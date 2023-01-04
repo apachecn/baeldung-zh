@@ -17,13 +17,13 @@ EJDK(Embedded Java Development Kit)是由 Oracle 推出的，用于解决为所�
 
 以下语法用于执行`jrecreate` 命令；在 Unix/Linux 中:
 
-```
+```java
 $jrecreate.sh -<option>/--<option> <argument-if-any>
 ```
 
 在 Windows 中:
 
-```
+```java
 $jrecreate.bat -<option>/--<option> <argument-if-any>
 ```
 
@@ -35,13 +35,13 @@ $jrecreate.bat -<option>/--<option> <argument-if-any>
 
 `destination`选项是必需的，它指定应该在其中创建目标 JRE 的目录:
 
-```
+```java
 $jrecreate.sh -d /SampleJRE
 ```
 
 运行上述命令时，将在指定位置创建一个默认的 JRE。命令行输出将是:
 
-```
+```java
 Building JRE using Options {
     ejdk-home: /installDir/ejdk1.8.0/bin/..
     dest: /SampleJRE
@@ -66,13 +66,13 @@ Embedded JRE created successfully
 
 `profile`选项用于管理目标 JRE 的大小。概要文件定义了要包含的 API 的功能。如果未指定配置文件选项，默认情况下，该工具将包括所有 JRE APIs:
 
-```
+```java
 $jrecreate.sh -d /SampleJRECompact1/ -p compact1
 ```
 
 将创建一个带有`compact1` 概要文件的 JRE。我们也可以在命令中用`––profile`代替`-p`。命令行输出将显示以下结果:
 
-```
+```java
 Building JRE using Options {
     ejdk-home: /installDir/ejdk1.8.0/bin/..
     dest: /SampleJRECompact1
@@ -99,13 +99,13 @@ Embedded JRE created successfully
 
 `jvm`选项用于根据用户的需求用特定的 JVM 定制我们的目标 JRE。默认情况下，如果没有指定`profile`和`jvm`选项，它将包含所有可用的 JVM(客户机、服务器和最小 JVM ):
 
-```
+```java
 $jrecreate.sh -d /SampleJREClientJVM/ --vm client
 ```
 
 将创建一个带有`client` jvm 的 JRE。命令行输出将显示以下结果:
 
-```
+```java
 Building JRE using Options {
     ejdk-home: /installDir/ejdk1.8.0/bin/..
     dest: /SampleJREClientJVM
@@ -130,13 +130,13 @@ Embedded JRE created successfully
 
 `extension`选项用于包含目标 JRE 的各种允许的扩展。默认情况下，不会添加扩展名:
 
-```
+```java
 $jrecreate.sh -d /SampleJRESunecExt/ -x sunec
 ```
 
 将创建一个带有`extension` sunec(椭圆曲线加密的安全提供者)的 JRE。我们也可以在命令中用`––extension`代替`-x`。命令行输出将显示以下结果:
 
-```
+```java
 Building JRE using Options {
     ejdk-home: /installDir/ejdk1.8.0/bin/..
     dest: /SampleJRESunecExt

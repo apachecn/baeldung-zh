@@ -18,13 +18,13 @@ Java 提供了一组类和接口，负责客户端和服务器之间的底层通
 
 这些主要包含在`java.net`包中，所以我们需要进行如下导入:
 
-```
+```java
 import java.net.*;
 ```
 
 我们还需要`java.io`包，它为我们提供了输入和输出流，以便在通信时写入和读取:
 
-```
+```java
 import java.io.*;
 ```
 
@@ -38,7 +38,7 @@ import java.io.*;
 
 我们将包括`main`方法和全局变量，以引起对本文中我们将如何运行所有服务器的注意。对于本文的其余示例，我们将省略这种重复的代码:
 
-```
+```java
 public class GreetServer {
     private ServerSocket serverSocket;
     private Socket clientSocket;
@@ -74,7 +74,7 @@ public class GreetServer {
 
 我们还将使用以下代码创建一个名为`GreetClient.java`的客户端:
 
-```
+```java
 public class GreetClient {
     private Socket clientSocket;
     private PrintWriter out;
@@ -104,7 +104,7 @@ public class GreetClient {
 
 然后，我们将使用单元测试向服务器发送问候，确认服务器发送问候作为响应:
 
-```
+```java
 @Test
 public void givenGreetingClient_whenServerRespondsWhenStarted_thenCorrect() {
     GreetClient client = new GreetClient();
@@ -128,13 +128,13 @@ public void givenGreetingClient_whenServerRespondsWhenStarted_thenCorrect() {
 
 通常，服务器运行在网络上的特定计算机上，并有一个绑定到特定端口号的套接字。在我们的例子中，我们将使用同一台计算机作为客户机，并在端口`6666`上启动服务器:
 
-```
+```java
 ServerSocket serverSocket = new ServerSocket(6666);
 ```
 
 服务器只是等待，监听客户机发出连接请求的套接字。这发生在下一步:
 
-```
+```java
 Socket clientSocket = serverSocket.accept();
 ```
 
@@ -144,7 +144,7 @@ Socket clientSocket = serverSocket.accept();
 
 此时，新的`Socket`对象将服务器与客户机直接连接起来。然后，我们可以访问输出和输入流，分别向客户端写入消息和从客户端接收消息:
 
-```
+```java
 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 ```
@@ -163,7 +163,7 @@ BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInp
 
 要发出连接请求，客户端会尝试在服务器的机器和端口上与服务器会合:
 
-```
+```java
 Socket clientSocket = new Socket("127.0.0.1", 6666);
 ```
 
@@ -171,7 +171,7 @@ Socket clientSocket = new Socket("127.0.0.1", 6666);
 
 上面的构造函数只在服务器有连接的时候创建一个新的套接字；否则，我们会得到一个连接被拒绝的异常。成功创建后，我们可以从它那里获得输入和输出流，以便与服务器通信:
 
-```
+```java
 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 ```
@@ -188,7 +188,7 @@ BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInp
 
 因此，让我们创建一个名为`EchoServer.java,`的新服务器，它的唯一目的是回显它从客户端接收到的任何消息:
 
-```
+```java
 public class EchoServer {
     public void start(int port) {
         serverSocket = new ServerSocket(port);
@@ -219,7 +219,7 @@ public class EchoServer {
 
 现在让我们创建一个`setup`方法来启动与服务器的连接:
 
-```
+```java
 @Before
 public void setup() {
     client = new EchoClient();
@@ -229,7 +229,7 @@ public void setup() {
 
 我们还将创建一个`tearDown`方法来释放我们所有的资源。对于我们使用网络资源的每种情况，这都是最佳实践:
 
-```
+```java
 @After
 public void tearDown() {
     client.stopConnection();
@@ -238,7 +238,7 @@ public void tearDown() {
 
 然后，我们将使用几个请求来测试我们的 echo 服务器:
 
-```
+```java
 @Test
 public void givenClient_whenServerEchosMessage_thenCorrect() {
     String resp1 = client.sendMessage("hello");
@@ -271,7 +271,7 @@ public void givenClient_whenServerEchosMessage_thenCorrect() {
 
 现在让我们来看看实际情况。我们将在其中创建另一个名为`EchoMultiServer.java.`的服务器，我们将创建一个处理程序线程类来管理每个客户端在其套接字上的通信:
 
-```
+```java
 public class EchoMultiServer {
     private ServerSocket serverSocket;
 
@@ -325,7 +325,7 @@ public class EchoMultiServer {
 
 为了清楚起见，我们仍然将测试放在一个新的套件中:
 
-```
+```java
 @Test
 public void givenClient1_whenServerResponds_thenCorrect() {
     EchoClient client1 = new EchoClient();

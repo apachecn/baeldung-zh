@@ -26,7 +26,7 @@
 
 我们将定义一个`sharedState` 变量和一个`CountDownLatch` 变量，用于协调处理:
 
-```
+```java
 ExecutorService executor = Executors.newFixedThreadPool(2);
 AtomicInteger sharedState = new AtomicInteger();
 CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -34,7 +34,7 @@ CountDownLatch countDownLatch = new CountDownLatch(1);
 
 生产者将把一个随机整数保存到`sharedState` 变量中，并在`countDownLatch,` 上执行`countDown()` 方法，通知消费者它可以从`sharedState:`中获取一个值
 
-```
+```java
 Runnable producer = () -> {
     Integer producedElement = ThreadLocalRandom
       .current()
@@ -46,7 +46,7 @@ Runnable producer = () -> {
 
 消费者将使用`await()` 方法等待`countDownLatch`。当生产者发出设置变量的信号时，消费者将从`sharedState:`中获取该变量
 
-```
+```java
 Runnable consumer = () -> {
     try {
         countDownLatch.await();
@@ -59,7 +59,7 @@ Runnable consumer = () -> {
 
 最后但同样重要的是，让我们开始我们的节目:
 
-```
+```java
 executor.execute(producer);
 executor.execute(consumer);
 
@@ -70,7 +70,7 @@ assertEquals(countDownLatch.getCount(), 0);
 
 它将产生以下输出:
 
-```
+```java
 Saving an element: -1507375353 to the exchange point
 consumed an element: -1507375353 from the exchange point
 ```
@@ -83,14 +83,14 @@ consumed an element: -1507375353 from the exchange point
 
 首先，我们将定义一个队列:
 
-```
+```java
 ExecutorService executor = Executors.newFixedThreadPool(2);
 SynchronousQueue<Integer> queue = new SynchronousQueue<>();
 ```
 
 生成器将调用一个`put()` 方法，该方法将一直阻塞，直到其他线程从队列中取出一个元素:
 
-```
+```java
 Runnable producer = () -> {
     Integer producedElement = ThreadLocalRandom
       .current()
@@ -105,7 +105,7 @@ Runnable producer = () -> {
 
 消费者将使用`take()` 方法简单地检索该元素:
 
-```
+```java
 Runnable consumer = () -> {
     try {
         Integer consumedElement = queue.take();
@@ -117,7 +117,7 @@ Runnable consumer = () -> {
 
 接下来，我们将开始我们的节目:
 
-```
+```java
 executor.execute(producer);
 executor.execute(consumer);
 
@@ -128,7 +128,7 @@ assertEquals(queue.size(), 0);
 
 它将产生以下输出:
 
-```
+```java
 Saving an element: 339626897 to the exchange point
 consumed an element: 339626897 from the exchange point
 ```

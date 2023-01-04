@@ -22,7 +22,7 @@ JSF EL 的主要功能是连接 JSF 视图(通常是 XHTML 标记)和基于 java
 
 JSP EL 表达式以美元符号(`$`)开始，然后是左花括号(`{`)，然后是实际表达式，最后以右花括号(`}`)结束:
 
-```
+```java
 ${ELBean.value > 0}
 ```
 
@@ -38,7 +38,7 @@ ${ELBean.value > 0}
 
 延期执行 EL 是专为 JSF 设计的 EL。它与 JSP EL 在语法上的主要区别是，它用“`#”`而不是“`$`来标记。
 
-```
+```java
 #{ELBean.value > 0}
 ```
 
@@ -56,7 +56,7 @@ ${ELBean.value > 0}
 
 快速注意——以下部分将展示一些例子，这些例子都可以在应用程序中找到(请参见最后的 Github 链接),方法是导航到:
 
-```
+```java
 http://localhost:8080/jsf/el_intro.jsf
 ```
 
@@ -66,13 +66,13 @@ http://localhost:8080/jsf/el_intro.jsf
 
 以下表达式将托管 bean 属性读取到页面上:
 
-```
+```java
 Hello, #{ELBean.firstName}
 ```
 
 但是，下面的表达式允许我们在用户对象上设置一个值:
 
-```
+```java
 <h:inputText id="firstName" value="#{ELBean.firstName}" required="true"/>
 ```
 
@@ -84,7 +84,7 @@ Unified EL 提供了方法表达式，可以在 JSF 页面中执行公共的非�
 
 这里有一个简单的例子:
 
-```
+```java
 <h:commandButton value="Save" action="#{ELBean.save}"/>
 ```
 
@@ -92,7 +92,7 @@ Unified EL 提供了方法表达式，可以在 JSF 页面中执行公共的非�
 
 从 EL 2.2 开始，您还可以向使用 EL 访问的方法传递参数。这可以让我们这样重写我们的例子:
 
-```
+```java
 <h:inputText id="firstName" binding="#{firstName}" required="true"/>
 <h:commandButton value="Save"
   action="#{ELBean.saveFirstName(firstName.value.toString().concat('(passed)'))}"/>
@@ -122,7 +122,7 @@ JSF EL 引擎提供了对几个容器管理对象的访问。其中一些是:
 
 下面这个简单的例子通过访问`headers` 隐式对象列出了所有的请求头和值:
 
-```
+```java
 <c:forEach items="#{header}" var="header">
    <tr>
        <td>#{header.key}</td>
@@ -139,7 +139,7 @@ JSF EL 引擎提供了对几个容器管理对象的访问。其中一些是:
 
 EL 可以出现在标准 HTML 标签中:
 
-```
+```java
 <meta name="description" content="#{ELBean.pageDescription}"/>
 ```
 
@@ -147,7 +147,7 @@ EL 可以出现在标准 HTML 标签中:
 
 在 Javascript 或
 
-```
+```java
 <script type="text/javascript"> var theVar = #{ELBean.firstName};</script>
 ```
 
@@ -167,7 +167,7 @@ EL 支持相当高级的比较运算符:
 
 在后台 bean 代码中，可以使用 JSF 应用程序计算 EL 表达式。这打开了一个可能性的世界，将 JSF 页面与后台 bean 连接起来。您可以轻松地从后台 bean 中检索隐式 EL 对象，或者检索实际的 HTML 页面组件或它们的值:
 
-```
+```java
 FacesContext ctx = FacesContext.getCurrentInstance(); 
 Application app = ctx.getApplication(); 
 String firstName = app.evaluateExpressionGet(ctx, "#{firstName.value}", String.class); 
@@ -184,7 +184,7 @@ EL < 3.0 确实有一定的局限性。下面几节讨论其中的一些。
 
 EL 不支持使用重载。所以在一个 backing bean 中用以下方法:
 
-```
+```java
 public void save(User theUser);
 public void save(String username);
 public void save(Integer uid);
@@ -192,7 +192,7 @@ public void save(Integer uid);
 
 JSF·埃尔将不能恰当地评价下面的表达式
 
-```
+```java
 <h:commandButton value="Save" action="#{ELBean.save(firstName.value)}"/>
 ```
 
@@ -202,14 +202,14 @@ JSF `ELResolver`将自省`bean`的类定义，并选择由`java.lang.Class#getMe
 
 JSF EL < 3.0，不支持在脚本中使用常量值或枚举。因此，拥有以下任何一种
 
-```
+```java
 public static final String USER_ERROR_MESS = "No, you can’t do that";
 enum Days { Sat, Sun, Mon, Tue, Wed, Thu, Fri };
 ```
 
 意味着您将无法执行以下操作
 
-```
+```java
 <h:outputText id="message" value="#{ELBean.USER_ERROR_MESS}"/>
 <h:commandButton id="saveButton" value="save" rendered="bean.offDay==Days.Sun"/>
 ```
@@ -220,7 +220,7 @@ JSF EL < 3.0 版不提供隐式空安全访问，有些人可能会觉得现代�
 
 因此，如果下面表达式中的`person`为空，整个表达式将失败，并出现难看的 NPE
 
-```
+```java
 Hello Mr, #{ELBean.person.surname}"
 ```
 

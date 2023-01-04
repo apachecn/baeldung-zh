@@ -51,7 +51,7 @@ Jenkins 是一个开源的 CI/CD 自动化工具，用于交付任何平台的�
 
 现在让我们看看从源机器获取`sampleJob`的配置文件的命令:
 
-```
+```java
 $ java -jar jenkins-cli.jar -s http://JENKINS_USER:[[email protected]](/web/20221010124232/https://www.baeldung.com/cdn-cgi/l/email-protection)_IP:JENKINS_PORT get-job sampleJob > sampleJob.xml
 ```
 
@@ -66,7 +66,7 @@ $ java -jar jenkins-cli.jar -s http://JENKINS_USER:[[email protected]](/web/202
 
 让我们来看看将`sampleJob.xml`导入目标机器的命令:
 
-```
+```java
 $ java -jar jenkins-cli.jar -s http://JENKINS_USER:[[email protected]](/web/20221010124232/https://www.baeldung.com/cdn-cgi/l/email-protection)_IP:JENKINS_PORT create-job sampleJob < sampleJob.xml
 ```
 

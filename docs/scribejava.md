@@ -22,7 +22,7 @@ ScribeJava 是一个简单的 OAuth Java 客户端，帮助管理 OAuth 流程�
 
 **ScribeJava 被组织成一个核心和 API 模块**，后者包括一组外部 API (Google、GitHub、Twitter 等)和核心构件:
 
-```
+```java
 <dependency>
     <groupId>com.github.scribejava</groupId>
     <artifactId>scribejava-apis</artifactId>
@@ -32,7 +32,7 @@ ScribeJava 是一个简单的 OAuth Java 客户端，帮助管理 OAuth 流程�
 
 如果我们只需要核心类而不需要任何外部 API，我们必须只提取核心模块:
 
-```
+```java
 <dependency>
     <groupId>com.github.scribejava</groupId>
     <artifactId>scribejava-core</artifactId>
@@ -50,7 +50,7 @@ ScribeJava 是一个简单的 OAuth Java 客户端，帮助管理 OAuth 流程�
 
 为了构建`OAuthService`实现，库提供了一个`ServiceBuilder:`
 
-```
+```java
 OAuthService service = new ServiceBuilder("api_key")
   .apiSecret("api_secret")
   .scope("scope")
@@ -70,14 +70,14 @@ OAuthService service = new ServiceBuilder("api_key")
 
 此外，**库允许我们选择使用哪个 HTTP 客户端:**
 
-```
+```java
 ServiceBuilder builder = new ServiceBuilder("api_key")
   .httpClient(new OkHttpHttpClient());
 ```
 
 当然，在之前的例子中，我们已经包括了所需的依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.github.scribejava</groupId>
     <artifactId>scribejava-httpclient-okhttp</artifactId>
@@ -91,7 +91,7 @@ ServiceBuilder builder = new ServiceBuilder("api_key")
 
 此外，**我们可以使用一种调试模式来帮助我们排除故障:**
 
-```
+```java
 ServiceBuilder builder = new ServiceBuilder("api_key")
   .debug();
 ```
@@ -100,7 +100,7 @@ ServiceBuilder builder = new ServiceBuilder("api_key")
 
 另外，如果我们想使用不同的输出，还有另一个方法接受一个`OutputStream`来发送调试信息给:
 
-```
+```java
 FileOutputStream debugFile = new FileOutputStream("debug");
 
 ServiceBuilder builder = new ServiceBuilder("api_key")
@@ -116,7 +116,7 @@ ServiceBuilder builder = new ServiceBuilder("api_key")
 
 首先，我们必须使用 builder 构建`Oauth10Service`，正如我们前面看到的:
 
-```
+```java
 OAuth10aService service = new ServiceBuilder("api_key")
   .apiSecret("api_secret")
   .build(TwitterApi.instance());
@@ -124,7 +124,7 @@ OAuth10aService service = new ServiceBuilder("api_key")
 
 一旦我们有了`OAuth10Service, `,我们就可以得到一个`requestToken`,并用它来获得授权 URL:
 
-```
+```java
 OAuth1RequestToken requestToken = service.getRequestToken();
 String authUrl = service.getAuthorizationUrl(requestToken);
 ```
@@ -133,13 +133,13 @@ String authUrl = service.getAuthorizationUrl(requestToken);
 
 因此，我们使用*oauthcverifier*来获得`accessToken`:
 
-```
+```java
 OAuth1AccessToken accessToken = service.getAccessToken(requestToken,oauthVerifier);
 ```
 
 最后，我们可以使用`OAuthRequest`对象创建一个请求，并使用`signRequest()`方法向其添加令牌:
 
-```
+```java
 OAuthRequest request = new OAuthRequest(Verb.GET, 
     "https://api.twitter.com/1.1/account/verify_credentials.json");
 service.signRequest(accessToken, request);
@@ -155,7 +155,7 @@ OAuth 2.0 的流程与 OAuth 1.0 没有太大的不同。为了解释这些变�
 
 同样，在 OAuth 1.0 流程中，我们必须构建`OAuthService`并获得`authUrl` `,`，但这次我们将使用一个`OAuth20Service`实例:
 
-```
+```java
 OAuth20Service service = new ServiceBuilder("api_key")
   .apiSecret("api_secret")
   .scope("https://www.googleapis.com/auth/userinfo.email")
@@ -169,7 +169,7 @@ String authUrl = service.getAuthorizationUrl();
 
 同样，我们必须将用户重定向到`authUrl`，并在回调的 url 中获取`code`参数:
 
-```
+```java
 OAuth2AccessToken accessToken = service.getAccessToken(code);
 
 OAuthRequest request = new OAuthRequest(Verb.GET, "https://www.googleapis.com/oauth2/v1/userinfo?alt=json");
@@ -188,7 +188,7 @@ Response response = service.execute(request);
 
 让我们想象一下，我们有一个 OAuth 2.0 授权服务器，带有密码授权。在这种情况下，我们可以实现`DefaultApi20`，这样我们就可以获得一个`access token`:
 
-```
+```java
 public class MyApi extends DefaultApi20 {
 
     public MyApi() {}
@@ -215,7 +215,7 @@ public class MyApi extends DefaultApi20 {
 
 因此，我们可以像以前一样以类似的方式获得访问令牌:
 
-```
+```java
 OAuth20Service service = new ServiceBuilder("baeldung_api_key")
   .apiSecret("baeldung_api_secret")
   .scope("read write")

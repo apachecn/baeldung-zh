@@ -38,7 +38,7 @@
 
 [注意:在下面的代码片段中，仅包含三个点(…)的一行表示为了简洁起见跳过了一些行。]
 
-```
+```java
 /foos:
   get:
     description: |
@@ -157,7 +157,7 @@
 
 下面是一个代表项目集合的`resource type`定义:
 
-```
+```java
 resourceTypes:
   collection:
     usage: Use this resourceType to represent any collection of items
@@ -180,7 +180,7 @@ resourceTypes:
 
 请注意，在我们的 API 中，因为我们的数据类型仅仅是我们的基本资源名称的大写单数形式，所以我们可以将函数应用于< <`resourcePathName` > >参数，而不是引入用户定义的< < `typeName` > >参数，从而为 API 的这一部分实现相同的结果:
 
-```
+```java
 resourceTypes:
   collection:
   ...
@@ -196,7 +196,7 @@ resourceTypes:
 
 使用上面包含< <`typeName` > >参数的定义，下面是如何将“集合”`resource type`应用于资源`/foos`和/ `bars`:
 
-```
+```java
 /foos:
   type: { collection: { "typeName": "Foo" } }
   get:
@@ -214,7 +214,7 @@ resourceTypes:
 
 现在让我们把重点放在 API 中处理集合中单个项目的部分:资源`/foos/{fooId}`和`/bars/{barId}`。这里是`/foos/{fooId}`的代码:
 
-```
+```java
 /foos:
 ...
   /{fooId}:
@@ -262,7 +262,7 @@ resourceTypes:
 
 提取我们刚刚确定的模式，下面是我们如何为集合中的单个项目定义一个`resource type`:
 
-```
+```java
 resourceTypes:
 ...
   item:
@@ -310,14 +310,14 @@ resourceTypes:
 
 下面是我们如何应用“item”`resource type`:
 
-```
+```java
 /foos:
 ...
   /{fooId}:
     type: { item: { "typeName": "Foo" } }
 ```
 
-```
+```java
 ... 
 /bars: 
 ... 
@@ -337,7 +337,7 @@ resourceTypes:
 
 请注意，“item”`resource type`仍然充满冗余。让我们看看`traits`如何帮助消除它们。我们将从提取任何包含请求体的方法的`trait`开始:
 
-```
+```java
 traits:
   hasRequestItem:
     body:
@@ -347,7 +347,7 @@ traits:
 
 现在让我们为那些正常响应包含主体的方法提取`traits`:
 
-```
+```java
  hasResponseItem:
     responses:
       200:
@@ -364,7 +364,7 @@ traits:
 
 最后，这里是任何可能返回 404 错误响应的方法的`trait`:
 
-```
+```java
  hasNotFound:
     responses:
       404:
@@ -378,7 +378,7 @@ traits:
 
 然后我们将这个`trait`应用到我们的`resource types`:
 
-```
+```java
 resourceTypes:
   collection:
     usage: Use this resourceType to represent any collection of items
@@ -409,7 +409,7 @@ resourceTypes:
 
 我们还可以将`traits`应用于资源中定义的方法。这对于资源-方法组合匹配一个或多个`traits`但不匹配任何已定义的`resource type`的“一次性”场景尤其有用:
 
-```
+```java
 /foos:
 ...
   /name/{name}:
@@ -430,7 +430,7 @@ resourceTypes:
 
 以下是我们最终的完整 RAML API:
 
-```
+```java
 #%RAML 1.0
 title: Baeldung Foo REST Services API
 version: v1

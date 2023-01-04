@@ -28,7 +28,7 @@ Java 9 对类装入器进行了一些重大修改。随着模块的引入，我�
 
 现在，让我们定义一个示例类:
 
-```
+```java
 public class ClassExample {
     class NestedClass {
     }
@@ -37,7 +37,7 @@ public class ClassExample {
 
 接下来，让我们定义一个接口:
 
-```
+```java
 public interface InterfaceExample {
 } 
 ```
@@ -48,7 +48,7 @@ public interface InterfaceExample {
 
 首先，我们将使用内置的系统类加载器`.` **系统类加载器** **加载在类路径**中找到的所有类。这发生在 JVM 的早期初始化过程中:
 
-```
+```java
 public class AccessingAllClassesInPackage {
 
     public Set<Class> findAllClassesUsingClassLoader(String packageName) {
@@ -81,7 +81,7 @@ public class AccessingAllClassesInPackage {
 
 现在让我们来测试这个方法:
 
-```
+```java
 @Test
 public void when_findAllClassesUsingClassLoader_thenSuccess() {
     AccessingAllClassesInPackage instance = new AccessingAllClassesInPackage();
@@ -103,7 +103,7 @@ public void when_findAllClassesUsingClassLoader_thenSuccess() {
 
 让我们从将 [`reflections`依赖项](https://web.archive.org/web/20220630220059/https://search.maven.org/artifact/org.reflections/reflections/0.9.12/jar)添加到我们的 Maven 项目开始:
 
-```
+```java
 <dependency>
     <groupId>org.reflections</groupId>
     <artifactId>reflections</artifactId> 
@@ -113,7 +113,7 @@ public void when_findAllClassesUsingClassLoader_thenSuccess() {
 
 现在，让我们深入代码示例:
 
-```
+```java
 public Set<Class> findAllClassesUsingReflectionsLibrary(String packageName) {
     Reflections reflections = new Reflections(packageName, new SubTypesScanner(false));
     return reflections.getSubTypesOf(Object.class)
@@ -126,7 +126,7 @@ public Set<Class> findAllClassesUsingReflectionsLibrary(String packageName) {
 
 同样，让我们来测试一下:
 
-```
+```java
 @Test
 public void when_findAllClassesUsingReflectionsLibrary_thenSuccess() {
     AccessingAllClassesInPackage instance = new AccessingAllClassesInPackage();
@@ -148,7 +148,7 @@ public void when_findAllClassesUsingReflectionsLibrary_thenSuccess() {
 
 首先，让我们将 [`guava`依赖项](https://web.archive.org/web/20220630220059/https://search.maven.org/artifact/com.google.guava/guava/30.1.1-jre/jar)添加到我们的项目中:
 
-```
+```java
 <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
@@ -158,7 +158,7 @@ public void when_findAllClassesUsingReflectionsLibrary_thenSuccess() {
 
 让我们深入研究代码:
 
-```
+```java
 public Set<Class> findAllClassesUsingGoogleGuice(String packageName) throws IOException {
     return ClassPath.from(ClassLoader.getSystemClassLoader())
       .getAllClasses()
@@ -174,7 +174,7 @@ public Set<Class> findAllClassesUsingGoogleGuice(String packageName) throws IOEx
 
 现在让我们来测试这个方法:
 
-```
+```java
 @Test
 public void when_findAllClassesUsingGoogleGuice_thenSuccess() throws IOException {
     AccessingAllClassesInPackage instance = new AccessingAllClassesInPackage();
@@ -214,7 +214,7 @@ Java 平台模块系统(JPMS)通过[模块](/web/20220630220059/https://www.bael
 
 我们可以构建一个模块来导出需要搜索的包:
 
-```
+```java
 module my.module {
     exports com.baeldung.reflection.access.packages.search;
 }
@@ -222,7 +222,7 @@ module my.module {
 
 对于普通模块，开放包的反射访问提供对声明包的所有类型及其成员的访问:
 
-```
+```java
 module my.module {
     opens com.baeldung.reflection.access.packages.search;
 }
@@ -230,7 +230,7 @@ module my.module {
 
 同样，开放模块授予对所有类型及其成员的反射访问，就好像所有包都已打开一样。现在，让我们打开整个模块，进行反思性访问:
 
-```
+```java
 open module my.module{
 }
 ```

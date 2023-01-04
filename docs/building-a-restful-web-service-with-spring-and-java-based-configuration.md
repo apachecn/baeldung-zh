@@ -29,7 +29,7 @@ Spring 框架支持两种创建 RESTful 服务的方式:
 
 ## 3。Java 配置
 
-```
+```java
 @Configuration
 @EnableWebMvc
 public class WebConfig{
@@ -55,7 +55,7 @@ public class WebConfig{
 
 从 Spring 3.1 开始，我们获得了对`@Configuration`类的一流测试支持:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration( 
   classes = {WebConfig.class, PersistenceConfig.class},
@@ -83,7 +83,7 @@ Spring Boot 提供了几个注释，以更直观的方式为我们的测试设�
 
 准备就绪后，我们可以添加`@AutoConfigureMockMvc`来注入一个`MockMvc `实例并发送 HTTP 请求`:`
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -104,7 +104,7 @@ public class FooControllerAppIntegrationTest {
 
 为了避免创建整个上下文并只测试我们的 MVC 控制器，我们可以使用`@WebMvcTest:`
 
-```
+```java
 @RunWith(SpringRunner.class)
 @WebMvcTest(FooController.class)
 public class FooControllerWebLayerIntegrationTest {
@@ -131,7 +131,7 @@ public class FooControllerWebLayerIntegrationTest {
 
 **`@RestController`是 RESTful API 的整个 Web 层的核心构件。**出于本文的目的，控制器正在建模一个简单的 REST 资源，`Foo`:
 
-```
+```java
 @RestController
 @RequestMapping("/foos")
 class FooController {
@@ -175,7 +175,7 @@ class FooController {
 
 正如我们所看到的，我们正在使用一个简单的、番石榴风格的`RestPreconditions`实用程序:
 
-```
+```java
 public class RestPreconditions {
     public static <T> T checkFound(T resource) {
         if (resource == null) {
@@ -218,7 +218,7 @@ HTTP 响应的状态代码是 REST 服务最重要的部分之一，这个主题
 
 简单地从 web 层的任何一层抛出这些异常将确保 Spring 在 HTTP 响应上映射相应的状态代码:
 
-```
+```java
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class BadRequestException extends RuntimeException {
    //
@@ -243,7 +243,7 @@ public class ResourceNotFoundException extends RuntimeException {
 
 除了标准 web 应用程序所需的`spring-webmvc`依赖关系[之外，我们还需要为 REST API 设置内容编组和解组:](/web/20220824083901/https://www.baeldung.com/spring-with-maven#mvc "Spring Maven Web dependencies")
 
-```
+```java
 <dependencies>
    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -269,7 +269,7 @@ public class ResourceNotFoundException extends RuntimeException {
 
 通常，如果我们正在开发一个 web 应用程序，**我们只需添加`spring-boot-starter-web`依赖项，并依靠它将所有必要的工件包含到我们的项目**中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>

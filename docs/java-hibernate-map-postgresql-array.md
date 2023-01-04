@@ -10,7 +10,7 @@
 
 作为连接 PostgreSQL 数据库的先决条件，我们应该将最新的 [`postgresql`](https://web.archive.org/web/20221129010145/https://search.maven.org/search?q=g:org.postgresql%20a:postgresql) Maven 依赖项以及 Hibernate 配置添加到我们的`pom.xml`中。同样，让我们用`String`数组`roles`创建一个名为`User` 的实体类[:](/web/20221129010145/https://www.baeldung.com/jpa-entities)
 
-```
+```java
 @Entity
 public class User {
     @Id
@@ -27,7 +27,7 @@ public class User {
 
 [Hibernate 支持自定义类型](/web/20221129010145/https://www.baeldung.com/hibernate-custom-types)将用户定义的类型映射到 SQL 查询中。因此，**我们可以创建自定义类型来映射 PostgreSQL 数组和 Hibernate** 来存储/获取数据。首先，让我们创建实现 Hibernate 的`UserType`类的`CustomStringArrayType`类[，以提供一个自定义类型来映射`String`数组:](/web/20221129010145/https://www.baeldung.com/hibernate-custom-types#2-implementingusertype)
 
-```
+```java
 public class CustomStringArrayType implements UserType {
     @Override
     public int[] sqlTypes() {
@@ -68,7 +68,7 @@ public class CustomStringArrayType implements UserType {
 
 然后，我们将使用`CustomStringArrayType`类将`String`数组`roles` 映射到 PostgreSQL `text`数组:
 
-```
+```java
 @Entity
 public class User {
     //...
@@ -87,7 +87,7 @@ public class User {
 
 为了测试我们的定制类型，让我们首先插入一个`User`对象和`String`数组`roles`:
 
-```
+```java
 @Test
 public void givenArrayMapping_whenArraysAreInserted_thenPersistInDB() 
   throws HibernateException, IOException {
@@ -114,7 +114,7 @@ public void givenArrayMapping_whenArraysAreInserted_thenPersistInDB()
 
 此外，我们可以获取包含 PostgreSQL `text`数组形式的`roles`的`User`记录:
 
-```
+```java
 @Test
 public void givenArrayMapping_whenQueried_thenReturnArraysFromDB() 
   throws HibernateException, IOException {
@@ -130,7 +130,7 @@ public void givenArrayMapping_whenQueried_thenReturnArraysFromDB()
 
 类似地，我们可以为 PostgreSQL 支持的各种数组类型创建一个自定义类型。例如，让我们创建`CustomIntegerArrayType`来映射 PostgreSQL `int`数组:
 
-```
+```java
 public class CustomIntegerArrayType implements UserType {
     @Override
     public int[] sqlTypes() {
@@ -166,7 +166,7 @@ public class CustomIntegerArrayType implements UserType {
 
 类似于我们在`CustomStringArrayType`类中注意到的，**方法的返回类型是`Integer`数组**。另外，**方法的实现创建了一个 PostgreSQL 类型的数组`int`** 。最后，我们可以使用`CustomIntegerArrayType`类将`Integer`数组 `locations` 映射到 PostgreSQL `int`数组:
 
-```
+```java
 @Entity
 public class User {
     //...
@@ -187,7 +187,7 @@ public class User {
 
 首先，我们将最新的 [`hibernate-types-52`](https://web.archive.org/web/20221129010145/https://search.maven.org/search?q=g:com.vladmihalcea%20a:hibernate-types-52) Maven 依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.vladmihalcea</groupId>
     <artifactId>hibernate-types-52</artifactId>
@@ -199,7 +199,7 @@ public class User {
 
 接下来，我们将在`User`实体中添加集成代码，以映射`String`数组 `phoneNumbers`:
 
-```
+```java
 @TypeDefs({
     @TypeDef(
         name = "string-array",
@@ -226,7 +226,7 @@ public class User {
 
 就是这样！我们已经准备好使用`hibernate-types`库进行数组映射。让我们更新已经讨论过的单元测试来验证插入操作:
 
-```
+```java
 @Test
 public void givenArrayMapping_whenArraysAreInserted_thenPersistInDB() 
   throws HibernateException, IOException {
@@ -252,7 +252,7 @@ public void givenArrayMapping_whenArraysAreInserted_thenPersistInDB()
 
 类似地，我们可以验证读取操作:
 
-```
+```java
 @Test
 public void givenArrayMapping_whenQueried_thenReturnArraysFromDB() 
   throws HibernateException, IOException {

@@ -10,7 +10,7 @@
 
 **Java 中简单的 [`for `循环](/web/20221127213044/https://www.baeldung.com/java-for-loop)本质上有三个部分——初始化、`boolean`条件&步骤:**
 
-```
+```java
 for (initialization; boolean-condition; step) {
     statement;
 }
@@ -32,7 +32,7 @@ Java 5 中引入了每个循环。**我们也称之为增强型`for`环路。**
 
 `for`-每个循环由循环变量的声明组成，后跟冒号(:)，后跟数组或集合的名称:
 
-```
+```java
 for (data_type var_name : array | collection) {
     // code
 }
@@ -48,7 +48,7 @@ for (data_type var_name : array | collection) {
 
 让我们看一个用`for` -each 循环遍历数组的例子:
 
-```
+```java
 int numbers[] = { 1, 2, 3, 4, 5 };
 
 for (int number : numbers) {
@@ -62,7 +62,7 @@ for (int number : numbers) {
 
 先说一个`List`:
 
-```
+```java
 String[] wordsArray = { "Java ", "is ", "great!" };
 List<String> wordsList = Arrays.asList(wordsArray);
 
@@ -73,7 +73,7 @@ for (String word : wordsList) {
 
 类似地，我们可以遍历一个`Set`的所有元素:
 
-```
+```java
 Set<String> wordsSet = new HashSet();
 wordsSet.addAll(wordsList);
 
@@ -84,7 +84,7 @@ for (String word : wordsSet) {
 
 此外，我们还可以使用`for` -each 循环来遍历`Map<K, V>` :
 
-```
+```java
 Map<Integer, String> map = new HashMap<>();
 map.put(1, "Java");
 map.put(2, "is");
@@ -102,7 +102,7 @@ for (Entry<Integer, String> entry : map.entrySet()) {
 
 **然而，如果数组或集合是`null`，它抛出一个`NullPointerException` :**
 
-```
+```java
 int[] numbers = null;
 for (int number : numbers) {
     System.out.print(number + " ");
@@ -111,7 +111,7 @@ for (int number : numbers) {
 
 上面的代码抛出了一个`NullPointerException`:
 
-```
+```java
 Exception in thread "main" java.lang.NullPointerException
     at com.baeldung.core.controlstructures.loops.ForEachLoop.traverseArray(ForEachLoop.java:63)
     ..

@@ -12,7 +12,7 @@
 
 这可以简单地创建为:
 
-```
+```java
 Set<Integer> threadSafeUniqueNumbers = ConcurrentHashMap.newKeySet();
 threadSafeUniqueNumbers.add(23);
 threadSafeUniqueNumbers.add(45);
@@ -34,7 +34,7 @@ threadSafeUniqueNumbers.add(45);
 
 虽然像`remove(object)`或`clear()`这样的操作正在按预期工作，但我们需要注意的是，`Set`上的任何变化都会反映在原始地图中:
 
-```
+```java
 ConcurrentHashMap<Integer,String> numbersMap = new ConcurrentHashMap<>();
 Set<Integer> numbersSet = numbersMap.keySet();
 
@@ -53,7 +53,7 @@ System.out.println("Map after remove: "+ numbersMap);
 
 接下来是上面代码的输出:
 
-```
+```java
 Map before remove: {1=One, 2=Two, 3=Three}
 Set before remove: [1, 2, 3]
 
@@ -67,7 +67,7 @@ Map after remove: {1=One, 3=Three}
 
 进一步查看作为参数传递的默认值，它被用作通过`add()`或`addAll()`方法添加的 map 中每个新条目的值。下面的例子说明了这是如何工作的:
 
-```
+```java
 ConcurrentHashMap<Integer,String> numbersMap = new ConcurrentHashMap<>();
 Set<Integer> numbersSet = numbersMap.keySet("SET-ENTRY");
 
@@ -86,7 +86,7 @@ System.out.println("Set after add: "+ numbersSet);
 
 下面是上面代码的输出:
 
-```
+```java
 Map before add: {1=One, 2=Two, 3=Three}
 Set before add: [1, 2, 3]
 Map after add: {1=One, 2=Two, 3=Three, 4=SET-ENTRY, 5=SET-ENTRY}
@@ -97,7 +97,7 @@ Set after add: [1, 2, 3, 4, 5]
 
 让我们使用`java.util.Collections`中可用的`synchronizedSet()`方法来创建一个线程安全的`HashSet` 实例:
 
-```
+```java
 Set<Integer> syncNumbers = Collections.synchronizedSet(new HashSet<>());
 syncNumbers.add(1);
 ```
@@ -108,7 +108,7 @@ syncNumbers.add(1);
 
 创建线程安全的`Set`实现的最后一种方法是 [`CopyOnWriteArraySet`](/web/20221220114603/https://www.baeldung.com/java-copy-on-write-arraylist) 。创建这个`Set`的实例很简单:
 
-```
+```java
 Set<Integer> copyOnArraySet = new CopyOnWriteArraySet<>();
 copyOnArraySet.add(1);
 ```

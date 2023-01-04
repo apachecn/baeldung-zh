@@ -12,7 +12,7 @@ Structurizr 打破了传统的架构图编辑器(如 UML)的拖放方法，允�
 
 首先，让我们将 [structurizr-core](https://web.archive.org/web/20221128104519/https://search.maven.org/search?q=a:structurizr-core) 依赖项添加到我们的`pom.xml:`中
 
-```
+```java
 <dependency>
     <groupId>com.structurizr</groupId>
     <artifactId>structurizr-core</artifactId>
@@ -26,14 +26,14 @@ Structurizr 打破了传统的架构图编辑器(如 UML)的拖放方法，允�
 
 首先，我们需要创建一个`Workspace`和一个`Model`:
 
-```
+```java
 Workspace workspace = new Workspace("Payment Gateway", "Payment Gateway");
 Model model = workspace.getModel();
 ```
 
 我们还在该模型中定义了一个用户和两个软件系统:
 
-```
+```java
 Person user = model.addPerson("Merchant", "Merchant");
 SoftwareSystem paymentTerminal = model.addSoftwareSystem(
   "Payment Terminal", "Payment Terminal");
@@ -45,7 +45,7 @@ paymentTerminal.uses(fraudDetector, "Obtains fraud score");
 
 现在我们的系统已经定义好了，我们可以创建一个视图:
 
-```
+```java
 ViewSet viewSet = workspace.getViews();
 
 SystemContextView contextView = viewSet.createSystemContextView(
@@ -62,7 +62,7 @@ contextView.addAllPeople();
 
 下一步是创建一个人性化的图表。对于已经在使用 [PlantUML](https://web.archive.org/web/20221128104519/http://plantuml.com/) 的组织来说，最简单的解决方案可能是指示 Structurizr 进行 PlantUML 导出:
 
-```
+```java
 StringWriter stringWriter = new StringWriter();
 PlantUMLWriter plantUMLWriter = new PlantUMLWriter();
 plantUMLWriter.write(workspace, stringWriter);
@@ -79,13 +79,13 @@ System.out.println(stringWriter.toString());
 
 让我们可以创建一个 API 客户端:
 
-```
+```java
 StructurizrClient client = new StructurizrClient("key", "secret");
 ```
 
 密钥和机密参数可从其网站上的工作区仪表板中获得。然后，可以通过以下方式引用工作区:
 
-```
+```java
 client.putWorkspace(1337, workspace);
 ```
 
@@ -97,7 +97,7 @@ client.putWorkspace(1337, workspace);
 
 首先，我们为支付终端创建一些容器:
 
-```
+```java
 Container f5 = paymentTerminal.addContainer(
   "Payment Load Balancer", "Payment Load Balancer", "F5");
 Container jvm1 = paymentTerminal.addContainer(
@@ -112,7 +112,7 @@ Container oracle = paymentTerminal.addContainer(
 
 接下来，我们定义这些新创建的元素之间的关系:
 
-```
+```java
 f5.uses(jvm1, "route");
 f5.uses(jvm2, "route");
 f5.uses(jvm3, "route");
@@ -124,7 +124,7 @@ jvm3.uses(oracle, "storage");
 
 最后，创建一个可以提供给呈现器的容器视图:
 
-```
+```java
 ContainerView view = workspace.getViews()
   .createContainerView(paymentTerminal, "F5", "Container View");
 view.addAllContainers();
@@ -140,7 +140,7 @@ view.addAllContainers();
 
 首先，我们在容器中创建一些组件:
 
-```
+```java
 Component jaxrs = jvm1.addComponent("jaxrs-jersey", 
   "restful webservice implementation", "rest");
 Component gemfire = jvm1.addComponent("gemfire", 
@@ -151,14 +151,14 @@ Component hibernate = jvm1.addComponent("hibernate",
 
 接下来，让我们添加一些关系:
 
-```
+```java
 jaxrs.uses(gemfire, "");
 gemfire.uses(hibernate, "");
 ```
 
 最后，让我们创建视图:
 
-```
+```java
 ComponentView componentView = workspace.getViews()
   .createComponentView(jvm1, JVM_COMPOSITION, "JVM Components");
 
@@ -175,7 +175,7 @@ componentView.addAllComponents();
 
 为了利用这个特性，我们需要添加另一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.structurizr</groupId>
     <artifactId>structurizr-spring</artifactId>
@@ -187,7 +187,7 @@ componentView.addAllComponents();
 
 **我们甚至可以插入自定义解决策略:**
 
-```
+```java
 ComponentFinder componentFinder = new ComponentFinder(
   jvm, "com.baeldung.structurizr",
   new SpringComponentFinderStrategy(
@@ -198,7 +198,7 @@ ComponentFinder componentFinder = new ComponentFinder(
 
 最后，我们启动查找器:
 
-```
+```java
 componentFinder.findComponents();
 ```
 

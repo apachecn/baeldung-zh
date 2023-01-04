@@ -16,7 +16,7 @@
 
 我们将从在`pom.xml`中添加 Google Guava 库依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -32,13 +32,13 @@
 
 *   如果要处理一个定制的 Java 对象，使用 HashBiMap 类中的`create`方法:
 
-```
+```java
 BiMap<String, String> capitalCountryBiMap = HashBiMap.create();
 ```
 
 *   如果我们已经有一个现有的映射，您可以使用来自类`HashBiMap`的`create`方法的重载版本创建一个`BiMap`的实例:
 
-```
+```java
 Map<String, String> capitalCountryBiMap = new HashMap<>();
 //...
 HashBiMap.create(capitalCountryBiMap); 
@@ -46,13 +46,13 @@ HashBiMap.create(capitalCountryBiMap);
 
 *   如果你要处理一个类型为`Enum,` 的键，使用`EnumHashBiMap`类中的`create`方法:
 
-```
+```java
 BiMap<MyEnum, String> operationStringBiMap = EnumHashBiMap.create(MyEnum.class); 
 ```
 
 *   如果您打算创建一个不可变的映射，使用`ImmutableBiMap`类(它遵循一个构建器模式):
 
-```
+```java
 BiMap<String, String> capitalCountryBiMap
   = new ImmutableBiMap.Builder<>()
     .put("New Delhi", "India")
@@ -63,7 +63,7 @@ BiMap<String, String> capitalCountryBiMap
 
 让我们从一个简单的例子开始，展示一下`BiMap,`的用法，我们可以得到一个基于值的键和一个基于键的值:
 
-```
+```java
 @Test
 public void givenBiMap_whenQueryByValue_shouldReturnKey() {
     BiMap<String, String> capitalCountryBiMap = HashBiMap.create();
@@ -85,7 +85,7 @@ public void givenBiMap_whenQueryByValue_shouldReturnKey() {
 
 让我们看一个同样的例子:
 
-```
+```java
 @Test(expected = IllegalArgumentException.class)
 public void givenBiMap_whenSameValueIsPresent_shouldThrowException() {
     BiMap<String, String> capitalCountryBiMap = HashBiMap.create();
@@ -98,7 +98,7 @@ public void givenBiMap_whenSameValueIsPresent_shouldThrowException() {
 
 如果我们希望覆盖已经存在于`BiMap`中的值，我们可以使用`forcePut`方法:
 
-```
+```java
 @Test
 public void givenSameValueIsPresent_whenForcePut_completesSuccessfully() {
     BiMap<String, String> capitalCountryBiMap = HashBiMap.create();

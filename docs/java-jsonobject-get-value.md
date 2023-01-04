@@ -14,7 +14,7 @@
 
 因此，在嵌套结构中获取值需要更多的工作。从这一点开始，我们来参考以下一个假想员工的 JSON 数据:
 
-```
+```java
 {
   "name" : "Bob",
   "profession" : "Software engineer",
@@ -53,13 +53,13 @@
 
 此外，每个组都有一个泛型方法和几个特定的类型转换方法。**泛型方法返回一个`Object`实例，而特定方法返回一个已经转换的实例**。让我们使用通用的`get()`方法获取 JSON 数据的“family”字段。我们假设 JSON 数据已经预先加载到`jsonObject`变量中，变量的类型为`JSONObject`:
 
-```
+```java
  JSONArray family = (JSONArray) jsonObject.get("family");
 ```
 
 我们可以用一种更易读的方式来做同样的事情，为`JSONArray`使用特定的 getter:
 
-```
+```java
  JSONArray family = jsonObject.getJSONArray("family");
 ```
 
@@ -67,7 +67,7 @@
 
 **在这种方法中，我们通过获取所需值**路径上的每个中间值来直接获取值。下面的代码显示了如何直接获得雇员儿子的姓名:
 
-```
+```java
  JSONArray family = jsonObject.getJSONArray("family");
     JSONObject sonObject = family.getJSONObject(1);
     JSONObject sonData = sonObject.getJSONObject("son");
@@ -87,7 +87,7 @@
 
 以下方法实现递归搜索:
 
-```
+```java
  public List<String> getValuesInObject(JSONObject jsonObject, String key) {
         List<String> accumulatedValues = new ArrayList<>();
         for (String currentKey : jsonObject.keySet()) {
@@ -124,7 +124,7 @@
 
 最后，让我们为``getValuesInObject()`` 方法编写测试代码:
 
-```
+```java
  @Test
     public void getAllAssociatedValuesRecursively() {
         List<String> values = jsonObjectValueGetter.getValuesInObject(jsonObject, "son");

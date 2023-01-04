@@ -24,7 +24,7 @@
 
 为了解决这个问题，我们应该首先通过编程定义一个矩形。**一个矩形可以很容易地用它的左下角和右上角坐标来表示:**
 
-```
+```java
 public class Rectangle {
     private Point bottomLeft;
     private Point topRight;
@@ -39,7 +39,7 @@ public class Rectangle {
 
 其中`Point`是表示空间中的点 `(x,y)`的类:
 
-```
+```java
 public class Point {
     private int x;
     private int y;
@@ -65,7 +65,7 @@ public class Point {
 
 现在我们已经了解了解决方案，让我们实现我们的`isOverlapping()`方法:
 
-```
+```java
 public boolean isOverlapping(Rectangle other) {
     if (this.topRight.getY() < other.bottomLeft.getY() 
       || this.bottomLeft.getY() > other.topRight.getY()) {

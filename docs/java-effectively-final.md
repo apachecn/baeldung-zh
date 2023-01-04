@@ -20,7 +20,7 @@ Java 8 中引入的最有趣的特性之一实际上是 final。它允许我们�
 
 理解一个 final 变量是否是有效 final 的最简单的方法是考虑移除关键字`final`是否允许代码编译和运行:
 
-```
+```java
 @FunctionalInterface
 public interface FunctionalInterface {
     void testEffectivelyFinal();
@@ -42,7 +42,7 @@ Java 编译器不会对有效的最终变量进行额外的优化，不像它对
 
 让我们考虑一个简单的例子，它声明了两个`final String`变量，但只使用它们进行连接:
 
-```
+```java
 public static void main(String[] args) {
     final String hello = "hello";
     final String world = "world";
@@ -53,7 +53,7 @@ public static void main(String[] args) {
 
 **编译器会将上面的`main`方法中执行的代码改为:**
 
-```
+```java
 public static void main(String[] var0) {
     String var1 = "hello world";
     System.out.println(var1);
@@ -70,7 +70,7 @@ public static void main(String[] var0) {
 
 套装`java.util.concurrent.atomic`提供了`AtomicReference`和`AtomicInteger`这样的职业。我们可以用它们来自动修改 lambda 表达式中的变量:
 
-```
+```java
 public static void main(String[] args) {
     AtomicInteger effectivelyFinalInt = new AtomicInteger(10);
     FunctionalInterface functionalInterface = effectivelyFinalInt::incrementAndGet;

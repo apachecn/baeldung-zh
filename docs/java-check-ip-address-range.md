@@ -25,7 +25,7 @@ Sean C Foley 编写的 [IPAddress](https://web.archive.org/web/20220625070344/ht
 
 建立这个库很简单。我们需要将 [ipaddress](https://web.archive.org/web/20220625070344/https://mvnrepository.com/artifact/com.github.seancfoley/ipaddress) 依赖项添加到 pom.xml:
 
-```
+```java
 <dependency>
     <groupId>com.github.seancfoley</groupId>
     <artifactId>ipaddress</artifactId>
@@ -41,7 +41,7 @@ Sean C Foley 编写的 [IPAddress](https://web.archive.org/web/20220625070344/ht
 
 现在，让我们看看使用上述类查找 IP 地址是否在给定范围内的代码:
 
-```
+```java
 public static boolean checkIPIsInGivenRange (String inputIP, String rangeStartIP, String rangeEndIP) 
   throws AddressStringException {
     IPAddress startIPAddress = new IPAddressString(rangeStartIP).getAddress();
@@ -62,7 +62,7 @@ public static boolean checkIPIsInGivenRange (String inputIP, String rangeStartIP
 
 让我们考虑几个使用 IPv4 和 IPv6 地址调用`checkIPIsInGivenRange`的单元案例:
 
-```
+```java
 @Test
 void givenIPv4Addresses_whenIsInRange_thenReturnsTrue() throws Exception {
     assertTrue(IPWithGivenRangeCheck.checkIPIsInGivenRange("192.220.3.0", "192.210.0.0", "192.255.0.0"));
@@ -92,7 +92,7 @@ void givenIPv6Addresses_whenIsNotInRange_thenReturnsFalse() throws Exception {
 
 我们需要将 [commons-ip-math](https://web.archive.org/web/20220625070344/https://mvnrepository.com/artifact/com.github.jgonian/commons-ip-math) 依赖项添加到 pom.xml 中:
 
-```
+```java
 <dependency>
     <groupId>com.github.jgonian</groupId>
     <artifactId>commons-ip-math</artifactId>
@@ -104,7 +104,7 @@ void givenIPv6Addresses_whenIsNotInRange_thenReturnsFalse() throws Exception {
 
 该库提供了`Ipv4`和`Ipv4Range `类，分别用于保存单个 IP 地址和一系列地址作为实例。现在，让我们看一下利用上述类的代码示例:
 
-```
+```java
 public static boolean checkIPv4IsInRange (String inputIP, String rangeStartIP, String rangeEndIP) {
     Ipv4 startIPAddress = Ipv4.of(rangeStartIP);
     Ipv4 endIPAddress = Ipv4.of(rangeEndIP);
@@ -118,7 +118,7 @@ public static boolean checkIPv4IsInRange (String inputIP, String rangeStartIP, S
 
 现在让我们对我们的函数进行一些测试:
 
-```
+```java
 @Test
 void givenIPv4Addresses_whenIsInRange_thenReturnsTrue() throws Exception {
     assertTrue(IPWithGivenRangeCheck.checkIPv4IsInRange("192.220.3.0", "192.210.0.0", "192.255.0.0"));
@@ -136,7 +136,7 @@ void givenIPv4Addresses_whenIsNotInRange_thenReturnsFalse() throws Exception {
 
 让我们利用前面提到的类来看看 IP 版本 6 的代码示例:
 
-```
+```java
 public static boolean checkIPv6IsInRange (String inputIP, String rangeStartIP, String rangeEndIP) {
     Ipv6 startIPAddress = Ipv6.of(rangeStartIP);
     Ipv6 endIPAddress = Ipv6.of(rangeEndIP);
@@ -148,7 +148,7 @@ public static boolean checkIPv6IsInRange (String inputIP, String rangeStartIP, S
 
 现在让我们运行单元测试来检查我们的代码:
 
-```
+```java
 @Test
 void givenIPv6Addresses_whenIsInRange_thenReturnsTrue() throws Exception {
     assertTrue(IPWithGivenRangeCheck.checkIPv6IsInRange(
@@ -170,7 +170,7 @@ Java 的`InetAddress `类表示一个 IP 地址，并提供获取任何给定�
 
 下面是将 IPv4 地址转换成长整数的 Java 代码:
 
-```
+```java
 long ipToLongInt (InetAddress ipAddress) {
     long resultIP = 0;
     byte[] ipAddressOctets = ipAddress.getAddress();
@@ -185,7 +185,7 @@ long ipToLongInt (InetAddress ipAddress) {
 
 通过使用上述方法，让我们检查 IP 是否在范围内:
 
-```
+```java
 public static boolean checkIPv4IsInRangeByConvertingToInt (String inputIP, String rangeStartIP, String rangeEndIP) 
   throws UnknownHostException {
     long startIPAddress = ipToLongInt(InetAddress.getByName(rangeStartIP));
@@ -198,7 +198,7 @@ public static boolean checkIPv4IsInRangeByConvertingToInt (String inputIP, Strin
 
 `InetAddress`类中的`getByName()`方法接受域名或 IP 地址作为输入，如果无效就抛出`UnknownHostException`。让我们通过运行单元测试来检查我们的代码:
 
-```
+```java
 @Test
 void givenIPv4Addresses_whenIsInRange_thenReturnsTrue() throws Exception {
     assertTrue(IPWithGivenRangeCheck.checkIPv4IsInRangeByConvertingToInt("192.220.3.0", "192.210.0.0", "192.255.0.0"));
@@ -218,7 +218,7 @@ void givenIPv4Addresses_whenIsNotInRange_thenReturnsFalse() throws Exception {
 
 我们需要将 [java-ipv6](https://web.archive.org/web/20220625070344/https://mvnrepository.com/artifact/com.googlecode.java-ipv6/java-ipv6) 依赖项添加到 pom.xml 中:
 
-```
+```java
 <dependency>
     <groupId>com.googlecode.java-ipv6</groupId>
     <artifactId>java-ipv6</artifactId>
@@ -233,7 +233,7 @@ void givenIPv4Addresses_whenIsNotInRange_thenReturnsFalse() throws Exception {
 
 让我们看看使用上述类来检查 IP 是否在给定范围内的代码片段:
 
-```
+```java
 public static boolean checkIPv6IsInRangeByIPv6library (String inputIP, String rangeStartIP, String rangeEndIP) {
     IPv6Address startIPAddress = IPv6Address.fromString(rangeStartIP);
     IPv6Address endIPAddress = IPv6Address.fromString(rangeEndIP);
@@ -255,7 +255,7 @@ public static boolean checkIPv6IsInRangeByIPv6library (String inputIP, String ra
 
 通过调用我们定义的上述方法，让我们在测试中传递几个样本输入:
 
-```
+```java
 @Test
 void givenIPv6Addresses_whenIsInRange_thenReturnsTrue() throws Exception {
     assertTrue(IPWithGivenRangeCheck.checkIPv6IsInRangeByIPv6library(

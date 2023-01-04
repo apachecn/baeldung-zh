@@ -10,7 +10,7 @@
 
 让我们从添加`[handlebars](https://web.archive.org/web/20220902002933/https://search.maven.org/search?q=g:com.github.jknack%2Ba:handlebars)`依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>com.github.jknack</groupId>
     <artifactId>handlebars</artifactId>
@@ -30,7 +30,7 @@
 
 然后 Handlebars 调用上下文对象上的`toString` 方法，并用结果替换标签:
 
-```
+```java
 @Test
 public void whenThereIsNoTemplateFile_ThenCompilesInline() throws IOException {
     Handlebars handlebars = new Handlebars();
@@ -52,7 +52,7 @@ public void whenThereIsNoTemplateFile_ThenCompilesInline() throws IOException {
 
 我们刚刚看到了如何为我们的上下文发送一个`String`，现在让我们尝试一个`Map`:
 
-```
+```java
 @Test
 public void whenParameterMapIsSupplied_thenDisplays() throws IOException {
     Handlebars handlebars = new Handlebars();
@@ -74,7 +74,7 @@ public void whenParameterMapIsSupplied_thenDisplays() throws IOException {
 
 **我们还可以向模板传递一个自定义对象:**
 
-```
+```java
 public class Person {
     private String name;
     private boolean busy;
@@ -89,7 +89,7 @@ public class Person {
 
 使用`Person` 类，我们将获得与上一个例子相同的结果:
 
-```
+```java
 @Test
 public void whenParameterObjectIsSupplied_ThenDisplays() throws IOException {
     Handlebars handlebars = new Handlebars();
@@ -111,7 +111,7 @@ public void whenParameterObjectIsSupplied_ThenDisplays() throws IOException {
 
 Handlebars.java 为从类路径、文件系统或 servlet 上下文中读取模板提供了特殊支持。**默认情况下，Handlebars 扫描类路径来加载给定的模板:**
 
-```
+```java
 @Test
 public void whenNoLoaderIsGiven_ThenSearchesClasspath() throws IOException {
     Handlebars handlebars = new Handlebars();
@@ -128,7 +128,7 @@ public void whenNoLoaderIsGiven_ThenSearchesClasspath() throws IOException {
 
 然而，我们也可以用`ClassPathTemplateLoader`来配置这些属性:
 
-```
+```java
 @Test
 public void whenClasspathTemplateLoaderIsGiven_ThenSearchesClasspathWithPrefixSuffix() throws IOException {
     TemplateLoader loader = new ClassPathTemplateLoader("/handlebars", ".html");
@@ -142,7 +142,7 @@ public void whenClasspathTemplateLoaderIsGiven_ThenSearchesClasspathWithPrefixSu
 
 最后，我们可以链接多个`TemplateLoader`实例:
 
-```
+```java
 @Test
 public void whenMultipleLoadersAreGiven_ThenSearchesSequentially() throws IOException {
     TemplateLoader firstLoader = new ClassPathTemplateLoader("/handlebars", ".html");
@@ -162,7 +162,7 @@ public void whenMultipleLoadersAreGiven_ThenSearchesSequentially() throws IOExce
 
 **`with` 助手改变当前上下文**:
 
-```
+```java
 {{#with address}}
 <h4>I live in {{street}}</h4>
 {{/with}}
@@ -174,7 +174,7 @@ public void whenMultipleLoadersAreGiven_ThenSearchesSequentially() throws IOExce
 
 因此，`{{street}}` 标签将保存`person.address.street`的值:
 
-```
+```java
 @Test
 public void whenUsedWith_ThenContextChanges() throws IOException {
     Handlebars handlebars = new Handlebars(templateLoader);
@@ -196,7 +196,7 @@ public void whenUsedWith_ThenContextChanges() throws IOException {
 
 **`each`助手遍历集合**:
 
-```
+```java
 {{#each friends}}
 <span>{{name}} is my friend.</span>
 {{/each}}
@@ -204,7 +204,7 @@ public void whenUsedWith_ThenContextChanges() throws IOException {
 
 作为使用`{{#each friends}}`和`{{/each}}`标签开始和结束迭代部分的结果，Handlebars 将迭代上下文对象的`friends`字段。
 
-```
+```java
 @Test
 public void whenUsedEach_ThenIterates() throws IOException {
     Handlebars handlebars = new Handlebars(templateLoader);
@@ -228,7 +228,7 @@ public void whenUsedEach_ThenIterates() throws IOException {
 
 最后，**助手`if`提供了条件渲染**。
 
-```
+```java
 {{#if busy}}
 <h4>{{name}} is busy.</h4>
 {{else}}
@@ -238,7 +238,7 @@ public void whenUsedEach_ThenIterates() throws IOException {
 
 在我们的模板中，我们根据`busy`字段提供不同的消息。
 
-```
+```java
 @Test
 public void whenUsedIf_ThenPutsCondition() throws IOException {
     Handlebars handlebars = new Handlebars(templateLoader);
@@ -264,7 +264,7 @@ public void whenUsedIf_ThenPutsCondition() throws IOException {
 
 作为第一步，我们必须提供一个`Helper`的实现:
 
-```
+```java
 new Helper<Person>() {
     @Override
     public Object apply(Person context, Options options) throws IOException {
@@ -278,7 +278,7 @@ new Helper<Person>() {
 
 **创建助手后，我们还必须注册带有把手的自定义助手**:
 
-```
+```java
 @Test
 public void whenHelperIsCreated_ThenCanRegister() throws IOException {
     Handlebars handlebars = new Handlebars(templateLoader);
@@ -298,7 +298,7 @@ public void whenHelperIsCreated_ThenCanRegister() throws IOException {
 
 **最后一步，我们必须在模板中使用助手的名字**定义一个标签:
 
-```
+```java
 {{#isBusy this}}{{/isBusy}}
 ```
 
@@ -310,7 +310,7 @@ public void whenHelperIsCreated_ThenCanRegister() throws IOException {
 
 而且，我们不需要实现任何特定的接口。我们只需在一个类中编写我们的助手方法，然后 HandleBars 使用反射提取助手定义:
 
-```
+```java
 public class HelperSource {
 
     public String isBusy(Person context) {
@@ -324,7 +324,7 @@ public class HelperSource {
 
 因为一个助手源可以包含多个助手实现，所以注册不同于单个助手注册:
 
-```
+```java
 @Test
 public void whenHelperSourceIsCreated_ThenCanRegister() throws IOException {
     Handlebars handlebars = new Handlebars(templateLoader);
@@ -344,7 +344,7 @@ Handlebars 库提供了几种重用现有模板的方法。
 
 模板包含是重用模板的方法之一。它支持模板的组合。
 
-```
+```java
 <h4>Hi {{name}}!</h4>
 ```
 
@@ -352,7 +352,7 @@ Handlebars 库提供了几种重用现有模板的方法。
 
 为了在另一个模板中使用它，我们必须参考`header`模板。
 
-```
+```java
 {{>header}}
 <p>This is the page {{name}}</p>
 ```
@@ -361,7 +361,7 @@ Handlebars 库提供了几种重用现有模板的方法。
 
 当 Handlebars.java 处理模板时，最终输出也将包含`header`的内容:
 
-```
+```java
 @Test
 public void whenOtherTemplateIsReferenced_ThenCanReuse() throws IOException {
     Handlebars handlebars = new Handlebars(templateLoader);
@@ -382,7 +382,7 @@ public void whenOtherTemplateIsReferenced_ThenCanReuse() throws IOException {
 
 我们可以使用`{{#block}}`和`{{#partial}}`标签来实现继承关系:
 
-```
+```java
 <html>
 <body>
 {{#block "intro"}}
@@ -398,7 +398,7 @@ public void whenOtherTemplateIsReferenced_ThenCanReuse() throws IOException {
 
 为了应用继承，我们需要使用`{{#partial}}`在其他模板中覆盖这些`blocks`:
 
-```
+```java
 {{#partial "message" }}
   Hi there!
 {{/partial}}

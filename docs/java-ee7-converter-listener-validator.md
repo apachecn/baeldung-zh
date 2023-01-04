@@ -14,7 +14,7 @@ Java 企业版(JEE) 7 提供了一些有用的功能，例如验证用户输入�
 
 为了定义一个`Integer`转换器，首先我们在被管理的 bean 中创建我们的属性，用作我们的`JSF`表单的后端:
 
-```
+```java
 private Integer age;
 
 // getters and setters
@@ -22,7 +22,7 @@ private Integer age;
 
 然后，我们使用`f:converter` 标签在表单中创建组件:
 
-```
+```java
 <h:outputLabel value="Age:"/>
 <h:inputText id="Age" value="#{convListVal.age}">
     <f:converter converterId="javax.faces.Integer" />
@@ -32,13 +32,13 @@ private Integer age;
 
 以类似的方式，我们创建其他数字转换器，如`Double`转换器:
 
-```
+```java
 private Double average;
 ```
 
 然后，我们在视图中创建适当的 JSF 组件。请注意，我们使用的是变量`average,`,然后使用 getter 和 setter 通过名称约定将其映射到字段:
 
-```
+```java
 <h:outputLabel value="Average:"/>
 <h:inputText id="Average" value="#{convListVal.average}">
     <f:converter converterId="javax.faces.Double" />
@@ -52,14 +52,14 @@ private Double average;
 
 首先，和前面的转换器一样，我们用 getters 和 setters 来声明我们的字段:
 
-```
+```java
 private Date myDate;
 // getters and setters
 ```
 
 然后我们在视图中创建组件。这里我们需要使用该模式输入日期，如果没有使用该模式，我们将得到一个错误，并给出一个正确的输入模式示例:
 
-```
+```java
 <h:outputLabel value="Date:"/>
 <h:inputText id="MyDate" value="#{convListVal.myDate}">
     <f:convertDateTime pattern="dd/MM/yyyy" />
@@ -78,13 +78,13 @@ private Date myDate;
 
 像以前一样，我们在托管 bean 中定义属性:
 
-```
+```java
 private String name;
 ```
 
 然后我们在视图中定义我们的监听器:
 
-```
+```java
 <h:outputLabel value="Name:"/>
 <h:inputText id="name" size="30" value="#{convListVal.name}">
     <f:valueChangeListener type="com.baeldung.convListVal.MyListener" />
@@ -93,7 +93,7 @@ private String name;
 
 我们通过添加一个`f:valueChangeListener` 来设置我们的`h:inputText` 标签，并且，在监听器标签中，我们需要指定一个类，当监听器被触发时，它将用于执行任务。
 
-```
+```java
 public class MyListener implements ValueChangeListener {
     private static final Logger LOG = Logger.getLogger(MyListener.class.getName());	
 
@@ -117,13 +117,13 @@ public class MyListener implements ValueChangeListener {
 
 首先，我们在受管 bean 中创建我们的字段:
 
-```
+```java
 private String surname;
 ```
 
 然后，我们在视图中创建组件:
 
-```
+```java
 <h:outputLabel value="surname" for="surname"/>
 <h:panelGroup>
     <h:inputText id="surname" value="#{convListVal.surname}">
@@ -141,7 +141,7 @@ private String surname;
 
 首先，我们使用`ShrinkWrap:`部署我们的应用程序
 
-```
+```java
 @Deployment(testable = false)
 public static WebArchive createDeployment() {
     return (ShrinkWrap.create(
@@ -154,7 +154,7 @@ public static WebArchive createDeployment() {
 
 然后，我们测试每个组件的错误消息，以验证我们的应用程序是否正常工作:
 
-```
+```java
 @Test
 @RunAsClient
 public void givenAge_whenAgeInvalid_thenErrorMessage() throws Exception {

@@ -16,7 +16,7 @@ Maven 是构建代码的强大工具。我们将深入了解这个错误发生�
 
 如果 **`JAVA_HOME`没有指向有效的 JDK 安装**，Maven 将在每次执行时抛出一个错误:
 
-```
+```java
 mvn -version
 
 # Output... 
@@ -33,7 +33,7 @@ Maven 如何验证`JAVA_HOME`路径？
 
 下面是针对 Linux 的`mvn`可执行文件检查(Apache Maven v3.5.4):
 
-```
+```java
 if [ -z "$JAVA_HOME" ] ; then
     JAVACMD=`which java`
 else
@@ -70,13 +70,13 @@ fi
 
 如果我们做基本检查:
 
-```
+```java
 mvn --version
 ```
 
 我们将得到如下有意义的输出:
 
-```
+```java
 Apache Maven 3.6.0 (97c98ec64a1fdfee7767ce5ffb20918da4f719f3; 2018-10-24T18:41:47Z)
 Maven home: /opt/apache-maven-3.6.0
 Java version: 1.8.0_191, vendor: Oracle Corporation, runtime: /usr/lib/jvm/java-8-openjdk-amd64/jre
@@ -86,13 +86,13 @@ OS name: "linux", version: "4.15.0-42-generic", arch: "amd64", family: "unix"
 
 让我们看看如果我们试图编译一个项目会发生什么:
 
-```
+```java
 mvn clean compile
 ```
 
 现在，我们得到一个错误:
 
-```
+```java
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.7.0:compile (default-compile) on project my-app: Compilation failure
 [ERROR] No compiler is provided in this environment. Perhaps you are running on a JRE rather than a JDK?
 ```
@@ -105,7 +105,7 @@ mvn clean compile
 
 首先，我们将打开我们项目的`pom.xml`，转到`build / pluginManagement / plugins`部分，看看`maven-compiler-plugin`的条目:
 
-```
+```java
 <plugin>
     <artifactId>maven-compiler-plugin</artifactId>
     <version>3.7.0</version>
@@ -114,7 +114,7 @@ mvn clean compile
 
 然后，我们将向它添加一个配置，以便它使用一个定制的可执行文件，并跳过在`JAVA_HOME/bin`目录中搜索`javac`:
 
-```
+```java
 <plugin>
     <artifactId>maven-compiler-plugin</artifactId>
     <version>3.7.0</version>
@@ -129,7 +129,7 @@ mvn clean compile
 
 接下来，我们将再次尝试编译该项目:
 
-```
+```java
 mvn clean compile
 ```
 
@@ -143,19 +143,19 @@ mvn clean compile
 
 只需打开一个终端并键入:
 
-```
+```java
 > $JAVA_HOME/bin/javac -version
 ```
 
 如果`JAVA_HOME`指向 JDK，输出应该是这样的:
 
-```
+```java
 > javac 1.X.0_XX
 ```
 
 如果`JAVA_HOME`没有指向 JDK，操作系统将抛出一条错误消息:
 
-```
+```java
 > bash: /bin/javac: No such file or directory
 ```
 
@@ -163,19 +163,19 @@ mvn clean compile
 
 打开命令提示符并键入:
 
-```
+```java
 %JAVA_HOME%\bin\javac -version
 ```
 
 如果`JAVA_HOME`指向 JDK，输出应该是这样的:
 
-```
+```java
 > javac 1.X.0_XX
 ```
 
 如果`JAVA_HOME`没有指向 JDK，操作系统将抛出一条错误消息:
 
-```
+```java
 > The system cannot find the path specified.
 ```
 

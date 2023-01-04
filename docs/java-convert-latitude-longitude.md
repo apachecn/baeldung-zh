@@ -16,7 +16,7 @@
 
 让我们从两种墨卡托投影实现的基类开始:
 
-```
+```java
 abstract class Mercator {
     final static double RADIUS_MAJOR = 6378137.0;
     final static double RADIUS_MINOR = 6356752.3142;
@@ -38,7 +38,7 @@ abstract class Mercator {
 
 让我们实现这种方法:
 
-```
+```java
 public class SphericalMercator extends Mercator {
 
     @Override
@@ -57,7 +57,7 @@ public class SphericalMercator extends Mercator {
 
 让我们测试一个简单的转换:
 
-```
+```java
 Assert.assertEquals(2449028.7974520186, sphericalMercator.xAxisProjection(22));
 Assert.assertEquals(5465442.183322753, sphericalMercator.yAxisProjection(44));
 ```
@@ -70,7 +70,7 @@ Assert.assertEquals(5465442.183322753, sphericalMercator.yAxisProjection(44));
 
  ****让我们实现这种方法:
 
-```
+```java
 class EllipticalMercator extends Mercator {
     @Override
     double yAxisProjection(double input) {
@@ -101,7 +101,7 @@ class EllipticalMercator extends Mercator {
 
 让我们测试一个简单的转换:
 
-```
+```java
 Assert.assertEquals(2449028.7974520186, ellipticalMercator.xAxisProjection(22));
 Assert.assertEquals(5435749.887511954, ellipticalMercator.yAxisProjection(44));
 ```

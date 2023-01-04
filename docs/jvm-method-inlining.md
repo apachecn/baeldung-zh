@@ -34,7 +34,7 @@
 
 我们当然不想猜测 JIT 在做什么。因此，我们需要某种方法来查看哪些方法是内联的，哪些是未内联的。我们可以很容易地实现这一点，并通过在启动时设置一些额外的 JVM 标志将所有这些信息记录到标准输出中:
 
-```
+```java
 -XX:+PrintCompilation -XX:+UnlockDiagnosticVMOptions -XX:+PrintInlining
 ```
 
@@ -56,7 +56,7 @@
 
 现在让我们看看如何在实践中检验这一点。我们将首先创建一个简单的类来计算第一个`N`连续正整数的和:
 
-```
+```java
 public class ConsecutiveNumbersSum {
 
     private long totalSum;
@@ -78,7 +78,7 @@ public class ConsecutiveNumbersSum {
 
 接下来，一个简单的方法将利用类来执行计算:
 
-```
+```java
 private static long calculateSum(int n) {
     return new ConsecutiveNumbersSum(n).getTotalSum();
 }
@@ -86,7 +86,7 @@ private static long calculateSum(int n) {
 
 最后，我们将多次调用该方法，看看会发生什么:
 
-```
+```java
 for (int i = 1; i < NUMBERS_OF_ITERATIONS; i++) {
     calculateSum(i);
 }
@@ -96,7 +96,7 @@ for (int i = 1; i < NUMBERS_OF_ITERATIONS; i++) {
 
 如果我们现在将迭代次数更改为 15，000 次，并再次搜索输出，我们将看到:
 
-```
+```java
 664 262 % com.baeldung.inlining.InliningExample::main @ 2 (21 bytes)
   @ 10   com.baeldung.inlining.InliningExample::calculateSum (12 bytes)   inline (hot)
 ```
@@ -105,13 +105,13 @@ for (int i = 1; i < NUMBERS_OF_ITERATIONS; i++) {
 
 值得一提的是，如果方法太大，无论迭代多少次，JIT 都不会内联它。我们可以通过在运行应用程序时添加另一个标志来检查这一点:
 
-```
+```java
 -XX:FreqInlineSize=10
 ```
 
 正如我们在前面的输出中看到的，我们的方法的大小是 12 字节。`-XX:` `FreqInlineSize`标志将符合内联条件的方法大小限制为 10 个字节。因此，这次不应该发生内联。事实上，我们可以通过查看输出来确认这一点:
 
-```
+```java
 330 266 % com.baeldung.inlining.InliningExample::main @ 2 (21 bytes)
   @ 10   com.baeldung.inlining.InliningExample::calculateSum (12 bytes)   hot method too big
 ```

@@ -10,18 +10,18 @@
 
 我们将从一个简单的`application.properties`文件开始:
 
-```
+```java
 arrayOfStrings=Baeldung,dot,com
 ```
 
 让我们看看当我们将变量类型设置为`String[]`时 Spring 是如何表现的:
 
-```
+```java
 @Value("${arrayOfStrings}")
 private String[] arrayOfStrings;
 ```
 
-```
+```java
 @Test
 void whenContextIsInitialized_thenInjectedArrayContainsExpectedValues() {
     assertArrayEquals(new String[] {"Baeldung", "dot", "com"}, arrayOfStrings);
@@ -36,12 +36,12 @@ void whenContextIsInitialized_thenInjectedArrayContainsExpectedValues() {
 
 如果我们尝试以同样的方式注入一个`List`，我们会得到一个令人惊讶的结果:
 
-```
+```java
 @Value("${arrayOfStrings}")
 private List<String> unexpectedListOfStrings;
 ```
 
-```
+```java
 @Test
 void whenContextIsInitialized_thenInjectedListContainsUnexpectedValues() {
     assertEquals(Collections.singletonList("Baeldung,dot,com"), unexpectedListOfStrings);
@@ -52,12 +52,12 @@ void whenContextIsInitialized_thenInjectedListContainsUnexpectedValues() {
 
 为了正确地注入一个`List`，我们需要使用一种叫做 [Spring 表达式语言](/web/20220628151332/https://www.baeldung.com/spring-expression-language) (SpEL)的特殊语法:
 
-```
+```java
 @Value("#{'${arrayOfStrings}'.split(',')}")
 private List<String> listOfStrings;
 ```
 
-```
+```java
 @Test
 void whenContextIsInitialized_thenInjectedListContainsExpectedValues() {
     assertEquals(Arrays.asList("Baeldung", "dot", "com"), listOfStrings);
@@ -70,18 +70,18 @@ void whenContextIsInitialized_thenInjectedListContainsExpectedValues() {
 
 如果我们想让我们的表达式简单一点，我们可以用一种特殊的格式来声明我们的属性:
 
-```
+```java
 listOfStrings={'Baeldung','dot','com'}
 ```
 
 Spring 将识别这种格式，我们将能够使用稍微简单一些的表达式来注入我们的`List`:
 
-```
+```java
 @Value("#{${listOfStrings}}")
 private List<String> listOfStringsV2;
 ```
 
-```
+```java
 @Test
 void whenContextIsInitialized_thenInjectedListV2ContainsExpectedValues() {
     assertEquals(Arrays.asList("Baeldung", "dot", "com"), listOfStringsV2);
@@ -92,18 +92,18 @@ void whenContextIsInitialized_thenInjectedListV2ContainsExpectedValues() {
 
 让我们创建一个类似的属性，但这一次，我们将使用不同的分隔符:
 
-```
+```java
 listOfStringsWithCustomDelimiter=Baeldung;dot;com
 ```
 
 **正如我们在注入`Lists`时看到的，我们可以使用一个特殊的表达式来指定我们想要的分隔符:**
 
-```
+```java
 @Value("#{'${listOfStringsWithCustomDelimiter}'.split(';')}")
 private List<String> listOfStringsWithCustomDelimiter;
 ```
 
-```
+```java
 @Test
 void whenContextIsInitialized_thenInjectedListWithCustomDelimiterContainsExpectedValues() {
     assertEquals(Arrays.asList("Baeldung", "dot", "com"), listOfStringsWithCustomDelimiter);
@@ -114,7 +114,7 @@ void whenContextIsInitialized_thenInjectedListWithCustomDelimiterContainsExpecte
 
 让我们来看看以下属性:
 
-```
+```java
 listOfBooleans=false,false,true
 listOfIntegers=1,2,3,4
 listOfCharacters=a,b,c
@@ -122,7 +122,7 @@ listOfCharacters=a,b,c
 
 **我们可以看到 Spring 支持开箱即用的基本类型，所以我们不需要做任何特殊的解析:**
 
-```
+```java
 @Value("#{'${listOfBooleans}'.split(',')}")
 private List<Boolean> listOfBooleans;
 
@@ -133,7 +133,7 @@ private List<Integer> listOfIntegers;
 private List<Character> listOfCharacters;
 ```
 
-```
+```java
 @Test
 void whenContextIsInitialized_thenInjectedListOfBasicTypesContainsExpectedValues() {
     assertEquals(Arrays.asList(false, false, true), listOfBooleans);
@@ -148,14 +148,14 @@ void whenContextIsInitialized_thenInjectedListOfBasicTypesContainsExpectedValues
 
 为了以编程方式读取属性，我们首先需要获得我们的`Environment`对象的实例:
 
-```
+```java
 @Autowired
 private Environment environment;
 ```
 
 **然后，我们可以简单地使用`getProperty`方法，通过指定它的键和预期类型来读取任何属性:**
 
-```
+```java
 @Test
 void whenReadingFromSpringEnvironment_thenPropertiesHaveExpectedValues() {
     String[] arrayOfStrings = environment.getProperty("arrayOfStrings", String[].class);

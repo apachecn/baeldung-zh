@@ -20,7 +20,7 @@
 
 下面是 RxJava 中的一个简单演示:
 
-```
+```java
 Observable
   .from(new String[] { "John", "Doe" })
   .subscribe(name -> System.out.println("Hello " + name))
@@ -40,7 +40,7 @@ Observable
 
 我们可以使用`merge`操作符来组合多个`Observables`的输出，这样它们就像一个:
 
-```
+```java
 @Test
 public void givenTwoObservables_whenMerged_shouldEmitCombinedResults() {
     TestSubscriber<String> testSubscriber = new TestSubscriber<>();
@@ -58,7 +58,7 @@ public void givenTwoObservables_whenMerged_shouldEmitCombinedResults() {
 
 `mergeDelayError`方法与`merge`的相同之处在于它将多个`Observables`合并为一个，但是**如果在合并过程中出现错误，它允许无错误的项目在传播错误**之前继续:
 
-```
+```java
 @Test
 public void givenMutipleObservablesOneThrows_whenMerged_thenCombineBeforePropagatingError() {
     TestSubscriber<String> testSubscriber = new TestSubscriber<>();
@@ -76,7 +76,7 @@ public void givenMutipleObservablesOneThrows_whenMerged_thenCombineBeforePropaga
 
 上面的例子**发出所有无错值**:
 
-```
+```java
 hello
 world
 rxjava
@@ -88,7 +88,7 @@ rxjava
 
 `zip`扩展方法**将两个值序列组合成对**:
 
-```
+```java
 @Test
 public void givenTwoObservables_whenZipped_thenReturnCombinedResults() {
     List<String> zippedStrings = new ArrayList<>();
@@ -108,7 +108,7 @@ public void givenTwoObservables_whenZipped_thenReturnCombinedResults() {
 
 在这个例子中，我们将使用`[interval](https://web.archive.org/web/20221205171539/http://reactivex.io/documentation/operators/interval.html)` 压缩一个流，这实际上将延迟第一个流的元素的发出:
 
-```
+```java
 @Test
 public void givenAStream_whenZippedWithInterval_shouldDelayStreamEmmission() {
     TestSubscriber<String> testSubscriber = new TestSubscriber<>();

@@ -62,7 +62,7 @@ JNDI API 的一个主要优点是它独立于任何底层服务提供者的实�
 
 为了使用嵌入式 ApacheDS 服务器，我们需要定义 Maven [依赖关系](https://web.archive.org/web/20221206221623/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.directory.server%22%20AND%20a%3A%22apacheds-test-framework%22):
 
-```
+```java
 <dependency>
     <groupId>org.apache.directory.server</groupId>
     <artifactId>apacheds-test-framework</artifactId>
@@ -85,7 +85,7 @@ JNDI API 的一个主要优点是它独立于任何底层服务提供者的实�
 
 为此，我们首先需要将这些环境属性添加到一个`Hashtable`中:
 
-```
+```java
 Hashtable<String, String> environment = new Hashtable<String, String>();
 
 environment.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
@@ -97,14 +97,14 @@ environment.put(Context.SECURITY_CREDENTIALS, "12345");
 
 接下来，在一个名为`authenticateUser`的新方法中，我们将通过将环境属性传递给它的构造函数来创建`InitialDirContext`对象。然后，我们将关闭上下文以释放资源:
 
-```
+```java
 DirContext context = new InitialDirContext(environment);
 context.close();
 ```
 
 最后，我们将验证用户:
 
-```
+```java
 assertThatCode(() -> authenticateUser(environment)).doesNotThrowAnyException();
 ```
 
@@ -114,13 +114,13 @@ assertThatCode(() -> authenticateUser(environment)).doesNotThrowAnyException();
 
 应用与前面相同的环境属性，让我们通过使用错误的密码使身份验证失败:
 
-```
+```java
 environment.put(Context.SECURITY_CREDENTIALS, "wrongpassword");
 ```
 
 然后，我们将检查使用该密码验证用户是否如预期的那样失败:
 
-```
+```java
 assertThatExceptionOfType(AuthenticationException.class).isThrownBy(() -> authenticateUser(environment));
 ```
 
@@ -132,7 +132,7 @@ assertThatExceptionOfType(AuthenticationException.class).isThrownBy(() -> authen
 
 和以前一样，我们首先需要在一个`Hashtable`中添加一些环境属性。但是这一次，我们将使用管理员的 DN 作为`Context.SECURITY_PRINCIPAL`，以及他的默认管理员密码作为`Context.SECURITY_CREDENTIALS`属性:
 
-```
+```java
 Hashtable<String, String> environment = new Hashtable<String, String>();
 
 environment.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
@@ -144,7 +144,7 @@ environment.put(Context.SECURITY_CREDENTIALS, "secret");
 
 接下来，我们将用这些属性创建一个`InitialDirContext`对象:
 
-```
+```java
 DirContext adminContext = new InitialDirContext(environment);
 ```
 
@@ -152,13 +152,13 @@ DirContext adminContext = new InitialDirContext(environment);
 
 现在，我们将根据用户的 CN，即他的[常用名](https://web.archive.org/web/20221206221623/https://ldapwiki.com/wiki/CommonName)，为我们的搜索定义过滤器。
 
-```
+```java
 String filter = "(&(objectClass=person)(cn=Joe Simms))";
 ```
 
 然后，使用这个`filter`来搜索用户，我们将创建一个 [`SearchControls`](https://web.archive.org/web/20221206221623/https://docs.oracle.com/en/java/javase/11/docs/api/java.naming/javax/naming/directory/SearchControls.html) 对象:
 
-```
+```java
 String[] attrIDs = { "cn" };
 SearchControls searchControls = new SearchControls();
 searchControls.setReturningAttributes(attrIDs);
@@ -167,7 +167,7 @@ searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
 接下来，我们将使用我们的`filter`和`SearchControls`搜索用户:
 
-```
+```java
 NamingEnumeration<SearchResult> searchResults
   = adminContext.search("dc=baeldung,dc=com", filter, searchControls);
 
@@ -192,20 +192,20 @@ if (searchResults.hasMore()) {
 
 现在有了用户的 DN 来进行身份验证，我们将用用户的 DN 和密码替换现有环境属性中的管理员 DN 和密码:
 
-```
+```java
 environment.put(Context.SECURITY_PRINCIPAL, distinguishedName);
 environment.put(Context.SECURITY_CREDENTIALS, "12345");
 ```
 
 然后，有了这些，让我们验证用户:
 
-```
+```java
 assertThatCode(() -> authenticateUser(environment)).doesNotThrowAnyException();
 ```
 
 最后，我们将关闭管理员的上下文来释放资源:
 
-```
+```java
 adminContext.close();
 ```
 

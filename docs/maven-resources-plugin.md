@@ -30,7 +30,7 @@
 
 我们来看看`pom.xml`中的`resources`插件:
 
-```
+```java
 <plugin>
     <artifactId>maven-resources-plugin</artifactId>
     <version>3.0.2</version>
@@ -48,7 +48,7 @@
 
 这种配置满足了这些要求:
 
-```
+```java
 <configuration>
     <outputDirectory>output-resources</outputDirectory>
     <resources>
@@ -73,7 +73,7 @@
 
 例如，如果我们在 POM 中有一个属性:
 
-```
+```java
 <properties>
     <resources.name>Baeldung</resources.name>
 </properties>
@@ -81,13 +81,13 @@
 
 其中一个资源文件包含:
 
-```
+```java
 Welcome to ${resources.name}!
 ```
 
 然后，将在输出资源中计算该变量，结果文件将包含:
 
-```
+```java
 Welcome to Baeldung!
 ```
 

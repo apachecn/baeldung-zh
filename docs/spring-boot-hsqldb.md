@@ -16,7 +16,7 @@ Spring Boot 让使用不同的数据库系统变得非常容易，没有手动�
 
 这里是 [Spring Boot 启动器](/web/20220909204051/https://www.baeldung.com/spring-boot-starters)，我们将使用它来启动并运行我们的示例存储库层:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -51,7 +51,7 @@ Spring Boot 让使用不同的数据库系统变得非常容易，没有手动�
 *   我们将启动一个命令提示符并导航到 HSQLDB `data`文件夹
 *   在`data`文件夹中，我们将运行以下命令:
 
-    ```
+    ```java
     java -cp ../lib/hsqldb.jar org.hsqldb.server.Server --database.0 file.testdb --dbname0.testdb
     ```
 
@@ -73,7 +73,7 @@ Spring Boot 让使用不同的数据库系统变得非常容易，没有手动�
 
 连接后，我们可以创建一个`customers`表:
 
-```
+```java
 CREATE TABLE customers (
    id INT  NOT NULL,
    name VARCHAR (45),
@@ -88,7 +88,7 @@ CREATE TABLE customers (
 
 如果我们希望从 Spring Boot 连接到以前的基于文件的数据库，下面是我们应该包含在`application.properties`文件中的设置:
 
-```
+```java
 spring.datasource.driver-class-name=org.hsqldb.jdbc.JDBCDriver 
 spring.datasource.url=jdbc:hsqldb:hsql://localhost/testdb 
 spring.datasource.username=sa 
@@ -98,7 +98,7 @@ spring.jpa.hibernate.ddl-auto=update
 
 或者，如果我们使用内存数据库，我们应该使用这些:
 
-```
+```java
 spring.datasource.driver-class-name=org.hsqldb.jdbc.JDBCDriver
 spring.datasource.url=jdbc:hsqldb:mem:testdb;DB_CLOSE_DELAY=-1
 spring.datasource.username=sa
@@ -112,7 +112,7 @@ spring.jpa.hibernate.ddl-auto=create
 
 数据库连接设置已经完成，接下来我们需要定义我们的`Customer`实体:
 
-```
+```java
 @Entity
 @Table(name = "customers")
 public class Customer {
@@ -135,7 +135,7 @@ public class Customer {
 
 我们可以通过扩展`[CrudRepository](https://web.archive.org/web/20220909204051/https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html)`接口轻松实现这一层:
 
-```
+```java
 @Repository
 public interface CustomerRepository extends CrudRepository<Customer, Long> {}
 ```
@@ -146,7 +146,7 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {}
 
 让我们开始测试存储库的`findById()`和`findAll()`方法:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CustomerRepositoryTest {
@@ -171,7 +171,7 @@ public class CustomerRepositoryTest {
 
 最后，我们来测试一下`save()`方法:
 
-```
+```java
 @Test
 public void whenSavingCustomer_thenCorrect() {
     customerRepository.save(new Customer("Bob", "[[email protected]](/web/20220909204051/https://www.baeldung.com/cdn-cgi/l/email-protection)"));

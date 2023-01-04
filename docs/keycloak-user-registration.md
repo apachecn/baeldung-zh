@@ -20,7 +20,7 @@
 
 **最初，我们需要启用 Keycloak 来允许用户注册**。为此，我们首先需要从 Keycloak 发行版的`bin`文件夹中运行这个命令来启动服务器:
 
-```
+```java
 ./standalone.sh -Djboss.socket.binding.port-offset=100
 ```
 
@@ -52,7 +52,7 @@
 
 我们现在将尝试为`Date of birth`添加一个新字段`dob`。为此，我们需要修改上面的`register.ftl`，并添加以下内容:
 
-```
+```java
 <div class="form-group">
     <div class="${properties.kcLabelWrapperClass!}">
         <label for="user.attributes.dob" class="${properties.kcLabelClass!}">
@@ -89,7 +89,7 @@
 
 我们可以通过在我们的领域定义文件 [`baeldung-realm.json`](/web/20221208143856/https://www.baeldung.com/keycloak-embedded-in-spring-boot-app#keycloak-config) 中将`registrationAllowed` 设置为`true`来做到这一点:
 
-```
+```java
 "registrationAllowed" : true,
 ```
 

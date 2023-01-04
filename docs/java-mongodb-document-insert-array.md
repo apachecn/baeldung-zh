@@ -14,7 +14,7 @@ MongoDB 是最流行的开源分布式面向文档的 NoSQL 数据库。MongoDB 
 
 在我们继续插入查询之前，让我们首先创建一个数据库。让我们称之为`baeldung. `我们还将创建一个名为`student:`的样本集合
 
-```
+```java
 use baeldung;
 db.createCollection(student);
 ```
@@ -25,7 +25,7 @@ db.createCollection(student);
 
 **要使用 MongoDB Shell 将数组插入到集合中，我们可以简单地将数组作为 JSON 数组类型**传递给 Shell:
 
-```
+```java
 db.student.insert({
     "studentId" : "STU1",
     "name" : "Avin",
@@ -36,13 +36,13 @@ db.student.insert({
 
 上面的查询在`student`集合中插入一个带有数组的文档。我们可以通过使用 [`find`](/web/20221207153629/https://www.baeldung.com/mongodb-find) 操作符查询`student`集合的文档来验证结果:
 
-```
+```java
 db.student.find();
 ```
 
 以上查询返回插入的`student`收款单:
 
-```
+```java
 {
     "_id" : ObjectId("631da4197581ba6bc1d2524d"),
     "studentId" : "STU1",
@@ -70,7 +70,7 @@ MongoDB Java 驱动程序提供了各种方便的方法来帮助我们将文档�
 
 让我们将一个带有数组的`DBObject`文档插入到`student`集合中:
 
-```
+```java
 BasicDBList coursesList = new BasicDBList();
 coursesList.add("Chemistry");
 coursesList.add("Science");
@@ -95,7 +95,7 @@ dbCollection.insert(student);
 
 首先，让我们使用`insertOne()`方法将带有数组的单个文档插入集合:
 
-```
+```java
 List coursesList = new ArrayList<>();
 coursesList.add("Science");
 coursesList.add("Geography");
@@ -114,7 +114,7 @@ collection.insertOne(student);
 
 让我们使用`insertMany()`方法将带有数组的多个文档插入到集合中:
 
-```
+```java
 List coursesList1 = new ArrayList<>();
 coursesList1.add("Chemistry");
 coursesList1.add("Geography");
@@ -146,7 +146,7 @@ collection.insertMany(students);
 
 最后，让我们将一个`Object`数组类型的文档插入 MongoDB 集合:
 
-```
+```java
 Document course1 = new Document().append("name", "C1")
   .append("points", 5);
 

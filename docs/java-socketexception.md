@@ -18,7 +18,7 @@
 
 网络连接不良可能是根本问题。设置较高的套接字连接超时可以降低慢速连接的`SocketException`速率:
 
-```
+```java
 socket.setSoTimeout(30000); // timeout set to 30,000 ms
 ```
 
@@ -38,14 +38,14 @@ socket.setSoTimeout(30000); // timeout set to 30,000 ms
 
 为了演示这一点，让我们在端口 6699 上启动一个服务器:
 
-```
+```java
 SocketServer server = new SocketServer();
 server.start(6699);
 ```
 
 当服务器启动时，我们将等待来自客户端的消息:
 
-```
+```java
 serverSocket = new ServerSocket(port);
 clientSocket = serverSocket.accept();
 out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -55,7 +55,7 @@ String msg = in.readLine();
 
 一旦我们得到它，**我们将响应并关闭连接:**
 
-```
+```java
 out.println("hi");
 in.close();
 out.close();
@@ -65,7 +65,7 @@ serverSocket.close();
 
 因此，假设一个客户端连接到我们的服务器并发送“嗨”:
 
-```
+```java
 SocketClient client = new SocketClient();
 client.startConnection("127.0.0.1", 6699);
 client.sendMessage("hi");
@@ -75,7 +75,7 @@ client.sendMessage("hi");
 
 但是，如果客户端发送另一条消息:
 
-```
+```java
 client.sendMessage("hi again");
 ```
 
@@ -87,7 +87,7 @@ client.sendMessage("hi again");
 
 让我们来处理例子中的异常:
 
-```
+```java
 try {
     client.sendMessage("hi");
     client.sendMessage("hi again");
@@ -98,7 +98,7 @@ try {
 
 这里，我们已经在异常发生后关闭了客户端连接。**重试不起作用，因为连接已经关闭。我们应该开始一个新的连接:**
 
-```
+```java
 client.startConnection("127.0.0.1", 6699);
 client.sendMessage("hi again");
 ```

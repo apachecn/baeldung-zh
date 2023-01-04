@@ -12,7 +12,7 @@
 
 首先，让我们创建一个脚本，`log-event.sh.`它只是在文件中添加一行，然后打印出来:
 
-```
+```java
 #!/bin/sh
 
 echo `date` [[email protected]](/web/20221111103508/https://www.baeldung.com/cdn-cgi/l/email-protection) >> log.txt;
@@ -21,7 +21,7 @@ cat log.txt;
 
 现在，让我们创建一个简单的 Dockerfile 文件:
 
-```
+```java
 FROM alpine
 ADD log-event.sh /
 ```
@@ -34,7 +34,7 @@ ADD log-event.sh /
 
 首先，我们将在 docker 文件中添加一条`run`指令:
 
-```
+```java
 FROM alpine
 ADD log-event.sh /
 RUN ["/log-event.sh", "image created"]
@@ -42,19 +42,19 @@ RUN ["/log-event.sh", "image created"]
 
 其次，让我们用以下方式建立我们的形象:
 
-```
+```java
 docker build -t myimage .
 ```
 
 现在我们希望有一个 Docker 图像，其中包含一个带有一行`image created`的`log.txt`文件。让我们通过运行一个基于图像的容器来检查这一点:
 
-```
+```java
 docker run myimage cat log.txt
 ```
 
 当列出文件的内容时，我们将看到如下输出:
 
-```
+```java
 Fri Sep 18 20:31:12 UTC 2020 image created
 ```
 
@@ -66,7 +66,7 @@ Fri Sep 18 20:31:12 UTC 2020 image created
 
 使用 **`cmd`指令，我们可以指定容器启动时执行的默认命令。**让我们在 docker 文件中添加一个`cmd`条目，看看它是如何工作的:
 
-```
+```java
 ...
 RUN ["/log-event.sh", "image created"]
 CMD ["/log-event.sh", "container started"]
@@ -74,7 +74,7 @@ CMD ["/log-event.sh", "container started"]
 
 构建完映像后，现在让我们运行它并检查输出:
 
-```
+```java
 $ docker run myimage
 Fri Sep 18 18:27:49 UTC 2020 image created
 Fri Sep 18 18:34:06 UTC 2020 container started
@@ -84,7 +84,7 @@ Fri Sep 18 18:34:06 UTC 2020 container started
 
 注意，我们这次使用了一个稍微不同的`docker run`命令来启动我们的容器。让我们看看，如果运行与之前相同的命令，会发生什么情况:
 
-```
+```java
 $ docker run myimage cat log.txt
 Fri Sep 18 18:27:49 UTC 2020 image created
 ```
@@ -93,7 +93,7 @@ Fri Sep 18 18:27:49 UTC 2020 image created
 
 现在让我们继续，看看如果 docker 文件中有不止一个`cmd`条目会发生什么。让我们添加一个新条目来显示另一条消息:
 
-```
+```java
 ...
 RUN ["/log-event.sh", "image created"]
 CMD ["/log-event.sh", "container started"]
@@ -102,7 +102,7 @@ CMD ["/log-event.sh", "container running"]
 
 构建映像并再次运行容器后，我们会发现以下输出:
 
-```
+```java
 $ docker run myimage
 Fri Sep 18 18:49:44 UTC 2020 image created
 Fri Sep 18 18:49:58 UTC 2020 container running
@@ -116,7 +116,7 @@ Fri Sep 18 18:49:58 UTC 2020 container running
 
 让我们用`entrypoint:`替换 docker 文件中的`cmd`条目
 
-```
+```java
 ...
 RUN ["/log-event.sh", "image created"]
 ENTRYPOINT ["/log-event.sh"]
@@ -124,7 +124,7 @@ ENTRYPOINT ["/log-event.sh"]
 
 现在让我们通过提供一个自定义文本条目来运行容器:
 
-```
+```java
 $ docker run myimage container running now
 Fri Sep 18 20:57:20 UTC 2020 image created
 Fri Sep 18 20:59:51 UTC 2020 container running now
@@ -140,7 +140,7 @@ Fri Sep 18 20:59:51 UTC 2020 container running now
 
 一个这样的用例是为`entrypoint.` 定义默认参数，让我们在 docker 文件中的`entrypoint`后添加一个`cmd`条目:
 
-```
+```java
 ...
 RUN ["/log-event.sh", "image created"]
 ENTRYPOINT ["/log-event.sh"]
@@ -149,7 +149,7 @@ CMD ["container started"]
 
 现在，让我们在不提供任何参数的情况下运行我们的容器，并使用在`cmd`中指定的默认值:
 
-```
+```java
 $ docker run myimage
 Fri Sep 18 21:26:12 UTC 2020 image created
 Fri Sep 18 21:26:18 UTC 2020 container started
@@ -157,7 +157,7 @@ Fri Sep 18 21:26:18 UTC 2020 container started
 
 如果我们愿意，也可以覆盖它们:
 
-```
+```java
 $ docker run myimage custom event
 Fri Sep 18 21:26:12 UTC 2020 image created
 Fri Sep 18 21:27:25 UTC 2020 custom event
@@ -165,7 +165,7 @@ Fri Sep 18 21:27:25 UTC 2020 custom event
 
 需要注意的是,`entrypoint`以 shell 形式使用时的不同行为。让我们更新 docker 文件中的`entrypoint`:
 
-```
+```java
 ...
 RUN ["/log-event.sh", "image created"]
 ENTRYPOINT /log-event.sh

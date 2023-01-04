@@ -14,7 +14,7 @@
 
 首先，让我们从 GitHub 克隆`myRepo`库(`https://github.com/sk1418/myRepo`)进行测试:
 
-```
+```java
 $ git clone [[email protected]](/web/20221003155508/https://www.baeldung.com/cdn-cgi/l/email-protection):sk1418/myRepo.git
 Cloning into 'myRepo'...
 ...
@@ -24,7 +24,7 @@ Receiving objects: 100% (6/6), done
 
 其次，让我们进入本地`myRepo`目录并检查分支:
 
-```
+```java
 $ git branch -a
 * master
   remotes/origin/HEAD -> origin/master
@@ -47,21 +47,21 @@ $ git branch -a
 
 首先，让我们尝试创建一个本地分支:
 
-```
+```java
 $ git checkout -b feature
 Switched to a new branch 'feature'
 ```
 
 接下来，让我们使用`-d`选项删除`feature`分支:
 
-```
+```java
 $ git branch -d feature
 error: Cannot delete branch 'feature' checked out at '/tmp/test/myRepo'
 ```
 
 哎呀，正如我们所看到的，我们收到了一条错误消息。这是因为我们目前在`feature`分支:
 
-```
+```java
 $ git branch
 * feature
   master
@@ -69,7 +69,7 @@ $ git branch
 
 **换句话说，我们不能删除当前检出的分支。**所以，让我们切换到`master`分支，再次发出命令:
 
-```
+```java
 $ git checkout master
 Switched to branch 'master'
 Your branch is up to date with 'origin/master'.
@@ -88,7 +88,7 @@ remotes/origin/master
 
 首先，让我们再次创建`feature`分支。但这一次，我们将做一些更改并提交:
 
-```
+```java
 $ git checkout -b feature
 Switched to a new branch 'feature'
 
@@ -109,7 +109,7 @@ $ git ci -am'add "feature" to the readme'
 
 现在，如果我们仍然使用`-d`选项，Git 将拒绝删除`feature`分支:
 
-```
+```java
 $ git checkout master
 Switched to branch 'master'
 Your branch is up to date with 'origin/master'.
@@ -121,7 +121,7 @@ If you are sure you want to delete it, run 'git branch -D feature'.
 
 **这是因为要删除的分支(`feature`)在默认分支(`master` )** 之前:
 
-```
+```java
 $ git log --graph --abbrev-commit 
 * commit 4a87db9 (HEAD -> feature)
 | Author: ...
@@ -143,7 +143,7 @@ $ git log --graph --abbrev-commit
 
 然而，如果我们想要丢弃未合并的提交，正如错误消息所建议的，我们可以**运行`git branch -D feature`来执行强制删除:**
 
-```
+```java
 $ git branch -D feature
 Deleted branch feature (was 4a87db9)
 
@@ -159,7 +159,7 @@ remotes/origin/master.
 
 接下来，我们通过一个例子来理解这一点。同样，让我们创建一个`feature`分支，进行一些更改，并将提交推送到远程存储库:
 
-```
+```java
 $ git checkout -b feature
 Switched to a new branch 'feature'
 
@@ -180,7 +180,7 @@ To github.com:sk1418/myRepo.git
 
 因此，本地`feature`分支正在跟踪远程`feature`分支:
 
-```
+```java
 $ git remote show origin | grep feature
     feature tracked
     feature pushes to feature (up to date)
@@ -188,7 +188,7 @@ $ git remote show origin | grep feature
 
 由于我们没有将`feature `合并到`master`中，让我们用`-D`选项删除局部特征分支:
 
-```
+```java
 $ git checkout master
 Switched to branch 'master'
 Your branch is up to date with 'origin/master'.
@@ -207,7 +207,7 @@ $ git branch -a
 
 现在，如果我们再次检查`feature`分支，我们所做的更改仍然存在:
 
-```
+```java
 $ git checkout feature
 Switched to branch 'feature'
 Your branch is up to date with 'origin/feature'.
@@ -225,7 +225,7 @@ a wonderful new file
 
 在我们删除远程`feature`之前，让我们首先创建一个本地`feature`分支来跟踪远程分支。这是因为我们希望检查删除远程分支是否会影响本地分支的跟踪:
 
-```
+```java
 $ git checkout feature 
 branch 'feature' set up to track 'origin/feature'.
 Switched to a new branch 'feature'
@@ -241,7 +241,7 @@ $ git branch -a
 
 接下来，让我们删除远程`feature`分支:
 
-```
+```java
 $ git push origin -d feature
 To github.com:sk1418/myRepo.git
  - [deleted]         feature

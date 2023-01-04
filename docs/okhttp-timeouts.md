@@ -18,7 +18,7 @@
 
 现在让我们看看如何构建和使用带有自定义连接超时的`OkHttpClient`:
 
-```
+```java
 @Test
 public void whenConnectTimeoutExceeded_thenSocketTimeoutException() {
     OkHttpClient client = new OkHttpClient.Builder()
@@ -47,7 +47,7 @@ public void whenConnectTimeoutExceeded_thenSocketTimeoutException() {
 
 现在让我们看看如何在实践中配置自定义读取超时:
 
-```
+```java
 @Test
 public void whenReadTimeoutExceeded_thenSocketTimeoutException() {
     OkHttpClient client = new OkHttpClient.Builder()
@@ -74,7 +74,7 @@ public void whenReadTimeoutExceeded_thenSocketTimeoutException() {
 
 在下面的示例中，我们设置了一个非常短的写入超时(10 ms ),并向服务器发送一个 1 MB 的内容:
 
-```
+```java
 @Test
 public void whenWriteTimeoutExceeded_thenSocketTimeoutException() {
     OkHttpClient client = new OkHttpClient.Builder()
@@ -104,7 +104,7 @@ public void whenWriteTimeoutExceeded_thenSocketTimeoutException() {
 
 让我们来看一个实际的使用例子:
 
-```
+```java
 @Test
 public void whenCallTimeoutExceeded_thenInterruptedIOException() {
     OkHttpClient client = new OkHttpClient.Builder()
@@ -133,7 +133,7 @@ public void whenCallTimeoutExceeded_thenInterruptedIOException() {
 
 现在让我们看看如何在实践中做到这一点:
 
-```
+```java
 @Test
 public void whenPerRequestTimeoutExtended_thenResponseSuccess() throws IOException {
     OkHttpClient defaultClient = new OkHttpClient.Builder()

@@ -49,7 +49,7 @@ AMQP 是异步消息通信的开放标准线路规范。它描述了应该如何
 
 我们需要一个 RabbitMQ 代理可供我们连接。最简单的方法是使用 Docker 为我们获取并运行一个 RabbitMQ 映像:
 
-```
+```java
 docker run -d -p 5672:5672 -p 15672:15672 --name my-rabbit rabbitmq:3-management
 ```
 
@@ -65,7 +65,7 @@ docker run -d -p 5672:5672 -p 15672:15672 --name my-rabbit rabbitmq:3-management
 
 为了将`spring-amqp`和`spring-rabbit`模块添加到我们的项目中，我们将`spring-boot-starter-amqp`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -81,7 +81,7 @@ docker run -d -p 5672:5672 -p 15672:15672 --name my-rabbit rabbitmq:3-management
 
 **我们将使用 Spring Boot 的自动配置来创建我们的`ConnectionFactory`、`RabbitTemplate`和`RabbitAdmin`bean**。因此，我们使用默认用户名和密码“guest”在端口 5672 上连接到我们的 RabbitMQ 代理。因此，我们只是用`@SpringBootApplication`来注释我们的应用程序:
 
-```
+```java
 @SpringBootApplication
 public class HelloWorldMessageApp {
    // ...
@@ -92,7 +92,7 @@ public class HelloWorldMessageApp {
 
 **为了创建我们的队列，我们简单地定义了一个类型为`Queue`的 bean。** `RabbitAdmin`会找到这个，并使用路由关键字“myQueue”将其绑定到默认交换机:
 
-```
+```java
 @Bean
 public Queue myQueue() {
     return new Queue("myQueue", false);
@@ -105,7 +105,7 @@ public Queue myQueue() {
 
 让我们**用`RabbitTemplate`向**发送我们的“你好，世界！”消息:
 
-```
+```java
 rabbitTemplate.convertAndSend("myQueue", "Hello, world!");
 ```
 
@@ -113,7 +113,7 @@ rabbitTemplate.convertAndSend("myQueue", "Hello, world!");
 
 我们将通过用`@RabbitListener`注释一个方法来实现一个消息消费者:
 
-```
+```java
 @RabbitListener(queues = "myQueue")
 public void listen(String in) {
     System.out.println("Message read from myQueue : " + in);
@@ -124,13 +124,13 @@ public void listen(String in) {
 
 首先，我们启动 RabbitMQ 代理:
 
-```
+```java
 docker run -d -p 5672:5672 -p 15672:15672 --name my-rabbit rabbitmq:3-management
 ```
 
 然后，我们通过运行`HelloWorldMessage.java`来运行 spring boot 应用程序，执行`main()`方法:
 
-```
+```java
 mvn spring-boot:run -Dstart-class=com.baeldung.springamqp.simple.HelloWorldMessageApp
 ```
 

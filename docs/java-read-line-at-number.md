@@ -10,7 +10,7 @@
 
 让我们首先创建一个名为`inputLines.txt`的简单文件，我们将在所有示例中使用它:
 
-```
+```java
 Line 1
 Line 2
 Line 3
@@ -24,7 +24,7 @@ Line 5
 
 **我们可以逐行读取文件，并在需要时停止:**
 
-```
+```java
 @Test
 public void givenFile_whenUsingBufferedReader_thenExtractedLineIsCorrect() {
     try (BufferedReader br = Files.newBufferedReader(Paths.get(FILE_PATH))) {
@@ -42,7 +42,7 @@ public void givenFile_whenUsingBufferedReader_thenExtractedLineIsCorrect() {
 
 我们可以采取的另一种类似的方法是使用 [`Scanner`](/web/20220707094748/https://www.baeldung.com/java-scanner) :
 
-```
+```java
 @Test
 public void givenFile_whenUsingScanner_thenExtractedLineIsCorrect() {
     try (Scanner scanner = new Scanner(new File(FILE_PATH))) {
@@ -64,7 +64,7 @@ public void givenFile_whenUsingScanner_thenExtractedLineIsCorrect() {
 
 我们可以使用来自[文件 API](/web/20220707094748/https://www.baeldung.com/java-nio-2-file-api) 的`Files.readAllLines()` 轻松地将文件内容读入内存，并提取我们想要的行:
 
-```
+```java
 @Test
 public void givenSmallFile_whenUsingFilesAPI_thenExtractedLineIsCorrect() {
     String extractedLine = Files.readAllLines(Paths.get(FILE_PATH)).get(4);
@@ -77,7 +77,7 @@ public void givenSmallFile_whenUsingFilesAPI_thenExtractedLineIsCorrect() {
 
 **如果我们需要处理大文件，我们应该使用`lines`方法，它返回一个`Stream`，这样我们就可以逐行读取文件:**
 
-```
+```java
 @Test
 public void givenLargeFile_whenUsingFilesAPI_thenExtractedLineIsCorrect() {
     try (Stream lines = Files.lines(Paths.get(FILE_PATH))) {
@@ -92,7 +92,7 @@ public void givenLargeFile_whenUsingFilesAPI_thenExtractedLineIsCorrect() {
 
 另一种选择是使用 [**commons-io**](/web/20220707094748/https://www.baeldung.com/apache-commons-io) 包的`FileUtils `类，该类读取整个文件并返回一列`String`行:
 
-```
+```java
 @Test
 public void givenFile_whenUsingFileUtils_thenExtractedLineIsCorrect() {
     ClassLoader classLoader = getClass().getClassLoader();
@@ -107,7 +107,7 @@ public void givenFile_whenUsingFileUtils_thenExtractedLineIsCorrect() {
 
 **我们也可以使用`IOUtils`类来达到同样的结果，只不过这一次，整个内容作为一个`String`返回，我们自己要做拆分:**
 
-```
+```java
 @Test
 public void givenFile_whenUsingIOUtils_thenExtractedLineIsCorrect() {
     String fileContent = IOUtils.toString(new FileInputStream(FILE_PATH), StandardCharsets.UTF_8);

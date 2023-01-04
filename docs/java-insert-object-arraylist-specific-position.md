@@ -14,7 +14,7 @@
 
 首先，我们将创建一个新的`ArrayList`并向其添加四个元素:
 
-```
+```java
 List<Integer> integers = new ArrayList<>();
 integers.add(5);
 integers.add(6);
@@ -29,7 +29,7 @@ System.out.println(integers);
 
 现在，如果我们在索引 1 处添加另一个元素:
 
-```
+```java
 integers.add(1,9);
 System.out.println(integers);
 ```

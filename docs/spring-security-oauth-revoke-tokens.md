@@ -16,7 +16,7 @@
 
 首先，让我们设置令牌存储；我们将使用一个`JdbcTokenStore`，以及附带的数据源:
 
-```
+```java
 @Bean 
 public TokenStore tokenStore() { 
     return new JdbcTokenStore(dataSource()); 
@@ -37,7 +37,7 @@ public DataSource dataSource() {
 
 处理所有令牌的类是`DefaultTokenServices`–在我们的配置中必须定义为 bean:
 
-```
+```java
 @Bean
 @Primary
 public DefaultTokenServices tokenServices() {
@@ -54,7 +54,7 @@ public DefaultTokenServices tokenServices() {
 
 我们将访问控制器中的`TokenStore`,并为指定的客户端 id 检索当前存储的令牌:
 
-```
+```java
 @Resource(name="tokenStore")
 TokenStore tokenStore;
 
@@ -76,7 +76,7 @@ public List<String> getTokens() {
 
 为了使令牌无效，我们将利用来自`ConsumerTokenServices`接口的`revokeToken()` API:
 
-```
+```java
 @Resource(name="tokenServices")
 ConsumerTokenServices tokenServices;
 
@@ -94,7 +94,7 @@ public String revokeToken(@PathVariable String tokenId) {
 
 对于我们示例的前端，我们将显示有效令牌的列表、发出撤销请求的登录用户当前使用的令牌，以及用户可以输入他们希望撤销的令牌的字段:
 
-```
+```java
 $scope.revokeToken = 
   $resource("http://localhost:8082/spring-security-oauth-resource/tokens/revoke/:tokenId",
   {tokenId:'@tokenId'});
@@ -121,7 +121,7 @@ $scope.revokeAccessToken = function(){
 
 如果我们也想使刷新令牌本身无效，我们可以使用类`JdbcTokenStore`的方法`removeRefreshToken()`，它将从存储中删除刷新令牌:
 
-```
+```java
 @RequestMapping(method = RequestMethod.POST, value = "/tokens/revokeRefreshToken/{tokenId:.*}")
 @ResponseBody
 public String revokeRefreshToken(@PathVariable String tokenId) {
@@ -136,7 +136,7 @@ public String revokeRefreshToken(@PathVariable String tokenId) {
 
 我们将看到，在撤销之后，我们将收到响应错误:“无效的刷新令牌”:
 
-```
+```java
 public class TokenRevocationLiveTest {
     private String refreshToken;
 

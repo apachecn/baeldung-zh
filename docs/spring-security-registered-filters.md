@@ -14,7 +14,7 @@ Spring 安全性基于一系列 servlet 过滤器。每个过滤器都有特定�
 
 我们可以使用`debug`属性启用安全调试:
 
-```
+```java
 @EnableWebSecurity(debug = true)
 ```
 
@@ -22,7 +22,7 @@ Spring 安全性基于一系列 servlet 过滤器。每个过滤器都有特定�
 
 我们还将能够看到整个安全过滤器链:
 
-```
+```java
 Security filter chain: [
   WebAsyncManagerIntegrationFilter
   SecurityContextPersistenceFilter
@@ -39,13 +39,13 @@ Security filter chain: [
 
 我们可以通过向`application.properties`添加下面一行来启用日志记录:
 
-```
+```java
 logging.level.org.springframework.security.web.FilterChainProxy=DEBUG
 ```
 
 以下是相关日志:
 
-```
+```java
 DEBUG o.s.security.web.FilterChainProxy - /foos/1 at position 1 of 12 in additional filter chain; firing Filter: 'WebAsyncManagerIntegrationFilter'
 DEBUG o.s.security.web.FilterChainProxy - /foos/1 at position 2 of 12 in additional filter chain; firing Filter: 'SecurityContextPersistenceFilter'
 DEBUG o.s.security.web.FilterChainProxy - /foos/1 at position 3 of 12 in additional filter chain; firing Filter: 'HeaderWriterFilter'
@@ -62,7 +62,7 @@ DEBUG o.s.security.web.FilterChainProxy - /foos/1 at position 5 of 12 in additio
 
 首先，让我们自动连接`springSecurityFilterChain` bean:
 
-```
+```java
 @Autowired
 @Qualifier("springSecurityFilterChain")
 private Filter springSecurityFilterChain;
@@ -72,7 +72,7 @@ private Filter springSecurityFilterChain;
 
 接下来，我们将这个对象转换为`FilterChainProxy`并调用`getFilterChains()`方法:
 
-```
+```java
 public void getFilters() {
     FilterChainProxy filterChainProxy = (FilterChainProxy) springSecurityFilterChain;
     List<SecurityFilterChain> list = filterChainProxy.getFilterChains();
@@ -84,7 +84,7 @@ public void getFilters() {
 
 这是一个输出示例:
 
-```
+```java
 class org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter
 class org.springframework.security.web.context.SecurityContextPersistenceFilter
 class org.springframework.security.web.header.HeaderWriterFilter

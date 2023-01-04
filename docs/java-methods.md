@@ -39,7 +39,7 @@
 
 让我们看一个`void `方法的例子:
 
-```
+```java
 public void printFullName(String firstName, String lastName) {
     System.out.println(firstName + " " + lastName);
 }
@@ -63,7 +63,7 @@ public void printFullName(String firstName, String lastName) {
 
 因此，让我们来看一下前面方法的一个更复杂的变体，它抛出一个检查过的异常:
 
-```
+```java
 public void writeName(String name) throws IOException {
     PrintWriter out = new PrintWriter(new FileWriter("OutFile.txt"));
     out.println("Name: " + name);
@@ -81,7 +81,7 @@ public void writeName(String name) throws IOException {
 
 所以，让我们写一个简单的方法:
 
-```
+```java
 public String getName(String firstName, String lastName) {
   return firstName + " " + middleName + " " + lastName;
 }
@@ -95,7 +95,7 @@ public String getName(String firstName, String lastName) {
 
 现在，让我们探索如何用 Java 调用方法。根据前面的例子，让我们假设这些方法包含在一个名为`PersonName`的 [Java 类](/web/20220630004458/https://www.baeldung.com/java-classes-objects)中:
 
-```
+```java
 public class PersonName {
   public String getName(String firstName, String lastName) {
     return firstName + " " + middleName + " " + lastName;
@@ -105,7 +105,7 @@ public class PersonName {
 
 由于我们的`getName`方法是一个实例方法而不是一个`static`方法，为了调用方法`getName`，我们需要**创建一个类** `PersonName`的实例:
 
-```
+```java
 PersonName personName = new PersonName();
 String fullName = personName.getName("Alan", "Turing");
 ```
@@ -116,7 +116,7 @@ String fullName = personName.getName("Alan", "Turing");
 
 让我们使用前一个示例的变体来演示:
 
-```
+```java
 public class PersonName {
   public static String getName(String firstName, String lastName) {
     return firstName + " " + middleName + " " + lastName;
@@ -126,7 +126,7 @@ public class PersonName {
 
 在这种情况下，方法调用是:
 
-```
+```java
 String fullName = PersonName.getName("Alan", "Turing");
 ```
 
@@ -134,7 +134,7 @@ String fullName = PersonName.getName("Alan", "Turing");
 
 Java 允许我们拥有**两个或更多具有相同标识符但不同参数列表的方法——不同的方法签名**。在这种情况下，我们说**方法是重载的**。让我们举个例子:
 
-```
+```java
 public String getName(String firstName, String lastName) {
   return getName(firstName, "", lastName);
 }

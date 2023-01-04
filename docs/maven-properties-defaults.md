@@ -14,7 +14,7 @@ Maven 属性允许我们在一个地方定义值，并在项目定义中的几�
 
 **最常见的是，我们在 POM** 中定义 Maven 属性的默认值——为了演示这一点，我们将创建一个保存库依赖项默认值的属性。让我们从在 POM 中定义属性及其默认值开始:
 
-```
+```java
 <properties>
     <junit.version>4.13</junit.version>
 </properties> 
@@ -32,7 +32,7 @@ Maven 属性允许我们在一个地方定义值，并在项目定义中的几�
 
 **当执行 Maven 命令**时，我们可以在[命令行](/web/20220926182749/https://www.baeldung.com/maven-arguments)上定义属性的默认值。在本例中，我们将默认值`4.13`更改为`4.12`:
 
-```
+```java
 mvn install -Djunit.version=4.12
 ```
 
@@ -40,7 +40,7 @@ mvn install -Djunit.version=4.12
 
 我们可以在 POM 的其他地方引用我们的默认属性值，所以让我们继续定义`junit` 依赖项，并使用我们的属性来检索版本号:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>junit</groupId>

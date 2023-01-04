@@ -18,7 +18,7 @@
 
 在我们的例子中，我们将使用这个简单的`Company` 类:
 
-```
+```java
 public class Company {
 
     private long id;
@@ -32,7 +32,7 @@ public class Company {
 
 控制器方法也是一个简单的实现——返回`Company`实例:
 
-```
+```java
 @RestController
 public class CompanyController {
 
@@ -47,7 +47,7 @@ public class CompanyController {
 
 在客户端，我们可以使用`jQuery`库创建并发送一个 AJAX 请求:
 
-```
+```java
 $.ajax({
     url: 'http://localhost:8080/spring-mvc-java/companyRest',
     data: {
@@ -60,13 +60,13 @@ $.ajax({
 
 考虑一个针对以下 URL 的 AJAX 请求:
 
-```
+```java
 http://localhost:8080/spring-mvc-java/companyRest 
 ```
 
 服务器的响应如下:
 
-```
+```java
 {"id":1,"name":"Xpto"}
 ```
 
@@ -76,7 +76,7 @@ http://localhost:8080/spring-mvc-java/companyRest
 
 通过将请求 URL 更改为:
 
-```
+```java
 http://127.0.0.1:8080/spring-mvc-java/companyRest 
 ```
 
@@ -84,13 +84,13 @@ http://127.0.0.1:8080/spring-mvc-java/companyRest
 
 使用 JSON-P，我们能够向请求添加一个回调参数:
 
-```
+```java
 http://127.1.1.1:8080/spring-mvc-java/companyRest?callback=getCompanyData 
 ```
 
 在客户端，向 AJAX 请求添加以下参数非常简单:
 
-```
+```java
 $.ajax({
     ...
     jsonpCallback:'getCompanyData',
@@ -103,7 +103,7 @@ $.ajax({
 
 如果服务器格式化响应，如下所示:
 
-```
+```java
 getCompanyData({"id":1,"name":"Xpto"}); 
 ```
 
@@ -123,7 +123,7 @@ getCompanyData({"id":1,"name":"Xpto"});
 
 为了启用对 JSON-P 的 Spring 支持，让我们从配置开始:
 
-```
+```java
 @ControllerAdvice
 public class JsonpControllerAdvice 
   extends AbstractJsonpResponseBodyAdvice {
@@ -142,13 +142,13 @@ public class JsonpControllerAdvice
 
 有了前面讨论的配置，我们就能够让 REST 应用程序用 JSON-P 进行响应了。在下面的例子中，我们将返回公司的数据，所以我们的 AJAX 请求 URL 应该是这样的:
 
-```
+```java
 http://127.0.0.1:8080/spring-mvc-java/companyRest?callback=getCompanyData 
 ```
 
 由于前面的配置，响应将如下所示:
 
-```
+```java
 getCompanyData({"id":1,"name":"Xpto"});
 ```
 

@@ -18,7 +18,7 @@ Spring 应用程序中负责处理 web 请求的主要组件是`[DispatcherServl
 
 第一种方法是引入新的 Spring bean:
 
-```
+```java
 @Configuration
 public class DispatcherServletCustomConfiguration {
 
@@ -42,13 +42,13 @@ public class DispatcherServletCustomConfiguration {
 
 我们也可以通过使用应用程序属性来获得相同的结果。在 Spring Boot 2 . 0 . 0 之后的版本中，我们会将以下内容添加到我们的`application.properties`文件中:
 
-```
+```java
 server.servlet.contextPath=/api
 ```
 
 在该版本之前，属性名称略有不同:
 
-```
+```java
 server.contextPath=/api
 ```
 
@@ -68,7 +68,7 @@ server.contextPath=/api
 
 第一种方式包括使用标准的`@RequestMapping annotation`和 [Spring 表达式语言](/web/20220815034912/https://www.baeldung.com/spring-expression-language) (SpEL)。使用这种方法，我们只需向每个想要添加前缀的控制器添加一个属性:
 
-```
+```java
 @Controller
 @RequestMapping(path = "${apiPrefix}/users")
 public class UserController {
@@ -78,7 +78,7 @@ public class UserController {
 
 然后，我们只需在我们的`application.properties`中指定属性值:
 
-```
+```java
 apiPrefix=/api
 ```
 
@@ -86,7 +86,7 @@ apiPrefix=/api
 
 另一种方法是创建我们自己的注释:
 
-```
+```java
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
@@ -100,7 +100,7 @@ public @interface ApiPrefixController {
 
 然后，我们只需要将注释应用到我们想要添加前缀的每个控制器:
 
-```
+```java
 @Controller
 @ApiPrefixController
 public class SomeController {
@@ -122,7 +122,7 @@ public class SomeController {
 
 首先，让我们编写一个具有两个端点的简单控制器:
 
-```
+```java
 @Controller
 class EndpointController {
     @GetMapping("/endpoint1")
@@ -141,7 +141,7 @@ class EndpointController {
 
 接下来，我们根据我们想要的前缀创建一个新的控制器:
 
-```
+```java
 @Controller
 @RequestMapping("/api/endpoint")
 public class ApiPrefixController {
@@ -162,7 +162,7 @@ public class ApiPrefixController {
 
 我们可以通过发送几个连续的请求来验证它是否工作:
 
-```
+```java
 > curl http://localhost:8080/api/endpoint
 Hello from endpoint 2
 > curl http://localhost:8080/api/endpoint

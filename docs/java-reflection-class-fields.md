@@ -14,7 +14,7 @@
 
 让我们从一个有两个字段`String`的`Person`类的例子开始:`lastName`和`firstName`。前者是*保护的*(稍后会有用)而后者是`private:`
 
-```
+```java
 public class Person {
     protected String lastName;
     private String firstName;
@@ -23,7 +23,7 @@ public class Person {
 
 我们希望使用反射获得`lastName`和`firstName`字段。我们将通过使用`Class::getDeclaredFields`方法来实现这一点。顾名思义，它以`Field`数组:的形式返回一个类的所有`declared`字段
 
-```
+```java
 public class PersonAndEmployeeReflectionUnitTest {
 
     /* ... constants ... */
@@ -55,7 +55,7 @@ public class PersonAndEmployeeReflectionUnitTest {
 
 为了说明这一点，让我们创建第二个名为`Employee`的扩展`Person`的类，它有自己的字段:
 
-```
+```java
 public class Employee extends Person {
     public int employeeId;
 }
@@ -71,7 +71,7 @@ public class Employee extends Person {
 
 让我们收集`Employee.class`和`Employee.class.getSuperclass()`上`getDeclaredFields()`的结果，并将它们合并成一个数组:
 
-```
+```java
 @Test
 public void givenEmployeeClass_whenGetDeclaredFieldsOnBothClasses_thenThreeFields() {
     Field[] personFields = Employee.class.getSuperclass().getDeclaredFields();
@@ -112,7 +112,7 @@ public void givenEmployeeClass_whenGetDeclaredFieldsOnBothClasses_thenThreeField
 
 我们很幸运，因为 Java 为我们提供了一个实用程序类来检查修饰符是否出现在由`getModifiers()`返回的值中。**让我们使用`isPublic()`和`isProtected()`方法只收集我们示例中的继承字段:**
 
-```
+```java
 List<Field> personFields = Arrays.stream(Employee.class.getSuperclass().getDeclaredFields())
   .filter(f -> Modifier.isPublic(f.getModifiers()) || Modifier.isProtected(f.getModifiers()))
   .collect(Collectors.toList());
@@ -135,7 +135,7 @@ assertTrue(personFields.stream().anyMatch(field ->
 
 我们可以通过创建贯穿层次结构的实用方法来实现这一点，为我们构建完整的结果:
 
-```
+```java
 List<Field> getAllFields(Class clazz) {
     if (clazz == null) {
         return Collections.emptyList();
@@ -154,7 +154,7 @@ List<Field> getAllFields(Class clazz) {
 
 让我们用一个新的`MonthEmployee`类的小测试来说明它，扩展了`Employee`类:
 
-```
+```java
 public class MonthEmployee extends Employee {
     protected double reward;
 }
@@ -164,7 +164,7 @@ public class MonthEmployee extends Employee {
 
 让我们调用`MonthEmployee`上的`getAllFields()`方法:
 
-```
+```java
 @Test
 public void givenMonthEmployeeClass_whenGetAllFields_thenThreeFields() {
     List<Field> allFields = getAllFields(MonthEmployee.class);

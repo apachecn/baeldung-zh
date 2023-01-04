@@ -47,7 +47,7 @@ Matt Welsh 论文中的上图描述了用 SEDA 实现的 web 服务器的整体�
 
 让我们将一个单词定义为一个没有空格的字符序列，我们将忽略其他复杂因素，如标点符号。我们的输出将是一个映射，其中包含作为键的单词和作为值的计数。例如，给定输入“`My name is Hesam`”，输出将是:
 
-```
+```java
 {
   "my": 1,
   "name": 1,
@@ -69,28 +69,28 @@ Matt Welsh 论文中的上图描述了用 SEDA 实现的 web 服务器的整体�
 | SEDA 组件 | 弹簧集成 | 阿帕奇骆驼 |
 | 
 
-```
+```java
 Event
 ```
 
  | `org.springframework.messaging.Message` | `org.apache.camel.Exchange` |
 | 
 
-```
+```java
 Event Queue
 ```
 
  | `org.springframework.integration.channel` | 由 URI 字符串定义的端点 |
 | 
 
-```
+```java
 Event Handler
 ```
 
  | 功能接口的实例 | Camel 处理器、Camel 实用程序类和 |
 | 
 
-```
+```java
 Thread Pool
 ```
 
@@ -116,7 +116,7 @@ Spring 集成有三个主要组件:
 
 让我们从添加 [Spring Integration、](https://web.archive.org/web/20221001122150/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-integration) [Spring Boot 测试](https://web.archive.org/web/20221001122150/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-test)和 [Spring Integration Test](https://web.archive.org/web/20221001122150/https://search.maven.org/artifact/org.springframework.integration/spring-integration-test) 的依赖项开始:
 
-```
+```java
 <dependencies>
     <dependency>
 	<groupId>org.springframework.boot</groupId>
@@ -139,7 +139,7 @@ Spring 集成有三个主要组件:
 
 **[消息传递网关](https://web.archive.org/web/20221001122150/https://www.enterpriseintegrationpatterns.com/MessagingGateway.html)是一个代理，它隐藏了向集成流发送消息的复杂性。**让我们为春季集成流程设置一个:
 
-```
+```java
 @MessagingGateway
 public interface IncomingGateway {
     @Gateway(requestChannel = "receiveTextChannel", replyChannel = "returnResponseChannel")
@@ -149,7 +149,7 @@ public interface IncomingGateway {
 
 稍后，我们将能够使用这个网关方法来测试我们的整个流程:
 
-```
+```java
 incomingGateway.countWords("My name is Hesam");
 ```
 
@@ -161,7 +161,7 @@ Spring 将`“My name is Hesam”` 输入包装在`org.springframework.messaging
 
 **在 SEDA 下，通道需要通过相关的线程池**进行扩展，所以让我们从创建一个线程池开始:
 
-```
+```java
 @Bean("receiveTextChannelThreadPool")
 TaskExecutor receiveTextChannelThreadPool() {
     ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -175,7 +175,7 @@ TaskExecutor receiveTextChannelThreadPool() {
 
 接下来，我们将使用线程池来创建通道:
 
-```
+```java
 @Bean(name = "receiveTextChannel")
 MessageChannel getReceiveTextChannel() {
     return MessageChannels.executor("receive-text", receiveTextChannelThreadPool)
@@ -191,7 +191,7 @@ MessageChannel getReceiveTextChannel() {
 
 随着我们的渠道的建立，我们可以开始实施我们的阶段。让我们创建我们的初始阶段:
 
-```
+```java
 @Bean
 IntegrationFlow receiveText() {
     return IntegrationFlows.from(receiveTextChannel)
@@ -208,7 +208,7 @@ IntegrationFlow receiveText() {
 
 我们的下一个阶段只有一个责任:将我们的输入`String`分解成句子中各个单词的`String`数组:
 
-```
+```java
 @Bean
 IntegrationFlow splitWords() {
     return IntegrationFlows.from(splitWordsChannel)
@@ -220,7 +220,7 @@ IntegrationFlow splitWords() {
 
 除了我们以前使用过的`from()`和`channel()`调用，这里我们还使用了`transform()`，它将提供的`Function`应用到我们的输入消息。我们的`splitWordsFunction` 实现很简单:
 
-```
+```java
 final Function<String, String[]> splitWordsFunction = sentence -> sentence.split(" ");
 ```
 
@@ -228,7 +228,7 @@ final Function<String, String[]> splitWordsFunction = sentence -> sentence.split
 
 这个阶段将我们的`String`数组中的每个单词转换成小写:
 
-```
+```java
 @Bean
 IntegrationFlow toLowerCase() {
     return IntegrationFlows.from(toLowerCaseChannel)
@@ -250,13 +250,13 @@ IntegrationFlow toLowerCase() {
 
 我们的发布策略函数使用了`listSizeReached`，它告诉聚合器在收集完输入数组的所有元素后开始聚合:
 
-```
+```java
 final ReleaseStrategy listSizeReached = r -> r.size() == r.getSequenceSize();
 ```
 
 然后， `buildMessageWithListPayload`处理器将我们小写的结果打包成一个`List`:
 
-```
+```java
 final MessageGroupProcessor buildMessageWithListPayload = messageGroup ->
   MessageBuilder.withPayload(messageGroup.streamMessages()
       .map(Message::getPayload)
@@ -268,7 +268,7 @@ final MessageGroupProcessor buildMessageWithListPayload = messageGroup ->
 
 我们的最后阶段将我们的单词计数打包到一个`Map`中，其中的键是来自原始输入的单词，值是每个单词出现的次数:
 
-```
+```java
 @Bean
 IntegrationFlow countWords() {
     return IntegrationFlows.from(countWordsChannel)
@@ -280,7 +280,7 @@ IntegrationFlow countWords() {
 
 这里，我们使用我们的`convertArrayListToCountMap` 函数将我们的计数打包成一个`Map`:
 
-```
+```java
 final Function<List<String>, Map<String, Long>> convertArrayListToCountMap = list -> list.stream()
   .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 ```
@@ -289,7 +289,7 @@ final Function<List<String>, Map<String, Long>> convertArrayListToCountMap = lis
 
 我们可以向网关方法传递一条初始消息来测试我们的流:
 
-```
+```java
 public class SpringIntegrationSedaIntegrationTest {
     @Autowired
     TestGateway testGateway;
@@ -323,7 +323,7 @@ Apache Camel 有一个专用于 SEDA 功能的组件，使得构建 SEDA 应用�
 
 让我们为 [Apache Camel](https://web.archive.org/web/20221001122150/https://mvnrepository.com/artifact/org.apache.camel/camel-core) 和 [Apache Camel 测试](https://web.archive.org/web/20221001122150/https://mvnrepository.com/artifact/org.apache.camel/camel-test-junit5)添加所需的 Maven 依赖项:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.apache.camel</groupId>
@@ -343,7 +343,7 @@ Apache Camel 有一个专用于 SEDA 功能的组件，使得构建 SEDA 应用�
 
 首先，我们需要定义端点。端点是用 URI 字符串定义的组件。SEDA 端点必须以“`seda:[endpointName]`”开头:
 
-```
+```java
 static final String receiveTextUri = "seda:receiveText?concurrentConsumers=5";
 static final String splitWordsUri = "seda:splitWords?concurrentConsumers=5";
 static final String toLowerCaseUri = "seda:toLowerCase?concurrentConsumers=5";
@@ -359,7 +359,7 @@ static final String returnResponse = "mock:result";
 
 接下来，让我们定义一个扩展 Apache Camel 的`RouteBuilder`并覆盖其 configure()方法的类。此类连接所有 SEDA 端点:
 
-```
+```java
 public class WordCountRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
@@ -373,7 +373,7 @@ public class WordCountRoute extends RouteBuilder {
 
 此阶段接收来自 SEDA 端点的消息，并将它们路由到下一阶段，而不进行任何处理:
 
-```
+```java
 from(receiveTextUri).to(splitWordsUri);
 ```
 
@@ -383,7 +383,7 @@ from(receiveTextUri).to(splitWordsUri);
 
 让我们实现将输入文本分割成单个单词的阶段:
 
-```
+```java
 from(splitWordsUri)
   .transform(ExpressionBuilder.bodyExpression(s -> s.toString().split(" ")))
   .to(toLowerCaseUri);
@@ -395,7 +395,7 @@ from(splitWordsUri)
 
 我们的下一个任务是将输入中的每个单词转换成小写。因为我们需要对消息中的每个`String`应用我们的转换函数，而不是数组本身，所以我们将使用`split()`方法来分割输入消息进行处理，并在稍后将结果聚合回一个`ArrayList`:
 
-```
+```java
 from(toLowerCaseUri)
   .split(body(), new ArrayListAggregationStrategy())
   .transform(ExpressionBuilder.bodyExpression(body -> body.toString().toLowerCase()))
@@ -407,7 +407,7 @@ from(toLowerCaseUri)
 
 `ArrayListAggregationStrategy`扩展了 Apache Camel 的`AbstractListAggregationStrategy`来定义消息的哪一部分应该被聚合。在这种情况下，消息正文是新的小写单词:
 
-```
+```java
 class ArrayListAggregationStrategy extends AbstractListAggregationStrategy<String> {
     @Override
     public String getValue(Exchange exchange) {
@@ -421,7 +421,7 @@ class ArrayListAggregationStrategy extends AbstractListAggregationStrategy<Strin
 
 最后一个阶段使用转换器将数组转换为单词到字数的映射:
 
-```
+```java
 from(countWordsUri)
   .transform(ExpressionBuilder.bodyExpression(List.class, body -> body.stream()
     .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))))
@@ -432,7 +432,7 @@ from(countWordsUri)
 
 让我们测试一下我们的路线:
 
-```
+```java
 public class ApacheCamelSedaIntegrationTest extends CamelTestSupport {
     @Test
     public void givenTextWithCapitalAndSmallCaseAndWithoutDuplicateWords_whenSendingTextToInputUri_thenWordCountReturnedAsMap()

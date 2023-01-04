@@ -14,7 +14,7 @@
 
 让我们将以下依赖项添加到`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>commons-io</groupId>
     <artifactId>commons-io</artifactId>
@@ -28,7 +28,7 @@
 
 首先，我们把文件内容读入一个字节数组，用 Java 8 `Base64`类进行编码:
 
-```
+```java
 byte[] fileContent = FileUtils.readFileToByteArray(new File(filePath));
 String encodedString = Base64.getEncoder().encodeToString(fileContent);
 ```
@@ -39,7 +39,7 @@ String encodedString = Base64.getEncoder().encodeToString(fileContent);
 
 现在我们有了一个 Base64 `String`，让我们将其解码回二进制内容并写入一个新文件:
 
-```
+```java
 byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
 FileUtils.writeByteArrayToFile(new File(outputFileName), decodedBytes);
 ```
@@ -48,7 +48,7 @@ FileUtils.writeByteArrayToFile(new File(outputFileName), decodedBytes);
 
 最后，我们可以通过读取一个文件，将其编码为 Base64 `String`，然后解码回一个新文件来验证代码是否正常工作:
 
-```
+```java
 public class FileToBase64StringConversionUnitTest {
 
     private String inputFilePath = "test_image.jpg";

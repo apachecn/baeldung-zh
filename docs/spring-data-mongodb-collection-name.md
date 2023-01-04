@@ -14,7 +14,7 @@
 
 首先，让我们写一个[控制器](/web/20220811173318/https://www.baeldung.com/spring-controllers)来断言我们的配置正在工作。我们将通过按集合名称进行搜索来做到这一点。请注意，使用存储库时，集合名称配置是透明的:
 
-```
+```java
 @RestController
 @RequestMapping("/collection")
 public class CollectionController {
@@ -34,7 +34,7 @@ public class CollectionController {
 
 其次，我们将开始构建我们的服务，它只保存对象并检索它们的集合。**`Compilation`类将在我们的第一个配置示例**中创建:
 
-```
+```java
 @Service
 public class MusicStoreService {
     @Autowired
@@ -56,7 +56,7 @@ public class MusicStoreService {
 
 最后，让我们编写一个控制器来与我们的应用程序接口。我们将为我们的服务方法公开端点:
 
-```
+```java
 @RestController
 @RequestMapping("/music")
 public class MusicStoreController {
@@ -87,7 +87,7 @@ public class MusicStoreController {
 
 默认行为认为集合名称与类名相同，但以小写字母开头。**简而言之，我们只需要添加`Document`注释，就可以了**:
 
-```
+```java
 @Document
 public class Compilation {
     @Id
@@ -99,7 +99,7 @@ public class Compilation {
 
 之后，来自我们的`Compilation`存储库的所有插入将进入 MongoDB 中一个名为“compilation”的集合:
 
-```
+```java
 $ curl -X POST http://localhost:8080/music/compilation -H 'Content-Type: application/json' -d '{
     "name": "Spring Hits"
 }'
@@ -109,7 +109,7 @@ $ curl -X POST http://localhost:8080/music/compilation -H 'Content-Type: applica
 
 让我们列出“编译”集合的内容来验证我们的配置:
 
-```
+```java
 $ curl http://localhost:8080/collection/compilation
 
 [
@@ -126,7 +126,7 @@ $ curl http://localhost:8080/collection/compilation
 
 `Document`注释让我们用`collection`属性覆盖默认行为。因为这个属性是`value`属性的别名，我们可以隐式地设置它:
 
-```
+```java
 @Document("albums")
 public class MusicAlbum {
     @Id
@@ -142,7 +142,7 @@ public class MusicAlbum {
 
 现在，这些文档不是放在名为“musicAlbum”的集合中，而是放在“albums”集合中。**这是用 Spring 数据**配置集合名称的最简单方式。要查看它的实际效果，让我们在收藏中添加一个相册:
 
-```
+```java
 $ curl -X POST 'http://localhost:8080/music/album' -H 'Content-Type: application/json' -d '{
   "name": "Album 1",
   "artist": "Artist A"
@@ -153,7 +153,7 @@ $ curl -X POST 'http://localhost:8080/music/album' -H 'Content-Type: application
 
 然后，我们可以获取我们的“相册”集合，确保我们的配置有效:
 
-```
+```java
 $ curl 'http://localhost:8080/collection/albums'
 
 [
@@ -173,13 +173,13 @@ $ curl 'http://localhost:8080/collection/albums'
 
 **首先，让我们给我们的`[application.properties](/web/20220811173318/https://www.baeldung.com/properties-with-spring)`添加一个属性，我们将使用它作为集合名称**的后缀:
 
-```
+```java
 collection.suffix=db
 ```
 
 现在，让我们通过`environment` bean 用 [SpEL](/web/20220811173318/https://www.baeldung.com/spring-expression-language) 引用它来创建我们的下一个类:
 
-```
+```java
 @Document("store-#{@environment.getProperty('collection.suffix')}")
 public class Store {
     @Id
@@ -193,7 +193,7 @@ public class Store {
 
 然后，让我们创建我们的第一个商店:
 
-```
+```java
 $ curl -X POST 'http://localhost:8080/music/store' -H 'Content-Type: application/json' -d '{
   "name": "Store A"
 }'
@@ -203,7 +203,7 @@ $ curl -X POST 'http://localhost:8080/music/store' -H 'Content-Type: application
 
 因此，我们的类将被存储在一个名为“store-db”的集合中。同样，我们可以通过列出其内容来验证我们的配置:
 
-```
+```java
 $ curl 'http://localhost:8080/collection/store-db'
 
 [
@@ -222,7 +222,7 @@ $ curl 'http://localhost:8080/collection/store-db'
 
 在我们的命名策略中，我们将使用 snake-case。首先，让我们借用 Spring Data 的`SnakeCaseFieldNamingStrategy`代码来创建我们的实用程序 bean:
 
-```
+```java
 public class Naming {
     public String fix(String name) {
         List<String> parts = ParsingUtils.splitCamelCaseToLower(name);
@@ -241,7 +241,7 @@ public class Naming {
 
 接下来，让我们将 bean 添加到我们的应用程序中:
 
-```
+```java
 @SpringBootApplication
 public class SpringBootCollectionNameApplication {
 
@@ -256,7 +256,7 @@ public class SpringBootCollectionNameApplication {
 
 之后，我们将能够通过 SpEL 引用我们的 bean:
 
-```
+```java
 @Document("#{@naming.fix('MusicTrack')}")
 public class MusicTrack {
     @Id
@@ -272,7 +272,7 @@ public class MusicTrack {
 
 让我们通过向我们的系列中添加一个项目来尝试一下:
 
-```
+```java
 $ curl -X POST 'http://localhost:8080/music/track' -H 'Content-Type: application/json' -d '{
   "name": "Track 1",
   "artist":"Artist A"
@@ -283,7 +283,7 @@ $ curl -X POST 'http://localhost:8080/music/track' -H 'Content-Type: application
 
 因此，我们的曲目将存储在名为“music_track”的收藏中:
 
-```
+```java
 $ curl 'http://localhost:8080/collection/music_track'
 
 [

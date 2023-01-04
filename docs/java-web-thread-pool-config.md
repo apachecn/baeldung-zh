@@ -16,7 +16,7 @@
 
 首先，我们可以通过我们的`server.xml`中的`Executor `配置类配置 Tomcat 的服务器线程池:
 
-```
+```java
 <Executor name="tomcatThreadPool" namePrefix="catalina-exec-" maxThreads="150" minSpareThreads="25"/>
 ```
 
@@ -28,13 +28,13 @@ Tomcat 默认分别为 25 和 200。在这个配置中，我们已经使线程�
 
 类似地，我们可以为 Spring Boot 修改一个[嵌入式 Tomcat 服务器](/web/20221206000620/https://www.baeldung.com/spring-boot-configure-tomcat)，通过设置一个应用程序属性来配置一个线程池:
 
-```
+```java
 server.tomcat.max-threads=250
 ```
 
 从 Boot 2.3 开始，该属性已更改为:
 
-```
+```java
 server.tomcat.threads.max=250
 ```
 
@@ -44,25 +44,25 @@ server.tomcat.threads.max=250
 
 Glassfish 使用 admin 命令，而不是 Tomcat 的 XML 配置文件，`server.xml.` 在提示符下，我们运行:
 
-```
+```java
 create-threadpool
 ```
 
 我们可以给`create-threadpool` 添加标志`maxthreadpoolsize` 和`minthreadpoolsize.` ，它们的功能类似于 Tomcat `minSpareThreads`和`maxThreads`:
 
-```
+```java
 --maxthreadpoolsize 250 --minthreadpoolsize 25
 ```
 
 我们还可以指定线程在返回池之前可以空闲多长时间:
 
-```
+```java
 --idletimeout=2
 ```
 
 然后，我们在最后提供线程池的名称:
 
-```
+```java
 asadmin> create-threadpool --maxthreadpoolsize 250 --minthreadpoolsize 25 --idletimeout=2 threadpool-1
 ```
 

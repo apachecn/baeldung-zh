@@ -20,7 +20,7 @@
 
 在开始之前，让我们导入所需的依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.ebean</groupId>
     <artifactId>ebean</artifactId>
@@ -44,7 +44,7 @@
 
 Ebean 需要修改实体 bean，以便它们可以被服务器管理。因此，我们将添加一个 Maven 插件来完成这项工作:
 
-```
+```java
 <plugin>
     <groupId>io.ebean</groupId>
     <artifactId>ebean-maven-plugin</artifactId>
@@ -66,7 +66,7 @@ Ebean 需要修改实体 bean，以便它们可以被服务器管理。因此，
 
 我们还需要向 Maven 插件提供包含使用事务的实体和类的包的名称。为此，我们创建了文件`ebean.mf:`
 
-```
+```java
 entity-packages: com.baeldung.ebean.model
 transactional-packages: com.baeldung.ebean.app
 ```
@@ -75,7 +75,7 @@ transactional-packages: com.baeldung.ebean.app
 
 让我们也创建`logback.xml` 并将一些包的日志级别设置为`TRACE`，这样我们就可以看到正在执行的语句:
 
-```
+```java
 <logger name="io.ebean.DDL" level="TRACE"/>
 <logger name="io.ebean.SQL" level="TRACE"/>
 <logger name="io.ebean.TXN" level="TRACE"/>
@@ -93,7 +93,7 @@ transactional-packages: com.baeldung.ebean.app
 
 现在，让我们来看一个示例配置:
 
-```
+```java
 ebean.db.ddl.generate=true
 ebean.db.ddl.run=true
 
@@ -107,7 +107,7 @@ datasource.db.databaseDriver=org.h2.Driver
 
 接下来，让我们看看如何使用`EbeanServerFactory`和`ServerConfig`以编程方式创建相同的服务器:
 
-```
+```java
 ServerConfig cfg = new ServerConfig();
 
 Properties properties = new Properties();
@@ -128,13 +128,13 @@ EbeanServer server = EbeanServerFactory.create(cfg);
 
 如果只创建了一个服务器实例，默认情况下，它会注册为默认服务器实例。使用`Ebean`类上的静态方法，可以在应用程序的任何地方访问它:
 
-```
+```java
 EbeanServer server = Ebean.getDefaultServer();
 ```
 
 如果有多个数据库，可以将其中一个服务器实例注册为默认实例:
 
-```
+```java
 cfg.setDefaultServer(true);
 ```
 
@@ -144,7 +144,7 @@ Ebean 提供了对 JPA 注释的完全支持，以及使用它自己的注释的
 
 让我们使用 JPA 和 Ebean 注释创建几个实体。首先，我们将创建一个`BaseModel`，它包含实体`:`共有的属性
 
-```
+```java
 @MappedSuperclass
 public abstract class BaseModel {
 
@@ -168,7 +168,7 @@ public abstract class BaseModel {
 
 接下来，我们将创建两个实体`Customer`和`Address`，它们扩展了`BaseModel`:
 
-```
+```java
 @Entity
 public class Customer extends BaseModel {
 
@@ -187,7 +187,7 @@ public class Customer extends BaseModel {
 } 
 ```
 
-```
+```java
 @Entity
 public class Address extends BaseModel{
 
@@ -214,7 +214,7 @@ public class Address extends BaseModel{
 
 我们将使用默认的服务器实例来保存和访问数据。`Ebean`类还提供静态方法来保存和访问数据，这些方法将请求代理到默认的服务器实例:
 
-```
+```java
 Address a1 = new Address("5, Wide Street", null, "New York");
 Customer c1 = new Customer("John Wide", a1);
 
@@ -242,7 +242,7 @@ Ebean.delete(foundC1);
 
 让我们来看一个查询，它根据城市找到一个`Customer`，并返回一个`Customer`和`Address `对象，其中只填充了一些字段:
 
-```
+```java
 Customer customer = Ebean.find(Customer.class)
             .select("name")
             .fetch("address", "city")
@@ -265,7 +265,7 @@ Customer customer = Ebean.find(Customer.class)
 
 在这种情况下，如果我们用`io.ebean.annotations.Transactional, `注释该方法，那么该方法中的所有语句都将在同一个事务中执行:
 
-```
+```java
 @Transactional
 public static void insertAndDeleteInsideTransaction() {
     Customer c1 = getCustomer();
@@ -280,7 +280,7 @@ public static void insertAndDeleteInsideTransaction() {
 
 最后，我们可以使用以下命令构建 Maven 项目:
 
-```
+```java
 compile io.ebean:ebean-maven-plugin:enhance
 ```
 

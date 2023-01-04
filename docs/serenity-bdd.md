@@ -38,7 +38,7 @@ Serenity 不仅报告测试结果，还使用它们来生成描述需求和应�
 
 为了利用 JUnit 的宁静，我们应该在`pom.xml:`中包含 [`serenity-core`](https://web.archive.org/web/20221128122857/https://search.maven.org/classic/#artifactdetails%7Cnet.serenity-bdd%7Cserenity-core%7C1.2.5-rc.11%7Cjar) 和 [`serenity-junit`](https://web.archive.org/web/20221128122857/https://search.maven.org/classic/#artifactdetails%7Cnet.serenity-bdd%7Cserenity-junit%7C1.2.5-rc.11%7Cjar)
 
-```
+```java
 <dependency>
     <groupId>net.serenity-bdd</groupId>
     <artifactId>serenity-core</artifactId>
@@ -53,7 +53,7 @@ Serenity 不仅报告测试结果，还使用它们来生成描述需求和应�
 
 我们还需要 [`serenity-maven-plugin`](https://web.archive.org/web/20221128122857/https://search.maven.org/classic/#artifactdetails%7Cnet.serenity-bdd.maven.plugins%7Cserenity-maven-plugin%7C1.2.5-rc.6%7Cjar) 从测试结果中汇总报告:
 
-```
+```java
 <plugin>
     <groupId>net.serenity-bdd.maven.plugins</groupId>
     <artifactId>serenity-maven-plugin</artifactId>
@@ -72,7 +72,7 @@ Serenity 不仅报告测试结果，还使用它们来生成描述需求和应�
 
 如果我们希望 Serenity 即使在测试失败时也能生成报告，那么在`pom.xml:`中添加以下内容
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-surefire-plugin</artifactId>
@@ -91,7 +91,7 @@ Serenity 不仅报告测试结果，还使用它们来生成描述需求和应�
 
 首先，让我们编写成员初始化测试，看看我们需要哪些步骤:
 
-```
+```java
 @RunWith(SerenityRunner.class)
 public class MemberStatusIntegrationTest {
 
@@ -108,7 +108,7 @@ public class MemberStatusIntegrationTest {
 
 然后，我们实施以下两个步骤:
 
-```
+```java
 public class MemberStatusSteps {
 
     private Member member;
@@ -135,7 +135,7 @@ public class MemberStatusSteps {
 
 正如我们所看到的，Serenity 的报告让我们彻底了解了我们的应用程序正在做什么，以及它是否符合我们的要求。如果我们有一些步骤要实现，我们可以将它们标记为`@Pending`:
 
-```
+```java
 @Pending
 @Step("When the member exchange {}")
 public void aMemberExchangeA(Commodity commodity){
@@ -159,7 +159,7 @@ Serenity 还可以集成现有的 BDD 框架，比如 JBehave。
 
 为了与 JBehave 集成，POM 中还需要一个依赖项 [`serenity-jbehave`](https://web.archive.org/web/20221128122857/https://search.maven.org/classic/#artifactdetails%7Cnet.serenity-bdd%7Cserenity-jbehave%7C1.24.0%7Cjar) :
 
-```
+```java
 <dependency>
     <groupId>net.serenity-bdd</groupId>
     <artifactId>serenity-jbehave</artifactId>
@@ -173,7 +173,7 @@ Serenity 还可以集成现有的 BDD 框架，比如 JBehave。
 
 我们的故事是:
 
-```
+```java
 Scenario: Github user's profile should have a login payload same as username
 
 Given github user profile api
@@ -183,7 +183,7 @@ Then github's response contains a 'login' payload same as eugenp
 
 `Given_When_Then`步骤可以迁移到`@Steps`而不做任何改变:
 
-```
+```java
 public class GithubRestUserAPISteps {
 
     private String api;
@@ -210,7 +210,7 @@ public class GithubRestUserAPISteps {
 
 为了让 JBehave 的故事到代码的映射像预期的那样工作，我们需要使用`@Steps`实现 JBehave 的步骤定义:
 
-```
+```java
 public class GithubUserProfilePayloadStepDefinitions {
 
     @Steps
@@ -235,7 +235,7 @@ public class GithubUserProfilePayloadStepDefinitions {
 
 使用`SerenityStories`，我们可以在 IDE 内部和构建过程中运行 JBehave 测试:
 
-```
+```java
 import net.serenitybdd.jbehave.SerenityStory;
 
 public class GithubUserProfilePayload extends SerenityStory {}
@@ -255,7 +255,7 @@ public class GithubUserProfilePayload extends SerenityStory {}
 
 为了使用放心与宁静，应该包括 [`serenity-rest-assured`](https://web.archive.org/web/20221128122857/https://search.maven.org/classic/#artifactdetails%7Cnet.serenity-bdd%7Cserenity-rest-assured%7C1.2.5-rc.11%7Cjar) 依赖:
 
-```
+```java
 <dependency>
     <groupId>net.serenity-bdd</groupId>
     <artifactId>serenity-rest-assured</artifactId>
@@ -267,7 +267,7 @@ public class GithubUserProfilePayload extends SerenityStory {}
 
 现在，我们可以用放心的实用程序替换我们的 web 客户端:
 
-```
+```java
 import static net.serenitybdd.rest.SerenityRest.rest;
 import static net.serenitybdd.rest.SerenityRest.then;
 
@@ -295,7 +295,7 @@ public class GithubRestAssuredUserAPISteps {
 
 在替换了`StepDefition`中`userAPISteps`的实现后，我们可以重新运行`verify`构建:
 
-```
+```java
 public class GithubUserProfilePayloadStepDefinitions {
 
     @Steps
@@ -320,7 +320,7 @@ public class GithubUserProfilePayloadStepDefinitions {
 
 为了与 JIRA 整合，我们需要另一个依赖:`[serenity-jira-requirements-provider](https://web.archive.org/web/20221128122857/https://search.maven.org/classic/#artifactdetails%7Cnet.serenity-bdd%7Cserenity-jira-requirements-provider%7C1.1.3-rc.5%7Cjar).`
 
-```
+```java
 <dependency>
     <groupId>net.serenity-bdd</groupId>
     <artifactId>serenity-jira-requirements-provider</artifactId>
@@ -332,14 +332,14 @@ public class GithubUserProfilePayloadStepDefinitions {
 
 要在故事中添加 JIRA 链接，我们可以使用 story 的 meta 标签添加 JIRA 问题:
 
-```
+```java
 Meta:
 @issue #BDDTEST-1
 ```
 
 此外，应该在项目根目录下的 serenity.properties 文件中指定 JIRA 帐户和链接:
 
-```
+```java
 jira.url=<jira-url>
 jira.project=<jira-project>
 jira.username=<jira-username>

@@ -20,13 +20,13 @@ Spring Boot 是创建 Java web 应用程序的一种很好的方式，但是它�
 
 我们可以使用`application.properties`禁用启动横幅:
 
-```
+```java
 spring.main.banner-mode=off
 ```
 
 或者如果我们使用`application.yaml`:
 
-```
+```java
 spring:
   main:
     banner-mode: "off"
@@ -34,7 +34,7 @@ spring:
 
 最后，由于 Spring Boot 的[外部化配置](https://web.archive.org/web/20220627181738/https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config)支持，我们还可以通过设置一个环境变量来禁用它:
 
-```
+```java
 SPRING_MAIN_BANNER-MODE=off
 ```
 
@@ -44,7 +44,7 @@ SPRING_MAIN_BANNER-MODE=off
 
 使用`SpringApplicationBuilder`时:
 
-```
+```java
 new SpringApplicationBuilder(MyApplication.class)
     .bannerMode(Banner.Mode.OFF)
     .run(args)
@@ -52,7 +52,7 @@ new SpringApplicationBuilder(MyApplication.class)
 
 使用`SpringApplication`时:
 
-```
+```java
 SpringApplication app = new SpringApplication(MyApplication.class);
 app.setBannerMode(Banner.Mode.OFF);
 app.run(args);
@@ -72,13 +72,13 @@ IntelliJ 为 Spring Boot 运行配置提供了一个复选框，用于禁用横�
 
 我们首先在 application.properties 中指定一个自定义文件:
 
-```
+```java
 spring.banner.location=classpath:/banner.txt
 ```
 
 或者，如果我们用 YAML:
 
-```
+```java
 spring:
   banner:
     location: classpath:/banner.txt

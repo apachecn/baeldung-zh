@@ -24,7 +24,7 @@
 
 `AuthenticationManagerResolver`让 Spring 为每个上下文选择一个`AuthenticationManager`。这是在 5.2.0 版本中添加到 Spring Security 的一个[新特性](https://web.archive.org/web/20221206111531/https://github.com/spring-projects/spring-security/issues/6722):
 
-```
+```java
 public interface AuthenticationManagerResolver<C> {
     AuthenticationManager resolve(C context);
 }
@@ -50,7 +50,7 @@ public interface AuthenticationManagerResolver<C> {
 
 让我们从创建一个安全配置类开始。
 
-```
+```java
 @Configuration
 public class CustomWebSecurityConfigurer {
     // ...
@@ -59,7 +59,7 @@ public class CustomWebSecurityConfigurer {
 
 然后，让我们添加一个为客户返回`AuthenticationManager`的方法:
 
-```
+```java
 AuthenticationManager customersAuthenticationManager() {
     return authentication -> {
         if (isCustomer(authentication)) {
@@ -72,7 +72,7 @@ AuthenticationManager customersAuthenticationManager() {
 
 员工的`AuthenticationManager`在逻辑上是相同的，只是我们将`isCustomer`替换为`isEmployee`:
 
-```
+```java
 public AuthenticationManager employeesAuthenticationManager() {
     return authentication -> {
         if (isEmployee(authentication)) {
@@ -85,7 +85,7 @@ public AuthenticationManager employeesAuthenticationManager() {
 
 最后，让我们添加一个根据请求的 URL 进行解析的`AuthenticationManagerResolver`:
 
-```
+```java
 AuthenticationManagerResolver<HttpServletRequest> resolver() {
     return request -> {
         if (request.getPathInfo().startsWith("/employee")) {
@@ -104,7 +104,7 @@ AuthenticationManagerResolver<HttpServletRequest> resolver() {
 
 首先，让我们在`CustomWebSecurityConfigurer`中添加一个方法来创建一个`AuthenticationFilter`:
 
-```
+```java
 private AuthenticationFilter authenticationFilter() {
     AuthenticationFilter filter = new AuthenticationFilter(
       resolver(), authenticationConverter());
@@ -117,7 +117,7 @@ private AuthenticationFilter authenticationFilter() {
 
 然后，我们可以通过在我们的 `CustomWebSecurityConfigurer`中创建一个`SecurityFilterChain` bean 来将这个过滤器添加到我们的安全过滤器链中:
 
-```
+```java
 @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.addFilterBefore(authenticationFilter(), BasicAuthenticationFilter.class);
@@ -133,7 +133,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 因此，我们可以通过创建一个`SecurityFilterChain` bean 在我们的 `CustomWebSecurityConfigurer`中为我们的资源服务器设置`AuthenticationManagerResolver`:
 
-```
+```java
 @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
@@ -147,7 +147,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 对于一个反应式 web 应用程序，我们仍然可以从根据上下文解析`AuthenticationManager`的概念中受益。但是这里我们用`ReactiveAuthenticationManagerResolver`代替:
 
-```
+```java
 @FunctionalInterface
 public interface ReactiveAuthenticationManagerResolver<C> {
     Mono<ReactiveAuthenticationManager> resolve(C context);
@@ -160,7 +160,7 @@ public interface ReactiveAuthenticationManagerResolver<C> {
 
 让我们首先为安全配置创建一个类:
 
-```
+```java
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 public class CustomWebSecurityConfig {
@@ -170,7 +170,7 @@ public class CustomWebSecurityConfig {
 
 接下来，让我们为该类客户定义`ReactiveAuthenticationManager`:
 
-```
+```java
 ReactiveAuthenticationManager customersAuthenticationManager() {
     return authentication -> customer(authentication)
       .switchIfEmpty(Mono.error(new UsernameNotFoundException(/*principal name*/)))
@@ -180,7 +180,7 @@ ReactiveAuthenticationManager customersAuthenticationManager() {
 
 之后，我们将为员工定义`ReactiveAuthenticationManager`:
 
-```
+```java
 public ReactiveAuthenticationManager employeesAuthenticationManager() {
     return authentication -> employee(authentication)
       .switchIfEmpty(Mono.error(new UsernameNotFoundException(/*principal name*/)))
@@ -190,7 +190,7 @@ public ReactiveAuthenticationManager employeesAuthenticationManager() {
 
 最后，我们基于我们的场景设置了一个`ReactiveAuthenticationManagerResolver`:
 
-```
+```java
 ReactiveAuthenticationManagerResolver<ServerWebExchange> resolver() {
     return exchange -> {
         if (match(exchange.getRequest(), "/employee")) {
@@ -209,7 +209,7 @@ ReactiveAuthenticationManagerResolver<ServerWebExchange> resolver() {
 
 因此，我们可以在安全配置中设置自定义的`AuthenticationWebFilter`:
 
-```
+```java
 @Bean
 public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
     return http
@@ -235,7 +235,7 @@ public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
 
 因此，让我们在安全配置中为 OAuth2 身份验证过滤器设置我们的`AuthenticationManagerResolver`:
 
-```
+```java
 @Bean
 public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
     return http

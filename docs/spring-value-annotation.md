@@ -26,7 +26,7 @@ A quick and practical guide to setting default values when using the @Value anno
 
 让我们定义属性文件:
 
-```
+```java
 value.from.file=Value got from the file
 priority=high
 listOfValues=A,B,C
@@ -36,7 +36,7 @@ listOfValues=A,B,C
 
 作为一个基本的、几乎没有用的例子，我们只能将注释中的“字符串值”注入到字段中:
 
-```
+```java
 @Value("string value")
 private String stringValue;
 ```
@@ -45,7 +45,7 @@ private String stringValue;
 
 在下面的例子中，我们将`Value got from the file`分配给该字段:
 
-```
+```java
 @Value("${value.from.file}")
 private String valueFromFile;
 ```
@@ -54,14 +54,14 @@ private String valueFromFile;
 
 假设我们已经定义了一个名为`systemValue`的系统属性:
 
-```
+```java
 @Value("${systemValue}")
 private String systemValue;
 ```
 
 可以为可能未定义的属性提供默认值。这里，值`some default`将被注入:
 
-```
+```java
 @Value("${unknown.param:some default}")
 private String someDefault;
 ```
@@ -70,7 +70,7 @@ private String someDefault;
 
 假设我们有一个属性`priority`被定义为一个值为`System property`的系统属性，并被定义为属性文件中的其他内容。该值将是`System property`:
 
-```
+```java
 @Value("${priority}")
 private String prioritySystemProperty;
 ```
@@ -79,7 +79,7 @@ private String prioritySystemProperty;
 
 在第一部分中，我们在属性文件`,`的`listOfValues`中定义了逗号分隔的值，因此数组值将是`[“A”, “B”, “C”]:`
 
-```
+```java
 @Value("${listOfValues}")
 private String[] valuesArray;
 ```
@@ -90,7 +90,7 @@ private String[] valuesArray;
 
 如果我们有一个名为`priority,`的系统属性，那么它的值将应用于该字段:
 
-```
+```java
 @Value("#{systemProperties['priority']}")
 private String spelValue;
 ```
@@ -99,21 +99,21 @@ private String spelValue;
 
 为了防止这种情况，我们可以在 SpEL 表达式中提供一个默认值。如果未定义系统属性，我们将获得字段的`some default` 值:
 
-```
+```java
 @Value("#{systemProperties['unknown'] ?: 'some default'}")
 private String spelSomeDefault;
 ```
 
 此外，我们可以使用来自其他 beans 的字段值。假设我们有一个名为`someBean`的 bean，其字段`someValue`等于`10`。然后，`10`将被分配到字段:
 
-```
+```java
 @Value("#{someBean.someValue}")
 private Integer someBeanValue;
 ```
 
 我们可以操纵属性来获得一个`List`值，这里是字符串值 A、B 和 C 的列表:
 
-```
+```java
 @Value("#{'${listOfValues}'.split(',')}")
 private List<String> valuesList;
 ```
@@ -124,7 +124,7 @@ private List<String> valuesList;
 
 首先，我们需要在属性文件的`{key: ‘value' }` 表单中定义属性:
 
-```
+```java
 valuesMap={key1: '1', key2: '2', key3: '3'}
 ```
 
@@ -132,28 +132,28 @@ valuesMap={key1: '1', key2: '2', key3: '3'}
 
 现在我们可以从属性文件中注入这个值作为`Map`:
 
-```
+```java
 @Value("#{${valuesMap}}")
 private Map<String, Integer> valuesMap;
 ```
 
 如果我们需要**来获取`Map`中特定键**的值，我们所要做的就是**在表达式**中添加键的名称:
 
-```
+```java
 @Value("#{${valuesMap}.key1}")
 private Integer valuesMapKey1;
 ```
 
 如果我们不确定`Map`是否包含某个键，我们应该选择**一个更安全的表达式，它不会抛出异常，而是在找不到键时将值设置为`null`** :
 
-```
+```java
 @Value("#{${valuesMap}['unknownKey']}")
 private Integer unknownMapKey;
 ```
 
 我们还可以**为可能不存在的属性或键设置默认值**:
 
-```
+```java
 @Value("#{${unknownMap : {key1: '1', key2: '2'}}}")
 private Map<String, Integer> unknownMap;
 
@@ -165,14 +165,14 @@ private Integer unknownMapKeyWithDefaultValue;
 
 假设我们只需要获取那些值大于 1 的条目:
 
-```
+```java
 @Value("#{${valuesMap}.?[value>'1']}")
 private Map<String, Integer> valuesMapFiltered;
 ```
 
 我们也可以使用`@Value`注释来**注入所有当前系统属性**:
 
-```
+```java
 @Value("#{systemProperties}")
 private Map<String, String> systemPropertiesMap;
 ```
@@ -183,7 +183,7 @@ private Map<String, String> systemPropertiesMap;
 
 让我们看看实际情况:
 
-```
+```java
 @Component
 @PropertySource("classpath:values.properties")
 public class PriorityProvider {
@@ -209,7 +209,7 @@ public class PriorityProvider {
 
 让我们来看看:
 
-```
+```java
 @Component
 @PropertySource("classpath:values.properties")
 public class CollectionProvider {

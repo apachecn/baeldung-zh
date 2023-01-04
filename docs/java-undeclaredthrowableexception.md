@@ -14,7 +14,7 @@
 
 有人可能会说这是不可能的，因为 Java 编译器用一个编译错误阻止了这一点。例如，如果我们试图编译:
 
-```
+```java
 public void undeclared() {
     throw new IOException();
 }
@@ -22,13 +22,13 @@ public void undeclared() {
 
 Java 编译器失败，并显示以下消息:
 
-```
+```java
 java: unreported exception java.io.IOException; must be caught or declared to be thrown
 ```
 
 尽管抛出未声明的检查异常可能不会在编译时发生，但在运行时仍有可能发生。例如，让我们考虑一个运行时代理拦截一个不抛出任何异常的方法:
 
-```
+```java
 public void save(Object data) {
     // omitted
 }
@@ -44,7 +44,7 @@ public void save(Object data) {
 
 作为我们的第一个例子，让我们为`java.util.List `接口创建一个[运行时代理](/web/20220628060946/https://www.baeldung.com/java-dynamic-proxies)，并拦截它的方法调用。首先，我们应该实现`[InvocationHandler](https://web.archive.org/web/20220628060946/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/InvocationHandler.html) `接口，并将额外的逻辑放在那里:
 
-```
+```java
 public class ExceptionalInvocationHandler implements InvocationHandler {
 
     @Override
@@ -69,7 +69,7 @@ public class SomeCheckedException extends Exception {
 
 让我们看看 Java 是如何处理这两种情况的。首先，我们将调用`List.size() `方法:
 
-```
+```java
 ClassLoader classLoader = getClass().getClassLoader();
 InvocationHandler invocationHandler = new ExceptionalInvocationHandler();
 List<String> proxy = (List<String>) Proxy.newProxyInstance(classLoader, 
@@ -84,7 +84,7 @@ assertThatThrownBy(proxy::size)
 
 如果我们在`List `接口上调用任何其他方法:
 
-```
+```java
 assertThatThrownBy(proxy::isEmpty).isInstanceOf(RuntimeException.class);
 ```
 
@@ -94,7 +94,7 @@ assertThatThrownBy(proxy::isEmpty).isInstanceOf(RuntimeException.class);
 
 当我们在一个 [Spring 方面](/web/20220628060946/https://www.baeldung.com/spring-aop)中抛出一个被检查的异常，而被通知的方法没有声明它们时，也会发生同样的事情。让我们从注释开始:
 
-```
+```java
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ThrowUndeclared {}
@@ -102,7 +102,7 @@ public @interface ThrowUndeclared {}
 
 现在我们要通知所有用这个注释标注的方法:
 
-```
+```java
 @Aspect
 @Component
 public class UndeclaredAspect {
@@ -116,7 +116,7 @@ public class UndeclaredAspect {
 
 基本上，这个建议会让所有带注释的方法抛出一个检查过的异常，即使它们没有声明这样的异常。现在，让我们创建一个服务:
 
-```
+```java
 @Service
 public class UndeclaredService {
 
@@ -127,7 +127,7 @@ public class UndeclaredService {
 
 如果我们调用带注释的方法，Java 将抛出一个`UndeclaredThrowableException `异常的实例:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = UndeclaredApplication.class)
 public class UndeclaredThrowableExceptionIntegrationTest {

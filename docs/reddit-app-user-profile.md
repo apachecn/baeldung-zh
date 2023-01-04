@@ -14,7 +14,7 @@
 
 首先，让我们从一个`Preference`实体开始:
 
-```
+```java
 @Entity
 public class Preference {
     @Id
@@ -43,7 +43,7 @@ public class Preference {
 
 现在，让我们**将偏好链接到用户**:
 
-```
+```java
 @Entity
 public class User {
     ...
@@ -60,7 +60,7 @@ public class User {
 
 首先，让我们创建一个简单的个人资料页面:
 
-```
+```java
 <form >
     <input type="hidden" name="id" />
     <input name="email" type="email"/>
@@ -94,7 +94,7 @@ function editPref(){
 
 让我们也添加一个快速链接到新的配置文件:
 
-```
+```java
 <h1>Welcome, <a href="profile" sec:authentication="principal.username">username</a></h1>
 ```
 
@@ -102,7 +102,7 @@ function editPref(){
 
 这里是控制器，用于创建和编辑用户的偏好:
 
-```
+```java
 @Controller
 @RequestMapping(value = "/user/preference")
 public class UserPreferenceController {
@@ -127,7 +127,7 @@ public class UserPreferenceController {
 
 最后，我们需要确保在创建用户时，其首选项也是未初始化的:
 
-```
+```java
 public void loadAuthentication(String name, OAuth2AccessToken token) {
     ...
     Preference pref = new Preference();
@@ -144,7 +144,7 @@ public void loadAuthentication(String name, OAuth2AccessToken token) {
 
 我们将从主`Post Schedule`页面开始，在这里我们将加载用户的偏好:
 
-```
+```java
 $(function() {
     $.get("user/preference", function (data){
         $.each(data, function(key, value) {

@@ -24,7 +24,7 @@ A Spring Login Example - How to Set Up a simple Login Form, a Basic Security XML
 
 我们可以使用 Java config 来配置 Spring 安全性:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
@@ -63,7 +63,7 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
 
 我们也可以使用 XML 获得同样的结果:
 
-```
+```java
 <http pattern="/securityNone" security="none"/>
 <http use-expressions="true">
     <intercept-url pattern="/**" access="isAuthenticated()" />
@@ -89,13 +89,13 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
 
 首先，让我们尝试在不提供任何安全凭证的情况下请求`/homepage.html`:
 
-```
+```java
 curl -i http://localhost:8080/spring-security-rest-basic-auth/api/foos/1
 ```
 
 我们得到预期的`401 Unauthorized`和[认证挑战](https://web.archive.org/web/20220722025919/https://datatracker.ietf.org/doc/html/rfc1945#section-10.16 "Basic Authentication Challenge"):
 
-```
+```java
 HTTP/1.1 401 Unauthorized
 Server: Apache-Coyote/1.1
 Set-Cookie: JSESSIONID=E5A8D3C16B65A0A007CFAACAEEE6916B; Path=/spring-security-mvc-basic-auth/; HttpOnly
@@ -109,14 +109,14 @@ Date: Wed, 29 May 2013 15:14:08 GMT
 
 现在让我们请求相同的资源，主页，但是**也提供了访问它的凭证**:
 
-```
+```java
 curl -i --user user1:user1Pass 
   http://localhost:8080/spring-security-rest-basic-auth/api/foos/1
 ```
 
 因此，来自服务器的响应是`200 OK`和`Cookie`:
 
-```
+```java
 HTTP/1.1 200 OK
 Server: Apache-Coyote/1.1
 Set-Cookie: JSESSIONID=301225C7AE7C74B0892887389996785D; Path=/spring-security-mvc-basic-auth/; HttpOnly
@@ -134,13 +134,13 @@ Date: Wed, 29 May 2013 15:19:38 GMT
 
 名称空间对于这个新需求也足够灵活。为了解决这个问题，可以覆盖入口点:
 
-```
+```java
 <http-basic entry-point-ref="myBasicAuthenticationEntryPoint" />
 ```
 
 新的入口点被定义为一个标准 bean:
 
-```
+```java
 @Component
 public class MyBasicAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
 

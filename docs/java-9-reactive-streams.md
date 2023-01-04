@@ -30,7 +30,7 @@
 
 在处理开始之前调用`onSubscribe()` 方法。`Subscription` 的实例作为参数传递。这个类用于控制`Subscriber`和`Publisher:`之间的消息流
 
-```
+```java
 public class EndSubscriber<T> implements Subscriber<T> {
     private Subscription subscription;
     public List<T> consumedElements = new LinkedList<>();
@@ -47,7 +47,7 @@ public class EndSubscriber<T> implements Subscriber<T> {
 
 现在，我们需要从`Subscriber` 接口实现剩余的方法。这里的主要方法是 on next()——每当`Publisher`发布新消息时都会调用这个方法:
 
-```
+```java
 @Override
 public void onNext(T item) {
     System.out.println("Got : " + item);
@@ -60,7 +60,7 @@ public void onNext(T item) {
 
 最后，我们需要实现`onError()`——每当处理过程中出现异常时都会调用它，当`Publisher`关闭时也会调用`onComplete() –` :
 
-```
+```java
 @Override
 public void onError(Throwable t) {
     t.printStackTrace();
@@ -76,7 +76,7 @@ public void onComplete() {
 
 我们将向`Publisher`提交`N`个元素——我们的`EndSubscriber` 将会收到:
 
-```
+```java
 @Test
 public void whenSubscribeToIt_thenShouldConsumeAll() 
   throws InterruptedException {
@@ -105,7 +105,7 @@ public void whenSubscribeToIt_thenShouldConsumeAll()
 
 运行该程序将产生以下输出:
 
-```
+```java
 Got : 1
 Got : x
 Got : 2
@@ -123,7 +123,7 @@ Done
 
 我们将传入一个将输入转换成输出的`Function`:
 
-```
+```java
 public class TransformProcessor<T, R> 
   extends SubmissionPublisher<R> 
   implements Flow.Processor<T, R> {
@@ -164,7 +164,7 @@ public class TransformProcessor<T, R>
 
 我们的`TransformProcessor` 将把`String`解析为`Integer`——这意味着这里需要进行转换:
 
-```
+```java
 @Test
 public void whenSubscribeAndTransformElements_thenShouldConsumeAll()
   throws InterruptedException {
@@ -202,7 +202,7 @@ public void whenSubscribeAndTransformElements_thenShouldConsumeAll()
 
 让我们修改我们的`EndSubscriber` ,只消耗 N 条消息。我们将传递这个数字作为`howMuchMessagesConsume` 构造函数的参数:
 
-```
+```java
 public class EndSubscriber<T> implements Subscriber<T> {
 
     private AtomicInteger howMuchMessagesConsume;
@@ -238,7 +238,7 @@ public class EndSubscriber<T> implements Subscriber<T> {
 
 让我们编写一个测试，其中我们只想使用给定`Subscription:`中的一个元素
 
-```
+```java
 @Test
 public void whenRequestForOnlyOneElement_thenShouldConsumeOne()
   throws InterruptedException {

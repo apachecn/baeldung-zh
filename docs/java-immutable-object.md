@@ -14,7 +14,7 @@
 
 如果我们看一下类`String`，我们可以看到，即使它的 API 似乎用它的`replace`方法为我们提供了一个可变的行为，最初的`String`并没有改变:
 
-```
+```java
 String name = "baeldung";
 String newName = name.replace("dung", "----");
 
@@ -32,14 +32,14 @@ API 给了我们只读的方法，它不应该包含改变对象内部状态的�
 
 通过在声明变量时使用`final`关键字，Java 编译器不会让我们改变该变量的值。相反，它将报告一个编译时错误:
 
-```
+```java
 final String name = "baeldung";
 name = "bael...";
 ```
 
 注意`final`只禁止我们改变变量持有的引用，它不保护我们通过使用它的公共 API 来改变它所引用的对象的内部状态:
 
-```
+```java
 final List<String> strings = new ArrayList<>();
 assertEquals(0, strings.size());
 strings.add("baeldung");
@@ -56,7 +56,7 @@ assertEquals(0, strings.size());
 
 向正确方向前进的一步是在声明其属性时使用`final`:
 
-```
+```java
 class Money {
     private final double amount;
     private final Currency currency;
@@ -71,7 +71,7 @@ class Money {
 
 大多数时候，我们需要对象的属性来保存自定义值，初始化不可变对象内部状态的地方是它的构造函数:
 
-```
+```java
 class Money {
     // ...
     public Money(double amount, Currency currency) {

@@ -32,7 +32,7 @@ A quick, practical guide to creating a custom auto-configuration in Spring Boot.
 
 假设我们在`com.baeldung.componentscan.springapp`包中有以下`@Configuration`:
 
-```
+```java
 @Configuration
 @ComponentScan
 public class SpringComponentScanApp {
@@ -56,14 +56,14 @@ public class SpringComponentScanApp {
 
 此外，`com.baeldung.componentscan.springapp.animals`封装中还有`Cat`和`Dog`组件:
 
-```
+```java
 package com.baeldung.componentscan.springapp.animals;
 // ...
 @Component
 public class Cat {}
 ```
 
-```
+```java
 package com.baeldung.componentscan.springapp.animals;
 // ...
 @Component
@@ -72,7 +72,7 @@ public class Dog {}
 
 最后，我们在`com.baeldung.componentscan.springapp.flowers`包中有`Rose`组件:
 
-```
+```java
 package com.baeldung.componentscan.springapp.flowers;
 // ...
 @Component
@@ -81,7 +81,7 @@ public class Rose {}
 
 `main()`方法的输出将包含`com.baeldung.componentscan.springapp`包及其子包的所有 beans:
 
-```
+```java
 springComponentScanApp
 cat
 dog
@@ -95,7 +95,7 @@ exampleBean
 
 最后，注意在我们的例子中，`@ComponentScan`相当于:
 
-```
+```java
 @ComponentScan(basePackages = "com.baeldung.componentscan.springapp")
 ```
 
@@ -105,7 +105,7 @@ exampleBean
 
 Spring Boot 的诀窍在于很多事情都是隐性发生的。我们使用`@SpringBootApplication`注释，但是它是三个注释的组合:
 
-```
+```java
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan
@@ -113,7 +113,7 @@ Spring Boot 的诀窍在于很多事情都是隐性发生的。我们使用`@Spr
 
 让我们在`com.baeldung.componentscan.springbootapp`包中创建一个类似的结构。这一次主要应用将是:
 
-```
+```java
 package com.baeldung.componentscan.springbootapp;
 // ...
 @SpringBootApplication
@@ -145,7 +145,7 @@ public class SpringBootComponentScanApp {
 
 Spring Boot 扫描包裹类似于我们的前一个例子。让我们检查输出:
 
-```
+```java
 Is cat in ApplicationContext: true
 Is dog in ApplicationContext: true
 Is rose in ApplicationContext: true
@@ -165,7 +165,7 @@ Is springBootComponentScanApp in ApplicationContext: true
 
 我们可以用几种不同的方法来做这件事。首先，我们可以更改基础包:
 
-```
+```java
 @ComponentScan(basePackages = "com.baeldung.componentscan.springapp.animals")
 @Configuration
 public class SpringComponentScanApp {
@@ -175,7 +175,7 @@ public class SpringComponentScanApp {
 
 现在输出将是:
 
-```
+```java
 springComponentScanApp
 cat
 dog
@@ -190,7 +190,7 @@ exampleBean
 
 上面列出的所有定制也适用于 Spring Boot。我们可以将`@ComponentScan`和`@SpringBootApplication`一起使用，结果是一样的:
 
-```
+```java
 @SpringBootApplication
 @ComponentScan(basePackages = "com.baeldung.componentscan.springbootapp.animals")
 ```
@@ -201,13 +201,13 @@ Spring 提供了一种便捷的方式来指定多个包名。为此，我们需�
 
 数组中的每个字符串表示一个包名:
 
-```
+```java
 @ComponentScan(basePackages = {"com.baeldung.componentscan.springapp.animals", "com.baeldung.componentscan.springapp.flowers"})
 ```
 
 或者，从 spring 4.1.1 开始，**我们可以使用逗号、分号或空格来分隔包列表**:
 
-```
+```java
 @ComponentScan(basePackages = "com.baeldung.componentscan.springapp.animals;com.baeldung.componentscan.springapp.flowers")
 @ComponentScan(basePackages = "com.baeldung.componentscan.springapp.animals,com.baeldung.componentscan.springapp.flowers")
 @ComponentScan(basePackages = "com.baeldung.componentscan.springapp.animals com.baeldung.componentscan.springapp.flowers")
@@ -217,7 +217,7 @@ Spring 提供了一种便捷的方式来指定多个包名。为此，我们需�
 
 另一种方法是使用过滤器，指定要排除的类的模式:
 
-```
+```java
 @ComponentScan(excludeFilters = 
   @ComponentScan.Filter(type=FilterType.REGEX,
     pattern="com\\.baeldung\\.componentscan\\.springapp\\.flowers\\..*"))
@@ -225,7 +225,7 @@ Spring 提供了一种便捷的方式来指定多个包名。为此，我们需�
 
 我们还可以选择不同的过滤器类型，因为注释支持几个灵活的选项来过滤扫描的类:
 
-```
+```java
 @ComponentScan(excludeFilters = 
   @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = Rose.class))
 ```

@@ -26,7 +26,7 @@
 
 我们将在所有示例中使用以下`Stream`个国家代码:
 
-```
+```java
 Stream.of(Locale.getISOCountries()); 
 ```
 
@@ -36,13 +36,13 @@ Stream.of(Locale.getISOCountries());
 
 首先，让我们使用`Collectors:toList()`创建一个`List`:
 
-```
+```java
 List<String> result = Stream.of(Locale.getISOCountries()).collect(Collectors.toList());
 ```
 
 之后，让我们使用` Collectors.toUnmodifiableList()`来收集它:
 
-```
+```java
 List<String> result = Stream.of(Locale.getISOCountries()).collect(Collectors.toUnmodifiableList());
 ```
 
@@ -50,7 +50,7 @@ List<String> result = Stream.of(Locale.getISOCountries()).collect(Collectors.toU
 
 然后，让我们用` Stream.toList()`重复收集:
 
-```
+```java
 List<String> result = Stream.of(Locale.getISOCountries()).toList();
 ```
 
@@ -64,19 +64,19 @@ List<String> result = Stream.of(Locale.getISOCountries()).toList();
 
 `Collectors.toList()`，将`Stream`个元素收集成一个`ArrayList`:
 
-```
+```java
 java.util.ArrayList
 ```
 
 `Collectors.toUnmodifiableList()`，将`Stream`元素收集到一个不可修改的`List`中。
 
-```
+```java
 java.util.ImmutableCollections.ListN
 ```
 
 `Stream.toList()`，将元素收集到一个不可修改的`List`中。
 
-```
+```java
 java.util.ImmutableCollections.ListN
 ```
 
@@ -92,7 +92,7 @@ java.util.ImmutableCollections.ListN
 
 当一个包含`null`元素的`Stream`被收集时`Collectors.toList()` 不会抛出一个`Exception`:
 
-```
+```java
 Assertions.assertDoesNotThrow(() -> {
     Stream.of(null,null).collect(Collectors.toList());
 });
@@ -100,7 +100,7 @@ Assertions.assertDoesNotThrow(() -> {
 
 `Collectors.toUnmodifiableList()`收集包含`null` 元素的`Stream`时抛出一个`NulPointerException`:
 
-```
+```java
 Assertions.assertThrows(NullPointerException.class, () -> {
     Stream.of(null,null).collect(Collectors.toUnmodifiableList());
 });
@@ -108,7 +108,7 @@ Assertions.assertThrows(NullPointerException.class, () -> {
 
 当我们试图收集一个包含`null` 元素的`Stream`时，`Stream.toList()` 不会抛出一个`NulPointerException`:
 
-```
+```java
 Assertions.assertDoesNotThrow(() -> {
     Stream.of(null,null).toList();
 });

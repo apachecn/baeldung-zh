@@ -12,7 +12,7 @@ Meecrowave 是来自 Apache 的轻量级微服务框架，它与 CDI、JAX-RS �
 
 要使用 Meecrowave，让我们在`pom.xml:`中定义依赖关系
 
-```
+```java
 <dependency>
     <groupId>org.apache.meecrowave</groupId>
     <artifactId>meecrowave-core</artifactId>
@@ -26,7 +26,7 @@ Meecrowave 是来自 Apache 的轻量级微服务框架，它与 CDI、JAX-RS �
 
 为了启动一个 Meecrowave 服务器，我们需要做的就是编写`main `方法，**创建一个`Meecrowave `实例并调用主`bake() `方法**:
 
-```
+```java
 public static void main(String[] args) {
     try (Meecrowave meecrowave = new Meecrowave()) {
         meecrowave.bake().await();
@@ -40,13 +40,13 @@ public static void main(String[] args) {
 
 注意，如果我们使用 Java 9，不要忘记给 VM 添加 javax `.xml.bind`模块:
 
-```
+```java
 --add-module javax.xml.bind
 ```
 
 以这种方式创建服务器将以默认配置启动它。我们可以使用`Meecrowave.Builder` 类`:`以编程方式更新默认配置
 
-```
+```java
 Meecrowave.Builder builder = new Meecrowave.Builder();
 builder.setHttpPort(8080);
 builder.setScanningPackageIncludes("com.baeldung.meecrowave");
@@ -56,7 +56,7 @@ builder.setJsonpPrettify(true);
 
 并在烘烤服务器时使用这个`builder `实例:
 
-```
+```java
 try (Meecrowave meecrowave = new Meecrowave(builder)) { 
     meecrowave.bake().await();
 }
@@ -68,7 +68,7 @@ try (Meecrowave meecrowave = new Meecrowave(builder)) {
 
 现在，一旦服务器准备就绪，让我们创建一些 REST 端点:
 
-```
+```java
 @RequestScoped
 @Path("article")
 public class ArticleEndpoints {
@@ -95,7 +95,7 @@ public class ArticleEndpoints {
 
 让我们首先将测试依赖项添加到我们的`pom.xml `中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.meecrowave</groupId>
     <artifactId>meecrowave-junit</artifactId>
@@ -108,7 +108,7 @@ public class ArticleEndpoints {
 
 同样，让我们添加 [OkHttp](/web/20220626211508/https://www.baeldung.com/guide-to-okhttp) 作为我们测试的 Http 客户端:
 
-```
+```java
 <dependency>
     <groupId>com.squareup.okhttp3</groupId>
     <artifactId>okhttp</artifactId>
@@ -120,7 +120,7 @@ public class ArticleEndpoints {
 
 现在有了依赖关系，让我们继续编写测试:
 
-```
+```java
 @RunWith(MonoMeecrowave.Runner.class)
 public class ArticleEndpointsIntegrationTest {
 
@@ -154,7 +154,7 @@ public class ArticleEndpointsIntegrationTest {
 
 让我们以一个`ArticleService `类为例:
 
-```
+```java
 @ApplicationScoped
 public class ArticleService {
     public Article createArticle(Article article) {
@@ -165,7 +165,7 @@ public class ArticleService {
 
 现在让我们使用`javax.inject.Inject` 注释`:`将它注入到我们的`ArticleEndpoints` 实例中
 
-```
+```java
 @Inject
 ArticleService articleService;
 ```
@@ -174,7 +174,7 @@ ArticleService articleService;
 
 使用 Meecrowave Maven 插件，创建发行包变得非常简单:
 
-```
+```java
 <build>
     ...
     <plugins>
@@ -191,13 +191,13 @@ ArticleService articleService;
 
 打包后，它将在目标目录中创建一个 zip 文件:
 
-```
+```java
 meecrowave-meecrowave-distribution.zip
 ```
 
 这个 zip 文件包含部署应用程序所需的构件:
 
-```
+```java
 |____meecrowave-distribution
 | |____bin
 | | |____meecrowave.sh
@@ -211,13 +211,13 @@ meecrowave-meecrowave-distribution.zip
 
 让我们导航到 bin 目录并启动应用程序:
 
-```
+```java
 ./meecrowave.sh start
 ```
 
 要停止应用程序:
 
-```
+```java
 ./meecrowave.sh stop
 ```
 

@@ -20,7 +20,7 @@ Spring Boot 让我们能够快速设置和运行服务。
 
 在项目中添加`spring-boot-devtools`就像添加任何其他的 spring-boot 模块一样简单。在现有的 spring-boot 项目中，添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-devtools</artifactId>
@@ -41,7 +41,7 @@ Spring-boot 做了很多自动配置，包括默认启用缓存来提高性能�
 
 使用`spring-boot-devtools,`这个过程也是自动化的。每当类路径中的文件改变时，使用`spring-boot-devtools`的应用程序将导致应用程序重启。此功能的好处是验证所做更改所需的时间大大减少:
 
-```
+```java
 19:45:44.804 ... - Included patterns for restart : []
 19:45:44.809 ... - Excluded patterns for restart : [/spring-boot-starter/target/classes/, /spring-boot-autoconfigure/target/classes/, /spring-boot-starter-[\w-]+/, /spring-boot/target/classes/, /spring-boot-actuator/target/classes/, /spring-boot-devtools/target/classes/]
 19:45:44.810 ... - Matching URLs for reloading : [file:/.../target/test-classes/, file:/.../target/classes/]
@@ -55,7 +55,7 @@ Spring-boot 做了很多自动配置，包括默认启用缓存来提高性能�
 
 从日志中可以看出，产生应用程序的线程不是`main`线程，而是`restartedMain`线程。项目中的任何更改，无论是 java 文件更改，都将导致项目自动重启:
 
-```
+```java
 2017-03-12 19:53:46.204  ...: Closing org.springframework.boot[[email protected]](/web/20220626082835/https://www.baeldung.com/cdn-cgi/l/email-protection)385c3ca3: startup date [Sun Mar 12 19:45:45 IST 2017]; root of context hierarchy
 2017-03-12 19:53:46.208  ...: Unregistering JMX-exposed beans on shutdown
 
@@ -84,7 +84,7 @@ Spring-boot 做了很多自动配置，包括默认启用缓存来提高性能�
 
 这里有一个简单的例子:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -102,7 +102,7 @@ Spring-boot 做了很多自动配置，包括默认启用缓存来提高性能�
 
 1.  An application being deployed and started on the server, should be started with Remote Debugging enabled:
 
-    ```
+    ```java
     -Xdebug -Xrunjdwp:server=y,transport=dt_socket,suspend=n
     ```
 
@@ -113,7 +113,7 @@ Spring-boot 做了很多自动配置，包括默认启用缓存来提高性能�
     在程序参数中，添加应用程序的 URL，例如`http://localhost:8080`
 3.  通过 spring-boot 应用程序调试的默认端口是 8000，可以通过:
 
-    ```
+    ```java
     spring.devtools.remote.debug.local-port=8010
     ```
 
@@ -122,7 +122,7 @@ Spring-boot 做了很多自动配置，包括默认启用缓存来提高性能�
 
 下面是日志的样子:
 
-```
+```java
  .   ____          _                                              __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _          ___               _      \ \ \ \
 ( ( )\___ | '_ | '_| | '_ \/ _` |        | _ \___ _ __  ___| |_ ___ \ \ \ \
@@ -148,7 +148,7 @@ Spring-boot 做了很多自动配置，包括默认启用缓存来提高性能�
 
 日志中是这样的:
 
-```
+```java
 2017-03-12 22:33:11.613  INFO 1484 ...: Remote debug connection opened
 2017-03-12 22:33:21.869  INFO 1484 ...: Uploaded 1 class resource
 ```

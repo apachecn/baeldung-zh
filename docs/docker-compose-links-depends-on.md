@@ -14,7 +14,7 @@ Docker 容器在我们的系统中作为独立的进程运行。然而，我们�
 
 例如，假设我们希望我们的 web 应用程序(我们将构建为一个`web-app`图像)在我们的 [Postgres](/web/20220810172900/https://www.baeldung.com/ops/postgresql-docker-setup) 容器之后启动。我们来看看`docker-compose.yml`文件:
 
-```
+```java
 services:
   db:
     image: postgres:latest
@@ -47,19 +47,19 @@ Docker 将根据给定的依赖关系提取图像并运行容器。因此，在�
 
 首先，让我们运行 Postgres 容器:
 
-```
+```java
 docker run -d --name db -p 5342:5342 postgres:latest 
 ```
 
 然后，我们将它链接到我们的 web 应用程序:
 
-```
+```java
 docker run -d -p 8080:8080 --name web-app --link db 
 ```
 
 让我们将示例转换为 Docker Compose:
 
-```
+```java
 services:
   db:
     image: postgres:latest
@@ -86,7 +86,7 @@ services:
 
 让我们删除`links `并用`network`替换它，同时为数据库添加一个卷和环境变量:
 
-```
+```java
 services:
   db:
     image: postgres:latest

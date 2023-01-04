@@ -14,13 +14,13 @@ HttpClient 是 Apache HttpComponents 项目的一部分，该项目提供了一�
 
 在本例中，最终的 URL 应该如下所示:
 
-```
+```java
 https://example.com?param1=value1&param2;=value2
 ```
 
 让我们看看如何使用`String`名称-值对:
 
-```
+```java
 public CloseableHttpResponse sendHttpRequest() {
     HttpGet httpGet = new HttpGet("https://example.com");
     URI uri = new URIBuilder(httpGet.getURI())
@@ -35,7 +35,7 @@ public CloseableHttpResponse sendHttpRequest() {
 
 此外，我们可以使用`HttpClient`请求的`NameValuePair`列表:
 
-```
+```java
 public CloseableHttpResponse sendHttpRequest() {
     List nameValuePairs = new ArrayList();
     nameValuePairs.add(new BasicNameValuePair("param1", "value1"));
@@ -56,7 +56,7 @@ public CloseableHttpResponse sendHttpRequest() {
 
 另一种方法是利用`UrlEncodedFormEntity`:
 
-```
+```java
 public CloseableHttpResponse sendHttpRequest() {
     List nameValuePairs = new ArrayList();
     nameValuePairs.add(new BasicNameValuePair("param1", "value1"));

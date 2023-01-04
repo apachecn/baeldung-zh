@@ -32,7 +32,7 @@
 
 让我们定义一个[正则表达式](/web/20220526055359/https://www.baeldung.com/tag/regex/)来定位仅由小写字母、单个大写字母后跟小写字母或单个大写字母组成的单词:
 
-```
+```java
 Pattern WORD_FINDER = Pattern.compile("(([A-Z]?[a-z]+)|([A-Z]))");
 ```
 
@@ -44,7 +44,7 @@ Pattern WORD_FINDER = Pattern.compile("(([A-Z]?[a-z]+)|([A-Z]))");
 
 我们将定义一个方法来使用这个正则表达式:
 
-```
+```java
 public List<String> findWordsInMixedCase(String text) {
     Matcher matcher = WORD_FINDER.matcher(text);
     List<String> words = new ArrayList<>();
@@ -63,14 +63,14 @@ public List<String> findWordsInMixedCase(String text) {
 
 我们的单词查找器应该能够找到由任何非单词字符分隔的单词，以及由大小写变化分隔的单词。让我们从一个简单的例子开始:
 
-```
+```java
 assertThat(findWordsInMixedCase("some words"))
   .containsExactly("some", "words");
 ```
 
 这个测试通过了，表明我们的算法正在工作。接下来，我们将尝试骆驼案例:
 
-```
+```java
 assertThat(findWordsInMixedCase("thisIsCamelCaseText"))
   .containsExactly("this", "Is", "Camel", "Case", "Text");
 ```
@@ -79,14 +79,14 @@ assertThat(findWordsInMixedCase("thisIsCamelCaseText"))
 
 我们也可以用标题案例来尝试:
 
-```
+```java
 assertThat(findWordsInMixedCase("ThisIsTitleCaseText"))
   .containsExactly("This", "Is", "Title", "Case", "Text");
 ```
 
 另外，我们可以检查单个字母的单词是否按照我们的意图提取:
 
-```
+```java
 assertThat(findWordsInMixedCase("thisHasASingleLetterWord"))
   .containsExactly("this", "Has", "A", "Single", "Letter", "Word");
 ```
@@ -101,7 +101,7 @@ assertThat(findWordsInMixedCase("thisHasASingleLetterWord"))
 
 **句子以大写字母开始，以句号**–`“.”`结束。我们需要能够创造一个以大写字母开头的单词:
 
-```
+```java
 private String capitalizeFirst(String word) {
     return word.substring(0, 1).toUpperCase()
       + word.substring(1).toLowerCase();
@@ -110,7 +110,7 @@ private String capitalizeFirst(String word) {
 
 然后我们可以循环遍历单词，将第一个单词大写，将其他单词小写:
 
-```
+```java
 public String sentenceCase(List<String> words) {
     List<String> capitalized = new ArrayList<>();
     for (int i = 0; i < words.size(); i++) {
@@ -129,7 +129,7 @@ public String sentenceCase(List<String> words) {
 
 让我们来测试一下:
 
-```
+```java
 assertThat(sentenceCase(Arrays.asList("these", "Words", "Form", "A", "Sentence")))
   .isEqualTo("These words form a sentence.");
 ```
@@ -140,7 +140,7 @@ assertThat(sentenceCase(Arrays.asList("these", "Words", "Form", "A", "Sentence")
 
 我们可以通过定义停用词来实现这一点:
 
-```
+```java
 Set<String> STOP_WORDS = Stream.of("a", "an", "the", "and", 
   "but", "for", "at", "by", "to", "or")
   .collect(Collectors.toSet());
@@ -148,7 +148,7 @@ Set<String> STOP_WORDS = Stream.of("a", "an", "the", "and",
 
 在这之后，我们可以修改循环中的`if`语句，使任何不是停用词的单词大写，第一个也是:
 
-```
+```java
 if (i == 0 || 
   !STOP_WORDS.contains(currentWord.toLowerCase())) {
     capitalized.add(capitalizeFirst(currentWord));
@@ -159,7 +159,7 @@ if (i == 0 ||
 
 让我们来测试一下:
 
-```
+```java
 assertThat(capitalizeMyTitle(Arrays.asList("title", "words", "capitalize")))
   .isEqualTo("Title Words Capitalize");
 

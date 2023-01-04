@@ -26,7 +26,7 @@
 
 让我们从`String`的示例`List`开始，创建我们的`Mono`发布者:
 
-```
+```java
 private Mono<List<String>> monoOfList() {
     List<String> list = new ArrayList<>();
     list.add("one");
@@ -40,7 +40,7 @@ private Mono<List<String>> monoOfList() {
 
 `flatMapMany` 是`Mono`上的一个通用操作符，它返回一个`Publisher.` ，让我们将`flatMapMany`应用到我们的解决方案中:
 
-```
+```java
 private <T> Flux<T> monoTofluxUsingFlatMapMany(Mono<List<T>> monoList) {
     return monoList
       .flatMapMany(Flux::fromIterable)
@@ -56,7 +56,7 @@ private <T> Flux<T> monoTofluxUsingFlatMapMany(Mono<List<T>> monoList) {
 
 这里，我们不需要从`List`显式创建`Flux`；我们只需要提供`List`。这个操作符从它的元素中隐式地创建了一个`Flux`。让我们使用`flatMapIterable`作为我们的解决方案:
 
-```
+```java
 private <T> Flux<T> monoTofluxUsingFlatMapIterable(Mono<List<T>> monoList) {
     return monoList
       .flatMapIterable(list -> list)

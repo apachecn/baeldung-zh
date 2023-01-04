@@ -16,7 +16,7 @@ Spring 允许我们为 [bean 的创建和销毁](/web/20220626110206/https://www
 
 `@PostConstruct`的一个可能用途是填充数据库。例如，在开发期间，我们可能想要创建一些默认用户:
 
-```
+```java
 @Component
 public class DbInit {
 
@@ -40,7 +40,7 @@ public class DbInit {
 
 与`@PostConstruct`相同，用`@PreDestroy`标注的方法可以有任何访问级别，但不能是静态的。
 
-```
+```java
 @Component
 public class UserRepository {
 
@@ -58,7 +58,7 @@ public class UserRepository {
 
 注意，`@PostConstruct`和`@PreDestroy`注释都是 Java EE 的一部分。由于 [Java EE 在 Java 9](/web/20220626110206/https://www.baeldung.com/java-enterprise-evolution) 中被弃用，并且在 Java 11 中被删除，我们必须添加一个额外的依赖项来使用这些注释:
 
-```
+```java
 <dependency>
     <groupId>javax.annotation</groupId>
     <artifactId>javax.annotation-api</artifactId>

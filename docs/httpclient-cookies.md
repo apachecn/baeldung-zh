@@ -16,7 +16,7 @@
 
 首先，我们需要创建一个 cookie 存储，并在存储中设置我们的示例 cookie:
 
-```
+```java
 BasicCookieStore cookieStore = new BasicCookieStore();
 BasicClientCookie cookie = new BasicClientCookie("JSESSIONID", "1234");
 cookie.setDomain(".github.com");
@@ -26,7 +26,7 @@ cookieStore.addCookie(cookie);
 
 然后，**我们可以使用`setDefaultCookieStore()`方法**在 HttpClient 上建立这个 cookie 存储，并发送请求:
 
-```
+```java
 @Test
 public void whenSettingCookiesOnTheHttpClient_thenCookieSentCorrectly() 
   throws ClientProtocolException, IOException {
@@ -48,7 +48,7 @@ public void whenSettingCookiesOnTheHttpClient_thenCookieSentCorrectly()
 
 此外，根据您使用的确切版本，您可能还需要设置:
 
-```
+```java
 cookie.setAttribute(ClientCookie.DOMAIN_ATTR, "true"); 
 ```
 
@@ -56,7 +56,7 @@ cookie.setAttribute(ClientCookie.DOMAIN_ATTR, "true");
 
 对于较旧版本的 http client(4.3 之前)cookie 存储直接设置在`HttpClient`上:
 
-```
+```java
 @Test
 public void givenUsingDeprecatedApi_whenSettingCookiesOnTheHttpClient_thenCorrect() 
   throws ClientProtocolException, IOException {
@@ -81,7 +81,7 @@ public void givenUsingDeprecatedApi_whenSettingCookiesOnTheHttpClient_thenCorrec
 
 如果不能在整个 HttpClient 上设置 cookie，我们可以使用`HttpContext`类单独配置带有 cookie 的请求:
 
-```
+```java
 @Test
 public void whenSettingCookiesOnTheRequest_thenCookieSentCorrectly() 
   throws ClientProtocolException, IOException {
@@ -107,7 +107,7 @@ public void whenSettingCookiesOnTheRequest_thenCookieSentCorrectly()
 
 在 HTTP 请求上设置 cookie 的一个低级替代方法是将其设置为原始头:
 
-```
+```java
 @Test
 public void whenSettingCookiesOnARequest_thenCorrect() 
   throws ClientProtocolException, IOException {

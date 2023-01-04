@@ -24,7 +24,7 @@
 
 在 Jakarta EE 中做完全相同的事情有点困难，因为没有提供类似的内置机制，然而，通过一点额外的编码就可以实现类似的场景。让我们来看看这是如何做到的:
 
-```
+```java
 @Singleton
 public class FixedTimerBean {
 
@@ -39,7 +39,7 @@ public class FixedTimerBean {
 } 
 ```
 
-```
+```java
 @Singleton
 public class WorkerBean {
 
@@ -69,7 +69,7 @@ public class WorkerBean {
 
 正如在上一篇文章中提到的，任务执行的开始并不等待上一次执行的完成。当任务的每次执行都是独立的时，应该使用此选项。下面的代码片段创建了一个每秒触发一次的计时器:
 
-```
+```java
 @Startup
 @Singleton
 public class ProgrammaticAtFixedRateTimerBean {
@@ -94,7 +94,7 @@ public class ProgrammaticAtFixedRateTimerBean {
 
 另一种方法是使用`@Scheduled`标注。在下面的代码片段中，我们每五秒钟触发一次计时器:
 
-```
+```java
 @Startup
 @Singleton
 public class ScheduleTimerBean {
@@ -117,7 +117,7 @@ public class ScheduleTimerBean {
 
 如果您的用例场景要求定时器延迟启动，我们也可以这样做。在这种情况下，Jakarta EE 允许使用[定时服务](https://web.archive.org/web/20220815030036/https://docs.oracle.com/javaee/6/api/javax/ejb/TimerService.html)。让我们看一个例子，计时器初始延迟 10 秒，然后每隔 5 秒触发一次:
 
-```
+```java
 @Startup
 @Singleton
 public class ProgrammaticWithInitialFixedDelayTimerBean {
@@ -148,7 +148,7 @@ public class ProgrammaticWithInitialFixedDelayTimerBean {
 
 我们看到的所有调度器，无论是编程的还是自动的，都允许使用 cron 表达式。让我们看一个例子:
 
-```
+```java
 @Schedules ({
    @Schedule(dayOfMonth="Last"),
    @Schedule(dayOfWeek="Fri", hour="23")

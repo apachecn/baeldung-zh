@@ -16,13 +16,13 @@
 
 首先，让我们[安装 Kubernetes 命令行，`kubectl`](https://web.archive.org/web/20220926195301/https://kubernetes.io/docs/tasks/tools/) 。在 macOS 上，我们可以使用自制软件安装它:
 
-```
+```java
 $ brew install kubectl
 ```
 
 我们可以使用以下命令来验证安装是否成功:
 
-```
+```java
 $ kubectl version --client
 
 Client Version: version.Info{Major:"1", Minor:"21", GitVersion:"v1.21.3", 
@@ -32,7 +32,7 @@ BuildDate:"2021-07-15T21:04:39Z", GoVersion:"go1.16.6", Compiler:"gc", Platform:
 
 同样，我们可以使用`curl`在 Windows 上下载:
 
-```
+```java
 curl -LO https://dl.k8s.io/v1.21.0/bin/windows/amd64/kubectl.exe.sha256
 ```
 
@@ -42,13 +42,13 @@ curl -LO https://dl.k8s.io/v1.21.0/bin/windows/amd64/kubectl.exe.sha256
 
 接下来，我们将使用自制软件在 macOS 上安装`kind`:
 
-```
+```java
 $ brew install kind
 ```
 
 要验证安装是否成功，我们可以尝试以下命令:
 
-```
+```java
 $ kind version
 kind v0.11.1 go1.15.6 darwin/amd64
 ```
@@ -57,7 +57,7 @@ kind v0.11.1 go1.15.6 darwin/amd64
 
 同样，对于 Windows 操作系统，我们可以使用`curl`下载`kind`:
 
-```
+```java
 curl -Lo kind-windows-amd64.exe https://kind.sigs.k8s.io/dl/v0.11.1/kind-windows-amd64
 Move-Item .\kind-windows-amd64.exe c:\kind\kind.exe
 ```
@@ -70,7 +70,7 @@ Move-Item .\kind-windows-amd64.exe c:\kind\kind.exe
 
 首先，让我们用默认配置创建一个本地 Kubernetes 集群:
 
-```
+```java
 $ kind create cluster
 ```
 
@@ -89,7 +89,7 @@ Set kubectl context to "kind-baeldung-kind"
 You can now use your cluster with:
 kubectl cluster-info --context kind-baeldung-kind
 Thanks for using kind! 😊 
-```
+```java
 
 此外，我们可以使用 YAML 配置文件来配置集群。例如，让我们在`baeldungConfig.yaml`文件中编写一个简单的配置:
 
@@ -97,19 +97,19 @@ Thanks for using kind! 😊
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1
 name: baeldung-kind
-```
+```java
 
 然后，让我们使用配置文件创建集群:
 
 ```
 $ kind create cluster --config baeldungConfig.yaml
-```
+```java
 
 此外，我们还可以在创建集群时提供特定版本的 Kubernetes 映像:
 
 ```
 $ kind create cluster --image kindest/node:v1.20.7
-```
+```java
 
 ### 3.2.获取集群
 
@@ -118,7 +118,7 @@ $ kind create cluster --image kindest/node:v1.20.7
 ```
 $ kind get clusters
 baeldung-kind
-```
+```java
 
 此外，我们可以确认相应的 docker 容器:
 
@@ -126,7 +126,7 @@ baeldung-kind
 $ docker ps
 CONTAINER ID  IMAGE                 COMMAND                 CREATED    STATUS        PORTS                      NAMES
 612a98989e99  kindest/node:v1.21.1  "/usr/local/bin/entr…"  1 min ago  Up 2 minutes  127.0.0.1:59489->6443/tcp  baeldung-kind-control-plane
-```
+```java
 
 或者，我们可以通过`kubectl`确认节点:
 
@@ -134,7 +134,7 @@ CONTAINER ID  IMAGE                 COMMAND                 CREATED    STATUS   
 $ kubectl get nodes
 NAME                          STATUS   ROLES                  AGE   VERSION
 baeldung-kind-control-plane   Ready    control-plane,master   41s   v1.21.1
-```
+```java
 
 ### 3.3.集群详细信息
 
@@ -144,13 +144,13 @@ baeldung-kind-control-plane   Ready    control-plane,master   41s   v1.21.1
 $ kubectl cluster-info --context kind-baeldung-kind
 Kubernetes master is running at https://127.0.0.1:59489
 CoreDNS is running at https://127.0.0.1:59489/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-```
+```java
 
 此外，我们可以使用`dump`参数和`cluster-info`命令来提取集群的详细信息:
 
 ```
 $ kubectl cluster-info dump --context kind-baeldung-kind 
-```
+```java
 
 ### 3.4.删除集群
 
@@ -158,7 +158,7 @@ $ kubectl cluster-info dump --context kind-baeldung-kind
 
 ```
 $ kind delete cluster --name baeldung-kind
-```
+```java
 
 ## 4.入口控制器
 
@@ -187,7 +187,7 @@ nodes:
   - containerPort: 443
     hostPort: 443
     protocol: TCP
-```
+```java
 
 这里，我们已经更新了我们的`baeldungConfig.yaml`文件来设置入口控制器的配置，将容器端口映射到主机端口。此外，我们通过定义`ingress-ready=true`为入口启用了节点。
 
@@ -195,7 +195,7 @@ nodes:
 
 ```
 kind create cluster --config baeldungConfig.yaml
-```
+```java
 
 ### 4.2.部署
 
@@ -203,7 +203,7 @@ kind create cluster --config baeldungConfig.yaml
 
 ```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
-```
+```java
 
 此外，我们还可以使用 [AWS](https://web.archive.org/web/20220926195301/https://github.com/kubernetes-sigs/aws-load-balancer-controller#readme) 和 [GCE 负载平衡器](https://web.archive.org/web/20220926195301/https://git.k8s.io/ingress-gce/README.md#readme)控制器。
 
@@ -256,7 +256,7 @@ spec:
             port:
               number: 5678
 ---
-```
+```java
 
 这里，我们创建了一个名为`baeldung-app`的 pod，带有`text`参数和一个名为`baeldung-service.`的服务
 
@@ -268,7 +268,7 @@ spec:
 
 ```
 $ kubectl apply -f baeldung-service.yaml
-```
+```java
 
 我们可以在`kubectl`上查看服务状态:
 
@@ -277,14 +277,14 @@ $ kubectl get services
 NAME               TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
 baeldung-service   ClusterIP   10.96.172.116   <none>        5678/TCP   5m38s
 kubernetes         ClusterIP   10.96.0.1       <none>        443/TCP    7m5s
-```
+```java
 
 就是这样！我们的服务已经部署，应该在 `localhost/baeldung`可用:
 
 ```
 $ curl localhost/baeldung
 Hello World! This is a Baeldung Kubernetes with kind App 
-```
+```java
 
 注意:如果我们遇到任何与`validate.nginx.ingress.kubernetes.io` webhook 相关的错误，我们应该删除`ValidationWebhookConfiguration`:
 

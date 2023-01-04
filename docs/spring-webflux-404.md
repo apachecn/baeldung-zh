@@ -14,7 +14,7 @@
 
 当然，当一切顺利时，默认的响应状态是 **200 (OK)** :
 
-```
+```java
 @GetMapping(
   value = "/ok",
   produces = MediaType.APPLICATION_JSON_UTF8_VALUE
@@ -28,7 +28,7 @@ public Flux<String> ok() {
 
 我们可以通过向方法添加`@ResponseStatus`注释来改变默认的返回状态:
 
-```
+```java
 @GetMapping(
   value = "/no-content",
   produces = MediaType.APPLICATION_JSON_UTF8_VALUE
@@ -45,7 +45,7 @@ public Flux<String> noContent() {
 
 我们可以在我们的方法中直接实现注入`ServerHttpResponse `:
 
-```
+```java
 @GetMapping(
   value = "/accepted",
   produces = MediaType.APPLICATION_JSON_UTF8_VALUE
@@ -62,7 +62,7 @@ public Flux<String> accepted(ServerHttpResponse response) {
 
 每当我们抛出一个异常，默认的 HTTP 返回状态被忽略，Spring 试图找到一个异常处理程序来处理它:
 
-```
+```java
 @GetMapping(
   value = "/bad-request"
 )
@@ -86,7 +86,7 @@ public void illegalArgumentHandler() {
 
 这允许我们选择想要返回的 HTTP 状态，并使用非常有用的 fluent API 进一步定制我们的响应:
 
-```
+```java
 @GetMapping(
   value = "/unauthorized"
 )
@@ -102,7 +102,7 @@ public ResponseEntity<Mono<String>> unathorized() {
 
 有了 Spring 5，我们可以用函数的方式定义端点，所以我们也可以用编程的方式改变默认的 HTTP 状态:
 
-```
+```java
 @Bean
 public RouterFunction<ServerResponse> notFound() {
     return RouterFunctions

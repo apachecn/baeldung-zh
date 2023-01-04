@@ -25,7 +25,7 @@ Some of the more useful configs for a Spring Boot application.[Read more](/web/2
 
 为了创建一个过滤器，我们只需要实现`Filter`接口:
 
-```
+```java
 @Component
 @Order(1)
 public class TransactionFilter implements Filter {
@@ -51,7 +51,7 @@ public class TransactionFilter implements Filter {
 } 
 ```
 
-```
+```java
 @Component
 @Order(2)
 public class RequestResponseLoggingFilter implements Filter {
@@ -87,7 +87,7 @@ public class RequestResponseLoggingFilter implements Filter {
 
 在这种情况下，我们必须从过滤器类定义中移除`@Component`注释，并使用`**FilterRegistrationBean**:`**注册过滤器**
 
-```
+```java
 @Bean
 public FilterRegistrationBean<RequestResponseLoggingFilter> loggingFilter(){
     FilterRegistrationBean<RequestResponseLoggingFilter> registrationBean 
@@ -111,7 +111,7 @@ public FilterRegistrationBean<RequestResponseLoggingFilter> loggingFilter(){
 
 现在让我们创建一个简单的端点，并向它发送一个 HTTP 请求:
 
-```
+```java
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -125,7 +125,7 @@ public class UserController {
 
 点击此 API 的应用程序日志如下:
 
-```
+```java
 23:54:38 INFO  com.spring.demo.TransactionFilter - Starting Transaction for req :/users
 23:54:38 INFO  c.s.d.RequestResponseLoggingFilter - Logging Request  GET : /users
 ...

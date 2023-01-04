@@ -20,7 +20,7 @@
 
 例如，我们将在`User`实体上设置一个时间戳，表示用户登录到当前会话的时间:
 
-```
+```java
 @Entity
 @Table(name = "Users")
 public class User {
@@ -43,7 +43,7 @@ public class User {
 
 如果我们序列化这个`User`对象并将其传递给系统中的另一个服务，那么`loginTime`字段将包含在序列化中。如果我们不想包含这个字段，我们可以用关键字`transient`代替`@Transient`注释:
 
-```
+```java
 @Entity
 @Table(name = "Users")
 public class User implements Serializable {

@@ -36,7 +36,7 @@
 
 通过在连续循环中创建线程，然后让线程等待，我们可以很容易地重现这个问题:
 
-```
+```java
 while (true) {
   new Thread(() -> {
     try {
@@ -62,7 +62,7 @@ while (true) {
 
 我们可以使用`Executors#newFixedThreadPool`方法来设置一次可以使用的最大线程数:
 
-```
+```java
 ExecutorService executorService = Executors.newFixedThreadPool(5);
 
 Runnable runnableTask = () -> {

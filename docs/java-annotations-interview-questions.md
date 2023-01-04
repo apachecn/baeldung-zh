@@ -44,7 +44,7 @@
 
 注释是一种接口形式，其中关键字`interface`在`@,`之前，并且其主体包含看起来非常类似于方法的`annotation type element`声明:
 
-```
+```java
 public @interface SimpleAnnotation {
     String value();
 
@@ -54,7 +54,7 @@ public @interface SimpleAnnotation {
 
 定义注释后，您可以开始在代码中使用它:
 
-```
+```java
 @SimpleAnnotation(value = "an element", types = 1)
 public class Element {
     @SimpleAnnotation(value = "an attribute", types = { 1, 2 })
@@ -66,7 +66,7 @@ public class Element {
 
 也可以选择提供默认值，只要它们是编译器的常量表达式:
 
-```
+```java
 public @interface SimpleAnnotation {
     String value() default "This is an element";
 
@@ -76,7 +76,7 @@ public @interface SimpleAnnotation {
 
 现在，您可以在没有这些元素的情况下使用注释:
 
-```
+```java
 @SimpleAnnotation
 public class Element {
     // ...
@@ -85,7 +85,7 @@ public class Element {
 
 或者只是其中的一部分:
 
-```
+```java
 @SimpleAnnotation(value = "an attribute")
 public Element nextElement;
 ```
@@ -96,7 +96,7 @@ public Element nextElement;
 
 下面是一个成功遵循这一原则的示例代码:
 
-```
+```java
 enum Complexity {
     LOW, HIGH
 }
@@ -112,7 +112,7 @@ public @interface ComplexAnnotation {
 
 下一个示例将无法编译，因为`Object` 不是有效的返回类型:
 
-```
+```java
 public @interface FailingAnnotation {
     Object complexity();
 }
@@ -122,7 +122,7 @@ public @interface FailingAnnotation {
 
 注释可以应用于整个源代码的几个地方。它们可以应用于类、构造函数和字段的声明:
 
-```
+```java
 @SimpleAnnotation
 public class Apply {
     @SimpleAnnotation
@@ -137,7 +137,7 @@ public class Apply {
 
 方法及其参数:
 
-```
+```java
 @SimpleAnnotation
 public void aMethod(@SimpleAnnotation String param) {
     // ...
@@ -146,7 +146,7 @@ public void aMethod(@SimpleAnnotation String param) {
 
 局部变量，包括循环和资源变量:
 
-```
+```java
 @SimpleAnnotation
 int i = 10;
 
@@ -163,7 +163,7 @@ try (@SimpleAnnotation FileWriter writer = getWriter()) {
 
 其他注释类型:
 
-```
+```java
 @SimpleAnnotation
 public @interface ComplexAnnotation {
     // ...
@@ -172,14 +172,14 @@ public @interface ComplexAnnotation {
 
 甚至是包，通过`package-info.java`文件:
 
-```
+```java
 @PackageAnnotation
 package com.baeldung.interview.annotations;
 ```
 
 从 Java 8 开始，它们也可以应用于类型的`use`。为此，注释必须指定一个值为`ElementType.USE`的`@Target` 注释:
 
-```
+```java
 @Target(ElementType.TYPE_USE)
 public @interface SimpleAnnotation {
     // ...
@@ -188,19 +188,19 @@ public @interface SimpleAnnotation {
 
 现在，注释可以应用于类实例的创建:
 
-```
+```java
 new @SimpleAnnotation Apply();
 ```
 
 类型转换:
 
-```
+```java
 aString = (@SimpleAnnotation String) something;
 ```
 
 实现子句:
 
-```
+```java
 public class SimpleList<T>
   implements @SimpleAnnotation List<@SimpleAnnotation T> {
     // ...
@@ -209,7 +209,7 @@ public class SimpleList<T>
 
 和`throws`条款:
 
-```
+```java
 void aMethod() throws @SimpleAnnotation Exception {
     // ...
 }
@@ -221,7 +221,7 @@ void aMethod() throws @SimpleAnnotation Exception {
 
 这里有一个例子，将`@SimpleAnnotation`注释的使用仅限于字段声明:
 
-```
+```java
 @Target(ElementType.FIELD)
 public @interface SimpleAnnotation {
     // ...
@@ -230,13 +230,13 @@ public @interface SimpleAnnotation {
 
 如果我们想让它适用于更多的上下文，我们可以传递多个常量:
 
-```
+```java
 @Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PACKAGE })
 ```
 
 我们甚至可以做一个注释，这样它就不能用来注释任何东西。当声明的类型仅用作复杂批注中的成员类型时，这可能会很方便:
 
-```
+```java
 @Target({})
 public @interface NoTargetAnnotation {
     // ...
@@ -249,7 +249,7 @@ public @interface NoTargetAnnotation {
 
 所有未标有`@Target,`或标有但包含`ANNOTATION_TYPE`常量的注释也是元注释:
 
-```
+```java
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface SimpleAnnotation {
     // ...
@@ -264,7 +264,7 @@ public @interface SimpleAnnotation {
 
 首先，我们需要声明一个可重复的注释:
 
-```
+```java
 @Repeatable(Schedules.class)
 public @interface Schedule {
     String time() default "morning";
@@ -273,7 +273,7 @@ public @interface Schedule {
 
 然后，我们用一个强制的`value`元素定义包含注释，其类型必须是可重复注释类型的数组:
 
-```
+```java
 public @interface Schedules {
     Schedule[] value();
 }
@@ -281,7 +281,7 @@ public @interface Schedules {
 
 现在，我们可以多次使用@Schedule:
 
-```
+```java
 @Schedule
 @Schedule(time = "afternoon")
 @Schedule(time = "night")
@@ -302,7 +302,7 @@ void scheduledMethod() {
 
 下面是创建可在运行时读取的注释的示例代码:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Description {
     String value();
@@ -311,7 +311,7 @@ public @interface Description {
 
 现在，可以通过反射来检索注释:
 
-```
+```java
 Description description
   = AnnotatedClass.class.getAnnotation(Description.class);
 System.out.println(description.value());
@@ -323,7 +323,7 @@ System.out.println(description.value());
 
 ### Q10。下面的代码会编译吗？
 
-```
+```java
 @Target({ ElementType.FIELD, ElementType.TYPE, ElementType.FIELD })
 public @interface TestAnnotation {
     int[] value() default {};
@@ -334,7 +334,7 @@ public @interface TestAnnotation {
 
 删除重复的常量将使代码成功编译:
 
-```
+```java
 @Target({ ElementType.FIELD, ElementType.TYPE})
 ```
 
@@ -344,7 +344,7 @@ public @interface TestAnnotation {
 
 如果我们试图在注释声明中使用`extends`子句，我们会得到一个编译错误:
 
-```
+```java
 public @interface AnAnnotation extends OtherAnnotation {
     // Compilation error
 }

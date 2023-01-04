@@ -12,7 +12,7 @@
 
 为了在我们的项目中使用 `JUnitParams`，我们需要将它添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>pl.pragmatists</groupId>
     <artifactId>JUnitParams</artifactId>
@@ -26,7 +26,7 @@
 
 让我们创建一个类来完成两个整数的安全加法。如果溢出，应该返回`Integer.MAX_VALUE`，如果下溢，应该返回`Integer.MIN_VALUE`:
 
-```
+```java
 public class SafeAdditionUtil {
 
     public int safeAdd(int a, int b) {
@@ -47,7 +47,7 @@ public class SafeAdditionUtil {
 
 让我们用最少的代码量来看看这个基本方法是如何实现的。之后，我们可以看到使用 JUnitParams 实现测试场景的其他可能方式是什么
 
-```
+```java
 @RunWith(JUnitParamsRunner.class)
 public class SafeAdditionUtilTest {
 
@@ -77,7 +77,7 @@ public class SafeAdditionUtilTest {
 
 如果我们使用 Maven 运行测试，我们会看到**我们正在运行四个测试用例，而不是一个**。输出将类似于以下内容:
 
-```
+```java
 -------------------------------------------------------
  T E S T S
 -------------------------------------------------------
@@ -114,7 +114,7 @@ Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
 
 我们可以使用类中的另一个方法来提供测试方法参数。我们先来看一个例子:
 
-```
+```java
 @Test
 @Parameters(method = "parametersToTestAdd")
 public void whenWithNamedMethod_thenSafeAdd(
@@ -137,7 +137,7 @@ private Object[] parametersToTestAdd() {
 
 提供者方法的规范应该返回一个由`Object`组成的数组作为结果。如果具有给定名称的方法不可用，测试用例将失败，并显示以下错误:
 
-```
+```java
 java.lang.RuntimeException: Could not find method: bogusMethodName so no params were used.
 ```
 
@@ -145,7 +145,7 @@ java.lang.RuntimeException: Could not find method: bogusMethodName so no params 
 
 如果我们没有在`@Parameters`注释中指定任何东西，`JUnitParams` 试图根据测试方法名加载一个测试数据提供者方法。方法名被构造成`“parametersFor”+ <test method name>:`
 
-```
+```java
 @Test
 @Parameters
 public void whenWithnoParam_thenLoadByNameSafeAdd(
@@ -174,7 +174,7 @@ private Object[] parametersForWhenWithnoParam_thenLoadByNameSafe() {
 
 类似于我们在前面的例子中引用数据提供者方法的方式，我们可以引用一个单独的类来为我们的测试提供数据:
 
-```
+```java
 @Test
 @Parameters(source = TestDataProvider.class)
 public void whenWithNamedClass_thenSafeAdd(
@@ -214,7 +214,7 @@ public class TestDataProvider {
 
 假设我们有一个测试参数为 `JunitParamsTestParameters.csv`的 CSV 文件:
 
-```
+```java
 1,2,3
 -10, 30, 20
 15, -5, 10
@@ -223,7 +223,7 @@ public class TestDataProvider {
 
 现在让我们看看如何使用这个文件来加载测试方法中的测试参数:
 
-```
+```java
 @Test
 @FileParameters("src/test/resources/JunitParamsTestParameters.csv")
 public void whenWithCsvFile_thenSafeAdd(

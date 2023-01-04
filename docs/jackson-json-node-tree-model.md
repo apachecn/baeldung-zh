@@ -12,7 +12,7 @@
 
 创建节点的第一步是使用默认构造函数实例化一个`ObjectMapper`对象:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 ```
 
@@ -24,13 +24,13 @@ ObjectMapper mapper = new ObjectMapper();
 
 这是无中生有地创建节点的最常见方式:
 
-```
+```java
 JsonNode node = mapper.createObjectNode();
 ```
 
 或者，我们也可以通过`JsonNodeFactory`创建一个节点:
 
-```
+```java
 JsonNode node = JsonNodeFactory.instance.objectNode();
 ```
 
@@ -42,13 +42,13 @@ JsonNode node = JsonNodeFactory.instance.objectNode();
 
 通过调用`ObjectMapper`上的`valueToTree(Object fromValue)`方法，可以从 Java 对象转换节点:
 
-```
+```java
 JsonNode node = mapper.valueToTree(fromValue);
 ```
 
 这里的`convertValue` API 也很有帮助:
 
-```
+```java
 JsonNode node = mapper.convertValue(fromValue, JsonNode.class);
 ```
 
@@ -56,7 +56,7 @@ JsonNode node = mapper.convertValue(fromValue, JsonNode.class);
 
 假设我们有一个名为`NodeBean`的类:
 
-```
+```java
 public class NodeBean {
     private int id;
     private String name;
@@ -75,7 +75,7 @@ public class NodeBean {
 
 让我们编写一个测试来确保转换正确进行:
 
-```
+```java
 @Test
 public void givenAnObject_whenConvertingIntoNode_thenCorrect() {
     NodeBean fromValue = new NodeBean(2016, "baeldung.com");
@@ -93,13 +93,13 @@ public void givenAnObject_whenConvertingIntoNode_thenCorrect() {
 
 这是将树节点转换成 JSON 字符串的基本方法，其中目的地可以是`File`、`OutputStream`或`Writer`:
 
-```
+```java
 mapper.writeValue(destination, node);
 ```
 
 通过重用第 2.3 节中声明的类`NodeBean`，一个测试确保该方法按预期工作:
 
-```
+```java
 final String pathToTestFile = "node_to_json_test.json";
 
 @Test
@@ -119,26 +119,26 @@ public void givenANode_whenModifyingIt_thenCorrect() throws IOException {
 
 将`JsonNode`转换成 Java 对象最方便的方法是使用`treeToValue` API:
 
-```
+```java
 NodeBean toValue = mapper.treeToValue(node, NodeBean.class);
 ```
 
 这在功能上等同于以下内容:
 
-```
+```java
 NodeBean toValue = mapper.convertValue(node, NodeBean.class)
 ```
 
 我们也可以通过令牌流来实现:
 
-```
+```java
 JsonParser parser = mapper.treeAsTokens(node);
 NodeBean toValue = mapper.readValue(parser, NodeBean.class);
 ```
 
 最后，让我们实现一个测试来验证转换过程:
 
-```
+```java
 @Test
 public void givenANode_whenConvertingIntoAnObject_thenCorrect()
   throws JsonProcessingException {
@@ -157,7 +157,7 @@ public void givenANode_whenConvertingIntoAnObject_thenCorrect()
 
 我们将使用包含在名为`example.json`的文件中的以下 JSON 元素，作为将要采取的操作的基础结构:
 
-```
+```java
 {
     "name": 
         {
@@ -172,7 +172,7 @@ public void givenANode_whenConvertingIntoAnObject_thenCorrect()
 
 这个位于类路径上的 JSON 文件被解析成一个模型树:
 
-```
+```java
 public class ExampleStructure {
     private static ObjectMapper mapper = new ObjectMapper();
 
@@ -197,7 +197,7 @@ public class ExampleStructure {
 
 假设我们想要一个名为`last`的节点，它位于`name`节点之下:
 
-```
+```java
 JsonNode locatedNode = rootNode.path("name").path("last");
 ```
 
@@ -211,7 +211,7 @@ JsonNode locatedNode = rootNode.path("name").path("last");
 
 可以将一个节点添加为另一个节点的子节点:
 
-```
+```java
 ObjectNode newNode = ((ObjectNode) locatedNode).put(fieldName, value);
 ```
 
@@ -221,7 +221,7 @@ ObjectNode newNode = ((ObjectNode) locatedNode).put(fieldName, value);
 
 最后，让我们看一个例子，我们将整个结构添加到树的根节点:
 
-```
+```java
 "address":
 {
     "city": "Seattle",
@@ -232,7 +232,7 @@ ObjectNode newNode = ((ObjectNode) locatedNode).put(fieldName, value);
 
 下面是通过所有这些操作并验证结果的完整测试:
 
-```
+```java
 @Test
 public void givenANode_whenAddingIntoATree_thenCorrect() throws IOException {
     JsonNode rootNode = ExampleStructure.getExampleRoot();
@@ -255,7 +255,7 @@ public void givenANode_whenAddingIntoATree_thenCorrect() throws IOException {
 
 可以通过调用`set(String fieldName, JsonNode value)`方法来修改`ObjectNode`实例:
 
-```
+```java
 JsonNode locatedNode = locatedNode.set(fieldName, value);
 ```
 
@@ -263,7 +263,7 @@ JsonNode locatedNode = locatedNode.set(fieldName, value);
 
 为了验证该方法是否按预期工作，我们将在测试中将根节点下的字段`name`的值从对象`first`和`last`更改为另一个仅包含`nick`字段的值:
 
-```
+```java
 @Test
 public void givenANode_whenModifyingIt_thenCorrect() throws IOException {
     String newString = "{\"nick\": \"cowtowncoder\"}";
@@ -281,13 +281,13 @@ public void givenANode_whenModifyingIt_thenCorrect() throws IOException {
 
 可以通过调用父节点上的`remove(String fieldName)` API 来删除节点:
 
-```
+```java
 JsonNode removedNode = locatedNode.remove(fieldName);
 ```
 
 为了一次移除多个节点，我们可以使用`Collection<String>`类型的参数调用一个重载方法，该方法返回父节点而不是要移除的节点:
 
-```
+```java
 ObjectNode locatedNode = locatedNode.remove(fieldNames);
 ```
 
@@ -295,7 +295,7 @@ ObjectNode locatedNode = locatedNode.remove(fieldNames);
 
 下面的测试将着重于上面提到的第一种方法，这是最常见的情况:
 
-```
+```java
 @Test
 public void givenANode_whenRemovingFromATree_thenCorrect() throws IOException {
     JsonNode rootNode = ExampleStructure.getExampleRoot();
@@ -313,7 +313,7 @@ JSON 有三种类型的节点，分别是值、对象和数组。
 
 因此，让我们通过添加一个`Array`来确保我们的样本数据具有所有三种不同的类型:
 
-```
+```java
 {
     "name": 
         {
@@ -338,7 +338,7 @@ JSON 有三种类型的节点，分别是值、对象和数组。
 
 现在让我们看看我们想要生产的 YAML:
 
-```
+```java
 name: 
   first: Tatu
   last: Saloranta
@@ -361,7 +361,7 @@ pets:
 
 我们的测试将 JSON 文档的根节点提供给我们的`toYaml`方法，并断言返回值是我们所期望的:
 
-```
+```java
 @Test
 public void givenANodeTree_whenIteratingSubNodes_thenWeFindExpected() throws IOException {
     JsonNode rootNode = ExampleStructure.getExampleRoot();
@@ -384,7 +384,7 @@ public String toYaml(JsonNode root) {
 
 我们将在我们的`processNode`方法中这样做:
 
-```
+```java
 private void processNode(JsonNode jsonNode, StringBuilder yaml, int depth) {
     if (jsonNode.isValueNode()) {
         yaml.append(jsonNode.asText());
@@ -410,7 +410,7 @@ private void processNode(JsonNode jsonNode, StringBuilder yaml, int depth) {
 
 但是，我们不能从元素中确定字段名，因为它只包含字段值:
 
-```
+```java
 Object  {"first": "Tatu", "last": "Saloranta"}
 Value  "Jackson Founder"
 Value  "FasterXML"
@@ -419,7 +419,7 @@ Array  [{"type": "dog", "number": 1},{"type": "fish", "number": 50}]
 
 相反，我们将使用`JsonNode.fields`,因为这使我们能够访问字段名和值:
 
-```
+```java
 Key="name", Value=Object  {"first": "Tatu", "last": "Saloranta"}
 Key="title", Value=Value  "Jackson Founder"
 Key="company", Value=Value  "FasterXML"
@@ -428,7 +428,7 @@ Key="pets", Value=Array  [{"type": "dog", "number": 1},{"type": "fish", "number"
 
 对于每个字段，我们将字段名添加到输出中，然后通过将值传递给`processNode`方法，将该值作为子节点进行处理:
 
-```
+```java
 private void appendNodeToYaml(
   JsonNode node, StringBuilder yaml, int depth, boolean isArrayItem) {
     Iterator<Entry<String, JsonNode>> fields = node.fields();
@@ -447,7 +447,7 @@ private void appendNodeToYaml(
 
 因此，我们将一个名为 depth 的字段传递到`processNode`方法中进行跟踪，并且我们在每次获得一个子节点时增加这个值，以便我们可以在 YAML 输出中正确地缩进这些字段:
 
-```
+```java
 private void addFieldNameToYaml(
   StringBuilder yaml, String fieldName, int depth, boolean isFirstInArray) {
     if (yaml.length()>0) {

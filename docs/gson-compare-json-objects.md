@@ -16,20 +16,20 @@ JSON 是数据的字符串表示。我们可能希望在我们的算法或测试
 
 假设我们有两个字符串，代表相同的 JSON 数据，但是其中一个在末尾有一些额外的空格:
 
-```
+```java
 String string1 = "{\"fullName\": \"Emily Jenkins\", \"age\": 27    }";
 String string2 = "{\"fullName\": \"Emily Jenkins\", \"age\": 27}";
 ```
 
 虽然 JSON 对象的内容是相同的，但是将上面的内容作为字符串进行比较会发现不同之处:
 
-```
+```java
 assertNotEquals(string1, string2);
 ```
 
 如果对象中键的顺序不同，也会发生同样的情况，即使 JSON 通常对此不敏感:
 
-```
+```java
 String string1 = "{\"fullName\": \"Emily Jenkins\", \"age\": 27}";
 String string2 = "{\"age\": 27, \"fullName\": \"Emily Jenkins\"}";
 assertNotEquals(string1, string2);
@@ -41,7 +41,7 @@ assertNotEquals(string1, string2);
 
 要使用 Gson，让我们首先添加 [Gson Maven 依赖关系](https://web.archive.org/web/20221128052325/https://search.maven.org/artifact/com.google.code.gson/gson):
 
-```
+```java
 <dependency>
     <groupId>com.google.code.gson</groupId>
     <artifactId>gson</artifactId>
@@ -55,7 +55,7 @@ assertNotEquals(string1, string2);
 
 在 Java 中使用 JSON 时，我们首先需要将 JSON 字符串转换成 Java 对象。Gson 提供了 [`JsonParser`](https://web.archive.org/web/20221128052325/https://www.javadoc.io/doc/com.google.code.gson/gson/2.6.2/com/google/gson/JsonParser.html) ，它将源 JSON 解析成一个`[JsonElement](https://web.archive.org/web/20221128052325/https://www.javadoc.io/doc/com.google.code.gson/gson/2.8.5/com/google/gson/JsonElement.html) `树:
 
-```
+```java
 JsonParser parser = new JsonParser();
 String objectString = "{\"customer\": {\"fullName\": \"Emily Jenkins\", \"age\": 27 }}";
 String arrayString = "[10, 20, 30]";
@@ -66,7 +66,7 @@ JsonElement json2 = parser.parse(arrayString);
 
 `JsonElement `是一个抽象类，代表 JSON 的一个元素。`parse` 方法返回一个`JsonElement`的实现；不是`JsonObject, JsonArray, JsonPrimitive`就是`JsonNull:`
 
-```
+```java
 assertTrue(json1.isJsonObject());
 assertTrue(json2.isJsonArray());
 ```
@@ -81,7 +81,7 @@ assertTrue(json2.isJsonArray());
 
 第一个对象的`fullName`早于`age`:
 
-```
+```java
 {
     "customer": {
         "id": 44521,
@@ -93,7 +93,7 @@ assertTrue(json2.isJsonArray());
 
 第二个颠倒了顺序:
 
-```
+```java
 {
     "customer": {
         "id": 44521,
@@ -105,7 +105,7 @@ assertTrue(json2.isJsonArray());
 
 我们可以简单地分析和比较它们:
 
-```
+```java
 assertEquals(parser.parse(string1), parser.parse(string2));
 ```
 
@@ -117,23 +117,23 @@ assertEquals(parser.parse(string1), parser.parse(string2));
 
 如果我们有一个有序的数组:
 
-```
+```java
 [10, 20, 30]
 ```
 
-```
+```java
 assertTrue(parser.parse(string1).isJsonArray());
 ```
 
 我们可以以不同的顺序将它与另一个进行比较:
 
-```
+```java
 [20, 10, 30]
 ```
 
 与`JsonObject`，**，`JsonArray`的`equals` 方法不同，是顺序敏感的**，所以这些数组不相等，这在语义上是正确的:
 
-```
+```java
 assertNotEquals(parser.parse(string1), parser.parse(string2));
 ```
 
@@ -145,7 +145,7 @@ assertNotEquals(parser.parse(string1), parser.parse(string2));
 
 如果这是`string1`:
 
-```
+```java
 {
   "customer": {
     "id": "44521",
@@ -161,7 +161,7 @@ assertNotEquals(parser.parse(string1), parser.parse(string2));
 
 而这个 JSON 是`string2`:
 
-```
+```java
 {
   "customer": {
     "fullName": "Emily Jenkins",
@@ -177,7 +177,7 @@ assertNotEquals(parser.parse(string1), parser.parse(string2));
 
 那么我们还是可以用`equals` 的方法来比较它们:
 
-```
+```java
 assertEquals(parser.parse(string1), parser.parse(string2));
 ```
 

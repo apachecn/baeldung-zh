@@ -22,7 +22,7 @@
 
 让我们定义一下我们的`Product`类:
 
-```
+```java
 public class Product implements Serializable {
     private long id;
     private String name;
@@ -36,7 +36,7 @@ public class Product implements Serializable {
 
 让我们定义两个 API 方法:
 
-```
+```java
 @RestController
 @ApiOperation("Products API")
 public class ProductController {
@@ -71,7 +71,7 @@ public class ProductController {
 
 让我们来看一些使方法具有描述性的方法。我们将向方法、参数和响应代码添加描述。让我们从`getProduct()` 方法开始:
 
-```
+```java
 @ApiOperation(value = "Get a product by id", notes = "Returns a product as per the id")
 @ApiResponses(value = {
   @ApiResponse(code = 200, message = "Successfully retrieved"),
@@ -104,7 +104,7 @@ public ResponseEntity<Product> getProduct(@PathVariable("id") @ApiParam(name = "
 
 让我们在`Product`类中做一些改变来实现这一点:
 
-```
+```java
 @ApiModelProperty(notes = "Product ID", example = "1", required = true) 
 private Long id; 
 @ApiModelProperty(notes = "Product name", example = "Product 1", required = false) 

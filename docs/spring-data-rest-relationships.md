@@ -16,7 +16,7 @@
 
 让我们通过使用`@OneToOne`注释来定义两个实体类，`Library`和`Address,` 具有一对一的关系。关联归关联的`Library`端所有:
 
-```
+```java
 @Entity
 public class Library {
 
@@ -36,7 +36,7 @@ public class Library {
 }
 ```
 
-```
+```java
 @Entity
 public class Address {
 
@@ -60,7 +60,7 @@ public class Address {
 
 关联名默认为属性名，我们可以使用`@RestResource`注释的`rel`属性对其进行定制:
 
-```
+```java
 @OneToOne
 @JoinColumn(name = "secondary_address_id")
 @RestResource(path = "libraryAddress", rel="address")
@@ -75,11 +75,11 @@ private Address secondaryAddress;
 
 为了**将这些实体作为资源**公开，我们将通过扩展`CrudRepository`接口为每个实体创建两个存储库接口:
 
-```
+```java
 public interface LibraryRepository extends CrudRepository<Library, Long> {}
 ```
 
-```
+```java
 public interface AddressRepository extends CrudRepository<Address, Long> {}
 ```
 
@@ -87,14 +87,14 @@ public interface AddressRepository extends CrudRepository<Address, Long> {}
 
 首先，我们将添加一个`Library`实例来处理:
 
-```
+```java
 curl -i -X POST -H "Content-Type:application/json" 
   -d '{"name":"My Library"}' http://localhost:8080/libraries
 ```
 
 然后 API 返回 JSON 对象:
 
-```
+```java
 {
   "name" : "My Library",
   "_links" : {
@@ -113,7 +113,7 @@ curl -i -X POST -H "Content-Type:application/json"
 
 注意，如果我们在 Windows 上使用`curl`，我们必须对代表`JSON`主体的`String`中的双引号字符进行转义:
 
-```
+```java
 -d "{\"name\":\"My Library\"}"
 ```
 
@@ -123,14 +123,14 @@ curl -i -X POST -H "Content-Type:application/json"
 
 但是，如果我们想要添加一个关联，我们必须首先创建一个`Address`实例:
 
-```
+```java
 curl -i -X POST -H "Content-Type:application/json" 
   -d '{"location":"Main Street nr 5"}' http://localhost:8080/addresses
 ```
 
 POST 请求的结果是一个包含`Address`记录的 JSON 对象:
 
-```
+```java
 {
   "location" : "Main Street nr 5",
   "_links" : {
@@ -155,14 +155,14 @@ POST 请求的结果是一个包含`Address`记录的 JSON 对象:
 
 由于`Library`实体是关联的所有者，我们将向库添加一个地址:
 
-```
+```java
 curl -i -X PUT -d "http://localhost:8080/addresses/1" 
   -H "Content-Type:text/uri-list" http://localhost:8080/libraries/1/libraryAddress
 ```
 
 如果成功，它将返回状态 204。为了验证这一点，我们可以检查`address`的`library`关联资源:
 
-```
+```java
 curl -i -X GET http://localhost:8080/addresses/1/library
 ```
 
@@ -170,7 +170,7 @@ curl -i -X GET http://localhost:8080/addresses/1/library
 
 为了**删除关联**，我们可以使用 DELETE 方法调用端点，确保使用关系所有者的关联资源:
 
-```
+```java
 curl -i -X DELETE http://localhost:8080/libraries/1/libraryAddress
 ```
 
@@ -182,7 +182,7 @@ curl -i -X DELETE http://localhost:8080/libraries/1/libraryAddress
 
 为了举例说明一对多关系，我们将添加一个新的`Book`实体，它表示与`Library`实体的关系的“多”端:
 
-```
+```java
 @Entity
 public class Book {
 
@@ -203,7 +203,7 @@ public class Book {
 
 然后我们也将关系添加到`Library`类中:
 
-```
+```java
 public class Library {
 
     //...
@@ -220,7 +220,7 @@ public class Library {
 
 我们还需要创建一个`BookRepository`:
 
-```
+```java
 public interface BookRepository extends CrudRepository<Book, Long> { }
 ```
 
@@ -228,14 +228,14 @@ public interface BookRepository extends CrudRepository<Book, Long> { }
 
 为了**向图书馆**添加一本书，我们需要首先使用/ `books`集合资源创建一个`Book`实例:
 
-```
+```java
 curl -i -X POST -d "{\"title\":\"Book1\"}" 
   -H "Content-Type:application/json" http://localhost:8080/books
 ```
 
 这是帖子请求的回复:
 
-```
+```java
 {
   "title" : "Book1",
   "_links" : {
@@ -256,20 +256,20 @@ curl -i -X POST -d "{\"title\":\"Book1\"}"
 
 现在让我们**通过向包含图书馆资源`URI`的关联资源发送一个 PUT 请求，将这本书与我们在上一节中创建的图书馆**关联起来:
 
-```
+```java
 curl -i -X PUT -H "Content-Type:text/uri-list" 
 -d "http://localhost:8080/libraries/1" http://localhost:8080/books/1/library
 ```
 
 我们可以通过使用图书馆/ `books`关联资源上的 GET 方法来**验证图书馆**中的图书:
 
-```
+```java
 curl -i -X GET http://localhost:8080/libraries/1/books
 ```
 
 返回的 JSON 对象将包含一个`books`数组:
 
-```
+```java
 {
   "_embedded" : {
     "books" : [ {
@@ -297,7 +297,7 @@ curl -i -X GET http://localhost:8080/libraries/1/books
 
 为了**删除一个关联**，我们可以在关联资源上使用 DELETE 方法:
 
-```
+```java
 curl -i -X DELETE http://localhost:8080/books/1/library
 ```
 
@@ -309,7 +309,7 @@ curl -i -X DELETE http://localhost:8080/books/1/library
 
 为了创建一个多对多关系的例子，我们将添加一个新的模型类`Author,` ，它与`Book`实体有多对多关系:
 
-```
+```java
 @Entity
 public class Author {
 
@@ -333,7 +333,7 @@ public class Author {
 
 然后我们也将关联添加到`Book`类中:
 
-```
+```java
 public class Book {
 
     //...
@@ -349,7 +349,7 @@ public class Book {
 
 接下来，我们将创建一个存储库接口来管理`Author`实体:
 
-```
+```java
 public interface AuthorRepository extends CrudRepository<Author, Long> { }
 ```
 
@@ -359,21 +359,21 @@ public interface AuthorRepository extends CrudRepository<Author, Long> { }
 
 我们将通过向/ `authors` 集合资源发送 POST 请求来创建一个`Author`实例:
 
-```
+```java
 curl -i -X POST -H "Content-Type:application/json" 
   -d "{\"name\":\"author1\"}" http://localhost:8080/authors
 ```
 
 接下来，我们将向数据库添加第二条`Book`记录:
 
-```
+```java
 curl -i -X POST -H "Content-Type:application/json" 
   -d "{\"title\":\"Book 2\"}" http://localhost:8080/books
 ```
 
 然后，我们将对我们的`Author`记录执行 GET 请求，以查看关联 URL:
 
-```
+```java
 {
   "name" : "author1",
   "_links" : {
@@ -394,27 +394,27 @@ curl -i -X POST -H "Content-Type:application/json"
 
 要发送多个`URI`,我们必须用换行符将它们分开:
 
-```
+```java
 curl -i -X PUT -H "Content-Type:text/uri-list" 
   --data-binary @uris.txt http://localhost:8080/authors/1/books
 ```
 
 `uris.txt`文件包含书籍的`URI`,每一个都在单独的一行:
 
-```
+```java
 http://localhost:8080/books/1
 http://localhost:8080/books/2
 ```
 
 为了**验证两本书都是与作者**相关联的 **，我们可以向关联端点发送一个 GET 请求:**
 
-```
+```java
 curl -i -X GET http://localhost:8080/authors/1/books
 ```
 
 我们会收到这样的回复:
 
-```
+```java
 {
   "_embedded" : {
     "books" : [ {
@@ -445,7 +445,7 @@ curl -i -X GET http://localhost:8080/authors/1/books
 
 为了**删除一个关联**，我们可以用 DELETE 方法向关联资源的 URL 发送一个请求，后跟`{bookId}`:
 
-```
+```java
 curl -i -X DELETE http://localhost:8080/authors/1/books/1
 ```
 
@@ -453,7 +453,7 @@ curl -i -X DELETE http://localhost:8080/authors/1/books/1
 
 让我们创建一个测试类，它注入一个`TestRestTemplate`实例，并定义我们将使用的常数:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SpringDataRestApplication.class, 
   webEnvironment = WebEnvironment.DEFINED_PORT)
@@ -478,7 +478,7 @@ public class SpringDataRelationshipsTest {
 
 然后，它通过对关联资源的 PUT 请求保存关系，并验证它是通过对同一资源的 GET 请求建立的:
 
-```
+```java
 @Test
 public void whenSaveOneToOneRelationship_thenCorrect() {
     Library library = new Library(LIBRARY_NAME);
@@ -505,7 +505,7 @@ public void whenSaveOneToOneRelationship_thenCorrect() {
 
 现在我们将创建一个保存一个`Library`实例和两个`Book`实例的`@Test`方法，向每个`Book`对象的`/library`关联资源发送一个 PUT 请求，并验证关系是否已经保存:
 
-```
+```java
 @Test
 public void whenSaveOneToManyRelationship_thenCorrect() {
     Library library = new Library(LIBRARY_NAME);
@@ -539,7 +539,7 @@ public void whenSaveOneToManyRelationship_thenCorrect() {
 
 然后，它向带有两个`Books` ' `URI`的`/books`关联资源发送一个 PUT 请求，并验证关系已经建立:
 
-```
+```java
 @Test
 public void whenSaveManyToManyRelationship_thenCorrect() {
     Author author1 = new Author(AUTHOR_NAME);

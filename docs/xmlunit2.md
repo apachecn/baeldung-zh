@@ -18,7 +18,7 @@ XMLUnit 2.x 是一个强大的库，可以帮助我们测试和验证 XML 内容
 
 为了在我们的 maven 项目中使用这个库，我们需要在`pom.xml`中有以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.xmlunit</groupId>
     <artifactId>xmlunit-core</artifactId>
@@ -28,7 +28,7 @@ XMLUnit 2.x 是一个强大的库，可以帮助我们测试和验证 XML 内容
 
 最新版本的 `xmlunit-core`可以通过关注[这个链接](https://web.archive.org/web/20220926010849/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22xmlunit-core%22)找到。并且:
 
-```
+```java
 <dependency>
     <groupId>org.xmlunit</groupId>
     <artifactId>xmlunit-matchers</artifactId>
@@ -44,7 +44,7 @@ XMLUnit 2.x 是一个强大的库，可以帮助我们测试和验证 XML 内容
 
 假设我们有两段 XML。当文档中节点的内容和顺序完全相同时，它们被认为是相同的，因此下面的测试将通过:
 
-```
+```java
 @Test
 public void given2XMLS_whenIdentical_thenCorrect() {
     String controlXml = "<struct><int>3</int><boolean>false</boolean></struct>";
@@ -55,7 +55,7 @@ public void given2XMLS_whenIdentical_thenCorrect() {
 
 下一个测试失败了，因为两段 XML 相似但不相同，因为它们的**节点出现在不同的序列**:
 
-```
+```java
 @Test
 public void given2XMLSWithSimilarNodesButDifferentSequence_whenNotIdentical_thenCorrect() {
     String controlXml = "<struct><int>3</int><boolean>false</boolean></struct>";
@@ -72,7 +72,7 @@ public void given2XMLSWithSimilarNodesButDifferentSequence_whenNotIdentical_then
 
 为了获得两段 XML 之间的所有差异，我们使用了一个类似于下面这样的`Diff` 类的实例:
 
-```
+```java
 @Test
 public void given2XMLS_whenGeneratesDifferences_thenCorrect(){
     String controlXml = "<struct><int>3</int><boolean>false</boolean></struct>";
@@ -91,7 +91,7 @@ public void given2XMLS_whenGeneratesDifferences_thenCorrect(){
 
 如果我们打印在`while`循环中返回的值，结果如下:
 
-```
+```java
 Expected element tag name 'int' but was 'boolean' - 
   comparing <int...> at /struct[1]/int[1] to <boolean...> 
     at /struct[1]/boolean[1] (DIFFERENT)
@@ -110,7 +110,7 @@ Expected text value 'false' but was '3' -
 
 如果我们想在发现第一个差异后强制差异引擎**停止，并且不继续枚举进一步的差异——我们需要提供一个`ComparisonController`:**
 
-```
+```java
 @Test
 public void given2XMLS_whenGeneratesOneDifference_thenCorrect(){
     String myControlXML = "<struct><int>3</int><boolean>false</boolean></struct>";
@@ -134,7 +134,7 @@ public void given2XMLS_whenGeneratesOneDifference_thenCorrect(){
 
 **差异信息更简单:**
 
-```
+```java
 Expected element tag name 'int' but was 'boolean' - 
   comparing <int...> at /struct[1]/int[1] 
     to <boolean...> at /struct[1]/boolean[1] (DIFFERENT)
@@ -146,7 +146,7 @@ Expected element tag name 'int' but was 'boolean' -
 
 为了从位于项目根的 XML 文件中选取输入，我们执行以下操作:
 
-```
+```java
 @Test
 public void givenFileSource_whenAbleToInput_thenCorrect() {
     ClassLoader classLoader = getClass().getClassLoader();
@@ -160,7 +160,7 @@ public void givenFileSource_whenAbleToInput_thenCorrect() {
 
 从 XML 字符串中选择输入源，如下所示:
 
-```
+```java
 @Test
 public void givenStringSource_whenAbleToInput_thenCorrect() {
     String controlXml = "<struct><int>3</int><boolean>false</boolean></struct>";
@@ -173,7 +173,7 @@ public void givenStringSource_whenAbleToInput_thenCorrect() {
 
 现在让我们使用一个流作为输入:
 
-```
+```java
 @Test
 public void givenStreamAsSource_whenAbleToInput_thenCorrect() {
     assertThat(Input.fromStream(XMLUnitTests.class
@@ -188,7 +188,7 @@ public void givenStreamAsSource_whenAbleToInput_thenCorrect() {
 
 例如，我们可以传入一个文件:
 
-```
+```java
 @Test
 public void givenFileSourceAsObject_whenAbleToInput_thenCorrect() {
     ClassLoader classLoader = getClass().getClassLoader();
@@ -201,7 +201,7 @@ public void givenFileSourceAsObject_whenAbleToInput_thenCorrect() {
 
 还是一个`String:`
 
-```
+```java
 @Test
 public void givenStringSourceAsObject_whenAbleToInput_thenCorrect() {
     assertThat(
@@ -212,7 +212,7 @@ public void givenStringSourceAsObject_whenAbleToInput_thenCorrect() {
 
 还是一个`Stream:`
 
-```
+```java
 @Test
 public void givenStreamAsObject_whenAbleToInput_thenCorrect() {
     assertThat(
@@ -227,7 +227,7 @@ public void givenStreamAsObject_whenAbleToInput_thenCorrect() {
 
 在上面的第 2 节中，我们只查看了相同的 XML，因为相似的 XML 需要使用来自`xmlunit-core`库的特性进行一点点定制:
 
-```
+```java
 @Test
 public void given2XMLS_whenSimilar_thenCorrect() {
     String controlXml = "<struct><int>3</int><boolean>false</boolean></struct>";
@@ -241,7 +241,7 @@ public void given2XMLS_whenSimilar_thenCorrect() {
 
 所以测试一个`isSimilarTo`条件比测试一个`isIdenticalTo`条件更有趣一点。`controlXml`中的节点`<int>3</int>`将与`testXml`中的`<boolean>false</boolean>`进行比较，自动给出故障信息:
 
-```
+```java
 java.lang.AssertionError: 
 Expected: Expected element tag name 'int' but was 'boolean' - 
   comparing <int...> at /struct[1]/int[1] to <boolean...> at /struct[1]/boolean[1]:
@@ -260,7 +260,7 @@ XMLUnit 在比较阶段查询 `DefaultNodeMatcher`类，因为它在`controlXml,
 
 让我们调整我们的测试，让它通过:
 
-```
+```java
 @Test
 public void given2XMLS_whenSimilar_thenCorrect() {
     String controlXml = "<struct><int>3</int><boolean>false</boolean></struct>";
@@ -278,7 +278,7 @@ public void given2XMLS_whenSimilar_thenCorrect() {
 
 或者，我们可以使用来自`xmlunit-core`的`Diff`，而不是使用`xmlunit-matchers`:
 
-```
+```java
 @Test
 public void given2XMLs_whenSimilarWithDiff_thenCorrect() throws Exception {
     String myControlXML = "<struct><int>3</int><boolean>false</boolean></struct>";
@@ -300,7 +300,7 @@ A `DifferenceEvaluator` 确定比较的结果。它的作用仅限于确定比�
 
 考虑以下 XML 片段:
 
-```
+```java
 <a>
     <b attr="abc">
     </b>
@@ -309,7 +309,7 @@ A `DifferenceEvaluator` 确定比较的结果。它的作用仅限于确定比�
 
 并且:
 
-```
+```java
 <a>
     <b attr="xyz">
     </b>
@@ -318,7 +318,7 @@ A `DifferenceEvaluator` 确定比较的结果。它的作用仅限于确定比�
 
 在默认状态下，它们在技术上被认为是不同的，因为它们的`attr`属性具有不同的值。让我们来看一个测试:
 
-```
+```java
 @Test
 public void given2XMLsWithDifferences_whenTestsDifferentWithoutDifferenceEvaluator_thenCorrect(){
     final String control = "<a><b attr=\"abc\"></b></a>";
@@ -331,7 +331,7 @@ public void given2XMLsWithDifferences_whenTestsDifferentWithoutDifferenceEvaluat
 
 失败消息:
 
-```
+```java
 java.lang.AssertionError: Expected attribute value 'abc' but was 'xyz' - 
   comparing <b attr="abc"...> at /a[1]/b[1]/@attr 
   to <b attr="xyz"...> at /a[1]/b[1]/@attr
@@ -339,7 +339,7 @@ java.lang.AssertionError: Expected attribute value 'abc' but was 'xyz' -
 
 如果我们真的不关心属性，我们可以改变`DifferenceEvaluator`的行为来忽略它。为此，我们创建了自己的:
 
-```
+```java
 public class IgnoreAttributeDifferenceEvaluator implements DifferenceEvaluator {
     private String attributeName;
     public IgnoreAttributeDifferenceEvaluator(String attributeName) {
@@ -364,7 +364,7 @@ public class IgnoreAttributeDifferenceEvaluator implements DifferenceEvaluator {
 
 然后，我们重写最初失败的测试，并提供我们自己的`DifferenceEvaluator`实例，就像这样:
 
-```
+```java
 @Test
 public void given2XMLsWithDifferences_whenTestsSimilarWithDifferenceEvaluator_thenCorrect() {
     final String control = "<a><b attr=\"abc\"></b></a>";
@@ -387,7 +387,7 @@ XMLUnit 使用`Validator`类执行 XML 验证。您使用`forLanguage`工厂方�
 
 我们通常像这样创建一个`Validator`类的实例:
 
-```
+```java
 Validator v = Validator.forLanguage(Languages.W3C_XML_SCHEMA_NS_URI);
 ```
 
@@ -395,7 +395,7 @@ Validator v = Validator.forLanguage(Languages.W3C_XML_SCHEMA_NS_URI);
 
 以我们的`students.xsd`为例:
 
-```
+```java
 <?xml version = "1.0"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:element name='class'>
@@ -418,7 +418,7 @@ Validator v = Validator.forLanguage(Languages.W3C_XML_SCHEMA_NS_URI);
 
 和`students.xml`:
 
-```
+```java
 <?xml version = "1.0"?>
 <class>
     <student id="393">
@@ -434,7 +434,7 @@ Validator v = Validator.forLanguage(Languages.W3C_XML_SCHEMA_NS_URI);
 
 接下来让我们进行一个测试:
 
-```
+```java
 @Test
 public void givenXml_whenValidatesAgainstXsd_thenCorrect() {
     Validator v = Validator.forLanguage(Languages.W3C_XML_SCHEMA_NS_URI);
@@ -454,7 +454,7 @@ public void givenXml_whenValidatesAgainstXsd_thenCorrect() {
 
 `ValidationResult`还包含一个带有`ValidationProblem` s 的`Iterable`，以防出现故障。让我们创建一个新的包含错误的 XML，名为`students_with_error.xml.` 而不是`<student>`，我们的开始标签都是`</studet>`:
 
-```
+```java
 <?xml version = "1.0"?>
 <class>
     <studet id="393">
@@ -470,7 +470,7 @@ public void givenXml_whenValidatesAgainstXsd_thenCorrect() {
 
 然后对其运行以下测试:
 
-```
+```java
 @Test
 public void givenXmlWithErrors_whenReturnsValidationProblems_thenCorrect() {
     Validator v = Validator.forLanguage(Languages.W3C_XML_SCHEMA_NS_URI);
@@ -490,7 +490,7 @@ public void givenXmlWithErrors_whenReturnsValidationProblems_thenCorrect() {
 
 如果我们打印出`while`循环中的错误，它们看起来会像:
 
-```
+```java
 ValidationProblem { line=3, column=19, type=ERROR,message='cvc-complex-type.2.4.a: 
   Invalid content was found starting with element 'studet'. 
     One of '{student}' is expected.' }
@@ -506,7 +506,7 @@ ValidationProblem { line=6, column=4, type=ERROR, message='The element type "stu
 
 考虑保存在名为`teachers.xml`的文件中的这段 XML:
 
-```
+```java
 <teachers>
     <teacher department="science" id='309'>
         <subject>math</subject>
@@ -523,7 +523,7 @@ XMLUnit 提供了许多与 XPath 相关的断言方法，如下所示。
 
 我们可以检索所有名为`teacher` 的节点，并分别对它们执行断言:
 
-```
+```java
 @Test
 public void givenXPath_whenAbleToRetrieveNodes_thenCorrect() {
     Iterable<Node> i = new JAXPXPathEngine()
@@ -548,7 +548,7 @@ public void givenXPath_whenAbleToRetrieveNodes_thenCorrect() {
 
 要验证路径是否存在，我们可以执行以下操作:
 
-```
+```java
 @Test
 public void givenXmlSource_whenAbleToValidateExistingXPath_thenCorrect() {
     assertThat(Input.fromFile(new File("teachers.xml")), hasXPath("//teachers"));
@@ -560,7 +560,7 @@ public void givenXmlSource_whenAbleToValidateExistingXPath_thenCorrect() {
 
 要验证路径不存在，我们可以这样做:
 
-```
+```java
 @Test
 public void givenXmlSource_whenFailsToValidateInExistentXPath_thenCorrect() {
     assertThat(Input.fromFile(new File("teachers.xml")), not(hasXPath("//sujet")));

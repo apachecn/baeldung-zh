@@ -26,7 +26,7 @@
 
 下面是一个关于`Feed`资源的例子:
 
-```
+```java
 {
     "id":1,
     "name":"baeldung feed",
@@ -38,7 +38,7 @@
 
 现在，让我们来看看我们的 feeds 页面:
 
-```
+```java
 <script 
   src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js">
 </script>
@@ -70,7 +70,7 @@
 
 接下来，让我们看看 AngularJS 控制器:
 
-```
+```java
 var app = angular.module('myApp', ["ngTable", "ngResource"]);
 app.controller('mainCtrl', function($scope, NgTableParams, $resource) {
     ...   
@@ -86,7 +86,7 @@ app.controller('mainCtrl', function($scope, NgTableParams, $resource) {
 
 现在让我们快速看一下`ng-table`模块——配置如下:
 
-```
+```java
 $scope.feed = $resource("api/myFeeds/:feedId",{feedId:'@id'});
 $scope.tableParams = new NgTableParams({}, {
     getData: function(params) {
@@ -126,7 +126,7 @@ API 需要某种分页样式，所以我们需要在表中定制它来匹配它�
 
 为了添加新进给，我们将使用`$resource`方法`save`，如下所示:
 
-```
+```java
 $scope.feed = {name:"New feed", url: "http://www.example.com/feed"};
 
 $scope.createFeed = function(){
@@ -140,7 +140,7 @@ $scope.createFeed = function(){
 
 我们可以通过`$resource`使用我们自己的定制方法，如下所示:
 
-```
+```java
 $scope.feeds = $resource("api/myFeeds/:feedId",{feedId:'@id'},{
     'update': { method:'PUT' }
 });
@@ -158,7 +158,7 @@ $scope.updateFeed = function(){
 
 最后，我们可以使用`delete`方法删除一个提要:
 
-```
+```java
 $scope.confirmDelete = function(id){
     $scope.feeds.delete({feedId:id}, function(){
         $scope.tableParams.reload();
@@ -172,7 +172,7 @@ $scope.confirmDelete = function(id){
 
 这是我们的模板，我们可以在单独的 HTML 页面或同一页面中定义它:
 
-```
+```java
 <script type="text/ng-template" id="templateId">
 <div class="ngdialog-message">
     <h2>{{feed.name}}</h2>
@@ -187,7 +187,7 @@ $scope.confirmDelete = function(id){
 
 然后我们将打开对话框来添加/编辑提要:
 
-```
+```java
 $scope.addNewFeed = function(){
     $scope.feed = {name:"New Feed", url: ""};
     ngDialog.open({ template: 'templateId', scope: $scope});
@@ -220,7 +220,7 @@ $scope.save = function(){
 
 为了全局处理服务器错误响应——而不是每个请求——我们将向`[$httpProvider](https://web.archive.org/web/20210927012325/https://docs.angularjs.org/api/ng/service/$http)`注册一个拦截器:
 
-```
+```java
 app.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push(function ($q,$rootScope) {
         return {
@@ -235,7 +235,7 @@ app.config(['$httpProvider', function ($httpProvider) {
 
 这是我们用 HTML 表示的消息:
 
-```
+```java
 <div ng-show="message" class="alert alert-danger">
     {{message}}
 </div>

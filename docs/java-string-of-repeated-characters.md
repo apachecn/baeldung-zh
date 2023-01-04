@@ -12,7 +12,7 @@
 
 让我们定义将在所有解决方案中用来验证生成的字符串的常数:
 
-```
+```java
 private static final String EXPECTED_STRING = "aaaaaaa";
 private static final int N = 7;
 ```
@@ -25,14 +25,14 @@ private static final int N = 7;
 
 Java 有一个`repeat`函数来构建源字符串的副本:
 
-```
+```java
 String newString = "a".repeat(N);
 assertEquals(EXPECTED_STRING, newString);
 ```
 
 这允许我们重复单个字符或多字符串:
 
-```
+```java
 String newString = "-->".repeat(5);
 assertEquals("-->-->-->-->-->", newString);
 ```
@@ -47,7 +47,7 @@ assertEquals("-->-->-->-->-->", newString);
 
 先说`StringBuilder`类。我们将遍历一个`for`循环 N 次，添加重复的字符:
 
-```
+```java
 StringBuilder builder = new StringBuilder(N);
 for (int i = 0; i < N; i++) {
     builder.append("a");
@@ -62,7 +62,7 @@ assertEquals(EXPECTED_STRING, newString);
 
 我们可以用我们想要的字符填充一个固定大小的`char`数组，并将其转换成一个字符串:
 
-```
+```java
 char[] charArray = new char[N];
 for (int i = 0; i < N; i++) {
     charArray[i] = 'a';
@@ -77,7 +77,7 @@ assertEquals(EXPECTED_STRING, newString);
 
 我们可以使用库函数来填充数组，而不是使用循环:
 
-```
+```java
 char charToAppend = 'a';
 char[] charArray = new char[N];
 Arrays.fill(charArray, charToAppend);
@@ -93,7 +93,7 @@ assertEquals(EXPECTED_STRING, newString);
 
 这个解决方案需要为 [Apache Commons 库](https://web.archive.org/web/20220815152727/https://search.maven.org/artifact/org.apache.commons/commons-lang3/3.12.0/jar)添加一个新的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -103,7 +103,7 @@ assertEquals(EXPECTED_STRING, newString);
 
 添加这个依赖项后，我们可以使用来自`StringUtils`类的`repeat`方法。**它将一个重复字符和该字符应该重复的次数作为参数**:
 
-```
+```java
 char charToAppend = 'a';
 String newString = StringUtils.repeat(charToAppend, N);
 assertEquals(EXPECTED_STRING, newString);
@@ -113,7 +113,7 @@ assertEquals(EXPECTED_STRING, newString);
 
 与前一种方法一样，这种方法需要为 [Guava](https://web.archive.org/web/20220815152727/https://search.maven.org/artifact/com.google.guava/guava/31.0.1-jre/bundle) 库添加一个新的依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -123,7 +123,7 @@ assertEquals(EXPECTED_STRING, newString);
 
 除了它来自不同的库之外，这个解决方案与 Apache Commons 解决方案完全相同:
 
-```
+```java
 String charToAppend = "a";
 String newString = Strings.repeat(charToAppend, N);
 assertEquals(EXPECTED_STRING, newString);
@@ -133,7 +133,7 @@ assertEquals(EXPECTED_STRING, newString);
 
 如果我们认为我们的目标字符串是重复子字符串的集合，那么我们可以使用一个`List`实用程序来构建列表，然后将结果列表转换成我们的最终`String`。为此，我们可以使用`java.util`包中`Collections`类的`nCopies`方法:
 
-```
+```java
 public static <T> List<T> nCopies(int n, T o);
 ```
 
@@ -143,7 +143,7 @@ public static <T> List<T> nCopies(int n, T o);
 
 让我们用`nCopies`方法创建一个单字符字符串列表，并使用`String.join`将其转换为我们的结果:
 
-```
+```java
 String charToAppend = "a";
 String newString = String.join("", Collections.nCopies(N, charToAppend));
 assertEquals(EXPECTED_STRING, newString);
@@ -155,7 +155,7 @@ assertEquals(EXPECTED_STRING, newString);
 
 番石榴提供了一种替代的串连接器，我们也可以使用:
 
-```
+```java
 String charToAppend = "a";
 String newString = Joiner.on("").join(Collections.nCopies(N, charToAppend));
 assertEquals(EXPECTED_STRING, newString);
@@ -167,7 +167,7 @@ assertEquals(EXPECTED_STRING, newString);
 
 但是，从 Java 8 开始，我们可以使用来自 [`Stream` API](/web/20220815152727/https://www.baeldung.com/java-8-streams-introduction) 的`generate`方法。**结合`limit`方法(用于定义长度)和`collect` 方法，我们可以生成一串 N 个重复的字符**:
 
-```
+```java
 String charToAppend = "a";
 String newString = generate(() -> charToAppend)
   .limit(length)
@@ -179,7 +179,7 @@ assertEquals(exampleString, newString);
 
 **来自`Apache Commons`库的`RandomStringUtils`类支持使用`random`方法**生成一串 N 个重复的字符。我们必须定义一个字符和重复的次数:
 
-```
+```java
 String charToAppend = "a";
 String newString = RandomStringUtils.random(N, charToAppend);
 assertEquals(EXPECTED_STRING, newString);

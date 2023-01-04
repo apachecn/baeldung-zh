@@ -12,7 +12,7 @@
 
 对于我们的例子，我们将考虑一个`Item`实体的清单，每个实体都有一个`id,` `name`、`color`和`grade`:
 
-```
+```java
 @Entity
 public class Item {
 
@@ -38,7 +38,7 @@ public class Item {
 
 首先，我们将设置我们的查询:
 
-```
+```java
 CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 CriteriaQuery<Item> criteriaQuery = criteriaBuilder.createQuery(Item.class);
 Root<Item> itemRoot = criteriaQuery.from(Item.class);
@@ -46,7 +46,7 @@ Root<Item> itemRoot = criteriaQuery.from(Item.class);
 
 现在我们需要构建一个`Predicate`来查找蓝色或红色的项目:
 
-```
+```java
 Predicate predicateForBlueColor
   = criteriaBuilder.equal(itemRoot.get("color"), "blue");
 Predicate predicateForRedColor
@@ -57,7 +57,7 @@ Predicate predicateForColor
 
 接下来，我们将构建一个`Predicate`来查找等级 A 或 B 的项目:
 
-```
+```java
 Predicate predicateForGradeA
   = criteriaBuilder.equal(itemRoot.get("grade"), "A");
 Predicate predicateForGradeB
@@ -68,7 +68,7 @@ Predicate predicateForGrade
 
 最后，我们将定义这两个变量的和`Predicate`，应用`where()`方法，并执行我们的查询:
 
-```
+```java
 Predicate finalPredicate
   = criteriaBuilder.and(predicateForColor, predicateForGrade);
 criteriaQuery.where(finalPredicate);
@@ -85,7 +85,7 @@ List<Item> items = entityManager.createQuery(criteriaQuery).getResultList();
 
 逻辑非常相似，但是这里我们首先创建两个 AND `Predicate`，然后使用 OR `Predicate`将它们组合起来:
 
-```
+```java
 CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 CriteriaQuery<Item> criteriaQuery = criteriaBuilder.createQuery(Item.class);
 Root<Item> itemRoot = criteriaQuery.from(Item.class);

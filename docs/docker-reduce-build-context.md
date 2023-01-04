@@ -20,7 +20,7 @@
 
 在构建映像时，我们将理解与构建上下文相关的问题。为了进一步理解构建上下文的问题，让我们举一个例子并创建一个 docker 文件示例:
 
-```
+```java
 FROM   centos:7
 MAINTAINER [[email protected]](/web/20220524165945/https://www.baeldung.com/cdn-cgi/l/email-protection)
 COPY jdk-8u202-linux-x64.rpm / 
@@ -28,13 +28,13 @@ COPY jdk-8u202-linux-x64.rpm /
 
 要构建映像，我们需要运行以下命令:
 
-```
+```java
 $ docker build -t javaapplication .
 ```
 
 上述命令的输出:
 
-```
+```java
 Sending build context to Docker daemon  178.4MB
 Step 1/3 : FROM   centos:7
  ---> eeb6ee3f44bd
@@ -52,7 +52,7 @@ Successfully tagged test:latest
 
 在运行`docker build`命令时，我们将得到以下输出:
 
-```
+```java
 Sending build context to Docker daemon  372.5MB
 Step 1/3 : FROM   centos:7
  ---> eeb6ee3f44bd
@@ -78,13 +78,13 @@ Docker 构建上下文的一个要点是，它递归地包含当前工作目录�
 
 这里，我们将把`jdk-8u202-linux-x64.tar.gz`文件添加到`.dockerignore` 文件中，以便在创建构建时忽略它:
 
-```
+```java
 $ echo "jdk-8u202-linux-x64.tar.gz" > .dockerignore
 ```
 
 现在让我们构建 Docker 映像:
 
-```
+```java
 $ docker build -t baeldung  .
 Sending build context to Docker daemon  178.4MB
 Step 1/3 : FROM   centos:7
@@ -99,7 +99,7 @@ Step 1/3 : FROM   centos:7
 
 让我们假设以下 Dockerfile 文件:
 
-```
+```java
 FROM   centos:7
 MAINTAINER [[email protected]](/web/20220524165945/https://www.baeldung.com/cdn-cgi/l/email-protection)
 RUN echo "Welcome to Bealdung"
@@ -107,7 +107,7 @@ RUN echo "Welcome to Bealdung"
 
 为上面的 docker 文件构建映像。我们运行`docker build`命令，得到以下输出:
 
-```
+```java
 $ docker build -t baeldung .
 Sending build context to Docker daemon  372.5MB
 Step 1/3 : FROM   centos:7
@@ -124,7 +124,7 @@ Successfully tagged baeldung:latest
 
 这里，我们可以看到发送给 Docker 守护进程的 Docker 构建上下文是`372.5MB`。如果我们使用以下方式运行同一个 Dockerfile 文件:
 
-```
+```java
 $ docker build -t test -<<EOF
 FROM   centos:7
 MAINTAINER [[email protected]](/web/20220524165945/https://www.baeldung.com/cdn-cgi/l/email-protection)
@@ -134,7 +134,7 @@ EOF
 
 上述命令的输出如下:
 
-```
+```java
 Sending build context to Docker daemon  2.048kB
 Step 1/3 : FROM   centos:7
  ---> eeb6ee3f44bd
@@ -164,7 +164,7 @@ Successfully tagged baeldung:latest
 
 让我们看一个在 docker 文件中使用多阶段的例子:
 
-```
+```java
 FROM centos:7 as builder
 RUN yum -y install maven
 COPY spring-boot-application /spring-boot-application
@@ -187,14 +187,14 @@ CMD ["java -jar ","-c","/spring-boot-application-0.0.1-SNAPSHOT.jar && tail -f /
 
 通常，用户像这样运行命令:
 
-```
+```java
 RUN apt-get -y update
 RUN apt-get install -y python
 ```
 
 上面的 Dockerfile 文件将创建两层。但是将这两个命令组合在一起会在最终图像中创建一个层:
 
-```
+```java
 RUN apt-get -y update && apt-get install -y python
 ```
 

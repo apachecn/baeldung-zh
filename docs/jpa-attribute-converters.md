@@ -14,7 +14,7 @@
 
 首先，让我们创建一个`PersonName`类——稍后将被转换:
 
-```
+```java
 public class PersonName implements Serializable {
 
     private String name;
@@ -26,7 +26,7 @@ public class PersonName implements Serializable {
 
 然后，我们将把类型为`PersonName`的属性添加到一个`@Entity`类中:
 
-```
+```java
 @Entity(name = "PersonTable")
 public class Person {
 
@@ -40,7 +40,7 @@ public class Person {
 
 为此，**我们必须用`@Converter` 注释我们的转换器类，并实现`AttributeConverter` 接口。**我们将用类的类型和数据库列来参数化接口，顺序如下:
 
-```
+```java
 @Converter
 public class PersonNameConverter implements 
   AttributeConverter<PersonName, String> {
@@ -106,7 +106,7 @@ public class PersonNameConverter implements
 
 **要使用我们的转换器，我们只需要给属性添加`@Convert`注释，并指定我们想要使用的转换器类**:
 
-```
+```java
 @Entity(name = "PersonTable")
 public class Person {
 
@@ -121,7 +121,7 @@ public class Person {
 
 为此，我们将首先在数据库中存储一个`Person`对象:
 
-```
+```java
 @Test
 public void givenPersonName_whenSaving_thenNameAndSurnameConcat() {
     String name = "name";
@@ -143,7 +143,7 @@ public void givenPersonName_whenSaving_thenNameAndSurnameConcat() {
 
 接下来，我们将测试`PersonName`是否按照我们在转换器中定义的那样存储——通过从数据库表中检索该字段:
 
-```
+```java
 @Test
 public void givenPersonName_whenSaving_thenNameAndSurnameConcat() {
     // ...
@@ -159,7 +159,7 @@ public void givenPersonName_whenSaving_thenNameAndSurnameConcat() {
 
 让我们通过编写一个检索整个`Person`类的查询来测试从数据库中存储的值到`PersonName`类的转换是否如转换器中定义的那样工作:
 
-```
+```java
 @Test
 public void givenPersonName_whenSaving_thenNameAndSurnameConcat() {
     // ...

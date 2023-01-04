@@ -18,7 +18,7 @@
 
 以下命令将下载所有需要的 Docker 映像，并为每个服务启动一个容器:
 
-```
+```java
 $ docker run --name mongo -d mongo:3
 $ docker run --name elasticsearch -p 9200:9200 -p 9300:9300 \
     -e ES_JAVA_OPTS="-Xms2g -Xmx4g" \
@@ -43,7 +43,7 @@ $ docker run --name graylog --link mongo --link elasticsearch \
 
 实例启动后，我们需要 SSH 到主机并做一些更改。以下命令将为我们配置 Graylog 服务:
 
-```
+```java
 $ sudo graylog-ctl enforce-ssl
 $ sudo graylog-ctl set-external-ip https://<EC2 PUBLIC IP>:443/api/
 $ sudo graylog-ctl reconfigure
@@ -73,7 +73,7 @@ $ sudo graylog-ctl reconfigure
 
 我们可以通过向任何`pom.xml`文件添加以下 Maven 依赖项来启用它:
 
-```
+```java
 <dependency>
     <groupId>org.graylog2</groupId>
     <artifactId>gelfj</artifactId>
@@ -83,7 +83,7 @@ $ sudo graylog-ctl reconfigure
 
 我们还必须在使用 Spring Boot 启动模块的任何地方排除日志启动模块:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -98,7 +98,7 @@ $ sudo graylog-ctl reconfigure
 
 现在我们可以在我们的`log4j.xml`文件中定义一个新的 appender:
 
-```
+```java
 <appender name="graylog" class="org.graylog2.log.GelfAppender">
     <param name="graylogHost" value="<GRAYLOG IP>"/>
     <param name="originHost" value="localhost"/>

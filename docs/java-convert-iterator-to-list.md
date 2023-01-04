@@ -8,7 +8,7 @@
 
 我们将在所有示例中使用带`Integer` s 的`Iterator`:
 
-```
+```java
 Iterator<Integer> iterator = Arrays.asList(1, 2, 3).iterator(); 
 ```
 
@@ -16,7 +16,7 @@ Iterator<Integer> iterator = Arrays.asList(1, 2, 3).iterator();
 
 让我们从 Java 8 之前传统使用的方法开始。我们将用**`while`循环**将`Iterator`转换为`List`:
 
-```
+```java
 List<Integer> actualList = new ArrayList<Integer>();
 while (iterator.hasNext()) {
     actualList.add(iterator.next());
@@ -29,7 +29,7 @@ assertThat(actualList, containsInAnyOrder(1, 2, 3));
 
 在 Java 8 和更高版本中，我们可以使用`Iterator`的`forEachRemaining()`方法来构建我们的`List`。我们将通过`List`接口的`add()`方法作为[方法引用](/web/20221126225628/https://www.baeldung.com/java-method-references):
 
-```
+```java
 List<Integer> actualList = new ArrayList<Integer>();
 iterator.forEachRemaining(actualList::add);
 
@@ -40,13 +40,13 @@ assertThat(actualList, containsInAnyOrder(1, 2, 3));
 
 接下来，我们将使用 [Java 8 Streams API](/web/20221126225628/https://www.baeldung.com/java-8-streams) 将`Iterator`转换为`List`。为了使用`Stream` API，我们需要**首先将`Iterator`转换为`[Iterable](/web/20221126225628/https://www.baeldung.com/java-iterable-to-stream)`** 。我们可以使用 Java 8 Lambda 表达式做到这一点:
 
-```
+```java
 Iterable<Integer> iterable = () -> iterator; 
 ```
 
 现在，**可以使用`StreamSupport` class' `stream()`和`collect()`的方法来构建`List`** :
 
-```
+```java
 List<Integer> actualList = StreamSupport
   .stream(iterable.spliterator(), false)
   .collect(Collectors.toList());
@@ -60,7 +60,7 @@ Google 的 [**番石榴库**](/web/20221126225628/https://www.baeldung.com/guava
 
 让我们首先使用`ImmutableList.copyOf()`方法创建一个不可变的`List`:
 
-```
+```java
 List<Integer> actualList = ImmutableList.copyOf(iterator);
 
 assertThat(actualList, containsInAnyOrder(1, 2, 3));
@@ -68,7 +68,7 @@ assertThat(actualList, containsInAnyOrder(1, 2, 3));
 
 现在，让我们使用`Lists.newArrayList()`方法创建一个可变的`List`:
 
-```
+```java
 List<Integer> actualList = Lists.newArrayList(iterator);
 
 assertThat(actualList, containsInAnyOrder(1, 2, 3));
@@ -78,7 +78,7 @@ assertThat(actualList, containsInAnyOrder(1, 2, 3));
 
 **[Apache Commons Collections](/web/20221126225628/https://www.baeldung.com/apache-commons-collection-utils)库提供了处理`List. `** 的选项，我们将使用`IteratorUtils`进行转换:
 
-```
+```java
 List<Integer> actualList = IteratorUtils.toList(iterator);
 
 assertThat(actualList, containsInAnyOrder(1, 2, 3));

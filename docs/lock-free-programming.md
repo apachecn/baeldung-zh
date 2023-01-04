@@ -78,7 +78,7 @@
 
 以下代码片段概述了 CAS 的工作原理:
 
-```
+```java
 volatile int value;
 
 boolean cas(int expectedValue, int newValue) {
@@ -92,7 +92,7 @@ boolean cas(int expectedValue, int newValue) {
 
 如果它仍然有预期的值，我们只使用新值更新该值，否则，它返回`false`。以下代码片段显示了如何调用 CAS:
 
-```
+```java
 void testCas() {
     int v = value;
     int x = v + 1;
@@ -158,7 +158,7 @@ Java 在其原子类中提供了`fetch-and-add`的实现。例子有`AtomicInteg
 
 让我们看一个 Java 中的基本无锁队列。首先，让我们看看类成员和构造函数:
 
-```
+```java
 public class NonBlockingQueue<T> {
 
     private final AtomicReference<Node<T>> head, tail;
@@ -177,7 +177,7 @@ public class NonBlockingQueue<T> {
 
 接下来，让我们看看节点类的实现:
 
-```
+```java
 private class Node<T> {
     private volatile T value;
     private volatile Node<T> next;
@@ -198,7 +198,7 @@ private class Node<T> {
 
 我们的无锁`add`操作将确保我们在尾部添加新元素，并且不会与队列断开连接，即使多个线程想要同时添加新元素:
 
-```
+```java
 public void add(T element) {
     if (element == null) {
         throw new NullPointerException();
@@ -226,7 +226,7 @@ public void add(T element) {
 
 类似于 add 操作，无锁 get 操作将确保我们返回最后一个元素并将尾部移动到当前位置:
 
-```
+```java
 public T get() {
     if(head.get() == null) {
         throw new NoSuchElementException();

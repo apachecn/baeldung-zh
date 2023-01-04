@@ -16,7 +16,7 @@
 
 首先，要发出一个`GET`请求，我们可以创建一个`java.net.URL`的实例，并将我们想要访问的 URL 作为构造函数参数传递。之后，我们只需打开连接并获得响应代码:
 
-```
+```java
 URL url = new URL("http://www.example.com");
 HttpURLConnection huc = (HttpURLConnection) url.openConnection();
 
@@ -27,7 +27,7 @@ Assert.assertEquals(HttpURLConnection.HTTP_OK, responseCode);
 
 当在 URL 上找不到资源时，我们得到一个`404` 响应代码:
 
-```
+```java
 URL url = new URL("http://www.example.com/xyz"); 
 HttpURLConnection huc = (HttpURLConnection) url.openConnection();
 
@@ -46,7 +46,7 @@ Assert.assertEquals(HttpURLConnection.HTTP_NOT_FOUND, responseCode);
 
 要创建 HEAD 请求，我们只需在获得响应代码之前将请求方法设置为 HEAD:
 
-```
+```java
 URL url = new URL("http://www.example.com");
 HttpURLConnection huc = (HttpURLConnection) url.openConnection();
 huc.setRequestMethod("HEAD");
@@ -58,7 +58,7 @@ Assert.assertEquals(HttpURLConnection.HTTP_OK, responseCode);
 
 同样，当在 URL 上找不到资源时:
 
-```
+```java
 URL url = new URL("http://www.example.com/xyz");
 HttpURLConnection huc = (HttpURLConnection) url.openConnection();
 huc.setRequestMethod("HEAD");
@@ -80,7 +80,7 @@ Assert.assertEquals(HttpURLConnection.HTTP_NOT_FOUND, responseCode);
 
 为此，我们可以覆盖所有`HttpURLConnection`的默认值`followRedirects`:
 
-```
+```java
 URL url = new URL("http://www.example.com");
 HttpURLConnection.setFollowRedirects(false);
 HttpURLConnection huc = (HttpURLConnection) url.openConnection();
@@ -92,7 +92,7 @@ Assert.assertEquals(HttpURLConnection.HTTP_OK, responseCode);
 
 或者，我们可以通过使用`setInstanceFollowRedirects()`方法禁用单个连接的以下重定向:
 
-```
+```java
 URL url = new URL("http://www.example.com");
 HttpURLConnection huc = (HttpURLConnection) url.openConnection();
 huc.setInstanceFollowRedirects(false);

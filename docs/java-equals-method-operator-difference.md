@@ -16,7 +16,7 @@
 
 我们知道 Java 中的[原语类型是简单的非类原始值。当我们对基本类型使用等式运算符时，我们只是比较它们的值:](/web/20221208143839/https://www.baeldung.com/java-primitives)
 
-```
+```java
 int a = 10;
 int b = 15;
 assertFalse(a == b);
@@ -32,7 +32,7 @@ assertTrue(a == d);
 
 现在让我们执行`null`检查:
 
-```
+```java
 int e = null; // compilation error
 assertFalse(a == null); // compilation error
 assertFalse(10 == null); // compilation error
@@ -44,7 +44,7 @@ Java 禁止将`null`赋给原语。一般来说，**我们不能用等式操作�
 
 至于 Java 、**中的[对象类型，相等运算符只执行参照相等比较](/web/20221208143839/https://www.baeldung.com/java-classes-objects)**，忽略对象值。在我们实现测试之前，让我们创建一个简单的定制类:
 
-```
+```java
 public class Person {
     private String name;
     private int age;
@@ -55,7 +55,7 @@ public class Person {
 
 现在，让我们初始化一些类对象并检查等式运算符的结果:
 
-```
+```java
 Person a = new Person("Bob", 20);
 Person b = new Person("Mike", 40);
 assertFalse(a == b);
@@ -92,7 +92,7 @@ assertTrue(a.equals(10)); // compilation error`
 
 然而，由于每个**原语都有自己的[包装类](/web/20221208143839/https://www.baeldung.com/java-wrapper-classes)** ，我们可以使用`boxing mechanism`将其转换为对象表示。然后，我们可以像使用对象类型一样轻松地调用`equals()`方法:
 
-```
+```java
 int a = 10;
 Integer b = a;
 
@@ -103,7 +103,7 @@ assertTrue(b.equals(10));
 
 让我们回到我们的`Person`班。为了让`equals() `方法正确工作，[我们需要通过考虑类中包含的字段来覆盖自定义类中的方法](/web/20221208143839/https://www.baeldung.com/java-eclipse-equals-and-hashcode):
 
-```
+```java
 public class Person {
     // other fields and methods omitted
 
@@ -125,7 +125,7 @@ public class Person {
 
 现在，让我们修改前面的测试并检查结果:
 
-```
+```java
 Person a = new Person("Bob", 20);
 Person b = new Person("Mike", 40);
 assertFalse(a.equals(b));
@@ -147,7 +147,7 @@ assertTrue(a.equals(d));
 
 最后，让我们检查一下`equals()`方法如何处理`null` 值:
 
-```
+```java
 Person a = new Person("Bob", 20);
 Person e = null;
 assertFalse(a.equals(e));
@@ -156,7 +156,7 @@ assertThrows(NullPointerException.class, () -> e.equals(a));
 
 当我们使用`equals()`方法对另一个对象进行检查时，根据这些变量的顺序，我们会得到两种不同的结果。最后一条语句抛出了一个异常，因为我们在`null`引用上调用了`equals()`方法。要修复最后一个语句，我们应该首先调用等式运算符 check:
 
-```
+```java
 assertFalse(e != null && e.equals(a));
 ```
 
@@ -164,7 +164,7 @@ assertFalse(e != null && e.equals(a));
 
 此外，从 Java 7 开始，我们可以使用一个空安全的 [`Objects#equals()`](https://web.archive.org/web/20221208143839/https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Objects.html#equals(java.lang.Object,java.lang.Object)) `static`方法来执行等式检查:
 
-```
+```java
 assertFalse(Objects.equals(e, a));
 assertTrue(Objects.equals(null, e));
 ```

@@ -14,7 +14,7 @@
 
 在我们继续之前，让我们首先创建一个 docker 文件来添加一个用户 *john* :
 
-```
+```java
 FROM ubuntu:16.04
 RUN apt-get update 
 RUN useradd -m john
@@ -24,7 +24,7 @@ CMD /bin/bash
 
 这里，我们使用“`ubuntu:16.04`”作为基础图像。让我们使用 [`docker build`](https://web.archive.org/web/20221026042423/https://docs.docker.com/engine/reference/commandline/build/) 命令来构建图像:
 
-```
+```java
 $ docker build -t baeldung .
 Sending build context to Docker daemon  2.048kB
 Step 1/5 : FROM ubuntu:16.04
@@ -41,14 +41,14 @@ Successfully tagged baeldung:latest
 
 我们现在将使用`baeldung`图像运行一个 Docker 容器:
 
-```
+```java
 $ docker run -id --name baeldung baeldung
 34dbc77279a2a6244b0e4ee87890d79e814128391c6a4387d2e2fd10fa6e8f20
 ```
 
 让我们使用 [`docker ps`](https://web.archive.org/web/20221026042423/https://docs.docker.com/engine/reference/commandline/ps/) 命令来验证容器是否按预期运行:
 
-```
+```java
 $ docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS               NAMES
 34dbc77279a2        baeldung            "/bin/sh -c /bin/bash"   About a minute ago   Up About a minute                       baeldung
@@ -64,20 +64,20 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 
 停靠容器"`baeldung`"已启动并正在运行。我们现在将使用`docker exec`命令来访问它:
 
-```
+```java
 $ docker exec -it baeldung bash
 ```
 
 请仔细注意我们之前创建的 Dockerfile 文件。我们添加了一个新用户`john` ，它被设置为所有使用 Docker 映像运行的容器的默认用户。让我们使用 [`whoami`](/web/20221026042423/https://www.baeldung.com/linux/tag/whoami) 命令:来验证这一点
 
-```
+```java
 $ whoami
 john 
 ```
 
 现在，如果我们试图将任何包安装到容器中，我们将得到以下错误消息:
 
-```
+```java
 $ apt-get update
 Reading package lists... Done
 W: chmod 0700 of directory /var/lib/apt/lists/partial failed - SetupAPTPartialDirectory (1: Operation not permitted)
@@ -93,26 +93,26 @@ E: Unable to lock directory /var/lib/apt/lists/
 
 为了在 Docker 容器中使用 root 用户来执行，我们将使用—`u`选项:
 
-```
+```java
 $ docker exec -it -u 0 baeldung bash
 ```
 
 使用`docker exec`命令的 `-u”` 选项，我们定义了根用户的`id`。我们也可以在这个命令中使用用户名:
 
-```
+```java
 $ docker exec -it -u root baeldung bash
 ```
 
 为了查看当前用户的详细信息，我们将运行 *whoami* 命令:
 
-```
+```java
 $ whoami
 root
 ```
 
 这次，我们以 root 用户的身份进入了容器。现在，我们可以对容器执行任何操作:
 
-```
+```java
 $ apt-get update
 Hit:1 http://security.ubuntu.com/ubuntu xenial-security InRelease
 Hit:2 http://archive.ubuntu.com/ubuntu xenial InRelease
@@ -127,14 +127,14 @@ Reading package lists... Done
 
 让我们看看获取容器 PID 的命令:
 
-```
+```java
 $ docker inspect --format {{.State.Pid}} baeldung
 6491
 ```
 
 一旦我们有了`PID`，我们将以如下方式将这个`PID`与*n 输入* 命令一起使用:
 
-```
+```java
 $ nsenter --target 6491 --mount --uts --ipc --net --pid
 ```
 
@@ -148,7 +148,7 @@ Docker 容器通常以 root 用户作为默认用户运行。 为了用不同的
 
 我们来看看 Dockerfile:
 
-```
+```java
 FROM ubuntu:16.04
 RUN apt-get update && apt-get -y install sudo
 RUN useradd -m john && echo "john:john" | chpasswd && adduser john sudo
@@ -160,20 +160,20 @@ CMD /bin/bash
 
 让我们运行命令来构建映像:
 
-```
+```java
 $ docker build -t baeldung . 
 ```
 
 上面的命令将创建`baeldung`图像。现在，让我们使用 `baeldung` 图像:来运行容器
 
-```
+```java
 $ docker run -id --name baeldung baeldung
 b0f83a7e8b49ddf043c80792f21d5c483c0c5ab56c700815a83b0a40e5292754 
 ```
 
 容器的默认用户是 `john` ，所以我们将使用它来访问容器:
 
-```
+```java
 $ docker exec -it baeldung bash
 To run a command as administrator (user "root"), use "sudo <command>".
 See "man sudo_root" for details. 
@@ -181,7 +181,7 @@ See "man sudo_root" for details.
 
 让我们运行 *whoami* 命令，找出登录用户的用户名:
 
-```
+```java
 $ whoami
 john
 ```
@@ -190,7 +190,7 @@ john
 
 这一次，我们将使用 *sudo* 命令为非根用户`john`获取特权:
 
-```
+```java
 $ sudo apt-get update
 [sudo] password for john: 
 Get:1 http://security.ubuntu.com/ubuntu xenial-security InRelease [99.8 kB]

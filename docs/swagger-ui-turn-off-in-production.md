@@ -14,7 +14,7 @@ Swagger 用户界面允许我们查看关于 REST 服务的信息。这对于开
 
 让我们创建一个`SwaggerConfig`类:
 
-```
+```java
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig implements WebMvcConfigurer {
@@ -47,7 +47,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
 让我们尝试使用一个 [SpEL 表达式](/web/20220630142743/https://www.baeldung.com/spring-expression-language)来匹配`“swagger”`概要文件，而不是`“prod”`概要文件:
 
-```
+```java
 @Profile({"!prod && swagger"})
 ```
 
@@ -55,7 +55,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
 我们可以将注释添加到配置中:
 
-```
+```java
 @Configuration 
 @Profile({"!prod && swagger"})
 @EnableSwagger2 
@@ -66,7 +66,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
 现在，让我们通过使用不同的`spring.profiles.active`属性设置启动我们的应用程序来测试它是否工作:
 
-```
+```java
  -Dspring.profiles.active=prod // Swagger is disabled
 
   -Dspring.profiles.active=prod,anyOther // Swagger is disabled
@@ -84,7 +84,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
 作为替代，我们可以使用`@ConditionalOnExpression`，它允许为启用 bean 指定自定义属性:
 
-```
+```java
 @Configuration
 @ConditionalOnExpression(value = "${useSwagger:false}")
 @EnableSwagger2
@@ -97,11 +97,11 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
 为了测试这一点，我们可以在`application.properties`(或`application.yaml`)文件中设置该属性，或者将其设置为一个 VM 选项:
 
-```
+```java
 -DuseSwagger=true
 ```
 
-```
+```java
 我们应该注意，这个例子没有包括任何保证我们的生产实例不会意外地将`useSwagger`设置为`true`的方法。
 5.避免陷阱
 
@@ -111,21 +111,21 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
 ```
 @Profile({"!prod"}) // Leaves Swagger enabled by default with no way to disable it in other profiles 
-```
+```java
 
 ```
 @Profile({"swagger"}) // Allows activating Swagger in prod as well 
-```
+```java
 
 ```
 @Profile({"!prod", "swagger"}) // Equivalent to {"!prod || swagger"} so it's worse than {"!prod"} as it provides a way to activate Swagger in prod too
-```
+```java
 
 这就是为什么我们的`@Profile`示例使用了:
 
 ```
 @Profile({"!prod && swagger"})
-```
+```java
 
 这种解决方案可能是最严格的，因为它默认禁用 Swagger **，并保证在** `**“prod”**. `中不能启用 
 

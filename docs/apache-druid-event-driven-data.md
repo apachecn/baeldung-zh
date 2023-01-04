@@ -81,7 +81,7 @@ Druid 被设计成可伸缩的、容错的集群。然而，**建立一个生产
 
 一旦我们准备好 Docker compose 和环境文件，启动 Druid 就像在同一个目录中运行一个命令一样简单:
 
-```
+```java
 docker-compose up
 ```
 
@@ -101,7 +101,7 @@ docker-compose up
 
 虽然有复杂的方法和工具来执行数据分析，但我们将从目视检查开始。快速分析显示**输入数据包含以 JSON 格式捕获的事件，单个事件包含典型属性**:
 
-```
+```java
 {
   "time": "2015-09-12T02:10:26.679Z",
   "channel": "#pt.wikipedia",
@@ -159,7 +159,7 @@ Druid 需要**一个特定的属性来标识时间戳列**。在大多数情况�
 
 让我们首先定义一个简单的任务规范，将我们的数据接收到一个名为`wikipedia-index.json`的文件中:
 
-```
+```java
 {
   "type" : "index_parallel",
   "spec" : {
@@ -239,7 +239,7 @@ Druid 需要**一个特定的属性来标识时间戳列**。在大多数情况�
 
 最后，我们可以使用类似于`curl`的工具通过命令行将这个任务规范提交给霸王流程:
 
-```
+```java
 curl -X 'POST' -H 'Content-Type:application/json' -d @wikipedia-index.json http://localhost:8081/druid/indexer/v1/task
 ```
 
@@ -267,7 +267,7 @@ Druid **中的本地查询使用 JSON 对象，我们可以将这些对象发送
 
 让我们创建一个名为`simple_query_native.json`的 JSON 文件:
 
-```
+```java
 {
   "queryType" : "topN",
   "dataSource" : "wikipedia",
@@ -289,13 +289,13 @@ Druid **中的本地查询使用 JSON 对象，我们可以将这些对象发送
 
 让我们使用`curl`通过 HTTP 发布这个消息:
 
-```
+```java
 curl -X 'POST' -H 'Content-Type:application/json' -d @simple_query_native.json http://localhost:8888/druid/v2?pretty
 ```
 
 该响应包含 JSON 格式的前十个页面的详细信息:
 
-```
+```java
 [ {
   "timestamp" : "2015-09-12T00:46:58.771Z",
   "result" : [ {
@@ -338,7 +338,7 @@ Druid 有一个**内置的 SQL 层，它为我们提供了在熟悉的类似 SQL
 
 让我们看看如何创建与之前相同的查询，但是使用 Druid SQL。和以前一样，我们将创建一个名为`simple_query_sql.json`的 JSON 文件:
 
-```
+```java
 {
   "query":"SELECT page, COUNT(*) AS counts /
     FROM wikipedia WHERE \"__time\" /
@@ -349,7 +349,7 @@ Druid 有一个**内置的 SQL 层，它为我们提供了在熟悉的类似 SQL
 
 请注意，为了便于阅读，查询被分成了多行，但它应该出现在一行中。同样，和以前一样，我们将通过 HTTP 发送这个查询，但是发送到不同的端点:
 
-```
+```java
 curl -X 'POST' -H 'Content-Type:application/json' -d @simple_query_sql.json http://localhost:8888/druid/v2/sql
 ```
 
@@ -387,7 +387,7 @@ Druid 支持两种连接数据的方式。第一个是连接操作符，第二�
 
 让我们从在 Maven 中定义[所需的依赖关系开始:](https://web.archive.org/web/20220921074633/https://search.maven.org/artifact/in.zapr.druid/druidry/2.14/jar)
 
-```
+```java
 <dependency>
     <groupId>in.zapr.druid</groupId>
     <artifactId>druidry</artifactId>
@@ -397,7 +397,7 @@ Druid 支持两种连接数据的方式。第一个是连接操作符，第二�
 
 在这之后，我们应该能够使用客户端库并创建我们的`TopN`查询:
 
-```
+```java
 DateTime startTime = new DateTime(2015, 9, 12, 0, 0, 0, DateTimeZone.UTC);
 DateTime endTime = new DateTime(2015, 9, 13, 0, 0, 0, DateTimeZone.UTC);
 Interval interval = new Interval(startTime, endTime);
@@ -417,7 +417,7 @@ DruidTopNQuery query = DruidTopNQuery.builder()
 
 在这之后，我们可以简单地生成所需的 JSON 结构，我们可以在 HTTP POST 调用中使用它:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 String requiredJson = mapper.writeValueAsString(query);
 ```

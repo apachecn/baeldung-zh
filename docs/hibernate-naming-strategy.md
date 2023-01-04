@@ -14,7 +14,7 @@ Hibernate 5 为 Hibernate 实体提供了两种不同的命名策略:隐式命�
 
 在本教程中，我们将使用[基本 Hibernate 核心依赖关系](https://web.archive.org/web/20220524120435/https://search.maven.org/search?q=g:org.hibernate%20AND%20a:hibernate-core):
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>
@@ -32,7 +32,7 @@ Hibernate 使用逻辑名将实体或属性名映射到表或列名。这个名�
 
 **如果我们想为一个特定的实体偏离这个策略，我们可以使用注释来进行定制**。我们可以使用*@表*注释来定制一个*@实体*的名称。对于一个属性，我们可以使用 *@Column* 注释:
 
-```
+```java
 @Entity
 @Table(name = "Customers")
 public class Customer {
@@ -55,7 +55,7 @@ public class Customer {
 
 使用这种配置，`Customer`实体及其属性的逻辑名称将是:
 
-```
+```java
 Customer -> Customers
 firstName -> firstName
 lastName -> lastName
@@ -78,7 +78,7 @@ Hibernate 使用物理命名策略将我们的逻辑名称映射到 SQL 表及�
 
 首先，我们将创建一个策略，将我们的 camel case 名称转换为使用我们更标准的 SQL 格式:
 
-```
+```java
 public class CustomPhysicalNamingStrategy implements PhysicalNamingStrategy {
 
     @Override
@@ -119,13 +119,13 @@ public class CustomPhysicalNamingStrategy implements PhysicalNamingStrategy {
 
 最后，我们可以告诉 Hibernate 使用我们的新策略:
 
-```
+```java
 hibernate.physical_naming_strategy=com.baeldung.hibernate.namingstrategy.CustomPhysicalNamingStrategy
 ```
 
 使用我们针对`Customer`实体的新策略，物理名称将是:
 
-```
+```java
 Customer -> customers
 firstName -> first_name
 lastName -> last_name

@@ -22,7 +22,7 @@
 
 第一个注释在运行时可见:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FirstAnnotation {
 }
@@ -30,7 +30,7 @@ public @interface FirstAnnotation {
 
 第二个具有相同的保持力:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SecondAnnotation {
 }
@@ -38,7 +38,7 @@ public @interface SecondAnnotation {
 
 最后，让我们创建仅在源代码中可见的第三个注释:
 
-```
+```java
 @Retention(RetentionPolicy.SOURCE)
 public @interface ThirdAnnotation {
 }
@@ -46,7 +46,7 @@ public @interface ThirdAnnotation {
 
 现在，让我们用字段`classMember`定义一个类，用我们所有的三个注释进行注释:
 
-```
+```java
 public class ClassWithAnnotations {
 
     @FirstAnnotation
@@ -58,7 +58,7 @@ public class ClassWithAnnotations {
 
 之后，让我们在运行时检索所有可见的注释。**我们将使用 [Java 反射](/web/20220529023153/https://www.baeldung.com/java-reflection)，它允许我们检查字段的属性:**
 
-```
+```java
 @Test
 public void whenCallingGetDeclaredAnnotations_thenOnlyRuntimeAnnotationsAreAvailable() throws NoSuchFieldException {
     Field classMemberField = ClassWithAnnotations.class.getDeclaredField("classMember");
@@ -75,7 +75,7 @@ public void whenCallingGetDeclaredAnnotations_thenOnlyRuntimeAnnotationsAreAvail
 
 现在让我们看看如何检查字段中是否存在特定的注释。`[Field](https://web.archive.org/web/20220529023153/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Field.html) `类有一个方法`isAnnotationPresent` ，当指定类型的注释出现在元素上时，该方法返回`true` 。让我们在我们的`classMember` 场地上测试一下:
 
-```
+```java
 @Test
 public void whenCallingIsAnnotationPresent_thenOnlyRuntimeAnnotationsAreAvailable() throws NoSuchFieldException {
     Field classMemberField = ClassWithAnnotations.class.getDeclaredField("classMember");
@@ -95,7 +95,7 @@ public void whenCallingIsAnnotationPresent_thenOnlyRuntimeAnnotationsAreAvailabl
 
 让我们通过一个简单的测试来展示它:
 
-```
+```java
 @Test
 public void whenCallingGetDeclaredAnnotationsOrGetAnnotations_thenSameAnnotationsAreReturned() throws NoSuchFieldException {
     Field classMemberField = ClassWithAnnotations.class.getDeclaredField("classMember");
@@ -107,7 +107,7 @@ public void whenCallingGetDeclaredAnnotationsOrGetAnnotations_thenSameAnnotation
 
 而且，在`Field` 类中，我们可以发现`getAnnotations`方法调用了`getDeclaredAnnotations`方法:
 
-```
+```java
 @Override
 public Annotation[] getAnnotations() {
     return getDeclaredAnnotations();

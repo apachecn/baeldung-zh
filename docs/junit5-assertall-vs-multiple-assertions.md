@@ -14,7 +14,7 @@
 
 我们将使用一个`User`类来帮助我们的例子:
 
-```
+```java
 public class User {
     String username;
     String email;
@@ -28,7 +28,7 @@ public class User {
 
 让我们从一个所有断言都失败的例子开始:
 
-```
+```java
 User user = new User("baeldung", "[[email protected]](/web/20221031071901/https://www.baeldung.com/cdn-cgi/l/email-protection)", false);
 assertEquals("admin", user.getUsername(), "Username should be admin");
 assertEquals("[[email protected]](/web/20221031071901/https://www.baeldung.com/cdn-cgi/l/email-protection)", user.getEmail(), "Email should be [[email protected]](/web/20221031071901/https://www.baeldung.com/cdn-cgi/l/email-protection)");
@@ -37,7 +37,7 @@ assertTrue(user.getActivated(), "User should be activated");
 
 运行测试后，只有第一个断言失败:
 
-```
+```java
 org.opentest4j.AssertionFailedError: Username should be admin ==> 
 Expected :admin
 Actual   :baeldung
@@ -53,7 +53,7 @@ Actual   :baeldung
 
 `assertAll()` 断言函数接受多个`Executable`对象的集合:
 
-```
+```java
 assertAll(
   "Grouped Assertions of User",
   () -> assertEquals("baeldung", user.getUsername(), "Username should be baeldung"),
@@ -70,7 +70,7 @@ assertAll(
 
 让我们看看完整的例子:
 
-```
+```java
 User user = new User("baeldung", "[[email protected]](/web/20221031071901/https://www.baeldung.com/cdn-cgi/l/email-protection)", false);
 assertAll(
   "Grouped Assertions of User",
@@ -82,7 +82,7 @@ assertAll(
 
 现在，让我们看看运行测试时会发生什么:
 
-```
+```java
 org.opentest4j.MultipleFailuresError: Grouped Assertions of User (3 failures)
 org.opentest4j.AssertionFailedError: Username should be admin ==> expected: <admin> but was: <baeldung>
 org.opentest4j.AssertionFailedError: Email should be [[email protected]](/web/20221031071901/https://www.baeldung.com/cdn-cgi/l/email-protection) ==> expected: <[[email protected]](/web/20221031071901/https://www.baeldung.com/cdn-cgi/l/email-protection)> but was: <[[email protected]](/web/20221031071901/https://www.baeldung.com/cdn-cgi/l/email-protection)>

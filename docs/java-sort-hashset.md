@@ -12,7 +12,7 @@
 
 `Collections.sort()`方法对实现`java.util.List`接口的对象集合进行排序。因此，我们可以将我们的`HashSet`转换成`List`，然后使用`Collections.sort()`对其进行排序:
 
-```
+```java
 HashSet<Integer> numberHashSet = new HashSet<>();
 numberHashSet.add(2);
 numberHashSet.add(1);
@@ -34,7 +34,7 @@ assertThat(arrayList).containsExactly(1, 2, 3, 4);
 
 使用这种方法，我们将`HashSet`转换为`[TreeSet](/web/20221218223415/https://www.baeldung.com/java-tree-set)`，这与`HashSet`类似，只是它以升序存储元素。因此，当`HashSet`转换为`TreeSet` 时，**`HashSet`元素按顺序排列:**
 
-```
+```java
 HashSet<Integer> numberHashSet = new HashSet<>();
 numberHashSet.add(2);
 numberHashSet.add(1);
@@ -55,7 +55,7 @@ assertThat(treeSet).containsExactly(1, 2, 3, 4);
 
 在我们的示例**中，我们将使用** **`stream().sorted()`方法，该方法返回一个`Stream`，其元素按照一定的顺序**排序。应该注意的是，由于原始的`HashSet`保持不变，我们需要将排序的结果保存在一个新的`Collection`中。我们将使用`collect()`方法将数据存储回一个新的`HashSet`:
 
-```
+```java
 HashSet<Integer> numberHashSet = new HashSet<>();
 numberHashSet.add(200);
 numberHashSet.add(100);

@@ -6,7 +6,7 @@
 
 使用 [Git](/web/20221103221508/https://www.baeldung.com/git-guide) 是任何开发人员日常工作的重要部分。然而，在开始时，它可能是压倒性的，错误消息可能不明显。**当人们开始使用 Git 时，最常见的问题之一是`refspec:`** 的错误
 
-```
+```java
 error: src refspec master does not match any 
 error: failed to push some refs to 'https://github.com/profile/repository.git'
 ```
@@ -17,7 +17,7 @@ error: failed to push some refs to 'https://github.com/profile/repository.git'
 
 我们中的许多人至少在控制台中看到过一次`refspec` 错误消息。推送到远程存储库时会出现此错误。让我们试着理解这一行的确切含义:
 
-```
+```java
 error: src refspec master does not match any
 ```
 
@@ -27,7 +27,7 @@ error: src refspec master does not match any
 
 当我们克隆一个未初始化的存储库并试图推送一个本地存储库时，可能会出现`refspec `错误。这就是 Git 服务如何解释建立本地存储库的。**以下是来自 GitHub 的步骤:**
 
-```
+```java
 $ echo "# repository" >> README.md
 $ git init
 $ git add README.md
@@ -47,19 +47,19 @@ $ git push -u origin main
 
 第一行创建了一个`README.md `文件:
 
-```
+```java
 $ echo "# repository" >> README.md
 ```
 
 以下命令将初始化本地 Git 存储库:
 
-```
+```java
 $ git init
 ```
 
 该命令可能会发出以下消息:
 
-```
+```java
 hint: Using 'master' as the name for the initial branch. This default branch name
 hint: is subject to change. To configure the initial branch name to use in all
 hint: of your new repositories, which will suppress this warning, call:
@@ -78,7 +78,7 @@ hint: 	git branch -m <name>
 
 随后的两个命令在我们的本地存储库中创建一个提交:
 
-```
+```java
 $ git add README.md 
 $ git commit -m "first commit"
 ```
@@ -87,7 +87,7 @@ $ git commit -m "first commit"
 
 有趣的事情发生在下面一行:
 
-```
+```java
 $ git branch -M main
 ```
 
@@ -95,7 +95,7 @@ $ git branch -M main
 
 GitHub 提供的步骤将包含平台上配置的默认名称。**然而，这种剩余成为`refspec`错误背后最常见的原因之一。**让我们看看，如果我们有一个使用`“master”`作为默认分支的本地存储库和一个使用`“main.”` 的远程存储库，会发生什么情况。对于这个例子，我们将跳过重命名步骤，直接设置我们的远程存储库:
 
-```
+```java
 $ git remote add origin https://github.com/profile/repository.git
 ```
 
@@ -103,7 +103,7 @@ $ git remote add origin https://github.com/profile/repository.git
 
 我们将在这条线上开始遇到问题:
 
-```
+```java
 $ git push -u origin main
 ```
 
@@ -111,26 +111,26 @@ $ git push -u origin main
 
 这意味着本地存储库应该包含`“main”`分支。**然而，默认的本地分支名称被设置为`“master,”`，我们没有创建新的*“`main`”*分支或重命名`“master”`分支。**在这种情况下，Git 将无法找到要推送的*“`main`”*分支，我们将得到以下错误消息:
 
-```
+```java
 error: src refspec main does not match any
 error: failed to push some refs to 'origin'
 ```
 
 现在这条信息更有意义了。如前所述，这个错误告诉我们没有`“main”` 分支。有几种方法可以解决这个问题。第一个是把我们现在的*`master`*分公司改名为`“main”` `:`
 
-```
+```java
 $ git branch -M main
 ```
 
 在重命名操作之后，我们可以重复 push 命令，它将没有问题地工作。同时，我们可以将想要推送的分支的名称从*、`main`、*更改为`master`，或者我们在本地存储库中默认使用的任何名称。以下命令将在远程存储库上创建一个“`master`”分支:
 
-```
+```java
 $ git push -u origin master
 ```
 
 最后，如果我们想在本地存储库中坚持使用"`master” `名称，在远程存储库中坚持使用`“main”`名称，我们可以使用以下命令显式设置上游分支:
 
-```
+```java
 $ git push -u origin master:main
 ```
 
@@ -142,7 +142,7 @@ $ git push -u origin master:main
 
 这个问题的另一个原因是推送一个空的存储库。然而，背后的原因将是相同的——试图推动一个不存在的分支。让我们假设我们已经创建了一个新的存储库。这些分支被恰当地命名。我们添加了一个文件，但未提交:
 
-```
+```java
 $ echo "# another-test-repo" >> README.md
 $ git init
 $ git add README.md
@@ -153,13 +153,13 @@ $ git push -u origin main
 
 **虽然我们在*`main`*分支上，但严格来说，并不存在。对于要在`.git/refs/heads,`下创建的分支，它应该包含至少一个提交。**让我们确保回购中的文件夹`.git/refs/heads `此时为空:
 
-```
+```java
 $ ls .git/refs/heads 
 ```
 
 这个命令应该显示一个空文件夹。因此，和前面的例子一样，我们试图推动一个不存在的分支。一次提交就能解决问题。它将创建一个分支，使推动变更成为可能:
 
-```
+```java
 $ git commit -m "first commit"
 $ git push -u origin master
 ```

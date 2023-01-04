@@ -30,7 +30,7 @@ A [Swagger](/web/20220716222627/https://www.baeldung.com/spring-boot-rest-client
 
 我们将使用 [`swagger-maven-plugin`](https://web.archive.org/web/20220716222627/https://search.maven.org/search?q=a:swagger-maven-plugin%20AND%20g:io.swagger.core.v3) ，，并且我们需要将它作为依赖项添加到我们的应用程序的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.github.kongchen</groupId>
     <artifactId>swagger-maven-plugin</artifactId>
@@ -44,7 +44,7 @@ A [Swagger](/web/20220716222627/https://www.baeldung.com/spring-boot-rest-client
 *   `info`:这个标签为 API 提供元数据。Swagger-ui 使用这些数据来显示信息
 *   `swaggerDirectory`:该标签定义了`swagger.json`文件的路径
 
-```
+```java
 <plugin>
     <groupId>com.github.kongchen</groupId>
     <artifactId>swagger-maven-plugin</artifactId>
@@ -93,7 +93,7 @@ A [Swagger](/web/20220716222627/https://www.baeldung.com/spring-boot-rest-client
 
 我们的`Employee,` `Role,` 和`HireController`会是什么样子:
 
-```
+```java
 @ApiModel
 public class Employee {
     @ApiModelProperty
@@ -103,7 +103,7 @@ public class Employee {
 }
 ```
 
-```
+```java
 @ApiModel
 public enum Role {
     Engineer, Clerk, Driver, Janitor;
@@ -112,7 +112,7 @@ public enum Role {
 
 接下来，我们将创建一个将`@Path`作为`“/hire”`的 API，并使用`Employee`模型作为`hireEmployee`方法的输入参数。我们必须将`@Api`添加到我们的`HireController`中，以便 [`swagger-maven-plugin`](https://web.archive.org/web/20220716222627/https://search.maven.org/search?q=a:swagger-maven-plugin%20AND%20g:io.swagger.core.v3) 知道并应该考虑它来记录:
 
-```
+```java
 @Api
 @Path(value="/hire")
 @Produces({"application/json"})
@@ -134,7 +134,7 @@ public class HireController {
 
 一旦构建完成，插件将在`generated/swagger-ui`或插件中配置的位置生成`swagger.json`文件。在定义下，我们会看到 employee 属性中记录的枚举`Role`及其所有可能的值。
 
-```
+```java
 "definitions" : {
   "Employee" : {
     "type" : "object",

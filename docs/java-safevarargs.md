@@ -12,7 +12,7 @@ Java 5 引入了 varargs 的概念，即可变长度的方法参数，以及参�
 
 将这些结合起来会给我们带来问题:
 
-```
+```java
 public static <T> T[] unsafe(T... elements) {
     return elements; // unsafe! don't ever return a parameterized varargs array
 }
@@ -29,7 +29,7 @@ public static void plant() {
 
 这些问题对于编译器来说很难确认，所以每当两者结合时它都会给出警告，就像在`unsafe:`的情况下一样
 
-```
+```java
 warning: [unchecked] Possible heap pollution from parameterized vararg type T
   public static <T> T[] unsafe(T... elements) {
 ```
@@ -40,7 +40,7 @@ warning: [unchecked] Possible heap pollution from parameterized vararg type T
 
 `@SafeVarargs`类似于`@SupressWarnings`,因为它允许我们声明一个特定的编译器警告是误报。**一旦我们确保我们的行动是安全的**，我们就可以添加这个注释:
 
-```
+```java
 public class Machine<T> {
     private List<T> versions = new ArrayList<>();
 

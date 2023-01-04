@@ -54,7 +54,7 @@
 
 例如，我们可以使用一个简单的 jar 命令用 [JDCommandLine](https://web.archive.org/web/20220815131112/https://github.com/betterphp/JDCommandLine) 进行反编译:
 
-```
+```java
 java -jar JDCommandLine.jar ${TARGET_JAR_NAME}.jar ./classes
 ```
 

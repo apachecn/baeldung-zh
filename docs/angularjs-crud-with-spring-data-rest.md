@@ -22,7 +22,7 @@
 
 所有用户的列表将在端点`/users`对我们可用。可以使用 GET 方法调用此 URL，它将返回以下形式的 JSON 对象:
 
-```
+```java
 {
   "_embedded" : {
     "users" : [ {
@@ -49,7 +49,7 @@
 
 为了检索一个`WebsiteUser`对象，我们可以用 GET 方法访问`/users/{userID}`。这将返回以下形式的 JSON 对象:
 
-```
+```java
 {
   "name" : "Bryan",
   "email" : "[[email protected]](/web/20220628094913/https://www.baeldung.com/cdn-cgi/l/email-protection)",
@@ -66,7 +66,7 @@
 
 要添加一个新的`WebsiteUser`，我们需要用 POST 方法调用`/users`。新的`WebsiteUser`记录的属性将作为一个 JSON 对象添加到请求体中:
 
-```
+```java
 {name: "Bryan", email: "[[email protected]](/web/20220628094913/https://www.baeldung.com/cdn-cgi/l/email-protection)"}
 ```
 
@@ -74,7 +74,7 @@
 
 如果我们想要更新`WebsiteUser` 记录的属性，我们需要使用 PATCH 方法和包含新值的请求体来调用 URL `/users/{UserID}`:
 
-```
+```java
 {name: "Bryan", email: "[[email protected]](/web/20220628094913/https://www.baeldung.com/cdn-cgi/l/email-protection)"}
 ```
 
@@ -84,7 +84,7 @@
 
 我们还将添加一个基本的 MVC 配置来显示应用程序中的 html 文件:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 public class MvcConfig implements WebMvcConfigurer {
@@ -112,7 +112,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
 从版本 1.5.0.RELEASE 开始，Spring Data REST 增加了对此的支持。
 
-```
+```java
 @CrossOrigin
 @RepositoryRestResource(collectionResourceRel = "users", path = "users")
 public interface UserRepository extends CrudRepository<WebsiteUser, Long> {}
@@ -126,7 +126,7 @@ public interface UserRepository extends CrudRepository<WebsiteUser, Long> {}
 
 为了使用`AngularJS`，我们首先需要在我们的 html 页面中包含 `angular.min.js`文件，它将被称为`users.html`:
 
-```
+```java
 <script 
   src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js">
 </script>
@@ -136,7 +136,7 @@ public interface UserRepository extends CrudRepository<WebsiteUser, Long> {}
 
 这些将被放在一个名为 `app.js`的 JavaScript 文件中，该文件也需要包含在 `users.html`页面中:
 
-```
+```java
 <script src="view/app.js"></script>
 ```
 
@@ -146,7 +146,7 @@ public interface UserRepository extends CrudRepository<WebsiteUser, Long> {}
 
 让我们来看一下使用`/users/{userID}`端点定义通过 id 检索用户的方法:
 
-```
+```java
 app.service('UserCRUDService', [ '$http', function($http) {
 
     this.getUser = function getUser(userId) {
@@ -160,7 +160,7 @@ app.service('UserCRUDService', [ '$http', function($http) {
 
 接下来，让我们定义`addUser`方法，该方法向`/users` URL 发出 POST 请求，并发送`data`属性中的用户值:
 
-```
+```java
 this.addUser = function addUser(name, email) {
     return $http({
         method : 'POST',
@@ -175,7 +175,7 @@ this.addUser = function addUser(name, email) {
 
 `updateUser`方法类似于上面的方法，除了它将有一个`id` 参数并发出一个补丁请求:
 
-```
+```java
 this.updateUser = function updateUser(id, name, email) {
     return $http({
         method : 'PATCH',
@@ -190,7 +190,7 @@ this.updateUser = function updateUser(id, name, email) {
 
 删除`WebsiteUser` 记录的方法将发出删除请求:
 
-```
+```java
 this.deleteUser = function deleteUser(id) {
     return $http({
         method : 'DELETE',
@@ -201,7 +201,7 @@ this.deleteUser = function deleteUser(id) {
 
 最后，让我们看看检索整个用户列表的方法:
 
-```
+```java
 this.getAllUsers = function getAllUsers() {
     return $http({
         method : 'GET',
@@ -218,7 +218,7 @@ this.getAllUsers = function getAllUsers() {
 
 我们来看看调用`getUser(userId)`服务函数的`getUser()`函数，定义了两个回调方法，分别在成功和错误的情况下使用。如果服务器请求成功，那么响应被保存在一个`user`变量中；否则，将处理错误消息:
 
-```
+```java
 app.controller('UserCRUDCtrl', ['$scope','UserCRUDService', 
   function ($scope,UserCRUDService) {
       $scope.getUser = function () {
@@ -245,7 +245,7 @@ app.controller('UserCRUDCtrl', ['$scope','UserCRUDService',
 
 `addUser()`函数将调用相应的服务函数并处理响应:
 
-```
+```java
 $scope.addUser = function () {
     if ($scope.user != null && $scope.user.name) {
         UserCRUDService.addUser($scope.user.name, $scope.user.email)
@@ -267,7 +267,7 @@ $scope.addUser = function () {
 
 `updateUser()`和`deleteUser()`功能与上图类似:
 
-```
+```java
 $scope.updateUser = function () {
     UserCRUDService.updateUser($scope.user.id, 
       $scope.user.name, $scope.user.email)
@@ -297,7 +297,7 @@ $scope.deleteUser = function () {
 
 最后，让我们定义检索用户列表的函数，并将其存储在`users` 变量中:
 
-```
+```java
 $scope.getAllUsers = function () {
     UserCRUDService.getAllUsers()
       .then(function success(response) {
@@ -318,19 +318,19 @@ $scope.getAllUsers = function () {
 
 首先，为了使用 Angular 模块，我们需要设置 `ng-app`属性:
 
-```
+```java
 <html ng-app="app">
 ```
 
 然后，为了避免每次使用控制器的函数时都键入`UserCRUDCtrl.getUser()`，我们可以将 HTML 元素包装在一个带有`ng-controller`属性集的`div`中:
 
-```
+```java
 <div ng-controller="UserCRUDCtrl">
 ```
 
 让我们创建一个表单，它将输入并显示我们想要操作的`WebiteUser` 对象的值。其中每一个都有一个`ng-model`属性集，将它绑定到属性值:
 
-```
+```java
 <table>
     <tr>
         <td width="100">ID:</td>
@@ -351,7 +351,7 @@ $scope.getAllUsers = function () {
 
 接下来，让我们使用`ng-click`属性来定义将触发每个 CRUD 控制器函数调用的链接:
 
-```
+```java
 <a ng-click="getUser(user.id)">Get User</a>
 <a ng-click="updateUser(user.id,user.name,user.email)">Update User</a>
 <a ng-click="addUser(user.name,user.email)">Add User</a>
@@ -360,7 +360,7 @@ $scope.getAllUsers = function () {
 
 最后，让我们按名称显示完整的用户列表:
 
-```
+```java
 <a ng-click="getAllUsers()">Get all Users</a><br/><br/>
 <div ng-repeat="usr in users">
 {{usr.name}} {{usr.email}}

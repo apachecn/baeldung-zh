@@ -12,7 +12,7 @@ Java 类中的复制构造函数是一个[构造函数](/web/20221231135948/http
 
 要创建复制构造函数，我们可以首先声明一个构造函数，它将一个相同类型的对象作为参数:
 
-```
+```java
 public class Employee {
     private int id;
     private String name;
@@ -24,7 +24,7 @@ public class Employee {
 
 然后，我们将输入对象的每个字段复制到新实例中:
 
-```
+```java
 public class Employee {
     private int id;
     private String name;
@@ -40,7 +40,7 @@ public class Employee {
 
 如果 Java 类有可变字段，那么我们可以在它的复制构造函数中创建一个 [`deep copy`](/web/20221231135948/https://www.baeldung.com/java-deep-copy) 。使用深度副本，新创建的对象独立于原始对象，因为我们为每个可变对象创建了一个不同的副本:
 
-```
+```java
 public class Employee {
     private int id;
     private String name;
@@ -68,7 +68,7 @@ Java 中的复制构造函数不能被子类继承。因此，如果我们试图
 
 为了说明这个问题，让我们首先创建一个`Employee`的子类和它的复制构造函数:
 
-```
+```java
 public class Manager extends Employee {
     private List<Employee> directReports;
     // ... other constructors
@@ -83,13 +83,13 @@ public class Manager extends Employee {
 
 然后，我们声明一个`Employee`变量并用`Manager`构造函数实例化它:
 
-```
+```java
 Employee source = new Manager(1, "Baeldung Manager", startDate, directReports);
 ```
 
 由于引用类型是`Employee`，我们必须将其转换为`Manager`类型，这样我们就可以使用`Manager`类的复制构造函数:
 
-```
+```java
 Employee clone = new Manager((Manager) source);
 ```
 
@@ -97,7 +97,7 @@ Employee clone = new Manager((Manager) source);
 
 避免在复制构造函数中进行强制转换的一种方法是为这两个类创建一个新的可继承方法:
 
-```
+```java
 public class Employee {
    public Employee copy() {
         return new Employee(this);
@@ -114,7 +114,7 @@ public class Manager extends Employee {
 
 在每个类方法中，我们用`this`对象的输入调用它的复制构造函数。这样，我们可以保证生成的对象等于调用者对象:
 
-```
+```java
 Employee clone = source.copy();
 ```
 

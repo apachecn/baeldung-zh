@@ -14,7 +14,7 @@
 
 `abs()`方法返回给定值的绝对值:
 
-```
+```java
 Math.abs(-5); // returns 5
 ```
 
@@ -24,7 +24,7 @@ Math.abs(-5); // returns 5
 
 计算并返回第一个参数的第二次幂的值:
 
-```
+```java
 Math.pow(5,2); // returns 25
 ```
 
@@ -34,7 +34,7 @@ Math.pow(5,2); // returns 25
 
 返回一个`double`的舍入正平方根:
 
-```
+```java
 Math.sqrt(25); // returns 5
 ```
 
@@ -44,7 +44,7 @@ Math.sqrt(25); // returns 5
 
 类似地，`cbrt()`返回一个`double`的立方根:
 
-```
+```java
 Math.cbrt(125); // returns 5
 ```
 
@@ -52,7 +52,7 @@ Math.cbrt(125); // returns 5
 
 顾名思义，该方法返回两个值之间的最大值:
 
-```
+```java
 Math.max(5,10); // returns 10
 ```
 
@@ -62,7 +62,7 @@ Math.max(5,10); // returns 10
 
 同样，`min()`返回两个值之间的最小值:
 
-```
+```java
 Math.min(5,10); // returns 5
 ```
 
@@ -70,7 +70,7 @@ Math.min(5,10); // returns 5
 
 返回大于或等于 0.0 且小于 1.0 的伪随机值`double `:
 
-```
+```java
 double random = Math.random()
 ```
 
@@ -84,7 +84,7 @@ double random = Math.random()
 
 当我们必须知道值的符号时，这是很有用的:
 
-```
+```java
 Math.signum(-5) // returns -1
 ```
 
@@ -96,7 +96,7 @@ Math.signum(-5) // returns -1
 
 接受两个参数，并返回第一个参数和第二个参数的符号:
 
-```
+```java
 Math.copySign(5,-1); // returns -5
 ```
 
@@ -110,7 +110,7 @@ Math.copySign(5,-1); // returns -5
 
 `exp()`方法接收一个`double` 参数并返回该参数的欧拉数的幂( *e* ^(`x`) ):
 
-```
+```java
 Math.exp(1); // returns 2.718281828459045
 ```
 
@@ -118,7 +118,7 @@ Math.exp(1); // returns 2.718281828459045
 
 与上面的方法类似，`expm1()`计算欧拉数的接收自变量的幂，但它增加了-1(exp-1):
 
-```
+```java
 Math.expm1(1); // returns 1.718281828459045
 ```
 
@@ -126,7 +126,7 @@ Math.expm1(1); // returns 1.718281828459045
 
 返回一个`double`值的自然对数:
 
-```
+```java
 Math.log(Math.E); // returns 1
 ```
 
@@ -134,7 +134,7 @@ Math.log(Math.E); // returns 1
 
 它返回参数以 10 为底的对数:
 
-```
+```java
 Math.log10(10); // returns 1
 ```
 
@@ -142,7 +142,7 @@ Math.log10(10); // returns 1
 
 类似的还有`log(), `，但是它给参数 ln(1 + x)加 1:
 
-```
+```java
 Math.log1p(Math.E); // returns 1.3132616875182228
 ```
 
@@ -154,7 +154,7 @@ Math.log1p(Math.E); // returns 1.3132616875182228
 
 接收表示角度(以弧度为单位)的单个`double`参数，并返回三角正弦值:
 
-```
+```java
 Math.sin(Math.PI/2); // returns 1
 ```
 
@@ -162,7 +162,7 @@ Math.sin(Math.PI/2); // returns 1
 
 同样，`cos()`返回一个角度的三角余弦值(以弧度为单位):
 
-```
+```java
 Math.cos(0); // returns 1
 ```
 
@@ -170,7 +170,7 @@ Math.cos(0); // returns 1
 
 返回角度的三角正切值(以弧度为单位):
 
-```
+```java
 Math.tan(Math.PI/4); // returns 1
 ```
 
@@ -178,7 +178,7 @@ Math.tan(Math.PI/4); // returns 1
 
 **分别返回一个`double`值的双曲正弦、双曲余弦和双曲正切:**
 
-```
+```java
 Math.sinh(Math.PI);
 
 Math.cosh(Math.PI);
@@ -190,7 +190,7 @@ Math.tanh(Math.PI);
 
 返回收到的参数的反正弦值:
 
-```
+```java
 Math.asin(1); // returns pi/2
 ```
 
@@ -200,7 +200,7 @@ Math.asin(1); // returns pi/2
 
 返回收到的参数的反余弦值:
 
-```
+```java
 Math.acos(0); // returns pi/2
 ```
 
@@ -210,7 +210,7 @@ Math.acos(0); // returns pi/2
 
 返回收到的参数的反正切值:
 
-```
+```java
 Math.atan(1); // returns pi/4
 ```
 
@@ -220,7 +220,7 @@ Math.atan(1); // returns pi/4
 
 最后，`atan2()`接收纵坐标`y`和横坐标`x,`，返回直角坐标`(x,y)`到极坐标`(r, ϑ)`转换的角度`ϑ`:
 
-```
+```java
 Math.atan2(1,1); // returns pi/4
 ```
 
@@ -228,7 +228,7 @@ Math.atan2(1,1); // returns pi/4
 
 当我们需要将弧度转换为度数时，这种方法很有用:
 
-```
+```java
 Math.toDegrees(Math.PI); // returns 180
 ```
 
@@ -236,7 +236,7 @@ Math.toDegrees(Math.PI); // returns 180
 
 另一方面，`toRadians()`有助于进行相反的转换:
 
-```
+```java
 Math.toRadians(180); // returns pi
 ```
 
@@ -252,7 +252,7 @@ Math.toRadians(180); // returns pi
 
 当我们必须将一个整数舍入到大于或等于参数的最小`double`值时，`ceil()`非常有用:
 
-```
+```java
 Math.ceil(Math.PI); // returns 4
 ```
 
@@ -262,7 +262,7 @@ Math.ceil(Math.PI); // returns 4
 
 要将一个数字四舍五入到小于或等于自变量的最大值`double`，我们应该使用`floor()`:
 
-```
+```java
 Math.floor(Math.PI); // returns 3
 ```
 
@@ -272,7 +272,7 @@ Math.floor(Math.PI); // returns 3
 
 参数可以是一个`double`或一个`float`:
 
-```
+```java
 Math.getExponent(333.3); // returns 8
 
 Math.getExponent(222.2f); // returns 7
@@ -282,7 +282,7 @@ Math.getExponent(222.2f); // returns 7
 
 计算第一个参数(被除数)和第二个参数(除数)之间的除法，并按照 IEEE 754 标准的规定返回余数:
 
-```
+```java
 Math.IEEEremainder(5,2); // returns 1
 ```
 
@@ -290,7 +290,7 @@ Math.IEEEremainder(5,2); // returns 1
 
 当我们需要知道`double`或`float` 值的相邻值时，这种方法很有用:
 
-```
+```java
 Math.nextAfter(1.95f,1); // returns 1.9499999
 
 Math.nextAfter(1.95f,2); // returns 1.9500002
@@ -302,7 +302,7 @@ Math.nextAfter(1.95f,2); // returns 1.9500002
 
 与前面的方法类似，但这种方法只返回正无穷大方向的相邻值:
 
-```
+```java
 Math.nextUp(1.95f); // returns 1.9500002
 ```
 
@@ -310,7 +310,7 @@ Math.nextUp(1.95f); // returns 1.9500002
 
 返回一个`double `，它是参数的最接近的整数值:
 
-```
+```java
 Math.rint(1.95f); // returns 2.0
 ```
 
@@ -318,7 +318,7 @@ Math.rint(1.95f); // returns 2.0
 
 与上面的方法相同，但是如果参数是`float `这个方法返回一个`int`值，如果参数是`double:`这个方法返回一个`long`值
 
-```
+```java
 int result = Math.round(1.95f); // returns 2
 
 long result2 = Math.round(1.95) // returns 2
@@ -328,7 +328,7 @@ long result2 = Math.round(1.95) // returns 2
 
 Scalb 是“scale binary”的缩写。该函数执行一次移位、一次转换和一次乘法运算:
 
-```
+```java
 Math.scalb(3, 4); // returns 3*2^4
 ```
 
@@ -336,7 +336,7 @@ Math.scalb(3, 4); // returns 3*2^4
 
 `ulp() `方法返回一个数字到其最近邻居的距离:
 
-```
+```java
 Math.ulp(1); // returns 1.1920929E-7
 Math.ulp(2); // returns 2.3841858E-7
 Math.ulp(4); // returns 4.7683716E-7
@@ -347,7 +347,7 @@ Math.ulp(8); // returns 9.536743E-7
 
 返回其参数平方和的平方根:
 
-```
+```java
 Math.hypot(4, 3); // returns 5
 ```
 
@@ -365,7 +365,7 @@ Math.hypot(4, 3); // returns 5
 
 除了这些方法，`Math `类还声明了两个常量字段:
 
-```
+```java
 public static final double E
 
 public static final double PI

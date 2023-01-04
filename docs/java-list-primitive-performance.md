@@ -18,7 +18,7 @@
 
 我们将使用以下参数运行基准测试:
 
-```
+```java
 @BenchmarkMode(Mode.SingleShotTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Measurement(batchSize = 100000, iterations = 10)
@@ -34,7 +34,7 @@ public class PrimitivesListPerformance {
 
 此外，让我们定义并初始化我们的原语列表:
 
-```
+```java
 public static class PrimitivesListPerformance {
     private List<Integer> arrayList = new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9));
     private TIntArrayList tList = new TIntArrayList(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
@@ -55,7 +55,7 @@ public static class PrimitivesListPerformance {
 
 第一个微基准是针对`[ArrayList](/web/20220626082909/https://www.baeldung.com/java-arraylist)‘` s `add()`方法的:
 
-```
+```java
 @Benchmark
 public boolean addArrayList() {
     return arrayList.add(getValue);
@@ -64,7 +64,7 @@ public boolean addArrayList() {
 
 同样，对于宝藏的`TIntArrayList.add()`:
 
-```
+```java
 @Benchmark
 public boolean addTroveIntList() {
     return tList.add(getValue);
@@ -73,7 +73,7 @@ public boolean addTroveIntList() {
 
 同样，柯尔特的`IntArrayList.add() `看起来像:
 
-```
+```java
 @Benchmark
 public void addColtIntList() {
     coltList.add(getValue);
@@ -82,7 +82,7 @@ public void addColtIntList() {
 
 并且，对于 Fastutil 库，`IntArrayList.add()`方法基准将是:
 
-```
+```java
 @Benchmark
 public boolean addFastUtilIntList() {
     return fastUtilList.add(getValue);
@@ -93,7 +93,7 @@ public boolean addFastUtilIntList() {
 
 现在，我们运行并比较结果:
 
-```
+```java
 Benchmark           Mode  Cnt  Score   Error  Units
 addArrayList          ss   10  4.527 ± 4.866  ms/op
 addColtIntList        ss   10  1.823 ± 4.360  ms/op
@@ -124,7 +124,7 @@ addTroveIntList       ss   10  3.069 ± 4.026  ms/op
 
 首先，对于`ArrayList'` s `get()` 操作:
 
-```
+```java
 @Benchmark
 public int getArrayList() {
     return arrayList.get(getValue);
@@ -133,7 +133,7 @@ public int getArrayList() {
 
 同样，对于宝藏的`TIntArrayList `,我们将拥有:
 
-```
+```java
 @Benchmark
 public int getTroveIntList() {
     return tList.get(getValue);
@@ -142,7 +142,7 @@ public int getTroveIntList() {
 
 对于 Colt 的`cern.colt.list.IntArrayList, `，`get()`方法将是:
 
-```
+```java
 @Benchmark
 public int getColtIntList() {
     return coltList.get(getValue);
@@ -151,7 +151,7 @@ public int getColtIntList() {
 
 最后，对于 Fastutil 的`IntArrayList`,我们将测试`getInt()`操作:
 
-```
+```java
 @Benchmark
 public int getFastUtilIntList() {
     return fastUtilList.getInt(getValue);
@@ -162,7 +162,7 @@ public int getFastUtilIntList() {
 
 之后，我们运行基准测试并查看结果:
 
-```
+```java
 Benchmark           Mode  Cnt  Score   Error  Units
 getArrayList        ss     20  5.539 ± 0.552  ms/op
 getColtIntList      ss     20  4.598 ± 0.825  ms/op
@@ -182,7 +182,7 @@ getTroveIntList     ss     20  4.715 ± 0.751  ms/op
 
 让我们为`ArrayList'`的`contains()` 方法添加第一个微基准:
 
-```
+```java
 @Benchmark
 public boolean containsArrayList() {
     return arrayList.contains(getValue);
@@ -191,7 +191,7 @@ public boolean containsArrayList() {
 
 同样，对于宝藏的`TIntArrayList `，`contains()`基准将是:
 
-```
+```java
 @Benchmark
 public boolean containsTroveIntList() {
     return tList.contains(getValue);
@@ -200,7 +200,7 @@ public boolean containsTroveIntList() {
 
 同样，对柯尔特`cern.colt.list.IntArrayList.contains()` 的测试是:
 
-```
+```java
 @Benchmark
 public boolean containsColtIntList() {
     return coltList.contains(getValue);
@@ -209,7 +209,7 @@ public boolean containsColtIntList() {
 
 并且，对于 Fastutil 的`IntArrayList, `, contains()方法测试看起来像:
 
-```
+```java
 @Benchmark
 public boolean containsFastUtilIntList() {
     return fastUtilList.contains(getValue);
@@ -220,7 +220,7 @@ public boolean containsFastUtilIntList() {
 
 最后，我们运行测试并比较结果:
 
-```
+```java
 Benchmark                  Mode  Cnt   Score    Error  Units
 containsArrayList          ss     20   2.083  ± 1.585  ms/op
 containsColtIntList        ss     20   1.623  ± 0.960  ms/op

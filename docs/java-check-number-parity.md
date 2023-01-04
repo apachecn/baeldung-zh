@@ -14,7 +14,7 @@
 
 我们可以验证一个数是偶数还是奇数的最简单的方法是通过将该数除以 2 并检查余数的数学运算:
 
-```
+```java
 boolean isEven(int x) {
     return x % 2 == 0;
 }
@@ -26,7 +26,7 @@ boolean isOdd(int x) {
 
 让我们编写几个测试来确认我们的方法的行为:
 
-```
+```java
 assertEquals(true, isEven(2));
 assertEquals(true, isOdd(3));
 ```
@@ -43,7 +43,7 @@ assertEquals(true, isOdd(3));
 
 **奇数`OR` 1 总会导致** **同数**:
 
-```
+```java
 boolean isOrEven(int x) {
     return (x | 1) > x;
 }
@@ -55,7 +55,7 @@ boolean isOrOdd(int x) {
 
 让我们通过一些测试来展示我们代码的行为:
 
-```
+```java
 assertEquals(true, isOrEven(4));
 assertEquals(true, isOrOdd(5));
 ```
@@ -64,7 +64,7 @@ assertEquals(true, isOrOdd(5));
 
 **偶数`AND` 1 总是导致 0** 。另一方面，**奇数`AND`1**导致 1 :
 
-```
+```java
 boolean isAndEven(int x) {
     return (x & 1) == 0;
 }
@@ -76,7 +76,7 @@ boolean isAndOdd(int x) {
 
 我们将通过一个小测试来确认这一行为:
 
-```
+```java
 assertEquals(true, isAndEven(6));
 assertEquals(true, isAndOdd(7));
 ```
@@ -87,7 +87,7 @@ assertEquals(true, isAndOdd(7));
 
  ****偶数`XOR` 1 总** **加 1，n 奇数`XOR` 1 总** **减 1** :
 
-```
+```java
 boolean isXorEven(int x) {
     return (x ^ 1) > x;
 }
@@ -99,7 +99,7 @@ boolean isXorOdd(int x) {
 
 让我们编写一些小测试来检查我们的代码:
 
-```
+```java
 assertEquals(true, isXorEven(8));
 assertEquals(true, isXorOdd(9));
 ```
@@ -110,7 +110,7 @@ assertEquals(true, isXorOdd(9));
 
 **偶数的最低有效位** **始终为 0，奇数的最低有效位始终为 1:**
 
-```
+```java
 boolean isLsbEven(int x) {
     return Integer.toBinaryString(x).endsWith("0");
 }
@@ -122,7 +122,7 @@ boolean isLsbOdd(int x) {
 
 我们将用几行代码来演示这种行为:
 
-```
+```java
 assertEquals(true, isLsbEven(10));
 assertEquals(true, isLsbOdd(11));
 ```

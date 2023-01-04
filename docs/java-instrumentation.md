@@ -21,7 +21,7 @@ Java 代理将修改 ATM 字节码，使我们无需修改 ATM 应用程序即�
 
 我们的项目将具有以下结构:
 
-```
+```java
 <groupId>com.baeldung.instrumentation</groupId>
 <artifactId>base</artifactId>
 <version>1.0.0</version>
@@ -66,7 +66,7 @@ Java 代理将修改 ATM 字节码，使我们无需修改 ATM 应用程序即�
 
 请记住，静态加载使用`premain`方法，它将在任何应用程序代码运行之前运行，为了让它运行，我们可以执行:
 
-```
+```java
 java -javaagent:agent.jar -jar application.jar
 ```
 
@@ -74,7 +74,7 @@ java -javaagent:agent.jar -jar application.jar
 
 以下是我们命令的日志:
 
-```
+```java
 22:24:39.296 [main] INFO - [Agent] In premain method
 22:24:39.300 [main] INFO - [Agent] Transforming class MyAtm
 22:24:39.407 [main] INFO - [Application] Starting ATM application
@@ -96,7 +96,7 @@ java -javaagent:agent.jar -jar application.jar
 
 让我们写一小段代码来完成这个任务，我们称这个类为`AgentLoader. `为了简单起见，我们将这个类放在应用程序 jar 文件中。因此，我们的应用程序 jar 文件既可以启动我们的应用程序，又可以将我们的代理附加到 ATM 应用程序:
 
-```
+```java
 VirtualMachine jvm = VirtualMachine.attach(jvmPid);
 jvm.loadAgent(agentFile.getAbsolutePath());
 jvm.detach();
@@ -108,7 +108,7 @@ jvm.detach();
 
 我们将这个类称为`Launcher`，它将是我们的主 jar 文件类:
 
-```
+```java
 public class Launcher {
     public static void main(String[] args) throws Exception {
         if(args[0].equals("StartMyAtmApplication")) {
@@ -122,7 +122,7 @@ public class Launcher {
 
 #### 启动应用
 
-```
+```java
 java -jar application.jar StartMyAtmApplication
 22:44:21.154 [main] INFO - [Application] Starting ATM application
 22:44:23.157 [main] INFO - [Application] Successful Withdrawal of [7] units!
@@ -132,7 +132,7 @@ java -jar application.jar StartMyAtmApplication
 
 在第一次操作之后，我们将 java 代理连接到我们的 JVM:
 
-```
+```java
 java -jar application.jar LoadAgent
 22:44:27.022 [main] INFO - Attaching to target JVM with PID: 6575
 22:44:27.306 [main] INFO - Attached to target JVM and loaded Java agent successfully 
@@ -144,7 +144,7 @@ java -jar application.jar LoadAgent
 
 这意味着我们在应用程序运行的同时动态添加了我们的功能:
 
-```
+```java
 22:44:27.229 [Attach Listener] INFO - [Agent] In agentmain method
 22:44:27.230 [Attach Listener] INFO - [Agent] Transforming class MyAtm
 22:44:33.157 [main] INFO - [Application] Successful Withdrawal of [8] units!
@@ -169,7 +169,7 @@ java -jar application.jar LoadAgent
 
 让我们在代理中定义它们，这样我们就能够静态和动态地加载这个代理:
 
-```
+```java
 public static void premain(
   String agentArgs, Instrumentation inst) {
 
@@ -192,7 +192,7 @@ public static void agentmain(
 
 在这个方法中，我们使用`transform `方法找到我们想要转换的类。此外，我们将转换器添加到检测引擎中:
 
-```
+```java
 private static void transformClass(
   String className, Instrumentation instrumentation) {
     Class<?> targetCls = null;
@@ -243,7 +243,7 @@ private static void transform(
 
 我们将使用 [Javassist](/web/20221114003540/https://www.baeldung.com/javassist) 向`MyAtm`类添加字节码，并添加一个包含 ATW 取款交易总时间的日志:
 
-```
+```java
 public class AtmTransformer implements ClassFileTransformer {
     @Override
     public byte[] transform(
@@ -307,7 +307,7 @@ public class AtmTransformer implements ClassFileTransformer {
 
 在最终的 Java 代理 jar 文件中，我们将在清单文件中添加以下几行:
 
-```
+```java
 Agent-Class: com.baeldung.instrumentation.agent.MyInstrumentationAgent
 Can-Redefine-Classes: true
 Can-Retransform-Classes: true

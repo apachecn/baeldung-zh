@@ -12,7 +12,7 @@
 
 首先，让我们看看如何使用默认接口方法中的私有方法:
 
-```
+```java
 public interface Foo {
 
     default void bar() {
@@ -30,7 +30,7 @@ public interface Foo {
 
 接下来，让我们向我们的`Foo`接口添加一个静态定义的私有方法:
 
-```
+```java
 public interface Foo {
 
     static void buzz() {
@@ -48,7 +48,7 @@ public interface Foo {
 
 最后，让我们从一个具体的类中调用已定义的默认和静态方法:
 
-```
+```java
 public class CustomFoo implements Foo {
 
     public static void main(String... args) {

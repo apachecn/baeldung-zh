@@ -148,7 +148,7 @@ ZGC 使用负载障碍来解决这个问题。加载屏障用一种叫做重映�
 
 运行应用程序时，我们可以使用以下命令行选项来启用 ZGC:
 
-```
+```java
 -XX:+UnlockExperimentalVMOptions -XX:+UseZGC
 ```
 

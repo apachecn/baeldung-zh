@@ -10,7 +10,7 @@
 
 首先，我们首先需要将 [poi](https://web.archive.org/web/20220630140759/https://search.maven.org/search?q=g:org.apache.poi%20a:poi) 依赖项添加到我们的项目`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.poi</groupId>
     <artifactId>poi</artifactId>
@@ -28,7 +28,7 @@ Apache POI 使用 [`Workbook`](https://web.archive.org/web/20220630140759/https:
 
 **为了实现这一点，我们可以使用** `[addMergedRegion](https://web.archive.org/web/20220630140759/https://poi.apache.org/apidocs/dev/org/apache/poi/ss/usermodel/Sheet.html#addMergedRegion-org.apache.poi.ss.util.CellRangeAddress-)` **来合并几个由`[CellRangeAddress](https://web.archive.org/web/20220630140759/https://poi.apache.org/apidocs/dev/org/apache/poi/ss/util/CellRangeAddress.html)`定义的单元格。**设置单元格范围有两种方式。首先，我们可以使用四个从零开始的索引来定义左上角的单元格位置和右下角的单元格位置:
 
-```
+```java
 sheet = // existing Sheet setup
 int firstRow = 0;
 int lastRow = 0;
@@ -39,7 +39,7 @@ sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol)
 
 我们还可以使用单元格区域引用字符串来提供合并区域:
 
-```
+```java
 sheet = // existing Sheet setup
 sheet.addMergedRegion(CellRangeAddress.valueOf("A1:C1"));
 ```

@@ -22,7 +22,7 @@
 
 最后，我们将检查被访问数组中的所有字符是否都设置为 true:
 
-```
+```java
 public class EnglishAlphabetLetters {
 
     public static boolean checkStringForAllTheLetters(String input) {
@@ -56,7 +56,7 @@ public class EnglishAlphabetLetters {
 
 使用正则表达式，我们可以用几行代码轻松获得相同的结果:
 
-```
+```java
 public static boolean checkStringForAllLetterUsingRegex(String input) {
     return input.toLowerCase()
       .replaceAll("[^a-z]", "")
@@ -73,7 +73,7 @@ public static boolean checkStringForAllLetterUsingRegex(String input) {
 
 使用 Java 8 的特性，我们可以使用 Stream 的`filter `和`distinct`方法以更紧凑和声明性的方式轻松实现相同的结果:
 
-```
+```java
 public static boolean checkStringForAllLetterUsingStream(String input) {
     long c = input.toLowerCase().chars()
       .filter(ch -> ch >= 'a' && ch <= 'z')
@@ -89,7 +89,7 @@ public static boolean checkStringForAllLetterUsingStream(String input) {
 
 让我们为我们的算法测试一条快乐的路径:
 
-```
+```java
 @Test
 public void givenString_whenContainsAllCharacter_thenTrue() {
     String sentence = "Farmer jack realized that big yellow quilts were expensive";

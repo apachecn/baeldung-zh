@@ -12,7 +12,7 @@
 
 Jackson 可以很容易地反序列化为 Java 数组:
 
-```
+```java
 @Test
 public void givenJsonArray_whenDeserializingAsArray_thenCorrect() 
   throws JsonParseException, JsonMappingException, IOException {
@@ -34,7 +34,7 @@ public void givenJsonArray_whenDeserializingAsArray_thenCorrect()
 
 将同一个 JSON 数组读入一个 Java 集合有点困难——默认情况下， **Jackson 将不能获得完整的泛型类型信息**,而是创建一个`LinkedHashMap`实例的集合:
 
-```
+```java
 @Test
 public void givenJsonArray_whenDeserializingAsListWithNoTypeInfo_thenNotCorrect() 
   throws JsonParseException, JsonMappingException, IOException {
@@ -52,7 +52,7 @@ public void givenJsonArray_whenDeserializingAsListWithNoTypeInfo_thenNotCorrect(
 
 有两种方法**帮助 Jackson 理解正确的类型信息**——我们可以使用图书馆提供的`TypeReference`来达到这个目的:
 
-```
+```java
 @Test
 public void givenJsonArray_whenDeserializingAsListWithTypeReferenceHelp_thenCorrect() 
   throws JsonParseException, JsonMappingException, IOException {
@@ -71,7 +71,7 @@ public void givenJsonArray_whenDeserializingAsListWithTypeReferenceHelp_thenCorr
 
 或者我们可以使用接受一个`JavaType`的重载`readValue`方法:
 
-```
+```java
 @Test
 public void givenJsonArray_whenDeserializingAsListWithJavaTypeHelp_thenCorrect() 
   throws JsonParseException, JsonMappingException, IOException {
@@ -91,7 +91,7 @@ public void givenJsonArray_whenDeserializingAsListWithJavaTypeHelp_thenCorrect()
 
 最后要注意的是，`MyDto`类需要无参数的默认构造函数——如果没有的话， **Jackson 将不能实例化它**:
 
-```
+```java
 com.fasterxml.jackson.databind.JsonMappingException: 
 No suitable constructor found for type [simple type, class org.baeldung.jackson.ignore.MyDto]: 
 can not instantiate from JSON object (need to add/enable type information?)

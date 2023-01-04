@@ -73,7 +73,7 @@ JDK 附带了一个默认的 GSS 提供程序。但是，我们可以使用其�
 
 让我们首先看看如何在客户端做到这一点:
 
-```
+```java
 GSSManager manager = GSSManager.getInstance();
 String serverPrinciple = "HTTP/[[email protected]](/web/20221025183651/https://www.baeldung.com/cdn-cgi/l/email-protection)";
 GSSName serverName = manager.createName(serverPrinciple, null);
@@ -97,7 +97,7 @@ clientContext.requestInteg(true);
 
 类似地，我们必须定义服务器端上下文:
 
-```
+```java
 GSSManager manager = GSSManager.getInstance();
 GSSContext serverContext = manager.createContext((GSSCredential) null);
 ```
@@ -110,7 +110,7 @@ GSSContext serverContext = manager.createContext((GSSCredential) null);
 
 为了建立这些上下文，我们需要交换特定于指定安全机制的令牌，即 Kerberos v5:
 
-```
+```java
 // On the client-side
 clientToken = clientContext.initSecContext(new byte[0], 0, 0);
 sendToServer(clientToken); // This is supposed to be send over the network
@@ -125,7 +125,7 @@ clientContext.initSecContext(serverToken, 0, serverToken.length);
 
 这最终使上下文在两端建立起来:
 
-```
+```java
 assertTrue(serverContext.isEstablished());
 assertTrue(clientContext.isEstablished());
 ```
@@ -134,7 +134,7 @@ assertTrue(clientContext.isEstablished());
 
 现在，我们已经在两端建立了上下文，**我们可以开始发送具有完整性和机密性的数据了**:
 
-```
+```java
 // On the client-side
 byte[] messageBytes = "Baeldung".getBytes();
 MessageProp clientProp = new MessageProp(0, true);
@@ -164,7 +164,7 @@ assertEquals("Baeldung", string);
 
 然而，在我们的例子中，我们不会直接使用基于 JAAS 的认证。我们将让 Kerberos 直接获取凭证，在我们的例子中使用 keytab 文件。有一个 JVM 系统参数可以实现这一点:
 
-```
+```java
 -Djavax.security.auth.useSubjectCredsOnly=false
 ```
 
@@ -172,7 +172,7 @@ assertEquals("Baeldung", string);
 
 这听起来可能与我们刚刚讨论的相反。请注意，我们可以在应用程序中显式使用 JAAS，它将填充`Subject`。或者让底层机制直接进行身份验证，不管怎样，它都会使用 JAAS。因此，我们需要为底层机制提供一个 JAAS 配置文件:
 
-```
+```java
 com.sun.security.jgss.initiate  {
   com.sun.security.auth.module.Krb5LoginModule required
   useKeyTab=true
@@ -191,7 +191,7 @@ com.sun.security.jgss.accept  {
 
 这个配置非常简单，我们将 Kerberos 定义为发起者和接受者所需的登录模块。此外，我们已经配置为使用 keytab 文件中的各个主体。我们可以将这个 JAAS 配置作为系统参数传递给 JVM:
 
-```
+```java
 -Djava.security.auth.login.config=login.conf
 ```
 
@@ -199,7 +199,7 @@ com.sun.security.jgss.accept  {
 
 此外，我们需要 Kerberos 配置文件指向正确的 KDC:
 
-```
+```java
 [libdefaults]
 default_realm = EXAMPLE.COM
 udp_preference_limit = 1
@@ -211,7 +211,7 @@ EXAMPLE.COM = {
 
 这个简单的配置定义了一个运行在端口 52135 上的 KDC，默认领域为 EXAMPLE.COM。我们可以将它作为系统参数传递给 JVM:
 
-```
+```java
 -Djava.security.krb5.conf=krb5.conf
 ```
 
@@ -221,7 +221,7 @@ EXAMPLE.COM = {
 
 此外，我们需要传递所需的 JVM 参数:
 
-```
+```java
 java -Djava.security.krb5.conf=krb5.conf \
   -Djavax.security.auth.useSubjectCredsOnly=false \
   -Djava.security.auth.login.config=login.conf \

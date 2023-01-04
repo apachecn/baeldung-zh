@@ -16,7 +16,7 @@
 
 当然，我们将首先从磁盘访问该文件:
 
-```
+```java
 public class ZipFile {
     public static void main(String[] args) throws IOException {
         String sourceFile = "test1.txt";
@@ -42,7 +42,7 @@ public class ZipFile {
 
 接下来，让我们看看如何将多个文件压缩成一个 zip 文件。我们将把`test1.txt`和`test2.txt`压缩成`multiCompressed.zip`:
 
-```
+```java
 public class ZipMultipleFiles {
     public static void main(String[] args) throws IOException {
         List<String> srcFiles = Arrays.asList("test1.txt", "test2.txt");
@@ -71,7 +71,7 @@ public class ZipMultipleFiles {
 
 现在让我们讨论如何压缩整个目录。我们将把`zipTest`压缩成`dirCompressed.zip`:
 
-```
+```java
 public class ZipDirectory {
     public static void main(String[] args) throws IOException {
         String sourceFile = "zipTest";
@@ -127,7 +127,7 @@ public class ZipDirectory {
 
 对于这个例子，我们将把`compressed.zip`解压到一个名为`unzipTest:`的新文件夹中
 
-```
+```java
 public class UnzipFile {
     public static void main(String[] args) throws IOException {
         String fileZip = "src/main/resources/unzipTest/compressed.zip";
@@ -146,7 +146,7 @@ public class UnzipFile {
 
 在`while`循环中，**我们将遍历每个`ZipEntry`，首先检查它是否是一个目录**。如果是，那么我们将使用`mkdirs()`方法创建目录；否则，我们将继续创建文件:
 
-```
+```java
 while (zipEntry != null) {
      File newFile = newFile(destDir, zipEntry);
      if (zipEntry.isDirectory()) {
@@ -176,7 +176,7 @@ while (zipEntry != null) {
 
 在`newFile()`方法中可以看到另一个关键点:
 
-```
+```java
 public static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {
     File destFile = new File(destinationDir, zipEntry.getName());
 

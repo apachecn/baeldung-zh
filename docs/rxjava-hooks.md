@@ -18,7 +18,7 @@
 
 我们可以使用`setErrorHandler( )`方法来处理由于下游的生命周期已经到达其终止状态而无法发出的错误。让我们看看如何实现错误处理程序并测试它:
 
-```
+```java
 RxJavaPlugins.setErrorHandler(throwable -> {
     hookCalled = true;
 });
@@ -45,7 +45,7 @@ RxJava [`Completable`](/web/20220627083908/https://www.baeldung.com/rxjava-compl
 
 RxJava 在`Completable`上实例化操作符和源时会调用这个钩子。我们可以使用当前的`Completable`对象，作为钩子函数的参数，对它进行任何操作:
 
-```
+```java
 RxJavaPlugins.setOnCompletableAssembly(completable -> {
     hookCalled = true;
     return completable;
@@ -60,7 +60,7 @@ assertTrue(hookCalled);
 
 RxJava 在订阅者订阅一个`Completable`之前调用这个钩子:
 
-```
+```java
 RxJavaPlugins.setOnCompletableSubscribe((completable, observer) -> {
     hookCalled = true;
     return observer;
@@ -79,7 +79,7 @@ assertTrue(hookCalled);
 
 RxJava 在实例化`Observable`上的操作符和源时调用这个钩子:
 
-```
+```java
 RxJavaPlugins.setOnObservableAssembly(observable -> {
     hookCalled = true;
     return observable;
@@ -94,7 +94,7 @@ assertTrue(hookCalled);
 
 RxJava 在订阅者订阅一个`Observable`之前调用这个钩子:
 
-```
+```java
 RxJavaPlugins.setOnObservableSubscribe((observable, observer) -> {
     hookCalled = true;
     return observer;
@@ -109,7 +109,7 @@ assertTrue(hookCalled);
 
 这个钩子是为`ConnectableObservable`准备的。一个`ConnectableObservable`是一个`Observable`本身的变体。唯一的区别是，当它被订阅时，它不开始发出项目，而是只有当它的`connect()`方法被调用时才开始发出项目:
 
-```
+```java
 RxJavaPlugins.setOnConnectableObservableAssembly(connectableObservable -> {
     hookCalled = true;
     return connectableObservable;
@@ -128,7 +128,7 @@ assertTrue(hookCalled);
 
 RxJava 在实例化`Flowable`上的操作符和源时调用这个钩子:
 
-```
+```java
 RxJavaPlugins.setOnFlowableAssembly(flowable -> {
     hookCalled = true;
     return flowable;
@@ -143,7 +143,7 @@ assertTrue(hookCalled);
 
 RxJava 在用户订阅`Flowable`之前调用这个钩子:
 
-```
+```java
 RxJavaPlugins.setOnFlowableSubscribe((flowable, observer) -> {
     hookCalled = true;
     return observer;
@@ -158,7 +158,7 @@ assertTrue(hookCalled);
 
 RxJava 在`ConnectableFlowable`上实例化操作符和源时调用这个钩子。和`ConnectableObservable`一样，`ConnectableFlowable`也只有在我们调用它的`connect()`方法时才开始发射物品:
 
-```
+```java
 RxJavaPlugins.setOnConnectableFlowableAssembly(connectableFlowable -> {
     hookCalled = true;
     return connectableFlowable;
@@ -173,7 +173,7 @@ assertTrue(hookCalled);
 
 一个`ParallelFlowable`是为了在多个发布者之间实现并行。RxJava 在实例化`ParallelFlowable`上的操作符和源时调用`setOnParallelAssembly()`钩子:
 
-```
+```java
 RxJavaPlugins.setOnParallelAssembly(parallelFlowable -> {
     hookCalled = true;
     return parallelFlowable;
@@ -192,7 +192,7 @@ assertTrue(hookCalled);
 
 RxJava 在实例化`Maybe`上的操作符和源时调用这个钩子:
 
-```
+```java
 RxJavaPlugins.setOnMaybeAssembly(maybe -> {
     hookCalled = true;
     return maybe;
@@ -207,7 +207,7 @@ assertTrue(hookCalled);
 
 RxJava 在用户订阅`Maybe`之前调用这个钩子:
 
-```
+```java
 RxJavaPlugins.setOnMaybeSubscribe((maybe, observer) -> {
     hookCalled = true;
     return observer;
@@ -226,7 +226,7 @@ RxJava 也为`Single`发射器定义了两个基本的钩子。
 
 RxJava 在实例化`Single`上的操作符和源时调用这个钩子:
 
-```
+```java
 RxJavaPlugins.setOnSingleAssembly(single -> {
     hookCalled = true;
     return single;
@@ -241,7 +241,7 @@ assertTrue(hookCalled);
 
 RxJava 在用户订阅`Single`之前调用这个钩子:
 
-```
+```java
 RxJavaPlugins.setOnSingleSubscribe((single, observer) -> {
     hookCalled = true;
     return observer;
@@ -260,7 +260,7 @@ assertTrue(hookCalled);
 
 当我们为一个操作使用任何调度程序时，RxJava 调用这个钩子:
 
-```
+```java
 RxJavaPlugins.setScheduleHandler((runnable) -> {
     hookCalled = true;
     return runnable;
@@ -289,7 +289,7 @@ assertTrue(hookCalled);
 
 当 RxJava 初始化一个计算调度器时，它调用我们使用`setInitComputationSchedulerHandler`函数设置的钩子。此外，当我们用`Schedulers.computation()`调度一个任务时，它调用我们用`setComputationSchedulerHandler function` 设置的钩子:
 
-```
+```java
 RxJavaPlugins.setInitComputationSchedulerHandler((scheduler) -> {
     initHookCalled = true;
     return scheduler.call();
@@ -312,7 +312,7 @@ assertTrue(hookCalled && initHookCalled);
 
 `IO`调度器也有两个钩子——即`setInitIoSchedulerHandler`和`setIoSchedulerHandler`:
 
-```
+```java
 RxJavaPlugins.setInitIoSchedulerHandler((scheduler) -> {
     initHookCalled = true;
     return scheduler.call();
@@ -335,7 +335,7 @@ assertTrue(hookCalled && initHookCalled);
 
 现在，让我们看看`Single`调度程序的钩子:
 
-```
+```java
 RxJavaPlugins.setInitSingleSchedulerHandler((scheduler) -> {
     initHookCalled = true;
     return scheduler.call();
@@ -358,7 +358,7 @@ assertTrue(hookCalled && initHookCalled);
 
 和其他调度器一样，`NewThread`调度器也定义了两个钩子:
 
-```
+```java
 RxJavaPlugins.setInitNewThreadSchedulerHandler((scheduler) -> {
     initHookCalled = true;
     return scheduler.call();

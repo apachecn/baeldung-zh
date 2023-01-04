@@ -14,7 +14,7 @@
 
 让我们首先来看看我们将在本文中使用的实体:
 
-```
+```java
 @Entity
 public class DeptEmployee {
     @Id
@@ -42,7 +42,7 @@ public class DeptEmployee {
 
 我们将其定义为`DeptEmployee`类的注释:
 
-```
+```java
 @org.hibernate.annotations.NamedQuery(name = "DeptEmployee_findByEmployeeNumber", 
   query = "from DeptEmployee where employeeNumber = :employeeNo") 
 ```
@@ -51,7 +51,7 @@ public class DeptEmployee {
 
 如果一个实体有多个命名查询，我们将使用`@NamedQueries`注释对它们进行分组:
 
-```
+```java
 @org.hibernate.annotations.NamedQueries({
     @org.hibernate.annotations.NamedQuery(name = "DeptEmployee_FindByEmployeeNumber", 
       query = "from DeptEmployee where employeeNumber = :employeeNo"),
@@ -69,7 +69,7 @@ public class DeptEmployee {
 
 我们可以用`@NamedQuery `注释设置各种查询特性。让我们看一个例子:
 
-```
+```java
 @org.hibernate.annotations.NamedQuery(
   name = "DeptEmployee_FindAllByDepartment", 
   query = "from DeptEmployee where department = :department",
@@ -90,7 +90,7 @@ public class DeptEmployee {
 
 现在我们已经定义了命名查询，让我们用它来检索一个雇员:
 
-```
+```java
 Query<DeptEmployee> query = session.createNamedQuery("DeptEmployee_FindByEmployeeNumber", 
   DeptEmployee.class);
 query.setParameter("employeeNo", "001");
@@ -105,7 +105,7 @@ DeptEmployee result = query.getSingleResult();
 
 让我们用一个例子来研究这个注释:
 
-```
+```java
 @org.hibernate.annotations.NamedNativeQueries(
     @org.hibernate.annotations.NamedNativeQuery(name = "DeptEmployee_GetEmployeeByName", 
       query = "select * from deptemployee emp where name=:name",
@@ -123,7 +123,7 @@ DeptEmployee result = query.getSingleResult();
 
 为了使用命名的本地查询，我们可以使用`Session.createNamedQuery()`:
 
-```
+```java
 Query<DeptEmployee> query = session.createNamedQuery("DeptEmployee_FindByEmployeeName", DeptEmployee.class);
 query.setParameter("name", "John Wayne");
 DeptEmployee result = query.getSingleResult();
@@ -131,7 +131,7 @@ DeptEmployee result = query.getSingleResult();
 
 还是那个`Session.getNamedNativeQuery()`:
 
-```
+```java
 NativeQuery query = session.getNamedNativeQuery("DeptEmployee_FindByEmployeeName");
 query.setParameter("name", "John Wayne");
 DeptEmployee result = (DeptEmployee) query.getSingleResult();
@@ -143,7 +143,7 @@ DeptEmployee result = (DeptEmployee) query.getSingleResult();
 
 我们也可以使用`@NamedNativeQuery`注释来定义对存储过程和函数的调用:
 
-```
+```java
 @org.hibernate.annotations.NamedNativeQuery(
   name = "DeptEmployee_UpdateEmployeeDesignation", 
   query = "call UPDATE_EMPLOYEE_DESIGNATION(:employeeNumber, :newDesignation)", 

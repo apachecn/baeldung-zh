@@ -12,7 +12,7 @@ Project Lombok 是一个减少 Java 样板文件的流行库。
 
 让我们从将[项目龙目岛](https://web.archive.org/web/20221128045848/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.projectlombok%22)添加到我们的`pom.xml`开始:
 
-```
+```java
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>
@@ -26,7 +26,7 @@ Project Lombok 是一个减少 Java 样板文件的流行库。
 
 我们可以用`@Getter`来注释这个字段:
 
-```
+```java
 @Getter
 private boolean running;
 ```
@@ -35,7 +35,7 @@ Lombok 将使用它的[注释处理器](/web/20221128045848/https://www.baeldung
 
 现在，我们可以引用它，即使我们没有自己编写方法:
 
-```
+```java
 @Test
 public void whenBasicBooleanField_thenMethodNamePrefixedWithIsFollowedByFieldName() {
     LombokExamples lombokExamples = new LombokExamples();
@@ -47,7 +47,7 @@ public void whenBasicBooleanField_thenMethodNamePrefixedWithIsFollowedByFieldNam
 
 让我们添加另一行代码，使示例变得稍微复杂一点:
 
-```
+```java
 @Getter
 private boolean isRunning = true;
 ```
@@ -56,7 +56,7 @@ private boolean isRunning = true;
 
 相反，龙目岛像以前一样创造了`isRunning` :
 
-```
+```java
 @Test
 public void whenBooleanFieldPrefixedWithIs_thenMethodNameIsSameAsFieldName() {
     LombokExamples lombokExamples = new LombokExamples();
@@ -70,7 +70,7 @@ public void whenBooleanFieldPrefixedWithIs_thenMethodNameIsSameAsFieldName() {
 
 假设我们需要在同一个类中包含以下行:
 
-```
+```java
  @Getter
     public boolean running = true;
 
@@ -84,7 +84,7 @@ public void whenBooleanFieldPrefixedWithIs_thenMethodNameIsSameAsFieldName() {
 
 Lombok 通过只创建一个访问器方法来解决这个问题，在这种情况下，根据字段声明顺序将它指向`running, `:
 
-```
+```java
 @Test
 public void whenTwoBooleanFieldsCauseNamingConflict_thenLombokMapsToFirstDeclaredField() {
     LombokExamples lombokExamples = new LombokExamples();
@@ -99,14 +99,14 @@ public void whenTwoBooleanFieldsCauseNamingConflict_thenLombokMapsToFirstDeclare
 
 让我们最后一次尝试相同的运行示例，但是用`Boolean `代替原始类型:
 
-```
+```java
 @Getter
 private Boolean running;
 ```
 
 Lombok 不会创建`isRunning`，而是会生成`getRunning`:
 
-```
+```java
 @Test
 public void whenFieldOfBooleanType_thenLombokPrefixesMethodWithGetInsteadOfIs() {
     LombokExamples lombokExamples = new LombokExamples();

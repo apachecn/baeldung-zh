@@ -14,7 +14,7 @@
 
 出于这些原因，在这种情况下选择一个`record `会非常有意义:
 
-```
+```java
 public record ColorRecord(int red, int green, int blue) {
 
     public String getHexString() {
@@ -25,7 +25,7 @@ public record ColorRecord(int red, int green, int blue) {
 
 类似地，Lombok 允许我们使用`@Value`注释创建不可变的对象:
 
-```
+```java
 @Value
 public class ColorValueObject {
     int red;
@@ -46,7 +46,7 @@ public class ColorValueObject {
 
 但是，Lombok 允许我们定制 getters 的名称、访问级别和返回类型。让我们相应地更新`ColorValueObject`:
 
-```
+```java
 @Value
 @Getter(AccessLevel.NONE)
 public class ColorValueObject {
@@ -68,7 +68,7 @@ public class ColorValueObject {
 
 我们已经看到了记录是如何代表一种创建小的、不可变的对象的非常方便的方式。让我们看看如果数据模型需要更多的字段，记录会是什么样子。对于这个例子，让我们考虑一下`Student`数据模型:
 
-```
+```java
 public record StudentRecord(
   String firstName, 
   String lastName, 
@@ -83,7 +83,7 @@ public record StudentRecord(
 
 我们已经可以猜到 StudentRecord 的实例化将很难阅读和理解，特别是如果一些字段不是强制的:
 
-```
+```java
 StudentRecord john = new StudentRecord(
   "John", "Doe", null, "[[email protected]](/web/20220906213109/https://www.baeldung.com/cdn-cgi/l/email-protection)", null, null, "England", 20); 
 ```
@@ -92,7 +92,7 @@ StudentRecord john = new StudentRecord(
 
 为了使用它，我们只需要用`@Builder:`来注释我们的类
 
-```
+```java
 @Getter
 @Builder
 public class StudentBuilder {
@@ -109,7 +109,7 @@ public class StudentBuilder {
 
 现在，让我们使用`StudentBuilder`创建一个具有相同属性的对象:
 
-```
+```java
 StudentBuilder john = StudentBuilder.builder()
   .firstName("John")
   .lastName("Doe")
@@ -127,7 +127,7 @@ StudentBuilder john = StudentBuilder.builder()
 
 我们可以将 java 记录专门用于不可变的数据。**如果上下文需要一个可变的 java 对象，我们可以使用 Lombok 的`@Data`对象来代替:**
 
-```
+```java
 @Data
 @AllArgsConstructor
 public class ColorData {
@@ -149,7 +149,7 @@ public class ColorData {
 
 **Java 记录不支持继承。**因此，他们不能延续或继承其他阶级。另一方面，Lombok 的`@Value`对象可以扩展其他类，但它们是最终的:
 
-```
+```java
 @Value
 public class MonochromeColor extends ColorData {
 

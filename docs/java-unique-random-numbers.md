@@ -10,7 +10,7 @@
 
 如果我们需要的数字范围很小，我们可以继续向列表中添加连续的数字，直到达到大小`n`。**那么，我们称之为 [`Collections.shuffle()`](/web/20221113160541/https://www.baeldung.com/java-shuffle-collection) ，它具有线性的[时间复杂度](/web/20221113160541/https://www.baeldung.com/java-algorithm-complexity)。之后，我们将得到一个唯一数字的随机列表。**让我们创建一个实用程序类来生成和使用这些数字:
 
-```
+```java
 public class UniqueRng implements Iterator<Integer> {
     private List<Integer> numbers = new ArrayList<>();
 
@@ -26,7 +26,7 @@ public class UniqueRng implements Iterator<Integer> {
 
 在构建我们的对象之后，我们将拥有从 1 到`size`的随机顺序的数字。**注意我们正在实现 [`Iterator`](/web/20221113160541/https://www.baeldung.com/java-iterator-vs-iterable) ，所以我们每次调用`next()`都会得到一个随机数。**此外，我们可以检查是否还有剩余的`hasNext()`号码。所以，让我们用[取代](/web/20221113160541/https://www.baeldung.com/java-override)吧:
 
-```
+```java
 @Override
 public Integer next() {
     if (!hasNext()) {
@@ -47,7 +47,7 @@ public boolean hasNext() {
 
 要使用它，我们只需选择想要多少个号码并消费它们:
 
-```
+```java
 UniqueRng rng = new UniqueRng(5);
 while (rng.hasNext()) {
     System.out.print(rng.next() + " ");
@@ -56,7 +56,7 @@ while (rng.hasNext()) {
 
 这可能会产生如下输出:
 
-```
+```java
 4 1 2 5 3
 ```
 
@@ -66,7 +66,7 @@ while (rng.hasNext()) {
 
 **这一次，我们将循环添加元素到集合中，直到达到*大小*。同样，我们将使用 [`Random`](/web/20221113160541/https://www.baeldung.com/java-generating-random-numbers-in-range) 来生成从零到`max` :** 的随机整数
 
-```
+```java
 public class BigUniqueRng implements Iterator<Integer> {
     private Random random = new Random();
     private Set<Integer> generated = new LinkedHashSet<>();
@@ -82,7 +82,7 @@ public class BigUniqueRng implements Iterator<Integer> {
 
 请注意，我们不需要检查一个数字是否已经存在于我们的集合中，因为`add()`会这样做。**现在，由于我们不能通过索引删除项目，我们需要一个`Iterator`的帮助来实现`next()` :**
 
-```
+```java
 public Integer next() {
     Iterator<Integer> iterator = generated.iterator();
     Integer next = iterator.next();
@@ -95,7 +95,7 @@ public Integer next() {
 
 虽然定制实现更具可重用性，但我们可以仅使用 [`Stream` s](/web/20221113160541/https://www.baeldung.com/java-streams) 来创建解决方案。**从 Java 8 开始，`Random`有一个返回 [`IntStream`](/web/20221113160541/https://www.baeldung.com/java-intstream-convert) 的`ints()`方法。我们可以对其进行流式处理，并强加与之前相同的必要条件，如范围和限制。**让我们将这些特征和`[collect](/web/20221113160541/https://www.baeldung.com/java-stream-immutable-collection)`结果组合成一个`Set`:
 
-```
+```java
 Set<Integer> set = new Random().ints(-5, 15)
   .distinct()
   .limit(5)
@@ -105,7 +105,7 @@ Set<Integer> set = new Random().ints(-5, 15)
 
 遍历的集合可能会产生如下输出:
 
-```
+```java
 -5 13 9 -4 14
 ```
 

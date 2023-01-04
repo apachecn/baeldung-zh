@@ -16,7 +16,7 @@
 
 先说设置安全，感谢春天安全。我们将需要[弹簧启动-启动-安全](https://web.archive.org/web/20220810180302/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-security)依赖。让我们将它添加到我们的 pom 中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -27,7 +27,7 @@
 
 接下来，让我们创建一个简单的控制器来返回用户:
 
-```
+```java
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -45,7 +45,7 @@ public class UserController {
 
 启动本地键盘锁最简单的方法是使用[Docker](/web/20220810180302/https://www.baeldung.com/ops/docker-guide)T3。让我们运行一个已经配置了管理员帐户的 Keycloak 容器:
 
-```
+```java
 docker run -p 8081:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:17.0.1 start-dev
 ```
 
@@ -77,7 +77,7 @@ docker run -p 8081:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin
 
 首先，我们将把识别控制委托给一个 Keycloak 服务器。为此，我们将使用一个方便的启动器，[key cloak-spring-boot-starter](https://web.archive.org/web/20220810180302/https://search.maven.org/search?q=g:org.keycloak%20AND%20a:keycloak-spring-boot-starter)。因此，让我们将它添加到 pom 中:
 
-```
+```java
 <dependency>
     <groupId>org.keycloak</groupId>
     <artifactId>keycloak-spring-boot-starter</artifactId>
@@ -86,7 +86,7 @@ docker run -p 8081:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin
 
 我们还需要 [keycloak-adapter-bom](https://web.archive.org/web/20220810180302/https://search.maven.org/search?q=g:org.keycloak.bom%20AND%20a:keycloak-adapter-bom) 依赖关系。具体来说，它添加了主适配器以完全使用 Spring 自动配置，以及连接 Keycloak 和不同 web 容器所需的库，包括 Tomcat:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -102,7 +102,7 @@ docker run -p 8081:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin
 
 然后，让我们创建一个配置类，它使用 Spring 属性来配置 Keycloak 适配器。
 
-```
+```java
 @Configuration
 public class KeycloakConfiguration {
 
@@ -115,7 +115,7 @@ public class KeycloakConfiguration {
 
 让我们继续配置 Spring Security 来使用 Keycloak 配置:
 
-```
+```java
 @KeycloakConfiguration
 @ConditionalOnProperty(name = "keycloak.enabled", havingValue = "true", matchIfMissing = true)
 public class KeycloakSecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter {
@@ -150,7 +150,7 @@ public class KeycloakSecurityConfiguration extends KeycloakWebSecurityConfigurer
 
 最后，让我们在`application.properties`文件中添加连接到 Keycloak 所需的配置:
 
-```
+```java
 keycloak.enabled=true
 keycloak.realm=baeldung
 keycloak.resource=baeldung-api
@@ -169,7 +169,7 @@ Keycloak 容器启动时没有任何配置。因此，**我们必须在容器作
 
 遗憾的是，Keycloak 不导出用户。在这种情况下，我们必须手动编辑生成的`realm-export.json`文件，并将我们的 Jane Doe 添加到其中。让我们在最后一个花括号前添加这个配置:
 
-```
+```java
 "users": [
   {
     "username": "janedoe",
@@ -199,7 +199,7 @@ Keycloak 容器启动时没有任何配置。因此，**我们必须在容器作
 
 让我们添加 [testcontainers](https://web.archive.org/web/20220810180302/https://search.maven.org/search?q=g:org.testcontainers%20AND%20a:testcontainers) 依赖项以及 [testcontainers-keycloak](https://web.archive.org/web/20220810180302/https://search.maven.org/search?q=g:com.github.dasniko%20AND%20a:testcontainers-keycloak) ，这允许我们启动一个 keycloak 容器:
 
-```
+```java
 <dependency>
     <groupId>com.github.dasniko</groupId>
     <artifactId>testcontainers-keycloak</artifactId>
@@ -215,7 +215,7 @@ Keycloak 容器启动时没有任何配置。因此，**我们必须在容器作
 
 接下来，让我们创建一个类，我们所有的测试都将从这个类中派生出来。我们用它来配置由 Testcontainers 启动的 Keycloak 容器:
 
-```
+```java
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public abstract class KeycloakTestContainers {
 
@@ -229,7 +229,7 @@ public abstract class KeycloakTestContainers {
 
 现在，让我们在测试开始时启动 Keycloak 容器。它使用随机端口。因此，一旦启动，我们需要覆盖在我们的`application.properties`中定义的`keycloak.auth-server-url`配置。为此，我们将在刷新上下文之前实现一个由 Spring 触发的回调接口:
 
-```
+```java
 static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
@@ -242,7 +242,7 @@ static class Initializer implements ApplicationContextInitializer<ConfigurableAp
 
 我们还需要告诉 Spring 使用这个类来初始化它的上下文。让我们在类级别添加这个注释:
 
-```
+```java
 @ContextConfiguration(initializers = { IntegrationTest.Initializer.class })
 ```
 
@@ -254,7 +254,7 @@ static class Initializer implements ApplicationContextInitializer<ConfigurableAp
 
 首先，让我们在抽象类 IntegrationTest 中添加一个方法，用于使用 Jane Doe 的凭据请求令牌:
 
-```
+```java
 URI authorizationURI = new URIBuilder(keycloak.getAuthServerUrl() + "/realms/baeldung/protocol/openid-connect/token").build();
 WebClient webclient = WebClient.builder().build();
 MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
@@ -276,7 +276,7 @@ String result = webclient.post()
 
 最后，我们将**解析 Keycloak 服务器响应，从中提取令牌**。具体来说，我们生成一个包含关键字`Bearer`的经典认证字符串，后跟令牌的内容，可以在头中使用:
 
-```
+```java
 JacksonJsonParser jsonParser = new JacksonJsonParser();
 return "Bearer " + jsonParser.parseMap(result)
   .get("access_token")
@@ -287,7 +287,7 @@ return "Bearer " + jsonParser.parseMap(result)
 
 让我们针对配置好的 Keycloak 容器快速设置集成测试。我们将使用 RestAssured 和 Hamcrest 进行测试。让我们添加[放心](https://web.archive.org/web/20220810180302/https://search.maven.org/search?q=g:io.rest-assured%20AND%20a:rest-assured)依赖:
 
-```
+```java
 <dependency>
     <groupId>io.rest-assured</groupId>
     <artifactId>rest-assured</artifactId>
@@ -297,7 +297,7 @@ return "Bearer " + jsonParser.parseMap(result)
 
 我们现在可以使用抽象的`IntegrationTest`类来创建我们的测试:
 
-```
+```java
 @Test
 void givenAuthenticatedUser_whenGetMe_shouldReturnMyInfo() {
 

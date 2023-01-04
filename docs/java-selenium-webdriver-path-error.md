@@ -12,7 +12,7 @@ Selenium 在使用之前需要一些设置步骤，比如设置 WebDriver 的路
 
 让我们来看看导致此错误的不完整设置:
 
-```
+```java
 WebDriver driver = new ChromeDriver();
 ```
 
@@ -38,7 +38,7 @@ WebDriver driver = new ChromeDriver();
 
 让我们来看看 Chrome 的手动设置。我们设置先前下载的 WebDriver 的路径，然后创建一个`ChromeDriver`实例:
 
-```
+```java
 WebDriver driver;
 
 void setupChromeDriver() {
@@ -56,7 +56,7 @@ void options() {
 
 其他浏览器的设置非常相似。正如我们在下面看到的，我们只需要替换驱动程序设置方法，并为各个驱动程序设置路径:
 
-```
+```java
 void setupGeckoDriver() {
     System.setProperty("webdriver.gecko.driver", "src/test/resources/geckodriver.exe");
     driver = new FirefoxDriver();
@@ -72,7 +72,7 @@ void setupEdgeDriver() {
 
 为了验证设置，我们可以对进行一个小检查:
 
-```
+```java
 String TITLE_XPATH = "//a[@href='/']";
 String URL = "https://www.baeldung.com";
 
@@ -96,7 +96,7 @@ void givenChromeDriver_whenNavigateToBaeldung_thenFindTitleIsSuccessful() {
 
 首先，我们需要将[依赖项](https://web.archive.org/web/20221110072459/https://search.maven.org/search?q=g:io.github.bonigarcia%20AND%20a:webdrivermanager)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>io.github.bonigarcia</groupId>
     <artifactId>webdrivermanager</artifactId>
@@ -106,7 +106,7 @@ void givenChromeDriver_whenNavigateToBaeldung_thenFindTitleIsSuccessful() {
 
 使用该库的设置非常简单，只需要一行代码:
 
-```
+```java
 WebDriver driver;
 
 void setupChromeDriver() {
@@ -124,7 +124,7 @@ void options() {
 
 为其他浏览器调整设置也很简单:
 
-```
+```java
 void setupGeckoDriver() {
     WebDriverManager.firefoxdriver().setup();
     driver = new FirefoxDriver();
@@ -140,7 +140,7 @@ void setupEdgeDriver() {
 
 同样，我们可以通过在上的一个小测试来验证这个设置:
 
-```
+```java
 String TITLE_XPATH = "//a[@href='/']";
 String URL = "https://www.baeldung.com";
 

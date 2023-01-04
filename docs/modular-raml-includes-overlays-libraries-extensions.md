@@ -40,7 +40,7 @@
 
 下面的例子展示了`!include`标签的所有三种用法:
 
-```
+```java
 #%RAML 1.0
 title: Baeldung Foo REST Services API
 ...
@@ -57,13 +57,13 @@ traits: !include http://foo.com/docs/allTraits.raml
 
 虽然不是必需的，但是作为`typed fragment`的`include`文件的第一行可以是以下格式的 RAML 片段标识符:
 
-```
+```java
 #%RAML 1.0 <fragment-type>
 ```
 
 例如，`trait`的`typed fragment`文件的第一行应该是:
 
-```
+```java
 #%RAML 1.0 Trait
 ```
 
@@ -71,7 +71,7 @@ traits: !include http://foo.com/docs/allTraits.raml
 
 让我们先来看看 API 的`traits`部分的一部分:
 
-```
+```java
 traits:
   - hasRequestItem:
       body:
@@ -88,7 +88,7 @@ traits:
 
 为了使用`typed fragments`模块化这个部分，我们首先重写`traits`部分如下:
 
-```
+```java
 traits:
   - hasRequestItem: !include traits/hasRequestItem.raml
   - hasResponseItem: !include traits/hasResponseItem.raml
@@ -96,7 +96,7 @@ traits:
 
 然后我们将编写文件`hasRequestItem.raml`:
 
-```
+```java
 #%RAML 1.0 Trait
 body:
   application/json:
@@ -105,7 +105,7 @@ body:
 
 文件`hasResponseItem.raml`看起来像这样:
 
-```
+```java
 #%RAML 1.0 Trait
 responses:
     200:
@@ -127,7 +127,7 @@ RAML `libraries`可用于模块化任意数量的`data types`、`security scheme
 
 让我们将我们的`traits`部分重写为一个`library`文件:
 
-```
+```java
 #%RAML 1.0 Library
 # This is the file /libraries/traits.raml
 usage: This library defines some basic traits
@@ -153,7 +153,7 @@ traits:
 
 一旦我们为`security schemes`、`data types`、`resource types`和`traits`创建了`libraries`，我们就可以将`libraries`应用到根 RAML 文件:
 
-```
+```java
 #%RAML 1.0
 title: Baeldung Foo REST Services API
 uses:
@@ -169,7 +169,7 @@ uses:
 
 你可能还记得[我们之前的文章](/web/20220813052709/https://www.baeldung.com/simple-raml-with-resource-types-and-traits)中，我们是如何使用我们已经定义的`traits`来重构我们的`resource types`的。以下示例显示了如何将我们的" item" `resource type`重写为`library,`，如何将`traits` `library`文件(如上所示)包含在新的`library`中，以及如何通过在`trait`名称前面加上它们的`library`名称限定符("`myTraits`")来引用`traits`:
 
-```
+```java
 #%RAML 1.0 Library
 # This is the file /libraries/resourceTypes.raml
 usage: This library defines the resource types for the API
@@ -202,13 +202,13 @@ resourceTypes:
 
 覆盖或扩展文件的第一行必须格式化如下:
 
-```
+```java
 RAML 1.0 Overlay 
 ```
 
 覆盖文件的第一行必须采用类似的格式:
 
-```
+```java
 RAML 1.0 Extension 
 ```
 
@@ -222,7 +222,7 @@ RAML 1.0 Extension
 
 `overlays`的一个常见用例是以多种语言提供用户文档和其他描述性元素。让我们重写 API 的标题，并添加一些用户文档:
 
-```
+```java
 #%RAML 1.0
 title: API for REST Services used in the RAML tutorials on Baeldung.com
 documentation:
@@ -236,7 +236,7 @@ documentation:
 
 以下是我们如何为该部分定义西班牙语覆盖图:
 
-```
+```java
 #%RAML 1.0 Overlay
 # File located at (archivo situado en):
 # /overlays/es_ES/documentationItems.raml
@@ -269,7 +269,7 @@ documentation:
 
 下面是一个`extension`,它覆盖了我们的 API 版本，并添加了以前版本中不可用的资源:
 
-```
+```java
 #%RAML 1.0 Extension
 # File located at:
 # /extensions/en_US/additionalResources.raml
@@ -290,7 +290,7 @@ version: v2
 
 这里有一个西班牙语的`overlay`来表示这个`extension`:
 
-```
+```java
 #%RAML 1.0 Overlay
 # Archivo situado en:
 # /overlays/es_ES/additionalResources.raml

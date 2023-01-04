@@ -65,7 +65,7 @@
 
 创建`Locale`对象有几种方法。一种可能的方式是利用`Locale.Builder`。`Locale.Builder`有五个 setter 方法，我们可以用它们来构建对象，同时验证这些值:
 
-```
+```java
 Locale locale = new Locale.Builder()
   .setLanguage("fr")
   .setRegion("CA")
@@ -92,7 +92,7 @@ Locale locale = new Locale.Builder()
 
 三参数构造函数:
 
-```
+```java
 Locale locale = new Locale("pl", "PL", "UNIX");
 ```
 
@@ -104,7 +104,7 @@ Locale locale = new Locale("pl", "PL", "UNIX");
 
 这可能是最简单也是最受限制的获取`Locales`的方式。`Locale`类有几个静态常量，代表最流行的国家或语言:
 
-```
+```java
 Locale japan = Locale.JAPAN;
 Locale japanese = Locale.JAPANESE;
 ```
@@ -115,7 +115,7 @@ Locale japanese = Locale.JAPANESE;
 
 这就是我们创建英国的方式:
 
-```
+```java
 Locale uk = Locale.forLanguageTag("en-UK");
 ```
 
@@ -129,7 +129,7 @@ Locale uk = Locale.forLanguageTag("en-UK");
 
 让我们看看如何检索可用区域设置的数组:
 
-```
+```java
 Locale[] numberFormatLocales = NumberFormat.getAvailableLocales();
 Locale[] dateFormatLocales = DateFormat.getAvailableLocales();
 Locale[] locales = Locale.getAvailableLocales();
@@ -145,13 +145,13 @@ Oracle Java SE Development Kit 网页上提供了受支持语言环境的完整�
 
 在处理本地化时，我们可能需要知道我们的`JVM`实例上的默认`Locale`是什么。幸运的是，有一个简单的方法可以做到:
 
-```
+```java
 Locale defaultLocale = Locale.getDefault();
 ```
 
 此外，我们可以通过调用类似的 setter 方法来指定默认的`Locale`:
 
-```
+```java
 Locale.setDefault(Locale.CANADA_FRENCH);
 ```
 
@@ -170,7 +170,7 @@ Locale.setDefault(Locale.CANADA_FRENCH);
 
 让我们检查一个示例代码:
 
-```
+```java
 Locale usLocale = Locale.US;
 double number = 102300.456d;
 NumberFormat usNumberFormat = NumberFormat.getInstance(usLocale);
@@ -182,7 +182,7 @@ assertEquals(usNumberFormat.format(number), "102,300.456");
 
 这是另一个例子:
 
-```
+```java
 Locale usLocale = Locale.US;
 BigDecimal number = new BigDecimal(102_300.456d);
 
@@ -202,7 +202,7 @@ assertEquals(usNumberFormat.format(number), "$102,300.46");
 
 **自从 Java 8 推出以来，本地化日期和时间的主要类是`DateTimeFormatter`类**。它对实现`TemporalAccessor`接口的类进行操作，例如`LocalDateTime`、`LocalDate, LocalTime`或`ZonedDateTime. `要创建一个`DateTimeFormatter`我们必须至少提供一个模式，然后`Locale. `让我们看一个示例代码:
 
-```
+```java
 Locale.setDefault(Locale.US);
 LocalDateTime localDateTime = LocalDateTime.of(2018, 1, 1, 10, 15, 50, 500);
 String pattern = "dd-MMMM-yyyy HH:mm:ss.SSS";
@@ -224,7 +224,7 @@ assertEquals(
 
 让我们以字母为例:
 
-```
+```java
 Symbol  Meaning                     Presentation      Examples
   ------  -------                     ------------      -------
    y       year-of-era                 year              2004; 04
@@ -241,7 +241,7 @@ Symbol  Meaning                     Presentation      Examples
 
 为了结束对`DateTimeFormatter`的讨论，让我们看看如何格式化`LocalizedDateTime`:
 
-```
+```java
 LocalDateTime localDateTime = LocalDateTime.of(2018, 1, 1, 10, 15, 50, 500);
 ZoneId losAngelesTimeZone = TimeZone.getTimeZone("America/Los_Angeles").toZoneId();
 
@@ -263,7 +263,7 @@ assertEquals("Monday, January 1, 2018 10:15:50 AM PST", formattedLocalizedTime);
 
 让我们分析一下第一个人的能力:
 
-```
+```java
 GregorianCalendar gregorianCalendar = new GregorianCalendar(2018, 1, 1, 10, 15, 20);
 Date date = gregorianCalendar.getTime();
 
@@ -284,7 +284,7 @@ assertEquals("01/02/18 10.15.20", smInstance.format(date));
 
 它们都将预定义的值`DateFormat` 作为参数。每个方法都是重载的，所以传递`Locale`也是可能的。如果我们想使用自定义模式，就像在`DateTimeFormatter`中所做的那样，我们可以使用`SimpleDateFormat`。让我们来看一小段代码:
 
-```
+```java
 GregorianCalendar gregorianCalendar = new GregorianCalendar(
   2018, 1, 1, 10, 15, 20);
 Date date = gregorianCalendar.getTime();
@@ -309,7 +309,7 @@ assertEquals(
 
 让我们考虑一个简短的例子:
 
-```
+```java
 Locale.setDefault(Locale.FRANCE);
 BigDecimal number = new BigDecimal(102_300.456d);
 
@@ -324,7 +324,7 @@ assertEquals(dollarDecimalFormat.format(number), "$102 300,46");
 
 也可以添加货币符号。我们可以在下面看到，使用`DateFormatSymbol`类可以获得相同的结果:
 
-```
+```java
 Locale.setDefault(Locale.FRANCE);
 BigDecimal number = new BigDecimal(102_300.456d);
 
@@ -345,7 +345,7 @@ assertEquals(separatorsDecimalFormat.format(number), "$10^[[email protected]](/
 
 让我们看看更改日期名称有多简单:
 
-```
+```java
 Date date = new GregorianCalendar(2018, 1, 1, 10, 15, 20).getTime();
 Locale.setDefault(new Locale("pl", "PL"));
 

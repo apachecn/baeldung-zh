@@ -18,7 +18,7 @@ Spring HATEOAS 项目是一个 API 库，我们可以使用它来轻松地创建
 
 首先，让我们添加 Spring HATEOAS 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-hateoas</artifactId>
@@ -28,7 +28,7 @@ Spring HATEOAS 项目是一个 API 库，我们可以使用它来轻松地创建
 
 如果我们不使用 Spring Boot，我们可以在项目中添加以下库:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.hateoas</groupId>
     <artifactId>spring-hateoas</artifactId>
@@ -45,7 +45,7 @@ Spring HATEOAS 项目是一个 API 库，我们可以使用它来轻松地创建
 
 接下来，我们有没有 Spring HATEOAS 支持的`Customer`资源:
 
-```
+```java
 public class Customer {
 
     private String customerId;
@@ -58,7 +58,7 @@ public class Customer {
 
 我们有一个不支持 Spring HATEOAS 的控制器类:
 
-```
+```java
 @RestController
 @RequestMapping(value = "/customers")
 public class CustomerController {
@@ -74,7 +74,7 @@ public class CustomerController {
 
 最后，`Customer`资源表示:
 
-```
+```java
 {
     "customerId": "10A",
     "customerName": "Jane",
@@ -92,7 +92,7 @@ public class CustomerController {
 
 该项目提供了一个名为`RepresentationModel`的基类，用于在创建资源表示时继承:
 
-```
+```java
 public class Customer extends RepresentationModel<Customer> {
     private String customerId;
     private String customerName;
@@ -110,7 +110,7 @@ public class Customer extends RepresentationModel<Customer> {
 
 首先，我们将手动创建一个简单的链接:
 
-```
+```java
 Link link = new Link("http://localhost:8080/spring-security-rest/api/customers/10A"); 
 ```
 
@@ -118,7 +118,7 @@ Link link = new Link("http://localhost:8080/spring-security-rest/api/customers/1
 
 下面是`Customer`资源包含新链接后的样子:
 
-```
+```java
 {
     "customerId": "10A",
     "customerName": "Jane",
@@ -139,7 +139,7 @@ Link link = new Link("http://localhost:8080/spring-security-rest/api/customers/1
 
 下面的代码片段展示了如何使用`WebMvcLinkBuilder`类构建客户自我链接:
 
-```
+```java
 linkTo(CustomerController.class).slash(customer.getCustomerId()).withSelfRel(); 
 ```
 
@@ -155,7 +155,7 @@ linkTo(CustomerController.class).slash(customer.getCustomerId()).withSelfRel();
 
 例如，一个`customer` 可以与订单有关系。让我们也将`Order` 类建模为资源:
 
-```
+```java
 public class Order extends RepresentationModel<Order> {
     private String orderId;
     private double price;
@@ -167,7 +167,7 @@ public class Order extends RepresentationModel<Order> {
 
 此时，我们可以用返回特定客户的所有订单的方法来扩展`CustomerController`:
 
-```
+```java
 @GetMapping(value = "/{customerId}/orders", produces = { "application/hal+json" })
 public CollectionModel<Order> getOrdersForCustomer(@PathVariable final String customerId) {
     List<Order> orders = orderService.getAllOrdersForCustomer(customerId);
@@ -192,7 +192,7 @@ public CollectionModel<Order> getOrdersForCustomer(@PathVariable final String cu
 
 `WebMvcLinkBuilder`为 Spring MVC 控制器提供了丰富的支持。下面的例子展示了如何基于`CustomerController`类的`getOrdersForCustomer()`方法构建 HATEOAS 超链接:
 
-```
+```java
 Link ordersLink = linkTo(methodOn(CustomerController.class)
   .getOrdersForCustomer(customerId)).withRel("allOrders"); 
 ```
@@ -203,7 +203,7 @@ Link ordersLink = linkTo(methodOn(CustomerController.class)
 
 **让我们把自我链接和方法链接的创建放在一个`getAllCustomers()`方法中:**
 
-```
+```java
 @GetMapping(produces = { "application/hal+json" })
 public CollectionModel<Customer> getAllCustomers() {
     List<Customer> allCustomers = customerService.allCustomers();
@@ -227,13 +227,13 @@ public CollectionModel<Customer> getAllCustomers() {
 
 接下来，让我们调用`getAllCustomers()`方法:
 
-```
+```java
 curl http://localhost:8080/spring-security-rest/api/customers 
 ```
 
 并检查结果:
 
-```
+```java
 {
   "_embedded": {
     "customerList": [{
@@ -283,11 +283,11 @@ curl http://localhost:8080/spring-security-rest/api/customers
 
 这个例子展示了 Spring HATEOAS 如何在 rest web 服务中促进 API 的可发现性。**如果链接存在，客户端可以跟随它并获得客户的所有订单:**
 
-```
+```java
 curl http://localhost:8080/spring-security-rest/api/customers/10A/orders 
 ```
 
-```
+```java
 {
   "_embedded": {
     "orderList": [{

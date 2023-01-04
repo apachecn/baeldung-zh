@@ -16,7 +16,7 @@ Spring Boot [支持一些众所周知的现成内存数据库](/web/202206252337
 
 在 pom 中，我们需要添加 [`sqllite-jdbc`](https://web.archive.org/web/20220625233741/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22sqlite-jdbc%22%20AND%20g%3A%22org.xerial%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.xerial</groupId>
     <artifactId>sqlite-jdbc</artifactId>
@@ -34,7 +34,7 @@ Spring Boot [支持一些众所周知的现成内存数据库](/web/202206252337
 
 我们的第一步是扩展`org.hibernate.dialect.Dialect` 类来注册 SQLite 提供的[数据类型](https://web.archive.org/web/20220625233741/https://www.sqlite.org/datatype3.html):
 
-```
+```java
 public class SQLiteDialect extends Dialect {
 
     public SQLiteDialect() {
@@ -55,7 +55,7 @@ public class SQLiteDialect extends Dialect {
 
 例如，**我们需要告诉 Hibernate SQLite 如何处理`@Id`列**，这可以通过一个定制的`IdentityColumnSupport`实现来实现:
 
-```
+```java
 public class SQLiteIdentityColumnSupport extends IdentityColumnSupportImpl {
 
     @Override
@@ -80,7 +80,7 @@ public class SQLiteIdentityColumnSupport extends IdentityColumnSupportImpl {
 
 然后，我们只需在不断增长的`SQLiteDialect`类中覆盖相应的方法:
 
-```
+```java
 @Override
 public IdentityColumnSupport getIdentityColumnSupport() {
     return new SQLiteIdentityColumnSupport();
@@ -91,7 +91,7 @@ public IdentityColumnSupport getIdentityColumnSupport() {
 
 并且， **SQLite 不支持数据库约束，所以我们需要通过再次覆盖主键和外键的适当方法来禁用这些**:
 
-```
+```java
 @Override
 public boolean hasAlterTable() {
     return false;
@@ -125,7 +125,7 @@ public String getAddPrimaryKeyConstraintString(String constraintName) {
 
 此外，由于 **`Spring Boot`没有为 SQLite 数据库提供现成的配置支持**，我们还需要公开我们自己的`DataSource` bean:
 
-```
+```java
 @Autowired Environment env;
 
 @Bean
@@ -141,7 +141,7 @@ public DataSource dataSource() {
 
 最后，我们将在我们的`persistence.properties`文件中配置以下属性:
 
-```
+```java
 driverClassName=org.sqlite.JDBC
 url=jdbc:sqlite:memory:myDb?cache=shared
 username=sa

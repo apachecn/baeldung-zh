@@ -22,7 +22,7 @@
 
 首先，让我们创建`Circle`类并在其中实现`calculateArea`方法:
 
-```
+```java
 public class Circle {
 
     public static double calculateArea(double radius) {
@@ -35,7 +35,7 @@ public class Circle {
 
 让我们在`src/main/test`目录中创建`CalculatorTest`类:
 
-```
+```java
 public class CircleTest {
 
     @Test
@@ -77,7 +77,7 @@ public class CircleTest {
 
 **在`given_when_then`中命名测试用例通常有助于阐述单元测试的目的**:
 
-```
+```java
 public class CircleTest {
 
     //...
@@ -108,13 +108,13 @@ public class CircleTest {
 
 为了证实期望值与实际值的概念，我们可以看看 JUnit 的`Assert`类的 [`assertEquals`方法的定义:](/web/20220811141445/https://www.baeldung.com/junit-assertions#junit4-assertequals)
 
-```
+```java
 public static void assertEquals(Object expected, Object actual)
 ```
 
 让我们在一个测试案例中使用这个断言:
 
-```
+```java
 @Test 
 public void givenRadius_whenCalculateArea_thenReturnArea() {
     double actualArea = Circle.calculateArea(1d);
@@ -131,7 +131,7 @@ public void givenRadius_whenCalculateArea_thenReturnArea() {
 
 不鼓励计算圆的面积来匹配`calculateArea`方法的返回值:
 
-```
+```java
 @Test 
 public void givenRadius_whenCalculateArea_thenReturnArea() {
     double actualArea = Circle.calculateArea(2d);

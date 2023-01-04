@@ -14,7 +14,7 @@
 
 假设我们有一个`Customer`实体:
 
-```
+```java
 @Entity
 public class Customer {
 
@@ -36,7 +36,7 @@ public class Customer {
 
 此外，我们还有一个 JPA 存储库:
 
-```
+```java
 public interface CustomerRepository extends JpaRepository<Customer, Long> { 
 
    // method1
@@ -58,13 +58,13 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
 让我们创建方法:
 
-```
+```java
 List<Customer> findByNameAndEmail(String name, String email);
 ```
 
 现在，如果我们传递一封`null`电子邮件，生成的 JPQL 将包含`IS NULL`条件:
 
-```
+```java
 customer0_.email is null
 ```
 
@@ -72,7 +72,7 @@ customer0_.email is null
 
 首先，我们将一些客户添加到存储库中:
 
-```
+```java
 @Before
 public void before() {
     entityManager.persist(new Customer("A", "[[email protected]](/web/20220628114545/https://www.baeldung.com/cdn-cgi/l/email-protection)"));
@@ -85,7 +85,7 @@ public void before() {
 
 我们可以看到，只找到一个客户:
 
-```
+```java
 List<Customer> customers = repository.findByNameAndEmail("D", null);
 
 assertEquals(1, customers.size());
@@ -104,7 +104,7 @@ assertEquals("D", actual.getName());
 
 例如，要忽略`email`，我们可以添加一个只接受`name`的方法:
 
-```
+```java
  List<Customer> findByName(String name);
 ```
 
@@ -114,7 +114,7 @@ assertEquals("D", actual.getName());
 
 我们可以通过使用 `@Query`注释并给 JPQL 语句添加一个小的复杂性来避免创建额外的方法:
 
-```
+```java
 @Query("SELECT c FROM Customer c WHERE (:name is null or c.name = :name) and (:email is null"
   + " or c.email = :email)")
 List<Customer> findCustomerByNameAndEmail(@Param("name") String name, @Param("email") String email);
@@ -122,13 +122,13 @@ List<Customer> findCustomerByNameAndEmail(@Param("name") String name, @Param("em
 
 注意，如果`email`参数是`null`，那么子句总是`true`，因此不会影响整个`WHERE`子句:
 
-```
+```java
 :email is null or s.email = :email
 ```
 
 让我们确保这是可行的:
 
-```
+```java
 List<Customer> customers = repository.findCustomerByNameAndEmail("D", null);
 
 assertEquals(2, customers.size());
@@ -138,7 +138,7 @@ assertEquals(2, customers.size());
 
 生成的 JPQL WHERE 子句如下所示:
 
-```
+```java
 where (? is null or customer0_.name=?) and (? is null or customer0_.email=?)
 ```
 

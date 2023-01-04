@@ -45,7 +45,7 @@ Vavr 库，以前称为 Javaslang，是 Java 的函数库。在本文中，我�
 
 我们也可以使用静态的`empty()`来创建一个空的`List` 和`ofAll()`来从一个`Iterable`类型创建一个`List`:
 
-```
+```java
 List<String> list = List.of(
   "Java", "PHP", "Jquery", "JavaScript", "JShell", "JAVA");
 ```
@@ -54,7 +54,7 @@ List<String> list = List.of(
 
 我们可以使用`drop()`及其变体来删除第一个`N`元素:
 
-```
+```java
 List list1 = list.drop(2);                                      
 assertFalse(list1.contains("Java") && list1.contains("PHP"));   
 
@@ -76,7 +76,7 @@ assertTrue(list4.isEmpty());
 
 接下来，`take(int n)`用于从列表中抓取元素。它从列表中取出`n`个元素，然后停止。还有一个`takeRight(int n)`，它从列表末尾开始获取元素:
 
-```
+```java
 List list5 = list.take(1);                       
 assertEquals(list5.single(), "Java");            
 
@@ -93,7 +93,7 @@ assertEquals(list7.size(), 3);
 
 非常有趣的是，还有在列表的每个元素之间插入一个元素的 `intersperse()`。对于`String`操作来说非常方便:
 
-```
+```java
 List list8 = list
   .distinctBy((s1, s2) -> s1.startsWith(s2.charAt(0) + "") ? 0 : 1);
 assertEquals(list8.size(), 2);
@@ -107,7 +107,7 @@ assertEquals(words, "Boys and Girls");
 
 想把一个列表分成几类？这也有一个 API:
 
-```
+```java
 Iterator<List<String>> iterator = list.grouped(2);
 assertEquals(iterator.head().size(), 2);
 
@@ -125,7 +125,7 @@ assertEquals(map.get(true).get().size(), 5);
 
 我们还可以使用堆栈语义——元素的后进先出(LIFO)检索来与`List`交互。在这个意义上，有一些 API 方法用于操作堆栈，如`peek()`、`pop()`和`push()`:
 
-```
+```java
 List<Integer> intList = List.empty();
 
 List<Integer> intList1 = intList.pushAll(List.rangeClosed(5,10));
@@ -150,7 +150,7 @@ assertEquals(intList2.size(), (intList1.size() - 1) );
 
 让我们创建一个队列:
 
-```
+```java
 Queue<Integer> queue = Queue.of(1, 2);
 Queue<Integer> secondQueue = queue.enqueueAll(List.of(4,5));
 
@@ -168,7 +168,7 @@ assertFalse(tailQueue.contains(secondQueue.get(0)));
 
 我们可以使用`combination(n)`来获得`Queue`中元素的所有可能的`N`组合:
 
-```
+```java
 Queue<Queue<Integer>> queue1 = queue.combinations(2);
 assertEquals(queue1.get(2).toCharSeq(), CharSeq.of("23"));
 ```
@@ -181,7 +181,7 @@ assertEquals(queue1.get(2).toCharSeq(), CharSeq.of("23"));
 
 假设我们有一个`Stream`整数:
 
-```
+```java
 Stream<Integer> s = Stream.of(2, 1, 3, 4);
 ```
 
@@ -195,7 +195,7 @@ Vavr `Stream`是不可变的，可能是`Empty`或`Cons`。一个`Cons`由一个
 
 让我们创建一个由 10 个正整数组成的`Stream`,并计算偶数的总和:
 
-```
+```java
 Stream<Integer> intStream = Stream.iterate(0, i -> i + 1)
   .take(10);
 
@@ -214,14 +214,14 @@ assertEquals(20, evenSum);
 
 最后，让我们快速演示一下一个`Stream`中的`tabulate()`。该方法返回一个长度为`n`的`Stream`，其中包含应用函数的结果元素:
 
-```
+```java
 Stream<Integer> s1 = Stream.tabulate(5, (i)-> i + 1);
 assertEquals(s1.get(2).intValue(), 3);
 ```
 
 我们还可以使用`zip()`生成一个`Tuple2<Integer, Integer>`的`Stream`，其中包含由两个`Streams`组合而成的元素:
 
-```
+```java
 Stream<Integer> s = Stream.of(2,1,3,4);
 
 Stream<Tuple2<Integer, Integer>> s2 = s.zip(List.of(7,8,9));
@@ -239,7 +239,7 @@ assertEquals(t1._2().intValue(), 7);
 
 `range()`和`rangeBy()`方法将只生成从开始值到结束值减一的元素。如果我们需要包含最终值，我们可以使用`rangeClosed()`或`rangeClosedBy()`:
 
-```
+```java
 Array<Integer> rArray = Array.range(1, 5);
 assertFalse(rArray.contains(5));
 
@@ -252,7 +252,7 @@ assertEquals(rArray3.size(), 3);
 
 让我们通过索引来操作元素:
 
-```
+```java
 Array<Integer> intArray = Array.of(1, 2, 3);
 Array<Integer> newArray = intArray.removeAt(1);
 
@@ -268,7 +268,7 @@ assertEquals(array2.get(0).intValue(), 5);
 
 一个`Vector`是一种介于`Array`和`List`之间的元素，它提供了另一个索引元素序列，允许在固定时间内进行随机访问和修改:
 
-```
+```java
 Vector<Integer> intVector = Vector.range(1, 5);
 Vector<Integer> newVector = intVector.replace(2, 6);
 
@@ -285,7 +285,7 @@ assertEquals(6, newVector.get(1).intValue());
 
 创建一个`CharSeq`:
 
-```
+```java
 CharSeq chars = CharSeq.of("vavr");
 CharSeq newChars = chars.replace('v', 'V');
 
@@ -311,7 +311,7 @@ assertEquals("Vavr", newChars.mkString());
 
 我们可以通过使用`diff()`方法得到两个集合之间的差异。同样，`union()`和`intersect()`方法返回两个集合的并集和交集:
 
-```
+```java
 HashSet<Integer> set0 = HashSet.rangeClosed(1,5);
 HashSet<Integer> set1 = HashSet.rangeClosed(3, 6);
 
@@ -322,7 +322,7 @@ assertEquals(set0.intersect(set1), HashSet.rangeClosed(3,5));
 
 我们还可以执行基本操作，例如添加和删除元素:
 
-```
+```java
 HashSet<String> set = HashSet.of("Red", "Green", "Blue");
 HashSet<String> newSet = set.add("Yellow");
 
@@ -341,7 +341,7 @@ assertTrue(newSet.contains("Yellow"));
 
 让我们使用自然排序顺序创建一个`SortedSet`:
 
-```
+```java
 SortedSet<String> set = TreeSet.of("Red", "Green", "Blue");
 assertEquals("Blue", set.head());
 
@@ -351,7 +351,7 @@ assertEquals(2, intSet.average().get().intValue());
 
 为了以定制的方式排序元素，在创建一个`TreeSet.` 的同时传递一个`Comparator`实例，我们也可以从集合元素中生成一个字符串:
 
-```
+```java
 SortedSet<String> reversedSet
   = TreeSet.of(Comparator.reverseOrder(), "Green", "Red", "Blue");
 assertEquals("Red", reversedSet.head());
@@ -370,7 +370,7 @@ Vavr 集合还包含一个不可变的 `BitSet`实现。`BitSet`接口扩展了`
 
 让我们看看如何使用工厂方法`of()`创建一个`BitSet`实例:
 
-```
+```java
 BitSet<Integer> bitSet = BitSet.of(1,2,3,4,5,6,7,8);
 BitSet<Integer> bitSet1 = bitSet.takeUntil(i -> i > 4);
 assertEquals(bitSet1.size(), 4);
@@ -392,7 +392,7 @@ assertEquals(bitSet1.size(), 4);
 
 Vavr 的`Map`使用`Tuple2`来表示键值对，而不是传统的`Entry`类型:
 
-```
+```java
 Map<Integer, List<Integer>> map = List.rangeClosed(0, 10)
   .groupBy(i -> i % 2);
 
@@ -405,7 +405,7 @@ assertEquals(5, map.get(1).get().size());
 
 我们可以使用`filterKeys()`方法按键过滤映射条目，或者使用`filterValues()`方法按值过滤。两种方法都接受一个`Predicate`作为参数:
 
-```
+```java
 Map<String, String> map1
   = HashMap.of("key1", "val1", "key2", "val2", "key3", "val3");
 
@@ -421,7 +421,7 @@ assertTrue(fMap2.containsValue("val3"));
 
 我们还可以通过使用`map()`方法来转换地图条目。例如，让我们将`map1` 转换为`Map<String, Integer>`:
 
-```
+```java
 Map<String, Integer> map2 = map1.map(
   (k, v) -> Tuple.of(k, Integer.valueOf(v.charAt(v.length() - 1) + "")));
 assertEquals(map2.get("key1").get().intValue(), 1);
@@ -433,7 +433,7 @@ assertEquals(map2.get("key1").get().intValue(), 1);
 
 让我们演示一下`SortedMap`的创建:
 
-```
+```java
 SortedMap<Integer, String> map
   = TreeMap.of(3, "Three", 2, "Two", 4, "Four", 1, "One");
 
@@ -443,7 +443,7 @@ assertEquals("Four", map.get(4).get());
 
 默认情况下，`TreeMap`的条目按关键字的自然顺序排序。然而，我们可以指定一个用于排序的`Comparator`:
 
-```
+```java
 TreeMap<Integer, String> treeMap2 =
   TreeMap.of(Comparator.reverseOrder(), 3,"three", 6, "six", 1, "one");
 assertEquals(treeMap2.keySet().mkString(), "631");
@@ -461,7 +461,7 @@ Vavr 中的每个集合实现都有一个静态工厂方法`ofAll()`，该方法
 
 要将 Java `List`转换成不可变的`List`:
 
-```
+```java
 java.util.List<Integer> javaList = java.util.Arrays.asList(1, 2, 3, 4);
 List<Integer> vavrList = List.ofAll(javaList);
 
@@ -471,7 +471,7 @@ Set<Integer> vavrSet = HashSet.ofAll(javaStream);
 
 另一个有用的函数是`collector()`，它可以与`Stream.collect()`结合使用，以获得 Vavr 集合:
 
-```
+```java
 List<Integer> vavrList = IntStream.range(1, 10)
   .boxed()
   .filter(i -> i % 2 == 0)
@@ -487,7 +487,7 @@ assertEquals(2, vavrList.head().intValue());
 
 让我们举几个例子:
 
-```
+```java
 Integer[] array = List.of(1, 2, 3)
   .toJavaArray(Integer.class);
 assertEquals(3, array.length);
@@ -499,7 +499,7 @@ assertEquals(2, map.get("2").intValue());
 
 我们还可以使用 Java 8 `Collectors`从 Vavr 集合中收集元素:
 
-```
+```java
 java.util.Set<Integer> javaSet = List.of(1, 2, 3)
   .collect(Collectors.toSet());
 
@@ -519,7 +519,7 @@ assertEquals(1, javaSet.toArray()[0]);
 
 让我们看一个例子:
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public void givenVavrList_whenViewConverted_thenException() {
     java.util.List<Integer> javaList = List.of(1, 2, 3)
@@ -532,7 +532,7 @@ public void givenVavrList_whenViewConverted_thenException() {
 
 要创建不可变视图:
 
-```
+```java
 java.util.List<Integer> javaList = List.of(1, 2, 3)
   .asJavaMutable();
 javaList.add(4);

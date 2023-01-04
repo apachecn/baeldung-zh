@@ -22,7 +22,7 @@
 
 让我们从在`pom.xml`中添加 Google 的番石榴库依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -42,7 +42,7 @@
 
 我们可以使用`checkArgument`而不传递任何额外的参数给`checkArgument`方法:
 
-```
+```java
 @Test
 public void whenCheckArgumentEvaluatesFalse_throwsException() {
     int age = -18;
@@ -57,7 +57,7 @@ public void whenCheckArgumentEvaluatesFalse_throwsException() {
 
 通过传递一条错误消息，我们可以从`checkArgument`方法中获得一条有意义的错误消息:
 
-```
+```java
 @Test
 public void givenErrorMsg_whenCheckArgEvalsFalse_throwsException() {
     int age = -18;
@@ -73,7 +73,7 @@ public void givenErrorMsg_whenCheckArgEvalsFalse_throwsException() {
 
 通过传递错误消息，我们可以从`checkArgument`方法获得有意义的错误消息和动态数据:
 
-```
+```java
 @Test
 public void givenTemplateMsg_whenCheckArgEvalsFalse_throwsException() {
     int age = -18;
@@ -92,7 +92,7 @@ public void givenTemplateMsg_whenCheckArgEvalsFalse_throwsException() {
 
 让我们看看如何使用这个方法，通过在抛出异常时传递一条错误消息来显示来自`checkElementIndex`方法的有意义的错误消息:
 
-```
+```java
 @Test
 public void givenArrayAndMsg_whenCheckElementEvalsFalse_throwsException() {
     int[] numbers = { 1, 2, 3, 4, 5 };
@@ -111,7 +111,7 @@ public void givenArrayAndMsg_whenCheckElementEvalsFalse_throwsException() {
 
 接下来，我们将通过展示如何通过传递错误消息从`checkNotNull`方法获得有意义的错误消息来展示如何使用该方法:
 
-```
+```java
 @Test
 public void givenNullString_whenCheckNotNullWithMessage_throwsException () {
     String nullObject = null;
@@ -125,7 +125,7 @@ public void givenNullString_whenCheckNotNullWithMessage_throwsException () {
 
 我们还可以通过向错误消息传递一个参数，从`checkNotNull`方法获得基于动态数据的有意义的错误消息:
 
-```
+```java
 @Test
 public void whenCheckNotNullWithTemplateMessage_throwsException() {
     String nullObject = null;
@@ -147,7 +147,7 @@ public void whenCheckNotNullWithTemplateMessage_throwsException() {
 
 让我们看看如何从`checkPositionIndex`方法中获得有意义的错误消息:
 
-```
+```java
 @Test
 public void givenArrayAndMsg_whenCheckPositionEvalsFalse_throwsException() {
     int[] numbers = { 1, 2, 3, 4, 5 };
@@ -166,7 +166,7 @@ public void givenArrayAndMsg_whenCheckPositionEvalsFalse_throwsException() {
 
 让我们看看如何使用这个方法，通过在抛出异常时传递一条错误消息来显示来自`checkState`方法的有意义的错误消息:
 
-```
+```java
 @Test
 public void givenStatesAndMsg_whenCheckStateEvalsFalse_throwsException() {
     int[] validStates = { -1, 0, 1 };

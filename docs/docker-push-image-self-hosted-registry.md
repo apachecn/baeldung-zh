@@ -22,13 +22,13 @@ Docker 注册表是一种管理容器映像存储库的服务。它允许我们�
 
 推送图像时，**图像名称定义了图像将被推送至何处**。这就是为什么，为了将图像推送到自托管的注册中心，我们使用正确的命名模式是至关重要的。**镜像名称必须包含注册主机、端口和存储库名称**，并且可以选择在其后跟随一个版本标记:
 
-```
+```java
 [registry host]:[registry port]/[repository name]:[tag name]
 ```
 
 假设我们有一个运行在`localhost`上并监听端口`5000`的注册中心。这里有一个我们想推送到注册中心的`my-fancy-app`存储库的图像版本`1.0.0`的名称示例:
 
-```
+```java
 localhost:5000/my-fancy-app:1.0.0
 ```
 
@@ -40,7 +40,7 @@ localhost:5000/my-fancy-app:1.0.0
 
 如果我们正在构建一个新的映像，并且已经准备好了一个应用程序和 Dockerfile 文件，我们可以**使用`docker build`命令**的`-t`标志，这样这个映像就会以适当的名称创建。使用上一节中的示例，该命令将是:
 
-```
+```java
 $ docker build -t localhost:5000/my-fancy-app:1.0.0 .
 ```
 
@@ -50,13 +50,13 @@ $ docker build -t localhost:5000/my-fancy-app:1.0.0 .
 
 如果我们想要将一个现有的图像推送到我们自托管的注册中心，我们首先需要用一个新的别名来标记该图像，该别名与我们上面描述的命名模式相匹配。**我们可以用`docker tag`命令**重新标记图像:
 
-```
+```java
 docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
 ```
 
 例如，假设我们想要将一个名为`my-fancy-app:1.0.0` 的现有图像推送到我们的自托管注册表中。我们将简单地使用`docker tag`命令用一个匹配该注册表的新别名来标记它:
 
-```
+```java
 $ docker tag my-fancy-app:1.0.0 localhost:5000/my-fancy-app:1.0.0
 ```
 
@@ -66,25 +66,25 @@ $ docker tag my-fancy-app:1.0.0 localhost:5000/my-fancy-app:1.0.0
 
 **公司通常需要身份验证来保护他们的自托管注册表。**在这种情况下，我们首先需要使用`docker login`命令登录:
 
-```
+```java
 docker login [OPTIONS] [SERVER]
 ```
 
 对于托管在`localhost:5000`上的自托管注册表，命令是:
 
-```
+```java
 $ docker login localhost:5000
 ```
 
 登录后，我们使用`docker push`命令将图像推送到我们自托管的注册表中:
 
-```
+```java
 docker push [OPTIONS] NAME[:TAG]
 ```
 
 让我们看一下推送我们在上面几节中准备的映像的命令:
 
-```
+```java
 $ docker push localhost:5000/my-fancy-app:1.0.0
 ```
 
@@ -92,25 +92,25 @@ $ docker push localhost:5000/my-fancy-app:1.0.0
 
 最后一步是验证图像现在在我们的自托管注册表中可用。为此，我们将从注册表中提取图像，但是**我们必须首先通过运行`docker image rm` 命令**删除我们缓存的本地图像:
 
-```
+```java
 $ docker image rm localhost:5000/my-fancy-app:1.0.0
 ```
 
 让我们通过列出我们所有的本地图像并检查我们的图像不在那里来验证我们是否删除了图像:
 
-```
+```java
 $ docker images
 ```
 
 接下来，让我们使用`docker pull` 命令从自托管注册表中提取图像:
 
-```
+```java
 $ docker pull localhost:5000/my-fancy-app:1.0.0
 ```
 
 通过再次列出所有本地映像，我们可以验证我们的映像是否成功地从我们的自托管注册表中提取:
 
-```
+```java
 $ docker images
 REPOSITORY                  TAG   IMAGE ID     CREATED        SIZE 
 localhost:5000/my-fancy-app 1.0.0 d33a5b65c0f5 20 minutes ago 326MB

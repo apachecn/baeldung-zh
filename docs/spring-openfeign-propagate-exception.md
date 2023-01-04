@@ -28,7 +28,7 @@
 
 此外，Spring 提供了一个结构良好的错误响应，包括时间戳、HTTP 状态代码、错误和路径等细节:
 
-```
+```java
 {
     "timestamp": "2022-07-08T08:07:51.120+00:00",
     "status": 500,
@@ -45,7 +45,7 @@
 
 首先，让我们用几个属性对`Product`类建模:
 
-```
+```java
 public class Product {
     private String id;
     private String productName;
@@ -55,7 +55,7 @@ public class Product {
 
 然后，让我们用`Get` `Product`端点实现`ProductController` :
 
-```
+```java
 @RestController("product_controller")
 @RequestMapping(value ="myapp1")
 public class ProductController {
@@ -76,7 +76,7 @@ public class ProductController {
 
 接下来，我们来看看如何将假扮的 [`Logger`](/web/20220906000116/https://www.baeldung.com/java-feign-logging) 注册为`Bean` :
 
-```
+```java
 public class FeignConfig {
 
     @Bean
@@ -88,7 +88,7 @@ public class FeignConfig {
 
 最后，让我们实现`ProductClient` 来与外部 API 接口:
 
-```
+```java
 @FeignClient(name = "product-client", url="http://localhost:8081/product/", configuration = FeignConfig.class)
 public interface ProductClient {
     @RequestMapping(value = "{id}", method = RequestMethod.GET")
@@ -106,7 +106,7 @@ public interface ProductClient {
 
 首先，让我们把 [`WireMockServer`](/web/20220906000116/https://www.baeldung.com/introduction-to-wiremock) 包括在内，美文依赖:
 
-```
+```java
 <dependency>
     <groupId>com.github.tomakehurst</groupId>
     <artifactId>wiremock-jre8</artifactId>
@@ -117,7 +117,7 @@ public interface ProductClient {
 
 然后，让我们配置并启动`WireMockServer`:
 
-```
+```java
 WireMockServer wireMockServer = new WireMockServer(8081);
 configureFor("localhost", 8081);
 wireMockServer.start();
@@ -131,7 +131,7 @@ Feign 的默认错误处理程序`ErrorDecoder.Default`，总是抛出一个`Fei
 
 让我们用`WireMock.stubFor`模拟`getProduct` 方法，让它看起来不可用:
 
-```
+```java
 String productId = "test";
 stubFor(get(urlEqualTo("/product/" + productId))
   .willReturn(aResponse()
@@ -144,7 +144,7 @@ assertThrows(FeignException.class, () -> productClient.getProduct(productId));
 
 接下来，让我们尝试相同的实验，但使用 404 Not Found 响应:
 
-```
+```java
 String productId = "test";
 stubFor(get(urlEqualTo("/product/" + productId))
   .willReturn(aResponse()
@@ -165,7 +165,7 @@ assertThrows(FeignException.class, () -> productClient.getProduct(productId));
 
 让我们断言产品服务何时不可用:
 
-```
+```java
 String productId = "test";
 stubFor(WireMock.get(urlEqualTo("/product/" + productId))
   .willReturn(aResponse()
@@ -183,7 +183,7 @@ mockMvc.perform(get("/myapp1/product/" + productId))
 
 让我们在自定义的`ErrorDecoder`实现中覆盖`decode`方法:
 
-```
+```java
 public class CustomErrorDecoder implements ErrorDecoder {
 
     @Override
@@ -208,7 +208,7 @@ public class CustomErrorDecoder implements ErrorDecoder {
 
 现在，让我们在 `FeignConfig as a ` 弹簧 `Bean` : 中配置 `CustomErrorDecoder`
 
-```
+```java
 @Bean
 public ErrorDecoder errorDecoder() {
    return new CustomErrorDecoder();
@@ -217,14 +217,14 @@ public ErrorDecoder errorDecoder() {
 
 或者，`CustomErrorDecoder` 可以直接在`ProductClient`中配置:
 
-```
+```java
 @FeignClient(name = "product-client-2", url = "http://localhost:8081/product/", 
    configuration = { FeignConfig.class, CustomErrorDecoder.class })
 ```
 
 然后，让我们检查`CustomErrorDecoder` 是否返回 `ProductServiceNotAvailableException`:
 
-```
+```java
 String productId = "test";
 stubFor(get(urlEqualTo("/product/" + productId))
   .willReturn(aResponse()
@@ -236,7 +236,7 @@ assertThrows(ProductServiceNotAvailableException.class,
 
 再次，让我们写一个测试用例来断言 `ProductNotFoundException` 当产品不存在的时候:
 
-```
+```java
 String productId = "test";
 stubFor(get(urlEqualTo("/product/" + productId))
   .willReturn(aResponse()
@@ -264,7 +264,7 @@ assertThrows(ProductNotFoundException.class,
 
 首先，让我们创建`ErrorResponse`类来定制错误响应:
 
-```
+```java
 public class ErrorResponse {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
@@ -286,7 +286,7 @@ public class ErrorResponse {
 
 现在，让我们子类化*ResponseEntityExceptionHandler*，并在错误处理程序中包含`@ExceptionHandler`注释:
 
-```
+```java
 @RestControllerAdvice
 public class ProductExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -316,7 +316,7 @@ public class ProductExceptionHandler extends ResponseEntityExceptionHandler {
 
 当产品服务不可用时，让我们测试一下`ProductController`:
 
-```
+```java
 String productId = "test";
 stubFor(WireMock.get(urlEqualTo("/product/" + productId))
   .willReturn(aResponse()
@@ -332,7 +332,7 @@ assertEquals("Product Api is unavailable", errorResponse.getMessage());
 
 同样，让我们测试相同的`ProductController`，但出现产品未找到错误:
 
-```
+```java
 String productId = "test";
 stubFor(WireMock.get(urlEqualTo("/product/" + productId))
   .willReturn(aResponse()

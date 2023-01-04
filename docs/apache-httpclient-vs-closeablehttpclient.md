@@ -24,7 +24,7 @@ Apache HttpClient 是一个流行的 Java 库，它提供了高效且功能丰�
 
 我们可以将任何客户端实现转换成`HttpClient`接口。因此，我们可以使用它通过默认的客户端实现来执行基本的 HTTP 请求:
 
-```
+```java
 HttpClient httpClient = HttpClients.createDefault();
 HttpGet httpGet = new HttpGet(serviceUrl);
 HttpResponse response = httpClient.execute(httpGet);
@@ -35,7 +35,7 @@ assertThat(response.getCode()).isEqualTo(HttpStatus.SC_OK);
 
 `CloseableHttpClient`是一个抽象类，表示`HttpClient`接口的**基本实现。然而，它也实现了`Closeable`接口。因此，我们应该在使用后关闭它的所有实例。我们可以通过使用 [`try-with-resources`](/web/20220524060337/https://www.baeldung.com/java-try-with-resources) 或者通过调用`finally`子句中的`close`方法来关闭它们:**
 
-```
+```java
 try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
     HttpGet httpGet = new HttpGet(serviceUrl);
     HttpResponse response = httpClient.execute(httpGet);
@@ -49,13 +49,13 @@ try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
 
 在上面的例子中，我们使用了一个来自`HttpClients`类的静态方法来获得一个默认的客户端实现。`HttpClients`是一个**工具类，包含创建`CloseableHttpClient`实例**的工厂方法:
 
-```
+```java
 CloseableHttpClient httpClient = HttpClients.createDefault();
 ```
 
 我们可以使用`HttpClientBuilder`类实现同样的功能`. HttpClientBuilder`是[构建器设计模式](/web/20220524060337/https://www.baeldung.com/creational-design-patterns#builder)的**实现，用于创建`CloseableHttpClient`实例**:
 
-```
+```java
 CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 ```
 
@@ -71,7 +71,7 @@ CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
 底层的 **HTTP 连接由响应对象持有，以允许响应内容直接从网络套接字**流出。因此，我们应该在自定义代码中使用`CloseableHttpResponse`类，而不是`HttpResponse`接口。一旦我们使用了响应，我们还需要确保调用`close`方法:
 
-```
+```java
 try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
     HttpGet httpGet = new HttpGet(serviceUrl);
     try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
@@ -87,7 +87,7 @@ try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
 
 关闭一个`CloseableHttpClient`实例并为每个请求创建一个新实例可能是一个开销很大的操作。相反，**我们可以重用一个`CloseableHttpClient`实例来发送多个请求**:
 
-```
+```java
 try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
     HttpGet httpGetOne = new HttpGet(serviceOneUrl);
     try (CloseableHttpResponse responseOne = httpClient.execute(httpGetOne)) {

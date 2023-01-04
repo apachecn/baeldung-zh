@@ -22,7 +22,7 @@ Docker 是一个 os 级的软件框架，用于在服务器和云中创建、管
 
 在我们继续理解`docker stop`和`docker kill`命令之前，让我们首先运行一个示例 Postgres Docker 容器:
 
-```
+```java
 $ docker run -itd -e POSTGRES_USER=baeldung -e POSTGRES_PASSWORD=baeldung
   -p 5432:5432 -v /data:/var/lib/postgresql/data --name postgresql-baedlung postgres
 Unable to find image 'postgres:latest' locally
@@ -37,7 +37,7 @@ Status: Downloaded newer image for postgres:latest
 
 让我们来看看集装箱的细节:
 
-```
+```java
 $ docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
 be2848539d76        postgres            "docker-entrypoint.s…"   4 seconds ago       Up 2 seconds        0.0.0.0:5432->5432/tcp   postgresql-baedlung
@@ -51,31 +51,31 @@ be2848539d76        postgres            "docker-entrypoint.s…"   4 seconds ago
 
 让我们演示如何使用容器名来停止容器:
 
-```
+```java
 $ docker stop postgresql-baeldung
 ```
 
 让我们举例说明如何使用`containerId`来停止容器:
 
-```
+```java
 $ docker stop be2848539d76
 ```
 
 有趣的是，我们也可以使用 containerId 的前缀来启动或停止容器。这里，我们只需要确保没有其他容器以“be”开始运行`containerId`:
 
-```
+```java
 $ docker stop be
 ```
 
 默认情况下，`docker stop`命令会等待 10 秒钟来终止进程。但是我们可以使用`-t`选项来配置等待时间:
 
-```
+```java
 $ docker stop -t 60 be2848539d76
 ```
 
 这里，容器将等待 60 秒，然后强制移除容器。我们也可以使用`docker container stop`命令停止容器:
 
-```
+```java
 $ docker container stop -t 60 be2848539d76
 ```
 
@@ -87,13 +87,13 @@ $ docker container stop -t 60 be2848539d76
 
 让我们来看看杀死一个容器的命令:
 
-```
+```java
 $ docker kill be2848539d76
 ```
 
 类似地，要杀死一个容器，我们也可以使用`docker container kill`命令:
 
-```
+```java
 $ docker container kill be2848539d76
 ```
 
@@ -103,7 +103,7 @@ $ docker container kill be2848539d76
 
 `docker kill`和`docker stop`命令都停止集装箱。停止容器的另一种方法就是移除它。我们可以使用`docker rm`命令来移除一个容器。这将立即从本地存储中移除容器:
 
-```
+```java
 $ docker rm be2848539d76
 ```
 
@@ -111,7 +111,7 @@ $ docker rm be2848539d76
 
 让我们看看暂停容器的命令:
 
-```
+```java
 $ docker pause be2848539d76
 ```
 

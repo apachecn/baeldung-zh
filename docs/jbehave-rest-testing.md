@@ -20,7 +20,7 @@ JBehave 是一个行为驱动的开发框架。它旨在为自动化验收测试
 
 典型的情况是:
 
-```
+```java
 Given a precondition
 When an event occurs
 Then the outcome should be captured
@@ -36,7 +36,7 @@ Then the outcome should be captured
 
 为了在我们的 maven 项目中使用 JBehave， [jbehave-core](https://web.archive.org/web/20221128105745/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.jbehave%22%20AND%20a%3A%22jbehave-core%22) 依赖项应该包含在`pom`中:
 
-```
+```java
 <dependency>
     <groupId>org.jbehave</groupId>
     <artifactId>jbehave-core</artifactId>
@@ -61,7 +61,7 @@ Then the outcome should be captured
 
 我们可以在一个`.story`文件中定义这个故事:
 
-```
+```java
 Scenario: when a user increases a counter, its value is increased by 1
 
 Given a counter
@@ -74,7 +74,7 @@ Then the value of the counter must be 1 greater than previous value
 
 给定步骤，让我们用 Java 实现它:
 
-```
+```java
 public class IncreaseSteps {
     private int counter;
     private int previousValue;
@@ -107,7 +107,7 @@ public class IncreaseSteps {
 
 要执行这些步骤，我们需要为我们的故事搭建舞台:
 
-```
+```java
 public class IncreaseStoryLiveTest extends JUnitStories {
 
     @Override
@@ -140,7 +140,7 @@ public class IncreaseStoryLiveTest extends JUnitStories {
 
 我们可以在控制台中看到我们的测试结果。随着我们的测试成功通过，输出将与我们的故事相同:
 
-```
+```java
 Scenario: when a user increases a counter, its value is increased by 1
 Given a counter
 And the counter has any integral value
@@ -150,7 +150,7 @@ Then the value of the counter must be 1 greater than previous value
 
 如果我们忘记实现场景中的任何步骤，报告会让我们知道。假设我们没有实现`@When`步骤:
 
-```
+```java
 Scenario: when a user increases a counter, its value is increased by 1
 Given a counter
 And the counter has any integral value
@@ -158,7 +158,7 @@ When the user increases the counter (PENDING)
 Then the value of the counter must be 1 greater than previous value (NOT PERFORMED)
 ```
 
-```
+```java
 @When("the user increases the counter")
 @Pending
 public void whenTheUserIncreasesTheCounter() {
@@ -170,7 +170,7 @@ public void whenTheUserIncreasesTheCounter() {
 
 如果我们的@Then 步骤失败了怎么办？我们可以马上从报告中发现错误:
 
-```
+```java
 Scenario: when a user increases a counter, its value is increased by 1
 Given a counter
 And the counter has any integral value
@@ -189,7 +189,7 @@ Then the value of the counter must be 1 greater than previous value (FAILED)
 
 故事:
 
-```
+```java
 Scenario: when a user checks a non-existent user on github, github would respond 'not found'
 
 Given github user profile api
@@ -206,7 +206,7 @@ Then github respond: 404 not found
 
 步骤:
 
-```
+```java
 public class GithubUserNotFoundSteps {
 
     private String api;
@@ -251,7 +251,7 @@ public class GithubUserNotFoundSteps {
 
 此外，还支持带注释的命名参数:
 
-```
+```java
 @When("I look for $username via the api")
 public void whenILookForSomeNonExistentUserViaTheApi(
   @Named("username") String user) throws IOException
@@ -261,7 +261,7 @@ public void whenILookForSomeNonExistentUserViaTheApi(
 
 这里有一个简单的 MIME 类型测试故事:
 
-```
+```java
 Scenario: when a user checks a valid user's profile on github, github would respond json data
 
 Given github user profile api
@@ -272,7 +272,7 @@ Then github respond data of type json
 
 以下是步骤:
 
-```
+```java
 public class GithubUserResponseMediaTypeSteps {
 
     private String api;
@@ -307,7 +307,7 @@ public class GithubUserResponseMediaTypeSteps {
 
 然后是最后一个故事:
 
-```
+```java
 Scenario: when a user checks a valid user's profile on github, github's response json should include a login payload with the same username
 
 Given github user profile api
@@ -317,7 +317,7 @@ Then github's response contains a 'login' payload same as eugenp
 
 以及简单的直线步骤实现:
 
-```
+```java
 public class GithubUserResponsePayloadSteps {
 
     private String api;

@@ -22,7 +22,7 @@
 
 创建新的 Quarkus 项目最简单的方法是打开一个终端并键入:
 
-```
+```java
 mvn io.quarkus:quarkus-maven-plugin:0.13.1:create \
     -DprojectGroupId=com.baeldung.quarkus \
     -DprojectArtifactId=quarkus-project \
@@ -38,7 +38,7 @@ mvn io.quarkus:quarkus-maven-plugin:0.13.1:create \
 
 让我们检查一下`HelloResource`类的内容:
 
-```
+```java
 @Path("/hello")
 public class HelloResource {
 
@@ -52,7 +52,7 @@ public class HelloResource {
 
 到目前为止一切看起来都很好。至此，我们有了一个简单的应用程序，它只有一个 RESTEasy JAX-RS 端点。让我们打开一个终端并运行以下命令来测试它:
 
-```
+```java
 ./mvnw compile quarkus:dev:
 ```
 
@@ -60,7 +60,7 @@ public class HelloResource {
 
 我们的 REST 端点应该在 localhost:8080/hello 处公开。让我们用`curl`命令测试一下:
 
-```
+```java
 $ curl localhost:8080/hello
 hello
 ```
@@ -73,7 +73,7 @@ hello
 
 首先，我们将创建一个`HelloService`类:
 
-```
+```java
 @ApplicationScoped
 public class HelloService {
     public String politeHello(String name){
@@ -84,7 +84,7 @@ public class HelloService {
 
 现在，我们将修改`HelloResource`类，注入`HelloService`并添加一个新方法:
 
-```
+```java
 @Inject
 HelloService helloService;
 
@@ -98,20 +98,20 @@ public String greeting(@PathParam("name") String name) {
 
 接下来，让我们测试我们的新端点:
 
-```
+```java
 $ curl localhost:8080/hello/polite/Baeldung
 Hello Mr/Mrs Baeldung
 ```
 
 我们将再做一个更改，以证明同样的情况也可以应用到属性文件。让我们编辑`application.properties`文件并再添加一个键:
 
-```
+```java
 greeting=Good morning
 ```
 
 之后，我们将修改`HelloService`来使用我们的新属性:
 
-```
+```java
 @ConfigProperty(name = "greeting")
 private String greeting;
 
@@ -122,13 +122,13 @@ public String politeHello(String name){
 
 如果我们执行相同的`curl`命令，我们现在应该看到:
 
-```
+```java
 Good morning Baeldung
 ```
 
 我们可以通过运行以下命令轻松打包应用程序:
 
-```
+```java
 ./mvnw package 
 ```
 
@@ -139,7 +139,7 @@ Good morning Baeldung
 
 我们现在可以运行打包的应用程序:
 
-```
+```java
 java -jar target/quarkus-project-1.0-SNAPSHOT-runner.jar
 ```
 
@@ -151,7 +151,7 @@ java -jar target/quarkus-project-1.0-SNAPSHOT-runner.jar
 
 我们现在将停止应用程序(Ctrl + C ),如果还没有停止的话，并运行命令:
 
-```
+```java
 ./mvnw package -Pnative
 ```
 
@@ -163,7 +163,7 @@ java -jar target/quarkus-project-1.0-SNAPSHOT-runner.jar
 
 其次，我们将**使用本地可执行文件**创建一个容器映像。为此，我们必须在我们的机器上运行一个容器运行时(即 [Docker](/web/20221206032224/https://www.baeldung.com/docker-test-containers) )。让我们打开一个终端窗口并执行:
 
-```
+```java
 ./mvnw package -Pnative -Dnative-image.docker-build=true 
 ```
 
@@ -171,7 +171,7 @@ java -jar target/quarkus-project-1.0-SNAPSHOT-runner.jar
 
 项目一代为我们创造了一个`Dockerfile.native`:
 
-```
+```java
 FROM registry.fedoraproject.org/fedora-minimal
 WORKDIR /work/
 COPY target/*-runner /work/application
@@ -182,13 +182,13 @@ CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
 
 如果我们检查这个文件，我们就知道接下来会发生什么。首先，我们将**创建一个 docker 图像**:
 
-```
+```java
 docker build -f src/main/docker/Dockerfile.native -t quarkus/quarkus-project .
 ```
 
 现在，我们可以使用以下命令运行容器:
 
-```
+```java
 docker run -i --rm -p 8080:8080 quarkus/quarkus-project
 ```
 
@@ -197,7 +197,7 @@ docker run -i --rm -p 8080:8080 quarkus/quarkus-project
 
 最后，我们应该测试修改后的 REST 来验证我们的应用程序:
 
-```
+```java
 $ curl localhost:8080/hello/polite/Baeldung
 Good morning Baeldung
 ```
@@ -206,7 +206,7 @@ Good morning Baeldung
 
 一旦我们使用 Docker 完成本地测试，我们将把我们的容器部署到 [OpenShift](/web/20221206032224/https://www.baeldung.com/spring-boot-deploy-openshift) 。假设我们的注册表中有 Docker 映像，我们可以按照以下步骤部署应用程序:
 
-```
+```java
 oc new-build --binary --name=quarkus-project -l app=quarkus-project
 oc patch bc/quarkus-project -p '{"spec":{"strategy":{"dockerStrategy":{"dockerfilePath":"src/main/docker/Dockerfile.native"}}}}'
 oc start-build quarkus-project --from-dir=. --follow
@@ -216,13 +216,13 @@ oc expose service quarkus-project
 
 现在，我们可以通过运行以下命令来获取应用程序 URL:
 
-```
+```java
 oc get route
 ```
 
 最后，我们将访问同一个端点(注意，URL 可能不同，这取决于我们的 IP 地址):
 
-```
+```java
 $ curl http://quarkus-project-myproject.192.168.64.2.nip.io/hello/polite/Baeldung
 Good morning Baeldung
 ```

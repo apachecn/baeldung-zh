@@ -12,7 +12,7 @@
 
 首先，我们将最新的 [`jcabi-aspects`](https://web.archive.org/web/20221126224052/https://search.maven.org/search?q=g:com.jcabi%20a:jcabi-aspects) Maven 依赖项添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.jcabi</groupId>
     <artifactId>jcabi-aspects</artifactId>
@@ -22,7 +22,7 @@
 
 `jcabi-aspects`库需要 AspectJ 运行时支持才能运行。因此，让我们添加 [`aspectjrt`](https://web.archive.org/web/20221126224052/https://search.maven.org/search?q=g:org.aspectj%20a:aspectjrt) 美芬依赖:
 
-```
+```java
 <dependency>
     <groupId>org.aspectj</groupId>
     <artifactId>aspectjrt</artifactId>
@@ -33,7 +33,7 @@
 
 接下来，让我们添加 **[`jcabi-maven-plugin`](https://web.archive.org/web/20221126224052/https://search.maven.org/search?q=g:com.jcabi%20a:jcabi-maven-plugin) 插件，它在编译时用 AspectJ 方面编织二进制文件**。插件提供了进行自动编织的`ajc`目标:
 
-```
+```java
 <plugin>
     <groupId>com.jcabi</groupId>
     <artifactId>jcabi-maven-plugin</artifactId>
@@ -62,13 +62,13 @@
 
 最后，让我们使用 Maven 命令编译这些类:
 
-```
+```java
 mvn clean package
 ```
 
 由`jcabi-maven-plugin`在编译时生成的日志看起来像这样:
 
-```
+```java
 [INFO] --- jcabi-maven-plugin:0.14.1:ajc (default) @ jcabi ---
 [INFO] jcabi-aspects 0.18/55a5c13 started new daemon thread jcabi-loggable for watching of 
   @Loggable annotated methods
@@ -87,7 +87,7 @@ mvn clean package
 
 让我们编写一个`displayFactorial`方法来异步显示一个数字的阶乘:
 
-```
+```java
 @Async
 public static void displayFactorial(int number) {
     long result = factorial(number);
@@ -97,7 +97,7 @@ public static void displayFactorial(int number) {
 
 然后，我们将重新编译该类，让 Maven 为`@Async`注释编织方面。最后，我们可以运行我们的示例:
 
-```
+```java
 [main] INFO com.jcabi.aspects.aj.NamedThreads - 
 jcabi-aspects 0.22.6/3f0a1f7 started new daemon thread jcabi-async for Asynchronous method execution
 ```
@@ -106,7 +106,7 @@ jcabi-aspects 0.22.6/3f0a1f7 started new daemon thread jcabi-async for Asynchron
 
 现在，让我们使用`@Async`注释来返回一个`Future`实例:
 
-```
+```java
 @Async
 public static Future<Long> getFactorial(int number) {
     Future<Long> factorialFuture = CompletableFuture.supplyAsync(() -> factorial(number));
@@ -122,7 +122,7 @@ public static Future<Long> getFactorial(int number) {
 
 例如，让我们编写一个返回最新汇率的`cacheExchangeRates`方法:
 
-```
+```java
 @Cacheable(lifetime = 2, unit = TimeUnit.SECONDS)
 public static String cacheExchangeRates() {
     String result = null;
@@ -140,13 +140,13 @@ public static String cacheExchangeRates() {
 
 在这里，缓存结果的生存期为 2 秒。类似地，我们可以使用以下方法使结果永远可缓存:
 
-```
+```java
 @Cacheable(forever = true)
 ```
 
 一旦我们重新编译并再次执行该类，该库将记录处理缓存机制的两个守护线程的详细信息:
 
-```
+```java
 [main] INFO com.jcabi.aspects.aj.NamedThreads - 
 jcabi-aspects 0.22.6/3f0a1f7 started new daemon thread jcabi-cacheable-clean for automated 
   cleaning of expired @Cacheable values
@@ -157,7 +157,7 @@ jcabi-aspects 0.22.6/3f0a1f7 started new daemon thread jcabi-cacheable-update fo
 
 当我们调用我们的`cacheExchangeRates`方法时，库将缓存结果并记录执行的细节:
 
-```
+```java
 [main] INFO com.baeldung.jcabi.JcabiAspectJ - #cacheExchangeRates(): 
 '{"rates":{"CAD":1.458,"HKD":8.5039,"ISK":137.9,"P..364..:4.5425},"base":"EUR","date":"2020-02-10"}'
   cached in 560ms, valid for 2s
@@ -165,7 +165,7 @@ jcabi-aspects 0.22.6/3f0a1f7 started new daemon thread jcabi-cacheable-update fo
 
 所以，如果再次调用(2 秒内)，`cacheExchangeRates`将从缓存中返回结果:
 
-```
+```java
 [main] INFO com.baeldung.jcabi.JcabiAspectJ - #cacheExchangeRates(): 
 '{"rates":{"CAD":1.458,"HKD":8.5039,"ISK":137.9,"P..364..:4.5425},"base":"EUR","date":"2020-02-10"}'
   from cache (hit #1, 563ms old)
@@ -179,7 +179,7 @@ jcabi-aspects 0.22.6/3f0a1f7 started new daemon thread jcabi-cacheable-update fo
 
 让我们给我们的`displayFactorial`和`cacheExchangeRates`方法添加`@Loggable`注释:
 
-```
+```java
 @Loggable
 @Async
 public static void displayFactorial(int number) {
@@ -195,7 +195,7 @@ public static String cacheExchangeRates() {
 
 然后，在重新编译之后，注释将记录方法名、返回值和执行时间:
 
-```
+```java
 [main] INFO com.baeldung.jcabi.JcabiAspectJ - #displayFactorial(): in 1.16ms
 [main] INFO com.baeldung.jcabi.JcabiAspectJ - #cacheExchangeRates(): 
 '{"rates":{"CAD":1.458,"HKD":8.5039,"ISK":137.9,"P..364..:4.5425},"base":"EUR","date":"2020-02-10"}'
@@ -208,7 +208,7 @@ public static String cacheExchangeRates() {
 
 让我们将`@LogExceptions`用在将抛出`ArithmeticException`的方法`divideByZero`上:
 
-```
+```java
 @LogExceptions
 public static void divideByZero() {
     int x = 1/0;
@@ -217,7 +217,7 @@ public static void divideByZero() {
 
 方法的执行将记录异常并引发异常:
 
-```
+```java
 [main] WARN com.baeldung.jcabi.JcabiAspectJ - java.lang.ArithmeticException: / by zero
     at com.baeldung.jcabi.JcabiAspectJ.divideByZero_aroundBody12(JcabiAspectJ.java:77)
 
@@ -232,7 +232,7 @@ java.lang.ArithmeticException: / by zero
 
 让我们将`@Quietly`注释添加到`divideByZero`方法中:
 
-```
+```java
 @Quietly
 public static void divideByZero() {
     int x = 1/0;
@@ -241,7 +241,7 @@ public static void divideByZero() {
 
 因此，注释将吞下异常，并且只记录异常的详细信息，否则将会被抛出:
 
-```
+```java
 [main] WARN com.baeldung.jcabi.JcabiAspectJ - java.lang.ArithmeticException: / by zero
     at com.baeldung.jcabi.JcabiAspectJ.divideByZero_aroundBody12(JcabiAspectJ.java:77)
 ```
@@ -254,7 +254,7 @@ public static void divideByZero() {
 
 例如，让我们将`@RetryOnFailure`注释添加到我们的`divideByZero`方法中:
 
-```
+```java
 @RetryOnFailure(attempts = 2)
 @Quietly
 public static void divideByZero() {
@@ -264,7 +264,7 @@ public static void divideByZero() {
 
 因此，如果方法抛出异常，AOP 通知将尝试执行两次:
 
-```
+```java
 [main] WARN com.baeldung.jcabi.JcabiAspectJ - 
 #divideByZero(): attempt #1 of 2 failed in 147µs with java.lang.ArithmeticException: / by zero
 [main] WARN com.baeldung.jcabi.JcabiAspectJ - 
@@ -273,7 +273,7 @@ public static void divideByZero() {
 
 此外，我们可以定义其他参数，如`delay`、`unit`和`types`，同时声明`@RetryOnFailure`注释:
 
-```
+```java
 @RetryOnFailure(attempts = 3, delay = 5, unit = TimeUnit.SECONDS, 
   types = {java.lang.NumberFormatException.class})
 ```
@@ -286,7 +286,7 @@ public static void divideByZero() {
 
 例如，让我们创建一个抛出`IOException`和`InterruptedException`的方法`processFile`:
 
-```
+```java
 @UnitedThrow(IllegalStateException.class)
 public static void processFile() throws IOException, InterruptedException {
     BufferedReader reader = new BufferedReader(new FileReader("baeldung.txt"));
@@ -297,7 +297,7 @@ public static void processFile() throws IOException, InterruptedException {
 
 在这里，我们添加了注释，将所有异常包装到`IllegalStateException`中。因此，当调用该方法时，异常的堆栈跟踪将如下所示:
 
-```
+```java
 java.lang.IllegalStateException: java.io.FileNotFoundException: baeldung.txt (No such file or directory)
     at com.baeldung.jcabi.JcabiAspectJ.processFile(JcabiAspectJ.java:92)
     at com.baeldung.jcabi.JcabiAspectJ.main(JcabiAspectJ.java:39)

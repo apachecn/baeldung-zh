@@ -14,7 +14,7 @@
 
 一个示例文件可以快速解释这一点:
 
-```
+```java
 $ cat theLordOfRings.txt
 title:The Lord of the Rings: The Return of the King
 director:Peter Jackson
@@ -46,7 +46,7 @@ army to draw his gaze from Frodo and Sam as they approach Mount Doom with the On
 
 为了使我们的解决方案更加灵活，让我们创建一个 [`enum`](/web/20221208143917/https://www.baeldung.com/a-guide-to-java-enums) 类，这样我们就可以将选项作为参数传递给我们的解决方法:
 
-```
+```java
 enum DupKeyOption {
     OVERWRITE, DISCARD
 } 
@@ -60,7 +60,7 @@ enum DupKeyOption {
 
 让我们基于`BufferedReader`和`FileReader`创建一个方法:
 
-```
+```java
 public static Map<String, String> byBufferedReader(String filePath, DupKeyOption dupKeyOption) {
     HashMap<String, String> map = new HashMap<>();
     String line;
@@ -102,7 +102,7 @@ public static Map<String, String> byBufferedReader(String filePath, DupKeyOption
 
 在我们编写相应的测试方法之前，让我们[初始化两个包含预期条目的 map 对象](/web/20221208143917/https://www.baeldung.com/java-initialize-hashmap):
 
-```
+```java
 private static final Map<String, String> EXPECTED_MAP_DISCARD = Stream.of(new String[][]{
     {"title", "The Lord of the Rings: The Return of the King"},
     {"director", "Peter Jackson"},
@@ -119,7 +119,7 @@ private static final Map<String, String> EXPECTED_MAP_OVERWRITE = Stream.of(new 
 
 接下来，让我们测试我们的方法，看看我们是否能得到预期的`Map`对象:
 
-```
+```java
 @Test
 public void givenInputFile_whenInvokeByBufferedReader_shouldGetExpectedMap() {
     Map<String, String> mapOverwrite = FileToHashMap.byBufferedReader(filePath, FileToHashMap.DupKeyOption.OVERWRITE);
@@ -138,7 +138,7 @@ public void givenInputFile_whenInvokeByBufferedReader_shouldGetExpectedMap() {
 
 现在，让我们创建一个使用`Stream`来解决问题的方法:
 
-```
+```java
 public static Map<String, String> byStream(String filePath, DupKeyOption dupKeyOption) {
     Map<String, String> map = new HashMap<>();
     try (Stream<String> lines = Files.lines(Paths.get(filePath))) {
@@ -168,7 +168,7 @@ public static Map<String, String> byStream(String filePath, DupKeyOption dupKeyO
 
 最后，让我们测试一下`byStream`解决方案:
 
-```
+```java
 @Test
 public void givenInputFile_whenInvokeByStream_shouldGetExpectedMap() {
     Map<String, String> mapOverwrite = FileToHashMap.byStream(filePath, FileToHashMap.DupKeyOption.OVERWRITE);
@@ -185,7 +185,7 @@ public void givenInputFile_whenInvokeByStream_shouldGetExpectedMap() {
 
 到目前为止，我们已经看到了覆盖和丢弃场景的解决方案。但是，正如我们已经讨论过的，如果需要的话，我们也可以通过键来聚合值。因此，最终，我们将拥有一个类型为`Map<String, List<String>>`的`Map`对象。现在，让我们构建一个方法来实现这个需求:
 
-```
+```java
 public static Map<String, List<String>> aggregateByKeys(String filePath) {
     Map<String, List<String>> map = new HashMap<>();
     try (Stream<String> lines = Files.lines(Paths.get(filePath))) {
@@ -213,7 +213,7 @@ public static Map<String, List<String>> aggregateByKeys(String filePath) {
 
 接下来，让我们测试一下我们的方法，看看它是否有效。像往常一样，我们首先创建预期的结果:
 
-```
+```java
 private static final Map<String, List<String>> EXPECTED_MAP_AGGREGATE = Stream.of(new String[][]{
       {"title", "The Lord of the Rings: The Return of the King"},
       {"director", "Peter Jackson"},
@@ -223,7 +223,7 @@ private static final Map<String, List<String>> EXPECTED_MAP_AGGREGATE = Stream.o
 
 然后，测试方法本身非常简单:
 
-```
+```java
 @Test
 public void givenInputFile_whenInvokeAggregateByKeys_shouldGetExpectedMap() {
     Map<String, List<String>> mapAgg = FileToHashMap.aggregateByKeys(filePath);

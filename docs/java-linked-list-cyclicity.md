@@ -18,7 +18,7 @@
 
 **如果外部循环访问的节点被内部循环访问两次，则检测到循环。**相反，如果外部循环到达列表的末尾，这意味着没有循环:
 
-```
+```java
 public static <T> boolean detectCycle(Node<T> head) {
     if (head == null) {
         return false;
@@ -61,7 +61,7 @@ public static <T> boolean detectCycle(Node<T> head) {
 
 当我们遇到一个已经存在于集合中的节点时，我们就发现了循环的开始。发现这一点后，我们可以通过将前一个节点的`next`字段设置为`null`来轻松打破循环，如下所示:
 
-```
+```java
 public static <T> boolean detectCycle(Node<T> head) {
     if (head == null) {
         return false;
@@ -94,7 +94,7 @@ public static <T> boolean detectCycle(Node<T> head) {
 
 因此，如果两个迭代器在任何一点相遇，那么我们可以得出结论，我们遇到了一个循环:
 
-```
+```java
 public static <T> CycleDetectionResult<T> detectCycle(Node<T> head) {
     if (head == null) {
         return new CycleDetectionResult<>(false, null);
@@ -118,7 +118,7 @@ public static <T> CycleDetectionResult<T> detectCycle(Node<T> head) {
 
 其中`CycleDetectionResult` 是保存结果的便利类:一个`boolean`变量，它表示循环是否存在，如果存在，那么它还包含对循环内的会合点的引用:
 
-```
+```java
 public class CycleDetectionResult<T> {
     boolean cycleExists;
     Node<T> node;
@@ -139,7 +139,7 @@ public class CycleDetectionResult<T> {
 
 一旦循环的开始(`bg`)被发现，那么找到循环的结束(其下一个字段指向`bg`的节点)是很容易的。然后，该结束节点的下一个指针被设置为`null`以移除循环:
 
-```
+```java
 public class CycleRemovalBruteForce {
     private static <T> void removeCycle(
       Node<T> loopNodeParam, Node<T> head) {
@@ -207,7 +207,7 @@ public class CycleRemovalBruteForce {
 
 这里有一个简单的、潜在的实现:
 
-```
+```java
 public class CycleRemovalByCountingLoopNodes {
     private static <T> void removeCycle(
       Node<T> loopNodeParam, Node<T> head) {
@@ -292,7 +292,7 @@ public class CycleRemovalByCountingLoopNodes {
 
 这可以通过以下方式实现:
 
-```
+```java
 public class CycleRemovalWithoutCountingLoopNodes {
     private static <T> void removeCycle(
       Node<T> meetingPointParam, Node<T> head) {

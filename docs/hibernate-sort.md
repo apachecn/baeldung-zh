@@ -24,14 +24,14 @@ A quick and practical guide to creating Hibernate interceptors.[Read more](/web/
 
 使用 Hibernate 的 HQL 进行排序就像在 HQL 查询字符串中添加 `Order By`子句一样简单:
 
-```
+```java
 String hql = "FROM Foo f ORDER BY f.name";
 Query query = sess.createQuery(hql);
 ```
 
 执行这段代码后，Hibernate 将生成以下 SQL 查询:
 
-```
+```java
 Hibernate: select foo0_.ID as ID1_0_, foo0_.NAME as NAME2_0_ from 
     FOO foo0_ order by foo0_.NAME
 ```
@@ -42,14 +42,14 @@ Hibernate: select foo0_.ID as ID1_0_, foo0_.NAME as NAME2_0_ from
 
 要手动指定排序顺序，您需要在 `HQL`查询字符串中包含顺序方向:
 
-```
+```java
 String hql = "FROM Foo f ORDER BY f.name ASC";
 Query query = sess.createQuery(hql);
 ```
 
 在本例中，设置 HQL 中的`asc`子句包含在生成的 SQL 查询中:
 
-```
+```java
 Hibernate: select foo0_.ID as ID1_0_, foo0_.NAME as NAME2_0_ 
     from FOO foo0_ order by foo0_.NAME ASC
 ```
@@ -58,14 +58,14 @@ Hibernate: select foo0_.ID as ID1_0_, foo0_.NAME as NAME2_0_
 
 可以将多个属性以及可选的排序顺序添加到 HQL 查询字符串的`Order By`子句中:
 
-```
+```java
 String hql = "FROM Foo f ORDER BY f.name DESC, f.id ASC";
 Query query = sess.createQuery(hql);
 ```
 
 生成的 SQL 查询将相应地改变:
 
-```
+```java
 Hibernate: select foo0_.ID as ID1_0_, foo0_.NAME as NAME2_0_ 
     from FOO foo0_ order by foo0_.NAME DESC, foo0_.ID ASC
 ```
@@ -76,14 +76,14 @@ Hibernate: select foo0_.ID as ID1_0_, foo0_.NAME as NAME2_0_
 
 这个简单的示例将所有空值放在结果列表的末尾:
 
-```
+```java
 String hql = "FROM Foo f ORDER BY f.name NULLS LAST";
 Query query = sess.createQuery(hql);
 ```
 
 让我们看看**生成的 SQL 查询**中的 `is null then 1 else 0`子句:
 
-```
+```java
 Hibernate: select foo0_.ID as ID1_1_, foo0_.NAME as NAME2_1_, 
 foo0_.BAR_ID as BAR_ID3_1_, foo0_.idx as idx4_1_ from FOO foo0_ 
 order by case when foo0_.NAME is null then 1 else 0 end, foo0_.NAME
@@ -95,7 +95,7 @@ order by case when foo0_.NAME is null then 1 else 0 end, foo0_.NAME
 
 我们将通过用**Hibernate`@OrderBy`注释**来注释集合来做到这一点；我们将指定完成订购的字段以及方向:
 
-```
+```java
 @OrderBy(clause = "NAME DESC")
 Set<Foo> fooList = new HashSet();
 ```
@@ -104,14 +104,14 @@ Set<Foo> fooList = new HashSet();
 
 现在我们来看看`Bars`和`Foos`的实际排序:
 
-```
+```java
 String hql = "FROM Bar b ORDER BY b.id";
 Query query = sess.createQuery(hql);
 ```
 
 **产生的 SQL 语句**显示排序后的`Foo's`放在了 `fooList:`中
 
-```
+```java
 Hibernate: select bar0_.ID as ID1_0_, bar0_.NAME as NAME2_0_ from BAR bar0_ 
     order by bar0_.ID Hibernate: select foolist0_.BAR_ID as BAR_ID3_0_0_, 
     foolist0_.ID as ID1_1_0_, foolist0_.ID as ID1_1_1_, foolist0_.NAME as 
@@ -138,7 +138,7 @@ Criteria 对象 API 提供了`Order`类作为管理排序的主要 API。
 
 让我们从一个简单的例子开始——按单个`id` 属性排序:
 
-```
+```java
 Criteria criteria = sess.createCriteria(Foo.class, "FOO");
 criteria.addOrder(Order.asc("id"));
 ```
@@ -147,7 +147,7 @@ criteria.addOrder(Order.asc("id"));
 
 Hibernate Criteria 的对象 API 明确设置了排序顺序方向，这反映在代码生成的 SQL 语句中:
 
-```
+```java
 Hibernate: select this_.ID as ID1_0_0_, this_.NAME as NAME2_0_0_ 
     from FOO this_ order by this_.ID sac
 ```
@@ -156,7 +156,7 @@ Hibernate: select this_.ID as ID1_0_0_, this_.NAME as NAME2_0_0_
 
 按多个属性排序只需要向`Criteria` 实例添加一个`Order`对象，如下例所示:
 
-```
+```java
 Criteria criteria = sess.createCriteria(Foo.class, "FOO");
 criteria.addOrder(Order.asc("name"));
 criteria.addOrder(Order.asc("id"));
@@ -164,7 +164,7 @@ criteria.addOrder(Order.asc("id"));
 
 SQL 中生成的查询是:
 
-```
+```java
 Hibernate: select this_.ID as ID1_0_0_, this_.NAME as NAME2_0_0_ from 
     FOO this_ order by this_.NAME asc, this_.ID sac
 ```
@@ -173,14 +173,14 @@ Hibernate: select this_.ID as ID1_0_0_, this_.NAME as NAME2_0_0_ from
 
 默认情况下，当作为排序依据的属性具有`null`值时，由 RDMS 决定优先级。Hibernate Criteria Object API 使得更改默认设置变得很简单，而且**将空值放在升序排序列表的末尾**:
 
-```
+```java
 Criteria criteria = sess.createCriteria(Foo.class, "FOO");
 criteria.addOrder(Order.asc("name").nulls(NullPrecedence.LAST));
 ```
 
 下面是底层的 `SQL`查询–带有 **`is null then 1 else 0`** 子句:
 
-```
+```java
 Hibernate: select this_.ID as ID1_1_1_, this_.NAME as NAME2_1_1_, 
     this_.BAR_ID as BAR_ID3_1_1_, this_.idx as idx4_1_1_, bar2_.ID as
     ID1_0_0_, bar2_.NAME as NAME2_0_0_ from FOO order by case when 
@@ -189,14 +189,14 @@ Hibernate: select this_.ID as ID1_1_1_, this_.NAME as NAME2_1_1_,
 
 或者，我们也可以**将空值放在降序列表的开头**:
 
-```
+```java
 Criteria criteria = sess.createCriteria(Foo.class, "FOO");
 criteria.addOrder(Order.desc("name").nulls(NullPrecedence.FIRST));
 ```
 
 相应的 SQL 查询如下——带有 **`is null then 0 else 1`** 子句:
 
-```
+```java
 Hibernate: select this_.ID as ID1_1_1_, this_.NAME as NAME2_1_1_, 
     this_.BAR_ID as BAR_ID3_1_1_, this_.idx as idx4_1_1_, bar2_.ID as 
     ID1_0_0_, bar2_.NAME as NAME2_0_0_ from FOO order by case when 
@@ -207,14 +207,14 @@ Hibernate: select this_.ID as ID1_1_1_, this_.NAME as NAME2_1_1_,
 
 例如，如果 `f.anIntVariable`的值为空，那么查询的执行:
 
-```
+```java
 String jql = "Select f from Foo as f order by f.anIntVariable desc NULLS FIRST";
 Query sortQuery = entityManager.createQuery(jql);
 ```
 
 将抛出:
 
-```
+```java
 javax.persistence.PersistenceException: org.hibernate.PropertyAccessException:
 Null value was assigned to a property of primitive type setter of 
 com.cc.jpa.example.Foo.anIntVariable

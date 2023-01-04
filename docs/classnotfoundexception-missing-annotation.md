@@ -12,7 +12,7 @@
 
 让我们从一个熟悉的 Java 例子开始。有阶级`A`，然后有阶级`B`，这取决于`A`:
 
-```
+```java
 public class A {
 }
 
@@ -25,7 +25,7 @@ public class B {
 
 现在，如果我们编译这些类并运行编译后的`B`，它会在控制台上为我们打印一条消息:
 
-```
+```java
 >> javac A.java
 >> javac B.java
 >> java B
@@ -34,7 +34,7 @@ public class B {
 
 但是，如果我们删除编译好的`A` `.class`文件，重新运行类`B`，我们会看到一个 [`NoClassDefFoundError` 导致一个`ClassNotFoundException`](/web/20220523152548/https://www.baeldung.com/java-classnotfoundexception-and-noclassdeffounderror) :
 
-```
+```java
 >> rm A.class
 >> java B
 Exception in thread "main" java.lang.NoClassDefFoundError: A
@@ -52,7 +52,7 @@ Caused by: java.lang.ClassNotFoundException: A
 
 现在，让我们看看在同样的情况下注释会发生什么。为了做到这一点，我们将把`A`类改为一个注释:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 public @interface A {
 } 
@@ -60,7 +60,7 @@ public @interface A {
 
 如上所示，Java 将在运行时保留注释信息。之后，是时候用`A`注释类`B`了:
 
-```
+```java
 @A
 public class B {
     public static void main(String[] args) {
@@ -71,7 +71,7 @@ public class B {
 
 接下来，让我们编译并运行这些类:
 
-```
+```java
 >> javac A.java
 >> javac B.java
 >> java B
@@ -82,7 +82,7 @@ It worked!
 
 现在，让我们删除`A`的类文件:
 
-```
+```java
 >> rm A.class
 >> java B
 It worked!
@@ -94,7 +94,7 @@ It worked!
 
 为了更加有趣，让我们引入另一个具有`Class<?>`属性的注释:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 public @interface C {
     Class<?> value();
@@ -103,14 +103,14 @@ public @interface C {
 
 如上所示，这个注释有一个名为`value `的属性，返回类型为`Class<?>`。作为该属性的参数，让我们添加另一个名为`D`的空类:
 
-```
+```java
 public class D {
 }
 ```
 
 现在，我们要用这个新注释来注释`B`类:
 
-```
+```java
 @A
 @C(D.class)
 public class B {
@@ -122,7 +122,7 @@ public class B {
 
 当所有的类文件都存在时，一切都应该正常工作。但是，如果我们只删除了`D`类文件，不碰其他的，会怎么样呢？让我们来看看:
 
-```
+```java
 >> rm D.class
 >> java B
 It worked!
@@ -146,7 +146,7 @@ It worked!
 
 让我们改变`B`类，使其反射性地检索`A`信息:
 
-```
+```java
 @A
 public class B {
     public static void main(String[] args) {
@@ -157,7 +157,7 @@ public class B {
 
 如果我们编译并运行它们，一切都会好的:
 
-```
+```java
 >> javac A.java
 >> javac B.java
 >> java B
@@ -166,7 +166,7 @@ A
 
 现在，如果我们删除`A`类文件并运行`B`，我们将看到由`ClassNotFoundException`引起的相同的`NoClassDefFoundError`:
 
-```
+```java
 Exception in thread "main" java.lang.NoClassDefFoundError: A
         at B.main(B.java:5)
 Caused by: java.lang.ClassNotFoundException: A

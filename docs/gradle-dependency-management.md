@@ -10,7 +10,7 @@
 
 让我们从一个简单的 Java 项目脚本开始:
 
-```
+```java
 plugins {
     id 'java'
 }
@@ -79,7 +79,7 @@ Gradle build 从 Maven 中央存储库中取出所有依赖项，如`repositorie
 
 事实上，Gradle 从`repository`块中的指定存储库中提取依赖项:
 
-```
+```java
 repositories {
     mavenCentral()
 }
@@ -95,7 +95,7 @@ dependencies {
 
 为此，我们可以使用`files`来包含一个依赖集合:
 
-```
+```java
 dependencies {
     runtimeOnly files('libs/lib1.jar', 'libs/lib2.jar')
 }
@@ -103,7 +103,7 @@ dependencies {
 
 类似地，我们可以使用`filetree`在一个目录中包含一个层次结构的`jar`文件:
 
-```
+```java
 dependencies {
     runtimeOnly fileTree('libs') { include '*.jar' }
 }
@@ -115,7 +115,7 @@ dependencies {
 
 假设我们想要声明我们的项目依赖于`shared`项目:
 
-```
+```java
 dependencies { 
     implementation project(':shared') 
 }
@@ -125,7 +125,7 @@ dependencies {
 
 在某些情况下，例如开发一个任务或插件，我们可以定义属于我们正在使用的 Gradle 版本的依赖关系:
 
-```
+```java
 dependencies {
     implementation gradleApi()
 }
@@ -137,7 +137,7 @@ dependencies {
 
 下面我们声明我们想通过从 Maven Central 下载来使用 [Spring Boot 插件](/web/20221022154512/https://www.baeldung.com/spring-boot-gradle-plugin):
 
-```
+```java
 buildscript {
     repositories {
         mavenCentral()
@@ -153,7 +153,7 @@ apply plugin: 'org.springframework.boot'
 
 上面所描述的是与旧版本的 Gradle 相关的。相反，在新版本中，可以使用更简洁的形式:
 
-```
+```java
 plugins {
     id 'org.springframework.boot' version '2.3.4.RELEASE'
 }

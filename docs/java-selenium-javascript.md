@@ -12,7 +12,7 @@
 
 首先，我们将`[selenium-java](https://web.archive.org/web/20220814111612/https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java)`和`[junit](https://web.archive.org/web/20220814111612/https://mvnrepository.com/artifact/junit/junit)`依赖项添加到我们项目的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.seleniumhq.selenium</groupId>
     <artifactId>selenium-java</artifactId>
@@ -30,7 +30,7 @@
 
 接下来，我们需要配置 WebDriver。在这个例子中，在下载了它的最新版本之后，我们将使用它的 Chrome 实现:
 
-```
+```java
 @Before
 public void setUp() {
     System.setProperty("webdriver.chrome.driver", new File("src/main/resources/chromedriver.mac").getAbsolutePath());
@@ -42,7 +42,7 @@ public void setUp() {
 
 测试完成后，我们应该关闭浏览器窗口。我们可以通过将`driver.close()`语句放在用`@After`注释的方法中来实现。这确保了即使测试失败它也会被执行:
 
-```
+```java
 @After
 public void cleanUp() {
     driver.close();
@@ -53,7 +53,7 @@ public void cleanUp() {
 
 现在，我们可以创建一个测试用例来完成我们的第一步——打开网站:
 
-```
+```java
 @Test
 public void whenSearchForSeleniumArticles_thenReturnNotEmptyResults() {
     driver.get("https://baeldung.com");
@@ -72,19 +72,19 @@ public void whenSearchForSeleniumArticles_thenReturnNotEmptyResults() {
 
 为此，我们首先需要的是`JavascriptExecutor`。由于我们使用的是`ChromeDriver` 实现，我们可以简单地将它转换成我们需要的:
 
-```
+```java
 JavascriptExecutor executor = (JavascriptExecutor) driver;
 ```
 
 得到了`JavascriptExecutor`之后，我们就可以使用它的`executeScript`方法了。参数是脚本本身和一组脚本参数。在我们的例子中，我们对第一个参数调用 click 方法:
 
-```
+```java
 executor.executeScript("arguments[0].click();", element);
 ```
 
 现在，让我们把它放在一个方法中，我们称之为`clickElement`:
 
-```
+```java
 private void clickElement(WebElement element) {
     JavascriptExecutor executor = (JavascriptExecutor) driver;
     executor.executeScript("arguments[0].click();", element);
@@ -93,7 +93,7 @@ private void clickElement(WebElement element) {
 
 最后，我们可以将它添加到我们的测试中:
 
-```
+```java
 @Test
 public void whenSearchForSeleniumArticles_thenReturnNotEmptyResults() {
     // ... load https://baeldung.com
@@ -116,19 +116,19 @@ public void whenSearchForSeleniumArticles_thenReturnNotEmptyResults() {
 
 第一，`W` `ebDriverWait`对象需要两个参数；驱动程序和超时:
 
-```
+```java
 WebDriverWait wait = new WebDriverWait(driver, 5000); 
 ```
 
 然后，我们调用`until`，给出期望的`elementToBeClickable`条件:
 
-```
+```java
 wait.until(ExpectedConditions.elementToBeClickable(By.className("nav--menu_item_anchor"))); 
 ```
 
 一旦成功返回，我们知道我们可以继续:
 
-```
+```java
 WebElement searchButton = driver.findElement(By.className("nav--menu_item_anchor"));
 clickElement(searchButton);
 ```

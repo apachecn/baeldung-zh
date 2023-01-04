@@ -22,7 +22,7 @@ CI/CD 的关键部分是管理我们代码的版本控制系统。此外，我�
 
 既然我们的存储库已经创建，我们应该在本地克隆我们的项目。为此，让我们在本地计算机上执行以下命令:
 
-```
+```java
 git clone https://github.com/$USERNAME/baeldung-ci-cd-process.git
 ```
 
@@ -40,7 +40,7 @@ git clone https://github.com/$USERNAME/baeldung-ci-cd-process.git
 
 或者，我们可以手动添加 [`spring-boot-starter-web`](https://web.archive.org/web/20220703154105/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-starter-web) 和 `[spring-boot-starter-actuator](https://web.archive.org/web/20220703154105/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-starter-actuator)`的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -56,7 +56,7 @@ git clone https://github.com/$USERNAME/baeldung-ci-cd-process.git
 
 此外，让我们添加允许我们运行应用程序的插件:
 
-```
+```java
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -65,7 +65,7 @@ git clone https://github.com/$USERNAME/baeldung-ci-cd-process.git
 
 最后，让我们添加一个 Spring Boot 主类:
 
-```
+```java
 @SpringBootApplication
 public class CiCdApplication {
 
@@ -81,7 +81,7 @@ public class CiCdApplication {
 
 让我们用下面的命令来实现这一点:
 
-```
+```java
 git add .
 git commit -m 'Initialize application'
 git push
@@ -101,7 +101,7 @@ CI/CD 过程的另一部分是一个服务，它将构建和测试我们的推�
 
 在应用程序目录中，让我们执行以下操作:
 
-```
+```java
 mvn -N io.takari:maven:0.7.7:wrapper
 ```
 
@@ -117,7 +117,7 @@ mvn -N io.takari:maven:0.7.7:wrapper
 
 在我们的例子中，让我们告诉 Travis 使用 Java 11 和 Maven 包装器来构建我们的应用程序:
 
-```
+```java
 language: java
 jdk:
   - openjdk11
@@ -153,7 +153,7 @@ script:
 
 首先，让我们添加 [`jib-maven-plugin`](https://web.archive.org/web/20220703154105/https://search.maven.org/search?q=g:com.google.cloud.tools%20AND%20a:jib-maven-plugin)，它将创建我们的应用程序映像并将其推送到 Docker 存储库中(用正确的用户名替换`DockerHubUsername`):
 
-```
+```java
 <profile>
     <id>deploy-docker</id>
     <properties>
@@ -186,7 +186,7 @@ script:
 
 接下来，让我们调整我们的构建文件(`.travis.yml`):
 
-```
+```java
 before_install:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker pull openjdk:11-jre-slim-sid
@@ -204,7 +204,7 @@ script:
 
 我们可以通过在本地运行以下命令来检查 Docker 映像是否已经被推送到存储库:
 
-```
+```java
 docker run -p 8080:8080 -t $DOCKER_USERNAME/baeldung-ci-cd-process
 ```
 
@@ -220,7 +220,7 @@ docker run -p 8080:8080 -t $DOCKER_USERNAME/baeldung-ci-cd-process
 
 其次，我们应该修改我们的代码。让我们从添加 [`jacoco`插件](https://web.archive.org/web/20220703154105/https://search.maven.org/search?q=g:org.jacoco%20AND%20a:jacoco-maven-plugin)开始:
 
-```
+```java
 <plugin>
     <groupId>org.jacoco</groupId>
     <artifactId>jacoco-maven-plugin</artifactId>
@@ -247,7 +247,7 @@ docker run -p 8080:8080 -t $DOCKER_USERNAME/baeldung-ci-cd-process
 
 接下来，我们应该调整构建服务文件(`.travis.yml`)中的脚本部分:
 
-```
+```java
 script:
   - ./mvnw clean org.jacoco:jacoco-maven-plugin:prepare-agent install
   - ./mvnw deploy jib:build -P deploy-docker
@@ -260,7 +260,7 @@ after_success:
 
 接下来，我们应该在应用程序中添加一个测试类。例如，它可以是对主类的测试:
 
-```
+```java
 @SpringBootTest
 class CiCdApplicationIntegrationTest {
 
@@ -287,7 +287,7 @@ class CiCdApplicationIntegrationTest {
 
 接下来，我们应该在 pom 中包含 [`heroku`插件](https://web.archive.org/web/20220703154105/https://search.maven.org/search?q=g:com.heroku.sdk%20AND%20a:heroku-maven-plugin):
 
-```
+```java
 <profile>
     <id>deploy-heroku</id>
     <properties>
@@ -315,7 +315,7 @@ class CiCdApplicationIntegrationTest {
 
 接下来，我们应该调整我们的构建服务文件(`.travis.yml`)，以便将应用程序也部署到 Heroku:
 
-```
+```java
 script:
   - ./mvnw clean install
   - ./mvnw heroku:deploy jib:build -P deploy-heroku,deploy-docker

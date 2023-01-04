@@ -17,7 +17,7 @@
 
 这是它的配置方式:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class BasicAuthConfiguration 
@@ -49,7 +49,7 @@ public class BasicAuthConfiguration
 
 现在让我们创建端点。我们的 REST 服务将有两个——一个用于登录，另一个用于获取用户数据:
 
-```
+```java
 @RestController
 @CrossOrigin
 public class UserController {
@@ -99,7 +99,7 @@ Angular 使用单页面架构，其中所有子组件(在我们的例子中是�
 
 让我们创建`index.html`文件，并向其中添加相关的依赖项:
 
-```
+```java
 <html ng-app="app">
 <body>
     <div ng-view></div>
@@ -118,7 +118,7 @@ Angular 使用单页面架构，其中所有子组件(在我们的例子中是�
 
 现在让我们创建定义 URL 到组件映射的`app.js`:
 
-```
+```java
 (function () {
     'use strict';
 
@@ -166,7 +166,7 @@ Angular 使用单页面架构，其中所有子组件(在我们的例子中是�
 
 我们来看第一个:
 
-```
+```java
 <h2>Login</h2>
 <form name="form" ng-submit="vm.login()" role="form">
     <div>
@@ -192,7 +192,7 @@ Angular 使用单页面架构，其中所有子组件(在我们的例子中是�
 
 第二个是:
 
-```
+```java
 (function () {
     'use strict';
     angular
@@ -243,7 +243,7 @@ Angular 使用单页面架构，其中所有子组件(在我们的例子中是�
 
 与登录组件类似，主页组件也由两个文件组成，`home.view.html` **:**
 
-```
+```java
 <h1>Hi {{vm.user}}!</h1>
 <p>You're logged in!!</p>
 <p><a href="#!/login" class="btn btn-primary" ng-click="logout()">Logout</a></p>
@@ -251,7 +251,7 @@ Angular 使用单页面架构，其中所有子组件(在我们的例子中是�
 
 而`home.controller.js:`
 
-```
+```java
 (function () {
     'use strict';
     angular
@@ -288,13 +288,13 @@ Angular 使用单页面架构，其中所有子组件(在我们的例子中是�
 
 现在让我们安装`http-server`来运行 Angular 应用程序:
 
-```
+```java
 npm install http-server --save
 ```
 
 安装完成后，我们可以在命令提示符下打开项目根文件夹并执行命令:
 
-```
+```java
 http-server -o
 ```
 
@@ -302,7 +302,7 @@ http-server -o
 
 版本 2 中的`index.html`与 AngularJS 版本略有不同:
 
-```
+```java
 <!DOCTYPE html>
 <html>
 <head>
@@ -324,13 +324,13 @@ http-server -o
 
 `main.ts`是应用程序的主入口点。它引导应用程序模块，因此浏览器加载登录页面:
 
-```
+```java
 platformBrowserDynamic().bootstrapModule(AppModule);
 ```
 
 `app.routing.ts`负责应用程序路由:
 
-```
+```java
 const appRoutes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'login', component: LoginComponent },
@@ -342,7 +342,7 @@ export const routing = RouterModule.forRoot(appRoutes);
 
 `app.module.ts`声明组件并导入相关模块:
 
-```
+```java
 @NgModule({
     imports: [
         BrowserModule,
@@ -363,7 +363,7 @@ export class AppModule { }
 
 因为我们正在创建一个单页面应用程序，所以让我们创建一个根组件，将所有子组件添加到其中:
 
-```
+```java
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html'
@@ -376,7 +376,7 @@ export class AppComponent { }
 
 现在让我们在`login.component.ts:`中创建登录组件及其相应的模板
 
-```
+```java
 @Component({
     selector: 'login',
     templateUrl: './app/login/login.component.html'
@@ -417,7 +417,7 @@ export class LoginComponent implements OnInit {
 
 最后，我们来看看`login.component.html`:
 
-```
+```java
 <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
     <div [ngClass]="{ 'has-error': f.submitted && !username.valid }">
         <label for="username">Username</label>
@@ -449,7 +449,7 @@ Angular team 在版本 6 中做了一些增强。由于这些变化，我们的�
 
 服务调用部分也将与旧版本略有不同:
 
-```
+```java
 this.http.post<Observable<boolean>>(url, {
     userName: this.model.username,
     password: this.model.password

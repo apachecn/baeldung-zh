@@ -30,7 +30,7 @@
 
 我们将在下面的例子中使用一个`Helper.toCharacterList`方法。这个方法封装了将一个`String`转换成`Characters`的`List`的复杂性:
 
-```
+```java
 static List<Character> toCharacterList(final String string) {
     return string.chars().mapToObj(s -> ((char) s)).collect(Collectors.toList());
 }
@@ -38,7 +38,7 @@ static List<Character> toCharacterList(final String string) {
 
 此外，我们将使用一个助手方法将`Characters`的`List `转换为`String`:
 
-```
+```java
 static String toString(Collection<Character> collection) {
     return collection.stream().map(s -> s.toString()).collect(Collectors.joining());
 }
@@ -48,7 +48,7 @@ static String toString(Collection<Character> collection) {
 
 首先，让我们将 Maven 依赖项`[commons-collections4](https://web.archive.org/web/20221008120408/https://search.maven.org/search?q=g:org.apache.commons%20AND%20a:commons-collections4)`添加到项目中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -58,7 +58,7 @@ static String toString(Collection<Character> collection) {
 
 总的来说，Apache 提供了一个简单的 API。 **`CollectionUtils` 急切地创建排列，所以我们在使用长`String`值**时要小心:
 
-```
+```java
 public List<String> eagerPermutationWithRepetitions(final String string) {
     final List<Character> characters = Helper.toCharacterList(string);
     return CollectionUtils.permutations(characters)
@@ -70,7 +70,7 @@ public List<String> eagerPermutationWithRepetitions(final String string) {
 
 **同时，为了让它以一种懒惰的方式工作，我们应该使用`PermutationIterator` :**
 
-```
+```java
 public List<String> lazyPermutationWithoutRepetitions(final String string) {
     final List<Character> characters = Helper.toCharacterList(string);
     final PermutationIterator<Character> permutationIterator = new PermutationIterator<>(characters);
@@ -88,7 +88,7 @@ public List<String> lazyPermutationWithoutRepetitions(final String string) {
 
 首先，让我们将[番石榴库](https://web.archive.org/web/20221008120408/https://search.maven.org/search?q=g:com.google.guava%20AND%20a:guava)的 Maven 依赖项添加到项目中:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -98,7 +98,7 @@ public List<String> lazyPermutationWithoutRepetitions(final String string) {
 
 番石榴允许用`Collections2`创造排列。该 API 易于使用:
 
-```
+```java
 public List<String> permutationWithRepetitions(final String string) {
     final List<Character> characters = Helper.toCharacterList(string);
     return Collections2.permutations(characters).stream()
@@ -111,7 +111,7 @@ public List<String> permutationWithRepetitions(final String string) {
 
 **此外，这个类提供了一个创建无重复排列的 API:**
 
-```
+```java
 public List<String> permutationWithoutRepetitions(final String string) {
     final List<Character> characters = Helper.toCharacterList(string);
     return Collections2.orderedPermutations(characters).stream()
@@ -126,7 +126,7 @@ public List<String> permutationWithoutRepetitions(final String string) {
 
 为了在项目中使用它，让我们添加`[combinatoricslib3](https://web.archive.org/web/20221008120408/https://search.maven.org/search?q=g:com.github.dpaukov%20AND%20a:combinatoricslib3)` Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.github.dpaukov</groupId>
     <artifactId>combinatoricslib3</artifactId>
@@ -136,7 +136,7 @@ public List<String> permutationWithoutRepetitions(final String string) {
 
 虽然这是一个小库，但它提供了许多组合学工具，包括排列。API 本身非常直观，并且利用了 Java 流。让我们从一个特定的字符串或一个`List`字符创建排列:
 
-```
+```java
 public List<String> permutationWithoutRepetitions(final String string) {
     List<Character> chars = Helper.toCharacterList(string);
     return Generator.permutation(chars)
@@ -151,7 +151,7 @@ public List<String> permutationWithoutRepetitions(final String string) {
 
 同时，有了这个库，我们可以确定复制的策略。如果我们使用字符串“aaaaaa”作为例子，我们将只得到一个而不是 720 个相同的排列。
 
-```
+```java
 public List<String> permutationWithRepetitions(final String string) {
     List<Character> chars = Helper.toCharacterList(string);
     return Generator.permutation(chars)

@@ -12,7 +12,7 @@
 
 我们需要添加一个工件:
 
-```
+```java
 <dependency>
     <groupId>org.mockito</groupId> 
     <artifactId>mockito-core</artifactId>
@@ -27,7 +27,7 @@
 
 我们可以用各种方式配置一个模拟方法。一种选择是返回一个固定值:
 
-```
+```java
 doReturn("Flower").when(flowerService).analyze("poppy");
 ```
 
@@ -37,7 +37,7 @@ doReturn("Flower").when(flowerService).analyze("poppy");
 
 在这些场景中，**我们可以用`argument`** `**matchers**:`配置我们的模仿方法
 
-```
+```java
 when(flowerService.analyze(anyString())).thenReturn("Flower");
 ```
 
@@ -47,7 +47,7 @@ when(flowerService.analyze(anyString())).thenReturn("Flower");
 
 这里我们可以看到一个不正确方法的例子:
 
-```
+```java
 abstract class FlowerService {
     public abstract boolean isABigFlower(String name, int petals);
 }
@@ -59,7 +59,7 @@ when(mock.isABigFlower("poppy", anyInt())).thenReturn(true);
 
 为了解决这个问题，并根据需要保留名称“poppy ”,我们将使用`eq matcher`:
 
-```
+```java
 when(mock.isABigFlower(eq("poppy"), anyInt())).thenReturn(true);
 ```
 
@@ -72,20 +72,20 @@ when(mock.isABigFlower(eq("poppy"), anyInt())).thenReturn(true);
 
 一个不好的例子是:
 
-```
+```java
 String orMatcher = or(eq("poppy"), endsWith("y"));
 verify(mock).analyze(orMatcher);
 ```
 
 我们实现上述代码的方式是:
 
-```
+```java
 verify(mock).analyze(or(eq("poppy"), endsWith("y")));
 ```
 
 `Mockito`还提供了`AdditionalMatchers`来实现对`ArgumentMatchers`的通用逻辑运算(“非”、“与”、“或”)，这些运算同时匹配基本类型和非基本类型:
 
-```
+```java
 verify(mock).analyze(or(eq("poppy"), endsWith("y")));
 ```
 
@@ -97,7 +97,7 @@ verify(mock).analyze(or(eq("poppy"), endsWith("y")));
 
 我们的验证将很简单；我们将验证我们用`any Message:`调用了`MessageService`1 次
 
-```
+```java
 verify(messageService, times(1)).deliverMessage(any(Message.class));
 ```
 
@@ -107,7 +107,7 @@ verify(messageService, times(1)).deliverMessage(any(Message.class));
 
 出于这个原因，我们将实现一个自定义的参数匹配器:
 
-```
+```java
 public class MessageMatcher implements ArgumentMatcher<Message> {
 
     private Message left;
@@ -127,7 +127,7 @@ public class MessageMatcher implements ArgumentMatcher<Message> {
 
 **要使用我们的匹配器，我们需要修改我们的测试，用`argThat`** 替换`any`:
 
-```
+```java
 verify(messageService, times(1)).deliverMessage(argThat(new MessageMatcher(message)));
 ```
 

@@ -12,13 +12,13 @@
 
 和往常一样，我们通过一个例子来理解问题。假设我们有一个`Integer`的`List`:
 
-```
+```java
 ​List<Integer> aList = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7));
 ```
 
 反转后，我们期待会有结果:
 
-```
+```java
 List<Integer> EXPECTED = new ArrayList<>(Arrays.asList(7, 6, 5, 4, 3, 2, 1));
 ```
 
@@ -41,7 +41,7 @@ Java 标准库提供了一个助手方法来完成这项工作。我们将看到
 
 这个方便的方法进行就地反转，这将反转它接收到的原始列表中的顺序。但是，首先，让我们创建一个单元测试方法来理解它:
 
-```
+```java
 List<Integer> aList = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7));
 Collections.reverse(aList);
 assertThat(aList).isEqualTo(EXPECTED); 
@@ -51,7 +51,7 @@ assertThat(aList).isEqualTo(EXPECTED);
 
 如果我们不想改变原来的`List`，并且希望得到一个新的`List`对象来包含逆序的元素，我们可以向`reverse`方法传递一个新的`List `对象:
 
-```
+```java
 List<Integer> originalList = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7));
 List<Integer> aNewList = new ArrayList<>(originalList);
 Collections.reverse(aNewList);
@@ -71,7 +71,7 @@ assertThat(aNewList).isNotEqualTo(originalList).isEqualTo(EXPECTED);
 
 首先，让我们使用[递归](/web/20221208143817/https://www.baeldung.com/java-recursion)技术实现我们自己的列表反转方法。首先，让我们看一下实现:
 
-```
+```java
 public static <T> void reverseWithRecursion(List<T> list) {
     if (list.size() > 1) {
         T value = list.remove(0);
@@ -87,7 +87,7 @@ public static <T> void reverseWithRecursion(List<T> list) {
 
 在每个递归调用中，我们执行“`T value = list.remove(0)`”，从列表中弹出第一个元素。它是这样工作的:
 
-```
+```java
 recursion step 0: value = null, list = (1, 2, 3, ... 7)
    |_ recursion step 1: value = 1, list = (2, 3, 4,...7)
       |_ recursion step 2: value = 2, list = (3, 4, 5, 6, 7)
@@ -100,7 +100,7 @@ recursion step 0: value = null, list = (1, 2, 3, ... 7)
 
 接下来，让我们创建一个测试来验证我们的递归实现是否按预期工作:
 
-```
+```java
 List<Integer> aList = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7));
 ReverseArrayList.reverseWithRecursion(aList);
 assertThat(aList).isEqualTo(EXPECTED); 
@@ -114,7 +114,7 @@ assertThat(aList).isEqualTo(EXPECTED);
 
 首先，让我们看一下实现:
 
-```
+```java
 public static <T> void reverseWithLoop(List<T> list) {
     for (int i = 0, j = list.size() - 1; i < j; i++) {
         list.add(i, list.remove(j));
@@ -130,7 +130,7 @@ public static <T> void reverseWithLoop(List<T> list) {
 
 我们在每个迭代步骤中移除最后一个元素，并使用`list.add(i, list.remove(j))`将其填充到`i-th`位置。当`i`到达`j-1`时，循环结束，我们颠倒了列表:
 
-```
+```java
 Iteration step 0: i = j = null, list = (1, 2, 3,...7)
 Iteration step 1: i = 0; j = 6 
                   |_ list.add(0, list.remove(6))
@@ -151,7 +151,7 @@ Iteration step 6: i = 5; j = 6
 
 最后，让我们测试我们的方法，看看它是否如预期的那样工作:
 
-```
+```java
 List<Integer> aList = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7));
 ReverseArrayList.reverseWithLoop(aList);
 assertThat(aList).isEqualTo(EXPECTED); 

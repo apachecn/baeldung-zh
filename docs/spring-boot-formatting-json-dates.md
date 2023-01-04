@@ -14,7 +14,7 @@
 
 **我们可以使用 [`@JsonFormat`](/web/20220523233330/https://www.baeldung.com/jackson-jsonformat) 注释来格式化特定字段**:
 
-```
+```java
 public class Contact {
 
     // other fields
@@ -36,7 +36,7 @@ public class Contact {
 
 当然，如果我们需要使用遗留类型如`java.util.Date`，我们可以用同样的方式使用注释:
 
-```
+```java
 public class ContactWithJavaUtilDate {
 
      // other fields
@@ -53,7 +53,7 @@ public class ContactWithJavaUtilDate {
 
 最后，让我们来看看使用给定日期格式的`@JsonFormat `呈现的输出:
 
-```
+```java
 {
     "birthday": "2019-02-03",
     "lastUpdate": "2019-02-03 10:08:02"
@@ -68,7 +68,7 @@ public class ContactWithJavaUtilDate {
 
 如果我们需要使用特定的时区，我们可以设置@ `JsonFormat`的`timezone`属性:
 
-```
+```java
 @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="Europe/Zagreb")
 private LocalDateTime lastUpdate;
 ```
@@ -81,13 +81,13 @@ private LocalDateTime lastUpdate;
 
 如果我们想为应用程序中的所有日期配置一个默认格式，**更灵活的方法是在`application.properties`** 中配置它:
 
-```
+```java
 spring.jackson.date-format=yyyy-MM-dd HH:mm:ss
 ```
 
 如果我们想在 JSON 日期中使用特定的时区，也有一个属性:
 
-```
+```java
 spring.jackson.time-zone=Europe/Zagreb
 ```
 
@@ -97,7 +97,7 @@ spring.jackson.time-zone=Europe/Zagreb
 
 所以，如果我们想用 Java 8 的日期类型`and `设置一个默认的日期格式，我们需要看看**创建的 [`Jackson2ObjectMapperBuilderCustomizer`](https://web.archive.org/web/20220523233330/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/autoconfigure/jackson/Jackson2ObjectMapperBuilderCustomizer.html) bean** :
 
-```
+```java
 @Configuration
 public class ContactAppConfig {
 

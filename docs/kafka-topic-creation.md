@@ -20,7 +20,7 @@ Kafka 主题是分区的，它将数据分布在多个代理上以实现可伸�
 
 要使用管理 API，让我们将[Kafka-clients dependency](https://web.archive.org/web/20220628115935/https://search.maven.org/artifact/org.apache.kafka/kafka-clients)y 添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.apache.kafka</groupId>
     <artifactId>kafka-clients</artifactId>
@@ -36,7 +36,7 @@ Kafka 主题是分区的，它将数据分布在多个代理上以实现可伸�
 
 首先，让我们将 [Testcontainers Kafka 依赖项](https://web.archive.org/web/20220628115935/https://search.maven.org/artifact/org.testcontainers/kafka)添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.testcontainers</groupId>
     <artifactId>kafka</artifactId>
@@ -47,7 +47,7 @@ Kafka 主题是分区的，它将数据分布在多个代理上以实现可伸�
 
 接下来，我们将添加用于使用 JUnit 5 运行 Testcontainer 测试的 [junit-jupiter 工件](https://web.archive.org/web/20220628115935/https://search.maven.org/search?q=g:org.testcontainers%20AND%20a:junit-jupiter):
 
-```
+```java
 <dependency>
     <groupId>org.testcontainers</groupId>
     <artifactId>junit-jupiter</artifactId>
@@ -62,7 +62,7 @@ Kafka 主题是分区的，它将数据分布在多个代理上以实现可伸�
 
 让我们首先为本地代理创建一个新的 [`Properties`](/web/20220628115935/https://www.baeldung.com/java-properties) 实例，并对其进行最少的配置:
 
-```
+```java
 Properties properties = new Properties();
 properties.put(
   AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_CONTAINER.getBootstrapServers()
@@ -71,7 +71,7 @@ properties.put(
 
 现在我们可以获得一个`Admin`实例:
 
-```
+```java
 Admin admin = Admin.create(properties)
 ```
 
@@ -85,7 +85,7 @@ Admin admin = Admin.create(properties)
 
 让我们首先用 Testcontainers 创建一个 [JUnit 5 测试来验证成功的主题创建。我们将利用](https://web.archive.org/web/20220628115935/https://www.testcontainers.org/quickstart/junit_5_quickstart/) [Kafka 模块](https://web.archive.org/web/20220628115935/https://www.testcontainers.org/modules/kafka/)，它使用官方 Kafka Docker 镜像用于[融合 OSS 平台](https://web.archive.org/web/20220628115935/https://hub.docker.com/r/confluentinc/cp-kafka/):
 
-```
+```java
 @Test
 void givenTopicName_whenCreateNewTopic_thenTopicIsCreated() throws Exception {
     kafkaTopicApplication.createTopic("test-topic");
@@ -104,7 +104,7 @@ void givenTopicName_whenCreateNewTopic_thenTopicIsCreated() throws Exception {
 
 [主题分区和复制因子](/web/20220628115935/https://www.baeldung.com/apache-kafka-data-modeling)是新主题的关键考虑因素。我们将保持简单，用 1 个分区和 1 的复制因子创建我们的示例主题:
 
-```
+```java
 try (Admin admin = Admin.create(properties)) {
     int partitions = 1;
     short replicationFactor = 1;
@@ -129,7 +129,7 @@ try (Admin admin = Admin.create(properties)) {
 
 除了默认选项，我们还可以使用 Admin 的**重载形式。`createTopics`方法并通过 [`CreateTopicsOptions`](https://web.archive.org/web/20220628115935/https://kafka.apache.org/28/javadoc/org/apache/kafka/clients/admin/CreateTopicsOptions.html) 对象**提供一些 **选项。我们可以使用这些来修改创建新主题时的管理客户端行为:**
 
-```
+```java
 CreateTopicsOptions topicOptions = new CreateTopicsOptions()
   .validateOnly(true)
   .retryOnQuotaViolation(false);
@@ -147,7 +147,7 @@ Kafka 有各种各样的[主题配置](https://web.archive.org/web/2022062811593
 
 我们可以通过使用新主题的配置图来**提供主题配置:**
 
-```
+```java
 // Create a compacted topic with 'lz4' compression codec
 Map<String, String> newTopicConfig = new HashMap<>();
 newTopicConfig.put(TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_COMPACT);

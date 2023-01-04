@@ -27,7 +27,7 @@ Apache Zookeeper 将在我们的服务发现设置中充当协调者。Apache Zo
 
 首先，让我们将所需的 `[spring-cloud-starter-zookeeper-discovery](https://web.archive.org/web/20220630005618/https://search.maven.org/classic/#search%7Cga%7C1%7Cspring-cloud-starter-zookeeper-discovery), [spring-web](https://web.archive.org/web/20220630005618/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework%22%20AND%20a%3A%22spring-web%22), [spring-cloud-dependencies](https://web.archive.org/web/20220630005618/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.cloud%22%20%20AND%20a%3A%22spring-cloud-dependencies%22)` 和`[spring-boot-starter](https://web.archive.org/web/20220630005618/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter%22%20AND%20g%3A%22org.springframework.boot%22)` 依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -61,7 +61,7 @@ Apache Zookeeper 将在我们的服务发现设置中充当协调者。Apache Zo
 
 接下来，我们将用`@EnableDiscoveryClient`注释我们的主类。这将使`HelloWorld`应用发现感知:
 
-```
+```java
 @SpringBootApplication
 @EnableDiscoveryClient
 public class HelloWorldApplication {
@@ -73,7 +73,7 @@ public class HelloWorldApplication {
 
 和一个简单的控制器:
 
-```
+```java
 @GetMapping("/helloworld")
 public String helloWorld() {
     return "Hello World!";
@@ -86,7 +86,7 @@ public String helloWorld() {
 
 向 Zookeeper 注册的应用程序的名称是最重要的。稍后在服务消费者中，`feign`客户机将在服务发现期间使用这个名称:
 
-```
+```java
 spring:
   application:
     name: HelloWorld
@@ -101,7 +101,7 @@ logging:
 
 spring boot 应用程序在默认端口 2181 上寻找 zookeeper。如果 zookeeper 位于其他地方，则需要添加配置:
 
-```
+```java
 spring:
   cloud:
     zookeeper:
@@ -116,7 +116,7 @@ spring:
 
 首先，让我们将所需的`[spring-cloud-starter-zookeeper-discovery](https://web.archive.org/web/20220630005618/https://search.maven.org/classic/#search%7Cga%7C1%7Cspring-cloud-starter-zookeeper-discovery), [spring-web](https://web.archive.org/web/20220630005618/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework%22%20AND%20a%3A%22spring-web%22), [spring-cloud-dependencies](https://web.archive.org/web/20220630005618/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.cloud%22%20%20AND%20a%3A%22spring-cloud-dependencies%22), [spring-boot-starter-actuator](https://web.archive.org/web/20220630005618/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-actuator%22%20AND%20g%3A%22org.springframework.boot%22)`和`[spring-cloud-starter-feign](https://web.archive.org/web/20220630005618/https://search.maven.org/classic/#search%7Cga%7C1%7Cspring-cloud-starter-feign)`依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.cloud</groupId>
@@ -149,7 +149,7 @@ spring:
 
 与服务提供者一样，我们将使用`@EnableDiscoveryClient`对主类进行注释，使其具有发现意识:
 
-```
+```java
 @SpringBootApplication
 @EnableDiscoveryClient
 public class GreetingApplication {
@@ -170,7 +170,7 @@ public class GreetingApplication {
 
 在这里的注释`@FeignClient(name = “HelloWorld”)`中，我们引用我们之前创建的服务生产者的`service-name`。
 
-```
+```java
 @Configuration
 @EnableFeignClients
 @EnableDiscoveryClient
@@ -196,7 +196,7 @@ public class HelloWorldClient {
 
 下面是一个简单的服务控制器类，它将调用我们的 feign client 类上的服务提供者函数，通过注入的接口`helloWorldClient`对象来消费服务(其细节通过服务发现来抽象),并在响应中显示它:
 
-```
+```java
 @RestController
 public class GreetingController {
 
@@ -214,7 +214,7 @@ public class GreetingController {
 
 接下来，我们创建一个 YAML 文件`Application.yml`,与之前使用的文件非常相似。它配置应用程序的日志级别:
 
-```
+```java
 logging:
   level:
     org.apache.zookeeper.ClientCnxn: WARN
@@ -222,7 +222,7 @@ logging:
 
 应用程序在默认端口`2181`上寻找 Zookeeper。如果 Zookeeper 位于其他地方，则需要添加配置:
 
-```
+```java
 spring:
   cloud:
     zookeeper:
@@ -237,7 +237,7 @@ HelloWorld REST 服务在部署时向 Zookeeper 注册。然后，充当服务�
 
 最后，我们将浏览器指向 [`http://localhost:8083/get-greeting`](https://web.archive.org/web/20220630005618/http://localhost:8080/get-greeting) ，它应该会显示:
 
-```
+```java
 Hello World!
 ```
 

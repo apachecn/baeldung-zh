@@ -28,7 +28,7 @@
 
 这里有一个来自优秀的 [Java 并发实践](https://web.archive.org/web/20190209024432/https://www.amazon.com/Java-Concurrency-Practice-Brian-Goetz/dp/0321349601/ref=sr_1_1)一书的非阻塞`Stack`例子；它定义了基本状态:
 
-```
+```java
 public class ConcurrentStack<E> {
 
     AtomicReference<Node<E>> top = new AtomicReference<Node<E>>();
@@ -44,7 +44,7 @@ public class ConcurrentStack<E> {
 
 还有几个 API 方法:
 
-```
+```java
 public void push(E item){
     Node<E> newHead = new Node<E>(item);
     Node<E> oldHead;
@@ -76,7 +76,7 @@ public E pop() {
 
 首先，让我们将 JCTools 依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.jctools</groupId>
     <artifactId>jctools-core</artifactId>
@@ -105,7 +105,7 @@ public E pop() {
 
 例如，下面的测试从两个线程填充了一个`single-producer`队列，并通过了测试，尽管不能保证消费者能看到来自不同生产者的数据:
 
-```
+```java
 SpscArrayQueue<Integer> queue = new SpscArrayQueue<>(2);
 
 Thread producer1 = new Thread(() -> queue.offer(1));
@@ -160,7 +160,7 @@ assertThat(fromQueue).containsOnly(1, 2);
 
 请注意，为了可读性，删除了一些代码语句。完整的实现可以在 GitHub 上的[中找到:](https://web.archive.org/web/20190209024432/https://github.com/eugenp/tutorials/blob/master/libraries/src/test/java/com/baeldung/jctools/JCToolsUnitTest.java#L45)
 
-```
+```java
 SpscChunkedArrayQueue<Integer> queue = new SpscChunkedArrayQueue<>(8, 16);
 CountDownLatch startConsuming = new CountDownLatch(1);
 CountDownLatch awakeProducer = new CountDownLatch(1);
@@ -206,7 +206,7 @@ JCTools 还提供了一些非队列数据结构。
 
 注意，为了提高可读性，下面的代码片段省略了几个语句。请在 [GitHub:](https://web.archive.org/web/20190209024432/https://github.com/eugenp/tutorials/blob/master/libraries/src/main/java/com/baeldung/jctools/MpmcBenchmark.java) 上找到完整的源代码
 
-```
+```java
 public class MpmcBenchmark {
 
     @Param({PARAM_UNSAFE, PARAM_AFU, PARAM_JDK})
@@ -238,7 +238,7 @@ public class MpmcBenchmark {
 
 结果(摘录自第 95 个百分位数，纳秒每操作):
 
-```
+```java
 MpmcBenchmark.MyGroup:MyGroup·p0.95 MpmcArrayQueue sample 1052.000 ns/op
 MpmcBenchmark.MyGroup:MyGroup·p0.95 MpmcAtomicArrayQueue sample 1106.000 ns/op
 MpmcBenchmark.MyGroup:MyGroup·p0.95 ArrayBlockingQueue sample 2364.000 ns/op

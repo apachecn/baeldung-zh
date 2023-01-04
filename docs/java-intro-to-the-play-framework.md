@@ -16,7 +16,7 @@ Play 是一个针对编程语言的高生产率 web 应用程序框架，其代�
 
 要使用下载文件夹中的`sbt `,让我们执行以下操作:
 
-```
+```java
 cd /path/to/folder/
 ./sbt run
 ```
@@ -25,7 +25,7 @@ cd /path/to/folder/
 
 如果我们安装了`sbt,` ，那么我们可以用它来代替:
 
-```
+```java
 cd /path/to/folder/
 sbt run
 ```
@@ -42,7 +42,7 @@ sbt run
 
 这些是我们在典型的 Play Framework 应用程序中找到的文件和文件夹:
 
-```
+```java
 ├── app                      → Application sources
 │   ├── assets               → Compiled Asset sources
 │   │   ├── javascripts      → Typically Coffee Script sources
@@ -128,7 +128,7 @@ sbt run
 
 让我们打开命令提示符，导航到我们选择的位置，并执行以下命令:
 
-```
+```java
 sbt new playframework/play-java-seed.g8
 ```
 
@@ -138,7 +138,7 @@ sbt new playframework/play-java-seed.g8
 
 用这个命令生成的应用程序与前面生成的应用程序具有相同的结构。因此，我们可以像以前一样继续运行应用程序:
 
-```
+```java
 cd /path/to/folder/ 
 sbt run
 ```
@@ -159,7 +159,7 @@ sbt run
 
 `HomeController`的索引操作返回一个带有简单欢迎消息的网页:
 
-```
+```java
 public Result index() {
     return ok(views.html.index.render());
 }
@@ -167,7 +167,7 @@ public Result index() {
 
 该网页是视图包中的默认`index`模板:
 
-```
+```java
 @main("Welcome to Play") {
   <h1>Welcome to Play!</h1>
 }
@@ -175,7 +175,7 @@ public Result index() {
 
 如上图所示，`index `页面调用了`main`模板。然后，主模板处理页面标题和正文标签的呈现。它需要两个参数:一个用于页面标题的`String `和一个用于插入页面主体的`Html `对象。
 
-```
+```java
 @(title: String)(content: Html)
 
 <!DOCTYPE html>
@@ -198,7 +198,7 @@ public Result index() {
 
 让我们稍微修改一下`index`文件中的文本:
 
-```
+```java
 @main("Welcome to Baeldung") {
   <h1>Welcome to Play Framework Tutorial on Baeldung!</h1>
 }
@@ -206,13 +206,13 @@ public Result index() {
 
 重新加载浏览器会给我们一个粗体标题:
 
-```
+```java
 Welcome to Play Framework Tutorial on Baeldung!
 ```
 
 **我们可以通过删除`HomeController`的`index() `方法中的`render `指令来完全去掉模板，这样我们就可以直接返回纯文本或 HTML 文本:**
 
-```
+```java
 public Result index() {
     return ok("REST API with Play by Baeldung");
 }
@@ -220,7 +220,7 @@ public Result index() {
 
 编辑完代码后，如上所示，我们在浏览器中将只有文本。这将只是没有任何 HTML 或样式的纯文本:
 
-```
+```java
 REST API with Play by Baeldung
 ```
 
@@ -228,13 +228,13 @@ REST API with Play by Baeldung
 
 让我们在`routes`中添加一个`/baeldung/html`端点:
 
-```
+```java
 GET    /baeldung/html    controllers.HomeController.applyHtml
 ```
 
 现在，让我们创建处理该端点上的请求的控制器:
 
-```
+```java
 public Result applyHtml() {
     return ok(Html.apply("<h1>This text will appear as a heading 1</h1>"));
 }
@@ -256,7 +256,7 @@ public Result applyHtml() {
 
 我们已经从 Play 的内容协商功能中获益**，甚至没有意识到这一点。Play 自动从响应正文中推断响应内容类型。这就是我们能够在`ok` 方法中返回文本的原因:**
 
-```
+```java
 return ok("text to display");
 ```
 
@@ -264,7 +264,7 @@ return ok("text to display");
 
 让**自定义`HomeController.customContentType`动作对`text/html`** 的响应:
 
-```
+```java
 public Result customContentType() {
     return ok("This is some text content").as("text/html");
 }
@@ -274,7 +274,7 @@ public Result customContentType() {
 
 我们可以做一些类似于设置标题的事情:
 
-```
+```java
 public Result setHeaders() {
     return ok("This is some text content")
             .as("text/html")

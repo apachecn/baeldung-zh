@@ -22,7 +22,7 @@
 
 因此，更容易互换使用不同的算法，并且它还为基于流的编程提供了更好的支持:
 
-```
+```java
 public IntStream getPseudoInts(String algorithm, int streamSize) {
     // returns an IntStream with size @streamSize of random numbers generated using the @algorithm
     // where the lower bound is 0 and the upper is 100 (exclusive)
@@ -58,7 +58,7 @@ JEP 403 代表着向强封装 JDK 内部迈出了又一步，因为它移除了�
 
 让我们看两个新功能的例子:
 
-```
+```java
  static record Human (String name, int age, String profession) {}
 
 public String checkObject(Object obj) {
@@ -92,7 +92,7 @@ public String checkShape(Shape shape) {
 
 让我们来看看它的实际应用:
 
-```
+```java
  int getNumberOfSides(Shape shape) {
     return switch (shape) {
         case WeirdTriangle t -> t.getNumberOfSides();
@@ -122,7 +122,7 @@ JDK 9 和 JDK 10 分别引入了超前(AOT)编译( [JEP 295](https://web.archive
 
 有了这个特性，我们可以从 Java 类调用 C 库:
 
-```
+```java
  private static final SymbolLookup libLookup;
 
 static {
@@ -137,7 +137,7 @@ static {
 
 接下来，我们需要指定目标方法的签名，最后调用它:
 
-```
+```java
  public String getPrintNameFormat(String name) {
 
     var printMethod = libLookup.lookup("printName");
@@ -173,7 +173,7 @@ Vector API 处理 SIMD(单指令、多数据)类型的操作，这意味着多�
 
 让我们使用 API 来说明一个简单的向量乘法示例:
 
-```
+```java
  public void newVectorComputation(float[] a, float[] b, float[] c) {
     for (var i = 0; i < a.length; i += SPECIES.length()) {
         var m = SPECIES.indexInRange(i, a.length);

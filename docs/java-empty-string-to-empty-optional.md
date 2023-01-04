@@ -14,7 +14,7 @@
 
 在 Java 8 中，我们可以利用这样一个事实:如果不满足`Optional#filter`的谓词，那么**将返回一个空的`Optional` :**
 
-```
+```java
 @Test
 public void givenEmptyString_whenFilteringOnOptional_thenEmptyOptionalIsReturned() {
     String str = "";
@@ -35,7 +35,7 @@ public void givenEmptyString_whenFilteringOnOptional_thenEmptyOptionalIsReturned
 
 因此，让我们简化我们之前所做的，现在使用方法引用来代替:
 
-```
+```java
 @Test
 public void givenEmptyString_whenFilteringOnOptionalInJava11_thenEmptyOptionalIsReturned() {
     String str = "";
@@ -50,7 +50,7 @@ public void givenEmptyString_whenFilteringOnOptionalInJava11_thenEmptyOptionalIs
 
 我们不是对`Optional#ofNullable`的结果调用`filter`方法，而是首先使用 Guava 的`String#emptyToNull` 将一个空的`String`转换为`null`，然后才将其传递给`Optional#ofNullable`:
 
-```
+```java
 @Test
 public void givenEmptyString_whenPassingResultOfEmptyToNullToOfNullable_thenEmptyOptionalIsReturned() {
     String str = "";

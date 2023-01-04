@@ -20,7 +20,7 @@
 
 我们已经知道，我们可以使用 JDK 附带的`jar`命令来检查 JAR 文件的内容:
 
-```
+```java
 $ jar tf stripe-0.0.1-SNAPSHOT.jar 
 META-INF/
 META-INF/MANIFEST.MF
@@ -50,7 +50,7 @@ com/baeldung/stripe/ChargeRequest$Currency.class
 
 因此，我们可以使用 [`unzip`](https://web.archive.org/web/20220625230552/https://linux.die.net/man/1/unzip) 命令的`-l`选项来列出一个 JAR 文件的内容，而不需要提取它:
 
-```
+```java
 $ unzip -l stripe-0.0.1-SNAPSHOT.jar
 Archive:  stripe-0.0.1-SNAPSHOT.jar
   Length      Date    Time    Name
@@ -92,7 +92,7 @@ JD-GUI 是一个很好的开源 GUI 实用程序，用于探索由 Java 反编�
 
 JD-GUI 附带了一个 JAR 文件。我们可以通过使用带有 `-jar`选项的`java`命令来启动该实用程序，例如:
 
-```
+```java
 $ java -jar jd-gui-1.6.6.jar
 ```
 
@@ -134,7 +134,7 @@ Jar Explorer 非常容易使用。反编译器的切换特性也很好。但是�
 
 一旦我们下载了 JAR 文件，我们可以使用`java -jar`命令启动卢伊滕:
 
-```
+```java
 $ java -jar luyten-0.5.4.jar 
 ```
 

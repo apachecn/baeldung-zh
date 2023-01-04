@@ -10,7 +10,7 @@
 
 让我们从 Java 解决方案开始:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenConvertingReaderIntoInputStream_thenCorrect() 
   throws IOException {
@@ -36,7 +36,7 @@ public void givenUsingPlainJava_whenConvertingReaderIntoInputStream_thenCorrect(
 
 接下来，让我们看看**更简单的番石榴溶液**:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenConvertingReaderIntoInputStream_thenCorrect() 
   throws IOException {
@@ -59,7 +59,7 @@ public void givenUsingGuava_whenConvertingReaderIntoInputStream_thenCorrect()
 
 首先，使用`[ReaderInputStream](https://web.archive.org/web/20221013193919/https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/input/ReaderInputStream.html):`
 
-```
+```java
 @Test
 public void givenUsingCommonsIOReaderInputStream_whenConvertingReaderIntoInputStream() 
   throws IOException {
@@ -74,7 +74,7 @@ public void givenUsingCommonsIOReaderInputStream_whenConvertingReaderIntoInputSt
 
 最后，使用`[IOUtils](https://web.archive.org/web/20221013193919/https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/IOUtils.html#toString-java.io.Reader-)`进行相同的转换:
 
-```
+```java
 @Test
 public void givenUsingCommonsIOUtils_whenConvertingReaderIntoInputStream() 
   throws IOException {

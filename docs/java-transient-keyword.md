@@ -24,7 +24,7 @@
 
 为了查看它的运行情况，让我们首先创建一个我们想要序列化其对象的`Book`类:
 
-```
+```java
 public class Book implements Serializable {
     private static final long serialVersionUID = -2936687026040726549L;
     private String bookName;
@@ -39,7 +39,7 @@ public class Book implements Serializable {
 
 创建类后，我们将创建该类的一个对象:
 
-```
+```java
 Book book = new Book();
 book.setBookName("Java Reference");
 book.setDescription("will not be saved");
@@ -48,7 +48,7 @@ book.setCopies(25);
 
 现在，我们将对象序列化到一个文件中:
 
-```
+```java
 public static void serialize(Book book) throws Exception {
     FileOutputStream file = new FileOutputStream(fileName);
     ObjectOutputStream out = new ObjectOutputStream(file);
@@ -60,7 +60,7 @@ public static void serialize(Book book) throws Exception {
 
 现在让我们从文件中反序列化对象:
 
-```
+```java
 public static Book deserialize() throws Exception {
     FileInputStream file = new FileInputStream(fileName);
     ObjectInputStream in = new ObjectInputStream(file);
@@ -73,7 +73,7 @@ public static Book deserialize() throws Exception {
 
 最后，我们将验证`book`对象的值:
 
-```
+```java
 assertEquals("Java Reference", book.getBookName());
 assertNull(book.getDescription());
 assertEquals(0, book.getCopies());
@@ -85,7 +85,7 @@ assertEquals(0, book.getCopies());
 
 现在，让我们看一个案例，我们将把`transient`和`final`关键字一起使用。为此，首先，我们将在我们的`Book`类中添加一个`final transient`元素，然后创建一个空的`Book`对象:
 
-```
+```java
 public class Book implements Serializable {
     // existing fields    
 
@@ -95,13 +95,13 @@ public class Book implements Serializable {
 }
 ```
 
-```
+```java
 Book book = new Book();
 ```
 
 **最后一个修饰符没有影响**–因为字段是`transient`，没有为该字段保存任何值。在反序列化过程中，新的`Book`对象获得在`Book`类中定义的默认值`Fiction`，但是该值不是来自序列化数据:
 
-```
+```java
 assertEquals("Fiction", book.getBookCategory());
 ```
 

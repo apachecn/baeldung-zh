@@ -18,7 +18,7 @@ XML 处理的一个重要部分是创建可供他人使用的 XML 文件。
 
 所以，我们先来弄个`TransformerFactory`。我们将使用这个工厂来创建变压器:
 
-```
+```java
 TransformerFactory transformerFactory = TransformerFactory.newInstance()
 ```
 
@@ -28,7 +28,7 @@ TransformerFactory transformerFactory = TransformerFactory.newInstance()
 
 现在我们有了工厂，让我们创建`Transformer`:
 
-```
+```java
 Transformer transformer = transformerFactory.newTransformer();
 ```
 
@@ -38,7 +38,7 @@ Transformer transformer = transformerFactory.newTransformer();
 
 首先，让我们指定转换的来源。这里，我们将使用我们的`Document`来构建一个 DOM 源:
 
-```
+```java
 DOMSource source = new DOMSource(document);
 ```
 
@@ -46,7 +46,7 @@ DOMSource source = new DOMSource(document);
 
 接下来，我们将指定转换器应该在哪里写入转换结果:
 
-```
+```java
 FileWriter writer = new FileWriter(new File(fileName));
 StreamResult result = new StreamResult(writer);
 ```
@@ -57,13 +57,13 @@ StreamResult result = new StreamResult(writer);
 
 最后，我们将告诉转换器对源对象进行操作，并输出到结果对象:
 
-```
+```java
 transformer.transform(source, result);
 ```
 
 **这将最终创建一个包含 XML 文档内容的文件:**
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><Company><Department name="Sales">
   <Employee name="John Smith"/><Employee name="Tim Dellor"/></Department></Company>
 ```
@@ -78,7 +78,7 @@ transformer.transform(source, result);
 
 **我们可以通过设置 transformer:** 的`OutputKeys.INDENT`属性来配置我们的 transformer 进行漂亮打印
 
-```
+```java
 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 ```
@@ -87,7 +87,7 @@ transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
 通过设置上述属性，我们得到了更好的输出:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Company>
     <Department name="Sales">
@@ -103,13 +103,13 @@ transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
 我们可以通过设置`OutputKeys.OMIT_XML_DECLARATION `属性来配置我们的转换器:
 
-```
+```java
 transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 ```
 
 再次使用我们的变压器，我们得到:
 
-```
+```java
 <Company>
     <Department name="Sales">
         <Employee name="John Smith"/>

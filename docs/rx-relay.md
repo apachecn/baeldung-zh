@@ -26,7 +26,7 @@ RxJava 的流行导致了多个扩展其功能的第三方库的产生。
 
 要使用`RxRelay` ,我们需要向我们的项目添加以下依赖项:
 
-```
+```java
 <dependency>
   <groupId>com.jakewharton.rxrelay2</groupId>
   <artifactId>rxrelay</artifactId>
@@ -44,7 +44,7 @@ RxJava 的流行导致了多个扩展其功能的第三方库的产生。
 
 事件将发送给所有订阅者:
 
-```
+```java
 public void whenObserverSubscribedToPublishRelay_itReceivesEmittedEvents() {
     PublishRelay<Integer> publishRelay = PublishRelay.create();
     TestObserver<Integer> firstObserver = TestObserver.create();
@@ -70,7 +70,7 @@ public void whenObserverSubscribedToPublishRelay_itReceivesEmittedEvents() {
 
 一旦 O `bserver`订阅，这种类型的`Relay`将重新提交最近观察到的事件和所有后续事件:
 
-```
+```java
 public void whenObserverSubscribedToBehaviorRelay_itReceivesEmittedEvents() {
     BehaviorRelay<Integer> behaviorRelay = BehaviorRelay.create();
     TestObserver<Integer> firstObserver = TestObserver.create();
@@ -89,7 +89,7 @@ public void whenObserverSubscribedToBehaviorRelay_itReceivesEmittedEvents() {
 
 要指定缺省值我们可以使用`createDefault()`方法:
 
-```
+```java
 public void whenObserverSubscribedToBehaviorRelay_itReceivesDefaultValue() {
     BehaviorRelay<Integer> behaviorRelay = BehaviorRelay.createDefault(1);
     TestObserver<Integer> firstObserver = new TestObserver<>();
@@ -100,7 +100,7 @@ public void whenObserverSubscribedToBehaviorRelay_itReceivesDefaultValue() {
 
 如果我们不想指定默认值，我们可以使用`create()` 方法:
 
-```
+```java
 public void whenObserverSubscribedToBehaviorRelayWithoutDefaultValue_itIsEmpty() {
     BehaviorRelay<Integer> behaviorRelay = BehaviorRelay.create();
     TestObserver<Integer> firstObserver = new TestObserver<>();
@@ -113,7 +113,7 @@ public void whenObserverSubscribedToBehaviorRelayWithoutDefaultValue_itIsEmpty()
 
 这种类型的`Relay`缓冲它接收到的所有事件，然后将其重新发送给订阅它的所有订阅者:
 
-```
+```java
  public void whenObserverSubscribedToReplayRelay_itReceivesEmittedEvents() {
     ReplayRelay<Integer> replayRelay = ReplayRelay.create();
     TestObserver<Integer> firstObserver = TestObserver.create();
@@ -134,7 +134,7 @@ public void whenObserverSubscribedToBehaviorRelayWithoutDefaultValue_itIsEmpty()
 
 要创建缓冲区大小有限的`Relay`，我们可以使用`createWithSize()`方法。当要缓冲的事件多于设置的缓冲区时，之前的元素将被丢弃:
 
-```
+```java
 public void whenObserverSubscribedToReplayRelayWithLimitedSize_itReceivesEmittedEvents() {
     ReplayRelay<Integer> replayRelay = ReplayRelay.createWithSize(2);
     TestObserver<Integer> firstObserver = TestObserver.create();
@@ -149,7 +149,7 @@ public void whenObserverSubscribedToReplayRelayWithLimitedSize_itReceivesEmitted
 
 我们还可以使用`createWithTime()`方法创建`ReplayRelay`，为缓冲事件留出最大时间:
 
-```
+```java
 public void whenObserverSubscribedToReplayRelayWithMaxAge_thenItReceivesEmittedEvents() {
     SingleScheduler scheduler = new SingleScheduler();
     ReplayRelay<Integer> replayRelay =
@@ -174,7 +174,7 @@ public void whenObserverSubscribedToReplayRelayWithMaxAge_thenItReceivesEmittedE
 
 让我们编写一个简单的中继，将事件重新发送给随机选择的一个订阅者:
 
-```
+```java
 public class RandomRelay extends Relay<Integer> {
     Random random = new Random();
 
@@ -202,7 +202,7 @@ public class RandomRelay extends Relay<Integer> {
 
 我们现在可以测试只有一个订户会收到该事件:
 
-```
+```java
 public void whenTwoObserversSubscribedToRandomRelay_thenOnlyOneReceivesEvent() {
     RandomRelay randomRelay = new RandomRelay();
     TestObserver<Integer> firstObserver = TestObserver.create();

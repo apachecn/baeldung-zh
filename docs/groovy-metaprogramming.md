@@ -26,7 +26,7 @@ Groovy 提供了一些方法和属性，有助于在运行时改变类的行为�
 
 首先，让我们用一些属性编写一个`Employee`类:
 
-```
+```java
 class Employee {
     String firstName
     String lastName  
@@ -36,12 +36,12 @@ class Employee {
 
 其次，我们将创建一个`Employee`对象，并尝试显示一个未定义的属性`address.`，因此，它将抛出`MissingPropertyException` :
 
-```
+```java
 Employee emp = new Employee(firstName: "Norman", lastName: "Lewis")
 println emp.address 
 ```
 
-```
+```java
 groovy.lang.MissingPropertyException: No such property: 
 address for class: com.baeldung.metaprogramming.Employee
 ```
@@ -50,19 +50,19 @@ address for class: com.baeldung.metaprogramming.Employee
 
 为了捕捉一个丢失的属性的 getter 方法调用，我们将用属性名的一个参数来定义它:
 
-```
+```java
 def propertyMissing(String propertyName) {
     "property '$propertyName' is not available"
 }
 ```
 
-```
+```java
 assert emp.address == "property 'address' is not available"
 ```
 
 此外，同一个方法可以将第二个参数作为属性值，以捕捉缺失属性的 setter 方法调用:
 
-```
+```java
 def propertyMissing(String propertyName, propertyValue) { 
     println "cannot set $propertyValue - property '$propertyName' is not available" 
 }
@@ -74,7 +74,7 @@ def propertyMissing(String propertyName, propertyValue) {
 
 让我们试着在一个`Employee`对象上调用`getFullName`方法。由于`getFullName`丢失，执行将在运行时抛出`MissingMethodException`:
 
-```
+```java
 try {
     emp.getFullName()
 } catch (MissingMethodException e) {
@@ -84,13 +84,13 @@ try {
 
 因此，我们可以定义`methodMissing`，而不是将方法调用包装在`try-catch`中:
 
-```
+```java
 def methodMissing(String methodName, def methodArgs) {
     "method '$methodName' is not defined"
 }
 ```
 
-```
+```java
 assert emp.getFullName() == "method 'getFullName' is not defined"
 ```
 
@@ -102,36 +102,36 @@ assert emp.getFullName() == "method 'getFullName' is not defined"
 
 首先，让我们使用`metaClass`属性将缺少的`address`属性添加到`Employee`类中:
 
-```
+```java
 Employee.metaClass.address = ""
 ```
 
-```
+```java
 Employee emp = new Employee(firstName: "Norman", lastName: "Lewis", address: "US")
 assert emp.address == "US"
 ```
 
 接下来，让我们在运行时将缺少的`getFullName`方法添加到`Employee`类对象中:
 
-```
+```java
 emp.metaClass.getFullName = {
     "$lastName, $firstName"
 }
 ```
 
-```
+```java
 assert emp.getFullName() == "Lewis, Norman"
 ```
 
 类似地，我们可以在运行时向`Employee`类添加一个构造函数:
 
-```
+```java
 Employee.metaClass.constructor = { String firstName -> 
     new Employee(firstName: firstName) 
 }
 ```
 
-```
+```java
 Employee norman = new Employee("Norman")
 assert norman.firstName == "Norman"
 assert norman.lastName == null
@@ -143,13 +143,13 @@ assert norman.lastName == null
 
 例如，让我们给`String`类添加一个`capitalize`方法:
 
-```
+```java
 String.metaClass.capitalize = { String str ->
     str.substring(0, 1).toUpperCase() + str.substring(1)
 }
 ```
 
-```
+```java
 assert "norman".capitalize() == "Norman"
 ```
 
@@ -161,7 +161,7 @@ assert "norman".capitalize() == "Norman"
 
 例如，让我们编写一个`BasicExtension`类来为`Employee`类添加一个`getYearOfBirth`方法:
 
-```
+```java
 class BasicExtensions {
     static int getYearOfBirth(Employee self) {
         return Year.now().value - self.age
@@ -173,7 +173,7 @@ class BasicExtensions {
 
 因此，让我们添加具有以下配置的`org.codehaus.groovy.runtime.ExtensionModule`文件:
 
-```
+```java
 moduleName=core-groovy-2 
 moduleVersion=1.0-SNAPSHOT 
 extensionClasses=com.baeldung.metaprogramming.extension.BasicExtensions
@@ -181,7 +181,7 @@ extensionClasses=com.baeldung.metaprogramming.extension.BasicExtensions
 
 让我们验证一下在`Employee`类中添加的`getYearOfBirth`方法:
 
-```
+```java
 def age = 28
 def expectedYearOfBirth = Year.now() - age
 Employee emp = new Employee(age: age)
@@ -192,7 +192,7 @@ assert emp.getYearOfBirth() == expectedYearOfBirth.value
 
 例如，让我们通过定义`StaticEmployeeExtension`类将`static`方法`getDefaultObj`添加到我们的`Employee`类中:
 
-```
+```java
 class StaticEmployeeExtension {
     static Employee getDefaultObj(Employee self) {
         return new Employee(firstName: "firstName", lastName: "lastName", age: 20)
@@ -202,13 +202,13 @@ class StaticEmployeeExtension {
 
 然后，我们通过向`ExtensionModule`文件添加以下配置来启用`StaticEmployeeExtension`:
 
-```
+```java
 staticExtensionClasses=com.baeldung.metaprogramming.extension.StaticEmployeeExtension
 ```
 
 现在，我们所需要的就是在`Employee`类上测试我们的`static` `getDefaultObj`方法:
 
-```
+```java
 assert Employee.getDefaultObj().firstName == "firstName"
 assert Employee.getDefaultObj().lastName == "lastName"
 assert Employee.getDefaultObj().age == 20
@@ -216,7 +216,7 @@ assert Employee.getDefaultObj().age == 20
 
 类似地，**使用扩展，我们可以给预编译的 Java 类**添加一个方法，比如`Integer` 和`Long`:
 
-```
+```java
 public static void printCounter(Integer self) {
     while (self > 0) {
         println self
@@ -227,7 +227,7 @@ public static void printCounter(Integer self) {
 assert 5.printCounter() == 0 
 ```
 
-```
+```java
 public static Long square(Long self) {
     return self*self
 }
@@ -248,7 +248,7 @@ assert 40l.square() == 1600l
 
 例如，让我们将`@ToString`注释添加到我们的`Employee`类中:
 
-```
+```java
 @ToString
 class Employee {
     long id
@@ -260,7 +260,7 @@ class Employee {
 
 现在，我们将创建一个`Employee`类的对象，并验证由`toString`方法返回的字符串:
 
-```
+```java
 Employee employee = new Employee()
 employee.id = 1
 employee.firstName = "norman"
@@ -274,11 +274,11 @@ assert employee.toString() == "com.baeldung.metaprogramming.Employee(1, norman, 
 
 例如，让我们从 Employee 对象的字符串中排除`id`和`package`:
 
-```
+```java
 @ToString(includePackage=false, excludes=['id'])
 ```
 
-```
+```java
 assert employee.toString() == "Employee(norman, lewis, 28)"
 ```
 
@@ -288,7 +288,7 @@ assert employee.toString() == "Employee(norman, lewis, 28)"
 
 例如，让我们将`@TupleConstructor` 添加到`Employee`类中:
 
-```
+```java
 @TupleConstructor 
 class Employee { 
     long id 
@@ -300,14 +300,14 @@ class Employee {
 
 现在，我们可以创建`Employee`对象，按照类中定义的属性顺序传递参数。
 
-```
+```java
 Employee norman = new Employee(1, "norman", "lewis", 28)
 assert norman.toString() == "Employee(norman, lewis, 28)" 
 ```
 
 如果我们在创建对象时没有为属性提供值，Groovy 将考虑默认值:
 
-```
+```java
 Employee snape = new Employee(2, "snape")
 assert snape.toString() == "Employee(snape, null, 0)"
 ```
@@ -320,7 +320,7 @@ assert snape.toString() == "Employee(snape, null, 0)"
 
 让我们通过将`@EqualsAndHashCode`添加到`Employee`类来验证它的行为:
 
-```
+```java
 Employee normanCopy = new Employee(1, "norman", "lewis", 28)
 
 assert norman == normanCopy
@@ -339,7 +339,7 @@ assert norman.hashCode() == normanCopy.hashCode()
 
 让我们在将`@AutoClone`添加到`Employee`类后验证`clone`方法:
 
-```
+```java
 try {
     Employee norman = new Employee(1, "norman", "lewis", 28)
     def normanCopy = norman.clone()
@@ -355,7 +355,7 @@ try {
 
 让我们通过向`Employee`类添加`@Log`注释来启用 JDK 提供的日志记录。之后，我们将添加`logEmp`方法:
 
-```
+```java
 def logEmp() {
     log.info "Employee: $lastName, $firstName is of $age years age"
 }
@@ -363,12 +363,12 @@ def logEmp() {
 
 在`Employee`对象上调用`logEmp`方法将在控制台上显示日志:
 
-```
+```java
 Employee employee = new Employee(1, "Norman", "Lewis", 28)
 employee.logEmp()
 ```
 
-```
+```java
 INFO: Employee: Lewis, Norman is of 28 years age
 ```
 

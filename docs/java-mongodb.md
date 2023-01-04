@@ -37,7 +37,7 @@ MongoDB 是用 C++编写的，有很多可靠的特性，比如 map-reduce、自
 
 我们需要从定义 MongoDB 的 Java 驱动程序的依赖性开始:
 
-```
+```java
 <dependency>
     <groupId>org.mongodb</groupId>
     <artifactId>mongo-java-driver</artifactId>
@@ -55,13 +55,13 @@ MongoDB 是用 C++编写的，有很多可靠的特性，比如 map-reduce、自
 
 首先，让我们连接一个 MongoDB 服务器。对于版本> = 2.10.0，我们将使用`MongoClient`:
 
-```
+```java
 MongoClient mongoClient = new MongoClient("localhost", 27017);
 ```
 
 对于旧版本，使用`Mongo` 类:
 
-```
+```java
 Mongo mongo = new Mongo("localhost", 27017);
 ```
 
@@ -69,7 +69,7 @@ Mongo mongo = new Mongo("localhost", 27017);
 
 现在，让我们连接到数据库。有趣的是，我们不需要创建一个。当 Mongo 发现数据库不存在时，它会为我们创建一个数据库:
 
-```
+```java
 DB database = mongoClient.getDB("myMongoDb");
 ```
 
@@ -77,7 +77,7 @@ DB database = mongoClient.getDB("myMongoDb");
 
 我们可以按照下面的方式来做:
 
-```
+```java
 MongoClient mongoClient = new MongoClient();
 DB database = mongoClient.getDB("myMongoDb");
 boolean auth = database.authenticate("username", "pwd".toCharArray());
@@ -87,19 +87,19 @@ boolean auth = database.authenticate("username", "pwd".toCharArray());
 
 让我们显示所有现有的数据库。当我们想要使用命令行时，显示数据库的语法类似于 MySQL:
 
-```
+```java
 show databases;
 ```
 
 在 Java 中，我们使用下面的代码片段显示数据库:
 
-```
+```java
 mongoClient.getDatabaseNames().forEach(System.out::println);
 ```
 
 输出将是:
 
-```
+```java
 local      0.000GB
 myMongoDb  0.000GB
 ```
@@ -110,19 +110,19 @@ myMongoDb  0.000GB
 
 让我们从为数据库创建一个`Collection`(MongoDB 的等价表)开始。一旦我们连接到数据库，我们可以将`Collection`设为:
 
-```
+```java
 database.createCollection("customers", null);
 ```
 
 现在，让我们显示当前数据库的所有现有集合:
 
-```
+```java
 database.getCollectionNames().forEach(System.out::println);
 ```
 
 输出将是:
 
-```
+```java
 customers
 ```
 
@@ -132,7 +132,7 @@ customers
 
 当我们遇到新客户时:
 
-```
+```java
 DBCollection collection = database.getCollection("customers");
 BasicDBObject document = new BasicDBObject();
 document.put("name", "Shubham");
@@ -142,7 +142,7 @@ collection.insert(document);
 
 实体将被插入到数据库中:
 
-```
+```java
 {
     "_id" : ObjectId("33a52bb7830b8c9b233b4fe6"),
     "name" : "Shubham",
@@ -156,7 +156,7 @@ collection.insert(document);
 
 现在让我们看看带有`update`语义的`save`，对现有客户进行操作:
 
-```
+```java
 {
     "_id" : ObjectId("33a52bb7830b8c9b233b4fe6"),
     "name" : "Shubham",
@@ -166,7 +166,7 @@ collection.insert(document);
 
 现在，当我们`save`现有客户时，我们将更新它:
 
-```
+```java
 BasicDBObject query = new BasicDBObject();
 query.put("name", "Shubham");
 
@@ -181,7 +181,7 @@ collection.update(query, updateObject);
 
 数据库将如下所示:
 
-```
+```java
 {
     "_id" : ObjectId("33a52bb7830b8c9b233b4fe6"),
     "name" : "John",
@@ -195,7 +195,7 @@ collection.update(query, updateObject);
 
 让我们通过查询在`Collection`中搜索`Document`:
 
-```
+```java
 BasicDBObject searchQuery = new BasicDBObject();
 searchQuery.put("name", "John");
 DBCursor cursor = collection.find(searchQuery);
@@ -207,7 +207,7 @@ while (cursor.hasNext()) {
 
 它将显示我们目前在`Collection`中仅有的`Document`:
 
-```
+```java
 [
     {
       "_id" : ObjectId("33a52bb7830b8c9b233b4fe6"),
@@ -221,7 +221,7 @@ while (cursor.hasNext()) {
 
 让我们前进到最后一个 CRUD 操作，删除:
 
-```
+```java
 BasicDBObject searchQuery = new BasicDBObject();
 searchQuery.put("name", "John");
 

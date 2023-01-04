@@ -12,7 +12,7 @@
 
 让我们首先引入我们的示例所需的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -41,7 +41,7 @@
 
 我们的 web 安全配置将非常简单。只有经过身份验证的用户才能访问匹配`/private/**`的路径。任何用户都可以使用与`/public/**`匹配的路径:
 
-```
+```java
 @Configuration
 public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
@@ -72,7 +72,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
 除了我们在`WebSecurityConfigurer,`中定义的基于 URL 路径的安全性，我们还可以通过提供额外的配置文件来配置基于方法的安全性:
 
-```
+```java
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MethodSecurityConfigurer 
@@ -88,7 +88,7 @@ public class MethodSecurityConfigurer
 
 因为`MockMvc`是为我们配置的，所以我们能够使用`@WithMockUser`进行测试，而不需要任何额外的配置:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @WebMvcTest(SecuredController.class)
 public class SecuredControllerWebMvcIntegrationTest {
@@ -115,7 +115,7 @@ public class SecuredControllerWebMvcIntegrationTest {
 
 使用由`SecurityMockMvcConfigurer`提供的静态`springSecurity`方法是最好的方法:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class SecuredControllerSpringBootIntegrationTest {
@@ -148,7 +148,7 @@ public class SecuredControllerSpringBootIntegrationTest {
 
 `@SpringBootTest`不需要任何额外的配置来测试安全方法。我们可以**简单地直接调用方法，并根据需要使用`@WithMockUser`:**
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class SecuredMethodSpringBootIntegrationTest {
@@ -175,7 +175,7 @@ public class SecuredMethodSpringBootIntegrationTest {
 
 我们可以**在请求安全端点之前简单地自动连接一个模板并设置凭证:**
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class SecuredControllerRestTemplateIntegrationTest {

@@ -32,7 +32,7 @@
 
 ### 可用签名
 
-```
+```java
 public int indexOf(int ch)
 public int indexOf(int ch, int fromIndex)
 public int indexOf(String str)
@@ -41,7 +41,7 @@ public int indexOf(String str, int fromIndex)
 
 ### 例子
 
-```
+```java
 @Test
 public void whenCallIndexOf_thenCorrect() {
     String str = "foo";

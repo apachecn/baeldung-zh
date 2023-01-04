@@ -12,7 +12,7 @@ Apache POI 是一个 Java 库，用于处理基于 Office Open XML 标准(OOXML)
 
 Apache POI 处理 MS Word 文件所需的唯一依赖项是:
 
-```
+```java
 <dependency>
     <groupId>org.apache.poi</groupId>
     <artifactId>poi-ooxml</artifactId>
@@ -32,7 +32,7 @@ Apache POI 处理 MS Word 文件所需的唯一依赖项是:
 
 此外，`logo-leaf.png`文件用于将图像插入到新文件中。所有这些文件都存在于类路径中，由几个静态变量表示:
 
-```
+```java
 public static String logo = "logo-leaf.png";
 public static String paragraph1 = "poi-word-para1.txt";
 public static String paragraph2 = "poi-word-para2.txt";
@@ -46,7 +46,7 @@ public static String output = "rest-with-spring.docx";
 
 由用于生成 MS Word 文件的逻辑组成的主方法(将在下一节中描述)利用了帮助器方法:
 
-```
+```java
 public String convertTextFileToString(String fileName) {
     try (Stream<String> stream 
       = Files.lines(Paths.get(ClassLoader.getSystemResource(fileName).toURI()))) {
@@ -64,7 +64,7 @@ public String convertTextFileToString(String fileName) {
 
 本节给出了如何格式化和生成 Microsoft Word 文件的说明。在处理文件的任何部分之前，我们需要有一个`XWPFDocument`实例:
 
-```
+```java
 XWPFDocument document = new XWPFDocument();
 ```
 
@@ -72,14 +72,14 @@ XWPFDocument document = new XWPFDocument();
 
 为了创建标题，我们需要首先实例化`XWPFParagraph`类，并在新对象上设置对齐:
 
-```
+```java
 XWPFParagraph title = document.createParagraph();
 title.setAlignment(ParagraphAlignment.CENTER);
 ```
 
 段落的内容需要包装在一个`XWPFRun`对象中。我们可以配置这个对象来设置一个文本值及其相关的样式:
 
-```
+```java
 XWPFRun titleRun = title.createRun();
 titleRun.setText("Build Your REST API with Spring");
 titleRun.setColor("009933");
@@ -92,14 +92,14 @@ titleRun.setFontSize(20);
 
 以类似的方式，我们创建一个包含字幕的`XWPFParagraph`实例:
 
-```
+```java
 XWPFParagraph subTitle = document.createParagraph();
 subTitle.setAlignment(ParagraphAlignment.CENTER);
 ```
 
 让我们也格式化副标题:
 
-```
+```java
 XWPFRun subTitleRun = subTitle.createRun();
 subTitleRun.setText("from HTTP fundamentals to API Mastery");
 subTitleRun.setColor("00CC44");
@@ -117,21 +117,21 @@ subTitleRun.setUnderline(UnderlinePatterns.DOT_DOT_DASH);
 
 图像也需要包装在一个`XWPFParagraph`实例中。我们希望图像水平居中，并放在副标题下，因此下面的代码片段必须放在上面给出的代码下面:
 
-```
+```java
 XWPFParagraph image = document.createParagraph();
 image.setAlignment(ParagraphAlignment.CENTER);
 ```
 
 以下是如何设置此图像与其下方文本之间的距离:
 
-```
+```java
 XWPFRun imageRun = image.createRun();
 imageRun.setTextPosition(20);
 ```
 
 从类路径上的文件中取出一个图像，然后插入到具有指定尺寸的 MS Word 文件中:
 
-```
+```java
 Path imagePath = Paths.get(ClassLoader.getSystemResource(logo).toURI());
 imageRun.addPicture(Files.newInputStream(imagePath),
   XWPFDocument.PICTURE_TYPE_PNG, imagePath.getFileName().toString(),
@@ -142,7 +142,7 @@ imageRun.addPicture(Files.newInputStream(imagePath),
 
 下面是我们如何用从`poi-word-para1.txt`文件中提取的内容创建第一段:
 
-```
+```java
 XWPFParagraph para1 = document.createParagraph();
 para1.setAlignment(ParagraphAlignment.BOTH);
 String string1 = convertTextFileToString(paragraph1);
@@ -154,7 +154,7 @@ para1Run.setText(string1);
 
 以类似的方式，我们可以使用文件`poi-word-para2.txt`和`poi-word-para3.txt`中的内容创建另外两个段落:
 
-```
+```java
 XWPFParagraph para2 = document.createParagraph();
 para2.setAlignment(ParagraphAlignment.RIGHT);
 String string2 = convertTextFileToString(paragraph2);
@@ -175,7 +175,7 @@ para3Run.setText(string3);
 
 现在我们准备从`document`变量向内存中写出一个 Microsoft Word 文件:
 
-```
+```java
 FileOutputStream out = new FileOutputStream(output);
 document.write(out);
 out.close();
@@ -192,7 +192,7 @@ document.close();
 
 我们在测试类中声明了一个静态字段:
 
-```
+```java
 static WordDocument wordDocument;
 ```
 
@@ -200,7 +200,7 @@ static WordDocument wordDocument;
 
 在解析和测试之前，我们需要初始化上面声明的静态变量，并通过调用`handleSimpleDoc`方法在当前工作目录中生成`rest-with-spring.docx`文件:
 
-```
+```java
 @BeforeClass
 public static void generateMSWordFile() throws Exception {
     WordTest.wordDocument = new WordDocument();
@@ -214,7 +214,7 @@ public static void generateMSWordFile() throws Exception {
 
 首先，我们从项目目录中给定的 MS Word 文件中提取内容，并将内容存储在`XWPFParagraph`的`List`中:
 
-```
+```java
 Path msWordPath = Paths.get(WordDocument.output);
 XWPFDocument document = new XWPFDocument(Files.newInputStream(msWordPath));
 List<XWPFParagraph> paragraphs = document.getParagraphs();
@@ -223,7 +223,7 @@ document.close();
 
 接下来，让我们确保标题的内容和样式与我们之前设置的相同:
 
-```
+```java
 XWPFParagraph title = paragraphs.get(0);
 XWPFRun titleRun = title.getRuns().get(0);
 
@@ -236,7 +236,7 @@ assertEquals(20, titleRun.getFontSize());
 
 为了简单起见，我们只验证文件其他部分的内容，忽略样式。对其风格的验证类似于我们对标题所做的工作:
 
-```
+```java
 assertEquals("from HTTP fundamentals to API Mastery",
   paragraphs.get(1).getText());
 assertEquals("What makes a good API?", paragraphs.get(3).getText());

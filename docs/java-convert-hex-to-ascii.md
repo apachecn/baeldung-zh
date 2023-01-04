@@ -18,7 +18,7 @@
 
 这里有一个我们如何实现上述步骤的快速示例:
 
-```
+```java
 private static String asciiToHex(String asciiStr) {
     char[] chars = asciiStr.toCharArray();
     StringBuilder hex = new StringBuilder();
@@ -40,7 +40,7 @@ private static String asciiToHex(String asciiStr) {
 
 让我们看一个如何实现上述步骤的示例:
 
-```
+```java
 private static String hexToAscii(String hexStr) {
     StringBuilder output = new StringBuilder("");
 
@@ -57,7 +57,7 @@ private static String hexToAscii(String hexStr) {
 
 最后，使用这些方法，让我们做一个快速测试:
 
-```
+```java
 @Test
 public static void whenHexToAscii() {
     String asciiString = "www.baeldung.com";

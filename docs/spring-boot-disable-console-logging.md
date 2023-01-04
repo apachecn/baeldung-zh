@@ -22,7 +22,7 @@
 
 例如，让我们设置 XML，以便禁用控制台输出并只记录到一个文件:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource=
@@ -37,7 +37,7 @@
 
 此外，我们将需要在我们的`application.properties `文件中的`logging.file`配置属性:
 
-```
+```java
 logging.file=baeldung-disabled-console.log
 ```
 
@@ -47,7 +47,7 @@ logging.file=baeldung-disabled-console.log
 
 例如，我们可以潜在地利用`logging.pattern.console `属性:
 
-```
+```java
 logging.pattern.console=
 ```
 
@@ -57,7 +57,7 @@ logging.pattern.console=
 
 此外，我们可以通过将根日志记录器级别的值设置为`OFF`来禁用所有日志记录活动:
 
-```
+```java
 logging.level.root=OFF
 ```
 
@@ -69,7 +69,7 @@ logging.level.root=OFF
 
 其他格式遵循相同的配置结构:
 
-```
+```java
 <Configuration status="INFO">
     <Appenders>
         <File name="MyFile" fileName="baeldung.log"
@@ -96,7 +96,7 @@ Java Util 日志(或简称为“JUL”)可能不是当今 Spring Boot 应用程�
 
 我们所要做的就是将以下值添加到资源文件夹的默认`logging.properties `中:
 
-```
+```java
 handlers=java.util.logging.FileHandler
 java.util.logging.FileHandler.pattern=baeldung.log
 java.util.logging.FileHandler.formatter=java.util.logging.SimpleFormatter
@@ -104,7 +104,7 @@ java.util.logging.FileHandler.formatter=java.util.logging.SimpleFormatter
 
 并将`logging.file` 属性包含在我们的 `application.properties`文件中。任何值都可以:
 
-```
+```java
 logging.file=true
 ```
 

@@ -18,7 +18,7 @@
 
 首先，我们将定义一个`MessageListenerAdapter` bean，它包含一个名为`RedisMessageSubscriber`的`MessageListener`接口的自定义实现。该 bean 充当发布-订阅消息传递模型中的订阅者:
 
-```
+```java
 @Bean
 MessageListenerAdapter messageListener() { 
     return new MessageListenerAdapter(new RedisMessageSubscriber());
@@ -27,7 +27,7 @@ MessageListenerAdapter messageListener() {
 
 `RedisMessageListenerContainer`是 Spring Data Redis 提供的一个类，为 Redis 消息监听器提供异步行为。这是内部调用，根据 Spring Data Redis 文档–“处理监听、转换和消息分发的底层细节”
 
-```
+```java
 @Bean
 RedisMessageListenerContainer redisContainer() {
     RedisMessageListenerContainer container 
@@ -40,7 +40,7 @@ RedisMessageListenerContainer redisContainer() {
 
 我们还将使用定制的`MessagePublisher`接口和`RedisMessagePublisher`实现创建一个 bean。这样，我们可以有一个通用的消息发布 API，并让 Redis 实现将一个`redisTemplate`和`topic`作为构造函数参数:
 
-```
+```java
 @Bean
 MessagePublisher redisPublisher() { 
     return new RedisMessagePublisher(redisTemplate(), topic());
@@ -49,7 +49,7 @@ MessagePublisher redisPublisher() {
 
 最后，我们将设置一个主题，发布者将向该主题发送消息，订阅者将收到消息:
 
-```
+```java
 @Bean
 ChannelTopic topic() {
     return new ChannelTopic("messageQueue");
@@ -62,7 +62,7 @@ ChannelTopic topic() {
 
 Spring Data Redis 不提供用于消息分发的`MessagePublisher`接口。我们可以定义一个自定义接口，它将在实现中使用`redisTemplate` :
 
-```
+```java
 public interface MessagePublisher {
     void publish(String message);
 }
@@ -74,7 +74,7 @@ public interface MessagePublisher {
 
 该模板包含一组非常丰富的函数，可用于各种操作——其中`convertAndSend` 能够通过主题向队列发送消息:
 
-```
+```java
 public class RedisMessagePublisher implements MessagePublisher {
 
     @Autowired
@@ -105,7 +105,7 @@ public class RedisMessagePublisher implements MessagePublisher {
 
 `RedisMessageSubscriber` 实现 Spring Data Redis 提供的`MessageListener` 接口:
 
-```
+```java
 @Service
 public class RedisMessageSubscriber implements MessageListener {
 
@@ -124,7 +124,7 @@ public class RedisMessageSubscriber implements MessageListener {
 
 现在我们把它们放在一起。让我们创建一条消息，然后使用`RedisMessagePublisher`发布它:
 
-```
+```java
 String message = "Message " + UUID.randomUUID();
 redisMessagePublisher.publish(message);
 ```
@@ -137,7 +137,7 @@ redisMessagePublisher.publish(message);
 
 在我们的例子中，我们可以通过检查我们的`RedisMessageSubscriber`中的`messageList`来验证我们已经收到了已经发布的消息:
 
-```
+```java
 RedisMessageSubscriber.messageList.get(0).contains(message) 
 ```
 

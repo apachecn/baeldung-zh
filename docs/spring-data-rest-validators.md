@@ -22,7 +22,7 @@
 
 因此，要创建一个新资源，我们只需运行:
 
-```
+```java
 curl -i -X POST -H "Content-Type:application/json" -d 
   '{ "name" : "Test", "email" : "[[email protected]](/web/20221023133213/https://www.baeldung.com/cdn-cgi/l/email-protection)" }' 
   http://localhost:8080/users
@@ -30,7 +30,7 @@ curl -i -X POST -H "Content-Type:application/json" -d
 
 这个 POST 请求将把提供的 JSON 对象保存到我们的数据库中，操作将返回:
 
-```
+```java
 {
   "name" : "Test",
   "email" : "[[email protected]](/web/20221023133213/https://www.baeldung.com/cdn-cgi/l/email-protection)",
@@ -49,14 +49,14 @@ curl -i -X POST -H "Content-Type:application/json" -d
 
 为了测试第一个场景，我们将运行之前修改过的命令，将空字符串设置为属性`name`的值:
 
-```
+```java
 curl -i -X POST -H "Content-Type:application/json" -d 
   '{ "name" : "", "email" : "Baggins" }' http://localhost:8080/users
 ```
 
 使用该命令，我们将得到以下响应:
 
-```
+```java
 {
   "name" : "",
   "email" : "Baggins",
@@ -73,14 +73,14 @@ curl -i -X POST -H "Content-Type:application/json" -d
 
 对于第二个场景，我们将从请求中删除属性`name`:
 
-```
+```java
 curl -i -X POST -H "Content-Type:application/json" -d 
   '{ "email" : "Baggins" }' http://localhost:8080/users
 ```
 
 对于该命令，我们将得到以下响应:
 
-```
+```java
 {
   "name" : null,
   "email" : "Baggins",
@@ -122,7 +122,7 @@ curl -i -X POST -H "Content-Type:application/json" -d
 
 让我们定义一个`WebsiteUserValidator` 类:
 
-```
+```java
 public class WebsiteUserValidator implements Validator {
 
     @Override
@@ -159,7 +159,7 @@ public class WebsiteUserValidator implements Validator {
 
 *   添加名为“`beforeCreateWebsiteUserValidator`”的`Component`标注。Spring Boot 将识别前缀`beforeCreate`，它决定了我们想要捕捉的事件，它还将识别来自`Component`名称的`WebsiteUser`类。
 
-    ```
+    ```java
     @Component("beforeCreateWebsiteUserValidator")
     public class WebsiteUserValidator implements Validator {
         ...
@@ -168,7 +168,7 @@ public class WebsiteUserValidator implements Validator {
 
 *   在带有`@Bean`注释:
 
-    ```
+    ```java
     @Bean
     public WebsiteUserValidator beforeCreateWebsiteUserValidator() {
         return new WebsiteUserValidator();
@@ -178,7 +178,7 @@ public class WebsiteUserValidator implements Validator {
     的应用程序上下文中创建`Bean`
 *   手动注册:
 
-    ```
+    ```java
     @SpringBootApplication
     public class SpringDataRestApplication implements RepositoryRestConfigurer {
         public static void main(String[] args) {
@@ -203,7 +203,7 @@ public class WebsiteUserValidator implements Validator {
 
 解决这个问题的一个简单方法是将所有事件插入到 Spring Data REST `ValidatingRepositoryEventListener`类中:
 
-```
+```java
 @Configuration
 public class ValidatorEventRegister implements InitializingBean {
 
@@ -234,12 +234,12 @@ public class ValidatorEventRegister implements InitializingBean {
 
 如果我们想要添加没有`name`属性但有提供的验证器的相同对象，我们将得到这个错误:
 
-```
+```java
 curl -i -X POST -H "Content-Type:application/json" -d 
   '{ "email" : "[[email protected]](/web/20221023133213/https://www.baeldung.com/cdn-cgi/l/email-protection)" }' http://localhost:8080/users
 ```
 
-```
+```java
 {  
    "timestamp":1472510818701,
    "status":406,
@@ -261,7 +261,7 @@ curl -i -X POST -H "Content-Type:application/json" -d
 
 这是我们的班级:
 
-```
+```java
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends
   ResponseEntityExceptionHandler {

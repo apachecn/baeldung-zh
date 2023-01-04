@@ -14,7 +14,7 @@ Java 提供了多种方式将线程置于`WAITING`状态。
 
 我们可以将线程置于`WAITING`状态的最标准的方法之一是通过 [`wait()`方法](/web/20221030132701/https://www.baeldung.com/java-wait-notify)。**当一个线程[拥有一个对象的监视器](/web/20221030132701/https://www.baeldung.com/cs/monitor)时，我们可以暂停它的执行，直到另一个线程完成一些工作，并使用`notify()`方法**唤醒它。当执行暂停时，线程处于`WAITING (on object monitor)`状态，这也在[程序的线程转储](/web/20221030132701/https://www.baeldung.com/java-thread-dump)中报告:
 
-```
+```java
 "WAITING-THREAD" #11 prio=5 os_prio=0 tid=0x000000001d6ff800 nid=0x544 in Object.wait() [0x000000001de4f000]
    java.lang.Thread.State: WAITING (on object monitor)
 ```
@@ -23,7 +23,7 @@ Java 提供了多种方式将线程置于`WAITING`状态。
 
 我们可以用来暂停线程执行的另一种方法是通过 [`join()`调用](/web/20221030132701/https://www.baeldung.com/java-thread-join)。**当我们的主线程需要等待一个工作线程先完成时，我们可以从主线程**调用工作线程实例上的`join()`。执行将暂停，主线程将进入`WAITING`状态，从 [`jstack`](/web/20221030132701/https://www.baeldung.com/java-thread-dump#1-jstack) 报告为`WAITING (on object monitor)`:
 
-```
+```java
 "MAIN-THREAD" #12 prio=5 os_prio=0 tid=0x000000001da4f000 nid=0x25f4 in Object.wait() [0x000000001e28e000]
    java.lang.Thread.State: WAITING (on object monitor)
 ```
@@ -32,7 +32,7 @@ Java 提供了多种方式将线程置于`WAITING`状态。
 
 最后，我们还可以用`LockSupport`类的`park()`静态方法将线程设置为`WAITING`状态。**调用`park()`将停止当前线程的执行，并将其置于`WAITING`状态——更具体地说，是`WAITING (parking)`状态**，如`jstack`报告所示:
 
-```
+```java
 "PARKED-THREAD" #11 prio=5 os_prio=0 tid=0x000000001e226800 nid=0x43cc waiting on condition [0x000000001e95f000]
    java.lang.Thread.State: WAITING (parking)
 ```
@@ -49,7 +49,7 @@ Java 提供了多种方式将线程置于`WAITING`状态。
 
 让我们看一个简单的停车例子:
 
-```
+```java
 public class Application {
     public static void main(String[] args) {
         Thread t = new Thread(() -> {
@@ -73,7 +73,7 @@ public class Application {
 
 为了简单起见，让我们使用`main`线程:
 
-```
+```java
 t.setName("PARK-THREAD");
 t.start();
 
@@ -95,7 +95,7 @@ LockSupport.unpark(t);
 
 我们可以通过删除前面代码片段中对`sleep()`的调用来看到这种效果:
 
-```
+```java
 //Thread.sleep(1000);
 LockSupport.unpark(t);
 ```
@@ -108,14 +108,14 @@ LockSupport.unpark(t);
 
 让我们更改代码以包含一个同步器对象:
 
-```
+```java
 Object syncObj = new Object();
 LockSupport.park(syncObj);
 ```
 
 如果我们删除对`unpark()`的调用并再次运行应用程序，它将会挂起。如果我们使用`jstack`来查看`PARK-THREAD`在做什么，我们会得到:
 
-```
+```java
 "PARK-THREAD" #11 prio=5 os_prio=0 tid=0x000000001e401000 nid=0xfb0 waiting on condition [0x000000001eb4f000]
    java.lang.Thread.State: WAITING (parking)
         at sun.misc.Unsafe.park(Native Method)

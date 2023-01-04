@@ -16,7 +16,7 @@
 
 此外， **`spring-security-core`** 支持独立(非 web)应用程序、方法级安全和 JDBC:
 
-```
+```java
 <properties>
     <spring-security.version>5.3.4.RELEASE</spring-security.version>
     <spring.version>5.2.8.RELEASE</spring.version>
@@ -35,7 +35,7 @@
 
 为了给 Spring Security 添加 **Web 支持，我们需要`spring-security-web`依赖项:**
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-web</artifactId>
@@ -53,7 +53,7 @@
 
 为了解决这个问题，我们必须**在我们自己的 pom 中明确定义一些 Spring 依赖关系**，而不依赖于隐含的 Maven 依赖关系解析机制。这样做将把特定的依赖关系放在距离我们的 pom 深度为 0 的位置(正如它在 pom 本身中定义的那样),因此它将获得优先权。以下所有内容都属于同一类别，并且都需要明确定义，或者直接定义，或者对于多模块项目，在父项目的`dependencyManagement`元素中定义:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-core</artifactId>
@@ -100,7 +100,7 @@
 
 为了使用丰富的 Spring Security XML 名称空间和注释，我们需要`spring-security-config`依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-config</artifactId>
@@ -114,7 +114,7 @@
 
 使用 Spring Boot 时， [`spring-boot-starter-security`](https://web.archive.org/web/20221122114744/https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security) 启动器将自动包含所有依赖项，如`spring-security-core`、`spring-security-web,`和`spring-security-config`等:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>

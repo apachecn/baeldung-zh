@@ -12,7 +12,7 @@ Apache Maven 是 Java 项目最流行的构建工具之一。除了分散依赖�
 
 典型的 Maven 项目有一个`pom.xml`文件和一个基于已定义约定的目录结构:
 
-```
+```java
 └───maven-project
     ├───pom.xml
     ├───README.txt

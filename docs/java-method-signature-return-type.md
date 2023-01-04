@@ -20,7 +20,7 @@
 
 让我们考虑下面的代码`:`
 
-```
+```java
 public void print() {
     System.out.println("Signature is: print()");
 }
@@ -34,7 +34,7 @@ public void print(int parameter) {
 
 现在，让我们通过添加以下方法来测试重载是否合法:
 
-```
+```java
 public int print() { 
     System.out.println("Signature is: print()"); 
     return 0; 
@@ -45,7 +45,7 @@ public int print() {
 
 让我们用同样的方法来尝试修改:
 
-```
+```java
 private final void print() { 
     System.out.println("Signature is: print()");
 }
@@ -55,7 +55,7 @@ private final void print() {
 
 通过更改抛出的异常进行重载可以通过添加以下内容来测试:
 
-```
+```java
 public void print() throws IllegalStateException { 
     System.out.println("Signature is: print()");
     throw new IllegalStateException();
@@ -66,7 +66,7 @@ public void print() throws IllegalStateException {
 
 我们可以测试的最后一件事是改变参数名是否允许重载。让我们添加以下方法:
 
-```
+```java
 public void print(int anotherParameter) { 
     System.out.println("Signature is: print(int)");
 }
@@ -80,7 +80,7 @@ public void print(int anotherParameter) {
 
 让我们考虑下面的代码:
 
-```
+```java
 public class OverloadingErrors<T extends Serializable> {
 
     public void printElement(T t) {
@@ -107,7 +107,7 @@ public class OverloadingErrors<T extends Serializable> {
 
 让我们来看看下面的代码:
 
-```
+```java
 public Number sum(Integer term1, Integer term2) {
     System.out.println("Adding integers");
     return term1 + term2;
@@ -128,7 +128,7 @@ public Number sum(Object term1, Object term2) {
 
 让我们探索一些最终绑定到`sum(Integer, Integer)`的方法调用:
 
-```
+```java
 StaticBinding obj = new StaticBinding(); 
 obj.sum(Integer.valueOf(2), Integer.valueOf(3)); 
 obj.sum(2, 3); 
@@ -139,7 +139,7 @@ obj.sum(2, 0x1);
 
 类似地，我们有以下绑定到`sum(Number, Number)`的调用:
 
-```
+```java
 obj.sum(2.0d, 3.0d);
 obj.sum(Float.valueOf(2), Float.valueOf(3));
 ```
@@ -150,7 +150,7 @@ obj.sum(Float.valueOf(2), Float.valueOf(3));
 
 现在让我们考虑下面的方法调用:
 
-```
+```java
 obj.sum(2, "John");
 ```
 
@@ -158,7 +158,7 @@ obj.sum(2, "John");
 
 **要改变默认绑定，我们可以使用如下的显式参数转换**:
 
-```
+```java
 obj.sum((Object) 2, (Object) 3);
 obj.sum((Number) 2, (Number) 3);
 ```
@@ -169,7 +169,7 @@ obj.sum((Number) 2, (Number) 3);
 
 这里我们有一个使用`varargs`的重载方法:
 
-```
+```java
 public Number sum(Object term1, Object term2) {
     System.out.println("Adding objects");
     return term1.hashCode() + term2.hashCode();
@@ -191,7 +191,7 @@ public Number sum(Object term1, Object... term2) {
 
 让我们考虑以下调用:
 
-```
+```java
 obj.sum(new Object(), new Object());
 obj.sum(new Object(), new Object(), new Object());
 obj.sum(new Object(), new Object[]{new Object()});
@@ -201,7 +201,7 @@ obj.sum(new Object(), new Object[]{new Object()});
 
 这里要注意的最后一点是，声明以下方法将与 vararg 版本冲突:
 
-```
+```java
 public Number sum(Object term1, Object[] term2) {
     // ...
 }

@@ -14,7 +14,7 @@ OptaPlanner 使用一套设置最少的算法来解决规划问题。
 
 首先，我们将为 OptaPlanner 添加一个 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.optaplanner</groupId>
     <artifactId>optaplanner-core</artifactId>
@@ -36,7 +36,7 @@ OptaPlanner 使用一套设置最少的算法来解决规划问题。
 
 让我们分别仔细看看:
 
-```
+```java
 @PlanningSolution
 public class CourseSchedule {
 
@@ -60,7 +60,7 @@ OptaPlanner 期望这些最基本的组成部分:规划实体、问题事实和�
 
 `Lecture,`一个 POJO，看起来像:
 
-```
+```java
 @PlanningEntity
 public class Lecture {
 
@@ -86,7 +86,7 @@ public class Lecture {
 
 我们使用 `Lecture`类作为规划实体，所以我们在`CourseSchedule`中的 getter 上添加了另一个注释:
 
-```
+```java
 @PlanningEntityCollectionProperty
 public List<Lecture> getLectureList() {
     return lectureList;
@@ -105,7 +105,7 @@ public List<Lecture> getLectureList() {
 
 OptaPlanner 使用这些变量将解决方案作为逻辑结果进行评分。我们给两个`getter`方法都添加了注释:
 
-```
+```java
 @ValueRangeProvider(id = "availableRooms")
 @ProblemFactCollectionProperty
 public List<Integer> getRoomList() {
@@ -125,7 +125,7 @@ OptaPlanner 在搜索空间的所有解决方案中填充它们。
 
 最后，它为每个解决方案设置一个分数，因此我们需要一个字段来存储分数:
 
-```
+```java
 @PlanningScore
 public HardSoftScore getScore() {
     return score;
@@ -144,7 +144,7 @@ public HardSoftScore getScore() {
 
 我们用一个简单的分数计算来解决这个问题(虽然看起来可能不是这样):
 
-```
+```java
 public class ScoreCalculator 
   implements EasyScoreCalculator<CourseSchedule, HardSoftScore> {
 
@@ -183,7 +183,7 @@ public class ScoreCalculator
 
 首先，我们做一些设置:
 
-```
+```java
 SolverFactory<CourseSchedule> solverFactory = SolverFactory.create(new SolverConfig() 
                                                       .withSolutionClass(CourseSchedule.class)
                                                       .withEntityClasses(Lecture.class)
@@ -192,7 +192,7 @@ SolverFactory<CourseSchedule> solverFactory = SolverFactory.create(new SolverCon
 solver = solverFactory.buildSolver();
 ```
 
-```
+```java
 unsolvedCourseSchedule = new CourseSchedule();
 ```
 
@@ -202,7 +202,7 @@ unsolvedCourseSchedule = new CourseSchedule();
 
 最后，我们通过调用`solve`来测试它。
 
-```
+```java
 CourseSchedule solvedCourseSchedule = solver.solve(unsolvedCourseSchedule);
 
 assertNotNull(solvedCourseSchedule.getScore());
@@ -213,7 +213,7 @@ assertEquals(-4, solvedCourseSchedule.getScore().getHardScore());
 
 作为奖励，我们创建了一个打印方法来显示我们的优化解决方案:
 
-```
+```java
 public void printCourseSchedule() {
     lectureList.stream()
       .map(c -> "Lecture in Room "
@@ -225,7 +225,7 @@ public void printCourseSchedule() {
 
 该方法显示:
 
-```
+```java
 Lecture in Room 1 during Period 1
 Lecture in Room 2 during Period 1
 Lecture in Room 1 during Period 2

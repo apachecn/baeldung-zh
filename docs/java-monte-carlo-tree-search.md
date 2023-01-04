@@ -74,7 +74,7 @@ MCTS 不断重复这四个阶段，直到某个固定的迭代次数或某个固
 
 首先，我们需要为`Tree`和`Node`类提供一个基本的实现，以实现树搜索功能:
 
-```
+```java
 public class Node {
     State state;
     Node parent;
@@ -88,7 +88,7 @@ public class Tree {
 
 因为每个节点都有特定的问题状态，所以让我们也实现一个`State`类:
 
-```
+```java
 public class State {
     Board board;
     int playerNo;
@@ -109,7 +109,7 @@ public class State {
 
 现在，让我们实现`MonteCarloTreeSearch` 类，它将负责从给定的游戏位置找到下一个最佳移动:
 
-```
+```java
 public class MonteCarloTreeSearch {
     static final int WIN_SCORE = 10;
     int level;
@@ -151,7 +151,7 @@ public class MonteCarloTreeSearch {
 
 **我们将从选择阶段**开始，这也需要 UCT 实施:
 
-```
+```java
 private Node selectPromisingNode(Node rootNode) {
     Node node = rootNode;
     while (node.getChildArray().size() != 0) {
@@ -161,7 +161,7 @@ private Node selectPromisingNode(Node rootNode) {
 }
 ```
 
-```
+```java
 public class UCT {
     public static double uctValue(
       int totalVisit, double nodeWinScore, int nodeVisit) {
@@ -184,7 +184,7 @@ public class UCT {
 
 **该阶段推荐一个叶节点，该叶节点应在扩展阶段进一步扩展:**
 
-```
+```java
 private void expandNode(Node node) {
     List<State> possibleStates = node.getState().getAllPossibleStates();
     possibleStates.forEach(state -> {
@@ -198,7 +198,7 @@ private void expandNode(Node node) {
 
 **接下来，我们编写代码来选择一个随机节点，并从中模拟一次随机播放。**此外，我们将有一个`update`函数从叶子到根传播分数和访问计数:
 
-```
+```java
 private void backPropogation(Node nodeToExplore, int playerNo) {
     Node tempNode = nodeToExplore;
     while (tempNode != null) {
@@ -228,7 +228,7 @@ private int simulateRandomPlayout(Node node) {
 
 现在我们完成了 MCTS 的实施。我们所需要的是一个井字游戏特定的`Board`类实现。注意，用我们的实现玩其他游戏；我们只需要改变`Board` 类。
 
-```
+```java
 public class Board {
     int[][] boardValues;
     public static final int DEFAULT_BOARD_SIZE = 3;
@@ -264,7 +264,7 @@ public class Board {
 
 我们刚刚实现了一个在井字游戏中不可战胜的人工智能。让我们写一个单元案例来证明人工智能与人工智能的对决总是以平局告终:
 
-```
+```java
 @Test
 public void givenEmptyBoard_whenSimulateInterAIPlay_thenGameDraw() {
     Board board = new Board();

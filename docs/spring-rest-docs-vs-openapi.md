@@ -30,7 +30,7 @@ Spring REST Docs 是由 Spring 社区开发的一个框架，目的是为 RESTfu
 
 这里，我们将使用的存储库是一个基本的`PagingAndSortingRepository`接口，模型为`Foo`:
 
-```
+```java
 @Repository
 public interface FooRepository extends PagingAndSortingRepository<Foo, Long>{}
 
@@ -56,7 +56,7 @@ public class Foo {
 
 接下来，让我们看看控制器，为了简洁起见，跳过它的实现细节:
 
-```
+```java
 @RestController
 @RequestMapping("/foo")
 public class FooController {
@@ -95,7 +95,7 @@ public class FooController {
 
 最后，启动应用程序:
 
-```
+```java
 @SpringBootApplication()
 public class Application {
     public static void main(String[] args) {
@@ -130,7 +130,7 @@ public class Application {
 
 为此，我们将在引导应用程序中添加一个`OpenAPI` bean:
 
-```
+```java
 @Bean
 public OpenAPI customOpenAPI(@Value("${springdoc.version}") String appVersion) {
     return new OpenAPI().info(new Info()
@@ -148,7 +148,7 @@ public OpenAPI customOpenAPI(@Value("${springdoc.version}") String appVersion) {
 
 让我们看看如何描述`getFooById.`我们将在另一个控制器`FooBarController`中这样做，它类似于我们的`FooController`:
 
-```
+```java
 @RestController
 @RequestMapping("/foobar")
 @Tag(name = "foobar", description = "the foobar API with documentation annotations")
@@ -189,7 +189,7 @@ REST docs 完全不同于 API 文档。如前所述，该过程是测试驱动�
 
 现在让我们看看 JUnit5 测试，其中包括我们的文档:
 
-```
+```java
 @ExtendWith({ RestDocumentationExtension.class, SpringExtension.class })
 @SpringBootTest(classes = Application.class)
 public class SpringRestDocsIntegrationTest {
@@ -230,7 +230,7 @@ public class SpringRestDocsIntegrationTest {
 
 这里有一个示例`http-response.adoc`，当然包含响应体:
 
-```
+```java
 [source,http,options="nowrap"]
 ----
 HTTP/1.1 200 OK
@@ -251,7 +251,7 @@ Content-Length: 60
 
 姑且称之为`fooapi.adoc`看一小部分:
 
-```
+```java
 === Accessing the foo GET
 A `GET` request is used to access the foo read.
 

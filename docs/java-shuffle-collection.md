@@ -12,7 +12,7 @@
 
 让我们看一个简单的例子，展示如何洗牌:
 
-```
+```java
 List<String> students = Arrays.asList("Foo", "Bar", "Baz", "Qux");
 Collections.shuffle(students);
 ```
@@ -21,7 +21,7 @@ Collections.shuffle(students);
 
 让我们使用第二种变体在两个列表上实现相同的洗牌:
 
-```
+```java
 List<String> students_1 = Arrays.asList("Foo", "Bar", "Baz", "Qux");
 List<String> students_2 = Arrays.asList("Foo", "Bar", "Baz", "Qux");
 
@@ -45,7 +45,7 @@ assertThat(students_1).isEqualTo(students_2);
 
 让我们来看一个快速洗牌的例子:
 
-```
+```java
 Map<Integer, String> studentsById = new HashMap<>();
 studentsById.put(1, "Foo");
 studentsById.put(2, "Bar");
@@ -63,7 +63,7 @@ List<String> shuffledStudents = shuffledStudentEntries.stream()
 
 类似地，我们可以打乱一个`Set`的元素:
 
-```
+```java
 Set<String> students = new HashSet<>(
   Arrays.asList("Foo", "Bar", "Baz", "Qux"));
 List<String> studentList = new ArrayList<>(students);

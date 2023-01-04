@@ -25,7 +25,7 @@ Hibernate 拦截器是一个接口，它允许我们对 Hibernate 中的某些�
 
 一个典型的例子是这样的:
 
-```
+```java
 public class CustomInterceptorImpl implements Interceptor, Serializable {
 
     @Override
@@ -55,14 +55,14 @@ public class CustomInterceptorImpl implements Interceptor, Serializable {
 
 例如，我们可以将`CustomInterceptor`定义为:
 
-```
+```java
 public class CustomInterceptor extends EmptyInterceptor {
 }
 ```
 
 如果我们需要在数据保存操作执行之前拦截它们，我们需要覆盖`onSave`方法:
 
-```
+```java
 @Override
 public boolean onSave(Object entity, Serializable id, 
   Object[] state, String[] propertyNames, Type[] types) {
@@ -84,7 +84,7 @@ public boolean onSave(Object entity, Serializable id,
 
 这可以通过以下方式实现:
 
-```
+```java
 @Override
 public boolean onFlushDirty(Object entity, Serializable id, 
   Object[] currentState, Object [] previousState, 
@@ -109,7 +109,7 @@ Hibernate 拦截器既可以注册为`Session`作用域，也可以注册为`Ses
 
 一个`Session`范围的拦截器链接到一个特定的会话。它是在会话定义或打开时创建的，如下所示:
 
-```
+```java
 public static Session getSessionWithInterceptor(Interceptor interceptor) 
   throws IOException {
     return getSessionFactory().withOptions()
@@ -123,7 +123,7 @@ public static Session getSessionWithInterceptor(Interceptor interceptor)
 
 在构建`SessionFactory.`之前注册一个`SessionFactory-`范围的拦截器，这通常是通过`SessionFactoryBuilder`实例上的`applyInterceptor`方法完成的:
 
-```
+```java
 ServiceRegistry serviceRegistry = configureServiceRegistry();
 SessionFactory sessionFactory = getSessionFactoryBuilder(serviceRegistry)
   .applyInterceptor(new CustomInterceptor())
@@ -136,13 +136,13 @@ SessionFactory sessionFactory = getSessionFactoryBuilder(serviceRegistry)
 
 对于`SessionFactory`范围的拦截器，我们自然需要确保它是线程安全的。这可以通过在属性文件中指定会话上下文来实现:
 
-```
+```java
 hibernate.current_session_context_class=org.hibernate.context.internal.ThreadLocalSessionContext
 ```
 
 或者将它添加到我们的 XML 配置文件中:
 
-```
+```java
 <property name="hibernate.current_session_context_class">
     org.hibernate.context.internal.ThreadLocalSessionContext
 </property>

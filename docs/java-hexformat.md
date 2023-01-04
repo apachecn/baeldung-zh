@@ -18,7 +18,7 @@
 
 这是一种简单且易于理解的实现方式，但往往效率低下:
 
-```
+```java
 public static String byteArrayToHex(byte[] a) {
     StringBuilder sb = new StringBuilder(a.length * 2);
     for (byte b: a) {
@@ -30,7 +30,7 @@ public static String byteArrayToHex(byte[] a) {
 
 另一个流行的解决方案是使用 [Apache Commons Codec](https://web.archive.org/web/20220525121925/https://commons.apache.org/proper/commons-codec/) 库，其中包含一个`Hex`实用程序类:
 
-```
+```java
 String foo = "I am a string";
 byte[] bytes = foo.getBytes();
 Hex.encodeHexString(bytes);
@@ -48,13 +48,13 @@ Hex.encodeHexString(bytes);
 
 `HexFormat.of() `是最常见的用例，当我们不关心分隔符支持时使用:
 
-```
+```java
 HexFormat hexFormat = HexFormat.of();
 ```
 
 `HexFormat.ofDelimiter(“:”)` 可用于分隔符支持，本例使用冒号作为分隔符:
 
-```
+```java
 HexFormat hexFormat = HexFormat.ofDelimiter(":");
 ```
 
@@ -64,7 +64,7 @@ HexFormat hexFormat = HexFormat.ofDelimiter(":");
 
 下面是三者结合使用的一个例子:
 
-```
+```java
 HexFormat hexFormat = HexFormat.of().withPrefix("[").withSuffix("]").withDelimiter(", ");
 assertEquals("[48], [0c], [11]", hexFormat.formatHex(new byte[] {72, 12, 17}));
 ```
@@ -77,20 +77,20 @@ assertEquals("[48], [0c], [11]", hexFormat.formatHex(new byte[] {72, 12, 17}));
 
 我们将使用创建实例的简单方法:
 
-```
+```java
 HexFormat hexFormat = HexFormat.of();
 ```
 
 接下来，让我们用它来把一个`String`转换成`byte[]`:
 
-```
+```java
 byte[] hexBytes = hexFormat.parseHex("ABCDEF0123456789");
 assertArrayEquals(new byte[] { -85, -51, -17, 1, 35, 69, 103, -119 }, hexBytes);
 ```
 
 然后再回来:
 
-```
+```java
 String bytesAsString = hexFormat.formatHex(new byte[] { -85, -51, -17, 1, 35, 69, 103, -119});
 assertEquals("ABCDEF0123456789", bytesAsString);
 ```
@@ -99,7 +99,7 @@ assertEquals("ABCDEF0123456789", bytesAsString);
 
 `HexFormat`还支持原语类型到十六进制字符串的转换:
 
-```
+```java
 String fromByte = hexFormat.toHexDigits((byte) 64);
 assertEquals("40", fromByte);
 
@@ -111,7 +111,7 @@ assertEquals("000462d53c8abac0", fromLong);
 
 如示例所示，`HexFormat`的默认行为是产生一个小写的十六进制值。**我们可以通过在创建我们的`HexFormat`实例**时调用`withUpperCase()`来改变这种行为:
 
-```
+```java
 upperCaseHexFormat = HexFormat.of().withUpperCase();
 ```
 

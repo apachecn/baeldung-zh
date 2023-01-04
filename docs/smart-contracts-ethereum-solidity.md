@@ -50,13 +50,13 @@ solidity 编译器将代码转换成 EVM 字节码，然后可以作为部署事
 
 solidity 契约中的第一行设置源代码版本。这是为了确保新的编译器版本不会突然改变契约的行为。
 
-```
+```java
 pragma solidity ^0.4.0;
 ```
 
 对于我们的示例，契约的名称是`Greeting`，正如我们所看到的，它的创建类似于 Java 或另一种面向对象编程语言中的类:
 
-```
+```java
 contract Greeting {
     address creator;
     string message;
@@ -75,7 +75,7 @@ contract Greeting {
 
 构造函数是一个特殊的函数，当一个契约第一次被部署到以太坊区块链时，它只被调用一次。我们只能为一个协定声明一个构造函数:
 
-```
+```java
 function Greeting(string _message) {
     message = _message;
     creator = msg.sender;
@@ -92,7 +92,7 @@ function Greeting(string _message) {
 
 最后，我们实现了`message:`的 setter 和 getter 方法
 
-```
+```java
 function greet() constant returns (string) {
     return message;
 }
@@ -121,7 +121,7 @@ Infura 是最直接的选择，所以我们将请求一个[免费访问令牌](h
 
 为了能够从 Java 处理智能契约，我们需要使用一个名为 [Web3j](https://web.archive.org/web/20220626080930/https://web3j.io/) 的库。下面是 Maven 的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.web3j</groupId>
     <artifactId>core</artifactId>
@@ -131,7 +131,7 @@ Infura 是最直接的选择，所以我们将请求一个[免费访问令牌](h
 
 在格拉德:
 
-```
+```java
 compile ('org.web3j:core:3.3.1')
 ```
 
@@ -148,14 +148,14 @@ Web3j 允许我们从命令行使用它的一些功能:
 
 命令行工具可以以 zip 文件/tarball 的形式从项目资源库的 [releases](https://web.archive.org/web/20220626080930/https://github.com/web3j/web3j/releases/latest) 页面下载，或者对于 OS X 用户可以通过 homebrew:
 
-```
+```java
 brew tap web3j/web3j
 brew install web3j
 ```
 
 要生成新的以太坊钱包，我们只需在命令行中键入以下内容:
 
-```
+```java
 $ web3j wallet create
 ```
 
@@ -175,13 +175,13 @@ Web3j 可以自动生成智能合约包装器代码，以便在不离开 JVM 的
 
 为了生成包装器代码，我们需要编译我们的智能契约。我们可以在这里找到安装编译器[的指令。从那里，我们在命令行上键入以下内容:](https://web.archive.org/web/20220626080930/https://github.com/ethereum/go-ethereum/wiki/Contract-Tutorial#installing-a-compiler)
 
-```
+```java
 $ solc Greeting.sol --bin --abi --optimize -o <output_dir>/
 ```
 
 后者将创建两个文件:`Greeting.bin` 和`Greeting.abi.`现在，我们可以使用 web3j 的命令行工具生成包装器代码:
 
-```
+```java
 $ web3j solidity generate /path/to/Greeting.bin 
   /path/to/Greeting.abi -o /path/to/src/main/java -p com.your.organisation.name
 ```
@@ -192,14 +192,14 @@ $ web3j solidity generate /path/to/Greeting.bin
 
 在我们的主类中，我们首先创建一个新的 web3j 实例来连接到网络上的远程节点:
 
-```
+```java
 Web3j web3j = Web3j.build(
   new HttpService("https://rinkeby.infura.io/<your_token>"));
 ```
 
 然后，我们需要加载以太坊钱包文件:
 
-```
+```java
 Credentials credentials = WalletUtils.loadCredentials(
   "<password>",
  "/path/to/<walletfile>");
@@ -207,7 +207,7 @@ Credentials credentials = WalletUtils.loadCredentials(
 
 现在，让我们部署我们的智能合同:
 
-```
+```java
 Greeting contract = Greeting.deploy(
   web3j, credentials,
   ManagedTransaction.GAS_PRICE, Contract.GAS_LIMIT,
@@ -216,7 +216,7 @@ Greeting contract = Greeting.deploy(
 
 根据网络中的工作情况，部署合同可能需要一段时间。部署后，我们可能希望存储部署协定的地址。我们可以这样获得地址:
 
-```
+```java
 String contractAddress = contract.getContractAddress();
 ```
 
@@ -224,13 +224,13 @@ String contractAddress = contract.getContractAddress();
 
 另一方面，我们可以修改执行交易的智能合约的值:
 
-```
+```java
 TransactionReceipt transactionReceipt = contract.setGreeting("Hello again").send();
 ```
 
 最后，如果我们想查看存储的新值，我们可以简单地写:
 
-```
+```java
 String newValue = contract.greet().send();
 ```
 

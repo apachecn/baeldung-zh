@@ -14,7 +14,7 @@
 
 首先，让我们看看开始使用 Spring Vault 所需的依赖项:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.vault</groupId>
@@ -34,7 +34,7 @@
 
 为了保护我们的秘密，我们必须实例化一个`VaultTemplate`，为此我们需要`VaultEndpoint`和`TokenAuthentication`实例:
 
-```
+```java
 VaultTemplate vaultTemplate = new VaultTemplate(new VaultEndpoint(), 
   new TokenAuthentication("00000000-0000-0000-0000-000000000000"));
 ```
@@ -45,19 +45,19 @@ VaultTemplate vaultTemplate = new VaultTemplate(new VaultEndpoint(),
 
 第一种是使用默认构造函数简单地实例化它，这将创建一个指向`http://localhost:8200:`的默认端点
 
-```
+```java
 VaultEndpoint endpoint = new VaultEndpoint();
 ```
 
 另一种方法是通过指定存储库的主机和端口来创建`VaultEndpoint`:
 
-```
+```java
 VaultEndpoint endpoint = VaultEndpoint.create("host", port);
 ```
 
 最后，我们还可以从存储库 URL 创建它:
 
-```
+```java
 VaultEndpoint endpoint = VaultEndpoint.from(new URI("vault uri"));
 ```
 
@@ -75,7 +75,7 @@ VaultEndpoint endpoint = VaultEndpoint.from(new URI("vault uri"));
 
 让我们创建一个扩展`AbstractVaultConfiguration,`来配置 Spring Vault 的类:
 
-```
+```java
 @Configuration
 public class VaultConfig extends AbstractVaultConfiguration {
 
@@ -99,7 +99,7 @@ public class VaultConfig extends AbstractVaultConfiguration {
 
 我们还可以使用`EnviromentVaultConfiguration`来配置 Spring Vault:
 
-```
+```java
 @Configuration
 @PropertySource(value = { "vault-config.properties" })
 @Import(value = EnvironmentVaultConfiguration.class)
@@ -113,7 +113,7 @@ public class VaultEnvironmentConfig {
 
 要配置存储库，我们至少需要几个属性:
 
-```
+```java
 vault.uri=https://localhost:8200
 vault.token=00000000-0000-0000-0000-000000000000
 ```
@@ -122,7 +122,7 @@ vault.token=00000000-0000-0000-0000-000000000000
 
 我们将创建一个简单的`Credentials`类，它映射到用户名和密码:
 
-```
+```java
 public class Credentials {
 
     private String username;
@@ -134,7 +134,7 @@ public class Credentials {
 
 现在，让我们看看如何使用`VaultTemplate:`来保护我们的`Credentials`对象
 
-```
+```java
 Credentials credentials = new Credentials("username", "password");
 vaultTemplate.write("secret/myapp", credentials);
 ```
@@ -147,7 +147,7 @@ vaultTemplate.write("secret/myapp", credentials);
 
 我们可以使用`VaultTemplate,` 中的`read() `方法访问受保护的秘密，该方法返回` VaultResponseSupport`作为响应:
 
-```
+```java
 VaultResponseSupport<Credentials> response = vaultTemplate
   .read("secret/myapp", Credentials.class);
 String username = response.getData().getUsername();
@@ -168,7 +168,7 @@ Spring 提供了这两个注释来标记我们想要在 Vault 中持久化的对
 
 所以首先，我们需要修饰我们的域类型`Credentials`:
 
-```
+```java
 @Secret(backend = "credentials", value = "myapp")
 public class Credentials {
 
@@ -186,7 +186,7 @@ public class Credentials {
 
 现在，让我们定义一个使用我们的域对象`Credentials`的存储库接口:
 
-```
+```java
 public interface CredentialsRepository extends CrudRepository<Credentials, String> {
 }
 ```
@@ -195,7 +195,7 @@ public interface CredentialsRepository extends CrudRepository<Credentials, Strin
 
 接下来，让我们将`CredentialsRepository`注入到`CredentialsService`中，并实现一些 CRUD 方法:
 
-```
+```java
 public class CredentialsService {
 
     @Autowired
@@ -215,7 +215,7 @@ public class CredentialsService {
 
 首先，让我们从`save()`方法的测试用例开始:
 
-```
+```java
 @Test
 public void givenCredentials_whenSave_thenReturnCredentials() {
     // Given
@@ -235,7 +235,7 @@ public void givenCredentials_whenSave_thenReturnCredentials() {
 
 最后，让我们用一个测试案例来确认`findById()`方法:
 
-```
+```java
 @Test
 public void givenId_whenFindById_thenReturnCredentials() {
     // Given

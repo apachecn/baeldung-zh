@@ -16,7 +16,7 @@
 
 最简单的实现是使用一个`for` 循环来从列表的最后一个元素开始**，并且当我们到达列表的开始时递减索引**:
 
-```
+```java
 for (int i = list.size(); i-- > 0; ) {
     System.out.println(list.get(i));
 }
@@ -28,13 +28,13 @@ for (int i = list.size(); i-- > 0; ) {
 
 将列表的大小作为索引提供给`ListIterator`会给我们一个指向列表末尾的迭代器:
 
-```
+```java
 ListIterator listIterator = list.listIterator(list.size());
 ```
 
 这个迭代器现在允许我们以相反的方向遍历列表:
 
-```
+```java
 while (listIterator.hasPrevious()) {
     System.out.println(listIterator.previous());
 }
@@ -44,13 +44,13 @@ while (listIterator.hasPrevious()) {
 
 **Java 中的 [`Collections`](https://web.archive.org/web/20220628064207/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collections.html#reverse(java.util.List)) 类提供了一个静态方法来反转指定列表中元素的顺序:**
 
-```
+```java
 Collections.reverse(list);
 ```
 
 然后，反向列表可用于向后迭代原始元素:
 
-```
+```java
 for (String item : list) {
     System.out.println(item);
 }
@@ -64,7 +64,7 @@ for (String item : list) {
 
 在开始之前，我们需要从 [Maven Central](https://web.archive.org/web/20220628064207/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.commons%22%20AND%20a%3A%22commons-collections4%22) 导入最新的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -74,13 +74,13 @@ for (String item : list) {
 
 我们可以通过将原始列表作为构造函数参数传递来创建一个新的`ReverseListIterator`:
 
-```
+```java
 ReverseListIterator reverseListIterator = new ReverseListIterator(list);
 ```
 
 然后我们可以使用这个迭代器反向遍历列表:
 
-```
+```java
 while (reverseListIterator.hasNext()) {
     System.out.println(reverseListIterator.next());
 }
@@ -92,7 +92,7 @@ while (reverseListIterator.hasNext()) {
 
 最新的番石榴版本可以在 [Maven Central](https://web.archive.org/web/20220628064207/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.google.guava%22%20AND%20a%3A%22guava%22) 上找到:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -102,13 +102,13 @@ while (reverseListIterator.hasNext()) {
 
 调用`Lists`类上的静态方法`reverse()`以相反的方式给出了列表:
 
-```
+```java
 List<String> reversedList = Lists.reverse(list);
 ```
 
 然后，反向列表可用于在原始列表上向后迭代:
 
-```
+```java
 for (String item : reversedList) {
     System.out.println(item);
 }

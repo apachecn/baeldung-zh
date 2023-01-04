@@ -78,7 +78,7 @@ Java 安全 API 广泛利用了`Factory`设计模式。
 
 让我们提供一个如何创建到服务器的安全连接的示例:
 
-```
+```java
 String host = getHost(...);
 Integer port = getPort(...);
 SSLSocketFactory sslsocketfactory = SSLSocketFactory.getDefault();

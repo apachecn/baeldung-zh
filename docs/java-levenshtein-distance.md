@@ -73,7 +73,7 @@
 
 该算法的简单递归实现:
 
-```
+```java
 public class EditDistanceRecursive {
 
    static int calculate(String x, String y) {
@@ -126,7 +126,7 @@ public class EditDistanceRecursive {
 
 或者，我们也可以通过使用基于表格的方法迭代地实现这一点:
 
-```
+```java
 static int calculate(String x, String y) {
     int[][] dp = new int[x.length() + 1][y.length() + 1];
 

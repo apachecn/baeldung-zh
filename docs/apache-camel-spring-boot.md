@@ -12,7 +12,7 @@
 
 首先，我们需要包含 Spring Boot、Camel、Rest API 与 Swagger 和 JSON 的依赖关系:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.apache.camel.springboot</groupId>
@@ -47,7 +47,7 @@ Apache Camel 依赖项的最新版本可以在这里找到。
 
 让我们先创建一个 Spring Boot `Application`:
 
-```
+```java
 @SpringBootApplication
 @ComponentScan(basePackages="com.baeldung.camel")
 public class Application {
@@ -63,7 +63,7 @@ public class Application {
 
 例如，让我们在`src/main/resources`中的`application.properties`文件上为我们的应用程序配置一个日志:
 
-```
+```java
 logging.config=classpath:logback.xml
 camel.springboot.name=MyCamel
 server.address=0.0.0.0
@@ -77,7 +77,7 @@ endpoints.health.enabled = true
 
 另一个配置文件是`application.yml`。在其中，我们将添加一些属性来帮助我们将值注入我们的应用程序路线:
 
-```
+```java
 server:
   port: 8080
 camel:
@@ -100,7 +100,7 @@ quickstart:
 
 如前所述，从 Camel 的 2.18 及以下版本开始，我们可以利用我们的`application.yml`，为我们的最终 URL 创建一个参数。稍后它将被注入到我们的 Java 代码中:
 
-```
+```java
 baeldung:
   api:
     path: '/camel'
@@ -108,7 +108,7 @@ baeldung:
 
 回到我们的`Application`类，我们需要在上下文路径的根位置注册 Camel servlet，当应用程序启动时，它将从`application.yml`中的引用`baeldung.api.path` 注入:
 
-```
+```java
 @Value("${baeldung.api.path}")
 String contextPath;
 
@@ -127,7 +127,7 @@ ServletRegistrationBean servletRegistrationBean() {
 
 让我们从扩展 Camel 的`RouteBuilder`类开始创建一个路由，并将其设置为`@Component`，这样组件扫描例程就可以在 web 服务器初始化期间找到它:
 
-```
+```java
 @Component
 class RestApi extends RouteBuilder {
     @Override
@@ -151,7 +151,7 @@ class RestApi extends RouteBuilder {
 
 接下来，我们为我们计划在`restConfiguration()`方法中创建的端点创建一个 REST 声明:
 
-```
+```java
 restConfiguration()
   .contextPath(contextPath) 
   .port(serverPort)
@@ -174,7 +174,7 @@ restConfiguration()
 
 现在，让我们从上面列出的`configure()`方法中实现`rest()`方法调用:
 
-```
+```java
 rest("/api/")
   .id("api-route")
   .consumes("application/json")
@@ -198,7 +198,7 @@ rest("/api/")
 
 在本文中，我们只在我们正在覆盖的`configure()`方法中创建另一个路由。这将是我们最后一条`to()`路线的目的地路线:
 
-```
+```java
 from("direct:remoteService")
   .routeId("direct-route")
   .tracing()
@@ -230,7 +230,7 @@ from("direct:remoteService")
 
 让我们做一些更有意义的事情，比如调用服务层返回处理过的数据。简单并不意味着繁重的数据处理，所以让我们用一个`process()`方法代替`transform()`:
 
-```
+```java
 from("direct:remoteService")
   .routeId("direct-route")
   .tracing()
@@ -251,7 +251,7 @@ from("direct:remoteService")
 
 因为我们之前将`bindingMode()`设置为 JSON，所以响应已经是基于我们的 POJO 生成的正确的 JSON 格式。这意味着对于一个`ExampleServices`类:
 
-```
+```java
 public class ExampleServices {
     public static void example(MyBean bodyIn) {
         bodyIn.setName( "Hello, " + bodyIn.getName() );

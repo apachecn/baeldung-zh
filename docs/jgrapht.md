@@ -14,7 +14,7 @@ JGraphT 是一个开源的 Java 类库，它不仅为我们提供了各种类型
 
 让我们从向 Maven 项目添加依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.jgrapht</groupId>
     <artifactId>jgrapht-core</artifactId>
@@ -32,7 +32,7 @@ JGraphT 支持各种类型的图形。
 
 首先，让我们创建一个顶点类型为`String`的简单图形:
 
-```
+```java
 Graph<String, DefaultEdge> g 
   = new SimpleGraph<>(DefaultEdge.class);
 g.addVertex(“v1”);
@@ -48,7 +48,7 @@ g.addEdge(v1, v2);
 
 [![Directed graph](img/8f37237e182234e1be1b97e6ff638892.png)](/web/20221208143830/https://www.baeldung.com/wp-content/uploads/2017/10/Directed_graph-300x232.png)
 
-```
+```java
 DirectedGraph<String, DefaultEdge> directedGraph 
   = new DefaultDirectedGraph<>(DefaultEdge.class);
 directedGraph.addVertex("v1");
@@ -64,7 +64,7 @@ directedGraph.addEdge("v1", "v2");
 
 [![complete graph2017/10/multigraph-1.png](img/7d7eafa24102146d7f28f09c36ead2e5.png)](/web/20221208143830/https://www.baeldung.com/wp-content/uploads/2017/10/complete_graph.png)
 
-```
+```java
 public void createCompleteGraph() {
     completeGraph = new SimpleWeightedGraph<>(DefaultEdge.class);
     CompleteGraphGenerator<String, DefaultEdge> completeGenerator 
@@ -89,7 +89,7 @@ public void createCompleteGraph() {
 
 让我们创建一个带加权边的多重图:
 
-```
+```java
 public void createMultiGraphWithWeightedEdges() {
     multiGraph = new Multigraph<>(DefaultWeightedEdge.class);
     multiGraph.addVertex("v1");
@@ -115,7 +115,7 @@ public void createMultiGraphWithWeightedEdges() {
 我们可以根据需要使用各种迭代器遍历图，比如`BreadthFirstIterator`、`DepthFirstIterator`、`ClosestFirstIterator`、`RandomWalkIterator`。
 我们只需要通过传递图形对象来创建各自迭代器的实例:
 
-```
+```java
 DepthFirstIterator depthFirstIterator 
   = new DepthFirstIterator<>(directedGraph);
 BreadthFirstIterator breadthFirstIterator 
@@ -130,7 +130,7 @@ BreadthFirstIterator breadthFirstIterator
 
 让我们使用 Dijkstra 的算法找到最短路径:
 
-```
+```java
 @Test
 public void whenGetDijkstraShortestPath_thenGetNotNullPath() {
     DijkstraShortestPath dijkstraShortestPath 
@@ -144,7 +144,7 @@ public void whenGetDijkstraShortestPath_thenGetNotNullPath() {
 
 同样，要使用贝尔曼-福特算法获得最短路径:
 
-```
+```java
 @Test
 public void 
   whenGetBellmanFordShortestPath_thenGetNotNullPath() {
@@ -169,7 +169,7 @@ public void
 
 列出所有强连通子图的实现:
 
-```
+```java
 @Test
 public void 
   whenGetStronglyConnectedSubgraphs_thenPathExists() {
@@ -204,7 +204,7 @@ public void
 
 [![eulerian circuit](img/55eaa4e870b1c54f71a02cf480d2e9de.png)](/web/20221208143830/https://www.baeldung.com/wp-content/uploads/2017/10/eulerian_circuit-1.png)
 
-```
+```java
 public void createGraphWithEulerianCircuit() {
     SimpleWeightedGraph<String, DefaultEdge> simpleGraph 
       = new SimpleWeightedGraph<>(DefaultEdge.class);
@@ -220,7 +220,7 @@ public void createGraphWithEulerianCircuit() {
 
 现在，我们可以使用 API 测试一个图是否包含欧拉回路:
 
-```
+```java
 @Test
 public void givenGraph_whenCheckEluerianCycle_thenGetResult() {
     HierholzerEulerianCycle eulerianCycle 
@@ -249,7 +249,7 @@ public void whenGetEulerianCycle_thenGetGraphPath() {
 
 该方法将返回一个近似的最小旅行推销员行程(哈密尔顿循环)。最优解是 NP 完全的，因此这是一个在多项式时间内运行的合适的近似:
 
-```
+```java
 public void 
   whenGetHamiltonianCyclePath_thenGetVerticeSequence() {
     List<String> verticeList = HamiltonianCycle
@@ -263,7 +263,7 @@ public void
 
 我们还可以检查图中是否有循环。目前，`CycleDetector` 仅支持有向图:
 
-```
+```java
 @Test
 public void whenCheckCycles_thenDetectCycles() {
     CycleDetector<String, DefaultEdge> cycleDetector 
@@ -280,7 +280,7 @@ public void whenCheckCycles_thenDetectCycles() {
 
 **JGraphT 允许我们生成图形的可视化，并将它们保存为图像**，首先让我们从 Maven Central 添加 [jgrapht-ext](https://web.archive.org/web/20221208143830/https://search.maven.org/search?q=a:jgrapht-ext%20AND%20g:org.jgrapht) 扩展依赖:
 
-```
+```java
 <dependency>
     <groupId>org.jgrapht</groupId>
     <artifactId>jgrapht-ext</artifactId>
@@ -290,7 +290,7 @@ public void whenCheckCycles_thenDetectCycles() {
 
 接下来，让我们创建一个具有 3 个顶点和 3 条边的简单有向图:
 
-```
+```java
 @Before
 public void createGraph() {
 
@@ -316,7 +316,7 @@ public void createGraph() {
 
 我们现在可以看到这个图表:
 
-```
+```java
 @Test
 public void givenAdaptedGraph_whenWriteBufferedImage_thenFileShouldExist() throws IOException {
 

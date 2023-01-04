@@ -35,7 +35,7 @@ StAX 比 SAX 和 DOM 更新。它代表 XML 的流 API。
 
 现在让我们使用下面的 XML 来表示 Baeldung 网站及其文章:
 
-```
+```java
 <baeldung>
     <articles>
         <article>
@@ -56,14 +56,14 @@ StAX 比 SAX 和 DOM 更新。它代表 XML 的流 API。
 
 我们将从为我们的`Baeldung`根元素及其子元素创建 POJOs 开始:
 
-```
+```java
 public class Baeldung {
     private List<BaeldungArticle> articleList;
     // usual getters and setters
 } 
 ```
 
-```
+```java
 public class BaeldungArticle {
     private String title;
     private String content;
@@ -77,7 +77,7 @@ public class BaeldungArticle {
 
 定义了所有回调之后，我们现在可以编写`BaeldungHandler`类了:
 
-```
+```java
 public class BaeldungHandler extends DefaultHandler {
     private static final String ARTICLES = "articles";
     private static final String ARTICLE = "article";
@@ -151,7 +151,7 @@ public class BaeldungHandler extends DefaultHandler {
 
 为了测试解析器，我们将实例化`SaxFactory`、`SaxParser`以及`BaeldungHandler`:
 
-```
+```java
 SAXParserFactory factory = SAXParserFactory.newInstance();
 SAXParser saxParser = factory.newSAXParser();
 SaxParserMain.BaeldungHandler baeldungHandler = new SaxParserMain.BaeldungHandler(); 
@@ -159,7 +159,7 @@ SaxParserMain.BaeldungHandler baeldungHandler = new SaxParserMain.BaeldungHandle
 
 之后，我们将解析 XML 文件，并断言该对象包含所有解析的预期元素:
 
-```
+```java
 saxParser.parse("src/test/resources/sax/baeldung.xml", baeldungHandler);
 
 SaxParserMain.Baeldung result = baeldungHandler.getWebsite();

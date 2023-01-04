@@ -53,7 +53,7 @@ API 网关将整个请求作为输入发送给后端 Lambda 函数。在响应�
 
 除此之外，我们还需要简单的 JSON 库:
 
-```
+```java
 <dependency>
     <groupId>com.googlecode.json-simple</groupId>
     <artifactId>json-simple</artifactId>
@@ -76,7 +76,7 @@ API 网关将整个请求作为输入发送给后端 Lambda 函数。在响应�
 
 在我们实现实际的请求处理程序之前，让我们快速看一下我们的数据模型:
 
-```
+```java
 public class Person {
 
     private int id;
@@ -104,7 +104,7 @@ public class Person {
 
 就像在文章 [AWS Lambda With Java](/web/20220526045901/https://www.baeldung.com/java-aws-lambda#handler) 中一样，我们将创建一个`RequestStreamHandler`接口的实现:
 
-```
+```java
 public class APIDemoHandler implements RequestStreamHandler {
 
     private static final String DYNAMODB_TABLE_NAME = System.getenv("TABLE_NAME"); 
@@ -136,7 +136,7 @@ public class APIDemoHandler implements RequestStreamHandler {
 
 在我们的第一个函数中，我们想要演示**如何从 API 网关**获取有效载荷(比如从 PUT 或 POST 请求中获取):
 
-```
+```java
 public void handleRequest(
   InputStream inputStream, 
   OutputStream outputStream, 
@@ -196,13 +196,13 @@ public void handleRequest(
 
 由于我们期望从 API 网关获得一个`String`作为`body`，我们将`body`转换为`String`并初始化我们的`Person`对象:
 
-```
+```java
 Person person = new Person((String) event.get("body"));
 ```
 
 API Gateway 还期望响应`body`是一个`String`:
 
-```
+```java
 responseJson.put("body", responseBody.toString());
 ```
 
@@ -218,7 +218,7 @@ responseJson.put("body", responseBody.toString());
 
 在第二步中，我们想要演示**如何使用路径参数或查询字符串参数**通过 ID 从数据库中检索`Person`项:
 
-```
+```java
 public void handleGetByParam(
   InputStream inputStream, OutputStream outputStream, Context context)
   throws IOException {
@@ -288,7 +288,7 @@ public void handleGetByParam(
 
 同样，我们可以使用 Maven 简单地构建我们的代码:
 
-```
+```java
 mvn clean package shade:shade
 ```
 
@@ -323,7 +323,7 @@ JAR 文件将被创建在`target`文件夹下。
 
 对于`StorePersonFunction`，我们应该用这个:
 
-```
+```java
 {
     "body": "{\"id\": 1, \"name\": \"John Doe\"}"
 }
@@ -333,7 +333,7 @@ JAR 文件将被创建在`target`文件夹下。
 
 应该返回以下响应:
 
-```
+```java
 {
     "isBase64Encoded": false,
     "headers": {
@@ -350,7 +350,7 @@ JAR 文件将被创建在`target`文件夹下。
 
 为了测试路径参数功能，输入如下所示:
 
-```
+```java
 {
     "pathParameters": {
         "id": "1"
@@ -360,7 +360,7 @@ JAR 文件将被创建在`target`文件夹下。
 
 并且用于发送查询字符串参数的输入将是:
 
-```
+```java
 {
     "queryStringParameters": {
         "id": "1"
@@ -370,7 +370,7 @@ JAR 文件将被创建在`target`文件夹下。
 
 作为响应，对于这两种情况，我们应该得到以下方法:
 
-```
+```java
 {
   "headers": {
     "x-custom-header": "my custom header value"
@@ -464,7 +464,7 @@ JAR 文件将被创建在`target`文件夹下。
 
 对于`StorePersonFunction`，我们必须在“请求正文”字段中键入以下结构:
 
-```
+```java
 {
     "id": 2,
     "name": "Jane Doe"
@@ -483,7 +483,7 @@ JAR 文件将被创建在`target`文件夹下。
 
 让我们看看我们的 API 的 URL 方案是什么样子的:
 
-```
+```java
 https://{restapi-id}.execute-api.{region}.amazonaws.com/{stageName}
 ```
 
@@ -504,7 +504,7 @@ https://{restapi-id}.execute-api.{region}.amazonaws.com/{stageName}
 
 `StorePersonFunction`:
 
-```
+```java
 curl -X PUT 'https://0skaqfgdw4.execute-api.eu-central-1.amazonaws.com/test/persons' \
   -H 'content-type: application/json' \
   -d '{"id": 3, "name": "Richard Roe"}'
@@ -512,14 +512,14 @@ curl -X PUT 'https://0skaqfgdw4.execute-api.eu-central-1.amazonaws.com/test/pers
 
 `GetPersonByHTTPParamFunction `对于路径参数:
 
-```
+```java
 curl -X GET 'https://0skaqfgdw4.execute-api.eu-central-1.amazonaws.com/test/persons/3' \
   -H 'content-type: application/json'
 ```
 
 `GetPersonByHTTPParamFunction` 对于查询字符串参数:
 
-```
+```java
 curl -X GET 'https://0skaqfgdw4.execute-api.eu-central-1.amazonaws.com/test/persons?id=3' \
   -H 'content-type: application/json'
 ```

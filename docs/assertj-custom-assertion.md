@@ -17,7 +17,7 @@
 
 本教程中的测试用例将围绕`Person`类构建:
 
-```
+```java
 public class Person {
     private String fullName;
     private int age;
@@ -45,7 +45,7 @@ public class Person {
 
 下面是`Person`的自定义断言类的框架:
 
-```
+```java
 public class PersonAssert extends AbstractAssert<PersonAssert, Person> {
 
     public PersonAssert(Person actual) {
@@ -60,7 +60,7 @@ public class PersonAssert extends AbstractAssert<PersonAssert, Person> {
 
 为了给我们的断言类提供一个入口点，我们可以定义一个静态方法来启动断言链:
 
-```
+```java
 public static PersonAssert assertThat(Person actual) {
     return new PersonAssert(actual);
 }
@@ -70,7 +70,7 @@ public static PersonAssert assertThat(Person actual) {
 
 第一种方法验证一个`Person`的全名是否与一个`String`参数匹配:
 
-```
+```java
 public PersonAssert hasFullName(String fullName) {
     isNotNull();
     if (!actual.getFullName().equals(fullName)) {
@@ -83,7 +83,7 @@ public PersonAssert hasFullName(String fullName) {
 
 以下方法根据`age`测试`Person`是否为成年人:
 
-```
+```java
 public PersonAssert isAdult() {
     isNotNull();
     if (actual.getAge() < 18) {
@@ -95,7 +95,7 @@ public PersonAssert isAdult() {
 
 最后检查一个`nickname`的存在:
 
-```
+```java
 public PersonAssert hasNickName(String nickName) {
     isNotNull();
     if (!actual.getNickNames().contains(nickName)) {
@@ -108,7 +108,7 @@ public PersonAssert hasNickName(String nickName) {
 
 当有多个自定义断言类时，我们可以将所有的`assertThat`方法包装在一个类中，为每个断言类提供一个静态工厂方法:
 
-```
+```java
 public class Assertions {
     public static PersonAssert assertThat(Person actual) {
         return new PersonAssert(actual);
@@ -128,7 +128,7 @@ public class Assertions {
 
 下面是如何使用`hasFullName`方法:
 
-```
+```java
 @Test
 public void whenPersonNameMatches_thenCorrect() {
     Person person = new Person("John Doe", 20);
@@ -139,7 +139,7 @@ public void whenPersonNameMatches_thenCorrect() {
 
 这是一个说明`isAdult`方法的负面测试案例:
 
-```
+```java
 @Test
 public void whenPersonAgeLessThanEighteen_thenNotAdult() {
     Person person = new Person("Jane Roe", 16);
@@ -151,7 +151,7 @@ public void whenPersonAgeLessThanEighteen_thenNotAdult() {
 
 另一个测试演示了`hasNickname`方法:
 
-```
+```java
 @Test
 public void whenPersonDoesNotHaveAMatchingNickname_thenIncorrect() {
     Person person = new Person("John Doe", 20);
@@ -171,7 +171,7 @@ public void whenPersonDoesNotHaveAMatchingNickname_thenIncorrect() {
 
 要在 Maven 中使用断言生成器，我们需要在`pom.xml`文件中添加一个插件:
 
-```
+```java
 <plugin>
     <groupId>org.assertj</groupId>
     <artifactId>assertj-assertions-generator-maven-plugin</artifactId>
@@ -192,13 +192,13 @@ AssertJ 断言生成器为目标类的每个公共属性创建断言。每个断
 
 在项目基本目录中执行以下 Maven 命令:
 
-```
+```java
 mvn assertj:generate-assertions
 ```
 
 我们应该看到在`target` `/generated-test-sources/assertj-assertions`文件夹中生成的断言类。例如，为生成的断言生成的入口点类如下所示:
 
-```
+```java
 // generated comments are stripped off for brevity
 
 package com.baeldung.testing.assertj.custom;

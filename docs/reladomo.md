@@ -22,7 +22,7 @@
 
 要开始使用 ORM，我们需要将`[reladomo](https://web.archive.org/web/20220628234451/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22reladomo%22)` 依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.goldmansachs.reladomo</groupId>
     <artifactId>reladomo</artifactId>
@@ -32,7 +32,7 @@
 
 我们将使用一个`H2`数据库作为我们的示例，所以我们还要添加 [`h2`](https://web.archive.org/web/20220628234451/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22h2%22%20AND%20g%3A%22com.h2database%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -44,7 +44,7 @@
 
 对于文件生成，我们可以使用通过`maven-antrun-plugin`执行的任务。首先，让我们看看如何定义生成 Java 类的任务:
 
-```
+```java
 <plugin>
     <artifactId>maven-antrun-plugin</artifactId>
     <executions>
@@ -82,7 +82,7 @@
 
 对应于 Java 对象的数据库表可以手动创建，也可以使用第二个`Ant`任务生成的 DDL 脚本自动创建:
 
-```
+```java
 <taskdef 
   name="gen-ddl"
   classname = "com.gs.fw.common.mithra.generator.dbgenerator.MithraDbDefinitionGenerator"
@@ -99,7 +99,7 @@
 
 为了完成这个插件的定义，我们还必须添加两个用于创建的依赖项:
 
-```
+```java
 <plugin>
     <artifactId>maven-antrun-plugin</artifactId>
     <executions>
@@ -122,7 +122,7 @@
 
 最后，使用`build-helper-maven-plugin`，我们可以将生成的文件添加到类路径中:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>build-helper-maven-plugin</artifactId>
@@ -173,7 +173,7 @@
 
 让我们定义第一个`Department.xml`文件:
 
-```
+```java
 <MithraObject objectType="transactional">
     <PackageName>com.baeldung.reladomo</PackageName>
     <ClassName>Department</ClassName>
@@ -198,7 +198,7 @@
 
 **我们可以用`Relationship`标签来描述对象之间的关系。**在我们的例子中，我们已经定义了`Department`和`Employee`对象之间的`one-to-many`关系，基于表达式:
 
-```
+```java
 Employee.departmentId = this.id
 ```
 
@@ -208,7 +208,7 @@ Employee.departmentId = this.id
 
 接下来，让我们以类似的方式创建`Employee.xml`文件:
 
-```
+```java
 <MithraObject objectType="transactional">
     <PackageName>com.baeldung.reladomo</PackageName>
     <ClassName>Employee</ClassName>
@@ -229,7 +229,7 @@ Employee.departmentId = this.id
 
 在`Maven`部分中，我们将`ReladomoClassList.xml`文件定义为生成任务的源，所以现在应该创建文件了:
 
-```
+```java
 <Mithra>
     <MithraObjectResource name="Department"/>
     <MithraObjectResource name="Employee"/>
@@ -248,7 +248,7 @@ Employee.departmentId = this.id
 
 这些是简单的类，我们可以在其中添加自定义代码。例如，`Department`类只包含一个不应该被移除的构造函数:
 
-```
+```java
 public class Department extends DepartmentAbstract {
     public Department() {
         super();
@@ -260,7 +260,7 @@ public class Department extends DepartmentAbstract {
 
 如果我们想给这个类添加一个自定义构造函数，它也需要调用父构造函数:
 
-```
+```java
 public Department(long id, String name){
     super();
     this.setId(id);
@@ -289,7 +289,7 @@ public Department(long id, String name){
 
 当使用单个数据库时，我们可以实现`SourcelessConnectionManager`接口:
 
-```
+```java
 public class ReladomoConnectionManager implements SourcelessConnectionManager {
 
     private static ReladomoConnectionManager instance;
@@ -313,7 +313,7 @@ public class ReladomoConnectionManager implements SourcelessConnectionManager {
 
 让我们仔细看看`createConnectionManager()`方法:
 
-```
+```java
 private XAConnectionManager createConnectionManager() {
     xaConnectionManager = new XAConnectionManager();
     xaConnectionManager.setDriverClassName("org.h2.Driver");
@@ -332,7 +332,7 @@ private XAConnectionManager createConnectionManager() {
 
 此外，我们需要从`SourcelessConnectionManager`接口实现几个方法:
 
-```
+```java
 @Override
 public Connection getConnection() {
     return xaConnectionManager.getConnection();
@@ -361,7 +361,7 @@ public BulkLoader createBulkLoader() throws BulkLoaderException {
 
 最后，让我们添加一个定制方法来执行生成的 DDL 脚本，这些脚本创建了我们的数据库表:
 
-```
+```java
 public void createTables() throws Exception {
     Path ddlPath = Paths.get(ClassLoader.getSystemResource("sql").toURI());
     try (
@@ -386,7 +386,7 @@ public void createTables() throws Exception {
 
 `Reladomo`初始化过程使用一个配置文件，该文件指定了连接管理器类和使用的对象类型。让我们定义一个`ReladomoRuntimeConfig.xml`文件:
 
-```
+```java
 <MithraRuntime>
     <ConnectionManager 
       className="com.baeldung.reladomo.ReladomoConnectionManager ">
@@ -400,7 +400,7 @@ public void createTables() throws Exception {
 
 接下来，我们可以创建一个主类，首先调用`createTables()`方法，然后**使用`MithraManager`类加载配置并初始化`Reladomo`** :
 
-```
+```java
 public class ReladomoApplication {
     public static void main(String[] args) {
         try {
@@ -431,7 +431,7 @@ public class ReladomoApplication {
 
 首先，让我们创建两个`Department`和`Employee`对象，然后使用`cascadeInsert()`方法保存它们:
 
-```
+```java
 Department department = new Department(1, "IT");
 Employee employee = new Employee(1, "John");
 department.getEmployees().add(employee);
@@ -442,7 +442,7 @@ department.cascadeInsert();
 
 **要查询对象，我们可以使用生成的`Finder`类:**
 
-```
+```java
 Department depFound = DepartmentFinder
   .findByPrimaryKey(1);
 Employee empFound = EmployeeFinder
@@ -451,20 +451,20 @@ Employee empFound = EmployeeFinder
 
 以这种方式获得的对象是“活”对象，这意味着使用 setters 对它们进行的任何更改都会立即反映在数据库中:
 
-```
+```java
 empFound.setName("Steven");
 ```
 
 为了避免这种行为，我们可以获得分离的对象:
 
-```
+```java
 Department depDetached = DepartmentFinder
   .findByPrimaryKey(1).getDetachedCopy();
 ```
 
 要删除对象，我们可以使用`delete()`方法:
 
-```
+```java
 empFound.delete();
 ```
 
@@ -472,7 +472,7 @@ empFound.delete();
 
 如果我们希望一组操作作为一个单元执行或不作为一个单元执行，我们可以将它们包装在一个事务中:
 
-```
+```java
 mithraManager.executeTransactionalCommand(tx -> {
     Department dep = new Department(2, "HR");
     Employee emp = new Employee(2, "Jim");
@@ -492,7 +492,7 @@ mithraManager.executeTransactionalCommand(tx -> {
 
 首先，我们需要添加额外的`[reladomo-test-util](https://web.archive.org/web/20220628234451/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22reladomo-test-util%22)`依赖项，以及`[junit](https://web.archive.org/web/20220628234451/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22junit%22%20AND%20g%3A%22junit%22)`依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.goldmansachs.reladomo</groupId>
     <artifactId>reladomo-test-util</artifactId>
@@ -507,7 +507,7 @@ mithraManager.executeTransactionalCommand(tx -> {
 
 接下来，我们必须创建一个使用`ConnectionManagerForTests`类的`ReladomoTestConfig.xml`文件:
 
-```
+```java
 <MithraRuntime>
     <ConnectionManager 
       className="com.gs.fw.common.mithra.test.ConnectionManagerForTests">
@@ -524,7 +524,7 @@ mithraManager.executeTransactionalCommand(tx -> {
 
 **`MithraTestResource`类的一个方便的特性是我们可以提供带有测试数据**的文本文件，格式如下:
 
-```
+```java
 class com.baeldung.reladomo.Department
 id, name
 1, "Marketing"
@@ -536,7 +536,7 @@ id, name
 
 让我们创建一个`JUnit`测试类并在一个`@Before`方法中设置我们的`MithraTestResource`实例:
 
-```
+```java
 public class ReladomoTest {
     private MithraTestResource mithraTestResource;
 
@@ -558,7 +558,7 @@ public class ReladomoTest {
 
 然后我们可以编写一个简单的`@Test`方法来验证我们的测试数据是否被加载:
 
-```
+```java
 @Test
 public void whenGetTestData_thenOk() {
     Employee employee = EmployeeFinder.findByPrimaryKey(1);
@@ -568,7 +568,7 @@ public void whenGetTestData_thenOk() {
 
 测试运行后，需要清除测试数据库:
 
-```
+```java
 @After
 public void tearDown() throws Exception {
     this.mithraTestResource.tearDown();

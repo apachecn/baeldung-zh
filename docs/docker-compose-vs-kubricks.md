@@ -18,7 +18,7 @@
 
 让我们为连接到 PostgreSQL 数据库的 API 创建一个`docker-compose.yml`文件:
 
-```
+```java
 version: '3.8'
 services:
   db:
@@ -63,7 +63,7 @@ volumes:
 
 最后，我们可以通过运行以下命令在本地或生产环境中开始工作:
 
-```
+```java
 docker-compose up
 ```
 
@@ -95,7 +95,7 @@ Kubernetes 是关于管理部署在虚拟机或 T1 上的工件的。`Nodes`和�
 
 **Kubernetes 提供了一种[声明式或命令式](https://web.archive.org/web/20220921135705/https://kubernetes.io/docs/tasks/manage-kubernetes-objects/)方法，因此我们可以使用模板来创建、更新、删除甚至缩放对象**。例如，让我们为一个`Deployment`定义一个模板:
 
-```
+```java
 -- Postgres Database
 apiVersion: apps/v1
 kind: Deployment

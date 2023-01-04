@@ -27,7 +27,7 @@ Spring 有自己的`org.hibernate.context.CurrentSessionContext`接口实现—`
 
 我们将用`LocalSessionFactoryBean`定义一个 Java Spring 配置类:
 
-```
+```java
 @Configuration
 @EnableTransactionManagement
 @PropertySource(
@@ -57,7 +57,7 @@ public class PersistenceConfigHibernate3 {
 
 这是我们的简单服务:
 
-```
+```java
 @Service
 @Transactional
 public class EventService {
@@ -71,7 +71,7 @@ public class EventService {
 }
 ```
 
-```
+```java
 @Entity
 @Table(name = "EVENTS")
 public class Event implements Serializable {
@@ -86,7 +86,7 @@ public class Event implements Serializable {
 
 正如我们在下面的代码片段中看到的，使用了`SessionFactory` 类的`getCurrentSession()` 方法来获得 Hibernate 会话:
 
-```
+```java
 public abstract class AbstractHibernateDao<T extends Serializable> 
   implements IOperations<T> {
     private Class<T> clazz;
@@ -108,7 +108,7 @@ public abstract class AbstractHibernateDao<T extends Serializable>
 
 下面的测试通过了，演示了当包含服务方法的类`EventService`没有用`@Transactional` 注释进行注释时，将如何抛出异常:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
   classes = { PersistenceConfigHibernate3.class }, 
@@ -135,7 +135,7 @@ public class HibernateExceptionScen1MainIntegrationTest {
 
 这个测试展示了当用`@Transactional` 注释对`EventService`类进行注释时，服务方法是如何成功执行的:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
   classes = { PersistenceConfigHibernate3.class }, 
@@ -162,7 +162,7 @@ public class HibernateExceptionScen1MainIntegrationTest {
 
 让我们来看一些演示这一点的示例代码。为此，我们用`AnnotationSessionFactoryBean`定义了一个 Java Spring 配置类:
 
-```
+```java
 @Configuration
 @EnableTransactionManagement
 @PropertySource(
@@ -190,7 +190,7 @@ public class PersistenceConfig {
 
 对于上一节中的同一组 DAO、服务和模型类，我们会遇到如上所述的异常:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
   classes = { PersistenceConfig.class }, 
@@ -217,7 +217,7 @@ public class HibernateExceptionScen2MainIntegrationTest {
 
 如果我们用一个`@Transactional` 注释来注释服务类，那么服务方法会像预期的那样工作，并且下面显示的测试会通过:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
   classes = { PersistenceConfig.class }, 

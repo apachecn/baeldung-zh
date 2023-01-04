@@ -14,7 +14,7 @@ Spring Boot 应用程序嵌入了一个 web 服务器，有时，我们可能希
 
 我们将创建一个简单的 Spring Boot 应用程序示例，快速展示在运行时发现 HTTP 端口的方法:
 
-```
+```java
 @SpringBootApplication
 public class GetServerPortApplication {
     public static void main(String[] args) {
@@ -29,13 +29,13 @@ public class GetServerPortApplication {
 
 例如，在`application.properties`文件中，我们可以将`7777`设置为应用程序运行的端口:
 
-```
+```java
 server.port=7777 
 ```
 
 或者，**不是定义一个固定的端口，我们可以通过将“`0`”设置为“`server.port`”属性**的值，让 Spring Boot 应用程序在一个随机的端口上运行:
 
-```
+```java
 server.port=0 
 ```
 
@@ -47,13 +47,13 @@ server.port=0
 
 让我们创建一个属性文件`application-fixedport.properties`并在其中定义一个固定端口`7777` :
 
-```
+```java
 server.port=7777
 ```
 
 接下来，我们将尝试在单元测试类中获取端口:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GetServerPortApplication.class,
   webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -74,7 +74,7 @@ public class GetServerFixedPortUnitTest {
 
 由于`application-fixedport.properties`文件将被加载，我们可以使用 [`@Value`注释](/web/20221208143917/https://www.baeldung.com/spring-value-annotation)来获得`server.port`属性:
 
-```
+```java
 @Value("${server.port}")
 private int serverPort;
 
@@ -90,7 +90,7 @@ public void givenFixedPortAsServerPort_whenReadServerPort_thenGetThePort() {
 
 我们可以注入一个`ServerProperties`组件并从中获取端口:
 
-```
+```java
 @Autowired
 private ServerProperties serverProperties;
 
@@ -108,7 +108,7 @@ public void givenFixedPortAsServerPort_whenReadServerProps_thenGetThePort() {
 
 这一次，让我们创建另一个属性文件`application-randomport.properties`:
 
-```
+```java
 server.port=0
 ```
 
@@ -116,7 +116,7 @@ server.port=0
 
 同样，让我们创建另一个单元测试类:
 
-```
+```java
 ....
 @ActiveProfiles("randomport")
 public class GetServerRandomPortUnitTest {
@@ -128,7 +128,7 @@ public class GetServerRandomPortUnitTest {
 
 我们已经学习了两种在运行时发现固定端口的方法。然而，他们不能帮助我们得到随机端口:
 
-```
+```java
 @Value("${server.port}")
 private int randomServerPort;
 
@@ -156,7 +156,7 @@ public void given0AsServerPort_whenReadServerProps_thenGet0() {
 
 因此，我们可以从 context 对象中获取`[WebServer](https://web.archive.org/web/20221208143917/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/web/server/WebServer.html)` 来获取服务器信息或操纵服务器:
 
-```
+```java
 @Autowired
 private ServletWebServerApplicationContext webServerAppCtxt;
 
@@ -178,7 +178,7 @@ public void given0AsServerPort_whenReadWebAppCtxt_thenGetThePort() {
 
 因此，我们可以创建一个`EventListener `来从这个事件中获取端口:
 
-```
+```java
 @Service
 public class ServerPortService {
     private int port;
@@ -196,7 +196,7 @@ public class ServerPortService {
 
 我们可以将服务组件注入到我们的测试类中，以快速获得随机端口:
 
-```
+```java
 @Autowired
 private ServerPortService serverPortService;
 

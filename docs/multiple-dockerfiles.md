@@ -14,7 +14,7 @@ Dockerfile 是一个包含组装 Docker 映像所需的所有指令的文件。D
 
 我们可以从 Docker 文件所在的目录中调用 Docker 的`build`命令:
 
-```
+```java
 $ docker build .
 ```
 
@@ -24,7 +24,7 @@ $ docker build .
 
 我们可以适当地命名它们，并调用两次`build`命令，每次传递一个 docker 文件的名称:
 
-```
+```java
 $ docker build -f Dockerfile.frontend .
 ...
 $ docker build -f Dockerfile.backend .
@@ -36,7 +36,7 @@ $ docker build -f Dockerfile.backend .
 
 **不用改变 Dockerfiles 的名字，我们可以把它们放在单独的文件夹里。**然后，我们可以使用 [`docker-compose`](https://web.archive.org/web/20220524070211/https://baeldung.com/ops/docker-compose) 来触发他们所有人的构建。假设我们有这样一个目录结构:
 
-```
+```java
 docker-compose.yml
 docker
 ├── frontend
@@ -47,7 +47,7 @@ docker
 
 虽然`docker-compose`文件的最基本用法通常意味着使用存储库中的图像，但是我们也可以为`build`提供目录路径:
 
-```
+```java
 version: '3'
 services:
   frontend:
@@ -62,13 +62,13 @@ services:
 
 现在运行`docker-compose`将从 docker 文件构建图像:
 
-```
+```java
 $ docker-compose up
 ```
 
 此外，在一个 `docker-compose`文件中，我们可以用不同的方式创建一个图像。有些可以从我们的源代码动态构建，有些可以由外部注册中心提供。例如，我们可能希望构建后端映像，但是从公共注册中心获取数据库映像:
 
-```
+```java
 services:
   backend:
     build: ./docker/backend

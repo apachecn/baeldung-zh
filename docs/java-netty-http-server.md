@@ -12,7 +12,7 @@
 
 在这里，我们将直接开始引导服务器，这与简单协议服务器基本相同:
 
-```
+```java
 public class HttpServer {
 
     private int port;
@@ -62,7 +62,7 @@ public class HttpServer {
 
 `CustomHttpServerHandler`扩展 Netty 的抽象`SimpleChannelInboundHandler`并实现其生命周期方法:
 
-```
+```java
 public class CustomHttpServerHandler extends SimpleChannelInboundHandler {
     private HttpRequest request;
     StringBuilder responseData = new StringBuilder();
@@ -97,7 +97,7 @@ public class CustomHttpServerHandler extends SimpleChannelInboundHandler {
 
 这里，**我们将消费消息或请求，并将其响应设置为协议** 推荐的[(注意，`RequestUtils` 是我们马上要写的内容):](https://web.archive.org/web/20220630012938/https://www.w3.org/Protocols/HTTP/1.1/draft-ietf-http-v11-spec-01.html#Response)
 
-```
+```java
 if (msg instanceof HttpRequest) {
     HttpRequest request = this.request = (HttpRequest) msg;
 
@@ -124,7 +124,7 @@ if (msg instanceof HttpContent) {
 
 正如我们所看到的，当我们的通道接收到一个`HttpRequest`时，它首先检查请求是否期望一个 [100 继续](https://web.archive.org/web/20220630012938/https://www.w3.org/Protocols/HTTP/1.1/draft-ietf-http-v11-spec-01.html#Status-Codes)状态。在这种情况下，我们立即写回一个状态为`CONTINUE`的空响应:
 
-```
+```java
 private void writeResponse(ChannelHandlerContext ctx) {
     FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, CONTINUE, 
       Unpooled.EMPTY_BUFFER);
@@ -136,7 +136,7 @@ private void writeResponse(ChannelHandlerContext ctx) {
 
 现在让我们定义方法`formatParams`并把它放在一个`RequestUtils`助手类中来完成:
 
-```
+```java
 StringBuilder formatParams(HttpRequest request) {
     StringBuilder responseData = new StringBuilder();
     QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.uri());
@@ -158,7 +158,7 @@ StringBuilder formatParams(HttpRequest request) {
 
 接下来，在接收到一个`HttpContent`，**时，我们获取请求体并将其转换为大写**:
 
-```
+```java
 StringBuilder formatBody(HttpContent httpContent) {
     StringBuilder responseData = new StringBuilder();
     ByteBuf content = httpContent.content();
@@ -172,7 +172,7 @@ StringBuilder formatBody(HttpContent httpContent) {
 
 同样，如果接收的`HttpContent`是一个`LastHttpContent`，我们添加一个再见消息和尾部报头，如果有的话:
 
-```
+```java
 StringBuilder prepareLastResponse(HttpRequest request, LastHttpContent trailer) {
     StringBuilder responseData = new StringBuilder();
     responseData.append("Good Bye!\r\n");
@@ -195,7 +195,7 @@ StringBuilder prepareLastResponse(HttpRequest request, LastHttpContent trailer) 
 
 既然我们要发送的数据已经准备好了，我们可以写对`ChannelHandlerContext`的响应了:
 
-```
+```java
 private void writeResponse(ChannelHandlerContext ctx, LastHttpContent trailer,
   StringBuilder responseData) {
     boolean keepAlive = HttpUtil.isKeepAlive(request);
@@ -233,13 +233,13 @@ private void writeResponse(ChannelHandlerContext ctx, LastHttpContent trailer,
 
 让我们首先调用服务器，提供一个带有请求的 cookie:
 
-```
+```java
 curl http://127.0.0.1:8080?param1=one
 ```
 
 作为回应，我们得到:
 
-```
+```java
 Parameter: PARAM1 = ONE
 
 Good Bye! 
@@ -251,13 +251,13 @@ Good Bye!
 
 作为我们的第二个测试，让我们发送一个正文为`sample content`的帖子:
 
-```
+```java
 curl -d "sample content" -X POST http://127.0.0.1:8080
 ```
 
 以下是回应:
 
-```
+```java
 SAMPLE CONTENT
 Good Bye!
 ```

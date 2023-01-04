@@ -12,7 +12,7 @@
 
 为了展示下面的每个解决方案如何执行拆分，我们将使用相同的示例字符串:
 
-```
+```java
 String example = "Mary;Thomas:Jane-Kate";
 String[] expectedArray = new String[]{"Mary", "Thomas", "Jane", "Kate"};
 ```
@@ -27,7 +27,7 @@ String[] expectedArray = new String[]{"Mary", "Thomas", "Jane", "Kate"};
 
 我们将编写一个简单的测试来演示这种方法:
 
-```
+```java
 String[] names = example.split("[;:-]");
 Assertions.assertEquals(4, names.length);
 Assertions.assertArrayEquals(expectedArray, names);
@@ -48,7 +48,7 @@ Assertions.assertArrayEquals(expectedArray, names);
 
 首先，我们将添加[番石榴](https://web.archive.org/web/20220524034154/https://search.maven.org/artifact/com.google.guava/guava/31.0.1-jre/bundle)依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -62,7 +62,7 @@ Assertions.assertArrayEquals(expectedArray, names);
 
 在我们的示例中，我们将使用正则表达式来指定分隔符:
 
-```
+```java
 Iterable<String> names = Splitter.on(Pattern.compile("[;:-]")).split(example);
 Assertions.assertEquals(4, Iterators.size(names.iterator()));
 Assertions.assertIterableEquals(Arrays.asList(expectedArray), names);
@@ -72,7 +72,7 @@ Assertions.assertIterableEquals(Arrays.asList(expectedArray), names);
 
 这个方法和前面的方法的区别在于,`onPattern`方法将模式作为一个字符串。不需要像在`on`方法中那样编译它。我们将为测试`onPattern`方法定义相同的分隔符组合:
 
-```
+```java
 Iterable<String> names = Splitter.onPattern("[;:-]").split(example);
 Assertions.assertEquals(4, Iterators.size(names.iterator()));
 Assertions.assertIterableEquals(Arrays.asList(expectedArray), names);
@@ -82,7 +82,7 @@ Assertions.assertIterableEquals(Arrays.asList(expectedArray), names);
 
 因为我们用多个分隔符分割输入字符串，所以我们也可以在`[CharMatcher](/web/20220524034154/https://www.baeldung.com/guava-string-charmatcher) `类中使用 *anyOf* 方法:
 
-```
+```java
 Iterable<String> names = Splitter.on(CharMatcher.anyOf(";:-")).split(example);
 Assertions.assertEquals(4, Iterators.size(names.iterator()));
 Assertions.assertIterableEquals(Arrays.asList(expectedArray), names);
@@ -96,7 +96,7 @@ Assertions.assertIterableEquals(Arrays.asList(expectedArray), names);
 
 我们首先将 [Apache Commons Lang](https://web.archive.org/web/20220524034154/https://search.maven.org/artifact/org.apache.commons/commons-lang3/3.12.0/jar) 依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -106,7 +106,7 @@ Assertions.assertIterableEquals(Arrays.asList(expectedArray), names);
 
 接下来，我们将使用来自`StringUtils`类的`split`方法:
 
-```
+```java
 String[] names = StringUtils.split(example, ";:-");
 Assertions.assertEquals(4, names.length);
 Assertions.assertArrayEquals(expectedArray, names);

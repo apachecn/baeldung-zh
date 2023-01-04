@@ -6,7 +6,7 @@
 
 在这篇简短的文章中，我们将讨论在 Java 8 中使用`Stream`类时可能会遇到的一个常见的`Exception` :
 
-```
+```java
 IllegalStateException: stream has already been operated upon or closed.
 ```
 
@@ -24,7 +24,7 @@ IllegalStateException: stream has already been operated upon or closed.
 
 让我们看看如何将其转化为一个实际的例子:
 
-```
+```java
 Stream<String> stringStream = Stream.of("A", "B", "C", "D");
 Optional<String> result1 = stringStream.findAny(); 
 System.out.println(result1.get()); 
@@ -33,7 +33,7 @@ Optional<String> result2 = stringStream.findFirst();
 
 因此:
 
-```
+```java
 A
 Exception in thread "main" java.lang.IllegalStateException: 
   stream has already been operated upon or closed
@@ -47,7 +47,7 @@ Exception in thread "main" java.lang.IllegalStateException:
 
 当然，我们可以手动操作，但这正是`Supplier`功能界面变得非常方便的地方:
 
-```
+```java
 Supplier<Stream<String>> streamSupplier 
   = () -> Stream.of("A", "B", "C", "D");
 Optional<String> result1 = streamSupplier.get().findAny();
@@ -58,7 +58,7 @@ System.out.println(result2.get());
 
 因此:
 
-```
+```java
 A
 A
 ```

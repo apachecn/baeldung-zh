@@ -14,7 +14,7 @@
 
 在我们继续执行`upsert`操作之前，首先我们需要建立一个新的数据库`baeldung`和一个样本集合`vehicle`:
 
-```
+```java
 db.vehicle.insertMany([
 {
     "companyName":"Nissan", 
@@ -41,7 +41,7 @@ db.vehicle.insertMany([
 
 如果插入成功，上面的命令将打印一个 JSON，如下所示:
 
-```
+```java
 {
     "acknowledged" : true, 
     "insertedIds" : [
@@ -62,7 +62,7 @@ db.vehicle.insertMany([
 
 让我们检查一个查询，其中的过滤条件与集合中的现有文档相匹配:
 
-```
+```java
 db.vehicle.update(
 {
     "modelName":"X5"
@@ -79,7 +79,7 @@ db.vehicle.update(
 
 上述查询将返回以下文档:
 
-```
+```java
 { 
     "nMatched" : 1, 
     "nUpserted" : 0,
@@ -89,7 +89,7 @@ db.vehicle.update(
 
 在这里，我们将看到与上述 mongo shell 查询相对应的 Java 驱动程序代码:
 
-```
+```java
 UpdateOptions options = new UpdateOptions().upsert(true);
 UpdateResult updateResult = collection.updateOne(Filters.eq("modelName", "X5"), 
   Updates.combine(Updates.set("companyName", "Hero Honda")), options);
@@ -100,7 +100,7 @@ System.out.println("updateResult:- " + updateResult);
 
 现在让我们看看使用$ `setOnInsert`操作符的`upsert`选项的例子。它仅适用于添加新文档的情况:
 
-```
+```java
 db.vehicle.update(
 {
     "modelName":"GTPR"
@@ -122,7 +122,7 @@ db.vehicle.update(
 
 上述查询将返回以下文档:
 
-```
+```java
 {
     "nMatched" : 0,
     "nUpserted" : 1,
@@ -133,7 +133,7 @@ db.vehicle.update(
 
 上面带有`$setOnInsert`选项的更新查询的 Java 驱动程序代码将是:
 
-```
+```java
 UpdateResult updateSetOnInsertResult = collection.updateOne(Filters.eq("modelName", "GTPR"),
   Updates.combine(Updates.set("companyName", "Hero Honda"),
   Updates.setOnInsert("launchYear", 2022),
@@ -150,7 +150,7 @@ System.out.println("updateSetOnInsertResult:- " + updateSetOnInsertResult);
 
 让我们看看带有`upsert`选项`true`的`findAndModify`方法的一个用例:
 
-```
+```java
 db.vehicle.findAndModify(
 {
     query:{
@@ -168,7 +168,7 @@ db.vehicle.findAndModify(
 
 在这种情况下，上述查询将返回新创建的文档。让我们来看看上面查询的 Java 驱动程序代码:
 
-```
+```java
 FindOneAndUpdateOptions upsertOptions = new FindOneAndUpdateOptions();
   upsertOptions.returnDocument(ReturnDocument.AFTER);
   upsertOptions.upsert(true);
@@ -185,7 +185,7 @@ System.out.println("resultDocument:- " + resultDocument);
 
 首先，让我们看看 replace 方法的 Mongo shell 查询:
 
-```
+```java
 db.vehicle.replaceOne(
 {
     "modelName":"GTPR"
@@ -204,7 +204,7 @@ db.vehicle.replaceOne(
 
 上述查询将返回以下响应:
 
-```
+```java
 { 
     "acknowledged" : true, 
     "matchedCount" : 1,
@@ -214,7 +214,7 @@ db.vehicle.replaceOne(
 
 现在，让我们使用 Java 驱动程序代码编写上面的查询:
 
-```
+```java
 Document replaceDocument = new Document();
 replaceDocument.append("modelName", "GTPP")
   .append("companyName", "Hero Honda")

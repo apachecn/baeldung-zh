@@ -48,7 +48,7 @@
 
 如前所述，我们的边缘服务将消费和处理健康生命体征，让我们创建一个包含个人基本健康生命体征的记录:
 
-```
+```java
 public record HealthData(
 
     String userId,
@@ -68,7 +68,7 @@ public record HealthData(
 
 **我们的健康服务将负责处理健康数据，从请求中识别区域，并将其发送到适当的动物区域:**
 
-```
+```java
 public interface HealthService {
     void process(HealthData healthData);
 }
@@ -76,7 +76,7 @@ public interface HealthService {
 
 让我们开始构建实现:
 
-```
+```java
 public class DefaultHealthService implements HealthService {
 
     @Override
@@ -92,7 +92,7 @@ Java 中有几个库可以识别地理位置。但是，对于本文，我们将
 
 让我们添加接口:
 
-```
+```java
 public interface GeoLocationService {
     String getRegion(double latitude, double longitude);
 }
@@ -100,7 +100,7 @@ public interface GeoLocationService {
 
 以及为所有请求返回“US”地区的实现:
 
-```
+```java
 public class DefaultGeoLocationService implements GeoLocationService {
 
     @Override
@@ -112,14 +112,14 @@ public class DefaultGeoLocationService implements GeoLocationService {
 
 接下来，让我们在我们的`HealthService;` 中使用这个`GeoLocationService`让我们注入它:
 
-```
+```java
 @Autowired
 private GeoLocationService geoLocationService;
 ```
 
 并在`process`方法中使用它来提取区域:
 
-```
+```java
 public void process(HealthData healthData) {
 
     String region = geoLocationService.getRegion(
@@ -154,7 +154,7 @@ public void process(HealthData healthData) {
 
 创建密钥后，让我们将特定区域的动物群连接 URL 和安全密钥存储在我们的 Spring Boot 服务的`application.properties`中:
 
-```
+```java
 fauna-connections.EU=https://db.eu.fauna.com/
 fauna-secrets.EU=eu-secret
 fauna-connections.US=https://db.us.fauna.com/
@@ -173,7 +173,7 @@ fauna-secrets.US=us-secret
 
 接下来，让我们单击下一个屏幕上的“New Document”按钮，插入一个示例文档，并在 JavaScript 控制台中添加以下 JSON:
 
-```
+```java
 {
   "userId": "baeldung-user",
   "temperature": "37.2",
@@ -198,7 +198,7 @@ fauna-secrets.US=us-secret
 
 为了将我们的 Spring Boot 应用程序与动物群集成，我们需要将 Java 的动物群驱动程序添加到项目中。让我们添加依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.faunadb</groupId>
     <artifactId>faunadb-java</artifactId>
@@ -213,7 +213,7 @@ fauna-secrets.US=us-secret
 
 这个驱动程序为我们提供了`FaunaClient`,我们可以使用给定的连接端点和密码轻松地进行配置:
 
-```
+```java
 FaunaClient client = FaunaClient.builder()
     .withEndpoint("connection-url")
     .withSecret("secret")
@@ -224,7 +224,7 @@ FaunaClient client = FaunaClient.builder()
 
 让我们创建一个新类`FaunaClients,` ，它接受一个区域并返回正确配置的`FaunaClient`:
 
-```
+```java
 public class FaunaClients {
 
     public FaunaClient getFaunaClient(String region) {
@@ -235,7 +235,7 @@ public class FaunaClients {
 
 我们已经在`application.properties; we`中存储了动物群的特定区域端点和秘密，可以将端点和秘密作为地图注入:
 
-```
+```java
 @ConfigurationProperties
 public class FaunaClients {
 
@@ -254,7 +254,7 @@ public class FaunaClients {
 
 这里，我们使用了`@ConfigurationProperties,` ，它在我们的类中注入了配置属性。要启用此注释，我们还需要添加:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-configuration-processor</artifactId>
@@ -264,7 +264,7 @@ public class FaunaClients {
 
 最后，我们需要从各自的映射中提取正确的连接端点和秘密，并相应地使用它们来创建`FaunaClient`:
 
-```
+```java
 public FaunaClient getFaunaClient(String region) {
 
     String faunaUrl = faunaConnections.get(region);
@@ -287,7 +287,7 @@ public FaunaClient getFaunaClient(String region) {
 
 让我们注射`FaunaClients`:
 
-```
+```java
 public class DefaultHealthService implements HealthService {
 
     @Autowired
@@ -299,7 +299,7 @@ public class DefaultHealthService implements HealthService {
 
 接下来，让我们通过传入先前从`GeoLocationService`中提取的区域来获得特定于区域的`FaunaClient`:
 
-```
+```java
 public void process(HealthData healthData) {
 
     String region = geoLocationService.getRegion(
@@ -316,7 +316,7 @@ public void process(HealthData healthData) {
 
 让我们添加查询来创建动物群的健康数据；我们将以关键字`Create` 开始，并提及我们要插入数据的集合名称:
 
-```
+```java
 Value queryResponse = faunaClient.query(
     Create(Collection("healthdata"), //)
     ).get();
@@ -324,7 +324,7 @@ Value queryResponse = faunaClient.query(
 
 接下来，我们将创建要插入的实际数据对象。我们将把对象的属性和它的值定义为一个`Map`的条目，并使用 FQL 的`Value`关键字包装它:
 
-```
+```java
 Create(Collection("healthdata"), 
     Obj("data", 
         Obj(Map.of(
@@ -336,7 +336,7 @@ Create(Collection("healthdata"),
 
 类似地，我们可以对所有剩余的属性进行操作:
 
-```
+```java
 Create(Collection("healthdata"), 
     Obj("data", 
         Obj(Map.of(
@@ -352,7 +352,7 @@ Create(Collection("healthdata"),
 
 最后，让我们记录查询的响应，以便了解查询执行过程中的任何问题:
 
-```
+```java
 log.info("Query response received from Fauna: {}", queryResponse); 
 ```
 
@@ -364,7 +364,7 @@ log.info("Query response received from Fauna: {}", queryResponse);
 
 让我们添加一个测试来验证我们的集成端到端地工作，并且我们的请求被发送到正确的动物区域。我们将模拟`GeoLocationService`来切换我们测试的区域:
 
-```
+```java
 @SpringBootTest
 class DefaultHealthServiceTest {
 
@@ -380,7 +380,7 @@ class DefaultHealthServiceTest {
 
 让我们为欧盟地区添加一个测试:
 
-```
+```java
 @Test
 void givenEURegion_whenProcess_thenRequestSentToEURegion() {
 
@@ -397,7 +397,7 @@ void givenEURegion_whenProcess_thenRequestSentToEURegion() {
 
 接下来，让我们模拟该区域并调用`process`方法:
 
-```
+```java
 when(geoLocationService.getRegion(51.50, -0.07)).thenReturn("EU");
 
 defaultHealthService.process(healthData);
@@ -405,13 +405,13 @@ defaultHealthService.process(healthData);
 
 当我们运行测试时，我们可以在日志中检查是否获取了正确的 URL 来创建`FaunaClient`:
 
-```
+```java
 Creating Fauna Client for Region:EU with URL:https://db.eu.fauna.com/
 ```
 
 我们还可以检查从动物群服务器返回的确认记录创建正确的响应:
 
-```
+```java
 Query response received from Fauna: 
 {
 ref: ref(id = "338686945465991375", 
@@ -432,7 +432,7 @@ timestamp: 2022-07-31T08:24:51.164033Z}}
 
 类似地，我们可以为美国地区添加测试:
 
-```
+```java
 @Test
 void givenUSRegion_whenProcess_thenRequestSentToUSRegion() {
 

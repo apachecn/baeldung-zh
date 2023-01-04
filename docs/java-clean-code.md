@@ -61,14 +61,14 @@ Java [规定了一套规则](https://web.archive.org/web/20220625172621/https://
 
 *   面向对象概念中的类是对象的蓝图，这些对象通常代表现实世界中的对象。因此，使用名词来命名充分描述它们的类是有意义的:
 
-```
+```java
 public class Customer {
 }
 ```
 
 *   `Variables`:Java 中的变量捕获从类中创建的对象的状态。变量的名称应该清楚地描述变量的意图:
 
-```
+```java
 public class Customer {
     private String customerName;
 }
@@ -76,7 +76,7 @@ public class Customer {
 
 *   Java 中的方法总是类的一部分，因此通常表示对从类中创建的对象的状态的动作。因此，使用动词命名方法[很有用:](/web/20220625172621/https://www.baeldung.com/java-pojo-class#javabeans)
 
-```
+```java
 public class Customer {
     private String customerName;
     public String getCustomerName() {
@@ -107,7 +107,7 @@ public class Customer {
 
 让我们来看一个格式良好的源文件:
 
-```
+```java
 # /src/main/java/com/baeldung/application/entity/Customer.java
 package com.baeldung.application.entity;
 
@@ -159,7 +159,7 @@ public class Customer {
 
 让我们看一个例子:
 
-```
+```java
 List<String> customerIds = customer.stream()
   .map(customer -> customer.getCustomerId())
   .collect(Collectors.toCollection(ArrayList::new));
@@ -176,7 +176,7 @@ List<String> customerIds = customer.stream()
 
 让我们来看一个例子:
 
-```
+```java
 public boolean setCustomerAddress(String firstName, String lastName, String streetAddress, 
   String city, String zipCode, String state, String country, String phoneNumber) {
 }
@@ -197,7 +197,7 @@ public boolean setCustomerAddress(Address address) {
 
 让我们看一个例子:
 
-```
+```java
 private int storeClosureDay = 7;
 
 // This can be refactored to use a constant from Java
@@ -231,7 +231,7 @@ Java 允许两种类型的注释:实现注释和文档注释。它们有不同�
 
 让我们看一个有意义的文档注释的例子:
 
-```
+```java
 /**
 * This method is intended to add a new address for the customer.
 * However do note that it only allows a single address per zip
@@ -261,7 +261,7 @@ Java 中有很多用于日志记录的库和框架，包括 SLF4J、Logback。�
 
 让我们看一个具有正确级别的描述性日志记录的示例:
 
-```
+```java
 logger.info(String.format("A new customer has been created with customer Id: %s", id));
 ```
 

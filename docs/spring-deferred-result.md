@@ -24,7 +24,7 @@ Servlet 3.0 中引入了异步支持，简单地说，它允许在请求接收�
 
 让我们从开发一个标准的阻塞 REST 服务开始:
 
-```
+```java
 @GetMapping("/process-blocking")
 public ResponseEntity<?> handleReqSync(Model model) { 
     // ...
@@ -40,7 +40,7 @@ public ResponseEntity<?> handleReqSync(Model model) {
 
 为了避免阻塞，我们将使用基于回调的编程模型，而不是实际的结果，我们将返回一个`DeferredResult`到 servlet 容器。
 
-```
+```java
 @GetMapping("/async-deferredresult")
 public DeferredResult<ResponseEntity<?>> handleReqDefResult(Model model) {
     LOG.info("Received async-deferredresult request");
@@ -64,7 +64,7 @@ public DeferredResult<ResponseEntity<?>> handleReqDefResult(Model model) {
 
 让我们看看日志输出，检查我们的线程是否如预期的那样运行:
 
-```
+```java
 [nio-8080-exec-6] com.baeldung.controller.AsyncDeferredResultController: 
 Received async-deferredresult request
 [nio-8080-exec-6] com.baeldung.controller.AsyncDeferredResultController: 
@@ -80,13 +80,13 @@ Servlet thread freed
 
 让我们使用`onCompletion()`方法来定义一个异步请求完成时执行的代码块:
 
-```
+```java
 deferredResult.onCompletion(() -> LOG.info("Processing complete"));
 ```
 
 类似地，我们可以使用`onTimeout()`来注册自定义代码，以便在超时发生时调用。为了限制请求处理时间，我们可以在`DeferredResult`对象创建期间传递一个超时值:
 
-```
+```java
 DeferredResult<ResponseEntity<?>> deferredResult = new DeferredResult<>(500l);
 
 deferredResult.onTimeout(() -> 
@@ -99,7 +99,7 @@ deferredResult.onTimeout(() ->
 
 让我们通过处理一个超过定义的 5 秒超时值的请求来触发超时错误:
 
-```
+```java
 ForkJoinPool.commonPool().submit(() -> {
     LOG.info("Processing in separate thread");
     try {
@@ -113,7 +113,7 @@ ForkJoinPool.commonPool().submit(() -> {
 
 让我们看看日志:
 
-```
+```java
 [nio-8080-exec-6] com.baeldung.controller.DeferredResultController: 
 servlet thread freed
 [nio-8080-exec-6] java.lang.Thread: Processing in separate thread
@@ -123,7 +123,7 @@ Request timeout occurred
 
 将会出现由于某些错误或异常导致长时间运行的计算失败的情况。在这种情况下，我们也可以注册一个`onError()`回调:
 
-```
+```java
 deferredResult.onError((Throwable t) -> {
     deferredResult.setErrorResult(
       ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

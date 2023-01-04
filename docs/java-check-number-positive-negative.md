@@ -16,7 +16,7 @@
 
 所以，我们可以创建一个 [`enum`](/web/20221012124242/https://www.baeldung.com/a-guide-to-java-enums) 来涵盖这三种可能性:
 
-```
+```java
 enum Result {
     POSITIVE, NEGATIVE, ZERO
 } 
@@ -32,7 +32,7 @@ enum Result {
 
 接下来，让我们以`Integer`类型为例创建一个方法来进行检查:
 
-```
+```java
 static Result byOperator(Integer integer) {
     if (integer > 0) {
         return POSITIVE;
@@ -47,7 +47,7 @@ static Result byOperator(Integer integer) {
 
 让我们创建一个测试来验证我们的方法:
 
-```
+```java
 assertEquals(POSITIVE, PositiveOrNegative.byOperator(42));
 assertEquals(ZERO, PositiveOrNegative.byOperator(0));
 assertEquals(NEGATIVE, PositiveOrNegative.byOperator(-700));
@@ -67,7 +67,7 @@ assertEquals(NEGATIVE, PositiveOrNegative.byOperator(-700));
 
 让我们以一个`Integer`为例来创建一个检查方法:
 
-```
+```java
 static Result bySignum(Integer integer) {
     int result = Integer.signum(integer);
     if (result == 1) {
@@ -81,7 +81,7 @@ static Result bySignum(Integer integer) {
 
 下面的测试验证了我们的方法的预期效果:
 
-```
+```java
 assertEquals(POSITIVE, PositiveOrNegative.bySignum(42));
 assertEquals(ZERO, PositiveOrNegative.bySignum(0));
 assertEquals(NEGATIVE, PositiveOrNegative.bySignum(-700));
@@ -89,7 +89,7 @@ assertEquals(NEGATIVE, PositiveOrNegative.bySignum(-700));
 
 与`Integer`和`Long`不同，`Float`和`Double`类不提供`signum()`方法。然而，**[`Math.signum()`](/web/20221012124242/https://www.baeldung.com/java-lang-math#signum)方法接受`Float`和`Double`数字作为参数**，例如:
 
-```
+```java
 static Result bySignum(Float floatNumber) {
     float result = Math.signum(floatNumber);
 
@@ -104,7 +104,7 @@ static Result bySignum(Float floatNumber) {
 
 最后，让我们创建一个测试来验证该方法是否可以检查浮点数是正数还是负数:
 
-```
+```java
 assertEquals(POSITIVE, PositiveOrNegative.bySignum(4.2f));
 assertEquals(ZERO, PositiveOrNegative.bySignum(0f));
 assertEquals(NEGATIVE, PositiveOrNegative.bySignum(-7.7f));

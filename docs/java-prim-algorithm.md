@@ -54,7 +54,7 @@ Prim 的算法选择最小值，即 2 或 BC:
 
 顶点和边构成了图形，所以我们需要一个数据结构来存储这些元素。让我们创建类`Edge`:
 
-```
+```java
 public class Edge {
 
     private int weight;
@@ -67,7 +67,7 @@ public class Edge {
 
 现在，让我们添加`Vertex`类:
 
-```
+```java
 public class Vertex {
 
     private String label = null;
@@ -81,7 +81,7 @@ public class Vertex {
 
 让我们创建我们的`Prim`类，我们将在其中实现逻辑:
 
-```
+```java
 public class Prim {
 
     private List<Vertex> graph;
@@ -91,7 +91,7 @@ public class Prim {
 
 顶点列表足以存储整个图，因为在每个`Vertex`中，我们有一个`Map<Vertex, Edge>`来标识所有连接。在`Prim,` 中，我们创建了一个`run()` 方法:
 
-```
+```java
 public void run() {
     if (graph.size() > 0) {
         graph.get(0).setVisited(true);
@@ -116,7 +116,7 @@ public void run() {
 
 我们首先将`List<Vertex> graph`的第一个元素设置为 visited。第一个元素可以是任何顶点，这取决于它们最初被添加到列表中的顺序。`isDisconnected()`返回`true`如果有到目前为止没有访问过的`Vertex`:
 
-```
+```java
 private boolean isDisconnected() {
     for (Vertex vertex : graph) {
         if (!vertex.isVisited()) {
@@ -129,7 +129,7 @@ private boolean isDisconnected() {
 
 而最小生成树`isDisconnected()`，我们在已经访问过的顶点上循环，找到具有最小权重的`Edge`作为`nextVertex:`的候选
 
-```
+```java
 public Pair<Vertex, Edge> nextMinimum() {
     Edge nextMinimum = new Edge(Integer.MAX_VALUE);
     Vertex nextVertex = this;
@@ -160,7 +160,7 @@ public Pair<Vertex, Edge> nextMinimum() {
 
 好了，现在我们已经有了一些代码，让我们用一个真实的例子来测试它。首先，我们构建我们的图表:
 
-```
+```java
 public static List<Vertex> createGraph() {
     List<Vertex> graph = new ArrayList<>();
     Vertex a = new Vertex("A");
@@ -182,14 +182,14 @@ public static List<Vertex> createGraph() {
 
 `Prim`类的构造函数获取它并将其存储在类中。我们可以用`originalGraphToString()`方法打印输入图形:
 
-```
+```java
 Prim prim = new Prim(createGraph());
 System.out.println(prim.originalGraphToString());
 ```
 
 我们的示例将输出:
 
-```
+```java
 A --- 2 --- B
 A --- 3 --- C
 B --- 5 --- E
@@ -200,7 +200,7 @@ C --- 1 --- D
 
 现在，我们运行 Prim 的算法并用`minimumSpanningTreeToString()`方法打印结果 MST:
 
-```
+```java
 prim.run();
 prim.resetPrintHistory();
 System.out.println(prim.minimumSpanningTreeToString());
@@ -208,7 +208,7 @@ System.out.println(prim.minimumSpanningTreeToString());
 
 最后，我们打印出我们的 MST:
 
-```
+```java
 A --- 2 --- B
 B --- 2 --- C
 C --- 1 --- E

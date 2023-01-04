@@ -12,7 +12,7 @@
 
 让我们将所需的 Drools 依赖项添加到我们的应用程序中:
 
-```
+```java
 <dependency>
     <groupId>org.kie</groupId>
     <artifactId>kie-ci</artifactId>
@@ -58,7 +58,7 @@
 
 `Customer`类:
 
-```
+```java
 public class Customer {
     private CustomerType type;
 
@@ -83,7 +83,7 @@ public class Customer {
 
 `KieServices`类提供了对 所有 Kie 构建和运行时设施的访问。它提供了几个工厂、服务和实用方法。所以，让我们先来看看一个`KieServices`实例:
 
-```
+```java
 KieServices kieServices = KieServices.Factory.get();
 ```
 
@@ -93,7 +93,7 @@ KieServices kieServices = KieServices.Factory.get();
 
 `KieFileSystem`是一个虚拟文件系统。让我们将 Excel 电子表格添加到其中:
 
-```
+```java
 Resource dt 
   = ResourceFactory
     .newClassPathResource("com/baeldung/drools/rules/Discount.xls",
@@ -106,7 +106,7 @@ KieFileSystem kieFileSystem = kieServices.newKieFileSystem().write(dt);
 
 现在，通过将内容传递给`KieBuilder`来构建`KieFileSystem`的内容:
 
-```
+```java
 KieBuilder kieBuilder = kieServices.newKieBuilder(kieFileSystem);
 kieBuilder.buildAll();
 ```
@@ -117,7 +117,7 @@ kieBuilder.buildAll();
 
 框架自动将`KieModule`(由构建产生)添加到`KieRepository`:
 
-```
+```java
 KieRepository kieRepository = kieServices.getRepository();
 ```
 
@@ -125,7 +125,7 @@ KieRepository kieRepository = kieServices.getRepository();
 
 现在可以使用这个`KieModule`的`ReleaseId`创建一个新的`KieContainer`。在这种情况下，Kie 会分配一个默认值`ReleaseId:`
 
-```
+```java
 ReleaseId krDefaultReleaseId = kieRepository.getDefaultReleaseId();
 KieContainer kieContainer 
   = kieServices.newKieContainer(krDefaultReleaseId);
@@ -135,7 +135,7 @@ KieContainer kieContainer
 
 我们现在可以从`KieContainer`中获得`KieSession`。我们的应用程序与`KieSession`交互，后者存储并执行运行时数据:
 
-```
+```java
 KieSession kieSession = kieContainer.newKieSession();
 ```
 
@@ -143,7 +143,7 @@ KieSession kieSession = kieContainer.newKieSession();
 
 最后，是时候提供输入数据并启动规则了:
 
-```
+```java
 Customer customer = new Customer(CustomerType.BUSINESS, 2);
 kieSession.insert(customer);
 
@@ -154,7 +154,7 @@ kieSession.fireAllRules();
 
 现在让我们添加一些测试用例:
 
-```
+```java
 public class DiscountExcelIntegrationTest {
 
     private KieSession kSession;
@@ -210,7 +210,7 @@ public class DiscountExcelIntegrationTest {
 
 Drools 将决策表转换为 [DRL](/web/20220627073939/https://www.baeldung.com/drools) 。因此，处理 Excel 文件中的错误和打字错误可能会很困难。这些错误通常与 DRL 的内容有关。因此，打印和分析 DRL 有助于故障排除:
 
-```
+```java
 Resource dt 
   = ResourceFactory
     .newClassPathResource("com/baeldung/drools/rules/Discount.xls",

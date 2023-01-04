@@ -16,7 +16,7 @@
 
 在 Java 中，我们可以用来与它们直接交互的主要 API 是`java.net.NetworkInterface`类。因此，为了快速开始，让我们导入完整的包:
 
-```
+```java
 import java.net.*;
 ```
 
@@ -28,7 +28,7 @@ import java.net.*;
 
 通常，当我们想要对特定的服务器地址进行套接字连接时:
 
-```
+```java
 Socket socket = new Socket();
 socket.connect(new InetSocketAddress(address, port));
 ```
@@ -37,7 +37,7 @@ socket.connect(new InetSocketAddress(address, port));
 
 这里我们将做一个假设；我们不知道地址，但我们知道名字。出于演示的目的，让我们假设我们希望通过环回接口进行连接，按照惯例，它的名称是`lo`，至少在 Linux 和 Windows 系统上是这样，在 OSX 上是`lo0`:
 
-```
+```java
 NetworkInterface nif = NetworkInterface.getByName("lo");
 Enumeration<InetAddress> nifAddresses = nif.getInetAddresses();
 
@@ -64,7 +64,7 @@ socket.connect(new InetSocketAddress(address, port));
 
 到目前为止，我们看到的 API 用于通过指定的名称搜索网络接口:
 
-```
+```java
 @Test
 public void givenName_whenReturnsNetworkInterface_thenCorrect() {
     NetworkInterface nif = NetworkInterface.getByName("lo");
@@ -75,7 +75,7 @@ public void givenName_whenReturnsNetworkInterface_thenCorrect() {
 
 如果没有名称，则返回`null`:
 
-```
+```java
 @Test
 public void givenInExistentName_whenReturnsNull_thenCorrect() {
     NetworkInterface nif = NetworkInterface.getByName("inexistent_name");
@@ -86,7 +86,7 @@ public void givenInExistentName_whenReturnsNull_thenCorrect() {
 
 第二个 API 是`getByInetAddress()`，它也要求我们提供一个已知的参数，这次我们可以提供 IP 地址:
 
-```
+```java
 @Test
 public void givenIP_whenReturnsNetworkInterface_thenCorrect() {
     byte[] ip = new byte[] { 127, 0, 0, 1 };
@@ -100,7 +100,7 @@ public void givenIP_whenReturnsNetworkInterface_thenCorrect() {
 
 或主机名称:
 
-```
+```java
 @Test
 public void givenHostName_whenReturnsNetworkInterface_thenCorrect()  {
     NetworkInterface nif = NetworkInterface.getByInetAddress(
@@ -112,7 +112,7 @@ public void givenHostName_whenReturnsNetworkInterface_thenCorrect()  {
 
 或者，如果您特别关注本地主机:
 
-```
+```java
 @Test
 public void givenLocalHost_whenReturnsNetworkInterface_thenCorrect() {
     NetworkInterface nif = NetworkInterface.getByInetAddress(
@@ -124,7 +124,7 @@ public void givenLocalHost_whenReturnsNetworkInterface_thenCorrect() {
 
 另一种方法也是显式使用环回接口:
 
-```
+```java
 @Test
 public void givenLoopBack_whenReturnsNetworkInterface_thenCorrect() {
     NetworkInterface nif = NetworkInterface.getByInetAddress(
@@ -136,13 +136,13 @@ public void givenLoopBack_whenReturnsNetworkInterface_thenCorrect() {
 
 第三种方法是通过索引获取网络接口，这是从 Java 7 开始才有的:
 
-```
+```java
 NetworkInterface nif = NetworkInterface.getByIndex(int index);
 ```
 
 最后一种方法涉及到使用`getNetworkInterfaces` API。它返回系统中所有可用网络接口的`Enumeration`。我们需要在一个循环中检索返回的对象，标准的习语使用一个`List`:
 
-```
+```java
 Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
 
 for (NetworkInterface nif: Collections.list(nets)) {
@@ -156,7 +156,7 @@ for (NetworkInterface nif: Collections.list(nets)) {
 
 我们可以使用两个 API 来获取 IP 地址。第一个 API 是`getInetAddresses()`。它返回一个`InetAddress`实例的`Enumeration`，我们可以按照自己认为合适的方式进行处理:
 
-```
+```java
 @Test
 public void givenInterface_whenReturnsInetAddresses_thenCorrect()  {
     NetworkInterface nif = NetworkInterface.getByName("lo");
@@ -169,7 +169,7 @@ public void givenInterface_whenReturnsInetAddresses_thenCorrect()  {
 
 第二个 API 是`getInterfaceAddresses()`。它返回比`InetAddress`实例更强大的`InterfaceAddress`实例的`List`。例如，除了 IP 地址之外，您可能还对广播地址感兴趣:
 
-```
+```java
 @Test
 public void givenInterface_whenReturnsInterfaceAddresses_thenCorrect() {
     NetworkInterface nif = NetworkInterface.getByName("lo");
@@ -186,7 +186,7 @@ public void givenInterface_whenReturnsInterfaceAddresses_thenCorrect() {
 
 除了分配给接口的名称和 IP 地址之外，我们还可以访问有关接口的网络参数。要检查它是否启动并运行:
 
-```
+```java
 @Test
 public void givenInterface_whenChecksIfUp_thenCorrect() {
     NetworkInterface nif = NetworkInterface.getByName("lo");
@@ -197,7 +197,7 @@ public void givenInterface_whenChecksIfUp_thenCorrect() {
 
 要检查它是否是环回接口:
 
-```
+```java
 @Test
 public void givenInterface_whenChecksIfLoopback_thenCorrect() {
     NetworkInterface nif = NetworkInterface.getByName("lo");
@@ -208,7 +208,7 @@ public void givenInterface_whenChecksIfLoopback_thenCorrect() {
 
 要检查它是否代表点对点网络连接:
 
-```
+```java
 @Test
 public void givenInterface_whenChecksIfPointToPoint_thenCorrect() {
     NetworkInterface nif = NetworkInterface.getByName("lo");
@@ -219,7 +219,7 @@ public void givenInterface_whenChecksIfPointToPoint_thenCorrect() {
 
 或者如果是虚拟界面:
 
-```
+```java
 @Test
 public void givenInterface_whenChecksIfVirtual_thenCorrect() {
     NetworkInterface nif = NetworkInterface.getByName("lo");
@@ -229,7 +229,7 @@ public void givenInterface_whenChecksIfVirtual_thenCorrect() {
 
 要检查是否支持多播，请执行以下操作:
 
-```
+```java
 @Test
 public void givenInterface_whenChecksMulticastSupport_thenCorrect() {
     NetworkInterface nif = NetworkInterface.getByName("lo");
@@ -240,7 +240,7 @@ public void givenInterface_whenChecksMulticastSupport_thenCorrect() {
 
 或者检索其物理地址，通常称为 MAC 地址:
 
-```
+```java
 @Test
 public void givenInterface_whenGetsMacAddress_thenCorrect() {
     NetworkInterface nif = NetworkInterface.getByName("lo");
@@ -252,7 +252,7 @@ public void givenInterface_whenGetsMacAddress_thenCorrect() {
 
 另一个参数是最大传输单位，它定义了可以通过该接口传输的最大数据包大小:
 
-```
+```java
 @Test
 public void givenInterface_whenGetsMTU_thenCorrect() {
     NetworkInterface nif = NetworkInterface.getByName("net0");

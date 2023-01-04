@@ -20,7 +20,7 @@
 
 **如果我们不使用父 POM，我们仍然可以通过添加带有`scope=import`的`spring-boot-dependencies` 工件从依赖管理**中获益:
 
-```
+```java
 <dependencyManagement>
      <dependencies>
         <dependency>
@@ -36,7 +36,7 @@
 
 接下来，我们可以简单地开始添加 Spring 依赖项并利用`Spring Boot`特性:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -45,7 +45,7 @@
 
 **另一方面，没有了父 POM，我们不再受益于插件管理。**这意味着我们需要显式地添加`spring-boot-maven-plugin`:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -60,7 +60,7 @@
 
 如果我们想为某个依赖项使用不同于 Boot 管理的版本，我们需要在声明`spring-boot-dependencies`之前，在`dependencyManagement`部分声明它:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>

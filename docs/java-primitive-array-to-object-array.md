@@ -10,7 +10,7 @@
 
 假设我们有一个原语数组，比如`int[]`，我们想把它转换成一个对象数组`Integer[]`。我们可能会直觉地尝试铸造:
 
-```
+```java
 Integer[] integers = (Integer[])(new int[]{0,1,2,3,4});
 ```
 
@@ -24,7 +24,7 @@ Integer[] integers = (Integer[])(new int[]{0,1,2,3,4});
 
 首先，让我们从原始数组转换为对象数组:
 
-```
+```java
 int[] input = new int[] { 0, 1, 2, 3, 4 };
 Integer[] expected = new Integer[] { 0, 1, 2, 3, 4 };
 
@@ -38,7 +38,7 @@ assertArrayEquals(expected, output);
 
 现在，让我们将对象数组转换为基元数组:
 
-```
+```java
 Integer[] input = new Integer[] { 0, 1, 2, 3, 4 };
 int[] expected = new int[] { 0, 1, 2, 3, 4 };
 
@@ -58,7 +58,7 @@ assertArrayEquals(expected, output);
 
 首先，让我们看看如何对原始数组的元素进行装箱:
 
-```
+```java
 int[] input = new int[] { 0, 1, 2, 3, 4 };
 Integer[] expected = new Integer[] { 0, 1, 2, 3, 4 };
 
@@ -73,7 +73,7 @@ assertArrayEquals(expected, output);
 
 接下来，为了将它们转换回来，我们将使用`mapToInt`方法和`Integer`的拆箱方法:
 
-```
+```java
 Integer[] input = new Integer[] { 0, 1, 2, 3, 4 };
 int[] expected = new int[] { 0, 1, 2, 3, 4 };
 
@@ -90,7 +90,7 @@ assertArrayEquals(expected, output);
 
 首先，让我们添加 [Apache Commons Lang](https://web.archive.org/web/20221208143903/https://search.maven.org/artifact/org.apache.commons/commons-lang3) 库作为依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -100,7 +100,7 @@ assertArrayEquals(expected, output);
 
 然后，为了将原语数组转换成它的装箱副本，让我们使用`ArrayUtils.toObject`方法:
 
-```
+```java
 int[] input = new int[] { 0, 1, 2, 3, 4 };
 Integer[] expected = new Integer[] { 0, 1, 2, 3, 4 };
 
@@ -111,7 +111,7 @@ assertArrayEquals(expected, output);
 
 最后，为了将装箱的元素转换回原语，让我们使用`ArrayUtils.toPrimitives`方法:
 
-```
+```java
 Integer[] input = new Integer[] { 0, 1, 2, 3, 4 };
 int[] expected = new int[] { 0, 1, 2, 3, 4 };
 

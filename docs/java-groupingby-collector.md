@@ -28,14 +28,14 @@ Java 8 `Stream` API 让我们以声明的方式处理数据集合。
 
 *   首先，使用分类函数作为方法参数:
 
-```
+```java
 static <T,K> Collector<T,?,Map<K,List<T>>> 
   groupingBy(Function<? super T,? extends K> classifier)
 ```
 
 *   其次，以分类函数和第二收集器为方法参数:
 
-```
+```java
 static <T,K,A,D> Collector<T,?,Map<K,D>>
   groupingBy(Function<? super T,? extends K> classifier, 
     Collector<? super T,A,D> downstream)
@@ -43,7 +43,7 @@ static <T,K,A,D> Collector<T,?,Map<K,D>>
 
 *   最后，使用分类函数、供应商方法(提供包含最终结果的`Map`实现)和第二个收集器作为方法参数:
 
-```
+```java
 static <T,K,D,A,M extends Map<K,D>> Collector<T,?,M>
   groupingBy(Function<? super T,? extends K> classifier, 
     Supplier<M> mapFactory, Collector<? super T,A,D> downstream)
@@ -53,7 +53,7 @@ static <T,K,D,A,M extends Map<K,D>> Collector<T,?,M>
 
 为了演示`groupingBy()`的用法，让我们定义一个`BlogPost`类(我们将使用一串`BlogPost`对象):
 
-```
+```java
 class BlogPost {
     String title;
     String author;
@@ -64,7 +64,7 @@ class BlogPost {
 
 接下来，`BlogPostType`:
 
-```
+```java
 enum BlogPostType {
     NEWS,
     REVIEW,
@@ -74,13 +74,13 @@ enum BlogPostType {
 
 然后是`BlogPost`对象的`List`:
 
-```
+```java
 List<BlogPost> posts = Arrays.asList( ... );
 ```
 
 让我们也定义一个`Tuple`类，它将用于通过组合帖子的`type`和`author`属性来对帖子进行分组:
 
-```
+```java
 class Tuple {
     BlogPostType type;
     String author;
@@ -95,7 +95,7 @@ class Tuple {
 
 要将博客文章列表中的博客文章按其`type`分组:
 
-```
+```java
 Map<BlogPostType, List<BlogPost>> postsPerType = posts.stream()
   .collect(groupingBy(BlogPost::getType)); 
 ```
@@ -108,14 +108,14 @@ Map<BlogPostType, List<BlogPost>> postsPerType = posts.stream()
 
 例如，按照 Apache Commons `Pair`实例中组合的类型和作者对列表中的博客文章进行分组:
 
-```
+```java
 Map<Pair<BlogPostType, String>, List<BlogPost>> postsPerTypeAndAuthor = posts.stream()
   .collect(groupingBy(post -> new ImmutablePair<>(post.getType(), post.getAuthor())));
 ```
 
 类似地，我们可以使用之前定义的 Tuple 类，这个类可以很容易地被泛化以包含更多需要的字段。前面使用元组实例的示例是:
 
-```
+```java
 Map<Tuple, List<BlogPost>> postsPerTypeAndAuthor = posts.stream()
   .collect(groupingBy(post -> new Tuple(post.getType(), post.getAuthor()))); 
 ```
@@ -124,7 +124,7 @@ Java 16 引入了 [`record`](/web/20220729193215/https://www.baeldung.com/java-r
 
 **`record`特性为我们提供了一种比元组更简单、更清晰、更安全的方式来完成`groupingBy`** 。例如，我们在`BlogPost`中定义了一个`record`实例:
 
-```
+```java
 public class BlogPost {
     private String title;
     private String author;
@@ -138,7 +138,7 @@ public class BlogPost {
 
 现在，使用`record`实例按照类型、作者和喜好将列表中的`BlotPost`分组非常简单:
 
-```
+```java
 Map<BlogPost.AuthPostTypesLikes, List<BlogPost>> postsPerTypeAndAuthor = posts.stream()
   .collect(groupingBy(post -> new BlogPost.AuthPostTypesLikes(post.getAuthor(), post.getType(), post.getLikes()))); 
 ```
@@ -151,7 +151,7 @@ Map<BlogPost.AuthPostTypesLikes, List<BlogPost>> postsPerTypeAndAuthor = posts.s
 
 让我们使用`toSet()`收集器作为下游收集器，并获得一个`Set`博客帖子(而不是一个`List`):
 
-```
+```java
 Map<BlogPostType, Set<BlogPost>> postsPerType = posts.stream()
   .collect(groupingBy(BlogPost::getType, toSet())); 
 ```
@@ -162,7 +162,7 @@ Map<BlogPostType, Set<BlogPost>> postsPerType = posts.stream()
 
 将`BlogPost`的`List`先按`author`分组，再按`type`分组:
 
-```
+```java
 Map<String, Map<BlogPostType, List>> map = posts.stream()
   .collect(groupingBy(BlogPost::getAuthor, groupingBy(BlogPost::getType)));
 ```
@@ -173,7 +173,7 @@ Map<String, Map<BlogPostType, List>> map = posts.stream()
 
 例如，要找到每篇博客文章`type`的平均数量`likes`:
 
-```
+```java
 Map<BlogPostType, Double> averageLikesPerType = posts.stream()
   .collect(groupingBy(BlogPost::getType, averagingInt(BlogPost::getLikes))); 
 ```
@@ -182,7 +182,7 @@ Map<BlogPostType, Double> averageLikesPerType = posts.stream()
 
 为了计算每个`type`的`likes`的总和:
 
-```
+```java
 Map<BlogPostType, Integer> likesPerType = posts.stream()
   .collect(groupingBy(BlogPost::getType, summingInt(BlogPost::getLikes))); 
 ```
@@ -191,7 +191,7 @@ Map<BlogPostType, Integer> likesPerType = posts.stream()
 
 我们可以执行的另一个聚合是获取具有最大点赞数的博客帖子:
 
-```
+```java
 Map<BlogPostType, Optional<BlogPost>> maxLikesPerPostType = posts.stream()
   .collect(groupingBy(BlogPost::getType,
   maxBy(comparingInt(BlogPost::getLikes)))); 
@@ -207,7 +207,7 @@ Map<BlogPostType, Optional<BlogPost>> maxLikesPerPostType = posts.stream()
 
 让我们为每个不同类型的博客帖子的 likes 属性计算一个摘要:
 
-```
+```java
 Map<BlogPostType, IntSummaryStatistics> likeStatisticsPerType = posts.stream()
   .collect(groupingBy(BlogPost::getType, 
   summarizingInt(BlogPost::getLikes))); 
@@ -223,7 +223,7 @@ Map<BlogPostType, IntSummaryStatistics> likeStatisticsPerType = posts.stream()
 
 例如，让我们按`author`分组，并对每个分组计算`titles`的数量，列出`titles`，并提供`likes`的汇总统计。为了实现这一点，我们首先向`BlogPost`添加一条新记录:
 
-```
+```java
 public class BlogPost {
     // ...
     record PostCountTitlesLikesStats(long postCount, String titles, IntSummaryStatistics likesStats){};
@@ -233,7 +233,7 @@ public class BlogPost {
 
 `groupingBy`和`collectingAndThen`的实现将是:
 
-```
+```java
 Map<String, BlogPost.PostCountTitlesLikesStats> postsPerAuthor = posts.stream()
   .collect(groupingBy(BlogPost::getAuthor, collectingAndThen(toList(), list -> {
     long count = list.stream()
@@ -252,7 +252,7 @@ Map<String, BlogPost.PostCountTitlesLikesStats> postsPerAuthor = posts.stream()
 
 获取给定`author`的信息非常简单:
 
-```
+```java
 BlogPost.PostCountTitlesLikesStats result = postsPerAuthor.get("Author 1");
 assertThat(result.postCount()).isEqualTo(3L);
 assertThat(result.titles()).isEqualTo("News item 1 : Programming guide : Tech review 2");
@@ -267,7 +267,7 @@ assertThat(result.likesStats().getAverage()).isEqualTo(16.666d, offset(0.001d));
 
 首先，我们创建将封装我们的聚合结果的记录:
 
-```
+```java
 public class BlogPost {
     // ...
     record TitlesBoundedSumOfLikes(String titles, int boundedSumOfLikes) {};
@@ -277,7 +277,7 @@ public class BlogPost {
 
 然后，我们按以下方式对数据流进行分组和累积:
 
-```
+```java
 int maxValLikes = 17;
 Map<String, BlogPost.TitlesBoundedSumOfLikes> postsPerAuthor = posts.stream()
   .collect(toMap(BlogPost::getAuthor, post -> {
@@ -301,7 +301,7 @@ Map<String, BlogPost.TitlesBoundedSumOfLikes> postsPerAuthor = posts.stream()
 
 让我们把每篇博文`type`的`title`串联起来:
 
-```
+```java
 Map<BlogPostType, String> postsPerType = posts.stream()
   .collect(groupingBy(BlogPost::getType, 
   mapping(BlogPost::getTitle, joining(", ", "Post titles: [", "]")))); 
@@ -315,7 +315,7 @@ Map<BlogPostType, String> postsPerType = posts.stream()
 
 让我们通过向`groupingBy`方法传递一个`EnumMap`供应商函数来检索一个`EnumMap`:
 
-```
+```java
 EnumMap<BlogPostType, List<BlogPost>> postsPerType = posts.stream()
   .collect(groupingBy(BlogPost::getType, 
   () -> new EnumMap<>(BlogPostType.class), toList())); 
@@ -327,7 +327,7 @@ EnumMap<BlogPostType, List<BlogPost>> postsPerType = posts.stream()
 
 要并发执行分组操作，流需要是并行的:
 
-```
+```java
 ConcurrentMap<BlogPostType, List<BlogPost>> postsPerType = posts.parallelStream()
   .collect(groupingByConcurrent(BlogPost::getType)); 
 ```

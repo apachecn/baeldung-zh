@@ -12,7 +12,7 @@ ModelMapper 的主要作用是通过确定如何将一个对象模型映射到�
 
 为了使用[模型映射器](https://web.archive.org/web/20221208143854/https://search.maven.org/artifact/org.modelmapper/modelmapper)，我们首先将依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency> 
     <groupId>org.modelmapper</groupId>
     <artifactId>modelmapper</artifactId>
@@ -24,7 +24,7 @@ ModelMapper 的主要作用是通过确定如何将一个对象模型映射到�
 
 模型映射器提供了多种配置来简化映射过程。 我们通过启用或禁用配置 中的适当属性来自定义配置。**将`fieldMatchingEnabled`属性设置为` true`并允许私有字段匹配** : 是一种常见的做法
 
-```
+```java
 modelMapper.getConfiguration()
   .setFieldMatchingEnabled(true)
   .setFieldAccessLevel(Configuration.AccessLevel.PRIVATE); 
@@ -36,7 +36,7 @@ modelMapper.getConfiguration()
 
 ModelMapper 使用 [TypeToken](https://web.archive.org/web/20221208143854/http://modelmapper.org/javadoc/org/modelmapper/TypeToken.html) 来映射泛型类型。为了理解为什么这是必要的，让我们看看当我们将一个`Integer`列表映射到一个`Character`列表:时会发生什么
 
-```
+```java
 List<Integer> integers = new ArrayList<Integer>();
 integers.add(1);
 integers.add(2);
@@ -50,7 +50,7 @@ modelMapper.map(integers, characters);
 
 如果我们将`map`调用改为使用`TypeToken`，我们可以为`List<Character>` : 创建一个类型文字
 
-```
+```java
 List<Character> characters 
     = modelMapper.map(integers, new TypeToken<List<Character>>() {}.getType());
 ```
@@ -63,7 +63,7 @@ Java 中的列表可以使用自定义元素类型进行映射。
 
 例如，假设我们想要将一个由`User`实体组成的列表映射到一个列表`UserDTO`。为了实现这一点，我们将为每个元素调用`map`:
 
-```
+```java
 List<UserDTO> dtos = users
   .stream()
   .map(user -> modelMapper.map(user, UserDTO.class))
@@ -72,7 +72,7 @@ List<UserDTO> dtos = users
 
 当然，通过更多的工作，我们可以创建一个通用的参数化方法:
 
-```
+```java
 <S, T> List<T> mapList(List<S> source, Class<T> targetClass) {
     return source
       .stream()
@@ -83,7 +83,7 @@ List<UserDTO> dtos = users
 
 因此，我们可以改为做:
 
-```
+```java
 List<UserDTO> userDtoList = mapList(users, UserDTO.class);
 ```
 
@@ -91,13 +91,13 @@ List<UserDTO> userDtoList = mapList(users, UserDTO.class);
 
 列表或集合等特定属性可以添加到`User-UserDTO`模型中。`[TypeMap](https://web.archive.org/web/20221208143854/http://modelmapper.org/javadoc/org/modelmapper/TypeMap.html)` 提供了明确定义这些属性映射的方法。`TypeMap`对象存储特定类型(类)的映射信息:
 
-```
+```java
 TypeMap<UserList, UserListDTO> typeMap = modelMapper.createTypeMap(UserList.class, UserListDTO.class);
 ```
 
 `UserList` 类包含一个`User` s. **的集合在这里，w** **e 想把这个集合中的用户名列表映射到`UserListDTO`类**的属性列表 **。为此，** 我们将创建第一个`UsersListConverter`类，并将其`List <User>`和`List <String>` 作为 参数类型传递给
 
-```
+```java
 public class UsersListConverter extends AbstractConverter<List<User>, List<String>> {
 
     @Override
@@ -113,7 +113,7 @@ public class UsersListConverter extends AbstractConverter<List<User>, List<Strin
 
 从创建的`TypeMap`对象我们 通过调用`UsersListConverter`类的实例显式添加[属性映射](https://web.archive.org/web/20221208143854/http://modelmapper.org/user-manual/property-mapping/)
 
-```
+```java
  typeMap.addMappings(mapper -> mapper.using(new UsersListConverter())
    .map(UserList::getUsers, UserListDTO::setUsernames));
 ```

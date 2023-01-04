@@ -12,7 +12,7 @@
 
 首先，我们需要将`[akka-stream](https://web.archive.org/web/20220628054908/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.typesafe.akka%22%20AND%20a%3A%22akka-stream_2.11%22)` 和 [`akka-stream-testkit`](https://web.archive.org/web/20220628054908/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.typesafe.akka%22%20AND%20a%3A%22akka-stream-testkit_2.11%22) 库添加到我们的`pom.xml:`中
 
-```
+```java
 <dependency>
     <groupId>com.typesafe.akka</groupId>
     <artifactId>akka-stream_2.11</artifactId>
@@ -44,7 +44,7 @@
 
 首先，让我们创建一个`DataImporter` 类，它将接受`ActorSystem` 的一个实例，稍后我们将使用它来创建我们的`Flow`:
 
-```
+```java
 public class DataImporter {
     private ActorSystem actorSystem;
 
@@ -54,7 +54,7 @@ public class DataImporter {
 
 接下来，让我们创建一个`parseLine`方法，它将从我们的分隔输入`String.` 中生成一个`Integer`的`List`。请记住，我们在这里使用 Java Stream API 只是为了解析:
 
-```
+```java
 private List<Integer> parseLine(String line) {
     String[] fields = line.split(";");
     return Arrays.stream(fields)
@@ -65,7 +65,7 @@ private List<Integer> parseLine(String line) {
 
 我们的初始`Flow` 将把`parseLine`应用到我们的输入中，创建一个输入类型为`String`输出类型为`Integer`的`Flow`:
 
-```
+```java
 private Flow<String, Integer, NotUsed> parseContent() {
     return Flow.of(String.class)
       .mapConcat(this::parseLine);
@@ -88,7 +88,7 @@ private Flow<String, Integer, NotUsed> parseContent() {
 
 将作为 lambda 传递给`Flow` 的动作需要返回一个`CompletableFuture` ，因为该动作将在单独的线程中异步计算:
 
-```
+```java
 private Flow<Integer, Double, NotUsed> computeAverage() {
     return Flow.of(Integer.class)
       .grouped(2)
@@ -114,7 +114,7 @@ private Flow<Integer, Double, NotUsed> computeAverage() {
 
 我们可以使用`via()` 方法来组合我们的流:
 
-```
+```java
 Flow<String, Double, NotUsed> calculateAverage() {
     return Flow.of(String.class)
       .via(parseContent())
@@ -130,7 +130,7 @@ Flow<String, Double, NotUsed> calculateAverage() {
 
 假设我们有一个带有下面的`save()` 方法的`AverageRepository`类，它将结果写入我们的数据库:
 
-```
+```java
 CompletionStage<Double> save(Double average) {
     return CompletableFuture.supplyAsync(() -> {
         // write to database
@@ -145,7 +145,7 @@ CompletionStage<Double> save(Double average) {
 
 为了从`Flow`创建一个`Sink`,我们需要调用`toMat()` ,将`Sink.ignore()` 作为第一个参数，将`Keep.right()`作为第二个参数，因为我们想要返回处理的状态:
 
-```
+```java
 private Sink<Double, CompletionStage<Done>> storeAverages() {
     return Flow.of(Double.class)
       .mapAsyncUnordered(4, averageRepository::save)
@@ -159,7 +159,7 @@ private Sink<Double, CompletionStage<Done>> storeAverages() {
 
 然后，为了将`Sink` 添加到处理中，我们需要调用`runWith()`方法并传递我们刚刚创建的`storeAverages() Sink`:
 
-```
+```java
 CompletionStage<Done> calculateAverageForContent(String content) {
     return Source.single(content)
       .via(calculateAverage())
@@ -184,7 +184,7 @@ CompletionStage<Done> calculateAverageForContent(String content) {
 
 在我们的测试中，我们创建了我们想要测试的`Flow`，接下来，我们从测试输入内容创建了一个`Source` :
 
-```
+```java
 @Test
 public void givenStreamOfIntegers_whenCalculateAverageOfPairs_thenShouldReturnProperResults() {
     // given

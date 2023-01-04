@@ -61,7 +61,7 @@
 
 首先，我们需要一个`State`类，它将存储代表每个状态下块的位置的堆栈列表。它还将存储该特定状态的试探法:
 
-```
+```java
 public class State {
     private List<Stack<String>> state;
     private int heuristics;
@@ -72,7 +72,7 @@ public class State {
 
 我们还需要一种方法来计算状态的启发值。
 
-```
+```java
 public int getHeuristicsValue(
   List<Stack<String>> currentState, Stack<String> goalStateStack) {
 
@@ -113,7 +113,7 @@ public int getHeuristicsValueForStack(
 1.  从堆栈中弹出一个块，并将其压入新的堆栈
 2.  从一个堆栈中弹出一个块，并将其推入另一个堆栈
 
-```
+```java
 private State pushElementToNewStack(
   List<Stack<String>> currentStackList,
   String block,
@@ -135,7 +135,7 @@ private State pushElementToNewStack(
 }
 ```
 
-```
+```java
 private State pushElementToExistingStacks(
   Stack currentStack,
   List<Stack<String>> currentStackList,
@@ -179,7 +179,7 @@ private State pushElementToStack(
 
 如果我们找不到任何新的状态，算法将终止，并显示一条错误消息:
 
-```
+```java
 public List<State> getRouteWithHillClimbing(
   Stack<String> initStateStack, Stack<String> goalStateStack) throws Exception {
     // instantiate initState with initStateStack
@@ -207,7 +207,7 @@ public List<State> getRouteWithHillClimbing(
 
 除此之外，我们还需要`findNextState` 方法，该方法对当前状态应用所有可能的操作，以获得下一个状态:
 
-```
+```java
 public State findNextState(State currentState, Stack<String> goalStateStack) {
     List<Stack<String>> listOfStacks = currentState.getState();
     int currentStateHeuristics = currentState.getHeuristics();

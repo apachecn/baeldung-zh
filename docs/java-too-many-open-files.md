@@ -24,7 +24,7 @@
 
 我们可以通过一个简短的单元测试来重现这种情况:
 
-```
+```java
 @Test
 public void whenNotClosingResoures_thenIOExceptionShouldBeThrown() {
     try {
@@ -58,7 +58,7 @@ public void whenNotClosingResoures_thenIOExceptionShouldBeThrown() {
 
 不仅**我们必须显式关闭我们打开的任何文件**，而且还要确保即使我们的代码失败并抛出异常，我们也会这样做。这意味着使用 [`finally`](/web/20221013193919/https://www.baeldung.com/java-finally-keyword) 关键字:
 
-```
+```java
 @Test
 public void whenClosingResoures_thenIOExceptionShouldNotBeThrown() {
     try {
@@ -87,7 +87,7 @@ public void whenClosingResoures_thenIOExceptionShouldNotBeThrown() {
 
 JDK 7 为我们带来了一种更清洁的资源处理方式。它通常被称为 [`try-with-resources`](/web/20221013193919/https://www.baeldung.com/java-try-with-resources) ，允许我们通过将资源包含在`try` 定义中来委托资源的处置:
 
-```
+```java
 @Test
 public void whenUsingTryWithResoures_thenIOExceptionShouldNotBeThrown() {
     try {

@@ -28,7 +28,7 @@ A quick and practical guide to dealing with different causes of Spring BeanCreat
 
 例如，`BeanB`正在连接一个协作者，`BeanA`:
 
-```
+```java
 @Component
 public class BeanA {
 
@@ -40,7 +40,7 @@ public class BeanA {
 
 现在，如果依赖性`BeanB`没有在 Spring 上下文中定义，引导过程将失败，并出现**没有这样的 bean 定义异常**:
 
-```
+```java
 org.springframework.beans.factory.NoSuchBeanDefinitionException: 
 No qualifying bean of type [com.baeldung.packageB.BeanB]
   found for dependency: 
@@ -54,7 +54,7 @@ Dependency annotations:
 
 一个原因`BeanB`可能在上下文中不存在——如果 bean 被**类路径扫描**自动拾取，并且如果`BeanB`被正确地注释为 bean ( `@Component`、`@Repository`、`@Service`、`@Controller`等)。)—它可能被定义在**一个不被 Spring** 扫描的包中:
 
-```
+```java
 package com.baeldung.packageB;
 @Component
 public class BeanB { ...}
@@ -62,7 +62,7 @@ public class BeanB { ...}
 
 类路径扫描可以配置如下:
 
-```
+```java
 @Configuration
 @ComponentScan("com.baeldung.packageA")
 public class ContextWithJavaConfig {
@@ -78,7 +78,7 @@ public class ContextWithJavaConfig {
 
 让我们举一个同样的例子，其中`BeanB`被连接到`BeanA`中，但是它没有被定义:
 
-```
+```java
 @Component
 public class BeanA {
 
@@ -90,7 +90,7 @@ public class BeanA {
 
 如果我们尝试运行这个简单的应用程序，它会尝试加载`BeanA`:
 
-```
+```java
 @SpringBootApplication
 public class NoSuchBeanDefinitionDemoApp {
 
@@ -102,7 +102,7 @@ public class NoSuchBeanDefinitionDemoApp {
 
 应用程序将无法启动，并显示以下错误消息:
 
-```
+```java
 ***************************
 APPLICATION FAILED TO START
 ***************************
@@ -126,7 +126,7 @@ Consider defining a bean of type 'com.baeldung.springbootmvc.nosuchbeandefinitio
 
 假设一个接口`IBeanB`由两个 bean`BeanB1`和`BeanB2`实现:
 
-```
+```java
 @Component
 public class BeanB1 implements IBeanB {
     //
@@ -139,7 +139,7 @@ public class BeanB2 implements IBeanB {
 
 现在，如果自动连接这个接口，Spring 将不知道注入两个实现中的哪一个:
 
-```
+```java
 @Component
 public class BeanA {
 
@@ -151,7 +151,7 @@ public class BeanA {
 
 同样，这将导致`BeanFactory`抛出一个`NoSuchBeanDefinitionException`:
 
-```
+```java
 Caused by: org.springframework.beans.factory.NoUniqueBeanDefinitionException: 
 No qualifying bean of type 
   [com.baeldung.packageB.IBeanB] is defined: 
@@ -164,7 +164,7 @@ expected single matching bean but found 2: beanB1,beanB2
 
 在此更改之前，这是上面的异常:
 
-```
+```java
 Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: 
 No qualifying bean of type [com.baeldung.packageB.IBeanB] is defined: 
 expected single matching bean but found 2: beanB1,beanB2
@@ -172,7 +172,7 @@ expected single matching bean but found 2: beanB1,beanB2
 
 这个问题的一个**解决方案是使用`@Qualifier`注释**来准确指定我们想要连接的 bean 的名称:
 
-```
+```java
 @Component
 public class BeanA {
 
@@ -189,7 +189,7 @@ public class BeanA {
 
 当一个未定义的 bean 被 Spring 上下文中的名称请求时，也会抛出一个`NoSuchBeanDefinitionException`:
 
-```
+```java
 @Component
 public class BeanA implements InitializingBean {
 
@@ -205,7 +205,7 @@ public class BeanA implements InitializingBean {
 
 在这种情况下，没有“someBeanName”的 bean 定义，导致以下异常:
 
-```
+```java
 Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: 
 No bean named 'someBeanName' is defined
 ```
@@ -222,7 +222,7 @@ bean 可能被代理的一个非常常见的原因是 **Spring 事务支持**，
 
 例如，如果`ServiceA`注入`ServiceB`，并且两个服务都是事务性的，那么通过类定义注入的**将不起作用:**
 
-```
+```java
 @Service
 @Transactional
 public class ServiceA implements IServiceA{
@@ -241,7 +241,7 @@ public class ServiceB implements IServiceB{
 
 同样的两个服务，这次由接口正确地**注入，将会正常:**
 
-```
+```java
 @Service
 @Transactional
 public class ServiceA implements IServiceA{

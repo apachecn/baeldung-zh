@@ -32,7 +32,7 @@ Spring Boot 项目旨在让创建 Spring 应用程序变得更快更容易。这
 
 为了在 Spring Boot 应用程序中启用 JPA，我们需要 `[spring-boot-starter](https://web.archive.org/web/20220813062407/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter%22%20AND%20g%3A%22org.springframework.boot%22)`和 `[spring-boot-starter-data-jpa](https://web.archive.org/web/20220813062407/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-data-jpa%22)` 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter</artifactId>
@@ -55,7 +55,7 @@ Spring Boot 项目旨在让创建 Spring 应用程序变得更快更容易。这
 
 例如，如果我们想在 Spring Boot JPA 应用程序中使用内存中的`H2`数据库，我们只需要将 [`h2`](https://web.archive.org/web/20220813062407/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22h2%22%20AND%20g%3A%22com.h2database%22) 依赖项添加到`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -71,7 +71,7 @@ Spring Boot 项目旨在让创建 Spring 应用程序变得更快更容易。这
 
 Java 配置看起来与它在标准 Spring 项目中的配置一样:
 
-```
+```java
 @Bean
 public DataSource dataSource() {
     DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -88,7 +88,7 @@ public DataSource dataSource() {
 
 **要使用属性文件配置数据源，我们必须设置前缀为`spring.datasource`** 的属性:
 
-```
+```java
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.datasource.username=mysqluser
 spring.datasource.password=mysqlpass
@@ -114,7 +114,7 @@ Spring Boot 将根据这些属性自动配置数据源。
 
 让我们看看如何使用后一个选项:
 
-```
+```java
 @Configuration
 @EnableTransactionManagement
 public class PersistenceJPAConfig{
@@ -140,7 +140,7 @@ public class PersistenceJPAConfig{
 
 **我们还需要显式定义上面使用的`DataSource` bean** :
 
-```
+```java
 @Bean
 public DataSource dataSource(){
     DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -154,7 +154,7 @@ public DataSource dataSource(){
 
 配置的最后一部分是附加的 Hibernate 属性以及`TransactionManager`和`exceptionTranslation`bean:
 
-```
+```java
 @Bean
 public PlatformTransactionManager transactionManager() {
     JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -181,7 +181,7 @@ Properties additionalProperties() {
 
 接下来，让我们看看同样的带有 XML 的 Spring 配置:
 
-```
+```java
 <bean id="myEmf" 
   class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
     <property name="dataSource" ref="dataSource" />
@@ -218,7 +218,7 @@ XML 和新的基于 Java 的配置之间的差别相对较小。也就是说，�
 
 但是在 Java 中，由于类型不同，编译器不允许这样做，所以首先从 bean 工厂中检索`EntityManagerFactory` ,然后传递给事务管理器:
 
-```
+```java
 transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
 ```
 
@@ -232,7 +232,7 @@ transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
 
 或者，我们可以将属性直接添加到实体管理器工厂 bean 中:
 
-```
+```java
 factoryBean.setJpaProperties(this.additionalProperties());
 ```
 
@@ -242,7 +242,7 @@ factoryBean.setJpaProperties(this.additionalProperties());
 
 除了 Spring 核心和持久性依赖——在 [Spring with Maven 教程](/web/20220813062407/https://www.baeldung.com/spring-with-maven "Spring Maven dependencies")中有详细介绍——我们还需要在项目中定义 JPA 和 Hibernate 以及 MySQL 连接器:
 
-```
+```java
 <dependency>
    <groupId>org.hibernate</groupId>
    <artifactId>hibernate-core</artifactId>

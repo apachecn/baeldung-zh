@@ -72,7 +72,7 @@
 
 如果我们的项目不需要它，我们可以在自定义的`WebSecurityConfigurerAdapter`中禁用它:
 
-```
+```java
 @Configuration
 public class SpringBootSecurityConfiguration 
   extends WebSecurityConfigurerAdapter {
@@ -91,7 +91,7 @@ public class SpringBootSecurityConfiguration
 
 我们必须将`HTTP-only`标志设置为`false`,以便能够从我们的 JavaScript 客户端检索它:
 
-```
+```java
 @Configuration
 public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
@@ -105,13 +105,13 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 我们可以通过将日志级别调整为 DEBUG 来确认这些错误是从`CsrfFilter`类发出的:
 
-```
+```java
 <logger name="org.springframework.security.web.csrf" level="DEBUG" />
 ```
 
 它将显示:
 
-```
+```java
 Invalid CSRF token found for http://...
 ```
 
@@ -119,7 +119,7 @@ Invalid CSRF token found for http://...
 
 让我们在 REST 控制器中添加几行代码，将信息写入 API 日志:
 
-```
+```java
 CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
 LOGGER.info("{}={}", token.getHeaderName(), token.getToken());
 ```
@@ -128,7 +128,7 @@ LOGGER.info("{}={}", token.getHeaderName(), token.getToken());
 
 在客户端应用程序中，在第一次 API 访问之后设置`XSRF-TOKEN` cookie。我们可以使用 JavaScript 正则表达式来检索它:
 
-```
+```java
 const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
 ```
 
@@ -136,7 +136,7 @@ const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;
 
 **春天期待在`X-XSRF-TOKEN`头**收到它。我们可以简单地用 JavaScript `Fetch` API 来设置它:
 
-```
+```java
 fetch(url, {
     method: 'POST',
     body: JSON.stringify({ /* data to send */ }),

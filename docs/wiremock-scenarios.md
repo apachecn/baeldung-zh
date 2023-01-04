@@ -12,7 +12,7 @@
 
 为了能够利用 [WireMock 库](https://web.archive.org/web/20220607162151/https://search.maven.org/search?q=a:wiremock)，我们需要在 POM 中包含以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.github.tomakehurst</groupId>
     <artifactId>wiremock</artifactId>
@@ -29,7 +29,7 @@ Wiremock 中场景的概念是**帮助模拟 REST API** 的不同状态。这使
 
 如果我们要小费，我们会在`text/plain`得到一份:
 
-```
+```java
 "use composition rather than inheritance" 
 ```
 
@@ -39,7 +39,7 @@ Wiremock 中场景的概念是**帮助模拟 REST API** 的不同状态。这使
 
 我们需要让 WireMock 为`“/java-tip”`端点创建存根。每一个存根都将返回一个特定的文本，该文本对应于模拟 API 的三种状态之一:
 
-```
+```java
 public class WireMockScenarioExampleIntegrationTest {
     private static final String THIRD_STATE = "third";
     private static final String SECOND_STATE = "second";
@@ -95,7 +95,7 @@ public class WireMockScenarioExampleIntegrationTest {
 
 为了使用 WireMock 场景，我们简单地重复调用`/java-tip`端点。所以我们需要修改我们的测试类，如下所示:
 
-```
+```java
  @Test
     public void changeStateOnEachCallTest() throws IOException {
         createWireMockStub(Scenario.STARTED, SECOND_STATE, TIP_01);

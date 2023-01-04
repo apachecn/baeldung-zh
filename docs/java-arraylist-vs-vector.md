@@ -26,7 +26,7 @@
 
 我们可以用典型的方式创建一个向量:
 
-```
+```java
 Vector<String> vector = new Vector<>();
 ```
 
@@ -34,7 +34,7 @@ Vector<String> vector = new Vector<>();
 
 让我们添加几个值:
 
-```
+```java
 vector.add("baeldung");
 vector.add("Vector");
 vector.add("example");
@@ -42,7 +42,7 @@ vector.add("example");
 
 最后，让我们通过使用 [`Iterator`](/web/20220524112326/https://www.baeldung.com/java-iterator) 接口来迭代这些值:
 
-```
+```java
 Iterator<String> iterator = vector.iterator();
 while (iterator.hasNext()) {
     String element = iterator.next();
@@ -52,7 +52,7 @@ while (iterator.hasNext()) {
 
 或者，我们可以使用`Enumeration`遍历`Vector`:
 
-```
+```java
 Enumeration e = vector.elements();
 while(e.hasMoreElements()) {
     String element = e.nextElement();
@@ -66,7 +66,7 @@ while(e.hasMoreElements()) {
 
 我们已经提到过`ArrayList`和`Vector`在并发策略上是不同的，但是让我们仔细看看。如果我们深入研究`Vector's`方法签名，我们会看到每个都有 synchronized 关键字:
 
-```
+```java
 public synchronized E get(int index)
 ```
 
@@ -78,7 +78,7 @@ public synchronized E get(int index)
 
 例如，我们可以使用 [`CopyOnWriteArrayList`](/web/20220524112326/https://www.baeldung.com/java-copy-on-write-arraylist) 或 [`Collections.synchronizedList`](/web/20220524112326/https://www.baeldung.com/java-synchronized-collections) 来获得类似于`Vector`的效果:
 
-```
+```java
 vector.get(1); // synchronized
 Collections.synchronizedList(arrayList).get(1); // also synchronized
 ```
@@ -93,7 +93,7 @@ Collections.synchronizedList(arrayList).get(1); // also synchronized
 
 `First`，我们来测试一下`get()`的方法:
 
-```
+```java
 @Benchmark
 public Employee testGet(ArrayListBenchmark.MyState state) {
     return state.employeeList.get(state.employeeIndex);
@@ -109,7 +109,7 @@ public Employee testVectorGet(ArrayListBenchmark.MyState state) {
 
 让我们报告一下纳秒级的每个操作的平均时间:
 
-```
+```java
 Benchmark                         Mode  Cnt   Score   Error  Units
 ArrayListBenchmark.testGet        avgt   20   9.786 ± 1.358  ns/op
 ArrayListBenchmark.testVectorGet  avgt   20  37.074 ± 3.469  ns/op
@@ -119,7 +119,7 @@ ArrayListBenchmark.testVectorGet  avgt   20  37.074 ± 3.469  ns/op
 
 现在，让我们比较一下`contains()`操作的结果:
 
-```
+```java
 @Benchmark
 public boolean testContains(ArrayListBenchmark.MyState state) {
     return state.employeeList.contains(state.employee);
@@ -133,7 +133,7 @@ public boolean testContainsVector(ArrayListBenchmark.MyState state) {
 
 并将结果打印出来:
 
-```
+```java
 Benchmark                              Mode  Cnt  Score   Error  Units
 ArrayListBenchmark.testContains        avgt   20  8.665 ± 1.159  ns/op
 ArrayListBenchmark.testContainsVector  avgt   20  36.513 ± 1.266  ns/op

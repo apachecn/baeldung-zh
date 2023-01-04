@@ -14,7 +14,7 @@ Apache Commons DbUtils 是一个小型的库，它使得使用 JDBC 更加容易
 
 首先，我们需要将`commons-dbutils`和`h2`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>commons-dbutils</groupId>
     <artifactId>commons-dbutils</artifactId>
@@ -33,7 +33,7 @@ Apache Commons DbUtils 是一个小型的库，它使得使用 JDBC 更加容易
 
 有了依赖项之后，让我们创建一个脚本来创建我们将使用的表和记录:
 
-```
+```java
 CREATE TABLE employee(
     id int NOT NULL PRIMARY KEY auto_increment,
     firstname varchar(255),
@@ -58,7 +58,7 @@ INSERT INTO email (employeeid,address)
 
 本文中的所有示例测试用例都将使用一个新创建的到 H2 内存数据库的连接:
 
-```
+```java
 public class DbUtilsUnitTest {
     private Connection connection;
 
@@ -82,7 +82,7 @@ public class DbUtilsUnitTest {
 
 最后，我们需要两个简单的类:
 
-```
+```java
 public class Employee {
     private Integer id;
     private String firstName;
@@ -118,7 +118,7 @@ DbUtils 库提供了**`QueryRunner`类作为大多数可用功能的主要入口
 
 让我们从一个简单的例子开始，用一个`MapListHandler`获得数据库中的所有记录，作为一个地图列表:
 
-```
+```java
 @Test
 public void givenResultHandler_whenExecutingQuery_thenExpectedList()
   throws SQLException {
@@ -136,7 +136,7 @@ public void givenResultHandler_whenExecutingQuery_thenExpectedList()
 
 接下来，下面是一个使用`BeanListHandler`将结果转换成`Employee`实例的例子:
 
-```
+```java
 @Test
 public void givenResultHandler_whenExecutingQuery_thenEmployeeList()
   throws SQLException {
@@ -155,7 +155,7 @@ public void givenResultHandler_whenExecutingQuery_thenEmployeeList()
 
 对于返回单个值的查询，我们可以使用`ScalarHandler`:
 
-```
+```java
 @Test
 public void givenResultHandler_whenExecutingQuery_thenExpectedScalar()
   throws SQLException {
@@ -180,7 +180,7 @@ public void givenResultHandler_whenExecutingQuery_thenExpectedScalar()
 
 让我们看看第二种方法是什么样子的。首先，让我们向我们的`Employee`类添加另一个字段:
 
-```
+```java
 public class Employee {
     private List<Email> emails;
     // ...
@@ -189,7 +189,7 @@ public class Employee {
 
 现在，让我们创建一个扩展`BeanListHandler`类型的类，并为每个雇员设置电子邮件列表:
 
-```
+```java
 public class EmployeeHandler extends BeanListHandler<Employee> {
 
     private Connection connection;
@@ -221,7 +221,7 @@ public class EmployeeHandler extends BeanListHandler<Employee> {
 
 最后，让我们测试我们的代码，看看是否一切都按预期运行:
 
-```
+```java
 @Test
 public void
   givenResultHandler_whenExecutingQuery_thenEmailsSetted()
@@ -245,7 +245,7 @@ public void
 
 让我们看看这个是什么样子的。首先，让我们创建另一个表，并在其中插入一些记录:
 
-```
+```java
 CREATE TABLE employee_legacy (
     id int NOT NULL PRIMARY KEY auto_increment,
     first_name varchar(255),
@@ -261,7 +261,7 @@ INSERT INTO employee_legacy (first_name,last_name,salary,hired_date)
 
 现在，让我们修改我们的`EmployeeHandler`类:
 
-```
+```java
 public class EmployeeHandler extends BeanListHandler<Employee> {
     // ...
     public EmployeeHandler(Connection con) {
@@ -284,7 +284,7 @@ public class EmployeeHandler extends BeanListHandler<Employee> {
 
 最后，让我们测试一切正常:
 
-```
+```java
 @Test
 public void
   givenResultHandler_whenExecutingQuery_thenAllPropertiesSetted()
@@ -307,7 +307,7 @@ public void
 
 第一种方法是使用`update()`方法，并传递 SQL 语句和可选的替换参数列表。方法返回插入的记录数:
 
-```
+```java
 @Test
 public void whenInserting_thenInserted() throws SQLException {
     QueryRunner runner = new QueryRunner();
@@ -325,7 +325,7 @@ public void whenInserting_thenInserted() throws SQLException {
 
 第二种方法是使用`insert()`方法，除了 SQL 语句和替换参数，还需要一个`ResultSetHandler`来转换生成的自动生成的键。返回值将是处理程序返回的内容:
 
-```
+```java
 @Test
 public void
   givenHandler_whenInserting_thenExpectedId() throws SQLException {
@@ -351,7 +351,7 @@ public void
 
 它的用法很简单。以下是如何更新员工工资的示例:
 
-```
+```java
 @Test
 public void givenSalary_whenUpdating_thenUpdated()
  throws SQLException {
@@ -368,7 +368,7 @@ public void givenSalary_whenUpdating_thenUpdated()
 
 下面是另一个删除给定 id 的雇员的例子:
 
-```
+```java
 @Test
 public void whenDeletingRecord_thenDeleted() throws SQLException {
     QueryRunner runner = new QueryRunner();
@@ -385,7 +385,7 @@ DbUtils 提供了`AsyncQueryRunner`类来异步执行操作。这个类的方法
 
 下面是一个获取数据库中所有雇员的示例，等待 10 秒钟即可得到结果:
 
-```
+```java
 @Test
 public void
   givenAsyncRunner_whenExecutingQuery_thenExpectedList() throws Exception {

@@ -24,7 +24,7 @@ Tips and best practices on using Java 8 lambdas and functional interfaces.[Read 
 
 首先，让我们定义一个简单的实体类:
 
-```
+```java
 public class Human {
     private String name;
     private int age;
@@ -37,7 +37,7 @@ public class Human {
 
 在 Java 8 之前，对集合进行排序需要**为排序中使用的`Comparator`** 创建一个匿名内部类:
 
-```
+```java
 new Comparator<Human>() {
     @Override
     public int compare(Human h1, Human h2) {
@@ -48,7 +48,7 @@ new Comparator<Human>() {
 
 这将简单地用于对`Human`实体的`List`进行排序:
 
-```
+```java
 @Test
 public void givenPreLambda_whenSortingEntitiesByName_thenCorrectlySorted() {
     List<Human> humans = Lists.newArrayList(
@@ -70,13 +70,13 @@ public void givenPreLambda_whenSortingEntitiesByName_thenCorrectlySorted() {
 
 随着 Lambdas 的引入，我们现在可以绕过匿名内部类，用**简单的函数语义**获得相同的结果:
 
-```
+```java
 (final Human h1, final Human h2) -> h1.getName().compareTo(h2.getName());
 ```
 
 类似地，我们现在可以像以前一样测试行为:
 
-```
+```java
 @Test
 public void whenSortingEntitiesByName_thenCorrectlySorted() {
     List<Human> humans = Lists.newArrayList(
@@ -97,13 +97,13 @@ public void whenSortingEntitiesByName_thenCorrectlySorted() {
 
 我们可以通过不指定类型定义来进一步简化表达式；**编译器能够自己推断出这些**:
 
-```
+```java
 (h1, h2) -> h1.getName().compareTo(h2.getName())
 ```
 
 同样，测试仍然非常相似:
 
-```
+```java
 @Test
 public void 
   givenLambdaShortForm_whenSortingEntitiesByName_thenCorrectlySorted() {
@@ -125,7 +125,7 @@ public void
 
 首先，我们将使用与`Comparator<Human>`对象中的`compare`方法完全相同的签名来定义方法`compareByNameThenAge`:
 
-```
+```java
 public static int compareByNameThenAge(Human lhs, Human rhs) {
     if (lhs.name.equals(rhs.name)) {
         return Integer.compare(lhs.age, rhs.age);
@@ -137,13 +137,13 @@ public static int compareByNameThenAge(Human lhs, Human rhs) {
 
 然后我们将用这个引用调用`humans.sort`方法:
 
-```
+```java
 humans.sort(Human::compareByNameThenAge);
 ```
 
 最终结果是使用静态方法作为`Comparator`对集合进行有效排序:
 
-```
+```java
 @Test
 public void 
   givenMethodDefinition_whenSortingEntitiesByNameThenAge_thenCorrectlySorted() {
@@ -164,7 +164,7 @@ public void
 
 我们将使用 getter `getName()`来构建 Lambda 表达式，并按名称对列表进行排序:
 
-```
+```java
 @Test
 public void 
   givenInstanceMethod_whenSortingEntitiesByName_thenCorrectlySorted() {
@@ -184,7 +184,7 @@ public void
 
 JDK 8 还引入了一个助手方法用于**反转比较器。**我们可以快速利用这一点来反转我们的排序:
 
-```
+```java
 @Test
 public void whenSortingEntitiesByNameReversed_thenCorrectlySorted() {
     List<Human> humans = Lists.newArrayList(
@@ -205,7 +205,7 @@ public void whenSortingEntitiesByNameReversed_thenCorrectlySorted() {
 
 比较 lambda 表达式不需要这么简单。我们还可以编写**更复杂的表达式，**例如先按名称，然后按年龄对实体进行排序:
 
-```
+```java
 @Test
 public void whenSortingEntitiesByNameThenAge_thenCorrectlySorted() {
     List<Human> humans = Lists.newArrayList(
@@ -231,7 +231,7 @@ public void whenSortingEntitiesByNameThenAge_thenCorrectlySorted() {
 
 **从 JDK 8 开始，我们现在可以将多个比较器**链接在一起，构建更复杂的比较逻辑:
 
-```
+```java
 @Test
 public void 
   givenComposition_whenSortingEntitiesByNameThenAge_thenCorrectlySorted() {
@@ -261,7 +261,7 @@ public void
 
 让我们来看一个如何使用自然排序的**方法的例子:**
 
-```
+```java
 @Test
 public final void 
   givenStreamNaturalOrdering_whenSortingEntitiesByName_thenCorrectlySorted() {
@@ -274,7 +274,7 @@ public final void
 
 现在让我们看看如何通过`sorted()` API 来**使用自定义的`Comparator `:**
 
-```
+```java
 @Test
 public final void 
   givenStreamCustomOrdering_whenSortingEntitiesByName_thenCorrectlySorted() {	
@@ -289,7 +289,7 @@ public final void
 
 如果我们**使用`Comparator.comparing()`方法**，我们可以进一步简化上面的例子:
 
-```
+```java
 @Test
 public final void 
   givenStreamComparatorOrdering_whenSortingEntitiesByName_thenCorrectlySorted() {
@@ -309,7 +309,7 @@ public final void
 
 首先，让我们来看一个例子，看看**如何将`sorted()`** **方法与`Comparator.reverseOrder()`方法结合起来，以相反的自然顺序**对列表进行排序:
 
-```
+```java
 @Test
 public final void 
   givenStreamNaturalOrdering_whenSortingEntitiesByNameReversed_thenCorrectlySorted() {
@@ -325,7 +325,7 @@ public final void
 
 现在让我们看看**如何使用`sorted()`方法和一个自定义的`Comparator`** :
 
-```
+```java
 @Test
 public final void 
   givenStreamCustomOrdering_whenSortingEntitiesByNameReversed_thenCorrectlySorted() {
@@ -343,7 +343,7 @@ public final void
 
 最后，让我们通过使用`Comparator.comparing()`方法的**来简化上面的例子:**
 
-```
+```java
 @Test
 public final void 
   givenStreamComparatorOrdering_whenSortingEntitiesByNameReversed_thenCorrectlySorted() {
@@ -361,7 +361,7 @@ public final void
 
 到目前为止，我们实现了我们的`Comparator` s，使得它们不能对包含`null `值的集合进行排序。也就是说，如果集合包含至少一个`null `元素，那么`sort `方法抛出一个`NullPointerException`:
 
-```
+```java
 @Test(expected = NullPointerException.class)
 public void givenANullElement_whenSortingEntitiesByName_thenThrowsNPE() {
     List<Human> humans = Lists.newArrayList(null, new Human("Jack", 12));
@@ -372,7 +372,7 @@ public void givenANullElement_whenSortingEntitiesByName_thenThrowsNPE() {
 
 最简单的解决方案是在我们的`Comparator `实现中手动处理`null `值:
 
-```
+```java
 @Test
 public void givenANullElement_whenSortingEntitiesByNameManually_thenMovesTheNullToLast() {
     List<Human> humans = Lists.newArrayList(null, new Human("Jack", 12), null);
@@ -397,7 +397,7 @@ public void givenANullElement_whenSortingEntitiesByNameManually_thenMovesTheNull
 
 此外，**我们可以将任何非空安全的`Comparator `传递给`[Comparator.nullsLast()](https://web.archive.org/web/20220703150536/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Comparator.html#nullsLast(java.util.Comparator)) `方法，并获得相同的结果**:
 
-```
+```java
 @Test
 public void givenANullElement_whenSortingEntitiesByName_thenMovesTheNullToLast() {
     List<Human> humans = Lists.newArrayList(null, new Human("Jack", 12), null);
@@ -412,7 +412,7 @@ public void givenANullElement_whenSortingEntitiesByName_thenMovesTheNullToLast()
 
 类似地，我们可以使用`[Comparator.nullsFirst()](https://web.archive.org/web/20220703150536/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Comparator.html#nullsFirst(java.util.Comparator)) `将`null `元素移向集合的开头:
 
-```
+```java
 @Test
 public void givenANullElement_whenSortingEntitiesByName_thenMovesTheNullToStart() {
     List<Human> humans = Lists.newArrayList(null, new Human("Jack", 12), null);

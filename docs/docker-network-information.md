@@ -16,7 +16,7 @@ Docker 的主要功能之一是创建和隔离网络。
 
 它们每个都将托管一个简单的“Hello World”HTTP 服务:
 
-```
+```java
 version: "3.5"
 
 services:
@@ -56,7 +56,7 @@ networks:
 
 让我们用 [`docker-compose`](https://web.archive.org/web/20220727020703/https://docs.docker.com/compose/) 命令启动它们:
 
-```
+```java
 $ docker-compose up -d
 Starting bael_test2_1 ... done
 Starting bael_test3_1 ... done
@@ -67,7 +67,7 @@ Starting bael_test1_1 ... done
 
 首先，让我们列出所有可用的 Docker 网络:
 
-```
+```java
 $ docker network ls
 NETWORK ID          NAME                DRIVER              SCOPE
 86e6a8138c0d        bridge              bridge              local
@@ -81,7 +81,7 @@ e943f7124776        network1            bridge              local
 
 让我们用`docker inspect`命令来检查它们:
 
-```
+```java
 $ docker inspect network1 network2
 [
     {
@@ -103,7 +103,7 @@ $ docker inspect network1 network2
 
 这将产生冗长、详细的输出。我们很少需要所有这些信息。**幸运的是，我们可以使用 [Go 模板](https://web.archive.org/web/20220727020703/https://golang.org/pkg/text/template/)对其进行格式化，并且只提取符合我们需求的元素。**让我们只得到`network1:`的子网
 
-```
+```java
 $ docker inspect -f '{{range .IPAM.Config}}{{.Subnet}}{{end}}' network1
 172.22.0.0/16
 ```
@@ -112,7 +112,7 @@ $ docker inspect -f '{{range .IPAM.Config}}{{.Subnet}}{{end}}' network1
 
 同样，我们可以检查特定的容器。首先，让我们列出所有容器及其标识符:
 
-```
+```java
 $ docker ps --format 'table {{.ID}}\t{{.Names}}'
 CONTAINER ID        NAMES
 78c10f03ad89        bael_test2_1
@@ -122,7 +122,7 @@ b09a8f47e2a8        bael_test1_1
 
 **现在我们将使用容器的 ID 作为`inspect`命令的参数来查找其 IP 地址。**与网络类似，我们可以格式化输出以获得我们需要的信息。我们将检查第二个容器及其在我们创建的两个网络中的地址:
 
-```
+```java
 $ docker inspect 78c10f03ad89 --format '{{.NetworkSettings.Networks.network1.IPAddress}}'
 172.22.0.2
 $ docker inspect 78c10f03ad89 --format '{{.NetworkSettings.Networks.network2.IPAddress}}'
@@ -131,7 +131,7 @@ $ docker inspect 78c10f03ad89 --format '{{.NetworkSettings.Networks.network2.IPA
 
 或者，我们可以使用 [`docker exec`](https://web.archive.org/web/20220727020703/https://docs.docker.com/engine/reference/commandline/exec/) 命令直接从容器中打印主机:
 
-```
+```java
 $ docker exec 78c10f03ad89 cat /etc/hosts
 127.0.0.1	localhost
 ::1	localhost ip6-localhost ip6-loopback
@@ -149,46 +149,46 @@ ff02::2	ip6-allrouters
 
 首先，让我们进入“test1”容器:
 
-```
+```java
 $ docker exec -it b09a8f47e2a8 /bin/bash
 ```
 
 然后，使用 curl 向“test2”容器发送一个请求:
 
-```
+```java
 [[email protected]](/web/20220727020703/https://www.baeldung.com/cdn-cgi/l/email-protection):/# curl 172.22.0.2:8080
 Hello from test2
 ```
 
 由于我们在码头工人的网络中，我们也可以使用别名来代替 IP 地址。 Docker 的内置 DNS 服务将为我们解析地址:
 
-```
+```java
 [[email protected]](/web/20220727020703/https://www.baeldung.com/cdn-cgi/l/email-protection):/# curl test2:8080
 Hello from test2
 ```
 
 注意，我们不能连接到“test3”容器，因为它在不同的网络中。通过 IP 地址连接将超时:
 
-```
+```java
 [[email protected]](/web/20220727020703/https://www.baeldung.com/cdn-cgi/l/email-protection):/# curl 172.23.0.2:8080
 ```
 
 通过别名连接也会失败，因为 DNS 服务无法识别它:
 
-```
+```java
 [[email protected]](/web/20220727020703/https://www.baeldung.com/cdn-cgi/l/email-protection):/# curl test3:8080
 curl: (6) Could not resolve host: test3
 ```
 
 为此，我们需要将“test3”容器添加到“network1”中(从容器外部):
 
-```
+```java
 $ docker network connect --alias test3 network1 f229dde68f3b
 ```
 
 现在对“测试 3”的请求将正确工作:
 
-```
+```java
 [[email protected]](/web/20220727020703/https://www.baeldung.com/cdn-cgi/l/email-protection):/# curl test3:8080
 Hello from test3
 ```

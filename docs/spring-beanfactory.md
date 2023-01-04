@@ -18,7 +18,7 @@ Spring 容器负责实例化、配置和组装 beans。容器通过读取我们�
 
 让我们将所需的 Maven [依赖项](https://web.archive.org/web/20220626081250/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework%22%20AND%20a%3A%22spring-beans%22)添加到`pom.xml` 文件中。我们将使用 Spring Beans 依赖项来设置 BeanFactory:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-beans</artifactId>
@@ -70,7 +70,7 @@ Spring 容器负责实例化、配置和组装 beans。容器通过读取我们�
 
 让我们定义一个简单的 bean:
 
-```
+```java
 public class Employee {
     private String name;
     private int age;
@@ -83,7 +83,7 @@ public class Employee {
 
 我们可以用 XML 配置`BeanFactory`。让我们创建一个文件`bean factory-example.xml:`
 
-```
+```java
 <bean id="employee" class="com.baeldung.beanfactory.Employee">
     <constructor-arg name="name" value="Hello! My name is Java"/>
     <constructor-arg name="age" value="18"/>
@@ -97,7 +97,7 @@ public class Employee {
 
 `ClassPathResource`属于`org.springframework.core.io`包。让我们运行一个快速测试，并使用`ClassPathResource`初始化`XmlBeanFactory`，如下所示:
 
-```
+```java
 public class BeanFactoryWithClassPathResourceTest {
 
     @Test

@@ -34,7 +34,7 @@ web 应用程序中的上下文总是`WebApplicationContext`的一个实例。�
 
 使用`web.xml`时，我们像往常一样配置监听器:
 
-```
+```java
 <listener>
     <listener-class>
         org.springframework.web.context.ContextLoaderListener
@@ -44,7 +44,7 @@ web 应用程序中的上下文总是`WebApplicationContext`的一个实例。�
 
 我们可以用参数`contextConfigLocation` 指定 XML 上下文配置的备用位置:
 
-```
+```java
 <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>/WEB-INF/rootApplicationContext.xml</param-value>
@@ -53,7 +53,7 @@ web 应用程序中的上下文总是`WebApplicationContext`的一个实例。�
 
 或者多个位置，用逗号分隔:
 
-```
+```java
 <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>/WEB-INF/context1.xml, /WEB-INF/context2.xml</param-value>
@@ -62,7 +62,7 @@ web 应用程序中的上下文总是`WebApplicationContext`的一个实例。�
 
 我们甚至可以使用模式:
 
-```
+```java
 <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>/WEB-INF/*-context.xml</param-value>
@@ -77,7 +77,7 @@ web 应用程序中的上下文总是`WebApplicationContext`的一个实例。�
 
 我们使用`contextClass` 参数告诉监听器要实例化哪种类型的上下文:
 
-```
+```java
 <context-param>
     <param-name>contextClass</param-name>
     <param-value>
@@ -90,7 +90,7 @@ web 应用程序中的上下文总是`WebApplicationContext`的一个实例。�
 
 因此，我们可以列出一个或多个带注释的类:
 
-```
+```java
 <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>
@@ -102,7 +102,7 @@ web 应用程序中的上下文总是`WebApplicationContext`的一个实例。�
 
 或者我们可以告诉上下文扫描一个或多个包:
 
-```
+```java
 <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>com.baeldung.bean.config</param-value>
@@ -129,7 +129,7 @@ Spring 扫描应用程序的类路径，寻找`org.springframework.web.WebApplic
 
 我们将实现前面提到的`onStartup` 方法:
 
-```
+```java
 public class ApplicationInitializer implements WebApplicationInitializer {
 
     @Override
@@ -146,19 +146,19 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 
 因此，第一行是我们前面遇到的`contextClass` 参数的显式版本，通过它我们决定使用哪个特定的上下文实现:
 
-```
+```java
 XmlWebApplicationContext rootContext = new XmlWebApplicationContext();
 ```
 
 然后，在第二行，我们告诉上下文从哪里加载它的 bean 定义。同样，`setConfigLocations` 是`web.xml`中`contextConfigLocation` 参数的编程类比:
 
-```
+```java
 rootContext.setConfigLocations("/WEB-INF/rootApplicationContext.xml");
 ```
 
 最后，我们用根上下文创建一个`ContextLoaderListener` ,并用 servlet 容器注册它。正如我们所见，`ContextLoaderListener`有一个合适的构造函数，它接受一个`WebApplicationContext` ，并使其对应用程序可用:
 
-```
+```java
 servletContext.addListener(new ContextLoaderListener(rootContext));
 ```
 
@@ -174,7 +174,7 @@ servletContext.addListener(new ContextLoaderListener(rootContext));
 
 我们只需要告诉它如何构建根上下文:
 
-```
+```java
 public class AnnotationsBasedApplicationInitializer 
   extends AbstractContextLoaderInitializer {
 
@@ -206,7 +206,7 @@ Spring MVC 应用程序至少配置了一个 Dispatcher Servlet】(但可能不�
 
 `DispatcherServlet`通常在`web.xml`中用名称和映射来声明:
 
-```
+```java
 <servlet>
     <servlet-name>normal-webapp</servlet-name>
     <servlet-class>
@@ -224,7 +224,7 @@ Spring MVC 应用程序至少配置了一个 Dispatcher Servlet】(但可能不�
 
 我们还可以指定一个或多个 XML 文件的路径，类似于`ContextLoaderListener`:
 
-```
+```java
 <servlet>
     ...
     <init-param>
@@ -238,7 +238,7 @@ Spring MVC 应用程序至少配置了一个 Dispatcher Servlet】(但可能不�
 
 当我们想要使用不同类型的上下文时，我们再次使用`ContextLoaderListener`。也就是说，我们指定了一个`contextClass` 参数和一个合适的`contextConfigLocation`:
 
-```
+```java
 <servlet>
     <servlet-name>normal-webapp-annotations</servlet-name>
     <servlet-class>
@@ -266,7 +266,7 @@ Spring MVC 应用程序至少配置了一个 Dispatcher Servlet】(但可能不�
 
 正如我们之前看到的，我们必须实现`onStartup` 方法。然而，这次我们也将创建并注册一个 dispatcher servlet:
 
-```
+```java
 XmlWebApplicationContext normalWebAppContext = new XmlWebApplicationContext();
 normalWebAppContext.setConfigLocation("/WEB-INF/normal-webapp-servlet.xml");
 ServletRegistration.Dynamic normal
@@ -284,7 +284,7 @@ normal.addMapping("/api/*");
 
 这是一个抽象类，除了像前面看到的那样创建一个根 web 应用程序上下文之外，还允许我们用最少的样板文件注册一个 dispatcher servlet:
 
-```
+```java
 @Override
 protected WebApplicationContext createServletApplicationContext() {
 
@@ -328,7 +328,7 @@ protected String[] getServletMappings() {
 
 另外，注意`AbstractDispatcherServletInitializer`用给定的名称(`dispatcher`)注册 servlet，当然，我们不能有多个同名的 servlet。所以，我们需要覆盖`getServletName`:
 
-```
+```java
 @Override
 protected String getServletName() {
     return "another-dispatcher";
@@ -347,7 +347,7 @@ protected String getServletName() {
 
 在我们的 hello world 示例中，我们满足于更简单的欢迎服务，而不是持久性:
 
-```
+```java
 package com.baeldung.contexts.services;
 
 @Service
@@ -363,7 +363,7 @@ public class GreeterService {
 
 我们将使用组件扫描在根 web 应用程序上下文中声明服务:
 
-```
+```java
 @Configuration
 @ComponentScan(basePackages = { "com.baeldung.contexts.services" })
 public class RootApplicationConfig {
@@ -373,7 +373,7 @@ public class RootApplicationConfig {
 
 我们可能更喜欢 XML:
 
-```
+```java
 <context:component-scan base-package="com.baeldung.contexts.services" />
 ```
 
@@ -381,7 +381,7 @@ public class RootApplicationConfig {
 
 让我们定义两个简单的控制器，它们使用服务并输出问候:
 
-```
+```java
 package com.baeldung.contexts.normal;
 
 @Controller
@@ -409,7 +409,7 @@ String message = "<h3>Secure " + greeterService.greet() + "</h3>";
 
 如前所述，我们将有两个不同的 dispatcher servlet 上下文，每个控制器一个。所以，让我们用 Java 来定义它们:
 
-```
+```java
 //Normal context
 @Configuration
 @EnableWebMvc
@@ -429,7 +429,7 @@ public class SecureWebAppConfig implements WebMvcConfigurer {
 
 或者，如果我们喜欢，用 XML:
 
-```
+```java
 <!-- normal-webapp-servlet.xml -->
 <context:component-scan base-package="com.baeldung.contexts.normal" />
 
@@ -443,7 +443,7 @@ public class SecureWebAppConfig implements WebMvcConfigurer {
 
 我们将定义一个`AbstractContextLoaderInitializer` 来加载根上下文:
 
-```
+```java
 @Override
 protected WebApplicationContext createRootApplicationContext() {
     AnnotationConfigWebApplicationContext rootContext
@@ -455,7 +455,7 @@ protected WebApplicationContext createRootApplicationContext() {
 
 然后，我们需要创建两个 servlets，因此我们将定义`AbstractDispatcherServletInitializer`的两个子类。首先是“正常”的:
 
-```
+```java
 @Override
 protected WebApplicationContext createServletApplicationContext() {
     AnnotationConfigWebApplicationContext normalWebAppContext
@@ -477,7 +477,7 @@ protected String getServletName() {
 
 然后是“安全”的，它加载不同的上下文并映射到不同的路径:
 
-```
+```java
 @Override
 protected WebApplicationContext createServletApplicationContext() {
     AnnotationConfigWebApplicationContext secureWebAppContext
@@ -503,7 +503,7 @@ protected String getServletName() {
 
 定义根应用程序上下文:
 
-```
+```java
 <listener>
     <listener-class>
         org.springframework.web.context.ContextLoaderListener
@@ -513,7 +513,7 @@ protected String getServletName() {
 
 “正常”调度程序上下文:
 
-```
+```java
 <servlet>
     <servlet-name>normal-webapp</servlet-name>
     <servlet-class>
@@ -529,7 +529,7 @@ protected String getServletName() {
 
 最后，一个“安全”的环境:
 
-```
+```java
 <servlet>
     <servlet-name>secure-webapp</servlet-name>
     <servlet-class>
@@ -557,7 +557,7 @@ protected String getServletName() {
 
 在 Java 中导入一个`@Configuration` 类:
 
-```
+```java
 @Configuration
 @Import(SomeOtherConfiguration.class)
 public class Config { ... }
@@ -565,7 +565,7 @@ public class Config { ... }
 
 在 Java 中加载一些其他类型的资源，例如 XML 上下文定义:
 
-```
+```java
 @Configuration
 @ImportResource("classpath:basicConfigForPropertiesTwo.xml")
 public class Config { ... }
@@ -573,7 +573,7 @@ public class Config { ... }
 
 最后，将一个 XML 文件包含在另一个文件中:
 
-```
+```java
 <import resource="greeting.xml" />
 ```
 
@@ -591,7 +591,7 @@ public class Config { ... }
 
 然而，对于本文中提到的添加 servlets、过滤器和监听器，没有必要这样做。**事实上，Spring Boot 自动将每个与 servlet 相关的 bean 注册到容器:**
 
-```
+```java
 @Bean
 public Servlet myServlet() { ... }
 ```

@@ -16,7 +16,7 @@
 
 例如，下面的`getCoordinates`方法返回两个`double`值的数组:
 
-```
+```java
 double[] getCoordinatesDoubleArray() {
 
     double[] coordinates = new double[2];
@@ -30,7 +30,7 @@ double[] getCoordinatesDoubleArray() {
 
 **如果我们想返回一个不同引用类型的数组，我们可以使用一个公共的父类型作为数组的类型**:
 
-```
+```java
 Number[] getCoordinatesNumberArray() {
 
     Number[] coordinates = new Number[2];
@@ -54,7 +54,7 @@ Number[] getCoordinatesNumberArray() {
 
 首先，让我们使用`List<Number>`重写前面的数组示例:
 
-```
+```java
 List<Number> getCoordinatesList() {
 
     List<Number> coordinates = new ArrayList<>();
@@ -72,7 +72,7 @@ List<Number> getCoordinatesList() {
 
 如果我们想要命名集合中的每个条目，可以使用`Map`来代替:
 
-```
+```java
 Map<String, Number> getCoordinatesMap() {
 
     Map<String, Number> coordinates = new HashMap<>();
@@ -92,7 +92,7 @@ Map<String, Number> getCoordinatesMap() {
 
 例如，下面的`Coordinates`类有两种不同的数据类型，`double`和`String`:
 
-```
+```java
 public class Coordinates {
 
     private double longitude;
@@ -114,7 +114,7 @@ public class Coordinates {
 
 下一步是实例化并返回`Coordinates`的实例:
 
-```
+```java
 Coordinates getCoordinates() {
 
     double longitude = 10;
@@ -139,7 +139,7 @@ Coordinates getCoordinates() {
 
 让我们首先创建一个通用的双字段元组:
 
-```
+```java
 public class Tuple2<K, V> {
 
     private K first;
@@ -156,7 +156,7 @@ public class Tuple2<K, V> {
 
 接下来，让我们实现我们的逻辑并使用一个`Tuple2<Coordinates, Double>`实例来包装结果:
 
-```
+```java
 Tuple2<Coordinates, Double> getMostDistantPoint(List<Coordinates> coordinatesList, 
                                                        Coordinates target) {
 
@@ -179,7 +179,7 @@ Tuple2<Coordinates, Double> getMostDistantPoint(List<Coordinates> coordinatesLis
 
 在我们进一步之前，让我们在我们的`pom.xml:`中添加 [`commons-lang3`](https://web.archive.org/web/20220913170115/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.commons%22%20AND%20a%3A%22commons-lang3%22) 依赖项
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -193,7 +193,7 @@ Apache Commons Lang 中的`[ImmutablePair](https://web.archive.org/web/202209131
 
 它包含两个字段:`left`和`right`。让我们看看如何让我们的`getMostDistantPoint`方法返回一个`ImmutablePair`类型的对象:
 
-```
+```java
 ImmutablePair<Coordinates, Double> getMostDistantPoint(
   List<Coordinates> coordinatesList, Coordinates target) {
     return coordinatesList.stream()
@@ -213,7 +213,7 @@ ImmutablePair<Coordinates, Double> getMostDistantPoint(
 
 让我们看看如何使用`ImmutableTriple`类用一个方法返回这三个值:
 
-```
+```java
 ImmutableTriple<Double, Double, Double> getMinAvgMaxTriple(
   List<Coordinates> coordinatesList, Coordinates target) {
     List<Double> distanceList = coordinatesList.stream()

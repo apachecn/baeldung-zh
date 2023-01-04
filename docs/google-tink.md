@@ -16,7 +16,7 @@
 
 对于我们的教程，我们将只添加 [Tink 的 Maven 依赖关系](https://web.archive.org/web/20220630005809/https://search.maven.org/search?q=g:com.google.crypto.tink%20AND%20a:tink&core=gav):
 
-```
+```java
 <dependency>
     <groupId>com.google.crypto.tink</groupId>
     <artifactId>tink</artifactId>
@@ -26,7 +26,7 @@
 
 虽然我们可以用格雷尔来代替:
 
-```
+```java
 dependencies {
   compile 'com.google.crypto.tink:tink:latest'
 }
@@ -38,13 +38,13 @@ dependencies {
 
 如果我们需要使用 Tink 中所有原语的所有实现，我们可以使用`TinkConfig.register()`方法:
 
-```
+```java
 TinkConfig.register();
 ```
 
 而例如，如果我们只需要 AEAD 原语，我们可以使用`AeadConfig.register()`方法:
 
-```
+```java
 AeadConfig.register();
 ```
 
@@ -73,7 +73,7 @@ AeadConfig.register();
 
 我们可以通过调用相应工厂类的方法 `getPrimitive()`并传递给它一个`KeysetHandle`来获得一个原语:
 
-```
+```java
 Aead aead = AeadFactory.getPrimitive(keysetHandle); 
 ```
 
@@ -85,20 +85,20 @@ Tink 提供了一个对象—`KeysetHandle – `,它用一些附加的参数和
 
 因此，在实例化一个原语之前，我们需要创建一个`KeysetHandle `对象:
 
-```
+```java
 KeysetHandle keysetHandle = KeysetHandle.generateNew(AeadKeyTemplates.AES256_GCM);
 ```
 
 在生成一个密钥后，我们可能想要持久化它:
 
-```
+```java
 String keysetFilename = "keyset.json";
 CleartextKeysetHandle.write(keysetHandle, JsonKeysetWriter.withFile(new File(keysetFilename)));
 ```
 
 然后，我们可以随后加载它:
 
-```
+```java
 String keysetFilename = "keyset.json";
 KeysetHandle keysetHandle = CleartextKeysetHandle.read(JsonKeysetReader.withFile(new File(keysetFilename)));
 ```
@@ -115,7 +115,7 @@ AEAD 提供了对关联数据的认证加密，这意味着**我们可以加密�
 
 如前所述，要使用 AEAD 实现之一加密数据，我们需要初始化库并创建一个`keysetHandle:`
 
-```
+```java
 AeadConfig.register();
 KeysetHandle keysetHandle = KeysetHandle.generateNew(
   AeadKeyTemplates.AES256_GCM);
@@ -123,7 +123,7 @@ KeysetHandle keysetHandle = KeysetHandle.generateNew(
 
 一旦我们做到了这一点，我们就可以获得原语并加密所需的数据:
 
-```
+```java
 String plaintext = "baeldung";
 String associatedData = "Tink";
 
@@ -133,7 +133,7 @@ byte[] ciphertext = aead.encrypt(plaintext.getBytes(), associatedData.getBytes()
 
 接下来，我们可以使用`decrypt()`方法解密`ciphertext`:
 
-```
+```java
 String decrypted = new String(aead.decrypt(ciphertext, associatedData.getBytes()));
 ```
 
@@ -141,7 +141,7 @@ String decrypted = new String(aead.decrypt(ciphertext, associatedData.getBytes()
 
 类似地，**当要加密的数据太大而无法在一个步骤中处理时，我们可以使用流式 AEAD 原语**:
 
-```
+```java
 AeadConfig.register();
 KeysetHandle keysetHandle = KeysetHandle.generateNew(
   StreamingAeadKeyTemplates.AES128_CTR_HMAC_SHA256_4KB);
@@ -167,7 +167,7 @@ in.close();
 
 因此，为了解密`cipherTextFile,` ，我们需要使用一个`ReadableByteChannel`:
 
-```
+```java
 FileChannel cipherTextSource = new FileInputStream("cipherTextFile").getChannel();
 ReadableByteChannel decryptingChannel =
   streamingAead.newDecryptingChannel(cipherTextSource, associatedData.getBytes());
@@ -196,7 +196,7 @@ out.close();
 
 那么，让我们来看看如何使用`HybridEncrypt`和`HybridDecrypt:`
 
-```
+```java
 TinkConfig.register();
 
 KeysetHandle privateKeysetHandle = KeysetHandle.generateNew(
@@ -225,7 +225,7 @@ MAC 是几个字节的块，我们可以用它来验证消息。
 
 让我们看看如何创建 MAC，然后验证其真实性:
 
-```
+```java
 TinkConfig.register();
 
 KeysetHandle keysetHandle = KeysetHandle.generateNew(
@@ -247,7 +247,7 @@ mac.verifyMac(tag, data.getBytes());
 
 **为了实现数字签名，本库使用`PublicKeySign`原语进行数据签名，使用`PublickeyVerify`进行验证:**
 
-```
+```java
 TinkConfig.register();
 
 KeysetHandle privateKeysetHandle = KeysetHandle.generateNew(SignatureKeyTemplates.ECDSA_P256);

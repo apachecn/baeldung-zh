@@ -12,7 +12,7 @@
 
 我们可以使用 Java Collections 模块提供的`emptyMap()`方法创建一个空的`Map`。**这将形成一个空的`Map`，本质上是可序列化的。该方法是在 Java 1.5 的集合库下引入的。**这将创建一个不可变的`Map`:
 
-```
+```java
 Map<String, String> emptyMap = Collections.emptyMap();
 ```
 
@@ -20,13 +20,13 @@ Map<String, String> emptyMap = Collections.emptyMap();
 
 我们还有两个方法支持空的`Map`的创建和初始化。**`emptySortedMap()`返回一个不可变类型的空`SortedMap`。**`Sorted``Map`是在其键上提供进一步总排序的键。由该方法创建的`Map`本质上是可序列化的:
 
-```
+```java
 SortedMap<String, String> sortedMap = Collections.emptySortedMap();
 ```
 
 **Java 集合提供的另一个方法是`emptyNavigableMap()`，它返回一个空的`NavigableMap`。**与空的已排序的`Map`具有相同的属性。唯一的区别是这个方法返回一个可导航的`Map`。一个`Navigable` `Map`是传统排序`Map`实现的扩展，它返回给定搜索目标的最接近匹配。
 
-```
+```java
 NavigableMap<String, String> navigableMap = Collections.emptyNavigableMap();
 ```
 
@@ -36,7 +36,7 @@ NavigableMap<String, String> navigableMap = Collections.emptyNavigableMap();
 
 我们可以使用不同的`Map`实现的构造函数来初始化`Maps`，例如`HashMap, LinkedHashMap, TreeMap`。所有这些初始化创建了一个空的`Map`,如果需要，我们可以在后面添加条目:
 
-```
+```java
 Map hashMap = new HashMap();
 Map linkedHashMap = new LinkedHashMap();
 Map treeMap = new TreeMap();
@@ -50,7 +50,7 @@ Java 9 附带了许多新特性，比如`Interface Private Methods, Anonymous cl
 
 为了初始化一个空的`Map`，我们不会在这个方法中传递任何键值对:
 
-```
+```java
 Map<String, String> emptyMapUsingJava9 = Map.of();
 ```
 
@@ -62,7 +62,7 @@ Map<String, String> emptyMapUsingJava9 = Map.of();
 
 到目前为止，我们已经研究了使用核心 Java 初始化空`Map`的不同方法。现在让我们继续，检查如何使用 Guava 库初始化一个`Map`:
 
-```
+```java
 Map<String, String> articles = ImmutableMap.of();
 ```
 
@@ -70,7 +70,7 @@ Map<String, String> articles = ImmutableMap.of();
 
 在某些情况下，我们不需要不可变的`Map`。我们可以使用`Maps `类初始化一个可变的`Map`:
 
-```
+```java
 Map<String, String> emptyMap = Maps.newHashMap();
 ```
 
@@ -78,7 +78,7 @@ Map<String, String> emptyMap = Maps.newHashMap();
 
 我们还可以用特定的键和值类型初始化`Map`。这将创建一个具有预定义元素类型的`Map`,如果没有遵循，将抛出一个异常:
 
-```
+```java
 Map genericEmptyMap = Maps.<String, Integer>newHashMap();
 ```
 
@@ -86,7 +86,7 @@ Map genericEmptyMap = Maps.<String, Integer>newHashMap();
 
 我们也可以使用下面的语法在 guava 中创建一个可变的`Map`:
 
-```
+```java
 Map<String, String> emptyMapUsingGuava = Maps.newHashMap(ImmutableMap.of());
 ```
 

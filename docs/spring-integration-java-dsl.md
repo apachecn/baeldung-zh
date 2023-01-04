@@ -14,7 +14,7 @@ Spring Integration Java DSL 是 [Spring Integration Core](https://web.archive.or
 
 因此，我们可以添加依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.integration</groupId>
     <artifactId>spring-integration-core</artifactId>
@@ -24,7 +24,7 @@ Spring Integration Java DSL 是 [Spring Integration Core](https://web.archive.or
 
 为了运行我们的文件移动应用程序，我们还需要 [Spring 集成文件](https://web.archive.org/web/20220525134642/https://search.maven.org/classic/#search%7Cgav%7C1%7Ca%3A%22spring-integration-file%22):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.integration</groupId>
     <artifactId>spring-integration-file</artifactId>
@@ -42,7 +42,7 @@ DSL 引入了一些流畅的构建器，从这些构建器中我们可以很容�
 
 在过去，我们可能会这样做:
 
-```
+```java
 <int:channel id="input"/>
 
 <int:transformer input-channel="input" expression="payload.toUpperCase()" />
@@ -50,7 +50,7 @@ DSL 引入了一些流畅的构建器，从这些构建器中我们可以很容�
 
 现在我们可以做的是:
 
-```
+```java
 @Bean
 public IntegrationFlow upcaseFlow() {
     return IntegrationFlows.from("input")
@@ -67,7 +67,7 @@ public IntegrationFlow upcaseFlow() {
 
 我们需要的第一个构建块是集成流程，我们可以从`IntegrationFlows `构建器中获得:
 
-```
+```java
 IntegrationFlows.from(...)
 ```
 
@@ -81,7 +81,7 @@ IntegrationFlows.from(...)
 
 在我们调用了`from`之后，现在我们可以使用一些定制方法:
 
-```
+```java
 IntegrationFlow flow = IntegrationFlows.from(sourceDirectory())
   .filter(onlyJpgs())
   .handle(targetDirectory())
@@ -97,7 +97,7 @@ IntegrationFlow flow = IntegrationFlows.from(sourceDirectory())
 
 首先，为了移动文件，我们需要向我们的集成流程指出应该在哪里寻找它们，为此，我们需要一个`MessageSource:`
 
-```
+```java
 @Bean
 public MessageSource<File> sourceDirectory() {
   // .. create a message source
@@ -110,7 +110,7 @@ public MessageSource<File> sourceDirectory() {
 
 `spring-integration-file `依赖关系为我们提供了一个输入通道适配器，非常适合我们的用例:`FileReadingMessageSource:`
 
-```
+```java
 @Bean
 public MessageSource<File> sourceDirectory() {
     FileReadingMessageSource messageSource = new FileReadingMessageSource();
@@ -123,7 +123,7 @@ public MessageSource<File> sourceDirectory() {
 
 让我们在一个`IntegrationFlows.from `调用中将它指定为我们的源:
 
-```
+```java
 IntegrationFlows.from(sourceDirectory());
 ```
 
@@ -133,7 +133,7 @@ IntegrationFlows.from(sourceDirectory());
 
 为了方便起见，`from`还可以将额外的`configurers`作为进一步定制的输入源:
 
-```
+```java
 IntegrationFlows.from(sourceDirectory(), configurer -> configurer.poller(Pollers.fixedDelay(10000)));
 ```
 
@@ -147,7 +147,7 @@ IntegrationFlows.from(sourceDirectory(), configurer -> configurer.poller(Pollers
 
 为此，我们可以使用`GenericSelector`:
 
-```
+```java
 @Bean
 public GenericSelector<File> onlyJpgs() {
     return new GenericSelector<File>() {
@@ -162,14 +162,14 @@ public GenericSelector<File> onlyJpgs() {
 
 因此，让我们再次更新我们的集成流程:
 
-```
+```java
 IntegrationFlows.from(sourceDirectory())
   .filter(onlyJpgs());
 ```
 
 或者，**因为这个过滤器非常简单，我们可以用 lambda** 来定义它:
 
-```
+```java
 IntegrationFlows.from(sourceDirectory())
   .filter(source -> ((File) source).getName().endsWith(".jpg"));
 ```
@@ -182,7 +182,7 @@ IntegrationFlows.from(sourceDirectory())
 
 让我们使用来自`spring-integration-file`的`FileWritingMessageHandler` 服务激活器:
 
-```
+```java
 @Bean
 public MessageHandler targetDirectory() {
     FileWritingMessageHandler handler = new FileWritingMessageHandler(new File(OUTPUT_DIR));
@@ -196,7 +196,7 @@ public MessageHandler targetDirectory() {
 
 再说一遍，让我们更新一下:
 
-```
+```java
 IntegrationFlows.from(sourceDirectory())
   .filter(onlyJpgs())
   .handle(targetDirectory());
@@ -208,7 +208,7 @@ IntegrationFlows.from(sourceDirectory())
 
 当我们添加完所有组件后，我们需要**将我们的`IntegrationFlow `注册为 bean** 来激活它:
 
-```
+```java
 @Bean
 public IntegrationFlow fileMover() {
     return IntegrationFlows.from(sourceDirectory(), c -> c.poller(Pollers.fixedDelay(10000)))
@@ -234,7 +234,7 @@ public IntegrationFlow fileMover() {
 
 如前所述，`Message Channel`是初始化流的另一种方式:
 
-```
+```java
 IntegrationFlows.from("anyChannel")
 ```
 
@@ -246,7 +246,7 @@ IntegrationFlows.from("anyChannel")
 
 例如，我们希望在文件从一个目录移动到下一个目录时对其进行优先级排序:
 
-```
+```java
 @Bean
 public PriorityChannel alphabetically() {
     return new PriorityChannel(1000, (left, right) -> 
@@ -257,7 +257,7 @@ public PriorityChannel alphabetically() {
 
 然后，我们可以在流程之间插入对`channel`的调用:
 
-```
+```java
 @Bean
 public IntegrationFlow fileMover() {
     return IntegrationFlows.from(sourceDirectory())
@@ -278,7 +278,7 @@ public IntegrationFlow fileMover() {
 
 让我们想象一下，不是直接写入输出目录，而是让我们的文件移动应用程序写入另一个通道:
 
-```
+```java
 @Bean
 public IntegrationFlow fileReader() {
     return IntegrationFlows.from(sourceDirectory())
@@ -292,7 +292,7 @@ public IntegrationFlow fileReader() {
 
 让我们创建一个桥来轮询我们的存储槽中的消息，并将它们写入目的地:
 
-```
+```java
 @Bean
 public IntegrationFlow fileWriter() {
     return IntegrationFlows.from("holdingTank")
@@ -304,7 +304,7 @@ public IntegrationFlow fileWriter() {
 
 同样，因为我们写入了一个中间通道，所以现在我们可以添加另一个流**，它获取这些相同的文件，并以不同的速率写入它们**:
 
-```
+```java
 @Bean
 public IntegrationFlow anotherFileWriter() {
     return IntegrationFlows.from("holdingTank")

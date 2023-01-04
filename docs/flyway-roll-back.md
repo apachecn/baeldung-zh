@@ -16,7 +16,7 @@
 
 首先，让我们向数据库添加一个新的`book`表。为此，我们将创建一个名为`V1_0__create_book_table.sql`的迁移文件:
 
-```
+```java
 create table book (
   id numeric,
   title varchar(128),
@@ -27,7 +27,7 @@ create table book (
 
 其次，让我们应用迁移:
 
-```
+```java
 ./flyway migrate
 ```
 
@@ -37,25 +37,25 @@ create table book (
 
 为了将数据库恢复到创建`book`表之前，让我们创建名为`V2_0__drop_table_book.sql`的迁移:
 
-```
+```java
 drop table book;
 ```
 
 接下来，让我们应用迁移:
 
-```
+```java
 ./flyway migrate
 ```
 
 最后，我们可以使用以下命令检查所有迁移的历史记录:
 
-```
+```java
 ./flyway info
 ```
 
 这为我们提供了以下输出:
 
-```
+```java
 +-----------+---------+-------------------+------+---------------------+---------+
 | Category  | Version | Description       | Type | Installed On        | State   |
 +-----------+---------+-------------------+------+---------------------+---------+
@@ -78,7 +78,7 @@ drop table book;
 
 首先，让我们创建一个名为`V1_0__create_book_table.sql`的迁移文件:
 
-```
+```java
 create table book (
   id numeric,
   title varchar(128),
@@ -89,7 +89,7 @@ create table book (
 
 其次，让我们创建相应的撤销迁移文件`U1_0__create_book_table.sql`:
 
-```
+```java
 drop table book;
 ```
 
@@ -99,13 +99,13 @@ drop table book;
 
 接下来，让我们检查迁移的当前状态:
 
-```
+```java
 ./flyway -pro info
 ```
 
 这为我们提供了以下输出:
 
-```
+```java
 +-----------+---------+-------------------+------+--------------+---------+----------+
 | Category  | Version | Description       | Type | Installed On | State   | Undoable |
 +-----------+---------+-------------------+------+--------------+---------+----------+
@@ -117,13 +117,13 @@ drop table book;
 
 接下来，让我们应用我们的迁移:
 
-```
+```java
 ./flyway migrate
 ```
 
 当它完成时，我们的迁移也完成了，我们的模式有了一个新的 book 表:
 
-```
+```java
  List of relations
  Schema |         Name          | Type  |  Owner   
 --------+-----------------------+-------+----------
@@ -136,19 +136,19 @@ drop table book;
 
 最后，让我们使用命令行撤销最后一次迁移:
 
-```
+```java
 ./flyway -pro undo
 ```
 
 命令成功运行后，我们可以再次检查迁移的状态:
 
-```
+```java
 ./flyway -pro info
 ```
 
 这为我们提供了以下输出:
 
-```
+```java
 +-----------+---------+-------------------+----------+---------------------+---------+----------+
 | Category  | Version | Description       | Type     | Installed On        | State   | Undoable |
 +-----------+---------+-------------------+----------+---------------------+---------+----------+

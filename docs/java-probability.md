@@ -12,19 +12,19 @@
 
 在这种情况下，我们将使用 [`SplittableRandom`](https://web.archive.org/web/20220626104429/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/SplittableRandom.html) 类，因为它提供了高质量的随机性并且相对较快:
 
-```
+```java
 SplittableRandom random = new SplittableRandom();
 ```
 
 然后，我们需要在一个范围内生成一个数字，并将其与从该范围中选择的另一个数字进行比较。范围内的每个数字都有均等的机会被抽到。因为我们知道范围，我们知道抽到我们选择的号码的概率。这样我们就控制了概率:
 
-```
+```java
 boolean probablyFalse = random.nextInt(10) == 0
 ```
 
 在这个例子中，我们抽取了从 0 到 9 的数字。所以抽 0 的概率等于 10%。现在，让我们获取一个随机数，并测试选择的数字是否低于抽取的数字:
 
-```
+```java
 boolean whoKnows = random.nextInt(1, 101) <= 50
 ```
 
@@ -42,13 +42,13 @@ boolean whoKnows = random.nextInt(1, 101) <= 50
 
 首先，我们使用 [Vavr](/web/20220626104429/https://www.baeldung.com/vavr) 将我们的`SplittableRandom`声明为`[Lazy](https://web.archive.org/web/20220626104429/https://javadoc.io/doc/io.vavr/vavr/0.9.2/io/vavr/Lazy.html)` 。这样，我们将只在第一次请求时实例化它一次:
 
-```
+```java
 private final Lazy<SplittableRandom> random = Lazy.of(SplittableRandom::new); 
 ```
 
 然后，我们将实现概率管理函数:
 
-```
+```java
 public <T> withProbability(Supplier<T> positiveCase, Supplier<T> negativeCase, int probability) {
     SplittableRandom random = this.random.get();
     if (random.nextInt(1, 101) <= probability) {
@@ -67,7 +67,7 @@ public <T> withProbability(Supplier<T> positiveCase, Supplier<T> negativeCase, i
 
 让我们看看如何实现这种方法。首先，我们将尝试一百万次生成概率为 10%的数字 1，并对它们进行计数:
 
-```
+```java
 int numberOfSamples = 1_000_000;
 int probability = 10;
 int howManyTimesInvoked = 
@@ -79,7 +79,7 @@ int howManyTimesInvoked =
 
 然后，生成数的总和除以样本数将是事件概率的近似值:
 
-```
+```java
 int monteCarloProbability = (howManyTimesInvoked * 100) / numberOfSamples; 
 ```
 
@@ -97,7 +97,7 @@ int monteCarloProbability = (howManyTimesInvoked * 100) / numberOfSamples;
 
 Apache Commons 库为我们提供了几个发行版的实现。让我们用它来实现正态分布:
 
-```
+```java
 private static final double MEAN_HEIGHT = 176.02;
 private static final double STANDARD_DEVIATION = 7.11;
 private static NormalDistribution distribution =  new NormalDistribution(MEAN_HEIGHT, STANDARD_DEVIATION); 
@@ -105,7 +105,7 @@ private static NormalDistribution distribution =  new NormalDistribution(MEAN_HE
 
 使用这个 API 非常简单——[sample](https://web.archive.org/web/20220626104429/https://commons.apache.org/proper/commons-math/javadocs/api-3.2/org/apache/commons/math3/distribution/NormalDistribution.html#sample())方法从分布中抽取一个随机数:
 
-```
+```java
 public static double generateNormalHeight() {
     return distribution.sample();
 }
@@ -113,7 +113,7 @@ public static double generateNormalHeight() {
 
 最后，让我们颠倒一下这个过程:
 
-```
+```java
 public static double probabilityOfHeightBetween(double heightLowerExclusive, double heightUpperInclusive) {
     return distribution.probability(heightLowerExclusive, heightUpperInclusive);
 }

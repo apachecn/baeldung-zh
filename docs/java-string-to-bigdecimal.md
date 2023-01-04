@@ -35,7 +35,7 @@ Java 中的`BigDecimal`类提供了基本算术、小数位数操作、比较、
 
 在 Java 中将`String`转换为`BigDecimal`的最简单方法是使用`BigDecimal(String)`构造函数:
 
-```
+```java
 BigDecimal bigDecimal = new BigDecimal("123");
 assertEquals(new BigDecimal(123), bigDecimal);
 ```
@@ -46,7 +46,7 @@ assertEquals(new BigDecimal(123), bigDecimal);
 
 这是一个两步过程。第一步是将`String`转换为`Double`。第二步是将`Double`转换为`BigDecimal`:
 
-```
+```java
 BigDecimal bigDecimal = BigDecimal.valueOf(Double.valueOf("123.42"));
 assertEquals(new BigDecimal(123.42).setScale(2, BigDecimal.ROUND_HALF_UP), bigDecimal);
 ```
@@ -59,7 +59,7 @@ assertEquals(new BigDecimal(123.42).setScale(2, BigDecimal.ROUND_HALF_UP), bigDe
 
 例如，我们可以在不删除非数字符号的情况下转换基于十进制的长值:
 
-```
+```java
 BigDecimal bigDecimal = new BigDecimal(10692467440017.111).setScale(3, BigDecimal.ROUND_HALF_UP);
 
 DecimalFormatSymbols symbols = new DecimalFormatSymbols();
@@ -85,7 +85,7 @@ Java 提供了处理无效数字`String`的通用异常。
 
 **值得注意的是，`new BigDecimal(String), *BigDecimal.valueOf()*`，`DecimalFormat.parse` 在我们经过`null` :** 时抛出一个`NullPointerException`
 
-```
+```java
 @Test(expected = NullPointerException.class)
 public void givenNullString_WhenBigDecimalObjectWithStringParameter_ThenNullPointerExceptionIsThrown() {
     String bigDecimal = null;
@@ -106,7 +106,7 @@ public void givenNullString_WhenDecimalFormatOfString_ThenNullPointerExceptionIs
 
 同理，`new BigDecimal(String)` 和 *BigDecimal.valueOf()* 当我们将一个无法解析的无效`String`传递给一个`BigDecimal`(比如`&`)时抛出一个`NumberFormatException`:
 
-```
+```java
 @Test(expected = NumberFormatException.class)
 public void givenInalidString_WhenBigDecimalObjectWithStringParameter_ThenNumberFormatExceptionIsThrown() {
     new BigDecimal("&");
@@ -120,7 +120,7 @@ public void givenInalidString_WhenValueOfDoubleFromString_ThenNumberFormatExcept
 
 **最后，当我们经过一个无效的`String` :** 时，`DecimalFormat.parse`抛出一个`ParseException`
 
-```
+```java
 @Test(expected = ParseException.class)
 public void givenInalidString_WhenDecimalFormatOfString_ThenNumberFormatExceptionIsThrown()
   throws ParseException {

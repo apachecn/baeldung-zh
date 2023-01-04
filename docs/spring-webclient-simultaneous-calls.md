@@ -22,11 +22,11 @@
 
 让我们来看看如何发出一个调用来检索给定 id 的用户:
 
-```
+```java
 WebClient webClient = WebClient.create("http://localhost:8080");
 ```
 
-```
+```java
 public Mono<User> getUser(int id) {
     LOG.info(String.format("Calling getUser(%d)", id));
 
@@ -47,7 +47,7 @@ public Mono<User> getUser(int id) {
 
 **现在让我们想象一下，我们想要同时获取关于五个用户的数据，并将结果作为用户列表返回**:
 
-```
+```java
 public Flux fetchUsers(List userIds) {
     return Flux.fromIterable(userIds)
         .flatMap(this::getUser);
@@ -70,7 +70,7 @@ public Flux fetchUsers(List userIds) {
 
 在本例中，我们将创建另一个端点，它返回相同的`User`类型:
 
-```
+```java
 public Mono<User> getOtherUser(int id) {
     return webClient.get()
         .uri("/otheruser/{id}", id)
@@ -81,7 +81,7 @@ public Mono<User> getOtherUser(int id) {
 
 现在，并行执行两个或更多调用的方法变成了:
 
-```
+```java
 public Flux fetchUserAndOtherUser(int id) {
     return Flux.merge(getUser(id), getOtherUser(id));
 }
@@ -95,7 +95,7 @@ public Flux fetchUserAndOtherUser(int id) {
 
 `Mono`类提供了静态 zip 方法，让我们可以组合两个或多个结果:
 
-```
+```java
 public Mono fetchUserAndItem(int userId, int itemId) {
     Mono user = getUser(userId);
     Mono item = getItem(itemId);
@@ -112,7 +112,7 @@ public Mono fetchUserAndItem(int userId, int itemId) {
 
 为此，我们将使用 [Wiremock](/web/20220630133110/https://www.baeldung.com/introduction-to-wiremock) 来创建一个模拟服务器，并且我们将测试`fetchUsers`方法:
 
-```
+```java
 @Test
 public void givenClient_whenFetchingUsers_thenExecutionTimeIsLessThanDouble() {
 

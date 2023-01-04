@@ -12,7 +12,7 @@ JavaServer Pages 标记库(JSTL)是一组标记，可用于实现一些常见操
 
 为了启用 JSTL 特性，我们必须将库添加到我们的项目中。对于 Maven 项目，我们在`pom.xml`文件中添加依赖关系:
 
-```
+```java
 <dependency>
     <groupId>javax.servlet</groupId>
     <artifactId>jstl</artifactId>
@@ -22,7 +22,7 @@ JavaServer Pages 标记库(JSTL)是一组标记，可用于实现一些常见操
 
 将库添加到我们的项目后，最后的设置将是使用 taglib 指令将核心 JSTL 标记和任何其他标记的名称空间文件添加到我们的 JSP 中，如下所示:
 
-```
+```java
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 ```
 
@@ -42,7 +42,7 @@ JSTL 核心标签库包含用于执行基本操作的标签，如打印值、变
 
 `<c:out>`标签的一个例子是:
 
-```
+```java
 <c:out value="${pageTitle}"/>
 ```
 
@@ -52,7 +52,7 @@ JSTL 核心标签库包含用于执行基本操作的标签，如打印值、变
 
 一个示例的形式如下:
 
-```
+```java
 <c:set value="JSTL Core Tags Example" var="pageTitle"/>
 ```
 
@@ -62,7 +62,7 @@ JSTL 核心标签库包含用于执行基本操作的标签，如打印值、变
 
 下面，我们展示了一个使用`<c:remove>` 标签的例子:
 
-```
+```java
 <c:remove var="pageTitle"/>
 ```
 
@@ -72,7 +72,7 @@ JSTL 核心标签库包含用于执行基本操作的标签，如打印值、变
 
 典型用法如下:
 
-```
+```java
 <c:catch var ="exceptionThrown">
     <% int x = Integer.valueOf("a");%>
 </c:catch>
@@ -80,7 +80,7 @@ JSTL 核心标签库包含用于执行基本操作的标签，如打印值、变
 
 为了检查是否抛出了异常，我们使用了如下所示的`<c:if>`标记:
 
-```
+```java
 <c:if test = "${exceptionThrown != null}">
     <p>The exception is : ${exceptionThrown} <br />
       There is an exception: ${exceptionThrown.message}
@@ -98,7 +98,7 @@ JSTL 核心标签库包含用于执行基本操作的标签，如打印值、变
 
 `<c:when>`接受一个`test`属性，该属性保存要计算的表达式。下面，我们展示了这些标签的用法示例:
 
-```
+```java
 <c:set value="<%= Calendar.getInstance().get(Calendar.SECOND)%>" var="seconds"/>
 <c:choose>
     <c:when test="${seconds le 30 }">
@@ -119,7 +119,7 @@ JSTL 核心标签库包含用于执行基本操作的标签，如打印值、变
 
 我们可以使用`url`和`var`属性分别保存 URL 和从 URL 获取的内容。例如，我们可以通过以下方式从 URL 导入内容:
 
-```
+```java
 <c:import var = "data" url = "http://www.example.com"/>
 ```
 
@@ -129,7 +129,7 @@ JSTL 核心标签库包含用于执行基本操作的标签，如打印值、变
 
 `<c:forEach>`标签还有一个`step`属性，控制每次迭代后索引增量的大小。下面，我们展示一个使用示例:
 
-```
+```java
 <c:forEach var = "i" items="1,4,5,6,7,8,9">
     Item <c:out value = "No. ${i}"/><p>
 </c:forEach>
@@ -141,7 +141,7 @@ JSTL 核心标签库包含用于执行基本操作的标签，如打印值、变
 
 类似于`<c:forEach>`标签，它有一个`items` 属性和一个附加的`delim`属性，该属性是`String`的分隔符，如下所示:
 
-```
+```java
 <c:forTokens 
   items = "Patrick:Wilson:Ibrahima:Chris" 
   delims = ":" var = "name">
@@ -155,7 +155,7 @@ JSTL 核心标签库包含用于执行基本操作的标签，如打印值、变
 
 `<c:url>`标签还有一个`<c:param>`子标签，用于指定 URL 参数。我们在下面展示一个例子:
 
-```
+```java
 <c:url value = "/core_tags" var = "myURL">
     <c:param name = "parameter_1" value = "1234"/>
     <c:param name = "parameter_2" value = "abcd"/>
@@ -166,7 +166,7 @@ JSTL 核心标签库包含用于执行基本操作的标签，如打印值、变
 
 `<c:redirect>`标签执行 URL 重写并将用户重定向到其`url`属性中指定的页面。典型的用例如下所示:
 
-```
+```java
 <c:redirect url="/core_tags"/>
 ```
 
@@ -178,7 +178,7 @@ JSTL 格式标签也可以用来增强网站的国际化。
 
 在使用这些格式化标签之前，我们必须将标签库添加到 JSP 中:
 
-```
+```java
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 ```
 
@@ -190,7 +190,7 @@ JSTL 格式标签也可以用来增强网站的国际化。
 
 `<fmt:formatDate>`还有一个`pattern`属性，我们可以在其中指定想要的格式模式。下面是其中一种模式的示例:
 
-```
+```java
 <c:set var="now" value="<%= new java.util.Date()%>"/>
 <fmt:formatDate type="time" value="${now}"/>
 ```
@@ -203,7 +203,7 @@ JSTL 格式标签也可以用来增强网站的国际化。
 
 我们可以解析日期:
 
-```
+```java
 <c:set var="today" value="28-03-2018"/>
 <fmt:parseDate value="${today}" var="parsedDate" pattern="dd-MM-yyyy"/>
 ```
@@ -212,7 +212,7 @@ JSTL 格式标签也可以用来增强网站的国际化。
 
 `<fmt:formatNumber>`标签以特定的模式或精度处理数字的呈现，该模式或精度可以是在其`type`属性中指定的`number, currency or percentage`之一。`<fmt:formatNumber>`的用法示例如下:
 
-```
+```java
 <c:set var="fee" value="35050.1067"/>
 <fmt:formatNumber value="${fee}" type="currency"/>
 ```
@@ -223,7 +223,7 @@ JSTL 格式标签也可以用来增强网站的国际化。
 
 我们可以这样使用它:
 
-```
+```java
 <fmt:parseNumber var="i" type="number" value="${fee}"/>
 ```
 
@@ -233,7 +233,7 @@ JSTL 格式标签也可以用来增强网站的国际化。
 
 标签对于启用国际化很有用，因为我们可以指定特定于地区的对象。典型的用法是:
 
-```
+```java
 <fmt:bundle basename="com.baeldung.jstl.bundles.CustomMessage" prefix="verb.">
     <fmt:message key="go"/><br/>
     <fmt:message key="come"/><br/>
@@ -246,7 +246,7 @@ JSTL 格式标签也可以用来增强网站的国际化。
 
 `<fmt:setBundle>`标签用于在 JSP 中加载资源包，并使其在整个页面中可用。加载的资源包存储在`<fmt:setBundle>`标签的`var`属性中。我们可以通过以下方式设置捆绑包:
 
-```
+```java
 <fmt:setBundle basename="com.baeldung.jstl.bundles.CustomMessage" var="lang"/>
 ```
 
@@ -254,7 +254,7 @@ JSTL 格式标签也可以用来增强网站的国际化。
 
 `<fmt:setLocale>`标签用于设置 JSP 中放在声明之后的部分的区域设置。通常，我们会通过以下方式进行设置:
 
-```
+```java
 <fmt:setLocale value="fr_FR"/>
 ```
 
@@ -266,7 +266,7 @@ fr_FR 表示地区，在本例中是法语。
 
 该时区参数由其`value`属性提供。下面显示了一个用法示例:
 
-```
+```java
 <fmt:timeZone value="${zone}">
     <fmt:formatDate value="${now}" timeZone="${zn}" 
       type="both"/>
@@ -277,7 +277,7 @@ fr_FR 表示地区，在本例中是法语。
 
 `<fmt:setTimeZone>`标签可用于将在其`value`属性中指定的时区复制到在其`var`属性中指定的作用域变量中。我们对此的定义是:
 
-```
+```java
 <fmt:setTimeZone value="GMT+9"/>
 ```
 
@@ -289,7 +289,7 @@ fr_FR 表示地区，在本例中是法语。
 
 这可能看起来像这样:
 
-```
+```java
 <fmt:setBundle basename = "com.baeldung.jstl.bundles.CustomMessage" var = "lang"/>
 <fmt:message key="verb.go" bundle="${lang}"/>
 ```
@@ -302,7 +302,7 @@ fr_FR 表示地区，在本例中是法语。
 
 让我们看下面的例子:
 
-```
+```java
 <fmt:requestEncoding value = "UTF-8" />
 ```
 
@@ -312,7 +312,7 @@ JSTL XML 标记库提供了在 JSP 中与 XML 数据交互的便捷方式。
 
 为了能够访问这些 XML 标记，我们将通过以下方式将标记库添加到 JSP 中:
 
-```
+```java
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 ```
 
@@ -326,7 +326,7 @@ JSTL XML 标记库提供了在 JSP 中与 XML 数据交互的便捷方式。
 
 一个简单的例子是:
 
-```
+```java
 <x:out select="$output/items/item[1]/name"/>
 ```
 
@@ -336,7 +336,7 @@ JSTL XML 标记库提供了在 JSP 中与 XML 数据交互的便捷方式。
 
 `<x:parse>`标签用于解析其 *xml* 或`doc` 属性或附件中指定的 XML 数据。一个典型的例子是:
 
-```
+```java
 <x:parse xml="${xmltext}" var="output"/>
 ```
 
@@ -344,7 +344,7 @@ JSTL XML 标记库提供了在 JSP 中与 XML 数据交互的便捷方式。
 
 `<x:set>`标签将在其`var`属性中指定的变量设置为传递给其`select`属性的 XPath 表达式。一个典型的例子是:
 
-```
+```java
 <x:set var="fragment" select="$output//item"/>
 ```
 
@@ -356,7 +356,7 @@ JSTL XML 标记库提供了在 JSP 中与 XML 数据交互的便捷方式。
 
 一个简单的用例如下所示:
 
-```
+```java
 <x:if select="$output//item">
     Document has at least one <item> element.
 </x:if>
@@ -370,7 +370,7 @@ JSTL XML 标记库提供了在 JSP 中与 XML 数据交互的便捷方式。
 
 因此，我们会有:
 
-```
+```java
 <ul class="items">
     <x:forEach select="$output/items/item/name" var="item">
         <li>Item Name: <x:out select="$item"/></li>
@@ -388,7 +388,7 @@ JSTL XML 标记库提供了在 JSP 中与 XML 数据交互的便捷方式。
 
 下面，我们展示一个示例用例:
 
-```
+```java
 <x:choose>
     <x:when select="$output//item/category = 'Sneakers'">
         Item category is Sneakers
@@ -412,7 +412,7 @@ JSTL XML 标记库提供了在 JSP 中与 XML 数据交互的便捷方式。
 
 一个简单的用例将采用以下形式:
 
-```
+```java
 <c:import url="/items_xml" var="xslt"/>
 <x:transform xml="${xmltext}" xslt="${xslt}">
     <x:param name="bgColor" value="blue"/>
@@ -425,7 +425,7 @@ JSTL XML 标记库提供了在 JSP 中与 XML 数据交互的便捷方式。
 
 为了启用 JSTL SQL 标记，我们将标记库添加到 JSP 中:
 
-```
+```java
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
 ```
 
@@ -439,7 +439,7 @@ JSTL SQL 标签支持不同的数据库，包括 MySQL，Oracle 和微软 SQL Se
 
 这些配置变量保存在`<sql:setDataSource>`标签的`driver, url, user, password` 和 `dataSource` 属性中，如下所示:
 
-```
+```java
 <sql:setDataSource var="dataSource" driver="com.mysql.cj.jdbc.Driver"
   url="jdbc:mysql://localhost/test" user="root" password=""/>
 ```
@@ -450,7 +450,7 @@ JSTL SQL 标签支持不同的数据库，包括 MySQL，Oracle 和微软 SQL Se
 
 `<sql:query>`标签用于执行 SQL SELECT 语句，其结果存储在`var`属性中定义的作用域变量中。通常，我们将其定义为:
 
-```
+```java
 <sql:query dataSource="${dataSource}" var="result">
     SELECT * from USERS;
 </sql:query>
@@ -464,7 +464,7 @@ JSTL SQL 标签支持不同的数据库，包括 MySQL，Oracle 和微软 SQL Se
 
 一个使用示例是:
 
-```
+```java
 <sql:update dataSource="${dataSource}" var="count">
     INSERT INTO USERS(first_name, last_name, email) VALUES
       ('Grace', 'Adams', '[[email protected]](/web/20220627172721/https://www.baeldung.com/cdn-cgi/l/email-protection)');
@@ -477,7 +477,7 @@ JSTL SQL 标签支持不同的数据库，包括 MySQL，Oracle 和微软 SQL Se
 
 `<sql:param>`标签是一个子标签，可以在`<sql:query>`或`<sql:update>`标签中使用，为 sql 语句中的值占位符提供值，如下所示:
 
-```
+```java
 <sql:update dataSource = "${dataSource}" var = "count">
     DELETE FROM USERS WHERE email = ?
     <sql:param value = "[[email protected]](/web/20220627172721/https://www.baeldung.com/cdn-cgi/l/email-protection)" />
@@ -492,7 +492,7 @@ JSTL SQL 标签支持不同的数据库，包括 MySQL，Oracle 和微软 SQL Se
 
 我们可以在 JSP 中这样定义它:
 
-```
+```java
 <sql:update dataSource = "${dataSource}" var = "count">
     UPDATE Users SET registered = ? WHERE email = ?
     <sql:dateParam value = "<%=registered%>" type = "DATE" />
@@ -506,7 +506,7 @@ JSTL SQL 标签支持不同的数据库，包括 MySQL，Oracle 和微软 SQL Se
 
 `<sql:transaction>`标签用于通过将`<sql:query>`和`<sql:update>`标签组合在一起来创建类似 JDBC 事务的操作，如下所示:
 
-```
+```java
 <sql:transaction dataSource = "${dataSource}">
     <sql:update var = "count">
         UPDATE Users SET first_name = 'Patrick-Ellis' WHERE
@@ -531,7 +531,7 @@ JSTL 方法是 JSP 中数据操作的实用工具。虽然有些函数采用不�
 
 要在 JSP 中启用 JSTL 方法，我们需要将 taglib 添加到页面中:
 
-```
+```java
 <%@ taglib prefix = "fn"
   uri = "http://java.sun.com/jsp/jstl/functions" %>
 ```
@@ -542,7 +542,7 @@ JSTL 方法是 JSP 中数据操作的实用工具。虽然有些函数采用不�
 
 `fn:contains()`方法评估一个`String`来检查它是否包含一个给定的子串，如下所示:
 
-```
+```java
 <c:set var = "string1" value = "This is first string"/>
 <c:if test = "${fn:contains(string1, 'first')}">
     <p>Found 'first' in string<p>
@@ -553,7 +553,7 @@ JSTL 方法是 JSP 中数据操作的实用工具。虽然有些函数采用不�
 
 `fn:containsIgnoreCase()`函数是`fn:contains()`方法的不区分大小写的变体，可以这样使用:
 
-```
+```java
 <c:if test = "${fn:containsIgnoreCase(string1, 'first')}">
     <p>Found 'first' string<p>
 </c:if>
@@ -568,7 +568,7 @@ JSTL 方法是 JSP 中数据操作的实用工具。虽然有些函数采用不�
 
 我们可以这样定义:
 
-```
+```java
 <c:if test = "${fn:endsWith(string1, 'string')}">
     <p>String ends with 'string'<p>
 </c:if>
@@ -578,7 +578,7 @@ JSTL 方法是 JSP 中数据操作的实用工具。虽然有些函数采用不�
 
 `fn:escapeXML()`函数用于转义输入`String`中的 XML 标记，如下所示:
 
-```
+```java
 <p>${fn:escapeXml(string1)}</p>
 ```
 
@@ -590,7 +590,7 @@ JSTL 方法是 JSP 中数据操作的实用工具。虽然有些函数采用不�
 
 `fn:indexOf()`函数返回一个整数，其用法如下:
 
-```
+```java
 <p>Index: ${fn:indexOf(string1, "first")}</p>
 ```
 
@@ -598,7 +598,7 @@ JSTL 方法是 JSP 中数据操作的实用工具。虽然有些函数采用不�
 
 `fn:join()`函数将一个数组的所有元素连接成一个单独的`String`，可以这样使用:
 
-```
+```java
 <c:set var = "string3" value = "${fn:split(string1, ' ')}" />
 <c:set var = "string4" value = "${fn:join(string3, '-')}" />
 ```
@@ -609,7 +609,7 @@ JSTL 方法是 JSP 中数据操作的实用工具。虽然有些函数采用不�
 
 `fn:length()` 函数接受一个单独的`Object`,它可以是一个集合或者是一个`String`,并返回一个整数，如下所示:
 
-```
+```java
 <p>Length: ${fn:length(string1)}</p>
 ```
 
@@ -619,7 +619,7 @@ JSTL 方法是 JSP 中数据操作的实用工具。虽然有些函数采用不�
 
 它需要三个参数:source `String,`要在 source 中查找的子字符串，而`String`要替换子字符串的所有匹配项，如下所示:
 
-```
+```java
 <c:set var = "string3" value = "${fn:replace(string1, 'first', 'third')}" />
 ```
 
@@ -627,7 +627,7 @@ JSTL 方法是 JSP 中数据操作的实用工具。虽然有些函数采用不�
 
 `fn:split()`函数使用指定的分隔符对`String`执行拆分操作。下面是一个用法示例:
 
-```
+```java
 <c:set var = "string3" value = "${fn:split(string1, ' ')}" />
 ```
 
@@ -635,7 +635,7 @@ JSTL 方法是 JSP 中数据操作的实用工具。虽然有些函数采用不�
 
 `fn:startsWith()`函数检查`String`的前缀，如果它匹配给定的子字符串，则返回 true，如下所示:
 
-```
+```java
 <c:if test = "${fn:startsWith(string1, 'This')}">
     <p>String starts with 'This'</p>
 </c:if>
@@ -645,7 +645,7 @@ JSTL 方法是 JSP 中数据操作的实用工具。虽然有些函数采用不�
 
 `fn:substring()`函数在指定的起始和结束索引处从源`String`创建一个子串。我们会这样使用它:
 
-```
+```java
 <c:set var = "string3" value = "${fn:substring(string1, 5, 15)}" />
 ```
 
@@ -655,7 +655,7 @@ JSTL 方法是 JSP 中数据操作的实用工具。虽然有些函数采用不�
 
 我们会这样使用它:
 
-```
+```java
 <c:set var = "string3" value = "${fn:substringAfter(string1, 'is')}" />
 ```
 
@@ -665,7 +665,7 @@ JSTL 方法是 JSP 中数据操作的实用工具。虽然有些函数采用不�
 
 在我们的 JSP 页面中，它看起来像这样:
 
-```
+```java
 <c:set var = "string3" value = "${fn:substringBefore(string1, 'is')}" />
 ```
 
@@ -673,7 +673,7 @@ JSTL 方法是 JSP 中数据操作的实用工具。虽然有些函数采用不�
 
 `fn:to LowerCase()`函数将`String`中的所有字符转换成小写，可以这样使用:
 
-```
+```java
 <c:set var = "string3" value = "${fn:toLowerCase(string1)}" />
 ```
 
@@ -681,7 +681,7 @@ JSTL 方法是 JSP 中数据操作的实用工具。虽然有些函数采用不�
 
 `fn:toUpperCase()`函数将`String`中的所有字符转换成大写:
 
-```
+```java
 <c:set var = "string3" value = "${fn:toUpperCase(string1)}" />
 ```
 
@@ -689,7 +689,7 @@ JSTL 方法是 JSP 中数据操作的实用工具。虽然有些函数采用不�
 
 `fn:trim()`函数删除`String:`中前后的空格
 
-```
+```java
 <c:set var = "string1" value = "This is first String    "/>
 ```
 

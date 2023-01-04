@@ -10,7 +10,7 @@
 
 让我们创建以下文件树:
 
-```
+```java
 |   Dockerfile
 |   
 \---folder1
@@ -23,7 +23,7 @@
 
 这可以通过运行以下命令来完成:
 
-```
+```java
 $ mkdir folder1
 $ cd folder1
 $ mkdir subfolder1
@@ -42,7 +42,7 @@ $ cd ../..
 
 然后，让我们插入以下内容:
 
-```
+```java
 FROM ubuntu:latest
 COPY folder1/ /workdir/
 RUN ls --recursive /workdir/
@@ -56,7 +56,7 @@ RUN ls --recursive /workdir/
 
 我们现在可以建立我们的 Docker 形象了:
 
-```
+```java
 $ docker build .
 #4 [1/3] FROM docker.io/library/ubuntu:latest
 #6 [2/3] COPY folder1/ /workdir/
@@ -78,7 +78,7 @@ $ docker build .
 
 现在，让我们稍微更新一下文件树，使其符合以下内容:
 
-```
+```java
 |   Dockerfile
 |   
 +---folder1
@@ -94,7 +94,7 @@ $ docker build .
 
 为了进行修改，我们将运行以下命令:
 
-```
+```java
 $ mkdir folder2
 $ cd folder2
 $ touch file3.txt
@@ -103,7 +103,7 @@ $ cd ..
 
 **我们现在想要将`folder2`的内容合并到图像的`workdir`中。**让我们完成我们的`Dockerfile`:
 
-```
+```java
 FROM ubuntu:latest
 COPY folder1/ /workdir/
 RUN ls --recursive /workdir/
@@ -113,7 +113,7 @@ RUN ls --recursive /workdir/
 
 第二个`COPY`指令不会删除之前添加的文件。让我们建立自己的形象来检查这种行为:
 
-```
+```java
 $ docker build .
 #4 [1/5] FROM docker.io/library/ubuntu:latest
 #6 [2/5] COPY folder1/ /workdir/
@@ -136,7 +136,7 @@ $ docker build .
 
 另外，我们选择这个例子是为了演示合并行为。如果我们想要的只是将`folder1`和`folder2`的内容同时复制到图像的`workdir`目录中，我们可以利用 **`COPY`可以接受多个来源**这一事实:
 
-```
+```java
 FROM ubuntu:latest
 COPY folder1/ folder2/ /workdir/
 RUN ls --recursive /workdir/

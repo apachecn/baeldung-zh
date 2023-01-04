@@ -32,14 +32,14 @@ offset 表示开始复制的第一个元素的索引，count 表示要复制的�
 
 ### 可用签名
 
-```
+```java
 public static String copyValueOf(char[] data)
 public static String copyValueOf(char[] data, int offset, int count)
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenCallCopyValueOf_thenStringConstructed() {
     char[] array = new char[] { 'a', 'b', 'c', 'd' };

@@ -32,7 +32,7 @@ Hibernate 二级缓存被设计成不知道实际使用的缓存提供者。Hibe
 
 我们将使用以下 Maven 依赖项将 Ehcache 区域工厂实现添加到类路径中:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-ehcache</artifactId>
@@ -48,14 +48,14 @@ Hibernate 二级缓存被设计成不知道实际使用的缓存提供者。Hibe
 
 通过下面的两个属性，我们将告诉 Hibernate 缓存已启用，并给它取区域工厂类的名称:
 
-```
+```java
 hibernate.cache.use_second_level_cache=true
 hibernate.cache.region.factory_class=org.hibernate.cache.ehcache.EhCacheRegionFactory 
 ```
 
 例如，在`persistence.xml,` 中，它看起来像是:
 
-```
+```java
 <properties>
     ...
     <property name="hibernate.cache.use_second_level_cache" value="true"/>
@@ -73,7 +73,7 @@ hibernate.cache.region.factory_class=org.hibernate.cache.ehcache.EhCacheRegionFa
 
 一些开发人员认为添加标准的`@javax.persistence.Cacheable`注释也是一个好习惯(尽管 Hibernate 并不要求)，所以实体类的实现可能如下所示:
 
-```
+```java
 @Entity
 @Cacheable
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -96,7 +96,7 @@ public class Foo {
 
 为了验证缓存工作正常，我们可以编写一个快速测试:
 
-```
+```java
 Foo foo = new Foo();
 fooService.create(foo);
 fooService.findOne(foo.getId());
@@ -124,7 +124,7 @@ assertThat(size, greaterThan(0));
 
 例如，我们可以定义以下 Ehcache 配置，将缓存的`Foo`实例的最大数量限制为 1000:
 
-```
+```java
 <ehcache>
     <cache name="com.baeldung.persistence.model.Foo" maxElementsInMemory="1000" />
 </ehcache>
@@ -134,7 +134,7 @@ assertThat(size, greaterThan(0));
 
 默认情况下，集合不会被缓存，我们需要显式地将它们标记为可缓存的:
 
-```
+```java
 @Entity
 @Cacheable
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -175,7 +175,7 @@ Hibernate 实际上将集合存储在单独的缓存区域中，每个集合一�
 
 当涉及到 DML 风格的 HQL ( `insert`、`update`和`delete` HQL 语句)时，Hibernate 能够确定哪些实体会受到这些操作的影响:
 
-```
+```java
 entityManager.createQuery("update Foo set … where …").executeUpdate();
 ```
 
@@ -183,13 +183,13 @@ entityManager.createQuery("update Foo set … where …").executeUpdate();
 
 然而，当涉及到原生 SQL DML 语句时，Hibernate 无法猜测正在更新什么，因此它使整个二级缓存无效:
 
-```
+```java
 session.createNativeQuery("update FOO set … where …").executeUpdate();
 ```
 
 这可能不是我们想要的。解决方案是告诉 Hibernate 哪些实体受到原生 DML 语句的影响，这样它就可以只驱逐与`Foo`实体相关的条目:
 
-```
+```java
 Query nativeQuery = entityManager.createNativeQuery("update FOO set ... where ...");
 nativeQuery.unwrap(org.hibernate.SQLQuery.class).addSynchronizedEntityClass(Foo.class);
 nativeQuery.executeUpdate();
@@ -205,13 +205,13 @@ nativeQuery.executeUpdate();
 
 为了启用查询缓存，我们将把`hibernate.cache.use_query_cache`属性的值设置为`true`:
 
-```
+```java
 hibernate.cache.use_query_cache=true
 ```
 
 对于每个查询，我们必须明确指出该查询是可缓存的(通过一个`org.hibernate.cacheable`查询提示):
 
-```
+```java
 entityManager.createQuery("select f from Foo f")
   .setHint("org.hibernate.cacheable", true)
   .getResultList();

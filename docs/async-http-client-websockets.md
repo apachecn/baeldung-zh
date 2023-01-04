@@ -12,7 +12,7 @@ AsyncHttpClient (AHC)是一个基于 Netty 的库，用于轻松执行异步 HTT
 
 这个库的最新版本可以在 [Maven Central](https://web.archive.org/web/20220523235438/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.asynchttpclient%22%20AND%20a%3A%22async-http-client%22) 上找到。我们需要小心使用组 id 为`org.asynchttpclient`的依赖项，而不是组 id 为`com.ning:`的依赖项
 
-```
+```java
 <dependency>
     <groupId>org.asynchttpclient</groupId>
     <artifactId>async-http-client</artifactId>
@@ -26,7 +26,7 @@ AsyncHttpClient (AHC)是一个基于 Netty 的库，用于轻松执行异步 HTT
 
 WebSocket 协议升级的处理由`WebSocketUpgradeHandler`类完成。这个类实现了`AsyncHandler`接口，也为我们提供了一个构建器:
 
-```
+```java
 WebSocketUpgradeHandler.Builder upgradeHandlerBuilder
   = new WebSocketUpgradeHandler.Builder();
 WebSocketUpgradeHandler wsHandler = upgradeHandlerBuilder
@@ -50,7 +50,7 @@ WebSocketUpgradeHandler wsHandler = upgradeHandlerBuilder
 
 为了获得一个`WebSocket`连接对象，我们使用标准的`AsyncHttpClient` 来创建一个带有首选连接细节的 HTTP 请求，比如头、查询参数或超时:
 
-```
+```java
 WebSocket webSocketClient = Dsl.asyncHttpClient()
   .prepareGet("ws://localhost:5590/websocket")
   .addHeader("header_name", "header_value")
@@ -64,7 +64,7 @@ WebSocket webSocketClient = Dsl.asyncHttpClient()
 
 使用`WebSocket`对象**，我们可以使用`isOpen()`方法**检查连接是否成功打开。一旦我们有了一个开放的连接**，我们就可以使用`sendTextFrame()`和`sendBinaryFrame()`方法发送带有字符串或二进制有效载荷的数据帧**:
 
-```
+```java
 if (webSocket.isOpen()) {
     webSocket.sendTextFrame("test message");
     webSocket.sendBinaryFrame(new byte[]{'t', 'e', 's', 't'});
@@ -77,14 +77,14 @@ WebSocket 协议支持三种类型的控制帧:ping、pong 和 close。
 
 **乒乓帧主要用于实现连接的“保活”机制。**我们可以使用`sendPingFrame()`和`sendPongFrame()`方法发送这些帧:
 
-```
+```java
 webSocket.sendPingFrame();
 webSocket.sendPongFrame();
 ```
 
 **关闭现有连接是通过使用`sendCloseFrame()`方法发送关闭帧**来完成的，其中我们可以以文本的形式提供状态代码和关闭连接的原因:
 
-```
+```java
 webSocket.sendCloseFrame(404, "Forbidden");
 ```
 

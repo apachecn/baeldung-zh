@@ -12,7 +12,7 @@
 
 复制`Set`的一种方式是使用`Set` 实现的[复制构造函数](/web/20221206224036/https://www.baeldung.com/java-constructors):
 
-```
+```java
 Set<T> copy = new HashSet<>(original);
 ```
 
@@ -24,7 +24,7 @@ Set<T> copy = new HashSet<>(original);
 
 `Set`接口有一个`[addAll](/web/20221206224036/https://www.baeldung.com/java-set-operations) `方法`. `，它将集合中的元素添加到目标集合中。因此，我们可以使用`addAll`方法将现有集合的元素复制到空集:
 
-```
+```java
 Set<T> copy = new HashSet<>();
 copy.addAll(original);
 ```
@@ -37,7 +37,7 @@ copy.addAll(original);
 
 因此，作为复制集合的另一种方法，我们可以调用集合的`clone`方法:
 
-```
+```java
 Set<T> copy = (Set<T>) original.clone();
 ```
 
@@ -51,7 +51,7 @@ Set<T> copy = (Set<T>) original.clone();
 
 在这个例子中，我们将通过使用 Google 的`Gson` 库的[序列化](/web/20221206224036/https://www.baeldung.com/gson-serialization-guide)和[反序列化](/web/20221206224036/https://www.baeldung.com/gson-deserialization-guide)方法来复制集合:
 
-```
+```java
 Gson gson = new Gson();
 String jsonStr = gson.toJson(original);
 Set<T> copy = gson.fromJson(jsonStr, Set.class);
@@ -61,7 +61,7 @@ Set<T> copy = gson.fromJson(jsonStr, Set.class);
 
 [Apache Commons Lang](/web/20221206224036/https://www.baeldung.com/java-commons-lang-3) 有一个类`SerializationUtils`，它提供了一个特殊的方法`clone`，可以用来克隆一个给定的对象。我们可以利用这种方法复制一个集合:
 
-```
+```java
 for (T item : original) {
     copy.add(SerializationUtils.clone(item));
 }
@@ -73,7 +73,7 @@ for (T item : original) {
 
 或者，我们可以用 [Java 8 的`Stream` API](/web/20221206224036/https://www.baeldung.com/java-8-streams) 搭配 [`Collectors`](/web/20221206224036/https://www.baeldung.com/java-8-collectors) 克隆一套:
 
-```
+```java
 Set<T> copy = original.stream()
     .collect(Collectors.toSet());
 ```
@@ -84,7 +84,7 @@ Set<T> copy = original.stream()
 
 Java 10 给`Set`接口带来了一个新特性，即**允许我们从给定集合**的元素中创建一个不可变集合:
 
-```
+```java
 Set<T> copy = Set.copyOf(original);
 ```
 

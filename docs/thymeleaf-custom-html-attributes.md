@@ -22,13 +22,13 @@
 
 **我们可以使用语法:**在 HTML 标签中指定一个自定义属性
 
-```
+```java
 th:data-<attribute_name>=""
 ```
 
 让我们创建一个简单的表单，允许学生注册一门课程来查看实际情况:
 
-```
+```java
 <form action="#" th:action="@{/registerCourse}" th:object="${course}"
     method="post" onsubmit="return validateForm();">
     <span id="errormesg" style="color: red"></span> <span
@@ -60,7 +60,7 @@ th:data-<attribute_name>=""
 
 更新后的`select`标签如下所示:
 
-```
+```java
 <select id="course" th:field="*{name}" th:data-validation-message="#{msg.courseName.mandatory}">
 ```
 
@@ -68,7 +68,7 @@ th:data-<attribute_name>=""
 
 现在，当用户在没有选择有效选项的情况下提交表单时，这个 JavaScript 函数将向用户显示一条错误消息:
 
-```
+```java
 function validateForm() {
     var e = document.getElementById("course");
     var value = e.options[e.selectedIndex].value;

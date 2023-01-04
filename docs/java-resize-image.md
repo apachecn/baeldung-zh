@@ -21,7 +21,7 @@
 
 让我们从使用`Graphics2D`调整图像大小开始:
 
-```
+```java
 BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) throws IOException {
     BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
     Graphics2D graphics2D = resizedImage.createGraphics();
@@ -41,7 +41,7 @@ BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targ
 
 我们可以使用`setRenderingHint`方法添加一个`RenderingHint`:
 
-```
+```java
 graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 ```
 
@@ -51,7 +51,7 @@ graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VAL
 
 这种使用`Image` 的方法非常简单，它能产生令人满意的图像质量:
 
-```
+```java
 BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) throws IOException {
     Image resultingImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_DEFAULT);
     BufferedImage outputImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
@@ -66,7 +66,7 @@ BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targ
 
 我们还可以通过为`getScaledInstance()`方法提供一个标志来指示缩放机制使用可用的方法之一，该标志指示用于图像重采样需求的算法类型:
 
-```
+```java
 Image resultingImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
 ```
 
@@ -80,7 +80,7 @@ Image resultingImage = originalImage.getScaledInstance(targetWidth, targetHeight
 
 我们将添加以下 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.imgscalr</groupId>
     <artifactId>imgscalr-lib</artifactId>
@@ -92,7 +92,7 @@ Image resultingImage = originalImage.getScaledInstance(targetWidth, targetHeight
 
 使用 Imgscalr 最简单的方法是:
 
-```
+```java
 BufferedImage simpleResizeImage(BufferedImage originalImage, int targetWidth) throws Exception {
     return Scalr.resize(originalImage, targetWidth);
 }
@@ -115,7 +115,7 @@ BufferedImage simpleResizeImage(BufferedImage originalImage, int targetWidth) th
 
 让我们使用完整的 `resize()`方法参数化:
 
-```
+```java
 BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) throws Exception {
     return Scalr.resize(originalImage, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, targetWidth, targetHeight, Scalr.OP_ANTIALIAS);
 }
@@ -133,7 +133,7 @@ Imgscalr 可以处理 Java Image IO 支持的所有文件——JPG、BMP、JPEG�
 
 我们将通过向我们的 `pom.xml`添加以下 Maven 依赖项来将它包含在我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>net.coobird</groupId>
     <artifactId>thumbnailator</artifactId>
@@ -145,7 +145,7 @@ Imgscalr 可以处理 Java Image IO 支持的所有文件——JPG、BMP、JPEG�
 
 它有一个非常简单的 API，允许我们以百分比设置输出质量:
 
-```
+```java
 BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) throws Exception {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     Thumbnails.of(originalImage)
@@ -165,7 +165,7 @@ BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targ
 
 它还有一个批处理选项:
 
-```
+```java
 Thumbnails.of(new File("path/to/directory").listFiles())
     .size(300, 300)
     .outputFormat("JPEG")
@@ -181,7 +181,7 @@ Marvin 是一款方便的图像处理工具，它提供了许多有用的基本(
 
 和以前一样，我们将添加 Marvin 调整大小所需的 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.github.downgoon</groupId>
     <artifactId>marvin</artifactId>
@@ -199,7 +199,7 @@ Marvin 是一款方便的图像处理工具，它提供了许多有用的基本(
 
 Marvin 的缺点是它没有提供额外的扩展配置。此外，缩放方法需要一个图像和图像克隆，这有点麻烦:
 
-```
+```java
 BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
     MarvinImage image = new MarvinImage(originalImage);
     Scale scale = new Scale();

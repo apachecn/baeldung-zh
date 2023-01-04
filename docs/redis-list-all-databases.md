@@ -10,14 +10,14 @@
 
 首先，**Redis 中的数据库数量是固定的**。因此，我们可以用一个简单的 [`grep`](/web/20220625222057/https://www.baeldung.com/linux/common-text-search) 命令从配置文件中提取这些信息:
 
-```
+```java
 $ cat redis.conf | grep databases
 databases 16
 ```
 
 但是如果我们没有访问配置文件的权限呢？在这种情况下，我们可以通过 [`redis-cli`](https://web.archive.org/web/20220625222057/https://redis.io/topics/rediscli) 在运行时读取配置来获取我们需要的信息:
 
-```
+```java
 127.0.0.1:6379> CONFIG GET databases
 1) "databases"
 2) "16"
@@ -25,7 +25,7 @@ databases 16
 
 最后，尽管它更适合底层应用程序，但我们可以通过 telnet 连接使用 [Redis 序列化协议(RESP)](https://web.archive.org/web/20220625222057/https://redis.io/topics/protocol) :
 
-```
+```java
 $ telnet 127.0.0.1 6379
 Trying 127.0.0.1...
 Connected to 127.0.0.1.
@@ -48,7 +48,7 @@ $2
 
 有时我们会想获得更多关于包含键的数据库的信息。为了做到这一点，**我们可以利用 Redis `INFO`命令，用来获取关于服务器**的信息和统计数据。这里，我们特别希望将注意力集中在`keyspace`部分，它包含与数据库相关的数据:
 
-```
+```java
 127.0.0.1:6379> INFO keyspace
 # Keyspace
 db0:keys=2,expires=0,avg_ttl=0

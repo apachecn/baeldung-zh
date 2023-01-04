@@ -12,7 +12,7 @@
 
 为了使用解析器，我们需要将最新的 [Maven 依赖项](https://web.archive.org/web/20220626090344/https://search.maven.org/artifact/com.univocity/univocity-parsers)添加到我们的项目`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.univocity</groupId>
     <artifactId>univocity-parsers</artifactId>
@@ -28,7 +28,7 @@
 
 首先，让我们通过将 CSV 文件的`Reader`提供给默认设置的`CsvParser`来解析 CSV 文件:
 
-```
+```java
 try (Reader inputReader = new InputStreamReader(new FileInputStream(
   new File("src/test/resources/productList.csv")), "UTF-8")) {
     CsvParser parser = new CsvParser(new CsvParserSettings());
@@ -45,7 +45,7 @@ try (Reader inputReader = new InputStreamReader(new FileInputStream(
 
 让我们通过向我们的`FixedWidthParserSettings`提供一个`FixedWidthFields`对象来读取一个固定宽度的文件:
 
-```
+```java
 try (Reader inputReader = new InputStreamReader(new FileInputStream(
   new File("src/test/resources/productList.txt")), "UTF-8")) {
     FixedWidthFields fieldLengths = new FixedWidthFields(8, 30, 10);
@@ -67,7 +67,7 @@ try (Reader inputReader = new InputStreamReader(new FileInputStream(
 
 让我们创建一个方法来编写所有三种可能格式的文件:
 
-```
+```java
 public boolean writeData(List<Object[]> products, OutputType outputType, String outputPath) {
     try (Writer outputWriter = new OutputStreamWriter(new FileOutputStream(new File(outputPath)),"UTF-8")){
         switch(outputType) {
@@ -104,7 +104,7 @@ Univocity 提供了许多我们可以使用的行处理器，并且还提供了�
 
 为了对使用行处理器有所了解，让我们使用`BatchedColumnProcessor`来处理一个较大的 CSV 文件，每批 5 行:
 
-```
+```java
 try (Reader inputReader = new InputStreamReader(new FileInputStream(new File(relativePath)), "UTF-8")) {
     CsvParserSettings settings = new CsvParserSettings();
     settings.setProcessor(new BatchedColumnProcessor(5) {
@@ -127,7 +127,7 @@ try (Reader inputReader = new InputStreamReader(new FileInputStream(new File(rel
 
 让我们用 Univocity 注释定义一个`Product` bean:
 
-```
+```java
 public class Product {
 
     @Parsed(field = "product_no")
@@ -149,7 +149,7 @@ public class Product {
 
 现在我们已经定义了我们的`Product` bean，让我们将 CSV 文件读入其中:
 
-```
+```java
 try (Reader inputReader = new InputStreamReader(new FileInputStream(
   new File("src/test/resources/productList.csv")), "UTF-8")) {
     BeanListProcessor<Product> rowProcessor = new BeanListProcessor<Product>(Product.class);
@@ -168,7 +168,7 @@ try (Reader inputReader = new InputStreamReader(new FileInputStream(
 
 接下来，让我们把我们的`Product`列表写到一个固定宽度的文件中:
 
-```
+```java
 try (Writer outputWriter = new OutputStreamWriter(new FileOutputStream(new File(outputPath)), "UTF-8")) {
     BeanWriterProcessor<Product> rowProcessor = new BeanWriterProcessor<Product>(Product.class);
     FixedWidthFields fieldLengths = new FixedWidthFields(8, 30, 10);
@@ -197,7 +197,7 @@ Univocity 有许多我们可以应用于解析器的设置。正如我们前面�
 
 让我们调整 CSV 解析器设置，对我们正在读取的数据进行一些限制:
 
-```
+```java
 CsvParserSettings settings = new CsvParserSettings();
 settings.setMaxCharsPerColumn(100);
 settings.setMaxColumns(50);

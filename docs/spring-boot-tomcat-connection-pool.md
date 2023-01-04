@@ -22,7 +22,7 @@
 
 为了配置一个 Tomcat JDBC 连接池而不是默认的 HikariCP，我们将**从`spring-boot-starter-data-jpa`依赖关系中排除`HikariCP`并将`[tomcat-jdbc](https://web.archive.org/web/20220626090456/https://search.maven.org/artifact/org.apache.tomcat/tomcat-jdbc/9.0.11/jar) ` Maven 依赖关系**添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -54,7 +54,7 @@
 
 或者，**可以跳过 Spring Boot 使用的连接池扫描算法，使用`“spring.datasource.type”`属性在`“application.properties” file` `,`中显式指定连接池数据源**:
 
-```
+```java
 spring.datasource.type=org.apache.tomcat.jdbc.pool.DataSource
 // other spring datasource properties
 ```
@@ -65,7 +65,7 @@ spring.datasource.type=org.apache.tomcat.jdbc.pool.DataSource
 
 我们可以在`“application.properties”`文件中这样做:
 
-```
+```java
 spring.datasource.tomcat.initial-size=15
 spring.datasource.tomcat.max-wait=20000
 spring.datasource.tomcat.max-active=50
@@ -78,7 +78,7 @@ spring.datasource.tomcat.default-auto-commit=true
 
 我们还可以指定一些特定于 Hibernate 的属性:
 
-```
+```java
 # Hibernate specific properties
 spring.jpa.show-sql=false
 spring.jpa.hibernate.ddl-auto=update
@@ -91,7 +91,7 @@ spring.jpa.properties.hibernate.id.new_generator_mappings=false
 
 让我们编写一个简单的集成测试来检查 Spring Boot 是否正确配置了连接池:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class SpringBootTomcatConnectionPoolIntegrationTest {
@@ -119,7 +119,7 @@ public class SpringBootTomcatConnectionPoolIntegrationTest {
 
 让我们首先定义一个简单的`Customer`实体类:
 
-```
+```java
 @Entity
 @Table(name = "customers")
 public class Customer {
@@ -140,7 +140,7 @@ public class Customer {
 
 所以，**我们所要做的就是扩展 Spring Data JPA 的`[CrudRepository](https://web.archive.org/web/20220626090456/https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html)`接口，并定义一个定制的方法**:
 
-```
+```java
 public interface CustomerRepository extends CrudRepository<Customer, Long> {
     List<Customer> findByLastName(String lastName);
 }
@@ -154,7 +154,7 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
 
 让我们创建一个 Spring Boot 的`CommandLineRunner`接口的实现。Spring Boot 将在启动应用程序之前引导实施:
 
-```
+```java
 public class CommandLineCrudRunner implements CommandLineRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(CommandLineCrudRunner.class);
@@ -188,7 +188,7 @@ public class CommandLineCrudRunner implements CommandLineRunner {
 
 当然，我们需要做的最后一件事就是运行示例应用程序。然后我们可以看到 Spring Boot/Tomcat 连接池的运行:
 
-```
+```java
 @SpringBootApplication
 public class SpringBootConsoleApplication {
 

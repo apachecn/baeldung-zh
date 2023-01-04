@@ -14,7 +14,7 @@
 
 假设我们有一个端点`http://localhost:8080/users`返回一个用户列表，如下所示:
 
-```
+```java
 [{
   "id": 1,
   "name": "user1",
@@ -26,7 +26,7 @@
 
 我们将需要相应的`User `类来处理数据:
 
-```
+```java
 public class User {
     private int id;
     private String name;
@@ -37,7 +37,7 @@ public class User {
 
 对于我们的接口实现，我们写了一个`UserConsumerServiceImpl `，用`RestTemplate `作为它的依赖:
 
-```
+```java
 public class UserConsumerServiceImpl implements UserConsumerService {
 
     private final RestTemplate restTemplate;
@@ -60,14 +60,14 @@ public class UserConsumerServiceImpl implements UserConsumerService {
 
 首先，让我们用`RestTemplate.getForEntity`进行调用，并使用一个`Object[]`类型的 `ResponseEntity`来收集响应:
 
-```
+```java
 ResponseEntity<Object[]> responseEntity =
    restTemplate.getForEntity(BASE_URL, Object[].class);
 ```
 
 接下来，我们可以将身体提取到我们的数组`Object`:
 
-```
+```java
 Object[] objects = responseEntity.getBody();
 ```
 
@@ -75,7 +75,7 @@ Object[] objects = responseEntity.getBody();
 
 为此，我们需要一个`ObjectMapper`:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 ```
 
@@ -83,7 +83,7 @@ ObjectMapper mapper = new ObjectMapper();
 
 最后，我们准备提取用户名:
 
-```
+```java
 return Arrays.stream(objects)
   .map(object -> mapper.convertValue(object, User.class))
   .map(User::getName)
@@ -102,7 +102,7 @@ return Arrays.stream(objects)
 
 我们可以提供`User[] `到`RestTemplate`，而不是`Object[]`:
 
-```
+```java
  ResponseEntity<User[]> responseEntity = 
     restTemplate.getForEntity(BASE_URL, User[].class); 
   User[] userArray = responseEntity.getBody();
@@ -119,7 +119,7 @@ return Arrays.stream(objects)
 
 这个方法使用一个由[匿名内部类](/web/20221126231529/https://www.baeldung.com/java-anonymous-classes)产生的`ParameterizedTypeReference` :
 
-```
+```java
 ResponseEntity<List<User>> responseEntity = 
   restTemplate.exchange(
     BASE_URL,

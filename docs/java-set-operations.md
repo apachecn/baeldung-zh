@@ -18,7 +18,7 @@
 
 让我们用两组整数作为一个简单的例子:
 
-```
+```java
 setA : {1, 2, 3, 4}
 
 setB : {2, 4, 6, 8}
@@ -35,7 +35,7 @@ setB : {2, 4, 6, 8}
 
 我们可以看到整数 2 和 4 在两个集合中都存在。所以 setA 和 setB 的交集是 2 和 4，因为这是我们两个集合共有的值。
 
-```
+```java
 setA intersection setB = {2, 4}
 ```
 
@@ -48,7 +48,7 @@ setA intersection setB = {2, 4}
 
 因此，让我们创建一个新的集合，它是我们的示例集合的并集。我们已经知道在一个集合中不能有重复的值。但是，我们的集合有一些重复的值(2 和 4)。因此，当我们合并两个集合的内容时，我们需要确保删除重复的内容。所以我们得到了 1，2，3，4，6 和 8。
 
-```
+```java
 setA union setB = {1, 2, 3, 4, 6, 8}
 ```
 
@@ -61,7 +61,7 @@ setA union setB = {1, 2, 3, 4, 6, 8}
 
 现在让我们创建新的集合，它们是`setA`和`setB`的相对补充。
 
-```
+```java
 relative complement of setA in setB = {6, 8}
 
 relative complement of setB in setA = {1, 3}
@@ -78,7 +78,7 @@ relative complement of setB in setA = {1, 3}
 
 为了了解我们如何在 Java 中执行集合操作，我们将以集合为例，实现交集、并集和相对补集。让我们从创建整数样本集开始:
 
-```
+```java
 private Set<Integer> setA = setOf(1,2,3,4);
 private Set<Integer> setB = setOf(2,4,6,8);
 
@@ -91,7 +91,7 @@ private static Set<Integer> setOf(Integer... values) {
 
 首先，我们将使用`retainAll`方法来**创建我们的样本集**的交集。因为`retainAll`直接修改集合，我们将制作一个名为`intersectSet.`的`setA`的副本，然后我们将使用`retainAll`方法来保存`setB`中的值:
 
-```
+```java
 Set<Integer> intersectSet = new HashSet<>(setA);
 intersectSet.retainAll(setB);
 assertEquals(setOf(2,4), intersectSet);
@@ -101,7 +101,7 @@ assertEquals(setOf(2,4), intersectSet);
 
 现在让我们使用`addAll`方法来**创建样本集**的并集。`addAll`方法将提供的集合的所有成员相加。同样，由于`addAll`直接更新设置，我们将复制一个名为`unionSet`的`setA`，然后添加`setB`:
 
-```
+```java
 Set<Integer> unionSet = new HashSet<>(setA);
 unionSet.addAll(setB);
 assertEquals(setOf(1,2,3,4,6,8), unionSet);
@@ -111,7 +111,7 @@ assertEquals(setOf(1,2,3,4,6,8), unionSet);
 
 最后，我们将使用`removeAll`方法来**创建`setA`** 中`setB`的相对补码。我们知道我们想要的是`setA`中不存在于`setB`中的值。所以我们只需要从`setA`中移除所有也在`setB`中的元素:
 
-```
+```java
 Set<Integer> differenceSet = new HashSet<>(setA);
 differenceSet.removeAll(setB);
 assertEquals(setOf(1,3), differenceSet);
@@ -125,7 +125,7 @@ assertEquals(setOf(1,3), differenceSet);
 
 首先，我们将把来自`setA`的值放到一个流中。**然后我们将过滤该流，以保留所有也在`setB`中的值。**最后，我们将把结果收集到一个新的`Set`中:
 
-```
+```java
 Set<Integer> intersectSet = setA.stream()
     .filter(setB::contains)
     .collect(Collectors.toSet());
@@ -138,7 +138,7 @@ assertEquals(setOf(2,4), intersectSet);
 
 为了从集合的连接中得到并集，我们需要删除任何重复的集合。我们将简单地将结果收集到一个`Set`中:
 
-```
+```java
 Set<Integer> unionSet = Stream.concat(setA.stream(), setB.stream())
     .collect(Collectors.toSet());
 assertEquals(setOf(1,2,3,4,6,8), unionSet);
@@ -150,7 +150,7 @@ assertEquals(setOf(1,2,3,4,6,8), unionSet);
 
 正如我们在交集示例中所做的那样，我们将首先把来自`setA`的值放入一个流中。这一次，我们将过滤流，删除也在`setB`中的任何值。然后，我们会把结果收集到一个新的`Set`:
 
-```
+```java
 Set<Integer> differenceSet = setA.stream()
     .filter(val -> !setB.contains(val))
     .collect(Collectors.toSet());
@@ -165,7 +165,7 @@ assertEquals(setOf(1,3), differenceSet);
 
 为了使用[番石榴`Sets`](https://web.archive.org/web/20220926182433/https://search.maven.org/search?q=g:com.google.guava%20AND%20a:guava) 和[阿帕奇公地集合`SetUtils`](https://web.archive.org/web/20220926182433/https://search.maven.org/search?q=g:org.apache.commons%20AND%20a:commons-collections4) ，我们需要添加它们的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -182,7 +182,7 @@ assertEquals(setOf(1,3), differenceSet);
 
 让我们使用 Guava `Sets`类在我们的示例集上执行`intersection`和`union`。为了做到这一点，我们可以简单地使用`Sets`类的静态方法`union`和`intersection`:
 
-```
+```java
 Set<Integer> intersectSet = Sets.intersection(setA, setB);
 assertEquals(setOf(2,4), intersectSet);
 
@@ -196,7 +196,7 @@ assertEquals(setOf(1,2,3,4,6,8), unionSet);
 
 现在让我们使用 Apache Commons 集合中的`SetUtils`类的`intersection`和`union`静态方法:
 
-```
+```java
 Set<Integer> intersectSet = SetUtils.intersection(setA, setB);
 assertEquals(setOf(2,4), intersectSet);
 

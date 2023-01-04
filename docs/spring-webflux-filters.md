@@ -14,7 +14,7 @@
 
 首先，让我们声明 WebFlux Maven 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-webflux</artifactId>
@@ -27,7 +27,7 @@
 
 让我们从基于注释的控制器开始:
 
-```
+```java
 @GetMapping(path = "/users/{name}")
 public Mono<String> getName(@PathVariable String name) {
     return Mono.just(name);
@@ -36,7 +36,7 @@ public Mono<String> getName(@PathVariable String name) {
 
 对于功能端点，我们必须首先创建一个处理程序:
 
-```
+```java
 @Component
 public class PlayerHandler {
     public Mono<ServerResponse> getName(ServerRequest request) {
@@ -48,7 +48,7 @@ public class PlayerHandler {
 
 以及路由器配置映射:
 
-```
+```java
 @Bean
 public RouterFunction<ServerResponse> route(PlayerHandler playerHandler) {
     return RouterFunctions
@@ -67,7 +67,7 @@ WebFlux 框架提供两种类型的过滤器: [`WebFilter` s](https://web.archiv
 
 我们将实现一个`WebFilter`来向响应添加一个新的头。因此，所有响应都应该具有这种行为:
 
-```
+```java
 @Component
 public class ExampleWebFilter implements WebFilter {
 
@@ -86,7 +86,7 @@ public class ExampleWebFilter implements WebFilter {
 
 对于这一个，我们实现了一个逻辑，当“name”参数等于“test”时，将 HTTP 状态设置为`FORBIDDEN`。
 
-```
+```java
 public class ExampleHandlerFilterFunction 
   implements HandlerFilterFunction<ServerResponse, ServerResponse> {
 
@@ -107,7 +107,7 @@ public class ExampleHandlerFilterFunction
 
 以下是基于注释的端点的示例:
 
-```
+```java
 @Test
 public void whenUserNameIsBaeldung_thenWebFilterIsApplied() {
     EntityExchangeResult<String> result = webTestClient.get()
@@ -133,7 +133,7 @@ public void whenUserNameIsTest_thenHandlerFilterFunctionIsNotApplied() {
 
 对于功能端点:
 
-```
+```java
 @Test
 public void whenPlayerNameIsBaeldung_thenWebFilterIsApplied() {
     EntityExchangeResult<String> result = webTestClient.get()

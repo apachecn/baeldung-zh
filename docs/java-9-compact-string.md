@@ -18,7 +18,7 @@ Java 中的`Strings`在内部由包含`String`字符的`char[]`表示。并且�
 
 JDK 6 更新 21 性能版引入了一个新的虚拟机选项:
 
-```
+```java
 -XX:+UseCompressedStrings
 ```
 
@@ -42,32 +42,32 @@ Java 9 带来了紧凑的概念
 
 到目前为止，`String`被存储为`char[]`:
 
-```
+```java
 private final char[] value;
 ```
 
 从现在开始，这将是一个`byte[]:`
 
-```
+```java
 private final byte[] value;
 ```
 
 变量`coder`:
 
-```
+```java
 private final byte coder;
 ```
 
 其中`coder`可以是:
 
-```
+```java
 static final byte LATIN1 = 0;
 static final byte UTF16 = 1;
 ```
 
 大多数`String`操作现在检查编码器并分派给特定的实现:
 
-```
+```java
 public int indexOf(int ch, int fromIndex) {
     return isLatin1() 
       ? StringLatin1.indexOf(value, ch, fromIndex) 
@@ -81,7 +81,7 @@ private boolean isLatin1() {
 
 有了 JVM 需要的所有信息，默认情况下,`CompactString` VM 选项是启用的。要禁用它，我们可以使用:
 
-```
+```java
 +XX:-CompactStrings
 ```
 
@@ -89,7 +89,7 @@ private boolean isLatin1() {
 
 在 Java 9 `String`类实现中，长度计算如下:
 
-```
+```java
 public int length() {
     return value.length >> coder;
 }
@@ -117,7 +117,7 @@ public int length() {
 
 让我们看一个非常简单的例子来说明启用和禁用压缩的性能差异`Strings:`
 
-```
+```java
 long startTime = System.currentTimeMillis();
 
 List strings = IntStream.rangeClosed(1, 10_000_000)
@@ -141,14 +141,14 @@ System.out.println("Created string of length " + appended.length()
 
 在这里，我们创建了 1000 万个`String`然后以一种简单的方式添加它们。当我们运行这段代码(默认情况下启用压缩字符串)时，我们得到输出:
 
-```
+```java
 Generated 10000000 strings in 854 ms.
 Created string of length 488895 in 5130 ms.
 ```
 
 类似地，如果我们通过使用:`-XX:-CompactStrings` 选项禁用压缩字符串来运行它，输出是:
 
-```
+```java
 Generated 10000000 strings in 936 ms.
 Created string of length 488895 in 9727 ms.
 ```

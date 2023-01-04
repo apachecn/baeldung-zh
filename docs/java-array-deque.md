@@ -32,7 +32,7 @@
 
 我们将从一个例子开始，说明如何将类视为一个`Stack`——并推送一个元素:
 
-```
+```java
 @Test
 public void whenPush_addsAtFirst() {
     Deque<String> stack = new ArrayDeque<>();
@@ -45,7 +45,7 @@ public void whenPush_addsAtFirst() {
 
 让我们看看如何从`ArrayDeque`中弹出一个元素——当作为堆栈使用时:
 
-```
+```java
 @Test
 public void whenPop_removesLast() {
     Deque<String> stack = new ArrayDeque<>();
@@ -62,7 +62,7 @@ public void whenPop_removesLast() {
 
 现在让我们从一个简单的例子开始，展示我们如何在一个`ArrayDeque`中提供一个元素——当作为一个简单的`Queue`使用时:
 
-```
+```java
 @Test
 public void whenOffer_addsAtLast() {
     Deque<String> queue = new ArrayDeque<>();
@@ -75,7 +75,7 @@ public void whenOffer_addsAtLast() {
 
 让我们看看如何从一个`ArrayDeque`轮询一个元素，当它被用作一个`Queue`时:
 
-```
+```java
 @Test
 public void whenPoll_removesFirst() {
     Deque<String> queue = new ArrayDeque<>();

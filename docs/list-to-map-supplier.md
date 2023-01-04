@@ -20,13 +20,13 @@ Stream API 提供了对`List`操作的支持。**一个这样的例子是`Stream
 
 在本教程中，我们将在以下示例中处理一个`String List`集合:
 
-```
+```java
 List source = Arrays.asList("List", "Map", "Set", "Tree");
 ```
 
 我们将把上面的列表聚集成一个映射，它的关键字是字符串的长度。当我们完成后，我们将有一个看起来像这样的地图:
 
-```
+```java
 {
     3: ["Map", "Set"],
     4: ["List", "Tree"]
@@ -37,7 +37,7 @@ List source = Arrays.asList("List", "Map", "Set", "Tree");
 
 使用`Collectors.groupingBy`，我们可以用特定的分类器将一个`Collection`转换成一个`Map`。分类器是一个元素的属性，我们将使用这个属性将元素合并到不同的组中:
 
-```
+```java
 public Map<Integer, List> groupingByStringLength(List source, 
     Supplier<Map<Integer, List>> mapSupplier, 
     Supplier<List> listSupplier) {
@@ -48,7 +48,7 @@ public Map<Integer, List> groupingByStringLength(List source,
 
 我们可以验证它是否适用于:
 
-```
+```java
 Map<Integer, List> convertedMap = converter.groupingByStringLength(source, HashMap::new, ArrayList::new);
 assertTrue(convertedMap.get(3).contains("Map"));
 ```
@@ -59,7 +59,7 @@ assertTrue(convertedMap.get(3).contains("Map"));
 
 我们首先用源字符串和`List`和`Map`供应商定义方法:
 
-```
+```java
 public Map<Integer, List> collectorToMapByStringLength(List source, 
         Supplier<Map<Integer, List>> mapSupplier, 
         Supplier<List> listSupplier)
@@ -67,7 +67,7 @@ public Map<Integer, List> collectorToMapByStringLength(List source,
 
 然后，我们定义如何从元素中获取键和值。为此，我们使用了两个新函数:
 
-```
+```java
 Function<String, Integer> keyMapper = String::length;
 
 Function<String, List> valueMapper = (element) -> {
@@ -79,7 +79,7 @@ Function<String, List> valueMapper = (element) -> {
 
 最后，我们定义一个在键冲突时调用的函数。在这种情况下，我们希望将两者的内容结合起来:
 
-```
+```java
 BinaryOperator<List> mergeFunction = (existing, replacement) -> {
     existing.addAll(replacement);
     return existing;
@@ -88,7 +88,7 @@ BinaryOperator<List> mergeFunction = (existing, replacement) -> {
 
 综上所述，我们得到:
 
-```
+```java
 source.stream().collect(Collectors.toMap(keyMapper, valueMapper, mergeFunction, mapSupplier))
 ```
 
@@ -96,7 +96,7 @@ source.stream().collect(Collectors.toMap(keyMapper, valueMapper, mergeFunction, 
 
 让我们来测试一下:
 
-```
+```java
 Map<Integer, List> convertedMap = converter.collectorToMapByStringLength(source, HashMap::new, ArrayList::new);
 assertTrue(convertedMap.get(3).contains("Map"));
 ```
@@ -107,7 +107,7 @@ assertTrue(convertedMap.get(3).contains("Map"));
 
 为此，我们还需要为`List`和`Map`供应商定义一个方法，一旦需要新的集合，就会调用该方法:
 
-```
+```java
 public Map<Integer, List> streamCollectByStringLength(List source, 
         Supplier<Map<Integer, List>> mapSupplier, 
         Supplier<List> listSupplier)
@@ -115,7 +115,7 @@ public Map<Integer, List> streamCollectByStringLength(List source,
 
 然后我们定义一个`accumulator`,给定元素的键，获取一个现有的列表，或者创建一个新的列表，并将元素添加到响应中:
 
-```
+```java
 BiConsumer<Map<Integer, List>, String> accumulator = (response, element) -> {
     Integer key = element.length();
     List values = response.getOrDefault(key, listSupplier.get());
@@ -126,7 +126,7 @@ BiConsumer<Map<Integer, List>, String> accumulator = (response, element) -> {
 
 最后，我们将合并累加器函数生成的值:
 
-```
+```java
 BiConsumer<Map<Integer, List>, Map<Integer, List>> combiner = (res1, res2) -> {
     res1.putAll(res2);
 };
@@ -134,7 +134,7 @@ BiConsumer<Map<Integer, List>, Map<Integer, List>> combiner = (res1, res2) -> {
 
 把所有东西放在一起，然后我们只需要在元素流上调用`collect`方法:
 
-```
+```java
 source.stream().collect(mapSupplier, accumulator, combiner);
 ```
 
@@ -142,7 +142,7 @@ source.stream().collect(mapSupplier, accumulator, combiner);
 
 测试结果将与其他两种方法相同:
 
-```
+```java
 Map<Integer, List> convertedMap = converter.streamCollectByStringLength(source, HashMap::new, ArrayList::new);
 assertTrue(convertedMap.get(3).contains("Map")); 
 ```

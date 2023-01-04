@@ -22,7 +22,7 @@ Micronaut 还有几个特性使其成为开发云原生应用程序的优秀框�
 
 最简单的入门方法是使用 [SDKMAN](https://web.archive.org/web/20220625080557/https://sdkman.io/install) :
 
-```
+```java
 > sdk install micronaut 1.0.0.RC2
 ```
 
@@ -40,7 +40,7 @@ Micronaut 还有几个特性使其成为开发云原生应用程序的优秀框�
 
 为了将 bean 自动连接到我们的代码中，我们使用了`@Inject:`
 
-```
+```java
 @Inject
 private EmployeeService service;
 ```
@@ -49,7 +49,7 @@ private EmployeeService service;
 
 默认情况下，所有 beans 的作用范围都是原型。我们可以使用`@Singleton. `快速创建单例 bean。如果多个类实现了同一个 bean 接口，可以使用`@Primary`来解除它们之间的冲突:
 
-```
+```java
 @Primary
 @Singleton
 public class BlueCar implements Car {}
@@ -59,7 +59,7 @@ public class BlueCar implements Car {}
 
 在这方面，它的表现很像 Spring Boot `@Conditional`的注解:
 
-```
+```java
 @Singleton
 @Requires(beans = DataSource.class)
 @Requires(property = "enabled")
@@ -72,7 +72,7 @@ public class JdbcEmployeeService implements EmployeeService {}
 
 现在让我们来看看如何创建一个简单的 HTTP 服务器应用程序。首先，我们将使用 SDKMAN 创建一个项目:
 
-```
+```java
 > mn create-app hello-world-server -build maven
 ```
 
@@ -80,7 +80,7 @@ public class JdbcEmployeeService implements EmployeeService {}
 
 非常简单的默认应用程序:
 
-```
+```java
 public class ServerApplication {
     public static void main(String[] args) {
         Micronaut.run(ServerApplication.class);
@@ -92,7 +92,7 @@ public class ServerApplication {
 
 这个应用程序本身不会做太多事情。让我们添加一个有两个端点的控制器。两者都将返回问候，但是一个将使用`GET` HTTP 动词，另一个将使用`POST:`
 
-```
+```java
 @Controller("/greet")
 public class GreetController {
 
@@ -117,7 +117,7 @@ public class GreetController {
 
 例如，对于 RxJava，我们可以使用`Observable`。同样，当使用 Reactor 时，我们可以返回`Mono`或`Flux`数据类型:
 
-```
+```java
 @Get("/{name}")
 public Mono<String> greet(String name) {
     return Mono.just(greetingService.getGreeting() + name);
@@ -141,7 +141,7 @@ public Mono<String> greet(String name) {
 
 创建的第一个也是最快的方法是使用声明性方法:
 
-```
+```java
 @Client("/greet")
 public interface GreetingClient {
     @Get("/{name}")
@@ -153,7 +153,7 @@ public interface GreetingClient {
 
 为了测试这个客户机，我们可以创建一个 JUnit 测试，它使用嵌入式服务器 API 来运行我们服务器的嵌入式实例:
 
-```
+```java
 public class GreetingClientTest {
     private EmbeddedServer server;
     private GreetingClient client;
@@ -180,7 +180,7 @@ public class GreetingClientTest {
 
 如果我们需要对其行为和实现进行更多的控制，我们也可以选择编写一个更传统的客户端:
 
-```
+```java
 @Singleton
 public class ConcreteGreetingClient {
    private RxHttpClient httpClient;
@@ -223,7 +223,7 @@ public class ConcreteGreetingClient {
 
 通过运行以下命令，我们可以找到可用功能的列表:
 
-```
+```java
 > mn profile-info service
 
 Provided Features:
@@ -240,7 +240,7 @@ Provided Features:
 
 **我们还可以使用 CLI 工具来修改现有项目。**使我们能够创建 beans、客户机、控制器等等。当我们从现有项目内部运行`mn`命令时，我们将有一组新的命令可用:
 
-```
+```java
 > mn help
 | Command Name         Command Description
 -----------------------------------------------

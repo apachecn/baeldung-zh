@@ -32,7 +32,7 @@ In addition, instrumenting Lightrun Metrics at runtime allows you to track down 
 
 接下来，我们将创建两个表，如下所示:
 
-```
+```java
 CREATE TABLE EMPLOYEE
 (id BIGINT,
  name VARCHAR(10));
@@ -40,7 +40,7 @@ CREATE TABLE EMPLOYEE
 
 `EMPLOYEE `表存储一个结果`Entity`对象。`SCHEDULE_DAYS `包含通过`employeeId:`列链接到`EMPLOYEE`表的记录
 
-```
+```java
 CREATE TABLE SCHEDULE_DAYS
 (id IDENTITY,
  employeeId BIGINT,
@@ -53,7 +53,7 @@ CREATE TABLE SCHEDULE_DAYS
 
 我们的`Entity `对象应该看起来相似:
 
-```
+```java
 @Entity
 public class Employee {
     @Id
@@ -64,7 +64,7 @@ public class Employee {
 
 对象的命名可能不同于数据库表。我们可以用@ `Table `来注释这个类，以显式地映射它们:
 
-```
+```java
 @Entity
 @Table(name = "SCHEDULE_DAYS")
 public class ScheduledDay {
@@ -89,7 +89,7 @@ public class ScheduledDay {
 
 在这种情况下，` ColumnResult `将任何列映射到标量结果类型:
 
-```
+```java
 @SqlResultSetMapping(
   name="FridayEmployeeResult",
   columns={@ColumnResult(name="employeeId")})
@@ -97,7 +97,7 @@ public class ScheduledDay {
 
 `ColumnResult `属性`name`标识查询中的列:
 
-```
+```java
 @NamedNativeQuery(
   name = "FridayEmployees",
   query = "SELECT employeeId FROM schedule_days WHERE dayOfWeek = 'FRIDAY'",
@@ -112,7 +112,7 @@ public class ScheduledDay {
 
 我们需要一些特定于 Hibernate 的对象来运行我们的代码:
 
-```
+```java
 @BeforeAll
 public static void setup() {
     emFactory = Persistence.createEntityManagerFactory("java-jpa-scheduled-day");
@@ -122,7 +122,7 @@ public static void setup() {
 
 最后，我们调用命名查询来运行我们的测试:
 
-```
+```java
 @Test
 public void whenNamedQuery_thenColumnResult() {
     List<Long> employeeIds = em.createNamedQuery("FridayEmployees").getResultList();
@@ -138,7 +138,7 @@ public void whenNamedQuery_thenColumnResult() {
 
 类似于我们的`ColumnResult`示例，我们将在我们的`Entity`类`ScheduledDay`上添加`SqlResultMapping`注释。但是，为了使用构造函数进行映射，我们需要创建一个:
 
-```
+```java
 public ScheduledDay (
   Long id, Long employeeId, 
   Integer hourIn, Integer hourOut, 
@@ -151,7 +151,7 @@ public ScheduledDay (
 
 此外，映射指定了目标类和列(两者都是必需的):
 
-```
+```java
 @SqlResultSetMapping(
     name="ScheduleResult",
     classes={
@@ -165,7 +165,7 @@ public ScheduledDay (
 
 **`ColumnResults`的顺序非常重要。**如果列顺序错误，构造函数将无法被识别。在我们的示例中，排序与表列相匹配，因此实际上并不需要。
 
-```
+```java
 @NamedNativeQuery(name = "Schedules",
   query = "SELECT * FROM schedule_days WHERE employeeId = 8",
   resultSetMapping = "ScheduleResult")
@@ -179,7 +179,7 @@ public ScheduledDay (
 
 让我们在单元测试中测试`ConstructorResult`:
 
-```
+```java
 @Test
 public void whenNamedQuery_thenConstructorResult() {
   List<ScheduledDay> scheduleDays
@@ -198,7 +198,7 @@ public void whenNamedQuery_thenConstructorResult() {
 
 `EntityResult` 要求我们指定实体类，`Employee`。我们使用可选的`fields `属性进行更多的控制。结合`FieldResult,` ，我们可以映射不匹配的别名和字段:
 
-```
+```java
 @SqlResultSetMapping(
   name="EmployeeResult",
   entities={
@@ -211,7 +211,7 @@ public void whenNamedQuery_thenConstructorResult() {
 
 现在，我们的查询应该包括别名列:
 
-```
+```java
 @NamedNativeQuery(
   name="Employees",
   query="SELECT id as employeeNumber, name FROM EMPLOYEE",
@@ -224,7 +224,7 @@ public void whenNamedQuery_thenConstructorResult() {
 
 一旦我们映射了一个实体，映射多个实体就非常简单了:
 
-```
+```java
 @SqlResultSetMapping(
   name = "EmployeeScheduleResults",
   entities = {
@@ -236,7 +236,7 @@ public void whenNamedQuery_thenConstructorResult() {
 
 让我们来看看`EntityResult`的行动:
 
-```
+```java
 @Test
 public void whenNamedQuery_thenSingleEntityResult() {
     List<Employee> employees = Collections.checkedList(
@@ -250,7 +250,7 @@ public void whenNamedQuery_thenSingleEntityResult() {
 
 因此，我们在测试中定义了查询:
 
-```
+```java
 @Test
 public void whenNamedQuery_thenMultipleEntityResult() {
     Query query = em.createNativeQuery(

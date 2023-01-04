@@ -18,7 +18,7 @@
 
 首先，让我们在原始 CSV 文件中添加几行:
 
-```
+```java
 username, user_id, transaction_date, transaction_amount
 devendra, 1234, 31/10/2015, 10000
 john, 2134, 3/12/2015, 12321
@@ -38,7 +38,7 @@ mike, 9876, 5/11/2018, -500
 
 现在让我们讨论两种配置作业的方法中的第一种，以便在出现故障时跳过项目——`skip`和`skipLimit`方法:
 
-```
+```java
 @Bean
 public Step skippingStep(
   ItemProcessor<Transaction, Transaction> processor,
@@ -73,7 +73,7 @@ public Step skippingStep(
 
 让我们看看如何使用`skip`、`skipLimit`和`noSkip`进行配置:
 
-```
+```java
 @Bean
 public Step skippingStep(
   ItemProcessor<Transaction, Transaction> processor,
@@ -108,7 +108,7 @@ public Step skippingStep(
 
 让我们实现我们的定制`SkipPolicy`:
 
-```
+```java
 public class CustomSkipPolicy implements SkipPolicy {
 
     private static final int MAX_SKIP_COUNT = 2;
@@ -138,7 +138,7 @@ public class CustomSkipPolicy implements SkipPolicy {
 
 现在，我们可以在步骤定义中使用我们的自定义策略:
 
-```
+```java
  @Bean
     public Step skippingStep(
       ItemProcessor<Transaction, Transaction> processor,

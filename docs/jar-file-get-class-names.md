@@ -18,7 +18,7 @@
 
 **JDK 的战舰带着 [`jar`](https://web.archive.org/web/20221206071122/https://docs.oracle.com/en/java/javase/11/tools/jar.html) 的命令。我们可以使用这个带有`t`和`f`选项的命令来列出 JAR 文件**的内容:
 
-```
+```java
 $ jar tf stripe-0.0.1-SNAPSHOT.jar 
 META-INF/
 META-INF/MANIFEST.MF
@@ -35,7 +35,7 @@ com/baeldung/stripe/ChargeRequest$Currency.class
 
 由于我们只对存档中的`*.class`文件感兴趣，我们可以使用 [`grep`](/web/20221206071122/https://www.baeldung.com/linux/common-text-search) 命令过滤输出:
 
-```
+```java
 $ jar tf stripe-0.0.1-SNAPSHOT.jar | grep '\.class
 
 这为我们提供了 JAR 文件中的类文件列表。
@@ -65,7 +65,7 @@ public static Set<String> getClassNamesFromJarFile(File givenFile) throws IOExce
         return classNames;
     }
 } 
-```
+```java
 
 现在，让我们仔细看看上面方法中的代码，并理解它是如何工作的:
 
@@ -93,7 +93,7 @@ public void givenJarFilePath_whenLoadClassNames_thenGetClassNames() throws IOExc
 
     Assert.assertEquals(EXPECTED_CLASS_NAMES, classNames);
 } 
-```
+```java
 
 ## 5.用 Java 从 JAR 文件中获取类
 
@@ -116,7 +116,7 @@ public static Set<Class> getClassesFromJarFile(File jarFile) throws IOException,
     }
     return classes;
 }
-```
+```java
 
 在上面的方法中，我们创建了一个`[URLClassLoader](https://web.archive.org/web/20221206071122/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/URLClassLoader.html)`对象来加载类。实现非常简单。
 
@@ -128,7 +128,7 @@ public static Set<Class> getClassesFromJarFile(File jarFile) throws IOException,
 jar:http://www.example.com/some_jar_file.jar!/
 jar:file:/local/path/to/some_jar_file.jar!/
 jar:file:/C:/windows/path/to/some_jar_file.jar!/
-```
+```java
 
 在我们的`getClassesFromJarFile`方法中，JAR 文件位于本地文件系统上，因此，URL 的前缀是“`file:`”。
 
@@ -144,7 +144,7 @@ public void givenJarFilePath_whenLoadClass_thenGetClassObjects()
     Set<String> names = classes.stream().map(Class::getName).collect(Collectors.toSet());
     Assert.assertEquals(EXPECTED_CLASS_NAMES, names);
 } 
-```
+```java
 
 一旦我们有了所需的`Class`对象，我们就可以使用 [Java 反射](/web/20221206071122/https://www.baeldung.com/java-reflection)来创建类的实例并调用方法。
 

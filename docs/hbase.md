@@ -18,7 +18,7 @@
 
 让我们看看 Hbase 中的一个示例记录:
 
-```
+```java
 Family1:{  
    'Qualifier1':'row1:cell_data',
    'Qualifier2':'row2:cell_data',
@@ -37,7 +37,7 @@ Family2:{
 
 在我们连接到 HBase 之前，我们需要添加 [`hbase-client`](https://web.archive.org/web/20220815030127/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.hbase%22%20AND%20a%3A%22hbase-client%22) 和`[hbase](https://web.archive.org/web/20220815030127/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.hbase%22%20AND%20a%3A%22hbase%22)`依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.hbase</groupId>
     <artifactId>hbase-client</artifactId>
@@ -56,7 +56,7 @@ Family2:{
 
 接下来，我们需要通过执行以下命令在本地启动 HBase master:
 
-```
+```java
 hbase master start
 ```
 
@@ -64,7 +64,7 @@ hbase master start
 
 为了以编程方式从 Java 连接到 HBase，我们需要定义一个 XML 配置文件。我们在本地主机上启动了 HBase 实例，因此我们需要将其输入到配置文件中:
 
-```
+```java
 <configuration>
     <property>
         <name>hbase.zookeeper.quorum</name>
@@ -79,7 +79,7 @@ hbase master start
 
 现在，我们需要将 HBase 客户端指向该配置文件:
 
-```
+```java
 Configuration config = HBaseConfiguration.create();
 
 String path = this.getClass()
@@ -91,7 +91,7 @@ config.addResource(new Path(path));
 
 接下来，我们将检查与 HBase 的连接是否成功——如果失败，将抛出`MasterNotRunningException` :
 
-```
+```java
 HBaseAdmin.checkHBaseAvailable(config);
 ```
 
@@ -99,7 +99,7 @@ HBaseAdmin.checkHBaseAvailable(config);
 
 在开始向 HBase 添加数据之前，我们需要创建用于插入行的数据结构。我们将创建一个包含两个柱族的表:
 
-```
+```java
 private TableName table1 = TableName.valueOf("Table1");
 private String family1 = "Family1";
 private String family2 = "Family2";
@@ -107,14 +107,14 @@ private String family2 = "Family2";
 
 首先，我们需要创建一个到数据库的连接，并获得`admin`对象，我们将使用它来操作数据库结构:
 
-```
+```java
 Connection connection = ConnectionFactory.createConnection(config)
 Admin admin = connection.getAdmin();
 ```
 
 然后，我们可以通过将`HTableDescriptor` 类的实例传递给`admin` 对象上的`createTable()` 方法来创建一个表:
 
-```
+```java
 HTableDescriptor desc = new HTableDescriptor(table1);
 desc.addFamily(new HColumnDescriptor(family1));
 desc.addFamily(new HColumnDescriptor(family2));
@@ -125,7 +125,7 @@ admin.createTable(desc);
 
 随着表的创建，我们可以通过创建一个`Put` 对象并在`Table` 对象上调用一个`put()` 方法来添加新数据:
 
-```
+```java
 byte[] row1 = Bytes.toBytes("row1")
 Put p = new Put(row1);
 p.addImmutable(family1.getBytes(), qualifier1, Bytes.toBytes("cell_data"));
@@ -134,7 +134,7 @@ table1.put(p);
 
 检索先前创建的行可以通过使用一个`Get` 类来实现:
 
-```
+```java
 Get g = new Get(row1);
 Result r = table1.get(g);
 byte[] value = r.getValue(family1.getBytes(), qualifier1);
@@ -142,7 +142,7 @@ byte[] value = r.getValue(family1.getBytes(), qualifier1);
 
 `row1` 是一个行标识符——我们可以用它从数据库中检索特定的行。拨打电话时:
 
-```
+```java
 Bytes.bytesToString(value)
 ```
 
@@ -152,7 +152,7 @@ Bytes.bytesToString(value)
 
 我们可以扫描该表，通过使用一个`Scan` 对象检索给定限定符内的所有元素(注意`ResultScanner`扩展了`Closable`，所以在完成后一定要对其调用`close()`):
 
-```
+```java
 Scan scan = new Scan();
 scan.addColumn(family1.getBytes(), qualifier1);
 
@@ -164,7 +164,7 @@ for (Result result : scanner) {
 
 该操作将打印一个`qualifier1`中的所有行以及一些附加信息，如时间戳:
 
-```
+```java
 Found row: keyvalues={Row1/Family1:Qualifier1/1488202127489/Put/vlen=9/seqid=0}
 ```
 
@@ -172,7 +172,7 @@ Found row: keyvalues={Row1/Family1:Qualifier1/1488202127489/Put/vlen=9/seqid=0}
 
 首先，我们创建两个过滤器。`filter1` 指定扫描查询将检索大于`row1,` 的元素，而`filter2` 指定我们只对限定符等于`qualifier1`的行感兴趣:
 
-```
+```java
 Filter filter1 = new PrefixFilter(row1);
 Filter filter2 = new QualifierFilter(
   CompareOp.GREATER_OR_EQUAL, 
@@ -182,7 +182,7 @@ List<Filter> filters = Arrays.asList(filter1, filter2);
 
 然后我们可以从一个`Scan`查询中得到一个结果集:
 
-```
+```java
 Scan scan = new Scan();
 scan.setFilter(new FilterList(Operator.MUST_PASS_ALL, filters));
 
@@ -199,7 +199,7 @@ try (ResultScanner scanner = table.getScanner(scan)) {
 
 最后，要删除一行，我们可以使用一个`Delete` 类:
 
-```
+```java
 Delete delete = new Delete(row1);
 delete.addColumn(family1.getBytes(), qualifier1);
 table.delete(delete);

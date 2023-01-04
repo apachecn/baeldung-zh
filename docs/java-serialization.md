@@ -14,13 +14,13 @@
 
 `ObjectOutputStream`中最重要的方法是:
 
-```
+```java
 public final void writeObject(Object o) throws IOException;
 ```
 
 此方法接受一个可序列化的对象，并将其转换为字节序列(流)。同样，`ObjectInputStream`中最重要的方法是:
 
-```
+```java
 public final Object readObject() 
   throws IOException, ClassNotFoundException;
 ```
@@ -29,7 +29,7 @@ public final Object readObject()
 
 让我们用一个`Person`类来说明序列化。注意**静态字段属于一个类(相对于一个对象)，并且没有被序列化**。另外，请注意，我们可以使用关键字`transient`在序列化过程中忽略类字段:
 
-```
+```java
 public class Person implements Serializable {
     private static final long serialVersionUID = 1L;
     static String country = "ITALY";
@@ -43,7 +43,7 @@ public class Person implements Serializable {
 
 下面的测试显示了一个将类型为`Person`的对象保存到本地文件，然后将值读回的例子:
 
-```
+```java
 @Test 
 public void whenSerializingAndDeserializing_ThenObjectIsTheSame() () 
   throws IOException, ClassNotFoundException { 
@@ -85,7 +85,7 @@ public void whenSerializingAndDeserializing_ThenObjectIsTheSame() ()
 
 当一个类实现了 `java.io.Serializable`接口时，它的所有子类也是可序列化的。相反，当一个对象引用另一个对象时，这些对象必须单独实现`Serializable`接口，否则将抛出 *NotSerializableException* :
 
-```
+```java
 public class Person implements Serializable {
     private int age;
     private String name;
@@ -107,20 +107,20 @@ public class Person implements Serializable {
 
 Java 指定了序列化对象的默认方式，但是 Java 类可以覆盖这种默认行为。当尝试序列化具有某些不可序列化属性的对象时，自定义序列化可能特别有用。我们可以通过在我们想要序列化的类中提供两个方法来做到这一点:
 
-```
+```java
 private void writeObject(ObjectOutputStream out) throws IOException;
 ```
 
 和
 
-```
+```java
 private void readObject(ObjectInputStream in) 
   throws IOException, ClassNotFoundException;
 ```
 
 使用这些方法，我们可以将不可序列化的属性序列化为其他可以序列化的形式:
 
-```
+```java
 public class Employee implements Serializable {
     private static final long serialVersionUID = 1L;
     private transient Address address;
@@ -145,7 +145,7 @@ public class Employee implements Serializable {
 }
 ```
 
-```
+```java
 public class Address {
     private int houseNumber;
 
@@ -155,7 +155,7 @@ public class Address {
 
 我们可以运行以下单元测试来测试这种自定义序列化:
 
-```
+```java
 @Test
 public void whenCustomSerializingAndDeserializing_ThenObjectIsTheSame() 
   throws IOException, ClassNotFoundException {

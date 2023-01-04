@@ -14,7 +14,7 @@
 
 首先，让我们在`pom.xml`中添加 RxJava:
 
-```
+```java
 <dependency>
     <groupId>io.reactivex.rxjava2</groupId>
     <artifactId>rxjava</artifactId>
@@ -32,7 +32,7 @@
 
 使用 [`doOnError`](https://web.archive.org/web/20220627084917/http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Observable.html#doOnError-io.reactivex.functions.Consumer-) ，我们可以在出现错误时调用任何需要的操作:
 
-```
+```java
 @Test
 public void whenChangeStateOnError_thenErrorThrown() {
     TestObserver testObserver = new TestObserver();
@@ -52,7 +52,7 @@ public void whenChangeStateOnError_thenErrorThrown() {
 
 如果在执行动作时抛出异常，RxJava 会将异常封装在一个 [`CompositeException`](https://web.archive.org/web/20220627084917/http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/exceptions/CompositeException.html) 中:
 
-```
+```java
 @Test
 public void whenExceptionOccurOnError_thenCompositeExceptionThrown() {
     TestObserver testObserver = new TestObserver();
@@ -73,7 +73,7 @@ public void whenExceptionOccurOnError_thenCompositeExceptionThrown() {
 
 虽然我们可以用`doOnError`调用动作，但是错误仍然打破了标准的顺序流程。有时我们想用默认选项恢复序列，这就是 [`onErrorReturnItem`](https://web.archive.org/web/20220627084917/http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Observable.html#onErrorReturnItem-T-) 所做的:
 
-```
+```java
 @Test
 public void whenHandleOnErrorResumeItem_thenResumed(){
     TestObserver testObserver = new TestObserver();
@@ -91,7 +91,7 @@ public void whenHandleOnErrorResumeItem_thenResumed(){
 
 如果动态默认物料供应商是首选，我们可以使用 [`onErrorReturn`](https://web.archive.org/web/20220627084917/http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Observable.html#onErrorReturn-io.reactivex.functions.Function-) :
 
-```
+```java
 @Test
 public void whenHandleOnErrorReturn_thenResumed() {
     TestObserver testObserver = new TestObserver();
@@ -111,7 +111,7 @@ public void whenHandleOnErrorReturn_thenResumed() {
 
 当遇到错误时，我们可以使用 [`onErrorResumeNext`](https://web.archive.org/web/20220627084917/http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Observable.html#onErrorResumeNext-io.reactivex.ObservableSource-) 提供回退数据序列，而不是回退到单个项目。这将有助于防止错误传播:
 
-```
+```java
 @Test
 public void whenHandleOnErrorResume_thenResumed() {
     TestObserver testObserver = new TestObserver();
@@ -129,7 +129,7 @@ public void whenHandleOnErrorResume_thenResumed() {
 
 如果回退序列根据具体的异常类型而不同，或者该序列需要由函数生成，我们可以将函数传递给`onErrorResumeNext:`
 
-```
+```java
 @Test
 public void whenHandleOnErrorResumeFunc_thenResumed() {
     TestObserver testObserver = new TestObserver();
@@ -150,7 +150,7 @@ public void whenHandleOnErrorResumeFunc_thenResumed() {
 
  **RxJava 还提供了一个回退方法，当出现异常(但没有错误)时，允许使用提供的`Observable`继续序列:
 
-```
+```java
 @Test
 public void whenHandleOnException_thenResumed() {
     TestObserver testObserver = new TestObserver();
@@ -190,7 +190,7 @@ public void whenHandleOnException_thenNotResumed() {
 
 通过使用[`retry`](https://web.archive.org/web/20220627084917/http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Observable.html#retry--)`,``Observable`将被无限次重新订阅，直到没有错误为止。但是大多数情况下，我们更喜欢固定的重试次数:
 
-```
+```java
 @Test
 public void whenRetryOnError_thenRetryConfirmed() {
     TestObserver testObserver = new TestObserver();
@@ -214,7 +214,7 @@ public void whenRetryOnError_thenRetryConfirmed() {
 
 条件重试在 RxJava 中也是可行的，使用带有谓词的[重试或使用](https://web.archive.org/web/20220627084917/http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Observable.html#retry-io.reactivex.functions.BiPredicate-)`[retryUntil](https://web.archive.org/web/20220627084917/http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Observable.html#retryUntil-io.reactivex.functions.BooleanSupplier-)`:
 
-```
+```java
 @Test
 public void whenRetryConditionallyOnError_thenRetryConfirmed() {
     TestObserver testObserver = new TestObserver();
@@ -258,7 +258,7 @@ public void whenRetryUntilOnError_thenRetryConfirmed() {
 
 下面的测试显示了这是如何工作的:
 
-```
+```java
 @Test
 public void whenRetryWhenOnError_thenRetryConfirmed() {
     TestObserver testObserver = new TestObserver();
@@ -312,7 +312,7 @@ public void whenRetryWhenOnError_thenResubscribed() {
 
 `retryWhen`的典型用法是可变延迟的有限重试:
 
-```
+```java
 @Test
 public void whenRetryWhenForMultipleTimesOnError_thenResumed() {
     TestObserver testObserver = new TestObserver();

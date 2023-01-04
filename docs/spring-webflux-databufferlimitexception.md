@@ -26,7 +26,7 @@ Spring WebFlux [限制编解码器中内存中数据的](https://web.archive.org
 
 让我们尝试向 Spring Webflux 服务器应用程序发送一个大小为 390 KB 的 JSON 有效负载来创建异常。我们将使用`curl `命令向我们的服务器发送一个`POST `请求:
 
-```
+```java
 curl --location --request POST 'http://localhost:8080/1.0/process' \
   --header 'Content-Type: application/json' \
   --data-binary '@/tmp/390KB.json'
@@ -34,7 +34,7 @@ curl --location --request POST 'http://localhost:8080/1.0/process' \
 
 正如我们所见，`DataBufferLimitException`被抛出:
 
-```
+```java
 org.springframework.core.io.buffer.DataBufferLimitException: Exceeded limit on max bytes to buffer : 262144
   at org.springframework.core.io.buffer.LimitedDataBufferList.raiseLimitException(LimitedDataBufferList.java:99) ~[spring-core-5.3.23.jar:5.3.23]
   Suppressed: reactor.core.publisher.FluxOnAssembly$OnAssemblyException: 
@@ -46,7 +46,7 @@ Error has been observed at the following site(s):
 
 最简单的解决方案是用**配置应用程序属性`spring.codec.max-in-memory-size`** 。让我们将以下内容添加到我们的`application.yaml `文件中:
 
-```
+```java
 spring:
     codec:
         max-in-memory-size: 500KB
@@ -58,7 +58,7 @@ spring:
 
 或者，我们可以使用`WebFluxConfigurer`界面来配置相同的阈值。为此，我们将添加一个新的配置类，`WebFluxConfiguration:`
 
-```
+```java
 @Configuration
 public class WebFluxConfiguration implements WebFluxConfigurer {
     @Override
@@ -78,7 +78,7 @@ public class WebFluxConfiguration implements WebFluxConfigurer {
 
 我们将尝试使用 Webflux 的`WebClient. `来重现相同的行为。让我们创建一个处理程序，使用 390 KB 的有效负载来调用服务器:
 
-```
+```java
 public Mono<Users> fetch() {
     return webClient
       .post()
@@ -90,7 +90,7 @@ public Mono<Users> fetch() {
 
 我们再次看到同样的异常被抛出，但这一次是由于`webClient`试图发送比允许的更大的有效载荷:
 
-```
+```java
 org.springframework.core.io.buffer.DataBufferLimitException: Exceeded limit on max bytes to buffer : 262144
   at org.springframework.core.io.buffer.LimitedDataBufferList.raiseLimitException(LimitedDataBufferList.java:99) ~[spring-core-5.3.23.jar:5.3.23]
   Suppressed: reactor.core.publisher.FluxOnAssembly$OnAssemblyException: 
@@ -104,7 +104,7 @@ Error has been observed at the following site(s):
 
 同样，最简单的解决方案是**配置应用程序属性`spring.codec.max-in-memory-size`** 。让我们将以下内容添加到我们的`application.yaml `文件中:
 
-```
+```java
 spring:
     codec:
         max-in-memory-size: 500KB
@@ -114,7 +114,7 @@ spring:
 
 因此，如果我们只想为特定的 web 客户端配置这个限制，那么这将不是一个理想的解决方案。此外，这种方法还有一个[警告](https://web.archive.org/web/20221225091828/https://github.com/spring-projects/spring-boot/issues/27836)。用于创建`WebClients` 的构建器必须由 Spring 自动连接，如下所示:
 
-```
+```java
 @Bean("webClient")
 public WebClient getSelfWebClient(WebClient.Builder builder) {
     return builder.baseUrl(host).build();
@@ -125,7 +125,7 @@ public WebClient getSelfWebClient(WebClient.Builder builder) {
 
 我们也有一种编程方式来配置 web 客户端以实现这一目标。让我们用以下配置创建一个`WebClient`:
 
-```
+```java
 @Bean("progWebClient")
     public WebClient getProgSelfWebClient() {
         return WebClient

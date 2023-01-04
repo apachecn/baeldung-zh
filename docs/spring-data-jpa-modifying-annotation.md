@@ -18,7 +18,7 @@
 
 让我们创建一个`User`类和一个匹配的 Spring 数据 JPA 存储库来说明这些机制:
 
-```
+```java
 @Entity
 @Table(name = "users", schema = "users")
 public class User {
@@ -35,13 +35,13 @@ public class User {
 }
 ```
 
-```
+```java
 public interface UserRepository extends JpaRepository<User, Integer> {}
 ```
 
 查询方法机制允许我们通过从方法名派生查询来操作数据:
 
-```
+```java
 List<User> findAllByName(String name);
 void deleteAllByCreationDateAfter(LocalDate date);
 ```
@@ -50,7 +50,7 @@ void deleteAllByCreationDateAfter(LocalDate date);
 
 至于`@Query`注释，**为我们提供了在`@Query`注释**中编写特定 JPQL 或 SQL 查询的机会:
 
-```
+```java
 @Query("select u from User u where u.email like '%@gmail.com'")
 List<User> findUsersWithGmailAddress();
 ```
@@ -67,7 +67,7 @@ List<User> findUsersWithGmailAddress();
 
 首先，让我们看一个`@Modifying`更新查询的例子:
 
-```
+```java
 @Modifying
 @Query("update User u set u.active = false where u.lastLoginDate < :date")
 void deactivateUsersNotLoggedInSince(@Param("date") LocalDate date);
@@ -77,7 +77,7 @@ void deactivateUsersNotLoggedInSince(@Param("date") LocalDate date);
 
 让我们试试另一个，我们将删除停用的用户:
 
-```
+```java
 @Modifying
 @Query("delete User u where u.active = false")
 int deleteDeactivatedUsers();
@@ -89,7 +89,7 @@ int deleteDeactivatedUsers();
 
 最后，让我们用一个`DDL`查询向我们的`USERS`表添加一个`deleted`列:
 
-```
+```java
 @Modifying
 @Query(value = "alter table USERS.USERS add column deleted int(1) not null default 0", nativeQuery = true)
 void addDeletedColumn();
@@ -103,7 +103,7 @@ void addDeletedColumn();
 
 因此，我们需要创建另一种方法:
 
-```
+```java
 @Query("delete User u where u.active = false")
 int deleteDeactivatedUsersWithNoModifyingAnnotation();
 ```
@@ -112,7 +112,7 @@ int deleteDeactivatedUsersWithNoModifyingAnnotation();
 
 当我们执行上述方法时，我们得到一个`InvalidDataAccessApiUsage`异常:
 
-```
+```java
 org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.hql.internal.QueryExecutionRequestException: 
 Not supported for DML operations [delete com.baeldung.boot.domain.User u where u.active = false]
 (...) 
@@ -126,7 +126,7 @@ Not supported for DML operations [delete com.baeldung.boot.domain.User u where u
 
 但是，我们不必在`EntityManager`上显式调用`clear()`方法。我们可以从`@Modifying`注释中使用 [`clearAutomatically`属性](https://web.archive.org/web/20220705092758/https://codingexplained.com/coding/java/spring-framework/updating-entities-with-update-query-spring-data-jpa):
 
-```
+```java
 @Modifying(clearAutomatically = true)
 ```
 
@@ -134,7 +134,7 @@ Not supported for DML operations [delete com.baeldung.boot.domain.User u where u
 
 然而，如果我们的持久性上下文包含未刷新的更改，清除它将意味着丢弃未保存的更改。幸运的是，在这种情况下，我们可以使用注释的另一个属性，`flushAutomatically`:
 
-```
+```java
 @Modifying(flushAutomatically = true)
 ```
 

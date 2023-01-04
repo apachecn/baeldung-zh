@@ -16,7 +16,7 @@
 
 例如:
 
-```
+```java
 Authorization: Bearer YmFyIiwiaWF0IjoxN;
 Content-Type: application/json;
 Cookie: foo=bar; 
@@ -32,7 +32,7 @@ Cookie: foo=bar;
 
 使用 Postman，我们可以通过向以下端点发送 GET 请求来确认服务器正在运行，并期待 JSON 响应:
 
-```
+```java
 http://localhost:8080/students/
 ```
 
@@ -52,13 +52,13 @@ http://localhost:8080/students/
 
 我们可以通过使用`name: value` 格式作为字符串来添加标题:
 
-```
+```java
 pm.request.headers.add("foo: bar");
 ```
 
 我们还可以传递一个带有`key` 和`value` 属性的 JavaScript 对象，如下所示:
 
-```
+```java
 pm.request.headers.add({
   key: "foo",
   value: "bar"
@@ -75,7 +75,7 @@ pm.request.headers.add({
 
 在 Postman 窗口上的预请求脚本中，我们添加了以下脚本，表明客户端期望 json 类型的响应:
 
-```
+```java
 pm.request.headers.add({
     key: "Accept",
     value: "application/json"
@@ -94,7 +94,7 @@ pm.request.headers.add({
 
 为了进一步验证预请求脚本，我们可以添加下面的头，并期待一个空响应和一个状态代码`406 Not Acceptable`:
 
-```
+```java
 pm.request.headers.add({ 
     key: "Accept",
     value: "image/*" 
@@ -115,7 +115,7 @@ pm.request.headers.add({
 
 与单个请求类似，我们可以通过选择左侧菜单上的`Student API Collection`并转到`Pre-request Script` 选项卡，将请求前脚本添加到我们的集合中。现在，我们可以添加我们的脚本:
 
-```
+```java
 pm.request.headers.add({ 
     key: "Accept",
     value: "application/json" 

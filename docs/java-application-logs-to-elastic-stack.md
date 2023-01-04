@@ -12,7 +12,7 @@
 
 让我们从配置 Logback 开始，使用`FileAppender`将应用程序日志写入文件:
 
-```
+```java
 <appender name="STASH" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>logback/redditApp.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -35,7 +35,7 @@
 
 为了使用这个编码器，我们需要向我们的`pom.xml`添加以下依赖项:
 
-```
+```java
 <dependency> 
     <groupId>net.logstash.logback</groupId> 
     <artifactId>logstash-logback-encoder</artifactId> 
@@ -45,7 +45,7 @@
 
 最后，让我们确保应用程序有权访问日志目录:
 
-```
+```java
 sudo chmod a+rwx /var/lib/tomcat8/logback
 ```
 
@@ -55,7 +55,7 @@ sudo chmod a+rwx /var/lib/tomcat8/logback
 
 这是我们的配置文件`logback.conf`:
 
-```
+```java
 input {
     file {
         path => "/var/lib/tomcat8/logback/*.log"
@@ -82,7 +82,7 @@ output {
 
 要使用新配置运行 Logstash，我们将使用:
 
-```
+```java
 bin/logstash -f logback.conf
 ```
 
@@ -92,7 +92,7 @@ bin/logstash -f logback.conf
 
 我们将创建一个新的搜索“回退日志”，以确保通过使用以下查询来分离回退数据:
 
-```
+```java
 type:logback
 ```
 

@@ -14,7 +14,7 @@ Java 8 引入了`Stream` API，用类似函数的操作来处理序列。如果�
 
 简单地说，`IntStream`包含来自`String`对象的字符的整数表示:
 
-```
+```java
 String testString = "String";
 IntStream intStream = testString.chars();
 ```
@@ -23,7 +23,7 @@ IntStream intStream = testString.chars();
 
 然而，如果我们要显示用于阅读的字符，我们需要将整数转换成人类友好的`Character`形式:
 
-```
+```java
 Stream<Character> characterStream = testString.chars()
   .mapToObj(c -> (char) c);
 ```
@@ -34,13 +34,13 @@ Stream<Character> characterStream = testString.chars()
 
 补充字符由 Unicode 代理项对表示，并将合并成一个代码点。这样我们可以正确地处理(和显示)任何 Unicode 符号:
 
-```
+```java
 IntStream intStream1 = testString.codePoints();
 ```
 
 我们需要将返回的`IntStream`映射到`Stream<Character>`向用户显示:
 
-```
+```java
 Stream<Character> characterStream2 
   = testString.codePoints().mapToObj(c -> (char) c); 
 ```
@@ -55,7 +55,7 @@ Stream<Character> characterStream2
 
 然后我们可以使用`String.valueOf()`或`Character.toString()`将字符转换成一个`String`对象:
 
-```
+```java
 Stream<String> stringStream = testString.codePoints()
   .mapToObj(c -> String.valueOf((char) c));
 ```

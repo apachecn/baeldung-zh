@@ -22,7 +22,7 @@
 
 以下是偏移量为 3 时原始字母和转换字母之间的完全匹配:
 
-```
+```java
 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
 D E F G H I J K L M N O P Q R S T U V W X Y Z A B C
 ```
@@ -33,7 +33,7 @@ D E F G H I J K L M N O P Q R S T U V W X Y Z A B C
 
 实际上，我们可以通过**对其执行模 26 运算**将任何偏移转换为更简单的偏移:
 
-```
+```java
 offset = offset % 26
 ```
 
@@ -43,7 +43,7 @@ offset = offset % 26
 
 首先，让我们创建一个类`CaesarCipher`，它将保存一个将消息和偏移量作为参数的`cipher()`方法:
 
-```
+```java
 public class CaesarCipher {
     String cipher(String message, int offset) {}
 }
@@ -53,7 +53,7 @@ public class CaesarCipher {
 
 这里我们假设偏移量是正的，消息只包含小写字母和空格。然后，我们想要的是将所有字母字符移动给定的偏移量:
 
-```
+```java
 StringBuilder result = new StringBuilder();
 for (char character : message.toCharArray()) {
     if (character != ' ') {
@@ -74,7 +74,7 @@ return result;
 
 现在，让我们在消息“他告诉我我永远也不能教美洲驼开车”上尝试这个实现，偏移量为 3:
 
-```
+```java
 CaesarCipher cipher = new CaesarCipher();
 
 String cipheredMessage = cipher.cipher("he told me i could never teach a llama to drive", 3);
@@ -87,7 +87,7 @@ assertThat(cipheredMessage)
 
 现在，这个特殊的例子具有在转换期间不超过字母`z`的特殊性，因此不必回到字母表的开始。因此，让我们用 10 的偏移量再试一次，这样一些字母将被映射到字母表开头的字母，比如`t`将被映射到`d`:
 
-```
+```java
 String cipheredMessage = cipher.cipher("he told me i could never teach a llama to drive", 10);
 
 assertThat(cipheredMessage)
@@ -116,19 +116,19 @@ assertThat(cipheredMessage)
 
 现在让我们用 Java 来实现它。首先，我们将在我们的类中添加一个`decipher()`方法:
 
-```
+```java
 String decipher(String message, int offset) {}
 ```
 
 然后，让我们用计算出的互补偏移量调用`cipher()`方法:
 
-```
+```java
 return cipher(message, 26 - (offset % 26));
 ```
 
 就这样，我们的破译算法设置好了。让我们在偏移量为 36 的示例中尝试一下:
 
-```
+```java
 String decipheredSentence = cipher.decipher("ro dyvn wo s myevn xofob dokmr k vvkwk dy nbsfo", 36);
 assertThat(decipheredSentence)
   .isEqualTo("he told me i could never teach a llama to drive");
@@ -158,13 +158,13 @@ assertThat(decipheredSentence)
 
 首先，让我们在我们的`CaesarCipher` 类中创建一个`breakCipher()`方法，它将返回用于加密消息的偏移量:
 
-```
+```java
 int breakCipher(String message) {}
 ```
 
 然后，让我们定义一个包含在英文文本中找到某个字母的概率的数组:
 
-```
+```java
 double[] englishLettersProbabilities = {0.073, 0.009, 0.030, 0.044, 0.130, 0.028, 0.016, 0.035, 0.074,
   0.002, 0.003, 0.035, 0.025, 0.078, 0.074, 0.027, 0.003,
   0.077, 0.063, 0.093, 0.027, 0.013, 0.016, 0.005, 0.019, 0.001};
@@ -172,7 +172,7 @@ double[] englishLettersProbabilities = {0.073, 0.009, 0.030, 0.044, 0.130, 0.028
 
 从这个数组中，我们将能够计算出给定消息中字母的预期频率，方法是将概率乘以消息的长度:
 
-```
+```java
 double[] expectedLettersFrequencies = Arrays.stream(englishLettersProbabilities)
   .map(probability -> probability * message.getLength())
   .toArray();
@@ -186,7 +186,7 @@ double[] expectedLettersFrequencies = Arrays.stream(englishLettersProbabilities)
 
 为了实现这一点，我们需要导入包含计算卡方的实用程序类的 Apache Commons Math3 库:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-math3</artifactId>
@@ -200,7 +200,7 @@ double[] expectedLettersFrequencies = Arrays.stream(englishLettersProbabilities)
 
 最后，我们将使用`ChiSquareTest#chiSquare`方法来计算预期和观察到的字母分布之间的卡方:
 
-```
+```java
 double[] chiSquares = new double[26];
 
 for (int offset = 0; offset < chiSquares.length; offset++) {
@@ -215,7 +215,7 @@ return chiSquares;
 
 `observedLettersFrequencies()`方法简单地实现了在传递的消息中对字母`a`到`z`的计数:
 
-```
+```java
 long[] observedLettersFrequencies(String message) {
     return IntStream.rangeClosed('a', 'z')
       .mapToLong(letter -> countLetter((char) letter, message))
@@ -233,7 +233,7 @@ long countLetter(char letter, String message) {
 
 计算完所有卡方后，我们可以返回与最小卡方匹配的偏移量:
 
-```
+```java
 int probableOffset = 0;
 for (int offset = 0; offset < chiSquares.length; offset++) {
     <span class="x x-first">log</span><span class="pl-k x">.</span><span class="x x-last">debug</span>(String.format("Chi-Square for offset %d: %.2f", offset, chiSquares[offset]));
@@ -249,7 +249,7 @@ return probableOffset;
 
 让我们对使用偏移量 10 加密的消息尝试这种算法:
 
-```
+```java
 int offset = algorithm.breakCipher("ro dyvn wo s myevn xofob dokmr k vvkwk dy nbsfo");
 assertThat(offset).isEqualTo(10);
 
@@ -261,7 +261,7 @@ assertThat(algorithm.decipher("ro dyvn wo s myevn xofob dokmr k vvkwk dy nbsfo",
 
 以下是针对这一特定中断计算的不同卡方:
 
-```
+```java
 Chi-Square for offset 0: 210.69
 Chi-Square for offset 1: 327.65
 Chi-Square for offset 2: 255.22

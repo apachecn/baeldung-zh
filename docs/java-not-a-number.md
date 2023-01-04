@@ -34,7 +34,7 @@ Java 将`float`和`double`类型的 `NaN`常量定义为 [`Float`。楠](https:/
 
 当且仅当`x`是`NaN:`时，我们得到`x != x”`的`true`
 
-```
+```java
 System.out.println("NaN == 1 = " + (NAN == 1));
 System.out.println("NaN > 1 = " + (NAN > 1));
 System.out.println("NaN < 1 = " + (NAN < 1));
@@ -47,7 +47,7 @@ System.out.println("NaN != NaN = " + (NAN != NAN));
 
 让我们看看运行上面代码的结果:
 
-```
+```java
 NaN == 1 = false
 NaN > 1 = false
 NaN < 1 = false
@@ -64,7 +64,7 @@ NaN != NaN = true
 
 我们还可以使用方法`Float.isNaN`和`Double.isNaN` 来检查这些值`.` 这是首选方法，因为它更具可读性和可理解性:
 
-```
+```java
 double x = 1;
 System.out.println(x + " is NaN = " + (x != x));
 System.out.println(x + " is NaN = " + (Double.isNaN(x)));
@@ -76,7 +76,7 @@ System.out.println(x + " is NaN = " + (Double.isNaN(x)));
 
 运行这段代码时，我们将得到以下结果:
 
-```
+```java
 1.0 is NaN = false
 1.0 is NaN = false
 NaN is NaN = true
@@ -91,7 +91,7 @@ NaN is NaN = true
 
 导致非数字值的常见情况是**数学上未定义的数字运算**:
 
-```
+```java
 double ZERO = 0;
 System.out.println("ZERO / ZERO = " + (ZERO / ZERO));
 System.out.println("INFINITY - INFINITY = " + 
@@ -101,7 +101,7 @@ System.out.println("INFINITY * ZERO = " + (Double.POSITIVE_INFINITY * ZERO));
 
 这些示例会产生以下输出:
 
-```
+```java
 ZERO / ZERO = NaN
 INFINITY - INFINITY = NaN
 INFINITY * ZERO = NaN 
@@ -109,21 +109,21 @@ INFINITY * ZERO = NaN
 
 **没有实数结果的数值运算也产生`NaN:`**
 
-```
+```java
 System.out.println("SQUARE ROOT OF -1 = " + Math.sqrt(-1));
 System.out.println("LOG OF -1 = " +  Math.log(-1)); 
 ```
 
 这些声明将导致:
 
-```
+```java
 SQUARE ROOT OF -1 = NaN
 LOG OF -1 = NaN 
 ```
 
 所有以`NaN`作为操作数的数字运算都会产生结果`NaN`:
 
-```
+```java
 System.out.println("2 + NaN = " +  (2 + Double.NaN));
 System.out.println("2 - NaN = " +  (2 - Double.NaN));
 System.out.println("2 * NaN = " +  (2 * Double.NaN));
@@ -132,7 +132,7 @@ System.out.println("2 / NaN = " +  (2 / Double.NaN));
 
 而以上的结果是:
 
-```
+```java
 2 + NaN = NaN
 2 - NaN = NaN
 2 * NaN = NaN
@@ -141,7 +141,7 @@ System.out.println("2 / NaN = " +  (2 / Double.NaN));
 
 最后，我们不能将`null`赋给`double`或`float`类型的变量。相反，我们可以显式地将`NaN`赋给这样的变量来表示缺失或未知的值:
 
-```
+```java
 double maxValue = Double.NaN;
 ```
 

@@ -25,7 +25,7 @@ Spring Cloud Gateway，简称 SCG，是 Spring Cloud 家族的一个子项目，
 
 为了更好地说明响应体操作是如何工作的，让我们创建一个简单的过滤器来屏蔽基于 JSON 的响应中的值。例如，假设一个 JSON 有一个名为“ssn”的字段:
 
-```
+```java
 {
   "name" : "John Doe",
   "ssn" : "123-45-9999",
@@ -35,7 +35,7 @@ Spring Cloud Gateway，简称 SCG，是 Spring Cloud 家族的一个子项目，
 
 我们希望用一个固定值替换它们的值，从而防止数据泄漏:
 
-```
+```java
 {
   "name" : "John Doe",
   "ssn" : "****",
@@ -47,7 +47,7 @@ Spring Cloud Gateway，简称 SCG，是 Spring Cloud 家族的一个子项目，
 
 一个`GatewayFilterFactory`顾名思义就是给定时间的滤镜的工厂。在启动时，Spring 寻找任何实现这个接口的[`@Component`](/web/20220813070922/https://www.baeldung.com/spring-component-annotation)-注释类。然后，它构建一个可用过滤器的注册表，我们可以在声明路由时使用:
 
-```
+```java
 spring:
   cloud:
     gateway:
@@ -72,7 +72,7 @@ SCG 已经有了几个实用程序类，我们可以用它们来实现这个工�
 
 在我们的例子中，实现很简单:
 
-```
+```java
 @Override
 public GatewayFilter apply(Config config) {
     return modifyResponseBodyFilterFactory
@@ -92,7 +92,7 @@ public GatewayFilter apply(Config config) {
 
 对于 transformer 类，我们传递了我们的`Scrubber`的一个实例，它在其`apply()`方法中实现了所需的`RewriteFunction`接口:
 
-```
+```java
 public static class Scrubber implements RewriteFunction<JsonNode,JsonNode> {
     // ... fields and constructor omitted
     @Override
@@ -113,7 +113,7 @@ public static class Scrubber implements RewriteFunction<JsonNode,JsonNode> {
 
 它的实现只是递归遍历所有节点，查找与配置的模式匹配的属性，并替换掩码的相应值:
 
-```
+```java
 public static class Scrubber implements RewriteFunction<JsonNode,JsonNode> {
     // ... fields and constructor omitted
     private JsonNode scrubRecursively(JsonNode u) {
@@ -150,7 +150,7 @@ public static class Scrubber implements RewriteFunction<JsonNode,JsonNode> {
 
 首先，存在提供一个可以发送消息的真实后端的问题。一种可能性是使用外部工具，如 Postman 或等效工具，这给典型的 CI/CD 场景带来了一些问题。相反，我们将使用 JDK 鲜为人知的`HttpServer`类，它实现了一个简单的 HTTP 服务器。
 
-```
+```java
 @Bean
 public HttpServer mockServer() throws IOException {
     HttpServer server = HttpServer.create(new InetSocketAddress(0),0);
@@ -172,7 +172,7 @@ public HttpServer mockServer() throws IOException {
 
 其次，我们以编程方式创建一个包含我们的过滤器的路由`@Bean`。这相当于使用配置属性构建路由，但允许我们完全控制测试路由的所有方面:
 
-```
+```java
 @Bean
 public RouteLocator scrubSsnRoute(
   RouteLocatorBuilder builder, 
@@ -201,7 +201,7 @@ public RouteLocator scrubSsnRoute(
 
 最后，有了那些 beans 现在是`@TestConfiguration`的一部分，我们可以把它们和 [`WebTestClient`](/web/20220813070922/https://www.baeldung.com/spring-5-webclient#workingwebtestclient) 一起注入到实际的测试中。实际测试使用这个`WebTestClient`来驱动旋转的 SCG 和后端:
 
-```
+```java
 @Test
 public void givenRequestToScrubRoute_thenResponseScrubbed() {
     client.get()

@@ -12,7 +12,7 @@
 
 首先，我们将使用`Map.equals()`来检查两个`HashMaps`是否有相同的条目:
 
-```
+```java
 @Test
 public void whenCompareTwoHashMapsUsingEquals_thenSuccess() {
     Map<String, String> asiaCapital1 = new HashMap<String, String>();
@@ -38,7 +38,7 @@ public void whenCompareTwoHashMapsUsingEquals_thenSuccess() {
 
 例如，当值类型为 array 时，`Map.equals()`不起作用，因为数组的`equals()`方法比较的是标识，而不是数组的内容:
 
-```
+```java
 @Test
 public void whenCompareTwoHashMapsWithArrayValuesUsingEquals_thenFail() {
     Map<String, String[]> asiaCity1 = new HashMap<String, String[]>();
@@ -57,7 +57,7 @@ public void whenCompareTwoHashMapsWithArrayValuesUsingEquals_thenFail() {
 
 **我们也可以使用 Java 8 `Stream` API:** 实现我们自己的方法来比较`HashMaps`
 
-```
+```java
 private boolean areEqual(Map<String, String> first, Map<String, String> second) {
     if (first.size() != second.size()) {
         return false;
@@ -70,7 +70,7 @@ private boolean areEqual(Map<String, String> first, Map<String, String> second) 
 
 为了简单起见，我们实现了现在可以用来比较`HashMap<String, String>`对象的`areEqual()`方法:
 
-```
+```java
 @Test
 public void whenCompareTwoHashMapsUsingStreamAPI_thenSuccess() {
     assertTrue(areEqual(asiaCapital1, asiaCapital2));
@@ -80,7 +80,7 @@ public void whenCompareTwoHashMapsUsingStreamAPI_thenSuccess() {
 
 但是我们也可以定制我们自己的方法`areEqualWithArrayValue()`来处理数组值，方法是使用`Arrays.equals()`来比较两个数组:
 
-```
+```java
 private boolean areEqualWithArrayValue(Map<String, String[]> first, Map<String, String[]> second) {
     if (first.size() != second.size()) {
         return false;
@@ -93,7 +93,7 @@ private boolean areEqualWithArrayValue(Map<String, String[]> first, Map<String, 
 
 与`Map.equals()`不同，我们自己的方法将成功地将`HashMaps`与数组值进行比较:
 
-```
+```java
 @Test
 public void whenCompareTwoHashMapsWithArrayValuesUsingStreamAPI_thenSuccess() {
     assertTrue(areEqualWithArrayValue(asiaCity1, asiaCity2)); 
@@ -109,7 +109,7 @@ public void whenCompareTwoHashMapsWithArrayValuesUsingStreamAPI_thenSuccess() {
 
 首先，我们可以通过比较两个`HashMaps`的`KeySet()`来检查它们是否有相同的键:
 
-```
+```java
 @Test
 public void whenCompareTwoHashMapKeys_thenSuccess() {
     assertTrue(asiaCapital1.keySet().equals(asiaCapital2.keySet())); 
@@ -123,7 +123,7 @@ public void whenCompareTwoHashMapKeys_thenSuccess() {
 
 我们将使用`Stream` API 实现一个简单的方法来检查哪些键在两个`HashMaps`中具有相同的值:
 
-```
+```java
 private Map<String, Boolean> areEqualKeyValues(Map<String, String> first, Map<String, String> second) {
     return first.entrySet().stream()
       .collect(Collectors.toMap(e -> e.getKey(), 
@@ -133,7 +133,7 @@ private Map<String, Boolean> areEqualKeyValues(Map<String, String> first, Map<St
 
 我们现在可以使用`areEqualKeyValues()`来比较两个不同的`HashMaps`以详细查看哪些键具有相同的值，哪些具有不同的值:
 
-```
+```java
 @Test
 public void whenCompareTwoHashMapKeyValuesUsingStreamAPI_thenSuccess() {
     Map<String, String> asiaCapital3 = new HashMap<String, String>();
@@ -165,7 +165,7 @@ public void whenCompareTwoHashMapKeyValuesUsingStreamAPI_thenSuccess() {
 
 首先，我们将使用`MapDifference.entriesDiffering()` 获得在每个`HashMap`中具有不同值的**公共键:**
 
-```
+```java
 @Test
 public void givenDifferentMaps_whenGetDiffUsingGuava_thenSuccess() {
     Map<String, String> asia1 = new HashMap<String, String>();
@@ -197,7 +197,7 @@ public void givenDifferentMaps_whenGetDiffUsingGuava_thenSuccess() {
 
 然后，我们可以使用`MapDifference.entriesOnlyOnRight()`和`MapDifference.entriesOnlyOnLeft():`获得只存在于一个`HashMap`中的条目
 
-```
+```java
 @Test
 public void givenDifferentMaps_whenGetEntriesOnOneSideUsingGuava_thenSuccess() {
     MapDifference<String, String> diff = Maps.difference(asia1, asia2);
@@ -215,7 +215,7 @@ public void givenDifferentMaps_whenGetEntriesOnOneSideUsingGuava_thenSuccess() {
 
 接下来，**我们将使用`MapDifference.entriesInCommon():`** 获得常见条目
 
-```
+```java
 @Test
 public void givenDifferentMaps_whenGetCommonEntriesUsingGuava_thenSuccess() {
     MapDifference<String, String> diff = Maps.difference(asia1, asia2);
@@ -230,7 +230,7 @@ public void givenDifferentMaps_whenGetCommonEntriesUsingGuava_thenSuccess() {
 
 因为默认情况下`Maps.difference()`使用`equals()`和`hashCode()`来比较条目，所以它对没有正确实现它们的对象不起作用:
 
-```
+```java
 @Test
 public void givenSimilarMapsWithArrayValue_whenCompareUsingGuava_thenFail() {
     MapDifference<String, String[]> diff = Maps.difference(asiaCity1, asiaCity2);
@@ -242,7 +242,7 @@ public void givenSimilarMapsWithArrayValue_whenCompareUsingGuava_thenFail() {
 
 例如，我们将为类型`String[]`定义`Equivalence `来比较`HashMaps`中的`String[]`值:
 
-```
+```java
 @Test
 public void givenSimilarMapsWithArrayValue_whenCompareUsingGuavaEquivalence_thenSuccess() {
     Equivalence<String[]> eq = new Equivalence<String[]>() {

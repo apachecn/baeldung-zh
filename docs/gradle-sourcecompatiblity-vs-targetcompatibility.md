@@ -17,7 +17,7 @@
 
 例如:
 
-```
+```java
 javac HelloWorld.java -source 1.6 -target 1.8
 ```
 
@@ -29,7 +29,7 @@ Gradle 和 Java 插件让我们用`java`任务的`sourceCompatibility`和`target
 
 让我们设置`build.gradle`文件:
 
-```
+```java
 plugins {
     id 'java'
 }
@@ -48,7 +48,7 @@ java {
 
 让我们创建一个非常简单的类:
 
-```
+```java
 public class HelloWorldApp {
     public static void main(String[] args) {
         System.out.println("Hello World!");
@@ -60,13 +60,13 @@ public class HelloWorldApp {
 
 我们可以使用与 Java 打包在一起的`javap `命令行工具来检查这个类文件生成的字节码版本:
 
-```
+```java
 javap -verbose HelloWorldApp.class
 ```
 
 这打印了很多信息，但是在前几行中，我们可以看到:
 
-```
+```java
 public class com.baeldung.helloworld.HelloWorldApp
   minor version: 0
   major version: 52
@@ -79,7 +79,7 @@ public class com.baeldung.helloworld.HelloWorldApp
 
 让我们用一个λ表达式:
 
-```
+```java
 public class HelloWorldApp {
 
     public static void main(String[] args) {
@@ -94,7 +94,7 @@ public class HelloWorldApp {
 
 如果我们试图用 Gradle 构建我们的代码，我们会看到一个编译错误:
 
-```
+```java
 error: lambda expressions are not supported in -source 1.6
 ```
 

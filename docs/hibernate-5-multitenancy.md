@@ -12,7 +12,7 @@
 
 我们需要在`pom.xml`文件中包含[和`hibernate-core`依赖关系](https://web.archive.org/web/20220701014001/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.hibernate%22%20AND%20a%3A%22hibernate-core%22):
 
-```
+```java
 <dependency>
    <groupId>org.hibernate</groupId>
    <artifactId>hibernate-core</artifactId>
@@ -22,7 +22,7 @@
 
 为了测试，我们将使用一个 H2 内存数据库，所以让我们也将[这个依赖关系](https://web.archive.org/web/20220701014001/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.h2database%22%20AND%20a%3A%22h2%22)添加到`pom.xml`文件中:
 
-```
+```java
 <dependency>
    <groupId>com.h2database</groupId>
    <artifactId>h2</artifactId>
@@ -56,7 +56,7 @@ Hibernate 还不支持**分区(鉴别器)数据方法。**跟进[这个 JIRA 问
 
 让我们看看它的两个主要方法:
 
-```
+```java
 interface MultiTenantConnectionProvider extends Service, Wrapped {
     Connection getAnyConnection() throws SQLException;
 
@@ -80,7 +80,7 @@ interface MultiTenantConnectionProvider extends Service, Wrapped {
 
 让我们看看这个界面:
 
-```
+```java
 public interface CurrentTenantIdentifierResolver {
 
     String resolveCurrentTenantIdentifier();
@@ -97,7 +97,7 @@ Hibernate 调用方法`resolveCurrentTenantIdentifier`来获取租户标识符�
 
 此外，我们将模拟`CurrentTenantIdentifierResolver`接口，在测试期间提供一个租户标识符作为我们的选择:
 
-```
+```java
 public abstract class MultitenancyIntegrationTest {
 
     @Mock
@@ -134,7 +134,7 @@ public abstract class MultitenancyIntegrationTest {
 
 我们实现的`MultiTenantConnectionProvider`接口将**设置每次请求连接时使用的模式**:
 
-```
+```java
 class SchemaMultiTenantConnectionProvider
   extends AbstractMultiTenantConnectionProvider {
 
@@ -183,7 +183,7 @@ class SchemaMultiTenantConnectionProvider
 
 让我们配置 `hibernate.properties` 来使用模式多承租模式和我们的`MultiTenantConnectionProvider` 接口`:`的实现
 
-```
+```java
 hibernate.connection.url=jdbc:h2:mem:mydb1;DB_CLOSE_DELAY=-1;\
   INIT=CREATE SCHEMA IF NOT EXISTS MYDB1\\;CREATE SCHEMA IF NOT EXISTS MYDB2\\;
 hibernate.multiTenancy=SCHEMA
@@ -195,7 +195,7 @@ hibernate.multi_tenant_connection_provider=\
 
 对于我们的测试，我们将在租户`myDb1\.` 中添加一个`Car`条目，我们将验证该条目是否存储在我们的数据库中，并且不在租户`myDb2`中:
 
-```
+```java
 @Test
 void whenAddingEntries_thenOnlyAddedToConcreteDatabase() {
     whenCurrentTenantIs(TenantIdNames.MYDB1);
@@ -216,7 +216,7 @@ void whenAddingEntries_thenOnlyAddedToConcreteDatabase() {
 
 对于`MultiTenantConnectionProvider`接口，我们将使用一个`Map`集合来获取每个租户的`ConnectionProvider`标识符:
 
-```
+```java
 class MapMultiTenantConnectionProvider
   extends AbstractMultiTenantConnectionProvider {
 
@@ -257,7 +257,7 @@ class MapMultiTenantConnectionProvider
 
 每个`ConnectionProvider`通过配置文件`hibernate-database-<tenant identifier>.properties,` 填充，该文件包含所有连接细节:
 
-```
+```java
 hibernate.connection.driver_class=org.h2.Driver
 hibernate.connection.url=jdbc:h2:mem:<Tenant Identifier>;DB_CLOSE_DELAY=-1
 hibernate.connection.username=sa
@@ -266,7 +266,7 @@ hibernate.dialect=org.hibernate.dialect.H2Dialect
 
 最后，让我们再次更新`hibernate.properties`以使用数据库多租户模式和我们的`MultiTenantConnectionProvider` 接口实现:
 
-```
+```java
 hibernate.multiTenancy=DATABASE
 hibernate.multi_tenant_connection_provider=\
   com.baeldung.hibernate.multitenancy.database.MapMultiTenantConnectionProvider

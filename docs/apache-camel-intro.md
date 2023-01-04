@@ -20,7 +20,7 @@ Apache Camel 是一个开源集成框架，旨在使系统集成变得简单和�
 
 为了使用 Camel，我们需要首先添加 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.camel</groupId>
     <artifactId>camel-core</artifactId>
@@ -66,7 +66,7 @@ Java DSL 提供了一些 Spring DSL 不支持的特性。然而，Spring DSL 有
 
 要用 Java DSL 定义路由，我们首先需要创建一个`DefaultCamelContext`实例。之后，我们需要扩展`RouteBuilder`类并实现包含路由流的`configure`方法:
 
-```
+```java
 private static final long DURATION_MILIS = 10000;
 private static final String SOURCE_FOLDER = "src/test/source-folder";
 private static final String DESTINATION_FOLDER 
@@ -94,7 +94,7 @@ public void moveFolderContentJavaDSLTest() throws Exception {
 
 `FileProcessor`实现`Processor`接口并包含单个`process`方法，该方法包含修改文件名的逻辑:
 
-```
+```java
 public class FileProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
         String originalFileName = (String) exchange.getIn().getHeader(
@@ -119,7 +119,7 @@ public class FileProcessor implements Processor {
 
 在这种安排中，CamelContext 是在 Spring XML 文件中使用 Camel 的自定义 XML 语法定义的，但没有像在使用 XML 的“纯”Spring DSL 的情况下那样定义路由:
 
-```
+```java
 <bean id="fileRouter" class="com.baeldung.camel.file.FileRouter" />
 <bean id="fileProcessor" 
   class="com.baeldung.camel.file.FileProcessor" />
@@ -131,7 +131,7 @@ public class FileProcessor implements Processor {
 
 这样，我们告诉 Camel 使用`FileRouter` 类，它保存了我们在 Java DSL 中的路由定义:
 
-```
+```java
 public class FileRouter extends RouteBuilder {
 
     private static final String SOURCE_FOLDER = 
@@ -149,7 +149,7 @@ public class FileRouter extends RouteBuilder {
 
 为了测试这一点，我们必须创建一个`ClassPathXmlApplicationContext`的实例，它将在春天加载我们的`CamelContext`:
 
-```
+```java
 @Test
 public void moveFolderContentSpringDSLTest() throws InterruptedException {
     ClassPathXmlApplicationContext applicationContext = 

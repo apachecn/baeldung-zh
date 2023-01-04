@@ -73,7 +73,7 @@ JARs 确实有助于将相关的组件组合在一起，但是它们也有一些
 
 该模块的一般结构如下:
 
-```
+```java
 src
  |----com.baeldung.reader
  |     |----module-info.java
@@ -111,7 +111,7 @@ src
 
 `com.baeldung.student.model`是根模块。它定义了模型类`com.baeldung.student.model.Student`，包含以下属性:
 
-```
+```java
 public class Student {
     private String registrationId;
     //other relevant fields, getters and setters
@@ -120,7 +120,7 @@ public class Student {
 
 它为其他模块提供了在`com.baeldung.student.model`包中定义的类型。这是通过在文件`module-info.java`中定义它来实现的:
 
-```
+```java
 module com.baeldung.student.model {
     exports com.baeldung.student.model;
 }
@@ -128,7 +128,7 @@ module com.baeldung.student.model {
 
 `com.baeldung.student.service`模块为抽象 CRUD 操作提供了一个接口`com.baeldung.student.service.StudentService`:
 
-```
+```java
 public interface StudentService {
     public String create(Student student);
     public Student read(String registrationId);
@@ -139,7 +139,7 @@ public interface StudentService {
 
 它依赖于`com.baeldung.student.model`模块，并使包`com.baeldung.student.service`中定义的类型可用于其他模块:
 
-```
+```java
 module com.baeldung.student.service {
     requires transitive com.baeldung.student.model;
     exports com.baeldung.student.service;
@@ -148,7 +148,7 @@ module com.baeldung.student.service {
 
 我们提供了另一个模块`com.baeldung.student.service.dbimpl`，它为上述模块提供了实现`com.baeldung.student.service.dbimpl.StudentDbService`:
 
-```
+```java
 public class StudentDbService implements StudentService {
 
     public String create(Student student) {
@@ -175,7 +175,7 @@ public class StudentDbService implements StudentService {
 
 它直接依赖于`com.baeldung.student.service`和过渡依赖于`com.baeldung.student.model` ，其定义为:
 
-```
+```java
 module com.baeldung.student.service.dbimpl {
     requires transitive com.baeldung.student.service;
     requires java.logging;
@@ -185,7 +185,7 @@ module com.baeldung.student.service.dbimpl {
 
 最后一个模块是客户端模块，它利用服务实现模块`com.baeldung.student.service.dbimpl`来执行其操作:
 
-```
+```java
 public class StudentClient {
 
     public static void main(String[] args) {
@@ -200,7 +200,7 @@ public class StudentClient {
 
 它的定义是:
 
-```
+```java
 module com.baeldung.student.client {
     requires com.baeldung.student.service.dbimpl;
 }

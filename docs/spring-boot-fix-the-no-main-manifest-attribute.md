@@ -12,23 +12,23 @@
 
 一般来说，如果我们从 Spring Initializr 中取出我们的`pom`,我们不会有任何问题。然而，如果我们通过将 [`spring-boot-starter-parent`](https://web.archive.org/web/20221218224710/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-parent "spring-boot-starter-parent") 添加到`pom.xml`来手动构建我们的项目，我们可能会遇到这个问题。我们可以通过尝试构建一个干净的 jar 来复制它:
 
-```
+```java
 $ mvn clean package
 ```
 
 我们在运行 jar 时会遇到错误:
 
-```
+```java
 $ java -jar target\spring-boot-artifacts-2.jar
 ```
 
-```
+```java
 no main manifest attribute, in target\spring-boot-artifacts-2.jar
 ```
 
 在本例中，`MANIFEST.MF`文件的内容是:
 
-```
+```java
 Manifest-Version: 1.0
 Archiver-Version: Plexus Archiver
 Created-By: Apache Maven 3.6.3
@@ -44,7 +44,7 @@ Build-Jdk: 11.0.13
 
 让我们将`plugin` 定义添加到我们的`pom.xml`中，并在`plugins`标签下添加`Main-Class`声明:
 
-```
+```java
 <plugins>
     <plugin>
         <groupId>org.springframework.boot</groupId>
@@ -65,7 +65,7 @@ Build-Jdk: 11.0.13
 
 让我们将`repackage`目标添加到紧接`configuration`标签之后的`spring-boot-maven-plugin`声明中:
 
-```
+```java
 <executions>
     <execution>
         <goals>
@@ -79,7 +79,7 @@ Build-Jdk: 11.0.13
 
 或者，**将属性`start-class`添加到我们的`pom.xml`文件的`properties`标签中，允许在构建过程中有更多的灵活性**:
 
-```
+```java
 <properties>
     <start-class>com.baeldung.demo.DemoApplication</start-class>
 </properties>
@@ -87,7 +87,7 @@ Build-Jdk: 11.0.13
 
 现在，我们必须通过使用 Maven 内联命令 [`spring-boot:repackage`](/web/20221218224710/https://www.baeldung.com/spring-boot-repackage-vs-mvn-package "spring-boot-repackage-vs-mvn-package") 来构建 jar 执行目标:
 
-```
+```java
 $ mvn package spring-boot:repackage
 ```
 
@@ -97,7 +97,7 @@ $ mvn package spring-boot:repackage
 
 我们注意到[的存在`Main-Class`和`Start-Class`的](/web/20221218224710/https://www.baeldung.com/spring-boot-main-class)属性:
 
-```
+```java
 Manifest-Version: 1.0
 Archiver-Version: Plexus Archiver
 Created-By: Apache Maven 3.6.3

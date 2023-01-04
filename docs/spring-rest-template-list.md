@@ -29,7 +29,7 @@ Learn how to use Spring's RestTemplate to send requests with JSON content.[Read 
 
 对于客户机和服务器之间的通信，我们将使用一个简单的 DTO 来封装基本的雇员数据:
 
-```
+```java
 public class Employee {
     public long id;
     public String title;
@@ -56,7 +56,7 @@ public class Employee {
 
 首先，我们可以使用`RestTemplate.` `getForEntity()` 通过`responseType`参数获得一个对象数组。无论我们在那里指定什么`class` ，都将匹配`ResponseEntity`的参数类型:
 
-```
+```java
 ResponseEntity<Employee[]> response =
   restTemplate.getForEntity(
   "http://localhost:8080/employees/",
@@ -72,7 +72,7 @@ Employee[] employees = response.getBody();
 
 有些 API 会返回一个包含员工列表的顶级对象，而不是直接返回列表。为了处理这种情况，我们可以使用一个包含雇员列表的包装类。
 
-```
+```java
 public class EmployeeList {
     private List<Employee> employees;
 
@@ -86,7 +86,7 @@ public class EmployeeList {
 
 现在我们可以使用更简单的`getForObject()`方法来获得雇员列表:
 
-```
+```java
 EmployeeList response = restTemplate.getForObject(
   "http://localhost:8080/employees",
   EmployeeList.class);
@@ -105,7 +105,7 @@ List<Employee> employees = response.getEmployees();
 
 这是因为现在我们正从 Java 对象转向 JSON。JVM 知道对象列表及其类型，所以它们将被正确地序列化:
 
-```
+```java
 List<Employee> newEmployees = new ArrayList<>();
 newEmployees.add(new Employee(3, "Intern"));
 newEmployees.add(new Employee(4, "CEO"));
@@ -120,7 +120,7 @@ restTemplate.postForObject(
 
 如果我们需要使用一个包装类来与上面的 GET 场景保持一致，那也很简单。我们可以使用`RestTemplate`发送新列表:
 
-```
+```java
 List<Employee> newEmployees = new ArrayList<>();
 newEmployees.add(new Employee(3, "Intern"));
 newEmployees.add(new Employee(4, "CEO"));

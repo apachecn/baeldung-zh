@@ -20,7 +20,7 @@
 
 在这种情况下，我们可以使用在[上一篇文章](/web/20220812051139/https://www.baeldung.com/introduction-to-json-schema-in-java)中使用的`JSON Schema`来描述数据对象“产品”:
 
-```
+```java
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Product",
@@ -55,7 +55,7 @@ price 属性特有的属性`minimum`、`exclusiveMinimum`告诉框架，在表�
 
 第二个组件是 **`UI schema`** 描述了表单的布局以及`data schema`的哪些属性将被呈现为控件:
 
-```
+```java
 {
     "type": "HorizontalLayout",
     "elements": [
@@ -95,7 +95,7 @@ price 属性特有的属性`minimum`、`exclusiveMinimum`告诉框架，在表�
 
 一旦安装了`node.js`并从 [GitHub](https://web.archive.org/web/20220812051139/https://github.com/eugenp/tutorials/tree/master/json-modules/json) 中克隆了实例后，打开一个 shell 并把 cd 放到`webapp`文件夹中。这个文件夹包含了`package.json`文件。它显示了项目的一些信息，主要是告诉`npm`它必须下载哪些依赖项。`package,json`文件如下: 
 
-```
+```java
 {
     "name": "jsonforms-intro",
     "description": "Introduction to JSONForms",
@@ -119,7 +119,7 @@ T3 现在，我们可以键入`npm install` 命令了。这将开始下载所有
 
 在我们的页面中，我们需要导入`jsonforms.js`库，并使用专用的 AngularJS 指令`jsonforms`嵌入表单:
 
-```
+```java
 <!DOCTYPE html>
 <html ng-app="jsonforms-intro">
 <head>
@@ -158,7 +158,7 @@ T3 现在，我们可以键入`npm install` 命令了。这将开始下载所有
 
 在 AngularJS 应用程序中，指令所需的值通常由控制器提供:
 
-```
+```java
 app.controller('MyController', ['$scope', 'Schema', 'UISchema', 
   function($scope, Schema, UISchema) {
 
@@ -176,7 +176,7 @@ app.controller('MyController', ['$scope', 'Schema', 'UISchema',
 
 接下来，我们需要在我们的应用程序模块中注入`jsonforms`:
 
-```
+```java
 var app = angular.module('jsonforms-intro', ['jsonforms']);
 ```
 

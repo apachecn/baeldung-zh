@@ -26,7 +26,7 @@
 
 首先，我们需要创建一个简单的服务来发送通知消息。例如，考虑一下`NotificationSender`接口:
 
-```
+```java
 public interface NotificationSender {
     String send(String message);
 }
@@ -34,7 +34,7 @@ public interface NotificationSender {
 
 接下来，让我们提供一个用于发送电子邮件的`NotificationSender`接口的实现:
 
-```
+```java
 public class EmailNotification implements NotificationSender {
     @Override
     public String send(String message) {
@@ -45,7 +45,7 @@ public class EmailNotification implements NotificationSender {
 
 现在让我们看看如何利用`@ConditionalOnProperty`注释。**让我们这样配置`NotificationSender` bean，只有当属性`notification.service`被定义为**时，它才会被加载:
 
-```
+```java
 @Bean(name = "emailNotification")
 @ConditionalOnProperty(prefix = "notification", name = "service")
 public NotificationSender notificationSender() {
@@ -57,7 +57,7 @@ public NotificationSender notificationSender() {
 
 最后，我们需要添加最后一块拼图。让我们在 [`application.properties`文件](/web/20221031142400/https://www.baeldung.com/properties-with-spring#1-applicationproperties---the-default-property-file)中定义我们的自定义属性:
 
-```
+```java
 notification.service=email
 ```
 
@@ -71,7 +71,7 @@ notification.service=email
 
 为此，我们需要创建另一个`NotificationSender` 实现:
 
-```
+```java
 public class SmsNotification implements NotificationSender {
     @Override
     public String send(String message) {
@@ -86,7 +86,7 @@ public class SmsNotification implements NotificationSender {
 
 现在让我们指定在什么条件下我们想要在上下文中注册`SmsNotification`实现:
 
-```
+```java
 @Bean(name = "smsNotification")
 @ConditionalOnProperty(prefix = "notification", name = "service", havingValue = "sms")
 public NotificationSender notificationSender2() {
@@ -100,7 +100,7 @@ public NotificationSender notificationSender2() {
 
 现在让我们把所有的部分放在一起，并编写一个简单的测试用例来确认一切按预期工作:
 
-```
+```java
 @Test
 public void whenValueSetToEmail_thenCreateEmailNotification() {
     this.contextRunner.withPropertyValues("notification.service=email")

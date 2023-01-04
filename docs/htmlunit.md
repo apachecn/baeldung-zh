@@ -20,7 +20,7 @@ HtmlUnit 这个名字可能会让你认为它是一个测试框架，但是虽�
 
 HtmlUnit 可以从 SourceForge 或者[官网](https://web.archive.org/web/20220127171802/http://htmlunit.sourceforge.net/)下载[。此外，你可以将它包含在你的构建工具中(比如 Maven 或 Gradle 等)，正如你在这里看到的](https://web.archive.org/web/20220127171802/https://sourceforge.net/projects/htmlunit/)。例如，这是您当前可以包含在项目中的 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>net.sourceforge.htmlunit</groupId>
     <artifactId>htmlunit</artifactId>
@@ -38,7 +38,7 @@ HtmlUnit 可以从 SourceForge 或者[官网](https://web.archive.org/web/202201
 
 让我们从一个简单的测试开始:创建一个`WebClient`并获得`www.baeldung.com`导航的第一页:
 
-```
+```java
 private WebClient webClient;
 
 @Before
@@ -66,7 +66,7 @@ public void givenAClient_whenEnteringBaeldung_thenPageTitleIsOk()
 
 有时，如果您知道您在做什么(例如，如果您发现您仅有的错误来自您不应该修改的第三方 JavaScript 库)，您可以防止这些错误使您的测试失败，用`false`调用`setThrowExceptionOnScriptError`:
 
-```
+```java
 @Test
 public void givenAClient_whenEnteringBaeldung_thenPageTitleIsCorrect()
   throws Exception {
@@ -91,7 +91,7 @@ public void givenAClient_whenEnteringBaeldung_thenPageTitleIsCorrect()
 
 通过 ID 获取元素很容易，但是一般来说，如果需要查找元素，使用 XPath 语法更方便。HtmlUnit 允许我们使用它，所以我们会。
 
-```
+```java
 @Test
 public void givenBaeldungArchive_whenRetrievingArticle_thenHasH1() 
   throws Exception {
@@ -116,7 +116,7 @@ public void givenBaeldungArchive_whenRetrievingArticle_thenHasH1()
 
 在实际的网络抓取中，你可以以`h1`和`h2`标题为例，结果会是这样的:
 
-```
+```java
 Java Web Weekly, Issue 135
 1\. Spring and Java
 2\. Technical and Musings
@@ -136,7 +136,7 @@ AJAX 功能可能是一个问题，因为 HtmlUnit 通常会在 AJAX 调用完�
 *   当进入 web 应用程序的页面时，您可以等待几秒钟，这样就有足够的时间让 AJAX 调用完成。要实现这一点，可以使用`webClient.waitForBackgroundJavaScript(MILLIS)`或者`webClient.waitForBackgroundJavaScriptStartingBefore(MILLIS)`。您应该在检索页面之后、使用页面之前调用它们。
 *   您可以等待，直到与 AJAX 调用执行相关的某些预期条件得到满足。例如:
 
-```
+```java
 for (int i = 0; i < 20; i++) {
     if (condition_to_happen_after_js_execution) {
         break;
@@ -149,7 +149,7 @@ for (int i = 0; i < 20; i++) {
 
 *   不要创建默认支持最好的 web 浏览器的`new WebClient()`，而是尝试其他浏览器，因为它们可能更适合您的 JavaScript 或 AJAX 调用。例如，这将创建一个使用 Chrome 浏览器的 webClient:
 
-```
+```java
 WebClient webClient = new WebClient(BrowserVersion.CHROME);
 ```
 
@@ -161,7 +161,7 @@ WebClient webClient = new WebClient(BrowserVersion.CHROME);
 
 在这种情况下，我们将为 HTML 页面使用一个[百里香叶](https://web.archive.org/web/20220127171802/http://www.thymeleaf.org/)模板(你可以在这里看到一个完整的百里香叶示例[):](/web/20220127171802/https://www.baeldung.com/thymeleaf-in-spring-mvc)
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = { TestConfig.class })

@@ -14,7 +14,7 @@
 
 让我们看一个直接向操作系统发送命令的例子:
 
-```
+```java
 String command =
   "curl -X GET https://postman-echo.com/get?foo1=bar1&foo2;=bar2";
 ProcessBuilder processBuilder = new ProcessBuilder(command.split(" ")); 
@@ -26,33 +26,33 @@ ProcessBuilder processBuilder = new ProcessBuilder(command.split(" "));
 
 然后我们可以为`ProcessBuilder `设置工作目录，并开始这个过程:
 
-```
+```java
 processBuilder.directory(new File("/home/"));
 Process process = processBuilder.start(); 
 ```
 
 从这里开始，我们可以通过从`Process`实例访问`InputStream`来获取它:
 
-```
+```java
 InputStream inputStream = process.getInputStream(); 
 ```
 
 当处理完成时，我们可以用以下代码获得退出代码:
 
-```
+```java
 int exitCode = process.exitValue(); 
 ```
 
 **如果我们需要运行额外的命令，我们可以通过在一个`String`数组中传递新的命令和参数来重用`ProcessBuilder` 实例:**
 
-```
+```java
 processBuilder.command(
   new String[]{"curl", "-X", "GET", "https://postman-echo.com?foo=bar"}); 
 ```
 
 最后，为了终止每个`Process`实例，我们应该使用:
 
-```
+```java
 process.destroy(); 
 ```
 
@@ -62,20 +62,20 @@ process.destroy();
 
 让我们看看另一个示例`curl`命令——这次使用的是 **POST** 请求:
 
-```
+```java
 curl -X POST https://postman-echo.com/post --data foo1=bar1&foo2;=bar2
 ```
 
 现在，让我们通过使用`Runtime.getRuntime() `方法来执行命令:
 
-```
+```java
 String command = "curl -X POST https://postman-echo.com/post --data foo1=bar1&foo2;=bar2";
 Process process = Runtime.getRuntime().exec(command); 
 ```
 
 首先，我们再次创建一个`Process`类的实例，但是这次使用的是`Runtime.getRuntime()`。我们可以通过调用`getInputStream()`方法得到一个`InputStream`,就像前面的例子一样:
 
-```
+```java
 process.getInputStream();
 ```
 

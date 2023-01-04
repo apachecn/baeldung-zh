@@ -10,7 +10,7 @@
 
 让我们从`pom.xml`文件中的`spring-context`依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context</artifactId>
@@ -22,7 +22,7 @@ spring-context 依赖的最新版本可以在这里找到[。](https://web.archi
 
 对于`ModelAndView`，需要`spring-web`依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-web</artifactId>
@@ -34,7 +34,7 @@ spring-web dependency 的最新版本可以在这里找到。
 
 而且，如果我们使用百里香叶作为我们的视图，我们应该将这个依赖项添加到 pom.xml:
 
-```
+```java
 <dependency>
     <groupId>org.thymeleaf</groupId>
     <artifactId>thymeleaf-spring5</artifactId>
@@ -52,7 +52,7 @@ spring-web dependency 的最新版本可以在这里找到。
 
 为了给视图提供可用的数据，我们只需将这些数据添加到它的`Model` 对象中。此外，带有属性的地图可以与`Model`实例合并:
 
-```
+```java
 @GetMapping("/showViewPage")
 public String passParametersWithModel(Model model) {
     Map<String, String> map = new HashMap<>();
@@ -69,7 +69,7 @@ public String passParametersWithModel(Model model) {
 
 `ModelMap`的优点是它让我们能够传递一组值，并将这些值视为在`Map`中:
 
-```
+```java
 @GetMapping("/printViewPage")
 public String passParametersWithModelMap(ModelMap map) {
     map.addAttribute("welcomeMessage", "welcome");
@@ -84,7 +84,7 @@ public String passParametersWithModelMap(ModelMap map) {
 
 这个接口允许我们在一次返回中传递 Spring MVC 所需的所有信息:
 
-```
+```java
 @GetMapping("/goToViewPage")
 public ModelAndView passParametersWithModelAndView() {
     ModelAndView modelAndView = new ModelAndView("viewPage");
@@ -99,7 +99,7 @@ public ModelAndView passParametersWithModelAndView() {
 
 如果我们有一个由控制器的方法作为视图的百里香模板文件。通过模型传递的参数可以从百里香 HTML 代码中访问:
 
-```
+```java
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>

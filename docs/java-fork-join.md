@@ -34,19 +34,19 @@ Java 7 引入了 fork/join 框架。它提供了一些工具，通过尝试使�
 
 根据 [Oracle 的文档](https://web.archive.org/web/20221227031719/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/ForkJoinPool.html)，使用预定义的公共池减少了资源消耗，因为这不鼓励为每个任务创建单独的线程池。
 
-```
+```java
 ForkJoinPool commonPool = ForkJoinPool.commonPool();
 ```
 
 在 Java 7 中，我们可以通过创建一个`ForkJoinPool`并将其分配给一个实用程序类的`public static`字段来实现相同的行为:
 
-```
+```java
 public static ForkJoinPool forkJoinPool = new ForkJoinPool(2);
 ```
 
 现在我们可以轻松访问它:
 
-```
+```java
 ForkJoinPool forkJoinPool = PoolUtil.forkJoinPool;
 ```
 
@@ -68,7 +68,7 @@ ForkJoinPool forkJoinPool = PoolUtil.forkJoinPool;
 
 使用`invokeAll()`方法将列表提交给`ForkJoinPool` :
 
-```
+```java
 public class CustomRecursiveAction extends RecursiveAction {
 
     private String workload = "";
@@ -118,7 +118,7 @@ public class CustomRecursiveAction extends RecursiveAction {
 
 不同之处在于，每个子任务的结果都统一在一个结果中:
 
-```
+```java
 public class CustomRecursiveTask extends RecursiveTask<Integer> {
     private int[] arr;
 
@@ -170,14 +170,14 @@ public class CustomRecursiveTask extends RecursiveTask<Integer> {
 
 让我们从 **`submit()`** 或`**execute()**` 方法开始(它们的用例是相同的):
 
-```
+```java
 forkJoinPool.execute(customRecursiveTask);
 int result = customRecursiveTask.join();
 ```
 
 `**invoke()**` 方法分叉任务并等待结果，不需要任何手动连接:
 
-```
+```java
 int result = forkJoinPool.invoke(customRecursiveTask);
 ```
 
@@ -187,7 +187,7 @@ int result = forkJoinPool.invoke(customRecursiveTask);
 
 在`RecursiveAction`的情况下，`join()` 只返回 `null`；对于`RecursiveTask<V>`，返回任务执行的结果:
 
-```
+```java
 customRecursiveTaskFirst.fork();
 result = customRecursiveTaskLast.join();
 ```

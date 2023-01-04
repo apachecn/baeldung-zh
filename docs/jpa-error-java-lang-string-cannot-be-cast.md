@@ -18,7 +18,7 @@ In addition, instrumenting Lightrun Metrics at runtime allows you to track down 
 
 当然，我们从来没有想过可以在 Java 中将一个`String` 转换成一个`String `数组:
 
-```
+```java
 java.lang.String cannot be cast to [Ljava.lang.String;
 ```
 
@@ -34,7 +34,7 @@ java.lang.String cannot be cast to [Ljava.lang.String;
 
 让我们看一个例子。首先，让我们创建一个查询执行器，我们希望重用它来执行我们所有的查询:
 
-```
+```java
 public class QueryExecutor {
     public static List<String[]> executeNativeQueryNoCastCheck(String statement, EntityManager em) {
         Query query = em.createNativeQuery(statement);
@@ -47,7 +47,7 @@ public class QueryExecutor {
 
 之后，让我们创建一个简单的实体用于我们的示例:
 
-```
+```java
 @Entity
 public class Message {
 
@@ -64,7 +64,7 @@ public class Message {
 
 最后，让我们创建一个测试类，在运行测试之前插入一个`Message`:
 
-```
+```java
 public class SpringCastUnitTest {
 
     private static EntityManager em;
@@ -89,7 +89,7 @@ public class SpringCastUnitTest {
 
 现在，我们可以使用我们的`QueryExecutor`来执行一个查询，检索我们实体的`text`字段:
 
-```
+```java
 @Test(expected = ClassCastException.class)
 public void givenExecutorNoCastCheck_whenQueryReturnsOneColumn_thenClassCastThrown() {
     List<String[]> results = QueryExecutor.executeNativeQueryNoCastCheck("select text from message", em);
@@ -107,7 +107,7 @@ public void givenExecutorNoCastCheck_whenQueryReturnsOneColumn_thenClassCastThro
 
 **修复这个错误最简单的方法是检查结果集对象的类型**以避免`ClassCastException.` 让我们在`QueryExecutor`中实现一个这样做的方法:
 
-```
+```java
 public static List<String[]> executeNativeQueryWithCastCheck(String statement, EntityManager em) {
     Query query = em.createNativeQuery(statement);
     List results = query.getResultList();
@@ -129,7 +129,7 @@ public static List<String[]> executeNativeQueryWithCastCheck(String statement, E
 
 然后，我们可以使用这个方法来执行我们的查询，而不会出现异常:
 
-```
+```java
 @Test
 public void givenExecutorWithCastCheck_whenQueryReturnsOneColumn_thenNoClassCastThrown() {
     List<String[]> results = QueryExecutor.executeNativeQueryWithCastCheck("select text from message", em);
@@ -145,7 +145,7 @@ public void givenExecutorWithCastCheck_whenQueryReturnsOneColumn_thenNoClassCast
 
 让我们为我们的执行器添加另一个方法来支持自定义实体映射的使用:
 
-```
+```java
 public static <T> List<T> executeNativeQueryGeneric(String statement, String mapping, EntityManager em) {
     Query query = em.createNativeQuery(statement, mapping);
     return query.getResultList();
@@ -154,7 +154,7 @@ public static <T> List<T> executeNativeQueryGeneric(String statement, String map
 
 之后，让我们创建一个自定义的`SqlResultSetMapping `来将我们之前查询的结果集映射到一个`Message`实体:
 
-```
+```java
 @SqlResultSetMapping(
   name="textQueryMapping",
   classes={
@@ -174,7 +174,7 @@ public class Message {
 
 在这种情况下，我们还必须添加一个与我们新创建的`SqlResultSetMapping`相匹配的构造函数:
 
-```
+```java
 public class Message {
 
     // ... fields and default constructor
@@ -190,7 +190,7 @@ public class Message {
 
 最后，我们可以使用新的 executor 方法来运行我们的测试查询，并获得一个`Message`列表:
 
-```
+```java
 @Test
 public void givenExecutorGeneric_whenQueryReturnsOneColumn_thenNoClassCastThrown() {
     List<Message> results = QueryExecutor.executeNativeQueryGeneric(

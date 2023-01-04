@@ -10,7 +10,7 @@
 
 首先，让我们看看开始使用 Akka HTTP:
 
-```
+```java
 <dependency>
     <groupId>com.typesafe.akka</groupId>
     <artifactId>akka-http_2.12</artifactId>
@@ -45,7 +45,7 @@
 
 在我们提供 HTTP API 之前，**我们需要实现一个 actor 来提供我们需要的操作:**
 
-```
+```java
 class UserActor extends AbstractActor {
 
   private UserService userService = new UserService();
@@ -101,7 +101,7 @@ Akka 使用路由的概念来描述 HTTP API。对于每个操作，我们需要
 
 为了创建 HTTP 服务器，我们扩展了框架类`HttpApp`并实现了`routes`方法:
 
-```
+```java
 class UserServer extends HttpApp {
 
   private final ActorRef userActor;
@@ -167,7 +167,7 @@ class UserServer extends HttpApp {
 
 一旦我们创建了如上所示的`HttpApp`实现，我们就可以用几行代码启动我们的 HTTP 服务器:
 
-```
+```java
 public static void main(String[] args) throws Exception {
   ActorSystem system = ActorSystem.create("userServer");
   ActorRef userActor = system.actorOf(UserActor.props(), "userActor");

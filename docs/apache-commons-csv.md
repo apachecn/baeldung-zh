@@ -12,7 +12,7 @@
 
 首先，我们将使用 Maven 导入这个库的最新版本:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-csv</artifactId>
@@ -26,7 +26,7 @@
 
 考虑以下名为 book.csv 的 CSV 文件，该文件包含书籍的属性:
 
-```
+```java
 author,title
 Dan Simmons,Hyperion
 Douglas Adams,The Hitchhiker's Guide to the Galaxy
@@ -34,7 +34,7 @@ Douglas Adams,The Hitchhiker's Guide to the Galaxy
 
 让我们看看如何阅读它:
 
-```
+```java
 Map<String, String> AUTHOR_BOOK_MAP = new HashMap<>() {
     {
         put("Dan Simmons", "Hyperion");
@@ -66,7 +66,7 @@ public void givenCSVFile_whenRead_thenContentsAsExpected() throws IOException {
 
 让我们看看如何创建与上面相同的 CSV 文件:
 
-```
+```java
 public void createCSVFile() throws IOException {
     FileWriter out = new FileWriter("book_new.csv");
     try (CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT
@@ -90,7 +90,7 @@ public void createCSVFile() throws IOException {
 
 这是读取列值的最基本方式。当 CSV 文件的文件头未知时，可以使用这种方法:
 
-```
+```java
 Reader in = new FileReader("book.csv");
 Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(in);
 for (CSVRecord record : records) {
@@ -103,7 +103,7 @@ for (CSVRecord record : records) {
 
 与按索引访问相比，这是一种更直观的访问列的方式:
 
-```
+```java
 Iterable<CSVRecord> records = CSVFormat.DEFAULT
   .withHeader("author", "title").parse(in);
 for (CSVRecord record : records) {
@@ -116,7 +116,7 @@ for (CSVRecord record : records) {
 
 使用`Strings`访问列值可能容易出错。使用枚举代替字符串将使代码更加标准化，也更容易理解:
 
-```
+```java
 enum BookHeaders {
     author, title
 }
@@ -135,7 +135,7 @@ for (CSVRecord record : records) {
 
 这将自动检测标题访问列值:
 
-```
+```java
 Iterable<CSVRecord> records = CSVFormat.DEFAULT
   .withFirstRowAsHeader().parse(in);
 for (CSVRecord record : records) {
@@ -148,7 +148,7 @@ for (CSVRecord record : records) {
 
 类似地，我们可以创建一个第一行包含标题的 CSV 文件:
 
-```
+```java
 FileWriter out = new FileWriter("book_new.csv");
 CSVPrinter printer = CSVFormat.DEFAULT
   .withHeader("author", "title").print(out);

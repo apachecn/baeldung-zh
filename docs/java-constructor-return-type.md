@@ -12,19 +12,19 @@
 
 让我们从一个空类开始:
 
-```
+```java
 public class Color {}
 ```
 
 这里，我们将从该类创建一个实例，并将其赋给某个变量:
 
-```
+```java
 Color color = new Color();
 ```
 
 编译完这个简单的 Java 片段后，让我们通过`javap -c`命令来看看它的字节码:
 
-```
+```java
 0: new           #7                  // class Color
 3: dup
 4: invokespecial #9                  // Method Color."<init>":()V
@@ -39,7 +39,7 @@ Color color = new Color();
 
 如上所示，默认构造函数的方法签名是:
 
-```
+```java
 Method Color."<init>":()V
 ```
 
@@ -52,7 +52,7 @@ Method Color."<init>":()V
 
 再看一下我们的简单任务:
 
-```
+```java
 Color color = new Color();
 ```
 
@@ -66,7 +66,7 @@ JVM 是基于堆栈的虚拟机。每个堆栈由[个堆栈帧](https://web.arch
 
 **每个堆栈帧使用一个数组存储局部变量，使用一个操作数堆栈存储部分结果**。考虑到这一点，让我们再来看看字节码:
 
-```
+```java
 0: new           #7                // class Color
 3: dup
 4: invokespecial #9               // Method Color."<init>":()V

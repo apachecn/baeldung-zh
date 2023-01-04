@@ -16,7 +16,7 @@
 
 首先，让我们将新的依赖项添加到我们的 Maven `pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.thymeleaf.extras</groupId>
     <artifactId>thymeleaf-extras-springsecurity5</artifactId>
@@ -31,7 +31,7 @@
 
 我们还需要至少两个不同的用户来演示安全方言的用法:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -64,7 +64,7 @@ public class SecurityConfiguration {
 
 让我们看一下索引页，其中包含安全术语的示例:
 
-```
+```java
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>

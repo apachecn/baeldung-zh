@@ -14,13 +14,13 @@
 
 我们首先启动我们的 Elasticsearch 实例:
 
-```
+```java
 docker run -d --name es762 -p 9200:9200 -e "discovery.type=single-node" elasticsearch:7.6.2
 ```
 
 默认情况下，Elasticsearch 在 9200 端口监听即将到来的 HTTP 查询。我们可以通过在您喜欢的浏览器中打开`http://localhost:9200/` URL 来验证它是否已成功启动:
 
-```
+```java
 {
   "name" : "M4ojISw",
   "cluster_name" : "docker-cluster",
@@ -44,7 +44,7 @@ docker run -d --name es762 -p 9200:9200 -e "discovery.type=single-node" elastics
 
 现在我们已经建立并运行了基本的 Elasticsearch 集群，让我们直接跳到 Java 客户端。首先，我们需要在我们的`pom.xml`文件中声明下面的 [Maven 依赖关系](https://web.archive.org/web/20221206051718/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.elasticsearch%22%20AND%20a%3A%22elasticsearch%22):
 
-```
+```java
 <dependency>
     <groupId>org.elasticsearch</groupId>
     <artifactId>elasticsearch</artifactId>
@@ -58,7 +58,7 @@ docker run -d --name es762 -p 9200:9200 -e "discovery.type=single-node" elastics
 
 在我们直接跳到如何使用主要的 Java API 特性之前，我们需要初始化`RestHighLevelClient` `:`
 
-```
+```java
 ClientConfiguration clientConfiguration =
     ClientConfiguration.builder().connectedTo("localhost:9200").build();
 RestHighLevelClient client = RestClients.create(clientConfiguration).rest();
@@ -68,7 +68,7 @@ RestHighLevelClient client = RestClients.create(clientConfiguration).rest();
 
 `index()`函数允许存储任意的 JSON 文档并使其可搜索:
 
-```
+```java
 @Test
 public void givenJsonString_whenJavaObject_thenIndexDocument() {
   String jsonObject = "{\"age\":10,\"dateOfBirth\":1471466076564,"
@@ -88,7 +88,7 @@ public void givenJsonString_whenJavaObject_thenIndexDocument() {
 
 注意，可以使用 **[任何 JSON Java 库](/web/20221206051718/https://www.baeldung.com/java-json)** 来创建和处理您的文档。**如果你不熟悉这些，你可以使用 Elasticsearch helpers 来生成你自己的 JSON 文档**:
 
-```
+```java
 XContentBuilder builder = XContentFactory.jsonBuilder()
   .startObject()
   .field("fullName", "Test")
@@ -107,7 +107,7 @@ XContentBuilder builder = XContentFactory.jsonBuilder()
 
 现在我们有了一个可搜索的 JSON 文档索引，我们可以继续使用`search()` 方法进行搜索:
 
-```
+```java
 SearchRequest searchRequest = new SearchRequest();
 SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
 SearchHit[] searchHits = response.getHits().getHits();
@@ -123,7 +123,7 @@ List<Person> results =
 
 我们可以通过添加额外的参数来增强请求，以便使用`QueryBuilders`方法定制查询:
 
-```
+```java
 SearchSourceBuilder builder = new SearchSourceBuilder()
   .postFilter(QueryBuilders.rangeQuery("age").from(5).to(15));
 
@@ -138,7 +138,7 @@ SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
 
 `get()`和`()`方法允许从集群中获取或删除一个 JSON 文档，使用它的 id:
 
-```
+```java
 GetRequest getRequest = new GetRequest("people");
 getRequest.id(id);
 
@@ -161,27 +161,27 @@ DeleteResponse deleteResponse = client.delete(deleteRequest, RequestOptions.DEFA
 
 `matchAllQuery()`方法返回一个匹配集群中所有文档的`QueryBuilder`对象:
 
-```
+```java
 QueryBuilder matchAllQuery = QueryBuilders.matchAllQuery();
 ```
 
 `rangeQuery()`匹配字段值在一定范围内的文档:
 
-```
+```java
 QueryBuilder matchDocumentsWithinRange = QueryBuilders
   .rangeQuery("price").from(15).to(100)
 ```
 
 通过提供字段名(如`fullName`)和相应的值(如`John Doe`),`matchQuery()`方法将所有文档与这些字段的值进行匹配:
 
-```
+```java
 QueryBuilder matchSpecificFieldQuery= QueryBuilders
   .matchQuery("fullName", "John Doe");
 ```
 
 我们还可以使用`multiMatchQuery()`方法来构建多字段版本的匹配查询:
 
-```
+```java
 QueryBuilder matchSpecificFieldQuery= QueryBuilders.matchQuery(
   "Text I am looking for", "field_1", "field_2^3", "*_field_wildcard");
 ```
@@ -194,7 +194,7 @@ QueryBuilder matchSpecificFieldQuery= QueryBuilders.matchQuery(
 
 如果您更熟悉 Lucene 查询语法，您可以使用 `simpleQueryStringQuery()`方法定制搜索查询:
 
-```
+```java
 QueryBuilder simpleStringQuery = QueryBuilders
   .simpleQueryStringQuery("+John -Doe OR Janette");
 ```

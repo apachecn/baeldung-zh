@@ -12,7 +12,7 @@
 
 设置默认列值的第一种方法是**将其直接设置为实体属性值**:
 
-```
+```java
 @Entity
 public class User {
     @Id
@@ -25,7 +25,7 @@ public class User {
 
 现在，每次我们使用`new`操作符创建一个实体时，它都会设置我们提供的默认值:
 
-```
+```java
 @Test
 void saveUser_shouldSaveWithDefaultFieldValues() {
     User user = new User();
@@ -41,7 +41,7 @@ void saveUser_shouldSaveWithDefaultFieldValues() {
 
 当我们查看 SQL 表定义时，我们不会在其中看到任何默认值:
 
-```
+```java
 create table user
 (
     id     bigint not null constraint user_pkey primary key,
@@ -53,7 +53,7 @@ create table user
 
 因此，**如果我们用`null`覆盖它们，实体将被保存，没有任何错误**:
 
-```
+```java
 @Test
 void saveUser_shouldSaveWithNullName() {
     User user = new User();
@@ -72,7 +72,7 @@ void saveUser_shouldSaveWithNullName() {
 
 要在 SQL 表定义中直接创建**默认值，我们可以使用`@Column`注释并设置其`columnDefinition`参数:**
 
-```
+```java
 @Entity
 public class User {
     @Id
@@ -91,7 +91,7 @@ public class User {
 
 使用这种方法，默认值将出现在 SQL 表定义中:
 
-```
+```java
 create table user
 (
     id     bigint not null constraint user_pkey primary key,
@@ -103,7 +103,7 @@ create table user
 
 实体将使用默认值正确保存:
 
-```
+```java
 @Test
 void saveUser_shouldSaveWithDefaultSqlValues() {
     User user = new User();

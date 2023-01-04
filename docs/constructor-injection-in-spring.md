@@ -10,7 +10,7 @@
 
 首先，我们需要在我们的`pom.xml`中导入`spring-context`依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context</artifactId>
@@ -38,7 +38,7 @@ This article will compare and contrast the use of annotations related to depende
 
 Java 配置文件看起来类似于 Java 对象，但有一些附加注释:
 
-```
+```java
 @Configuration
 @ComponentScan("com.baeldung.constructordi")
 public class Config {
@@ -57,7 +57,7 @@ public class Config {
 
 这里我们使用注释来通知 Spring runtime 这个类提供了 bean 定义(`@Bean`注释)，并且包`com.baeldung.spring` 需要执行额外 bean 的上下文扫描。接下来，我们定义一个`Car`类:
 
-```
+```java
 @Component
 public class Car {
 
@@ -73,7 +73,7 @@ Spring 在进行包扫描时会遇到我们的`Car` 类，并且会通过调用`
 
 通过调用`Config` 类的`@Bean` 注释方法，我们将获得`Engine and Transmission`的实例。最后，我们需要使用我们的 POJO 配置引导一个`ApplicationContext` :
 
-```
+```java
 ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
 Car car = context.getBean(Car.class);
 ```
@@ -88,7 +88,7 @@ Car car = context.getBean(Car.class);
 
 用基于构造函数的依赖注入来配置 Spring runtime 的另一种方法是使用 XML 配置文件:
 
-```
+```java
 <bean id="toyota" class="com.baeldung.constructordi.domain.Car">
     <constructor-arg index="0" ref="engine"/>
     <constructor-arg index="1" ref="transmission"/>
@@ -110,7 +110,7 @@ Car car = context.getBean(Car.class);
 
 在这种情况下，我们需要使用`ClassPathXmlApplicationContext`引导我们的 Spring 应用程序上下文:
 
-```
+```java
 ApplicationContext context = new ClassPathXmlApplicationContext("baeldung.xml");
 Car car = context.getBean(Car.class);
 ```
@@ -121,7 +121,7 @@ Car car = context.getBean(Car.class);
 
 第一个好处是可测试性。假设我们要对一个使用字段注入的 Spring bean 进行单元测试:
 
-```
+```java
 public class UserService {
 
     @Autowired 

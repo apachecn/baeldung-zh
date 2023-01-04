@@ -144,7 +144,7 @@ Istio 为网格内的所有服务通信生成详细的遥测信息，如指标�
 
 有几种方法可以安装 Istio，但最简单的方法是下载并解压特定操作系统(如 Windows)的最新版本。解压缩后的包包含位于`bin`目录中的`istioctl`客户端二进制文件。我们**可以使用`istioctl`在目标 Kubernetes 集群上安装 Istio** :
 
-```
+```java
 istioctl install --set profile=demo -y
 ```
 
@@ -152,7 +152,7 @@ istioctl install --set profile=demo -y
 
 最后，当我们在这个 Kubernetes 集群上部署任何应用程序时，我们需要**指示 Istio 自动注入 Envoy sidecar 代理**:
 
-```
+```java
 kubectl label namespace default istio-injection=enabled
 ```
 
@@ -170,7 +170,7 @@ kubectl label namespace default istio-injection=enabled
 
 在像 Minikube 这样的 Kubernetes 集群上部署容器化的[工作负载相当简单。我们将使用`Deployment` 和`Service`资源类型来声明和访问工作负载。通常，我们在 YAML 文件中定义它们:](/web/20221029013823/https://www.baeldung.com/spring-boot-minikube)
 
-```
+```java
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
@@ -210,7 +210,7 @@ spec:
 
 使用`kubectl`部署这些资源也相当简单:
 
-```
+```java
 kubectl apply -f booking-service.yaml -f inventory-service.yaml -f shipping-service.yaml
 ```
 
@@ -222,7 +222,7 @@ kubectl apply -f booking-service.yaml -f inventory-service.yaml -f shipping-serv
 
 为此，我们将为我们的应用程序创建一个网关和一个虚拟服务:
 
-```
+```java
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
@@ -272,7 +272,7 @@ spec:
 
 我们可以使用虚拟服务的路由规则来实现这一点:
 
-```
+```java
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -314,7 +314,7 @@ spec:
 
 在 Istio 中，当调用像`inventory-service`这样的服务时，我们可以使用`DestinationRule`中的`trafficPolicy`配置来应用电路中断:
 
-```
+```java
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
@@ -343,7 +343,7 @@ spec:
 
 虽然 Istio 会自动将代理服务之间的所有流量升级到相互 TLS，但这些服务仍然可以接收纯文本流量。我们可以选择使用`PeerAuthentication`策略在全网范围内实施相互 TLS:
 
-```
+```java
 apiVersion: "security.istio.io/v1beta1"
 kind: "PeerAuthentication"
 metadata:
@@ -362,7 +362,7 @@ JSON Web Token (JWT) 是**一种创建数据的标准，它的有效负载包含
 
 我们可以在 Istio 中启用授权策略，以允许访问基于 JWT 的类似`booking-service`的服务:
 
-```
+```java
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:

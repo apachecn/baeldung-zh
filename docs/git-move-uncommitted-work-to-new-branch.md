@@ -23,7 +23,7 @@ Git 是当今非常流行的版本控制系统。
 
 一个例子可以很快解释这种情况。假设我们有一个名为`myRepo`的 Git 存储库:
 
-```
+```java
 $ git branch
 * master
 
@@ -36,7 +36,7 @@ nothing to commit, working tree clean
 
 接下来，让我们做一些改变:
 
-```
+```java
 $ git status
 On branch master
 Changes not staged for commit:
@@ -61,7 +61,7 @@ no changes added to commit (use "git add" and/or "git commit -a")
 
 接下来，让我们在我们的`myRepo`项目上测试`git checkout`命令:
 
-```
+```java
 $ git branch
 * master
 
@@ -84,7 +84,7 @@ no changes added to commit (use "git add" and/or "git commit -a")
 
 如上面的命令所示，我们已经创建了`feature1`分支，并将所有未提交的变更从`master`转移到`feature1`。接下来，让我们准备并提交更改:
 
-```
+```java
 $ git add . && git commit -m'implemented feature1'
 [feature1 2ffc161] implemented feature1
  2 files changed, 2 insertions(+)
@@ -104,7 +104,7 @@ Date:   ...
 
 现在，让我们切换回`master`分支，检查我们是否没有改变它:
 
-```
+```java
 $ git checkout master
 Switched to branch 'master'
 $ git status
@@ -127,7 +127,7 @@ Date:   ...
 
 接下来，让我们对`myRepo`项目进行与`git checkout -b` 相同的测试:
 
-```
+```java
 $ git branch
   feature1
 * master
@@ -150,7 +150,7 @@ Untracked files:
 
 接下来，让我们使用`git` `switch`命令将这些未提交的变更移动到一个名为`feature2`的新分支:
 
-```
+```java
 $ git switch -C feature2
 Switched to a new branch 'feature2'
 
@@ -183,7 +183,7 @@ Date:   ...
 
 接下来，让我们切换回`master`分支，检查它是否未被修改:
 
-```
+```java
 $ git switch master
 Switched to branch 'master'
 

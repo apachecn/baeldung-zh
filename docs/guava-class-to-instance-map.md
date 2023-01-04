@@ -16,7 +16,7 @@
 
 我们将从在`pom.xml`中添加 Google Guava 库依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -34,26 +34,26 @@
 
 *   使用`of()`方法创建空地图:
 
-    ```
+    ```java
     ImmutableClassToInstanceMap.of()
     ```
 
 *   使用`of(Class<T> type, T value)`方法创建单入口映射:
 
-    ```
+    ```java
     ImmutableClassToInstanceMap.of(Save.class, new Save());
     ```
 
 *   使用接受另一个地图作为参数的`copyOf()`方法。它将创建一个与参数:
 
-    ```
+    ```java
     ImmutableClassToInstanceMap.copyOf(someMap)
     ```
 
     中提供的 map 条目相同的 map
 *   使用构建器:
 
-    ```
+    ```java
     ImmutableClassToInstanceMap.<Action>builder()
       .put(Save.class, new Save())
       .put(Open.class, new Open())
@@ -67,14 +67,14 @@
 
 *   使用`create()`方法制作一个由`HashMap` :
 
-    ```
+    ```java
     MutableClassToInstanceMap.create();
     ```
 
     支持的实例
 *   使用`create(Map<Class<? extends B>, B> backingMap)`生成一个由提供的空地图支持的实例:
 
-    ```
+    ```java
     MutableClassToInstanceMap.create(new HashMap());
     ```
 
@@ -84,14 +84,14 @@
 
 *   第一种方法是`<T extends B> T getInstance(Class<T> type)` :
 
-    ```
+    ```java
     Action openAction = map.get(Open.class);
     Delete deleteAction = map.getInstance(Delete.class);
     ```
 
 *   第二种方法是`<T extends B> T putInstance(Class<T> type, @Nullable T value)` :
 
-    ```
+    ```java
     Action newOpen = map.put(Open.class, new Open());
     Delete newDelete = map.putInstance(Delete.class, new Delete());
     ```

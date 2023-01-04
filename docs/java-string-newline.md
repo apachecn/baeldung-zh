@@ -30,7 +30,7 @@ Explore various ways to search for a substring in a String with performance benc
 
 对于基于 Unix/Linux/新 Mac 的操作系统，我们可以使用“`\n”:`
 
-```
+```java
 String line1 = "Humpty Dumpty sat on a wall.";
 String line2 = "Humpty Dumpty had a great fall.";
 String rhyme = line1 + "\n" + line2;
@@ -38,13 +38,13 @@ String rhyme = line1 + "\n" + line2;
 
 如果我们在基于 Windows 的操作系统上，我们可以使用“`\r\n”:`
 
-```
+```java
 rhyme = line1 + "\r\n" + line2;
 ```
 
 对于旧的基于 Mac 的操作系统，我们可以使用“`\r”:`
 
-```
+```java
 rhyme = line1 + "\r" + line2;
 ```
 
@@ -56,13 +56,13 @@ rhyme = line1 + "\r" + line2;
 
 **例如，使用`System.lineSeparator()`给出一个行分隔符:**
 
-```
+```java
 rhyme = line1 + System.lineSeparator() + line2;
 ```
 
 或者我们也可以用`System.getProperty(“line.separator”)` :
 
-```
+```java
 rhyme = line1 + System.getProperty("line.separator") + line2;
 ```
 
@@ -72,7 +72,7 @@ rhyme = line1 + System.getProperty("line.separator") + line2;
 
 如果我们使用类似于 [`System.out.printf`](/web/20221128040625/https://www.baeldung.com/java-printstream-printf) 或 [`String.format`](/web/20221128040625/https://www.baeldung.com/string/format) 的东西，那么**平台独立换行符`%n`可以直接在字符串**内使用:
 
-```
+```java
 rhyme = "Humpty Dumpty sat on a wall.%nHumpty Dumpty had a great fall.";
 ```
 
@@ -92,7 +92,7 @@ rhyme = "Humpty Dumpty sat on a wall.%nHumpty Dumpty had a great fall.";
 
 我们可以使用 HTML break 标签`<br>`来换行:
 
-```
+```java
 rhyme = line1 + "<br>" + line2;
 ```
 
@@ -102,7 +102,7 @@ rhyme = line1 + "<br>" + line2;
 
 如果文本包含在`<pre>`或`<textarea>`标签中，我们可以使用`‘\n'`换行:
 
-```
+```java
 rhyme = line1 + "\n" + line2;
 ```
 
@@ -110,7 +110,7 @@ rhyme = line1 + "\n" + line2;
 
 最后，我们可以使用 Unicode 字符`“& #13;” `(回车)和`“& #10;” `(换行)来换行。例如，在`<textarea>`标签中，我们可以使用以下两者之一:
 
-```
+```java
 rhyme = line1 + "
 " + line2;
 rhyme = line1 + "
@@ -119,7 +119,7 @@ rhyme = line1 + "
 
 对于`<pre>`标签，下面的两行都可以使用:
 
-```
+```java
 rhyme = line1 + "
 " + line2;
 rhyme = line1 + "

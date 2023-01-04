@@ -10,14 +10,14 @@
 
 Jackson 有一个简单但有用的方法来全局控制当映射被序列化时空值会发生什么:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 mapper.setSerializationInclusion(Include.NON_NULL);
 ```
 
 现在，通过此映射器序列化的映射对象中的任何空值都将被忽略:
 
-```
+```java
 @Test
 public void givenIgnoringNullValuesInMap_whenWritingMapObjectWithNullValue_thenIgnored() 
   throws JsonProcessingException {
@@ -41,7 +41,7 @@ public void givenIgnoringNullValuesInMap_whenWritingMapObjectWithNullValue_thenI
 
 默认情况下， **Jackson 不允许序列化带有空键**的地图。如果您尝试写出这样的地图，您将会得到以下异常:
 
-```
+```java
 c.f.j.c.JsonGenerationException: 
   Null key for a Map not allowed in JSON (use a converting NullKeySerializer?)
     at c.f.j.d.s.i.FailingSerializer.serialize(FailingSerializer.java:36)
@@ -49,7 +49,7 @@ c.f.j.c.JsonGenerationException:
 
 然而，这个库足够灵活，您可以定义一个定制的空键序列化器并覆盖默认行为:
 
-```
+```java
 class MyDtoNullKeySerializer extends StdSerializer<Object> {
     public MyDtoNullKeySerializer() {
         this(null);
@@ -69,7 +69,7 @@ class MyDtoNullKeySerializer extends StdSerializer<Object> {
 
 现在，带有空键的映射就可以正常工作了——空键将被写成一个空字符串:
 
-```
+```java
 @Test
 public void givenAllowingMapObjectWithNullKey_whenWriting_thenCorrect() 
 throws JsonProcessingException {

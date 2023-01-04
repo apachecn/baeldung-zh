@@ -12,7 +12,7 @@
 
 直角三角形是我们将要学习的最简单的三角形。让我们快速看一下我们想要获得的输出:
 
-```
+```java
 *
 **
 ***
@@ -24,7 +24,7 @@
 
 因此，让我们使用两个`for`循环来构建三角形:
 
-```
+```java
 public static String printARightTriangle(int N) {
     StringBuilder result = new StringBuilder();
     for (int r = 1; r <= N; r++) {
@@ -41,7 +41,7 @@ public static String printARightTriangle(int N) {
 
 现在，让我们来看看等腰三角形的形状:
 
-```
+```java
  *
    ***
   *****
@@ -61,7 +61,7 @@ public static String printARightTriangle(int N) {
 
 基于以上观察，让我们创建第二个示例:
 
-```
+```java
 public static String printAnIsoscelesTriangle(int N) {
     StringBuilder result = new StringBuilder();
     for (int r = 1; r <= N; r++) {
@@ -83,7 +83,7 @@ public static String printAnIsoscelesTriangle(int N) {
 
 我们将使用 for 循环来迭代三角形的行，就像我们在前面的例子中所做的那样。然后，我们将使用`StringUtils.repeat()`方法为每一行生成必要的字符:
 
-```
+```java
 public static String printAnIsoscelesTriangleUsingStringUtils(int N) {
     StringBuilder result = new StringBuilder();
 
@@ -102,7 +102,7 @@ public static String printAnIsoscelesTriangleUsingStringUtils(int N) {
 
 查看前面的示例，我们注意到第一行需要最大数量的`N – 1`个空格，最后一行需要最大数量的`N x 2 – 1`个星号:
 
-```
+```java
 String helperString = StringUtils.repeat(' ', N - 1) + StringUtils.repeat('*', N * 2 - 1);
 // for N = 10, helperString = "    *********"
 ```
@@ -111,7 +111,7 @@ String helperString = StringUtils.repeat(' ', N - 1) + StringUtils.repeat('*', N
 
 现在，让我们看看完整的示例:
 
-```
+```java
 public static String printAnIsoscelesTriangleUsingSubstring(int N) {
     StringBuilder result = new StringBuilder();
     String helperString = StringUtils.repeat(' ', N - 1) + StringUtils.repeat('*', N * 2 - 1);

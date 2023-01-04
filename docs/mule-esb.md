@@ -36,7 +36,7 @@ ESB 还用于处理多种类型的通信协议，以及需要消息路由功能�
 
 例如，我们可以使用 Java 组件获得消息的实例。这个组件类实现了来自`org.mule.api.lifecycle`包的`Callable`接口:
 
-```
+```java
 public Object onCall(MuleEventContext eventContext) throws Exception {
     MuleMessage message = eventContext.getMessage();
     message.setPayload("Message payload is changed here.");
@@ -54,7 +54,7 @@ public Object onCall(MuleEventContext eventContext) throws Exception {
 
 我们可以通过在各自的范围内调用相关的 setter 和 getter 方法来分别设置和获取出站和入站属性:
 
-```
+```java
 message.setProperty(
   "outboundKey", "outboundpropertyvalue", PropertyScope.OUTBOUND);
 String inboundProp = (String) message.getInboundProperty("outboundKey");
@@ -82,14 +82,14 @@ String inboundProp = (String) message.getInboundProperty("outboundKey");
 
 我们可以将 HTTP 侦听器配置为:
 
-```
+```java
 <http:listener-config name="HTTP_Listener_Configuration"
   host="localhost" port="8081" doc:name="HTTP Listener Configuration"/>
 ```
 
 流组件必须在`<flow>`标记内。因此，具有多个组件的示例流程如下:
 
-```
+```java
 <flow name="Flow">
     <http:listener 
       config-ref="HTTP_Listener_Configuration" 
@@ -116,7 +116,7 @@ String inboundProp = (String) message.getInboundProperty("outboundKey");
 
 之后，放置一个定制的 Java transformer 类，它在接收到消息后转换有效负载:
 
-```
+```java
 public Object transformMessage(
   MuleMessage message, 
   String outputEncoding) throws TransformerException {
@@ -142,7 +142,7 @@ Java 组件检索由第一个流设置的出站属性，并返回成为消息有
 
 该任务的`transformMessage()`方法:
 
-```
+```java
 public Object transformMessage(
   MuleMessage message, 
   String outputEncoding) throws TransformerException {
@@ -171,7 +171,7 @@ public Object transformMessage(
 
 在 Maven 的`settings.xml`文件中，我们首先需要添加`org.mule.tools`插件组:
 
-```
+```java
 <pluginGroups>
     <pluginGroup>org.mule.tools</pluginGroup>
 </pluginGroups>
@@ -179,7 +179,7 @@ public Object transformMessage(
 
 然后，我们需要添加一个`profile` 标签，说明 Maven 应该在哪里寻找 Mulesoft 工件:
 
-```
+```java
 <profile>
     <id>Mule Org</id>
     <activation>
@@ -198,7 +198,7 @@ public Object transformMessage(
 
 最后，我们可以使用`mule-project-archetype:create`创建项目:
 
-```
+```java
 mvn mule-project-archetype:create -DartifactId=muleesb -DmuleVersion=3.9.0
 ```
 
@@ -212,7 +212,7 @@ mvn mule-project-archetype:create -DartifactId=muleesb -DmuleVersion=3.9.0
 
 如果我们还没有，我们可以编辑我们的`pom.xml ` [从 MuleSoft 的 Maven 资源库](https://web.archive.org/web/20220803035136/https://repository.mulesoft.org/nexus/content/repositories/releases/org/mule/tools/maven/mule-maven-plugin/)中提取一个:
 
-```
+```java
 <plugin>
     <groupId>org.mule.tools.maven</groupId>
     <artifactId>mule-maven-plugin</artifactId>

@@ -20,7 +20,7 @@ Cassandra 容器在 [Cassandra Testcontainers 模块](https://web.archive.org/we
 
 与 [`cassandra-unit`](/web/20220707143816/https://www.baeldung.com/spring-data-cassandra-tutorial) 库`,`不同，Testcontainers 库**与 JUnit 5** 完全兼容。让我们首先列出所需的 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.testcontainers</groupId>
     <artifactId>testcontainers</artifactId>
@@ -47,7 +47,7 @@ Cassandra 容器在 [Cassandra Testcontainers 模块](https://web.archive.org/we
 
 首先，我们需要用`@SpringBootTest`和`@Testcontainers`注释我们的测试类:
 
-```
+```java
 @SpringBootTest
 @Testcontainers
 class CassandraSimpleIntegrationTest {}
@@ -55,7 +55,7 @@ class CassandraSimpleIntegrationTest {}
 
 然后，我们可以**定义一个 Cassandra 容器，并公开它的** **特定端口**:
 
-```
+```java
 @Container
 public static final CassandraContainer cassandra 
   = (CassandraContainer) new CassandraContainer("cassandra:3.11.2").withExposedPorts(9042); 
@@ -65,7 +65,7 @@ public static final CassandraContainer cassandra
 
 使用上面的方法，Testcontainers 库自动为我们**启动一个 dockerized Cassandra 容器实例，与测试类**的生命周期保持一致:
 
-```
+```java
 @Test
 void givenCassandraContainer_whenSpringContextIsBootstrapped_thenContainerIsRunningWithNoExceptions() {
     assertThat(cassandra.isRunning()).isTrue();
@@ -78,7 +78,7 @@ void givenCassandraContainer_whenSpringContextIsBootstrapped_thenContainerIsRunn
 
 为了让 Spring 数据能够**与 Cassandra 容器**建立连接，我们需要提供一些连接属性。我们将通过`java.lang.System`类定义系统属性来覆盖默认的 Cassandra 连接属性:
 
-```
+```java
 @BeforeAll
 static void setupCassandraConnectionProperties() {
     System.setProperty("spring.data.cassandra.keyspace-name", KEYSPACE_NAME);
@@ -93,7 +93,7 @@ static void setupCassandraConnectionProperties() {
 
 作为在 Cassandra 中创建任何表之前的最后一步**，我们需要创建一个键空间:**
 
-```
+```java
 private static void createKeyspace(Cluster cluster) {
     try (Session session = cluster.connect()) {
         session.execute("CREATE KEYSPACE IF NOT EXISTS " + KEYSPACE_NAME +
@@ -113,7 +113,7 @@ Apache Cassandra **的 Spring Data 将核心的 Spring 概念应用到使用 Cas
 
 让我们从准备一个简单的 DAO 类开始，稍后我们将在集成测试中使用它:
 
-```
+```java
 @Table
 public class Car {
 
@@ -140,7 +140,7 @@ public class Car {
 
 Spring Data 使得为我们的 DAO 创建存储库变得非常简单。首先，我们需要在我们的 Spring Boot 主类中启用 Cassandra 存储库:
 
-```
+```java
 @SpringBootApplication
 @EnableCassandraRepositories(basePackages = "org.baeldung.springcassandra.repository")
 public class SpringCassandraApplication {}
@@ -148,14 +148,14 @@ public class SpringCassandraApplication {}
 
 然后，我们只需要创建一个扩展`CassandraRepository`的接口:
 
-```
+```java
 @Repository
 public interface CarRepository extends CassandraRepository<Car, UUID> {}
 ```
 
 在开始集成测试之前，我们需要定义两个额外的属性:
 
-```
+```java
 spring.data.cassandra.local-datacenter=datacenter1
 spring.data.cassandra.schema-action=create_if_not_exists
 ```
@@ -172,7 +172,7 @@ spring.data.cassandra.schema-action=create_if_not_exists
 
 让我们从测试向 Cassandra 数据库插入新记录开始:
 
-```
+```java
 @Test
 void givenValidCarRecord_whenSavingIt_thenRecordIsSaved() {
     UUID carId = UUIDs.timeBased();
@@ -189,7 +189,7 @@ void givenValidCarRecord_whenSavingIt_thenRecordIsSaved() {
 
 然后，我们可以编写一个类似的测试来更新现有的数据库记录:
 
-```
+```java
 @Test
 void givenExistingCarRecord_whenUpdatingIt_thenRecordIsUpdated() {
     UUID carId = UUIDs.timeBased();
@@ -207,7 +207,7 @@ void givenExistingCarRecord_whenUpdatingIt_thenRecordIsUpdated() {
 
 最后，让我们编写一个删除现有数据库记录的测试:
 
-```
+```java
 @Test
 void givenExistingCarRecord_whenDeletingIt_thenRecordIsDeleted() {
     UUID carId = UUIDs.timeBased();
@@ -224,7 +224,7 @@ void givenExistingCarRecord_whenDeletingIt_thenRecordIsDeleted() {
 
 大多数时候，当使用集成测试时，我们希望在多个测试中重用同一个数据库实例。我们可以通过使用多个嵌套的测试类来共享同一个容器实例:
 
-```
+```java
 @Testcontainers
 @SpringBootTest
 class CassandraNestedIntegrationTest {

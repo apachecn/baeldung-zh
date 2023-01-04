@@ -39,7 +39,7 @@ Lagom 是一个开源框架，构建时考虑到了从单片到微服务驱动�
 
 创建一个项目文件夹`lagom-hello-world`，后面是构建文件 **`build.sbt`** 。Lagom 系统通常由一组`sbt`构建组成，每个构建对应一组相关的服务:
 
-```
+```java
 organization in ThisBuild := "com.baeldung"
 
 scalaVersion in ThisBuild := "2.11.8"
@@ -94,14 +94,14 @@ API 项目包含实现所依赖的服务接口。
 
 另外，如果我们在这个项目中使用 Eclipse IDE 的话,`sbteclipse`插件会很方便。下面的代码显示了两个插件的内容:
 
-```
+```java
 addSbtPlugin("com.lightbend.lagom" % "lagom-sbt-plugin" % "1.3.1")
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "3.0.0")
 ```
 
 创建 **`project/build.properties`** 文件并指定要使用的`sbt`版本:
 
-```
+```java
 sbt.version=0.13.11
 ```
 
@@ -127,7 +127,7 @@ sbt.version=0.13.11
 
 在`greeting-api`项目中，我们指定了以下接口:
 
-```
+```java
 public interface GreetingService extends Service {
 
     public ServiceCall<NotUsed, String> handleGreetFrom(String user);
@@ -154,7 +154,7 @@ public interface GreetingService extends Service {
 
 同样，我们在`weather-api`项目中定义了`WeatherService`接口。`weatherStatsForToday()`方法和`descriptor()`方法几乎是不言自明的:
 
-```
+```java
 public interface WeatherService extends Service {
 
     public ServiceCall<NotUsed, WeatherStats> weatherStatsForToday();
@@ -172,7 +172,7 @@ public interface WeatherService extends Service {
 
 `WeatherStats`定义为一个枚举，具有不同天气的样本值和随机查找以返回当天的天气预报:
 
-```
+```java
 public enum WeatherStats {
 
     STATS_RAINY("Going to Rain, Take Umbrella"), 
@@ -192,7 +192,7 @@ public enum WeatherStats {
 
 现在让我们看看 greeting-impl 项目中的持久实体，`GreetingEntity`:
 
-```
+```java
 public class GreetingEntity extends 
   PersistentEntity<GreetingCommand, GreetingEvent, GreetingState> {
 
@@ -230,7 +230,7 @@ Lagom 提供了`[PersistentEntity<Command, Entity, Event>](https://web.archive.o
 
 Lagom 遵循`GreetingCommand`和`GreetingEvent`接口的约定，将所有支持的命令和事件放在一起:
 
-```
+```java
 public interface GreetingCommand extends Jsonable {
 
     @JsonDeserialize
@@ -247,7 +247,7 @@ public interface GreetingCommand extends Jsonable {
 }
 ```
 
-```
+```java
 public interface GreetingEvent extends Jsonable {
     class ReceivedGreetingEvent implements GreetingEvent {
 
@@ -263,7 +263,7 @@ public interface GreetingEvent extends Jsonable {
 
 ### 7.1。问候服务
 
-```
+```java
 public class GreetingServiceImpl implements GreetingService {
 
     @Inject
@@ -311,7 +311,7 @@ public class GreetingServiceImpl implements GreetingService {
 
 为了向 Lagom 注册服务描述符接口`GreetingService`的实现，让我们创建扩展`AbstractModule`并实现`ServiceGuiceSupport`的`GreetingServiceModule`类:
 
-```
+```java
 public class GreetingServiceModule extends AbstractModule 
   implements ServiceGuiceSupport {
 
@@ -326,7 +326,7 @@ public class GreetingServiceModule extends AbstractModule
 
 另外，Lagom 内部使用 Play 框架。因此，我们可以在`src/main/resources/application.conf`文件中将我们的模块添加到玩家的已启用模块列表中:
 
-```
+```java
 play.modules.enabled
   += com.baeldung.lagom.helloworld.greeting.impl.GreetingServiceModule
 ```
@@ -335,7 +335,7 @@ play.modules.enabled
 
 看完`GreetingServiceImpl`，`WeatherServiceImpl`非常简单明了:
 
-```
+```java
 public class WeatherServiceImpl implements WeatherService {
 
     @Override
@@ -348,7 +348,7 @@ public class WeatherServiceImpl implements WeatherService {
 
 我们按照与上面问候模块相同的步骤向 Lagom 注册天气模块:
 
-```
+```java
 public class WeatherServiceModule 
   extends AbstractModule 
   implements ServiceGuiceSupport {
@@ -364,7 +364,7 @@ public class WeatherServiceModule
 
 另外，将天气模块注册到 Play 的框架启用模块列表中:
 
-```
+```java
 play.modules.enabled
   += com.baeldung.lagom.helloworld.weather.impl.WeatherServiceModule
 ```
@@ -375,7 +375,7 @@ Lagom 允许用一个命令运行任意数量的服务。
 
 我们可以通过点击下面的命令来开始我们的项目:
 
-```
+```java
 sbt lagom:runAll
 ```
 
@@ -383,7 +383,7 @@ sbt lagom:runAll
 
 我们可以专注于我们的逻辑，Lagom 处理编译和重新加载。一旦成功启动，我们将看到以下输出:
 
-```
+```java
 ................
 [info] Cassandra server running at 127.0.0.1:4000
 [info] Service locator is running at http://localhost:8000
@@ -395,19 +395,19 @@ sbt lagom:runAll
 
 一旦成功启动，我们可以发出 curl 请求问候:
 
-```
+```java
 curl http://localhost:9000/api/greeting/Amit
 ```
 
 我们将在控制台上看到以下输出:
 
-```
+```java
 Hello Amit! Today's weather stats: Going to Rain, Take Umbrella
 ```
 
 为现有用户运行相同的 curl 请求将会更改问候语:
 
-```
+```java
 Hello Again Amit! Today's weather stats: Going to Rain, Take Umbrella
 ```
 

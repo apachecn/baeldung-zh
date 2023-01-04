@@ -34,7 +34,7 @@ Spring Cloud 网飞将网飞 OSS 产品集成到了 Spring Cloud 生态系统中
 
 首先，我们必须将`[spring-cloud-starter-feign](https://web.archive.org/web/20220626202852/https://search.maven.org/search?q=g:org.springframework.cloud%20AND%20a:spring-cloud-starter-feign)`和`[spring-cloud-dependencies](https://web.archive.org/web/20220626202852/https://search.maven.org/search?q=g:org.springframework.cloud%20AND%20a:spring-cloud-dependencies)` 依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-feign</artifactId>
@@ -57,7 +57,7 @@ Spring Cloud 网飞将网飞 OSS 产品集成到了 Spring Cloud 生态系统中
 
 对于我们使用 Spring Cloud 网飞 Feign 项目开发的每个示例，我们使用以下导入:
 
-```
+```java
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 ```
@@ -70,7 +70,7 @@ import org.springframework.cloud.netflix.feign.EnableFeignClients;
 
 这里唯一的区别是我们的进口来自不同的包装:
 
-```
+```java
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 ```

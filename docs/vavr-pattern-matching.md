@@ -12,7 +12,7 @@ Vavr 的模式匹配的好处是，它让我们不用写一堆`switch` cases 或
 
 我们可以通过进行以下导入来使用模式匹配 API:
 
-```
+```java
 import static io.vavr.API.*;
 ```
 
@@ -20,7 +20,7 @@ import static io.vavr.API.*;
 
 正如我们在上一篇文章中看到的，模式匹配可以用来替换`switch`块:
 
-```
+```java
 @Test
 public void whenSwitchWorksAsMatcher_thenCorrect() {
     int input = 2;
@@ -49,7 +49,7 @@ public void whenSwitchWorksAsMatcher_thenCorrect() {
 
 或者多个`if`语句:
 
-```
+```java
 @Test
 public void whenIfWorksAsMatcher_thenCorrect() {
     int input = 3;
@@ -83,7 +83,7 @@ public void whenIfWorksAsMatcher_thenCorrect() {
 
 `switch`和`if`方法可以用一段更短更简洁的代码来代替，如下所示:
 
-```
+```java
 @Test
 public void whenMatchworks_thenCorrect() {
     int input = 2;
@@ -99,7 +99,7 @@ public void whenMatchworks_thenCorrect() {
 
 如果输入不匹配，则评估通配符模式:
 
-```
+```java
 @Test
 public void whenMatchesDefault_thenCorrect() {
     int input = 5;
@@ -113,7 +113,7 @@ public void whenMatchesDefault_thenCorrect() {
 
 如果没有通配符模式，并且输入不匹配，我们将得到一个匹配错误:
 
-```
+```java
 @Test(expected = MatchError.class)
 public void givenNoMatchAndNoDefault_whenThrows_thenCorrect() {
     int input = 5;
@@ -131,7 +131,7 @@ public void givenNoMatchAndNoDefault_whenThrows_thenCorrect() {
 
 然而，包含通配符模式的另一种替代方法是将匹配操作的返回值包装在一个`Option`实例中:
 
-```
+```java
 @Test
 public void whenMatchWorksWithOption_thenCorrect() {
     int i = 10;
@@ -149,7 +149,7 @@ public void whenMatchWorksWithOption_thenCorrect() {
 
 Vavr 附带了一些内置的谓词，使我们的代码更易于阅读。因此，我们最初的例子可以用谓词进一步改进:
 
-```
+```java
 @Test
 public void whenMatchWorksWithPredicate_thenCorrect() {
     int i = 3;
@@ -165,7 +165,7 @@ public void whenMatchWorksWithPredicate_thenCorrect() {
 
 Vavr 提供了比这更多的谓词。例如，我们可以让我们的条件检查输入的类别:
 
-```
+```java
 @Test
 public void givenInput_whenMatchesClass_thenCorrect() {
     Object obj=5;
@@ -179,7 +179,7 @@ public void givenInput_whenMatchesClass_thenCorrect() {
 
 或者输入是否为`null`:
 
-```
+```java
 @Test
 public void givenInput_whenMatchesNull_thenCorrect() {
     Object obj=5;
@@ -193,7 +193,7 @@ public void givenInput_whenMatchesNull_thenCorrect() {
 
 我们可以使用`contains`样式，而不是用`equals`样式匹配值。这样，我们可以用`isIn`谓词检查输入是否存在于值列表中:
 
-```
+```java
 @Test
 public void givenInput_whenContainsWorks_thenCorrect() {
     int i = 5;
@@ -210,7 +210,7 @@ public void givenInput_whenContainsWorks_thenCorrect() {
 
 一个实际的例子是，我们想要检查一个数字是否包含在一个列表中，就像我们在前面的例子中所做的那样。问题是这个列表也包含空值。因此，我们希望应用一个过滤器，除了拒绝不在列表中的数字，还将拒绝空值:
 
-```
+```java
 @Test
 public void givenInput_whenMatchAllWorks_thenCorrect() {
     Integer i = null;
@@ -228,7 +228,7 @@ public void givenInput_whenMatchAllWorks_thenCorrect() {
 
 如果找不到这样的候选人，那么我们只能接受 1986 年出生的人，我们也希望在我们的准则中明确这一点:
 
-```
+```java
 @Test
 public void givenInput_whenMatchesAnyOfWorks_thenCorrect() {
     Integer year = 1990;
@@ -243,7 +243,7 @@ public void givenInput_whenMatchesAnyOfWorks_thenCorrect() {
 
 为了证明这一点，我们可以否定上例中的条件，从而得到不在上述年龄组中的候选人:
 
-```
+```java
 @Test
 public void givenInput_whenMatchesNoneOfWorks_thenCorrect() {
     Integer year = 1990;
@@ -261,7 +261,7 @@ public void givenInput_whenMatchesNoneOfWorks_thenCorrect() {
 
 有了这些新知识，我们可以在前一节的第一个示例中嵌入一个谓词，并将其重写为:
 
-```
+```java
 @Test
 public void whenMatchWorksWithCustomPredicate_thenCorrect() {
     int i = 3;
@@ -276,7 +276,7 @@ public void whenMatchWorksWithCustomPredicate_thenCorrect() {
 
 如果我们需要更多的参数，我们也可以用一个函数接口来代替谓词。contains 示例可以像这样重写，虽然有点冗长，但是它给了我们更多的权力来控制我们的谓词所做的事情:
 
-```
+```java
 @Test
 public void givenInput_whenContainsWorks_thenCorrect2() {
     int i = 5;
@@ -302,7 +302,7 @@ public void givenInput_whenContainsWorks_thenCorrect2() {
 
 对象分解是将 Java 对象分解成其组成部分的过程。例如，考虑提取雇员的生物数据和雇佣信息的情况:
 
-```
+```java
 public class Employee {
 
     private String name;
@@ -314,7 +314,7 @@ public class Employee {
 
 我们可以将一个雇员的记录分解成它的组成部分:`name`和`id`。这在 Java 中非常明显:
 
-```
+```java
 @Test
 public void givenObject_whenDecomposesJavaWay_thenCorrect() {
     Employee person = new Employee("Carl", "EMP01");
@@ -341,7 +341,7 @@ public void givenObject_whenDecomposesJavaWay_thenCorrect() {
 
 上述代码可以写成如下形式:
 
-```
+```java
 @Test
 public void givenObject_whenDecomposesVavrWay_thenCorrect() {
     Employee person = new Employee("Carl", "EMP01");
@@ -366,7 +366,7 @@ public void givenObject_whenDecomposesVavrWay_thenCorrect() {
 
 这意味着我们必须教会模式匹配 API 如何分解我们的对象，从而为每个要分解的对象生成一个条目:
 
-```
+```java
 @Patterns
 class Demo {
     @Unapply
@@ -380,7 +380,7 @@ class Demo {
 
 注释处理工具将生成一个名为`DemoPatterns.java`的类，我们必须将它静态导入到我们想要应用这些模式的任何地方:
 
-```
+```java
 import static com.baeldung.vavr.DemoPatterns.*;
 ```
 
@@ -388,7 +388,7 @@ import static com.baeldung.vavr.DemoPatterns.*;
 
 例如，`java.time.LocalDate`可以分解为年、月和月中的日。让我们把它的`unapply`图案加到`Demo.java`上:
 
-```
+```java
 @Unapply
 static Tuple3<Integer, Integer, Integer> LocalDate(LocalDate date) {
     return Tuple.of(
@@ -398,7 +398,7 @@ static Tuple3<Integer, Integer, Integer> LocalDate(LocalDate date) {
 
 然后是测试:
 
-```
+```java
 @Test
 public void givenObject_whenDecomposesVavrWay_thenCorrect2() {
     LocalDate date = LocalDate.of(2017, 2, 13);
@@ -428,7 +428,7 @@ public void givenObject_whenDecomposesVavrWay_thenCorrect2() {
 
 偶数打印机:
 
-```
+```java
 public void displayEven() {
     System.out.println("Input is even");
 }
@@ -436,7 +436,7 @@ public void displayEven() {
 
 奇数打印机:
 
-```
+```java
 public void displayOdd() {
     System.out.println("Input is odd");
 }
@@ -444,7 +444,7 @@ public void displayOdd() {
 
 和匹配功能:
 
-```
+```java
 @Test
 public void whenMatchCreatesSideEffects_thenCorrect() {
     int i = 4;
@@ -459,7 +459,7 @@ public void whenMatchCreatesSideEffects_thenCorrect() {
 
 它将打印:
 
-```
+```java
 Input is even
 ```
 

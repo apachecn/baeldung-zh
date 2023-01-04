@@ -34,7 +34,7 @@ In addition, instrumenting Lightrun Metrics at runtime allows you to track down 
 
 对于验证，我们将使用`@Size` **，**一个 bean 验证注释。让我们使用用`@Size`注释的属性`middleName`来验证其在属性 *min* 和 *max:* 之间的值
 
-```
+```java
 public class User {
 
     // ...
@@ -53,7 +53,7 @@ public class User {
 
 正如我们刚刚提到的，`@Length` 是`@Size.` 的 Hibernate 特定版本，让我们使用`@Length`来加强`lastName`的范围:
 
-```
+```java
 @Entity
 public class User {
 
@@ -73,7 +73,7 @@ public class User {
 
 我们将使用`@Column`到**来表示物理数据库列的具体特征。**让我们使用`@Column`注释的`[length](https://web.archive.org/web/20220525131809/http://java.sun.com/javaee/5/docs/api/javax/persistence/Column.html#length%28%29)`属性来指定字符串值列的长度:
 
-```
+```java
 @Entity
 public class User {
 
@@ -91,7 +91,7 @@ public class User {
 
 当然，**我们可以将`@Column`与`@Size`** 一起使用，通过 bean 验证来指定数据库列属性。
 
-```
+```java
 @Entity
 public class User {
 

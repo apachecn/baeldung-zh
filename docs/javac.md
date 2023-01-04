@@ -12,7 +12,7 @@
 
 当执行`javac`工具时，我们可以指定选项和源文件:
 
-```
+```java
 javac [options] [source-files]
 ```
 
@@ -28,7 +28,7 @@ javac [options] [source-files]
 
 让我们从介绍我们将用来演示`javac`选项的类开始:
 
-```
+```java
 public class Data {
     List<String> textList = new ArrayList();
 
@@ -52,7 +52,7 @@ public class Data {
 
 让我们在包含上一节中提供的结构的目录中执行以下命令:
 
-```
+```java
 javac -d javac-target com/baeldung/javac/Data.java
 ```
 
@@ -73,20 +73,20 @@ javac -d javac-target com/baeldung/javac/Data.java
 
 `options`文件:
 
-```
+```java
 -d javac-target
 -verbose
 ```
 
 `types`文件:
 
-```
+```java
 com/baeldung/javac/Data.java
 ```
 
 我们可以像以前一样编译`Data`类型，并通过执行以下命令在控制台上打印详细消息:
 
-```
+```java
 javac @javac-args/options @javac-args/types
 ```
 
@@ -94,14 +94,14 @@ javac @javac-args/options @javac-args/types
 
 假设在`javac-args`目录中有一个名为`arguments`的文件:
 
-```
+```java
 -d javac-target -verbose
 com/baeldung/javac/Data.java
 ```
 
 让我们将这个文件输入到`javac` 中，以获得与`:`之前的两个独立文件相同的结果
 
-```
+```java
 javac @javac-args/arguments
 ```
 
@@ -129,7 +129,7 @@ javac @javac-args/arguments
 
 现在，在`javac-args`目录下创建一个名为`xlint-ops`的文件，内容如下:
 
-```
+```java
 -d javac-target
 -Xlint:rawtypes,unchecked
 com/baeldung/javac/Data.java
@@ -137,13 +137,13 @@ com/baeldung/javac/Data.java
 
 运行此命令时:
 
-```
+```java
 javac @javac-args/xlint-ops
 ```
 
 我们应该会看到`rawtypes` 和`unchecked`警告:
 
-```
+```java
 com/baeldung/javac/Data.java:7: warning: [rawtypes] found raw type: ArrayList
     List<String> textList = new ArrayList();
                                 ^

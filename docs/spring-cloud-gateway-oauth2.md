@@ -72,7 +72,7 @@ Spring Cloud Gateway 主要用于以下角色之一:
 
 我们将在本教程中使用的嵌入式 Keycloak 只是一个普通的 SpringBoot 应用程序，我们可以从 [GitHub](https://web.archive.org/web/20220903190824/https://github.com/Baeldung/spring-security-oauth) 中克隆并使用 Maven 构建它:
 
-```
+```java
 $ git clone https://github.com/Baeldung/spring-security-oauth
 $ cd oauth-rest/oauth-authorization/server
 $ mvn install
@@ -84,7 +84,7 @@ $ mvn install
 
 我们现在可以使用`spring-boot:run` maven 插件启动服务器:
 
-```
+```java
 $ mvn spring-boot:run
 ... many, many log messages omitted
 2022-01-16 10:23:20.318
@@ -105,7 +105,7 @@ $ mvn spring-boot:run
 
 报价后端需要常规的 Spring Boot 反应式 MVC 依赖关系，加上[资源服务器启动器依赖关系](https://web.archive.org/web/20220903190824/https://search.maven.org/search?q=spring-boot-starter-oauth2-resource-server):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
@@ -117,7 +117,7 @@ $ mvn spring-boot:run
 
 在主应用程序类中，我们必须使用`@EnableWebFluxSecurity`启用 web flux 安全性:
 
-```
+```java
 @SpringBootApplication
 @EnableWebFluxSecurity
 public class QuotesApplication {    
@@ -129,7 +129,7 @@ public class QuotesApplication {
 
 端点实现使用提供的`BearerAuthenticationToken`来检查当前用户是否拥有`gold`角色:
 
-```
+```java
 @RestController
 public class QuoteApi {
     private static final GrantedAuthority GOLD_CUSTOMER = new SimpleGrantedAuthority("gold");
@@ -155,7 +155,7 @@ public class QuoteApi {
 
 我们还必须提供访问身份提供者所需的配置属性:
 
-```
+```java
 spring.security.oauth2.resourceserver.opaquetoken.introspection-uri=http://localhost:8083/auth/realms/baeldung/protocol/openid-connect/token/introspect
 spring.security.oauth2.resourceserver.opaquetoken.client-id=quotes-client
 spring.security.oauth2.resourceserver.opaquetoken.client-secret=<CLIENT SECRET> 
@@ -163,13 +163,13 @@ spring.security.oauth2.resourceserver.opaquetoken.client-secret=<CLIENT SECRET>
 
 最后，要运行我们的应用程序，我们可以在 IDE 中导入它，也可以从 Maven 中运行它。项目的 POM 包含一个用于此目的的概要:
 
-```
+```java
 $ mvn spring-boot:run -Pquotes-application
 ```
 
 应用程序现在将准备好在`http://localhost:8085/quotes`为请求提供服务。我们可以使用`curl`检查它是否正在响应:
 
-```
+```java
 $ curl -v http://localhost:8085/quotes/BAEL
 ```
 
@@ -179,7 +179,7 @@ $ curl -v http://localhost:8085/quotes/BAEL
 
 保护一个充当资源服务器的 Spring Cloud Gateway 应用程序与普通的资源服务没有什么不同。因此，毫不奇怪，我们必须添加与后端服务相同的启动器依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-gateway</artifactId>
@@ -194,7 +194,7 @@ $ curl -v http://localhost:8085/quotes/BAEL
 
 相应地，我们还必须将`@EnableWebFluxSecurity`添加到我们的启动类中:
 
-```
+```java
 @SpringBootApplication
 @EnableWebFluxSecurity
 public class ResourceServerGatewayApplication {
@@ -206,7 +206,7 @@ public class ResourceServerGatewayApplication {
 
 与安全相关的配置属性与后端中使用的相同:
 
-```
+```java
 spring:
   security:
     oauth2:
@@ -219,7 +219,7 @@ spring:
 
 接下来，我们只是添加路由声明，就像我们在上一篇关于 Spring Cloud Gateway setup 的文章中所做的一样:
 
-```
+```java
 ... other properties omitted
   cloud:
     gateway:
@@ -232,7 +232,7 @@ spring:
 
 **注意，除了安全依赖和属性，我们没有改变网关本身的任何东西**。为了运行网关应用程序，我们将使用`spring-boot:run`，使用具有所需设置的特定概要文件:
 
-```
+```java
 $ mvn spring-boot:run -Pgateway-as-resource-server
 ```
 
@@ -242,7 +242,7 @@ $ mvn spring-boot:run -Pgateway-as-resource-server
 
 接下来，我们需要从 Keycloak 获得一个访问令牌。在这种情况下，获得密码的最直接方法是使用密码授权流(也称为“资源所有者”)。这意味着向 Keycloak 发出 POST 请求，传递其中一个用户的用户名/密码，以及客户机 id 和 quotes 客户机应用程序的密码:
 
-```
+```java
 $ curl -L -X POST \
   'http://localhost:8083/auth/realms/baeldung/protocol/openid-connect/token' \
   -H 'Content-Type: application/x-www-form-urlencoded' \
@@ -256,7 +256,7 @@ $ curl -L -X POST \
 
 响应将是一个 JSON 对象，包含访问令牌以及其他值:
 
-```
+```java
 {
 	"access_token": "...omitted",
 	"expires_in": 300,
@@ -271,7 +271,7 @@ $ curl -L -X POST \
 
 我们现在可以使用返回的访问令牌来访问`/quotes` API:
 
-```
+```java
 $ curl --location --request GET 'http://localhost:8086/quotes/BAEL' \
 --header 'Accept: application/json' \
 --header 'Authorization: Bearer xxxx...'
@@ -279,7 +279,7 @@ $ curl --location --request GET 'http://localhost:8086/quotes/BAEL' \
 
 它生成 JSON 格式的报价:
 
-```
+```java
 {
   "symbol":"BAEL",
   "price":12.0
@@ -288,7 +288,7 @@ $ curl --location --request GET 'http://localhost:8086/quotes/BAEL' \
 
 让我们重复这个过程，这次使用 Maxwell Smart 的访问令牌:
 
-```
+```java
 {
   "symbol":"BAEL",
   "price":10.0
@@ -297,7 +297,7 @@ $ curl --location --request GET 'http://localhost:8086/quotes/BAEL' \
 
 我们看到我们有一个更低的价格，这意味着后端能够正确地识别相关用户。我们还可以使用没有`Authorization`头的 curl 请求来检查未经身份验证的请求不会传播到后端:
 
-```
+```java
 $ curl  http://localhost:8086/quotes/BAEL
 ```
 
@@ -311,7 +311,7 @@ $ curl  http://localhost:8086/quotes/BAEL
 
 我们还需要定义我们的应用程序客户机注册细节，包括请求的范围。这些范围通知 IdP 哪组信息项将通过自省机制可用:
 
-```
+```java
 ... other propeties omitted
   security:
     oauth2:
@@ -332,7 +332,7 @@ $ curl  http://localhost:8086/quotes/BAEL
 
 最后，路由定义部分有一个重要的变化。**我们必须将`TokenRelay`过滤器添加到任何需要传播接入令牌的路由:**
 
-```
+```java
 spring:
   cloud:
     gateway:
@@ -347,7 +347,7 @@ spring:
 
 或者，如果我们希望所有路由都启动一个授权流，我们可以将`TokenRelay`过滤器添加到`default-filters `部分:
 
-```
+```java
 spring:
   cloud:
     gateway:
@@ -361,7 +361,7 @@ spring:
 
 对于测试设置，我们还需要确保项目的三个部分都在运行。然而，这一次，我们将使用一个不同的 [Spring Profile](/web/20220903190824/https://www.baeldung.com/spring-profiles) 来运行网关，它包含了使其充当 OAuth 2.0 客户端所需的属性。示例项目的 POM 包含一个概要文件，允许我们在启用该概要文件的情况下启动它:
 
-```
+```java
 $ mvn spring-boot:run -Pgateway-as-oauth-client
 ```
 

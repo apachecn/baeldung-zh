@@ -10,7 +10,7 @@
 
 让我们从一个标准的 Gradle Java 项目`gradle-to-maven`开始，使用下面的`build.gradle`文件:
 
-```
+```java
 repositories {
     mavenCentral()
 }
@@ -32,7 +32,7 @@ Gradle 附带了一个 [Maven 插件](https://web.archive.org/web/20220926191334
 
 要使用它，让我们将 Maven 发布插件添加到我们的`build.gradle` 文件中:
 
-```
+```java
 apply plugin: 'maven-publish'
 ```
 
@@ -40,7 +40,7 @@ apply plugin: 'maven-publish'
 
 插件也会自动添加`publish`任务。因此，为了进行转换，让我们将发布的基本定义添加到 POM 文件中:
 
-```
+```java
 publishing {
     publications {
         customLibrary(MavenPublication) {
@@ -59,7 +59,7 @@ publishing {
 
 现在，我们可以将我们的`customLibrary`发布到一个本地的基于目录的存储库，用于演示目的:
 
-```
+```java
 gradle publish
 ```
 
@@ -72,7 +72,7 @@ gradle publish
 
 生成的 POM 文件将如下所示:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" 
 
@@ -104,7 +104,7 @@ gradle publish
 
 改变 POM 的`groupId`、`artifactId`和`version`可以在`publications/{publicationName}`块中操作:
 
-```
+```java
 publishing {
     publications {
         customLibrary(MavenPublishing) {
@@ -118,7 +118,7 @@ publishing {
 
 运行 `publish`任务现在会产生带有上面提供的信息的 POM 文件:
 
-```
+```java
 <groupId>com.baeldung.sample</groupId>
 <artifactId>gradle-maven-converter</artifactId>
 <version>0.0.1-maven</version>
@@ -128,7 +128,7 @@ publishing {
 
 Maven 插件还使得更改任何生成的 POM 元素变得简单。例如，要将默认的`runtime`范围改为`compile`，我们可以将下面的闭包添加到`pom.withXml`方法中:
 
-```
+```java
 pom.withXml {
     asNode()
       .dependencies
@@ -146,7 +146,7 @@ pom.withXml {
 
 这将更改生成的 POM 文件中所有依赖项的范围:
 
-```
+```java
 <dependency>
   <groupId>org.slf4j</groupId>
   <artifactId>slf4j-api</artifactId>
@@ -161,7 +161,7 @@ pom.withXml {
 
 让我们添加一些许可证信息:
 
-```
+```java
 ...
 pom {
     licenses {
@@ -176,7 +176,7 @@ pom {
 
 我们现在可以看到添加到 POM 中的许可证信息:
 
-```
+```java
 ... 
 <licenses>
   <license>

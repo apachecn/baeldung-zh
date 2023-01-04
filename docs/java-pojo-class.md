@@ -16,7 +16,7 @@
 
 让我们创建一个基本的员工 POJO。它有三个属性。名字、姓氏和开始日期:
 
-```
+```java
 public class EmployeePojo {
 
     public String firstName;
@@ -55,7 +55,7 @@ public class EmployeePojo {
 
 让我们将[`commons-beanutils`](https://web.archive.org/web/20220719161511/https://search.maven.org/search?q=g:commons-beanutils%20AND%20a:commons-beanutils) `[dependency](https://web.archive.org/web/20220719161511/https://search.maven.org/search?q=g:commons-beanutils%20AND%20a:commons-beanutils)`添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>commons-beanutils</groupId>
     <artifactId>commons-beanutils</artifactId>
@@ -65,7 +65,7 @@ public class EmployeePojo {
 
 现在，让我们检查 POJO 的属性:
 
-```
+```java
 List<String> propertyNames =
   PropertyUtils.getPropertyDescriptors(EmployeePojo.class).stream()
     .map(PropertyDescriptor::getDisplayName)
@@ -74,7 +74,7 @@ List<String> propertyNames =
 
 如果我们将`propertyNames` 输出到控制台，我们只会看到:
 
-```
+```java
 [start] 
 ```
 
@@ -99,7 +99,7 @@ JavaBean 仍然是 POJO，但是引入了一套严格的规则来实现它:
 
 所以，让我们试着将`EmployeePojo`转换成 JavaBean:
 
-```
+```java
 public class EmployeeBean implements Serializable {
 
     private static final long serialVersionUID = -3760445487636086034L;
@@ -133,7 +133,7 @@ public class EmployeeBean implements Serializable {
 
 当我们用反射检查 bean 时，现在我们得到了属性的完整列表:
 
-```
+```java
 [firstName, lastName, startDate]
 ```
 

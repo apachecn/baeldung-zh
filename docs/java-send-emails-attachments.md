@@ -10,7 +10,7 @@
 
 在本文中，我们将创建一个具有`[javax.mail](https://web.archive.org/web/20221208074836/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22javax.mail%22%20AND%20a%3A%22mail%22)`依赖关系的简单 Maven 项目:
 
-```
+```java
 <dependency>
     <groupId>javax.mail</groupId>
     <artifactId>mail</artifactId>
@@ -26,7 +26,7 @@
 
 现在我们有了一个`Session`对象，让我们进一步创建`MimeMessage`和`MimeBodyPart`对象。我们使用这些对象来创建电子邮件:
 
-```
+```java
 Message message = new MimeMessage(session); 
 message.setFrom(new InternetAddress(from)); 
 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to)); 
@@ -40,14 +40,14 @@ messageBodyPart.setText("Mail Body");
 
 现在，我们需要创建另一个`MimeBodyPart`来在邮件中添加附件:
 
-```
+```java
 MimeBodyPart attachmentPart = new MimeBodyPart();
 attachmentPart.attachFile(new File("path/to/file")); 
 ```
 
 我们现在有两个`MimeBodyPart`对象用于一个邮件会话。所以我们需要创建一个`MimeMultipart`对象，然后将两个`MimeBodyPart`对象添加到其中:
 
-```
+```java
 Multipart multipart = new MimeMultipart();
 multipart.addBodyPart(messageBodyPart);
 multipart.addBodyPart(attachmentPart); 
@@ -55,7 +55,7 @@ multipart.addBodyPart(attachmentPart);
 
 最后，`MimeMultiPart`被添加到`MimeMessage`对象中作为我们的邮件内容，并调用`Transport.send()`方法来发送消息:
 
-```
+```java
 message.setContent(multipart);
 Transport.send(message); 
 ```

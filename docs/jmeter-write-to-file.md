@@ -18,7 +18,7 @@
 
 让我们设置我们的`HTTP Sampler`来调用运行在`localhost.` 上的 API，我们可以从用一个简单的 [REST 控制器](/web/20221128050843/https://www.baeldung.com/spring-controller-vs-restcontroller)定义 API 开始:
 
-```
+```java
 @RestController
 public class RetrieveUuidController {
 
@@ -31,7 +31,7 @@ public class RetrieveUuidController {
 
 此外，让我们也定义由我们的控制器返回的`Response` 实例，如上所述:
 
-```
+```java
 public class Response {
     private Instant timestamp;
     private UUID uuid;
@@ -65,7 +65,7 @@ public class Response {
 
 现在让我们将以下脚本添加到`Script`部分:
 
-```
+```java
 FileWriter fWriter = new FileWriter("/<path>/result.txt", true);
 BufferedWriter buff = new BufferedWriter(fWriter);
 
@@ -81,7 +81,7 @@ fWriter.close();
 
 从`ctx`中，我们获取响应代码、响应头和响应体，并将它们提取到我们的文件中:
 
-```
+```java
 buff.write("Response Code : " + ctx.getPreviousResult().getResponseCode());
 buff.write(System.getProperty("line.separator"));
 buff.write("Response Headers : " + ctx.getPreviousResult().getResponseHeaders());
@@ -97,7 +97,7 @@ buff.write("Response Body : " + new String(ctx.getPreviousResult().getResponseDa
 
 这个提取器将创建一个名为`message`的变量。剩下要做的就是在我们的文件提取器中引用这个变量，将其输出到我们的文件中:
 
-```
+```java
 buff.write("More complex extraction : " + vars.get("message"));
 ```
 

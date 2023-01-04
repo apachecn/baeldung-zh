@@ -16,7 +16,7 @@
 
 假设我们有一个服务类`PurchaseDeptService`，它依赖于`InventoryRepository`:
 
-```
+```java
 @Service
 public class PurchaseDeptService {
     public PurchaseDeptService(InventoryRepository repository) {
@@ -25,18 +25,18 @@ public class PurchaseDeptService {
 }
 ```
 
-```
+```java
 public interface InventoryRepository {
 } 
 ```
 
-```
+```java
 @Repository
 public class ShoeRepository implements InventoryRepository {
 }
 ```
 
-```
+```java
 @SpringBootApplication
 public class SpringDependenciesExampleApplication {
 
@@ -56,7 +56,7 @@ public class SpringDependenciesExampleApplication {
 
 现在让我们从我们的`ShoeRepository`类中移除`@Repository `注释:
 
-```
+```java
 public class ShoeRepository implements InventoryRepository {
 }
 ```
@@ -75,7 +75,7 @@ Spring 没有被指示连接一个`ShoeRepository` bean 并将其添加到应用
 
 为了解决这个问题，我们可以在父包上配置包扫描，并确保包含所有相关的类:
 
-```
+```java
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.baeldung.dependency.exception"})
 public class SpringDependenciesExampleApplication {
@@ -89,7 +89,7 @@ public class SpringDependenciesExampleApplication {
 
 假设我们添加了另一个`InventoryRepository`实现— `DressRepository`:
 
-```
+```java
 @Repository
 public class DressRepository implements InventoryRepository {
 } 
@@ -101,14 +101,14 @@ public class DressRepository implements InventoryRepository {
 
 为了解决这个问题，我们可能想要添加`@Qualifier`来区分存储库:
 
-```
+```java
 @Qualifier("dresses")
 @Repository
 public class DressRepository implements InventoryRepository {
 } 
 ```
 
-```
+```java
 @Qualifier("shoes")
 @Repository
 public class ShoeRepository implements InventoryRepository {
@@ -117,7 +117,7 @@ public class ShoeRepository implements InventoryRepository {
 
 此外，我们必须给`PurchaseDeptService`构造函数依赖关系添加一个限定符:
 
-```
+```java
 public PurchaseDeptService(@Qualifier("dresses") InventoryRepository repository) {
     this.repository = repository;
 }

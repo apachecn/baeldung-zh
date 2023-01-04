@@ -33,7 +33,7 @@
 
 我们可以通过注释或`.xml`描述符来配置它。通过注释，我们使用了`@ActivationConfigProperty`:
 
-```
+```java
 @MessageDriven(activationConfig = {
     @ActivationConfigProperty(
         propertyName=”maxSession”, propertyValue=”50”
@@ -43,7 +43,7 @@
 
 如果选择的配置方法是`.xml`描述符，我们可以这样配置`maxSession`:
 
-```
+```java
 <activation-config>
     <activation-config-property>
         <activation-config-property-name>maxSession</activation-config-property-name>
@@ -73,7 +73,7 @@
 
 为了在发布-订阅模型上从`Topic`消费，我们可以使用注释:
 
-```
+```java
 @ActivationConfigProperty(
   propertyName = "destinationType", 
   propertyValue = "javax.jms.Topic")
@@ -81,7 +81,7 @@
 
 同样，我们也可以在`.xml`部署描述符中配置这些值:
 
-```
+```java
 <activation-config>
     <activation-config-property>
         <activation-config-property-name>destinationType</activation-config-property-name>
@@ -94,7 +94,7 @@
 
 为了从队列中消费，我们将注释设置为:
 
-```
+```java
 @ActivationConfigProperty(
   propertyName = "destinationType", 
   propertyValue = "javax.jms.Queue")
@@ -102,7 +102,7 @@
 
 如果我们使用的是`.xml`部署描述符，我们可以设置它:
 
-```
+```java
 <activation-config>
     <activation-config-property>
         <activation-config-property-name>destinationType</activation-config-property-name>

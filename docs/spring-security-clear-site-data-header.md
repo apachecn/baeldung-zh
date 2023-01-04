@@ -37,7 +37,7 @@
 
 因此，`Clear-Site-Data `头必须包括至少一种存储类型:
 
-```
+```java
 Clear-Site-Data: "cache", "cookies", "storage", "executionContexts"
 ```
 
@@ -47,7 +47,7 @@ Clear-Site-Data: "cache", "cookies", "storage", "executionContexts"
 
 在我们编写一些代码以在 Spring 中添加`Clear-Site-Data `头之前，让我们将 [`spring-security-web`](https://web.archive.org/web/20220905102449/https://search.maven.org/artifact/org.springframework.security/spring-security-web) 和 [`spring-security-config`](https://web.archive.org/web/20220905102449/https://search.maven.org/artifact/org.springframework.security/spring-security-config) 依赖项添加到项目中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-web</artifactId>
@@ -64,7 +64,7 @@ Clear-Site-Data: "cache", "cookies", "storage", "executionContexts"
 
 我们之前讨论过，Spring 提供了一个`[CacheControl](/web/20220905102449/https://www.baeldung.com/spring-security-cache-control-headers) `实用程序类来在响应中写入`Cache-Control `头。**同样，Spring Security 提供了一个`ClearSiteDataHeaderWriter `类来轻松地在 HTTP 响应中添加报头**:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -91,13 +91,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 这里，我们用 Spring Security 实现了一个登录和注销页面。因此，Spring 将添加一个`Clear-Site-Data` 头来响应所有的`/baeldung/logout` 请求`:`
 
-```
+```java
 Clear-Site-Data: "cache", "cookies", "storage"
 ```
 
 如果我们现在使用`curl `并向`https://localhost:8080/baeldung/logout`发送一个请求，我们将得到以下响应头:
 
-```
+```java
 { [5 bytes data]
 < HTTP/1.1 302
 < Clear-Site-Data: "cache", "cookies", "storage"

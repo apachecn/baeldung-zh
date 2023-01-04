@@ -10,7 +10,7 @@
 
 让我们首先看看简单的 Java 解决方案:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenConvertingFileIntoReader_thenCorrect() 
   throws IOException {
@@ -25,7 +25,7 @@ public void givenUsingPlainJava_whenConvertingFileIntoReader_thenCorrect()
 
 现在，让我们看看相同的转换，这次使用的是番石榴库:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenConvertingFileIntoReader_thenCorrect() throws 
   IOException {
@@ -40,7 +40,7 @@ public void givenUsingGuava_whenConvertingFileIntoReader_thenCorrect() throws
 
 最后，让我们以 Commons IO 代码示例结束，通过中间字节数组进行转换:
 
-```
+```java
 @Test
 public void givenUsingCommonsIO_whenConvertingFileIntoReader_thenCorrect() 
   throws IOException {

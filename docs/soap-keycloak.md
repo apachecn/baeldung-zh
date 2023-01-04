@@ -39,7 +39,7 @@ Keycloak 是一款开源的身份和访问管理服务器，可以保护我们�
 
 首先，让我们定义一个`product.xsd`:
 
-```
+```java
 <xs:element name="getProductDetailsRequest">
     ...
 </xs:element>
@@ -52,7 +52,7 @@ Keycloak 是一款开源的身份和访问管理服务器，可以保护我们�
 
 同样，让我们添加 [wsdl4j](https://web.archive.org/web/20220525133211/https://search.maven.org/search?q=g:wsdl4j%20a:wsdl4j) 和 [Spring Boot 网络服务](https://web.archive.org/web/20220525133211/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-web-services)的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>wsdl4j</groupId>
     <artifactId>wsdl4j</artifactId>
@@ -69,7 +69,7 @@ Keycloak 是一款开源的身份和访问管理服务器，可以保护我们�
 
 更进一步，让我们开发一个 SOAP web 服务。
 
-```
+```java
 @PayloadRoot(namespace = "http://www.baeldung.com/springbootsoap/keycloak", localPart = "getProductDetailsRequest")
 @ResponsePayload
 public GetProductDetailsResponse getProductDetails(@RequestPayload GetProductDetailsRequest request) {
@@ -137,7 +137,7 @@ public DeleteProductResponse deleteProduct(@RequestPayload DeleteProductRequest 
 
 **Keycloak 提供了一个利用 Spring Boot 自动配置的适配器，使集成变得容易**。现在，让我们更新我们的依赖项，以包括这个[键盘锁适配器](https://web.archive.org/web/20220525133211/https://search.maven.org/search?q=g:org.keycloak%20a:keycloak-spring-boot-starter):
 
-```
+```java
 <dependency>
     <groupId>org.keycloak</groupId>
     <artifactId>keycloak-spring-boot-starter</artifactId>
@@ -147,7 +147,7 @@ public DeleteProductResponse deleteProduct(@RequestPayload DeleteProductRequest 
 
 接下来，让我们将 Keycloak 配置添加到我们的`application.properties`:
 
-```
+```java
 keycloak.enabled=true
 keycloak.realm=baeldung-soap-services
 keycloak.auth-server-url=http://localhost:8080/auth
@@ -192,7 +192,7 @@ keycloak.use-resource-role-mappings=true
 
 现在，让我们配置`KeycloakSecurityConfig` 类:
 
-```
+```java
 @KeycloakConfiguration
 @EnableGlobalMethodSecurity(jsr250Enabled = true)
 public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
@@ -219,7 +219,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
 
 **鉴于此，让我们用访问角色来配置我们的方法。为此，让我们使用`@RolesAllowed`注释**。回想一下，我们在 Keycloak 中定义了两个不同的角色，`user`和`admin,` 。让我们为每个 web 服务定义一个角色:
 
-```
+```java
 @RolesAllowed("user")
 @PayloadRoot(namespace = "http://www.baeldung.com/springbootsoap/keycloak", localPart = "getProductDetailsRequest")
 @ResponsePayload
@@ -242,13 +242,13 @@ public DeleteProductResponse deleteProduct(@RequestPayload DeleteProductRequest 
 
 现在应用程序已经准备好了，让我们开始使用`curl`测试我们的 SOAP web 服务:
 
-```
+```java
 curl -d @request.xml -i -o -X POST --header 'Content-Type: text/xml' http://localhost:18080/ws/api/v1
 ```
 
 最终，如果所有配置都正确，我们将得到拒绝访问响应:
 
-```
+```java
 <SOAP-ENV:Fault>
     <faultcode>SOAP-ENV:Server</faultcode>
     <faultstring xml:lang="en">Access is denied</faultstring>
@@ -277,7 +277,7 @@ curl -d @request.xml -i -o -X POST --header 'Content-Type: text/xml' http://loca
 
 现在，让我们获得访问令牌:
 
-```
+```java
 curl -L -X POST 'http://localhost:8080/auth/realms/baeldung-soap-services/protocol/openid-connect/token' \
 -H 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'grant_type=password' \
@@ -289,7 +289,7 @@ curl -L -X POST 'http://localhost:8080/auth/realms/baeldung-soap-services/protoc
 
 实际上，我们获得了访问令牌和刷新令牌以及元数据:
 
-```
+```java
 {
     "access_token": "eyJh ...",
     "expires_in": 300,
@@ -308,14 +308,14 @@ curl -L -X POST 'http://localhost:8080/auth/realms/baeldung-soap-services/protoc
 
 在本例中，让我们使用在上一节中检索到的访问令牌。让我们使用访问令牌作为[承载令牌](https://web.archive.org/web/20220525133211/https://datatracker.ietf.org/doc/html/rfc6750) `.`来调用 SOAP web 服务
 
-```
+```java
 curl -d @request.xml -i -o -X POST -H 'Authorization: Bearer BwcYg94bGV9TLKH8i2Q' \
   -H 'Content-Type: text/xml' http://localhost:18080/ws/api/v1
 ```
 
 使用正确的访问令牌，响应是:
 
-```
+```java
 <ns2:getProductDetailsResponse xmlns:ns2="http://www.baeldung.com/springbootsoap/keycloak">
     <ns2:product>
         <ns2:id>1</ns2:id>
@@ -328,14 +328,14 @@ curl -d @request.xml -i -o -X POST -H 'Authorization: Bearer BwcYg94bGV9TLKH8i2Q
 
 回想一下，我们为角色为`a user` 的用户`janedoe` 生成了访问令牌。使用`user`访问令牌，让我们尝试执行`admin` 操作。也就是说，让我们试着调用`deleteProduct`:
 
-```
+```java
 curl -d @request.xml -i -o -X POST -H 'Authorization: Bearer sSgGNZ3KbMMTQ' -H 'Content-Type: text/xml' \
   http://localhost:18080/ws/api/v1
 ```
 
 其中`request.xml` 的内容为:
 
-```
+```java
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:key="http://www.baeldung.com/springbootsoap/keycloak">
     <soapenv:Header/>
     <soapenv:Body>
@@ -348,7 +348,7 @@ curl -d @request.xml -i -o -X POST -H 'Authorization: Bearer sSgGNZ3KbMMTQ' -H '
 
 由于`user` 没有被授权访问`admin` 操作，我们得到一个访问被拒绝:
 
-```
+```java
 <SOAP-ENV:Fault>
     <faultcode>SOAP-ENV:Server</faultcode>
         <faultstring xml:lang="en">Access is denied</faultstring>

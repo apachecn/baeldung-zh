@@ -12,7 +12,7 @@
 
 首先，我们需要将[龙目岛](https://web.archive.org/web/20220525134849/https://search.maven.org/search?q=g:org.projectlombok%20AND%20a:lombok)添加到我们的 `pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>
@@ -29,7 +29,7 @@
 
 Lombok 提供了两个访问器注释，`@Getter`和`@Setter`。我们可以注释每个字段，或者简单地用它们标记整个类。默认情况下生成的方法会是`public`。但是，我们可以将访问级别更改为`protected`、包或`private`。让我们看一个例子:
 
-```
+```java
 @Setter
 @Getter
 public class User {
@@ -41,7 +41,7 @@ public class User {
 
 我们可以使用 IDE 插件中的`delombok`选项，查看 Lombok 生成的代码:
 
-```
+```java
 public class User {
     private long id;
     private String login;
@@ -79,7 +79,7 @@ public class User {
 
 `@Data`结合了一些其他注释的特性，包括`@Getter`和`@Setter.`，因此，在这种情况下，默认的访问器方法也将生成为`public`:
 
-```
+```java
 @Data
 public class Employee {
     private String name;
@@ -92,7 +92,7 @@ public class Employee {
 
 要禁用特定字段的默认 getter/setter 生成，我们应该使用特定的访问级别:
 
-```
+```java
 @Getter(AccessLevel.NONE)
 @Setter(AccessLevel.NONE)
 ```
@@ -103,7 +103,7 @@ public class Employee {
 
 让我们将`age`字段的 getter 和`id`字段的 setter 上的`AccessLevel`改为`NONE`:
 
-```
+```java
 @Getter
 @Setter
 public class User {
@@ -119,7 +119,7 @@ public class User {
 
 让我们`delombok`这个代码:
 
-```
+```java
 public class User {
     private  long id;
 
@@ -151,7 +151,7 @@ public class User {
 
 让我们看另一个例子，在这个例子中，我们用`@Data`注释将类上的`AccessLevel`改为`NONE`:
 
-```
+```java
 @Data
 public class Employee {
 
@@ -167,7 +167,7 @@ public class Employee {
 
 我们向*工作长度*字段添加了显式`@Getter`注释，向*名称*字段添加了显式`@Setter`注释。两个存取器的`AccessLevel`都被设置为`NONE`。让我们看看`delombok`的代码:
 
-```
+```java
 public class Employee {
 
     private String name;

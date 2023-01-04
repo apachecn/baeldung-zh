@@ -14,7 +14,7 @@
 
 让我们看一个使用`for`循环的基本阶乘算法:
 
-```
+```java
 public long factorialUsingForLoop(int n) {
     long fact = 1;
     for (int i = 2; i <= n; i++) {
@@ -32,7 +32,7 @@ public long factorialUsingForLoop(int n) {
 
 我们也可以使用 [Java 8 `Stream` API](/web/20221126223232/https://www.baeldung.com/java-8-streams-introduction) 非常容易地计算阶乘:
 
-```
+```java
 public long factorialUsingStreams(int n) {
     return LongStream.rangeClosed(1, n)
         .reduce(1, (long x, long y) -> x * y);
@@ -45,7 +45,7 @@ public long factorialUsingStreams(int n) {
 
 让我们看看阶乘程序的另一个例子，这次使用递归:
 
-```
+```java
 public long factorialUsingRecursion(int n) {
     if (n <= 2) {
         return n;
@@ -60,7 +60,7 @@ public long factorialUsingRecursion(int n) {
 
 为了包含 Apache Commons Math，我们将把[的`commons-math3`依赖关系](https://web.archive.org/web/20221126223232/https://search.maven.org/search?q=a:commons-math3)添加到我们的`pom`中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-math3</artifactId>
@@ -70,7 +70,7 @@ public long factorialUsingRecursion(int n) {
 
 让我们看一个使用`CombinatoricsUtils `类的例子:
 
-```
+```java
 public long factorialUsingApacheCommons(int n) {
     return CombinatoricsUtils.factorial(n);
 }
@@ -90,7 +90,7 @@ public long factorialUsingApacheCommons(int n) {
 
 对于更大的`n`、**值，我们可以使用`java.math`包中的`BigInteger`类**，它可以保存**值直到`2^Integer.MAX_VALUE`、**:
 
-```
+```java
 public BigInteger factorialHavingLargeResult(int n) {
     BigInteger result = BigInteger.ONE;
     for (int i = 2; i <= n; i++)
@@ -105,7 +105,7 @@ Google 的 [Guava](/web/20221126223232/https://www.baeldung.com/category/guava/)
 
 为了包含这个库，我们可以将它的[`guava `依赖项](https://web.archive.org/web/20221126223232/https://search.maven.org/search?q=guava)添加到我们的`pom`中:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -115,7 +115,7 @@ Google 的 [Guava](/web/20221126223232/https://www.baeldung.com/category/guava/)
 
 现在，我们可以使用来自`BigIntegerMath`类的静态`factorial`方法来计算给定数字的阶乘:
 
-```
+```java
 public BigInteger factorialUsingGuava(int n) {
     return BigIntegerMath.factorial(n);
 }

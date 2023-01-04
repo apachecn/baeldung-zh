@@ -10,7 +10,7 @@
 
 有些情况下，我们需要在运行时在应用程序中使用动态 URL。[改进库](https://web.archive.org/web/20220627082636/https://search.maven.org/search?q=g:%20com.squareup.retrofit2%20AND%20a:%20retrofit)的版本 2 引入了`@Url`注释，允许我们**传递端点**的完整 URL:
 
-```
+```java
 @GET
 Call<ResponseBody> reposList(@Url String url);
 ```
@@ -19,7 +19,7 @@ Call<ResponseBody> reposList(@Url String url);
 
 @ `Url`参数替换了服务实现中的`baseUrl`:
 
-```
+```java
 Retrofit retrofit = new Retrofit.Builder()
   .baseUrl("https://api.github.com/")
   .addConverterFactory(GsonConverterFactory.create()).build();
@@ -31,7 +31,7 @@ Retrofit retrofit = new Retrofit.Builder()
 
 如果我们知道我们的基本 URL 的某个部分将是常量，但我们不知道它的扩展名或将要使用的参数的数量，我们可以使用 **`@Path`注释和`encoded`** 标志:
 
-```
+```java
 @GET("{fullUrl}")
 Call<List<Contributor>> contributorsList(@Path(value = "fullUrl", encoded = true) String fullUrl);
 ```

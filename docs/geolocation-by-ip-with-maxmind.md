@@ -16,7 +16,7 @@
 
 要在您的 Maven 项目中包含 MaxMind GeoIP2 API，请将以下内容添加到`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.maxmind.geoip2</groupId>
     <artifactId>geoip2</artifactId>
@@ -36,20 +36,20 @@
 
 让我们使用 GeoIP2 Java API 从数据库中获取给定 IP 地址的位置数据。首先，让我们创建一个`DatabaseReader`来查询数据库:
 
-```
+```java
 File database = new File(dbLocation);
 DatabaseReader dbReader = new DatabaseReader.Builder(database).build();
 ```
 
 接下来，让我们使用`city()` 方法来获取 IP 地址的城市数据:
 
-```
+```java
 CityResponse response = dbReader.city(ipAddress);
 ```
 
 `CityResponse`对象包含几条信息，而不仅仅是城市名。下面是一个 JUnit 测试示例，展示了如何打开数据库，获取 IP 地址的城市信息，并从`CityResponse`中提取这些信息:
 
-```
+```java
 @Test
 public void givenIP_whenFetchingCity_thenReturnsCityData() 
   throws IOException, GeoIp2Exception {
@@ -82,7 +82,7 @@ public void givenIP_whenFetchingCity_thenReturnsCityData()
 
 让我们从定义保存地理位置响应的类开始:
 
-```
+```java
 public class GeoIP {
     private String ipAddress;
     private String city;
@@ -96,7 +96,7 @@ public class GeoIP {
 
 现在让我们编写使用 GeoIP2 Java API 和 GeoLite2 数据库获取地理位置数据的服务类:
 
-```
+```java
 public class RawDBDemoGeoIPLocationService {
     private DatabaseReader dbReader;
 
@@ -124,7 +124,7 @@ public class RawDBDemoGeoIPLocationService {
 
 让我们看看 Spring MVC 的`Controller`,它将“ipAddress”请求参数发送给我们的服务类，以获取地理位置响应数据:
 
-```
+```java
 @RestController
 public class GeoIPTestController {
     private RawDBDemoGeoIPLocationService locationService;
@@ -149,7 +149,7 @@ public class GeoIPTestController {
 
 让我们添加调用 Spring `Controller,` 的前端代码，从包含 IP 地址的 HTML 表单开始:
 
-```
+```java
 <body>
     <form id="ipForm" action="GeoIPTest" method="POST">
         <input type="text" name = "ipAddress" id = "ip"/>
@@ -163,7 +163,7 @@ public class GeoIPTestController {
 
 现在，让我们使用 jQuery 和[ipify.org](https://web.archive.org/web/20220815030644/https://www.ipify.org/)JavaScript API，用用户的公共 IP 地址预填充“ipAddress”文本字段:
 
-```
+```java
 <script src
    ="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
 </script>
@@ -182,7 +182,7 @@ public class GeoIPTestController {
 
 当提交表单时，我们将向 Spring `Controller`发出一个 Ajax POST 请求，以检索带有地理位置数据的 JSON 响应:
 
-```
+```java
 $( "#ipForm" ).submit(function( event ) {
     event.preventDefault();
     $.ajax({
@@ -209,7 +209,7 @@ $( "#ipForm" ).submit(function( event ) {
 
 来自 Spring `Controller`的 JSON 响应将具有以下格式:
 
-```
+```java
 {
     "ipAddress":"your-ip-address",
     "city":"your-city",
@@ -222,7 +222,7 @@ $( "#ipForm" ).submit(function( event ) {
 
 要在谷歌地图上显示位置，您需要在 HTML 代码中包含谷歌地图 API:
 
-```
+```java
 <script src="https://maps.googleapis.com/maps/api/js?key=YOUR-API-KEY" 
 async defer></script>
 ```
@@ -231,13 +231,13 @@ async defer></script>
 
 您还需要定义一个 HTML `<div>`标签来包含地图图像:
 
-```
+```java
 <div id="map" style="height: 500px; width:100%; position:absolute"></div>
 ```
 
 您可以使用以下 JavaScript 函数在 Google Maps 上显示坐标:
 
-```
+```java
 function showLocationOnMap (location) {
     var map;
     map = new google.maps.Map(document.getElementById('map'), {
@@ -260,7 +260,7 @@ function showLocationOnMap (location) {
 
 启动 web 应用程序后，打开地图页面的 URL:
 
-```
+```java
 http://localhost:8080/spring-mvc-xml/GeoIpTest.jsp
 ```
 

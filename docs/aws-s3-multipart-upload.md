@@ -20,7 +20,7 @@
 
 在开始之前，我们需要在项目中添加 AWS SDK 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>aws-java-sdk</artifactId>
@@ -36,7 +36,7 @@
 
 首先，我们需要**创建一个访问亚马逊 S3 的客户端。**为此，我们将使用`AmazonS3ClientBuilder` :
 
-```
+```java
 AmazonS3 amazonS3 = AmazonS3ClientBuilder
   .standard()
   .withCredentials(new DefaultAWSCredentialsProviderChain())
@@ -54,7 +54,7 @@ AmazonS3 amazonS3 = AmazonS3ClientBuilder
 
 这个类**提供了简单的 API 来管理亚马逊 S3** 的上传和下载，并管理所有相关的任务:
 
-```
+```java
 TransferManager tm = TransferManagerBuilder.standard()
   .withS3Client(amazonS3)
   .withMultipartUploadThreshold((long) (5 * 1024 * 1025))
@@ -69,7 +69,7 @@ TransferManager tm = TransferManagerBuilder.standard()
 
 **要使用`TransferManager`上传对象，我们只需调用它的`upload()`函数**。这将并行上传零件:
 
-```
+```java
 String bucketName = "baeldung-bucket";
 String keyName = "my-picture.jpg";
 String file = new File("documents/my-picture.jpg");
@@ -84,7 +84,7 @@ Upload upload = tm.upload(bucketName, keyName, file);
 
 我们可以**使用返回的`Upload`对象等待上传完成**，然后退出程序:
 
-```
+```java
 try {
     upload.waitForCompletion();
 } catch (AmazonClientException e) {
@@ -96,7 +96,7 @@ try {
 
 跟踪上传的进度是一个很常见的需求；我们可以借助一个`P` `rogressListener`实例来实现:
 
-```
+```java
 ProgressListener progressListener = progressEvent -> System.out.println(
   "Transferred bytes: " + progressEvent.getBytesTransferred());
 PutObjectRequest request = new PutObjectRequest(
@@ -113,7 +113,7 @@ Upload upload = tm.upload(request);
 
 然而，我们可以通过在构建`TransferManager`时指定一个`ExecutorService`来控制这一点:
 
-```
+```java
 int maxUploadThreads = 5;
 TransferManager tm = TransferManagerBuilder.standard()
   .withS3Client(amazonS3)

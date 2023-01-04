@@ -21,7 +21,7 @@ Spring Security 是保护基于 Spring 的应用程序的标准。它有几个�
 
 让我们看看实际情况:
 
-```
+```java
 @Configuration
 public class DefaultLogoutConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -44,7 +44,7 @@ public class DefaultLogoutConfiguration extends WebSecurityConfigurerAdapter {
 
 为此，我们可以创建自己的`LogoutHandler` 来遍历所有 cookies，并在注销时使它们过期:
 
-```
+```java
 @Configuration
 public class AllCookieClearingLogoutConfiguration extends WebSecurityConfigurerAdapter {
     @Override
@@ -73,7 +73,7 @@ public class AllCookieClearingLogoutConfiguration extends WebSecurityConfigurerA
 
 基本上，`Clear-Data-Site`头清除了与请求网站相关的浏览数据(cookies、存储、缓存):
 
-```
+```java
 @Configuration
 public class ClearSiteDataHeaderLogoutConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -99,7 +99,7 @@ public class ClearSiteDataHeaderLogoutConfiguration extends WebSecurityConfigure
 
 首先，让我们添加必要的配置，以便根据请求手动调用`logout()`:
 
-```
+```java
 @Configuration
 public static class LogoutOnRequestConfiguration extends WebSecurityConfigurerAdapter {
     @Override
@@ -121,7 +121,7 @@ public static class LogoutOnRequestConfiguration extends WebSecurityConfigurerAd
 
 最后，让我们创建一个测试用例来确认一切都按预期运行:
 
-```
+```java
 @Test
 public void givenLoggedUserWhenUserLogoutOnRequestThenSessionCleared() throws Exception {
 

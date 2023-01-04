@@ -46,7 +46,7 @@ JVM 有五种类型的`GC`实现:
 
 对于大多数对暂停时间要求不高并运行在客户端风格的机器上的应用程序来说，串行 GC 是垃圾收集器的首选。要启用`Serial Garbage Collector`，我们可以使用以下参数:
 
-```
+```java
 java -XX:+UseSerialGC -jar Application.java
 ```
 
@@ -66,7 +66,7 @@ java -XX:+UseSerialGC -jar Application.java
 
 要启用`Parallel Garbage Collector`，我们可以使用以下参数:
 
-```
+```java
 java -XX:+UseParallelGC -jar Application.java
 ```
 
@@ -84,13 +84,13 @@ java -XX:+UseParallelGC -jar Application.java
 
 要启用`CMS Garbage Collector`，我们可以使用以下标志:
 
-```
+```java
 java -XX:+UseParNewGC -jar Application.java
 ```
 
 **[从 Java 9](https://web.archive.org/web/20220905193148/https://openjdk.java.net/jeps/291) 开始，CMS 垃圾收集器已经被弃用**。因此，如果我们试图使用它，JVM 会打印一条警告消息:
 
-```
+```java
 >> java -XX:+UseConcMarkSweepGC --version
 Java HotSpot(TM) 64-Bit Server VM warning: Option UseConcMarkSweepGC was deprecated 
 in version 9.0 and will likely be removed in a future release.
@@ -99,7 +99,7 @@ java version "9.0.1"
 
 而且， [Java 14](https://web.archive.org/web/20220905193148/https://openjdk.java.net/jeps/363) 完全放弃了 CMS 支持:
 
-```
+```java
 >> java -XX:+UseConcMarkSweepGC --version
 OpenJDK 64-Bit Server VM warning: Ignoring option UseConcMarkSweepGC; 
 support was removed in 14.0
@@ -118,7 +118,7 @@ openjdk 14 2020-03-17
 
 为了启用`G1 Garbage Collector`，我们可以使用下面的参数:
 
-```
+```java
 java -XX:+UseG1GC -jar Application.java
 ```
 
@@ -140,13 +140,13 @@ java -XX:+UseG1GC -jar Application.java
 
 要启用`Z Garbage Collector`，我们可以在低于 15 的`JDK`版本中使用以下参数:
 
-```
+```java
 java -XX:+UnlockExperimentalVMOptions -XX:+UseZGC Application.java
 ```
 
 从版本 15 开始，我们不需要实验模式:
 
-```
+```java
 java -XX:+UseZGC Application.java
 ```
 

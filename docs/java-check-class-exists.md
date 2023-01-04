@@ -16,7 +16,7 @@
 
 首先，让我们编写一个测试，它肯定会抛出一个 [`ClassNotFoundException`](/web/20220625173731/https://www.baeldung.com/java-classnotfoundexception-and-noclassdeffounderror) ，这样我们就可以知道我们的阳性测试是安全的:
 
-```
+```java
 @Test(expected = ClassNotFoundException.class)
 public void givenNonExistingClass_whenUsingForName_thenClassNotFound() throws ClassNotFoundException {
     Class.forName("class.that.does.not.exist");
@@ -25,7 +25,7 @@ public void givenNonExistingClass_whenUsingForName_thenClassNotFound() throws Cl
 
 所以，我们证明了一个不存在的类会抛出一个`ClassNotFoundException`。让我们为一个确实存在的类编写一个测试:
 
-```
+```java
 @Test
 public void givenExistingClass_whenUsingForName_thenNoException() throws ClassNotFoundException {
     Class.forName("java.lang.String");
@@ -40,7 +40,7 @@ public void givenExistingClass_whenUsingForName_thenNoException() throws ClassNo
 
 为了举例说明这种行为，让我们创建一个类，当它的静态初始化器块被执行时抛出一个`RuntimeException`,这样我们可以立即知道它何时被执行:
 
-```
+```java
 public static class InitializingClass {
     static {
         if (true) { //enable throwing of an exception in a static initialization block
@@ -54,7 +54,7 @@ public static class InitializingClass {
 
 让我们编写一个测试，当试图在不指定类加载器的情况下找到我们的`InitializingClass` 时，它将期待一个`ExceptionInInitializerError`:
 
-```
+```java
 @Test(expected = ExceptionInInitializerError.class)
 public void givenInitializingClass_whenUsingForName_thenInitializationError() throws ClassNotFoundException {
     Class.forName("path.to.InitializingClass");
@@ -69,14 +69,14 @@ public void givenInitializingClass_whenUsingForName_thenInitializationError() th
 
 根据文档，以下调用是等效的:
 
-```
+```java
 Class.forName("Foo")
 Class.forName("Foo", true, this.getClass().getClassLoader())
 ```
 
 通过将`true`改为`false`，我们现在可以编写一个测试来检查我们的`InitializingClass`T3 的存在，而不触发它的静态初始化块:
 
-```
+```java
 @Test
 public void givenInitializingClass_whenUsingForNameWithoutInitialization_thenNoException() throws ClassNotFoundException {
     Class.forName("path.to.InitializingClass", false, getClass().getClassLoader());

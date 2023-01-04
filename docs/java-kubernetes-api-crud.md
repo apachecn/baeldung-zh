@@ -18,7 +18,7 @@
 
 在本例中，我们将在 Kubernetes 集群中创建一个作业资源。作业是 Kubernetes 的一种工作负载，不同于其他类型的工作负载，它会一直运行到完成。也就是说，一旦在其 pod 中运行的程序终止，作业本身也会终止。其在 YAML 的代表性与其他资源并无不同:
 
-```
+```java
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -49,7 +49,7 @@ Kubernetes API 提供了两种创建等效 Java 对象的方法:
 
 使用哪种方法主要是个人偏好。在这里，我们将使用 fluent 方法创建`V1Job`对象，因为构建过程看起来非常类似于它的 YAML 对应物:
 
-```
+```java
 ApiClient client  = Config.defaultClient();
 BatchV1Api api = new BatchV1Api(client);
 V1Job body = new V1JobBuilder()
@@ -101,7 +101,7 @@ V1Job createdJob = api.createNamespacedJob("report-jobs", body, null, null, null
 
 不幸的是，Java API 没有提供构建这个部分 YAML 文档的简单方法。相反，我们必须求助于`PatchUtil `助手类来发送原始的 YAML 或 JSON 字符串。然而，我们可以使用内置的 JSON 序列化器，通过`ApiClient`对象获得它:
 
-```
+```java
 V1Job patchedJob = new V1JobBuilder(createdJob)
   .withNewMetadata()
     .withName(createdJob.getMetadata().getName())
@@ -139,7 +139,7 @@ PatchUtils.patch(
 
 与前面的操作相比，删除资源非常简单:
 
-```
+```java
 V1Status response = api.deleteNamespacedJob(
   createdJob.getMetadata().getName(), 
   createdJob.getMetadata().getNamespace(), 

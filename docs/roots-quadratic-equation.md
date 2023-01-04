@@ -14,7 +14,7 @@
 
 **这个方程的解也被称为多项式`ax² + bx + c`的根。**因此，让我们定义一个`Polynom`类。如果`a`系数等于 0，我们将抛出一个 [`IllegalArgumentException`](/web/20221102130416/https://www.baeldung.com/java-exceptions) :
 
-```
+```java
 public class Polynom {
 
     private double a;
@@ -40,7 +40,7 @@ public class Polynom {
 
 我们还将展示如何在复数系统中求解这个方程。**Java**中没有复数的默认表示，所以我们将创建自己的表示。下面就给它一个 [`static`](/web/20221102130416/https://www.baeldung.com/java-static) 的方法`ofReal`来轻松转换实数。这将有助于以下步骤:
 
-```
+```java
 public class Complex {
 
     private double realPart;
@@ -68,7 +68,7 @@ public class Complex {
 
 让我们坚持使用第一种方法，并向`Polynom`类添加一个`getDiscriminant`方法:
 
-```
+```java
 public double getDiscriminant() {
     return b*b - 4*a*c;
 }
@@ -82,14 +82,14 @@ public double getDiscriminant() {
 
 **如果判别式是严格正的，方程有两个实解，(-b-√δ)/2a 和(-b+√δ)/2a:**
 
-```
+```java
 Double solution1 = (-polynom.getB() - Math.sqrt(polynom.getDiscriminant())) / (2 * polynom.getA());
 Double solution2 = (-polynom.getB() + Math.sqrt(polynom.getDiscriminant())) / (2 * polynom.getA());
 ```
 
 如果我们在复数系统中工作，那么我们只需要进行转换:
 
-```
+```java
 Complex solution1 = Complex.ofReal((-polynom.getB() - Math.sqrt(polynom.getDiscriminant())) / (2 * polynom.getA()));
 Complex solution2 = Complex.ofReal((-polynom.getB() + Math.sqrt(polynom.getDiscriminant())) / (2 * polynom.getA()));
 ```
@@ -98,13 +98,13 @@ Complex solution2 = Complex.ofReal((-polynom.getB() + Math.sqrt(polynom.getDiscr
 
 **若判别式等于零，则方程有唯一的实解-b / 2a:**
 
-```
+```java
 Double solution = (double) -polynom.getB() / (2 * polynom.getA());
 ```
 
 同样，如果我们在一个复数系统中工作，我们将以如下方式转换解决方案:
 
-```
+```java
 Complex solution = Complex.ofReal(-polynom.getB() / (2 * polynom.getA()));
 ```
 
@@ -112,7 +112,7 @@ Complex solution = Complex.ofReal(-polynom.getB() / (2 * polynom.getA()));
 
 **如果判别式是严格负的，则该方程在实数系中无解。但在复数系中可以求解:解为(-b–I √-δ)/2a 及其共轭(-b+I √-δ)/2a:**
 
-```
+```java
 Complex solution1 = new Complex(-polynom.getB() / (2* polynom.getA()), -Math.sqrt(-polynom.getDiscriminant()) / 2* polynom.getA());
 Complex solution2 = new Complex(-polynom.getB() / (2* polynom.getA()), Math.sqrt(-polynom.getDiscriminant()) / 2* polynom.getA());
 ```
@@ -121,7 +121,7 @@ Complex solution2 = new Complex(-polynom.getB() / (2* polynom.getA()), Math.sqrt
 
 **综上所述，让我们构建一个方法，当方程的解存在时，用方程的解填充一个`[List](/web/20221102130416/https://www.baeldung.com/java-collections)`。**在实数系统中，这种方法看起来是这样的:
 
-```
+```java
 public static List<Double> getPolynomRoots(Polynom polynom) {
     List<Double> roots = new ArrayList<>();
     double discriminant = polynom.getDiscriminant();
@@ -137,7 +137,7 @@ public static List<Double> getPolynomRoots(Polynom polynom) {
 
 如果我们在一个复数系统中工作，我们宁愿写:
 
-```
+```java
 public static List<Complex> getPolynomRoots(Polynom polynom) {
     List<Complex> roots = new ArrayList<>();
     double discriminant = polynom.getDiscriminant();

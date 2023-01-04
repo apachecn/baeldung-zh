@@ -16,7 +16,7 @@
 
 下面是`pom.xml`文件的相关部分，显示了所需的依赖关系:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -37,7 +37,7 @@
 
 让我们也定义一个非常简单的实体，我们将在整个教程中使用:
 
-```
+```java
 @Entity
 public class Item {
 
@@ -55,7 +55,7 @@ public class Item {
 
 让我们继续使用我们的用例，将`@NotNull`注释添加到`Item`的`price`字段:
 
-```
+```java
 @Entity
 public class Item {
 
@@ -70,7 +70,7 @@ public class Item {
 
 现在，让我们尝试用`null` `price`持久化一个项目:
 
-```
+```java
 @SpringBootTest
 public class ItemIntegrationTest {
 
@@ -86,7 +86,7 @@ public class ItemIntegrationTest {
 
 让我们看看 Hibernate 的输出:
 
-```
+```java
 2019-11-14 12:31:15.070 ERROR 10980 --- [ main] o.h.i.ExceptionMapperStandardImpl : 
 HHH000346: Error during managed flush [Validation failed for classes 
 [com.baeldung.h2db.springboot.models.Item] during persist time for groups 
@@ -119,14 +119,14 @@ messageTemplate='{javax.validation.constraints.NotNull.message}'}]
 
 出于这个原因，我们将在我们的`application.properties`文件中设置几个属性:
 
-```
+```java
 spring.jpa.hibernate.ddl-auto=create-drop
 spring.jpa.show-sql=true
 ```
 
 如果我们现在启动应用程序，我们将看到 DDL 语句:
 
-```
+```java
 create table item (
    id bigint not null,
     price decimal(19,2) not null,
@@ -146,7 +146,7 @@ create table item (
 
 为了测试这一点，让我们更新我们的`application.properties`:
 
-```
+```java
 spring.jpa.hibernate.ddl-auto=create-drop
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.validator.apply_to_ddl=false
@@ -154,7 +154,7 @@ spring.jpa.properties.hibernate.validator.apply_to_ddl=false
 
 让我们运行应用程序并查看 DDL 语句:
 
-```
+```java
 create table item (
    id bigint not null,
     price decimal(19,2),
@@ -172,7 +172,7 @@ create table item (
 
 让我们用`@Column(nullable = false)`更新我们的`Item` 实体，看看它是如何工作的:
 
-```
+```java
 @Entity
 public class Item {
 
@@ -187,7 +187,7 @@ public class Item {
 
 我们现在可以尝试保存一个`null price`值:
 
-```
+```java
 @SpringBootTest
 public class ItemIntegrationTest {
 
@@ -203,7 +203,7 @@ public class ItemIntegrationTest {
 
 下面是 Hibernate 的输出片段:
 
-```
+```java
 Hibernate: 
 
     create table item (
@@ -239,14 +239,14 @@ NULL not allowed for column "PRICE"
 
 为了激活这个 Hibernate 特性，我们需要显式地将`hibernate.check_nullability`属性设置为`true`:
 
-```
+```java
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.check_nullability=true
 ```
 
 现在让我们再次执行我们的测试用例，并检查输出:
 
-```
+```java
 org.springframework.dao.DataIntegrityViolationException: 
 not-null property references a null or transient value : com.baeldung.h2db.springboot.models.Item.price; 
 nested exception is org.hibernate.PropertyValueException: 

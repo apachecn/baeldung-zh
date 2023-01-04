@@ -20,7 +20,7 @@
 
 首先，我们需要将 Maven 依赖项添加到 [`pact-jvm-consumer-junit5_2.12`](https://web.archive.org/web/20220626082031/https://search.maven.org/search?q=g:au.com.dius%20AND%20a:pact-jvm-consumer-junit5_2.12) 库中:
 
-```
+```java
 <dependency>
     <groupId>au.com.dius</groupId>
     <artifactId>pact-jvm-consumer-junit5_2.12</artifactId>
@@ -33,7 +33,7 @@
 
 当我们想要使用`Pact`创建一个测试时，首先我们需要用将要使用的提供者来注释我们的测试类:
 
-```
+```java
 @PactTestFor(providerName = "test_provider", hostInterface="localhost")
 public class PactConsumerDrivenContractUnitTest
 ```
@@ -48,7 +48,7 @@ public class PactConsumerDrivenContractUnitTest
 
 **我们需要使用`@Pact` 注释，并传递为其定义合同的消费者名称。**在带注释的方法里面，我们可以定义我们的 GET 契约:
 
-```
+```java
 @Pact(consumer = "test_consumer")
 public RequestResponsePact createPact(PactDslWithProvider builder) {
     Map<String, String> headers = new HashMap<>();
@@ -73,7 +73,7 @@ public RequestResponsePact createPact(PactDslWithProvider builder) {
 
 让我们用`Pact:`来定义这样的合同
 
-```
+```java
 (...)
 .given("test POST")
 .uponReceiving("POST REQUEST")
@@ -92,7 +92,7 @@ public RequestResponsePact createPact(PactDslWithProvider builder) {
 
 默认情况下，Pact 文件将在`target/pacts`文件夹中生成。为了定制这个路径，我们可以配置`maven-surefire-plugin:`
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-surefire-plugin</artifactId>
@@ -107,7 +107,7 @@ public RequestResponsePact createPact(PactDslWithProvider builder) {
 
 Maven 构建将在`target/mypacts`文件夹中生成一个名为`test_consumer-test_provider.json`的文件，其中包含请求和响应的结构:
 
-```
+```java
 {
     "provider": {
         "name": "test_provider"
@@ -171,7 +171,7 @@ Maven 构建将在`target/mypacts`文件夹中生成一个名为`test_consumer-t
 
 让我们为 GET 请求编写一个测试:
 
-```
+```java
 @Test
 @PactTestFor
 public void givenGet_whenSendRequest_shouldReturn200WithProperHeaderAndBody() {
@@ -191,7 +191,7 @@ public void givenGet_whenSendRequest_shouldReturn200WithProperHeaderAndBody() {
 
 让我们也为 POST 方法调用添加测试:
 
-```
+```java
 HttpHeaders httpHeaders = new HttpHeaders();
 httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 String jsonBody = "{\"name\": \"Michael\"}";
@@ -223,7 +223,7 @@ assertThat(postResponse.getStatusCode().value()).isEqualTo(201);
 
 首先，为了创建我们的 JUnit 测试，我们需要添加[pact-JVM-provider-JUnit 5 _ 2.12](https://web.archive.org/web/20220626082031/https://search.maven.org/search?q=a:pact-jvm-provider-junit5_2.12)依赖项:
 
-```
+```java
 <dependency>
     <groupId>au.com.dius</groupId>
     <artifactId>pact-jvm-provider-junit5_2.12</artifactId>
@@ -233,7 +233,7 @@ assertThat(postResponse.getStatusCode().value()).isEqualTo(201);
 
 **这允许我们创建一个 JUnit 测试，指定提供者名称和 Pact 工件的位置:**
 
-```
+```java
 @Provider("test_provider")
 @PactFolder("pacts")
 public class PactProviderLiveTest {
@@ -245,7 +245,7 @@ public class PactProviderLiveTest {
 
 接下来，为了用 JUnit 5 编写 Pact 验证测试，我们需要使用带有`@TestTemplate`注释的`PactVerificationInvocationContextProvider`。我们需要给它传递`PactVerificationContext`参数，我们将使用它来设置目标 Spring Boot 应用程序的细节:
 
-```
+```java
 private static ConfigurableWebApplicationContext application;
 
 @TestTemplate
@@ -267,7 +267,7 @@ void before(PactVerificationContext context) {
 
 最后，我们将在契约中指定我们想要测试的状态:
 
-```
+```java
 @State("test GET")
 public void toGetState() { }
 
@@ -277,7 +277,7 @@ public void toPostState() { }
 
 运行这个 JUnit 类将为两个 GET 和 POST 请求执行两个测试。让我们来看看日志:
 
-```
+```java
 Verifying a pact between test_consumer and test_provider
   Given test GET
   GET REQUEST

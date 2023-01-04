@@ -60,7 +60,7 @@ JWT，即 [JSON Web Token](https://web.archive.org/web/20221018140149/https://to
 
 主要是，我们将需要 [`spring-boot-starter-oauth2-resource-server`](https://web.archive.org/web/20221018140149/https://search.maven.org/search?q=spring-boot-starter-oauth2-resource-server) ，Spring Boot 的资源服务器支持的启动器。这个 starter 默认包含 Spring Security，所以我们不需要显式地添加它:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -86,7 +86,7 @@ JWT，即 [JSON Web Token](https://web.archive.org/web/20221018140149/https://to
 
 简单来说，我们将使用 POJO`Foo`作为我们的受保护资源:
 
-```
+```java
 public class Foo {
     private long id;
     private String name;
@@ -99,7 +99,7 @@ public class Foo {
 
 这是我们的 rest 控制器，使`Foo`可用于操作:
 
-```
+```java
 @RestController
 @RequestMapping(value = "/foos")
 public class FooController {
@@ -132,7 +132,7 @@ public class FooController {
 
 在本配置课程中，我们将定义资源的访问级别:
 
-```
+```java
 @Configuration
 public class JWTSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -156,7 +156,7 @@ public class JWTSecurityConfig extends WebSecurityConfigurerAdapter {
 
 在应用程序属性中，除了通常的端口号和上下文路径，**我们需要定义到我们的授权服务器的发布者 URI 的路径，以便资源服务器可以发现它的[提供者配置](https://web.archive.org/web/20221018140149/https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfig)** :
 
-```
+```java
 server: 
   port: 8081
   servlet: 
@@ -176,7 +176,7 @@ spring:
 
 如果我们需要独立启动它，那么我们可以提供`jwk-set-uri`属性来指向授权服务器的端点，公开公钥:
 
-```
+```java
 jwk-set-uri: http://localhost:8083/auth/realms/baeldung/protocol/openid-connect/certs
 ```
 
@@ -188,7 +188,7 @@ jwk-set-uri: http://localhost:8083/auth/realms/baeldung/protocol/openid-connect/
 
 让我们验证一下，在我们的测试中，我们可以用一个`read`范围的令牌从`resource-server-jw` t 获得`Foo` s:
 
-```
+```java
 @Test
 public void givenUserWithReadScope_whenGetFooResource_thenSuccess() {
     String accessToken = obtainAccessToken("read");
@@ -212,7 +212,7 @@ public void givenUserWithReadScope_whenGetFooResource_thenSuccess() {
 
 为了支持不透明令牌，我们需要额外的`[oauth2-oidc-sdk](https://web.archive.org/web/20221018140149/https://search.maven.org/search?q=oauth2-oidc-sdk)` 依赖:
 
-```
+```java
 <dependency>
     <groupId>com.nimbusds</groupId>
     <artifactId>oauth2-oidc-sdk</artifactId>
@@ -225,7 +225,7 @@ public void givenUserWithReadScope_whenGetFooResource_thenSuccess() {
 
 对此，我们将添加一个`Bar`资源:
 
-```
+```java
 public class Bar {
     private long id;
     private String name;
@@ -240,7 +240,7 @@ public class Bar {
 
 在这里的`application.yml`中，我们需要添加一个对应于授权服务器自省端点的`introspection-uri` 。如前所述，这就是不透明令牌被验证的方式:
 
-```
+```java
 server: 
   port: 8082
   servlet: 
@@ -260,7 +260,7 @@ spring:
 
 保持类似于`Bar`资源的`Foo`的访问级别，**这个配置类还使用 `oauth2ResourceServer()` DSL 调用`opaqueToken()`来指示使用不透明令牌类型**:
 
-```
+```java
 @Configuration
 public class OpaqueSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -295,7 +295,7 @@ public class OpaqueSecurityConfig extends WebSecurityConfigurerAdapter {
 
 在这种情况下，我们将检查一个`write`范围内的访问令牌是否可以向`resource-server-opaque`发送一个`Bar`:
 
-```
+```java
 @Test
 public void givenUserWithWriteScope_whenPostNewBarResource_thenCreated() {
     String accessToken = obtainAccessToken("read write");

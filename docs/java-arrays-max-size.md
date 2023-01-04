@@ -14,7 +14,7 @@
 
 这可以用一个简单的例子来验证:
 
-```
+```java
 for (int i = 2; i >= 0; i--) {
     try {
         int[] arr = new int[Integer.MAX_VALUE - i];
@@ -27,7 +27,7 @@ for (int i = 2; i >= 0; i--) {
 
 在使用 Linux 和 Mac 机器执行上述程序的过程中，可以观察到类似的行为。在使用 **VM 参数`-Xms2G -Xmx2G,`** 执行时，我们会收到以下错误:
 
-```
+```java
 java.lang.OutOfMemoryError: Java heap space
 	at com.example.demo.ArraySizeCheck.main(ArraySizeCheck.java:8)
 java.lang.OutOfMemoryError: Requested array size exceeds VM limit
@@ -39,7 +39,7 @@ java.lang.OutOfMemoryError: Requested array size exceeds VM limit
 
 现在让我们尝试使用 **VM 参数** `**-Xms9G -Xmx9G**` 来获得准确的最大大小:
 
-```
+```java
 Max-Size: 2147483645
 java.lang.OutOfMemoryError: Requested array size exceeds VM limit
 	at com.example.demo.ArraySizeCheck.main(ArraySizeCheck.java:8)

@@ -10,7 +10,7 @@
 
 让我们从一个天真的方法开始。首先，**我们可以检查每个子串是否包含唯一的字符:**
 
-```
+```java
 String getUniqueCharacterSubstringBruteForce(String input) {
     String output = "";
     for (int start = 0; start < input.length(); start++) {
@@ -42,7 +42,7 @@ String getUniqueCharacterSubstringBruteForce(String input) {
 2.  最长的不重复子串`output`
 3.  **一个已经有`visited`个字符的查找表**
 
-```
+```java
 String getUniqueCharacterSubstring(String input) {
     Map<Character, Integer> visited = new HashMap<>();
     String output = "";
@@ -70,7 +70,7 @@ String getUniqueCharacterSubstring(String input) {
 
 最后，让我们彻底测试一下我们的实现，以确保它能够工作:
 
-```
+```java
 @Test
 void givenString_whenGetUniqueCharacterSubstringCalled_thenResultFoundAsExpected() {
     assertEquals("", getUniqueCharacterSubstring(""));

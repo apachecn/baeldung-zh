@@ -32,7 +32,7 @@
 
 首先，我们将创建一个用不同方式发送消息的`MessagingService`接口:
 
-```
+```java
 public interface MessagingService {
 
     String getMessageBody();
@@ -42,7 +42,7 @@ public interface MessagingService {
 
 接下来，我们将定义上述接口的两个实现，它们通过电子邮件和 SMS 发送消息:
 
-```
+```java
 public class EmailService implements MessagingService {
 
     public String getMessageBody() {
@@ -59,7 +59,7 @@ public class EmailService implements MessagingService {
 
 在定义了这两个服务之后，我们必须定义初始化它们的逻辑:
 
-```
+```java
 public class InitialContext {
     public Object lookup(String serviceName) {
         if (serviceName.equalsIgnoreCase("EmailService")) {
@@ -76,7 +76,7 @@ public class InitialContext {
 
 在我们的例子中，这是一个具有`List`属性的简单类:
 
-```
+```java
 public class Cache {
     private List<MessagingService> services = new ArrayList<>();
 
@@ -92,7 +92,7 @@ public class Cache {
 
 最后，我们可以实现我们的服务定位器类:
 
-```
+```java
 public class ServiceLocator {
 
     private static Cache cache = new Cache();
@@ -124,7 +124,7 @@ public class ServiceLocator {
 
 现在让我们看看如何获得实例:
 
-```
+```java
 MessagingService service 
   = ServiceLocator.getService("EmailService");
 String email = service.getMessageBody();

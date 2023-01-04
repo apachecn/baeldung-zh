@@ -30,14 +30,14 @@ Terraform 发行版包含一个二进制文件，我们可以从 Hashicorp 的[�
 
 完成这一步后，我们可以用一个简单的命令来检查它是否正常工作:
 
-```
+```java
 $ terraform -v
 Terraform v0.12.24
 ```
 
 就是这样，不需要管理员权限！我们可以通过不带任何参数地运行 Terraform 来快速获得可用命令的帮助:
 
-```
+```java
 $ terraform
 Usage: terraform [-version] [-help] <command> [args]
 ... help content omitted
@@ -49,7 +49,7 @@ Usage: terraform [-version] [-help] <command> [args]
 
 对于我们的“Hello，Terraform”项目，我们的资源将只是一个具有固定内容的文件。让我们通过打开命令 shell 并键入几个命令来看看这是什么样子:
 
-```
+```java
 $ cd $HOME
 $ mkdir hello-terraform
 $ cd hello-terraform
@@ -72,7 +72,7 @@ EOF
 
 现在，让我们继续在这个项目上运行 Terraform。因为这是我们第一次运行这个项目，我们需要用`init`命令初始化它:
 
-```
+```java
 $ terraform init
 
 Initializing the backend...
@@ -89,7 +89,7 @@ Terraform has been successfully initialized!
 
 接下来，我们使用`plan`命令来验证 Terraform 将执行什么操作来创建我们的资源。这一步的工作方式非常类似于其他构建系统中的“预演”特性，比如 GNU 的 make 工具:
 
-```
+```java
 $ terraform plan
 ... messages omitted
 Terraform will perform the following actions:
@@ -111,7 +111,7 @@ Plan: 1 to add, 0 to change, 0 to destroy.
 
 我们现在可以使用`apply `命令进行实际的资源创建:
 
-```
+```java
 $ terraform apply
 
 An execution plan has been generated and is shown below.
@@ -145,14 +145,14 @@ Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
 
 现在，我们可以验证该文件是使用指定的内容创建的:
 
-```
+```java
 $ cat hello.txt
 Hello, Terraform
 ```
 
 一切都好！现在，让我们看看如果我们重新运行`apply` 命令会发生什么，这一次使用`-auto-approve` 标志，这样 Terraform 会立即运行而不要求任何确认:
 
-```
+```java
 $ terraform apply -auto-approve
 local_file.hello: Refreshing state... [id=392b5481eae4ab2178340f62b752297f72695d57]
 
@@ -161,7 +161,7 @@ Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 
 这一次，Terraform 什么也没做，因为文件已经存在。然而，这还不是全部。**有时资源存在，但有人可能改变了它的一个属性，这种情况通常被称为“配置漂移”** `.`让我们看看 Terraform 在这种情况下的表现:
 
-```
+```java
 $ echo foo > hello.txt
 $ terraform plan
 Refreshing Terraform state in-memory prior to plan...
@@ -195,7 +195,7 @@ Plan: 1 to add, 0 to change, 0 to destroy.
 
 我们现在可以再次运行`apply`，结果，它会将文件的内容恢复到预期的内容:
 
-```
+```java
 $ terraform apply -auto-approve
 ... messages omitted
 Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
@@ -218,7 +218,7 @@ Terraform 根据给定项目的资源，根据需要自动从其[公共注册表
 
 虽然不是绝对必要的，但显式声明我们将在 Terraform 项目中使用哪个提供者并告知其版本被认为是一个好的做法。为此，我们使用可用于任何`provider`声明的`version`属性:
 
-```
+```java
 provider "kubernetes" {
   version = "~> 1.10"
 }
@@ -232,7 +232,7 @@ provider "kubernetes" {
 
 让我们看一个简单的资源定义:
 
-```
+```java
 resource "aws_instance" "web" {
   ami = "some-ami-id"
   instance_type = "t2.micro"
@@ -245,7 +245,7 @@ resource "aws_instance" "web" {
 
 为了说明这是如何工作的，让我们通过在非默认 VPC(虚拟私有云)中创建 EC2 实例来扩展前面的示例:
 
-```
+```java
 resource "aws_instance" "web" {
   ami = "some-ami-id"
   instance_type = "t2.micro"
@@ -270,7 +270,7 @@ resource "aws_vpc" "apps" {
 
 例如，让我们使用`count`在 AWS 上创建一些 EC2 实例:
 
-```
+```java
 resource "aws_instance" "server" {
   count = var.server_count 
   ami = "ami-xxxxxxx"
@@ -285,7 +285,7 @@ resource "aws_instance" "server" {
 
 同样，我们可以使用`for_each`元参数来创建基于映射的那些实例:
 
-```
+```java
 variable "instances" {
   type = map(string)
 }
@@ -309,7 +309,7 @@ resource "aws_instance" "server" {
 
 一个典型的例子是 AWS provider 中可用的`aws_ami`数据源，我们使用它从现有的 AMI 中恢复属性:
 
-```
+```java
 data "aws_ami" "ubuntu" {
   most_recent = true
   filter {
@@ -326,7 +326,7 @@ data "aws_ami" "ubuntu" {
 
 这个例子定义了一个名为“ubuntu”的`data`源，它查询 AMI 注册表并返回与所定位图像相关的几个属性。然后我们可以在其他资源定义中使用这些属性，在属性名前面加上前缀`data`:
 
-```
+```java
 resource "aws_instance" "web" {
   ami = data.aws_ami.ubuntu.id 
   instance_type = "t2.micro"
@@ -343,7 +343,7 @@ resource "aws_instance" "web" {
 
 Terraform 使用`backend`的概念来存储和检索状态文件。默认的后端是`local` 后端，它使用项目根文件夹中的一个文件作为它的存储位置。我们还可以通过在项目的一个`.tf`文件的`terraform`块中声明来配置一个替代的`remote` 后端:
 
-```
+```java
 terraform {
   backend "s3" {
     bucket = "some-bucket"
@@ -359,7 +359,7 @@ Terraform 模块的主要特点是允许我们在多个项目中重用资源定�
 
 模块只是包含一个或多个资源定义文件的目录。事实上，即使我们将所有代码放在一个文件/目录中，我们仍然在使用模块——在这种情况下，只有一个模块。重要的一点是，子目录不是模块的一部分。相反，父模块必须使用`module`声明显式包含它们:
 
-```
+```java
 module "networking" {
   source = "./networking"
   create_public_ip = true
@@ -374,7 +374,7 @@ module "networking" {
 
 任何模块，包括顶层或主模块，都可以使用`variable `块定义来定义几个输入变量:
 
-```
+```java
 variable "myvar" {
   type = string
   default = "Some Value"
@@ -393,7 +393,7 @@ variable "myvar" {
 
 一旦定义完毕，我们就可以在表达式中使用带有前缀`var`的变量:
 
-```
+```java
 resource "xxx_type" "some_name" {
   arg = var.myvar
 }
@@ -403,7 +403,7 @@ resource "xxx_type" "some_name" {
 
 根据设计，模块的使用者无权访问模块中创建的任何资源。然而，有时我们需要这些属性中的一些作为另一个模块或资源的输入。**为了解决这些情况，一个模块可以定义`output `块，这些块暴露了所创建资源的子集**:
 
-```
+```java
 output "web_addr" {
   value = aws_instance.web.private_ip
   description = "Web server's private IP address"
@@ -416,7 +416,7 @@ output "web_addr" {
 
 局部变量像标准变量一样工作，但是它们的范围被限制在声明它们的模块中。使用局部变量有助于减少代码重复，尤其是在处理模块的输出值时:
 
-```
+```java
 locals {
   vpc_id = module.network.vpc_id
 }

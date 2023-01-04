@@ -18,7 +18,7 @@ Java 中的 `throw`关键字用于显式抛出[一个定制的异常或内置的
 
 下面，我们再次抛出同样的异常。而且，在抛出之前，我们会记录一条错误消息:
 
-```
+```java
 String name = null;
 
 try {
@@ -31,7 +31,7 @@ try {
 
 控制台将显示以下消息:
 
-```
+```java
 Exception in thread "main" java.lang.NullPointerException
   at com.baeldung.exceptions.RethrowSameExceptionDemo.main(RethrowSameExceptionDemo.java:16)
 ```
@@ -44,7 +44,7 @@ Exception in thread "main" java.lang.NullPointerException
 
 在这种情况下，我们将在不同异常的构造函数中传递相同的异常作为引用:
 
-```
+```java
 String name = null;
 
 try {
@@ -57,7 +57,7 @@ try {
 
 控制台将显示:
 
-```
+```java
 Exception in thread "main" java.lang.IllegalArgumentException: java.lang.NullPointerException
   at com.baeldung.exceptions.RethrowDifferentExceptionDemo.main(RethrowDifferentExceptionDemo.java:24)
 Caused by: java.lang.NullPointerException

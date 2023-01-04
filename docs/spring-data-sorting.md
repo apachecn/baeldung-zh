@@ -29,7 +29,7 @@
 
 在这里，我们将我们的乘客建模为 JPA 实体，但是我们也可以像对 MongoDB 文档或任何其他模型抽象一样简单地对其建模:
 
-```
+```java
 @Entity
 class Passenger {
 
@@ -66,7 +66,7 @@ class Passenger {
 
 我们可以使用这个约定创建一个查询，按照座位号以升序返回我们的乘客:
 
-```
+```java
 interface PassengerRepository extends JpaRepository<Passenger, Long> {
 
     List<Passenger> findByOrderBySeatNumberAsc();
@@ -77,7 +77,7 @@ interface PassengerRepository extends JpaRepository<Passenger, Long> {
 
 让我们看一个根据姓氏`and`查找乘客，根据座位号排序的方法示例:
 
-```
+```java
 List<Passenger> findByLastNameOrderBySeatNumberAsc(String lastName);
 ```
 
@@ -85,7 +85,7 @@ List<Passenger> findByLastNameOrderBySeatNumberAsc(String lastName);
 
 **我们的第二个选项是包含一个`[Sort](https://web.archive.org/web/20220707143830/https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/domain/Sort.html)`参数**，指定我们想要排序的属性名和方向:
 
-```
+```java
 List<Passenger> passengers = repository.findAll(Sort.by(Sort.Direction.ASC, "seatNumber"));
 ```
 
@@ -93,13 +93,13 @@ List<Passenger> passengers = repository.findAll(Sort.by(Sort.Direction.ASC, "sea
 
 我们还可以将此参数添加到新的方法定义中:
 
-```
+```java
 List<Passenger> findByLastName(String lastName, Sort sort);
 ```
 
 最后，如果我们正在分页，我们可以在一个 [`Pageable`](https://web.archive.org/web/20220707143830/https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/domain/Pageable.html) 对象中指定我们的排序:
 
-```
+```java
 Page<Passenger> page = repository.findAll(PageRequest.of(0, 1, Sort.by(Sort.Direction.ASC, "seatNumber")));
 ```
 

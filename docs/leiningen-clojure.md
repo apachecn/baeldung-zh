@@ -18,7 +18,7 @@ Leiningen 可以单独下载，也可以从不同系统的大量[包管理器中
 
 第一次运行该脚本时，它将下载 Leiningen 应用程序的其余部分，然后从现在开始，它将被缓存:
 
-```
+```java
 $ ./lein
 Downloading Leiningen to /Users/user/.lein/self-installs/leiningen-2.8.3-standalone.jar now...
 .....
@@ -45,7 +45,7 @@ Run `lein help $TASK` for details.
 
 例如，要创建一个名为“我的项目”的新应用程序，我们将执行:
 
-```
+```java
 $ ./lein new app my-project
 Generating a project called my-project based on the 'app' template.
 ```
@@ -59,7 +59,7 @@ Generating a project called my-project based on the 'app' template.
 
 **看看我们的构建定义，我们会发现它告诉我们要构建什么，而不是如何构建:**
 
-```
+```java
 (defproject my-project "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
@@ -85,7 +85,7 @@ Generating a project called my-project based on the 'app' template.
 
 生成的代码非常简单:
 
-```
+```java
 (ns my-project.core
   (:gen-class))
 
@@ -109,7 +109,7 @@ Generating a project called my-project based on the 'app' template.
 
 它还让我们进入为项目定义的主名称空间:
 
-```
+```java
 $ lein repl
 nREPL server started on port 62856 on host 127.0.0.1 - nrepl://127.0.0.1:62856
 []REPL-y 0.4.3, nREPL 0.5.3
@@ -134,7 +134,7 @@ nil
 
 如果我们正在处理一个应用程序项目——使用`lein new app`创建——那么**我们可以简单地从命令行运行应用程序。这是使用`lein run`** 完成的:
 
-```
+```java
 $ lein run
 Hello, World!
 ```
@@ -149,14 +149,14 @@ Hello, World!
 
 **如果我们使用`lein jar`，那么它将把它放在本地`target`目录**:
 
-```
+```java
 $ lein jar
 Created /Users/user/source/me/my-library/target/my-library-0.1.0-SNAPSHOT.jar
 ```
 
 **如果我们使用`lein install`，那么它将构建 JAR 文件，生成一个`pom.xml`文件，然后将这两个文件放入本地 Maven 资源库**(通常在用户主目录的`.m2/repository`下)
 
-```
+```java
 $ lein install
 Created /Users/user/source/me/my-library/target/my-library-0.1.0-SNAPSHOT.jar
 Wrote /Users/user/source/me/my-library/pom.xml
@@ -167,7 +167,7 @@ Installed jar and pom into local repo.
 
 如果我们正在进行一个应用项目， **Leiningen 给了我们构建一个叫做 uberjar** 的东西的能力。这是一个 JAR 文件，包含项目本身和所有的依赖项，并允许它按原样运行。
 
-```
+```java
 $ lein uberjar
 Compiling my-project.core
 Created /Users/user/source/me/my-project/target/uberjar/my-project-0.1.0-SNAPSHOT.jar
@@ -176,7 +176,7 @@ Created /Users/user/source/me/my-project/target/uberjar/my-project-0.1.0-SNAPSHO
 
 文件`my-project-0.1.0-SNAPSHOT.jar`是一个包含本地项目的 JAR 文件，文件`my-project-0.1.0-SNAPSHOT-standalone.jar`包含运行应用程序所需的一切。
 
-```
+```java
 $ java -jar target/uberjar/my-project-0.1.0-SNAPSHOT-standalone.jar
 Hello, World!
 ```
@@ -193,13 +193,13 @@ Hello, World!
 
 如果我们想要添加其他依赖项，我们可以通过将它们添加到关键字`:dependencies`旁边的 vector 中来实现。例如，如果我们想要依赖于`clj-json`,我们将更新文件:
 
-```
+```java
  :dependencies [[org.clojure/clojure "1.9.0"] [clj-json "0.5.3"]]
 ```
 
 **一旦完成，如果我们启动我们的 REPL——或任何其他方式来构建或运行我们的项目——那么 Leiningen 将确保依赖项被下载并在类路径中可用**:
 
-```
+```java
 $ lein repl
 Retrieving clj-json/clj-json/0.5.3/clj-json-0.5.3.pom from clojars
 Retrieving clj-json/clj-json/0.5.3/clj-json-0.5.3.jar from clojars
@@ -223,7 +223,7 @@ my-project.core=>
 
 我们也可以在项目内部使用它们。例如，我们可以如下更新生成的`src/my_project/core.clj`文件:
 
-```
+```java
 (ns my-project.core
   (:gen-class))
 
@@ -237,7 +237,7 @@ my-project.core=>
 
 然后运行它将完全按照预期进行:
 
-```
+```java
 $ lein run
 {"foo":"bar"}
 ```
@@ -248,7 +248,7 @@ $ lein run
 
 例如，我们可以找到我们的 JSON 库:
 
-```
+```java
 $ lein search json
 Searching central ...
 [com.jwebmp/json "0.63.0.60"]
@@ -275,7 +275,7 @@ Clojure 内置了对应用程序单元测试的支持，Leiningen 可以在我�
 
 我们生成的项目包含位于`test`目录中的测试代码，以及位于`src`目录中的源代码。它还包括一个单一的，失败的默认测试——在`test/my_project/core-test.clj`发现:
 
-```
+```java
 (ns my-project.core-test
   (:require [clojure.test :refer :all]
             [my-project.core :refer :all]))
@@ -291,7 +291,7 @@ Clojure 内置了对应用程序单元测试的支持，Leiningen 可以在我�
 
 **让我们使用`lein test`命令**来运行它，并立即看到测试运行和失败:
 
-```
+```java
 $ lein test
 lein test my-project.core-test
 
@@ -309,7 +309,7 @@ Tests failed.
 
 如果我们改为修复测试，改为断言`1 == 1`，那么我们将得到一个传递消息:
 
-```
+```java
 $ lein test
 lein test my-project.core-test
 
@@ -321,7 +321,7 @@ Ran 1 tests containing 1 assertions.
 
 如果我们愿意，我们还可以运行特定的测试子集。命令行允许提供一个名称空间，并且只执行该名称空间中的测试:
 
-```
+```java
 $ lein test my-project.core-test
 
 lein test my-project.core-test

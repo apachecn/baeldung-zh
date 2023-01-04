@@ -16,7 +16,7 @@ Java `[Stack](/web/20221208143859/https://www.baeldung.com/java-stack)`类实现
 
 Java 的`Stack `是一个`Class`:
 
-```
+```java
 public class Stack<E> extends Vector<E> { ... }
 ```
 
@@ -24,7 +24,7 @@ public class Stack<E> extends Vector<E> { ... }
 
 **由于 Java 不支持多重继承，如果我们的类已经是另一个类型**的子类，那么有时很难扩展`Stack`类:
 
-```
+```java
 public class UserActivityStack extends ActivityCollection { ... }
 ```
 
@@ -32,7 +32,7 @@ public class UserActivityStack extends ActivityCollection { ... }
 
 另一方面，Java 的`Deque`是一个接口:
 
-```
+```java
 public interface Deque<E> extends Queue<E> { ... }
 ```
 
@@ -40,7 +40,7 @@ public interface Deque<E> extends Queue<E> { ... }
 
 例如，我们可以很容易地让我们的`UserActivityStack`实现`Deque`接口:
 
-```
+```java
 public class UserActivityStack extends ActivityCollection implements Deque<UserActivity> { ... }
 ```
 
@@ -66,7 +66,7 @@ public class UserActivityStack extends ActivityCollection implements Deque<UserA
 
 首先，让我们将一些元素推入一个`Stack`对象，并检查它的迭代顺序:
 
-```
+```java
 @Test
 void givenAStack_whenIterate_thenFromBottomToTop() {
     Stack<String> myStack = new Stack<>();
@@ -89,7 +89,7 @@ void givenAStack_whenIterate_thenFromBottomToTop() {
 
 此外，我们将使用`ArrayDeque`作为 LIFO 堆栈:
 
-```
+```java
 @Test
 void givenADeque_whenIterate_thenFromTopToBottom() {
     Deque<String> myStack = new ArrayDeque<>();
@@ -126,7 +126,7 @@ void givenADeque_whenIterate_thenFromTopToBottom() {
 
 因为它的父类`Vector `是基于数组的数据结构，所以`Stack`类能够通过索引访问元素:
 
-```
+```java
 @Test
 void givenAStack_whenAccessByIndex_thenElementCanBeRead() {
     Stack<String> myStack = new Stack<>();
@@ -148,7 +148,7 @@ void givenAStack_whenAccessByIndex_thenElementCanBeRead() {
 
 此外，使用`Stack`对象，**我们甚至可以通过索引**来插入和移除元素。让我们创建一个测试方法来证明这一点:
 
-```
+```java
 @Test
 void givenAStack_whenAddOrRemoveByIndex_thenElementCanBeAddedOrRemoved() {
     Stack<String> myStack = new Stack<>();
@@ -180,7 +180,7 @@ void givenAStack_whenAddOrRemoveByIndex_thenElementCanBeAddedOrRemoved() {
 
 让我们构建一个测试方法来看看这是如何发生的。同样，我们将在测试中继续使用`ArrayDeque`类:
 
-```
+```java
 @Test
 void givenADeque_whenAddOrRemoveLastElement_thenTheLastElementCanBeAddedOrRemoved() {
     Deque<String> myStack = new ArrayDeque<>();
@@ -212,7 +212,7 @@ void givenADeque_whenAddOrRemoveLastElement_thenTheLastElementCanBeAddedOrRemove
 
 我们可以创建一个简单的`LifoStack`接口来遵守 LIFO 契约:
 
-```
+```java
 public interface LifoStack<E> extends Collection<E> {
     E peek();
     E pop();
@@ -224,7 +224,7 @@ public interface LifoStack<E> extends Collection<E> {
 
 让我们创建一个`ArrayLifoStack` 类作为例子来快速理解它:
 
-```
+```java
 public class ArrayLifoStack<E> implements LifoStack<E> {
     private final Deque<E> deque = new ArrayDeque<>();
 

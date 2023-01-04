@@ -58,14 +58,14 @@
 
 首先，我们初始化`lowEnd`和`highEnd`:
 
-```
+```java
 int highEnd = (data.length - 1);
 int lowEnd = 0;
 ```
 
 接下来，我们建立一个循环，在每次迭代中，我们根据前面提到的公式计算新的`probe`。循环条件通过比较`item`与`data[lowEnd]`和`data[highEnd]`来确保我们没有超出搜索空间:
 
-```
+```java
 while (item >= data[lowEnd] && item <= data[highEnd] && lowEnd <= highEnd) {
     int probe
       = lowEnd + (highEnd - lowEnd) * (item - data[lowEnd]) / (data[highEnd] - data[lowEnd]);
@@ -76,7 +76,7 @@ while (item >= data[lowEnd] && item <= data[highEnd] && lowEnd <= highEnd) {
 
 最后，我们调整`lowEnd`或`highEnd`以减少每次迭代的搜索空间:
 
-```
+```java
 public int interpolationSearch(int[] data, int item) {
 
     int highEnd = (data.length - 1);

@@ -28,7 +28,7 @@ Generate Bounded and Unbounded Random Strings using plain Java and the Apache Co
 
 让我们使用`Math.random` 方法在给定范围`[min, max)`内生成一个随机数:
 
-```
+```java
 public int getRandomNumber(int min, int max) {
     return (int) ((Math.random() * (max - min)) + min);
 }
@@ -36,7 +36,7 @@ public int getRandomNumber(int min, int max) {
 
 为什么会这样？让我们看看当`Math.random`返回 0.0 时会发生什么，这是可能的最低输出:
 
-```
+```java
 0.0 * (max - min) + min => min
 ```
 
@@ -44,7 +44,7 @@ public int getRandomNumber(int min, int max) {
 
 由于 1.0 是`Math.random`的独占上限，所以我们得到的是:
 
-```
+```java
 1.0 * (max - min) + min => max - min + min => max
 ```
 
@@ -58,7 +58,7 @@ public int getRandomNumber(int min, int max) {
 
 让我们利用`java.util.Random.nextInt` 方法得到一个随机数:
 
-```
+```java
 public int getRandomNumberUsingNextInt(int min, int max) {
     Random random = new Random();
     return random.nextInt(max - min) + min;
@@ -73,7 +73,7 @@ public int getRandomNumberUsingNextInt(int min, int max) {
 
 因此，我们可以利用`java.util.Random.ints`方法并返回一个随机数:
 
-```
+```java
 public int getRandomNumberUsingInts(int min, int max) {
     Random random = new Random();
     return random.ints(min, max)

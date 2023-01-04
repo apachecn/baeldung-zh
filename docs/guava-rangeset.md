@@ -18,7 +18,7 @@
 
 让我们从在`pom.xml`中添加 Google 的番石榴库依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -34,20 +34,20 @@
 
 首先，我们可以使用类`TreeRangeSet`中的`create`方法来创建一个可变集合:
 
-```
+```java
 RangeSet<Integer> numberRangeSet = TreeRangeSet.create();
 ```
 
 如果我们已经有了集合，使用类`TreeRangeSet`的`create`方法通过传递集合来创建一个可变集合:
 
-```
+```java
 List<Range<Integer>> numberList = Arrays.asList(Range.closed(0, 2));
 RangeSet<Integer> numberRangeSet = TreeRangeSet.create(numberList);
 ```
 
 最后，如果我们需要创建一个不可变的范围集合，使用`ImmutableRangeSet`类(按照构建器模式创建):
 
-```
+```java
 RangeSet<Integer> numberRangeSet 
   = new ImmutableRangeSet.<Integer>builder().add(Range.closed(0, 2)).build(); 
 ```
@@ -60,7 +60,7 @@ RangeSet<Integer> numberRangeSet
 
 我们可以检查所提供的输入是否在集合中任何范围项目中的范围内:
 
-```
+```java
 @Test
 public void givenRangeSet_whenQueryWithinRange_returnsSucessfully() {
     RangeSet<Integer> numberRangeSet = TreeRangeSet.create();
@@ -85,7 +85,7 @@ public void givenRangeSet_whenQueryWithinRange_returnsSucessfully() {
 
 让我们看看如何从`RangeSet`中移除值:
 
-```
+```java
 @Test
 public void givenRangeSet_whenRemoveRangeIsCalled_removesSucessfully() {
     RangeSet<Integer> numberRangeSet = TreeRangeSet.create();
@@ -109,7 +109,7 @@ public void givenRangeSet_whenRemoveRangeIsCalled_removesSucessfully() {
 
 现在让我们看看`RangeSet` 的总跨度是多少:
 
-```
+```java
 @Test
 public void givenRangeSet_whenSpanIsCalled_returnsSucessfully() {
     RangeSet<Integer> numberRangeSet = TreeRangeSet.create();
@@ -128,7 +128,7 @@ public void givenRangeSet_whenSpanIsCalled_returnsSucessfully() {
 
 如果我们希望根据给定的`Range`得到`RangeSet`的一部分，我们可以使用`subRangeSet`方法:
 
-```
+```java
 @Test
 public void 
   givenRangeSet_whenSubRangeSetIsCalled_returnsSubRangeSucessfully() {
@@ -151,7 +151,7 @@ public void
 
 接下来，让我们使用`complement`方法获得除了`RangeSet`中的值之外的所有值:
 
-```
+```java
 @Test
 public void givenRangeSet_whenComplementIsCalled_returnsSucessfully() {
     RangeSet<Integer> numberRangeSet = TreeRangeSet.create();
@@ -173,7 +173,7 @@ public void givenRangeSet_whenComplementIsCalled_returnsSucessfully() {
 
 最后，当我们想要检查`RangeSet`中出现的范围区间是否与另一个给定范围中的一些或所有值相交时，我们可以利用`intersect`方法:
 
-```
+```java
 @Test
 public void givenRangeSet_whenIntersectsWithinRange_returnsSucessfully() {
     RangeSet<Integer> numberRangeSet = TreeRangeSet.create();

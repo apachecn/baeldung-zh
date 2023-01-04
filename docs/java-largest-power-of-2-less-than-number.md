@@ -12,7 +12,7 @@
 
 让我们从 2⁰ 开始，也就是 1，我们将**继续将这个数字乘以 2，直到我们找到一个小于输入**的数字:
 
-```
+```java
 public long findLargestPowerOf2LessThanTheGivenNumber(long input) {
     Assert.isTrue(input > 1, "Invalid input");
     long firstPowerOf2 = 1;
@@ -37,7 +37,7 @@ public long findLargestPowerOf2LessThanTheGivenNumber(long input) {
 
 让我们运行一些测试来验证我们的代码:
 
-```
+```java
 assertEquals(8, findPowerOf2LessThanTheGivenNumber(9));
 assertEquals(16, findPowerOf2LessThanTheGivenNumber(32)); 
 ```
@@ -56,7 +56,7 @@ log(2, 8) = 3，log(2, 16) = 4。一般情况下，我们可以看到 y = log(2,
 
 让我们把它写成代码:
 
-```
+```java
 public long findLargestPowerOf2LessThanTheGivenNumberUsingLogBase2(long input) {
     Assert.isTrue(input > 1, "Invalid input");
     long temp = input;
@@ -79,7 +79,7 @@ public long findLargestPowerOf2LessThanTheGivenNumberUsingLogBase2(long input) {
 
 让我们验证我们的代码:
 
-```
+```java
 assertEquals(8, findLargestPowerOf2LessThanTheGivenNumberUsingLogBase2(9));
 assertEquals(16, findLargestPowerOf2LessThanTheGivenNumberUsingLogBase2(32));
 ```
@@ -99,7 +99,7 @@ assertEquals(16, findLargestPowerOf2LessThanTheGivenNumberUsingLogBase2(32));
 
 让我们用位移法编码:
 
-```
+```java
 public long findLargestPowerOf2LessThanTheGivenNumberUsingBitShiftApproach(long input) {
     Assert.isTrue(input > 1, "Invalid input");
     long result = 1;
@@ -119,7 +119,7 @@ public long findLargestPowerOf2LessThanTheGivenNumberUsingBitShiftApproach(long 
 
 让我们检查一下我们的代码是否如预期的那样工作:
 
-```
+```java
 assertEquals(8, findLargestPowerOf2LessThanTheGivenNumberUsingBitShiftApproach(9));
 assertEquals(16, findLargestPowerOf2LessThanTheGivenNumberUsingBitShiftApproach(32));
 ```
@@ -138,7 +138,7 @@ assertEquals(16, findLargestPowerOf2LessThanTheGivenNumberUsingBitShiftApproach(
 
 让我们看看使用按位 AND 解决这个问题的代码:
 
-```
+```java
 public long findLargestPowerOf2LessThanTheGivenNumberUsingBitwiseAnd(long input) { 
     Assert.isTrue(input > 1, "Invalid input");
     long result = 1;
@@ -156,7 +156,7 @@ public long findLargestPowerOf2LessThanTheGivenNumberUsingBitwiseAnd(long input)
 
 现在，让我们验证几个场景:
 
-```
+```java
 assertEquals(8, findLargestPowerOf2LessThanTheGivenNumberUsingBitwiseAnd(9));
 assertEquals(16, findLargestPowerOf2LessThanTheGivenNumberUsingBitwiseAnd(32));
 ```

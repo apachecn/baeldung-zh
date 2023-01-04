@@ -24,7 +24,7 @@ TLS 为客户端和服务器之间传输的数据提供保护，是 HTTPS 协议
 
 为了启用 TLS，我们需要创建一个公共/私有[密钥对](/web/20220626193019/https://www.baeldung.com/java-digital-signature#getting_keypair)。为此，我们使用`[keytool](/web/20220626193019/https://www.baeldung.com/keytool-intro)`。`keytool`命令带有默认的 Java 发行版。让我们使用`keytool`生成一个密钥对，并将其存储在`keystore.p12`文件中:
 
-```
+```java
 keytool -genkeypair -alias baeldung -keyalg RSA -keysize 4096 \
   -validity 3650 -dname "CN=localhost" -keypass changeit -keystore keystore.p12 \
   -storeType PKCS12 -storepass changeit
@@ -36,7 +36,7 @@ keytool -genkeypair -alias baeldung -keyalg RSA -keysize 4096 \
 
 让我们从配置单向 TLS 开始。我们在`application.properties`文件中配置 TLS 相关属性:
 
-```
+```java
 # enable/disable https
 server.ssl.enabled=true
 # keystore format
@@ -49,7 +49,7 @@ server.ssl.key-store-password=changeit
 
 在配置 SSL 协议时，我们将使用 TLS，并告诉服务器使用 TLS 1.2:
 
-```
+```java
 # SSL protocol to use
 server.ssl.protocol=TLS
 # Enabled SSL protocols
@@ -64,13 +64,13 @@ server.ssl.enabled-protocols=TLSv1.2
 
 为了启用 mTLS，我们使用带有`need`值的`client-auth`属性:
 
-```
+```java
 server.ssl.client-auth=need 
 ```
 
 当我们使用`need`值时，客户端认证是必需的并且是强制性的。这意味着客户端和服务器必须共享它们的公共证书。为了在 Spring Boot 应用程序中存储客户端的证书，我们使用了`truststore`文件，并在`application.properties`文件中对其进行了配置:
 
-```
+```java
 #trust store location
 server.ssl.trust-store=classpath:keystore/truststore.p12
 #trust store password
@@ -83,7 +83,7 @@ server.ssl.trust-store-password=changeit
 
 默认情况下，启动 Tomcat 时使用没有任何 TLS 功能的 HTTP 协议。为了在 Tomcat 中启用 TLS，我们配置了`server.xml`文件:
 
-```
+```java
 <Connector
   protocol="org.apache.coyote.http11.Http11NioProtocol"
   port="8443" maxThreads="200"
@@ -98,32 +98,32 @@ server.ssl.trust-store-password=changeit
 
 为了调用 REST API，我们将使用 [`curl`](/web/20220626193019/https://www.baeldung.com/curl-rest) 工具:
 
-```
+```java
 curl -v http://localhost:8443/baeldung
 ```
 
 由于我们没有指定`https`，它将输出一个错误:
 
-```
+```java
 Bad Request
 This combination of host and port requires TLS.
 ```
 
 这个问题通过使用`https`协议来解决:
 
-```
+```java
 curl -v https://localhost:8443/baeldung
 ```
 
 然而，这给了我们另一个错误:
 
-```
+```java
 SSL certificate problem: self signed certificate
 ```
 
 当我们使用自签名证书时会发生这种情况。要解决这个问题，我们必须在客户端请求中使用服务器证书。首先，我们将从服务器`keystore`文件中复制服务器证书`baeldung.cer`。然后我们将使用`curl`请求中的服务器证书和`–cacert`选项:
 
-```
+```java
 curl --cacert baeldung.cer https://localhost:8443/baeldung 
 ```
 

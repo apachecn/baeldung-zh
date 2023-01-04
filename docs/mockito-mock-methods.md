@@ -8,7 +8,7 @@
 
 正如在关注 Mockito 框架的其他文章中一样(如 [Mockito Verify](/web/20221026103513/https://www.baeldung.com/mockito-verify) 或 [Mockito When/Then](/web/20221026103513/https://www.baeldung.com/mockito-behavior) )，下面显示的`MyList`类将被用作测试用例中被模仿的协作者:
 
-```
+```java
 public class MyList extends AbstractList<String> {
     @Override
     public String get(int index) {
@@ -26,26 +26,26 @@ public class MyList extends AbstractList<String> {
 
 `mock`方法最简单的重载变体是为要模仿的类提供一个参数:
 
-```
+```java
 public static <T> T mock(Class<T> classToMock)
 ```
 
 我们将使用这个方法模拟一个类并设置一个期望:
 
-```
+```java
 MyList listMock = mock(MyList.class);
 when(listMock.add(anyString())).thenReturn(false);
 ```
 
 然后我们将在 mock 上执行一个方法:
 
-```
+```java
 boolean added = listMock.add(randomAlphabetic(6));
 ```
 
 下面的代码确认我们调用了 mock 上的`add`方法。调用返回一个与我们之前设置的期望值相匹配的值:
 
-```
+```java
 verify(listMock).add(anyString());
 assertThat(added).isFalse();
 ```
@@ -54,7 +54,7 @@ assertThat(added).isFalse();
 
 在这一节中，我们将介绍`mock`方法的另一种变体，它提供了一个指定模拟名称的参数:
 
-```
+```java
 public static <T> T mock(Class<T> classToMock, String name)
 ```
 
@@ -63,27 +63,27 @@ public static <T> T mock(Class<T> classToMock, String name)
 为了确保不成功的验证抛出的异常消息包含所提供的模拟名称，我们将在下面的代码中使用`assertThatThrownBy.`
 ，我们将为`MyList`类创建一个模拟，并将其命名为`myMock`:
 
-```
+```java
 MyList listMock = mock(MyList.class, "myMock");
 ```
 
 然后，我们将对 mock 的方法设置一个期望值，并执行它:
 
-```
+```java
 when(listMock.add(anyString())).thenReturn(false);
 listMock.add(randomAlphabetic(6));
 ```
 
 接下来，我们将调用`assertThatThrownBy `内部的验证，并验证抛出的异常的实例:
 
-```
+```java
 assertThatThrownBy(() -> verify(listMock, times(2)).add(anyString()))
     .isInstanceOf(TooFewActualInvocations.class)
 ```
 
 此外，我们还可以验证异常的消息，它应该包含关于 mock 的信息:
 
-```
+```java
 assertThatThrownBy(() -> verify(listMock, times(2)).add(anyString()))
     .isInstanceOf(TooFewActualInvocations.class)
     .hasMessageContaining("myMock.add");
@@ -91,7 +91,7 @@ assertThatThrownBy(() -> verify(listMock, times(2)).add(anyString()))
 
 下面是抛出异常的消息:
 
-```
+```java
 org.mockito.exceptions.verification.TooLittleActualInvocations:
 myMock.add(<any>);
 Wanted 2 times:
@@ -108,13 +108,13 @@ at com.baeldung.mockito.MockitoMockTest
 
 这里我们将演示一个`mock`变体的使用，在这个变体中，我们将在创建时为模拟的交互响应配置策略。Mockito 文档中的这个`mock`方法的签名如下所示:
 
-```
+```java
 public static <T> T mock(Class<T> classToMock, Answer defaultAnswer)
 ```
 
 让我们从`Answer`接口实现的定义开始:
 
-```
+```java
 class CustomAnswer implements Answer<Boolean> {
     @Override
     public Boolean answer(InvocationOnMock invocation) throws Throwable {
@@ -125,19 +125,19 @@ class CustomAnswer implements Answer<Boolean> {
 
 我们将使用上面的`CustomAnswer`类来生成模拟:
 
-```
+```java
 MyList listMock = mock(MyList.class, new CustomAnswer());
 ```
 
 如果我们不对一个方法设置一个期望值，那么默认的答案，由`CustomAnswer`类型配置的，将会发挥作用。为了证明这一点，我们将跳过期望值设置步骤，直接跳到方法执行:
 
-```
+```java
 boolean added = listMock.add(randomAlphabetic(6));
 ```
 
 下面的验证和断言确认了带有`Answer`参数的`mock`方法按预期工作:
 
-```
+```java
 verify(listMock).add(anyString());
 assertThat(added).isFalse();
 ```
@@ -152,19 +152,19 @@ assertThat(added).isFalse();
 
 一个`MockSettings`对象被一个工厂方法实例化:
 
-```
+```java
 MockSettings customSettings = withSettings().defaultAnswer(new CustomAnswer());
 ```
 
 我们将在创建新模拟时使用设置对象:
 
-```
+```java
 MyList listMock = mock(MyList.class, customSettings);
 ```
 
 与上一节类似，我们将调用一个`MyList`实例的`add`方法，并验证带有`MockSettings`参数的`mock`方法是否按预期工作:
 
-```
+```java
 boolean added = listMock.add(randomAlphabetic(6));
 verify(listMock).add(anyString());
 assertThat(added).isFalse();

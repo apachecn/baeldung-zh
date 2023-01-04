@@ -16,7 +16,7 @@ Java API 是 Java 8 版本的主要特性。`Streams`表示延迟求值的对象
 
 让我们使用`String`值中的一个`List`，从`List`中得到`Stream`，然后减少:
 
-```
+```java
 List<String> valueList = new ArrayList<>();
 valueList.add("Joe");
 valueList.add("John");
@@ -37,7 +37,7 @@ stream.reduce((first, second) -> second)
 
 下面是使用`skip`获取最后一个元素的示例代码:
 
-```
+```java
 List<String> valueList = new ArrayList<String>();
 valueList.add("Joe");
 valueList.add("John");
@@ -57,7 +57,7 @@ stream.skip(count - 1).findFirst().get();
 
 下面是我们获取无限流并尝试获取最后一个元素的示例代码:
 
-```
+```java
 Stream<Integer> stream = Stream.iterate(0, i -> i + 1);
 stream.reduce((first, second) -> second).orElse(null);
 ```

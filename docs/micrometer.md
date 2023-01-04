@@ -14,7 +14,7 @@
 
 首先，让我们向`pom.xml`添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>micrometer-registry-atlas</artifactId>
@@ -34,7 +34,7 @@
 
 我们可以添加将数据上传到多个平台所需的任何`MeterRegistry`:
 
-```
+```java
 CompositeMeterRegistry compositeRegistry = new CompositeMeterRegistry();
 SimpleMeterRegistry oneSimpleMeter = new SimpleMeterRegistry();
 AtlasMeterRegistry atlasMeterRegistry 
@@ -46,7 +46,7 @@ compositeRegistry.add(atlasMeterRegistry);
 
 有静态全局注册表支持，单位为微米， [`Metrics.globalRegistry`](https://web.archive.org/web/20220727020637/https://github.com/micrometer-metrics/micrometer/blob/master/micrometer-core/src/main/java/io/micrometer/core/instrument/Metrics.java#L31) 。此外，还提供了一组基于该全局注册表的静态构建器来生成 [`Metrics`](https://web.archive.org/web/20220727020637/https://github.com/micrometer-metrics/micrometer/blob/master/micrometer-core/src/main/java/io/micrometer/core/instrument/Metrics.java#L30) 中的计量表:
 
-```
+```java
 @Test
 public void givenGlobalRegistry_whenIncrementAnywhere_thenCounted() {
     class CountedObject {
@@ -72,7 +72,7 @@ public void givenGlobalRegistry_whenIncrementAnywhere_thenCounted() {
 
 [`Meter`](https://web.archive.org/web/20220727020637/https://github.com/micrometer-metrics/micrometer/blob/master/micrometer-core/src/main/java/io/micrometer/core/instrument/Meter.java#L24) 的标识符由名称和标签组成。**我们应该遵循用点分隔单词的命名约定，以帮助保证指标名称在多个监控系统之间的可移植性。**
 
-```
+```java
 Counter counter = registry.counter("page.visitors", "age", "20s");
 ```
 
@@ -80,7 +80,7 @@ Counter counter = registry.counter("page.visitors", "age", "20s");
 
 对于一个大型系统，我们可以在注册表中添加公共标签。例如，假设指标来自特定区域:
 
-```
+```java
 registry.config().commonTags("region", "ua-east");
 ```
 
@@ -88,7 +88,7 @@ registry.config().commonTags("region", "ua-east");
 
 一个 [`Counter`](https://web.archive.org/web/20220727020637/https://github.com/micrometer-metrics/micrometer/blob/master/micrometer-core/src/main/java/io/micrometer/core/instrument/Counter.java#L25) 仅仅报告一个应用的特定属性的计数。我们可以用 fluent builder 或任何`MetricRegistry`的 helper 方法构建一个自定义计数器:
 
-```
+```java
 Counter counter = Counter
   .builder("instance")
   .description("indicates instance count of the object")
@@ -112,7 +112,7 @@ assertTrue(counter.count() == 1);
 
 例如，我们可以记录一个持续几秒钟的应用程序事件:
 
-```
+```java
 SimpleMeterRegistry registry = new SimpleMeterRegistry();
 Timer timer = registry.timer("app.event");
 timer.record(() -> {
@@ -130,7 +130,7 @@ assertThat(timer.totalTime(TimeUnit.MILLISECONDS)).isBetween(40.0, 55.0);
 
 为了记录长时间运行的事件，我们使用 [`LongTaskTimer`](https://web.archive.org/web/20220727020637/https://github.com/micrometer-metrics/micrometer/blob/master/micrometer-core/src/main/java/io/micrometer/core/instrument/LongTaskTimer.java#L26) :
 
-```
+```java
 SimpleMeterRegistry registry = new SimpleMeterRegistry();
 LongTaskTimer longTaskTimer = LongTaskTimer
   .builder("3rdPartyService")
@@ -151,7 +151,7 @@ long timeElapsed = currentTaskId.stop();
 
 [`Gauges`](https://web.archive.org/web/20220727020637/https://github.com/micrometer-metrics/micrometer/blob/master/micrometer-core/src/main/java/io/micrometer/core/instrument/Gauge.java#L23) 与其他仪表不同，应该只报告观测时的数据。`Gauges`在监控缓存或收集的统计数据时非常有用:
 
-```
+```java
 SimpleMeterRegistry registry = new SimpleMeterRegistry();
 List<String> list = new ArrayList<>(4);
 
@@ -170,7 +170,7 @@ assertTrue(gauge.value() == 1.0);
 
 事件分布及简单摘要由 [`DistributionSummary`](https://web.archive.org/web/20220727020637/https://github.com/micrometer-metrics/micrometer/blob/master/micrometer-core/src/main/java/io/micrometer/core/instrument/DistributionSummary.java#L29) 提供:
 
-```
+```java
 SimpleMeterRegistry registry = new SimpleMeterRegistry();
 DistributionSummary distributionSummary = DistributionSummary
   .builder("request.size")
@@ -187,7 +187,7 @@ assertTrue(12 == distributionSummary.totalAmount());
 
 此外，`DistributionSummary`和`Timers`可以增加百分位数:
 
-```
+```java
 SimpleMeterRegistry registry = new SimpleMeterRegistry();
 Timer timer = Timer
   .builder("test.timer")
@@ -200,7 +200,7 @@ Timer timer = Timer
 
 为了查看这些百分点的作用，让我们添加一些记录:
 
-```
+```java
 timer.record(2, TimeUnit.SECONDS);
 timer.record(2, TimeUnit.SECONDS);
 timer.record(3, TimeUnit.SECONDS);
@@ -211,7 +211,7 @@ timer.record(13, TimeUnit.SECONDS);
 
 然后，我们可以通过提取这三个百分点`Gauges`中的值来验证:
 
-```
+```java
 Map<Double, Double> actualMicrometer = new TreeMap<>();
 ValueAtPercentile[] percentiles = timer.takeSnapshot().percentileValues();
 for (ValueAtPercentile percentile : percentiles) {
@@ -228,7 +228,7 @@ assertEquals(expectedMicrometer, actualMicrometer);
 
 此外，千分尺还支持[服务级别目标](https://web.archive.org/web/20220727020637/https://en.wikipedia.org/wiki/Service-level_objective)(直方图):
 
-```
+```java
 DistributionSummary hist = DistributionSummary
   .builder("summary")
   .serviceLevelObjectives(1, 10, 5)
@@ -237,7 +237,7 @@ DistributionSummary hist = DistributionSummary
 
 类似于百分位数，在追加几条记录后，我们可以看到直方图很好地处理了计算:
 
-```
+```java
 Map<Integer, Double> actualMicrometer = new TreeMap<>();
 HistogramSnapshot snapshot = hist.takeSnapshot();
 Arrays.stream(snapshot.histogramCounts()).forEach(p -> {
@@ -254,7 +254,7 @@ assertEquals(expectedMicrometer, actualMicrometer);
 
 一般来说，直方图有助于说明不同时段中的直接比较。直方图也可以按时间缩放，这对于分析后端服务响应时间非常有用:
 
-```
+```java
 Duration[] durations = {Duration.ofMillis(25), Duration.ofMillis(300), Duration.ofMillis(600)};
 Timer timer = Timer
   .builder("timer")
@@ -271,7 +271,7 @@ Micrometer 有多个内置绑定器来监控 JVM、缓存、`ExecutorService,`�
 
 通过使用 [`GuavaCacheMetrics`](https://web.archive.org/web/20220727020637/https://github.com/micrometer-metrics/micrometer/blob/main/micrometer-core/src/main/java/io/micrometer/core/instrument/binder/cache/GuavaCacheMetrics.java) 、 [`EhCache2Metrics`](https://web.archive.org/web/20220727020637/https://github.com/micrometer-metrics/micrometer/blob/main/micrometer-core/src/main/java/io/micrometer/core/instrument/binder/cache/EhCache2Metrics.java) 、 [`HazelcastCacheMetrics`](https://web.archive.org/web/20220727020637/https://github.com/micrometer-metrics/micrometer/blob/main/micrometer-core/src/main/java/io/micrometer/core/instrument/binder/cache/HazelcastCacheMetrics.java) 和 [`CaffeineCacheMetrics`](https://web.archive.org/web/20220727020637/https://github.com/micrometer-metrics/micrometer/blob/main/micrometer-core/src/main/java/io/micrometer/core/instrument/binder/cache/CaffeineCacheMetrics.java) 进行插装来支持缓存监控(目前仅支持 Guava、EhCache、Hazelcast 和咖啡因)。为了监控日志返回服务，我们可以将 [`LogbackMetrics`](https://web.archive.org/web/20220727020637/https://github.com/micrometer-metrics/micrometer/blob/main/micrometer-core/src/main/java/io/micrometer/core/instrument/binder/logging/LogbackMetrics.java) 绑定到任何有效的注册表:
 
-```
+```java
 new LogbackMetrics().bind(registry);
 ```
 
@@ -283,7 +283,7 @@ new LogbackMetrics().bind(registry);
 
 我们将需要以下依赖项(最新版本可以在这里找到):
 
-```
+```java
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>micrometer-spring-legacy</artifactId>
@@ -299,7 +299,7 @@ new LogbackMetrics().bind(registry);
 
 说我们需要`JvmThreadMetrics`:
 
-```
+```java
 @Bean
 JvmThreadMetrics threadMetrics(){
     return new JvmThreadMetrics();
@@ -330,7 +330,7 @@ JvmThreadMetrics threadMetrics(){
 
 注意，我们还可以在控制器类或特定端点方法上使用 [`@Timed`](https://web.archive.org/web/20220727020637/https://github.com/micrometer-metrics/micrometer/blob/master/micrometer-core/src/main/java/io/micrometer/core/annotation/Timed.java#L24) 来定制指标的标签、长任务、分位数和百分位数:
 
-```
+```java
 @RestController
 @Timed("people")
 public class PeopleController {
@@ -346,13 +346,13 @@ public class PeopleController {
 
 基于上面的代码，我们可以通过检查 Atlas 端点`http://localhost:7101/api/v1/tags/name`看到以下标签:
 
-```
+```java
 ["people", "people.all", "jvmBufferCount", ... ]
 ```
 
 Micrometer 也在 Spring Boot 2.0 中引入的功能 web 框架中工作。我们可以通过过滤`RouterFunction`来启用指标:
 
-```
+```java
 RouterFunctionMetrics metrics = new RouterFunctionMetrics(registry);
 RouterFunctions.route(...)
   .filter(metrics.timer("server.requests"));

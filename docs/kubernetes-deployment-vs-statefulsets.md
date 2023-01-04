@@ -43,7 +43,7 @@ Kubernetes `Deployment`通常用于无状态应用程序。**然而，我们可�
 
 首先，让我们制作部署模板，并将其保存为'`deployment.yaml'`。在下面的模板中，我们还附加了一个永久卷:
 
-```
+```java
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -77,7 +77,7 @@ spec:
 
 在下面的模板中，我们有我们的`PersistentVolumeClaim`:
 
-```
+```java
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -95,7 +95,7 @@ spec:
 
 在执行我们的`Deployment`之前，我们需要一个服务来访问上面的`Deployment`。让我们创建一个类型为`NodePort`的服务，并将其保存为'`service.yaml'` :
 
-```
+```java
 apiVersion: v1
 kind: Service
 metadata:
@@ -116,19 +116,19 @@ spec:
 
 然后，我们对部署模板运行相同的命令:
 
-```
+```java
 kubectl apply -f deployment.yaml
 ```
 
 此外，为了获得部署的详细描述，让我们运行 kubectl `describe`命令:
 
-```
+```java
 kubectl describe deployment web-app-deployment
 ```
 
 输出如下所示:
 
-```
+```java
 Name:                web-app-deployment
  Namespace:          default
  CreationTimestamp:  Tue, 30 Aug 2016 18:11:37 -0700
@@ -192,7 +192,7 @@ s 为其中的每个 pod 提供两个稳定的唯一身份。首先，**网络�
 
 首先，我们创建一个`StatefulSet`模板:
 
-```
+```java
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -225,7 +225,7 @@ spec:
 
 其次，我们创建一个在`StatefulSet`模板中提到的持久卷:
 
-```
+```java
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -240,7 +240,7 @@ spec:
 
 最后，我们现在为上面的`StatefulSet`创建一个无头服务:
 
-```
+```java
 apiVersion: v1
 kind: Service
 metadata:
@@ -260,13 +260,13 @@ spec:
 
 我们已经为所有三个组件准备好了模板。现在，让我们运行`create` kubectl 命令来创建`StatefulSet`:
 
-```
+```java
 kubectl create -f statefulset.yaml
 ```
 
 它将创建三个名为`web-0,web-1,web-2`的 pod。我们可以用`get pods`验证创建是否正确:
 
-```
+```java
 kubectl get pods
 NAME      READY     STATUS    RESTARTS   AGE
 web-0     1/1       Running   0          1m
@@ -276,7 +276,7 @@ web-2     1/1       Running   0          18s
 
 我们还可以验证正在运行的服务:
 
-```
+```java
 kubectl get svc nginx
 NAME      TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 nginx     ClusterIP   None         < none >      80/TCP    2m

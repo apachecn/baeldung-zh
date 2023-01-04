@@ -36,13 +36,13 @@ Java 为 HTTP、HTTPS、FTP 和 SOCKS 协议提供代理处理程序。可以将
 
 我们可以通过将设置作为系统属性传入来在命令行上定义代理:
 
-```
+```java
 java -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=3128 com.baeldung.networking.proxies.CommandLineProxyDemo
 ```
 
 当以这种方式启动一个流程时，我们能够简单地在`URL`上使用`openConnection()`，而不需要任何额外的工作:
 
-```
+```java
 URL url = new URL(RESOURCE_URL);
 URLConnection con = url.openConnection();
 ```
@@ -51,7 +51,7 @@ URLConnection con = url.openConnection();
 
 如果我们不能在命令行上设置代理属性，我们可以在程序中调用`System.setProperty()`来设置它们:
 
-```
+```java
 System.setProperty("http.proxyHost", "127.0.0.1");
 System.setProperty("http.proxyPort", "3128");
 
@@ -62,7 +62,7 @@ URLConnection con = url.openConnection();
 
 如果我们稍后手动取消设置相关的系统属性，则代理将不再使用:
 
-```
+```java
 System.setProperty("http.proxyHost", null);
 ```
 
@@ -88,7 +88,7 @@ System.setProperty("http.proxyHost", null);
 
 为了使用 HTTP 代理，我们首先用`Proxy`和类型`Proxy.Type.HTTP`T6**包装一个`SocketAddress`实例。接下来，我们简单地将`Proxy`实例传递给`URLConnection.openConnection():`**
 
-```
+```java
 URL weburl = new URL(URL_STRING);
 Proxy webProxy 
   = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 3128));
@@ -102,7 +102,7 @@ HttpURLConnection webProxyConnection
 
 我们可能需要直接连接到主机。在这种情况下，我们可以通过使用静态的`Proxy.NO_PROXY` 实例，显式地**绕过一个可以全局配置的代理。在幕后，API 为我们构建了一个新的`Proxy`实例，使用`Proxy.Type.DIRECT` 作为类型`:`**
 
-```
+```java
 HttpURLConnection directConnection 
   = (HttpURLConnection) weburl.openConnection(Proxy.NO_PROXY);
 ```
@@ -113,7 +113,7 @@ HttpURLConnection directConnection
 
 在使用`URLConnection.`时，使用 SOCKS 代理类似于 HTTP 变体，我们从使用`Proxy.Type.SOCKS` 类型的**用`Proxy`包装`SocketAddress`实例开始。之后，我们将`Proxy`实例传递给`URLConnection.openConnection`:**
 
-```
+```java
 Proxy socksProxy 
   = new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("127.0.0.1", 1080));
 HttpURLConnection socksConnection 
@@ -122,7 +122,7 @@ HttpURLConnection socksConnection
 
 当连接到 TCP 套接字时，**也可以使用 SOCKS 代理。首先，我们使用`Proxy`实例来构造一个`Socket`。之后，我们**将目的地`SocketAddress`实例传递给`Socket.connect()`** :**
 
-```
+```java
 Socket proxySocket = new Socket(socksProxy);
 InetSocketAddress socketHost 
   = new InetSocketAddress(SOCKET_SERVER_HOST, SOCKET_SERVER_PORT);

@@ -48,7 +48,7 @@ S `tudentServlet` 类将充当控制器，对于表示层，我们将创建`stud
 
 现在，让我们一个一个地写这些层，从`Student`类开始:
 
-```
+```java
 public class Student {
     private int id;
     private String firstName;
@@ -60,7 +60,7 @@ public class Student {
 
 现在让我们编写我们的`StudentService`，它将处理我们的业务逻辑:
 
-```
+```java
 public class StudentService {
 
     public Optional<Student> getStudent(int id) {
@@ -80,7 +80,7 @@ public class StudentService {
 
 现在让我们创建我们的控制器类`StudentServlet`:
 
-```
+```java
 @WebServlet(
   name = "StudentServlet", 
   urlPatterns = "/student-record")
@@ -132,7 +132,7 @@ public class StudentServlet extends HttpServlet {
 
 接下来，让我们编写我们的表示层`student-record.jsp`:
 
-```
+```java
 <html>
     <head>
         <title>Student Record</title>

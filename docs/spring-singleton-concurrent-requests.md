@@ -16,7 +16,7 @@
 
 举个例子，让我们看一个 Spring 应用程序，它有一个名为`ProductService`的单例 bean:
 
-```
+```java
 @Service
 public class ProductService {
     private final static List<Product> productRepository = asList(
@@ -44,7 +44,7 @@ public class ProductService {
 
 Spring 为每个请求创建一个不同的线程。正如我们在下面的控制台输出中看到的，两个线程使用同一个`ProductService` 实例来返回产品数据:
 
-```
+```java
 Thread: pool-2-thread-1; bean instance: [[email protected]](/web/20220524051348/https://www.baeldung.com/cdn-cgi/l/email-protection); product id: 1 has the name: Product 1
 Thread: pool-2-thread-2; bean instance: [[email protected]](/web/20220524051348/https://www.baeldung.com/cdn-cgi/l/email-protection); product id: 2 has the name: Product 2
 ```
@@ -63,7 +63,7 @@ Spring 可以在多个线程中使用同一个 bean 实例，首先是因为 Jav
 
 假设我们将`productName`变量移到了类级别:
 
-```
+```java
 @Service
 public class ProductService {
     private String productName = null;
@@ -82,7 +82,7 @@ public class ProductService {
 
 现在，让我们再次运行服务并查看输出:
 
-```
+```java
 Thread: pool-2-thread-2; bean instance: [[email protected]](/web/20220524051348/https://www.baeldung.com/cdn-cgi/l/email-protection); product id: 2 has the name: Product 2
 Thread: pool-2-thread-1; bean instance: [[email protected]](/web/20220524051348/https://www.baeldung.com/cdn-cgi/l/email-protection); product id: 1 has the name: Product 2
 ```

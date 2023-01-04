@@ -29,7 +29,7 @@ spring Cloud Open Service Broker**通过提供所需的 web 控制器、域对�
 
 除了云启动器，我们还需要包含一个 Spring Boot web 启动器，以及 Spring WebFlux 或 Spring MVC，来激活自动配置:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-open-service-broker</artifactId>
@@ -49,7 +49,7 @@ spring Cloud Open Service Broker**通过提供所需的 web 控制器、域对�
 
 如果这不理想，我们想改变它，最直接的方法是在我们的应用程序属性或 YAML 文件中设置属性`spring.cloud.openservicebroker.base-path`:
 
-```
+```java
 spring:
   cloud:
     openservicebroker:
@@ -68,7 +68,7 @@ spring:
 
 首先，**为了控制我们的服务代理提供哪些服务，我们需要定义一个服务目录**。为了快速初始化服务目录，在我们的示例中，我们将提供一个类型为`[Catalog](https://web.archive.org/web/20220628163443/https://docs.spring.io/spring-cloud-open-service-broker/docs/current/apidocs//org/springframework/cloud/servicebroker/model/catalog/Catalog.html)`的 Spring bean:
 
-```
+```java
 @Bean
 public Catalog catalog() {
     Plan mailFreePlan = Plan.builder()
@@ -99,7 +99,7 @@ public Catalog catalog() {
 
 最终，服务目录通过 service broker `/v2/catalog`端点提供给云原生平台:
 
-```
+```java
 curl http://localhost:8080/broker/v2/catalog
 
 {
@@ -138,7 +138,7 @@ curl http://localhost:8080/broker/v2/catalog
 
 使用 Spring Cloud Open Service Broker，我们可以通过实现 [`ServiceInstanceService`](https://web.archive.org/web/20220628163443/https://docs.spring.io/spring-cloud-open-service-broker/docs/current/apidocs/org/springframework/cloud/servicebroker/service/ServiceInstanceService.html) 接口来管理服务生命周期。例如，为了在我们的 service broker 中管理服务供应请求，我们必须为`createServiceInstance`方法提供一个实现:
 
-```
+```java
 @Override
 public Mono<CreateServiceInstanceResponse> createServiceInstance(
     CreateServiceInstanceRequest request) {
@@ -168,7 +168,7 @@ public Mono<CreateServiceInstanceResponse> createServiceInstance(
 
 服务供应通过`/v2/service_instances/{instance_id}`端点提供给云原生平台:
 
-```
+```java
 curl -X PUT http://localhost:8080/broker/v2/service_instances/[[email protected]](/web/20220628163443/https://www.baeldung.com/cdn-cgi/l/email-protection) 
   -H 'Content-Type: application/json' 
   -d '{
@@ -191,7 +191,7 @@ curl -X PUT http://localhost:8080/broker/v2/service_instances/[[email protected
 
 让我们通过为`createServiceInstanceBinding`方法提供一个实现来处理服务绑定创建请求:
 
-```
+```java
 @Override
 public Mono<CreateServiceInstanceBindingResponse> createServiceInstanceBinding(
     CreateServiceInstanceBindingRequest request) {
@@ -225,7 +225,7 @@ public Mono<CreateServiceInstanceBindingResponse> createServiceInstanceBinding(
 
 Spring Cloud Open Service Broker 框架通过`/v2/service_instances/{instance_id}/service_bindings/{binding_id}`端点公开服务绑定操作:
 
-```
+```java
 curl -X PUT 
   http://localhost:8080/broker/v2/service_instances/[[email protected]](/web/20220628163443/https://www.baeldung.com/cdn-cgi/l/email-protection)/service_bindings/admin 
   -H 'Content-Type: application/json' 

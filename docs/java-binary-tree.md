@@ -34,7 +34,7 @@ A guide to the Depth-first search algorithm in Java, using both Tree and Graph d
 
 对于实现，我们将使用一个辅助的`Node`类，它将存储`int`值，并保存对每个孩子的引用:
 
-```
+```java
 class Node {
     int value;
     Node left;
@@ -50,7 +50,7 @@ class Node {
 
 然后我们将添加树的开始节点，通常称为`root:`
 
-```
+```java
 public class BinaryTree {
 
     Node root;
@@ -75,7 +75,7 @@ public class BinaryTree {
 
 然后，我们将创建一个递归方法来进行插入:
 
-```
+```java
 private Node addRecursive(Node current, int value) {
     if (current == null) {
         return new Node(value);
@@ -96,7 +96,7 @@ private Node addRecursive(Node current, int value) {
 
 接下来，我们将创建从`root`节点开始递归的公共方法:
 
-```
+```java
 public void add(int value) {
     root = addRecursive(root, value);
 }
@@ -104,7 +104,7 @@ public void add(int value) {
 
 让我们看看如何使用这个方法从我们的例子中创建树:
 
-```
+```java
 private BinaryTree createBinaryTree() {
     BinaryTree bt = new BinaryTree();
 
@@ -126,7 +126,7 @@ private BinaryTree createBinaryTree() {
 
 和以前一样，我们将首先创建一个遍历树的递归方法:
 
-```
+```java
 private boolean containsNodeRecursive(Node current, int value) {
     if (current == null) {
         return false;
@@ -144,7 +144,7 @@ private boolean containsNodeRecursive(Node current, int value) {
 
 接下来我们将创建从`root`开始的公共方法:
 
-```
+```java
 public boolean containsNode(int value) {
     return containsNodeRecursive(root, value);
 }
@@ -152,7 +152,7 @@ public boolean containsNode(int value) {
 
 然后，我们将创建一个简单的测试来验证树确实包含插入的元素:
 
-```
+```java
 @Test
 public void givenABinaryTree_WhenAddingElements_ThenTreeContainsThoseElements() {
     BinaryTree bt = createBinaryTree();
@@ -172,7 +172,7 @@ public void givenABinaryTree_WhenAddingElements_ThenTreeContainsThoseElements() 
 
 首先，我们必须像前面一样找到要删除的节点:
 
-```
+```java
 private Node deleteRecursive(Node current, int value) {
     if (current == null) {
         return null;
@@ -199,7 +199,7 @@ private Node deleteRecursive(Node current, int value) {
 
 让我们看看当节点是叶节点时，我们将如何实现第一种情况:
 
-```
+```java
 if (current.left == null && current.right == null) {
     return null;
 }
@@ -207,7 +207,7 @@ if (current.left == null && current.right == null) {
 
 现在让我们继续讨论节点只有一个子节点的情况:
 
-```
+```java
 if (current.right == null) {
     return current.left;
 }
@@ -223,7 +223,7 @@ if (current.left == null) {
 
 首先，我们需要找到将替换被删除节点的节点。我们将使用即将被删除节点的右侧子树中最小的节点:
 
-```
+```java
 private int findSmallestValue(Node root) {
     return root.left == null ? root.value : findSmallestValue(root.left);
 }
@@ -231,7 +231,7 @@ private int findSmallestValue(Node root) {
 
 然后，我们将最小值分配给要删除的节点，之后，我们将从右边的子树中删除它:
 
-```
+```java
 int smallestValue = findSmallestValue(current.right);
 current.value = smallestValue;
 current.right = deleteRecursive(current.right, smallestValue);
@@ -240,7 +240,7 @@ return current;
 
 最后，我们将创建从`root`开始删除的公共方法:
 
-```
+```java
 public void delete(int value) {
     root = deleteRecursive(root, value);
 }
@@ -248,7 +248,7 @@ public void delete(int value) {
 
 现在让我们检查删除是否如预期的那样工作:
 
-```
+```java
 @Test
 public void givenABinaryTree_WhenDeletingElements_ThenTreeDoesNotContainThoseElements() {
     BinaryTree bt = createBinaryTree();
@@ -273,7 +273,7 @@ public void givenABinaryTree_WhenDeletingElements_ThenTreeDoesNotContainThoseEle
 
 **有序遍历包括首先访问左边的子树，然后是根节点，最后是右边的子树:**
 
-```
+```java
 public void traverseInOrder(Node node) {
     if (node != null) {
         traverseInOrder(node.left);
@@ -285,13 +285,13 @@ public void traverseInOrder(Node node) {
 
 如果我们调用这个方法，控制台输出将显示按顺序遍历:
 
-```
+```java
 3 4 5 6 7 8 9
 ```
 
 **前序遍历首先访问根节点，然后是左边的子树，最后是右边的子树:**
 
-```
+```java
 public void traversePreOrder(Node node) {
     if (node != null) {
         System.out.print(" " + node.value);
@@ -303,13 +303,13 @@ public void traversePreOrder(Node node) {
 
 让我们检查控制台输出中的前序遍历:
 
-```
+```java
 6 4 3 5 8 7 9
 ```
 
 **后序遍历访问左边的子树、右边的子树和末尾的根节点:**
 
-```
+```java
 public void traversePostOrder(Node node) {
     if (node != null) {
         traversePostOrder(node.left);
@@ -321,7 +321,7 @@ public void traversePostOrder(Node node) {
 
 以下是按后顺序排列的节点:
 
-```
+```java
 3 5 4 7 9 8 6
 ```
 
@@ -333,7 +333,7 @@ public void traversePostOrder(Node node) {
 
 对于实现，我们将使用一个`Queue`来按顺序保存每个级别的节点。我们将从列表中提取每个节点，打印其值，然后将其子节点添加到队列中:
 
-```
+```java
 public void traverseLevelOrder() {
     if (root == null) {
         return;
@@ -361,7 +361,7 @@ public void traverseLevelOrder() {
 
 在这种情况下，节点的顺序将是:
 
-```
+```java
 6 4 8 3 5 7 9
 ```
 

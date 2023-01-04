@@ -35,13 +35,13 @@ Apache Tapestry 需要一组简单的工具来创建 web 应用程序:
 
 为了建立[最新的](https://web.archive.org/web/20220703153749/https://tapestry.apache.org/download.html) Apache Tapestry 项目，我们将使用 [Maven 原型](/web/20220703153749/https://www.baeldung.com/maven-archetype#creating-archetype)，并遵循官方文档提供的[指令](https://web.archive.org/web/20220703153749/https://tapestry.apache.org/getting-started.html):
 
-```
+```java
 $ mvn archetype:generate -DarchetypeCatalog=http://tapestry.apache.org
 ```
 
 或者，如果我们有一个现有的项目，我们可以简单地将 [tapestry-core](https://web.archive.org/web/20220703153749/https://search.maven.org/search?q=g:org.apache.tapestry%20a:tapestry-core) Maven 依赖项添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.apache.tapestry</groupId>
     <artifactId>tapestry-core</artifactId>
@@ -51,7 +51,7 @@ $ mvn archetype:generate -DarchetypeCatalog=http://tapestry.apache.org
 
 一旦我们准备好设置，我们可以通过下面的 Maven 命令启动应用程序`apache-tapestry`:
 
-```
+```java
 $ mvn jetty:run
 ```
 
@@ -117,7 +117,7 @@ $ mvn jetty:run
 
 首先，我们将在`src/main/java`的`pages`目录中定义一个 Java 类`Home`:
 
-```
+```java
 public class Home {
 }
 ```
@@ -130,7 +130,7 @@ public class Home {
 
 例如，让我们看看`Home.tml`模板:
 
-```
+```java
 <html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd">
     <head>
         <title>apache-tapestry Home</title>
@@ -151,7 +151,7 @@ public class Home {
 
 为此，我们将在`Home` 类中添加一个属性和一个 getter 方法:
 
-```
+```java
 @Property
 private String appName = "apache-tapestry";
 
@@ -170,7 +170,7 @@ Apache Tapestry 提供了集成的[本地化](https://web.archive.org/web/202207
 
 例如，我们将在`pages`目录中为带有本地消息的`Home`页面创建一个`home.properties`文件:
 
-```
+```java
 introMsg=Welcome to the Apache Tapestry Tutorial
 ```
 
@@ -182,7 +182,7 @@ introMsg=Welcome to the Apache Tapestry Tutorial
 
 让我们通过创建`Layout.java`类来定义一个基本的布局组件。我们将把文件保存在`src/main/java`的`components`目录中:
 
-```
+```java
 public class Layout {
     @Property
     @Parameter(required = true, defaultPrefix = BindingConstants.LITERAL)
@@ -194,7 +194,7 @@ public class Layout {
 
 然后，我们将在`src/main/resources`的`components`目录下写一个相应的模板文件`Layout.tml`:
 
-```
+```java
 <html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd">
     <head>
         <title>${title}</title>
@@ -213,7 +213,7 @@ public class Layout {
 
 现在，让我们使用`home`页面上的`layout`:
 
-```
+```java
 <html t:type="layout" title="apache-tapestry Home" 
     xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd">
     <h1>Home! ${appName}</h1>
@@ -236,7 +236,7 @@ public class Layout {
 
 正如已经探讨过的，我们将首先创建一个 Java 类`Login`:
 
-```
+```java
 public class Login {
     // ...
     @InjectComponent
@@ -254,7 +254,7 @@ public class Login {
 
 然后，让我们创建一个相应的模板`login.tml`:
 
-```
+```java
 <html t:type="layout" title="apache-tapestry com.example"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
       xmlns:p="tapestry:parameter">
@@ -281,7 +281,7 @@ Apache Tapestry 为[表单验证](https://web.archive.org/web/20220703153749/htt
 
 因此，让我们将这些内置方法添加到`Login` 类中:
 
-```
+```java
 public class Login {
     // ...
 
@@ -310,7 +310,7 @@ public class Login {
 
 为此，我们将首先在`Login` 类中注入 [`AlertManager`](https://web.archive.org/web/20220703153749/https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/alerts/AlertManager.html) 的实例来管理警报`.`，然后用警报消息替换现有方法中的`println`语句:
 
-```
+```java
 public class Login {
     // ...
     @Inject
@@ -346,7 +346,7 @@ public class Login {
 
 首先，我们将在`Home` 类中注入 [`AjaxResponseRenderer`](https://web.archive.org/web/20220703153749/https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/services/ajax/AjaxResponseRenderer.html) 和 [`Block`](https://web.archive.org/web/20220703153749/https://tapestry.apache.org/current/apidocs/org/apache/tapestry5/Block.html) 组件的实例。然后，我们将创建一个方法`onCallAjax`来处理 Ajax 调用:
 
-```
+```java
 public class Home {
     // ....
 
@@ -369,7 +369,7 @@ public class Home {
 
 最后，我们需要一个 block 组件，它将被注入到`Home `类中，并呈现为 Ajax 响应:
 
-```
+```java
 <p><t:eventlink event="callAjax" zone="ajaxZone" class="btn btn-default">Call Ajax</t:eventlink></p>
 <t:zone t:id="ajaxZone"></t:zone>
 <t:block t:id="ajaxBlock">
@@ -393,7 +393,7 @@ public class Home {
 
 因此，让我们在`Home `类中进行必要的修改:
 
-```
+```java
 public class Home {
     // ...
 
@@ -409,7 +409,7 @@ public class Home {
 
 现在，当我们单击 Call Ajax 按钮时，`logger`将在 INFO 级别进行记录:
 
-```
+```java
 [INFO] pages.Home Ajax call 
 ```
 

@@ -24,7 +24,7 @@
 
 常规`Point`类的代码和相应的内存布局应该是:
 
-```
+```java
 final class Point {
   final int x;
   final int y;
@@ -35,7 +35,7 @@ final class Point {
 
 另一方面，值类型`Point`的代码和相应的内存布局将是:
 
-```
+```java
 value class Point {
   int x;
   int y

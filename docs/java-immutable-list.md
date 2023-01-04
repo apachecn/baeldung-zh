@@ -26,13 +26,13 @@ A quick and practical guide to picking a random item/items from a List in Java.[
 
 首先，JDK 提供了一种从现有集合中获取不可修改集合的好方法:
 
-```
+```java
 Collections.unmodifiableList(list);
 ```
 
 此时，新集合应该不再是可修改的:
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public void givenUsingTheJdk_whenUnmodifiableListIsCreated_thenNotModifiable() {
     List<String> list = new ArrayList<>(Arrays.asList("one", "two", "three"));
@@ -45,7 +45,7 @@ public void givenUsingTheJdk_whenUnmodifiableListIsCreated_thenNotModifiable() {
 
 从 Java 9 开始，我们可以使用一个`List<E>.of​(E… elements)`静态工厂方法来创建一个不可变列表:
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public final void givenUsingTheJava9_whenUnmodifiableListIsCreated_thenNotModifiable() {
     final List<String> list = new ArrayList<>(Arrays.asList("one", "two", "three"));
@@ -60,13 +60,13 @@ public final void givenUsingTheJava9_whenUnmodifiableListIsCreated_thenNotModifi
 
 Guava 为创建自己的`ImmutableList`版本提供了类似的功能:
 
-```
+```java
 ImmutableList.copyOf(list);
 ```
 
 类似地，结果列表不可修改:
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public void givenUsingGuava_whenUnmodifiableListIsCreated_thenNotModifiable() {
     List<String> list = new ArrayList<>(Arrays.asList("one", "two", "three"));
@@ -79,7 +79,7 @@ public void givenUsingGuava_whenUnmodifiableListIsCreated_thenNotModifiable() {
 
 Guava 还提供了一个构建器——它将返回强类型的`ImmutableList`,而不是简单的`List`:
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public void givenUsingGuavaBuilder_whenUnmodifiableListIsCreated_thenNoLongerModifiable() {
     List<String> list = new ArrayList<>(Arrays.asList("one", "two", "three"));
@@ -92,13 +92,13 @@ public void givenUsingGuavaBuilder_whenUnmodifiableListIsCreated_thenNoLongerMod
 
 最后，Commons Collection 还提供了一个 API 来创建不可修改的列表:
 
-```
+```java
 ListUtils.unmodifiableList(list);
 ```
 
 同样，修改结果列表应该会导致一个`UnsupportedOperationException`:
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public void givenUsingCommonsCollections_whenUnmodifiableListIsCreated_thenNotModifiable() {
     List<String> list = new ArrayList<>(Arrays.asList("one", "two", "three"));

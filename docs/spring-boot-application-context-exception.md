@@ -28,7 +28,7 @@
 
 首先，让我们创建一个入口点类，并故意忘记用`@SpringBootApplication`对其进行注释:
 
-```
+```java
 public class MainEntryPoint {
 
     public static void main(String[] args) {
@@ -39,7 +39,7 @@ public class MainEntryPoint {
 
 现在，让我们运行我们的示例 Spring Boot 应用程序，看看会发生什么:
 
-```
+```java
 22:20:39.134 [main] ERROR o.s.boot.SpringApplication - Application run failed
 org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.context.ApplicationContextException: Unable to start ServletWebServerApplicationContext due to missing ServletWebServerFactory bean.
 	...
@@ -62,13 +62,13 @@ org.springframework.context.ApplicationContextException: Unable to start web ser
 
 在`application.properties`中:
 
-```
+```java
 spring.main.web-application-type=none
 ```
 
 同样，在我们的`application.yml`:
 
-```
+```java
 spring: 
     main: 
         web-application-type: none
@@ -78,7 +78,7 @@ spring:
 
 请记住，从 [Spring Boot 2.0](https://web.archive.org/web/20220628095139/https://spring.io/blog/2018/03/01/spring-boot-2-0-goes-ga) 开始，我们还可以使用`[SpringApplicationBuilder](https://web.archive.org/web/20220628095139/https://docs.spring.io/spring-boot/docs/2.0.x/api/org/springframework/boot/builder/SpringApplicationBuilder.html#web-org.springframework.boot.WebApplicationType-)`来明确定义特定类型的 web 应用程序:
 
-```
+```java
 @SpringBootApplication
 public class MainClass {
 

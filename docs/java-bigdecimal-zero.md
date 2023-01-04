@@ -22,19 +22,19 @@
 
 首先，让我们创建一个值为零的`BigDecimal`对象:
 
-```
+```java
 BigDecimal BD1 = new BigDecimal("0");
 ```
 
 现在，让我们使用`equals`方法检查`BD1`的值是否为零。为了简单起见，让我们用一种单元测试方法来做这件事:
 
-```
+```java
 assertThat(BigDecimal.ZERO.equals(BD1)).isTrue();
 ```
 
 如果我们进行测试，它会通过的。到目前为止，一切顺利。我们可能认为这是解决方案。接下来，让我们创建另一个`BigDecimal`对象:
 
-```
+```java
 BigDecimal BD2 = new BigDecimal("0.0000");
 ```
 
@@ -42,7 +42,7 @@ BigDecimal BD2 = new BigDecimal("0.0000");
 
 现在，让我们再次用`equals`方法测试 BD2:
 
-```
+```java
 assertThat(BigDecimal.ZERO.equals(BD2)).isTrue();
 ```
 
@@ -68,7 +68,7 @@ assertThat(BigDecimal.ZERO.equals(BD2)).isTrue();
 
 接下来，让我们测试这个方法是否能正确地判断出`BigDecimal`对象`BD1`和`BD2`是否都为零:
 
-```
+```java
 assertThat(BigDecimal.ZERO.compareTo(BD1)).isSameAs(0);
 assertThat(BigDecimal.ZERO.compareTo(BD2)).isSameAs(0);
 ```
@@ -83,7 +83,7 @@ assertThat(BigDecimal.ZERO.compareTo(BD2)).isSameAs(0);
 
 同样，让我们编写一个测试来验证这种方法是否适用于这两个示例:
 
-```
+```java
 assertThat(BD1.signum()).isSameAs(0);
 assertThat(BD2.signum()).isSameAs(0);
 ```

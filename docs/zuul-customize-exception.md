@@ -16,7 +16,7 @@ Zuul 中所有被处理的异常都是`ZuulExceptions`。现在，让我们明�
 
 当有`ZuulException`时，Zuul 显示以下错误响应:
 
-```
+```java
 {
     "timestamp": "2022-01-23T22:43:43.126+00:00",
     "status": 500,
@@ -32,7 +32,7 @@ Zuul 中所有被处理的异常都是`ZuulExceptions`。现在，让我们明�
 
 首先，我们将禁用自动配置的默认`SendErrorFilter`。这使我们不必担心执行的顺序，因为这是唯一的 Zuul 默认错误过滤器。让我们在`application.yml`中添加属性来禁用它:
 
-```
+```java
 zuul:
   SendErrorFilter:
     post:
@@ -41,7 +41,7 @@ zuul:
 
 现在，让我们编写一个名为`CustomZuulErrorFilter`的自定义 Zuul 错误过滤器，如果底层服务不可用，它将抛出一个自定义异常:
 
-```
+```java
 public class CustomZuulErrorFilter extends ZuulFilter {
 }
 ```
@@ -50,7 +50,7 @@ public class CustomZuulErrorFilter extends ZuulFilter {
 
 首先，我们必须用**覆盖`filterType()`方法，并将类型作为`“error”`** 返回。这是因为我们要为误差过滤器类型配置 Zuul 过滤器:
 
-```
+```java
 @Override
 public String filterType() {
     return "error";
@@ -59,7 +59,7 @@ public String filterType() {
 
 之后，我们**覆盖`filterOrder()`并返回`-1,`，这样过滤器就是链中的第一个**:
 
-```
+```java
 @Override
 public int filterOrder() {
     return -1;
@@ -68,7 +68,7 @@ public int filterOrder() {
 
 然后，我们**覆盖`shouldFilter()`方法并无条件返回`true`** ，因为我们想在所有情况下链接这个过滤器:
 
-```
+```java
 @Override
 public boolean shouldFilter() {
     return true;
@@ -77,7 +77,7 @@ public boolean shouldFilter() {
 
 最后，让我们用**覆盖`run()`方法**:
 
-```
+```java
 @Override
 public Object run() {
     RequestContext context = RequestContext.getCurrentContext();
@@ -103,7 +103,7 @@ public Object run() {
 
 此外，我们还可以在我们的`run()`方法中设置一个定制的异常，它可以被后续的过滤器处理:
 
-```
+```java
 if (throwable.getCause().getCause().getCause() instanceof ConnectException) {
     ZuulException customException = new ZuulException("", 503, "Service Unavailable");
     context.setThrowable(customException);
@@ -120,7 +120,7 @@ if (throwable.getCause().getCause().getCause() instanceof ConnectException) {
 
 假设有一个`ConnectException`，上面例子在 Zuul API 响应中的输出将是:
 
-```
+```java
 {
     "timestamp": "2022-01-23T23:10:25.584791Z",
     "status": 503,
@@ -132,7 +132,7 @@ if (throwable.getCause().getCause().getCause() instanceof ConnectException) {
 
 现在，让我们通过一些测试案例来验证它:
 
-```
+```java
 @Test
 public void whenSendRequestWithCustomErrorFilter_thenCustomError() {
     Response response = RestAssured.get("http://localhost:8080/foos/1");
@@ -144,7 +144,7 @@ public void whenSendRequestWithCustomErrorFilter_thenCustomError() {
 
 现在，让我们在不注册自定义错误过滤器的情况下对此进行测试:
 
-```
+```java
 @Test
 public void whenSendRequestWithoutCustomErrorFilter_thenError() {
     Response response = RestAssured.get("http://localhost:8080/foos/1");

@@ -18,7 +18,7 @@
 
 假设我们有两个简单的实体，`User`和`Group`，它们被关联为`@ManyToMany:`
 
-```
+```java
 @Entity(name = "users")
 public class User {
 
@@ -35,7 +35,7 @@ public class User {
 } 
 ```
 
-```
+```java
 @Entity
 public class Group {
 
@@ -64,7 +64,7 @@ public class Group {
 
 让我们创建`UserGroupRelation`类来做这件事:
 
-```
+```java
 @Entity(name = "r_user_group")
 public class UserGroupRelation implements Serializable {
 
@@ -83,7 +83,7 @@ public class UserGroupRelation implements Serializable {
 
 对于我们的额外数据，假设我们想要为每个`Group`存储每个`User`的角色。所以，我们将创建`UserGroupRole`枚举:
 
-```
+```java
 public enum UserGroupRole {
     MEMBER, MODERATOR
 } 
@@ -91,14 +91,14 @@ public enum UserGroupRole {
 
 接下来，我们将向`UserGroupRelation:`添加一个`role`属性
 
-```
+```java
 @Enumerated(EnumType.STRING)
 private UserGroupRole role; 
 ```
 
 最后，为了正确配置它，我们需要在`User`的`groups`集合上添加`@JoinTable`注释。这里我们将使用`UserGroupRelation:`的实体名`r_user_group,` 来指定连接表名
 
-```
+```java
 @ManyToMany
 @JoinTable(
     name = "r_user_group",
@@ -112,7 +112,7 @@ private List<Group> groups = new ArrayList<>();
 
 对于我们的集成测试，让我们定义一些样本数据:
 
-```
+```java
 public void setUp() {
     session = sessionFactory.openSession();
     session.beginTransaction();
@@ -160,13 +160,13 @@ private void saveRelation(User user, Group group, UserGroupRole role) {
 
 为了获取组，我们可以简单地调用活动 Hibernate 会话中的`User`的`getGroups()`方法:
 
-```
+```java
 List<Group> groups = user1.getGroups(); 
 ```
 
 我们对`groups`的输出将是:
 
-```
+```java
 [Group [name=group1], Group [name=group2]] 
 ```
 
@@ -180,7 +180,7 @@ List<Group> groups = user1.getGroups();
 
 我们需要添加一个 SQL where 子句来根据`MODERATOR` 角色过滤组:
 
-```
+```java
 @WhereJoinTable(clause = "role='MODERATOR'")
 @ManyToMany
 @JoinTable(
@@ -193,13 +193,13 @@ private List<Group> moderatorGroups = new ArrayList<>();
 
 因此，我们可以很容易地获得应用了指定 SQL where 子句的组:
 
-```
+```java
 List<Group> groups = user1.getModeratorGroups(); 
 ```
 
 我们的输出将是用户仅拥有`MODERATOR:`角色的组
 
-```
+```java
 [Group [name=group1]] 
 ```
 

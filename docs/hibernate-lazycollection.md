@@ -36,7 +36,7 @@
 
 在这个例子中，我们有一个由`id`、`name`和与`Employee`实体的`@OneToMany`关系组成的`Branch`实体。我们可以注意到，在本例中，我们将`@LazyCollection`选项显式设置为`true`:
 
-```
+```java
 @Entity
 public class Branch {
 
@@ -55,7 +55,7 @@ public class Branch {
 
 现在，让我们看看由`id`、`name`、`address`以及与`Branch`实体的`@ManyToOne`关系组成的`Employee`实体:
 
-```
+```java
 @Entity
 public class Employee {
 
@@ -82,7 +82,7 @@ public class Employee {
 
 在这种情况下，我们有一个`Branch`实体，它包含`id`、`name`，以及一个与`Employee`实体的`@OneToMany`关系。注意，我们将`@LazyCollection`的选项设置为`FALSE`:
 
-```
+```java
 @Entity
 public class Branch {
 
@@ -109,7 +109,7 @@ public class Branch {
 
 与之前的情况类似，`Branch`实体与`Employee`实体有一个`id`、`name`和`@OneToMany`关系。但是，我们将`@LazyCollection`的选项设置为`EXTRA`:
 
-```
+```java
 @Entity
 public class Branch {
 
@@ -139,7 +139,7 @@ public class Branch {
 
 现在，当持久化一个有三个关联雇员的`Branch`实体时，我们需要将代码写成:
 
-```
+```java
 entityManager.persist(
   new Branch().setId(1L).setName("Branch-1")
 
@@ -167,7 +167,7 @@ entityManager.persist(
 
 **我们可以看出这是一种自然行为。然而，`EXTRA` 选项中的不良行为是，在刷新上述查询后，它将执行另外三个查询——每添加一个`Employee`就执行一个:**
 
-```
+```java
 UPDATE EMPLOYEES
 SET
     order_id = 0
@@ -193,13 +193,13 @@ WHERE
 
 另一方面，使用这个选项的好处是当我们需要获得每个分支机构的雇员列表的大小时:
 
-```
+```java
 int employeesCount = branch.getEmployees().size();
 ```
 
 当我们调用这条语句时，它只会执行这条 SQL 语句:
 
-```
+```java
 SELECT
     COUNT(ID)
 FROM

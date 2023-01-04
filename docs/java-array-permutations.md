@@ -36,7 +36,7 @@ n！= 3!= 1 x 2 x 3 = 6
 
 输入数组将被修改。如果我们不希望这样，我们需要在调用方法之前创建数组的副本:
 
-```
+```java
 public static <T> void printAllRecursive(
   int n, T[] elements, char delimiter) {
 
@@ -58,7 +58,7 @@ public static <T> void printAllRecursive(
 
 该方法使用两个辅助方法:
 
-```
+```java
 private void swap(T[] input, int a, int b) {
     T tmp = input[a];
     input[a] = input[b];
@@ -66,7 +66,7 @@ private void swap(T[] input, int a, int b) {
 }
 ```
 
-```
+```java
 private void printArray(T[] input) {
     System.out.print('\n');
     for(int i = 0; i < input.length; i++) {
@@ -81,7 +81,7 @@ private void printArray(T[] input) {
 
 **堆的算法也可以用迭代来实现:**
 
-```
+```java
 int[] indexes = new int[n];
 int[] indexes = new int[n];
 for (int i = 0; i < n; i++) {
@@ -109,7 +109,7 @@ while (i < n) {
 
 如果元素是可比较的，我们可以生成按照元素的自然顺序排序的**排列:**
 
-```
+```java
 public static <T extends Comparable<T>> void printAllOrdered(
   T[] elements, char delimiter) {
 
@@ -147,7 +147,7 @@ public static <T extends Comparable<T>> void printAllOrdered(
 
 如果`n`很大，我们可以通过洗牌产生一个随机排列:
 
-```
+```java
 Collections.shuffle(Arrays.asList(elements));
 ```
 

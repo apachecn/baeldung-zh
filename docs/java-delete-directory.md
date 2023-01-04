@@ -17,7 +17,7 @@ Java 有一个删除目录的选项。但是，这要求目录为空。因此，
 
 让我们实现这个简单的算法:
 
-```
+```java
 boolean deleteDirectory(File directoryToBeDeleted) {
     File[] allContents = directoryToBeDeleted.listFiles();
     if (allContents != null) {
@@ -31,7 +31,7 @@ boolean deleteDirectory(File directoryToBeDeleted) {
 
 这个方法可以用一个简单的测试用例来测试:
 
-```
+```java
 @Test
 public void givenDirectory_whenDeletedWithRecursion_thenIsGone() 
   throws IOException {
@@ -55,7 +55,7 @@ public void givenDirectory_whenDeletedWithRecursion_thenIsGone()
 
 首先，我们需要向 Maven 项目添加`commons-io`依赖项:
 
-```
+```java
 <dependency>
     <groupId>commons-io</groupId>
     <artifactId>commons-io</artifactId>
@@ -67,7 +67,7 @@ public void givenDirectory_whenDeletedWithRecursion_thenIsGone()
 
 现在，我们可以用一条语句使用`FileUtils`来执行任何基于文件的操作，包括`deleteDirectory()`:
 
-```
+```java
 FileUtils.deleteDirectory(file);
 ```
 
@@ -75,7 +75,7 @@ FileUtils.deleteDirectory(file);
 
 或者，我们可以将 s `pring-core`依赖项添加到 Maven 项目中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-core</artifactId>
@@ -87,7 +87,7 @@ FileUtils.deleteDirectory(file);
 
 我们可以使用`FileSystemUtils`中的`deleteRecursively()`方法来执行删除:
 
-```
+```java
 boolean result = FileSystemUtils.deleteRecursively(file);
 ```
 
@@ -97,7 +97,7 @@ Java 的最新版本提供了执行这种 IO 操作的新方法，下面几节�
 
 Java 7 引入了一种全新的使用`Files`执行文件操作的方式。它允许我们遍历目录树，并使用回调来执行操作。
 
-```
+```java
 public void whenDeletedWithNIO2WalkFileTree_thenIsGone() 
   throws IOException {
 
@@ -139,7 +139,7 @@ public void whenDeletedWithNIO2WalkFileTree_thenIsGone()
 
 从 Java 8 开始，Stream API 提供了一种更好的删除目录的方法:
 
-```
+```java
 @Test
 public void whenDeletedWithFilesWalk_thenIsGone() 
   throws IOException {

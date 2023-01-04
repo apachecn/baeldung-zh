@@ -14,7 +14,7 @@
 
 为了使用构建器，我们需要在我们的`pom.xml`的`dependencies`中包含以下部分:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-web</artifactId>
@@ -34,7 +34,7 @@
 
 `UriComponentsBuilder` 的最大优势之一是**我们可以将其直接注入控制器方法**:
 
-```
+```java
 @RequestMapping(method = RequestMethod.POST)
 public ResponseEntity createCustomer(UriComponentsBuilder builder) {
     // implementation
@@ -47,7 +47,7 @@ public ResponseEntity createCustomer(UriComponentsBuilder builder) {
 
 先说最简单的。我们想使用`UriComponentsBuilder`来创建简单的链接:
 
-```
+```java
 @Test
 public void constructUri() {
     UriComponents uriComponents = UriComponentsBuilder.newInstance()
@@ -65,7 +65,7 @@ public void constructUri() {
 
 除了创建一个简单的链接之外，我们可能还想对最终结果进行编码。让我们看看实际情况:
 
-```
+```java
 @Test
 public void constructUriEncoded() {
     UriComponents uriComponents = UriComponentsBuilder.newInstance()
@@ -81,7 +81,7 @@ public void constructUriEncoded() {
 
 URI 的大多数组件中都允许使用 URI 模板，但是它们的值仅限于特定的元素，我们称之为模板。让我们看看这个例子来阐明:
 
-```
+```java
 @Test
 public void constructUriFromTemplate() {
     UriComponents uriComponents = UriComponentsBuilder.newInstance()
@@ -104,7 +104,7 @@ public void constructUriFromTemplate() {
 
 我们需要使用来自`UriComponentsBuilder`的`query()`来指定 URI 查询参数。让我们看下面的例子:
 
-```
+```java
 @Test
 public void constructUriWithQueryParameter() {
     UriComponents uriComponents = UriComponentsBuilder.newInstance()
@@ -123,7 +123,7 @@ public void constructUriWithQueryParameter() {
 
 最后一个例子展示了带有正则表达式验证的 URI 的构造。只有正则表达式验证成功，我们才能展开`uriComponents` :
 
-```
+```java
 @Test
 public void expandWithRegexVar() {
     String template = "/myurl/{name:[a-z]{1,5}}/show";

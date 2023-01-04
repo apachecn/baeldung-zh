@@ -18,7 +18,7 @@
 
 当测试不完整或尚未实现时，我们可能会失败:
 
-```
+```java
 @Test
 public void incompleteTest() {
     fail("Not yet implemented");
@@ -29,7 +29,7 @@ public void incompleteTest() {
 
 当我们认为会发生异常时，我们也可以这样做:
 
-```
+```java
 @Test
 public void expectedException() {
     try {
@@ -45,7 +45,7 @@ public void expectedException() {
 
 当不希望抛出异常时，测试失败是另一种选择:
 
-```
+```java
 @Test
 public void unexpectedException() {
     try {
@@ -61,7 +61,7 @@ public void unexpectedException() {
 
 当一个结果不满足某些期望的条件时，我们可以调用`fail() `:
 
-```
+```java
 @Test
 public void testingCondition() {
     int result = randomInteger();
@@ -76,7 +76,7 @@ public void testingCondition() {
 
 最后，当代码没有按预期返回/中断时，我们可能会测试失败:
 
-```
+```java
 @Test
 public void returnBefore() {
     int value = randomInteger();
@@ -104,7 +104,7 @@ JUnit 4 中的所有断言都是`org.junit.Assert`类的一部分。对于 JUnit
 
 **另外，JUnit 5 中所有形式的`fail`都声明为`public static <V> V fail()`。泛型返回类型`V,`允许这些方法在 lambda 表达式中作为单语句使用:**
 
-```
+```java
 Stream.of().map(entry -> fail("should not be called"));
 ```
 

@@ -20,7 +20,7 @@
 
 首先，我们需要一个[弹簧启动程序](https://web.archive.org/web/20221029180113/https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter) `:`
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -31,7 +31,7 @@
 
 然后，我们需要一个 [web starter](https://web.archive.org/web/20221029180113/https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web) 和 [data MongoDB](https://web.archive.org/web/20221029180113/https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb) 的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -44,13 +44,13 @@
 
 类似地，如果我们使用 Gradle，我们添加到`build.gradle`:
 
-```
+```java
 plugins {
     id 'org.springframework.boot' version '2.6.4'
 }
 ```
 
-```
+```java
 compile 'org.springframework.boot:spring-boot-starter-data-mongodb'
 compile 'org.springframework.boot:spring-boot-starter-web'
 ```
@@ -63,7 +63,7 @@ compile 'org.springframework.boot:spring-boot-starter-web'
 
 例如，我们将创建一个`User`文档:
 
-```
+```java
 @Document(collection = "user")
 public class User {
 
@@ -83,7 +83,7 @@ public class User {
 
 然后，我们再添加一个`Account`文档:
 
-```
+```java
 @Document(collection = "account")
 public class Account {
 
@@ -108,7 +108,7 @@ public class Account {
 
 首先，我们来加一个`UserRepository`:
 
-```
+```java
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
 
@@ -118,7 +118,7 @@ public interface UserRepository extends MongoRepository<User, String> {
 
 下面，我们添加一个`AccountRepository`:
 
-```
+```java
 @Repository
 public interface AccountRepository extends MongoRepository<Account, String> {
 
@@ -130,7 +130,7 @@ public interface AccountRepository extends MongoRepository<Account, String> {
 
 让我们为正在使用的多个数据库定义属性:
 
-```
+```java
 mongodb.primary.host=localhost
 mongodb.primary.database=db1
 mongodb.primary.authenticationDatabase=admin
@@ -154,7 +154,7 @@ mongodb.secondary.port=27017
 
 让我们来看看用于`UserRepository`的主类定义。：
 
-```
+```java
 @Configuration
 @EnableMongoRepositories(basePackageClasses = UserRepository.class, mongoTemplateRef = "primaryMongoTemplate")
 @EnableConfigurationProperties
@@ -167,7 +167,7 @@ public class PrimaryConfig {
 
 首先，我们将使用`[MongoProperties](https://web.archive.org/web/20221029180113/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/autoconfigure/mongo/MongoProperties.html).`检索和设置属性。这样，我们将所有属性直接映射到一个 bean:
 
-```
+```java
 @Bean(name = "primaryProperties")
 @ConfigurationProperties(prefix = "mongodb.primary")
 @Primary
@@ -178,7 +178,7 @@ public MongoProperties primaryProperties() {
 
 为了向多个用户授予访问权限，我们使用一个 MongoDB [认证机制](https://web.archive.org/web/20221029180113/https://www.mongodb.com/docs/drivers/java/sync/v4.6/fundamentals/auth/)和`[MongoCredential](https://web.archive.org/web/20221029180113/https://mongodb.github.io/mongo-java-driver/3.6/javadoc/com/mongodb/MongoCredential.html).`，我们通过添加一个认证数据库`admin`来构造我们的凭证对象，在本例中:
 
-```
+```java
 @Bean(name = "primaryMongoClient")
 public MongoClient mongoClient(@Qualifier("primaryProperties") MongoProperties mongoProperties) {
 
@@ -195,7 +195,7 @@ public MongoClient mongoClient(@Qualifier("primaryProperties") MongoProperties m
 
 **根据最新版本的建议，我们使用** `[SimpleMongoClientDatabaseFactory](https://web.archive.org/web/20221029180113/https://docs.spring.io/spring-data/data-mongo/docs/4.0.x/reference/html/#mongo.mongo-db-factory)` **，而不是从连接字符串**创建`MongoTemplate`
 
-```
+```java
 @Primary
 @Bean(name = "primaryMongoDBFactory")
 public MongoDatabaseFactory mongoDatabaseFactory(
@@ -209,7 +209,7 @@ public MongoDatabaseFactory mongoDatabaseFactory(
 
 **当我们映射[多个`EntityManager`](/web/20221029180113/https://www.baeldung.com/spring-data-jpa-multiple-databases) 时，我们用 JPA 做同样的事情。同样，我们需要引用我们的`@EnableMongoRepositories:`** 中的`Mongotemplate`
 
-```
+```java
 @EnableMongoRepositories(basePackageClasses = UserRepository.class, mongoTemplateRef = "primaryMongoTemplate")
 ```
 
@@ -217,7 +217,7 @@ public MongoDatabaseFactory mongoDatabaseFactory(
 
 最后，为了仔细检查，让我们看一下第二个数据库配置:
 
-```
+```java
 @Configuration
 @EnableMongoRepositories(basePackageClasses = AccountRepository.class, mongoTemplateRef = "secondaryMongoTemplate")
 @EnableConfigurationProperties
@@ -266,7 +266,7 @@ public class SecondaryConfig {
 
 让我们使用 [Docker Compose](/web/20221029180113/https://www.baeldung.com/ops/docker-compose) 运行一个 MongoDB 容器。让我们看看我们的 YAML 模板:
 
-```
+```java
 services:
   mongo:
     hostname: localhost
@@ -286,7 +286,7 @@ services:
 
 如果我们想进行身份验证，我们需要用 root 用户进行初始化。为了用更多的用户填充数据库，我们将一个[绑定挂载](https://web.archive.org/web/20221029180113/https://docs.docker.com/storage/bind-mounts/)添加到一个 JavaScript 初始化文件:
 
-```
+```java
 db.createUser(
     {
         user: "user1",
@@ -306,7 +306,7 @@ db.createUser(
 
 让我们运行我们的容器:
 
-```
+```java
 docker-compose up -d
 ```
 
@@ -316,7 +316,7 @@ docker-compose up -d
 
 让我们用一些基本的 [Spring Boot 测试](/web/20221029180113/https://www.baeldung.com/spring-boot-testing)来总结一下:
 
-```
+```java
 @SpringBootTest(classes = { SpringBootMultipeDbApplication.class })
 @TestPropertySource("/multipledb/multidb.properties")
 public class MultipleDbUnitTest {
@@ -341,13 +341,13 @@ public class MultipleDbUnitTest {
 
 在这些情况下，我们可以查看数据库容器的日志，例如:
 
-```
+```java
 docker logs 30725c8635d4
 ```
 
 值得注意的是，最初的 JavaScript 只在容器第一次运行时执行。因此，如果我们需要使用不同的脚本运行，我们可能需要删除该卷:
 
-```
+```java
 docker-compose down -v
 ```
 

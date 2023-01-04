@@ -34,7 +34,7 @@
 
 让我们看看我们的`NumberInfoClassifier`,看看我们需要的三种方法:
 
-```
+```java
 public class NumberInfoClassifier extends ItemListenerSupport<NumberInfo, Integer>
   implements ItemProcessor<NumberInfo, Integer> {
 
@@ -65,7 +65,7 @@ public class NumberInfoClassifier extends ItemListenerSupport<NumberInfo, Intege
 
 最后，当我们创建我们的作业时，我们告诉我们的`JobBuilderFactory`为任何以状态`NOTIFY`退出的步骤发送通知:
 
-```
+```java
 jobBuilderFactory.get("Number generator - second dataset")
     .start(dataProviderStep)
     .on("NOTIFY").to(notificationStep)
@@ -75,7 +75,7 @@ jobBuilderFactory.get("Number generator - second dataset")
 
 还要注意，当我们有额外的条件分支和多个退出代码时，我们可以用`JobBuilderFacotry`的`from` 和 `on`方法将它们添加到我们的作业中:
 
-```
+```java
 jobBuilderFactory.get("Number generator - second dataset")
     .start(dataProviderStep)
     .on("NOTIFY").to(notificationStep)
@@ -86,7 +86,7 @@ jobBuilderFactory.get("Number generator - second dataset")
 
 现在，只要我们的`ItemProcessor`看到一个正数，它就会指示我们的作业运行`notificationStep`，它只是向`System.out`打印一条消息:
 
-```
+```java
 Second Dataset Processor 11
 Second Dataset Processor -2
 Second Dataset Processor -3
@@ -95,7 +95,7 @@ Second Dataset Processor -3
 
 如果我们有一个没有正数的数据集，我们将看不到我们的`notificationStep`消息:
 
-```
+```java
 Second Dataset Processor -1
 Second Dataset Processor -2
 Second Dataset Processor -3 
@@ -107,7 +107,7 @@ Second Dataset Processor -3
 
 要使用这个方法，我们首先需要修改我们的`ItemProcessor`来移除`ItemListenerSupport `接口和`@BeforeStep`方法:
 
-```
+```java
 public class NumberInfoClassifierWithDecider extends ItemListenerSupport<NumberInfo, Integer>
   implements ItemProcessor<NumberInfo, Integer> {
 
@@ -120,7 +120,7 @@ public class NumberInfoClassifierWithDecider extends ItemListenerSupport<NumberI
 
 接下来，我们创建一个决定步骤通知状态的 decider 类:
 
-```
+```java
 public class NumberInfoDecider implements JobExecutionDecider {
 
     private boolean shouldNotify() {
@@ -140,7 +140,7 @@ public class NumberInfoDecider implements JobExecutionDecider {
 
 然后，我们设置我们的`Job`在流程中使用决策器:
 
-```
+```java
 jobBuilderFactory.get("Number generator - third dataset")
     .start(dataProviderStep)
     .next(new NumberInfoDecider()).on("NOTIFY").to(notificationStep)

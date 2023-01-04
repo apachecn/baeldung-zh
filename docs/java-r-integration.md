@@ -12,7 +12,7 @@ R 是一种流行的用于统计的编程语言。因为它有各种各样的可
 
 对于我们的项目，我们将从实现一个非常简单的 R 函数开始，它将一个向量作为输入，并返回其值的平均值。我们将在一个专用文件中对此进行定义:
 
-```
+```java
 customMean <- function(vector) {
     mean(vector)
 }
@@ -20,7 +20,7 @@ customMean <- function(vector) {
 
 在本教程中，我们将使用一个 Java helper 方法来读取该文件，并将其内容作为`String`返回:
 
-```
+```java
 String getMeanScriptContent() throws IOException, URISyntaxException {
     URI rScriptUri = RUtils.class.getClassLoader().getResource("script.R").toURI();
     Path inputScript = Paths.get(rScriptUri);
@@ -36,7 +36,7 @@ String getMeanScriptContent() throws IOException, URISyntaxException {
 
 由于 RCaller 可从 [Maven Central](https://web.archive.org/web/20220625161849/https://search.maven.org/classic/#artifactdetails%7Ccom.github.jbytecode%7CRCaller%7C3.0%7Cjar) 获得，我们可以将它包含在我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.github.jbytecode</groupId>
     <artifactId>RCaller</artifactId>
@@ -46,7 +46,7 @@ String getMeanScriptContent() throws IOException, URISyntaxException {
 
 接下来，让我们编写一个自定义方法，使用我们原来的 R 脚本返回我们的平均值:
 
-```
+```java
 public double mean(int[] values) throws IOException, URISyntaxException {
     String fileContent = RUtils.getMeanScriptContent();
     RCode code = RCode.create();
@@ -74,7 +74,7 @@ Renjin 是 R 集成领域另一个流行的解决方案。**它被更广泛地�
 
 将 Renjin 添加到我们的项目中稍微简单一些，因为我们必须添加 [`Mulesoft`](https://web.archive.org/web/20220625161849/https://repository.mulesoft.org/nexus/content/repositories/public/) 库以及 Maven 依赖项:
 
-```
+```java
 <repositories>
     <repository>
         <id>mulesoft</id>
@@ -94,7 +94,7 @@ Renjin 是 R 集成领域另一个流行的解决方案。**它被更广泛地�
 
 让我们再次为 R 函数构建一个 Java 包装器:
 
-```
+```java
 public double mean(int[] values) throws IOException, URISyntaxException, ScriptException {
     RenjinScriptEngine engine = new RenjinScriptEngine();
     String meanScriptContent = RUtils.getMeanScriptContent();
@@ -115,7 +115,7 @@ Renjin 的主要优势是它不需要安装 R，因为它使用基于 JVM 的解
 
 设置 Rserve 包括安装相关的包，并通过 R 控制台启动服务器加载我们的脚本:
 
-```
+```java
 > install.packages("Rserve")
 ...
 > library("Rserve")
@@ -125,7 +125,7 @@ Starting Rserve...
 
 接下来，我们现在可以像往常一样，通过添加 [Maven 依赖项](https://web.archive.org/web/20220625161849/https://search.maven.org/classic/#artifactdetails%7Corg.rosuda.REngine%7CRserve%7C1.8.1%7Cjar)将 Rserve 包含在我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.rosuda.REngine</groupId>
     <artifactId>Rserve</artifactId>
@@ -135,7 +135,7 @@ Starting Rserve...
 
 最后，让我们将 R 脚本包装成一个 Java 方法。这里我们将使用一个带有服务器地址的`RConnection`对象，如果没有提供，默认为 127.0.0.1:6311:
 
-```
+```java
 public double mean(int[] values) throws REngineException, REXPMismatchException {
     RConnection c = new RConnection();
     c.assign("input", values);
@@ -149,7 +149,7 @@ public double mean(int[] values) throws REngineException, REXPMismatchException 
 
 为了使用它，我们首先需要从官网安装 GraalVM。之后，我们需要使用 Graal 组件更新程序安装 FastR 本身，然后运行它附带的配置脚本:
 
-```
+```java
 $ bin/gu install R
 ...
 $ languages/R/bin/configure_fastr
@@ -157,7 +157,7 @@ $ languages/R/bin/configure_fastr
 
 这一次我们的代码将依赖于 [Polyglot](https://web.archive.org/web/20220625161849/https://www.graalvm.org/reference-manual/polyglot-programming/) ，GraalVM 内部 API 用于在 Java 中嵌入不同的客户语言。由于 Polyglot 是一个通用 API，我们指定了想要运行的代码的语言。同样，我们将使用`c` R 函数将我们的输入转换成一个向量:
 
-```
+```java
 public double mean(int[] values) {
     Context polyglot = Context.newBuilder().allowAllAccess(true).build();
     String meanScriptContent = RUtils.getMeanScriptContent(); 

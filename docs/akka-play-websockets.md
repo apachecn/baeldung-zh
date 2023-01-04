@@ -24,7 +24,7 @@
 
 让我们将 jQuery 添加到`app/views/i` `ndex.scala.html`文件的底部:
 
-```
+```java
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 ```
 
@@ -36,7 +36,7 @@
 
 我们需要添加`[akka-actor](https://web.archive.org/web/20220628113531/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.typesafe.akka%22%20AND%20a%3A%22akka-actor_2.13%22)`和`[akka-testkit](https://web.archive.org/web/20220628113531/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.typesafe.akka%22%20AND%20a%3A%22akka-testkit_2.13%22)`依赖项:
 
-```
+```java
 libraryDependencies += "com.typesafe.akka" %% "akka-actor" % akkaVersion
 libraryDependencies += "com.typesafe.akka" %% "akka-testkit" % akkaVersion
 ```
@@ -45,13 +45,13 @@ libraryDependencies += "com.typesafe.akka" %% "akka-testkit" % akkaVersion
 
 接下来，我们将使用 Akka 流。所以让我们添加`[akka-stream](https://web.archive.org/web/20220628113531/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.typesafe.akka%22%20AND%20a%3A%22akka-stream_2.13%22)`依赖项:
 
-```
+```java
 libraryDependencies += "com.typesafe.akka" %% "akka-stream" % akkaVersion
 ```
 
 最后，我们需要从 Akka actor 调用一个 rest 端点。为此，我们需要`[akka-http](https://web.archive.org/web/20220628113531/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.typesafe.akka%22%20AND%20a%3A%22akka-http_2.13%22)`依赖关系。当我们这样做时，端点将返回 JSON 数据，我们必须对这些数据进行反序列化，因此我们还需要添加 [`akka-http-jackson`](https://web.archive.org/web/20220628113531/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.typesafe.akka%22%20AND%20a%3A%22akka-http-jackson_2.13%22) 依赖项:
 
-```
+```java
 libraryDependencies += "com.typesafe.akka" %% "akka-http-jackson" % akkaHttpVersion
 libraryDependencies += "com.typesafe.akka" %% "akka-http" % akkaHttpVersion
 ```
@@ -70,7 +70,7 @@ libraryDependencies += "com.typesafe.akka" %% "akka-http" % akkaHttpVersion
 
 我们需要将`ActorSystem`和`Materializer`注入控制器`app/controllers/HomeController.java`:
 
-```
+```java
 private ActorSystem actorSystem;
 private Materializer materializer;
 
@@ -84,7 +84,7 @@ public HomeController(
 
 现在让我们添加一个套接字控制器方法:
 
-```
+```java
 public WebSocket socket() {
     return WebSocket.Json
       .acceptOrResult(this::createActorFlow);
@@ -97,7 +97,7 @@ public WebSocket socket() {
 
 现在，让我们创建流程:
 
-```
+```java
 private CompletionStage<F.Either<Result, Flow<JsonNode, JsonNode, ?>>> 
   createActorFlow(Http.RequestHeader request) {
     return CompletableFuture.completedFuture(
@@ -111,7 +111,7 @@ Play 框架中的`F `类定义了一组函数式编程风格的助手。在这�
 
 为此，我们可以检查是否在会话中设置了用户名。如果不是，我们拒绝连接 HTTP 403 禁止:
 
-```
+```java
 private CompletionStage<F.Either<Result, Flow<JsonNode, JsonNode, ?>>> 
   createActorFlow2(Http.RequestHeader request) {
     return CompletableFuture.completedFuture(
@@ -128,7 +128,7 @@ private CompletionStage<F.Either<Result, Flow<JsonNode, JsonNode, ?>>>
 
 最后，我们将流链接到将处理消息的参与者:
 
-```
+```java
 private Flow<JsonNode, JsonNode, ?> createFlowForActor() {
     return ActorFlow.actorRef(out -> Messenger.props(out), 
       actorSystem, materializer);
@@ -141,7 +141,7 @@ private Flow<JsonNode, JsonNode, ?> createFlowForActor() {
 
 现在，让我们在`conf/routes`中添加控制器方法的`routes`定义:
 
-```
+```java
 GET  /                    controllers.HomeController.index(request: Request)
 GET  /chat                controllers.HomeController.socket
 GET  /chat/with/streams   controllers.HomeController.akkaStreamsSocket
@@ -154,7 +154,7 @@ GET  /assets/*file        controllers.Assets.versioned(path="/public", file: Ass
 
 **actor 类最重要的部分是`createReceive` 方法**，它决定了 actor 可以处理哪些消息:
 
-```
+```java
 @Override
 public Receive createReceive() {
     return receiveBuilder()
@@ -166,7 +166,7 @@ public Receive createReceive() {
 
 actor 将所有匹配`JsonNode`类的消息转发给`onSendMessage `处理程序方法:
 
-```
+```java
 private void onSendMessage(JsonNode jsonNode) {
     RequestDTO requestDTO = MessageConverter.jsonNodeToRequest(jsonNode);
     String message = requestDTO.getMessage().toLowerCase();
@@ -177,7 +177,7 @@ private void onSendMessage(JsonNode jsonNode) {
 
 然后，处理程序将使用`processMessage`方法响应每条消息:
 
-```
+```java
 private void processMessage(RequestDTO requestDTO) {
     CompletionStage<HttpResponse> responseFuture = getRandomMessage();
     responseFuture.thenCompose(this::consumeHttpResponse)
@@ -192,7 +192,7 @@ private void processMessage(RequestDTO requestDTO) {
 
 让我们用一个随机 post id 调用端点的方法:
 
-```
+```java
 private CompletionStage<HttpResponse> getRandomMessage() {
     int postId = ThreadLocalRandom.current().nextInt(0, 100);
     return Http.get(getContext().getSystem())
@@ -203,7 +203,7 @@ private CompletionStage<HttpResponse> getRandomMessage() {
 
 我们还处理从调用服务中获得的`HttpResponse`,以便获得 JSON 响应:
 
-```
+```java
 private CompletionStage<MessageDTO> consumeHttpResponse(
   HttpResponse httpResponse) {
     Materializer materializer = 
@@ -220,7 +220,7 @@ private CompletionStage<MessageDTO> consumeHttpResponse(
 
 `MessageConverter `类是用于在`JsonNode `和 dto 之间进行转换的实用程序:
 
-```
+```java
 public static MessageDTO jsonNodeToMessage(JsonNode jsonNode) {
     ObjectMapper mapper = new ObjectMapper();
     return mapper.convertValue(jsonNode, MessageDTO.class);
@@ -231,7 +231,7 @@ public static MessageDTO jsonNodeToMessage(JsonNode jsonNode) {
 
 让我们看看如何丢弃字节:
 
-```
+```java
 private void discardEntity(
   HttpResponse httpResponse, Materializer materializer) {
     HttpMessage.DiscardedEntity discarded = 
@@ -252,7 +252,7 @@ private void discardEntity(
 
 我们需要定义一个呈现索引页面的控制器动作。我们将把它放入控制器类`app.controllers.HomeController`:
 
-```
+```java
 public Result index(Http.Request request) {
     String url = routes.HomeController.socket()
       .webSocketURL(request);
@@ -264,7 +264,7 @@ public Result index(Http.Request request) {
 
 现在，让我们转到`app/views/ndex.scala.html` 页面，添加一个用于接收消息的容器和一个用于捕获新消息的表单:
 
-```
+```java
 <div id="messageContent"></div>F
 <form>
     <textarea id="messageInput"></textarea>
@@ -274,7 +274,7 @@ public Result index(Http.Request request) {
 
 我们还需要通过在`app/views/index.scala.html` 页面的顶部声明这个参数来传入 WebSocket 控制器动作的 URL:
 
-```
+```java
 @(url: String)
 ```
 
@@ -284,7 +284,7 @@ public Result index(Http.Request request) {
 
 让我们声明事件处理程序:
 
-```
+```java
 var webSocket;
 var messageInput;
 
@@ -303,7 +303,7 @@ function initWebSocket() {
 
 让我们添加处理程序本身:
 
-```
+```java
 function onOpen(evt) {
     writeToScreen("CONNECTED");
 }
@@ -324,7 +324,7 @@ function onMessage(evt) {
 
 然后，为了显示输出，我们将使用函数`appendMessageToView` 和`writeToScreen`:
 
-```
+```java
 function appendMessageToView(title, message) {
     $("#messageContent").append("<p>" + title + ": " + message + "</p>");
 }
@@ -338,7 +338,7 @@ function writeToScreen(message) {
 
 我们已经准备好测试应用程序，现在让我们运行它:
 
-```
+```java
 cd websockets
 sbt run
 ```
@@ -357,7 +357,7 @@ sbt run
 
 我们将从`HomeController`中的 WebSocket 动作开始:
 
-```
+```java
 public WebSocket akkaStreamsSocket() {
     return WebSocket.Json.accept(request -> {
         Sink<JsonNode, ?> in = Sink.foreach(System.out::println);
@@ -377,7 +377,7 @@ public WebSocket akkaStreamsSocket() {
 
 要看到这一点，我们需要修改`index `动作中的 URL，并使其指向`akkaStreamsSocket `端点:
 
-```
+```java
 String url = routes.HomeController.akkaStreamsSocket().webSocketURL(request);
 ```
 
@@ -395,7 +395,7 @@ String url = routes.HomeController.akkaStreamsSocket().webSocketURL(request);
 
 当处理 WebSocket 的 actor 终止时，Play 将自动关闭 WebSocket。所以我们可以通过实现`Actor#postStop `方法来处理这个场景:
 
-```
+```java
 @Override
 public void postStop() throws Exception {
     log.info("Messenger actor stopped at {}",
@@ -410,7 +410,7 @@ public void postStop() throws Exception {
 
 让我们看看如何在`onSendMessage`方法中做到这一点:
 
-```
+```java
 private void onSendMessage(JsonNode jsonNode) {
     RequestDTO requestDTO = MessageConverter.jsonNodeToRequest(jsonNode);
     String message = requestDTO.getMessage().toLowerCase();
@@ -440,13 +440,13 @@ WebSocket 帧长度是可配置的。我们可以根据应用要求调整框架�
 
 **配置较短的帧长度可能有助于减少使用长数据帧的拒绝服务攻击。**我们可以通过在`application.conf`中指定最大长度来改变应用的帧长度:
 
-```
+```java
 play.server.websocket.frame.maxLength = 64k
 ```
 
 我们还可以通过将最大长度指定为命令行参数来设置此配置选项:
 
-```
+```java
 sbt -Dwebsocket.frame.maxLength=64k run
 ```
 
@@ -456,13 +456,13 @@ sbt -Dwebsocket.frame.maxLength=64k run
 
 我们可以通过配置选项来改变这一点。让我们来看看我们的`application.conf `,将服务器改为没有空闲超时:
 
-```
+```java
 play.server.http.idleTimeout = "infinite"
 ```
 
 或者我们可以将选项作为命令行参数传入:
 
-```
+```java
 sbt -Dhttp.idleTimeout=infinite run
 ```
 
@@ -470,7 +470,7 @@ sbt -Dhttp.idleTimeout=infinite run
 
 **在`build.sbt`中指定的配置选项仅在开发中使用，在生产中会被忽略:**
 
-```
+```java
 PlayKeys.devSettings += "play.server.http.idleTimeout" -> "infinite"
 ```
 
@@ -478,7 +478,7 @@ PlayKeys.devSettings += "play.server.http.idleTimeout" -> "infinite"
 
 我们可以将该值更改为秒:
 
-```
+```java
 PlayKeys.devSettings += "play.server.http.idleTimeout" -> "120 s"
 ```
 

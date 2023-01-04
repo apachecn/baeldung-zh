@@ -10,7 +10,7 @@
 
 ## 2.属国
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -41,7 +41,7 @@
 
 让我们创建一个简单的 REST 控制器，它调用一个服务来计算一个数字的平方，并将结果作为 JSON 字符串返回:
 
-```
+```java
 @RestController
 @RequestMapping("/number", MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class NumberController {
@@ -65,7 +65,7 @@ public class NumberController {
 
 我们需要提供要使用的缓存的名称和可选的密钥。我们还可以添加一个条件来限制缓存的内容:
 
-```
+```java
 @Service
 public class NumberService {
 
@@ -85,7 +85,7 @@ public class NumberService {
 
 最后，让我们创建主要的 Spring Boot 应用程序:
 
-```
+```java
 @SpringBootApplication
 public class Application {
 
@@ -101,7 +101,7 @@ public class Application {
 
 让我们创建一个`CacheConfig`类:
 
-```
+```java
 @Configuration
 @EnableCaching
 public class CacheConfig {
@@ -112,13 +112,13 @@ public class CacheConfig {
 
 因为 Spring 和 Ehcache 都不会寻找默认的`ehcache.xml`文件。我们添加以下属性来告诉 Spring 在哪里可以找到它:
 
-```
+```java
 spring.cache.jcache.config=classpath:ehcache.xml 
 ```
 
 让我们用名为`squareCache` `:`的缓存创建一个`ehcache.xml`文件
 
-```
+```java
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 
     xmlns:jsr107="http://www.ehcache.org/v3/jsr107"
@@ -154,7 +154,7 @@ spring.cache.jcache.config=classpath:ehcache.xml
 
 我们还要添加缓存事件监听器，它记录`CREATED`和`EXPIRED`缓存事件:
 
-```
+```java
 public class CacheEventLogger 
   implements CacheEventListener<Object, Object> {
 
@@ -177,7 +177,7 @@ public class CacheEventLogger
 
 如果我们转到`[http://localhost:8080/number/square/12](https://web.archive.org/web/20220712034740/http://localhost:8080/number/square/12), `，那么我们将返回`{“square”:144}`，在日志中我们将看到:
 
-```
+```java
 INFO [nio-8080-exec-1] c.b.cachetest.rest.NumberController : call numberService to square 12
 INFO [nio-8080-exec-1] c.b.cachetest.service.NumberService : square of 12 is 144
 INFO [e [_default_]-0] c.b.cachetest.config.CacheEventLogger : Cache event CREATED for item with key 12\. Old value = null, New value = 144
@@ -185,7 +185,7 @@ INFO [e [_default_]-0] c.b.cachetest.config.CacheEventLogger : Cache event CREAT
 
 我们可以看到来自`NumberService`的`square`方法的日志消息，以及来自 EventLogger 的`CREATED`事件。**如果我们刷新浏览器，我们只会看到以下内容被添加到日志中:**
 
-```
+```java
 INFO [nio-8080-exec-2] c.b.cachetest.rest.NumberController : call numberService to square 12
 ```
 
@@ -193,7 +193,7 @@ INFO [nio-8080-exec-2] c.b.cachetest.rest.NumberController : call numberService 
 
 **如果我们等待 30 秒，等待缓存项过期并刷新浏览器，我们将看到一个`EXPIRED`事件、**和添加回缓存的值:
 
-```
+```java
 INFO [nio-8080-exec-1] (...) NumberController : call numberService to square 12
 INFO [e [_default_]-1] (...) CacheEventLogger : Cache event EXPIRED for item with key 12\. Old value = 144,New value = null
 INFO [nio-8080-exec-1] (... )NumberService : square of 12 is 144

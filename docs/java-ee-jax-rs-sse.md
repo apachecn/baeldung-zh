@@ -30,7 +30,7 @@ SSE 事件是由以下字段组成的文本块:
 
 此外，同一事件中的数据可以写入多行，如下例所示:
 
-```
+```java
 event: stock
 id: 1
 : price change
@@ -65,7 +65,7 @@ SSE 资源方法是 JAX RS 方法，它:
 *   有一个注入的`SseEventSink`参数，事件被发送到这里
 *   也可能有一个注入的`Sse`参数，该参数用作创建事件生成器的入口点
 
-```
+```java
 @GET
 @Path("prices")
 @Produces("text/event-stream")
@@ -76,7 +76,7 @@ public void getStockPrices(@Context SseEventSink sseEventSink, @Context Sse sse)
 
 因此，客户端应该使用以下 HTTP 头发出第一个 HTTP 请求:
 
-```
+```java
 Accept: text/event-stream 
 ```
 
@@ -91,7 +91,7 @@ SSE 实例是一个上下文 bean，JAX RS 运行时将使其可用于注入。
 
 让我们看看它是如何工作的:
 
-```
+```java
 @Context
 public void setSse(Sse sse) {
     this.sse = sse;
@@ -102,7 +102,7 @@ public void setSse(Sse sse) {
 
 现在，让我们关注事件构建器。`OutboundSseEvent.Builder`负责创建`OutboundSseEvent`:
 
-```
+```java
 OutboundSseEvent sseEvent = this.eventBuilder
   .name("stock")
   .id(String.valueOf(lastEventId))
@@ -121,7 +121,7 @@ OutboundSseEvent sseEvent = this.eventBuilder
 
 Sse 实例还有两个生成器快捷方式，用于创建仅包含数据字段或类型和数据字段的事件:
 
-```
+```java
 OutboundSseEvent sseEvent = sse.newEvent("cool Event");
 OutboundSseEvent sseEvent = sse.newEvent("typed event", "data Event");
 ```
@@ -136,7 +136,7 @@ OutboundSseEvent sseEvent = sse.newEvent("typed event", "data Event");
 
 在下一个示例中，将发送大量股票更新，并最终关闭事件流:
 
-```
+```java
 @GET
 @Path("prices")
 @Produces("text/event-stream")
@@ -164,7 +164,7 @@ public void getStockPrices(@Context SseEventSink sseEventSink /*..*/) {
 
 发送完所有事件后，服务器通过显式调用`close()`方法关闭连接，或者最好通过使用`try-with-resource,`，因为`SseEventSink`扩展了`AutoClosable`接口:
 
-```
+```java
 try (SseEventSink sink = sseEventSink) {
     OutboundSseEvent sseEvent = //..
     sink.send(sseEvent);
@@ -173,7 +173,7 @@ try (SseEventSink sink = sseEventSink) {
 
 在我们的示例应用程序中，如果我们访问:
 
-```
+```java
 http://localhost:9080/sse-jaxrs-server/sse.html
 ```
 
@@ -183,13 +183,13 @@ http://localhost:9080/sse-jaxrs-server/sse.html
 
 首先，我们从注入的 Sse 上下文中创建`SseBroadcaster`对象，如前所示:
 
-```
+```java
 SseBroadcaster sseBroadcaster = sse.newBroadcaster();
 ```
 
 然后，客户端应该订阅以便能够接收 Sse 事件。这通常在 SSE 资源方法中完成，其中注入了一个`SseEventSink`上下文实例:
 
-```
+```java
 @GET
 @Path("subscribe")
 @Produces(MediaType.SERVER_SENT_EVENTS)
@@ -200,7 +200,7 @@ public void listen(@Context SseEventSink sseEventSink) {
 
 最后，**我们可以通过调用`broadcast()`方法**来触发事件发布:
 
-```
+```java
 @GET
 @Path("publish")
 public void broadcast() {
@@ -213,13 +213,13 @@ public void broadcast() {
 
 为了展示广播，我们可以访问以下 URL:
 
-```
+```java
 http://localhost:9080/sse-jaxrs-server/sse-broadcast.html
 ```
 
 然后我们可以通过调用 broadcast()资源方法来触发广播:
 
-```
+```java
 curl -X GET http://localhost:9080/sse-jaxrs-server/sse/stock/publish
 ```
 
@@ -233,7 +233,7 @@ curl -X GET http://localhost:9080/sse-jaxrs-server/sse/stock/publish
 
 这里，我们将使用 Apache CXF 客户端实现:
 
-```
+```java
 <dependency>
     <groupId>org.apache.cxf</groupId>
     <artifactId>cxf-rt-rs-client</artifactId>
@@ -250,7 +250,7 @@ curl -X GET http://localhost:9080/sse-jaxrs-server/sse/stock/publish
 
 我们首先监听由`InboundSseEvent`接口抽象的传入事件:
 
-```
+```java
 Client client = ClientBuilder.newClient();
 WebTarget target = client.target(url);
 try (SseEventSource source = SseEventSource.target(target).build()) {
@@ -263,13 +263,13 @@ try (SseEventSource source = SseEventSource.target(target).build()) {
 
 然后我们可以使用`readData()`方法读取原始数据`String:`
 
-```
+```java
 String data = inboundSseEvent.readData();
 ```
 
 或者，我们可以使用重载版本，通过合适的媒体类型获得反序列化的 Java 对象:
 
-```
+```java
 Stock stock = inboundSseEvent.readData(Stock.class, MediaType.Application_Json);
 ```
 

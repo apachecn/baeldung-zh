@@ -26,7 +26,7 @@ Spring Batch allows us to set retry strategies on tasks so that they are automat
 
 让我们从**将 `spring-retry`依赖项添加到我们的`pom.xml` 文件**开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.retry</groupId>
     <artifactId>spring-retry</artifactId>
@@ -36,7 +36,7 @@ Spring Batch allows us to set retry strategies on tasks so that they are automat
 
 我们还需要将 Spring AOP 添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-aspects</artifactId>
@@ -50,7 +50,7 @@ Spring Batch allows us to set retry strategies on tasks so that they are automat
 
 为了在应用程序中启用 Spring Retry，**我们需要将`@EnableRetry`注释**添加到我们的`@Configuration` 类中:
 
-```
+```java
 @Configuration
 @EnableRetry
 public class AppConfig { ... }
@@ -62,7 +62,7 @@ public class AppConfig { ... }
 
 **我们可以使用`@Retryable`注释为方法**添加重试功能:
 
-```
+```java
 @Service
 public interface MyService {
     @Retryable(value = RuntimeException.class)
@@ -79,7 +79,7 @@ public interface MyService {
 
 **现在让我们使用`@Recover`注释**添加一个恢复方法:
 
-```
+```java
 @Service
 public interface MyService {
     @Retryable(value = SQLException.class)
@@ -100,7 +100,7 @@ public interface MyService {
 
 为了定制一个重试的行为，**我们可以使用参数`maxAttempts`和** `**backoff**`:
 
-```
+```java
 @Service
 public interface MyService {
     @Retryable( value = SQLException.class, 
@@ -119,14 +119,14 @@ public interface MyService {
 
 首先，让我们在一个名为`retryConfig.` `properties`的文件中定义属性:
 
-```
+```java
 retry.maxAttempts=2
 retry.maxDelay=100
 ```
 
 然后，我们指示我们的`@Configuration`类加载这个文件:
 
-```
+```java
 // ...
 @PropertySource("classpath:retryConfig.properties")
 public class AppConfig { ... }
@@ -134,7 +134,7 @@ public class AppConfig { ... }
 
 最后，**我们可以在我们的`@Retryable`定义**中注入`retry.maxAttempts`和`retry.maxDelay`的值:
 
-```
+```java
 @Service 
 public interface MyService { 
   @Retryable( value = SQLException.class, maxAttemptsExpression = "${retry.maxAttempts}",
@@ -151,7 +151,7 @@ public interface MyService {
 
 Spring Retry 提供了`RetryOperations`接口，该接口提供了一组`execute()`方法:
 
-```
+```java
 public interface RetryOperations {
     <T> T execute(RetryCallback<T> retryCallback) throws Exception;
 
@@ -161,7 +161,7 @@ public interface RetryOperations {
 
 `RetryCallback`是`execute()`的参数，是允许插入失败后需要重试的业务逻辑的接口:
 
-```
+```java
 public interface RetryCallback<T> {
     T doWithRetry(RetryContext context) throws Throwable;
 }
@@ -173,7 +173,7 @@ public interface RetryCallback<T> {
 
 让我们在我们的`@Configuration`类中配置一个`RetryTemplate` bean:
 
-```
+```java
 @Configuration
 public class AppConfig {
     //...
@@ -204,7 +204,7 @@ public class AppConfig {
 
 为了运行带有重试处理的代码，我们可以调用`r` `etryTemplate.execute()` 方法 :
 
-```
+```java
 retryTemplate.execute(new RetryCallback<Void, RuntimeException>() {
     @Override
     public Void doWithRetry(RetryContext arg0) {
@@ -216,7 +216,7 @@ retryTemplate.execute(new RetryCallback<Void, RuntimeException>() {
 
 我们可以使用 lambda 表达式来代替匿名类:
 
-```
+```java
 retryTemplate.execute(arg0 -> {
     myService.templateRetryService();
     return null;
@@ -231,7 +231,7 @@ retryTemplate.execute(arg0 -> {
 
 回调在一个`RetryListener`接口中提供:
 
-```
+```java
 public class DefaultListenerSupport extends RetryListenerSupport {
     @Override
     public <T, E extends Throwable> void close(RetryContext context,
@@ -265,7 +265,7 @@ public class DefaultListenerSupport extends RetryListenerSupport {
 
 接下来，我们将侦听器(`DefaultListenerSupport)` 注册到我们的`RetryTemplate` bean:
 
-```
+```java
 @Configuration
 public class AppConfig {
     ...
@@ -284,7 +284,7 @@ public class AppConfig {
 
 为了结束我们的示例，让我们验证结果:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
   classes = AppConfig.class,
@@ -309,7 +309,7 @@ public class SpringRetryIntegrationTest {
 
 从测试日志中我们可以看到，我们已经正确地配置了`RetryTemplate`和`RetryListener`:
 
-```
+```java
 2020-01-09 20:04:10 [main] INFO  o.b.s.DefaultListenerSupport - onOpen 
 2020-01-09 20:04:10 [main] INFO  o.baeldung.springretry.MyServiceImpl
 - throw RuntimeException in method templateRetryService() 

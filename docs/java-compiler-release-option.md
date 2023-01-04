@@ -43,7 +43,7 @@ Also, the documented APIs are located in `$JDK_ROOT/lib/ct.sym`, which is a ZIP 
 
 首先，让我们创建一个示例类，并使用被覆盖的`ByteBuffer`的`flip`方法，它是在 Java 9:
 
-```
+```java
 import java.nio.ByteBuffer;
 
 public class TestForRelease {
@@ -60,13 +60,13 @@ public class TestForRelease {
 
 让我们用 Java 9 编译代码，将`-source`和`-target`选项值设为 8:
 
-```
+```java
 /jdk9path/bin/javac TestForRelease.java -source 8 -target 8 
 ```
 
 这样做的结果是成功的，但是有一个警告:
 
-```
+```java
 warning: [options] bootstrap class path not set in conjunction with -source 8
 
 1 warning
@@ -74,13 +74,13 @@ warning: [options] bootstrap class path not set in conjunction with -source 8
 
 现在，让我们在 Java 8 上运行代码:
 
-```
+```java
 /jdk8path/bin/java TestForRelease
 ```
 
 我们看到这失败了:
 
-```
+```java
 Exception in thread "main" java.lang.NoSuchMethodError: java.nio.ByteBuffer.flip()Ljava/nio/ByteBuffer;
 at com.corejava.TestForRelease.main(TestForRelease.java:9)
 ```
@@ -91,7 +91,7 @@ at com.corejava.TestForRelease.main(TestForRelease.java:9)
 
 在 Java 9 之前的版本中，`Buffer`类包含了`flip`方法:
 
-```
+```java
 public Buffer flip() {
     ...
  }
@@ -99,7 +99,7 @@ public Buffer flip() {
 
 在 Java 9 中， *ByteBuffer，*扩展了*缓冲区，*覆盖了 *flip* 方法:
 
-```
+```java
 @Override
 public ByteBuffer flip() {
     ...
@@ -108,7 +108,7 @@ public ByteBuffer flip() {
 
 当这个新方法在 Java 9 上编译并在 Java 8 上运行时，我们会得到错误，因为两个方法有不同的返回类型，并且使用描述符的方法查找在运行时会失败:
 
-```
+```java
 Exception in thread "main" java.lang.NoSuchMethodError: java.nio.ByteBuffer.flip()Ljava/nio/ByteBuffer;
 at com.corejava.TestForRelease.main(TestForRelease.java:9)
 ```
@@ -119,7 +119,7 @@ at com.corejava.TestForRelease.main(TestForRelease.java:9)
 
 现在，让我们用–`bootclasspath` 选项`:`重新编译相同的代码
 
-```
+```java
 /jdk9path/bin/javac TestForRelease.java -source 8 -target 8 -Xbootclasspath ${jdk8path}/jre/lib/rt.jar
 ```
 
@@ -127,7 +127,7 @@ at com.corejava.TestForRelease.main(TestForRelease.java:9)
 
 现在，让我们在 Java 8 上运行我们的代码，我们看到这是成功的:
 
-```
+```java
 /jdk8path/bin/java TestForRelease 
 Baeldung: --release option test is successful 
 ```
@@ -138,7 +138,7 @@ Baeldung: --release option test is successful
 
 现在，让我们用`–release`选项编译相同的代码:
 
-```
+```java
 /jdk9path/bin/javac TestForRelease.java —-release 8
 ```
 
@@ -146,7 +146,7 @@ Baeldung: --release option test is successful
 
 最后，当我们在 Java 8 上运行代码时，我们看到它是成功的:
 
-```
+```java
 /jdk8path/bin/java TestForRelease
 Baeldung: --release option test is successful
 ```
@@ -159,7 +159,7 @@ Baeldung: --release option test is successful
 
 让我们首先看看如何使用现有的`-source`和`-target`选项:
 
-```
+```java
 <plugins>
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -175,7 +175,7 @@ Baeldung: --release option test is successful
 
 下面是我们如何使用`–release`选项:
 
-```
+```java
 <plugins>
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>

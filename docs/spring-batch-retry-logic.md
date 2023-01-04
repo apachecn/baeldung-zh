@@ -12,7 +12,7 @@
 
 假设我们有一个读取输入 CSV 文件的批处理作业:
 
-```
+```java
 username, userid, transaction_date, transaction_amount
 sammy, 1234, 31/10/2015, 10000
 john, 9999, 3/12/2015, 12321
@@ -20,7 +20,7 @@ john, 9999, 3/12/2015, 12321
 
 然后，它通过点击 REST 端点获取用户的`age`和`postCode`属性来处理每条记录:
 
-```
+```java
 public class RetryItemProcessor implements ItemProcessor<Transaction, Transaction> {
 
     @Override
@@ -37,7 +37,7 @@ public class RetryItemProcessor implements ItemProcessor<Transaction, Transactio
 
 最后，它生成一个合并输出`XML`:
 
-```
+```java
 <transactionRecord>
     <transactionRecord>
         <amount>10000.0</amount>
@@ -57,7 +57,7 @@ public class RetryItemProcessor implements ItemProcessor<Transaction, Transactio
 
 在这种情况下，我们更希望失败的项目处理被重试几次。因此，**让我们配置我们的批处理作业，以便在失败的情况下最多执行三次重试**:
 
-```
+```java
 @Bean
 public Step retryStep(
   ItemProcessor<Transaction, Transaction> processor,
@@ -82,7 +82,7 @@ public Step retryStep(
 
 让我们来看一个测试场景，在这个场景中，返回`age`和`postCode`的 REST 端点关闭了一段时间。在这个测试场景中，我们将只获得前两个 API 调用的`ConnectTimeoutException`，第三个调用将会成功:
 
-```
+```java
 @Test
 public void whenEndpointFailsTwicePasses3rdTime_thenSuccess() throws Exception {
     FileSystemResource expectedResult = new FileSystemResource(EXPECTED_OUTPUT);
@@ -110,7 +110,7 @@ public void whenEndpointFailsTwicePasses3rdTime_thenSuccess() throws Exception {
 
 在这里，我们的工作成功完成了。另外，从日志中可以明显看出，**与`id=1234`的第一条记录失败了两次，最后在第三次重试**时成功了:
 
-```
+```java
 19:06:57.742 [main] INFO  o.s.batch.core.job.SimpleStepHandler - Executing step: [retryStep]
 19:06:57.758 [main] INFO  o.b.batch.service.RetryItemProcessor - Attempting to process user with id=1234
 19:06:57.758 [main] INFO  o.b.batch.service.RetryItemProcessor - Attempting to process user with id=1234
@@ -121,7 +121,7 @@ public void whenEndpointFailsTwicePasses3rdTime_thenSuccess() throws Exception {
 
 类似地，让我们用**另一个测试用例来看看当所有重试都用尽时会发生什么**:
 
-```
+```java
 @Test
 public void whenEndpointAlwaysFail_thenJobFails() throws Exception {
     when(httpClient.execute(any()))
@@ -145,7 +145,7 @@ public void whenEndpointAlwaysFail_thenJobFails() throws Exception {
 
 最后，让我们看一下上述配置的 XML 等价物:
 
-```
+```java
 <batch:job id="retryBatchJob">
     <batch:step id="retryStep">
         <batch:tasklet>

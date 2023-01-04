@@ -14,7 +14,7 @@ Jakarta EE 官方支持 CDI，但是一些实现支持在 Java SE 环境中使�
 
 为了使用 CDI，我们需要在 POM 中导入焊接库:
 
-```
+```java
 <dependency>
     <groupId>org.jboss.weld.se</groupId>
     <artifactId>weld-se-core</artifactId>
@@ -30,7 +30,7 @@ Jakarta EE 官方支持 CDI，但是一些实现支持在 Java SE 环境中使�
 
 为了指定我们需要拦截的类，让我们创建拦截器绑定:
 
-```
+```java
 @InterceptorBinding
 @Target( { METHOD, TYPE } )
 @Retention( RUNTIME )
@@ -40,7 +40,7 @@ public @interface Audited {
 
 定义了拦截器绑定之后，我们需要定义实际的拦截器实现:
 
-```
+```java
 @Audited
 @Interceptor
 public class AuditedInterceptor {
@@ -65,7 +65,7 @@ public class AuditedInterceptor {
 
 让我们将创建的拦截器应用于一些业务逻辑:
 
-```
+```java
 public class SuperService {
     @Audited
     public String deliverService(String uid) {
@@ -78,7 +78,7 @@ public class SuperService {
 
 要启用 CDI 拦截器，需要在位于`META-INF`目录的`beans.xml`文件中指定完整的类名:
 
-```
+```java
 <beans 
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
@@ -91,7 +91,7 @@ public class SuperService {
 
 为了验证拦截器确实工作了**，现在让我们运行下面的测试**:
 
-```
+```java
 public class TestInterceptor {
     Weld weld;
     WeldContainer container;
@@ -143,7 +143,7 @@ Spring 也使用 AspectJ 语法支持拦截器功能的类似实现。
 
 首先，我们需要向 POM 添加以下 Spring 和 AspectJ 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context</artifactId>
@@ -160,7 +160,7 @@ Spring 也使用 AspectJ 语法支持拦截器功能的类似实现。
 
 我们现在可以使用 AspectJ 注释语法创建一个简单的方面:
 
-```
+```java
 @Aspect
 public class SpringTestAspect {
     @Autowired
@@ -179,7 +179,7 @@ public class SpringTestAspect {
 
 我们创建了一个适用于所有`SpringSuperService`类方法的方面——为了简单起见，看起来像这样:
 
-```
+```java
 public class SpringSuperService {
     public String getInfoFromService(String code) {
         return code;
@@ -191,7 +191,7 @@ public class SpringSuperService {
 
 为了验证方面是否真正适用于服务，让我们编写下面的单元测试:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = { AppConfig.class })
 public class TestSpringInterceptor {
@@ -217,7 +217,7 @@ public class TestSpringInterceptor {
 
 配置如下所示:
 
-```
+```java
 @Configuration
 @EnableAspectJAutoProxy
 public class AppConfig {

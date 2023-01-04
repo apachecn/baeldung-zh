@@ -14,7 +14,7 @@
 
 我们需要`spring-core`、`spring-aop`和`spring-context-support`罐子来完成这项工作。我们可以在我们的`pom.xml`中声明`spring-context-support`。
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context-support</artifactId>
@@ -32,7 +32,7 @@
 
 ### 3.1。通用刀
 
-```
+```java
 public class GenericDao<E> {
 
     private Class<E> entityClass;
@@ -57,7 +57,7 @@ public class GenericDao<E> {
 
 ### 3.2。数据访问
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @Documented
@@ -68,7 +68,7 @@ public @interface DataAccess {
 
 我们将使用上面的注释注入一个`GenericDao`,如下所示:
 
-```
+```java
 @DataAccess(entity=Person.class)
 private GenericDao<Person> personDao;
 ```
@@ -79,7 +79,7 @@ private GenericDao<Person> personDao;
 
 ### 3.3。`DataAccessAnnotationProcessor`
 
-```
+```java
 @Component
 public class DataAccessAnnotationProcessor implements BeanPostProcessor {
 
@@ -120,7 +120,7 @@ public class DataAccessAnnotationProcessor implements BeanPostProcessor {
 
 ### 3.4。`DataAccessFieldCallback`
 
-```
+```java
 public class DataAccessFieldCallback implements FieldCallback {
     private static Logger logger = LoggerFactory.getLogger(DataAccessFieldCallback.class);
 
@@ -205,7 +205,7 @@ public class DataAccessFieldCallback implements FieldCallback {
 
 这是一个相当好的实现，但其中最重要的部分是`doWith()`方法:
 
-```
+```java
 genericDaoInstance = configurableBeanFactory.initializeBean(beanToRegister, beanName);
 configurableBeanFactory.autowireBeanProperties(genericDaoInstance, autowireMode, true);
 configurableBeanFactory.registerSingleton(beanName, genericDaoInstance); 
@@ -219,7 +219,7 @@ configurableBeanFactory.registerSingleton(beanName, genericDaoInstance);
 
 ### 3.5。`CustomAnnotationConfiguration`
 
-```
+```java
 @Configuration
 @ComponentScan("com.baeldung.springcustomannotation")
 public class CustomAnnotationConfiguration {} 
@@ -231,7 +231,7 @@ public class CustomAnnotationConfiguration {}
 
 让我们从一个支持 Spring 的测试和两个简单的示例实体类开始吧—`Person`和`Account`。
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={CustomAnnotationConfiguration.class})
 public class DataAccessAnnotationTest {
@@ -257,7 +257,7 @@ public class DataAccessAnnotationTest {
 
 为了测试第 2 点，我们需要查看两个都使用了`Person`类的`GenericDao`实例:
 
-```
+```java
 @Test
 public void whenGenericDaoInjected_thenItIsSingleton() {
     assertThat(personGenericDao, not(sameInstance(accountGenericDao)));
@@ -272,7 +272,7 @@ public void whenGenericDaoInjected_thenItIsSingleton() {
 
 为了测试第 3 点，我们在这里只测试一些简单的与持久性相关的逻辑:
 
-```
+```java
 @Test
 public void whenFindAll_thenMessagesIsCorrect() {
     personGenericDao.findAll();

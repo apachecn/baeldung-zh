@@ -16,7 +16,7 @@
 
 现在让我们为这个对象创建一个简单的接口和配置:
 
-```
+```java
 public interface ExpensiveObject {
     void process();
 }
@@ -24,7 +24,7 @@ public interface ExpensiveObject {
 
 以及该接口的实现具有较大的初始配置:
 
-```
+```java
 public class ExpensiveObjectImpl implements ExpensiveObject {
 
     public ExpensiveObjectImpl() {
@@ -45,7 +45,7 @@ public class ExpensiveObjectImpl implements ExpensiveObject {
 
 我们现在将利用代理模式并按需初始化我们的对象:
 
-```
+```java
 public class ExpensiveObjectProxy implements ExpensiveObject {
     private static ExpensiveObject object;
 
@@ -61,7 +61,7 @@ public class ExpensiveObjectProxy implements ExpensiveObject {
 
 每当我们的客户调用`process()` 方法时，他们只能看到处理过程，初始配置总是隐藏的:
 
-```
+```java
 public static void main(String[] args) {
     ExpensiveObject object = new ExpensiveObjectProxy();
     object.process();
@@ -73,7 +73,7 @@ public static void main(String[] args) {
 
 对于每一个其他的后续调用，该模式将跳过初始配置，并且只进行处理:
 
-```
+```java
 Loading initial configuration...
 processing complete.
 processing complete.

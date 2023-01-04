@@ -12,7 +12,7 @@
 
 在本教程中，我们将使用这三个列表作为测试的示例输入:
 
-```
+```java
 List first = Arrays.asList(1, 3, 4, 6, 8);
 List second = Arrays.asList(8, 1, 6, 3, 4);
 List third = Arrays.asList(1, 3, 3, 6, 6);
@@ -28,7 +28,7 @@ JUnit 是一个众所周知的用于 Java 生态系统中单元测试的框架�
 
 这里我们检查两个列表的大小，并检查第一个列表是否包含第二个列表的所有元素，反之亦然。虽然这个解决方案可行，但可读性不是很好。现在让我们来看一些替代方案:
 
-```
+```java
 @Test
 public void whenTestingForOrderAgnosticEquality_ShouldBeTrue() {
     assertTrue(first.size() == second.size() && first.containsAll(second) && second.containsAll(first));
@@ -39,7 +39,7 @@ public void whenTestingForOrderAgnosticEquality_ShouldBeTrue() {
 
 现在让我们来看看一个失败的测试:
 
-```
+```java
 @Test
 public void whenTestingForOrderAgnosticEquality_ShouldBeFalse() {
     assertFalse(first.size() == third.size() && first.containsAll(third) && third.containsAll(first));
@@ -54,7 +54,7 @@ AssertJ 是一个开源社区驱动的库，用于在 Java 测试中编写流畅
 
 为了在我们的 maven 项目中使用它，让我们在`pom.xml`文件中添加 [`assertj-core`](https://web.archive.org/web/20221011102112/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22assertj-core%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.assertj</groupId>
     <artifactId>assertj-core</artifactId>
@@ -64,7 +64,7 @@ AssertJ 是一个开源社区驱动的库，用于在 Java 测试中编写流畅
 
 让我们编写一个测试来比较相同元素和相同大小的两个列表实例的相等性:
 
-```
+```java
 @Test
 void whenTestingForOrderAgnosticEqualityBothList_ShouldBeEqual() {
     assertThat(first).hasSameElementsAs(second);
@@ -75,7 +75,7 @@ void whenTestingForOrderAgnosticEqualityBothList_ShouldBeEqual() {
 
 让我们在实践中看看这是什么意思:
 
-```
+```java
 @Test
 void whenTestingForOrderAgnosticEqualityBothList_ShouldNotBeEqual() {
     List a = Arrays.asList("a", "a", "b", "c");
@@ -86,7 +86,7 @@ void whenTestingForOrderAgnosticEqualityBothList_ShouldNotBeEqual() {
 
 在这个测试中，虽然我们有相同的元素，但是两个列表的大小不相等，但是断言仍然为真，因为它忽略了重复的元素。为了使它工作，我们需要为两个列表添加一个大小检查:
 
-```
+```java
 assertThat(a).hasSize(b.size()).hasSameElementsAs(b);
 ```
 
@@ -98,7 +98,7 @@ assertThat(a).hasSize(b.size()).hasSameElementsAs(b);
 
 为了在我们的 maven 项目中使用 Hamcrest，让我们在`pom.xml`文件中添加 [`hamcrest-all`](https://web.archive.org/web/20221011102112/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22hamcrest-all%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.hamcrest</groupId>
     <artifactId>hamcrest-all</artifactId>
@@ -108,7 +108,7 @@ assertThat(a).hasSize(b.size()).hasSameElementsAs(b);
 
 让我们来看看测试:
 
-```
+```java
 @Test
 public void whenTestingForOrderAgnosticEquality_ShouldBeEqual() {
     assertThat(first, Matchers.containsInAnyOrder(second.toArray()));
@@ -125,7 +125,7 @@ public void whenTestingForOrderAgnosticEquality_ShouldBeEqual() {
 
 为了在我们的 maven 项目中使用它，让我们在`pom.xml`文件中添加 [`commons-collections4`](https://web.archive.org/web/20221011102112/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22commons-collections4%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -135,7 +135,7 @@ public void whenTestingForOrderAgnosticEquality_ShouldBeEqual() {
 
 下面是一个使用`CollectionUtils`的测试:
 
-```
+```java
 @Test
 public void whenTestingForOrderAgnosticEquality_ShouldBeTrueIfEqualOtherwiseFalse() {
     assertTrue(CollectionUtils.isEqualCollection(first, second));

@@ -24,7 +24,7 @@
 
 例如，我们可以用`@Transactional`注释一个`ServiceActivator`或者它的方法:
 
-```
+```java
 @Transactional
 public class TxServiceActivator {
 
@@ -56,7 +56,7 @@ public class TxServiceActivator {
 
 Spring 集成为开箱即用的轮询器提供了事务支持。任何时候我们配置一个`Poller`组件，我们都可以提供事务性配置:
 
-```
+```java
 @Bean
 @InboundChannelAdapter(value = "someChannel", poller = @Poller(value = "pollerMetadata"))
 public MessageSource<File> someMessageSource() {
@@ -104,7 +104,7 @@ private TransactionInterceptor transactionInterceptor() {
 
 首先，我们用一个简单的`Poller`定义一个`InboundChannelAdapter`:
 
-```
+```java
 @Bean
 @InboundChannelAdapter(value = "inputChannel", poller = @Poller(value = "pollerMetadata"))
 public MessageSource<File> fileReadingMessageSource() {
@@ -125,7 +125,7 @@ public PollerMetadata pollerMetadata() {
 
 如前所述，`Poller`包含对`TransactionManager,`的引用。此外，它还包含对`TransactionSynchronizationFactory`的引用。该组件提供了文件系统操作与事务同步的机制:
 
-```
+```java
 @Bean
 public TransactionSynchronizationFactory transactionSynchronizationFactory() {
     ExpressionEvaluatingTransactionSynchronizationProcessor processor =
@@ -149,7 +149,7 @@ public TransactionSynchronizationFactory transactionSynchronizationFactory() {
 
 `InputChannel`使用`FileToStringTransformer`转换有效载荷，并将其委托给`toServiceChannel`。该通道绑定到`ServiceActivator`:
 
-```
+```java
 @Bean
 public MessageChannel inputChannel() {
     return new DirectChannel();
@@ -164,7 +164,7 @@ public FileToStringTransformer fileToStringTransformer() {
 
 `ServiceActivator`读取传入的文件，其中包含学生的考试成绩。它将结果写入数据库。如果结果包含字符串“fail”，它将抛出`Exception`，这将导致数据库回滚:
 
-```
+```java
 @ServiceActivator(inputChannel = "toServiceChannel")
 public void serviceActivator(String payload) {
 

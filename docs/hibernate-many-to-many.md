@@ -22,7 +22,7 @@
 
 我们还需要创建`employee`和`project`表以及将`employee_id`和`project_id`作为外键的`employee_project`连接表:
 
-```
+```java
 CREATE TABLE `employee` (
   `employee_id` int(11) NOT NULL AUTO_INCREMENT,
   `first_name` varchar(50) DEFAULT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE `employee_project` (
 
 模型类`Employee` 和`Project` 需要用 JPA 注释创建:
 
-```
+```java
 @Entity
 @Table(name = "Employee")
 public class Employee { 
@@ -72,7 +72,7 @@ public class Employee {
 }
 ```
 
-```
+```java
 @Entity
 @Table(name = "Project")
 public class Project {    
@@ -101,7 +101,7 @@ public class Project {
 
 为了查看多对多注释的运行情况，我们可以编写以下 JUnit 测试:
 
-```
+```java
 public class HibernateManyToManyAnnotationMainIntegrationTest {
 	private static SessionFactory sessionFactory;
 	private Session session;

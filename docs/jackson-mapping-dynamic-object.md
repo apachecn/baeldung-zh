@@ -28,7 +28,7 @@ A quick overview of how we can use the Optional with Jackson.[Read more](/web/20
 
 数据结构如下所示:
 
-```
+```java
 {
     "name": "Pear yPhone 72",
     "category": "cellphone",
@@ -43,7 +43,7 @@ A quick overview of how we can use the Optional with Jackson.[Read more](/web/20
 
 我们可以用下面的 Java 类映射公共属性:
 
-```
+```java
 class Product {
 
     String name;
@@ -57,7 +57,7 @@ class Product {
 
 要使用它，我们必须将它作为字段添加到我们的`Product`类中:
 
-```
+```java
 class Product {
 
     // common fields
@@ -70,7 +70,7 @@ class Product {
 
 最后，我们验证它是否有效:
 
-```
+```java
 String json = "<json object>";
 
 Product product = objectMapper.readValue(json, Product.class);
@@ -87,7 +87,7 @@ assertThat(product.getDetails().get("audioConnector").asText()).isEqualTo("none"
 
 其他一切都可以保持不变:
 
-```
+```java
 class Product {
 
     // common fields
@@ -100,7 +100,7 @@ class Product {
 
 然后我们可以通过测试来验证它:
 
-```
+```java
 String json = "<json object>";
 
 Product product = objectMapper.readValue(json, Product.class);
@@ -115,7 +115,7 @@ assertThat(product.getDetails().get("audioConnector")).isEqualTo("none");
 
 例如，我们可能需要简化我们的产品表示:
 
-```
+```java
 {
     "name": "Pear yPhone 72",
     "category": "cellphone",
@@ -128,7 +128,7 @@ assertThat(product.getDetails().get("audioConnector")).isEqualTo("none");
 
 或者，我们可以使用 **`@JsonAnySetter`来标记一个处理额外的未知属性**的方法。这种方法应该接受两个参数，即属性的名称和值:
 
-```
+```java
 class Product {
 
     // common fields
@@ -148,7 +148,7 @@ class Product {
 
 由于我们将动态属性存储在一个`Map`中，我们可以像以前一样使用它:
 
-```
+```java
 String json = "<json object>";
 
 Product product = objectMapper.readValue(json, Product.class);

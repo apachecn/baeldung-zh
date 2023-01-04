@@ -12,13 +12,13 @@ NIO2 中的`Path`API 构成了 Java 7 附带的主要新功能领域之一，尤
 
 NIO2 支持捆绑在`java.nio.file`包中。所以设置您的项目来使用`Path`API 只是导入这个包中的所有东西:
 
-```
+```java
 import java.nio.file.*;
 ```
 
 因为本文中的代码示例可能会在不同的环境中运行，所以让我们来了解一下用户的主目录:
 
-```
+```java
 private static String HOME = System.getProperty("user.home");
 ```
 
@@ -36,7 +36,7 @@ private static String HOME = System.getProperty("user.home");
 
 助手类`java.nio.file.Paths`(复数形式)是创建`Path`对象的正式方式。它有两个静态方法来从路径字符串创建一个`Path`:
 
-```
+```java
 Path path = Paths.get("path string");
 ```
 
@@ -44,7 +44,7 @@ Path path = Paths.get("path string");
 
 从一个`java.net.URI`物体:
 
-```
+```java
 Path path = Paths.get(URI object);
 ```
 
@@ -54,7 +54,7 @@ Path path = Paths.get(URI object);
 
 要**从路径字符串创建一个`Path`** 对象:
 
-```
+```java
 @Test
 public void givenPathString_whenCreatesPathObject_thenCorrect() {
     Path p = Paths.get("/articles/baeldung");
@@ -67,7 +67,7 @@ public void givenPathString_whenCreatesPathObject_thenCorrect() {
 
 如果我们提供这些部分而不是完整的路径字符串，它们将用于构造路径对象，我们不需要在变量参数部分中包含名称分隔符(斜线):
 
-```
+```java
 @Test
 public void givenPathParts_whenCreatesPathObject_thenCorrect() {
     Path p = Paths.get("/articles", "baeldung");
@@ -82,7 +82,7 @@ public void givenPathParts_whenCreatesPathObject_thenCorrect() {
 
 目录结构中最低的元素将位于索引`[n-1]`，其中`n`是路径中名称元素的数量。这个最低层的元素被称为**文件名**，不管它是否是一个实际的文件:
 
-```
+```java
 @Test
 public void givenPath_whenRetrievesFileName_thenCorrect() {
     Path p = Paths.get("/articles/baeldung/logs");
@@ -95,7 +95,7 @@ public void givenPath_whenRetrievesFileName_thenCorrect() {
 
 方法可用于通过索引检索单个元素:
 
-```
+```java
 @Test
 public void givenPath_whenRetrievesNameByIndex_thenCorrect() {
     Path p = Paths.get("/articles/baeldung/logs");
@@ -110,7 +110,7 @@ public void givenPath_whenRetrievesNameByIndex_thenCorrect() {
 
 或者使用这些索引范围的路径的子序列:
 
-```
+```java
 @Test
 public void givenPath_whenCanRetrieveSubsequenceByIndex_thenCorrect() {
     Path p = Paths.get("/articles/baeldung/logs");
@@ -129,7 +129,7 @@ public void givenPath_whenCanRetrieveSubsequenceByIndex_thenCorrect() {
 
 每个路径都与一个父路径相关联，如果路径没有父路径，则与`null`相关联。path 对象的父对象由路径的根组件(如果有)和路径中除文件名之外的每个元素组成。例如，`/a/b/c`的父路径是`/a/b`，而`/a`的父路径为空:
 
-```
+```java
 @Test
 public void givenPath_whenRetrievesParent_thenCorrect() {
     Path p1 = Paths.get("/articles/baeldung/logs");
@@ -151,7 +151,7 @@ public void givenPath_whenRetrievesParent_thenCorrect() {
 
 我们还可以获得路径的根元素:
 
-```
+```java
 @Test
 public void givenPath_whenRetrievesRoot_thenCorrect() {
     Path p1 = Paths.get("/articles/baeldung/logs");
@@ -171,7 +171,7 @@ public void givenPath_whenRetrievesRoot_thenCorrect() {
 
 例如，考虑以下路径字符串:
 
-```
+```java
 /baeldung/./articles
 /baeldung/authors/../articles
 /baeldung/articles
@@ -183,7 +183,7 @@ public void givenPath_whenRetrievesRoot_thenCorrect() {
 
 这个例子现在应该是不言自明的了:
 
-```
+```java
 @Test
 public void givenPath_whenRemovesRedundancies_thenCorrect1() {
     Path p = Paths.get("/home/./baeldung/articles");
@@ -196,7 +196,7 @@ public void givenPath_whenRemovesRedundancies_thenCorrect1() {
 
 这个也是:
 
-```
+```java
 @Test
 public void givenPath_whenRemovesRedundancies_thenCorrect2() {
     Path p = Paths.get("/home/baeldung/../articles");
@@ -211,7 +211,7 @@ public void givenPath_whenRemovesRedundancies_thenCorrect2() {
 
 有一些操作可以将路径转换为所选的表示格式。为了将任何路径转换成可以从浏览器打开的字符串，我们使用了`toUri`方法:
 
-```
+```java
 @Test
 public void givenPath_whenConvertsToBrowseablePath_thenCorrect() {
     Path p = Paths.get("/home/baeldung/articles.html");
@@ -225,7 +225,7 @@ public void givenPath_whenConvertsToBrowseablePath_thenCorrect() {
 
 我们也可以将路径转换成它的绝对表示。`toAbsolutePath`方法解析文件系统默认目录的路径:
 
-```
+```java
 @Test
 public void givenPath_whenConvertsToAbsolutePath_thenCorrect() {
     Path p = Paths.get("/home/baeldung/articles.html");
@@ -240,7 +240,7 @@ public void givenPath_whenConvertsToAbsolutePath_thenCorrect() {
 
 但是，当检测到要解析的路径已经是绝对路径时，该方法按原样返回它:
 
-```
+```java
 @Test
 public void givenAbsolutePath_whenRetainsAsAbsolute_thenCorrect() {
     Path p = Paths.get("E:\\home\\baeldung\\articles.html");
@@ -257,7 +257,7 @@ public void givenAbsolutePath_whenRetainsAsAbsolute_thenCorrect() {
 
 是时候使用我们在**设置**部分创建的变量了，该变量指向登录用户在文件系统中的主位置:
 
-```
+```java
 @Test
 public void givenExistingPath_whenGetsRealPathToFile_thenCorrect() {
     Path p = Paths.get(HOME);
@@ -272,7 +272,7 @@ public void givenExistingPath_whenGetsRealPathToFile_thenCorrect() {
 
 由于没有更好的方法来证明这一点，只需看看下一个测试，它试图将一个不存在的路径转换为一个真实的路径:
 
-```
+```java
 @Test(expected = NoSuchFileException.class)
 public void givenInExistentPath_whenFailsToConvert_thenCorrect() {
     Path p = Paths.get("E:\\home\\baeldung\\articles.html");
@@ -289,7 +289,7 @@ public void givenInExistentPath_whenFailsToConvert_thenCorrect() {
 
 简单地说，我们可以在任何一个`Path`上调用`resolve`方法，并传入一个`partial path`作为参数。该部分路径会附加到原始路径:
 
-```
+```java
 @Test
 public void givenTwoPaths_whenJoinsAndResolves_thenCorrect() {
     Path p = Paths.get("/baeldung/articles");
@@ -302,7 +302,7 @@ public void givenTwoPaths_whenJoinsAndResolves_thenCorrect() {
 
 然而，当传递给`resolve`方法的路径字符串不是一个`partial path;` 时，最明显的是一个绝对路径，那么传入的路径被返回:
 
-```
+```java
 @Test
 public void givenAbsolutePath_whenResolutionRetainsIt_thenCorrect() {
     Path p = Paths.get("/baeldung/articles");
@@ -315,7 +315,7 @@ public void givenAbsolutePath_whenResolutionRetainsIt_thenCorrect() {
 
 任何有根元素的路径都会发生同样的事情。路径字符串`“java”`没有根元素，而路径字符串`“/java”`有根元素。因此，当您传入带有根元素的路径时，它将按原样返回:
 
-```
+```java
 @Test
 public void givenPathWithRoot_whenResolutionRetainsIt_thenCorrect2() {
     Path p = Paths.get("/baeldung/articles");
@@ -332,7 +332,7 @@ public void givenPathWithRoot_whenResolutionRetainsIt_thenCorrect2() {
 
 相对于`authors`到`articles`的路径将被描述为`“move one level up in the directory hierarchy then into articles directory”`或`..\articles:`
 
-```
+```java
 @Test
 public void givenSiblingPaths_whenCreatesPathToOther_thenCorrect() {
     Path p1 = Paths.get("articles");
@@ -348,7 +348,7 @@ public void givenSiblingPaths_whenCreatesPathToOther_thenCorrect() {
 
 假设我们将`articles`目录移动到`authors`文件夹，这样它们就不再是兄弟了。以下相对化操作包括在`baeldung`和`articles`之间创建一条路径，反之亦然:
 
-```
+```java
 @Test
 public void givenNonSiblingPaths_whenCreatesPathToOther_thenCorrect() {
     Path p1 = Paths.get("/baeldung");
@@ -366,7 +366,7 @@ public void givenNonSiblingPaths_whenCreatesPathToOther_thenCorrect() {
 
 `Path`类有一个`equals`方法的直观实现，它使我们能够比较两条路径是否相等:
 
-```
+```java
 @Test
 public void givenTwoPaths_whenTestsEquality_thenCorrect() {
     Path p1 = Paths.get("/baeldung/articles");
@@ -380,7 +380,7 @@ public void givenTwoPaths_whenTestsEquality_thenCorrect() {
 
 您还可以检查路径是否以给定的字符串开头:
 
-```
+```java
 @Test
 public void givenPath_whenInspectsStart_thenCorrect() {
     Path p1 = Paths.get("/baeldung/articles");
@@ -391,7 +391,7 @@ public void givenPath_whenInspectsStart_thenCorrect() {
 
 或者以其他字符串结尾:
 
-```
+```java
 @Test
 public void givenPath_whenInspectsEnd_thenCorrect() {
     Path p1 = Paths.get("/baeldung/articles");

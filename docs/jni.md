@@ -37,7 +37,7 @@ Java 提供了关键字`native`,用于指示方法实现将由本地代码提供
 
 **`native`关键字将我们的方法转换成一种抽象方法:**
 
-```
+```java
 private native void aNativeMethod();
 ```
 
@@ -86,7 +86,7 @@ C/C++元素(其中许多是在`jni.h`中定义的)
 
 首先，我们创建下面的 Java 类，它包含将执行工作的本地方法:
 
-```
+```java
 package com.baeldung.jni;
 
 public class HelloWorldJNI {
@@ -116,13 +116,13 @@ public class HelloWorldJNI {
 
 首先，**为了创建方法的定义，我们必须使用 Java 编译器**的`-h`标志:
 
-```
+```java
 javac -h . HelloWorldJNI.java
 ```
 
 这将生成一个`com_baeldung_jni_HelloWorldJNI.h`文件，其中包含作为参数传递的类中的所有本机方法，在本例中，只有一个:
 
-```
+```java
 JNIEXPORT void JNICALL Java_com_baeldung_jni_HelloWorldJNI_sayHello
   (JNIEnv *, jobject); 
 ```
@@ -135,7 +135,7 @@ JNIEXPORT void JNICALL Java_com_baeldung_jni_HelloWorldJNI_sayHello
 
 我们将用与。h 一个包含头的函数，并添加以下代码来实现本机函数:
 
-```
+```java
 JNIEXPORT void JNICALL Java_com_baeldung_jni_HelloWorldJNI_sayHello
   (JNIEnv* env, jobject thisObject) {
     std::cout << "Hello from C++ !!" << std::endl;
@@ -152,19 +152,19 @@ JNIEXPORT void JNICALL Java_com_baeldung_jni_HelloWorldJNI_sayHello
 
 Ubuntu 版本:
 
-```
+```java
 g++ -c -fPIC -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux com_baeldung_jni_HelloWorldJNI.cpp -o com_baeldung_jni_HelloWorldJNI.o
 ```
 
 Windows 版本:
 
-```
+```java
 g++ -c -I%JAVA_HOME%\include -I%JAVA_HOME%\include\win32 com_baeldung_jni_HelloWorldJNI.cpp -o com_baeldung_jni_HelloWorldJNI.o
 ```
 
 MacOS 版本；
 
-```
+```java
 g++ -c -fPIC -I${JAVA_HOME}/include -I${JAVA_HOME}/include/darwin com_baeldung_jni_HelloWorldJNI.cpp -o com_baeldung_jni_HelloWorldJNI.o
 ```
 
@@ -176,19 +176,19 @@ G++链接器然后将 C++目标文件链接到我们的桥接库中。
 
 Ubuntu 版本:
 
-```
+```java
 g++ -shared -fPIC -o libnative.so com_baeldung_jni_HelloWorldJNI.o -lc
 ```
 
 Windows 版本:
 
-```
+```java
 g++ -shared -o native.dll com_baeldung_jni_HelloWorldJNI.o -Wl,--add-stdcall-alias
 ```
 
 MacOS 版本:
 
-```
+```java
 g++ -dynamiclib -o libnative.dylib com_baeldung_jni_HelloWorldJNI.o -lc
 ```
 
@@ -198,13 +198,13 @@ g++ -dynamiclib -o libnative.dylib com_baeldung_jni_HelloWorldJNI.o -lc
 
 然而，**我们需要将完整路径添加到包含我们刚刚生成的库的目录中。**这样 Java 将知道在哪里寻找我们的本地库:
 
-```
+```java
 java -cp . -Djava.library.path=/NATIVE_SHARED_LIB_FOLDER com.baeldung.jni.HelloWorldJNI
 ```
 
 控制台输出:
 
-```
+```java
 Hello from C++ !!
 ```
 
@@ -216,7 +216,7 @@ Hello from C++ !!
 
 我们将向本地方法添加一些参数。让我们创建一个名为`ExampleParametersJNI`的新类，它有两个本地方法，使用不同类型的参数和返回:
 
-```
+```java
 private native long sumIntegers(int first, int second);
 
 private native String sayHelloToMe(String name, boolean isFemale);
@@ -226,7 +226,7 @@ private native String sayHelloToMe(String name, boolean isFemale);
 
 现在创建相应的。cpp 文件与新 C++方法的实现:
 
-```
+```java
 ...
 JNIEXPORT jlong JNICALL Java_com_baeldung_jni_ExampleParametersJNI_sumIntegers 
   (JNIEnv* env, jobject thisObject, jint first, jint second) {
@@ -264,7 +264,7 @@ JNIEXPORT jstring JNICALL Java_com_baeldung_jni_ExampleParametersJNI_sayHelloToM
 
 我们将开始创建一个新的类`UserData`,用于存储一些用户信息:
 
-```
+```java
 package com.baeldung.jni;
 
 public class UserData {
@@ -280,7 +280,7 @@ public class UserData {
 
 然后，我们将创建另一个名为`ExampleObjectsJNI`的 Java 类，使用一些本地方法来管理类型为`UserData`的对象:
 
-```
+```java
 ...
 public native UserData createUser(String name, double balance);
 
@@ -289,7 +289,7 @@ public native String printUserData(UserData user);
 
 再来一次，让我们创建`.h`头文件，然后在新的`.cpp`文件上创建本地方法的 C++实现:
 
-```
+```java
 JNIEXPORT jobject JNICALL Java_com_baeldung_jni_ExampleObjectsJNI_createUser
   (JNIEnv *env, jobject thisObject, jstring name, jdouble balance) {
 

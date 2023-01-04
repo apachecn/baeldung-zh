@@ -12,7 +12,7 @@
 
 在我们继续之前，让我们将下面的依赖项添加到我们的`pom.xml:`中
 
-```
+```java
 <dependency>
     <groupId>io.ratpack</groupId>
     <artifactId>ratpack-spring-boot-starter</artifactId>
@@ -27,7 +27,7 @@
 
 我们可以在 Spring Boot 嵌入 Ratpack，作为 Tomcat 或 Undertow 提供的 servlet 容器的替代。我们只需要用 [`@EnableRatpack`](https://web.archive.org/web/20220628101320/https://ratpack.io/manual/current/api/ratpack/spring/config/EnableRatpack.html) 注释一个 Spring 配置类，并声明类型`[Action](https://web.archive.org/web/20220628101320/https://ratpack.io/manual/current/api/ratpack/func/Action.html)<[Chain](https://web.archive.org/web/20220628101320/https://ratpack.io/manual/current/api/ratpack/handling/Chain.html)>`的 beans:
 
-```
+```java
 @SpringBootApplication
 @EnableRatpack
 public class EmbedRatpackApp {
@@ -55,7 +55,7 @@ public class EmbedRatpackApp {
 
 然而，这个“魔术”的[当前实现](https://web.archive.org/web/20220628101320/https://github.com/ratpack/ratpack/blob/master/ratpack-spring-boot/src/main/java/ratpack/spring/config/RatpackProperties.java#L202)依赖于我们的项目设置和开发环境。因此，如果我们要在不同的环境中实现静态资源的稳定服务，我们应该显式地指定`baseDir`:
 
-```
+```java
 @Bean
 public ServerConfig ratpackServerConfig() {
     return ServerConfig
@@ -69,7 +69,7 @@ public ServerConfig ratpackServerConfig() {
 
 然后我们可以用 [ratpack-test](https://web.archive.org/web/20220628101320/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22io.ratpack%22%20AND%20a%3A%22ratpack-test%22) 测试我们的应用程序:
 
-```
+```java
 MainClassApplicationUnderTest appUnderTest
   = new MainClassApplicationUnderTest(EmbedRatpackApp.class);
 
@@ -100,7 +100,7 @@ public void whenRequestStaticResource_thenGotStaticContent() {
 
 首先，我们将在一个 Spring 配置类中注册所需的 beans:
 
-```
+```java
 @Configuration
 public class Config {
 
@@ -113,7 +113,7 @@ public class Config {
 
 然后我们可以使用`ratpack-spring-boot`提供的便利方法 [`spring(…)`](https://web.archive.org/web/20220628101320/https://ratpack.io/manual/current/api/ratpack/spring/Spring.html#spring-java.lang.Class-java.lang.String...-) 轻松创建一个注册表:
 
-```
+```java
 public class EmbedSpringBootApp {
 
     public static void main(String[] args) throws Exception {

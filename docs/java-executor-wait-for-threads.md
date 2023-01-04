@@ -16,7 +16,7 @@
 
 这将阻塞线程，直到所有任务完成执行或达到指定的超时时间:
 
-```
+```java
 public void awaitTerminationAfterShutdown(ExecutorService threadPool) {
     threadPool.shutdown();
     try {
@@ -38,7 +38,7 @@ public void awaitTerminationAfterShutdown(ExecutorService threadPool) {
 
 例如，如果我们需要当前线程等待另一个`N`线程完成它们的执行，我们可以使用`N`初始化锁存器:
 
-```
+```java
 ExecutorService WORKER_THREAD_POOL 
   = Executors.newFixedThreadPool(10);
 CountDownLatch latch = new CountDownLatch(2);
@@ -63,7 +63,7 @@ latch.await();
 
 此外，我们必须注意返回的`Future`对象的顺序与提供的`Callable`对象的列表相同:
 
-```
+```java
 ExecutorService WORKER_THREAD_POOL = Executors.newFixedThreadPool(10);
 
 List<Callable<String>> callables = Arrays.asList(
@@ -93,7 +93,7 @@ assertTrue("slow thread".equals(secondThreadResponse));
 
 与`invokeAll()`的一个区别是代表已执行任务的`Futures,`的返回顺序。 **`ExecutorCompletionService`使用队列按照结果完成的顺序存储结果**，而`invokeAll()`返回一个列表，其顺序与迭代器为给定任务列表生成的顺序相同:
 
-```
+```java
 CompletionService<String> service
   = new ExecutorCompletionService<>(WORKER_THREAD_POOL);
 
@@ -108,7 +108,7 @@ for (Callable<String> callable : callables) {
 
 可以使用`take()`方法访问结果:
 
-```
+```java
 long startProcessingTime = System.currentTimeMillis();
 
 Future<String> future = service.take();

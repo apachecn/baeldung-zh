@@ -30,7 +30,7 @@ Maven 认为编码非常重要，如果我们不声明编码，它就会发出�
 
 首先，让我们添加 [`maven-resources-plugin`](https://web.archive.org/web/20220815212340/https://maven.apache.org/plugins/maven-resources-plugin/) ，它将资源复制到一个输出目录中:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-resources-plugin</artifactId>
@@ -40,7 +40,7 @@ Maven 认为编码非常重要，如果我们不声明编码，它就会发出�
 
 我们还想编译我们的代码文件，所以让我们添加 [`maven-compiler-plugin`](https://web.archive.org/web/20220815212340/https://maven.apache.org/plugins/maven-compiler-plugin/) :
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-compiler-plugin</artifactId>
@@ -49,7 +49,7 @@ Maven 认为编码非常重要，如果我们不声明编码，它就会发出�
 
 当我们在一个多模块项目中工作时，父 POM 可能已经为我们设置了编码。出于演示目的，让我们通过覆盖 encoding 属性来清除它(不要担心，我们稍后将回到这一点):
 
-```
+```java
 <properties>
     <project.build.sourceEncoding></project.build.sourceEncoding>
 </properties>
@@ -57,13 +57,13 @@ Maven 认为编码非常重要，如果我们不声明编码，它就会发出�
 
 让我们使用标准的 Maven 命令运行插件:
 
-```
+```java
 mvn clean install
 ```
 
 像这样不设置我们的编码会破坏构建！我们将在日志中看到以下警告:
 
-```
+```java
 [INFO] --- maven-resources-plugin:3.2.0:resources (default-resources) @ maven-properties ---
   [WARNING] Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
 ```
@@ -84,7 +84,7 @@ Maven 还生成通常分发到另一台计算机的文件。因此，使用预�
 
 为了展示这一点，让我们添加一个使用非 ASCII 字符的简单 Java 类:
 
-```
+```java
 public class NonAsciiString {
 
     public static String getNonAsciiString() {
@@ -97,7 +97,7 @@ public class NonAsciiString {
 
 在我们的 POM 中，让我们将我们的构建设置为使用 [ASCII](https://web.archive.org/web/20220815212340/https://en.wikipedia.org/wiki/ASCII) 编码:
 
-```
+```java
 <properties>
     <project.build.sourceEncoding>US-ASCII</project.build.sourceEncoding>
 </properties>
@@ -105,7 +105,7 @@ public class NonAsciiString {
 
 使用`mvn clean install`运行它，我们看到我们得到了许多如下形式的构建错误:
 
-```
+```java
 [ERROR] /Baeldung/tutorials/maven-modules/maven-properties/src/main/java/
 com/baeldung/maven/properties/NonAsciiString.java:[15,31] unmappable character (0xC3) for encoding US-ASCII
 ```
@@ -128,7 +128,7 @@ com/baeldung/maven/properties/NonAsciiString.java:[15,31] unmappable character (
 
 我们需要在`maven-resources-plugin`和`maven-compiler-plugin`中设置编码。我们可以简单地给每个 Maven 插件添加`encoding`参数:
 
-```
+```java
 <configuration>
     <encoding>UTF-8</encoding>
 </configuration>
@@ -136,7 +136,7 @@ com/baeldung/maven/properties/NonAsciiString.java:[15,31] unmappable character (
 
 让我们使用`mvn clean install`运行这段代码，看看日志记录:
 
-```
+```java
 [INFO] --- maven-resources-plugin:3.2.0:resources (default-resources) @ maven-properties ---
 [INFO] Using 'UTF-8' encoding to copy filtered resources.
 ```
@@ -151,7 +151,7 @@ com/baeldung/maven/properties/NonAsciiString.java:[15,31] unmappable character (
 
 正如我们之前看到的，让我们从插件中移除`encoding`参数，改为设置:
 
-```
+```java
 <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 </properties> 
@@ -171,7 +171,7 @@ com/baeldung/maven/properties/NonAsciiString.java:[15,31] unmappable character (
 
 为了说明这一点，我们将使用`[properties-maven-plugin](https://web.archive.org/web/20220815212340/https://www.mojohaus.org/properties-maven-plugin/):`
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>properties-maven-plugin</artifactId>
@@ -181,13 +181,13 @@ com/baeldung/maven/properties/NonAsciiString.java:[15,31] unmappable character (
 
 让我们也设置一个新的系统范围的属性为空:
 
-```
+```java
 <project.reporting.outputEncoding></project.reporting.outputEncoding>
 ```
 
 如果我们现在运行一个`mvn clean install`,我们的构建将会因为日志记录而失败:
 
-```
+```java
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-pmd-plugin:3.13.0:pmd (pmd) on project maven-properties: Execution pmd of goal 
   org.apache.maven.plugins:maven-pmd-plugin:3.13.0:pmd failed: org.apache.maven.reporting.MavenReportException: : UnsupportedEncodingException -> [Help 1]
 ```
@@ -198,7 +198,7 @@ com/baeldung/maven/properties/NonAsciiString.java:[15,31] unmappable character (
 
 这意味着仅仅设置`project.build.sourceEncoding`是不够的。我们还需要为报告流程添加以下属性:
 
-```
+```java
 <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 ```
 
@@ -210,7 +210,7 @@ com/baeldung/maven/properties/NonAsciiString.java:[15,31] unmappable character (
 
 让我们运行以下代码来指定构建应该使用的编码:
 
-```
+```java
 mvn clean install -Dproject.build.sourceEncoding=UTF-8 -Dproject.reporting.outputEncoding=UTF-8
 ```
 
@@ -234,7 +234,7 @@ mvn clean install -Dproject.build.sourceEncoding=UTF-8 -Dproject.reporting.outpu
 
 我们前面看到了`encoding`参数。该插件还提供了一个`propertiesEncoding` 参数，允许属性文件以不同于其他资源的方式编码:
 
-```
+```java
 <configuration>
     <encoding>UTF-8</encoding>
     <propertiesEncoding>ISO-8859-1</propertiesEncoding>
@@ -243,7 +243,7 @@ mvn clean install -Dproject.build.sourceEncoding=UTF-8 -Dproject.reporting.outpu
 
 当使用`mvn clean install`运行构建时，会给出:
 
-```
+```java
 [INFO] --- maven-resources-plugin:3.2.0:resources (default-resources) @ maven-properties ---
 [INFO] Using 'UTF-8' encoding to copy filtered resources.
 [INFO] Using 'ISO-8859-1' encoding to copy filtered properties files.

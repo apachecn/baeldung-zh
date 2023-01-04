@@ -56,7 +56,7 @@ Keycloak 支持六种类型的主题:
 
 每个主题类型包含一个`theme.properties`文件。作为一个例子，让我们看看这个来自`account`类型的文件:
 
-```
+```java
 parent=base
 import=common/keycloak
 
@@ -68,7 +68,7 @@ stylesCommon=node_modules/patternfly/dist/css/patternfly.min.css node_modules/pa
 
 脚本是一个可选功能。如果我们需要为给定主题类型的模板包含定制的 JavaScript 文件，我们可以创建一个`resources/js`目录并保存在那里。接下来，我们需要将它们包含在我们的`theme.properties`中:
 
-```
+```java
 scripts=js/script1.js js/script2.js
 ```
 
@@ -86,7 +86,7 @@ scripts=js/script1.js js/script2.js
 
 现在，只需要添加我们的新徽标文件，比如在我们的`custom`目录中添加`baeldung.png`到`resources/img`并修改`resources/css/account.css`:
 
-```
+```java
 .navbar-title {
     background-image: url('../img/baeldung.png');
     height: 25px;
@@ -108,7 +108,7 @@ scripts=js/script1.js js/script2.js
 
 **重要的是，在开发阶段，我们希望立即看到我们的更改的效果，而无需重启服务器**。为此，我们需要对 Keycloak 在`standalone/configuration`文件夹中的`standalone.xml` 做一些修改:
 
-```
+```java
 <theme>
     <staticMaxAge>-1</staticMaxAge>
     <cacheThemes>false</cacheThemes>
@@ -123,7 +123,7 @@ scripts=js/script1.js js/script2.js
 
 要定制欢迎页面，首先，我们需要在`standalone.xml`中添加一行:
 
-```
+```java
 <theme>
     ...
     <welcomeTheme>custom</welcomeTheme>
@@ -141,7 +141,7 @@ scripts=js/script1.js js/script2.js
 
 要改变背景图像，保留新图像，在`themes/custom/welcome/resources`中说`geo.png,`，然后简单地编辑`resources/css/welcome.css`:
 
-```
+```java
 body {
     background: #fff url(../geo.png);
     background-size: cover;
@@ -169,7 +169,7 @@ body {
 
 为了达到同样的效果，我们需要在我们的领域定义文件中添加一行代码，`baeldung-realm.json`:
 
-```
+```java
 "accountTheme": "custom",
 ```
 
@@ -183,13 +183,13 @@ body {
 
 在为我们的嵌入式服务器启动引导应用程序时，我们可以将主题目录指定为一个 VM 参数:
 
-```
+```java
 mvn spring-boot:run -Dkeycloak.theme.dir=/src/main/resources/themes
 ```
 
 为了以编程方式实现这一点，我们可以在我们的`@SpringBootApplication`类中将它设置为一个系统属性:
 
-```
+```java
 public static void main(String[] args) throws Exception {
     System.setProperty("keycloak.theme.dir","src/main/resources/themes");
     SpringApplication.run(JWTAuthorizationServerApp.class, args);
@@ -198,7 +198,7 @@ public static void main(String[] args) throws Exception {
 
 或者，我们可以在`keycloak-server.json`中更改服务器配置:
 
-```
+```java
 "theme": {
     ....
     "welcomeTheme": "custom",

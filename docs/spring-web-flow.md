@@ -14,7 +14,7 @@ Spring Web Flow 建立在 Spring MVC 之上，允许在 Web 应用程序中实�
 
 让我们从将 Spring Web 流依赖项添加到`pom.xml`开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.webflow</groupId>
     <artifactId>spring-webflow</artifactId>
@@ -38,7 +38,7 @@ Spring Web Flow 的最新版本可以在[中央 Maven 资源库](https://web.arc
 
 这个流程非常简单。起点是`activation`视图。如果一个`activate`事件被触发，它应该转移到`success`视图。如果`cancel`事件被触发，它应该转换到`failure`视图。`transition`元素处理`view-state:`中发生的按钮点击事件
 
-```
+```java
 <view-state id="activation">
     <transition on="activate" to="success"/>
     <transition on="cancel" to="failure"/>
@@ -51,7 +51,7 @@ Spring Web Flow 的最新版本可以在[中央 Maven 资源库](https://web.arc
 
 初始激活页面由 id `activation` 表示，位于`WEB-INF/view/activation.jsp`中，是一个简单的页面，有两个按钮`activate`和`cancel`。点击按钮来触发我们的转换，将用户发送到成功的`view-state` ( `WEB-INF/view/success.jsp`)或失败的`view-state` ( `WEB-INF/view/failure.jsp):`
 
-```
+```java
 <body>
     <h2>Click to activate account</h2>
 
@@ -76,7 +76,7 @@ Spring Web Flow 的最新版本可以在[中央 Maven 资源库](https://web.arc
 
 下面是我们将如何为我们的示例配置 Spring Web Flow:
 
-```
+```java
 @Configuration
 public class WebFlowConfig extends AbstractFlowConfiguration {
 
@@ -115,7 +115,7 @@ public class WebFlowConfig extends AbstractFlowConfiguration {
 
 我们也可以使用 XML 进行配置:
 
-```
+```java
 <bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
     <property name="flowRegistry" ref="activationFlowRegistry"/>
 </bean>

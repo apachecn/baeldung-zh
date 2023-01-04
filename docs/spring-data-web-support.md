@@ -26,7 +26,7 @@ Spring Data web support 的功能是围绕几个`resolver`类构建的。解析�
 
 我们的演示项目的 Maven 依赖项是相当标准的，有一些例外，我们将在后面讨论:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -59,7 +59,7 @@ Spring Data web support 的功能是围绕几个`resolver`类构建的。解析�
 
 现在，让我们将一个简单的`User` JPA 实体类添加到项目中，这样我们就可以使用一个工作域模型了:
 
-```
+```java
 @Entity
 @Table(name = "users")
 public class User {
@@ -80,7 +80,7 @@ public class User {
 
 Spring Boot 使得创建现成的、提供最少 CRUD 功能的存储库实现变得容易。因此，让我们定义一个与`User` JPA 实体一起工作的简单存储库接口:
 
-```
+```java
 @Repository
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {}
 ```
@@ -95,7 +95,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
 因此，让我们创建一个控制器类，它在其构造函数中接受一个`UserRepository`实例，并添加一个通过`id`查找`User`实体的方法:
 
-```
+```java
 @RestController
 public class UserController {
 
@@ -110,7 +110,7 @@ public class UserController {
 
 最后，让我们定义应用程序的主类，并用几个`User`实体填充 H2 数据库:
 
-```
+```java
 @SpringBootApplication
 public class Application {
 
@@ -133,7 +133,7 @@ public class Application {
 
 现在，让我们运行应用程序。正如所料，我们看到启动时控制台打印出持久化的`User`实体列表:
 
-```
+```java
 User{id=1, name=John}
 User{id=2, name=Robert}
 User{id=3, name=Nataly}
@@ -153,7 +153,7 @@ Spring MVC 使用`[DomainClassConverter](https://web.archive.org/web/20221208143
 
 例如，对`[http://localhost:8080/users/1](https://web.archive.org/web/20221208143917/http://localhost:8080/user/1)` 端点的 GET HTTP 请求将返回以下结果:
 
-```
+```java
 {
   "id":1,
   "name":"John"
@@ -162,7 +162,7 @@ Spring MVC 使用`[DomainClassConverter](https://web.archive.org/web/20221208143
 
 因此，我们可以创建一个集成测试并检查`findUserById()`方法的行为:
 
-```
+```java
 @Test
 public void whenGetRequestToUsersEndPointWithIdPathVariable_thenCorrectResponse() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get("/users/{id}", "1")
@@ -189,7 +189,7 @@ Spring MVC 支持在控制器和存储库中使用 [`Pageable`](https://web.arch
 
 为了理解`PageableHandlerMethodArgumentResolver`类是如何工作的，让我们给`UserController`类添加一个新方法:
 
-```
+```java
 @GetMapping("/users")
 public Page<User> findAllUsers(Pageable pageable) {
     return userRepository.findAll(pageable);
@@ -210,7 +210,7 @@ public Page<User> findAllUsers(Pageable pageable) {
 
 例如，对`[http://localhost:8080/user](https://web.archive.org/web/20221208143917/http://localhost:8080/users)[s](https://web.archive.org/web/20221208143917/http://localhost:8080/users)`端点的 GET 请求将返回以下输出:
 
-```
+```java
 {
   "content":[
     {
@@ -265,7 +265,7 @@ public Page<User> findAllUsers(Pageable pageable) {
 
 此外，我们可以使用集成测试来检查`findAllUsers()`方法:
 
-```
+```java
 @Test
 public void whenGetRequestToUsersEndPoint_thenCorrectResponse() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get("/users")
@@ -279,7 +279,7 @@ public void whenGetRequestToUsersEndPoint_thenCorrectResponse() throws Exception
 
 在许多情况下，我们需要定制分页参数。最简单的方法是使用 [`@PageableDefault`](https://web.archive.org/web/20221208143917/https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/web/PageableDefault.html) 标注:
 
-```
+```java
 @GetMapping("/users")
 public Page<User> findAllUsers(@PageableDefault(value = 2, page = 0) Pageable pageable) {
     return userRepository.findAll(pageable);
@@ -288,7 +288,7 @@ public Page<User> findAllUsers(@PageableDefault(value = 2, page = 0) Pageable pa
 
 或者，我们可以使用`PageRequest`的`[of()](https://web.archive.org/web/20221208143917/https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/domain/PageRequest.html#of-int-int-org.springframework.data.domain.Sort-)`静态工厂方法来创建一个定制的`PageRequest`对象，并将其传递给存储库方法:
 
-```
+```java
 @GetMapping("/users")
 public Page<User> findAllUsers() {
     Pageable pageable = PageRequest.of(0, 5);
@@ -302,7 +302,7 @@ public Page<User> findAllUsers() {
 
 此外，我们可以使用`page`和`size`请求参数构建一个`PageRequest`对象:
 
-```
+```java
 @GetMapping("/users")
 public Page<User> findAllUsers(@RequestParam("page") int page, 
   @RequestParam("size") int size, Pageable pageable) {
@@ -312,7 +312,7 @@ public Page<User> findAllUsers(@RequestParam("page") int page,
 
 使用这个实现，对`[http://localhost:8080/users?page=0&size;=2](https://web.archive.org/web/20221208143917/http://localhost:8080/users?page=0&size=2)`端点的 GET 请求将返回`User`对象的第一页，结果页的大小将是 2:
 
-```
+```java
 {
   "content": [
     {
@@ -340,7 +340,7 @@ public Page<User> findAllUsers(@RequestParam("page") int page,
 
 为了清楚地了解`SortHandlerMethodArgumentResolver`类是如何工作的，让我们将`findAllUsersSortedByName()`方法添加到控制器类中:
 
-```
+```java
 @GetMapping("/sortedusers")
 public Page<User> findAllUsersSortedByName(@RequestParam("sort") String sort, Pageable pageable) {
     return userRepository.findAll(pageable);
@@ -351,7 +351,7 @@ public Page<User> findAllUsersSortedByName(@RequestParam("sort") String sort, Pa
 
 因此，对`[http://localhost:8080/sortedusers?sort=name](https://web.archive.org/web/20221208143917/http://the http//localhost:8080/sortedusers)`端点的 GET 请求将返回一个 JSON 数组，其中包含按照`name`属性排序的`User`对象列表:
 
-```
+```java
 {
   "content": [
     {
@@ -387,7 +387,7 @@ public Page<User> findAllUsersSortedByName(@RequestParam("sort") String sort, Pa
 
 在这种情况下，我们将只按`name`属性对记录进行排序:
 
-```
+```java
 @GetMapping("/sortedusers")
 public Page<User> findAllUsersSortedByName() {
     Pageable pageable = PageRequest.of(0, 5, Sort.by("name"));
@@ -401,7 +401,7 @@ public Page<User> findAllUsersSortedByName() {
 
 同样，我们可以使用`@SortDefault`注释并得到相同的结果:
 
-```
+```java
 @GetMapping("/sortedusers")
 public Page<User> findAllUsersSortedByName(@SortDefault(sort = "name", 
   direction = Sort.Direction.ASC) Pageable pageable) {
@@ -411,7 +411,7 @@ public Page<User> findAllUsersSortedByName(@SortDefault(sort = "name",
 
 最后，让我们创建一个集成测试来检查方法的行为:
 
-```
+```java
 @Test
 public void whenGetRequestToSorteredUsersEndPoint_thenCorrectResponse() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get("/sortedusers")
@@ -429,7 +429,7 @@ public void whenGetRequestToSorteredUsersEndPoint_thenCorrectResponse() throws E
 
 为此，首先我们需要将`[querydsl-apt](https://web.archive.org/web/20221208143917/https://search.maven.org/search?q=g:com.querydsl%20AND%20a:querydsl-apt)`和`[querydsl-jpa](https://web.archive.org/web/20221208143917/https://search.maven.org/search?q=g:com.querydsl%20AND%20a:querydsl-jpa)` Maven 依赖项添加到`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.querydsl</groupId>
     <artifactId>querydsl-apt</artifactId>
@@ -442,7 +442,7 @@ public void whenGetRequestToSorteredUsersEndPoint_thenCorrectResponse() throws E
 
 接下来，我们需要重构我们的`UserRepository`接口，它也必须扩展`QuerydslPredicateExecutor`接口:
 
-```
+```java
 @Repository
 public interface UserRepository extends PagingAndSortingRepository<User, Long>,
   QuerydslPredicateExecutor<User> {
@@ -451,7 +451,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long>,
 
 最后，让我们将下面的方法添加到`UserController`类中:
 
-```
+```java
 @GetMapping("/filteredusers")
 public Iterable<User> getUsersByQuerydslPredicate(@QuerydslPredicate(root = User.class) 
   Predicate predicate) {
@@ -467,7 +467,7 @@ public Iterable<User> getUsersByQuerydslPredicate(@QuerydslPredicate(root = User
 
 正如所料，该请求将返回以下结果:
 
-```
+```java
 [
   {
     "id": 1,
@@ -478,7 +478,7 @@ public Iterable<User> getUsersByQuerydslPredicate(@QuerydslPredicate(root = User
 
 正如我们之前所做的，我们可以使用集成测试来检查`getUsersByQuerydslPredicate()`方法:
 
-```
+```java
 @Test
 public void whenGetRequestToFilteredUsersEndPoint_thenCorrectResponse() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get("/filteredusers")
@@ -497,7 +497,7 @@ public void whenGetRequestToFilteredUsersEndPoint_thenCorrectResponse() throws E
 
 在这种情况下，我们会得到这样的结果:
 
-```
+```java
 [
   {
     "id": 2,

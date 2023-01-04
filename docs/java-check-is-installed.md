@@ -10,13 +10,13 @@
 
 首先，**让我们打开一个命令窗口或终端，输入:**
 
-```
+```java
 > java -version
 ```
 
 **如果安装了 Java**并且路径配置正确，我们的输出将类似于:
 
-```
+```java
 java version "1.8.0_31"
 Java(TM) SE Runtime Environment (build 1.8.0_31-b13)
 Java HotSpot(TM) Client VM (build 25.31-b07, mixed mode, sharing)
@@ -24,7 +24,7 @@ Java HotSpot(TM) Client VM (build 25.31-b07, mixed mode, sharing)
 
 否则，我们将看到如下所示的错误消息，我们需要检查其他地方:
 
-```
+```java
 'java' is not recognized as an internal or external command,
 operable program or batch file.
 ```
@@ -85,13 +85,13 @@ operable program or batch file.
 
 在基于 Debian 的发行版中，我们可以使用`aptitude search`命令:
 
-```
+```java
 $ sudo aptitude search jdk jre
 ```
 
 如果在结果前有一个`i`，那么这意味着软件包已经安装:
 
-```
+```java
 ...
 i   oracle-java8-jdk                - Java™ Platform, Standard Edition 8 Develop
 ...
@@ -105,13 +105,13 @@ i   oracle-java8-jdk                - Java™ Platform, Standard Edition 8 Devel
 
 在 Windows 中，我们可以使用`where`命令找到我们的`java.exe`所在的位置:
 
-```
+```java
 > where java
 ```
 
 我们的输出看起来会像这样:
 
-```
+```java
 C:\Apps\Java\jdk1.8.0_31\bin\java.exe
 ```
 
@@ -121,25 +121,25 @@ C:\Apps\Java\jdk1.8.0_31\bin\java.exe
 
 在*nix 系统或 Mac 上的终端应用程序中，我们可以使用`which`命令:
 
-```
+```java
 $ which java
 ```
 
 输出告诉我们 Java 命令在哪里:
 
-```
+```java
 /usr/bin/java
 ```
 
 现在让我们使用`whereis`命令:
 
-```
+```java
 $ whereis java -b
 ```
 
 `whereis`命令还为我们提供了 Java 安装的路径:
 
-```
+```java
 /usr/bin/java
 ```
 

@@ -48,7 +48,7 @@
 
 如果数字是偶数，我们调用`Printer`类的`printEven`方法，否则我们调用`printOdd`方法:
 
-```
+```java
 class TaskEvenOdd implements Runnable {
     private int max;
     private Printer print;
@@ -73,7 +73,7 @@ class TaskEvenOdd implements Runnable {
 
 我们将`Printer`类定义如下:
 
-```
+```java
 class Printer {
     private volatile boolean isOdd;
 
@@ -107,7 +107,7 @@ class Printer {
 
 **在 main 方法中，我们使用已定义的类来创建两个线程。**我们创建一个`Printer`类的对象，并将其作为参数传递给`TaskEvenOdd`构造函数:
 
-```
+```java
 public static void main(String... args) {
     Printer print = new Printer();
     Thread t1 = new Thread(new TaskEvenOdd(print, 10, false),"Odd");
@@ -145,7 +145,7 @@ Java 在`java.util.concurrent`包中提供了`Semaphore`类，我们可以用它
 
 这是上述工作流的代码:
 
-```
+```java
 public static void main(String[] args) {
     SharedPrinter sp = new SharedPrinter();
     Thread odd = new Thread(new Odd(sp, 10),"Odd");
@@ -155,7 +155,7 @@ public static void main(String[] args) {
 }
 ```
 
-```
+```java
 class SharedPrinter {
 
     private Semaphore semEven = new Semaphore(0);

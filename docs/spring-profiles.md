@@ -28,7 +28,7 @@ Tutorial for how to work with properties files and property values in Spring.[Re
 
 我们用一个`dev`概要文件注释这个 bean，它将只在开发期间出现在容器中。在生产中，`dev`不会被激活:
 
-```
+```java
 @Component
 @Profile("dev")
 public class DevDatasourceConfig
@@ -38,7 +38,7 @@ public class DevDatasourceConfig
 
 在本例中，仅当`dev`配置文件未激活时，组件才被激活:
 
-```
+```java
 @Component
 @Profile("!dev")
 public class DevDatasourceConfig
@@ -48,7 +48,7 @@ public class DevDatasourceConfig
 
 概要文件也可以用 XML 来配置。`<beans>`标签有一个`profile`属性，它采用逗号分隔的适用概要文件值:
 
-```
+```java
 <beans profile="dev">
     <bean id="devDatasourceConfig" 
       class="org.baeldung.profiles.DevDatasourceConfig" />
@@ -67,7 +67,7 @@ public class DevDatasourceConfig
 
 这也是一个非常方便的以编程方式设置活动配置文件的位置:
 
-```
+```java
 @Configuration
 public class MyWebApplicationInitializer 
   implements WebApplicationInitializer {
@@ -85,7 +85,7 @@ public class MyWebApplicationInitializer
 
 我们也可以直接在环境中设置配置文件:
 
-```
+```java
 @Autowired
 private ConfigurableEnvironment env;
 ...
@@ -96,7 +96,7 @@ env.setActiveProfiles("someProfile");
 
 类似地，我们可以在 web 应用程序的`web.xml`文件中定义活动概要文件，使用一个上下文参数:
 
-```
+```java
 <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>/WEB-INF/app-config.xml</param-value>
@@ -111,7 +111,7 @@ env.setActiveProfiles("someProfile");
 
 配置文件名也可以通过 JVM 系统参数传递。这些配置文件将在应用程序启动时激活:
 
-```
+```java
 -Dspring.profiles.active=dev
 ```
 
@@ -119,7 +119,7 @@ env.setActiveProfiles("someProfile");
 
 在 Unix 环境中，**配置文件也可以通过环境变量**激活:
 
-```
+```java
 export spring_profiles_active=dev
 ```
 
@@ -129,7 +129,7 @@ Spring 概要文件也可以通过 Maven 概要文件激活，通过**指定`spr
 
 在每个 Maven 概要文件中，我们可以设置一个`spring.profiles.active`属性:
 
-```
+```java
 <profiles>
     <profile>
         <id>dev</id>
@@ -151,13 +151,13 @@ Spring 概要文件也可以通过 Maven 概要文件激活，通过**指定`spr
 
 **它的值将被用来替换`application.properties` :** 中的`@[[email protected]](/web/20221001115718/https://www.baeldung.com/cdn-cgi/l/email-protection)`占位符
 
-```
+```java
 [[email protected]](/web/20221001115718/https://www.baeldung.com/cdn-cgi/l/email-protection)@
 ```
 
 现在我们需要在`pom.xml`中启用资源过滤:
 
-```
+```java
 <build>
     <resources>
         <resource>
@@ -171,7 +171,7 @@ Spring 概要文件也可以通过 Maven 概要文件激活，通过**指定`spr
 
 并附加一个`-P`参数来切换将应用哪个 Maven 概要文件:
 
-```
+```java
 mvn clean package -Pprod
 ```
 
@@ -181,7 +181,7 @@ mvn clean package -Pprod
 
 通过使用`@ActiveProfile` 注释来启用特定的概要文件，测试可以非常容易地指定哪些概要文件是活动的:
 
-```
+```java
 @ActiveProfiles("dev")
 ```
 
@@ -209,7 +209,7 @@ Spring 的活动概要文件驱动了启用/禁用 beans 的`@Profile`注释的�
 
 我们可以通过注入从`Environment`对象中访问活动概要文件:
 
-```
+```java
 public class ProfileManager {
     @Autowired
     private Environment environment;
@@ -226,7 +226,7 @@ public class ProfileManager {
 
 或者，我们可以通过注入属性`spring.profiles.active`来访问概要文件:
 
-```
+```java
 @Value("${spring.profiles.active}")
 private String activeProfile;
 ```
@@ -237,7 +237,7 @@ private String activeProfile;
 
 为了避免这种情况，我们可以**定义一个默认值**:
 
-```
+```java
 @Value("${spring.profiles.active:}")
 private String activeProfile;
 ```
@@ -246,7 +246,7 @@ private String activeProfile;
 
 如果我们想像前面的例子一样访问它们的列表，我们可以通过[拆分](/web/20221001115718/https://www.baeldung.com/java-split-string)变量`activeProfile`来实现:
 
-```
+```java
 public class ProfileManager {
     @Value("${spring.profiles.active:}")
     private String activeProfiles;
@@ -267,7 +267,7 @@ public class ProfileManager {
 
 让我们创建一个需要由两个数据源实现来实现的公共接口`DatasourceConfig`:
 
-```
+```java
 public interface DatasourceConfig {
     public void setup();
 }
@@ -275,7 +275,7 @@ public interface DatasourceConfig {
 
 以下是开发环境的配置:
 
-```
+```java
 @Component
 @Profile("dev")
 public class DevDatasourceConfig implements DatasourceConfig {
@@ -288,7 +288,7 @@ public class DevDatasourceConfig implements DatasourceConfig {
 
 和生产环境的配置:
 
-```
+```java
 @Component
 @Profile("production")
 public class ProductionDatasourceConfig implements DatasourceConfig {
@@ -301,7 +301,7 @@ public class ProductionDatasourceConfig implements DatasourceConfig {
 
 现在让我们创建一个测试并注入我们的 DatasourceConfig 接口；根据活动配置文件，Spring 将注入`DevDatasourceConfig`或`ProductionDatasourceConfig` bean:
 
-```
+```java
 public class SpringProfilesWithMavenPropertiesIntegrationTest {
     @Autowired
     DatasourceConfig datasourceConfig;
@@ -314,7 +314,7 @@ public class SpringProfilesWithMavenPropertiesIntegrationTest {
 
 当`dev`概要文件被激活时，Spring 注入`DevDatasourceConfig`对象，当调用`setup()`方法时，输出如下:
 
-```
+```java
 Setting up datasource for DEV environment.
 ```
 
@@ -326,7 +326,7 @@ Spring Boot 支持到目前为止概述的所有概要文件配置，还有一�
 
 第 4 节中介绍的初始化参数`spring.profiles.active`也可以在 Spring Boot 中设置为一个属性，以定义当前活动的配置文件。这是一个标准属性，Spring Boot 会自动选择:
 
-```
+```java
 spring.profiles.active=dev
 ```
 
@@ -334,13 +334,13 @@ spring.profiles.active=dev
 
 为了以编程方式设置概要文件，我们也可以使用`SpringApplication`类:
 
-```
+```java
 SpringApplication.setAdditionalProfiles("dev");
 ```
 
 要在 Spring Boot 使用 Maven 设置概要文件，我们可以在`pom.xm` `l`中的`spring-boot-maven-plugin`下指定概要文件名称:
 
-```
+```java
 <plugins>
     <plugin>
         <groupId>org.springframework.boot</groupId>
@@ -357,7 +357,7 @@ SpringApplication.setAdditionalProfiles("dev");
 
 并执行 Spring Boot 特有的 Maven 目标:
 
-```
+```java
 mvn spring-boot:run
 ```
 
@@ -371,7 +371,7 @@ Spring Boot 将自动加载所有概要文件的属性到一个`application.prop
 
 在`application-production.properties`文件中，我们可以设置一个`MySql`数据源:
 
-```
+```java
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.datasource.url=jdbc:mysql://localhost:3306/db
 spring.datasource.username=root
@@ -380,7 +380,7 @@ spring.datasource.password=root
 
 然后我们可以为`application-dev.properties`文件中的`dev`配置文件配置相同的属性，以使用内存中的`H2`数据库:
 
-```
+```java
 spring.datasource.driver-class-name=org.h2.Driver
 spring.datasource.url=jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
 spring.datasource.username=sa
@@ -397,7 +397,7 @@ spring.datasource.password=sa
 
 从 2.4 版本开始，除了以前支持的 [YAML](/web/20221001115718/https://www.baeldung.com/spring-yaml) 之外，Spring Boot 还扩展了对属性文件的多文档文件支持。所以现在，**我们可以在同一个`application.properties`** 中指定`dev`和`production`属性:
 
-```
+```java
 my.prop=used-always-in-all-profiles
 #---
 spring.config.activate.on-profile=dev
@@ -423,7 +423,7 @@ Boot 2.4 中添加的另一个功能是配置文件组。顾名思义，**它允
 
 为了通过我们的`application.properties`文件一次启用这些概要文件，我们可以指定:
 
-```
+```java
 spring.profiles.group.production=proddb,prodquartz
 ```
 

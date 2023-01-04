@@ -16,7 +16,7 @@
 
 让我们来看看基于[`JAAS`](/web/20220630020859/https://www.baeldung.com/java-authentication-authorization-service)框架实现的例子:
 
-```
+```java
 Subject subject = loginContext.getSubject();
 PrivilegedAction privilegedAction = new ResourceAction();
 Subject.doAsPrivileged(subject, privilegedAction, null); 
@@ -30,7 +30,7 @@ Subject.doAsPrivileged(subject, privilegedAction, null);
 
 让我们看看如何在成功登录后创建一个 `UserPrincipal` 并将其添加到一个`Subject:`
 
-```
+```java
 @Override
 public boolean commit() throws LoginException {
     if (!loginSucceeded) {

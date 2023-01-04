@@ -10,7 +10,7 @@
 
 假设我们有一个文本文件，其中每一行都是由两部分组成的字符串，左边部分表示一个人的名字，右边部分表示他们的问候:
 
-```
+```java
 Roberto "I wish you a bug-free day!"
 Daniele "Have a great day!"
 Jonas "Good bye!"
@@ -30,7 +30,7 @@ Jonas "Good bye!"
 
 因此，我们可以使用重载的`split()`方法将每一行标记为两部分:
 
-```
+```java
 public String getFirstWordUsingSplit(String input) {
     String[] tokens = input.split(" ", 2);
     return tokens[0];
@@ -43,7 +43,7 @@ public String getFirstWordUsingSplit(String input) {
 
 让我们来测试一下:
 
-```
+```java
 assertEquals("Roberto", getFirstWordUsingSplit("Roberto \"I wish you a bug-free day\""));
 assertEquals("StringWithNoSpace", getFirstWordUsingSplit("StringWithNoSpace"));
 ```
@@ -56,7 +56,7 @@ assertEquals("StringWithNoSpace", getFirstWordUsingSplit("StringWithNoSpace"));
 
 首先，我们将得到第一个空格字符的索引。然后，我们将得到子串，直到这个索引，这将是我们的结果，人的名字:
 
-```
+```java
 public String getFirstWordUsingSubString(String input) {
     return input.substring(0, input.indexOf(" "));
 }
@@ -68,7 +68,7 @@ public String getFirstWordUsingSubString(String input) {
 
 为了避免这种异常，我们可以修改上面的方法:
 
-```
+```java
 public String getFirstWordUsingSubString(String input) {
     int index = input.contains(" ") ? input.indexOf(" ") : 0;
     return input.substring(0, index);
@@ -79,7 +79,7 @@ public String getFirstWordUsingSubString(String input) {
 
 让我们来测试一下:
 
-```
+```java
 assertEquals("Roberto", getFirstWordUsingSubString("Roberto \"I wish you a bug-free day\""));
 assertEquals("", getFirstWordUsingSubString("StringWithNoSpace"));
 ```

@@ -40,7 +40,7 @@ Let's take a look at them one by one.
 
 *自动*是`@GeneratedValue` 的**默认策略。如果我们只想有一个主键，我们可以使用`AUTO`策略。JPA 提供者将为底层数据库选择适当的策略:**
 
-```
+```java
 @Entity
 @Table(name = "app_admin")
 public class Admin {
@@ -60,7 +60,7 @@ public class Admin {
 
 **`IDENTITY`策略依赖于数据库自动递增列**。数据库在每次插入操作后都会生成主键。JPA 在执行插入操作或事务提交后分配主键值:
 
-```
+```java
 @Entity
 @Table(name = "app_user")
 public class User {
@@ -78,7 +78,7 @@ public class User {
 
 这里，我们验证事务提交前后的`id`值:
 
-```
+```java
 @Test
 public void givenIdentityStrategy_whenCommitTransction_thenReturnPrimaryKey() {
     User user = new User();
@@ -100,7 +100,7 @@ MySQL、SQL Server、PostgreSQL、DB2、Derby 和 Sybase 都支持`IDENTITY`策�
 
 通过使用`SEQUENCE`策略， **JPA 使用数据库序列**生成主键。在应用这个策略之前，我们首先需要在数据库端创建一个序列:
 
-```
+```java
 CREATE SEQUENCE article_seq
   MINVALUE 1
   START WITH 50
@@ -111,7 +111,7 @@ JPA 在我们调用`EntityManager.persist()`方法之后和提交事务之前设
 
 让我们用`SEQUENCE`策略定义一个`Article`实体:
 
-```
+```java
 @Entity
 @Table(name = "article")
 public class Article {
@@ -132,7 +132,7 @@ public class Article {
 
 现在，让我们测试一下`SEQUENCE`策略:
 
-```
+```java
 @Test
 public void givenSequenceStrategy_whenPersist_thenReturnPrimaryKey() {
     Article article = new Article();
@@ -157,7 +157,7 @@ Oracle、PostgreSQL 和 DB2 支持`SEQUENCE`策略。
 
 首先，让我们创建一个生成器表:
 
-```
+```java
 @Table(name = "id_gen")
 @Entity
 public class IdGenerator {
@@ -178,7 +178,7 @@ public class IdGenerator {
 
 然后，我们需要向生成器表中插入两个初始值:
 
-```
+```java
 INSERT INTO id_gen (gen_name, gen_val) VALUES ('id_generator', 0);
 INSERT INTO id_gen (gen_name, gen_val) VALUES ('task_gen', 10000);
 ```
@@ -187,7 +187,7 @@ INSERT INTO id_gen (gen_name, gen_val) VALUES ('task_gen', 10000);
 
 现在让我们使用带有`TABLE`策略的生成器表。我们可以使用`allocationSize`来预分配一些主键:
 
-```
+```java
 @Entity
 @Table(name = "task")
 public class Task {
@@ -207,7 +207,7 @@ public class Task {
 
 在我们调用`persist`方法后，`id`从 10，000 开始:
 
-```
+```java
 @Test
 public void givenTableStrategy_whenPersist_thenReturnPrimaryKey() {
     Task task = new Task();

@@ -14,7 +14,7 @@
 
 要开始使用这个库，首先我们需要添加 [`link-rest`](https://web.archive.org/web/20220627081048/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22link-rest%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.nhl.link.rest</groupId>
     <artifactId>link-rest</artifactId>
@@ -26,7 +26,7 @@
 
 此外，我们将使用`Jersey`作为`JAX-RS`实现，因此我们需要添加`[jersey-container-servlet](https://web.archive.org/web/20220627081048/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22jersey-container-servlet%22)`依赖项，以及用于序列化 JSON 响应的 [`jersey-media-moxy`](https://web.archive.org/web/20220627081048/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22jersey-media-moxy%22) :
 
-```
+```java
 <dependency>
     <groupId>org.glassfish.jersey.containers</groupId>
     <artifactId>jersey-container-servlet</artifactId>
@@ -41,7 +41,7 @@
 
 对于我们的例子，我们将使用内存中的`H2`数据库，因为它更容易设置；因此，我们还要加上 [`h2`](https://web.archive.org/web/20220627081048/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22h2%22%20AND%20g%3A%22com.h2database%22) :
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -69,7 +69,7 @@
 
 因为我们使用`Jersey`作为`JAX-RS`的实现，所以让我们添加一个扩展`ResourceConfig`的类，并指定包含定义 REST 端点的类的包:
 
-```
+```java
 @ApplicationPath("/linkrest")
 public class LinkRestApplication extends ResourceConfig {
 
@@ -83,7 +83,7 @@ public class LinkRestApplication extends ResourceConfig {
 
 在同一个构造函数中，我们需要构建并注册`LinkRestRuntime`到`Jersey`容器。这个类是基于第一次装载`CayenneRuntime`:
 
-```
+```java
 ServerRuntime cayenneRuntime = ServerRuntime.builder()
   .addConfig("cayenne-linkrest-project.xml")
   .build();
@@ -93,7 +93,7 @@ super.register(lrRuntime);
 
 最后，我们需要将类添加到 `web.xml`:
 
-```
+```java
 <servlet>
     <servlet-name>linkrest</servlet-name>
     <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
@@ -119,7 +119,7 @@ super.register(lrRuntime);
 
 首先，让我们创建`DepartmentResource`类，它被映射到`/department`:
 
-```
+```java
 @Path("department")
 @Produces(MediaType.APPLICATION_JSON)
 public class DepartmentResource {
@@ -139,7 +139,7 @@ public class DepartmentResource {
 
 为了创建一个实体，`LinkRest`类提供了返回一个`UpdateBuilder`对象的`create()`方法:
 
-```
+```java
 @POST
 public SimpleResponse create(String data) {
     return LinkRest.create(Department.class, config).sync(data);
@@ -156,20 +156,20 @@ public SimpleResponse create(String data) {
 
 接下来，让我们使用`curl`向数据库添加一条`Department`记录:
 
-```
+```java
 curl -i -X POST -H "Content-Type:application/json" 
   -d "{"name":"IT"}" http://localhost:8080/linkrest/department
 ```
 
 因此，该命令返回状态`201 Created`和一个`success`属性:
 
-```
+```java
 {"success":true}
 ```
 
 我们还可以通过发送一个 JSON 数组来创建多个对象:
 
-```
+```java
 curl -i -X POST -H "Content-Type:application/json" 
   -d "[{"name":"HR"},{"name":"Marketing"}]" 
   http://localhost:8080/linkrest/department
@@ -181,7 +181,7 @@ curl -i -X POST -H "Content-Type:application/json"
 
 让我们在`DepartmentResource`类中创建一个端点，它返回数据库中的所有`Department`对象:
 
-```
+```java
 @GET
 public DataResponse<Department> getAll(@Context UriInfo uriInfo) {
     return LinkRest.select(Department.class, config).uri(uriInfo).get();
@@ -192,13 +192,13 @@ public DataResponse<Department> getAll(@Context UriInfo uriInfo) {
 
 让我们看看在使用此端点之前我们添加的部门:
 
-```
+```java
 curl -i -X GET http://localhost:8080/linkrest/department
 ```
 
 响应采用 JSON 对象的形式，带有一个`data`数组和一个`total`属性:
 
-```
+```java
 {"data":[
   {"id":200,"name":"IT"},
   {"id":201,"name":"Marketing"},
@@ -211,7 +211,7 @@ curl -i -X GET http://localhost:8080/linkrest/department
 
 让我们添加一个映射到`/department/{departmentId}`的端点，它返回一个具有给定 id 的对象。为此，我们将使用`byId()`方法过滤记录:
 
-```
+```java
 @GET
 @Path("{id}")
 public DataResponse<Department> getOne(@PathParam("id") int id, 
@@ -223,13 +223,13 @@ public DataResponse<Department> getOne(@PathParam("id") int id,
 
 然后，我们可以向这个 URL 发送一个 GET 请求:
 
-```
+```java
 curl -i -X GET http://localhost:8080/linkrest/department/200
 ```
 
 结果是一个包含一个元素的`data`数组:
 
-```
+```java
 {"data":[{"id":200,"name":"IT"}],"total":1}
 ```
 
@@ -237,7 +237,7 @@ curl -i -X GET http://localhost:8080/linkrest/department/200
 
 为了更新记录，我们可以使用`update()`或`createOrUpdate()`方法。后者将更新记录(如果存在),或者创建记录(如果不存在):
 
-```
+```java
 @PUT
 public SimpleResponse createOrUpdate(String data) {
     return LinkRest.createOrUpdate(Department.class, config).sync(data);
@@ -248,7 +248,7 @@ public SimpleResponse createOrUpdate(String data) {
 
 让我们更新之前添加的一个部门:
 
-```
+```java
 curl -i -X PUT -H "Content-Type:application/json" 
   -d "{"id":202,"name":"Human Resources"}" 
   http://localhost:8080/linkrest/department
@@ -256,13 +256,13 @@ curl -i -X PUT -H "Content-Type:application/json"
 
 这将返回一个带有成功或错误消息的 JSON 对象。之后，我们可以验证 ID 为 202 的部门名称是否被更改:
 
-```
+```java
 curl -i -X GET http://localhost:8080/linkrest/department/202
 ```
 
 果然，这个命令返回了具有新名称的对象:
 
-```
+```java
 {"data":[
   {"id":202,"name":"Human Resources"}
 ],
@@ -273,7 +273,7 @@ curl -i -X GET http://localhost:8080/linkrest/department/202
 
 并且，要删除一个对象，我们可以调用创建一个`DeleteBuilder`的`delete()`方法，然后使用`id()`方法指定我们想要删除的对象的主键:
 
-```
+```java
 @DELETE
 @Path("{id}")
 public SimpleResponse delete(@PathParam("id") int id) {
@@ -283,7 +283,7 @@ public SimpleResponse delete(@PathParam("id") int id) {
 
 然后我们可以使用`curl`调用这个端点:
 
-```
+```java
 curl -i -X DELETE http://localhost:8080/linkrest/department/202
 ```
 
@@ -293,7 +293,7 @@ curl -i -X DELETE http://localhost:8080/linkrest/department/202
 
 由于`Department`与`Employee`有一对多的关系，让我们添加一个访问`EmployeeSubResource`类的`/department/{departmentId}/employees`端点:
 
-```
+```java
 @Path("{id}/employees")
 public EmployeeSubResource getEmployees(
   @PathParam("id") int id, @Context UriInfo uriInfo) {
@@ -303,7 +303,7 @@ public EmployeeSubResource getEmployees(
 
 `EmployeeSubResource`类对应于一个部门，因此它将有一个设置部门 id 的构造函数，以及`Configuration`实例:
 
-```
+```java
 @Produces(MediaType.APPLICATION_JSON)
 public class EmployeeSubResource {
     private Configuration config;
@@ -324,7 +324,7 @@ public class EmployeeSubResource {
 
 接下来，让我们定义一个从一个部门检索所有雇员的端点:
 
-```
+```java
 @GET
 public DataResponse<Employee> getAll(@Context UriInfo uriInfo) {
     return LinkRest.select(Employee.class, config)
@@ -339,20 +339,20 @@ public DataResponse<Employee> getAll(@Context UriInfo uriInfo) {
 
 要向一个部门添加雇员，我们可以用 POST 方法调用`departments/{departmentId}/employees`端点:
 
-```
+```java
 curl -i -X POST -H "Content-Type:application/json" 
   -d "{"name":"John"}" http://localhost:8080/linkrest/department/200/employees
 ```
 
 然后，让我们发送一个 GET 请求来查看该部门的雇员:
 
-```
+```java
 curl -i -X GET "http://localhost:8080/linkrest/department/200/employees
 ```
 
 这将返回一个带有数据数组的 JSON 对象:
 
-```
+```java
 {"data":[{"id":200,"name":"John"}],"total":1}
 ```
 
@@ -366,7 +366,7 @@ curl -i -X GET "http://localhost:8080/linkrest/department/200/employees
 
 让我们发送一个请求，只返回名称为“IT”的部门:
 
-```
+```java
 curl -i -X GET http://localhost:8080/linkrest/department?cayenneExp=name='IT'
 ```
 
@@ -376,7 +376,7 @@ curl -i -X GET http://localhost:8080/linkrest/department?cayenneExp=name='IT'
 
 让我们看看按名称排序的所有部门:
 
-```
+```java
 curl -i -X GET "http://localhost:8080/linkrest/department?sort=name&dir;=ASC"
 ```
 
@@ -384,7 +384,7 @@ curl -i -X GET "http://localhost:8080/linkrest/department?sort=name&dir;=ASC"
 
 该库通过添加`start`和`limit`参数来支持分页:
 
-```
+```java
 curl -i -X GET "http://localhost:8080/linkrest/department?start=0&limit;=2
 ```
 
@@ -394,13 +394,13 @@ curl -i -X GET "http://localhost:8080/linkrest/department?start=0&limit;=2
 
 例如，让我们发送一个只显示部门名称的请求:
 
-```
+```java
 curl -i -X GET "http://localhost:8080/linkrest/department?include=name
 ```
 
 为了只显示姓名和部门雇员的姓名，我们可以使用两次`include`属性:
 
-```
+```java
 curl -i -X GET "http://localhost:8080/linkrest/department?include=name&include;=employees.name
 ```
 

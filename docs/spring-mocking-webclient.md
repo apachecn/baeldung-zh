@@ -21,7 +21,7 @@ Mockito 是 Java 最常见的模仿库。它擅长为方法调用提供预定义
 
 例如，让一个带有`getEmployeeById` 方法的`EmployeeService`类使用`WebClient`通过 HTTP 获取数据:
 
-```
+```java
 public class EmployeeService {
 
     public EmployeeService(String baseUrl) {
@@ -39,7 +39,7 @@ public class EmployeeService {
 
 我们可以用 Mockito 来模拟这个:
 
-```
+```java
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
 
@@ -85,7 +85,7 @@ public class EmployeeServiceTest {
 
 要使用`MockWebServer`，我们需要将 [okhttp](https://web.archive.org/web/20220707143817/https://search.maven.org/search?q=g:com.squareup.okhttp3%20AND%20a:okhttp&core=gav) 和 [mockwebserver](https://web.archive.org/web/20220707143817/https://search.maven.org/search?q=g:com.squareup.okhttp3%20AND%20a:mockwebserver&core=gav) 的 Maven 依赖项添加到我们的 pom.xml:
 
-```
+```java
 <dependency>
     <groupId>com.squareup.okhttp3</groupId>
     <artifactId>okhttp</artifactId>
@@ -104,7 +104,7 @@ public class EmployeeServiceTest {
 
 让我们用`MockWebServer`来测试我们的`EmployeeService`:
 
-```
+```java
 public class EmployeeServiceMockWebServerTest {
 
     public static MockWebServer mockBackEnd;
@@ -126,7 +126,7 @@ public class EmployeeServiceMockWebServerTest {
 
 下一步是**将实际 REST 服务调用的端口映射到`MockWebServer's`端口:**
 
-```
+```java
 @BeforeEach
 void initialize() {
     String baseUrl = String.format("http://localhost:%s", 
@@ -141,7 +141,7 @@ void initialize() {
 
 让我们使用`MockWebServer's`便利的`enqueue` 方法在 web 服务器上排队测试响应:
 
-```
+```java
 @Test
 void getEmployeeById() throws Exception {
     Employee mockEmployee = new Employee(100, "Adam", "Sandler", 
@@ -167,7 +167,7 @@ void getEmployeeById() throws Exception {
 
 `MockWebServer`有一个名为`takeRequest` 的简便方法，它返回一个`RecordedRequest`的实例:
 
-```
+```java
 RecordedRequest recordedRequest = mockBackEnd.takeRequest();
 
 assertEquals("GET", recordedRequest.getMethod());

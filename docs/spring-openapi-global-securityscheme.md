@@ -16,7 +16,7 @@ OpenAPI 规范让我们为 API 定义一套安全方案。我们可以全局配�
 
 该示例有两个依赖项。**第一个依赖者是 [`spring-boot-starter-web`](https://web.archive.org/web/20220908120135/https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web)** 。这是构建 web 应用程序的主要依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -26,7 +26,7 @@ OpenAPI 规范让我们为 API 定义一套安全方案。我们可以全局配�
 
 **另一个依赖项是** `**[springdoc-openapi-ui](https://web.archive.org/web/20220908120135/https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui "springdoc-openapi-ui")**`，它是以 HTML、JSON 或 YAML 的形式呈现 API 文档的库:
 
-```
+```java
 <dependency>
     <groupId>org.springdoc</groupId>
     <artifactId>springdoc-openapi-ui</artifactId>
@@ -40,7 +40,7 @@ OpenAPI 规范让我们为 API 定义一套安全方案。我们可以全局配�
 
 **我们将使用`@SpringBootApplication` 注释来引导应用程序，并使用**T4`SpringApplication` 助手类来启动它:
 
-```
+```java
 @SpringBootApplication
 public class DefaultGlobalSecuritySchemeApplication {
     public static void main(String[] args) {
@@ -55,13 +55,13 @@ public class DefaultGlobalSecuritySchemeApplication {
 
 **我们将通过向`DefaultGlobalSecuritySchemeApplication` 类**添加`springdoc-openapi`注释来定义默认的全局安全方案和 API 元数据。为了定义全局安全方案，我们将使用`@SecurityScheme` 注释:
 
-```
+```java
 @SecurityScheme(type = SecuritySchemeType.APIKEY, name = "api_key", in = SecuritySchemeIn.HEADER)
 ```
 
 我们选择了一个`APIKEY`安全方案类型，但是我们可以配置其他安全方案，例如， [JWT](/web/20220908120135/https://www.baeldung.com/openapi-jwt-authentication) 。在定义了安全方案之后，我们将添加元数据并为 API 建立默认的安全需求。我们使用`@OpenApiDefinition`注释来实现这一点:
 
-```
+```java
 @OpenAPIDefinition(info = @Info(title = "Apply Default Global SecurityScheme in springdoc-openapi", version = "1.0.0"), security = { @SecurityRequirement(name = "api_key") })
 ```
 
@@ -75,7 +75,7 @@ public class DefaultGlobalSecuritySchemeApplication {
 
 现在我们已经配置了 Spring 框架和`springdoc-openapi`库，**让我们向上下文基本路径**添加一个 REST 控制器。为了实现这一点，我们将使用`@RestController`和`@RequestMapping`注释:
 
-```
+```java
 @RestController
 @RequestMapping("/")
 public class DefaultGlobalSecuritySchemeOpenApiController {
@@ -97,13 +97,13 @@ API 的另一个端点是`/ping`端点，它需要由`/login`方法生成的令�
 
 首先，我们需要告诉 Spring 这是我们 API 的一个端点，所以我们将添加注释`@RequestMapping`来配置端点:
 
-```
+```java
 @RequestMapping(method = RequestMethod.POST, value = "/login", produces = { "application/json" }, consumes = { "application/json" })
 ```
 
 之后，我们需要向端点添加语义信息。所以我们将使用`@Operation`和`@SecurityRequirements`注释。`@Operation`将定义端点，而`@SecurityRequirements`将定义适用于端点的特定安全需求集:
 
-```
+```java
 @Operation(operationId = "login", responses = {
     @ApiResponse(responseCode = "200", description = "api_key to be used in the secured-ping endpoint", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = TokenDto.class)) }),
     @ApiResponse(responseCode = "401", description = "Unauthorized request", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ApplicationExceptionDto.class)) }) })
@@ -116,7 +116,7 @@ API 的另一个端点是`/ping`端点，它需要由`/login`方法生成的令�
 
 最后，让我们看看`login()`方法的签名:
 
-```
+```java
 public ResponseEntity login(@Parameter(name = "LoginDto", description = "Login") @Valid @RequestBody(required = true) LoginDto loginDto) {
     ...
 }
@@ -124,7 +124,7 @@ public ResponseEntity login(@Parameter(name = "LoginDto", description = "Login")
 
 正如我们所看到的，API 请求的主体接收了一个`LoginDto`实例。我们还必须用语义信息来修饰 dto，以便在文档中显示信息:
 
-```
+```java
 public class LoginDto {
     private String user;
     private String pass;
@@ -151,7 +151,7 @@ public class LoginDto {
 
 此时，我们将定义`ping()`方法。**`ping()`方法将使用默认的全局安全方案**:
 
-```
+```java
 @Operation(operationId = "ping", responses = {
     @ApiResponse(responseCode = "200", description = "Ping that needs an api_key attribute in the header", content = {
         @Content(mediaType = "application/json", schema = @Schema(implementation = PingResponseDto.class), examples = { @ExampleObject(value = "{ pong: '2022-06-17T18:30:33.465+02:00' }") }) }),
@@ -171,7 +171,7 @@ public ResponseEntity ping(@RequestHeader(name = "api_key", required = false) St
 
 此时，我们已经准备好了 Spring MVC web 应用程序，我们可以启动服务器了:
 
-```
+```java
 mvn spring-boot:run -Dstart-class="com.baeldung.defaultglobalsecurityscheme.DefaultGlobalSecuritySchemeApplication"
 ```
 

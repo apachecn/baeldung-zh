@@ -20,7 +20,7 @@
 
 我们需要一些核心的 Spring Boot 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -35,7 +35,7 @@
 
 然后， [H2 数据库](https://web.archive.org/web/20220627181507/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.h2database%22%20AND%20a%3A%22h2%22):
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -46,7 +46,7 @@
 
 最后是杰克逊图书馆:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.datatype</groupId>
     <artifactId>jackson-datatype-jsr310</artifactId>
@@ -64,7 +64,7 @@
 
 此外，在开发时将 SQL 查询记录到控制台也很有用:
 
-```
+```java
 spring.datasource.name=ecommercedb
 spring.jpa.show-sql=true
 
@@ -79,7 +79,7 @@ spring.h2.console.path=/h2-console
 
 该项目将被组织成几个标准包，角度应用程序放在前端文件夹:
 
-```
+```java
 ├───pom.xml            
 ├───src
     ├───main
@@ -118,7 +118,7 @@ spring.h2.console.path=/h2-console
 
 在这里，我们关注`ConstraintViolationException`和我们的客户`ResourceNotFoundException`:
 
-```
+```java
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
@@ -154,7 +154,7 @@ public class ApiExceptionHandler {
 
 让我们创建一个简单的`Product`类:
 
-```
+```java
 @Entity
 public class Product {
 
@@ -179,7 +179,7 @@ public class Product {
 
 一项简单的服务就足以满足我们的需求:
 
-```
+```java
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService {
@@ -207,7 +207,7 @@ public class ProductServiceImpl implements ProductService {
 
 一个简单的控制器将处理检索产品列表的请求:
 
-```
+```java
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -225,7 +225,7 @@ public class ProductController {
 
 这样，我们将在应用程序启动时将产品插入数据库:
 
-```
+```java
 @Bean
 CommandLineRunner runner(ProductService productService) {
     return args -> {
@@ -242,7 +242,7 @@ CommandLineRunner runner(ProductService productService) {
 
 让我们首先创建模型:
 
-```
+```java
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -286,7 +286,7 @@ public class Order {
 
 最后，我们有一个代表订单详细信息的 **`@OneToMany`关系。为此，我们需要另一个实体类:**
 
-```
+```java
 @Entity
 public class OrderProduct {
 
@@ -324,7 +324,7 @@ public class OrderProduct {
 
 **我们这里有一个复合主键****:**
 
-```
+```java
 @Embeddable
 public class OrderProductPK implements Serializable {
 
@@ -349,7 +349,7 @@ public class OrderProductPK implements Serializable {
 
 接下来，我们需要一个简单的服务实现:
 
-```
+```java
 @Service
 @Transactional
 public class OrderServiceImpl implements OrderService {
@@ -378,7 +378,7 @@ public class OrderServiceImpl implements OrderService {
 
 最重要的是`create`()方法:
 
-```
+```java
 @PostMapping
 public ResponseEntity<Order> create(@RequestBody OrderForm form) {
     List<OrderProductDto> formDtos = form.getProductOrders();
@@ -419,7 +419,7 @@ public ResponseEntity<Order> create(@RequestBody OrderForm form) {
 
 要创建它，我们需要在`/src/main`文件夹中打开一个终端(或命令提示符)并运行:
 
-```
+```java
 ng new frontend
 ```
 
@@ -435,7 +435,7 @@ ng new frontend
 
 我们只需要几样东西就能实现这一点。**首先，我们需要** **运行一个命令来安装它**:
 
-```
+```java
 npm install --save bootstrap
 ```
 
@@ -449,13 +449,13 @@ npm install --save bootstrap
 
 现在，我们将创建一个基础组件，名为`ecommerce`:
 
-```
+```java
 ng g c ecommerce
 ```
 
 这将在`/frontend/src/app`文件夹中创建我们的组件。**为了在应用程序启动时加载它，我们将** **将其** **包含到`app.component.html`** 中:
 
-```
+```java
 <div class="container">
     <app-ecommerce></app-ecommerce>
 </div>
@@ -463,7 +463,7 @@ ng g c ecommerce
 
 接下来，我们将在这个基本组件中创建其他组件:
 
-```
+```java
 ng g c /ecommerce/products
 ng g c /ecommerce/orders
 ng g c /ecommerce/shopping-cart
@@ -473,7 +473,7 @@ ng g c /ecommerce/shopping-cart
 
 我们还需要一些模型来轻松处理我们的数据:
 
-```
+```java
 export class Product {
     id: number;
     name: string;
@@ -484,7 +484,7 @@ export class Product {
 }
 ```
 
-```
+```java
 export class ProductOrder {
     product: Product;
     quantity: number;
@@ -493,7 +493,7 @@ export class ProductOrder {
 }
 ```
 
-```
+```java
 export class ProductOrders {
     productOrders: ProductOrder[] = [];
 }
@@ -505,7 +505,7 @@ export class ProductOrders {
 
 在我们的`ecommerce`组件的顶部，我们将在右边放置一个带有 Home 链接的导航栏:
 
-```
+```java
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
         <a class="navbar-brand" href="#">Baeldung Ecommerce</a>
@@ -531,7 +531,7 @@ export class ProductOrders {
 
 我们还将从这里加载其他组件:
 
-```
+```java
 <div class="row">
     <div class="col-md-9">
         <app-products #productsC [hidden]="orderFinished"></app-products>
@@ -548,7 +548,7 @@ export class ProductOrders {
 
 我们应该记住，为了从我们的组件中看到内容，因为我们使用了`navbar`类，我们需要向`app.component.css`添加一些 CSS:
 
-```
+```java
 .container {
     padding-top: 65px;
 }
@@ -556,7 +556,7 @@ export class ProductOrders {
 
 在我们评论最重要的部分之前，让我们检查一下`.ts`文件:
 
-```
+```java
 @Component({
     selector: 'app-ecommerce',
     templateUrl: './ecommerce.component.html',
@@ -598,7 +598,7 @@ export class EcommerceComponent implements OnInit {
 
 为了让**兄弟组件相互通信** **以及从/向我们的 API** 检索/发送数据，我们需要创建一个服务:
 
-```
+```java
 @Injectable()
 export class EcommerceService {
     private productsUrl = "/api/products";
@@ -638,7 +638,7 @@ export class EcommerceService {
 
 当然，我们可以将 URL 硬编码到`localhost:8080`，但这不是我们想要做的。相反，**当处理不同的域时，我们应该在我们的`/frontend`文件夹**中创建一个名为`proxy-conf.json`的文件:
 
-```
+```java
 {
     "/api": {
         "target": "http://localhost:8080",
@@ -649,7 +649,7 @@ export class EcommerceService {
 
 然后我们需要**打开`package.json`并改变`scripts.start`属性**来匹配:
 
-```
+```java
 "scripts": {
     ...
     "start": "ng serve --proxy-config proxy-conf.json",
@@ -663,7 +663,7 @@ export class EcommerceService {
 
 在我们的`ProductsComponent`中，我们将注入我们之前创建的服务，从 API 加载产品列表，并将其转换为`ProductOrders`的列表，因为我们希望为每个产品添加一个数量字段:
 
-```
+```java
 export class ProductsComponent implements OnInit {
     productOrders: ProductOrder[] = [];
     products: Product[] = [];
@@ -703,7 +703,7 @@ export class ProductsComponent implements OnInit {
 
 我们还需要一个将产品添加到购物车或从购物车中删除产品的选项:
 
-```
+```java
 addToCart(order: ProductOrder) {
     this.ecommerceService.SelectedProductOrder = order;
     this.selectedProductOrder = this.ecommerceService.SelectedProductOrder;
@@ -724,7 +724,7 @@ removeFromCart(productOrder: ProductOrder) {
 
 最后，我们将创建一个我们在 3.4 节提到的`reset`()方法:
 
-```
+```java
 reset() {
     this.productOrders = [];
     this.loadProducts();
@@ -736,7 +736,7 @@ reset() {
 
 我们将遍历 HTML 文件中的产品列表，并将其显示给用户:
 
-```
+```java
 <div class="row card-deck">
     <div class="col-lg-4 col-md-6 mb-4" *ngFor="let order of productOrders">
         <div class="card text-center">
@@ -771,7 +771,7 @@ reset() {
 
 我们还将在相应的 CSS 文件中添加一个简单的类，这样一切都可以很好地适应:
 
-```
+```java
 .padding-0 {
     padding-right: 0;
     padding-left: 1;
@@ -782,7 +782,7 @@ reset() {
 
 在`ShoppingCart`组件中，我们还将注入服务。我们将使用它来订阅`ProductsComponent`中的更改(注意产品何时被选择放入购物车)，然后更新购物车的内容并相应地重新计算总成本:
 
-```
+```java
 export class ShoppingCartComponent implements OnInit, OnDestroy {
     orderFinished: boolean;
     orders: ProductOrders;
@@ -830,7 +830,7 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
 
 当订单完成时，我们从这里向父组件发送一个事件，并且我们需要去结帐。这里还有一个`reset`()方法:
 
-```
+```java
 finishOrder() {
     this.orderFinished = true;
     this.ecommerceService.Total = this.total;
@@ -848,7 +848,7 @@ reset() {
 
 HTML 文件很简单:
 
-```
+```java
 <div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
     <div class="card-header text-center">Shopping Cart</div>
     <div class="card-body">
@@ -875,7 +875,7 @@ HTML 文件很简单:
 
 我们还需要这里的`EcommerceService`,以便从购物车中检索产品列表和我们订单的总金额:
 
-```
+```java
 export class OrdersComponent implements OnInit {
     orders: ProductOrders;
     total: number;
@@ -903,7 +903,7 @@ export class OrdersComponent implements OnInit {
 
 最后，我们需要向用户显示信息:
 
-```
+```java
 <h2 class="text-center">ORDER</h2>
 <ul>
     <li *ngFor="let order of orders.productOrders">
@@ -926,7 +926,7 @@ export class OrdersComponent implements OnInit {
 
 要做到这一点，我们需要**再次打开`package.json`，在`scripts`之后添加一些新的脚本。`build`** :
 
-```
+```java
 "postbuild": "npm run deploy",
 "predeploy": "rimraf ../resources/static/ && mkdirp ../resources/static",
 "deploy": "copyfiles -f dist/** ../resources/static",
@@ -934,7 +934,7 @@ export class OrdersComponent implements OnInit {
 
 我们正在使用一些尚未安装的软件包，所以让我们安装它们:
 
-```
+```java
 npm install --save-dev rimraf
 npm install --save-dev mkdirp
 npm install --save-dev copyfiles

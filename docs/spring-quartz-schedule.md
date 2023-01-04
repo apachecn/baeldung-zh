@@ -40,7 +40,7 @@ API 提供了一个只有一个方法的*作业*接口，`execute.`它必须由�
 
 在这个简单的例子中，作业将任务委托给一个服务类:
 
-```
+```java
 @Component
 public class SampleJob implements Job {
 
@@ -61,7 +61,7 @@ public class SampleJob implements Job {
 
 Quartz `JobBuilder` 为构建`JobDetail` 实体提供了一个构建器风格的 API:
 
-```
+```java
 @Bean
 public JobDetail jobDetail() {
     return JobBuilder.newJob().ofType(SampleJob.class)
@@ -76,7 +76,7 @@ public JobDetail jobDetail() {
 
 Spring 的 *JobDetailFactoryBean* 为配置`JobDetail` 实例提供了 Bean 风格的用法。如果没有另外指定，它使用 Spring bean 名称作为作业名称:
 
-```
+```java
 @Bean
 public JobDetailFactoryBean jobDetail() {
     JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
@@ -101,7 +101,7 @@ public JobDetailFactoryBean jobDetail() {
 
 `TriggerBuilder`是一个构建器风格的 API，用于构建`Trigger`实体:
 
-```
+```java
 @Bean
 public Trigger trigger(JobDetail job) {
     return TriggerBuilder.newTrigger().forJob(job)
@@ -116,7 +116,7 @@ public Trigger trigger(JobDetail job) {
 
 *SimpleTriggerFactoryBean* 为配置`SimpleTrigger`提供了 Bean 风格的用法。它使用 Spring bean 名称作为触发器名称，如果没有另外指定，默认为无限重复:
 
-```
+```java
 @Bean
 public SimpleTriggerFactoryBean trigger(JobDetail job) {
     SimpleTriggerFactoryBean trigger = new SimpleTriggerFactoryBean();
@@ -135,7 +135,7 @@ public SimpleTriggerFactoryBean trigger(JobDetail job) {
 
 对于我们的示例，我们将使用内存中的 ***RAMJobStore、*** ，它通过`quartz.properties`提供了极快的性能和简单的配置:
 
-```
+```java
 org.quartz.jobStore.class=org.quartz.simpl.RAMJobStore
 ```
 
@@ -143,7 +143,7 @@ org.quartz.jobStore.class=org.quartz.simpl.RAMJobStore
 
 为了在 Spring `,`中启用内存中的`JobStore`，我们将在我们的`application.properties`中设置这个属性:
 
-```
+```java
 spring.quartz.job-store-type=memory
 ```
 
@@ -155,7 +155,7 @@ spring.quartz.job-store-type=memory
 
 有几个属性需要为`JDBCJobStore`设置。至少，我们必须指定`JDBCJobStore`的类型、数据源和数据库驱动程序类。大多数数据库都有驱动程序类，但是`StdJDBCDelegate`涵盖了大多数情况:
 
-```
+```java
 org.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTX
 org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.StdJDBCDelegate
 org.quartz.jobStore.dataSource=quartzDataSource
@@ -163,13 +163,13 @@ org.quartz.jobStore.dataSource=quartzDataSource
 
 在春天建立一个 JDBC 需要几个步骤。首先，我们将在我们的`application.properties`中设置商店类型:
 
-```
+```java
 spring.quartz.job-store-type=jdbc
 ```
 
 然后我们需要启用自动配置，并为 Spring 提供 Quartz 调度程序所需的数据源。`@QuartzDataSource`注释为我们完成了配置和初始化 Quartz 数据库的艰苦工作:
 
-```
+```java
 @Configuration
 @EnableAutoConfiguration
 public class SpringQrtzScheduler {
@@ -192,7 +192,7 @@ public class SpringQrtzScheduler {
 
 通过简单地调用`StdSchedulerFactory`上的`getScheduler`方法，我们可以实例化`Scheduler`，初始化它(用配置好的`JobStore`和`ThreadPool`)，并返回其 API 的句柄:
 
-```
+```java
 @Bean
 public Scheduler scheduler(Trigger trigger, JobDetail job, SchedulerFactoryBean factory) 
   throws SchedulerException {
@@ -207,7 +207,7 @@ public Scheduler scheduler(Trigger trigger, JobDetail job, SchedulerFactoryBean 
 
 Spring 的 `SchedulerFactoryBean`提供了 bean 风格的用法来配置`Scheduler`，在应用程序上下文中管理它的生命周期，并将`Scheduler`公开为依赖注入的 bean:
 
-```
+```java
 @Bean
 public SchedulerFactoryBean scheduler(Trigger trigger, JobDetail job, DataSource quartzDataSource) {
     SchedulerFactoryBean schedulerFactory = new SchedulerFactoryBean();
@@ -227,7 +227,7 @@ public SchedulerFactoryBean scheduler(Trigger trigger, JobDetail job, DataSource
 
 然而，它缺乏对从**应用程序上下文**注入 bean 引用的支持。感谢[这篇博文](https://web.archive.org/web/20220812055703/http://www.btmatthews.com/blog/2011/inject-application-context+dependencies-in-quartz-job-beans.html)的作者，我们可以给 *SpringBeanJobFactory:* 添加**自动布线**支持
 
-```
+```java
 @Bean
 public SpringBeanJobFactory springBeanJobFactory() {
     AutoWiringSpringBeanJobFactory jobFactory = new AutoWiringSpringBeanJobFactory();

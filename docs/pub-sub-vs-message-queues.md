@@ -40,7 +40,7 @@
 
 首先，让我们定义我们的队列:
 
-```
+```java
 private static final String MESSAGE_QUEUE = "pizza-message-queue";
 
 @Bean
@@ -51,7 +51,7 @@ public Queue queue() {
 
 使用 Spring AMQP，我们创建了一个名为“pizza-message-queue”的队列。接下来，让我们定义将消息发送到我们新定义的队列的发布者:
 
-```
+```java
 public class Publisher {
 
     private RabbitTemplate rabbitTemplate;
@@ -75,7 +75,7 @@ Spring AMQP 将为我们创建一个`RabbitTemplate ` bean，它连接到我们
 
 现在我们的比萨饼订单已经收到，我们需要一个单独的消费者应用程序。这将在示例中充当我们的厨师，并读取消息:
 
-```
+```java
 public class Consumer {
     public void receiveOrder(String message) {
         System.out.printf("Order received: %s%n", message);
@@ -85,7 +85,7 @@ public class Consumer {
 
 现在让我们为队列创建一个`MessageListenerAdapter` ,它将使用反射调用消费者的 receive order 方法:
 
-```
+```java
 @Bean
 public SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
@@ -127,7 +127,7 @@ public MessageListenerAdapter listenerAdapter(Consumer consumer) {
 
 首先，让我们定义我们的主题交换，并将两个队列绑定到它:
 
-```
+```java
 private static final String PUB_SUB_TOPIC = "notification-topic";
 private static final String PUB_SUB_EMAIL_QUEUE = "email-queue";
 private static final String PUB_SUB_TEXT_QUEUE = "text-queue";
@@ -160,7 +160,7 @@ public Binding textBinding(Queue textQueue, TopicExchange exchange) {
 
 我们现在已经使用路由关键字“notification”绑定了两个队列，这意味着使用该路由关键字在主题上发布的任何消息都将进入这两个队列。更新我们之前创建的`Publisher `类，我们可以向我们的交换发送一些消息:
 
-```
+```java
 rabbitTemplate.convertAndSend(topic, "notification", "New Deal on T-Shirts: 95% off!");
 rabbitTemplate.convertAndSend(topic, "notification", "2 for 1 on all Jeans!");
 ```

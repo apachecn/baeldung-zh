@@ -19,25 +19,25 @@ Java 标准库提供了 [`URI`](/web/20221208143917/https://www.baeldung.com/jav
 
 首先，让我们看看构造函数的签名:
 
-```
+```java
 public URI(String str) throws URISyntaxException
 ```
 
 我们可以看到，用无效地址调用构造函数可能会引发`URISyntaxException`。为了简单起见，让我们创建一个单元测试来看看这个案例:
 
-```
+```java
 assertThrows(URISyntaxException.class, () -> new URI("I am an invalid URI string.")); 
 ```
 
 我们要注意的是， **`URISyntaxException`是** `**Exception**`的子类:
 
-```
+```java
 public class URISyntaxException extends Exception { ... } 
 ```
 
 因此，**是一个[被检查的异常](/web/20221208143917/https://www.baeldung.com/java-checked-unchecked-exceptions)T4。换句话说，**当我们调用这个构造函数时，我们必须处理`URISyntaxException`** :**
 
-```
+```java
 try {
     URI myUri = new URI("https://www.baeldung.com/articles");
     assertNotNull(myUri);
@@ -54,7 +54,7 @@ try {
 
 我们已经提到过`URI.create()`也可以创建一个`URI`实例。为了理解`create()`方法和构造函数之间的区别，让我们看一下`create()`方法的源代码:
 
-```
+```java
 public static URI create(String str) {
     try {
         return new URI(str);
@@ -68,7 +68,7 @@ public static URI create(String str) {
 
 接下来，让我们创建一个测试，看看如果我们给`create()`一个无效的 URI 字符串，我们是否能得到预期的`IllegalArgumentException`:
 
-```
+```java
 assertThrows(IllegalArgumentException.class, () -> URI.create("I am an invalid URI string."));
 ```
 
@@ -76,13 +76,13 @@ assertThrows(IllegalArgumentException.class, () -> URI.create("I am an invalid U
 
 如果我们仔细看看`IllegalArgumentException`类，我们可以看到它是`RuntimeException`的子类:
 
-```
+```java
 public class IllegalArgumentException extends RuntimeException { ... }
 ```
 
 我们知道`RuntimeException`是一个未检查的异常。这意味着**当我们使用`create()`方法创建一个`URI`实例时，我们不必在显式的`try-catch`** 中处理异常:
 
-```
+```java
 URI myUri = URI.create("https://www.baeldung.com/articles");
 assertNotNull(myUri);
 ```

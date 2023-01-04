@@ -14,7 +14,7 @@ Mockito 是一个流行的 Java 模仿框架。但是，在我们开始之前，
 
 我们可以通过将依赖项添加到我们的`pom.xml`来获得工件:
 
-```
+```java
 <dependency>
     <groupId>org.mockito</groupId>
     <artifactId>mockito-core</artifactId>
@@ -30,7 +30,7 @@ Mockito 是一个流行的 Java 模仿框架。但是，在我们开始之前，
 
 为了验证这一点，让我们看看`mockito-all.jar`的内部，看看它包含的包:
 
-```
+```java
 mockito-all.jar
 |-- org
 |   |-- hamcrest

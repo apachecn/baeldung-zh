@@ -10,7 +10,7 @@
 
 首先，让我们将 [spring-security-taglibs](https://web.archive.org/web/20221129000745/https://search.maven.org/search?q=g:org.springframework.security%20AND%20a:spring-security-taglibs&core=gav) 依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-taglibs</artifactId>
@@ -22,7 +22,7 @@
 
 现在，在使用标记之前，我们需要在 JSP 文件的顶部导入标记库:
 
-```
+```java
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 ```
 
@@ -36,7 +36,7 @@
 
 在这种情况下，我们可以使用`authorize`标签:
 
-```
+```java
 <sec:authorize access="!isAuthenticated()">
   Login
 </sec:authorize>
@@ -47,7 +47,7 @@
 
 此外，我们可以检查经过身份验证的用户是否有特定的角色:
 
-```
+```java
 <sec:authorize access="hasRole('ADMIN')">
     Manage Users
 </sec:authorize>
@@ -64,7 +64,7 @@
 
 除此之外，我们可以检查被授权向特定 URL 发送请求的用户:
 
-```
+```java
 <sec:authorize url="/userManagement">
     <a href="/userManagement">Manage Users</a>
 </sec:authorize>
@@ -84,7 +84,7 @@
 
 为此，我们使用了`authentication `标签:
 
-```
+```java
 <sec:authorize access="isAuthenticated()">
     Welcome Back, <sec:authentication property="name"/>
 </sec:authorize>
@@ -98,7 +98,7 @@
 
 但是如果我们想使用`<form>`，**，我们可以使用`csrfInput` :** 手动指示 Spring Security 应该在哪里放置这个隐藏的输入字段
 
-```
+```java
 <form method="post" action="/do/something">
     <sec:csrfInput />
     Text Field:<br />
@@ -114,7 +114,7 @@
 
 我们可以用`csrfMetaTags `标签来做到这一点:
 
-```
+```java
 <html>
     <head>
         <title>JavaScript with CSRF Protection</title>

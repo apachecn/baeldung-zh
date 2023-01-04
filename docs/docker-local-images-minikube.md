@@ -12,7 +12,7 @@
 
 让我们创建一个`Dockerfile`,只使用一个`echo`命令来打印一条消息:
 
-```
+```java
 FROM alpine 
 
 CMD ["echo", "Hello World"]
@@ -26,13 +26,13 @@ CMD ["echo", "Hello World"]
 
 让我们检查一下这个先决条件，看看 Docker CLI 是否正常工作:
 
-```
+```java
 $ docker version
 ```
 
 输出应该如下所示:
 
-```
+```java
 Client: Docker Engine - Community
  Version:           19.03.12
  ...
@@ -47,13 +47,13 @@ Server: Docker Engine - Community
 
 让我们看看配置 Docker CLI 所需的[步骤:](https://web.archive.org/web/20221025150553/https://minikube.sigs.k8s.io/docs/commands/docker-env/)
 
-```
+```java
 $ minikube docker-env
 ```
 
 我们可以在这里看到命令列表:
 
-```
+```java
 export DOCKER_TLS_VERIFY="1"
 export DOCKER_HOST="tcp://172.22.238.61:2376"
 export DOCKER_CERT_PATH="C:\Users\Baeldung\.minikube\certs"
@@ -65,7 +65,7 @@ export MINIKUBE_ACTIVE_DOCKERD="minikube"
 
 **让我们执行最后一行的命令，因为它会为我们进行配置:**
 
-```
+```java
 $ eval $(minikube -p minikube docker-env)
 ```
 
@@ -73,13 +73,13 @@ $ eval $(minikube -p minikube docker-env)
 
 **让我们用 [`minikube image ls`](https://web.archive.org/web/20221025150553/https://minikube.sigs.k8s.io/docs/commands/image/#minikube-image-ls) 命令列出可用的图像:**
 
-```
+```java
 $ minikube image ls --format table
 ```
 
 这将打印一个包含图像的表格:
 
-```
+```java
 |-----------------------------------------|---------|---------------|--------|
 |                  Image                  |   Tag   |   Image ID    |  Size  |
 |-----------------------------------------|---------|---------------|--------|
@@ -102,19 +102,19 @@ $ minikube image ls --format table
 
 让我们用我们的`Dockerfile`和[建立一个图像](https://web.archive.org/web/20221025150553/https://docs.docker.com/engine/reference/commandline/build/):
 
-```
+```java
 $ docker build -t first-image -f ./Dockerfile .
 ```
 
 现在它在 Minikube 中可用，我们可以创建一个使用此图像的 pod:
 
-```
+```java
 $ kubectl run first-container --image=first-image --image-pull-policy=Never --restart=Never
 ```
 
 让我们检查一下这个 pod 的日志:
 
-```
+```java
 $ kubectl logs first-container
 ```
 
@@ -124,31 +124,31 @@ $ kubectl logs first-container
 
 让我们看看使用本地图像的另一种方法。这一次，我们将在机器上的 Minikube 外部构建 Docker 映像，并将其加载到 Minikube 中。让我们建立形象:
 
-```
+```java
 $ docker build -t second-image -f ./Dockerfile .
 ```
 
 现在图像存在了，但在 Minikube 中还不可用。让我们[加载它](https://web.archive.org/web/20221025150553/https://minikube.sigs.k8s.io/docs/commands/image/#minikube-image-load):
 
-```
+```java
 $ minikube image load second-image
 ```
 
 让我们列出图片并检查是否可用:
 
-```
+```java
 $ minikube image ls --format table
 ```
 
 我们可以在列表中看到新的图像。这意味着我们可以创建 pod:
 
-```
+```java
 $ kubectl run second-container --image=second-image --image-pull-policy=Never --restart=Never
 ```
 
 容器成功启动。让我们检查日志:
 
-```
+```java
 $ kubectl logs second-container
 ```
 
@@ -160,19 +160,19 @@ $ kubectl logs second-container
 
 让我们使用相同的`Dockerfile`并构建一个新的 Docker 映像:
 
-```
+```java
 $ minikube image build -t third-image -f ./Dockerfile .
 ```
 
 现在图像在 Minikube 中可用了，我们可以用它启动一个容器:
 
-```
+```java
 $ kubectl run third-container --image=third-image --image-pull-policy=Never --restart=Never
 ```
 
 让我们检查日志以确保它在工作:
 
-```
+```java
 $ kubectl logs third-container
 ```
 

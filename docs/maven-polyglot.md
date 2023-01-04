@@ -20,13 +20,13 @@ Maven polyglot 的主要目标是摆脱 XML，因为它不再是当今的主流�
 
 从技术上来说，**Maven 核心扩展是在`extensions.xml`文件中声明的 Maven 工件:**
 
-```
+```java
 ${projectDirectory}/.mvn/extensions.xml
 ```
 
 下面是一个扩展的例子:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <extensions>
     <extension>
@@ -45,7 +45,7 @@ Maven Polyglot 是一个核心扩展的集合。它们中的每一个都负责�
 
 Maven Polyglot 为以下语言提供了扩展:
 
-```
+```java
 +-----------+-------------------+--------------------------------------+
 | Language  | Artifact Id       | Accepted POM files                   |
 +-----------+-------------------+--------------------------------------+
@@ -73,13 +73,13 @@ Maven Polyglot 为以下语言提供了扩展:
 
 第一步是创建 Maven 核心扩展文件:
 
-```
+```java
 ${projectDirectory}/.mvn/extensions.xml
 ```
 
 然后我们将添加以下内容:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <extensions>
     <extension>
@@ -94,7 +94,7 @@ ${projectDirectory}/.mvn/extensions.xml
 
 最后一步是在`YAML`文件中提供项目元数据:
 
-```
+```java
 modelVersion: 4.0.0
 groupId: com.baeldung.maven.polyglot
 artifactId: maven-polyglot-yml-app
@@ -106,7 +106,7 @@ properties: {maven.compiler.source: 1.8, maven.compiler.target: 1.8}
 
 现在我们可以像往常一样运行我们的构建了。例如，我们可以调用命令:
 
-```
+```java
 mvn clean install
 ```
 
@@ -118,7 +118,7 @@ mvn clean install
 
 然后，**我们可以通过使用翻译插件**将现有的`pom.xml`项目转换成想要的多语言版本:
 
-```
+```java
 mvn io.takari.polyglot:polyglot-translate-plugin:translate -Dinput=pom.xml -Doutput=pom.yml
 ```
 
@@ -134,7 +134,7 @@ mvn io.takari.polyglot:polyglot-translate-plugin:translate -Dinput=pom.xml -Dout
 
 我们将从创建一个具有以下依赖项的 Maven 项目开始:
 
-```
+```java
 <dependency>
     <groupId>org.apache.maven</groupId>
     <artifactId>maven-core</artifactId>
@@ -152,7 +152,7 @@ mvn io.takari.polyglot:polyglot-translate-plugin:translate -Dinput=pom.xml -Dout
 
 由于 Maven 使用丛依赖注入容器，**我们需要我们的实现成为丛组件**。所以我们需要这个插件来生成丛元数据:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.plexus</groupId>
     <artifactId>plexus-component-metadata</artifactId>
@@ -177,7 +177,7 @@ Maven 提供了一个`DefaultModelProcessor`实现，默认情况下，它从位
 
 所以让我们从创建一个`CustomModelProcessor`实现开始，并将其标记为一个丛组件:
 
-```
+```java
 @Component(role = ModelProcessor.class)
 public class CustomModelProcessor implements ModelProcessor {
 
@@ -202,7 +202,7 @@ public class CustomModelProcessor implements ModelProcessor {
 
 因此，我们将返回一个`pom.json`文件(如果它存在的话),否则，我们通常会返回`pom.xml`:
 
-```
+```java
 @Override
 public File locatePom(File projectDirectory) {
     File pomFile = new File(projectDirectory, "pom.json");
@@ -215,7 +215,7 @@ public File locatePom(File projectDirectory) {
 
 `The next step is to read this file and transform it to the Maven Model. This is achieved by the read() method:`
 
-```
+```java
 @Requirement
 private ModelReader modelReader;
 
@@ -242,7 +242,7 @@ public Model read(InputStream input, Map<String, ?> options)
 
 我们需要构建扩展，它将可以使用:
 
-```
+```java
 mvn clean install
 ```
 
@@ -254,7 +254,7 @@ mvn clean install
 
 然后，**我们将在`${projectDirectory}/.mvn/extensions.xml:`** 中添加我们已经实现的扩展
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <extensions>
     <extension>
@@ -267,7 +267,7 @@ mvn clean install
 
 最后我们用以下内容创建`pom.json`:
 
-```
+```java
 {
   "modelVersion": "4.0.0",
   "groupId": "com.baeldung.maven.polyglot",
@@ -306,7 +306,7 @@ mvn clean install
 
 我们现在可以使用命令运行项目:
 
-```
+```java
 mvn spring-boot:run
 ```
 

@@ -28,7 +28,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 首先，让我们指定我们将使用的 Spring 框架和 Spring 安全的主要版本:
 
-```
+```java
 <properties>
     <spring.version>5.3.13</spring.version>
     <spring-security.version>5.6.0</spring-security.version>
@@ -37,7 +37,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 其次，让我们添加实现基本身份验证和授权所需的核心 Spring MVC 和 Spring 安全库:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-core</artifactId>
@@ -69,7 +69,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 最后，让我们添加所需的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-websocket</artifactId>
@@ -93,7 +93,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 使用 `spring-security-messaging` 库的特定于 WebSocket 的安全性以`AbstractSecurityWebSocketMessageBrokerConfigurer`类及其在项目中的实现为中心:
 
-```
+```java
 @Configuration
 public class SocketSecurityConfig 
   extends AbstractSecurityWebSocketMessageBrokerConfigurer {
@@ -111,7 +111,7 @@ public class SocketSecurityConfig
 
 `configureInbound()`的实现是配置`AbstractSecurityWebSocketMessageBrokerConfigurer` 子类中最重要的一步:
 
-```
+```java
 @Override 
 protected void configureInbound(
   MessageSecurityMetadataSourceRegistry messages) { 
@@ -129,19 +129,19 @@ protected void configureInbound(
 
 **类型匹配器约束哪些`SimpMessageType` 被允许**以及以何种方式 **:**
 
-```
+```java
 .simpTypeMatchers(CONNECT, UNSUBSCRIBE, DISCONNECT).permitAll()
 ```
 
 **目的地匹配器约束哪些端点模式是可访问的**以及以何种方式访问 **:**
 
-```
+```java
 .simpDestMatchers("/app/**").hasRole("ADMIN")
 ```
 
 **订阅目的地匹配器映射一个`List`** `of` `SimpDestinationMessageMatcher i`匹配于 `SimpMessageType.SUBSCRIBE:` 的实例
 
-```
+```java
 .simpSubscribeDestMatchers("/topic/**").authenticated()
 ```
 
@@ -153,7 +153,7 @@ protected void configureInbound(
 
 首先，让我们为基本的 Spring 安全覆盖设置我们的套接字视图和控制器:
 
-```
+```java
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @EnableWebSecurity
@@ -183,7 +183,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 其次，让我们设置具有身份验证要求的实际消息目的地:
 
-```
+```java
 @Configuration
 public class SocketSecurityConfig 
   extends AbstractSecurityWebSocketMessageBrokerConfigurer {
@@ -198,7 +198,7 @@ public class SocketSecurityConfig
 
 现在，在我们的`WebSocketMessageBrokerConfigurer,` 中，我们可以注册实际的消息和 STOMP 端点:
 
-```
+```java
 @Configuration
 @EnableWebSocketMessageBroker
 public class SocketBrokerConfig 
@@ -220,7 +220,7 @@ public class SocketBrokerConfig
 
 让我们定义**一个示例套接字控制器**和端点，我们在上面提供了安全覆盖:
 
-```
+```java
 @Controller
 public class SocketController {
 
@@ -247,7 +247,7 @@ Spring WebSockets 执行开箱即用的同源策略，而普通的 WebSockets �
 
 事实上， **Spring Security 对于任何有效的 `CONNECT`消息类型都需要一个 CSRF ( `Cross Site Request Forgery`)令牌**:
 
-```
+```java
 @Controller
 public class CsrfTokenController {
     @GetMapping("/csrf")
@@ -262,7 +262,7 @@ public class CsrfTokenController {
 
 然而，Spring 的**同源策略可以通过向您的`AbstractSecurityWebSocketMessageBrokerConfigurer`添加以下配置来覆盖**:
 
-```
+```java
 @Override
 protected boolean sameOriginDisabled() {
     return true;
@@ -277,7 +277,7 @@ protected boolean sameOriginDisabled() {
 
 然而，在某些用例中，允许`iframes`利用 SockJS 传输是有益的。为此，您可以覆盖`WebSecurityConfigurerAdapter`中的默认配置:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) 
   throws Exception {
@@ -302,7 +302,7 @@ protected void configure(HttpSecurity http)
 
 下面是一个使用 SockJS 和 STOMP 演示这一概念的示例:
 
-```
+```java
 var endpoint = '/ws/?access_token=' + auth.access_token;
 var socket = new SockJS(endpoint);
 var stompClient = Stomp.over(socket);

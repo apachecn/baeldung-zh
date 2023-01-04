@@ -14,7 +14,7 @@
 
 首先，让我们熟悉一下数据模型。对于本文中的大多数示例，我们将使用`Account` 类:
 
-```
+```java
 public class Account {
 
     @NotNull
@@ -46,7 +46,7 @@ public class Account {
 
 我们可以通过将三个约束组合在一个带有合适名称的自定义注释下来避免代码重复:
 
-```
+```java
 @NotNull
 @Pattern(regexp = ".*\\d.*", message = "must contain at least one numeric character")
 @Length(min = 6, max = 32, message = "must have between 6 and 32 characters")
@@ -66,7 +66,7 @@ public @interface ValidAlphanumeric {
 
 因此，我们现在可以使用`@ValidAlphanumeric` 来验证`Account`字段:
 
-```
+```java
 public class Account {
 
     @ValidAlphanumeric
@@ -86,7 +86,7 @@ public class Account {
 
 例如，如果我们将`username`设置为`“john”,` ,我们应该会遇到两个违例，因为它太短并且不包含数字字符:
 
-```
+```java
 @Test
 public void whenUsernameIsInvalid_validationShouldReturnTwoViolations() {
     Account account = new Account();
@@ -106,7 +106,7 @@ public void whenUsernameIsInvalid_validationShouldReturnTwoViolations() {
 
 为了实现这一点，我们必须用`@ReportAsSingleViolation`来注释我们的组合约束:
 
-```
+```java
 @NotNull
 @Pattern(regexp = ".*\\d.*", message = "must contain at least one numeric character")
 @Length(min = 6, max = 32, message = "must have between 6 and 32 characters")
@@ -127,7 +127,7 @@ public @interface ValidAlphanumericWithSingleViolation {
 
 之后，我们可以使用`password`字段测试我们的新注释，并期待一个单独的违例:
 
-```
+```java
 @Test
 public void whenPasswordIsInvalid_validationShouldReturnSingleViolation() {
     Account account = new Account();
@@ -149,7 +149,7 @@ public void whenPasswordIsInvalid_validationShouldReturnSingleViolation() {
 
 为此，我们需要将`ConstraintComposition` 切换到`CompositionType.` `OR`:
 
-```
+```java
 @Pattern(regexp = ".*\\d.*", message = "must contain at least one numeric character")
 @Length(min = 6, max = 32, message = "must have between 6 and 32 characters")
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
@@ -171,7 +171,7 @@ public @interface ValidLengthOrNumericCharacter {
 
 让我们使用模型中的`nickname`字段来测试这个新注释:
 
-```
+```java
 @Test
 public void whenNicknameIsTooShortButContainsNumericCharacter_validationShouldPass() {
     Account account = new Account();
@@ -193,7 +193,7 @@ public void whenNicknameIsTooShortButContainsNumericCharacter_validationShouldPa
 
 为了验证方法的返回值，我们只需将`@SupportedValidationTarget(ValidationTarget.ANNOTATED_ELEMENT)` 添加到组合约束中:
 
-```
+```java
 @NotNull
 @Pattern(regexp = ".*\\d.*", message = "must contain at least one numeric character")
 @Length(min = 6, max = 32, message = "must have between 6 and 32 characters")
@@ -214,7 +214,7 @@ public @interface AlphanumericReturnValue {
 
 为了举例说明这一点，我们将使用`getAnInvalidAlphanumericValue` 方法，该方法用我们的自定义约束进行了注释:
 
-```
+```java
 @Component
 @Validated
 public class AccountService {
@@ -228,7 +228,7 @@ public class AccountService {
 
 现在，让我们调用这个方法，并期待抛出一个`ConstraintViolationException`:
 
-```
+```java
 @Test
 public void whenMethodReturnValuesIsInvalid_validationShouldFail() {
     assertThatThrownBy(() -> accountService.getAnInvalidAlphanumericValue())				 

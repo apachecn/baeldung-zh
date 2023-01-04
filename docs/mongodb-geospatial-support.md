@@ -20,7 +20,7 @@
 
 这里，我们有一个简单的对象，在我们的`places`集合`,`中，字段`location`作为`Point`:
 
-```
+```java
 {
   "name": "Big Ben",
   "location": {
@@ -40,7 +40,7 @@
 
 让我们看看另一个对象，它的位置被定义为一个`Polygon`:
 
-```
+```java
 {
   "name": "Hyde Park",
   "location": {
@@ -72,7 +72,7 @@
 
 但是首先，让我们定义我们的位置:
 
-```
+```java
 MongoClient mongoClient = new MongoClient();
 MongoDatabase db = mongoClient.getDatabase("myMongoDb");
 collection = db.getCollection("places");
@@ -84,13 +84,13 @@ collection = db.getCollection("places");
 
 我们可以在 Java 应用程序的`location`字段上创建一个`2d`索引，如下所示:
 
-```
+```java
 collection.createIndex(Indexes.geo2d("location"));
 ```
 
 当然，我们可以在`mongo` shell 中做同样的事情:
 
-```
+```java
 db.places.createIndex({location:"2d"})
 ```
 
@@ -100,13 +100,13 @@ db.places.createIndex({location:"2d"})
 
 类似地，我们可以使用与上面相同的`Indexes`类在 Java 中创建一个`2dsphere`索引:
 
-```
+```java
 collection.createIndex(Indexes.geo2dsphere("location"));
 ```
 
 或者在`mongo`外壳中:
 
-```
+```java
 db.places.createIndex({location:"2dsphere"})
 ```
 
@@ -122,7 +122,7 @@ db.places.createIndex({location:"2dsphere"})
 
 在下一个示例中，我们将搜索距离给定位置不到 1 公里但超过 10 米的地点:
 
-```
+```java
 @Test
 public void givenNearbyLocation_whenSearchNearby_thenFound() {
     Point currentLoc = new Point(new Position(-0.126821, 51.495885));
@@ -137,7 +137,7 @@ public void givenNearbyLocation_whenSearchNearby_thenFound() {
 
 以及在`mongo` shell 中的相应查询:
 
-```
+```java
 db.places.find({
   location: {
     $near: {
@@ -156,7 +156,7 @@ db.places.find({
 
 同样，如果我们使用一个非常远的位置，我们不会找到任何附近的地方:
 
-```
+```java
 @Test
 public void givenFarLocation_whenSearchNearby_thenNotFound() {
     Point currentLoc = new Point(new Position(-0.5243333, 51.4700223));
@@ -178,7 +178,7 @@ public void givenFarLocation_whenSearchNearby_thenNotFound() {
 
 在本例中，我们要查找距离给定中心位置 5 km 半径范围内的地点:
 
-```
+```java
 @Test
 public void givenNearbyLocation_whenSearchWithinCircleSphere_thenFound() {
     double distanceInRad = 5.0 / 6371;
@@ -195,7 +195,7 @@ public void givenNearbyLocation_whenSearchWithinCircleSphere_thenFound() {
 
 结果查询:
 
-```
+```java
 db.places.find({
   location: {
     $geoWithin: {
@@ -210,7 +210,7 @@ db.places.find({
 
 接下来，我们将搜索矩形“盒子”中存在的所有地方。我们需要定义盒子的左下位置和右上位置:
 
-```
+```java
 @Test
 public void givenNearbyLocation_whenSearchWithinBox_thenFound() {
     double lowerLeftX = -0.1427638;
@@ -228,7 +228,7 @@ public void givenNearbyLocation_whenSearchWithinBox_thenFound() {
 
 下面是在`mongo` shell 中的相应查询:
 
-```
+```java
 db.places.find({
   location: {
     $geoWithin: {
@@ -243,7 +243,7 @@ db.places.find({
 
 最后，**如果我们想要搜索的区域不是矩形或圆形，我们可以使用多边形来定义一个更具体的区域**:
 
-```
+```java
 @Test
 public void givenNearbyLocation_whenSearchWithinPolygon_thenFound() {
     ArrayList<List<Double>> points = new ArrayList<List<Double>>();
@@ -262,7 +262,7 @@ public void givenNearbyLocation_whenSearchWithinPolygon_thenFound() {
 
 下面是相应的查询:
 
-```
+```java
 db.places.find({
   location: {
     $geoWithin: {
@@ -279,7 +279,7 @@ db.places.find({
 
 我们只定义了一个有外部边界的多边形，但是我们也可以给它添加洞。每个孔将是一个`Point`的`List`;
 
-```
+```java
 geoWithinPolygon("location", points, hole1, hole2, ...)
 ```
 
@@ -293,7 +293,7 @@ geoWithinPolygon("location", points, hole1, hole2, ...)
 
 让我们在实践中看到这一点，以寻找与`Polygon`相交的任何地方为例:
 
-```
+```java
 @Test
 public void givenNearbyLocation_whenSearchUsingIntersect_thenFound() {
     ArrayList<Position> positions = new ArrayList<Position>();
@@ -313,7 +313,7 @@ public void givenNearbyLocation_whenSearchUsingIntersect_thenFound() {
 
 结果查询:
 
-```
+```java
 db.places.find({
   location:{
     $geoIntersects:{

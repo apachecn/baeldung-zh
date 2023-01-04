@@ -20,14 +20,14 @@
 
 如果我们喜欢使用延迟加载，我们可以使用类`ResourceLoader`:
 
-```
+```java
 ResourceLoader resourceLoader = new DefaultResourceLoader();
 Resource resource = resourceLoader.getResource("classpath:resource.txt");
 ```
 
 我们也可以用`@Autowired`将`ResourceLoader`注入到 bean 中:
 
-```
+```java
 @Autowired
 private ResourceLoader resourceLoader;
 ```
@@ -36,7 +36,7 @@ private ResourceLoader resourceLoader;
 
 我们可以用`@Value`将`Resource`直接注入到 Spring bean 中:
 
-```
+```java
 @Value("classpath:resource.txt")
 private Resource resource;
 ```
@@ -47,13 +47,13 @@ private Resource resource;
 
 首先，我们必须获得一个`InputStream`:
 
-```
+```java
 InputStream inputStream = resource.getInputStream();
 ```
 
 我们的下一步是把这个`InputStream`转换成一个`String`。我们可以用春天自己的`FileCopyUtils#copyToString`方法:
 
-```
+```java
 public class ResourceReader {
 
     public static String asString(Resource resource) {
@@ -72,7 +72,7 @@ public class ResourceReader {
 
 让我们也创建另一个实用方法`readFileToString,`，它将检索路径的`Resource`，并调用`asString`方法将其转换为`String`。
 
-```
+```java
 public static String readFileToString(String path) {
     ResourceLoader resourceLoader = new DefaultResourceLoader();
     Resource resource = resourceLoader.getResource(path);
@@ -86,7 +86,7 @@ public static String readFileToString(String path) {
 
 通过在加载应用程序上下文时将资源的内容注入一个或多个 Spring beans，我们可以实现一个更简洁的解决方案。通过这种方式，我们可以对需要使用该内容的各种 beans 隐藏读取资源的实现细节。
 
-```
+```java
 @Configuration
 public class LoadResourceConfig {
 
@@ -98,7 +98,7 @@ public class LoadResourceConfig {
 
 让我们声明 beans 来保存一个`@Configuration`类中的资源内容:
 
-```
+```java
 @Bean
 public String resourceString() {
     return ResourceReader.readFileToString("resource.txt");
@@ -107,7 +107,7 @@ public String resourceString() {
 
 现在让我们通过添加一个 [`@Autowired`](/web/20220630130841/https://www.baeldung.com/spring-autowire) 注释将注册的 beans 注入到字段中:
 
-```
+```java
 public class LoadResourceAsStringIntegrationTest {
     private static final String EXPECTED_RESOURCE_VALUE = "...";  // The string value of the file content
 
@@ -132,7 +132,7 @@ public class LoadResourceAsStringIntegrationTest {
 
 让我们使用`@Value`注释将文件内容注入到字段`resourceStringUsingSpel`中:
 
-```
+```java
 public class LoadResourceAsStringIntegrationTest {
     private static final String EXPECTED_RESOURCE_VALUE = "..."; // The string value of the file content
 
@@ -152,7 +152,7 @@ public class LoadResourceAsStringIntegrationTest {
 
 为了减少 SpEL 中的代码量，我们在类`ResourceReader`中创建了一个 helper 方法，它使用 Apache Commons `FileUtils`从提供的路径访问文件:
 
-```
+```java
 public class ResourceReader {
     public static String readFileToString(String path) throws IOException {
         return FileUtils.readFileToString(ResourceUtils.getFile(path), StandardCharsets.UTF_8);

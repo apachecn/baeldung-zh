@@ -28,7 +28,7 @@ JDBC 为我们提供了在事务下执行语句的选项。`Connection` 的**默
 
 但是，如果我们希望在单个事务中捆绑多个语句，这也是可以实现的:
 
-```
+```java
 Connection connection = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
 try {
     connection.setAutoCommit(false);
@@ -58,7 +58,7 @@ JPA 架构
 
 让我们看看如何创建一个`EntityManager` 并手动定义一个事务边界:
 
-```
+```java
 EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("jpa-example");
 EntityManager entityManager = entityManagerFactory.createEntityManager();
 try {
@@ -84,7 +84,7 @@ JMS 允许我们从特定于供应商的`ConnectionFactory`获得的`Connection`
 
 让我们看看如何创建一个 transactioned`Session` 来在一个事务下发送多条消息:
 
-```
+```java
 ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(CONNECTION_URL);
 Connection connection = = connectionFactory.createConnection();
 connection.start();
@@ -155,7 +155,7 @@ JTS 为应用程序提供的服务在很大程度上是透明的，因此我们�
 
 让我们看看如何使用 Atomikos 这样的事务管理器来促进带有数据库和消息队列的分布式事务。分布式事务的一个关键方面是**用事务监视器**登记和删除参与的资源。Atomikos 会帮我们处理的。我们所要做的就是使用 Atomikos 提供的抽象:
 
-```
+```java
 AtomikosDataSourceBean atomikosDataSourceBean = new AtomikosDataSourceBean();
 atomikosDataSourceBean.setXaDataSourceClassName("com.mysql.cj.jdbc.MysqlXADataSource");
 DataSource dataSource = atomikosDataSourceBean;
@@ -165,7 +165,7 @@ DataSource dataSource = atomikosDataSourceBean;
 
 类似地，我们**有一个消息队列**的抽象，它负责自动向事务监视器注册特定于供应商的 XA 资源:
 
-```
+```java
 AtomikosConnectionFactoryBean atomikosConnectionFactoryBean = new AtomikosConnectionFactoryBean();
 atomikosConnectionFactoryBean.setXaConnectionFactory(new ActiveMQXAConnectionFactory());
 ConnectionFactory connectionFactory = atomikosConnectionFactoryBean;
@@ -175,13 +175,13 @@ ConnectionFactory connectionFactory = atomikosConnectionFactoryBean;
 
 现在，Atomikos 为我们提供了拼图的最后一块拼图，一个`UserTransaction`的实例:
 
-```
+```java
 UserTransaction userTransaction = new UserTransactionImp();
 ```
 
 现在，我们准备创建一个跨数据库和消息队列的分布式事务应用程序:
 
-```
+```java
 try {
     userTransaction.begin();
 
@@ -217,7 +217,7 @@ Spring 通过用事务代码为方法创建一个代理，为我们提供了这�
 
 让我们看看如何配置 **Spring 来使用 Atomikos 作为事务管理器，并为 JPA 和 JMS** 提供事务支持。我们将从定义 JTA 类型的`PlatformTransactionManager`开始:
 
-```
+```java
 @Bean
 public PlatformTransactionManager platformTransactionManager() throws Throwable {
     return new JtaTransactionManager(
@@ -227,7 +227,7 @@ public PlatformTransactionManager platformTransactionManager() throws Throwable 
 
 这里，我们向`JTATransactionManager`提供了`UserTransaction`和`TransactionManager` 的实例。这些实例是由 Atomikos 这样的事务管理器库提供的:
 
-```
+```java
 @Bean
 public UserTransaction userTransaction() {
     return new UserTransactionImp();
@@ -243,7 +243,7 @@ public TransactionManager transactionManager() {
 
 进一步，我们需要定义`JmsTemplete`哪个核心类允许 Spring 中的同步 JMS 访问:
 
-```
+```java
 @Bean
 public JmsTemplate jmsTemplate() throws Throwable {
     return new JmsTemplate(connectionFactory());
@@ -252,7 +252,7 @@ public JmsTemplate jmsTemplate() throws Throwable {
 
 这里，`ConnectionFactory` 是由 Atomikos 提供的，它为其提供的`Connection` 启用分布式事务:
 
-```
+```java
 @Bean(initMethod = "init", destroyMethod = "close")
 public ConnectionFactory connectionFactory() {
     ActiveMQXAConnectionFactory activeMQXAConnectionFactory = new 
@@ -270,7 +270,7 @@ atomikosConnectionFactoryBean.setXaConnectionFactory(activeMQXAConnectionFactory
 
 接下来，我们需要定义一个负责在 Spring 中创建 JPA `EntityManagerFactory` bean 的`AbstractEntityManagerFactoryBean` :
 
-```
+```java
 @Bean
 public LocalContainerEntityManagerFactoryBean entityManager() throws SQLException {
     LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
@@ -284,7 +284,7 @@ public LocalContainerEntityManagerFactoryBean entityManager() throws SQLExceptio
 
 和以前一样，我们在这里的`LocalContainerEntityManagerFactoryBean` 中设置的`DataSource` 是由启用了分布式事务的 Atomikos 提供的:
 
-```
+```java
 @Bean(initMethod = "init", destroyMethod = "close")
 public DataSource dataSource() throws SQLException {
     MysqlXADataSource mysqlXaDataSource = new MysqlXADataSource();
@@ -308,7 +308,7 @@ public DataSource dataSource() throws SQLException {
 
 在 Spring 中使用事务最简单的方法是声明性支持。这里，我们有**一个方便的注释，可以应用于方法甚至类**。这只是为我们的代码启用了全局事务:
 
-```
+```java
 @PersistenceContext
 EntityManager entityManager;
 
@@ -328,7 +328,7 @@ public void process(ENTITY, MESSAGE) {
 
 虽然声明性支持非常优雅和简单，但它并没有为我们提供更精确地控制事务边界的好处。因此，如果我们确实需要实现这一点，Spring 提供了编程支持来划分事务边界:
 
-```
+```java
 @Autowired
 private PlatformTransactionManager transactionManager;
 

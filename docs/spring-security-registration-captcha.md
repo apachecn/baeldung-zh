@@ -16,14 +16,14 @@
 
 我们将密钥存储在`application.properties:`中
 
-```
+```java
 google.recaptcha.key.site=6LfaHiITAAAA...
 google.recaptcha.key.secret=6LfaHiITAAAA...
 ```
 
 并使用标注了`@ConfigurationProperties:`的 bean 将它们暴露给 Spring
 
-```
+```java
 @Component
 @ConfigurationProperties(prefix = "google.recaptcha.key")
 public class CaptchaSettings {
@@ -43,7 +43,7 @@ public class CaptchaSettings {
 
 当提交时，小部件将追加**请求参数`g-recaptcha-response`:**
 
-```
+```java
 <!DOCTYPE html>
 <html>
 <head>
@@ -73,7 +73,7 @@ public class CaptchaSettings {
 
 端点接受 URL[https://www.google.com/recaptcha/api/siteverify](https://web.archive.org/web/20220917055838/https://www.google.com/recaptcha/api/siteverify)上的 HTTP 请求，带有查询参数`**secret**`、`**response**`和`**remoteip.**` ，它返回一个 json 响应，其模式为:
 
-```
+```java
 {
     "success": true|false,
     "challenge_ts": timestamp,
@@ -86,7 +86,7 @@ public class CaptchaSettings {
 
 使用`HttpServletRequest`从请求参数`g-recaptcha-response`中检索用户对 reCAPTCHA 质询的响应，并用我们的`CaptchaService`进行验证。处理响应时引发的任何异常都将中止注册逻辑的其余部分:
 
-```
+```java
 public class RegistrationController {
 
     @Autowired
@@ -113,7 +113,7 @@ public class RegistrationController {
 
 如果响应看起来合法，我们就用**密钥**、**验证码响应**和客户端的 **IP 地址**向 web 服务发出请求:
 
-```
+```java
 public class CaptchaService implements ICaptchaService {
 
     @Autowired
@@ -151,7 +151,7 @@ public class CaptchaService implements ICaptchaService {
 
 用`Jackson`注释修饰的 Java-bean 封装了验证响应:
 
-```
+```java
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({
@@ -223,7 +223,7 @@ public class GoogleResponse {
 
 我们在客户端的注册错误处理程序中这样做，通过调用库的`grecaptcha`小部件上的 reset:
 
-```
+```java
 register(event){
     event.preventDefault();
 
@@ -255,7 +255,7 @@ register(event){
 
 虽然我们需要一个更加分层的方法来真正缓解 DoS，但我们可以实现一个基本缓存，将客户端限制为 4 个失败的验证码响应:
 
-```
+```java
 public class ReCaptchaAttemptService {
     private int MAX_ATTEMPT = 4;
     private LoadingCache<String, Integer> attemptsCache;
@@ -291,7 +291,7 @@ public class ReCaptchaAttemptService {
 
 如果客户端已经超过尝试限制，则首先通过中止来合并缓存。否则，当处理一个不成功的`GoogleResponse`时，我们记录包含客户端响应错误的尝试。成功的验证会清除尝试缓存:
 
-```
+```java
 public class CaptchaService implements ICaptchaService {
 
     @Autowired
@@ -335,7 +335,7 @@ public class CaptchaService implements ICaptchaService {
 
 注册后，我们需要用新的密钥和我们选择的分数阈值更新`application.properties` :
 
-```
+```java
 google.recaptcha.key.site=6LefKOAUAAAAAE...
 google.recaptcha.key.secret=6LefKOAUAAAA...
 google.recaptcha.key.threshold=0.5
@@ -345,7 +345,7 @@ google.recaptcha.key.threshold=0.5
 
 接下来，让我们更新我们的`CaptchaSettings`类:
 
-```
+```java
 @Component
 @ConfigurationProperties(prefix = "google.recaptcha.key")
 public class CaptchaSettings {
@@ -362,7 +362,7 @@ public class CaptchaSettings {
 
 在我们的注册表单中，我们添加了一个隐藏字段，用于存储从对`grecaptcha.execute`函数的调用中收到的响应令牌:
 
-```
+```java
 <!DOCTYPE html>
 <html>
 <head>
@@ -398,7 +398,7 @@ public class CaptchaSettings {
 
 响应 JSON 对象将包含两个附加属性:
 
-```
+```java
 {
     ...
     "score": number,
@@ -416,7 +416,7 @@ Action 是 Google 引入的一个新概念，这样我们就可以在同一个�
 
 使用`HttpServletRequest`从`response`请求参数中检索 reCAPTCHA v3 响应令牌，并用我们的`CaptchaService`进行验证。该机制与 reCAPTCHA 中上方[所示的机制相同:](/web/20220917055838/https://www.baeldung.com/spring-security-registration-captcha#Retrieve)
 
-```
+```java
 public class RegistrationController {
 
     @Autowired
@@ -441,7 +441,7 @@ public class RegistrationController {
 
 重构后的`CaptchaService`验证服务类包含一个`processResponse`方法，类似于先前版本的 [`processResponse`方法](/web/20220917055838/https://www.baeldung.com/spring-security-registration-captcha#Validation)，但是它会仔细检查`GoogleResponse`的`action`和`score`参数:
 
-```
+```java
 public class CaptchaService implements ICaptchaService {
 
     public static final String REGISTER_ACTION = "register";
@@ -470,7 +470,7 @@ public class CaptchaService implements ICaptchaService {
 
 我们需要将新的属性`score`和`action`添加到 [`GoogleResponse`](/web/20220917055838/https://www.baeldung.com/spring-security-registration-captcha#Objectifying) Java bean 中:
 
-```
+```java
 @JsonPropertyOrder({
     "success",
     "score", 

@@ -18,7 +18,7 @@ Jackson 是一个广泛使用的 Java 库，它允许我们方便地序列化/�
 
 让我们从一个简单的 POJO 类开始:
 
-```
+```java
 public class Book {
     private Integer bookId;
     private String title;
@@ -29,7 +29,7 @@ public class Book {
 
 假设我们有一个由 JSON 数组组成的`books.json`文件，其中包含三本书:
 
-```
+```java
 [ {
     "bookId" : 1,
     "title" : "A Song of Ice and Fire",
@@ -51,7 +51,7 @@ public class Book {
 
 让我们看看是否可以通过将这个 JSON 文件反序列化为一个`List<Book>`对象并从中读取元素来重现类转换问题:
 
-```
+```java
 @Test
 void givenJsonString_whenDeserializingToList_thenThrowingClassCastException() 
   throws JsonProcessingException {
@@ -92,7 +92,7 @@ void givenJsonString_whenDeserializingToList_thenThrowingClassCastException()
 
 在这种情况下，我们只需要将`new TypeReference<List<Book>>() {}`作为第二个参数传递:
 
-```
+```java
 @Test
 void givenJsonString_whenDeserializingWithTypeReference_thenGetExpectedList() 
   throws JsonProcessingException {
@@ -117,13 +117,13 @@ void givenJsonString_whenDeserializingWithTypeReference_thenGetExpectedList()
 
 因此，我们可以用这个要求构造一个`CollectionType`:
 
-```
+```java
 objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, Book.class);
 ```
 
 现在让我们编写一个单元测试，看看向`readValue()`方法传递一个`JavaType`是否能解决我们的问题:
 
-```
+```java
 @Test
 void givenJsonString_whenDeserializingWithJavaType_thenGetExpectedList() 
   throws JsonProcessingException {
@@ -150,7 +150,7 @@ void givenJsonString_whenDeserializingWithJavaType_thenGetExpectedList()
 
 首先，让我们使用一个`TypeReference `对象和`objectMapper.convertValue()`方法创建一个测试方法:
 
-```
+```java
 @Test
 void givenJsonString_whenDeserializingWithConvertValueAndTypeReference_thenGetExpectedList() 
   throws JsonProcessingException {
@@ -164,7 +164,7 @@ void givenJsonString_whenDeserializingWithConvertValueAndTypeReference_thenGetEx
 
 现在让我们看看当我们将一个`JavaType`对象传递给`objectMapper.convertValue()`方法时会发生什么:
 
-```
+```java
 @Test
 void givenJsonString_whenDeserializingWithConvertValueAndJavaType_thenGetExpectedList() 
   throws JsonProcessingException {
@@ -187,7 +187,7 @@ void givenJsonString_whenDeserializingWithConvertValueAndJavaType_thenGetExpecte
 
 **我们可以在调用`objectMapper.readValue()` 方法**时传递一个`JavaType`对象:
 
-```
+```java
 public static <T> List<T> jsonArrayToList(String json, Class<T> elementClass) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
     CollectionType listType = 
@@ -198,7 +198,7 @@ public static <T> List<T> jsonArrayToList(String json, Class<T> elementClass) th
 
 接下来，让我们创建一个单元测试方法来验证它是否如我们预期的那样工作:
 
-```
+```java
 @Test
 void givenJsonString_whenCalljsonArrayToList_thenGetExpectedList() throws IOException {
     String jsonString = readFile("/to-java-collection/books.json");
@@ -214,7 +214,7 @@ void givenJsonString_whenCalljsonArrayToList_thenGetExpectedList() throws IOExce
 
 让我们创建一个通用的实用方法，并将相应的`TypeReference`对象传递给`objectMapper.readValue()`方法:
 
-```
+```java
 public static <T> List<T> jsonArrayToList(String json, Class<T> elementClass) throws IOException {
     return new ObjectMapper().readValue(json, new TypeReference<List<T>>() {});
 } 
@@ -224,7 +224,7 @@ public static <T> List<T> jsonArrayToList(String json, Class<T> elementClass) th
 
 如果我们再次运行测试方法，我们将得到以下结果:
 
-```
+```java
 java.lang.ClassCastException: class java.util.LinkedHashMap cannot be cast to class com.baeldung...Book ...
 ```
 
@@ -242,7 +242,7 @@ java.lang.ClassCastException: class java.util.LinkedHashMap cannot be cast to cl
 
 首先，让我们创建一个 XML 文件`books.xml`:
 
-```
+```java
 <ArrayList>
     <item>
         <bookId>1</bookId>
@@ -264,7 +264,7 @@ java.lang.ClassCastException: class java.util.LinkedHashMap cannot be cast to cl
 
 接下来，就像我们对 JSON 文件所做的那样，我们创建另一个单元测试方法来验证是否会抛出类转换异常:
 
-```
+```java
 @Test
 void givenXml_whenDeserializingToList_thenThrowingClassCastException() 
   throws JsonProcessingException {
@@ -285,7 +285,7 @@ void givenXml_whenDeserializingToList_thenThrowingClassCastException()
 
 例如，我们可以将一个`TypeReference`对象传递给`xmlMapper.readValue()`方法来解决问题:
 
-```
+```java
 @Test
 void givenXml_whenDeserializingWithTypeReference_thenGetExpectedList() 
   throws JsonProcessingException {

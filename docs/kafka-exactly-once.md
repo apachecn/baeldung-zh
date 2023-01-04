@@ -24,7 +24,7 @@
 
 为了使用事务 API，我们将需要 pom 中的 [Kafka 的 Java 客户端](https://web.archive.org/web/20221129002105/https://search.maven.org/search?q=g:org.apache.kafka%20AND%20a:kafka-clients):
 
-```
+```java
 <dependency>
     <groupId>org.apache.kafka</groupId>
     <artifactId>kafka-clients</artifactId>
@@ -44,14 +44,14 @@
 
 所以我们先来补充一个典型的卡夫卡制作人。
 
-```
+```java
 Properties producerProps = new Properties();
 producerProps.put("bootstrap.servers", "localhost:9092");
 ```
 
 此外，我们需要指定一个`transactional.id`并启用`idempotence`:
 
-```
+```java
 producerProps.put("enable.idempotence", "true");
 producerProps.put("transactional.id", "prod-1");
 
@@ -68,7 +68,7 @@ KafkaProducer<String, String> producer = new KafkaProducer(producerProps);
 
 一旦我们准备好了，那么我们还需要调用`initTransaction `来准备生产者使用的事务:
 
-```
+```java
 producer.initTransactions();
 ```
 
@@ -80,7 +80,7 @@ producer.initTransactions();
 
 当我们消费时，我们可以按顺序阅读一个主题分区上的所有消息。虽然，**我们可以用`isolation.level`来表示我们应该等到相关的事务被提交后再读取事务消息**:
 
-```
+```java
 Properties consumerProps = new Properties();
 consumerProps.put("bootstrap.servers", "localhost:9092");
 consumerProps.put("group.id", "my-group-id");
@@ -98,7 +98,7 @@ consumer.subscribe(singleton(“sentences”));
 
 既然我们已经将生产者和消费者都配置为事务性地读写，我们就可以从我们的输入主题中消费记录，并计算每个记录中的每个单词:
 
-```
+```java
 ConsumerRecords<String, String> records = consumer.poll(ofSeconds(60));
 Map<String, Integer> wordCountMap =
   records.records(new TopicPartition("input", 0))
@@ -119,13 +119,13 @@ Map<String, Integer> wordCountMap =
 
 将我们的计数作为新消息发送，但是在同一个事务中，我们调用`beginTransaction`:
 
-```
+```java
 producer.beginTransaction();
 ```
 
 然后，我们可以将每一个都写入我们的“计数”主题，关键字是单词，计数是值:
 
-```
+```java
 wordCountMap.forEach((key,value) -> 
     producer.send(new ProducerRecord<String,String>("counts",key,value.toString())));
 ```
@@ -140,7 +140,7 @@ wordCountMap.forEach((key,value) ->
 
 我们可以在一个调用中完成所有这些，但是我们首先需要计算每个主题分区的偏移量:
 
-```
+```java
 Map<TopicPartition, OffsetAndMetadata> offsetsToCommit = new HashMap<>();
 for (TopicPartition partition : records.partitions()) {
     List<ConsumerRecord<String, String>> partitionedRecords = records.records(partition);
@@ -153,7 +153,7 @@ for (TopicPartition partition : records.partitions()) {
 
 然后，我们可以将计算出的偏移量发送给事务:
 
-```
+```java
 producer.sendOffsetsToTransaction(offsetsToCommit, "my-group-id");
 ```
 
@@ -161,7 +161,7 @@ producer.sendOffsetsToTransaction(offsetsToCommit, "my-group-id");
 
 最后，我们可以提交事务，这将自动地向`consumer_offsets `主题以及事务本身写入偏移量:
 
-```
+```java
 producer.commitTransaction();
 ```
 
@@ -169,7 +169,7 @@ producer.commitTransaction();
 
 当然，如果我们在处理过程中出现任何问题，例如，如果我们捕捉到一个异常，我们可以调用`abortTransaction:`
 
-```
+```java
 try {
   // ... read from input topic
   // ... transform

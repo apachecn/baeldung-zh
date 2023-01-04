@@ -29,7 +29,7 @@
 
 作为一个组件对象，我们将定义一个简单的`Department`接口:
 
-```
+```java
 public interface Department {
     void printDepartmentName();
 }
@@ -39,7 +39,7 @@ public interface Department {
 
 对于叶组件，让我们定义财务和销售部门的类:
 
-```
+```java
 public class FinancialDepartment implements Department {
 
     private Integer id;
@@ -55,7 +55,7 @@ public class FinancialDepartment implements Department {
 
 `SalesDepartment,`第二叶类，也类似:
 
-```
+```java
 public class SalesDepartment implements Department {
 
     private Integer id;
@@ -79,7 +79,7 @@ public class SalesDepartment implements Department {
 
 作为一个复合类，让我们创建一个`HeadDepartment`类:
 
-```
+```java
 public class HeadDepartment implements Department {
     private Integer id;
     private String name;
@@ -114,7 +114,7 @@ public class HeadDepartment implements Department {
 
 出于测试的目的，让我们来看看一个`CompositeDemo`类:
 
-```
+```java
 public class CompositeDemo {
     public static void main(String args[]) {
         Department salesDepartment = new SalesDepartment(
@@ -137,7 +137,7 @@ public class CompositeDemo {
 
 最后可以测试一下`printDepartmentName()`的构图方法。如我们所料，**输出包含每个叶组件的类名**:
 
-```
+```java
 SalesDepartment
 FinancialDepartment
 ```

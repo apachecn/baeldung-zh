@@ -18,7 +18,7 @@
 
 首先，让我们看看这个例子的应用程序。我们有一个简单的 Spring Boot 应用程序:
 
-```
+```java
 @SpringBootApplication
 public class DenyApplication {
     public static void main(String[] args) {
@@ -29,7 +29,7 @@ public class DenyApplication {
 
 其次，我们有一个安全配置。我们设置了两个用户并启用了前/后注释:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -46,7 +46,7 @@ public class DenyMethodSecurityConfig extends GlobalMethodSecurityConfiguration 
 
 最后，我们有一个带有两种方法的 rest 控制器。然而，我们“忘记”保护`/bye`端点:
 
-```
+```java
 @RestController
 public class DenyOnMissingController {
     @GetMapping(path = "hello")
@@ -71,7 +71,7 @@ public class DenyOnMissingController {
 
 使用 [MockMvc](/web/20220630135241/https://www.baeldung.com/integration-testing-in-spring#3-mocking-web-context-beans) 我们可以建立一个测试。我们检查我们的非注释方法是否仍然可访问:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = DenyApplication.class)
 public class DenyOnMissingControllerIntegrationTest {
@@ -112,7 +112,7 @@ public class DenyOnMissingControllerIntegrationTest {
 
 让我们扩展我们的`MethodSecurityConfig`类并设置一个`MethodSecurityMetadataSource:`
 
-```
+```java
 @Configuration 
 @EnableWebSecurity 
 @EnableGlobalMethodSecurity(prePostEnabled = true) 
@@ -128,7 +128,7 @@ public class DenyMethodSecurityConfig extends GlobalMethodSecurityConfiguration 
 
 现在让我们实现`MethodSecurityMetadataSource`接口:
 
-```
+```java
 public class CustomPermissionAllowedMethodSecurityMetadataSource 
   extends AbstractFallbackMethodSecurityMetadataSource {
     @Override

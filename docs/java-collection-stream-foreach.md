@@ -12,13 +12,13 @@
 
 首先，让我们创建一个要迭代的列表:
 
-```
+```java
 List<String> list = Arrays.asList("A", "B", "C", "D");
 ```
 
 最直接的方法是使用增强的 for 循环:
 
-```
+```java
 for(String s : list) {
     //do something with s
 } 
@@ -28,20 +28,20 @@ for(String s : list) {
 
 我们可以直接在产品系列上这样做:
 
-```
+```java
 Consumer<String> consumer = s -> { System.out::println }; 
 list.forEach(consumer); 
 ```
 
 或者我们可以在集合的流上调用`forEach()`:
 
-```
+```java
 list.stream().forEach(consumer); 
 ```
 
 两个版本都将遍历列表并打印所有元素:
 
-```
+```java
 ABCD ABCD
 ```
 
@@ -59,7 +59,7 @@ ABCD ABCD
 
 让我们看一个例子，首先在集合上直接调用`forEach()`，然后在并行流上调用:
 
-```
+```java
 list.forEach(System.out::print);
 System.out.print(" ");
 list.parallelStream().forEach(System.out::print); 
@@ -69,13 +69,13 @@ list.parallelStream().forEach(System.out::print);
 
 下面是一个可能的输出:
 
-```
+```java
 ABCD CDBA
 ```
 
 这是另一个:
 
-```
+```java
 ABCD DBCA
 ```
 
@@ -83,7 +83,7 @@ ABCD DBCA
 
 让我们用自定义迭代器定义一个列表，以逆序遍历集合:
 
-```
+```java
 class ReverseList extends ArrayList<String> {
 
     @Override
@@ -120,7 +120,7 @@ class ReverseList extends ArrayList<String> {
 
 然后我们将直接在集合上使用`forEach()`再次迭代列表，然后在流上迭代:
 
-```
+```java
 List<String> myList = new ReverseList();
 myList.addAll(list);
 
@@ -131,7 +131,7 @@ myList.stream().forEach(System.out::print);
 
 我们得到了不同的结果:
 
-```
+```java
 DCBA ABCD 
 ```
 
@@ -153,7 +153,7 @@ DCBA ABCD
 
 让我们定义一个删除列表中最后一个元素(“D”)的操作:
 
-```
+```java
 Consumer<String> removeElement = s -> {
     System.out.println(s + " " + list.size());
     if (s != null && s.equals("A")) {
@@ -164,13 +164,13 @@ Consumer<String> removeElement = s -> {
 
 当我们遍历列表时，在打印第一个元素(“A”)后，最后一个元素被删除:
 
-```
+```java
 list.forEach(removeElement);
 ```
 
 **由于`forEach()`是快速失效的，我们停止迭代，在处理下一个元素之前看到一个异常**:
 
-```
+```java
 A 4
 Exception in thread "main" java.util.ConcurrentModificationException
 	at java.util.ArrayList.forEach(ArrayList.java:1252)
@@ -179,13 +179,13 @@ Exception in thread "main" java.util.ConcurrentModificationException
 
 让我们看看如果使用 *stream()会发生什么。forEach()* 改为:
 
-```
+```java
 list.stream().forEach(removeElement);
 ```
 
 在我们看到一个异常之前，我们继续遍历整个列表。
 
-```
+```java
 A 4
 B 3
 C 3
@@ -202,7 +202,7 @@ Exception in thread "main" java.util.ConcurrentModificationException
 
 我们可以在遍历列表时改变元素:
 
-```
+```java
 list.forEach(e -> {
     list.set(3, "E");
 });

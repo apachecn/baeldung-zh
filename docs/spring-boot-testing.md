@@ -30,7 +30,7 @@ This article will show how to use dependency injection to insert Mockito mocks i
 
 让我们首先添加我们的测试依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-test</artifactId>
@@ -52,7 +52,7 @@ H2 数据库是我们的内存数据库。它消除了为测试目的配置和�
 
 从 Spring Boot 2.4 开始，JUnit 5 的老式引擎已经从`spring-boot-starter-test`中移除。如果我们仍然想使用 JUnit 4 编写测试，我们需要添加以下 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.junit.vintage</groupId>
     <artifactId>junit-vintage-engine</artifactId>
@@ -76,7 +76,7 @@ H2 数据库是我们的内存数据库。它消除了为测试目的配置和�
 
 集成测试需要启动一个容器来执行测试用例。因此，这需要一些额外的设置—所有这些在 Spring Boot 都很容易:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(
   webEnvironment = SpringBootTest.WebEnvironment.MOCK,
@@ -104,7 +104,7 @@ public class EmployeeRestControllerIntegrationTest {
 
 `application-integrationtest.properties`包含配置持久存储的详细信息:
 
-```
+```java
 spring.datasource.url = jdbc:h2:mem:test
 spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.H2Dialect
 ```
@@ -113,7 +113,7 @@ spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.H2Dialect
 
 集成测试的测试用例可能看起来类似于`Controller`层单元测试:
 
-```
+```java
 @Test
 public void givenEmployees_whenGetEmployees_thenStatus200()
   throws Exception {
@@ -135,7 +135,7 @@ public void givenEmployees_whenGetEmployees_thenStatus200()
 
 正如我们在上一节中看到的，用`@SpringBootTest`注释的测试将引导完整的应用程序上下文，这意味着我们可以`@Autowire`将组件扫描获得的任何 bean 加入到我们的测试中:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class EmployeeServiceImplIntegrationTest {
@@ -149,7 +149,7 @@ public class EmployeeServiceImplIntegrationTest {
 
 然而，我们可能希望避免引导真实的应用程序上下文，而是使用特殊的测试配置。我们可以通过`@TestConfiguration`注释来实现这一点。有两种使用注释的方法。要么在同一个测试类中的一个静态内部类上，我们希望在这里`@Autowire`bean:
 
-```
+```java
 @RunWith(SpringRunner.class)
 public class EmployeeServiceImplIntegrationTest {
 
@@ -170,7 +170,7 @@ public class EmployeeServiceImplIntegrationTest {
 
 或者，我们可以创建一个单独的测试配置类:
 
-```
+```java
 @TestConfiguration
 public class EmployeeServiceImplTestContextConfiguration {
 
@@ -185,7 +185,7 @@ public class EmployeeServiceImplTestContextConfiguration {
 
 用`@TestConfiguration`标注的配置类被排除在组件扫描之外，因此我们需要在我们想要`@Autowire`它的每个测试中显式地导入它。我们可以用`@Import`注解来做到这一点:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @Import(EmployeeServiceImplTestContextConfiguration.class)
 public class EmployeeServiceImplIntegrationTest {
@@ -201,7 +201,7 @@ public class EmployeeServiceImplIntegrationTest {
 
 我们的`Service`层代码依赖于我们的`Repository:`
 
-```
+```java
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -221,7 +221,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 让我们先来看看测试类的框架:
 
-```
+```java
 @RunWith(SpringRunner.class)
 public class EmployeeServiceImplIntegrationTest {
 
@@ -248,7 +248,7 @@ public class EmployeeServiceImplIntegrationTest {
 
 这里另一个有趣的事情是`@MockBean`的使用。它[为`EmployeeRepository`创建一个模拟](/web/20221212193351/https://www.baeldung.com/mockito-mock-methods)，它可以用来绕过对实际`EmployeeRepository`的调用:
 
-```
+```java
 @Before
 public void setUp() {
     Employee alex = new Employee("alex");
@@ -260,7 +260,7 @@ public void setUp() {
 
 由于设置已经完成，测试用例将会更简单:
 
-```
+```java
 @Test
 public void whenValidName_thenEmployeeShouldBeFound() {
     String name = "alex";
@@ -275,7 +275,7 @@ public void whenValidName_thenEmployeeShouldBeFound() {
 
 我们将使用一个名为`Employee,` 的实体，它有一个`id`和一个`name`属性:
 
-```
+```java
 @Entity
 @Table(name = "person")
 public class Employee {
@@ -293,7 +293,7 @@ public class Employee {
 
 这是我们使用 Spring Data JPA 的存储库:
 
-```
+```java
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
@@ -306,7 +306,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
 首先，让我们创建测试类的框架:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class EmployeeRepositoryIntegrationTest {
@@ -339,7 +339,7 @@ public class EmployeeRepositoryIntegrationTest {
 
 现在让我们编写我们的第一个测试用例:
 
-```
+```java
 @Test
 public void whenFindByName_thenReturnEmployee() {
     // given
@@ -364,7 +364,7 @@ public void whenFindByName_thenReturnEmployee() {
 
 我们的`Controller`依赖于`Service`层；为了简单起见，我们只包括一个方法:
 
-```
+```java
 @RestController
 @RequestMapping("/api")
 public class EmployeeRestController {
@@ -381,7 +381,7 @@ public class EmployeeRestController {
 
 因为我们只关注于`Controller`代码，所以很自然地在我们的单元测试中模仿`Service`层代码:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @WebMvcTest(EmployeeRestController.class)
 public class EmployeeRestControllerIntegrationTest {
@@ -404,7 +404,7 @@ public class EmployeeRestControllerIntegrationTest {
 
 说到这里，让我们来编写我们的测试用例:
 
-```
+```java
 @Test
 public void givenEmployees_whenGetEmployees_thenReturnJsonArray()
   throws Exception {

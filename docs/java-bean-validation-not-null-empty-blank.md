@@ -18,7 +18,7 @@
 
 这里是我们的`pom.xml`文件的相关部分:
 
-```
+```java
 <dependencies> 
     <dependency> 
         <groupId>org.hibernate</groupId>
@@ -39,7 +39,7 @@
 
 接下来，让我们实现一个简单的`UserNotNull`域类，并用`@NotNull`注释约束的`name`字段:
 
-```
+```java
 public class UserNotNull {
 
     @NotNull(message = "Name may not be null")
@@ -53,7 +53,7 @@ public class UserNotNull {
 
 为此，让我们为该类创建一个简单的单元测试，并验证它的几个实例:
 
-```
+```java
 @BeforeClass
 public static void setupValidatorInstance() {
     validator = Validation.buildDefaultValidatorFactory().getValidator();
@@ -88,7 +88,7 @@ public void whenEmptyName_thenNoConstraintViolations() {
 
 为了更好地理解这一点，让我们看一下 [`NotNullValidator`类](https://web.archive.org/web/20221103025345/http://docs.jboss.org/ejb3/app-server/HibernateAnnotations/api/org/hibernate/validator/NotNullValidator.html#isValid(java.lang.Object)) ' `isValid()`方法，这是`@NotNull`约束使用的方法。该方法的实现非常简单:
 
-```
+```java
 public boolean isValid(Object object) {
     return object != null;  
 }
@@ -100,7 +100,7 @@ public boolean isValid(Object object) {
 
 现在让我们实现一个示例`UserNotEmpty`类并使用`@NotEmpty`约束:
 
-```
+```java
 public class UserNotEmpty {
 
     @NotEmpty(message = "Name may not be empty")
@@ -112,7 +112,7 @@ public class UserNotEmpty {
 
 有了这个类，让我们通过给`name`字段分配不同的值来测试它:
 
-```
+```java
 @Test
 public void whenNotEmptyName_thenNoConstraintViolations() {
     UserNotEmpty user = new UserNotEmpty("John");
@@ -146,7 +146,7 @@ public void whenNullName_thenOneConstraintViolation() {
 
 这样做时，我们还会强制对象的最小和最大大小值在指定的最小/最大范围内:
 
-```
+```java
 @NotEmpty(message = "Name may not be empty")
 @Size(min = 2, max = 32, message = "Name must be between 2 and 32 characters long") 
 private String name; 
@@ -156,7 +156,7 @@ private String name;
 
 类似地，我们可以用`@NotBlank`注释约束一个类字段:
 
-```
+```java
 public class UserNotBlank {
 
     @NotBlank(message = "Name may not be blank")
@@ -169,7 +169,7 @@ public class UserNotBlank {
 
 同样，我们可以实现一个单元测试来理解`@NotBlank`约束是如何工作的:
 
-```
+```java
 @Test
 public void whenNotBlankName_thenNoConstraintViolations() {
     UserNotBlank user = new UserNotBlank("John");
@@ -205,7 +205,7 @@ public void whenNullName_thenOneConstraintViolation() {
 
 `@NotBlank`注释使用了 [`NotBlankValidator`](https://web.archive.org/web/20221103025345/https://docs.jboss.org/hibernate/validator/6.0/api/org/hibernate/validator/internal/constraintvalidators/hv/NotBlankValidator.html) 类，该类检查字符序列的修整长度是否为空:
 
-```
+```java
 public boolean isValid(
   CharSequence charSequence, 
   ConstraintValidatorContext constraintValidatorContext)

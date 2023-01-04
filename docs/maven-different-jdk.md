@@ -10,7 +10,7 @@
 
 首先，让我们来看看一个可能的系统配置，其中 [Maven](/web/20220628090731/https://www.baeldung.com/maven) 使用了不同于系统中默认设置的 Java 版本。Maven 配置返回:
 
-```
+```java
 $ mvn -v
 Apache Maven 3.3.9 (bb52d8502b132ec0a5a3f4c09453c07478323dc5; 2015-11-10T17:41:47+01:00)
 Maven home: C:\Users\test\apps\maven\3.3.9
@@ -24,7 +24,7 @@ OS name: "windows 10", version: "10.0", arch: "amd64", family: "dos"
 
 现在让我们看看我们系统中设置的 Java 版本:
 
-```
+```java
 $ java -version
 java version "13.0.2" 2020-01-14
 Java(TM) SE Runtime Environment (build 13.0.2+8)
@@ -37,7 +37,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 13.0.2+8, mixed mode, sharing)
 
 让我们来看看默认设置。综上所述，****[`JAVA_HOME`](/web/20220628090731/https://www.baeldung.com/java-home-on-windows-7-8-10-mac-os-x-linux) 变量是一个强制的 Maven 配置**。此外，如果没有设置，`mvn`命令会返回一条错误消息:**
 
-```
+```java
 $ mvn
 Error: JAVA_HOME not found in your environment.
 Please set the JAVA_HOME variable in your environment to match the
@@ -62,13 +62,13 @@ location of your Java installation.
 
 它可以在`mvn`命令开始时执行的用户定义脚本中设置。**在 Windows 中，我们将其设置在`%HOME%\mavenrc_pre.bat`或`%HOME%\mavenrc_pre.cmd`文件**中。Maven 两者都支持。蝙蝠和。cmd '文件。在文件中，我们简单地设置了`JAVA_HOME`变量:
 
-```
+```java
 set JAVA_HOME="C:\my\java\jdk-11.0.10"
 ```
 
 另一方面， **Linux 有用于相同目的的`$HOME/.mavenrc` 文件**。这里，我们以几乎相同的方式设置变量:
 
-```
+```java
 JAVA_HOME=C:/my/java/jdk-11.0.10
 ```
 

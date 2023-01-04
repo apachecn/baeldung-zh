@@ -26,22 +26,22 @@
 
 下载后，我们可以检查它是否在我们的平台上工作:
 
-```
+```java
 $ ./profiler.sh --version
 ```
 
-```
+```java
 Async-profiler 1.7.1 built on May 14 2020
 Copyright 2016-2020 Andrei Pangin
 ```
 
 事先用`async-profiler`检查所有可用选项总是一个好主意:
 
-```
+```java
 $ ./profiler.sh
 ```
 
-```
+```java
 Usage: ./profiler.sh [action] [options] 
 Actions:
   start             start profiling and return immediately
@@ -90,13 +90,13 @@ Options:
 
 首先，我们将把`perf_event_paranoid` 设置为 1，这将允许分析器收集性能信息:
 
-```
+```java
 $ sudo sh -c 'echo 1 >/proc/sys/kernel/perf_event_paranoid'
 ```
 
 然后，我们将把`kptr_restrict`设置为 0，以消除公开内核地址的限制:
 
-```
+```java
 $ sudo sh -c 'echo 0 >/proc/sys/kernel/kptr_restrict'
 ```
 
@@ -104,7 +104,7 @@ $ sudo sh -c 'echo 0 >/proc/sys/kernel/kptr_restrict'
 
 现在我们的平台已经准备好了，我们可以构建我们的分析应用程序，并使用 Java 命令运行它:
 
-```
+```java
 $ java -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints -jar path-to-jar-file
 ```
 
@@ -118,7 +118,7 @@ $ java -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints -jar path-to-jar-f
 
 让我们使用 PID 来分析我们的应用程序:
 
-```
+```java
 $ ./profiler.sh -e cpu -d 30 -o summary 66959
 Started [cpu] profiling
 --- Execution profile --- 
@@ -133,7 +133,7 @@ Frame buffer usage  : 0.069%
 
 让我们在 CPU 分析我们的应用程序时创建 HTML 输出:
 
-```
+```java
 $ ./profiler.sh -e cpu -d 30 -f cpu_profile.html 66959
 ```
 
@@ -145,7 +145,7 @@ $ ./profiler.sh -e cpu -d 30 -f cpu_profile.html 66959
 
 让我们为我们的应用程序的 CPU 配置文件使用`.svg`文件扩展名来生成一个火焰图:
 
-```
+```java
 $ ./profiler.sh -e cpu -d 30 -f cpu_profile.svg 66959
 ```
 
@@ -161,7 +161,7 @@ $ ./profiler.sh -e cpu -d 30 -f cpu_profile.svg 66959
 
 通过使用`alloc`事件，我们可以让分析器收集我们的分析应用程序的堆分配:
 
-```
+```java
 $ ./profiler.sh -e alloc -d 30 -f alloc_profile.svg 66255
 ```
 
@@ -177,7 +177,7 @@ $ ./profiler.sh -e alloc -d 30 -f alloc_profile.svg 66255
 
 通过定义`wall`事件，我们可以配置分析器来收集所有线程的样本:
 
-```
+```java
 $ ./profiler.sh -e wall -t -d 30 -f wall_clock_profile.svg 66959
 ```
 
@@ -187,11 +187,11 @@ $ ./profiler.sh -e wall -t -d 30 -f wall_clock_profile.svg 66959
 
 此外，我们可以通过使用`list`选项来检查 JVM 支持的所有分析事件:
 
-```
+```java
 $ ./profiler.sh list 66959
 ```
 
-```
+```java
 Basic events:
   cpu
   alloc

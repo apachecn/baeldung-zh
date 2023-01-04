@@ -26,7 +26,7 @@ OkHttp 支持 Android 2.3 及以上版本。对于 Java，最低要求是 1.7。
 
 首先，我们将把这个库作为一个依赖项添加到`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.squareup.okhttp3</groupId>
     <artifactId>okhttp</artifactId>
@@ -40,7 +40,7 @@ OkHttp 支持 Android 2.3 及以上版本。对于 Java，最低要求是 1.7。
 
 为了发送同步 GET 请求，我们需要基于一个`URL`构建一个`Request`对象，并制作一个`Call`。在它执行之后，我们将得到一个`Response` 的实例:
 
-```
+```java
 @Test
 public void whenGetRequest_thenCorrect() throws IOException {
     Request request = new Request.Builder()
@@ -60,7 +60,7 @@ public void whenGetRequest_thenCorrect() throws IOException {
 
 读取响应正文可能仍会阻塞。OkHttp 目前不提供任何异步 API 来接收部分响应体:
 
-```
+```java
 @Test
 public void whenAsynchronousGetRequest_thenCorrect() {
     Request request = new Request.Builder()
@@ -87,7 +87,7 @@ public void whenAsynchronousGetRequest_thenCorrect() {
 
 在我们构建了 URL 之后，我们可以将它传递给我们的`Request`对象:
 
-```
+```java
 @Test
 public void whenGetRequestWithQueryParameter_thenCorrect() 
   throws IOException {
@@ -112,7 +112,7 @@ public void whenGetRequestWithQueryParameter_thenCorrect()
 
 现在让我们看一个简单的 POST 请求，我们构建一个`RequestBody`来发送参数`“username”`和`“password”`:
 
-```
+```java
 @Test
 public void whenSendPostRequest_thenCorrect() 
   throws IOException {
@@ -141,7 +141,7 @@ public void whenSendPostRequest_thenCorrect()
 
 在这个例子中，我们将演示如何上传一个`File`。我们将使用`MultipartBody.Builder`上传“`test.ext”` 文件:
 
-```
+```java
 @Test
 public void whenUploadFile_thenCorrect() throws IOException {
     RequestBody requestBody = new MultipartBody.Builder()
@@ -169,7 +169,7 @@ public void whenUploadFile_thenCorrect() throws IOException {
 
 上传方法如下:
 
-```
+```java
 @Test
 public void whenGetUploadFileProgress_thenCorrect() 
   throws IOException {
@@ -203,7 +203,7 @@ public void whenGetUploadFileProgress_thenCorrect()
 
 现在这里是界面`ProgressListener,`，它使我们能够观察上传进度:
 
-```
+```java
 public interface ProgressListener {
     void onRequestProgress(long bytesWritten, long contentLength);
 }
@@ -211,7 +211,7 @@ public interface ProgressListener {
 
 接下来是`ProgressRequestWrapper,`，它是`RequestBody`的扩展版本:
 
-```
+```java
 public class ProgressRequestWrapper extends RequestBody {
 
     @Override
@@ -230,7 +230,7 @@ public class ProgressRequestWrapper extends RequestBody {
 
 最后，这里是`CountingSink,`，它是`ForwardingSink`的扩展版本:
 
-```
+```java
 protected class CountingSink extends ForwardingSink {
 
     private long bytesWritten = 0;
@@ -261,7 +261,7 @@ protected class CountingSink extends ForwardingSink {
 
 要在`Request,`上设置任何自定义标题，我们可以使用一个简单的`addHeader`调用:
 
-```
+```java
 @Test
 public void whenSetHeader_thenCorrect() throws IOException {
     Request request = new Request.Builder()
@@ -281,7 +281,7 @@ public void whenSetHeader_thenCorrect() throws IOException {
 
 例如，如果我们想为每个请求设置一个内容类型`“application/json”`，我们需要为我们的客户端设置一个拦截器:
 
-```
+```java
 @Test
 public void whenSetDefaultHeader_thenCorrect() 
   throws IOException {
@@ -303,7 +303,7 @@ public void whenSetDefaultHeader_thenCorrect()
 
 这里的`DefaultContentTypeInterceptor,`是`Interceptor`的扩展版本:
 
-```
+```java
 public class DefaultContentTypeInterceptor implements Interceptor {
 
     public Response intercept(Interceptor.Chain chain) 
@@ -332,7 +332,7 @@ public class DefaultContentTypeInterceptor implements Interceptor {
 
 请注意，响应将返回一个`HTTP 301`状态代码:
 
-```
+```java
 @Test
 public void whenSetFollowRedirects_thenNotRedirected() 
   throws IOException {
@@ -360,7 +360,7 @@ public void whenSetFollowRedirects_thenNotRedirected()
 
 在这个例子中，我们用 1 秒的`readTimeout`构建了我们的客户端，而 URL 服务有 2 秒的延迟:
 
-```
+```java
 @Test
 public void whenSetRequestTimeout_thenFail() 
   throws IOException {
@@ -387,7 +387,7 @@ public void whenSetRequestTimeout_thenFail()
 
 当不再需要通话时，我们使用这种方法来保存网络，例如当用户离开某个应用程序时:
 
-```
+```java
 @Test(expected = IOException.class)
 public void whenCancelRequest_thenCorrect() 
   throws IOException {
@@ -430,7 +430,7 @@ public void whenCancelRequest_thenCorrect()
 
 客户端将使用它来缓存响应:
 
-```
+```java
 @Test
 public void  whenSetResponseCache_thenCorrect() 
   throws IOException {

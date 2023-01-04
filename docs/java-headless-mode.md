@@ -26,7 +26,7 @@
 
 首先，我们将在一个`JUnit` 类中以编程方式打开无头模式:
 
-```
+```java
 @Before
 public void setUpHeadlessMode() {
     System.setProperty("java.awt.headless", "true");
@@ -35,7 +35,7 @@ public void setUpHeadlessMode() {
 
 为了确保设置正确，我们可以使用`java.awt.GraphicsEnvironment` # `isHeadless`:
 
-```
+```java
 @Test
 public void whenSetUpSuccessful_thenHeadlessIsTrue() {
     assertThat(GraphicsEnvironment.isHeadless()).isTrue();
@@ -46,7 +46,7 @@ public void whenSetUpSuccessful_thenHeadlessIsTrue() {
 
 现在让我们看看简单的图像转换器:
 
-```
+```java
 @Test
 public void whenHeadlessMode_thenImagesWork() {
     boolean result = false;
@@ -62,7 +62,7 @@ public void whenHeadlessMode_thenImagesWork() {
 
 在下一个示例中，我们可以看到所有字体的信息，包括字体规格:
 
-```
+```java
 @Test
 public void whenHeadless_thenFontsWork() {
     GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -83,7 +83,7 @@ public void whenHeadless_thenFontsWork() {
 
 有些组件需要外围设备，无法在无头模式下工作。在非交互环境中使用时，它们抛出一个`HeadlessException`:
 
-```
+```java
 Exception in thread "main" java.awt.HeadlessException
 	at java.awt.GraphicsEnvironment.checkHeadless(GraphicsEnvironment.java:204)
 	at java.awt.Window.<init>(Window.java:536)
@@ -92,7 +92,7 @@ Exception in thread "main" java.awt.HeadlessException
 
 这个测试断言在无头模式下使用`Frame`确实会抛出一个`HeadlessException`:
 
-```
+```java
 @Test
 public void whenHeadlessmode_thenFrameThrowsHeadlessException() {
     assertThatExceptionOfType(HeadlessException.class).isThrownBy(() -> {
@@ -113,7 +113,7 @@ public void whenHeadlessmode_thenFrameThrowsHeadlessException() {
 
 所以，我们可以使用条件方法:
 
-```
+```java
 public void FlexibleApp() {
     if (GraphicsEnvironment.isHeadless()) {
         System.out.println("Hello World");

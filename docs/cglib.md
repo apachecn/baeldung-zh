@@ -10,7 +10,7 @@
 
 要在您的项目中使用`cglib`，只需添加一个 Maven 依赖项(最新版本可以在[这里找到](https://web.archive.org/web/20221011084927/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22cglib%22%20AND%20a%3A%22cglib%22)):
 
-```
+```java
 <dependency>
     <groupId>cglib</groupId>
     <artifactId>cglib</artifactId>
@@ -32,7 +32,7 @@ Java 中的类是在运行时动态加载的。利用 Java 语言的这一特性
 
 假设我们有一个`PersonService` 类，它有两个方法:
 
-```
+```java
 public class PersonService {
     public String sayHello(String name) {
         return "Hello " + name;
@@ -50,7 +50,7 @@ public class PersonService {
 
 我们想要创建一个简单的代理类来拦截对`sayHello()` 方法的调用。 [`Enhancer`](https://web.archive.org/web/20221011084927/http://cglib.sourceforge.net/apidocs/net/sf/cglib/Enhancer.html) 类允许我们通过使用来自`Enhancer` 类的`setSuperclass()` 方法动态扩展`PersonService` 类来创建代理:
 
-```
+```java
 Enhancer enhancer = new Enhancer();
 enhancer.setSuperclass(PersonService.class);
 enhancer.setCallback((FixedValue) () -> "Hello Tom!");
@@ -67,7 +67,7 @@ assertEquals("Hello Tom!", res);
 
 我们的代理的第一个版本有一些缺点，因为我们不能决定代理应该拦截哪个方法，以及应该从超类调用哪个方法。我们可以使用一个`[MethodInterceptor](https://web.archive.org/web/20221011084927/http://cglib.sourceforge.net/apidocs/net/sf/cglib/proxy/MethodInterceptor.html)` 接口来拦截对代理的所有调用，并决定是否要进行特定的调用或执行超类中的方法:
 
-```
+```java
 Enhancer enhancer = new Enhancer();
 enhancer.setSuperclass(PersonService.class);
 enhancer.setCallback((MethodInterceptor) (obj, method, args, proxy) -> {
@@ -92,7 +92,7 @@ assertEquals(4, lengthOfName);
 
 来自`cglib` 的另一个有用的构造是一个 [`BeanGenerator`](https://web.archive.org/web/20221011084927/http://cglib.sourceforge.net/apidocs/net/sf/cglib/beans/BeanGenerator.html) 类。它允许我们动态地创建 beans，并用 setter 和 getter 方法添加字段。代码生成工具可以使用它来生成简单的 POJO 对象:
 
-```
+```java
 BeanGenerator beanGenerator = new BeanGenerator();
 
 beanGenerator.addProperty("name", String.class);
@@ -110,7 +110,7 @@ assertEquals("some string value set by a cglib", getter.invoke(myBean));
 
 假设我们想要创建两个接口的混合。我们需要定义接口及其实现:
 
-```
+```java
 public interface Interface1 {
     String first();
 }
@@ -136,13 +136,13 @@ public class Class2 implements Interface2 {
 
 为了组合`Interface1`和`Interface2` 的实现，我们需要创建一个扩展它们的接口:
 
-```
+```java
 public interface MixinInterface extends Interface1, Interface2 { }
 ```
 
 通过使用 [`Mixin`](https://web.archive.org/web/20221011084927/http://cglib.sourceforge.net/apidocs/net/sf/cglib/proxy/Mixin.html) 类中的`create()`方法，我们可以将`Class1`和`Class2`的行为包含到`MixinInterface:`中
 
-```
+```java
 Mixin mixin = Mixin.create(
   new Class[]{ Interface1.class, Interface2.class, MixinInterface.class },
   new Object[]{ new Class1(), new Class2() }

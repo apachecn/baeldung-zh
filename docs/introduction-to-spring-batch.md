@@ -26,7 +26,7 @@ Spring Batch 遵循传统的批处理架构，其中作业存储库执行调度�
 
 每行包含一笔交易，由用户名、用户 id、交易日期和金额组成:
 
-```
+```java
 username, userid, transaction_date, transaction_amount
 devendra, 1234, 31/10/2015, 10000
 john, 2134, 3/12/2015, 12321
@@ -37,7 +37,7 @@ robin, 2134, 2/02/2015, 23411
 
 该项目所需的依赖项是弹簧芯、弹簧批次和`sqlite` JDBC 连接器:
 
-```
+```java
 <!-- SQLite database driver -->
 <dependency>
     <groupId>org.xerial</groupId>
@@ -65,7 +65,7 @@ robin, 2134, 2/02/2015, 23411
 
 我们要做的第一件事是用 XML 配置 Spring Batch:
 
-```
+```java
 <!-- connect to SQLite database -->
 <bean id="dataSource"
   class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -109,7 +109,7 @@ robin, 2134, 2/02/2015, 23411
 
 当然，Java 配置也是可用的:
 
-```
+```java
 @Configuration
 @EnableBatchProcessing
 @Profile("spring")
@@ -171,7 +171,7 @@ public class SpringConfig {
 
 现在让我们为 CSV 到 XML 的工作编写工作描述:
 
-```
+```java
 <import resource="spring.xml" />
 
 <bean id="record" class="com.baeldung.spring_batch_intro.model.Transaction"></bean>
@@ -225,7 +225,7 @@ public class SpringConfig {
 
 下面是类似的基于 Java 的作业配置:
 
-```
+```java
 @Profile("spring")
 public class SpringBatchConfig {
 
@@ -301,7 +301,7 @@ public class SpringBatchConfig {
 
 首先，我们配置了从`record.csv`中读取数据并将其转换成`Transaction`对象的`cvsFileItemReader`:
 
-```
+```java
 @SuppressWarnings("restriction")
 @XmlRootElement(name = "transactionRecord")
 public class Transaction {
@@ -323,7 +323,7 @@ public class Transaction {
 
 为此，它使用自定义映射器:
 
-```
+```java
 public class RecordFieldSetMapper implements FieldSetMapper<Transaction> {
 
     public Transaction mapFieldSet(FieldSet fieldSet) throws BindException {
@@ -346,7 +346,7 @@ public class RecordFieldSetMapper implements FieldSetMapper<Transaction> {
 
 它所做的只是将来自阅读器的原始对象传递给编写器:
 
-```
+```java
 public class CustomItemProcessor implements ItemProcessor<Transaction, Transaction> {
 
     public Transaction process(Transaction item) {
@@ -359,7 +359,7 @@ public class CustomItemProcessor implements ItemProcessor<Transaction, Transacti
 
 最后，我们将把这个`transaction`存储到位于`xml/output.xml`的 XML 文件中:
 
-```
+```java
 <bean id="itemWriter"
   class="org.springframework.batch.item.xml.StaxEventItemWriter">
     <property name="resource" value="file:xml/output.xml" />
@@ -376,7 +376,7 @@ public class CustomItemProcessor implements ItemProcessor<Transaction, Transacti
 
 它会将事务保存在内存中，直到该点(或者直到遇到输入数据的结尾):
 
-```
+```java
 <batch:job id="firstBatchJob">
     <batch:step id="step1">
         <batch:tasklet>
@@ -392,7 +392,7 @@ public class CustomItemProcessor implements ItemProcessor<Transaction, Transacti
 
 现在让我们设置并运行一切:
 
-```
+```java
 @Profile("spring")
 public class App {
     public static void main(String[] args) {
@@ -429,7 +429,7 @@ public class App {
 
 让我们从在 Spring Boot 应用程序的`pom.xml`中声明 [`spring-boot-starter-batch`](https://web.archive.org/web/20221118053208/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-batch) 依赖关系开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-batch</artifactId>
@@ -438,7 +438,7 @@ public class App {
 
 **我们需要一个数据库来存储春季批量作业信息**。在本教程中，我们使用一个内存中的 [HSQLDB](/web/20221118053208/https://www.baeldung.com/spring-boot-hsqldb) 数据库。因此，我们需要用 [`hsqldb`](https://web.archive.org/web/20221118053208/https://search.maven.org/search?q=g:org.hsqldb%20AND%20a:hsqldb) 搭配 Spring Boot:
 
-```
+```java
 <dependency>
     <groupId>org.hsqldb</groupId>
     <artifactId>hsqldb</artifactId>
@@ -451,7 +451,7 @@ public class App {
 
 我们使用 [`@Profile`](/web/20221118053208/https://www.baeldung.com/spring-profiles) 注释来区分弹簧和 Spring Boot 配置。我们在应用程序中设置了`spring-boot`配置文件:
 
-```
+```java
 @SpringBootApplication
 public class SpringBatchApplication {
 
@@ -468,7 +468,7 @@ public class SpringBatchApplication {
 
 我们使用与前面的`SpringBatchConfig`类相同的批处理作业配置:
 
-```
+```java
 @Configuration
 @EnableBatchProcessing
 @Profile("spring-boot")

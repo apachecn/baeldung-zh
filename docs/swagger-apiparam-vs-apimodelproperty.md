@@ -18,7 +18,7 @@
 
 让我们来看看它的用法:
 
-```
+```java
 @RequestMapping(
     method = RequestMethod.POST,
     value = "/createUser",
@@ -55,7 +55,7 @@ public User createUser(
 
 让我们给`User's` `firstName`字段添加一些模型属性:
 
-```
+```java
 @ApiModelProperty(
   value = "first name of the user",
   name = "firstName",

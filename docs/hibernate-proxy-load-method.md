@@ -16,7 +16,7 @@
 
 简单来说，Hibernate 使用`CGLib`库对我们的实体类进行子类化。除了`@Id`方法，代理实现将所有其他属性方法委托给 Hibernate 会话来填充实例，有点像:
 
-```
+```java
 public class HibernateProxy extends MyEntity {
     private MyEntity target;
 
@@ -41,7 +41,7 @@ public class HibernateProxy extends MyEntity {
 
 如果我们使用`Session.load()`来实例化一个`Employee`:
 
-```
+```java
 Employee albert = session.load(Employee.class, new Long(1));
 ```
 
@@ -49,7 +49,7 @@ Employee albert = session.load(Employee.class, new Long(1));
 
 然而，一旦我们调用了`albert`上的一个方法:
 
-```
+```java
 String firstName = albert.getFirstName();
 ```
 
@@ -61,7 +61,7 @@ String firstName = albert.getFirstName();
 
 现在，让我们也创建一个`Company `实体，其中一个`Company `有许多`Employees:`
 
-```
+```java
 public class Company {
     private String name;
     private Set<Employee> employees;
@@ -70,7 +70,7 @@ public class Company {
 
 如果我们这次对公司使用`Session.load() `:
 
-```
+```java
 Company bizco = session.load(Company.class, new Long(1));
 String name = bizco.getName();
 ```
@@ -83,7 +83,7 @@ String name = bizco.getName();
 
 相反方向的情况是相似的:
 
-```
+```java
 public class Employee {
     private String firstName;
     private Company workplace;
@@ -92,7 +92,7 @@ public class Employee {
 
 如果我们再次使用`load()`:
 
-```
+```java
 Employee bob = session.load(Employee.class, new Long(2));
 String firstName = bob.getFirstName();
 ```
@@ -109,7 +109,7 @@ String firstName = bob.getFirstName();
 
 假设我们在我们的`Employee `实体上使用`@BatchSize`:
 
-```
+```java
 @Entity
 @BatchSize(size=5)
 class Employee {
@@ -119,7 +119,7 @@ class Employee {
 
 这次我们有三名员工:
 
-```
+```java
 Employee catherine = session.load(Employee.class, new Long(3));
 Employee darrell = session.load(Employee.class, new Long(4));
 Employee emma = session.load(Employee.class, new Long(5));
@@ -127,7 +127,7 @@ Employee emma = session.load(Employee.class, new Long(5));
 
 如果我们在`catherine`上调用`getFirstName `:
 
-```
+```java
 String cathy = catherine.getFirstName();
 ```
 
@@ -135,7 +135,7 @@ String cathy = catherine.getFirstName();
 
 然后，当我们叫`darrell`的名字时:
 
-```
+```java
 String darrell = darrell.getFirstName();
 ```
 
@@ -147,7 +147,7 @@ String darrell = darrell.getFirstName();
 
 我们也可以完全绕过代理，让 Hibernate 使用`Session.get()`加载真实的东西:
 
-```
+```java
 Employee finnigan = session.get(Employee.class, new Long(6));
 ```
 
@@ -161,7 +161,7 @@ Employee finnigan = session.get(Employee.class, new Long(6));
 
 例如，假设`gerald `将为一家新公司工作:
 
-```
+```java
 Employee gerald = session.get(Employee.class, new Long(7));
 Company worldco = (Company) session.load(Company.class, new Long(2));
 employee.setCompany(worldco);        

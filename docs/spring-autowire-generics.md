@@ -12,7 +12,7 @@
 
 假设我们有一个叫做`Vehicle `的抽象类和一个叫做`Car:`的具体子类
 
-```
+```java
 public abstract class Vehicle {
     private String name;
     private String manufacturer;
@@ -21,7 +21,7 @@ public abstract class Vehicle {
 }
 ```
 
-```
+```java
 public class Car extends Vehicle {
     private String engineType;
 
@@ -31,7 +31,7 @@ public class Car extends Vehicle {
 
 假设我们想要将类型为`Vehicle`的对象列表注入到某个处理程序类中:
 
-```
+```java
 @Autowired
 private List<Vehicle> vehicles;
 ```
@@ -40,7 +40,7 @@ private List<Vehicle> vehicles;
 
 我们也可以使用限定符来获得特定的`Vehicle`类型的 beans。然后我们创建`@CarQualifier`，并用`@Qualifier`对其进行注释:
 
-```
+```java
 @Target({
   ElementType.FIELD, 
   ElementType.METHOD,
@@ -54,7 +54,7 @@ public @interface CarQualifier {
 
 现在我们可以在我们的列表中使用这个注释来获得一些特定的`Vehicles`:
 
-```
+```java
 @Autowired
 @CarQualifier
 private List<Vehicle> vehicles;
@@ -62,7 +62,7 @@ private List<Vehicle> vehicles;
 
 **在这种情况下，我们可以创建几个`Vehicle`beans，但是 Spring 只会将那些带有`@CarQualifier`的 bean 注入到上面的列表中:**
 
-```
+```java
 public class CustomConfiguration {
     @Bean
     @CarQualifier
@@ -76,7 +76,7 @@ public class CustomConfiguration {
 
 假设我们有另一个叫做`Motorcycle`的`Vehicle`子类:
 
-```
+```java
 public class Motorcycle extends Vehicle {
     private boolean twoWheeler;
     //... getters, setters etc
@@ -85,7 +85,7 @@ public class Motorcycle extends Vehicle {
 
 现在，如果我们只想将`Car`bean 注入到我们的列表中，而不想注入`Motorcycle `bean，我们可以通过使用特定的子类作为类型参数来实现:
 
-```
+```java
 @Autowired
 private List<Car> vehicles; 
 ```
@@ -100,7 +100,7 @@ private List<Car> vehicles;
 
 它是在 Spring 4.0 中引入的，用于封装 Java 类型，处理对超类型、接口、泛型参数的访问，并最终解析为一个类:
 
-```
+```java
 ResolvableType vehiclesType = ResolvableType.forField(getClass().getDeclaredField("vehicles"));
 System.out.println(vehiclesType);
 
@@ -113,7 +113,7 @@ System.out.println(aClass);
 
 上述代码的输出将显示相应的简单类型和一般类型:
 
-```
+```java
 java.util.List<com.example.model.Vehicle>
 com.example.model.Vehicle
 class com.example.model.Vehicle 

@@ -12,7 +12,7 @@
 
 首先，我们需要创建一个简单的 Spring Boot web 应用程序，并添加以下 [Maven 依赖项](https://web.archive.org/web/20220926192843/https://search.maven.org/classic/#search%7Cga%7C1%7Cspring-boot-admin-starter-server):
 
-```
+```java
 <dependency>
     <groupId>de.codecentric</groupId>
     <artifactId>spring-boot-admin-starter-server</artifactId>
@@ -22,7 +22,7 @@
 
 此后，`@EnableAdminServer` 将可用，因此我们将把它添加到主类中，如下例所示:
 
-```
+```java
 @EnableAdminServer
 @SpringBootApplication
 public class SpringBootAdminServerApplication(exclude = AdminServerHazelcastAutoConfiguration.class) {
@@ -39,7 +39,7 @@ public class SpringBootAdminServerApplication(exclude = AdminServerHazelcastAuto
 
 现在，在我们设置好管理服务器之后，我们可以将我们的第一个 Spring Boot 应用程序注册为客户机。我们必须添加下面的 [Maven 依赖关系](https://web.archive.org/web/20220926192843/https://search.maven.org/classic/#search%7Cga%7C1%7Cspring-boot-admin-starter-client):
 
-```
+```java
 <dependency>
     <groupId>de.codecentric</groupId>
     <artifactId>spring-boot-admin-starter-client</artifactId>
@@ -49,7 +49,7 @@ public class SpringBootAdminServerApplication(exclude = AdminServerHazelcastAuto
 
 接下来，我们需要配置客户机来了解管理服务器的基本 URL。为此，我们只需添加以下属性:
 
-```
+```java
 spring.boot.admin.client.url=http://localhost:8080
 ```
 
@@ -57,7 +57,7 @@ spring.boot.admin.client.url=http://localhost:8080
 
 让我们公开所有的端点:
 
-```
+```java
 management.endpoints.web.exposure.include=*
 management.endpoint.health.show-details=always
 ```
@@ -68,7 +68,7 @@ Spring Boot 管理服务器可以访问应用程序的敏感端点，因此建�
 
 首先，我们将着重于配置管理服务器的安全性。我们必须添加以下 [Maven 依赖关系](https://web.archive.org/web/20220926192843/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-security%22):
 
-```
+```java
 <dependency>
     <groupId>de.codecentric</groupId>
     <artifactId>spring-boot-admin-server-ui-login</artifactId>
@@ -85,7 +85,7 @@ Spring Boot 管理服务器可以访问应用程序的敏感端点，因此建�
 
 接下来，我们将添加一个安全配置类，如下所示:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
@@ -138,7 +138,7 @@ public class WebSecurityConfig {
 
 为了将客户机注册到新的安全服务器，我们必须在客户机的属性文件中添加更多的配置:
 
-```
+```java
 spring.boot.admin.client.username=admin
 spring.boot.admin.client.password=admin
 ```
@@ -147,7 +147,7 @@ spring.boot.admin.client.password=admin
 
 我们必须添加一些元数据，我们将发送到管理服务器。服务器使用此信息连接到客户端的端点:
 
-```
+```java
 spring.security.user.name=client
 spring.security.user.password=client
 spring.boot.admin.client.instance.metadata.user.name=${spring.security.user.name}
@@ -160,7 +160,7 @@ spring.boot.admin.client.instance.metadata.user.password=${spring.security.user.
 
 Spring Boot 管理员可以配置为只显示我们认为有用的信息。我们只需改变默认配置并添加我们自己需要的指标:
 
-```
+```java
 spring.boot.admin.routes.endpoints=env, metrics, trace, jolokia, info, configprops
 ```
 
@@ -168,7 +168,7 @@ spring.boot.admin.routes.endpoints=env, metrics, trace, jolokia, info, configpro
 
 Spring Boot 管理员还支持使用 Hazelcast 进行集群复制。我们只需添加下面的 [Maven 依赖关系](https://web.archive.org/web/20220926192843/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.hazelcast%22%20AND%20a%3A%22hazelcast%22)，让自动配置完成剩下的工作:
 
-```
+```java
 <dependency>
     <groupId>com.hazelcast</groupId>
     <artifactId>hazelcast</artifactId>
@@ -178,7 +178,7 @@ Spring Boot 管理员还支持使用 Hazelcast 进行集群复制。我们只需
 
 如果我们想要一个持久的 Hazelcast 实例，我们将使用一个自定义配置:
 
-```
+```java
 @Configuration
 public class HazelcastConfig {
 
@@ -230,7 +230,7 @@ public class HazelcastConfig {
 
 我们将首先关注为我们的管理服务器配置邮件通知。为此，我们必须添加如下所示的[邮件启动器依赖项](https://web.archive.org/web/20220926192843/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-mail%22):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-mail</artifactId>
@@ -240,7 +240,7 @@ public class HazelcastConfig {
 
 在这之后，我们必须添加一些邮件配置:
 
-```
+```java
 spring.mail.host=smtp.example.com
 spring.mail.username=smtp_user
 spring.mail.password=smtp_password
@@ -253,7 +253,7 @@ spring.mail.password=smtp_password
 
 正如我们将看到的，与 Hipchat 的集成非常简单；只有几个强制属性需要设置:
 
-```
+```java
 spring.boot.admin.notify.hipchat.auth-token=<generated_token>
 spring.boot.admin.notify.hipchat.room-id=<room-id>
 spring.boot.admin.notify.hipchat.url=https://yourcompany.hipchat.com/v2/
@@ -267,7 +267,7 @@ spring.boot.admin.notify.hipchat.url=https://yourcompany.hipchat.com/v2/
 
 或者，我们可能希望向一组经过筛选的客户端发送通知。为此，我们可以使用一个`filtering notifier:`
 
-```
+```java
 @Configuration
 public class NotifierConfiguration {
     private final InstanceRepository repository;

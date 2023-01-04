@@ -20,13 +20,13 @@
 
 `System.out`指向标准输出流，将其公开为`PrintStream`，我们可以使用它将文本打印到控制台:
 
-```
+```java
 System.out.print("some inline message");
 ```
 
 `System`的一个高级用法是调用`System.setOut`，我们可以用它来定制`System.out`将写入的位置:
 
-```
+```java
 // Redirect to a text file
 System.setOut(new PrintStream("filename.txt"));
 ```
@@ -37,7 +37,7 @@ System.setOut(new PrintStream("filename.txt"));
 
 但是`System.err`代表标准误差，我们专门用它来输出错误信息:
 
-```
+```java
 System.err.print("some inline error message"); 
 ```
 
@@ -51,7 +51,7 @@ System.err.print("some inline error message");
 
 虽然参与程度有所提高，但我们仍然可以做到:
 
-```
+```java
 public String readUsername(int length) throws IOException {
     byte[] name = new byte[length];
     System.in.read(name, 0, length); // by default, from the console
@@ -65,7 +65,7 @@ public String readUsername(int length) throws IOException {
 
 当然，在如此低的级别上操作可能具有挑战性并且容易出错，所以我们可以用`BufferedReader`来清理一下:
 
-```
+```java
 public String readUsername() throws IOException {
     BufferedReader reader = new BufferedReader(
       new InputStreamReader(System.in));
@@ -97,7 +97,7 @@ Java 1.6 引入了另一种与控制台交互的方式，而不是简单地直�
 
 我们可以通过调用`System.console`来访问它:
 
-```
+```java
 public String readUsername() {
     Console console = System.console();	 	 
 
@@ -116,7 +116,7 @@ public String readUsername() {
 
 `arraycopy`主要是将一个完整的数组复制到另一个数组中:
 
-```
+```java
 int[] a = {34, 22, 44, 2, 55, 3};
 int[] b = new int[a.length];
 
@@ -128,7 +128,7 @@ assertArrayEquals(a, b);
 
 例如，假设我们想要从`a`复制 2 个元素，从`a[1]`开始到`b`，从`b[3]`开始:
 
-```
+```java
 System.arraycopy(a, 1, b, 3, 2); 
 assertArrayEquals(new int[] {0, 0, 0, 22, 44, 0}, b);
 ```
@@ -145,7 +145,7 @@ assertArrayEquals(new int[] {0, 0, 0, 22, 44, 0}, b);
 
 `currentTimeMillis`返回自 Unix 纪元(1970 年 1 月 1 日 12:00 AM UTC:
 
-```
+```java
 public long nowPlusOneHour() {
     return System.currentTimeMillis() + 3600 * 1000L;
 }
@@ -157,7 +157,7 @@ public String nowPrettyPrinted() {
 
 `nanoTime`返回相对于 JVM 启动的时间。我们可以多次调用它来标记应用程序中的时间流逝:
 
-```
+```java
 long startTime = System.nanoTime();
 // ...
 long endTime = System.nanoTime();
@@ -175,7 +175,7 @@ assertTrue(endTime - startTime < 10000);
 
 按照 Unix 中的惯例，状态 0 表示正常退出，而非零表示发生了一些错误:
 
-```
+```java
 if (error) {
     System.exit(1);
 } else {
@@ -191,7 +191,7 @@ if (error) {
 
 我们可以用`setProperty` 和`clearProperty`来管理它们:
 
-```
+```java
 public String getJavaVMVendor() {
     System.getProperty("java.vm.vendor");
 }
@@ -207,7 +207,7 @@ assertNull(System.getProperty("abckey"));
 
 我们还可以提供一个默认值:
 
-```
+```java
 System.clearProperty("dbHost");
 String myKey = System.getProperty("dbHost", "db.host.com");
 assertEquals("db.host.com", myKey);
@@ -215,13 +215,13 @@ assertEquals("db.host.com", myKey);
 
 并且`System.getProperties`提供了所有系统属性的集合:
 
-```
+```java
 Properties properties = System.getProperties();
 ```
 
 从中我们可以进行任何`Properties` 操作:
 
-```
+```java
 public void clearAllProperties() {
     System.getProperties().clear();
 }
@@ -233,7 +233,7 @@ public void clearAllProperties() {
 
 例如，如果我们想访问`PATH`环境变量，我们可以这样做:
 
-```
+```java
 public String getPath() {
     return System.getenv("PATH");
 }
@@ -251,7 +251,7 @@ public String getPath() {
 
 然而，它们可以作为优化来使用，比如当桌面应用程序最小化时调用`gc`:
 
-```
+```java
 public void windowStateChanged(WindowEvent event) {
     if ( event == WindowEvent.WINDOW_DEACTIVATED ) {
         System.gc(); // if it ends up running, great!

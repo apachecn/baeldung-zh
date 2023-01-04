@@ -24,7 +24,7 @@
 
 为了开始使用`WebServer API` `,`，我们需要将所需的 [Maven 依赖项](https://web.archive.org/web/20221206211307/https://search.maven.org/search?q=a:helidon-webserver)添加到`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>io.helidon.webserver</groupId>
     <artifactId>helidon-webserver</artifactId>
@@ -36,7 +36,7 @@
 
 这是一个运行在预定义端口上的简单 Web 应用程序。我们还注册了一个简单的处理程序，它将对任何带有“/ `greet'`路径和`GET`方法的 HTTP 请求响应问候消息:
 
-```
+```java
 public static void main(String... args) throws Exception {
     ServerConfiguration serverConfig = ServerConfiguration.builder()
       .port(9001).build();
@@ -52,7 +52,7 @@ public static void main(String... args) throws Exception {
 
 最后一行是启动服务器并等待服务 HTTP 请求。但是如果我们在 main 方法中运行这个示例代码，我们会得到错误:
 
-```
+```java
 Exception in thread "main" java.lang.IllegalStateException: 
   No implementation found for SPI: io.helidon.webserver.spi.WebServerFactory
 ```
@@ -61,7 +61,7 @@ Exception in thread "main" java.lang.IllegalStateException:
 
 这里是这个实现的 [Maven 依赖关系](https://web.archive.org/web/20221206211307/https://search.maven.org/search?q=a:helidon-webserver-netty):
 
-```
+```java
 <dependency>
     <groupId>io.helidon.webserver</groupId>
     <artifactId>helidon-webserver-netty</artifactId>
@@ -72,7 +72,7 @@ Exception in thread "main" java.lang.IllegalStateException:
 
 现在，我们可以运行主应用程序，并通过调用已配置的端点来检查它是否工作:
 
-```
+```java
 http://localhost:9001/greet
 ```
 
@@ -86,7 +86,7 @@ Helidon SE 还允许使用由`Config` API 提供配置数据的配置模式。�
 
 Helidon SE 为许多配置源提供实现。默认实现由 [`helidon-config`](https://web.archive.org/web/20221206211307/https://search.maven.org/search?q=a:helidon-config) 提供，其中配置源是位于类路径下的`application.properties`文件:
 
-```
+```java
 <dependency>
     <groupId>io.helidon.config</groupId>
     <artifactId>helidon-config</artifactId>
@@ -96,13 +96,13 @@ Helidon SE 为许多配置源提供实现。默认实现由 [`helidon-config`](h
 
 要读取配置数据，我们只需使用默认的构建器，它默认从`application.properties:`获取配置数据
 
-```
+```java
 Config config = Config.builder().build();
 ```
 
 让我们在`src/main/resource`目录下创建一个`application.properties`文件，内容如下:
 
-```
+```java
 server.port=9080
 web.debug=true
 web.page-size=15
@@ -111,7 +111,7 @@ user.home=C:/Users/app
 
 **要读取这些值，我们可以使用`Config.get()`方法**，然后方便地转换成相应的 Java 类型:
 
-```
+```java
 int port = config.get("server.port").asInt();
 int pageSize = config.get("web.page-size").asInt();
 boolean debug = config.get("web.debug").asBoolean();
@@ -120,7 +120,7 @@ String userHome = config.get("user.home").asString();
 
 事实上，默认的构建器按照这个优先级顺序加载第一个找到的文件:`application.yaml, application.conf, application.json, and application.properties.`后三种格式需要一个额外的相关配置依赖项。例如，要使用 YAML 格式，我们需要添加相关的 YAML [配置](https://web.archive.org/web/20221206211307/https://search.maven.org/search?q=a:helidon-config-yaml)依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.helidon.config</groupId>
     <artifactId>helidon-config-yaml</artifactId>
@@ -130,7 +130,7 @@ String userHome = config.get("user.home").asString();
 
 然后，我们添加一个`application.yml`:
 
-```
+```java
 server:
   port: 9080  
 web:
@@ -146,7 +146,7 @@ user:
 
 **我们还可以通过禁用环境变量和系统属性或者通过明确指定配置源来控制默认的构建器行为**:
 
-```
+```java
 ConfigSource configSource = ConfigSources.classpath("application.yaml").build();
 Config config = Config.builder()
   .disableSystemPropertiesSource()
@@ -165,21 +165,21 @@ Config config = Config.builder()
 
 因此，要配置路由，我们可以只使用 HTTP 方法作为标准:
 
-```
+```java
 Routing routing = Routing.builder()
   .get((request, response) -> {} );
 ```
 
 或者我们可以将 HTTP 方法与请求路径结合起来:
 
-```
+```java
 Routing routing = Routing.builder()
   .get("/path", (request, response) -> {} );
 ```
 
 我们也可以使用`RequestPredicate`进行更多的控制。例如，我们可以检查现有的标题或内容类型:
 
-```
+```java
 Routing routing = Routing.builder()
   .post("/save",
     RequestPredicate.whenRequest()
@@ -197,7 +197,7 @@ Routing routing = Routing.builder()
 
 所以，让我们首先为我们正在处理的对象创建一个模型，即`Book`类:
 
-```
+```java
 public class Book {
     private String id;
     private String name;
@@ -209,7 +209,7 @@ public class Book {
 
 **我们可以通过实现`Service.update()`方法为`Book`类创建 REST 服务。这允许配置相同资源的子路径:**
 
-```
+```java
 public class BookResource implements Service {
 
     private BookManager bookManager = new BookManager();
@@ -239,7 +239,7 @@ public class BookResource implements Service {
 
 我们还将媒体类型配置为 JSON，因此为此我们需要 [helidon-webserver-json](https://web.archive.org/web/20221206211307/https://search.maven.org/search?q=a:helidon-webserver-json) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>io.helidon.webserver</groupId>
     <artifactId>helidon-webserver-json</artifactId>
@@ -249,7 +249,7 @@ public class BookResource implements Service {
 
 最后，**我们使用`Routing`构建器的`register()`方法将根路径绑定到资源。**在本例中，`Paths`所配置的服务都以根路径为前缀:
 
-```
+```java
 Routing routing = Routing.builder()
   .register(JsonSupport.get())
   .register("/books", new BookResource())
@@ -258,7 +258,7 @@ Routing routing = Routing.builder()
 
 我们现在可以启动服务器并检查端点:
 
-```
+```java
 http://localhost:9080/books
 http://localhost:9080/books/0001-201810
 ```
@@ -269,7 +269,7 @@ http://localhost:9080/books/0001-201810
 
 让我们从声明所有必要的依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>io.helidon.security</groupId>
     <artifactId>helidon-security</artifactId>
@@ -293,7 +293,7 @@ http://localhost:9080/books/0001-201810
 
 **首先要做的是创建一个`Security`实例。为了简单起见，我们可以通过编程来实现**:
 
-```
+```java
 Map<String, MyUser> users = //...
 UserStore store = user -> Optional.ofNullable(users.get(user));
 
@@ -312,7 +312,7 @@ Security security = Security.builder()
 
 在这种情况下，我们将在通过`Config` API 加载的`application.yml`文件中声明所有安全配置:
 
-```
+```java
 #Config 4 Security ==> Mapped to Security Object
 security:
   providers:
@@ -342,14 +342,14 @@ security:
 
 为了加载它，我们只需要创建一个`Config`对象，然后调用`Security.fromConfig()`方法:
 
-```
+```java
 Config config = Config.create();
 Security security = Security.fromConfig(config);
 ```
 
 **一旦我们有了`Security`实例，我们首先需要使用`WebSecurity.from()`方法:**向`WebServer`注册它
 
-```
+```java
 Routing routing = Routing.builder()
   .register(WebSecurity.from(security).securityDefaults(WebSecurity.authenticate()))
   .build();
@@ -357,7 +357,7 @@ Routing routing = Routing.builder()
 
 我们还可以使用 config 方法直接创建一个`WebSecurity`实例，通过它我们可以加载安全性和 web 服务器配置:
 
-```
+```java
 Routing routing = Routing.builder()        
   .register(WebSecurity.from(config))
   .build();
@@ -365,7 +365,7 @@ Routing routing = Routing.builder()
 
 我们现在可以为`/user`和`/admin`路径添加一些处理程序，启动服务器并尝试访问它们:
 
-```
+```java
 Routing routing = Routing.builder()
   .register(WebSecurity.from(config))
   .get("/user", (request, response) -> response.send("Hello, I'm Helidon SE"))
@@ -381,7 +381,7 @@ Helidon MP 是 Eclipse MicroProfile 的一个实现，也为运行基于 MicroPr
 
 检查完代码后，我们将删除所有依赖项和插件，并将 Helidon MP 依赖项添加到 POM 文件中:
 
-```
+```java
 <dependency>
     <groupId>io.helidon.microprofile.bundles</groupId>
     <artifactId>helidon-microprofile-1.2</artifactId>
@@ -398,7 +398,7 @@ Helidon MP 是 Eclipse MicroProfile 的一个实现，也为运行基于 MicroPr
 
 接下来，**我们将在`src/main/resource/META-INF`目录下**添加`beans.xml`文件，内容如下:
 
-```
+```java
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 
   xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
@@ -409,7 +409,7 @@ Helidon MP 是 Eclipse MicroProfile 的一个实现，也为运行基于 MicroPr
 
 在`LibraryApplication`类中，覆盖`getClasses()`方法，这样服务器就不会扫描资源:
 
-```
+```java
 @Override
 public Set<Class<?>> getClasses() {
     return CollectionsHelper.setOf(BookEndpoint.class);
@@ -418,7 +418,7 @@ public Set<Class<?>> getClasses() {
 
 最后，创建一个 main 方法并添加以下代码片段:
 
-```
+```java
 public static void main(String... args) {
     Server server = Server.builder()
       .addApplication(LibraryApplication.class)

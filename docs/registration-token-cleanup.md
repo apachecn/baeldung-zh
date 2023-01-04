@@ -10,7 +10,7 @@
 
 回想一下系列的前一篇文章中的[，一个验证令牌有成员 **`expiryDate`** ，代表令牌的到期时间戳:](/web/20220813051842/https://www.baeldung.com/registration-verify-user-by-email)
 
-```
+```java
 @Entity
 public class VerificationToken {
 
@@ -38,7 +38,7 @@ public class VerificationToken {
 
 为了便于删除令牌，我们将在`VerificationTokenRepository`中添加一个新方法来删除过期的令牌:
 
-```
+```java
 public interface VerificationTokenRepository
   extends JpaRepository<VerificationToken, Long> {
 
@@ -50,7 +50,7 @@ public interface VerificationTokenRepository
 
 请注意，因为`VerificationToken`与标记为`FetchType.EAGER`的`User`有一个`@OneToOne`关联，所以**也发出一个 select 来填充`User`实体**——即使`deleteByExpiryDateLessThan`的签名具有返回类型`void`:
 
-```
+```java
 select 
     *
 from 
@@ -75,7 +75,7 @@ where
 
 或者，如果不需要将实体加载到持久性上下文中，我们可以创建一个 JPQL 查询:
 
-```
+```java
 public interface VerificationTokenRepository
   extends JpaRepository<VerificationToken, Long> {
 
@@ -87,7 +87,7 @@ public interface VerificationTokenRepository
 
 Hibernate 不会将实体加载到持久性上下文中:
 
-```
+```java
 delete from
     VerificationToken
 where
@@ -104,7 +104,7 @@ where
 
 为了能够调度任务，我们创建了一个新的配置类`SpringTaskConfig`，用`@EnableScheduling`进行了注释:
 
-```
+```java
 @Configuration
 @EnableScheduling
 public class SpringTaskConfig {
@@ -118,7 +118,7 @@ public class SpringTaskConfig {
 
 然后我们用`@Scheduled`注释该方法，表示 Spring 应该定期执行它:
 
-```
+```java
 @Service
 @Transactional
 public class TokensPurgeTask {
@@ -138,7 +138,7 @@ public class TokensPurgeTask {
 
 我们使用一个属性来保存 crontab 设置的值，以避免在更改时重新编译。在`application.properties`中，我们赋值:
 
-```
+```java
 #    5am every day
 purge.cron.expression=0 0 5 * * ?
 ```

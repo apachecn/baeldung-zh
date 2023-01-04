@@ -31,19 +31,19 @@ Spring 框架承认了[漏洞](https://web.archive.org/web/20220814172559/https:
 
 克隆存储库:
 
-```
+```java
 git clone [[email protected]](/web/20220814172559/https://www.baeldung.com/cdn-cgi/l/email-protection):spring-projects/spring-mvc-showcase.git
 ```
 
 在克隆的目录中，编辑`pom.xml` 以包含`5.0.0.RELEASE` 作为 Spring 框架版本:
 
-```
+```java
 <org.springframework-version>5.0.0.RELEASE</org.springframework-version>
 ```
 
 接下来，编辑 web 配置类`WebMvcConfig` 并修改`addResourceHandlers` 方法，以使用`file:`将资源映射到本地文件目录
 
-```
+```java
 @Override
 public void addResourceHandlers(ResourceHandlerRegistry registry) {
     registry
@@ -54,13 +54,13 @@ public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
 稍后，构建工件并运行我们的 web 应用程序:
 
-```
+```java
 mvn jetty:run
 ```
 
 现在，当服务器启动时，调用 URL:
 
-```
+```java
 curl 'http://localhost:8080/spring-mvc-showcase/resources/%255c%255c%252e%252e%255c/%252e%252e%255c/%252e%252e%255c/%252e%252e%255c/%252e%252e%255c/windows/system.ini'
 ```
 
@@ -76,13 +76,13 @@ curl 'http://localhost:8080/spring-mvc-showcase/resources/%255c%255c%252e%252e%2
 
 另一方面，下面返回`/api/v1/users/1`:
 
-```
+```java
 request.getServletPath()
 ```
 
 但是，下面的命令会返回一个`null`:
 
-```
+```java
 request.getPathInfo()
 ```
 
@@ -96,7 +96,7 @@ request.getPathInfo()
 
 防火墙试图清理或标准化 URL，并标准化容器中的`servletPath`和`pathInfo`。此外，我们可以通过显式声明一个`@Bean`来覆盖默认的`HttpFirewall` 行为:
 
-```
+```java
 @Bean
 public HttpFirewall getHttpFirewall() {
     return new DefaultHttpFirewall();
@@ -111,7 +111,7 @@ public HttpFirewall getHttpFirewall() {
 
 此外，这种实现是可定制的，并且具有合理的默认值。换句话说，我们可以禁用(不推荐)一些功能，比如允许分号作为 URI 的一部分:
 
-```
+```java
 @Bean
 public HttpFirewall getHttpFirewall() {
     StrictHttpFirewall strictHttpFirewall = new StrictHttpFirewall();
@@ -128,7 +128,7 @@ public HttpFirewall getHttpFirewall() {
 
 让我们声明 [Spring Security](https://web.archive.org/web/20220814172559/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-security) 和 [Spring Web](https://web.archive.org/web/20220814172559/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-web) 的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -145,7 +145,7 @@ public HttpFirewall getHttpFirewall() {
 
 接下来，让我们通过创建一个扩展了`WebSecurityConfigurerAdapter`的配置类，用基本认证来保护我们的应用程序:
 
-```
+```java
 @Configuration
 public class SpringSecurityHttpFirewallConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -166,7 +166,7 @@ public class SpringSecurityHttpFirewallConfiguration extends WebSecurityConfigur
 
 默认情况下，Spring Security 提供了一个默认密码，该密码会在每次重启时更改。因此，让我们在`application.properties`中创建一个默认的用户名和密码:
 
-```
+```java
 spring.security.user.name=user
 spring.security.user.password=password
 ```
@@ -177,7 +177,7 @@ spring.security.user.password=password
 
 现在，让我们构建我们的用户管理 REST API:
 
-```
+```java
 @PostMapping
 public ResponseEntity<Response> createUser(@RequestBody User user) {
     userService.saveUser(user);
@@ -199,7 +199,7 @@ public ResponseEntity<Response> deleteUser(@PathVariable("userId") String userId
 
 现在，让我们构建并运行应用程序:
 
-```
+```java
 mvn spring-boot:run
 ```
 
@@ -207,14 +207,14 @@ mvn spring-boot:run
 
 现在，让我们开始创建一个使用[卷曲](/web/20220814172559/https://www.baeldung.com/curl-rest)的`User`:
 
-```
+```java
 curl -i --user user:password -d @request.json -H "Content-Type: application/json" 
      -H "Accept: application/json" http://localhost:8080/api/v1/users
 ```
 
 这里有一个`request.json`:
 
-```
+```java
 {
     "id":"1",
     "username":"navuluri",
@@ -224,7 +224,7 @@ curl -i --user user:password -d @request.json -H "Content-Type: application/json
 
 因此，答案是:
 
-```
+```java
 HTTP/1.1 201
 Location: /users/1
 Content-Type: application/json
@@ -237,7 +237,7 @@ Content-Type: application/json
 
 现在，让我们配置我们的`StrictHttpFirewall` 来拒绝来自所有 HTTP 方法的请求:
 
-```
+```java
 @Bean
 public HttpFirewall configureFirewall() {
     StrictHttpFirewall strictHttpFirewall = new StrictHttpFirewall();
@@ -251,7 +251,7 @@ public HttpFirewall configureFirewall() {
 
 在日志中，我们有这样一个例外:
 
-```
+```java
 org.springframework.security.web.firewall.RequestRejectedException: 
 The request was rejected because the HTTP method "POST" was not included
   within the list of allowed HTTP methods []
@@ -259,7 +259,7 @@ The request was rejected because the HTTP method "POST" was not included
 
 **既然`Spring Security v5.4`有了`RequestRejectedException` :** 就可以用`RequestRejectedHandler`定制`HTTP Status`
 
-```
+```java
 @Bean
 public RequestRejectedHandler requestRejectedHandler() {
    return new HttpStatusRequestRejectedHandler();
@@ -270,21 +270,21 @@ public RequestRejectedHandler requestRejectedHandler() {
 
 现在，让我们重新配置`StrictHttpFirewall` 以允许 URL 中的`\\` 以及`HTTP GET`、`POST`、`DELETE`和`OPTIONS`方法:
 
-```
+```java
 strictHttpFirewall.setAllowBackSlash(true);
 strictHttpFirewall.setAllowedHttpMethods(Arrays.asList("GET","POST","DELETE", "OPTIONS")
 ```
 
 接下来，调用 API:
 
-```
+```java
 curl -i --user user:password -d @request.json -H "Content-Type: application/json" 
      -H "Accept: application/json" http://localhost:8080/api<strong>\\</strong>v1/users
 ```
 
 这里我们有一个回应:
 
-```
+```java
 {
   "code":201,
   "message":"User created successfully",
@@ -296,19 +296,19 @@ curl -i --user user:password -d @request.json -H "Content-Type: application/json
 
 接下来，让我们尝试使用可疑的 URL 来调用我们的 API:
 
-```
+```java
 curl -i --user user:password -d @request.json -H "Content-Type: application/json" 
       -H "Accept: application/json" http://localhost:8080/api/v1<strong>//</strong>users
 ```
 
-```
+```java
 curl -i --user user:password -d @request.json -H "Content-Type: application/json" 
       -H "Accept: application/json" http://localhost:8080/api/v1<strong>\\</strong>users
 ```
 
 立即，所有上述请求失败，并显示错误日志:
 
-```
+```java
 org.springframework.security.web.firewall.RequestRejectedException: 
 The request was rejected because the URL contained a potentially malicious String "//"
 ```

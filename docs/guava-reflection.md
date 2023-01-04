@@ -16,7 +16,7 @@
 
 我们最终可能会将两个具有不同泛型类型的列表分配给同一个引用，这显然不是一个好主意:
 
-```
+```java
 List<String> stringList = Lists.newArrayList();
 List<Integer> intList = Lists.newArrayList();
 
@@ -32,7 +32,7 @@ assertTrue(result);
 
 `TypeToken`类使用这种变通方法来允许泛型类型的操作。我们可以使用`TypeToken` 类来捕获泛型列表的实际类型，并检查它们是否真的可以被同一个引用引用:
 
-```
+```java
 TypeToken<List<String>> stringListToken
   = new TypeToken<List<String>>() {};
 TypeToken<List<Integer>> integerListToken
@@ -51,7 +51,7 @@ assertTrue(integerListToken.isSubtypeOf(numberTypeToken));
 
 假设我们想要创建一个泛型参数化类，并且我们想要在运行时获得关于泛型类型的信息。我们可以创建一个以`TypeToken` 为字段的类来捕获信息:
 
-```
+```java
 abstract class ParametrizedClass<T> {
     TypeToken<T> type = new TypeToken<T>(getClass()) {};
 }
@@ -59,7 +59,7 @@ abstract class ParametrizedClass<T> {
 
 然后，当创建该类的实例时，泛型类型将在运行时可用:
 
-```
+```java
 ParametrizedClass<String> parametrizedClass = new ParametrizedClass<String>() {};
 
 assertEquals(parametrizedClass.type, TypeToken.of(String.class));
@@ -67,7 +67,7 @@ assertEquals(parametrizedClass.type, TypeToken.of(String.class));
 
 我们还可以创建一个具有多个泛型类型的复杂类型的`TypeToken` ，并在运行时检索每个泛型类型的信息:
 
-```
+```java
 TypeToken<Function<Integer, String>> funToken
   = new TypeToken<Function<Integer, String>>() {};
 
@@ -79,7 +79,7 @@ assertEquals(funResultToken, TypeToken.of(String.class));
 
 我们得到了`Function`的实际返回类型，也就是一个`String.` 我们甚至可以得到 map 中条目的类型:
 
-```
+```java
 TypeToken<Map<String, Integer>> mapToken
   = new TypeToken<Map<String, Integer>>() {};
 
@@ -98,7 +98,7 @@ assertEquals(
 
 `Invokable`是 [`java.lang.reflect.Method`](https://web.archive.org/web/20220815041353/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html) 和 [`java.lang.reflect.Constructor`](https://web.archive.org/web/20220815041353/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Constructor.html) 的流畅包装器。它在标准 Java `reflection` API 的基础上提供了一个更简单的 API。假设我们有一个类，它有两个公共方法，其中一个是 final 方法:
 
-```
+```java
 class CustomClass {
     public void somePublicMethod() {}
 
@@ -108,7 +108,7 @@ class CustomClass {
 
 现在让我们使用 Guava API 和 Java 标准的`reflection` API 来检查`somePublicMethod()` :
 
-```
+```java
 Method method = CustomClass.class.getMethod("somePublicMethod");
 Invokable<CustomClass, ?> invokable 
   = new TypeToken<CustomClass>() {}
@@ -123,7 +123,7 @@ assertTrue(isPublicGuava);
 
 这两种变体之间没有太大的区别，但是在 Java 中，检查一个方法是否是可重写的是一项非常重要的任务。幸运的是，`Invokable` 类中的`isOverridable()` 方法使这变得更容易:
 
-```
+```java
 Method method = CustomClass.class.getMethod("notOverridablePublicMethod");
 Invokable<CustomClass, ?> invokable
  = new TypeToken<CustomClass>() {}.method(method);

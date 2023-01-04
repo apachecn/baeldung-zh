@@ -14,7 +14,7 @@
 
 在 fork/join 框架中，**问题或任务被递归地分解成子任务**。然后单独解决子任务，将子结果组合起来形成结果:
 
-```
+```java
 Result solve(Problem problem) {
     if (problem is small)
         directly solve problem
@@ -39,7 +39,7 @@ Result solve(Problem problem) {
 
 **我们可以使用 [`ForkJoinPool`类](/web/20221205163736/https://www.baeldung.com/java-fork-join)或者 [`Executors`类](/web/20221205163736/https://www.baeldung.com/java-executor-service-tutorial) :** 创建一个窃取工作的线程池
 
-```
+```java
 ForkJoinPool commonPool = ForkJoinPool.commonPool();
 ExecutorService workStealingPool = Executors.newWorkStealingPool();
 ```
@@ -71,7 +71,7 @@ ExecutorService workStealingPool = Executors.newWorkStealingPool();
 
 `PrimeNumbers` 类帮助我们找到质数:
 
-```
+```java
 public class PrimeNumbers extends RecursiveAction {
 
     private int lowerBound;
@@ -137,14 +137,14 @@ public class PrimeNumbers extends RecursiveAction {
 
 首先，让我们看看**单线程方法**:
 
-```
+```java
 PrimeNumbers primes = new PrimeNumbers(10000);
 primes.findPrimeNumbers();
 ```
 
 现在， **`ForkJoinPool.commonPool`接近**:
 
-```
+```java
 PrimeNumbers primes = new PrimeNumbers(10000);
 ForkJoinPool pool = ForkJoinPool.commonPool();
 pool.invoke(primes);
@@ -153,7 +153,7 @@ pool.shutdown();
 
 最后，我们来看看 **`Executors.newWorkStealingPool` 接近**:
 
-```
+```java
 PrimeNumbers primes = new PrimeNumbers(10000);
 int parallelism = ForkJoinPool.getCommonPoolParallelism();
 ForkJoinPool stealer = (ForkJoinPool) Executors.newWorkStealingPool(parallelism);
@@ -163,7 +163,7 @@ stealer.shutdown();
 
 我们使用`ForkJoinPool`类的`invoke`方法将任务传递给线程池。这个方法接受`RecursiveAction`子类的实例。使用 [Java 微基准管理](/web/20221205163736/https://www.baeldung.com/java-microbenchmark-harness)，我们根据每次操作的平均时间对这些不同的方法进行了基准测试:
 
-```
+```java
 # Run complete. Total time: 00:04:50
 
 Benchmark                                                      Mode  Cnt    Score   Error  Units
@@ -184,13 +184,13 @@ fork/join pool 框架允许我们将任务分解成子任务。我们将 10，00
 
 我们使用`ForkJoinPool`类的`getStealCount`来获得偷工减料的级别:
 
-```
+```java
 long steals = forkJoinPool.getStealCount();
 ```
 
 确定`Executors.newWorkStealingPool` 和`ForkJoinPool.commonPool`的偷工减料计数给了我们不同的行为:
 
-```
+```java
 Executors.newWorkStealingPool ->
 Granularity: [1], Steals: [6564]
 Granularity: [10], Steals: [572]

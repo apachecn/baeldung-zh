@@ -12,7 +12,7 @@
 
 首先，让我们添加必要的依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.projectreactor</groupId>
     <artifactId>reactor-core</artifactId>
@@ -33,7 +33,7 @@ spring-boot-starter-data-couchbase-reactive 依赖关系包含了我们使用 re
 
 让我们首先创建一个保存我们属性的类:
 
-```
+```java
 @Configuration
 public class CouchbaseProperties {
 
@@ -59,7 +59,7 @@ public class CouchbaseProperties {
 
 为了使用响应式支持，我们应该创建扩展`AbstractReactiveCouchbaseConfiguration`的配置类:
 
-```
+```java
 @Configuration
 @EnableReactiveCouchbaseRepositories("com.baeldung.couchbase.domain.repository")
 public class ReactiveCouchbaseConfiguration extends AbstractReactiveCouchbaseConfiguration {
@@ -105,7 +105,7 @@ public class ReactiveCouchbaseConfiguration extends AbstractReactiveCouchbaseCon
 
 首先，让我们创建我们的存储库将使用的 POJO 类:
 
-```
+```java
 @Document
 public class Person {
     @Id private UUID id;
@@ -119,7 +119,7 @@ public class Person {
 
 现在，我们将为`Person`创建一个存储库:
 
-```
+```java
 @Repository
 @ViewIndexed(designDoc = ViewPersonRepository.DESIGN_DOCUMENT)
 public interface ViewPersonRepository extends ReactiveCrudRepository<Person, UUID> {
@@ -132,7 +132,7 @@ public interface ViewPersonRepository extends ReactiveCrudRepository<Person, UUI
 
 此外，我们可以添加一个定制方法，并使用`@View`注释使其基于视图:
 
-```
+```java
 @View(designDocument = ViewPersonRepository.DESIGN_DOCUMENT)
 Flux<Person> findByFirstName(String firstName);
 ```
@@ -141,7 +141,7 @@ Flux<Person> findByFirstName(String firstName);
 
 最后，让我们在测试订阅者的帮助下创建一个简单的 CRUD 测试:
 
-```
+```java
 @Test
 public void shouldSavePerson_findById_thenDeleteIt() {
     final UUID id = UUID.randomUUID();
@@ -170,7 +170,7 @@ public void shouldSavePerson_findById_thenDeleteIt() {
 
 现在，我们将为使用 N1QL 查询的`Person`创建反应式存储库:
 
-```
+```java
 @Repository
 @N1qlPrimaryIndexed
 public interface N1QLPersonRepository extends ReactiveCrudRepository<Person, UUID> {
@@ -182,7 +182,7 @@ public interface N1QLPersonRepository extends ReactiveCrudRepository<Person, UUI
 
 之后，让我们添加对`findAllByFirstName`方法的测试:
 
-```
+```java
 @Test
 public void shouldFindAll_byLastName() {
     final String firstName = "John";
@@ -206,7 +206,7 @@ public void shouldFindAll_byLastName() {
 
 此外，我们将创建一个存储库，允许我们使用排序抽象来检索人员:
 
-```
+```java
 @Repository
 public interface N1QLSortingPersonRepository extends ReactiveSortingRepository<Person, UUID> {
     Flux<Person> findAllByFirstName(String firstName, Sort sort);
@@ -215,7 +215,7 @@ public interface N1QLSortingPersonRepository extends ReactiveSortingRepository<P
 
 最后，让我们编写一个测试来检查数据是否真正排序了:
 
-```
+```java
 @Test
 public void shouldFindAll_sortedByFirstName() {
     final Person firstPerson = new Person(UUID.randomUUID(), "John");

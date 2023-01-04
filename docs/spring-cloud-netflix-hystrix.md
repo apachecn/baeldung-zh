@@ -16,7 +16,7 @@
 
 让我们使用`[spring-boot-starter-web](https://web.archive.org/web/20220416114752/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-web%22)`依赖项创建一个新的 Maven 项目:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -28,7 +28,7 @@
 
 我们将从界面开始:
 
-```
+```java
 public interface GreetingController {
     @GetMapping("/greeting/{username}")
     String greeting(@PathVariable("username") String username);
@@ -37,7 +37,7 @@ public interface GreetingController {
 
 以及实现:
 
-```
+```java
 @RestController
 public class GreetingControllerImpl implements GreetingController {
 
@@ -50,7 +50,7 @@ public class GreetingControllerImpl implements GreetingController {
 
 接下来，我们将写下主要的应用程序类:
 
-```
+```java
 @SpringBootApplication
 public class RestProducerApplication {
     public static void main(String[] args) {
@@ -65,14 +65,14 @@ public class RestProducerApplication {
 
 然后让我们在我们的`application.properties` 文件中指定一个端口`9090` 和一个名称`rest-producer` :
 
-```
+```java
 server.port=9090
 spring.application.name=rest-producer
 ```
 
 现在我们可以使用 cURL 测试我们的生成器了:
 
-```
+```java
 $> curl http://localhost:9090/greeting/Cid
 Hello Cid!
 ```
@@ -83,7 +83,7 @@ Hello Cid!
 
 因此，我们创建一个新的 Maven 项目，将 [`spring-cloud-starter-` hystrix](https://web.archive.org/web/20220416114752/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.cloud%22%20AND%20a%3A%22spring-cloud-starter-hystrix%22) `, [spring-boot-starter-web](https://web.archive.org/web/20220416114752/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-web%22)`和 [`spring-boot-starter-thymeleaf`](https://web.archive.org/web/20220416114752/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-thymeleaf%22) 作为依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-hystrix</artifactId>
@@ -107,7 +107,7 @@ Hello Cid!
 
 这将是我们的可注入的`@Service`实现一个带有相关回退方法的`@HystrixCommand`。该回退必须使用与原始签名相同的签名:
 
-```
+```java
 @Service
 public class GreetingService {
     @HystrixCommand(fallbackMethod = "defaultGreeting")
@@ -127,7 +127,7 @@ public class GreetingService {
 
 为了显式地使用 Hystrix，我们必须用`@EnableHystrix`来注释这个类:
 
-```
+```java
 @SpringBootApplication
 @EnableCircuitBreaker
 public class RestConsumerApplication {
@@ -139,7 +139,7 @@ public class RestConsumerApplication {
 
 我们将使用我们的`GreetingService`设置控制器:
 
-```
+```java
 @Controller
 public class GreetingController {
 
@@ -156,7 +156,7 @@ public class GreetingController {
 
 这是 HTML 模板:
 
-```
+```java
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
@@ -170,19 +170,19 @@ public class GreetingController {
 
 为了确保应用程序正在侦听一个定义的端口，我们将以下内容放在一个`application.properties`文件中:
 
-```
+```java
 server.port=8080
 ```
 
 为了查看 Hystix 断路器的运行情况，我们启动我们的消费者，将浏览器指向 [`http://localhost:8080/get-greeting/Cid`](https://web.archive.org/web/20220416114752/http://localhost:8080/get-greeting/Cid) 。正常情况下，将显示以下内容:
 
-```
+```java
 Hello Cid!
 ```
 
 为了模拟我们的生产者的失败，我们将简单地停止它，并且在我们完成刷新浏览器之后，我们应该看到一个一般的消息，从我们的`@Service`中的 fallback 方法返回:
 
-```
+```java
 Hello User!
 ```
 
@@ -194,7 +194,7 @@ Hello User!
 
 为了启动这个新项目，我们将复制我们的消费者，并添加我们的生产者和`[spring-cloud-starter-feign](https://web.archive.org/web/20220416114752/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.cloud%22%20AND%20a%3A%22spring-cloud-starter-feign%22)`作为依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.baeldung.spring.cloud</groupId>
     <artifactId>spring-cloud-hystrix-rest-producer</artifactId>
@@ -213,7 +213,7 @@ Hello User!
 
 `@FeignClient`的 name 属性是强制的。它用于通过 Eureka 客户端的服务发现或通过 URL 查找应用程序，前提是给出了以下属性:
 
-```
+```java
 @FeignClient(
   name = "rest-producer"
   url = "http://localhost:9090", 
@@ -236,7 +236,7 @@ public interface GreetingClient extends GreetingController {
 
 在`RestConsumerFeignApplication`中，我们将添加一个额外的注释来启用对主应用程序类的假装集成，实际上是`@EnableFeignClients`:
 
-```
+```java
 @SpringBootApplication
 @EnableCircuitBreaker
 @EnableFeignClients
@@ -250,7 +250,7 @@ public class RestConsumerFeignApplication {
 
 我们将修改控制器，使用自动连接的 Feign 客户端，而不是之前注入的`@Service`，来检索我们的问候:
 
-```
+```java
 @Controller
 public class GreetingController {
     @Autowired
@@ -266,7 +266,7 @@ public class GreetingController {
 
 为了区别这个例子和前面的例子，我们将改变`application.properties`中的应用程序监听端口:
 
-```
+```java
 server.port=8082
 ```
 
@@ -282,7 +282,7 @@ server.port=8082
 
 让我们将`[spring-cloud-starter-hystrix](https://web.archive.org/web/20220416114752/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.cloud%22%20AND%20a%3A%22spring-cloud-starter-hystrix%22)`依赖性添加到评级模块中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-hystrix</artifactId>
@@ -293,7 +293,7 @@ server.port=8082
 
 让我们更新`RatingService`,用`@HystrixCommand`将数据库查询方法包装在一个 Hystrix 命令中，并将其配置为回退到从 Redis 读取:
 
-```
+```java
 @HystrixCommand(
   commandKey = "ratingsByIdFromDB", 
   fallbackMethod = "findCachedRatingById", 
@@ -313,7 +313,7 @@ public Rating findCachedRatingById(Long ratingId) {
 
 由于 Hystrix 功能是作为 AOP 建议透明注入的，我们必须调整建议的堆叠顺序，以防我们有其他建议，如 Spring 的事务性建议。这里，我们调整了 Spring 的事务 AOP 建议，使其优先级低于 Hystrix AOP 建议:
 
-```
+```java
 @EnableHystrix
 @EnableTransactionManagement(
   order=Ordered.LOWEST_PRECEDENCE, 
@@ -338,14 +338,14 @@ public class RatingServiceApplication {
 
 让我们将 H2 库(`h2-1.4.193.jar`)复制到一个已知的目录，并启动 H2 服务器:
 
-```
+```java
 >java -cp h2-1.4.193.jar org.h2.tools.Server -tcp
 TCP server running at tcp://192.168.99.1:9092 (only local connections)
 ```
 
 现在让我们在`rating-service.properties`中更新我们模块的数据源 URL，以指向这个 H2 服务器:
 
-```
+```java
 spring.datasource.url = jdbc:h2:tcp://localhost/~/ratings
 ```
 
@@ -357,7 +357,7 @@ spring.datasource.url = jdbc:h2:tcp://localhost/~/ratings
 
 通常情况下，`@HytrixCommand`注释方法是在线程池上下文中执行的。但有时它需要在本地范围内运行，例如，一个`@SessionScope`或一个`@RequestScope`。这可以通过给命令注释提供参数来实现:
 
-```
+```java
 @HystrixCommand(fallbackMethod = "getSomeDefault", commandProperties = {
   @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE")
 })
@@ -369,7 +369,7 @@ Hystrix 的一个很好的可选特性是能够在仪表板上监控其状态。
 
 为了启用它，我们将把`[spring-cloud-starter-hystrix-dashboard](https://web.archive.org/web/20220416114752/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.cloud%22%20AND%20a%3A%22spring-cloud-starter-hystrix-dashboard%22)` 和`[spring-boot-starter-actuator](https://web.archive.org/web/20220416114752/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-actuator%22)`放在消费者的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-hystrix-dashboard</artifactId>

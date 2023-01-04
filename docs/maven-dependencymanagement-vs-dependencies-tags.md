@@ -18,7 +18,7 @@
 
 这个标签由一个`dependencies`标签组成，标签本身可能包含多个`dependency`标签。每个`dependency`应该至少有三个主标签:`groupId`、`artifactId,`和`version`。让我们看一个例子:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -38,7 +38,7 @@
 
 让我们看一个简单的例子:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.apache.commons</groupId>
@@ -50,7 +50,7 @@
 
 **如果我们以前在 POM 文件**中使用过`dependencyManagement `标签，那么`version`和`scope`标签可以被隐式继承:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.apache.commons</groupId>
@@ -67,7 +67,7 @@
 
 让我们看一个添加 JUnit 库依赖项的示例:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -84,7 +84,7 @@
 
 现在，让我们看看代码的另一面，它向项目添加了实际的依赖关系:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>junit</groupId>
@@ -115,7 +115,7 @@
 
 让我们看一个来自[Maven 项目](https://web.archive.org/web/20220829071246/https://github.com/apache/maven/blob/master/pom.xml)本身的例子。我们看到了`hamcrest-core`依赖，它存在于 Maven 项目中。它首先在`dependencyManagement `标签中声明，然后由主`dependencies`标签导入:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -152,7 +152,7 @@
 
 让我们看一个例子:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -167,7 +167,7 @@
 
 想象一下上面的 POM 代码片段。然后假设我们要在子模块源文件中使用这个库:
 
-```
+```java
 import org.apache.commons.lang3.StringUtils;
 
 public class Main {
@@ -180,14 +180,14 @@ public class Main {
 
 由于缺少库，此代码将无法编译。编译器报错:
 
-```
+```java
 [ERROR] Failed to execute goal compile (default-compile) on project sample-module: Compilation failure
 [ERROR] ~/sample-module/src/main/java/com/baeldung/Main.java:[3,32] package org.apache.commons.lang3 does not exist
 ```
 
 为了避免这个错误，在子模块 POM 文件中添加下面的`dependencies`标记就足够了:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.apache.commons</groupId>

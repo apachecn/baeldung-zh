@@ -38,7 +38,7 @@
 
 我们举个例子。假设我们有一个全局计数器，它由每个线程递增。在处理结束时，我们希望该计数器的状态与已经执行的线程数完全相同:
 
-```
+```java
 private int counter;
 public void increment() {
     counter++;
@@ -63,7 +63,7 @@ public void increment() {
 
 让我们从定义一个简单的类开始，这个类记录可能发生的任何事情:
 
-```
+```java
 public class MyCounter {
     private int count;
     public void increment() {
@@ -80,7 +80,7 @@ public class MyCounter {
 
 作为一条经验法则，**将代码与任何并发行为隔离开来进行测试总是明智的。这是为了合理地确定代码中没有与并发性无关的其他缺陷。让我们看看如何做到这一点:**
 
-```
+```java
 @Test
 public void testCounter() {
     MyCounter counter = new MyCounter();
@@ -97,7 +97,7 @@ public void testCounter() {
 
 让我们继续测试相同的代码，这次是在并发设置中。我们将尝试用多个线程访问该类的同一个实例，并观察它的行为:
 
-```
+```java
 @Test
 public void testCounterWithConcurrency() throws InterruptedException {
     int numberOfThreads = 10;
@@ -123,7 +123,7 @@ public void testCounterWithConcurrency() throws InterruptedException {
 
 我们需要的是**一种控制线程交错的方法，这样我们就可以用更少的线程以确定的方式揭示并发问题**。我们将从稍微调整一下正在测试的代码开始:
 
-```
+```java
 public synchronized void increment() throws InterruptedException {
     int temp = count;
     wait(100);
@@ -139,7 +139,7 @@ public synchronized void increment() throws InterruptedException {
 
 现在，让我们像前面一样测试这段代码:
 
-```
+```java
 @Test
 public void testSummationWithConcurrency() throws InterruptedException {
     int numberOfThreads = 2;
@@ -179,7 +179,7 @@ public void testSummationWithConcurrency() throws InterruptedException {
 
 让我们重温一下之前我们试图产生压力的代码，并理解如何使用 tempus-fugit 实现同样的效果:
 
-```
+```java
 public class MyCounterTests {
     @Rule
     public ConcurrentRule concurrently = new ConcurrentRule();
@@ -213,7 +213,7 @@ public class MyCounterTests {
 
 让我们看看如何改进我们之前天真的尝试:
 
-```
+```java
 public class MyCounterTests {
     private MyCounter counter;
 
@@ -251,7 +251,7 @@ public class MyCounterTests {
 
 让我们看看如何用多线程更确定地测试我们的代码 dTC:
 
-```
+```java
 public class MyTests extends MultithreadedTestCase {
     private MyCounter counter;
     @Override
@@ -284,7 +284,7 @@ OpenJDK 维护代码工具项目，为开发人员提供处理 OpenJDK 项目的
 
 尽管这是一个实验性的工具，我们仍然可以利用它来分析并发代码并编写测试来解决相关的缺陷。让我们看看如何测试我们在本教程中一直使用的代码。从使用的角度来看，这个概念非常相似:
 
-```
+```java
 @JCStressTest
 @Outcome(id = "1", expect = ACCEPTABLE_INTERESTING, desc = "One update lost.")
 @Outcome(id = "2", expect = ACCEPTABLE, desc = "Both updates.")

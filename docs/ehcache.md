@@ -16,7 +16,7 @@
 
 为了使用 Ehcache，我们需要添加这个 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.ehcache</groupId>
     <artifactId>ehcache</artifactId>
@@ -39,7 +39,7 @@ Ehcache 有两种配置方式:
 
 这一小节将展示用 POJOs 配置 Ehcache 是多么容易。此外，我们将创建一个助手类来简化缓存配置和可用性:
 
-```
+```java
 public class CacheHelper {
 
     private CacheManager cacheManager;
@@ -79,7 +79,7 @@ public class CacheHelper {
 
 3.1 小节中的配置对象。等同于使用以下 XML 配置:
 
-```
+```java
 <cache-template name="squaredNumber">
     <key-type>java.lang.Integer</key-type>
     <value-type>java.lang.Integer</value-type>
@@ -89,7 +89,7 @@ public class CacheHelper {
 
 为了在 Java 应用程序中包含这个缓存，我们需要用 Java 读取 XML 配置文件:
 
-```
+```java
 URL myUrl = getClass().getResource(xmlFile); 
 XmlConfiguration xmlConfig = new XmlConfiguration(myUrl); 
 CacheManager myCacheManager = CacheManagerBuilder
@@ -102,7 +102,7 @@ CacheManager myCacheManager = CacheManagerBuilder
 
 当然，如果缓存已经包含计算值，我们将返回缓存值并避免不必要的计算:
 
-```
+```java
 public class SquaredCalculator {
     private CacheHelper cache;
 
@@ -126,7 +126,7 @@ public class SquaredCalculator {
 
 为了完成我们的测试场景，我们还需要计算平方值的代码:
 
-```
+```java
 @Test
 public void whenCalculatingSquareValueAgain_thenCacheHasAllValues() {
     for (int i = 10; i < 15; i++) {
@@ -145,7 +145,7 @@ public void whenCalculatingSquareValueAgain_thenCacheHasAllValues() {
 
 如果我们运行我们的测试，我们将在控制台中得到这个结果:
 
-```
+```java
 Calculating square value of 10 and caching result.
 Square value of 10 is: 100
 
@@ -178,7 +178,7 @@ Square value of 14 is: 196
 
 如果有太多的值要存储到缓存中，我们可以在硬盘上存储一些值。
 
-```
+```java
 PersistentCacheManager persistentCacheManager = 
   CacheManagerBuilder.newCacheManagerBuilder()
     .with(CacheManagerBuilder.persistence(getStoragePath()
@@ -205,7 +205,7 @@ persistentCacheManager.close();
 
 Ehcache 通过`Expiry`接口控制数据刷新:
 
-```
+```java
 CacheConfiguration<Integer, Integer> cacheConfiguration 
   = CacheConfigurationBuilder
     .newCacheConfigurationBuilder(Integer.class, Integer.class, 

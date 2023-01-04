@@ -35,7 +35,7 @@ In addition, instrumenting Lightrun Metrics at runtime allows you to track down 
 
 我们需要将以下依赖项添加到`pom.xml`:
 
-```
+```java
 <dependency> 
     <groupId>com.querydsl</groupId> 
     <artifactId>querydsl-apt</artifactId> 
@@ -50,7 +50,7 @@ In addition, instrumenting Lightrun Metrics at runtime allows you to track down 
 
 我们还需要配置 APT–注释处理工具–插件，如下所示:
 
-```
+```java
 <plugin>
     <groupId>com.mysema.maven</groupId>
     <artifactId>apt-maven-plugin</artifactId>
@@ -75,7 +75,7 @@ In addition, instrumenting Lightrun Metrics at runtime allows you to track down 
 
 接下来，让我们看看我们将在搜索 API 中使用的“`MyUser`”实体:
 
-```
+```java
 @Entity
 public class MyUser {
     @Id
@@ -96,7 +96,7 @@ public class MyUser {
 
 我们在这里使用`PathBuilder`而不是自动生成的 Q 类型，因为我们需要为更抽象的用法动态地创建路径:
 
-```
+```java
 public class MyUserPredicate {
 
     private SearchCriteria criteria;
@@ -131,7 +131,7 @@ public class MyUserPredicate {
 
 为了表示这种开放的过滤标准，我们使用了一个简单但非常灵活的实现—`SearchCriteria`:
 
-```
+```java
 public class SearchCriteria {
     private String key;
     private String operation;
@@ -151,7 +151,7 @@ public class SearchCriteria {
 
 我们需要我们的`MyUserRepository` 来扩展`QuerydslPredicateExecutor`,这样我们就可以稍后使用`Predicates`来过滤搜索结果:
 
-```
+```java
 public interface MyUserRepository extends JpaRepository<MyUser, Long>, 
   QuerydslPredicateExecutor<MyUser>, QuerydslBinderCustomizer<QMyUser> {
     @Override
@@ -172,7 +172,7 @@ public interface MyUserRepository extends JpaRepository<MyUser, Long>,
 
 在下面的例子中，我们与一个构建者`MyUserPredicatesBuilder` 一起工作，来组合`Predicates`:
 
-```
+```java
 public class MyUserPredicatesBuilder {
     private List<SearchCriteria> params;
 
@@ -212,7 +212,7 @@ public class MyUserPredicatesBuilder {
 
 我们将从用几个用户初始化数据库开始——让这些用户准备好并可用于测试:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { PersistenceConfig.class })
 @Transactional
@@ -246,7 +246,7 @@ public class JPAQuerydslIntegrationTest {
 
 接下来，让我们看看如何查找姓氏为的用户:
 
-```
+```java
 @Test
 public void givenLast_whenGettingListOfUsers_thenCorrect() {
     MyUserPredicatesBuilder builder = new MyUserPredicatesBuilder().with("lastName", ":", "Doe");
@@ -258,7 +258,7 @@ public void givenLast_whenGettingListOfUsers_thenCorrect() {
 
 现在，让我们看看如何找到一个名为**，姓为**的用户:
 
-```
+```java
 @Test
 public void givenFirstAndLastName_whenGettingListOfUsers_thenCorrect() {
     MyUserPredicatesBuilder builder = new MyUserPredicatesBuilder()
@@ -273,7 +273,7 @@ public void givenFirstAndLastName_whenGettingListOfUsers_thenCorrect() {
 
 接下来，让我们看看如何找到给定了姓氏和最小年龄的用户
 
-```
+```java
 @Test
 public void givenLastAndAge_whenGettingListOfUsers_thenCorrect() {
     MyUserPredicatesBuilder builder = new MyUserPredicatesBuilder()
@@ -288,7 +288,7 @@ public void givenLastAndAge_whenGettingListOfUsers_thenCorrect() {
 
 现在，让我们看看如何搜索实际上不存在的**`MyUser` :**
 
-```
+```java
 @Test
 public void givenWrongFirstAndLast_whenGettingListOfUsers_thenCorrect() {
     MyUserPredicatesBuilder builder = new MyUserPredicatesBuilder()
@@ -301,7 +301,7 @@ public void givenWrongFirstAndLast_whenGettingListOfUsers_thenCorrect() {
 
 最后，让我们看看如何在只给出名字的一部分的情况下找到一个`MyUser` **，如下例所示:**
 
-```
+```java
 @Test
 public void givenPartialFirst_whenGettingListOfUsers_thenCorrect() {
     MyUserPredicatesBuilder builder = new MyUserPredicatesBuilder().with("firstName", ":", "jo");
@@ -319,7 +319,7 @@ public void givenPartialFirst_whenGettingListOfUsers_thenCorrect() {
 
 我们正在定义一个`UserController`,它定义了一个简单的方法`findAll()`,带有一个“`search`”参数来传递查询字符串:
 
-```
+```java
 @Controller
 public class UserController {
 
@@ -346,13 +346,13 @@ public class UserController {
 
 下面是一个快速测试 URL 的例子:
 
-```
+```java
 http://localhost:8080/myusers?search=lastName:doe,age>25
 ```
 
 回应是:
 
-```
+```java
 [{
     "id":2,
     "firstName":"tom",

@@ -22,7 +22,7 @@ Drools 是一个业务规则管理系统(BRMS)解决方案。Drools 可以与 jB
 
 下面是一个简单的例子，通过使用一个包含决策表的 Excel 文件来说明这个框架是如何工作的。首先，让我们导入依赖于 [org.openl.core](https://web.archive.org/web/20220627082047/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.openl%22%20AND%20a%3A%22org.openl.core%22) 和 [org.openl.rules](https://web.archive.org/web/20220627082047/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.openl.rules%22%20AND%20a%3A%22org.openl.rules%22) 模块的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.openl</groupId>
     <artifactId>org.openl.core</artifactId>
@@ -37,7 +37,7 @@ Drools 是一个业务规则管理系统(BRMS)解决方案。Drools 可以与 jB
 
 现在，一个`User` POJO:
 
-```
+```java
 public class User {
     private String name;
     // getters and setters
@@ -46,7 +46,7 @@ public class User {
 
 以及将表示应用规则的结果的枚举:
 
-```
+```java
 public enum Greeting {
     // ...
 }
@@ -54,7 +54,7 @@ public enum Greeting {
 
 `Case`类用导致结果的变量包装`User`对象:
 
-```
+```java
 public class Case {
     // Variables to infer outcomes
     // getters and setters
@@ -63,7 +63,7 @@ public class Case {
 
 界面`IRule`包含 Excel 文件注入的规则:
 
-```
+```java
 public interface IRule {
     void helloUser(Case aCase, final Response response);
 }
@@ -71,7 +71,7 @@ public interface IRule {
 
 `Response`类处理应用规则的返回:
 
-```
+```java
 public class Response {
     private String result;
     private Map<String, String> map = new HashMap<>();
@@ -80,7 +80,7 @@ public class Response {
 
 触发规则执行的主类:
 
-```
+```java
 public class Main {
     private IRule instance;
 
@@ -110,7 +110,7 @@ Easy Rules 是一个简单的 Java 规则引擎，提供了一个轻量级的基
 
 这里我们提供一个“Hello，world”的例子。让我们根据 [easy-rules-core](https://web.archive.org/web/20220627082047/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.jeasy%22%20AND%20a%3A%22easy-rules-core%22) 模块导入所需的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.jeasy</groupId>
     <artifactId>easy-rules-core</artifactId>
@@ -120,7 +120,7 @@ Easy Rules 是一个简单的 Java 规则引擎，提供了一个轻量级的基
 
 接下来，我们创建一个定义规则的类:
 
-```
+```java
 @Rule(name = "Hello World rule", description = "Always say hello world")
 public class HelloWorldRule {
 
@@ -138,7 +138,7 @@ public class HelloWorldRule {
 
 最后，我们创建主类:
 
-```
+```java
 public class Launcher {
     public static void main(String... args) {
         // create facts
@@ -165,7 +165,7 @@ RuleBook 可以使用 Java DSL 与 Spring 集成。
 
 这里，我们使用 RuleBook 提供了一个简单的“Hello，world”示例。让我们添加依赖于 [rulebook-core](https://web.archive.org/web/20220627082047/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.deliveredtechnologies%22%20AND%20a%3A%22rulebook-core%22) 模块的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.deliveredtechnologies</groupId>
     <artifactId>rulebook-core</artifactId>
@@ -175,7 +175,7 @@ RuleBook 可以使用 Java DSL 与 Spring 集成。
 
 现在，我们创建规则:
 
-```
+```java
 public class HelloWorldRule {
     public RuleBook<Object> defineHelloWorldRules() {
         return RuleBookBuilder
@@ -191,7 +191,7 @@ public class HelloWorldRule {
 
 最后，主类:
 
-```
+```java
 public static void main(String[] args) {
     HelloWorldRule ruleBook = new HelloWorldRule();
     ruleBook

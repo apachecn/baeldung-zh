@@ -37,7 +37,7 @@ A `stack`可以方便地处理一些有趣的问题，如表达式求值、实�
 
 下面让我们来看看 Java 集合类中的一个方法，`ArrayDeque`:
 
-```
+```java
 public E pollFirst() {
     int h = head;
     E result = (E) elements[h];
@@ -89,7 +89,7 @@ public E pollFirst() {
 
 让我们来看看这个类:
 
-```
+```java
 public class DequeBasedSynchronizedStack<T> {
 
     // Internal Deque which gets decorated for synchronization.

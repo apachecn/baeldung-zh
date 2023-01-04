@@ -12,7 +12,7 @@
 
 **Sql2o 是一个单独的 jar 文件，我们可以很容易地将它添加到我们项目的依赖项中:**
 
-```
+```java
 <dependency>
     <groupId>org.sql2o</groupId>
     <artifactId>sql2o</artifactId>
@@ -22,7 +22,7 @@
 
 在我们的例子中，我们还将使用嵌入式数据库 HSQL 为了跟进，我们也可以包括它:
 
-```
+```java
 <dependency>
     <groupId>org.hsqldb</groupId>
     <artifactId>hsqldb</artifactId>
@@ -37,7 +37,7 @@ Maven Central 托管最新版本的`[sql2o](https://web.archive.org/web/20221206
 
 **为了建立连接，我们从`Sql2o` 类的一个实例开始:**
 
-```
+```java
 Sql2o sql2o = new Sql2o("jdbc:hsqldb:mem:testDB", "sa", "");
 ```
 
@@ -49,7 +49,7 @@ Sql2o sql2o = new Sql2o("jdbc:hsqldb:mem:testDB", "sa", "");
 
 **在大多数应用程序中，我们希望使用一个** `**DataSource** `而不是一个原始的`DriverManager` 连接，也许是为了利用连接池，或者指定额外的连接参数。别担心，Sql2o 已经为我们做好了准备:
 
-```
+```java
 Sql2o sql2o = new Sql2o(datasource);
 ```
 
@@ -59,7 +59,7 @@ Sql2o sql2o = new Sql2o(datasource);
 
 相反，**我们使用`open` 方法得到一个`Connection` 对象**(注意不是 JDBC `Connection`)。由于`Connection`是`AutoCloseable,` ，我们可以将其包装在 [try-with-resources](/web/20221206170835/https://www.baeldung.com/java-try-with-resources) 块中:
 
-```
+```java
 try (Connection connection = sql2o.open()) {
     // use the connection
 }
@@ -69,7 +69,7 @@ try (Connection connection = sql2o.open()) {
 
 现在让我们创建一个数据库并将一些数据放入其中。在整个教程中，我们将使用一个名为`project:`的简单表格
 
-```
+```java
 connection.createQuery(
     "create table project "
     + "(id integer identity, name varchar(50), url varchar(100))").executeUpdate();
@@ -77,7 +77,7 @@ connection.createQuery(
 
 `executeUpdate` 返回`Connection` 对象，这样我们可以链接多个调用。然后，如果我们想知道受影响的行数，我们使用`getResult:`
 
-```
+```java
 assertEquals(0, connection.getResult());
 ```
 
@@ -89,7 +89,7 @@ assertEquals(0, connection.getResult());
 
 我们分两步走。首先，用一个附加参数来`createQuery:`
 
-```
+```java
 Query query = connection.createQuery(
     "insert into project (name, url) "
     + "values ('tutorials', 'github.com/eugenp/tutorials')", true);
@@ -97,13 +97,13 @@ Query query = connection.createQuery(
 
 然后，在连接上调用`getKey` :
 
-```
+```java
 assertEquals(0, query.executeUpdate().getKey());
 ```
 
 如果键不止一个，我们使用`getKeys` 来代替，它返回一个数组:
 
-```
+```java
 assertEquals(1, query.executeUpdate().getKeys()[0]);
 ```
 
@@ -113,7 +113,7 @@ assertEquals(1, query.executeUpdate().getKeys()[0]);
 
 首先，我们必须用 getters 和 setters 定义一个 POJO 类来表示我们的项目表:
 
-```
+```java
 public class Project {
     long id;
     private String name;
@@ -124,13 +124,13 @@ public class Project {
 
 然后，像以前一样，我们将编写我们的查询:
 
-```
+```java
 Query query = connection.createQuery("select * from project order by id");
 ```
 
 不过，这次我们要用一个新方法，`executeAndFetch:`
 
-```
+```java
 List<Project> list = query.executeAndFetch(Project.class);
 ```
 
@@ -142,7 +142,7 @@ List<Project> list = query.executeAndFetch(Project.class);
 
 然而，Java 和关系数据库之间的命名约定是不同的。假设我们向项目添加了一个创建日期属性:
 
-```
+```java
 public class Project {
     long id;
     private String name;
@@ -156,7 +156,7 @@ public class Project {
 
 当然，我们可以在查询中给它起别名:
 
-```
+```java
 Query query = connection.createQuery(
     "select name, url, creation_date as creationDate from project");
 ```
@@ -165,7 +165,7 @@ Query query = connection.createQuery(
 
 另一个选项是指示 Sql2o 将`creation_date` 映射到`creationDate.`，也就是说，我们可以告诉查询关于映射的信息:
 
-```
+```java
 connection.createQuery("select * from project")
     .addColumnMapping("creation_date", "creationDate");
 ```
@@ -174,7 +174,7 @@ connection.createQuery("select * from project")
 
 幸运的是，我们还可以**全局指定映射:**
 
-```
+```java
 Map<String, String> mappings = new HashMap<>();
 mappings.put("CREATION_DATE", "creationDate");
 sql2o.setDefaultColumnMappings(mappings);
@@ -188,7 +188,7 @@ sql2o.setDefaultColumnMappings(mappings);
 
 在这些情况下，定义一个类并迭代一个我们知道包含单个元素的列表是多余的。因此， **Sql2o 包含了`executeScalar` 方法:**
 
-```
+```java
 Query query = connection.createQuery(
     "select count(*) from project");
 assertEquals(2, query.executeScalar(Integer.class));
@@ -202,7 +202,7 @@ assertEquals(2, query.executeScalar(Integer.class));
 
 因此， **Sql2o 还允许一个到表格数据结构的低级动态映射。**我们使用`executeAndFetchTable` 方法获得:
 
-```
+```java
 Query query = connection.createQuery(
     "select * from project order by id");
 Table table = query.executeAndFetchTable();
@@ -210,14 +210,14 @@ Table table = query.executeAndFetchTable();
 
 然后，我们可以提取地图列表:
 
-```
+```java
 List<Map<String, Object>> list = table.asList();
 assertEquals("tutorials", list.get(0).get("name"));
 ```
 
 或者，我们可以将数据映射到一列`Row` 对象上，这些对象是从列名到值的映射，类似于`ResultSet` s:
 
-```
+```java
 List<Row> rows = table.rows();
 assertEquals("tutorials", rows.get(0).getString("name"));
 ```
@@ -234,7 +234,7 @@ assertEquals("tutorials", rows.get(0).getString("name"));
 
 因此，我们可以在 Sql2o 中使用命名参数来实现上述所有功能。我们用冒号引入参数，并用`addParameter` 方法绑定它们:
 
-```
+```java
 Query query = connection.createQuery(
     "insert into project (name, url) values (:name, :url)")
     .addParameter("name", "REST with Spring")
@@ -246,7 +246,7 @@ assertEquals(1, query.executeUpdate().getResult());
 
 Sql2o 提供了另一种绑定参数的方式:即使用 POJO 作为源来绑定**。当一个查询有许多参数并且它们都指向同一个实体时，这种技术特别适合。那么，让我们来介绍一下**的`bind` 方法:****
 
-```
+```java
 Project project = new Project();
 project.setName("REST with Spring");
 project.setUrl("github.com/eugenp/REST-With-Spring");
@@ -263,7 +263,7 @@ assertEquals(1, connection.getResult());
 
 为了打开一个事务，我们使用了`beginTransaction` 方法，而不是我们目前使用的`open` 方法:
 
-```
+```java
 try (Connection connection = sql2o.beginTransaction()) {
     // here, the transaction is active
 }
@@ -275,7 +275,7 @@ try (Connection connection = sql2o.beginTransaction()) {
 
 然而，**我们可以用适当的方法显式地提交或回滚事务:**
 
-```
+```java
 try (Connection connection = sql2o.beginTransaction()) {
     boolean transactionSuccessful = false;
     // perform some operations
@@ -291,7 +291,7 @@ try (Connection connection = sql2o.beginTransaction()) {
 
 但是，我们可以提交或回滚事务而不结束它:
 
-```
+```java
 try (Connection connection = sql2o.beginTransaction()) {
     List list = connection.createQuery("select * from project")
         .executeAndFetchTable()
@@ -320,7 +320,7 @@ try (Connection connection = sql2o.beginTransaction()) {
 *   然后，我们绑定参数，并为查询的每个实例调用`addToBatch`
 *   最后，我们称之为`executeBatch:`
 
-```
+```java
 try (Connection connection = sql2o.beginTransaction()) {
     Query query = connection.createQuery(
         "insert into project (name, url) " +
@@ -346,7 +346,7 @@ try (Connection connection = sql2o.beginTransaction()) {
 
 因此，Sql2o 支持惰性模式，在这种模式下，每次返回并映射一行:
 
-```
+```java
 Query query = connection.createQuery("select * from project");
 try (ResultSetIterable<Project> projects = query.executeAndFetchLazy(Project.class)) {
     for(Project p : projects) {

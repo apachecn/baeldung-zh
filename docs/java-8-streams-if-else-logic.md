@@ -12,7 +12,7 @@
 
 首先，让我们创建一个`Integer List` ，然后在`Integer`流`forEach()`方法中使用传统的 if/else 逻辑:
 
-```
+```java
 List<Integer> ints = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
 ints.stream()
@@ -31,7 +31,7 @@ ints.stream()
 
 其次，让我们看一个使用`Stream filter()`方法的更优雅的实现:
 
-```
+```java
 Stream<Integer> evenIntegers = ints.stream()
     .filter(i -> i.intValue() % 2 == 0);
 Stream<Integer> oddIntegers = ints.stream()

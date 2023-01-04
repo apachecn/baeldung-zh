@@ -12,7 +12,7 @@
 
 首先，我们需要**配置我们的消息代理和 WebSocket 应用程序端点**:
 
-```
+```java
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig
@@ -41,7 +41,7 @@ public class WebSocketConfig
 
 如果我们想要启用 SockJS，我们必须修改寄存器部分:
 
-```
+```java
 registry.addEndpoint("/greeting").withSockJS();
 ```
 
@@ -51,7 +51,7 @@ registry.addEndpoint("/greeting").withSockJS();
 
 这个拦截器可以直接添加到`WebSocketConfig:`中
 
-```
+```java
 @Override
 public void registerStompEndpoints(StompEndpointRegistry registry) {
 
@@ -83,7 +83,7 @@ registry
 
 这意味着注释依赖于输入消息的会话 id，有效地向会话私有的目的地发送回复:
 
-```
+```java
 @Controller
 public class WebSocketController {
 
@@ -114,7 +114,7 @@ public class WebSocketController {
 
 ## 5.WebSocket 客户端
 
-```
+```java
 function connect() {
     var socket = new WebSocket('ws://localhost:8080/greeting');
     ws = Stomp.over(socket);

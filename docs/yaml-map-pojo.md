@@ -14,7 +14,7 @@ POJO 类是普通的旧 Java 对象。YAML 是一种人类可读的结构化数�
 
 让我们想象一下，我们正在运营一个在线商店，我们正在创建一个翻译服装尺寸的服务。起初，我们只在英国卖衣服。我们想知道标签“S”、“M”、“L”等指的是什么英国尺寸。我们创建我们的 POJO 配置类:
 
-```
+```java
 @ConfigurationProperties(prefix = "t-shirt-size")
 public class TshirtSizeConfig {
 
@@ -32,7 +32,7 @@ public class TshirtSizeConfig {
 
 我们还需要记住在我们的`Application.class`上使用以下注释来启用配置属性:
 
-```
+```java
 @EnableConfigurationProperties(TshirtSizeConfig.class)
 public class DemoApplication {
     public static void main(String[] args) {
@@ -47,7 +47,7 @@ public class DemoApplication {
 
 我们可以在我们的`application.yml`文件中使用以下结构:
 
-```
+```java
 t-shirt-size:
   simple-mapping:
     XS: 6
@@ -67,7 +67,7 @@ t-shirt-size:
 
 我们可以用更复杂的映射来改变我们的`application.yml`:
 
-```
+```java
 t-shirt-size:
   complex-mapping:
     XS:
@@ -94,7 +94,7 @@ t-shirt-size:
 
 POJO 中的相应字段将是地图的地图:
 
-```
+```java
 private Map<String, Map<String, Integer>> complexMapping;
 ```
 

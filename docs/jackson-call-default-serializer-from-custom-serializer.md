@@ -14,7 +14,7 @@
 
 在我们深入 Jackson 的定制之前，让我们看一下我们想要序列化的示例`Folder`类:
 
-```
+```java
 public class Folder {
     private Long id;
     private String name;
@@ -30,7 +30,7 @@ public class Folder {
 
 以及在我们的`Folder`类中被定义为`List`的`File`类:
 
-```
+```java
 public class File {
     private Long id;
     private String name;
@@ -45,7 +45,7 @@ public class File {
 
 因此，让我们假设我们想要我们的`Folder`类的一个简化视图:
 
-```
+```java
 {
     "name": "Root Folder",
     "files": [
@@ -63,7 +63,7 @@ public class File {
 
 让我们为我们的`Folder`类创建一个定制的序列化程序来实现这一点:
 
-```
+```java
 public class FolderJsonSerializer extends StdSerializer<Folder> {
 
     public FolderJsonSerializer() {
@@ -98,7 +98,7 @@ public class FolderJsonSerializer extends StdSerializer<Folder> {
 
 使用默认序列化程序的一种方法是访问内部的`ObjectMapper`类:
 
-```
+```java
 @Override
 public void serialize(Folder value, JsonGenerator gen, SerializerProvider provider) throws IOException {
     gen.writeStartObject();
@@ -121,7 +121,7 @@ public void serialize(Folder value, JsonGenerator gen, SerializerProvider provid
 
 现在，让我们在`SerializerProvider`的帮助下稍微简化一下我们的代码:
 
-```
+```java
 @Override
 public void serialize(Folder value, JsonGenerator gen, SerializerProvider provider) throws IOException {
     gen.writeStartObject();
@@ -141,7 +141,7 @@ public void serialize(Folder value, JsonGenerator gen, SerializerProvider provid
 
 让我们更改我们的序列化程序，为我们的序列化数据创建一个`details`字段，以简单地公开`Folder`类的所有字段:
 
-```
+```java
 @Override
 public void serialize(Folder value, JsonGenerator gen, SerializerProvider provider) throws IOException {
     gen.writeStartObject();
@@ -168,7 +168,7 @@ public void serialize(Folder value, JsonGenerator gen, SerializerProvider provid
 
 让我们修改我们的序列化程序并添加一个额外的字段— `defaultSerializer`:
 
-```
+```java
 private final JsonSerializer<Object> defaultSerializer;
 
 public FolderJsonSerializer(JsonSerializer<Object> defaultSerializer) {
@@ -179,7 +179,7 @@ public FolderJsonSerializer(JsonSerializer<Object> defaultSerializer) {
 
 接下来，我们将创建一个`BeanSerializerModifier`的实现来传递默认的序列化程序:
 
-```
+```java
 public class FolderBeanSerializerModifier extends BeanSerializerModifier {
 
     @Override
@@ -197,7 +197,7 @@ public class FolderBeanSerializerModifier extends BeanSerializerModifier {
 
 现在，我们需要将我们的`BeanSerializerModifier`注册为一个模块来使它工作:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 
 SimpleModule module = new SimpleModule();
@@ -208,7 +208,7 @@ mapper.registerModule(module);
 
 然后，我们将`defaultSerializer`用于`details`字段:
 
-```
+```java
 @Override
 public void serialize(Folder value, JsonGenerator gen, SerializerProvider provider) throws IOException {
     gen.writeStartObject();
@@ -227,14 +227,14 @@ public void serialize(Folder value, JsonGenerator gen, SerializerProvider provid
 
 因此，我们简单地忽略了我们的`Folder`类中的`files`字段:
 
-```
+```java
 @JsonIgnore
 private List<File> files = new ArrayList<>(); 
 ```
 
 最后，问题得到了解决，我们也获得了预期的输出:
 
-```
+```java
 {
     "name": "Root Folder",
     "files": [

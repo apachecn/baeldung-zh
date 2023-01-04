@@ -14,7 +14,7 @@
 
 在`react/package.json`中，我们将有如下配置:
 
-```
+```java
 {
     "name": "react",
     "version": "0.1.0",
@@ -35,7 +35,7 @@
 
 然后，我们将**使用[前端-Maven-插件](https://web.archive.org/web/20220707143845/https://github.com/eirslett/frontend-maven-plugin "https://github.com/eirslett/frontend-maven-plugin")来帮助用 Maven:** 构建我们的 React 项目
 
-```
+```java
 <plugin>
     <groupId>com.github.eirslett</groupId>
     <artifactId>frontend-maven-plugin</artifactId>
@@ -83,7 +83,7 @@
 
 在我们深入 React 组件之前，我们更新 Spring 配置以服务 React 应用程序的静态资源:
 
-```
+```java
 @EnableWebMvc
 @Configuration
 public class MvcConfig extends WebMvcConfigurerAdapter {
@@ -112,7 +112,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 
 与我们在[之前的表单登录](https://web.archive.org/web/20220707143845/http://wwwbaeldung.com/spring-security-login "http://wwwbaeldung.com/spring-security-login")文章中使用的`“login.jsp”`不同，这里我们使用`“index.html”`作为我们的`Login`页面:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 @Profile("!https")
@@ -153,7 +153,7 @@ public class SecSecurityConfig
 
 让我们从支持`react/src/Input.js`中登录表单的`<input />`元素的`Input`组件开始:
 
-```
+```java
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
@@ -207,7 +207,7 @@ React 提供了一种使用 [`PropTypes`](https://web.archive.org/web/2022070714
 
 然后将`Input`组件和验证错误信息插入`Form:`
 
-```
+```java
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Input from './Input'
@@ -246,7 +246,7 @@ export default Form
 
 现在，让我们看看如何管理字段验证错误和登录错误:
 
-```
+```java
 class Form extends Component {
 
     constructor(props) {
@@ -298,7 +298,7 @@ class Form extends Component {
 
 然后是表单提交处理程序:
 
-```
+```java
 class Form extends Component {
 
     //...
@@ -330,7 +330,7 @@ class Form extends Component {
 
 既然我们已经设置了所有需要的组件，我们可以继续把它们放在 DOM 中。基本 HTML 结构如下(在`react/public/index.html`下找到):
 
-```
+```java
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -348,7 +348,7 @@ class Form extends Component {
 
 最后，我们将表单呈现到`react/src/index.js`中 id 为`container”` 的`<div/>`中:
 
-```
+```java
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'

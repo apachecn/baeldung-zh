@@ -22,7 +22,7 @@ A quick and practical guide to using MapStruct[Read more](/web/20220925070143/ht
 
 我们将在`pom.xml`中需要这个依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.modelmapper</groupId>
     <artifactId>modelmapper</artifactId>
@@ -34,7 +34,7 @@ A quick and practical guide to using MapStruct[Read more](/web/20220925070143/ht
 
 然后我们将在 Spring 配置中定义`ModelMapper` bean:
 
-```
+```java
 @Bean
 public ModelMapper modelMapper() {
     return new ModelMapper();
@@ -45,7 +45,7 @@ public ModelMapper modelMapper() {
 
 接下来我们来介绍一下这个双面问题的 DTO 一面，`Post` DTO:
 
-```
+```java
 public class PostDto {
     private static final SimpleDateFormat dateFormat
       = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -83,7 +83,7 @@ public class PostDto {
 
 现在让我们来看一个服务级别的操作，它显然将与实体(而不是 DTO)一起工作:
 
-```
+```java
 public List<Post> getPostsList(
   int page, int size, String sortDir, String sort) {
 
@@ -104,7 +104,7 @@ public List<Post> getPostsList(
 
 我们将在这里展示一些简单的 CRUD 操作:创建、更新、获取一个和获取全部。鉴于操作非常简单，**我们对实体-DTO 转换方面特别感兴趣**:
 
-```
+```java
 @Controller
 class PostRestController {
 
@@ -156,7 +156,7 @@ class PostRestController {
 
 这里是**我们从`Post`实体到`PostDto` :** 的转换
 
-```
+```java
 private PostDto convertToDto(Post post) {
     PostDto postDto = modelMapper.map(post, PostDto.class);
     postDto.setSubmissionDate(post.getSubmissionDate(), 
@@ -167,7 +167,7 @@ private PostDto convertToDto(Post post) {
 
 下面是从 DTO 到实体的转换:
 
-```
+```java
 private Post convertToEntity(PostDto postDto) throws ParseException {
     Post post = modelMapper.map(postDto, Post.class);
     post.setSubmissionDate(postDto.getSubmissionDateConverted(
@@ -188,7 +188,7 @@ private Post convertToEntity(PostDto postDto) throws ParseException {
 
 最后，让我们做一个非常简单的测试来确保实体和 DTO 之间的转换正常进行:
 
-```
+```java
 public class PostDtoUnitTest {
 
     private ModelMapper modelMapper = new ModelMapper();

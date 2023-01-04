@@ -42,7 +42,7 @@ Java 中的整数数据类型有`byte` (8 位)`short` (16 位)`int` (32 位)`lon
 
 让我们考虑下面的代码片段来更好地说明这种行为:
 
-```
+```java
 int value = Integer.MAX_VALUE-1;
 for(int i = 0; i < 4; i++, value++) {
     System.out.println(value);
@@ -51,7 +51,7 @@ for(int i = 0; i < 4; i++, value++) {
 
 我们将得到下面的输出，它演示了溢出:
 
-```
+```java
 2147483646
 2147483647
 -2147483648
@@ -74,7 +74,7 @@ for(int i = 0; i < 4; i++, value++) {
 
 让我们看看如何用`BigInteger`重写上面的例子:
 
-```
+```java
 BigInteger largeValue = new BigInteger(Integer.MAX_VALUE + "");
 for(int i = 0; i < 4; i++) {
     System.out.println(largeValue);
@@ -84,7 +84,7 @@ for(int i = 0; i < 4; i++) {
 
 我们将看到以下输出:
 
-```
+```java
 2147483647
 2147483648
 2147483649
@@ -99,7 +99,7 @@ for(int i = 0; i < 4; i++) {
 
 从 Java 8 开始，我们可以使用精确算术运算的方法。我们先来看一个例子:
 
-```
+```java
 int value = Integer.MAX_VALUE-1;
 for(int i = 0; i < 4; i++) {
     System.out.println(value);
@@ -109,7 +109,7 @@ for(int i = 0; i < 4; i++) {
 
 静态方法`addExact()`执行正常的加法，但是如果操作导致溢出或下溢，则抛出异常:
 
-```
+```java
 2147483646
 2147483647
 Exception in thread "main" java.lang.ArithmeticException: integer overflow
@@ -123,13 +123,13 @@ Exception in thread "main" java.lang.ArithmeticException: integer overflow
 
 对于从`long`到`int`的转换:
 
-```
+```java
 public static int toIntExact(long a)
 ```
 
 对于从`BigInteger`到`int`或`long`的转换:
 
-```
+```java
 BigInteger largeValue = BigInteger.TEN;
 long longValue = largeValue.longValueExact();
 int intValue = largeValue.intValueExact();
@@ -139,7 +139,7 @@ int intValue = largeValue.intValueExact();
 
 Java 8 中加入了精确的算术方法。如果我们使用早期版本，我们可以简单地自己创建这些方法。这样做的一个选择是实现与 Java 8 中相同的方法:
 
-```
+```java
 public static int addExact(int x, int y) {
     int r = x + y;
     if (((x ^ r) & (y ^ r)) < 0) {
@@ -163,13 +163,13 @@ Java 的`float`和`double`数据类型遵循 [IEEE 浮点运算标准(IEEE 754)]
 
 至于整数数据类型，我们可能期望:
 
-```
+```java
 assertTrue(Double.MAX_VALUE + 1 == Double.MIN_VALUE);
 ```
 
 然而，浮点变量就不是这样了。以下是真实的:
 
-```
+```java
 assertTrue(Double.MAX_VALUE + 1 == Double.MAX_VALUE);
 ```
 
@@ -177,13 +177,13 @@ assertTrue(Double.MAX_VALUE + 1 == Double.MAX_VALUE);
 
 如果我们增加变量的值，从而增加变量的一个有效位，变量将具有值`INFINITY`:
 
-```
+```java
 assertTrue(Double.MAX_VALUE * 2 == Double.POSITIVE_INFINITY);
 ```
 
 和负值的`NEGATIVE_INFINITY`:
 
-```
+```java
 assertTrue(Double.MAX_VALUE * -2 == Double.NEGATIVE_INFINITY);
 ```
 
@@ -205,7 +205,7 @@ Java SE 语言规范中关于[类型、值和变量](https://web.archive.org/web
 
 那么，如果我们试图给类型为`double`的变量赋一个太小的值，会发生什么呢？让我们看一个例子:
 
-```
+```java
 for(int i = 1073; i <= 1076; i++) {
     System.out.println("2^" + i + " = " + Math.pow(2, -i));
 }
@@ -213,7 +213,7 @@ for(int i = 1073; i <= 1076; i++) {
 
 带输出:
 
-```
+```java
 2^1073 = 1.0E-323
 2^1074 = 4.9E-324
 2^1075 = 0.0
@@ -229,7 +229,7 @@ for(int i = 1073; i <= 1076; i++) {
 
 如果我们想在这种情况下抛出一个异常，我们可以实现一个 helper 方法。让我们看看如何寻找指数运算:
 
-```
+```java
 public static double powExact(double base, double exponent) {
     if(base == 0.0) {
         return 0.0;
@@ -259,27 +259,27 @@ public static double powExact(double base, double exponent) {
 
 让我们定义几个变量来演示:
 
-```
+```java
 double a = +0f;
 double b = -0f;
 ```
 
 **因为正负`0`被认为相等:**
 
-```
+```java
 assertTrue(a == b);
 ```
 
 **而正负无穷大被认为是不同的:**
 
-```
+```java
 assertTrue(1/a == Double.POSITIVE_INFINITY);
 assertTrue(1/b == Double.NEGATIVE_INFINITY);
 ```
 
 然而，下面的断言是正确的:
 
-```
+```java
 assertTrue(1/a != 1/b);
 ```
 

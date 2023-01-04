@@ -14,7 +14,7 @@
 
 让我们从在我们的项目中包含插件开始:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId> 
     <artifactId>properties-maven-plugin</artifactId> 
@@ -35,7 +35,7 @@
 
 接下来，我们将继续为变量赋值。**此外，因为我们在`pom.xml`中定义它们，我们也可以使用 [Maven 占位符](https://web.archive.org/web/20220628052152/https://github.com/cko/predefined_maven_properties/blob/master/README.md):**
 
-```
+```java
 <properties> 
     <name>${project.name}</name> 
     <my.awesome.property>property-from-pom</my.awesome.property> 
@@ -46,7 +46,7 @@
 
 现在是时候从配置中访问我们的属性了。让我们创建一个简单的实用程序类，从类路径上的文件中读取属性:
 
-```
+```java
 public class PropertiesReader {
     private Properties properties;
 
@@ -65,7 +65,7 @@ public class PropertiesReader {
 
 接下来，我们简单地编写一个小的测试用例来读取我们的值:
 
-```
+```java
 PropertiesReader reader = new PropertiesReader("properties-from-pom.properties"); 
 String property = reader.getProperty("my.awesome.property");
 Assert.assertEquals("property-from-pom", property);

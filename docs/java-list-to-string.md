@@ -10,7 +10,7 @@
 
 最简单的方法之一是在`List`上调用`toString()`方法:
 
-```
+```java
 @Test
 public void whenListToString_thenPrintDefault() {
     List<Integer> intLIst = Arrays.asList(1, 2, 3);
@@ -21,7 +21,7 @@ public void whenListToString_thenPrintDefault() {
 
 输出:
 
-```
+```java
 [1, 2, 3]
 ```
 
@@ -29,7 +29,7 @@ public void whenListToString_thenPrintDefault() {
 
 如果我们使用自定义类型，比如`Person`，那么我们需要确保`Person`类覆盖了`toString()`方法，并且不依赖于默认实现。如果我们没有正确实现`toString()`方法，我们可能会得到意想不到的结果:
 
-```
+```java
 [[[email protected]](/web/20220929201254/https://www.baeldung.com/cdn-cgi/l/email-protection),
   [[email protected]](/web/20220929201254/https://www.baeldung.com/cdn-cgi/l/email-protection),
   [[email protected]](/web/20220929201254/https://www.baeldung.com/cdn-cgi/l/email-protection)]
@@ -41,7 +41,7 @@ public void whenListToString_thenPrintDefault() {
 
 与前面的示例相比，让我们用连字符(-)替换逗号(，)，用一组花括号({，})替换方括号([，]):
 
-```
+```java
 @Test
 public void whenCollectorsJoining_thenPrintCustom() {
     List<Integer> intList = Arrays.asList(1, 2, 3);
@@ -55,7 +55,7 @@ public void whenCollectorsJoining_thenPrintCustom() {
 
 输出:
 
-```
+```java
 {1-2-3}
 ```
 
@@ -67,7 +67,7 @@ public void whenCollectorsJoining_thenPrintCustom() {
 
 ### 4.1。Maven 依赖关系
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -81,7 +81,7 @@ public void whenCollectorsJoining_thenPrintCustom() {
 
 该实现实际上是一个方法调用:
 
-```
+```java
 @Test
 public void whenStringUtilsJoin_thenPrintCustom() {
     List<Integer> intList = Arrays.asList(1, 2, 3);
@@ -92,7 +92,7 @@ public void whenStringUtilsJoin_thenPrintCustom() {
 
 输出:
 
-```
+```java
 1|2|3
 ```
 

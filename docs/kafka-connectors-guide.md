@@ -54,7 +54,7 @@ Kafka Connect 特性包括:
 
 对于源连接器，参考配置可在`$CONFLUENT_HOME/etc/kafka/connect-file-source.properties`获得:
 
-```
+```java
 name=local-file-source
 connector.class=FileStreamSource
 tasks.max=1
@@ -75,7 +75,7 @@ file=test.txt
 
 为此，让我们创建一个包含一些内容的基本文件:
 
-```
+```java
 echo -e "foo\nbar\n" > $CONFLUENT_HOME/test.txt
 ```
 
@@ -85,7 +85,7 @@ echo -e "foo\nbar\n" > $CONFLUENT_HOME/test.txt
 
 对于我们的 sink 连接器，我们将使用位于`$CONFLUENT_HOME/etc/kafka/connect-file-sink.properties`的参考配置:
 
-```
+```java
 name=local-file-sink
 connector.class=FileStreamSink
 tasks.max=1
@@ -101,7 +101,7 @@ topics=connect-test
 
 为此，我们可以使用`$CONFLUENT_HOME/etc/kafka/connect-standalone.properties`:
 
-```
+```java
 bootstrap.servers=localhost:9092
 key.converter=org.apache.kafka.connect.json.JsonConverter
 value.converter=org.apache.kafka.connect.json.JsonConverter
@@ -130,7 +130,7 @@ plugin.path=/share/java
 
 这样，我们就可以开始第一个连接器设置了:
 
-```
+```java
 $CONFLUENT_HOME/bin/connect-standalone \
   $CONFLUENT_HOME/etc/kafka/connect-standalone.properties \
   $CONFLUENT_HOME/etc/kafka/connect-file-source.properties \
@@ -139,20 +139,20 @@ $CONFLUENT_HOME/bin/connect-standalone \
 
 首先，我们可以使用命令行检查主题的内容:
 
-```
+```java
 $CONFLUENT_HOME/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic connect-test --from-beginning
 ```
 
 我们可以看到，源连接器从`test.txt`文件中获取数据，将其转换为 JSON，并发送给 Kafka:
 
-```
+```java
 {"schema":{"type":"string","optional":false},"payload":"foo"}
 {"schema":{"type":"string","optional":false},"payload":"bar"}
 ```
 
 如果我们看一下文件夹`$CONFLUENT_HOME`，我们可以看到这里创建了一个文件`test.sink.txt `:
 
-```
+```java
 cat $CONFLUENT_HOME/test.sink.txt
 foo
 bar
@@ -204,7 +204,7 @@ bar
 
 我们可以在分布式模式下启动连接，如下所示:
 
-```
+```java
 $CONFLUENT_HOME/bin/connect-distributed $CONFLUENT_HOME/etc/kafka/connect-distributed.properties
 ```
 
@@ -216,7 +216,7 @@ $CONFLUENT_HOME/bin/connect-distributed $CONFLUENT_HOME/etc/kafka/connect-distri
 
 首先，我们需要为源连接器 POST 创建一个 JSON 文件的主体。在这里，我们称之为`connect-file-source.json`:
 
-```
+```java
 {
     "name": "local-file-source",
     "config": {
@@ -232,7 +232,7 @@ $CONFLUENT_HOME/bin/connect-distributed $CONFLUENT_HOME/etc/kafka/connect-distri
 
 然后我们发布它:
 
-```
+```java
 curl -d @"$CONFLUENT_HOME/connect-file-source.json" \
   -H "Content-Type: application/json" \
   -X POST http://localhost:8083/connectors
@@ -240,7 +240,7 @@ curl -d @"$CONFLUENT_HOME/connect-file-source.json" \
 
 然后，我们将对 sink 连接器做同样的事情，调用文件`connect-file-sink.json`:
 
-```
+```java
 {
     "name": "local-file-sink",
     "config": {
@@ -254,7 +254,7 @@ curl -d @"$CONFLUENT_HOME/connect-file-source.json" \
 
 并像以前一样执行 POST:
 
-```
+```java
 curl -d @$CONFLUENT_HOME/connect-file-sink.json \
   -H "Content-Type: application/json" \
   -X POST http://localhost:8083/connectors
@@ -262,7 +262,7 @@ curl -d @$CONFLUENT_HOME/connect-file-sink.json \
 
 如果需要，我们可以验证该设置是否正常工作:
 
-```
+```java
 $CONFLUENT_HOME/bin/kafka-console-consumer --bootstrap-server localhost:9092 --topic connect-distributed --from-beginning
 {"schema":{"type":"string","optional":false},"payload":"foo"}
 {"schema":{"type":"string","optional":false},"payload":"bar"}
@@ -270,7 +270,7 @@ $CONFLUENT_HOME/bin/kafka-console-consumer --bootstrap-server localhost:9092 --t
 
 如果我们看一下文件夹`$CONFLUENT_HOME`，我们可以看到这里创建了一个文件`test-distributed.sink.txt `:
 
-```
+```java
 cat $CONFLUENT_HOME/test-distributed.sink.txt
 foo
 bar
@@ -278,7 +278,7 @@ bar
 
 在我们测试了分布式设置之后，让我们通过移除两个连接器来进行清理:
 
-```
+```java
 curl -X DELETE http://localhost:8083/connectors/local-file-source
 curl -X DELETE http://localhost:8083/connectors/local-file-sink
 ```
@@ -315,14 +315,14 @@ Kafka Connect 支持以下内置转换:
 
 在应用我们的转换之前，我们必须通过修改`connect-distributed.properties`来配置 Connect 使用无模式 JSON:
 
-```
+```java
 key.converter.schemas.enable=false
 value.converter.schemas.enable=false
 ```
 
 之后，我们必须重新启动 Connect，同样是在分布式模式下:
 
-```
+```java
 $CONFLUENT_HOME/bin/connect-distributed $CONFLUENT_HOME/etc/kafka/connect-distributed.properties
 ```
 
@@ -330,7 +330,7 @@ $CONFLUENT_HOME/bin/connect-distributed $CONFLUENT_HOME/etc/kafka/connect-distri
 
 除了已知的参数之外，我们为两个必需的转换添加了几行:
 
-```
+```java
 {
     "name": "local-file-source",
     "config": {
@@ -350,7 +350,7 @@ $CONFLUENT_HOME/bin/connect-distributed $CONFLUENT_HOME/etc/kafka/connect-distri
 
 之后，我们来执行 POST:
 
-```
+```java
 curl -d @$CONFLUENT_HOME/connect-file-source-transform.json \
   -H "Content-Type: application/json" \
   -X POST http://localhost:8083/connectors
@@ -358,14 +358,14 @@ curl -d @$CONFLUENT_HOME/connect-file-source-transform.json \
 
 让我们给我们的`test-transformation.txt`写几行:
 
-```
+```java
 Foo
 Bar
 ```
 
 如果我们现在检查`connect-transformation`主题，我们应该得到以下几行:
 
-```
+```java
 {"line":"Foo","data_source":"test-file-source"}
 {"line":"Bar","data_source":"test-file-source"}
 ```
@@ -391,7 +391,7 @@ Bar
 
 Confluent 的企业版提供了从 Confluent Hub 安装连接器和其他组件的脚本(该脚本不包含在开源版本中)。如果我们使用企业版，我们可以使用以下命令安装连接器:
 
-```
+```java
 $CONFLUENT_HOME/bin/confluent-hub install confluentinc/kafka-connect-mqtt:1.0.0-preview
 ```
 

@@ -59,7 +59,7 @@ PKCE 机制对标准授权代码流做了一些调整:
 
 PKCE 支持住在`spring-security-oauth2-client`模块里。对于 Spring Boot 应用程序，实现这种依赖性的最简单方法是使用相应的 starter 模块:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-webflux</artifactId>
@@ -76,7 +76,7 @@ PKCE 支持住在`spring-security-oauth2-client`模块里。对于 Spring Boot �
 
 有了依赖关系，我们现在需要定制 OAuth 2.0 登录过程来支持 PKCE。对于反应式应用程序，这意味着添加一个应用此设置的 SecurityWebFilterChain bean:
 
-```
+```java
 @Bean
 public SecurityWebFilterChain pkceFilterChain(ServerHttpSecurity http,
   ServerOAuth2AuthorizationRequestResolver resolver) {
@@ -90,7 +90,7 @@ public SecurityWebFilterChain pkceFilterChain(ServerHttpSecurity http,
 
 幸运的是，我们不必实现这个接口。相反，我们可以使用现成的`DefaultServerOAuth2AuthorizationRequestResolver`类，它允许我们应用进一步的定制:
 
-```
+```java
 @Bean
 public ServerOAuth2AuthorizationRequestResolver pkceResolver(ReactiveClientRegistrationRepository repo) {
     var resolver = new DefaultServerOAuth2AuthorizationRequestResolver(repo);
@@ -109,7 +109,7 @@ public ServerOAuth2AuthorizationRequestResolver pkceResolver(ReactiveClientRegis
 
 在我们的实时测试环境中，授权服务器作为独立于客户端的进程运行。该项目是一个标准的 Spring Boot web 应用程序，我们已经添加了相关的 maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -126,7 +126,7 @@ public ServerOAuth2AuthorizationRequestResolver pkceResolver(ReactiveClientRegis
 
 为了正常工作，授权服务器要求我们提供一些配置 beans，包括一个`RegisteredClientRepository`和一个`UserDetailsService`。出于测试目的，我们可以使用两者的内存实现，包含一组固定的测试值。对于本教程，前者更相关:
 
-```
+```java
 @Bean 
 public RegisteredClientRepository registeredClientRepository() {      
     var pkceClient = RegisteredClient
@@ -157,7 +157,7 @@ public RegisteredClientRepository registeredClientRepository() {
 
 为了完成设置，我们还需要修改应用程序属性文件中的默认端口设置:
 
-```
+```java
 server.port=8085
 ```
 
@@ -175,7 +175,7 @@ server.port=8085
 
 我们可以在 Location 头中看到 PKCE 参数，这些参数出现在我们的客户端应用程序对向`http://127.0.0.1:8080/oauth2/authorization/pkce`发出的请求所生成的响应中:
 
-```
+```java
 Location: http://localhost:8085/oauth2/authorize?
   response_type=code&
   client_id=pkce-client&

@@ -87,7 +87,7 @@
 
 以下代码片段从 Jenkins 管道向 Slack 发送了一条消息:
 
-```
+```java
 slackSend botUser: true, 
   channel: 'builds', 
   color: '#00ff00', 

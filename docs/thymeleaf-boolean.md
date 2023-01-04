@@ -26,7 +26,7 @@
 
 它们的效果正好相反——只有当属性值为`true `时，百里香叶才会呈现具有`th:if `属性的元素，而只有当属性值为`false:`时，百里香叶才会呈现具有`th`:除非属性的元素
 
-```
+```java
 <span th:if="${true}">will be rendered</span>
 <span th:unless="${true}">won't be rendered</span>
 <span th:if="${false}">won't be rendered</span>
@@ -43,7 +43,7 @@
 
 **我们可以在变量表达式中使用这些操作符，或者将多个变量表达式组合在一起:**
 
-```
+```java
 <span th:if="${isRaining or isCold}">The weather is bad</span>
 <span th:if="${isRaining} or ${isCold}">The weather is bad</span>
 <span th:if="${isSunny and isWarm}">The weather is good</span>
@@ -58,19 +58,19 @@
 
 `if-then-else `运算符是通常的三进制，或`?`:运算符:
 
-```
+```java
 It's <span th:text="${isCold} ? 'cold' : 'warm'"></span>
 ```
 
 此外，`if-then `操作符是一个简化版本，我们没有 else 部分:
 
-```
+```java
 <span th:text="${isRaining or isCold} ? 'The weather is bad'"></span>
 ```
 
 默认操作符返回第一个操作数(如果不是`null `),否则返回第二个操作数:
 
-```
+```java
 <span th:text="'foo' ?: 'bar'"></span> <!-- foo -->
 <span th:text="null ?: 'bar'"></span> <!-- bar -->
 <span th:text="0 ?: 'bar'"></span> <!-- 0 -->

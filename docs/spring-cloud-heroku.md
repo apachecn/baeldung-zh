@@ -60,14 +60,14 @@ Heroku 在使用 git 作为我们的源代码控制时工作得最好。
 
 让我们发出一些 HTTP 请求:
 
-```
+```java
 POST https://{heroku-domain}/books HTTP
 {"author":"baeldung","title":"Spring Boot on Heroku"}
 ```
 
 我们应该回去:
 
-```
+```java
 {
     "title": "Spring Boot on Heroku",
     "author": "baeldung"
@@ -76,13 +76,13 @@ POST https://{heroku-domain}/books HTTP
 
 现在让我们试着读取我们刚刚创建的对象:
 
-```
+```java
 GET https://{heroku-domain}/books/1 HTTP
 ```
 
 这应该会返回:
 
-```
+```java
 {
     "id": 1,
     "title": "Spring Boot on Heroku",
@@ -106,7 +106,7 @@ GET https://{heroku-domain}/books/1 HTTP
 
 首先，我们需要添加一个依赖项来包含 PostgreSQL 驱动程序:
 
-```
+```java
 <dependency>
     <groupId>org.postgresql</groupId>
     <artifactId>postgresql</artifactId>
@@ -118,7 +118,7 @@ GET https://{heroku-domain}/books/1 HTTP
 
 在`src/main/resources`中，创建一个 application.properties 文件，并添加以下属性:
 
-```
+```java
 spring.datasource.driverClassName=org.postgresql.Driver
 spring.datasource.maxActive=10
 spring.datasource.maxIdle=5
@@ -134,7 +134,7 @@ spring.jpa.hibernate.ddl-auto=create
 
 我们需要做的最后一件事是更改 ddl 设置。让我们也更新这个值:
 
-```
+```java
 spring.jpa.hibernate.ddl-auto=update
 ```
 

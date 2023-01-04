@@ -33,7 +33,7 @@
 
 **对于递归情况，我们获取中间索引并创建两个临时数组`l[]`和`r[]`** 。然后我们为两个子数组递归调用`mergeSort`函数:
 
-```
+```java
 public static void mergeSort(int[] a, int n) {
     if (n < 2) {
         return;
@@ -61,7 +61,7 @@ public static void mergeSort(int[] a, int n) {
 
 当我们到达其中一个子数组的末尾时，来自另一个数组的其余元素被复制到输入数组中，从而得到最终排序的数组:
 
-```
+```java
 public static void merge(
   int[] a, int[] l, int[] r, int left, int right) {
 
@@ -85,7 +85,7 @@ public static void merge(
 
 程序的单元测试是:
 
-```
+```java
 @Test
 public void positiveTest() {
     int[] actual = { 5, 1, 6, 2, 3, 4 };
@@ -99,7 +99,7 @@ public void positiveTest() {
 
 由于合并排序是一种递归算法，时间复杂度可以表示为以下递归关系:
 
-```
+```java
 T(n) = 2T(n/2) + O(n)
 ```
 

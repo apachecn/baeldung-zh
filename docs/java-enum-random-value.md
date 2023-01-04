@@ -12,7 +12,7 @@
 
 我们在`enum`类体内声明了一个方法，它是`static`，并返回一个`enum`值。这个方法将从一个 [`Random`](/web/20221012233249/https://www.baeldung.com/java-generating-random-numbers)) 对象中调用`nextInt()` ，我们将这个方法命名为`randomDirection()`:
 
-```
+```java
 public enum Direction {
     EAST, WEST, SOUTH, NORTH;
 
@@ -29,13 +29,13 @@ public enum Direction {
 
 此外，每次调用`randomDirection()` 方法时，`values()`方法都会创建一个`enum`值的副本。我们可以通过创建一个在生成随机索引后访问的`final` 成员变量列表来提高性能:
 
-```
+```java
 private static final Direction[] directions = values();
 ```
 
 现在，`randomDirection()` 方法将如下所示:
 
-```
+```java
 public static Direction randomDirection() { 
     return directions[PRNG.nextInt(directions.length)]; 
 }
@@ -43,7 +43,7 @@ public static Direction randomDirection() {
 
 最后，我们可以通过调用方法生成一个随机的`Direction`:
 
-```
+```java
 Direction direction = Direction.randomDirection();
 ```
 
@@ -51,7 +51,7 @@ Direction direction = Direction.randomDirection();
 
 类似地，我们可以使用泛型来生成一个随机的`enum`值。**通过使用泛型，我们创建了一个类，它接受任何类型的`enum`数据来生成一个随机值:**
 
-```
+```java
 public class RandomEnumGenerator<T extends Enum<T>> {
     private static final Random PRNG = new Random();
     private final T[] values;
@@ -70,7 +70,7 @@ public class RandomEnumGenerator<T extends Enum<T>> {
 
 我们可以使用`RandomEnumGenerator`类生成一个随机方向，如下所示:
 
-```
+```java
 RandomEnumGenerator reg = new RandomEnumGenerator(Direction.class);
 Direction direction = (Direction) reg.randomEnum();
 ```

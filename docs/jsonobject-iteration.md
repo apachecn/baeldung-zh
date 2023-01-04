@@ -12,7 +12,7 @@
 
 让我们从迭代名称-值对的 JSON 的简单情况开始:
 
-```
+```java
 {
   "name": "Cake",
   "cakeId": "0001",
@@ -22,7 +22,7 @@
 
 为此，我们可以使用`keys()`方法:简单地**遍历这些键**
 
-```
+```java
 void handleJSONObject(JSONObject jsonObject) {
     jsonObject.keys().forEachRemaining(key -> {
         Object value = jsonObject.get(key);
@@ -33,7 +33,7 @@ void handleJSONObject(JSONObject jsonObject) {
 
 我们的输出将是:
 
-```
+```java
 Key: name      Value: Cake
 Key: cakeId    Value: 0001
 Key: cakeShape Value: Heart
@@ -43,7 +43,7 @@ Key: cakeShape Value: Heart
 
 但是假设我们有一个更复杂的结构:
 
-```
+```java
 {
   "batters": [
     {
@@ -68,7 +68,7 @@ Key: cakeShape Value: Heart
 
 让我们看看我们天真的方法会给我们带来什么:
 
-```
+```java
 Key: batters    Value: [{"type":"Regular","id":"1001"},{"type":"Chocolate","id":"1002"},
   {"type":"BlueBerry","id":"1003"}]
 Key: name       Value: Cake
@@ -81,7 +81,7 @@ Key: cakeId     Value: 0001
 
 为此，**我们实际上也需要检查值类型。**假设我们用一种不同的方法来做这件事:
 
-```
+```java
 void handleValue(Object value) {
     if (value instanceof JSONObject) {
         handleJSONObject((JSONObject) value);
@@ -95,7 +95,7 @@ void handleValue(Object value) {
 
 然后，我们的方法仍然相当相似:
 
-```
+```java
 void handleJSONObject(JSONObject jsonObject) {
     jsonObject.keys().forEachRemaining(key -> {
         Object value = jsonObject.get(key);
@@ -111,7 +111,7 @@ void handleJSONObject(JSONObject jsonObject) {
 
 让我们尝试保持使用迭代器的类似方法。**我们不叫`keys()`，而是叫`iterator()` :**
 
-```
+```java
 void handleJSONArray(JSONArray jsonArray) {
     jsonArray.iterator().forEachRemaining(element -> {
         handleValue(element)

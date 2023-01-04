@@ -17,7 +17,7 @@
 
 让我们来看看基本实现:
 
-```
+```java
 public static List<String> baseScanner(String input) {
     try (Scanner scan = new Scanner(input)) {
         List<String> result = new ArrayList<String>();
@@ -35,7 +35,7 @@ public static List<String> baseScanner(String input) {
 
 让我们编写一个测试来检查我们的方法的行为是否符合预期:
 
-```
+```java
 @Test
 void whenBaseScanner_ThenWhitespacesAreUsedAsDelimiters() {
     assertEquals(List.of("Welcome", "to", "Baeldung"), baseScanner("Welcome to Baeldung"));
@@ -48,7 +48,7 @@ void whenBaseScanner_ThenWhitespacesAreUsedAsDelimiters() {
 
 让我们看看如何做到这一点:
 
-```
+```java
 public static List<String> scannerWithDelimiter(String input, String delimiter) {
     try (Scanner scan = new Scanner(input)) {
         scan.useDelimiter(delimiter); 
@@ -68,7 +68,7 @@ public static List<String> scannerWithDelimiter(String input, String delimiter) 
 
 让我们看看如何测试第一种情况:
 
-```
+```java
 @Test
 void givenSimpleCharacterDelimiter_whenScannerWithDelimiter_ThenInputIsCorrectlyParsed() {
     assertEquals(List.of("Welcome", "to", "Baeldung"), scannerWithDelimiter("Welcome to Baeldung", "\\s"));
@@ -77,7 +77,7 @@ void givenSimpleCharacterDelimiter_whenScannerWithDelimiter_ThenInputIsCorrectly
 
 **实际上，在场景下，`useDelimiter`方法会将其输入转换为封装在`Pattern`对象中的[正则表达式](/web/20220627154627/https://www.baeldung.com/regular-expressions-java)。另外，我们也可以自己处理`Pattern`的实例化。为此，我们需要使用覆盖的`useDelimiter(Pattern pattern)`，如下所示:**
 
-```
+```java
 public static List<String> scannerWithDelimiterUsingPattern(String input, Pattern delimiter) {
     try (Scanner scan = new Scanner(input)) {
         scan.useDelimiter(delimiter); 
@@ -90,7 +90,7 @@ public static List<String> scannerWithDelimiterUsingPattern(String input, Patter
 
 要实例化一个`Pattern`，我们可以使用下面测试中的`compile`方法:
 
-```
+```java
 @Test
 void givenStringDelimiter_whenScannerWithDelimiterUsingPattern_ThenInputIsCorrectlyParsed() {
     assertEquals(List.of("Welcome", "to", "Baeldung"), DelimiterDemo.scannerWithDelimiterUsingPattern("Welcome to Baeldung", Pattern.compile("\\s")));

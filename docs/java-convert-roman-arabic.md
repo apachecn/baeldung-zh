@@ -30,7 +30,7 @@
 
 让我们定义一个枚举来表示罗马数字:
 
-```
+```java
 enum RomanNumeral {
     I(1), IV(4), V(5), IX(9), X(10), 
     XL(40), L(50), XC(90), C(100), 
@@ -62,7 +62,7 @@ enum RomanNumeral {
 
 **罗马数字只能代表 1 到 4000 之间的整数**。我们可以使用下面的算法将罗马数字转换成阿拉伯数字(从`M`到`I`以相反的顺序遍历符号):
 
-```
+```java
 LET numeral be the input String representing an Roman Numeral
 LET symbol be initialy set to RomanNumeral.values()[0]
 WHILE numeral.length > 0:
@@ -77,7 +77,7 @@ WHILE numeral.length > 0:
 
 接下来，我们可以用 Java 实现该算法:
 
-```
+```java
 public static int romanToArabic(String input) {
     String romanNumeral = input.toUpperCase();
     int result = 0;
@@ -108,7 +108,7 @@ public static int romanToArabic(String input) {
 
 最后，我们可以测试实现:
 
-```
+```java
 @Test
 public void given2018Roman_WhenConvertingToArabic_ThenReturn2018() {
     String roman2018 = "MMXVIII";
@@ -123,7 +123,7 @@ public void given2018Roman_WhenConvertingToArabic_ThenReturn2018() {
 
 我们可以使用下面的算法将阿拉伯数字转换成罗马数字(从`M`到`I`以相反的顺序遍历符号):
 
-```
+```java
 LET number be an integer between 1 and 4000
 LET symbol be RomanNumeral.values()[0]
 LET result be an empty String
@@ -139,7 +139,7 @@ WHILE number > 0:
 
 接下来，我们现在可以实现算法:
 
-```
+```java
 public static String arabicToRoman(int number) {
     if ((number <= 0) || (number > 4000)) {
         throw new IllegalArgumentException(number + " is not in range (0,4000]");
@@ -168,7 +168,7 @@ public static String arabicToRoman(int number) {
 
 最后，我们可以测试实现:
 
-```
+```java
 @Test
 public void given1999Arabic_WhenConvertingToRoman_ThenReturnMCMXCIX() {
     int arabic1999 = 1999;

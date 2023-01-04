@@ -12,7 +12,7 @@
 
 为了比较分支，我们在`git diff`命令后指定了两个分支的名称:
 
-```
+```java
 $ git diff branch1 branch2 
 diff --git a/file1.txt b/file1.txt
 index 3b18e51..c28f4fa 100644
@@ -35,7 +35,7 @@ index 3b18e51..c28f4fa 100644
 
 **为了只显示两个分支之间不同的文件名，我们使用了`git diff`命令**中的`‐‐name-only` 选项:
 
-```
+```java
 $ git diff branch1 branch2 --name-only
 file1.txt
 ```
@@ -50,7 +50,7 @@ file1.txt
 
 例如，让我们从`branch2`内部比较一下`branch1`和`branch2`:
 
-```
+```java
 $ git checkout branch2 
 $ git diff branch1
 ```
@@ -63,7 +63,7 @@ $ git diff branch1
 
 换句话说，我们可能需要找出分支中与另一个分支相比的所有差异，因为它们是分支出来的。为了便于说明，让我们看看下面的树:
 
-```
+```java
 ---A---B---C---D  <== branch1
         \
          E---F    <== branch2
@@ -73,7 +73,7 @@ $ git diff branch1
 
 为了找出`branch2`和`branch1`共同祖先之间的区别，我们需要在分支名称之间使用三个点:
 
-```
+```java
 git diff branch1...branch2
 ```
 
@@ -85,7 +85,7 @@ git diff branch1...branch2
 
 其语法类似于分支比较。但是，我们需要指定要比较的提交散列，而不是分支:
 
-```
+```java
 git diff b94a88bac17318fb3c3cc881d657c04de9fd7901 73ea8956375c10fe41c669ba8c6f6f9e01490452
 ```
 

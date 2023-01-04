@@ -34,7 +34,7 @@
 
 `ArchUnit`与`[JUnit](/web/20220701021100/https://www.baeldung.com/junit)`测试框架很好地集成，因此，它们通常一起使用。我们所要做的就是添加 [`archunit-junit4`](https://web.archive.org/web/20220701021100/https://search.maven.org/search?q=g:com.tngtech.archunit%20a:archunit-junit4) 依赖项来匹配我们的`JUnit`版本:
 
-```
+```java
 <dependency>
     <groupId>com.tngtech.archunit</groupId>
     <artifactId>archunit-junit4</artifactId>
@@ -47,7 +47,7 @@
 
 如果我们使用`JUnit` 5，还有一个 [`archunit-junit5`](https://web.archive.org/web/20220701021100/https://search.maven.org/search?q=g:com.tngtech.archunit%20a:archunit-junit5) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.tngtech.archunit</groupId>
     <artifactId>archunit-junit5</artifactId>
@@ -66,7 +66,7 @@
 
 **第一步是创建一组 Java 类，将检查它们是否违反了规则**。我们通过实例化`ClassFileImporter`类，然后使用它的`importXXX()`方法之一来实现这一点:
 
-```
+```java
 JavaClasses jc = new ClassFileImporter()
   .importPackages("com.baeldung.archunit.smurfs");
 ```
@@ -75,7 +75,7 @@ JavaClasses jc = new ClassFileImporter()
 
 架构规则使用来自`ArchRuleDefinition`类的一个静态方法作为其`fluent API`调用的起点。让我们尝试使用这个 API 实现上面定义的第一个规则。我们将使用`classes()`方法作为我们的锚，并从那里添加额外的约束:
 
-```
+```java
 ArchRule r1 = classes()
   .that().resideInAPackage("..presentation..")
   .should().onlyDependOnClassesThat()
@@ -87,7 +87,7 @@ r1.check(jc);
 
 这一切看起来都很好，但如果我们试图对我们的代码运行它，我们会得到一个错误列表:
 
-```
+```java
 java.lang.AssertionError: Architecture Violation [Priority: MEDIUM] - 
   Rule 'classes that reside in a package '..presentation..' should only 
   depend on classes that reside in a package '..service..'' was violated (6 times):
@@ -100,7 +100,7 @@ java.lang.AssertionError: Architecture Violation [Priority: MEDIUM] -
 
 解决此错误的一个方法是添加一个考虑到这些附加依赖关系的子句:
 
-```
+```java
 ArchRule r1 = classes()
   .that().resideInAPackage("..presentation..")
   .should().onlyDependOnClassesThat()
@@ -109,7 +109,7 @@ ArchRule r1 = classes()
 
 有了这个改变，我们的支票将不再失败。然而，这种方法存在可维护性问题，并且感觉有点笨拙。我们可以避免这些问题，使用`noClasses()`静态方法作为我们的起点重写我们的规则:
 
-```
+```java
 ArchRule r1 = noClasses()
   .that().resideInAPackage("..presentation..")
   .should().dependOnClassesThat()
@@ -130,7 +130,7 @@ ArchRule r1 = noClasses()
 
 涵盖所有这些规则超出了本介绍的范围，但是让我们看一下`Architecture`规则包。具体来说，让我们使用分层架构规则重写上一节中的规则。使用这些规则需要两步:首先，我们定义应用程序的层。然后，我们定义允许哪些层访问:
 
-```
+```java
 LayeredArchitecture arch = layeredArchitecture()
    // Define layers
   .layer("Presentation").definedBy("..presentation..")

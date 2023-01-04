@@ -24,7 +24,7 @@ Redis 是一个内存中的键值存储，可以用作数据库、缓存或消�
 
 让我们从声明我们在`pom.xml`中需要的唯一依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>io.lettuce</groupId>
     <artifactId>lettuce-core</artifactId>
@@ -55,7 +55,7 @@ Redis 官方不支持 Windows，但是这里有一个服务器的端口[这里](
 
 让我们来看看实现:
 
-```
+```java
 RedisClient redisClient = RedisClient
   .create("redis://[[email protected]](/web/20221126235007/https://www.baeldung.com/cdn-cgi/l/email-protection):6379/");
 StatefulRedisConnection<String, String> connection
@@ -72,7 +72,7 @@ A `StatefulRedisConnection`就是它听起来的样子；到 Redis 服务器的�
 
 莴苣利用了 Redis URIs 的自定义语法。这是模式:
 
-```
+```java
 redis :// [[[email protected]](/web/20221126235007/https://www.baeldung.com/cdn-cgi/l/email-protection)] host [: port] [/ database]
   [? [timeout=timeout[d|h|m|s|ms|us|ns]]
   [&_database=database_]] 
@@ -89,7 +89,7 @@ Redis 数据库实例可以被指定为 URL 路径的一部分或附加参数。
 
 在上面的例子中，我们使用了一个`String`表示。莴苣也有一个用于建立连接的`RedisURI`类。它提供了`Builder`模式:
 
-```
+```java
 RedisURI.Builder
   .redis("localhost", 6379).auth("password")
   .database(1).build(); 
@@ -97,7 +97,7 @@ RedisURI.Builder
 
 和一个构造函数:
 
-```
+```java
 new RedisURI("localhost", 6379, 60, TimeUnit.SECONDS); 
 ```
 
@@ -109,7 +109,7 @@ new RedisURI("localhost", 6379, 60, TimeUnit.SECONDS);
 
 创建连接后，我们使用它来创建命令集:
 
-```
+```java
 RedisCommands<String, String> syncCommands = connection.sync(); 
 ```
 
@@ -117,7 +117,7 @@ RedisCommands<String, String> syncCommands = connection.sync();
 
 我们可以设置并获取`String values:`
 
-```
+```java
 syncCommands.set("key", "Hello, Redis!");
 
 String value = syncommands.get(“key”); 
@@ -125,7 +125,7 @@ String value = syncommands.get(“key”);
 
 我们可以使用哈希:
 
-```
+```java
 syncCommands.hset("recordName", "FirstName", "John");
 syncCommands.hset("recordName", "LastName", "Smith");
 Map<String, String> record = syncCommands.hgetall("recordName"); 
@@ -139,13 +139,13 @@ Map<String, String> record = syncCommands.hgetall("recordName");
 
 让我们来看看异步命令:
 
-```
+```java
 RedisAsyncCommands<String, String> asyncCommands = connection.async(); 
 ```
 
 我们从连接中检索一组`RedisAsyncCommands`，类似于我们检索同步组的方式。这些命令返回一个`RedisFuture`(内部是一个`CompletableFuture`)`:`
 
-```
+```java
 RedisFuture<String> result = asyncCommands.get("key"); 
 ```
 
@@ -155,7 +155,7 @@ RedisFuture<String> result = asyncCommands.get("key");
 
 最后，让我们看看如何使用非阻塞反应式 API:
 
-```
+```java
 RedisStringReactiveCommands<String, String> reactiveCommands = connection.reactive(); 
 ```
 
@@ -171,7 +171,7 @@ RedisStringReactiveCommands<String, String> reactiveCommands = connection.reacti
 
 **列表是保留插入顺序的`Strings`列表。**从两端插入或检索值:
 
-```
+```java
 asyncCommands.lpush("tasks", "firstTask");
 asyncCommands.lpush("tasks", "secondTask");
 RedisFuture<String> redisFuture = asyncCommands.rpop("tasks");
@@ -183,7 +183,7 @@ String nextTask = redisFuture.get();
 
 我们也可以从另一端弹出元素:
 
-```
+```java
 asyncCommands.del("tasks");
 asyncCommands.lpush("tasks", "firstTask");
 asyncCommands.lpush("tasks", "secondTask");
@@ -198,7 +198,7 @@ String nextTask = redisFuture.get();
 
 **Redis 集合是类似 Java `Sets`的`Strings`的无序集合；没有重复的元素:**
 
-```
+```java
 asyncCommands.sadd("pets", "dog");
 asyncCommands.sadd("pets", "cat");
 asyncCommands.sadd("pets", "cat");
@@ -215,7 +215,7 @@ RedisFuture<Boolean> exists = asyncCommands.sismember("pets", "dog");
 
 **Redis 散列是具有`String`字段和值的记录。**每个记录在主索引中也有一个键:
 
-```
+```java
 asyncCommands.hset("recordName", "FirstName", "John");
 asyncCommands.hset("recordName", "LastName", "Smith");
 
@@ -235,7 +235,7 @@ RedisFuture<Map<String, String>> record
 
 添加带有等级的项目，并在一个范围内检索:
 
-```
+```java
 asyncCommands.zadd("sortedset", 1, "one");
 asyncCommands.zadd("sortedset", 4, "zero");
 asyncCommands.zadd("sortedset", 2, "two");
@@ -256,7 +256,7 @@ RedisFuture<List<String>> valuesReverse = asyncCommands.zrevrange(key, 0, 3);
 
 让我们看一个例子:
 
-```
+```java
 asyncCommands.multi();
 
 RedisFuture<String> result1 = asyncCommands.set("key1", "value1");
@@ -288,7 +288,7 @@ String thirdResult = transactionResult.get(0);
 
 异步应用程序可以覆盖这种行为:
 
-```
+```java
 commands.setAutoFlushCommands(false);
 
 List<RedisFuture<?>> futures = new ArrayList<>();
@@ -317,7 +317,7 @@ Redis 使用发布/订阅系统来通知 Redis 数据集，使客户端能够接
 
 A `RedisPubSubListener`接收发布/订阅消息。这个接口定义了几个方法，但是我们在这里只展示接收消息的方法:
 
-```
+```java
 public class Listener implements RedisPubSubListener<String, String> {
 
     @Override
@@ -330,7 +330,7 @@ public class Listener implements RedisPubSubListener<String, String> {
 
 我们使用`RedisClient`连接一个发布/订阅通道并安装监听器:
 
-```
+```java
 StatefulRedisPubSubConnection<String, String> connection
  = client.connectPubSub();
 connection.addListener(new Listener())
@@ -346,7 +346,7 @@ async.subscribe("channel");
 
 发布只是连接发布/订阅通道并检索命令的问题:
 
-```
+```java
 StatefulRedisPubSubConnection<String, String> connection 
   = client.connectPubSub();
 
@@ -361,7 +361,7 @@ async.publish("channel", "Hello, Redis!");
 
 莴苣还提供了一个用于订阅发布/订阅消息的反应界面:
 
-```
+```java
 StatefulRedisPubSubConnection<String, String> connection = client
   .connectPubSub();
 
@@ -387,7 +387,7 @@ Redis 服务器在主/从配置中进行自我复制。主服务器向从服务�
 
 莴苣可以连接到主/从系统，查询它们的拓扑结构，然后选择从系统进行读取操作，这可以提高吞吐量:
 
-```
+```java
 RedisClient redisClient = RedisClient.create();
 
 StatefulRedisMasterSlaveConnection<String, String> connection
@@ -405,7 +405,7 @@ Redis Sentinel 监控主实例和从实例，并在主实例发生故障转移�
 
 为此，我们构建了一个不同的`RedisURI`并将我们的`RedisClient`与它连接起来:
 
-```
+```java
 RedisURI redisUri = RedisURI.Builder
   .sentinel("sentinelhost1", "clustername")
   .withSentinel("sentinelhost2").build();
@@ -424,7 +424,7 @@ Redis 集群使用分布式配置来提供高可用性和高吞吐量。
 
 **集群共享多达 1000 个节点的密钥，因此集群中的事务不可用:**
 
-```
+```java
 RedisURI redisUri = RedisURI.Builder.redis("localhost")
   .withPassword("authentication").build();
 RedisClusterClient clusterClient = RedisClusterClient

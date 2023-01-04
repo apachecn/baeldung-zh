@@ -14,7 +14,7 @@
 
 让我们看看定义常数的基础:
 
-```
+```java
 private static final int OUR_CONSTANT = 1;
 ```
 
@@ -28,7 +28,7 @@ private static final int OUR_CONSTANT = 1;
 
 **[幻数](/web/20220926183451/https://www.baeldung.com/cs/antipatterns-magic-numbers)是代码块中的数值:**
 
-```
+```java
 if (number == 3.14159265359) {
     // ...
 }
@@ -52,7 +52,7 @@ if (number == 3.14159265359) {
 
 让我们为计算器定义一个常量接口:
 
-```
+```java
 public interface CalculatorConstants {
     double PI = 3.14159265359;
     double UPPER_LIMIT = 0x1.fffffffffffffP+1023;
@@ -62,7 +62,7 @@ public interface CalculatorConstants {
 
 接下来，我们将实现我们的`CalculatorConstants`接口:
 
-```
+```java
 public class GeometryCalculator implements CalculatorConstants {    
     public double operateOnTwoNumbers(double numberOne, double numberTwo, Operation operation) {
        // Code to do an operation
@@ -74,7 +74,7 @@ public class GeometryCalculator implements CalculatorConstants {
 
 其次，使用常量接口会给我们带来由字段隐藏引起的运行时问题。让我们通过在我们的`GeometryCalculator`类中定义一个`UPPER_LIMIT`常量来看看这是如何发生的:
 
-```
+```java
 public static final double UPPER_LIMIT = 100000000000000000000.0;
 ```
 
@@ -92,7 +92,7 @@ public static final double UPPER_LIMIT = 100000000000000000000.0;
 
 让我们在一个`Calculator`类中定义一些常量:
 
-```
+```java
 public class Calculator {
     public static final double PI = 3.14159265359;
     private static final double UPPER_LIMIT = 0x1.fffffffffffffP+1023;
@@ -142,7 +142,7 @@ public class Calculator {
 
 让我们创建一个`MathConstants`类:
 
-```
+```java
 public final class MathConstants {
     public static final double PI = 3.14159265359;
     static final double GOLDEN_RATIO = 1.6180;

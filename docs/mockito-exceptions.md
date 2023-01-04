@@ -10,7 +10,7 @@
 
 下面是我们将使用的简单字典类:
 
-```
+```java
 class MyDictionary {
     private Map<String, String> wordMap = new HashMap<>();
 
@@ -42,7 +42,7 @@ Learn how to use AssertJ for performing assertions on exceptions.[Read more](/we
 
 首先，如果我们的方法返回类型不是`void`，我们可以使用`when().thenThrow()`:
 
-```
+```java
 @Test(expected = NullPointerException.class)
 public void whenConfigNonVoidRetunMethodToThrowEx_thenExIsThrown() {
     MyDictionary dictMock = mock(MyDictionary.class);
@@ -59,7 +59,7 @@ public void whenConfigNonVoidRetunMethodToThrowEx_thenExIsThrown() {
 
 现在，如果我们的方法返回`void,`，我们将使用`doThrow()`:
 
-```
+```java
 @Test(expected = IllegalStateException.class)
 public void whenConfigVoidRetunMethodToThrowEx_thenExIsThrown() {
     MyDictionary dictMock = mock(MyDictionary.class);
@@ -79,7 +79,7 @@ public void whenConfigVoidRetunMethodToThrowEx_thenExIsThrown() {
 
 为了配置异常本身，我们可以像前面的例子一样传递异常的类，或者作为一个对象传递:
 
-```
+```java
 @Test(expected = NullPointerException.class)
 public void whenConfigNonVoidRetunMethodToThrowExWithNewExObj_thenExIsThrown() {
     MyDictionary dictMock = mock(MyDictionary.class);
@@ -92,7 +92,7 @@ public void whenConfigNonVoidRetunMethodToThrowExWithNewExObj_thenExIsThrown() {
 
 我们可以用 `doThrow()`做同样的事情:
 
-```
+```java
 @Test(expected = IllegalStateException.class)
 public void whenConfigVoidRetunMethodToThrowExWithNewExObj_thenExIsThrown() {
     MyDictionary dictMock = mock(MyDictionary.class);
@@ -108,7 +108,7 @@ public void whenConfigVoidRetunMethodToThrowExWithNewExObj_thenExIsThrown() {
 
 我们还可以配置`Spy`抛出一个异常，就像我们对 mock 所做的一样:
 
-```
+```java
 @Test(expected = NullPointerException.class)
 public void givenSpy_whenConfigNonVoidRetunMethodToThrowEx_thenExIsThrown() {
     MyDictionary dict = new MyDictionary();

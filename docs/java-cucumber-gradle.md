@@ -14,7 +14,7 @@
 
 接下来，我们将把 [`cucumber-java`](https://web.archive.org/web/20221129002507/https://search.maven.org/artifact/io.cucumber/cucumber-java) 依赖项添加到`build.gradle`:
 
-```
+```java
 testImplementation 'io.cucumber:cucumber-java:6.10.4' 
 ```
 
@@ -28,7 +28,7 @@ testImplementation 'io.cucumber:cucumber-java:6.10.4'
 
 让我们首先将所需的配置添加到项目的`build.gradle`文件中:
 
-```
+```java
 configurations {
     cucumberRuntime {
         extendsFrom testImplementation
@@ -38,7 +38,7 @@ configurations {
 
 接下来，我们将创建定制的`cucumberCli`任务:
 
-```
+```java
 task cucumberCli() {
     dependsOn assemble, testClasses
     doLast {
@@ -67,7 +67,7 @@ task cucumberCli() {
 
 现在，让我们在`src/test/resources/features/account_credited.feature`文件中为我们的应用程序创建一个简单的场景:
 
-```
+```java
 Feature: Account is credited with amount
 
   Scenario: Credit amount
@@ -78,7 +78,7 @@ Feature: Account is credited with amount
 
 接下来，我们将实现运行场景所需的相应步骤定义—`glue`:
 
-```
+```java
 public class StepDefinitions {
 
     @Given("account balance is {double}")
@@ -95,7 +95,7 @@ public class StepDefinitions {
 
 最后，让我们从命令行运行我们的`cucumberCli`任务:
 
-```
+```java
 >> ./gradlew cucumberCli
 
 > Task :cucumberCli
@@ -118,19 +118,19 @@ Scenario: Credit amount                      # src/test/resources/features/accou
 
 让我们从包含`[cucumber-junit](https://web.archive.org/web/20221129002507/https://search.maven.org/artifact/io.cucumber/cucumber-junit)`依赖项开始:
 
-```
+```java
 testImplementation 'io.cucumber:cucumber-junit:6.10.4'
 ```
 
 当我们使用 JUnit 5 时，我们还需要添加 [`junit-vintage-engine`](https://web.archive.org/web/20221129002507/https://search.maven.org/artifact/org.junit.vintage/junit-vintage-engine) 依赖项:
 
-```
+```java
 testImplementation 'org.junit.vintage:junit-vintage-engine:5.7.2'
 ```
 
 接下来，我们将在测试源位置创建一个空的 runner 类:
 
-```
+```java
 @RunWith(Cucumber.class)
 @CucumberOptions(
   plugin = {"pretty", "html:target/cucumber-report.html"},
@@ -144,7 +144,7 @@ public class RunCucumberTest {
 
 现在，执行**标准**
 
-```
+```java
 >> ./gradlew test
 
 > Task :test
@@ -160,7 +160,7 @@ BUILD SUCCESSFUL in 2s
 
 在我们的例子中，我们将使用 [`gradle-cucumber-runner`](https://web.archive.org/web/20221129002507/https://github.com/tsundberg/gradle-cucumber-runner) 插件来运行 Cucumber JVM。实际上，这会将所有呼叫转发到我们之前使用的 CLI 运行程序。让我们将它包含在我们的项目中:
 
-```
+```java
 plugins {
   id "se.thinkcode.cucumber-runner" version "0.0.8"
 }
@@ -168,7 +168,7 @@ plugins {
 
 这将一个`cucumber`任务添加到我们的构建中，现在我们可以使用默认设置运行它:
 
-```
+```java
 >> ./gradlew cucumber
 ```
 

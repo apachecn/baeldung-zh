@@ -12,13 +12,13 @@
 
 `–assume-unchanged`选项告诉 Git 暂时假设一个被跟踪的文件在工作树中没有被修改。因此，所做的更改不会反映在临时区域中:
 
-```
+```java
 $ git update-index --assume-unchanged assumeunchanged.txt
 ```
 
 我们可以用`[git ls-files](/web/20220524050201/https://www.baeldung.com/Program%20Files/Git/mingw64/share/doc/git-doc/git-ls-files.html)`来验证文件状态:
 
-```
+```java
 $ git ls-files -v
 $ h assumeunchanged.txt 
 ```
@@ -29,7 +29,7 @@ $ h assumeunchanged.txt
 
 每当目标文件在索引中的条目发生变化时，此功能就会丢失。当文件在上游被更改时，可能会发生这种情况。要取消设置该选项，我们可以使用`–no-assume-unchanged`:
 
-```
+```java
 $ git update-index --no-assume-unchanged assumeunchanged.txt
 ```
 
@@ -37,13 +37,13 @@ $ git update-index --no-assume-unchanged assumeunchanged.txt
 
 `–skip-worktree`选项忽略已经跟踪的文件中未提交的更改。不管在工作树中做了什么修改，git 将总是使用 staging 区域中的文件内容和属性。**当我们想要添加本地更改到一个文件而不把它们推送到上游**时，这很有用:
 
-```
+```java
 $ git update-index --skip-worktree skipworktree.txt
 ```
 
 我们可以验证文件状态:
 
-```
+```java
 $ git ls-files -v
 $ S skipworktree.txt 
 ```
@@ -54,7 +54,7 @@ $ S skipworktree.txt
 
 `–no-skip-worktree` 用于取消设置该选项。如果标记了错误的文件，或者情况发生了变化，以前跳过的文件不应再被忽略，这将非常有用:
 
-```
+```java
 $ git update-index --no-skip-worktree skipworktree.txt
 ```
 
@@ -64,7 +64,7 @@ $ git update-index --no-skip-worktree skipworktree.txt
 
 当一个文件有`–skip-worktree`选项时，签出一个分支是没有问题的。但是，`–assume-unchanged`会引发一个错误:
 
-```
+```java
 $ git checkout  another-branch
 error: Your local changes to the following files would be overwritten by checkout:
         assumeunchanged.txt
@@ -74,7 +74,7 @@ Aborting
 
 我们可以取消选项来克服这种情况:
 
-```
+```java
 $ git update-index --no-assume-unchanged assumeunchanged.txt 
 $ git checkout another-branch 
 Switched to branch 'another-branch'
@@ -84,13 +84,13 @@ Switched to branch 'another-branch'
 
 当两者都置位时，`–skip-worktree`优先于— `assume-unchanged`位。让我们尝试在一个文件上设置这两个选项:
 
-```
+```java
 $ git update-index --assume-unchanged --skip-work-tree worktree-assumeunchanged.txt
 ```
 
 文件的状态确认了`skip-wortkree`的优先级:
 
-```
+```java
 $ git ls-files -v
 $ S worktree-assumeunchanged.txt
 ```

@@ -35,7 +35,7 @@ A quick and practical guide to Java Config for Spring Security[Read more](/web/2
 
 我们可以使用以下命令来生成 PKCS12 密钥库格式:
 
-```
+```java
 keytool -genkeypair -alias baeldung -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore baeldung.p12 -validity 3650
 ```
 
@@ -43,13 +43,13 @@ keytool -genkeypair -alias baeldung -keyalg RSA -keysize 2048 -storetype PKCS12 
 
 为了以 JKS 格式生成我们的密钥库，我们可以使用以下命令:
 
-```
+```java
 keytool -genkeypair -alias baeldung -keyalg RSA -keysize 2048 -keystore baeldung.jks -validity 3650
 ```
 
 我们建议使用 PKCS12 格式，这是一种行业标准格式。因此，如果我们已经有一个 JKS 密钥库，我们可以使用以下命令将其转换为 PKCS12 格式:
 
-```
+```java
 keytool -importkeystore -srckeystore baeldung.jks -destkeystore baeldung.p12 -deststoretype pkcs12
 ```
 
@@ -67,7 +67,7 @@ Spring Boot 提供了一组声明性的`[server.ssl.* properties](https://web.ar
 
 现在我们将配置 SSL 相关属性:
 
-```
+```java
 # The format used for the keystore. It could be set to JKS in case it is a JKS file
 server.ssl.key-store-type=PKCS12
 # The path to the keystore containing the certificate
@@ -80,7 +80,7 @@ server.ssl.key-alias=baeldung
 
 因为我们使用的是支持 Spring 安全的应用程序，所以让我们将其配置为只接受 HTTPS 请求:
 
-```
+```java
 server.ssl.enabled=true
 ```
 
@@ -90,7 +90,7 @@ server.ssl.enabled=true
 
 首先，我们需要创建一个信任存储。因为我们已经生成了 PKCS12 文件，所以我们可以将它用作信任存储。让我们为信任存储详细信息定义新的属性:
 
-```
+```java
 #trust store location
 trust.store=classpath:keystore/baeldung.p12
 #trust store password
@@ -99,7 +99,7 @@ trust.store.password=password
 
 然后我们需要为信任存储准备一个`SSLContext`并创建一个定制的`RestTemplate:`
 
-```
+```java
 RestTemplate restTemplate() throws Exception {
     SSLContext sslContext = new SSLContextBuilder()
       .loadTrustMaterial(trustStore.getURL(), trustStorePassword.toCharArray())
@@ -116,7 +116,7 @@ RestTemplate restTemplate() throws Exception {
 
 为了便于演示，让我们确保`Spring Security` 允许任何传入的请求:
 
-```
+```java
 protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests()
       .antMatchers("/**")
@@ -126,7 +126,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 最后，我们可以呼叫 HTTPS 端点:
 
-```
+```java
 @Test
 public void whenGETanHTTPSResource_thenCorrectResponse() throws Exception {
     ResponseEntity<String> response = 
@@ -145,6 +145,6 @@ public void whenGETanHTTPSResource_thenCorrectResponse() throws Exception {
 
 最后，为了运行代码示例，我们需要在`pom.xml`中取消注释下面的 start-class 属性:
 
-```
+```java
 <start-class>com.baeldung.ssl.HttpsEnabledApplication</start-class>
 ```

@@ -32,14 +32,14 @@
 
 ### 可用签名
 
-```
+```java
 public String toUpperCase()
 public String toUpperCase(Locale locale)
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenConvertToUpperCase_thenCorrect() {
     String s = "Welcome to Baeldung!";

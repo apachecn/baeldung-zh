@@ -32,7 +32,7 @@ JVM 之间的具体工作方式会有所不同。这不仅包括不同版本的 
 
 一个简单的测试将证明这一点。比如拿`java.lang.Math.sqrt()`来说。我们可以写一个测试:
 
-```
+```java
 for (int a = 0; a < 100000; ++a) {
     double result = Math.sqrt(a);
 } 
@@ -40,7 +40,7 @@ for (int a = 0; a < 100000; ++a) {
 
 该测试执行 100，000 次平方根运算，大约需要 123 毫秒。然而，如果我们用`Math.sqrt()`实现的副本来替换这段代码:
 
-```
+```java
 double result = StrictMath.sqrt(a);
 ```
 

@@ -14,7 +14,7 @@
 
 在本教程中，我们将使用一个名为 Alpine 的小型(5MB) Linux 映像。让我们从本地提取图像开始:
 
-```
+```java
 docker pull alpine:3
 ```
 
@@ -22,13 +22,13 @@ docker pull alpine:3
 
 例如，让我们执行以下命令:
 
-```
+```java
 $ docker run --env VARIABLE1=foobar alpine:3 env 
 ```
 
 简而言之，我们将环境变量反射回控制台:
 
-```
+```java
 VARIABLE1=foobar
 ```
 
@@ -38,19 +38,19 @@ VARIABLE1=foobar
 
 例如，让我们定义一个本地环境变量:
 
-```
+```java
 $ export VARIABLE2=foobar2
 ```
 
 然后，让我们指定不带值的环境变量:
 
-```
+```java
 docker run --env VARIABLE2 alpine:3 env
 ```
 
 我们可以看到 Docker 仍然获得了价值，这一次是从周围环境中获得的:
 
-```
+```java
 VARIABLE2=foobar2
 ```
 
@@ -62,7 +62,7 @@ VARIABLE2=foobar2
 
 让我们在一个名为`my-env.txt`的文件中定义几个变量:
 
-```
+```java
 $ echo VARIABLE1=foobar1 > my-env.txt
 $ echo VARIABLE2=foobar2 >> my-env.txt
 $ echo VARIABLE3=foobar3 >> my-env.txt
@@ -70,13 +70,13 @@ $ echo VARIABLE3=foobar3 >> my-env.txt
 
 现在，让我们将这个文件注入到 Docker 容器中:
 
-```
+```java
 $ docker run --env-file my-env.txt alpine:3 env
 ```
 
 最后，让我们看看输出:
 
-```
+```java
 VARIABLE1=foobar1
 VARIABLE2=foobar2
 VARIABLE3=foobar3
@@ -98,13 +98,13 @@ Docker Compose 还提供了定义环境变量的工具。对于那些对这个�
 
 让我们检查一个运行中的容器:
 
-```
+```java
 docker inspect 6b6b033a3240
 ```
 
 输出显示了环境变量:
 
-```
+```java
 "Config": {
     // ...
     "Env": [

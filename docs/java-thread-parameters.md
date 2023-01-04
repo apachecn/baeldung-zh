@@ -22,7 +22,7 @@
 
 让我们创建一个接受一组数字并返回其平均值的`AverageCalculator`:
 
-```
+```java
 public class AverageCalculator implements Callable<Double> {
 
     int[] numbers;
@@ -40,7 +40,7 @@ public class AverageCalculator implements Callable<Double> {
 
 接下来，我们将向我们的平均计算器线程提供一些数字，并验证输出:
 
-```
+```java
 @Test
 public void whenSendingParameterToCallable_thenSuccessful() throws Exception {
     ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -65,19 +65,19 @@ public void whenSendingParameterToCallable_thenSuccessful() throws Exception {
 
 第一个将计算平均值:
 
-```
+```java
 executorService.submit(() -> IntStream.of(numbers).average().orElse(0d));
 ```
 
 并且，第二个将做总和:
 
-```
+```java
 executorService.submit(() -> IntStream.of(numbers).sum());
 ```
 
 让我们看看如何将同一个参数传递给两个线程并得到结果:
 
-```
+```java
 @Test
 public void whenParametersToThreadWithLamda_thenParametersPassedCorrectly()
   throws Exception {
@@ -103,7 +103,7 @@ public void whenParametersToThreadWithLamda_thenParametersPassedCorrectly()
 
 总结一下，如果我们使用的是旧版本的 Java，匿名内部类也是可行的:
 
-```
+```java
 final int[] numbers = { 1, 2, 3 };
 Thread parameterizedThread = new Thread(new Callable<Double>() {
     @Override

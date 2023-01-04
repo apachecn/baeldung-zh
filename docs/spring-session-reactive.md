@@ -20,7 +20,7 @@ Spring `Session` 被定义为“名称-值对的简化`Map`”。`Sessions`跟�
 
 然后，我们将它们添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-webflux</artifactId>
@@ -45,7 +45,7 @@ Spring `Session` 被定义为“名称-值对的简化`Map`”。`Sessions`跟�
 
 然后，将以下内容添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -64,7 +64,7 @@ Spring `Session` 被定义为“名称-值对的简化`Map`”。`Sessions`跟�
 
 要使用内存配置，请添加 config 类:
 
-```
+```java
 @Configuration
 @EnableSpringWebSession
 public class SessionConfig {
@@ -84,7 +84,7 @@ public class SessionConfig {
 
 现在，让我们连接上 Redis。要使用 Redis 来管理`WebSessions, `添加配置类:
 
-```
+```java
 @Configuration
 @EnableRedisWebSession
 public class RedisConfig {
@@ -100,7 +100,7 @@ public class RedisConfig {
 
 [Docker](https://web.archive.org/web/20220926200400/https://www.docker.com/) 是与 Redis 交互的最简单方式之一。安装 Docker 后，我们只需输入三个命令即可。运行命令以启动 Redis 实例:
 
-```
+```java
 $ docker stop redis
 $ docker rm redis
 $ docker run -d --name redis -p 6379:6379 redis:4.0.5-alpine
@@ -112,7 +112,7 @@ $ docker run -d --name redis -p 6379:6379 redis:4.0.5-alpine
 
 现在，让我们将反应式休息控制器添加到我们的应用程序中:
 
-```
+```java
 @GetMapping("/websession")
 public Mono<String> getSession(WebSession session) {
     session.getAttributes().putIfAbsent("note", "Howdy Cosmic Spheroid!");
@@ -131,7 +131,7 @@ public Mono<String> getSession(WebSession session) {
 
 认证之后，我们可以更改默认的`WebSession`值(`0`和`“Howdy Cosmic Spheroid!”`)。运行卷曲命令`:`
 
-```
+```java
 $ curl -i -H "Accept: application/json" -H "Content-Type:application/json" -X GET http://localhost:8080/websession/test?id=222&note;=helloworld
 ```
 

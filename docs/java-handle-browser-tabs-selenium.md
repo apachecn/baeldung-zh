@@ -12,7 +12,7 @@
 
 初始化是在`init() `方法中完成的，需要用`@BeforeAll`进行注释:
 
-```
+```java
 @BeforeAll
 public static void init() {
     setupChromeDriver();
@@ -21,7 +21,7 @@ public static void init() {
 
 在所有测试之后，teardown 或 cleanup 方法将关闭整个浏览器:
 
-```
+```java
 @AfterAll
 public static void cleanup() {
     if (driver != null) {
@@ -36,7 +36,7 @@ public static void cleanup() {
 
 我们需要处理选项卡的一个典型情况是，当点击一个链接或按钮时，一个新的选项卡被打开。目标属性设置为`_blank`的网站上的链接将在新标签中打开，例如:
 
-```
+```java
 <a href="https://www.baeldung.com/" target="_blank">Baeldung.com</a>
 ```
 
@@ -52,7 +52,7 @@ public static void cleanup() {
 
 **有了 Selenium > = 4.0，不用 Javascript 或者浏览器热键就可以打开新标签页。**`WebDriver`提供了以下方法来打开一个新的标签页:
 
-```
+```java
 driver.switchTo().newWindow(WindowType.TAB);
 ```
 
@@ -60,14 +60,14 @@ driver.switchTo().newWindow(WindowType.TAB);
 
 我们可以用下面的`WebDriver`方法来检索窗口句柄集合和活动标签页的窗口句柄:
 
-```
+```java
 driver.getWindowHandles();
 driver.getWindowHandle()
 ```
 
 在这些方法的帮助下，我们可以在`TabHelper`类中实现一个助手方法。它会在新标签页中打开一个链接，并切换到该标签页。只有在打开了新标签页的情况下，才会执行标签页切换。
 
-```
+```java
 String openLinkAndSwitchToNewTab(By link) {
     String windowHandle = driver.getWindowHandle();
     Set<String> windowHandlesBefore = driver.getWindowHandles();
@@ -89,13 +89,13 @@ String openLinkAndSwitchToNewTab(By link) {
 
 每当我们打开多个选项卡时，我们需要手动在它们之间切换。我们可以使用下面的语句切换到一个特定的选项卡，其中`destinationWindowHandle`表示我们要切换到的选项卡的窗口句柄:
 
-```
+```java
 driver.switchTo().window(destinationWindowHandle)
 ```
 
 可以实现一个助手方法，该方法将目标窗口句柄作为参数，并切换到相应的选项卡。此外，该方法在切换前返回活动选项卡的窗口句柄:
 
-```
+```java
 public String switchToTab(String destinationWindowHandle) {
     String currentWindowHandle = driver.getWindowHandle();
     driver.switchTo().window(destinationWindowHandle);
@@ -107,13 +107,13 @@ public String switchToTab(String destinationWindowHandle) {
 
 在我们的测试之后，或者当我们不再需要某个选项卡时，我们需要关闭它。Selenium 提供了一条语句来关闭当前选项卡，如果是最后一个打开的选项卡，则关闭整个浏览器:
 
-```
+```java
 driver.close();
 ```
 
 我们可以使用该语句关闭所有不再需要的选项卡。使用以下方法，我们可以关闭除特定选项卡之外的所有选项卡:
 
-```
+```java
 void closeAllTabsExcept(String windowHandle) {
     for (String handle : driver.getWindowHandles()) {
         if (!handle.equals(windowHandle)) {
@@ -129,7 +129,7 @@ void closeAllTabsExcept(String windowHandle) {
 
 我们可以使用此方法关闭除当前打开的选项卡之外的所有选项卡:
 
-```
+```java
 void closeAllTabsExceptCurrent() {
     String currentWindow = driver.getWindowHandle();
     closeAllTabsExcept(currentWindow);
@@ -138,7 +138,7 @@ void closeAllTabsExceptCurrent() {
 
 我们现在可以在每次测试后在我们的`SeleniumTestBase`类中使用这个方法来关闭所有剩余的选项卡。这在测试未能在开始下一个测试之前清理浏览器的情况下特别有用，以免影响结果。我们将调用带有`@AfterEach`注释的方法中的方法:
 
-```
+```java
 @AfterEach
 public void closeTabs() {
     tabHelper.closeAllTabsExceptCurrent();
@@ -153,7 +153,7 @@ public void closeTabs() {
 
 我们可以通过几个简单的测试来验证我们的`TabHelper`类的标签处理是否如预期的那样工作。正如本文介绍中提到的，我们的测试类需要扩展`SeleniumTestBase:`
 
-```
+```java
 class SeleniumTabsLiveTest extends SeleniumTestBase {
     //...
 }
@@ -161,7 +161,7 @@ class SeleniumTabsLiveTest extends SeleniumTestBase {
 
 对于这些测试，我们在测试类中为 URL 和定位器声明了一些常量，如下所示:
 
-```
+```java
 By LINK_TO_ATTRIBUTES_PAGE_XPATH = By.xpath("//a[.='Attributes in new page']");
 By LINK_TO_ALERT_PAGE_XPATH = By.xpath("//a[.='Alerts In A New Window From JavaScript']");
 
@@ -172,7 +172,7 @@ String ALERT_PAGE_URL = "https://testpages.herokuapp.com/styled/alerts/alert-tes
 
 在我们的第一个测试案例中，我们在一个新标签页中打开一个链接。我们正在验证是否打开了两个选项卡，并且可以在它们之间切换。注意，我们总是存储各自的窗口句柄。下面的代码代表了这个测试用例:
 
-```
+```java
 void givenOneTab_whenOpenTab_thenTwoTabsOpen() {
     driver.get(MAIN_PAGE_URL);
 
@@ -187,7 +187,7 @@ void givenOneTab_whenOpenTab_thenTwoTabsOpen() {
 
 在我们的第二个测试中，我们希望验证除了第一个打开的选项卡之外，我们可以关闭所有的选项卡。我们需要提供该选项卡的窗口句柄。以下代码显示了这个测试用例:
 
-```
+```java
 void givenTwoTabs_whenCloseAllExceptMainTab_thenOneTabOpen() {
     driver.get(MAIN_PAGE_URL);
     String mainWindow = tabHelper.openLinkAndSwitchToNewTab(LINK_TO_ATTRIBUTES_PAGE_XPATH);

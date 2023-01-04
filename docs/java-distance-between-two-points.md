@@ -20,25 +20,25 @@
 
 显然:
 
-```
+```java
 AC = y2 - y1
 ```
 
 类似地:
 
-```
+```java
 BC = x2 - x1
 ```
 
 让我们替换等式的各个部分:
 
-```
+```java
 distance * distance = (y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1)
 ```
 
 最后，根据上面的等式，我们可以计算两点之间的距离:
 
-```
+```java
 distance = sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1))
 ```
 
@@ -50,7 +50,7 @@ distance = sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1))
 
 虽然` java.lang.Math`和`java.awt.geom.Point2D `包提供了现成的解决方案，但让我们先按原样实现上面的公式:
 
-```
+```java
 public double calculateDistanceBetweenPoints(
   double x1, 
   double y1, 
@@ -62,13 +62,13 @@ public double calculateDistanceBetweenPoints(
 
 为了测试解决方案，我们拿有腿的三角形`3`和`4`(如上图所示)。很明显，`5`这个数字适合作为斜边的值:
 
-```
+```java
 3 * 3 + 4 * 4 = 5 * 5
 ```
 
 让我们来看看解决方案:
 
-```
+```java
 @Test
 public void givenTwoPoints_whenCalculateDistanceByFormula_thenCorrect() {
     double x1 = 3;
@@ -86,7 +86,7 @@ public void givenTwoPoints_whenCalculateDistanceByFormula_thenCorrect() {
 
 如果`calculateDistanceBetweenPoints()`方法中乘法的结果太大，可能会发生溢出。与此不同，`Math.hypot()`方法防止中间溢出或下溢:
 
-```
+```java
 public double calculateDistanceBetweenPointsWithHypot(
     double x1, 
     double y1, 
@@ -102,7 +102,7 @@ public double calculateDistanceBetweenPointsWithHypot(
 
 让我们像以前一样取相同的点，并检查距离是否相同:
 
-```
+```java
 @Test
 public void givenTwoPoints_whenCalculateDistanceWithHypot_thenCorrect() {
     double x1 = 3;
@@ -120,7 +120,7 @@ public void givenTwoPoints_whenCalculateDistanceWithHypot_thenCorrect() {
 
 最后，让我们用`Point2D.distance()`法计算距离:
 
-```
+```java
 public double calculateDistanceBetweenPointsWithPoint2D( 
     double x1, 
     double y1, 
@@ -133,7 +133,7 @@ public double calculateDistanceBetweenPointsWithPoint2D(
 
 现在让我们以同样的方式测试这个方法:
 
-```
+```java
 @Test
 public void givenTwoPoints_whenCalculateDistanceWithPoint2D_thenCorrect() {
 

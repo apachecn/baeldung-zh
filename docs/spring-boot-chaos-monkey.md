@@ -12,7 +12,7 @@
 
 为了将 Chaos Monkey 添加到我们的应用程序中，我们的项目中需要一个单独的 [Maven 依赖项](https://web.archive.org/web/20221114100953/https://search.maven.org/classic/#search%7Cgav%7C1%7Ca%3A%22chaos-monkey-spring-boot%22):
 
-```
+```java
 <dependency>
     <groupId>de.codecentric</groupId>
     <artifactId>chaos-monkey-spring-boot</artifactId>
@@ -31,13 +31,13 @@
 
 通过使用`chaos-monkey` spring profile **启动应用程序，当我们的应用程序运行时，如果我们想要启用或禁用它**，我们不必停止和启动应用程序:
 
-```
+```java
 java -jar your-app.jar --spring.profiles.active=chaos-monkey
 ```
 
 另一个有用的属性是`management.endpoint.chaosmonkey.enabled. `,将该属性设置为 true 将为我们的混沌猴子启用管理端点:
 
-```
+```java
 http://localhost:8080/chaosmonkey
 ```
 
@@ -69,7 +69,7 @@ http://localhost:8080/chaosmonkey
 
 但是我们可以通过配置属性轻松地改变这一点:
 
-```
+```java
 chaos.monkey.watcher.controller=false
 chaos.monkey.watcher.restController=false
 chaos.monkey.watcher.service=true
@@ -89,7 +89,7 @@ chaos.monkey.watcher.component=false
 
 我们可以使用应用程序的属性文件来配置和开启这种类型的攻击:
 
-```
+```java
 chaos.monkey.assaults.latencyActive=true
 chaos.monkey.assaults.latencyRangeStart=3000
 chaos.monkey.assaults.latencyRangeEnd=15000
@@ -99,7 +99,7 @@ chaos.monkey.assaults.latencyRangeEnd=15000
 
 让我们打开延迟攻击，并添加一个介于 2 到 5 秒之间的延迟范围:
 
-```
+```java
 curl -X POST http://localhost:8080/chaosmonkey/assaults \
 -H 'Content-Type: application/json' \
 -d \
@@ -119,7 +119,7 @@ curl -X POST http://localhost:8080/chaosmonkey/assaults \
 
 我们可以使用类似于延迟攻击的 curl 调用来启用它:
 
-```
+```java
 curl -X POST http://localhost:8080/chaosmonkey/assaults \
 -H 'Content-Type: application/json' \
 -d \
@@ -135,7 +135,7 @@ curl -X POST http://localhost:8080/chaosmonkey/assaults \
 
 这一个，嗯，我们的应用会在某个随机点死亡。我们可以通过一个简单的 curl 调用来启用或禁用它，就像前面两种攻击类型一样:
 
-```
+```java
 curl -X POST http://localhost:8080/chaosmonkey/assaults \
 -H 'Content-Type: application/json' \
 -d \

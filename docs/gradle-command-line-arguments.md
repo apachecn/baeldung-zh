@@ -21,7 +21,7 @@
 
 让我们看看这些属性的作用。首先，我们配置我们的`build.gradle`:
 
-```
+```java
 apply plugin: "java"
 description = "Gradle Command Line Arguments examples"
 
@@ -43,7 +43,7 @@ task propertyTypes(){
 
 接下来，让我们运行任务并查看其输出:
 
-```
+```java
 $ ./gradlew propertyTypes -Dargs=lorem -Pargs=ipsum
 
 > Task :cmd-line-args:propertyTypes
@@ -61,7 +61,7 @@ Our input argument with system property [lorem]
 
 首先，让我们**使用我们`build.gradle`** 中的应用插件:
 
-```
+```java
 apply plugin: "java"
 apply plugin: "application"
 description = "Gradle Command Line Arguments examples"
@@ -77,7 +77,7 @@ application {
 
 现在，让我们来看看我们的主类:
 
-```
+```java
 public class MainClass {
     public static void main(String[] args) {
         System.out.println("Gradle command line arguments example");
@@ -90,7 +90,7 @@ public class MainClass {
 
 接下来，让我们用一些参数来运行它:
 
-```
+```java
 $ ./gradlew :cmd-line-args:run --args="lorem ipsum dolor"
 
 > Task :cmd-line-args:run
@@ -108,7 +108,7 @@ Got argument [dolor]
 
 首先，我们需要在我们的`build.gradle`中定义它:
 
-```
+```java
 ext.javaMainClass = "com.baeldung.cmd.MainClass"
 if (project.hasProperty("args")) {
     ext.cmdargs = project.getProperty("args")
@@ -132,7 +132,7 @@ task cmdLineJavaExec(type: JavaExec) {
 
 让我们看看当我们运行这个任务时会发生什么，用`-P`选项传递项目属性:
 
-```
+```java
 $ ./gradlew cmdLineJavaExec -Pargs="lorem ipsum dolor"
 
 > Task :cmd-line-args:cmdLineJavaExec
@@ -148,7 +148,7 @@ Got argument [dolor]
 
 幸运的是，我们可以**使用更通用的*执行*任务**来做到这一点:
 
-```
+```java
 if (project.hasProperty("args")) {
     ext.cmdargs = project.getProperty("args")
 } else { 
@@ -166,7 +166,7 @@ task cmdLineExec(type: Exec) {
 
 让我们看看如何运行 *ls* 命令:
 
-```
+```java
 $ ./gradlew cmdLineExec -Pargs="ls -ll"
 
 > Task :cmd-line-args:cmdLineExec

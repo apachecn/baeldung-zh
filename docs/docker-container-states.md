@@ -16,7 +16,7 @@
 
 默认情况下，`docker ps`命令显示所有 Docker 容器的当前状态:
 
-```
+```java
 $ docker ps -a
 CONTAINER ID   IMAGE      COMMAND       CREATED              STATUS                          PORTS     NAMES
 8f0b524f2d32   centos:7   "/bin/bash"   46 seconds ago       Created                                   strange_beaver
@@ -27,7 +27,7 @@ e6d798254d45   centos:7   "/bin/bash"   About a minute ago   Exited (0) About a 
 
 我们还可以使用`docker inspect`命令来获取单个容器的状态:
 
-```
+```java
 $ docker inspect -f '{{.State.Status}}' mycontainer
 running
 ```
@@ -44,7 +44,7 @@ running
 
 使用`docker create`命令创建的 Docker 容器将状态显示为 c `reated:`
 
-```
+```java
 $ docker create --name mycontainer httpd
 dd109e4be16219f1a6b9fc1cbfb050c1ae035d6a2c301ea0e93eb7d5252b8d2e
 $ docker inspect -f '{{.State.Status}}' mycontainer
@@ -61,7 +61,7 @@ created
 
 **这个状态表示进程正在容器内部的隔离环境中运行。**
 
-```
+```java
 $ docker create --name mycontainer httpd
 8d60cb560afc1397d6732672b2b4af16a08bf6289a5a0b6b5125c5635e8ee749
 $ docker inspect -f '{{.State.Status}}' mycontainer
@@ -76,7 +76,7 @@ running
 
 使用`docker run`命令运行的容器也获得了相同的状态:
 
-```
+```java
 $ docker run -itd --name mycontainer httpd
 685efd4c1c4a658fd8a0d6ca66ee3cf88ab75a127b9b439026e91211d09712c7
 $ docker inspect -f '{{.State.Status}}' mycontainer
@@ -95,7 +95,7 @@ Docker 支持四种类型的[重启策略](https://web.archive.org/web/202212102
 
 让我们将重启策略更新为`always `，并使用以下示例验证 Docker 容器的状态:
 
-```
+```java
 $ docker run -itd --restart=always --name mycontainer centos:7 sleep 5
 f7d0e8becdac1ebf7aae25be2d02409f0f211fcc191aea000041d158f89be6f6
 ```
@@ -104,7 +104,7 @@ f7d0e8becdac1ebf7aae25be2d02409f0f211fcc191aea000041d158f89be6f6
 
 5 秒钟后，容器的状态将为`restarting`:
 
-```
+```java
 $ docker inspect -f '{{.State.Status}}' mycontainer
 restarting
 ```
@@ -120,21 +120,21 @@ restarting
 *   使用`docker stop`命令有意停止容器。
 *   没有为运行 bash 的容器设置交互终端。
 
-```
+```java
 $ docker run -itd --name mycontainer centos:7 sleep 10
 596a10ddb635b83ad6bb9daffb12c1e2f230280fe26be18559c53c1dca6c755f 
 ```
 
 在这里，我们已经启动了一个 centos 容器，`mycontainer, `并通过了命令`sleep 10\.` ，它将在 10 秒钟的睡眠后退出容器。我们可以通过在 10 秒钟后运行以下命令来验证这一点:
 
-```
+```java
 $ docker inspect -f '{{.State.Status}}' mycontainer
 exited
 ```
 
 使用`docker exec`命令无法访问处于`exited`状态的容器。然而，我们可以使用`docker start`或`docker restart `启动容器，然后访问它。
 
-```
+```java
 $ docker start mycontainer
 ```
 
@@ -144,7 +144,7 @@ $ docker start mycontainer
 
 可以使用`docker pause`命令暂停 Docker 容器。
 
-```
+```java
 $ docker run -itd --name mycontainer centos:7 sleep 1000
 1a44702cea17eec42195b057588cf72825174db311a35374e250d3d1da9d70c5 
 ```
@@ -153,7 +153,7 @@ $ docker run -itd --name mycontainer centos:7 sleep 1000
 
 现在让我们暂停这个容器几秒钟，比如 100 秒钟:
 
-```
+```java
 $ docker pause mycontainer
 mycontainer
 $ docker inspect -f '{{.State.Status}}' mycontainer
@@ -162,7 +162,7 @@ paused
 
 **一个`paused`容器消耗的内存与运行容器时消耗的内存相同，但是 CPU 被完全释放。**让我们使用`docker stat`命令来验证这一点:
 
-```
+```java
 $ docker stats --no-stream
 CONTAINER ID   NAME          CPU %     MEM USAGE / LIMIT    MEM %     NET I/O       BLOCK I/O   PIDS
 1a44702cea17   mycontainer   0.00%     1.09MiB / 7.281GiB   0.01%     1.37kB / 0B   0B / 0B     1
@@ -172,7 +172,7 @@ CONTAINER ID   NAME          CPU %     MEM USAGE / LIMIT    MEM %     NET I/O   
 
 我们可以使用`docker unpause`命令来恢复容器:
 
-```
+```java
 $ docker unpause mycontainer
 mycontainer
 ```

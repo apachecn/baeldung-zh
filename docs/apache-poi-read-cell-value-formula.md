@@ -17,7 +17,7 @@
 
 我们需要在 Apache POI 的 pom.xml 文件中添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.poi</groupId>
     <artifactId>poi-ooxml</artifactId>
@@ -35,7 +35,7 @@
 
 让我们看看如何获取单元格的最后一个缓存值:
 
-```
+```java
 FileInputStream inputStream = new FileInputStream(new File("temp.xlsx"));
 Workbook workbook = new XSSFWorkbook(inputStream);
 Sheet sheet = workbook.getSheetAt(0);
@@ -67,7 +67,7 @@ Apache POI 提供了一个 **`FormulaEvaluator `类，使我们能够计算 Exc
 
 让我们来看看这种方法的实际应用:
 
-```
+```java
 // existing Workbook setup
 
 FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator(); 

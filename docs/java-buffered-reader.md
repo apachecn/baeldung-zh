@@ -18,14 +18,14 @@
 
 像大多数 Java I/O 类一样， **`BufferedReader `实现了** `**Decorator pattern,**` **，这意味着它期望在其构造函数中有一个`Reader`。**通过这种方式，它使我们能够灵活地扩展具有缓冲功能的`Reader`实现的实例:
 
-```
+```java
 BufferedReader reader = 
   new BufferedReader(new FileReader("src/main/resources/input.txt"));
 ```
 
 但是，如果缓冲对我们来说无关紧要，我们可以直接使用`FileReader `:
 
-```
+```java
 FileReader reader = 
   new FileReader("src/main/resources/input.txt");
 ```
@@ -36,7 +36,7 @@ FileReader reader =
 
 一般来说，**我们可以将`BufferedReader` 配置为将任何类型的输入流作为底层源**。我们可以使用`InputStreamReader`并将其包装在构造函数中:
 
-```
+```java
 BufferedReader reader = 
   new BufferedReader(new InputStreamReader(System.in));
 ```
@@ -68,7 +68,7 @@ BufferedReader reader =
 
 首先，**让我们用它的`BufferedReader(Reader)`构造器**创建一个`BufferedReader`:
 
-```
+```java
 BufferedReader reader = 
   new BufferedReader(new FileReader("src/main/resources/input.txt"));
 ```
@@ -77,7 +77,7 @@ BufferedReader reader =
 
 默认情况下，这将使用 8 KB 的缓冲区。然而，如果我们想要缓冲更小或更大的块，我们可以使用`BufferedReader(Reader, int)`构造函数:
 
-```
+```java
 BufferedReader reader = 
   new BufferedReader(new FileReader("src/main/resources/input.txt")), 16384);
 ```
@@ -90,7 +90,7 @@ BufferedReader reader =
 
 最后，**还有一种更方便的方法来创建一个`BufferedReader`，从`java.nio` `API:`中使用 [`Files`](https://web.archive.org/web/20221121020730/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Files.html) 助手类**
 
-```
+```java
 BufferedReader reader = 
   Files.newBufferedReader(Paths.get("src/main/resources/input.txt"))
 ```
@@ -101,7 +101,7 @@ BufferedReader reader =
 
 接下来，让我们使用`readLine`方法读取文件的内容:
 
-```
+```java
 public String readAllLines(BufferedReader reader) throws IOException {
     StringBuilder content = new StringBuilder();
     String line;
@@ -117,7 +117,7 @@ public String readAllLines(BufferedReader reader) throws IOException {
 
 **我们可以使用 Java 8** 中引入的`lines `方法做同样的事情，简单一点:
 
-```
+```java
 public String readAllLinesWithStream(BufferedReader reader) {
     return reader.lines()
       .collect(Collectors.joining(System.lineSeparator()));
@@ -128,7 +128,7 @@ public String readAllLinesWithStream(BufferedReader reader) {
 
 在使用了`BufferedReader`之后，我们必须调用它的`close()`方法来释放与之相关的任何系统资源。如果我们使用`try-with-resources`块，这是自动完成的:
 
-```
+```java
 try (BufferedReader reader = 
        new BufferedReader(new FileReader("src/main/resources/input.txt"))) {
     return readAllLines(reader);
@@ -143,7 +143,7 @@ try (BufferedReader reader =
 
 我们可以使用`read() `方法来读取单个字符。让我们一个字符一个字符地阅读整个内容，直到流的结尾:
 
-```
+```java
 public String readAllCharsOneByOne(BufferedReader reader) throws IOException {
     StringBuilder content = new StringBuilder();
 
@@ -162,7 +162,7 @@ public String readAllCharsOneByOne(BufferedReader reader) throws IOException {
 
 如果我们想一次读取多个字符，我们可以使用方法`read(char[] cbuf, int off, int len)`:
 
-```
+```java
 public String readMultipleChars(BufferedReader reader) throws IOException {
     int length;
     char[] chars = new char[length];
@@ -185,7 +185,7 @@ public String readMultipleChars(BufferedReader reader) throws IOException {
 
 我们也可以通过调用`skip(long n)`方法跳过给定数量的字符:
 
-```
+```java
 @Test
 public void givenBufferedReader_whensSkipChars_thenOk() throws IOException {
     StringBuilder result = new StringBuilder();
@@ -209,7 +209,7 @@ public void givenBufferedReader_whensSkipChars_thenOk() throws IOException {
 
 我们可以使用`mark(int readAheadLimit)`和`reset() `方法来标记流中的某个位置，稍后再返回。作为一个有点做作的例子，让我们使用`mark()`和`reset()`来忽略流开头的所有空白:
 
-```
+```java
 @Test
 public void givenBufferedReader_whenSkipsWhitespacesAtBeginning_thenOk() 
   throws IOException {

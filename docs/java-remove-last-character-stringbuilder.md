@@ -18,7 +18,7 @@
 
 接下来，让我们创建一个测试来检查它是否有效:
 
-```
+```java
 StringBuilder sb = new StringBuilder("Using the sb.deleteCharAt() method!");
 sb.deleteCharAt(sb.length() - 1);
 assertEquals("Using the sb.deleteCharAt() method", sb.toString()); 
@@ -38,7 +38,7 @@ assertEquals("Using the sb.deleteCharAt() method", sb.toString());
 
 假设序列中最后一个字符的索引是`lastIdx.` **，如果要删除最后一个字符，可以将`lastIdx`作为起始索引，`lastIdx+1`作为结束索引，空字符串`“”`作为对`replace()`** 的替换:
 
-```
+```java
 StringBuilder sb = new StringBuilder("Using the sb.replace() method!");
 int last = sb.length() - 1;
 sb.replace(last, last + 1, "");
@@ -55,7 +55,7 @@ assertEquals("Using the sb.replace() method", sb.toString());
 
 我们可以将 0 作为`start`索引，将最后一个字符的索引作为`end`索引传递给`substring()`方法，以获得去掉最后一个字符的字符串:
 
-```
+```java
 StringBuilder sb = new StringBuilder("Using the sb.substring() method!");
 assertEquals("Using the sb.substring() method", sb.substring(0, sb.length() - 1));
 //the stringBuilder object is not changed

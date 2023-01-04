@@ -36,7 +36,7 @@
 
 让我们创建一个简单的类，并用 JDK 8:
 
-```
+```java
 public class Sample {
     public static void main(String[] args) {
         System.out.println("Baeldung tutorials");
@@ -48,13 +48,13 @@ public class Sample {
 
 下面是`javap`命令的语法:
 
-```
+```java
 javap [option] [classname]
 ```
 
 让我们以检查`Sample.class`的版本为例:
 
-```
+```java
 javap -verbose Sample
 
 //stripped output ..
@@ -74,13 +74,13 @@ public class test.Sample
 
 对于任何基于 Linux 的系统，我们可以使用下面的命令只获取主要版本:
 
-```
+```java
 javap -verbose Sample | grep major
 ```
 
 同样，对于 Windows 系统，我们可以使用以下命令:
 
-```
+```java
 javap -verbose Sample | findstr major
 ```
 
@@ -94,7 +94,7 @@ javap -verbose Sample | findstr major
 
 也可以使用任何十六进制编辑器来检查版本。Java 类文件遵循一个[规范](https://web.archive.org/web/20221104163944/https://en.wikipedia.org/wiki/Java_class_file)。让我们看看它的结构:
 
-```
+```java
 ClassFile {
     u4             magic;
     u2             minor_version;
@@ -108,7 +108,7 @@ ClassFile {
 
 **对于基于 Linux 的系统，我们可以使用 [`hexdump`](/web/20221104163944/https://www.baeldung.com/linux/create-hex-dump#using-hexdump) 实用程序来解析任何`.class`文件**:
 
-```
+```java
 > hexdump -v Sample.class
 0000000 ca fe ba be 00 00 00 34 00 22 07 00 02 01 00 0b
 0000010 74 65 73 74 2f 53 61 6d 70 6c 65 07 00 04 01 00
@@ -119,7 +119,7 @@ ClassFile {
 
 作为替代，**我们可以用`hexdump`** 直接得到十进制的主发布版本:
 
-```
+```java
 > hexdump -s 7 -n 1 -e '"%d"' Sample.class
 52
 ```
@@ -134,13 +134,13 @@ jar 文件中还有一个`[MANIFEST.MF](/web/20221104163944/https://www.baeldung
 
 例如，`Build-Jdk`或`Created-By`头根据 jar 的构建方式存储 JDK 值:
 
-```
+```java
 Build-Jdk: 17.0.4
 ```
 
 或者
 
-```
+```java
 Created-By: 17.0.4
 ```
 

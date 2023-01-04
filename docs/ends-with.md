@@ -30,13 +30,13 @@
 
 ### 可用签名
 
-```
+```java
 public boolean endsWith(String suffix)
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenCallEndsWith_thenCorrect() {
     String s1 = "test";

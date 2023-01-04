@@ -26,14 +26,14 @@
 
 首先，让我们建立一个新的数据库`baeldung`和一个样本集合`vehicle`:
 
-```
+```java
 use baeldung;
 db.createCollection("vehicle");
 ```
 
 此外，让我们使用`insertMany`方法向集合中添加一些文档:
 
-```
+```java
 db.vehicle.insertMany([
 {
     "companyName":"Skoda", 
@@ -60,7 +60,7 @@ db.vehicle.insertMany([
 
 如果插入成功，上面的命令将打印一个 JSON，如下所示:
 
-```
+```java
 {
     "acknowledged" : true,
     "insertedIds" : [
@@ -79,13 +79,13 @@ db.vehicle.insertMany([
 
 首先，让我们编写一个将返回所有`vehicle`集合文档的查询:
 
-```
+```java
 db.vehicle.find({});
 ```
 
 以上查询返回所有文档:
 
-```
+```java
 { "_id" : ObjectId("62d01d17cdd1b7c8a5f945b9"), "companyName" : "Skoda",
     "modelName" : "Octavia", "launchYear" : 2016, "type" : "Sports", "registeredNo" : "SKO 1134" }
 { "_id" : ObjectId("62d01d17cdd1b7c8a5f945ba"), "companyName" : "BMW",
@@ -96,7 +96,7 @@ db.vehicle.find({});
 
 此外，让我们编写一个查询，使用上面结果中返回的 ID 获取`vehicle`集合文档:
 
-```
+```java
 db.vehicle.find(
 {
     "_id": ObjectId("62d01d17cdd1b7c8a5f945b9")
@@ -105,14 +105,14 @@ db.vehicle.find(
 
 以上查询返回`_id`等于`ObjectId(“62d01d17cdd1b7c8a5f945b9”)`的`vehicle`收款单:
 
-```
+```java
 { "_id" : ObjectId("62d01d17cdd1b7c8a5f945b9"), "companyName" : "Skoda",
     "modelName" : "Octavia", "launchYear" : 2016, "type" : "Sports", "registeredNo" : "SKO 1134" }
 ```
 
 此外，我们可以使用带有`in`查询操作符的 id 来检索多个`vehicle`集合文档:
 
-```
+```java
 db.vehicle.find(
 {
     "_id": {
@@ -127,7 +127,7 @@ db.vehicle.find(
 
 上述查询返回在`in`运算符中查询到的 id 的所有`vehicle`收款单据:
 
-```
+```java
 { "_id" : ObjectId("62d01d17cdd1b7c8a5f945b9"), "companyName" : "Skoda",
     "modelName" : "Octavia", "launchYear" : 2016, "type" : "Sports", "registeredNo" : "SKO 1134" }
 { "_id" : ObjectId("62d01d17cdd1b7c8a5f945ba"), "companyName" : "BMW",
@@ -142,7 +142,7 @@ db.vehicle.find(
 
 让我们尝试使用 ID 作为`String`值来查询一个现有的文档:
 
-```
+```java
 db.vehicle.find(
 {
     "_id": "62d01d17cdd1b7c8a5f945b9"
@@ -157,7 +157,7 @@ db.vehicle.find(
 
 在执行更新操作之前，让我们首先连接到`baeldung`数据库中的`vehicle`集合:
 
-```
+```java
 MongoClient mongoClient = new MongoClient("localhost", 27017);
 MongoDatabase database = mongoClient.getDatabase("baeldung");
 MongoCollection<Document> collection = database.getCollection("vehicle");
@@ -167,7 +167,7 @@ MongoCollection<Document> collection = database.getCollection("vehicle");
 
 首先，让我们编写使用 ID 查询文档的代码:
 
-```
+```java
 Bson filter = Filters.eq("_id", new ObjectId("62d01d17cdd1b7c8a5f945b9"));
 FindIterable<Document> documents = collection.find(filter);
 
@@ -181,7 +181,7 @@ while (cursor.hasNext()) {
 
 此外，让我们编写一个代码片段来查询具有多个 id 的文档:
 
-```
+```java
 Bson filter = Filters.in("_id", new ObjectId("62d01d17cdd1b7c8a5f945b9"),
   new ObjectId("62d01d17cdd1b7c8a5f945ba"));
 FindIterable<Document> documents = collection.find(filter);
@@ -196,7 +196,7 @@ while (cursor.hasNext()) {
 
 最后，让我们尝试使用驱动程序生成的 ID 查询`vehicle`集合:
 
-```
+```java
 Bson filter = Filters.eq("_id", new ObjectId());
 FindIterable<Document> documents = collection.find(filter);
 

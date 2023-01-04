@@ -14,7 +14,7 @@
 
 让我们看一个使用 glob 模式的方法的例子:
 
-```
+```java
 String pattern = "myCustomPattern";
 PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);
 ```
@@ -41,7 +41,7 @@ PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern)
 
 首先，让我们用一个`searchWithWc()`方法创建我们的`SearchFileByWildcard`类，该方法将一个`Path`和`String`模式作为参数:
 
-```
+```java
 class SearchFileByWildcard {
     static List<String> matchesList = new ArrayList<String>();
     List<String> searchWithWc(Path rootDir, String pattern) throws IOException {
@@ -76,7 +76,7 @@ class SearchFileByWildcard {
 
 如果我们用`“glob:*.{txt,docx}”`模式传递一个`String`，我们的代码输出三个扩展名为`“txt”`的文件名和一个扩展名为`“docx”`的文件名:
 
-```
+```java
 SearchFileByWildcard sfbw = new SearchFileByWildcard();
 List<String> actual = sfbw.searchWithWc(Paths.get("src/test/resources/sfbw"), "glob:*.{txt,docx}");
 
@@ -86,7 +86,7 @@ assertEquals(new HashSet<>(Arrays.asList("six.txt", "three.txt", "two.docx", "on
 
 如果我们用`“glob:????.{csv}”`模式传递一个`String`，我们的代码将输出一个文件名，文件名包含四个字符，后跟一个“.”带分机`“csv”`:
 
-```
+```java
 SearchFileByWildcard sfbw = new SearchFileByWildcard();
 List<String> actual = sfbw.searchWithWc(Paths.get("src/test/resources/sfbw"), "glob:????.{csv}");
 

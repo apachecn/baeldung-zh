@@ -14,13 +14,13 @@ Ali Arthas 是一个诊断工具，它使我们能够监控、分析和诊断我
 
 首先，让我们通过[下载链接](https://web.archive.org/web/20221208143845/https://alibaba.github.io/arthas/arthas-boot.jar)或者使用`curl`直接下载阿尔萨斯库:
 
-```
+```java
 curl -O https://alibaba.github.io/arthas/arthas-boot.jar 
 ```
 
 现在，让我们通过运行带有`-h`(帮助)选项的 Arthas 来测试它是否在运行:
 
-```
+```java
 java -jar arthas-boot.jar -h
 ```
 
@@ -32,7 +32,7 @@ java -jar arthas-boot.jar -h
 
 在本教程中，我们将使用一个非常简单的应用程序，它基于使用递归的[斐波那契](/web/20221208143845/https://www.baeldung.com/java-fibonacci)序列的一个相当低效的实现:
 
-```
+```java
 public class FibonacciGenerator {
 
     public static void main(String[] args) {
@@ -64,13 +64,13 @@ public class FibonacciGenerator {
 
 现在，让我们运行 Arthas 可执行文件:
 
-```
+```java
 java -jar arthas-boot.jar
 ```
 
 **阿尔萨斯提示一个菜单来选择我们想要附加到哪个进程:**
 
-```
+```java
 [INFO] arthas-boot version: 3.1.7
 [INFO] Found existing java process, please choose one and hit RETURN.
 * [1]: 25500 com.baeldung.arthas.FibonacciGenerator
@@ -81,7 +81,7 @@ java -jar arthas-boot.jar
 
 阿尔萨斯现在将连接到这个进程并开始:
 
-```
+```java
 INFO] Try to attach process 25500
 [INFO] Attach process 25500 success.
 ... 
@@ -117,7 +117,7 @@ INFO] Try to attach process 25500
 
 现在我们已经退出了仪表板，我们可以通过**运行`thread`命令**来更详细地分析流程:
 
-```
+```java
 thread 1
 ```
 
@@ -125,13 +125,13 @@ thread 1
 
 如果堆栈跟踪很长，阅读起来很乏味，thread 命令允许我们使用管道:
 
-```
+```java
 thread 1 | grep 'main('
 ```
 
 这将只打印与`grep `命令匹配的行:
 
-```
+```java
 [[[email protected]](/web/20221208143845/https://www.baeldung.com/cdn-cgi/l/email-protection)]$ thread 1 | grep 'main('
     at com.baeldung.arthas.FibonacciGenerator.main(FibonacciGenerator.java:10)
 ```
@@ -140,7 +140,7 @@ thread 1 | grep 'main('
 
 让我们设想一个场景，我们正在分析一个我们知之甚少或一无所知的 Java 应用程序，突然发现堆栈中散布着重复的调用类型:
 
-```
+```java
 [[[email protected]](/web/20221208143845/https://www.baeldung.com/cdn-cgi/l/email-protection)]$ thread 1
 "main" Id=1 RUNNABLE
   at app//com.baeldung.arthas.FibonacciGenerator.fibonacci(FibonacciGenerator.java:18)
@@ -150,7 +150,7 @@ thread 1 | grep 'main('
 
 因为我们正在运行 Arthas，**我们可以反编译一个类来查看它的内容。**要实现这一点，我们可以使用 [`jad`](https://web.archive.org/web/20221208143845/https://alibaba.github.io/arthas/en/jad) 命令，传递限定类名作为参数:
 
-```
+```java
 jad com.baeldung.arthas.FibonacciGenerator
 
 ClassLoader:
@@ -161,7 +161,7 @@ Location:
 /home/amoreno/work/baeldung/tutorials/libraries-3/target/
 ```
 
-```
+```java
 /*
  * Decompiled with CFR.
  */
@@ -181,7 +181,7 @@ public class FibonacciGenerator {
 
 在搜索 JVM 中加载的类时，search class 命令非常方便。**我们可以通过键入`sc`并传递一个模式(带或不带通配符)作为参数**来使用它:
 
-```
+```java
 [[[email protected]](/web/20221208143845/https://www.baeldung.com/cdn-cgi/l/email-protection)]$ sc *Fibonacci*
 com.baeldung.arthas.FibonacciGenerator
 Affect(row-cnt:1) cost in 5 ms. 
@@ -194,7 +194,7 @@ Affect(row-cnt:1) cost in 5 ms.
 
 但是，必须结合详细信息来查询该类的字段:
 
-```
+```java
 [[[email protected]](/web/20221208143845/https://www.baeldung.com/cdn-cgi/l/email-protection)]$ sc -df com.baeldung.arthas.FibonacciGenerator
   class-info        com.baeldung.arthas.FibonacciGenerator
   ... 
@@ -202,7 +202,7 @@ Affect(row-cnt:1) cost in 5 ms.
 
 同样，我们可以使用命令`sm` (search method)在一个类中查找加载的方法。在这种情况下，对于我们的类`com.baeldung.arthas.FibonacciGenerator`，我们可以运行:
 
-```
+```java
 [[[email protected]](/web/20221208143845/https://www.baeldung.com/cdn-cgi/l/email-protection)]$ sm com.baeldung.arthas.FibonacciGenerator
 com.baeldung.arthas.FibonacciGenerator <init>()V
 com.baeldung.arthas.FibonacciGenerator main([Ljava/lang/String;)V
@@ -212,7 +212,7 @@ Affect(row-cnt:3) cost in 4 ms.
 
 **我们也可以使用标志`-d`来检索方法的细节**。最后，我们可以给方法名传递一个可选参数，以减少返回方法的数量:
 
-```
+```java
 sm -d com.baeldung.arthas.FibonacciGenerator fibonacci
  declaring-class  com.baeldung.arthas.FibonacciGenerator
  method-name      fibonacci
@@ -232,13 +232,13 @@ sm -d com.baeldung.arthas.FibonacciGenerator fibonacci
 
 对于我们的案例研究，现在让我们调用`monitor`:
 
-```
+```java
 monitor -c 10 com.baeldung.arthas.FibonacciGenerator fibonacci
 ```
 
 正如预期的那样，Arthas 将每 10 秒钟打印一次关于`fibonacci`方法的指标:
 
-```
+```java
 Affect(class-cnt:1 , method-cnt:1) cost in 47 ms.
  timestamp            class                                          method     total   success  fail  avg-rt(ms)  fail-rate                                                                       
 -----------------------------------------------------------------------------------------------------------------------------                                                                      
@@ -252,7 +252,7 @@ Affect(class-cnt:1 , method-cnt:1) cost in 47 ms.
 
 **如果我们需要调试一个方法的参数，我们可以使用`watch`命令**。但是，语法有点复杂:
 
-```
+```java
 watch com.baeldung.arthas.FibonacciGenerator fibonacci '{params[0], returnObj}' 'params[0]>10' -n 10 
 ```
 
@@ -265,7 +265,7 @@ watch com.baeldung.arthas.FibonacciGenerator fibonacci '{params[0], returnObj}' 
 
 在这个例子中，我们只想监控大于 10 的参数。最后，我们添加一个标志，将结果数量限制为 10:
 
-```
+```java
 watch com.baeldung.arthas.FibonacciGenerator fibonacci '{params[0], returnObj}' 'params[0]>10' -n 10
 Press Q or Ctrl+C to abort.
 Affect(class-cnt:1 , method-cnt:1) cost in 19 ms.

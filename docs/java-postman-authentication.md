@@ -12,7 +12,7 @@
 
 **基本认证是一种通过特殊报头保护 HTTP 请求的方法**:
 
-```
+```java
 Authorization: Basic <credentials>
 ```
 
@@ -20,7 +20,7 @@ Authorization: Basic <credentials>
 
 假设用户名为“`admin`”，密码为“`baeldung`”。首先，我们将创建凭证字符串，它将是“`admin:baeldung`”。然后，我们用 Base64 编码，添加“`Basic`”关键字，并将其设置为头的值:
 
-```
+```java
 Authorization: Basic YWRtaW46YmFlbGR1bmc=
 ```
 
@@ -36,7 +36,7 @@ Authorization: Basic YWRtaW46YmFlbGR1bmc=
 
 因此，我们可以看到请求被授权，响应代码是 200。此外，如果我们单击“`code`”链接，我们可以看到授权头现在是如何添加到请求中的:
 
-```
+```java
 GET /postman-test HTTP/1.1
 Host: localhost:8080
 Authorization: Basic YWRtaW46YmFlbGR1bmc=

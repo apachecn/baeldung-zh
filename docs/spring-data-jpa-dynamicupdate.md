@@ -18,7 +18,7 @@
 
 我们试着用一个例子来理解这一点。首先，让我们考虑一个名为`Account`的 JPA 实体:
 
-```
+```java
 @Entity
 public class Account {
 
@@ -40,7 +40,7 @@ public class Account {
 
 接下来，让我们为`Account`实体编写一个 JPA 存储库:
 
-```
+```java
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Integer> {
 }
@@ -48,7 +48,7 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 
 现在，我们将使用`AccountRepository`来更新一个`Account`对象的`name`字段:
 
-```
+```java
 Account account = accountRepository.findOne(ACCOUNT_ID);
 account.setName("Test Account");
 accountRepository.save(account);
@@ -56,7 +56,7 @@ accountRepository.save(account);
 
 执行这个更新后，我们可以验证生成的 SQL 语句。生成的 SQL 语句将包括`Account`的所有列:
 
-```
+```java
 update Account set active=?, name=?, type=? where id=?
 ```
 
@@ -66,7 +66,7 @@ update Account set active=?, name=?, type=? where id=?
 
 现在，让我们将`@DynamicUpdate`注释添加到`Account`实体中:
 
-```
+```java
 @Entity
 @DynamicUpdate
 public class Account {
@@ -76,7 +76,7 @@ public class Account {
 
 接下来，让我们运行在上一节中使用的相同的更新代码。我们可以看到 Hibernate 生成的 SQL，在这种情况下，只包含了`name`列:
 
-```
+```java
 update Account set name=? where id=?
 ```
 

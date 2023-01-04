@@ -12,7 +12,7 @@
 
 首先，我们需要将`spring-social-facebook`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.social</groupId>
     <artifactId>spring-social-facebook</artifactId>
@@ -24,7 +24,7 @@
 
 让我们首先从简单的安全配置开始，这里我们只有基于表单的身份验证:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 @ComponentScan(basePackages = { "com.baeldung.security" })
@@ -58,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 接下来，让我们在`application.properties`中配置脸书属性:
 
-```
+```java
 spring.social.facebook.appId=YOUR_APP_ID
 spring.social.facebook.appSecret=YOUR_APP_SECRET
 ```
@@ -72,7 +72,7 @@ spring.social.facebook.appSecret=YOUR_APP_SECRET
 
 现在，让我们在系统中添加一种新的身份认证方式，由脸书推动:
 
-```
+```java
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -130,7 +130,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 简而言之，这个适配器是上面的控制器(驱动脸书用户登录流程)和我们特定的本地应用程序之间的桥梁:
 
-```
+```java
 public class FacebookSignInAdapter implements SignInAdapter {
     @Override
     public String signIn(
@@ -156,7 +156,7 @@ public class FacebookSignInAdapter implements SignInAdapter {
 
 这就是我们需要为他们自动创建帐户的地方；我们将使用`ConnectionSignUp`来驱动用户创建逻辑:
 
-```
+```java
 @Service
 public class FacebookConnectionSignup implements ConnectionSignUp {
 
@@ -182,7 +182,7 @@ public class FacebookConnectionSignup implements ConnectionSignUp {
 
 我们现在将在登录页面上支持这两种身份验证流程，即表单登录和脸书:
 
-```
+```java
 <html>
 <body>
 <div th:if="${param.logout}">You have been logged out</div>
@@ -204,7 +204,7 @@ public class FacebookConnectionSignup implements ConnectionSignUp {
 
 最后，这里是`index.html`:
 
-```
+```java
 <html>
 <body>
 <nav>

@@ -35,7 +35,7 @@ Learn how and when to use the standard Spring bean annotations - @Component, @Re
 
 让我们创建一个`Person`实体来举例说明作用域的概念:
 
-```
+```java
 public class Person {
     private String name;
 
@@ -45,7 +45,7 @@ public class Person {
 
 之后，我们通过使用`@Scope`注释来定义具有`singleton`范围的 bean:
 
-```
+```java
 @Bean
 @Scope("singleton")
 public Person personSingleton() {
@@ -55,13 +55,13 @@ public Person personSingleton() {
 
 我们也可以用一个常数代替`String`值，如下所示:
 
-```
+```java
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 ```
 
 现在，我们可以继续编写一个测试，显示引用同一个 bean 的两个对象将具有相同的值，即使其中只有一个对象更改了它们的状态，因为它们都引用同一个 bean 实例:
 
-```
+```java
 private static final String NAME = "John Smith";
 
 @Test
@@ -81,7 +81,7 @@ public void givenSingletonScope_whenSetName_thenEqualNames() {
 
 本例中的`scopes.xml`文件应该包含所用 beans 的 xml 定义:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -96,7 +96,7 @@ public void givenSingletonScope_whenSetName_thenEqualNames() {
 
 具有`prototype`作用域的 bean 将在每次从容器中被请求时返回不同的实例。它是通过将值`prototype`设置为 bean 定义中的 *@Scope* 注释来定义的:
 
-```
+```java
 @Bean
 @Scope("prototype")
 public Person personPrototype() {
@@ -106,13 +106,13 @@ public Person personPrototype() {
 
 我们也可以像对待`singleton`范围一样使用一个常量:
 
-```
+```java
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 ```
 
 我们现在将编写一个与之前类似的测试，显示两个对象请求相同的 bean 名称和`prototype `范围。它们将具有不同的状态，因为它们不再引用同一个 bean 实例:
 
-```
+```java
 private static final String NAME = "John Smith";
 private static final String NAME_OTHER = "Anna Jones";
 
@@ -136,7 +136,7 @@ public void givenPrototypeScope_whenSetNames_thenDifferentNames() {
 
 `scopes.xml`文件类似于上一节中给出的文件，只是添加了范围为`prototype`的 bean 的 xml 定义:
 
-```
+```java
 <bean id="personPrototype" class="org.baeldung.scopes.Person" scope="prototype"/>
 ```
 
@@ -150,7 +150,7 @@ public void givenPrototypeScope_whenSetNames_thenDifferentNames() {
 
 让我们创建一个用于实例化 beans 的类:
 
-```
+```java
 public class HelloMessageGenerator {
     private String message;
 
@@ -162,7 +162,7 @@ public class HelloMessageGenerator {
 
 我们可以使用`@Scope`注释定义具有`request`范围的 bean:
 
-```
+```java
 @Bean
 @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public HelloMessageGenerator requestScopedBean() {
@@ -174,7 +174,7 @@ public HelloMessageGenerator requestScopedBean() {
 
 我们还可以使用一个`@RequestScope`组合注释，作为上述定义的快捷方式:
 
-```
+```java
 @Bean
 @RequestScope
 public HelloMessageGenerator requestScopedBean() {
@@ -186,7 +186,7 @@ public HelloMessageGenerator requestScopedBean() {
 
 如果我们在每次请求运行时显示`message`，我们可以看到该值被重置为`null`，即使它后来在方法中被更改。这是因为为每个请求返回了不同的 bean 实例。
 
-```
+```java
 @Controller
 public class ScopesController {
     @Resource(name = "requestScopedBean")
@@ -206,7 +206,7 @@ public class ScopesController {
 
 我们可以用类似的方式定义具有*会话*范围的 bean:
 
-```
+```java
 @Bean
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public HelloMessageGenerator sessionScopedBean() {
@@ -216,7 +216,7 @@ public HelloMessageGenerator sessionScopedBean() {
 
 我们还可以使用一个专用的组合注释来简化 bean 定义:
 
-```
+```java
 @Bean
 @SessionScope
 public HelloMessageGenerator sessionScopedBean() {
@@ -228,7 +228,7 @@ public HelloMessageGenerator sessionScopedBean() {
 
 在这种情况下，当第一次发出请求时，值`message`是`null.`,但是，一旦它被更改，该值将为后续请求保留，因为为整个会话返回相同的 bean 实例。
 
-```
+```java
 @Controller
 public class ScopesController {
     @Resource(name = "sessionScopedBean")
@@ -254,7 +254,7 @@ public class ScopesController {
 
 让我们创建具有`application`范围的 bean:
 
-```
+```java
 @Bean
 @Scope(
   value = WebApplicationContext.SCOPE_APPLICATION, proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -265,7 +265,7 @@ public HelloMessageGenerator applicationScopedBean() {
 
 类似于`request`和`session`范围，我们可以使用一个更短的版本:
 
-```
+```java
 @Bean
 @ApplicationScope
 public HelloMessageGenerator applicationScopedBean() {
@@ -275,7 +275,7 @@ public HelloMessageGenerator applicationScopedBean() {
 
 现在让我们创建一个引用这个 bean 的控制器:
 
-```
+```java
 @Controller
 public class ScopesController {
     @Resource(name = "applicationScopedBean")
@@ -297,7 +297,7 @@ public class ScopesController {
 
 最后，让我们创建具有 *websocket* 作用域的 bean:
 
-```
+```java
 @Bean
 @Scope(scopeName = "websocket", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public HelloMessageGenerator websocketScopedBean() {

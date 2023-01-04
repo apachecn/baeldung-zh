@@ -35,7 +35,7 @@
 
 让我们先来看一个天真的解决方案:
 
-```
+```java
 public boolean twoSumSlow(int[] input, int targetValue) {
 
     for (int i = 0; i < input.length; i++) {
@@ -53,7 +53,7 @@ public boolean twoSumSlow(int[] input, int targetValue) {
 
 现在让我们看看如何在这里应用两点技术:
 
-```
+```java
 public boolean twoSum(int[] input, int targetValue) {
 
     int pointerOne = 0;
@@ -87,7 +87,7 @@ public boolean twoSum(int[] input, int targetValue) {
 
 让我们使用双指针技术来解决这个问题:
 
-```
+```java
 public void rotate(int[] input, int step) {
     step %= input.length;
     reverse(input, 0, input.length - 1);
@@ -116,7 +116,7 @@ private void reverse(int[] input, int start, int end) {
 
 我们还可以在类似于数组的其他数据结构中使用双指针技术，如`LinkedList`:
 
-```
+```java
 public <T> T findMiddle(MyNode<T> head) {
     MyNode<T> slowPointer = head;
     MyNode<T> fastPointer = head;

@@ -38,7 +38,7 @@ Docker 的 secrets 实现使用了许多与前面提到的系统相同的功能:
 
 因此，要使用这些秘密，我们必须使用命令为 swarm 配置我们的集群:
 
-```
+```java
 docker swarm init --advertise-addr <MANAGER-IP>
 ```
 
@@ -46,7 +46,7 @@ docker swarm init --advertise-addr <MANAGER-IP>
 
 在 Windows 和 Mac 的 Docker 桌面上，我们可以简化命令:
 
-```
+```java
 docker swarm init
 ```
 
@@ -65,7 +65,7 @@ Docker secrets 几乎可以存储任何可以用字符串或二进制表示的�
 
 创建密码时，该命令接受来自命令行的输入:
 
-```
+```java
 docker secret create my_secret -
 ```
 
@@ -73,7 +73,7 @@ docker secret create my_secret -
 
 然而，当与自动化流程结合使用时，用键盘手动键入输入不仅容易出错，而且不切实际。因此，**我们也可以用一个文件的内容来创建一个秘密**:
 
-```
+```java
 docker secret create my_secret /path/to/secret/file
 ```
 
@@ -81,7 +81,7 @@ docker secret create my_secret /path/to/secret/file
 
 一旦我们创造了一个秘密，我们可以确认它是成功的:
 
-```
+```java
 docker secret ls
 ID                          NAME        DRIVER    CREATED          UPDATED
 2g9z0nabsi6v7hsfra32unb1o   my_secret             30 minutes ago   30 minutes ago
@@ -89,7 +89,7 @@ ID                          NAME        DRIVER    CREATED          UPDATED
 
 这显示了我们所有的秘密，以及分配给它们的唯一 id。我们也可以检查个人秘密:
 
-```
+```java
 docker secret inspect my_secret
 [
     {
@@ -111,7 +111,7 @@ docker secret inspect my_secret
 
 一旦不再需要某个秘密，就删除它被认为是一种最佳做法。例如，我们可以从命令行永久删除一个秘密:
 
-```
+```java
 docker secret rm my_secret
 ```
 
@@ -125,7 +125,7 @@ docker secret rm my_secret
 
 因为 Docker 机密要求我们的集群处于群体模式，所以我们不能从普通的 Docker `run`命令访问机密。相反，我们必须创建服务，我们可以用命令行指定一个或多个秘密:
 
-```
+```java
 docker service create --name my_app --secret my_secret openjdk:19-jdk-alpine
 ```
 
@@ -133,7 +133,7 @@ docker service create --name my_app --secret my_secret openjdk:19-jdk-alpine
 
 在 Docker Compose 3 和更高版本中，我们有两个使用秘密的选项。下面是定义服务和机密的简单示例:
 
-```
+```java
 version: '3.1'
 services:
   my_app:
@@ -158,7 +158,7 @@ Docker 将秘密作为文件提供给我们的应用程序。默认行为是将�
 
 我们可以通过使用我们的服务来指定文件的位置来更改它:
 
-```
+```java
 docker service create
   --name my_app
   --secret source=my_secret,target=/different/path/to/secret/file,mode=0400

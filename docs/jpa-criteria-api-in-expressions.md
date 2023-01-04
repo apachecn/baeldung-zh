@@ -26,7 +26,7 @@ In addition, instrumenting Lightrun Metrics at runtime allows you to track down 
 
 我们有一个`DeptEmployee`类，它与一个`Department`类有一个[多对一关系](/web/20220524002723/https://www.baeldung.com/hibernate-one-to-many):
 
-```
+```java
 @Entity
 public class DeptEmployee {
     @Id
@@ -42,7 +42,7 @@ public class DeptEmployee {
 
 同样，映射到多个`DeptEmployees`的`Department`实体:
 
-```
+```java
 @Entity
 public class Department {
     @Id
@@ -60,7 +60,7 @@ public class Department {
 
 首先，我们用一下`CriteriaBuilder`界面。**`in()`方法接受一个`Expression`并返回一个新的`CriteriaBuilder.In`类型的`Predicate``.`**它可以用来测试给定的表达式是否包含在值列表中:
 
-```
+```java
 CriteriaQuery<DeptEmployee> criteriaQuery = 
   criteriaBuilder.createQuery(DeptEmployee.class);
 Root<DeptEmployee> root = criteriaQuery.from(DeptEmployee.class);
@@ -75,7 +75,7 @@ criteriaQuery.select(root).where(inClause);
 
 或者，我们可以从 [`Expression`](https://web.archive.org/web/20220524002723/https://javaee.github.io/javaee-spec/javadocs/javax/persistence/criteria/Expression.html) 接口中使用一组重载的`in()`方法:
 
-```
+```java
 criteriaQuery.select(root)
   .where(root.get("title")
   .in(titles));
@@ -89,7 +89,7 @@ criteriaQuery.select(root)
 
 例如，我们可以获取所有属于名称中带有指定关键字的`Department,`的`DeptEmployee`:
 
-```
+```java
 Subquery<Department> subquery = criteriaQuery.subquery(Department.class);
 Root<Department> dept = subquery.from(Department.class);
 subquery.select(dept)

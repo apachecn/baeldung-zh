@@ -50,7 +50,7 @@ Robert C. Martin 在他 2000 年的论文[“设计原则和设计模式”中�
 
 例如，让我们看一个代表一本书的类:
 
-```
+```java
 public class Book {
 
     private String name;
@@ -65,7 +65,7 @@ public class Book {
 
 现在让我们添加几个方法来查询文本:
 
-```
+```java
 public class Book {
 
     private String name;
@@ -91,7 +91,7 @@ public class Book {
 
 我们豁出去了，加一个打印方法:
 
-```
+```java
 public class Book {
     //...
 
@@ -105,7 +105,7 @@ public class Book {
 
 为了解决我们的混乱，我们应该实现一个单独的类，只处理打印我们的文本:
 
-```
+```java
 public class BookPrinter {
 
     // methods for outputting text
@@ -133,7 +133,7 @@ public class BookPrinter {
 
 它功能齐全，甚至还有音量旋钮:
 
-```
+```java
 public class Guitar {
 
     private String make;
@@ -150,7 +150,7 @@ public class Guitar {
 
 相反，让我们**坚持开闭原则，简单地扩展我们的`Guitar `类**:
 
-```
+```java
 public class SuperCoolGuitarWithFlames extends Guitar {
 
     private String flameColor;
@@ -167,7 +167,7 @@ public class SuperCoolGuitarWithFlames extends Guitar {
 
 让我们直接跳到代码来帮助我们理解这个概念:
 
-```
+```java
 public interface Car {
 
     void turnOnEngine();
@@ -179,7 +179,7 @@ public interface Car {
 
 让我们实现我们的接口，并为这些方法提供一些代码:
 
-```
+```java
 public class MotorCar implements Car {
 
     private Engine engine;
@@ -202,7 +202,7 @@ public class MotorCar implements Car {
 
 但是等等——我们现在生活在电动汽车时代:
 
-```
+```java
 public class ElectricCar implements Car {
 
     public void turnOnEngine() {
@@ -227,7 +227,7 @@ public class ElectricCar implements Car {
 
 让我们从一个界面开始，这个界面概括了我们作为一个养熊人的角色:
 
-```
+```java
 public interface BearKeeper {
     void washTheBear();
     void feedTheBear();
@@ -239,7 +239,7 @@ public interface BearKeeper {
 
 让我们**通过将我们的大接口分成三个独立的接口来解决这个问题**:
 
-```
+```java
 public interface BearCleaner {
     void washTheBear();
 }
@@ -255,7 +255,7 @@ public interface BearPetter {
 
 现在，由于接口分离，我们可以自由地只实现对我们重要的方法:
 
-```
+```java
 public class BearCarer implements BearCleaner, BearFeeder {
 
     public void washTheBear() {
@@ -270,7 +270,7 @@ public class BearCarer implements BearCleaner, BearFeeder {
 
 最后，我们可以把危险的事情留给鲁莽的人:
 
-```
+```java
 public class CrazyPerson implements BearPetter {
 
     public void petTheBear() {
@@ -287,13 +287,13 @@ public class CrazyPerson implements BearPetter {
 
 为了证明这一点，让我们用老一套的方法，用代码将 Windows 98 计算机变成现实:
 
-```
+```java
 public class Windows98Machine {}
 ```
 
 但是没有显示器和键盘的电脑有什么用呢？让我们给我们的构造函数各添加一个，这样我们实例化的每个`Windows98Computer `都预装了一个`Monitor `和一个`StandardKeyboard`:
 
-```
+```java
 public class Windows98Machine {
 
     private final StandardKeyboard keyboard;
@@ -315,11 +315,11 @@ public class Windows98Machine {
 
 让我们通过添加一个更通用的`Keyboard`接口并在我们的类中使用它来将我们的机器与`StandardKeyboard`解耦:
 
-```
+```java
 public interface Keyboard { }
 ```
 
-```
+```java
 public class Windows98Machine{
 
     private final Keyboard keyboard;
@@ -336,7 +336,7 @@ public class Windows98Machine{
 
 让我们也修改我们的`StandardKeyboard`类来实现`Keyboard`接口，以便它适合注入到`Windows98Machine`类中:
 
-```
+```java
 public class StandardKeyboard implements Keyboard { }
 ```
 

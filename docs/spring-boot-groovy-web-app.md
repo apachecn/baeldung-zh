@@ -24,7 +24,7 @@
 
 让我们在`pom.xml` 文件中包含所有需要的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -60,7 +60,7 @@
 
 此外，我们必须将**包括 [`gmavenplus-plugin`](https://web.archive.org/web/20221208143845/https://search.maven.org/search?q=gmavenplus-plugin)** 以及`pom.xml:`中的所有[目标](https://web.archive.org/web/20221208143845/https://github.com/groovy/GMavenPlus/wiki/Usage#why-do-i-need-so-many-goals)
 
-```
+```java
 <build>
     <plugins>
         //...
@@ -91,7 +91,7 @@
 
 让我们编写一个简单的 **`Todo` Groovy 类，它有三个字段——`id`、`task,`和`isCompleted`** :
 
-```
+```java
 @Entity
 @Table(name = 'todo')
 class Todo {
@@ -115,7 +115,7 @@ class Todo {
 
 让**创建一个 Groovy 接口——`TodoRepository`** ，它实现了 [`JpaRepository`](/web/20221208143845/https://www.baeldung.com/spring-data-repositories#jprepository) 。它将负责我们应用程序中的所有 CRUD 操作:
 
-```
+```java
 @Repository
 interface TodoRepository extends JpaRepository<Todo, Integer> {}
 ```
@@ -124,7 +124,7 @@ interface TodoRepository extends JpaRepository<Todo, Integer> {}
 
 **`TodoService` 接口包含了我们的 CRUD 操作**所需的所有抽象方法:
 
-```
+```java
 interface TodoService {
 
     List<Todo> findAll()
@@ -141,7 +141,7 @@ interface TodoService {
 
 **`TodoServiceImpl`是一个实现类**，它实现了`TodoService:`的所有方法
 
-```
+```java
 @Service
 class TodoServiceImpl implements TodoService {
 
@@ -178,7 +178,7 @@ class TodoServiceImpl implements TodoService {
 
 现在，让我们用**来定义`TodoController`** 中所有其余的 API，也就是我们的 [`@RestController`](/web/20221208143845/https://www.baeldung.com/spring-controller-vs-restcontroller#spring-mvc-rest-controller) :
 
-```
+```java
 @RestController
 @RequestMapping('todo')
 public class TodoController {
@@ -219,7 +219,7 @@ public class TodoController {
 
 现在，让我们用将用于启动我们的应用程序的 main 方法编写一个类:
 
-```
+```java
 @SpringBootApplication
 class SpringBootGroovyApplication {
     static void main(String[] args) {
@@ -234,7 +234,7 @@ class SpringBootGroovyApplication {
 
 现在，让我们将`pom.xml` 中的这个类定义为 [`start-class`](/web/20221208143845/https://www.baeldung.com/spring-boot-main-class#maven) :
 
-```
+```java
 <properties>
     <start-class>com.baeldung.app.SpringBootGroovyApplication</start-class>
 </properties>
@@ -244,7 +244,7 @@ class SpringBootGroovyApplication {
 
 最后，我们的应用程序可以运行了。我们应该简单地将`SpringBootGroovyApplication`类作为 Java 应用程序运行，或者运行 Maven build:
 
-```
+```java
 spring-boot:run
 ```
 
@@ -258,7 +258,7 @@ spring-boot:run
 
 让我们在我们的类中定义三个静态变量——`API_ROOT`、`readingTodoId,`和`writingTodoId` :
 
-```
+```java
 static API_ROOT = "http://localhost:8080/todo"
 static readingTodoId
 static writingTodoId
@@ -268,7 +268,7 @@ static writingTodoId
 
 现在，让我们通过使用注释 [`@BeforeClass`](/web/20221208143845/https://www.baeldung.com/junit-before-beforeclass-beforeeach-beforeall#beforeclass) 来创建另一个方法——`populateDummyData()` 来填充测试数据:
 
-```
+```java
 @BeforeClass
 static void populateDummyData() {
     Todo readingTodo = new Todo(task: 'Reading', isCompleted: false)
@@ -300,7 +300,7 @@ static void populateDummyData() {
 
 接下来，让我们从待办事项列表中找到所有任务:
 
-```
+```java
 @Test
 void whenGetAllTodoList_thenOk(){
     final Response response = RestAssured.get(API_ROOT)
@@ -312,7 +312,7 @@ void whenGetAllTodoList_thenOk(){
 
 然后，让我们通过传递之前填充的`readingTodoId` 来找到一个特定的任务:
 
-```
+```java
 @Test
 void whenGetTodoById_thenOk(){
     final Response response = 
@@ -328,7 +328,7 @@ void whenGetTodoById_thenOk(){
 
 此外，让我们尝试使用`readingTodoId` `:`来更新待办事项列表中的任务
 
-```
+```java
 @Test
 void whenUpdateTodoById_thenOk(){
     Todo todo = new Todo(id:readingTodoId, isCompleted: true)
@@ -345,7 +345,7 @@ void whenUpdateTodoById_thenOk(){
 
 然后使用`writingTodoId`删除待办事项列表中的任务:
 
-```
+```java
 @Test
 void whenDeleteTodoById_thenOk(){
     final Response response = 
@@ -358,7 +358,7 @@ void whenDeleteTodoById_thenOk(){
 
 最后，我们可以保存一个新任务:
 
-```
+```java
 @Test
 void whenSaveTodo_thenOk(){
     Todo todo = new Todo(task: 'Blogging', isCompleted: false)

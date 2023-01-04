@@ -14,7 +14,7 @@
 
 为了使用 Apache Tika 解析文档，我们只需要一个 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.tika</groupId>
     <artifactId>tika-parsers</artifactId>
@@ -28,7 +28,7 @@
 
 **`Parser`API 是 Apache Tika 的核心，抽象出解析操作的复杂性**。这个 API 依赖于一个方法:
 
-```
+```java
 void parse(
   InputStream stream, 
   ContentHandler handler, 
@@ -60,7 +60,7 @@ Apache Tika 可以根据文档本身而不是附加信息自动检测文档的�
 
 **文档类型的检测可以使用`Detector`接口**的实现类来完成，它有一个方法:
 
-```
+```java
 MediaType detect(java.io.InputStream input, Metadata metadata) 
   throws IOException
 ```
@@ -91,7 +91,7 @@ MediaType detect(java.io.InputStream input, Metadata metadata)
 
 插图方法将被包装在一个类中:
 
-```
+```java
 public class TikaAnalysis {
     // illustration methods
 }
@@ -101,7 +101,7 @@ public class TikaAnalysis {
 
 下面是我们可以用来检测从`InputStream`中读取的文档类型的代码:
 
-```
+```java
 public static String detectDocTypeUsingDetector(InputStream stream) 
   throws IOException {
     Detector detector = new DefaultDetector();
@@ -114,7 +114,7 @@ public static String detectDocTypeUsingDetector(InputStream stream)
 
 假设我们在类路径中有一个名为`tika.txt`的 PDF 文件。这个文件的扩展名已经被改变，试图欺骗我们的分析工具。文档的真实类型仍然可以通过测试来发现和确认:
 
-```
+```java
 @Test
 public void whenUsingDetector_thenDocumentTypeIsReturned() 
   throws IOException {
@@ -132,7 +132,7 @@ public void whenUsingDetector_thenDocumentTypeIsReturned()
 
 为了方便起见，我们可以使用`Tika` facade 类重写检测代码，得到相同的结果:
 
-```
+```java
 public static String detectDocTypeUsingFacade(InputStream stream) 
   throws IOException {
 
@@ -146,7 +146,7 @@ public static String detectDocTypeUsingFacade(InputStream stream)
 
 现在让我们提取一个文件的内容，并使用`Parser` API 将结果作为`String`返回:
 
-```
+```java
 public static String extractContentUsingParser(InputStream stream) 
   throws IOException, TikaException, SAXException {
 
@@ -162,14 +162,14 @@ public static String extractContentUsingParser(InputStream stream)
 
 给定类路径中的 Microsoft Word 文件，其内容如下:
 
-```
+```java
 Apache Tika - a content analysis toolkit
 The Apache Tika™ toolkit detects and extracts metadata and text ...
 ```
 
 可以提取并验证内容:
 
-```
+```java
 @Test
 public void whenUsingParser_thenContentIsReturned() 
   throws IOException, TikaException, SAXException {
@@ -188,7 +188,7 @@ public void whenUsingParser_thenContentIsReturned()
 
 同样，`Tika`类可以用来更方便地编写代码:
 
-```
+```java
 public static String extractContentUsingFacade(InputStream stream) 
   throws IOException, TikaException {
 
@@ -202,7 +202,7 @@ public static String extractContentUsingFacade(InputStream stream)
 
 除了文档的内容之外，`Parser` API 还可以提取元数据:
 
-```
+```java
 public static Metadata extractMetadatatUsingParser(InputStream stream) 
   throws IOException, SAXException, TikaException {
 
@@ -218,7 +218,7 @@ public static Metadata extractMetadatatUsingParser(InputStream stream)
 
 当类路径中存在 Microsoft Excel 文件时，这个测试用例确认提取的元数据是正确的:
 
-```
+```java
 @Test
 public void whenUsingParser_thenMetadataIsReturned() 
   throws IOException, TikaException, SAXException {
@@ -236,7 +236,7 @@ public void whenUsingParser_thenMetadataIsReturned()
 
 最后，这里是使用`Tika` facade 类的提取方法的另一个版本:
 
-```
+```java
 public static Metadata extractMetadatatUsingFacade(InputStream stream) 
   throws IOException, TikaException {
     Tika tika = new Tika();

@@ -17,7 +17,7 @@ Content Series:[This article is part of a series:](javascript:void(0);)[• Spri
 
 要创建这个 bean，我们可以使用一个`AmazonSQSAsync`客户端，在使用 Spring Boot 启动器时，默认情况下这个客户端在应用程序上下文中可用:
 
-```
+```java
 @Bean
 public QueueMessagingTemplate queueMessagingTemplate(
   AmazonSQSAsync amazonSQSAsync) {
@@ -27,7 +27,7 @@ public QueueMessagingTemplate queueMessagingTemplate(
 
 然后，我们可以使用`convertAndSend()`方法发送消息:
 
-```
+```java
 @Autowired
 QueueMessagingTemplate messagingTemplate;
 
@@ -40,7 +40,7 @@ public void send(String topicName, Object message) {
 
 我们还可以使用 `@SqsListener`来配置监听器:
 
-```
+```java
 @SqsListener("spring-cloud-test-queue")
 public void receiveMessage(String message, 
   @Header("SenderId") String senderId) {
@@ -58,7 +58,7 @@ public void receiveMessage(String message,
 
 要创建它，我们需要一个`AmazonSNS`客户端:
 
-```
+```java
 @Bean
 public NotificationMessagingTemplate notificationMessagingTemplate(
   AmazonSNS amazonSNS) {
@@ -68,7 +68,7 @@ public NotificationMessagingTemplate notificationMessagingTemplate(
 
 然后，我们可以向主题发送通知:
 
-```
+```java
 @Autowired
 NotificationMessagingTemplate messagingTemplate;
 
@@ -82,7 +82,7 @@ public void send(String Object message, String subject) {
 
 我们可以在 MVC 控制器中配置端点:
 
-```
+```java
 @Controller
 @RequestMapping("/topic-subscriber")
 public class SNSEndpointController {
@@ -111,7 +111,7 @@ public class SNSEndpointController {
 
 例如，我们可以通过调用 URL 来订阅某个主题:
 
-```
+```java
 https://host:port/topic-subscriber/
 ```
 

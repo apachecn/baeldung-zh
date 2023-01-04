@@ -16,7 +16,7 @@ Spring 带来了许多特性来帮助我们测试代码。有时我们需要使�
 
 在我们的项目中包含所有需要的库的最简单的方法是在我们的`pom.xml`文件中添加`spring-boot-starter-test`工件:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-test</artifactId>
@@ -31,7 +31,7 @@ Spring 带来了许多特性来帮助我们测试代码。有时我们需要使�
 
 让我们假设我们正在使用一个属性的值，通过使用 [`@Value`](/web/20220703152918/https://www.baeldung.com/spring-value-annotation) Spring 注释来注入它:
 
-```
+```java
 @Component
 public class ClassUsingProperty {
 
@@ -46,7 +46,7 @@ public class ClassUsingProperty {
 
 然后，我们将使用`@TestPropertySource `类级注释来定义一个新的配置源，并覆盖该属性的值:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = ClassUsingProperty.class)
 @TestPropertySource
@@ -72,14 +72,14 @@ public class DefaultTest {
 
 让我们将它添加到我们的资源文件夹中:
 
-```
+```java
 # DefaultTest.properties
 baeldung.testpropertysource.one=default-value
 ```
 
 **此外，我们可以更改默认的配置文件位置，或者添加具有更高优先级的额外属性:**
 
-```
+```java
 @TestPropertySource(locations = "/other-location.properties",
   properties = "baeldung.testpropertysource.one=other-property-value")
 ```

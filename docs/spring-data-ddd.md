@@ -18,7 +18,7 @@ Ingalls 发布系列中引入的春季数据`@DomainEvents`。它适用于任何
 
 本文提供的代码示例使用 Spring Data JPA。**将 Spring 域事件与我们的项目集成的最简单的方法是使用 [Spring Boot 数据 JPA 启动器](https://web.archive.org/web/20220712173816/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-starter-data-jpa) :**
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -43,7 +43,7 @@ Ingalls 发布系列中引入的春季数据`@DomainEvents`。它适用于任何
 
 因此，当事务回滚且聚合没有更新时，没有处理“假”事件的风险:
 
-```
+```java
 @Service
 public class DomainService {
 
@@ -62,7 +62,7 @@ public class DomainService {
 
 这里有一个测试，证明事件确实是由服务`DomainOperation`发布的:
 
-```
+```java
 @DisplayName("given existing aggregate,"
     + " when do domain operation on service,"
     + " then domain event is published")
@@ -85,7 +85,7 @@ void serviceEventsTest() {
 
 通过这种方式，我们可以在类内部管理域事件的创建，这样感觉更自然:
 
-```
+```java
 @Entity
 class Aggregate {
     // ...
@@ -102,7 +102,7 @@ class Aggregate {
 
 下面是显示真实行为的相应测试:
 
-```
+```java
 @DisplayName("given existing aggregate,"
     + " when do domain operation directly on aggregate,"
     + " then domain event is NOT published")
@@ -141,7 +141,7 @@ void aggregateEventsTest() {
 
 然后，使用`ApplicationEventPublisher`接口发布该方法返回的事件:
 
-```
+```java
 @Entity
 public class Aggregate2 {
 
@@ -162,7 +162,7 @@ public class Aggregate2 {
 
 以下是解释这种行为的示例:
 
-```
+```java
 @DisplayName("given aggregate with @DomainEvents,"
     + " when do domain operation and save,"
     + " then event is published")
@@ -185,7 +185,7 @@ void domainEvents() {
 
 此方法的目的通常是清除所有事件的列表，以便它们在将来不会再次发布:
 
-```
+```java
 @AfterDomainEventPublication
 public void clearEvents() {
     domainEvents.clear();
@@ -194,7 +194,7 @@ public void clearEvents() {
 
 让我们将这个方法添加到`Aggregate2`类中，看看它是如何工作的:
 
-```
+```java
 @DisplayName("given aggregate with @AfterDomainEventPublication,"
     + " when do domain operation and save twice,"
     + " then an event is published only for the first time")
@@ -222,7 +222,7 @@ void afterDomainEvents() {
 
 **由于有了`AbstractAggregateRoot`模板类**，可以进一步简化领域事件的发布。当我们想要将新的域事件添加到事件集合中时，我们所要做的就是调用`register`方法:
 
-```
+```java
 @Entity
 public class Aggregate3 extends AbstractAggregateRoot<Aggregate3> {
     // ...
@@ -237,7 +237,7 @@ public class Aggregate3 extends AbstractAggregateRoot<Aggregate3> {
 
 为了确保一切按预期运行，以下是测试:
 
-```
+```java
 @DisplayName("given aggregate extending AbstractAggregateRoot,"
     + " when do domain operation and save twice,"
     + " then an event is published only for the first time")

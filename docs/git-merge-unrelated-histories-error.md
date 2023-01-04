@@ -12,7 +12,7 @@
 
 唯一的例外是其中一个分支没有提交。在这种情况下，它们合并应该没有问题。否则，我们将得到如下例所示的`“refusing to merge unrelated histories”`:
 
-```
+```java
 $ git pull origin main
 ...
 fatal: refusing to merge unrelated histories 
@@ -29,7 +29,7 @@ fatal: refusing to merge unrelated histories
 
 例如`:`
 
-```
+```java
 $ git pull origin main --allow-unrelated-histories
 ```
 
@@ -39,7 +39,7 @@ $ git pull origin main --allow-unrelated-histories
 
 通常，独立于远程存储库创建本地存储库分支并不是最佳实践。更可靠的方法是使用 [`git clone`](/web/20221023090055/https://www.baeldung.com/git-guide#2-git-clone---clone-an-external-repository) 命令将远程存储库下载到本地机器，如下所示:
 
-```
+```java
 $ git clone <repo_url>
 ```
 

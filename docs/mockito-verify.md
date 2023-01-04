@@ -10,7 +10,7 @@
 
 我们将**模仿一个简单的 list** 实现:
 
-```
+```java
 public class MyList extends AbstractList<String> {
 
     @Override
@@ -42,7 +42,7 @@ Learn how PowerMock can be used to extend the capability of Mockito for mocking 
 
 **验证模拟上的简单调用:**
 
-```
+```java
 List<String> mockedList = mock(MyList.class);
 mockedList.size();
 verify(mockedList).size();
@@ -50,7 +50,7 @@ verify(mockedList).size();
 
 **验证与模拟的交互次数:**
 
-```
+```java
 List<String> mockedList = mock(MyList.class);
 mockedList.size();
 verify(mockedList, times(1)).size();
@@ -58,21 +58,21 @@ verify(mockedList, times(1)).size();
 
 **验证没有与整个模拟发生交互:**
 
-```
+```java
 List<String> mockedList = mock(MyList.class);
 verifyNoInteractions(mockedList);
 ```
 
 **验证没有与特定方法发生交互:**
 
-```
+```java
 List<String> mockedList = mock(MyList.class);
 verify(mockedList, times(0)).size();
 ```
 
 **验证没有意外的交互—这应该会失败:**
 
-```
+```java
 List<String> mockedList = mock(MyList.class);
 mockedList.size();
 mockedList.clear();
@@ -82,7 +82,7 @@ verifyNoMoreInteractions(mockedList);
 
 **验证交互顺序:**
 
-```
+```java
 List<String> mockedList = mock(MyList.class);
 mockedList.size();
 mockedList.add("a parameter");
@@ -96,7 +96,7 @@ inOrder.verify(mockedList).clear();
 
 **验证没有发生交互:**
 
-```
+```java
 List<String> mockedList = mock(MyList.class);
 mockedList.size();
 verify(mockedList, never()).clear();
@@ -104,7 +104,7 @@ verify(mockedList, never()).clear();
 
 **验证交互至少发生了一定次数:**
 
-```
+```java
 List<String> mockedList = mock(MyList.class);
 mockedList.clear();
 mockedList.clear();
@@ -116,7 +116,7 @@ verify(mockedList, atMost(10)).clear();
 
 **用确切的参数验证交互:**
 
-```
+```java
 List<String> mockedList = mock(MyList.class);
 mockedList.add("test");
 verify(mockedList).add("test");
@@ -124,7 +124,7 @@ verify(mockedList).add("test");
 
 **验证与灵活/任意参数的交互:**
 
-```
+```java
 List<String> mockedList = mock(MyList.class);
 mockedList.add("test");
 verify(mockedList).add(anyString());
@@ -132,7 +132,7 @@ verify(mockedList).add(anyString());
 
 **使用参数捕获验证交互:**
 
-```
+```java
 List<String> mockedList = mock(MyList.class);
 mockedList.addAll(Lists.<String> newArrayList("someElement"));
 

@@ -16,7 +16,7 @@
 
 这是因为，在`Windows`上，我们需要运行我们的命令作为`cmd.exe` shell 的参数，而在所有其他操作系统上，我们可以发布一个标准的 shell，叫做`sh:`
 
-```
+```java
 boolean isWindows = System.getProperty("os.name")
   .toLowerCase().startsWith("windows");
 ```
@@ -29,7 +29,7 @@ boolean isWindows = System.getProperty("os.name")
 
 让我们实现一个常用的名为`StreamGobbler`的类，它使用一个`InputStream`:
 
-```
+```java
 private static class StreamGobbler implements Runnable {
     private InputStream inputStream;
     private Consumer<String> consumer;
@@ -55,7 +55,7 @@ private static class StreamGobbler implements Runnable {
 
 在下面的示例中，我们将请求一个用户主目录的目录列表，并将其打印到控制台:
 
-```
+```java
 String homeDirectory = System.getProperty("user.home");
 Process process;
 if (isWindows) {
@@ -88,7 +88,7 @@ future.get(); // waits for streamGobbler to finish
 *   将输入和输出流重定向到自定义替换
 *   使用`builder.inheritIO()`将它们继承到当前`JVM`进程的流中
 
-```
+```java
 ProcessBuilder builder = new ProcessBuilder();
 if (isWindows) {
     builder.command("cmd.exe", "/c", "dir");

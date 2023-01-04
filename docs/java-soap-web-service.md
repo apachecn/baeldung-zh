@@ -30,7 +30,7 @@
 
 让我们来看看我们的 web 服务的 WSDL，`country`:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions <!-- namespace declarations -->
     targetNamespace="http://server.ws.soap.baeldung.com/" name="CountryServiceImplService">
@@ -80,7 +80,7 @@
 *   作为响应，服务将返回给我们一个自定义类型`country`。
 *   类型在 [`http://localhost:8888/ws/country?xsd=1`](https://web.archive.org/web/20220628094602/http://localhost:8888/ws/country?xsd=1) 位置生成的`xsd`模式中定义:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema <!-- namespace declarations -->
     targetNamespace="http://server.ws.soap.baeldung.com/">
@@ -114,7 +114,7 @@
 
 首先，让我们给我们的`pom.xml`添加一个插件，通过 Maven 使用这个工具:
 
-```
+```java
 <plugin> 
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>jaxws-maven-plugin</artifactId>
@@ -140,7 +140,7 @@
 
 其次，让我们执行这个插件:
 
-```
+```java
 mvn clean jaxws:wsimport
 ```
 
@@ -150,7 +150,7 @@ mvn clean jaxws:wsimport
 
 要使用`wsimport`生成客户端代码，我们可以导航到项目的根目录并运行以下命令:
 
-```
+```java
 JAVA_HOME/bin/wsimport -s src/main/java/ -keep -p com.baeldung.soap.ws.client.generated "http://localhost:8888/ws/country?wsdl"
 ```
 
@@ -164,7 +164,7 @@ JAVA_HOME/bin/wsimport -s src/main/java/ -keep -p com.baeldung.soap.ws.client.ge
 
 为了使用`wsimport`为 Java 11 及以上版本生成客户端代码，我们需要在 [`jaxws-maven-plugin`](https://web.archive.org/web/20220628094602/https://search.maven.org/search?q=g:com.sun.xml.ws%20AND%20a:jaxws-maven-plugin) 之外添加[`jakarta.xml.ws-api`](https://web.archive.org/web/20220628094602/https://search.maven.org/search?q=g:jakarta.xml.ws%20AND%20a:jakarta.xml.ws-api)[`jaxws-rt`](https://web.archive.org/web/20220628094602/https://search.maven.org/search?q=g:com.sun.xml.ws%20AND%20a:jaxws-rt)和 [`jaxws-ri`](https://web.archive.org/web/20220628094602/https://search.maven.org/search?q=g:com.sun.xml.ws%20AND%20a:jaxws-ri) 依赖项:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>jakarta.xml.ws</groupId
@@ -205,7 +205,7 @@ JAVA_HOME/bin/wsimport -s src/main/java/ -keep -p com.baeldung.soap.ws.client.ge
 
 现在，为了在包`com.baeldung.soap.ws.client.generated`中生成客户端代码，我们将需要与之前相同的 Maven 命令:
 
-```
+```java
 mvn clean jaxws:wsimport
 ```
 
@@ -215,7 +215,7 @@ mvn clean jaxws:wsimport
 
 基于我们之前看到的`xsd`，该工具将生成一个名为`Country.java`的文件:
 
-```
+```java
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "country", propOrder = { "capital", "currency", "name", "population" })
 public class Country {
@@ -232,7 +232,7 @@ public class Country {
 
 此外，它还会生成一个`Currency`枚举:
 
-```
+```java
 @XmlType(name = "currency")
 @XmlEnum
 public enum Currency {
@@ -252,7 +252,7 @@ public enum Currency {
 
 接口`CountryService`声明了与我们的服务器`findByName`相同的方法:
 
-```
+```java
 @WebService(name = "CountryService", targetNamespace = "http://server.ws.soap.baeldung.com/")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @XmlSeeAlso({ ObjectFactory.class })
@@ -275,7 +275,7 @@ public interface CountryService {
 
 它的注释`[WebServiceClient](https://web.archive.org/web/20220628094602/https://docs.oracle.com/javase/7/docs/api/javax/xml/ws/WebServiceClient.html) `表示它是服务的客户端视图:
 
-```
+```java
 @WebServiceClient(name = "CountryServiceImplService", 
   targetNamespace = "http://server.ws.soap.baeldung.com/", 
   wsdlLocation = "http://localhost:8888/ws/country?wsdl")
@@ -332,7 +332,7 @@ public class CountryServiceImplService extends Service {
 
 在这样做之前，我们需要在客户端获得服务的代理实例:
 
-```
+```java
 @BeforeClass
 public static void setup() {
     CountryServiceImplService service = new CountryServiceImplService();
@@ -344,7 +344,7 @@ public static void setup() {
 
 现在我们来看一些测试:
 
-```
+```java
 @Test
 public void givenCountryService_whenCountryIndia_thenCapitalIsNewDelhi() {
     assertEquals("New Delhi", countryService.findByName("India").getCapital());

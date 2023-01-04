@@ -12,7 +12,7 @@
 
 在我们继续执行`find`操作之前，我们首先需要建立一个数据库`baeldung`和一个样本集合`employee`:
 
-```
+```java
 db.employee.insertMany([
 {
     "employeeId":"EMP1",
@@ -39,7 +39,7 @@ db.employee.insertMany([
 
 成功插入后，上面的查询将返回类似如下所示的 JSON 结果:
 
-```
+```java
 {
     "acknowledged" : true,
     "insertedIds" : [
@@ -62,13 +62,13 @@ db.employee.insertMany([
 
 此外，让我们从一个基本的`find`查询开始，该查询将返回所有的集合文档:
 
-```
+```java
 db.employee.find({});
 ```
 
 上面的查询将返回来自`employee`集合的所有文档:
 
-```
+```java
 { "_id" : ObjectId("62a88223ff0a77909323a7fa"), "employeeId" : "1", "name" : "Sam", "age" : 23, "type" : "Full Time", "department" : "Engineering" }
 { "_id" : ObjectId("62a88223ff0a77909323a7fb"), "employeeId" : "2", "name" : "Tony", "age" : 31, "type" : "Full Time", "department" : "Admin" }
 { "_id" : ObjectId("62a88223ff0a77909323a7fc"), "employeeId" : "3", "name" : "Ray", "age" : 42, "type" : "Part Time", "department" : "Engineering" }
@@ -76,7 +76,7 @@ db.employee.find({});
 
 接下来，让我们编写一个查询来返回属于`“Engineering”` `department`的所有雇员:
 
-```
+```java
 db.employee.find(
 {
     "department":"Engineering"
@@ -85,14 +85,14 @@ db.employee.find(
 
 以上查询返回所有`department`等于`Engineering”`的`employee`收款单据:
 
-```
+```java
 { "_id" : ObjectId("62a88223ff0a77909323a7fa"), "employeeId" : "1", "name" : "Sam", "age" : 23, "type" : "Full Time", "department" : "Engineering" }
 { "_id" : ObjectId("62a88223ff0a77909323a7fc"), "employeeId" : "3", "name" : "Ray", "age" : 42, "type" : "Part Time", "department" : "Engineering" }
 ```
 
 最后，让我们编写一个查询来获取属于`“Engineering” department`的所有雇员的`name`和`age`:
 
-```
+```java
 db.employee.find(
 {
     "department":"Engineering"
@@ -105,7 +105,7 @@ db.employee.find(
 
 上面的查询只返回符合查询条件的文档的`name`和`age`字段:
 
-```
+```java
 { "_id" : ObjectId("62a88223ff0a77909323a7fa"), "name" : "Sam", "age" : 23 }
 { "_id" : ObjectId("62a88223ff0a77909323a7fc"), "name" : "Ray", "age" : 42 }
 ```
@@ -116,13 +116,13 @@ db.employee.find(
 
 此外，MongoDB Shell 提供了一个 **`findOne()`方法，该方法只返回一个满足上述查询标准**的文档。如果多个文档匹配，将根据文档在磁盘上的自然顺序返回第一个文档:
 
-```
+```java
 db.employee.findOne();
 ```
 
 与`find()`不同，上面的查询将只返回一个文档，而不是一个光标:
 
-```
+```java
 {
     "_id" : ObjectId("62a99e22a849e1472c440bbf"),
     "employeeId" : "EMP1",
@@ -137,7 +137,7 @@ db.employee.findOne();
 
 到目前为止，我们已经看到了如何使用 MongoDB Shell 来执行`find`操作。接下来，让我们使用 MongoDB Java 驱动程序实现同样的功能。在我们开始之前，让我们首先创建一个到`employee`集合的`MongoClient`连接:
 
-```
+```java
 MongoClient mongoClient = new MongoClient("localhost", 27017);
 MongoDatabase database = mongoClient.getDatabase("baeldung");
 MongoCollection<Document> collection = database.getCollection("employee");
@@ -147,7 +147,7 @@ MongoCollection<Document> collection = database.getCollection("employee");
 
 首先，为了执行一个`find`操作，我们在一个`MongoCollection`的实例上调用`find()`方法。让我们检查代码，从集合中检索所有文档:
 
-```
+```java
 FindIterable<Document> documents = collection.find();
 MongoCursor<Document> cursor = documents.iterator();
 while (cursor.hasNext()) {
@@ -159,7 +159,7 @@ while (cursor.hasNext()) {
 
 接下来，让我们添加查询操作符来过滤从`find`操作返回的文档:
 
-```
+```java
 Bson filter = Filters.eq("department", "Engineering");
 FindIterable<Document> documents = collection.find(filter);
 
@@ -173,7 +173,7 @@ while (cursor.hasNext()) {
 
 此外，让我们编写一个代码片段，只返回文档中符合选择标准的`name`和`age`字段:
 
-```
+```java
 Bson filter = Filters.eq("department", "Engineering");
 Bson projection = Projections.fields(Projections.include("name", "age"));
 FindIterable<Document> documents = collection.find(filter)
@@ -189,7 +189,7 @@ while (cursor.hasNext()) {
 
 最后，我们可以在`FindIterable`实例上使用`first()`方法检索结果的第一个文档。这将返回一个单独的文档，而不是一个`MongoCursor`实例:
 
-```
+```java
 FindIterable<Document> documents = collection.find();
 Document document = documents.first();
 ```

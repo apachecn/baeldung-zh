@@ -26,7 +26,7 @@
 
 下面是一个简单 Java 项目的`build.xml`文件的例子，它带有`HelloWorld`主类:
 
-```
+```java
 <project>
     <target name="clean">
         <delete dir="classes" />
@@ -55,7 +55,7 @@
 
 这个构建文件定义了四个目标:`clean`、`compile`、`jar`和`run`。例如，我们可以通过运行以下命令来编译代码:
 
-```
+```java
 ant compile
 ```
 
@@ -81,7 +81,7 @@ Maven 的配置文件包含构建和依赖管理指令，按照惯例称为`pom.
 
 下面是一个简单 Java 项目的`pom.xml`文件的例子，它带有前面的`HelloWorld`主类:
 
-```
+```java
 <project  
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
@@ -105,7 +105,7 @@ Maven 的配置文件包含构建和依赖管理指令，按照惯例称为`pom.
 
 然而，现在项目结构也已经标准化，并且符合 Maven 约定:
 
-```
+```java
 +---src
 |   +---main
 |   |   +---java
@@ -124,7 +124,7 @@ Maven 的配置文件包含构建和依赖管理指令，按照惯例称为`pom.
 
 例如，我们可以通过运行以下命令来编译代码:
 
-```
+```java
 mvn compile
 ```
 
@@ -134,7 +134,7 @@ mvn compile
 
 为了展示这个插件的运行，让我们将这个插件包含在我们的`pom.xml`文件中，并为我们的依赖项配置一个输出目录:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -160,7 +160,7 @@ mvn compile
 
 这个插件将在`package` 阶段执行，所以如果我们运行:
 
-```
+```java
 mvn package
 ```
 
@@ -188,7 +188,7 @@ Gradle 是一个依赖管理和构建自动化工具，**是基于 Ant 和 Maven
 
 下面是一个简单 Java 项目的`build.gradle`文件的例子，它带有前面的`HelloWorld`主类:
 
-```
+```java
 apply plugin: 'java'
 
 repositories {
@@ -207,7 +207,7 @@ dependencies {
 
 我们可以通过运行以下命令来编译代码:
 
-```
+```java
 gradle classes
 ```
 
@@ -215,7 +215,7 @@ gradle classes
 
 Gradle 将其构建步骤命名为“任务”，而不是 Ant“目标”或 Maven 的“阶段”。对于 Maven，我们使用 Apache Maven 依赖插件，将依赖项复制到指定的目录是一个特定的目标。有了 Gradle，我们可以通过使用任务来完成同样的任务:
 
-```
+```java
 task copyDependencies(type: Copy) {
    from configurations.compile
    into 'dependencies'
@@ -224,7 +224,7 @@ task copyDependencies(type: Copy) {
 
 我们可以通过执行以下命令来运行该任务:
 
-```
+```java
 gradle copyDependencies
 ```
 

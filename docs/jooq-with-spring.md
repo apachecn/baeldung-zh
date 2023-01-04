@@ -18,7 +18,7 @@ Jooq 避免了一些典型的 ORM 模式，并生成允许我们构建类型安�
 
 ### 2.1 .jooq〔t1〕
 
-```
+```java
 <dependency>
     <groupId>org.jooq</groupId>
     <artifactId>jooq</artifactId>
@@ -30,7 +30,7 @@ Jooq 避免了一些典型的 ORM 模式，并生成允许我们构建类型安�
 
 我们的例子需要几个 Spring 依赖项；然而，为了简单起见，我们只需要在 POM 文件中显式包含其中的两个:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context</artifactId>
@@ -47,7 +47,7 @@ Jooq 避免了一些典型的 ORM 模式，并生成允许我们构建类型安�
 
 为了简化我们的示例，我们将使用 H2 嵌入式数据库:
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -65,7 +65,7 @@ Jooq 避免了一些典型的 ORM 模式，并生成允许我们构建类型安�
 
 存储在`intro_schema.sql`资源文件中的以下 SQL 查询将针对我们之前已经建立的数据库执行，以创建必要的表并用样本数据填充它们:
 
-```
+```java
 DROP TABLE IF EXISTS author_book, author, book;
 
 CREATE TABLE author (
@@ -112,7 +112,7 @@ INSERT INTO author_book VALUES (1, 1), (1, 3), (2, 1);
 
 这个插件的`read-project-properties`目标应该被绑定到一个早期阶段，以便配置数据可以被其他插件使用。在这种情况下，它被绑定到`initialize`阶段:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>properties-maven-plugin</artifactId>
@@ -139,7 +139,7 @@ SQL Maven 插件用于执行 SQL 语句来创建和填充数据库表。它将�
 
 SQL Maven 插件配置如下:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>sql-maven-plugin</artifactId>
@@ -177,7 +177,7 @@ SQL Maven 插件配置如下:
 
 Jooq Codegen 插件从数据库表结构中生成 Java 代码。它的`generate`目标应该绑定到`generate-sources`阶段，以确保正确的执行顺序。插件元数据如下所示:
 
-```
+```java
 <plugin>
     <groupId>org.jooq</groupId>
     <artifactId>jooq-codegen-maven</artifactId>
@@ -215,7 +215,7 @@ Jooq Codegen 插件从数据库表结构中生成 Java 代码。它的`generate`
 
 `Author`类:
 
-```
+```java
 public class Author extends TableImpl<AuthorRecord> {
     public static final Author AUTHOR = new Author();
 
@@ -225,7 +225,7 @@ public class Author extends TableImpl<AuthorRecord> {
 
 `Book`类:
 
-```
+```java
 public class Book extends TableImpl<BookRecord> {
     public static final Book BOOK = new Book();
 
@@ -235,7 +235,7 @@ public class Book extends TableImpl<BookRecord> {
 
 `AuthorBook`类:
 
-```
+```java
 public class AuthorBook extends TableImpl<AuthorBookRecord> {
     public static final AuthorBook AUTHOR_BOOK = new AuthorBook();
 
@@ -253,7 +253,7 @@ public class AuthorBook extends TableImpl<AuthorBookRecord> {
 
 让我们定义一个`ExecuteListener`接口的实现来转换异常:
 
-```
+```java
 public class ExceptionTranslator extends DefaultExecuteListener {
     public void exception(ExecuteContext context) {
         SQLDialect dialect = context.configuration().dialect();
@@ -278,7 +278,7 @@ public class ExceptionTranslator extends DefaultExecuteListener {
 *   `@EnableTransactionManagement`:启用 Spring 管理的事务
 *   `@PropertySource`:表示要加载的属性文件的位置。本文中的值指向包含配置数据和数据库方言的文件，这恰好是 4.1 小节中提到的同一文件。
 
-```
+```java
 @Configuration
 @ComponentScan({"com.baeldung.Jooq.introduction.db.public_.tables"})
 @EnableTransactionManagement
@@ -290,7 +290,7 @@ public class PersistenceContext {
 
 接下来，使用一个`Environment`对象来获取配置数据，然后用它来配置`DataSource` bean:
 
-```
+```java
 @Autowired
 private Environment environment;
 
@@ -303,14 +303,14 @@ public DataSource dataSource() {
     dataSource.setPassword(environment.getRequiredProperty("db.password"));
 ```
 
-```
+```java
  return dataSource; 
 }
 ```
 
 现在我们定义几个 beans 来处理数据库访问操作:
 
-```
+```java
 @Bean
 public TransactionAwareDataSourceProxy transactionAwareDataSource() {
     return new TransactionAwareDataSourceProxy(dataSource());
@@ -339,7 +339,7 @@ public DefaultDSLContext dsl() {
 
 最后，我们提供了一个 Jooq `Configuration`实现，并将其声明为由`DSLContext`类使用的 Spring bean:
 
-```
+```java
 @Bean
 public DefaultConfiguration configuration() {
     DefaultConfiguration JooqConfiguration = new DefaultConfiguration();
@@ -360,7 +360,7 @@ public DefaultConfiguration configuration() {
 
 我们将首先声明一个自动连接的`DSLContext`对象和 Jooq 生成的类的实例，供所有测试方法使用:
 
-```
+```java
 @Autowired
 private DSLContext dsl;
 
@@ -373,7 +373,7 @@ AuthorBook authorBook = AuthorBook.AUTHOR_BOOK;
 
 第一步是将数据插入表格:
 
-```
+```java
 dsl.insertInto(author)
   .set(author.ID, 4)
   .set(author.FIRST_NAME, "Herbert")
@@ -391,7 +391,7 @@ dsl.insertInto(authorBook)
 
 提取数据的`SELECT`查询:
 
-```
+```java
 Result<Record3<Integer, String, Integer>> result = dsl
   .select(author.ID, author.LAST_NAME, DSL.count())
   .from(author)
@@ -405,7 +405,7 @@ Result<Record3<Integer, String, Integer>> result = dsl
 
 上述查询产生以下输出:
 
-```
+```java
 +----+---------+-----+
 |  ID|LAST_NAME|count|
 +----+---------+-----+
@@ -417,7 +417,7 @@ Result<Record3<Integer, String, Integer>> result = dsl
 
 结果由`Assert` API 确认:
 
-```
+```java
 assertEquals(3, result.size());
 assertEquals("Sierra", result.getValue(0, author.LAST_NAME));
 assertEquals(Integer.valueOf(2), result.getValue(0, DSL.count()));
@@ -427,7 +427,7 @@ assertEquals(Integer.valueOf(1), result.getValue(2, DSL.count()));
 
 当由于无效查询而导致失败时，会引发异常，并且事务会回滚。在以下示例中，`INSERT`查询违反了外键约束，导致异常:
 
-```
+```java
 @Test(expected = DataAccessException.class)
 public void givenInvalidData_whenInserting_thenFail() {
     dsl.insertInto(authorBook)
@@ -441,7 +441,7 @@ public void givenInvalidData_whenInserting_thenFail() {
 
 现在让我们更新现有数据:
 
-```
+```java
 dsl.update(author)
   .set(author.LAST_NAME, "Baeldung")
   .where(author.ID.equal(3))
@@ -458,7 +458,7 @@ dsl.insertInto(authorBook)
 
 获取必要的数据:
 
-```
+```java
 Result<Record3<Integer, String, String>> result = dsl
   .select(author.ID, author.LAST_NAME, book.TITLE)
   .from(author)
@@ -472,7 +472,7 @@ Result<Record3<Integer, String, String>> result = dsl
 
 输出应该是:
 
-```
+```java
 +----+---------+----------------------------------+
 |  ID|LAST_NAME|TITLE                             |
 +----+---------+----------------------------------+
@@ -482,7 +482,7 @@ Result<Record3<Integer, String, String>> result = dsl
 
 以下测试将验证 Jooq 是否按预期工作:
 
-```
+```java
 assertEquals(1, result.size());
 assertEquals(Integer.valueOf(3), result.getValue(0, author.ID));
 assertEquals("Baeldung", result.getValue(0, author.LAST_NAME));
@@ -491,7 +491,7 @@ assertEquals("Building your REST API with Spring", result.getValue(0, book.TITLE
 
 在失败的情况下，抛出一个异常，事务回滚，我们通过测试来确认这一点:
 
-```
+```java
 @Test(expected = DataAccessException.class)
 public void givenInvalidData_whenUpdating_thenFail() {
     dsl.update(authorBook)
@@ -505,7 +505,7 @@ public void givenInvalidData_whenUpdating_thenFail() {
 
 以下方法删除一些数据:
 
-```
+```java
 dsl.delete(author)
   .where(author.ID.lt(3))
   .execute();
@@ -513,7 +513,7 @@ dsl.delete(author)
 
 以下是读取受影响的表的查询:
 
-```
+```java
 Result<Record3<Integer, String, String>> result = dsl
   .select(author.ID, author.FIRST_NAME, author.LAST_NAME)
   .from(author)
@@ -522,7 +522,7 @@ Result<Record3<Integer, String, String>> result = dsl
 
 查询输出:
 
-```
+```java
 +----+----------+---------+
 |  ID|FIRST_NAME|LAST_NAME|
 +----+----------+---------+
@@ -532,7 +532,7 @@ Result<Record3<Integer, String, String>> result = dsl
 
 以下测试验证删除:
 
-```
+```java
 assertEquals(1, result.size());
 assertEquals("Bryan", result.getValue(0, author.FIRST_NAME));
 assertEquals("Basham", result.getValue(0, author.LAST_NAME));
@@ -540,7 +540,7 @@ assertEquals("Basham", result.getValue(0, author.LAST_NAME));
 
 另一方面，如果一个查询无效，它将抛出一个异常，事务回滚。以下测试将证明:
 
-```
+```java
 @Test(expected = DataAccessException.class)
 public void givenInvalidData_whenDeleting_thenFail() {
     dsl.delete(book)

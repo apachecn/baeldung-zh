@@ -78,7 +78,7 @@ A*算法的工作原理是反复选择迄今为止的最佳路线，并尝试查
 
 我们将用一个名为`GraphNode`的接口来表示我们的单个节点:
 
-```
+```java
 public interface GraphNode {
     String getId();
 }
@@ -88,7 +88,7 @@ public interface GraphNode {
 
 然后，我们的整个图由一个简单的叫做`Graph`的类来表示:
 
-```
+```java
 public class Graph<T extends GraphNode> {
     private final Set<T> nodes;
     private final Map<String, Set<String>> connections;
@@ -118,7 +118,7 @@ public class Graph<T extends GraphNode> {
 
 **第一部分是以某种方式在任意两个节点之间生成一个分数。**我们将为到下一个节点的分数和到目的地的估计值提供`Scorer`接口:
 
-```
+```java
 public interface Scorer<T extends GraphNode> {
     double computeCost(T from, T to);
 }
@@ -128,7 +128,7 @@ public interface Scorer<T extends GraphNode> {
 
 **我们还需要一个包装器来包装我们的节点，携带一些额外的信息。**这不是一个`GraphNode`，而是一个`RouteNode`，因为它是我们计算出的路线中的一个节点，而不是整个图中的一个节点:
 
-```
+```java
 class RouteNode<T extends GraphNode> implements Comparable<RouteNode> {
     private final T current;
     private T previous;
@@ -152,7 +152,7 @@ class RouteNode<T extends GraphNode> implements Comparable<RouteNode> {
 
 **这些也需要被`Comparable`处理，这样我们就可以根据估计的分数对它们进行排序，作为算法的一部分。**这意味着添加一个`compareTo()`方法来满足`Comparable`接口的需求:
 
-```
+```java
 @Override
 public int compareTo(RouteNode other) {
     if (this.estimatedScore > other.estimatedScore) {
@@ -169,7 +169,7 @@ public int compareTo(RouteNode other) {
 
 现在，我们可以实际生成穿过图表的路线了。这将是一个名为`RouteFinder`的类:
 
-```
+```java
 public class RouteFinder<T extends GraphNode> {
     private final Graph<T> graph;
     private final Scorer<T> nextNodeScorer;
@@ -187,7 +187,7 @@ public class RouteFinder<T extends GraphNode> {
 
 我们从一些基本的设置开始——我们可以考虑作为下一步的节点“开放集”,以及到目前为止我们已经访问过的每个节点的地图和我们对它的了解:
 
-```
+```java
 Queue<RouteNode> openSet = new PriorityQueue<>();
 Map<T, RouteNode<T>> allNodes = new HashMap<>();
 
@@ -202,7 +202,7 @@ allNodes.put(from, start);
 
 现在我们迭代，直到我们用完了要查看的节点，或者最佳可用节点是我们的目的地:
 
-```
+```java
 while (!openSet.isEmpty()) {
     RouteNode<T> next = openSet.poll();
     if (next.getCurrent().equals(to)) {
@@ -222,7 +222,7 @@ while (!openSet.isEmpty()) {
 
 接下来，如果我们还没有到达目的地，我们可以想出下一步该做什么:
 
-```
+```java
  graph.getConnections(next.getCurrent()).forEach(connection -> { 
         RouteNode<T> nextNode = allNodes.getOrDefault(connection, new RouteNode<>(connection));
         allNodes.put(connection, nextNode);
@@ -252,7 +252,7 @@ while (!openSet.isEmpty()) {
 
 我们的节点是地铁上的车站，我们将用`Station`类对它们建模:
 
-```
+```java
 public class Station implements GraphNode {
     private final String id;
     private final String name;
@@ -265,7 +265,7 @@ public class Station implements GraphNode {
 
 在这个场景中，我们只需要一个`Scorer`的实现。我们将使用[哈弗辛公式](/web/20221018063907/https://www.baeldung.com/cs/haversine-formula)来计算两对纬度/经度之间的直线距离:
 
-```
+```java
 public class HaversineScorer implements Scorer<Station> {
     @Override
     public double computeCost(Station from, Station to) {
@@ -288,7 +288,7 @@ public class HaversineScorer implements Scorer<Station> {
 
 让我们用它来绘制路线。我们会从伯爵的宫廷到天使产生一个。这有许多不同的旅行选择，至少有两条线路:
 
-```
+```java
 public void findRoute() {
     List<Station> route = routeFinder.findRoute(underground.getNode("74"), underground.getNode("7"));
 

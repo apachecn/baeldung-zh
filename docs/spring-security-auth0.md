@@ -52,7 +52,7 @@
 
 首先，让我们将最新的 [`mvc-auth-commons`](https://web.archive.org/web/20221126215056/https://search.maven.org/search?q=g:com.auth0%20a:mvc-auth-commons) Maven 依赖添加到我们的`pom.xm` l:
 
-```
+```java
 <dependency>
     <groupId>com.auth0</groupId>
     <artifactId>mvc-auth-commons</artifactId>
@@ -64,7 +64,7 @@
 
 类似地，当使用 Gradle 时，我们可以在`build.gradle`文件中添加`mvc-auth-commons`依赖项:
 
-```
+```java
 compile 'com.auth0:mvc-auth-commons:1.2.0'
 ```
 
@@ -72,7 +72,7 @@ compile 'com.auth0:mvc-auth-commons:1.2.0'
 
 我们的 Spring Boot 应用程序需要像`Client Id`和`Client Secret`这样的信息来启用 Auth0 帐户的认证。所以，我们将它们添加到`application.properties`文件中:
 
-```
+```java
 com.auth0.domain: dev-example.auth0.com
 com.auth0.clientId: {clientId}
 com.auth0.clientSecret: {clientSecret}
@@ -82,7 +82,7 @@ com.auth0.clientSecret: {clientSecret}
 
 接下来，我们将创建`AuthConfig` 类来从`application.properties`文件中读取 Auth0 属性:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class AuthConfig {
@@ -118,7 +118,7 @@ public class AuthConfig {
 
 最后，我们将为已经讨论过的`AuthConfig`类添加一个 [`AuthenticationController`](https://web.archive.org/web/20221126215056/https://javadoc.io/doc/com.auth0/mvc-auth-commons/latest/com/auth0/AuthenticationController.html) 类的 bean 引用:
 
-```
+```java
 @Bean
 public AuthenticationController authenticationController() throws UnsupportedEncodingException {
     JwkProvider jwkProvider = new JwkProviderBuilder(domain).build();
@@ -136,7 +136,7 @@ public AuthenticationController authenticationController() throws UnsupportedEnc
 
 接下来，我们将为登录和回调特性创建`AuthController`类:
 
-```
+```java
 @Controller
 public class AuthController {
     @Autowired
@@ -153,7 +153,7 @@ public class AuthController {
 
 让我们创建`login`方法，它允许我们的 Spring Boot 应用对用户进行身份验证:
 
-```
+```java
 @GetMapping(value = "/login")
 protected void login(HttpServletRequest request, HttpServletResponse response) {
     String redirectUri = "http://localhost:8080/callback";
@@ -170,7 +170,7 @@ protected void login(HttpServletRequest request, HttpServletResponse response) {
 
 一旦用户使用 Auth0 凭据登录，回调请求将被发送到我们的 Spring Boot 应用程序。为此，让我们创建`callback`方法:
 
-```
+```java
 @GetMapping(value="/callback")
 public void callback(HttpServletRequest request, HttpServletResponse response) {
     Tokens tokens = authenticationController.handle(request, response);
@@ -193,7 +193,7 @@ public void callback(HttpServletRequest request, HttpServletResponse response) {
 
 最后，我们将为应用程序的登录页面创建带有默认映射的`HomeController`:
 
-```
+```java
 @Controller
 public class HomeController {
     @GetMapping(value = "/")
@@ -211,7 +211,7 @@ public class HomeController {
 
 就是这样！我们的 Spring Boot 应用已准备好提供 Auth0 安全支持。让我们使用 Maven 命令运行我们的应用程序:
 
-```
+```java
 mvn spring-boot:run
 ```
 
@@ -255,7 +255,7 @@ mvn spring-boot:run
 
 让我们创建实现`LogoutSuccessHandler`类的`LogoutController`类:
 
-```
+```java
 @Controller
 public class LogoutController implements LogoutSuccessHandler {
     @Autowired
@@ -303,7 +303,7 @@ public class LogoutController implements LogoutSuccessHandler {
 
 让我们使用上一节中收到的客户端凭据为 Auth0 管理应用程序生成一个访问令牌:
 
-```
+```java
 public String getManagementApiToken() {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -332,7 +332,7 @@ public String getManagementApiToken() {
 
 之后，让我们用`users`方法创建`UserController`类:
 
-```
+```java
 @Controller
 public class UserController {
     @GetMapping(value="/users")
@@ -356,7 +356,7 @@ public class UserController {
 
 因此，让我们访问 [`localhost:8080/users`](https://web.archive.org/web/20221126215056/http://localhost:8080/users) 来接收一个包含所有用户的 JSON 响应:
 
-```
+```java
 [{
     "created_at": "2020-05-05T14:38:18.955Z",
     "email": "[[email protected]](/web/20221126215056/https://www.baeldung.com/cdn-cgi/l/email-protection)",
@@ -380,7 +380,7 @@ public class UserController {
 
 类似地，我们可以通过向`/api/v2/users` Auth0 API 发出 POST 请求来创建一个用户:
 
-```
+```java
 @GetMapping(value = "/createUser")
 @ResponseBody
 public ResponseEntity<String> createUser(HttpServletResponse response) {
@@ -400,7 +400,7 @@ public ResponseEntity<String> createUser(HttpServletResponse response) {
 
 然后，让我们访问 [`localhost:8080/createUser`](https://web.archive.org/web/20221126215056/http://localhost:8080/createUser) 并验证新用户的详细信息:
 
-```
+```java
 {
     "created_at": "2020-05-10T12:30:15.343Z",
     "email": "[[email protected]](/web/20221126215056/https://www.baeldung.com/cdn-cgi/l/email-protection)",

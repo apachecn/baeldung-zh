@@ -34,7 +34,7 @@ Keycloak 也可以作为一个独立的服务器运行，但是它需要通过�
 
 相反，**我们将设置以下一组依赖关系**:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>        
     <artifactId>spring-boot-starter-web</artifactId>
@@ -61,7 +61,7 @@ Keycloak 也可以作为一个独立的服务器运行，但是它需要通过�
 
 **我们还需要几个 Keycloak 和 RESTEasy 的依赖项**:
 
-```
+```java
 <dependency>
     <groupId>org.jboss.resteasy</groupId>
     <artifactId>resteasy-jackson2-provider</artifactId>
@@ -80,7 +80,7 @@ Keycloak 也可以作为一个独立的服务器运行，但是它需要通过�
 
 最后，我们必须覆盖`<infinispan.version>` 属性，使用 Keycloak 声明的版本，而不是 Spring Boot 定义的版本:
 
-```
+```java
 <properties>
     <infinispan.version>13.0.8.Final</infinispan.version>
 </properties>
@@ -90,7 +90,7 @@ Keycloak 也可以作为一个独立的服务器运行，但是它需要通过�
 
 现在让我们为授权服务器定义 Spring 配置:
 
-```
+```java
 @Configuration
 public class EmbeddedKeycloakConfig {
 
@@ -175,7 +175,7 @@ public class EmbeddedKeycloakConfig {
 
 现在让我们来看看我们刚刚提到的`KeycloakServerProperties`:
 
-```
+```java
 @ConfigurationProperties(prefix = "keycloak.server")
 public class KeycloakServerProperties {
     String contextPath = "/auth";
@@ -199,7 +199,7 @@ public class KeycloakServerProperties {
 
 接下来，让我们看看这个类，它使用我们之前设置的配置来创建领域:
 
-```
+```java
 public class EmbeddedKeycloakApplication extends KeycloakApplication {
     private static final Logger LOG = LoggerFactory.getLogger(EmbeddedKeycloakApplication.class);
     static KeycloakServerProperties keycloakServerProperties;
@@ -260,7 +260,7 @@ public class EmbeddedKeycloakApplication extends KeycloakApplication {
 
 例如，在我们刚刚配置的`EmbeddedKeycloakApplication` 中，我们首先加载了 Keycloak 的服务器配置`keycloak-server.json`，使用了抽象`JsonConfigProviderFactory`的一个空子类:
 
-```
+```java
 public class RegularJsonConfigProviderFactory extends JsonConfigProviderFactory { }
 ```
 
@@ -282,7 +282,7 @@ public class RegularJsonConfigProviderFactory extends JsonConfigProviderFactory 
 
 对于弹簧配置，我们将使用一个简单的 YAML:
 
-```
+```java
 server:
   port: 8083
 
@@ -304,7 +304,7 @@ keycloak:
 
 最后，这是 Spring Boot 的应用程序:
 
-```
+```java
 @SpringBootApplication(exclude = LiquibaseAutoConfiguration.class)
 @EnableConfigurationProperties(KeycloakServerProperties.class)
 public class AuthorizationServerApp {
@@ -335,7 +335,7 @@ public class AuthorizationServerApp {
 
 我们还可以[创建一个可执行的 jar 文件](/web/20220809012715/https://www.baeldung.com/deployable-fat-jar-spring-boot)来打包并运行应用程序:
 
-```
+```java
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>

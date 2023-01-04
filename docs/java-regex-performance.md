@@ -14,7 +14,7 @@
 
 在后台，上面提到的引擎用的是`backtracking`。这个通用算法试图穷尽所有的可能性，直到宣告失败。考虑下面的例子来更好地理解`NFA`:
 
-```
+```java
 "tra(vel|ce|de)m"
 ```
 
@@ -36,7 +36,7 @@ Java 中的正则表达式被编译成内部数据结构。这种编译是耗时
 
 每次我们调用`String.matches(String regex) `方法时，指定的正则表达式都会被重新编译:
 
-```
+```java
 if (input.matches(regexPattern)) {
     // do something
 }
@@ -46,7 +46,7 @@ if (input.matches(regexPattern)) {
 
 为了优化，可以先编译模式，然后创建一个`Matcher`来查找值中的重合:
 
-```
+```java
 Pattern pattern = Pattern.compile(regexPattern);
 for(String value : values) {
     Matcher matcher = pattern.matcher(value);
@@ -58,7 +58,7 @@ for(String value : values) {
 
 上述优化的替代方法是使用同一个`Matcher`实例及其`reset()`方法:
 
-```
+```java
 Pattern pattern = Pattern.compile(regexPattern);
 Matcher matcher = pattern.matcher("");
 for(String value : values) {
@@ -79,13 +79,13 @@ for(String value : values) {
 
 此外，我们必须提取它们之间的共同模式。这是不一样的:
 
-```
+```java
 (travel | trade | trace)
 ```
 
 比:
 
-```
+```java
 tra(vel | de | ce)
 ```
 

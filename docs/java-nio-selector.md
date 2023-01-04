@@ -32,7 +32,7 @@
 
 可以通过调用`Selector` 类的静态`open` 方法来创建选择器，该方法将使用系统的默认选择器提供程序来创建新的选择器:
 
-```
+```java
 Selector selector = Selector.open();
 ```
 
@@ -42,7 +42,7 @@ Selector selector = Selector.open();
 
 但是在向选择器注册通道之前，它必须处于非阻塞模式:
 
-```
+```java
 channel.configureBlocking(false);
 SelectionKey key = channel.register(selector, SelectionKey.OP_READ);
 ```
@@ -74,7 +74,7 @@ SelectionKey key = channel.register(selector, SelectionKey.OP_READ);
 
 当我们对这两个值进行 AND 运算时，我们会得到一个布尔值，它告诉我们事件是否被监视:
 
-```
+```java
 int interestSet = selectionKey.interestOps();
 
 boolean isInterestedInAccept  = interestSet & SelectionKey.OP_ACCEPT;
@@ -91,7 +91,7 @@ boolean isInterestedInWrite   = interestSet & SelectionKey.OP_WRITE;
 
 另一个更简单的替代方法是使用`SelectionKey'`的便利方法来达到同样的目的:
 
-```
+```java
 selectionKey.isAcceptable();
 selectionKey.isConnectable();
 selectionKey.isReadable();
@@ -102,7 +102,7 @@ selectionKey.isWriteable();
 
 从`SelectionKey`对象访问正在观看的频道非常简单。我们只是调用了`channel`方法:
 
-```
+```java
 Channel channel = key.channel();
 ```
 
@@ -110,7 +110,7 @@ Channel channel = key.channel();
 
 就像获取通道一样，从`SelectionKey`对象中获取`Selector`对象非常容易:
 
-```
+```java
 Selector selector = key.selector();
 ```
 
@@ -120,7 +120,7 @@ Selector selector = key.selector();
 
 附加对象是一种简便的方法。下面是如何从`SelectionKey`中附加和获取对象:
 
-```
+```java
 key.attach(Object);
 
 Object object = key.attachment();
@@ -128,7 +128,7 @@ Object object = key.attachment();
 
 或者，我们可以选择在通道注册期间附加一个对象。我们将它作为第三个参数添加到 channel 的`register`方法中，如下所示:
 
-```
+```java
 SelectionKey key = channel.register(
   selector, SelectionKey.OP_ACCEPT, object);
 ```
@@ -139,7 +139,7 @@ SelectionKey key = channel.register(
 
 这只是该过程的一半，现在我们必须执行一个连续的过程来选择我们之前看到的就绪集。我们使用选择器的`select`方法进行选择，就像这样:
 
-```
+```java
 int channels = selector.select();
 ```
 
@@ -147,7 +147,7 @@ int channels = selector.select();
 
 接下来，我们通常检索所选键的集合进行处理:
 
-```
+```java
 Set<SelectionKey> selectedKeys = selector.selectedKeys();
 ```
 
@@ -169,7 +169,7 @@ Set<SelectionKey> selectedKeys = selector.selectedKeys();
 
 这是我们的`EchoServer.java`代码:
 
-```
+```java
 public class EchoServer {
 
     private static final String POISON_PILL = "POISON_PILL";
@@ -269,7 +269,7 @@ Java NIO 使用面向缓冲区的模型，而不是面向流的模型。所以�
 
 这是我们的`EchoClient.java`代码:
 
-```
+```java
 public class EchoClient {
     private static SocketChannel client;
     private static ByteBuffer buffer;
@@ -333,7 +333,7 @@ public class EchoClient {
 
 我们现在可以运行测试:
 
-```
+```java
 public class EchoTest {
 
     Process server;
@@ -369,7 +369,7 @@ public class EchoTest {
 
 我们可以使用`[CountDownLatch](/web/20220922104547/https://www.baeldung.com/java-countdown-latch)`并跟踪代码执行步骤来演示这一点:
 
-```
+```java
 @Test
 public void whenWakeUpCalledOnSelector_thenBlockedThreadReturns() {
     Pipe pipe = Pipe.open();

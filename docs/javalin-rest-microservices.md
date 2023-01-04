@@ -12,7 +12,7 @@ Javalin 是一个为 Java 和 Kotlin 编写的轻量级 web 框架。它是在 J
 
 要创建一个基本的应用程序，我们只需要一个依赖项——Java Lin 本身:
 
-```
+```java
 <dependency>
     <groupId>io.javalin</groupId>
     <artifactId>javalin</artifactId>
@@ -30,7 +30,7 @@ Javalin 使设置一个基本的应用程序变得容易。我们将从定义我
 
 在这个文件中，我们创建一个 main 方法，并添加以下内容来设置一个基本的应用程序:
 
-```
+```java
 Javalin app = Javalin.create()
   .port(7000)
   .start();
@@ -51,7 +51,7 @@ app.get("/hello", ctx -> ctx.html("Hello, Javalin!"));
 
 然后，我们添加一个新的`User`类:
 
-```
+```java
 public class User {
     public final int id;
     public final String name;
@@ -64,7 +64,7 @@ public class User {
 
 我们在打包的`user`中创建了一个名为`UserDao.java:`的新类
 
-```
+```java
 class UserDao {
 
     private List<User> users = Arrays.asList(
@@ -105,7 +105,7 @@ class UserDao {
 
 我们在`user`包中创建了一个名为`UserController.java`的新类:
 
-```
+```java
 public class UserController {
     public static Handler fetchAllUsernames = ctx -> {
         UserDao dao = UserDao.instance();
@@ -136,7 +136,7 @@ public class UserController {
 
 让我们将它们添加到我们的主应用程序类中:
 
-```
+```java
 app.get("/users", UserController.fetchAllUsernames);
 app.get("/users/:id", UserController.fetchById);
 ```
@@ -153,7 +153,7 @@ app.get("/users/:id", UserController.fetchById);
 
 此外，如果我们包含 Jackson 作为依赖项，我们可以将 JSON 请求体自动解析到我们的模型类中。例如:
 
-```
+```java
 app.post("/") { ctx ->
   User user = ctx.bodyAsClass(User.class);
 }

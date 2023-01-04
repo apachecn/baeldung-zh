@@ -14,7 +14,7 @@
 
 **将`Stream`转换成数组的最好方法是使用`Stream'`的`toArray()`方法:**
 
-```
+```java
 public String[] usingMethodReference(Stream<String> stringStream) {
     return stringStream.toArray(String[]::new);
 }
@@ -22,7 +22,7 @@ public String[] usingMethodReference(Stream<String> stringStream) {
 
 现在，我们可以轻松测试转换是否成功:
 
-```
+```java
 Stream<String> stringStream = Stream.of("baeldung", "convert", "to", "string", "array");
 assertArrayEquals(new String[] { "baeldung", "convert", "to", "string", "array" },
     usingMethodReference(stringStream));
@@ -32,7 +32,7 @@ assertArrayEquals(new String[] { "baeldung", "convert", "to", "string", "array" 
 
 另一个等价方法是**将一个 lambda 表达式**传递给`toArray`()方法:
 
-```
+```java
 public static String[] usingLambda(Stream<String> stringStream) {
     return stringStream.toArray(size -> new String[size]);
 }
@@ -48,7 +48,7 @@ public static String[] usingLambda(Stream<String> stringStream) {
 
 当然，`IntFunction `是一个接口，所以我们可以实现它:
 
-```
+```java
 class MyArrayFunction implements IntFunction<String[]> {
     @Override
     public String[] apply(int size) {
@@ -59,7 +59,7 @@ class MyArrayFunction implements IntFunction<String[]> {
 
 然后我们可以正常地构造和使用:
 
-```
+```java
 public String[] usingCustomClass(Stream<String> stringStream) {
     return stringStream.toArray(new MyArrayFunction());
 }
@@ -73,7 +73,7 @@ public String[] usingCustomClass(Stream<String> stringStream) {
 
 不过，对于原语来说，这有点不同。例如，如果我们有一个要转换成`int[]`的`Integer`的`Stream`，我们首先需要调用`mapToInt()`方法:
 
-```
+```java
 public int[] intStreamToPrimitiveIntArray(Stream<Integer> integerStream) {
     return integerStream.mapToInt(i -> i).toArray();
 }
@@ -83,7 +83,7 @@ public int[] intStreamToPrimitiveIntArray(Stream<Integer> integerStream) {
 
 最后，让我们做等式断言，并确认我们已经正确地得到了我们的`int`数组:
 
-```
+```java
 Stream<Integer> integerStream = IntStream.rangeClosed(1, 7).boxed();
 assertArrayEquals(new int[]{1, 2, 3, 4, 5, 6, 7}, intStreamToPrimitiveIntArray(integerStream));
 ```
@@ -98,7 +98,7 @@ assertArrayEquals(new int[]{1, 2, 3, 4, 5, 6, 7}, intStreamToPrimitiveIntArray(i
 
 **我们可以使用`Arrays.stream()`或`Stream.of()`方法**将数组转换为`Stream`:
 
-```
+```java
 public Stream<String> stringArrayToStreamUsingArraysStream(String[] stringArray) {
     return Arrays.stream(stringArray);
 }
@@ -114,7 +114,7 @@ public Stream<String> stringArrayToStreamUsingStreamOf(String[] stringArray) {
 
 类似地，我们可以转换基元数组:
 
-```
+```java
 public IntStream primitiveIntArrayToStreamUsingArraysStream(int[] intArray) {
     return Arrays.stream(intArray);
 }
@@ -132,7 +132,7 @@ public Stream<int[]> primitiveIntArrayToStreamUsingStreamOf(int[] intArray) {
 
 让我们先来看看 Java 对这两种方法的实现:
 
-```
+```java
 public <T> Stream<T> stream(T[] array) {
     return stream(array, 0, array.length);
 }
@@ -146,7 +146,7 @@ public <T> Stream<T> of(T... values) {
 
 现在，当我们想要转换一个基元数组时，我们将检查该案例中的方法:
 
-```
+```java
 public IntStream stream(int[] array) {
     return stream(array, 0, array.length);
 }

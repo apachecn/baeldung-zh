@@ -12,7 +12,7 @@
 
 我们可以通过将以下依赖项添加到我们的`pom.xml`文件来使用 Hamcrest 和 Maven:
 
-```
+```java
 <dependency>
     <groupId>org.hamcrest</groupId>
     <artifactId>java-hamcrest</artifactId>
@@ -31,7 +31,7 @@
 
 **我们可以将它用于几乎所有的方法**:
 
-```
+```java
 String testString = "hamcrest core";
 
 assertThat(testString, is("hamcrest core"));
@@ -42,7 +42,7 @@ assertThat(testString, is(equalTo("hamcrest core")));
 
 `equalTo(T)`将一个对象作为参数，并检查它与另一个对象是否相等。**经常与`is(Matcher<T>)` :** 一起使用
 
-```
+```java
 String actualString = "equalTo match";
 List<String> actualList = Lists.newArrayList("equalTo", "match");
 
@@ -52,7 +52,7 @@ assertThat(actualList, is(equalTo(Lists.newArrayList("equalTo", "match"))));
 
 我们也可以使用`equalToObject(Object operand) – `来检查相等性，并且不强制两个对象应该是相同的静态类型:
 
-```
+```java
 Object original = 100;
 assertThat(original, equalToObject(100));
 ```
@@ -61,7 +61,7 @@ assertThat(original, equalToObject(100));
 
 `not(T)`和`not(Matcher<T>)`用于检查给定对象的不相等性。首先接受一个对象作为参数，然后接受另一个匹配器:
 
-```
+```java
 String testString = "troy kingdom";
 
 assertThat(testString, not("german kingdom"));
@@ -73,7 +73,7 @@ assertThat(testString, is(not(instanceOf(Integer.class))));
 
 `nullValue() `检查被检查对象的`null `值。`nullValue(Class<T>) `检查给定类类型对象的可空性:
 
-```
+```java
 Integer nullObject = null;
 
 assertThat(nullObject, is(nullValue()));
@@ -84,7 +84,7 @@ assertThat(nullObject, is(nullValue(Integer.class)));
 
 **这些都是常用的`is(not(nullValue))`的快捷方式。**这些检查一个对象或类类型的非空相等性:
 
-```
+```java
 Integer testNumber = 123;
 
 assertThat(testNumber, is(notNullValue()));
@@ -97,7 +97,7 @@ assertThat(testNumber, is(notNullValue(Integer.class)));
 
 **验证，该方法内部调用** `**Class **`类的 `**isIntance(Object) **` **:**
 
-```
+```java
 assertThat("instanceOf example", is(instanceOf(String.class)));
 ```
 
@@ -105,7 +105,7 @@ assertThat("instanceOf example", is(instanceOf(String.class)));
 
 `isA(Class<T> type)`是上述`instanceOf(Class<?>)`的快捷方式。**它采用与** `**instanceOf(Class<?>)**`完全相同的论证类型:
 
-```
+```java
 assertThat("Drogon is biggest dragon", isA(String.class));
 ```
 
@@ -113,7 +113,7 @@ assertThat("Drogon is biggest dragon", isA(String.class));
 
 如果两个引用变量指向堆中的同一个对象，那么`sameInstance()`匹配:
 
-```
+```java
 String string1 = "Viseron";
 String string2 = string1;
 
@@ -124,7 +124,7 @@ assertThat(string1, is(sameInstance(string2)));
 
 `any(Class<T>)`检查该类是否与实际对象的类型相同:
 
-```
+```java
 assertThat("test string", is(any(String.class)));
 assertThat("test string", is(any(Object.class)));
 ```
@@ -133,14 +133,14 @@ assertThat("test string", is(any(Object.class)));
 
 我们可以使用`allOf(Matcher<? extends T>…)`来断言实际对象是否符合所有指定的条件:
 
-```
+```java
 String testString = "Achilles is powerful";
 assertThat(testString, allOf(startsWith("Achi"), endsWith("ul"), containsString("Achilles")));
 ```
 
 `anyOf(Matcher<? extends T>…)`的行为类似于`allOf(Matcher<? extends T>… )`,但是如果被检查的对象匹配任何指定的条件，则匹配:
 
-```
+```java
 String testString = "Hector killed Achilles";
 assertThat(testString, anyOf(startsWith("Hec"), containsString("baeldung")));
 ```
@@ -151,7 +151,7 @@ assertThat(testString, anyOf(startsWith("Hec"), containsString("baeldung")));
 
 让我们理解这是如何工作的:
 
-```
+```java
 List<String> list = Lists.newArrayList("java", "spring", "baeldung");
 
 assertThat(list, hasItem("java"));
@@ -160,7 +160,7 @@ assertThat(list, hasItem(isA(String.class)));
 
 **同样，** **我们也可以用** `**hasItems(T…)**` **和** `**hasItems(Matcher<? extends T>…)**`对多个项目进行断言:
 
-```
+```java
 List<String> list = Lists.newArrayList("java", "spring", "baeldung");
 
 assertThat(list, hasItems("java", "baeldung"));
@@ -171,14 +171,14 @@ assertThat(list, hasItems(isA(String.class), endsWith("ing")));
 
 顾名思义，当指定的两个条件都匹配被检查对象时，`both(Matcher<? extends T>) `匹配:
 
-```
+```java
 String testString = "daenerys targaryen";
 assertThat(testString, both(startsWith("daene")).and(containsString("yen")));
 ```
 
 当指定条件中的任一个与检查对象匹配时,`either(Matcher<? extends T>)`匹配:
 
-```
+```java
 String testString = "daenerys targaryen";
 assertThat(testString, either(startsWith("tar")).or(containsString("targaryen")));
 ```
@@ -187,7 +187,7 @@ assertThat(testString, either(startsWith("tar")).or(containsString("targaryen"))
 
 我们可以使用`containsString(String)`或`containsStringIgnoringCase(String) `来断言实际字符串是否包含测试字符串:
 
-```
+```java
 String testString = "Rhaegar Targaryen";
 assertThat(testString, containsString("aegar"));
 assertThat(testString, containsStringIgnoringCase("AEGAR"));
@@ -195,14 +195,14 @@ assertThat(testString, containsStringIgnoringCase("AEGAR"));
 
 或`startsWith(String)` 和`startsWithIgnoringCase(String) `来断言实际字符串是否以测试字符串开始:
 
-```
+```java
 assertThat(testString, startsWith("Rhae"));
 assertThat(testString, startsWithIgnoringCase("rhae"));
 ```
 
 我们还可以使用`endsWith(String) `或`endsWithIgnoringCase(String)`来断言实际字符串是否以测试字符串结尾:
 
-```
+```java
 assertThat(testString, endsWith("aryen"));
 assertThat(testString, endsWithIgnoringCase("ARYEN"));
 ```

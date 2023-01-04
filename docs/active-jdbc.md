@@ -36,7 +36,7 @@ ActiveJDBC 是一个轻量级 ORM，遵循了 Ruby on Rails 的主要 ORM`Active
 
 使用 MySQL 数据库的典型 Maven 设置包括:
 
-```
+```java
 <dependency>
     <groupId>org.javalite</groupId>
     <artifactId>activejdbc</artifactId>
@@ -55,7 +55,7 @@ ActiveJDBC 是一个轻量级 ORM，遵循了 Ruby on Rails 的主要 ORM`Active
 
 项目中需要配置一个插装插件:
 
-```
+```java
 <plugin>
     <groupId>org.javalite</groupId>
     <artifactId>activejdbc-instrumentation</artifactId>
@@ -75,7 +75,7 @@ ActiveJDBC 是一个轻量级 ORM，遵循了 Ruby on Rails 的主要 ORM`Active
 
 现在，我们可以通过执行以下两个命令之一来处理仪器:
 
-```
+```java
 mvn process-classes
 mvn activejdbc-instrumentation:instrument
 ```
@@ -90,7 +90,7 @@ mvn activejdbc-instrumentation:instrument
 
 让我们看看一个简单的模型是什么样子的:
 
-```
+```java
 import org.javalite.activejdbc.Model;
 
 public class Employee extends Model {}
@@ -102,7 +102,7 @@ public class Employee extends Model {}
 
 连接到数据库的最简单方法是:
 
-```
+```java
 Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://host/organization", "user", "xxxxx");
 ```
 
@@ -112,7 +112,7 @@ Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://host/organization", "user", "xx
 
 让我们看看如何使用`DB` 类连接到数据库`:`
 
-```
+```java
 new DB("default").open(
   "com.mysql.jdbc.Driver", 
   "jdbc:mysql://localhost/dbname", 
@@ -126,7 +126,7 @@ new DB("default").open(
 
 向数据库添加记录非常简单。如前所述，不需要 setters 和 getters:
 
-```
+```java
 Employee e = new Employee();
 e.set("first_name", "Hugo");
 e.set("last_name", "Choi");
@@ -135,14 +135,14 @@ e.saveIt();
 
 或者，我们可以这样添加相同的记录:
 
-```
+```java
 Employee employee = new Employee("Hugo","Choi");
 employee.saveIt();
 ```
 
 甚至流利地说:
 
-```
+```java
 new Employee()
  .set("first_name", "Hugo", "last_name", "Choi")
  .saveIt();
@@ -152,7 +152,7 @@ new Employee()
 
 下面的代码片段显示了如何更新记录:
 
-```
+```java
 Employee employee = Employee.findFirst("first_name = ?", "Hugo");
 employee
   .set("last_name","Choi")
@@ -161,20 +161,20 @@ employee
 
 ### 5.5.删除记录
 
-```
+```java
 Employee e = Employee.findFirst("first_name = ?", "Hugo");
 e.delete();
 ```
 
 如果需要删除所有记录:
 
-```
+```java
 Employee.deleteAll();
 ```
 
 如果我们想从级联到子表的主表中删除一条记录，使用`deleteCascade`:
 
-```
+```java
 Employee employee = Employee.findFirst("first_name = ?","Hugo");
 employee.deleteCascade();
 ```
@@ -183,13 +183,13 @@ employee.deleteCascade();
 
 让我们从数据库中取出一条记录:
 
-```
+```java
 Employee e = Employee.findFirst("first_name = ?", "Hugo");
 ```
 
 如果我们想获取多条记录，我们可以使用`where`方法:
 
-```
+```java
 List<Employee> employees = Employee.where("first_name = ?", "Hugo");
 ```
 
@@ -203,19 +203,19 @@ List<Employee> employees = Employee.where("first_name = ?", "Hugo");
 
 开始交易:
 
-```
+```java
 Base.openTransaction();
 ```
 
 提交交易:
 
-```
+```java
 Base.commitTransaction();
 ```
 
 回滚事务:
 
-```
+```java
 Base.rollbackTransaction();
 ```
 

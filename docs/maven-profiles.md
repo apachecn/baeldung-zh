@@ -14,7 +14,7 @@
 
 首先，我们将创建一个`no-tests`概要文件，它将`maven.test.skip`属性设置为`true:`
 
-```
+```java
 <profile>
     <id>no-tests</id>
     <properties>
@@ -35,7 +35,7 @@
 
 我们将从在我们的`pom.xml` 文件中为每一个指定一个`id `开始:
 
-```
+```java
 <profiles>
     <profile>
         <id>integration-tests</id>
@@ -74,13 +74,13 @@
 
 **让我们使用`help:active-profiles` 目标来查看在我们的默认构建中哪些概要文件是活动的**:
 
-```
+```java
 mvn help:active-profiles
 ```
 
 实际上，由于我们还没有激活任何东西，我们得到:
 
-```
+```java
 The following profiles are active:
 ```
 
@@ -88,7 +88,7 @@ The following profiles are active:
 
 我们马上就会激活它们。但是很快，另一种查看什么被激活的方法是**将`maven-help-plugin`包含在我们的`pom.xml `中，并将`active-profiles`目标与`compile `阶段:**
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -117,13 +117,13 @@ The following profiles are active:
 
 因此，让我们从启用`integration-tests`配置文件开始:
 
-```
+```java
 mvn package -P integration-tests
 ```
 
 如果我们使用`maven-help-plugin`或`mvn help:active-profiles -P integration-tests`命令来验证活动配置文件，我们将得到以下结果:
 
-```
+```java
 The following profiles are active:
 
  - integration-tests
@@ -131,7 +131,7 @@ The following profiles are active:
 
 如果我们想同时激活多个配置文件，我们使用逗号分隔的配置文件列表:
 
-```
+```java
 mvn package -P integration-tests,mutation-tests
 ```
 
@@ -139,7 +139,7 @@ mvn package -P integration-tests,mutation-tests
 
 如果我们总是想要执行一个概要文件，我们可以在默认情况下激活一个概要文件:
 
-```
+```java
 <profile>
     <id>integration-tests</id>
     <activation>
@@ -158,7 +158,7 @@ mvn package -P integration-tests,mutation-tests
 
 我们可以在命令行上激活配置文件。然而，有时如果它们被自动激活会更方便。例如，**我们可以基于一个`-D` 系统属性:**
 
-```
+```java
 <profile>
     <id>active-on-property-environment</id>
     <activation>
@@ -173,7 +173,7 @@ mvn package -P integration-tests,mutation-tests
 
 如果属性不存在，也可以激活配置文件:
 
-```
+```java
 <property>
     <name>!environment</name>
 </property>
@@ -181,7 +181,7 @@ mvn package -P integration-tests,mutation-tests
 
 或者，如果属性具有特定值:，我们可以激活配置文件
 
-```
+```java
 <property>
     <name>environment</name>
     <value>test</value>
@@ -192,7 +192,7 @@ mvn package -P integration-tests,mutation-tests
 
 最后，如果属性的值不是指定的值，我们可以激活配置文件:
 
-```
+```java
 <property>
     <name>environment</name>
     <value>!test</value>
@@ -203,7 +203,7 @@ mvn package -P integration-tests,mutation-tests
 
 另一个选项是启用基于计算机上运行的 JDK 的配置文件。在这种情况下，如果 JDK 版本以 11:
 
-```
+```java
 <profile>
     <id>active-on-jdk-11</id>
     <activation>
@@ -220,7 +220,7 @@ mvn package -P integration-tests,mutation-tests
 
 如果我们不确定，我们可以首先使用`mvn enforcer:display-info`命令，它会在我的机器上给出以下输出:
 
-```
+```java
 Maven Version: 3.5.4
 JDK Version: 11.0.2 normalized as: 11.0.2
 OS Info: Arch: amd64 Family: windows Name: windows 10 Version: 10.0
@@ -228,7 +228,7 @@ OS Info: Arch: amd64 Family: windows Name: windows 10 Version: 10.0
 
 之后，我们可以配置一个仅在 Windows 10 上激活的配置文件:
 
-```
+```java
 <profile>
     <id>active-on-windows-10</id>
     <activation>
@@ -248,7 +248,7 @@ OS Info: Arch: amd64 Family: windows Name: windows 10 Version: 10.0
 
 因此，让我们创建一个仅在`testreport.html`不存在时才执行的测试概要文件:
 
-```
+```java
 <activation>
     <file>
         <missing>target/testreport.html</missing>

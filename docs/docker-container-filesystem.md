@@ -16,7 +16,7 @@
 
 让**使用带有`-it` 选项**的`docker run`命令通过 shell 访问直接启动一个容器:
 
-```
+```java
 $ docker run -it alpine
 /# ls -all
 ...
@@ -32,7 +32,7 @@ drwxr-xr-x    1 root     root             0 Jan 16 21:52 home
 
 但是如果我们想探索一些不是 Linux 发行版的东西，会发生什么呢？
 
-```
+```java
 $ docker run -it cassandra
  ... 
 INFO [MigrationStage:1] 2020-03-05 13:44:36,734 - Initializing system_auth.resource_role_permissons_index 
@@ -51,7 +51,7 @@ Cassandra docker 容器带有一个默认的启动命令，它运行 Cassandra�
 
 **让我们将`/bin/bash` 附加参数传递给`docker run`命令** :
 
-```
+```java
 $ docker run -it cassandra /bin/bash
 [[email protected]](/web/20220901074910/https://www.baeldung.com/cdn-cgi/l/email-protection):/# ls -all
 total 4
@@ -75,7 +75,7 @@ drwxr-xr-x   1 root root 1690 Mar  5 13:30 etc
 
 让我们首先开始我们想要探索的容器:
 
-```
+```java
 $ docker run cassandra
 ...
 INFO  [MigrationStage:1] 2020-03-05 13:44:36,734 - Initializing system_auth.resource_role_permissons_index
@@ -88,7 +88,7 @@ INFO  [main] 2020-03-05 13:44:36,764 - Waiting for gossip to settle...
 
 接下来，我们用 `**docker ps**`来标识容器 id:
 
-```
+```java
 $ docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             
 00622c0645fb        cassandra           "docker-entrypoint.s…"   2 minutes ago 
@@ -96,7 +96,7 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED
 
 然后，我们**将`/bin/bash`作为带有`-it` 选项的自变量传递给 `docker exec`** :
 
-```
+```java
 $ docker exec -it 00622c0645fb /bin/bash
 [[email protected]](/web/20220901074910/https://www.baeldung.com/cdn-cgi/l/email-protection):/# ls -all
 ...
@@ -113,7 +113,7 @@ drwxr-xr-x   1 root root 1690 Mar  5 13:44 etc
 
 相比之下，我们的第一个例子使用 Alpine Linux，默认情况下它带有 Bourne Shell:
 
-```
+```java
 $ docker ps
 CONTAINER ID        IMAGE               COMMAND             CREATED            
 8408c85b3c57        alpine              "/bin/sh"           3 seconds ago 
@@ -121,7 +121,7 @@ CONTAINER ID        IMAGE               COMMAND             CREATED
 
 由于 Bash 不可用，我们将`/bin/sh`作为参数传递给`docker exec`:
 
-```
+```java
 $ docker exec -it 8408c85b3c57 /bin/sh
 / # ls -all
 ...
@@ -149,7 +149,7 @@ drwxr-xr-x    1 root     root             0 Jan 16 21:52 home
 
 让我们首先运行 hello-world 容器:
 
-```
+```java
 $ docker run hello-world
 
 Hello from Docker!
@@ -159,7 +159,7 @@ This message shows that your installation appears to be working correctly.
 
 类似地，我们首先通过将`-a`标志传递给`docker ps` **:** 来让**获得一个停止的集装箱的集装箱 id**
 
-```
+```java
 $ docker ps -a
 CONTAINER ID        IMAGE                 COMMAND                  CREATED             
 a0af60c72d93        hello-world           "/hello"                 3 minutes ago       
@@ -168,13 +168,13 @@ a0af60c72d93        hello-world           "/hello"                 3 minutes ago
 
 然后我们使用`docker export` 的`-o`选项将文件系统转储到 hello.tar 文件中**:**
 
-```
+```java
 $ docker export -o hello.tar a0af60c72d93 
 ```
 
 最后，**我们使用带有`-tvf` 标志**的`tar` 实用程序打印归档文件的内容:
 
-```
+```java
 $ tar -tvf hello.tar
 -rwxr-xr-x root/0            0 2020-03-05 16:55 .dockerenv
 ....
@@ -196,13 +196,13 @@ drwxr-xr-x root/0            0 2020-03-05 16:55 dev/shm/
 
 **首先，我们将从`the root (/)`** 开始的完整文件系统从我们的容器复制到`test`目录:
 
-```
+```java
 $ docker cp a0af60c72d93:/ ./test 
 ```
 
 接下来，让我们打印`test`目录的内容:
 
-```
+```java
 $ ls -all test/
 total 28
 ..

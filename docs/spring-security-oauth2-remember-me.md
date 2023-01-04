@@ -16,7 +16,7 @@
 
 在使用`password`授权类型的第一次认证尝试中，用户需要发送有效的用户名和密码，以及客户端 id 和密码。如果身份验证请求成功，服务器将发回以下形式的响应:
 
-```
+```java
 {
     "access_token": "2e17505e-1c34-4ea6-a901-40e49ba786fa",
     "token_type": "bearer",
@@ -51,7 +51,7 @@
 
 在[上一篇关于刷新令牌](/web/20220822105732/https://www.baeldung.com/spring-security-oauth2-refresh-token-angular-js-legacy)的文章中，我们添加了一个`CustomPostZuulFilter`，它拦截对`OAuth`服务器的请求，提取身份验证时发回的刷新令牌，并将其存储在服务器端 cookie 中:
 
-```
+```java
 @Component
 public class CustomPostZuulFilter extends ZuulFilter {
 
@@ -70,7 +70,7 @@ public class CustomPostZuulFilter extends ZuulFilter {
 
 接下来，让我们在登录表单上添加一个复选框，它有一个到`loginData.remember`变量的数据绑定:
 
-```
+```java
 <input type="checkbox"  ng-model="loginData.remember" id="remember"/>
 <label for="remember">Remeber me</label>
 ```
@@ -81,7 +81,7 @@ public class CustomPostZuulFilter extends ZuulFilter {
 
 `loginData`对象随认证请求一起发送，因此它将包含`remember`参数。在发送认证请求之前，我们将根据参数设置一个名为`remember`的 cookie:
 
-```
+```java
 function obtainAccessToken(params){
     if (params.username != null){
         if (params.remember != null){
@@ -101,7 +101,7 @@ function obtainAccessToken(params){
 
 为了拦截返回 401 响应的请求，让我们修改我们的`AngularJS`应用程序，添加一个带有`responseError`函数的拦截器:
 
-```
+```java
 app.factory('rememberMeInterceptor', ['$q', '$injector', '$httpParamSerializer', 
   function($q, $injector, $httpParamSerializer) {  
     var interceptor = {
@@ -128,7 +128,7 @@ app.factory('rememberMeInterceptor', ['$q', '$injector', '$httpParamSerializer',
 
 让我们仔细看看刷新访问令牌的过程。首先，我们将初始化必要的变量:
 
-```
+```java
 var $http = $injector.get('$http');
 var $cookies = $injector.get('$cookies');
 var deferred = $q.defer();
@@ -147,7 +147,7 @@ var req = {
 
 接下来，让我们使用我们注入的`$http`模块来发送请求。如果请求成功，我们将使用新的访问令牌值设置一个新的`Authentication`头，并为`access_token` cookie 设置一个新值。如果请求失败(如果刷新令牌最终也过期，可能会发生这种情况)，则用户会被重定向到登录页面:
 
-```
+```java
 $http(req).then(
     function(data){
         $http.defaults.headers.common.Authorization= 'Bearer ' + data.data.access_token;
@@ -164,7 +164,7 @@ $http(req).then(
 
 刷新令牌由我们在上一篇文章中实现的`CustomPreZuulFilter`添加到请求中:
 
-```
+```java
 @Component
 public class CustomPreZuulFilter extends ZuulFilter {
 
@@ -186,7 +186,7 @@ public class CustomPreZuulFilter extends ZuulFilter {
 
 除了定义拦截器，我们还需要用`$httpProvider`注册它:
 
-```
+```java
 app.config(['$httpProvider', function($httpProvider) {  
     $httpProvider.interceptors.push('rememberMeInterceptor');
 }]);
@@ -200,13 +200,13 @@ app.config(['$httpProvider', function($httpProvider) {
 
 让我们为每个身份验证将这个值保存在一个 cookie 中:
 
-```
+```java
 $cookies.put("validity", data.data.expires_in);
 ```
 
 然后，为了发送刷新请求，让我们使用`AngularJS $timeout`服务在令牌过期前 10 秒安排一个刷新调用:
 
-```
+```java
 if ($cookies.get("remember") == "yes"){
     var validity = $cookies.get("validity");
     if (validity >10) validity -= 10;

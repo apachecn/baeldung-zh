@@ -12,7 +12,7 @@ Jetty 是一个 HTTP 服务器和 servlet 容器，被设计成轻量级和易�
 
 首先，我们希望[将带有以下 Maven 依赖项](https://web.archive.org/web/20221206062905/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.eclipse.jetty%22%20AND%20a%3A%22jetty-server%22)的 Jetty 9 添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-server</artifactId>
@@ -29,14 +29,14 @@ Jetty 是一个 HTTP 服务器和 servlet 容器，被设计成轻量级和易�
 
 使用 Jetty 构建嵌入式服务器就像编写代码一样简单:
 
-```
+```java
 Server server = new Server();
 server.start();
 ```
 
 关闭它同样简单:
 
-```
+```java
 server.stop();
 ```
 
@@ -52,7 +52,7 @@ server.stop();
 
 如果我们想在“myApp”上下文中公开一个应用程序，我们应该写:
 
-```
+```java
 Handler webAppHandler = new WebAppContext(webAppPath, "/myApp");
 server.setHandler(webAppHandler);
 ```
@@ -65,7 +65,7 @@ server.setHandler(webAppHandler);
 
 以下是如何做到这一点:
 
-```
+```java
 Handler handlers = new HandlerCollection();
 handlers.addHandler(loggingRequestHandler);
 handlers.addHandler(customRequestHandler);
@@ -82,7 +82,7 @@ server.setHandler(handlers);
 
 在这种情况下，Jetty 提供了`Connector` 接口，更具体地说是`ServerConnector`类，它允许定义各种连接配置参数:
 
-```
+```java
 ServerConnector connector = new ServerConnector(server);
 connector.setPort(80);
 connector.setHost("169.20.45.12");

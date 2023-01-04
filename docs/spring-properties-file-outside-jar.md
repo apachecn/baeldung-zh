@@ -23,13 +23,13 @@
 
 如果以上约定对我们不起作用，我们可以直接在命令行中**配置位置:**
 
-```
+```java
 java -jar app.jar --spring.config.location=file:///Users/home/config/jdbc.properties
 ```
 
 我们还可以传递应用程序将搜索文件的文件夹位置:
 
-```
+```java
 java -jar app.jar --spring.config.name=application,jdbc --spring.config.location=file:///Users/home/config
 ```
 
@@ -37,7 +37,7 @@ java -jar app.jar --spring.config.name=application,jdbc --spring.config.location
 
 这里，我们可以使用一个`-D`参数:
 
-```
+```java
 mvn spring-boot:run -Dspring.config.location="file:///Users/home/jdbc.properties"
 ```
 
@@ -47,7 +47,7 @@ mvn spring-boot:run -Dspring.config.location="file:///Users/home/jdbc.properties
 
 很棒的是， **Spring Boot 还会读取环境变量`SPRING_CONFIG_NAME`和`SPRING_CONFIG_LOCATION`** :
 
-```
+```java
 export SPRING_CONFIG_NAME=application,jdbc
 export SPRING_CONFIG_LOCATION=file:///Users/home/config
 java -jar app.jar
@@ -63,7 +63,7 @@ Spring Boot 修改了版本 2.4.0 中处理属性的方式。
 
 除了这一变化，该团队还引入了一个新的属性，允许直接从应用程序属性中导入其他配置文件:
 
-```
+```java
 spring.config.import=file:./additional.properties,optional:file:/Users/home/config/jdbc.properties
 ```
 
@@ -71,7 +71,7 @@ spring.config.import=file:./additional.properties,optional:file:/Users/home/conf
 
 如果我们想要编程访问，我们可以注册一个`PropertySourcesPlaceholderConfigurer` bean:
 
-```
+```java
 public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
     PropertySourcesPlaceholderConfigurer properties = 
       new PropertySourcesPlaceholderConfigurer();
@@ -89,7 +89,7 @@ Maven Boot 插件会自动将`src/main/resources`目录中的所有文件包含�
 
 如果我们不想让文件成为 jar 的一部分，我们可以使用一个简单的配置来排除它:
 
-```
+```java
 <build>
     <resources>
         <resource>

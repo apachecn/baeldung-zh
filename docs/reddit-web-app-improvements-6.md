@@ -14,7 +14,7 @@
 
 我们将从在配置中启用`@Preauthorize`开始:
 
-```
+```java
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 ```
 
@@ -22,7 +22,7 @@
 
 接下来，让我们借助一些 Spring 安全表达式在控制器层中授权我们的命令:
 
-```
+```java
 @PreAuthorize("@resourceSecurityService.isPostOwner(#postDto.id)")
 @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 @ResponseStatus(HttpStatus.OK)
@@ -38,7 +38,7 @@ public void deletePost(@PathVariable("id") Long id) {
 }
 ```
 
-```
+```java
 @PreAuthorize("@resourceSecurityService.isRssFeedOwner(#feedDto.id)")
 @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 @ResponseStatus(HttpStatus.OK)
@@ -63,7 +63,7 @@ public void deleteFeed(@PathVariable("id") Long id) {
 
 负责检查所有权的服务如下所示:
 
-```
+```java
 @Service
 public class ResourceSecurityService {
 
@@ -100,7 +100,7 @@ public class ResourceSecurityService {
 
 接下来，我们将简单地处理`AccessDeniedException`–如下所示:
 
-```
+```java
 @ExceptionHandler({ AuthenticationCredentialsNotFoundException.class, AccessDeniedException.class })
 public ResponseEntity<Object> handleAccessDeniedException(final Exception ex, final WebRequest request) {
     logger.error("403 Status Code", ex);
@@ -113,7 +113,7 @@ public ResponseEntity<Object> handleAccessDeniedException(final Exception ex, fi
 
 最后，我们将测试我们的命令授权:
 
-```
+```java
 public class CommandAuthorizationLiveTest extends ScheduledPostLiveTest {
 
     @Test
@@ -159,13 +159,13 @@ public class CommandAuthorizationLiveTest extends ScheduledPostLiveTest {
 
 我们将通过删除以下内容来修改帖子和首选项实体:
 
-```
+```java
 private int timeInterval;
 ```
 
 并补充道:
 
-```
+```java
 private int checkAfterInterval;
 
 private int submitAfterInterval;
@@ -177,7 +177,7 @@ private int submitAfterInterval;
 
 接下来，我们将修改我们的调度程序以使用新的时间间隔，如下所示:
 
-```
+```java
 private void checkAndReSubmitInternal(Post post) {
     if (didIntervalPass(post.getSubmissionDate(), post.getCheckAfterInterval())) {
         PostScores postScores = getPostScores(post);
@@ -214,7 +214,7 @@ private void resetPost(Post post, String failReason) {
 
 下面是简单的控制器级别检查—`isAccessTokenValid()`:
 
-```
+```java
 @RequestMapping(value = "/isAccessTokenValid")
 @ResponseBody
 public boolean isAccessTokenValid() {
@@ -226,7 +226,7 @@ public boolean isAccessTokenValid() {
 
 下面是服务级别实现:
 
-```
+```java
 @Override
 public boolean isCurrentUserAccessTokenValid() {
     UserPrincipal userPrincipal = (UserPrincipal) 
@@ -257,7 +257,7 @@ public boolean isCurrentUserAccessTokenValid() {
 
 最后，我们将在主页上展示这一点:
 
-```
+```java
 <div id="connect" style="display:none">
     <a href="redditLogin">Connect your Account to Reddit</a>
 </div>
@@ -283,7 +283,7 @@ $.get("api/isAccessTokenValid", function(data){
 
 父模块 **reddit-scheduler** 包含子模块和一个简单的`pom.xml`，如下所示:
 
-```
+```java
 <project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.baeldung</groupId>
@@ -322,7 +322,7 @@ $.get("api/isAccessTokenValid", function(data){
 
 下面是简单的`pom.xml`:
 
-```
+```java
 <project>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>reddit-common</artifactId>
@@ -346,7 +346,7 @@ $.get("api/isAccessTokenValid", function(data){
 
 下面是`pom.xml`:
 
-```
+```java
 <project>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>reddit-rest</artifactId>
@@ -379,7 +379,7 @@ $.get("api/isAccessTokenValid", function(data){
 
 我们需要更改百里香配置，从资源类路径而不是服务器上下文中加载模板:
 
-```
+```java
 @Bean
 public TemplateResolver templateResolver() {
     SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
@@ -392,7 +392,7 @@ public TemplateResolver templateResolver() {
 
 下面是简单的`pom.xml`:
 
-```
+```java
 <project>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>reddit-ui</artifactId>
@@ -417,7 +417,7 @@ public TemplateResolver templateResolver() {
 
 我们现在也有了一个更简单的异常处理程序，用于处理前端异常:
 
-```
+```java
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler implements Serializable {
 
@@ -444,7 +444,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler impleme
 
 该模块包含资源、安全配置和`SpringBootApplication`配置——如下:
 
-```
+```java
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
     @Bean
@@ -495,7 +495,7 @@ public class Application extends SpringBootServletInitializer {
 
 这里是`pom.xml`:
 
-```
+```java
 <project>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>reddit-web</artifactId>

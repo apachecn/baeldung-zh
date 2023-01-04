@@ -20,7 +20,7 @@ Learn how to set up Lombok with popular IDEs[Read more](/web/20221127130246/http
 
 在我们的构建中包括它，在我们使用的任何系统中，都是非常直接的。Project Lombok 的[项目页面](https://web.archive.org/web/20221127130246/https://projectlombok.org/features/index.html)有关于具体细节的详细说明。我的大多数项目都是基于 maven 的，所以我通常只在`provided`范围内放弃它们的依赖性，这样就可以了:
 
-```
+```java
 <dependencies>
     ...
     <dependency>
@@ -45,7 +45,7 @@ Learn how to set up Lombok with popular IDEs[Read more](/web/20221127130246/http
 
 让我们考虑一下我们想用作 JPA 实体的这个类:
 
-```
+```java
 @Entity
 public class User implements Serializable {
 
@@ -72,7 +72,7 @@ public class User implements Serializable {
 
 咱们现在`Lombok-ize`这节课:
 
-```
+```java
 @Entity
 @Getter @Setter @NoArgsConstructor // <--- THIS is it
 public class User implements Serializable {
@@ -99,7 +99,7 @@ public class User implements Serializable {
 
 如果我们想细化某些属性的可见性怎么办？例如，如果我们希望保持实体的`id`字段修饰符`package`或`protected`可见，因为它们应该被读取，但不是由应用程序代码显式设置的，我们可以对这个特定的字段使用更细粒度的`@Setter`:
 
-```
+```java
 private @Id @Setter(AccessLevel.PROTECTED) Long id;
 ```
 
@@ -117,7 +117,7 @@ Lombok 通过我们上面看到的@ `Getter`注释中的 **`lazy` 参数实现�
 
 例如，考虑这个简单的类:
 
-```
+```java
 public class GetterLazy {
 
     @Getter(lazy = true)
@@ -142,7 +142,7 @@ public class GetterLazy {
 
 如果我们现在查看这个类的编译代码，我们会看到一个 **getter 方法，如果它是`null`的话，它会更新缓存，然后返回缓存的数据**:
 
-```
+```java
 public class GetterLazy {
 
     private final AtomicReference<Object> transactions = new AtomicReference();
@@ -182,7 +182,7 @@ public class GetterLazy {
 
 我们设计了一个类来表示成功的登录操作。我们希望所有字段都是非空的，对象都是不可变的，这样我们就可以安全地访问它的属性:
 
-```
+```java
 public class LoginResult {
 
     private final Instant loginTs;
@@ -200,7 +200,7 @@ public class LoginResult {
 
 同样，我们必须为注释部分编写的代码量将比我们想要封装的信息量大得多。我们可以使用 Lombok 来改进这一点:
 
-```
+```java
 @RequiredArgsConstructor
 @Accessors(fluent = true) @Getter
 public class LoginResult {
@@ -221,7 +221,7 @@ public class LoginResult {
 
 这种“流畅”的形式适用于属性设置器的非最终字段，并允许链式调用:
 
-```
+```java
 // Imagine fields were no longer final now
 return new LoginResult()
   .loginTs(Instant.now())
@@ -242,7 +242,7 @@ return new LoginResult()
 
 为了演示这一点，让我们假设我们的`User` JPA 实体示例包含了对与该用户相关联的事件的引用:
 
-```
+```java
 @OneToMany(mappedBy = "user")
 private List<UserEvent> events;
 ```
@@ -265,7 +265,7 @@ private List<UserEvent> events;
 
 下面是一个 REST API 客户端的配置类示例:
 
-```
+```java
 public class ApiClientConfiguration {
 
     private String host;
@@ -290,7 +290,7 @@ public class ApiClientConfiguration {
 
 相反，我们可以告诉工具生成一个`builder`模式，这样我们就不必编写额外的`Builder`类和相关的流畅的类似 setter 的方法，只需将@Builder 注释添加到我们的`ApiClientConfiguration:`中
 
-```
+```java
 @Builder
 public class ApiClientConfiguration {
 
@@ -301,7 +301,7 @@ public class ApiClientConfiguration {
 
 抛开上面的类定义(没有声明构造函数或 setter+`@Builder`)，我们最终可以将它用作:
 
-```
+```java
 ApiClientConfiguration config = 
     ApiClientConfiguration.builder()
         .host("api.server.com")
@@ -318,7 +318,7 @@ ApiClientConfiguration config =
 
 许多 Java APIs 被设计成可以抛出一些检查过的异常；客户端代码被强制为`catch`或声明为`throws`。有多少次我们把这些我们知道不会发生的例外变成了这样的事情？：
 
-```
+```java
 public String resourceAsString() {
     try (InputStream is = this.getClass().getResourceAsStream("sure_in_my_jar.txt")) {
         BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
@@ -332,7 +332,7 @@ public String resourceAsString() {
 
 如果我们想避免这种代码模式，因为编译器会不高兴(而且我们**知道**被检查的错误不会发生)，使用恰当地命名为 [`@SneakyThrows`](https://web.archive.org/web/20221127130246/https://projectlombok.org/features/SneakyThrows.html) :
 
-```
+```java
 @SneakyThrows
 public String resourceAsString() {
     try (InputStream is = this.getClass().getResourceAsStream("sure_in_my_jar.txt")) {
@@ -348,13 +348,13 @@ Java 7 引入了 try-with-resources 块，以确保我们的资源被任何实�
 
 Lombok 通过 [@Cleanup](https://web.archive.org/web/20221127130246/https://projectlombok.org/features/Cleanup.html) 提供了另一种更灵活的方式来实现这一点。我们可以将它用于任何局部变量，我们希望确保它的资源被释放。他们不需要实现任何特定的接口，我们只需要调用`close()`方法:
 
-```
+```java
 @Cleanup InputStream is = this.getClass().getResourceAsStream("res.txt");
 ```
 
 我们的释放方法有一个不同的名字？没问题，我们只是自定义注释:
 
-```
+```java
 @Cleanup("dispose") JFrame mainFrame = new JFrame("Main Window");
 ```
 
@@ -362,7 +362,7 @@ Lombok 通过 [@Cleanup](https://web.archive.org/web/20221127130246/https://proj
 
 我们中的许多人通过从我们选择的框架中创建一个`Logger`实例来谨慎地将日志记录语句添加到代码中。比如说 SLF4J:
 
-```
+```java
 public class ApiClientConfiguration {
 
     private static Logger LOG = LoggerFactory.getLogger(ApiClientConfiguration.class);
@@ -374,7 +374,7 @@ public class ApiClientConfiguration {
 
 这是一个如此常见的模式，以至于 Lombok 开发人员为我们简化了它:
 
-```
+```java
 @Slf4j // or: @Log @CommonsLog @Log4j @Log4j2 @XSlf4j
 public class ApiClientConfiguration {
 
@@ -391,7 +391,7 @@ public class ApiClientConfiguration {
 
 这就是 [`@Synchronized`](https://web.archive.org/web/20221127130246/https://projectlombok.org/features/Synchronized.html) 的用武之地。我们可以用它来注释我们的方法(实例的和静态的),我们将得到一个自动生成的、私有的、未公开的字段，我们的实现将使用它来锁定:
 
-```
+```java
 @Synchronized
 public /* better than: synchronized */ void putValueInCache(String key, Object value) {
     // whatever here will be thread-safe code
@@ -410,7 +410,7 @@ Java 没有语言级别的构造来平滑“偏好组合继承”的方法。其
 
 首先，让我们定义一个接口:
 
-```
+```java
 public interface HasContactInformation {
 
     String getFirstName();
@@ -429,7 +429,7 @@ public interface HasContactInformation {
 
 现在一个适配器作为一个`support`类:
 
-```
+```java
 @Data
 public class ContactInformationSupport implements HasContactInformation {
 
@@ -446,7 +446,7 @@ public class ContactInformationSupport implements HasContactInformation {
 
 现在是有趣的部分；看看将联系信息组合到两个模型类中是多么容易:
 
-```
+```java
 public class User implements HasContactInformation {
 
     // Whichever other User-specific attributes

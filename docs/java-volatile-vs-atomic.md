@@ -14,7 +14,7 @@
 
 理论上，任何应用程序线程都可以增加这个计数器的值。让我们从一个简单的方法开始实现它，并检查会出现什么问题:
 
-```
+```java
 public class UnsafeCounter {
 
     private int counter;
@@ -41,7 +41,7 @@ public class UnsafeCounter {
 
 **`volatile`关键字[帮助](/web/20221005030132/https://www.baeldung.com/java-volatile-variables-thread-safety)通过绕过本地线程中的缓存来解决这个问题。**因此，`volatile`变量对所有线程都是可见的，并且所有这些线程都将看到相同的值。因此，当一个线程更新该值时，所有线程都会看到新值。我们可以把它看作一个低级的观察者模式，并且可以重写前面的实现:
 
-```
+```java
 public class UnsafeVolatileCounter {
 
     private volatile int counter;
@@ -72,7 +72,7 @@ public class UnsafeVolatileCounter {
 
 在内部，原子类确保在这种情况下，增量将是原子操作。因此，我们可以用它来创建一个线程安全的实现:
 
-```
+```java
 public class SafeAtomicCounter {
     private final AtomicInteger counter = new AtomicInteger(0);
 

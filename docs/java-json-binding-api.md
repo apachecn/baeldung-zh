@@ -20,7 +20,7 @@
 
 请记住，在许多情况下，包含所选实现的依赖关系就足够了，并且`javax.json.bind-api`将被过渡性地包含:
 
-```
+```java
 <dependency>
     <groupId>javax.json.bind</groupId>
     <artifactId>javax.json.bind-api</artifactId>
@@ -38,7 +38,7 @@
 
 要使用它，我们需要在我们的 Maven 项目中包含以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.eclipse</groupId>
     <artifactId>yasson</artifactId>
@@ -61,7 +61,7 @@
 
 要使用它，我们需要在我们的 Maven 项目中包含以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.geronimo.specs</groupId>
     <artifactId>geronimo-json_1.1_spec</artifactId>
@@ -82,7 +82,7 @@ API 为定制序列化/反序列化提供了注释。
 
 让我们创建一个简单的类，看看示例配置是什么样子的:
 
-```
+```java
 public class Person {
 
     private int id;
@@ -112,7 +112,7 @@ public class Person {
 
 序列化后，该类的对象将类似于:
 
-```
+```java
 {
    "email":"[[email protected]](/web/20221208143832/https://www.baeldung.com/cdn-cgi/l/email-protection)",
    "id":1,
@@ -136,7 +136,7 @@ public class Person {
 
 首先，让我们创建一个简单的`Person`对象，如下所示:
 
-```
+```java
 Person person = new Person(
   1, 
   "Jhon", 
@@ -148,19 +148,19 @@ Person person = new Person(
 
 并且，实例化`Jsonb`类:
 
-```
+```java
 Jsonb jsonb = JsonbBuilder.create();
 ```
 
 然后，我们使用`toJson`方法:
 
-```
+```java
 String jsonPerson = jsonb.toJson(person);
 ```
 
 要获得以下 JSON 表示:
 
-```
+```java
 {
     "email":"[[email protected]](/web/20221208143832/https://www.baeldung.com/cdn-cgi/l/email-protection)",
     "id":1,
@@ -172,20 +172,20 @@ String jsonPerson = jsonb.toJson(person);
 
 如果我们想以另一种方式进行转换，我们可以使用`fromJson`方法:
 
-```
+```java
 Person person = jsonb.fromJson(jsonPerson, Person.class);
 ```
 
 自然，我们也可以处理集合:
 
-```
+```java
 List<Person> personList = Arrays.asList(...);
 String jsonArrayPerson = jsonb.toJson(personList);
 ```
 
 要获得以下 JSON 表示:
 
-```
+```java
 [ 
     {
       "email":"[[email protected]](/web/20221208143832/https://www.baeldung.com/cdn-cgi/l/email-protection)",
@@ -207,7 +207,7 @@ String jsonArrayPerson = jsonb.toJson(personList);
 
 为了从 JSON 数组转换到`List`，我们将使用`fromJson` API:
 
-```
+```java
 List<Person> personList = jsonb.fromJson(
   personJsonArray, 
   new ArrayList<Person>(){}.getClass().getGenericSuperclass()
@@ -222,7 +222,7 @@ List<Person> personList = jsonb.fromJson(
 
 现在，我们将使用`LOWER_CASE_WITH_UNDERSCORES`策略:
 
-```
+```java
 JsonbConfig config = new JsonbConfig().withPropertyNamingStrategy(
   PropertyNamingStrategy.LOWER_CASE_WITH_UNDERSCORES);
 Jsonb jsonb = JsonbBuilder.create(config);
@@ -231,7 +231,7 @@ String jsonPerson = jsonb.toJson(person);
 
 要获得以下 JSON 表示:
 
-```
+```java
 {
    "email":"[[email protected]](/web/20221208143832/https://www.baeldung.com/cdn-cgi/l/email-protection)",
    "id":1,
@@ -244,7 +244,7 @@ String jsonPerson = jsonb.toJson(person);
 现在，我们将使用`REVERSE`策略改变属性顺序。使用这种策略，属性的顺序与字典顺序相反。
 这也可以在编译时用注释`@JsonbPropertyOrder.`进行配置，让我们来看看它的运行情况:
 
-```
+```java
 JsonbConfig config 
   = new JsonbConfig().withPropertyOrderStrategy(PropertyOrderStrategy.REVERSE);
 Jsonb jsonb = JsonbBuilder.create(config);
@@ -253,7 +253,7 @@ String jsonPerson = jsonb.toJson(person);
 
 要获得以下 JSON 表示:
 
-```
+```java
 {
     "salary":"1000.0",
     "registeredDate":"07-09-2019",
@@ -274,7 +274,7 @@ String jsonPerson = jsonb.toJson(person);
 
 让我们创建一个`PersonAdapter`来处理`Person`类的`id`和`name`属性:
 
-```
+```java
 public class PersonAdapter implements JsonbAdapter<Person, JsonObject> {
 
     @Override
@@ -297,14 +297,14 @@ public class PersonAdapter implements JsonbAdapter<Person, JsonObject> {
 
 此外，我们将把适配器分配给我们的`JsonbConfig`实例:
 
-```
+```java
 JsonbConfig config = new JsonbConfig().withAdapters(new PersonAdapter());
 Jsonb jsonb = JsonbBuilder.create(config);
 ```
 
 我们会得到下面的 JSON 表示:
 
-```
+```java
 {
     "id":1, 
     "name":"Jhon"

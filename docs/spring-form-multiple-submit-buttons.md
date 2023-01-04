@@ -20,7 +20,7 @@
 
 首先，让我们向表单`employeeHome.jsp`添加一个新按钮:
 
-```
+```java
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 ...
 <body>
@@ -45,7 +45,7 @@
 
 接下来，让我们修改[控制器](/web/20220525133819/https://www.baeldung.com/spring-controller-vs-restcontroller)，为`RequestMapping`添加一个新属性`param`，以区分两次按钮点击:
 
-```
+```java
 @RequestMapping(value = "/addEmployee", method = RequestMethod.POST, params = "submit")
 public String submit(@Valid @ModelAttribute("employee") final Employee employee, 
   final BindingResult result, final ModelMap model) {

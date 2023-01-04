@@ -22,7 +22,7 @@ API 网关的主要职责之一是将 HTTP 请求路由到目的服务器。我�
 
 HAProxy 的[基本配置](https://web.archive.org/web/20221212054534/https://www.haproxy.com/blog/haproxy-configuration-basics-load-balance-your-servers/)是一个负载均衡器。我们将为示例定义`frontend`和`backend` :
 
-```
+```java
 frontend haproxy_as_api_gateway
     bind 127.0.0.1:80
     default_backend load_balancing
@@ -45,7 +45,7 @@ API 网关的基本功能是将 HTTP API 调用路由到微服务架构中的相
 
 配置如下:
 
-```
+```java
 frontend haproxy_as_api_gateway
     bind 127.0.0.1:80
     acl PATH_order path_beg -i /order
@@ -62,7 +62,7 @@ backend invoicing_service
 
 如果订单服务的一个服务器无法管理负载，我们可以在`127.0.0.1:8090`添加另一个服务器解析，并利用 HAProxy 的负载平衡特性:
 
-```
+```java
 frontend haproxy_as_api_gateway
     bind 127.0.0.1:80
     acl PATH_order path_beg -i /order
@@ -88,7 +88,7 @@ backend invoicing_service
 
 下面是我们实现上述场景的方法:
 
-```
+```java
 frontend haproxy_as_api_gateway
     bind :80
     acl consumerapi_host req.hdr(Host) -i -m dom 127.0.0.1
@@ -114,7 +114,7 @@ backend invoicing_service
 
 下面是我们如何满足上述要求:
 
-```
+```java
 frontend haproxy_as_api_gateway
     bind :80
     acl consumerapi_host req.hdr(Host) -i -m dom 127.0.0.1
@@ -144,7 +144,7 @@ backend invoicing_service
 
 首先，我们将创建一个文件`path_param_rates.map`。我们将添加具有各自限制的路径:
 
-```
+```java
 /order 100
 ```
 
@@ -152,7 +152,7 @@ backend invoicing_service
 
 在这种情况下，我们将跟踪订单请求发出的次数:
 
-```
+```java
 frontend haproxy_as_api_gateway
     bind :80
     stick-table type string size 1m expire 10s store http_rate_limiting

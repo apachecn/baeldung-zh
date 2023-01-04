@@ -14,7 +14,7 @@
 
 此外， **IntelliJ IDEA 提供了我们的 JVM 参数作为配置的一部分**:
 
-```
+```java
 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
 ```
 
@@ -26,13 +26,13 @@
 
 因此，让我们构建调度程序应用程序:
 
-```
+```java
 mvn clean package
 ```
 
 **现在让我们启动应用程序，包括`-agentlib:jdwp`参数:**
 
-```
+```java
 java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 \
   target/gs-scheduling-tasks-0.1.0.jar
 ```
@@ -51,7 +51,7 @@ java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 \
 
 接下来，我们打开`ScheduleTask`文件，在第 36 行放置一个断点，如下所示:
 
-```
+```java
 public void reportCurrentTime() {
   log.info("The time is now {}", dateFormat.format(new Date()));
 }

@@ -22,7 +22,7 @@
 
 让我们看看这样一种情况，我们有一个由实现`BankPayment`使用的`Payment`接口:
 
-```
+```java
 public interface Payment { 
     void initiatePayments();
     Object status();
@@ -32,7 +32,7 @@ public interface Payment {
 
 以及实现:
 
-```
+```java
 public class BankPayment implements Payment {
 
     @Override
@@ -62,7 +62,7 @@ public class BankPayment implements Payment {
 
 为了开发这个新特性，我们将向`Payment`接口添加新方法:
 
-```
+```java
 public interface Payment {
 
     // original methods
@@ -74,7 +74,7 @@ public interface Payment {
 
 接下来，我们将实现`LoanPayment`:
 
-```
+```java
 public class LoanPayment implements Payment {
 
     @Override
@@ -108,7 +108,7 @@ public class LoanPayment implements Payment {
 
 那么，我们的`BankPayment `类会发生什么呢:
 
-```
+```java
 public class BankPayment implements Payment {
 
     @Override
@@ -154,7 +154,7 @@ public class BankPayment implements Payment {
 
 分类之后，让我们分解接口并应用接口分离原则。因此，我们现在有了一个通用接口:
 
-```
+```java
 public interface Payment {
     Object status();
     List<Object> getPayments();
@@ -163,13 +163,13 @@ public interface Payment {
 
 以及两种支付类型的两个接口:
 
-```
+```java
 public interface Bank extends Payment {
     void initiatePayments();
 }
 ```
 
-```
+```java
 public interface Loan extends Payment {
     void intiateLoanSettlement();
     void initiateRePayment();
@@ -178,7 +178,7 @@ public interface Loan extends Payment {
 
 以及各自的实现，从`BankPayment`开始:
 
-```
+```java
 public class BankPayment implements Bank {
 
     @Override
@@ -200,7 +200,7 @@ public class BankPayment implements Bank {
 
 最后，我们修改后的`LoanPayment`实施:
 
-```
+```java
 public class LoanPayment implements Loan {
 
     @Override

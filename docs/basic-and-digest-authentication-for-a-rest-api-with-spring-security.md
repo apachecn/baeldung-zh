@@ -24,7 +24,7 @@
 
 我们将从设置基本身份验证开始——首先，我们从主要的`<http>`安全元素中删除旧的自定义入口点和过滤器:
 
-```
+```java
 <http create-session="stateless">
    <intercept-url pattern="/api/admin/**" access="ROLE_ADMIN" />
 
@@ -50,7 +50,7 @@ RESTful 架构风格的主要限制之一是客户端-服务器通信完全是�
 
 从前面的配置开始，设置摘要式身份验证所需的过滤器和入口点将被定义为 beans。然后，**摘要入口点**将覆盖`<http-basic>`在幕后创建的入口点。最后，定制的**摘要过滤器**将被引入到安全过滤器链中，使用安全名称空间的`after`语义将其直接放置在基本认证过滤器之后。
 
-```
+```java
 <http create-session="stateless" entry-point-ref="digestEntryPoint">
    <intercept-url pattern="/api/admin/**" access="ROLE_ADMIN" />
 
@@ -102,7 +102,7 @@ RESTful 架构风格的主要限制之一是客户端-服务器通信完全是�
 
 测试将使用 REST 服务，方法是在使用 basic 或 digest 进行身份验证后创建一个新资源:
 
-```
+```java
 @Test
 public void givenAuthenticatedByBasicAuth_whenAResourceIsCreated_then201IsReceived(){
    // Given

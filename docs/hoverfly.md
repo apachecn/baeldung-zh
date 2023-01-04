@@ -10,7 +10,7 @@
 
 要使用 Hoverfly，我们需要添加一个 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.specto</groupId>
     <artifactId>hoverfly-java</artifactId>
@@ -26,7 +26,7 @@
 
 让我们从一个简单的例子开始，实例化`HoverflyRule`实例:
 
-```
+```java
 public static final HoverflyRule rule
   = HoverflyRule.inSimulationMode(dsl(
     service("http://www.baeldung.com")
@@ -45,7 +45,7 @@ public static final HoverflyRule rule
 
 让我们创建一个发送 HTTP 请求的简单测试，看看它是否到达端点:
 
-```
+```java
 responseEntity<String> courseResponse
   = restTemplate.getForEntity("http://www.baeldung.com/api/courses/1", String.class);
 
@@ -61,7 +61,7 @@ assertEquals("{\"id\":\"1\",\"name\":\"HCI\"}", courseResponse.getBody());
 
 下面是使用 POST 方法设置请求延迟的代码示例:
 
-```
+```java
 SimulationSource.dsl(
   service("http://www.baeldung.com")
     .post("/api/courses")
@@ -81,7 +81,7 @@ SimulationSource.dsl(
 
 以下是不同匹配器的使用示例:
 
-```
+```java
 SimulationSource.dsl(
   service(matches("www.*dung.com"))
     .get(startsWith("/api/student")) 

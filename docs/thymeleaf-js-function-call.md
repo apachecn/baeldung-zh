@@ -12,7 +12,7 @@
 
 为了在我们的应用程序中使用百里香叶，让我们将[百里香叶弹簧 5](https://web.archive.org/web/20220813062744/https://search.maven.org/search?q=a:thymeleaf-spring5%20AND%20g:org.thymeleaf) 依赖项添加到我们的 Maven 配置中:
 
-```
+```java
 <dependency>
     <groupId>org.thymeleaf</groupId>
     <artifactId>thymeleaf-spring5</artifactId>
@@ -22,7 +22,7 @@
 
 然后，让我们基于我们的 [`Student`](/web/20220813062744/https://www.baeldung.com/thymeleaf-in-spring-mvc#2-collection-attributes) 模型将它添加到我们的弹簧控制器中:
 
-```
+```java
 @Controller
 public class FunctionCallController {
 
@@ -37,7 +37,7 @@ public class FunctionCallController {
 
 最后，我们将这两个 JavaScript 函数添加到`src/main/webapp/WEB-INF/views`下的`functionCall.html`模板中:
 
-```
+```java
 <script  th:inline="javascript">
     function greetWorld() {
         alert("hello world")
@@ -59,7 +59,7 @@ public class FunctionCallController {
 
 下面是我们如何调用上面的`greetWorld`函数:
 
-```
+```java
 <button th:onclick="greetWorld()">using no variable</button>
 ```
 
@@ -69,7 +69,7 @@ public class FunctionCallController {
 
 如果我们在 JavaScript 函数中不需要任何动态变量，这就是如何调用它:
 
-```
+```java
 <button th:onclick="'alert(\'static variable used here.\');'">using static variable</button> 
 ```
 
@@ -81,19 +81,19 @@ public class FunctionCallController {
 
 插入变量的第一种方法是使用行内变量:
 
-```
+```java
 <button th:onclick="'alert(\'There are exactly '  + ${totalStudents} +  ' students\');'">using inline dynamic variable</button> 
 ```
 
 另一个选择是通过调用`javascript:function`:
 
-```
+```java
 <button th:onclick="'javascript:alert(\'There are exactly ' + ${totalStudents} + ' students\');'">using javascript:function</button>
 ```
 
 第三种方式是使用[数据属性](/web/20220813062744/https://www.baeldung.com/thymeleaf-custom-html-attributes):
 
-```
+```java
 <button th:data-name="${student.name}" th:onclick="salute(this.getAttribute('data-name'))">using data attribute</button> 
 ```
 
@@ -101,7 +101,7 @@ public class FunctionCallController {
 
 最后，我们可以用[双方括号语法](https://web.archive.org/web/20220813062744/https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#expression-inlining)调用我们的`salute`函数:
 
-```
+```java
 <button th:onclick="salute([[${student.name}]])">using double brackets</button>
 ```
 

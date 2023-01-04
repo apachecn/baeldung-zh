@@ -20,7 +20,7 @@
 
 首先，让我们定义一个多模块 Maven 项目来进行实验。我们的项目将由一对父母和两个孩子组成:
 
-```
+```java
 + parent
      + child-a
      + child-b 
@@ -30,7 +30,7 @@
 
 我们将从`parent`配置开始:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-compiler-plugin</artifactId>
@@ -46,7 +46,7 @@
 
 所以，让我们配置`child-a`使用 Java 8:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-compiler-plugin</artifactId>
@@ -63,7 +63,7 @@
 
 有效的 POM 受各种因素的影响，比如继承、配置文件、外部设置等等。为了查看实际的 POM，让我们从`child-a`目录运行`mvn help:effective-pom` :
 
-```
+```java
 mvn help:effective-pom
 
 ...
@@ -92,7 +92,7 @@ mvn help:effective-pom
 
 作为基线，让我们配置`parent`以包含来自`parent-resources`目录的资源:
 
-```
+```java
 <plugin>
     <artifactId>maven-resources-plugin</artifactId>
     <configuration>
@@ -107,7 +107,7 @@ mvn help:effective-pom
 
 此时，`child-a`将从其父插件继承这个插件配置。然而，假设我们想要为`child-a`定义一个替代资源目录:
 
-```
+```java
 <plugin>
     <artifactId>maven-resources-plugin</artifactId>
     <configuration>
@@ -122,7 +122,7 @@ mvn help:effective-pom
 
 现在，让我们回顾一下有效的 POM:
 
-```
+```java
 mvn help:effective-pom
 ...
 <configuration>
@@ -140,7 +140,7 @@ mvn help:effective-pom
 
 也许我们想让一些孩子使用一个公共的资源目录，并定义额外的资源目录。为此，**我们可以通过在父配置中的 resources 元素上使用`combine.children=”append”`** 来附加父配置:
 
-```
+```java
 <resources combine.children="append">
     <resource>
         <directory>parent-resources</directory>
@@ -150,7 +150,7 @@ mvn help:effective-pom
 
 因此，有效的 POM 将包含这两者:
 
-```
+```java
 mvn help:effective-pom
 ....
 <resources combine.children="append">
@@ -169,7 +169,7 @@ mvn help:effective-pom
 
 在前面的例子中，由于父母的联合策略，孩子不能完全控制最终的 POM。**子元素可以通过在其`resources`元素上添加`combine.self=”override”`** 来否决父元素:
 
-```
+```java
 <resources combine.self="override">
     <resource>
         <directory>child-a-resources</directory>
@@ -179,7 +179,7 @@ mvn help:effective-pom
 
 在这种情况下，孩子重新获得控制权:
 
-```
+```java
 mvn help:effective-pom
 ...
 <resources combine.self="override">
@@ -195,7 +195,7 @@ mvn help:effective-pom
 
 为了避免插件被继承，我们可以**在父级**添加属性`<inherited>false</inherited>` :
 
-```
+```java
 <plugin>
     <inherited>false</inherited>
     <groupId>org.apache.maven.plugins</groupId>

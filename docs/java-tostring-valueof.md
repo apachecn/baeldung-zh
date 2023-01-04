@@ -14,13 +14,13 @@
 
 让我们来看看它的签名:
 
-```
+```java
 public static String toString(int i)
 ```
 
 现在，我们将看到几个示例，其中我们将有符号/无符号整数作为参数传递给它，以了解整数到字符串的转换是如何发生的:
 
-```
+```java
 @Test
 public void whenValidIntIsPassed_thenShouldConvertToString() {
     assertEquals("11", Integer.toString(11)); 
@@ -35,7 +35,7 @@ public void whenValidIntIsPassed_thenShouldConvertToString() {
 
 让我们看看它的内部实现，如在`java.lang.String`类中给出的:
 
-```
+```java
 /**
  * Returns the string representation of the {@code int} argument.
  * <p>
@@ -53,7 +53,7 @@ public static String valueOf(int i) {
 
 为了更好地理解它，我们将看几个例子，其中我们将有符号/无符号整数作为参数传递给它，以理解整数到字符串的转换是如何发生的:
 
-```
+```java
 @Test
 public void whenValidIntIsPassed_thenShouldConvertToValidString() {
     assertEquals("11", String.valueOf(11)); 
@@ -74,7 +74,7 @@ public void whenValidIntIsPassed_thenShouldConvertToValidString() {
 
 让我们用下面的例子来理解最后一点:
 
-```
+```java
 @Test(expected = NullPointerException.class)
 public void whenNullIntegerObjectIsPassed_thenShouldThrowException() {
     Integer i = null; 

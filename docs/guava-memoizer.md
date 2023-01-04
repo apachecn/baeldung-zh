@@ -36,7 +36,7 @@ Guava 支持记忆和缓存。**记忆适用于没有自变量的函数(`Supplie
 
 我们可以使用`Suppliers` ' `memoize`方法，并指定委托的`Supplier` 作为方法引用:
 
-```
+```java
 Supplier<String> memoizedSupplier = Suppliers.memoize(
   CostlySupplier::generateBigNumber);
 ```
@@ -49,7 +49,7 @@ Supplier<String> memoizedSupplier = Suppliers.memoize(
 
 我们可以使用`Suppliers` ' `memoizeWithExpiration`的方法，除了委托的`Supplier`之外，还可以用相应的时间单位(如秒、分)来指定到期时间:
 
-```
+```java
 Supplier<String> memoizedSupplier = Suppliers.memoizeWithExpiration(
   CostlySupplier::generateBigNumber, 5, TimeUnit.SECONDS);
 ```
@@ -62,7 +62,7 @@ Supplier<String> memoizedSupplier = Suppliers.memoizeWithExpiration(
 
 让我们模拟一个名为`generateBigNumber`的计算开销很大的方法:
 
-```
+```java
 public class CostlySupplier {
     private static BigInteger generateBigNumber() {
         try {
@@ -77,7 +77,7 @@ public class CostlySupplier {
 
 为了简单起见，我们将省略驱逐策略:
 
-```
+```java
 @Test
 public void givenMemoizedSupplier_whenGet_thenSubsequentGetsAreFast() {
     Supplier<BigInteger> memoizedSupplier; 
@@ -116,7 +116,7 @@ private <T> void assertSupplierGetExecutionResultAndDuration(
 
 `LoadingCache`的键是`Function`的参数/输入，而 map 的值是`Function`的返回值:
 
-```
+```java
 LoadingCache<Integer, BigInteger> memo = CacheBuilder.newBuilder()
   .build(CacheLoader.from(FibonacciSequence::getFibonacciNumber));
 ```
@@ -129,7 +129,7 @@ LoadingCache<Integer, BigInteger> memo = CacheBuilder.newBuilder()
 
 例如，我们可以驱逐空闲了 2 秒钟的条目:
 
-```
+```java
 LoadingCache<Integer, BigInteger> memo = CacheBuilder.newBuilder()
   .expireAfterAccess(2, TimeUnit.SECONDS)
   .build(CacheLoader.from(Fibonacci::getFibonacciNumber));
@@ -141,7 +141,7 @@ LoadingCache<Integer, BigInteger> memo = CacheBuilder.newBuilder()
 
 我们可以从一个给定的数字`n`递归计算一个斐波那契数:
 
-```
+```java
 public static BigInteger getFibonacciNumber(int n) {
     if (n == 0) {
         return BigInteger.ZERO;
@@ -159,7 +159,7 @@ public static BigInteger getFibonacciNumber(int n) {
 
 在下面的示例中，一旦 memo 大小达到 100 个条目，我们将删除最旧的条目:
 
-```
+```java
 public class FibonacciSequence {
     private static LoadingCache<Integer, BigInteger> memo = CacheBuilder.newBuilder()
       .maximumSize(100)
@@ -187,7 +187,7 @@ public class FibonacciSequence {
 
 接下来，我们有另一个递归方法来计算给定输入值 n 的阶乘:
 
-```
+```java
 public static BigInteger getFactorial(int n) {
     if (n == 0) {
         return BigInteger.ONE;
@@ -199,7 +199,7 @@ public static BigInteger getFactorial(int n) {
 
 我们可以通过应用记忆来提高实现的效率:
 
-```
+```java
 public class Factorial {
     private static LoadingCache<Integer, BigInteger> memo = CacheBuilder.newBuilder()
       .build(CacheLoader.from(Factorial::getFactorial));

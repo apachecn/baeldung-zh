@@ -14,7 +14,7 @@
 
 让我们看看这个结构在我们的声明性管道中是什么样子的:
 
-```
+```java
 pipeline {
     agent any
     stages {
@@ -39,7 +39,7 @@ pipeline {
 
 这类管道对结构的限制较少。还有，它们只有两个基本块:“节点”和“阶段”。“节点”块指定执行特定流水线的机器，而“阶段”块用于对步骤进行分组，这些步骤放在一起表示一个单独的操作。**由于缺少额外的规则和模块，这些管道很容易理解**:
 
-```
+```java
 node {
     stage('Hello world') {
         sh 'echo Hello World'
@@ -57,7 +57,7 @@ node {
 
 让我们来看一个三步管道，它从 git 中提取一个项目，然后测试、打包和部署它:
 
-```
+```java
 pipeline {
     agent any
     tools {
@@ -88,7 +88,7 @@ pipeline {
 
 正如我们所看到的，所有的逻辑都存在于“步骤”部分中。因此，如果我们想将此声明性管道转换为脚本化管道，这些部分不会改变:
 
-```
+```java
 node {
     stage('Test') {
         git 'https://github.com/user/project.git'

@@ -10,7 +10,7 @@
 
 首先，让我们添加 `[jackson-databind](https://web.archive.org/web/20221129022100/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.fasterxml.jackson.core%22%20AND%20a%3A%22jackson-databind%22)` Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -24,7 +24,7 @@
 
 让我们创建一个`ObjectMapper`:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 ```
 
@@ -34,7 +34,7 @@ ObjectMapper mapper = new ObjectMapper();
 
 假设我们有一个定义为`s1`变量的 JSON 字符串:
 
-```
+```java
 {
     "employee":
     {
@@ -47,7 +47,7 @@ ObjectMapper mapper = new ObjectMapper();
 
 我们想将它与另一个 JSON 进行比较，`s2`:
 
-```
+```java
 {   
     "employee":
     {
@@ -60,7 +60,7 @@ ObjectMapper mapper = new ObjectMapper();
 
 让我们将输入的 JSON 读作`JsonNode`并进行比较:
 
-```
+```java
 assertEquals(mapper.readTree(s1), mapper.readTree(s2));
 ```
 
@@ -72,7 +72,7 @@ assertEquals(mapper.readTree(s1), mapper.readTree(s2));
 
 让我们从定义为`s1`变量的 JSON 开始:
 
-```
+```java
 { 
     "employee":
     {
@@ -92,7 +92,7 @@ assertEquals(mapper.readTree(s1), mapper.readTree(s2));
 
 我们想将它与另一个由`s2`定义的 JSON 进行比较:
 
-```
+```java
 {
     "employee":
     {
@@ -110,7 +110,7 @@ assertEquals(mapper.readTree(s1), mapper.readTree(s2));
 
 让我们将输入的 JSON 读作`JsonNode`并进行比较:
 
-```
+```java
 assertEquals(mapper.readTree(s1), mapper.readTree(s2)); 
 ```
 
@@ -122,7 +122,7 @@ assertEquals(mapper.readTree(s1), mapper.readTree(s2));
 
 让我们把这个 JSON 定义为`s1`:
 
-```
+```java
 {
     "employee":
     {
@@ -136,7 +136,7 @@ assertEquals(mapper.readTree(s1), mapper.readTree(s2));
 
 我们正在将其与另一个 JSON 进行比较，`s2`:
 
-```
+```java
 {
     "employee":
     {
@@ -150,7 +150,7 @@ assertEquals(mapper.readTree(s1), mapper.readTree(s2));
 
 让我们将输入的 JSON 读作`JsonNode`并进行比较:
 
-```
+```java
 assertEquals(mapper.readTree(s1), mapper.readTree(s2));
 ```
 
@@ -168,7 +168,7 @@ assertEquals(mapper.readTree(s1), mapper.readTree(s2));
 
 我们将使用这个 JSON 作为输入`s1`:
 
-```
+```java
 {
     "name": "John",
     "score": 5.0
@@ -177,7 +177,7 @@ assertEquals(mapper.readTree(s1), mapper.readTree(s2));
 
 我们来对比另一个定义为`s2`的 JSON:
 
-```
+```java
 {
     "name": "John",
     "score": 5
@@ -188,7 +188,7 @@ assertEquals(mapper.readTree(s1), mapper.readTree(s2));
 
 让我们将输入的 JSON 读作`JsonNode`并进行比较:
 
-```
+```java
 JsonNode actualObj1 = mapper.readTree(s1);
 JsonNode actualObj2 = mapper.readTree(s2);
 
@@ -201,7 +201,7 @@ assertNotEquals(actualObj1, actualObj2);
 
 让我们首先创建一个`Comparator`来比较两个`NumericNode` 对象:
 
-```
+```java
 public class NumericNodeComparator implements Comparator<JsonNode> 
 {
     @Override
@@ -224,7 +224,7 @@ public class NumericNodeComparator implements Comparator<JsonNode>
 
 接下来，我们来看看如何使用这个`Comparator`:
 
-```
+```java
 NumericNodeComparator cmp = new NumericNodeComparator();
 assertTrue(actualObj1.equals(cmp, actualObj2));
 ```
@@ -235,7 +235,7 @@ assertTrue(actualObj1.equals(cmp, actualObj2));
 
 我们将使用这个 JSON 作为输入`s1`:
 
-```
+```java
 {
     "name": "john", 
     "score": 5 
@@ -244,7 +244,7 @@ assertTrue(actualObj1.equals(cmp, actualObj2));
 
 我们来对比另一个定义为`s2`的 JSON:
 
-```
+```java
 { 
     "name": "JOHN", 
     "score": 5 
@@ -255,7 +255,7 @@ assertTrue(actualObj1.equals(cmp, actualObj2));
 
 让我们首先创建一个`Comparator`来比较两个`TextNode` 对象:
 
-```
+```java
 public class TextNodeComparator implements Comparator<JsonNode> 
 {
     @Override
@@ -277,7 +277,7 @@ public class TextNodeComparator implements Comparator<JsonNode>
 
 让我们看看如何使用`TextNodeComparator`来比较`s1`和`s2`:
 
-```
+```java
 JsonNode actualObj1 = mapper.readTree(s1);
 JsonNode actualObj2 = mapper.readTree(s2);
 

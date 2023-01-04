@@ -16,7 +16,7 @@
 
 让我们首先创建一个简单的`Spring Boot`项目，作为我们稍后的会话示例的基础:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -45,7 +45,7 @@
 
 让我们在`application.properties`中为我们的 Redis 服务器添加一些配置属性:
 
-```
+```java
 spring.redis.host=localhost
 spring.redis.port=6379
 ```
@@ -54,7 +54,7 @@ spring.redis.port=6379
 
 对于 Spring Boot，**添加以下依赖关系**就足够了，自动配置会处理剩下的事情:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -75,7 +75,7 @@ spring.redis.port=6379
 
 首先，如果我们将`spring-session`添加到一个标准的 Spring 项目中，我们需要显式地定义:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.session</groupId>
     <artifactId>spring-session</artifactId>
@@ -94,7 +94,7 @@ spring.redis.port=6379
 
 现在让我们为`Spring Session`添加一个配置类:
 
-```
+```java
 @Configuration
 @EnableRedisHttpSession
 public class SessionConfig extends AbstractHttpSessionApplicationInitializer {
@@ -113,7 +113,7 @@ public class SessionConfig extends AbstractHttpSessionApplicationInitializer {
 
 导航到我们的主应用程序文件并添加一个控制器:
 
-```
+```java
 @RestController
 public class SessionController {
     @RequestMapping("/")
@@ -127,7 +127,7 @@ public class SessionController {
 
 接下来，添加我们的安全配置类:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -171,7 +171,7 @@ public class SecurityConfig {
 
 让我们先来设置一下:
 
-```
+```java
 public class SessionControllerTest {
 
     private Jedis jedis;
@@ -194,7 +194,7 @@ public class SessionControllerTest {
 
 让我们从测试`Redis`为空开始:
 
-```
+```java
 @Test
 public void testRedisIsEmpty() {
     Set<String> result = jedis.keys("*");
@@ -204,7 +204,7 @@ public void testRedisIsEmpty() {
 
 现在测试我们的安全性是否为未经验证的请求返回 401:
 
-```
+```java
 @Test
 public void testUnauthenticatedCantAccess() {
     ResponseEntity<String> result = testRestTemplate.getForEntity(testUrl, String.class);
@@ -214,7 +214,7 @@ public void testUnauthenticatedCantAccess() {
 
 接下来，我们测试`Spring Session`正在管理我们的认证令牌:
 
-```
+```java
 @Test
 public void testRedisControlsSession() {
     ResponseEntity<String> result = testRestTemplateWithAuth.getForEntity(testUrl, String.class);

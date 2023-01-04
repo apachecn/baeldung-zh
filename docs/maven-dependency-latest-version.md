@@ -46,7 +46,7 @@ Maven2 还提供了两个特殊的元版本值来实现这个结果:`LATEST`和`
 *   一个带有属性版本的版本，以及
 *   一张快照
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>commons-io</groupId>
@@ -82,7 +82,7 @@ Maven2 还提供了两个特殊的元版本值来实现这个结果:`LATEST`和`
 
 最后，让我们在定义插件时从过程中排除一个工件:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -103,7 +103,7 @@ Maven2 还提供了两个特殊的元版本值来实现这个结果:`LATEST`和`
 
 首先，**为了简单地知道我们是否以及如何更新我们的项目，适合这项工作的工具是 [`versions:display-dependency-updates`](https://web.archive.org/web/20220627184603/https://www.mojohaus.org/versions-maven-plugin/display-dependency-updates-mojo.html)** :
 
-```
+```java
 mvn versions:display-dependency-updates
 ```
 
@@ -125,7 +125,7 @@ mvn versions:display-dependency-updates
 
 我们可以使用 [`versions:use-releases`](https://web.archive.org/web/20220627184603/https://www.mojohaus.org/versions-maven-plugin/use-releases-mojo.html) 来检查相应的新闻稿是否已经发布，甚至可以同时将我们的快照转换为该新闻稿:
 
-```
+```java
 mvn versions:use-releases 
 ```
 
@@ -135,7 +135,7 @@ mvn versions:use-releases
 
 **我们可以用 [`versions:use-next-releases`](https://web.archive.org/web/20220627184603/https://www.mojohaus.org/versions-maven-plugin/use-next-releases-mojo.html) 将每个非快照依赖项移植到其最近的版本**:
 
-```
+```java
 mvn versions:use-next-releases 
 ```
 
@@ -149,7 +149,7 @@ mvn versions:use-next-releases
 
 将每个非快照依赖项更新到其最新版本的工作方式相同，只需将目标更改为 [`versions:use-latest-releases`](https://web.archive.org/web/20220627184603/https://www.mojohaus.org/versions-maven-plugin/use-latest-releases-mojo.html) :
 
-```
+```java
 mvn versions:use-latest-releases 
 ```
 
@@ -159,7 +159,7 @@ mvn versions:use-latest-releases
 
 **如果我们想忽略某些版本，[插件配置可以调整为](https://web.archive.org/web/20220627184603/https://www.mojohaus.org/versions-maven-plugin/version-rules.html#Ignoring_certain_versions)** 从外部文件动态加载规则:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>versions-maven-plugin</artifactId>
@@ -172,7 +172,7 @@ mvn versions:use-latest-releases
 
 最值得注意的是，`<rulesUri>`还可以引用一个本地文件:
 
-```
+```java
 <rulesUri>file:///home/andrea/maven-version-rules.xml</rulesUri> 
 ```
 
@@ -180,7 +180,7 @@ mvn versions:use-latest-releases
 
 我们可以配置我们的规则文件，使**忽略匹配特定正则表达式**的版本:
 
-```
+```java
 <ruleset comparisonMethod="maven"
 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -196,7 +196,7 @@ mvn versions:use-latest-releases
 
 最后，如果我们的需求更具体，我们可以建立一套规则:
 
-```
+```java
 <ruleset comparisonMethod="maven"
 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -221,6 +221,6 @@ mvn versions:use-latest-releases
 
 要查看它的运行情况，只需下载项目并在终端中运行(如果使用 Windows，则在 Git Bash 中运行):
 
-```
+```java
 ./run-the-demo.sh
 ```

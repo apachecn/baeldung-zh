@@ -18,13 +18,13 @@
 
 首先，我们需要进入项目的主文件夹并运行以下命令:
 
-```
+```java
 mvn -N wrapper:wrapper
 ```
 
 我们还可以指定 Maven 的版本:
 
-```
+```java
 mvn -N wrapper:wrapper -Dmaven=3.5.2
 ```
 
@@ -44,7 +44,7 @@ mvn -N wrapper:wrapper -Dmaven=3.5.2
 
 例如，我们的属性文件包含以下行:
 
-```
+```java
 distributionUrl=https://repo1.maven.org/maven2/org/apache/maven/apache-maven/3.5.2/apache-maven-3.5.2-bin.zip
 ```
 
@@ -61,13 +61,13 @@ distributionUrl=https://repo1.maven.org/maven2/org/apache/maven/apache-maven/3.5
 
 之后，我们可以为 Unix 系统运行我们的目标，如下所示:
 
-```
+```java
 ./mvnw clean install
 ```
 
 以及以下用于 Windows 的命令:
 
-```
+```java
 mvnw.cmd clean install
 ```
 
@@ -75,7 +75,7 @@ mvnw.cmd clean install
 
 让我们运行我们的春季启动项目:
 
-```
+```java
 ./mvnw spring-boot:run
 ```
 

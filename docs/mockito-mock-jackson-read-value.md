@@ -12,7 +12,7 @@
 
 首先，作为 Maven 依赖项，我们将使用`[mockito-core](https://web.archive.org/web/20220630014556/https://search.maven.org/artifact/org.mockito/mockito-core)`和`[jackson-databind](https://web.archive.org/web/20220630014556/https://search.maven.org/artifact/com.fasterxml.jackson.core/jackson-databind)`:
 
-```
+```java
 <dependency>
     <groupId>org.mockito</groupId>
     <artifactId>mockito-core</artifactId>
@@ -31,7 +31,7 @@
 
 让我们考虑一个简单的`Flower`类:
 
-```
+```java
 public class Flower {
 
     private String name;
@@ -48,7 +48,7 @@ public class Flower {
 
 假设我们有一个类来验证一个`Flower`对象的 JSON 字符串表示。它将`ObjectMapper `作为一个构造函数参数——这使得我们以后可以很容易地模仿它:
 
-```
+```java
 public class FlowerJsonStringValidator {
     private ObjectMapper objectMapper;
 
@@ -69,7 +69,7 @@ public class FlowerJsonStringValidator {
 
 让我们从设置测试类开始。我们可以很容易地模仿一个`ObjectMapper `并将它作为构造函数参数传递给我们的`FlowerStringValidator`类:
 
-```
+```java
 @ExtendWith(MockitoExtension.class)
 public class FlowerJsonStringValidatorUnitTest {
 
@@ -91,7 +91,7 @@ public class FlowerJsonStringValidatorUnitTest {
 
 现在我们已经准备好了模拟测试，让我们编写一个简单的测试:
 
-```
+```java
 @Test
 public void whenCallingHasPetalsWithPetals_thenReturnsTrue() throws JsonProcessingException {
     Flower rose = new Flower("testFlower", 100);

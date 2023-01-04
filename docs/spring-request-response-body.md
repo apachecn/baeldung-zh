@@ -26,7 +26,7 @@ Learn about the differences between @Controller and @RestController annotations 
 
 首先，让我们来看看弹簧控制器的方法:
 
-```
+```java
 @PostMapping("/request")
 public ResponseEntity postController(
   @RequestBody LoginForm loginForm) {
@@ -40,7 +40,7 @@ Spring 自动将 JSON 反序列化为 Java 类型，假设指定了一个合适�
 
 默认情况下，**我们用`@RequestBody`注释的类型必须对应于从我们的客户端控制器发送的 JSON:**
 
-```
+```java
 public class LoginForm {
     private String username;
     private String password;
@@ -52,7 +52,7 @@ public class LoginForm {
 
 让我们用 CURL 来测试一下:
 
-```
+```java
 curl -i \
 -H "Accept: application/json" \
 -H "Content-Type:application/json" \
@@ -68,7 +68,7 @@ curl -i \
 
 假设我们有一个定制的`Response`对象:
 
-```
+```java
 public class ResponseTransfer {
     private String text; 
 
@@ -78,7 +78,7 @@ public class ResponseTransfer {
 
 接下来，可以实现相关联的控制器:
 
-```
+```java
 @Controller
 @RequestMapping("/post")
 public class ExamplePostController {
@@ -97,7 +97,7 @@ public class ExamplePostController {
 
 在我们浏览器的开发人员控制台中或使用类似 Postman 的工具，我们可以看到以下响应:
 
-```
+```java
 {"text":"Thanks For Posting!!!"}
 ```
 
@@ -111,7 +111,7 @@ public class ExamplePostController {
 
 现在让我们添加一个发送 JSON 响应的新端点:
 
-```
+```java
 @PostMapping(value = "/content", produces = MediaType.APPLICATION_JSON_VALUE)
 @ResponseBody
 public ResponseTransfer postResponseJsonContent(
@@ -124,7 +124,7 @@ public ResponseTransfer postResponseJsonContent(
 
 接下来，让我们实现一个新方法，映射到同一个`/content`路径，但是返回 XML 内容:
 
-```
+```java
 @PostMapping(value = "/content", produces = MediaType.APPLICATION_XML_VALUE)
 @ResponseBody
 public ResponseTransfer postResponseXmlContent(
@@ -137,7 +137,7 @@ public ResponseTransfer postResponseXmlContent(
 
 让我们来看看实际情况:
 
-```
+```java
 curl -i \ 
 -H "Accept: application/json" \ 
 -H "Content-Type:application/json" \ 
@@ -147,7 +147,7 @@ curl -i \
 
 CURL 命令返回一个 JSON 响应:
 
-```
+```java
 HTTP/1.1 200
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -158,7 +158,7 @@ Date: Thu, 20 Feb 2020 19:43:06 GMT
 
 现在，让我们更改`Accept`参数:
 
-```
+```java
 curl -i \
 -H "Accept: application/xml" \
 -H "Content-Type:application/json" \
@@ -168,7 +168,7 @@ curl -i \
 
 不出所料，我们这次得到了一个 XML 内容:
 
-```
+```java
 HTTP/1.1 200
 Content-Type: application/xml
 Transfer-Encoding: chunked

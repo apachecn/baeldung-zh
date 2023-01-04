@@ -10,7 +10,7 @@
 
 首先，让我们看一下我们将在本文中使用的实体:
 
-```
+```java
 @Entity
 public class Product {
     @Id
@@ -44,14 +44,14 @@ public class Product {
 
 假设我们想列出所有产品的名称。在 JPQL 中，我们可以通过在`select`子句中只包含`name`来做到这一点:
 
-```
+```java
 Query query = entityManager.createQuery("select name from Product");
 List<Object> resultList = query.getResultList();
 ```
 
 或者，我们可以对`CriteriaBuilder`做同样的事情:
 
-```
+```java
 CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 CriteriaQuery<String> query = builder.createQuery(String.class);
 Root<Product> product = query.from(Product.class);
@@ -65,7 +65,7 @@ List<String> resultList = entityManager.createQuery(query).getResultList();
 
 现在，让我们来看看上面两个查询生成的示例输出:
 
-```
+```java
 Product Name 1
 Product Name 2
 Product Name 3
@@ -78,14 +78,14 @@ Product Name 4
 
 要使用 JPQL 在多个列上进行投影，我们只需将所有必需的列添加到`select`子句中:
 
-```
+```java
 Query query = session.createQuery("select id, name, unitPrice from Product");
 List resultList = query.getResultList();
 ```
 
 但是，当使用`CriteriaBuilder`时，我们必须做一些不同的事情:
 
-```
+```java
 CriteriaBuilder builder = session.getCriteriaBuilder();
 CriteriaQuery<Object[]> query = builder.createQuery(Object[].class);
 Root<Product> product = query.from(Product.class);
@@ -99,7 +99,7 @@ List<Object[]> resultList = entityManager.createQuery(query).getResultList();
 
 让我们看看打印出来的数据是什么样的:
 
-```
+```java
 [1, Product Name 1, 1.40]
 [2, Product Name 2, 4.30]
 [3, Product Name 3, 14.00]
@@ -116,13 +116,13 @@ List<Object[]> resultList = entityManager.createQuery(query).getResultList();
 
 假设我们想要找到每个类别中产品的数量。我们可以使用 JPQL 中的`count()`聚合函数来做到这一点:
 
-```
+```java
 Query query = entityManager.createQuery("select p.category, count(p) from Product p group by p.category");
 ```
 
 或者我们可以使用`CriteriaBuilder`:
 
-```
+```java
 CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 CriteriaQuery<Object[]> query = builder.createQuery(Object[].class);
 Root<Product> product = query.from(Product.class);
@@ -134,7 +134,7 @@ query.groupBy(product.get("category"));
 
 使用上述任何一种方法都会产生一个对象数组列表:
 
-```
+```java
 [category1, 2]
 [category2, 1]
 [category3, 1]
@@ -156,7 +156,7 @@ query.groupBy(product.get("category"));
 
 首先，让我们看看如何投影一个单独的列。我们将使用之前看到的示例:
 
-```
+```java
 Criteria criteria = session.createCriteria(Product.class);
 criteria = criteria.setProjection(Projections.property("name")); 
 ```
@@ -169,7 +169,7 @@ criteria = criteria.setProjection(Projections.property("name"));
 
 我们可以使用`Projections.projectionList()` 方法创建一个*项目列表* **，比如显示`Product`的`id` 和`name`:**
 
-```
+```java
 Criteria criteria = session.createCriteria(Product.class);
 criteria = criteria.setProjection(
   Projections.projectionList()
@@ -183,7 +183,7 @@ criteria = criteria.setProjection(
 
 让我们看看如何实现前面看到的 count 示例:
 
-```
+```java
 Criteria criteria = session.createCriteria(Product.class);
 criteria = criteria.setProjection(
   Projections.projectionList()
@@ -201,7 +201,7 @@ Hibernate Criteria API 的一个有趣特性是为投影使用别名。
 
 这在使用聚合函数时特别有用，因为我们可以在`Criterion`和`Order`实例中引用别名:
 
-```
+```java
 Criteria criteria = session.createCriteria(Product.class);
 criteria = criteria.setProjection(Projections.projectionList()
              .add(Projections.groupProperty("category"))

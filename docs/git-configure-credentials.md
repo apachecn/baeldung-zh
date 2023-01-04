@@ -34,7 +34,7 @@
 
 一些 git 提供者允许在存储库 URL 中同时嵌入用户名和密码。这可以在我们克隆存储库时完成:
 
-```
+```java
 git clone https://<username>:<password>@gitlab.com/group/project.git
 ```
 
@@ -42,7 +42,7 @@ git clone https://<username>:<password>@gitlab.com/group/project.git
 
 或者，我们可以编辑存储库中的 git 配置文件，以包含用户名和密码:
 
-```
+```java
 url = https://<username>:<password>@<code class="language-shell">gitlab.com/group/project.git
 ```
 
@@ -52,13 +52,13 @@ url = https://<username>:<password>@<code class="language-shell">gitlab.com/grou
 
 Git 还允许根据上下文配置凭证。以下命令将配置特定的 git 上下文以使用特定的用户名:
 
-```
+```java
 git config --global credential.https://github.com.username <your_username>
 ```
 
 或者，我们可以直接编辑我们的全局 git 配置文件。这通常可以在我们的主目录中的一个名为`.gitconfig`的文件中找到，我们将添加以下几行:
 
-```
+```java
 [credential "https://github.com"]
 	username = <username>
 ```
@@ -80,7 +80,7 @@ Git 提供了凭证助手来更安全地保存凭证。凭证助手可以以多�
 
 缓存凭据帮助程序可以配置如下:
 
-```
+```java
 git config credential.helper cache
 ```
 
@@ -88,7 +88,7 @@ git config credential.helper cache
 
 在配置缓存凭证助手时，我们还可以提供一个`timeout`参数。这使我们能够控制凭据在内存中保留的时间:
 
-```
+```java
 git config credential.helper 'cache --timeout=86400'
 ```
 
@@ -98,7 +98,7 @@ git config credential.helper 'cache --timeout=86400'
 
 **存储凭证助手无限期地将凭证保存到文件**。我们可以按如下方式配置存储凭据帮助器:
 
-```
+```java
 git config credential.helper store
 ```
 
@@ -106,7 +106,7 @@ git config credential.helper store
 
 默认情况下，该文件存储在用户的主目录中。我们可以通过向命令传递一个`file`参数来覆盖文件位置:
 
-```
+```java
 git config credential.helper 'store --file=/full/path/to/.git_credentials'
 ```
 
@@ -128,13 +128,13 @@ git config credential.helper 'store --file=/full/path/to/.git_credentials'
 
 为 git 存储库启用 ssh 的最简单方法是在克隆它时对协议使用 SSH:
 
-```
+```java
 git clone [[email protected]](/web/20221026020020/https://www.baeldung.com/cdn-cgi/l/email-protection):group/project.git
 ```
 
 对于现有的存储库，我们可以使用以下命令更新远程存储库:
 
-```
+```java
 git remote set-url origin [[email protected]](/web/20221026020020/https://www.baeldung.com/cdn-cgi/l/email-protection):group/project.git
 ```
 

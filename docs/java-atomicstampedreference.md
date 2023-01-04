@@ -24,7 +24,7 @@
 
 首先，让我们假设我们的引用持有一个帐户余额:
 
-```
+```java
 AtomicStampedReference<Integer> account = new AtomicStampedReference<>(100, 0);
 ```
 
@@ -40,7 +40,7 @@ AtomicStampedReference<Integer> account = new AtomicStampedReference<>(100, 0);
 
 如果我们想更改帐户的余额，我们需要更改余额和戳记:
 
-```
+```java
 if (!account.compareAndSet(balance, balance + 100, stamp, stamp + 1)) {
     // retry
 }
@@ -54,7 +54,7 @@ if (!account.compareAndSet(balance, balance + 100, stamp, stamp + 1)) {
 
 幸运的是，`AtomicStampedReference`为我们提供了一个基于数组的 API 来实现这一点。让我们通过为我们的`Account`类实现`withdrawal()`方法来演示它的用法:
 
-```
+```java
 public boolean withdrawal(int funds) {
     int[] stamps = new int[1];
     int current = this.account.get(stamps);
@@ -65,7 +65,7 @@ public boolean withdrawal(int funds) {
 
 同样，我们可以添加`deposit()`方法:
 
-```
+```java
 public boolean deposit(int funds) {
     int[] stamps = new int[1];
     int current = this.account.get(stamps);
@@ -80,7 +80,7 @@ public boolean deposit(int funds) {
 
 余额设置为 100 美元。线程 1 运行`deposit(100)`至以下点:
 
-```
+```java
 int[] stamps = new int[1];
 int current = this.account.get(stamps);
 int newStamp = this.stamp.incrementAndGet(); 
@@ -93,7 +93,7 @@ int newStamp = this.stamp.incrementAndGet();
 
 最后，线程 1 运行:
 
-```
+```java
 return this.account.compareAndSet(current, current + 100, stamps[0], newStamp);
 ```
 
@@ -103,7 +103,7 @@ return this.account.compareAndSet(current, current + 100, stamps[0], newStamp);
 
 测试起来很棘手，因为这依赖于一种非常特殊的线程交错。但是，让我们至少编写一个简单的单元测试来验证存款和取款的工作情况:
 
-```
+```java
 public class ThreadStampedAccountUnitTest {
 
     @Test

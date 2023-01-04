@@ -22,7 +22,7 @@
 
 让我们用一个简单的 XML 文件来描述一本书:
 
-```
+```java
 <book>
     <title>Book1</title>
     <published>1979-10-21T03:31:12</published>
@@ -31,7 +31,7 @@
 
 我们希望将文件映射到相应的 Java `Book`对象:
 
-```
+```java
 @XmlRootElement(name = "book")
 public class Book {
 
@@ -51,7 +51,7 @@ public class Book {
 
 最后，我们需要创建一个客户机应用程序，将 XML 数据转换成 JAXB 派生的 Java 对象:
 
-```
+```java
 public static Book unmarshalDates(InputStream inputFile) 
   throws JAXBException {
     JAXBContext jaxbContext = JAXBContext.newInstance(Book.class);
@@ -64,7 +64,7 @@ public static Book unmarshalDates(InputStream inputFile)
 
 如果我们运行上面的代码并打印结果，我们将得到下面的`Book`对象:
 
-```
+```java
 [title: Book1; published: 1979-11-28T02:31:32]
 ```
 
@@ -82,7 +82,7 @@ public static Book unmarshalDates(InputStream inputFile)
 
 让我们看看如何用我们的自定义`XmlAdapter:`将`xsd:dateTime`类型映射到`java.util.Date`对象
 
-```
+```java
 public class DateAdapter extends XmlAdapter<String, Date> {
 
     private static final String CUSTOM_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
@@ -116,7 +116,7 @@ public class DateAdapter extends XmlAdapter<String, Date> {
 
 `DateAdapter`像 JAXB 的插件一样工作，我们将使用`@XmlJavaTypeAdapter`注释把它附加到我们的日期字段。**`@XmlJavaTypeAdapte`r 注释指定使用`XmlAdapter`进行自定义解组**:
 
-```
+```java
 @XmlRootElement(name = "book")
 public class BookDateAdapter {
 
@@ -135,7 +135,7 @@ public class BookDateAdapter {
 
 最后，让我们运行新代码:
 
-```
+```java
 [title: Book1; published: Wed Nov 28 02:31:32 EET 1979]
 ```
 
@@ -147,7 +147,7 @@ Java 8 引入了新的 [`Date/Time` API](/web/20220626082800/https://www.baeldun
 
 默认情况下， **JAXB 不能自动将`xsd:dateTime`值绑定到`LocalDateTime`** 对象，不管日期格式如何。为了在 XML 模式日期值和`LocalDateTime`对象之间进行转换，我们需要定义另一个类似于上一个的`XmlAdapter` :
 
-```
+```java
 public class LocalDateTimeAdapter extends XmlAdapter<String, LocalDateTime> {
 
     private DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -173,7 +173,7 @@ public class LocalDateTimeAdapter extends XmlAdapter<String, LocalDateTime> {
 
 现在，让我们在我们的`Book`类中用新的适配器替换旧的适配器，并且用`LocalDateTime`替换`Date`:
 
-```
+```java
 @XmlRootElement(name = "book")
 public class BookLocalDateTimeAdapter {
 
@@ -190,7 +190,7 @@ public class BookLocalDateTimeAdapter {
 
 如果我们运行上面的代码，我们将得到输出:
 
-```
+```java
 [title: Book1; published: 1979-11-28T02:31:32]
 ```
 

@@ -12,7 +12,7 @@
 
 在描述攻击之前，让我们回顾一些 XStream 基础知识。XStream 是一个 XML 序列化库，在 Java 类型和 XML 之间进行转换。考虑一个简单的`Person`类:
 
-```
+```java
 public class Person {
     private String first;
     private String last;
@@ -23,14 +23,14 @@ public class Person {
 
 让我们看看 [XStream 如何将一些`Person`实例写入 XML](/web/20220626105857/https://www.baeldung.com/xstream-serialize-object-to-xml) :
 
-```
+```java
 XStream xstream = new XStream();
 String xml = xstream.toXML(person);
 ```
 
 同样， [XStream 可以将 XML 读入`Person`](/web/20220626105857/https://www.baeldung.com/xstream-deserialize-xml-to-object) 的实例:
 
-```
+```java
 XStream xstream = new XStream();
 xstream.alias("person", Person.class);
 String xml = "<person><first>John</first><last>Smith</last></person>";
@@ -45,7 +45,7 @@ XStream 实例化的类由它解析的 XML 元素的名称决定。
 
 除了像`Person`这样的用户定义类型之外，XStream 还可以识别开箱即用的核心 Java 类型。例如，XStream 可以从 XML 中读取一个`Map` :
 
-```
+```java
 String xml = "" 
     + "<map>" 
     + "  <element>" 
@@ -71,7 +71,7 @@ Map<String, Integer> map = (Map<String, Integer>) xStream.fromXML(xml);
 
 我们的攻击旨在启动一个新的桌面计算器进程。在 macOS 上，这是“/Applications/Calculator.app”。在 Windows 上，这是“calc.exe”。为此，我们将使用一个`ProcessBuilder.` 调用 [Java 代码来启动一个新进程](/web/20220626105857/https://www.baeldung.com/java-lang-processbuilder-api)来欺骗 XStream 运行一个新进程:
 
-```
+```java
 new ProcessBuilder().command("executable-name-here").start();
 ```
 
@@ -91,7 +91,7 @@ new ProcessBuilder().command("executable-name-here").start();
 
 将这些组件放在一起，我们就有了一个用于`Comparable`代理的 XStream XML 表示:
 
-```
+```java
 <dynamic-proxy>
     <interface>java.lang.Comparable</interface>
     <handler class="java.beans.EventHandler">
@@ -112,7 +112,7 @@ new ProcessBuilder().command("executable-name-here").start();
 
 我们将使用`TreeSet`的复制构造函数来构建这个集合。最后，我们有了新的`TreeSet`的 XStream XML 表示，它包含我们的代理和一个`String`:
 
-```
+```java
 <sorted-set>
     <string>foo</string>
     <dynamic-proxy>
@@ -132,7 +132,7 @@ new ProcessBuilder().command("executable-name-here").start();
 
 最终，当 XStream 读取这个 XML 时，攻击就会发生。虽然开发人员希望 XStream 读取一个`Person`，但它却执行了攻击:
 
-```
+```java
 String sortedSortAttack = // XML from above
 XStream xstream = new XStream();
 Person person = (Person) xstream.fromXML(sortedSortAttack);
@@ -164,7 +164,7 @@ Person person = (Person) xstream.fromXML(sortedSortAttack);
 
 这个列表将只包括基本类型和我们的`Person`类:
 
-```
+```java
 XStream xstream = new XStream();
 xstream.addPermission(NoTypePermission.NONE);
 xstream.addPermission(NullPermission.NULL);

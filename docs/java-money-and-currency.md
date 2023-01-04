@@ -14,7 +14,7 @@ JSR 没有进入 JDK 9，但它是未来 JDK 版本的候选。
 
 首先，让我们在`pom.xml`文件中定义依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.javamoney</groupId>
     <artifactId>moneta</artifactId>
@@ -45,7 +45,7 @@ JSR 没有进入 JDK 9，但它是未来 JDK 版本的候选。
 
 模拟货币的最小属性。它的实例可以使用`Monetary.getCurrency`方法获得:
 
-```
+```java
 @Test
 public void givenCurrencyCode_whenString_thanExist() {
     CurrencyUnit usd = Monetary.getCurrency("USD");
@@ -59,7 +59,7 @@ public void givenCurrencyCode_whenString_thanExist() {
 
 我们使用货币的`String`表示来创建`CurrencyUnit` ，这可能导致我们试图用不存在的代码创建货币的情况。用不存在的代码创建货币会引发`UnknownCurrency`异常:
 
-```
+```java
 @Test(expected = UnknownCurrencyException.class)
 public void givenCurrencyCode_whenNoExist_thanThrowsError() {
     Monetary.getCurrency("AAA");
@@ -76,7 +76,7 @@ public void givenCurrencyCode_whenNoExist_thanThrowsError() {
 
 可以使用缺省工厂创建通用实例。让我们展示获得`MonetaryAmount`实例的不同方式:
 
-```
+```java
 @Test
 public void givenAmounts_whenStringified_thanEquals() {
 
@@ -99,7 +99,7 @@ public void givenAmounts_whenStringified_thanEquals() {
 
 例如，当我们将一个欧元实例的`FastMoney`与一个欧元实例的`Money`进行比较时，结果是它们并不相同:
 
-```
+```java
 @Test
 public void givenCurrencies_whenCompared_thanNotequal() {
     MonetaryAmount oneDolar = Monetary.getDefaultAmountFactory()
@@ -115,7 +115,7 @@ public void givenCurrencies_whenCompared_thanNotequal() {
 
 算术运算应该抛出一个`ArithmeticException`，如果数量之间的算术运算超过了所使用的数字表示类型的能力，例如，如果我们试图除以 3，我们会得到一个`ArithmeticException` ，因为结果是一个无穷大的数:
 
-```
+```java
 @Test(expected = ArithmeticException.class)
 public void givenAmount_whenDivided_thanThrowsException() {
     MonetaryAmount oneDolar = Monetary.getDefaultAmountFactory()
@@ -130,7 +130,7 @@ public void givenAmount_whenDivided_thanThrowsException() {
 
 可以通过多种方式计算总金额，其中一种方式是简单地将金额与以下各项联系起来:
 
-```
+```java
 @Test
 public void givenAmounts_whenSummed_thanCorrect() {
     MonetaryAmount[] monetaryAmounts = new MonetaryAmount[] {
@@ -147,25 +147,25 @@ public void givenAmounts_whenSummed_thanCorrect() {
 
 链接也可以应用于减法:
 
-```
+```java
 Money calcAmtUSD = Money.of(1, "USD").subtract(fstAmtUSD); 
 ```
 
 乘法:
 
-```
+```java
 MonetaryAmount multiplyAmount = oneDolar.multiply(0.25);
 ```
 
 或者划分:
 
-```
+```java
 MonetaryAmount divideAmount = oneDolar.divide(0.25);
 ```
 
 让我们使用字符串来比较我们的算术结果，假设使用字符串，因为结果也包含货币:
 
-```
+```java
 @Test
 public void givenArithmetic_whenStringified_thanEqualsAmount() {
     CurrencyUnit usd = Monetary.getCurrency("USD");
@@ -195,7 +195,7 @@ public void givenArithmetic_whenStringified_thanEqualsAmount() {
 
 我们将使用由`Monetary` 类提供的`getDefaultRounding` API 来进行转换。默认舍入值由货币提供:
 
-```
+```java
 @Test
 public void givenAmount_whenRounded_thanEquals() {
     MonetaryAmount fstAmtEUR = Monetary.getDefaultAmountFactory()
@@ -215,7 +215,7 @@ public void givenAmount_whenRounded_thanEquals() {
 
 货币转换或访问汇率可以参数化:
 
-```
+```java
 @Test
 public void givenAmount_whenConversion_thenNotNull() {
     MonetaryAmount oneDollar = Monetary.getDefaultAmountFactory().setCurrency("USD")
@@ -236,7 +236,7 @@ public void givenAmount_whenConversion_thenNotNull() {
 
 格式化允许访问基于`java.util.Locale`的格式。与 JDK 相反，这个 API 定义的格式化程序是线程安全的:
 
-```
+```java
 @Test
 public void givenLocale_whenFormatted_thanEquals() {
     MonetaryAmount oneDollar = Monetary.getDefaultAmountFactory()
@@ -255,7 +255,7 @@ public void givenLocale_whenFormatted_thanEquals() {
 
 和以前一样，因为货币包含在结果中，所以我们使用`Strings`测试我们的结果:
 
-```
+```java
 @Test
 public void givenAmount_whenCustomFormat_thanEquals() {
     MonetaryAmount oneDollar = Monetary.getDefaultAmountFactory()

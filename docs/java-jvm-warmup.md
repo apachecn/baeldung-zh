@@ -34,7 +34,7 @@ JVM 是有史以来最古老而强大的虚拟机之一。
 
 当应用程序启动时，我们可以利用这个属性将关键方法强制加载到缓存中。为此，我们需要设置一个名为 **`Tiered Compilation` :** 的 VM 参数
 
-```
+```java
 -XX:CompileThreshold -XX:TieredCompilation
 ```
 
@@ -54,7 +54,7 @@ JVM 是有史以来最古老而强大的虚拟机之一。
 
 首先，我们需要用常规方法创建一个虚拟类:
 
-```
+```java
 public class Dummy {
     public void m() {
     }
@@ -63,7 +63,7 @@ public class Dummy {
 
 接下来，我们需要创建一个类，该类具有一个静态方法，一旦应用程序启动，该方法将至少执行 100000 次，并且每次执行时，它都会创建前面提到的我们之前创建的虚拟类的一个新实例:
 
-```
+```java
 public class ManualClassLoader {
     protected static void load() {
         for (int i = 0; i < 100000; i++) {
@@ -80,7 +80,7 @@ public class ManualClassLoader {
 
 我们必须运行应用程序两次；一次使用静态块中的`load()`方法调用，一次不使用该方法调用:
 
-```
+```java
 public class MainApplication {
     static {
         long start = System.nanoTime();
@@ -116,7 +116,7 @@ public class MainApplication {
 
 要使用它，我们需要向`pom.xml`添加另一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.openjdk.jmh</groupId>
     <artifactId>jmh-core</artifactId>
@@ -133,7 +133,7 @@ public class MainApplication {
 
 或者，我们可以使用 JMH 的 maven 插件来生成一个示例项目:
 
-```
+```java
 mvn archetype:generate \
     -DinteractiveMode=false \
     -DarchetypeGroupId=org.openjdk.jmh \
@@ -145,7 +145,7 @@ mvn archetype:generate \
 
 接下来，让我们创建一个`main`方法:
 
-```
+```java
 public static void main(String[] args) 
   throws RunnerException, IOException {
     Main.main(args);
@@ -154,7 +154,7 @@ public static void main(String[] args)
 
 现在，我们需要创建一个方法，并用 JMH 的`@Benchmark`注释对其进行注释:
 
-```
+```java
 @Benchmark
 public void init() {
     //code snippet	

@@ -53,14 +53,14 @@
 
 我们可以使用常规导入来导入在不同包中定义的特定类或所有类:
 
-```
+```java
 import java.util.ArrayList; //specific class
 import java.util.*; //all classes in util package
 ```
 
 我们还可以使用它们来导入封闭类的公共嵌套类:
 
-```
+```java
 import com.baeldung.A.*
 ```
 
@@ -68,7 +68,7 @@ import com.baeldung.A.*
 
 **也有静态导入，使我们能够导入静态成员或嵌套类:**
 
-```
+```java
 import static java.util.Collections.EMPTY_LIST;
 ```
 
@@ -151,7 +151,7 @@ JVM 在内存的两个部分存储所有的变量和对象。第一个是`stack`
 
 首先，我们来看一下`Comparable`界面:
 
-```
+```java
 public interface Comparable<T> {
     int compareTo(T var1);
 }
@@ -195,7 +195,7 @@ public interface Comparable<T> {
 
 `Enum`是一种允许开发者指定一组预定义常量值的类。要创建这样一个类，我们必须使用`enum`关键字。让我们想象一周中的几天:
 
-```
+```java
 public enum Day {
     SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY 
 }
@@ -238,13 +238,13 @@ public enum Day {
 
 很简单，因为我们总能做到。例如，我们可以将一个`String`实例向上转换为`Object`类型:
 
-```
+```java
 Object str = "string";
 ```
 
 或者，我们可以`downcast`一个变量。它不像向上转换那样安全，因为它涉及类型检查。如果我们错误地转换了一个对象，JVM 将在运行时抛出一个`ClassCastExcpetion`。**幸运的是，我们可以使用`instanceof`关键字来防止无效的铸造:**
 
-```
+```java
 Object o = "string";
 String str = (String) o; // it's ok
 
@@ -323,7 +323,7 @@ Java 中的[类加载器一文中有更多关于类加载器的信息。](/web/2
 
 动态类加载指的是在编译时我们不能提供类定义的情况。然而，我们可以在运行时这样做。要创建一个类的实例，我们必须使用`Class.forName()`方法:
 
-```
+```java
 Class.forName("oracle.jdbc.driver.OracleDriver") 
 ```
 

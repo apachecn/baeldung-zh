@@ -22,7 +22,7 @@
 
 更改上下文路径最直接的方法是在`application.properties` / `yml`文件中设置属性:
 
-```
+```java
 server.servlet.context-path=/baeldung
 ```
 
@@ -32,7 +32,7 @@ server.servlet.context-path=/baeldung
 
 我们还可以在上下文初始化之前将上下文路径设置为 Java 系统属性:
 
-```
+```java
 public static void main(String[] args) {
     System.setProperty("server.servlet.context-path", "/baeldung");
     SpringApplication.run(Application.class, args);
@@ -43,13 +43,13 @@ public static void main(String[] args) {
 
 Spring Boot 也可以依赖操作系统环境变量。在基于 Unix 的系统上，我们可以编写:
 
-```
+```java
 $ export SERVER_SERVLET_CONTEXT_PATH=/baeldung
 ```
 
 在 Windows 上，设置环境变量的命令是:
 
-```
+```java
 > set SERVER_SERVLET_CONTEXT_PATH=/baeldung
 ```
 
@@ -59,7 +59,7 @@ $ export SERVER_SERVLET_CONTEXT_PATH=/baeldung
 
 我们也可以通过命令行参数动态设置属性:
 
-```
+```java
 $ java -jar app.jar --server.servlet.context-path=/baeldung
 ```
 
@@ -69,7 +69,7 @@ $ java -jar app.jar --server.servlet.context-path=/baeldung
 
 对于 Spring Boot 2，我们可以使用`WebServerFactoryCustomizer`:
 
-```
+```java
 @Bean
 public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory>
   webServerFactoryCustomizer() {
@@ -79,7 +79,7 @@ public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory>
 
 使用 Spring Boot 1，我们可以创建一个`EmbeddedServletContainerCustomizer`的实例:
 
-```
+```java
 @Bean
 public EmbeddedServletContainerCustomizer
   embeddedServletContainerCustomizer() {

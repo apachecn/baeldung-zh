@@ -14,13 +14,13 @@
 
 当然，一个接口不能直接实例化；它需要一个实现来实例化一个变量:
 
-```
+```java
 CharSequence charSequence = "baeldung";
 ```
 
 这里，`charSequence`用一个`String.`实例化其他实现:
 
-```
+```java
 CharSequence charSequence = new StringBuffer("baeldung");
 CharSequence charSequence = new StringBuilder("baeldung");
 ```
@@ -31,7 +31,7 @@ CharSequence charSequence = new StringBuilder("baeldung");
 
 下面两个实例化用相同的内容创建`Strings`。然而，它们彼此并不平等:
 
-```
+```java
 @Test
 public void givenUsingString_whenInstantiatingString_thenWrong() {
     CharSequence firstString = "baeldung";
@@ -47,7 +47,7 @@ public void givenUsingString_whenInstantiatingString_thenWrong() {
 
 在下面的示例中，每个 sum 操作都会创建另一个实例，增加存储的数据量，并返回最近创建的`String:`
 
-```
+```java
 @Test
 public void givenString_whenAppended_thenUnmodified() {
     String test = "a";
@@ -61,7 +61,7 @@ public void givenString_whenAppended_thenUnmodified() {
 
 另一方面，`StringBuilder`更新已经创建的`String`以保存新值:
 
-```
+```java
 @Test
 public void givenStringBuilder_whenAppended_thenModified() {
     StringBuilder test = new StringBuilder();
@@ -78,7 +78,7 @@ public void givenStringBuilder_whenAppended_thenModified() {
 
 为了比较两个`CharSequence`,我们可以将它们转换为`String`,然后再进行比较:
 
-```
+```java
 @Test
 public void givenIdenticalCharSequences_whenCastToString_thenEqual() {
     CharSequence charSeq1 = "baeldung_1";

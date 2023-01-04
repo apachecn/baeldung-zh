@@ -34,7 +34,7 @@ Maven 存储库包含一组预编译的工件，我们可以在应用程序中�
 
 让我们假设我们有一个正在开发的项目，它有一个`SNAPSHOT`版本:
 
-```
+```java
 <groupId>com.baeldung</groupId>
 <artifactId>maven-snapshot-repository</artifactId>
 <version>1.0.0-SNAPSHOT</version>
@@ -44,7 +44,7 @@ Maven 存储库包含一组预编译的工件，我们可以在应用程序中�
 
 首先，让我们定义我们想要部署工件的发布存储库信息。我们可以使用分发管理插件:
 
-```
+```java
 <distributionManagement>
     <snapshotRepository>
         <id>nexus</id>
@@ -62,7 +62,7 @@ Maven 存储库包含一组预编译的工件，我们可以在应用程序中�
 
 `maven-metadata.xml`文件包含关于快照版本的精确信息及其与最新时间戳值的链接:
 
-```
+```java
 <metadata modelVersion="1.1.0">
     <groupId>com.baeldung</groupId>
     <artifactId>maven-snapshot-repository</artifactId>
@@ -101,7 +101,7 @@ Maven 存储库包含一组预编译的工件，我们可以在应用程序中�
 
 要从存储库中下载工件，首先，我们需要定义一个依赖关系存储库:
 
-```
+```java
 <repositories>
     <repository>
         <id>nexus</id>
@@ -119,7 +119,7 @@ Maven 存储库包含一组预编译的工件，我们可以在应用程序中�
 
 **默认情况下不启用快照版本。**我们需要手动启用它们:
 
-```
+```java
 <snapshots>
     <enabled>true</enabled>
 </snapshots>
@@ -127,7 +127,7 @@ Maven 存储库包含一组预编译的工件，我们可以在应用程序中�
 
 通过启用快照，我们可以定义多久检查一次`SNAPSHOT`工件的新版本。但是，默认更新策略设置为每天一次。我们可以通过设置不同的更新策略来覆盖此行为:
 
-```
+```java
 <snapshots>
     <enabled>true</enabled>
     <updatePolicy>always</updatePolicy>
@@ -143,7 +143,7 @@ Maven 存储库包含一组预编译的工件，我们可以在应用程序中�
 
 此外，我们可以通过在命令中传递参数`-U`来强制更新所有快照工件，而不是定义`updatePolicy`:
 
-```
+```java
 mvn install -U
 ```
 
@@ -151,7 +151,7 @@ mvn install -U
 
 接下来，我们可以向我们的项目添加一个工件的快照版本:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>com.baeldung</groupId>
@@ -173,7 +173,7 @@ mvn install -U
 
 现在，让我们在本地 Nexus 存储库中部署项目。让我们假设我们已经完成了开发，并准备发布项目:
 
-```
+```java
 <groupId>com.baeldung</groupId>
 <artifactId>maven-release-repository</artifactId>
 <version>1.0.0</version>
@@ -181,7 +181,7 @@ mvn install -U
 
 让我们在分发管理器中定义发布存储库:
 
-```
+```java
 <distributionManagement>
     <repository>
         <id>nexus</id>
@@ -208,7 +208,7 @@ Maven 默认从 [Maven 中央存储库](https://web.archive.org/web/202209091622
 
 如果我们想要下载发布的工件，我们需要定义存储库:
 
-```
+```java
 <repository>
     <id>nexus</id>
     <name>nexus-release</name>
@@ -218,7 +218,7 @@ Maven 默认从 [Maven 中央存储库](https://web.archive.org/web/202209091622
 
 最后，让我们简单地将发布版本添加到我们的项目中:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>com.baeldung</groupId>

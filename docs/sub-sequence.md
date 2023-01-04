@@ -32,13 +32,13 @@
 
 ### 可用签名
 
-```
+```java
 public CharSequence subSequence(int beginIndex, int endIndex)
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenCallSubSequence_thenCorrect() {
     String s = "Welcome to Baeldung";

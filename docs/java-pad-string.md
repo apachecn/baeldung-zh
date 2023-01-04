@@ -14,7 +14,7 @@ Java 中的`String`类没有提供方便的填充方法，所以让我们自己�
 
 首先，让我们设定一些期望:
 
-```
+```java
 assertEquals("    123456", padLeftZeros("123456", 10));
 assertEquals("0000123456", padLeftZeros("123456", 10));
 ```
@@ -23,7 +23,7 @@ assertEquals("0000123456", padLeftZeros("123456", 10));
 
 我们可以通过`StringBuilder`和一些程序逻辑来实现这一点:
 
-```
+```java
 public String padLeftZeros(String inputString, int length) {
     if (inputString.length() >= length) {
         return inputString;
@@ -48,7 +48,7 @@ public String padLeftZeros(String inputString, int length) {
 
 另一种做左填充的方法是**创建一个只包含填充字符的期望长度的`String`，然后使用`substring()`方法**:
 
-```
+```java
 StringBuilder sb = new StringBuilder();
 for (int i = 0; i < length; i++) {
     sb.append(' ');
@@ -61,7 +61,7 @@ return sb.substring(inputString.length()) + inputString;
 
 最后，从 Java 5 开始，我们可以使用`String` `.format()`:
 
-```
+```java
 return String.format("%1$" + length + "s", inputString).replace(' ', '0');
 ```
 
@@ -79,7 +79,7 @@ Apache Commons Lang 提供了一个 Java 实用程序类包。其中最受欢迎
 
 要使用它，我们需要通过将[的依赖项](https://web.archive.org/web/20220707143819/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.commons%22%20AND%20a%3A%22commons-lang3%22)添加到我们的`pom.xml`文件中来将它包含到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -91,7 +91,7 @@ Apache Commons Lang 提供了一个 Java 实用程序类包。其中最受欢迎
 
 我们也可以传递填充字符:
 
-```
+```java
 assertEquals("    123456", StringUtils.leftPad("123456", 10));
 assertEquals("0000123456", StringUtils.leftPad("123456", 10, "0"));
 ```
@@ -108,7 +108,7 @@ assertEquals("0000123456", StringUtils.leftPad("123456", 10, "0"));
 
 当然，我们首先需要通过添加[的依赖项](https://web.archive.org/web/20220707143819/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.google.guava%22%20AND%20a%3A%22guava%22)将它添加到项目中:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -118,7 +118,7 @@ assertEquals("0000123456", StringUtils.leftPad("123456", 10, "0"));
 
 **然后我们用`Strings`类**:
 
-```
+```java
 assertEquals("    123456", Strings.padStart("123456", 10, ' '));
 assertEquals("0000123456", Strings.padStart("123456", 10, '0'));
 ```

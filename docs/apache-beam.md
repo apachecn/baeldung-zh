@@ -62,7 +62,7 @@ Apache Beam 有 Java、Python、Go 和 Scala SDKs 可用。事实上，团队中
 
 在实现我们的工作流图之前，我们应该将 [Apache Beam 的核心依赖关系](https://web.archive.org/web/20220629004535/https://search.maven.org/artifact/org.apache.beam/beam-sdks-java-core)添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.beam</groupId>
     <artifactId>beam-sdks-java-core</artifactId>
@@ -72,7 +72,7 @@ Apache Beam 有 Java、Python、Go 和 Scala SDKs 可用。事实上，团队中
 
 波束管道运行程序依靠分布式处理后端来执行任务。让我们添加 [`DirectRunner`](https://web.archive.org/web/20220629004535/https://search.maven.org/artifact/org.apache.beam/beam-runners-direct-java) 作为运行时依赖:
 
-```
+```java
 <dependency>
     <groupId>org.apache.beam</groupId>
     <artifactId>beam-runners-direct-java</artifactId>
@@ -89,14 +89,14 @@ Apache Beam 利用了 Map-Reduce 编程范式(与 [Java Streams](/web/2022062900
 
 创建一个`Pipeline`是我们要做的第一件事:
 
-```
+```java
 PipelineOptions options = PipelineOptionsFactory.create();
 Pipeline p = Pipeline.create(options);
 ```
 
 现在我们应用我们的六步字数统计任务:
 
-```
+```java
 PCollection<KV<String, Long>> wordCount = p
     .apply("(1) Read all lines", 
       TextIO.read().from(inputFilePath))
@@ -128,7 +128,7 @@ PCollection<KV<String, Long>> wordCount = p
 
 首先，我们将我们的`PCollection`转换成`String`。然后，我们用`TextIO`写出输出:
 
-```
+```java
 wordCount.apply(MapElements.into(TypeDescriptors.strings())
     .via(count -> count.getKey() + " --> " + count.getValue()))
     .apply(TextIO.write().to(outputFilePath));
@@ -140,13 +140,13 @@ wordCount.apply(MapElements.into(TypeDescriptors.strings())
 
 到目前为止，我们已经为字数统计任务定义了一个`Pipeline`。此时，让我们运行`Pipeline`:
 
-```
+```java
 p.run().waitUntilFinish();
 ```
 
 在这一行代码中，Apache Beam 会将我们的任务发送给多个`DirectRunner`实例。因此，最后会生成几个输出文件。它们将包含以下内容:
 
-```
+```java
 ...
 apache --> 3
 beam --> 5

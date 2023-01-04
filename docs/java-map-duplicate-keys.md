@@ -16,7 +16,7 @@ Java 有几个接口`Map`的实现，每个都有自己的特点。
 
 它也将被返回(通过每一个正确的`[put(K key, V value)](https://web.archive.org/web/20221103195028/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/HashMap.html#put(K,V))`方法的实现):
 
-```
+```java
 Map<String, String> map = new HashMap<>();
 assertThat(map.put("key1", "value1")).isEqualTo(null);
 assertThat(map.put("key1", "value2")).isEqualTo("value1");
@@ -29,7 +29,7 @@ assertThat(map.get("key1")).isEqualTo("value2");
 
 显然，对我们的`Map`的每个值使用一个`Collection`就可以完成这项工作:
 
-```
+```java
 Map<String, List<String>> map = new HashMap<>();
 List<String> list = new ArrayList<>();
 map.put("key1", list);
@@ -44,7 +44,7 @@ assertThat(map.get("key1").get(1)).isEqualTo("value2");
 
 在 Java 8 中，我们可以利用`compute()`方法并对其进行改进:
 
-```
+```java
 Map<String, List<String>> map = new HashMap<>();
 map.computeIfAbsent("key1", k -> new ArrayList<>()).add("value1");
 map.computeIfAbsent("key1", k -> new ArrayList<>()).add("value2");
@@ -63,7 +63,7 @@ assertThat(map.get("key1").get(1)).isEqualTo("value2");
 
 先来导入最新发布的`Common Collections` (CC 从现在开始):
 
-```
+```java
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-collections4</artifactId>
@@ -77,7 +77,7 @@ assertThat(map.get("key1").get(1)).isEqualTo("value2");
 
 它是由`[org.apache.commons.collections4.map.**MultiValueMap**](https://web.archive.org/web/20221103195028/https://commons.apache.org/proper/commons-collections/apidocs/org/apache/commons/collections4/map/MultiValueMap.html)`类实现的，该类自动处理大部分样板文件:
 
-```
+```java
 MultiMap<String, String> map = new MultiValueMap<>();
 map.put("key1", "value1");
 map.put("key1", "value2");
@@ -93,7 +93,7 @@ assertThat((Collection<String>) map.get("key1"))
 
 让我们看看如何将我们的多个值存储到一个`ArrayList`中，它保留了副本:
 
-```
+```java
 MultiValuedMap<String, String> map = new ArrayListValuedHashMap<>();
 map.put("key1", "value1");
 map.put("key1", "value2");
@@ -104,7 +104,7 @@ assertThat((Collection<String>) map.get("key1"))
 
 或者，我们可以使用一个`HashSet`，它会删除重复项:
 
-```
+```java
 MultiValuedMap<String, String> map = new HashSetValuedHashMap<>();
 map.put("key1", "value1");
 map.put("key1", "value1");
@@ -116,7 +116,7 @@ assertThat((Collection<String>) map.get("key1"))
 
 让我们看看如何使用`UnmodifiableMultiValuedMap`装饰器使它们不可变:
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public void givenUnmodifiableMultiValuedMap_whenInserting_thenThrowingException() {
     MultiValuedMap<String, String> map = new ArrayListValuedHashMap<>();
@@ -134,7 +134,7 @@ Guava 是用于 Java API 的 Google 核心库。
 
 让我们从在我们的项目中导入番石榴开始:
 
-```
+```java
 <dependency>
   <groupId>com.google.guava</groupId>
   <artifactId>guava</artifactId>
@@ -146,7 +146,7 @@ Guava 是用于 Java API 的 Google 核心库。
 
 最常见的是`[com.google.common.collect.**ArrayListMultimap**](https://web.archive.org/web/20221103195028/https://google.github.io/guava/releases/23.0/api/docs/com/google/common/collect/ArrayListMultimap.html)`，它使用一个`HashMap`和一个`ArrayList`作为每个值的后盾:
 
-```
+```java
 Multimap<String, String> map = ArrayListMultimap.create();
 map.put("key1", "value2");
 map.put("key1", "value1");
@@ -162,7 +162,7 @@ assertThat((Collection<String>) map.get("key1"))
 
 例如，我们可以使用`[com.google.common.collect.**LinkedHashMultimap**](https://web.archive.org/web/20221103195028/https://google.github.io/guava/releases/23.0/api/docs/com/google/common/collect/LinkedHashMultimap.html)`，它保留了键和值的插入顺序:
 
-```
+```java
 Multimap<String, String> map = LinkedHashMultimap.create();
 map.put("key1", "value3");
 map.put("key1", "value1");
@@ -173,7 +173,7 @@ assertThat((Collection<String>) map.get("key1"))
 
 或者，我们可以使用一个`[com.google.common.collect.**TreeMultimap**](https://web.archive.org/web/20221103195028/https://google.github.io/guava/releases/23.0/api/docs/com/google/common/collect/TreeMultimap.html)`，它按照自然顺序迭代键和值:
 
-```
+```java
 Multimap<String, String> map = TreeMultimap.create();
 map.put("key1", "value3");
 map.put("key1", "value1");

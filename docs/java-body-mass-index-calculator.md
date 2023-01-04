@@ -23,28 +23,28 @@
 | 身体质量指数山脉 | 种类 |
 | 
 
-```
+```java
 < 18.5
 ```
 
  | 体重不足 |
 | 
 
-```
+```java
 18.5 - 25
 ```
 
  | 常态 |
 | 
 
-```
+```java
 25 - 30
 ```
 
  | 超重 |
 | 
 
-```
+```java
 > 30
 ```
 
@@ -62,7 +62,7 @@
 
 Java 程序由计算身体质量指数的公式和简单的`if`–`else`语句组成。使用公式和上表，我们可以找出个人所在的类别:
 
-```
+```java
 static String calculateBMI(double weight, double height) {
 
     double bmi = weight / (height * height);
@@ -86,7 +86,7 @@ static String calculateBMI(double weight, double height) {
 
 让我们通过提供“肥胖”个体的身高和体重来测试代码 **:**
 
-```
+```java
 @Test
 public void whenBMIIsGreaterThanThirty_thenObese() {
     double weight = 50;

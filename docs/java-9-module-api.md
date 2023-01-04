@@ -24,7 +24,7 @@
 
 让我们看看如何判断一个给定的类，比如`HashMap`，是否是一个命名模块的一部分，以及如何检索它的名称:
 
-```
+```java
 Module javaBaseModule = HashMap.class.getModule();
 
 assertThat(javaBaseModule.isNamed(), is(true));
@@ -33,7 +33,7 @@ assertThat(javaBaseModule.getName(), is("java.base"));
 
 现在让我们定义一个`Person`类:
 
-```
+```java
 public class Person {
     private String name;
 
@@ -43,7 +43,7 @@ public class Person {
 
 同样，正如我们对`HashMap`类所做的那样，我们可以检查`Person`类是否是命名模块的一部分:
 
-```
+```java
 Module module = Person.class.getModule();
 
 assertThat(module.isNamed(), is(false));
@@ -56,7 +56,7 @@ assertThat(module.getName(), is(nullValue()));
 
 让我们看看如何检查给定的包，例如`java.lang.annotation`，是否包含在给定的模块中:
 
-```
+```java
 assertTrue(javaBaseModule.getPackages().contains("java.lang.annotation"));
 assertFalse(javaBaseModule.getPackages().contains("java.sql"));
 ```
@@ -69,7 +69,7 @@ assertFalse(javaBaseModule.getPackages().contains("java.sql"));
 
 让我们看看`java.base`模块中有多少注释:
 
-```
+```java
 assertThat(javaBaseModule.getAnnotations().length, is(0));
 ```
 
@@ -79,7 +79,7 @@ assertThat(javaBaseModule.getAnnotations().length, is(0));
 
 感谢`Module`类中可用的`getClassLoader()`方法，我们可以检索给定模块的`ClassLoader`:
 
-```
+```java
 assertThat(
   module.getClassLoader().getClass().getName(), 
   is("jdk.internal.loader.ClassLoaders$AppClassLoader")
@@ -96,13 +96,13 @@ assertThat(
 
 让我们看看如何检索给定模块的`ModuleLayer`:
 
-```
+```java
 ModuleLayer javaBaseModuleLayer = javaBaseModule.getLayer();
 ```
 
 一旦我们检索到`ModuleLayer`，我们就可以访问它的信息:
 
-```
+```java
 assertTrue(javaBaseModuleLayer.configuration().findModule("java.base").isPresent());
 ```
 
@@ -120,7 +120,7 @@ assertTrue(javaBaseModuleLayer.configuration().findModule("java.base").isPresent
 
 因为`ModuleDescriptor`与`Module`紧密相连，所以可以直接从`Module:`中检索它
 
-```
+```java
 ModuleDescriptor moduleDescriptor = javaBaseModule.getDescriptor();
 ```
 
@@ -130,7 +130,7 @@ ModuleDescriptor moduleDescriptor = javaBaseModule.getDescriptor();
 
 让我们看看如何使用`ModuleDescriptor.Builder` API 创建模块描述符:
 
-```
+```java
 ModuleDescriptor.Builder moduleBuilder = ModuleDescriptor
   .newModule("baeldung.base");
 
@@ -147,7 +147,7 @@ assertThat(moduleDescriptor.name(), is("baeldung.base"));
 
 得益于`ModuleDescriptor`中可用的方法，可以识别模块的类型:
 
-```
+```java
 ModuleDescriptor moduleDescriptor = javaBaseModule.getDescriptor();
 
 assertFalse(moduleDescriptor.isAutomatic());
@@ -160,7 +160,7 @@ assertFalse(moduleDescriptor.isOpen());
 
 使用`requires()`方法可以做到这一点:
 
-```
+```java
 Set<Requires> javaBaseRequires = javaBaseModule.getDescriptor().requires();
 Set<Requires> javaSqlRequires = javaSqlModule.getDescriptor().requires();
 
@@ -180,7 +180,7 @@ assertThat(javaSqlRequiresNames, hasItems("java.base", "java.xml", "java.logging
 
 使用`provides()`方法，可以检索模块提供的服务列表:
 
-```
+```java
 Set<Provides> javaBaseProvides = javaBaseModule.getDescriptor().provides();
 Set<Provides> javaSqlProvides = javaSqlModule.getDescriptor().provides();
 
@@ -196,7 +196,7 @@ assertThat(javaSqlProvides, empty());
 
 使用`exports()`方法，我们可以发现模块是否导出包，特别是哪些包:
 
-```
+```java
 Set<Exports> javaSqlExports = javaSqlModule.getDescriptor().exports();
 
 Set<String> javaSqlExportsSource = javaSqlExports.stream()
@@ -212,7 +212,7 @@ assertThat(javaSqlExportsSource, hasItems("java.sql", "javax.sql"));
 
 使用`uses()`方法，可以检索模块的服务依赖集:
 
-```
+```java
 Set<String> javaSqlUses = javaSqlModule.getDescriptor().uses();
 
 assertThat(javaSqlUses, hasItem("java.sql.Driver"));
@@ -224,7 +224,7 @@ assertThat(javaSqlUses, hasItem("java.sql.Driver"));
 
 每当我们想要检索一个模块的打开包的列表时，我们可以使用`opens()`方法:
 
-```
+```java
 Set<Opens> javaBaseUses = javaBaseModule.getDescriptor().opens();
 Set<Opens> javaSqlUses = javaSqlModule.getDescriptor().opens();
 
@@ -242,7 +242,7 @@ assertThat(javaSqlUses, empty());
 
 让我们看看如何更新一个模块，从一个给定的模块导出给定的包:
 
-```
+```java
 Module updatedModule = module.addExports(
   "com.baeldung.java9.modules", javaSqlModule);
 
@@ -257,7 +257,7 @@ assertTrue(updatedModule.isExported("com.baeldung.java9.modules"));
 
 当我们想要更新一个模块来读取一个给定的模块时，我们可以使用`addReads()`方法:
 
-```
+```java
 Module updatedModule = module.addReads(javaSqlModule);
 
 assertTrue(updatedModule.canRead(javaSqlModule));
@@ -271,7 +271,7 @@ assertTrue(updatedModule.canRead(javaSqlModule));
 
 当我们想要更新一个已经打开包的模块到至少调用方模块时，我们可以使用`addOpens()`打开包到另一个模块:
 
-```
+```java
 Module updatedModule = module.addOpens(
   "com.baeldung.java9.modules", javaSqlModule);
 
@@ -284,7 +284,7 @@ assertTrue(updatedModule.isOpen("com.baeldung.java9.modules", javaSqlModule));
 
 每当我们想要更新一个添加服务依赖的模块时，方法`addUses()`就是我们的选择:
 
-```
+```java
 Module updatedModule = module.addUses(Driver.class);
 
 assertTrue(updatedModule.canUse(Driver.class));

@@ -16,7 +16,7 @@
 
 我们将对用户实体进行一些更改:使`username`唯一，添加一个`password`字段(临时) :
 
-```
+```java
 @Entity
 public class User {
     ...
@@ -34,7 +34,7 @@ public class User {
 
 接下来，让我们看看如何在后端注册新用户:
 
-```
+```java
 @Controller
 @RequestMapping(value = "/user")
 public class UserController {
@@ -58,7 +58,7 @@ public class UserController {
 
 下面是服务层中的**实际实现:**
 
-```
+```java
 @Service
 public class UserService {
     @Autowired
@@ -94,7 +94,7 @@ public class UserService {
 
 还有简单的`UserAlreadyExistsException`:
 
-```
+```java
 public class UsernameAlreadyExistsException extends RuntimeException {
 
     public UsernameAlreadyExistsException(String message) {
@@ -108,7 +108,7 @@ public class UsernameAlreadyExistsException extends RuntimeException {
 
 该异常在应用程序的主异常处理程序**中处理:**
 
-```
+```java
 @ExceptionHandler({ UsernameAlreadyExistsException.class })
 public ResponseEntity<Object> 
   handleUsernameAlreadyExists(RuntimeException ex, WebRequest request) {
@@ -123,7 +123,7 @@ public ResponseEntity<Object>
 
 最后，一个简单的前端`signup.html`:
 
-```
+```java
 <form>
     <input  id="username"/>
     <input  id="email"/>
@@ -150,7 +150,7 @@ function register(){
 
 这是我们的**新的简单登录页面**:
 
-```
+```java
 <div th:if="${param.containsKey('error')}">
 Invalid username or password
 </div>
@@ -166,7 +166,7 @@ Invalid username or password
 
 现在，让我们来看看**新的安全配置**:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 @ComponentScan({ "org.baeldung.security" })
@@ -205,7 +205,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 这里有一个习俗:
 
-```
+```java
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
@@ -225,7 +225,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
 这是我们的习俗`Principal``UserPrincipal”`，它实现了`UserDetails`:
 
-```
+```java
 public class UserPrincipal implements UserDetails {
 
     private User user;
@@ -280,7 +280,7 @@ public class UserPrincipal implements UserDetails {
 
 首先，我们需要修改旧的 Reddit 登录逻辑:
 
-```
+```java
 @RequestMapping("/redditLogin")
 public String redditLogin() {
     OAuth2AccessToken token = redditTemplate.getAccessToken();
@@ -291,7 +291,7 @@ public String redditLogin() {
 
 以及实际的实现——`connectReddit()`方法:
 
-```
+```java
 @Override
 public void connectReddit(boolean needsCaptcha, OAuth2AccessToken token) {
     UserPrincipal userPrincipal = (UserPrincipal) 
@@ -309,7 +309,7 @@ public void connectReddit(boolean needsCaptcha, OAuth2AccessToken token) {
 
 至于前端——这很简单:
 
-```
+```java
 <h1>Welcome, 
 <a href="profile" sec:authentication="principal.username">Bob</a></small>
 </h1>
@@ -320,7 +320,7 @@ public void connectReddit(boolean needsCaptcha, OAuth2AccessToken token) {
 
 我们还需要确保用户在尝试提交帖子之前确实将他们的帐户连接到 Reddit:
 
-```
+```java
 @RequestMapping("/post")
 public String showSubmissionForm(Model model) {
     if (getCurrentUser().getAccessToken() == null) {

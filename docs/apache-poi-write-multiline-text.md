@@ -14,7 +14,7 @@ Apache POI 是一个开源库，允许软件开发人员创建和操作 Microsof
 
 首先，我们首先需要将 [Apache POI](https://web.archive.org/web/20220524022706/https://search.maven.org/search?q=g:org.apache.poi%20a:poi) 依赖项添加到我们的项目`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.poi</groupId> 
     <artifactId>poi</artifactId> 
@@ -26,7 +26,7 @@ Apache POI 是一个开源库，允许软件开发人员创建和操作 Microsof
 
 让我们从一个包含多行文本的单元格开始:
 
-```
+```java
 cell.setCellValue("Hello \n world!");
 ```
 
@@ -38,14 +38,14 @@ cell.setCellValue("Hello \n world!");
 
 使用代码设置单元格格式，并将其行高扩展到等于或大于两行文本的任何值:
 
-```
+```java
 cell.getRow()
   .setHeightInPoints(cell.getSheet().getDefaultRowHeightInPoints() * 2);
 ```
 
 之后，我们需要设置单元格样式来换行:
 
-```
+```java
 CellStyle cellStyle = cell.getSheet().getWorkbook().createCellStyle();
 cellStyle.setWrapText(true);
 cell.setCellStyle(cellStyle);

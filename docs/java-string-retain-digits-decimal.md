@@ -18,7 +18,7 @@
 
 为了简单起见，我们将定义一个单元测试来验证预期的结果:
 
-```
+```java
 String s = "Testing abc123.555abc";
 s = s.replaceAll("[^\\d.]", "");
 assertEquals("123.555", s);
@@ -32,7 +32,7 @@ assertEquals("123.555", s);
 
 使用 [Java 8 Streams](/web/20221113102735/https://www.baeldung.com/java-streams) ，我们有能力在不同的小步骤中定义一系列数据操作:
 
-```
+```java
 String s = "Testing abc123.555abc"; 
 StringBuilder sb = new StringBuilder(); 
 s.chars() 
@@ -56,7 +56,7 @@ assertEquals("123.555", sb.toString());
 
 为了包含 [`Guava`](https://web.archive.org/web/20221113102735/https://mvnrepository.com/artifact/com.google.guava/guava/31.1-jre) ，我们首先需要更新我们的`pom.xml`文件:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -66,7 +66,7 @@ assertEquals("123.555", sb.toString());
 
 接下来，让我们使用来自`CharMatcher`类的方法重写单元测试:
 
-```
+```java
 String s = "Testing abc123.555abc";
 String result = CharMatcher.inRange('0', '9')
   .or(CharMatcher.is('.'))
@@ -87,7 +87,7 @@ assertEquals("123.555", result);
 
 为了包含 [`Apache Commons Lang`](https://web.archive.org/web/20221113102735/https://mvnrepository.com/artifact/org.apache.commons/commons-lang3/3.12.0) ，我们需要更新我们的`pom.xml`文件:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -97,7 +97,7 @@ assertEquals("123.555", result);
 
 如果我们看一下`RegExUtils` 类，我们会发现它的`removeAll() `方法可以帮助我们解决问题:
 
-```
+```java
 String s = "Testing abc123.555abc";
 String result = RegExUtils.removeAll(s, "[^\\d.]");
 assertEquals("123.555", result);

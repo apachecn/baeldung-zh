@@ -14,19 +14,19 @@
 
 **要下载源代码**，首先，我们应该**导航到包含`pom.xml `的目录，然后执行命令:**
 
-```
+```java
 mvn dependency:sources
 ```
 
 下载源代码可能需要一段时间。类似地，**为了只下载 Javadocs，我们可以发出命令**:
 
-```
+```java
 mvn dependency:resolve -Dclassifier=javadoc
 ```
 
 当然，我们也可以用一个命令下载这两个文件:
 
-```
+```java
 mvn dependency:sources dependency:resolve -Dclassifier=javadoc
 ```
 
@@ -36,7 +36,7 @@ mvn dependency:sources dependency:resolve -Dclassifier=javadoc
 
 **也可以下载所有 Maven 项目的源代码和文档**。为此，我们应该编辑或创建一个`~/m2/settings.xml `文件，并向其中添加以下配置:
 
-```
+```java
 <settings>
     <!-- ... other settings omitted ... -->
     <profiles>
@@ -61,7 +61,7 @@ mvn dependency:sources dependency:resolve -Dclassifier=javadoc
 
 甚至可以把这个配置放到`pom.xml`里。**通过这种方式，我们迫使所有项目贡献者下载源代码和文档，作为依赖性解决方案的一部分**:
 
-```
+```java
 <build>
     <plugins>
         <plugin>

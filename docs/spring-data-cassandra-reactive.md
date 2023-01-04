@@ -30,7 +30,7 @@
 
 首先，让我们添加教程所需的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-cassandra</artifactId>
@@ -46,7 +46,7 @@
 
 现在，我们将通过 REST API 从数据库中公开`SELECT`操作。因此，让我们也为`RestController`添加依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -57,7 +57,7 @@
 
 因为我们将持久化数据，所以让我们首先定义我们的实体对象`:`
 
-```
+```java
 @Table
 public class Employee {
     @PrimaryKey
@@ -71,7 +71,7 @@ public class Employee {
 
 接下来，是时候创建一个从`ReactiveCassandraRepository.` 扩展而来的`EmployeeRepository `了，需要注意的是**这个接口启用了对反应型**的支持；
 
-```
+```java
 public interface EmployeeRepository extends ReactiveCassandraRepository<Employee, Integer> {
     @AllowFiltering
     Flux<Employee> findByAgeGreaterThan(int age);
@@ -82,7 +82,7 @@ public interface EmployeeRepository extends ReactiveCassandraRepository<Employee
 
 为了便于说明，我们将使用一个简单的 Rest 控制器来展示一些基本的`SELECT`操作:
 
-```
+```java
 @RestController
 @RequestMapping("employee")
 public class EmployeeController {
@@ -120,7 +120,7 @@ public class EmployeeController {
 
 最后再补充一个简单的`EmployeeService`:
 
-```
+```java
 @Service
 public class EmployeeService {
 
@@ -151,7 +151,7 @@ public class EmployeeService {
 
 然后，让我们在`application.properties`中指定用于连接 Cassandra 的密钥空间和端口:
 
-```
+```java
 spring.data.cassandra.keyspace-name=practice
 spring.data.cassandra.port=9042
 spring.data.cassandra.local-datacenter=datacenter1
@@ -167,13 +167,13 @@ spring.data.cassandra.local-datacenter=datacenter1
 
 首先，让我们从数据库中获取雇员记录:
 
-```
+```java
 curl localhost:8080/employee/list
 ```
 
 结果，我们得到了所有的员工:
 
-```
+```java
 [
     {
         "id": 324,
@@ -208,13 +208,13 @@ curl localhost:8080/employee/list
 
 接下来，让我们试着通过 id 找到一个特定的员工:
 
-```
+```java
 curl localhost:8080/employee/643
 ```
 
 结果，迈克·劳伦先生回来了:
 
-```
+```java
 {
     "id": 643,
     "name": "Mike Lauren",
@@ -226,13 +226,13 @@ curl localhost:8080/employee/643
 
 最后，让我们看看我们的年龄过滤器是否有效:
 
-```
+```java
 curl localhost:8080/employee/filterByAge/35
 ```
 
 不出所料，我们得到了所有年龄大于 35 岁的员工:
 
-```
+```java
 [
     {
         "id": 324,
@@ -255,7 +255,7 @@ curl localhost:8080/employee/filterByAge/35
 
 此外，让我们通过编写测试用例来测试相同的功能:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ReactiveEmployeeRepositoryIntegrationTest {

@@ -16,7 +16,7 @@
 
 现在让我们看看如何使用`java.io.File`类来达到预期的目的:
 
-```
+```java
 public static File findUsingIOApi(String sdir) {
     File dir = new File(sdir);
     if (dir.isDirectory()) {
@@ -46,7 +46,7 @@ NIO API 的引入是文件系统管理的一个转折点。Java 7 中发布的�
 
 因此，让我们看看如何利用`Files` 类来获取目录中最后修改的文件:
 
-```
+```java
 public static Path findUsingNIOApi(String sdir) throws IOException {
     Path dir = Paths.get(sdir);
     if (Files.isDirectory(dir)) {
@@ -75,7 +75,7 @@ Apache Commons IO 将文件系统管理提升到了一个新的层次。它提�
 
 首先，我们需要在我们的`pom.xml`中添加 [`commons-io`依赖关系](https://web.archive.org/web/20221208143828/https://search.maven.org/classic/#artifactdetails%7Ccommons-io%7Ccommons-io%7C2.7%7Cjar):
 
-```
+```java
 <dependency>
     <groupId>commons-io</groupId>
     <artifactId>commons-io</artifactId>
@@ -85,7 +85,7 @@ Apache Commons IO 将文件系统管理提升到了一个新的层次。它提�
 
 最后，让我们展示如何使用 Apache Commons IO 在文件夹中找到最后修改的文件:
 
-```
+```java
 public static File findUsingCommonsIO(String sdir) {
     File dir = new File(sdir);
     if (dir.isDirectory()) {

@@ -34,7 +34,7 @@ Spring 提供了 [Spring Cloud Function](/web/20221129012300/https://www.baeldun
 
 然后，我们将把默认的`App`类(其中有一个示例 API 处理程序)改为一个简单的在启动时记录的`RequestStreamHandler`:
 
-```
+```java
 public class App implements RequestStreamHandler {
 
     @Override
@@ -51,7 +51,7 @@ public class App implements RequestStreamHandler {
 
 让我们快速测试一下:
 
-```
+```java
 $ sam build
 $ sam local invoke
 
@@ -72,7 +72,7 @@ REPORT RequestId: 2aaf6041-cf57-4414-816d-76a63c7109fd  Init Duration: 0.12 ms  
 
 **`template.yaml `文件包含λ**的设置。我们可以使用`AWS::Serverless::Function`部分下的`Environment`部分将环境变量添加到我们的函数中:
 
-```
+```java
 Environment: 
   Variables:
     PARAM1: VALUE
@@ -84,7 +84,7 @@ Environment:
 
 首先，让我们用一个默认的环境名在`template.yaml`文件的最顶端添加一个参数:
 
-```
+```java
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: todo-reminder application
@@ -97,7 +97,7 @@ Parameters:
 
 接下来，让我们将该参数连接到`AWS::Serverless::Function`部分中的环境变量:
 
-```
+```java
 Environment: 
   Variables: 
     ENV_NAME: !Ref EnvironmentName
@@ -109,19 +109,19 @@ Environment:
 
 让[在构造我们的`App`对象时读取环境变量](/web/20221129012300/https://www.baeldung.com/java-system-get-property-vs-system-getenv#using-systemgetenv) `ENV_NAME`:
 
-```
+```java
 private String environmentName = System.getenv("ENV_NAME");
 ```
 
 我们还可以在调用`handleRequest`时记录环境:
 
-```
+```java
 context.getLogger().log("Environment: " + environmentName + "\n");
 ```
 
 日志消息必须以`“\n”`结尾，以分隔日志行。我们可以看到输出:
 
-```
+```java
 $ sam build
 $ sam local invoke
 
@@ -136,7 +136,7 @@ Environment: dev
 
 我们可以**使用参数覆盖在运行时**或部署时提供不同的值:
 
-```
+```java
 $ sam local invoke --parameter-overrides "ParameterKey=EnvironmentName,ParameterValue=test"
 
 START RequestId: 18460a04-4f8b-46cb-9aca-e15ce959f6fa Version: $LATEST
@@ -152,7 +152,7 @@ Environment: test
 
 我们可以使用[系统存根](/web/20221129012300/https://www.baeldung.com/java-system-stubs)来设置一个环境变量，并使用 [Mockito 深存根](/web/20221129012300/https://www.baeldung.com/mockito-fluent-apis#deep-mocking)来使我们的`LambdaLogger`在`Context`中可测试。首先，我们必须将`MockitoJUnitRunner`添加到测试中:
 
-```
+```java
 @RunWith(MockitoJUnitRunner.class)
 public class AppTest {
 
@@ -165,7 +165,7 @@ public class AppTest {
 
 接下来，我们可以在创建`App`对象之前使用`EnvironmentVariablesRule`来控制环境变量:
 
-```
+```java
 @Rule
 public EnvironmentVariablesRule environmentVariablesRule = 
   new EnvironmentVariablesRule();
@@ -173,7 +173,7 @@ public EnvironmentVariablesRule environmentVariablesRule =
 
 现在，我们可以编写测试:
 
-```
+```java
 environmentVariablesRule.set("ENV_NAME", "unitTest");
 new App().handleRequest(fakeInputStream, fakeOutputStream, mockContext);
 
@@ -188,7 +188,7 @@ verify(mockContext.getLogger()).log("Environment: unitTest\n");
 
 我们可以多次使用`System.getenv`，甚至使用`Optional`和`orElse`来降低到一个默认值:
 
-```
+```java
 String setting = Optional.ofNullable(System.getenv("SETTING"))
   .orElse("default");
 ```
@@ -199,7 +199,7 @@ String setting = Optional.ofNullable(System.getenv("SETTING"))
 
 如果我们构建一个 Java 类来包含我们的配置，我们可以与需要它的服务共享它:
 
-```
+```java
 public class Config {
     private String toDoEndpoint;
     private String postEndpoint;
@@ -211,7 +211,7 @@ public class Config {
 
 现在，我们可以用当前配置来构造我们的运行时组件:
 
-```
+```java
 public class ToDoReaderService {
     public ToDoReaderService(Config configuration) {
         // ...
@@ -221,7 +221,7 @@ public class ToDoReaderService {
 
 该服务可以从`Config`对象获取它需要的任何配置值。我们甚至可以将配置建模为对象的层次结构，如果我们有像凭据这样的重复结构，这可能会很有用:
 
-```
+```java
 private Credentials toDoCredentials;
 private Credentials postCredentials;
 ```
@@ -234,7 +234,7 @@ private Credentials postCredentials;
 
 让我们将[依赖项](https://web.archive.org/web/20221129012300/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22uk.org.webcompere%22%20AND%20a%3A%22lightweight-config%22)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>uk.org.webcompere</groupId>
     <artifactId>lightweight-config</artifactId>
@@ -244,7 +244,7 @@ private Credentials postCredentials;
 
 然后，让我们将一个`configuration.yml`文件添加到我们的`src/main/resources`目录。这个文件反映了我们的配置 POJO 的结构，包含硬编码的值、从环境变量填充的占位符和默认值:
 
-```
+```java
 toDoEndpoint: https://jsonplaceholder.typicode.com/todos
 postEndpoint: https://jsonplaceholder.typicode.com/posts
 environmentName: ${ENV_NAME}
@@ -258,7 +258,7 @@ postCredentials:
 
 我们可以使用`ConfigLoader`将这些设置加载到 POJO 中:
 
-```
+```java
 Config config = ConfigLoader.loadYmlConfigFromResource("configuration.yml", Config.class);
 ```
 
@@ -270,7 +270,7 @@ Config config = ConfigLoader.loadYmlConfigFromResource("configuration.yml", Conf
 
 让我们创建一个名为`ExecutionContext`的类，`App`可以用它来创建对象:
 
-```
+```java
 public class ExecutionContext {
     private Config config;
     private ToDoReaderService toDoReaderService;
@@ -285,7 +285,7 @@ public class ExecutionContext {
 
 `App`可以在其初始化列表中创建其中一个:
 
-```
+```java
 private ExecutionContext executionContext = new ExecutionContext();
 ```
 
@@ -301,7 +301,7 @@ private ExecutionContext executionContext = new ExecutionContext();
 
 我们可以通过向我们的`pom.xml`添加依赖项来启用 [AWS lambda `Log4j`运行时](https://web.archive.org/web/20221129012300/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.amazonaws%22%20AND%20a%3A%22aws-lambda-java-log4j2%22):
 
-```
+```java
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>aws-lambda-java-log4j2</artifactId>
@@ -311,7 +311,7 @@ private ExecutionContext executionContext = new ExecutionContext();
 
 我们还需要在`src/main/resources`中配置一个`log4j2.xml`文件来使用这个记录器:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration packages="com.amazonaws.services.lambda.runtime.log4j2">
     <Appenders>
@@ -333,7 +333,7 @@ private ExecutionContext executionContext = new ExecutionContext();
 
 现在，我们将标准的`Log4j` `Logger`样板文件添加到我们的类中:
 
-```
+```java
 public class ToDoReaderService {
     private static final Logger LOGGER = LogManager.getLogger(ToDoReaderService.class);
 
@@ -348,7 +348,7 @@ public class ToDoReaderService {
 
 然后我们可以从命令行测试它:
 
-```
+```java
 $ sam build
 $ sam local invoke
 
@@ -360,7 +360,7 @@ START RequestId: acb34989-980c-42e5-b8e4-965d9f497d93 Version: $LATEST
 
 在测试日志输出很重要的情况下，我们可以使用系统存根来完成。我们的配置针对 AWS Lambda 进行了优化，将日志输出定向到`System.out`，我们可以利用它:
 
-```
+```java
 @Rule
 public SystemOutRule systemOutRule = new SystemOutRule();
 
@@ -379,7 +379,7 @@ public void whenTheServiceStarts_thenItOutputsEndpoint() {
 
 我们可以通过添加依赖关系来添加`[Slf4j](https://web.archive.org/web/20221129012300/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.logging.log4j%22%20AND%20a%3A%22log4j-slf4j-impl%22)`:
 
-```
+```java
 <dependency>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-slf4j-impl</artifactId>
@@ -389,7 +389,7 @@ public void whenTheServiceStarts_thenItOutputsEndpoint() {
 
 这允许我们查看来自`Slf4j`启用库的日志消息。我们也可以直接使用它:
 
-```
+```java
 public class ExecutionContext {
     private static final Logger LOGGER =
       LoggerFactory.getLogger(ExecutionContext.class);
@@ -405,7 +405,7 @@ public class ExecutionContext {
 
 `Slf4j`日志记录通过 AWS `Log4j`运行时路由:
 
-```
+```java
 $ sam local invoke
 
 START RequestId: 60b2efad-bc77-475b-93f6-6fa7ddfc9f88 Version: $LATEST
@@ -424,7 +424,7 @@ OpenFeign 是一个很好的选择。它允许我们为 HTTP 客户端、日志�
 
 另外，我们将使用 [`Slf4j`](https://web.archive.org/web/20221129012300/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22io.github.openfeign%22%20AND%20a%3A%22feign-slf4j%22) 日志和 [`Gson`](https://web.archive.org/web/20221129012300/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22io.github.openfeign%22%20AND%20a%3A%22feign-gson%22) 作为我们的 JSON 库:
 
-```
+```java
 <dependency>
     <groupId>io.github.openfeign</groupId>
     <artifactId>feign-core</artifactId>
@@ -448,7 +448,7 @@ OpenFeign 是一个很好的选择。它允许我们为 HTTP 客户端、日志�
 
 首先，我们用一个接口来描述我们将要调用的 API:
 
-```
+```java
 public interface ToDoApi {
     @RequestLine("GET /todos")
     List<ToDoItem> getAllTodos();
@@ -457,7 +457,7 @@ public interface ToDoApi {
 
 这描述了 API 中的路径和任何将从 JSON 响应中产生的对象。让我们创建`ToDoItem`来模拟 API 的响应:
 
-```
+```java
 public class ToDoItem {
     private int userId;
     private int id;
@@ -472,7 +472,7 @@ public class ToDoItem {
 
 接下来，我们使用`Feign.Builder`将`interface`转换成客户端:
 
-```
+```java
 ToDoApi toDoApi = Feign.builder()
   .decoder(new GsonDecoder())
   .logger(new Slf4jLogger())
@@ -481,7 +481,7 @@ ToDoApi toDoApi = Feign.builder()
 
 在我们的例子中，我们还使用了凭证。假设这些是通过基本认证提供的，这将要求我们在`target`调用之前添加一个`BasicAuthRequestInterceptor`:
 
-```
+```java
 .requestInterceptor(
    new BasicAuthRequestInterceptor(
      config.getToDoCredentials().getUsername(),
@@ -498,7 +498,7 @@ ToDoApi toDoApi = Feign.builder()
 
 我们可能希望扩展构造函数来按顺序构建所有的 beans:
 
-```
+```java
 this.config = ... // load config
 this.toDoApi = ... // build api
 this.postApi = ... // build post API
@@ -516,7 +516,7 @@ DropWizard 使用 [Guice](/web/20221129012300/https://www.baeldung.com/guice) �
 
 让我们添加它的[依赖关系](https://web.archive.org/web/20221129012300/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.google.inject%22%20AND%20a%3A%22guice%22):
 
-```
+```java
 <dependency>
     <groupId>com.google.inject</groupId>
     <artifactId>guice</artifactId>
@@ -528,7 +528,7 @@ DropWizard 使用 [Guice](/web/20221129012300/https://www.baeldung.com/guice) �
 
 我们可以用 **`@Inject`注释来注释从其他 bean 构造的 bean，使它们可以自动注入**:
 
-```
+```java
 public class PostService {
     private PostApi postApi;
 
@@ -545,7 +545,7 @@ public class PostService {
 
 对于任何我们必须使用定制装载或构造代码的 beans，我们可以**使用`Module` 作为工厂**:
 
-```
+```java
 public class Services extends AbstractModule {
     @Override
     protected void configure() {
@@ -575,7 +575,7 @@ public class Services extends AbstractModule {
 
 然后我们通过一个`Injector`在`ExecutionContext`中使用这个模块:
 
-```
+```java
 public ExecutionContext() {
     LOGGER.info("Loading configuration");
 
@@ -597,7 +597,7 @@ public ExecutionContext() {
 
 现在我们有了一个包含服务的`ExecutionContext` ，服务内部有 API，由`Config`配置，让我们完成我们的处理程序:
 
-```
+```java
 @Override
 public void handleRequest(InputStream inputStream, 
   OutputStream outputStream, Context context) throws IOException {
@@ -611,7 +611,7 @@ public void handleRequest(InputStream inputStream,
 
 让我们来测试一下:
 
-```
+```java
 $ sam build
 $ sam local invoke
 

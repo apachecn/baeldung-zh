@@ -20,7 +20,7 @@ Spring Data 提供了对数据存储技术的抽象。因此，我们的业务�
 
 当我们想要**配置方法**的事务行为时，我们可以使用:
 
-```
+```java
 @Transactional
 void pay() {}
 ```
@@ -37,7 +37,7 @@ void pay() {}
 
 例如，如果我们想要在我们所有的存储库中有一个`Optional<T> findById(ID id) `方法，我们可以创建一个基础存储库:
 
-```
+```java
 @NoRepositoryBean
 interface MyUtilityRepository<T, ID extends Serializable> extends CrudRepository<T, ID> {
     Optional<T> findById(ID id);
@@ -46,7 +46,7 @@ interface MyUtilityRepository<T, ID extends Serializable> extends CrudRepository
 
 此注释不影响子接口；因此，Spring 将为以下存储库接口创建一个 bean:
 
-```
+```java
 @Repository
 interface PersonRepository extends MyUtilityRepository<Person, Long> {}
 ```
@@ -57,7 +57,7 @@ interface PersonRepository extends MyUtilityRepository<Person, Long> {}
 
 我们可以使用`@Param`将命名参数传递给我们的查询:
 
-```
+```java
 @Query("FROM Person p WHERE p.name = :name")
 Person findByName(@Param("name") String name);
 ```
@@ -70,7 +70,7 @@ Person findByName(@Param("name") String name);
 
 `@Id `将模型类中的字段标记为主键:
 
-```
+```java
 class Person {
 
     @Id
@@ -87,7 +87,7 @@ class Person {
 
 我们可以使用这个注释将模型类中的字段标记为瞬态的。因此，数据存储引擎不会读取或写入该字段的值:
 
-```
+```java
 class Person {
 
     // ...
@@ -106,7 +106,7 @@ class Person {
 
 有了这些注释，我们可以审计我们的模型类:Spring 自动用创建对象的主体、最后修改对象的主体、创建日期和最后修改日期填充注释字段:
 
-```
+```java
 public class Person {
 
     // ...
@@ -138,21 +138,21 @@ public class Person {
 
 使用`@Query`，我们可以为存储库方法提供一个 JPQL 实现:
 
-```
+```java
 @Query("SELECT COUNT(*) FROM Person p")
 long getPersonCount();
 ```
 
 此外，我们可以使用命名参数:
 
-```
+```java
 @Query("FROM Person p WHERE p.name = :name")
 Person findByName(@Param("name") String name);
 ```
 
 此外，我们可以使用本地 SQL 查询，如果我们将参数`nativeQuery `设置为`true`:
 
-```
+```java
 @Query(value = "SELECT AVG(p.age) FROM person p", nativeQuery = true)
 int getAverageAge();
 ```
@@ -165,7 +165,7 @@ int getAverageAge();
 
 首先，我们需要使用标准 JPA 注释在实体类上声明存储库:
 
-```
+```java
 @NamedStoredProcedureQueries({ 
     @NamedStoredProcedureQuery(
         name = "count_by_name", 
@@ -188,7 +188,7 @@ class Person {}
 
 此后，我们可以在存储库中用我们在`name `参数中声明的名称来引用它:
 
-```
+```java
 @Procedure(name = "count_by_name")
 long getCountByName(@Param("name") String name);
 ```
@@ -197,7 +197,7 @@ long getCountByName(@Param("name") String name);
 
 我们可以在执行存储库查询方法时配置锁定模式:
 
-```
+```java
 @Lock(LockModeType.NONE)
 @Query("SELECT COUNT(*) FROM Person p")
 long getPersonCount();
@@ -218,7 +218,7 @@ long getPersonCount();
 
 如果我们用`@Modifying`注释数据，我们可以用存储库方法修改数据:
 
-```
+```java
 @Modifying
 @Query("UPDATE Person p SET p.name = :name WHERE p.id = :id")
 void changeName(@Param("id") long id, @Param("name") String name);
@@ -232,7 +232,7 @@ void changeName(@Param("id") long id, @Param("name") String name);
 
 注意，我们必须将这个注释与`@Configuration`一起使用:
 
-```
+```java
 @Configuration
 @EnableJpaRepositories
 class PersistenceJPAConfig {}
@@ -242,7 +242,7 @@ Spring 将在这个`@Configuration `类的子包中寻找存储库。
 
 我们可以用`basePackages `参数改变这种行为:
 
-```
+```java
 @Configuration
 @EnableJpaRepositories(basePackages = "com.baeldung.persistence.dao")
 class PersistenceJPAConfig {}
@@ -260,14 +260,14 @@ Spring 数据使得使用 MongoDB 更加容易。在接下来的小节中，我�
 
 该注释将一个类标记为我们希望保存到数据库中的域对象:
 
-```
+```java
 @Document
 class User {}
 ```
 
 它还允许我们选择想要使用的集合的名称:
 
-```
+```java
 @Document(collection = "user")
 class User {}
 ```
@@ -278,7 +278,7 @@ class User {}
 
 使用`@Field`，我们可以配置当 MongoDB 持久化文档时我们想要使用的字段的名称:
 
-```
+```java
 @Document
 class User {
 
@@ -298,7 +298,7 @@ class User {
 
 使用`@Query`，我们可以在 MongoDB 存储库方法上提供一个 finder 查询:
 
-```
+```java
 @Query("{ 'name' : ?0 }")
 List<User> findUsersByName(String name);
 ```
@@ -309,7 +309,7 @@ List<User> findUsersByName(String name);
 
 注意，我们必须将这个注释与`@Configuration`一起使用:
 
-```
+```java
 @Configuration
 @EnableMongoRepositories
 class MongoConfig {}
@@ -317,7 +317,7 @@ class MongoConfig {}
 
 Spring 将在这个`@Configuration `类的子包中寻找存储库。我们可以用`basePackages `参数改变这种行为:
 
-```
+```java
 @Configuration
 @EnableMongoRepositories(basePackages = "com.baeldung.repository")
 class MongoConfig {}

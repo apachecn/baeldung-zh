@@ -30,7 +30,7 @@ Quick and practical examples focused on converting String objects to different d
 
 让我们从一个专注于处理固定大小流的 Java 解决方案开始:
 
-```
+```java
 @Test
 public void givenUsingPlainJavaOnFixedSizeStream_whenConvertingAnInputStreamToAByteArray_thenCorrect() 
   throws IOException {
@@ -43,7 +43,7 @@ public void givenUsingPlainJavaOnFixedSizeStream_whenConvertingAnInputStreamToAB
 
 在缓冲流的情况下——我们处理的是缓冲流，并且不知道底层数据的确切大小，我们需要使实现更加灵活:
 
-```
+```java
 @Test
 public void givenUsingPlainJavaOnUnknownSizeStream_whenConvertingAnInputStreamToAByteArray_thenCorrect() 
   throws IOException {
@@ -64,7 +64,7 @@ public void givenUsingPlainJavaOnUnknownSizeStream_whenConvertingAnInputStreamTo
 
 从 Java 9 开始，我们可以用一个专用的`readNbytes`方法实现同样的功能:
 
-```
+```java
 @Test
 public void givenUsingPlainJava9OnUnknownSizeStream_whenConvertingAnInputStreamToAByteArray_thenCorrect() 
   throws IOException {
@@ -92,7 +92,7 @@ public void givenUsingPlainJava9OnUnknownSizeStream_whenConvertingAnInputStreamT
 
 我们也可以一次读取所有字节:
 
-```
+```java
 @Test
 public void
   givenUsingPlainJava9_whenConvertingAnInputStreamToAByteArray_thenCorrect()
@@ -107,7 +107,7 @@ public void
 
 现在让我们看看简单的基于番石榴的解决方案——使用方便的 ByteStreams 实用程序类:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenConvertingAnInputStreamToAByteArray_thenCorrect() 
   throws IOException {
@@ -121,7 +121,7 @@ public void givenUsingGuava_whenConvertingAnInputStreamToAByteArray_thenCorrect(
 
 最后，使用 Apache Commons IO 的简单解决方案:
 
-```
+```java
 @Test
 public void givenUsingCommonsIO_whenConvertingAnInputStreamToAByteArray_thenCorrect() 
   throws IOException {
@@ -143,7 +143,7 @@ public void givenUsingCommonsIO_whenConvertingAnInputStreamToAByteArray_thenCorr
 
 在字节流的情况下，我们知道底层数据的确切大小。让我们使用`ByteArrayInputStream#available` 方法将字节流读入一个`ByteBuffer`:
 
-```
+```java
 @Test
 public void givenUsingCoreClasses_whenByteArrayInputStreamToAByteBuffer_thenLengthMustMatch() 
   throws IOException {
@@ -162,7 +162,7 @@ public void givenUsingCoreClasses_whenByteArrayInputStreamToAByteBuffer_thenLeng
 
 现在让我们看看一个简单的基于番石榴的解决方案——使用方便的`ByteStreams`实用程序类:
 
-```
+```java
 @Test
 public void givenUsingGuava__whenByteArrayInputStreamToAByteBuffer_thenLengthMustMatch() 
   throws IOException {
@@ -185,7 +185,7 @@ public void givenUsingGuava__whenByteArrayInputStreamToAByteBuffer_thenLengthMus
 
 最后，使用 Apache Commons IO 和`IOUtils`类:
 
-```
+```java
 @Test
 public void givenUsingCommonsIo_whenByteArrayInputStreamToAByteBuffer_thenLengthMustMatch() 
   throws IOException {

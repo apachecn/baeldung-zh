@@ -12,7 +12,7 @@
 
 `HashMap`使用哈希的[机制来存储和检索自身的值。**当我们调用`put(key, value)`方法时，`HashMap`根据键的`hashCode()`方法计算散列码。**该散列用于标识最终存储值的桶:](/web/20221126220806/https://www.baeldung.com/java-hashmap#internals-hashmap)
 
-```
+```java
 public V put(K key, V value) {
     if (key == null)
         return putForNullKey(value);
@@ -36,7 +36,7 @@ public V put(K key, V value) {
 
 当我们使用`get(key)`方法获取一个值时，会涉及到一个类似的过程。该密钥用于计算哈希代码，然后找到存储桶。**然后使用`equals()`方法检查桶中的每个条目是否相等。**最后，返回匹配条目的值:
 
-```
+```java
 public V get(Object key) {
     if (key == null)
         return getForNullKey();
@@ -68,7 +68,7 @@ public V get(Object key) {
 
 让我们用一个字节数组作为键创建一个简单的实现:
 
-```
+```java
 byte[] key1 = {1, 2, 3};
 byte[] key2 = {1, 2, 3};
 Map<byte[], String> map = new HashMap<>();
@@ -78,7 +78,7 @@ map.put(key2, "value2");
 
 我们不仅有两个条目具有几乎相同的键，而且我们不能使用新创建的具有相同值的数组来检索任何内容:
 
-```
+```java
 String retrievedValue1 = map.get(key1);
 String retrievedValue2 = map.get(key2);
 String retrievedValue3 = map.get(new byte[]{1, 2, 3});
@@ -96,7 +96,7 @@ assertThat(retrievedValue3).isNull();
 
 `String`相等是基于字符数组的内容:
 
-```
+```java
 public boolean equals(Object anObject) {
     if (this == anObject) {
         return true;
@@ -122,14 +122,14 @@ public boolean equals(Object anObject) {
 
 `String`也是不可变的，基于字节数组创建`String`相当简单。我们可以使用 [`Base64`](https://web.archive.org/web/20221126220806/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Base64.html) 方案轻松地对`String`进行编码和解码:
 
-```
+```java
 String key1 = Base64.getEncoder().encodeToString(new byte[]{1, 2, 3});
 String key2 = Base64.getEncoder().encodeToString(new byte[]{1, 2, 3});
 ```
 
 现在我们可以用`String`创建一个`HashMap`作为键，而不是字节数组。我们将以类似于前一个例子的方式将值放入`Map`:
 
-```
+```java
 Map<String, String> map = new HashMap<>();
 map.put(key1, "value1");
 map.put(key2, "value2");
@@ -137,7 +137,7 @@ map.put(key2, "value2");
 
 然后我们可以从地图中检索一个值。对于这两个键，我们将得到相同的第二个值。我们还可以检查密钥是否真的彼此相等:
 
-```
+```java
 String retrievedValue1 = map.get(key1);
 String retrievedValue2 = map.get(key2);
 
@@ -150,7 +150,7 @@ assertThat(retrievedValue2).isEqualTo("value2");
 
 与`String`类似，`List#equals`方法将检查它的每个元素是否相等。如果这些元素有一个合理的`equals()`方法并且是不可变的，`List`将作为`HashMap`键正确工作。我们只需要**确保我们使用的是不可变的`List`实现**:
 
-```
+```java
 List<Byte> key1 = ImmutableList.of((byte)1, (byte)2, (byte)3);
 List<Byte> key2 = ImmutableList.of((byte)1, (byte)2, (byte)3);
 Map<List<Byte>, String> map = new HashMap<>();
@@ -168,7 +168,7 @@ assertThat(map.get(key1)).isEqualTo(map.get(key2));
 
 让我们创建一个具有最后一个私有数组字段的类。它没有 setter，它的 getter 将创建一个防御性副本以确保完全不变性:
 
-```
+```java
 public final class BytesKey {
     private final byte[] array;
 
@@ -184,7 +184,7 @@ public final class BytesKey {
 
 我们还需要实现自己的`equals`和`hashCode`方法。幸运的是，我们可以使用`Arrays`实用程序类来完成这两项任务:
 
-```
+```java
 @Override
 public boolean equals(Object o) {
     if (this == o) return true;
@@ -201,7 +201,7 @@ public int hashCode() {
 
 最后，我们可以将我们的包装器用作一个`HashMap`中的键:
 
-```
+```java
 BytesKey key1 = new BytesKey(new byte[]{1, 2, 3});
 BytesKey key2 = new BytesKey(new byte[]{1, 2, 3});
 Map<BytesKey, String> map = new HashMap<>();
@@ -211,7 +211,7 @@ map.put(key2, "value2");
 
 然后，我们可以使用任何一个声明的键或者使用一个动态创建的键来检索第二个值:
 
-```
+```java
 String retrievedValue1 = map.get(key1);
 String retrievedValue2 = map.get(key2);
 String retrievedValue3 = map.get(new BytesKey(new byte[]{1, 2, 3}));

@@ -29,7 +29,7 @@
 
 让我们定义客户机和相关的模拟对象:
 
-```
+```java
 exchangeFunction = mock(ExchangeFunction.class);
 ClientResponse mockResponse = mock(ClientResponse.class);
 when(mockResponse.bodyToMono(String.class))
@@ -49,7 +49,7 @@ webClient = WebClient
 
 最后，为了验证特定的 URI 已经被传递给底层的`ExchangeFunction`实例，我们将使用下面的帮助器方法:
 
-```
+```java
 private void verifyCalledUrl(String relativeUrl) {
     ClientRequest request = argumentCaptor.getValue();
     assertEquals(String.format("%s%s", BASE_URL, relativeUrl), request.url().toString());
@@ -61,7 +61,7 @@ private void verifyCalledUrl(String relativeUrl) {
 
 `WebClientBuilder`类的`uri()`方法提供了`UriBuilder`实例作为参数。通常，我们以下列方式进行 API 调用:
 
-```
+```java
 webClient.get()
   .uri(uriBuilder -> uriBuilder
     //... building a URI
@@ -77,7 +77,7 @@ webClient.get()
 
 **路径组件由一系列由斜杠(/ )** 分隔的路径段组成。首先，我们从一个简单的例子开始，其中 URI 没有任何可变段，`/products`:
 
-```
+```java
 webClient.get()
   .uri("/products")
   .retrieve()
@@ -91,7 +91,7 @@ verifyCalledUrl("/products");
 
 接下来，我们将采用`/products/{id}`端点并构建相应的 URI:
 
-```
+```java
 webClient.get()
   .uri(uriBuilder - > uriBuilder
     .path("/products/{id}")
@@ -107,7 +107,7 @@ verifyCalledUrl("/products/2");
 
 以类似的方式，我们可以为`/products/{id}/attributes/{attributeId}`端点创建一个具有多个路径段的 URI:
 
-```
+```java
 webClient.get()
   .uri(uriBuilder - > uriBuilder
     .path("/products/{id}/attributes/{attributeId}")
@@ -129,7 +129,7 @@ URI 可以根据需要拥有任意多的路径段，但最终的 URI 长度不�
 
 我们将从单值参数开始，取`/products/?name={name}&deliveryDate;={deliveryDate}&color;={color}`端点。为了设置查询参数，我们将调用`UriBuilder`接口的`queryParam()`方法:
 
-```
+```java
 webClient.get()
   .uri(uriBuilder - > uriBuilder
     .path("/products/")
@@ -146,7 +146,7 @@ verifyCalledUrl("/products/?name=AndroidPhone&color;=black&deliveryDate;=13/04/2
 
 这里我们添加了三个查询参数，并立即分配了实际值。相反，也可以留下占位符来代替精确值:
 
-```
+```java
 webClient.get()
   .uri(uriBuilder - > uriBuilder
     .path("/products/")
@@ -173,7 +173,7 @@ verifyCalledUrl("/products/?name=AndroidPhone&color;=black&deliveryDate;=13%2F04
 
 让我们从`/products/?tag[]={tag1}&tag;[]={tag2}`端点开始:
 
-```
+```java
 webClient.get()
   .uri(uriBuilder - > uriBuilder
     .path("/products/")
@@ -190,7 +190,7 @@ verifyCalledUrl("/products/?tag%5B%5D=Snapdragon&tag;%5B%5D=NFC");
 
 或者，我们可以**省略方括号，只传递多个具有相同键**，但不同值`/products/?category={category1}&category;={category2}`的查询参数:
 
-```
+```java
 webClient.get()
   .uri(uriBuilder - > uriBuilder
     .path("/products/")
@@ -205,7 +205,7 @@ verifyCalledUrl("/products/?category=Phones&category;=Tablets");
 
 最后，还有一种更广泛使用的编码数组的方法，那就是传递逗号分隔的值。让我们把前面的例子转换成逗号分隔的值:
 
-```
+```java
 webClient.get()
   .uri(uriBuilder - > uriBuilder
     .path("/products/")
@@ -233,7 +233,7 @@ verifyCalledUrl("/products/?category=Phones,Tablets");
 
 默认值为**模板 _ 和 _ 值**。让我们将模式设置为**URI _ 组件**:
 
-```
+```java
 DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(BASE_URL);
 factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.URI_COMPONENT);
 webClient = WebClient
@@ -246,7 +246,7 @@ webClient = WebClient
 
 因此，下面的断言将会成功:
 
-```
+```java
 webClient.get()
   .uri(uriBuilder - > uriBuilder
     .path("/products/")

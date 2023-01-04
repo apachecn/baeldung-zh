@@ -65,7 +65,7 @@ Couchbase 部署中的每个节点都有一个强制的集群管理器。其他�
 
 下面是 SQL 语言、MongoDB 查询语言和 Couchbase N1QL 中的`SELECT`操作:
 
-```
+```java
 -- SQL
 SELECT * FROM STUDENT WHERE name = 'Ryan';
 
@@ -80,7 +80,7 @@ SELECT * FROM STUDENT WHERE name = 'Ryan';
 
 现在，让我们看看`INSERT`操作在 SQL、MongoDB 查询语言和 Couchbase N1QL 中是怎样的:
 
-```
+```java
 -- SQL
 INSERT INTO STUDENT(id, name) VALUES (123, 'Ryan');
 
@@ -95,7 +95,7 @@ INSERT INTO STUDENT(KEY, VALUE) VALUES ('123', {"id": "123", "name": "Ryan"})
 
 接下来是 SQL、MongoDB 查询语言和 Couchbase N1QL 中的`UPDATE`操作:
 
-```
+```java
 -- SQL
 UPDATE STUDENT SET name='John' WHERE id = 123;
 
@@ -110,7 +110,7 @@ UPDATE STUDENT SET name = "John" WHERE id = "123"
 
 这里是最后一个基本操作。让我们用 SQL、MongoDB 查询语言和 Couchbase N1QL 来看看:
 
-```
+```java
 -- SQL
 DELETE FROM STUDENT WHERE id = 123;
 

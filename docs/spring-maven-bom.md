@@ -32,7 +32,7 @@ Maven 可以在我们的`pom.xml`中发现我们自己的依赖项所需要的�
 
 让我们看下面的例子来阐明依赖中介:
 
-```
+```java
 A -> B -> C -> D 1.4  and  A -> E -> D 1.0
 ```
 
@@ -51,7 +51,7 @@ A -> B -> C -> D 1.4  and  A -> E -> D 1.0
 
 以下是如何编写 BOM 文件的示例:
 
-```
+```java
 <project ...>
 
     <modelVersion>4.0.0</modelVersion>
@@ -93,7 +93,7 @@ A -> B -> C -> D 1.4  and  A -> E -> D 1.0
 
 我们可以从父母那里继承:
 
-```
+```java
 <project ...>
     <modelVersion>4.0.0</modelVersion>
     <groupId>baeldung</groupId>
@@ -117,7 +117,7 @@ A -> B -> C -> D 1.4  and  A -> E -> D 1.0
 
 让我们看看如何将 BOM 文件导入到项目 POM 中:
 
-```
+```java
 <project ...>
     <modelVersion>4.0.0</modelVersion>
     <groupId>baeldung</groupId>
@@ -160,7 +160,7 @@ A -> B -> C -> D 1.4  and  A -> E -> D 1.0
 
 我们可以在我们的`dependencyManagement`部分导入`spring-framework-bom`,以确保所有的 Spring 依赖项都是相同的版本:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -176,7 +176,7 @@ A -> B -> C -> D 1.4  and  A -> E -> D 1.0
 
 当我们像下面的例子一样使用 Spring 工件时，我们不需要指定`version`属性:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework</groupId>

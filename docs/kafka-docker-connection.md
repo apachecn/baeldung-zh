@@ -12,7 +12,7 @@ Apache Kafka 是一个非常受欢迎的事件流媒体平台，经常与 [Docke
 
 在我们尝试建立连接之前，我们需要使用 Docker 运行一个 [Kafka 代理。下面是我们的](/web/20220529025840/https://www.baeldung.com/ops/kafka-docker-setup) [docker-compose.yaml](/web/20220529025840/https://www.baeldung.com/ops/docker-compose) 文件的一个片段:
 
-```
+```java
 version: '2'
 services:
   zookeeper:
@@ -45,7 +45,7 @@ networks:
 
 使用上面的`docker-compose.yaml` 文件，我们启动服务:
 
-```
+```java
 docker-compose up -d
 Creating network "kafka_docker_example_net" with the default driver
 Creating zookeeper ... done
@@ -62,7 +62,7 @@ Creating kafka ... done
 
 每个 URI 包括一个协议名，后跟一个接口地址和一个端口:
 
-```
+```java
 EXTERNAL_SAME_HOST://0.0.0.0:29092,INTERNAL://0.0.0.0:9092
 ```
 
@@ -96,7 +96,7 @@ EXTERNAL_SAME_HOST://0.0.0.0:29092,INTERNAL://0.0.0.0:9092
 
 让我们从另一个容器启动 Kafka 控制台生成器，并尝试向代理生成消息:
 
-```
+```java
 docker run -it --rm --network kafka_docker_example_net confluentinc/cp-kafka /bin/kafka-console-producer --bootstrap-server kafka:9092 --topic test_topic
 >hello
 >world
@@ -112,7 +112,7 @@ docker run -it --rm --network kafka_docker_example_net confluentinc/cp-kafka /bi
 
 为了测试同一台主机的连接性，我们将使用一个非 Dockerized Kafka 控制台生成器:
 
-```
+```java
 kafka-console-producer --bootstrap-server localhost:29092 --topic test_topic_2
 >hi
 >there 
@@ -126,7 +126,7 @@ kafka-console-producer --bootstrap-server localhost:29092 --topic test_topic_2
 
 如果 Kafka 代理运行在不同的主机上，我们如何连接到它？不幸的是，我们不能重用现有的侦听器，因为它们只用于同一个 Docker 网络或主机连接。因此，我们需要定义一个新的侦听器并公布它:
 
-```
+```java
 KAFKA_LISTENERS: EXTERNAL_SAME_HOST://:29092,EXTERNAL_DIFFERENT_HOST://:29093,INTERNAL://:9092
 KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL_SAME_HOST://localhost:29092,EXTERNAL_DIFFERENT_HOST://157.245.80.232:29093
 KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL_SAME_HOST:PLAINTEXT,EXTERNAL_DIFFERENT_HOST:PLAINTEXT 
@@ -138,7 +138,7 @@ KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL_SAME_HOST:PLAI
 
 让我们尝试生成一些消息:
 
-```
+```java
 kafka-console-producer --bootstrap-server 157.245.80.232:29093 --topic test_topic_3
 >hello
 >REMOTE SERVER

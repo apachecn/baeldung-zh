@@ -12,7 +12,7 @@
 
 首先，我们需要给 [`jackson-core`](https://web.archive.org/web/20220703150611/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.fasterxml.jackson.core%22%20AND%20a%3A%22jackson-databind%22) 添加一个 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-core</artifactId>
@@ -24,7 +24,7 @@
 
 我们可以通过使用一个`[JsonGenerator](https://web.archive.org/web/20220703150611/https://fasterxml.github.io/jackson-core/javadoc/2.6/com/fasterxml/jackson/core/JsonGenerator.html)` 类将 JSON 内容直接写到`OutputStream` 中。首先，我们需要创建该对象的实例:
 
-```
+```java
 ByteArrayOutputStream stream = new ByteArrayOutputStream();
 JsonFactory jfactory = new JsonFactory();
 JsonGenerator jGenerator = jfactory
@@ -33,7 +33,7 @@ JsonGenerator jGenerator = jfactory
 
 接下来，假设我们想要编写一个具有以下结构的 JSON:
 
-```
+```java
 {  
    "name":"Tom",
    "age":25,
@@ -46,7 +46,7 @@ JsonGenerator jGenerator = jfactory
 
 我们可以使用`JsonGenerator` 的实例将特定字段直接写入`OutputStream:`
 
-```
+```java
 jGenerator.writeStartObject();
 jGenerator.writeStringField("name", "Tom");
 jGenerator.writeNumberField("age", 25);
@@ -61,7 +61,7 @@ jGenerator.close();
 
 为了检查是否创建了正确的 JSON，我们可以创建一个包含 JSON 对象的`String` 对象:
 
-```
+```java
 String json = new String(stream.toByteArray(), "UTF-8");
 assertEquals(
   json, 
@@ -72,7 +72,7 @@ assertEquals(
 
 当我们得到一个 JSON `String` 作为输入，并希望从中提取特定的字段时，可以使用一个`[JsonParser](https://web.archive.org/web/20220703150611/https://fasterxml.github.io/jackson-core/javadoc/2.6/com/fasterxml/jackson/core/JsonParser.html)` 类:
 
-```
+```java
 String json
   = "{\"name\":\"Tom\",\"age\":25,\"address\":[\"Poland\",\"5th avenue\"]}";
 JsonFactory jfactory = new JsonFactory();
@@ -85,7 +85,7 @@ List<String> addresses = new LinkedList<>();
 
 我们想从输入 JSON 中获得`parsedName, parsedAge, and addresses` 字段。为了实现这一点，我们需要处理底层解析逻辑并自己实现它:
 
-```
+```java
 while (jParser.nextToken() != JsonToken.END_OBJECT) {
     String fieldname = jParser.getCurrentName();
     if ("name".equals(fieldname)) {
@@ -110,7 +110,7 @@ jParser.close();
 
 根据字段名，我们提取它并分配给一个适当的字段。解析文档后，所有字段都应该有正确的数据:
 
-```
+```java
 assertEquals(parsedName, "Tom");
 assertEquals(parsedAge, (Integer) 25);
 assertEquals(addresses, Arrays.asList("Poland", "5th avenue"));
@@ -124,7 +124,7 @@ assertEquals(addresses, Arrays.asList("Poland", "5th avenue"));
 
 假设我们只对输入 JSON 的`age`字段感兴趣。在这种情况下，我们可以实现解析逻辑，一旦找到需要的字段就停止解析:
 
-```
+```java
 while (jParser.nextToken() != JsonToken.END_OBJECT) {
     String fieldname = jParser.getCurrentName();
 
@@ -140,7 +140,7 @@ jParser.close();
 
 处理后，唯一的`parsedAge` 字段将有一个值:
 
-```
+```java
 assertNull(parsedName);
 assertEquals(parsedAge, (Integer) 25);
 assertTrue(addresses.isEmpty());

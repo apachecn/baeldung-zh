@@ -16,7 +16,7 @@
 
 对于大多数用例来说, `awaitility`库就足够了。如果我们想使用基于代理的条件`,`，我们还需要提供`awaitility-proxy` 库:
 
-```
+```java
 <dependency>
     <groupId>org.awaitility</groupId>
     <artifactId>awaitility</artifactId>
@@ -37,7 +37,7 @@
 
 让我们编写一个简单的异步服务并测试它:
 
-```
+```java
 public class AsyncService {
     private final int DELAY = 1000;
     private final int INIT_DELAY = 2000;
@@ -89,7 +89,7 @@ public class AsyncService {
 
 现在，让我们创建测试类:
 
-```
+```java
 public class AsyncServiceLongRunningManualTest {
     private AsyncService asyncService;
 
@@ -108,7 +108,7 @@ public class AsyncServiceLongRunningManualTest {
 
 在指定的初始延迟(默认为 100 毫秒)之后，通过以定义的间隔(默认为 100 毫秒)轮询我们的服务的`Callable`来获得状态。这里我们使用超时、间隔和延迟的默认设置:
 
-```
+```java
 asyncService.initialize();
 await()
   .until(asyncService::isInitialized);
@@ -118,7 +118,7 @@ await()
 
 默认的定时参数可以使用`Awaitility`类中的静态方法来更改:
 
-```
+```java
 Awaitility.setDefaultPollInterval(10, TimeUnit.MILLISECONDS);
 Awaitility.setDefaultPollDelay(Duration.ZERO);
 Awaitility.setDefaultTimeout(Duration.ONE_MINUTE);
@@ -128,7 +128,7 @@ Awaitility.setDefaultTimeout(Duration.ONE_MINUTE);
 
 我们还可以**为每个`await`调用**提供定制的计时值。在这里，我们预计初始化最多在 5 秒钟后发生，至少在 100 毫秒后发生，轮询间隔为 100 毫秒:
 
-```
+```java
 asyncService.initialize();
 await()
     .atLeast(Duration.ONE_HUNDRED_MILLISECONDS)
@@ -144,7 +144,7 @@ await()
 
 可用性还允许使用`hamcrest`匹配器来检查表达式的结果。例如，在调用`addValue`方法后，我们可以检查我们的`long`值是否如预期的那样改变了:
 
-```
+```java
 asyncService.initialize();
 await()
   .until(asyncService::isInitialized);
@@ -164,7 +164,7 @@ await()
 
 例如，让我们在初始化后立即检查`getValue` 结果是否等于零，忽略`IllegalStateException`:
 
-```
+```java
 asyncService.initialize();
 given().ignoreException(IllegalStateException.class)
   .await().atMost(Duration.FIVE_SECONDS)
@@ -178,7 +178,7 @@ given().ignoreException(IllegalStateException.class)
 
 让我们使用`AwaitilityClassProxy.to` 静态方法来检查`AsyncService` 是否被初始化:
 
-```
+```java
 asyncService.initialize();
 await()
   .untilCall(to(asyncService).isInitialized(), equalTo(true));
@@ -188,7 +188,7 @@ await()
 
 可用性甚至可以访问私有字段来对它们执行断言。在下面的示例中，我们可以看到获取服务初始化状态的另一种方法:
 
-```
+```java
 asyncService.initialize();
 await()
   .until(fieldIn(asyncService)

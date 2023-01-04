@@ -26,7 +26,7 @@ See how to integrate Spring Data with Spring Security.[Read more](/web/202209020
 
 首先，让我们看看我们需要的 maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-ldap</artifactId>
@@ -45,7 +45,7 @@ See how to integrate Spring Data with Spring Security.[Read more](/web/202209020
 
 接下来，让我们讨论我们的 Spring Security Java 配置:
 
-```
+```java
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
@@ -68,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 现在，让我们看看相应的 XML 配置:
 
-```
+```java
 <authentication-manager>
     <ldap-authentication-provider
       user-search-base="ou=people"
@@ -87,7 +87,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 LDAP 数据可以用 LDAP 数据交换格式(LDIF)来表示——下面是我们的用户数据的一个例子:
 
-```
+```java
 dn: ou=groups,dc=baeldung,dc=com
 objectclass: top
 objectclass: organizationalUnit
@@ -127,7 +127,7 @@ member: uid=baeldung,ou=people,dc=baeldung,dc=com
 
 要启用自动配置，我们需要确保在 pom.xml 中将`spring-boot-starter-data-ldap` Starter 或`spring-ldap-core`定义为依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-ldap</artifactId>
@@ -136,7 +136,7 @@ member: uid=baeldung,ou=people,dc=baeldung,dc=com
 
 要连接到 LDAP，我们需要在应用程序中提供连接设置。属性:
 
-```
+```java
 spring.ldap.url=ldap://localhost:18889
 spring.ldap.base=dc=example,dc=com
 spring.ldap.username=uid=admin,ou=system
@@ -145,7 +145,7 @@ spring.ldap.password=secret
 
 关于 Spring 数据 LDAP 自动配置的更多细节可以在[官方文档](https://web.archive.org/web/20220902041127/https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#features.nosql.ldap)中找到。Spring Boot 引入了 [LdapAutoConfiguration](https://web.archive.org/web/20220902041127/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/autoconfigure/ldap/LdapAutoConfiguration.html) ，它负责`LdapTemplate `的检测，然后可以将这些检测注入到所需的服务类中:
 
-```
+```java
 @Autowired
 private LdapTemplate ldapTemplate;
 ```
@@ -154,7 +154,7 @@ private LdapTemplate ldapTemplate;
 
 最后，这是我们的简单应用程序:
 
-```
+```java
 @Controller
 public class MyController {
 

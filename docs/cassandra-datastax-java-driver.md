@@ -30,7 +30,7 @@ DataStax 还为其 Apache Cassandra 发行版提供了一个 Java 客户端。�
 
 使用 Maven，我们只需将 [`java-driver-core`依赖项](https://web.archive.org/web/20221129021453/https://search.maven.org/search?q=g:com.datastax.oss%20a:java-driver-core)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.datastax.oss</groupId>
     <artifactId>java-driver-core</artifactId>
@@ -52,7 +52,7 @@ DataStax 还为其 Apache Cassandra 发行版提供了一个 Java 客户端。�
 
 为了连接到数据库，我们将创建一个`CqlSession`:
 
-```
+```java
 CqlSession session = CqlSession.builder().build();
 ```
 
@@ -60,7 +60,7 @@ CqlSession session = CqlSession.builder().build();
 
 让我们创建一个连接器类，用一些可配置的参数来构建`CqlSession`:
 
-```
+```java
 public class CassandraConnector {
 
     private CqlSession session;
@@ -89,7 +89,7 @@ public class CassandraConnector {
 
 对于本教程，**我们将使用`SimpleStrategy`复制策略，其中副本数量设置为 1** :
 
-```
+```java
 public class KeyspaceRepository {
 
     public void createKeyspace(String keyspaceName, int numberOfReplicas) {
@@ -106,7 +106,7 @@ public class KeyspaceRepository {
 
 同样，我们可以**在当前会话**中开始使用密钥空间:
 
-```
+```java
 public class KeyspaceRepository {
 
     //...
@@ -123,7 +123,7 @@ public class KeyspaceRepository {
 
 我们将定义`Video`模型并创建一个表来表示它:
 
-```
+```java
 public class Video {
     private UUID id;
     private String title;
@@ -135,7 +135,7 @@ public class Video {
 
 让我们创建我们的表，有可能定义我们想要在其中执行查询的键空间。我们将编写一个简单的`VideoRepository`类来处理我们的视频数据:
 
-```
+```java
 public class VideoRepository {
     private static final String TABLE_NAME = "videos";
 
@@ -181,7 +181,7 @@ public class VideoRepository {
 
 让我们编写一个将一些数据插入数据库的方法:
 
-```
+```java
 public class VideoRepository {
 
     //...
@@ -222,7 +222,7 @@ public class VideoRepository {
 
 现在，让我们添加一个方法，该方法创建一个简单的查询来获取我们存储在数据库中的数据:
 
-```
+```java
 public class VideoRepository {
 
     // ...
@@ -249,7 +249,7 @@ public class VideoRepository {
 
 最后，让我们来看一个例子，它使用了我们在本教程中讨论过的每个部分:
 
-```
+```java
 public class Application {
 
     public void run() {
@@ -281,7 +281,7 @@ public class Application {
 
 在我们执行我们的示例之后，我们可以在日志中看到数据被正确地存储在数据库中:
 
-```
+```java
 INFO com.baeldung.datastax.cassandra.Application - [id:733249eb-914c-4153-8698-4f58992c4ad4, title:Video Title 1, creationDate: 2019-07-10T19:43:35.112Z]
 INFO com.baeldung.datastax.cassandra.Application - [id:a6568236-77d7-42f2-a35a-b4c79afabccf, title:Video Title 2, creationDate: 2019-07-09T19:43:35.181Z]
 ```

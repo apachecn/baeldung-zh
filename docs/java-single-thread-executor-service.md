@@ -18,7 +18,7 @@
 
 让我们通过扩展`Thread`类来创建一个线程:
 
-```
+```java
 public class CustomThread extends Thread {
     // override the run() method to provide custom implementation
 
@@ -33,7 +33,7 @@ public class CustomThread extends Thread {
 
 现在让我们看一个通过实现`Runnable `接口创建线程的例子:
 
-```
+```java
 public class TestClass implements Runnable {
     // implement the run() method of Runnable interface
 
@@ -61,7 +61,7 @@ public class TestClass implements Runnable {
 
 让我们看看如何创建固定线程池:
 
-```
+```java
 ExecutorService executorService = Executors.newFixedThreadPool(5);
 ```
 
@@ -73,7 +73,7 @@ ExecutorService executorService = Executors.newFixedThreadPool(5);
 
 下面是我们创建缓存线程池的方法:
 
-```
+```java
 ExecutorService executorService = Executors.newCachedThreadPool();
 ```
 

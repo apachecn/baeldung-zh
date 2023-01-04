@@ -20,7 +20,7 @@
 
 让我们创建一个将在整篇文章中使用的简单类:
 
-```
+```java
 public class Product {
 
     private String name;
@@ -40,13 +40,13 @@ public class Product {
 
 我们现在可以用类型为`String`的键和类型为`Product`的元素创建一个`HashMap`:
 
-```
+```java
 Map<String, Product> productsByName = new HashMap<>(); 
 ```
 
 并将产品添加到我们的`HashMap`:
 
-```
+```java
 Product eBike = new Product("E-Bike", "A bike with a battery");
 Product roadBike = new Product("Road bike", "A bike for competition");
 productsByName.put(eBike.getName(), eBike);
@@ -57,21 +57,21 @@ productsByName.put(roadBike.getName(), roadBike);
 
 我们可以通过它的键从映射中检索一个值:
 
-```
+```java
 Product nextPurchase = productsByName.get("E-Bike");
 assertEquals("A bike with a battery", nextPurchase.getDescription());
 ```
 
 如果我们试图为一个 map 中不存在的键寻找一个值，我们将得到一个`null`值:
 
-```
+```java
 Product nextPurchase = productsByName.get("Car");
 assertNull(nextPurchase);
 ```
 
 如果我们用同一个键插入第二个值，我们将只得到最后插入的那个键的值:
 
-```
+```java
 Product newEBike = new Product("E-Bike", "A bike with a better battery");
 productsByName.put(newEBike.getName(), newEBike);
 assertEquals("A bike with a better battery", productsByName.get("E-Bike").getDescription());
@@ -81,7 +81,7 @@ assertEquals("A bike with a better battery", productsByName.get("E-Bike").getDes
 
 `HashMap`也允许我们将`null`作为一个键:
 
-```
+```java
 Product defaultProduct = new Product("Chocolate", "At least buy chocolate");
 productsByName.put(null, defaultProduct);
 
@@ -93,7 +93,7 @@ assertEquals("At least buy chocolate", nextPurchase.getDescription());
 
 此外，我们可以用不同的键将同一个对象插入两次:
 
-```
+```java
 productsByName.put(defaultProduct.getName(), defaultProduct);
 assertSame(productsByName.get(null), productsByName.get("Chocolate"));
 ```
@@ -102,7 +102,7 @@ assertSame(productsByName.get(null), productsByName.get("Chocolate"));
 
 我们可以从`HashMap`中删除一个键值映射:
 
-```
+```java
 productsByName.remove("E-Bike");
 assertNull(productsByName.get("E-Bike"));
 ```
@@ -111,13 +111,13 @@ assertNull(productsByName.get("E-Bike"));
 
 要检查一个键是否出现在 map 中，我们可以使用`containsKey()`方法:
 
-```
+```java
 productsByName.containsKey("E-Bike");
 ```
 
 或者，为了检查一个值是否出现在地图中，我们可以使用`containsValue()`方法:
 
-```
+```java
 productsByName.containsValue(eBike);
 ```
 
@@ -129,7 +129,7 @@ productsByName.containsValue(eBike);
 
 我们可以迭代所有键的集合:
 
-```
+```java
 for(String key : productsByName.keySet()) {
     Product product = productsByName.get(key);
 }
@@ -137,7 +137,7 @@ for(String key : productsByName.keySet()) {
 
 或者我们可以迭代所有条目的集合:
 
-```
+```java
 for(Map.Entry<String, Product> entry : productsByName.entrySet()) {
     Product product =  entry.getValue();
     String key = entry.getKey();
@@ -147,7 +147,7 @@ for(Map.Entry<String, Product> entry : productsByName.entrySet()) {
 
 最后，我们可以迭代所有的值:
 
-```
+```java
 List<Product> products = new ArrayList<>(productsByName.values());
 ```
 
@@ -155,14 +155,14 @@ List<Product> products = new ArrayList<>(productsByName.values());
 
 在我们的`HashMap`中，我们可以使用任何类作为键。然而，为了让地图正常工作，我们需要为`equals()`和 `**hashCode().**` 提供一个实现，假设我们想要一个地图，其中产品作为键，价格作为值:
 
-```
+```java
 HashMap<Product, Integer> priceByProduct = new HashMap<>();
 priceByProduct.put(eBike, 900);
 ```
 
 让我们实现`equals()`和`hashCode()`方法:
 
-```
+```java
 @Override
 public boolean equals(Object o) {
     if (this == o) {
@@ -197,7 +197,7 @@ Java 8 给`HashMap`增加了几个函数式的方法。在这一节中，我们�
 
 `forEach`方法是遍历地图中所有元素的函数式方法:
 
-```
+```java
 productsByName.forEach( (key, product) -> {
     System.out.println("Key: " + key + " Product:" + product.getDescription());
     //do something with the key and value
@@ -206,7 +206,7 @@ productsByName.forEach( (key, product) -> {
 
 Java 8 之前的版本:
 
-```
+```java
 for(Map.Entry<String, Product> entry : productsByName.entrySet()) {
     Product product =  entry.getValue();
     String key = entry.getKey();
@@ -220,7 +220,7 @@ for(Map.Entry<String, Product> entry : productsByName.entrySet()) {
 
 使用`getOrDefault()`方法，我们可以从映射中获得一个值，或者在给定键没有映射的情况下返回一个默认元素:
 
-```
+```java
 Product chocolate = new Product("chocolate", "something sweet");
 Product defaultProduct = productsByName.getOrDefault("horse carriage", chocolate); 
 Product bike = productsByName.getOrDefault("E-Bike", chocolate);
@@ -228,7 +228,7 @@ Product bike = productsByName.getOrDefault("E-Bike", chocolate);
 
 Java 8 之前的版本:
 
-```
+```java
 Product bike2 = productsByName.containsKey("E-Bike") 
     ? productsByName.get("E-Bike") 
     : chocolate;
@@ -241,13 +241,13 @@ Product defaultProduct2 = productsByName.containsKey("horse carriage")
 
 使用这种方法，我们可以添加一个新的映射，但前提是对于给定的键还没有映射:
 
-```
+```java
 productsByName.putIfAbsent("E-Bike", chocolate); 
 ```
 
 Java 8 之前的版本:
 
-```
+```java
 if(productsByName.containsKey("E-Bike")) {
     productsByName.put("E-Bike", chocolate);
 }
@@ -259,7 +259,7 @@ if(productsByName.containsKey("E-Bike")) {
 
 使用`[merge()](/web/20221205110945/https://www.baeldung.com/java-merge-maps),`,如果存在映射，我们可以修改给定键的值，否则添加新值:
 
-```
+```java
 Product eBike2 = new Product("E-Bike", "A bike with a battery");
 eBike2.getTags().add("sport");
 productsByName.merge("E-Bike", eBike2, Product::addTagsOfOtherProduct);
@@ -267,7 +267,7 @@ productsByName.merge("E-Bike", eBike2, Product::addTagsOfOtherProduct);
 
 Java 8 之前的版本:
 
-```
+```java
 if(productsByName.containsKey("E-Bike")) {
     productsByName.get("E-Bike").addTagsOfOtherProduct(eBike2);
 } else {
@@ -279,7 +279,7 @@ if(productsByName.containsKey("E-Bike")) {
 
 使用`compute()`方法，我们可以计算给定键的值:
 
-```
+```java
 productsByName.compute("E-Bike", (k,v) -> {
     if(v != null) {
         return v.addTagsOfOtherProduct(eBike2);
@@ -291,7 +291,7 @@ productsByName.compute("E-Bike", (k,v) -> {
 
 Java 8 之前的版本:
 
-```
+```java
 if(productsByName.containsKey("E-Bike")) {    
     productsByName.get("E-Bike").addTagsOfOtherProduct(eBike2); 
 } else {
@@ -331,7 +331,7 @@ if(productsByName.containsKey("E-Bike")) {
 
 对于这个例子，我们将创建`MutableKey`:
 
-```
+```java
 public class MutableKey {
     private String name;
 
@@ -358,7 +358,7 @@ public class MutableKey {
 
 测试开始了:
 
-```
+```java
 MutableKey key = new MutableKey("initial");
 
 Map<MutableKey, String> items = new HashMap<>();

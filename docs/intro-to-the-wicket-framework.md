@@ -16,7 +16,7 @@ Wicket 是一个面向 Java 服务器端 web 组件的框架，旨在通过引�
 
 要运行 Wicket 项目，让我们添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.wicket</groupId>
     <artifactId>wicket-core</artifactId>
@@ -34,7 +34,7 @@ Wicket 是一个面向 Java 服务器端 web 组件的框架，旨在通过引�
 
 Wicket 将使用这个类作为应用程序的主要入口点。在方法内部，简单地返回一个名为`HelloWorld:`的类的`class`对象
 
-```
+```java
 public class HelloWorldApplication extends WebApplication {
     @Override
     public Class<? extends Page> getHomePage() {
@@ -47,7 +47,7 @@ Wicket 更倾向于约定而不是配置。向应用程序添加新网页需要�
 
 在源代码的包目录中，首先添加`HelloWorld.java`:
 
-```
+```java
 public class HelloWorld extends WebPage {
     public HelloWorld() {
         add(new Label("hello", "Hello World!"));
@@ -57,7 +57,7 @@ public class HelloWorld extends WebPage {
 
 然后`HelloWorld.html`:
 
-```
+```java
 <html>
     <body>
         <span wicket:id="hello"></span>
@@ -67,7 +67,7 @@ public class HelloWorld extends WebPage {
 
 最后一步，在`web.xml:`中添加过滤器定义
 
-```
+```java
 <filter>
     <filter-name>wicket.examples</filter-name>
     <filter-class>
@@ -98,7 +98,7 @@ Wicket 中的组件是由 Java 类、HTML 标记和模型组成的三元组。�
 
 HTML 文件`CafeSelector.html`的主体将是最小的，只有两个元素，一个下拉菜单和一个标签:
 
-```
+```java
 <select wicket:id="cafes"></select>
 <p>
     Address: <span wicket:id="address">address</span>
@@ -107,7 +107,7 @@ HTML 文件`CafeSelector.html`的主体将是最小的，只有两个元素，�
 
 在 Java 端，让我们创建标签:
 
-```
+```java
 Label addressLabel = new Label("address", 
   new PropertyModel<String>(this.address, "address"));
 addressLabel.setOutputMarkupId(true);
@@ -117,7 +117,7 @@ addressLabel.setOutputMarkupId(true);
 
 `setOutputMarkupId`方法使得组件可以通过 Ajax 修改。现在让我们创建下拉列表，并向其中添加 Ajax 行为:
 
-```
+```java
 DropDownChoice<String> cafeDropdown 
   = new DropDownChoice<>(
     "cafes", 

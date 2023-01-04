@@ -43,7 +43,7 @@ SBE 的一个常见用例是金融数据流——大多包含数字和枚举—�
 
 为了使用 SBE 库，让我们将下面的 Maven [依赖项](https://web.archive.org/web/20221022195507/https://search.maven.org/search?q=g:uk.co.real-logic%20AND%20a:sbe-tool)添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>uk.co.real-logic</groupId>
     <artifactId>sbe-all</artifactId>
@@ -63,7 +63,7 @@ SBE 的一个常见用例是金融数据流——大多包含数字和枚举—�
 
 因此，让我们创建我们的模式文件:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe"
   package="com.baeldung.sbe.stub" id="1" version="0" semanticVersion="5.2"
@@ -110,7 +110,7 @@ SBE 的一个常见用例是金融数据流——大多包含数字和枚举—�
 
 作为我们的第一种类型，我们创建了`messageHeader`。这是必填字段，也有四个必填字段:
 
-```
+```java
 <composite name="messageHeader" description="Message identifiers and length of message root.">
     <type name="blockLength" primitiveType="uint16"/>
     <type name="templateId" primitiveType="uint16"/>
@@ -126,7 +126,7 @@ SBE 的一个常见用例是金融数据流——大多包含数字和枚举—�
 
 接下来，我们定义一个枚举，`Market`:
 
-```
+```java
 <enum name="Market" encodingType="uint8">
     <validValue name="NYSE" description="New York Stock Exchange">0</validValue>
     <validValue name="NASDAQ" 
@@ -140,7 +140,7 @@ SBE 的一个常见用例是金融数据流——大多包含数字和枚举—�
 
 紧接着，我们定义了另一种类型，`Symbol`。这将是一个 3 或 4 个字符的字符串，用于标识金融工具，如 AAPL(苹果)、MSFT(微软)等。：
 
-```
+```java
 <type name="Symbol" primitiveType="char" length="4" characterEncoding="ASCII" description="Instrument symbol"/>
 ```
 
@@ -148,7 +148,7 @@ SBE 的一个常见用例是金融数据流——大多包含数字和枚举—�
 
 之后，我们需要一个价格数据的复合类型。因此，我们创建了类型`Decimal`:
 
-```
+```java
 <composite name="Decimal">
     <type name="mantissa" primitiveType="uint64" minValue="0"/>
     <type name="exponent" primitiveType="int8"/>
@@ -164,7 +164,7 @@ SBE 的一个常见用例是金融数据流——大多包含数字和枚举—�
 
 接下来，非常类似于`Market`，我们创建另一个`<enum>`来表示`Currency`，其值被映射为`uint8`:
 
-```
+```java
 <enum name="Currency" encodingType="uint8">
     <validValue name="USD" description="US Dollar">0</validValue>
     <validValue name="EUR" description="Euro">1</validValue>
@@ -173,7 +173,7 @@ SBE 的一个常见用例是金融数据流——大多包含数字和枚举—�
 
 最后，我们通过组合之前创建的其他类型来定义`Quote`:
 
-```
+```java
 <composite name="Quote" description="A quote represents the price of an instrument in a market">
     <ref name="market" type="Market"/>
     <ref name="symbol" type="Symbol"/>
@@ -186,7 +186,7 @@ SBE 的一个常见用例是金融数据流——大多包含数字和枚举—�
 
 然而，我们仍然需要定义一个消息。那么，让我们来定义我们的信息，`TradeData`:
 
-```
+```java
 <sbe:message name="TradeData" id="1" description="Represents a quote and amount of trade">
     <field name="quote" id="1" type="Quote"/>
     <field name="amount" id="2" type="uint16"/>
@@ -201,7 +201,7 @@ SBE 的一个常见用例是金融数据流——大多包含数字和枚举—�
 
 生成 Java 存根的一种简单方法是使用 SBE jar 文件。这将自动运行实用程序类`SbeTool`:
 
-```
+```java
 java -jar -Dsbe.output.dir=target/generated-sources/java 
   <local-maven-directory>/repository/uk/co/real-logic/sbe-all/1.26.0/sbe-all-1.26.0.jar 
   src/main/resources/schema.xml
@@ -217,7 +217,7 @@ java -jar -Dsbe.output.dir=target/generated-sources/java
 
 因此，让我们将以下 Maven 插件添加到我们的`pom.xml`中:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -288,7 +288,7 @@ java -jar -Dsbe.output.dir=target/generated-sources/java
 
 首先，我们需要一些数据来进行测试。因此，我们创建了一个类，`MarketData`:
 
-```
+```java
 public class MarketData {
 
     private int amount;
@@ -305,7 +305,7 @@ public class MarketData {
 
 接下来，让我们定义一个`MarketData`对象，稍后在单元测试中使用:
 
-```
+```java
 private MarketData marketData;
 
 @BeforeEach
@@ -320,7 +320,7 @@ public void setup() {
 
 大多数情况下，我们希望将数据写入一个`ByteBuffer`，因此我们创建了一个初始容量为的`ByteBuffer`以及我们生成的编码器、`MessageHeaderEncoder`和`TradeDataEncoder`:
 
-```
+```java
 @Test
 public void givenMarketData_whenEncode_thenDecodedValuesMatch() {
     // our buffer to write encoded data, initial cap. 128 bytes
@@ -334,7 +334,7 @@ public void givenMarketData_whenEncode_thenDecodedValuesMatch() {
 
 在写入数据之前，我们需要将价格数据解析成两部分，尾数和指数:
 
-```
+```java
 BigDecimal priceDecimal = BigDecimal.valueOf(marketData.getPrice());
 int priceMantissa = priceDecimal.scaleByPowerOfTen(priceDecimal.scale()).intValue();
 int priceExponent = priceDecimal.scale() * -1;
@@ -344,7 +344,7 @@ int priceExponent = priceDecimal.scale() * -1;
 
 最后，让我们编码并编写我们的`TradeData`:
 
-```
+```java
 TradeDataEncoder encoder = dataEncoder.wrapAndApplyHeader(buffer, 0, headerEncoder);
 encoder.amount(marketData.getAmount());
 encoder.quote()
@@ -360,20 +360,20 @@ encoder.quote()
 
 为了读取消息，我们将使用写入数据的同一个缓冲区实例。然而，我们需要解码器，`MessageHeaderDecoder`和`TradeDataDecoder`，这次:
 
-```
+```java
 MessageHeaderDecoder headerDecoder = new MessageHeaderDecoder();
 TradeDataDecoder dataDecoder = new TradeDataDecoder();
 ```
 
 接下来，我们解码我们的`TradeData`:
 
-```
+```java
 dataDecoder.wrapAndApplyHeader(buffer, 0, headerDecoder);
 ```
 
 类似地，我们需要从尾数和指数这两个部分解码价格数据，以便将价格数据转换成一个`double`值。当然，我们会再次使用`BigDecimal`:
 
-```
+```java
 double price = BigDecimal.valueOf(dataDecoder.quote().price().mantissa())
   .scaleByPowerOfTen(dataDecoder.quote().price().exponent())
   .doubleValue();
@@ -381,7 +381,7 @@ double price = BigDecimal.valueOf(dataDecoder.quote().price().mantissa())
 
 最后，让我们确保解码值与原始值匹配:
 
-```
+```java
 Assertions.assertEquals(2, dataDecoder.amount());
 Assertions.assertEquals("IBM", dataDecoder.quote().symbol());
 Assertions.assertEquals(Market.NYSE, dataDecoder.quote().market());

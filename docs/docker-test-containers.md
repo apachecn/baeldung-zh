@@ -14,7 +14,7 @@
 
 首先，让我们定义核心功能的 maven 依赖性:
 
-```
+```java
 <dependency>
     <groupId>org.testcontainers</groupId>
     <artifactId>testcontainers</artifactId>
@@ -26,7 +26,7 @@
 
 让我们添加相关的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.testcontainers</groupId>
     <artifactId>postgresql </artifactId>
@@ -49,7 +49,7 @@
 
 让我们配置一个通用容器规则:
 
-```
+```java
 @ClassRule
 public static GenericContainer simpleWebServer
  = new GenericContainer("alpine:3.2")
@@ -69,7 +69,7 @@ public static GenericContainer simpleWebServer
 
 **我们可以使用 IP 地址和端口与运行在容器中的进程进行通信**:
 
-```
+```java
 @Test
 public void givenSimpleWebServerContainer_whenGetReuqest_thenReturnsResponse()
   throws Exception {
@@ -96,7 +96,7 @@ public void givenSimpleWebServerContainer_whenGetReuqest_thenReturnsResponse()
 
 例如，我们用`PostgreSQLContainer`规则启动一个 PostgreSQL 容器。然后，我们能够使用辅助方法。**这些是数据库连接的`getJdbcUrl, getUsername, getPassword` :**
 
-```
+```java
 @Rule
 public PostgreSQLContainer postgresContainer = new PostgreSQLContainer();
 
@@ -125,7 +125,7 @@ public void whenSelectQueryExecuted_thenResulstsReturned()
 
 这对于自动化 web 应用程序的 UI/验收测试非常有用:
 
-```
+```java
 @Rule
 public BrowserWebDriverContainer chrome = new BrowserWebDriverContainer()
   .withCapabilities(new ChromeOptions());
@@ -144,7 +144,7 @@ public void whenNavigatedToPage_thenHeadingIsInThePage() {
 
 如果测试需要更复杂的服务，我们可以在一个`docker-compose`文件中指定它们:
 
-```
+```java
 simpleWebServer:
   image: alpine:3.2
   command: ["/bin/sh", "-c", "while true; do echo 'HTTP/1.1 200 OK\n\nHello World!' | nc -l -p 80; done"]
@@ -154,7 +154,7 @@ simpleWebServer:
 
 **我们使用`getServiceHost`和`getServicePost`方法建立到服务的连接地址:**
 
-```
+```java
 @ClassRule
 public static DockerComposeContainer compose = 
   new DockerComposeContainer(

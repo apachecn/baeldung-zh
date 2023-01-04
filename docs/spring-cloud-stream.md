@@ -12,7 +12,7 @@ Spring Cloud Stream 是建立在 Spring Boot 和 Spring 集成之上的框架，
 
 首先，我们需要将带有代理 RabbitMQ Maven 依赖的 [Spring Cloud Starter Stream 作为消息中间件添加到我们的`pom.xml`:](https://web.archive.org/web/20220628063223/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.cloud%22%20AND%20a%3A%22spring-cloud-starter-stream-rabbit%22)
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
@@ -22,7 +22,7 @@ Spring Cloud Stream 是建立在 Spring Boot 和 Spring 集成之上的框架，
 
 我们将添加来自 Maven Central 的[模块依赖项，以启用 JUnit 支持:](https://web.archive.org/web/20220628063223/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.cloud%22%20AND%20a%3A%22spring-cloud-stream-test-support%22)
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-stream-test-support</artifactId>
@@ -41,7 +41,7 @@ Spring Cloud Stream 是建立在 Spring Boot 和 Spring 集成之上的框架，
 
 让我们看看 Spring Cloud Stream 中的一个简单服务，它监听`input`绑定并向`output`绑定发送响应:
 
-```
+```java
 @SpringBootApplication
 @EnableBinding(Processor.class)
 public class MyLoggerServiceApplication {
@@ -83,7 +83,7 @@ public class MyLoggerServiceApplication {
 
 让我们向上面的`enrichLogMessage`服务发送一条消息，并检查响应是否在消息的开头包含文本`“[1]: “`:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = MyLoggerServiceApplication.class)
 @DirtiesContext
@@ -116,7 +116,7 @@ public class MyLoggerApplicationTests {
 
 如果我们需要不同的东西，比如一个输入和两个输出通道，我们可以创建一个定制的处理器:
 
-```
+```java
 public interface MyProcessor {
     String INPUT = "myInput";
 
@@ -137,7 +137,7 @@ Spring 将为我们提供这个接口的正确实现。可以使用类似`@Outpu
 
 现在，假设如果值小于 10，我们希望将消息路由到一个输出，如果值大于或等于 10，则路由到另一个输出:
 
-```
+```java
 @Autowired
 private MyProcessor processor;
 
@@ -161,7 +161,7 @@ private static final <T> Message<T> message(T val) {
 
 例如，我们可以使用条件调度作为将消息路由到不同输出的另一种方法:
 
-```
+```java
 @Autowired
 private MyProcessor processor;
 
@@ -190,14 +190,14 @@ public void routeValuesToAnotherOutput(Integer val) {
 
 我们可以通过`META-INF/spring.binders`配置我们的应用程序使用默认的绑定器实现:
 
-```
+```java
 rabbit:\
 org.springframework.cloud.stream.binder.rabbit.config.RabbitMessageChannelBinderConfiguration
 ```
 
 或者我们可以通过包含`[this dependency](https://web.archive.org/web/20220628063223/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.cloud%22%20AND%20a%3A%22spring-cloud-stream-binder-rabbit%22)`将 RabbitMQ 的绑定器库添加到类路径中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
@@ -211,7 +211,7 @@ org.springframework.cloud.stream.binder.rabbit.config.RabbitMessageChannelBinder
 
 为了配置 3.1 节中的例子来使用 RabbitMQ 绑定器，我们需要更新位于`src/main/resources`的`application.yml`:
 
-```
+```java
 spring:
   cloud:
     stream:
@@ -247,7 +247,7 @@ Spring Cloud Stream 允许我们为特定的内容类型应用消息转换。在
 
 为此，我们将对**使用`MessageConverter`** 对`LogMessage`应用一个自定义转换:
 
-```
+```java
 @SpringBootApplication
 @EnableBinding(Processor.class)
 public class MyLoggerServiceApplication {
@@ -262,7 +262,7 @@ public class MyLoggerServiceApplication {
 }
 ```
 
-```
+```java
 public class TextPlainMessageConverter extends AbstractMessageConverter {
 
     public TextPlainMessageConverter() {
@@ -296,7 +296,7 @@ public class TextPlainMessageConverter extends AbstractMessageConverter {
 
 为了实现这种行为，每个消费者绑定可以使用`spring.cloud.stream.bindings.<CHANNEL>.group`属性来指定一个组名:
 
-```
+```java
 spring:
   cloud:
     stream:

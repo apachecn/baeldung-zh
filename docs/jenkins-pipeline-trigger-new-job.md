@@ -40,7 +40,7 @@ Jenkins 是一款自动化服务器，为开发人员提供自动构建、测试
 
 Jenkins pipeline 是一系列相互关联的事件或工作，在我们的软件开发工作流程中产生持续交付的。在这里，我们将创建一个管道作业，该作业将在内部调用我们刚刚创建的`childJob`。让我们看看管道作业的 Groovy 脚本:
 
-```
+```java
 pipeline {
     agent any
     stages {

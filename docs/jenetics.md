@@ -25,7 +25,7 @@
 
 为了使用 Jenetics，我们需要将以下依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>io.jenetics</groupId>
     <artifactId>jenetics</artifactId>
@@ -43,7 +43,7 @@
 
 假设我们需要解决最简单的二进制问题，其中我们需要优化由 0 和 1 组成的染色体中 1 位的位置。首先，我们需要定义适合该问题的工厂:
 
-```
+```java
 Factory<Genotype<BitGene>> gtf = Genotype.of(BitChromosome.of(10, 0.5));
 ```
 
@@ -51,14 +51,14 @@ Factory<Genotype<BitGene>> gtf = Genotype.of(BitChromosome.of(10, 0.5));
 
 现在，让我们创建执行环境:
 
-```
+```java
 Engine<BitGene, Integer> engine
   = Engine.builder(SimpleGeneticAlgorithm::eval, gtf).build();
 ```
 
 `eval()`方法返回位数:
 
-```
+```java
 private Integer eval(Genotype<BitGene> gt) {
     return gt.getChromosome().as(BitChromosome.class).bitCount();
 }
@@ -66,7 +66,7 @@ private Integer eval(Genotype<BitGene> gt) {
 
 在最后一步，我们开始进化并收集结果:
 
-```
+```java
 Genotype<BitGene> result = engine.stream()
   .limit(500)
   .collect(EvolutionResult.toBestGenotype());
@@ -74,7 +74,7 @@ Genotype<BitGene> result = engine.stream()
 
 最终结果将类似于此:
 
-```
+```java
 Before the evolution:
 [00000010|11111100]
 After the evolution:
@@ -89,7 +89,7 @@ Jenetics 的另一个用例是解决[子集和问题](https://web.archive.org/we
 
 Jenetics 中有预定义的接口来解决此类问题:
 
-```
+```java
 public class SubsetSum implements Problem<ISeq<Integer>, EnumGene<Integer>, Integer> {
     // implementation
 }
@@ -103,7 +103,7 @@ public class SubsetSum implements Problem<ISeq<Integer>, EnumGene<Integer>, Inte
 
 为了使用`Problem<T, G, C>` 接口，我们需要覆盖两个方法:
 
-```
+```java
 @Override
 public Function<ISeq<Integer>, Integer> fitness() {
     return subset -> Math.abs(subset.stream()
@@ -120,7 +120,7 @@ public Codec<ISeq<Integer>, EnumGene<Integer>> codec() {
 
 现在我们可以进入主要部分了。开始时，我们需要创建一个子集用于问题:
 
-```
+```java
 SubsetSum problem = of(500, 15, new LCG64ShiftRandom(101010));
 ```
 
@@ -128,7 +128,7 @@ SubsetSum problem = of(500, 15, new LCG64ShiftRandom(101010));
 
 下一步，我们将构建解决方案的引擎:
 
-```
+```java
 Engine<EnumGene<Integer>, Integer> engine = Engine.builder(problem)
   .minimizing()
   .maximalPhenotypeAge(5)
@@ -138,7 +138,7 @@ Engine<EnumGene<Integer>, Integer> engine = Engine.builder(problem)
 
 我们试图通过设置用于改变后代的表现型年龄和改变者来最小化结果(最佳结果将是 0)。在下一步中，我们可以获得结果:
 
-```
+```java
 Phenotype<EnumGene<Integer>, Integer> result = engine.stream()
   .limit(limit.bySteadyFitness(55))
   .collect(EvolutionResult.toBestPhenotype());
@@ -148,7 +148,7 @@ Phenotype<EnumGene<Integer>, Integer> result = engine.stream()
 
 如果我们幸运的话，对于随机创建的集合有一个解决方案，我们会看到类似这样的东西:
 
-```
+```java
 [85|-76|178|-197|91|-106|-70|-243|-41|-98|94|-213|139|238|219] --> 0
 ```
 
@@ -160,14 +160,14 @@ Jenetics 库允许我们解决更复杂的问题，比如背包问题。简单�
 
 让我们从定义箱包尺寸和物品数量开始:
 
-```
+```java
 int nItems = 15;
 double ksSize = nItems * 100.0 / 3.0;
 ```
 
 在下一步中，我们将生成一个包含`KnapsackItem`个对象(由`size`和`value`字段定义)的随机数组，我们将使用首次适合方法将这些项目随机放入背包中:
 
-```
+```java
 KnapsackFF ff = new KnapsackFF(Stream.generate(KnapsackItem::random)
   .limit(nItems)
   .toArray(KnapsackItem[]::new), ksSize);
@@ -175,7 +175,7 @@ KnapsackFF ff = new KnapsackFF(Stream.generate(KnapsackItem::random)
 
 接下来，我们需要创建`Engine`:
 
-```
+```java
 Engine<BitGene, Double> engine
   = Engine.builder(ff, BitChromosome.of(nItems, 0.5))
   .populationSize(500)
@@ -193,13 +193,13 @@ Engine<BitGene, Double> engine
 
 **jene tics 还有一个很重要的特点。我们可以轻松地从整个模拟过程中收集所有统计数据和见解。**我们将通过使用 `EvolutionStatistics` 类来实现这一点:
 
-```
+```java
 EvolutionStatistics<Double, ?> statistics = EvolutionStatistics.ofNumber();
 ```
 
 最后，让我们运行模拟:
 
-```
+```java
 Phenotype<BitGene, Double> best = engine.stream()
   .limit(bySteadyFitness(7))
   .limit(100)
@@ -216,7 +216,7 @@ Phenotype<BitGene, Double> best = engine.stream()
 
 最终结果包含大量信息:
 
-```
+```java
 +---------------------------------------------------------------------------+
 |  Time statistics                                                          |
 +---------------------------------------------------------------------------+

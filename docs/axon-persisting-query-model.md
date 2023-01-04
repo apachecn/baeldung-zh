@@ -22,7 +22,7 @@ Axon framework 帮助我们构建事件驱动的微服务系统。在[Axon 框�
 
 让我们进一步构建订单应用程序，并允许以多种方式创建和更新订单。通过更新内存模型在`InMemoryOrdersEventHandler` 中处理`ProductAddedEvent`:
 
-```
+```java
 @EventHandler
 public void on(ProductAddedEvent event) {
     orders.computeIfPresent(event.getOrderId(), (orderId, order) -> {
@@ -38,7 +38,7 @@ public void on(ProductAddedEvent event) {
 
 让我们使用 MongoDB 来持久化我们的查询模型。**我们使用 [Axon framework mongo 扩展](https://web.archive.org/web/20221128161122/https://github.com/AxonFramework/extension-mongo)在 mongo 中持久化令牌存储。**因为我们已经添加了`[axon-bom](https://web.archive.org/web/20221128161122/https://search.maven.org/search?q=a:axon-bom)`，所以在向我们的`pom.xml`添加扩展时，我们不需要指定版本:
 
-```
+```java
 <dependency>
     <groupId>org.axonframework.extensions.mongo</groupId>
     <artifactId>axon-mongo</artifactId>
@@ -49,7 +49,7 @@ public void on(ProductAddedEvent event) {
 
 有了依赖关系，我们可以**配置 Axon 来使用`MongoTokenStore`** :
 
-```
+```java
 @Bean
 public TokenStore getTokenStore(MongoClient client, Serializer serializer){
     return MongoTokenStore.builder()
@@ -67,7 +67,7 @@ public TokenStore getTokenStore(MongoClient client, Serializer serializer){
 
 名为`mongo`的 [Spring Profile](/web/20221128161122/https://www.baeldung.com/spring-profiles) 支持在事件处理程序的实现之间切换。当`mongo`概要文件激活时，将使用`MongoOrdersEventHandler`，以及令牌存储配置。这使得事件处理程序类:
 
-```
+```java
 @Service
 @ProcessingGroup("orders")
 @Profile("mongo")
@@ -80,7 +80,7 @@ public class MongoOrdersEventHandler implements OrdersEventHandler {
 
 我们将在构造函数中使用依赖注入来获得`MongoClient`和`QueryUpdateEmitter.` ，我们使用`MongoClient`来创建 MongoCollection 和索引。我们注入`QueryUpdateEmitter`来启用[订阅查询](/web/20221128161122/https://www.baeldung.com/axon-query-dispatching#subscription-queries):
 
-```
+```java
 public MongoOrdersEventHandler(MongoClient client, QueryUpdateEmitter emitter) {
     orders = client
       .getDatabase(AXON_FRAMEWORK_DATABASE_NAME)
@@ -95,7 +95,7 @@ public MongoOrdersEventHandler(MongoClient client, QueryUpdateEmitter emitter) {
 
 `MongoOrdersEventHandler` 使用`orders` mongo 集合来处理查询。我们需要使用`documentToOrder()`方法将 Mongo 文档映射到订单:
 
-```
+```java
 @QueryHandler
 public List<Order> handle(FindAllOrderedProductsQuery query) {
     List<Order> orderList = new ArrayList<>();
@@ -110,7 +110,7 @@ public List<Order> handle(FindAllOrderedProductsQuery query) {
 
 为了能够处理`TotalProductsShippedQuery,`,我们添加了一个 **`shippedProductFilter`,它过滤出已经发货并有产品的订单:**
 
-```
+```java
 private Bson shippedProductFilter(String productId){
     return and(
       eq(ORDER_STATUS_PROPERTY_NAME, OrderStatus.SHIPPED.toString()),
@@ -121,7 +121,7 @@ private Bson shippedProductFilter(String productId){
 
 然后，在查询处理程序中使用该过滤器提取和添加产品计数:
 
-```
+```java
 @QueryHandler
 public Integer handle(TotalProductsShippedQuery query) {
     AtomicInteger result = new AtomicInteger();
@@ -144,7 +144,7 @@ public Integer handle(TotalProductsShippedQuery query) {
 
 对于`MongoOrdersEventHandler,` **，我们需要确保删除集合，这样我们就不会保留之前测试的状态**。我们通过实现`getHandler()`方法来实现这一点:
 
-```
+```java
 @Override
 protected OrdersEventHandler getHandler() {
     mongoClient.getDatabase("axonframework").drop();
@@ -160,7 +160,7 @@ protected OrdersEventHandler getHandler() {
 
 `reset()`方法的实现是:
 
-```
+```java
 @Override
 public void reset(List<Order> orderList) {
     orders.deleteMany(new Document());
@@ -170,7 +170,7 @@ public void reset(List<Order> orderList) {
 
 `reset()`方法确保只有列表中的订单是集合的一部分。该方法在`OrderQueryServiceIntegrationTest`中每次测试前执行:
 
-```
+```java
 @BeforeEach
 void setUp() {
     orderId = UUID.randomUUID().toString();

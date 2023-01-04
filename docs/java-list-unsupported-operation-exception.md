@@ -14,7 +14,7 @@
 
 当我们使用来自`java.util.Arrays:`的`asList()`方法时，经常会出现这种错误
 
-```
+```java
 public static List asList(T... a)
 ```
 
@@ -27,13 +27,13 @@ public static List asList(T... a)
 
 由于 T 是一个 [`varargs`](/web/20220814123140/https://www.baeldung.com/java-varargs) ，我们可以直接将一个数组或者项作为参数传递，方法会创建一个固定大小的初始化列表:
 
-```
+```java
 List<String> flowers = Arrays.asList("Ageratum", "Allium", "Poppy", "Catmint");
 ```
 
 我们也可以通过一个实际的`array`:
 
-```
+```java
 String[] flowers = { "Ageratum", "Allium", "Poppy", "Catmint" };
 List<String> flowerList = Arrays.asList(flowers);
 ```
@@ -42,7 +42,7 @@ List<String> flowerList = Arrays.asList(flowers);
 
 试图添加更多元素会导致`UnsupportedOperationException`:
 
-```
+```java
 String[] flowers = { "Ageratum", "Allium", "Poppy", "Catmint" }; 
 List<String> flowerList = Arrays.asList(flowers); 
 flowerList.add("Celosia");
@@ -58,7 +58,7 @@ flowerList.add("Celosia");
 
 其中之一是直接从`asList()`的结果中创建一个`ArrayList`或任何类型的列表:
 
-```
+```java
 String[] flowers = { "Ageratum", "Allium", "Poppy", "Catmint" }; 
 List<String> flowerList = new ArrayList<>(Arrays.asList(flowers));
 ```

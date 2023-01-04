@@ -24,21 +24,21 @@ Maven 的本地存储库是本地机器上存储所有项目工件的目录。
 
 以下是基于操作系统的默认本地存储库的位置:
 
-```
+```java
 Windows: C:\Users\<User_Name>\.m2
 ```
 
-```
+```java
 Linux: /home/<User_Name>/.m2
 ```
 
-```
+```java
 Mac: /Users/<user_name>/.m2
 ```
 
 对于 Linux 和 Mac，我们可以用简短的形式写:
 
-```
+```java
 ~/.m2
 ```
 
@@ -50,7 +50,7 @@ Mac: /Users/<user_name>/.m2
 
 下面是确定我们丢失的本地回购位置的相关配置:
 
-```
+```java
 <settings>
     <localRepository>C:/maven_repository</localRepository>
     ...
@@ -64,7 +64,7 @@ Mac: /Users/<user_name>/.m2
 
 除了在 Maven 的`settings.xml`中设置定制的本地存储库之外，`mvn`命令还支持`maven.repo.local`属性，这允许我们将本地存储库位置作为命令行参数传递:
 
-```
+```java
 mvn -Dmaven.repo.local=/my/local/repository/path clean install
 ```
 

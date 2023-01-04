@@ -12,7 +12,7 @@
 
 Java 8 [流](https://web.archive.org/web/20221129020054/https://github.com/openjdk/jdk/blob/6bab0f539fba8fb441697846347597b4a0ade428/src/java.base/share/classes/java/util/stream/BaseStream.java#L64)实现`AutoCloseable`接口:
 
-```
+```java
 public interface Stream<T> extends BaseStream<...> {
     // omitted
 }
@@ -29,7 +29,7 @@ public interface BaseStream<...> extends AutoCloseable {
 
 大多数时候，我们从 Java 集合、数组或生成器函数中创建`Stream`实例。例如，在这里，我们通过流 API 对一组`String`进行操作:
 
-```
+```java
 List<String> colors = List.of("Red", "Blue", "Green")
   .stream()
   .filter(c -> c.length() > 4)
@@ -39,14 +39,14 @@ List<String> colors = List.of("Red", "Blue", "Green")
 
 有时，我们会生成一个有限或无限的序列流:
 
-```
+```java
 Random random = new Random();
 random.ints().takeWhile(i -> i < 1000).forEach(System.out::println);
 ```
 
 此外，我们还可以使用基于阵列的流:
 
-```
+```java
 String[] colors = {"Red", "Blue", "Green"};
 Arrays.stream(colors).map(String::toUpperCase).toArray()
 ```
@@ -57,7 +57,7 @@ Arrays.stream(colors).map(String::toUpperCase).toArray()
 
 然而，有些流是由 IO 资源支持的，比如文件或套接字。例如， [`Files.lines()`](https://web.archive.org/web/20221129020054/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Files.html#lines(java.nio.file.Path)) 方法对给定文件的所有行进行流式处理:
 
-```
+```java
 Files.lines(Paths.get("/path/to/file"))
   .flatMap(line -> Arrays.stream(line.split(",")))
   // omitted
@@ -67,7 +67,7 @@ Files.lines(Paths.get("/path/to/file"))
 
 为了防止这种资源泄漏，强烈建议使用`[try-with-resources](/web/20221129020054/https://www.baeldung.com/java-try-with-resources) `习语来关闭基于 IO 的流:
 
-```
+```java
 try (Stream<String> lines = Files.lines(Paths.get("/path/to/file"))) {
     lines.flatMap(line -> Arrays.stream(line.split(","))) // omitted
 }

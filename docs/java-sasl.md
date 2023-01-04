@@ -62,7 +62,7 @@ Java 中有一些 APIs】支持用 SASL 开发客户端和服务器端应用。A
 
 让我们看看如何实例化一个`SaslServer`:
 
-```
+```java
 SaslServer ss = Sasl.createSaslServer(
   mechanism, 
   protocol, 
@@ -83,7 +83,7 @@ SaslServer ss = Sasl.createSaslServer(
 
 `SaslClient`代表 SASL 的客户端机制。让我们看看如何实例化一个`SaslClient`:
 
-```
+```java
 SaslClient sc = Sasl.createSaslClient(
   mechanisms, 
   authorizationId, 
@@ -124,7 +124,7 @@ SunSASL 将 Java 作为安全提供者提供，默认情况下注册为 JCA 提�
 
 首先，让我们看看如何为服务器定义一个`CallbackHandler`:
 
-```
+```java
 public class ServerCallbackHandler implements CallbackHandler {
     @Override
     public void handle(Callback[] cbs) throws IOException, UnsupportedCallbackException {
@@ -153,7 +153,7 @@ public class ServerCallbackHandler implements CallbackHandler {
 
 现在，让我们看看`Callbackhandler`的客户端:
 
-```
+```java
 public class ClientCallbackHandler implements CallbackHandler {
     @Override
     public void handle(Callback[] cbs) throws IOException, UnsupportedCallbackException {
@@ -184,7 +184,7 @@ public class ClientCallbackHandler implements CallbackHandler {
 
 现在是时候看看他们的行动了:
 
-```
+```java
 @Test
 public void givenHandlers_whenStarted_thenAutenticationWorks() throws SaslException {
     byte[] challenge;
@@ -217,7 +217,7 @@ public void givenHandlers_whenStarted_thenAutenticationWorks() throws SaslExcept
 
 首先，让我们先检查我们是否能够协商一个安全的通信:
 
-```
+```java
 String qop = (String) saslClient.getNegotiatedProperty(Sasl.QOP);
 
 assertEquals("auth-conf", qop);
@@ -229,7 +229,7 @@ assertEquals("auth-conf", qop);
 
 让我们看看如何保护客户端中的传出通信:
 
-```
+```java
 byte[] outgoing = "Baeldung".getBytes();
 byte[] secureOutgoing = saslClient.wrap(outgoing, 0, outgoing.length);
 
@@ -238,7 +238,7 @@ byte[] secureOutgoing = saslClient.wrap(outgoing, 0, outgoing.length);
 
 类似地，服务器可以处理传入的通信:
 
-```
+```java
 // Receive secureIncoming from the client over the network
 byte[] incoming = saslServer.unwrap(secureIncoming, 0, netIn.length);
 
@@ -257,7 +257,7 @@ assertEquals("Baeldung", new String(incoming, StandardCharsets.UTF_8));
 
 我们首先提供一个简单的 JAAS 配置“kafka_jaas.conf”:
 
-```
+```java
 KafkaClient {
   org.apache.kafka.common.security.plain.PlainLoginModule required
   username="username"
@@ -267,13 +267,13 @@ KafkaClient {
 
 我们在启动 JVM 时使用了这个 JAAS 配置:
 
-```
+```java
 -Djava.security.auth.login.config=kafka_jaas.conf
 ```
 
 最后，我们必须添加一些属性来传递给我们的生产者和消费者实例:
 
-```
+```java
 security.protocol=SASL_SSL
 sasl.mechanism=PLAIN
 ```

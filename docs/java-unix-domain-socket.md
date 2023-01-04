@@ -24,7 +24,7 @@ Unix 域套接字由[文件系统](/web/20221219035157/https://www.baeldung.com/
 
 正如我们之前所了解的，Unix 域套接字是基于文件系统路径名的，所以首先，我们需要为我们的套接字文件定义一个路径，并将其转换成`UnixDomainSocketAddress`:
 
-```
+```java
 Path socketPath = Path
   .of(System.getProperty("user.home"))
   .resolve("baeldung.socket");
@@ -35,13 +35,13 @@ UnixDomainSocketAddress socketAddress = UnixDomainSocketAddress.of(socketPath);
 
 我们需要记住的一件事是在每次关闭服务器后删除套接字文件:
 
-```
+```java
 Files.deleteIfExists(socketPath);
 ```
 
 不幸的是，它不会被自动删除，我们也不能在以后的连接中重用它。任何重复使用同一路径的尝试都将以一个异常结束，该异常指出该地址已被使用:
 
-```
+```java
 java.net.BindException: Address already in use
 ```
 
@@ -51,26 +51,26 @@ java.net.BindException: Address already in use
 
 首先，我们应该用 Unix 协议创建一个服务器套接字通道:
 
-```
+```java
 ServerSocketChannel serverChannel = ServerSocketChannel
   .open(StandardProtocolFamily.UNIX);
 ```
 
 此外，我们需要将它与我们之前创建的套接字地址绑定:
 
-```
+```java
 serverChannel.bind(socketAddress);
 ```
 
 现在我们可以等待第一个客户端连接了:
 
-```
+```java
 SocketChannel channel = serverChannel.accept();
 ```
 
 当客户端连接时，消息将进入字节缓冲区。为了读取这些消息，我们需要构建一个无限循环来处理输入并[将每条消息打印到控制台](/web/20221219035157/https://www.baeldung.com/java-console-input-output#writing-to-systemout):
 
-```
+```java
 while (true) {
     readSocketMessage(channel)
       .ifPresent(message -> System.out.printf("[Client message] %s", message));
@@ -80,7 +80,7 @@ while (true) {
 
 在上面的例子中，方法`readSocketMessage`负责将套接字通道[缓冲区转换为`String:`](/web/20221219035157/https://www.baeldung.com/java-string-to-byte-array)
 
-```
+```java
 private Optional<String> readSocketMessage(SocketChannel channel) throws IOException {
     ByteBuffer buffer = ByteBuffer.allocate(1024);
     int bytesRead = channel.read(buffer);
@@ -103,7 +103,7 @@ private Optional<String> readSocketMessage(SocketChannel channel) throws IOExcep
 
 我们唯一需要设置的是一个带有 Unix 协议的套接字通道，并将其连接到我们的套接字地址:
 
-```
+```java
 SocketChannel channel = SocketChannel
   .open(StandardProtocolFamily.UNIX);
 channel.connect(socketAddress);
@@ -111,13 +111,13 @@ channel.connect(socketAddress);
 
 现在我们可以准备一条短信:
 
-```
+```java
 String message = "Hello from Baeldung Unix domain socket article";
 ```
 
 将其转换为字节缓冲区:
 
-```
+```java
 ByteBuffer buffer = ByteBuffer.allocate(1024);
 buffer.clear();
 buffer.put(message.getBytes());
@@ -126,7 +126,7 @@ buffer.flip();
 
 并将全部数据写入我们的套接字:
 
-```
+```java
 while (buffer.hasRemaining()) {
     channel.write(buffer);
 }
@@ -134,7 +134,7 @@ while (buffer.hasRemaining()) {
 
 最后，服务器日志中会弹出以下输出:
 
-```
+```java
 [Client message] Hello from Baeldung Unix domain socket article!
 ```
 
@@ -144,13 +144,13 @@ Unix 域套接字可用于连接数据库。许多流行的发行版，如 [Mong
 
 例如，MongoDB 在`/tmp/mongodb-27017.sock`创建一个 Unix 域套接字，我们可以在 [`MongoClient`配置](/web/20221219035157/https://www.baeldung.com/java-mongodb#1-make-a-connection-with-mongoclient)中直接使用它:
 
-```
+```java
 MongoClient mongoClient = new MongoClient("/tmp/mongodb-27017.sock");
 ```
 
 一个需求是将 [`jnr.unixsocket`](https://web.archive.org/web/20221219035157/https://search.maven.org/search?q=a:jnr-unixsocket) 依赖项添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>com.github.jnr</groupId>
     <artifactId>jnr-unixsocket</artifactId>
@@ -160,7 +160,7 @@ MongoClient mongoClient = new MongoClient("/tmp/mongodb-27017.sock");
 
 另一方面，PostgreSQL 给了我们使用 Unix 域套接字和 JDBC 标准 T2 的可能性。因此，我们只需要在创建连接时提供一个额外的`socketFactory`参数:
 
-```
+```java
 String dbUrl = "jdbc:postgresql://databaseName?socketFactory=org.newsclub.net.unix.
   AFUNIXSocketFactory$FactoryArg&socketFactoryArg;=/var/run/postgresql/.s.PGSQL.5432";
 Connection connection = DriverManager
@@ -171,7 +171,7 @@ Connection connection = DriverManager
 
 在我们的例子中，我们使用了来自 [`junixsocket`库](https://web.archive.org/web/20221219035157/https://search.maven.org/search?q=junixsocket-core)的`AFUNIXSocketFactory`类:
 
-```
+```java
 <dependency>
   <groupId>com.kohlschutter.junixsocket</groupId>
   <artifactId>junixsocket-core</artifactId>

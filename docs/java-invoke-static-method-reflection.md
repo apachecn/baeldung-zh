@@ -15,7 +15,7 @@
 
 为了便于演示和解释，我们先创建一个`GreetingAndBye`类作为示例:
 
-```
+```java
 public class GreetingAndBye {
 
     public static String greeting(String name) {
@@ -38,7 +38,7 @@ public class GreetingAndBye {
 
 首先，让我们看看如何调用`public` `static`方法:
 
-```
+```java
 @Test
 void invokePublicMethod() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     Class<GreetingAndBye> clazz = GreetingAndBye.class;
@@ -68,7 +68,7 @@ void invokePublicMethod() throws NoSuchMethodException, InvocationTargetExceptio
 
 调用`private` `static`方法与调用`public`方法非常相似。让我们先来看看代码:
 
-```
+```java
 @Test
 void invokePrivateMethod() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     Class<GreetingAndBye> clazz = GreetingAndBye.class;

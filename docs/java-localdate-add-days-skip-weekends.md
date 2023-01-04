@@ -16,7 +16,7 @@
 
 这样，我们不断增加天数，直到计数器等于应该增加的天数:
 
-```
+```java
 public static LocalDate addDaysSkippingWeekends(LocalDate date, int days) {
     LocalDate result = date;
     int addedDays = 0;
@@ -38,7 +38,7 @@ public static LocalDate addDaysSkippingWeekends(LocalDate date, int days) {
 
 为了实现这一点，**我们将为减去的天数保留一个计数器，该计数器仅在得出的日期是工作日时递增**:
 
-```
+```java
 public static LocalDate subtractDaysSkippingWeekends(LocalDate date, int days) {
     LocalDate result = date;
     int subtractedDays = 0;

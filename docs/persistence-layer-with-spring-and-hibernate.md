@@ -30,7 +30,7 @@
 
 我们将从基础 DAO**开始——一个抽象的、参数化的 DAO** ,它支持常见的通用操作，并且我们可以为每个实体进行扩展:
 
-```
+```java
 public abstract class AbstractHibernateDao<T extends Serializable> {
     private Class<T> clazz;
 
@@ -86,7 +86,7 @@ public abstract class AbstractHibernateDao<T extends Serializable> {
 
 现在，让我们看一下**这个 DAO** 对于`Foo`实体的示例实现:
 
-```
+```java
 @Repository
 public class FooDAO extends AbstractHibernateDAO< Foo > implements IFooDAO{
 

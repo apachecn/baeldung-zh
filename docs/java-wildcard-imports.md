@@ -12,7 +12,7 @@
 
 举个例子，我们来看一个`Book`类:
 
-```
+```java
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +37,7 @@ public class Book {
 
 使用通配符，我们可以用一条语句来替换前面示例中的三条导入语句:
 
-```
+```java
 import java.util.*;
 
 public class Book {
@@ -88,7 +88,7 @@ public class Book {
 
 在这种情况下，编译器注意到有两个`Date`类，并给出一个错误，因为在`java.sql`和`java.util`包中都找到了`Date`类:
 
-```
+```java
 import java.util.*;
 import java.sql.*;
 
@@ -110,7 +110,7 @@ public class Library {
 
 为了防止上面例子中的错误，我们可以添加第三行来指定冲突的`Date`类的源到两个现有的导入中:
 
-```
+```java
 import java.util.*;
 import java.sql.*;
 import java.sql.Date; 
@@ -124,7 +124,7 @@ import java.sql.Date;
 
 我们来看一个例子:  
 
-```
+```java
 import java.awt.*;
 import java.util.*;
 

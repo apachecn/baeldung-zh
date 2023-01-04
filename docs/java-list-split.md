@@ -28,7 +28,7 @@ Learn about the Spliterator interface that can be used for traversing and part
 
 Guava 通过**`Lists.partition`操作**将列表划分为指定大小的子列表:
 
-```
+```java
 @Test
 public void givenList_whenParitioningIntoNSublists_thenCorrect() {
     List<Integer> intList = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8);
@@ -45,7 +45,7 @@ public void givenList_whenParitioningIntoNSublists_thenCorrect() {
 
 **番石榴也可用于分割系列**:
 
-```
+```java
 @Test
 public void givenCollection_whenParitioningIntoNSublists_thenCorrect() {
     Collection<Integer> intCollection = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8);
@@ -60,7 +60,7 @@ public void givenCollection_whenParitioningIntoNSublists_thenCorrect() {
 
 请记住，分区是原始集合的**子列表视图，**这意味着原始集合中的更改将反映在分区中:
 
-```
+```java
 @Test
 public void givenListPartitioned_whenOriginalListIsModified_thenPartitionsChangeAsWell() {
     // Given
@@ -81,7 +81,7 @@ public void givenListPartitioned_whenOriginalListIsModified_thenPartitionsChange
 
 Apache Commons Collections 的最新版本最近也增加了对列表分区的支持:
 
-```
+```java
 @Test
 public void givenList_whenParitioningIntoNSublists_thenCorrect() {
     List<Integer> intList = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8);
@@ -106,7 +106,7 @@ public void givenList_whenParitioningIntoNSublists_thenCorrect() {
 
 我们可以使用`Collectors.partitioningBy()`将列表分成两个子列表:
 
-```
+```java
 @Test
 public void givenList_whenParitioningIntoSublistsUsingPartitionBy_thenCorrect() {
     List<Integer> intList = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8);
@@ -128,7 +128,7 @@ public void givenList_whenParitioningIntoSublistsUsingPartitionBy_thenCorrect() 
 
 我们也可以使用 `Collectors.groupingBy()`将我们的列表分成多个分区:
 
-```
+```java
 @Test
 public final void givenList_whenParitioningIntoNSublistsUsingGroupingBy_thenCorrect() {
     List<Integer> intList = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8);
@@ -150,7 +150,7 @@ public final void givenList_whenParitioningIntoNSublistsUsingGroupingBy_thenCorr
 
 我们还可以使用 Java8 通过分隔符来分割我们的列表:
 
-```
+```java
 @Test
 public void givenList_whenSplittingBySeparator_thenCorrect() {
     List<Integer> intList = Lists.newArrayList(1, 2, 3, 0, 4, 5, 6, 0, 7, 8);

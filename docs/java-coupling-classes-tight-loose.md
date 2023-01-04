@@ -26,7 +26,7 @@
 
 因此，让我们使用基本应用程序来看看这种行为。让我们进入一些代码定义。首先，我们的`XMLFetch`课:
 
-```
+```java
 public class XMLFetch {
     public List<Object> fetchMetadata() {
         List<Object> metadata = new ArrayList<>();
@@ -38,7 +38,7 @@ public class XMLFetch {
 
 接下来，`CSVExport`类:
 
-```
+```java
 public class CSVExport {
     public File export(List<Object> metadata) {
         System.out.println("Exporting data...");
@@ -51,7 +51,7 @@ public class CSVExport {
 
 最后，我们的`MetadataCollector` 类:
 
-```
+```java
 public class MetadataCollector {
     private XMLFetch xmlFetch = new XMLFetch();
     private CSVExport csvExport = new CSVExport();
@@ -66,7 +66,7 @@ public class MetadataCollector {
 
 如果我们需要改进我们的收集器，可能需要添加一个新的数据 JSON 获取器并以 PDF 格式导出数据，我们需要在我们的类中包含这些新元素。让我们编写新的“改进”类:
 
-```
+```java
 public class MetadataCollector {
     ...
     private CSVExport csvExport = new CSVExport();
@@ -111,7 +111,7 @@ public class MetadataCollector {
 
 因此，让我们将 DIP 和 IoC 应用到我们当前的示例中。首先，我们需要定义一个获取数据的接口和另一个导出数据的接口。让我们跳到代码中来看看如何做到这一点:
 
-```
+```java
 public interface FetchMetadata {
     List<Object> fetchMetadata();
 }
@@ -119,7 +119,7 @@ public interface FetchMetadata {
 
 很简单，不是吗？现在我们定义导出接口:
 
-```
+```java
 public interface ExportMetadata {
     File export(List<Object> metadata);
 }
@@ -127,7 +127,7 @@ public interface ExportMetadata {
 
 此外，我们需要在相应的类中实现这些接口。简而言之，我们需要更新我们当前的类:
 
-```
+```java
 public class XMLFetch implements FetchMetadata {
     @Override
     public List<Object> fetchMetadata() {
@@ -140,7 +140,7 @@ public class XMLFetch implements FetchMetadata {
 
 接下来，我们需要更新`CSVExport`类:
 
-```
+```java
 public class CSVExport implements ExportMetadata {
     @Override
     public File export(List<Object> metadata) {
@@ -154,7 +154,7 @@ public class CSVExport implements ExportMetadata {
 
 此外，我们更新了主模块的代码以支持新的设计变更。让我们看看它是什么样子的:
 
-```
+```java
 public class MetadataCollector {
     private FetchMetadata fetchMetadata;
     private ExportMetadata exportMetadata;

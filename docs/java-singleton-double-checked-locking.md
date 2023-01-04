@@ -12,7 +12,7 @@
 
 首先，让我们考虑一个带有严格同步的简单单例:
 
-```
+```java
 public class DraconianSingleton {
     private static DraconianSingleton instance;
     public static synchronized DraconianSingleton getInstance() {
@@ -32,7 +32,7 @@ public class DraconianSingleton {
 
 更进一步，我们希望在进入 synchronized 块时再次执行相同的检查，以保持操作的原子性:
 
-```
+```java
 public class DclSingleton {
     private static volatile DclSingleton instance;
     public static DclSingleton getInstance() {
@@ -65,7 +65,7 @@ public class DclSingleton {
 
 实现线程安全的最简单方法是内联对象创建或使用等效的静态块。这利用了静态字段和块被相继初始化的事实( [Java 语言规范 12.4.2](https://web.archive.org/web/20220628152241/https://docs.oracle.com/javase/specs/jls/se7/html/jls-12.html#jls-12.4.2) ):
 
-```
+```java
 public class EarlyInitSingleton {
     private static final EarlyInitSingleton INSTANCE = new EarlyInitSingleton();
     public static EarlyInitSingleton getInstance() {
@@ -80,7 +80,7 @@ public class EarlyInitSingleton {
 
 此外，由于我们从上一段的 Java 语言规范参考中了解到，当我们第一次使用一个类的方法或字段时，就会发生类初始化，因此我们可以使用嵌套的静态类来实现惰性初始化:
 
-```
+```java
 public class InitOnDemandSingleton {
     private static class InstanceHolder {
         private static final InitOnDemandSingleton INSTANCE = new InitOnDemandSingleton();
@@ -99,7 +99,7 @@ public class InitOnDemandSingleton {
 
 最后一个解决方案来自约书亚·布洛克的`Effective Java`书(第 3 项)，使用了一个`enum`而不是一个`class`。在撰写本文时，这被认为是编写 singleton 的最简洁、最安全的方式:
 
-```
+```java
 public enum EnumSingleton {
     INSTANCE;
 

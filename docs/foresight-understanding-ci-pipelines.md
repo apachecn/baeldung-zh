@@ -70,7 +70,7 @@ Foresight 是一种工具，它能让我们更深入地了解我们的 CI 渠道
 
 第一步发生在存储库中每个作业的最开始:
 
-```
+```java
 - name: Collect Workflow Telemetry
   uses: runforesight/[[email protected]](/web/20221109113153/https://www.baeldung.com/cdn-cgi/l/email-protection)
   if: success() || failure()
@@ -82,7 +82,7 @@ Foresight 是一种工具，它能让我们更深入地了解我们的 CI 渠道
 
 第二步是在执行测试运行的每个作业中运行所有测试之后:
 
-```
+```java
 - name: Analyze Test and/or Coverage Results
   uses: runforesight/[[email protected]](/web/20221109113153/https://www.baeldung.com/cdn-cgi/l/email-protection)
   if: success() || failure()
@@ -159,7 +159,7 @@ Foresight 提供的更强大的功能之一是变更影响分析。这让我们�
 
 要做到这一点，很重要的一点是，我们已经将 GitHub 动作配置为既可以运行 pull 请求，也可以运行 push 请求。我们可以通过更新`on`部分来做到这一点:
 
-```
+```java
 on:
   push:
   pull_request:

@@ -14,7 +14,7 @@ JSON 是一种轻量级和独立于语言的数据交换格式，用于大多数
 
 我们将首先在 POM 中添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.json</groupId>
     <artifactId>json</artifactId>
@@ -28,7 +28,7 @@ JSON 是一种轻量级和独立于语言的数据交换格式，用于大多数
 
 JSON 消息通常由 JSON 对象和数组组成，它们可以相互嵌套。一个`JSONArray`对象被括在方括号 `[ ]`中，而一个`JSONObject`被括在花括号`{}`中。例如，让我们考虑这个 JSON 消息:
 
-```
+```java
 [
     {
         "name": "John",
@@ -56,7 +56,7 @@ JSON 消息通常由 JSON 对象和数组组成，它们可以相互嵌套。一
 
 我们知道，`JSONArray`是 JSON 对象的列表。所以，让我们找出给定键的所有值:
 
-```
+```java
 public List<String> getValuesForGivenKey(String jsonArrayStr, String key) {
     JSONArray jsonArray = new JSONArray(jsonArrayStr);
     return IntStream.range(0, jsonArray.length())
@@ -74,7 +74,7 @@ public List<String> getValuesForGivenKey(String jsonArrayStr, String key) {
 
 在调用`getValuesForGivenKey(jsonArrayStr, “name”)` 时，其中 `jsonArrayStr` 是我们的示例 JSON，我们将得到所有名字的`List`作为输出:
 
-```
+```java
 [John, Gary, Selena]
 ```
 

@@ -16,7 +16,7 @@ Maven 是 Java 领域最流行的构建工具，而集成测试是开发过程�
 
 我们将围绕 Jersey 构建我们的 REST 应用程序——JAX-RS 的参考实现。这种实现需要几个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.glassfish.jersey.containers</groupId>
     <artifactId>jersey-container-servlet-core</artifactId>
@@ -35,7 +35,7 @@ Maven 是 Java 领域最流行的构建工具，而集成测试是开发过程�
 
 下面是我们如何在`pom.xml`中配置 Jetty Maven 插件:
 
-```
+```java
 <plugin>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-maven-plugin</artifactId>
@@ -72,7 +72,7 @@ Maven 是 Java 领域最流行的构建工具，而集成测试是开发过程�
 
 另一件需要注意的事情是，我们必须将`pom.xml`文件中的`packaging`元素设置为`war`，否则 Jetty 插件无法启动服务器:
 
-```
+```java
 <packaging>war</packaging>
 ```
 
@@ -80,7 +80,7 @@ Maven 是 Java 领域最流行的构建工具，而集成测试是开发过程�
 
 应用程序端点非常简单——当 GET 请求命中上下文根时，返回一条欢迎消息:
 
-```
+```java
 @Path("/")
 public class RestEndpoint {
     @GET
@@ -92,7 +92,7 @@ public class RestEndpoint {
 
 这是我们向 Jersey 注册端点类的方式:
 
-```
+```java
 package com.baeldung.maven.it;
 
 import org.glassfish.jersey.server.ResourceConfig;
@@ -106,7 +106,7 @@ public class EndpointConfig extends ResourceConfig {
 
 为了让 Jetty 服务器知道我们的 REST 应用程序，我们可以使用一个经典的`web.xml`部署描述符:
 
-```
+```java
 <web-app 
 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -134,7 +134,7 @@ public class EndpointConfig extends ResourceConfig {
 
 以下部分中的所有测试类都包含一个方法:
 
-```
+```java
 @Test
 public void whenSendingGet_thenMessageIsReturned() throws IOException {
     String url = "http://localhost:8999";
@@ -175,7 +175,7 @@ public void whenSendingGet_thenMessageIsReturned() throws IOException {
 
 让我们用默认配置将`failsafe`插件添加到 POM 中:
 
-```
+```java
 <profile>
     <id>failsafe</id>
     <build>
@@ -201,7 +201,7 @@ public void whenSendingGet_thenMessageIsReturned() throws IOException {
 
 使用上述配置，将在`integration-test`阶段执行以下测试方法:
 
-```
+```java
 public class RestIT {
     // test method shown in subsection 2.3
 }
@@ -209,13 +209,13 @@ public class RestIT {
 
 由于 Jetty 服务器在`pre-integration-test`阶段启动，在`post-integration-test`阶段关闭，我们刚刚看到的测试通过了这个命令:
 
-```
+```java
 mvn verify -Pfailsafe
 ```
 
 我们还可以定制命名模式，以包含具有不同名称的类:
 
-```
+```java
 <plugin>
     <artifactId>maven-failsafe-plugin</artifactId>
     <version>2.22.0</version>
@@ -235,7 +235,7 @@ mvn verify -Pfailsafe
 
 假设我们想要用后缀`IntegrationTest`来命名所有的集成测试。由于默认情况下`surefire`插件在`test`阶段使用这样的名称运行测试，我们需要将它们从默认执行中排除:
 
-```
+```java
 <plugin>
     <artifactId>maven-surefire-plugin</artifactId>
     <version>2.22.2</version>
@@ -251,7 +251,7 @@ mvn verify -Pfailsafe
 
 我们已经将所有名称以`IntegrationTest`结尾的测试类从构建生命周期中移除。是时候用个人资料把它们放回去了:
 
-```
+```java
 <profile>
     <id>surefire</id>
     <build>
@@ -287,7 +287,7 @@ mvn verify -Pfailsafe
 
 现在，让我们用我们的命名模式定义一个集成测试类:
 
-```
+```java
 public class RestIntegrationTest {
     // test method shown in subsection 2.3
 }
@@ -295,7 +295,7 @@ public class RestIntegrationTest {
 
 该测试将使用以下命令运行:
 
-```
+```java
 mvn verify -Psurefire
 ```
 
@@ -311,7 +311,7 @@ mvn verify -Psurefire
 
 首先，我们需要一个接口或类作为类别标识符:
 
-```
+```java
 package com.baeldung.maven.it;
 
 public interface Integration { }
@@ -319,7 +319,7 @@ public interface Integration { }
 
 然后我们可以用`@Category`注释和`Integration`标识符来修饰一个测试类:
 
-```
+```java
 @Category(Integration.class)
 public class RestJUnitTest {
     // test method shown in subsection 2.3
@@ -330,7 +330,7 @@ public class RestJUnitTest {
 
 从`test`构建阶段中排除一个类别很简单:
 
-```
+```java
 <plugin>
     <artifactId>maven-surefire-plugin</artifactId>
     <version>2.22.2</version>
@@ -342,7 +342,7 @@ public class RestJUnitTest {
 
 在`integration-test`阶段包含`Integration`类别也很简单:
 
-```
+```java
 <profile>
     <id>category</id>
         <build>
@@ -372,7 +372,7 @@ public class RestJUnitTest {
 
 我们现在可以用 Maven 命令运行集成测试:
 
-```
+```java
 mvn verify -Pcategory
 ```
 
@@ -382,7 +382,7 @@ mvn verify -Pcategory
 
 为此，我们可以使用 Maven `build helper`插件:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>build-helper-maven-plugin</artifactId>
@@ -408,7 +408,7 @@ mvn verify -Pcategory
 
 我们刚刚看到的配置向构建中添加了一个测试源目录。让我们向新目录添加一个类定义:
 
-```
+```java
 public class RestITCase {
     // test method shown in subsection 2.3
 }
@@ -416,7 +416,7 @@ public class RestITCase {
 
 是时候在这个类中运行集成测试了:
 
-```
+```java
 mvn verify -Pfailsafe
 ```
 
@@ -424,7 +424,7 @@ mvn verify -Pfailsafe
 
 测试源目录通常伴随着资源目录。我们可以在插件配置的另一个`execution`元素中添加这样一个目录:
 
-```
+```java
 <executions>
     ...
     <execution>

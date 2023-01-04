@@ -12,7 +12,7 @@
 
 让我们从导入 drools-core [依赖关系](https://web.archive.org/web/20220523230533/https://search.maven.org/classic/#search%7Cga%7C1%7Cdrools-core)开始:
 
-```
+```java
 <dependency>
     <groupId>org.drools</groupId>
     <artifactId>drools-core</artifactId>
@@ -55,7 +55,7 @@ Drools 项目最初是作为一个正向链接系统创建的。但是，从版�
 
 利用反向链接的主`belongsTo`查询可以写成:
 
-```
+```java
 query belongsTo(String x, String y)
     Fact(x, y;)
     or
@@ -65,7 +65,7 @@ end
 
 此外，让我们添加两条规则，以便轻松查看我们的结果:
 
-```
+```java
 rule "Great Wall of China BELONGS TO Planet Earth"
 when
     belongsTo("Great Wall of China", "Planet Earth";)
@@ -85,7 +85,7 @@ end
 
 现在，我们需要一个 Java 类来表示事实:
 
-```
+```java
 public class Fact {
 
     @Position(0)
@@ -102,7 +102,7 @@ public class Fact {
 
 此外，我们将创建表示结果的 POJO:
 
-```
+```java
 public class Result {
     private String value;
     private List<String> facts = new ArrayList<>();
@@ -113,7 +113,7 @@ public class Result {
 
 现在，我们可以运行示例:
 
-```
+```java
 public class BackwardChainingTest {
 
     @Before

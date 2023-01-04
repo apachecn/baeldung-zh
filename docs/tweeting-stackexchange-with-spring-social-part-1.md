@@ -10,7 +10,7 @@
 
 要使用 StackExchange REST API，我们只需要很少的依赖项——基本上只需要一个 HTTP 客户端—`Apache HttpClient`就可以满足这个目的:
 
-```
+```java
 <dependency>
    <groupId>org.apache.httpcomponents</groupId>
    <artifactId>httpclient</artifactId>
@@ -25,7 +25,7 @@
 这个客户端的目标是使用 StackExchange [发布的](https://web.archive.org/web/20221208143845/https://api.stackexchange.com/docs/types/question "Questions StackExchange API")REST 服务，而不是为整个 StackExchange APIs 提供一个通用的客户端——因此，出于本文的目的，我们将只研究它。
 使用`HTTPClient`的实际 HTTP 通信相对简单:
 
-```
+```java
 public String questions(int min, String questionsUri) {
    HttpGet request = null;
    try {
@@ -48,7 +48,7 @@ public String questions(int min, String questionsUri) {
 
 对 StackExchange API 的请求完全配置了查询参数，即使对于更复杂的高级搜索查询也是如此——没有发送正文。为了构建`questionsUri`，我们将构建一个基本的 fluent `RequestBuilder`类，该类将**利用 HttpClient 库中的`URIBuilder`** 。这将负责正确编码 URI，并通常确保最终结果是有效的:
 
-```
+```java
 public class RequestBuilder {
    private Map<String, Object> parameters = new HashMap<>();
 
@@ -69,7 +69,7 @@ public class RequestBuilder {
 
 现在，为 StackExchange API 构造一个有效的 URI:
 
-```
+```java
 String params = new RequestBuilder().
    add("order", "desc").add("sort", "votes").add("min", min).add("site", site).build();
 return "https://api.stackexchange.com/2.1/questions" + params;
@@ -79,7 +79,7 @@ return "https://api.stackexchange.com/2.1/questions" + params;
 
 客户端将输出原始的 JSON，但是为了进行测试，我们需要一个 JSON 处理库，特别是 [`Jackson 2`](https://web.archive.org/web/20221208143845/https://github.com/FasterXML/jackson "Jackson 2") :
 
-```
+```java
 <dependency>
    <groupId>com.fasterxml.jackson.core</groupId>
    <artifactId>jackson-databind</artifactId>
@@ -90,7 +90,7 @@ return "https://api.stackexchange.com/2.1/questions" + params;
 
 我们将研究的测试将与实际的 StackExchange API 进行交互:
 
-```
+```java
 @Test
 public void whenRequestIsPerformed_thenSuccess() 
       throws ClientProtocolException, IOException {
@@ -119,7 +119,7 @@ public void whenParsingOutputFromQuestionsApi_thenOutputContainsSomeQuestions()
 
 请注意，这些请求会计入 API 指定的[速率限制](https://web.archive.org/web/20221208143845/https://api.stackexchange.com/docs/throttle "StackExchange Rate Limits")——因此，现场测试被排除在标准 Maven 构建之外:
 
-```
+```java
 <plugin>
    <groupId>org.apache.maven.plugins</groupId>
    <artifactId>maven-surefire-plugin</artifactId>

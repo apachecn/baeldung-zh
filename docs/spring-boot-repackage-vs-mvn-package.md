@@ -16,7 +16,7 @@
 
 首先，我们将创建一个简单的 Spring Boot 应用程序作为示例:
 
-```
+```java
 @SpringBootApplication
 public class DemoApplication {
     public static void main(String[] args) {
@@ -27,7 +27,7 @@ public class DemoApplication {
 
 为了验证我们的应用程序是否启动并运行，让我们创建一个简单的 REST 端点:
 
-```
+```java
 @RestController
 public class DemoRestController {
     @GetMapping(value = "/welcome")
@@ -41,7 +41,7 @@ public class DemoRestController {
 
 我们只需要 [`spring-boot-starter-web`](https://web.archive.org/web/20221208143917/https://search.maven.org/search?q=a:spring-boot-starter-web%20g:org.springframework.boot) 依赖项来构建我们的 Spring Boot 应用程序:
 
-```
+```java
 <artifactId>spring-boot-artifacts-2</artifactId>
 <packaging>jar</packaging>
 ...
@@ -54,7 +54,7 @@ public class DemoRestController {
 
 **Maven 的`package`目标是将编译后的代码打包成可分发的格式**，在本例中是 JAR 格式:
 
-```
+```java
 $ mvn package
 [INFO] Scanning for projects...
 [INFO] ------< com.baeldung.spring-boot-modules:spring-boot-artifacts-2 >------
@@ -71,7 +71,7 @@ $ mvn package
 
 执行`mvn package`命令后，我们可以在`target`目录下找到构建好的 JAR 文件`spring-boot-artifacts-2.jar `。让我们[检查创建的 JAR 文件](/web/20221208143917/https://www.baeldung.com/java-view-jar-contents#reviewing-the-jar-command)的内容:
 
-```
+```java
 $ jar tf target/spring-boot-artifacts-2.jar
 META-INF/
 META-INF/MANIFEST.MF
@@ -98,7 +98,7 @@ META-INF/maven/...
 
 为了执行`repackage`目标，我们需要在我们的`pom.xml`中添加 Spring Boot Maven 插件:
 
-```
+```java
 <build>
     <finalName>${project.artifactId}</finalName>
     <plugins>
@@ -114,7 +114,7 @@ META-INF/maven/...
 
 现在，让我们清理之前构建的 JAR 文件，并尝试一下`spring-boot:repackage`:
 
-```
+```java
 $ mvn clean spring-boot:repackage     
  ...
 [INFO] --- spring-boot-maven-plugin:2.3.3.RELEASE:repackage (default-cli) @ spring-boot-artifacts-2 ---
@@ -132,7 +132,7 @@ org.springframework.boot:spring-boot-maven-plugin:2.3.3.RELEASE:repackage failed
 
 因此，在执行`spring-boot:repackage`目标之前，我们需要首先构建 JAR 文件:
 
-```
+```java
 $ mvn clean package spring-boot:repackage
  ...
 [INFO] Building spring-boot-artifacts-2 1.0.0-SNAPSHOT
@@ -152,7 +152,7 @@ $ mvn clean package spring-boot:repackage
 
 现在，如果我们检查`target`目录，我们将看到重新打包的 JAR 文件和原始 JAR 文件:
 
-```
+```java
 $ ls -1 target/*jar*
 target/spring-boot-artifacts-2.jar
 target/spring-boot-artifacts-2.jar.original 
@@ -160,7 +160,7 @@ target/spring-boot-artifacts-2.jar.original
 
 让我们检查重新打包的 JAR 文件的内容:
 
-```
+```java
 $ jar tf target/spring-boot-artifacts-2.jar 
 META-INF/
 META-INF/MANIFEST.MF
@@ -192,7 +192,7 @@ BOOT-INF/lib/httpclient-4.5.12.jar
 
 接下来，让我们启动我们的应用程序并检查它是否工作:
 
-```
+```java
 $ java -jar target/spring-boot-artifacts-2.jar 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -209,7 +209,7 @@ $ java -jar target/spring-boot-artifacts-2.jar
 
 我们的 Spring Boot 应用程序已经启动并运行。现在，让我们通过调用我们的`/welcome`端点来验证它:
 
-```
+```java
 $ curl http://localhost:8080/welcome
 Welcome to Baeldung Spring Boot Demo!
 ```
@@ -222,7 +222,7 @@ Welcome to Baeldung Spring Boot Demo!
 
 配置非常简单。我们只是将`repackage`目标添加到一个`execution`元素中:
 
-```
+```java
 <build>
     <finalName>${project.artifactId}</finalName>
     <plugins>
@@ -243,7 +243,7 @@ Welcome to Baeldung Spring Boot Demo!
 
 现在，让我们再次运行`mvn clean package`:
 
-```
+```java
 $ mvn clean package
  ...
 [INFO] Building spring-boot-artifacts-2 1.0.0-SNAPSHOT
@@ -258,7 +258,7 @@ $ mvn clean package
 
 输出显示已经执行了重新打包目标。如果我们检查文件系统，我们会发现重新打包的 JAR 文件被创建:
 
-```
+```java
 $ ls -lh target/*jar*
 -rw-r--r-- 1 kent kent  29M Dec 22 23:56 target/spring-boot-artifacts-2.jar
 -rw-r--r-- 1 kent kent 3.6K Dec 22 23:56 target/spring-boot-artifacts-2.jar.original 

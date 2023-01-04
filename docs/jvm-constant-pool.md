@@ -16,7 +16,7 @@
 
 让我们使用一个简单的 Java 类来理解常量池的结构:
 
-```
+```java
 public class ConstantPool {
 
     public void sayHello() {
@@ -27,13 +27,13 @@ public class ConstantPool {
 
 要查看常量池的内容，我们需要首先编译文件，然后运行命令:
 
-```
+```java
 javap -v name.class
 ```
 
 上述命令将产生:
 
-```
+```java
  #1 = Methodref          #6.#14         // java/lang/Object."<init>":()V
    #2 = Fieldref           #15.#16        // java/lang/System.out:Ljava/io/PrintStream;
    #3 = String             #17            // Hello World
@@ -85,7 +85,7 @@ javap -v name.class
 
 表中的每个条目都遵循一种通用格式:
 
-```
+```java
 cp_info {
     u1 tag;
     u1 info[];

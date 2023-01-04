@@ -24,7 +24,7 @@
 
 除了使用这个默认设置，我们还可以通过将`true`传递给连接的 [`setAutoCommit`](https://web.archive.org/web/20220926201541/https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/java/sql/Connection.html#setAutoCommit(boolean)) 方法来手动打开自动提交:
 
-```
+```java
 connection.setAutoCommit(true);
 ```
 
@@ -36,7 +36,7 @@ connection.setAutoCommit(true);
 
 在这个例子中，我们将使用 [H2 内存数据库](https://web.archive.org/web/20220926201541/https://www.h2database.com/)来存储我们的数据。为了使用它，我们首先需要定义 Maven [依赖关系](https://web.archive.org/web/20220926201541/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.h2database%22%20AND%20a%3A%22h2%22):
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -46,7 +46,7 @@ connection.setAutoCommit(true);
 
 首先，让我们创建一个数据库表来保存人员的详细信息:
 
-```
+```java
 CREATE TABLE Person (
     id INTEGER not null,
     name VARCHAR(50),
@@ -57,7 +57,7 @@ CREATE TABLE Person (
 
 接下来，我们将创建两个到数据库的连接。我们将使用第一个来运行 SQL 查询并更新表。我们将使用第二个连接来测试是否对该表进行了更新:
 
-```
+```java
 Connection connection1 = DriverManager.getConnection("jdbc:h2:mem:testdb", "sa", "");
 Connection connection2 = DriverManager.getConnection("jdbc:h2:mem:testdb", "sa", "");
 ```
@@ -66,7 +66,7 @@ Connection connection2 = DriverManager.getConnection("jdbc:h2:mem:testdb", "sa",
 
 现在，我们将创建一个 POJO 来表示保存个人信息的数据库记录:
 
-```
+```java
 public class Person {
 
     private Integer id;
@@ -80,7 +80,7 @@ public class Person {
 
 为了向我们的表中插入一条记录，让我们创建一个名为`insertPerson`的方法:
 
-```
+```java
 private static int insertPerson(Connection connection, Person person) throws SQLException {    
     try (PreparedStatement preparedStatement = connection.prepareStatement(
       "INSERT INTO Person VALUES (?,?,?,?)")) {
@@ -97,7 +97,7 @@ private static int insertPerson(Connection connection, Person person) throws SQL
 
 然后我们将添加一个`updatePersonAgeById`方法来更新表中的特定记录:
 
-```
+```java
 private static void updatePersonAgeById(Connection connection, int id, int newAge) throws SQLException {
     try (PreparedStatement preparedStatement = connection.prepareStatement(
       "UPDATE Person SET age = ? WHERE id = ?")) {
@@ -111,7 +111,7 @@ private static void updatePersonAgeById(Connection connection, int id, int newAg
 
 最后，让我们添加一个`selectAllPeople`方法来从表中选择所有记录。我们将用它来检查 SQL `insert`和`update`语句的结果:
 
-```
+```java
 private static List selectAllPeople(Connection connection) throws SQLException {
 
     List people = null;
@@ -141,7 +141,7 @@ private static List selectAllPeople(Connection connection) throws SQLException {
 
 为了测试我们的示例代码，让我们首先在表中插入一个人。然后，从不同的连接，我们将检查数据库是否已经更新，而不需要我们发出`commit`:
 
-```
+```java
 Person person = new Person(1, "John", "Doe", 45);
 insertPerson(connection1, person);
 
@@ -153,7 +153,7 @@ assertThat("id correct", personInserted.getId(), is(equalTo(1)));
 
 然后，将这个新记录插入到表中，让我们更新这个人的年龄。此后，我们将从第二个连接开始检查更改是否已经保存到数据库中，而不需要调用`commit`:
 
-```
+```java
 updatePersonAgeById(connection1, 1, 65);
 
 people = selectAllPeople(connection2);
@@ -169,7 +169,7 @@ assertThat("updated age correct", personUpdated.getAge(), is(equalTo(65)));
 
 我们通过传递`false to` 连接的`setAutoCommit`方法来做到这一点:
 
-```
+```java
 connection.setAutoCommit(false);
 ```
 
@@ -183,7 +183,7 @@ connection.setAutoCommit(false);
 
 首先，让我们使用第一个连接插入人员记录。然后，在不调用`commit`的情况下，我们将断言我们无法从另一个连接看到数据库中插入的记录:
 
-```
+```java
 Person person = new Person(1, "John", "Doe", 45);
 insertPerson(connection1, person);
 
@@ -193,7 +193,7 @@ assertThat("No people have been inserted into database yet", people.size(), is(e
 
 接下来，我们将在记录中更新这个人的年龄。和以前一样，我们将在不调用 commit 的情况下断言，我们仍然不能使用第二个连接从数据库中选择记录:
 
-```
+```java
 updatePersonAgeById(connection1, 1, 65);
 
 people = selectAllPeople(connection2);
@@ -202,7 +202,7 @@ assertThat("No people have been inserted into database yet", people.size(), is(e
 
 为了完成我们的测试，我们将调用`commit`，然后断言我们现在可以使用第二个连接看到数据库中的所有更新:
 
-```
+```java
 connection1.commit();
 
 people = selectAllPeople(connection2);

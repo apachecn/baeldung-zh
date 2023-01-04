@@ -12,7 +12,7 @@
 
 例如，假设我们有一个`HashMap`和一个键列表:
 
-```
+```java
 Map<Integer, String> map = new HashMap<>();
 map.put(1, "A");
 map.put(2, "B");
@@ -25,7 +25,7 @@ List<Integer> keyList = Arrays.asList(1, 2, 3);
 
 我们可以使用 Java 8 流来获得基于`keyList`的 submap:
 
-```
+```java
 Map<Integer, String> subMap = map.entrySet().stream()
   .filter(x -> keyList.contains(x.getKey()))
   .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -35,7 +35,7 @@ System.out.println(subMap);
 
 输出将如下所示:
 
-```
+```java
 {1=A, 2=B, 3=C}
 ```
 
@@ -43,13 +43,13 @@ System.out.println(subMap);
 
 我们可以获取地图的`keySet`并使用`retainAll()`方法删除所有键不在`keyList`中的条目:
 
-```
+```java
 map.keySet().retainAll(keyList);
 ```
 
 **注意这个方法会编辑原来的地图**。如果我们不想影响原始地图，我们可以首先使用`HashMap`的复制构造函数创建一个新地图:
 
-```
+```java
 Map<Integer, String> newMap = new HashMap<>(map);
 newMap.keySet().retainAll(keyList);
 

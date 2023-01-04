@@ -25,7 +25,7 @@
 
 让我们编写一个简单的变更集，它将在执行时创建一个表，并向变更集添加一个 rollback 语句:
 
-```
+```java
 <changeSet id="testRollback" author="baeldung">
     <createTable tableName="baeldung_turorial">
         <column name="id" type="int"/>
@@ -42,13 +42,13 @@
 
 我们可以使用以下命令运行迁移:
 
-```
+```java
 mvn liquibase:update
 ```
 
 执行后，我们可以使用以下命令回滚操作:
 
-```
+```java
 mvn liquibase:rollback
 ```
 
@@ -64,7 +64,7 @@ mvn liquibase:rollback
 
 我们可以将数据库的特定状态定义为一个标签。因此，我们可以引用该状态。回滚到标记名“1.0”如下所示:
 
-```
+```java
 mvn liquibase:rollback -Dliquibase.rollbackTag=1.0
 ```
 
@@ -74,7 +74,7 @@ mvn liquibase:rollback -Dliquibase.rollbackTag=1.0
 
 这里，我们定义了需要回滚多少个变更集。如果我们将其定义为一个，最后一次变更集执行将被回滚:
 
-```
+```java
 mvn liquibase:rollback -Dliquibase.rollbackCount=1
 ```
 
@@ -82,7 +82,7 @@ mvn liquibase:rollback -Dliquibase.rollbackCount=1
 
 我们可以将回滚目标设置为一个日期，因此，在该日期之后执行的任何变更集都将被回滚:
 
-```
+```java
 mvn liquibase:rollback "-Dliquibase.rollbackDate=Jun 03, 2017"
 ```
 
@@ -96,7 +96,7 @@ mvn liquibase:rollback "-Dliquibase.rollbackDate=Jun 03, 2017"
 
 单个回滚标记可以包含不止一条要执行的指令:
 
-```
+```java
 <changeSet id="multiStatementRollback" author="baeldung">
     <createTable tableName="baeldung_tutorial2">
         <column name="id" type="int"/>
@@ -119,7 +119,7 @@ mvn liquibase:rollback "-Dliquibase.rollbackDate=Jun 03, 2017"
 
 在一个变更集中，我们可以有多个回滚标记。它们按照在变更集中出现的顺序执行:
 
-```
+```java
 <changeSet id="multipleRollbackTags" author="baeldung">
     <createTable tableName="baeldung_tutorial4">
         <column name="id" type="int"/>
@@ -142,7 +142,7 @@ mvn liquibase:rollback "-Dliquibase.rollbackDate=Jun 03, 2017"
 
 如果我们要更改数据库的一些细节，我们可以引用另一个变更集，可能是原始的变更集。这将减少代码重复，并且可以正确地恢复已完成的更改:
 
-```
+```java
 <changeSet id="referChangeSetForRollback" author="baeldung">
     <dropTable tableName="baeldung_tutorial2"/>
     <dropTable tableName="baeldung_tutorial3"/>
@@ -154,7 +154,7 @@ mvn liquibase:rollback "-Dliquibase.rollbackDate=Jun 03, 2017"
 
 默认情况下，如果我们没有提供回滚脚本，Liquibase 会尝试生成一个回滚脚本。如果我们需要中断此功能，我们可以使用空的回滚标记，以便回滚操作不会被恢复:
 
-```
+```java
 <changeSet id="emptyRollback" author="baeldung">
     <createTable tableName="baeldung_tutorial">
         <column name="id" type="int"/>
@@ -179,7 +179,7 @@ mvn liquibase:rollback "-Dliquibase.rollbackDate=Jun 03, 2017"
 
 让我们来看一个实际例子:
 
-```
+```java
 mvn liquibase:rollbackCountSQL 2
 ```
 
@@ -189,7 +189,7 @@ mvn liquibase:rollbackCountSQL 2
 
 如果需要为我们将要执行的更改提供回滚脚本，这将非常有用:
 
-```
+```java
 mvn liquibase:futureRollbackSQL 
 ```
 
@@ -199,7 +199,7 @@ mvn liquibase:futureRollbackSQL
 
 这可用于测试更新更改的执行，而无需永久更改数据库:
 
-```
+```java
 mvn liquibase:updateTestingRollback
 ```
 

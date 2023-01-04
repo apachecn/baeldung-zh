@@ -10,7 +10,7 @@
 
 日志依赖将与 intro 文章中的相同；我们将简单地在这里添加弹簧:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-core</artifactId>
@@ -24,7 +24,7 @@
 
 首先，我们将定义一个在示例中使用的控制器:
 
-```
+```java
 @RestController
 public class TaxiFareController {
 
@@ -55,7 +55,7 @@ Spring 提供了一种机制来配置用户定义的拦截器，以便在 web �
 
 让我们通过扩展`HandlerInterceptorAdaptor `来创建自己的拦截器，如下所示:
 
-```
+```java
 @Component
 public class TaxiFareRequestInterceptor 
   extends HandlerInterceptorAdapter {
@@ -81,7 +81,7 @@ public class TaxiFareRequestInterceptor
 
 最后，我们将在 MVC 生命周期中配置`TaxiRideRequestInterceptor` 来捕获映射到在`TaxiFareController` 类中定义的路径`/taxifare`的控制器方法调用的预处理和后处理:
 
-```
+```java
 @Configuration
 public class TaxiFareMVCConfig implements WebMvcConfigurer {
 
@@ -104,7 +104,7 @@ public class TaxiFareMVCConfig implements WebMvcConfigurer {
 
 应用程序在读取请求流后将引发异常:
 
-```
+```java
 {
   "timestamp": 1500645243383,
   "status": 400,
@@ -123,7 +123,7 @@ Spring 提供了一些有用的类，比如[ContentCachingRequestWrapper](https:
 
 让我们调整`TaxiRideRequestInterceptor` 类的`preHandle()` ,使用`ContentCachingRequestWrapper`类缓存请求对象:
 
-```
+```java
 @Override
 public boolean preHandle(HttpServletRequest request, 
   HttpServletResponse response, Object handler) {
@@ -138,7 +138,7 @@ public boolean preHandle(HttpServletRequest request,
 
 正如我们所看到的，我们使用`ContentCachingRequestWrapper`类缓存请求对象，我们可以使用它来读取日志记录的有效负载数据，而不会干扰实际的请求对象:
 
-```
+```java
 requestCacheWrapperObject.getContentAsByteArray();
 ```
 
@@ -146,14 +146,14 @@ requestCacheWrapperObject.getContentAsByteArray();
 
 *   `ContentCachingRequestWrapper`类仅支持以下内容:
 
-```
+```java
 Content-Type:application/x-www-form-urlencoded
 Method-Type:POST
 ```
 
 *   我们必须调用下面的方法来确保请求数据在使用之前缓存在`ContentCachingRequestWrapper`中:
 
-```
+```java
 requestCacheWrapperObject.getParameterMap();
 ```
 
@@ -175,7 +175,7 @@ Spring 框架提供了三个具体的实现类，我们可以用它们来记录�
 
 我们可以通过添加 bean 定义来配置 Spring Boot 应用程序，以启用请求日志记录:
 
-```
+```java
 @Configuration
 public class RequestLoggingFilterConfig {
 
@@ -195,7 +195,7 @@ public class RequestLoggingFilterConfig {
 
 这个日志过滤器还要求我们将日志级别设置为 DEBUG。我们可以通过在`logback.xml`中添加以下元素来启用调试模式:
 
-```
+```java
 <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter">
     <level value="DEBUG" />
 </logger>
@@ -203,7 +203,7 @@ public class RequestLoggingFilterConfig {
 
 启用调试级日志的另一种方式是在`application.properties`中添加以下内容:
 
-```
+```java
 logging.level.org.springframework.web.filter.CommonsRequestLoggingFilter=
   DEBUG
 ```
@@ -214,7 +214,7 @@ logging.level.org.springframework.web.filter.CommonsRequestLoggingFilter=
 
 我们知道，`CommonsRequestLoggingFilter`的`includePayload`属性默认设置为 false。在使用 Java 配置注入容器之前，我们需要一个自定义类来覆盖属性的值以启用`includePayload` :
 
-```
+```java
 public class CustomeRequestLoggingFilter 
   extends CommonsRequestLoggingFilter {
 
@@ -228,7 +228,7 @@ public class CustomeRequestLoggingFilter
 
 然后我们需要使用[基于 Java 的 web 初始化器](/web/20221208143917/https://www.baeldung.com/spring-xml-vs-java-config)来注入`CustomeRequestLoggingFilter`:
 
-```
+```java
 public class CustomWebAppInitializer implements 
   WebApplicationInitializer {
     public void onStartup(ServletContext container) {
@@ -255,7 +255,7 @@ public class CustomWebAppInitializer implements
 
 最后，我们可以将 Spring Boot 与上下文关联起来，以查看传入请求的日志记录是否如预期那样工作:
 
-```
+```java
 @Test
 public void givenRequest_whenFetchTaxiFareRateCard_thanOK() {
     TestRestTemplate testRestTemplate = new TestRestTemplate();

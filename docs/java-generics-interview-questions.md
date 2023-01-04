@@ -27,7 +27,7 @@
 
 让我们从一个简单的例子开始，一个没有泛型的例子，来说明这一点:
 
-```
+```java
 public interface Consumer {
     public void consume(String parameter)
 }
@@ -37,7 +37,7 @@ public interface Consumer {
 
 现在让我们用一个我们称之为`T.` 的泛型类型来替换我们的`String` 类型。按照惯例，它是这样命名的:
 
-```
+```java
 public interface Consumer<T> {
     public void consume(T parameter)
 }
@@ -45,7 +45,7 @@ public interface Consumer<T> {
 
 当我们实现我们的消费者时，我们可以提供我们希望它消费的`type` 作为参数。这是一个泛型类型参数:
 
-```
+```java
 public class IntegerConsumer implements Consumer<Integer> {
     public void consume(Integer parameter)
 }
@@ -57,7 +57,7 @@ public class IntegerConsumer implements Consumer<Integer> {
 
 使用泛型的一个优点是避免强制转换并提供类型安全。这在处理集合时特别有用。让我们来演示一下:
 
-```
+```java
 List list = new ArrayList();
 list.add("foo");
 Object o = list.get(0);
@@ -68,7 +68,7 @@ String foo = (String) o;
 
 接下来，如果我们开始考虑人为错误的空间，铸造问题会变得更糟。如果我们的列表中意外出现了一个`Integer`会怎么样？
 
-```
+```java
 list.add(1)
 Object o = list.get(0);
 String foo = (String) o;
@@ -78,7 +78,7 @@ String foo = (String) o;
 
 现在，让我们试着重复我们自己，这次使用泛型:
 
-```
+```java
 List<String> list = new ArrayList<>();
 list.add("foo");
 String o = list.get(0);    // No cast
@@ -101,7 +101,7 @@ Integer foo = list.get(0); // Compilation error
 
 理解类型擦除很重要。否则，开发人员可能会感到困惑，认为他们能够在运行时获得该类型:
 
-```
+```java
 public foo(Consumer<T> consumer) {
    Type type = consumer.getGenericTypeParameter()
 }
@@ -113,7 +113,7 @@ public foo(Consumer<T> consumer) {
 
 由于泛型在 Java 5 之前并不存在，所以有可能根本不使用它们。例如，泛型被改造成大多数标准 Java 类，比如集合。如果我们看看问题一的列表，我们会发现已经有一个省略泛型类型的例子了:
 
-```
+```java
 List list = new ArrayList();
 ```
 
@@ -125,7 +125,7 @@ List list = new ArrayList();
 
 **泛型方法是将类型参数引入到一个方法中，** **活在那个方法的范围内。**让我们用一个例子来试试这个:
 
-```
+```java
 public static <T> T returnType(T argument) { 
     return argument; 
 }
@@ -137,7 +137,7 @@ public static <T> T returnType(T argument) {
 
 类型推断是指编译器可以查看方法参数的类型来推断泛型类型。例如，如果我们将`T` 传递给一个返回`T,` 的方法，那么编译器可以计算出返回类型。让我们通过调用上一个问题中的泛型方法来尝试一下:
 
-```
+```java
 Integer inferredInteger = returnType(1);
 String inferredString = returnType("String");
 ```
@@ -152,7 +152,7 @@ String inferredString = returnType("String");
 
 例如，假设我们想强制我们的泛型类型总是 animal 的子类:
 
-```
+```java
 public abstract class Cage<T extends Animal> {
     abstract void addAnimal(T animal)
 }
@@ -160,19 +160,19 @@ public abstract class Cage<T extends Animal> {
 
 通过使用扩展`,` ,我们迫使`T` 成为动物`.` 的一个子类，然后我们可以拥有一个猫的笼子:
 
-```
+```java
 Cage<Cat> catCage;
 ```
 
 但我们不可能有一个对象的笼子，因为对象不是动物的子类:
 
-```
+```java
 Cage<Object> objectCage; // Compilation error
 ```
 
 这样做的一个好处是，animal 的所有方法都可供编译器使用。我们知道我们的类型扩展了它，所以我们可以写一个通用算法，可以在任何动物身上运行。这意味着我们不必为不同的动物子类重复我们的方法:
 
-```
+```java
 public void firstAnimalJump() {
     T animal = animals.get(0);
     animal.jump();
@@ -183,7 +183,7 @@ public void firstAnimalJump() {
 
 为我们的泛型类型声明多个界限是可能的。在前面的示例中，我们指定了一个界限，但是如果我们愿意，也可以指定更多界限:
 
-```
+```java
 public abstract class Cage<T extends Animal & Comparable>
 ```
 
@@ -193,7 +193,7 @@ public abstract class Cage<T extends Animal & Comparable>
 
 **通配符类型代表未知的`type`** 。它是带着一个问号引爆的，如下:
 
-```
+```java
 public static void consumeListOfWildcardType(List<?> list)
 ```
 
@@ -205,7 +205,7 @@ public static void consumeListOfWildcardType(List<?> list)
 
 让我们尝试用一个存储动物的 farm 类来演示这一点，首先不使用通配符类型:
 
-```
+```java
 public class Farm {
   private List<Animal> animals;
 
@@ -217,7 +217,7 @@ public class Farm {
 
 如果我们有动物`,` 的多个子类，比如猫和狗`,` ，我们可能会做出错误的假设，认为我们可以将它们都添加到我们的农场中:
 
-```
+```java
 farm.addAnimals(cats); // Compilation error
 farm.addAnimals(dogs); // Compilation error
 ```
@@ -226,7 +226,7 @@ farm.addAnimals(dogs); // Compilation error
 
 现在，让我们为添加动物方法引入一个上限通配符:
 
-```
+```java
 public void addAnimals(Collection<? extends Animal> newAnimals)
 ```
 
@@ -238,7 +238,7 @@ public void addAnimals(Collection<? extends Animal> newAnimals)
 
 了解通配符类型与 object 不是同义词也很重要。这是因为通配符可以是任何类型，而对象类型是特定的对象(不能是对象的子类)。让我们用一个例子来说明这一点:
 
-```
+```java
 List<?> wildcardList = new ArrayList<String>(); 
 List<Object> objectList = new ArrayList<String>(); // Compilation error
 ```
@@ -249,7 +249,7 @@ List<Object> objectList = new ArrayList<String>(); // Compilation error
 
 下界通配符是指我们通过使用`super`关键字来提供下界，而不是提供上界。换句话说，**一个较低的有界通配符意味着我们强制该类型成为我们的有界类型**的超类。让我们用一个例子来试试这个:
 
-```
+```java
 public static void addDogs(List<? super Animal> list) {
    list.add(new Dog("tom"))
 }
@@ -257,7 +257,7 @@ public static void addDogs(List<? super Animal> list) {
 
 通过使用`super,` ,我们可以在对象列表上调用 addDogs:
 
-```
+```java
 ArrayList<Object> objects = new ArrayList<>();
 addDogs(objects);
 ```
@@ -266,7 +266,7 @@ addDogs(objects);
 
 如果我们仔细想想，我们不可能把狗添加到任何动物子类的列表中，比如猫，甚至狗。只是动物的一个超类。例如，这不会编译:
 
-```
+```java
 ArrayList<Cat> objects = new ArrayList<>();
 addDogs(objects);
 ```
@@ -279,7 +279,7 @@ addDogs(objects);
 
 `Producer extends`仅仅意味着如果你正在创建一个泛型类型的生产者，那么使用`extends`关键字。让我们试着将这一原则应用于一个系列，看看它为什么有意义:
 
-```
+```java
 public static void makeLotsOfNoise(List<? extends Animal> animals) {
     animals.forEach(Animal::makeNoise);   
 }
@@ -289,7 +289,7 @@ public static void makeLotsOfNoise(List<? extends Animal> animals) {
 
 `Consumer super` 的意思与`producer extends.` 相反，它的意思是，如果我们正在处理消耗元素的东西，那么我们应该使用`super` 关键字。我们可以通过重复前面的例子来证明这一点:
 
-```
+```java
 public static void addCats(List<? super Animal> animals) {
     animals.add(new Cat());   
 }
@@ -303,13 +303,13 @@ public static void addCats(List<? super Animal> animals) {
 
 在一种情况下，泛型类型在运行时是可用的。当泛型类型是类签名的一部分时，如下所示:
 
-```
+```java
 public class CatCage implements Cage<Cat>
 ```
 
 通过使用反射，我们得到这个类型参数:
 
-```
+```java
 (Class<T>) ((ParameterizedType) getClass()
   .getGenericSuperclass()).getActualTypeArguments()[0];
 ```

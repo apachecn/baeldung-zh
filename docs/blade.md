@@ -16,7 +16,7 @@
 
 首先，让我们创建一个空的 Maven 项目，并在`pom.xml`中添加[最新的刀片 MVC 依赖关系](https://web.archive.org/web/20221208143837/https://search.maven.org/search?q=g:com.bladejava%20AND%20a:blade-mvc):
 
-```
+```java
 <dependency>
     <groupId>com.bladejava</groupId>
     <artifactId>blade-mvc</artifactId>
@@ -36,7 +36,7 @@
 
 **Blade 基于[Netty](/web/20221208143837/https://www.baeldung.com/netty)T3，一个令人惊叹的异步事件驱动的网络应用框架。因此，要运行我们基于刀片的应用程序，我们不需要任何外部应用服务器或 Servlet 容器；JRE 就足够了:**
 
-```
+```java
 java -jar target/sample-blade-app.jar 
 ```
 
@@ -69,7 +69,7 @@ Blade 提供了两种类型的路线:基本路线和带注释的路线。
 
 基本路线适用于非常小的软件，如微服务或最小的 web 应用程序:
 
-```
+```java
 Blade.of()
   .get("/basic-routes-example", ctx -> ctx.text("GET called"))
   .post("/basic-routes-example", ctx -> ctx.text("POST called"))
@@ -90,7 +90,7 @@ Blade.of()
 
 然后，我们需要使用与我们想要拦截的 HTTP 方法相关的路由注释:
 
-```
+```java
 @Path
 public class RouteExampleController {    
 
@@ -118,7 +118,7 @@ public class RouteExampleController {
 
 我们还可以使用简单的`@Route`注释并将 HTTP 方法指定为参数:
 
-```
+```java
 @Route(value="/another-route-example", method=HttpMethod.GET) 
 public String anotherGet(){ 
     return "get.html" ; 
@@ -133,7 +133,7 @@ public String anotherGet(){
 
 *   表单参数:
 
-```
+```java
 @GetRoute("/home")
 public void formParam(@Param String name){
     System.out.println("name: " + name);
@@ -142,7 +142,7 @@ public void formParam(@Param String name){
 
 *   Restful 参数:
 
-```
+```java
 @GetRoute("/users/:uid")
 public void restfulParam(@PathParam Integer uid){
     System.out.println("uid: " + uid);
@@ -151,7 +151,7 @@ public void restfulParam(@PathParam Integer uid){
 
 *   文件上传参数:
 
-```
+```java
 @PostRoute("/upload")
 public void fileParam(@MultipartParam FileItem fileItem){
     byte[] file = fileItem.getData();
@@ -160,7 +160,7 @@ public void fileParam(@MultipartParam FileItem fileItem){
 
 *   标题参数:
 
-```
+```java
 @GetRoute("/header")
 public void headerParam(@HeaderParam String referer){
     System.out.println("Referer: " + referer);
@@ -169,7 +169,7 @@ public void headerParam(@HeaderParam String referer){
 
 *   Cookie 参数:
 
-```
+```java
 @GetRoute("/cookie")
 public void cookieParam(@CookieParam String myCookie){
     System.out.println("myCookie: " + myCookie);
@@ -178,7 +178,7 @@ public void cookieParam(@CookieParam String myCookie){
 
 *   身体参数:
 
-```
+```java
 @PostRoute("/bodyParam")
 public void bodyParam(@BodyParam User user){
     System.out.println("user: " + user.toString());
@@ -187,14 +187,14 @@ public void bodyParam(@BodyParam User user){
 
 *   值对象参数，通过将其属性发送到路由来调用:
 
-```
+```java
 @PostRoute("/voParam")
 public void voParam(@Param User user){
     System.out.println("user: " + user.toString());
 } 
 ```
 
-```
+```java
 <form method="post">
     <input type="text" name="age"/>
     <input type="text" name="name"/>
@@ -211,13 +211,13 @@ public void voParam(@Param User user){
 
 我们可以通过以编程方式添加一个或多个静态路径来调整这种行为:
 
-```
+```java
 blade.addStatics("/custom-static"); 
 ```
 
 通过编辑文件`src/main/resources/application.properties`，可以通过配置获得相同的结果:
 
-```
+```java
 mvc.statics=/custom-static 
 ```
 
@@ -225,13 +225,13 @@ mvc.statics=/custom-static
 
 我们可以允许列出静态文件夹的内容，出于安全原因，这个特性在默认情况下是关闭的:
 
-```
+```java
 blade.showFileList(true); 
 ```
 
 或者在配置中:
 
-```
+```java
 mvc.statics.show-list=true 
 ```
 
@@ -245,7 +245,7 @@ mvc.statics.show-list=true
 
 例如，让我们在`pom.xml`中导入[引导程序](https://web.archive.org/web/20221208143837/https://search.maven.org/search?q=g:org.webjars%20AND%20a:bootstrap):
 
-```
+```java
 <dependency>
     <groupId>org.webjars</groupId>
     <artifactId>bootstrap</artifactId>
@@ -277,7 +277,7 @@ mvc.statics.show-list=true
 
 我们可以通过 automapped 属性读取表单参数:
 
-```
+```java
 @PostRoute("/save")
 public void formParams(@Param String username){
     // ...
@@ -286,7 +286,7 @@ public void formParams(@Param String username){
 
 或者来自`Request`对象:
 
-```
+```java
 @PostRoute("/save")
 public void formParams(Request request){
     String username = request.query("username", "Baeldung");
@@ -297,14 +297,14 @@ public void formParams(Request request){
 
 现在让我们看看如何将 JSON 对象映射到 POJO:
 
-```
+```java
 curl -X POST http://localhost:9000/users -H 'Content-Type: application/json' \ 
   -d '{"name":"Baeldung","site":"baeldung.com"}' 
 ```
 
 POJO(为了可读性，用 [Lombok](/web/20221208143837/https://www.baeldung.com/intro-to-project-lombok) 标注):
 
-```
+```java
 public class User {
     @Getter @Setter private String name;
     @Getter @Setter private String site;
@@ -313,7 +313,7 @@ public class User {
 
 同样，该值可作为注入属性使用:
 
-```
+```java
 @PostRoute("/users")
 public void bodyParams(@BodyParam User user){
     // ...
@@ -322,7 +322,7 @@ public void bodyParams(@BodyParam User user){
 
 并且从`Request`开始:
 
-```
+```java
 @PostRoute("/users")
 public void bodyParams(Request request) {
     String bodyString = request.bodyToString();
@@ -333,7 +333,7 @@ public void bodyParams(Request request) {
 
 像`localhost:9000/user/42`这样漂亮的 URL 中的 RESTFul 参数也是一等公民:
 
-```
+```java
 @GetRoute("/user/:id")
 public void user(@PathParam Integer id){
     // ...
@@ -342,7 +342,7 @@ public void user(@PathParam Integer id){
 
 像往常一样，我们可以在需要时依靠`Request`对象:
 
-```
+```java
 @GetRoute("/user")
 public void user(Request request){
     Integer id = request.pathInt("id");
@@ -355,7 +355,7 @@ public void user(Request request){
 
 Blade 支持 JSON 和表单绑定参数，并自动将它们附加到模型对象:
 
-```
+```java
 @PostRoute("/users")
 public void bodyParams(User user){} 
 ```
@@ -366,7 +366,7 @@ public void bodyParams(User user){}
 
 带有两个参数的方法，分别代表键和值，是我们可以用来在不同的上下文中存储值的赋值函数:
 
-```
+```java
 Session session = request.session();
 request.attribute("request-val", "Some Request value");
 session.attribute("session-val", 1337); 
@@ -374,7 +374,7 @@ session.attribute("session-val", 1337);
 
 另一方面，只接受 key 参数的相同方法是访问器:
 
-```
+```java
 String requestVal = request.attribute("request-val");
 String sessionVal = session.attribute("session-val"); //It's an Integer 
 ```
@@ -385,7 +385,7 @@ String sessionVal = session.attribute("session-val"); //It's an Integer
 
 相反，请求头只能从请求中读取:
 
-```
+```java
 String header1 = request.header("a-header");
 String header2 = request.header("a-safe-header", "with a default value");
 Map<String, String> allHeaders = request.headers(); 
@@ -404,19 +404,19 @@ Map<String, String> allHeaders = request.headers();
 
 让我们看看`Request`对象如何帮助我们处理 Cookies，特别是在读取`Optional<Cookie>`时:
 
-```
+```java
 Optional<Cookie> cookieRaw(String name); 
 ```
 
 如果 Cookie 不存在，我们也可以通过指定要应用的默认值来获取它作为一个`String`:
 
-```
+```java
 String cookie(String name, String defaultValue); 
 ```
 
 最后，这是我们如何一次读取所有 cookie 的方法(`keys`是 cookie 的名称，`values`是 cookie 的值):
 
-```
+```java
 Map<String, String> cookies = request.cookies(); 
 ```
 
@@ -424,7 +424,7 @@ Map<String, String> cookies = request.cookies();
 
 类似于对`Request`所做的，我们可以通过简单地将它声明为路由方法的一个参数来获得对`Response`对象的引用:
 
-```
+```java
 @GetRoute("/")
 public void home(Response response) {} 
 ```
@@ -435,31 +435,31 @@ public void home(Response response) {}
 
 首先，我们可以发送纯文本:
 
-```
+```java
 response.text("Hello World!");
 ```
 
 其次，我们可以制作一个 HTML:
 
-```
+```java
 response.html("<h1>Hello World!</h1>");
 ```
 
 第三，我们同样可以生成一个 XML:
 
-```
+```java
 response.xml("<Msg>Hello World!</Msg>");
 ```
 
 最后，我们可以使用一个`String`输出 JSON:
 
-```
+```java
 response.json("{\"The Answer\":42}"); 
 ```
 
 甚至在 POJO 中，利用自动 JSON 转换:
 
-```
+```java
 User user = new User("Baeldung", "baeldung.com"); 
 response.json(user); 
 ```
@@ -468,7 +468,7 @@ response.json(user);
 
 从服务器下载文件再简单不过了:
 
-```
+```java
 response.download("the-file.txt", "/path/to/the/file.txt"); 
 ```
 
@@ -478,7 +478,7 @@ response.download("the-file.txt", "/path/to/the/file.txt");
 
 Blade 还可以通过模板引擎呈现页面:
 
-```
+```java
 response.render("admin/users.html"); 
 ```
 
@@ -492,7 +492,7 @@ response.render("admin/users.html");
 
 我们可以重定向到另一个路由，或者也可以重定向到外部 URL:
 
-```
+```java
 response.redirect("/target-route"); 
 ```
 
@@ -500,13 +500,13 @@ response.redirect("/target-route");
 
 在这一点上，我们应该习惯于 Blade 的简单性。因此，让我们看看如何用一行代码编写一个未过期的 Cookie:
 
-```
+```java
 response.cookie("cookie-name", "Some value here"); 
 ```
 
 事实上，删除 Cookie 同样简单:
 
-```
+```java
 response.removeCookie("cookie-name"); 
 ```
 
@@ -530,7 +530,7 @@ WebHook 是一个拦截器，通过它我们可以在路由方法执行之前和
 
 我们可以通过简单地实现`WebHook`函数接口并覆盖`before()`方法来创建一个 WebHook:
 
-```
+```java
 @FunctionalInterface
 public interface WebHook {
 
@@ -550,7 +550,7 @@ public interface WebHook {
 
 用它注释的 WebHook 将因此全局工作，拦截对每个 URL 的请求:
 
-```
+```java
 @Bean
 public class BaeldungHook implements WebHook {
 
@@ -566,7 +566,7 @@ public class BaeldungHook implements WebHook {
 
 我们还可以拦截特定的 URL，只围绕这些路由方法执行代码:
 
-```
+```java
 Blade.of()
   .before("/user/*", ctx -> System.out.println("Before: " + ctx.uri()));
   .start(App.class, args); 
@@ -576,7 +576,7 @@ Blade.of()
 
 中间件是优先的 WebHook，它在任何标准的 web hook 之前执行:
 
-```
+```java
 public class BaeldungMiddleware implements WebHook {
 
     @Override
@@ -589,7 +589,7 @@ public class BaeldungMiddleware implements WebHook {
 
 它们只需要在没有`@Bean`注释的情况下定义，然后通过`use()`声明性地注册:
 
-```
+```java
 Blade.of()
   .use(new BaeldungMiddleware())
   .start(App.class, args); 
@@ -612,7 +612,7 @@ Blade.of()
 
 *   启动期间:
 
-```
+```java
 Blade.of()
   .on(EventType.SERVER_STARTED, e -> {
       Optional<String> version = WebContext.blade().env("app.version");
@@ -622,7 +622,7 @@ Blade.of()
 
 *   在路线内:
 
-```
+```java
 @GetRoute("/some-route")
 public void someRoute(){
     String authors = WebContext.blade().env("app.authors","Unknown authors");
@@ -631,7 +631,7 @@ public void someRoute(){
 
 *   在自定义加载器中，通过实现`BladeLoader`接口，覆盖`load()`方法，并用`@Bean`注释该类:
 
-```
+```java
 @Bean
 public class LoadConfig implements BladeLoader {
 
@@ -649,7 +649,7 @@ public class LoadConfig implements BladeLoader {
 
 按前缀对配置设置进行分组，可以使它们一次全部显示在一个映射中，这在有许多配置设置时非常有用:
 
-```
+```java
 Environment environment = blade.environment();
 Map<String, Object> map = environment.getPrefix("app");
 String version = map.get("version").toString();
@@ -662,7 +662,7 @@ String authors = map.get("authors","Unknown authors").toString();
 
 在启动过程中，我们可以指定我们想要使用的环境，框架将通过使用来自`application-prod.properties`的最具体的设置和来自默认`application.properties`文件的所有其他设置来合并文件:
 
-```
+```java
 java -jar target/sample-blade-app.jar --app.env=prod 
 ```
 
@@ -676,7 +676,7 @@ Blade 的作者建议使用另一个聪明的中国项目 [Jetbrick](https://web
 
 默认模板通过`${}`符号解析不同上下文中的变量:
 
-```
+```java
 <h1>Hello, ${name}!</h1> 
 ```
 
@@ -684,7 +684,7 @@ Blade 的作者建议使用另一个聪明的中国项目 [Jetbrick](https://web
 
 切换到不同的模板引擎是一件轻而易举的事！我们只需导入引擎(的刀片包装器)的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.bladejava</groupId>
     <artifactId>blade-template-jetbrick</artifactId>
@@ -694,7 +694,7 @@ Blade 的作者建议使用另一个聪明的中国项目 [Jetbrick](https://web
 
 此时，只需编写一个简单的配置来指示框架使用该库就足够了:
 
-```
+```java
 @Bean
 public class TemplateConfig implements BladeLoader {
 
@@ -711,7 +711,7 @@ public class TemplateConfig implements BladeLoader {
 
 包装一个新的模板引擎需要创建一个类，这个类必须实现`TemplateEngine`接口并覆盖`render()`方法:
 
-```
+```java
 void render (ModelAndView modelAndView, Writer writer) throws TemplateException; 
 ```
 
@@ -723,7 +723,7 @@ Blade 使用`slf4j-api`作为测井接口。
 
 它还包括一个已经配置好的日志实现，名为 [`blade-log`](https://web.archive.org/web/20221208143837/https://github.com/lets-blade/blade-log) 。因此，我们不需要导入任何东西；它的工作方式是，简单地定义一个`Logger`:
 
-```
+```java
 private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LogExample.class); 
 ```
 
@@ -733,7 +733,7 @@ private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Lo
 
 *   日志记录级别(可以是“跟踪”、“调试”、“信息”、“警告”或“错误”):
 
-```
+```java
 # Root Logger
 com.blade.logger.rootLevel=info
 
@@ -746,7 +746,7 @@ com.blade.logger.com.baeldung.sample.SomeClass=trace
 
 *   显示的信息:
 
-```
+```java
 # Date and Time
 com.blade.logger.showDate=false
 
@@ -765,7 +765,7 @@ com.blade.logger.shortName=true
 
 *   记录器:
 
-```
+```java
 # Path 
 com.blade.logger.dir=./logs
 
@@ -777,7 +777,7 @@ com.blade.logger.name=sample
 
 尽管已经配置了一个集成的日志记录器对于开始我们的小项目来说非常方便，但是我们可能很容易陷入其他库导入它们自己的日志实现的情况。在这种情况下，为了避免冲突，我们可以删除集成模块:
 
-```
+```java
 <dependency>
     <groupId>com.bladejava</groupId>
     <artifactId>blade-mvc</artifactId>
@@ -799,7 +799,7 @@ com.blade.logger.name=sample
 
 然而，我们可以通过定义一个扩展了`DefaultExceptionHandler`类的`@Bean`来以特定的方式处理异常:
 
-```
+```java
 @Bean
 public class GlobalExceptionHandler extends DefaultExceptionHandler {
 
@@ -822,7 +822,7 @@ public class GlobalExceptionHandler extends DefaultExceptionHandler {
 
 我们可以通过使用以下设置在`application.properties`文件中声明页面来强制框架使用我们自己的页面:
 
-```
+```java
 mvc.view.404=my-404.html
 mvc.view.500=my-500.html 
 ```
@@ -831,7 +831,7 @@ mvc.view.500=my-500.html
 
 在 500 中，我们还可以通过它们的特殊变量检索异常`message`和`stackTrace`:
 
-```
+```java
 <!DOCTYPE html>
 <html>
     <head>
@@ -852,7 +852,7 @@ mvc.view.500=my-500.html
 
 这可以通过用`@Schedule`注释来注释`@Bean`类的方法来实现:
 
-```
+```java
 @Bean
 public class ScheduleExample {
 
@@ -869,19 +869,19 @@ public class ScheduleExample {
 
 *   获取所有计划任务:
 
-```
+```java
 List<Task> allScheduledTasks = TaskManager.getTasks(); 
 ```
 
 *   按名称获取任务:
 
-```
+```java
 Task myTask = TaskManager.getTask("baeldungTask"); 
 ```
 
 *   按名称停止任务:
 
-```
+```java
 boolean closed = TaskManager.stopTask("baeldungTask"); 
 ```
 
@@ -891,7 +891,7 @@ boolean closed = TaskManager.stopTask("baeldungTask");
 
 Blade 提供了以下现成的事件:
 
-```
+```java
 public enum EventType {
     SERVER_STARTING,
     SERVER_STARTED,
@@ -908,7 +908,7 @@ public enum EventType {
 
 让我们看看如何在创建会话时给它赋值:
 
-```
+```java
 Blade.of()
   .on(EventType.SESSION_CREATED, e -> {
       Session session = (Session) e.attribute("session");
@@ -925,7 +925,7 @@ Blade.of()
 
 然后，只需要让框架知道我们想要使用它。我们可以用与定制模板引擎相同的方式来实现这一点，唯一的区别是我们调用了`sessionType()`方法:
 
-```
+```java
 @Bean
 public class SessionConfig implements BladeLoader {
 
@@ -942,19 +942,19 @@ public class SessionConfig implements BladeLoader {
 
 首先，我们可以更改 IP 地址，默认情况下是本地`0.0.0.0`回环:
 
-```
+```java
 java -jar target/sample-blade-app.jar --server.address=192.168.1.100 
 ```
 
 其次，我们还可以更改端口，默认为`9000`:
 
-```
+```java
 java -jar target/sample-blade-app.jar --server.port=8080 
 ```
 
 最后，如第 9.3 节所示，我们可以改变环境，让不同的`application-XXX.properties`文件覆盖默认文件`application.properties`:
 
-```
+```java
 java -jar target/sample-blade-app.jar --app.env=prod 
 ```
 

@@ -14,7 +14,7 @@
 
 一个简单的`Jooby`应用程序结构如下所示:
 
-```
+```java
 ├── public
 |   └── welcome.html
 ├── conf
@@ -42,7 +42,7 @@
 
 我们可以通过在我们的`pom.xml:`中添加以下依赖项来创建一个简单的`Jooby`应用程序
 
-```
+```java
 <dependency>
     <groupId>org.jooby</groupId>
     <artifactId>jooby-netty</artifactId>
@@ -52,7 +52,7 @@
 
 如果我们想选择`Jetty`或`Undertow`，我们可以使用以下依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.jooby</groupId>
     <artifactId>jooby-jetty</artifactId>
@@ -71,7 +71,7 @@
 
 我们可以使用以下脚本来生成示例项目:
 
-```
+```java
 mvn archetype:generate -B -DgroupId=com.baeldung.jooby -DartifactId=jooby 
 -Dversion=1.0 -DarchetypeArtifactId=jooby-archetype 
 -DarchetypeGroupId=org.jooby -DarchetypeVersion=1.1.3
@@ -83,7 +83,7 @@ mvn archetype:generate -B -DgroupId=com.baeldung.jooby -DartifactId=jooby
 
 要启动嵌入式服务器，我们需要使用以下代码片段:
 
-```
+```java
 public class App extends Jooby {
     public static void main(String[] args) {
         run(App::new, args);
@@ -95,7 +95,7 @@ public class App extends Jooby {
 
 我们还可以用自定义端口和自定义`HTTPS`端口配置后端服务器:
 
-```
+```java
 {
     port( 8081 );
     securePort( 8443 );
@@ -106,7 +106,7 @@ public class App extends Jooby {
 
 在`Jooby`中创建基于路径的路由器非常容易。例如，我们可以通过以下方式为路径'【T1]'创建一个路由器:
 
-```
+```java
 {
     get( "/login", () -> "Hello from Baeldung");
 }
@@ -114,7 +114,7 @@ public class App extends Jooby {
 
 同样，如果我们想处理其他`HTTP`方法，比如 POST、PUT 等，我们可以使用下面的代码片段:
 
-```
+```java
 {
     post( "/save", req -> {
         Mutant token = req.param( "token" );
@@ -127,7 +127,7 @@ public class App extends Jooby {
 
 我们可以通过以下方式检查任何 url 参数:
 
-```
+```java
 {
     get( "/user/{id}", req -> "Hello user : " + req.param("id").value() );
     get( "/user/:id", req -> "Hello user: " + req.param("id").value() );
@@ -136,7 +136,7 @@ public class App extends Jooby {
 
 我们可以使用以上任何一种。也可以找到以固定内容开始的参数。例如，我们可以通过以下方式找到一个以'`uid:'` 开头的 URL 参数:
 
-```
+```java
 {
     get( "/uid:{id}", req -> "Hello User with id : uid" + 
         req.param("id").value());
@@ -149,7 +149,7 @@ public class App extends Jooby {
 
 例如，我们可以处理一个名为'`/hello`'的路径:
 
-```
+```java
 @Path("/hello")
 public class GetController {
     @GET
@@ -167,7 +167,7 @@ public class GetController {
 
 放置后，我们可以从路由器将任何 url 映射到这些资源:
 
-```
+```java
 {
     assets( "/employee" , "form.html" );
 }
@@ -179,7 +179,7 @@ public class GetController {
 
 假设我们需要通过表单提交员工的详细信息。第一步，我们需要创建一个用于保存数据的`Employee` bean 对象:
 
-```
+```java
 public class Employee {
     String id;
     String name;
@@ -191,7 +191,7 @@ public class Employee {
 
 现在，我们需要创建一个页面来创建表单:
 
-```
+```java
 <form enctype="application/x-www-form-urlencoded" action="/submitForm" 
     method="post">
     <input name="id" />
@@ -203,7 +203,7 @@ public class Employee {
 
 接下来，我们将创建一个 post 处理程序来处理这个表单并获取提交的数据:
 
-```
+```java
 post( "/submitForm", req -> {
     Employee employee = req.params(Employee.class);
     // ...
@@ -215,7 +215,7 @@ post( "/submitForm", req -> {
 
 通过`[Request.file(String filename)](https://web.archive.org/web/20220524024843/https://javadoc.io/static/org.jooby/jooby/1.2.3/org/jooby/Request.html#file-java.lang.String-)`,我们可以检索上传的文件:
 
-```
+```java
 post( "/upload", req -> {
     Upload upload = req.file("file");
     // ...
@@ -231,7 +231,7 @@ post( "/upload", req -> {
 
 例如，如果我们必须为名为'【T0]的 URL 路径实现一个过滤器，我们需要在这个路径中显式地实现过滤器:
 
-```
+```java
 get( "/filter", ( req, resp, chain ) -> {
     // ...
     chain.next( req, resp );
@@ -242,7 +242,7 @@ get( "/filter", ( req, resp, chain ) -> {
 
 一旦实现了过滤器，我们需要实现请求处理程序:
 
-```
+```java
 get("/filter", (req, resp) -> {
     resp.send("filter response");
 });
@@ -256,7 +256,7 @@ get("/filter", (req, resp) -> {
 
 例如，要实现基于 Redis 的会话存储，我们需要添加以下 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.jooby</groupId>
     <artifactId>jooby-jedis</artifactId>
@@ -266,7 +266,7 @@ get("/filter", (req, resp) -> {
 
 现在，我们可以使用下面的代码片段来启用会话管理:
 
-```
+```java
 {
     use(new Redis());
     session(RedisSessionStore.class);
@@ -291,7 +291,7 @@ get("/filter", (req, resp) -> {
 
 例如，我们可以快速为默认 URL 创建一个测试用例:
 
-```
+```java
 public class AppTest {
 
     @ClassRule
@@ -310,7 +310,7 @@ public class AppTest {
 
 我们也可以使用`Jooby's [MockRouter](https://web.archive.org/web/20220524024843/https://github.com/jooby-project/jooby/blob/2.x/modules/jooby-test/src/main/java/io/jooby/MockRouter.java)`以同样的方式测试路径:
 
-```
+```java
 @Test
 public void given_defaultUrl_with_mockrouter_expect_fixedString() 
   throws Throwable {

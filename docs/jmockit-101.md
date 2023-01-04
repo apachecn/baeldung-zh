@@ -24,7 +24,7 @@
 
 首先，我们需要将 [jmockit](https://web.archive.org/web/20220812064337/https://search.maven.org/search?q=a:jmockit%20AND%20g:org.jmockit) 依赖项添加到项目中:
 
-```
+```java
 <dependency> 
     <groupId>org.jmockit</groupId> 
     <artifactId>jmockit</artifactId> 
@@ -38,13 +38,13 @@
 
 这意味着你不会做这样的事情:
 
-```
+```java
 API.expect(mockInstance.method()).andThenReturn(value).times(2);
 ```
 
 相反，应该期待这样的事情:
 
-```
+```java
 new Expectation() {
     mockInstance.method(); 
     result = value; 
@@ -66,7 +66,7 @@ new Expectation() {
 
 对于一个代码示例，一个测试的线框如下所示:
 
-```
+```java
 @Test
 public void testWireframe() {
    // preparation code not specific to JMockit, if any
@@ -101,7 +101,7 @@ public void testWireframe() {
 
 使用 JMockit 时，可以将模拟作为测试参数传递。这对于为某个特定的测试创建模拟非常有用，比如某个复杂的模型对象需要某个测试的特定行为。大概是这样的:
 
-```
+```java
 @RunWith(JMockit.class)
 public class TestPassingArguments {
 
@@ -133,7 +133,7 @@ public class TestPassingArguments {
 
 因此，经过测试的类将如下所示:
 
-```
+```java
 public class Model {
     public String getInfo(){
         return "info";
@@ -161,7 +161,7 @@ public class Performer {
 
 测试的代码将会是这样的:
 
-```
+```java
 @RunWith(JMockit.class)
 public class PerformerTest {
 

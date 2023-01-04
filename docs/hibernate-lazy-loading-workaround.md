@@ -32,7 +32,7 @@ Hibernate 有一个变通方法，一个`enable_lazy_load_no_trans`属性。打�
 
 现在让我们定义我们的`User`实体:
 
-```
+```java
 @Entity
 public class User {
 
@@ -46,7 +46,7 @@ public class User {
 
 接下来，我们需要一个具有两种方法的服务层来说明不同的选项。其中一个标注为`@Transactional`。这里，两种方法通过计算来自所有用户的所有文档来执行相同的逻辑:
 
-```
+```java
 @Service
 public class ServiceLayer {
 
@@ -78,7 +78,7 @@ public class ServiceLayer {
 
 首先，我们用推荐的方式来使用懒加载。因此，我们将在服务层调用我们的`@Transactional` 方法:
 
-```
+```java
 @Test
 public void whenCallTransactionalMethodWithPropertyOff_thenTestPass() {
     SQLStatementCountValidator.reset();
@@ -96,7 +96,7 @@ public void whenCallTransactionalMethodWithPropertyOff_thenTestPass() {
 
 现在，让我们调用一个非事务性的方法来模拟我们在没有周围事务的情况下得到的错误:
 
-```
+```java
 @Test(expected = LazyInitializationException.class)
 public void whenCallNonTransactionalMethodWithPropertyOff_thenThrowException() {
     serviceLayer.countAllDocsNonTransactional();
@@ -109,7 +109,7 @@ public void whenCallNonTransactionalMethodWithPropertyOff_thenThrowException() {
 
 要解决这个问题，我们可以启用属性:
 
-```
+```java
 spring.jpa.properties.hibernate.enable_lazy_load_no_trans=true
 ```
 
@@ -117,7 +117,7 @@ spring.jpa.properties.hibernate.enable_lazy_load_no_trans=true
 
 然而，查询的计数显示对数据库进行了六次往返。这里，一次往返选择用户，五次往返为五个用户中的每一个选择文档:
 
-```
+```java
 @Test
 public void whenCallNonTransactionalMethodWithPropertyOn_thenGetNplusOne() {
     SQLStatementCountValidator.reset();

@@ -28,7 +28,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 我们的访问令牌存储在一个 cookie 中，该 cookie 将根据令牌本身的过期时间而过期:
 
-```
+```java
 var expireDate = new Date().getTime() + (1000 * token.expires_in);
 Cookie.set("access_token", token.access_token, expireDate);
 ```
@@ -37,7 +37,7 @@ Cookie.set("access_token", token.access_token, expireDate);
 
 但是请注意我们实际上是如何定义这个`retrieveToken()`函数来获取访问令牌的:
 
-```
+```java
 retrieveToken(code) {
   let params = new URLSearchParams();
   params.append('grant_type','authorization_code');
@@ -69,7 +69,7 @@ retrieveToken(code) {
 
 现在**让我们配置代理**的路由:
 
-```
+```java
 zuul:
   routes:
     auth/code:
@@ -110,7 +110,7 @@ zuul:
 
 **代理的第一次使用很简单——我们建立一个获取授权码的请求:**
 
-```
+```java
 @Component
 public class CustomPreZuulFilter extends ZuulFilter {
     @Override
@@ -169,7 +169,7 @@ public class CustomPreZuulFilter extends ZuulFilter {
 
 **我们将设置一个 Zuul 后置过滤器来提取这段代码，并将其设置在 cookie 中。**这不仅仅是一个普通的 cookie，而是一个**安全的、只有 HTTP 的 cookie，具有非常有限的路径(`/auth/token` )** :
 
-```
+```java
 @Component
 public class CustomPostZuulFilter extends ZuulFilter {
     private ObjectMapper mapper = new ObjectMapper();
@@ -220,7 +220,7 @@ public class CustomPostZuulFilter extends ZuulFilter {
 
 为此，我们将创建一个配置类:
 
-```
+```java
 @Configuration
 public class SameSiteConfig implements WebMvcConfigurer {
     @Bean
@@ -242,7 +242,7 @@ public class SameSiteConfig implements WebMvcConfigurer {
 
 因此，我们现在将在代理中的`pre`过滤器中有另一个条件，即**将从 cookie 中提取代码，并将其与其他表单参数一起发送，以获得令牌**:
 
-```
+```java
 public Object run() {
     RequestContext ctx = RequestContext.getCurrentContext();
     ...
@@ -277,7 +277,7 @@ private String extractCookie(HttpServletRequest req, String name) {
 
 这里是我们的**`CustomHttpServletRequest` ——用于发送我们的请求体，将所需的表单参数转换为字节**:
 
-```
+```java
 public class CustomHttpServletRequest extends HttpServletRequestWrapper {
 
     private byte[] bytes;
@@ -319,7 +319,7 @@ public class CustomHttpServletRequest extends HttpServletRequestWrapper {
 
 **我们将添加 Zuul 后置过滤器，从响应的 JSON 主体中提取刷新令牌，并将其设置在 cookie 中。**这也是一个安全的、只有 HTTP 的 cookie，具有非常有限的路径(`/auth/refresh`):
 
-```
+```java
 public Object run() {
 ...
     else if (requestURI.contains("auth/token") || requestURI.contains("auth/refresh")) {
@@ -356,7 +356,7 @@ public Object run() {
 
 **因此，我们现在将在代理中的`pre`过滤器中有另一个条件，它将从 cookie 中提取刷新令牌，并将其作为 HTTP 参数**转发——以便请求有效:
 
-```
+```java
 public Object run() {
     RequestContext ctx = RequestContext.getCurrentContext();
     ...
@@ -387,7 +387,7 @@ public Object run() {
 
 下面是我们的函数`refreshAccessToken()`:
 
-```
+```java
 refreshAccessToken() {
   let headers = new HttpHeaders({
     'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
@@ -409,7 +409,7 @@ refreshAccessToken() {
 
 **第一步也一样。我们需要构建应用程序**:
 
-```
+```java
 mvn clean install
 ```
 

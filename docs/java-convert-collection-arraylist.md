@@ -14,13 +14,13 @@
 
 我们的源可以是任何类型的集合，所以我们将使用`Collection`接口来声明它:
 
-```
+```java
 Collection<Foo> srcCollection; 
 ```
 
 我们需要生成一个具有相同元素类型的`ArrayList`:
 
-```
+```java
 ArrayList<Foo> newList;
 ```
 
@@ -30,7 +30,7 @@ ArrayList<Foo> newList;
 
 在我们之前的[数组列表](/web/20221128045127/https://www.baeldung.com/java-arraylist)指南中，我们了解到`ArrayList`构造函数可以接受一个集合参数:
 
-```
+```java
 ArrayList<Foo> newList = new ArrayList<>(srcCollection);
 ```
 
@@ -43,7 +43,7 @@ ArrayList<Foo> newList = new ArrayList<>(srcCollection);
 
 现在，**让我们利用 Streams API 从现有的集合** :中创建一个数组列表
 
-```
+```java
 ArrayList<Foo> newList = srcCollection.stream().collect(toCollection(ArrayList::new));
 ```
 
@@ -55,7 +55,7 @@ ArrayList<Foo> newList = srcCollection.stream().collect(toCollection(ArrayList::
 
 如果我们不关心确切的`List`类型，我们可以简化:
 
-```
+```java
 List<Foo> newList = srcCollection.stream().collect(toList());
 ```
 
@@ -71,7 +71,7 @@ List<Foo> newList = srcCollection.stream().collect(toList());
 
 让我们定义我们的`Foo`类，以便它知道如何深度复制自己:
 
-```
+```java
 public class Foo {
 
     private int id;
@@ -97,7 +97,7 @@ public class Foo {
 
 现在我们可以回到我们的`ArrayList`转换。**我们只需要`map`操作符将深层副本**插入到流中:
 
-```
+```java
 ArrayList<Foo> newList = srcCollection.stream()
   .map(foo -> foo.deepCopy())
   .collect(toCollection(ArrayList::new));
@@ -113,7 +113,7 @@ ArrayList<Foo> newList = srcCollection.stream()
 
 如果我们想改变顺序**，我们可以将`sorted()`操作符应用于流**。要按名称对我们的`Foo`对象进行排序:
 
-```
+```java
 ArrayList<Foo> newList = srcCollection.stream()
   .sorted(Comparator.comparing(Foo::getName))
   .collect(toCollection(ArrayList::new));

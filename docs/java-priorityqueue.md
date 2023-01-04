@@ -22,7 +22,7 @@
 
 **作为一个例子，现在让我们看看，通过提供一个标准的`Integer`自然排序比较器或 null，队列将以同样的方式排序**:
 
-```
+```java
 PriorityQueue<Integer> integerQueue = new PriorityQueue<>();
 PriorityQueue<Integer> integerQueueWithComparator = new PriorityQueue<>((Integer c1, Integer c2) -> Integer.compare(c1, c2));
 
@@ -50,7 +50,7 @@ assertThat(integerQueue.poll())
 
 现在让我们创建一个按逆自然顺序排序的`PriorityQueue`。我们可以通过使用`static`方法`java.util.Collections.reverseOrder()`来实现:
 
-```
+```java
 PriorityQueue<Integer> reversedQueue = new PriorityQueue<>(Collections.reverseOrder());
 
 reversedQueue.add(1);
@@ -68,7 +68,7 @@ assertThat(reversedQueue.poll()).isEqualTo(1);
 
 例如，让我们创建一个`ColoredNumber`类来演示这种行为:
 
-```
+```java
 public class ColoredNumber {
 
    private int value;
@@ -84,7 +84,7 @@ public class ColoredNumber {
 
 **当我们试图在`PriorityQueue`中使用这个类时，它会抛出一个异常**:
 
-```
+```java
 PriorityQueue<ColoredNumber> queue = new PriorityQueue<>();
 queue.add(new ColoredNumber(3,"red"));
 queue.add(new ColoredNumber(2, "blue"));
@@ -94,7 +94,7 @@ queue.add(new ColoredNumber(2, "blue"));
 
 我们可以通过在构造函数中提供一个`Comparator`来提供排序，就像我们在前面的例子中所做的那样，或者我们可以实现`Comparable`接口:
 
-```
+```java
 public final class ColoredNumberComparable implements Comparable<ColoredNumber> {
 // ...
 @Override
@@ -114,7 +114,7 @@ public int compareTo(ColoredNumberComparable o) {
 
 这将允许首先考虑“红色”来对每个项目进行排序，然后以自然排序的方式对值进行排序，这意味着将首先返回所有红色的对象:
 
-```
+```java
 PriorityQueue<ColoredNumberComparable> queue = new PriorityQueue<>();
 queue.add(new ColoredNumberComparable(10, "red"));
 queue.add(new ColoredNumberComparable(20, "red"));

@@ -12,7 +12,7 @@
 
 除了常见的 Spring 依赖项，我们还将添加百里香叶和 Spring 数据共享的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.thymeleaf</groupId>
     <artifactId>thymeleaf-spring5</artifactId>
@@ -33,7 +33,7 @@
 
 首先，让我们定义一个具有两个字段和一个全参数构造函数的`Book`类:
 
-```
+```java
 public class Book {
     private int id;
     private String name;
@@ -46,7 +46,7 @@ public class Book {
 
 然后，我们将创建一个服务来使用 Spring Data Commons 库为所请求的页面生成分页的图书列表:
 
-```
+```java
 @Service
 public class BookService {
 
@@ -85,7 +85,7 @@ public class BookService {
 
 例如，`/listBooks?page=2&size;=6`将检索第二页，每页有六个项目:
 
-```
+```java
 @Controller
 public class BookController {
 
@@ -127,7 +127,7 @@ public class BookController {
 
 每次我们单击并选择一个页面，就会显示相应的图书列表，并突出显示当前页面链接:
 
-```
+```java
 <table border="1">
     <thead>
         <tr>

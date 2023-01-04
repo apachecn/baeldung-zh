@@ -18,7 +18,7 @@
 
 我们的测试类将用`@SpringBootTest` 进行注释，并将包含:
 
-```
+```java
 final static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:4.0.10"));
 
 @DynamicPropertySource
@@ -32,7 +32,7 @@ static void mongoDbProperties(DynamicPropertyRegistry registry) {
 
 对于这个测试，我们将用`save`和`getItem`方法创建`ItemService`类:
 
-```
+```java
 @Service
 public class ItemService {
 
@@ -53,7 +53,7 @@ public class ItemService {
 
 在`application.properties,`中，我们为缓存和存储库设置了记录器，这样我们可以监控测试中发生的事情:
 
-```
+```java
 logging.level.org.springframework.data.mongodb.core.ReactiveMongoTemplate=DEBUG
 logging.level.org.springframework.cache=TRACE
 ```
@@ -62,7 +62,7 @@ logging.level.org.springframework.cache=TRACE
 
 设置完成后，我们可以运行测试并分析结果:
 
-```
+```java
 @Test
 public void givenItem_whenGetItemIsCalled_thenMonoIsCached() {
     Mono<Item> glass = itemService.save(new Item("glass", 1.00));
@@ -87,7 +87,7 @@ public void givenItem_whenGetItemIsCalled_thenMonoIsCached() {
 
 在控制台中，我们可以看到以下输出(为简洁起见，只显示了基本部分):
 
-```
+```java
 Inserting Document containing fields: [name, price, _class] in collection: item...
 Computed cache key '618817a52bffe4526c60f6c0' for operation Builder[public reactor.core.publisher.Mono...
 No cache entry for key '618817a52bffe4526c60f6c0' in cache(s) [items]
@@ -109,7 +109,7 @@ findOne using query: { "_id" : { "$oid" : "618817a52bffe4526c60f6c0"}} fields: {
 
 `Mono`和`Flux`有一个内置的缓存机制，我们可以在这种情况下使用它作为解决方法。如前所述， `@Cacheable` 缓存包装器对象，通过内置缓存，我们可以创建对服务方法实际结果的引用:
 
-```
+```java
 @Cacheable("items")
 public Mono<Item> getItem_withCache(String id) {
     return repository.findById(id).cache();
@@ -118,7 +118,7 @@ public Mono<Item> getItem_withCache(String id) {
 
 让我们用这个新的服务方法运行上一章的测试。输出将如下所示:
 
-```
+```java
 Inserting Document containing fields: [name, price, _class] in collection: item
 Computed cache key '6189242609a72e0bacae1787' for operation Builder[public reactor.core.publisher.Mono...
 No cache entry for key '6189242609a72e0bacae1787' in cache(s) [items]
@@ -135,7 +135,7 @@ Cache entry for key '6189242609a72e0bacae1787' found in cache 'items'
 
 Reactor 3 addon 允许我们通过`CacheMono`和`CacheFlux`类流畅地使用不同的缓存实现。对于这个例子，我们将配置[咖啡因](/web/20220525142026/https://www.baeldung.com/spring-boot-caffeine-cache)缓存:
 
-```
+```java
 public ItemService(ItemRepository repository) {
     this.repository = repository;
     this.cache = Caffeine.newBuilder().build(this::getItem_withAddons);
@@ -144,7 +144,7 @@ public ItemService(ItemRepository repository) {
 
 在`the ItemService`构造函数中，我们用最小的配置初始化咖啡因缓存，在新的服务方法中，我们使用该缓存:
 
-```
+```java
 @Cacheable("items")
 public Mono<Item> getItem_withAddons(String id) {
     return CacheMono.lookup(cache.asMap(), id)

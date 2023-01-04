@@ -10,7 +10,7 @@
 
 我们需要包含的 Maven 依赖项是:
 
-```
+```java
 <dependency>           
     <groupId>com.insightfullogic</groupId>
     <artifactId>lambda-behave</artifactId>
@@ -36,7 +36,7 @@
 
 让我们看一个简单的`Calculator`类测试规范的例子:
 
-```
+```java
 public class Calculator {
 
     public int add() {
@@ -56,7 +56,7 @@ public class Calculator {
 
 接下来，我们将通过编写规范来测试`add()` 方法:
 
-```
+```java
 {
     Suite.describe("Lambda behave example tests", it -> {
         it.isSetupWith(() -> {
@@ -75,7 +75,7 @@ public class Calculator {
 
 让我们为除以 0 添加另一个测试用例，并验证我们是否得到一个异常:
 
-```
+```java
 it.should("Throw an exception if divide by 0", expect -> {
     expect.exception(ArithmeticException.class, () -> {
         calculator.divide(1, 0);
@@ -93,7 +93,7 @@ it.should("Throw an exception if divide by 0", expect -> {
 
 为了创建一个例子，让我们给我们的`Calculator`类添加一个方法:
 
-```
+```java
 public int add(int a, int b) {
     return a + b;
 }
@@ -101,7 +101,7 @@ public int add(int a, int b) {
 
 让我们为它编写一个数据驱动的测试:
 
-```
+```java
 it.uses(2, 3, 5)
   .and(23, 10, 33)
   .toShow("%d + %d = %d", (expect, a, b, c) -> {
@@ -113,7 +113,7 @@ it.uses(2, 3, 5)
 
 `toShow()` 用于描述使用参数的测试–输出如下:
 
-```
+```java
 0: 2 + 3 = 5 (seed: 42562700892554)(Lambda behave example tests)
 1: 23 + 10 = 33 (seed: 42562700892554)(Lambda behave example tests)
 ```
@@ -130,7 +130,7 @@ it.uses(2, 3, 5)
 
 因此，我们的`String`基于反转属性的测试应该是这样的:
 
-```
+```java
 it.requires(2)
   .example(Generator.asciiStrings())
   .toShow("Reversing a String twice returns the original String", 
@@ -145,7 +145,7 @@ it.requires(2)
 
 该规范的输出是:
 
-```
+```java
 0: Reversing a String twice returns the original String(ljL+qz2) 
   (seed: 42562700892554)(Lambda behave example tests)
 1: Reversing a String twice returns the original String(g) 
@@ -164,7 +164,7 @@ Lambda Behave 能够处理这个问题。正如前面测试用例的输出所示
 
 `SourceGenerator`包含`deterministicNumbers()`方法，该方法只将种子作为参数:
 
-```
+```java
  it.requires(2)
    .withSource(SourceGenerator.deterministicNumbers(42562700892554L))
    .example(Generator.asciiStrings())

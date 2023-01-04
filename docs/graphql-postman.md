@@ -10,7 +10,7 @@
 
 我们将使用在我们的 [GraphQL](/web/20221129021102/https://www.baeldung.com/spring-graphql) 教程中创建的端点。提醒一下，模式包含描述文章和作者的定义:
 
-```
+```java
 type Post {
     id: ID!
     title: String!
@@ -29,7 +29,7 @@ type Author {
 
 此外，我们还有显示帖子和撰写新帖子的方法:
 
-```
+```java
 type Query {
     recentPosts(count: Int, offset: Int): [Post]!
 }
@@ -55,7 +55,7 @@ type Mutation {
 
 然后，我们可以编写一个原生的 GraphQL 查询，比如将`title`、`category`和作者`name` 放入查询部分:
 
-```
+```java
 query {
     recentPosts(count: 1, offset: 0) {
         title
@@ -69,7 +69,7 @@ query {
 
 结果，我们会得到:
 
-```
+```java
 {
     "data": {
         "recentPosts": [
@@ -89,7 +89,7 @@ query {
 
 例如，我们可以更新*标题、文本、* *类别、*得到一个`id`和`title`作为响应:
 
-```
+```java
 mutation {
     createPost (
         title: "Post", 
@@ -112,7 +112,7 @@ mutation {
 
 因此，我们可以修改查询部分中的`recentPosts `主体，以动态分配变量的值:
 
-```
+```java
 query recentPosts ($count: Int, $offset: Int) {
     recentPosts (count: $count, offset: $offset) {
         id
@@ -125,7 +125,7 @@ query recentPosts ($count: Int, $offset: Int) {
 
 我们可以编辑 GRAPHQL 变量部分，将变量设置为:
 
-```
+```java
 {
   "count": 1,
   "offset": 0

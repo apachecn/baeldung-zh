@@ -12,7 +12,7 @@
 
 Java 没有为外部链接提供任何特殊的工具，但是我们可以使用标准的 HTML。以下语法用于创建内嵌链接:
 
-```
+```java
 /**
  * Some text <a href="URL#value">label</a> 
  */
@@ -22,7 +22,7 @@ Java 没有为外部链接提供任何特殊的工具，但是我们可以使用
 
 让我们考虑一个例子:
 
-```
+```java
 /** 
  * Refer to <a href="http://www.baeldung.com">Baeldung</a> 
  */
@@ -36,7 +36,7 @@ Java 没有为外部链接提供任何特殊的工具，但是我们可以使用
 
 **另一种方法是创建包含链接的标题。**`@see`标签用于实现这一点，如下所示:
 
-```
+```java
 /**
  * @see <a href="URL#value">label</a>
  */
@@ -44,7 +44,7 @@ Java 没有为外部链接提供任何特殊的工具，但是我们可以使用
 
 考虑下面的例子:
 
-```
+```java
 /**
  * @see <a href="http://www.baeldung.com">Baeldung</a> 
  */
@@ -62,7 +62,7 @@ Java 没有为外部链接提供任何特殊的工具，但是我们可以使用
 
 假设我们有一个包含方法`demo`的类`DemoOne`:
 
-```
+```java
 /** 
  * Javadoc
  */
@@ -79,13 +79,13 @@ class DemoOne {
 
 现在，我们可以通过以下方式从另一个类链接到上述类和方法的 Javadoc:
 
-```
+```java
 /** 
  * See also {@link org.demo.DemoOne}
  */
 ```
 
-```
+```java
 /**
  * See also {@link org.demo.DemoOne#demo()}
  */

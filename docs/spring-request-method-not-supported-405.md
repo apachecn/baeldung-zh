@@ -26,7 +26,7 @@ Spring 在一个 enum `RequestMethod`下声明所有支持的请求方法；它�
 
 现在，让我们来看一个映射所有 HTTP 方法的代码示例:
 
-```
+```java
 @RestController
 @RequestMapping(value="/api")
 public class RequestMethodController {
@@ -46,7 +46,7 @@ public class RequestMethodController {
 
 我们可以使用不同的支持方法请求 API，例如，使用 curl:
 
-```
+```java
 $ curl --request POST http://localhost:8080/api/employees
 [{"id":100,"name":"Steve Martin","contactNumber":"333-777-999"},
 {"id":200,"name":"Adam Schawn","contactNumber":"444-111-777"}]
@@ -64,7 +64,7 @@ $ curl --request POST http://localhost:8080/api/employees
 
 让我们看看如果我们在 Spring MVC 中专门定义和处理 GET 请求会发生什么，就像这样:
 
-```
+```java
 @RequestMapping(
   value = "/employees", 
   produces = "application/json", 
@@ -88,7 +88,7 @@ $ curl --request PUT http://localhost:8080/api/employees
 
 如您所料，我们可以通过在现有的方法映射中为 PUT 定义一个显式映射来解决这个问题:
 
-```
+```java
 @RequestMapping(
   value = "/employees", 
   produces = "application/json", 
@@ -97,7 +97,7 @@ $ curl --request PUT http://localhost:8080/api/employees
 
 或者，我们可以单独定义新的方法/映射:
 
-```
+```java
 @RequestMapping(value = "/employees", 
   produces = "application/json", 
   method=RequestMethod.PUT)

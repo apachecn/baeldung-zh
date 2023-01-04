@@ -12,7 +12,7 @@ Apache Lucene 是一个全文搜索引擎，可以在各种编程语言中使用
 
 首先，让我们添加必要的依赖项:
 
-```
+```java
 <dependency>        
     <groupId>org.apache.lucene</groupId>          
     <artifactId>lucene-core</artifactId>
@@ -24,7 +24,7 @@ Apache Lucene 是一个全文搜索引擎，可以在各种编程语言中使用
 
 此外，为了解析我们的搜索查询，我们需要:
 
-```
+```java
 <dependency>
     <groupId>org.apache.lucene</groupId>
     <artifactId>lucene-queryparser</artifactId>
@@ -54,7 +54,7 @@ Apache Lucene 是一个全文搜索引擎，可以在各种编程语言中使用
 
 文档可以有字段数据，其中字段通常是保存数据值的键:
 
-```
+```java
 title: Goodness of Tea
 body: Discussing goodness of drinking herbal tea...
 ```
@@ -89,7 +89,7 @@ Lucene 提供了非常动态且易于编写的查询语法。
 
 要搜索特定字段中的文本，我们可以使用:
 
-```
+```java
 fieldName:text
 
 eg: title:tea
@@ -97,25 +97,25 @@ eg: title:tea
 
 范围搜索:
 
-```
+```java
 timestamp:[1509909322,1572981321] 
 ```
 
 我们还可以使用通配符进行搜索:
 
-```
+```java
 dri?nk
 ```
 
 将搜索单个字符来代替通配符“？”
 
-```
+```java
 d*k
 ```
 
 搜索以“d”开头、以“k”结尾、中间有多个字符的单词。
 
-```
+```java
 uni*
 ```
 
@@ -123,7 +123,7 @@ uni*
 
 我们也可以组合这些查询并创建更复杂的查询。并包括逻辑运算符，如 And、NOT 或:
 
-```
+```java
 title: "Tea in breakfast" AND "coffee"
 ```
 
@@ -135,7 +135,7 @@ title: "Tea in breakfast" AND "coffee"
 
 首先，我们将创建一个内存索引，并向其中添加一些文档:
 
-```
+```java
 ...
 Directory memoryIndex = new RAMDirectory();
 StandardAnalyzer analyzer = new StandardAnalyzer();
@@ -156,7 +156,7 @@ writter.close();
 
 接下来，让我们创建一个搜索查询，并在索引中搜索添加的文档:
 
-```
+```java
 public List<Document> searchIndex(String inField, String queryString) {
     Query query = new QueryParser(inField, analyzer)
       .parse(queryString);
@@ -177,7 +177,7 @@ public List<Document> searchIndex(String inField, String queryString) {
 
 现在我们来测试一下:
 
-```
+```java
 @Test
 public void givenSearchQueryWhenFetchedDocumentThenCorrect() {
     InMemoryLuceneIndex inMemoryLuceneIndex 
@@ -209,7 +209,7 @@ A `Term`是搜索的基本单位，包含字段名和要搜索的文本。
 
 `TermQuery` 是由一个词组成的所有查询中最简单的一个:
 
-```
+```java
 @Test
 public void givenTermQueryWhenFetchedDocumentThenCorrect() {
     InMemoryLuceneIndex inMemoryLuceneIndex 
@@ -229,7 +229,7 @@ public void givenTermQueryWhenFetchedDocumentThenCorrect() {
 
 若要搜索包含“开头为”单词的文稿:
 
-```
+```java
 @Test
 public void givenPrefixQueryWhenFetchedDocumentThenCorrect() {
     InMemoryLuceneIndex inMemoryLuceneIndex 
@@ -249,7 +249,7 @@ public void givenPrefixQueryWhenFetchedDocumentThenCorrect() {
 
 顾名思义，我们可以使用通配符“*”或“？”用于搜索:
 
-```
+```java
 // ...
 Term term = new Term("body", "intro*");
 Query query = new WildcardQuery(term);
@@ -260,7 +260,7 @@ Query query = new WildcardQuery(term);
 
 它用于搜索文档中的一系列文本:
 
-```
+```java
 // ...
 inMemoryLuceneIndex.indexDocument(
   "quotes", 
@@ -279,7 +279,7 @@ List<Document> documents = inMemoryLuceneIndex.searchIndex(query);
 
 我们可以在搜索相似但不一定相同的东西时使用这个:
 
-```
+```java
 // ...
 inMemoryLuceneIndex.indexDocument("article", "Halloween Festival");
 inMemoryLuceneIndex.indexDocument("decoration", "Decorations for Halloween");
@@ -297,7 +297,7 @@ List<Document> documents = inMemoryLuceneIndex.searchIndex(query);
 
 有时我们可能需要执行复杂的搜索，将两种或多种不同类型的查询结合起来:
 
-```
+```java
 // ...
 inMemoryLuceneIndex.indexDocument("Destination", "Las Vegas singapore car");
 inMemoryLuceneIndex.indexDocument("Commutes in singapore", "Bus Car Bikes");
@@ -320,7 +320,7 @@ BooleanQuery booleanQuery
 
 我们还可以根据某些字段对搜索结果文档进行排序:
 
-```
+```java
 @Test
 public void givenSortFieldWhenSortedThenCorrect() {
     InMemoryLuceneIndex inMemoryLuceneIndex 
@@ -351,7 +351,7 @@ public void givenSortFieldWhenSortedThenCorrect() {
 
 让我们试着根据给定的`Term:`从索引中删除一些文档
 
-```
+```java
 // ...
 IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
 IndexWriter writer = new IndexWriter(memoryIndex, indexWriterConfig);
@@ -361,7 +361,7 @@ writer.deleteDocuments(term);
 
 我们将对此进行测试:
 
-```
+```java
 @Test
 public void whenDocumentDeletedThenCorrect() {
     InMemoryLuceneIndex inMemoryLuceneIndex 

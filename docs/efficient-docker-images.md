@@ -20,20 +20,20 @@
 
 假设我们想使用 Nginx 来托管我们的静态网站。我们可以创建 docker 文件，并以官方图像为基础:
 
-```
+```java
 FROM nginx:1.19.2
 COPY my-static-website/ /usr/share/nginx/html
 ```
 
 然后我们可以建立我们的形象:
 
-```
+```java
 $ docker build -t my-static-website .
 ```
 
 最后，运行它:
 
-```
+```java
 $ docker run -p 8080:80 -d my-static-website
 ```
 
@@ -41,7 +41,7 @@ $ docker run -p 8080:80 -d my-static-website
 
 更具体地说，基础映像阻止 Nginx 成为守护进程并结束初始进程。这种行为在其他环境中是意料之中的，但是在 Docker 中，这被解释为应用程序的结束，因此容器终止。解决方案是配置 Nginx 不要成为守护进程。这是官方图中的[配置](https://web.archive.org/web/20220727020704/https://github.com/nginxinc/docker-nginx/blob/1.19.2/stable/buster/Dockerfile#L110):
 
-```
+```java
 CMD ["nginx", "-g", "daemon off;"]
 ```
 
@@ -55,7 +55,7 @@ CMD ["nginx", "-g", "daemon off;"]
 
 例如，要更改 EMQX 监听的默认端口，我们可以添加`EMQX_LISTENER__TCP__EXTERNAL`环境变量:
 
-```
+```java
 $ docker run -d -e EMQX_LISTENER__TCP__EXTERNAL=9999 -p 9999:9999 emqx/emqx:v4.1.3
 ```
 
@@ -79,7 +79,7 @@ $ docker run -d -e EMQX_LISTENER__TCP__EXTERNAL=9999 -p 9999:9999 emqx/emqx:v4.1
 
 让我们看看如何使用安装在运行容器上的自定义配置来运行 HAProxy:
 
-```
+```java
 $ docker run -d -v my-config.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro haproxy:2.2.2
 ```
 
@@ -121,7 +121,7 @@ Alpine Linux 从一开始就考虑到了资源效率和安全性。这使得它�
 
 我们可以在一个阶段下载 HAProxy API 二进制文件，并将其提供给下一个阶段:
 
-```
+```java
 FROM haproxy:2.2.2-alpine AS downloadapi
 RUN apk add --no-cache curl
 RUN curl -L https://github.com/haproxytech/dataplaneapi/releases/download/v2.1.0/dataplaneapi_2.1.0_Linux_x86_64.tar.gz --output api.tar.gz

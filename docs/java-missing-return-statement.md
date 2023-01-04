@@ -21,7 +21,7 @@
 
 接下来，让我们定义一个简单的`pow` 方法:
 
-```
+```java
 public int pow(int number) {
     int pow = number * number;
 }
@@ -29,13 +29,13 @@ public int pow(int number) {
 
 由于编译了前面的代码，我们得到了:
 
-```
+```java
 java: missing return statement
 ```
 
 为了解决这个问题，我们只需在`pow` 变量后添加一个 return 语句:
 
-```
+```java
 public int pow(int number) {
     int pow = number * number;
     return pow;
@@ -46,7 +46,7 @@ public int pow(int number) {
 
 类似地，但是对于条件结构，会出现以下错误:
 
-```
+```java
 public static String checkNumber(int number) {
     if (number == 0) {
         return "It's equals to zero";
@@ -63,7 +63,7 @@ public static String checkNumber(int number) {
 
 所以，为了修复它，我们只需要在方法的末尾放一个默认的 return 语句:
 
-```
+```java
 public static String checkNumber(int number) {
     if (number == 0) {
         return "It's equals to zero";
@@ -81,7 +81,7 @@ public static String checkNumber(int number) {
 
 此外，当我们使用 lambdas 时，可能会出现此错误。对于函数来说，检测这个错误可能有点棘手。streams 中的`[map](/web/20221208143816/https://www.baeldung.com/java-8-streams-introduction#3-mapping)`方法是发生这种错误的常见地方。让我们检查一下我们的代码:
 
-```
+```java
 public Map<String, Integer> createDictionary() {
     List<String> words = Arrays.asList("Hello", "World");
     Map<String, Integer> dictionary = new HashMap<>();
@@ -94,13 +94,13 @@ public Map<String, Integer> createDictionary() {
 
 接下来，为了解决这个错误，我们简单地将流中的`map`替换为`[forEach](/web/20221208143816/https://www.baeldung.com/foreach-java)`方法:
 
-```
+```java
 words.forEach(s -> {dictionary.put(s, 1);});
 ```
 
 或者，直接从流中返回地图:
 
-```
+```java
 dictionary = words.stream().collect(Collectors.toMap(s -> s, s -> 1))
 ```
 
@@ -108,7 +108,7 @@ dictionary = words.stream().collect(Collectors.toMap(s -> s, s -> 1))
 
 最后，最后一种情况是我们错过了向方法签名添加返回类型。因此，当我们试图编译我们的方法时，我们会得到一个错误。下面的代码示例向我们展示了这种行为:
 
-```
+```java
 public pow(int number) {
     int pow = number * number;
     return pow;
@@ -117,7 +117,7 @@ public pow(int number) {
 
 我们忘记添加 int 作为返回类型。如果我们将它添加到我们的方法签名中，将会修复这个错误:
 
-```
+```java
 public int pow(int number) {
     int pow = number * number;
     return pow;

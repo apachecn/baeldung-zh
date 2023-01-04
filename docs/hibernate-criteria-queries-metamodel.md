@@ -24,7 +24,7 @@
 
 首先，让我们看看我们的`Student` 类:
 
-```
+```java
 @Entity
 @Table(name = "students")
 public class Student {
@@ -52,7 +52,7 @@ public class Student {
 
 要使用 JBoss 工具，我们需要在我们的`pom.xml`文件中添加[最新的依赖关系](https://web.archive.org/web/20220926190808/https://search.maven.org/search?q=g:org.hibernate%20AND%20a:hibernate-jpamodelgen)，一旦我们触发 maven build 命令，该工具将生成元模型类:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-jpamodelgen</artifactId>
@@ -66,7 +66,7 @@ public class Student {
 
 根据 JPA 规范，生成的类将与对应的实体类驻留在同一个包中，并且将具有相同的名称，并在末尾添加一个“_”(下划线)。因此，**为`Student `类生成的元模型类将是** `**Student_** `，看起来像这样:
 
-```
+```java
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(Student.class)
 public abstract class Student_ {
@@ -89,7 +89,7 @@ public abstract class Student_ {
 
 让我们来看看将获取所有 2015 年毕业的`Students`的条件查询:
 
-```
+```java
 //session set-up code
 CriteriaBuilder cb = session.getCriteriaBuilder();
 CriteriaQuery<Student> criteriaQuery = cb.createQuery(Student.class);

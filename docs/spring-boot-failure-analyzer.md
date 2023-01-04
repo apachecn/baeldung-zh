@@ -20,7 +20,7 @@ Boot 包含一系列常见启动异常的分析器，如`PortInUseException`、`
 
 让我们创建一个自定义的`FailureAnalyzer`来处理所有类型为`BeanNotOfRequiredTypeException.` 的异常。我们的类截获异常并创建一个`FailureAnalysis`对象，其中包含有用的描述和动作消息:
 
-```
+```java
 public class MyBeanNotOfRequiredTypeFailureAnalyzer 
   extends AbstractFailureAnalyzer<BeanNotOfRequiredTypeException> {
 
@@ -50,7 +50,7 @@ public class MyBeanNotOfRequiredTypeFailureAnalyzer
 
 对于 Spring Boot 要考虑的自定义`FailureAnalyzer`,必须将其注册到一个标准的`resources/META-INF/spring.factories`文件中，该文件包含带有我们的类的全名值的`org.springframework.boot.diagnostics.FailureAnalyzer`键:
 
-```
+```java
 org.springframework.boot.diagnostics.FailureAnalyzer=\
   com.baeldung.failureanalyzer.MyBeanNotOfRequiredTypeFailureAnalyzer
 ```
@@ -61,18 +61,18 @@ org.springframework.boot.diagnostics.FailureAnalyzer=\
 
 让我们创建两个类`MyDAO`和`MySecondDAO`，并将第二个类标注为一个名为`myDAO`的 bean:
 
-```
+```java
 public class MyDAO { }
 ```
 
-```
+```java
 @Repository("myDAO")
 public class MySecondDAO { }
 ```
 
 接下来，在一个`MyService`类中，我们将尝试将`MySecondDAO`类型的`myDAO` bean 注入到`MyDAO`类型的变量中:
 
-```
+```java
 @Service
 public class MyService {
 
@@ -83,7 +83,7 @@ public class MyService {
 
 运行 Spring Boot 应用程序时，启动将失败，控制台输出如下:
 
-```
+```java
 ***************************
 APPLICATION FAILED TO START
 ***************************

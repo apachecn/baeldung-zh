@@ -16,7 +16,7 @@
 
 接下来，我们将配置一条带有速率限制器的路由。我们将监听`/example` 端点，并将请求转发给`http://example.org`:
 
-```
+```java
 @Bean
 public RouteLocator myRoutes(RouteLocatorBuilder builder) {
     return builder.routes()
@@ -30,7 +30,7 @@ public RouteLocator myRoutes(RouteLocatorBuilder builder) {
 
 上面，我们通过使用`.setRateLimiter()`方法用一个`RequestRateLimiter`来配置路由。特别是，我们通过方法`redisRatelimiter()`定义了`RedisRateLimiter` bean 来管理速率限制器的状态:
 
-```
+```java
 @Bean
 public RedisRateLimiter redisRateLimiter() {
     return new RedisRateLimiter(1, 1, 1);
@@ -49,7 +49,7 @@ public RedisRateLimiter redisRateLimiter() {
 
 目前，这个接口没有默认的实现，所以我们必须定义一个，记住我们需要客户端的 IP 地址:
 
-```
+```java
 @Component
 public class SimpleClientAddressResolver implements KeyResolver {
     @Override
@@ -65,7 +65,7 @@ public class SimpleClientAddressResolver implements KeyResolver {
 
 我们使用`ServerWebExchange`对象提取客户端的 IP 地址。如果我们不能获得 IP 地址，我们将返回`Mono.empty()`向速率限制器发出信号，并默认拒绝该请求。然而，我们可以通过将`.setDenyEmptyKey()`设置为`false`来配置速率限制器，以便在`KeyResolver`返回空键时允许请求。此外，通过为`.setKeyResolver()`方法提供一个定制的`KeyResolver`实现，我们还可以为每个不同的路由提供不同的`KeyResolver`:
 
-```
+```java
 builder.routes()
     .route("ipaddress_route", p -> p
         .path("/example2")
@@ -82,7 +82,7 @@ builder.routes()
 
 为了解决这个问题，**我们依靠`X-Forwarded-For`报头来识别通过代理服务器**连接的客户机的原始 IP 地址。例如，让我们配置`KeyResolver`,以便它可以读取起始 IP 地址:
 
-```
+```java
 @Primary
 @Component
 public class ProxiedClientAddressResolver implements KeyResolver {

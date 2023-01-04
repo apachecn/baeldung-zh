@@ -20,13 +20,13 @@ Quick and practical guide to ArrayList in Java[Read more](/web/20220926193405/ht
 
 我们可以从数组中创建一个`List`。多亏了数组文字，我们可以在一行中初始化它们:
 
-```
+```java
 List<String> list = Arrays.asList(new String[]{"foo", "bar"});
 ```
 
 我们可以信任 varargs 机制来处理数组创建。有了它，我们可以编写更简洁、可读性更好的代码:
 
-```
+```java
 @Test
 public void givenArraysAsList_thenInitialiseList() {
     List<String> list = Arrays.asList("foo", "bar");
@@ -43,7 +43,7 @@ public void givenArraysAsList_thenInitialiseList() {
 
 来自`Arrays.asList`的结果实例将具有固定的大小:
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public void givenArraysAsList_whenAdd_thenUnsupportedException() {
     List<String> list = Arrays.asList("foo", "bar");
@@ -56,7 +56,7 @@ public void givenArraysAsList_whenAdd_thenUnsupportedException() {
 
 原始数组和列表共享对对象的相同引用:
 
-```
+```java
 @Test
 public void givenArraysAsList_whenCreated_thenShareReference(){
     String[] array = {"foo", "bar"};
@@ -73,7 +73,7 @@ public void givenArraysAsList_whenCreated_thenShareReference(){
 
 因此，使用`Streams`的工厂方法，我们可以在一行中创建和初始化列表:
 
-```
+```java
 @Test
 public void givenStream_thenInitializeList(){
     List<String> list = Stream.of("foo", "bar")
@@ -93,7 +93,7 @@ public void givenStream_thenInitializeList(){
 
 JDK 9 为集合引入了几种方便的工厂方法:
 
-```
+```java
 List<String> list = List.of("foo", "bar", "baz");
 Set<String> set = Set.of("foo", "bar", "baz");
 ```
@@ -106,7 +106,7 @@ Set<String> set = Set.of("foo", "bar", "baz");
 
 在几个地方，我们可以找到一个叫做双大括号初始化的方法，它看起来像这样:
 
-```
+```java
 @Test
 public void givenAnonymousInnerClass_thenInitialiseList() {
     List<String> cities = new ArrayList() {{

@@ -20,7 +20,7 @@
 
 首先，让我们创建一个方法来格式化表示为一个数组`String`的单行数据:
 
-```
+```java
 public String convertToCSV(String[] data) {
     return Stream.of(data)
       .map(this::escapeSpecialCharacters)
@@ -30,7 +30,7 @@ public String convertToCSV(String[] data) {
 
 在我们调用这个方法之前，让我们构建一些示例数据:
 
-```
+```java
 List<String[]> dataLines = new ArrayList<>();
 dataLines.add(new String[] 
   { "John", "Doe", "38", "Comment Data\nAnother line of comment data" });
@@ -40,7 +40,7 @@ dataLines.add(new String[]
 
 有了这些数据，让我们用`convertToCSV,`转换每一行，并将其写入一个文件:
 
-```
+```java
 public void givenDataArray_whenConvertToCSV_thenOutputCreated() throws IOException {
     File csvOutputFile = new File(CSV_FILE_NAME);
     try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
@@ -64,7 +64,7 @@ public void givenDataArray_whenConvertToCSV_thenOutputCreated() throws IOExcepti
 
 现在让我们实现我们的`escapeSpecialCharacters`方法:
 
-```
+```java
 public String escapeSpecialCharacters(String data) {
     String escapedData = data.replaceAll("\\R", " ");
     if (data.contains(",") || data.contains("\"") || data.contains("'")) {

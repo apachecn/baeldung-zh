@@ -24,7 +24,7 @@
 
 让我们创建一个简单商店的`HashMap`示例，该商店通过商品 id ( `String`)管理库存商品的数量(`Integer`)。在这里，我们输入一个样本值:
 
-```
+```java
 Map<String, Integer> items = new HashMap<>();
 // insert
 items.put("158-865-A", 56);
@@ -60,7 +60,7 @@ Integer count = items.get("158-865-A");
 
 例如，我们将设计一个由`x`和`y`值组成的`Coordinate`类，并将其用作`HashMap`中的一个键:
 
-```
+```java
 Map<Coordinate, Color> pixels = new HashMap<>();
 Coordinate coord = new Coordinate(1, 2);
 pixels.put(coord, Color.CYAN);
@@ -70,7 +70,7 @@ Color color = pixels.get(new Coordinate(1, 2));
 
 让我们实现我们的`Coordinate`类:
 
-```
+```java
 public class Coordinate {
     private final int x;
     private final int y;
@@ -109,7 +109,7 @@ public class Coordinate {
 
 作为替代，我们可以使用 Lombok 使我们的类更短:
 
-```
+```java
 @RequiredArgsConstructor
 @Getter
 // no calculation in the constructor, but
@@ -129,7 +129,7 @@ public class Coordinate {
 
 如果我们通过对所有实例使用静态哈希值来实现`Coordinate`类，那么`HashMap`将会正确工作，但是性能会显著下降:
 
-```
+```java
 public class Coordinate {
 
     ...
@@ -151,7 +151,7 @@ public class Coordinate {
 
 如果我们使 key 类可变，我们应该确保实例的状态在用作键时不会改变:
 
-```
+```java
 Map<Coordinate, Color> pixels = new HashMap<>();
 Coordinate coord = new Coordinate(1, 2); // x=1, y=2
 pixels.put(coord, Color.CYAN);
@@ -160,13 +160,13 @@ coord.setX(3); // x=3, y=2
 
 因为`Coordinate`存储在旧的哈希值下，所以在新的哈希值下找不到它。因此，下面这条线将导致一个`null`值:
 
-```
+```java
 Color color = pixels.get(coord);
 ```
 
 下面一行将导致对象在`Map`中存储两次:
 
-```
+```java
 pixels.put(coord, Color.CYAN);
 ```
 

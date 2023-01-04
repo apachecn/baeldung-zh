@@ -98,7 +98,7 @@
 
 随着应用程序的启动和运行，我们可以对所有请求使用这个基本 URL:
 
-```
+```java
 http://localhost:8080/activiti-rest/service/
 ```
 
@@ -110,13 +110,13 @@ http://localhost:8080/activiti-rest/service/
 
 我们需要发出一个 POST 请求，以及`contentType: multipart/form-data`，在这里我们将为我们的新流程上传 BPMN 文件:
 
-```
+```java
 POST repository/deployments
 ```
 
 当我们通过为我们创建的进程传递 BPMN 文件来进行这个调用时，它将给出以下输出:
 
-```
+```java
 {    
     "id": "40",
     "name": "user_msg.bpmn20.xml",
@@ -129,19 +129,19 @@ POST repository/deployments
 
 现在，如果我们得到所有的过程定义，我们可以看到我们的过程定义被列出:
 
-```
+```java
 GET repository/process-definitions
 ```
 
 接下来，我们可以使用我们在 BPMN 文件中提到的`processKey`来运行这个过程:
 
-```
+```java
 POST /runtime/process-instances 
 ```
 
 使用此请求主体:
 
-```
+```java
 {
     "processDefinitionKey":"user_msg"
 } 
@@ -149,7 +149,7 @@ POST /runtime/process-instances
 
 回应将是:
 
-```
+```java
 {
     "id": "44",
     "url": "http://localhost:8080/activiti-rest/service/runtime/process-instances/44",
@@ -165,7 +165,7 @@ POST /runtime/process-instances
 
 我们可以使用先前响应返回的流程实例的`id`来查看我们正在运行的流程图:
 
-```
+```java
 GET runtime/process-instances/44/diagram 
 ```
 
@@ -177,13 +177,13 @@ GET runtime/process-instances/44/diagram
 
 现在让我们来看看我们的未决任务，使用:
 
-```
+```java
 GET runtime/tasks 
 ```
 
 响应将有一个未完成任务的列表。目前，只有一个任务——我们的`User Task`:
 
-```
+```java
 {
     "data": [
         {
@@ -203,7 +203,7 @@ GET runtime/tasks
 
 最后，让我们使用任务`id 49`来完成这个任务:
 
-```
+```java
 POST runtime/tasks/49 
 ```
 
@@ -211,7 +211,7 @@ POST runtime/tasks/49
 
 在我们的例子中，我们必须传递一个“message”字段，它是 out User Message 文本字段。所以我们的请求体是:
 
-```
+```java
 {
     "action": "complete",
      "variables": [{

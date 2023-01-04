@@ -32,7 +32,7 @@ Spring Security 中登录后重定向的简短示例[阅读更多](/web/20221004
 
 让我们从这个简单的方法开始，**直接看一个例子**:
 
-```
+```java
 @Controller
 @RequestMapping("/")
 public class RedirectController {
@@ -55,13 +55,13 @@ public class RedirectController {
 
 **现在让我们借助一个简单的`curl`命令**来测试我们的重定向:
 
-```
+```java
 curl -i http://localhost:8080/spring-rest/redirectWithRedirectView
 ```
 
 这是我们的结果:
 
-```
+```java
 HTTP/1.1 302 Found
 Server: Apache-Coyote/1.1
 Location: 
@@ -80,7 +80,7 @@ Location:
 
 看起来是这样的:
 
-```
+```java
 @Controller
 @RequestMapping("/")
 public class RedirectController {
@@ -101,13 +101,13 @@ public class RedirectController {
 
 **所以，现在当我们执行`curl`命令**时:
 
-```
+```java
 curl -i http://localhost:8080/spring-rest/redirectWithRedirectPrefix
 ```
 
 我们将立即被重定向:
 
-```
+```java
 HTTP/1.1 302 Found
 Server: Apache-Coyote/1.1
 Location: 
@@ -125,7 +125,7 @@ Location:
 
 现在让我们看看代码:
 
-```
+```java
 @Controller
 @RequestMapping("/")
 public class RedirectController {
@@ -142,13 +142,13 @@ public class RedirectController {
 
 **当我们用`curl`** 执行命令时:
 
-```
+```java
 curl -I http://localhost:8080/spring-rest/forwardWithForwardPrefix 
 ```
 
 我们将获得 HTTP 405(不允许使用方法):
 
-```
+```java
 HTTP/1.1 405 Method Not Allowed
 Server: Apache-Coyote/1.1
 Allow: GET
@@ -161,7 +161,7 @@ Content-Type: text/html;charset=utf-8
 
 接下来，让我们仔细看看**在重定向**中传递属性，充分利用框架与`RedirectAttributes`:
 
-```
+```java
 @GetMapping("/redirectWithRedirectAttributes")
 public RedirectView redirectWithRedirectAttributes(RedirectAttributes attributes) {
 
@@ -177,7 +177,7 @@ public RedirectView redirectWithRedirectAttributes(RedirectAttributes attributes
 
 有了这种属性，我们以后就可以只在作为重定向的最终目标的方法中使用`@ModelAttribute(“flashAttribute”)` **来访问 flash 属性:**
 
-```
+```java
 @GetMapping("/redirectedUrl")
 public ModelAndView redirection(
   ModelMap model, 
@@ -190,13 +190,13 @@ public ModelAndView redirection(
 
 **总结一下，如果我们用`curl`** 测试功能:
 
-```
+```java
 curl -i http://localhost:8080/spring-rest/redirectWithRedirectAttributes
 ```
 
 我们将被重定向到新位置:
 
-```
+```java
 HTTP/1.1 302 Found
 Server: Apache-Coyote/1.1
 Set-Cookie: JSESSIONID=4B70D8FADA2FD6C22E73312C2B57E381; Path=/spring-rest/; HttpOnly
@@ -212,7 +212,7 @@ Location: http://localhost:8080/spring-rest/redirectedUrl;
 
 为了实现这一点，我们需要使用一个`org.springframework.web.servlet.view.XmlViewResolver`:
 
-```
+```java
 <bean class="org.springframework.web.servlet.view.XmlViewResolver">
     <property name="location">
         <value>/WEB-INF/spring-views.xml</value>
@@ -223,7 +223,7 @@ Location: http://localhost:8080/spring-rest/redirectedUrl;
 
 这代替了我们在先前配置中使用的`org.springframework.web.servlet.view.InternalResourceViewResolver` :
 
-```
+```java
 <bean 
   class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 </bean> 
@@ -231,7 +231,7 @@ Location: http://localhost:8080/spring-rest/redirectedUrl;
 
 我们还需要在配置中定义一个`RedirectView` bean:
 
-```
+```java
 <bean id="RedirectedUrl" class="org.springframework.web.servlet.view.RedirectView">
     <property name="url" value="redirectedUrl" />
 </bean> 
@@ -239,7 +239,7 @@ Location: http://localhost:8080/spring-rest/redirectedUrl;
 
 现在我们可以**通过 id** 引用这个新 bean 来触发重定向:
 
-```
+```java
 @Controller
 @RequestMapping("/")
 public class RedirectController {
@@ -254,13 +254,13 @@ public class RedirectController {
 
 **为了测试它，我们将再次使用`curl`命令**:
 
-```
+```java
 curl -i http://localhost:8080/spring-rest/redirectWithRedirectView
 ```
 
 这是我们的结果:
 
-```
+```java
 HTTP/1.1 302 Found
 Server: Apache-Coyote/1.1
 Location: 
@@ -275,7 +275,7 @@ Location:
 
 让我们看看将一个 post 请求重定向到另一个 post 请求的代码:
 
-```
+```java
 @PostMapping("/redirectPostToPost")
 public ModelAndView redirectPostToPost(HttpServletRequest request) {
     request.setAttribute(
@@ -284,7 +284,7 @@ public ModelAndView redirectPostToPost(HttpServletRequest request) {
 }
 ```
 
-```
+```java
 @PostMapping("/redirectedPostToPost")
 public ModelAndView redirectedPostToPost() {
     return new ModelAndView("redirection");
@@ -293,13 +293,13 @@ public ModelAndView redirectedPostToPost() {
 
 **现在我们将使用`curl`命令**测试 POST 的重定向:
 
-```
+```java
 curl -L --verbose -X POST http://localhost:8080/spring-rest/redirectPostToPost
 ```
 
 我们被重定向到目的地:
 
-```
+```java
 > POST /redirectedPostToPost HTTP/1.1
 > Host: localhost:8080
 > User-Agent: curl/7.49.0
@@ -321,7 +321,7 @@ curl -L --verbose -X POST http://localhost:8080/spring-rest/redirectPostToPost
 
 这里有一个方法`forwardWithParams`，它需要将`param1`和`param2`发送到另一个映射`forwardedWithParams`:
 
-```
+```java
 @RequestMapping(value="/forwardWithParams", method = RequestMethod.GET)
 public ModelAndView forwardWithParams(HttpServletRequest request) {
     request.setAttribute("param1", "one");
@@ -332,7 +332,7 @@ public ModelAndView forwardWithParams(HttpServletRequest request) {
 
 事实上，映射`forwardedWithParams`可以存在于一个全新的控制器中，而不需要在同一个控制器中:
 
-```
+```java
 @RequestMapping(value="/forwardWithParams", method = RequestMethod.GET)
 @Controller
 @RequestMapping("/")
@@ -352,13 +352,13 @@ public class RedirectParamController {
 
 为了举例说明，让我们试试这个`curl`命令:
 
-```
+```java
 curl -i http://localhost:8080/spring-rest/forwardWithParams
 ```
 
 结果如下:
 
-```
+```java
 HTTP/1.1 302 Found
 Date: Fri, 19 Feb 2021 05:37:14 GMT
 Content-Language: en-IN

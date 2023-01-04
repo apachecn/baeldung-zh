@@ -14,7 +14,7 @@ Spring 的 [`@Transactional`](/web/20220926190313/https://www.baeldung.com/trans
 
 假设我们在一个简单的服务中混合了两种不同类型的 I/O:
 
-```
+```java
 @Transactional
 public void initialPayment(PaymentRequest request) {
     savePaymentRequest(request); // DB
@@ -48,7 +48,7 @@ public void initialPayment(PaymentRequest request) {
 
 我们可以使用依赖注入来设置这个模板:
 
-```
+```java
 // test annotations
 class ManualTransactionIntegrationTest {
 
@@ -76,7 +76,7 @@ class ManualTransactionIntegrationTest {
 
 在这个简单的域中，我们有一个`Payment `实体来封装每笔支付的详细信息:
 
-```
+```java
 @Entity
 public class Payment {
 
@@ -102,7 +102,7 @@ public class Payment {
 
 此外，我们将运行测试类中的所有测试，在每个测试用例之前，使用 [Testcontainers](/web/20220926190313/https://www.baeldung.com/spring-boot-testcontainers-integration-test) 库运行 PostgreSQL 实例:
 
-```
+```java
 @DataJpaTest
 @Testcontainers
 @ActiveProfiles("test")
@@ -144,7 +144,7 @@ public class ManualTransactionIntegrationTest {
 
 `TransactionTemplate `提供了一个名为`[execute](https://web.archive.org/web/20220926190313/https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/transaction/support/TransactionTemplate.html#execute-org.springframework.transaction.support.TransactionCallback-)`的方法，它可以在一个事务中运行任何给定的代码块，然后返回一些结果:
 
-```
+```java
 @Test
 void givenAPayment_WhenNotDuplicate_ThenShouldCommit() {
     Long id = transactionTemplate.execute(status -> {
@@ -169,7 +169,7 @@ void givenAPayment_WhenNotDuplicate_ThenShouldCommit() {
 
 如果事务中的一个操作未能完成，它会回滚所有操作:
 
-```
+```java
 @Test
 void givenTwoPayments_WhenRefIsDuplicate_ThenShouldRollback() {
     try {
@@ -199,7 +199,7 @@ void givenTwoPayments_WhenRefIsDuplicate_ThenShouldRollback() {
 
 也可以通过调用`[TransactionStatus](https://web.archive.org/web/20220926190313/https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/transaction/TransactionStatus.html)`上的`setRollbackOnly() `来手动触发回滚:
 
-```
+```java
 @Test
 void givenAPayment_WhenMarkAsRollback_ThenShouldRollback() {
     transactionTemplate.execute(status -> {
@@ -222,7 +222,7 @@ void givenAPayment_WhenMarkAsRollback_ThenShouldRollback() {
 
 如果我们不打算从事务中返回任何东西，我们可以使用 [`TransactionCallbackWithoutResult`](https://web.archive.org/web/20220926190313/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/support/TransactionCallbackWithoutResult.html) 回调类:
 
-```
+```java
 @Test
 void givenAPayment_WhenNotExpectingAnyResult_ThenShouldCommit() {
     transactionTemplate.execute(new TransactionCallbackWithoutResult() {
@@ -246,26 +246,26 @@ void givenAPayment_WhenNotExpectingAnyResult_ThenShouldCommit() {
 
 让我们设置[事务隔离级别](https://web.archive.org/web/20220926190313/https://en.wikipedia.org/wiki/Isolation_(database_systems)):
 
-```
+```java
 transactionTemplate = new TransactionTemplate(transactionManager);
 transactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_REPEATABLE_READ);
 ```
 
 同样，我们可以更改事务传播行为:
 
-```
+```java
 transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
 ```
 
 或者我们可以为事务设置一个超时时间，以秒为单位:
 
-```
+```java
 transactionTemplate.setTimeout(1000);
 ```
 
 甚至可以从只读事务的优化中获益:
 
-```
+```java
 transactionTemplate.setReadOnly(true);
 ```
 
@@ -281,7 +281,7 @@ transactionTemplate.setReadOnly(true);
 
 让我们用可重复读取事务隔离级别设置一个三秒钟的超时:
 
-```
+```java
 DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
 definition.setIsolationLevel(TransactionDefinition.ISOLATION_REPEATABLE_READ);
 definition.setTimeout(3); 
@@ -293,7 +293,7 @@ definition.setTimeout(3);
 
 在配置了我们的事务之后，我们可以以编程方式管理事务:
 
-```
+```java
 @Test
 void givenAPayment_WhenUsingTxManager_ThenShouldCommit() {
 

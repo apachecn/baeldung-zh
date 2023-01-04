@@ -38,7 +38,7 @@ JPA 指定了七个可选的生命周期事件，称为:
 
 我们将从定义我们的`User`实体开始:
 
-```
+```java
 @Entity
 public class User {
     private static Log log = LogFactory.getLog(User.class);
@@ -59,7 +59,7 @@ public class User {
 
 接下来，我们需要创建一个`UserRepository`接口:
 
-```
+```java
 public interface UserRepository extends JpaRepository<User, Integer> {
     public User findByUserName(String userName);
 }
@@ -67,7 +67,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 现在，让我们返回到我们的`User`类并添加我们的回调方法:
 
-```
+```java
 @PrePersist
 public void logNewUserAttempt() {
     log.info("Attempting to add new user with username: " + userName);
@@ -112,7 +112,7 @@ public void logUserLoad() {
 
 让我们创建我们的`AuditTrailListener`来记录`User`表上的所有活动:
 
-```
+```java
 public class AuditTrailListener {
     private static Log log = LogFactory.getLog(AuditTrailListener.class);
 
@@ -145,7 +145,7 @@ public class AuditTrailListener {
 
 现在，我们需要回到我们的`User`实体并将`@EntityListener`注释添加到类中:
 
-```
+```java
 @EntityListeners(AuditTrailListener.class)
 @Entity
 public class User {

@@ -16,7 +16,7 @@
 
 为了使用`WebClient,`,我们需要给我们的`pom.xml:` 添加几个依赖项
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-webflux</artifactId>
@@ -32,7 +32,7 @@
 
 让我们从一个端点`http://localhost:8080/readers`开始，它以 JSON 数组的形式返回一个读者列表，其中包含他们最喜欢的书籍:
 
-```
+```java
 [{
     "id": 1,
     "name": "reader1",
@@ -51,7 +51,7 @@
 
 我们将需要相应的`Reader` 和`Book` 类来处理数据:
 
-```
+```java
 public class Reader {
     private int id;
     private String name;
@@ -61,7 +61,7 @@ public class Reader {
 }
 ```
 
-```
+```java
 public class Book {
     private final String author;
     private final String title;
@@ -72,7 +72,7 @@ public class Book {
 
 对于我们的接口实现，我们写了一个`ReaderConsumerServiceImpl` ，用`WebClient` 作为它的依赖:
 
-```
+```java
 public class ReaderConsumerServiceImpl implements ReaderConsumerService {
 
     private final WebClient webClient;
@@ -101,7 +101,7 @@ public class ReaderConsumerServiceImpl implements ReaderConsumerService {
 
 首先，让我们用`WebClient.get`进行`GET`调用，并使用一个`Object[]`类型的 `Mono` 来收集响应:
 
-```
+```java
 Mono<Object[]> response = webClient.get()
   .accept(MediaType.APPLICATION_JSON)
   .retrieve()
@@ -110,7 +110,7 @@ Mono<Object[]> response = webClient.get()
 
 接下来，让我们将尸体提取到我们的`Object`数组中:
 
-```
+```java
 Object[] objects = response.block();
 ```
 
@@ -118,7 +118,7 @@ Object[] objects = response.block();
 
 为此，我们需要一个`ObjectMapper`:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 ```
 
@@ -126,7 +126,7 @@ ObjectMapper mapper = new ObjectMapper();
 
 最后，我们准备提取读者最喜欢的书籍，并将其收集到一个列表中:
 
-```
+```java
 return Arrays.stream(objects)
   .map(object -> mapper.convertValue(object, Reader.class))
   .map(Reader::getFavouriteBook)
@@ -139,7 +139,7 @@ return Arrays.stream(objects)
 
 我们可以向我们的`WebClient`提供`Reader[]`而不是`Object[]`:
 
-```
+```java
 Mono<Reader[]> response = webClient.get()
   .accept(MediaType.APPLICATION_JSON)
   .retrieve()
@@ -156,7 +156,7 @@ return Arrays.stream(readers)
 
 如果我们希望 Jackson 产生一个由 `Reader`组成的`List`而不是一个数组，我们需要描述我们想要创建的`List`。为此，我们向该方法提供了一个由[匿名内部类](/web/20220525124321/https://www.baeldung.com/java-anonymous-classes)生成的`ParameterizedTypeReference` :
 
-```
+```java
 Mono<List<Reader>> response = webClient.get()
   .accept(MediaType.APPLICATION_JSON)
   .retrieve()

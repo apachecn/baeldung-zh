@@ -10,7 +10,7 @@
 
 [`Code_attribute`](https://web.archive.org/web/20220626074731/https://docs.oracle.com/javase/specs/jvms/se16/html/jvms-4.html#jvms-4.7.3) 是 JVM 规范的`method_info`结构中一个可变长度的表。该结构包含方法的 JVM 指令，该方法可以是实例、类或接口的常规方法或初始化方法:
 
-```
+```java
 Code_attribute {
     u2 attribute_name_index;
     u4 attribute_length;
@@ -33,7 +33,7 @@ Code_attribute {
 
 属性`code_length`指定了方法中代码的长度:
 
-```
+```java
 code_length
 The value of the code_length item gives the number of bytes in the code array for this method.
 The value of code_length must be greater than zero (as the code array must not be empty) and less than 65536. 
@@ -51,7 +51,7 @@ The value of code_length must be greater than zero (as the code array must not b
 *   [代码检测](/web/20220626074731/https://www.baeldung.com/java-instrumentation):在运行时将字节码添加到编译后的类中
 *   数组初始化器:初始化非常大的数组的方法，如下所示:
 
-```
+```java
 String[][] largeStringArray = new String[][] {
     { "java", "code", "exceeded", "65355", "bytes" },
     { "alpha", "beta", "gamma", "delta", "epsilon" },

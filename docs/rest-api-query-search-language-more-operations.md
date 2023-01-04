@@ -21,7 +21,7 @@
 
 首先，让我们通过枚举来更好地表示我们支持的各种搜索操作:
 
-```
+```java
 public enum SearchOperation {
     EQUALITY, NEGATION, GREATER_THAN, LESS_THAN, LIKE, STARTS_WITH, ENDS_WITH, CONTAINS;
 
@@ -64,7 +64,7 @@ public enum SearchOperation {
 
 我们还需要修改我们的`SearchCriteria`类来使用新的`SearchOperation`:
 
-```
+```java
 public class SearchCriteria {
     private String key;
     private SearchOperation operation;
@@ -76,7 +76,7 @@ public class SearchCriteria {
 
 现在，让我们将新支持的操作包括到我们的`UserSpecification`实现中:
 
-```
+```java
 public class UserSpecification implements Specification<User> {
 
     private SearchCriteria criteria;
@@ -121,7 +121,7 @@ public class UserSpecification implements Specification<User> {
 
 在下面的例子中，我们将通过名字和姓氏来搜索用户**:**
 
-```
+```java
 @Test
 public void givenFirstAndLastName_whenGettingListOfUsers_thenCorrect() {
     UserSpecification spec = new UserSpecification(
@@ -139,7 +139,7 @@ public void givenFirstAndLastName_whenGettingListOfUsers_thenCorrect() {
 
 接下来，让我们搜索名字不是“John”的用户:
 
-```
+```java
 @Test
 public void givenFirstNameInverse_whenGettingListOfUsers_thenCorrect() {
     UserSpecification spec = new UserSpecification(
@@ -155,7 +155,7 @@ public void givenFirstNameInverse_whenGettingListOfUsers_thenCorrect() {
 
 接下来，我们将搜索**年龄大于“25”**的用户:
 
-```
+```java
 @Test
 public void givenMinAge_whenGettingListOfUsers_thenCorrect() {
     UserSpecification spec = new UserSpecification(
@@ -171,7 +171,7 @@ public void givenMinAge_whenGettingListOfUsers_thenCorrect() {
 
 下一个–名字以“jo”开头的用户:
 
-```
+```java
 @Test
 public void givenFirstNamePrefix_whenGettingListOfUsers_thenCorrect() {
     UserSpecification spec = new UserSpecification(
@@ -187,7 +187,7 @@ public void givenFirstNamePrefix_whenGettingListOfUsers_thenCorrect() {
 
 接下来，我们将搜索名字以“n”结尾的用户:
 
-```
+```java
 @Test
 public void givenFirstNameSuffix_whenGettingListOfUsers_thenCorrect() {
     UserSpecification spec = new UserSpecification(
@@ -203,7 +203,7 @@ public void givenFirstNameSuffix_whenGettingListOfUsers_thenCorrect() {
 
 现在，我们将搜索名字中包含“oh”的用户:
 
-```
+```java
 @Test
 public void givenFirstNameSubstring_whenGettingListOfUsers_thenCorrect() {
     UserSpecification spec = new UserSpecification(
@@ -219,7 +219,7 @@ public void givenFirstNameSubstring_whenGettingListOfUsers_thenCorrect() {
 
 最后，我们将搜索年龄在“20”和“25”之间的用户:
 
-```
+```java
 @Test
 public void givenAgeRange_whenGettingListOfUsers_thenCorrect() {
     UserSpecification spec = new UserSpecification(
@@ -239,7 +239,7 @@ public void givenAgeRange_whenGettingListOfUsers_thenCorrect() {
 
 我们将在上一篇文章的`UserSpecificationBuilder`实现的基础上构建**并加入新的搜索操作**:
 
-```
+```java
 public class UserSpecificationsBuilder {
 
     private List<SearchCriteria> params;
@@ -288,7 +288,7 @@ public class UserSpecificationsBuilder {
 
 接下来——我们需要修改我们的`UserController`,以便正确地**解析新的操作**:
 
-```
+```java
 @RequestMapping(method = RequestMethod.GET, value = "/users")
 @ResponseBody
 public List<User> findAllBySpecification(@RequestParam(value = "search") String search) {
@@ -313,13 +313,13 @@ public List<User> findAllBySpecification(@RequestParam(value = "search") String 
 
 现在，我们可以点击 API，使用任何标准组合获得正确的结果。例如，下面是使用 API 和查询语言的复杂操作:
 
-```
+```java
 http://localhost:8080/users?search=firstName:jo*,age<25
 ```
 
 回应是:
 
-```
+```java
 [{
     "id":1,
     "firstName":"john",
@@ -335,7 +335,7 @@ http://localhost:8080/users?search=firstName:jo*,age<25
 
 我们将从测试的简单配置和数据初始化开始:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
   classes = { ConfigTest.class, PersistenceConfig.class }, 
@@ -380,7 +380,7 @@ public class JPASpecificationLiveTest {
 
 首先，让我们搜索一个名字为**`john`，姓氏为`doe`**的用户:
 
-```
+```java
 @Test
 public void givenFirstAndLastName_whenGettingListOfUsers_thenCorrect() {
     Response response = givenAuth().get(URL_PREFIX + "firstName:john,lastName:doe");
@@ -395,7 +395,7 @@ public void givenFirstAndLastName_whenGettingListOfUsers_thenCorrect() {
 
 现在，我们将搜索名字不是“john”的用户**:**
 
-```
+```java
 @Test
 public void givenFirstNameInverse_whenGettingListOfUsers_thenCorrect() {
     Response response = givenAuth().get(URL_PREFIX + "firstName!john");
@@ -410,7 +410,7 @@ public void givenFirstNameInverse_whenGettingListOfUsers_thenCorrect() {
 
 接下来，我们将寻找**年龄大于“25”**的用户:
 
-```
+```java
 @Test
 public void givenMinAge_whenGettingListOfUsers_thenCorrect() {
     Response response = givenAuth().get(URL_PREFIX + "age>25");
@@ -425,7 +425,7 @@ public void givenMinAge_whenGettingListOfUsers_thenCorrect() {
 
 下一个–名字以“jo”开头的用户:
 
-```
+```java
 @Test
 public void givenFirstNamePrefix_whenGettingListOfUsers_thenCorrect() {
     Response response = givenAuth().get(URL_PREFIX + "firstName:jo*");
@@ -440,7 +440,7 @@ public void givenFirstNamePrefix_whenGettingListOfUsers_thenCorrect() {
 
 现在–名字以“n”结尾的用户**:**
 
-```
+```java
 @Test
 public void givenFirstNameSuffix_whenGettingListOfUsers_thenCorrect() {
     Response response = givenAuth().get(URL_PREFIX + "firstName:*n");
@@ -455,7 +455,7 @@ public void givenFirstNameSuffix_whenGettingListOfUsers_thenCorrect() {
 
 接下来，我们将搜索名字中包含“oh”的用户:
 
-```
+```java
 @Test
 public void givenFirstNameSubstring_whenGettingListOfUsers_thenCorrect() {
     Response response = givenAuth().get(URL_PREFIX + "firstName:*oh*");
@@ -470,7 +470,7 @@ public void givenFirstNameSubstring_whenGettingListOfUsers_thenCorrect() {
 
 最后，我们将搜索年龄在“20”和“25”之间的用户:
 
-```
+```java
 @Test
 public void givenAgeRange_whenGettingListOfUsers_thenCorrect() {
     Response response = givenAuth().get(URL_PREFIX + "age>20,age<25");

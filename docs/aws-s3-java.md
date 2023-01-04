@@ -14,7 +14,7 @@
 
 在开始之前，我们需要在项目中声明 AWS SDK 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>aws-java-sdk</artifactId>
@@ -36,7 +36,7 @@
 
 首先，我们需要创建一个客户端连接来访问亚马逊 S3 web 服务。为此，我们将使用`AmazonS3`接口:
 
-```
+```java
 AWSCredentials credentials = new BasicAWSCredentials(
   "<AWS accesskey>", 
   "<AWS secretkey>"
@@ -45,7 +45,7 @@ AWSCredentials credentials = new BasicAWSCredentials(
 
 然后，我们将配置客户端:
 
-```
+```java
 AmazonS3 s3client = AmazonS3ClientBuilder
   .standard()
   .withCredentials(new AWSStaticCredentialsProvider(credentials))
@@ -70,7 +70,7 @@ AmazonS3 s3client = AmazonS3ClientBuilder
 
 现在让我们创建一个存储桶:
 
-```
+```java
 String bucketName = "baeldung-bucket";
 
 if(s3client.doesBucketExist(bucketName)) {
@@ -88,7 +88,7 @@ s3client.createBucket(bucketName);
 
 既然我们已经创建了一些 bucket，那么让我们使用`listBuckets()`方法打印一个在我们的 S3 环境中可用的所有 bucket 的列表。该方法将返回所有存储桶的列表:
 
-```
+```java
 List<Bucket> buckets = s3client.listBuckets();
 for(Bucket bucket : buckets) {
     System.out.println(bucket.getName());
@@ -97,7 +97,7 @@ for(Bucket bucket : buckets) {
 
 这将列出我们的 S3 环境中存在的所有存储桶:
 
-```
+```java
 baeldung-bucket
 baeldung-bucket-test2
 elasticbeanstalk-us-east-2
@@ -107,7 +107,7 @@ elasticbeanstalk-us-east-2
 
 在删除之前，确保我们的存储桶是空的是很重要的。否则会抛出异常。另外，请注意，只有存储桶的所有者可以删除它，而不管它的权限(访问控制策略):
 
-```
+```java
 try {
     s3client.deleteBucket("baeldung-bucket-test2");
 } catch (AmazonServiceException e) {
@@ -128,7 +128,7 @@ try {
 2.  `key`:这是文件的完整路径
 3.  `file`:包含待上传数据的实际文件
 
-```
+```java
 s3client.putObject(
   bucketName, 
   "Document/hello.txt", 
@@ -140,7 +140,7 @@ s3client.putObject(
 
 我们将使用`listObjects()` 方法列出我们的 S3 桶中所有可用的对象:
 
-```
+```java
 ObjectListing objectListing = s3client.listObjects(bucketName);
 for(S3ObjectSummary os : objectListing.getObjectSummaries()) {
     LOG.info(os.getKey());
@@ -151,7 +151,7 @@ for(S3ObjectSummary os : objectListing.getObjectSummaries()) {
 
 这将打印我们的桶中所有对象的列表:
 
-```
+```java
 Document/hello.txt
 ```
 
@@ -159,7 +159,7 @@ Document/hello.txt
 
 为了下载一个对象，我们将首先在将返回一个`S3Object`对象的`s3client,` 上使用`getObject()` 方法。一旦我们得到这个，我们将调用它的`getObjectContent()` 来得到一个`S3ObjectInputStream` 对象，它的行为就像一个传统的 Java `InputStream:`
 
-```
+```java
 S3Object s3object = s3client.getObject(bucketName, "picture/pic.png");
 S3ObjectInputStream inputStream = s3object.getObjectContent();
 FileUtils.copyInputStreamToFile(inputStream, new File("/Users/user/Desktop/hello.txt"));
@@ -176,7 +176,7 @@ FileUtils.copyInputStreamToFile(inputStream, new File("/Users/user/Desktop/hello
 3.  目标存储桶名称(可以与源相同)
 4.  目标存储桶中的对象关键字
 
-```
+```java
 s3client.copyObject(
   "baeldung-bucket", 
   "picture/pic.png", 
@@ -191,7 +191,7 @@ s3client.copyObject(
 
 要删除一个对象，我们将调用`s3client` 上的`deleteObject()` 方法，并传递桶名和对象键:
 
-```
+```java
 s3client.deleteObject("baeldung-bucket","picture/pic.png");
 ```
 
@@ -201,7 +201,7 @@ s3client.deleteObject("baeldung-bucket","picture/pic.png");
 
 一旦我们有了这个`DeleteObjectsRequest` 对象，我们可以将它作为参数传递给我们的`s3client` 的`deleteObjects()` 方法。如果成功，它将删除我们提供的所有对象:
 
-```
+```java
 String objkeyArr[] = {
   "document/hello.txt", 
   "document/pic.png"

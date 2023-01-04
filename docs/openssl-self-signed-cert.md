@@ -28,13 +28,13 @@ Explore how to generate a self-signed certificate to enable HTTPS in a Spring Bo
 
 让我们用`openssl`命令创建一个受密码保护的 2048 位 RSA 私钥(`domain.key`):
 
-```
+```java
 openssl genrsa -des3 -out domain.key 2048 
 ```
 
 出现提示时，我们将输入密码。输出将类似于:
 
-```
+```java
 Generating RSA private key, 2048 bit long modulus (2 primes)
 .....................+++++
 .........+++++
@@ -51,13 +51,13 @@ Verifying - Enter pass phrase for domain.key:
 
 让我们从现有的私钥创建一个 CSR ( `domain.csr`):
 
-```
+```java
 openssl req -key domain.key -new -out domain.csr
 ```
 
 我们将输入我们的私钥密码和一些 CSR 信息来完成该过程。输出将类似于:
 
-```
+```java
 Enter pass phrase for domain.key:
 You are about to be asked to enter information that will be incorporated
 into your certificate request.
@@ -86,13 +86,13 @@ An optional company name []:
 
 **我们还可以用一个命令**创建私钥和 CSR:
 
-```
+```java
 openssl req -newkey rsa:2048 -keyout domain.key -out domain.csr
 ```
 
 如果我们希望我们的私钥不加密，我们可以添加`-nodes`选项:
 
-```
+```java
 openssl req -newkey rsa:2048 -nodes -keyout domain.key -out domain.csr
 ```
 
@@ -102,7 +102,7 @@ openssl req -newkey rsa:2048 -nodes -keyout domain.key -out domain.csr
 
 让我们用现有的私钥和 CSR 创建一个自签名证书(`domain.crt`):
 
-```
+```java
 openssl x509 -signkey domain.key -in domain.csr -req -days 365 -out domain.crt
 ```
 
@@ -110,7 +110,7 @@ openssl x509 -signkey domain.key -in domain.csr -req -days 365 -out domain.crt
 
 我们可以只用一个私钥创建一个自签名证书:
 
-```
+```java
 openssl req -key domain.key -new -x509 -days 365 -out domain.crt
 ```
 
@@ -118,7 +118,7 @@ openssl req -key domain.key -new -x509 -days 365 -out domain.crt
 
 我们甚至可以只使用一条命令来创建私钥和自签名证书:
 
-```
+```java
 openssl req -newkey rsa:2048 -keyout domain.key -x509 -days 365 -out domain.crt
 ```
 
@@ -130,7 +130,7 @@ openssl req -newkey rsa:2048 -keyout domain.key -x509 -days 365 -out domain.crt
 
 让我们从命令行创建一个私钥(`rootCA.key`)和一个自签名的根 CA 证书(`rootCA.crt`):
 
-```
+```java
 openssl req -x509 -sha256 -days 1825 -newkey rsa:2048 -keyout rootCA.key -out rootCA.crt
 ```
 
@@ -138,7 +138,7 @@ openssl req -x509 -sha256 -days 1825 -newkey rsa:2048 -keyout rootCA.key -out ro
 
 首先，我们将创建一个包含以下内容的配置文本文件(`domain.ext`):
 
-```
+```java
 authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
 subjectAltName = @alt_names
@@ -150,7 +150,7 @@ DNS.1 = domain
 
 然后，我们可以用根 CA 证书及其私钥签署我们的 CSR ( `domain.csr`):
 
-```
+```java
 openssl x509 -req -CA rootCA.crt -CAkey rootCA.key -in domain.csr -out domain.crt -days 365 -CAcreateserial -extfile domain.ext
 ```
 
@@ -160,13 +160,13 @@ openssl x509 -req -CA rootCA.crt -CAkey rootCA.key -in domain.csr -out domain.cr
 
 我们可以使用`openssl`命令以纯文本方式查看我们的证书内容:
 
-```
+```java
 openssl x509 -text -noout -in domain.crt
 ```
 
 输出将类似于:
 
-```
+```java
 Certificate:
     Data:
         Version: 1 (0x0)
@@ -227,7 +227,7 @@ Certificate:
 
 DER 格式通常用于 Java。让我们将 PEM 编码的证书转换为 DER 编码的证书:
 
-```
+```java
 openssl x509 -in domain.crt -outform der -out domain.der
 ```
 
@@ -237,7 +237,7 @@ PKCS12 文件也称为 PFX 文件，通常用于在 Microsoft IIS 中导入和�
 
 我们将使用以下命令获取我们的私钥和证书，然后将它们合并到一个 PKCS12 文件中:
 
-```
+```java
 openssl pkcs12 -inkey domain.key -in domain.crt -export -out domain.pfx
 ```
 

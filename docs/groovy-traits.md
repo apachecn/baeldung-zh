@@ -24,7 +24,7 @@
 
 让我们创建一个名为`UserTrait` 的`trait`和一个`public`的`sayHello`方法:
 
-```
+```java
 trait UserTrait {
     String sayHello() {
         return "Hello!"
@@ -34,13 +34,13 @@ trait UserTrait {
 
 之后，我们将创建一个`Employee`类，它实现了`UserTrait`:
 
-```
+```java
 class Employee implements UserTrait {}
 ```
 
 现在，让我们创建一个测试来验证一个`Employee`实例可以访问`UserTrait`的`the sayHello`方法:
 
-```
+```java
 def 'Should return msg string when using Employee.sayHello method provided by User trait' () {
     when:
         def msg = employee.sayHello()
@@ -57,7 +57,7 @@ def 'Should return msg string when using Employee.sayHello method provided by Us
 
 让我们看看`UserTrait:`中的代码实现
 
-```
+```java
 private String greetingMessage() {
     return 'Hello, from a private method!'
 }
@@ -71,7 +71,7 @@ String greet() {
 
 注意，如果我们访问实现类中的`private` 方法，它将抛出一个`MissingMethodException`:
 
-```
+```java
 def 'Should return MissingMethodException when using Employee.greetingMessage method' () {
     when:
         def exception
@@ -95,7 +95,7 @@ def 'Should return MissingMethodException when using Employee.greetingMessage me
 
 一个`trait`也可以包含能够在另一个类中实现的`abstract`方法:
 
-```
+```java
 trait UserTrait {
     abstract String name()
 
@@ -105,7 +105,7 @@ trait UserTrait {
 }
 ```
 
-```
+```java
 class Employee implements UserTrait {
     String name() {
         return 'Bob'
@@ -117,7 +117,7 @@ class Employee implements UserTrait {
 
 通常，`trait`包含其公共方法的默认实现，但是我们可以在实现类中覆盖它们:
 
-```
+```java
 trait SpeakingTrait {
     String speak() {
         return "Speaking!!"
@@ -125,7 +125,7 @@ trait SpeakingTrait {
 } 
 ```
 
-```
+```java
 class Dog implements SpeakingTrait {
     String speak() {
         return "Bow Bow!!"
@@ -141,7 +141,7 @@ class Dog implements SpeakingTrait {
 
 例如，我们将创建一个在`trait`中返回`this` 的方法:
 
-```
+```java
 trait UserTrait {
     def self() {
         return this 
@@ -155,13 +155,13 @@ A `trait`也可以实现接口，就像普通类一样。
 
 让我们创建一个`interface`并在一个`trait`中实现它:
 
-```
+```java
 interface Human {
     String lastName()
 }
 ```
 
-```
+```java
 trait UserTrait implements Human {
     String showLastName() {
         return "Hello, ${lastName()}!"
@@ -171,7 +171,7 @@ trait UserTrait implements Human {
 
 现在，让我们在实现类中实现`interface`的`abstract`方法:
 
-```
+```java
 class Employee implements UserTrait {
     String lastName() {
         return "Marley"
@@ -183,7 +183,7 @@ class Employee implements UserTrait {
 
 **我们可以给一个`trait`添加属性，就像我们在任何一个普通的类中做的一样:**
 
-```
+```java
 trait UserTrait implements Human { 
     String email
     String address
@@ -194,7 +194,7 @@ trait UserTrait implements Human {
 
 与常规 Groovy `class`类似，`trait`可以使用`extends`关键字扩展另一个`trait`:
 
-```
+```java
 trait WheelTrait {
     int noOfWheels
 }
@@ -210,7 +210,7 @@ class Car implements VehicleTrait {}
 
 **我们还可以用`implements`子句扩展多个特征:**
 
-```
+```java
 trait AddressTrait {                                      
     String residentialAddress
 }
@@ -234,7 +234,7 @@ trait Person implements AddressTrait, EmailTrait {}
 
 首先，让我们用一个具有相同签名的方法创建两个特征:
 
-```
+```java
 trait WalkingTrait {
     String basicAbility() {
         return "Walking!!"
@@ -250,7 +250,7 @@ trait SpeakingTrait {
 
 接下来，让我们编写一个实现这两种特征的类:
 
-```
+```java
 class Dog implements WalkingTrait, SpeakingTrait {} 
 ```
 
@@ -262,13 +262,13 @@ class Dog implements WalkingTrait, SpeakingTrait {}
 
 例如，让我们为我们的两个特征添加另一个具有相同签名的方法:
 
-```
+```java
 String speakAndWalk() {
     return "Walk and speak!!"
 }
 ```
 
-```
+```java
 String speakAndWalk() {
     return "Speak and walk!!"
 }
@@ -276,7 +276,7 @@ String speakAndWalk() {
 
 现在，让我们使用`super`关键字覆盖`Dog`类中多重继承冲突的默认解决方案:
 
-```
+```java
 class Dog implements WalkingTrait, SpeakingTrait {
     String speakAndWalk() {
         WalkingTrait.super.speakAndWalk()
@@ -290,7 +290,7 @@ class Dog implements WalkingTrait, SpeakingTrait {
 
 例如，让我们用`basicBehavior`方法创建一个`AnimalTrait`:
 
-```
+```java
 trait AnimalTrait {
     String basicBehavior() {
         return "Animalistic!!"
@@ -300,7 +300,7 @@ trait AnimalTrait {
 
 为了一次实现几个特征，我们可以使用`withTraits`方法来代替`as`关键字:
 
-```
+```java
 def dog = new Dog()
 def dogWithTrait = dog.withTraits SpeakingTrait, WalkingTrait, AnimalTrait
 ```

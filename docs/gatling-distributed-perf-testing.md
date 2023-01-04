@@ -18,13 +18,13 @@
 
 对于本教程，**我们将使用 Spring CLI 创建一个简单的 Spring Boot web 应用程序**:
 
-```
+```java
 spring init --dependencies=web my-application
 ```
 
 接下来，我们将创建一个简单的 REST API，根据请求提供一个随机数:
 
-```
+```java
 @RestController
 @SpringBootApplication
 public class Application {
@@ -44,7 +44,7 @@ public class Application {
 
 使用 Maven 命令启动这个应用程序非常简单:
 
-```
+```java
 mvnw spring-boot:run
 ```
 
@@ -56,7 +56,7 @@ mvnw spring-boot:run
 
 Gatling 提供了 **Scala DSL 来创建场景，以便在模拟**中进行测试。让我们首先为我们之前创建的 API 创建一个基本场景:
 
-```
+```java
 package randomapi
 
 import io.gatling.core.Predef._
@@ -97,13 +97,13 @@ class RandomAPILoadTest extends Simulation {
 
 我们可以通过运行以下命令来启动 Gatling:
 
-```
+```java
 $GATLING_HOME/bin/gatling.sh
 ```
 
 这将提示我们选择要运行的模拟:
 
-```
+```java
 Choose a simulation number:
      [0] randomapi.RandomAPILoadTest
 ```
@@ -150,13 +150,13 @@ Choose a simulation number:
 
 让我们看看需要在控制器机器上设置的重要环境变量:
 
-```
+```java
 HOSTS=( 192.168.x.x 192.168.x.x 192.168.x.x)
 ```
 
 我们还要定义远程工作机的列表，我们将使用这些机器来注入负载:
 
-```
+```java
 GATLING_HOME=/gatling/gatling-charts-highcharts-1.5.6
 GATLING_SIMULATIONS_DIR=$GATLING_HOME/user-files/simulations
 SIMULATION_NAME='randomapi.RandomAPILoadTest'
@@ -173,7 +173,7 @@ GATHER_REPORTS_DIR=/gatling/reports/
 
 在这里，我们将**将相同的场景复制到我们之前创建的多个工作机**。有几种方法可以将模拟复制到远程主机。最简单的方法是对支持的主机使用 [`scp`](https://web.archive.org/web/20221211111403/https://www.ssh.com/ssh/scp/) 。我们还可以使用一个 shell 脚本来实现自动化:
 
-```
+```java
 for HOST in "${HOSTS[@]}"
 do
   scp -r $GATLING_SIMULATIONS_DIR/* [[email protected]](/web/20221211111403/https://www.baeldung.com/cdn-cgi/l/email-protection)$HOST:$GATLING_SIMULATIONS_DIR
@@ -188,7 +188,7 @@ done
 
 我们可以使用一个 shell 脚本再次自动化这个步骤:
 
-```
+```java
 for HOST in "${HOSTS[@]}"
 do
   ssh -n -f [[email protected]](/web/20221211111403/https://www.baeldung.com/cdn-cgi/l/email-protection)$HOST \
@@ -203,7 +203,7 @@ done
 
 现在，我们需要**收集所有工作机**上模拟生成的日志文件。同样，这也是我们可以使用 shell 脚本自动化并从控制器机器上执行的事情:
 
-```
+```java
 for HOST in "${HOSTS[@]}"
 do
   ssh -n -f [[email protected]](/web/20221211111403/https://www.baeldung.com/cdn-cgi/l/email-protection)$HOST \
@@ -222,7 +222,7 @@ done
 
 最后，我们必须**从不同工作机**上执行的模拟中收集的所有日志文件中生成一个报告。谢天谢地，加特林做了所有的重活:
 
-```
+```java
 mv $GATHER_REPORTS_DIR $GATLING_REPORT_DIR
 $GATLING_RUNNER -ro reports
 ```

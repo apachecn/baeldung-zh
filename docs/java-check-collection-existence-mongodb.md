@@ -16,7 +16,7 @@ MongoDB 是一个 NoSQL 数据库，它将数据记录作为 [`BSON`](/web/20220
 
 `[MongoClient](https://web.archive.org/web/20220524053703/https://docs.mongodb.com/drivers/java-drivers/) `是一个 Java 类，用于建立与 MongoDB 实例的连接:
 
-```
+```java
 MongoClient mongoClient = new MongoClient("localhost", 27017);
 ```
 
@@ -28,13 +28,13 @@ MongoClient mongoClient = new MongoClient("localhost", 27017);
 
 首先，我们将使用`getDatabase`方法来访问`baeldung`数据库:
 
-```
+```java
 MongoDatabase database = mongoClient.getDatabase("baeldung");
 ```
 
 我们也可以使用 Mongo Java 驱动程序的`getDB`方法连接数据库:
 
-```
+```java
 DB db = mongoClient.getDB("baeldung");
 ```
 
@@ -50,7 +50,7 @@ MongoDB Java 驱动程序提供同步和异步方法调用。为了连接到数�
 
 `collectionExists`方法可用于检查集合是否存在:
 
-```
+```java
 MongoClient mongoClient = new MongoClient("localhost", 27017);
 DB db = mongoClient.getDB("baeldung");
 String testCollectionName = "student";
@@ -69,7 +69,7 @@ System.out.println("Collection Name " + testCollectionName + " " + db.collection
 
 `createCollection`方法在 MongoDB 中创建新的集合。但是我们也可以用它来检查集合是否存在:
 
-```
+```java
 String databaseName="baeldung";
 MongoDatabase database = mongoClient.getDatabase(databaseName);
 String testCollectionName = "student";
@@ -90,7 +90,7 @@ try {
 
 现在让我们看看使用 Java 驱动程序代码的`listCollectionNames` 方法的示例代码:
 
-```
+```java
 String databaseName="baeldung";
 MongoDatabase database = mongoClient.getDatabase(databaseName);
 String testCollectionName = "student";
@@ -107,7 +107,7 @@ System.out.println("collectionExists:- " + collectionExists);
 
 作为一种变通方法，我们可以使用这个方法来检查集合是否存在。下面是相同的 Java 代码片段:
 
-```
+```java
 String databaseName="baeldung";
 MongoDatabase database = mongoClient.getDatabase(databaseName);
 String testCollectionName = "student";

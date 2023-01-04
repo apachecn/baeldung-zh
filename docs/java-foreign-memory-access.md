@@ -60,25 +60,25 @@ API **允许创建直接的堆外字节缓冲区**。这些缓冲区可以从 Ja
 
 让我们创建一个 200 字节的本机内存段:
 
-```
+```java
 MemorySegment memorySegment = MemorySegment.allocateNative(200);
 ```
 
 内存段也可以由现有的堆分配的 Java 数组支持。例如，我们可以从一个数组`long`中创建一个`array memory segment` :
 
-```
+```java
 MemorySegment memorySegment = MemorySegment.ofArray(new long[100]);
 ```
 
 此外，内存段可以由现有的 Java `ByteBuffer`支持。这就是所谓的`buffer memory segment`:
 
-```
+```java
 MemorySegment memorySegment = MemorySegment.ofByteBuffer(ByteBuffer.allocateDirect(200));
 ```
 
 或者，我们可以使用内存映射文件。这就是所谓的`mapped memory segment.` 让我们定义一个 200 字节的内存段，使用一个具有读写权限的文件路径:
 
-```
+```java
 MemorySegment memorySegment = MemorySegment.mapFromPath(
   Path.of("/tmp/memory.txt"), 200, FileChannel.MapMode.READ_WRITE);
 ```
@@ -96,7 +96,7 @@ MemorySegment memorySegment = MemorySegment.mapFromPath(
 
 **A `MemoryAddress`是内存段**内的偏移量。通常使用`baseAddress`方法获得:
 
-```
+```java
 MemoryAddress address = MemorySegment.allocateNative(100).baseAddress();
 ```
 
@@ -110,7 +110,7 @@ MemoryAddress address = MemorySegment.allocateNative(100).baseAddress();
 
 让我们以用坐标`x`和`y`定义的笛卡尔坐标点为例:
 
-```
+```java
 int numberOfPoints = 10;
 MemoryLayout pointLayout = MemoryLayout.ofStruct(
   MemoryLayout.ofValueBits(32, ByteOrder.BIG_ENDIAN).withName("x"),
@@ -130,7 +130,7 @@ SequenceLayout pointsLayout =
 
 让我们试试这个:
 
-```
+```java
 long value = 10;
 MemoryAddress memoryAddress = MemorySegment.allocateNative(8).baseAddress();
 VarHandle varHandle = MemoryHandles.varHandle(long.class, ByteOrder.nativeOrder());
@@ -145,7 +145,7 @@ assertThat(varHandle.get(memoryAddress), is(value));
 
 我们也可以结合使用偏移量和`MemoryAddress`来访问内存段。这类似于使用索引从数组中获取项目:
 
-```
+```java
 VarHandle varHandle = MemoryHandles.varHandle(int.class, ByteOrder.nativeOrder());
 try (MemorySegment memorySegment = MemorySegment.allocateNative(100)) {
     MemoryAddress base = memorySegment.baseAddress();
@@ -170,14 +170,14 @@ try (MemorySegment memorySegment = MemorySegment.allocateNative(100)) {
 
 例如，在前面的例子中，我们创建了一个`SequenceLayout`:
 
-```
+```java
 SequenceLayout sequenceLayout = MemoryLayout.ofSequence(25, 
   MemoryLayout.ofValueBits(64, ByteOrder.nativeOrder()));
 ```
 
 这可以用`JAVA_LONG`常量更简单地表达:
 
-```
+```java
 SequenceLayout sequenceLayout = MemoryLayout.ofSequence(25, MemoryLayouts.JAVA_LONG);
 ```
 
@@ -185,7 +185,7 @@ SequenceLayout sequenceLayout = MemoryLayout.ofSequence(25, MemoryLayouts.JAVA_L
 
 **A `ValueLayout`为基本数据类型(如整型和浮点型)建模内存布局。**每个值布局都有大小和字节顺序。我们可以使用`ofValueBits` 方法创建一个`ValueLayout`:
 
-```
+```java
 ValueLayout valueLayout = MemoryLayout.ofValueBits(32, ByteOrder.nativeOrder()); 
 ```
 
@@ -195,7 +195,7 @@ ValueLayout valueLayout = MemoryLayout.ofValueBits(32, ByteOrder.nativeOrder());
 
 例如，我们可以为每个 64 位的 25 个元素创建一个序列布局:
 
-```
+```java
 SequenceLayout sequenceLayout = MemoryLayout.ofSequence(25, 
   MemoryLayout.ofValueBits(64, ByteOrder.nativeOrder())); 
 ```
@@ -208,13 +208,13 @@ SequenceLayout sequenceLayout = MemoryLayout.ofSequence(25,
 
 让我们用一个`integer`和一个`long`创建一个`struct` 类型的`GroupLayout` :
 
-```
+```java
 GroupLayout groupLayout = MemoryLayout.ofStruct(MemoryLayouts.JAVA_INT, MemoryLayouts.JAVA_LONG);
 ```
 
 我们也可以使用`ofUnion` 方法创建一个`union` 类型的`GroupLayout` :
 
-```
+```java
 GroupLayout groupLayout = MemoryLayout.ofUnion(MemoryLayouts.JAVA_INT, MemoryLayouts.JAVA_LONG);
 ```
 
@@ -222,7 +222,7 @@ GroupLayout groupLayout = MemoryLayout.ofUnion(MemoryLayouts.JAVA_INT, MemoryLay
 
 组布局允许我们创建由多个元素组成的复杂内存布局。例如:
 
-```
+```java
 MemoryLayout memoryLayout1 = MemoryLayout.ofValueBits(32, ByteOrder.nativeOrder());
 MemoryLayout memoryLayout2 = MemoryLayout.ofStruct(MemoryLayouts.JAVA_LONG, MemoryLayouts.PAD_64);
 MemoryLayout.ofStruct(memoryLayout1, memoryLayout2);
@@ -234,7 +234,7 @@ MemoryLayout.ofStruct(memoryLayout1, memoryLayout2);
 
 让我们试试使用`asSlice`:
 
-```
+```java
 MemoryAddress memoryAddress = MemorySegment.allocateNative(12).baseAddress();
 MemoryAddress memoryAddress1 = memoryAddress.segment().asSlice(0,4).baseAddress();
 MemoryAddress memoryAddress2 = memoryAddress.segment().asSlice(4,4).baseAddress();

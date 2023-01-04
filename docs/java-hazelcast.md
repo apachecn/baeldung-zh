@@ -20,7 +20,7 @@ Hazelcast 提供了许多不同的库来处理各种需求。我们可以在 Mav
 
 然而，在本文中，我们将只使用创建独立的 Hazelcast 集群成员和 Hazelcast Java 客户端所需的核心依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.hazelcast</groupId>
     <artifactId>hazelcast</artifactId>
@@ -38,7 +38,7 @@ Hazelcast 提供了许多不同的库来处理各种需求。我们可以在 Mav
 
 让我们创建一个在 Hazelcast 分布式地图中存储数据的成员:
 
-```
+```java
 public class ServerNode {
 
     HazelcastInstance hzInstance = Hazelcast.newHazelcastInstance();
@@ -48,7 +48,7 @@ public class ServerNode {
 
 当我们启动`ServerNode` 应用程序时，我们可以在控制台中看到流动的文本，这意味着我们在 JVM 中创建了一个新的 Hazelcast 节点，它必须加入集群。
 
-```
+```java
 Members [1] {
     Member [192.168.1.105]:5701 - 899898be-b8aa-49aa-8d28-40917ccba56c this
 } 
@@ -58,7 +58,7 @@ Members [1] {
 
 例如，如果我们再次运行`ServerNode`应用程序，我们将在控制台中看到下面的日志，它指出集群中有两个成员。
 
-```
+```java
 Members [2] {
   Member [192.168.1.105]:5701 - 899898be-b8aa-49aa-8d28-40917ccba56c
   Member [192.168.1.105]:5702 - d6b81800-2c78-4055-8a5f-7f5b65d49f30 this
@@ -69,14 +69,14 @@ Members [2] {
 
 接下来，让我们创建一个分布式的`Map.` 我们需要前面创建的`HazelcastInstance` 的实例来构建一个分布式的`Map`，它扩展了`java.util.concurrent.ConcurrentMap`接口。
 
-```
+```java
 Map<Long, String> map = hazelcastInstance.getMap("data");
 ...
 ```
 
 最后，让我们给`map`添加一些条目:
 
-```
+```java
 FlakeIdGenerator idGenerator = hazelcastInstance.getFlakeIdGenerator("newid");
 for (int i = 0; i < 10; i++) {
     map.put(idGenerator.newId(), "message" + i);
@@ -95,7 +95,7 @@ Hazelcast 客户端允许我们在不成为集群成员的情况下执行所有�
 
 让我们创建一个本地客户端:
 
-```
+```java
 ClientConfig config = new ClientConfig();
 config.setClusterName("dev");
 HazelcastInstance hazelcastInstanceClient = HazelcastClient.newHazelcastClient(config); 
@@ -107,14 +107,14 @@ HazelcastInstance hazelcastInstanceClient = HazelcastClient.newHazelcastClient(c
 
 接下来，我们将使用之前创建的`HazelcastInstance` 的实例来访问分布式`Map`:
 
-```
+```java
 Map<Long, String> map = hazelcastInstanceClient.getMap("data");
 ...
 ```
 
 现在，我们可以在不成为集群成员的情况下对`map` 进行操作。例如，让我们尝试迭代这些条目:
 
-```
+```java
 for (Entry<Long, String> entry : map.entrySet()) {
     ...
 }
@@ -134,7 +134,7 @@ for (Entry<Long, String> entry : map.entrySet()) {
 
 让我们使用声明性配置来配置 TCP/IP 集群:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <hazelcast 
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -155,7 +155,7 @@ for (Entry<Long, String> entry : map.entrySet()) {
 
 或者，我们可以使用 Java 配置方法:
 
-```
+```java
 Config config = new Config();
 NetworkConfig network = config.getNetworkConfig();
 network.setPort(5701).setPortCount(20);
@@ -181,7 +181,7 @@ join.getTcpIpConfig()
 
 现在，让我们使用声明式配置来配置管理中心:
 
-```
+```java
 <management-center enabled="true">
     http://localhost:8080/mancenter
 </management-center>
@@ -189,7 +189,7 @@ join.getTcpIpConfig()
 
 同样，下面是编程配置:
 
-```
+```java
 ManagementCenterConfig manCenterCfg = new ManagementCenterConfig();
 manCenterCfg.setEnabled(true).setUrl("http://localhost:8080/mancenter");
 ```

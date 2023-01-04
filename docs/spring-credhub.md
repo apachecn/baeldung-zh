@@ -10,7 +10,7 @@
 
 首先，我们需要安装 [`spring-credhub-starter`](https://web.archive.org/web/20221207163043/https://search.maven.org/search?q=a:spring-credhub-starter) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.credhub</groupId>
     <artifactId>spring-credhub-starter</artifactId>
@@ -32,7 +32,7 @@
 
 默认情况下，CredHub 提供集成的相互 TLS 身份验证。要使用此方案，请在应用程序属性中指定 CredHub 服务器的 URL:
 
-```
+```java
 spring:
   credhub:
     url: <CredHub URL>
@@ -40,7 +40,7 @@ spring:
 
 认证 API 的另一种方法是通过 UAA，它需要客户端凭证授权令牌来获得访问令牌:
 
-```
+```java
 spring:
   credhub:
     url: <CredHub URL>
@@ -86,7 +86,7 @@ spring:
 
 **`CredHubOperations`接口位于`org.springframework.credhub.core`包中。它是 Spring 的 CredHub 的核心类，支持丰富的特性集来与 CredHub 交互。**它提供对接口的访问，这些接口对整个 CredHub APIs 和域对象与 CredHub 数据之间的映射进行建模:
 
-```
+```java
 public class CredentialService {
     private final CredHubCredentialOperations credentialOperations;
     private final CredHubPermissionV2Operations permissionOperations;
@@ -102,7 +102,7 @@ public class CredentialService {
 
 让我们首先创建一个类型为`password,` 的新凭证，它是使用`PasswordCredentialRequest`构建的:
 
-```
+```java
 SimpleCredentialName credentialName = new SimpleCredentialName(credential.getName());
 PasswordCredential passwordCredential = new PasswordCredential((String) value.get("password"));
 PasswordCredentialRequest request = PasswordCredentialRequest.builder()
@@ -114,7 +114,7 @@ credentialOperations.write(request);
 
 类似地，`CredentialRequest` 的其他实现可以用来构建不同的凭证类型，比如`ValueCredentialRequest`用于`value`凭证，`RsaCredentialRequest`用于`rsa`凭证，等等:
 
-```
+```java
 ValueCredential valueCredential = new ValueCredential((String) value.get("value"));
 request = ValueCredentialRequest.builder()
   .name(credentialName)
@@ -122,7 +122,7 @@ request = ValueCredentialRequest.builder()
   .build();
 ```
 
-```
+```java
 RsaCredential rsaCredential = new RsaCredential((String) value.get("public_key"), (String) value.get("private_key"));
 request = RsaCredentialRequest.builder()
   .name(credentialName)
@@ -134,7 +134,7 @@ request = RsaCredentialRequest.builder()
 
 Spring CredHub 还提供了一个选项将生成 凭证到 避免了管理它们的工作量  放在应用 端。本、 中的 转、 增强了 数据 的安全性。let ' s see我们如何实现这个功能:
 
-```
+```java
 SimpleCredentialName credentialName = new SimpleCredentialName("api_key");
 PasswordParameters parameters = PasswordParameters.builder()
   .length(24)
@@ -156,13 +156,13 @@ String password = generatedCred.getValue().getPassword();
 
 凭据管理的另一个重要阶段是轮换凭据。下面的代码演示了我们如何使用`password`凭证类型来实现这一点:
 
-```
+```java
 CredentialDetails<PasswordCredential> newPassword = credentialOperations.regenerate(credentialName, PasswordCredential.class); 
 ```
 
 CredHub 还让`certificate`凭证类型同时拥有多个活动版本，这样它们可以在不停机的情况下轮换。最终 和至关重要 相国书 管理 是
 
-```
+```java
 credentialOperations.deleteByName(credentialName);
 ```
 
@@ -170,7 +170,7 @@ credentialOperations.deleteByName(credentialName);
 
 现在，我们已经了解了完整的凭据管理生命周期。我们将看到如何检索订单 API 认证的最新版本的`password`凭证:
 
-```
+```java
 public ResponseEntity<Collection<Order>> getAllOrders() {
     try {
         String apiKey = credentialService.getPassword("api_key");
@@ -194,7 +194,7 @@ public String getPassword(String name) {
 
 让我们看一个向凭证添加允许用户`u101`执行`READ`和`WRITE`操作的例子:
 
-```
+```java
 Permission permission = Permission.builder()
   .app(UUID.randomUUID().toString())
   .operations(Operation.READ, Operation.WRITE)

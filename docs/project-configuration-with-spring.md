@@ -42,7 +42,7 @@ Seven hundred and twenty
 
 在 Spring 中，我们将根据环境包含正确的文件:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -61,7 +61,7 @@ Seven hundred and twenty
 
 当然，Java 配置也可以做到这一点:
 
-```
+```java
 @PropertySource({ "classpath:persistence-${envTarget:dev}.properties" })
 ```
 
@@ -73,7 +73,7 @@ Seven hundred and twenty
 
 `envTarget`变量可以在操作系统/环境中设置，或者作为 JVM 命令行的参数:
 
-```
+```java
 -DenvTarget=dev
 ```
 
@@ -81,7 +81,7 @@ Seven hundred and twenty
 
 对于需要启用持久性的集成测试，我们只需在 pom.xml 中设置`envTarget`属性:
 
-```
+```java
 <plugin>
    <groupId>org.apache.maven.plugins</groupId>
    <artifactId>maven-surefire-plugin</artifactId>

@@ -12,7 +12,7 @@
 
 首先，我们需要标准的 Jersey 客户端库依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.glassfish.jersey.core</groupId>
     <artifactId>jersey-client</artifactId>
@@ -29,7 +29,7 @@
 
 对于第三方反应式框架支持，我们将使用这些扩展:
 
-```
+```java
 <dependency>
     <groupId>org.glassfish.jersey.ext.rx</groupId>
     <artifactId>jersey-rx-client-rxjava</artifactId>
@@ -39,7 +39,7 @@
 
 上面的依赖关系提供了对 RxJava 的`[Observable](https://web.archive.org/web/20220630141337/https://github.com/ReactiveX/RxJava/wiki/Observable);`的支持。对于较新的 RxJava2 的`[Flowable](/web/20220630141337/https://www.baeldung.com/rxjava-2-flowable), `,我们使用下面的扩展:
 
-```
+```java
 <dependency>
     <groupId>org.glassfish.jersey.ext.rx</groupId>
     <artifactId>jersey-rx-client-rxjava2</artifactId>
@@ -59,7 +59,7 @@
 
 我们为每项服务创建一个客户端:
 
-```
+```java
 Client client = ClientBuilder.newClient();
 WebTarget userIdService = client.target("http://localhost:8080/id-service/ids");
 WebTarget nameService 
@@ -85,7 +85,7 @@ WebTarget hashService = client.target("http://localhost:8080/hash-service/{rawVa
 
 虽然我们现在获得了真正的异步执行([对线程效率有一些限制](https://web.archive.org/web/20220630141337/https://stackoverflow.com/questions/26150257/jersey-client-non-blocking))，但很容易看出**这种风格的代码在任何情况下都变得不可读和笨拙**。 [JAX-RS 规范](https://web.archive.org/web/20220630141337/https://github.com/jax-rs/spec)特别强调了这一场景为[末日金字塔](https://web.archive.org/web/20220630141337/https://en.wikipedia.org/wiki/Pyramid_of_doom_(programming)):
 
-```
+```java
 // used to keep track of the progress of the subsequent calls
 CountDownLatch completionTracker = new CountDownLatch(expectedHashValues.size()); 
 
@@ -158,7 +158,7 @@ JAX 遥感中心在以下方面支持这些目标:
 
 让我们从检索用户 id 开始:
 
-```
+```java
 CompletionStage<List<Long>> userIdStage = userIdService.request()
   .accept(MediaType.APPLICATION_JSON)
   .rx()
@@ -173,7 +173,7 @@ CompletionStage<List<Long>> userIdStage = userIdService.request()
 
 从这里，我们可以干净地编排调用，从名称服务中检索用户名，然后散列名称和用户 ID 的组合:
 
-```
+```java
 List<String> expectedHashValues = ...;
 List<String> receivedHashValues = new ArrayList<>(); 
 
@@ -225,13 +225,13 @@ assertThat(receivedHashValues).containsAll(expectedHashValues);
 
 要使用`Observable ` RxJava 组件，我们必须首先在客户机上注册*rxbobservableinvokerprovider*提供者(而不是 Jersey 规范文档中提到的"`ObservableRxInvokerProvider” `):
 
-```
+```java
 Client client = client.register(RxObservableInvokerProvider.class); 
 ```
 
 然后我们覆盖默认调用者:
 
-```
+```java
 Observable<List<Long>> userIdObservable = userIdService
   .request()
   .rx(RxObservableInvoker.class)
@@ -240,7 +240,7 @@ Observable<List<Long>> userIdObservable = userIdService
 
 从这一点出发，我们**可以使用标准的`Observable `语义来编排处理流程**:
 
-```
+```java
 userIdObservable.subscribe((List<Long> listOfIds)-> { 
   /** define processing flow for each ID */
 });
@@ -250,13 +250,13 @@ userIdObservable.subscribe((List<Long> listOfIds)-> {
 
 使用 RxJava `Flowable `的语义类似于`Observable. `我们注册适当的提供者:
 
-```
+```java
 client.register(RxFlowableInvokerProvider.class);
 ```
 
 然后我们供应`RxFlowableInvoker`:
 
-```
+```java
 Flowable<List<Long>> userIdFlowable = userIdService
   .request()
   .rx(RxFlowableInvoker.class)

@@ -28,7 +28,7 @@ A quick and practical guide to the @JsonFormat annotation in Jackson.[Read more]
 
 我们可以忽略类级别的特定字段，使用@ `JsonIgnoreProperties`注释并通过名称指定字段:
 
-```
+```java
 @JsonIgnoreProperties(value = { "intValue" })
 public class MyDto {
 
@@ -46,7 +46,7 @@ public class MyDto {
 
 我们现在可以测试，在对象被写入 JSON 之后，该字段确实不是输出的一部分:
 
-```
+```java
 @Test
 public void givenFieldIsIgnoredByName_whenDtoIsSerialized_thenCorrect()
   throws JsonParseException, IOException {
@@ -64,7 +64,7 @@ public void givenFieldIsIgnoredByName_whenDtoIsSerialized_thenCorrect()
 
 我们也可以通过字段上的@ `JsonIgnore`注释直接忽略字段:
 
-```
+```java
 public class MyDto {
 
     private String stringValue;
@@ -82,7 +82,7 @@ public class MyDto {
 
 我们现在可以测试`intValue`字段确实不是序列化 JSON 输出的一部分:
 
-```
+```java
 @Test
 public void givenFieldIsIgnoredDirectly_whenDtoIsSerialized_thenCorrect() 
   throws JsonParseException, IOException {
@@ -100,7 +100,7 @@ public void givenFieldIsIgnoredDirectly_whenDtoIsSerialized_thenCorrect()
 
 最后，我们可以使用@ `JsonIgnoreType`注释**忽略指定类型的所有字段。**如果我们控制了类型，那么我们可以直接对类进行注释:
 
-```
+```java
 @JsonIgnoreType
 public class SomeType { ... }
 ```
@@ -109,20 +109,20 @@ public class SomeType { ... }
 
 首先，我们为我们想要忽略的类型定义一个 MixIn，并用`@JsonIgnoreType`代替:
 
-```
+```java
 @JsonIgnoreType
 public class MyMixInForIgnoreType {}
 ```
 
 然后我们注册 mixin 来替换(并忽略)编组期间的所有`String[]`类型:
 
-```
+```java
 mapper.addMixInAnnotations(String[].class, MyMixInForIgnoreType.class);
 ```
 
 此时，所有字符串数组都将被忽略，而不是被封送到 JSON:
 
-```
+```java
 @Test
 public final void givenFieldTypeIsIgnored_whenDtoIsSerialized_thenCorrect()
   throws JsonParseException, IOException {
@@ -142,7 +142,7 @@ public final void givenFieldTypeIsIgnored_whenDtoIsSerialized_thenCorrect()
 
 这是我们的 DTO:
 
-```
+```java
 public class MyDtoWithSpecialField {
     private String[] stringValue;
     private int intValue;
@@ -158,14 +158,14 @@ public class MyDtoWithSpecialField {
 
 首先，我们需要在 Java 对象上定义过滤器:
 
-```
+```java
 @JsonFilter("myFilter")
 public class MyDtoWithFilter { ... }
 ```
 
 然后我们定义一个简单的过滤器，它将忽略`intValue`字段:
 
-```
+```java
 SimpleBeanPropertyFilter theFilter = SimpleBeanPropertyFilter
   .serializeAllExcept("intValue");
 FilterProvider filters = new SimpleFilterProvider()
@@ -174,7 +174,7 @@ FilterProvider filters = new SimpleFilterProvider()
 
 现在我们可以序列化对象，并确保 JSON 输出中不存在`intValue`字段:
 
-```
+```java
 @Test
 public final void givenTypeHasFilterThatIgnoresFieldByName_whenDtoIsSerialized_thenCorrect() 
   throws JsonParseException, IOException {

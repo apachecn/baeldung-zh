@@ -14,13 +14,13 @@
 
 让我们创建我们的`application.properties`文件，并告诉它在哪里可以找到日志配置文件:
 
-```
+```java
 logging.config=/path/to/log4j2.xml
 ```
 
 接下来，让我们为名为`application-dev.properties`的“dev”概要文件创建一个新的属性文件，并添加一行类似的代码:
 
-```
+```java
 logging.config=/path/to/log4j2-dev.xml
 ```
 
@@ -30,7 +30,7 @@ logging.config=/path/to/log4j2-dev.xml
 
 我们可以通过改变我们的 Spring Boot `Application`类，以编程方式选择使用哪个 Log4j2 配置文件:
 
-```
+```java
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 

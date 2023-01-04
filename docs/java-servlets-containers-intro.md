@@ -38,7 +38,7 @@ Servlets 是用于 web 开发的 JEE 框架的一个组件。它们基本上是�
 
 这基本上是将对象绑定到一个用户会话，因此与特定用户相关的信息可以跨多个请求持久化。这通常使用 cookies 的概念来实现，使用 [`JSESSIONID`](/web/20220627074056/https://www.baeldung.com/java-servlet-cookies-session#httpsession-object) 作为给定会话的唯一标识符。我们可以在`web.xml`中指定会话的超时时间:
 
-```
+```java
 <session-config>
     <session-timeout>10</session-timeout>
 </session-config> 
@@ -66,7 +66,7 @@ Servlets 是用于 web 开发的 JEE 框架的一个组件。它们基本上是�
 
 例如，让我们考虑这个片段:
 
-```
+```java
 public class ExampleThree extends HttpServlet {
 
     private String instanceMessage;

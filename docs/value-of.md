@@ -34,7 +34,7 @@
 
 ### 可用签名
 
-```
+```java
 public static String valueOf(boolean b)
 public static String valueOf(char c)
 public static String valueOf(char[] data)
@@ -48,7 +48,7 @@ public static String valueOf(Object obj)
 
 ### 例子
 
-```
+```java
 @Test
 public void whenCallValueOf_thenCorrect() {
     long l = 200L;

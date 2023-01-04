@@ -26,7 +26,7 @@
 
 让我们从启动`arangosh`开始，创建一个名为`baeldung-database`的新数据库和一个可以访问这个新创建的数据库的用户`baeldung`。
 
-```
+```java
 arangosh> db._createDatabase("baeldung-database", {}, [{ username: "baeldung", passwd: "password", active: true}]);
 ```
 
@@ -34,7 +34,7 @@ arangosh> db._createDatabase("baeldung-database", {}, [{ username: "baeldung", p
 
 为了在我们的应用程序中使用带有 ArangoDB 的 Spring 数据，我们需要在依赖关系之后的[:](https://web.archive.org/web/20220707143816/https://search.maven.org/search?q=a:arangodb-spring-data)
 
-```
+```java
 <dependency>
     <groupId>com.arangodb</groupId>
     <artifactId>arangodb-spring-data</artifactId>
@@ -46,14 +46,14 @@ arangosh> db._createDatabase("baeldung-database", {}, [{ username: "baeldung", p
 
 在我们开始处理数据之前，我们需要建立到`ArangoDB`的连接。我们应该通过创建一个实现`ArangoConfiguration`接口的配置类来实现它:
 
-```
+```java
 @Configuration
 public class ArangoDbConfiguration implements ArangoConfiguration {}
 ```
 
 在内部，我们需要实现两个方法。第一个应该创建`ArangoDB.Builder`对象，该对象将生成到我们数据库的接口:
 
-```
+```java
 @Override
 public ArangoDB.Builder arango() {
     return new ArangoDB.Builder()
@@ -65,7 +65,7 @@ public ArangoDB.Builder arango() {
 
 或者，我们可以跳过在配置类中设置这些参数:
 
-```
+```java
 @Override
 public ArangoDB.Builder arango() {
     return new ArangoDB.Builder();
@@ -74,7 +74,7 @@ public ArangoDB.Builder arango() {
 
 因为我们可以将它们存储在`arango.properties`资源文件中:
 
-```
+```java
 arangodb.host=127.0.0.1
 arangodb.port=8529
 arangodb.user=baeldung
@@ -83,7 +83,7 @@ arangodb.password=password
 
 这是阿兰戈寻找的默认位置。可以通过向自定义属性文件传递一个`InputStream`来覆盖它:
 
-```
+```java
 InputStream in = MyClass.class.getResourceAsStream("my.properties");
 ArangoDB.Builder arango = new ArangoDB.Builder()
   .loadProperties(in);
@@ -91,7 +91,7 @@ ArangoDB.Builder arango = new ArangoDB.Builder()
 
 我们必须实现的第二个方法是简单地提供我们在应用程序中需要的数据库名称:
 
-```
+```java
 @Override
 public String database() {
     return "baeldung-database";
@@ -100,7 +100,7 @@ public String database() {
 
 此外，配置类需要 `@EnableArangoRepositories` 注释来告诉 Spring Data 在哪里寻找 ArangoDB 存储库:
 
-```
+```java
 @EnableArangoRepositories(basePackages = {"com.baeldung"})
 ```
 
@@ -108,7 +108,7 @@ public String database() {
 
 下一步，我们将创建一个数据模型。对于这篇文章，我们将使用一个带有`name`、`author`和`publishDate`字段的文章表示:
 
-```
+```java
 @Document("articles")
 public class Article {
 
@@ -132,7 +132,7 @@ public class Article {
 
 现在，当我们定义了实体后，我们可以为数据访问创建一个存储库接口:
 
-```
+```java
 @Repository
 public interface ArticleRepository extends ArangoRepository<Article, String> {}
 ```
@@ -145,14 +145,14 @@ public interface ArticleRepository extends ArangoRepository<Article, String> {}
 
 首先，我们需要一个对文章存储库的依赖:
 
-```
+```java
 @Autowired
 ArticleRepository articleRepository;
 ```
 
 和一个简单的`Article`类实例:
 
-```
+```java
 Article newArticle = new Article(
   "ArangoDb with Spring Data",
   "Baeldung Writer",
@@ -162,33 +162,33 @@ Article newArticle = new Article(
 
 现在，如果我们想将这篇文章存储在我们的数据库中，我们应该简单地调用 `save` 方法:
 
-```
+```java
 Article savedArticle = articleRepository.save(newArticle);
 ```
 
 之后，我们可以确保生成了 `id` 和 `arangoId` 字段:
 
-```
+```java
 assertNotNull(savedArticle.getId());
 assertNotNull(savedArticle.getArangoId());
 ```
 
 要从数据库中获取文章，我们需要首先获取它的 id:
 
-```
+```java
 String articleId = savedArticle.getId();
 ```
 
 然后简单地调用`findById`方法:
 
-```
+```java
 Optional<Article> articleOpt = articleRepository.findById(articleId);
 assertTrue(articleOpt.isPresent());
 ```
 
 有了文章实体，我们可以改变它的属性:
 
-```
+```java
 Article article = articleOpt.get();
 article.setName("New Article Name");
 articleRepository.save(article);
@@ -198,13 +198,13 @@ articleRepository.save(article);
 
 删除条目也是一个简单的操作。我们简单地调用存储库的`delete`方法:
 
-```
+```java
 articleRepository.delete(article)
 ```
 
 通过 id 删除它也是可能的:
 
-```
+```java
 articleRepository.deleteById(articleId)
 ```
 
@@ -212,7 +212,7 @@ articleRepository.deleteById(articleId)
 
 有了`Spring Data`和`ArangoDB,`,我们可以利用[派生的库](/web/20220707143816/https://www.baeldung.com/spring-data-derived-queries),并简单地通过方法名定义查询:
 
-```
+```java
 @Repository
 public interface ArticleRepository extends ArangoRepository<Article, String> {
     Iterable<Article> findByAuthor(String author);
@@ -223,7 +223,7 @@ public interface ArticleRepository extends ArangoRepository<Article, String> {
 
 现在，让我们来看一个基本的 AQL 查询，该查询将查找给定作者的所有文章，并按发表日期对它们进行排序:
 
-```
+```java
 @Query("FOR a IN articles FILTER a.author == @author SORT a.publishDate ASC RETURN a")
 Iterable<Article> getByAuthor(@Param("author") String author);
 ```
@@ -236,14 +236,14 @@ Iterable<Article> getByAuthor(@Param("author") String author);
 
 为此，我们需要用`@Relations`注释定义一个新的集合属性，该属性将包含给定作者撰写的每篇文章的链接:
 
-```
+```java
 @Relations(edges = ArticleLink.class, lazy = true)
 private Collection<Article> articles;
 ```
 
 正如我们所见，`ArangoDB`中的关系是通过一个单独的用@Edge 注释的类定义的:
 
-```
+```java
 @Edge
 public class ArticleLink {
 

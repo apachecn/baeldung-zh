@@ -12,7 +12,7 @@
 
 让我们考虑工件的定义:
 
-```
+```java
 <groupId>com.baeldung</groupId>
 <artifactId>maven-classifier-example-provider</artifactId>
 <version>0.0.1-SNAPSHOT</version>
@@ -24,7 +24,7 @@
 
 让我们向 jar 插件添加一个分类器配置:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -55,7 +55,7 @@
 
 为了消费默认工件，我们不需要做任何特殊的事情:
 
-```
+```java
 <dependency>
     <groupId>com.baeldung</groupId>
     <artifactId>maven-classifier-example-provider</artifactId>
@@ -65,7 +65,7 @@
 
 但是，要使用带有自定义后缀“arbitrary”的工件，我们需要在`dependency`元素中使用`classifier`元素:
 
-```
+```java
 <dependency>
     <groupId>com.baeldung</groupId>
     <artifactId>maven-classifier-example-provider</artifactId>
@@ -84,7 +84,7 @@
 
 首先，让我们为`maven-classifier-example-provider`模块生成一个 sources jar。我们将使用`maven-source-plugin` 来做到这一点:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-source-plugin</artifactId>
@@ -103,7 +103,7 @@
 
 现在，让我们运行:
 
-```
+```java
 mvn clean install
 ```
 
@@ -113,7 +113,7 @@ mvn clean install
 
 现在，要使用 sources 工件，[有几种方法](/web/20220524053151/https://www.baeldung.com/maven-download-sources-javadoc)。让我们来看看其中的一个。我们可以在依赖关系定义中使用一个分类器元素来提取源 jar 以获得选择性依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.baeldung</groupId>
     <artifactId>maven-classifier-example-producer</artifactId>
@@ -124,13 +124,13 @@ mvn clean install
 
 现在，让我们运行:
 
-```
+```java
 mvn clean install
 ```
 
 结果，获取了这个特定依赖项的源 jar。一般来说，我们不这样做，因为它会不必要地污染 POM。因此，我们通常更喜欢使用 IDEs 的功能来按需附加源 jar。或者，我们也可以通过`mvn` CLI 命令有选择地获取它们:
 
-```
+```java
 mvn dependency:sources -DincludeArtifactIds=maven-classifier-example-provider
 ```
 
@@ -144,7 +144,7 @@ mvn dependency:sources -DincludeArtifactIds=maven-classifier-example-provider
 
 让我们使用`maven-javadoc-plugin` 来生成 Javadoc 工件:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-javadoc-plugin</artifactId>
@@ -162,7 +162,7 @@ mvn dependency:sources -DincludeArtifactIds=maven-classifier-example-provider
 
 定义好插件后，让我们运行:
 
-```
+```java
 mvn clean install
 ```
 
@@ -172,7 +172,7 @@ mvn clean install
 
 现在让我们从消费者的角度通过`mvn`下载生成的 Javadoc:
 
-```
+```java
 mvn dependency:resolve -Dclassifier=javadoc -DincludeArtifactIds=maven-classifier-example-provider
 ```
 
@@ -186,7 +186,7 @@ mvn dependency:resolve -Dclassifier=javadoc -DincludeArtifactIds=maven-classifie
 
 首先，让我们为`maven-classifier-example-provider`模块生成测试 jar。为了做到这一点，我们将通过指定`test-jar`目标来使用 Maven jar 插件:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-jar-plugin</artifactId>
@@ -204,7 +204,7 @@ mvn dependency:resolve -Dclassifier=javadoc -DincludeArtifactIds=maven-classifie
 
 现在，让我们运行:
 
-```
+```java
 mvn clean install
 ```
 
@@ -214,7 +214,7 @@ mvn clean install
 
 现在，让我们将测试 jar 依赖关系放入我们的消费者模块`maven-classifier-example-consumer`。我们使用`tests`分类器来完成这项工作:
 
-```
+```java
 <dependency>
     <groupId>com.baeldung</groupId>
     <artifactId>maven-classifier-example-provider</artifactId>
@@ -235,7 +235,7 @@ Java 现在以 6 个月一次的速度发布了新版本。因此，它要求模
 
 首先，我们将配置 Maven 编译器插件，使用 JDK 8 和 JDK 11 生成编译后的类文件:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-compiler-plugin</artifactId>
@@ -279,7 +279,7 @@ Java 现在以 6 个月一次的速度发布了新版本。因此，它要求模
 
 我们还明确提供了 Java 11 的编译器的可执行路径`javac.`对于 Java 8，Maven 将使用系统上配置的默认`javac`，在本例中是 Java 8 的`javac`:
 
-```
+```java
 mvn clean compile
 ```
 
@@ -289,7 +289,7 @@ mvn clean compile
 
 其次，我们可以使用 Maven jar 插件将模块打包到两个独立的 jar 中:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-jar-plugin</artifactId>
@@ -314,7 +314,7 @@ mvn clean compile
 
 现在，让我们运行:
 
-```
+```java
 mvn clean install
 ```
 
@@ -326,7 +326,7 @@ mvn clean install
 
 如果我们正在进行一个 Java 8 项目，我们不需要做任何特别的事情。我们将只添加一个普通的依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.baeldung</groupId>
     <artifactId>maven-classifier-example-provider</artifactId>
@@ -336,7 +336,7 @@ mvn clean install
 
 然而，如果我们正在处理一个 Java 11 项目，我们必须通过一个分类器明确地请求用 Java 11 编译的 jar:
 
-```
+```java
 <dependency>
     <groupId>com.baeldung</groupId>
     <artifactId>maven-classifier-example-provider</artifactId>

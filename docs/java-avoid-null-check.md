@@ -36,7 +36,7 @@ Learn about the Null Object Pattern and how to implement it in Java[Read more](/
 
 让我们快速看几个导致这个异常的 Java 代码示例:
 
-```
+```java
 public void doSomething() {
     String result = doSomethingElse();
     if (result.equalsIgnoreCase("Success")) 
@@ -53,7 +53,7 @@ private String doSomethingElse() {
 
 另一个常见的例子是，如果我们试图访问一个`null` 数组:
 
-```
+```java
 public static void main(String[] args) {
     findMax(null);
 }
@@ -70,7 +70,7 @@ private static void findMax(int[] arr) {
 
 避免`NullPointerException` 的常见方法是检查`null`:
 
-```
+```java
 public void doSomething() {
     String result = doSomethingElse();
     if (result != null && result.equalsIgnoreCase("Success")) {
@@ -95,7 +95,7 @@ private String doSomethingElse() {
 
 然而，通常有一些 API 可以处理`null` 值:
 
-```
+```java
 public void print(Object param) {
     System.out.println("Printing " + param);
 }
@@ -130,7 +130,7 @@ public Object process() throws Exception {
 
 让我们看一个例子:
 
-```
+```java
 public void accept(@NonNull Object param) {
     System.out.println(param.toString());
 }
@@ -146,7 +146,7 @@ public void accept(@NonNull Object param) {
 
 要在 IntelliJ 中添加对这些注释的支持，我们需要添加以下 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.jetbrains</groupId>
     <artifactId>annotations</artifactId>
@@ -166,7 +166,7 @@ IntelliJ 还提供了一个用于处理复杂 API 契约的`[Contract](https://w
 
 在这里，我们可以使用 [Java 断言](/web/20220812145536/https://www.baeldung.com/java-assert)代替传统的`null`检查条件语句:
 
-```
+```java
 public void accept(Object param){
     assert param != null;
     doSomething(param);
@@ -190,7 +190,7 @@ public void accept(Object param){
 
 让我们来看看两种方法——一种在早期会失败，另一种不会:
 
-```
+```java
 public void goodAccept(String one, String two, String three) {
     if (one == null || two == null || three == null) {
         throw new IllegalArgumentException();
@@ -232,7 +232,7 @@ public void badAccept(String one, String two, String three) {
 
 考虑对两个整数求和的方法的两种实现:
 
-```
+```java
 public static int primitiveSum(int a, int b) {
     return a + b;
 }
@@ -244,7 +244,7 @@ public static Integer wrapperSum(Integer a, Integer b) {
 
 现在让我们在客户端代码中调用这些 API:
 
-```
+```java
 int sum = primitiveSum(null, 2);
 ```
 
@@ -252,7 +252,7 @@ int sum = primitiveSum(null, 2);
 
 当使用带有包装类的 API 时，我们得到一个`NullPointerException`:
 
-```
+```java
 assertThrows(NullPointerException.class, () -> wrapperSum(null, 2));
 ```
 
@@ -262,7 +262,7 @@ assertThrows(NullPointerException.class, () -> wrapperSum(null, 2));
 
 有时候，我们需要返回一个集合作为方法的响应。对于这样的方法，我们应该总是试图用**返回一个空集合，而不是用`null`** :
 
-```
+```java
 public List<String> names() {
     if (userExists()) {
         return Stream.of(readName()).collect(Collectors.toList());
@@ -280,7 +280,7 @@ Java 7 引入了新的`Objects` API。这个 API 有几个`static` 实用方法�
 
 让我们来看一个这样的方法， [`requireNonNull()`](https://web.archive.org/web/20220812145536/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Objects.html#requireNonNull(T)) :
 
-```
+```java
 public void accept(Object param) {
     Objects.requireNonNull(param);
     // doSomething()
@@ -289,7 +289,7 @@ public void accept(Object param) {
 
 现在让我们测试一下`accept()` 方法:
 
-```
+```java
 assertThrows(NullPointerException.class, () -> accept(null));
 ```
 
@@ -305,7 +305,7 @@ Java 8 在语言中引入了一个新的`[Optional](/web/20220812145536/https://
 
 让我们看看`Optional` 如何消除对`null` 检查的需求:
 
-```
+```java
 public Optional<Object> process(boolean processed) {
     String response = doSomething(processed);
 
@@ -329,7 +329,7 @@ private String doSomething(boolean processed) {
 
 这明显地消除了客户端代码中任何`null` 检查的需要。使用`Optional` API 的声明式风格可以不同地处理空响应:
 
-```
+```java
 assertThrows(Exception.class, () -> process(false).orElseThrow(() -> new Exception()));
 ```
 
@@ -339,7 +339,7 @@ assertThrows(Exception.class, () -> process(false).orElseThrow(() -> new Excepti
 
 为了避免这种情况， **`Optional`提供了一个`ofNullable` 方法，该方法返回一个具有指定值的`Optional` ，或者如果值为`null`** ，则返回`empty`:
 
-```
+```java
 public Optional<Object> process(boolean processed) {
     String response = doSomething(processed);
     return Optional.ofNullable(response);
@@ -350,7 +350,7 @@ public Optional<Object> process(boolean processed) {
 
 在处理空集合时，`Optional` 派上了用场:
 
-```
+```java
 public String findFirst() {
     return getList().stream()
       .findFirst()
@@ -364,7 +364,7 @@ public String findFirst() {
 
 或者，我们也可以允许客户端通过从该方法返回`Optional` 来决定如何处理`empty`:
 
-```
+```java
 public Optional<String> findOptionalFirst() {
     return getList().stream()
       .findFirst();
@@ -385,7 +385,7 @@ public Optional<String> findOptionalFirst() {
 
 我们的`findFirst`方法想要返回一个`Optional`列表的第一个`Optional`元素:
 
-```
+```java
 public Optional<String> optionalListFirst() {
    return getOptionalList()
       .flatMap(list -> list.stream().findFirst());
@@ -404,7 +404,7 @@ public Optional<String> optionalListFirst() {
 
 在我们继续讨论一些例子之前，让我们为 Lombok 添加一个 [Maven](https://web.archive.org/web/20220812145536/https://search.maven.org/search?q=g:org.projectlombok%20AND%20a:lombok&core=gav) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>
@@ -414,7 +414,7 @@ public Optional<String> optionalListFirst() {
 
 现在我们可以在任何需要`null` 检查的地方使用`@NonNull` :
 
-```
+```java
 public void accept(@NonNull Object param){
     System.out.println(param);
 }
@@ -422,7 +422,7 @@ public void accept(@NonNull Object param){
 
 因此，我们简单地注释了需要进行`null` 检查的对象，Lombok 生成了编译后的类:
 
-```
+```java
 public void accept(@NonNull Object param) {
     if (param == null) {
         throw new NullPointerException("param");
@@ -440,7 +440,7 @@ public void accept(@NonNull Object param) {
 
 因此，这将是一个常见的验证语句:
 
-```
+```java
 public void accept(String param){
     if (null != param && !param.isEmpty())
         System.out.println(param);
@@ -451,7 +451,7 @@ public void accept(String param){
 
 在我们看到这一点之前，让我们为 [commons-lang3](https://web.archive.org/web/20220812145536/https://search.maven.org/search?q=g:org.apache.commons%20AND%20a:commons-lang3&core=gav) 添加一个 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -461,7 +461,7 @@ public void accept(String param){
 
 现在让我们用`StringUtils`重构上面的代码:
 
-```
+```java
 public void accept(String param) {
     if (StringUtils.isNotEmpty(param))
         System.out.println(param);

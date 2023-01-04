@@ -10,7 +10,7 @@
 
 让我们从简单地计算这个数组中单词的字数开始:
 
-```
+```java
 static String[] COUNTRY_NAMES 
   = { "China", "Australia", "India", "USA", "USSR", "UK", "China", 
   "France", "Poland", "Austria", "India", "USA", "Egypt", "China" }; 
@@ -22,7 +22,7 @@ static String[] COUNTRY_NAMES
 
 最简单的解决方案之一是创建一个`Map`，将单词存储为键，将出现的次数存储为值:
 
-```
+```java
 Map<String, Integer> counterMap = new HashMap<>();
 
 for (String country : COUNTRY_NAMES) { 
@@ -41,7 +41,7 @@ assertEquals(2, counterMap.get("India").intValue());
 
 现在，让我们利用 Java 8 流 API、并行`Streams`和 [`groupingBy` ()](/web/20221003190704/https://www.baeldung.com/java-groupingby-collector) 收集器:
 
-```
+```java
 @Test
 public void whenMapWithLambdaAndWrapperCounter_runsSuccessfully() {
     Map<String, Long> counterMap = new HashMap<>();
@@ -57,7 +57,7 @@ public void whenMapWithLambdaAndWrapperCounter_runsSuccessfully() {
 
 类似地，我们可以使用一个`parallelStream`:
 
-```
+```java
 @Test
 public void whenMapWithLambdaAndWrapperCounter_runsSuccessfully() {
     Map<String, Long> counterMap = new HashMap<>();
@@ -75,7 +75,7 @@ public void whenMapWithLambdaAndWrapperCounter_runsSuccessfully() {
 
 接下来，让我们使用一个`Map`，它将一个计数器包装在一个用作值的`Integer`数组中:
 
-```
+```java
 @Test
 public void whenMapWithPrimitiveArrayCounter_runsSuccessfully() {
     Map<String, int[]> counterMap = new HashMap<>();
@@ -107,7 +107,7 @@ private void counterWithPrimitiveArray(Map<String, int[]> counterMap) {
 
 接下来，让我们创建一个封装器对象，它嵌入了一个原始整数计数器，如下所示:
 
-```
+```java
 private static class MutableInteger {
     int count = 1;
 
@@ -121,7 +121,7 @@ private static class MutableInteger {
 
 让我们看看如何利用上面的类作为计数器:
 
-```
+```java
 @Test
 public void whenMapWithMutableIntegerCounter_runsSuccessfully() {
     Map<String, MutableInteger> counterMap = new HashMap<>();
@@ -156,7 +156,7 @@ private void counterWithMutableInteger(
 
 上面的图表是使用 JMH 创建的，下面是创建上面的统计数据的代码:
 
-```
+```java
 Map<String, Integer> counterMap = new HashMap<>();
 Map<String, MutableInteger> counterMutableIntMap = new HashMap<>();
 Map<String, int[]> counterWithIntArrayMap = new HashMap<>();

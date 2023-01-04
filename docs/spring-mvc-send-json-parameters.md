@@ -26,7 +26,7 @@ Spring 提供了一种通过 POST 请求发送 JSON 数据的简单方法。[内
 
 首先，我们需要创建一个模型对象来表示传递的 JSON 数据。例如，考虑一下`Product`类:
 
-```
+```java
 public class Product {
 
     private int id;
@@ -40,7 +40,7 @@ public class Product {
 
 其次，让我们定义一个接受 POST 请求的 Spring 处理程序方法:
 
-```
+```java
 @PostMapping("/create")
 @ResponseBody
 public Product createProduct(@RequestBody Product product) {
@@ -53,7 +53,7 @@ public Product createProduct(@RequestBody Product product) {
 
 现在，我们可以使用 [cURL](/web/20220714004847/https://www.baeldung.com/curl-rest) 来测试我们的 POST 请求:
 
-```
+```java
 curl -i \
 -H "Accept: application/json" \
 -H "Content-Type: application/json" \
@@ -73,7 +73,7 @@ Spring MVC 提供 [`@RequestParam`](/web/20220714004847/https://www.baeldung.com
 
 现在，让我们看看如何在 Spring MVC 中通过 GET 请求发送 JSON 参数。首先，我们需要在控制器中创建另一个处理程序方法来处理 GET 请求:
 
-```
+```java
 @GetMapping("/get")
 @ResponseBody
 public Product getProduct(@RequestParam String product) throws JsonMappingException, JsonProcessingException {
@@ -90,7 +90,7 @@ public Product getProduct(@RequestParam String product) throws JsonMappingExcept
 
 首先，**我们需要创建一个定制的属性编辑器来封装将作为`String`给出的 JSON 参数转换成`Product `对象**的逻辑:
 
-```
+```java
 public class ProductEditor extends PropertyEditorSupport {
 
     private ObjectMapper objectMapper;
@@ -119,7 +119,7 @@ public class ProductEditor extends PropertyEditorSupport {
 
 接下来，让我们将 JSON 参数绑定到一个`Product`类的对象:
 
-```
+```java
 @GetMapping("/get2")
 @ResponseBody
 public Product get2Product(@RequestParam Product product) {
@@ -130,7 +130,7 @@ public Product get2Product(@RequestParam Product product) {
 
 最后，我们需要添加最后一个缺失的部分。让我们**在我们的弹簧控制器**中注册`ProductEditor`:
 
-```
+```java
 @InitBinder
 public void initBinder(WebDataBinder binder) {
     binder.registerCustomEditor(Product.class, new ProductEditor(objectMapper));
@@ -141,13 +141,13 @@ public void initBinder(WebDataBinder binder) {
 
 因此，与其说:
 
-```
+```java
 GET /spring-mvc-basics-4/products/get2?product={"id": 1,"name": "Asus Zenbook","price": 800}
 ```
 
 我们需要发送:
 
-```
+```java
 GET /spring-mvc-basics-4/products/get2?product=%7B%22id%22%3A%201%2C%22name%22%3A%20%22Asus%20Zenbook%22%2C%22price%22%3A%20800%7D
 ```
 

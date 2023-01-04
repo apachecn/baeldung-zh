@@ -36,7 +36,7 @@
 
 让我们看看`compareTo`方法是如何在核心`Integer`类中实现的:
 
-```
+```java
 @Override
 public int compareTo(Integer anotherInteger) {
     return compare(this.value, anotherInteger.value);
@@ -51,7 +51,7 @@ public static int compare (int x, int y) {
 
 有人可能会说，我们可以用一个聪明的减法一行程序来代替:
 
-```
+```java
 @Override
 public int compareTo(BankAccount anotherAccount) {
     return this.balance - anotherAccount.balance;
@@ -60,7 +60,7 @@ public int compareTo(BankAccount anotherAccount) {
 
 让我们考虑一个例子，我们期望正的账户余额大于负的账户余额:
 
-```
+```java
 BankAccount accountOne = new BankAccount(1900000000);
 BankAccount accountTwo = new BankAccount(-2000000000);
 int comparison = accountOne.compareTo(accountTwo);
@@ -71,7 +71,7 @@ assertThat(comparison).isNegative();
 
 正确的解决方法是用比较代替减法。我们也可以重用核心`Integer`类的正确实现:
 
-```
+```java
 @Override
 public int compareTo(BankAccount anotherAccount) {
     return Integer.compare(this.balance, anotherAccount.balance);
@@ -98,7 +98,7 @@ public int compareTo(BankAccount anotherAccount) {
 
 在我们的例子中，`compareTo`方法检查进球得分，而`equals`方法检查球员姓名:
 
-```
+```java
 @Override
 public int compareTo(FootballPlayer anotherPlayer) {
     return this.goalsScored - anotherPlayer.goalsScored;
@@ -117,7 +117,7 @@ public boolean equals(Object object) {
 
 在排序集合或排序映射中使用此类时，这可能会导致意外行为:
 
-```
+```java
 FootballPlayer messi = new FootballPlayer("Messi", 800);
 FootballPlayer ronaldo = new FootballPlayer("Ronaldo", 800);
 
@@ -145,7 +145,7 @@ assertThat(set).doesNotContain(ronaldo);
 
 按自然顺序对数字进行排序将导致升序排列:
 
-```
+```java
 int[] numbers = new int[] {5, 3, 9, 11, 1, 7};
 Arrays.sort(numbers);
 assertThat(numbers).containsExactly(1, 3, 5, 7, 9, 11);
@@ -153,7 +153,7 @@ assertThat(numbers).containsExactly(1, 3, 5, 7, 9, 11);
 
 另一方面，字符串的自然排序将导致字母顺序:
 
-```
+```java
 String[] players = new String[] {"ronaldo",  "modric", "ramos", "messi"};
 Arrays.sort(players);
 assertThat(players).containsExactly("messi", "modric", "ramos", "ronaldo");
@@ -167,7 +167,7 @@ assertThat(players).containsExactly("messi", "modric", "ramos", "ronaldo");
 
 如果我们对数组进行同样的尝试，它在编译过程中不会失败。但是，这将导致类强制转换运行时异常:
 
-```
+```java
 HandballPlayer duvnjak = new HandballPlayer("Duvnjak", 197);
 HandballPlayer hansen = new HandballPlayer("Hansen", 196);
 HandballPlayer[] players = new HandballPlayer[] {duvnjak, hansen};
@@ -182,7 +182,7 @@ assertThatExceptionOfType(ClassCastException.class).isThrownBy(() -> Arrays.sort
 
 让我们来看一个自定义类的示例，该类根据球员的进球数来比较他们:
 
-```
+```java
 @Override
 public int compareTo(FootballPlayer anotherPlayer) {
     return Integer.compare(this.goalsScored, anotherPlayer.goalsScored);
@@ -191,7 +191,7 @@ public int compareTo(FootballPlayer anotherPlayer) {
 
 在我们的示例中，键是根据在 *compareTo* 实现中定义的标准自动排序的:
 
-```
+```java
 FootballPlayer ronaldo = new FootballPlayer("Ronaldo", 900);
 FootballPlayer messi = new FootballPlayer("Messi", 800);
 FootballPlayer modric = new FootballPlayer("modric", 100);
@@ -210,7 +210,7 @@ assertThat(players.keySet()).containsExactly(modric, messi, ronaldo);
 
 [`Comparator`接口](/web/20221208143921/https://www.baeldung.com/java-comparator-comparable)允许从我们正在排序的对象中分离出多个不同的比较策略:
 
-```
+```java
 FootballPlayer ronaldo = new FootballPlayer("Ronaldo", 900);
 FootballPlayer messi = new FootballPlayer("Messi", 800);
 FootballPlayer modric = new FootballPlayer("Modric", 100);

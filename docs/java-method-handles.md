@@ -45,13 +45,13 @@
 
 让我们创建一个提供对`public`方法访问的查找:
 
-```
+```java
 MethodHandles.Lookup publicLookup = MethodHandles.publicLookup();
 ```
 
 然而，如果我们想访问`private`和`protected`方法，我们可以使用`lookup()`方法:
 
-```
+```java
 MethodHandles.Lookup lookup = MethodHandles.lookup();
 ```
 
@@ -67,7 +67,7 @@ MethodHandles.Lookup lookup = MethodHandles.lookup();
 
 让我们看看如何定义一个指定一个`java.util.List`类作为返回类型和一个`Object`数组作为输入类型的`MethodType`:
 
-```
+```java
 MethodType mt = MethodType.methodType(List.class, Object[].class);
 ```
 
@@ -75,7 +75,7 @@ MethodType mt = MethodType.methodType(List.class, Object[].class);
 
 让我们定义一个`MethodType`，它返回一个 int 值并接受一个`Object`:
 
-```
+```java
 MethodType mt = MethodType.methodType(int.class, Object.class);
 ```
 
@@ -91,7 +91,7 @@ MethodType mt = MethodType.methodType(int.class, Object.class);
 
 使用`findVirtual()`方法允许我们为一个对象方法创建一个方法句柄。让我们基于`String`类的`concat()`方法创建一个:
 
-```
+```java
 MethodType mt = MethodType.methodType(String.class, String.class);
 MethodHandle concatMH = publicLookup.findVirtual(String.class, "concat", mt);
 ```
@@ -100,7 +100,7 @@ MethodHandle concatMH = publicLookup.findVirtual(String.class, "concat", mt);
 
 当我们想要访问一个静态方法时，我们可以使用`findStatic()`方法:
 
-```
+```java
 MethodType mt = MethodType.methodType(List.class, Object[].class);
 
 MethodHandle asListMH = publicLookup.findStatic(Arrays.class, "asList", mt);
@@ -114,7 +114,7 @@ MethodHandle asListMH = publicLookup.findStatic(Arrays.class, "asList", mt);
 
 让我们创建一个方法句柄，其行为类似于`Integer`类的构造函数，接受一个`String`属性:
 
-```
+```java
 MethodType mt = MethodType.methodType(void.class, String.class);
 
 MethodHandle newIntegerMH = publicLookup.findConstructor(Integer.class, mt);
@@ -126,7 +126,7 @@ MethodHandle newIntegerMH = publicLookup.findConstructor(Integer.class, mt);
 
 让我们开始定义`Book` 类:
 
-```
+```java
 public class Book {
 
     String id;
@@ -139,7 +139,7 @@ public class Book {
 
 以方法句柄和声明的属性之间的直接访问可见性为前提，我们可以创建一个行为类似于 getter 的方法句柄:
 
-```
+```java
 MethodHandle getTitleMH = lookup.findGetter(Book.class, "title", String.class);
 ```
 
@@ -151,7 +151,7 @@ MethodHandle getTitleMH = lookup.findGetter(Book.class, "title", String.class);
 
 让我们开始向`Book`类添加一个`private`方法:
 
-```
+```java
 private String formatBook() {
     return id + " > " + title;
 }
@@ -159,7 +159,7 @@ private String formatBook() {
 
 现在我们可以创建一个行为与`formatBook()`方法完全相同的方法句柄:
 
-```
+```java
 Method formatBookMethod = Book.class.getDeclaredMethod("formatBook");
 formatBookMethod.setAccessible(true);
 
@@ -178,7 +178,7 @@ MethodHandle formatBookMH = lookup.unreflect(formatBookMethod);
 
 让我们看看如何将`invoke()`用于一个装箱的参数:
 
-```
+```java
 MethodType mt = MethodType.methodType(String.class, char.class, char.class);
 MethodHandle replaceMH = publicLookup.findVirtual(String.class, "replace", mt);
 
@@ -197,7 +197,7 @@ assertEquals("java", output);
 
 实际上，这允许我们从`int`值的`array`开始创建`Integer`的`List`:
 
-```
+```java
 MethodType mt = MethodType.methodType(List.class, Object[].class);
 MethodHandle asList = publicLookup.findStatic(Arrays.class, "asList", mt);
 
@@ -214,7 +214,7 @@ assertThat(Arrays.asList(1,2), is(list));
 
 让我们看看如何使用方法句柄来`sum`两个`int`值:
 
-```
+```java
 MethodType mt = MethodType.methodType(int.class, int.class, int.class);
 MethodHandle sumMH = lookup.findStatic(Integer.class, "sum", mt);
 
@@ -233,7 +233,7 @@ assertEquals(12, sum);
 
 让我们看看如何扩展方法句柄来检查数组中的元素是否相等:
 
-```
+```java
 MethodType mt = MethodType.methodType(boolean.class, Object.class);
 MethodHandle equals = publicLookup.findVirtual(String.class, "equals", mt);
 
@@ -250,7 +250,7 @@ assertTrue((boolean) methodHandle.invoke(new Object[] { "java", "java" }));
 
 让我们看看如何执行连接，将后缀绑定到我们的`concatMH`:
 
-```
+```java
 MethodType mt = MethodType.methodType(String.class, String.class);
 MethodHandle concatMH = publicLookup.findVirtual(String.class, "concat", mt);
 

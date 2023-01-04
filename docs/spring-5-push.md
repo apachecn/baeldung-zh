@@ -12,7 +12,7 @@ Spring 5 带来的新特性之一是 Jakarta EE 8 Servlet 4.0 API 附带的服�
 
 让我们从定义将要使用的依赖关系开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-webmvc</artifactId>
@@ -50,7 +50,7 @@ Spring 5 带来的新特性之一是 Jakarta EE 8 Servlet 4.0 API 附带的服�
 
 为了演示集成，我们将使用一个资源`logo.png`创建`demo.jsp`页面:
 
-```
+```java
 <%@ page language="java" contentType="text/html; charset=UTF-8"
   pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -72,7 +72,7 @@ Spring 5 带来的新特性之一是 Jakarta EE 8 Servlet 4.0 API 附带的服�
 
 我们还将使用`PushController`控制器公开两个端点——一个使用服务器推送，另一个不使用:
 
-```
+```java
 @Controller
 public class PushController {
 

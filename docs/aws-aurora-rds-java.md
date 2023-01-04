@@ -14,7 +14,7 @@
 
 让我们创建一个 Java Maven 项目并将 AWS SDK 添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>aws-java-sdk</artifactId>
@@ -46,7 +46,7 @@
 
 为此，我们将使用`AmazonRDS `接口:
 
-```
+```java
 AWSCredentials credentials = new BasicAWSCredentials(
   "<AWS accesskey>", 
   "<AWS secretkey>"
@@ -55,7 +55,7 @@ AWSCredentials credentials = new BasicAWSCredentials(
 
 然后用适当的`region`和`credentials`配置`RDS Builder `:
 
-```
+```java
 AmazonRDSClientBuilder.standard().withCredentials(credentials)
   .withRegion(Regions.AP_SOUTHEAST_2)
   .build(); 
@@ -78,7 +78,7 @@ AmazonRDSClientBuilder.standard().withCredentials(credentials)
 *   对于存储类型，指定一个`Amazon EBS volume`类型。名单可在[这里](https://web.archive.org/web/20220628145323/https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html)获得
 *   GiB 中的存储分配
 
-```
+```java
 CreateDBInstanceRequest request = new CreateDBInstanceRequest();
 request.setDBInstanceIdentifier("baeldung");   
 request.setDBInstanceClass("db.t2.micro");
@@ -93,7 +93,7 @@ request.setAllocatedStorage(10);
 
 现在让我们通过调用`createDBInstance()` : 来创建我们的第一个实例
 
-```
+```java
 amazonRDS.createDBInstance(request); 
 ```
 
@@ -107,7 +107,7 @@ amazonRDS.createDBInstance(request);
 
 **要列出 RDS 实例，我们需要使用`AmazonRDS` 接口的`describeDBInstances`:**
 
-```
+```java
 DescribeDBInstancesResult result = amazonRDS.describeDBInstances();
 List<DBInstance> instances = result.getDBInstances();
 for (DBInstance instance : instances) {
@@ -127,7 +127,7 @@ for (DBInstance instance : instances) {
 
 让我们创建一个 db.properties 文件并添加数据库信息:
 
-```
+```java
 db_hostname=<Endpoint URL>
 db_username=username
 db_password=password
@@ -136,7 +136,7 @@ db_database=mydb
 
 创建文件后，让我们连接到 RDS 实例并创建名为`jdbc_test`的表:
 
-```
+```java
 Properties prop = new Properties();
 InputStream input = AwsRdsDemo.class.getClassLoader().getResourceAsStream("db.properties");
 prop.load(input);
@@ -146,7 +146,7 @@ String db_password = prop.getProperty("db_password");
 String db_database = prop.getProperty("db_database"); 
 ```
 
-```
+```java
 Connection conn = DriverManager.getConnection(jdbc_url, db_username, db_password);
 Statement statement = conn.createStatement();
 String sql = "CREATE TABLE IF NOT EXISTS jdbc_test (id SERIAL PRIMARY KEY, content VARCHAR(80))";
@@ -155,14 +155,14 @@ statement.executeUpdate(sql);
 
 **之后，我们将从表中插入和检索数据:**
 
-```
+```java
 PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO jdbc_test (content) VALUES (?)");
 String content = "" + UUID.randomUUID();
 preparedStatement.setString(1, content);
 preparedStatement.executeUpdate(); 
 ```
 
-```
+```java
 String sql = "SELECT  count(*) as count FROM jdbc_test";
 ResultSet resultSet = statement.executeQuery(sql);
 while (resultSet.next()) {
@@ -177,7 +177,7 @@ while (resultSet.next()) {
 
 `skipFinalSanpshot `用于指定我们是否要在删除实例之前拍摄快照:
 
-```
+```java
 DeleteDBInstanceRequest request = new DeleteDBInstanceRequest();
 request.setDBInstanceIdentifier(identifier);
 request.setSkipFinalSnapshot(true);

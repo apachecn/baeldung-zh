@@ -25,7 +25,7 @@
 
 让我们看看如何设置两个变量，`DISABLE_AUTH`和`DB_ENGINE`:
 
-```
+```java
 Jenkinsfile (Declarative Pipeline)
 pipeline {
     //Setting the environment variables DISABLE_AUTH and DB_ENGINE
@@ -55,7 +55,7 @@ pipeline {
 
 现在，我们可以通过将名称括在`${}`中来使用我们的任何环境变量:
 
-```
+```java
 echo "Database engine is ${DB_ENGINE}"
 ```
 

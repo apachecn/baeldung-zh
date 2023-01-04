@@ -18,7 +18,7 @@ Swagger-UI 是 HTML、Javascript 和 CSS 文件的集合，它基于 OpenAPI 规
 
 让我们直接从添加 [Springdoc-OpenAPI](https://web.archive.org/web/20220813175644/https://search.maven.org/search?q=springdoc-openapi-ui) 依赖关系开始:
 
-```
+```java
 <dependency>
     <groupId>org.springdoc</groupId>
     <artifactId>springdoc-openapi-ui</artifactId>
@@ -40,7 +40,7 @@ Swagger-UI 是 HTML、Javascript 和 CSS 文件的集合，它基于 OpenAPI 规
 
 此外，让我们使用 [`@OpenAPIDefinition`](https://web.archive.org/web/20220813175644/https://docs.swagger.io/swagger-core/v2.2.0/apidocs/io/swagger/v3/oas/annotations/OpenAPIDefinition.html) 为我们的`User`API 添加描述、服务条款和其他元信息:
 
-```
+```java
 @Configuration
 @OpenAPIDefinition(
   info [[email protected]](/web/20220813175644/https://www.baeldung.com/cdn-cgi/l/email-protection)(
@@ -75,7 +75,7 @@ public class OpenAPISecurityConfiguration {}
 
 类似地，OpenAPI 文档将在`http://localhost:8080/v3/api-docs`发布:
 
-```
+```java
 {
     "openapi": "3.0.1",
     "info": {
@@ -98,7 +98,7 @@ Springdoc-OpenAPI 基于我们的应用程序 REST APIs 生成文档。此外，
 
 首先，让我们声明 JWT 认证只用于特定的操作。让我们来定义这种配置:
 
-```
+```java
 @Configuration
 @SecurityScheme(
   name = "Bearer Authentication",
@@ -115,7 +115,7 @@ public class OpenAPI30Configuration {}
 
 因为我们喜欢只保护特定的操作，所以我们需要指定需要认证的操作。对于操作级认证，我们应该使用 [`@SecurityRequirement`](https://web.archive.org/web/20220813175644/https://docs.swagger.io/swagger-core/v2.1.1/apidocs/io/swagger/v3/oas/annotations/security/SecurityRequirement.html) 对操作进行标注:
 
-```
+```java
 @Operation(summary = "Delete user", description = "Delete user")
 @SecurityRequirement(name = "Bearer Authentication")
 @DeleteMapping
@@ -147,7 +147,7 @@ public String deleteUser(Authentication authentication) {}
 
 类似地，我们可以为一个类中的所有操作提供 OpenAPI 认证。在包含所有 API 的类上声明`@SecurityRequirement` 注释。这样做将为该特定类中的所有 API 提供身份验证:
 
-```
+```java
 @RequestMapping("/api/user")
 @RestController
 @SecurityRequirement(name = "bearerAuth")
@@ -163,7 +163,7 @@ public class UserApi {}
 
 通常，我们更喜欢对应用程序中的所有 API 进行 OpenAPI 认证。**对于这些情况，我们可以使用 Spring `@Bean` 注释**在全局级别声明安全性:
 
-```
+```java
 @Configuration
 public class OpenAPI30Configuration {
 @Bean

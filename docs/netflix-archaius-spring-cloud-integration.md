@@ -34,7 +34,7 @@
 
 可选地，我们也可以将`spring-cloud-netflix`添加到我们的`dependencyManagement `部分，并依赖它的工件版本规范:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.cloud</groupId>
@@ -61,7 +61,7 @@
 
 一旦我们添加了所需的依赖项，我们将能够访问由框架管理的属性:
 
-```
+```java
 DynamicStringProperty dynamicProperty 
   = DynamicPropertyFactory.getInstance()
   .getStringProperty("baeldung.archaius.property", "default value");
@@ -77,14 +77,14 @@ String propertyCurrentValue = dynamicProperty.get();
 
 因此，让我们用一些任意属性将它添加到我们的资源文件夹中:
 
-```
+```java
 #config.properties
 baeldung.archaius.properties.one=one FROM:config.properties
 ```
 
 现在，我们需要一种方法来检查任何特定时刻的属性值。在这种情况下，我们将创建一个`RestController`,以 JSON 响应的形式检索值:
 
-```
+```java
 @RestController
 public class ConfigPropertiesController {
 
@@ -146,7 +146,7 @@ Spring Cloud 库提供的另一个有用的特性是定义了一个 Actuator `En
 
 该值被解析为由逗号分隔的 URL 列表，因此，例如，我们可以在启动应用程序时添加这个系统属性:
 
-```
+```java
 -Darchaius.configurationSource.additionalUrls=
   "classpath:other-dir/extra.properties,
   file:///home/user/other-extra.properties"
@@ -170,7 +170,7 @@ Archaius 将首先读取`config.properties`文件，然后按照指定的顺序�
 
 为了简单起见，我们将看到一个例子，在这个例子中，我们配置了一个类似于缺省值`config.properties`的属性文件，但区别在于它比 Spring 环境和应用程序属性的其余部分具有更高的优先级:
 
-```
+```java
 @Bean
 public AbstractConfiguration addApplicationPropertiesSource() {
     URL configPropertyURL = (new ClassPathResource("other-config.properties")).getURL();

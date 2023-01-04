@@ -66,7 +66,7 @@ Cassandra 中的主键**由一个或多个分区键和零个或多个集群键�
 
 让我们用一个例子来理解这一点—一个包含应用程序日志和一个主键的简单表格:
 
-```
+```java
 CREATE TABLE application_logs (
   id                    INT,
   app_name              VARCHAR,
@@ -97,7 +97,7 @@ CREATE TABLE application_logs (
 
 另一方面，通过在`where`子句中使用分区键，Cassandra 使用一致散列技术来识别集群中节点的确切节点和确切分区范围。因此，获取数据查询既快速又高效:
 
-```
+```java
 select * application_logs where app_name = 'app1';
 ```
 
@@ -109,7 +109,7 @@ select * application_logs where app_name = 'app1';
 
 下面是一个表定义的例子，它将`app_name`和`env`列组合在一起，形成一个复合分区键:
 
-```
+```java
 CREATE TABLE application_logs (
   id                    INT,
   app_name              VARCHAR,
@@ -140,7 +140,7 @@ CREATE TABLE application_logs (
 
 最重要的是，**为了有效地检索数据，fetch 查询中的`where`子句必须按照主键定义**中指定的顺序包含所有组合分区键:
 
-```
+```java
 select * application_logs where app_name = 'app1' and env = 'prod';
 ```
 
@@ -154,7 +154,7 @@ select * application_logs where app_name = 'app1' and env = 'prod';
 
 让我们看一个例子表定义，它有聚集键和复合分区键:
 
-```
+```java
 CREATE TABLE application_logs (
   id                    INT,
   app_name              VARCHAR,
@@ -175,7 +175,7 @@ CREATE TABLE application_logs (
 
 默认情况下，Cassandra 存储引擎按照聚类键列的升序对数据进行排序，但是**我们可以通过使用表定义**中的`WITH CLUSTERING ORDER BY `子句来控制聚类列的排序顺序:
 
-```
+```java
 CREATE TABLE application_logs (
   id                    INT,
   app_name              VARCHAR,
@@ -193,7 +193,7 @@ WITH CLUSTERING ORDER BY (hostname ASC, log_datetime DESC);
 
 现在，让我们看一个在`where`子句中对列进行聚类的数据获取查询示例:
 
-```
+```java
 select * application_logs 
 where 
 app_name = 'app1' and env = 'prod' 

@@ -20,7 +20,7 @@ JPA 默认表名的生成是特定于它的实现的。
 
 设置自定义 SQL 表名最简单的方法是用`@` `javax.persistence.Table`标注实体，并定义其名称参数:
 
-```
+```java
 @Entity
 @Table(name = "ARTICLES")
 public class Article {
@@ -30,7 +30,7 @@ public class Article {
 
 我们还可以将表名存储在静态最终变量中:
 
-```
+```java
 @Entity
 @Table(name = Article.TABLE_NAME)
 public class Article {
@@ -43,19 +43,19 @@ public class Article {
 
 默认情况下，在 JPQL 查询中，我们使用实体类名:
 
-```
+```java
 select * from Article
 ```
 
 但是我们可以通过在`@javax.persistence.Entity`注释中定义 name 参数来改变它:
 
-```
+```java
 @Entity(name = "MyArticle")
 ```
 
 然后我们将 JPQL 查询改为:
 
-```
+```java
 select * from MyArticle
 ```
 

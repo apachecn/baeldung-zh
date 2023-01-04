@@ -12,7 +12,7 @@
 
 首先，我们需要导入数据。Tablesaw 支持各种格式，包括我们数据集的格式 CSV。因此，让我们从数据集的 CSV 文件加载数据集开始:
 
-```
+```java
 CsvReadOptions csvReadOptions =
     CsvReadOptions.builder(file)
         .separator(',')
@@ -30,7 +30,7 @@ table = Table.read().usingOptions(csvReadOptions);
 
 让我们使用`structure()`方法来检查表格的设计。它返回另一个包含列名、索引和数据类型的表:
 
-```
+```java
  Structure of avocado.csv         
  Index  |  Column Name   |  Column Type  |
 ------------------------------------------
@@ -43,7 +43,7 @@ table = Table.read().usingOptions(csvReadOptions);
 
 接下来，让我们通过使用`shape()`方法来检查它的形状:
 
-```
+```java
 assertThat(table.shape()).isEqualTo("avocado.csv: 18249 rows X 14 cols");
 ```
 
@@ -61,7 +61,7 @@ Tablesaw 支持多种[列类型](https://web.archive.org/web/20221125192801/http
 
 例如，在 avocado 数据集中，region 和 type 列属于类型`StringColumn`。它们在列向量中的重复值被更有效地存储，并指向文本的同一个实例:
 
-```
+```java
 StringColumn type = table.stringColumn("type");
 List<String> conventional = type.where(type.isEqualTo("conventional")).asList().stream()
     .limit(2)
@@ -81,13 +81,13 @@ Tablesaw 中有四种可用的时态类型。它们映射到对应的 Java 对�
 
 让我们通过调用在每种类型的可用列上定义的静态方法`.create()`来创建一个新列。例如，要使一个`TimeColumn`命名为`time`，我们写:
 
-```
+```java
 TimeColumn time = TimeColumn.create("Time");
 ```
 
 然后可以使用`.addColumns()` 方法将该列添加到表中:
 
-```
+```java
 Table table = Table.create("test");
 table.addColumns(time);
 assertThat(table.columnNames()).contains("time");
@@ -97,7 +97,7 @@ assertThat(table.columnNames()).contains("time");
 
 让我们使用`.append()`方法将数据添加到列的末尾:
 
-```
+```java
 DoubleColumn averagePrice = table.doubleColumn("AveragePrice");
 averagePrice.append(1.123);
 assertThat(averagePrice.get(averagePrice.size() - 1)).isEqualTo(1.123);
@@ -105,7 +105,7 @@ assertThat(averagePrice.get(averagePrice.size() - 1)).isEqualTo(1.123);
 
 对于表，我们必须为每一列提供一个值，以确保所有列至少有一个值。否则，当创建具有不同大小的列的表时，它将抛出一个`IllegalArgumentException`:
 
-```
+```java
 DoubleColumn averagePrice2 = table.doubleColumn("AveragePrice").copy();
 averagePrice2.setName("AveragePrice2");
 averagePrice2.append(1.123);
@@ -114,13 +114,13 @@ assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> table
 
 我们使用`the .set()`方法来改变列向量中的特定值。要使用它，我们必须知道我们想要改变的值的索引:
 
-```
+```java
 stringColumn.set(2, "Baeldung");
 ```
 
 从列中删除数据可能会有问题，尤其是在表的情况下。因此， **Tablesaw 不允许从列向量**中删除值。相反，让我们使用`.setMissing()`将希望删除的值标记为缺失，并将每个值的索引传递给这个方法:
 
-```
+```java
 DoubleColumn averagePrice = table.doubleColumn("AveragePrice").setMissing(0);
 assertThat(averagePrice.get(0)).isNull();
 ```
@@ -131,7 +131,7 @@ assertThat(averagePrice.get(0)).isNull();
 
 接下来，让我们对之前导入的数据进行排序。首先，我们将根据一组列对表格行进行排序。为此，我们**使用了`.sortAscending()`和`.sortDescending()`方法**，它们接受列的名称。让我们排序以获取数据集中最早和最近的日期:
 
-```
+```java
 Table ascendingDateSortedTable = table.sortAscendingOn("Date");
 assertThat(ascendingDateSortedTable.dateColumn("Date").get(0)).isEqualTo(LocalDate.parse("2015-01-04"));
 Table descendingDateSortedTable = table.sortDescendingOn("Date");
@@ -140,7 +140,7 @@ assertThat(descendingDateSortedTable.dateColumn("Date").get(0)).isEqualTo(LocalD
 
 然而，**这些方法都非常局限**。例如，我们不能混合升序和降序排序。**为了解决这些限制，我们使用了`.sortOn()`方法**。默认情况下，它接受一组列名并对它们进行排序。为了对特定的列进行降序排序，我们在列名前面加了一个减号“-”。例如，让我们按年份和最高平均价格降序排列数据:
 
-```
+```java
 Table ascendingYearAndAveragePriceSortedTable = table.sortOn("year", "-AveragePrice");
 assertThat(ascendingYearAndAveragePriceSortedTable.intColumn("year").get(0)).isEqualTo(2015);
 assertThat(ascendingYearAndAveragePriceSortedTable.numberColumn("AveragePrice").get(0)).isEqualTo(2.79);
@@ -160,7 +160,7 @@ assertThat(ascendingYearAndAveragePriceSortedTable.numberColumn("AveragePrice").
 
 让我们通过获得 2017 年平均价格仅高于 2 美元的数据表来实践这一点:
 
-```
+```java
 DateColumn dateTable = table.dateColumn("Date");
 DoubleColumn averagePrice = table.doubleColumn("AveragePrice");
 Selection selection = dateTable.isInYear(2017).and(averagePrice.isGreaterThan(2D));
@@ -177,14 +177,14 @@ assertThat(table2017.doubleColumn("AveragePrice")).allMatch(avrgPrice -> avrgPri
 
 处理完数据后，我们希望从中提取一些真知灼见。我们使用。`summarize()`汇总数据的方法来了解它。例如，从鳄梨数据集中，我们提取平均价格的最小值、最大值、平均值和标准差:
 
-```
+```java
 Table summary = table.summarize("AveragePrice", max, min, mean, stdDev).by("year");
 System.out.println(summary.print());
 ```
 
 首先，我们将想要聚合的列名和列表`AggregateFunction`传递给`.summarize()`方法。接下来，我们使用。`by()`法。最后，我们在标准输出中打印结果:
 
-```
+```java
  avocado.csv summary                                               
  year  |  Mean [AveragePrice]  |  Max [AveragePrice]  |  Min [AveragePrice]  |  Std. Deviation [AveragePrice]  |
 ----------------------------------------------------------------------------------------------------------------
@@ -200,7 +200,7 @@ Tablesaw 为最常见的操作提供了 [`AggregateFunction`](https://web.archiv
 
 到目前为止，我们一直将数据打印到标准输出。在运行中验证我们的结果时，打印到控制台是很好的，但是我们需要将数据保存到文件中，以便其他人可以重用这些结果。所以，让我们直接在表上使用`.write()`方法:
 
-```
+```java
 summary.write().csv("summary.csv");
 ```
 

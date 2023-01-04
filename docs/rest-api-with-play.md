@@ -18,7 +18,7 @@
 
 让我们使用`sbt`命令通过`play-java-seed`创建一个名为`student-api`的新应用程序:
 
-```
+```java
 sbt new playframework/play-java-seed.g8
 ```
 
@@ -26,7 +26,7 @@ sbt new playframework/play-java-seed.g8
 
 有了我们的应用程序框架，让我们导航到`student-api/app/models`并创建一个用于处理学生信息的 Java bean:
 
-```
+```java
 public class Student {
     private String firstName;
     private String lastName;
@@ -39,7 +39,7 @@ public class Student {
 
 我们现在将创建一个简单的数据存储——由一个用于学生数据的`HashMap –`支持，使用助手方法来执行 CRUD 操作:
 
-```
+```java
 public class StudentStore {
     private Map<Integer, Student> students = new HashMap<>();
 
@@ -83,7 +83,7 @@ public class StudentStore {
 
 让我们注射它:
 
-```
+```java
 private HttpExecutionContext ec;
 private StudentStore studentStore;
 
@@ -102,7 +102,7 @@ public StudentController(HttpExecutionContext ec, StudentStore studentStore) {
 
 因此，让我们创建`student-api/app/utils`包并在其中添加`Util.java`:
 
-```
+```java
 public class Util {
     public static ObjectNode createResponse(Object response, boolean ok) {
         ObjectNode result = Json.newObject();
@@ -125,7 +125,7 @@ public class Util {
 
 映射为一个`POST `动作，该方法处理`Student`对象的创建:
 
-```
+```java
 public CompletionStage<Result> create(Http.Request request) {
     JsonNode json = request.body().asJson();
     return supplyAsync(() -> {
@@ -156,7 +156,7 @@ public CompletionStage<Result> create(Http.Request request) {
 
 对`http://localhost:9000/` 的`PUT `请求命中`StudentController.` `update`方法，该方法通过调用`StudentStore`的`updateStudent `方法更新学生信息:
 
-```
+```java
 public CompletionStage<Result> update(Http.Request request) {
     JsonNode json = request.body().asJson();
     return supplyAsync(() -> {
@@ -179,7 +179,7 @@ public CompletionStage<Result> update(Http.Request request) {
 
 为了检索学生，我们在对`http://localhost:9000/:id`的`GET `请求中传递学生的 id 作为路径参数。这将打击`retrieve `行动:
 
-```
+```java
 public CompletionStage<Result> retrieve(int id) {
     return supplyAsync(() -> {
         final Optional<Student> studentOptional = studentStore.getStudent(id);
@@ -195,7 +195,7 @@ public CompletionStage<Result> retrieve(int id) {
 
 `delete `动作被映射到`http://localhost:9000/:id`。我们提供了`id`来标识要删除的记录:
 
-```
+```java
 public CompletionStage<Result> delete(int id) {
     return supplyAsync(() -> {
         boolean status = studentStore.deleteStudent(id);
@@ -211,7 +211,7 @@ public CompletionStage<Result> delete(int id) {
 
 最后，`listStudents`动作返回到目前为止存储的所有学生的列表。它作为一个`GET`请求被映射到`http://localhost:9000/`:
 
-```
+```java
 public CompletionStage<Result> listStudents() {
     return supplyAsync(() -> {
         Set<Student> result = studentStore.getAllStudents();
@@ -226,7 +226,7 @@ public CompletionStage<Result> listStudents() {
 
 设置好控制器动作后，我们现在可以通过打开文件`student-api/conf/routes`并添加这些路线来映射它们:
 
-```
+```java
 GET     /                           controllers.StudentController.listStudents()
 GET     /:id                        controllers.StudentController.retrieve(id:Int)
 POST    /                           controllers.StudentController.create(request: Request)
@@ -245,7 +245,7 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 我们现在可以通过向`http://localhost:9000/`发送请求并添加适当的上下文来对我们的 API 运行测试。从浏览器运行基本路径应该会输出:
 
-```
+```java
 {
      "isSuccessful":true,
      "body":[]
@@ -256,7 +256,7 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 让我们打开一个终端窗口，执行 curl 命令来**添加一个学生**:
 
-```
+```java
 curl -X POST -H "Content-Type: application/json" \
  -d '{"firstName":"John","lastName":"Baeldung","age": 18}' \
  http://localhost:9000/
@@ -264,7 +264,7 @@ curl -X POST -H "Content-Type: application/json" \
 
 这将返回新创建的学生:
 
-```
+```java
 { 
     "isSuccessful":true,
     "body":{ 
@@ -278,7 +278,7 @@ curl -X POST -H "Content-Type: application/json" \
 
 运行上述测试后，从浏览器加载`http://localhost:9000`应该会给出:
 
-```
+```java
 { 
     "isSuccessful":true,
     "body":[ 
@@ -296,7 +296,7 @@ curl -X POST -H "Content-Type: application/json" \
 
 为了**删除一条记录**我们发送一个`DELETE` 请求:
 
-```
+```java
 curl -X DELETE http://localhost:9000/0
 { 
     "isSuccessful":true,
@@ -306,7 +306,7 @@ curl -X DELETE http://localhost:9000/0
 
 在上面的测试中，我们删除了在第一次测试中创建的记录，现在让**再次创建它，以便我们可以测试`update`方法**:
 
-```
+```java
 curl -X POST -H "Content-Type: application/json" \
 -d '{"firstName":"John","lastName":"Baeldung","age": 18}' \
 http://localhost:9000/
@@ -323,7 +323,7 @@ http://localhost:9000/
 
 现在让我们**更新记录**，将名字设置为“Andrew ”,年龄设置为 30:
 
-```
+```java
 curl -X PUT -H "Content-Type: application/json" \
 -d '{"firstName":"Andrew","lastName":"Baeldung","age": 30,"id":0}' \
 http://localhost:9000/
@@ -342,13 +342,13 @@ http://localhost:9000/
 
 让我们创建一些额外的虚拟记录，我们将添加两个:John Doe 和 Sam Baeldung:
 
-```
+```java
 curl -X POST -H "Content-Type: application/json" \
 -d '{"firstName":"John","lastName":"Doe","age": 18}' \
 http://localhost:9000/
 ```
 
-```
+```java
 curl -X POST -H "Content-Type: application/json" \
 -d '{"firstName":"Sam","lastName":"Baeldung","age": 25}' \
 http://localhost:9000/
@@ -356,7 +356,7 @@ http://localhost:9000/
 
 现在，让我们得到所有的记录:
 
-```
+```java
 curl -X GET http://localhost:9000/
 { 
     "isSuccessful":true,

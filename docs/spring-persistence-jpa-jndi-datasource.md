@@ -24,7 +24,7 @@
 
 假设数据库服务器与应用程序容器运行在同一台机器上，目标数据库名为`postgres`，用户名为`baeldung`，密码为`pass1234`，资源看起来如下:
 
-```
+```java
 <Resource name="jdbc/BaeldungDatabase" 
   auth="Container"
   type="javax.sql.DataSource" 
@@ -48,7 +48,7 @@
 
 我们还必须在`<tomcat_home>/conf/context` `.xml,` 中的`<Context>`元素内定义一个`ResourceLink`,如下所示:
 
-```
+```java
 <ResourceLink 
   name="jdbc/BaeldungDatabase" 
   global="jdbc/BaeldungDatabase" 
@@ -65,7 +65,7 @@
 
 我们将从定义 Spring 上下文的配置开始(请记住，我们这里关注的是 JNDI，并且假设您已经了解了 Spring 配置的基础):
 
-```
+```java
 @Configuration
 @EnableTransactionManagement
 @PropertySource("classpath:persistence-jndi.properties")
@@ -107,7 +107,7 @@ public class PersistenceJNDIConfig {
 
 为了创建我们的`dataSource` bean，我们需要寻找我们在应用程序容器中定义的 JNDI 资源。我们将把它存储在`persistence-jndi.properties`键中(在其他属性中):
 
-```
+```java
 jdbc.url=java:comp/env/jdbc/BaeldungDatabase
 ```
 
@@ -117,7 +117,7 @@ jdbc.url=java:comp/env/jdbc/BaeldungDatabase
 
 我们将使用一个带有`@Entity`注释的简单模型，并生成一个`id`和一个`name`:
 
-```
+```java
 @Entity
 public class Foo {
 
@@ -135,7 +135,7 @@ public class Foo {
 
 让我们定义一个简单的存储库:
 
-```
+```java
 @Repository
 public class FooDao {
 
@@ -151,7 +151,7 @@ public class FooDao {
 
 最后，让我们创建一个简单的服务:
 
-```
+```java
 @Service
 @Transactional
 public class FooService {

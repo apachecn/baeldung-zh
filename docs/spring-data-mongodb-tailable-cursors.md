@@ -20,7 +20,7 @@ Spring Data MongoDB 项目帮助我们利用反应式数据库功能，包括可
 
 首先，我们将使用简单的`Log`实体:
 
-```
+```java
 @Document
 public class Log {
     private @Id String id;
@@ -32,7 +32,7 @@ public class Log {
 
 其次，我们将日志存储在我们的 MongoDB capped 集合中。 [Capped 集合](https://web.archive.org/web/20220625230955/https://docs.mongodb.com/manual/core/capped-collections/)是固定大小的集合，根据插入顺序插入和检索文档。我们可以用`MongoOperations.createCollection`来创建它们:
 
-```
+```java
 db.createCollection(COLLECTION_NAME, new CreateCollectionOptions()
   .capped(true)
   .sizeInBytes(1024)
@@ -43,7 +43,7 @@ db.createCollection(COLLECTION_NAME, new CreateCollectionOptions()
 
 第三，我们将使用适当的 [Spring Boot 启动器依赖关系](https://web.archive.org/web/20220625230955/https://search.maven.org/search?q=a:spring-boot-starter-data-mongodb-reactive):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
@@ -59,7 +59,7 @@ db.createCollection(COLLECTION_NAME, new CreateCollectionOptions()
 
 当新文档到达一个有上限的集合并匹配[过滤查询](/web/20220625230955/https://www.baeldung.com/queries-in-spring-data-mongodb)时，一个可定制的游标保持打开并发出数据——一个`Flux`实体:
 
-```
+```java
 private Disposable subscription;
 
 public WarnLogsCounter(ReactiveMongoOperations template) {
@@ -76,7 +76,7 @@ public WarnLogsCounter(ReactiveMongoOperations template) {
 
 最后，我们应该释放订阅以关闭流:
 
-```
+```java
 public void close() {
     this.subscription.dispose();
 }
@@ -92,7 +92,7 @@ MongoDB 也不例外。请查看关于 MongoDB 的 Spring Data Reactive Reposito
 
 此外， **MongoDB reactive repositories 通过用`@Tailable`注释查询方法来支持无限流。**我们可以注释任何返回`Flux`的存储库方法或其他能够发出多个元素的反应类型:
 
-```
+```java
 public interface LogsRepository extends ReactiveCrudRepository<Log, String> {
     @Tailable
     Flux<Log> findByLevel(LogLevel level);
@@ -101,7 +101,7 @@ public interface LogsRepository extends ReactiveCrudRepository<Log, String> {
 
 让我们使用这个可定制的存储库方法来统计`INFO`日志:
 
-```
+```java
 private Disposable subscription;
 
 public InfoLogsCounter(LogsRepository repository) {
@@ -114,7 +114,7 @@ public InfoLogsCounter(LogsRepository repository) {
 
 同样，对于`WarnLogsCounter`，我们应该处理订阅以关闭流:
 
-```
+```java
 public void close() {
     this.subscription.dispose();
 }
@@ -128,7 +128,7 @@ public void close() {
 
 Spring Data MongoDB 与**一起提供了一个默认实现，能够为`TailableCursorRequest:`创建和执行`Task`实例**
 
-```
+```java
 private String collectionName;
 private MessageListenerContainer container;
 private AtomicInteger counter = new AtomicInteger();
@@ -161,7 +161,7 @@ private TailableCursorRequest<Log> getTailableCursorRequest() {
 
 此外，我们不应该忘记在不再需要容器时停止使用它:
 
-```
+```java
 public void close() {
     container.stop();
 }

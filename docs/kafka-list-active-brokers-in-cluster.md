@@ -10,7 +10,7 @@
 
 出于本文的目的，让我们使用下面的 **`docker-compose.yml`文件来建立一个双节点 Kafka 集群**:
 
-```
+```java
 $ cat docker-compose.yml
 ---
 version: '2'
@@ -53,13 +53,13 @@ services:
 
 现在，让我们使用 [`docker-compose`](/web/20220526054627/https://www.baeldung.com/ops/docker-compose) 命令加速 Kafka 集群:
 
-```
+```java
 $ docker-compose up -d
 ```
 
 我们可以验证 Zookeeper 服务器正在监听端口`2181`，而 Kafka 代理正在分别监听端口`29092`和`39092,`:
 
-```
+```java
 $ ports=(2181 29092 39092)
 $ for port in $ports
 do
@@ -80,7 +80,7 @@ Connection to localhost port 39092 [tcp/*] succeeded!
 
 首先，让我们连接到运行于`localhost:2181`的 Zookeeper 服务器:
 
-```
+```java
 $ /usr/local/bin/zookeeper-shell localhost:2181
 Connecting to localhost:2181
 Welcome to ZooKeeper! 
@@ -88,14 +88,14 @@ Welcome to ZooKeeper!
 
 一旦我们连接到 Zookeeper 服务器，我们就可以执行**典型的文件系统命令，比如`ls`来获取存储在服务器中的元数据信息**。让我们找到目前还活着的经纪人的 id:
 
-```
+```java
 ls /brokers/ids
 [1, 2]
 ```
 
 我们可以看到目前有两个活跃的代理，id 分别为 1 和 2。使用`get`命令，我们可以获取具有给定 id 的特定代理的更多细节:
 
-```
+```java
 get /brokers/ids/1
 {"features":{},"listener_security_protocol_map":{"PLAINTEXT":"PLAINTEXT","PLAINTEXT_HOST":"PLAINTEXT"},"endpoints":["PLAINTEXT://kafka-1:9092","PLAINTEXT_HOST://localhost:29092"],"jmx_port":-1,"port":9092,"host":"kafka-1","version":5,"timestamp":"1625336133848"}
 get /brokers/ids/2
@@ -106,7 +106,7 @@ get /brokers/ids/2
 
 最后，要退出 Zookeeper shell，我们可以使用`quit`命令:
 
-```
+```java
 quit
 ```
 
@@ -116,7 +116,7 @@ quit
 
 因此，**与`zkCli`的交互就像与`zookeeper-shell`** 的交互一样，所以让我们继续确认我们能够通过`id=1`获得经纪人所需的详细信息:
 
-```
+```java
 $ zkCli -server localhost:2181 get /brokers/ids/1
 Connecting to localhost:2181
 
@@ -134,7 +134,7 @@ WatchedEvent state:SyncConnected type:None path:null
 
 假设我们知道一个代理在`localhost:29092`运行，那么让我们试着找出参与 Kafka 集群的所有活动代理:
 
-```
+```java
 $ kafka-broker-api-versions --bootstrap-server localhost:29092 | awk '/id/{print $1}'
 localhost:39092
 localhost:29092
@@ -152,7 +152,7 @@ localhost:29092
 
 让我们在`functions.sh` 脚本中编写所有的**助手函数:**
 
-```
+```java
 $ cat functions.sh
 #!/bin/bash
 ZOOKEEPER_SERVER="${1:-localhost:2181}"
@@ -162,7 +162,7 @@ ZOOKEEPER_SERVER="${1:-localhost:2181}"
 
 首先，让我们编写 **`get_broker_ids`函数来获取将在内部调用`zkCli`命令的一组活动代理 id**:
 
-```
+```java
 function get_broker_ids {
 broker_ids_out=$(zkCli -server $ZOOKEEPER_SERVER <<EOF
 ls /brokers/ids
@@ -182,7 +182,7 @@ quit
 EOF
 )"
 }
-```
+```java
 
 现在我们有了详细的代理细节，让我们编写`parse_broker_endpoint`函数来获取代理的端点细节:
 
@@ -197,7 +197,7 @@ json="$(echo "$broker_detail"  | grep '^{.*}
 
 现在，让我们编写使用`functions.sh`中定义的助手函数的主脚本`get_all_active_brokers.sh`:
 
-```
+```java
 $ cat get_all_active_brokers.sh
 #!/bin/bash
 . functions.sh "$1"
@@ -219,7 +219,7 @@ get_all_active_brokers
 
 最后，让我们执行`get_all_active_brokers.sh`脚本，这样我们就可以看到双节点 Kafka 集群的活动代理列表:
 
-```
+```java
 $ ./get_all_active_brokers.sh localhost:2181
 broker_id=1,endpoint="PLAINTEXT_HOST://localhost:29092"
 broker_id=2,endpoint="PLAINTEXT_HOST://localhost:39092"
@@ -232,7 +232,7 @@ broker_id=2,endpoint="PLAINTEXT_HOST://localhost:39092"
 在本教程中，我们学习了 shell 命令，如`zookeeper-shell`、`zkCli`和`kafka-broker-api-versions `来获取 Kafka 集群中活动代理的列表。此外，我们编写了一个 **shell 脚本来自动执行在真实场景中查找代理细节**的过程。)"
 echo "$broker_ids_csv" | sed 's/\[//;s/]//;s/,/ /'
 }
-```
+```java
 
 接下来，让我们编写 **`get_broker_details`函数，使用`broker_id`获取详细的代理细节**:
 

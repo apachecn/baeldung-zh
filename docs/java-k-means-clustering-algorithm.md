@@ -63,7 +63,7 @@ K-Means 从 k 个随机放置的质心开始。**质心，顾名思义，是星�
 
 由于数字向量是如此通用的数据结构，我们将使用它们来表示特征`. `下面是我们如何在 Java 中实现特征向量:
 
-```
+```java
 public class Record {
     private final String description;
     private final Map<String, Double> features;
@@ -80,7 +80,7 @@ public class Record {
 
 让我们用 Java 实现这个函数。首先，抽象:
 
-```
+```java
 public interface Distance {
     double calculate(Map<String, Double> f1, Map<String, Double> f2);
 }
@@ -90,7 +90,7 @@ public interface Distance {
 
 让我们看看欧几里德距离的实现:
 
-```
+```java
 public class EuclideanDistance implements Distance {
 
     @Override
@@ -116,7 +116,7 @@ public class EuclideanDistance implements Distance {
 
 质心与普通要素位于同一空间，因此我们可以将其表示为类似于要素:
 
-```
+```java
 public class Centroid {
 
     private final Map<String, Double> coordinates;
@@ -127,7 +127,7 @@ public class Centroid {
 
 现在我们已经有了一些必要的抽象，是时候编写 K-Means 实现了。下面快速浏览一下我们的方法签名:
 
-```
+```java
 public class KMeans {
 
     private static final Random random = new Random();
@@ -157,7 +157,7 @@ public class KMeans {
 
 首先，我们应该计算每个属性的最小值和最大值，然后在每对属性之间生成随机值:
 
-```
+```java
 private static List<Centroid> randomCentroids(List<Record> records, int k) {
     List<Centroid> centroids = new ArrayList<>();
     Map<String, Double> maxs = new HashMap<>();
@@ -197,7 +197,7 @@ private static List<Centroid> randomCentroids(List<Record> records, int k) {
 
 首先，给定一个`Record`，我们应该找到离它最近的质心:
 
-```
+```java
 private static Centroid nearestCentroid(Record record, List<Centroid> centroids, Distance distance) {
     double minimumDistance = Double.MAX_VALUE;
     Centroid nearest = null;
@@ -217,7 +217,7 @@ private static Centroid nearestCentroid(Record record, List<Centroid> centroids,
 
 每个记录属于其最近的质心聚类:
 
-```
+```java
 private static void assignToCluster(Map<Centroid, List<Record>> clusters,  
   Record record, 
   Centroid centroid) {
@@ -236,7 +236,7 @@ private static void assignToCluster(Map<Centroid, List<Record>> clusters,
 
 如果在一次迭代之后，一个质心不包含任何赋值，那么我们不会重新定位它。否则，我们应该将每个属性的质心坐标重新定位到所有分配记录的平均位置:
 
-```
+```java
 private static Centroid average(Centroid centroid, List<Record> records) {
     if (records == null || records.isEmpty()) { 
         return centroid;
@@ -260,7 +260,7 @@ private static Centroid average(Centroid centroid, List<Record> records) {
 
 由于我们可以重新定位单个质心，现在可以实现`relocateCentroids `方法:
 
-```
+```java
 private static List<Centroid> relocateCentroids(Map<Centroid, List<Record>> clusters) {
     return clusters.entrySet().stream().map(e -> average(e.getKey(), e.getValue())).collect(toList());
 }
@@ -274,7 +274,7 @@ private static List<Centroid> relocateCentroids(Map<Centroid, List<Record>> clus
 
 如果分配是相同的，那么算法终止。否则，在跳到下一次迭代之前，我们应该重新定位质心:
 
-```
+```java
 public static Map<Centroid, List<Record>> fit(List<Record> records, 
   int k, 
   Distance distance, 
@@ -322,7 +322,7 @@ Last.fm 通过记录用户所听音乐的细节，建立了每个用户音乐品
 
 要使用这些 API，我们应该从 Last.fm 获取一个 [API 键，并在每个 HTTP 请求中发送它。我们将使用下面的](https://web.archive.org/web/20221116154651/https://www.last.fm/api/authentication)[改进](/web/20221116154651/https://www.baeldung.com/retrofit)服务来调用这些 API:
 
-```
+```java
 public interface LastFmService {
 
     @GET("/2.0/?method=chart.gettopartists&format;=json&limit;=50")
@@ -340,7 +340,7 @@ public interface LastFmService {
 
 所以，让我们在 Last.fm 上找到最受欢迎的艺术家:
 
-```
+```java
 // setting up the Retrofit service
 
 private static List<String> getTop100Artists() throws IOException {
@@ -356,7 +356,7 @@ private static List<String> getTop100Artists() throws IOException {
 
 类似地，我们可以获取顶部的标签:
 
-```
+```java
 private static Set<String> getTop100Tags() throws IOException {
     return lastFm.topTags().execute().body().all();
 }
@@ -364,7 +364,7 @@ private static Set<String> getTop100Tags() throws IOException {
 
 最后，我们可以建立艺术家及其标签频率的数据集:
 
-```
+```java
 private static List<Record> datasetWithTaggedArtists(List<String> artists, 
   Set<String> topTags) throws IOException {
     List<Record> records = new ArrayList<>();
@@ -385,7 +385,7 @@ private static List<Record> datasetWithTaggedArtists(List<String> artists,
 
 现在，我们可以将准备好的数据集提供给 K-Means 实现:
 
-```
+```java
 List<String> artists = getTop100Artists();
 Set<String> topTags = getTop100Tags();
 List<Record> records = datasetWithTaggedArtists(artists, topTags);
@@ -407,7 +407,7 @@ clusters.forEach((key, value) -> {
 
 如果我们运行这段代码，它会将聚类可视化为文本输出:
 
-```
+```java
 ------------------------------ CLUSTER -----------------------------------
 Centroid {classic rock=65.58333333333333, rock=64.41666666666667, british=20.333333333333332, ... }
 David Bowie, Led Zeppelin, Pink Floyd, System of a Down, Queen, blink-182, The Rolling Stones, Metallica, 
@@ -476,7 +476,7 @@ K-Means 的基本属性之一是我们应该预先定义聚类的数量。到目
 
 执行该距离计算的一种方式是使用误差平方和`. ` **误差平方和或 SSE 等于质心与其所有成员之间的平方差之和**:
 
-```
+```java
 public static double sse(Map<Centroid, List<Record>> clustered, Distance distance) {
     double sum = 0;
     for (Map.Entry<Centroid, List<Record>> entry : clustered.entrySet()) {
@@ -493,7 +493,7 @@ public static double sse(Map<Centroid, List<Record>> clustered, Distance distanc
 
 然后，**我们可以对不同的`k`** 值运行 K-Means 算法，并计算每个值的 SSE:
 
-```
+```java
 List<Record> records = // the dataset;
 Distance distance = new EuclideanDistance();
 List<Double> sumOfSquaredErrors = new ArrayList<>();

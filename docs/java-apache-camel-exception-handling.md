@@ -14,7 +14,7 @@ Apache Camel 是一个强大的开源集成框架，实现了几种已知的 T2 
 
 我们需要做的就是将`[camel-spring-boot-starter](https://web.archive.org/web/20221109115315/https://search.maven.org/search?q=a:camel-spring-boot-starter)`添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.camel.springboot</groupId>
     <artifactId>camel-spring-boot-starter</artifactId>
@@ -26,7 +26,7 @@ Apache Camel 是一个强大的开源集成框架，实现了几种已知的 T2 
 
 让我们从定义一个相当基本的故意抛出异常的路由开始:
 
-```
+```java
 @Component
 public class ExceptionThrowingRoute extends RouteBuilder {
 
@@ -58,7 +58,7 @@ public class ExceptionThrowingRoute extends RouteBuilder {
 
 目前，我们的路由不包含任何类型的异常处理，所以当我们运行它时，我们会在应用程序的输出中看到一些难看的东西:
 
-```
+```java
 ...
 10:21:57.087 [main] ERROR c.b.c.e.ExceptionThrowingRoute - Exception Thrown
 10:21:57.094 [main] ERROR o.a.c.p.e.DefaultErrorHandler - Failed delivery for (MessageId: 50979CFF47E7816-0000000000000000 on ExchangeId: 50979CFF47E7816-0000000000000000). 
@@ -83,7 +83,7 @@ java.lang.IllegalArgumentException: An exception happened on purpose
 
 但首先，为了帮助简化我们的代码，我们将定义一个抛出`IllegalArgumentException –` 的专用处理器类。这将使我们的代码更具可读性，并且我们可以在以后的其他路径中重用我们的处理器:
 
-```
+```java
 @Component
 public class IllegalArgumentExceptionThrowingProcessor implements Processor {
 
@@ -99,7 +99,7 @@ public class IllegalArgumentExceptionThrowingProcessor implements Processor {
 
 有了新的处理器，让我们在第一个异常处理路径中使用它:
 
-```
+```java
 @Component
 public class ExceptionHandlingWithDoTryRoute extends RouteBuilder {
 
@@ -132,7 +132,7 @@ public class ExceptionHandlingWithDoTryRoute extends RouteBuilder {
 
 Camel 还提供了另一个强大的特性，允许我们在使用`doCatch()`块时使用[谓词](https://web.archive.org/web/20221109115315/https://camel.apache.org/manual/predicate.html):
 
-```
+```java
 ...
 .doCatch(IOException.class, IllegalArgumentException.class).onWhen(exceptionMessage().contains("Hello"))
    .to("mock:catch")
@@ -151,7 +151,7 @@ Camel 还提供了另一个强大的特性，允许我们在使用`doCatch()`块
 
 假设我们想要为我们的应用程序实现一个异常处理策略。对于我们的简单示例，我们假设只有一条路线:
 
-```
+```java
 @Component
 public class ExceptionHandlingWithExceptionClauseRoute extends RouteBuilder {
 

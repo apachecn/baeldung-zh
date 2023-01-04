@@ -18,13 +18,13 @@
 
 在本教程中，我们将使用 PostgreSQL，因此命令是:
 
-```
+```java
 $docker pull postgres
 ```
 
 下载完成后，**`docker run`命令将在 Docker 容器**中创建一个运行数据库。对于 PostgreSQL，必须使用`-e`选项指定`POSTGRES_PASSWORD`环境变量:
 
-```
+```java
 $docker run -e POSTGRES_PASSWORD=password postgres
 ```
 
@@ -34,7 +34,7 @@ $docker run -e POSTGRES_PASSWORD=password postgres
 
 让我们做一个简单的测试。我们将使用 JDBC 数据源将本地 Java 项目连接到数据库。连接字符串应该使用`localhost`上的默认 PostgreSQL 端口`5432`:
 
-```
+```java
 jdbc:postgresql://localhost:5432/postgres?user=postgres&password;=password
 ```
 
@@ -42,7 +42,7 @@ jdbc:postgresql://localhost:5432/postgres?user=postgres&password;=password
 
 为了解决这个问题，**我们需要将集装箱港口映射到我们的`localhost`港口**。我们将为 PostgreSQL 使用默认端口 5432:
 
-```
+```java
 $docker run -p 5432:5432 -e POSTGRES_PASSWORD=password postgres
 ```
 
@@ -54,7 +54,7 @@ $docker run -p 5432:5432 -e POSTGRES_PASSWORD=password postgres
 
 首先，让我们找到正在运行的容器 id:
 
-```
+```java
 $docker ps
 CONTAINER ID   IMAGE      COMMAND                  CREATED          STATUS          PORTS                    NAMES
 65d9163eece2   postgres   "docker-entrypoint.s…"   27 minutes ago   Up 27 minutes   0.0.0.0:5432->5432/tcp   optimistic_hellman
@@ -62,13 +62,13 @@ CONTAINER ID   IMAGE      COMMAND                  CREATED          STATUS      
 
 然后，**我们将运行带有交互式`-it`选项的`docker exec`命令来运行容器**内的 shell:
 
-```
+```java
 $docker exec -it 65d9163eece2 bash
 ```
 
 最后，我们可以使用命令行客户端连接到数据库实例，并粘贴我们的 SQL 脚本:
 
-```
+```java
 [[email protected]](/web/20220525123245/https://www.baeldung.com/cdn-cgi/l/email-protection):/# psql -U postgres
 postgres=#CREATE DATABASE TEST;
 CREATE TABLE PERSON(
@@ -81,7 +81,7 @@ CREATE TABLE PERSON(
 
 例如，如果我们有一个大的转储文件要加载，我们必须避免复制粘贴。**我们可以使用`docker exec`命令**直接从主机运行导入命令:
 
-```
+```java
 $docker exec 65d9163eece2 psql -U postgres < dump.sql
 ```
 
@@ -97,7 +97,7 @@ $docker exec 65d9163eece2 psql -U postgres < dump.sql
 
 **第一个任务是检查我们的容器，看看哪个卷被我们的数据库使用:**
 
-```
+```java
 $docker inspect -f "{{ .Mounts }}" 65d9163eece2
 [{volume f1033d3 /var/lib/docker/volumes/f1033d3/_data /var/lib/postgresql/data local true }] 
 ```
@@ -106,7 +106,7 @@ $docker inspect -f "{{ .Mounts }}" 65d9163eece2
 
 **我们必须通过添加`-v`选项到我们在第 2.1 章中使用的`docker run`命令**来修改这个映射:
 
-```
+```java
 $docker run -v C:\docker-db-volume:/var/lib/postgresql/data -e POSTGRES_PASSWORD=password postgres
 ```
 
@@ -135,7 +135,7 @@ Docker Compose 非常适合作为无状态服务共享配置和管理容器。�
 
 让我们来看一个极简主义的例子:
 
-```
+```java
 version: '3'
 services:       
   database:

@@ -66,7 +66,7 @@ Hibernate 是最成功的 Java ORM 实现。因此，Hibernate API 极大地影�
 
 作为一个例子，我们将使用一个简单的注释映射实体，`Person`:
 
-```
+```java
 @Entity
 public class Person {
 
@@ -87,7 +87,7 @@ public class Person {
 
 我们通常在想要向数据库添加记录时调用它(持久化一个实体实例):
 
-```
+```java
 Person person = new Person();
 person.setName("John");
 session.persist(person);
@@ -106,7 +106,7 @@ session.persist(person);
 
 我们可以在一个已经`persistent`的实例上调用这个方法，但是什么也没有发生。但是如果我们试图持久化一个`detached`实例，实现将抛出一个异常。在下面的例子中，我们将`persist`实体，从上下文中`evict`它，所以它变成`detached`，然后再次尝试`persist`。对`session.persist()`的第二次调用导致了一个异常，所以下面的代码不起作用:
 
-```
+```java
 Person person = new Person();
 person.setName("John");
 session.persist(person);
@@ -122,7 +122,7 @@ session.persist(person); // PersistenceException!
 
 其目的与`persist`基本相同，只是实现细节不同。该方法的文档严格说明了它持久化实例，“首先分配一个生成的标识符。”该方法将返回该标识符的`Serializable`值:
 
-```
+```java
 Person person = new Person();
 person.setName("John");
 Long id = (Long) session.save(person);
@@ -130,7 +130,7 @@ Long id = (Long) session.save(person);
 
 保存一个已经持久化的实例的效果与使用`persist`相同。当我们试图保存一个`detached`实例时，差异就出现了:
 
-```
+```java
 Person person = new Person();
 person.setName("John");
 Long id1 = (Long) session.save(person);
@@ -155,7 +155,7 @@ Long id2 = (Long) session.save(person);
 
 在下面的例子中，我们从上下文中`evict`(分离)保存的实体，更改`name`字段，然后`merge`该`detached`实体:
 
-```
+```java
 Person person = new Person(); 
 person.setName("John"); 
 session.save(person);
@@ -184,7 +184,7 @@ Person mergedPerson = (Person) session.merge(person);
 
 在下面的例子中，我们`save`对象，`evict`(从上下文中分离)它，然后改变它的`name`并调用`update`。注意，我们没有将`update`操作的结果放在单独的变量中，因为`update`发生在 `person`对象本身上。基本上，我们将现有的实体实例重新附加到持久性上下文，这是 JPA 规范不允许我们做的:
 
-```
+```java
 Person person = new Person();
 person.setName("John");
 session.save(person);
@@ -196,7 +196,7 @@ session.update(person);
 
 试图在`transient`实例上调用`update`将导致异常。以下内容不起作用:
 
-```
+```java
 Person person = new Person();
 person.setName("John");
 session.update(person); // PersistenceException!
@@ -208,7 +208,7 @@ session.update(person); // PersistenceException!
 
 实际上，处理`update`方法的内部`DefaultUpdateEventListener`类是`DefaultSaveOrUpdateListener`的子类，只是覆盖了一些功能。`saveOrUpdate`方法的主要区别在于，当应用于`transient`实例时，它不抛出异常，而是生成这个`transient`实例`persistent`。下面的代码将保存一个新创建的`Person`实例:
 
-```
+```java
 Person person = new Person();
 person.setName("John");
 session.saveOrUpdate(person);

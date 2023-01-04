@@ -18,7 +18,7 @@
 
 我们自然会使用 Spring Boot:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -31,7 +31,7 @@
 
 因为我们添加了 Spring Boot 父项，所以我们可以添加所需的依赖项，而无需指定它们的版本:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -40,7 +40,7 @@
 
 将启用对 MongoDB 的 Spring 支持:
 
-```
+```java
 <dependency>
     <groupId>de.flapdoodle.embed</groupId>
     <artifactId>de.flapdoodle.embed.mongo</artifactId>
@@ -62,7 +62,7 @@
 
 在这个阶段，我们应该能够开始并通过示例 JUnit 5 集成测试:
 
-```
+```java
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
 public class MongoDbSpringIntegrationTest {
@@ -88,7 +88,7 @@ public class MongoDbSpringIntegrationTest {
 
 正如我们所看到的，嵌入式数据库是由 Spring 自动启动的，这也应该记录在控制台中:
 
-```
+```java
 ...Starting MongodbExampleApplicationTests on arroyo with PID 10413...
 ```
 
@@ -98,7 +98,7 @@ Spring Boot 会自动启动并配置嵌入式数据库，然后为我们注入`M
 
 下面的代码片段展示了我们如何手动配置嵌入式 MongoDB 实例。这大致相当于之前的春季测试:
 
-```
+```java
 class ManualEmbeddedMongoDbIntegrationTest {
     private static final String CONNECTION_STRING = "mongodb://%s:%d";
 
@@ -155,14 +155,14 @@ class ManualEmbeddedMongoDbIntegrationTest {
 
 我们可以在运行集成测试时为 MongoDB 配置日志消息，方法是将这两个属性添加到`src/test/resources/application.propertes`文件中:
 
-```
+```java
 logging.level.org.springframework.boot.autoconfigure.mongo.embedded
 logging.level.org.mongodb
 ```
 
 例如，要禁用日志记录，我们只需将值设置为`off`:
 
-```
+```java
 logging.level.org.springframework.boot.autoconfigure.mongo.embedded=off
 logging.level.org.mongodb=off
 ```

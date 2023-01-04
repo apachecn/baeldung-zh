@@ -10,7 +10,7 @@
 
 为了让 Maven 能够发布到 Nexus 存储库服务器，我们需要**通过`distributionManagement`元素定义存储库**信息:
 
-```
+```java
 <distributionManagement>
    <repository>
       <id>nexus-releases</id>
@@ -25,7 +25,7 @@
 
 发布过程将与项目的源代码控制交互——这意味着我们首先需要在我们的`pom.xml`中定义`<scm>`元素:
 
-```
+```java
 <scm>
    <connection>scm:git:https://github.com/user/project.git</connection>
    <url>http://github.com/user/project</url>
@@ -35,7 +35,7 @@
 
 或者，使用 git 协议:
 
-```
+```java
 <scm>
    <connection>scm:git:[[email protected]](/web/20220706103857/https://www.baeldung.com/cdn-cgi/l/email-protection):user/project.git</connection>
    <url>scm:git:[[email protected]](/web/20220706103857/https://www.baeldung.com/cdn-cgi/l/email-protection):user/project.git</url>
@@ -47,7 +47,7 @@
 
 发布过程使用的标准 Maven 插件是`maven-release-plugin`——这个插件的配置是最小的:
 
-```
+```java
 <plugin>
    <groupId>org.apache.maven.plugins</groupId>
    <artifactId>maven-release-plugin</artifactId>
@@ -64,7 +64,7 @@
 
 在这个过程中，`nexus-staging-maven-plugin`被用来执行到`nexus-releases` Nexus 存储库的部署:
 
-```
+```java
 <profiles>
    <profile>
       <id>releases</id>
@@ -101,7 +101,7 @@
 
 我们还需要在全局`settings.xml` ( `%USER_HOME%/.m2/settings.xml`)中为`nexus-releases`服务器配置凭证:
 
-```
+```java
 <servers>
    <server>
       <id>nexus-releases</id>
@@ -160,7 +160,7 @@ Jenkins 可以通过两种方式之一来执行发布过程——它可以使用
 
 在`**Build**`配置部分，我们可以简单地配置下面的 Maven 命令来运行:
 
-```
+```java
 Release:Clean release:prepare release:perform 
    -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion}
 ```

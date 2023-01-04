@@ -12,7 +12,7 @@
 
 让我们首先将 Groovy 的依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.codehaus.groovy</groupId>
     <artifactId>groovy</artifactId>
@@ -22,7 +22,7 @@
 
 现在，让我们添加插件:
 
-```
+```java
 <build>
     <plugins>
         //...
@@ -61,7 +61,7 @@
 
 让我们创建一个具有几个属性的简单类:
 
-```
+```java
 public class JavaPersonBean {
     private String firstName;
     private String lastName;
@@ -76,7 +76,7 @@ public class JavaPersonBean {
 
 我们可以使用基于 Java 的配置来配置同一个 bean:
 
-```
+```java
 @Configuration
 public class JavaBeanConfig {
 
@@ -95,7 +95,7 @@ public class JavaBeanConfig {
 
 现在，当我们使用 Groovy 配置之前创建的 bean 时，我们可以看到不同之处:
 
-```
+```java
 beans {
     javaPersonBean(JavaPersonBean) {
         firstName = 'John'
@@ -114,13 +114,13 @@ beans {
 
 如果我们需要为 bean 设置一个`alias`,我们可以很容易地做到:
 
-```
+```java
 registerAlias("bandsBean","bands")
 ```
 
 如果我们想定义 bean 的`scope:`
 
-```
+```java
 { 
     bean ->
         bean.scope = "prototype"
@@ -129,7 +129,7 @@ registerAlias("bandsBean","bands")
 
 要为我们的 bean 添加生命周期回调，我们可以:
 
-```
+```java
 { 
     bean ->
         bean.initMethod = "someInitMethod"
@@ -139,7 +139,7 @@ registerAlias("bandsBean","bands")
 
 我们还可以在 bean 定义中指定继承:
 
-```
+```java
 { 
     bean->
         bean.parent="someBean"
@@ -148,7 +148,7 @@ registerAlias("bandsBean","bands")
 
 最后，如果我们需要从 XML 配置中导入一些先前定义的 beans，我们可以使用`importBeans():`来完成
 
-```
+```java
 importBeans("somexmlconfig.xml")
 ```
 

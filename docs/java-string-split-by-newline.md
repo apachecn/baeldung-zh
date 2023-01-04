@@ -16,13 +16,13 @@
 
 因此，我们可以使用由`System#lineSeparator`方法和`String#split`方法返回的行分隔符字符串，通过换行符来拆分 Java `String`:
 
-```
+```java
 String[] lines = "Line1\r\nLine2\r\nLine3".split(System.lineSeparator());
 ```
 
 生成的行将是:
 
-```
+```java
 ["Line1", "Line2", "Line3"]
 ```
 
@@ -38,7 +38,7 @@ String[] lines = "Line1\r\nLine2\r\nLine3".split(System.lineSeparator());
 
 涵盖所有不同换行符的正则表达式模式将是:
 
-```
+```java
 "\\r?\\n|\\r"
 ```
 
@@ -50,7 +50,7 @@ String[] lines = "Line1\r\nLine2\r\nLine3".split(System.lineSeparator());
 
 接下来，我们用`String` # `split`的方法来拆分 Java `String`。让我们看几个例子:
 
-```
+```java
 String[] lines = "Line1\nLine2\nLine3".split("\\r?\\n|\\r");
 String[] lines = "Line1\rLine2\rLine3".split("\\r?\\n|\\r");
 String[] lines = "Line1\r\nLine2\r\nLine3".split("\\r?\\n|\\r");
@@ -58,7 +58,7 @@ String[] lines = "Line1\r\nLine2\r\nLine3".split("\\r?\\n|\\r");
 
 所有示例的结果行将是:
 
-```
+```java
 ["Line1", "Line2", "Line3"]
 ```
 
@@ -68,7 +68,7 @@ Java 8 提供了一个`“\R”`模式，可以匹配任何 Unicode 换行符序
 
 让我们看几个例子:
 
-```
+```java
 String[] lines = "Line1\nLine2\nLine3".split("\\R");
 String[] lines = "Line1\rLine2\rLine3".split("\\R");
 String[] lines = "Line1\r\nLine2\r\nLine3".split("\\R");
@@ -76,7 +76,7 @@ String[] lines = "Line1\r\nLine2\r\nLine3".split("\\R");
 
 同样，所有示例的结果输出行将是:
 
-```
+```java
 ["Line1", "Line2", "Line3"]
 ```
 
@@ -88,7 +88,7 @@ String[] lines = "Line1\r\nLine2\r\nLine3".split("\\R");
 
 让我们来看看它的实际应用:
 
-```
+```java
 Pattern pattern = Pattern.compile("\\R");
 Stream<String> lines = pattern.splitAsStream("Line1\nLine2\nLine3");
 Stream<String> lines = pattern.splitAsStream("Line1\rLine2\rLine3");
@@ -101,7 +101,7 @@ Stream<String> lines = pattern.splitAsStream("Line1\r\nLine2\r\nLine3");
 
 Java 11 让换行拆分变得非常容易:
 
-```
+```java
 Stream<String> lines = "Line1\nLine2\rLine3\r\nLine4".lines();
 ```
 

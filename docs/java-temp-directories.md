@@ -14,7 +14,7 @@
 
 在普通 Java 中，我们通过指定希望目录采用的前缀来创建目录:
 
-```
+```java
 String tmpdir = Files.createTempDirectory("tmpDirPrefix").toFile().getAbsolutePath();
 String tmpDirsLocation = System.getProperty("java.io.tmpdir");
 assertThat(tmpdir).startsWith(tmpDirsLocation);
@@ -22,7 +22,7 @@ assertThat(tmpdir).startsWith(tmpDirsLocation);
 
 使用 Guava，过程是相似的，但是我们不能指定我们想要如何前缀我们的目录:
 
-```
+```java
 String tmpdir = Files.createTempDir().getAbsolutePath();
 String tmpDirsLocation = System.getProperty("java.io.tmpdir");
 assertThat(tmpdir).startsWith(tmpDirsLocation);
@@ -30,7 +30,7 @@ assertThat(tmpdir).startsWith(tmpDirsLocation);
 
 Apache Commons IO 没有提供创建临时目录的方法。它提供了一个包装器来获取操作系统临时目录，然后，剩下的工作就由我们来做了:
 
-```
+```java
 String tmpDirsLocation = System.getProperty("java.io.tmpdir");
 Path path = Paths.get(FileUtils.getTempDirectory().getAbsolutePath(), UUID.randomUUID().toString());
 String tmpdir = Files.createDirectories(path).toFile().getAbsolutePath();
@@ -43,7 +43,7 @@ assertThat(tmpdir).startsWith(tmpDirsLocation);
 
 有时我们需要指定我们想要创建临时目录的位置。一个很好的例子是在 Maven 构建期间。因为我们已经有了一个“临时”构建目录，我们可以利用这个目录来放置我们的构建可能需要的临时目录:
 
-```
+```java
 Path tmpdir = Files.createTempDirectory(Paths.get("target"), "tmpDirPrefix");
 assertThat(tmpdir.toFile().getPath()).startsWith("target");
 ```
@@ -54,7 +54,7 @@ Guava 和 Apache Commons IO 都缺乏在特定位置创建临时目录的方法�
 
 由于操作系统不负责清理，我们可以利用`File.deleteOnExit()`:
 
-```
+```java
 tmpdir.toFile().deleteOnExit();
 ```
 
@@ -64,7 +64,7 @@ tmpdir.toFile().deleteOnExit();
 
 像任何其他文件或目录一样，可以在创建临时目录时指定文件属性。因此，如果我们想要创建一个只能由创建它的用户读取的临时目录，我们可以指定一组属性来完成这个任务:
 
-```
+```java
 FileAttribute<Set> attrs = PosixFilePermissions.asFileAttribute(
   PosixFilePermissions.fromString("r--------"));
 Path tmpdir = Files.createTempDirectory(Paths.get("target"), "tmpDirPrefix", attrs);

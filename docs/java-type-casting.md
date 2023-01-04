@@ -24,7 +24,7 @@ Learn about the instanceof operator in Java[Read more](/web/20221205112022/htt
 
 在这两种情况下，我们都在将一种类型“转变”成另一种类型。但是，简单地说，原始变量包含其值，原始变量的转换意味着其值的不可逆变化:
 
-```
+```java
 double myDouble = 1.1;
 int myInt = (int) myDouble;
 
@@ -47,7 +47,7 @@ assertNotEquals(myDouble, myInt);
 
 为了演示向上转换，让我们定义一个`Animal`类:
 
-```
+```java
 public class Animal {
 
     public void eat() {
@@ -58,7 +58,7 @@ public class Animal {
 
 现在我们来延伸一下`Animal`:
 
-```
+```java
 public class Cat extends Animal {
 
     public void eat() {
@@ -73,13 +73,13 @@ public class Cat extends Animal {
 
 现在我们可以创建一个`Cat`类的对象，并将其分配给`Cat`类型的引用变量:
 
-```
+```java
 Cat cat = new Cat();
 ```
 
 我们也可以将它赋给类型为`Animal`的引用变量:
 
-```
+```java
 Animal animal = cat;
 ```
 
@@ -87,7 +87,7 @@ Animal animal = cat;
 
 我们可以明确地这样做:
 
-```
+```java
 animal = (Animal) cat;
 ```
 
@@ -99,7 +99,7 @@ animal = (Animal) cat;
 
 虽然`Cat`对象仍然是`Cat`对象，但是调用`meow()`会导致编译器错误:
 
-```
+```java
 // animal.meow(); The method meow() is undefined for the type Animal
 ```
 
@@ -111,7 +111,7 @@ animal = (Animal) cat;
 
 让我们定义`Animal`的另一个子类，一个`Dog`类:
 
-```
+```java
 public class Dog extends Animal {
 
     public void eat() {
@@ -122,7 +122,7 @@ public class Dog extends Animal {
 
 现在我们可以定义`feed()`方法，它像对待`animals`一样对待所有的猫和狗:
 
-```
+```java
 public class AnimalFeeder {
 
     public void feed(List<Animal> animals) {
@@ -137,7 +137,7 @@ public class AnimalFeeder {
 
 当我们将特定类型的对象添加到`animals`列表时，就会发生隐式向上转换:
 
-```
+```java
 List<Animal> animals = new ArrayList<>();
 animals.add(new Cat());
 animals.add(new Dog());
@@ -148,7 +148,7 @@ new AnimalFeeder().feed(animals);
 
 顺便说一下，所有的 Java 对象都是多态的，因为每个对象至少是一个`Object`。我们可以将`Animal`的一个实例赋给`Object`类型的引用变量，编译器不会抱怨:
 
-```
+```java
 Object object = new Animal();
 ```
 
@@ -158,7 +158,7 @@ Object object = new Animal();
 
 我们可以创建`Mew`接口并让`Cat`实现它:
 
-```
+```java
 public interface Mew {
     public void meow();
 }
@@ -177,7 +177,7 @@ public class Cat extends Animal implements Mew {
 
 现在任何`Cat`对象也可以向上投射到`Mew`:
 
-```
+```java
 Mew mew = new Cat();
 ```
 
@@ -189,7 +189,7 @@ Mew mew = new Cat();
 
 在上面的例子中，`eat()`方法被覆盖。这意味着尽管在`Animal`类型的变量上调用了`eat()`,但是工作是通过在真实对象上调用的方法来完成的——猫和狗:
 
-```
+```java
 public void feed(List<Animal> animals) {
     animals.forEach(animal -> {
         animal.eat();
@@ -199,7 +199,7 @@ public void feed(List<Animal> animals) {
 
 如果我们在我们的类中添加一些日志记录，我们会看到`Cat`和`Dog`方法被调用:
 
-```
+```java
 web - 2018-02-15 22:48:49,354 [main] INFO com.baeldung.casting.Cat - cat is eating
 web - 2018-02-15 22:48:49,363 [main] INFO com.baeldung.casting.Dog - dog is eating 
 ```
@@ -216,7 +216,7 @@ web - 2018-02-15 22:48:49,363 [main] INFO com.baeldung.casting.Dog - dog is eati
 
 让我们看一个例子:
 
-```
+```java
 Animal animal = new Cat();
 ```
 
@@ -224,7 +224,7 @@ Animal animal = new Cat();
 
 要调用`meow()`，我们应该将`animal`降级为`Cat`:
 
-```
+```java
 ((Cat) animal).meow();
 ```
 
@@ -232,7 +232,7 @@ Animal animal = new Cat();
 
 让我们用`meow()`方法重写前面的`AnimalFeeder` 例子:
 
-```
+```java
 public class AnimalFeeder {
 
     public void feed(List<Animal> animals) {
@@ -248,7 +248,7 @@ public class AnimalFeeder {
 
 现在我们可以访问所有对`Cat`类可用的方法。查看日志以确保实际调用了`meow()`:
 
-```
+```java
 web - 2018-02-16 18:13:45,445 [main] INFO com.baeldung.casting.Cat - cat is eating
 web - 2018-02-16 18:13:45,454 [main] INFO com.baeldung.casting.Cat - meow
 web - 2018-02-16 18:13:45,455 [main] INFO com.baeldung.casting.Dog - dog is eating
@@ -260,7 +260,7 @@ web - 2018-02-16 18:13:45,455 [main] INFO com.baeldung.casting.Dog - dog is eati
 
 我们经常在向下转换之前使用`instanceof`运算符来检查对象是否属于特定类型:
 
-```
+```java
 if (animal instanceof Cat) {
     ((Cat) animal).meow();
 }
@@ -272,7 +272,7 @@ if (animal instanceof Cat) {
 
 为了演示这一点，让我们从上面的代码中删除`instanceof`操作符:
 
-```
+```java
 public void uncheckedFeed(List<Animal> animals) {
     animals.forEach(animal -> {
         animal.eat();
@@ -291,7 +291,7 @@ public void uncheckedFeed(List<Animal> animals) {
 
 请注意，如果我们尝试向下转换为不相关的类型，编译器不会允许这样做:
 
-```
+```java
 Animal animal;
 String s = (String) animal;
 ```
@@ -311,7 +311,7 @@ String s = (String) animal;
 
 还有另一种方法使用`Class`的方法来投射对象:
 
-```
+```java
 public void whenDowncastToCatWithCastMethod_thenMeowIsCalled() {
     Animal animal = new Cat();
     if (Cat.class.isInstance(animal)) {
@@ -327,7 +327,7 @@ public void whenDowncastToCatWithCastMethod_thenMeowIsCalled() {
 
 让我们用`feed()`方法创建`AnimalFeederGeneric<T>`类，根据类型参数的值，只“喂养”一种动物，猫或狗:
 
-```
+```java
 public class AnimalFeederGeneric<T> {
     private Class<T> type;
 
@@ -355,7 +355,7 @@ public class AnimalFeederGeneric<T> {
 
 让我们让`T`等于`Cat`，并确保该方法只返回猫:
 
-```
+```java
 @Test
 public void whenParameterCat_thenOnlyCatsFed() {
     List<Animal> animals = new ArrayList<>();

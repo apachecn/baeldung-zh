@@ -12,7 +12,7 @@ Apache Commons Chain 是一个使用责任链[模式](https://web.archive.org/we
 
 首先，我们将使用 Maven 导入这个库的最新版本:
 
-```
+```java
 <dependency>
     <groupId>commons-chain</groupId>
     <artifactId>commons-chain</artifactId>
@@ -40,7 +40,7 @@ Apache Commons Chain 是一个使用责任链[模式](https://web.archive.org/we
 
 这种状态在类中定义:
 
-```
+```java
 public class AtmRequestContext extends ContextBase {
     int totalAmountToBeWithdrawn;
     int noOfHundredsDispensed;
@@ -58,7 +58,7 @@ public class AtmRequestContext extends ContextBase {
 
 我们将把上面提到的每个步骤都实现为一个`Command:`
 
-```
+```java
 public class HundredDenominationDispenser implements Command {
 
     @Override
@@ -79,7 +79,7 @@ public class HundredDenominationDispenser implements Command {
 
 一个`Chain` 是以指定顺序执行的命令集合。我们的`Chain` 将由上面的`Command`和结尾的`AuditFilter` 组成:
 
-```
+```java
 public class AtmWithdrawalChain extends ChainBase {
 
     public AtmWithdrawalChain() {
@@ -100,7 +100,7 @@ public class AtmWithdrawalChain extends ChainBase {
 
 我们的`Filter`将向客户&银行发送通知:
 
-```
+```java
 public class AuditFilter implements Filter {
 
     @Override
@@ -122,7 +122,7 @@ public class AuditFilter implements Filter {
 
 在我们的例子中，我们的`Catalog` 将包含`AtmWithdrawalChain.`
 
-```
+```java
 public class AtmCatalog extends CatalogBase {
 
     public AtmCatalog() {
@@ -138,7 +138,7 @@ public class AtmCatalog extends CatalogBase {
 
 我们将编写一个测试用例来演示我们的`AtmWithdrawalChain:`
 
-```
+```java
 public class AtmChainTest {
 
     @Test

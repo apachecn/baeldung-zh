@@ -16,7 +16,7 @@ Spring 框架附带了两个 IOC 容器—`[BeanFactory](/web/20221001115718/htt
 
 假设我们有一个名为`Student` 的[单例 bean](/web/20221001115718/https://www.baeldung.com/spring-bean-scopes#singleton) 类，它有一个方法:
 
-```
+```java
 public class Student {
     public static boolean isBeanInstantiated = false;
 
@@ -30,13 +30,13 @@ public class Student {
 
 我们将`postConstruct()`方法定义为`BeanFactory`配置文件中的 [`init-method`](/web/20221001115718/https://www.baeldung.com/running-setup-logic-on-startup-in-spring#4-the-bean-initmethod-attribute) ，`ioc-container-difference-example.xml`:
 
-```
+```java
 <bean id="student" class="com.baeldung.ioccontainer.bean.Student" init-method="postConstruct"/>
 ```
 
 现在，让我们编写一个测试用例，创建一个`BeanFactory`来检查它是否加载了`Student` bean:
 
-```
+```java
 @Test
 public void whenBFInitialized_thenStudentNotInitialized() {
     Resource res = new ClassPathResource("ioc-container-difference-example.xml");
@@ -50,7 +50,7 @@ public void whenBFInitialized_thenStudentNotInitialized() {
 
 让我们检查一下我们手动调用`getBean()`方法的`Student` bean 的初始化:
 
-```
+```java
 @Test
 public void whenBFInitialized_thenStudentInitialized() {
     Resource res = new ClassPathResource("ioc-container-difference-example.xml");
@@ -69,7 +69,7 @@ public void whenBFInitialized_thenStudentInitialized() {
 
 我们将只定义`ApplicationContext,` ,它将通过使用急切加载策略来立即加载所有的 beans:
 
-```
+```java
 @Test
 public void whenAppContInitialized_thenStudentInitialized() {
     ApplicationContext context = new ClassPathXmlApplicationContext("ioc-container-difference-example.xml");
@@ -100,7 +100,7 @@ public void whenAppContInitialized_thenStudentInitialized() {
 
 首先，我们有`CustomBeanFactoryPostProcessor` 类，它实现了`BeanFactoryPostProcessor`:
 
-```
+```java
 public class CustomBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
     private static boolean isBeanFactoryPostProcessorRegistered = false;
 
@@ -117,7 +117,7 @@ public class CustomBeanFactoryPostProcessor implements BeanFactoryPostProcessor 
 
 其次，我们有另一个类`CustomBeanPostProcessor`，它实现了`BeanPostProcessor`:
 
-```
+```java
 public class CustomBeanPostProcessor implements BeanPostProcessor {
     private static boolean isBeanPostProcessorRegistered = false;
 
@@ -135,7 +135,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 
 此外，我们已经在`ioc-container-difference-example.xml` 配置文件中配置了这两个类:
 
-```
+```java
 <bean id="customBeanPostProcessor" 
   class="com.baeldung.ioccontainer.bean.CustomBeanPostProcessor" />
 <bean id="customBeanFactoryPostProcessor" 
@@ -144,7 +144,7 @@ public class CustomBeanPostProcessor implements BeanPostProcessor {
 
 让我们看一个测试案例，检查这两个类是否在启动时自动注册:
 
-```
+```java
 @Test
 public void whenBFInitialized_thenBFPProcessorAndBPProcessorNotRegAutomatically() {
     Resource res = new ClassPathResource("ioc-container-difference-example.xml");
@@ -159,7 +159,7 @@ public void whenBFInitialized_thenBFPProcessorAndBPProcessorNotRegAutomatically(
 
 **现在，让我们看一个测试用例，它将它们手动添加到`BeanFactory` :**
 
-```
+```java
 @Test
 public void whenBFPostProcessorAndBPProcessorRegisteredManually_thenReturnTrue() {
     Resource res = new ClassPathResource("ioc-container-difference-example.xml");
@@ -185,7 +185,7 @@ public void whenBFPostProcessorAndBPProcessorRegisteredManually_thenReturnTrue()
 
 让我们在单元测试中验证这一行为:
 
-```
+```java
 @Test
 public void whenAppContInitialized_thenBFPostProcessorAndBPostProcessorRegisteredAutomatically() {
     ApplicationContext context 

@@ -20,7 +20,7 @@
 
 为了创建一个观察，我们需要一个`ObservationRegistry`。
 
-```
+```java
 ObservationRegistry observationRegistry = ObservationRegistry.create();
 Observation observation = Observation.createNotStarted("sample", observationRegistry);
 ```
@@ -31,7 +31,7 @@ Observation observation = Observation.createNotStarted("sample", observationRegi
 
 我们可以这样使用`Observation`类型:
 
-```
+```java
 observation.start();
 try (Observation.Scope scope = observation.openScope()) {
     // ... the observed action
@@ -45,7 +45,7 @@ try (Observation.Scope scope = observation.openScope()) {
 
 或者只是
 
-```
+```java
 observation.observe(() -> {
     // ... the observed action
 });
@@ -55,7 +55,7 @@ observation.observe(() -> {
 
 数据收集代码实现为一个`ObservationHandler`。这个处理程序得到关于`Observation`的生命周期事件的通知，因此提供回调方法。可以这样实现一个简单的处理程序，它只是打印出事件:
 
-```
+```java
 public class SimpleLoggingHandler implements ObservationHandler<Observation.Context> {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleLoggingHandler.class);
@@ -94,7 +94,7 @@ public class SimpleLoggingHandler implements ObservationHandler<Observation.Cont
 
 然后，在创建`Observation:`之前，我们在`ObservationRegistry`注册`ObservationHandler`
 
-```
+```java
 observationRegistry
   .observationConfig()
   .observationHandler(new SimpleLoggingHandler());
@@ -102,7 +102,7 @@ observationRegistry
 
 对于简单的日志记录，已经有了一个实现。例如，为了简单地将事件记录到控制台，我们可以使用:
 
-```
+```java
 observationRegistry
   .observationConfig()
   .observationHandler(new ObservationTextPublisher(System.out::println));
@@ -110,7 +110,7 @@ observationRegistry
 
 要使用定时器样本和计数器，我们可以这样配置:
 
-```
+```java
 MeterRegistry meterRegistry = new SimpleMeterRegistry();
 observationRegistry
   .observationConfig()
@@ -133,7 +133,7 @@ Optional<Double> maximumDuration = meterRegistry.getMeters().stream()
 
 我们在 Spring Boot 应用中获得了与[致动器](/web/20221231082811/https://www.baeldung.com/spring-boot-actuators)相关性的最佳集成:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-actuator</artifactId>
@@ -144,7 +144,7 @@ Optional<Double> maximumDuration = meterRegistry.getMeters().stream()
 
 例如，我们可以使用注册表在服务中创建自定义观察:
 
-```
+```java
 @Service
 public class GreetingService {
 
@@ -166,7 +166,7 @@ public class GreetingService {
 
 此外，它在`ObservationRegistry`处注册`ObservationHandler`bean。我们只需要提供 beans:
 
-```
+```java
 @Configuration
 public class ObservationTextPublisherConfiguration {
 
@@ -188,7 +188,7 @@ public class ObservationTextPublisherConfiguration {
 
 当 Actuator 是我们的应用程序的一部分时，这些过滤器已经注册并处于活动状态。如果没有，我们需要配置它们:
 
-```
+```java
 @Configuration
 public class ObservationFilterConfiguration {
 
@@ -209,7 +209,7 @@ public class ObservationFilterConfiguration {
 
 Micrometer Observation API 还用基于 AspectJ 的方面实现声明了一个`@Observed`注释。为了完成这项工作，我们需要将 AOP 依赖性添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-aop</artifactId>
@@ -218,7 +218,7 @@ Micrometer Observation API 还用基于 AspectJ 的方面实现声明了一个`@
 
 然后，我们将方面实现注册为一个 Spring 管理的 bean:
 
-```
+```java
 @Configuration
 public class ObservedAspectConfiguration {
 
@@ -231,7 +231,7 @@ public class ObservedAspectConfiguration {
 
 现在，我们不用在代码中创建一个`Observation`，而是简单地写下`GreetingService`:
 
-```
+```java
 @Observed(name = "greetingService")
 @Service
 public class GreetingService {
@@ -244,7 +244,7 @@ public class GreetingService {
 
 结合 Actuator，我们可以使用`http://localhost:8080/actuator/metrics/greetingService`读取预先配置的指标(在我们至少调用服务一次之后),并将得到如下结果:
 
-```
+```java
 {
     "name": "greetingService",
     "baseUnit": "seconds",
@@ -270,7 +270,7 @@ public class GreetingService {
 
 千分尺可观察性 API 提供了一个允许编写测试的模块。为此，我们需要添加这种依赖性:
 
-```
+```java
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>micrometer-observation-test</artifactId>
@@ -288,7 +288,7 @@ public class GreetingService {
 
 所以，举例来说，如果我们想测试`GreetingService`的观测值，我们可以使用这个测试设置:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @ComponentScan(basePackageClasses = GreetingService.class)
 @EnableAutoConfiguration
@@ -316,7 +316,7 @@ class GreetingServiceObservationTest {
 
 我们还可以使用 JUnit 元注释对此进行配置:
 
-```
+```java
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
@@ -341,7 +341,7 @@ public @interface EnableTestObservation {
 
 然后，我们只需要向我们的测试类添加注释:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @ComponentScan(basePackageClasses = GreetingService.class)
 @EnableAutoConfiguration
@@ -359,7 +359,7 @@ class GreetingServiceObservationTest {
 
 然后，我们可以调用服务并检查观察是否完成:
 
-```
+```java
 import static io.micrometer.observation.tck.TestObservationRegistryAssert.assertThat;
 
 // ...
@@ -386,7 +386,7 @@ void testObservation() {
 
 实现很简单:
 
-```
+```java
 public class SimpleLoggingHandlerTest
   extends AnyContextObservationHandlerCompatibilityKit {
 
@@ -415,7 +415,7 @@ public class SimpleLoggingHandlerTest
 
 要使用测微计跟踪，我们需要将以下依赖项添加到我们的项目中——该版本由 Spring Boot 管理:
 
-```
+```java
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>micrometer-tracing</artifactId>
@@ -424,7 +424,7 @@ public class SimpleLoggingHandlerTest
 
 然后，我们需要一个[支持的跟踪器](https://web.archive.org/web/20221231082811/https://micrometer.io/docs/tracing#_supported_tracers)(目前是 [OpenZipkin Brave](https://web.archive.org/web/20221231082811/https://github.com/openzipkin/brave) 或 [OpenTelemetry](https://web.archive.org/web/20221231082811/https://opentelemetry.io/) )。然后，我们必须将特定于供应商的依赖项添加到微米跟踪中:
 
-```
+```java
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>micrometer-tracing-bridge-brave</artifactId>
@@ -433,7 +433,7 @@ public class SimpleLoggingHandlerTest
 
 或者
 
-```
+```java
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>micrometer-tracing-bridge-otel</artifactId>
@@ -446,7 +446,7 @@ public class SimpleLoggingHandlerTest
 
 出于测试目的，我们需要将以下依赖项添加到我们的项目中——该版本由 Spring Boot 管理:
 
-```
+```java
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>micrometer-tracing-test</artifactId>
@@ -458,7 +458,7 @@ public class SimpleLoggingHandlerTest
 
 因此，跟踪的最小测试配置如下所示:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @EnableAutoConfiguration
 @AutoConfigureObservability
@@ -485,7 +485,7 @@ public class GreetingServiceTracingTest {
 
 或者，在使用 JUnit 元注释的情况下:
 
-```
+```java
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
@@ -515,7 +515,7 @@ public @interface EnableTestObservation {
 
 然后，我们可以通过下面的示例测试来测试我们的欢迎服务:
 
-```
+```java
 import static io.micrometer.tracing.test.simple.TracerAssert.assertThat;
 
 // ...

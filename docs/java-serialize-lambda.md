@@ -16,7 +16,7 @@
 
 在源文件中，让我们使用`Runnable`接口来构造一个 lambda 表达式:
 
-```
+```java
 public class NotSerializableLambdaExpression {
     public static Object getLambdaExpressionObject() {
         Runnable r = () -> System.out.println("please serialize this message");
@@ -29,7 +29,7 @@ public class NotSerializableLambdaExpression {
 
 当 JVM 遇到 lambda 表达式时，它将使用内置的 ASM 来构建内部类。那么，这个内部类是什么样子的呢？我们可以通过在命令行上指定`jdk.internal.lambda.dumpProxyClasses`属性来转储这个生成的内部类:
 
-```
+```java
 -Djdk.internal.lambda.dumpProxyClasses=<dump directory>
 ```
 
@@ -49,7 +49,7 @@ public class NotSerializableLambdaExpression {
 
 例如，让我们将`Runnable`和`Serializable`组合成一个交集类型:
 
-```
+```java
 Runnable r = (Runnable & Serializable) () -> System.out.println("please serialize this message");
 ```
 
@@ -57,27 +57,27 @@ Runnable r = (Runnable & Serializable) () -> System.out.println("please serializ
 
 然而，如果我们经常这样做，就会引入很多样板文件。为了使代码简洁，我们可以定义一个新的接口来实现`Runnable`和`Serializable`:
 
-```
+```java
 interface SerializableRunnable extends Runnable, Serializable {
 }
 ```
 
 然后我们可以使用它:
 
-```
+```java
 SerializableRunnable obj = () -> System.out.println("please serialize this message");
 ```
 
 但是**我们也应该小心不要捕获任何不可序列化的参数**。例如，让我们定义另一个接口:
 
-```
+```java
 interface SerializableConsumer<T> extends Consumer<T>, Serializable {
 }
 ```
 
 那么我们可以选择`System.out::println`作为它的实现:
 
-```
+```java
 SerializableConsumer<String> obj = System.out::println;
 ```
 
@@ -89,7 +89,7 @@ SerializableConsumer<String> obj = System.out::println;
 
 为了有一个讨论的基础，让我们准备另一段代码:
 
-```
+```java
 public class SerializableLambdaExpression {
     public static Object getLambdaExpressionObject() {
         Runnable r = (Runnable & Serializable) () -> System.out.println("please serialize this message");
@@ -102,7 +102,7 @@ public class SerializableLambdaExpression {
 
 编译后，我们可以使用`javap`来检查编译后的类:
 
-```
+```java
 javap -v -p SerializableLambdaExpression.class
 ```
 

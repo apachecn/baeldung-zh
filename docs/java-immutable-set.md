@@ -26,7 +26,7 @@
 
 首先，让我们创建一个简单的 [`HashSet`](/web/20220926153229/https://www.baeldung.com/java-hashset) 实例，并用`String`值初始化它:
 
-```
+```java
 Set<String> set = new HashSet<>();
 set.add("Canada");
 set.add("USA");
@@ -34,13 +34,13 @@ set.add("USA");
 
 接下来，我们用`Collections`来总结一下。`unmodifiableSet():`
 
-```
+```java
 Set<String> unmodifiableSet = Collections.unmodifiableSet(set);
 ```
 
 最后，为了确保我们的`unmodifiableSet`实例是不可变的，让我们创建一个简单的测试用例:
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public void testUnmodifiableSet() {
     // create and initialize the set instance
@@ -54,13 +54,13 @@ public void testUnmodifiableSet() {
 
 现在，让我们通过添加相同的值来改变初始的`set`实例:
 
-```
+```java
 set.add("Costa Rica");
 ```
 
 这样，我们间接地修改了不可修改的集合。因此，当我们打印`unmodifiableSet`实例时:
 
-```
+```java
 [Canada, USA, Costa Rica]
 ```
 
@@ -70,7 +70,7 @@ set.add("Costa Rica");
 
 从 Java 9 开始，`Set.of(elements)`静态工厂方法可用于创建不可变集合:
 
-```
+```java
 Set<String> immutable = Set.of("Canada", "USA");
 ```
 
@@ -86,13 +86,13 @@ Set<String> immutable = Set.of("Canada", "USA");
 
 简单来说就是`ImmutableSet`。`copyOf()`方法返回集合中所有元素的副本:
 
-```
+```java
 Set<String> immutable = ImmutableSet.copyOf(set);
 ```
 
 因此，在更改初始设置后，不可变实例将保持不变:
 
-```
+```java
 [Canada, USA]
 ```
 
@@ -100,7 +100,7 @@ Set<String> immutable = ImmutableSet.copyOf(set);
 
 类似地，使用`ImmutableSet.of()`方法，我们可以立即用给定的值创建一个不可变的集合:
 
-```
+```java
 Set<String> immutable = ImmutableSet.of("Canada", "USA");
 ```
 

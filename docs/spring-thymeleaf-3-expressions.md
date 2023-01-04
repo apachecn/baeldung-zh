@@ -14,7 +14,7 @@
 
 首先，让我们看看将百里香与 Spring 集成所需的配置。在我们的依赖关系中需要`thymeleaf-spring`库:
 
-```
+```java
 <dependency>
     <groupId>org.thymeleaf</groupId>
     <artifactId>thymeleaf</artifactId>
@@ -54,13 +54,13 @@
 
 假设我们想使用`ISO8601`格式:
 
-```
+```java
 <p th:text="${#dates.formatISO(date)}"></p>
 ```
 
 无论我们的`date`在后端如何设置，都需要按照这个标准来显示。更重要的是，如果我们想对格式进行具体说明，我们可以手动指定:
 
-```
+```java
 <p th:text="${#dates.format(date, 'dd-MM-yyyy HH:mm')}"></p>
 ```
 
@@ -68,7 +68,7 @@
 
 最后，这里有几个我们可以使用的类似的有用函数:
 
-```
+```java
 <p th:text="${#dates.dayOfWeekName(date)}"></p>
 <p th:text="${#dates.createNow()}"></p>
 <p th:text="${#dates.createToday()}"></p>
@@ -80,7 +80,7 @@
 
 日历实用程序与日期处理非常相似，除了我们使用的是`java.util.Calendar`对象的实例:
 
-```
+```java
 <p th:text="${#calendars.formatISO(calendar)}"></p>
 <p th:text="${#calendars.format(calendar, 'dd-MM-yyyy HH:mm')}"></p>
 <p th:text="${#calendars.dayOfWeekName(calendar)}"></p>
@@ -88,7 +88,7 @@
 
 唯一的区别是当我们想要创建新的`Calendar`实例时:
 
-```
+```java
 <p th:text="${#calendars.createNow().getTime()}"></p>
 <p th:text="${#calendars.createToday().getFirstDayOfWeek()}"></p>
 ```
@@ -99,7 +99,7 @@
 
 另一个非常少的特性是数字处理。让我们关注一个用`double` 类型随机创建的`num`变量:
 
-```
+```java
 <p th:text="${#numbers.formatDecimal(num,2,3)}"></p>
 <p th:text="${#numbers.formatDecimal(num,2,3,'COMMA')}"></p>
 ```
@@ -108,7 +108,7 @@
 
 这一段我们还想介绍一个功能。它是整数序列的创建:
 
-```
+```java
 <p th:each="number: ${#numbers.sequence(0,2)}">
     <span th:text="${number}"></span>
 </p>
@@ -129,7 +129,7 @@
 
 相反，我们可以这样做:
 
-```
+```java
 <p th:text="${#strings.isEmpty(string)}"></p>
 <p th:text="${#strings.isEmpty(nullString)}"></p>
 <p th:text="${#strings.defaultString(emptyString,'Empty String')}"></p>
@@ -139,7 +139,7 @@
 
 还有很多方法。所有这些不仅适用于字符串，也适用于`Java.Collections.` ,例如使用子串相关的操作:
 
-```
+```java
 <p th:text="${#strings.indexOf(name,frag)}"></p>
 <p th:text="${#strings.substring(name,3,5)}"></p>
 <p th:text="${#strings.substringAfter(name,prefix)}"></p>
@@ -149,7 +149,7 @@
 
 或者使用空安全比较和连接:
 
-```
+```java
 <p th:text="${#strings.equals(first, second)}"></p>
 <p th:text="${#strings.equalsIgnoreCase(first, second)}"></p>
 <p th:text="${#strings.concat(values...)}"></p>
@@ -158,7 +158,7 @@
 
 最后，还有与文本样式相关的功能，这些功能将保持语法始终相同:
 
-```
+```java
 <p th:text="${#strings.abbreviate(string,5)} "></p>
 <p th:text="${#strings.capitalizeWords(string)}"></p>
 ```
@@ -171,7 +171,7 @@
 
 这里我们要讨论的最后一个功能是`aggregates`。它们是安全的，并且提供了从数组或任何其他集合中计算平均值或总和的工具:
 
-```
+```java
 <p th:text="${#aggregates.sum(array)}"></p>
 <p th:text="${#aggregates.avg(array)}"></p>
 <p th:text="${#aggregates.sum(set)}"></p>

@@ -12,7 +12,7 @@
 
 首先，让我们填充我们的`List` s:
 
-```
+```java
 @Before
 public void init() {
     list.add("cat");
@@ -33,7 +33,7 @@ public void init() {
 
 其次，让我们从`ArrayList,`中移除第一个元素，并确保我们的列表不再包含它:
 
-```
+```java
 @Test
 public void givenList_whenRemoveFirst_thenRemoved() {
     list.remove(0);
@@ -51,7 +51,7 @@ public void givenList_whenRemoveFirst_thenRemoved() {
 
 让我们确保它按预期工作:
 
-```
+```java
 @Test
 public void givenLinkedList_whenRemoveFirst_thenRemoved() {
     linkedList.removeFirst();

@@ -14,7 +14,7 @@ Docx4j 是一个 Java 库，用于创建和操作 Office `OpenXML`文件——�
 
 要开始使用 docx4j，我们需要将所需的依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.docx4j</groupId>
     <artifactId>docx4j</artifactId>
@@ -37,7 +37,7 @@ Docx4j 是一个 Java 库，用于创建和操作 Office `OpenXML`文件——�
 
 让我们首先看看如何创建一个简单的`docx`文件——带有一个文本段落:
 
-```
+```java
 WordprocessingMLPackage wordPackage = WordprocessingMLPackage.createPackage();
 MainDocumentPart mainDocumentPart = wordPackage.getMainDocumentPart();
 mainDocumentPart.addStyledParagraphOfText("Title", "Hello World!");
@@ -54,7 +54,7 @@ wordPackage.save(exportFile);
 
 为了弄清楚，让我们解压缩`welcome.docx`文件，并打开`word/document.xml`文件，看看 XML 表示是什么样子的:
 
-```
+```java
 <w:body>
     <w:p>
         <w:pPr>
@@ -84,7 +84,7 @@ wordPackage.save(exportFile);
 
 因此，让我们来看看如何使用`runProperties` ( `RPr`)对象来样式化我们的内容:
 
-```
+```java
 ObjectFactory factory = Context.getWmlObjectFactory();
 P p = factory.createP();
 R r = factory.createR();
@@ -118,7 +118,7 @@ wordPackage.save(exportFile);
 
 Docx4j 提供了一种向 Word 文档添加图像的简单方法:
 
-```
+```java
 File image = new File("image.jpg" );
 byte[] fileContent = Files.readAllBytes(image.toPath());
 BinaryPartAbstractImage imagePart = BinaryPartAbstractImage
@@ -131,7 +131,7 @@ mainDocumentPart.getContent().add(Imageparagraph);
 
 下面是`addImageToParagraph()`方法的实现:
 
-```
+```java
 private static P addImageToParagraph(Inline inline) {
     ObjectFactory factory = new ObjectFactory();
     P p = factory.createP();
@@ -162,7 +162,7 @@ Docx4j 还使得操纵表(Tbl)、行(Tr)和列(Tc)变得非常容易。
 
 让我们看看如何创建一个 3×3 的表格并向其中添加一些内容:
 
-```
+```java
 int writableWidthTwips = wordPackage.getDocumentModel()
   .getSections().get(0).getPageDimensions().getWritableWidthTwips();
 int columnNumber = 3;
@@ -190,7 +190,7 @@ for (Object row : rows) {
 
 现在我们已经了解了如何使用 docx4j 创建文档，让我们看看如何读取现有的 docx 文件，并打印其内容:
 
-```
+```java
 File doc = new File("helloWorld.docx");
 WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage
   .load(doc);

@@ -26,7 +26,7 @@ A quick and practical guide to handling duplicate keys by using multimaps in Jav
 
 首先，让我们看看如何使用普通 java 将 Map 的值转换成一个数组**:**
 
-```
+```java
 @Test
 public void givenUsingCoreJava_whenMapValuesConvertedToArray_thenCorrect() {
     Map<Integer, String> sourceMap = createMap();
@@ -42,7 +42,7 @@ public void givenUsingCoreJava_whenMapValuesConvertedToArray_thenCorrect() {
 
 接下来，让我们使用普通 Java 将映射的值转换为列表:
 
-```
+```java
 @Test
 public void givenUsingCoreJava_whenMapValuesConvertedToList_thenCorrect() {
     Map<Integer, String> sourceMap = createMap();
@@ -53,7 +53,7 @@ public void givenUsingCoreJava_whenMapValuesConvertedToList_thenCorrect() {
 
 用番石榴:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenMapValuesConvertedToList_thenCorrect() {
     Map<Integer, String> sourceMap = createMap();
@@ -66,7 +66,7 @@ public void givenUsingGuava_whenMapValuesConvertedToList_thenCorrect() {
 
 最后，让我们使用普通 java 将 Map 的值转换成一个集合:
 
-```
+```java
 @Test
 public void givenUsingCoreJava_whenMapValuesConvertedToS_thenCorrect() {
     Map<Integer, String> sourceMap = createMap();

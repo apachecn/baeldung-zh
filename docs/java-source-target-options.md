@@ -12,7 +12,7 @@
 
 为了详细理解这一点，首先，让我们创建一个示例类，并使用 Java 9 中添加的、Java 8 中没有的`List.of()`方法:
 
-```
+```java
 public class TestForSourceAndTarget {
     public static void main(String[] args) {
         System.out.println(List.of("Hello", "Baeldung"));
@@ -23,20 +23,20 @@ public class TestForSourceAndTarget {
 让我们假设我们使用 Java 9 来编译代码，并希望与 Java 8 兼容。
 我们可以使用`-source`和`-target`来实现这一点:
 
-```
+```java
 /jdk9path/bin/javac TestForSourceAndTarget.java -source 8 -target 8
 ```
 
 现在，我们得到一个关于编译的警告，但是编译是成功的:
 
-```
+```java
 warning: [options] bootstrap class path not set in conjunction with -source 8
 1 warning
 ```
 
 让我们用 Java 8 运行代码，我们可以看到错误:
 
-```
+```java
 $ /jdk8path/bin/java TestForSourceAndTarget
 Exception in thread "main" java.lang.NoSuchMethodError: ↩
   java.util.List.of(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/List;
@@ -49,13 +49,13 @@ Exception in thread "main" java.lang.NoSuchMethodError: ↩
 
 为此，**我们必须使用–`Xbootclasspath`指向需要交叉编译的 Java 版本的路径**:
 
-```
+```java
 /jdk9path/bin/javac TestForSourceAndTarget.java -source 8 -target 8 -Xbootclasspath ${jdk8path}/jre/lib/rt.jar
 ```
 
 现在，让我们编译它，我们可以看到编译时的错误:
 
-```
+```java
 TestForSourceAndTarget.java:7: error: cannot find symbol
         System.out.println(List.of("Hello", "Baeldung"));
                                ^
@@ -69,7 +69,7 @@ String)
 
 **–`source`选项指定编译器接受的 Java 源代码版本:**
 
-```
+```java
 /jdk9path/bin/javac TestForSourceAndTarget.java -source 8 -target 8
 ```
 
@@ -83,7 +83,7 @@ In our example, If `-source` 8 is not provided, the compiler will compile source
 
 **目标选项指定要生成的类文件的 Java 版本。目标版本必须等于或高于来源选项:**
 
-```
+```java
 /jdk9path/bin/javac TestForSourceAndTarget.java -source 8 -target 8
 ```
 
@@ -93,7 +93,7 @@ In our example, If `-source` 8 is not provided, the compiler will compile source
 
 **从我们的例子中可以看出，要在 Java 8 之前正确地进行交叉编译，我们需要提供三个选项，即——`source, -target,`和`-Xbootclasspath.`** 例如，如果我们需要用 Java 9 构建代码，但它需要与 Java 8 兼容:
 
-```
+```java
 /jdk9path/bin/javac TestForSourceAndTarget.java -source 8 -target 8 -Xbootclasspath ${jdk8path}/jre/lib/rt.jar
 ```
 
@@ -107,11 +107,11 @@ In our example, If `-source` 8 is not provided, the compiler will compile source
 
 让我们使用`–release`选项来编译我们之前的示例类:
 
-```
+```java
 /jdk9path/bin/javac TestForSourceAndTarget.java —release 8
 ```
 
-```
+```java
 TestForSourceAndTarget.java:7: error: cannot find symbol
         System.out.println(List.of("Hello", "Baeldung"));
                                ^

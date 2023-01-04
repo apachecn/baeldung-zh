@@ -20,7 +20,7 @@ Gherkin 是一种面向行的语言，使用行尾、缩进和关键字来定义
 
 下面是一个简单的小黄瓜文档示例:
 
-```
+```java
 Feature: A short description of the desired functionality
 
   Scenario: A business situation
@@ -61,7 +61,7 @@ Cucumber 最初是用 Ruby 编写的，已经通过 Cucumber-JVM 实现移植到
 
 为了在 Maven 项目中使用 Cucumber-JVM，POM 中需要包含以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.cucumber</groupId>
     <artifactId>cucumber-java</artifactId>
@@ -72,7 +72,7 @@ Cucumber 最初是用 Ruby 编写的，已经通过 Cucumber-JVM 实现移植到
 
 为了方便用 Cucumber 进行 JUnit 测试，我们还需要一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.cucumber</groupId>
     <artifactId>cucumber-junit</artifactId>
@@ -88,13 +88,13 @@ Cucumber 最初是用 Ruby 编写的，已经通过 Cucumber-JVM 实现移植到
 
 为了使它更清楚，让我们来看看下面的步骤:
 
-```
+```java
 Given I have registered a course in Baeldung
 ```
 
 和步骤定义:
 
-```
+```java
 @Given("I have registered a course in Baeldung")
 public void verifyAccount() {
     // method implementation
@@ -109,7 +109,7 @@ public void verifyAccount() {
 
 让我们从在一个文件中声明场景和步骤开始，该文件的名称以扩展名`.feature`结尾:
 
-```
+```java
 Feature: Testing a REST API
   Users should be able to submit GET and POST requests to a web service, 
   represented by WireMock
@@ -129,7 +129,7 @@ Feature: Testing a REST API
 
 为了让 JUnit 知道 Cucumber 并在运行时读取特性文件，必须将`Cucumber`类声明为`Runner`。我们还需要告诉 JUnit 搜索特性文件和步骤定义的位置。
 
-```
+```java
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "classpath:Feature")
 public class CucumberIntegrationTest {
@@ -147,7 +147,7 @@ public class CucumberIntegrationTest {
 
 下面是一个完全匹配一个小黄瓜步骤的方法。该方法将用于向 REST web 服务发送数据:
 
-```
+```java
 @When("users upload data on a project")
 public void usersUploadDataOnAProject() throws IOException {
 
@@ -156,7 +156,7 @@ public void usersUploadDataOnAProject() throws IOException {
 
 下面是一个匹配 Gherkin 步骤的方法，它从文本中获取一个参数，该参数将用于从 REST web 服务中获取信息:
 
-```
+```java
 @When("users want to get information on the {string} project")
 public void usersGetInformationOnAProject(String projectName) throws IOException {
 
@@ -167,7 +167,7 @@ public void usersGetInformationOnAProject(String projectName) throws IOException
 
 或者，我们可以使用正则表达式:
 
-```
+```java
 @When("^users want to get information on the '(.+)' project$")
 public void usersGetInformationOnAProject(String projectName) throws IOException {
 
@@ -182,7 +182,7 @@ public void usersGetInformationOnAProject(String projectName) throws IOException
 
 首先，我们将从一个 JSON 结构开始，说明通过 POST 请求上传到服务器的数据，以及使用 GET 下载到客户机的数据。该结构保存在`jsonString`字段，如下所示:
 
-```
+```java
 {
     "testing-framework": "cucumber",
     "supported-language": 
@@ -201,13 +201,13 @@ public void usersGetInformationOnAProject(String projectName) throws IOException
 
 为了演示 REST API，我们使用一个 WireMock 服务器:
 
-```
+```java
 WireMockServer wireMockServer = new WireMockServer(options().dynamicPort());
 ```
 
 此外，我们将使用 Apache HttpClient API 来表示用于连接到服务器的客户机:
 
-```
+```java
 CloseableHttpClient httpClient = HttpClients.createDefault();
 ```
 
@@ -215,13 +215,13 @@ CloseableHttpClient httpClient = HttpClients.createDefault();
 
 在客户端连接到服务器之前，服务器应该正在运行:
 
-```
+```java
 wireMockServer.start();
 ```
 
 使用 WireMock API 来存根化 REST 服务:
 
-```
+```java
 configureFor("localhost", wireMockServer.port());
 stubFor(post(urlEqualTo("/create"))
   .withHeader("content-type", equalTo("application/json"))
@@ -231,7 +231,7 @@ stubFor(post(urlEqualTo("/create"))
 
 现在，向服务器发送一个 POST 请求，内容取自上面声明的`jsonString`字段:
 
-```
+```java
 HttpPost request = new HttpPost("http://localhost:" + wireMockServer.port() + "/create");
 StringEntity entity = new StringEntity(jsonString);
 request.addHeader("content-type", "application/json");
@@ -241,7 +241,7 @@ HttpResponse response = httpClient.execute(request);
 
 以下代码断言 POST 请求已被成功接收和处理:
 
-```
+```java
 assertEquals(200, response.getStatusLine().getStatusCode());
 verify(postRequestedFor(urlEqualTo("/create"))
   .withHeader("content-type", equalTo("application/json")));
@@ -249,13 +249,13 @@ verify(postRequestedFor(urlEqualTo("/create"))
 
 服务器在使用后应停止运行:
 
-```
+```java
 wireMockServer.stop();
 ```
 
 我们将在这里实现的第二个方法是`usersGetInformationOnAProject(String projectName)`。与第一个测试类似，我们需要启动服务器，然后存根化 REST 服务:
 
-```
+```java
 wireMockServer.start();
 
 configureFor("localhost", wireMockServer.port());
@@ -266,7 +266,7 @@ stubFor(get(urlEqualTo("/projects/cucumber"))
 
 提交 GET 请求并接收响应:
 
-```
+```java
 HttpGet request = new HttpGet("http://localhost:" + wireMockServer.port() + "/projects/" + projectName.toLowerCase());
 request.addHeader("accept", "application/json");
 HttpResponse httpResponse = httpClient.execute(request);
@@ -274,13 +274,13 @@ HttpResponse httpResponse = httpClient.execute(request);
 
 我们将使用一个助手方法将`httpResponse`变量转换为`String`:
 
-```
+```java
 String responseString = convertResponseToString(httpResponse);
 ```
 
 下面是转换助手方法的实现:
 
-```
+```java
 private String convertResponseToString(HttpResponse response) throws IOException {
     InputStream responseStream = response.getEntity().getContent();
     Scanner scanner = new Scanner(responseStream, "UTF-8");
@@ -292,7 +292,7 @@ private String convertResponseToString(HttpResponse response) throws IOException
 
 下面验证整个过程:
 
-```
+```java
 assertThat(responseString, containsString("\"testing-framework\": \"cucumber\""));
 assertThat(responseString, containsString("\"website\": \"cucumber.io\""));
 verify(getRequestedFor(urlEqualTo("/projects/cucumber"))
@@ -309,7 +309,7 @@ JUnit 并行运行特性文件而不是场景，这意味着特性文件中的�
 
 现在让我们添加插件配置:
 
-```
+```java
 <plugin>
     <artifactId>maven-failsafe-plugin</artifactId>
     <version>${maven-failsafe-plugin.version}</version>

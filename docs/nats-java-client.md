@@ -16,7 +16,7 @@ NATS 提供了三种主要的消息交换模式。发布/订阅语义将消息�
 
 首先，我们需要将 NATS 图书馆添加到我们的`pom.xml:`
 
-```
+```java
 <dependency>
     <groupId>io.nats</groupId>
     <artifactId>jnats</artifactId>
@@ -40,7 +40,7 @@ NATS 提供了三种主要的消息交换模式。发布/订阅语义将消息�
 
 如果我们想使用带有默认选项的连接，并在本地主机的端口 4222 上监听，我们可以使用默认方法:
 
-```
+```java
 Connection natsConnection = Nats.connect(); 
 ```
 
@@ -48,7 +48,7 @@ Connection natsConnection = Nats.connect();
 
 我们将创建一个`Options`对象并将其传递给`Nats`:
 
-```
+```java
 private Connection initConnection() {
     Options options = new Options.Builder()
       .errorCb(ex -> log.error("Connection Exception: ", ex))
@@ -66,14 +66,14 @@ private Connection initConnection() {
 
 我们可以做一个快速测试。创建一个连接，并添加一个 60 秒的休眠，以保持进程运行:
 
-```
+```java
 Connection natsConnection = initConnection();
 Thread.sleep(60000); 
 ```
 
 运行这个。然后停止并启动您的 NATS 服务器:
 
-```
+```java
 [jnats-callbacks] ERROR com.baeldung.nats.NatsClient 
   - Channel disconnected: [[email protected]](/web/20220625082214/https://www.baeldung.com/cdn-cgi/l/email-protection)
 [reconnect] WARN io.nats.client.ConnectionImpl 
@@ -96,7 +96,7 @@ NATS 支持同步和异步订阅。
 
 让我们来看看异步订阅:
 
-```
+```java
 AsyncSubscription subscription = natsConnection
   .subscribe( topic, msg -> log.info("Received message on {}", msg.getSubject())); 
 ```
@@ -105,7 +105,7 @@ API 在其线程中将`Messages`传递给我们的`MessageHandler(),` 。
 
 一些应用程序可能希望控制处理消息的线程:
 
-```
+```java
 SyncSubscription subscription = natsConnection.subscribeSync("foo.bar");
 Message message = subscription.nextMessage(1000); 
 ```
@@ -114,7 +114,7 @@ Message message = subscription.nextMessage(1000);
 
 `AsyncSubscription` 和 `SyncSubscription`都有一个`unsubscribe()`方法，我们可以用它来关闭订阅。
 
-```
+```java
 subscription.unsubscribe(); 
 ```
 
@@ -124,13 +124,13 @@ subscription.unsubscribe();
 
 最简单的方法只需要一个主题`String`和消息`bytes`:
 
-```
+```java
 natsConnection.publish("foo.bar", "Hi there!".getBytes()); 
 ```
 
 如果发布者希望得到回复或提供有关消息来源的特定信息，也可以发送包含回复主题的消息:
 
-```
+```java
 natsConnection.publish("foo.bar", "bar.foo", "Hi there!".getBytes()); 
 ```
 
@@ -140,7 +140,7 @@ natsConnection.publish("foo.bar", "bar.foo", "Hi there!".getBytes());
 
 给定一个有效的`Connection`，我们可以编写一个测试来验证消息交换:
 
-```
+```java
 SyncSubscription fooSubscription = natsConnection.subscribe("foo.bar");
 SyncSubscription barSubscription = natsConnection.subscribe("bar.foo");
 natsConnection.publish("foo.bar", "bar.foo", "hello there".getBytes());
@@ -174,7 +174,7 @@ NATS 服务器支持主题通配符。
 
 让我们尝试几个测试:
 
-```
+```java
 SyncSubscription fooSubscription = client.subscribeSync("foo.*");
 
 client.publishMessage("foo.bar", "bar.foo", "hello there");
@@ -202,7 +202,7 @@ assertEquals("hello there", new String(message.getData()));
 
 发布者可以使用我们上面使用的异步订阅方法安装请求处理程序:
 
-```
+```java
 AsyncSubscription subscription = natsConnection
   .subscribe("foo.bar.requests", new MessageHandler() {
     @Override
@@ -216,7 +216,7 @@ AsyncSubscription subscription = natsConnection
 
 API 提供了一个`request()`方法:
 
-```
+```java
 Message reply = natsConnection.request("foo.bar.requests", request.getBytes(), 100); 
 ```
 
@@ -226,7 +226,7 @@ Message reply = natsConnection.request("foo.bar.requests", request.getBytes(), 1
 
 我们可以修改请求/回复的测试:
 
-```
+```java
 natsConnection.subscribe(salary.requests", message -> {
     natsConnection.publish(message.getReplyTo(), "denied!".getBytes());
 });
@@ -245,13 +245,13 @@ assertEquals("denied!", new String(reply.getData()));
 
 订户将队列组名指定为`String:`
 
-```
+```java
 SyncSubscription subscription = natsConnection.subscribe("topic", "queue name");
 ```
 
 当然还有一个异步版本:
 
-```
+```java
 SyncSubscription subscription = natsConnection
   .subscribe("topic", "queue name", new MessageHandler() {
     @Override
@@ -267,7 +267,7 @@ SyncSubscription subscription = natsConnection
 
 将消息发布到队列组只需发布到相关主题:
 
-```
+```java
 natsConnection.publish("foo",  "queue message".getBytes());
 ```
 
@@ -275,7 +275,7 @@ NATS 服务器会将消息路由到队列，并选择一个消息接收者。
 
 我们可以通过测试来验证这一点:
 
-```
+```java
 SyncSubscription queue1 = natsConnection.subscribe("foo", "queue name");
 SyncSubscription queue2 = natsConnection.subscribe("foo", "queue name");
 
@@ -296,7 +296,7 @@ assertEquals(1, messages.size());
 
 如果我们将前两行改为普通订阅:
 
-```
+```java
 SyncSubscription queue1 = natsConnection.subscribe("foo");
 SyncSubscription queue2 = natsConnection.subscribe("foo"); 
 ```

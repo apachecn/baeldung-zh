@@ -12,7 +12,7 @@
 
 让我们首先将 [`zip4j`](https://web.archive.org/web/20220625071042/https://search.maven.org/search?q=g:%20net.lingala.zip4j%20a:zip4j) 依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>net.lingala.zip4j</groupId>
     <artifactId>zip4j</artifactId>
@@ -24,7 +24,7 @@
 
 首先，**我们将使用 *ZipFile addFile()* 方法**将一个名为`aFile.txt`的文件压缩到一个名为`compressed.zip`的受密码保护的档案中:
 
-```
+```java
 ZipParameters zipParameters = new ZipParameters();
 zipParameters.setEncryptFiles(true);
 zipParameters.setCompressionLevel(CompressionLevel.HIGHER);
@@ -42,7 +42,7 @@ zipFile.addFile(new File("aFile.txt"), zipParameters);
 
 要解决这个问题，我们必须确保该文件是手动创建的并放在项目文件夹中，或者我们必须从 Java 创建它:
 
-```
+```java
 File fileToAdd = new File("aFile.txt");
 if (!fileToAdd.exists()) {
     fileToAdd.createNewFile();
@@ -51,7 +51,7 @@ if (!fileToAdd.exists()) {
 
 同样，在我们完成新的`ZipFile`，**之后，关闭资源**是一个很好的实践
 
-```
+```java
 zipFile.close(); 
 ```
 
@@ -59,7 +59,7 @@ zipFile.close();
 
 让我们稍微修改一下代码，这样我们就可以一次压缩多个文件:
 
-```
+```java
 ZipParameters zipParameters = new ZipParameters();
 zipParameters.setEncryptFiles(true);
 zipParameters.setEncryptionMethod(EncryptionMethod.AES);
@@ -79,7 +79,7 @@ zipFile.addFiles(filesToAdd, zipParameters);
 
 我们可以简单地通过用`addFolder`替换`addFile`方法来压缩文件夹:
 
-```
+```java
 ZipFile zipFile = new ZipFile("compressed.zip", "password".toCharArray());
 zipFile.addFolder(new File("/users/folder_to_add"), zipParameters);
 ```
@@ -88,13 +88,13 @@ zipFile.addFolder(new File("/users/folder_to_add"), zipParameters);
 
 我们可以通过使用`createSplitZipFile`和`createSplitZipFileFromFolder`方法，在文件大小超过特定限制时**将 zip 文件分割成几个文件:**
 
-```
+```java
 ZipFile zipFile = new ZipFile("compressed.zip", "password".toCharArray());
 int splitLength = 1024 * 1024 * 10; //10MB
 zipFile.createSplitZipFile(Arrays.asList(new File("aFile.txt")), zipParameters, true, splitLength);
 ```
 
-```
+```java
 zipFile.createSplitZipFileFromFolder(new File("/users/folder_to_add"), zipParameters, true, splitLength);
 ```
 
@@ -104,7 +104,7 @@ zipFile.createSplitZipFileFromFolder(new File("/users/folder_to_add"), zipParame
 
 提取文件也一样简单。我们可以用`extractAll()`方法从我们的`compressed.zip`中提取所有文件:
 
-```
+```java
 ZipFile zipFile = new ZipFile("compressed.zip", "password".toCharArray());
 zipFile.extractAll("/destination_directory");
 ```
@@ -113,7 +113,7 @@ zipFile.extractAll("/destination_directory");
 
 如果我们只想从`compressed.zip`中提取一个文件，我们可以使用`extractFile()`方法:
 
-```
+```java
 ZipFile zipFile = new ZipFile("compressed.zip", "password".toCharArray());
 zipFile.extractFile("aFile.txt", "/destination_directory");
 ```

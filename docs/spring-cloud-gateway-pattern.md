@@ -18,7 +18,7 @@ Spring Cloud 现在也提供了实现这种模式的 [Spring Cloud Gateway](/web
 
 让我们打开我们的`gateway`服务器的`pom.xml`,并添加对 Feign 的依赖:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-feign</artifactId>
@@ -29,7 +29,7 @@ Spring Cloud 现在也提供了实现这种模式的 [Spring Cloud Gateway](/web
 
 现在我们已经支持构建一个虚拟客户端，让我们在`GatewayApplication.java`中启用它:
 
-```
+```java
 @EnableFeignClients
 public class GatewayApplication { ... }
 ```
@@ -42,7 +42,7 @@ public class GatewayApplication { ... }
 
 让我们创建一个名为`BooksClient.java`的新界面:
 
-```
+```java
 @FeignClient("book-service")
 public interface BooksClient {
 
@@ -55,7 +55,7 @@ public interface BooksClient {
 
 为了完成这项工作，我们需要添加一个`Book.java` DTO:
 
-```
+```java
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Book {
 
@@ -74,7 +74,7 @@ public class Book {
 
 让我们创建一个名为`RatingsClient`的接口:
 
-```
+```java
 @FeignClient("rating-service")
 public interface RatingsClient {
 
@@ -96,7 +96,7 @@ public interface RatingsClient {
 
 最后，我们来补充一个`Rating.java` DTO:
 
-```
+```java
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Rating {
     private Long id;
@@ -113,7 +113,7 @@ public class Rating {
 
 为此，让我们创建一个控制器，并将其命名为`CombinedController.java`:
 
-```
+```java
 @RestController
 @RequestMapping("/combined")
 public class CombinedController { ... }
@@ -121,7 +121,7 @@ public class CombinedController { ... }
 
 接下来，让我们连接新创建的虚拟客户端:
 
-```
+```java
 private BooksClient booksClient;
 private RatingsClient ratingsClient;
 
@@ -137,7 +137,7 @@ public CombinedController(
 
 最后，让我们创建一个 GET 请求，该请求将这两个端点结合起来，并返回一本书及其加载的评级:
 
-```
+```java
 @GetMapping
 public Book getCombinedResponse(
   @RequestParam Long bookId,
@@ -160,7 +160,7 @@ public Book getCombinedResponse(
 
 导航到`LiveTest.java`，让我们为我们的组合端点添加一个测试:
 
-```
+```java
 @Test
 public void accessCombinedEndpoint() {
     Response response = RestAssured.given()

@@ -12,7 +12,7 @@
 
 要将`Vavr`库添加到您的 Maven 项目中，请编辑您的`pom.xml`文件以包含以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.vavr</groupId>
     <artifactId>vavr</artifactId>
@@ -26,31 +26,31 @@
 
 使用静态导入:
 
-```
+```java
 static import io.vavr.API.*;
 ```
 
 我们可以使用构造函数`List(…):`创建一个列表
 
-```
+```java
 List numbers = List(1,2,3);
 ```
 
 代替使用静态工厂方法`of(…):`
 
-```
+```java
 List numbers = List.of(1,2,3);
 ```
 
 或者还有:
 
-```
+```java
 Tuple t = Tuple('a', 3);
 ```
 
 而不是:
 
-```
+```java
 Tuple t = Tuple.of('a', 3);
 ```
 
@@ -60,7 +60,7 @@ Tuple t = Tuple.of('a', 3);
 
 元素不是集合，但是它们可以是 Vavr 库的非常有用的构造。这种类型的**允许我们持有一个对象或者一个`None`元素**(相当于一个`null`对象):
 
-```
+```java
 Option<Integer> none = None();
 Option<Integer> some = Some(1);
 ```
@@ -69,7 +69,7 @@ Option<Integer> some = Some(1);
 
 同样，Java 没有元组，像有序对、三元组等。在`Vavr`中，我们可以**定义一个元组，它可以容纳多达八个不同类型的对象**。这里有一个包含一个`Character`、一个`String`和一个`Integer`对象的例子:
 
-```
+```java
 Tuple3<Character, String, Integer> tuple
   = Tuple('a', "chain", 2); 
 ```
@@ -78,7 +78,7 @@ Tuple3<Character, String, Integer> tuple
 
 `Try`类型可用于**模型计算，该模型计算可能会也可能不会引发异常**:
 
-```
+```java
 Try<Integer> integer
   = Success(55);
 Try<Integer> failure
@@ -91,19 +91,19 @@ Try<Integer> failure
 
 我们可以用许多不同的方式创建集合。对于`List` s，我们可以用`List.of(), List.fill(), List.tabulate()`等。如前所述，默认的工厂方法是`List.of()`，可以使用 Scala 风格的构造函数来简化:
 
-```
+```java
 List<Integer> list = List(1, 2, 3, 4, 5); 
 ```
 
 我们还可以创建一个空列表(在`Vavr`中称为`Nil`对象):
 
-```
+```java
 List()
 ```
 
 以类似的方式，我们可以创建其他类型的`Collection`:
 
-```
+```java
 Array arr = Array(1, 2, 3, 4, 5);
 Stream stm = Stream(1, 2, 3, 4, 5);
 Vector vec = Vector(1, 2, 3, 4, 5); 

@@ -16,7 +16,7 @@
 
 我们将向 Maven POM 文件添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.thymeleaf</groupId>
     <artifactId>thymeleaf</artifactId>
@@ -35,7 +35,7 @@
 
 我们可以在 Java 配置文件中将该类配置为 bean:
 
-```
+```java
 @Bean
 @Description("Thymeleaf Template Resolver")
 public ServletContextTemplateResolver templateResolver() {
@@ -63,7 +63,7 @@ Spring MVC 中的`ViewResolver`接口将控制器返回的视图名称映射到�
 
 集成的最后一步是将`ThymeleafViewResolver`作为 bean 添加:
 
-```
+```java
 @Bean
 @Description("Thymeleaf View Resolver")
 public ThymeleafViewResolver viewResolver() {
@@ -78,7 +78,7 @@ public ThymeleafViewResolver viewResolver() {
 
 `Spring Boot`通过添加 [`spring-boot-starter-thymeleaf`](https://web.archive.org/web/20221006104233/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-thymeleaf%22) 依赖关系为`Thymeleaf`提供自动配置:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -94,7 +94,7 @@ public ThymeleafViewResolver viewResolver() {
 
 为此，我们需要将属性文件配置为一个`messageSource` bean:
 
-```
+```java
 @Bean
 @Description("Spring Message Resolver")
 public ResourceBundleMessageSource messageSource() {
@@ -106,7 +106,7 @@ public ResourceBundleMessageSource messageSource() {
 
 下面是显示与键`welcome.message`相关的值的百里香 HTML 代码:
 
-```
+```java
 <span th:text="#{welcome.message}" />
 ```
 
@@ -118,13 +118,13 @@ public ResourceBundleMessageSource messageSource() {
 
 让我们在控制器类中添加一个名为`serverTime`的模型属性:
 
-```
+```java
 model.addAttribute("serverTime", dateFormat.format(new Date()));
 ```
 
 下面是显示`serverTime`属性的值的 HTML 代码:
 
-```
+```java
 Current time is <span th:text="${serverTime}" />
 ```
 
@@ -134,7 +134,7 @@ Current time is <span th:text="${serverTime}" />
 
 让我们定义一个具有两个字段`id`和`name`的`Student`模型类:
 
-```
+```java
 public class Student implements Serializable {
     private Integer id;
     private String name;
@@ -144,7 +144,7 @@ public class Student implements Serializable {
 
 现在我们将在控制器类中添加一个学生列表作为模型属性:
 
-```
+```java
 List<Student> students = new ArrayList<Student>();
 // logic to build student data
 model.addAttribute("students", students);
@@ -152,7 +152,7 @@ model.addAttribute("students", students);
 
 最后，我们可以使用百里香模板代码迭代学生列表并显示所有字段值:
 
-```
+```java
 <tbody>
     <tr th:each="student: ${students}">
         <td th:text="${student.id}" />
@@ -169,7 +169,7 @@ model.addAttribute("students", students);
 
 让我们给`Student`模型添加一个`gender`字段:
 
-```
+```java
 public class Student implements Serializable {
     private Integer id;
     private String name;
@@ -183,7 +183,7 @@ public class Student implements Serializable {
 
 如果我们希望显示单词“男性”或“女性”而不是单个字符，我们可以使用下面的百里香代码:
 
-```
+```java
 <td>
     <span th:if="${student.gender} == 'M'" th:text="Male" /> 
     <span th:unless="${student.gender} == 'M'" th:text="Female" />
@@ -196,7 +196,7 @@ public class Student implements Serializable {
 
 让我们使用`th:switch`和`th:case`属性重写前面的代码:
 
-```
+```java
 <td th:switch="${student.gender}">
     <span th:case="'M'" th:text="Male" /> 
     <span th:case="'F'" th:text="Female" />
@@ -211,7 +211,7 @@ public class Student implements Serializable {
 
 对于`Student`类，我们可以创建一个输入表单:
 
-```
+```java
 <form action="#" th:action="@{/saveStudent}" th:object="${student}" method="post">
     <table border="1">
         <tr>
@@ -233,7 +233,7 @@ public class Student implements Serializable {
 
 `StudentController`类处理表单提交:
 
-```
+```java
 @Controller
 public class StudentController {
     @RequestMapping(value = "/saveStudent", method = RequestMethod.POST)
@@ -251,7 +251,7 @@ public class StudentController {
 
 让我们看一下 HTML 代码来迭代并显示表单中每个字段的错误:
 
-```
+```java
 <ul>
     <li th:each="err : ${#fields.errors('id')}" th:text="${err}" />
     <li th:each="err : ${#fields.errors('name')}" th:text="${err}" />
@@ -262,7 +262,7 @@ public class StudentController {
 
 下面是使用通配符`*`重写的前一段 HTML 代码:
 
-```
+```java
 <ul>
     <li th:each="err : ${#fields.errors('*')}" th:text="${err}" />
 </ul>
@@ -270,7 +270,7 @@ public class StudentController {
 
 这里我们使用常数`all`:
 
-```
+```java
 <ul>
     <li th:each="err : ${#fields.errors('all')}" th:text="${err}" />
 </ul>
@@ -280,7 +280,7 @@ public class StudentController {
 
 下面是显示全局错误的 HTML 代码:
 
-```
+```java
 <ul>
     <li th:each="err : ${#fields.errors('global')}" th:text="${err}" />
 </ul>
@@ -290,7 +290,7 @@ public class StudentController {
 
 前面显示表单错误的代码可以使用`th:errors`属性重写:
 
-```
+```java
 <ul>
     <li th:errors="*{id}" />
     <li th:errors="*{name}" />
@@ -303,7 +303,7 @@ public class StudentController {
 
 让我们看看如何格式化`Student`类中的 name 字段:
 
-```
+```java
 <tr th:each="student: ${students}">
     <td th:text="${{student.name}}" />
 </tr>
@@ -313,7 +313,7 @@ public class StudentController {
 
 为此，我们的`@Configuration`类覆盖了`WebMvcConfigurerAdapter`类:
 
-```
+```java
 @Configuration
 public class WebMVCConfig extends WebMvcConfigurerAdapter {
     // ...
@@ -331,7 +331,7 @@ public class WebMVCConfig extends WebMvcConfigurerAdapter {
 
 下面是如何显示去掉小数部分的`student`对象`percentage`字段:
 
-```
+```java
 <tr th:each="student: ${students}">
     <td th:text="${#conversions.convert(student.percentage, 'Integer')}" />
 </tr>

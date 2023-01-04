@@ -15,7 +15,7 @@
 
 为了能够使用 `Statement` 和 `PreparedStatement` 在我们的示例中， 我们将把`h2` JDBC 连接器声明为我们的`pom.xml`文件中的依赖项:
 
-```
+```java
 <dependency>
   <groupId>com.h2database</groupId>
   <artifactId>h2</artifactId>
@@ -25,7 +25,7 @@
 
 让我们定义一个贯穿本文的实体:
 
-```
+```java
 public class PersonEntity {
     private int id;
     private String name;
@@ -38,7 +38,7 @@ public class PersonEntity {
 
 首先， `Statement` 接口 接受字符串作为 SQL 查询。因此，当我们连接 SQL 字符串:时，**代码变得可读性更差**
 
-```
+```java
 public void insert(PersonEntity personEntity) {
     String query = "INSERT INTO persons(id, name) VALUES(" + personEntity.getId() + ", '"
       + personEntity.getName() + "')";
@@ -52,14 +52,14 @@ public void insert(PersonEntity personEntity) {
 
 在第一行中，update 会将所有行上的列“`name`”设置为“`hacker`”，因为“—”之后的任何内容都被解释为 SQL 中的注释，update 语句的条件将被忽略。在第二行中，insert 将失败，因为“`name`”列上的引号没有被转义:
 
-```
+```java
 dao.update(new PersonEntity(1, "hacker' --"));
 dao.insert(new PersonEntity(1, "O'Brien"))
 ```
 
 第三， **JDBC 将带有内联值的查询传递给数据库**。因此，没有查询优化，最重要的是，**数据库引擎必须确保所有的检查**。此外，该查询对数据库来说不会显示为相同，并且**它将阻止缓存使用**。同样，批量更新需要单独执行:
 
-```
+```java
 public void insert(List<PersonEntity> personEntities) {
     for (PersonEntity personEntity: personEntities) {
         insert(personEntity);
@@ -69,7 +69,7 @@ public void insert(List<PersonEntity> personEntities) {
 
 第四，****`Statement`界面适用于 DDL 查询类似 创建 ， 修改 ， 删除** :**
 
-```
+```java
 public void createTables() {
     String query = "create table if not exists PERSONS (ID INT, NAME VARCHAR(45))";
     connection.createStatement().executeUpdate(query);
@@ -82,7 +82,7 @@ public void createTables() {
 
 首先， `PreparedStatement` 扩展了`Statement`接口。它有绑定各种对象类型的方法，包括文件和数组。因此，**代码变得** **易于理解** :
 
-```
+```java
 public void insert(PersonEntity personEntity) {
     String query = "INSERT INTO persons(id, name) VALUES( ?, ?)";
 
@@ -95,7 +95,7 @@ public void insert(PersonEntity personEntity) {
 
 其次，**它通过对提供的所有参数值文本进行转义来防范 SQL 注入**:
 
-```
+```java
 @Test 
 void whenInsertAPersonWithQuoteInText_thenItNeverThrowsAnException() {
     assertDoesNotThrow(() -> dao.insert(new PersonEntity(1, "O'Brien")));
@@ -120,7 +120,7 @@ void whenAHackerUpdateAPerson_thenItUpdatesTheTargetedPerson() throws SQLExcepti
 
 第四， **`PreparedStatement`** **提供了一个[批处理](/web/20220626082541/https://www.baeldung.com/jdbc-batch-processing)执行期间的单个数据库连接**。让我们来看看实际情况:
 
-```
+```java
 public void insert(List<PersonEntity> personEntities) throws SQLException {
     String query = "INSERT INTO persons(id, name) VALUES( ?, ?)";
     PreparedStatement preparedStatement = connection.prepareStatement(query);

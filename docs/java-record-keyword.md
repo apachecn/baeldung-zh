@@ -29,7 +29,7 @@
 
 例如，我们可以创建一个带有名称和地址的简单的`Person`数据类:
 
-```
+```java
 public class Person {
 
     private final String name;
@@ -88,7 +88,7 @@ Java 编译器生成`equals`、`hashCode`和`toString`方法，以及`private,`�
 
 为了创建一个`Person`记录，我们将使用`record`关键字:
 
-```
+```java
 public record Person (String name, String address) {}
 ```
 
@@ -98,7 +98,7 @@ public record Person (String name, String address) {}
 
 在我们的`Person`记录中，等价的构造函数是:
 
-```
+```java
 public Person(String name, String address) {
     this.name = name;
     this.address = address;
@@ -107,7 +107,7 @@ public Person(String name, String address) {
 
 此构造函数可以像类一样用于从记录中实例化对象:
 
-```
+```java
 Person person = new Person("John Doe", "100 Linda Ln.");
 ```
 
@@ -117,7 +117,7 @@ Person person = new Person("John Doe", "100 Linda Ln.");
 
 在我们的`Person`记录中，这意味着一个`name()`和`address()` getter:
 
-```
+```java
 @Test
 public void givenValidNameAndAddress_whenGetNameAndAddress_thenExpectedValuesReturned() {
     String name = "John Doe";
@@ -136,7 +136,7 @@ public void givenValidNameAndAddress_whenGetNameAndAddress_thenExpectedValuesRet
 
 **如果提供的对象属于同一类型，并且其所有字段的值都匹配:**，则该方法返回`true`
 
-```
+```java
 @Test
 public void givenSameNameAndAddress_whenEquals_thenPersonsEqual() {
     String name = "John Doe";
@@ -157,7 +157,7 @@ public void givenSameNameAndAddress_whenEquals_thenPersonsEqual() {
 
 **如果两个对象的所有字段值都匹配**(由于[生日悖论](https://web.archive.org/web/20221018104148/https://en.wikipedia.org/wiki/Birthday_problem)导致的冲突除外) **:** ，我们的`hashCode`方法为两个`Person`对象返回相同的值
 
-```
+```java
 @Test
 public void givenSameNameAndAddress_whenHashCode_thenPersonsEqual() {
     String name = "John Doe";
@@ -178,7 +178,7 @@ public void givenSameNameAndAddress_whenHashCode_thenPersonsEqual() {
 
 因此，用名称`“John Doe”`和地址`“100 Linda Ln.`实例化一个`Person`会导致下面的`toString`结果:
 
-```
+```java
 Person[name=John Doe, address=100 Linda Ln.]
 ```
 
@@ -190,7 +190,7 @@ Person[name=John Doe, address=100 Linda Ln.]
 
 例如，我们可以使用下面的构造函数实现来确保提供给我们的`Person`记录的`name`和`address`不是`null`:
 
-```
+```java
 public record Person(String name, String address) {
     public Person {
         Objects.requireNonNull(name);
@@ -201,7 +201,7 @@ public record Person(String name, String address) {
 
 我们还可以通过提供不同的参数列表来创建具有不同参数的新构造函数:
 
-```
+```java
 public record Person(String name, String address) {
     public Person(String name) {
         this(name, "Unknown");
@@ -213,7 +213,7 @@ public record Person(String name, String address) {
 
 注意**创建一个与生成的公共构造函数具有相同参数的构造函数是有效的，但是这需要手动初始化每个字段**:
 
-```
+```java
 public record Person(String name, String address) {
     public Person(String name, String address) {
         this.name = name;
@@ -226,7 +226,7 @@ public record Person(String name, String address) {
 
 因此，下面的代码不会被编译:
 
-```
+```java
 public record Person(String name, String address) {
     public Person {
         Objects.requireNonNull(name);
@@ -246,7 +246,7 @@ public record Person(String name, String address) {
 
 我们使用与类相同的语法声明静态变量:
 
-```
+```java
 public record Person(String name, String address) {
     public static String UNKNOWN_ADDRESS = "Unknown";
 }
@@ -254,7 +254,7 @@ public record Person(String name, String address) {
 
 同样，我们使用与类相同的语法声明静态方法:
 
-```
+```java
 public record Person(String name, String address) {
     public static Person unnamed(String address) {
         return new Person("Unnamed", address);
@@ -264,7 +264,7 @@ public record Person(String name, String address) {
 
 然后，我们可以使用记录的名称来引用静态变量和静态方法:
 
-```
+```java
 Person.UNKNOWN_ADDRESS
 Person.unnamed("100 Linda Ln.");
 ```

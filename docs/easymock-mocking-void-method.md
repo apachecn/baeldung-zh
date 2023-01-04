@@ -14,7 +14,7 @@
 
 首先，让我们将 EasyMock 依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.easymock</groupId>
     <artifactId>easymock</artifactId>
@@ -39,7 +39,7 @@
 
 让我们假设，我们必须模拟一个`WeatherService`类的 void 方法，它接受一个位置并设置最低和最高温度:
 
-```
+```java
 public interface WeatherService {
     void populateTemperature(Location location);
 }
@@ -49,7 +49,7 @@ public interface WeatherService {
 
 让我们从为`WeatherService`创建一个模拟开始:
 
-```
+```java
 @Mock
 private WeatherService mockWeatherService;
 ```
@@ -58,7 +58,7 @@ private WeatherService mockWeatherService;
 
 接下来，我们将通过调用`populateTemperature()`来记录与 mock 的预期交互:
 
-```
+```java
 mockWeatherService.populateTemperature(EasyMock.anyObject(Location.class));
 ```
 
@@ -70,7 +70,7 @@ mockWeatherService.populateTemperature(EasyMock.anyObject(Location.class));
 
 在我们的例子中，该方法抛出`ServiceUnavailableException`:
 
-```
+```java
 EasyMock.expectLastCall().andThrow(new ServiceUnavailableException());
 ```
 
@@ -82,7 +82,7 @@ EasyMock.expectLastCall().andThrow(new ServiceUnavailableException());
 
 在我们的例子中，这将涉及填充所经过位置的最低和最高温度:
 
-```
+```java
 EasyMock.expectLastCall()
   .andAnswer(() -> {
       Location passedLocation = (Location) EasyMock.getCurrentArguments()[0];
@@ -102,7 +102,7 @@ EasyMock.expectLastCall()
 
 最后，我们将使用`EasyMock.replay()`方法将 mock 更改为“replay”模式，以便记录的动作可以在被调用时重放:
 
-```
+```java
 EasyMock.replay(mockWeatherService);
 ```
 

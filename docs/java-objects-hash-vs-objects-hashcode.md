@@ -22,7 +22,7 @@ hashcode 是对象内容的数字表示。
 
 也就是说，让我们在两个相同的`Double`对象上调用`Object.hashCode()`:
 
-```
+```java
 Double valueOne = Double.valueOf(1.0012);
 Double valueTwo = Double.valueOf(1.0012);
 
@@ -36,7 +36,7 @@ assertEquals(hashCode1, hashCode2);
 
 相比之下，现在让我们对一个`null`对象调用`Object.hashCode()`,期望抛出一个`NullPointerException`:
 
-```
+```java
 Double value = null;
 value.hashCode();
 ```
@@ -54,7 +54,7 @@ value.hashCode();
 
 首先，让我们在两个相同的字符串上调用`Objects.hashCode()`:
 
-```
+```java
 String stringOne = "test";
 String stringTwo = "test";
 int hashCode1 = Objects.hashCode(stringOne);
@@ -67,7 +67,7 @@ assertEquals(hashCode1, hashCode2);
 
 另一方面，如果我们提供一个`null`到`Objects.hashCode()`，我们将得到零:
 
-```
+```java
 String nullString = null;
 int hashCode = Objects.hashCode(nullString);
 assertEquals(0, hashCode);
@@ -79,7 +79,7 @@ assertEquals(0, hashCode);
 
 首先，让我们用两对相同的字符串调用`Objects.hash()`:
 
-```
+```java
 String strOne = "one";
 String strTwo = "two";
 String strOne2 = "one";
@@ -93,7 +93,7 @@ assertEquals(hashCode1, hashCode2);
 
 接下来，让我们用一个字符串调用`Objects.hash()`和`Objects.hashCode()`:
 
-```
+```java
 String testString = "test string";
 int hashCode1 = Objects.hash(testString);
 int hashCode2 = Objects.hashCode(testString);
@@ -111,7 +111,7 @@ assertNotEquals(hashCode1, hashCode2);
 
 让我们首先为我们的例子创建一个简单的`Player`类:
 
-```
+```java
 public class Player {
     private String firstName;
     private String lastName;
@@ -127,7 +127,7 @@ public class Player {
 
 也就是说，让我们看看在 Java 7 之前[我们是如何实现](/web/20221129003257/https://www.baeldung.com/java-eclipse-equals-and-hashcode) `Player.hashCode()`的:
 
-```
+```java
 @Override
 public int hashCode() {
     int result = 17;
@@ -142,7 +142,7 @@ public int hashCode() {
 
 让我们确认我们都可以在同一个对象上调用`hashCode()`两次并得到相同的结果，并且我们可以在相同的对象上调用它并得到相同的结果:
 
-```
+```java
 Player player = new Player("Eduardo", "Rodriguez", "Pitcher");
 Player indenticalPlayer = new Player("Eduardo", "Rodriguez", "Pitcher");
 
@@ -156,7 +156,7 @@ assertEquals(hashCode1, hashCode3);
 
 接下来，让我们看看如何利用通过`Objects.hashCode()`获得的空安全来缩短这个时间:
 
-```
+```java
 int result = 17;
 result = 31 * result + Objects.hashCode(firstName);
 result = 31 * result + Objects.hashCode(lastName);
@@ -168,7 +168,7 @@ return result;
 
 因为我们的类依赖于多个字段来确定等式，所以让我们更进一步，使用`Objects.hash()`使我们的`hashCode()`方法非常简洁:
 
-```
+```java
 return Objects.hash(firstName, lastName, position);
 ```
 
@@ -180,7 +180,7 @@ return Objects.hash(firstName, lastName, position);
 
 也就是说，让我们创建一个`Player`并将它的 hashcode 与我们使用的值进行比较:
 
-```
+```java
 @Test
 public void whenCallingHashCodeAndArraysHashCode_thenSameHashCodeReturned() {
     Player player = new Player("Bobby", "Dalbec", "First Base");

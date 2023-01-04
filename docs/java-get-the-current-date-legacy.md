@@ -12,7 +12,7 @@
 
 当我们只需要一个代表当前日期和时间的数值时，我们可以使用系统时间。为了获得从`January 1, 1970 00:00:00 GMT`开始经过的毫秒数，我们可以使用返回一个`long`的`currentTimeMillis`方法:
 
-```
+```java
 long elapsedMilliseconds = System.currentTimeMillis();
 ```
 
@@ -20,7 +20,7 @@ long elapsedMilliseconds = System.currentTimeMillis();
 
 这个任意的时间对于 JVM 内部的所有调用都是相同的，所以返回的值只对计算多个调用`nanoTime`之间经过的纳秒数之差有用:
 
-```
+```java
 long elapsedNanosecondsStart = System.nanoTime();
 long elapsedNanoseconds = System.nanoTime() - elapsedNanosecondsStart;
 ```
@@ -35,7 +35,7 @@ long elapsedNanoseconds = System.nanoTime() - elapsedNanosecondsStart;
 
 虽然有许多可用的构造函数，但创建表示本地时区当前日期的`Date`对象的最简单方法是使用基本的构造函数:
 
-```
+```java
 Date currentUtilDate = new Date();
 ```
 
@@ -43,7 +43,7 @@ Date currentUtilDate = new Date();
 
 或者，我们可以使用`SimpleDateFormat`类来[将一个`String`](/web/20220626074323/https://www.baeldung.com/java-string-to-date) 值转换成一个实际的`Date`对象:
 
-```
+```java
 SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 Date customUtilDate = dateFormatter.parse("30-01-2020 10:11:12");
 ```
@@ -56,13 +56,13 @@ Date customUtilDate = dateFormatter.parse("30-01-2020 10:11:12");
 
 要获得当前日期，在没有指定`TimeZone`或`Locale`的情况下，我们可以使用`getInstance`方法:
 
-```
+```java
 Calendar currentUtilCalendar = Calendar.getInstance();
 ```
 
 对于从`Calendar`到`Date`的转换，我们可以简单地使用`getTime`方法:
 
-```
+```java
 Date currentDate = Calendar.getInstance().getTime();
 ```
 
@@ -76,7 +76,7 @@ Date currentDate = Calendar.getInstance().getTime();
 
 使用`java.sql.Date`、**对象，我们无法访问时区信息，精度在日级别被截断**。为了表示今天，我们可以使用接受毫秒的`long`表示的构造函数:
 
-```
+```java
 Date currentSqlDate = new Date(System.currentTimeMillis());
 ```
 
@@ -84,7 +84,7 @@ Date currentSqlDate = new Date(System.currentTimeMillis());
 
 当`Date`的`String`表示与`**yyyy-[m]m-[d]d**`模式匹配时，我们可以简单地使用`valueOf`方法:
 
-```
+```java
 Date customSqlDate = Date.valueOf("2020-01-30");
 ```
 
@@ -92,13 +92,13 @@ Date customSqlDate = Date.valueOf("2020-01-30");
 
 `java.sql.Time`对象为**提供了对小时、分钟和秒信息的访问**——同样，没有对时区的访问。让我们用毫秒来表示当前的`Time`:
 
-```
+```java
 Time currentSqlTime = new Time(System.currentTimeMillis());
 ```
 
 要使用`valueOf`方法指定时间，我们可以传入一个与`**hh:mm:ss**` 模式匹配的值:
 
-```
+```java
 Time customSqlTime = Time.valueOf("10:11:12");
 ```
 
@@ -108,13 +108,13 @@ Time customSqlTime = Time.valueOf("10:11:12");
 
 让我们通过再次将当前毫秒数的`long`值传递给构造函数来创建一个`Timestamp`对象:
 
-```
+```java
 Timestamp currentSqlTimestamp = new Timestamp(System.currentTimeMillis());
 ```
 
 最后，让我们使用`valueOf`方法和所需的`**yyyy-[m]m-[d]d hh:mm:ss[.f…]**`模式创建一个新的定制`Timestamp`:
 
-```
+```java
 Timestamp customSqlTimestamp = Timestamp.valueOf("2020-1-30 10:11:12.123456789");
 ```
 

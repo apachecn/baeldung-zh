@@ -18,7 +18,7 @@
 
 我们需要在`pom.xml`中添加以下依赖关系:
 
-```
+```java
 <dependency>
     <groupId>io.vavr</groupId>
     <artifactId>vavr</artifactId>
@@ -38,7 +38,7 @@
 
 这可能是这样的:
 
-```
+```java
 public static Map<String, Object> computeWithoutEitherUsingMap(int marks) {
     Map<String, Object> results = new HashMap<>();
     if (marks < 85) {
@@ -59,7 +59,7 @@ public static void main(String[] args) {
 
 对于第二种方法，我们可以使用下面的代码:
 
-```
+```java
 public static Object[] computeWithoutEitherUsingArray(int marks) {
     Object[] results = new Object[2];
     if (marks < 85) {
@@ -77,7 +77,7 @@ public static Object[] computeWithoutEitherUsingArray(int marks) {
 
 现在让我们看看如何利用`Vavr`的`Either`实用程序来实现相同的结果:
 
-```
+```java
 private static Either<String, Integer> computeWithEither(int marks) {
     if (marks < 85) {
         return Either.left("Marks not acceptable");
@@ -91,7 +91,7 @@ private static Either<String, Integer> computeWithEither(int marks) {
 
 此外，`Either`提供了一个非常方便的类似一元的 API 来处理这两种情况:
 
-```
+```java
 computeWithEither(80)
   .right()
   .filter(...)
@@ -105,7 +105,7 @@ computeWithEither(80)
 
 例如，让我们创建`Right`投影，并在其上定义一些操作:
 
-```
+```java
 computeWithEither(90).right()
   .filter(...)
   .map(...)
@@ -116,7 +116,7 @@ computeWithEither(90).right()
 
 我们可以以类似的方式与`Left`投影进行交互:
 
-```
+```java
 computeWithEither(9).left()
   .map(FetchError::getMsg)
   .forEach(System.out::println);
@@ -128,27 +128,27 @@ computeWithEither(9).left()
 
 我们可以使用`isLeft`和`isRight`方法检查一个`Either`是否只包含`Left`或`Right`:
 
-```
+```java
 result.isLeft();
 result.isRight();
 ```
 
 我们可以检查`Either`是否包含给定的`Right`值:
 
-```
+```java
 result.contains(100)
 ```
 
 我们可以`fold`从左到右归纳出一种常见的类型:
 
-```
+```java
 Either<String, Integer> either = Either.right(42);
 String result = either.fold(i -> i, Object::toString);
 ```
 
 或者…甚至交换立场:
 
-```
+```java
 Either<String, Integer> either = Either.right(42);
 Either<Integer, String> swap = either.swap();
 ```

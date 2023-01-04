@@ -10,7 +10,7 @@
 
 首先，我们需要在我们的`pom.xml`中添加这个库的依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.googlecode.libphonenumber</groupId>
     <artifactId>libphonenumber</artifactId>
@@ -30,7 +30,7 @@
 
 重要的是，在所有的例子中，我们将使用这个类的 singleton 对象进行方法调用:
 
-```
+```java
 PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
 ```
 
@@ -40,7 +40,7 @@ PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
 
 以美国为例，它的国家代码是 1。我们可以用这种方式检查给定的电话号码是否可能是美国号码:
 
-```
+```java
 @Test
 public void givenPhoneNumber_whenPossible_thenValid() {
     PhoneNumber number = new PhoneNumber();
@@ -65,7 +65,7 @@ public void givenPhoneNumber_whenPossible_thenValid() {
 
 因此，我们可以用它来展示这个 API 的能力:
 
-```
+```java
 @Test
 public void givenPhoneNumber_whenPossibleForType_thenValid() {
     PhoneNumber number = new PhoneNumber();
@@ -88,7 +88,7 @@ public void givenPhoneNumber_whenPossibleForType_thenValid() {
 
 该方法用于验证给定的电话号码是否是有效的字母数字号码，例如`325-CARS`:
 
-```
+```java
 @Test
 public void givenPhoneNumber_whenAlphaNumber_thenValid() {
     assertTrue(phoneNumberUtil.isAlphaNumber("325-CARS"));
@@ -105,7 +105,7 @@ public void givenPhoneNumber_whenAlphaNumber_thenValid() {
 
 我们之前讨论的 API 只根据电话号码的长度来快速检查电话号码。另一方面， **`isValidNumber`使用前缀和长度信息**进行完整的验证:
 
-```
+```java
 @Test
 public void givenPhoneNumber_whenValid_thenOK() throws Exception {
 
@@ -125,7 +125,7 @@ public void givenPhoneNumber_whenValid_thenOK() throws Exception {
 
 此方法检查给定的数字是否有与之关联的地理或区域:
 
-```
+```java
 @Test
 public void givenPhoneNumber_whenNumberGeographical_thenValid() throws NumberParseException {
 

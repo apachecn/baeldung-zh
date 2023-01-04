@@ -32,7 +32,7 @@ Dubbo 区分了几个角色:
 
 在我们开始之前，让我们将下面的依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>dubbo</artifactId>
@@ -58,7 +58,7 @@ Dubbo 区分了几个角色:
 
 在下面的例子中，提供者只对其消费者说“嗨”:
 
-```
+```java
 public interface GreetingsService {
     String sayHi(String name);
 }
@@ -78,7 +78,7 @@ public class GreetingsServiceImpl implements GreetingsService {
 
 现在让我们将`GreetingsService`注册到注册表中。如果提供者和消费者都在同一个本地网络上，一种非常方便的方法是使用多播注册表:
 
-```
+```java
 <dubbo:application name="demo-provider" version="1.0"/>
 <dubbo:registry address="multicast://224.1.1.1:9090"/>
 <dubbo:protocol name="dubbo" port="20880"/>
@@ -99,7 +99,7 @@ public class GreetingsServiceImpl implements GreetingsService {
 
 通常，消费者需要指定要调用的接口和远程服务的地址，这正是消费者所需要的:
 
-```
+```java
 <dubbo:application name="demo-consumer" version="1.0"/>
 <dubbo:registry address="multicast://224.1.1.1:9090"/>
 <dubbo:reference interface="com.baeldung.dubbo.remote.GreetingsService"
@@ -108,7 +108,7 @@ public class GreetingsServiceImpl implements GreetingsService {
 
 现在一切都设置好了，让我们看看它们是如何工作的:
 
-```
+```java
 public class MulticastRegistryTest {
 
     @Before
@@ -139,7 +139,7 @@ public class MulticastRegistryTest {
 
 我们提到注册中心是可选的，这意味着消费者可以通过公开的端口直接连接到提供者:
 
-```
+```java
 <dubbo:reference interface="com.baeldung.dubbo.remote.GreetingsService"
   id="greetingsService" url="dubbo://127.0.0.1:20880"/>
 ```
@@ -154,7 +154,7 @@ public class MulticastRegistryTest {
 
 将以下 beans 配置加载到 Spring context 后，将启动一个简单的注册服务:
 
-```
+```java
 <dubbo:application name="simple-registry" />
 <dubbo:protocol port="9090" />
 <dubbo:service interface="com.alibaba.dubbo.registry.RegistryService"
@@ -175,7 +175,7 @@ public class MulticastRegistryTest {
 
 然后，我们将调整提供者和消费者的注册中心配置:
 
-```
+```java
 <dubbo:registry address="127.0.0.1:9090"/>
 ```
 
@@ -187,7 +187,7 @@ public class MulticastRegistryTest {
 
 让我们看看如何将我们以前的多播注册中心的 XML 配置转换成 API 配置。首先，提供程序的设置如下:
 
-```
+```java
 ApplicationConfig application = new ApplicationConfig();
 application.setName("demo-provider");
 application.setVersion("1.0");
@@ -206,7 +206,7 @@ service.export();
 
 现在服务已经通过多播注册中心公开了，让我们在本地客户机中使用它:
 
-```
+```java
 ApplicationConfig application = new ApplicationConfig();
 application.setName("demo-consumer");
 application.setVersion("1.0");
@@ -233,14 +233,14 @@ String hiMessage = greetingsService.sayHi("baeldung");
 
 有几个可配置的属性，如端口、每个用户的连接数、最大接受连接数等。
 
-```
+```java
 <dubbo:protocol name="dubbo" port="20880"
   connections="2" accepts="1000" />
 ```
 
 Dubbo 还支持同时通过不同的协议公开服务:
 
-```
+```java
 <dubbo:protocol name="dubbo" port="20880" />
 <dubbo:protocol name="rmi" port="1099" />
 
@@ -256,14 +256,14 @@ Dubbo 还支持同时通过不同的协议公开服务:
 
 本机支持远程结果缓存，以加快对热数据的访问。这就像向 bean 引用添加一个缓存属性一样简单:
 
-```
+```java
 <dubbo:reference interface="com.baeldung.dubbo.remote.GreetingsService"
   id="greetingsService" cache="lru" />
 ```
 
 这里我们配置了一个最近最少使用的缓存。为了验证缓存行为，我们将对前面的标准实现稍作修改(我们称之为“特殊实现”):
 
-```
+```java
 public class GreetingsServiceSpecialImpl implements GreetingsService {
     @Override
     public String sayHi(String name) {
@@ -277,7 +277,7 @@ public class GreetingsServiceSpecialImpl implements GreetingsService {
 
 启动 provider 后，我们可以在使用者端验证在多次调用时结果是否被缓存:
 
-```
+```java
 @Test
 public void givenProvider_whenConsumerSaysHi_thenGotResponse() {
     ClassPathXmlApplicationContext localContext
@@ -312,13 +312,13 @@ public void givenProvider_whenConsumerSaysHi_thenGotResponse() {
 
 Dubbo 通过其负载平衡能力和多种容错策略帮助我们自由扩展服务。这里，让我们假设我们用 Zookeeper 作为注册中心来管理集群中的服务。提供商可以像这样在 Zookeeper 中注册他们的服务:
 
-```
+```java
 <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
 ```
 
 请注意，我们在`POM`中需要这些额外的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.zookeeper</groupId>
     <artifactId>zookeeper</artifactId>
@@ -346,7 +346,7 @@ Dubbo 通过其负载平衡能力和多种容错策略帮助我们自由扩展�
 
 首先，让我们设置服务提供商:
 
-```
+```java
 @Before
 public void initRemote() {
     ExecutorService executorService = Executors.newFixedThreadPool(2);
@@ -367,7 +367,7 @@ public void initRemote() {
 
 使用循环策略运行 6 次后，我们预计平均响应时间至少为 2.5 秒:
 
-```
+```java
 @Test
 public void givenProviderCluster_whenConsumerSaysHi_thenResponseBalanced() {
     ClassPathXmlApplicationContext localContext
@@ -397,7 +397,7 @@ public void givenProviderCluster_whenConsumerSaysHi_thenResponseBalanced() {
 
 “慢速提供者”在系统启动 2 秒钟后注册:
 
-```
+```java
 @Before
 public void initRemote() {
     ExecutorService executorService = Executors.newFixedThreadPool(2);
@@ -418,7 +418,7 @@ public void initRemote() {
 
 消费者每秒钟调用一次远程服务。运行 6 次后，我们预计平均响应时间将大于 1.6 秒:
 
-```
+```java
 @Test
 public void givenProviderCluster_whenConsumerSaysHi_thenResponseBalanced()
   throws InterruptedException {
@@ -448,7 +448,7 @@ public void givenProviderCluster_whenConsumerSaysHi_thenResponseBalanced()
 
 请注意，负载平衡器既可以在使用者端配置，也可以在提供者端配置。下面是一个消费者端配置的例子:
 
-```
+```java
 <dubbo:reference interface="com.baeldung.dubbo.remote.GreetingsService"
   id="greetingsService" loadbalance="roundrobin" />
 ```
@@ -467,14 +467,14 @@ Dubbo 支持多种容错策略，包括:
 
 服务提供商的容错策略配置如下:
 
-```
+```java
 <dubbo:service interface="com.baeldung.dubbo.remote.GreetingsService"
   ref="greetingsService" cluster="failover"/>
 ```
 
 为了实际演示服务故障转移，让我们创建一个`GreetingsService`的故障转移实现:
 
-```
+```java
 public class GreetingsFailoverServiceImpl implements GreetingsService {
 
     @Override
@@ -488,14 +488,14 @@ public class GreetingsFailoverServiceImpl implements GreetingsService {
 
 当任何超过 2 秒的响应被视为消费者的请求失败时，我们有一个故障转移场景:
 
-```
+```java
 <dubbo:reference interface="com.baeldung.dubbo.remote.GreetingsService"
   id="greetingsService" retries="2" timeout="2000" />
 ```
 
 启动两个提供者后，我们可以用下面的代码片段验证故障转移行为:
 
-```
+```java
 @Test
 public void whenConsumerSaysHi_thenGotFailoverResponse() {
     ClassPathXmlApplicationContext localContext

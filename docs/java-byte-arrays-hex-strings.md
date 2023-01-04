@@ -18,7 +18,7 @@
 
 例如，我们可以将 45 写成二进制的 0010 1101，十六进制的等价形式是“2d”:
 
-```
+```java
 0010 = 2 (base 10) = 2 (base 16)
 1101 = 13 (base 10) = d (base 16)
 
@@ -27,7 +27,7 @@ Therefore: 45 = 0010 1101 = 0x2d
 
 让我们用 Java 实现这个简单的逻辑:
 
-```
+```java
 public String byteToHex(byte num) {
     char[] hexDigits = new char[2];
     hexDigits[0] = Character.forDigit((num >> 4) & 0xF, 16);
@@ -38,19 +38,19 @@ public String byteToHex(byte num) {
 
 现在，让我们通过分析每个操作来理解上面的代码。首先，我们创建了一个长度为 2 的 char 数组来存储输出:
 
-```
+```java
 char[] hexDigits = new char[2];
 ```
 
 接下来，我们通过右移 4 位来隔离高阶位。然后，我们应用一个掩码来隔离低阶 4 位。需要屏蔽，因为负数在内部表示为正数的[二进制补码](/web/20220908152252/https://www.baeldung.com/cs/two-complement):
 
-```
+```java
 hexDigits[0] = Character.forDigit((num >> 4) & 0xF, 16);
 ```
 
 然后，我们将剩余的 4 位转换为十六进制:
 
-```
+```java
 hexDigits[1] = Character.forDigit((num & 0xF), 16);
 ```
 
@@ -58,7 +58,7 @@ hexDigits[1] = Character.forDigit((num & 0xF), 16);
 
 现在，让我们理解这对于负字节 4 是如何工作的:
 
-```
+```java
 hexDigits[0]:
 1111 1100 >> 4 = 1111 1111 1111 1111 1111 1111 1111 1111
 1111 1111 1111 1111 1111 1111 1111 1111 & 0xF = 0000 0000 0000 0000 0000 0000 0000 1111 = 0xf
@@ -79,7 +79,7 @@ Therefore: -4 (base 10) = 1111 1100 (base 2) = fc (base 16)
 
 然后，我们需要连接两个四位段，以获得等效的字节:
 
-```
+```java
 Hexadecimal: 2d
 2 = 0010 (base 2)
 d = 1101 (base 2)
@@ -89,7 +89,7 @@ Therefore: 2d = 0010 1101 (base 2) = 45
 
 现在，让我们用 Java 编写操作:
 
-```
+```java
 public byte hexToByte(String hexString) {
     int firstDigit = toDigit(hexString.charAt(0));
     int secondDigit = toDigit(hexString.charAt(1));
@@ -110,7 +110,7 @@ private int toDigit(char hexChar) {
 
 首先，我们将十六进制字符转换成整数:
 
-```
+```java
 int firstDigit = toDigit(hexString.charAt(0));
 int secondDigit = toDigit(hexString.charAt(1));
 ```
@@ -119,7 +119,7 @@ int secondDigit = toDigit(hexString.charAt(1));
 
 然后，我们添加了最低有效数字:
 
-```
+```java
 return (byte) ((firstDigit << 4) + secondDigit);
 ```
 
@@ -135,7 +135,7 @@ return (byte) ((firstDigit << 4) + secondDigit);
 
 我们需要遍历数组，为每个字节生成十六进制对:
 
-```
+```java
 public String encodeHexString(byte[] byteArray) {
     StringBuffer hexStringBuffer = new StringBuffer();
     for (int i = 0; i < byteArray.length; i++) {
@@ -153,7 +153,7 @@ public String encodeHexString(byte[] byteArray) {
 
 现在，我们将遍历数组并将每个十六进制对转换为一个字节:
 
-```
+```java
 public byte[] decodeHexString(String hexString) {
     if (hexString.length() % 2 == 1) {
         throw new IllegalArgumentException(
@@ -174,7 +174,7 @@ public byte[] decodeHexString(String hexString) {
 
 现在，我们可以在`String`类中定义的静态方法格式的帮助下生成十六进制的`String`:
 
-```
+```java
 public String encodeUsingBigIntegerStringFormat(byte[] bytes) {
     BigInteger bigInteger = new BigInteger(1, bytes);
     return String.format(
@@ -186,7 +186,7 @@ public String encodeUsingBigIntegerStringFormat(byte[] bytes) {
 
 或者，我们可以使用来自`BigInteger`的`toString()`方法。使用`toString()`方法的微妙**区别在于输出没有用前导零填充**:
 
-```
+```java
 public String encodeUsingBigIntegerToString(byte[] bytes) {
     BigInteger bigInteger = new BigInteger(1, bytes);
     return bigInteger.toString(16);
@@ -195,7 +195,7 @@ public String encodeUsingBigIntegerToString(byte[] bytes) {
 
 现在，让我们来看看十六进制的`String`到`byte`数组的转换:
 
-```
+```java
 public byte[] decodeUsingBigInteger(String hexString) {
     byte[] byteArray = new BigInteger(hexString, 16)
       .toByteArray();
@@ -220,7 +220,7 @@ JAXB 库提供了`DataTypeConverter`类。在 Java 8 之前，这是标准库的
 
 让我们看看使用`DataTypeConverter`类的实现:
 
-```
+```java
 public String encodeUsingDataTypeConverter(byte[] bytes) {
     return DatatypeConverter.printHexBinary(bytes);
 }
@@ -238,7 +238,7 @@ public byte[] decodeUsingDataTypeConverter(String hexString) {
 
 我们可以使用 Apache commons-codec 库提供的 [`Hex`](https://web.archive.org/web/20220908152252/https://commons.apache.org/proper/commons-codec/apidocs/org/apache/commons/codec/binary/Hex.html) 类:
 
-```
+```java
 public String encodeUsingApacheCommons(byte[] bytes) 
   throws DecoderException {
     return Hex.encodeHexString(bytes);
@@ -256,7 +256,7 @@ public byte[] decodeUsingApacheCommons(String hexString)
 
 让我们来看看 [`BaseEncoding`](https://web.archive.org/web/20220908152252/https://google.github.io/guava/releases/16.0/api/docs/com/google/common/io/BaseEncoding.html) 类是如何用于将字节数组编码和解码为十六进制的`String:`
 
-```
+```java
 public String encodeUsingGuava(byte[] bytes) {
     return BaseEncoding.base16().encode(bytes);
 }

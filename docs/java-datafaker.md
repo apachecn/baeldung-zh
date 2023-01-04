@@ -14,7 +14,7 @@
 
 首先，让我们将`[datafaker](https://web.archive.org/web/20221024112317/https://search.maven.org/search?q=g:net.datafaker%20AND%20a:datafaker%20AND%20v:1.6.0)` Maven 依赖项添加到项目中:
 
-```
+```java
 <dependency>
     <groupId>net.datafaker</groupId>
     <artifactId>datafaker</artifactId>
@@ -34,7 +34,7 @@ Datafaker 和 Javafaker 都支持基于所提供的模式生成值。 **Datafake
 
 指令有几个参数。第一个是底座 S `tring`。第二个是给定字符串中将被替换的字符。其余的是随机选择的替换选项:
 
-```
+```java
 public class Templatify {
     private static Faker faker = new Faker();
 
@@ -55,7 +55,7 @@ public class Templatify {
 
 虽然我们可以使用不带占位符的基本字符串，但它可能会产生不良的结果，因为它将替换给定字符串中的所有匹配项。我们可以引入一个占位符，一个只出现在基本字符串特定位置的字符。在上面的例子中，结果是:
 
-```
+```java
 Expression: resj
 Expression with a placeholder: night
 ```
@@ -66,7 +66,7 @@ Expression with a placeholder: night
 
 本指令根据提供的示例生成一个随机值。它会用相应的值替换小写或大写字符。数字也是如此。**特殊字符不变，这有助于创建格式化字符串:**
 
-```
+```java
 public class Examplify {
     private static Faker faker = new Faker();
 
@@ -87,7 +87,7 @@ public class Examplify {
 
 输出的示例:
 
-```
+```java
 Expression: Lvo lw ero Qkd
 Number expression: 707-657-434
 ```
@@ -96,7 +96,7 @@ Number expression: 707-657-434
 
 这是创建格式化 S `tring`值的一种更灵活的方式。**我们可以使用`regexify`指令作为表达式，或者直接在`Faker `对象上调用`regexify`方法:**
 
-```
+```java
 public class Regexify {
     private static Faker faker = new Faker();
 
@@ -117,7 +117,7 @@ public class Regexify {
 
 可能的输出:
 
-```
+```java
 Expression: bye
 Regexify with a method: DCCC 
 ```
@@ -126,7 +126,7 @@ Regexify with a method: DCCC
 
 **`options.option`指令允许从提供的列表中随机选择一个选项。**该功能可以通过`regexify`实现，但由于这是一种常见情况，所以单独的指令更有意义:
 
-```
+```java
 public class Option {
     private static Faker faker = new Faker();
 
@@ -152,7 +152,7 @@ public class Option {
 
 上面代码的输出:
 
-```
+```java
 First expression: Hey
 Second expression: 4
 Third expression: Hello
@@ -164,7 +164,7 @@ Third expression: Hello
 
 该指令根据其名称创建 CSV 格式的数据。然而，使用这个指令可能会引起混淆。因为，在幕后，两个签名完全不同的重载方法处理这个指令:
 
-```
+```java
 public class Csv {
     private static Faker faker = new Faker();
 
@@ -191,7 +191,7 @@ public class Csv {
 
 表达式中`csv`指令之后的值被映射到上述方法的参数。这些方法的文档提供了更多信息。然而，有时解析这些指令可能会出现问题，在这种情况下，最好直接使用这些方法。上面的代码将产生以下输出:
 
-```
+```java
 First expression:
 "name_column","last_name_column"
 "Riley","Spinka"
@@ -213,7 +213,7 @@ Second expression:
 
 另一种流行且常用的格式是 JSON。Datafaker 允许使用表达式生成 JSON 格式的数据:
 
-```
+```java
 public class Json {
     private static final Faker faker = new Faker();
 
@@ -231,7 +231,7 @@ public class Json {
 
 上面的代码产生以下输出:
 
-```
+```java
 {"person": {"first_name": "Dorian", "last_name": "Simonis"}, "address": {"country": "Cameroon", "city": "South Ernestine"}}
 ```
 
@@ -239,7 +239,7 @@ public class Json {
 
 **事实上，所有的表达式都是方法调用，方法名和参数作为`String.`** 传递，因此，上面所有的指令都镜像了同名的方法。然而，有时使用纯文本创建模拟数据更方便:
 
-```
+```java
 public class MethodInvocation {
     private static Faker faker = new Faker();
 
@@ -262,7 +262,7 @@ public class MethodInvocation {
 
 **此外，可以通过表达式向方法传递参数。**我们在`regexify` 和`templatify` 指令的格式中看到了这一点。尽管在某些情况下可能有点麻烦和容易出错，但有时这是与`Faker:`互动的最方便的方式
 
-```
+```java
 public class MethodInvocationWithParams {
     public static int MIN = 1;
     public static int MAX = 10;
@@ -285,7 +285,7 @@ public class MethodInvocationWithParams {
 
 **表达式的缺点之一是它们返回一个`String`对象。**结果，这减少了我们可以对返回的对象进行的操作数量。上面的代码产生以下输出:
 
-```
+```java
 Duration from the method: PT6S
 Duration from the expression: PT4S
 ```
@@ -294,7 +294,7 @@ Duration from the expression: PT4S
 
 集合允许创建带有模拟数据的列表。在这种情况下，元素可以是不同的类型。集合由最特定的类型参数化:集合中所有类的父类。让我们来做一点工作，列出《星球大战》和《星际迷航》中的角色:
 
-```
+```java
 public class Collection {
     public static int MIN = 1;
     public static int MAX = 100;
@@ -320,7 +320,7 @@ public class Collection {
 
 **因为我们集合中的两个供应商都返回字符串类型值，所以结果列表将由`String.`** 参数化。让我们检查混合不同类型数据的情况:
 
-```
+```java
 public class MixedCollection {
     public static int MIN = 1;
     public static int MAX = 20;
@@ -342,7 +342,7 @@ public class MixedCollection {
 
 **在这种情况下，`String`和`Timestamp `最具体的类是`Serializable.`** ，输出如下:
 
-```
+```java
 [1964-11-09 15:16:43.0, Devora Stamm DVM, 1980-01-11 15:18:00.0, 1989-04-28 05:13:54.0,
   2004-09-06 17:11:49.0, Irving Turcotte, Sherita Durgan I, 2004-03-08 00:45:57.0, 1979-08-25 22:48:50.0,
   Manda Hane, Latanya Hegmann, 1991-05-29 12:07:23.0, 1989-06-26 12:40:44.0, Kevin Quigley] 

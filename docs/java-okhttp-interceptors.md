@@ -43,7 +43,7 @@ OkHttp 是一款适用于 Android 和 Java 应用的高效 HTTP & HTTP/2 客户�
 
 当然，我们需要将标准的 [`okhttp`依赖关系](https://web.archive.org/web/20220730173805/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.squareup.okhttp3%22%20AND%20a%3A%22okhttp%22)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.squareup.okhttp3</groupId>
     <artifactId>okhttp</artifactId>
@@ -53,7 +53,7 @@ OkHttp 是一款适用于 Android 和 Java 应用的高效 HTTP & HTTP/2 客户�
 
 我们还需要另一个专门用于测试的依赖项。再来补充一下 OkHttp [`mockwebserver`神器](https://web.archive.org/web/20220730173805/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.squareup.okhttp3%22%20AND%20a%3A%22mockwebserver%22):
 
-```
+```java
 <dependency>
     <groupId>com.squareup.okhttp3</groupId>
     <artifactId>mockwebserver</artifactId>
@@ -68,7 +68,7 @@ OkHttp 是一款适用于 Android 和 Java 应用的高效 HTTP & HTTP/2 客户�
 
 让我们从定义我们自己的拦截器开始。为了简单起见，我们的拦截器将记录请求头和请求 URL:
 
-```
+```java
 public class SimpleLoggingInterceptor implements Interceptor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleLoggingInterceptor.class);
@@ -96,7 +96,7 @@ public class SimpleLoggingInterceptor implements Interceptor {
 
 要真正利用这个拦截器，我们需要做的就是在构建我们的`OkHttpClient`实例时调用`addInterceptor`方法，它应该可以正常工作:
 
-```
+```java
 OkHttpClient client = new OkHttpClient.Builder() 
   .addInterceptor(new SimpleLoggingInterceptor())
   .build();
@@ -108,7 +108,7 @@ OkHttpClient client = new OkHttpClient.Builder()
 
 现在，我们已经定义了第一个拦截器；让我们继续编写我们的第一个集成测试:
 
-```
+```java
 @Rule
 public MockWebServer server = new MockWebServer();
 
@@ -147,7 +147,7 @@ public void givenSimpleLogginInterceptor_whenRequestSent_thenHeadersLogged() thr
 
 最后，当我们运行我们的测试时，我们将看到我们的 HTTP `User-Agent`头被记录:
 
-```
+```java
 16:07:02.644 [main] INFO  c.b.o.i.SimpleLoggingInterceptor - Intercepted headers: User-Agent: A Baeldung Reader
  from URL: http://localhost:54769/greeting
 ```
@@ -158,7 +158,7 @@ public void givenSimpleLogginInterceptor_whenRequestSent_thenHeadersLogged() thr
 
 为了使用这个记录器，我们需要一个额外的 [Maven 依赖项](https://web.archive.org/web/20220730173805/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.squareup.okhttp3%22%20AND%20a%3A%22logging-interceptor%22):
 
-```
+```java
 <dependency>
     <groupId>com.squareup.okhttp3</groupId>
     <artifactId>logging-interceptor</artifactId>
@@ -168,7 +168,7 @@ public void givenSimpleLogginInterceptor_whenRequestSent_thenHeadersLogged() thr
 
 然后，我们可以实例化我们的日志记录器，并定义我们感兴趣的日志记录级别:
 
-```
+```java
 HttpLoggingInterceptor logger = new HttpLoggingInterceptor();
 logger.setLevel(HttpLoggingInterceptor.Level.HEADERS);
 ```
@@ -181,7 +181,7 @@ logger.setLevel(HttpLoggingInterceptor.Level.HEADERS);
 
 如果我们想要添加我们自己的专有应用程序 HTTP 头或重写从我们的服务器返回的一个头，这可能是有用的:
 
-```
+```java
 public class CacheControlResponeInterceptor implements Interceptor {
 
     @Override
@@ -206,7 +206,7 @@ public class CacheControlResponeInterceptor implements Interceptor {
 
 记住这一点，我们将从定义一个简单的 bean 来保存错误消息和状态代码开始:
 
-```
+```java
 public class ErrorMessage {
 
     private final int status;
@@ -223,7 +223,7 @@ public class ErrorMessage {
 
 接下来，我们将创建拦截器:
 
-```
+```java
 public class ErrorResponseInterceptor implements Interceptor {
 
     public static final MediaType APPLICATION_JSON = MediaType.get("application/json; charset=utf-8");
@@ -252,7 +252,7 @@ public class ErrorResponseInterceptor implements Interceptor {
 
 很简单，我们的拦截器检查响应是否成功，如果不成功，就创建一个包含响应代码和简单消息的 JSON 响应。注意，在这种情况下，我们必须记住关闭原始响应的主体，以释放与之相关的任何资源。
 
-```
+```java
 {
     "status": 500,
     "detail": "The response from the server was not OK"
@@ -265,7 +265,7 @@ public class ErrorResponseInterceptor implements Interceptor {
 
 我们可以用与前面解释的完全相同的方式来定义我们的网络拦截器。**然而，当我们创建 HTTP 客户端实例**时，我们需要调用`addNetworkInterceptor`方法:
 
-```
+```java
 OkHttpClient client = new OkHttpClient.Builder()
   .addNetworkInterceptor(new SimpleLoggingInterceptor())
   .build();

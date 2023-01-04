@@ -14,7 +14,7 @@ Java 为连接`String` s `. `提供了各种方法和类，然而，如果我�
 
 我们可以使用+运算符简单地做到这一点:
 
-```
+```java
 String[] values = { "Java ", null, "", "is ", "great!" };
 String result = "";
 
@@ -25,7 +25,7 @@ for (String value : values) {
 
 这将把所有元素连接成结果`String`，如下所示:
 
-```
+```java
 Java nullis great!
 ```
 
@@ -33,7 +33,7 @@ Java nullis great!
 
 类似地，如果我们的应用程序运行在 Java 8 或更高版本上，我们使用 [`String.join()`](https://web.archive.org/web/20221208143814/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#join(java.lang.CharSequence,java.lang.CharSequence...)) 静态方法得到相同的输出:
 
-```
+```java
 String result = String.join("", values);
 ```
 
@@ -45,7 +45,7 @@ String result = String.join("", values);
 
 加法(+)运算符被重载以在 Java 中连接`String` s。当使用+运算符连接时，我们可以检查`String `是否是`null`，并用空的(" "`String:`)替换`null` `String`
 
-```
+```java
 for (String value : values) {
     result = result + (value == null ? "" : value);
 }
@@ -55,7 +55,7 @@ assertEquals("Java is great!", result);
 
 或者，我们可以将检查`null` `String`的代码提取到一个接受`String`对象并返回非`null` `String`对象的帮助器方法中:
 
-```
+```java
 for (String value : values) {
     result = result + getNonNullString(value);
 }
@@ -63,7 +63,7 @@ for (String value : values) {
 
 在这里，`getNonNullString() `方法是我们的辅助方法。它只是检查输入`String`对象的`null`引用。如果输入对象是`null`，则返回一个空值(" "`String`)，否则返回相同的`String`:
 
-```
+```java
 return value == null ? "" : value;
 ```
 
@@ -77,7 +77,7 @@ return value == null ? "" : value;
 
 这里，我们可以使用我们的`getNonNullString()`方法来检查一个`null`对象并返回一个空的`String`:
 
-```
+```java
 for (String value : values) {
     result = result.concat(getNonNullString(value));
 }
@@ -91,7 +91,7 @@ for (String value : values) {
 
 在这里，我们也可以使用同样的`getNonNullString()`方法来避开`null`对象，同时使用`append()`方法:
 
-```
+```java
 for (String value : values) {
     result = result.append(getNonNullString(value));
 }
@@ -103,7 +103,7 @@ for (String value : values) {
 
 和以前一样，我们可以使用我们的帮助器方法`getNonNullString() `来避免`null` `String`值被连接起来:
 
-```
+```java
 StringJoiner result = new StringJoiner("");
 
 for (String value : values) {
@@ -121,7 +121,7 @@ for (String value : values) {
 
 最后，我们可以使用`Collectors.joining()`连接所有非`null` `String`值，最后将结果`Stream`收集到一个`String` 变量中:
 
-```
+```java
 result = Stream.of(values).filter(value -> null != value).collect(Collectors.joining("")); 
 ```
 

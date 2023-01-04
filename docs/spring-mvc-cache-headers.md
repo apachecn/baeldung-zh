@@ -30,7 +30,7 @@ web 服务器可以通过在响应中添加一个`[Cache-Control](https://web.ar
 
 **最直接的方法是** **使用 Spring** 提供的`CacheControl ` builder 类:
 
-```
+```java
 @GetMapping("/hello/{name}")
 @ResponseBody
 public ResponseEntity<String> hello(@PathVariable String name) {
@@ -45,7 +45,7 @@ public ResponseEntity<String> hello(@PathVariable String name) {
 
 这将在响应中添加一个`Cache-Control`头:
 
-```
+```java
 @Test
 void whenHome_thenReturnCacheHeader() throws Exception {
     this.mockMvc.perform(MockMvcRequestBuilders.get("/hello/baeldung"))
@@ -62,7 +62,7 @@ void whenHome_thenReturnCacheHeader() throws Exception {
 
 或者，对于这样的控制器，我们可以直接在`HttpServletResponse `中设置`Cache-Control`标题:
 
-```
+```java
 @GetMapping(value = "/home/{name}")
 public String home(@PathVariable String name, final HttpServletResponse response) {
     response.addHeader("Cache-Control", "max-age=60, must-revalidate, no-transform");
@@ -72,7 +72,7 @@ public String home(@PathVariable String name, final HttpServletResponse response
 
 这也将在 HTTP 响应中添加一个类似于上一节的`Cache-Control`头:
 
-```
+```java
 @Test
 void whenHome_thenReturnCacheHeader() throws Exception {
     this.mockMvc.perform(MockMvcRequestBuilders.get("/home/baeldung"))
@@ -90,7 +90,7 @@ void whenHome_thenReturnCacheHeader() throws Exception {
 
 Spring 允许我们在资源映射中控制这种缓存行为:
 
-```
+```java
 @Override
 public void addResourceHandlers(final ResourceHandlerRegistry registry) {
     registry.addResourceHandler("/resources/**").addResourceLocations("/resources/")
@@ -108,7 +108,7 @@ public void addResourceHandlers(final ResourceHandlerRegistry registry) {
 
 **现在，我们将使用 Spring** 提供的`WebContentInterceptor `，而不是实现一个定制的拦截器:
 
-```
+```java
 @Override
 public void addInterceptors(InterceptorRegistry registry) {
     WebContentInterceptor interceptor = new WebContentInterceptor();
@@ -123,7 +123,7 @@ public void addInterceptors(InterceptorRegistry registry) {
 
 在上面的例子中，对于所有以`/login`开始的请求，我们将添加这个头:
 
-```
+```java
 @Test
 void whenInterceptor_thenReturnCacheHeader() throws Exception {
     this.mockMvc.perform(MockMvcRequestBuilders.get("/login/baeldung"))
@@ -153,7 +153,7 @@ void whenInterceptor_thenReturnCacheHeader() throws Exception {
 
 Spring 提供了一些实用方法来检查请求是否包含过期头:
 
-```
+```java
 @GetMapping(value = "/productInfo/{name}")
 public ResponseEntity<String> validate(@PathVariable String name, WebRequest request) {
 
@@ -171,7 +171,7 @@ public ResponseEntity<String> validate(@PathVariable String name, WebRequest req
 
 Spring 提供了`checkNotModified() `方法来检查自上次请求以来资源是否被修改过:
 
-```
+```java
 @Test
 void whenValidate_thenReturnCacheHeader() throws Exception {
     HttpHeaders headers = new HttpHeaders();

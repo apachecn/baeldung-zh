@@ -24,7 +24,7 @@ JSON 输入有各种形状和大小，大多数时候，我们需要将它映射
 
 例如，假设我们需要将 JSON 解组到以下 Java 实体:
 
-```
+```java
 public class MyDto {
 
     private String stringValue;
@@ -39,7 +39,7 @@ public class MyDto {
 
 试图将一个属性未知的 JSON 解组到这个简单的 Java 实体会导致一个`com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException`:
 
-```
+```java
 @Test(expected = UnrecognizedPropertyException.class)
 public void givenJsonHasUnknownValues_whenDeserializing_thenException()
   throws JsonParseException, JsonMappingException, IOException {
@@ -58,7 +58,7 @@ public void givenJsonHasUnknownValues_whenDeserializing_thenException()
 
 这将失败，并出现以下异常:
 
-```
+```java
 com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException: 
 Unrecognized field "stringValue2" (class org.baeldung.jackson.ignore.MyDto), 
 not marked as ignorable (3 known properties: "stringValue", "booleanValue", "intValue"])
@@ -68,14 +68,14 @@ not marked as ignorable (3 known properties: "stringValue", "booleanValue", "int
 
 **我们现在可以配置完整的`ObjectMapper`来忽略 JSON:** 中的未知属性
 
-```
+```java
 new ObjectMapper()
   .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 ```
 
 然后，我们应该能够将这种 JSON 读入预定义的 Java 实体:
 
-```
+```java
 @Test
 public void givenJsonHasUnknownValuesButJacksonIsIgnoringUnknowns_whenDeserializing_thenCorrect()
   throws JsonParseException, JsonMappingException, IOException {
@@ -101,14 +101,14 @@ public void givenJsonHasUnknownValuesButJacksonIsIgnoringUnknowns_whenDeserializ
 
 **我们也可以将单个类标记为接受未知字段**，而不是整个 Jackson `ObjectMapper`:
 
-```
+```java
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MyDtoIgnoreUnknown { ... }
 ```
 
 现在我们应该能够像以前一样测试相同的行为。未知字段被忽略，只映射已知字段:
 
-```
+```java
 @Test
 public void givenJsonHasUnknownValuesButIgnoredOnClass_whenDeserializing_thenCorrect() 
   throws JsonParseException, JsonMappingException, IOException {
@@ -134,7 +134,7 @@ public void givenJsonHasUnknownValuesButIgnoredOnClass_whenDeserializing_thenCor
 
 与其他未知字段类似，解组一个不完整的 JSON，一个不包含 Java 类中所有字段的 JSON，对 Jackson 来说不是问题:
 
-```
+```java
 @Test
 public void givenNotAllFieldsHaveValuesInJson_whenDeserializingAJsonToAClass_thenCorrect() 
   throws JsonParseException, JsonMappingException, IOException {

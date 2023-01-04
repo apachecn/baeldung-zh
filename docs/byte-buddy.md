@@ -12,7 +12,7 @@
 
 让我们首先将依赖项添加到项目中。对于基于 Maven 的项目，我们需要将这种依赖性添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>net.bytebuddy</groupId>
     <artifactId>byte-buddy</artifactId>
@@ -22,7 +22,7 @@
 
 对于基于 Gradle 的项目，我们需要将相同的工件添加到我们的`build.gradle`文件中:
 
-```
+```java
 compile net.bytebuddy:byte-buddy:1.12.13
 ```
 
@@ -34,7 +34,7 @@ compile net.bytebuddy:byte-buddy:1.12.13
 
 在这个例子中，我们创建了一个类型(`Class`)，它是`Object.class` 的子类，并覆盖了`toString()`方法:
 
-```
+```java
 DynamicType.Unloaded unloadedType = new ByteBuddy()
   .subclass(Object.class)
   .method(ElementMatchers.isToString())
@@ -52,7 +52,7 @@ DynamicType.Unloaded unloadedType = new ByteBuddy()
 
 因此，在使用之前，我们需要将生成的类加载到 JVM 中:
 
-```
+```java
 Class<?> dynamicType = unloadedType.load(getClass()
   .getClassLoader())
   .getLoaded();
@@ -60,7 +60,7 @@ Class<?> dynamicType = unloadedType.load(getClass()
 
 现在，我们可以实例化`dynamicType`并对其调用`toString()`方法:
 
-```
+```java
 assertEquals(
   dynamicType.newInstance().toString(), "Hello World ByteBuddy!");
 ```
@@ -79,7 +79,7 @@ assertEquals(
 
 让我们创建一个动态类型，它继承了具有`sayHelloFoo()`方法的`Foo.class` :
 
-```
+```java
 public String sayHelloFoo() { 
     return "Hello in Foo!"; 
 }
@@ -87,7 +87,7 @@ public String sayHelloFoo() {
 
 此外，让我们用与`sayHelloFoo()`相同的签名和返回类型的静态`sayHelloBar()`创建另一个类`Bar` :
 
-```
+```java
 public static String sayHelloBar() { 
     return "Holla in Bar!"; 
 }
@@ -95,7 +95,7 @@ public static String sayHelloBar() {
 
 现在，让我们使用`ByteBuddy`的 DSL 将所有对`sayHelloFoo()`的调用委托给`sayHelloBar()`。这允许我们在运行时为新创建的类提供用纯 Java 编写的定制逻辑:
 
-```
+```java
 String r = new ByteBuddy()
   .subclass(Foo.class)
   .method(named("sayHelloFoo")
@@ -121,7 +121,7 @@ assertEquals(r, Bar.sayHelloBar());
 
 `@BindingPriority`采用整数参数——整数值越高，调用特定实现的优先级越高。因此，在下面的代码片段中，`sayHelloBar()`将优先于`sayBar()`:
 
-```
+```java
 @BindingPriority(3)
 public static String sayHelloBar() { 
     return "Holla in Bar!"; 
@@ -139,7 +139,7 @@ public static String sayBar() {
 
 我们将使用 Java 反射来调用动态创建的方法:
 
-```
+```java
 Class<?> type = new ByteBuddy()
   .subclass(Object.class)
   .name("MyClassName")
@@ -166,7 +166,7 @@ assertNotNull(type.getDeclaredField("x"));
 
 首先，让我们将`ByteBuddyAgent`添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>net.bytebuddy</groupId>
     <artifactId>byte-buddy-agent</artifactId>
@@ -178,7 +178,7 @@ assertNotNull(type.getDeclaredField("x"));
 
 现在，让我们重新定义之前在`Foo.class` 中创建的`sayHelloFoo()`方法:
 
-```
+```java
 ByteBuddyAgent.install();
 new ByteBuddy()
   .redefine(Foo.class)

@@ -28,7 +28,7 @@ Learn how to solve the ApplicationContextException in Spring Boot.[Read more](/w
 
 首先，假设我们有一个带有服务 bean 定义的`application-context.xml`文件:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -46,7 +46,7 @@ Learn how to solve the ApplicationContextException in Spring Boot.[Read more](/w
 
 我们还将创建一个服务接口和类:
 
-```
+```java
 public interface EmployeeService {
     Employee getEmployee();
 }
@@ -62,7 +62,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 最后，我们将创建一个从应用程序上下文中获取`EmployeeService` bean 的测试用例:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @ContextConfiguration(locations={"classpath:WEB-INF/application-context.xml"})
 public class EmployeeServiceAppContextIntegrationTest {
@@ -80,13 +80,13 @@ public class EmployeeServiceAppContextIntegrationTest {
 
 现在，如果我们尝试运行这个测试，我们将观察到错误:
 
-```
+```java
 java.lang.IllegalStateException: Failed to load ApplicationContext
 ```
 
 这个错误出现在测试类中，因为应用程序上下文没有加载到测试上下文中。此外，**根本原因是`WEB-INF`没有包含在类路径**中:
 
-```
+```java
 @ContextConfiguration(locations={"classpath:WEB-INF/application-context.xml"})
 ```
 
@@ -100,14 +100,14 @@ Spring Boot 为**提供了`@SpringBootTest`注释，我们可以用它来创建�
 
 首先，让我们用 [`@ImportResource`](/web/20220525130539/https://www.baeldung.com/spring-boot-xml-beans#the-importresource-annotation) 在主类中标注:
 
-```
+```java
 @SpringBootApplication
 @ImportResource({"classpath*:application-context.xml"})
 ```
 
 现在让我们创建一个从应用程序上下文中获取`EmployeeService` bean 的测试用例:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = XmlBeanApplication.class)
 public class EmployeeServiceAppContextIntegrationTest {
@@ -133,7 +133,7 @@ public class EmployeeServiceAppContextIntegrationTest {
 
 首先，让我们从`EmployeeService`接口创建另一个 bean:
 
-```
+```java
 public class EmployeeServiceTestImpl implements EmployeeService {
 
     @Override
@@ -145,7 +145,7 @@ public class EmployeeServiceTestImpl implements EmployeeService {
 
 然后我们将在`src/test/resources`目录中创建`test-context.xml`文件:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -158,7 +158,7 @@ public class EmployeeServiceTestImpl implements EmployeeService {
 
 最后，我们将创建测试用例:
 
-```
+```java
 @SpringBootTest
 @ContextConfiguration(locations = "/test-context.xml")
 public class EmployeeServiceTestContextIntegrationTest {
@@ -181,7 +181,7 @@ public class EmployeeServiceTestContextIntegrationTest {
 
 **我们还可以从`WEB-INF `目录**中导入测试类中的应用程序上下文。为此，我们可以使用应用程序的`file` URL 来寻址应用程序上下文:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @ContextConfiguration(locations = "file:src/main/webapp/WEB-INF/application-context.xml")
 ```

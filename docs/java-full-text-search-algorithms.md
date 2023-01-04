@@ -16,7 +16,7 @@
 
 在我们开始之前，让我们定义一下 Rabin Karp 算法中使用的计算素数的简单方法:
 
-```
+```java
 public static long getBiggerPrime(int m) {
     BigInteger prime = BigInteger.probablePrime(getNumberOfBits(m) + 1, new Random());
     return prime.longValue();
@@ -30,7 +30,7 @@ private static int getNumberOfBits(int number) {
 
 这个算法的名字比其他任何解释都更好地描述了它。这是最自然的解决方案:
 
-```
+```java
 public static int simpleTextSearch(char[] pattern, char[] text) {
     int patternSize = pattern.length;
     int textSize = text.length;
@@ -56,7 +56,7 @@ public static int simpleTextSearch(char[] pattern, char[] text) {
 
 最坏情况发生在`String`发生多次局部事件的情况下:
 
-```
+```java
 Text: baeldunbaeldunbaeldunbaeldun
 Pattern: baeldung
 ```
@@ -71,7 +71,7 @@ Pattern: baeldung
 
 算法的代码:
 
-```
+```java
 public static int RabinKarpMethod(char[] pattern, char[] text) {
     int patternSize = pattern.length;
     int textSize = text.length;      
@@ -135,7 +135,7 @@ public static int RabinKarpMethod(char[] pattern, char[] text) {
 
 KMP 算法的 Java 实现；
 
-```
+```java
 public static int KnuthMorrisPrattSearch(char[] pattern, char[] text) {
     int patternSize = pattern.length;
     int textSize = text.length;
@@ -165,7 +165,7 @@ public static int KnuthMorrisPrattSearch(char[] pattern, char[] text) {
 
 下面是我们计算移位表的方法:
 
-```
+```java
 public static int[] KnuthMorrisPrattShift(char[] pattern) {
     int patternSize = pattern.length;
 
@@ -201,7 +201,7 @@ public static int[] KnuthMorrisPrattShift(char[] pattern) {
 
 博耶和摩尔两位科学家提出了另一个想法。为什么不从右向左而不是从左向右比较模式和文本，同时保持移动方向不变:
 
-```
+```java
 public static int BoyerMooreHorspoolSimpleSearch(char[] pattern, char[] text) {
     int patternSize = pattern.length;
     int textSize = text.length;
@@ -231,7 +231,7 @@ Boyer-Moore 算法的启发式实现有许多变体，最简单的一种是 Hors
 
 像 Boyer-Moore 算法一样，最坏情况下的时间复杂度是`O(m * n)`，而平均复杂度是 O(n)。空间使用不取决于模式的大小，而只取决于字母表的大小，即 256，因为这是英语字母表中 ASCII 字符的最大值:
 
-```
+```java
 public static int BoyerMooreHorspoolSearch(char[] pattern, char[] text) {
 
     int shift[] = new int[256];

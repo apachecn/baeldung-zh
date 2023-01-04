@@ -28,7 +28,7 @@ How to configure HttpMessageConverters for a REST API with Spring, and how to us
 
 ### 2.1。`@RequestMapping` —途经
 
-```
+```java
 @RequestMapping(value = "/ex/foos", method = RequestMethod.GET)
 @ResponseBody
 public String getFoosBySimplePath() {
@@ -38,7 +38,7 @@ public String getFoosBySimplePath() {
 
 要用一个简单的`curl`命令测试这个映射，运行:
 
-```
+```java
 curl -i http://localhost:8080/spring-rest/ex/foos
 ```
 
@@ -48,7 +48,7 @@ HTTP `method`参数没有默认值**。**所以，如果我们不指定值，它
 
 这里有一个简单的例子，类似于上一个例子，但是这次映射到一个 HTTP POST 请求:
 
-```
+```java
 @RequestMapping(value = "/ex/foos", method = POST)
 @ResponseBody
 public String postFoos() {
@@ -58,7 +58,7 @@ public String postFoos() {
 
 通过`curl`命令测试开机自检:
 
-```
+```java
 curl -i -X POST http://localhost:8080/spring-rest/ex/foos
 ```
 
@@ -68,7 +68,7 @@ curl -i -X POST http://localhost:8080/spring-rest/ex/foos
 
 通过为请求指定一个标头，可以进一步缩小映射范围:
 
-```
+```java
 @RequestMapping(value = "/ex/foos", headers = "key=val", method = GET)
 @ResponseBody
 public String getFoosWithHeader() {
@@ -78,13 +78,13 @@ public String getFoosWithHeader() {
 
 为了测试操作，我们将使用`curl`标题支持:
 
-```
+```java
 curl -i -H "key:val" http://localhost:8080/spring-rest/ex/foos
 ```
 
 甚至通过`@RequestMapping`的`headers`属性实现多个头:
 
-```
+```java
 @RequestMapping(
   value = "/ex/foos", 
   headers = { "key1=val1", "key2=val2" }, method = GET)
@@ -96,7 +96,7 @@ public String getFoosWithHeaders() {
 
 我们可以使用以下命令对此进行测试:
 
-```
+```java
 curl -i -H "key1:val1" -H "key2:val2" http://localhost:8080/spring-rest/ex/foos
 ```
 
@@ -108,7 +108,7 @@ curl -i -H "key1:val1" -H "key2:val2" http://localhost:8080/spring-rest/ex/foos
 
 我们可以通过上面介绍的`@RequestMapping` `headers`属性，基于请求的`Accept`头来映射请求:
 
-```
+```java
 @RequestMapping(
   value = "/ex/foos", 
   method = GET, 
@@ -121,14 +121,14 @@ public String getFoosAsJsonFromBrowser() {
 
 这种定义`Accept`头的方式的匹配是灵活的——它使用 contains 而不是 equals，所以像下面这样的请求仍然可以正确映射:
 
-```
+```java
 curl -H "Accept:application/json,text/html" 
   http://localhost:8080/spring-rest/ex/foos
 ```
 
 从 Spring 3.1 开始， **`@RequestMapping`注释现在有了`produces`和`consumes`属性**，专门用于这个目的:
 
-```
+```java
 @RequestMapping(
   value = "/ex/foos", 
   method = RequestMethod.GET, 
@@ -144,14 +144,14 @@ public String getFoosAsJsonFromREST() {
 
 这通过`curl`以同样的方式消耗:
 
-```
+```java
 curl -H "Accept:application/json" 
   http://localhost:8080/spring-rest/ex/foos
 ```
 
 此外，`produces`还支持多个值:
 
-```
+```java
 @RequestMapping(
   value = "/ex/foos", 
   method = GET,
@@ -163,7 +163,7 @@ curl -H "Accept:application/json"
 
 同时激活这两种方法会导致:
 
-```
+```java
 Caused by: java.lang.IllegalStateException: Ambiguous mapping found. 
 Cannot map 'fooController' bean method 
 java.lang.String 
@@ -193,7 +193,7 @@ mapped.
 
 一个带有单个路径变量的简单示例:
 
-```
+```java
 @RequestMapping(value = "/ex/foos/{id}", method = GET)
 @ResponseBody
 public String getFoosBySimplePathWithPathVariable(
@@ -204,13 +204,13 @@ public String getFoosBySimplePathWithPathVariable(
 
 这可以用`curl`来测试:
 
-```
+```java
 curl http://localhost:8080/spring-rest/ex/foos/1
 ```
 
 如果方法参数的名称与路径变量的名称完全匹配，那么这可以通过使用不带值的`@PathVariable`**来简化:**
 
-```
+```java
 @RequestMapping(value = "/ex/foos/{id}", method = GET)
 @ResponseBody
 public String getFoosBySimplePathWithPathVariable(
@@ -221,7 +221,7 @@ public String getFoosBySimplePathWithPathVariable(
 
 注意，`@PathVariable`受益于自动类型转换，所以我们也可以将`id`声明为:
 
-```
+```java
 @PathVariable long id
 ```
 
@@ -229,7 +229,7 @@ public String getFoosBySimplePathWithPathVariable(
 
 更复杂的 URI 可能需要将 URI 的多个部分映射到多个值:
 
-```
+```java
 @RequestMapping(value = "/ex/foos/{fooid}/bar/{barid}", method = GET)
 @ResponseBody
 public String getFoosBySimplePathWithPathVariables
@@ -241,7 +241,7 @@ public String getFoosBySimplePathWithPathVariables
 
 这很容易用`curl`以同样的方式测试:
 
-```
+```java
 curl http://localhost:8080/spring-rest/ex/foos/1/bar/2
 ```
 
@@ -251,7 +251,7 @@ curl http://localhost:8080/spring-rest/ex/foos/1/bar/2
 
 例如，我们将限制映射只接受`id`的数值:
 
-```
+```java
 @RequestMapping(value = "/ex/bars/{numericId:[\\d]+}", method = GET)
 @ResponseBody
 public String getBarsBySimplePathWithPathVariable(
@@ -262,13 +262,13 @@ public String getBarsBySimplePathWithPathVariable(
 
 这将意味着以下 URIs 将匹配:
 
-```
+```java
 http://localhost:8080/spring-rest/ex/bars/1
 ```
 
 但这不会:
 
-```
+```java
 http://localhost:8080/spring-rest/ex/bars/abc
 ```
 
@@ -278,11 +278,11 @@ http://localhost:8080/spring-rest/ex/bars/abc
 
 我们现在将一个请求映射到一个 URI:
 
-```
+```java
 http://localhost:8080/spring-rest/ex/bars?id=100
 ```
 
-```
+```java
 @RequestMapping(value = "/ex/bars", method = GET)
 @ResponseBody
 public String getBarBySimplePathWithRequestParam(
@@ -295,7 +295,7 @@ public String getBarBySimplePathWithRequestParam(
 
 要发送带有`id`参数的请求，我们将使用`curl`中的参数支持:
 
-```
+```java
 curl -i -d id=100 http://localhost:8080/spring-rest/ex/bars
 ```
 
@@ -303,7 +303,7 @@ curl -i -d id=100 http://localhost:8080/spring-rest/ex/bars
 
 对于更高级的场景， **`@RequestMapping`可以选择性地定义参数**,作为缩小请求映射的另一种方式:
 
-```
+```java
 @RequestMapping(value = "/ex/bars", params = "id", method = GET)
 @ResponseBody
 public String getBarBySimplePathWithExplicitRequestParam(
@@ -314,7 +314,7 @@ public String getBarBySimplePathWithExplicitRequestParam(
 
 甚至允许更灵活的映射。可以设置多个`params`值，并且不必使用所有的值:
 
-```
+```java
 @RequestMapping(
   value = "/ex/bars", 
   params = { "id", "second" }, 
@@ -328,7 +328,7 @@ public String getBarBySimplePathWithExplicitRequestParams(
 
 当然，还有对 URI 的请求，例如:
 
-```
+```java
 http://localhost:8080/spring-rest/ex/bars?id=100&second;=something
 ```
 
@@ -342,7 +342,7 @@ http://localhost:8080/spring-rest/ex/bars?id=100&second;=something
 
 在这种情况下，`@RequestMapping`的`value`属性接受多个映射，而不仅仅是一个:
 
-```
+```java
 @RequestMapping(
   value = { "/ex/advanced/bars", "/ex/advanced/foos" }, 
   method = GET)
@@ -354,7 +354,7 @@ public String getFoosOrBarsByPath() {
 
 现在，这两个`curl`命令应该使用相同的方法:
 
-```
+```java
 curl -i http://localhost:8080/spring-rest/ex/advanced/foos
 curl -i http://localhost:8080/spring-rest/ex/advanced/bars
 ```
@@ -363,7 +363,7 @@ curl -i http://localhost:8080/spring-rest/ex/advanced/bars
 
 使用不同 HTTP 动词的多个请求可以映射到同一个控制器方法:
 
-```
+```java
 @RequestMapping(
   value = "/ex/foos/multiple", 
   method = { RequestMethod.PUT, RequestMethod.POST }
@@ -376,7 +376,7 @@ public String putAndPostFoos() {
 
 有了`curl`，这两者现在将达到相同的方法:
 
-```
+```java
 curl -i -X POST http://localhost:8080/spring-rest/ex/foos/multiple
 curl -i -X PUT http://localhost:8080/spring-rest/ex/foos/multiple
 ```
@@ -385,7 +385,7 @@ curl -i -X PUT http://localhost:8080/spring-rest/ex/foos/multiple
 
 要使用特定的 HTTP 方法为所有请求实现简单的回退，例如，对于 GET:
 
-```
+```java
 @RequestMapping(value = "*", method = RequestMethod.GET)
 @ResponseBody
 public String getFallback() {
@@ -395,7 +395,7 @@ public String getFallback() {
 
 或者甚至针对所有请求:
 
-```
+```java
 @RequestMapping(
   value = "*", 
   method = { RequestMethod.GET, RequestMethod.POST ... })
@@ -411,7 +411,7 @@ public String allFallback() {
 
 例如，这是一个不明确的映射:
 
-```
+```java
 @GetMapping(value = "foos/duplicate" )
 public String duplicate() {
     return "Duplicate";
@@ -425,7 +425,7 @@ public String duplicateEx() {
 
 抛出的异常通常包含如下错误消息:
 
-```
+```java
 Caused by: java.lang.IllegalStateException: Ambiguous mapping.
   Cannot map 'fooMappingExamplesController' method 
   public java.lang.String org.baeldung.web.controller.FooMappingExamplesController.duplicateEx()
@@ -438,7 +438,7 @@ Caused by: java.lang.IllegalStateException: Ambiguous mapping.
 
 **下面的代码片段不会导致不明确的映射错误，因为两种方法返回不同的内容类型**:
 
-```
+```java
 @GetMapping(value = "foos/duplicate", produces = MediaType.APPLICATION_XML_VALUE)
 public String duplicateXml() {
     return "<message>Duplicate</message>";
@@ -468,7 +468,7 @@ Spring Framework 4.3 引入了[几个新的](/web/20221130175138/https://www.bae
 
 让我们通过创建一个支持 CRUD 操作的 RESTful API 来看看这些新注释的作用:
 
-```
+```java
 @GetMapping("/{id}")
 public ResponseEntity<?> getBazz(@PathVariable String id){
     return new ResponseEntity<>(new Bazz(id, "Bazz"+id), HttpStatus.OK);
@@ -498,7 +498,7 @@ public ResponseEntity<?> deleteBazz(@PathVariable String id){
 
 考虑到我们的`FooController`是在下面的包中定义的，Spring MVC 配置非常简单:
 
-```
+```java
 package org.baeldung.spring.web.controller;
 
 @Controller
@@ -507,7 +507,7 @@ public class FooController { ... }
 
 我们只需要一个`@Configuration`类来启用完整的 MVC 支持并为控制器配置类路径扫描:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 @ComponentScan({ "org.baeldung.spring.web.controller" })

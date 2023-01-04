@@ -28,7 +28,7 @@ Java 13 引入了两个新的语言特性，尽管是在预览模式下。这意
 
 **使用`yield`，我们现在可以有效地从开关表达式**中返回值:
 
-```
+```java
 @Test
 @SuppressWarnings("preview")
 public void whenSwitchingOnOperationSquareMe_thenWillReturnSquare() {
@@ -56,14 +56,14 @@ public void whenSwitchingOnOperationSquareMe_thenWillReturnSquare() {
 
 早先，为了在我们的代码中嵌入 JSON，我们将把它声明为一个`String` 文字:
 
-```
+```java
 String JSON_STRING 
   = "{\r\n" + "\"name\" : \"Baeldung\",\r\n" + "\"website\" : \"https://www.%s.com/\"\r\n" + "}";
 ```
 
 现在让我们使用`String` 文本块编写相同的 JSON:
 
-```
+```java
 String TEXT_BLOCK_JSON = """
 {
     "name" : "Baeldung",
@@ -76,7 +76,7 @@ String TEXT_BLOCK_JSON = """
 
 此外，所有`String` 功能都可用:
 
-```
+```java
 @Test
 public void whenTextBlocks_thenStringOperationsWorkSame() {        
     assertThat(TEXT_BLOCK_JSON.contains("Baeldung")).isTrue();
@@ -93,7 +93,7 @@ public void whenTextBlocks_thenStringOperationsWorkSame() {
 
 让我们快速看一个`String::formatted`例子:
 
-```
+```java
 assertThat(TEXT_BLOCK_JSON.formatted("baeldung").contains("www.baeldung.com")).isTrue();
 assertThat(String.format(JSON_STRING,"baeldung").contains("www.baeldung.com")).isTrue(); 
 ```
@@ -110,13 +110,13 @@ assertThat(String.format(JSON_STRING,"baeldung").contains("www.baeldung.com")).i
 
 为了使应用程序能够在默认的系统归档文件之上创建一个动态共享归档文件，我们需要添加一个选项`-XX:ArchiveClassesAtExit`并将归档文件名称指定为参数:
 
-```
+```java
 java -XX:ArchiveClassesAtExit=<archive filename> -cp <app jar> AppName
 ```
 
 然后，我们可以使用新创建的归档文件运行带有`-XX:SharedArchiveFile`选项的相同应用程序:
 
-```
+```java
 java -XX:SharedArchiveFile=<archive filename> -cp <app jar> AppName
 ```
 

@@ -12,13 +12,13 @@
 
 首先，我们将定义我们的`Iterable`:
 
-```
+```java
 Iterable<String> iterable = Arrays.asList("john", "tom", "jane");
 ```
 
 我们还将定义一个简单的`Iterator`——来强调将`Iterable`转换为`Collection`和将`Iterator`转换为`Collection`之间的区别:
 
-```
+```java
 Iterator<String> iterator = iterable.iterator();
 ```
 
@@ -28,7 +28,7 @@ Iterator<String> iterator = iterable.iterator();
 
 我们可以**使用 Java 8 `forEach()`方法将所有元素添加到`List`** :
 
-```
+```java
 @Test
 public void whenConvertIterableToListUsingJava8_thenSuccess() {
     List<String> result = new ArrayList<String>();
@@ -40,7 +40,7 @@ public void whenConvertIterableToListUsingJava8_thenSuccess() {
 
 或者**使用`Spliterator` 类将我们的`Iterable`转换成`Stream`，然后转换成`Collection`** :
 
-```
+```java
 List<String> result = 
   StreamSupport.stream(iterable.spliterator(), false)
     .collect(Collectors.toList());
@@ -50,7 +50,7 @@ List<String> result =
 
 另一方面，我们将把`forEachRemaining()`和`Iterator`一起使用，而不是使用`forEach()`:
 
-```
+```java
 @Test
 public void whenConvertIteratorToListUsingJava8_thenSuccess() {
     List<String> result = new ArrayList<String>();
@@ -62,7 +62,7 @@ public void whenConvertIteratorToListUsingJava8_thenSuccess() {
 
 我们也可以从我们的`Iterator`创建一个`Spliterator`，然后用它将`Iterator`转换成`Stream`:
 
-```
+```java
 List<String> result = 
   StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED), false)
     .collect(Collectors.toList());
@@ -72,7 +72,7 @@ List<String> result =
 
 让我们来看看一个解决方案，它使用一个非常简单的 for 循环将我们的`Iterable`转换为`List`:
 
-```
+```java
 @Test
 public void whenConvertIterableToListUsingJava_thenSuccess() {
     List<String> result = new ArrayList<String>();
@@ -86,7 +86,7 @@ public void whenConvertIterableToListUsingJava_thenSuccess() {
 
 另一方面，我们将使用`hasNext()`和`next()`以及`Iterator`:
 
-```
+```java
 @Test
 public void whenConvertIteratorToListUsingJava_thenSuccess() {
     List<String> result = new ArrayList<String>();
@@ -106,13 +106,13 @@ public void whenConvertIteratorToListUsingJava_thenSuccess() {
 
 **我们可以使用`Lists.newArrayList()` :** 从`Iterable`或`Iterator`创建一个新的`List`
 
-```
+```java
 List<String> result = Lists.newArrayList(iterable);
 ```
 
 或者我们可以使用`ImmutableList.copyOf()`:
 
-```
+```java
 List<String> result = ImmutableList.copyOf(iterable);
 ```
 
@@ -120,13 +120,13 @@ List<String> result = ImmutableList.copyOf(iterable);
 
 最后，**我们将使用 [Apache Commons](/web/20221126180429/https://www.baeldung.com/java-commons-lang-3) `IterableUtils`从`Iterable` :** 创建一个`List`
 
-```
+```java
 List<String> result = IterableUtils.toList(iterable);
 ```
 
 类似地，我们将使用`IteratorUtils`从我们的`Iterator`创建一个`List`:
 
-```
+```java
 List<String> result = IteratorUtils.toList(iterator);
 ```
 

@@ -19,7 +19,7 @@
 
 因此，考虑到我们的输入`String`包含在双引号中，我们可以使用`substring`方法:
 
-```
+```java
 String input = "\"text wrapped in double quotes\"";
 String result = input.substring(1, input.length() - 1);
 System.out.println("Input: " + input);
@@ -28,14 +28,14 @@ System.out.println("Result: " + result);
 
 通过执行上面的代码，我们得到了以下输出:
 
-```
+```java
 Input: "text wrapped in double quotes"
 Result: text wrapped in double quotes
 ```
 
 当我们不确定`String`是否会用双引号括起来时，我们应该在运行`substring`方法之前检查一下:
 
-```
+```java
 if (input != null && input.length() >= 2 
       && input.charAt(0) == '\"' && input.charAt(input.length() - 1) == '\"') {
     result = input.substring(1, input.length() - 1);
@@ -48,7 +48,7 @@ if (input != null && input.length() >= 2
 
 除了`substring`法，我们还可以使用`replaceAll`法。**该方法替换`String`中与给定正则表达式**匹配的所有部分。使用`replaceAll`，我们可以用空字符串替换所有出现的双引号:
 
-```
+```java
 String result = input.replaceAll("\"", "");
 ```
 
@@ -56,7 +56,7 @@ String result = input.replaceAll("\"", "");
 
 **要从**的开头和结尾去掉双引号`**String**,`我们可以使用一个更具体的正则表达式:
 
-```
+```java
 String result = input.replaceAll("^\"|\"$", "");
 ```
 
@@ -72,13 +72,13 @@ String result = input.replaceAll("^\"|\"$", "");
 
 从`String`的开头和结尾去掉双引号的另一种可能的方法是**使用来自 Guava 库**的`CharMatcher`类:
 
-```
+```java
 String result = CharMatcher.is('\"').trimFrom(input);
 ```
 
 **这种方法更容易理解，只删除了`String`** 的开始和结束引号。然而，为了让这种方法工作，我们需要将 [`guava`](https://web.archive.org/web/20221128235332/https://search.maven.org/search?q=g:com.google.guava%20a:guava) 库添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>

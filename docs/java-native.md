@@ -20,7 +20,7 @@
 
 此外，标记为`native`的方法不能有主体，应该以分号结束:
 
-```
+```java
 [ public | protected | private] native [return_type] method ();
 ```
 
@@ -39,7 +39,7 @@
 
 首先，让我们创建一个类`DateTimeUtils`，它需要访问一个名为`getSystemTime`的依赖于平台的`native`方法:
 
-```
+```java
 public class DateTimeUtils {
     public native String getSystemTime();
     // ...
@@ -50,7 +50,7 @@ public class DateTimeUtils {
 
 让我们将加载这个库的调用放在一个`static `块中，以便它在我们的类中可用:
 
-```
+```java
 public class DateTimeUtils {
     public native String getSystemTime();
 
@@ -66,7 +66,7 @@ public class DateTimeUtils {
 
 最后，让我们看看如何测试在`DateTimeUtils`类中定义的本地方法:
 
-```
+```java
 public class DateTimeUtilsManualTest {
 
    @BeforeClass
@@ -86,7 +86,7 @@ public class DateTimeUtilsManualTest {
 
 下面是记录器的输出:
 
-```
+```java
 [main] INFO  c.b.n.DateTimeUtilsManualTest - System time is : Wed Dec 19 11:34:02 2018
 ```
 

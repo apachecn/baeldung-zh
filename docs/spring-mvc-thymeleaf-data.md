@@ -12,7 +12,7 @@
 
 首先，我们需要添加我们的[百里香叶依赖关系](https://web.archive.org/web/20220728105348/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-thymeleaf):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -22,7 +22,7 @@
 
 第二，让我们把 Spring Boot 的[`web starter`](https://web.archive.org/web/20220728105348/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-web)包括进来:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -34,7 +34,7 @@
 
 我们将创建几个百里香模板来覆盖我们的示例案例，并将它们存储在`resources/mvcdata`中。教程的每个部分将实现不同的模板:
 
-```
+```java
 <!DOCTYPE html>
 <html  xmlns:th="http://www.thymeleaf.org">
     <!-- data -->
@@ -43,7 +43,7 @@
 
 最后，我们需要实现一个控制器类来存储我们的业务逻辑:
 
-```
+```java
 @Controller
 public class EmailController {
     private ServletContext servletContext;
@@ -64,7 +64,7 @@ public class EmailController {
 
 让我们将我们的`emailData`作为一个属性来传递:
 
-```
+```java
 @GetMapping(value = "/email/modelattributes")
 public String emailModel(Model model) {
     model.addAttribute("emailData", emailData);
@@ -76,13 +76,13 @@ public String emailModel(Model model) {
 
 然后，我们可以在百里香表达式中引用我们的`emailData`模型属性:
 
-```
+```java
 <p th:text="${emailData.emailSubject}">Subject</p>
 ```
 
 另一种方法是通过使用`@ModelAttribute`告诉我们的 Spring 容器在我们的视图中需要什么属性:
 
-```
+```java
 @ModelAttribute("emailModelAttribute")
 EmailData emailModelAttribute() {
     return emailData;
@@ -91,7 +91,7 @@ EmailData emailModelAttribute() {
 
 然后我们可以将视图中的数据表示为:
 
-```
+```java
 <p th:each="emailAddress : ${emailModelAttribute.getEmailAddresses()}">
     <span th:text="${emailAddress}"></span>
 </p>
@@ -103,7 +103,7 @@ EmailData emailModelAttribute() {
 
 另一种访问数据的方式是通过请求参数:
 
-```
+```java
 @GetMapping(value = "/email/requestparameters")
 public String emailRequestParameters(
     @RequestParam(value = "emailsubject") String emailSubject) {
@@ -113,13 +113,13 @@ public String emailRequestParameters(
 
 同时，在我们的模板中，我们需要使用关键字`param`指定**哪个参数包含数据**:
 
-```
+```java
 <p th:text="${param.emailsubject}"></p>
 ```
 
 我们也可以有多个同名的请求参数:
 
-```
+```java
 @GetMapping(value = "/email/requestparameters")
 public String emailRequestParameters(
     @RequestParam(value = "emailsubject") String emailSubject,
@@ -133,7 +133,7 @@ public String emailRequestParameters(
 
 首先，我们可以使用`th:each `遍历每个同名的参数:
 
-```
+```java
 <p th:each="emailaddress : ${param.emailaddress}">
     <span th:text="${emailaddress}"></span>
 </p>
@@ -141,7 +141,7 @@ public String emailRequestParameters(
 
 其次，我们可以使用参数数组的索引:
 
-```
+```java
 <p th:text="${param.emailaddress[0]}"></p>
 <p th:text="${param.emailaddress[1]}"></p>
 ```
@@ -150,7 +150,7 @@ public String emailRequestParameters(
 
 或者，我们可以将数据放在一个`HttpSession` 属性中:
 
-```
+```java
 @GetMapping("/email/sessionattributes")
 public String emailSessionAttributes(HttpSession httpSession) {
     httpSession.setAttribute("emaildata", emailData);
@@ -160,7 +160,7 @@ public String emailSessionAttributes(HttpSession httpSession) {
 
 然后，类似于请求参数，我们可以使用`session`关键字:
 
-```
+```java
 <p th:text="${session.emaildata.emailSubject}"></p>
 ```
 
@@ -170,7 +170,7 @@ public String emailSessionAttributes(HttpSession httpSession) {
 
 为了解决这个问题，我们将每个值作为一个单独的属性传递:
 
-```
+```java
 @GetMapping("/email/servletcontext")
 public String emailServletContext() {
     servletContext.setAttribute("emailsubject", emailData.getEmailSubject());
@@ -183,7 +183,7 @@ public String emailServletContext() {
 
 **然后，我们可以通过`servletContext `变量:**检索每一个
 
-```
+```java
 <p th:text="${#servletContext.getAttribute('emailsubject')}"></p>
 ```
 
@@ -191,7 +191,7 @@ public String emailServletContext() {
 
 最后，我们还可以使用上下文 beans 提供数据:
 
-```
+```java
 @Bean
 public EmailData emailData() {
     return new EmailData();
@@ -200,7 +200,7 @@ public EmailData emailData() {
 
 百里香允许使用`@beanName`语法进行 bean 访问:
 
-```
+```java
 <p th:text="${@emailData.emailSubject}"></p>
 ```
 

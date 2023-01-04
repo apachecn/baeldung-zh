@@ -21,7 +21,7 @@
 
 例如，让我们考虑下面的`pom.xml`:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -48,7 +48,7 @@
 
 **使用 [JUnit 5 平台](/web/20220907090048/https://www.baeldung.com/junit-5)时，我们至少需要添加一个`TestEngine`实现**。例如，如果我们想用 JUnit Jupiter 编写测试，我们需要将测试工件`junit-jupiter-engine`添加到`pom.xml`中的依赖项中:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -69,7 +69,7 @@
 
 如果我们想通过 JUnit 平台编写和执行 JUnit 3 或 4 测试，我们需要将 Vintage 引擎添加到依赖项部分:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.junit.vintage</groupId>
@@ -86,7 +86,7 @@
 
 为了提供一些背景知识，Maven 定义了一个标准的目录结构:
 
-```
+```java
 - src
   - main
     - java
@@ -103,13 +103,13 @@
 
 例如，源类文件应该放在这里:
 
-```
+```java
 src/main/java/Calculator.java
 ```
 
 并且，相应的测试类文件应该放在这里:
 
-```
+```java
 src/test/java/CalculatorTest.java
 ```
 
@@ -121,7 +121,7 @@ Java 中默认的访问修饰符是 [`package-private`](/web/20220907090048/http
 
 让我们看一个例子:
 
-```
+```java
 public class MySampleTest {
     @Test
     private void givenTestCase1_thenPrintTest1() {
@@ -140,13 +140,13 @@ Maven 提供了多个选项来[打包](/web/20220907090048/https://www.baeldung.
 
 有时，由于复制粘贴错误，Maven 打包类型可能被标记为`pom`:
 
-```
+```java
 <packaging>pom</packaging>
 ```
 
 要解决这个问题，我们需要指定正确的打包类型。例如:
 
-```
+```java
 <packaging>jar</packaging>
 ```
 

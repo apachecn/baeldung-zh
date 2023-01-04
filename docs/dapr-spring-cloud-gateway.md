@@ -20,7 +20,7 @@
 
 让我们添加一个控制器来响应`hello`端点:
 
-```
+```java
 @RestController
 public class GreetingController {
     @GetMapping(value = "/hello")
@@ -32,13 +32,13 @@ public class GreetingController {
 
 建立我们的问候服务应用程序后，我们将启动它:
 
-```
+```java
 java -jar greeting/target/greeting-1.0-SNAPSHOT.jar
 ```
 
 我们可以使用`curl`返回“Hello world！”消息:
 
-```
+```java
 curl http://localhost:3001/hello
 ```
 
@@ -46,7 +46,7 @@ curl http://localhost:3001/hello
 
 现在，我们将在端口 3000 上创建一个 Spring Cloud Gateway，作为一个标准的 Spring Boot 应用程序，使用`spring-cloud-starter-gateway`作为唯一的依赖项和标准的主类。我们还将配置路由到 来访问问候服务:
 
-```
+```java
 spring:
   cloud:
     gateway:
@@ -61,13 +61,13 @@ spring:
 
 一旦我们构建了网关应用程序，我们就可以启动网关:
 
-```
+```java
 java -Dspring.profiles.active=no-dapr -jar gateway/target/gateway-1.0-SNAPSHOT.jar
 ```
 
 我们可以使用`curl`返回“Hello world！”来自问候服务的消息:
 
-```
+```java
 curl http://localhost:3000/hello
 ```
 
@@ -83,7 +83,7 @@ curl http://localhost:3000/hello
 
 我们将使用标准的 Dapr 配置文件:
 
-```
+```java
 apiVersion: dapr.io/v1alpha1
 kind: Configuration
 metadata:
@@ -93,25 +93,25 @@ spec: {}
 
 让我们使用`dapr`命令:为端口 4000 上的网关启动 Dapr sidecar
 
-```
+```java
 dapr run --app-id gateway --dapr-http-port 4000 --app-port 3000 --config dapr-config/basic-config.yaml
 ```
 
 接下来，让我们使用`dapr`命令为端口 4001 上的问候服务启动 Dapr sidecar:
 
-```
+```java
 dapr run --app-id greeting --dapr-http-port 4001 --app-port 3001 --config dapr-config/basic-config.yaml
 ```
 
 现在 sidecars 正在运行，我们可以看到它们是如何截取请求并将其转发给问候服务的。当我们使用`curl`测试它时，它应该返回“Hello world！”问候语:
 
-```
+```java
 curl http://localhost:4001/v1.0/invoke/greeting/method/hello
 ```
 
 让我们使用 gateway sidecar 尝试相同的测试，以确认它也返回“Hello world！”问候语:
 
-```
+```java
 curl http://localhost:4000/v1.0/invoke/greeting/method/hello
 ```
 
@@ -121,7 +121,7 @@ curl http://localhost:4000/v1.0/invoke/greeting/method/hello
 
 下一步是将网关路由配置为使用其 Dapr 边车:
 
-```
+```java
 spring:
   cloud:
     gateway:
@@ -136,13 +136,13 @@ spring:
 
 然后，我们将使用更新后的路由重新启动网关:
 
-```
+```java
 java -Dspring.profiles.active=with-dapr -jar gateway/target/gateway-1.0-SNAPSHOT.jar
 ```
 
 我们可以使用`curl`命令测试一下，再次从问候服务:获得“Hello world”问候
 
-```
+```java
 curl http://localhost:3000/hello
 ```
 
@@ -160,7 +160,7 @@ curl http://localhost:3000/hello
 
 首先，我们需要 在默认端口 8500 上安装并启动 Consul，然后 u 更新 Dapr sidecar 配置以使用 Consul:
 
-```
+```java
 apiVersion: dapr.io/v1alpha1
 kind: Configuration
 metadata:
@@ -174,11 +174,11 @@ spec:
 
 然后，我们将使用新配置重启两个 Dapr 边车:
 
-```
+```java
 dapr run --app-id greeting --dapr-http-port 4001 --app-port 3001 --config dapr-config/consul-config.yaml
 ```
 
-```
+```java
 dapr run --app-id gateway --dapr-http-port 4000 --app-port 3000 --config dapr-config/consul-config.yaml
 ```
 
@@ -192,7 +192,7 @@ Dapr 还支持与 Zipkin(T2)的集成，用于跨应用程序追踪电话。
 
 首先，在默认端口 9411 上安装并启动 Zipkin，然后更新 Dapr sidecar 的配置以添加 Zipkin:
 
-```
+```java
 apiVersion: dapr.io/v1alpha1
 kind: Configuration
 metadata:
@@ -210,11 +210,11 @@ spec:
 
 我们需要重启两个 Dapr 边车，以获取新配置:
 
-```
+```java
 dapr run --app-id greeting --dapr-http-port 4001 --app-port 3001 --config dapr-config/consul-zipkin-config.yaml
 ```
 
-```
+```java
 dapr run --app-id gateway --dapr-http-port 4000 --app-port 3000 --config dapr-config/consul-zipkin-config.yaml
 ```
 

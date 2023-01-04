@@ -14,20 +14,20 @@
 
 首先，我们需要连接到 mongo shell:
 
-```
+```java
 mongo --host localhost --port 27017
 ```
 
 现在，建立一个数据库`baeldung`和一个样本集合`populations`:
 
-```
+```java
 use baeldung;
 db.createCollection(populations);
 ```
 
 让我们使用`insertMany`方法将一些样本数据添加到集合`populations`中:
 
-```
+```java
 db.populations.insertMany([
 {
     "cityId":1124,
@@ -61,7 +61,7 @@ db.populations.insertMany([
 
 上面的`insertMany`查询将返回以下文档:
 
-```
+```java
 {
     "acknowledged" : true,
     "insertedIds" : [
@@ -83,7 +83,7 @@ MongoDB 的批量操作构建器用于为单个集合批量构建写操作列表
 
 我们可以使用 insert、update、replace 和 remove 方法在单个 DB 调用中执行不同类型的操作。作为一个例子，让我们来看看使用 MongoDB shell 的批量写操作查询:
 
-```
+```java
 db.populations.bulkWrite([
     { 
         insertOne :
@@ -174,7 +174,7 @@ db.populations.bulkWrite([
 
 上面的`bulkWrite`查询将返回以下文档:
 
-```
+```java
 {
     "acknowledged" : true,
     "deletedCount" : 1,
@@ -198,7 +198,7 @@ db.populations.bulkWrite([
 
 我们已经讨论了执行批量写操作的 MongoDB shell 查询。在创建批量写操作之前，让我们首先创建一个与数据库`baeldung`的集合`populations`的`MongoClient`连接:
 
-```
+```java
 MongoClient mongoClient = new MongoClient("localhost", 27017);
 MongoDatabase database = mongoClient.getDatabase("baeldung");
 MongoCollection<Document> collection = database.getCollection("populations");
@@ -206,7 +206,7 @@ MongoCollection<Document> collection = database.getCollection("populations");
 
 这里，我们创建了与 MongoDB 服务器的连接，运行在默认端口 27017 上。现在让我们使用 Java 代码实现相同的批量操作:
 
-```
+```java
 List<WriteModel<Document>> writeOperations = new ArrayList<WriteModel<Document>>();
 writeOperations.add(new InsertOneModel<Document>(new Document("cityId", 1128)
   .append("cityName", "Kathmandu")

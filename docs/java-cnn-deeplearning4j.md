@@ -72,7 +72,7 @@
 
 在这一部分，我们将准备图像。让我们在本教程中使用嵌入式[CIFS ar 10](https://web.archive.org/web/20220802081121/https://en.wikipedia.org/wiki/CIFAR-10)数据集。我们将创建迭代器来访问图像:
 
-```
+```java
 public class CifarDatasetService implements IDataSetService {
 
     private CifarDataSetIterator trainIterator;
@@ -96,7 +96,7 @@ public class CifarDatasetService implements IDataSetService {
 
 接下来，让我们从头开始构建我们的 CNN 模型。为此，**我们将使用卷积、子采样(池化)和全连接(密集)层**。
 
-```
+```java
 MultiLayerConfiguration configuration = new NeuralNetConfiguration.Builder()
   .seed(1611)
   .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
@@ -125,7 +125,7 @@ network = new MultiLayerNetwork(configuration);
 
 然后，我们将训练建成的模型。这可以用几行代码完成:
 
-```
+```java
 public void train() {
     network.init();    
     IntStream.range(1, epochsNum + 1).forEach(epoch -> {
@@ -140,7 +140,7 @@ public void train() {
 
 最后，我们可以评估现在训练好的模型。Deeplearning4j 库提供了轻松完成这项工作的能力:
 
-```
+```java
 public Evaluation evaluate() {
    return network.evaluate(dataSetService.testIterator());
 }
@@ -148,7 +148,7 @@ public Evaluation evaluate() {
 
 `Evaluation`是一个对象，包含训练模型后计算出的指标。这些是**准确度、精确度、召回率和 F1 分数**。此外，它有一个友好的可打印界面:
 
-```
+```java
 ==========================Scores=====================
 # of classes: 11
 Accuracy: 0,8406

@@ -16,19 +16,19 @@ web 服务器指定了浏览器可以使用`Content-Security-Policy` 头呈现�
 
 该标题的语法是:
 
-```
+```java
 Content-Security-Policy: <directive>; <directive>; <directive> ; ...
 ```
 
 此外，我们可以将这个策略设置为 HTML 页面的`<meta>`标签的一部分:
 
-```
+```java
 <meta http-equiv="Content-Security-Policy" content="<directive>;<directive>;<directive>; ...">
 ```
 
 **此外，这些[指令](https://web.archive.org/web/20220630142013/https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy#directives)中的每一个都包含一个具有多个值的键。可以有多个指令，每个指令之间用分号`(;)` :** 隔开
 
-```
+```java
 Content-Security-Policy: script-src 'self' https://baeldung.com; style-src 'self'; 
 ```
 
@@ -42,7 +42,7 @@ Content-Security-Policy: script-src 'self' https://baeldung.com; style-src 'self
 
 通常，在 web 应用程序中，我们会在会话超时时将用户重定向到登录页面。此外，标准登录表单有用户名/密码字段和提交按钮:
 
-```
+```java
 <span> Session time out. Please login.</span>
 <form id="login" action="/login">
     <input type="email" class="form-control" id="email">
@@ -59,7 +59,7 @@ Content-Security-Policy: script-src 'self' https://baeldung.com; style-src 'self
 
 类似地，让我们假设表单域没有足够的验证。用户再次利用这一点，将恶意的 Javascript 代码注入到 [DOM(文档对象模型)](https://web.archive.org/web/20220630142013/https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction):
 
-```
+```java
 <span> Session time out. Please login.</span>
 <form id="login" action="/login">
     <input type="email" class="form-control" id="email">
@@ -93,7 +93,7 @@ Content-Security-Policy: script-src 'self' https://baeldung.com; style-src 'self
 
 在前面的例子中添加一个`Content-Security-Policy` 头会阻止表单提交给恶意服务器。所以，让我们使用`<meta` >标签添加这个头，并检查其行为:
 
-```
+```java
 <meta http-equiv="Content-Security-Policy" content="form-action 'self';">
 ```
 
@@ -109,7 +109,7 @@ Content-Security-Policy: script-src 'self' https://baeldung.com; style-src 'self
 
 首先，让我们将 [Spring Security](https://web.archive.org/web/20220630142013/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-security) 和 [Spring Web](https://web.archive.org/web/20220630142013/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-web) 依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -126,7 +126,7 @@ Content-Security-Policy: script-src 'self' https://baeldung.com; style-src 'self
 
 接下来，让我们通过扩展`WebSecurityConfigurerAdapter`来定义 Spring 安全配置:
 
-```
+```java
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
@@ -156,19 +156,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 同样，我们可以配置 Spring Security 来支持[不同的指令](https://web.archive.org/web/20220630142013/https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy)。例如，这段代码指定浏览器只从相同的来源加载脚本:
 
-```
+```java
 .contentSecurityPolicy("script-src 'self'");
 ```
 
 类似地，我们可以指示浏览器只从相同的源和`somecdn.css.com`下载 CSS:
 
-```
+```java
 .contentSecurityPolicy("style-src 'self' somecdn.css.com");
 ```
 
 此外，我们可以在 Content-Security-Policy 头中组合任意数量的指令。例如，为了限制 CSS、JS 和 form 动作，我们可以指定:
 
-```
+```java
 .contentSecurityPolicy("style-src 'self' somecdn.css.com; script-src 'self'; form-action 'self'")
 ```
 
@@ -178,7 +178,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 浏览器将以下内容发布到`report-uri`中定义的 URL:
 
-```
+```java
 {
     "csp-report": {
         "blocked-uri": "",
@@ -196,7 +196,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 首先，让我们更新我们的 Spring 安全配置:
 
-```
+```java
 String REPORT_TO = "{\"group\":\"csp-violation-report\",\"max_age\":2592000,\"endpoints\":[{\"url\":\"https://localhost:8080/report\"}]}";
 http
   .csrf().disable()
@@ -216,13 +216,13 @@ http
 
 接下来，让我们填写表格并点击 `Login` 按钮。不出所料，浏览器会阻止请求并发送报告。在服务器控制台上，我们有一个类似于以下内容的日志:
 
-```
+```java
 Report: {"csp-report":{"blocked-uri":"https://youaredoomed.com:9090/[[email protected]](/web/20220630142013/https://www.baeldung.com/cdn-cgi/l/email-protection)&p;=password","document-uri":"https://localhost:8080/","original-policy":"form-action 'self'; report-uri https://localhost:8080/report","referrer":"","violated-directive":"form-action"}}
 ```
 
 以下是格式化 JSON 后的相同报告:
 
-```
+```java
 {
     "csp-report": {
         "blocked-uri": "https://youaredoomed.com:9090/[[email protected]](/web/20220630142013/https://www.baeldung.com/cdn-cgi/l/email-protection)&p;=password",

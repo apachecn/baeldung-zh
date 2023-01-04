@@ -14,14 +14,14 @@
 
 我们有一个`List<Integer>`，我们想用这个列表的每个元素除一个常数，比如说 50，并打印结果:
 
-```
+```java
 List<Integer> integers = Arrays.asList(3, 9, 7, 6, 10, 20);
 integers.forEach(i -> System.out.println(50 / i));
 ```
 
 这种表达是可行的，但是有一个问题。如果列表中的任何元素是`0`，那么我们得到一个`ArithmeticException: / by zero`。让我们通过使用传统的`try-catch`块来解决这个问题，这样我们可以记录任何这样的异常，并继续执行下一个元素:
 
-```
+```java
 List<Integer> integers = Arrays.asList(3, 9, 7, 0, 10, 20);
 integers.forEach(i -> {
     try {
@@ -37,7 +37,7 @@ integers.forEach(i -> {
 
 为了处理这个问题，我们可以为 lambda 函数编写一个 lambda 包装器**。让我们看看代码，看看它是如何工作的:**
 
-```
+```java
 static Consumer<Integer> lambdaWrapper(Consumer<Integer> consumer) {
     return i -> {
         try {
@@ -50,7 +50,7 @@ static Consumer<Integer> lambdaWrapper(Consumer<Integer> consumer) {
 }
 ```
 
-```
+```java
 List<Integer> integers = Arrays.asList(3, 9, 7, 0, 10, 20);
 integers.forEach(lambdaWrapper(i -> System.out.println(50 / i)));
 ```
@@ -61,7 +61,7 @@ integers.forEach(lambdaWrapper(i -> System.out.println(50 / i)));
 
 在包装器特定于特定用例的情况下确实如此，但是我们可以利用泛型来改进这种方法，并将其用于各种其他场景:
 
-```
+```java
 static <T, E extends Exception> Consumer<T>
   consumerWrapper(Consumer<T> consumer, Class<E> clazz) {
 
@@ -81,7 +81,7 @@ static <T, E extends Exception> Consumer<T>
 }
 ```
 
-```
+```java
 List<Integer> integers = Arrays.asList(3, 9, 7, 0, 10, 20);
 integers.forEach(
   consumerWrapper(
@@ -97,7 +97,7 @@ integers.forEach(
 
 让我们修改上一节中的示例，不打印到控制台，而是写入文件。
 
-```
+```java
 static void writeToFile(Integer integer) throws IOException {
     // logic to write to file which throws IOException
 }
@@ -105,14 +105,14 @@ static void writeToFile(Integer integer) throws IOException {
 
 注意，上面的方法可能会抛出`IOException.`
 
-```
+```java
 List<Integer> integers = Arrays.asList(3, 9, 7, 0, 10, 20);
 integers.forEach(i -> writeToFile(i));
 ```
 
 在编译时，我们得到错误:
 
-```
+```java
 java.lang.Error: Unresolved compilation problem: Unhandled exception type IOException
 ```
 
@@ -128,7 +128,7 @@ java.lang.Error: Unresolved compilation problem: Unhandled exception type IOExce
 
 让我们看看当我们在`main`方法上声明`IOException`时会发生什么:
 
-```
+```java
 public static void main(String[] args) throws IOException {
     List<Integer> integers = Arrays.asList(3, 9, 7, 0, 10, 20);
     integers.forEach(i -> writeToFile(i));
@@ -137,7 +137,7 @@ public static void main(String[] args) throws IOException {
 
 尽管如此，**在编译**的过程中，我们得到了同样的未处理的错误`IOException`。
 
-```
+```java
 java.lang.Error: Unresolved compilation problem: Unhandled exception type IOException
 ```
 
@@ -147,7 +147,7 @@ java.lang.Error: Unresolved compilation problem: Unhandled exception type IOExce
 
 让我们来看看`Consumer`的定义:
 
-```
+```java
 @FunctionalInterface
 public interface Consumer<T> {
     void accept(T t);
@@ -158,7 +158,7 @@ public interface Consumer<T> {
 
 最直接的方法是使用一个`try-catch`块，将检查过的异常包装到未检查的异常中，然后重新抛出它:
 
-```
+```java
 List<Integer> integers = Arrays.asList(3, 9, 7, 0, 10, 20);
 integers.forEach(i -> {
     try {
@@ -175,7 +175,7 @@ integers.forEach(i -> {
 
 让我们用一个抛出异常的`accept`方法创建一个定制的函数接口。
 
-```
+```java
 @FunctionalInterface
 public interface ThrowingConsumer<T, E extends Exception> {
     void accept(T t) throws E;
@@ -184,7 +184,7 @@ public interface ThrowingConsumer<T, E extends Exception> {
 
 现在，让我们实现一个能够抛出异常的包装器方法:
 
-```
+```java
 static <T> Consumer<T> throwingConsumerWrapper(
   ThrowingConsumer<T, Exception> throwingConsumer) {
 
@@ -200,7 +200,7 @@ static <T> Consumer<T> throwingConsumerWrapper(
 
 最后，我们能够简化使用`writeToFile`方法的方式:
 
-```
+```java
 List<Integer> integers = Arrays.asList(3, 9, 7, 0, 10, 20);
 integers.forEach(throwingConsumerWrapper(i -> writeToFile(i)));
 ```
@@ -215,7 +215,7 @@ integers.forEach(throwingConsumerWrapper(i -> writeToFile(i)));
 
 由于我们的`ThrowingConsumer`接口使用泛型，我们可以轻松处理任何特定的异常。
 
-```
+```java
 static <T, E extends Exception> Consumer<T> handlingConsumerWrapper(
   ThrowingConsumer<T, E> throwingConsumer, Class<E> exceptionClass) {
 
@@ -237,7 +237,7 @@ static <T, E extends Exception> Consumer<T> handlingConsumerWrapper(
 
 让我们看看如何在实践中使用它:
 
-```
+```java
 List<Integer> integers = Arrays.asList(3, 9, 7, 0, 10, 20);
 integers.forEach(handlingConsumerWrapper(
   i -> writeToFile(i), IOException.class));

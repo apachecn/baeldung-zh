@@ -12,7 +12,7 @@
 
 在本教程中，我们将使用 Maven 来管理我们的依赖关系。我们将需要 [iText](https://web.archive.org/web/20221229072819/https://search.maven.org/artifact/com.itextpdf/itext7-core) 依赖来开始使用 iText PDF 库。同样，我们需要 [`AssertJ`](https://web.archive.org/web/20221229072819/https://search.maven.org/search?q=a:assertj-core) 依赖来进行测试。我们将把这两个依赖项添加到我们的`pom.xml` :
 
-```
+```java
 <dependency>
     <groupId>com.itextpdf</groupId>
     <artifactId>itext7-core</artifactId>
@@ -39,7 +39,7 @@
 
 在本文中，让我们策划一个故事，并使用 iText PDF 库将我们的故事转换为 PDF 格式。我们先写一个简单的程序， `StoryTime` 。首先，我们将声明两个 `String` 类型的变量。我们将把我们的故事存储在声明的变量中:
 
-```
+```java
 public class StoryTime {
     String aliceStory = "I am ...";
     String paulStory = "I am Paul ..";
@@ -48,7 +48,7 @@ public class StoryTime {
 
 为了简单起见，我们将缩短`String`值。然后，让我们声明一个`String`类型的变量，它将存储我们生成的 PDF 的输出路径:
 
-```
+```java
 public static final String OUTPUT_DIR = "output/alice.pdf";
 ```
 
@@ -56,7 +56,7 @@ public static final String OUTPUT_DIR = "output/alice.pdf";
 
 接下来，我们将创建一个`PdfDocument`实例来处理我们的 PDF 文件。为了将我们的`String`值添加到 PDF 文档中，我们将创建一个新的 `Document` : 实例
 
-```
+```java
 public void createPdf(String output) throws IOException {
 
     PdfWriter writer = new PdfWriter(output);
@@ -79,7 +79,7 @@ public void createPdf(String output) throws IOException {
 
 首先，让我们创建一个指定水印属性的方法。我们将设置`Font``fontSize``Opacity`我们的水印:
 
-```
+```java
 public Paragraph createWatermarkParagraph(String watermark) throws IOException {
 
     PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA);
@@ -93,7 +93,7 @@ public Paragraph createWatermarkParagraph(String watermark) throws IOException {
 
 接下来，让我们创建一个包含向 PDF 文档添加水印的逻辑的方法。该方法将以 `Document` 、 `Paragraph` 、 `offset` 为自变量。我们将计算放置水印段落的位置和旋转:
 
-```
+```java
 public void addWatermarkToGeneratedPDF(Document document, int pageIndex, 
   Paragraph paragraph, float verticalOffset) {
 
@@ -110,7 +110,7 @@ public void addWatermarkToGeneratedPDF(Document document, int pageIndex,
 
 我们通过调用 `showTextAligned()` 方法将水印段落添加到我们的文档中。接下来，让我们编写一个生成新 PDF 并添加水印的方法。我们将调用`createWatermarkParagraph()`方法和`addWatermarkToGeneratedPDF()`方法:
 
-```
+```java
 public void createNewPDF() throws IOException {
 
     StoryTime storyTime = new StoryTime();
@@ -132,7 +132,7 @@ public void createNewPDF() throws IOException {
 
 最后，让我们编写一个单元测试来验证水印的存在:
 
-```
+```java
 @Test
 public void givenNewTexts_whenGeneratingNewPDFWithIText() throws IOException {
 
@@ -160,7 +160,7 @@ public void givenNewTexts_whenGeneratingNewPDFWithIText() throws IOException {
 
 然后，我们将计算我们的水印在 PDF 上的位置和旋转。我们将刷新文档并释放状态以提高性能:
 
-```
+```java
 public void addWatermarkToExistingPDF(Document document, int pageIndex,
   Paragraph paragraph, PdfExtGState graphicState, float verticalOffset) {
 
@@ -186,7 +186,7 @@ public void addWatermarkToExistingPDF(Document document, int pageIndex,
 
 最后，让我们写一个方法来添加一个水印到一个现有的 PDF。我们将调用 `createWatermarkParagraph()` 来添加一个水印段落。同样，我们将调用 `addWatermarkToExistingPDF()` 来处理向页面添加水印的任务:
 
-```
+```java
 public void addWatermarkToExistingPdf() throws IOException {
 
     StoryTime storyTime = new StoryTime();
@@ -208,7 +208,7 @@ public void addWatermarkToExistingPdf() throws IOException {
 
 让我们编写一个单元测试来验证水印的存在:
 
-```
+```java
 @Test
 public void givenAnExistingPDF_whenManipulatedPDFWithITextmark() throws IOException {
     StoryTime storyTime = new StoryTime();

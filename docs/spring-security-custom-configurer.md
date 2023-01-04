@@ -14,7 +14,7 @@ Spring Security Java 配置支持为我们提供了强大的流畅 APIs 为应�
 
 为了开始定义我们的配置器，首先**我们需要扩展`AbstractHttpConfigurer`类**:
 
-```
+```java
 public class ClientErrorLoggingConfigurer 
   extends AbstractHttpConfigurer<ClientErrorLoggingConfigurer, HttpSecurity> {
 
@@ -44,7 +44,7 @@ public class ClientErrorLoggingConfigurer
 
 接下来，让我们定义在自定义实现中注册的 Spring 安全过滤器类:
 
-```
+```java
 public class ClientErrorLoggingFilter extends GenericFilterBean {
 
     private static final Logger logger = LogManager.getLogger(
@@ -70,7 +70,7 @@ public class ClientErrorLoggingFilter extends GenericFilterBean {
 
 让我们仔细看看`doFilter()`方法:
 
-```
+```java
 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 if (auth == null) {
     chain.doFilter(request, response);
@@ -98,7 +98,7 @@ if (errorCodes == null) {
 
 现在我们有了自己的自定义 API，**我们可以通过定义 bean，然后使用`HttpSecurity:`的`apply()`方法**将它添加到 Spring 安全配置中
 
-```
+```java
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -119,7 +119,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 我们还可以用我们想要记录的特定错误代码列表来定义 bean:
 
-```
+```java
 @Bean
 public ClientErrorLoggingConfigurer clientErrorLogging() {
     return new ClientErrorLoggingConfigurer(Arrays.asList(HttpStatus.NOT_FOUND)) ;
@@ -130,13 +130,13 @@ public ClientErrorLoggingConfigurer clientErrorLogging() {
 
 如果我们希望默认添加定制配置器，我们可以使用`META-INF/spring.factories`文件:
 
-```
+```java
 org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer = com.baeldung.dsl.ClientErrorLoggingConfigurer
 ```
 
 要手动禁用它，我们可以使用`disable()`方法:
 
-```
+```java
 //...
 .apply(clientErrorLogging()).disable();
 ```

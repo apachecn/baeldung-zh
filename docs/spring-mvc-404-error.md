@@ -14,7 +14,7 @@ Spring MVC 是使用前端控制器模式构建的传统应用程序。`[Dispatc
 
 假设我们有一个映射到`/greeting`并呈现`greeting.jsp`的`GreetingController `:
 
-```
+```java
 @Controller
 public class GreetingController {
 
@@ -28,7 +28,7 @@ public class GreetingController {
 
 相应的视图呈现了`message`变量的值:
 
-```
+```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
     <head>
@@ -42,13 +42,13 @@ public class GreetingController {
 
 正如所料，向`/greeting`发出一个 GET 请求是可行的:
 
-```
+```java
 curl http://localhost:8080/greeting
 ```
 
 我们将看到一个 HTML 页面，显示消息“Hello World”:
 
-```
+```java
 <html>
     <head>
         <title>Greeting</title>
@@ -61,20 +61,20 @@ curl http://localhost:8080/greeting
 
 看到 404 最常见的原因之一是使用了不正确的 URI。例如，向`/greetings`而不是`/greeting`发出 GET 请求是错误的:
 
-```
+```java
 curl http://localhost:8080/greetings
 ```
 
 在这种情况下，我们会在服务器日志中看到一条警告消息:
 
-```
+```java
 [http-nio-8080-exec-6] WARN  o.s.web.servlet.PageNotFound - 
   No mapping found for HTTP request with URI [/greetings] in DispatcherServlet with name 'mvc'
 ```
 
 客户端会看到一个错误页面:
 
-```
+```java
 <html>
     <head>
         <title>Home</title>
@@ -93,7 +93,7 @@ curl http://localhost:8080/greetings
 
 我们在`servlet `标签中定义 servlet，并将其映射到`servlet-mapping`标签中的 URI。我们需要确保`url-pattern`的值是正确的，因为经常会看到 servlet 映射到“/*”的建议**——注意后面的星号**:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app ...>
     <!-- Additional config omitted -->
@@ -112,11 +112,11 @@ curl http://localhost:8080/greetings
 
 现在，如果我们请求`/greeting`**，我们会在服务器日志中看到一条警告:**
 
-```
+```java
 curl http://localhost:8080/greeting
 ```
 
-```
+```java
 WARN  o.s.web.servlet.PageNotFound - No mapping found for HTTP request with URI 
   [/WEB-INF/view/greeting.jsp] in DispatcherServlet with name 'mvc'
 ```
@@ -125,7 +125,7 @@ WARN  o.s.web.servlet.PageNotFound - No mapping found for HTTP request with URI
 
 **为了修复这个错误，我们需要将`DispatcherServlet `映射到“/”(后面没有星号)来代替:**
 
-```
+```java
 <servlet-mapping>
     <servlet-name>mvc</servlet-name>
     <url-pattern>/</url-pattern>
@@ -134,11 +134,11 @@ WARN  o.s.web.servlet.PageNotFound - No mapping found for HTTP request with URI
 
 修复映射后，一切都应该正常工作。请求`/greeting`现在显示消息“你好，世界！”：
 
-```
+```java
 curl http://localhost:8080/greeting
 ```
 
-```
+```java
 <html>
     <head>
         <title>Greeting</title>

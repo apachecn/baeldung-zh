@@ -10,7 +10,7 @@
 
 将 Java 对象转换成 JSON `String`非常容易。假设我们有一个简单的`Person`类:
 
-```
+```java
 public class Person {
     private String firstName;
     private String lastName;
@@ -22,7 +22,7 @@ public class Person {
 
 要将该类的实例转换成 JSON `String`，首先我们需要创建一个`[JsonObjectBuilder](https://web.archive.org/web/20220813065846/https://docs.oracle.com/javaee/7/api/javax/json/JsonObjectBuilder.html)`的实例，并使用`add()`方法添加属性/值对:
 
-```
+```java
 JsonObjectBuilder objectBuilder = Json.createObjectBuilder()
   .add("firstName", person.getFirstName())
   .add("lastName", person.getLastName())
@@ -34,7 +34,7 @@ JsonObjectBuilder objectBuilder = Json.createObjectBuilder()
 
 一旦我们完成了属性的设置，我们只需要将对象写入一个`String`:
 
-```
+```java
 JsonObject jsonObject = objectBuilder.build();
 
 String jsonString;
@@ -46,7 +46,7 @@ try(Writer writer = new StringWriter()) {
 
 就是这样！生成的`String`将如下所示:
 
-```
+```java
 {"firstName":"Michael","lastName":"Scott","birthdate":"06/15/1978"}
 ```
 
@@ -54,7 +54,7 @@ try(Writer writer = new StringWriter()) {
 
 现在，为了给我们的示例增加一点复杂性，让我们假设对`Person` 类进行了修改，添加了一个名为`emails` 的新属性，该属性将包含一个电子邮件地址列表:
 
-```
+```java
 public class Person {
     private String firstName;
     private String lastName;
@@ -68,7 +68,7 @@ public class Person {
 
 要将列表中的所有值添加到`JsonObjectBuilder`中，我们需要`[JsonArrayBuilder](https://web.archive.org/web/20220813065846/https://docs.oracle.com/javaee/7/api/javax/json/JsonArrayBuilder.html)`的帮助:
 
-```
+```java
 JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
 for(String email : person.getEmails()) {
@@ -82,7 +82,7 @@ objectBuilder.add("emails", arrayBuilder);
 
 因此，让我们来看看为一个有两个电子邮件地址的`Person`对象生成的字符串:
 
-```
+```java
 {"firstName":"Michael","lastName":"Scott","birthdate":"06/15/1978",
  "emails":["[[email protected]](/web/20220813065846/https://www.baeldung.com/cdn-cgi/l/email-protection)","[[email protected]](/web/20220813065846/https://www.baeldung.com/cdn-cgi/l/email-protection)"]}
 ```
@@ -93,7 +93,7 @@ objectBuilder.add("emails", arrayBuilder);
 
 在前面的例子中，我们使用简单的 [`Json`创建了一个`JsonWriter` 。`createWriter()`](https://web.archive.org/web/20220813065846/https://docs.oracle.com/javaee/7/api/javax/json/Json.html#createWriter-java.io.Writer-) 静法。为了更好地控制生成的`String`，我们将利用 Java 7 的`[JsonWriterFactory](https://web.archive.org/web/20220813065846/https://docs.oracle.com/javaee/7/api/javax/json/JsonWriterFactory.html)`功能创建一个具有特定配置的写入器。
 
-```
+```java
 Map<String, Boolean> config = new HashMap<>();
 
 config.put(JsonGenerator.PRETTY_PRINTING, true);
@@ -114,7 +114,7 @@ try(Writer writer = new StringWriter()) {
 
 新的输出将包含 JSON `String`特有的换行符和表格:
 
-```
+```java
 {
     "firstName":"Michael",
     "lastName":"Scott",
@@ -132,7 +132,7 @@ try(Writer writer = new StringWriter()) {
 
 转换过程的主要部分围绕着`JsonObject`。要创建这个类的实例，使用静态方法`[Json.createReader()](https://web.archive.org/web/20220813065846/https://docs.oracle.com/javaee/7/api/javax/json/Json.html#createReader-java.io.InputStream-)`后跟`[readObject()](https://web.archive.org/web/20220813065846/https://docs.oracle.com/javaee/7/api/javax/json/JsonReader.html#readObject--)`:
 
-```
+```java
 JsonReader reader = Json.createReader(new StringReader(jsonString));
 
 JsonObject jsonObject = reader.readObject();
@@ -142,7 +142,7 @@ JsonObject jsonObject = reader.readObject();
 
 手头有了一个`JsonObject`的实例，我们可以使用`getString()` 方法读取属性，并将获得的值赋给我们的`Person` 类的一个新创建的实例:
 
-```
+```java
 Person person = new Person();
 
 person.setFirstName(jsonObject.getString("firstName"));
@@ -154,7 +154,7 @@ person.setBirthdate(dateFormat.parse(jsonObject.getString("birthdate")));
 
 我们需要使用一个名为`JsonArray`的特殊类从`JsonObject`中提取列表值:
 
-```
+```java
 JsonArray emailsJson = jsonObject.getJsonArray("emails");
 
 List<String> emails = new ArrayList<>();
@@ -174,7 +174,7 @@ person.setEmails(emails);
 
 考虑下面代表宠物店客户的 JSON。假设出于某种原因，您需要从宠物列表中获取第三只宠物的名字:
 
-```
+```java
 {
     "ownerName": "Robert",
     "pets": [{
@@ -196,7 +196,7 @@ person.setEmails(emails);
 
 查询 JSON 结构中已知位置的属性值非常简单。我们可以使用前面例子中使用的同一个类的实例`JsonObject,`:
 
-```
+```java
 JsonReader reader = Json.createReader(new StringReader(jsonString));
 
 JsonObject jsonObject = reader.readObject();
@@ -217,7 +217,7 @@ String searchResult = jsonObject
 
 `JsonParser` 提供对 JS 的极快的、只读的、向前的访问，缺点是比对象模型稍微复杂一些:
 
-```
+```java
 JsonParser jsonParser = Json.createParser(new StringReader(jsonString));
 
 int count = 0;

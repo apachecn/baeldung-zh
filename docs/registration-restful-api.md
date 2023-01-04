@@ -35,7 +35,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 让我们从主寄存器操作开始:
 
-```
+```java
 @PostMapping("/user/registration")
 public GenericResponse registerUserAccount(
       @Valid UserDto accountDto, HttpServletRequest request) {
@@ -73,7 +73,7 @@ public GenericResponse registerUserAccount(
 
 这是:
 
-```
+```java
 <html>
 <head>
 <title th:text="#{label.form.title}">form</title>
@@ -146,7 +146,7 @@ function register(){
 
 这是`BindException`–当`UserDto`生效时抛出(如果无效)。我们将覆盖默认的`ResponseEntityExceptionHandler`方法`handleBindException()` ，在响应体中添加错误:
 
-```
+```java
 @Override
 protected ResponseEntity<Object> handleBindException
   (BindException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -162,7 +162,7 @@ protected ResponseEntity<Object> handleBindException
 
 我们还需要处理我们的自定义`Exception``UserAlreadyExistException`——当用户注册一个已经存在的电子邮件时抛出:
 
-```
+```java
 @ExceptionHandler({ UserAlreadyExistException.class })
 public ResponseEntity<Object> handleUserAlreadyExist(RuntimeException ex, WebRequest request) {
     logger.error("409 Status Code", ex);
@@ -178,7 +178,7 @@ public ResponseEntity<Object> handleUserAlreadyExist(RuntimeException ex, WebReq
 
 我们还需要改进`GenericResponse`实现来控制这些验证错误:
 
-```
+```java
 public class GenericResponse {
 
     public GenericResponse(List<FieldError> fieldErrors, List<ObjectError> globalErrors) {
@@ -199,7 +199,7 @@ public class GenericResponse {
 
 最后，让我们看看如何使用 jQuery 处理字段和全局错误:
 
-```
+```java
 var serverContext = [[@{/}]];
 
 function register(){

@@ -36,7 +36,7 @@ MongoDB 为 Java 等几乎所有流行的编程语言提供了 [**驱动。这�
 
 然而，最简单的方法是使用像 Maven 这样的依赖管理工具:
 
-```
+```java
 <dependency>
     <groupId>dev.morphia.morphia</groupId>
     <artifactId>core</artifactId>
@@ -50,7 +50,7 @@ MongoDB 为 Java 等几乎所有流行的编程语言提供了 [**驱动。这�
 
 让我们看看如何实现这一点:
 
-```
+```java
 Morphia morphia = new Morphia();
 morphia.mapPackage("com.baeldung.morphia");
 Datastore datastore = morphia.createDatastore(new MongoClient(), "library");
@@ -72,7 +72,7 @@ datastore.ensureIndexes();
 
 让我们首先定义一个简单的带有一些属性的`Book`实体:
 
-```
+```java
 @Entity("Books")
 public class Book {
     @Id
@@ -102,14 +102,14 @@ MongoDB 提供了两种机制来建立关系——引用和嵌入。顾名思义
 
 让我们看看如何使用它们。让我们从在我们的`Book`中嵌入`Publisher` 开始:
 
-```
+```java
 @Embedded
 private Publisher publisher;
 ```
 
 很简单。现在让我们继续添加对其他书籍的引用:
 
-```
+```java
 @Reference
 private List<Book> companionBooks;
 ```
@@ -128,7 +128,7 @@ private List<Book> companionBooks;
 
 让我们从最简单的操作开始，在我们的 MongoDB 数据库`library`中创建一个`Book`实例:
 
-```
+```java
 Publisher publisher = new Publisher(new ObjectId(), "Awsome Publisher");
 
 Book book = new Book("9781565927186", "Learning Java", "Tom Kirkman", 3.95, publisher);
@@ -147,7 +147,7 @@ datastore.save(book);
 
 让我们看看能否在 MongoDB 中查询我们刚刚创建的图书:
 
-```
+```java
 List<Book> books = datastore.createQuery(Book.class)
   .field("title")
   .contains("Learning Java")
@@ -169,7 +169,7 @@ Morphia 用过滤器和操作符支持更多复杂的查询构造。此外，Mor
 
 虽然如果主键匹配，保存操作可以处理更新，但是 Morphia 提供了有选择地更新文档的方法:
 
-```
+```java
 Query<Book> query = datastore.createQuery(Book.class)
   .field("title")
   .contains("Learning Java");
@@ -194,7 +194,7 @@ assertEquals(4.95, books.get(0).getCost());
 
 最后，已经创建的必须删除！同样，Morphia 非常直观:
 
-```
+```java
 Query<Book> query = datastore.createQuery(Book.class)
   .field("title")
   .contains("Learning Java");
@@ -226,7 +226,7 @@ Morphia 有一个 API 来支持这样的聚合管道。
 
 让我们假设我们希望以这样一种方式聚集我们的图书馆数据，即我们将所有的书按它们的作者分组:
 
-```
+```java
 Iterator<Author> iterator = datastore.createAggregation(Book.class)
   .group("author", grouping("books", push("title")))
   .out(Author.class);
@@ -238,7 +238,7 @@ Iterator<Author> iterator = datastore.createAggregation(Book.class)
 
 当然，我们必须用一个名为 books 的变量定义一个名为`Author`的实体:
 
-```
+```java
 @Entity
 public class Author {
     @Id
@@ -256,7 +256,7 @@ MongoDB 中的 Projection 允许我们在查询中只选择我们想要从文档
 
 假设我们只需要在查询中获取带有书名的书籍:
 
-```
+```java
 List<Book> books = datastore.createQuery(Book.class)
   .field("title")
   .contains("Learning Java")
@@ -278,7 +278,7 @@ MongoDB **在集合级别定义索引，默认情况下在主键上创建一个�
 
 例如，在我们的例子中，我们可能希望在字段`Book`的“title”上创建一个索引，因为我们经常最终查询它:
 
-```
+```java
 @Indexes({
   @Index(
     fields = @Field("title"),
@@ -303,7 +303,7 @@ public class Book {
 
 假设我们不想插入没有有效价格的书。我们可以利用模式验证来实现这一点:
 
-```
+```java
 @Validation("{ price : { $gt : 0 } }")
 public class Book {
     // ...

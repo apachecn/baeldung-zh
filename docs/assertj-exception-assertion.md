@@ -10,7 +10,7 @@
 
 为了测试是否抛出了异常，我们需要捕捉异常，然后执行断言:
 
-```
+```java
 try {
     // ...
 } catch (Exception e) {
@@ -28,7 +28,7 @@ try {
 
 让我们检查索引列表中的越界项是否会引发`IndexOutOfBoundsException:`
 
-```
+```java
 assertThatThrownBy(() -> {
     List<String> list = Arrays.asList("String one", "String two");
     list.get(2);
@@ -40,7 +40,7 @@ assertThatThrownBy(() -> {
 
 当然，我们可以利用各种标准的 AssertJ 断言，比如:
 
-```
+```java
 .hasMessage("Index: %s, Size: %s", 2, 2)
 .hasMessageStartingWith("Index: 2")
 .hasMessageContaining("2")
@@ -54,7 +54,7 @@ assertThatThrownBy(() -> {
 
 这个想法类似于上面的例子，但是我们可以在开始的时候指定异常类型:
 
-```
+```java
 assertThatExceptionOfType(IndexOutOfBoundsException.class)
   .isThrownBy(() -> {
       // ...
@@ -65,7 +65,7 @@ assertThatExceptionOfType(IndexOutOfBoundsException.class)
 
 AssertJ 为常见的异常类型提供了包装器，比如:
 
-```
+```java
 assertThatIOException().isThrownBy(() -> {
     // ...
 }); 
@@ -82,7 +82,7 @@ assertThatIOException().isThrownBy(() -> {
 
 编写单元测试的另一种方法是**将`when`和`then`逻辑写在不同的部分:**
 
-```
+```java
 // when
 Throwable thrown = catchThrowable(() -> {
     // ...

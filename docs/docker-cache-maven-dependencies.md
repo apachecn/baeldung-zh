@@ -12,7 +12,7 @@
 
 多阶段构建是优化 Docker 构建流程的一个好方法。它们使我们能够将整个过程保存在一个文件中，并帮助我们将 Docker 图像保持得尽可能小。在第一阶段，我们将运行一个 Maven 构建并创建我们的 fat JAR，在第二阶段，我们将复制这个 JAR 并定义一个入口点:
 
-```
+```java
 FROM maven:alpine as build
 ENV HOME=/usr/app
 RUN mkdir -p $HOME
@@ -29,19 +29,19 @@ ENTRYPOINT java -jar /app/runner.jar
 
 让我们创建 Docker 图像:
 
-```
+```java
 docker build -t maven-caching .
 ```
 
 接下来，让我们从图像开始一个容器:
 
-```
+```java
 docker run maven-caching
 ```
 
 当我们修改代码并重新运行构建时，我们会注意到 Maven `package`任务之前的所有命令都被缓存并立即执行。**由于我们的代码比项目依赖项更改得更频繁，我们可以使用 Docker 层缓存将依赖项下载和代码编译分开，以缩短构建时间**:
 
-```
+```java
 FROM maven:alpine as build
 ENV HOME=/usr/app
 RUN mkdir -p $HOME
@@ -62,7 +62,7 @@ ENTRYPOINT java -jar /app/runner.jar
 
 Docker 版本 18.09 引入了 BuildKit，作为对现有构建系统的一次革新。彻底改革的目的是提高性能、存储管理和安全性。我们可以利用 BuildKit 来保持多个构建之间的状态。这样，Maven 不会每次都下载依赖项，因为我们有永久存储。为了在 Docker 安装中启用 BuildKit，我们需要编辑`daemon.json`文件:
 
-```
+```java
 ...
 {
 "features": {
@@ -73,7 +73,7 @@ Docker 版本 18.09 引入了 BuildKit，作为对现有构建系统的一次革
 
 启用 BuildKit 后，我们可以将 docker 文件更改为:
 
-```
+```java
 FROM maven:alpine as build
 ENV HOME=/usr/app
 RUN mkdir -p $HOME
@@ -96,7 +96,7 @@ ENTRYPOINT java -jar /app/runner.jar
 
 由于子模块被列为依赖项，它们会阻止 Docker 进行层缓存，并触发 Maven 再次下载所有依赖项。**这个解决方案在大多数情况下都很好**，**，但是正如我们所说的，它可能需要不时地强制更新以获取更新的子模块。**为了避免这种情况，我们可以将项目分成不同的层，并使用 Maven 增量构建:
 
-```
+```java
 FROM maven:alpine as build
 ENV HOME=/usr/app
 RUN mkdir -p $HOME

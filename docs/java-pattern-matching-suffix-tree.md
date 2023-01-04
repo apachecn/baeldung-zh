@@ -22,7 +22,7 @@
 
 让我们用一个例子来理解一个简单的模式匹配问题:
 
-```
+```java
 Pattern:   NA
 Text:      HAVANABANANA
 Match1:    ----NA------
@@ -88,7 +88,7 @@ Match3:    ----------NA
 
 所以，让我们创建我们的`Node`类:
 
-```
+```java
 public class Node {
     private String text;
     private List<Node> children;
@@ -108,7 +108,7 @@ public class Node {
 
 因此，我们有一个`SuffixTree`类:
 
-```
+```java
 public class SuffixTree {
     private static final String WORD_TERMINATION = "$";
     private static final int POSITION_UNDEFINED = -1;
@@ -132,7 +132,7 @@ public class SuffixTree {
 
 首先，让我们有一个方法`addChildNode`到**向任何给定的父节点**添加一个新的子节点:
 
-```
+```java
 private void addChildNode(Node parentNode, String text, int index) {
     parentNode.getChildren().add(new Node(text, index));
 }
@@ -142,7 +142,7 @@ private void addChildNode(Node parentNode, String text, int index) {
 
 其次，我们将编写一个简单的实用方法`getLongestCommonPrefix`到**找到两个字符串**的最长公共前缀:
 
-```
+```java
 private String getLongestCommonPrefix(String str1, String str2) {
     int compareLength = Math.min(str1.length(), str2.length());
     for (int i = 0; i < compareLength; i++) {
@@ -164,7 +164,7 @@ private String getLongestCommonPrefix(String str1, String str2) {
 
 简而言之，这是一种方便的方法，在插入新节点时会派上用场:
 
-```
+```java
 private void splitNodeToParentAndChild(Node parentNode, String parentNewText, String childNewText) {
     Node childNode = new Node(childNewText, parentNode.getPosition());
 
@@ -201,7 +201,7 @@ private void splitNodeToParentAndChild(Node parentNode, String parentNewText, St
 
 现在，让我们编写遍历树的逻辑，只要我们能够在位置上匹配给定的模式:
 
-```
+```java
 List<Node> getAllNodesInTraversePath(String pattern, Node startNode, boolean isAllowPartialMatch) {
     // ...
 }
@@ -211,7 +211,7 @@ List<Node> getAllNodesInTraversePath(String pattern, Node startNode, boolean isA
 
 我们从比较模式文本的第一个字符和节点文本开始:
 
-```
+```java
 if (pattern.charAt(0) == nodeText.charAt(0)) {
     // logic to handle remaining characters       
 } 
@@ -219,7 +219,7 @@ if (pattern.charAt(0) == nodeText.charAt(0)) {
 
 对于部分匹配，如果模式短于或等于节点文本的长度，我们将当前节点添加到我们的`nodes`列表并在此处停止:
 
-```
+```java
 if (isAllowPartialMatch && pattern.length() <= nodeText.length()) {
     nodes.add(currentNode);
     return nodes;
@@ -228,7 +228,7 @@ if (isAllowPartialMatch && pattern.length() <= nodeText.length()) {
 
 然后，我们将该节点文本的剩余字符与模式的剩余字符进行比较。如果模式与节点文本的位置不匹配，我们就到此为止。当前节点包含在`nodes`列表中只是为了部分匹配:
 
-```
+```java
 int compareLength = Math.min(nodeText.length(), pattern.length());
 for (int j = 1; j < compareLength; j++) {
     if (pattern.charAt(j) != nodeText.charAt(j)) {
@@ -242,13 +242,13 @@ for (int j = 1; j < compareLength; j++) {
 
 如果模式匹配节点文本，我们将当前节点添加到我们的`nodes`列表中:
 
-```
+```java
 nodes.add(currentNode);
 ```
 
 但是如果模式的字符比节点文本多，我们需要检查子节点。为此，我们进行了一个递归调用，将`currentNode`作为开始节点，将`pattern`的剩余部分作为新模式。如果这个调用返回的节点列表不为空，它将被追加到我们的`nodes`列表中。如果对于完全匹配的场景它是空的，这意味着存在不匹配，因此为了表明这一点，我们添加了一个`null`项。而我们返回`nodes`:
 
-```
+```java
 if (pattern.length() > compareLength) {
     List nodes2 = getAllNodesInTraversePath(pattern.substring(compareLength), currentNode, 
       isAllowPartialMatch);
@@ -263,7 +263,7 @@ return nodes;
 
 将所有这些放在一起，让我们创建`getAllNodesInTraversePath`:
 
-```
+```java
 private List<Node> getAllNodesInTraversePath(String pattern, Node startNode, boolean isAllowPartialMatch) {
     List<Node> nodes = new ArrayList<>();
     for (int i = 0; i < startNode.getChildren().size(); i++) {
@@ -308,7 +308,7 @@ private List<Node> getAllNodesInTraversePath(String pattern, Node startNode, boo
 
 我们现在可以编写逻辑来存储数据。让我们从在`SuffixTree`类上定义一个新方法`addSuffix`开始:
 
-```
+```java
 private void addSuffix(String suffix, int position) {
     // ...
 }
@@ -318,7 +318,7 @@ private void addSuffix(String suffix, int position) {
 
 接下来，让我们编写处理后缀的逻辑。**首先，我们需要检查是否存在与后缀**部分匹配的路径，至少通过调用我们的助手方法`getAllNodesInTraversePath`并将`isAllowPartialMatch`设置为`true`。如果路径不存在，我们可以将后缀作为子路径添加到根目录:
 
-```
+```java
 List<Node> nodes = getAllNodesInTraversePath(pattern, root, true);
 if (nodes.size() == 0) {
     addChildNode(root, suffix, position);
@@ -327,7 +327,7 @@ if (nodes.size() == 0) {
 
 然而，**如果路径存在，就意味着我们需要修改一个现有的节点**。该节点将是`nodes` 列表中的最后一个节点。我们还需要弄清楚这个现有节点的新文本应该是什么。如果`nodes`列表只有一项，那么我们使用`suffix`。否则，我们从`suffix`中排除直到最后一个节点的公共前缀，以获得`newText`:
 
-```
+```java
 Node lastNode = nodes.remove(nodes.size() - 1);
 String newText = suffix;
 if (nodes.size() > 0) {
@@ -340,7 +340,7 @@ if (nodes.size() > 0) {
 
 为了修改现有节点，让我们创建一个新方法`extendNode,`，我们将从`addSuffix`方法中停止的地方调用它。这个方法有两个主要的责任。一种是将现有节点分解为父节点和子节点，另一种是向新创建的父节点添加子节点。我们分解父节点只是为了让它成为所有子节点的公共节点。所以，我们的新方法已经准备好了:
 
-```
+```java
 private void extendNode(Node node, String newText, int position) {
     String currentText = node.getText();
     String commonPrefix = getLongestCommonPrefix(currentText, newText);
@@ -358,7 +358,7 @@ private void extendNode(Node node, String newText, int position) {
 
 我们现在可以回到添加后缀的方法，现在所有的逻辑都已就绪:
 
-```
+```java
 private void addSuffix(String suffix, int position) {
     List<Node> nodes = getAllNodesInTraversePath(suffix, root, true);
     if (nodes.size() == 0) {
@@ -379,7 +379,7 @@ private void addSuffix(String suffix, int position) {
 
 最后，让我们修改我们的`SuffixTree`构造函数来生成后缀，并调用我们之前的方法`addSuffix`来迭代地将它们添加到我们的数据结构中:
 
-```
+```java
 public void SuffixTree(String text) {
     root = new Node("", POSITION_UNDEFINED);
     for (int i = 0; i < text.length(); i++) {
@@ -395,7 +395,7 @@ public void SuffixTree(String text) {
 
 我们从在`SuffixTree`类上添加一个新方法`searchText`开始，将`pattern`作为输入进行搜索:
 
-```
+```java
 public List<String> searchText(String pattern) {
     // ...
 }
@@ -403,7 +403,7 @@ public List<String> searchText(String pattern) {
 
 接下来，为了检查后缀树中是否存在`pattern`,我们调用我们的助手方法`getAllNodesInTraversePath` ,只为精确匹配设置标志，不像在添加数据时我们允许部分匹配:
 
-```
+```java
 List<Node> nodes = getAllNodesInTraversePath(pattern, root, false);
 ```
 
@@ -411,7 +411,7 @@ List<Node> nodes = getAllNodesInTraversePath(pattern, root, false);
 
 让我们创建一个单独的方法`getPositions`来做这件事。我们将检查给定的节点是否存储了后缀的最后一部分，以决定是否需要返回它的位置值。并且，我们将对给定节点的每个子节点递归地这样做:
 
-```
+```java
 private List<Integer> getPositions(Node node) {
     List<Integer> positions = new ArrayList<>();
     if (node.getText().endsWith(WORD_TERMINATION)) {
@@ -426,7 +426,7 @@ private List<Integer> getPositions(Node node) {
 
 一旦我们有了位置集，下一步就是用它来标记存储在后缀树中的文本模式。位置值指示后缀开始的位置，模式的长度指示从起点偏移多少个字符。应用这个逻辑，让我们创建一个简单的实用方法:
 
-```
+```java
 private String markPatternInText(Integer startPosition, String pattern) {
     String matchingTextLHS = fullText.substring(0, startPosition);
     String matchingText = fullText.substring(startPosition, startPosition + pattern.length());
@@ -437,7 +437,7 @@ private String markPatternInText(Integer startPosition, String pattern) {
 
 现在，我们已经准备好了支持方法。因此，**我们可以将它们添加到我们的搜索方法中，并完成逻辑**:
 
-```
+```java
 public List<String> searchText(String pattern) {
     List<String> result = new ArrayList<>();
     List<Node> nodes = getAllNodesInTraversePath(pattern, root, false);
@@ -462,20 +462,20 @@ public List<String> searchText(String pattern) {
 
 首先，让我们在`SuffixTree`中存储一个文本:
 
-```
+```java
 SuffixTree suffixTree = new SuffixTree("havanabanana"); 
 ```
 
 接下来，让我们搜索一个有效的模式`a`:
 
-```
+```java
 List<String> matches = suffixTree.searchText("a");
 matches.stream().forEach(m -> LOGGER.debug(m));
 ```
 
 运行该代码得到了预期的六个匹配项:
 
-```
+```java
 h[a]vanabanana
 hav[a]nabanana
 havan[a]banana
@@ -486,20 +486,20 @@ havanabanan[a]
 
 接下来，让我们**搜索另一个有效的模式`nab`** :
 
-```
+```java
 List<String> matches = suffixTree.searchText("nab");
 matches.stream().forEach(m -> LOGGER.debug(m)); 
 ```
 
 运行代码只得到一个预期的匹配:
 
-```
+```java
 hava[nab]anana
 ```
 
 最后，让我们**搜索一个无效模式`nag`** :
 
-```
+```java
 List<String> matches = suffixTree.searchText("nag");
 matches.stream().forEach(m -> LOGGER.debug(m));
 ```

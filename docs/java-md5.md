@@ -12,25 +12,25 @@ MD5 是广泛使用的加密散列函数，它产生 128 位的散列。
 
 在`java.security.MessageDigest`类中有一个[散列](/web/20221010092922/https://www.baeldung.com/cs/hashing)功能。想法是首先用您想用作参数的算法类型实例化`MessageDigest`:
 
-```
+```java
 MessageDigest.getInstance(String Algorithm)
 ```
 
 然后继续使用`update()` 函数更新消息摘要:
 
-```
+```java
 public void update(byte [] input)
 ```
 
 当你在读一个长文件时，上面的函数可以被多次调用。然后最后我们需要使用`digest()`函数来生成一个散列码:
 
-```
+```java
 public byte[] digest()
 ```
 
 下面是一个示例，它为密码生成一个哈希，然后对其进行验证:
 
-```
+```java
 @Test
 public void givenPassword_whenHashing_thenVerifying() 
   throws NoSuchAlgorithmException {
@@ -49,7 +49,7 @@ public void givenPassword_whenHashing_thenVerifying()
 
 同样，我们也可以验证文件的校验和:
 
-```
+```java
 @Test
 public void givenFile_generatingChecksum_thenVerifying() 
   throws NoSuchAlgorithmException, IOException {
@@ -74,7 +74,7 @@ public void givenFile_generatingChecksum_thenVerifying()
 
 让我们看一个散列和验证密码的例子:
 
-```
+```java
 @Test
 public void givenPassword_whenHashingUsingCommons_thenVerifying()  {
     String hash = "35454B055CC325EA1AF2126E27707052";
@@ -91,7 +91,7 @@ public void givenPassword_whenHashingUsingCommons_thenVerifying()  {
 
 下面是使用`com.google.common.io.Files.hash`生成 MD5 校验和的另一种方法:
 
-```
+```java
 @Test
 public void givenFile_whenChecksumUsingGuava_thenVerifying() 
   throws IOException {

@@ -34,7 +34,7 @@ UAA 是一个 Java web 应用程序，可以在任何兼容的 servlet 容器中
 
 让我们继续**下载[UAA 战争](https://web.archive.org/web/20220911130933/https://search.maven.org/search?q=g:org.cloudfoundry.identity%20AND%20a:cloudfoundry-identity-uaa)并存放到我们的 Tomcat** 部署中:
 
-```
+```java
 wget -O $CATALINA_HOME/webapps/uaa.war \
   https://search.maven.org/remotecontent?filepath=org/cloudfoundry/identity/cloudfoundry-identity-uaa/4.27.0/cloudfoundry-identity-uaa-4.27.0.war
 ```
@@ -47,7 +47,7 @@ wget -O $CATALINA_HOME/webapps/uaa.war \
 
 我们可以通过**设置`UAA_CONFIG_PATH`属性:**来做到这一点
 
-```
+```java
 export UAA_CONFIG_PATH=~/.uaa
 ```
 
@@ -55,7 +55,7 @@ export UAA_CONFIG_PATH=~/.uaa
 
 然后，我们可以将 [UAA 所需的配置](https://web.archive.org/web/20220911130933/https://raw.githubusercontent.com/cloudfoundry/uaa/4.27.0/uaa/src/main/resources/required_configuration.yml)复制到我们的配置路径中:
 
-```
+```java
 wget -qO- https://raw.githubusercontent.com/cloudfoundry/uaa/4.27.0/uaa/src/main/resources/required_configuration.yml \
   > $UAA_CONFIG_PATH/uaa.yml
 ```
@@ -68,7 +68,7 @@ wget -qO- https://raw.githubusercontent.com/cloudfoundry/uaa/4.27.0/uaa/src/main
 
 出于本教程的目的，我们将使用 HSQLDB:
 
-```
+```java
 export SPRING_PROFILES="default,hsqldb"
 ```
 
@@ -80,7 +80,7 @@ export SPRING_PROFILES="default,hsqldb"
 
 OpenSSL 使这变得简单:
 
-```
+```java
 openssl genrsa -out signingkey.pem 2048
 openssl rsa -in signingkey.pem -pubout -out verificationkey.pem
 ```
@@ -89,7 +89,7 @@ openssl rsa -in signingkey.pem -pubout -out verificationkey.pem
 
 我们将它们导出到`JWT_TOKEN_SIGNING_KEY` 和`JWT_TOKEN_VERIFICATION_KEY`:
 
-```
+```java
 export JWT_TOKEN_SIGNING_KEY=$(cat signingkey.pem)
 export JWT_TOKEN_VERIFICATION_KEY=$(cat verificationkey.pem) 
 ```
@@ -100,7 +100,7 @@ export JWT_TOKEN_VERIFICATION_KEY=$(cat verificationkey.pem)
 
 最后，让我们开始吧:
 
-```
+```java
 $CATALINA_HOME/bin/catalina.sh run
 ```
 
@@ -112,14 +112,14 @@ $CATALINA_HOME/bin/catalina.sh run
 
 CF UAA 命令行客户端是管理 UAA 的主要工具，但是要使用它，我们需要[先安装 Ruby】:](https://web.archive.org/web/20220911130933/https://rubygems.org/)
 
-```
+```java
 sudo apt install rubygems
 gem install cf-uaac
 ```
 
 然后，我们可以配置`uaac`指向我们正在运行的 UAA 实例:
 
-```
+```java
 uaac target http://localhost:8080/uaa
 ```
 
@@ -131,7 +131,7 @@ uaac target http://localhost:8080/uaa
 
 因此，要进行任何管理，我们都需要对自己进行身份验证。我们将选择 UAA 附带的默认管理员，**，该管理员有权创建其他客户端、用户和组:**
 
-```
+```java
 uaac token client get admin -s adminsecret
 ```
 
@@ -141,7 +141,7 @@ uaac token client get admin -s adminsecret
 
 如果一切顺利，我们将看到一条成功消息:
 
-```
+```java
 Successfully fetched token via client credentials grant.
 ```
 
@@ -149,7 +149,7 @@ Successfully fetched token via client credentials grant.
 
 **现在，作为`admin`操作，我们可以在` client add:`** 注册一个名为`webappclient`的客户端
 
-```
+```java
 uaac client add webappclient -s webappclientsecret \ 
 --name WebAppClient \ 
 --scope resource.read,resource.write,openid,profile,email,address,phone \ 
@@ -160,20 +160,20 @@ uaac client add webappclient -s webappclientsecret \
 
 **同样，我们可以用`user add:`** 注册一个名为`appuser` 的用户
 
-```
+```java
 uaac user add appuser -p appusersecret --emails [[email protected]](/web/20220911130933/https://www.baeldung.com/cdn-cgi/l/email-protection)
 ```
 
 接下来，我们将添加两个组——`resource.read`和`resource.write`——使用` group add:`
 
-```
+```java
 uaac group add resource.read
 uaac group add resource.write
 ```
 
 最后，我们将用` member add:`将这些组分配给`appuser`
 
-```
+```java
 uaac member add resource.read appuser
 uaac member add resource.write appuser
 ```
@@ -194,7 +194,7 @@ uaac member add resource.write appuser
 
 让我们从访问 [Spring Initializr](https://web.archive.org/web/20220911130933/https://start.spring.io/) 并生成一个 Spring Boot web 应用程序开始。我们只选择`Web` 和`OAuth2 Client`组件:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -211,7 +211,7 @@ uaac member add resource.write appuser
 
 很简单，我们需要给应用程序赋予`client-id,` `client-secret,` 和 UAA 的`issuer-uri`。我们还将指定该客户端希望用户授予它的 OAuth 2.0 范围:
 
-```
+```java
 #registration
 spring.security.oauth2.client.registration.uaa.client-id=webappclient
 spring.security.oauth2.client.registration.uaa.client-secret=webappclientsecret
@@ -225,7 +225,7 @@ spring.security.oauth2.client.provider.uaa.issuer-uri=http://localhost:8080/uaa/
 
 由于我们已经将端口 8080 用于 UAA，让我们在 8081 上运行:
 
-```
+```java
 server.port=8081
 ```
 
@@ -250,7 +250,7 @@ server.port=8081
 
 为了证明这一点，我们可以复制索引路径中显示的令牌， [`http://localhost:8081`](https://web.archive.org/web/20220911130933/http://localhost:8081/) ，并使用 [JWT 调试器](https://web.archive.org/web/20220911130933/https://jwt.io/#debugger-io)对其进行解码。**我们应该会看到我们在批准页面上检查的范围:**
 
-```
+```java
 {
   "jti": "f228d8d7486942089ff7b892c796d3ac",
   "sub": "0e6101d8-d14b-49c5-8c33-fc12d8d1cc7d",
@@ -282,7 +282,7 @@ server.port=8081
 
 为了创建我们的资源服务器，我们将再次使用 [Spring Initializr](https://web.archive.org/web/20220911130933/https://start.spring.io/) 来生成一个 Spring Boot web 应用程序。这一次，我们将选择`Web`和`OAuth2 Resource Server`组件:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
@@ -297,13 +297,13 @@ server.port=8081
 
 **下一步是在`application.properties`文件中指出运行 CF UAA 的位置:**
 
-```
+```java
 spring.security.oauth2.resourceserver.jwt.issuer-uri=http://localhost:8080/uaa/oauth/token
 ```
 
 当然，我们也在这里选择一个新的端口。8082 将工作良好:
 
-```
+```java
 server.port=8082
 ```
 
@@ -315,7 +315,7 @@ server.port=8082
 
 我们将添加一个具有两个端点的`RestController`,一个为具有`resource.read`范围的用户授权，另一个为具有`resource.write scope:`范围的用户授权
 
-```
+```java
 @GetMapping("/read")
 public String read(Principal principal) {
     return "Hello write: " + principal.getName();
@@ -329,7 +329,7 @@ public String write(Principal principal) {
 
 接下来，**我们将覆盖默认的 Spring Boot 配置**来保护两个资源:
 
-```
+```java
 @EnableWebSecurity
 public class OAuth2ResourceServerSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -351,7 +351,7 @@ public class OAuth2ResourceServerSecurityConfiguration extends WebSecurityConfig
 
 在客户端应用程序中，我们将使用`RestTemplate.` 调用两个受保护的资源。在发出请求之前，我们从上下文中检索访问令牌，并将其添加到`Authorization` 头`:`
 
-```
+```java
 private String callResourceServer(OAuth2AuthenticationToken authenticationToken, String url) {
     OAuth2AuthorizedClient oAuth2AuthorizedClient = this.authorizedClientService.
       loadAuthorizedClient(authenticationToken.getAuthorizedClientRegistrationId(), 
@@ -371,7 +371,7 @@ private String callResourceServer(OAuth2AuthenticationToken authenticationToken,
 
 然后，我们将向资源服务器端点添加两个调用:
 
-```
+```java
 @GetMapping("/read")
 public String read(OAuth2AuthenticationToken authenticationToken) {
     String url = remoteResourceServer + "/read";

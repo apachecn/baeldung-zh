@@ -12,7 +12,7 @@
 
 我们首先需要的是合适的 [`spring-webmvc`](https://web.archive.org/web/20220626193107/https://search.maven.org/artifact/org.springframework/spring-webmvc/5.2.0.RELEASE/jar) 和 [`javax.servlet`](https://web.archive.org/web/20220626193107/https://search.maven.org/artifact/javax.servlet/javax.servlet-api/4.0.1/jar) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-webmvc</artifactId>
@@ -27,7 +27,7 @@
 
 此外，因为我们使用了`application/json` 内容类型，所以需要 [`jackson-databind`](https://web.archive.org/web/20220626193107/https://search.maven.org/artifact/com.fasterxml.jackson.core/jackson-databind/2.10.0/bundle) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -57,7 +57,7 @@ Spring 提供了一个`ContentCachingRequestWrapper` 类。这个类提供了一
 
 首先，让我们创建一个构造函数。在其中，我们将从实际的`InputStream` 中读取主体，并将其存储在一个`byte[]`对象中:
 
-```
+```java
 public class CachedBodyHttpServletRequest extends HttpServletRequestWrapper {
 
     private byte[] cachedBody;
@@ -78,7 +78,7 @@ public class CachedBodyHttpServletRequest extends HttpServletRequestWrapper {
 
 在这个方法中，我们将**创建并返回一个`CachedBodyServletInputStream` 类的新对象**(一个`ServletInputStream)`的实现:
 
-```
+```java
 @Override
 public ServletInputStream getInputStream() throws IOException {
     return new CachedBodyServletInputStream(this.cachedBody);
@@ -89,7 +89,7 @@ public ServletInputStream getInputStream() throws IOException {
 
 然后，我们将覆盖`getReader()`方法。这个方法返回一个`BufferedReader` 对象:
 
-```
+```java
 @Override
 public BufferedReader getReader() throws IOException {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(this.cachedBody);
@@ -107,7 +107,7 @@ public BufferedReader getReader() throws IOException {
 
 在其中，我们将使用该字节数组创建一个新的**实例。**之后，我们将它赋给全局变量`cachedBodyInputStream:`
 
-```
+```java
 public class CachedBodyServletInputStream extends ServletInputStream {
 
     private InputStream cachedBodyInputStream;
@@ -122,7 +122,7 @@ public class CachedBodyServletInputStream extends ServletInputStream {
 
 然后，我们将覆盖`read()` 方法`.` 。在这个方法中，我们将调用`ByteArrayInputStream#read:`
 
-```
+```java
 @Override
 public int read() throws IOException {
     return cachedBodyInputStream.read();
@@ -133,7 +133,7 @@ public int read() throws IOException {
 
 然后，我们将覆盖`isFinished()`方法。该方法指示`InputStream`是否有更多数据要读取。当没有字节可供读取时，它返回`true`:
 
-```
+```java
 @Override
 public boolean isFinished() {
     return cachedBody.available() == 0;
@@ -146,7 +146,7 @@ public boolean isFinished() {
 
 因为我们已经将`InputStream`复制到一个字节数组中，所以我们将返回`true`来表示它总是可用的:
 
-```
+```java
 @Override
 public boolean isReady() {
     return true;
@@ -159,14 +159,14 @@ public boolean isReady() {
 
 在这个方法中，我们将从实际的请求对象中**创建一个`CachedBodyHttpServletRequest` 类的对象:**
 
-```
+```java
 CachedBodyHttpServletRequest cachedBodyHttpServletRequest =
   new CachedBodyHttpServletRequest(request);
 ```
 
 然后我们将**把这个新的请求包装器对象传递给过滤器链**。因此，对`getInputStream`()方法的所有后续调用都将调用被覆盖的方法:
 
-```
+```java
 filterChain.doFilter(cachedContentHttpServletRequest, response);
 ```
 

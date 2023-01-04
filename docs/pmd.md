@@ -14,7 +14,7 @@
 
 让我们从在 Maven 项目中设置 PMD 开始——使用和配置`maven-pmd-plugin`:
 
-```
+```java
 <project>
     ...
     <reporting>
@@ -41,7 +41,7 @@
 
 最后，在运行所有程序之前，让我们创建一个简单的 Java 类，它有一些突出的问题——PMD 可以开始报告这些问题:
 
-```
+```java
 public class Ct {
 
     public int d(int a, int b) {
@@ -57,13 +57,13 @@ public class Ct {
 
 使用简单的 PMD 配置和示例代码，让我们在构建目标文件夹中生成一个报告:
 
-```
+```java
 mvn site
 ```
 
 生成的报告名为`pmd.html`，位于`target/site`文件夹中:
 
-```
+```java
 Files
 
 com/baeldung/pmd/Cnt.java
@@ -92,7 +92,7 @@ PMD 插件使用五个默认规则集:
 
 您可以使用其他规则集或创建自己的规则集，并在插件中配置这些规则集:
 
-```
+```java
 <project>
     ...
     <reporting>
@@ -125,7 +125,7 @@ PMD 插件使用五个默认规则集:
 
 首先，我们将创建一个新的`ruleset.xml`文件。当然，我们可以使用一个现有的规则集文件作为示例，将其复制并粘贴到我们的新文件中，删除其中的所有旧规则，并更改名称和描述:
 
-```
+```java
 <?xml version="1.0"?>
 <ruleset name="Custom ruleset"
 
@@ -140,14 +140,14 @@ PMD 插件使用五个默认规则集:
 
 其次，让我们添加一些规则引用:
 
-```
+```java
 <!-- We'll use the entire 'strings' ruleset -->
 <rule ref="rulesets/java/strings.xml"/> 
 ```
 
 或者添加一些具体的规则:
 
-```
+```java
 <rule ref="rulesets/java/unusedcode.xml/UnusedLocalVariable"/>
 <rule ref="rulesets/java/unusedcode.xml/UnusedPrivateField"/>
 <rule ref="rulesets/java/imports.xml/DuplicateImports"/>
@@ -156,7 +156,7 @@ PMD 插件使用五个默认规则集:
 
 我们可以自定义规则的消息和优先级:
 
-```
+```java
 <rule ref="rulesets/java/basic.xml/EmptyCatchBlock"
   message="Must handle exceptions">
     <priority>2</priority>
@@ -165,7 +165,7 @@ PMD 插件使用五个默认规则集:
 
 您还可以自定义规则的属性值，如下所示:
 
-```
+```java
 <rule ref="rulesets/java/codesize.xml/CyclomaticComplexity">
     <properties>
         <property name="reportLevel" value="5"/>
@@ -177,7 +177,7 @@ PMD 插件使用五个默认规则集:
 
 接下来，您还可以从规则集中排除规则:
 
-```
+```java
 <rule ref="rulesets/java/braces.xml">
     <exclude name="WhileLoopsMustUseBraces"/>
     <exclude name="IfElseStmtsMustUseBraces"/>
@@ -194,7 +194,7 @@ PMD 插件使用五个默认规则集:
 
 这里有一个简单的例子:
 
-```
+```java
 <?xml version="1.0"?>
 <ruleset ...>
     <description>My ruleset</description>

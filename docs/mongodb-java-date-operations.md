@@ -16,7 +16,7 @@
 
 接下来，让我们将 [MongoDB Java 驱动程序](https://web.archive.org/web/20220821031626/https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync)作为依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.mongodb</groupId>
     <artifactId>mongodb-driver-sync</artifactId>
@@ -28,7 +28,7 @@
 
 让我们定义一个 [POJO](/web/20220821031626/https://www.baeldung.com/java-pojo-class) 来表示数据库中包含的文档:
 
-```
+```java
 public class Event {
     private String title;
     private String location;
@@ -55,14 +55,14 @@ public class Event {
 
 为了让 MongoDB 序列化/反序列化我们的`Event` POJO，我们需要向 MongoDB 的`CodecRegistry`注册`PojoCodecProvider` :
 
-```
+```java
 CodecProvider codecProvider = PojoCodecProvider.builder().automatic(true).build();
 CodecRegistry codecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(codecProvider));
 ```
 
 让我们创建一个数据库、集合和客户机，它将使用我们注册的`PojoCodecProvider` :
 
-```
+```java
 MongoClient mongoClient = MongoClients.create(uri);
 MongoDatabase db = mongoClient.getDatabase("calendar").withCodecRegistry(codecRegistry);
 MongoCollection<Event> collection = db.getCollection("my_events", Event.class);
@@ -74,7 +74,7 @@ MongoCollection<Event> collection = db.getCollection("my_events", Event.class);
 
 在我们的 POJO 中，我们使用了 [`LocalDateTime`](/web/20220821031626/https://www.baeldung.com/java-8-date-time-intro) 而不是`String`，以便更容易处理日期值。现在让我们通过使用`LocalDateTime`的便利 API 构造`Event`对象来利用这一点:
 
-```
+```java
 Event pianoLessonsEvent = new Event("Piano lessons", "Foo Blvd",
   LocalDateTime.of(2022, 6, 4, 11, 0, 0));
 Event soccerGameEvent = new Event("Soccer game", "Bar Avenue",
@@ -83,14 +83,14 @@ Event soccerGameEvent = new Event("Soccer game", "Bar Avenue",
 
 我们可以将新的`Event`插入我们的数据库，如下所示:
 
-```
+```java
 InsertOneResult pianoLessonsInsertResult = collection.insertOne(pianoLessonsEvent);
 InsertOneResult soccerGameInsertResult = collection.insertOne(soccerGameEvent);
 ```
 
 让我们通过检查插入文档的 id 来验证插入是否成功:
 
-```
+```java
 assertNotNull(pianoLessonsInsertResult.getInsertedId());
 assertNotNull(soccerGameInsertResult.getInsertedId());
 ```
@@ -101,14 +101,14 @@ assertNotNull(soccerGameInsertResult.getInsertedId());
 
 **我们可以使用等式过滤器(`eq`)来检索匹配特定日期和时间的文档:**
 
-```
+```java
 LocalDateTime dateTime = LocalDateTime.of(2022, 6, 10, 17, 0, 0);
 Event event = collection.find(eq("dateTime", dateTime)).first();
 ```
 
 让我们检查结果`Event`的各个字段:
 
-```
+```java
 assertEquals("Soccer game", event.title);
 assertEquals("Bar Avenue", event.location);
 assertEquals(dateTime, event.dateTime);
@@ -116,7 +116,7 @@ assertEquals(dateTime, event.dateTime);
 
 **我们还可以使用 MongoDB `BasicDBObject` 类以及`gte` 和`lte` 操作符来构建使用日期范围**的 **更复杂的查询:**
 
-```
+```java
 LocalDateTime from = LocalDateTime.of(2022, 06, 04, 12, 0, 0);
 LocalDateTime to = LocalDateTime.of(2022, 06, 10, 17, 0, 0);
 BasicDBObject object = new BasicDBObject();
@@ -126,7 +126,7 @@ List list = new ArrayList(collection.find(object).into(new ArrayList()));
 
 由于足球比赛是我们查询的日期范围内唯一的`Event`,我们应该在`list`中只看到一个`Event` 对象，不包括钢琴课:
 
-```
+```java
 assertEquals(1, events.size());
 assertEquals("Soccer game", events.get(0).title);
 assertEquals("Bar Avenue", events.get(0).location);
@@ -141,7 +141,7 @@ assertEquals(dateTime, events.get(0).dateTime);
 
 **要更新一个 MongoDB 文档，我们可以使用`updateOne()` 方法**。让我们也使用`currentDate()`方法来设置钢琴课事件的`dateTime`字段:
 
-```
+```java
 Document document = new Document().append("title", "Piano lessons");
 Bson update = Updates.currentDate("dateTime");
 UpdateOptions options = new UpdateOptions().upsert(false);
@@ -152,7 +152,7 @@ UpdateResult result = collection.updateOne(document, update, options);
 
 我们可以通过检查修改了多少文档来确认操作是否成功:
 
-```
+```java
 assertEquals(1, result.getModifiedCount());
 ```
 
@@ -162,7 +162,7 @@ assertEquals(1, result.getModifiedCount());
 
 与`updateOne()`不同，`updateMany()` 方法期望第二个`Bson`对象封装查询标准，该标准将定义我们想要更新的文档。在这种情况下，我们将通过引入`lt` 字段操作符来指定涵盖 2022 年所有事件的日期范围:
 
-```
+```java
 LocalDate updateManyFrom = LocalDate.of(2022, 1, 1);
 LocalDate updateManyTo = LocalDate.of(2023, 1, 1);
 Bson query = and(gte("dateTime", from), lt("dateTime", to));
@@ -172,7 +172,7 @@ UpdateResult result = collection.updateMany(query, updates);
 
 就像使用`updateOne()`，**一样，我们可以通过检查我们的`result` 对象:**的更新计数来确认这个操作更新了多个事件
 
-```
+```java
 assertEquals(2, result.getModifiedCount());
 ```
 
@@ -180,7 +180,7 @@ assertEquals(2, result.getModifiedCount());
 
 与更新一样，我们可以一次从数据库中删除一个或多个文档。假设我们需要删除 2022 年的所有事件。让我们使用一个`Bson`日期范围查询和`deleteMany()`方法来完成:
 
-```
+```java
 LocalDate deleteFrom = LocalDate.of(2022, 1, 1);
 LocalDate deleteTo = LocalDate.of(2023, 1, 1);
 Bson query = and(gte("dateTime", deleteFrom), lt("dateTime", deleteTo));
@@ -189,7 +189,7 @@ DeleteResult result = collection.deleteMany(query);
 
 由于我们在本教程中创建的所有事件都有一个 2022 `dateTime`字段值，`deleteMany()` 将它们全部从我们的集合中删除。我们可以通过检查删除计数来确认这一点:
 
-```
+```java
 assertEquals(2, result.getDeletedCount());
 ```
 
@@ -197,13 +197,13 @@ assertEquals(2, result.getDeletedCount());
 
 **MongoDB 用 UTC 存储日期，这是不可更改的。**因此，如果我们希望我们的日期字段特定于一个时区，我们可以将时区偏移量存储在一个单独的字段中，并自己进行转换。让我们添加那个字段作为`String`:
 
-```
+```java
 public String timeZoneOffset;
 ```
 
 我们需要调整构造函数，以便在创建事件时设置新字段:
 
-```
+```java
 public Event(String title, String location, LocalDateTime dateTime, String timeZoneOffset) {
     this.title = title;
     this.location = location;
@@ -214,7 +214,7 @@ public Event(String title, String location, LocalDateTime dateTime, String timeZ
 
 我们现在可以创建特定时区的事件并将其插入到数据库中。让我们使用`ZoneOffset` 类来避免手动格式化时区偏移量`String`:
 
-```
+```java
 LocalDateTime utcDateTime = LocalDateTime.of(2022, 6, 20, 11, 0, 0);
 Event pianoLessonsTZ = new Event("Piano lessons", "Baz Bvld", utcDateTime, ZoneOffset.ofHours(2).toString());
 InsertOneResult pianoLessonsTZInsertResult = collection.insertOne(pianoLessonsTZ);
@@ -223,7 +223,7 @@ assertNotNull(pianoLessonsTZInsertResult.getInsertedId());
 
 注意，**因为偏移量是相对于 UTC 的，所以`dateTime `成员变量必须代表 UTC 时间，这样我们就可以在后面正确地转换它**。一旦我们从集合中检索到文档，我们就可以使用偏移字段和 [`OffsetDateTime`](/web/20220821031626/https://www.baeldung.com/java-8-date-time-intro) 类进行转换:
 
-```
+```java
 OffsetDateTime dateTimeWithOffset = OffsetDateTime.of(pianoLessonsTZ.dateTime, ZoneOffset.of(pianoLessonsTZ.timeZoneOffset));
 ```
 

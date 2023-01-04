@@ -20,7 +20,7 @@
 
 让我们看看如何从发出的值中只过滤出奇数值:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.range(1, 10);
 TestSubscriber<Integer> subscriber = new TestSubscriber();
 
@@ -38,7 +38,7 @@ subscriber.assertValues(1, 3, 5, 7, 9);
 
 让我们看看如何过滤`source` `Observable`并仅发出前两项:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.range(1, 10);
 TestSubscriber<Integer> subscriber = new TestSubscriber();
 
@@ -55,7 +55,7 @@ subscriber.assertValues(1, 2, 3);
 
 让我们看看如何使用过滤`Predicate:`的`takeWhile`
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.just(1, 2, 3, 4, 3, 2, 1);
 TestSubscriber<Integer> subscriber = new TestSubscriber();
 
@@ -73,7 +73,7 @@ subscriber.assertValues(1, 2, 3);
 
 让我们快速看一下如何发出第一个大于 5 的项目:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable
   .just(1, 2, 3, 4, 5, 7, 6);
 TestSubscriber<Integer> subscriber = new TestSubscriber();
@@ -90,7 +90,7 @@ subscriber.assertValue(7);
 
 使用`first` API 可以实现类似的行为:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.range(1, 10);
 TestSubscriber<Integer> subscriber = new TestSubscriber();
 
@@ -103,7 +103,7 @@ subscriber.assertValue(1);
 
 **但是，如果我们想指定一个默认值，如果没有项目被发射，我们可以使用 *f* `irstOrDefault` :**
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.empty();
 
 Observable<Integer> filteredObservable = sourceObservable.firstOrDefault(-1);
@@ -119,7 +119,7 @@ subscriber.assertValue(-1);
 
 让我们看看如何只发射最后三个项目:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.range(1, 10);
 TestSubscriber<Integer> subscriber = new TestSubscriber();
 
@@ -138,7 +138,7 @@ subscriber.assertValues(8, 9, 10);
 
 这将过滤`Observable`，仅发出最后一个元素，该元素可选地验证过滤`Predicate`:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.range(1, 10);
 TestSubscriber<Integer> subscriber = new TestSubscriber();
 
@@ -154,7 +154,7 @@ subscriber.assertValue(9);
 
 如果使用了`lastOrDefault`操作符，并且没有任何验证过滤条件的项目，也会发出默认值:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.range(1, 10);
 TestSubscriber<Integer> subscriber = new TestSubscriber();
 
@@ -170,7 +170,7 @@ subscriber.assertValue(-1);
 
 使用`elementAt`操作符，我们可以选择由源`Observable`发出的单个项目，并指定其索引:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable
   .just(1, 2, 3, 5, 7, 11);
 TestSubscriber<Integer> subscriber = new TestSubscriber();
@@ -186,7 +186,7 @@ subscriber.assertValue(7);
 
 为了避免这种情况，可以使用`elementAtOrDefault –`，如果索引超出范围，它将返回默认值:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable
   .just(1, 2, 3, 5, 7, 11);
 TestSubscriber<Integer> subscriber = new TestSubscriber();
@@ -205,7 +205,7 @@ subscriber.assertValue(-1);
 
 让我们看看如何只过滤发出的`String`类型项目:
 
-```
+```java
 Observable sourceObservable = Observable.just(1, "two", 3, "five", 7, 11);
 TestSubscriber subscriber = new TestSubscriber();
 
@@ -228,7 +228,7 @@ subscriber.assertValues("two", "five");
 
 比如说。让我们看看如何跳过前四个元素:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.range(1, 10);
 TestSubscriber<Integer> subscriber = new TestSubscriber();
 
@@ -243,7 +243,7 @@ subscriber.assertValues(5, 6, 7, 8, 9, 10);
 
 **每当我们想要过滤掉由`Observable`发出的所有不符合过滤谓词的第一个值时，我们可以使用`skipWhile`操作符:**
 
-```
+```java
 Observable<Integer> sourceObservable = Observable
   .just(1, 2, 3, 4, 5, 4, 3, 2, 1);
 TestSubscriber<Integer> subscriber = new TestSubscriber();
@@ -262,7 +262,7 @@ subscriber.assertValues(4, 5, 4, 3, 2, 1);
 
 例如，这样我们可以跳过最后五项:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.range(1, 10);
 TestSubscriber<Integer> subscriber = new TestSubscriber();
 
@@ -277,7 +277,7 @@ subscriber.assertValues(1, 2, 3, 4, 5);
 
 **`distinct`操作符返回一个`Observable`，它发出由`sourceObservable`发出的所有不同的项目:**
 
-```
+```java
 Observable<Integer> sourceObservable = Observable
   .just(1, 1, 2, 2, 1, 3, 3, 1);
 TestSubscriber<Integer> subscriber = new TestSubscriber();
@@ -291,7 +291,7 @@ subscriber.assertValues(1, 2, 3);
 
 然而，如果我们想获得一个发出所有由`sourceObservable`发出的项目的`Observable`，这些项目不同于它们的直接前任，我们可以使用`distinctUntilChanged`操作符:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable
   .just(1, 1, 2, 2, 1, 3, 3, 1);
 TestSubscriber<Integer> subscriber = new TestSubscriber();
@@ -307,7 +307,7 @@ subscriber.assertValues(1, 2, 1, 3, 1);
 
 每当我们想忽略由`sourceObservable`发出的所有元素时，我们可以简单地使用`ignoreElements:`
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.range(1, 10);
 TestSubscriber<Integer> subscriber = new TestSubscriber();
 
@@ -326,7 +326,7 @@ subscriber.assertNoValues();
 
 在进入第一个之前，让我们定义一个定时的`Observable`,它将每秒发出一个项目:
 
-```
+```java
 TestScheduler testScheduler = new TestScheduler();
 
 Observable<Integer> timedObservable = Observable
@@ -343,7 +343,7 @@ Observable<Integer> timedObservable = Observable
 
 让我们看看如何对`timedObservable`进行采样，每 2.5 秒过滤一次最后发出的项目:
 
-```
+```java
 TestSubscriber<Integer> subscriber = new TestSubscriber();
 
 Observable<Integer> sampledObservable = timedObservable
@@ -364,7 +364,7 @@ subscriber.assertValues(3, 5, 6);
 
 让我们看看如何使用 4 秒的采样周期发射第一个项目:
 
-```
+```java
 TestSubscriber<Integer> subscriber = new TestSubscriber();
 
 Observable<Integer> filteredObservable = timedObservable
@@ -385,7 +385,7 @@ subscriber.assertValues(1, 6);
 
 让我们看看第一个场景会发生什么:
 
-```
+```java
 TestSubscriber<Integer> subscriber = new TestSubscriber();
 
 Observable<Integer> filteredObservable = timedObservable
@@ -406,7 +406,7 @@ subscriber.assertValue(6);
 
 让我们看看如果我们给我们的`timedObservable`指定 500 毫秒的超时会发生什么:
 
-```
+```java
 TestSubscriber<Integer> subscriber = new TestSubscriber();
 
 Observable<Integer> filteredObservable = timedObservable
@@ -425,7 +425,7 @@ subscriber.assertError(TimeoutException.class); subscriber.assertValues(1);
 
 在继续之前，让我们定义一个`delayedObservable`，它将在 3 秒后仅发射 1 个项目:
 
-```
+```java
 Observable<Integer> delayedObservable = Observable.just(1)
   .delay(3, TimeUnit.SECONDS, testScheduler);
 ```
@@ -436,7 +436,7 @@ Observable<Integer> delayedObservable = Observable.just(1)
 
 在第二个`Observable` ( `delayedObservable`)发出一个项目或终止后，`takeUntil`操作员丢弃由源`Observable` ( `timedObservable`)发出的任何项目；
 
-```
+```java
 TestSubscriber<Integer> subscriber = new TestSubscriber();
 
 Observable<Integer> filteredObservable = timedObservable
@@ -453,7 +453,7 @@ subscriber.assertValues(4, 5, 6);
 
 另一方面，`skipUntil`丢弃由源`Observable` ( `timedObservable`)发出的任何物品，直到第二个`Observable` ( `delayedObservable`)发出一个物品:
 
-```
+```java
 TestSubscriber<Integer> subscriber = new TestSubscriber();
 
 Observable<Integer> filteredObservable = timedObservable

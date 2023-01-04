@@ -16,26 +16,26 @@
 
 **创建 http 客户端**
 
-```
+```java
 CloseableHttpClient client = HttpClientBuilder.create().build();
 ```
 
 **发送基本获取请求**
 
-```
+```java
 instance.execute(new HttpGet("http://www.google.com"));
 ```
 
 **获取 HTTP 响应的状态码**
 
-```
+```java
 CloseableHttpResponse response = instance.execute(new HttpGet("http://www.google.com"));
 assertThat(response.getStatusLine().getStatusCode(), equalTo(200));
 ```
 
 **获取响应的媒体类型**
 
-```
+```java
 CloseableHttpResponse response = instance.execute(new HttpGet("http://www.google.com"));
 String contentMimeType = ContentType.getOrDefault(response.getEntity()).getMimeType();
 assertThat(contentMimeType, equalTo(ContentType.TEXT_HTML.getMimeType()));
@@ -43,7 +43,7 @@ assertThat(contentMimeType, equalTo(ContentType.TEXT_HTML.getMimeType()));
 
 **得到回应的正文**
 
-```
+```java
 CloseableHttpResponse response = instance.execute(new HttpGet("http://www.google.com"));
 String bodyAsString = EntityUtils.toString(response.getEntity());
 assertThat(bodyAsString, notNullValue());
@@ -51,7 +51,7 @@ assertThat(bodyAsString, notNullValue());
 
 **配置请求超时**
 
-```
+```java
 @Test(expected = SocketTimeoutException.class)
 public void givenLowTimeout_whenExecutingRequestWithTimeout_thenException() 
     throws ClientProtocolException, IOException {
@@ -65,7 +65,7 @@ public void givenLowTimeout_whenExecutingRequestWithTimeout_thenException()
 
 **在整个客户端上配置超时**
 
-```
+```java
 RequestConfig requestConfig = RequestConfig.custom().
     setConnectionRequestTimeout(1000).setConnectTimeout(1000).setSocketTimeout(1000).build();
 HttpClientBuilder builder = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig);
@@ -73,13 +73,13 @@ HttpClientBuilder builder = HttpClientBuilder.create().setDefaultRequestConfig(r
 
 **发帖子请求**
 
-```
+```java
 instance.execute(new HttpPost(SAMPLE_URL));
 ```
 
 **给请求添加参数**
 
-```
+```java
 List<NameValuePair> params = new ArrayList<NameValuePair>();
 params.add(new BasicNameValuePair("key1", "value1"));
 params.add(new BasicNameValuePair("key2", "value2"));
@@ -88,7 +88,7 @@ request.setEntity(new UrlEncodedFormEntity(params, Consts.UTF_8));
 
 **配置如何处理 HTTP 请求的重定向**
 
-```
+```java
 CloseableHttpClient instance = HttpClientBuilder.create().disableRedirectHandling().build();
 CloseableHttpResponse response = instance.execute(new HttpGet("http://t.co/I5YYd9tddw"));
 assertThat(response.getStatusLine().getStatusCode(), equalTo(301));
@@ -96,7 +96,7 @@ assertThat(response.getStatusLine().getStatusCode(), equalTo(301));
 
 **为请求配置报头**
 
-```
+```java
 HttpGet request = new HttpGet(SAMPLE_URL);
 request.addHeader(HttpHeaders.ACCEPT, "application/xml");
 response = instance.execute(request);
@@ -104,7 +104,7 @@ response = instance.execute(request);
 
 **从响应中获取报头**
 
-```
+```java
 CloseableHttpResponse response = instance.execute(new HttpGet(SAMPLE_URL));
 Header[] headers = response.getHeaders(HttpHeaders.CONTENT_TYPE);
 assertThat(headers, not(emptyArray()));
@@ -112,7 +112,7 @@ assertThat(headers, not(emptyArray()));
 
 **关闭/释放资源**
 
-```
+```java
 response = instance.execute(new HttpGet(SAMPLE_URL));
 try {
     HttpEntity entity = response.getEntity();

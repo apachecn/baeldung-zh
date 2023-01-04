@@ -12,7 +12,7 @@ Aegis 是 [Apache CXF](https://web.archive.org/web/20220117074026/https://cxf.ap
 
 激活 Aegis 数据绑定所需的唯一依赖项是:
 
-```
+```java
 <dependency>
     <groupId>org.apache.cxf</groupId>
     <artifactId>cxf-rt-databinding-aegis</artifactId>
@@ -30,7 +30,7 @@ Aegis 是 [Apache CXF](https://web.archive.org/web/20220117074026/https://cxf.ap
 
 这是我们示例中最简单的类，定义如下:
 
-```
+```java
 public class Course {
     private int id;
     private String name;
@@ -45,7 +45,7 @@ public class Course {
 
 `CourseRepo`是我们模型中的顶级类型。我们将它定义为一个接口，而不是一个类，以展示编组 Java 接口是多么容易，这在没有自定义适配器的 JAXB 中是不可能的:
 
-```
+```java
 public interface CourseRepo {
     String getGreeting();
     void setGreeting(String greeting);
@@ -61,7 +61,7 @@ public interface CourseRepo {
 
 这个类提供了对`CourseRepo`接口的实现:
 
-```
+```java
 public class CourseRepoImpl implements CourseRepo {
     private String greeting;
     private Map<Integer, Course> courses = new HashMap<>();
@@ -87,7 +87,7 @@ public class CourseRepoImpl implements CourseRepo {
 
 在`CourseRepo`映射文件中，我们更改了与`CourseRepo`接口相关联的 XML 元素的名称和命名空间，以及它的`greeting`属性的样式:
 
-```
+```java
 <mappings xmlns:ns="http://courserepo.baeldung.com">
     <mapping name="ns:Baeldung">
         <property name="greeting" style="attribute"/>
@@ -101,7 +101,7 @@ public class CourseRepoImpl implements CourseRepo {
 
 在这个映射文件中，我们指示 Aegis 在封送处理时忽略`Course`类的`instructor`属性，这样它的值在从输出 XML 文档重新创建的对象中不可用:
 
-```
+```java
 <mappings>
     <mapping>
         <property name="instructor" ignore="true"/>
@@ -117,7 +117,7 @@ public class CourseRepoImpl implements CourseRepo {
 
 为了方便测试过程，我们在测试类中声明了两个字段:
 
-```
+```java
 public class BaeldungTest {
     private AegisContext context;
     private String fileName = "baeldung.xml";
@@ -132,13 +132,13 @@ public class BaeldungTest {
 
 首先，必须创建一个`AegisContext`对象:
 
-```
+```java
 context = new AegisContext();
 ```
 
 然后配置并初始化那个`AegisContext`实例。下面是我们如何为上下文设置根类:
 
-```
+```java
 Set<Type> rootClasses = new HashSet<Type>();
 rootClasses.add(CourseRepo.class);
 context.setRootClasses(rootClasses);
@@ -148,7 +148,7 @@ Aegis 为`Set<Type>`对象中的每个`Type`创建一个 XML 映射元素。在�
 
 现在，让我们为上下文设置实现映射，为`CourseRepo`接口指定代理类:
 
-```
+```java
 Map<Class<?>, String> beanImplementationMap = new HashMap<>();
 beanImplementationMap.put(CourseRepoImpl.class, "CourseRepo");
 context.setBeanImplementationMap(beanImplementationMap);
@@ -156,19 +156,19 @@ context.setBeanImplementationMap(beanImplementationMap);
 
 Aegis 上下文的最后一个配置告诉它在相应的 XML 文档中设置`xsi:type`属性。除非被映射文件覆盖，否则该属性携带关联 Java 对象的实际类型名:
 
-```
+```java
 context.setWriteXsiTypes(true);
 ```
 
 我们的`AegisContext`实例现在可以初始化了:
 
-```
+```java
 context.initialize();
 ```
 
 为了保持代码的整洁，我们将本小节中的所有代码片段收集到一个帮助器方法中:
 
-```
+```java
 private void initializeContext() {
     // ...
 }
@@ -178,7 +178,7 @@ private void initializeContext() {
 
 由于本教程的简单性质，我们在内存中生成样本数据，而不是依赖于一个持久的解决方案。让我们使用下面的设置逻辑来填充课程报告:
 
-```
+```java
 private CourseRepoImpl initCourseRepo() {
     Course restCourse = new Course();
     restCourse.setId(1);
@@ -204,7 +204,7 @@ private CourseRepoImpl initCourseRepo() {
 
 下面的 helper 方法说明了将 Java 对象封送到 XML 元素所需的步骤:
 
-```
+```java
 private void marshalCourseRepo(CourseRepo courseRepo) throws Exception {
     AegisWriter<XMLStreamWriter> writer = context.createXMLStreamWriter();
     AegisType aegisType = context.getTypeMapping().getType(CourseRepo.class);
@@ -224,7 +224,7 @@ private void marshalCourseRepo(CourseRepo courseRepo) throws Exception {
 
 以下方法将 XML 文档解组为给定类型的 Java 对象:
 
-```
+```java
 private CourseRepo unmarshalCourseRepo() throws Exception {       
     AegisReader<XMLStreamReader> reader = context.createXMLStreamReader();
     XMLStreamReader xmlReader = XMLInputFactory.newInstance()
@@ -244,7 +244,7 @@ private CourseRepo unmarshalCourseRepo() throws Exception {
 
 现在，是时候将前面小节中定义的所有助手方法组合成一个测试方法了:
 
-```
+```java
 @Test
 public void whenMarshalingAndUnmarshalingCourseRepo_thenCorrect()
   throws Exception {
@@ -261,7 +261,7 @@ public void whenMarshalingAndUnmarshalingCourseRepo_thenCorrect()
 
 我们首先创建一个`CourseRepo`实例，然后将其编组为一个 XML 文档，最后解组该文档以重新创建原始对象。让我们验证重新创建的对象是我们所期望的:
 
-```
+```java
 assertEquals("Welcome to Beldung!", outputRepo.getGreeting());
 assertEquals("REST with Spring", restCourse.getName());
 assertEquals(new Date(1234567890000L), restCourse.getEnrolmentDate());
@@ -277,7 +277,7 @@ assertNull(securityCourse.getInstructor());
 
 为了明确 Aegis 映射文件的效果，我们在下面显示了没有定制的 XML 文档:
 
-```
+```java
 <ns1:baeldung xmlns:ns1="http://aegis.cxf.baeldung.com"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:type="ns1:CourseRepo">
@@ -309,7 +309,7 @@ assertNull(securityCourse.getInstructor());
 
 将此与 Aegis 自定义映射的情况进行比较:
 
-```
+```java
 <ns1:baeldung xmlns:ns1="http://aegis.cxf.baeldung.com"
     xmlns:ns="http://courserepo.baeldung.com"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

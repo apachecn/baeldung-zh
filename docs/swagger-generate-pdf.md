@@ -16,7 +16,7 @@
 
 我们将使用的第一个插件是`[swagger-maven-plugin](https://web.archive.org/web/20221125175536/https://search.maven.org/artifact/com.github.kongchen/swagger-maven-plugin/3.1.8/maven-plugin)`。这个插件**为我们的 REST API** 生成`swagger.json`文件:
 
-```
+```java
 <plugin>
     <groupId>com.github.kongchen</groupId>
     <artifactId>swagger-maven-plugin</artifactId>
@@ -54,7 +54,7 @@
 
 我们需要的第二个插件是`[swagger2markup-maven-plugin](https://web.archive.org/web/20221125175536/https://search.maven.org/artifact/io.github.robwin/swagger2markup-maven-plugin/0.9.3/jar)`。它**将前一个插件的`swagger.json`输出作为其输入，产生** **[Asciidoc](/web/20221125175536/https://www.baeldung.com/asciidoctor)** :
 
-```
+```java
 <plugin>
     <groupId>io.github.robwin</groupId>
     <artifactId>swagger2markup-maven-plugin</artifactId>
@@ -81,7 +81,7 @@
 
 我们将使用的第三个也是最后一个插件是`[asciidoctor-maven-plugin](https://web.archive.org/web/20221125175536/https://search.maven.org/artifact/org.asciidoctor/asciidoctor-maven-plugin/2.2.1/maven-plugin)`。作为三个插件中的最后一个，这个**从[Asciidoc](/web/20221125175536/https://www.baeldung.com/asciidoctor)T4 产生一个 PDF 文件:**
 
-```
+```java
 <plugin>
     <groupId>org.asciidoctor</groupId>
     <artifactId>asciidoctor-maven-plugin</artifactId>

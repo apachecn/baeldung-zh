@@ -34,7 +34,7 @@ Memento 设计模式，由四人组在他们的书中描述，是一种行为设
 
 现在让我们看一个 Memento 设计模式的例子。假设我们有一个文本编辑器:
 
-```
+```java
 public class TextEditor {
 
     private TextWindow textWindow;
@@ -47,7 +47,7 @@ public class TextEditor {
 
 它有一个文本窗口，保存当前输入的文本，并提供添加更多文本的方法:
 
-```
+```java
 public class TextWindow {
 
     private StringBuilder currentText;
@@ -68,7 +68,7 @@ public class TextWindow {
 
 为了做到这一点，我们将利用 Memento 设计模式。首先，我们将创建一个保存窗口当前文本的对象:
 
-```
+```java
 public class TextWindowState {
 
     private String text;
@@ -89,7 +89,7 @@ public class TextWindowState {
 
 **之后，我们必须为`TextWindow`类提供创建和消费 Memento 对象的方法，使`TextWindow`成为我们的发起者:**
 
-```
+```java
 private StringBuilder currentText;
 
 public TextWindowState save() {
@@ -107,7 +107,7 @@ public void restore(TextWindowState save) {
 
 最后，我们必须更新我们的`TextEditor`类。**作为看守者，它将保持发起者的状态，并在需要时请求恢复它:**
 
-```
+```java
 private TextWindowState savedTextWindow;
 
 public void hitSave() {
@@ -123,7 +123,7 @@ public void hitUndo() {
 
 让我们通过一个示例运行来看看它是否有效。假设我们在编辑器中添加一些文本，保存它，然后再添加一些，最后撤销。为了实现这一点，我们将在我们的`TextEditor`上添加一个`print() `方法，它返回当前文本的一个`String`:
 
-```
+```java
 TextEditor textEditor = new TextEditor(new TextWindow());
 textEditor.write("The Memento Design Pattern\n");
 textEditor.write("How to implement it in Java?\n");

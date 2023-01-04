@@ -14,7 +14,7 @@ Groovy 是一种用于 JVM 的动态脚本语言。它编译成字节码，并�
 
 如果我们想在 Maven 项目中使用 Groovy，我们需要在`pom.xml:`中添加以下内容
 
-```
+```java
 <build>
     <plugins>
         // ...
@@ -49,7 +49,7 @@ Groovy 最重要的特性之一是支持动态类型。
 
 类型定义是可选的，实际类型在运行时确定。让我们来看看这两个类:
 
-```
+```java
 class Duck {
     String getName() {
         'Duck'
@@ -66,7 +66,7 @@ class Cat {
 
 现在，假设我们有一个包含鸭子和猫的对象列表，这些对象使用了`getName`方法。使用 Groovy，我们可以做到以下几点:
 
-```
+```java
 Duck duck = new Duck()
 Cat cat = new Cat()
 
@@ -78,7 +78,7 @@ list.each { obj ->
 
 代码将会编译，上面代码的输出将会是:
 
-```
+```java
 Duck
 Cat
 ```
@@ -87,7 +87,7 @@ Cat
 
 与 JavaScript 一样，Groovy 在需要时会将每个对象评估为布尔值，例如，当在`if`语句中使用它或者对值求反时:
 
-```
+```java
 if("hello") {...}
 if(15) {...}
 if(someObject) {...}
@@ -108,7 +108,7 @@ if(someObject) {...}
 
 有些包是默认导入的，我们不需要显式导入它们:
 
-```
+```java
 import java.lang.* 
 import java.util.* 
 import java.io.* 
@@ -135,7 +135,7 @@ AST(**Abstract Syntax Tree**)transforms 允许我们挂钩到 Groovy 编译过�
 
 让我们看看下面的例子:
 
-```
+```java
 class Universe {
     @TypeChecked
     int answer() { "forty two" }
@@ -144,7 +144,7 @@ class Universe {
 
 如果我们尝试编译这段代码，我们会观察到以下错误:
 
-```
+```java
 [Static type checking] - Cannot return value of type java.lang.String on method returning type int
 ```
 
@@ -164,7 +164,7 @@ class Universe {
 
 考虑这个对象:
 
-```
+```java
 class Person {
     String name
     String lastName
@@ -179,7 +179,7 @@ class Person {
 
 Groovy 提供了获取和设置属性的快捷表示法。我们可以使用类似字段的访问符号，而不是用 Java 的方式调用 getters 和 setters:
 
-```
+```java
 resourceGroup.getResourcePrototype().getName() == SERVER_TYPE_NAME
 resourceGroup.resourcePrototype.name == SERVER_TYPE_NAME
 
@@ -197,7 +197,7 @@ resourcePrototype.name = "something"
 
 例如，我们可以安全地调用:
 
-```
+```java
 String name = person?.organization?.parent?.name
 ```
 
@@ -207,13 +207,13 @@ String name = person?.organization?.parent?.name
 
 Elvis 运算符 `“?:`"让我们可以精简三元表达式。这两个是等价的:
 
-```
+```java
 String name = person.name ?: defaultName
 ```
 
 和
 
-```
+```java
 String name = person.name ? person.name : defaultName
 ```
 
@@ -227,7 +227,7 @@ String name = person.name ? person.name : defaultName
 
 使用比较操作符的最大好处是平滑地处理`nulls`，这样`x <=> y`就不会抛出`NullPointerException`:
 
-```
+```java
 println 5 <=> null
 ```
 
@@ -243,14 +243,14 @@ println 5 <=> null
 
 用双引号定义的字符串支持使用 `${}`语法进行插值:
 
-```
+```java
 def name = "Bill Gates"
 def greeting = "Hello, ${name}"
 ```
 
 事实上，任何表达式都可以放在`${}`里面:
 
-```
+```java
 def name = "Bill Gates"
 def greeting = "Hello, ${name.toUpperCase()}"
 ```
@@ -259,7 +259,7 @@ def greeting = "Hello, ${name.toUpperCase()}"
 
 下面的代码将运行，不会测试失败:
 
-```
+```java
 def a = "hello" 
 assert a.class.name == 'java.lang.String'
 
@@ -278,7 +278,7 @@ assert c.class.name == 'org.codehaus.groovy.runtime.GStringImpl'
 
 下面是一些代码，用于向 Java 中的新实例`ArrayList` 添加一些元素:
 
-```
+```java
 List<String> list = new ArrayList<>();
 list.add("Hello");
 list.add("World");
@@ -286,7 +286,7 @@ list.add("World");
 
 下面是 Groovy 中相同的操作:
 
-```
+```java
 List list = ['Hello', 'World']
 ```
 
@@ -294,13 +294,13 @@ List list = ['Hello', 'World']
 
 对于一个`Set`没有单独的语法，但是我们可以使用类型`coercion`来实现。要么使用:
 
-```
+```java
 Set greeting = ['Hello', 'World']
 ```
 
 或者:
 
-```
+```java
 def greeting = ['Hello', 'World'] as Set
 ```
 
@@ -308,7 +308,7 @@ def greeting = ['Hello', 'World'] as Set
 
 `Map`的语法是类似的，尽管有点冗长，因为我们需要能够指定用冒号分隔的键和值:
 
-```
+```java
 def key = 'Key3'
 def aMap = [
     'Key1': 'Value 1', 
@@ -321,7 +321,7 @@ def aMap = [
 
 我们可以通过多种方式访问地图中的条目:
 
-```
+```java
 println aMap['Key1']
 println aMap[key]
 println aMap.Key1
@@ -333,7 +333,7 @@ println aMap.Key1
 
 Groovy 支持预期的条件`if/else`语法:
 
-```
+```java
 if (...) {
     // ...
 } else if (...) {
@@ -349,7 +349,7 @@ if (...) {
 
 最重要的区别是`switch`可以针对多个不同的值类型执行匹配:
 
-```
+```java
 def x = 1.23
 def result = ""
 
@@ -395,7 +395,7 @@ println(result)
 
 Groovy 像 Java 一样支持常见的`while` 循环:
 
-```
+```java
 def x = 0
 def y = 5
 
@@ -408,7 +408,7 @@ while ( y-- > 0 ) {
 
 Groovy 接受这种简单性，并强烈鼓励`for`循环遵循这种结构:
 
-```
+```java
 for (variable in iterable) { body }
 ```
 
@@ -416,7 +416,7 @@ for (variable in iterable) { body }
 
 如果正文只包含一条语句，则正文两边的大括号是可选的。下面是迭代一个`range`、`list`、`array`、`map`和`strings`的例子:
 
-```
+```java
 def x = 0
 for ( i in 0..9 ) {
     x += i
@@ -455,13 +455,13 @@ for (c in text) {
 
 主要区别在于`for` 循环的主体不是闭包，这意味着这个主体是一个块:
 
-```
+```java
 for (x in 0..9) { println x }
 ```
 
 而这个身体是一个封闭体:
 
-```
+```java
 (0..9).each { println it }
 ```
 
@@ -475,7 +475,7 @@ for (x in 0..9) { println x }
 
 为了处理一般的异常，我们可以将可能导致异常的代码放在一个`try/catch`块中:
 
-```
+```java
 try {
     someActionThatWillThrowAnException()
 } catch (e)
@@ -495,7 +495,7 @@ try {
 
 让我们考虑下面的例子:
 
-```
+```java
 def helloWorld = {
     println "Hello World"
 }
@@ -503,13 +503,13 @@ def helloWorld = {
 
 变量`helloWorld`现在保存了对闭包的引用，我们可以通过调用它的`call` 方法来执行它:
 
-```
+```java
 helloWorld.call()
 ```
 
 Groovy 让我们使用更自然的方法调用语法——它为我们调用了`call` 方法:
 
-```
+```java
 helloWorld()
 ```
 
@@ -519,20 +519,20 @@ helloWorld()
 
 在后一个示例中，因为没有 declpersistence_startared，所以只有一个默认名称为`it`的参数。打印发送内容的修改后的闭包应该是:
 
-```
+```java
 def printTheParam = { println it }
 ```
 
 我们可以这样称呼它:
 
-```
+```java
 printTheParam('hello')
 printTheParam 'hello'
 ```
 
 我们还可以在闭包中期待参数，并在调用时传递它们:
 
-```
+```java
 def power = { int x, int y ->
     return Math.pow(x, y)
 }
@@ -541,7 +541,7 @@ println power(2, 3)
 
 参数的类型定义与变量相同。如果我们定义了一个类型，我们只能使用这个类型，但是我们也可以传递任何我们想要的东西:
 
-```
+```java
 def say = { what ->
     println what
 }
@@ -552,7 +552,7 @@ say "Hello World"
 
 闭包的最后一个语句可以隐式返回，而不需要编写 return 语句。这可以用来将样板代码减少到最少。因此，计算数字平方的闭包可以简化如下:
 
-```
+```java
 def square = { it * it }
 println square(4)
 ```

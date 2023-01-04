@@ -24,7 +24,7 @@
 1.  在给定`Instants`的历元秒之间生成一个随机数
 2.  通过将随机数传递给`[ofEpochSecond()](https://web.archive.org/web/20220807065448/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/Instant.html#ofEpochSecond(long)) `方法来创建随机数`Instant `
 
-```
+```java
 public static Instant between(Instant startInclusive, Instant endExclusive) {
     long startSeconds = startInclusive.getEpochSecond();
     long endSeconds = endExclusive.getEpochSecond();
@@ -40,7 +40,7 @@ public static Instant between(Instant startInclusive, Instant endExclusive) {
 
 我们可以验证生成的`Instant`总是大于或等于第一个`Instant and `小于第二个`Instant:`
 
-```
+```java
 Instant hundredYearsAgo = Instant.now().minus(Duration.ofDays(100 * 365));
 Instant tenDaysAgo = Instant.now().minus(Duration.ofDays(10));
 Instant random = RandomDateTimes.between(hundredYearsAgo, tenDaysAgo);
@@ -51,7 +51,7 @@ assertThat(random).isBetween(hundredYearsAgo, tenDaysAgo);
 
 类似地，也可以在另一个之后或之前生成一个随机的`Instant `:
 
-```
+```java
 public static Instant after(Instant startInclusive) {
     return between(startInclusive, Instant.MAX);
 }
@@ -65,7 +65,7 @@ public static Instant before(Instant upperExclusive) {
 
 **其中一个`java.util.Date `构造函数获取纪元后的毫秒数。**所以，我们可以用同样的算法在另外两个之间产生一个随机的`Date `:
 
-```
+```java
 public static Date between(Date startInclusive, Date endExclusive) {
     long startMillis = startInclusive.getTime();
     long endMillis = endExclusive.getTime();
@@ -79,7 +79,7 @@ public static Date between(Date startInclusive, Date endExclusive) {
 
 同样，我们应该能够验证这种行为:
 
-```
+```java
 long aDay = TimeUnit.DAYS.toMillis(1);
 long now = new Date().getTime();
 Date hundredYearsAgo = new Date(now - aDay * 365 * 100);
@@ -92,7 +92,7 @@ assertThat(random).isBetween(hundredYearsAgo, tenDaysAgo);
 
 为了生成一个完全随机的`Instant`，我们可以简单地生成一个随机整数并将其传递给`ofEpochSecond() `方法:
 
-```
+```java
 public static Instant timestamp() {
     return Instant.ofEpochSecond(ThreadLocalRandom.current().nextInt());
 }
@@ -102,7 +102,7 @@ public static Instant timestamp() {
 
 此外，这个值应该仍然在 Java 可以处理的最小和最大可能`Instant `值之间:
 
-```
+```java
 Instant random = RandomDateTimes.timestamp();
 assertThat(random).isBetween(Instant.MIN, Instant.MAX);
 ```
@@ -111,7 +111,7 @@ assertThat(random).isBetween(Instant.MIN, Instant.MAX);
 
 与有界示例类似，我们可以将一个随机值传递给`Date's `构造函数来生成一个随机的`Date:`
 
-```
+```java
 public static Date timestamp() {
     return new Date(ThreadLocalRandom.current().nextInt() * 1000L);
 }
@@ -121,7 +121,7 @@ public static Date timestamp() {
 
 当然，该值仍在最小和最大可能`Date `值之间:
 
-```
+```java
 Date MIN_DATE = new Date(Long.MIN_VALUE);
 Date MAX_DATE = new Date(Long.MAX_VALUE);
 Date random = LegacyRandomDateTimes.timestamp();
@@ -138,7 +138,7 @@ assertThat(random).isBetween(MIN_DATE, MAX_DATE);
 
 我们需要一个只包含日期成分的时态抽象，所以`java.time.LocalDate `似乎是一个不错的选择:
 
-```
+```java
 public static LocalDate between(LocalDate startInclusive, LocalDate endExclusive) {
     long startEpochDay = startInclusive.toEpochDay();
     long endEpochDay = endExclusive.toEpochDay();
@@ -152,7 +152,7 @@ public static LocalDate between(LocalDate startInclusive, LocalDate endExclusive
 
 这里我们使用`[toEpochDay()](https://web.archive.org/web/20220807065448/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/chrono/ChronoLocalDate.html#toEpochDay()) `方法将每个`LocalDate `转换成它对应的纪元日。同样，我们可以验证这种方法是正确的:
 
-```
+```java
 LocalDate start = LocalDate.of(1989, Month.OCTOBER, 14);
 LocalDate end = LocalDate.now();
 LocalDate random = RandomDates.between(start, end);
@@ -163,7 +163,7 @@ assertThat(random).isAfterOrEqualTo(start, end);
 
 为了生成不考虑任何范围的随机日期，我们可以简单地生成一个随机纪元日:
 
-```
+```java
 public static LocalDate date() {
     int hundredYears = 100 * 365;
     return LocalDate.ofEpochDay(ThreadLocalRandom
@@ -173,7 +173,7 @@ public static LocalDate date() {
 
 我们的随机日期生成器从纪元前后的 100 年中随机选择一天。同样，这背后的基本原理是生成合理的日期值:
 
-```
+```java
 LocalDate randomDay = RandomDates.date();
 assertThat(randomDay).isBetween(LocalDate.MIN, LocalDate.MAX);
 ```
@@ -186,7 +186,7 @@ assertThat(randomDay).isBetween(LocalDate.MIN, LocalDate.MAX);
 
 `java.time.LocalTime `类是一个时态抽象，只封装了时间组件:
 
-```
+```java
 public static LocalTime between(LocalTime startTime, LocalTime endTime) {
     int startSeconds = startTime.toSecondOfDay();
     int endSeconds = endTime.toSecondOfDay();
@@ -205,7 +205,7 @@ public static LocalTime between(LocalTime startTime, LocalTime endTime) {
 
 我们可以很容易地验证这种随机时间生成算法的行为:
 
-```
+```java
 LocalTime morning = LocalTime.of(8, 30);
 LocalTime randomTime = RandomTimes.between(LocalTime.MIDNIGHT, morning);
 assertThat(randomTime)
@@ -217,7 +217,7 @@ assertThat(randomTime)
 
 即使是无限制的时间值也应该在 00:00:00 到 23:59:59 的范围内，因此我们可以通过委托简单地实现这个逻辑:
 
-```
+```java
 public static LocalTime time() {
     return between(LocalTime.MIN, LocalTime.MAX);
 }

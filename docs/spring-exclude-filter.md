@@ -18,7 +18,7 @@
 
 首先，让我们在一个`LogFilter`类中创建日志过滤器，该类扩展了 **[`OncePerRequestFilter`](https://web.archive.org/web/20221115050032/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/filter/OncePerRequestFilter.html) 类并实现了 [`doFilterInternal`](https://web.archive.org/web/20221115050032/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/filter/OncePerRequestFilter.html#doFilterInternal-javax.servlet.http.HttpServletRequest-javax.servlet.http.HttpServletResponse-javax.servlet.FilterChain-) 方法:**
 
-```
+```java
 @Override
 protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
   FilterChain filterChain) throws ServletException, IOException {
@@ -33,7 +33,7 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
 
 假设我们需要只为选择的 URL 模式执行日志记录任务，即`/health`、`/faq/*.` 为此，我们将使用`FilterRegistrationBean` 注册我们的日志过滤器，以便它只匹配所需的 URL 模式:
 
-```
+```java
 @Bean
 public FilterRegistrationBean<LogFilter> logFilter() {
     FilterRegistrationBean<LogFilter> registrationBean = new FilterRegistrationBean<>();
@@ -64,7 +64,7 @@ public FilterRegistrationBean<LogFilter> logFilter() {
 
 让我们实现一个`Filter` 来检查头部，拒绝不符合我们条件的请求:
 
-```
+```java
 @Override
 protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
@@ -83,7 +83,7 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
 
 首先，l et 使用 **星号(*)通配符来注册我们的过滤器** 以匹配所有可能的 URL 模式:
 
-```
+```java
 @Bean
 public FilterRegistrationBean<HeaderValidatorFilter> headerValidatorFilter() {
     FilterRegistrationBean<HeaderValidatorFilter> registrationBean = new FilterRegistrationBean<>();
@@ -107,7 +107,7 @@ public FilterRegistrationBean<HeaderValidatorFilter> headerValidatorFilter() {
 
 因此，让我们简化我们的 */health* 请求，将它们从过滤器的主体中排除:
 
-```
+```java
 @Override
 protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
   FilterChain filterChain) throws ServletException, IOException {
@@ -130,7 +130,7 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
 
 相反，我们可以通过覆盖 [`shouldNotFilter`](https://web.archive.org/web/20221115050032/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/filter/OncePerRequestFilter.html#shouldNotFilter-javax.servlet.http.HttpServletRequest-) 方法来隔离两组逻辑:
 
-```
+```java
 @Override
 protected boolean shouldNotFilter(HttpServletRequest request)
   throws ServletException {
@@ -141,7 +141,7 @@ protected boolean shouldNotFilter(HttpServletRequest request)
 
 因此，`doInternalFilter()`方法遵循[单一责任原则](https://web.archive.org/web/20221115050032/https://baeldung.com/solid-principles#s):
 
-```
+```java
 @Override
 protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
   FilterChain filterChain) throws ServletException, IOException {

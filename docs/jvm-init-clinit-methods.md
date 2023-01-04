@@ -12,13 +12,13 @@ JVM 使用两种不同的方法来初始化对象实例和类。
 
 让我们从简单的对象分配和赋值开始:
 
-```
+```java
 Object obj = new Object();
 ```
 
 如果我们编译这个代码片段，并通过`javap -c`查看它的字节码，我们会看到类似这样的内容:
 
-```
+```java
 0: new           #2      // class java/lang/Object
 3: dup
 4: invokespecial #1      // Method java/lang/Object."<init>":()V
@@ -37,7 +37,7 @@ Object obj = new Object();
 
 为了更好地理解 Java 编译器如何将构造函数翻译成`<init>`，让我们考虑另一个例子:
 
-```
+```java
 public class Person {
 
     private String firstName = "Foo"; // <init>
@@ -62,7 +62,7 @@ public class Person {
 
 这是这个类的字节码:
 
-```
+```java
 public Person(java.lang.String, java.lang.String);
   Code:
      0: aload_0
@@ -93,13 +93,13 @@ public Person(java.lang.String, java.lang.String);
 
 如果我们如下创建一个`Person` :
 
-```
+```java
 Person person = new Person("Brian", "Goetz");
 ```
 
 然后，这将转化为以下字节码:
 
-```
+```java
 0: new           #7        // class Person
 3: dup
 4: ldc           #9        // String Brian
@@ -116,7 +116,7 @@ Person person = new Person("Brian", "Goetz");
 
 在 Java 中，[静态初始化器块](/web/20220625225859/https://www.baeldung.com/java-static#a-static-block)在我们要在类级别初始化某些东西时很有用:
 
-```
+```java
 public class Person {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Person.class); // <clinit>

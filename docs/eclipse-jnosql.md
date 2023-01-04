@@ -34,7 +34,7 @@ API 没有覆盖 NoSQL 图形类型，因为它已经被 [Apache ThinkerPop](htt
 
 因此，对于面向文档的数据库，我们需要`diana-document`依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.jnosql.diana</groupId>
     <artifactId>diana-document</artifactId>
@@ -44,7 +44,7 @@ API 没有覆盖 NoSQL 图形类型，因为它已经被 [Apache ThinkerPop](htt
 
 类似地，如果工作中的 NoSQL 数据库是面向键值的，我们应该使用`diana-key-value`模块:
 
-```
+```java
 <dependency>
     <groupId>org.jnosql.diana</groupId>
     <artifactId>diana-key-value</artifactId>
@@ -54,7 +54,7 @@ API 没有覆盖 NoSQL 图形类型，因为它已经被 [Apache ThinkerPop](htt
 
 最后是`diana-column`模块，如果它是面向列的:
 
-```
+```java
 <dependency>
     <groupId>org.jnosql.diana</groupId>
     <artifactId>diana-column</artifactId>
@@ -78,7 +78,7 @@ API 没有覆盖 NoSQL 图形类型，因为它已经被 [Apache ThinkerPop](htt
 
 例如，对于 MongoDB，我们需要包含以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.jnosql.diana</groupId>
     <artifactId>diana-document</artifactId>
@@ -107,40 +107,40 @@ API 没有覆盖 NoSQL 图形类型，因为它已经被 [Apache ThinkerPop](htt
 
 我们可以在位于类路径的`mongodb-driver.properties`中提供这些设置:
 
-```
+```java
 #Define Host and Port
 mongodb-server-host-1=localhost:27017
 ```
 
 或者作为硬编码的值:
 
-```
+```java
 Map<String, Object> map = new HashMap<>();
 map.put("mongodb-server-host-1", "localhost:27017");
 ```
 
 接下来，我们为文档类型创建`Configuration` bean:
 
-```
+```java
 DocumentConfiguration configuration = new MongoDBDocumentConfiguration();
 ```
 
 从这个`Configuration` bean，我们能够创建一个`ManagerFactory`:
 
-```
+```java
 DocumentCollectionManagerFactory managerFactory = configuration.get();
 ```
 
 隐式地，`Configuration` bean 的`get()`方法使用属性文件中的设置。我们还可以从硬编码的值中获得这个工厂:
 
-```
+```java
 DocumentCollectionManagerFactory managerFactory 
   = configuration.get(Settings.of(map));
 ```
 
 `ManagerFactory`有一个简单的方法`get(),`，它将数据库名称作为参数，并创建`Manager`:
 
-```
+```java
 DocumentCollectionManager manager = managerFactory.get("my-db");
 ```
 
@@ -148,7 +148,7 @@ DocumentCollectionManager manager = managerFactory.get("my-db");
 
 例如，我们可以插入一个文档:
 
-```
+```java
 DocumentEntity documentEntity = DocumentEntity.of("books");
 documentEntity.add(Document.of("_id", "100"));
 documentEntity.add(Document.of("name", "JNoSQL in Action"));
@@ -158,21 +158,21 @@ DocumentEntity saved = manager.insert(documentEntity);
 
 我们还可以搜索文档:
 
-```
+```java
 DocumentQuery query = select().from("books").where("_id").eq(100).build();
 List<DocumentEntity> entities = manager.select(query);
 ```
 
 同样，我们可以更新现有的文档:
 
-```
+```java
 saved.add(Document.of("author", "baeldung"));
 DocumentEntity updated = manager.update(saved);
 ```
 
 最后，我们可以删除存储的文档:
 
-```
+```java
 DocumentDeleteQuery deleteQuery = delete().from("books").where("_id").eq("100").build();
 manager.delete(deleteQuery);
 ```
@@ -181,7 +181,7 @@ manager.delete(deleteQuery);
 
 我们应该会在控制台中看到输出:
 
-```
+```java
 DefaultDocumentEntity{documents={pages=620, name=JNoSQL in Action, _id=100}, name='books'}
 DefaultDocumentEntity{documents={pages=620, author=baeldung, name=JNoSQL in Action, _id=100}, name='books'}
 []
@@ -193,7 +193,7 @@ DefaultDocumentEntity{documents={pages=620, author=baeldung, name=JNoSQL in Acti
 
 使用面向列的数据库的过程非常相似。首先，我们将 Cassandra 驱动程序和列 API 添加到 pom:
 
-```
+```java
 <dependency>
     <groupId>org.jnosql.diana</groupId>
     <artifactId>diana-column</artifactId>
@@ -210,7 +210,7 @@ DefaultDocumentEntity{documents={pages=620, author=baeldung, name=JNoSQL in Acti
 
 然后，用类似的方法，我们将创建一个`ColumnFamilyManager`并开始操作`ColumnEntity:`
 
-```
+```java
 ColumnConfiguration configuration = new CassandraConfiguration();
 ColumnFamilyManagerFactory managerFactory = configuration.get();
 ColumnFamilyManager entityManager = managerFactory.get("my-keySpace");
@@ -218,7 +218,7 @@ ColumnFamilyManager entityManager = managerFactory.get("my-keySpace");
 
 因此，要创建一个新实体，让我们调用`insert()`方法:
 
-```
+```java
 ColumnEntity columnEntity = ColumnEntity.of("books");
 Column key = Columns.of("id", 10L);
 Column name = Columns.of("name", "JNoSQL in Action");
@@ -235,7 +235,7 @@ ColumnEntity saved = entityManager.insert(columnEntity);
 
 使用面向键值的类型的过程也是类似的。我们从将这些依赖项添加到 pom 开始:
 
-```
+```java
 <dependency>
     <groupId>org.jnosql.diana</groupId>
     <artifactId>diana-key-value</artifactId>
@@ -250,7 +250,7 @@ ColumnEntity saved = entityManager.insert(columnEntity);
 
 然后我们需要提供配置设置。接下来，我们可以获得一个`BucketManager`，然后操纵`KeyValueEntity:`
 
-```
+```java
 KeyValueConfiguration configuration = new HazelcastKeyValueConfiguration();
 BucketManagerFactory managerFactory = configuration.get();
 BucketManager entityManager = managerFactory.getBucketManager("books"); 
@@ -258,7 +258,7 @@ BucketManager entityManager = managerFactory.getBucketManager("books");
 
 假设我们想要保存下面的`Book`模型:
 
-```
+```java
 public class Book implements Serializable {
 
     private String isbn;
@@ -273,7 +273,7 @@ public class Book implements Serializable {
 
 所以我们创建一个`Book`实例，然后通过调用`put()`方法保存它；
 
-```
+```java
 Book book = new Book(
   "12345", "JNoSQL in Action", 
   "baeldung", 420);
@@ -284,7 +284,7 @@ entityManager.put(keyValueEntity);
 
 然后检索保存的`Book`实例:
 
-```
+```java
 Optional<Value> optionalValue = manager.get("12345");
 Value value = optionalValue.get(); // or any other adequate Optional handling
 Book savedBook = value.get(Book.class);
@@ -308,7 +308,7 @@ Book savedBook = value.get(Book.class);
 
 MongoDB 还需要 Diana 驱动程序:
 
-```
+```java
 <dependency>
     <groupId>org.jnosql.artemis</groupId>
     <artifactId>artemis-configuration</artifactId>
@@ -328,7 +328,7 @@ MongoDB 还需要 Diana 驱动程序:
 
 Artemis 基于 CDI，因此我们还需要提供这种 Maven 依赖性:
 
-```
+```java
 <dependency>
     <groupId>javax</groupId>
     <artifactId>javaee-web-api</artifactId>
@@ -343,7 +343,7 @@ Artemis 基于 CDI，因此我们还需要提供这种 Maven 依赖性:
 
 这是配置文件的一个示例:
 
-```
+```java
 [
     {
         "description": "The mongodb document configuration",
@@ -360,7 +360,7 @@ Artemis 基于 CDI，因此我们还需要提供这种 Maven 依赖性:
 
 给定这个配置，我们创建一个工厂:
 
-```
+```java
 @Inject
 @ConfigurationUnit(name = "document")
 private DocumentCollectionManagerFactory<MongoDBDocumentCollectionManager> managerFactory;
@@ -368,7 +368,7 @@ private DocumentCollectionManagerFactory<MongoDBDocumentCollectionManager> manag
 
 从这个工厂，我们可以创造一个`DocumentCollectionManager`:
 
-```
+```java
 @Produces
 public MongoDBDocumentCollectionManager getEntityManager() {
     return managerFactory.get("todos");
@@ -383,7 +383,7 @@ public MongoDBDocumentCollectionManager getEntityManager() {
 
 让我们从定义一个`Todo`模型开始:
 
-```
+```java
 @Entity
 public class Todo implements Serializable {
 
@@ -409,14 +409,14 @@ public class Todo implements Serializable {
 
 **模板是实体模型和 Diana API** 之间的 **桥梁。对于面向文档的数据库，我们从注入`DocumentTemplate` bean 开始:**
 
-```
+```java
 @Inject
 DocumentTemplate documentTemplate;
 ```
 
 然后，我们可以操纵`Todo`实体。例如，我们可以创建一个`Todo`:
 
-```
+```java
 public Todo add(Todo todo) {
     return documentTemplate.insert(todo);
 }
@@ -424,7 +424,7 @@ public Todo add(Todo todo) {
 
 或者我们可以通过`id`检索一个`Todo`:
 
-```
+```java
 public Todo get(String id) {
     Optional<Todo> todo = documentTemplate
       .find(Todo.class, id);
@@ -434,7 +434,7 @@ public Todo get(String id) {
 
 为了选择所有实体，我们构建一个`DocumentQuery`，然后调用`select()`方法:
 
-```
+```java
 public List<Todo> getAll() {
     DocumentQuery query = select().from("Todo").build();
     return documentTemplate.select(query);
@@ -443,7 +443,7 @@ public List<Todo> getAll() {
 
 最后我们可以通过`id`删除一个`Todo`实体:
 
-```
+```java
 public void delete(String id) {
     documentTemplate.delete(Todo.class, id);
 }
@@ -455,7 +455,7 @@ public void delete(String id) {
 
 为了使用`Repository`接口，我们只需提供一个`Repository:`的子接口
 
-```
+```java
 public interface TodoRepository extends Repository<Todo, String> {
     List<Todo> findByName(String name);
     List<Todo> findAll();
@@ -468,7 +468,7 @@ public interface TodoRepository extends Repository<Todo, String> {
 
 我们现在可以使用它:
 
-```
+```java
 @Inject
 TodoRepository todoRepository;
 ```
@@ -477,7 +477,7 @@ TodoRepository todoRepository;
 
 如果数据库是多模型的，那么我们需要指定我们正在使用哪个模型:
 
-```
+```java
 @Inject
 @Database(value = DatabaseType.DOCUMENT)
 TodoRepository todoRepository;
@@ -485,7 +485,7 @@ TodoRepository todoRepository;
 
 此外，如果我们有多个相同型号的数据库，我们需要指定提供者:
 
-```
+```java
 @Inject
 @Database(value = DatabaseType.DOCUMENT, provider="org.jnosql.diana.mongodb.document.MongoDBDocumentConfiguration")
 TodoRepository todoRepository;
@@ -493,7 +493,7 @@ TodoRepository todoRepository;
 
 要运行该示例，只需访问 jnosql-artemis 模块并调用以下命令:
 
-```
+```java
 mvn package liberty:run
 ```
 
@@ -505,19 +505,19 @@ mvn package liberty:run
 
 所以要保存一个 Todo 类:
 
-```
+```java
 curl -d '{"id":"120", "name":"task120", "description":"Description 120"}' -H "Content-Type: application/json" -X POST http://localhost:9080/jnosql-artemis/todos
 ```
 
 要做所有的事情:
 
-```
+```java
 curl -H "Accept: application/json" -X GET http://localhost:9080/jnosql-artemis/todos
 ```
 
 或者只做一件事:
 
-```
+```java
 curl -H "Accept: application/json" -X GET http://localhost:9080/jnosql-artemis/todos/120
 ```
 

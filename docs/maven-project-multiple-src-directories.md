@@ -14,7 +14,7 @@
 
 之后，让我们在这个文件夹中创建一个简单的 Java 类:
 
-```
+```java
 public class Foo {
     public static String foo() {
         return "foo";
@@ -24,7 +24,7 @@ public class Foo {
 
 现在让我们在我们的`src/main/java`目录中创建另一个类，它使用我们刚刚创建的`Foo`类:
 
-```
+```java
 public class MultipleSrcFolders {
     public static void callFoo() {
         Foo.foo();
@@ -38,7 +38,7 @@ public class MultipleSrcFolders {
 
 **如果我们试图用 Maven 编译这个项目，我们会得到一个编译错误**,因为项目中没有包含`Foo`类:
 
-```
+```java
 [ERROR] .../MultipleSrcFolders.java:[6,9] cannot find symbol
 [ERROR]   symbol:   variable Foo
 [ERROR]   location: class com.baeldung.maven.plugins.MultipleSrcFolders
@@ -52,7 +52,7 @@ public class MultipleSrcFolders {
 
 通过将它添加到我们的`pom.xml`中，我们可以在我们的项目中使用它:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>build-helper-maven-plugin</artifactId>

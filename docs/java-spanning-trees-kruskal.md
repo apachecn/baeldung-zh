@@ -24,7 +24,7 @@
 
 给定一个图，我们可以用 Kruskal 的算法求出它的最小生成树。如果一个图中的节点数是`V`，那么它的每个生成树应该有(V-1)条边，并且不包含圈。我们可以用下面的伪代码来描述克鲁斯卡尔的算法:
 
-```
+```java
 Initialize an empty edge set T. 
 Sort all graph edges by the ascending order of their weight values. 
 foreach edge in the sorted edge list
@@ -66,7 +66,7 @@ return T
 
 让我们使用一个 Java 类来定义不相交集信息:
 
-```
+```java
 public class DisjointSetInfo {
     private Integer parentNode;
     DisjointSetInfo(Integer parent) {
@@ -79,7 +79,7 @@ public class DisjointSetInfo {
 
 让我们用一个整数标记每个图节点，从 0 开始。我们可以使用一个列表数据结构`List<DisjointSetInfo> nodes`，来存储一个图的不相交集合信息。一开始，每个节点都是其自身集合的代表成员:
 
-```
+```java
 void initDisjointSets(int totalNodes) {
     nodes = new ArrayList<>(totalNodes);
     for (int i = 0; i < totalNodes; i++) {
@@ -92,7 +92,7 @@ void initDisjointSets(int totalNodes) {
 
 为了找到节点所属的集合，我们可以沿着节点的父链向上，直到到达根节点:
 
-```
+```java
 Integer find(Integer node) {
     Integer parent = nodes.get(node).getParentNode();
     if (parent.equals(node)) {
@@ -107,7 +107,7 @@ Integer find(Integer node) {
 
 因为我们在到根节点的途中访问的每个节点都是同一个集合的一部分，所以我们可以将根节点直接附加到它的`parent `引用。下次当我们访问这个节点时，我们需要一个查找路径来获取根节点:
 
-```
+```java
 Integer pathCompressionFind(Integer node) {
     DisjointSetInfo setInfo = nodes.get(node);
     Integer parent = setInfo.getParentNode();
@@ -125,7 +125,7 @@ Integer pathCompressionFind(Integer node) {
 
 如果一条边的两个节点在不同的集合中，我们将把这两个集合合并成一个集合。我们可以通过将一个代表节点的根设置到另一个代表节点来实现这个`union`操作:
 
-```
+```java
 void union(Integer rootU, Integer rootV) {
     DisjointSetInfo setInfoU = nodes.get(rootU);
     setInfoU.setParentNode(rootV);
@@ -138,7 +138,7 @@ void union(Integer rootU, Integer rootV) {
 
 为了实现这一点，我们首先向`DisjointSetInfo`类添加一个*等级*属性:
 
-```
+```java
 public class DisjointSetInfo {
     private Integer parentNode;
     private int rank;
@@ -153,7 +153,7 @@ public class DisjointSetInfo {
 
 开始时，单个不相交节点的秩为 0。在两个集合的并集过程中，排序较高的根节点成为合并集合的根节点。只有当原始的两个秩相同时，我们才将新的根节点的秩增加 1:
 
-```
+```java
 void unionByRank(int rootU, int rootV) {
     DisjointSetInfo setInfoU = nodes.get(rootU);
     DisjointSetInfo setInfoV = nodes.get(rootV);
@@ -174,7 +174,7 @@ void unionByRank(int rootU, int rootV) {
 
 我们可以通过比较两个`find`运算的结果来确定两个节点是否在同一个不相交集合中。如果它们有相同的代表性根节点，那么我们已经检测到一个循环。否则，我们通过使用一个`union`操作来合并两个不相交的集合:
 
-```
+```java
 boolean detectCycle(Integer u, Integer v) {
     Integer rootU = pathCompressionFind(u);
     Integer rootV = pathCompressionFind(v);
@@ -194,7 +194,7 @@ boolean detectCycle(Integer u, Integer v) {
 
 要使用`ValueGraph`，我们首先需要将番石榴依赖项添加到我们项目的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -204,7 +204,7 @@ boolean detectCycle(Integer u, Integer v) {
 
 我们可以把上面的循环检测方法包装成一个`CycleDetector `类，用在 Kruskal 的算法中。由于最小和最大生成树构造算法只有微小的差别，我们可以使用一个通用函数来实现这两种构造:
 
-```
+```java
 ValueGraph<Integer, Double> spanningTree(ValueGraph<Integer, Double> graph, boolean minSpanningTree) {
     Set<EndpointPair> edges = graph.edges();
     List<EndpointPair> edgeList = new ArrayList<>(edges);

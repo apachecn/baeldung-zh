@@ -19,7 +19,7 @@
 
 我们需要在项目中包含以下依赖项，以便使用`BidiMap`及其实现。对于基于 Maven 的项目，我们必须向我们的`pom.xml`添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -29,7 +29,7 @@
 
 对于基于 Gradle 的项目，我们必须将相同的工件添加到我们的`build.gradle`文件中:
 
-```
+```java
 compile 'org.apache.commons:commons-collections4:4.1'
 ```
 
@@ -58,7 +58,7 @@ compile 'org.apache.commons:commons-collections4:4.1'
 
  **该方法返回删除的旧条目，如果没有旧条目，则返回`null`:
 
-```
+```java
 BidiMap<String, String> map = new DualHashBidiMap<>();
 map.put("key1", "value1");
 map.put("key2", "value2");
@@ -67,21 +67,21 @@ assertEquals(map.size(), 2);
 
 **`inverseBidiMap()`反转一个**的键值对`**BidiMap.**`这个方法返回一个新的`BidiMap`，其中键变成了值，反之亦然。该操作在翻译和词典应用中非常有用:
 
-```
+```java
 BidiMap<String, String> rMap = map.inverseBidiMap();
 assertTrue(rMap.containsKey("value1") && rMap.containsKey("value2"));
 ```
 
 **`removeValue()`用于通过指定一个值来删除一个地图条目，而不是一个键**。这是对`java.util`包中的`Map`实现的补充:
 
-```
+```java
 map.removeValue("value2");
 assertFalse(map.containsKey("key2"));
 ```
 
 **我们可以使用`getKey().`** 将键映射到`BidiMap`中的特定值。如果没有键映射到指定值，该方法返回`null`:
 
-```
+```java
 assertEquals(map.getKey("value1"), "key1");
 ```
 

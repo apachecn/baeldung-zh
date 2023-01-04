@@ -22,7 +22,7 @@ API 提供了各种可用于访问和管理流程的服务。这些服务可以�
 
 像往常一样，我们需要添加 maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.activiti</groupId>
     <artifactId>activiti-spring-boot-starter-basic</artifactId>
@@ -52,7 +52,7 @@ API 的最新稳定版本可以在[这里](https://web.archive.org/web/202206281
 
 用户任务的受理人被设置为流程的发起者。这个过程定义的 BPMN 文件如下所示:
 
-```
+```java
  <process id="my-process" name="say-hello-process" isExecutable="true">
      <startEvent id="startEvent" name="startEvent">
      </startEvent>
@@ -69,7 +69,7 @@ API 的最新稳定版本可以在[这里](https://web.archive.org/web/202206281
 
 现在，我们将创建一个 REST 控制器来处理启动该流程的请求:
 
-```
+```java
 @Autowired
 private RuntimeService runtimeService;
 
@@ -89,7 +89,7 @@ public String startProcess() {
 
 JUnit 测试案例向我们展示了这种行为:
 
-```
+```java
 @Test
 public void givenProcess_whenStartProcess_thenIncreaseInProcessInstanceCount() 
   throws Exception {
@@ -127,7 +127,7 @@ public void givenProcess_whenStartProcess_thenIncreaseInProcessInstanceCount()
 
 像`Task`这样的对象不能直接作为响应发送，因此我们需要创建一个自定义对象，并将`Task`转换为我们的自定义对象。我们称这个类为`TaskRepresentation`:
 
-```
+```java
 class TaskRepresentation {
     private String id;
     private String name;
@@ -139,7 +139,7 @@ class TaskRepresentation {
 
 处理程序方法将类似于:
 
-```
+```java
 @GetMapping("/get-tasks/{processInstanceId}")
 public List<TaskRepresentation> getTasks(
   @PathVariable String processInstanceId) {
@@ -157,7 +157,7 @@ public List<TaskRepresentation> getTasks(
 
 在这里，`taskService.createTaskQuery().processInstanceId(processInstanceId).list()` 使用`TaskService`并获得与给定的`processInstanceId`相关的任务列表。我们可以看到，当我们开始运行我们创建的流程时，我们将通过向我们刚刚定义的方法发出请求来获得任务`A`:
 
-```
+```java
 @Test
 public void givenProcess_whenProcessInstance_thenReceivedRunningTask() 
   throws Exception {
@@ -189,7 +189,7 @@ public void givenProcess_whenProcessInstance_thenReceivedRunningTask()
 
 现在，我们来看看完成任务`A`后会发生什么。我们创建一个 handler 方法，它将处理为给定的`processInstance`完成任务`A`的请求:
 
-```
+```java
 @GetMapping("/complete-task-A/{processInstanceId}")
 public void completeTaskA(@PathVariable String processInstanceId) {
     Task task = taskService.createTaskQuery()
@@ -202,7 +202,7 @@ public void completeTaskA(@PathVariable String processInstanceId) {
 `taskService.createTaskQuery().processInstanceId(processInstanceId).singleResult()`在任务服务上创建一个查询，并给出给定`processInstance`的任务。这就是`UserTask A`。下一行`taskService.complete(task.getId)`完成这个任务。
 因此，现在该过程已经结束，`RuntimeService`不包含任何`ProcessInstances`。我们可以使用 JUnit 测试用例来看到这一点:
 
-```
+```java
 @Test
 public void givenProcess_whenCompleteTaskA_thenNoProcessInstance() 
   throws Exception {

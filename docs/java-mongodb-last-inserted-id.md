@@ -32,13 +32,13 @@ Java 驱动程序为计数器使用随机数生成器，它不是单调的。这
 
 例如，下面是我们如何获取 ID 的创建日期:
 
-```
+```java
 Date creationDate = objectId.getDate();
 ```
 
 同样，我们可以以秒为单位检索 ID 的时间戳:
 
-```
+```java
 int timestamp = objectId.getTimestamp();
 ```
 
@@ -54,7 +54,7 @@ int timestamp = objectId.getTimestamp();
 
 我们将新的`Document`插入到您的集合中的代码可能如下所示:
 
-```
+```java
 Document document = new Document();
 document.put("name", "Shubham");
 document.put("company", "Baeldung");
@@ -65,13 +65,13 @@ collection.insertOne(document);
 
 当`insertOne()`方法返回时，我们可以从`Document`中得到生成的`ObjectId`:
 
-```
+```java
 ObjectId objectId = document.getObjectId("_id");
 ```
 
 我们也可以像检索`Document`的标准字段一样检索`ObjectId`，然后将其转换为`ObjectId`:
 
-```
+```java
 ObjectId oId = (ObjectId) document.get("_id");
 ```
 
@@ -83,25 +83,25 @@ ObjectId oId = (ObjectId) document.get("_id");
 
 我们可以通过创建该类的一个新实例来生成一个新的`ObjectId`:
 
-```
+```java
 ObjectId generatedId = new ObjectId();
 ```
 
 或者，我们也可以调用`ObjectId`类的静态`get()`方法:
 
-```
+```java
 ObjectId generatedId = ObjectId.get();
 ```
 
 然后，我们只需创建我们的`Document`并使用生成的 ID。为此，我们可以在`Document`构造函数中提供它:
 
-```
+```java
 Document document = new Document("_id", generatedId); 
 ```
 
 或者，我们可以使用`put()`方法:
 
-```
+```java
 document.put("_id", generatedId);
 ```
 
@@ -109,7 +109,7 @@ document.put("_id", generatedId);
 
 `ObjectId`类提供了其他几个构造函数，允许我们设置标识符的某些部分:
 
-```
+```java
 public ObjectId(final Date date)
 public ObjectId(final Date date, final int counter)
 public ObjectId(final int timestamp, final int counter)

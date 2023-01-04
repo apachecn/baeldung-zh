@@ -12,7 +12,7 @@
 
 例如，试图在没有事务的情况下更新记录:
 
-```
+```java
 Query updateQuery
   = session.createQuery("UPDATE Post p SET p.title = ?1, p.body = ?2 WHERE p.id = ?3");
 updateQuery.setParameter(1, title);
@@ -23,7 +23,7 @@ updateQuery.executeUpdate();
 
 将引发异常，并显示如下消息:
 
-```
+```java
 ...
 javax.persistence.TransactionRequiredException: Executing an update/delete query
   at org.hibernate.query.internal.AbstractProducedQuery.executeUpdate(AbstractProducedQuery.java:1586)
@@ -34,7 +34,7 @@ javax.persistence.TransactionRequiredException: Executing an update/delete query
 
 **显而易见的解决方案是将任何数据库修改操作包装在一个事务中:**
 
-```
+```java
 Transaction txn = session.beginTransaction();
 Query updateQuery
   = session.createQuery("UPDATE Post p SET p.title = ?1, p.body = ?2 WHERE p.id = ?3");
@@ -53,7 +53,7 @@ txn.commit();
 
 例如，假设我们想在发送电子邮件通知之前更新帖子:
 
-```
+```java
 public void update() {
     entityManager.createQuery("UPDATE Post p SET p.title = ?2, p.body = ?3 WHERE p.id = ?1")
       // parameters
@@ -66,7 +66,7 @@ public void update() {
 
 因此，在`TransactionTemplate`中更新 post 将防止这种情况，因为它会立即提交操作:
 
-```
+```java
 public void update() {
     transactionTemplate.execute(transactionStatus -> {
         entityManager.createQuery("UPDATE Post p SET p.title = ?2, p.body = ?3 WHERE p.id = ?1")

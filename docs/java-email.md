@@ -10,7 +10,7 @@
 
 对于本文，我们将使用一个简单的基于 Maven 的项目，它依赖于 Java 邮件库:
 
-```
+```java
 <dependency>
     <groupId>javax.mail</groupId>
     <artifactId>mail</artifactId>
@@ -26,7 +26,7 @@
 
 配置是通过 Java `Properties `对象进行的:
 
-```
+```java
 Properties prop = new Properties();
 prop.put("mail.smtp.auth", true);
 prop.put("mail.smtp.starttls.enable", "true");
@@ -39,7 +39,7 @@ prop.put("mail.smtp.ssl.trust", "smtp.mailtrap.io");
 
 现在，让我们进一步用我们的用户名和密码创建一个会话:
 
-```
+```java
 Session session = Session.getInstance(prop, new Authenticator() {
     @Override
     protected PasswordAuthentication getPasswordAuthentication() {
@@ -52,7 +52,7 @@ Session session = Session.getInstance(prop, new Authenticator() {
 
 现在我们有了一个邮件`Session `对象，让我们创建一个`Mime` `Message `用于发送:
 
-```
+```java
 Message message = new MimeMessage(session);
 message.setFrom(new InternetAddress("[[email protected]](/web/20220630130601/https://www.baeldung.com/cdn-cgi/l/email-protection)"));
 message.setRecipients(
@@ -86,14 +86,14 @@ Transport.send(message);
 
 接下来，要发送附件，我们只需要创建另一个`MimeBodyPart`并将文件附加到它上面:
 
-```
+```java
 MimeBodyPart attachmentBodyPart = new MimeBodyPart();
 attachmentBodyPart.attachFile(new File("path/to/file"));
 ```
 
 然后，我们可以将新的身体部位添加到我们之前创建的`MimeMultipart`对象中:
 
-```
+```java
 multipart.addBodyPart(attachmentBodyPart);
 ```
 
@@ -107,7 +107,7 @@ multipart.addBodyPart(attachmentBodyPart);
 
 例如，我们可以创建一个包含红色粗体文本的`String`:
 
-```
+```java
 String msgStyled = "This is my <b style='color:red;'>bold-red email</b> using JavaMailer";
 ```
 

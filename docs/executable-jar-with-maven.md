@@ -30,7 +30,7 @@ Learn how to use a BOM, Bill of Materials, in your Spring Maven project.[Read mo
 
 我们还需要确保我们的`pom.xml`包含这些元素:
 
-```
+```java
 <modelVersion>4.0.0</modelVersion>
 <groupId>com.baeldung</groupId>
 <artifactId>core-java</artifactId>
@@ -48,7 +48,7 @@ Learn how to use a BOM, Bill of Materials, in your Spring Maven project.[Read mo
 
 我们首先将所有必需的依赖项复制到我们指定的文件夹中:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-dependency-plugin</artifactId>
@@ -75,7 +75,7 @@ Learn how to use a BOM, Bill of Materials, in your Spring Maven project.[Read mo
 
 其次，我们将创建可执行文件和类路径感知的`jar`，其中包含第一步中复制的依赖项的链接:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-jar-plugin</artifactId>
@@ -110,7 +110,7 @@ assembly 插件中的主要目标是`[single](https://web.archive.org/web/202209
 
 我们来看看`pom.xml`中的配置:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-assembly-plugin</artifactId>
@@ -152,7 +152,7 @@ Apache Maven Shade 插件提供了将工件打包到一个`uber-jar`中的能力
 
 我们来看看配置:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-shade-plugin</artifactId>
@@ -196,7 +196,7 @@ Apache Maven Shade 插件提供了将工件打包到一个`uber-jar`中的能力
 
 我们来看看配置:
 
-```
+```java
 <plugin>
     <groupId>com.jolira</groupId>
     <artifactId>onejar-maven-plugin</artifactId>
@@ -235,7 +235,7 @@ Apache Maven Shade 插件提供了将工件打包到一个`uber-jar`中的能力
 
 让我们看一下配置:
 
-```
+```java
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -268,7 +268,7 @@ Spring 插件和其他插件有两个不同之处:执行的目标被称为`repac
 
 为了做到这一点，我们需要使用不同的插件，为创建可执行的 jar 文件而设计:
 
-```
+```java
 <plugin>
     <groupId>org.apache.tomcat.maven</groupId>
     <artifactId>tomcat7-maven-plugin</artifactId>
@@ -302,7 +302,7 @@ Spring 插件和其他插件有两个不同之处:执行的目标被称为`repac
 
 注意这是这个插件的最新版本，支持 Tomcat7 服务器。为了避免错误，我们可以检查我们对 Servlets 的依赖关系是否已经将`scope`设置为`provided`，否则，在可执行文件`jar`的`runtime`处将会发生冲突:
 
-```
+```java
 <dependency>
     <groupId>javax.servlet</groupId>
     <artifactId>javax.servlet-api</artifactId>

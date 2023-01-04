@@ -12,7 +12,7 @@
 
 让我们看看构造函数的规范:
 
-```
+```java
 <Constructor Modifiers> <Constructor Declarator> [Throws Clause] <Constructor Body>
 ```
 
@@ -36,7 +36,7 @@
 
 让我们检查一下构造函数声明符的语法:
 
-```
+```java
 Constrcutor Name (Parameter List)
 ```
 
@@ -50,7 +50,7 @@ Constrcutor Name (Parameter List)
 
 构造函数体的语法是:
 
-```
+```java
 Constructor Body: { [Explicit Constructor Invocation] [Block Statements] }
 ```
 
@@ -65,7 +65,7 @@ Constructor Body: { [Explicit Constructor Invocation] [Block Statements] }
 
 让我们看一个如何使用`this`和`super`关键字调用另一个构造函数的例子:
 
-```
+```java
 class Person {
     String name;
 
@@ -81,7 +81,7 @@ class Person {
 
 这里，`Employee`的第一个构造函数调用其超类`Person`的构造函数，传递 id:
 
-```
+```java
 class Person {
     int id;
     public Person(int id) {
@@ -109,7 +109,7 @@ class Employee extends Person {
 
 让我们来看一个例子:
 
-```
+```java
 class Person {
     Person() {
         //
@@ -124,7 +124,7 @@ class Employee extends Person {
 
 下面是一个构造函数编译的例子:
 
-```
+```java
 .class Employee
 .super Person
 ; A constructor taking no arguments
@@ -147,7 +147,7 @@ return
 
 让我们通过一个例子来看看会发生什么:
 
-```
+```java
 class Person {
     String name;
     public Person() {
@@ -193,7 +193,7 @@ Java 编译器不允许编译这个程序，因为初始化不明确。
 
 如果构造函数调用自身，编译器将引发错误。例如，在下面的 Java 代码中，编译器会抛出一个错误，因为我们试图在构造函数中调用同一个构造函数:
 
-```
+```java
 public class RecursiveConstructorInvocation {
     public RecursiveConstructorInvocation() {
         this();
@@ -203,7 +203,7 @@ public class RecursiveConstructorInvocation {
 
 尽管有 Java 编译器的限制，我们可以通过稍微修改代码来编译程序，但是我们会遇到这样的堆栈溢出:
 
-```
+```java
 public class RecursiveConstructorInvocation {
     public RecursiveConstructorInvocation() {
         RecursiveConstructorInvocation rci = new RecursiveConstructorInvocation();
@@ -219,7 +219,7 @@ public class RecursiveConstructorInvocation {
 
 现在，让我们看看输出:
 
-```
+```java
 Exception in thread "main" java.lang.StackOverflowError
 	at org.example.RecursiveConstructorInvocation.<init>(RecursiveConstructorInvocation.java:29)
 	at org.example.RecursiveConstructorInvocation.<init>(RecursiveConstructorInvocation.java:29)

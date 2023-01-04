@@ -16,7 +16,7 @@
 
 让我们从将 Log4J2 依赖项添加到我们的`pom.xml`开始:
 
-```
+```java
 <dependency>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-api</artifactId>
@@ -35,7 +35,7 @@
 
 使用`System.out`不需要任何额外的配置。然而，要使用 Log4J2，我们需要一个`log4j.xml`配置文件:
 
-```
+```java
 <Configuration status="debug" name="baeldung" packages="">
     <Appenders>
         <Console name="stdout" target="SYSTEM_OUT">
@@ -58,7 +58,7 @@
 
 此外，使用`System.out.println`，无法控制或过滤要打印的日志。分离日志的唯一可能方式是使用`System.out.println `作为信息日志，使用`System.err.println `作为错误日志:
 
-```
+```java
 System.out.println("This is an informational message");
 System.err.println("This is an error message");
 ```
@@ -77,7 +77,7 @@ System.err.println("This is an error message");
 
 使用这些级别，**我们可以轻松过滤何时何地打印什么信息**:
 
-```
+```java
 logger.trace("Trace log message");
 logger.debug("Debug log message");
 logger.info("Info log message");
@@ -94,7 +94,7 @@ logger.fatal("Fatal log message");
 
 可以使用`System.setOut()` 方法将`System.out.println`发送到一个文件:
 
-```
+```java
 PrintStream outStream = new PrintStream(new File("outFile.txt"));
 System.setOut(outStream);
 System.out.println("This is a baeldung article");
@@ -102,7 +102,7 @@ System.out.println("This is a baeldung article");
 
 在`System.err`的情况下:
 
-```
+```java
 PrintStream errStream = new PrintStream(new File("errFile.txt"));
 System.setErr(errStream);
 System.err.println("This is a baeldung article error");
@@ -116,7 +116,7 @@ System.err.println("This is a baeldung article error");
 
 Log4J2 提供了一种机制，可以系统地将日志写入文件，还可以基于某些策略滚动文件。例如，我们可以**根据日期/时间模式**配置要转存的文件:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
     <Appenders>
@@ -135,7 +135,7 @@ Log4J2 提供了一种机制，可以系统地将日志写入文件，还可以�
 
 或者，一旦文件达到给定的阈值，我们可以**根据文件大小滚动文件:**
 
-```
+```java
 ...
 <RollingFile name="roll-by-size"
   fileName="target/log4j2/roll-by-size/app.log" filePattern="target/log4j2/roll-by-size/app.%i.log.gz"
@@ -162,7 +162,7 @@ Log4J2 提供了一种机制，可以系统地将日志写入文件，还可以�
 
 虽然这在`System.out.println,` 中是可能的，但它需要大量的手工工作，而日志框架提供了开箱即用的功能。对于记录器，**我们可以简单地在记录器配置中定义一个模式**:
 
-```
+```java
 <Console name="ConsoleAppender" target="SYSTEM_OUT">
     <PatternLayout pattern="%style{%date{DEFAULT}}{yellow}
       %highlight{%-5level}{FATAL=bg_red, ERROR=red, WARN=yellow, INFO=green} %message"/>
@@ -177,7 +177,7 @@ Log4J2 提供了一种机制，可以系统地将日志写入文件，还可以�
 
 使用`printStackTrace()`打印异常细节的异常处理非常常见:
 
-```
+```java
 try {
     // some code
 } catch (Exception e) {
@@ -189,7 +189,7 @@ try {
 
 相反，我们可以使用日志框架记录异常，然后，我们将能够轻松地检索日志:
 
-```
+```java
 try {
     // some code
 } catch (Exception e) {

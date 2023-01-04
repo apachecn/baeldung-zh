@@ -10,7 +10,7 @@
 
 首先——让我们看看如何在一个简单的例子中使用`HttpAsyncClient`——发送一个 GET 请求:
 
-```
+```java
 @Test
 public void whenUseHttpAsyncClient_thenCorrect() throws Exception {
     CloseableHttpAsyncClient client = HttpAsyncClients.createDefault();
@@ -26,7 +26,7 @@ public void whenUseHttpAsyncClient_thenCorrect() throws Exception {
 
 注意**我们需要在使用异步客户端之前`start` 它**；否则，我们会得到以下异常:
 
-```
+```java
 java.lang.IllegalStateException: Request cannot be executed; I/O reactor status: INACTIVE
     at o.a.h.u.Asserts.check(Asserts.java:46)
     at o.a.h.i.n.c.CloseableHttpAsyncClientBase.
@@ -39,7 +39,7 @@ java.lang.IllegalStateException: Request cannot be executed; I/O reactor status:
 
 在下面的例子中，我们使用`HttpAsyncClient`和`PoolingNHttpClientConnectionManager`向三个不同的主机发送三个 GET 请求:
 
-```
+```java
 @Test
 public void whenUseMultipleHttpAsyncClient_thenCorrect() throws Exception {
     ConnectingIOReactor ioReactor = new DefaultConnectingIOReactor();
@@ -72,7 +72,7 @@ public void whenUseMultipleHttpAsyncClient_thenCorrect() throws Exception {
 
 下面是我们处理响应的`GetThread`实现:
 
-```
+```java
 static class GetThread extends Thread {
     private CloseableHttpAsyncClient client;
     private HttpContext context;
@@ -103,7 +103,7 @@ static class GetThread extends Thread {
 
 在下面的例子中，我们通过代理发送一个 HTTP **GET 请求:**
 
-```
+```java
 @Test
 public void whenUseProxyWithHttpClient_thenCorrect() throws Exception {
     CloseableHttpAsyncClient client = HttpAsyncClients.createDefault();
@@ -128,7 +128,7 @@ public void whenUseProxyWithHttpClient_thenCorrect() throws Exception {
 
 在下面的例子中，我们将`HttpAsyncClient`配置为**接受所有证书**:
 
-```
+```java
 @Test
 public void whenUseSSLWithHttpAsyncClient_thenCorrect() throws Exception {
     TrustStrategy acceptingTrustStrategy = new TrustStrategy() {
@@ -159,7 +159,7 @@ public void whenUseSSLWithHttpAsyncClient_thenCorrect() throws Exception {
 
 在下面的例子中，我们在发送请求之前设置了一个 cookie 值:
 
-```
+```java
 @Test
 public void whenUseCookiesWithHttpAsyncClient_thenCorrect() throws Exception {
     BasicCookieStore cookieStore = new BasicCookieStore();
@@ -188,7 +188,7 @@ public void whenUseCookiesWithHttpAsyncClient_thenCorrect() throws Exception {
 
 在以下示例中，我们使用`CredentialsProvider`通过基本身份验证访问主机:
 
-```
+```java
 @Test
 public void whenUseAuthenticationWithHttpAsyncClient_thenCorrect() throws Exception {
     CredentialsProvider provider = new BasicCredentialsProvider();

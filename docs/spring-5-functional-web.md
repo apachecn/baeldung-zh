@@ -14,7 +14,7 @@ Spring WebFlux 是一个新的功能性 web 框架，使用反应原理构建。
 
 我们将需要与上一篇文章中定义的相同的`[spring-boot-starter-webflux](https://web.archive.org/web/20220701022854/https://search.maven.org/classic#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-webflux%22%20AND%20g%3A%22org.springframework.boot%22)`依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-webflux</artifactId>
@@ -34,7 +34,7 @@ Spring WebFlux 是一个新的功能性 web 框架，使用反应原理构建。
 
 `HandlerFunction`代表一个为发送给它们的请求生成响应的函数:
 
-```
+```java
 @FunctionalInterface
 public interface HandlerFunction<T extends ServerResponse> {
     Mono<T> handle(ServerRequest request);
@@ -49,7 +49,7 @@ public interface HandlerFunction<T extends ServerResponse> {
 
 `RouterFunction`作为`@RequestMapping`注释的替代。我们可以使用它将请求路由到处理函数:
 
-```
+```java
 @FunctionalInterface
 public interface RouterFunction<T extends ServerResponse> {
     Mono<HandlerFunction<T>> route(ServerRequest request);
@@ -61,7 +61,7 @@ public interface RouterFunction<T extends ServerResponse> {
 
 当谓词匹配时，它允许我们通过应用一个`RequestPredicate.` 来路由请求，然后返回第二个参数，即处理函数:
 
-```
+```java
 public static <T extends ServerResponse> RouterFunction<T> route(
   RequestPredicate predicate,
   HandlerFunction<T> handlerFunction)
@@ -83,7 +83,7 @@ public static <T extends ServerResponse> RouterFunction<T> route(
 
 让我们使用发布单个`Employee`资源的`RouterFunction` 创建第一个路由:
 
-```
+```java
 @Bean
 RouterFunction<ServerResponse> getEmployeeByIdRoute() {
   return route(GET("/employees/{id}"), 
@@ -100,7 +100,7 @@ RouterFunction<ServerResponse> getEmployeeByIdRoute() {
 
 接下来，为了发布集合资源，让我们添加另一个路由:
 
-```
+```java
 @Bean
 RouterFunction<ServerResponse> getAllEmployeesRoute() {
   return route(GET("/employees"), 
@@ -113,7 +113,7 @@ RouterFunction<ServerResponse> getAllEmployeesRoute() {
 
 最后，让我们添加一个更新`Employee` 资源的路径:
 
-```
+```java
 @Bean
 RouterFunction<ServerResponse> updateEmployeeRoute() {
   return route(POST("/employees/update"), 
@@ -129,7 +129,7 @@ RouterFunction<ServerResponse> updateEmployeeRoute() {
 
 让我们看看如何组合上面创建的路线:
 
-```
+```java
 @Bean
 RouterFunction<ServerResponse> composedRoutes() {
   return 
@@ -162,7 +162,7 @@ RouterFunction<ServerResponse> composedRoutes() {
 
 让我们来测试一下我们的`getEmployeeByIdRoute`:
 
-```
+```java
 @Test
 void givenEmployeeId_whenGetEmployeeById_thenCorrectEmployee() {
     WebTestClient client = WebTestClient
@@ -185,7 +185,7 @@ void givenEmployeeId_whenGetEmployeeById_thenCorrectEmployee() {
 
 类似地`getAllEmployeesRoute`:
 
-```
+```java
 @Test
 void whenGetAllEmployees_thenCorrectEmployees() {
     WebTestClient client = WebTestClient
@@ -211,7 +211,7 @@ void whenGetAllEmployees_thenCorrectEmployees() {
 
 我们还可以通过断言我们的`Employee` 实例通过`EmployeeRepository`更新来测试我们的`updateEmployeeRoute`:
 
-```
+```java
 @Test
 void whenUpdateEmployee_thenEmployeeUpdated() {
     WebTestClient client = WebTestClient

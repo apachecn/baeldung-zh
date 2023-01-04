@@ -12,7 +12,7 @@ JSON 对象中的字段名可以有多种格式。当我们想把它们加载到
 
 让我们首先将 [Jackson 依赖项](https://web.archive.org/web/20220524023433/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.fasterxml.jackson.core%22%20AND%20a%3A%22jackson-databind%22)添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -24,7 +24,7 @@ JSON 对象中的字段名可以有多种格式。当我们想把它们加载到
 
 让我们考虑一个例子`User`类:
 
-```
+```java
 public class User {
     private String firstName;
     private String lastName;
@@ -35,7 +35,7 @@ public class User {
 
 让我们尝试加载这个 JSON，它使用 Snake Case 命名标准(小写名称用`_`分隔):
 
-```
+```java
 {
     "first_name": "Jackie",
     "last_name": "Chan"
@@ -44,14 +44,14 @@ public class User {
 
 首先，我们需要使用`ObjectMapper`来反序列化这个 JSON:
 
-```
+```java
 ObjectMapper objectMapper = new ObjectMapper();
 User user = objectMapper.readValue(JSON, User.class); 
 ```
 
 然而，当我们尝试这样做时，我们得到一个错误:
 
-```
+```java
 com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException: Unrecognized field "first_name" (class com.baeldung.jackson.snakecase.User), not marked as ignorable (2 known properties: "lastName", "firstName"])
 ```
 
@@ -63,7 +63,7 @@ com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException: Unrecognized f
 
 我们可以在类的字段上使用`@JsonProperty`注释，将字段映射到 JSON 中的确切名称:
 
-```
+```java
 public class UserWithPropertyNames {
     @JsonProperty("first_name")
     private String firstName;
@@ -77,7 +77,7 @@ public class UserWithPropertyNames {
 
 现在我们可以将 JSON 反序列化为一个`UserWithPropertyNames`:
 
-```
+```java
 ObjectMapper objectMapper = new ObjectMapper();
 UserWithPropertyNames user = objectMapper.readValue(JSON, UserWithPropertyNames.class);
 assertEquals("Jackie", user.getFirstName());
@@ -88,7 +88,7 @@ assertEquals("Chan", user.getLastName());
 
 接下来，我们可以在类上使用`@JsonNaming`注释，并且**所有字段将使用 snake case** 进行反序列化:
 
-```
+```java
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class UserWithSnakeStrategy {
     private String firstName;
@@ -100,7 +100,7 @@ public class UserWithSnakeStrategy {
 
 然后再次反序列化我们的 JSON:
 
-```
+```java
 ObjectMapper objectMapper = new ObjectMapper();
 UserWithSnakeStrategy user = objectMapper.readValue(JSON, UserWithSnakeStrategy.class);
 assertEquals("Jackie", user.getFirstName());
@@ -111,7 +111,7 @@ assertEquals("Chan", user.getLastName());
 
 最后，我们可以使用`ObjectMapper`上的`setPropertyNamingStrategy`方法来为所有序列化配置它:
 
-```
+```java
 ObjectMapper objectMapper = new ObjectMapper()
   .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
 User user = objectMapper.readValue(JSON, User.class);

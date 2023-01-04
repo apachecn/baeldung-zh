@@ -16,14 +16,14 @@
 
 为了更好的理解，我们来看一个基本的例子。首先，我们需要声明一个切入点。我们将定义来自`ArticleService`类的`getArticleList()`的每次执行:
 
-```
+```java
 @Pointcut("execution(* com.baeldung.ArticleService.getArticleList(..))")
 public void articleListPointcut(){ }
 ```
 
 接下来，我们可以定义建议。在我们的例子中，我们将使用`@Before`:
 
-```
+```java
 @Before("articleListPointcut()")
 public void beforeAdvice(JoinPoint joinPoint) {
     log.info(
@@ -36,7 +36,7 @@ public void beforeAdvice(JoinPoint joinPoint) {
 
 在上面的例子中，我们使用`@Before`通知来记录方法执行及其参数。一个类似的用例是记录代码中出现的异常:
 
-```
+```java
 @AfterThrowing(
   pointcut = "articleListPointcut()",
   throwing = "e"
@@ -54,7 +54,7 @@ public void logExceptions(JoinPoint jp, Exception e) {
 
 它可能只是围绕整个方法调用的`@Around`建议:
 
-```
+```java
 @Around("articleListPointcut()")
 public Object aroundAdvice(ProceedingJoinPoint pjp) {
     Object articles = cache.get(pjp.getArgs());
@@ -69,7 +69,7 @@ public Object aroundAdvice(ProceedingJoinPoint pjp) {
 
 如果出现任何异常，我们也可以使用`ProceedingJoinPoint`和`@Around`建议来重试操作:
 
-```
+```java
 @Around("articleListPointcut()")
 public Object aroundAdvice(ProceedingJoinPoint pjp) {
     try {

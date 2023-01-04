@@ -12,7 +12,7 @@
 
 首先，让我们创建一个压缩字节数组的方法。这将很快派上用场:
 
-```
+```java
 public static byte[] compress(byte[] body) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     try (GZIPOutputStream gzipOutputStream = new GZIPOutputStream(baos)) {
@@ -24,7 +24,7 @@ public static byte[] compress(byte[] body) throws IOException {
 
 接下来，我们需要实现一个`ClientHttpRequestInterceptor`来修改请求。注意，我们将发送适当的 HTTP 压缩头，并调用我们的主体压缩方法:
 
-```
+```java
 public ClientHttpResponse intercept(HttpRequest req, byte[] body, ClientHttpRequestExecution exec)
   throws IOException {
     HttpHeaders httpHeaders = req.getHeaders();
@@ -40,7 +40,7 @@ public ClientHttpResponse intercept(HttpRequest req, byte[] body, ClientHttpRequ
 
 最后，我们将拦截器添加到我们的`RestTemplate` 定义中:
 
-```
+```java
 @Bean
 public RestTemplate getRestTemplate() {
     RestTemplate restTemplate = new RestTemplate();
@@ -61,7 +61,7 @@ public RestTemplate getRestTemplate() {
 
 然而，将它添加到 Jetty web 服务器是不够的。我们需要将`inflateBufferSize`设置为大于零的值来启用解压缩:
 
-```
+```java
 @Bean
 public JettyServletWebServerFactory jettyServletWebServerFactory() {
     JettyServletWebServerFactory factory = new JettyServletWebServerFactory();
@@ -83,7 +83,7 @@ public JettyServletWebServerFactory jettyServletWebServerFactory() {
 
 我们配置编码处理程序来处理来自请求的 GZIP 源数据:
 
-```
+```java
 @Bean
 public UndertowServletWebServerFactory undertowServletWebServerFactory() {
     UndertowServletWebServerFactory factory = new UndertowServletWebServerFactory();

@@ -14,7 +14,7 @@
 
 `company`表将存储公司名称、地址和电话等基本信息，以及联系人的信息:
 
-```
+```java
 public class Company {
 
     private Integer id;
@@ -43,7 +43,7 @@ public class Company {
 
 让我们定义一个类来提取联系人的详细信息:
 
-```
+```java
 @Embeddable
 public class ContactPerson {
 
@@ -63,7 +63,7 @@ public class ContactPerson {
 
 接下来让我们修改我们的`Company`类。我们将添加 JPA 注释，我们还将使用`ContactPerson` 代替单独的字段:
 
-```
+```java
 @Entity
 public class Company {
 
@@ -98,7 +98,7 @@ public class Company {
 
 让我们将它添加到我们的`Company `实体中的`ContactPerson `字段:
 
-```
+```java
 @Embedded
 @AttributeOverrides({
   @AttributeOverride( name = "firstName", column = @Column(name = "contact_first_name")),

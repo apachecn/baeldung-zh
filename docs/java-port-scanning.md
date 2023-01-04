@@ -34,7 +34,7 @@
 
 让我们看看我们的`portScan()`方法是什么样子的:
 
-```
+```java
 public void runPortScan(String ip, int nbrPortMaxToScan) throws IOException {
         ConcurrentLinkedQueue openPorts = new ConcurrentLinkedQueue<>();
         ExecutorService executorService = Executors.newFixedThreadPool(poolSize);

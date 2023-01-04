@@ -12,14 +12,14 @@
 
 首先，让我们定义两个`Map`实例:
 
-```
+```java
 private static Map<String, Employee> map1 = new HashMap<>();
 private static Map<String, Employee> map2 = new HashMap<>();
 ```
 
 `Employee`类看起来像这样:
 
-```
+```java
 public class Employee {
 
     private Long id;
@@ -31,7 +31,7 @@ public class Employee {
 
 然后，我们可以将一些数据推入`Map`实例:
 
-```
+```java
 Employee employee1 = new Employee(1L, "Henry");
 map1.put(employee1.getName(), employee1);
 Employee employee2 = new Employee(22L, "Annie");
@@ -57,26 +57,26 @@ map2.put(employee5.getName(), employee5);
 
 首先，让我们通过复制来自`map1`的所有条目来构造一个新的`HashMap`:
 
-```
+```java
 Map<String, Employee> map3 = new HashMap<>(map1);
 ```
 
 接下来，让我们介绍一下`merge()`函数以及合并规则:
 
-```
+```java
 map3.merge(key, value, (v1, v2) -> new Employee(v1.getId(),v2.getName())
 ```
 
 最后，我们将迭代`map2`并将条目合并到`map3`:
 
-```
+```java
 map2.forEach(
   (key, value) -> map3.merge(key, value, (v1, v2) -> new Employee(v1.getId(),v2.getName())));
 ```
 
 让我们运行程序并打印出`map3`的内容:
 
-```
+```java
 John=Employee{id=8, name='John'}
 Annie=Employee{id=22, name='Annie'}
 George=Employee{id=2, name='George'}
@@ -89,7 +89,7 @@ Henry=Employee{id=1, name='Henry'}
 
 这是因为我们在合并函数中定义的规则:
 
-```
+```java
 (v1, v2) -> new Employee(v1.getId(), v2.getName())
 ```
 
@@ -97,13 +97,13 @@ Henry=Employee{id=1, name='Henry'}
 
 Java 8 中的`Stream` API 也可以为我们的问题提供一个简单的解决方案。首先，**我们需要将我们的`Map`实例合并成一个`Stream`** 。这正是`Stream.concat()`操作的作用:
 
-```
+```java
 Stream combined = Stream.concat(map1.entrySet().stream(), map2.entrySet().stream());
 ```
 
 这里，我们将映射条目集作为参数传递。**接下来，我们需要将我们的结果收集到一个新的`Map`** 中。为此，我们可以使用`Collectors.toMap()`:
 
-```
+```java
 Map<String, Employee> result = combined.collect(
   Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 ```
@@ -112,7 +112,7 @@ Map<String, Employee> result = combined.collect(
 
 为了解决这个问题，我们只需在收集器中添加第三个“合并”lambda 参数:
 
-```
+```java
 (value1, value2) -> new Employee(value2.getId(), value1.getName())
 ```
 
@@ -120,7 +120,7 @@ Map<String, Employee> result = combined.collect(
 
 最后，将所有这些放在一起:
 
-```
+```java
 Map<String, Employee> result = Stream.concat(map1.entrySet().stream(), map2.entrySet().stream())
   .collect(Collectors.toMap(
     Map.Entry::getKey, 
@@ -130,7 +130,7 @@ Map<String, Employee> result = Stream.concat(map1.entrySet().stream(), map2.entr
 
 最后，让我们运行代码，看看结果:
 
-```
+```java
 George=Employee{id=2, name='George'}
 John=Employee{id=8, name='John'}
 Annie=Employee{id=22, name='Annie'}
@@ -145,7 +145,7 @@ Henry=Employee{id=3, name='Henry'}
 
 在这里，我们不必创建额外的集合来处理流:
 
-```
+```java
 Map<String, Employee> map3 = Stream.of(map1, map2)
   .flatMap(map -> map.entrySet().stream())
   .collect(Collectors.toMap(
@@ -158,7 +158,7 @@ Map<String, Employee> map3 = Stream.of(map1, map2)
 
 运行程序后打印出的`map3`实例:
 
-```
+```java
 George=Employee{id=2, name='George'}
 John=Employee{id=8, name='John'}
 Annie=Employee{id=22, name='Annie'}
@@ -169,7 +169,7 @@ Henry=Employee{id=1, name='Henry'}
 
 此外，我们可以使用一个`stream() `管道来组装我们的地图条目。下面的代码片段演示了如何通过忽略重复条目来添加来自`map2`和`map1`的条目:
 
-```
+```java
 Map<String, Employee> map3 = map2.entrySet()
   .stream()
   .collect(Collectors.toMap(
@@ -181,7 +181,7 @@ Map<String, Employee> map3 = map2.entrySet()
 
 正如我们所料，合并后的结果是:
 
-```
+```java
 {John=Employee{id=8, name='John'}, 
 Annie=Employee{id=22, name='Annie'}, 
 George=Employee{id=2, name='George'}, 
@@ -194,7 +194,7 @@ Henry=Employee{id=1, name='Henry'}}
 
 简单地说， **[`StreamEx`](/web/20220930004318/https://www.baeldung.com/streamex) 是对`Stream` API** 的增强，提供了许多额外的有用方法。我们将使用一个 **`EntryStream`实例来操作键值对**:
 
-```
+```java
 Map<String, Employee> map3 = EntryStream.of(map1)
   .append(EntryStream.of(map2))
   .toMap((e1, e2) -> e1);
@@ -204,7 +204,7 @@ Map<String, Employee> map3 = EntryStream.of(map1)
 
 现在，结果是:
 
-```
+```java
 {George=Employee{id=2, name='George'}, 
 John=Employee{id=8, name='John'}, 
 Annie=Employee{id=22, name='Annie'}, 

@@ -44,7 +44,7 @@
 
 我们开始建立对核心`OSGi API`的简单依赖:
 
-```
+```java
 <dependency>
     <groupId>org.osgi</groupId> 
     <artifactId>org.osgi.core</artifactId>
@@ -57,7 +57,7 @@
 
 现在让我们编写简单的`HelloWorld`类:
 
-```
+```java
 public class HelloWorld implements BundleActivator {
     public void start(BundleContext ctx) {
         System.out.println("Hello world.");
@@ -80,13 +80,13 @@ public class HelloWorld implements BundleActivator {
 
 首先，我们必须明确声明我们将构建一个包，而不是一个 jar:
 
-```
+```java
 <packaging>bundle</packaging>
 ```
 
 然后我们利用`Apache Felix`社区提供的`maven-bundle-plugin,` ，将`HelloWorld`类打包成一个`OSGi`包:
 
-```
+```java
 <plugin>
     <groupId>org.apache.felix</groupId>
     <artifactId>maven-bundle-plugin</artifactId>
@@ -120,13 +120,13 @@ public class HelloWorld implements BundleActivator {
 
 让我们通过执行命令来启动`Karaf`:
 
-```
+```java
 <KARAF_HOME>/bin/karaf start
 ```
 
 其中`<KARAF_HOME>`是安装`Karaf`的文件夹。当`Karaf`控制台的提示符出现时，我们可以执行以下命令来安装软件包:
 
-```
+```java
 > bundle:install mvn:com.baeldung/osgi-intro-sample-activator/1.0-SNAPSHOT
 Bundle ID: 63
 ```
@@ -135,14 +135,14 @@ Bundle ID: 63
 
 作为回报，Karaf 打印出分配给捆绑包的数字 ID ，这取决于已经安装的捆绑包的数量，可能会有所不同。软件包现在刚刚安装好，我们现在可以使用以下命令启动它:
 
-```
+```java
 > bundle:start 63
 Hello World
 ```
 
 一启动捆绑包，就会立即出现“Hello World”。我们现在可以使用以下命令停止并卸载软件包:
 
-```
+```java
 > bundle:stop 63
 > bundle:uninstall 63
 ```
@@ -153,7 +153,7 @@ Hello World
 
 让我们继续编写一个简单的`OSGi`服务，一个公开问候人们的方法的接口:
 
-```
+```java
 package com.baeldung.osgi.sample.service.definition;
 public interface Greeter {
     public String sayHiTo(String name);
@@ -162,7 +162,7 @@ public interface Greeter {
 
 让我们编写一个也是`BundleActivator`的实现，这样我们就能够实例化服务，并在捆绑包启动时在平台上注册它:
 
-```
+```java
 package com.baeldung.osgi.sample.service.implementation;
 public class GreeterImpl implements Greeter, BundleActivator {
 
@@ -197,7 +197,7 @@ public class GreeterImpl implements Greeter, BundleActivator {
 
 我们还应该提供服务的类型和可能的配置参数的映射，这在我们的简单场景中是不需要的。现在让我们继续配置`maven-bundle-plugin`:
 
-```
+```java
 <plugin>
     <groupId>org.apache.felix</groupId>
     <artifactId>maven-bundle-plugin</artifactId>
@@ -235,14 +235,14 @@ public class GreeterImpl implements Greeter, BundleActivator {
 
 现在让我们编写客户端。它只是在启动时查找服务并调用它:
 
-```
+```java
 public class Client implements BundleActivator, ServiceListener {
 }
 ```
 
 让我们实现`BundleActivator start()`方法:
 
-```
+```java
 private BundleContext ctx;
 private ServiceReference serviceReference;
 
@@ -263,7 +263,7 @@ public void start(BundleContext ctx) {
 
 让我们继续讨论回调方法:
 
-```
+```java
 public void serviceChanged(ServiceEvent serviceEvent) {
     int type = serviceEvent.getType();
     switch (type){
@@ -292,7 +292,7 @@ public void serviceChanged(ServiceEvent serviceEvent) {
 
 我们现在只需要编写`stop()`方法:
 
-```
+```java
 public void stop(BundleContext bundleContext) {
     if(serviceReference != null) {
         ctx.ungetService(serviceReference);
@@ -302,7 +302,7 @@ public void stop(BundleContext bundleContext) {
 
 这里，我们再次取消对服务的获取，以涵盖在服务停止之前客户端停止的情况。让我们最后看一下`pom.xml`中的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.baeldung</groupId>
     <artifactId>osgi-intro-sample-service</artifactId>
@@ -320,7 +320,7 @@ public void stop(BundleContext bundleContext) {
 
 现在，让我们通过以下操作在 Karaf 中安装客户端和服务包:
 
-```
+```java
 > install mvn:com.baeldung/osgi-intro-sample-service/1.0-SNAPSHOT
 Bundle ID: 64
 > install mvn:com.baeldung/osgi-intro-sample-client/1.0-SNAPSHOT
@@ -331,13 +331,13 @@ Bundle ID: 65
 
 现在让我们开始客户端捆绑包:
 
-```
+```java
 > start 65
 ```
 
 因此，什么都不会发生，因为客户端是活动的，它正在等待服务，我们可以从:
 
-```
+```java
 > start 64
 Registering service.
 Service registered.

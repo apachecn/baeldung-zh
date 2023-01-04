@@ -12,7 +12,7 @@
 
 java 提供了一个简单的工具——[`javac`](/web/20221208143832/https://www.baeldung.com/javac)来编译 Java 源代码文件。先来编一个小类，`Car.java`:
 
-```
+```java
 public class Car {
     private String make;
     private String model;
@@ -23,7 +23,7 @@ public class Car {
 
 我们可以在这个文件所在的目录中用一个命令来编译它:
 
-```
+```java
 javac Car.java
 ```
 
@@ -35,7 +35,7 @@ javac Car.java
 
 首先，让我们添加两个新类型，`Owner.java`和`History.java`:
 
-```
+```java
 public class Car {
     private String make;
     private String model;
@@ -44,13 +44,13 @@ public class Car {
 } 
 ```
 
-```
+```java
 public class Owner {
     private String name;
 } 
 ```
 
-```
+```java
 public class History {
     private String details;
 } 
@@ -58,7 +58,7 @@ public class History {
 
 现在，我们需要运行下面的命令来编译:
 
-```
+```java
 javac Owner.java Car.java History.java
 ```
 
@@ -98,7 +98,7 @@ javac Owner.java Car.java History.java
 
 除了我们创建的类，我们还需要在程序中使用外部库。现在让我们看一个更复杂的例子:
 
-```
+```java
 libs/
 ├─ guava-31.1-jre.jar
 model/
@@ -114,7 +114,7 @@ target/
 
 假设我们想要使用由[番石榴](https://web.archive.org/web/20221208143832/https://mvnrepository.com/artifact/com.google.guava/guava)库提供的`ImmutableSet `类。我们下载并把它放在`libs`文件夹下。然后，在`service `包下，我们引入了一个新类，它使用了`CarService.java`中的外部库:
 
-```
+```java
 package service;
 
 import model.Car;
@@ -140,13 +140,13 @@ public class CarService {
 
 现在，是时候编译我们的项目了:
 
-```
+```java
 javac -classpath libs/*:. -d target -sourcepath . service/CarService.java model/*.java
 ```
 
 我们已经将`libs`文件夹包含在带有`-cp`的类路径中。
 
-```
+```java
 libs/
 ├─ guava-31.1-jre.jar
 model/

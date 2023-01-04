@@ -18,7 +18,7 @@
 
 假设我们有一个`User`:
 
-```
+```java
 public class User {
     String firstName;
     String lastName;
@@ -27,7 +27,7 @@ public class User {
 
 我们还有一个非常简单的`UserCache:`
 
-```
+```java
 @Component
 public class UserCache {
 
@@ -47,7 +47,7 @@ public class UserCache {
 
 我们创建一个集成测试来加载和测试整个应用程序:
 
-```
+```java
 @TestMethodOrder(OrderAnnotation.class)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = SpringDataRestApplication.class)
@@ -62,7 +62,7 @@ class DirtiesContextIntegrationTest {
 
 第一种方法`addJaneDoeAndPrintCache`，向缓存中添加一个条目:
 
-```
+```java
 @Test
 @Order(1)
 void addJaneDoeAndPrintCache() {
@@ -73,13 +73,13 @@ void addJaneDoeAndPrintCache() {
 
 将用户添加到缓存后，它会打印缓存的内容:
 
-```
+```java
 addJaneDoeAndPrintCache: [Jane Doe]
 ```
 
 接下来，`printCache`再次打印用户缓存:
 
-```
+```java
 @Test
 @Order(2)
 void printCache() {
@@ -89,7 +89,7 @@ void printCache() {
 
 它包含在之前的测试中添加的名称:
 
-```
+```java
 printCache: [Jane Doe]
 ```
 
@@ -103,7 +103,7 @@ printCache: [Jane Doe]
 
 `addJohnDoeAndPrintCache`测试方法将用户添加到缓存中。我们还添加了`@DirtiesContext`注释，它表示上下文应该在测试方法结束时关闭:
 
-```
+```java
 @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
 @Test
 @Order(3)
@@ -115,13 +115,13 @@ void addJohnDoeAndPrintCache() {
 
 现在的输出是:
 
-```
+```java
 addJohnDoeAndPrintCache: [John Doe, Jane Doe]
 ```
 
 最后，` printCacheAgain`再次打印缓存:
 
-```
+```java
 @Test
 @Order(4)
 void printCacheAgain() {
@@ -131,7 +131,7 @@ void printCacheAgain() {
 
 运行完整的测试类，我们看到 Spring 上下文在`addJohnDoeAndPrintCache`和`printCacheAgain`之间重新加载。因此缓存重新初始化，输出为空:
 
-```
+```java
 printCacheAgain: []
 ```
 

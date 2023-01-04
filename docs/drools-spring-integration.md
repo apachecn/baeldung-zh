@@ -10,7 +10,7 @@
 
 让我们从将以下依赖项添加到我们的`pom.xml`文件开始:
 
-```
+```java
 <dependency>
     <groupId>org.drools</groupId>
     <artifactId>drools-core</artifactId>
@@ -31,7 +31,7 @@
 
 这里有一个简单的对象，它将被用作一个`Fact:`
 
-```
+```java
 public class TaxiRide {
     private Boolean isNightSurcharge;
     private Long distanceInMile;
@@ -42,7 +42,7 @@ public class TaxiRide {
 
 让我们还定义另一个业务对象，它将用于表示票价:
 
-```
+```java
 public class Fare {
     private Long nightSurcharge;
     private Long rideFare;
@@ -53,7 +53,7 @@ public class Fare {
 
 现在，让我们定义一个计算出租车费用的业务规则:
 
-```
+```java
 global com.baeldung.spring.drools.model.Fare rideFare;
 dialect  "mvel"
 
@@ -80,7 +80,7 @@ end
 
 我们将定义一个 Spring bean 配置类，它将负责实例化`TaxiFareCalculatorService` bean 及其依赖项:
 
-```
+```java
 @Configuration
 @ComponentScan("com.baeldung.spring.drools.service")
 public class TaxiFareConfiguration {
@@ -109,7 +109,7 @@ public class TaxiFareConfiguration {
 
 让我们继续创建一个`KieModule`,它是定义称为`KieBase.` 的规则知识所需的所有资源的容器
 
-```
+```java
 KieModule kieModule = kieBuilder.getKieModule();
 ```
 
@@ -117,7 +117,7 @@ KieModule kieModule = kieBuilder.getKieModule();
 
 一旦`KieModule`被创建，我们可以继续创建`KieContainer`-**-**，其中包含定义了`KieBase`的`KieModule`。`KieContainer`是使用一个模块创建的:
 
-```
+```java
 KieContainer kContainer = kieServices.newKieContainer(kieModule.getReleaseId());
 ```
 
@@ -125,7 +125,7 @@ KieContainer kContainer = kieServices.newKieContainer(kieModule.getReleaseId());
 
 让我们定义一个服务类，它通过将`Fact`对象传递给引擎来处理结果，从而执行实际的业务逻辑:
 
-```
+```java
 @Service
 public class TaxiFareCalculatorService {
 
@@ -157,7 +157,7 @@ Global(就像一个全局变量)用于将信息传递给引擎。我们可以使
 
 现在，我们可以连接一个 Spring 上下文，并看到 Drools 按预期工作:
 
-```
+```java
 @Test
 public void whenNightSurchargeFalseAndDistLessThan10_thenFixWithoutNightSurcharge() {
     TaxiRide taxiRide = new TaxiRide();

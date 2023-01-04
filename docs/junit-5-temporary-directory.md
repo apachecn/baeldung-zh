@@ -24,7 +24,7 @@
 
 除了主要的 JUnit 5 库`junit-jupiter-engine`之外，我们还需要`junit-jupiter-api`库:
 
-```
+```java
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-api</artifactId>
@@ -37,7 +37,7 @@
 
 除此之外，我们还需要添加`junit-jupiter-params`依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-params</artifactId>
@@ -63,7 +63,7 @@
 
 让我们先来看看如何**将一个用`@TempDir`标注的参数注入到一个测试方法**中:
 
-```
+```java
 @Test
 void givenTestMethodWithTempDirectory_whenWriteToFile_thenContentIsCorrect(@TempDir Path tempDir) 
   throws IOException {
@@ -86,7 +86,7 @@ void givenTestMethodWithTempDirectory_whenWriteToFile_thenContentIsCorrect(@Temp
 
 在下一个例子中，我们将使用`@TempDir`注释来注释测试类中的一个字段:
 
-```
+```java
 @TempDir
 File anotherTempDir;
 
@@ -115,7 +115,7 @@ void givenFieldWithTempDirectoryFile_whenWriteToFile_thenContentIsCorrect() thro
 
 我们可以通过声明我们的字段`static`来做到这一点:
 
-```
+```java
 @TempDir
 static Path sharedTempDir;
 
@@ -159,13 +159,13 @@ void givenAlreadyWrittenToSharedFile_whenCheckContents_thenContentIsCorrect() th
 
 这通常在环境变量`TMPDIR`中指定:
 
-```
+```java
 TMPDIR=/var/folders/3b/rp7016xn6fz9g0yf5_nj71m00000gn/T/ 
 ```
 
 例如，产生一个临时文件位置:
 
-```
+```java
 /var/folders/3b/rp7016xn6fz9g0yf5_nj71m00000gn/T/junit5416670701666180307/numbers.txt
 ```
 

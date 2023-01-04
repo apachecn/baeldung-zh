@@ -16,7 +16,7 @@ JDBC 是一组规范，定义了 Java 数据库连接契约的 API 和 SPI 部�
 
 **使用连接字符串，我们可以获得一个数据库连接对象，它是与 JDBC 数据库通信的基本单元**:
 
-```
+```java
 Connection con = DriverManager.getConnection(
    "jdbc:postgresql://localhost:21500/test?user=fred&password;=secret&ssl;=true"); 
 ```
@@ -29,7 +29,7 @@ Connection con = DriverManager.getConnection(
 
 在 JDBC 版本 4 和 Java SE 1.6 之前，JVM 中没有通用的机制来自动发现和注册服务。因此，需要手动加载名为的 JDBC 驱动程序[类:](/web/20220628114504/https://www.baeldung.com/java-reflection)
 
-```
+```java
 Class.forName("oracle.jdbc.driver.OracleDriver");
 ```
 
@@ -39,7 +39,7 @@ Class.forName("oracle.jdbc.driver.OracleDriver");
 
 典型的驱动程序注册例程将实例化驱动程序实例，并将其传递给`DriverManager.registerDriver`方法:
 
-```
+```java
 public static void register() throws SQLException {
     if (isRegistered()) {
         throw new IllegalStateException("Driver is already registered. It can only be registered once.");
@@ -55,7 +55,7 @@ public static void register() throws SQLException {
 
 **通过设置`jdbc.drivers`系统属性，即使使用传统方法**，也可以部分自动化该步骤:
 
-```
+```java
 java -Djdbc.drivers=oracle.jdbc.driver.OracleDriver
 ```
 

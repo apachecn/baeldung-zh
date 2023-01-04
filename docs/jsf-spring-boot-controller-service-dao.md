@@ -12,7 +12,7 @@ JavaServer Faces 是一个服务器端的基于组件的用户界面框架。最
 
 我们必须扩展我们的`pom.xml`来使用 JSF 技术:
 
-```
+```java
 <dependency>
     <groupId>org.apache.tomcat.embed</groupId>
     <artifactId>tomcat-embed-jasper</artifactId>
@@ -33,7 +33,7 @@ JSF 框架使用 XHTML 文件来描述用户界面的内容和结构。服务器
 
 让我们从在`src/main/webapp`目录下的`index.xhtml`文件中创建一个静态结构开始:
 
-```
+```java
 <f:view 
   xmlns:f="http://java.sun.com/jsf/core"
   xmlns:h="http://java.sun.com/jsf/html">
@@ -55,7 +55,7 @@ JSF 框架使用 XHTML 文件来描述用户界面的内容和结构。服务器
 
 该内容将在`<your-url>/index.jsf`可用。但是，如果我们在这个阶段尝试访问内容，我们会在客户端收到一条错误消息:
 
-```
+```java
 There was an unexpected error (type=Not Found, status=404).
 No message available
 ```
@@ -64,7 +64,7 @@ No message available
 
 由于我们在 Spring Boot，我们可以轻松地扩展我们的应用程序类来处理所需的配置:
 
-```
+```java
 @SpringBootApplication
 public class JsfApplication extends SpringBootServletInitializer {
 
@@ -84,13 +84,13 @@ public class JsfApplication extends SpringBootServletInitializer {
 
 这看起来很棒，也很合理，但不幸的是仍然不够好。当我们现在试图打开`<your-url>/index.jsf`时，我们会得到另一个错误:
 
-```
+```java
 java.lang.IllegalStateException: Could not find backup for factory javax.faces.context.FacesContextFactory.
 ```
 
 **不幸的是，除了 Java 配置，我们还需要一个`web.xml`。**让我们在`src/webapp/WEB-INF`中创建它:
 
-```
+```java
 <servlet>
     <servlet-name>Faces Servlet</servlet-name>
     <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -104,7 +104,7 @@ java.lang.IllegalStateException: Could not find backup for factory javax.faces.c
 
 现在，我们的配置已经准备就绪。打开`<your-url>/index.jsf`:
 
-```
+```java
 Welcome in the TO-DO application!
 
 This is a static message rendered from xhtml.
@@ -118,7 +118,7 @@ DAO 代表数据访问对象。通常，DAO 类负责两个概念。封装持久
 
 为了实现 DAO 模式，**我们将首先定义一个通用接口**:
 
-```
+```java
 public interface Dao<T> {
 
     Optional<T> get(int id);
@@ -131,7 +131,7 @@ public interface Dao<T> {
 
 现在让我们在这个待办事项应用程序中创建第一个也是唯一一个域类:
 
-```
+```java
 public class Todo {
 
     private int id;
@@ -149,7 +149,7 @@ public class Todo {
 
 对于我们的例子，**我们将使用内存中的存储类**:
 
-```
+```java
 @Component
 public class TodoDao implements Dao<Todo> {
 
@@ -193,7 +193,7 @@ DAO 层的主要目标是处理持久性机制的细节。而服务层站在它�
 
 请注意，DAO 接口将从服务中引用:
 
-```
+```java
 @Scope(value = "session")
 @Component(value = "todoService")
 public class TodoService {
@@ -240,7 +240,7 @@ public class TodoService {
 
 接下来，我们将实现一个极简控制器。它将从开始页面导航到待办事项列表页面:
 
-```
+```java
 @Scope(value = "session")
 @Component(value = "jsfController")
 public class JsfController {
@@ -262,7 +262,7 @@ public class JsfController {
 
 让我们看看如何从 JSF 上下文中引用我们的组件。首先，我们将扩展`index.xthml`:
 
-```
+```java
 <f:view 
 
   xmlns:f="http://java.sun.com/jsf/core"
@@ -289,7 +289,7 @@ public class JsfController {
 
 不幸的是，当我们点击按钮时，我们会得到一个错误:
 
-```
+```java
 There was an unexpected error (type=Internal Server Error, status=500).
 javax.el.PropertyNotFoundException:
 /index.xhtml @11,104 action="#{jsfController.loadTodoPage}":
@@ -302,7 +302,7 @@ Target Unreachable, identifier [jsfController] resolved to null
 
 **我们需要在`webapp/WEB-INF/faces-config.xml` :** 中连接 Spring 上下文和`JSF`上下文
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <faces-config 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -324,7 +324,7 @@ Target Unreachable, identifier [jsfController] resolved to null
 
 为此，UI 组件将直接与之前声明的服务进行交互:
 
-```
+```java
 <f:view 
   xmlns:f="http://java.sun.com/jsf/core"
   xmlns:h="http://java.sun.com/jsf/html">

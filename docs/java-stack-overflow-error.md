@@ -30,7 +30,7 @@ JVM 遇到这种情况的最常见原因是**未终止/无限递归**——`Stac
 
 在下面的例子中，由于意外的递归，将会抛出一个`StackOverflowError` ,因为开发人员忘记了为递归行为指定一个终止条件:
 
-```
+```java
 public class UnintendedInfiniteRecursion {
     public int calculateFactorial(int number) {
         return number * calculateFactorial(number - 1);
@@ -40,7 +40,7 @@ public class UnintendedInfiniteRecursion {
 
 这里，对于传递到方法中的任何值，都会在所有情况下引发错误:
 
-```
+```java
 public class UnintendedInfiniteRecursionManualTest {
     @Test(expected = StackOverflowError.class)
     public void givenPositiveIntNoOne_whenCalFact_thenThrowsException() {
@@ -73,7 +73,7 @@ public class UnintendedInfiniteRecursionManualTest {
 
 然而，在下一个示例中，指定了终止条件，但是如果将值 `-1`传递给`calculateFactorial()` 方法，则永远不会满足终止条件，这会导致未终止/无限递归:
 
-```
+```java
 public class InfiniteRecursionWithTerminationCondition {
     public int calculateFactorial(int number) {
        return number == 1 ? 1 : number * calculateFactorial(number - 1);
@@ -83,7 +83,7 @@ public class InfiniteRecursionWithTerminationCondition {
 
 这组测试演示了这个场景:
 
-```
+```java
 public class InfiniteRecursionWithTerminationConditionManualTest {
     @Test
     public void givenPositiveIntNoOne_whenCalcFact_thenCorrectlyCalc() {
@@ -116,7 +116,7 @@ public class InfiniteRecursionWithTerminationConditionManualTest {
 
 在这种特殊情况下，如果终止条件简单地表示为:
 
-```
+```java
 public class RecursionWithCorrectTerminationCondition {
     public int calculateFactorial(int number) {
         return number <= 1 ? 1 : number * calculateFactorial(number - 1);
@@ -126,7 +126,7 @@ public class RecursionWithCorrectTerminationCondition {
 
 下面的测试实际展示了这种情况:
 
-```
+```java
 public class RecursionWithCorrectTerminationConditionManualTest {
     @Test
     public void givenNegativeInt_whenCalcFact_thenCorrectlyCalc() {
@@ -141,7 +141,7 @@ public class RecursionWithCorrectTerminationConditionManualTest {
 
 现在让我们看一个场景，其中`StackOverflowError`作为类之间循环关系的结果而发生。让我们考虑一下`ClassOne` 和`ClassTwo`，它们在构造函数中实例化了彼此，从而导致了一种循环关系:
 
-```
+```java
 public class ClassOne {
     private int oneValue;
     private ClassTwo clsTwoInstance = null;
@@ -158,7 +158,7 @@ public class ClassOne {
 }
 ```
 
-```
+```java
 public class ClassTwo {
     private int twoValue;
     private ClassOne clsOneInstance = null;
@@ -177,7 +177,7 @@ public class ClassTwo {
 
 现在，假设我们尝试实例化`ClassOne`,如本测试所示:
 
-```
+```java
 public class CyclicDependancyManualTest {
     @Test(expected = StackOverflowError.class)
     public void whenInstanciatingClassOne_thenThrowsException() {
@@ -192,7 +192,7 @@ public class CyclicDependancyManualTest {
 
 如下例所示，`AccountHolder` 将其自身实例化为实例变量`jointAccountHolder`:
 
-```
+```java
 public class AccountHolder {
     private String firstName;
     private String lastName;
@@ -203,7 +203,7 @@ public class AccountHolder {
 
 当`AccountHolder` 类被实例化`,`时，由于构造函数的递归调用，抛出了一个`StackOverflowError`，如本测试所示:
 
-```
+```java
 public class AccountHolderManualTest {
     @Test(expected = StackOverflowError.class)
     public void whenInstanciatingAccountHolder_thenThrowsException() {
@@ -220,7 +220,7 @@ public class AccountHolderManualTest {
 
 如果我们省略了`expected` 异常声明，这个堆栈跟踪由`InfiniteRecursionWithTerminationConditionManualTest` 产生:
 
-```
+```java
 java.lang.StackOverflowError
 
  at c.b.s.InfiniteRecursionWithTerminationCondition
@@ -237,7 +237,7 @@ java.lang.StackOverflowError
 
 下面是我们通过执行`CyclicDependancyManualTest` 得到的堆栈跟踪(同样，没有`expected` 异常):
 
-```
+```java
 java.lang.StackOverflowError
   at c.b.s.ClassTwo.<init>(ClassTwo.java:9)
   at c.b.s.ClassOne.<init>(ClassOne.java:9)

@@ -22,27 +22,27 @@
 
 我们用一个例子来理解；让我们来看两个`integers:`
 
-```
+```java
 int value1 = 6;
 int value2 = 5;
 ```
 
 接下来，让我们对这些数字应用按位 OR 运算符:
 
-```
+```java
 int result = 6 | 5;
 ```
 
 要执行此操作，首先，将计算这些数字的二进制表示:
 
-```
+```java
 Binary number of value1 = 0110
 Binary number of value2 = 0101
 ```
 
 那么该操作将被应用于每一位。结果返回一个新的二进制数:
 
-```
+```java
 0110
 0101
 -----
@@ -51,7 +51,7 @@ Binary number of value2 = 0101
 
 最后，结果`0111 `将被转换回等于`7`的十进制:
 
-```
+```java
 result : 7
 ```
 
@@ -69,7 +69,7 @@ OR 运算符比较两个整数的每个二进制数字，如果其中一个为 1
 
 在上一节中，我们看到了该运算符的一个示例:
 
-```
+```java
 @Test
 public void givenTwoIntegers_whenOrOperator_thenNewDecimalNumber() {
     int value1 = 6;
@@ -81,7 +81,7 @@ public void givenTwoIntegers_whenOrOperator_thenNewDecimalNumber() {
 
 让我们看看这个操作的二进制表示:
 
-```
+```java
 0110
 0101
 -----
@@ -98,7 +98,7 @@ public void givenTwoIntegers_whenOrOperator_thenNewDecimalNumber() {
 
 让我们使用与上面相同的例子，除了现在使用&操作符代替|操作符:
 
-```
+```java
 @Test
 public void givenTwoIntegers_whenAndOperator_thenNewDecimalNumber() {
     int value1 = 6;
@@ -110,7 +110,7 @@ public void givenTwoIntegers_whenAndOperator_thenNewDecimalNumber() {
 
 让我们看看这个操作的二进制表示:
 
-```
+```java
 0110
 0101
 -----
@@ -119,7 +119,7 @@ public void givenTwoIntegers_whenAndOperator_thenNewDecimalNumber() {
 
 `0100`是`4`的小数，因此，结果是:
 
-```
+```java
 result : 4
 ```
 
@@ -127,7 +127,7 @@ result : 4
 
 XOR 运算符比较两个整数的每个二进制数字，如果两个被比较的位不同，则返回 1。这意味着如果两个整数的位都是 1 或 0，结果将是 0；否则，结果将是 1:
 
-```
+```java
 @Test
 public void givenTwoIntegers_whenXorOperator_thenNewDecimalNumber() {
     int value1 = 6;
@@ -139,7 +139,7 @@ public void givenTwoIntegers_whenXorOperator_thenNewDecimalNumber() {
 
 二进制表示:
 
-```
+```java
 0110
 0101
 -----
@@ -148,7 +148,7 @@ public void givenTwoIntegers_whenXorOperator_thenNewDecimalNumber() {
 
 *0011* 是十进制的 3，因此，结果是:
 
-```
+```java
 result : 3
 ```
 
@@ -162,7 +162,7 @@ result : 3
 
 让我们做 value1 = 6 的补码:
 
-```
+```java
 @Test
 public void givenOneInteger_whenNotOperator_thenNewDecimalNumber() {
     int value1 = 6;
@@ -173,13 +173,13 @@ public void givenOneInteger_whenNotOperator_thenNewDecimalNumber() {
 
 二进制值为:
 
-```
+```java
 value1 = 0000 0110
 ```
 
 通过应用补码运算符，结果将是:
 
-```
+```java
 0000 0110 -> 1111 1001
 ```
 
@@ -187,13 +187,13 @@ value1 = 0000 0110
 
 现在，由于数字存储为二进制补码，首先我们需要找到它的二进制补码，然后将结果二进制数转换为十进制数:
 
-```
+```java
 1111 1001 -> 0000 0110 + 1 -> 0000 0111
 ```
 
 最后，0000 0111 是十进制的 7。如上所述，由于符号位是 1，因此得到的答案是:
 
-```
+```java
 result : -7
 ```
 
@@ -201,7 +201,7 @@ result : -7
 
 让我们在一个比较表中总结一下到目前为止我们看到的操作符的结果:
 
-```
+```java
 A	B	A|B	A&B;	A^B	~A
 0	0	0	0	0	1
 1	0	1	0	1	0
@@ -215,7 +215,7 @@ A	B	A|B	A&B;	A^B	~A
 
 让我们看看这些运算符的语法:
 
-```
+```java
 value <operator> <number_of_times>
 ```
 
@@ -235,7 +235,7 @@ value <operator> <number_of_times>
 
 12 的二进制等效值是 00001100。左移 2 位后，结果是 00110000，相当于十进制的 48:
 
-```
+```java
 @Test
 public void givenOnePositiveInteger_whenLeftShiftOperator_thenNewDecimalNumber() {
     int value = 12;
@@ -246,7 +246,7 @@ public void givenOnePositiveInteger_whenLeftShiftOperator_thenNewDecimalNumber()
 
 对于负值，情况类似:
 
-```
+```java
 @Test
 public void givenOneNegativeInteger_whenLeftShiftOperator_thenNewDecimalNumber() {
     int value = -12;
@@ -268,7 +268,7 @@ public void givenOneNegativeInteger_whenLeftShiftOperator_thenNewDecimalNumber()
 
 输入的数字是正数，所以右移 2 位后，结果是 0011，十进制是 3:
 
-```
+```java
 @Test
 public void givenOnePositiveInteger_whenSignedRightShiftOperator_thenNewDecimalNumber() {
     int value = 12;
@@ -279,7 +279,7 @@ public void givenOnePositiveInteger_whenSignedRightShiftOperator_thenNewDecimalN
 
 此外，对于负值:
 
-```
+```java
 @Test
 public void givenOneNegativeInteger_whenSignedRightShiftOperator_thenNewDecimalNumber() {
     int value = -12;
@@ -294,7 +294,7 @@ public void givenOneNegativeInteger_whenSignedRightShiftOperator_thenNewDecimalN
 
 让我们右移 12 的相同值:
 
-```
+```java
 @Test
 public void givenOnePositiveInteger_whenUnsignedRightShiftOperator_thenNewDecimalNumber() {
     int value = 12;
@@ -305,7 +305,7 @@ public void givenOnePositiveInteger_whenUnsignedRightShiftOperator_thenNewDecima
 
 现在，负值:
 
-```
+```java
 @Test
 public void givenOneNegativeInteger_whenUnsignedRightShiftOperator_thenNewDecimalNumber() {
     int value = -12;

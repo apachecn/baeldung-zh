@@ -22,7 +22,7 @@
 
 要将它发送给客户端，我们需要**创建一个并将其添加到响应**:
 
-```
+```java
 Cookie uiColorCookie = new Cookie("color", "red");
 response.addCookie(uiColorCookie); 
 ```
@@ -33,7 +33,7 @@ response.addCookie(uiColorCookie);
 
 我们可以设置最大年龄(使用方法`maxAge(int)`)，它定义了给定 cookie 的有效秒数:
 
-```
+```java
 uiColorCookie.setMaxAge(60*60); 
 ```
 
@@ -47,7 +47,7 @@ uiColorCookie.setMaxAge(60*60);
 
 让我们为 cookie 设置域:
 
-```
+```java
 uiColorCookie.setDomain("example.com");
 ```
 
@@ -65,7 +65,7 @@ cookie 将被发送到由`example.com`及其子域发出的每个请求。
 
 **如果我们显式地指定一个路径，那么一个`Cookie`将被传递到给定的 URL 及其所有子目录:**
 
-```
+```java
 uiColorCookie.setPath("/welcomeUser");
 ```
 
@@ -81,7 +81,7 @@ uiColorCookie.setPath("/welcomeUser");
 
 我们可以遍历这个数组并搜索我们需要的数组，例如，通过比较它们的名称:
 
-```
+```java
 public Optional<String> readCookie(String key) {
     return Arrays.stream(request.getCookies())
       .filter(c -> key.equals(c.getName()))
@@ -94,7 +94,7 @@ public Optional<String> readCookie(String key) {
 
 **为了** **从浏览器中删除一个 cookie，我们必须向响应中添加一个同名的新 cookie，但是将`maxAge`值设置为 0** :
 
-```
+```java
 Cookie userNameCookieRemove = new Cookie("userName", "");
 userNameCookieRemove.setMaxAge(0);
 response.addCookie(userNameCookieRemove);
@@ -118,25 +118,25 @@ response.addCookie(userNameCookieRemove);
 
 我们可以直接从请求中获得`HttpSession`:
 
-```
+```java
 HttpSession session = request.getSession(); 
 ```
 
 上面的代码将创建一个新的会话，以防它不存在。我们可以通过拨打以下电话达到同样的目的:
 
-```
+```java
 request.getSession(true)
 ```
 
 如果我们只想获得现有会话，而不想创建新会话，我们需要使用:
 
-```
+```java
 request.getSession(false) 
 ```
 
 如果我们第一次访问 JSP 页面，那么默认情况下会创建一个新的会话。我们可以通过将`session`属性设置为`false:`来禁用这种行为
 
-```
+```java
 <%@ page contentType="text/html;charset=UTF-8" session="false" %>
 ```
 
@@ -156,26 +156,26 @@ session 对象提供了一系列访问(创建、读取、修改、删除)为给�
 
 我们可以创建一个属性:
 
-```
+```java
 HttpSession session = request.getSession();
 session.setAttribute("attributeKey", "Sample Value"); 
 ```
 
 属性值可以通过其键(名称)获得:
 
-```
+```java
 session.getAttribute("attributeKey"); 
 ```
 
 我们可以删除不再需要的属性:
 
-```
+```java
 session.removeAttribute("attributeKey"); 
 ```
 
 用户会话的一个众所周知的用例是，当用户从我们的网站注销时，它存储的所有数据都将失效。会话对象为它提供了一个解决方案:
 
-```
+```java
 session.invalidate(); 
 ```
 

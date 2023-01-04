@@ -18,7 +18,7 @@
 
 假设**我们有一个返回可空结果的方法:**
 
-```
+```java
 public String findNameById(String id) {
     return id == null ? null : "example-name";
 }
@@ -30,7 +30,7 @@ public String findNameById(String id) {
 
 我们可以通过运行以下测试来验证该行为:
 
-```
+```java
 @Test
 public void whenIdIsNull_thenExceptionIsThrown() {
     assertThrows(InvalidArgumentException.class, () -> Optional
@@ -43,7 +43,7 @@ public void whenIdIsNull_thenExceptionIsThrown() {
 
 我们可以用一个非空参数调用这个方法。那么，我们不会得到一个`InvalidArgumentException:`
 
-```
+```java
 @Test
 public void whenIdIsNonNull_thenNoExceptionIsThrown() {
     assertAll(() -> Optional

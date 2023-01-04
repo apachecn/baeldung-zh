@@ -14,7 +14,7 @@ Spring Integration 提供了许多强大的组件，可以极大地增强企业�
 
 ## 2。设置
 
-```
+```java
 <dependency>
     <groupId>org.springframework.integration</groupId>
     <artifactId>spring-integration-core</artifactId>
@@ -43,7 +43,7 @@ Spring Integration 提供了许多强大的组件，可以极大地增强企业�
 
 让我们考虑一个基本的例子,它将一个 MPEG 视频文件从一个指定的文件夹复制到另一个配置好的文件夹:
 
-```
+```java
 @Configuration
 @EnableIntegration
 public class BasicIntegrationConfig{
@@ -82,7 +82,7 @@ public class BasicIntegrationConfig{
 
 让我们开始我们的 Spring 集成应用程序上下文:
 
-```
+```java
 public static void main(String... args) {
     AbstractApplicationContext context 
       = new AnnotationConfigApplicationContext(BasicIntegrationConfig.class);
@@ -109,7 +109,7 @@ public static void main(String... args) {
 
 `org.springframework.integration.Message` 接口定义了 spring 消息:Spring 集成上下文中的数据传输单元。
 
-```
+```java
 public interface Message<T> {
     T getPayload();
     MessageHeaders getHeaders();
@@ -133,7 +133,7 @@ Spring Integration 中的通道有多种风格，这取决于您的需要。它�
 
 正如我们已经看到的，配置通道就像返回一个`DirectChannel`的实例一样简单:
 
-```
+```java
 @Bean
 public MessageChannel fileChannel1() {
     return new DirectChannel();
@@ -156,7 +156,7 @@ public MessageChannel fileChannel3() {
 
 因此，按照我们的示例，我们可以用发布-订阅通道来替换 P2P 通道:
 
-```
+```java
 @Bean
 public MessageChannel pubSubFileChannel() {
     return new PublishSubscribeChannel();
@@ -180,7 +180,7 @@ Spring Integration 中的桥用于连接两个消息通道或适配器，如果�
 
 在我们的例子中，我们可以使用一个桥将我们的发布-订阅通道连接到三个不同的 P2P 通道(因为 P2P 和发布-订阅通道不能直接连接):
 
-```
+```java
 @Bean
 @BridgeFrom(value = "pubSubFileChannel")
 public MessageChannel fileChannel1() {

@@ -40,7 +40,7 @@
 
 让我们从 Apache Commons DBCP 组件开始，这是一个全功能的连接池 JDBC 框架:
 
-```
+```java
 public class DBCPDataSource {
 
     private static BasicDataSource ds = new BasicDataSource();
@@ -66,7 +66,7 @@ public class DBCPDataSource {
 
 下面是如何获得与`DBCPDataSource`类的池连接:
 
-```
+```java
 Connection con = DBCPDataSource.getConnection();
 ```
 
@@ -74,7 +74,7 @@ Connection con = DBCPDataSource.getConnection();
 
 现在让我们来看看 [HikariCP](https://web.archive.org/web/20221126232712/https://github.com/brettwooldridge/HikariCP) ，一个由 [Brett Wooldridge](https://web.archive.org/web/20221126232712/https://github.com/brettwooldridge) 创建的闪电般快速的 JDBC 连接池框架(关于如何配置和充分利用 HikariCP 的完整细节，请查看[这篇文章](/web/20221126232712/https://www.baeldung.com/hikaricp)):
 
-```
+```java
 public class HikariCPDataSource {
 
     private static HikariConfig config = new HikariConfig();
@@ -100,7 +100,7 @@ public class HikariCPDataSource {
 
 类似地，下面是如何获得与`HikariCPDataSource`类的池连接:
 
-```
+```java
 Connection con = HikariCPDataSource.getConnection();
 ```
 
@@ -108,7 +108,7 @@ Connection con = HikariCPDataSource.getConnection();
 
 这篇评论的最后一篇是由 Steve Waldman 开发的强大的 JDBC4 连接和语句池框架:
 
-```
+```java
 public class C3p0DataSource {
 
     private static ComboPooledDataSource cpds = new ComboPooledDataSource();
@@ -134,7 +134,7 @@ public class C3p0DataSource {
 
 正如所料，用`C3p0DataSource`类获得一个池连接类似于前面的例子:
 
-```
+```java
 Connection con = C3p0DataSource.getConnection();
 ```
 
@@ -144,7 +144,7 @@ Connection con = C3p0DataSource.getConnection();
 
 我们将从基于单一接口的松散耦合设计开始:
 
-```
+```java
 public interface ConnectionPool {
     Connection getConnection();
     boolean releaseConnection(Connection connection);
@@ -158,7 +158,7 @@ public interface ConnectionPool {
 
 现在，让我们创建一个提供一些基本功能的实现，包括获取和释放池连接:
 
-```
+```java
 public class BasicConnectionPool 
   implements ConnectionPool {
 
@@ -234,7 +234,7 @@ public class BasicConnectionPool
 
 让我们创建一个简单的单元测试，并获得一个内存池 [H2](https://web.archive.org/web/20221126232712/http://www.h2database.com/html/main.html) 连接:
 
-```
+```java
 @Test
 public whenCalledgetConnection_thenCorrect() {
     ConnectionPool connectionPool = BasicConnectionPool
@@ -252,7 +252,7 @@ public whenCalledgetConnection_thenCorrect() {
 
 我们还可以在将从池中获得的连接传递给客户端之前，验证它是否仍处于活动状态:
 
-```
+```java
 @Override
 public Connection getConnection() throws SQLException {
     if (connectionPool.isEmpty()) {
@@ -280,7 +280,7 @@ public Connection getConnection() throws SQLException {
 
 或者我们可以添加一个方法来优雅地关闭我们的连接池实例:
 
-```
+```java
 public void shutdown() throws SQLException {
     usedConnections.forEach(this::releaseConnection);
     for (Connection c : connectionPool) {

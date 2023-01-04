@@ -18,7 +18,7 @@
 
 最后，我们从该数组中构造所需的`String`。
 
-```
+```java
 public String addChar(String str, char ch, int position) {
     int len = str.length();
     char[] updatedArr = new char[len + 1];
@@ -39,7 +39,7 @@ public String addChar(String str, char ch, int position) {
 2.  新角色
 3.  原`String`位置后的子串
 
-```
+```java
 public String addChar(String str, char ch, int position) {
     return str.substring(0, position) + ch + str.substring(position);
 }
@@ -59,7 +59,7 @@ public String addChar(String str, char ch, int position) {
 
 我们可以使用`StringBuilder`类的`insert()`方法实现相同的功能:
 
-```
+```java
 public String addChar(String str, char ch, int position) {
     StringBuilder sb = new StringBuilder(str);
     sb.insert(position, ch);

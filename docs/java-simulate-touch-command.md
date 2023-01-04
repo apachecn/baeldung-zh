@@ -16,7 +16,7 @@ Linux 中的 [`touch`](/web/20221013193919/https://www.baeldung.com/linux/touch-
 
 此外，它还可以使用从 input 传入的自定义时间:
 
-```
+```java
 public static void touch(String path, String... args) throws IOException, ParseException {
     File file = new File(path);
     if (!file.exists()) {
@@ -52,32 +52,32 @@ public static void touch(String path, String... args) throws IOException, ParseE
 
 让我们用我们的方法创建一个空文件:
 
-```
+```java
 touch("test.txt");
 ```
 
 并使用 Linux 中的`stat`命令查看文件信息:
 
-```
+```java
 stat test.txt
 ```
 
 我们可以在`stat`输出中看到文件的访问和修改时间:
 
-```
+```java
 Access: 2021-12-07 10:42:16.474007513 +0700
 Modify: 2021-12-07 10:42:16.474007513 +0700
 ```
 
 现在，让我们用我们的方法改变它的访问时间:
 
-```
+```java
 touch("test.txt", "a", "16-09-2020 08:00:00");
 ```
 
 然后，我们将再次使用`stat`命令获取这个文件信息:
 
-```
+```java
 Access: 2020-09-16 08:00:00.000000000 +0700
 Modify: 2021-12-07 10:42:16.474007000 +0700 
 ```
@@ -86,7 +86,7 @@ Modify: 2021-12-07 10:42:16.474007000 +0700
 
 我们也可以使用来自 [Apache Commons Lang](/web/20221013193919/https://www.baeldung.com/java-commons-lang-3) 库的`FileUtils`类。这个类有一个易于使用的`touch()`方法，如果文件还不存在，它也会创建一个空文件:
 
-```
+```java
 FileUtils.touch(new File("/home/baeldung/test.txt"));
 ```
 

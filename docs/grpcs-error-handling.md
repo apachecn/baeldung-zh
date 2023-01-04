@@ -28,7 +28,7 @@ gRPC 中的错误是一级实体，即**gRPC 中的每个调用要么是有效�
 
 让我们开始考虑下面在`commodity_price.proto`中定义的服务接口:
 
-```
+```java
 service CommodityPriceProvider {
     rpc getBestCommodityPrice(Commodity) returns (CommodityQuote) {}
 }
@@ -62,7 +62,7 @@ message ErrorResponse {
 
 在服务器的服务调用中，我们检查有效的`Commodity`请求:
 
-```
+```java
 public void getBestCommodityPrice(Commodity request, StreamObserver<CommodityQuote> responseObserver) {
 
     if (commodityLookupBasePrice.get(request.getCommodityName()) == null) {
@@ -90,7 +90,7 @@ public void getBestCommodityPrice(Commodity request, StreamObserver<CommodityQuo
 
 如果客户端发出无效请求，它将返回一个异常:
 
-```
+```java
 @Test
 public void whenUsingInvalidCommodityName_thenReturnExceptionIoRpcStatus() throws Exception {
 
@@ -119,7 +119,7 @@ public void whenUsingInvalidCommodityName_thenReturnExceptionIoRpcStatus() throw
 
 让我们考虑下面的服务器代码示例:
 
-```
+```java
 public void getBestCommodityPrice(Commodity request, StreamObserver<CommodityQuote> responseObserver) {
     // ...
     if (request.getAccessToken().equals("123validToken") == false) {
@@ -151,7 +151,7 @@ public void getBestCommodityPrice(Commodity request, StreamObserver<CommodityQuo
 
 客户端实现非常简单:
 
-```
+```java
 @Test
 public void whenUsingInvalidRequestToken_thenReturnExceptionGoogleRPCStatus() throws Exception {
 
@@ -191,7 +191,7 @@ gRPC 流允许服务器和客户端在一次 RPC 调用中发送多条消息。
 
 这个问题的一个好的**解决方案是将错误添加到消息本身**，如我们在`commodity_price.proto`中所示:
 
-```
+```java
 service CommodityPriceProvider {
 
     rpc getBestCommodityPrice(Commodity) returns (CommodityQuote) {}
@@ -216,7 +216,7 @@ message StreamingCommodityQuote{
 
 在以下示例中，如果客户端发送无效令牌，服务器会在响应正文中添加一个状态错误:
 
-```
+```java
 public StreamObserver<Commodity> bidirectionalListOfPrices(StreamObserver<StreamingCommodityQuote> responseObserver) {
 
     return new StreamObserver<Commodity>() {
@@ -249,7 +249,7 @@ public StreamObserver<Commodity> bidirectionalListOfPrices(StreamObserver<Stream
 
 让我们看看客户端实现:
 
-```
+```java
 public void onNext(StreamingCommodityQuote streamingCommodityQuote) {
 
     switch (streamingCommodityQuote.getMessageCase()) {

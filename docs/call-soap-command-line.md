@@ -16,7 +16,7 @@
 
 对于我们的 web 服务，一个简单的 HTTP POST 请求是:
 
-```
+```java
 curl -v --request POST --header "Content-Type: text/xml;charset=UTF-8" \
 --data \
 '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gs="http://www.baeldung.com/springsoap/gen"> \
@@ -34,7 +34,7 @@ http://localhost:8080/ws
 
 由于我们使用了`-v`选项，我们得到了一个详细的响应:
 
-```
+```java
 * Connected to localhost (::1) port 8080 (#0)
 > POST /ws HTTP/1.1
 > Host: localhost:8080
@@ -59,7 +59,7 @@ t localhost left intact
 
 SOAP web 服务的请求和响应消息可能很长，因此将它们存储在文件中会更方便。**如果我们将请求体保存在`request.xml`中，并将响应的输出重定向到文件`response.xml`，在这种情况下，命令非常简单**:
 
-```
+```java
 curl --header "Content-Type: text/xml;charset=UTF-8" -d @request.xml -o response.xml http://localhost:8080/ws
 ```
 
@@ -67,7 +67,7 @@ curl --header "Content-Type: text/xml;charset=UTF-8" -d @request.xml -o response
 
 如果我们需要在终端中读取响应，最好是用`xmllint`通过**管道命令来获得正确格式化的 XML 响应**:
 
-```
+```java
 curl --request POST --header "Content-Type: text/xml;charset=UTF-8" -d @request.xml http://localhost:8080/ws | xmllint --format -
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
@@ -91,13 +91,13 @@ curl --request POST --header "Content-Type: text/xml;charset=UTF-8" -d @request.
 
 让我们使用 Wget 发出同样的请求:
 
-```
+```java
 wget --post-file=request.xml --header="Content-Type: text/xml" http://localhost:8080/ws -O response.xml 
 ```
 
 回应是:
 
-```
+```java
 Resolving localhost (localhost)... ::1, 127.0.0.1
 Connecting to localhost (localhost)|::1|:8080... connected.
 HTTP request sent, awaiting response... 200
@@ -115,7 +115,7 @@ HTTPie 的优势在于它提供了一种非常直观的方式来与 Web 服务�
 
 让我们发出之前发出的简单请求，这次使用 HTTPie:
 
-```
+```java
 echo '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gs="http://www.baeldung.com/springsoap/gen"> \
 <soapenv:Header/> \ 
 <soapenv:Body> \ 
@@ -127,7 +127,7 @@ http -b POST http://localhost:8080/ws 'Content-Type:text/xml'
 
 如果我们想从文件中提取请求体:
 
-```
+```java
 http -b POST http://localhost:8080/ws 'Content-Type:text/xml' < request.xml
 ```
 

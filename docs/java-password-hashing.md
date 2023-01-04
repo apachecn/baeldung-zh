@@ -57,7 +57,7 @@ SHA-512 代表第三代算法中最长的密钥。
 
 我们的新散列函数大致变成:
 
-```
+```java
 salt <- generate-salt;
 hash <- salt + ':' + sha512(salt + password)
 ```
@@ -66,7 +66,7 @@ hash <- salt + ':' + sha512(salt + password)
 
 为了介绍 salt，我们将使用来自`java.security`的`[SecureRandom](https://web.archive.org/web/20220625071421/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/security/SecureRandom.html) `类:
 
-```
+```java
 SecureRandom random = new SecureRandom();
 byte[] salt = new byte[16];
 random.nextBytes(salt);
@@ -74,14 +74,14 @@ random.nextBytes(salt);
 
 然后，我们将使用`[MessageDigest](https://web.archive.org/web/20220625071421/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/security/MessageDigest.html) `类用我们的 salt 配置`SHA-512 `散列函数:
 
-```
+```java
 MessageDigest md = MessageDigest.getInstance("SHA-512");
 md.update(salt);
 ```
 
 添加后，我们现在可以使用`digest`方法来生成散列密码:
 
-```
+```java
 byte[] hashedPassword = md.digest(passwordToHash.getBytes(StandardCharsets.UTF_8));
 ```
 
@@ -105,7 +105,7 @@ PBKDF2、BCrypt 和 SCrypt 是三种推荐的算法。
 
 现在， **salts 是密码散列的一个基本原理**，所以我们也需要一个用于 PBKDF2:
 
-```
+```java
 SecureRandom random = new SecureRandom();
 byte[] salt = new byte[16];
 random.nextBytes(salt);
@@ -113,7 +113,7 @@ random.nextBytes(salt);
 
 接下来，我们将创建一个 [`PBEKeySpec`](https://web.archive.org/web/20220625071421/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/javax/crypto/spec/PBEKeySpec.html) 和一个`[SecretKeyFactory](https://web.archive.org/web/20220625071421/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/javax/crypto/SecretKeyFactory.html)`，我们将使用`PBKDF2WithHmacSHA1 `算法实例化它们:
 
-```
+```java
 KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
 SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 ```
@@ -122,7 +122,7 @@ SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 
 最后，我们可以使用我们的`SecretKeyFactory `来生成散列:
 
-```
+```java
 byte[] hash = factory.generateSecret(spec).getEncoded();
 ```
 

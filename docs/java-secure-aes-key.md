@@ -57,7 +57,7 @@ AES 算法是公开信息——AES 密钥是一个秘密，必须知道它才能
 
 对于所有代码片段，我们将密码定义为:
 
-```
+```java
 private static final String CIPHER = "AES"; 
 ```
 
@@ -65,7 +65,7 @@ private static final String CIPHER = "AES";
 
 让我们使用 Java 中的`Random`类来生成密钥:
 
-```
+```java
 private static Key getRandomKey(String cipher, int keySize) {
     byte[] randomKeyBytes = new byte[keySize / 8];
     Random random = new Random();
@@ -84,7 +84,7 @@ Java `Random` 类是一个 **[伪随机数生成器](https://web.archive.org/web
 
 我们现在将使用 Java 中的`SecureRandom`类来生成密钥:
 
-```
+```java
 private static Key getSecureRandomKey(String cipher, int keySize) {
     byte[] secureRandomKeyBytes = new byte[keySize / 8];
     SecureRandom secureRandom = new SecureRandom();
@@ -101,7 +101,7 @@ private static Key getSecureRandomKey(String cipher, int keySize) {
 
 接下来，让我们使用`KeyGenerator` 类生成一个密钥:
 
-```
+```java
 private static Key getKeyFromKeyGenerator(String cipher, int keySize) throws NoSuchAlgorithmException {
     KeyGenerator keyGenerator = KeyGenerator.getInstance(cipher);
     keyGenerator.init(keySize);
@@ -117,11 +117,11 @@ private static Key getKeyFromKeyGenerator(String cipher, int keySize) throws NoS
 
 当我们初始化加密的密码时，将`SecureRandom`与无效的`keySize` 一起使用会引发异常:
 
-```
+```java
 encrypt(plainText, getSecureRandomKey(CIPHER, 111)); 
 ```
 
-```
+```java
 java.security.InvalidKeyException: Invalid AES key length: 13 bytes
   at java.base/com.sun.crypto.provider.AESCrypt.init(AESCrypt.java:90)
   at java.base/com.sun.crypto.provider.GaloisCounterMode.init(GaloisCounterMode.java:321)
@@ -138,11 +138,11 @@ java.security.InvalidKeyException: Invalid AES key length: 13 bytes
 
 另一方面，使用`KeyGenerator`会在密钥生成过程中失败，这允许我们更恰当地处理它:
 
-```
+```java
 encrypt(plainText, getKeyFromKeyGenerator(CIPHER, 111));
 ```
 
-```
+```java
 java.security.InvalidParameterException: Wrong keysize: must be equal to 128, 192 or 256
   at java.base/com.sun.crypto.provider.AESKeyGenerator.engineInit(AESKeyGenerator.java:93)
   at java.base/javax.crypto.KeyGenerator.init(KeyGenerator.java:539)
@@ -153,7 +153,7 @@ java.security.InvalidParameterException: Wrong keysize: must be equal to 128, 19
 
 另一个关键区别是默认使用`SecureRandom`。`KeyGenerator` 类是 Java 的加密包`javax.crypto`的一部分，它确保了`SecureRandom`的随机性。我们可以在`KeyGenerator`类中看到`init` 方法的定义:
 
-```
+```java
 public final void init(int keysize) {
     init(keysize, JCAUtil.getSecureRandom());
 }
@@ -165,7 +165,7 @@ public final void init(int keysize) {
 
 到目前为止，我们一直在从随机的、不太友好的字节数组中生成密钥。基于密码的密钥(PBK)使我们能够根据人类可读的密码生成`SecretKey `:
 
-```
+```java
 private static Key getPasswordBasedKey(String cipher, int keySize, char[] password) throws NoSuchAlgorithmException, InvalidKeySpecException {
     byte[] salt = new byte[100];
     SecureRandom random = new SecureRandom();

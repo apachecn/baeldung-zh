@@ -37,7 +37,7 @@ Learn how to quickly auto-authenticate a user after they complete the registrati
 
 我们首先将简单的 BCryptPasswordEncoder 定义为配置中的 bean:
 
-```
+```java
 @Bean
 public PasswordEncoder encoder() {
     return new BCryptPasswordEncoder();
@@ -50,7 +50,7 @@ public PasswordEncoder encoder() {
 
 为了使这种随机盐生成工作，BCrypt 将盐存储在哈希值本身中。例如，在下面的哈希值中:
 
-```
+```java
 $2a$10$ZLhnHxdpHETcxmtEStgpI./Ri1mksgJ9iDP36FmfMdYyVg9g0b2dq
 ```
 
@@ -68,7 +68,7 @@ $2a$10$ZLhnHxdpHETcxmtEStgpI./Ri1mksgJ9iDP36FmfMdYyVg9g0b2dq
 
 **例 3.1。—`UserServic``e`散列密码**
 
-```
+```java
 @Autowired
 private PasswordEncoder passwordEncoder;
 
@@ -96,7 +96,7 @@ public User registerNewUserAccount(UserDto accountDto) throws EmailExistsExcepti
 
 首先，我们需要将我们之前定义的密码编码器 bean 注入到我们的身份验证提供程序中:
 
-```
+```java
 @Autowired
 private UserDetailsService userDetailsService;
 
@@ -117,7 +117,7 @@ public DaoAuthenticationProvider authProvider() {
 
 最后，我们需要在我们的安全 XML 配置中引用这个身份验证提供者:
 
-```
+```java
 <authentication-manager>
     <authentication-provider ref="authProvider" />
 </authentication-manager>
@@ -125,7 +125,7 @@ public DaoAuthenticationProvider authProvider() {
 
 或者，如果您使用 Java 配置:
 
-```
+```java
 @Configuration
 @ComponentScan(basePackages = { "com.baeldung.security" })
 @EnableWebSecurity

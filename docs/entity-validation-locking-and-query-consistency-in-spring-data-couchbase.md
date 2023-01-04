@@ -10,7 +10,7 @@
 
 Spring Data Couchbase 支持 JSR-303 实体验证注释。为了利用这个特性，首先我们将 JSR-303 库添加到 Maven 项目的依赖部分:
 
-```
+```java
 <dependency>
     <groupId>javax.validation</groupId>
     <artifactId>validation-api</artifactId>
@@ -20,7 +20,7 @@ Spring Data Couchbase 支持 JSR-303 实体验证注释。为了利用这个特�
 
 然后我们添加一个 JSR-303 的实现。我们将使用 Hibernate 实现:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-validator</artifactId>
@@ -30,7 +30,7 @@ Spring Data Couchbase 支持 JSR-303 实体验证注释。为了利用这个特�
 
 最后，我们向 Couchbase 配置添加一个验证器工厂 bean 和相应的 Couchbase 事件监听器:
 
-```
+```java
 @Bean
 public LocalValidatorFactoryBean localValidatorFactoryBean() {
     return new LocalValidatorFactoryBean();
@@ -44,7 +44,7 @@ public ValidatingCouchbaseEventListener validatingCouchbaseEventListener() {
 
 等效的 XML 配置如下所示:
 
-```
+```java
 <bean id="validator"
   class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
 
@@ -56,7 +56,7 @@ public ValidatingCouchbaseEventListener validatingCouchbaseEventListener() {
 
 以下是我们可以强制实施的涉及`Student`实体的约束示例:
 
-```
+```java
 @Field
 @NotNull
 @Size(min=1, max=20)
@@ -75,7 +75,7 @@ Spring Data Couchbase 不支持多文档事务，类似于您可以在 Spring Da
 
 然而，通过使用`@Version`注释，它确实像其他 Spring 数据模块一样支持乐观锁定:
 
-```
+```java
 @Version
 private long version;
 ```
@@ -136,7 +136,7 @@ Spring Data 允许您通过`org.springframework.data.couchbase.core.query`包中
 
 下面是如何在 Couchbase 配置类中覆盖全局一致性级别:
 
-```
+```java
 @Override
 public Consistency getDefaultConsistency() {
     return Consistency.STRONGLY_CONSISTENT;
@@ -145,7 +145,7 @@ public Consistency getDefaultConsistency() {
 
 下面是等效的 XML 配置:
 
-```
+```java
 <couchbase:template consistency="STRONGLY_CONSISTENT"/>
 ```
 
@@ -161,7 +161,7 @@ public Consistency getDefaultConsistency() {
 
 首先，创建一个包含自定义方法声明的接口:
 
-```
+```java
 public interface CustomStudentRepository {
     List<Student> findByFirstNameStartsWith(String s);
 }
@@ -169,7 +169,7 @@ public interface CustomStudentRepository {
 
 接下来，实现接口，将底层 Couchbase Java SDK 中的`Stale`设置设置为所需的级别:
 
-```
+```java
 public class CustomStudentRepositoryImpl implements CustomStudentRepository {
 
     @Autowired
@@ -186,7 +186,7 @@ public class CustomStudentRepositoryImpl implements CustomStudentRepository {
 
 最后，通过让您的标准存储库接口扩展通用`CrudRepository`接口和您的定制存储库接口，客户端将可以访问您的标准存储库接口的所有内置和派生方法，以及您在定制存储库类中实现的任何定制方法:
 
-```
+```java
 public interface StudentRepository extends CrudRepository<Student, String>,
   CustomStudentRepository {
     ...

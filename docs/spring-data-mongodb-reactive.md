@@ -16,7 +16,7 @@
 
 我们还将添加一个嵌入式 MongoDB 进行测试:
 
-```
+```java
 <dependencies>
     // ...
     <dependency>
@@ -35,7 +35,7 @@
 
 为了激活响应式支持，我们需要使用`@EnableReactiveMongoRepositories`以及一些基础设施设置:
 
-```
+```java
 @EnableReactiveMongoRepositories
 public class MongoReactiveApplication
   extends AbstractReactiveMongoConfiguration {
@@ -58,7 +58,7 @@ public class MongoReactiveApplication
 
 对于下面的例子，让我们创建一个`Account`类并用`@Document`对其进行注释，以便在数据库操作中使用它:
 
-```
+```java
 @Document
 public class Account {
 
@@ -81,7 +81,7 @@ public class Account {
 
 我们可以像阻塞`CrudRepository`一样使用这个存储库:
 
-```
+```java
 @Repository
 public interface AccountCrudRepository 
   extends ReactiveCrudRepository<Account, String> {
@@ -97,7 +97,7 @@ public interface AccountCrudRepository
 
 还有`ReactiveMongoRepository`接口，它继承了`ReactiveCrudRepository`并增加了一些新的查询方法:
 
-```
+```java
 @Repository
 public interface AccountReactiveRepository 
   extends ReactiveMongoRepository<Account, String> { }
@@ -105,7 +105,7 @@ public interface AccountReactiveRepository
 
 使用`ReactiveMongoRepository`，我们可以通过例子进行查询:
 
-```
+```java
 Flux<Account> accountFlux = repository
   .findAll(Example.of(new Account(null, "owner", null)));
 ```
@@ -114,7 +114,7 @@ Flux<Account> accountFlux = repository
 
 随着我们的存储库的创建，他们已经定义了一些方法来执行一些我们不需要实现的数据库操作:
 
-```
+```java
 Mono<Account> accountMono 
   = repository.save(new Account(null, "owner", 12.3));
 Mono<Account> accountMono2 = repository
@@ -125,7 +125,7 @@ Mono<Account> accountMono2 = repository
 
 对于`RxJava2CrudRepository,`，我们有与`ReactiveCrudRepository,`相同的行为，但是结果和参数类型来自`RxJava`:
 
-```
+```java
 @Repository
 public interface AccountRxJavaRepository 
   extends RxJava2CrudRepository<Account, String> {
@@ -139,7 +139,7 @@ public interface AccountRxJavaRepository
 
 为了测试我们的存储库方法，我们将使用测试订阅者:
 
-```
+```java
 @Test
 public void givenValue_whenFindAllByValue_thenFindAccount() {
     repository.save(new Account(null, "Bill", 12.3)).block();
@@ -191,7 +191,7 @@ public void givenAccount_whenSave_thenSaveAccount() {
 
 首先，我们需要将`ReactiveMongoTemplate`注册为一个 bean:
 
-```
+```java
 @Configuration
 public class ReactiveMongoConfig {
 
@@ -207,7 +207,7 @@ public class ReactiveMongoConfig {
 
 然后，我们可以将这个 bean 注入到我们的服务中来执行数据库操作:
 
-```
+```java
 @Service
 public class AccountTemplateOperations {
 

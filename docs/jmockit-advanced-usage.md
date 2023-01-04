@@ -17,7 +17,7 @@
 
 首先，我们需要将 [jmockit](https://web.archive.org/web/20220807183407/https://search.maven.org/search?q=a:jmockit%20AND%20g:org.jmockit) 依赖项添加到项目中:
 
-```
+```java
 <dependency> 
     <groupId>org.jmockit</groupId> 
     <artifactId>jmockit</artifactId> 
@@ -40,7 +40,7 @@
 
 所有下面的例子都将在下面的类中完成，我们假设它们运行在一个与第一个具有相同配置的测试类上(以避免重复代码):
 
-```
+```java
 public class AdvancedCollaborator {
     int i;
     private int privateField = 5;
@@ -71,7 +71,7 @@ JMockit 的 Mockup API 为创建假实现或`mock-ups`提供了支持。通常�
 
 让我们看看如何使用模型的 API 重新定义`privateMethod()`:
 
-```
+```java
 @RunWith(JMockit.class)
 public class AdvancedCollaboratorTest {
 
@@ -96,7 +96,7 @@ public class AdvancedCollaboratorTest {
 
 我们也可以用它来`mock-up`构造一个需要特定参数或配置的类，以简化测试:
 
-```
+```java
 @Test
 public void testToMockUpDifficultConstructor() throws Exception{
     new MockUp<AdvancedCollaborator>() {
@@ -118,7 +118,7 @@ JMockit 包含一个测试实用程序类:`Deencapsulation`。顾名思义，它
 
 您可以调用一个方法:
 
-```
+```java
 @Test
 public void testToCallPrivateMethodsDirectly(){
     Object value = Deencapsulation.invoke(mock, "privateMethod");
@@ -128,7 +128,7 @@ public void testToCallPrivateMethodsDirectly(){
 
 您还可以设置字段:
 
-```
+```java
 @Test
 public void testToSetPrivateFieldDirectly(){
     Deencapsulation.setField(mock, "privateField", 10);
@@ -138,7 +138,7 @@ public void testToSetPrivateFieldDirectly(){
 
 并获取字段:
 
-```
+```java
 @Test
 public void testToGetPrivateFieldDirectly(){
     int value = Deencapsulation.getField(mock, "privateField");
@@ -148,7 +148,7 @@ public void testToGetPrivateFieldDirectly(){
 
 并创建类的新实例:
 
-```
+```java
 @Test
 public void testToCreateNewInstanceDirectly(){
     AdvancedCollaborator coll = Deencapsulation
@@ -159,7 +159,7 @@ public void testToCreateNewInstanceDirectly(){
 
 甚至内部类的新实例:
 
-```
+```java
 @Test
 public void testToCreateNewInnerClassInstanceDirectly(){
     InnerCollaborator inner = Deencapsulation
@@ -180,7 +180,7 @@ public void testToCreateNewInnerClassInstanceDirectly(){
 
 例如，我们将通过两种方式`:`为接口`List` 和`Comparable` 创建一个模拟
 
-```
+```java
 @RunWith(JMockit.class)
 public class AdvancedCollaboratorTest<MultiMock
   extends List<String> & Comparable<List<String>>> {
@@ -223,7 +223,7 @@ public class AdvancedCollaboratorTest<MultiMock
 
 我们将通过一个例子来解释它(我们使用来自我们的 [JMockit 101](/web/20220807183407/https://www.baeldung.com/jmockit-101) 文章中的类`Model, Collaborator`和`Performer`):
 
-```
+```java
 @RunWith(JMockit.class)
 public class ReusingTest {
 

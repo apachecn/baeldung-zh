@@ -30,7 +30,7 @@ HTTP servlets(一种特定类型的 servlet)是 Java web 应用程序中的一�
 
 首先，让我们看看呈现表单的 JSP 文件:
 
-```
+```java
 <!DOCTYPE html>
 <html>
     <head>
@@ -56,7 +56,7 @@ HTTP servlets(一种特定类型的 servlet)是 Java web 应用程序中的一�
 
 下面是我们最初的 servlet 实现:
 
-```
+```java
 @WebServlet(name = "UserServlet", urlPatterns = "/userServlet", initParams={
 @WebInitParam(name="name", value="Not provided"), 
 @WebInitParam(name="email", value="Not provided")}))
@@ -108,7 +108,7 @@ public class UserServlet extends HttpServlet {
 
 `doPost()`方法首先检索用户在 HTML 表单中输入的姓名和电子邮件(如果有的话)。然后它处理请求参数并将请求转发到一个`“result.jsp”`文件:
 
-```
+```java
 <!DOCTYPE html>
 <html>
     <head>
@@ -127,7 +127,7 @@ public class UserServlet extends HttpServlet {
 
 一旦用户填写了`name`和`email`字段并提交了表单，它将输出数据:
 
-```
+```java
 User Information
 Name: the user's name
 Email: the user's email 
@@ -135,7 +135,7 @@ Email: the user's email
 
 如果表单是空白的，它将显示 servlet 初始化参数:
 
-```
+```java
 User Information 
 Name: Not provided 
 Email: Not provided 
@@ -149,14 +149,14 @@ Email: Not provided
 
 为了展示如何用`“web.xml”`文件定义初始化 servlet 参数，让我们首先从`UserServlet`类中移除`initParam`和`@WebInitParam`注释:
 
-```
+```java
 @WebServlet(name = "UserServlet", urlPatterns = {"/userServlet"}) 
 public class UserServlet extends HttpServlet { ... } 
 ```
 
 接下来，让我们在`“web.xml”`文件中定义 servlet 初始化参数:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app  
 
@@ -197,7 +197,7 @@ public class UserServlet extends HttpServlet { ... }
 
 让我们相应地重构`“web.xml”`文件:
 
-```
+```java
 <web-app 
 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -221,7 +221,7 @@ public class UserServlet extends HttpServlet { ... }
 
 以下是 servlet 的相关部分:
 
-```
+```java
 @WebServlet(name = "UserServlet", urlPatterns = {"/userServlet"})
 public class UserServlet extends HttpServlet {
     // ...
@@ -247,7 +247,7 @@ public class UserServlet extends HttpServlet {
 
 接下来，我们需要重构`“result.jsp”`文件，以便它可以显示上下文参数以及特定于 servlet 的参数:
 
-```
+```java
 <p><strong>Name:</strong> ${name}</p>
 <p><strong>Email:</strong> ${email}</p>
 <p><strong>Province:</strong> ${province}</p>
@@ -258,7 +258,7 @@ public class UserServlet extends HttpServlet {
 
 如果用户在 HTML 表单中填写姓名和电子邮件，那么它将显示这些数据以及上下文参数:
 
-```
+```java
 User Information 
 Name: the user's name 
 Email: the user's email
@@ -268,7 +268,7 @@ Country: Argentina
 
 否则，它将输出 servlet 和上下文初始化参数:
 
-```
+```java
 User Information 
 Name: Not provided 
 Email: Not provided

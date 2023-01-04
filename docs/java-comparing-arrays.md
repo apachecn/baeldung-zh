@@ -23,7 +23,7 @@
 
 让我们看一个例子:
 
-```
+```java
 String[] planes1 = new String[] { "A320", "B738", "A321", "A319", "B77W", "B737", "A333", "A332" };
 String[] planes2 = planes1;
 ```
@@ -34,19 +34,19 @@ String[] planes2 = planes1;
 
 让我们断言这两个引用是否相同:
 
-```
+```java
 assertThat(planes1).isSameAs(planes2);
 ```
 
 现在让我们确定`planes1`引用的值实际上与`planes2`引用的值相同。因此，我们可以更改`planes2,`引用的数组，并检查这些更改是否对`planes1`引用的数组有任何影响:
 
-```
+```java
 planes2[0] = "747";
 ```
 
 为了最终看到这一点，让我们断言:
 
-```
+```java
 assertThat(planes1).isSameAs(planes2);
 assertThat(planes2[0]).isEqualTo("747");
 assertThat(planes1[0]).isEqualTo("747");
@@ -58,14 +58,14 @@ assertThat(planes1[0]).isEqualTo("747");
 
 我们现在将创建两个具有相同值的不同数组:
 
-```
+```java
 String[] planes1 = new String[] { "A320", "B738", "A321", "A319", "B77W", "B737", "A333", "A332" };
 String[] planes2 = new String[] { "A320", "B738", "A321", "A319", "B77W", "B737", "A333", "A332" };
 ```
 
 既然它们是不同的物体，我们肯定知道它们是不同的。因此，我们可以比较它们:
 
-```
+```java
 assertThat(planes1).isNotSameAs(planes2);
 ```
 
@@ -77,14 +77,14 @@ assertThat(planes1).isNotSameAs(planes2);
 
 让我们创建两个数组:
 
-```
+```java
 final String[] planes1 = new String[] { "A320", "B738", "A321", "A319", "B77W", "B737", "A333", "A332" };
 final Integer[] quantities = new Integer[] { 10, 12, 34, 45, 12, 43, 5, 2 };
 ```
 
 这是两个具有不同元素类型的不同数组。在这个数据集中，作为一个例子，我们记录了仓库中存储的每个型号的飞机数量。现在让我们对它们进行单元测试:
 
-```
+```java
 assertThat(planes1).hasSize(8);
 assertThat(quantities).hasSize(8);
 ```
@@ -97,27 +97,27 @@ assertThat(quantities).hasSize(8);
 
 让我们以完全相同的顺序用相同的`String`文字创建两个不同的数组:
 
-```
+```java
 String[] planes1 = new String[] { "A320", "B738", "A321", "A319", "B77W", "B737", "A333", "A332" };
 String[] planes2 = new String[] { "A320", "B738", "A321", "A319", "B77W", "B737", "A333", "A332" };
 ```
 
 现在，让我们断言它们是相等的:
 
-```
+```java
 assertThat(Arrays.equals(planes1, planes2)).isTrue();
 ```
 
 如果我们改变第二个数组的值的顺序:
 
-```
+```java
 String[] planes1 = new String[] { "A320", "B738", "A321", "A319", "B77W", "B737", "A333", "A332" };
 String[] planes2 = new String[] { "B738", "A320", "A321", "A319", "B77W", "B737", "A333", "A332" }; 
 ```
 
 我们会得到不同的结果:
 
-```
+```java
 assertThat(Arrays.equals(planes1, planes2)).isFalse();
 ```
 
@@ -127,7 +127,7 @@ assertThat(Arrays.equals(planes1, planes2)).isFalse();
 
 首先，让我们从一个`Plane `类开始:
 
-```
+```java
 public class Plane {
     private final String name;
     private final String model;
@@ -138,7 +138,7 @@ public class Plane {
 
 让我们实现`hashCode `和`equals`方法:
 
-```
+```java
 @Override
 public boolean equals(Object o) {
     if (this == o)
@@ -157,7 +157,7 @@ public int hashCode() {
 
 其次，让我们创建以下两元素数组:
 
-```
+```java
 Plane[][] planes1 
   = new Plane[][] { new Plane[]{new Plane("Plane 1", "A320")}, new Plane[]{new Plane("Plane 2", "B738") }};
 Plane[][] planes2 
@@ -166,13 +166,13 @@ Plane[][] planes2
 
 现在让我们看看它们是否是真正的深度相等的数组:
 
-```
+```java
 assertThat(Arrays.deepEquals(planes1, planes2)).isTrue();
 ```
 
 为了确保我们的比较按预期进行，现在让我们更改最后一个数组的顺序:
 
-```
+```java
 Plane[][] planes1 
   = new Plane[][] { new Plane[]{new Plane("Plane 1", "A320")}, new Plane[]{new Plane("Plane 2", "B738") }};
 Plane[][] planes2 
@@ -181,7 +181,7 @@ Plane[][] planes2
 
 最后，让我们测试一下它们是否真的不再相等:
 
-```
+```java
 assertThat(Arrays.deepEquals(planes1, planes2)).isFalse();
 ```
 
@@ -189,7 +189,7 @@ assertThat(Arrays.deepEquals(planes1, planes2)).isFalse();
 
 为了检查数组是否相等，不管元素的顺序如何，我们需要定义**是什么使得我们的`Plane`的一个实例是唯一的**。对于我们的情况，不同的名称或型号足以确定一个平面不同于另一个平面。我们已经通过实现`hashCode` 和`equals `方法建立了这一点。这意味着在我们比较数组之前，我们应该对它们进行排序。为此，我们需要一个 [`Comparator`](/web/20221208143830/https://www.baeldung.com/java-comparator-comparable) :
 
-```
+```java
 Comparator<Plane> planeComparator = (o1, o2) -> {
     if (o1.getName().equals(o2.getName())) {
         return o2.getModel().compareTo(o1.getModel());
@@ -202,14 +202,14 @@ Comparator<Plane> planeComparator = (o1, o2) -> {
 
 我们希望能够发现数组是否相等，而不考虑排序顺序。为此，我们现在对数组进行排序:
 
-```
+```java
 Arrays.sort(planes1[0], planeComparator);
 Arrays.sort(planes2[0], planeComparator);
 ```
 
 最后，我们来测试一下:
 
-```
+```java
 assertThat(Arrays.deepEquals(planes1, planes2)).isTrue();
 ```
 

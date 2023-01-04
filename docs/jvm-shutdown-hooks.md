@@ -37,14 +37,14 @@ JVM 允许注册函数在完成关闭之前运行。这些功能通常是释放�
 
 为了添加一个关机挂钩，我们可以使用`[Runtime.getRuntime().addShutdownHook()](https://web.archive.org/web/20221223070804/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Runtime.html#addShutdownHook(java.lang.Thread)) `方法:
 
-```
+```java
 Thread printingHook = new Thread(() -> System.out.println("In the middle of a shutdown"));
 Runtime.getRuntime().addShutdownHook(printingHook);
 ```
 
 这里，我们只是在 JVM 自行关闭之前将一些内容打印到标准输出中。如果我们像下面这样关闭 JVM:
 
-```
+```java
 > System.exit(129);
 In the middle of a shutdown
 ```
@@ -53,7 +53,7 @@ In the middle of a shutdown
 
 JVM 负责启动钩子线程。因此，如果给定的钩子已经启动，Java 将抛出一个异常:
 
-```
+```java
 Thread longRunningHook = new Thread(() -> {
     try {
         Thread.sleep(300);
@@ -68,7 +68,7 @@ assertThatThrownBy(() -> Runtime.getRuntime().addShutdownHook(longRunningHook))
 
 显然，我们也不能多次注册一个钩子:
 
-```
+```java
 Thread unfortunateHook = new Thread(() -> {});
 Runtime.getRuntime().addShutdownHook(unfortunateHook);
 
@@ -81,7 +81,7 @@ assertThatThrownBy(() -> Runtime.getRuntime().addShutdownHook(unfortunateHook))
 
 Java 提供了一个双`remove `方法来删除注册后的特定关闭挂钩:
 
-```
+```java
 Thread willNotRun = new Thread(() -> System.out.println("Won't run!"));
 Runtime.getRuntime().addShutdownHook(willNotRun);
 
@@ -94,7 +94,7 @@ assertThat(Runtime.getRuntime().removeShutdownHook(willNotRun)).isTrue();
 
 JVM 只在正常终止的情况下运行关闭挂钩。所以，当外力突然杀死 JVM 进程时，JVM 就没有机会执行 shutdown 钩子了。此外，从 Java 代码中暂停 JVM 也会产生相同的效果:
 
-```
+```java
 Thread haltedHook = new Thread(() -> System.out.println("Halted abruptly"));
 Runtime.getRuntime().addShutdownHook(haltedHook);
 

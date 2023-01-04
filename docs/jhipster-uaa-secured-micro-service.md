@@ -29,7 +29,7 @@ JHipster UAA 还支持自助注册和“记住我”等典型的登录功能。�
 
 让我们使用 JHipster 命令行实用程序来生成我们的 UAA 服务:
 
-```
+```java
 $ mkdir uaa
 $ cd uaa
 $ jhipster 
@@ -49,7 +49,7 @@ $ jhipster
 
 我们现在可以使用本地 Maven 脚本来构建和运行我们的 UAA 服务:
 
-```
+```java
 $ ./mvnw
 ... build messages omitted
 2018-10-14 14:07:17.995  INFO 18052 --- [  restartedMain] com.baeldung.jhipster.uaa.UaaApp         :
@@ -75,7 +75,7 @@ $ ./mvnw
 
 首先，让**使用一个简单的`curl` 命令`:`从我们 UAA 的 OAuth 端点**获取一个新令牌
 
-```
+```java
 $ curl -X POST --data \
  "username=user&password;=user&grant;_type=password&scope;=openid" \
  http://web_app:[[email protected]](/web/20220628145118/https://www.baeldung.com/cdn-cgi/l/email-protection):9999/oauth/token 
@@ -87,7 +87,7 @@ $ curl -X POST --data \
 
 假设我们正确地提供了所有细节，我们将得到一个包含访问令牌和刷新令牌的答案:
 
-```
+```java
 {
   "access_token" : "eyJh...(token omitted)",
   "token_type" : "bearer",
@@ -101,7 +101,7 @@ $ curl -X POST --data \
 
 我们现在可以**使用返回的`access_token`来获取相关账户的信息，使用`account`资源**，该资源在 UAA 服务中可用:
 
-```
+```java
 $ curl -H "Authorization: Bearer eyJh...(access token omitted)" \ 
  http://localhost:9999/api/account
 {
@@ -137,7 +137,7 @@ $ curl -H "Authorization: Bearer eyJh...(access token omitted)" \
 
 我们将再次在新创建的目录中使用 JHipster 命令行工具:
 
-```
+```java
 $ mkdir gateway
 $ cd gateway
 $ jhipster
@@ -153,7 +153,7 @@ $ jhipster
 
 一旦 JHipster 生成了所有的工件，我们就可以用提供的 Maven 包装器脚本构建并运行网关:
 
-```
+```java
 $ ./mwnw
 ... many messages omitted
 ----------------------------------------------------------
@@ -192,7 +192,7 @@ $ ./mwnw
 
 让我们回到我们的终端，使用 JHipster 的命令行工具来生成我们的项目:
 
-```
+```java
 $ mkdir quotes
 $ cd quotes
 $ jhipster 
@@ -210,7 +210,7 @@ $ jhipster
 
 一旦 JHipster 完成了项目的生成，我们就可以开始构建它了:
 
-```
+```java
 $ mvnw
 ... many, many messages omitted
 ----------------------------------------------------------
@@ -239,7 +239,7 @@ $ mvnw
 
 接下来，我们**创建一个名为`quotes.jh`的文本文件，包含我们的`Quote `实体定义**，以及一些代码生成指令:
 
-```
+```java
 entity Quote {
   symbol String required unique,
   price BigDecimal required,
@@ -255,7 +255,7 @@ clientRootFolder Quote with quotes
 
 我们现在可以**将这个实体定义**导入到我们的项目中:
 
-```
+```java
 $ jhipster import-jdl quotes.jh 
 ```
 
@@ -267,7 +267,7 @@ $ jhipster import-jdl quotes.jh
 
 最后，让我们在 gateway 项目中生成 CRUD UI，我们将用它来访问我们的报价。我们将使用来自“quotes”微服务项目的同一个 JDL 文件来生成 UI 组件，并且我们将使用 JHipster 的`import-jdl`命令来导入它:
 
-```
+```java
 $ jhipster import-jdl ../jhipster-quotes/quotes.jh
 ...messages omitted
 ? Overwrite webpack\webpack.dev.js? <b>y</b>

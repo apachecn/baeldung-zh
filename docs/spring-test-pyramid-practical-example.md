@@ -86,7 +86,7 @@ Mike Cohn 在他的书《[用敏捷取得成功](https://web.archive.org/web/202
 
 正如我们所看到的，它有一个简单的 REST 控制器，公开了三个端点:
 
-```
+```java
 @RestController
 public class MovieController {
 
@@ -112,7 +112,7 @@ public class MovieController {
 
 除了处理数据编组和解组之外，控制器仅仅路由到适当的服务:
 
-```
+```java
 @Service
 public class MovieService {
 
@@ -141,7 +141,7 @@ public class MovieService {
 
 此外，我们有一个映射到持久层的 JPA 存储库:
 
-```
+```java
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 }
@@ -149,7 +149,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
 最后，我们保存和传递电影数据的简单域实体:
 
-```
+```java
 @Entity
 public class Movie {
     @Id
@@ -168,7 +168,7 @@ public class Movie {
 
 首先，我们将了解如何为我们的应用程序编写一个简单的单元测试。从这个应用中可以明显看出，**大多数逻辑倾向于在服务层**中积累。这要求我们更广泛、更频繁地测试它——非常适合单元测试:
 
-```
+```java
 public class MovieServiceUnitTests {
 
     @InjectMocks
@@ -201,7 +201,7 @@ public class MovieServiceUnitTests {
 
 在我们的单元测试中，我们模拟了存储库，它是我们对持久层的依赖。虽然我们已经彻底测试了服务层的行为，但当它连接到数据库时，我们仍然可能会有问题。这就是集成测试发挥作用的地方:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class MovieControllerIntegrationTests {
@@ -229,7 +229,7 @@ public class MovieControllerIntegrationTests {
 
 最后，我们的应用程序有 REST 端点可供使用，它们可能有自己的细微差别需要测试。由于这是我们应用程序的用户界面，我们将在 UI 测试中重点介绍它。现在让我们使用放心测试应用程序:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MovieApplicationE2eTests {

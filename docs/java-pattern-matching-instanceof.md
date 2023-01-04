@@ -14,7 +14,7 @@
 
 假设我们想在一个简单的动物对象层次结构中检查类型:
 
-```
+```java
 if (animal instanceof Cat) {
     Cat cat = (Cat) animal;
     cat.meow();
@@ -46,7 +46,7 @@ Java 14 通过 JEP 305 带来了一个改进版本的`instanceof`操作符，该
 
 **这意味着我们可以用一种更简洁的方式来写我们之前的动物例子**:
 
-```
+```java
 if (animal instanceof Cat cat) {
     cat.meow();
 } else if(animal instanceof Dog dog) {

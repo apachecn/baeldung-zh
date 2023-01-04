@@ -12,7 +12,7 @@ NanoHTTPD 是一个用 Java 编写的开源轻量级 web 服务器。
 
 让我们 将 [NanoHTTPD 核心依赖](https://web.archive.org/web/20220628131736/https://search.maven.org/search?q=a:nanohttpd%20AND%20g:org.nanohttpd)添加到我们的`pom.xml` :
 
-```
+```java
 <dependency>
     <groupId>org.nanohttpd</groupId>
     <artifactId>nanohttpd</artifactId>
@@ -22,7 +22,7 @@ NanoHTTPD 是一个用 Java 编写的开源轻量级 web 服务器。
 
 要创建一个简单的服务器，我们需要扩展`NanoHTTPD`并覆盖它的`serve`方法:
 
-```
+```java
 public class App extends NanoHTTPD {
     public App() throws IOException {
         super(8080);
@@ -46,7 +46,7 @@ public class App extends NanoHTTPD {
 
 让我们用 [cURL](/web/20220628131736/https://www.baeldung.com/curl-rest) 来试试我们的项目:
 
-```
+```java
 > curl 'http://localhost:8080/'
 Hello world
 ```
@@ -63,7 +63,7 @@ Hello world
 
 与 [Java Servlet 容器](/web/20220628131736/https://www.baeldung.com/intro-to-servlets)不同，我们没有可用的`doGet `方法——相反，我们只是通过`getMethod`检查值:
 
-```
+```java
 @Override
 public Response serve(IHTTPSession session) {
     if (session.getMethod() == Method.GET) {
@@ -77,7 +77,7 @@ public Response serve(IHTTPSession session) {
 
 这很简单，对吧？让我们通过卷曲我们的新端点来运行一个快速测试，看看请求参数`itemId`是否被正确读取:
 
-```
+```java
 > curl 'http://localhost:8080/?itemId=23Bk8'
 Requested itemId = 23Bk8
 ```
@@ -88,7 +88,7 @@ Requested itemId = 23Bk8
 
 为了介绍两种最流行的 HTTP 方法，现在我们应该处理一个 POST(从而读取请求体):
 
-```
+```java
 @Override
 public Response serve(IHTTPSession session) {
     if (session.getMethod() == Method.POST) {
@@ -109,7 +109,7 @@ Notice that before when we asked for the request body, **we first called the `pa
 
 我们将在我们的`cURL`命令中包含一个实体:
 
-```
+```java
 > curl -X POST -d 'deliveryAddress=Washington nr 4&quantity;=5''http://localhost:8080/'
 Request body = deliveryAddress=Washington nr 4&quantity;=5
 ```
@@ -120,7 +120,7 @@ Request body = deliveryAddress=Washington nr 4&quantity;=5
 
 Using [CORS](/web/20220628131736/https://www.baeldung.com/spring-cors), we enable cross-domain communication. The most common use case is AJAX calls from a different domain.The first approach that we can use is to enable CORS for all our APIs. Using the `–``-cors` argument, we’ll allow access to all domains. We can also define which domains we allow with `–cors=”http://dashboard.myApp.com http://admin.myapp.com”`.The second approach is to enable CORS for individual APIs. Let’s see how to use `addHeader` to achieve this:
 
-```
+```java
 @Override 
 public Response serve(IHTTPSession session) {
     Response response = newFixedLengthResponse("Hello world"); 
@@ -131,7 +131,7 @@ public Response serve(IHTTPSession session) {
 
 现在当我们`cURL`时，我们将把我们的 CORS 头球拿回来:
 
-```
+```java
 > curl -v 'http://localhost:8080'
 HTTP/1.1 200 OK 
 Content-Type: text/html
@@ -147,7 +147,7 @@ Hello world
 
 NanoHTTPD 对于文件上传有一个单独的[依赖项，所以让我们将它添加到我们的项目:](https://web.archive.org/web/20220628131736/https://search.maven.org/search?q=a:nanohttpd-apache-fileupload)
 
-```
+```java
 <dependency>
     <groupId>org.nanohttpd</groupId>
     <artifactId>nanohttpd-apache-fileupload</artifactId>
@@ -165,7 +165,7 @@ NanoHTTPD 对于文件上传有一个单独的[依赖项，所以让我们将它
 
 NanoHTTPD 公开的是一个名为`NanoFileUpload`的类:
 
-```
+```java
 @Override
 public Response serve(IHTTPSession session) {
     try {
@@ -194,7 +194,7 @@ public Response serve(IHTTPSession session) {
 
 嘿，让我们试试:
 
-```
+```java
 > curl -F '[[email protected]](/web/20220628131736/https://www.baeldung.com/cdn-cgi/l/email-protection)/pathToFile.txt' 'http://localhost:8080'
 Uploaded files: 1
 ```
@@ -205,7 +205,7 @@ A `nanolet` is like a servlet but has a very low profile. We can use them to def
 
 首先，让我们为`nanolets` 添加所需的[依赖项:](https://web.archive.org/web/20220628131736/https://search.maven.org/search?q=a:nanohttpd-nanolets)
 
-```
+```java
 <dependency>
     <groupId>org.nanohttpd</groupId>
     <artifactId>nanohttpd-nanolets</artifactId>
@@ -217,7 +217,7 @@ A `nanolet` is like a servlet but has a very low profile. We can use them to def
 
 `addMappings`方法是我们定义处理程序的地方:
 
-```
+```java
 public class MultipleRoutesExample extends RouterNanoHTTPD {
     public MultipleRoutesExample() throws IOException {
         super(8080);
@@ -236,20 +236,20 @@ public class MultipleRoutesExample extends RouterNanoHTTPD {
 
 第一个是 一个`IndexHandler`类到“/”路径。这个类带有 NanoHTTPD 库，默认情况下返回一条`Hello World`消息。当我们想要不同的响应时，我们可以覆盖`getText`方法:
 
-```
+```java
 addRoute("/", IndexHandler.class); // inside addMappings method
 ```
 
 为了测试我们的新路线，我们可以:
 
-```
+```java
 > curl 'http://localhost:8080' 
 <html><body><h2>Hello world!</h3></body></html>
 ```
 
 其次，让我们创建一个新的`UserHandler` 类，它扩展了现有的`DefaultHandler.`类，它的路由将是/ `users`。在这里，我们处理了文本、MIME 类型和返回的状态代码:
 
-```
+```java
 public static class UserHandler extends DefaultHandler {
     @Override
     public String getText() {
@@ -270,14 +270,14 @@ public static class UserHandler extends DefaultHandler {
 
 为了调用这条路线，我们将再次发出一个`cURL`命令:
 
-```
+```java
 > curl -X POST 'http://localhost:8080/users' 
 UserA, UserB, UserC
 ```
 
 最后，我们可以用一个新的`StoreHandler`类来探索`GeneralHandler`。我们修改了返回的消息，以包含 URL 的`storeId`部分。
 
-```
+```java
 public static class StoreHandler extends GeneralHandler {
     @Override
     public Response get(
@@ -290,7 +290,7 @@ public static class StoreHandler extends GeneralHandler {
 
 让我们检查一下我们的新 API:
 
-```
+```java
 > curl 'http://localhost:8080/stores/123' 
 Retrieving store for id = 123
 ```
@@ -301,7 +301,7 @@ Retrieving store for id = 123
 
 我们可以使用类似于[的服务来加密](https://web.archive.org/web/20220628131736/https://letsencrypt.org/)，或者我们可以简单地生成一个自签名证书，如下所示:
 
-```
+```java
 > keytool -genkey -keyalg RSA -alias selfsigned
   -keystore keystore.jks -storepass password -validity 360
   -keysize 2048 -ext SAN=DNS:localhost,IP:127.0.0.1  -validity 9999
@@ -311,7 +311,7 @@ Retrieving store for id = 123
 
 之后，我们可以在对`NanoHTTPD#makeSSLSocketFactory`的调用中引用它:
 
-```
+```java
 public class HttpsExample  extends NanoHTTPD {
 
     public HttpsExample() throws IOException {
@@ -327,7 +327,7 @@ public class HttpsExample  extends NanoHTTPD {
 
 现在我们可以试试了。请注意— `insecure`参数的使用，因为默认情况下`cURL`无法验证我们的自签名证书:
 
-```
+```java
 > curl --insecure 'https://localhost:8443'
 HTTPS call is a success
 ```
@@ -338,7 +338,7 @@ NanoHTTPD 支持 [WebSockets](/web/20220628131736/https://www.baeldung.com/rest-
 
 让我们创建一个 WebSocket 的最简单的实现。为此，我们需要扩展`NanoWSD`类。我们还需要为 WebSocket: 添加 [`NanoHTTPD`依赖项](https://web.archive.org/web/20220628131736/https://search.maven.org/search?q=a:nanohttpd-websocket%20AND%20g:org.nanohttpd)
 
-```
+```java
 <dependency>
     <groupId>org.nanohttpd</groupId>
     <artifactId>nanohttpd-websocket</artifactId>
@@ -348,7 +348,7 @@ NanoHTTPD 支持 [WebSockets](/web/20220628131736/https://www.baeldung.com/rest-
 
 对于我们的实现，我们将只回复一个简单的文本负载:
 
-```
+```java
 public class WsdExample extends NanoWSD {
     public WsdExample() throws IOException {
         super(8080);
@@ -385,7 +385,7 @@ public class WsdExample extends NanoWSD {
 
 这次我们不用`cURL`，而是用`[wscat](https://web.archive.org/web/20220628131736/https://github.com/websockets/wscat)`:
 
-```
+```java
 > wscat -c localhost:8080
 hello
 hello to you

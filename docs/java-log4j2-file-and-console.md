@@ -16,7 +16,7 @@
 
 让我们将 log4j2 依赖项添加到我们的项目中。我们将需要 [Apache Log4J 核心](https://web.archive.org/web/20221006181921/https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core)和 [Apache Log4J API](https://web.archive.org/web/20221006181921/https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api) 依赖项:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.apache.logging.log4j</groupId>
@@ -35,7 +35,7 @@
 
 现在让我们使用 log4j2 库向我们的应用程序添加一些日志记录:
 
-```
+```java
 public class Log4j2ConsoleAndFile {
 
     private static final Logger logger = LogManager.getLogger(Log4j2ConsoleAndFile.class);
@@ -55,7 +55,7 @@ public class Log4j2ConsoleAndFile {
 
 为了记录到任何目的地，我们首先需要定义一个记录到控制台的 [appender](/web/20221006181921/https://www.baeldung.com/log4j2-appenders-layouts-filters) 。让我们来看看实现这一点的配置:
 
-```
+```java
 appender.console.type = Console
 appender.console.name = STDOUT
 appender.console.layout.type = PatternLayout
@@ -71,7 +71,7 @@ appender.console.layout.pattern = [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c
 
 为了启用控制台记录器，我们需要将控制台附加器添加到根记录器中。我们可以使用上面指定的名字:
 
-```
+```java
 rootLogger=debug, STDOUT
 ```
 
@@ -81,7 +81,7 @@ rootLogger=debug, STDOUT
 
 类似地，我们可以配置日志记录器来记录文件。这对于持久化日志通常很有用。让我们定义一个文件附加器:
 
-```
+```java
 appender.file.type = File
 appender.file.name = LOGFILE
 appender.file.fileName=logs/log4j.log
@@ -97,7 +97,7 @@ appender.file.filter.threshold.level = info
 
 **要启用文件记录器，我们需要将文件附加器添加到根记录器中。**我们需要更改`rootLogger`配置，以包含文件附加器:
 
-```
+```java
 rootLogger=debug, STDOUT, LOGFILE
 ```
 
@@ -107,14 +107,14 @@ rootLogger=debug, STDOUT, LOGFILE
 
 现在让我们运行应用程序并检查控制台中的输出:
 
-```
+```java
 12:43:47,891 INFO  Application:8 - Hello World!
 12:43:47,892 DEBUG Application:9 - Hello World!
 ```
 
 正如所料，我们可以在控制台中看到这两个日志消息。如果我们检查路径`logs/log4j.log`下的日志文件，我们只能看到`info`级别的日志消息:
 
-```
+```java
 12:43:47,891 INFO  Application:8 - Hello World!
 ```
 

@@ -12,7 +12,7 @@ RSocket 是一个提供反应流语义的应用协议，例如，它可以作为
 
 让我们从添加 [`spring-boot-starter-rsocket`](https://web.archive.org/web/20221126230003/https://mvnrepository.com/search?q=spring-boot-starter-rsocket) 依赖关系开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-rsocket</artifactId>
@@ -33,7 +33,7 @@ RSocket 是一个提供反应流语义的应用协议，例如，它可以作为
 
 例如，让我们通过向我们的`application.properties` 文件添加下面一行来更改我们的 RSocket 服务器的端口:
 
-```
+```java
 spring.rsocket.server.port=7000
 ```
 
@@ -45,7 +45,7 @@ spring.rsocket.server.port=7000
 
 虽然 Spring Boot 自动配置了大部分与 RSocket 相关的组件，但是我们还应该定义一些 beans 来完成设置:
 
-```
+```java
 @Configuration
 public class ClientConfiguration {
 
@@ -82,7 +82,7 @@ public class ClientConfiguration {
 
 在服务器端，我们应该首先创建一个控制器来保存我们的处理程序方法。**但是不像 Spring MVC 中的 [`@RequestMapping`](/web/20221126230003/https://www.baeldung.com/spring-requestmapping) 或 [`@GetMapping`](/web/20221126230003/https://www.baeldung.com/spring-new-requestmapping-shortcuts) 注释，我们将使用`@MessageMapping`注释**:
 
-```
+```java
 @Controller
 public class MarketDataRSocketController {
 
@@ -111,7 +111,7 @@ public class MarketDataRSocketController {
 
 要发起请求，我们应该使用`RSocketRequester`类:
 
-```
+```java
 @RestController
 public class MarketDataRestController {
 
@@ -145,7 +145,7 @@ public class MarketDataRestController {
 
 让我们在服务器应用程序中创建另一个端点:
 
-```
+```java
 @MessageMapping("collectMarketData")
 public Mono<Void> collectMarketData(MarketData marketData) {
     marketDataRepository.add(marketData);
@@ -163,7 +163,7 @@ public Mono<Void> collectMarketData(MarketData marketData) {
 
 我们将创建另一个 REST 端点:
 
-```
+```java
 @GetMapping(value = "/collect")
 public Publisher<Void> collect() {
     return rSocketRequester
@@ -185,7 +185,7 @@ public Publisher<Void> collect() {
 
 让我们从我们的服务器开始。我们将添加另一个消息映射方法:
 
-```
+```java
 @MessageMapping("feedMarketData")
 public Flux<MarketData> feedMarketData(MarketDataRequest marketDataRequest) {
     return marketDataRepository.getAll(marketDataRequest.getStock());
@@ -198,7 +198,7 @@ public Flux<MarketData> feedMarketData(MarketDataRequest marketDataRequest) {
 
 在客户端，我们应该创建一个端点来启动我们的请求/流通信:
 
-```
+```java
 @GetMapping(value = "/feed/{stock}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 public Publisher<MarketData> feed(@PathVariable("stock") String stock) {
     return rSocketRequester
@@ -220,7 +220,7 @@ public Publisher<MarketData> feed(@PathVariable("stock") String stock) {
 
 当进行请求/响应时，我们可以简单地使用`@MessageExceptionHandler` 注释:
 
-```
+```java
 @MessageExceptionHandler
 public Mono<MarketData> handleException(Exception e) {
     return Mono.just(MarketData.fromException(e));

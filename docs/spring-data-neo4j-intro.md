@@ -14,7 +14,7 @@ Spring Data Neo4j 支持基于 POJO 的 Neo4j 图形数据库开发，并使用�
 
 让我们从在`pom.xml.` 中声明 Spring 数据 Neo4j 依赖关系开始，下面提到的 Spring 模块也是 Spring 数据 Neo4j 所需要的:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-neo4j</artifactId>
@@ -34,7 +34,7 @@ Spring Data Neo4j 支持基于 POJO 的 Neo4j 图形数据库开发，并使用�
 
 如果我们想使用嵌入式服务器，我们还必须添加依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.neo4j</groupId>
     <artifactId>neo4j-ogm-embedded-driver</artifactId>
@@ -50,7 +50,7 @@ Neo4j 配置非常简单，它定义了应用程序连接到服务器的连接�
 
 在本教程中，我们将只使用基于 Java 的配置:
 
-```
+```java
 public static final String URL = 
   System.getenv("NEO4J_URL") != null ? 
   System.getenv("NEO4J_URL") : "http://neo4j:[[email protected]](/web/20220625180249/https://www.baeldung.com/cdn-cgi/l/email-protection):7474";
@@ -88,7 +88,7 @@ Neo4j 将根据 URI 的协议推断驱动程序类，在我们的例子中是“
 
 在本教程中，我们使用两个存储库来实现数据持久性:
 
-```
+```java
 @Repository
 public interface MovieRepository extends Neo4jRepository<Movie, Long> {
 
@@ -108,7 +108,7 @@ public interface MovieRepository extends Neo4jRepository<Movie, Long> {
 
 接下来我们有更简单的`PersonRepository`，它只有标准操作:
 
-```
+```java
 @Repository
 public interface PersonRepository extends Neo4jRepository <Person, Long> {
     //
@@ -121,7 +121,7 @@ public interface PersonRepository extends Neo4jRepository <Person, Long> {
 
 下一步，我们必须让 Spring 知道在第 3 节创建的`Neo4jConfiguration`类中指示它的相关存储库:
 
-```
+```java
 @Configuration
 @ComponentScan("com.baeldung.spring.data.neo4j")
 @EnableNeo4jRepositories(
@@ -135,7 +135,7 @@ public class MovieDatabaseNeo4jConfiguration {
 
 我们已经开始查看数据模型，所以现在让我们把它全部展开——完整的`Movie, Role` 和`Person`。`Person`实体通过`Role` 关系引用`Movie` 实体。
 
-```
+```java
 @NodeEntity
 public class Movie {
 
@@ -158,7 +158,7 @@ public class Movie {
 
 注意我们是如何用`@NodeEntity`注释`Movie` 来表示这个类直接映射到 Neo4j 中的一个节点。
 
-```
+```java
 @JsonIdentityInfo(generator=JSOGGenerator.class)
 @NodeEntity
 public class Person {
@@ -203,7 +203,7 @@ public class Role {
 
 让我们保存一些数据——首先是一部新电影，然后是一个人，当然还有一个角色——包括我们拥有的所有关系数据:
 
-```
+```java
 Movie italianJob = new Movie();
 italianJob.setTitle("The Italian Job");
 italianJob.setReleased(1999);
@@ -229,7 +229,7 @@ movieRepository.save(italianJob);
 
 现在，让我们通过使用定义的标题检索插入的电影来验证它，这是一个自定义操作:
 
-```
+```java
 Movie result = movieRepository.findByTitle(title);
 ```
 
@@ -237,7 +237,7 @@ Movie result = movieRepository.findByTitle(title);
 
 可以使用标题的一部分搜索现有电影:
 
-```
+```java
 Collection<Movie> result = movieRepository.findByTitleContaining("Italian");
 ```
 
@@ -245,7 +245,7 @@ Collection<Movie> result = movieRepository.findByTitleContaining("Italian");
 
 所有电影都可以检索一次，并且可以检查正确的计数:
 
-```
+```java
 Collection<Movie> result = (Collection<Movie>) movieRepository.findAll();
 ```
 
@@ -255,19 +255,19 @@ Collection<Movie> result = (Collection<Movie>) movieRepository.findAll();
 
 插入几个电影对象后，我们可以得到退出的电影数量:
 
-```
+```java
 long movieCount = movieRepository.count();
 ```
 
 ### 6.6。删除现有电影
 
-```
+```java
 movieRepository.delete(movieRepository.findByTitle("The Italian Job"));
 ```
 
 删除插入的电影后，我们可以搜索电影对象并验证结果为空:
 
-```
+```java
 assertNull(movieRepository.findByTitle("The Italian Job"));
 ```
 
@@ -275,7 +275,7 @@ assertNull(movieRepository.findByTitle("The Italian Job"));
 
 可以删除数据库中的所有元素，使数据库变空:
 
-```
+```java
 movieRepository.deleteAll();
 ```
 

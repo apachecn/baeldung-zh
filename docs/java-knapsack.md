@@ -43,7 +43,7 @@
 
 我们可以用 Java 实现这个递归公式:
 
-```
+```java
 int knapsackRec(int[] w, int[] v, int n, int W) {
     if (n <= 0) { 
         return 0; 
@@ -64,7 +64,7 @@ int knapsackRec(int[] w, int[] v, int n, int W) {
 
 我们也可以用动态规划来解决 0-1 背包问题。为了使用动态编程，我们首先创建一个二维表，维度从 0 到`n`和 0 到`W`。然后，我们使用自下而上的方法通过下表计算最优解:
 
-```
+```java
 int knapsackDP(int[] w, int[] v, int n, int W) {
     if (n <= 0 || W <= 0) {
         return 0;

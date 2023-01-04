@@ -12,7 +12,7 @@
 
 让我们假设有一个`Map`和几个`Key-Value`对:
 
-```
+```java
 Map<String, Integer> map = new HashMap<>();
 map.put("first", 1);
 map.put("second", 2); 
@@ -20,13 +20,13 @@ map.put("second", 2);
 
 最初的`Map`将存储如下项目:
 
-```
+```java
 {first=1, second=2}
 ```
 
 相反，我们希望**将键转化为值，反之亦然**转化为新的`Map`对象。结果将是:
 
-```
+```java
 {1=first, 2=second} 
 ```
 
@@ -34,7 +34,7 @@ map.put("second", 2);
 
 首先，让我们看看如何使用一个`for`循环来**反转一个`Map`:**
 
-```
+```java
 public static <V, K> Map<V, K> invertMapUsingForLoop(Map<K, V> map) {
     Map<V, K> inversedMap = new HashMap<V, K>();
     for (Entry<K, V> entry : map.entrySet()) {
@@ -54,7 +54,7 @@ Java 8 从`Stream` API 提供了方便的方法，以一种更加函数化的风
 
 如果在源映射中没有任何重复的值，我们可以使用`Collectors.toMap()` **:**
 
-```
+```java
 public static <V, K> Map<V, K> invertMapUsingStreams(Map<K, V> map) {
     Map<V, K> inversedMap = map.entrySet()
         .stream()
@@ -67,7 +67,7 @@ public static <V, K> Map<V, K> invertMapUsingStreams(Map<K, V> map) {
 
 让我们考虑源映射包含重复的值。在这种情况下，**我们可以使用映射函数将自定义规则应用于输入元素**:
 
-```
+```java
 public static <K, V> Map<V, K> invertMapUsingMapper(Map<K, V> sourceMap) {
     return sourceMap.entrySet()
         .stream().collect(
@@ -84,13 +84,13 @@ public static <K, V> Map<V, K> invertMapUsingMapper(Map<K, V> sourceMap) {
 
 例如，假设我们有下面的`Key`–`Value`对:
 
-```
+```java
 {first=1, second=2, two=2}
 ```
 
 这里，值“2”对于不同的键重复两次。在这些情况下，我们可以使用`groupingBy() `方法在`Value`对象上实现级联的“group by”操作:
 
-```
+```java
 private static <V, K> Map<V, List<K>> invertMapUsingGroupingBy(Map<K, V> map) {
     Map<V, List<K>> inversedMap = map.entrySet()
         .stream()
@@ -101,7 +101,7 @@ private static <V, K> Map<V, List<K>> invertMapUsingGroupingBy(Map<K, V> map) {
 
 简单解释一下，`Collectors.mapping()`函数使用指定的收集器对与给定键相关联的值执行归约操作。`groupingBy()`收集器将重复值收集到一个`List`、**中，产生一个`MultiMap`、**。现在的输出将是:
 
-```
+```java
 {1=[first], 2=[two, second]}
 ```
 

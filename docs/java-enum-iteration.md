@@ -12,7 +12,7 @@
 
 让我们首先定义一个`Enum`，这样我们可以创建一些简单的代码示例:
 
-```
+```java
 public enum DaysOfWeekEnum {
     SUNDAY,
     MONDAY,
@@ -30,7 +30,7 @@ public enum DaysOfWeekEnum {
 
 首先，我们可以简单地使用老式的`for`循环:
 
-```
+```java
 for (DaysOfWeekEnum day : DaysOfWeekEnum.values()) { 
     System.out.println(day); 
 }
@@ -42,19 +42,19 @@ for (DaysOfWeekEnum day : DaysOfWeekEnum.values()) {
 
 要创建一个`Stream,`,我们有两种选择。首先是使用`Stream.of`:
 
-```
+```java
 Stream.of(DaysOfWeekEnum.values());
 ```
 
 第二种是使用`Arrays.stream`:
 
-```
+```java
 Arrays.stream(DaysOfWeekEnum.values());
 ```
 
 让我们扩展`DaysOfWeekEnum`类来创建一个使用`Stream`的例子:
 
-```
+```java
 public enum DaysOfWeekEnum {
 
     SUNDAY("off"), 
@@ -81,7 +81,7 @@ public enum DaysOfWeekEnum {
 
 现在我们将编写一个示例来打印非工作日:
 
-```
+```java
 public class EnumStreamExample {
 
     public static void main() {
@@ -94,7 +94,7 @@ public class EnumStreamExample {
 
 当我们运行时，我们得到的输出是:
 
-```
+```java
 SUNDAY
 SATURDAY
 ```
@@ -103,7 +103,7 @@ SATURDAY
 
 Java 8 中的`Iterable`接口增加了`forEach()`方法。所以所有的 java 集合类都有一个`forEach()`方法的实现。为了将这些与一个`Enum`一起使用，我们首先需要将 `Enum`转换成一个合适的集合。我们可以使用`Arrays.asList()`生成一个`ArrayList,`,然后我们可以使用`forEach()`方法循环使用它:
 
-```
+```java
 Arrays.asList(DaysOfWeekEnum.values())
   .forEach(day -> System.out.println(day)); 
 ```
@@ -112,7 +112,7 @@ Arrays.asList(DaysOfWeekEnum.values())
 
 `EnumSet`是一个专门的 set 实现，我们可以将其用于`Enum`类型:
 
-```
+```java
 EnumSet.allOf(DaysOfWeekEnum.class)
   .forEach(day -> System.out.println(day));
 ```
@@ -121,7 +121,7 @@ EnumSet.allOf(DaysOfWeekEnum.class)
 
 我们也可以把一个`Enum`的值加到一个`List`上。这让我们可以像操纵其他任何东西一样操纵`List`:
 
-```
+```java
 List<DaysOfWeekEnum> days = new ArrayList<>();
 days.add(DaysOfWeekEnum.FRIDAY);
 days.add(DaysOfWeekEnum.SATURDAY);
@@ -142,7 +142,7 @@ for (DaysOfWeekEnum day : days) {
 
 然而，由于`ArrayList`是由`Enum`值数组支持的，所以它是不可变的，所以我们不能从`List.`中添加或移除项目，下面代码中的移除会因`UnsupportedOperationException`而失败:
 
-```
+```java
 List<DaysOfWeekEnum> days = Arrays.asList(DaysOfWeekEnum.values());
 days.remove(0); 
 ```

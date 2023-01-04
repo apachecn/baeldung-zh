@@ -26,7 +26,7 @@ RESTX 附带了一个方便的 shell/command 应用程序，对于快速启动 J
 
 在 RESTX shell 中，让我们运行以下命令:
 
-```
+```java
 shell install
 ```
 
@@ -38,7 +38,7 @@ shell install
 
 我们首先在 shell 上执行以下命令:
 
-```
+```java
 app new
 ```
 
@@ -52,7 +52,7 @@ app new
 
 我们的下一步将是构建项目:
 
-```
+```java
 mvn clean install -DskipTests
 ```
 
@@ -70,7 +70,7 @@ mvn clean install -DskipTests
 
 路线在<`main_package>.rest.HelloResource`类中定义:
 
-```
+```java
 @Component
 @RestxResource
 public class HelloResource {
@@ -102,7 +102,7 @@ RESTX 还支持将方法参数映射到请求的许多合理的默认值。
 
 **它使用这些来创建应用程序的主模块，其中定义了管理员密码:**
 
-```
+```java
 @Module
 public class AppModule {
 
@@ -135,7 +135,7 @@ public class AppModule {
 
 `AppModule`还提供了一个`SignatureKey`用于签署发送给客户端的内容。例如，在为示例应用程序创建会话时，这将设置一个 cookie，用配置的密钥签名:
 
-```
+```java
 HTTP/1.1 200 OK
 ...
 Set-Cookie: RestxSessionSignature-restx-demo="ySfv8FejvizMMvruGlK3K2hwdb8="; RestxSession-restx-demo="..."
@@ -148,7 +148,7 @@ Set-Cookie: RestxSessionSignature-restx-demo="ySfv8FejvizMMvruGlK3K2hwdb8="; Res
 
 最后，`AppServer`类用于在嵌入式 Jetty 服务器中将应用程序作为标准 Java 应用程序运行:
 
-```
+```java
 public class AppServer {
     public static final String WEB_INF_LOCATION = "src/main/webapp/WEB-INF/web.xml";
     public static final String WEB_APP_LOCATION = "src/main/webapp";
@@ -174,7 +174,7 @@ public class AppServer {
 
 RESTX 的一个强大特性是它的“规格”概念。样本`spec`应该是这样的:
 
-```
+```java
 title: should admin say hello
 given:
   - time: 2013-08-28T01:18:00.822+02:00
@@ -189,7 +189,7 @@ wts:
 
 `src/test/resources`中的`HelloResourceSpecTest`类将触发上述规范中编写的测试:
 
-```
+```java
 @RunWith(RestxSpecTestsRunner.class)
 @FindSpecsIn("specs/hello")
 public class HelloResourceSpecTest {}
@@ -210,13 +210,13 @@ public class HelloResourceSpecTest {}
 
 我们也可以通过 HTTP 手动测试。我们首先需要登录，为此，我们需要在 RESTX 控制台中散列管理员密码:
 
-```
+```java
 hash md5 <clear-text-password>
 ```
 
 然后我们可以将它传递给`/sessions`端点:
 
-```
+```java
 curl -b u1 -c u1 -X POST -H "Content-Type: application/json" 
   -d '{"principal":{"name":"admin","passwordHash":"1d528266b85cf052803a57288"}}'
   http://localhost:8080/api/sessions
@@ -226,13 +226,13 @@ curl -b u1 -c u1 -X POST -H "Content-Type: application/json"
 
 现在，如果我们将会话作为我们的`/message`请求的一部分:
 
-```
+```java
 curl -b u1 "http://localhost:8080/api/message?who=restx"
 ```
 
 然后我们会得到这样的结果:
 
-```
+```java
 {"message" : "hello admin, it's 09:56:51"}
 ```
 
@@ -283,7 +283,7 @@ RESTX 允许用户选择在应用程序上收集和共享匿名统计数据，�
 
 默认情况下，RESTX 端点是安全的。这意味着如果对于任何端点:
 
-```
+```java
 @GET("/greetings/{who}")
 public Message sayHello(String who) {
     return new Message(who);
@@ -294,7 +294,7 @@ public Message sayHello(String who) {
 
 为了使端点成为公共的，我们需要在方法或类级别使用`@PermitAll`注释:
 
-```
+```java
 @PermitAll 
 @GET("/greetings/{who}")
 public Message sayHello(String who) {
@@ -306,7 +306,7 @@ public Message sayHello(String who) {
 
 此外，该框架还允许使用`@RolesAllowed`注释来指定用户角色:
 
-```
+```java
 @RolesAllowed("admin")
 @GET("/greetings/{who}")
 public Message sayHello(String who) {
@@ -320,7 +320,7 @@ public Message sayHello(String who) {
 
 因此，带有加密密码的用户 id 存储在`/data/credentials.json`文件下:
 
-```
+```java
 {
     "user1": "$2a$10$iZluUbCseDOvKnoe",
     "user2": "$2a$10$oym3Swr7pScdiCXu"
@@ -329,7 +329,7 @@ public Message sayHello(String who) {
 
 并且，用户角色在`/data/users.json`文件中定义:
 
-```
+```java
 [
     {"name":"user1", "roles": ["hello"]},
     {"name":"user2", "roles": []}
@@ -338,7 +338,7 @@ public Message sayHello(String who) {
 
 在示例应用程序中，文件通过`FileBasedUserRepository`类加载到`AppModule`中:
 
-```
+```java
 new FileBasedUserRepository<>(StdUser.class, mapper, 
   new StdUser("admin", ImmutableSet.<String> of("*")), 
   Paths.get("data/users.json"), Paths.get("data/credentials.json"), true)

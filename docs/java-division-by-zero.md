@@ -14,13 +14,13 @@
 
 首先，对于整数，事情非常简单。**整数除以零将得到`ArithmeticException` :**
 
-```
+```java
 assertThrows(ArithmeticException.class, () -> {
     int result = 12 / 0;
 });
 ```
 
-```
+```java
 assertThrows(ArithmeticException.class, () -> {
     int result = 0 / 0;
 });
@@ -30,7 +30,7 @@ assertThrows(ArithmeticException.class, () -> {
 
 然而，当用浮点数`,` 处理**时，不会抛出异常**:
 
-```
+```java
 assertDoesNotThrow(() -> {
     float result = 12f / 0;
 });
@@ -42,7 +42,7 @@ assertDoesNotThrow(() -> {
 
 让我们从用零除浮点零值开始**:**
 
-```
+```java
 assertEquals(Float.NaN, 0f / 0);
 assertEquals(Double.NaN, 0d / 0);
 ```
@@ -53,7 +53,7 @@ assertEquals(Double.NaN, 0d / 0);
 
 接下来，让我们**将一些非零值除以零**:
 
-```
+```java
 assertEquals(Float.POSITIVE_INFINITY, 12f / 0);
 assertEquals(Double.POSITIVE_INFINITY, 12d / 0);
 assertEquals(Float.NEGATIVE_INFINITY, -12f / 0);
@@ -64,7 +64,7 @@ assertEquals(Double.NEGATIVE_INFINITY, -12d / 0);
 
 此外，我们还可以使用负零的概念来得到`NEGATIVE_INFINITY`:
 
-```
+```java
 assertEquals(Float.NEGATIVE_INFINITY, 12f / -0f);
 assertEquals(Double.NEGATIVE_INFINITY, 12f / -0f);
 ```
@@ -81,7 +81,7 @@ assertEquals(Double.NEGATIVE_INFINITY, 12f / -0f);
 
 `INFINITY`具有全部设置为 0 的尾数位，而`NaN`具有非零尾数:
 
-```
+```java
 assertEquals(Float.POSITIVE_INFINITY, Float.intBitsToFloat(0b01111111100000000000000000000000));
 assertEquals(Float.NEGATIVE_INFINITY, Float.intBitsToFloat(0b11111111100000000000000000000000));
 assertEquals(Float.NaN, Float.intBitsToFloat(0b11111111100000010000000000000000));

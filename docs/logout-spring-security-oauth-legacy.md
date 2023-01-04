@@ -22,7 +22,7 @@
 
 相反，我们需要做的是定义这是一个`@FrameworkEndpoint –` ，以便它被`FrameworkEndpointHandlerMapping`而不是标准的`RequestMappingHandlerMapping`拾取和解析。这样我们就不会遇到任何部分匹配，也不会有任何冲突:
 
-```
+```java
 @FrameworkEndpoint
 public class RevokeTokenEndpoint {
 
@@ -51,7 +51,7 @@ public class RevokeTokenEndpoint {
 
 让我们增强拦截`/oauth/token/revoke` URL 的`CustomPostZuulFilter`实现，以便它在遇到这个 URL 时删除`refreshToken` cookie:
 
-```
+```java
 @Component
 public class CustomPostZuulFilter extends ZuulFilter {
     //...
@@ -76,7 +76,7 @@ public class CustomPostZuulFilter extends ZuulFilter {
 
 让我们给我们的`AngularJS`控制器添加一个方法，该方法清除`access_token` cookie 并调用`/oauth/token/revoke`删除映射:
 
-```
+```java
 $scope.logout = function() {
     logout($scope.loginData);
 }
@@ -98,7 +98,7 @@ function logout(params) {
 
 点击`Logout`链接时将调用该函数:
 
-```
+```java
 <a class="btn btn-info" href="#" ng-click="logout()">Logout</a>
 ```
 

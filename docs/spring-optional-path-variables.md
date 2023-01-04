@@ -14,7 +14,7 @@
 
 例如，考虑下面的`getArticle`方法，它试图(不成功地)使`id`路径变量可选:
 
-```
+```java
 @RequestMapping(value = {"/article", "/article/{id}"})
 public Article getArticle(@PathVariable(name = "id") Integer articleId) {
     if (articleId != null) {
@@ -31,7 +31,7 @@ public Article getArticle(@PathVariable(name = "id") Integer articleId) {
 
 另一方面，如果我们向`/article`发送一个请求，Spring 由于以下异常返回状态代码 500:
 
-```
+```java
 org.springframework.web.bind.MissingPathVariableException:
   Missing URI template variable 'id' for method parameter of type Integer
 ```
@@ -48,7 +48,7 @@ org.springframework.web.bind.MissingPathVariableException:
 
 例如，以下版本的`getArticle`使用了`required`属性:
 
-```
+```java
 @RequestMapping(value = {"/article", "/article/{id}"})
 public Article getArticle(@PathVariable(required = false) Integer articleId) {
    if (articleId != null) {
@@ -67,7 +67,7 @@ public Article getArticle(@PathVariable(required = false) Integer articleId) {
 
 下面的实现展示了 Spring 4.1 如何与 [JDK 8 的`Optional`类](/web/20221207175422/https://www.baeldung.com/java-optional)一起，提供了另一种使`articleId`可选的方法:
 
-```
+```java
 @RequestMapping(value = {"/article", "/article/{id}"}")
 public Article getArticle(@PathVariable Optional<Integer> optionalArticleId) {
     if (optionalArticleId.isPresent()) {
@@ -85,7 +85,7 @@ public Article getArticle(@PathVariable Optional<Integer> optionalArticleId) {
 
 另一种定义可选路径变量的方法是用@ `PathVariable`参数的`M` `ap`:
 
-```
+```java
 @RequestMapping(value = {"/article", "/article/{id}"})
 public Article getArticle(@PathVariable Map<String, String> pathVarsMap) {
     String articleId = pathVarsMap.get("id");
@@ -108,7 +108,7 @@ public Article getArticle(@PathVariable Map<String, String> pathVarsMap) {
 
 第一种方法将处理对`/article/{id}`的请求:
 
-```
+```java
 @RequestMapping(value = "/article/{id}")
 public Article getArticle(@PathVariable(name = "id") Integer articleId) {
     //...        
@@ -117,7 +117,7 @@ public Article getArticle(@PathVariable(name = "id") Integer articleId) {
 
 而第二种方法将处理对`/article`的请求:
 
-```
+```java
 @RequestMapping(value = "/article")
 public Article getDefaultArticle() {
     //...

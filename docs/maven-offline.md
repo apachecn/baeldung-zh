@@ -14,7 +14,7 @@
 
 **为了准备离线模式，我们可以使用`go-offline `目标从 [`maven-dependency-plugin`](https://web.archive.org/web/20220813020625/https://maven.apache.org/plugins/maven-dependency-plugin/go-offline-mojo.html)** :
 
-```
+```java
 mvn dependency:go-offline
 ```
 
@@ -24,7 +24,7 @@ mvn dependency:go-offline
 
 **要在离线模式下执行 [Maven 目标和阶段](/web/20220813020625/https://www.baeldung.com/maven-goals-phases)，我们只需使用`-o `或`–offline `选项**。例如，为了在离线模式下运行集成测试:
 
-```
+```java
 mvn -o verify
 ```
 
@@ -32,7 +32,7 @@ mvn -o verify
 
 还可以通过设置`~/.m2/settings.xml`文件中的`offline `属性来全局配置离线模式:
 
-```
+```java
 <settings 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0

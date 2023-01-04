@@ -20,7 +20,7 @@
 
 我们将从它们的接口开始:
 
-```
+```java
 @Remote
 public interface HelloStatefulWorld {
     int howManyTimes();
@@ -28,7 +28,7 @@ public interface HelloStatefulWorld {
 } 
 ```
 
-```
+```java
 @Remote
 public interface HelloStatelessWorld {
     String getHelloWorld();
@@ -39,7 +39,7 @@ public interface HelloStatelessWorld {
 
 现在，让我们实现我们的远程 EJB 接口:
 
-```
+```java
 @Stateful(name = "HelloStatefulWorld")
 public class HelloStatefulWorldBean implements HelloStatefulWorld {
 
@@ -56,7 +56,7 @@ public class HelloStatefulWorldBean implements HelloStatefulWorld {
 } 
 ```
 
-```
+```java
 @Stateless(name = "HelloStatelessWorld")
 public class HelloStatelessWorldBean implements HelloStatelessWorld {
 
@@ -72,7 +72,7 @@ public class HelloStatelessWorldBean implements HelloStatelessWorld {
 
 我们可以在任何 JEE 容器中运行我们的代码，但是出于实用目的，我们将使用 Wildfly 和`cargo` Maven 插件来为我们完成繁重的工作:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.cargo</groupId>
     <artifactId>cargo-maven2-plugin</artifactId>
@@ -102,13 +102,13 @@ public class HelloStatelessWorldBean implements HelloStatelessWorld {
 
 配置好这些之后，我们可以直接从 Maven 命令行运行容器:
 
-```
+```java
 mvn clean package cargo:run -Pwildfly-standalone
 ```
 
 我们现在有了一个 Wildfly 托管我们的 beans 的工作实例。我们可以通过日志行来确认这一点:
 
-```
+```java
 java:global/ejb-remote-for-spring/HelloStatefulWorld!com.baeldung.ejb.tutorial.HelloStatefulWorld
 java:app/ejb-remote-for-spring/HelloStatefulWorld!com.baeldung.ejb.tutorial.HelloStatefulWorld
 java:module/HelloStatefulWorld!com.baeldung.ejb.tutorial.HelloStatefulWorld
@@ -118,7 +118,7 @@ java:app/ejb-remote-for-spring/HelloStatefulWorld
 java:module/HelloStatefulWorld 
 ```
 
-```
+```java
 java:global/ejb-remote-for-spring/HelloStatelessWorld!com.baeldung.ejb.tutorial.HelloStatelessWorld
 java:app/ejb-remote-for-spring/HelloStatelessWorld!com.baeldung.ejb.tutorial.HelloStatelessWorld
 java:module/HelloStatelessWorld!com.baeldung.ejb.tutorial.HelloStatelessWorld
@@ -136,7 +136,7 @@ java:module/HelloStatelessWorld
 
 为了能够连接到远程 EJB，我们需要`Wildfly EJB Client`库和我们的远程接口:
 
-```
+```java
 <dependency>
     <groupId>org.wildfly</groupId>
     <artifactId>wildfly-ejb-client-bom</artifactId>
@@ -157,7 +157,7 @@ java:module/HelloStatelessWorld
 
 有了类路径中的这些依赖项，我们可以**实例化一个`javax.naming.Context`来查找我们的远程 bean**。我们将把它创建为一个 Spring Bean，这样我们可以在需要时自动连接它:
 
-```
+```java
 @Bean   
 public Context context() throws NamingException {
     Properties jndiProps = new Properties();
@@ -176,7 +176,7 @@ public Context context() throws NamingException {
 
 在我们将远程 beans 连接到 Spring 容器之前，我们需要知道如何到达它们。为此，我们将使用他们的 JNDI 绑定。让我们看看这些绑定的标准模式:
 
-```
+```java
 ${appName}/${moduleName}/${distinctName}/${beanName}!${viewClassName}
 ```
 
@@ -190,7 +190,7 @@ ${appName}/${moduleName}/${distinctName}/${beanName}!${viewClassName}
 
 我们将看到现在正在使用的信息:
 
-```
+```java
 @Bean
 public HelloStatelessWorld helloStatelessWorld(Context context) 
   throws NamingException {
@@ -200,7 +200,7 @@ public HelloStatelessWorld helloStatelessWorld(Context context)
 } 
 ```
 
-```
+```java
 @Bean
 public HelloStatefulWorld helloStatefulWorld(Context context) 
   throws NamingException {
@@ -210,7 +210,7 @@ public HelloStatefulWorld helloStatefulWorld(Context context)
 } 
 ```
 
-```
+```java
 private String getFullName(Class classType) {
     String moduleName = "ejb-remote-for-spring/";
     String beanName = classType.getSimpleName();
@@ -227,7 +227,7 @@ private String getFullName(Class classType) {
 
 一切就绪后，我们可以**将 beans 注入控制器**，这样我们就可以测试连接是否正确:
 
-```
+```java
 @RestController
 public class HomeEndpoint {
 
@@ -248,20 +248,20 @@ public class HomeEndpoint {
 
 让我们启动 Spring 服务器并检查一些日志。我们将看到下面一行，表示一切正常:
 
-```
+```java
 EJBCLIENT000013: Successful version handshake completed
 ```
 
 现在，让我们测试我们的无状态 bean。我们可以尝试一些`curl`命令来验证它们是否按预期运行:
 
-```
+```java
 curl http://localhost:8081/stateless
 Hello Stateless World!
 ```
 
 让我们检查一下有状态的:
 
-```
+```java
 curl http://localhost:8081/stateful
 Hello Stateful World called 1 times
 

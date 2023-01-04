@@ -16,14 +16,14 @@
 
 但是，我们可以修改数组中的单个项目。请注意，我们对`List`的单项所做的所有**修改都将反映在我们的原始数组**中:
 
-```
+```java
 String[] stringArray = new String[] { "A", "B", "C", "D" };
 List stringList = Arrays.asList(stringArray); 
 ```
 
 现在，让我们看看修改`stringList`的第一个元素会发生什么:
 
-```
+```java
 stringList.set(0, "E");
 
 assertThat(stringList).containsExactly("E", "B", "C", "D");
@@ -34,11 +34,11 @@ assertThat(stringArray).containsExactly("E", "B", "C", "D");
 
 现在让我们尝试向`stringList`插入一个新元素:
 
-```
+```java
 stringList.add("F");
 ```
 
-```
+```java
 java.lang.UnsupportedOperationException
 	at java.base/java.util.AbstractList.add(AbstractList.java:153)
 	at java.base/java.util.AbstractList.add(AbstractList.java:111)
@@ -52,14 +52,14 @@ java.lang.UnsupportedOperationException
 
 但是，与我们之前的例子不同，这是数组的独立副本，这意味着**修改新列表不会影响原始数组**。此外，我们拥有常规`ArrayList,` 的所有功能，比如添加和删除元素:
 
-```
+```java
 String[] stringArray = new String[] { "A", "B", "C", "D" }; 
 List stringList = new ArrayList<>(Arrays.asList(stringArray)); 
 ```
 
 现在让我们修改`stringList`的第一个元素:
 
-```
+```java
 stringList.set(0, "E");
 
 assertThat(stringList).containsExactly("E", "B", "C", "D");
@@ -67,7 +67,7 @@ assertThat(stringList).containsExactly("E", "B", "C", "D");
 
 现在，让我们看看原始阵列发生了什么:
 
-```
+```java
 assertThat(stringArray).containsExactly("A", "B", "C", "D");
 ```
 

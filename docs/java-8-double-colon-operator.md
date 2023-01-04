@@ -26,19 +26,19 @@ A short intro into the new features of Java 8; the focus is on default and stati
 
 例如，要**创建一个比较器**，以下语法就足够了:
 
-```
+```java
 Comparator c = (Computer c1, Computer c2) -> c1.getAge().compareTo(c2.getAge()); 
 ```
 
 然后，用类型推断:
 
-```
+```java
 Comparator c = (c1, c2) -> c1.getAge().compareTo(c2.getAge());
 ```
 
 但是我们能让上面的代码更有表现力和可读性吗？让我们来看看:
 
-```
+```java
 Comparator c = Comparator.comparing(Computer::getAge); 
 ```
 
@@ -50,7 +50,7 @@ Comparator c = Comparator.comparing(Computer::getAge);
 
 例如:
 
-```
+```java
 Computer::getAge;
 ```
 
@@ -58,7 +58,7 @@ Computer::getAge;
 
 然后，我们可以使用该函数进行操作:
 
-```
+```java
 Function<Computer, Integer> getAge = Computer::getAge;
 Integer computerAge = getAge.apply(c1); 
 ```
@@ -73,7 +73,7 @@ Integer computerAge = getAge.apply(c1);
 
 首先，我们将利用**一个静态实用方法**:
 
-```
+```java
 List inventory = Arrays.asList(
   new Computer( 2015, "white", 35), new Computer(2009, "black", 65));
 inventory.forEach(ComputerUtils::repair); 
@@ -85,7 +85,7 @@ inventory.forEach(ComputerUtils::repair);
 
 我们将使用变量`System`。`out`–支持`print`方法的`PrintStream` 类型的对象:
 
-```
+```java
 Computer c1 = new Computer(2015, "white");
 Computer c2 = new Computer(2009, "black");
 Computer c3 = new Computer(2014, "black");
@@ -94,7 +94,7 @@ Arrays.asList(c1, c2, c3).forEach(System.out::print);
 
 ### 4.3。特定类型的任意对象的实例方法
 
-```
+```java
 Computer c1 = new Computer(2015, "white", 100);
 Computer c2 = new MacbookPro(2009, "black", 100);
 List inventory = Arrays.asList(c1, c2);
@@ -111,7 +111,7 @@ inventory.forEach(Computer::turnOnPc);
 
 假设在`Computer`超类中有以下方法:
 
-```
+```java
 public Double calculateValue(Double initialValue) {
     return initialValue/1.50;
 } 
@@ -119,7 +119,7 @@ public Double calculateValue(Double initialValue) {
 
 这个在`MacbookPro`子类中:
 
-```
+```java
 @Override
 public Double calculateValue(Double initialValue){
     Function<Double, Double> function = super::calculateValue;
@@ -130,7 +130,7 @@ public Double calculateValue(Double initialValue){
 
 对`MacbookPro`实例上的`calculateValue`方法的调用:
 
-```
+```java
 macbookPro.calculateValue(999.99); 
 ```
 
@@ -142,7 +142,7 @@ macbookPro.calculateValue(999.99);
 
 引用构造函数来实例化对象可能非常简单:
 
-```
+```java
 @FunctionalInterface
 public interface InterfaceComputer {
     Computer create();
@@ -154,14 +154,14 @@ Computer computer = c.create();
 
 如果一个构造函数中有两个参数呢？
 
-```
+```java
 BiFunction<Integer, String, Computer> c4Function = Computer::new; 
 Computer c4 = c4Function.apply(2013, "white"); 
 ```
 
 如果参数为三个或更多，您必须定义一个新的功能接口:
 
-```
+```java
 @FunctionalInterface 
 interface TriFunction<A, B, C, R> { 
     R apply(A a, B b, C c); 
@@ -174,7 +174,7 @@ interface TriFunction<A, B, C, R> {
 
 然后，初始化您的对象:
 
-```
+```java
 TriFunction <Integer, String, Integer, Computer> c6Function = Computer::new;
 Computer c3 = c6Function.apply(2008, "black", 90); 
 ```
@@ -183,7 +183,7 @@ Computer c3 = c6Function.apply(2008, "black", 90);
 
 最后，让我们看看如何创建一个包含五个元素的`Computer`对象的数组:
 
-```
+```java
 Function <Integer, Computer[]> computerCreator = Computer[]::new;
 Computer[] computerArray = computerCreator.apply(5); 
 ```

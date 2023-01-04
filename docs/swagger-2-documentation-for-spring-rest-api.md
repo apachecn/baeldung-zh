@@ -41,7 +41,7 @@ Learn how to generate documents using AsciiDoctor.[Read more](/web/2022081513103
 
 为了将它添加到我们的 Maven 项目中，我们需要在`pom.xml`文件中添加一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.springfox</groupId>
     <artifactId>springfox-swagger2</artifactId>
@@ -53,7 +53,7 @@ Learn how to generate documents using AsciiDoctor.[Read more](/web/2022081513103
 
 对于基于 Spring Boot 的项目，**添加一个`springfox-boot-starter`依赖项**就足够了:
 
-```
+```java
 <dependency>
     <groupId>io.springfox</groupId>
     <artifactId>springfox-boot-starter</artifactId>
@@ -63,7 +63,7 @@ Learn how to generate documents using AsciiDoctor.[Read more](/web/2022081513103
 
 我们可以添加我们需要的任何其他启动器，其中一个版本由 Spring Boot 母公司管理:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -77,7 +77,7 @@ Learn how to generate documents using AsciiDoctor.[Read more](/web/2022081513103
 
 Swagger 的配置主要围绕`**Docket**` bean 展开:
 
-```
+```java
 @Configuration
 public class SpringFoxConfig {                                    
     @Bean
@@ -99,7 +99,7 @@ public class SpringFoxConfig {
 
 在普通的 Spring 项目中，我们需要显式地启用 Swagger 2。为此，**我们必须在我们的配置类**上使用`@EnableSwagger2WebMvc`:
 
-```
+```java
 @Configuration
 @EnableSwagger2WebMvc
 public class SpringFoxConfig {                                    
@@ -110,7 +110,7 @@ public class SpringFoxConfig {
 
 Swagger UI 添加了一组资源，我们必须将它们配置为扩展`WebMvcConfigurerAdapter`并使用`@EnableWebMvc:`注释的类的一部分
 
-```
+```java
 @Override
 public void addResourceHandlers(ResourceHandlerRegistry registry) {
     registry.addResourceHandler("swagger-ui.html")
@@ -137,7 +137,7 @@ Swagger UI 是一个内置的解决方案，它使得用户与 Swagger 生成的
 
 要使用 Swagger UI，我们需要添加一个额外的 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.springfox</groupId>
     <artifactId>springfox-swagger-ui</artifactId>
@@ -165,7 +165,7 @@ Swagger UI 是一个内置的解决方案，它使得用户与 Swagger 生成的
 
 Swagger 与我们的代码库同步的能力至关重要。为了演示这一点，我们可以向我们的应用程序添加一个新的控制器:
 
-```
+```java
 @RestController
 public class CustomController {
 
@@ -186,7 +186,7 @@ Springfox 通过其 [`springfox-data-rest`](https://web.archive.org/web/20220815
 
 现在让我们创建一个名为`User`的实体:
 
-```
+```java
 @Entity
 public class User {
     @Id
@@ -201,7 +201,7 @@ public class User {
 
 然后我们将创建`UserRepository`来添加对`User`实体的 CRUD 操作:
 
-```
+```java
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
 }
@@ -209,7 +209,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
 最后，我们将把 [`SpringDataRestConfiguration`](https://web.archive.org/web/20220815131030/https://springfox.github.io/springfox/javadoc/current/springfox/documentation/spring/data/rest/configuration/SpringDataRestConfiguration.html) 类导入到`SpringFoxConfig` 类中:
 
-```
+```java
 @EnableSwagger2WebMvc
 @Import(SpringDataRestConfiguration.class)
 public class SpringFoxConfig {
@@ -231,7 +231,7 @@ Springfox 还通过其 [`springfox-bean-validators`](https://web.archive.org/web
 
 首先，我们将把 Maven 依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>io.springfox</groupId>
     <artifactId>springfox-bean-validators</artifactId>
@@ -243,7 +243,7 @@ Springfox 还通过其 [`springfox-bean-validators`](https://web.archive.org/web
 
 接下来，让我们给`User`实体添加几个验证注释，如 [`@NotNull`](https://web.archive.org/web/20220815131030/https://docs.oracle.com/javaee/7/api/javax/validation/constraints/NotNull.html) 和 [`@Min`](https://web.archive.org/web/20220815131030/https://docs.oracle.com/javaee/7/api/javax/validation/constraints/Min.html) :
 
-```
+```java
 @Entity
 public class User {
     //...
@@ -259,7 +259,7 @@ public class User {
 
 最后，我们将把 [`BeanValidatorPluginsConfiguration`](https://web.archive.org/web/20220815131030/https://springfox.github.io/springfox/javadoc/current/springfox/bean/validators/configuration/BeanValidatorPluginsConfiguration.html) 类导入到`SpringFoxConfig` 类中:
 
-```
+```java
 @EnableSwagger2
 @Import(BeanValidatorPluginsConfiguration.class)
 public class SpringFoxConfig {
@@ -283,7 +283,7 @@ Springfox 通过其 [spi](https://web.archive.org/web/20220815131030/https://git
 
 首先，让我们创建`EmailAnnotationPlugin`类并覆盖`supports`方法以允许任何[文档类型](https://web.archive.org/web/20220815131030/https://springfox.github.io/springfox/javadoc/current/springfox/documentation/spi/DocumentationType.html)，比如 Swagger 1.2 和 Swagger 2:
 
-```
+```java
 @Component
 @Order(Validators.BEAN_VALIDATOR_PLUGIN_ORDER)
 public class EmailAnnotationPlugin implements ModelPropertyBuilderPlugin {
@@ -296,7 +296,7 @@ public class EmailAnnotationPlugin implements ModelPropertyBuilderPlugin {
 
 然后我们将覆盖`ModelPropertyBuilderPlugin` 的`apply`方法来设置构建器属性的值:
 
-```
+```java
 @Override
 public void apply(ModelPropertyContext context) {
     Optional<Email> email = annotationFromBean(context, Email.class);
@@ -312,7 +312,7 @@ public void apply(ModelPropertyContext context) {
 
 接下来，我们将把`@Email`注释添加到`User`实体中:
 
-```
+```java
 @Entity
 public class User {
     //...
@@ -324,7 +324,7 @@ public class User {
 
 最后，我们将通过注册为 bean 来启用`SpringFoxConfig` 类中的`EmailAnnotationPlugin`:
 
-```
+```java
 @Import({BeanValidatorPluginsConfiguration.class})
 public class SpringFoxConfig {
     //...
@@ -358,7 +358,7 @@ public class SpringFoxConfig {
 
 在下面的例子中，我们将使用`ant()`谓词指示 Swagger 只包含特定包中的控制器，以及特定的路径:
 
-```
+```java
 @Bean
 public Docket api() {                
     return new Docket(DocumentationType.SWAGGER_2)          
@@ -375,7 +375,7 @@ Swagger 在它的响应中也提供了一些默认值，我们可以自定义，
 
 要更改这些值，我们可以使用 **`apiInfo(ApiInfo apiInfo)`** 方法——包含关于 API 的定制信息的 **`ApiInfo`** 类:
 
-```
+```java
 @Bean
 public Docket api() {                
     return new Docket(DocumentationType.SWAGGER_2)          
@@ -405,7 +405,7 @@ Swagger 允许**通过`Docket`的 **`globalResponses()`** 方法全局覆盖 HTT
 
 为了实现这一点，必须将一些代码添加到`Docket`的初始化块中(为了清楚起见，原始代码被排除在外):
 
-```
+```java
 .useDefaultResponseMessages(false)
 .globalResponses(HttpMethod.GET, newArrayList(
     new ResponseBuilder().code("500")
@@ -425,7 +425,7 @@ Swagger UI 提供了许多非常有用的特性，到目前为止我们已经很
 
 我们将配置 Swagger 使用`SecurityScheme`和`SecurityContext`支持来访问我们的安全 API:
 
-```
+```java
 @Bean
 public Docket api() {
     return new Docket(DocumentationType.SWAGGER_2).select()
@@ -441,7 +441,7 @@ public Docket api() {
 
 我们将在我们的 Swagger 配置中定义一个`SecurityConfiguration` bean，并设置一些默认值:
 
-```
+```java
 @Bean
 public SecurityConfiguration security() {
     return SecurityConfigurationBuilder.builder()
@@ -459,7 +459,7 @@ public SecurityConfiguration security() {
 
 在我们的例子中，我们将定义一个 OAuth 方案，用于保护我们的[资源服务器](/web/20220815131030/https://www.baeldung.com/rest-api-spring-oauth2-angular):
 
-```
+```java
 private SecurityScheme securityScheme() {
     GrantType grantType = new AuthorizationCodeGrantBuilder()
         .tokenEndpoint(new TokenEndpoint(AUTH_SERVER + "/token", "oauthtoken"))
@@ -479,7 +479,7 @@ private SecurityScheme securityScheme() {
 
 这里是我们需要定义的范围:
 
-```
+```java
 private AuthorizationScope[] scopes() {
     AuthorizationScope[] scopes = { 
       new AuthorizationScope("read", "for read operations"), 
@@ -495,7 +495,7 @@ private AuthorizationScope[] scopes() {
 
 最后，我们需要为我们的示例 API 定义一个`SecurityContext`:
 
-```
+```java
 private SecurityContext securityContext() {
     return SecurityContext.builder()
       .securityReferences(
@@ -513,7 +513,7 @@ private SecurityContext securityContext() {
 
 我们可以在本地访问 Swagger UI:
 
-```
+```java
 http://localhost:8082/spring-security-oauth-resource/swagger-ui.html
 ```
 

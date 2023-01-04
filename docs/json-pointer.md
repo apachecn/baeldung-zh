@@ -12,7 +12,7 @@
 
 首先，我们需要向我们的`pom.xml`添加一些依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.glassfish</groupId>
     <artifactId>javax.json</artifactId>
@@ -36,7 +36,7 @@ JSON 指针( [RFC 6901](https://web.archive.org/web/20221126231301/https://tools
 
 假设我们有一个名为`books.json`的 JSON 文件，其内容为:
 
-```
+```java
 {
     "library": "My Personal Library",
     "books": [
@@ -50,7 +50,7 @@ JSON 指针( [RFC 6901](https://web.archive.org/web/20221126231301/https://tools
 
 我们可以这样做:
 
-```
+```java
 JsonReader reader = Json.createReader(new FileReader("books.json"));
 JsonStructure jsonStructure = reader.read();
 reader.close();
@@ -62,7 +62,7 @@ reader.close();
 
 为了获取单个值，我们创建了一个`JsonPointer`，通知我们想要从哪个标签获取值:
 
-```
+```java
 JsonPointer jsonPointer = Json.createPointer("/library");
 JsonString jsonString = (JsonString) jsonPointer.getValue(jsonStructure);
 System.out.println(jsonString.getString());
@@ -72,13 +72,13 @@ System.out.println(jsonString.getString());
 
 这个片段的结果是:
 
-```
+```java
 My Personal Library
 ```
 
 要从列表中获取一个值，我们需要指定它的索引(其中第一个索引为 0):
 
-```
+```java
 JsonPointer jsonPointer = Json.createPointer("/books/1");
 JsonObject jsonObject = (JsonObject) jsonPointer.getValue(jsonStructure);
 System.out.println(jsonObject.toString());
@@ -86,7 +86,7 @@ System.out.println(jsonObject.toString());
 
 这将输出:
 
-```
+```java
 "title":"Title 2", "author":"John Doe"
 ```
 
@@ -94,7 +94,7 @@ System.out.println(jsonObject.toString());
 
 通过方法`containsValue`，我们可以检查用于创建指针的值是否存在于 JSON 文件中:
 
-```
+```java
 JsonPointer jsonPointer = Json.createPointer("/library");
 boolean found = jsonPointer.containsValue(jsonStructure);
 System.out.println(found); 
@@ -102,7 +102,7 @@ System.out.println(found);
 
 这个片段的结果是:
 
-```
+```java
 true
 ```
 
@@ -110,7 +110,7 @@ true
 
 如果我们需要向 JSON 添加一个新值，那么`createValue`就是处理它的那个。**方法`createValue`被重载接受`String`、`int`、`long`、`double`、`BigDecimal`和`BigInteger:`、**
 
-```
+```java
 JsonPointer jsonPointer = Json.createPointer("/total");
 JsonNumber jsonNumber = Json.createValue(2);
 jsonStructure = jsonPointer.add(jsonStructure, jsonNumber);
@@ -119,7 +119,7 @@ System.out.println(jsonStructure);
 
 同样，我们的输出是:
 
-```
+```java
 {
     "library": "My Personal Library",
     "total": 2,
@@ -134,7 +134,7 @@ System.out.println(jsonStructure);
 
 **要更新一个值，我们需要先创建新值**。在创建值之后，我们从使用 key 参数创建的指针中使用`replace`方法:
 
-```
+```java
 JsonPointer jsonPointer = Json.createPointer("/total");
 JsonNumber jsonNumberNewValue = Json.createValue(5);
 jsonStructure = jsonPointer.replace(jsonStructure, jsonNumberNewValue);
@@ -143,7 +143,7 @@ System.out.println(jsonStructure);
 
 输出:
 
-```
+```java
 {
     "library": "My Personal Library",
     "total": 5,
@@ -158,7 +158,7 @@ System.out.println(jsonStructure);
 
 要删除一个键，我们首先创建一个指向该键的指针。然后我们使用 remove 方法:
 
-```
+```java
 JsonPointer jsonPointer = Json.createPointer("/library");
 jsonPointer.getValue(jsonStructure);
 jsonStructure = jsonPointer.remove(jsonStructure);
@@ -167,7 +167,7 @@ System.out.println(jsonStructure);
 
 导致:
 
-```
+```java
 {
     "total": 5,
     "books": [
@@ -181,7 +181,7 @@ System.out.println(jsonStructure);
 
 如果指针是用空的`String`创建的，则检索全部内容:
 
-```
+```java
 JsonPointer jsonPointer = Json.createPointer("");
 JsonObject jsonObject = (JsonObject) jsonPointer.getValue(jsonStructure);
 System.out.println(jsonObject.toString());

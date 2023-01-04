@@ -18,7 +18,7 @@
 
 为了在 Maven 项目中使用空手道，我们需要向`pom.xml`添加 [`karate-apache`](https://web.archive.org/web/20220524064828/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.intuit.karate%22%20AND%20a%3A%22karate-apache%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.intuit.karate</groupId>
     <artifactId>karate-apache</artifactId>
@@ -28,7 +28,7 @@
 
 我们还需要 [`karate-junit4`](https://web.archive.org/web/20220524064828/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.intuit.karate%22%20AND%20a%3A%22karate-junit4%22) 依赖来促进 JUnit 测试:
 
-```
+```java
 <dependency>
     <groupId>com.intuit.karate</groupId>
     <artifactId>karate-junit4</artifactId>
@@ -44,7 +44,7 @@
 
 让我们编写一个测试 GET 端点并检查它是否返回一个`200` (OK) HTTP 状态代码的场景:
 
-```
+```java
 Scenario: Testing valid GET endpoint
 Given url 'http://localhost:8097/user/get'
 When method GET
@@ -57,7 +57,7 @@ Then status 200
 
 让我们编写另一个测试 REST 端点返回特定响应的场景:
 
-```
+```java
 Scenario: Testing the exact response of a GET endpoint
 Given url 'http://localhost:8097/user/get'
 When method GET
@@ -69,13 +69,13 @@ And match $ == {id:"1234",name:"John Smith"}
 
 我们还可以专门检查`id`字段的值:
 
-```
+```java
 And match $.id == "1234"
 ```
 
 **`match`操作也可用于检查响应是否包含某些字段。**当仅需要检查某些字段或并非所有响应字段都已知时，这很有帮助:
 
-```
+```java
 Scenario: Testing that GET response contains specific field
 Given url 'http://localhost:8097/user/get'
 When method GET
@@ -113,7 +113,7 @@ And match $ contains {id:"1234"}
 
 让我们重写上面的场景，以检查`id`字段不是`null`:
 
-```
+```java
 Scenario: Test GET request exact response
 Given url 'http://localhost:8097/user/get'
 When method GET
@@ -125,7 +125,7 @@ And match $ == {id:"#notnull",name:"John Smith"}
 
 让我们来看最后一个场景，它测试一个 POST 端点并接受一个请求体:
 
-```
+```java
 Scenario: Testing a POST endpoint with request body
 Given url 'http://localhost:8097/user/create'
 And request { id: '1234' , name: 'John Smith'}
@@ -140,7 +140,7 @@ And match $ contains {id:"#notnull"}
 
 我们将使用`@CucumberOptions`注释来指定`Feature`文件的确切位置:
 
-```
+```java
 @RunWith(Karate.class)
 @CucumberOptions(features = "classpath:karate")
 public class KarateUnitTest {
@@ -152,7 +152,7 @@ public class KarateUnitTest {
 
 对于这个例子，我们模拟了在用`@BeforeClass`标注的方法中测试的所有端点。我们将在用`@AfterClass`标注的方法中关闭 WireMock 服务器:
 
-```
+```java
 private static WireMockServer wireMockServer
   = new WireMockServer(WireMockConfiguration.options().port(8097));
 

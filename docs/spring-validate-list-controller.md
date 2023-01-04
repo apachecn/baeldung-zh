@@ -14,7 +14,7 @@
 
 所以，让我们从使用 [javax 验证](/web/20220628123722/https://www.baeldung.com/javax-validation "Java Bean Validation Basics")为`Movie` bean 添加约束开始:
 
-```
+```java
 public class Movie {
 
     private String id;
@@ -30,7 +30,7 @@ public class Movie {
 
 让我们看看我们的控制器。首先，我们将**向控制器类**添加`@Validated`注释:
 
-```
+```java
 @Validated
 @RestController
 @RequestMapping("/movies")
@@ -47,7 +47,7 @@ public class MovieController {
 
 我们将**将`@NotEmpty` 注释添加到我们的电影**列表中，以验证列表中至少应该有一个元素。同时，我们将添加`@Valid`注释以确保`Movie`对象本身是有效的:
 
-```
+```java
 @PostMapping
 public void addAll(
   @RequestBody 
@@ -59,13 +59,13 @@ public void addAll(
 
 如果我们用一个空的`Movie`列表输入调用控制器方法，那么验证将会因为`@NotEmpty`注释而失败，我们将会看到消息:
 
-```
+```java
 Input movie list cannot be empty.
 ```
 
 `@Valid`注释将确保为列表中的每个对象评估`Movie`类中指定的约束。因此，如果我们在列表中传递一个名字为空的`Movie`，验证将会失败，并显示消息:
 
-```
+```java
 Movie name cannot be empty.
 ```
 
@@ -75,7 +75,7 @@ Movie name cannot be empty.
 
 对于我们的示例，自定义约束将验证输入列表大小被限制为最多四个元素的条件。让我们创建这个自定义约束注释:
 
-```
+```java
 @Constraint(validatedBy = MaxSizeConstraintValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MaxSizeConstraint {
@@ -87,7 +87,7 @@ public @interface MaxSizeConstraint {
 
 现在，我们将创建一个应用上述约束的验证器:
 
-```
+```java
 public class MaxSizeConstraintValidator implements ConstraintValidator<MaxSizeConstraint, List<Movie>> {
     @Override
     public boolean isValid(List<Movie> values, ConstraintValidatorContext context) {
@@ -98,7 +98,7 @@ public class MaxSizeConstraintValidator implements ConstraintValidator<MaxSizeCo
 
 最后，我们将把`@MaxSizeConstraint` 注释添加到控制器方法中:
 
-```
+```java
 @PostMapping
 public void addAll(
   @RequestBody
@@ -115,7 +115,7 @@ public void addAll(
 
 如果任何验证失败，就会抛出`[ConstraintViolationException](https://web.archive.org/web/20220628123722/https://javaee.github.io/javaee-spec/javadocs/javax/validation/ConstraintViolationException.html "ConstraintViolationException javadoc")`。现在，让我们看看如何添加一个[异常处理](/web/20220628123722/https://www.baeldung.com/exception-handling-for-rest-with-spring "Error Handling for REST with Spring")组件来捕捉这个异常。
 
-```
+```java
 @ExceptionHandler(ConstraintViolationException.class)
 public ResponseEntity handle(ConstraintViolationException constraintViolationException) {
     Set<ConstraintViolation<?>> violations = constraintViolationException.getConstraintViolations();
@@ -137,13 +137,13 @@ public ResponseEntity handle(ConstraintViolationException constraintViolationExc
 
 首先，让我们为 API 提供有效的输入:
 
-```
+```java
 curl -v -d [{"name":"Movie1"}] -H "Content-Type: application/json" -X POST http://localhost:8080/movies
 ```
 
 在这个场景中，我们将得到一个 HTTP 状态 200 响应:
 
-```
+```java
 ...
 HTTP/1.1 200
 ...
@@ -153,26 +153,26 @@ HTTP/1.1 200
 
 让我们尝试一个空列表:
 
-```
+```java
 curl -d [] -H "Content-Type: application/json" -X POST http://localhost:8080/movies
 ```
 
 在这个场景中，我们将得到一个 HTTP 状态 400 响应。这是因为输入不满足`@NotEmpty`约束。
 
-```
+```java
 Input movie list cannot be empty.
 ```
 
 接下来，让我们尝试传递列表中的五个`Movie`对象:
 
-```
+```java
 curl -d [{"name":"Movie1"},{"name":"Movie2"},{"name":"Movie3"},{"name":"Movie4"},{"name":"Movie5"}] 
   -H "Content-Type: application/json" -X POST http://localhost:8080/movies
 ```
 
 这也将导致 HTTP status 400 响应，因为我们没有通过`@MaxSizeConstraint` 约束:
 
-```
+```java
 The input list cannot contain more than 4 movies.
 ```
 

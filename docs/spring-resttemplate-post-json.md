@@ -20,7 +20,7 @@ Learn how to handle errors with Spring's RestTemplate[Read more](/web/2022110512
 
 让我们首先添加一个简单的`Person`模型类来表示要发布的数据:
 
-```
+```java
 public class Person {
     private Integer id;
     private String name;
@@ -31,7 +31,7 @@ public class Person {
 
 为了使用`Person`对象，我们将添加一个`PersonService`接口，并用两种方法实现:
 
-```
+```java
 public interface PersonService {
 
     public Person saveUpdatePerson(Person person);
@@ -45,7 +45,7 @@ public interface PersonService {
 
 让我们为我们的`Person`类定义一个简单的 REST API:
 
-```
+```java
 @PostMapping(
   value = "/createPerson", consumes = "application/json", produces = "application/json")
 public Person createPerson(@RequestBody Person person) {
@@ -76,7 +76,7 @@ public Person updatePerson(@RequestBody Person person, HttpServletResponse respo
 
 在我们开始实现单元测试之前，让我们定义一个设置方法来初始化我们将在所有单元测试方法中使用的对象:
 
-```
+```java
 @BeforeClass
 public static void runBeforeAllTestMethods() {
     createPersonUrl = "http://localhost:8082/spring-rest/createPerson";
@@ -93,7 +93,7 @@ public static void runBeforeAllTestMethods() {
 
 除了这个设置方法之外，请注意，在我们的单元测试中，我们将引用下面的映射器来将 JSON 字符串转换成一个`JSONNode`对象:
 
-```
+```java
 private final ObjectMapper objectMapper = new ObjectMapper();
 ```
 
@@ -109,7 +109,7 @@ Spring 的`HttpHeaders`类提供了不同的方法来访问头部。这里，我
 
 **首先，我们将基于`personJsonObject`和包含** `**Content-Type**` **的头文件构建`HttpEntity`类型的`request`对象。**这允许`postForObject`方法发送一个 JSON 请求体:
 
-```
+```java
 @Test
 public void givenDataIsJson_whenDataIsPostedByPostForObject_thenResponseBodyIsNotNull()
   throws IOException {
@@ -130,7 +130,7 @@ public void givenDataIsJson_whenDataIsPostedByPostForObject_thenResponseBodyIsNo
 
 我们还可以通过设置`responseType`参数将响应作为`Person`对象返回:
 
-```
+```java
 Person person = restTemplate.postForObject(createPersonUrl, request, Person.class);
 
 assertNotNull(person);
@@ -149,7 +149,7 @@ assertNotNull(person.getName());
 
 我们可以利用`postForEntity`方法来实现这一点:
 
-```
+```java
 @Test
 public void givenDataIsJson_whenDataIsPostedByPostForEntity_thenResponseBodyIsNotNull()
   throws IOException {
@@ -171,7 +171,7 @@ public void givenDataIsJson_whenDataIsPostedByPostForEntity_thenResponseBodyIsNo
 
 我们还可以通过将`responseType`参数设置为`Person.class`，将响应作为`ResponseEntity<Person>` 对象返回:
 
-```
+```java
 ResponseEntity<Person> responseEntityPerson = restTemplate.
   postForEntity(createPersonUrl, request, Person.class);
 
@@ -185,7 +185,7 @@ assertNotNull(responseEntityPerson.getBody().getName());
 
 记住，我们已经在上面的`updatePerson` REST API 方法中看到了如何设置响应的`Location`头:
 
-```
+```java
 response.setHeader("Location", ServletUriComponentsBuilder.fromCurrentContextPath()
   .path("/findPerson/" + person.getId()).toUriString());
 ```
@@ -194,7 +194,7 @@ response.setHeader("Location", ServletUriComponentsBuilder.fromCurrentContextPat
 
 我们可以通过使用`postForLocation`方法实现这一点:
 
-```
+```java
 @Test
 public void givenDataIsJson_whenDataIsPostedByPostForLocation_thenResponseBodyIsTheLocationHeader() 
   throws JsonProcessingException {

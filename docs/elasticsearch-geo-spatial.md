@@ -34,7 +34,7 @@ Elasticsearch 提供了两种表示地理数据的方式:
 
 下面是保存地理点数据的字段映射示例:
 
-```
+```java
 PUT /index_name
 {
     "mappings": {
@@ -57,7 +57,7 @@ PUT /index_name
 
 让我们来看看地理形状数据类型的映射:
 
-```
+```java
 PUT /index_name
 {
     "mappings": {
@@ -78,7 +78,7 @@ PUT /index_name
 
 ### 3.1。纬度经度对象
 
-```
+```java
 PUT index_name/index_type/1
 {
     "location": { 
@@ -92,7 +92,7 @@ PUT index_name/index_type/1
 
 ### 3.2。纬度经度对
 
-```
+```java
 {
     "location": "23.02,72.57"
 }
@@ -102,7 +102,7 @@ PUT index_name/index_type/1
 
 ### 3.3。地理哈希
 
-```
+```java
 {
     "location": "tsj4bys"
 }
@@ -112,7 +112,7 @@ PUT index_name/index_type/1
 
 ### 3.4。经度纬度数组
 
-```
+```java
 {
     "location": [72.57, 23.02]
 }
@@ -124,7 +124,7 @@ PUT index_name/index_type/1
 
 ### 4.1。`Point`
 
-```
+```java
 POST /index/type
 {
     "location" : {
@@ -138,7 +138,7 @@ POST /index/type
 
 ### 4.2。`LineString`
 
-```
+```java
 POST /index/type
 {
     "location" : {
@@ -152,7 +152,7 @@ POST /index/type
 
 ### 4.3。`Polygon`
 
-```
+```java
 POST /index/type
 {
     "location" : {
@@ -183,7 +183,7 @@ POST /index/type
 
 现在，我们知道了如何插入包含地理形状的文档，让我们开始使用地理形状查询获取这些记录。但是在我们开始使用地理查询之前，我们需要以下 maven 依赖项来支持用于地理查询的 Java API:
 
-```
+```java
 <dependency>
     <groupId>org.locationtech.spatial4j</groupId>
     <artifactId>spatial4j</artifactId>
@@ -214,7 +214,7 @@ Elasticsearch 支持不同类型的地理查询，具体如下:
 
 下面是一个示例查询，用于获取给定左上和右下坐标的所有落入`within`的文档:
 
-```
+```java
 {
     "query":{
         "bool": {
@@ -250,7 +250,7 @@ Elasticsearch 支持不同类型的地理查询，具体如下:
 
 上述查询的 Java 代码如下:
 
-```
+```java
 Coordinate topLeft = new Coordinate(74, 31.2);
 Coordinate bottomRight = new Coordinate(81.1, 24);
 
@@ -263,7 +263,7 @@ qb.relation(ShapeRelation.INTERSECTS);
 
 地理包围盒查询用于基于点位置提取所有文档。下面是一个边界框查询示例:
 
-```
+```java
 {
     "query": {
         "bool" : {
@@ -285,7 +285,7 @@ qb.relation(ShapeRelation.INTERSECTS);
 
 上述边界框查询的 Java 代码如下:
 
-```
+```java
 QueryBuilders
   .geoBoundingBoxQuery("location").setCorners(31.8, 30.5, 28.3, 32.12);
 ```
@@ -298,7 +298,7 @@ QueryBuilders
 
 下面是一个示例`geo_distance`查询:
 
-```
+```java
 {
     "query": {
         "bool" : {
@@ -318,7 +318,7 @@ QueryBuilders
 
 下面是上述查询的 Java 代码:
 
-```
+```java
 QueryBuilders
   .geoDistanceQuery("location")
   .point(29.976, 31.131)
@@ -333,7 +333,7 @@ QueryBuilders
 
 让我们快速看一下一个示例查询:
 
-```
+```java
 {
     "query": {
         "bool" : {
@@ -358,7 +358,7 @@ QueryBuilders
 
 这个查询的 Java 代码:
 
-```
+```java
 List<GeoPoint> allPoints = new ArrayList<GeoPoint>(); 
 allPoints.add(new GeoPoint(22.733, 68.859)); 
 allPoints.add(new GeoPoint(24.733, 68.859)); 

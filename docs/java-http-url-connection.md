@@ -22,14 +22,14 @@
 
 基本认证允许客户端通过`Authorization`头使用**编码的用户名和密码**对自己进行认证:
 
-```
+```java
 GET / HTTP/1.1
 Authorization: Basic dXNlcjpwYXNzd29yZA==
 ```
 
 要创建编码的用户名和密码字符串，我们只需对用户名进行 Base64 编码，后跟一个冒号，然后是密码:
 
-```
+```java
 basic(user, pass) = base64-encode(user + ":" + pass)
 ```
 
@@ -45,7 +45,7 @@ basic(user, pass) = base64-encode(user + ":" + pass)
 
 类`HttpUrlConnection`可以发送请求，但是首先，我们必须从一个 URL 对象获得它的一个实例:
 
-```
+```java
 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 ```
 
@@ -55,26 +55,26 @@ HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
 一旦我们使用“:”连接了用户名和密码，我们就可以使用`java.util.Base64`类对凭证进行编码:
 
-```
+```java
 String auth = user + ":" + password;
 byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.UTF_8));
 ```
 
 然后，我们从文字“Basic”创建头值，后跟编码的凭证:
 
-```
+```java
 String authHeaderValue = "Basic " + new String(encodedAuth);
 ```
 
 接下来，我们调用方法`setRequestProperty(key, value)`来认证请求。如前所述，**我们必须使用`“Authorization”`作为我们的标题，使用`“Basic ” + encoded credentials` 作为我们的值:**
 
-```
+```java
 connection.setRequestProperty("Authorization", authHeaderValue);
 ```
 
 最后，我们需要实际发送 HTTP 请求，例如通过调用`getResponseCode()`。结果，我们从服务器得到一个 HTTP 响应代码:
 
-```
+```java
 int responseCode = connection.getResponseCode();
 ```
 
@@ -86,13 +86,13 @@ int responseCode = connection.getResponseCode();
 
 我们首先需要扩展类。然后，我们调用静态方法`Authenticator.setDefault()` 来注册我们的验证器的实例:
 
-```
+```java
 Authenticator.setDefault(new BasicAuthenticator());
 ```
 
 我们的基本 auth 类只是覆盖了基类的`getPasswordAuthentication()`非抽象方法:
 
-```
+```java
 private final class BasicAuthenticator extends Authenticator {
 protected PasswordAuthentication getPasswordAuthentication() {
 return new PasswordAuthentication(user, password.toCharArray());

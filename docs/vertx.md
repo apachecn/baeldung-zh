@@ -22,7 +22,7 @@ Vert.x 是一个开源的、反应式的、多语言的软件开发工具包，�
 
 要使用 Vert.x，我们需要添加 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.vertx</groupId>
     <artifactId>vertx-core</artifactId>
@@ -54,7 +54,7 @@ Vert.x 是一个开源的、反应式的、多语言的软件开发工具包，�
 
 为了创建我们的 verticle，我们将扩展`io.vertx.core.AbstractVerticle` 类并覆盖`start()` 方法:
 
-```
+```java
 public class HelloVerticle extends AbstractVerticle {
 
     @Override
@@ -68,7 +68,7 @@ public class HelloVerticle extends AbstractVerticle {
 
 现在让我们部署垂直市场:
 
-```
+```java
 public static void main(String[] args) {
     Vertx vertx = Vertx.vertx();
     vertx.deployVerticle(new HelloVerticle());
@@ -77,7 +77,7 @@ public static void main(String[] args) {
 
 类似地，我们可以覆盖来自`AbstractVerticle` 类的`stop()` 方法，该方法将在关闭 verticle 时被调用:
 
-```
+```java
 @Override
 public void stop() {
     LOGGER.info("Shutting down application");
@@ -88,7 +88,7 @@ public void stop() {
 
 现在，让我们使用一个垂直设备启动一个 HTTP 服务器:
 
-```
+```java
 @Override
 public void start(Future<Void> future) {
     vertx.createHttpServer()
@@ -113,7 +113,7 @@ public void start(Future<Void> future) {
 
 让我们测试我们的服务器:
 
-```
+```java
 @Test
 public void whenReceivedResponse_thenSuccess(TestContext testContext) {
     Async async = testContext.async();
@@ -130,7 +130,7 @@ public void whenReceivedResponse_thenSuccess(TestContext testContext) {
 
 对于测试，让我们将 vertx-unit 与 JUnit 一起使用。：
 
-```
+```java
 <dependency>
     <groupId>io.vertx</groupId>
     <artifactId>vertx-unit</artifactId>
@@ -143,7 +143,7 @@ public void whenReceivedResponse_thenSuccess(TestContext testContext) {
 
 verticle 被部署在单元测试的`setup()`方法的`vertx`实例中:
 
-```
+```java
 @Before
 public void setup(TestContext testContext) {
     vertx = Vertx.vertx();
@@ -155,7 +155,7 @@ public void setup(TestContext testContext) {
 
 类似地，`vertx` 实例在`@AfterClass tearDown()` 方法中关闭:
 
-```
+```java
 @After
 public void tearDown(TestContext testContext) {
     vertx.close(testContext.asyncAssertSuccess());
@@ -172,7 +172,7 @@ public void tearDown(TestContext testContext) {
 
 让我们将依赖项添加到我们的`pom.xml:`
 
-```
+```java
 <dependency>
     <groupId>io.vertx</groupId>
     <artifactId>vertx-web</artifactId>
@@ -186,7 +186,7 @@ public void tearDown(TestContext testContext) {
 
 让我们为我们的 web 服务创建一个`router` 。这个路由器将采用 GET 方法和 handler 方法`getArtilces()`的简单路线:
 
-```
+```java
 Router router = Router.router(vertx);
 router.get("/api/baeldung/articles/article/:id")
   .handler(this::getArticles);
@@ -194,7 +194,7 @@ router.get("/api/baeldung/articles/article/:id")
 
 `getArticle()` 方法是一个简单的方法，返回新的`Article`对象:
 
-```
+```java
 private void getArticles(RoutingContext routingContext) {
     String articleId = routingContext.request()
       .getParam("id");
@@ -218,7 +218,7 @@ A `Router,` 在收到请求时，寻找匹配的路由，并进一步传递请�
 
 现在让我们将上一节中创建的`router,` 添加到 HTTP 服务器:
 
-```
+```java
 vertx.createHttpServer()
   .requestHandler(router::accept)
   .listen(config().getInteger("http.port", 8080), 
@@ -235,7 +235,7 @@ vertx.createHttpServer()
 
 现在让我们测试我们的 web 服务:
 
-```
+```java
 @Test
 public void givenId_whenReceivedArticle_thenSuccess(TestContext testContext) {
     Async async = testContext.async();
@@ -256,7 +256,7 @@ public void givenId_whenReceivedArticle_thenSuccess(TestContext testContext) {
 
 将应用程序打包成可部署的 Java 档案文件(。jar)让我们使用 Maven Shade 插件和`execution`标签中的配置:
 
-```
+```java
 <configuration>
     <transformers>
         <transformer 

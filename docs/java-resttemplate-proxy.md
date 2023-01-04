@@ -12,7 +12,7 @@
 
 要使用该类，我们需要将 [Apache 的`httpcore`依赖项](https://web.archive.org/web/20220707143820/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.httpcomponents%22%20AND%20a%3A%22httpcore%22)添加到我们的 Maven `pom.xml` 文件中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.httpcomponents</groupId>
     <artifactId>httpcore</artifactId>
@@ -22,7 +22,7 @@
 
 或者到我们的 Gradle `build.gradle`文件:
 
-```
+```java
 compile 'org.apache.httpcomponents:httpcore:4.4.13'
 ```
 
@@ -32,7 +32,7 @@ compile 'org.apache.httpcomponents:httpcore:4.4.13'
 
 首先，我们从配置`SimpleClientHttpRequestFactory`开始:
 
-```
+```java
 Proxy proxy = new Proxy(Type.HTTP, new InetSocketAddress(PROXY_SERVER_HOST, PROXY_SERVER_PORT));
 SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
 requestFactory.setProxy(proxy);
@@ -40,13 +40,13 @@ requestFactory.setProxy(proxy);
 
 然后，我们继续将请求工厂实例传递给`RestTemplate` 构造函数:
 
-```
+```java
 RestTemplate restTemplate = new RestTemplate(requestFactory);
 ```
 
 最后，一旦我们构建了`RestTemplate`，我们就可以用它来发出代理请求:
 
-```
+```java
 ResponseEntity<String> responseEntity = restTemplate.getForEntity("http://httpbin.org/get", String.class);
 
 assertThat(responseEntity.getStatusCode(), is(equalTo(HttpStatus.OK)));
@@ -58,7 +58,7 @@ assertThat(responseEntity.getStatusCode(), is(equalTo(HttpStatus.OK)));
 
 让我们开始定义一个`ProxyCustomizer`:
 
-```
+```java
 class ProxyCustomizer implements RestTemplateCustomizer {
 
     @Override
@@ -79,13 +79,13 @@ class ProxyCustomizer implements RestTemplateCustomizer {
 
 之后，我们构建我们定制的 `RestTemplate`:
 
-```
+```java
 RestTemplate restTemplate = new RestTemplateBuilder(new ProxyCustomizer()).build();
 ```
 
 最后，我们使用`RestTemplate`发出首先通过代理的请求:
 
-```
+```java
 ResponseEntity<String> responseEntity = restTemplate.getForEntity("http://httpbin.org/get", String.class);
 assertThat(responseEntity.getStatusCode(), is(equalTo(HttpStatus.OK)));
 ```

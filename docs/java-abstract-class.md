@@ -22,7 +22,7 @@
 
 让我们的基本抽象类定义一个棋盘游戏的抽象 API:
 
-```
+```java
 public abstract class BoardGame {
 
     //... field declarations, constructors
@@ -35,7 +35,7 @@ public abstract class BoardGame {
 
 然后，我们可以创建一个实现`play `方法的子类:
 
-```
+```java
 public class Checkers extends BoardGame {
 
     public void play() {
@@ -68,7 +68,7 @@ public class Checkers extends BoardGame {
 
 因此，如果我们想要有几种类型的文件读取器，我们可以创建一个抽象类来封装文件读取的常见内容:
 
-```
+```java
 public abstract class BaseFileReader {
 
     protected Path filePath;
@@ -100,7 +100,7 @@ public abstract class BaseFileReader {
 
 一个自然的实现可能是将文件内容转换成小写:
 
-```
+```java
 public class LowercaseFileReader extends BaseFileReader {
 
     public LowercaseFileReader(Path filePath) {
@@ -116,7 +116,7 @@ public class LowercaseFileReader extends BaseFileReader {
 
 或者另一个可能是将文件的内容转换为大写:
 
-```
+```java
 public class UppercaseFileReader extends BaseFileReader {
 
     public UppercaseFileReader(Path filePath) {
@@ -136,7 +136,7 @@ public class UppercaseFileReader extends BaseFileReader {
 
 最后，使用从抽象类继承的类与任何其他具体类没有什么不同:
 
-```
+```java
 @Test
 public void givenLowercaseFileReaderInstance_whenCalledreadFile_thenCorrect() throws Exception {
     URL location = getClass().getClassLoader().getResource("files/test.txt")

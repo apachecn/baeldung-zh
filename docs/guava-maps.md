@@ -8,7 +8,7 @@
 
 让我们从非常简单的开始，**使用番石榴创建一个没有`new`操作符的`HashMap`** :
 
-```
+```java
 Map<String, String> aNewMap = Maps.newHashMap();
 ```
 
@@ -16,7 +16,7 @@ Map<String, String> aNewMap = Maps.newHashMap();
 
 接下来，让我们看看如何用**番石榴**制作`ImmutableMap`:
 
-```
+```java
 @Test
 public void whenCreatingImmutableMap_thenCorrect() {
     Map<String, Integer> salary = ImmutableMap.<String, Integer> builder()
@@ -37,7 +37,7 @@ public void whenCreatingImmutableMap_thenCorrect() {
 
 在下面的例子中，我们使用相应的番石榴构建器创建一个排序的地图:
 
-```
+```java
 @Test
 public void whenUsingSortedMap_thenKeysAreSorted() {
     ImmutableSortedMap<String, Integer> salary = new ImmutableSortedMap
@@ -59,7 +59,7 @@ public void whenUsingSortedMap_thenKeysAreSorted() {
 
 在下面的例子中，我们创建了一个`BiMap` ，并得到了它的 `inverse()`:
 
-```
+```java
 @Test
 public void whenCreateBiMap_thenCreated() {
     BiMap<String, Integer> words = HashBiMap.create();
@@ -78,7 +78,7 @@ public void whenCreateBiMap_thenCreated() {
 
 我们可以使用`Multimap`到**将每个键与多个值**相关联，如下例所示:
 
-```
+```java
 @Test
 public void whenCreateMultimap_thenCreated() {
     Multimap<String, String> multimap = ArrayListMultimap.create();
@@ -98,7 +98,7 @@ public void whenCreateMultimap_thenCreated() {
 
 在以下示例中，我们将使用一个表格来存储城市之间的距离:
 
-```
+```java
 @Test
 public void whenCreatingTable_thenCorrect() {
     Table<String,String,Integer> distance = HashBasedTable.create();
@@ -115,7 +115,7 @@ public void whenCreatingTable_thenCorrect() {
 
 我们也可以使用`Tables.transpose()`来翻转行和列键，如下例所示:
 
-```
+```java
 @Test
 public void whenTransposingTable_thenCorrect() {
     Table<String,String,Integer> distance = HashBasedTable.create();
@@ -135,7 +135,7 @@ public void whenTransposingTable_thenCorrect() {
 
 接下来——我们来看看`ClassToInstanceMap`。如果我们想让对象的类成为键，我们可以使用`ClassToInstanceMap`,如下例所示:
 
-```
+```java
 @Test
 public void whenCreatingClassToInstanceMap_thenCorrect() {
     ClassToInstanceMap<Number> numbers = MutableClassToInstanceMap.create();
@@ -151,7 +151,7 @@ public void whenCreatingClassToInstanceMap_thenCorrect() {
 
 接下来，让我们看看如何使用`Multimap`将 a `List`分组。在下面的例子中，我们使用`Multimaps.index()`将一个`List`的名字按长度分组:
 
-```
+```java
 @Test
 public void whenGroupingListsUsingMultimap_thenGrouped() {
     List<String> names = Lists.newArrayList("John", "Adam", "Tom");

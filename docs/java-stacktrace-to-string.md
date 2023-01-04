@@ -14,7 +14,7 @@
 
 *异常*类的函数 *printStackTrace()* 可以带一个参数，可以是 *PrintStream* 或 *PrintWriter* 。因此，可以使用 *StringWriter* 将堆栈跟踪打印到*字符串*中:
 
-```
+```java
 StringWriter sw = new StringWriter();
 PrintWriter pw = new PrintWriter(sw);
 e.printStackTrace(pw); 
@@ -30,7 +30,7 @@ Apache Commons-Lang 是一个非常有用的库，它提供了 Java API 的核�
 
 首先，我们从项目配置开始。当使用 Maven 时，我们只需向 *pom.xml* 添加以下依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -40,7 +40,7 @@ Apache Commons-Lang 是一个非常有用的库，它提供了 Java API 的核�
 
 然后，在我们的例子中，最有趣的类是 *ExceptionUtils* ，它提供了操作异常的函数。使用这个类，从一个*异常*中获取堆栈跟踪作为一个*字符串*非常简单:
 
-```
+```java
 String stacktrace = ExceptionUtils.getStackTrace(e); 
 ```
 

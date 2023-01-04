@@ -12,7 +12,7 @@ FreeMarker 是一个基于 Java 的模板引擎，来自 Apache 软件基金会�
 
 由于这是一个基于 Maven 的项目，我们首先将所需的依赖项添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.freemarker</groupId>
     <artifactId>freemarker</artifactId>
@@ -33,7 +33,7 @@ FreeMarker 是一个基于 Java 的模板引擎，来自 Apache 软件基金会�
 
 让我们创建一个类来配置 web 组件。为此，我们需要用`@EnableWebMvc`、`@Configuration`和`@ComponentScan`来注释这个类。
 
-```
+```java
 @EnableWebMvc
 @Configuration
 @ComponentScan({"com.baeldung.freemarker"})
@@ -48,7 +48,7 @@ Spring MVC 框架提供了 **`ViewResolver`** 接口，将视图名称映射到�
 
 该对象需要用将在运行时使用的必需值进行配置。例如，我们将配置视图解析器对以`**.ftl**`结尾的视图使用 FreeMarker:
 
-```
+```java
 @Bean 
 public FreeMarkerViewResolver freemarkerViewResolver() { 
     FreeMarkerViewResolver resolver = new FreeMarkerViewResolver(); 
@@ -65,7 +65,7 @@ public FreeMarkerViewResolver freemarkerViewResolver() {
 
 接下来，我们将设置模板路径，该路径指示模板在 web 上下文中的位置:
 
-```
+```java
 @Bean 
 public FreeMarkerConfigurer freemarkerConfig() { 
     FreeMarkerConfigurer freeMarkerConfigurer = new FreeMarkerConfigurer(); 
@@ -78,7 +78,7 @@ public FreeMarkerConfigurer freemarkerConfig() {
 
 现在我们可以使用一个 Spring 控制器**来处理一个 FreeMarker 模板用于显示**。这只是一个传统的弹簧控制器:
 
-```
+```java
 @RequestMapping(value = "/cars", method = RequestMethod.GET)
 public String init(@ModelAttribute("model") ModelMap model) {
     model.addAttribute("carList", carList);
@@ -98,7 +98,7 @@ public String init(@ModelAttribute("model") ModelMap model) {
 
 下面的代码还包括**FreeMarker**表达式来引用`carList`中每个元素的属性；例如，为了显示当前汽车元素的`make`属性，我们使用了表达式`${car.make}`。
 
-```
+```java
 <div id="header">
   <h2>FreeMarker Spring MVC Hello World</h2>
 </div>
@@ -135,7 +135,7 @@ public String init(@ModelAttribute("model") ModelMap model) {
 
 如果我们使用 Spring Boot，我们可以简单地导入`spring-boot-starter-freemarker`依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-freemarker</artifactId>

@@ -20,7 +20,7 @@
 
 我们的输入可能是:
 
-```
+```java
 "First 3 Capital Words! then 10 TLAs, I Found"
 ```
 
@@ -34,13 +34,13 @@
 
 识别这种模式的正则表达式是:
 
-```
+```java
 "(?<=^|[^A-Za-z])([A-Z][a-z]*)(?=[^A-Za-z]|$)"
 ```
 
 为了理解这一点，让我们把它分解成它的组成部分。我们从中间开始:
 
-```
+```java
 [A-Z]
 ```
 
@@ -48,7 +48,7 @@
 
 我们允许单字符单词或后跟小写字母的单词，因此:
 
-```
+```java
 [a-z]*
 ```
 
@@ -60,7 +60,7 @@
 
 `[^A-Za-z] `这个表达的意思是“没有字母”。在非捕获组中，我们将其中一个放在表达式的开头:
 
-```
+```java
 (?<=^|[^A-Za-z])
 ```
 
@@ -76,7 +76,7 @@
 
 我们的示例文本在一个名为`EXAMPLE_INPUT`的常量中，正则表达式在一个名为`TITLE_CASE_PATTERN`的`Pattern`中，让我们使用`Matcher` 类上的`find`来提取单元测试中的所有匹配:
 
-```
+```java
 Matcher matcher = TITLE_CASE_PATTERN.matcher(EXAMPLE_INPUT);
 List<String> matches = new ArrayList<>();
 while (matcher.find()) {
@@ -97,7 +97,7 @@ assertThat(matches)
 
 但是，如果这些单词中的每一个都是我们想要替换的标记，我们就需要更多的匹配信息来构建结果字符串。**让我们看看`Matcher`** 的一些其他属性，它们可能会对我们有所帮助:
 
-```
+```java
 while (matcher.find()) {
     System.out.println("Match: " + matcher.group(0));
     System.out.println("Start: " + matcher.start());
@@ -107,7 +107,7 @@ while (matcher.find()) {
 
 这段代码会告诉我们每个匹配的位置。它还向我们展示了`group(0)`匹配，这是捕获的所有内容:
 
-```
+```java
 Match: First
 Start: 0
 End: 5
@@ -131,7 +131,7 @@ End: 38
 
 让我们继续我们的例子，使用我们的算法将原始字符串中的每个标题词替换为小写的等价词。这意味着我们的测试字符串将被转换为:
 
-```
+```java
 "first 3 capital words! then 10 TLAs, i found"
 ```
 
@@ -154,7 +154,7 @@ End: 38
 
 我们想把每个单词都转换成小写，所以我们可以写一个简单的转换方法:
 
-```
+```java
 private static String convert(String token) {
     return token.toLowerCase();
 }
@@ -162,7 +162,7 @@ private static String convert(String token) {
 
 现在我们可以编写算法来迭代匹配。这可以使用一个`StringBuilder`来输出:
 
-```
+```java
 int lastIndex = 0;
 StringBuilder output = new StringBuilder();
 Matcher matcher = TITLE_CASE_PATTERN.matcher(original);
@@ -188,7 +188,7 @@ return output.toString();
 
 我们可以使用 Java `Function<Matcher, String>`对象来允许调用者提供处理每个匹配的逻辑。我们可以接受一个名为`tokenPattern`的输入来查找所有的令牌:
 
-```
+```java
 // same as before
 while (matcher.find()) {
     output.append(original, lastIndex, matcher.start())
@@ -203,7 +203,7 @@ while (matcher.find()) {
 
 让我们看看通用方法是否和原始方法一样有效:
 
-```
+```java
 assertThat(replaceTokens("First 3 Capital Words! then 10 TLAs, I Found",
   TITLE_CASE_PATTERN,
   match -> match.group(1).toLowerCase()))
@@ -222,7 +222,7 @@ assertThat(replaceTokens("First 3 Capital Words! then 10 TLAs, I Found",
 
 如果我们可以表达表示“正则表达式字符”的模式，就很容易使用我们的算法来避开它们:
 
-```
+```java
 Pattern regexCharacters = Pattern.compile("[<(\\[{\\\\^\\-=$!|\\]})?*+.>]");
 
 assertThat(replaceTokens("A regex character like [",
@@ -239,7 +239,7 @@ assertThat(replaceTokens("A regex character like [",
 
 表达占位符的一种常见方式是使用类似于`${name}`的语法。让我们考虑一个用例，其中模板`“Hi ${name} at ${company}” `需要从名为`placeholderValues`的地图中填充:
 
-```
+```java
 Map<String, String> placeholderValues = new HashMap<>();
 placeholderValues.put("name", "Bill");
 placeholderValues.put("company", "Baeldung");
@@ -247,7 +247,7 @@ placeholderValues.put("company", "Baeldung");
 
 **我们只需要一个好的正则表达式**来找到`${…}`令牌:
 
-```
+```java
 "\\$\\{(?<placeholder>[A-Za-z0-9-_]+)}"
 ```
 
@@ -257,7 +257,7 @@ placeholderValues.put("company", "Baeldung");
 
 然而，**为了使代码更具可读性，我们将这个捕获组命名为** `placeholder`。让我们看看如何使用命名的捕获组:
 
-```
+```java
 assertThat(replaceTokens("Hi ${name} at ${company}",
   "\\$\\{(?<placeholder>[A-Za-z0-9-_]+)}",
   match -> placeholderValues.get(match.group("placeholder"))))

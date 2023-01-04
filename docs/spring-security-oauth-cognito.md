@@ -35,7 +35,7 @@
 
 在应用程序客户端的配置中，**确保`CallbackURL`与 Spring 配置文件中的`redirect-uri`** 相匹配。在我们的案例中，这将是:
 
-```
+```java
 http://localhost:8080/login/oauth2/code/cognito
 ```
 
@@ -47,7 +47,7 @@ http://localhost:8080/login/oauth2/code/cognito
 
 由于我们想要使用 OAuth 2.0 登录，我们需要添加[spring-security-OAuth 2-client](https://web.archive.org/web/20221206014514/https://search.maven.org/search?q=a:spring-security-oauth2-client%20g:org.springframework.security)和[spring-security-OAuth 2-Jose](https://web.archive.org/web/20221206014514/https://search.maven.org/search?q=a:spring-security-oauth2-jose%20g:org.springframework.security)依赖项到我们的应用程序:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-oauth2-client</artifactId>
@@ -60,7 +60,7 @@ http://localhost:8080/login/oauth2/code/cognito
 
 然后，我们需要一些配置来将所有东西绑定在一起:
 
-```
+```java
 spring:
   security:
     oauth2:
@@ -86,7 +86,7 @@ spring:
 
 现在我们将添加一个安全配置类:
 
-```
+```java
 @Configuration
 public class SecurityConfiguration {
 
@@ -113,7 +113,7 @@ public class SecurityConfiguration {
 
 接下来，我们添加一个简单的[百里香叶](/web/20221206014514/https://www.baeldung.com/thymeleaf-in-spring-mvc)登录页面，这样我们就知道自己何时登录:
 
-```
+```java
 <div>
     <h1 class="title">OAuth 2.0 Spring Security Cognito Demo</h1>
     <div sec:authorize="isAuthenticated()">
@@ -134,7 +134,7 @@ public class SecurityConfiguration {
 
 然后让我们确保**我们将应用程序根绑定到我们的欢迎页面:**
 
-```
+```java
 @Configuration
 public class CognitoWebConfiguration implements WebMvcConfigurer {
     @Override
@@ -148,7 +148,7 @@ public class CognitoWebConfiguration implements WebMvcConfigurer {
 
 这是一个将与 auth 相关的所有东西都投入运行的类:
 
-```
+```java
 @SpringBootApplication
 public class SpringCognitoApplication {
     public static void main(String[] args) {

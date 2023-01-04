@@ -32,7 +32,7 @@ Learn how to effectively use the @Lookup annotation in Spring for procedural inj
 
 让我们想象这样一种情况，在给定的实例中，Spring 有两个可能的候选者作为 bean 合作者注入:
 
-```
+```java
 @Component("fooFormatter")
 public class FooFormatter implements Formatter {
 
@@ -65,7 +65,7 @@ public class FooService {
 
 让我们回顾一下前面的例子，看看我们如何通过包含`@Qualifier`注释来指示我们想要使用哪个 bean 来解决这个问题:
 
-```
+```java
 public class FooService {
 
     @Autowired
@@ -80,7 +80,7 @@ public class FooService {
 
 注意，我们也可以在`Formatter`实现类上使用`@Qualifier`注释，而不是在它们的`@Component`注释中指定名称，以获得相同的效果:
 
-```
+```java
 @Component
 @Qualifier("fooFormatter")
 public class FooFormatter implements Formatter {
@@ -102,7 +102,7 @@ public class BarFormatter implements Formatter {
 
 让我们看一个例子:
 
-```
+```java
 @Configuration
 public class Config {
 
@@ -127,7 +127,7 @@ public class Config {
 
 让我们看看使用`@Primary`注释的另一种方式，这次使用最初的例子:
 
-```
+```java
 @Component
 @Primary
 public class FooFormatter implements Formatter {
@@ -146,7 +146,7 @@ public class BarFormatter implements Formatter {
 
 另一种在自动连接时决定多个 beans 的方法是使用字段的名称来注入。**这是默认设置，以防 Spring** 没有其他提示。让我们看看基于我们最初的例子的一些代码:
 
-```
+```java
 public class FooService {
 
     @Autowired

@@ -12,7 +12,7 @@
 
 让我们从使用`System#getProperty`的标准解决方案开始，假设我们当前的工作目录名在整个代码中都是`Baeldung`:
 
-```
+```java
 static final String CURRENT_DIR = "Baeldung";
 @Test
 void whenUsingSystemProperties_thenReturnCurrentDirectory() {
@@ -27,7 +27,7 @@ void whenUsingSystemProperties_thenReturnCurrentDirectory() {
 
 让我们看看另一个使用`java.io.File`的解决方案:
 
-```
+```java
 @Test
 void whenUsingJavaIoFile_thenReturnCurrentDirectory() {
     String userDirectory = new File("").getAbsolutePath();
@@ -41,7 +41,7 @@ void whenUsingJavaIoFile_thenReturnCurrentDirectory() {
 
 另一个有效的替代方法是使用新的`java.nio.file.FileSystems` API:
 
-```
+```java
 @Test
 void whenUsingJavaNioFileSystems_thenReturnCurrentDirectory() {
     String userDirectory = FileSystems.getDefault()
@@ -58,7 +58,7 @@ void whenUsingJavaNioFileSystems_thenReturnCurrentDirectory() {
 
 最后，让我们看一个更简单的解决方案，使用`java.nio.file.Paths` API 获取当前目录:
 
-```
+```java
 @Test
 void whenUsingJavaNioPaths_thenReturnCurrentDirectory() {
     String userDirectory = Paths.get("")

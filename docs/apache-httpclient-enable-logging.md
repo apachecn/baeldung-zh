@@ -34,7 +34,7 @@ HttpClient 库提供了高效、最新、功能丰富的 HTTP 协议实现客户
 
 让我们添加 [httpclient](https://web.archive.org/web/20220813062922/https://search.maven.org/artifact/org.apache.httpcomponents/httpclient) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.httpcomponents</groupId>
     <artifactId>httpclient</artifactId>
@@ -50,7 +50,7 @@ HttpClient 库提供了高效、最新、功能丰富的 HTTP 协议实现客户
 
 我们将使用 [jul-to-slf4j](https://web.archive.org/web/20220813062922/https://search.maven.org/artifact/org.slf4j/jul-to-slf4j) 将日志重定向到 slf4j。因此我们排除了`commons-logging`。接下来，让我们为朱莉和 SLF4J 之间的桥添加一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.slf4j</groupId>
     <artifactId>jul-to-slf4j</artifactId>
@@ -60,7 +60,7 @@ HttpClient 库提供了高效、最新、功能丰富的 HTTP 协议实现客户
 
 因为 SLF4J 只是一个门面，我们需要一个绑定。在我们的例子中，我们将使用[回退](https://web.archive.org/web/20220813062922/https://search.maven.org/artifact/ch.qos.logback/logback-classic):
 
-```
+```java
 <dependency>
     <groupId>ch.qos.logback</groupId>
     <artifactId>logback-classic</artifactId>
@@ -70,7 +70,7 @@ HttpClient 库提供了高效、最新、功能丰富的 HTTP 协议实现客户
 
 现在让我们创建`ApacheHttpClientUnitTest` 类:
 
-```
+```java
 public class ApacheHttpClientUnitTest {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     public static final String DUMMY_URL = "https://postman-echo.com/get";
@@ -91,7 +91,7 @@ public class ApacheHttpClientUnitTest {
 
 现在让我们用我们的`logback.xml`文件定义一个日志配置:
 
-```
+```java
 <configuration debug="false">
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -110,7 +110,7 @@ public class ApacheHttpClientUnitTest {
 
 运行我们的测试后，可以在控制台中找到所有 HttpClient 的日志:
 
-```
+```java
 ...
 2021-06-19 22:24:45,378 [DEBUG] org.apache.http.impl.execchain.MainClientExec - Executing request GET /get HTTP/1.1 
 2021-06-19 22:24:45,378 [DEBUG] org.apache.http.impl.execchain.MainClientExec - Target auth state: UNCHALLENGED 
@@ -125,7 +125,7 @@ public class ApacheHttpClientUnitTest {
 
 让我们添加 [httpclient5](https://web.archive.org/web/20220813062922/https://search.maven.org/artifact/org.apache.httpcomponents.client5/httpclient5) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.httpcomponents.client5</groupId>
     <artifactId>httpclient5</artifactId>
@@ -135,7 +135,7 @@ public class ApacheHttpClientUnitTest {
 
 让我们添加一个与上例相似的测试:
 
-```
+```java
 public class ApacheHttpClient5UnitTest {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     public static final String DUMMY_URL = "https://postman-echo.com/get";
@@ -154,7 +154,7 @@ public class ApacheHttpClient5UnitTest {
 
 接下来，我们需要向 `logback.xml`文件添加一个记录器:
 
-```
+```java
 <configuration debug="false">
 ...
     <logger name="org.apache.hc.client5.http" level="debug"/>
@@ -164,7 +164,7 @@ public class ApacheHttpClient5UnitTest {
 
 让我们运行测试类`ApacheHttpClient5UnitTest` 并检查输出。它类似于旧版本:
 
-```
+```java
 ...
 2021-06-19 22:27:16,944 [DEBUG] org.apache.hc.client5.http.impl.classic.InternalHttpClient - ep-0000000000 endpoint connected 
 2021-06-19 22:27:16,944 [DEBUG] org.apache.hc.client5.http.impl.classic.MainClientExec - ex-0000000001 executing GET /get HTTP/1.1 

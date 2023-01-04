@@ -20,7 +20,7 @@
 
 上图显示了以下等式的计算图:
 
-```
+```java
 f(x, y) = z = a*x + b*y
 ```
 
@@ -39,7 +39,7 @@ f(x, y) = z = a*x + b*y
 
 我们将建立一个快速 Maven 项目，用 Java 创建并运行 TensorFlow 图。我们只需要 [`tensorflow`依赖](https://web.archive.org/web/20220626083438/https://search.maven.org/search?q=g:org.tensorflow%20AND%20a:tensorflow%20AND%20v:1.12.0):
 
-```
+```java
 <dependency>
     <groupId>org.tensorflow</groupId>
     <artifactId>tensorflow</artifactId>
@@ -51,13 +51,13 @@ f(x, y) = z = a*x + b*y
 
 现在让我们尝试使用 TensorFlow Java API 来构建我们在上一节中讨论过的图表。更准确地说，在本教程中，我们将使用 TensorFlow Java API 来求解由以下等式表示的函数:
 
-```
+```java
 z = 3*x + 2*y
 ```
 
 第一步是声明和初始化一个图形:
 
-```
+```java
 Graph graph = new Graph()
 ```
 
@@ -69,7 +69,7 @@ Graph graph = new Graph()
 
 首先，让我们在上图中定义常量操作。请注意，**常数运算将需要一个张量作为其值**:
 
-```
+```java
 Operation a = graph.opBuilder("Const", "a")
   .setAttr("dtype", DataType.fromClass(Double.class))
   .setAttr("value", Tensor.<Double>create(3.0, Double.class))
@@ -88,7 +88,7 @@ Operation b = graph.opBuilder("Const", "b")
 
 现在，让我们看看如何定义占位符:
 
-```
+```java
 Operation x = graph.opBuilder("Placeholder", "x")
   .setAttr("dtype", DataType.fromClass(Double.class))
   .build();			
@@ -105,7 +105,7 @@ Operation y = graph.opBuilder("Placeholder", "y")
 
 在 TensorFlow 中，这些也不过是`Operation`而已，而`Graph.opBuilder()`再次变得很方便:
 
-```
+```java
 Operation ax = graph.opBuilder("Mul", "ax")
   .addInput(a.output(0))
   .addInput(x.output(0))
@@ -130,7 +130,7 @@ Operation z = graph.opBuilder("Add", "z")
 
 不幸的是，Java API 不能生成 TensorBoard 使用的事件文件。但是使用 Python 中的 API，我们可以生成如下事件文件:
 
-```
+```java
 writer = tf.summary.FileWriter('.')
 ......
 writer.add_graph(tf.get_default_graph())
@@ -141,7 +141,7 @@ writer.flush()
 
 我们现在可以在 TensorBoard 中加载并可视化事件文件，如下所示:
 
-```
+```java
 tensorboard --logdir .
 ```
 
@@ -155,13 +155,13 @@ TensorBoard 是 TensorFlow 安装的一部分。
 
 我们现在已经在 TensorFlow Java API 中为我们的简单方程创建了一个计算图。但是我们如何运行它呢？在解决这个问题之前，让我们看看我们刚刚创建的`Graph`的状态是什么。如果我们试图打印我们最后的`Operation`“z”的输出:
 
-```
+```java
 System.out.println(z.output(0));
 ```
 
 这将导致类似以下的结果:
 
-```
+```java
 <Add 'z:0' shape=<unknown> dtype=DOUBLE>
 ```
 
@@ -169,13 +169,13 @@ System.out.println(z.output(0));
 
 现在让我们定义一个`Session` 来运行我们的`Graph`:
 
-```
+```java
 Session sess = new Session(graph)
 ```
 
 最后，我们现在准备运行我们的图表，并获得我们一直期待的输出:
 
-```
+```java
 Tensor<Double> tensor = sess.runner().fetch("z")
   .feed("x", Tensor.<Double>create(3.0, Double.class))
   .feed("y", Tensor.<Double>create(6.0, Double.class))
@@ -192,7 +192,7 @@ System.out.println(tensor.doubleValue());
 
 现在我们看到标量输出:
 
-```
+```java
 21.0
 ```
 
@@ -222,7 +222,7 @@ System.out.println(tensor.doubleValue());
 
 让我们看看我们可以在 Python 中做到这一点:
 
-```
+```java
 import tensorflow as tf
 graph = tf.Graph()
 builder = tf.saved_model.builder.SavedModelBuilder('./model')
@@ -244,7 +244,7 @@ with graph.as_default():
 
 我们现在将“saved_model.pb”加载到 Java 中。Java TensorFlow API 有`SavedModelBundle`可以处理保存的模型:
 
-```
+```java
 SavedModelBundle model = SavedModelBundle.load("./model", "serve");	
 Tensor<Integer> tensor = model.session().runner().fetch("z")
   .feed("x", Tensor.<Integer>create(3, Integer.class))

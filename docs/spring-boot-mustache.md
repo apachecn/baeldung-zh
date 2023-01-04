@@ -14,7 +14,7 @@
 
 为了能和 Spring Boot 一起使用小胡子，我们需要在我们的`pom.xml:`中添加[专用的 Spring Boot 首发](https://web.archive.org/web/20221206062259/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-mustache%22)
 
-```
+```java
 <dependency>			
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-mustache</artifactId>
@@ -33,7 +33,7 @@
 
 让我们为文章内容编写第一个模板:
 
-```
+```java
 <div class="starter-template">
     {{#articles}}
     <h1>{{title}}</h1>
@@ -46,7 +46,7 @@
 
 我们将保存这个 HTML 文件，比如说`article.html, a`并在我们的`index.html:`中引用它
 
-```
+```java
 <div class="container">
     {{>layout/article}}
 </div>
@@ -56,7 +56,7 @@
 
 注意，默认的 mustache 模板文件扩展名现在是。`mustache`。我们可以用一个属性覆盖这个配置:
 
-```
+```java
 spring.mustache.suffix:.html
 ```
 
@@ -64,7 +64,7 @@ spring.mustache.suffix:.html
 
 现在让我们编写服务商品的控制器:
 
-```
+```java
 @GetMapping("/article")
 public ModelAndView displayArticle(Map<String, Object> model) {
 
@@ -82,7 +82,7 @@ public ModelAndView displayArticle(Map<String, Object> model) {
 
 这将迭代传递的模型，并分别呈现每个元素，就像在 HTML 表中一样:
 
-```
+```java
  {{#articles}}...{{/articles}} 
 ```
 
@@ -92,7 +92,7 @@ public ModelAndView displayArticle(Map<String, Object> model) {
 
 现在，让我们测试我们的应用程序:
 
-```
+```java
 @Test
 public void givenIndexPage_whenContainsArticle_thenTrue() {
 
@@ -108,7 +108,7 @@ public void givenIndexPage_whenContainsArticle_thenTrue() {
 
 我们还可以通过部署以下组件来测试应用程序:
 
-```
+```java
 mvn spring-boot:run
 ```
 
@@ -122,7 +122,7 @@ mvn spring-boot:run
 
 为了避免这种错误，最好为所有占位符提供一个默认的全局值:
 
-```
+```java
 @Bean
 public Mustache.Compiler mustacheCompiler(
   Mustache.TemplateLoader templateLoader, 
@@ -143,7 +143,7 @@ public Mustache.Compiler mustacheCompiler(
 
 现在，让我们讨论如果我们决定不使用 Spring Boot，如何与 Spring MVC 集成。首先，让我们添加依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.github.sps.mustache</groupId>
     <artifactId>mustache-spring-view</artifactId>
@@ -155,7 +155,7 @@ public Mustache.Compiler mustacheCompiler(
 
 接下来，我们需要配置`MustacheViewResolver` 而不是 Spring 的`InternalResourceViewResolver`:
 
-```
+```java
 @Bean
 public ViewResolver getViewResolver(ResourceLoader resourceLoader) {
     MustacheViewResolver mustacheViewResolver

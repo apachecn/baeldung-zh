@@ -16,13 +16,13 @@
 
 我们将把这个路径传递给一个 Java `File`对象，它将代表我们的临时目录:
 
-```
+```java
 private static final File TEMP_DIRECTORY = new File(System.getProperty("java.io.tmpdir"));
 ```
 
 现在让我们在其中创建一个新目录。**我们将通过在一个新的`File`对象上调用`File::mkdir`方法来实现这一点，该对象表示要创建的目录:**
 
-```
+```java
 File newDirectory = new File(TEMP_DIRECTORY, "new_directory");
 assertFalse(newDirectory.exists());
 assertTrue(newDirectory.mkdir());
@@ -34,7 +34,7 @@ assertTrue(newDirectory.mkdir());
 
 如果我们再打同样的电话:
 
-```
+```java
 assertTrue(newDirectory.exists());
 assertFalse(newDirectory.mkdir());
 ```
@@ -45,7 +45,7 @@ assertFalse(newDirectory.mkdir());
 
 考虑到这一点，我们必须找到一种方法来确保我们的目录最终存在，要么是我们创建的，要么是它已经存在了。为此，[我们可以使用`isDirectory()`方法](https://web.archive.org/web/20221115015550/https://twitter.com/steveloughran/status/1087428893882175490):
 
-```
+```java
 newDirectory.mkdir() || newDirectory.isDirectory()
 ```
 
@@ -57,7 +57,7 @@ newDirectory.mkdir() || newDirectory.isDirectory()
 
 在下面的例子中，我们将看到`File::mkdir`对此不起作用:
 
-```
+```java
 File newDirectory = new File(TEMP_DIRECTORY, "new_directory");
 File nestedDirectory = new File(newDirectory, "nested_directory");
 assertFalse(newDirectory.exists());
@@ -73,7 +73,7 @@ assertFalse(nestedDirectory.mkdir());
 
 注意，到目前为止我们使用的是`File(File, String)`构造函数，但是**我们也可以使用`File(String)`构造函数，并使用`File.separator`** 来传递文件的完整路径，以分隔路径的不同部分:
 
-```
+```java
 File newDirectory = new File(System.getProperty("java.io.tmpdir") + File.separator + "new_directory");
 File nestedDirectory = new File(newDirectory, "nested_directory");
 assertFalse(newDirectory.exists());

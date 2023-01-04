@@ -18,7 +18,7 @@ Java 提供了许多方便的方法来截断`String`。让我们来看看。
 
 让我们来看看它的实际应用:
 
-```
+```java
 static String usingSubstringMethod(String text, int length) {
     if (text.length() <= length) {
         return text;
@@ -34,7 +34,7 @@ static String usingSubstringMethod(String text, int length) {
 
 让我们用一个测试案例来证实这一点:
 
-```
+```java
 static final String TEXT = "Welcome to baeldung.com";
 
 @Test
@@ -52,7 +52,7 @@ public void givenStringAndLength_whenUsingSubstringMethod_thenTrim() {
 
 这里我们将使用一个名为[正向后视](/web/20221020160428/https://www.baeldung.com/java-regex-lookahead-lookbehind#positive-lookbehind)的正则表达式特性来匹配从`String`开头开始的指定数量的字符:
 
-```
+```java
 static String usingSplitMethod(String text, int length) {
 
     String[] results = text.split("(?<=\\G.{" + length + "})");
@@ -65,7 +65,7 @@ static String usingSplitMethod(String text, int length) {
 
 让我们测试一下我们的方法:
 
-```
+```java
 @Test
 public void givenStringAndLength_whenUsingSplitMethod_thenTrim() {
 
@@ -79,7 +79,7 @@ public void givenStringAndLength_whenUsingSplitMethod_thenTrim() {
 
 例如，让我们使用 `{1,” + length + “}.` 这个正则表达式匹配至少一个最多`length`个字符:
 
-```
+```java
 static String usingPattern(String text, int length) {
 
     Optional<String> result = Pattern.compile(".{1," + length + "}")
@@ -97,7 +97,7 @@ static String usingPattern(String text, int length) {
 
 现在让我们添加一个测试用例来验证我们的代码是否如预期的那样工作:
 
-```
+```java
 @Test
 public void givenStringAndLength_whenUsingPattern_thenTrim() {
 
@@ -111,7 +111,7 @@ Java 9 提供了一个`codePoints()`方法来将一个`String`转换成一个由
 
 让我们看看如何使用这个方法和[流 API](/web/20221020160428/https://www.baeldung.com/java-8-streams) 来截断一个字符串:
 
-```
+```java
 static String usingCodePointsMethod(String text, int length) {
 
     return text.codePoints()
@@ -125,7 +125,7 @@ static String usingCodePointsMethod(String text, int length) {
 
 接下来，让我们验证我们的方法是否可行:
 
-```
+```java
 @Test
 public void givenStringAndLength_whenUsingCodePointsMethod_thenTrim() {
 
@@ -139,7 +139,7 @@ public void givenStringAndLength_whenUsingCodePointsMethod_thenTrim() {
 
 首先，让我们将 Apache Commons [依赖项](https://web.archive.org/web/20221020160428/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.commons%22%20AND%20a%3A%22commons-lang3%22)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -151,7 +151,7 @@ public void givenStringAndLength_whenUsingCodePointsMethod_thenTrim() {
 
 `StringUtils`有一个有用的`static`方法叫做`left()`。 **`StringUtils.left()`以空安全的方式返回指定数量的`String`最左边的字符:**
 
-```
+```java
 static String usingLeftMethod(String text, int length) {
 
     return StringUtils.left(text, length);
@@ -162,7 +162,7 @@ static String usingLeftMethod(String text, int length) {
 
 或者，我们可以使用`StringUtils.truncate()`来完成同样的目标:
 
-```
+```java
 public static String usingTruncateMethod(String text, int length) {
 
     return StringUtils.truncate(text, length);
@@ -173,7 +173,7 @@ public static String usingTruncateMethod(String text, int length) {
 
 除了使用核心 Java 方法和 Apache Commons 库来截断一个`String`，我们还可以使用[番石榴](/web/20221020160428/https://www.baeldung.com/guava-guide)。让我们首先将番石榴[依赖关系](https://web.archive.org/web/20221020160428/https://search.maven.org/search?q=g:com.google.guava%20AND%20a:guava)添加到我们的`pom.xml` 文件中:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -183,7 +183,7 @@ public static String usingTruncateMethod(String text, int length) {
 
 现在我们可以使用 Guava 的`Splitter`类来截断我们的`String`:
 
-```
+```java
 static String usingSplitter(String text, int length) {
 
     Iterable<String> parts = Splitter.fixedLength(length)

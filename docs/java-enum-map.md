@@ -12,7 +12,7 @@
 
 假设有一个简单的需求，我们需要将一周中的每一天与当天我们参加的运动对应起来:
 
-```
+```java
 Monday     Soccer                         
 Tuesday    Basketball                     
 Wednesday  Hiking                         
@@ -21,7 +21,7 @@ Thursday   Karate
 
 为此，我们可以使用枚举:
 
-```
+```java
 public enum DayOfWeek {
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
 }
@@ -33,7 +33,7 @@ public enum DayOfWeek {
 
 要开始探索`EnumMap`，首先我们需要实例化一个:
 
-```
+```java
 EnumMap<DayOfWeek, String> activityMap = new EnumMap<>(DayOfWeek.class);
 activityMap.put(DayOfWeek.MONDAY, "Soccer"); 
 ```
@@ -44,7 +44,7 @@ activityMap.put(DayOfWeek.MONDAY, "Soccer");
 
 还附带了两个复制构造函数。第一部拍另一部`EnumMap`:
 
-```
+```java
 EnumMap<DayOfWeek, String> activityMap = new EnumMap<>(DayOfWeek.class);
 activityMap.put(DayOfWeek.MONDAY, "Soccer");
 activityMap.put(DayOfWeek.TUESDAY, "Basketball");
@@ -59,7 +59,7 @@ assertThat(activityMapCopy.get(DayOfWeek.TUESDAY)).isEqualTo("Basketball");
 
 或者，**如果我们有一个非空的`Map`，它的键是一个枚举，那么我们也可以这样做:**
 
-```
+```java
 Map<DayOfWeek, String> ordinaryMap = new HashMap();
 ordinaryMap.put(DayOfWeek.MONDAY, "Soccer");
 
@@ -76,13 +76,13 @@ assertThat(enumMap.get(DayOfWeek.MONDAY)).isEqualTo("Soccer");
 
 在实例化一个`EnumMap`之后，我们可以使用 [`put()`](https://web.archive.org/web/20220712135027/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/EnumMap.html#put(K,V)) 方法添加我们的运动:
 
-```
+```java
 activityMap.put(DayOfWeek.MONDAY, "Soccer");
 ```
 
 而要检索它，我们可以用 [`get()`](https://web.archive.org/web/20220712135027/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#get(java.lang.Object)) :
 
-```
+```java
 assertThat(clubMap.get(DayOfWeek.MONDAY)).isEqualTo("Soccer");
 ```
 
@@ -90,14 +90,14 @@ assertThat(clubMap.get(DayOfWeek.MONDAY)).isEqualTo("Soccer");
 
 为了检查我们是否为某一天定义了映射，我们使用 [`containsKey()`](https://web.archive.org/web/20220712135027/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/EnumMap.html#containsKey(java.lang.Object)) :
 
-```
+```java
 activityMap.put(DayOfWeek.WEDNESDAY, "Hiking");
 assertThat(activityMap.containsKey(DayOfWeek.WEDNESDAY)).isTrue();
 ```
 
 并且，为了检查一个特定的运动是否映射到任何键，我们使用 [`containsValue()`](https://web.archive.org/web/20220712135027/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/EnumMap.html#containsValue(java.lang.Object)) :
 
-```
+```java
 assertThat(activityMap.containsValue("Hiking")).isTrue(); 
 ```
 
@@ -107,7 +107,7 @@ assertThat(activityMap.containsValue("Hiking")).isTrue();
 
 让我们把`null` 和“无所事事”联系起来，映射到周六:
 
-```
+```java
 assertThat(activityMap.containsKey(DayOfWeek.SATURDAY)).isFalse();
 assertThat(activityMap.containsValue(null)).isFalse();
 activityMap.put(DayOfWeek.SATURDAY, null);
@@ -119,7 +119,7 @@ assertThat(activityMap.containsValue(null)).isTrue();
 
 为了揭示特定的一天，我们简单地把它:
 
-```
+```java
 activityMap.put(DayOfWeek.MONDAY, "Soccer");
 assertThat(activityMap.remove(DayOfWeek.MONDAY)).isEqualTo("Soccer");
 assertThat(activityMap.containsKey(DayOfWeek.MONDAY)).isFalse(); 
@@ -129,7 +129,7 @@ assertThat(activityMap.containsKey(DayOfWeek.MONDAY)).isFalse();
 
 我们还可以选择**取消特定日期的映射`only if`该日期被映射到特定活动:**
 
-```
+```java
 activityMap.put(DayOfWeek.Monday, "Soccer");
 assertThat(activityMap.remove(DayOfWeek.Monday, "Hiking")).isEqualTo(false);
 assertThat(activityMap.remove(DayOfWeek.Monday, "Soccer")).isEqualTo(true); 
@@ -143,7 +143,7 @@ assertThat(activityMap.remove(DayOfWeek.Monday, "Soccer")).isEqualTo(true);
 
 首先，让我们创建一个新的活动地图:
 
-```
+```java
 EnumMap<DayOfWeek, String> activityMap = new EnumMap(DayOfWeek.class);
 activityMap.put(DayOfWeek.THURSDAY, "Karate");
 activityMap.put(DayOfWeek.WEDNESDAY, "Hiking");
@@ -154,7 +154,7 @@ activityMap.put(DayOfWeek.MONDAY, "Soccer");
 
 我们的活动地图的第一个视图是`[values()](https://web.archive.org/web/20220712135027/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/EnumMap.html#values()) `，顾名思义，它返回地图中的所有值:
 
-```
+```java
 Collection values = dayMap.values();
 assertThat(values)
   .containsExactly("Soccer", "Hiking", "Karate"); 
@@ -166,7 +166,7 @@ assertThat(values)
 
 类似地，`[keySet()](https://web.archive.org/web/20220712135027/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/EnumMap.html#keySet())`返回键的集合，同样按照枚举顺序:
 
-```
+```java
 Set keys = dayMap.keySet();
 assertThat(keys)
         .containsExactly(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.SATURDAY); 
@@ -176,7 +176,7 @@ assertThat(keys)
 
 最后，`[entrySet()](https://web.archive.org/web/20220712135027/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/EnumMap.html#entrySet())`返回成对的键和值的映射:
 
-```
+```java
 assertThat(dayMap.entrySet())
     .containsExactly(
         new SimpleEntry(DayOfWeek.MONDAY, "Soccer"),
@@ -191,7 +191,7 @@ assertThat(dayMap.entrySet())
 
 **现在，请记住，我们在原始活动地图中所做的任何更改都将反映在它的任何视图中:**
 
-```
+```java
 activityMap.put(DayOfWeek.TUESDAY, "Basketball");
 assertThat(values)
     .containsExactly("Soccer", "Basketball", "Hiking", "Karate"); 
@@ -199,7 +199,7 @@ assertThat(values)
 
 反之亦然；我们对子视图所做的任何更改都将反映在原始活动图中:
 
-```
+```java
 values.remove("Hiking");
 assertThat(activityMap.containsKey(DayOfWeek.WEDNESDAY)).isFalse();
 assertThat(activityMap.size()).isEqualTo(3); 

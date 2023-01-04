@@ -20,7 +20,7 @@
 
 首先，让我们创建一个`Inventory`类:
 
-```
+```java
 @Document(collection = "inventory")
 public class Inventory {
 
@@ -38,7 +38,7 @@ public class Inventory {
 
 然后，为了测试`MongoRepository`，我们创建了一个`InventoryRepository`。我们还将在`@Query`中使用一个`where`条件。例如，我们想过滤库存状态:
 
-```
+```java
 public interface InventoryRepository extends MongoRepository<Inventory, String> {
 
     @Query(value = "{ 'status' : ?0 }", fields = "{ 'item' : 1, 'status' : 1 }")
@@ -69,7 +69,7 @@ public interface InventoryRepository extends MongoRepository<Inventory, String> 
 
 **我们还将使用[嵌入式 MongoDB](/web/20220617075805/https://www.baeldung.com/spring-boot-embedded-mongodb) 。** L et 将 [`spring-data-mongodb`](https://web.archive.org/web/20220617075805/https://search.maven.org/artifact/org.springframework.data/spring-data-mongodb) 和 [`de.flapdoodle.embed.mongo`](https://web.archive.org/web/20220617075805/https://search.maven.org/artifact/de.flapdoodle.embed/de.flapdoodle.embed.mongo) 依赖关系添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-mongodb</artifactId>
@@ -95,7 +95,7 @@ public interface InventoryRepository extends MongoRepository<Inventory, String> 
 
 让我们从包含一些字段开始。所有被排除的将是`null`。投影默认添加了 _`id`:
 
-```
+```java
 List<Inventory> inventoryList = inventoryRepository.findByStatusIncludeItemAndStatusFields("A");
 
 inventoryList.forEach(i -> {
@@ -109,7 +109,7 @@ inventoryList.forEach(i -> {
 
 现在，让我们来看看`MongoTemplate`版本:
 
-```
+```java
 Query query = new Query();
  query.fields()
    .include("item")
@@ -120,7 +120,7 @@ Query query = new Query();
 
 这一次，我们将看到明确包括一些字段但排除其他字段的示例—在这种情况下，我们将排除 _ `id`字段:
 
-```
+```java
 List<Inventory> inventoryList = inventoryRepository.findByStatusIncludeItemAndStatusExcludeIdFields("A");
 
 inventoryList.forEach(i -> {
@@ -134,7 +134,7 @@ inventoryList.forEach(i -> {
 
 使用`MongoTemplate`的等效查询将是:
 
-```
+```java
 Query query = new Query();
 query.fields()
   .include("item")
@@ -146,7 +146,7 @@ query.fields()
 
 让我们继续排除一些字段。所有其他字段将为非空:
 
-```
+```java
 List<Inventory> inventoryList = inventoryRepository.findByStatusIncludeAllButStatusAndStockFields("A");
 
 inventoryList.forEach(i -> {
@@ -160,7 +160,7 @@ inventoryList.forEach(i -> {
 
 让我们来看看`MongoTemplate`版本:
 
-```
+```java
 Query query = new Query();
 query.fields()
   .exclude("status")
@@ -171,7 +171,7 @@ query.fields()
 
 同样，包含嵌入字段会将它们添加到我们的结果中:
 
-```
+```java
 List<Inventory> inventoryList = inventoryRepository.findByStatusIncludeEmbeddedFields("A");
 
 inventoryList.forEach(i -> {
@@ -188,7 +188,7 @@ inventoryList.forEach(i -> {
 
 让我们看看如何用`MongoTemplate`做同样的事情:
 
-```
+```java
 Query query = new Query();
 query.fields()
   .include("item")
@@ -200,7 +200,7 @@ query.fields()
 
 同样，**排除嵌入的字段使它们不在我们的结果中，但是，它会添加剩余的嵌入字段**:
 
-```
+```java
 List<Inventory> inventoryList = inventoryRepository.findByStatusExcludeEmbeddedFields("A");
 
 inventoryList.forEach(i -> {
@@ -217,7 +217,7 @@ inventoryList.forEach(i -> {
 
 我们来看看`MongoTemplate`版本:
 
-```
+```java
 Query query = new Query();
 query.fields()
   .exclude("size.uom"); 
@@ -227,7 +227,7 @@ query.fields()
 
 与其他字段类似，我们也可以添加数组字段的投影:
 
-```
+```java
 List<Inventory> inventoryList = inventoryRepository.findByStatusIncludeEmbeddedFieldsInArray("A");
 
 inventoryList.forEach(i -> {
@@ -246,7 +246,7 @@ inventoryList.forEach(i -> {
 
 让我们使用`MongoTemplate`来实现同样的功能:
 
-```
+```java
 Query query = new Query();
 query.fields()
   .include("item")
@@ -258,7 +258,7 @@ query.fields()
 
 MongoDB 可以使用 JavaScript 函数来限制数组的结果——例如，使用`slice`只获取数组中的最后一个元素:
 
-```
+```java
 List<Inventory> inventoryList = inventoryRepository.findByStatusIncludeEmbeddedFieldsLastElementInArray("A");
 
 inventoryList.forEach(i -> {
@@ -273,7 +273,7 @@ inventoryList.forEach(i -> {
 
 让我们使用`MongoTemplate`执行同样的查询:
 
-```
+```java
 Query query = new Query();
 query.fields()
   .include("item")

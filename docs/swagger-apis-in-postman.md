@@ -24,7 +24,7 @@ Postman 是一个用于构建和使用 API 的 API 平台。Postman 简化了 AP
 
 我们需要添加几个将 Swagger 用于 Swagger-UI 的依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.springfox</groupId>
     <artifactId>springfox-swagger2</artifactId>
@@ -41,7 +41,7 @@ Postman 是一个用于构建和使用 API 的 API 平台。Postman 简化了 AP
 
 Swagger 的配置非常简单:
 
-```
+```java
 @Configuration
 public class SpringFoxConfig {
     @Bean

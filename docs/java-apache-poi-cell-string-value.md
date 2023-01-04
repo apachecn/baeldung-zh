@@ -12,7 +12,7 @@
 
 首先，我们首先需要将 [poi](https://web.archive.org/web/20220626073851/https://search.maven.org/search?q=g:org.apache.poi%20a:poi) 依赖项添加到我们的项目`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.poi</groupId>
     <artifactId>poi</artifactId>
@@ -35,7 +35,7 @@ Apache POI 使用 [`Workbook`](https://web.archive.org/web/20220626073851/https:
 
 **我们可以使用`[DataFormatter](https://web.archive.org/web/20220626073851/https://poi.apache.org/apidocs/dev/org/apache/poi/ss/usermodel/DataFormatter.html)` 来获取 Excel 单元格的字符串值。**它可以获取一个单元格中存储的值的格式化字符串表示。例如，如果一个单元格的数值是 1.234，并且该单元格的格式规则是两位小数点，我们将得到字符串表示“1.23”:
 
-```
+```java
 Cell cell = // a numeric cell with value of 1.234 and format rule "0.00"
 
 DataFormatter formatter = new DataFormatter();
@@ -50,7 +50,7 @@ assertEquals("1.23", strValue);
 
 如果单元格的类型是公式，前面的方法将返回原始公式字符串，而不是计算出的公式值。因此，**要得到公式值的字符串表示，我们需要用`[FormulaEvaluator](https://web.archive.org/web/20220626073851/https://poi.apache.org/apidocs/dev/org/apache/poi/ss/usermodel/FormulaEvaluator.html)`对公式**求值:
 
-```
+```java
 Workbook workbook = // existing Workbook setup
 FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 

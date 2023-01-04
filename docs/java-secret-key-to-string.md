@@ -16,7 +16,7 @@
 
 为了生成密钥，我们可以使用`KeyGenerator`类。让我们定义一个生成`SecretKey`的方法——参数`n`以位为单位指定密钥的长度(128、192 或 256):
 
-```
+```java
 public static SecretKey generateKey(int n) throws NoSuchAlgorithmException {
     KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
     keyGenerator.init(n);
@@ -31,7 +31,7 @@ public static SecretKey generateKey(int n) throws NoSuchAlgorithmException {
 
 让我们定义一种从给定密码生成`SecretKey`的方法，迭代 65，536 次，密钥长度为 256 位:
 
-```
+```java
 public static SecretKey getKeyFromPassword(String password, String salt)
   throws NoSuchAlgorithmException, InvalidKeySpecException {
     SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
@@ -47,7 +47,7 @@ public static SecretKey getKeyFromPassword(String password, String salt)
 
 我们将把`SecretKey`转换成一个`byte`数组。然后，我们将使用`Base64`编码将`byte`数组转换成`String`:
 
-```
+```java
 public static String convertSecretKeyToString(SecretKey secretKey) throws NoSuchAlgorithmException {
     byte[] rawData = secretKey.getEncoded();
     String encodedKey = Base64.getEncoder().encodeToString(rawData);
@@ -59,7 +59,7 @@ public static String convertSecretKeyToString(SecretKey secretKey) throws NoSuch
 
 我们将使用`Base64 `解码将编码的`String`键转换成一个`byte`数组。然后，使用`SecretKeySpecs`，我们将把`byte`数组转换成`SecretKey`:
 
-```
+```java
 public static SecretKey convertStringToSecretKeyto(String encodedKey) {
     byte[] decodedKey = Base64.getDecoder().decode(encodedKey);
     SecretKey originalKey = new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
@@ -69,7 +69,7 @@ public static SecretKey convertStringToSecretKeyto(String encodedKey) {
 
 让我们快速验证一下转换:
 
-```
+```java
 SecretKey encodedKey = ConversionClassUtil.getKeyFromPassword("[[email protected]](/web/20220630020741/https://www.baeldung.com/cdn-cgi/l/email-protection)", "@$#[[email protected]](/web/20220630020741/https://www.baeldung.com/cdn-cgi/l/email-protection)#^$*");
 String encodedString = ConversionClassUtil.convertSecretKeyToString(encodedKey);
 SecretKey decodeKey = ConversionClassUtil.convertStringToSecretKeyto(encodedString);

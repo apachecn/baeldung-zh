@@ -12,7 +12,7 @@
 
 让我们首先创建一个执行计算的方法:
 
-```
+```java
 private void calculateArea(double radius) {
     double area = radius * radius * Math.PI;
     System.out.println("The area of the circle [radius = " + radius + "]: " + area);
@@ -23,21 +23,21 @@ private void calculateArea(double radius) {
 
 现在我们可以读取命令行参数并计算面积:
 
-```
+```java
 double radius = Double.parseDouble(args[0]);
 calculateArea(radius);
 ```
 
 当我们编译和运行程序时:
 
-```
+```java
 java CircleArea.java
 javac CircleArea 7
 ```
 
 我们将得到以下输出:
 
-```
+```java
 The area of the circle [radius = 7.0]: 153.93804002589985
 ```
 
@@ -45,7 +45,7 @@ The area of the circle [radius = 7.0]: 153.93804002589985
 
 获得半径值的另一种方法是使用来自用户的输入数据:
 
-```
+```java
 Scanner sc = new Scanner(System.in);
 System.out.println("Please enter radius value: ");
 double radius = sc.nextDouble();
@@ -58,7 +58,7 @@ calculateArea(radius);
 
 除了调用我们在第 2 节中看到的计算面积的方法之外，我们还可以创建一个表示圆的类:
 
-```
+```java
 public class Circle {
 
     private double radius;
@@ -83,7 +83,7 @@ public class Circle {
 
 我们现在可以实例化我们的 Circle 对象:
 
-```
+```java
 Circle circle = new Circle(7);
 ```
 

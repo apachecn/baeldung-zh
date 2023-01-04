@@ -13,7 +13,7 @@
 
 ## 2.Maven 依赖性
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -29,7 +29,7 @@
 
 然而，如果它是`Error, RuntimeException`或`Exception`的实例，我们可以调用`propagateIfPossible`来传播它:
 
-```
+```java
 try {
     methodThatMightThrowThrowable();
 } catch (Throwable t) {
@@ -42,19 +42,19 @@ try {
 
 Guava 还提供了检查抛出的异常及其链的实用方法。
 
-```
+```java
 Throwable getRootCause(Throwable) 
 ```
 
 **`getRootCause`方法允许我们获得最内部的异常**，这在我们想要找到最初的原因时很有用。
 
-```
+```java
 List<Throwable> getCausalChain(Throwable)
 ```
 
 这个`getCausalChain`方法将返回层次结构中所有 throwables 的列表。如果我们想检查它是否包含某种类型的异常，这很方便。
 
-```
+```java
 String getStackTraceAsString(Throwable)
 ```
 

@@ -20,7 +20,7 @@
 
 让我们来看一个例子:
 
-```
+```java
 public class MyBeanName implements BeanNameAware {
 
     @Override
@@ -34,7 +34,7 @@ public class MyBeanName implements BeanNameAware {
 
 接下来，让我们在 Spring 配置类中注册一个这种类型的 bean:
 
-```
+```java
 @Configuration
 public class Config {
 
@@ -49,7 +49,7 @@ public class Config {
 
 现在，我们可以启动应用程序上下文并从中获取 bean:
 
-```
+```java
 AnnotationConfigApplicationContext context 
   = new AnnotationConfigApplicationContext(Config.class);
 
@@ -66,7 +66,7 @@ MyBeanName myBeanName = context.getBean(MyBeanName.class);
 
 下面是一个`MyBeanFactory`类的例子:
 
-```
+```java
 public class MyBeanFactory implements BeanFactoryAware {
 
     private BeanFactory beanFactory;
@@ -89,7 +89,7 @@ public class MyBeanFactory implements BeanFactoryAware {
 
 让我们初始化`MyBeanFactory`并调用`getMyBeanName()`方法:
 
-```
+```java
 MyBeanFactory myBeanFactory = context.getBean(MyBeanFactory.class);
 myBeanFactory.getMyBeanName();
 ```

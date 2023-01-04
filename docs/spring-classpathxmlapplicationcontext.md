@@ -20,7 +20,7 @@ Spring 中有两种基本类型的容器 Bean 工厂和应用程序上下文。�
 
 我们有一门`Student`课:
 
-```
+```java
 public class Student {
     private int no;
     private String name;
@@ -31,7 +31,7 @@ public class Student {
 
 我们在`classpathxmlapplicationcontext-example.xml`中配置一个`Student` bean，并将其添加到一个类路径中:
 
-```
+```java
 <beans ...>
     <bean id="student" class="com.baeldung.applicationcontext.Student">
         <property name="no" value="15"/>
@@ -42,7 +42,7 @@ public class Student {
 
 现在我们可以使用`ClassPathXmlApplicationContext`来加载 XML 配置并获得`Student` bean:
 
-```
+```java
 @Test
 public void testBasicUsage() {
     ApplicationContext context 
@@ -63,7 +63,7 @@ public void testBasicUsage() {
 
 有时我们想使用几个 XML 配置来初始化一个 Spring 容器。在这种情况下，我们只需要在构造`ApplicationContext`时添加几个配置位置:
 
-```
+```java
 ApplicationContext context 
   = new ClassPathXmlApplicationContext("ctx.xml", "ctx2.xml");
 ```
@@ -76,7 +76,7 @@ ApplicationContext context
 
 让我们给`Student`类添加一个`destroy()`方法:
 
-```
+```java
 public void destroy() {
     System.out.println("Student(no: " + no + ") is destroyed");
 }
@@ -84,7 +84,7 @@ public void destroy() {
 
 我们现在可以将这个方法配置为`student` bean 的销毁方法:
 
-```
+```java
 <beans ...>
     <bean id="student" class="com.baeldung.applicationcontext.Student" 
       destroy-method="destroy">
@@ -96,7 +96,7 @@ public void destroy() {
 
 我们现在将注册一个关闭挂钩:
 
-```
+```java
 @Test
 public void testRegisterShutdownHook() {
     ConfigurableApplicationContext context 
@@ -120,7 +120,7 @@ public void testRegisterShutdownHook() {
 
 `dialog_en.properties`:
 
-```
+```java
 hello=hello
 you=you
 thanks=thank {0}
@@ -128,7 +128,7 @@ thanks=thank {0}
 
 `dialog_zh_CN.properties`:
 
-```
+```java
 hello=\u4f60\u597d
 you=\u4f60
 thanks=\u8c22\u8c22{0}
@@ -136,7 +136,7 @@ thanks=\u8c22\u8c22{0}
 
 在`classpathxmlapplicationcontext-internationalization.xml`中配置`messageSource` bean:
 
-```
+```java
 <beans ...>
     <bean id="messageSource"
       class="org.springframework.context.support.ResourceBundleMessageSource">
@@ -151,7 +151,7 @@ thanks=\u8c22\u8c22{0}
 
 然后，让我们用`MessageSource`得到不同语言的对话词:
 
-```
+```java
 @Test
 public void testInternationalization() {
     MessageSource resources 
@@ -186,7 +186,7 @@ public void testInternationalization() {
 
 我们有一个名为`Course`的类:
 
-```
+```java
 public class Course {
 
     private String name;
@@ -197,7 +197,7 @@ public class Course {
 
 我们有一个`Teacher`类，它根据容器的 beans 组装它的课程:
 
-```
+```java
 public class Teacher implements ApplicationContextAware {
 
     private ApplicationContext context;
@@ -226,7 +226,7 @@ public class Teacher implements ApplicationContextAware {
 
 让我们在`classpathxmlapplicationcontext-example.xml`中配置`course` bean 和`teacher` bean:
 
-```
+```java
 <beans ...>
     <bean id="math" class="com.baeldung.applicationcontext.Course">
         <property name="name" value="math"/>
@@ -238,7 +238,7 @@ public class Teacher implements ApplicationContextAware {
 
 然后–测试`courses`属性的注入:
 
-```
+```java
 @Test
 public void testApplicationContextAware() {
     ApplicationContext context 
@@ -256,7 +256,7 @@ public void testApplicationContextAware() {
 
 让我们把`Teacher`类改成这样:
 
-```
+```java
 public class Teacher {
 
     @Autowired

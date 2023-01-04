@@ -16,13 +16,13 @@
 
 当我们创建一个模拟对象时，我们所有的模拟都带有一组默认设置。让我们看一个简单的模拟例子:
 
-```
+```java
 List mockedList = mock(List.class);
 ```
 
 在幕后，Mockito `mock`方法委托给另一个重载方法，该重载方法具有我们的 mock 的一组默认设置:
 
-```
+```java
 public static <T> T mock(Class<T> classToMock) {
     return mock(classToMock, withSettings());
 }
@@ -30,7 +30,7 @@ public static <T> T mock(Class<T> classToMock) {
 
 让我们看看我们的默认设置:
 
-```
+```java
 public static MockSettings withSettings() {
     return new MockSettingsImpl().defaultAnswer(RETURNS_DEFAULTS);
 }
@@ -48,7 +48,7 @@ public static MockSettings withSettings() {
 
 假设我们有一个非常简单的模拟设置:
 
-```
+```java
 PizzaService service = mock(PizzaService.class);
 Pizza pizza = service.orderHouseSpecial();
 PizzaSize size = pizza.getSize();
@@ -60,13 +60,13 @@ PizzaSize size = pizza.getSize();
 
 为了帮助我们解决这个问题，**我们可以在模拟创建过程中通过模拟设置提供不同的默认答案**:
 
-```
+```java
 PizzaService pizzaService = mock(PizzaService.class, withSettings().defaultAnswer(RETURNS_SMART_NULLS));
 ```
 
 通过使用`RETURNS_SMART_NULLS`作为我们的默认答案，Mockito 给了我们一个更有意义的错误消息，告诉我们错误的存根发生在哪里:
 
-```
+```java
 org.mockito.exceptions.verification.SmartNullPointerException: 
 You have a NullPointerException here:
 -> at com.baeldung.mockito.mocksettings.MockSettingsUnitTest.whenServiceMockedWithSmartNulls_thenExceptionHasExtraInfo(MockSettingsUnitTest.java:45)
@@ -85,7 +85,7 @@ pizzaService.orderHouseSpecial();
 
 我们可以通过使用`MockSettings`的`name`方法给我们的模拟命名。这对于调试特别有用，因为我们提供的名称会在所有验证错误中使用:
 
-```
+```java
 PizzaService service = mock(PizzaService.class, withSettings()
   .name("pizzaServiceMock")
   .verboseLogging()
@@ -98,7 +98,7 @@ PizzaService service = mock(PizzaService.class, withSettings()
 
 当我们运行测试时，我们将在控制台上看到一些输出:
 
-```
+```java
 pizzaServiceMock.orderHouseSpecial();
    invoked: -> at com.baeldung.mockito.mocksettings.MockSettingsUnitTest.whenServiceMockedWithNameAndVerboseLogging_thenLogsMethodInvocations(MockSettingsUnitTest.java:36)
    has returned: "Mock for Pizza, hashCode: 366803687" (com.baeldung.mockito.fluentapi.Pizza$MockitoMock$168951489)
@@ -112,7 +112,7 @@ pizzaServiceMock.orderHouseSpecial();
 
 假设我们有一个特殊的界面:
 
-```
+```java
 public interface SpecialInterface {
     // Public methods
 }
@@ -120,7 +120,7 @@ public interface SpecialInterface {
 
 和一个使用这个接口的类:
 
-```
+```java
 public class SimpleService {
 
     public SimpleService(SpecialInterface special) {
@@ -133,14 +133,14 @@ public class SimpleService {
 
 当然，这不是[干净的代码](/web/20221208143832/https://www.baeldung.com/java-clean-code)，但是如果我们被迫为此编写单元测试，我们很可能会遇到问题:
 
-```
+```java
 SpecialInterface specialMock = mock(SpecialInterface.class);
 SimpleService service = new SimpleService(specialMock);
 ```
 
 当我们运行这段代码时，我们会得到一个`ClassCastException`。**为了纠正这一点，我们可以使用`extraInterfaces`方法**创建具有多种类型的模拟:
 
-```
+```java
 SpecialInterface specialMock = mock(SpecialInterface.class, withSettings()
   .extraInterfaces(Runnable.class));
 ```
@@ -151,7 +151,7 @@ SpecialInterface specialMock = mock(SpecialInterface.class, withSettings()
 
 在最后一个例子中，我们将看到如何使用`MockSettings`调用带有参数值的真实构造函数:
 
-```
+```java
 @Test
 public void whenMockSetupWithConstructor_thenConstructorIsInvoked() {
     AbstractCoffee coffeeSpy = mock(AbstractCoffee.class, withSettings()

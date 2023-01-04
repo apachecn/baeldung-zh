@@ -14,7 +14,7 @@
 
 `Iterable`只有一种方法产生一个 [`Iterator`](https://web.archive.org/web/20220711232709/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html) `:`
 
-```
+```java
 public interface Iterable<T> {
     public Iterator<T> iterator();    
 }
@@ -30,7 +30,7 @@ public interface Iterable<T> {
 
 这允许我们循环遍历`Iterable`中的元素，同时递增计数器以获得其大小:
 
-```
+```java
 int counter = 0;
 for (Object i : data) {
     counter++;
@@ -44,7 +44,7 @@ return counter;
 
 在这种情况下，我们可以检查`Iterable`的类型，并对其调用`size()`方法来获得元素的数量。
 
-```
+```java
 if (data instanceof Collection) {
     return ((Collection<?>) data).size();
 }
@@ -54,7 +54,7 @@ if (data instanceof Collection) {
 
 **下面的例子展示了上述两种解决方案的组合:**
 
-```
+```java
 public static int size(Iterable data) {
 
     if (data instanceof Collection) {
@@ -74,7 +74,7 @@ public static int size(Iterable data) {
 
 然后可以使用流对象来获得`Iterable`中元素的计数。
 
-```
+```java
 return StreamSupport.stream(data.spliterator(), false).count();
 ```
 
@@ -86,7 +86,7 @@ return StreamSupport.stream(data.spliterator(), false).count();
 
 在开始之前，我们需要从 [Maven Central](https://web.archive.org/web/20220711232709/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.commons%22%20AND%20a%3A%22commons-collections4%22) 导入最新的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -96,7 +96,7 @@ return StreamSupport.stream(data.spliterator(), false).count();
 
 我们可以在一个`Iterable`对象上调用`IterableUtils`的`size()`方法来获取它的大小。
 
-```
+```java
 return IterableUtils.size(data);
 ```
 
@@ -106,7 +106,7 @@ return IterableUtils.size(data);
 
 在开始之前，我们需要从 [Maven Central](https://web.archive.org/web/20220711232709/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.google.guava%22%20AND%20a%3A%22guava%22) 导入最新的依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -116,7 +116,7 @@ return IterableUtils.size(data);
 
 调用`Iterables`类上的静态`size()`方法给我们提供了元素的数量。
 
-```
+```java
 return Iterables.size(data);
 ```
 

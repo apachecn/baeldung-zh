@@ -20,7 +20,7 @@
 
 首先，让我们将[`easy-random-core`Maven 依赖](https://web.archive.org/web/20220628235038/https://mvnrepository.com/artifact/org.jeasy/easy-random-core/4.0.0)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.jeasy</groupId>
     <artifactId>easy-random-core</artifactId>
@@ -41,7 +41,7 @@
 
 让我们用`nextObject(Class<T> t)`**生成我们对象的一个实例:**
 
-```
+```java
 @Test
 void givenDefaultConfiguration_thenGenerateSingleObject() {
     EasyRandom generator = new EasyRandom();
@@ -55,7 +55,7 @@ void givenDefaultConfiguration_thenGenerateSingleObject() {
 
 这是对象在生成后的样子:
 
-```
+```java
 Person[firstName='eOMtThyhVNLWUZNRcBaQKxI', lastName='yedUsFwdkelQbxeTeQOvaScfqIOOmaa', age=-1188957731]
 ```
 
@@ -69,7 +69,7 @@ Person[firstName='eOMtThyhVNLWUZNRcBaQKxI', lastName='yedUsFwdkelQbxeTeQOvaScfqI
 
 下面是我们如何让**生成五个`Person`** 的实例:
 
-```
+```java
 @Test
 void givenDefaultConfiguration_thenGenerateObjectsList() {
     EasyRandom generator = new EasyRandom();
@@ -84,7 +84,7 @@ void givenDefaultConfiguration_thenGenerateObjectsList() {
 
 让我们来看看我们的`Employee`课:
 
-```
+```java
 public class Employee {
     private long id;
     private String firstName;
@@ -107,7 +107,7 @@ public class Employee {
 
 **将`endDate`设置为正好指向开始日期**后的 3 个月，这有点逻辑:
 
-```
+```java
 public class YearQuarter {
 
     private LocalDate startDate;
@@ -140,7 +140,7 @@ public class YearQuarter {
 
 最后，**按照承诺，我们通过应用我们的自定义** `**YearQuarterRandomizer:**`来解决`YearQuarter`类的`startDate` 和 `endDate`代的问题
 
-```
+```java
 @Test
 void givenCustomConfiguration_thenGenerateSingleEmployee() {
     EasyRandomParameters parameters = new EasyRandomParameters();

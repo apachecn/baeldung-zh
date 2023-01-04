@@ -42,7 +42,7 @@ Bucket4j 是一个基于[令牌桶](https://web.archive.org/web/20221208143832/h
 
 让我们从将`[bucket4j](https://web.archive.org/web/20221208143832/https://search.maven.org/search?q=g:com.github.vladimir-bukhtoyarov%20AND%20a:%20bucket4j-core)` 依赖项添加到我们的`pom.xml`开始:
 
-```
+```java
 <dependency>
     <groupId>com.github.vladimir-bukhtoyarov</groupId>
     <artifactId>bucket4j-core</artifactId>
@@ -68,7 +68,7 @@ Bucket4j 是一个基于[令牌桶](https://web.archive.org/web/20221208143832/h
 
 对于每分钟 10 个请求的速率限制，我们将创建一个容量为 10 的存储桶，再填充速率为每分钟 10 个令牌:
 
-```
+```java
 Refill refill = Refill.intervally(10, Duration.ofMinutes(1));
 Bandwidth limit = Bandwidth.classic(10, refill);
 Bucket bucket = Bucket4j.builder()
@@ -87,7 +87,7 @@ assertFalse(bucket.tryConsume(1));
 
 我们将设置每 2 秒 1 个令牌的充值速率，并且**限制我们的请求以遵守速率限制**:
 
-```
+```java
 Bandwidth limit = Bandwidth.classic(1, Refill.intervally(1, Duration.ofSeconds(2)));
 Bucket bucket = Bucket4j.builder()
     .addLimit(limit)
@@ -99,7 +99,7 @@ Executors.newScheduledThreadPool(1)   // schedule another request for 2 seconds 
 
 假设我们的速率限制为每分钟 10 个请求。同时，**我们可能希望避免在前 5 秒耗尽所有令牌的峰值**。Bucket4j 允许我们在同一个桶上设置多个限制(`Bandwidth`)。让我们添加另一个限制，在 20 秒的时间窗口内只允许 5 个请求:
 
-```
+```java
 Bucket bucket = Bucket4j.builder()
     .addLimit(Bandwidth.classic(10, Refill.intervally(10, Duration.ofMinutes(1))))
     .addLimit(Bandwidth.classic(5, Refill.intervally(5, Duration.ofSeconds(20))))
@@ -119,7 +119,7 @@ assertFalse(bucket.tryConsume(1));
 
 我们将实现一个简单但非常受欢迎的面积计算器 REST API。目前，它计算并返回给定尺寸的矩形的面积:
 
-```
+```java
 @RestController
 class AreaCalculationController {
 
@@ -132,7 +132,7 @@ class AreaCalculationController {
 
 让我们确保我们的 API 启动并运行:
 
-```
+```java
 $ curl -X POST http://localhost:9001/api/v1/area/rectangle \
     -H "Content-Type: application/json" \
     -d '{ "length": 10, "width": 12 }'
@@ -146,7 +146,7 @@ $ curl -X POST http://localhost:9001/api/v1/area/rectangle \
 
 让我们修改我们的`Controller`来创建一个`Bucket`并添加限制`(Bandwidth):`
 
-```
+```java
 @RestController
 class AreaCalculationController {
 
@@ -164,7 +164,7 @@ class AreaCalculationController {
 
 在这个 API 中，我们可以通过使用方法`tryConsume`使用桶中的令牌来检查请求是否被允许。如果达到了限制，我们可以通过响应 HTTP 429 太多请求状态来拒绝请求:
 
-```
+```java
 public ResponseEntity<AreaV1> rectangle(@RequestBody RectangleDimensionsV1 dimensions) {
     if (bucket.tryConsume(1)) {
         return ResponseEntity.ok(new AreaV1("rectangle", dimensions.getLength() * dimensions.getWidth()));
@@ -174,7 +174,7 @@ public ResponseEntity<AreaV1> rectangle(@RequestBody RectangleDimensionsV1 dimen
 } 
 ```
 
-```
+```java
 # 21st request within 1 minute
 $ curl -v -X POST http://localhost:9001/api/v1/area/rectangle \
     -H "Content-Type: application/json" \
@@ -197,7 +197,7 @@ $ curl -v -X POST http://localhost:9001/api/v1/area/rectangle \
 
 让我们为每个定价方案定义费率限制(`Bandwidth`):
 
-```
+```java
 enum PricingPlan {
     FREE {
         Bandwidth getLimit() {
@@ -220,7 +220,7 @@ enum PricingPlan {
 
 然后，让我们添加一个方法，根据给定的 API 键来解析定价计划:
 
-```
+```java
 enum PricingPlan {
 
     static PricingPlan resolvePlanFromApiKey(String apiKey) {
@@ -239,7 +239,7 @@ enum PricingPlan {
 
 接下来，我们需要为每个 API 键存储`Bucket` ,并为速率限制检索`Bucket`:
 
-```
+```java
 class PricingPlanService {
 
     private final Map<String, Bucket> cache = new ConcurrentHashMap<>();
@@ -259,7 +259,7 @@ class PricingPlanService {
 
 现在我们在内存中存储了每个 API 键的桶。让我们修改我们的`Controller`来使用`PricingPlanService`:
 
-```
+```java
 @RestController
 class AreaCalculationController {
 
@@ -295,7 +295,7 @@ class AreaCalculationController {
 
 让我们调用 API:
 
-```
+```java
 ## successful request
 $ curl -v -X POST http://localhost:9001/api/v1/area/rectangle \
     -H "Content-Type: application/json" -H "X-api-key:FX001-99999" \
@@ -318,7 +318,7 @@ $ curl -v -X POST http://localhost:9001/api/v1/area/rectangle \
 
 假设我们现在必须添加一个新的 API 端点，该端点根据给定的高度和底边计算并返回三角形的面积:
 
-```
+```java
 @PostMapping(value = "/triangle")
 public ResponseEntity<AreaV1> triangle(@RequestBody TriangleDimensionsV1 dimensions) {
     return ResponseEntity.ok(new AreaV1("triangle", 0.5d * dimensions.getHeight() * dimensions.getBase()));
@@ -329,7 +329,7 @@ public ResponseEntity<AreaV1> triangle(@RequestBody TriangleDimensionsV1 dimensi
 
 让我们创建一个`RateLimitInterceptor`并在`preHandle`方法中实现速率限制代码:
 
-```
+```java
 public class RateLimitInterceptor implements HandlerInterceptor {
 
     private PricingPlanService pricingPlanService;
@@ -361,7 +361,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
 最后，我们必须将拦截器添加到`InterceptorRegistry`:
 
-```
+```java
 public class AppConfig implements WebMvcConfigurer {
 
     private RateLimitInterceptor interceptor;
@@ -378,7 +378,7 @@ public class AppConfig implements WebMvcConfigurer {
 
 让我们试试我们的新端点:
 
-```
+```java
 ## successful request
 $ curl -v -X POST http://localhost:9001/api/v1/area/triangle \
     -H "Content-Type: application/json" -H "X-api-key:FX001-99999" \
@@ -424,7 +424,7 @@ Bucket4j Spring Boot 启动器为定义我们的速率限制键提供了几个�
 
 让我们从将`[bucket4j-spring-boot-starter](https://web.archive.org/web/20221208143832/https://search.maven.org/search?q=g:com.giffing.bucket4j.spring.boot.starter%20AND%20a:%20bucket4j-spring-boot-starter)`依赖项添加到我们的`pom.xml`开始:
 
-```
+```java
 <dependency>
     <groupId>com.giffing.bucket4j.spring.boot.starter</groupId>
     <artifactId>bucket4j-spring-boot-starter</artifactId>
@@ -436,7 +436,7 @@ Bucket4j Spring Boot 启动器为定义我们的速率限制键提供了几个�
 
 让我们添加缓存依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-cache</artifactId>
@@ -465,7 +465,7 @@ Bucket4j Spring Boot 启动器为定义我们的速率限制键提供了几个�
 
 让我们配置我们的应用程序来使用 Bucket4j starter 库。首先，我们将[配置](https://web.archive.org/web/20221208143832/https://docs.spring.io/spring-boot/docs/2.1.6.RELEASE/reference/html/boot-features-caching.html#boot-features-caching-provider-caffeine)咖啡因缓存来存储 API 密钥和`Bucket`内存:
 
-```
+```java
 spring:
   cache:
     cache-names:
@@ -476,7 +476,7 @@ spring:
 
 接下来，让我们[配置](https://web.archive.org/web/20221208143832/https://github.com/MarcGiffing/bucket4j-spring-boot-starter#bucket4j_complete_properties) Bucket4j:
 
-```
+```java
 bucket4j:
   enabled: true
   filters:
@@ -518,7 +518,7 @@ bucket4j:
 
 让我们试一试:
 
-```
+```java
 ## successful request
 $ curl -v -X POST http://localhost:9000/api/v1/area/triangle \
     -H "Content-Type: application/json" -H "X-api-key:FX001-99999" \

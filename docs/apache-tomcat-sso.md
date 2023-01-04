@@ -35,13 +35,13 @@ Tomcat 在必须在主机级别配置的 valve 中实现单点登录特性。它
 
 **在服务器端，我们需要配置`SingleSignOn`阀门和领域或“用户数据库”**。这些配置位于 Tomcat 安装的 conf 文件夹下的 server.xml 文件中。要添加 SSO 阀，我们需要取消对以下行的注释:
 
-```
+```java
 <Valve className="org.apache.catalina.authenticator.SingleSignOn" />
 ```
 
 对于本文的示例，**我们将依赖默认配置的领域，我们只需要将用户添加到数据库**。领域定义如下所示:
 
-```
+```java
 <Realm
   className="org.apache.catalina.realm.UserDatabaseRealm"
   resourceName="UserDatabase"/> 
@@ -49,7 +49,7 @@ Tomcat 在必须在主机级别配置的 valve 中实现单点登录特性。它
 
 此配置使用全局 JNDI 资源来定义用户数据库的源:
 
-```
+```java
 <Resource name="UserDatabase" auth="Container"
   type="org.apache.catalina.UserDatabase"
   description="User database that can be updated and saved"
@@ -61,7 +61,7 @@ Tomcat 在必须在主机级别配置的 valve 中实现单点登录特性。它
 
 最后，在这里我们将看到如何添加一个具有本文示例所需的管理员角色的用户。我们需要修改 tomcat-users.xml 文件:
 
-```
+```java
 <tomcat-users 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
@@ -87,7 +87,7 @@ Tomcat 在必须在主机级别配置的 valve 中实现单点登录特性。它
 
 在 ping web 应用程序中，我们使用表单身份验证方法。**表单认证方式需要一个登录表单，而登录失败的网页**。例如，当我们希望将登录页面定制为 web 应用程序的外观时，这种方法会很有用，配置如下所示:
 
-```
+```java
 <login-config>
     <auth-method>FORM</auth-method>
     <form-login-config>
@@ -99,7 +99,7 @@ Tomcat 在必须在主机级别配置的 valve 中实现单点登录特性。它
 
 **登录页面必须遵循 servlet 规范 2.3** 的登录表单注释中定义的一些严格规则，因为我们既不能选择表单的名称，也不能选择输入字段。他们必须是`j_security_check`、`j_username`和`j_password`。这是为了实现登录表单与所有类型的资源一起工作，并消除在服务器中配置出站表单的操作字段的需要。在这里，我们可以看到一个示例:
 
-```
+```java
 <!DOCTYPE html>
 <html>
 <head>
@@ -136,7 +136,7 @@ Tomcat 在必须在主机级别配置的 valve 中实现单点登录特性。它
 
 在 Pong web 应用程序中，我们使用摘要认证机制，配置如下所示:
 
-```
+```java
 <login-config>
     <auth-method>DIGEST</auth-method>
 </login-config>
@@ -150,7 +150,7 @@ Tomcat 在必须在主机级别配置的 valve 中实现单点登录特性。它
 
 在这一点上，我们不打算区分乒乓球和乒乓。尽管它们的元素值不同，但配置的重要部分在两个应用程序中都是相同的:
 
-```
+```java
 <security-constraint>
     <display-name>Ping Login Auth</display-name>
     <web-resource-collection>

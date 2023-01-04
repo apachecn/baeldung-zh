@@ -16,7 +16,7 @@
 
 例如，想象一个`Car `类:
 
-```
+```java
 public class Car {
     public String honk() {
         return "beep!";
@@ -30,7 +30,7 @@ public class Car {
 
 因为它的所有方法都是实现的，所以我们称它为具体类，我们可以实例化它:
 
-```
+```java
 Car car = new Car();
 ```
 
@@ -48,7 +48,7 @@ JDK 中具体类的一些例子有 **`HashMap`、`HashSet`、`ArrayList`和`Link
 
 接口是一个类的蓝图。或者，换句话说，它是未实现的方法签名的集合:
 
-```
+```java
 interface Driveable {
     void honk();
     void drive();
@@ -67,7 +67,7 @@ JDK 提供了许多接口，如**`Map``List``Set`。**
 
 **抽象类是具有未实现方法的类，**尽管它实际上可以同时具有这两种方法:
 
-```
+```java
 public abstract class Vehicle {
     public abstract String honk();
 
@@ -89,7 +89,7 @@ public abstract class Vehicle {
 
 具体的类可以像我们前面的例子一样简单。它们还可以实现接口和扩展抽象类:
 
-```
+```java
 public class FancyCar extends Vehicle implements Driveable {
     public String honk() { 
         return "beep";
@@ -101,7 +101,7 @@ public class FancyCar extends Vehicle implements Driveable {
 
 **因此，它没有未实现的方法**。因此，我们可以用`new`关键字创建一个`FancyCar`类实例。
 
-```
+```java
 FancyCar car = new FancyCar();
 ```
 

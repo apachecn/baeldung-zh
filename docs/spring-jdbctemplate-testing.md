@@ -14,7 +14,7 @@
 
 首先，让我们从一个使用`JdbcTemplate`的数据访问对象(DAO)类开始:
 
-```
+```java
 public class EmployeeDAO {
     private JdbcTemplate jdbcTemplate;
 
@@ -40,7 +40,7 @@ public class EmployeeDAO {
 
 **我们可以创建一个连接到 H2 数据库的数据源，并将其注入到`EmployeeDAO`类:**
 
-```
+```java
 @Test
 public void whenInjectInMemoryDataSource_thenReturnCorrectEmployeeCount() {
     DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
@@ -57,7 +57,7 @@ public void whenInjectInMemoryDataSource_thenReturnCorrectEmployeeCount() {
 
 在这个测试中，我们首先在 H2 数据库上构建一个数据源。在构造过程中，我们执行`schema.sql`来创建`EMPLOYEE`表:
 
-```
+```java
 CREATE TABLE EMPLOYEE
 (
     ID int NOT NULL PRIMARY KEY,
@@ -69,7 +69,7 @@ CREATE TABLE EMPLOYEE
 
 此外，我们运行`test-data.sql`将测试数据添加到表中:
 
-```
+```java
 INSERT INTO EMPLOYEE VALUES (1, 'James', 'Gosling', 'Canada');
 INSERT INTO EMPLOYEE VALUES (2, 'Donald', 'Knuth', 'USA');
 INSERT INTO EMPLOYEE VALUES (3, 'Linus', 'Torvalds', 'Finland');
@@ -82,7 +82,7 @@ INSERT INTO EMPLOYEE VALUES (4, 'Dennis', 'Ritchie', 'USA');
 
 **我们可以模仿`JdbcTemplate`对象，这样我们就不需要在数据库上运行 SQL 语句:**
 
-```
+```java
 public class EmployeeDAOUnitTest {
     @Mock
     JdbcTemplate jdbcTemplate;
@@ -103,7 +103,7 @@ public class EmployeeDAOUnitTest {
 
 当我们模拟`JdbcTemplate`查询时，我们使用 SQL 语句字符串的精确匹配。在现实世界的应用程序中，我们可能会创建复杂的 SQL 字符串，并且很难做到完全匹配。因此，我们也可以用 [`anyString()`](/web/20220625232250/https://www.baeldung.com/mockito-argument-matchers) 的方法来绕过字符串检查:
 
-```
+```java
 Mockito.when(jdbcTemplate.queryForObject(Mockito.anyString(), Mockito.eq(Integer.class)))
   .thenReturn(3);
 assertEquals(3, employeeDAO.getCountOfEmployees());
@@ -115,7 +115,7 @@ assertEquals(3, employeeDAO.getCountOfEmployees());
 
 让我们用这个注释创建一个测试类:
 
-```
+```java
 @JdbcTest
 @Sql({"schema.sql", "test-data.sql"})
 class EmployeeDAOIntegrationTest {

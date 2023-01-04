@@ -12,7 +12,7 @@
 
 让我们假设我们有一个调用远程服务的客户端应用程序——`PingPongService`。
 
-```
+```java
 interface PingPongService {
     String call(String ping) throws PingPongServiceException;
 }
@@ -24,7 +24,7 @@ interface PingPongService {
 
 对于我们的例子，我们将使用 [Resilience4j](/web/20220929005048/https://www.baeldung.com/resilience4j) 库，特别是它的[重试](https://web.archive.org/web/20220929005048/https://resilience4j.readme.io/docs/retry)模块。我们需要将 resilience4j-retry 模块添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>io.github.resilience4j</groupId>
     <artifactId>resilience4j-retry</artifactId>
@@ -39,7 +39,7 @@ interface PingPongService {
 
 指数补偿是处理失败网络呼叫重试的常用策略。简单来说，**客户端在连续重试之间等待的时间间隔逐渐变长**:
 
-```
+```java
 wait_interval = base * multiplier^n 
 ```
 
@@ -55,7 +55,7 @@ wait_interval = base * multiplier^n
 
 重试机制将`IntervalFunction`用作睡眠功能:
 
-```
+```java
 IntervalFunction intervalFn =
   IntervalFunction.ofExponentialBackoff(INITIAL_INTERVAL, MULTIPLIER);
 
@@ -72,7 +72,7 @@ pingPongFn.apply("Hello");
 
 让我们模拟一个真实的场景，假设我们有几个客户端并发地调用`PingPongService`:
 
-```
+```java
 ExecutorService executors = newFixedThreadPool(NUM_CONCURRENT_CLIENTS);
 List<Callable> tasks = nCopies(NUM_CONCURRENT_CLIENTS, () -> pingPongFn.apply("Hello"));
 executors.invokeAll(tasks); 
@@ -80,7 +80,7 @@ executors.invokeAll(tasks);
 
 让我们看看`NUM_CONCURRENT_CLIENTS`等于 4 的远程调用日志:
 
-```
+```java
 [thread-1] At 00:37:42.756
 [thread-2] At 00:37:42.756
 [thread-3] At 00:37:42.756
@@ -111,7 +111,7 @@ executors.invokeAll(tasks);
 
 在我们以前的方法中，客户端等待时间逐渐变长，但仍然是同步的。**增加抖动提供了一种打破客户端间同步的方法，从而避免冲突**。在这种方法中，我们增加了等待间隔的随机性。
 
-```
+```java
 wait_interval = (base * 2^n) +/- (random_interval) 
 ```
 
@@ -121,14 +121,14 @@ wait_interval = (base * 2^n) +/- (random_interval)
 
 我们可以通过配置也接受`randomizationFactor`的指数随机退避`IntervalFunction `，在 Resilience4j 重试中使用带抖动的指数退避:
 
-```
+```java
 IntervalFunction intervalFn = 
   IntervalFunction.ofExponentialRandomBackoff(INITIAL_INTERVAL, MULTIPLIER, RANDOMIZATION_FACTOR); 
 ```
 
 让我们回到现实场景，看看带有抖动的远程调用日志:
 
-```
+```java
 [thread-2] At 39:21.297
 [thread-4] At 39:21.297
 [thread-3] At 39:21.297

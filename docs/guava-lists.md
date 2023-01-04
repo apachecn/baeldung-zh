@@ -8,7 +8,7 @@
 
 让我们从简单的开始——看看**使用 Guava 语法创建一个新的`ArrayList`**——没有`new`:
 
-```
+```java
 List<String> names = Lists.newArrayList("John", "Adam", "Jane");
 ```
 
@@ -16,7 +16,7 @@ List<String> names = Lists.newArrayList("John", "Adam", "Jane");
 
 首先，让我们**使用`Lists.reverse()`反转一个`List`** ，如下例所示:
 
-```
+```java
 @Test
 public void whenReverseList_thenReversed() {
     List<String> names = Lists.newArrayList("John", "Adam", "Jane");
@@ -32,7 +32,7 @@ public void whenReverseList_thenReversed() {
 
 在下面的例子中——我们使用`Lists.CharactersOf()` API 从`String` `“John”`创建一个`Character` `List`:
 
-```
+```java
 @Test
 public void whenCreateCharacterListFromString_thenCreated() {
     List<Character> chars = Lists.charactersOf("John");
@@ -48,7 +48,7 @@ public void whenCreateCharacterListFromString_thenCreated() {
 
 在下面的例子中——我们使用`Lists.partition()`来获得连续的大小为 2 的子列表:
 
-```
+```java
 @Test
 public void whenPartitionList_thenPartitioned(){
     List<String> names = Lists.newArrayList("John","Jane","Adam","Tom","Viki","Tyler");
@@ -68,7 +68,7 @@ public void whenPartitionList_thenPartitioned(){
 
 在下面的例子中，我们将元素复制到一个`Set`中，然后从剩余的元素中创建一个`List`:
 
-```
+```java
 @Test
 public void whenRemoveDuplicatesFromList_thenRemoved() {
     List<Character> chars = Lists.newArrayList('h','e','l','l','o');
@@ -85,7 +85,7 @@ public void whenRemoveDuplicatesFromList_thenRemoved() {
 
 在下面的例子中，我们使用非常有用的`Iterables.removeIf()` API 和库本身提供的谓词删除了所有的`null`值:
 
-```
+```java
 @Test
 public void whenRemoveNullFromList_thenRemoved() {
     List<String> names = Lists.newArrayList("John", null, "Adam", null, "Jane");
@@ -100,7 +100,7 @@ public void whenRemoveNullFromList_thenRemoved() {
 
 最后，让我们看看如何使用`ImmutableList.copyOf()` API 创建一个`List`—`ImmutableList`的不可变副本:
 
-```
+```java
 @Test
 public void whenCreateImmutableList_thenCreated() {
     List<String> names = Lists.newArrayList("John", "Adam", "Jane");

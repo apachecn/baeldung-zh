@@ -12,7 +12,7 @@
 
 运行 JUnit 4 和 JUnit 5 测试，我们需要几个基本的依赖项:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.junit.jupiter</groupId>
@@ -44,7 +44,7 @@
 
 对于 JUnit 4 和 JUnit 5，我们将设置几个“占位符”测试类，这足以演示我们的示例:
 
-```
+```java
 public class FirstUnitTest {
 
     @Test
@@ -64,7 +64,7 @@ public class FirstUnitTest {
 }
 ```
 
-```
+```java
 public class SecondUnitTest {
 
     @Test
@@ -87,7 +87,7 @@ public class SecondUnitTest {
 
 为了从 Java 代码中运行 JUnit 测试，我们可以使用`JUnitCore`类(外加一个`TextListener`类，用于在`System.out`中显示输出):
 
-```
+```java
 JUnitCore junit = new JUnitCore();
 junit.addListener(new TextListener(System.out));
 junit.run(FirstUnitTest.class);
@@ -95,7 +95,7 @@ junit.run(FirstUnitTest.class);
 
 在控制台上，我们将看到一条非常简单的消息，表明测试成功:
 
-```
+```java
 Running one test class:
 ..
 Time: 0.019
@@ -106,7 +106,7 @@ OK (2 tests)
 
 如果我们希望**用 JUnit 4 指定多个测试类**，我们可以使用与单个类相同的代码，并简单地添加额外的类:
 
-```
+```java
 JUnitCore junit = new JUnitCore();
 junit.addListener(new TextListener(System.out));
 
@@ -119,7 +119,7 @@ resultReport(result);
 
 注意，结果存储在 JUnit 的 `Result` 类的实例中，我们使用一个简单的实用方法打印出来
 
-```
+```java
 public static void resultReport(Result result) {
     System.out.println("Finished. Result: Failures: " +
       result.getFailureCount() + ". Ignored: " +
@@ -133,7 +133,7 @@ public static void resultReport(Result result) {
 
 如果我们需要分组一些测试类来运行它们，我们可以创建一个`TestSuite`。这只是一个空类，我们使用 JUnit 注释指定所有的类:
 
-```
+```java
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
   FirstUnitTest.class,
@@ -145,7 +145,7 @@ public class MyTestSuite {
 
 为了运行这些测试，我们将再次使用与之前相同的代码:
 
-```
+```java
 JUnitCore junit = new JUnitCore();
 junit.addListener(new TextListener(System.out));
 Result result = junit.run(MyTestSuite.class);
@@ -158,7 +158,7 @@ JUnit 的一个有趣的特性是，我们可以通过创建`RepeatedTest` 的�
 
 在下一个例子中，我们将从`MergeListsTest`开始运行测试五次:
 
-```
+```java
 Test test = new JUnit4TestAdapter(FirstUnitTest.class);
 RepeatedTest repeatedTest = new RepeatedTest(test, 5);
 
@@ -172,7 +172,7 @@ junit.run(repeatedTest);
 
 我们甚至可以通过重复测试，以编程方式创建套件:
 
-```
+```java
 TestSuite mySuite = new ActiveTestSuite();
 
 JUnitCore junit = new JUnitCore();
@@ -198,7 +198,7 @@ junit.run(mySuite);
 
 这两者都将提供关于要执行的测试和结果的信息:
 
-```
+```java
 public class RunJUnit5TestsFromJava {
     SummaryGeneratingListener listener = new SummaryGeneratingListener();
 
@@ -221,7 +221,7 @@ public class RunJUnit5TestsFromJava {
 
 让我们看看如何设置包选择器和测试类名过滤器，以获得我们想要运行的所有测试类:
 
-```
+```java
 public void runAll() {
     LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
       .selectors(selectPackage("com.baeldung.junit5.runfromjava"))
@@ -240,7 +240,7 @@ public void runAll() {
 
 提取其信息的最简单方法是打印到控制台输出流:
 
-```
+```java
 public static void main(String[] args) {
     RunJUnit5TestsFromJava runner = new RunJUnit5TestsFromJava();
     runner.runAll();
@@ -252,7 +252,7 @@ public static void main(String[] args) {
 
 这将为我们提供测试运行的详细信息:
 
-```
+```java
 Test run finished after 177 ms
 [         7 containers found      ]
 [         0 containers skipped    ]

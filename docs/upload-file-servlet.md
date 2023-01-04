@@ -18,7 +18,7 @@
 
 首先，让我们向 HTML 文件添加一个表单:
 
-```
+```java
 <form method="post" action="multiPartServlet" enctype="multipart/form-data">
     Choose a file: <input type="file" name="multiPartServlet" />
     <input type="submit" value="Upload" />
@@ -29,7 +29,7 @@
 
 接下来，**我们将使用`@MultipartConfig`注释**用正确的信息注释我们的`HttpServlet`:
 
-```
+```java
 @MultipartConfig(fileSizeThreshold = 1024 * 1024,
   maxFileSize = 1024 * 1024 * 5, 
   maxRequestSize = 1024 * 1024 * 5 * 5)
@@ -40,7 +40,7 @@ public class MultipartServlet extends HttpServlet {
 
 然后，让我们确保设置了默认的服务器上传文件夹:
 
-```
+```java
 String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIRECTORY;
 File uploadDir = new File(uploadPath);
 if (!uploadDir.exists()) uploadDir.mkdir(); 
@@ -48,7 +48,7 @@ if (!uploadDir.exists()) uploadDir.mkdir();
 
 最后，**我们可以使用`getParts()` 方法**轻松地从`request` 中检索我们的入站`File` ，并将其保存到磁盘:
 
-```
+```java
 for (Part part : request.getParts()) {
     fileName = getFileName(part);
     part.write(uploadPath + File.separator + fileName);
@@ -57,7 +57,7 @@ for (Part part : request.getParts()) {
 
 注意，在这个例子中，我们使用了一个助手方法 getFileName():
 
-```
+```java
 private String getFileName(Part part) {
     for (String content : part.getHeader("content-disposition").split(";")) {
         if (content.trim().startsWith("filename"))
@@ -69,7 +69,7 @@ private String getFileName(Part part) {
 
 **针对 Servlet 3.1。项目，我们可以选择使用`Part.getSubmittedFileName()`方法:**
 
-```
+```java
 fileName = part.getSubmittedFileName();
 ```
 
@@ -81,7 +81,7 @@ fileName = part.getSubmittedFileName();
 
 我们希望使用下面的`pom.xml`依赖关系来运行我们的示例:
 
-```
+```java
 <dependency> 
     <groupId>commons-fileupload</groupId>
     <artifactId>commons-fileupload</artifactId>
@@ -114,7 +114,7 @@ fileName = part.getSubmittedFileName();
 
 最后，**我们将创建一个`ServletFileUpload` 对象，它将代表实际的文件本身**。它将为最终的持久性服务器端公开多部分上传的内容:
 
-```
+```java
 if (ServletFileUpload.isMultipartContent(request)) {
 
     DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -136,7 +136,7 @@ if (ServletFileUpload.isMultipartContent(request)) {
 
 然后，我们可以提取这些内容并将其写入磁盘:
 
-```
+```java
 if (ServletFileUpload.isMultipartContent(request)) {
     //...
     List<FileItem> formItems = upload.parseRequest(request);

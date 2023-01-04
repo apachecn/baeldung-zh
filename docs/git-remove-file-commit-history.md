@@ -12,7 +12,7 @@
 
 例如，假设我们错误地将一个 blob 文件放到了一个项目文件夹中，在删除它之后，我们仍然会在 g it 历史中注意到该文件:
 
-```
+```java
 $ git log --graph --full-history --all --pretty=format:"%h%x09%d%x20%s"
 * 9e87646        (HEAD -> master) blob file removed
 * 2583677        blob file
@@ -21,7 +21,7 @@ $ git log --graph --full-history --all --pretty=format:"%h%x09%d%x20%s"
 
 我们可以通过使用以下命令重写树及其内容，从 git 历史中删除 blob 文件:
 
-```
+```java
 $ git filter-branch --tree-filter 'rm -f blob.txt' HEAD
 ```
 
@@ -29,7 +29,7 @@ $ git filter-branch --tree-filter 'rm -f blob.txt' HEAD
 
 这里是我们运行命令后的 git 日志:
 
-```
+```java
 * 8f39d86        (HEAD -> master) blob file removed
 * e99a81d        blob file
 | * 9e87646      (refs/original/refs/heads/master) blob file removed
@@ -42,7 +42,7 @@ $ git filter-branch --tree-filter 'rm -f blob.txt' HEAD
 
 我们的 git 日志仍然包含对被删除文件的引用。我们可以通过更新我们的回购协议来删除引用:
 
-```
+```java
 $ git update-ref -d refs/original/refs/heads/master 
 ```
 
@@ -50,7 +50,7 @@ $ git update-ref -d refs/original/refs/heads/master
 
 我们需要记录我们的引用在存储库中发生了变化:
 
-```
+```java
 $ git reflog expire --expire=now --all
 ```
 
@@ -58,7 +58,7 @@ $ git reflog expire --expire=now --all
 
 最后，我们需要清理和优化我们的回购:
 
-```
+```java
 $ git gc --prune=now
 ```
 
@@ -66,7 +66,7 @@ $ git gc --prune=now
 
 运行命令后，这里是我们的 git 日志:
 
-```
+```java
 * 6f49d86        (HEAD -> master) my first commit 
 ```
 
@@ -74,7 +74,7 @@ $ git gc --prune=now
 
 或者，我们可以运行:
 
-```
+```java
 $ git filter-branch --index filter 'git rm --cached --ignore-unmatched blob.txt' HEAD
 ```
 
@@ -94,14 +94,14 @@ $ git filter-branch --index filter 'git rm --cached --ignore-unmatched blob.txt'
 
 首先，我们将使用以下命令安装`python-pip`和`git-filter-repo` :
 
-```
+```java
 $ sudo apt install python3-pip
 $ pip install --user git-filter-repo
 ```
 
 另外，我们可以使用下面的命令来安装`git-filter-repo` :
 
-```
+```java
 # Add to bashrc.
 export PATH="${HOME}/bin:${PATH}"
 
@@ -114,7 +114,7 @@ chmod +x ~/bin/git-filter-repo
 
 让我们运行命令来检查我们的 git 日志:
 
-```
+```java
 $ git log --graph --full-history --all --pretty=format:"%h%x09%d%x20%s"
 * ee36517        (HEAD -> master) blob.txt removed
 * a480073        project folder
@@ -122,7 +122,7 @@ $ git log --graph --full-history --all --pretty=format:"%h%x09%d%x20%s"
 
 接下来我们要分析我们的回购:
 
-```
+```java
 $ git filter-repo --analyze
 Processed 5 blob sizes
 Processed 2 commits
@@ -133,13 +133,13 @@ Writing reports to .git/filter-repo/analysis...done.
 
 然后，让我们使用选项`–path-match,`运行这个命令，它有助于指定要包含在过滤历史中的文件:
 
-```
+```java
 $ git filter-repo --force --invert-paths --path-match blob.txt
 ```
 
 这是我们新的 git 日志:
 
-```
+```java
 * 8940776        (HEAD -> master) project folder 
 ```
 
@@ -153,13 +153,13 @@ $ git filter-repo --force --invert-paths --path-match blob.txt
 
 假设我们想要删除大于 200MB 的 blob 文件。这个附加组件使它很容易做到这一点:
 
-```
+```java
 $ java -jar bfg.jar --strip-blob-bigger-than 200M my-repo.git
 ```
 
 然后，让我们运行这个命令来清除无效数据:
 
-```
+```java
 $ git gc --prune=now --aggressive
 ```
 
@@ -167,7 +167,7 @@ $ git gc --prune=now --aggressive
 
 我们需要 git 日志中的 SHA1 密钥来使用这种方法:
 
-```
+```java
 $ git log --graph --full-history --all --pretty=format:"%h%x09%d%x20%s"
 * 535f7ea        (HEAD -> master) blob file removed
 * 8bffdfa        blob file
@@ -178,13 +178,13 @@ $ git log --graph --full-history --all --pretty=format:"%h%x09%d%x20%s"
 
 通过这个命令，我们进入了一个交互式的 rebase:
 
-```
+```java
 $ git rebase -i 5bac30b
 ```
 
 这将打开我们的`nano`编辑器显示:
 
-```
+```java
 pick 535f7ea blob file removed
 pick 8bffdfa blob file 
 
@@ -211,7 +211,7 @@ pick 8bffdfa blob file
 
 然后我们保存文件并退出编辑器，这将我们带到终端并显示以下消息:
 
-```
+```java
 interactive rebase in progress; onto 535f7ea
 Last command done (1 command done):
 pick 535f7ea blob file removed
@@ -222,14 +222,14 @@ You are currently rebasing branch 'master' on '535f7ea'.
 
 最后，让我们继续 rebase 操作:
 
-```
+```java
 $ git rebase --continue
 Successfully rebased and updated refs/heads/master.
 ```
 
 然后，我们可以验证我们的提交历史:
 
-```
+```java
 $ git log --graph --full-history --all --pretty=format:"%h%x09%d%x20%s"
 * 5bac30b        (HEAD -> master) index.html
 ```

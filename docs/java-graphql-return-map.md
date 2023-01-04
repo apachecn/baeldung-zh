@@ -26,7 +26,7 @@
 
 对于前两个选项，我们将使用下面的 GraphQL 查询:
 
-```
+```java
 query {
     product(id:1){ 
         id 
@@ -45,13 +45,13 @@ query {
 
 这是最简单的选择。我们将在`Product`解析器中将`Map`序列化为 JSON `String`格式:
 
-```
+```java
 String attributes = objectMapper.writeValueAsString(product.getAttributes());
 ```
 
 GraphQL 模式本身如下:
 
-```
+```java
 type Product {
     id: ID
     name: String!
@@ -62,7 +62,7 @@ type Product {
 
 下面是实现后的查询结果:
 
-```
+```java
 {
   "data": {
     "product": {
@@ -95,7 +95,7 @@ type Product {
 
 首先，我们将在`pom.xml`中包含[graph QL-Java-extended-scalar](https://web.archive.org/web/20220524052942/https://mvnrepository.com/artifact/com.graphql-java/graphql-java-extended-scalars/18.0)依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.graphql-java</groupId>
     <artifactId>graphql-java-extended-scalars</artifactId>
@@ -105,7 +105,7 @@ type Product {
 
 然后，我们将在 GraphQL 配置组件中注册我们选择的标量类型。在这种情况下，标量类型是`JSON`:
 
-```
+```java
 @Bean
 public GraphQLScalarType json() {
     return ExtendedScalars.Json;
@@ -114,7 +114,7 @@ public GraphQLScalarType json() {
 
 最后，我们将相应地更新我们的 GraphQL 模式:
 
-```
+```java
 type Product {
     id: ID
     name: String!
@@ -126,7 +126,7 @@ scalar JSON
 
 下面是实现后的结果:
 
-```
+```java
 {
   "data": {
     "product": {
@@ -160,7 +160,7 @@ scalar JSON
 
 下面是我们代表一个键值对的类:
 
-```
+```java
 public class AttributeKeyValueModel {
     private String key;
     private Attribute value;
@@ -174,14 +174,14 @@ public class AttributeKeyValueModel {
 
 在`Product`解析器中，我们将添加以下实现:
 
-```
+```java
 List<AttributeKeyValueModel> attributeModelList = new LinkedList<>();
 product.getAttributes().forEach((key, val) -> attributeModelList.add(new AttributeKeyValueModel(key, val)));
 ```
 
 最后，我们将更新模式:
 
-```
+```java
 type Product {
     id: ID
     name: String!
@@ -201,7 +201,7 @@ type Attribute {
 
 既然我们已经更新了模式，我们也将更新查询:
 
-```
+```java
 query {
     product(id:1){ 
          id 
@@ -221,7 +221,7 @@ query {
 
 现在，让我们看看结果:
 
-```
+```java
 {
   "data": {
     "product": {

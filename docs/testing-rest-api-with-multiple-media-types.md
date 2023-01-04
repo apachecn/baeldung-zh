@@ -20,7 +20,7 @@
 
 我们将从定义一个简单的编组器接口开始。这将是允许测试在不同媒体类型之间切换的主要抽象:
 
-```
+```java
 public interface IMarshaller {
     ...
     String getMime();
@@ -31,7 +31,7 @@ public interface IMarshaller {
 
 **为此，我们将使用一个 Spring `FactoryBean`来初始化编组器，并使用一个简单的属性来确定使用哪个编组器**:
 
-```
+```java
 @Component
 @Profile("test")
 public class TestMarshallerFactory implements FactoryBean<IMarshaller> {
@@ -80,7 +80,7 @@ public class TestMarshallerFactory implements FactoryBean<IMarshaller> {
 
 对于 JSON，我们将使用`Jackson`作为底层库:
 
-```
+```java
 public class JacksonMarshaller implements IMarshaller {
     private ObjectMapper objectMapper;
 
@@ -100,7 +100,7 @@ public class JacksonMarshaller implements IMarshaller {
 
 对于 XML 支持，编组器使用`XStream`:
 
-```
+```java
 public class XStreamMarshaller implements IMarshaller {
     private XStream xstream;
 
@@ -123,7 +123,7 @@ public class XStreamMarshaller implements IMarshaller {
 
 此时，我们应该能够针对已部署的服务运行完整的集成测试。使用编组器很简单:我们将在测试中注入一个 `IMarshaller`:
 
-```
+```java
 @ActiveProfiles({ "test" })
 public abstract class SomeRestLiveTest {
 
@@ -144,13 +144,13 @@ public abstract class SomeRestLiveTest {
 
 如果 Maven 设置为针对已经部署的 REST 服务运行集成测试，那么我们可以使用:
 
-```
+```java
 mvn test -Dtest.mime=xml
 ```
 
 或者，如果构建使用 Maven 生命周期的`integration-test`阶段:
 
-```
+```java
 mvn integration-test -Dtest.mime=xml
 ```
 
@@ -158,7 +158,7 @@ mvn integration-test -Dtest.mime=xml
 
 对于 Jenkins，我们必须配置以下工作:
 
-```
+```java
 This build is parametrized
 ```
 

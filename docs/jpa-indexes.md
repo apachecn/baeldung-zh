@@ -18,7 +18,7 @@ JPA 允许我们通过使用`@Index`从代码中定义索引来实现这一点�
 
 索引支持最终由`[javax.persistence.Index](https://web.archive.org/web/20220630125253/https://javaee.github.io/javaee-spec/javadocs/javax/persistence/Index.html)`添加到 JPA 2.1 规范中。这个注释让我们为表定义一个索引，并相应地定制它:
 
-```
+```java
 @Target({})
 @Retention(RUNTIME)
 public @interface Index {
@@ -48,7 +48,7 @@ public @interface Index {
 
 让我们实现一个`Student`实体:
 
-```
+```java
 @Entity
 @Table
 public class Student implements Serializable {
@@ -64,13 +64,13 @@ public class Student implements Serializable {
 
 当我们有了模型后，让我们实现第一个索引。我们所要做的就是添加一个`@Index`注释。我们在`indexes`属性下的 [`@Table`](https://web.archive.org/web/20220630125253/https://javaee.github.io/javaee-spec/javadocs/javax/persistence/Table.html) 中标注。让我们记住指定列的名称:
 
-```
+```java
 @Table(indexes = @Index(columnList = "firstName"))
 ```
 
 我们已经使用`firstName`列声明了第一个索引。当我们执行模式创建过程时，我们可以验证它:
 
-```
+```java
 [main] DEBUG org.hibernate.SQL -
   create index IDX2gdkcjo83j0c2svhvceabnnoh on Student (firstName)
 ```
@@ -81,13 +81,13 @@ public class Student implements Serializable {
 
 正如我们所看到的，我们的索引必须有一个名字。默认情况下，如果我们不这样指定，它是一个提供者生成的值。当我们想要一个自定义标签时，我们应该简单地添加`name`属性:
 
-```
+```java
 @Index(name = "fn_index", columnList = "firstName")
 ```
 
 此变体使用用户定义的名称创建索引:
 
-```
+```java
 [main] DEBUG org.hibernate.SQL -
   create index fn_index on Student (firstName)
 ```
@@ -100,20 +100,20 @@ public class Student implements Serializable {
 
 现在，让我们仔细看看`columnList`语法:
 
-```
+```java
 column ::= index_column [,index_column]*
 index_column ::= column_name [ASC | DESC]
 ```
 
 正如我们已经知道的，我们可以指定要包含在索引中的列名。当然，我们可以为单个索引指定多个列。我们通过用逗号分隔名称来做到这一点:
 
-```
+```java
 @Index(name = "mulitIndex1", columnList = "firstName, lastName")
 
 @Index(name = "mulitIndex2", columnList = "lastName, firstName")
 ```
 
-```
+```java
 [main] DEBUG org.hibernate.SQL -
   create index mulitIndex1 on Student (firstName, lastName)
 
@@ -127,11 +127,11 @@ index_column ::= column_name [ASC | DESC]
 
 正如我们在上一节中回顾的语法，我们也可以在`column_name`后指定`ASC`(升序)和`DESC`(降序)值。我们用它来设置索引列中值的排序顺序:
 
-```
+```java
 @Index(name = "mulitSortIndex", columnList = "firstName, lastName DESC")
 ```
 
-```
+```java
 [main] DEBUG org.hibernate.SQL -
   create index mulitSortIndex on Student (firstName, lastName desc)
 ```
@@ -142,18 +142,18 @@ index_column ::= column_name [ASC | DESC]
 
 最后一个可选参数是一个`unique`属性，它定义索引是否惟一。唯一索引确保索引字段不会存储重复值。默认是`false`。如果我们想改变它，我们可以声明:
 
-```
+```java
 @Index(name = "uniqueIndex", columnList = "firstName", unique = true)
 ```
 
-```
+```java
 [main] DEBUG org.hibernate.SQL -
   alter table Student add constraint uniqueIndex unique (firstName)
 ```
 
 当我们以这种方式创建一个索引时，我们在我们的列上添加了一个惟一性约束，类似地， [`@Column`](https://web.archive.org/web/20220630125253/https://javaee.github.io/javaee-spec/javadocs/javax/persistence/Column.html) 注释上的`unique`属性也是如此。`@Index`比`@Column`更有优势，因为它可以声明多列唯一约束:
 
-```
+```java
 @Index(name = "uniqueMulitIndex", columnList = "firstName, lastName", unique = true)
 ```
 
@@ -161,7 +161,7 @@ index_column ::= column_name [ASC | DESC]
 
 到目前为止，我们已经实现了索引的不同变体。当然，我们并不局限于在实体上声明单个索引。让我们收集我们的声明并一次指定每个索引。我们通过在大括号中用逗号分隔重复`@Index`注释来做到这一点:
 
-```
+```java
 @Entity
 @Table(indexes = {
   @Index(columnList = "firstName"),

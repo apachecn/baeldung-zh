@@ -12,7 +12,7 @@
 
 为了演示这些特性，我们只需要 hibernate-core 库和一个后台 H2 数据库:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>
@@ -31,7 +31,7 @@
 
 假设我们想根据一些其他属性计算一个实体字段值。一种方法是在我们的 Java 实体中定义一个计算只读字段:
 
-```
+```java
 @Entity
 public class Employee implements Serializable {
 
@@ -54,7 +54,7 @@ public class Employee implements Serializable {
 
 从数据库中获取已经计算出的值会容易得多。这可以通过`@Formula`注释来完成:
 
-```
+```java
 @Entity
 public class Employee implements Serializable {
 
@@ -78,7 +78,7 @@ Hibernate 足够聪明，可以解析我们提供的 SQL 并插入正确的表�
 
 另外，请记住**该值是在从数据库**中提取实体时计算的。因此，当我们持久化或更新实体时，直到该实体从上下文中被逐出并被再次加载，该值才会被重新计算:
 
-```
+```java
 Employee employee = new Employee(10_000L, 25);
 session.save(employee);
 
@@ -97,7 +97,7 @@ assertThat(employee.getTax()).isEqualTo(2_500L);
 
 我们必须非常注意应用程序中所有现有的和未来的查询。我们必须为每个查询提供这个附加条件。幸运的是，Hibernate 在一个地方提供了实现这一点的方法:
 
-```
+```java
 @Entity
 @Where(clause = "deleted = false")
 public class Employee implements Serializable {
@@ -108,7 +108,7 @@ public class Employee implements Serializable {
 
 方法上的`@Where`注释包含一个 SQL 子句，该子句将被添加到该实体的任何查询或子查询中:
 
-```
+```java
 employee.setDeleted(true);
 
 session.flush();
@@ -124,7 +124,7 @@ assertThat(employee).isNull();
 
 `@Where`注释也可以用于集合字段。假设我们有一个可删除电话的列表:
 
-```
+```java
 @Entity
 public class Phone implements Serializable {
 
@@ -141,7 +141,7 @@ public class Phone implements Serializable {
 
 然后，从`Employee`端，我们可以映射一个可删除的集合`phones`，如下所示:
 
-```
+```java
 public class Employee implements Serializable {
 
     // ...
@@ -156,7 +156,7 @@ public class Employee implements Serializable {
 
 不同的是，`Employee.phones`集合总是被过滤，但是我们仍然可以通过直接查询获得所有的电话，包括被删除的电话:
 
-```
+```java
 employee.getPhones().iterator().next().setDeleted(true);
 session.flush();
 session.clear();
@@ -179,7 +179,7 @@ assertThat(fullPhoneList).hasSize(2);
 
 为了演示`@Filter`如何工作，让我们首先将下面的过滤器定义添加到`Employee`实体中:
 
-```
+```java
 @FilterDef(
     name = "incomeLevelFilter", 
     parameters = @ParamDef(name = "incomeLimit", type = "int")
@@ -203,14 +203,14 @@ public class Employee implements Serializable {
 
 `@Filter`与`@Where`的另一个区别是`@Filter`默认不启用。我们必须在会话级别手动启用它，并为它提供参数值:
 
-```
+```java
 session.enableFilter("incomeLevelFilter")
   .setParameter("incomeLimit", 11_000);
 ```
 
 现在假设数据库中有以下三名员工:
 
-```
+```java
 session.save(new Employee(10_000, 25));
 session.save(new Employee(12_000, 25));
 session.save(new Employee(15_000, 25));
@@ -218,7 +218,7 @@ session.save(new Employee(15_000, 25));
 
 然后启用过滤器，如上所示，通过查询只能看到其中的两个:
 
-```
+```java
 List<Employee> employees = session.createQuery("from Employee")
   .getResultList();
 assertThat(employees).hasSize(2);
@@ -226,7 +226,7 @@ assertThat(employees).hasSize(2);
 
 请注意，启用的过滤器及其参数值仅在当前会话中应用。在没有启用过滤器的新会话中，我们将看到所有三名员工:
 
-```
+```java
 session = HibernateUtil.getSessionFactory().openSession();
 employees = session.createQuery("from Employee").getResultList();
 assertThat(employees).hasSize(3);
@@ -234,7 +234,7 @@ assertThat(employees).hasSize(3);
 
 此外，当按 id 直接提取实体时，不应用过滤器:
 
-```
+```java
 Employee employee = session.get(Employee.class, 1);
 assertThat(employee.getGrossIncome()).isEqualTo(10_000);
 ```
@@ -257,7 +257,7 @@ assertThat(employee.getGrossIncome()).isEqualTo(10_000);
 
 下面是我们如何定义对任何实现`Serializable`的实体的引用(即，对任何实体的引用):
 
-```
+```java
 @Entity
 public class EntityDescription implements Serializable {
 
@@ -288,7 +288,7 @@ public class EntityDescription implements Serializable {
 
 下面是带有`@AnyMetaDef`注释的`package-info.java`文件的样子:
 
-```
+```java
 @AnyMetaDef(
     name = "EntityDescriptionMetaDef", 
     metaType = "string", 
@@ -305,7 +305,7 @@ package com.baeldung.hibernate.pojo;
 
 现在，假设我们有一名员工有两部手机，描述如下:
 
-```
+```java
 Employee employee = new Employee();
 Phone phone1 = new Phone("555-45-67");
 Phone phone2 = new Phone("555-89-01");
@@ -315,7 +315,7 @@ employee.getPhones().add(phone2);
 
 现在，我们可以向所有三个实体添加描述性元数据，即使它们具有不同的不相关类型:
 
-```
+```java
 EntityDescription employeeDescription = new EntityDescription(
   "Send to conference next year", employee);
 EntityDescription phone1Description = new EntityDescription(

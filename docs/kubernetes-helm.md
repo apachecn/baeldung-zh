@@ -65,7 +65,7 @@ Helm 的官方安装页面[上简洁地描述了几种安装 Helm 的方法。**
 
 使用 Chocolaty，安装 Helm 是一个简单的一行命令:
 
-```
+```java
 choco install kubernetes-helm
 ```
 
@@ -73,13 +73,13 @@ choco install kubernetes-helm
 
 在继续之前，我们应该**确保 Kubernetes 集群正在运行**，并且可以使用`kubectl` 命令 **`:`** 进行访问
 
-```
+```java
 kubectl cluster-info
 ```
 
 现在，直到头盔 2，也需要初始化头盔。这有效地安装了 Tiller 服务器，并在 Kubernetes 集群上设置了 Helm 状态。我们可以使用以下命令通过 Helm CLI 初始化 Helm:
 
-```
+```java
 helm init
 ```
 
@@ -93,7 +93,7 @@ helm init
 
 当然，第一步是用给定的名称创建一个新图表:
 
-```
+```java
 helm create hello-world
 ```
 
@@ -101,7 +101,7 @@ helm create hello-world
 
 让我们快速查看一下为我们创建的目录结构:
 
-```
+```java
 hello-world /
   Chart.yaml
   values.yaml
@@ -122,7 +122,7 @@ hello-world /
 
 如果我们查看模板目录，我们会注意到已经为我们创建了几个用于常见 Kubernetes 资源的**模板:**
 
-```
+```java
 hello-world /
   templates /
     deployment.yaml
@@ -137,7 +137,7 @@ hello-world /
 
 让我们编辑`templates`目录中的文件`deployment.yaml`,如下所示:
 
-```
+```java
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -171,7 +171,7 @@ spec:
 
 类似地，让我们编辑文件`service.yaml`,如下所示:
 
-```
+```java
 apiVersion: v1
 kind: Service
 metadata:
@@ -205,7 +205,7 @@ Helm 中有许多这样的对象，如 Release、Values、Chart 和 Files。
 
 我们可以使用图表中的文件`values.yaml`通过内置的对象值将值传递给模板渲染引擎。让我们将`values.yaml`修改成这样:
 
-```
+```java
 replicaCount: 1
 image:
   repository: "hello-world"
@@ -226,7 +226,7 @@ service:
 
 首先，这是一个简单的命令，它获取一个图表的路径，并运行一系列测试来确保该图表是格式良好的:
 
-```
+```java
 helm lint ./hello-world
 ==> Linting ./hello-world
 1 chart(s) linted, no failures
@@ -238,7 +238,7 @@ helm lint ./hello-world
 
 此外，我们使用这个命令在本地呈现模板以获得快速反馈:
 
-```
+```java
 helm template ./hello-world
 ---
 # Source: hello-world/templates/service.yaml
@@ -301,7 +301,7 @@ spec:
 
 一旦我们确认图表没有问题，最后，我们可以运行这个命令将图表安装到 Kubernetes 集群中:
 
-```
+```java
 helm install --name hello-world ./hello-world
 NAME:   hello-world
 LAST DEPLOYED: Mon Feb 25 15:29:59 2019
@@ -328,7 +328,7 @@ hello-world-7758b9cdf8-cs798  0/1    Pending  0         0s
 
 现在，我们想看看哪个版本安装了哪些图表。这个命令让我们查询命名的版本:
 
-```
+```java
 helm ls --all
 NAME            REVISION        UPDATED                         STATUS          CHART               APP VERSION NAMESPACE
 hello-world     1               Mon Feb 25 15:29:59 2019        DEPLOYED        hello-world-0.1.0   1.0         default
@@ -340,7 +340,7 @@ hello-world     1               Mon Feb 25 15:29:59 2019        DEPLOYED        
 
 如果我们修改了图表，需要安装更新的版本，该怎么办？此命令帮助我们将版本升级到图表或配置的指定或当前版本:
 
-```
+```java
 helm upgrade hello-world ./hello-world
 Release "hello-world" has been upgraded. Happy Helming!
 LAST DEPLOYED: Mon Feb 25 15:36:04 2019
@@ -367,7 +367,7 @@ hello-world-7758b9cdf8-cs798  1/1    Running  0         6m4s
 
 发布出错并需要被收回的情况总是会发生的。这是将版本回滚到以前版本的命令:
 
-```
+```java
 helm rollback hello-world 1
 Rollback was a success! Happy Helming!
 ```
@@ -378,7 +378,7 @@ Rollback was a success! Happy Helming!
 
 虽然可能性较小，但我们可能希望完全卸载某个版本。我们可以使用这个命令从 Kubernetes 卸载一个版本:
 
-```
+```java
 helm uninstall hello-world
 release "hello-world" deleted
 ```
@@ -395,7 +395,7 @@ release "hello-world" deleted
 
 首先，我们需要将我们创建的图表打包，以便能够分发它们。这是创建图表的版本化归档文件的命令:
 
-```
+```java
 helm package ./hello-world
 Successfully packaged chart and saved it to: \hello-world\hello-world-0.1.0.tgz
 ```
@@ -410,7 +410,7 @@ Successfully packaged chart and saved it to: \hello-world\hello-world-0.1.0.tgz
 
 我们可以为图表报告创建`index.yaml`:
 
-```
+```java
 helm repo index my-repo/ --url https://<username>.github.io/my-repo
 ```
 
@@ -418,13 +418,13 @@ helm repo index my-repo/ --url https://<username>.github.io/my-repo
 
 成功创建图表存储库之后，我们可以远程添加这个存储库:
 
-```
+```java
 helm repo add my-repo https://my-pages.github.io/my-repo
 ```
 
 现在，我们应该能够直接从我们的回购安装图表:
 
-```
+```java
 helm install my-repo/hello-world --name=hello-world
 ```
 
@@ -434,7 +434,7 @@ helm install my-repo/hello-world --name=hello-world
 
 最后，我们应该在图表中搜索一个可以出现在任何公共或私有图表存储库中的关键字。
 
-```
+```java
 helm search repo <KEYWORD>
 ```
 

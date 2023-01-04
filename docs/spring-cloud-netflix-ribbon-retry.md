@@ -30,7 +30,7 @@ Spring Cloud 通过使用[网飞功能区](/web/20220627170527/https://www.baeld
 
 让我们构建一个非常简单的**天气服务，它有时会失败，带有 503 HTTP 状态代码**(服务不可用)。我们将通过选择在调用次数是可配置的`successful.call.divisor`属性的倍数时失败来模拟这种间歇性故障:
 
-```
+```java
 @Value("${successful.call.divisor}")
 private int divisor;
 private int nrOfCalls = 0;
@@ -60,7 +60,7 @@ private boolean isServiceUnavailable() {
 
 首先，让我们定义[功能区客户端配置](/web/20220627170527/https://www.baeldung.com/spring-cloud-rest-client-with-netflix-ribbon):
 
-```
+```java
 @Configuration
 @RibbonClient(name = "weather-service", configuration = RibbonConfiguration.class)
 public class WeatherClientRibbonConfiguration {
@@ -78,7 +78,7 @@ public class WeatherClientRibbonConfiguration {
 
 我们现在将添加一个 ping 机制来确定服务的可用性，以及一个循环负载平衡策略，方法是定义上面的`@RibbonClient`注释中包含的`RibbonConfiguration`类:
 
-```
+```java
 public class RibbonConfiguration {
 
     @Bean
@@ -97,7 +97,7 @@ public class RibbonConfiguration {
 
 因此，让我们也将这些全部添加到`application.yml`文件中:
 
-```
+```java
 weather-service:
     ribbon:
         eureka:
@@ -107,7 +107,7 @@ weather-service:
 
 最后，让我们构建一个控制器，并让它调用后端服务:
 
-```
+```java
 @RestController
 public class MyRestController {
 
@@ -128,7 +128,7 @@ public class MyRestController {
 
 我们需要将天气服务属性放在客户端应用程序的`application.yml`文件中:
 
-```
+```java
 weather-service:
   ribbon:
     MaxAutoRetries: 3
@@ -152,7 +152,7 @@ weather-service:
 
 我们必须确保依赖关系在类路径上。否则，将不会重试失败的请求。我们可以省略这个版本，因为它是由 Spring Boot 管理的:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.retry</groupId>
     <artifactId>spring-retry</artifactId>
@@ -167,20 +167,20 @@ weather-service:
 
 此外，我们需要在每个实例上配置`successful.call.divisor`属性，以确保我们模拟的服务在不同的时间失败:
 
-```
+```java
 successful.call.divisor = 5 // instance 1
 successful.call.divisor = 2 // instance 2
 ```
 
 接下来，让我们在端口 8080 上运行客户端服务，并调用:
 
-```
+```java
 http://localhost:8080/client/weather
 ```
 
 让我们来看看`weather-service`的控制台:
 
-```
+```java
 weather service instance 1:
     Providing today's weather information
     Providing today's weather information
@@ -202,7 +202,7 @@ weather service instance 2:
 
 然而，**我们可以通过扩展`RibbonLoadBalancedRetryFactory`类来覆盖默认行为**:
 
-```
+```java
 @Component
 private class CustomRibbonLoadBalancedRetryFactory 
   extends RibbonLoadBalancedRetryFactory {
@@ -225,7 +225,7 @@ private class CustomRibbonLoadBalancedRetryFactory
 
 或者，**我们可以设置一个`ExponentialBackOffPolicy` 或者一个`ExponentialRandomBackOffPolicy`T3:**
 
-```
+```java
 @Override
 public BackOffPolicy createBackOffPolicy(String service) {
     ExponentialBackOffPolicy exponentialBackOffPolicy = 

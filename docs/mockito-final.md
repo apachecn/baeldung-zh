@@ -10,7 +10,7 @@
 
 我们将为本教程添加一个新方法:
 
-```
+```java
 public class MyList extends AbstractList {
     final public int finalMethod() {
         return 0;
@@ -20,7 +20,7 @@ public class MyList extends AbstractList {
 
 我们还将用一个`final`子类来扩展它:
 
-```
+```java
 public final class FinalList extends MyList {
 
     @Override
@@ -36,7 +36,7 @@ public final class FinalList extends MyList {
 
 我们需要向项目的`src/test/resources/mockito-extensions`目录添加一个名为`org.mockito.plugins.MockMaker`的文本文件，并添加一行文本:
 
-```
+```java
 mock-maker-inline 
 ```
 
@@ -46,7 +46,7 @@ mock-maker-inline
 
 **一旦我们正确配置了 Mockito，我们就可以像模拟其他方法一样模拟 final 方法了**:
 
-```
+```java
 @Test
 public void whenMockFinalMethodMockWorks() {
 
@@ -65,7 +65,7 @@ public void whenMockFinalMethodMockWorks() {
 
 嘲笑最后一个职业和嘲笑其他职业一样简单:
 
-```
+```java
 @Test
 public void whenMockFinalClassMockWorks() {
 

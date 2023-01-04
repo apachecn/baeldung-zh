@@ -38,7 +38,7 @@ Learn how to reactively consume REST API endpoints with WebClient from Spring We
 
 让我们将以下依赖项添加到`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-webflux</artifactId>
@@ -49,7 +49,7 @@ Learn how to reactively consume REST API endpoints with WebClient from Spring We
 
 对于 Gradle，我们需要将以下条目添加到`build.gradle`文件中:
 
-```
+```java
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-webflux'
 }
@@ -67,19 +67,19 @@ dependencies {
 
 有三个选项可供选择。第一个是使用默认设置创建一个 *WebClient* 对象:
 
-```
+```java
 WebClient client = WebClient.create(); 
 ```
 
 第二个选项是用给定的基本 URI 启动一个 *WebClient* 实例:
 
-```
+```java
 WebClient client = WebClient.create("http://localhost:8080"); 
 ```
 
 第三个选项(也是最高级的一个)是使用 *DefaultWebClientBuilder* 类构建一个客户端，它允许完全定制:
 
-```
+```java
 WebClient client = WebClient.builder()
   .baseUrl("http://localhost:8080")
   .defaultCookie("cookieKey", "cookieValue")
@@ -100,7 +100,7 @@ WebClient client = WebClient.builder()
 
 正如我们所说，所有这些都必须在我们将要配置的`HttpClient`实例中指定:
 
-```
+```java
 HttpClient httpClient = HttpClient.create()
   .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
   .responseTimeout(Duration.ofMillis(5000))
@@ -119,13 +119,13 @@ WebClient client = WebClient.builder()
 
 首先，我们需要通过调用*方法(HttpMethod method)* 来指定请求的 HTTP 方法:
 
-```
+```java
 UriSpec<RequestBodySpec> uriSpec = client.method(HttpMethod.POST);
 ```
 
 或者调用其快捷方式如`get`、 *post* 、 *delete* :
 
-```
+```java
 UriSpec<RequestBodySpec> uriSpec = client.post();
 ```
 
@@ -137,20 +137,20 @@ UriSpec<RequestBodySpec> uriSpec = client.post();
 
 我们可以将它作为*字符串:*传递给 *uri* API
 
-```
+```java
 RequestBodySpec bodySpec = uriSpec.uri("/resource");
 ```
 
 使用`UriBuilder Function`:
 
-```
+```java
 RequestBodySpec bodySpec = uriSpec.uri(
   uriBuilder -> uriBuilder.pathSegment("/resource").build());
 ```
 
 或者作为一个`java.net.URL`实例:
 
-```
+```java
 RequestBodySpec bodySpec = uriSpec.uri(URI.create("/resource"));
 ```
 
@@ -162,27 +162,27 @@ RequestBodySpec bodySpec = uriSpec.uri(URI.create("/resource"));
 
 例如，如果我们想要设置一个请求体，有几种可用的方法。可能最常见和最直接的选择是使用`bodyValue` 方法:
 
-```
+```java
 RequestHeadersSpec<?> headersSpec = bodySpec.bodyValue("data");
 ```
 
 或者通过向`body` 方法提供一个`Publisher` (以及将要发布的元素的类型):
 
-```
+```java
 RequestHeadersSpec<?> headersSpec = bodySpec.body(
   Mono.just(new Foo("name")), Foo.class);
 ```
 
 或者，我们可以利用`BodyInserters`实用程序类。例如，让我们看看如何使用一个简单的对象填充请求体，就像我们对`bodyValue` 方法`:`所做的那样
 
-```
+```java
 RequestHeadersSpec<?> headersSpec = bodySpec.body(
   BodyInserters.fromValue("data"));
 ```
 
 类似地，如果我们使用一个反应器实例，我们可以使用`BodyInserters#fromPublisher`方法:
 
-```
+```java
 RequestHeadersSpec headersSpec = bodySpec.body(
   BodyInserters.fromPublisher(Mono.just("data")),
   String.class);
@@ -190,7 +190,7 @@ RequestHeadersSpec headersSpec = bodySpec.body(
 
 这个类还提供了其他直观的函数来涵盖更高级的场景。例如，如果我们必须发送多部分请求:
 
-```
+```java
 LinkedMultiValueMap map = new LinkedMultiValueMap();
 map.add("key1", "value1");
 map.add("key2", "value2");
@@ -212,7 +212,7 @@ RequestHeadersSpec<?> headersSpec = bodySpec.body(
 
 以下是如何使用这些值的示例:
 
-```
+```java
 ResponseSpec responseSpec = headersSpec.header(
     HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
   .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML)
@@ -228,7 +228,7 @@ ResponseSpec responseSpec = headersSpec.header(
 
 `exchangeToMono` 和`exchangeToFlux`方法允许访问`ClientResponse`及其状态和标题:
 
-```
+```java
 Mono<String> response = headersSpec.exchangeToMono(response -> {
   if (response.statusCode().equals(HttpStatus.OK)) {
       return response.bodyToMono(String.class);
@@ -243,7 +243,7 @@ Mono<String> response = headersSpec.exchangeToMono(response -> {
 
 而`retrieve`方法是直接获取身体的最短路径:
 
-```
+```java
 Mono<String> response = headersSpec.retrieve()
   .bodyToMono(String.class);
 ```
@@ -260,7 +260,7 @@ Mono<String> response = headersSpec.retrieve()
 
 要完成对正在运行的服务器的实际请求的端到端集成测试，我们可以使用 *bindToServer* 方法:
 
-```
+```java
 WebTestClient testClient = WebTestClient
   .bindToServer()
   .baseUrl("http://localhost:8080")
@@ -271,7 +271,7 @@ WebTestClient testClient = WebTestClient
 
 我们可以通过将特定的 *RouterFunction* 传递给 *bindToRouterFunction* 方法来测试它:
 
-```
+```java
 RouterFunction function = RouterFunctions.route(
   RequestPredicates.GET("/resource"),
   request -> ServerResponse.ok().build()
@@ -289,7 +289,7 @@ WebTestClient
 
 使用`bindToWebHandler`方法可以实现相同的行为，该方法采用一个`WebHandler`实例:
 
-```
+```java
 WebHandler handler = exchange -> Mono.empty();
 WebTestClient.bindToWebHandler(handler).build();
 ```
@@ -300,7 +300,7 @@ WebTestClient.bindToWebHandler(handler).build();
 
 如果我们注入一个`ApplicationContext`的实例，一个简单的代码片段可能如下所示:
 
-```
+```java
 @Autowired
 private ApplicationContext context;
 
@@ -312,7 +312,7 @@ WebTestClient testClient = WebTestClient.bindToApplicationContext(context)
 
 一个更短的方法是提供一组我们想通过`bindToController`方法测试的控制器。假设我们已经有了一个*控制器*类，并将它注入到一个需要的类中，我们可以写:
 
-```
+```java
 @Autowired
 private Controller controller;
 
@@ -323,7 +323,7 @@ WebTestClient testClient = WebTestClient.bindToController(controller).build();
 
 在构建了一个 *WebTestClient* 对象之后，链中的所有后续操作都将类似于*webtest client*，直到*交换*方法(获得响应的一种方式)提供了 *WebTestClient。ResponseSpec* 接口使用有用的方法，如 *expectStatus* 、 *expectBody* 和 *expectHeader* :
 
-```
+```java
 WebTestClient
   .bindToServer()
     .baseUrl("http://localhost:8080")

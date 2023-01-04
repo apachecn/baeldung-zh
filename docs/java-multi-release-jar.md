@@ -14,7 +14,7 @@ Java 在不断发展，并为 JDK 增加了新的特性。而且，如果我们�
 
 让我们来看看一个名为`DateHelper`的实用程序类，它有一个检查[闰年](/web/20220627180039/https://www.baeldung.com/java-leap-year)的方法。让我们假设它是使用 JDK 7 编写的，并构建为在 JRE 7+上运行:
 
-```
+```java
 public class DateHelper {
     public static boolean checkIfLeapYear(String dateStr) throws Exception {
         logger.info("Checking for leap year using Java 1 calendar API ");
@@ -30,7 +30,7 @@ public class DateHelper {
 
 将从我们的测试应用程序的`main`方法中调用`checkIfLeapYear`方法:
 
-```
+```java
 public class App {
     public static void main(String[] args) throws Exception {
         String dateToCheck = args[0];
@@ -60,7 +60,7 @@ Java 9 中的解决方案是**保持原始类不变，而是使用新的 JDK 创
 
 让我们从在与`java`相同的级别创建一个文件夹`java9`开始。之后，让我们克隆`DateHelper.java`文件，保留它的包文件夹结构，并把它放在`java9:`
 
-```
+```java
 src/
     main/
         java/
@@ -84,7 +84,7 @@ src/
 
 让我们重写`java9`克隆类的逻辑:
 
-```
+```java
 public class DateHelper {
     public static boolean checkIfLeapYear(String dateStr) throws Exception {
         logger.info("Checking for leap year using Java 9 Date Api");
@@ -105,13 +105,13 @@ public class DateHelper {
 
 首先，编译 Java 7 平台的旧代码:
 
-```
+```java
 javac --release 7 -d classes src\main\java\com\baeldung\multireleaseapp\*.java
 ```
 
 其次，为 Java 9 平台编译新代码:
 
-```
+```java
 javac --release 9 -d classes-9 src\main\java9\com\baeldung\multireleaseapp\*.java
 ```
 
@@ -121,14 +121,14 @@ javac --release 9 -d classes-9 src\main\java9\com\baeldung\multireleaseapp\*.jav
 
 最后，使用版本 9+创建 MRJAR 文件:
 
-```
+```java
 jar --create --file target/mrjar.jar --main-class com.baeldung.multireleaseapp.App
   -C classes . --release 9 -C classes-9 .
 ```
 
 **`release`选项后跟一个文件夹名，使得该文件夹的内容被打包到 jar 文件中，位于版本号值:**
 
-```
+```java
 com/
     baeldung/
         multireleaseapp/
@@ -146,7 +146,7 @@ META-INF/
 
 `MANIFEST.MF`文件的属性设置为让 JVM 知道这是一个 MRJAR 文件:
 
-```
+```java
 Multi-Release: true
 ```
 
@@ -158,7 +158,7 @@ Multi-Release: true
 
 最后，让我们用 Java 7 或 8 来测试我们的 jar:
 
-```
+```java
 > java -jar target/mrjar.jar "2012-09-22"
 Checking for leap year using Java 1 calendar API 
 Date given 2012-09-22 is leap year: true
@@ -166,7 +166,7 @@ Date given 2012-09-22 is leap year: true
 
 然后，让我们针对 Java 9 或更高版本再次测试这个 jar:
 
-```
+```java
 > java -jar target/mrjar.jar "2012-09-22"
 Checking for leap year using Java 9 Date Api
 Date given 2012-09-22 is leap year: true

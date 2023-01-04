@@ -25,7 +25,7 @@
 
 简单地说，`Multiplier`类展示了如何通过简单地定义两个采用不同数量参数的实现来重载`multiply()`方法:
 
-```
+```java
 public class Multiplier {
 
     public int multiply(int a, int b) {
@@ -42,7 +42,7 @@ public class Multiplier {
 
 类似地，我们可以通过让 `multiply()`方法接受不同类型的参数来重载它:
 
-```
+```java
 public class Multiplier {
 
     public int multiply(int a, int b) {
@@ -57,7 +57,7 @@ public class Multiplier {
 
 此外，用两种类型的方法重载来定义`Multiplier`类是合理的:
 
-```
+```java
 public class Multiplier {
 
     public int multiply(int a, int b) {
@@ -78,7 +78,7 @@ public class Multiplier {
 
 为了理解原因，让我们考虑下面的例子:
 
-```
+```java
 public int multiply(int a, int b) { 
     return a * b; 
 }
@@ -98,7 +98,7 @@ public double multiply(int a, int b) {
 
 为了更清楚地理解类型提升是如何工作的，考虑下面的`multiply()`方法的实现:
 
-```
+```java
 public double multiply(int a, long b) {
     return a * b;
 }
@@ -112,7 +112,7 @@ public int multiply(int a, int b, int c) {
 
 让我们看一个演示类型提升的快速单元测试:
 
-```
+```java
 @Test
 public void whenCalledMultiplyAndNoMatching_thenTypePromotion() {
     assertThat(multiplier.multiply(10, 10)).isEqualTo(100.0);
@@ -121,7 +121,7 @@ public void whenCalledMultiplyAndNoMatching_thenTypePromotion() {
 
 相反，如果我们调用具有匹配实现的方法，类型提升就不会发生:
 
-```
+```java
 @Test
 public void whenCalledMultiplyAndMatching_thenNoTypePromotion() {
     assertThat(multiplier.multiply(10, 10, 10)).isEqualTo(1000);
@@ -155,7 +155,7 @@ public void whenCalledMultiplyAndMatching_thenNoTypePromotion() {
 
 下面是基类:
 
-```
+```java
 public class Vehicle {
 
     public String accelerate(long mph) {
@@ -174,7 +174,7 @@ public class Vehicle {
 
 这里有一个人为的子类:
 
-```
+```java
 public class Car extends Vehicle {
 
     @Override
@@ -190,7 +190,7 @@ public class Car extends Vehicle {
 
 让我们编写一些单元测试来检查`Vehicle`和`Car`类:
 
-```
+```java
 @Test
 public void whenCalledAccelerate_thenOneAssertion() {
     assertThat(vehicle.accelerate(100))
@@ -230,7 +230,7 @@ public void whenCalledStop_thenOneAssertion() {
 
 现在，让我们来看一些单元测试，展示未被覆盖的`run()`和`stop()`方法如何为`Car`和`Vehicle`返回相等的值:
 
-```
+```java
 @Test
 public void givenVehicleCarInstances_whenCalledRun_thenEqual() {
     assertThat(vehicle.run()).isEqualTo(car.run());
@@ -246,7 +246,7 @@ public void givenVehicleCarInstances_whenCalledStop_thenEqual() {
 
 因此，下面的测试演示了为`Car`的实例调用被覆盖的方法:
 
-```
+```java
 @Test
 public void whenCalledAccelerateWithSameArgument_thenNotEqual() {
     assertThat(vehicle.accelerate(100))

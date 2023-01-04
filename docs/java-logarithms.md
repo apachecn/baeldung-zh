@@ -22,7 +22,7 @@
 
 要在 Java 中计算常用对数，我们可以简单地使用`Math.log10()`方法:
 
-```
+```java
 @Test
 public void givenLog10_shouldReturnValidResults() {
     assertEquals(Math.log10(100), 2);
@@ -36,7 +36,7 @@ public void givenLog10_shouldReturnValidResults() {
 
 为了在 Java 中计算自然对数，我们使用了`Math.log()`方法:
 
-```
+```java
 @Test
 public void givenLog10_shouldReturnValidResults() {
     assertEquals(Math.log(Math.E), 1);
@@ -50,7 +50,7 @@ public void givenLog10_shouldReturnValidResults() {
 
 ![{\displaystyle \log _{b}x={\frac {\log _{10}x}{\log _{10}b}}={\frac {\log _{e}x}{\log _{e}b}}.\,}](img/9669a66d7b1d7e92355f0df8f257fdc1.png)
 
-```
+```java
 @Test
 public void givenCustomLog_shouldReturnValidResults() {
     assertEquals(customLog(2, 256), 8);

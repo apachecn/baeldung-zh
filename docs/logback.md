@@ -38,7 +38,7 @@ A quick intro to logging in Java - the libraries, the configuration details as w
 
 Logback 使用 Java 的简单日志门面(SLF4J)作为其本机接口。在开始记录消息之前，我们需要将 Logback 和 SLF4J 添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>ch.qos.logback</groupId>
     <artifactId>logback-core</artifactId>
@@ -61,7 +61,7 @@ Logback 还需要运行时类路径上的 [`logback-classic.jar `](https://web.
 
 我们将把它作为测试依赖项添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>ch.qos.logback</groupId>
     <artifactId>logback-classic</artifactId>
@@ -75,7 +75,7 @@ Logback 还需要运行时类路径上的 [`logback-classic.jar `](https://web.
 
 首先，我们需要一个配置文件。我们将创建一个名为`logback.xml` 的文本文件，并将其放在我们的类路径中:
 
-```
+```java
 <configuration>
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
@@ -91,7 +91,7 @@ Logback 还需要运行时类路径上的 [`logback-classic.jar `](https://web.
 
 接下来，我们需要一个带有`main`方法的简单类:
 
-```
+```java
 public class Example {
 
     private static final Logger logger 
@@ -107,7 +107,7 @@ public class Example {
 
 当我们运行`Example,`时，我们看到我们的消息被记录到控制台:
 
-```
+```java
 20:34:22.136 [main] INFO Example - Example log from Example
 ```
 
@@ -127,14 +127,14 @@ public class Example {
 
 为了将一条消息记录到 Logback，我们从 SLF4J 或 Logback 初始化一个`Logger`:
 
-```
+```java
 private static final Logger logger 
   = LoggerFactory.getLogger(Example.class); 
 ```
 
 然后我们使用它:
 
-```
+```java
 logger.info("Example log from {}", Example.class.getSimpleName()); 
 ```
 
@@ -161,7 +161,7 @@ logger.info("Example log from {}", Example.class.getSimpleName());
 
 让我们创建一个示例程序，演示如何在日志层次结构中使用上下文:
 
-```
+```java
 ch.qos.logback.classic.Logger parentLogger = 
   (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("com.baeldung.logback");
 
@@ -178,7 +178,7 @@ childlogger.debug("DEBUG < INFO");
 
 当我们运行它时，我们会看到这些消息:
 
-```
+```java
 20:31:29.586 [main] WARN com.baeldung.logback - This message is logged because WARN > INFO.
 20:31:29.594 [main] INFO com.baeldung.logback.tests - INFO == INFO
 ```
@@ -193,7 +193,7 @@ childlogger.debug("DEBUG < INFO");
 
 现在让我们使用根日志记录器:
 
-```
+```java
 ch.qos.logback.classic.Logger logger = 
   (ch.qos.logback.classic.Logger)LoggerFactory.getLogger("com.baeldung.logback");
 logger.debug("Hi there!");
@@ -210,7 +210,7 @@ logger.error("This is logged.");
 
 当我们执行以下代码片段时，我们会看到这些消息:
 
-```
+```java
 20:44:44.241 [main] DEBUG com.baeldung.logback - Hi there!
 20:44:44.243 [main] DEBUG com.baeldung.logback - This message is logged because DEBUG == DEBUG.
 20:44:44.243 [main] ERROR com.baeldung.logback - This is logged. 
@@ -228,7 +228,7 @@ logger.error("This is logged.");
 
 考虑以下消息:
 
-```
+```java
 log.debug("Current count is " + count); 
 ```
 
@@ -236,7 +236,7 @@ log.debug("Current count is " + count);
 
 Logback 通过其参数化消息提供了一种替代方案:
 
-```
+```java
 log.debug("Current count is {}", count); 
 ```
 
@@ -244,7 +244,7 @@ log.debug("Current count is {}", count);
 
 让我们尝试一些不同的参数:
 
-```
+```java
 String message = "This is a String";
 Integer zero = 0;
 
@@ -259,7 +259,7 @@ try {
 
 这个片段产生:
 
-```
+```java
 21:32:10.311 [main] DEBUG com.baeldung.logback.LogbackTests - Logging message: This is a String
 21:32:10.316 [main] DEBUG com.baeldung.logback.LogbackTests - Going to divide 42 by 0
 21:32:10.316 [main] ERROR com.baeldung.logback.LogbackTests - Error dividing 42 by 0
@@ -296,7 +296,7 @@ java.lang.ArithmeticException: / by zero
 
 **我们看到一个标签声明了一个类型为`ConsoleAppender`的`Appender`，并将其命名为`STDOUT`。嵌套在该标签中的是一个编码器。它有一个类似于`sprintf-style`转义码的模式:**
 
-```
+```java
 <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
         <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
@@ -306,7 +306,7 @@ java.lang.ArithmeticException: / by zero
 
 最后，我们看到一个`root`标签。该标签将根日志记录器设置为`DEBUG`模式，并将其输出与名为`STDOUT`的`Appender`相关联:
 
-```
+```java
 <root level="debug">
     <appender-ref ref="STDOUT" />
 </root>
@@ -318,7 +318,7 @@ java.lang.ArithmeticException: / by zero
 
 为了在 Logback 处理配置时查看调试信息，我们可以打开调试日志记录:
 
-```
+```java
 <configuration debug="true">
   ...
 </configuration>
@@ -326,7 +326,7 @@ java.lang.ArithmeticException: / by zero
 
 Logback 在处理配置时会将状态信息打印到控制台:
 
-```
+```java
 23:54:23,040 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [logback-test.xml] 
   at [file:/Users/egoebelbecker/ideaProjects/logback-guide/out/test/resources/logback-test.xml]
 23:54:23,230 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - About to instantiate appender 
@@ -345,7 +345,7 @@ Logback 在处理配置时会将状态信息打印到控制台:
 
 还有第二种打印状态信息的机制:
 
-```
+```java
 <configuration>
     <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />  
     ...
@@ -360,7 +360,7 @@ Logback 在处理配置时会将状态信息打印到控制台:
 
 在应用程序运行时重新加载日志配置是一个强大的故障排除工具。Logback 通过`scan`参数实现了这一点:
 
-```
+```java
 <configuration scan="true">
   ...
 </configuration>
@@ -368,7 +368,7 @@ Logback 在处理配置时会将状态信息打印到控制台:
 
 默认行为是每 60 秒扫描一次配置文件的更改。我们可以通过添加`scanPeriod`来修改这个间隔:
 
-```
+```java
 <configuration scan="true" scanPeriod="15 seconds">
   ...
 </configuration>
@@ -382,7 +382,7 @@ Logback 在处理配置时会将状态信息打印到控制台:
 
 我们可以为任何`logger`设置级别:
 
-```
+```java
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -399,7 +399,7 @@ Logback 在处理配置时会将状态信息打印到控制台:
 
 让我们将它添加到我们的类路径中，并运行代码:
 
-```
+```java
 Logger foobar = 
   (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("com.baeldung.foobar");
 Logger logger = 
@@ -416,7 +416,7 @@ testslogger.warn("This is logged from tests");
 
 我们看到这样的输出:
 
-```
+```java
 00:29:51.787 [main] DEBUG com.baeldung.foobar - This is logged from foobar
 00:29:51.789 [main] INFO com.baeldung.logback - This is logged from logger
 00:29:51.789 [main] WARN com.baeldung.logback.tests - This is logged from tests 
@@ -432,7 +432,7 @@ testslogger.warn("This is logged from tests");
 
 例如，下面是一个`FileAppender`的配置:
 
-```
+```java
 <property name="LOG_DIR" value="/var/log/application" />
 <appender name="FILE" class="ch.qos.logback.core.FileAppender">
     <file>${LOG_DIR}/tests.log</file>
@@ -447,7 +447,7 @@ testslogger.warn("This is logged from tests");
 
 属性在配置脚本中的`<property>`标签中声明，但是它们也可以从外部来源获得，比如系统属性。我们可以省略这个例子中的`property`声明，在命令行中设置`LOG_DIR`的值:
 
-```
+```java
 $ java -DLOG_DIR=/var/log/application com.baeldung.logback.LogbackTests
 ```
 
@@ -467,7 +467,7 @@ $ java -DLOG_DIR=/var/log/application com.baeldung.logback.LogbackTests
 
 `FileAppender` 将消息追加到文件中。它支持广泛的配置参数。让我们将文件`appender`添加到我们的基本配置中:
 
-```
+```java
 <configuration debug="true">
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoders are assigned the type
@@ -502,7 +502,7 @@ $ java -DLOG_DIR=/var/log/application com.baeldung.logback.LogbackTests
 
 我们可以覆盖这种行为:
 
-```
+```java
 <logger name="com.baeldung.logback.tests" level="WARN" additivity="false" > 
     <appender-ref ref="FILE" /> 
 </logger> 
@@ -520,7 +520,7 @@ $ java -DLOG_DIR=/var/log/application com.baeldung.logback.LogbackTests
 
 为此，我们有`RollingFileAppender:`
 
-```
+```java
 <property name="LOG_FILE" value="LogFile" />
 <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>${LOG_FILE}.log</file>
@@ -546,7 +546,7 @@ $ java -DLOG_DIR=/var/log/application com.baeldung.logback.LogbackTests
 
 例如:
 
-```
+```java
 <property name="LOG_FILE" value="LogFile" />
 <property name="LOG_DIR" value="/var/logs/application" />
 <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -579,7 +579,7 @@ $ java -DLOG_DIR=/var/log/application com.baeldung.logback.LogbackTests
 
 到目前为止，我们在所有的例子中都使用了`PatternLayout`:
 
-```
+```java
 <encoder>
     <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
 </encoder> 
@@ -599,7 +599,7 @@ $ java -DLOG_DIR=/var/log/application com.baeldung.logback.LogbackTests
 
 所以我们看到类似这样的消息:
 
-```
+```java
 21:32:10.311 [main] DEBUG com.baeldung.logback.LogbackTests - Logging message: This is a String
 ```
 

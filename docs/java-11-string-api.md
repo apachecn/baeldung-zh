@@ -12,7 +12,7 @@ Java 11 给常用的 [`String`类](/web/20220706122849/https://www.baeldung.com/
 
 **它返回一个字符串，其值是重复`n`次的字符串的串联，其中`n`作为参数**传递:
 
-```
+```java
 @Test
 public void whenRepeatStringTwice_thenGetStringTwice() {
     String output = "La ".repeat(2) + "Land";
@@ -27,7 +27,7 @@ public void whenRepeatStringTwice_thenGetStringTwice() {
 
 **`strip()`实例方法返回一个去掉了所有前导和尾随空格的字符串**:
 
-```
+```java
 @Test
 public void whenStripString_thenReturnStringWithoutWhitespaces() {
     is("\n\t  hello   \u2005".strip()).equals("hello");
@@ -42,7 +42,7 @@ Java 11 还增加了方法`stripLeading()`和`stripTrailing()`，分别处理前
 
 这与 [`trim()`](/web/20220706122849/https://www.baeldung.com/string/trim) 不同，后者将空格定义为小于或等于 Unicode 空格字符(U+0020)的任何字符。如果我们在前面的例子中使用`trim()`，我们将得到不同的结果:
 
-```
+```java
 @Test
 public void whenTrimAdvanceString_thenReturnStringWithWhitespaces() {
     is("\n\t  hello   \u2005".trim()).equals("hello   \u2005");
@@ -55,7 +55,7 @@ public void whenTrimAdvanceString_thenReturnStringWithWhitespaces() {
 
 **如果字符串为空或者只包含空白，`isBlank()`实例方法返回`true`。否则，它返回`false`** :
 
-```
+```java
 @Test
 public void whenBlankString_thenReturnTrue() {
     assertTrue("\n\t\u2005  ".isBlank());
@@ -68,7 +68,7 @@ public void whenBlankString_thenReturnTrue() {
 
 **`lines()`实例方法返回一个从字符串中提取的 [`Stream`](/web/20220706122849/https://www.baeldung.com/java-8-streams-introduction) 行，由行终止符**分隔:
 
-```
+```java
 @Test
 public void whenMultilineString_thenReturnNonEmptyLineCount() {
     String multilineStr = "This is\n \n a multiline\n string.";

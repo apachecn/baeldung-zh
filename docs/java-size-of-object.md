@@ -44,7 +44,7 @@
 
 现在让我们创建`InstrumentationAgent`类:
 
-```
+```java
 public class InstrumentationAgent {
     private static volatile Instrumentation globalInstrumentation;
 
@@ -63,13 +63,13 @@ public class InstrumentationAgent {
 
 **在我们为这个代理创建 JAR 之前，我们需要确保一个简单的元文件`MANIFEST.MF`包含在其中**:
 
-```
+```java
 Premain-class: com.baeldung.objectsize.InstrumentationAgent
 ```
 
 现在我们可以用清单制作一个代理罐子。包括 MF 文件。一种方法是通过命令行:
 
-```
+```java
 javac InstrumentationAgent.java
 jar cmf MANIFEST.MF InstrumentationAgent.jar InstrumentationAgent.class
 ```
@@ -78,7 +78,7 @@ jar cmf MANIFEST.MF InstrumentationAgent.jar InstrumentationAgent.class
 
 让我们通过创建一个使用我们的代理类的示例对象的类来看看这一点:
 
-```
+```java
 public class InstrumentationExample {
 
     public static void printObjectSize(Object object) {
@@ -138,13 +138,13 @@ public class InstrumentationExample {
 
 为此，**我们需要在运行我们的应用程序**时，在代理 JAR 的路径中包含–`javaagent`选项:
 
-```
+```java
 VM Options: -javaagent:"path_to_agent_directory\InstrumentationAgent.jar"
 ```
 
 运行我们的类的输出将向我们显示估计的对象大小:
 
-```
+```java
 Object type: class java.lang.String, size: 24 bytes
 Object type: class java.lang.String, size: 24 bytes
 Object type: class [Ljava.lang.String;, size: 32 bytes

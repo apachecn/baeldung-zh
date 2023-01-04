@@ -26,7 +26,7 @@ Learn how to use the @Query annotation in Spring Data JPA to define custom queri
 
 实现分页最简单的方法是使用**Java 查询语言**——创建一个查询，并通过`setMaxResults` 和`s`e` tFirstResult` 对其进行配置:
 
-```
+```java
 Query query = entityManager.createQuery("From Foo");
 int pageNumber = 1;
 int pageSize = 10;
@@ -44,7 +44,7 @@ API 很简单:
 
 对于一个更完整的分页解决方案，我们还需要获得总结果计数:
 
-```
+```java
 Query queryTotal = entityManager.createQuery
     ("Select count(f.id) from Foo f");
 long countResult = (long)queryTotal.getSingleResult();
@@ -52,7 +52,7 @@ long countResult = (long)queryTotal.getSingleResult();
 
 计算**最后一页**也很有用:
 
-```
+```java
 int pageSize = 10;
 int pageNumber = (int) ((countResult / pageSize) + 1);
 ```
@@ -63,7 +63,7 @@ int pageNumber = (int) ((countResult / pageSize) + 1);
 
 另一种简单的分页策略是**首先检索完整的 id**，然后基于这些 id**检索完整的实体**。这允许更好地控制实体提取，但也意味着它需要加载整个表来检索 id:
 
-```
+```java
 Query queryForIds = entityManager.createQuery(
   "Select f.id from Foo f order by f.lastName");
 List<Integer> fooIds = queryForIds.getResultList();
@@ -79,7 +79,7 @@ List<Foo> fooList = query.getResultList();
 
 接下来，让我们看看如何**利用 JPA 标准 API** 实现分页:
 
-```
+```java
 int pageSize = 10;
 CriteriaBuilder criteriaBuilder = entityManager
   .getCriteriaBuilder();
@@ -97,7 +97,7 @@ List<Foo> fooList = typedQuery.getResultList();
 
 使用 JPA 标准**获得实体总数**非常简单:
 
-```
+```java
 CriteriaQuery<Long> countQuery = criteriaBuilder
   .createQuery(Long.class);
 countQuery.select(criteriaBuilder.count(
@@ -108,7 +108,7 @@ Long count = entityManager.createQuery(countQuery)
 
 最终结果是**一个完整的分页解决方案**，使用 JPA 标准 API:
 
-```
+```java
 int pageNumber = 1;
 int pageSize = 10;
 CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();

@@ -12,7 +12,7 @@
 
 它有一个根据内部值确定对象是否符合操作条件的方法:
 
-```
+```java
 class Item {
     private int value;
 
@@ -30,7 +30,7 @@ class Item {
 
 现在我们可以为我们的`Stream`创建一个源，它可以是`Items:`的集合
 
-```
+```java
 List<Item> itemList = new ArrayList<>();
 for (int i = 0; i < 10; i++) {
     itemList.add(new Item(i));
@@ -41,7 +41,7 @@ for (int i = 0; i < 10; i++) {
 
 **在很多情况下，如果我们想对项目的子集做一些事情，我们可以使用`Stream#filter`方法，我们不需要先删除任何东西:**
 
-```
+```java
 itemList.stream()
   .filter(item -> item.isQualified())
   ...
@@ -57,13 +57,13 @@ itemList.stream()
 
 我们可以创建一个`Predicate`来确定一个`Item`是否有资格接受手术:
 
-```
+```java
 Predicate<Item> isQualified = item -> item.isQualified();
 ```
 
 我们的`Predicate`将过滤我们想要操作的`Items`:
 
-```
+```java
 itemList.stream()
   .filter(isQualified)
   .forEach(item -> item.operate());
@@ -71,7 +71,7 @@ itemList.stream()
 
 一旦我们完成了对流中项目的操作，我们就可以使用之前用于过滤的相同的`Predicate`来删除它们:
 
-```
+```java
 itemList.removeIf(isQualified);
 ```
 
@@ -81,7 +81,7 @@ itemList.removeIf(isQualified);
 
 我们还可以使用另一个列表来保存已经被操作过的元素，然后将它们从原始列表中删除:
 
-```
+```java
 List<Item> operatedList = new ArrayList<>();
 itemList.stream()
   .filter(item -> item.isQualified())

@@ -14,7 +14,7 @@ JGit 是用 Java 编写的功能相对完整的 Git 实现，在 Java 社区中�
 
 有许多方法可以将您的项目与 JGit 连接起来并开始编写代码。最简单的方法可能是使用 Maven——通过向我们的 `pom.xml`文件中的`<dependencies>`标签添加以下代码片段来完成集成:
 
-```
+```java
 <dependency>
     <groupId>org.eclipse.jgit</groupId>
     <artifactId>org.eclipse.jgit</artifactId>
@@ -37,7 +37,7 @@ JGit 有两个基本级别的 API: `plumbing`和`porcelain`。这些术语来自
 
 `init` 命令将让我们创建一个空的存储库:
 
-```
+```java
 Git git = Git.init().setDirectory("/path/to/repo").call();
 ```
 
@@ -45,7 +45,7 @@ Git git = Git.init().setDirectory("/path/to/repo").call();
 
 可以使用`cloneRepository`命令克隆一个现有的存储库:
 
-```
+```java
 Git git = Git.cloneRepository()
   .setURI("https://github.com/eclipse/jgit.git")
   .setDirectory("/path/to/repo")
@@ -67,7 +67,7 @@ Git 对象模型中有四种类型的对象:
 
 要从存储库中解析对象，只需传递正确的修订版，如以下函数所示:
 
-```
+```java
 ObjectId head = repository.resolve("HEAD");
 ```
 
@@ -77,7 +77,7 @@ ObjectId head = repository.resolve("HEAD");
 
 例如，要查询对 head 的引用，只需调用:
 
-```
+```java
 Ref HEAD = repository.getRef("refs/heads/master");
 ```
 
@@ -85,7 +85,7 @@ Ref HEAD = repository.getRef("refs/heads/master");
 
 `RevWalk`遍历提交图并按顺序产生匹配的提交:
 
-```
+```java
 RevWalk walk = new RevWalk(repository);
 ```
 
@@ -93,7 +93,7 @@ RevWalk walk = new RevWalk(repository);
 
 `RevCommit`表示 Git 对象模型中的提交。要解析提交，使用一个`RevWalk`实例:
 
-```
+```java
 RevWalk walk = new RevWalk(repository);
 RevCommit commit = walk.parseCommit(objectIdOfCommit);
 ```
@@ -102,7 +102,7 @@ RevCommit commit = walk.parseCommit(objectIdOfCommit);
 
 `RevTag`代表 Git 对象模型中的一个标签。您可以使用一个`RevWalk`实例来解析标签:
 
-```
+```java
 RevWalk walk = new RevWalk(repository);
 RevTag tag = walk.parseTag(objectIdOfTag);
 ```
@@ -111,7 +111,7 @@ RevTag tag = walk.parseTag(objectIdOfTag);
 
 `RevTree`表示 Git 对象模型中的一棵树。一个`RevWalk`实例也用于解析一棵树:
 
-```
+```java
 RevWalk walk = new RevWalk(repository);
 RevTree tree = walk.parseTree(objectIdOfTree);
 ```
@@ -128,7 +128,7 @@ RevTree tree = walk.parseTree(objectIdOfTree);
 
 下面是一个如何使用`porcelain` API 将一组文件添加到索引中的快速示例:
 
-```
+```java
 Git git = new Git(db);
 AddCommand add = git.add();
 add.addFilepattern("someDirectory").call();
@@ -144,7 +144,7 @@ add.addFilepattern("someDirectory").call();
 
 这里有一个如何使用`porcelain` API 提交的快速示例:
 
-```
+```java
 Git git = new Git(db);
 CommitCommand commit = git.commit();
 commit.setMessage("initial commit").call();
@@ -163,7 +163,7 @@ commit.setMessage("initial commit").call();
 
 这里有一个使用`porcelain` API 标记提交的简单例子:
 
-```
+```java
 Git git = new Git(db);
 RevCommit commit = git.commit().setMessage("initial commit").call();
 RevTag tag = git.tag().setName("tag").call();
@@ -178,7 +178,7 @@ RevTag tag = git.tag().setName("tag").call();
 
 下面是如何获取一些日志消息的快速示例:
 
-```
+```java
 Git git = new Git(db);
 Iterable<RevCommit> log = git.log().call();
 ```
@@ -189,7 +189,7 @@ JGit 也有一些常见的 Ant 任务包含在`org.eclipse.jgit.ant`包中。
 
 要使用这些任务:
 
-```
+```java
 <taskdef resource="org/eclipse/jgit/ant/ant-tasks.properties">
     <classpath>
         <pathelement location="path/to/org.eclipse.jgit.ant-VERSION.jar"/>
@@ -203,7 +203,7 @@ JGit 也有一些常见的 Ant 任务包含在`org.eclipse.jgit.ant`包中。
 
 ### 6.1。`git-clone`
 
-```
+```java
 <git-clone uri="http://egit.eclipse.org/jgit.git" />
 ```
 
@@ -219,7 +219,7 @@ JGit 也有一些常见的 Ant 任务包含在`org.eclipse.jgit.ant`包中。
 
 ### 6.2。`git-init`
 
-```
+```java
 <git-init />
 ```
 
@@ -232,7 +232,7 @@ JGit 也有一些常见的 Ant 任务包含在`org.eclipse.jgit.ant`包中。
 
 ### 6.3。`git-checkout`
 
-```
+```java
 <git-checkout src="path/to/repo" branch="origin/newbranch" />
 ```
 

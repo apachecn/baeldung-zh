@@ -12,7 +12,7 @@ AssertJ 基础知识可以在[这里](/web/20220524034754/https://www.baeldung.c
 
 让我们来看看我们将要编写测试用例的目标类:
 
-```
+```java
 public class Member {
     private String name;
     private int age;
@@ -31,7 +31,7 @@ public class Member {
 
 让我们为我们的`Member`类的`age`字段声明一个条件:
 
-```
+```java
 Condition<Member> senior = new Condition<>(
   m -> m.getAge() >= 60, "senior");
 ```
@@ -42,7 +42,7 @@ Condition<Member> senior = new Condition<>(
 
 另一个条件，检查一个`Person`是否有`name`“John”，看起来像这样:
 
-```
+```java
 Condition<Member> nameJohn = new Condition<>(
   m -> m.getName().equalsIgnoreCase("John"), 
   "name John"
@@ -57,21 +57,21 @@ Condition<Member> nameJohn = new Condition<>(
 
 当`age`值高于资历阈值时，应通过以下测试:
 
-```
+```java
 Member member = new Member("John", 65);
 assertThat(member).is(senior);
 ```
 
 由于使用`is`方法的断言通过了，使用具有相同参数的`isNot`的断言将失败:
 
-```
+```java
 // assertion fails with an error message containing "not to be <senior>"
 assertThat(member).isNot(senior);
 ```
 
 使用`nameJohn`变量，我们可以编写两个类似的测试:
 
-```
+```java
 Member member = new Member("Jane", 60);
 assertThat(member).doesNotHave(nameJohn);
 
@@ -85,7 +85,7 @@ assertThat(member).has(nameJohn);
 
 条件不仅仅对标量值起作用，它们还可以验证集合中元素的存在或不存在。让我们来看一个测试案例:
 
-```
+```java
 List<Member> members = new ArrayList<>();
 members.add(new Member("Alice", 50));
 members.add(new Member("Bob", 60));
@@ -108,7 +108,7 @@ assertThat(members).doNotHave(nameJohn);
 
 下面是如何使用`not`和`allOf`方法来组合条件:
 
-```
+```java
 Member john = new Member("John", 60);
 Member jane = new Member("Jane", 50);
 
@@ -118,7 +118,7 @@ assertThat(jane).is(allOf(not(nameJohn), not(senior)));
 
 同样，我们可以利用`anyOf`:
 
-```
+```java
 Member john = new Member("John", 50);
 Member jane = new Member("Jane", 60);
 

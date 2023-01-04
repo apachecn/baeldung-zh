@@ -41,7 +41,7 @@ Heap 有许多变体，它们在一些实现细节上都有所不同。
 
 让我们用一些例子来看看这些规则:
 
-```
+```java
  1        2      3        4        5        6         7         8        9       10
  ()       ()     ()       ()       ()       ()        ()        ()       ()       ()
          /         \     /  \     /  \     /  \      /  \      /        /        /  \
@@ -72,7 +72,7 @@ Heap 有许多变体，它们在一些实现细节上都有所不同。
 
 我们来看一个例子！我们想在这个堆中插入 4:
 
-```
+```java
  2
        / \
       /   \
@@ -83,7 +83,7 @@ Heap 有许多变体，它们在一些实现细节上都有所不同。
 
 第一步是创建存储 4:
 
-```
+```java
  2
        / \
       /   \
@@ -94,7 +94,7 @@ Heap 有许多变体，它们在一些实现细节上都有所不同。
 
 因为 4 比它的父代 6 小，所以我们交换它们:
 
-```
+```java
  2
        / \
       /   \
@@ -107,7 +107,7 @@ Heap 有许多变体，它们在一些实现细节上都有所不同。
 
 让我们插入一句:
 
-```
+```java
  2
        / \
       /   \
@@ -118,7 +118,7 @@ Heap 有许多变体，它们在一些实现细节上都有所不同。
 
 我们必须交换 1 和 4:
 
-```
+```java
  2
        / \
       /   \
@@ -129,7 +129,7 @@ Heap 有许多变体，它们在一些实现细节上都有所不同。
 
 现在我们应该交换 1 和 2:
 
-```
+```java
  1
        / \
       /   \
@@ -144,7 +144,7 @@ Heap 有许多变体，它们在一些实现细节上都有所不同。
 
 由于我们使用了一个**完整的二叉树，我们可以用一个数组**来实现它:数组中的一个元素将是树中的一个节点。我们从左到右、从上到下用数组索引标记每个节点，如下所示:
 
-```
+```java
  0
        / \
       /   \
@@ -165,7 +165,7 @@ Heap 有许多变体，它们在一些实现细节上都有所不同。
 
 基本的二叉树实现如下所示:
 
-```
+```java
 class BinaryTree<E> {
 
     List<E> elements = new ArrayList<>();
@@ -199,7 +199,7 @@ class BinaryTree<E> {
 
 上面的代码只是将新元素添加到树的末尾。因此，如果有必要，我们需要遍历新元素。我们可以用下面的代码来实现:
 
-```
+```java
 class Heap<E extends Comparable<E>> {
 
     // ...
@@ -262,7 +262,7 @@ class Heap<E extends Comparable<E>> {
 
 让我们从这棵树上删除根:
 
-```
+```java
  1
        / \
       /   \
@@ -273,7 +273,7 @@ class Heap<E extends Comparable<E>> {
 
 首先，我们将最后一片叶子放入根中:
 
-```
+```java
  4
        / \
       /   \
@@ -284,7 +284,7 @@ class Heap<E extends Comparable<E>> {
 
 然后，因为它比它的两个孩子都大，所以我们把它和它最小的孩子交换，也就是 2:
 
-```
+```java
  2
        / \
       /   \
@@ -299,7 +299,7 @@ class Heap<E extends Comparable<E>> {
 
 用我们所有的，移除根(弹出)看起来像这样:
 
-```
+```java
 class Heap<E extends Comparable<E>> {
 
     // ...
@@ -355,7 +355,7 @@ class Heap<E extends Comparable<E>> {
 
 就像我们之前说的，排序只是创建一个堆，并重复删除根:
 
-```
+```java
 class Heap<E extends Comparable<E>> {
 
     // ...
@@ -387,7 +387,7 @@ class Heap<E extends Comparable<E>> {
 
 我们可以通过以下测试来验证它是否正常工作:
 
-```
+```java
 @Test
 void givenNotEmptyIterable_whenSortCalled_thenItShouldReturnElementsInSortedList() {
     // given

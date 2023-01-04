@@ -18,7 +18,7 @@
 
 首先，我们需要在我们的`pom.xml`中包含`[json](https://web.archive.org/web/20221025152558/https://mvnrepository.com/artifact/org.json/json) `依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.json</groupId>
     <artifactId>json</artifactId>
@@ -30,7 +30,7 @@
 
 首先，为了检查`String`是否是 JSON，我们将尝试进一步创建一个`JSONObject.`，如果是无效值，我们将得到一个`JSONException:`
 
-```
+```java
 public boolean isValid(String json) {
     try {
         new JSONObject(json);
@@ -43,12 +43,12 @@ public boolean isValid(String json) {
 
 让我们用一个简单的例子来尝试一下:
 
-```
+```java
 String json = "{\"email\": \"[[email protected]](/web/20221025152558/https://www.baeldung.com/cdn-cgi/l/email-protection)\", \"name\": \"John\"}";
 assertTrue(validator.isValid(json));
 ```
 
-```
+```java
 String json = "Invalid_Json"; 
 assertFalse(validator.isValid(json));
 ```
@@ -57,7 +57,7 @@ assertFalse(validator.isValid(json));
 
 例如，让我们看看它是如何处理数组的:
 
-```
+```java
 String json = "[{\"email\": \"[[email protected]](/web/20221025152558/https://www.baeldung.com/cdn-cgi/l/email-protection)\", \"name\": \"John\"}]";
 assertFalse(validator.isValid(json));
 ```
@@ -66,7 +66,7 @@ assertFalse(validator.isValid(json));
 
 为了验证`String` 是对象还是数组，如果`JSONObject`创建失败，我们需要添加一个附加条件。 同样，**`JSONArray`也会抛出一个****`JSONException`****如果`String`不适合 JSON 数组**的话:
 
-```
+```java
 public boolean isValid(String json) {
     try {
         new JSONObject(json);
@@ -83,7 +83,7 @@ public boolean isValid(String json) {
 
 因此，我们可以验证任何值:
 
-```
+```java
 String json = "[{\"email\": \"[[email protected]](/web/20221025152558/https://www.baeldung.com/cdn-cgi/l/email-protection)\", \"name\": \"John\"}]";
 assertTrue(validator.isValid(json));
 ```
@@ -96,7 +96,7 @@ assertTrue(validator.isValid(json));
 
 让我们添加 [`jackson-databind`](https://web.archive.org/web/20221025152558/https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind) 美芬依赖:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -110,7 +110,7 @@ assertTrue(validator.isValid(json));
 
 换句话说，我们不需要提供额外的检查。它对对象和数组都有效:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 
 public boolean isValid(String json) {
@@ -125,7 +125,7 @@ public boolean isValid(String json) {
 
 让我们通过例子来看看如何使用它:
 
-```
+```java
 String json = "{\"email\": \"[[email protected]](/web/20221025152558/https://www.baeldung.com/cdn-cgi/l/email-protection)\", \"name\": \"John\"}";
 assertTrue(validator.isValid(json));
 
@@ -144,7 +144,7 @@ Gson 是另一个公共库，它允许我们使用相同的方法验证原始 JS
 
 让我们添加 [`gson`](https://web.archive.org/web/20221025152558/https://mvnrepository.com/artifact/com.google.code.gson/gson) 美芬依赖:
 
-```
+```java
 <dependency>
     <groupId>com.google.code.gson</groupId>
     <artifactId>gson</artifactId>
@@ -158,7 +158,7 @@ Gson 提供了`JsonParser`来将指定的 JSON 读入到一个由`JsonElement`�
 
 因此，在 JSON 值不正确的情况下，我们可以使用`parse()`方法计算`String`并处理`Exception`:
 
-```
+```java
 public boolean isValid(String json) {
     try {
         JsonParser.parseString(json);
@@ -171,7 +171,7 @@ public boolean isValid(String json) {
 
 让我们编写一些测试来检查主要情况:
 
-```
+```java
 String json = "{\"email\": \"[[email protected]](/web/20221025152558/https://www.baeldung.com/cdn-cgi/l/email-protection)\", \"name\": \"John\"}";
 assertTrue(validator.isValid(json));
 
@@ -183,7 +183,7 @@ assertTrue(validator.isValid(json));
 
 例如，让我们看看它是如何处理单个字符串的:
 
-```
+```java
 String json = "Invalid_Json";
 assertTrue(validator.isValid(json));
 ```
@@ -196,7 +196,7 @@ assertTrue(validator.isValid(json));
 
 我们可以调用`fromJson()`方法来使用特定的`TypeAdapter`读取原始 JSON:
 
-```
+```java
 final TypeAdapter<JsonElement> strictAdapter = new Gson().getAdapter(JsonElement.class);
 
 public boolean isValid(String json) {
@@ -211,7 +211,7 @@ public boolean isValid(String json) {
 
 最后，我们可以检查 JSON 是否有效:
 
-```
+```java
 String json = "Invalid_Json";
 assertFalse(validator.isValid(json));
 ```

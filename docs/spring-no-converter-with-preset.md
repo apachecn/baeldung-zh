@@ -26,7 +26,7 @@
 
 例如，让我们使用`APPLICATION_XML_VALUE` 或`“application/xml”`:
 
-```
+```java
 @GetMapping(value = "/student/v3/{id}", produces = MediaType.APPLICATION_XML_VALUE)
 public ResponseEntity<Student> getV3(@PathVariable("id") int id) {
     return ResponseEntity.ok(new Student(id, "Robert", "Miller", "BB"));
@@ -35,19 +35,19 @@ public ResponseEntity<Student> getV3(@PathVariable("id") int id) {
 
 接下来，让我们向`http://localhost:8080/api/student/v3/1` 发送请求，看看会发生什么:
 
-```
+```java
 curl http://localhost:8080/api/student/v3/1
 ```
 
 端点发回以下响应:
 
-```
+```java
 {"timestamp":"2022-02-01T18:23:37.490+00:00","status":500,"error":"Internal Server Error","path":"/api/student/v3/1"}
 ```
 
 事实上，查看日志，Spring 失败了，出现了`HttpMessageNotWritableException`异常:
 
-```
+```java
 [org.springframework.http.converter.HttpMessageNotWritableException: No converter for [class com.baeldung.boot.noconverterfound.model.Student] with preset Content-Type 'null']
 ```
 
@@ -55,7 +55,7 @@ curl http://localhost:8080/api/student/v3/1
 
 最后，让我们创建一个测试用例来确认 Spring 抛出带有指定消息的`HttpMessageNotWritableException` :
 
-```
+```java
 @Test
 public void whenConverterNotFound_thenThrowException() throws Exception {
     String url = "/api/student/v3/1";
@@ -78,7 +78,7 @@ Spring Boot 依靠自动配置来注册[内置消息转换器](/web/202205240617
 
 话虽如此，并且知道 Spring Boot 在 [web starter](/web/20220524061721/https://www.baeldung.com/spring-boot-starters#Starter) 中包含了 Jackson，让我们用`APPLICATION_JSON_VALUE`媒体类型创建一个新的端点:
 
-```
+```java
 @GetMapping(value = "/student/v2/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 public ResponseEntity<Student> getV2(@PathVariable("id") int id) {
     return ResponseEntity.ok(new Student(id, "Kevin", "Cruyff", "AA"));
@@ -87,7 +87,7 @@ public ResponseEntity<Student> getV2(@PathVariable("id") int id) {
 
 现在，让我们创建一个测试用例来确认一切正常:
 
-```
+```java
 @Test
 public void whenJsonConverterIsFound_thenReturnResponse() throws Exception {
     String url = "/api/student/v2/1";

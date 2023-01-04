@@ -12,7 +12,7 @@
 
 让我们首先定义一个示例注释和一个使用我们的自定义注释的示例类:
 
-```
+```java
 @Target({ METHOD, TYPE })
 @Retention(RUNTIME)
 public @interface SampleAnnotation {
@@ -41,7 +41,7 @@ public class SampleAnnotatedClass {
 
 为了实现这个目标，我们需要通过使用 [`ClassLoader`](/web/20220810172110/https://www.baeldung.com/java-classloaders) 来加载类。因此，当我们知道在哪个(些)类中扫描注释时，这个方法是有用的:
 
-```
+```java
 Class<?> clazz = ClassLoader.getSystemClassLoader()
   .loadClass("com.baeldung.annotation.scanner.SampleAnnotatedClass");
 SampleAnnotation classAnnotation = clazz.getAnnotation(SampleAnnotation.class);
@@ -64,7 +64,7 @@ Assert.assertEquals("annotatedMethod", annotatedMethods.get(0));
 
 让我们从添加`[spring-context](https://web.archive.org/web/20220810172110/https://search.maven.org/search?q=g:org.springframework%20a:spring-context)`依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context</artifactId>
@@ -74,7 +74,7 @@ Assert.assertEquals("annotatedMethod", annotatedMethods.get(0));
 
 让我们继续看一个简单的例子:
 
-```
+```java
 ClassPathScanningCandidateComponentProvider provider =
   new ClassPathScanningCandidateComponentProvider(false);
 provider.addIncludeFilter(new AnnotationTypeFilter(SampleAnnotation.class));
@@ -103,7 +103,7 @@ Assert.assertEquals("SampleAnnotatedClass", annotatedBeans.get(0));
 
 首先，我们需要添加`[spring-core](https://web.archive.org/web/20220810172110/https://search.maven.org/search?q=g:org.springframework%20a:spring-core)`依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-core</artifactId>
@@ -113,7 +113,7 @@ Assert.assertEquals("SampleAnnotatedClass", annotatedBeans.get(0));
 
 这里有一个简单的例子:
 
-```
+```java
 Class<?> userClass = ClassUtils.getUserClass(SampleAnnotatedClass.class);
 
 List<String> annotatedMethods = Arrays.stream(userClass.getMethods())
@@ -135,7 +135,7 @@ Assert.assertEquals("annotatedMethod", annotatedMethods.get(0));
 
 让我们添加`[reflections](https://web.archive.org/web/20220810172110/https://search.maven.org/search?q=g:org.reflections%20a:reflections)`依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.reflections</groupId>
     <artifactId>reflections</artifactId>
@@ -145,7 +145,7 @@ Assert.assertEquals("annotatedMethod", annotatedMethods.get(0));
 
 现在我们已经准备好使用这个库来搜索带注释的类、方法、字段和类型了:
 
-```
+```java
 Reflections reflections = new Reflections("com.baeldung.annotation.scanner");
 
 Set<Method> methods = reflections
@@ -177,7 +177,7 @@ Assert.assertEquals("SampleAnnotatedClass", annotatedClasses.get(0));
 
 这个库引入了一个 [`Maven`插件](https://web.archive.org/web/20220810172110/https://search.maven.org/search?q=g:org.jboss.jandex%20a:jandex-maven-plugin)来生成一个包含与我们的项目相关的元信息的`Jandex`文件:
 
-```
+```java
 <plugin>
     <groupId>org.jboss.jandex</groupId>
     <artifactId>jandex-maven-plugin</artifactId>
@@ -205,7 +205,7 @@ Assert.assertEquals("SampleAnnotatedClass", annotatedClasses.get(0));
 
 现在我们准备扫描任何类型的注释。首先，我们需要添加`[jandex](https://web.archive.org/web/20220810172110/https://search.maven.org/search?q=g:org.jboss%20a:jandex)`依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.jboss</groupId>
     <artifactId>jandex</artifactId>
@@ -215,7 +215,7 @@ Assert.assertEquals("SampleAnnotatedClass", annotatedClasses.get(0));
 
 现在该扫描注释了:
 
-```
+```java
 IndexReader reader = new IndexReader(appFile.getInputStream());
 Index jandexFile = reader.read();
 List<AnnotationInstance> appAnnotationList = jandexFile

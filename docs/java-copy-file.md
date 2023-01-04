@@ -12,7 +12,7 @@
 
 首先，**到** **用`java.io` API 复制一个文件，我们需要打开一个流，循环遍历内容并写出到另一个流:**
 
-```
+```java
 @Test
 public void givenIoAPI_whenCopied_thenCopyExistsWithSameContents() 
   throws IOException {
@@ -60,7 +60,7 @@ public void givenIoAPI_whenCopied_thenCopyExistsWithSameContents()
 
 让我们看一个使用带有两个`Path`参数的`copy()`的例子:
 
-```
+```java
 @Test
 public void givenNIO2_whenCopied_thenCopyExistsWithSameContents() 
   throws IOException {
@@ -83,7 +83,7 @@ public void givenNIO2_whenCopied_thenCopyExistsWithSameContents()
 
 首先，我们需要添加依赖关系:
 
-```
+```java
 <dependency>
     <groupId>commons-io</groupId>
     <artifactId>commons-io</artifactId>
@@ -97,7 +97,7 @@ public void givenNIO2_whenCopied_thenCopyExistsWithSameContents()
 
 让我们看看使用`copyFile()`方法的 JUnit 测试:
 
-```
+```java
 @Test
 public void givenCommonsIoAPI_whenCopied_thenCopyExistsWithSameContents() 
   throws IOException {
@@ -118,7 +118,7 @@ public void givenCommonsIoAPI_whenCopied_thenCopyExistsWithSameContents()
 
 同样，如果我们想使用番石榴`,` ,我们需要包括依赖性:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -130,7 +130,7 @@ public void givenCommonsIoAPI_whenCopied_thenCopyExistsWithSameContents()
 
 这是番石榴复制文件的方法:
 
-```
+```java
 @Test
 public void givenGuava_whenCopied_thenCopyExistsWithSameContents() 
   throws IOException {

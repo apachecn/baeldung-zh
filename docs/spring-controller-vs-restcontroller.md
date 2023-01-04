@@ -28,7 +28,7 @@ A detailed guide to Spring's @RequestParam annotation[Read more](/web/2022062508
 
 让我们看一个 Spring MVC 控制器的简单例子:
 
-```
+```java
 @Controller
 @RequestMapping("books")
 public class SimpleBookController {
@@ -50,7 +50,7 @@ public class SimpleBookController {
 
 `@RestController`是控制器的专用版本。它包括`@Controller`和`@ResponseBody`注释，因此简化了控制器的实现:
 
-```
+```java
 @RestController
 @RequestMapping("books-rest")
 public class SimpleBookRestController {

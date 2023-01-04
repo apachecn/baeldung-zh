@@ -18,7 +18,7 @@
 
 首先，我们需要将`spring-security-jwt`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-jwt</artifactId>
@@ -31,7 +31,7 @@
 
 接下来，我们将配置我们的授权服务器来使用`JwtTokenStore`–如下所示:
 
-```
+```java
 @Configuration
 @EnableAuthorizationServer
 public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
@@ -72,7 +72,7 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
 
 现在，让我们来看看我们的资源服务器配置——它与授权服务器的配置非常相似:
 
-```
+```java
 @Configuration
 @EnableResourceServer
 public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter {
@@ -113,7 +113,7 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
 
 在下面的例子中，我们将向我们的访问令牌添加一个额外的字段“`organization`”——使用这个`CustomTokenEnhancer`:
 
-```
+```java
 public class CustomTokenEnhancer implements TokenEnhancer {
     @Override
     public OAuth2AccessToken enhance(
@@ -131,7 +131,7 @@ public class CustomTokenEnhancer implements TokenEnhancer {
 
 然后，我们将它连接到我们的**授权服务器**配置中，如下所示:
 
-```
+```java
 @Override
 public void configure(
   AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
@@ -152,7 +152,7 @@ public TokenEnhancer tokenEnhancer() {
 
 随着这一新配置的启动和运行，令牌令牌有效负载将会是这样的:
 
-```
+```java
 {
     "user_name": "john",
     "scope": [
@@ -176,7 +176,7 @@ public TokenEnhancer tokenEnhancer() {
 
 所以我们要做的是利用`index.html`中的“`organization`”声明:
 
-```
+```java
 <p class="navbar-text navbar-right">{{organization}}</p>
 
 <script type="text/javascript" 
@@ -205,7 +205,7 @@ app.controller('mainCtrl', function($scope, $cookies, jwtHelper,...) {
 
 我们在这里要做的是–从访问令牌中提取额外的声明:
 
-```
+```java
 public Map<String, Object> getExtraInfo(OAuth2Authentication auth) {
     OAuth2AuthenticationDetails details =
       (OAuth2AuthenticationDetails) auth.getDetails();
@@ -221,7 +221,7 @@ public Map<String, Object> getExtraInfo(OAuth2Authentication auth) {
 
 让我们创建`CustomAccessTokenConverter`并用访问令牌声明设置身份验证细节:
 
-```
+```java
 @Component
 public class CustomAccessTokenConverter extends DefaultAccessTokenConverter {
 
@@ -241,7 +241,7 @@ public class CustomAccessTokenConverter extends DefaultAccessTokenConverter {
 
 接下来，我们将配置我们的`JwtTokenStore`来使用我们的`CustomAccessTokenConverter`:
 
-```
+```java
 @Configuration
 @EnableResourceServer
 public class OAuth2ResourceServerConfigJwt
@@ -268,7 +268,7 @@ public class OAuth2ResourceServerConfigJwt
 
 既然授权服务器在令牌中添加了一些额外的声明，我们现在可以在资源服务器端直接在身份验证对象中访问:
 
-```
+```java
 public Map<String, Object> getExtraInfo(Authentication auth) {
     OAuth2AuthenticationDetails oauthDetails =
       (OAuth2AuthenticationDetails) auth.getDetails();
@@ -281,7 +281,7 @@ public Map<String, Object> getExtraInfo(Authentication auth) {
 
 让我们确保我们的身份验证对象包含额外的信息:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(
   classes = ResourceServerApplication.class, 
@@ -323,7 +323,7 @@ public class AuthenticationClaimsIntegrationTest {
 
 在我们之前的配置中，我们使用对称密钥对令牌进行签名:
 
-```
+```java
 @Bean
 public JwtAccessTokenConverter accessTokenConverter() {
     JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
@@ -338,7 +338,7 @@ public JwtAccessTokenConverter accessTokenConverter() {
 
 让我们首先使用命令行工具:生成密钥——更具体地说是一个`.jks`文件
 
-```
+```java
 keytool -genkeypair -alias mytest 
                     -keyalg RSA 
                     -keypass mypass 
@@ -354,13 +354,13 @@ keytool -genkeypair -alias mytest
 
 接下来，我们需要从生成的 JKS 中导出我们的公钥，我们可以使用下面的命令来这样做:
 
-```
+```java
 keytool -list -rfc --keystore mytest.jks | openssl x509 -inform pem -pubkey
 ```
 
 示例响应如下所示:
 
-```
+```java
 -----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgIK2Wt4x2EtDl41C7vfp
 OsMquZMyOyteO2RsVeMLF/hXIeYvicKr0SQzVkodHEBCMiGXQDz5prijTq3RHPy2
@@ -393,7 +393,7 @@ lLFCUGhA7hxn2xf3x1JW
 
 我们只取我们的公钥，并将其复制到我们的**资源服务器** `src/main/resources/public.txt`:
 
-```
+```java
 -----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgIK2Wt4x2EtDl41C7vfp
 OsMquZMyOyteO2RsVeMLF/hXIeYvicKr0SQzVkodHEBCMiGXQDz5prijTq3RHPy2
@@ -407,7 +407,7 @@ eQIDAQAB
 
 或者，我们可以通过添加`-noout`参数只导出公钥:
 
-```
+```java
 keytool -list -rfc --keystore mytest.jks | openssl x509 -inform pem -pubkey -noout
 ```
 
@@ -415,7 +415,7 @@ keytool -list -rfc --keystore mytest.jks | openssl x509 -inform pem -pubkey -noo
 
 接下来，我们不希望 JKS 文件被 maven 过滤过程拾取——所以我们将确保在`pom.xml`中排除它:
 
-```
+```java
 <build>
     <resources>
         <resource>
@@ -431,7 +431,7 @@ keytool -list -rfc --keystore mytest.jks | openssl x509 -inform pem -pubkey -noo
 
 如果我们使用 Spring Boot，我们需要确保通过 Spring Boot Maven 插件将我们的 JKS 文件添加到应用程序类路径中。
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -449,7 +449,7 @@ keytool -list -rfc --keystore mytest.jks | openssl x509 -inform pem -pubkey -noo
 
 现在，我们将配置`JwtAccessTokenConverter`使用来自`mytest.jks`的密钥对，如下所示:
 
-```
+```java
 @Bean
 public JwtAccessTokenConverter accessTokenConverter() {
     JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
@@ -464,7 +464,7 @@ public JwtAccessTokenConverter accessTokenConverter() {
 
 最后，我们需要配置我们的资源服务器来使用公钥——如下所示:
 
-```
+```java
 @Bean
 public JwtAccessTokenConverter accessTokenConverter() {
     JwtAccessTokenConverter converter = new JwtAccessTokenConverter();

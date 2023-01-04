@@ -18,7 +18,7 @@ Activiti API 是一个工作流和业务流程管理系统。我们可以在其�
 
 要使用这个 API，我们需要包含 Activiti 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.activiti</groupId>
     <artifactId>activiti-engine</artifactId>
@@ -29,7 +29,7 @@ Activiti API 是一个工作流和业务流程管理系统。我们可以在其�
 
 在 Activiti 中，`ProcessEngine`通常使用 XML 文件`activiti.cfg.xml`进行配置。此配置文件的一个示例是:
 
-```
+```java
 <beans >
     <bean id="processEngineConfiguration" class=
       "org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration">
@@ -45,7 +45,7 @@ Activiti API 是一个工作流和业务流程管理系统。我们可以在其�
 
 现在我们可以使用`ProcessEngines`类获得`ProcessEngine`:
 
-```
+```java
 ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
 ```
 
@@ -55,7 +55,7 @@ ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
 
 让我们编写一个 JUnit 测试用例，它将使用上面显示的配置文件创建`ProcessEngine`:
 
-```
+```java
 @Test
 public void givenXMLConfig_whenGetDefault_thenGotProcessEngine() {
     ProcessEngine processEngine 
@@ -121,7 +121,7 @@ public void givenXMLConfig_whenGetDefault_thenGotProcessEngine() {
 
 此流程的 BPMN 2.0 文件`VacationRequest.bpmn20.xml`将启动事件定义为:
 
-```
+```java
 <startEvent id="startEvent" name="request" 
   activiti:initiator="employeeName">
     <extensionElements>
@@ -138,7 +138,7 @@ public void givenXMLConfig_whenGetDefault_thenGotProcessEngine() {
 
 类似地，分配给用户组“管理”的第一个用户任务将如下所示:
 
-```
+```java
 <userTask id="handle_vacation_request" name=
   "Handle Request for Vacation">
     <documentation>${employeeName} would like to take ${numberOfDays} day(s)
@@ -159,7 +159,7 @@ public void givenXMLConfig_whenGetDefault_thenGotProcessEngine() {
 
 使用`ServiceTask,`,我们需要定义要执行的代码。我们有这段 Java 类代码:
 
-```
+```java
 <serviceTask id="send-email-confirmation" name="Send email confirmation" 
   activiti:class=
   "com.example.activiti.servicetasks.SendEmailServiceTask.java">
@@ -168,7 +168,7 @@ public void givenXMLConfig_whenGetDefault_thenGotProcessEngine() {
 
 条件流将通过在`“sequenceFlow”:`中添加`“conditionExpression”`标签来显示
 
-```
+```java
 <sequenceFlow id="flow3" name="approved" 
   sourceRef="sid-12A577AE-5227-4918-8DE1-DC077D70967C" 
   targetRef="send-email-confirmation">
@@ -192,7 +192,7 @@ public void givenXMLConfig_whenGetDefault_thenGotProcessEngine() {
 
 为了让 Activiti 引擎知道我们的流程，我们需要部署流程。我们可以使用`RepositoryService.` 以编程的方式实现它。让我们编写一个 JUnit 测试来展示这一点:
 
-```
+```java
 @Test 
 public void givenBPMN_whenDeployProcess_thenDeployed() {
     ProcessEngine processEngine 
@@ -224,7 +224,7 @@ public void givenBPMN_whenDeployProcess_thenDeployed() {
 
 让我们编写一个 JUnit 测试用例来获得更好的想法:
 
-```
+```java
 @Test
 public void givenDeployedProcess_whenStartProcessInstance_thenRunning() {
     //deploy the process definition    
@@ -256,7 +256,7 @@ public void givenDeployedProcess_whenStartProcessInstance_thenRunning() {
 
 我们需要为此编写的代码如下所示:
 
-```
+```java
 @Test 
 public void givenProcessInstance_whenCompleteTask_thenGotNextTask() {
     // deploy process and start process instance   
@@ -286,7 +286,7 @@ public void givenProcessInstance_whenCompleteTask_thenGotNextTask() {
 
 我们可以暂停一个`ProcessDefinition`和一个`ProcessInstance`。如果我们挂起了一个`ProcessDefinition,` ，我们就不能在它挂起的时候创建它的实例。我们可以使用`RepositoryService:`来完成这项工作
 
-```
+```java
 @Test(expected = ActivitiException.class)
 public void givenDeployedProcess_whenSuspend_thenNoProcessInstance() {
     // deploy the process definition

@@ -30,7 +30,7 @@ REST API 安全中经常使用一个 [JSON Web 令牌](https://web.archive.org/w
 
 首先，让我们将令牌分成几个部分:
 
-```
+```java
 String[] chunks = token.split("\\.");
 ```
 
@@ -40,7 +40,7 @@ String[] chunks = token.split("\\.");
 
 接下来，让我们使用 base64url 解码器对报头和有效载荷部分进行解码:
 
-```
+```java
 Base64.Decoder decoder = Base64.getUrlDecoder();
 
 String header = new String(decoder.decode(chunks[0]));
@@ -49,13 +49,13 @@ String payload = new String(decoder.decode(chunks[1]));
 
 让我们用 JWT 运行这段代码(我们可以[在线解码](https://web.archive.org/web/20221013062022/https://jwt.io/#encoded-jwt)来比较结果):
 
-```
+```java
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkJhZWxkdW5nIFVzZXIiLCJpYXQiOjE1MTYyMzkwMjJ9.qH7Zj_m3kY69kxhaQXTa-ivIpytKXXjZc1ZSmapZnGE
 ```
 
 输出将为我们提供任何有效载荷的解码头:
 
-```
+```java
 {"alg":"HS256","typ":"JWT"}{"sub":"1234567890","name":"Baeldung User","iat":1516239022}
 ```
 
@@ -69,7 +69,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkJhZWx
 
 为了验证，我们可以将 [jjwt](https://web.archive.org/web/20221013062022/https://search.maven.org/artifact/io.jsonwebtoken/jjwt) 添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>io.jsonwebtoken</groupId>
     <artifactId>jjwt</artifactId>
@@ -83,7 +83,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkJhZWx
 
 要开始验证有效负载和报头，我们需要最初用于签名令牌的签名算法和密钥:
 
-```
+```java
 SignatureAlgorithm sa = HS256;
 SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), sa.getJcaName());
 ```
@@ -98,14 +98,14 @@ SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), sa.getJcaN
 
 让我们将报头和有效载荷重新组合成一个无符号的 JWT，用“.”将它们连接起来分隔符:
 
-```
+```java
 String tokenWithoutSignature = chunks[0] + "." + chunks[1];
 String signature = chunks[2];
 ```
 
 现在我们有了未签名的令牌和提供的签名。我们可以使用这个库来验证它:
 
-```
+```java
 DefaultJwtSignatureValidator validator = new DefaultJwtSignatureValidator(sa, secretKeySpec);
 
 if (!validator.isValid(tokenWithoutSignature, signature)) {

@@ -22,7 +22,7 @@
 
 为了使用拦截器，我们需要在我们的`pom.xml`中包含 [`spring-web`](https://web.archive.org/web/20220812020546/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-web%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-web</artifactId>
@@ -46,7 +46,7 @@
 
 下面是一个简单的`preHandle()`实现:
 
-```
+```java
 @Override
 public boolean preHandle(
   HttpServletRequest request,
@@ -61,7 +61,7 @@ public boolean preHandle(
 
 接下来，我们有一个`postHandle()`的实现:
 
-```
+```java
 @Override
 public void postHandle(
   HttpServletRequest request, 
@@ -78,7 +78,7 @@ public void postHandle(
 
 我们需要实现的最后一个方法是`afterCompletion()`:
 
-```
+```java
 @Override
 public void afterCompletion(
   HttpServletRequest request, 
@@ -98,7 +98,7 @@ public void afterCompletion(
 
 首先，我们的类需要实现`HandlerInterceptor`:
 
-```
+```java
 public class LoggerInterceptor implements HandlerInterceptor {
     ...
 }
@@ -106,7 +106,7 @@ public class LoggerInterceptor implements HandlerInterceptor {
 
 我们还需要在拦截器中启用日志记录:
 
-```
+```java
 private static Logger log = LoggerFactory.getLogger(LoggerInterceptor.class);
 ```
 
@@ -124,7 +124,7 @@ private static Logger log = LoggerFactory.getLogger(LoggerInterceptor.class);
 
 在我们的例子中，我们使用一个简单的`Log4J`记录器记录这些信息:
 
-```
+```java
 @Override
 public boolean preHandle(
   HttpServletRequest request,
@@ -144,7 +144,7 @@ public boolean preHandle(
 
 下面是如何做到这一点的快速实现:
 
-```
+```java
 private String getParameters(HttpServletRequest request) {
     StringBuffer posted = new StringBuffer();
     Enumeration<?> e = request.getParameterNames();
@@ -178,7 +178,7 @@ private String getParameters(HttpServletRequest request) {
 
 下面是一个简单的实现:
 
-```
+```java
 private String getRemoteAddr(HttpServletRequest request) {
     String ipFromHeader = request.getHeader("X-FORWARDED-FOR");
     if (ipFromHeader != null && ipFromHeader.length() > 0) {
@@ -197,7 +197,7 @@ private String getRemoteAddr(HttpServletRequest request) {
 
 在我们的例子中，我们将在`DispatcherServlet`呈现视图之前简单地记录我们的请求:
 
-```
+```java
 @Override
 public void postHandle(
   HttpServletRequest request, 
@@ -213,7 +213,7 @@ public void postHandle(
 
 我们可以使用这个方法在视图呈现后获得请求和响应数据:
 
-```
+```java
 @Override
 public void afterCompletion(
   HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) 
@@ -231,7 +231,7 @@ public void afterCompletion(
 
 为此，我们需要覆盖`addInterceptors()`方法:
 
-```
+```java
 @Override
 public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(new LoggerInterceptor());
@@ -240,7 +240,7 @@ public void addInterceptors(InterceptorRegistry registry) {
 
 我们可以通过编辑 XML Spring 配置文件来实现相同的配置:
 
-```
+```java
 <mvc:interceptors>
     <bean id="loggerInterceptor" class="com.baeldung.web.interceptor.LoggerInterceptor"/>
 </mvc:interceptors>

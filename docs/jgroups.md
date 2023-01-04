@@ -22,7 +22,7 @@ JGroups 是一个用于可靠消息交换的 Java API。它有一个简单的界
 
 我们需要向我们的`pom.xml`添加一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.jgroups</groupId>
     <artifactId>jgroups</artifactId>
@@ -38,7 +38,7 @@ JGroups 是一个用于可靠消息交换的 Java API。它有一个简单的界
 
 为了避免这种情况，在这里运行我们的应用程序时，我们将设置`java.net.preferIPv4Stack`到`true`属性:
 
-```
+```java
 java -Djava.net.preferIPv4Stack=true com.baeldung.jgroups.JGroupsMessenger 
 ```
 
@@ -52,7 +52,7 @@ java -Djava.net.preferIPv4Stack=true com.baeldung.jgroups.JGroupsMessenger
 
 我们将使用显式命名的配置文件创建一个通道:
 
-```
+```java
 JChannel channel = new JChannel("src/main/resources/udp.xml"); 
 ```
 
@@ -66,7 +66,7 @@ JGroups 的配置可能非常复杂，但是默认的 UDP 和 TCP 配置对于�
 
 加入群集需要群集名称:
 
-```
+```java
 channel.connect("Baeldung"); 
 ```
 
@@ -76,7 +76,7 @@ channel.connect("Baeldung");
 
 节点通过名称来标识，以便对等点可以发送定向消息和接收关于谁进入和离开集群的通知。JGroups 将自动分配一个名称，或者我们可以设置自己的名称:
 
-```
+```java
 channel.name("user1");
 ```
 
@@ -88,7 +88,7 @@ channel.name("user1");
 
 我们用它的关闭方法关闭一个`JChannel`:
 
-```
+```java
 channel.close()
 ```
 
@@ -104,7 +104,7 @@ channel.close()
 
 让我们将`viewAccepted`添加到应用程序中:
 
-```
+```java
 public void viewAccepted(View newView) {
 
     private View lastView;
@@ -141,7 +141,7 @@ JGroups 中的消息处理非常简单。一个`Message`包含一个`byte`数组
 
 我们将接受来自命令行的文本，并将其发送到集群:
 
-```
+```java
 System.out.print("Enter a message: ");
 String line = in.readLine().toLowerCase();
 Message message = new Message(null, line.getBytes());
@@ -154,7 +154,7 @@ channel.send(message);
 
 如果我们不想看到我们的消息，我们可以为此设置一个属性:
 
-```
+```java
 channel.setDiscardOwnMessages(true); 
 ```
 
@@ -166,7 +166,7 @@ channel.setDiscardOwnMessages(true);
 
 电流`View`始终可从`JChannel`获得:
 
-```
+```java
 private Optional<address> getAddress(String name) { 
     View view = channel.view(); 
     return view.getMembers().stream()
@@ -179,7 +179,7 @@ private Optional<address> getAddress(String name) {
 
 因此，我们可以从控制台接受一个名称，找到相关的目的地，并发送一条直接消息:
 
-```
+```java
 Address destination = null;
 System.out.print("Enter a destination: ");
 String destinationName = in.readLine().toLowerCase();
@@ -195,7 +195,7 @@ channel.send(message);
 
 让我们覆盖`ReceiverAdaptor's`空接收方法:
 
-```
+```java
 public void receive(Message message) {
     String line = Message received from: " 
       + message.getSrc() 
@@ -215,7 +215,7 @@ public void receive(Message message) {
 
 让我们在应用程序中添加一个广播消息计数。我们将添加一个新的成员变量，并在`receive()`中递增它:
 
-```
+```java
 private Integer messageCount = 0;
 
 public void receive(Message message) {
@@ -236,7 +236,7 @@ public void receive(Message message) {
 
 接下来，我们在`ReceiverAdaptor`中覆盖另外两个方法:
 
-```
+```java
 public void setState(InputStream input) {
     try {
         messageCount = Util.objectFromStream(new DataInputStream(input));
@@ -259,7 +259,7 @@ JGroups 向协调器提供一个`InputStream`来写入状态，并向新节点�
 
 最后，在我们连接到集群之后，我们将对`getState()`的调用添加到我们的启动中:
 
-```
+```java
 channel.connect(clusterName);
 channel.getState(null, 0); 
 ```

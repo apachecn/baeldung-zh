@@ -31,7 +31,7 @@
 
 首先，与包含在超级`pom.xml`中的`surefire`(参见[这篇文章](/web/20220626210859/https://www.baeldung.com/maven-surefire-plugin))不同，`failsafe`插件及其目标必须在`pom.xml`中明确指定，以成为构建生命周期的一部分:
 
-```
+```java
 <plugin>
     <artifactId>maven-failsafe-plugin</artifactId>
     <version>2.21.0</version>

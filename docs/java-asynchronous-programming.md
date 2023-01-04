@@ -16,7 +16,7 @@
 
 让我们创建一个新的线程来计算并打印一个数的阶乘:
 
-```
+```java
 int number = 20;
 Thread newThread = new Thread(() -> {
     System.out.println("Factorial of " + number + " is: " + factorial(number));
@@ -32,7 +32,7 @@ newThread.start();
 
 所以让我们找出一个数的阶乘:
 
-```
+```java
 ExecutorService threadpool = Executors.newCachedThreadPool();
 Future<Long> futureTask = threadpool.submit(() -> factorial(number));
 
@@ -52,7 +52,7 @@ threadpool.shutdown();
 
 现在让我们用`CompletableFuture`代替`FutureTask`来求一个数的阶乘:
 
-```
+```java
 CompletableFuture<Long> completableFuture = CompletableFuture.supplyAsync(() -> factorial(number));
 while (!completableFuture.isDone()) {
     System.out.println("CompletableFuture is not finished yet...");
@@ -68,7 +68,7 @@ long result = completableFuture.get();
 
 首先，我们来添加最新的 [`guava`](https://web.archive.org/web/20221007090003/https://search.maven.org/search?q=g:com.google.guava%20a:guava) 美文依赖:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -78,7 +78,7 @@ long result = completableFuture.get();
 
 然后让我们用`ListenableFuture`来求一个数的阶乘:
 
-```
+```java
 ExecutorService threadpool = Executors.newCachedThreadPool();
 ListeningExecutorService service = MoreExecutors.listeningDecorator(threadpool);
 ListenableFuture<Long> guavaFuture = (ListenableFuture<Long>) service.submit(()-> factorial(number));
@@ -91,7 +91,7 @@ long result = guavaFuture.get();
 
 例如，让我们看看如何使用`Futures.submitAsync`来代替`ListeningExecutorService.submit`方法:
 
-```
+```java
 ListeningExecutorService service = MoreExecutors.listeningDecorator(threadpool);
 AsyncCallable<Long> asyncCallable = Callables.asAsyncCallable(new Callable<Long>() {
     public Long call() {
@@ -105,7 +105,7 @@ ListenableFuture<Long> guavaFuture = Futures.submitAsync(asyncCallable, service)
 
 此外，`Futures`类提供了`addCallback`方法来注册成功和失败的回调:
 
-```
+```java
 Futures.addCallback(
   factorialFuture,
   new FutureCallback<Long>() {
@@ -127,7 +127,7 @@ Futures.addCallback(
 
 首先，我们将最新的 [`ea-async`](https://web.archive.org/web/20221007090003/https://search.maven.org/search?q=g:com.ea.async%20a:ea-async) Maven 依赖项添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.ea.async</groupId>
     <artifactId>ea-async</artifactId>
@@ -137,7 +137,7 @@ Futures.addCallback(
 
 然后我们将通过使用 EA 的`[Async](https://web.archive.org/web/20221007090003/https://javadoc.io/doc/com.ea.async/ea-async/latest/com/ea/async/Async.html)`类提供的`await`方法来转换前面讨论的`CompletableFuture`代码:
 
-```
+```java
 static { 
     Async.init(); 
 }
@@ -156,7 +156,7 @@ public long factorialUsingEAAsync(int number) {
 
 我们可以使用–`javaagent`JVM 参数进行编译时检测。这是`Async.init` 方法的替代方法:
 
-```
+```java
 java -javaagent:ea-async-1.2.3.jar -cp <claspath> <MainClass>
 ```
 
@@ -164,7 +164,7 @@ java -javaagent:ea-async-1.2.3.jar -cp <claspath> <MainClass>
 
 首先，我们将使用`CompletableFuture`类的`thenComposeAsync`和`thenAcceptAsync` 等组合方法异步执行一些链操作:
 
-```
+```java
 CompletableFuture<Void> completableFuture = hello()
   .thenComposeAsync(hello -> mergeWorld(hello))
   .thenAcceptAsync(helloWorld -> print(helloWorld))
@@ -177,7 +177,7 @@ completableFuture.get();
 
 然后我们可以使用 EA 的`Async.await()`转换代码:
 
-```
+```java
 try {
     String hello = await(hello());
     String helloWorld = await(mergeWorld(hello));
@@ -201,7 +201,7 @@ Cactoos 是一个基于面向对象原则的 Java 库。
 
 首先，让我们添加最新的`[cactoos](https://web.archive.org/web/20221007090003/https://search.maven.org/search?q=g:org.cactoos%20a:cactoos)` Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.cactoos</groupId>
     <artifactId>cactoos</artifactId>
@@ -213,7 +213,7 @@ Cactoos 是一个基于面向对象原则的 Java 库。
 
 因此，我们可以使用 Cactoos 的`Async`类的实例找到一个数字的阶乘:
 
-```
+```java
 Async<Integer, Long> asyncFunction = new Async<Integer, Long>(input -> factorial(input));
 Future<Long> asyncFuture = asyncFunction.apply(number);
 long result = asyncFuture.get();
@@ -231,7 +231,7 @@ Jcabi-Aspects 通过 [AspectJ](/web/20221007090003/https://www.baeldung.com/aspe
 
 首先，让我们添加最新的 [`jcabi-aspects`](https://web.archive.org/web/20221007090003/https://search.maven.org/search?q=g:com.jcabi%20a:jcabi-aspects) 美文依赖:
 
-```
+```java
 <dependency>
     <groupId>com.jcabi</groupId>
     <artifactId>jcabi-aspects</artifactId>
@@ -241,7 +241,7 @@ Jcabi-Aspects 通过 [AspectJ](/web/20221007090003/https://www.baeldung.com/aspe
 
 `jcabi-aspects`库需要 AspectJ 运行时支持，所以我们将添加 [`aspectjrt`](https://web.archive.org/web/20221007090003/https://search.maven.org/search?q=g:org.aspectj%20a:aspectjrt) Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.aspectj</groupId>
     <artifactId>aspectjrt</artifactId>
@@ -251,7 +251,7 @@ Jcabi-Aspects 通过 [AspectJ](/web/20221007090003/https://www.baeldung.com/aspe
 
 接下来，我们将添加 [`jcabi-maven-plugin`](https://web.archive.org/web/20221007090003/https://search.maven.org/search?q=g:com.jcabi%20a:jcabi-maven-plugin) 插件，用 AspectJ 方面编织二进制文件。插件提供了为我们完成所有工作的`ajc`目标:
 
-```
+```java
 <plugin>
     <groupId>com.jcabi</groupId>
     <artifactId>jcabi-maven-plugin</artifactId>
@@ -280,7 +280,7 @@ Jcabi-Aspects 通过 [AspectJ](/web/20221007090003/https://www.baeldung.com/aspe
 
 现在我们已经准备好使用 AOP 方面进行异步编程了:
 
-```
+```java
 @Async
 @Loggable
 public Future<Long> factorialUsingAspect(int number) {
@@ -293,13 +293,13 @@ public Future<Long> factorialUsingAspect(int number) {
 
 让我们使用 Maven 命令编译这个类:
 
-```
+```java
 mvn install
 ```
 
 来自`jcabi-maven-plugin`的输出可能看起来像:
 
-```
+```java
  --- jcabi-maven-plugin:0.14.1:ajc (default) @ java-async ---
 [INFO] jcabi-aspects 0.18/55a5c13 started new daemon thread jcabi-loggable for watching of @Loggable annotated methods
 [INFO] Unwoven classes will be copied to /tutorials/java-async/target/unwoven
@@ -309,7 +309,7 @@ mvn install
 
 我们可以通过检查 Maven 插件生成的`jcabi-ajc.log`文件中的日志来验证我们的类是否被正确编织:
 
-```
+```java
 Join point 'method-execution(java.util.concurrent.Future 
 com.baeldung.async.JavaAsync.factorialUsingJcabiAspect(int))' 
 in Type 'com.baeldung.async.JavaAsync' (JavaAsync.java:158) 
@@ -319,7 +319,7 @@ advised by around advice from 'com.jcabi.aspects.aj.MethodAsyncRunner'
 
 然后，我们将该类作为一个简单的 Java 应用程序运行，输出如下所示:
 
-```
+```java
 17:46:58.245 [main] INFO com.jcabi.aspects.aj.NamedThreads - 
 jcabi-aspects 0.22.6/3f0a1f7 started new daemon thread jcabi-loggable for watching of @Loggable annotated methods
 17:46:58.355 [main] INFO com.jcabi.aspects.aj.NamedThreads - 

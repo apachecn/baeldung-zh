@@ -45,13 +45,13 @@ Arquillian 通过提供依赖注入来丰富测试，这样我们就可以轻松
 
 我们可以使用注释创建多个部署:
 
-```
+```java
 @Deployment(name="myname" order = 1)
 ```
 
 其中 name 是部署文件的名称，order 参数是部署的执行顺序，因此我们现在可以使用注释同时在多个部署上运行测试:
 
-```
+```java
 @Test @OperateOnDeployment("myname")
 ```
 
@@ -69,7 +69,7 @@ Arquillian 提供了多种扩展，以防核心运行时无法满足我们的测
 
 让我们将下面的依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.jboss.arquillian</groupId>
     <artifactId>arquillian-bom</artifactId>
@@ -99,7 +99,7 @@ Arquillian 提供了多种扩展，以防核心运行时无法满足我们的测
 
 让我们从一个简单的组件开始。我们在这里不包括任何高级逻辑，以便能够专注于测试:
 
-```
+```java
 public class Component {
     public void sendMessage(PrintStream to, String msg) {
         to.println(message(msg));
@@ -117,7 +117,7 @@ public class Component {
 
 首先，我们需要指定我们的测试类应该使用特定于框架的运行程序来运行:
 
-```
+```java
 @RunWith(Arquillian.class) 
 ```
 
@@ -129,7 +129,7 @@ Arquillian 不使用整个类路径来隔离测试档案。相反，它使用了
 
 `JavaArchive.class` 创建一个名为`test.war,` 的 web 档案模型。这个文件被部署到容器中，然后被 Arquillian 用来执行测试:
 
-```
+```java
 @Deployment
 public static JavaArchive createDeployment() {
     return ShrinkWrap.create(JavaArchive.class)
@@ -140,14 +140,14 @@ public static JavaArchive createDeployment() {
 
 然后我们在测试中注入我们的组件:
 
-```
+```java
 @Inject
 private Component component;
 ```
 
 最后，我们执行测试:
 
-```
+```java
 assertEquals("Message, MESSAGE",component.message(("MESSAGE")));
 
 component.sendMessage(System.out, "MESSAGE");
@@ -159,7 +159,7 @@ component.sendMessage(System.out, "MESSAGE");
 
 使用 Arquillian，我们可以测试企业 Java Bean 的依赖注入，为此，我们创建了一个类，该类具有将任何单词转换为小写的方法:
 
-```
+```java
 public class ConvertToLowerCase {
     public String convert(String word){
         return word.toLowerCase();
@@ -169,7 +169,7 @@ public class ConvertToLowerCase {
 
 使用这个类，我们创建一个无状态类来调用之前创建的方法:
 
-```
+```java
 @Stateless
 public class CapsConvertor {
     public ConvertToLowerCase getLowerCase(){
@@ -180,7 +180,7 @@ public class CapsConvertor {
 
 `CapsConvertor`类被注入到服务 bean 中:
 
-```
+```java
 @Stateless
 public class CapsService {
 
@@ -197,7 +197,7 @@ public class CapsService {
 
 现在我们可以使用 Arquillian 来测试我们的企业 Java Bean，注入`CapsService`:
 
-```
+```java
 @Inject
 private CapsService capsService;
 
@@ -210,7 +210,7 @@ public void givenWord_WhenUppercase_ThenLowercase(){
 
 使用`ShrinkWrap,` ,我们确保所有类都正确连接:
 
-```
+```java
 @Deployment
 public static JavaArchive createDeployment() {
     return ShrinkWrap.create(JavaArchive.class)
@@ -225,7 +225,7 @@ public static JavaArchive createDeployment() {
 
 我们还可以使用 Arquillian 来测试持久性。首先，我们要创建我们的实体:
 
-```
+```java
 @Entity
 public class Car {
 
@@ -244,7 +244,7 @@ public class Car {
 
 然后，我们将创建 EJB 来对我们的数据执行基本操作:
 
-```
+```java
 @Stateless
 public class CarEJB {
 
@@ -278,14 +278,14 @@ public class CarEJB {
 
 首先，我们将类添加到我们的`ShrinkWrap:`
 
-```
+```java
 .addClasses(Car.class, CarEJB.class)
 .addAsResource("META-INF/persistence.xml")
 ```
 
 然后我们创建我们的测试:
 
-```
+```java
 @Test
 public void testCars() {
     assertTrue(carEJB.findAllCars().isEmpty());

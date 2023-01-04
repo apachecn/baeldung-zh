@@ -30,7 +30,7 @@
 
 考虑这个接口的方法(让我们称这个接口为`Vehicle`):
 
-```
+```java
 static String producer() {
     return "N&F; Vehicles";
 }
@@ -40,7 +40,7 @@ static String producer() {
 
 要在接口外部调用它，应该使用静态方法调用的标准方法:
 
-```
+```java
 String producer = Vehicle.producer();
 ```
 
@@ -50,7 +50,7 @@ String producer = Vehicle.producer();
 
 让我们给我们的`Vehicle` 接口添加一个`default`方法，它也将调用这个接口的`static`方法:
 
-```
+```java
 default String getOverview() {
     return "ATV made by " + producer();
 }
@@ -60,7 +60,7 @@ default String getOverview() {
 
 为了执行`default`方法，应该创建这个类的一个实例:
 
-```
+```java
 Vehicle vehicle = new VehicleImpl();
 String overview = vehicle.getOverview();
 ```
@@ -75,7 +75,7 @@ String overview = vehicle.getOverview();
 
 我们将尝试借助 Stream API 对`List<String>`中的所有空字符串进行计数:
 
-```
+```java
 boolean isReal = list.stream().anyMatch(u -> User.isRealUser(u));
 ```
 
@@ -83,7 +83,7 @@ boolean isReal = list.stream().anyMatch(u -> User.isRealUser(u));
 
 因此，可以用对静态方法的引用来替换它:
 
-```
+```java
 boolean isReal = list.stream().anyMatch(User::isRealUser);
 ```
 
@@ -95,7 +95,7 @@ boolean isReal = list.stream().anyMatch(User::isRealUser);
 
 以下代码调用类型为`User`的方法`isLegalName(String string)` ，该方法验证输入参数:
 
-```
+```java
 User user = new User();
 boolean isLegalName = list.stream().anyMatch(user::isLegalName); 
 ```
@@ -106,7 +106,7 @@ boolean isLegalName = list.stream().anyMatch(user::isLegalName);
 
 让我们看一个例子:
 
-```
+```java
 long count = list.stream().filter(String::isEmpty).count();
 ```
 
@@ -116,7 +116,7 @@ long count = list.stream().filter(String::isEmpty).count();
 
 由于 Java 中的构造函数是一个特殊的方法，方法引用也可以应用于它，借助 **`new`** 作为方法名:
 
-```
+```java
 Stream<User> stream = list.stream().map(User::new);
 ```
 
@@ -132,20 +132,20 @@ Java 8 `Optional<T>`类可以帮助处理有可能获得`NPE`的情况。它作�
 
 让我们看看如何返回一个空的`Optional`:
 
-```
+```java
 Optional<String> optional = Optional.empty();
 ```
 
 接下来，我们返回一个包含非空值的`Optional`:
 
-```
+```java
 String str = "value";
 Optional<String> optional = Optional.of(str);
 ```
 
 最后，下面是如何返回一个带有特定值的`Optional`或者一个空的`Optional`(如果参数是`null`):
 
-```
+```java
 Optional<String> optional = Optional.ofNullable(getString());
 ```
 
@@ -155,14 +155,14 @@ Optional<String> optional = Optional.ofNullable(getString());
 
 对于 Java 8 之前的代码，我们需要这样做:
 
-```
+```java
 List<String> list = getList();
 List<String> listOpt = list != null ? list : new ArrayList<>();
 ```
 
 使用 Java 8，可以用更短的代码实现相同的功能:
 
-```
+```java
 List<String> listOpt = getList().orElseGet(() -> new ArrayList<>());
 ```
 
@@ -170,7 +170,7 @@ List<String> listOpt = getList().orElseGet(() -> new ArrayList<>());
 
 假设我们有一个类型为`User`的对象，它有一个类型为*的地址字段*和一个类型为`String`的字段 s *treet* ，我们需要返回一个`street` 字段的值(如果有的话)或者一个默认值(如果`street` 是`null`:
 
-```
+```java
 User user = getUser();
 if (user != null) {
     Address address = user.getAddress();
@@ -186,7 +186,7 @@ return "not specified";
 
 这可以用`Optional`来简化:
 
-```
+```java
 Optional<User> user = Optional.ofNullable(getUser());
 String result = user
   .map(User::getAddress)
@@ -200,7 +200,7 @@ String result = user
 
 在这种情况下，我们应该使用`flatMap()` 方法，而不是`map()`:
 
-```
+```java
 Optional<OptionalUser> optionalUser = Optional.ofNullable(getOptionalUser());
 String result = optionalUser
   .flatMap(OptionalUser::getAddress)
@@ -212,7 +212,7 @@ String result = optionalUser
 
 因此，正如我们之前所做的那样，让我们尝试用 Java 8 之前的风格来做这件事:
 
-```
+```java
 String value = null;
 String result = "";
 try {
@@ -224,7 +224,7 @@ try {
 
 如果我们使用`Optional<String>`，答案会更易读、更简单:
 
-```
+```java
 String value = null;
 Optional<String> valueOpt = Optional.ofNullable(value);
 String result = valueOpt.orElseThrow(CustomException::new).toUpperCase();

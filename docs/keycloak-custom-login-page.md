@@ -18,7 +18,7 @@
 
 要启动服务器，让我们导航到保存 Keycloak 发行版的目录，并从它的`bin`文件夹中运行这个命令:
 
-```
+```java
 ./standalone.sh -Djboss.socket.binding.port-offset=100
 ```
 
@@ -40,7 +40,7 @@
 
 现在假设我们需要改变背景。为此，我们将打开`login/resources/css/login.css`并更改类定义:
 
-```
+```java
 .login-pf body {
     background: #39a5dc;
     background-size: cover;
@@ -56,7 +56,7 @@
 
 为此，我们需要在`theme/login/messages` 文件夹中创建一个新文件`messages_en.properties`。该文件覆盖给定属性使用的默认消息包:
 
-```
+```java
 usernameOrEmail=Enter Username:
 password=Enter Password:
 ```
@@ -73,7 +73,7 @@ password=Enter Password:
 
 在复制的文件中，更改以下行:
 
-```
+```java
 <div id="kc-header-wrapper" class="${properties.kcHeaderWrapperClass!}">
     ${kcSanitize(msg("loginTitleHtml",(realm.displayNameHtml!'')))?no_esc}
 </div>
@@ -81,7 +81,7 @@ password=Enter Password:
 
 收件人:
 
-```
+```java
 <div id="kc-header-wrapper" class="${properties.kcHeaderWrapperClass!}">
     WELCOME TO BAELDUNG
 </div>
@@ -99,7 +99,7 @@ password=Enter Password:
 
 现在我们需要做的就是在我们的领域定义文件`baeldung-realm.json`中添加指令，以便`custom`用于我们的登录主题类型:
 
-```
+```java
 "loginTheme": "custom",
 ```
 

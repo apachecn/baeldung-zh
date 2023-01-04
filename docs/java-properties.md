@@ -18,7 +18,7 @@
 
 `app.properties:`
 
-```
+```java
 version=1.0
 name=TestApp
 date=2016-11-12
@@ -26,7 +26,7 @@ date=2016-11-12
 
 和`catalog`:
 
-```
+```java
 c1=files
 c2=images
 c3=videos
@@ -36,7 +36,7 @@ c3=videos
 
 我们现在可以非常简单地将它们加载到一个`Properties`实例中:
 
-```
+```java
 String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
 String appConfigPath = rootPath + "app.properties";
 String catalogConfigPath = rootPath + "catalog";
@@ -61,7 +61,7 @@ assertEquals("files", catalogProps.getProperty("c1"));
 
 下面是一个从 XML 文件加载键值对的例子—`icons.xml`:
 
-```
+```java
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
@@ -74,7 +74,7 @@ assertEquals("files", catalogProps.getProperty("c1"));
 
 现在，让我们加载它:
 
-```
+```java
 String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
 String iconConfigPath = rootPath + "icons.xml";
 Properties iconProps = new Properties();
@@ -91,7 +91,7 @@ assertEquals("icon1.jpg", iconProps.getProperty("fileIcon"));
 
 示例代码:
 
-```
+```java
 String appVersion = appProps.getProperty("version");
 String appName = appProps.getProperty("name", "defaultName");
 String appGroup = appProps.getProperty("group", "baeldung");
@@ -107,7 +107,7 @@ assertNull(appDownloadAddr);
 
 下面的代码将抛出一个`Exception`:
 
-```
+```java
 float appVerFloat = (float) appProps.get("version");
 ```
 
@@ -117,7 +117,7 @@ float appVerFloat = (float) appProps.get("version");
 
 示例代码:
 
-```
+```java
 appProps.setProperty("name", "NewAppName"); // update an old value
 appProps.setProperty("downloadAddr", "www.baeldung.com/downloads"); // add new key-value pair
 
@@ -132,7 +132,7 @@ assertEquals("www.baeldung.com/downloads", newAppDownloadAddr);
 
 下面的代码不会如你所愿，当你用`getProperty()`获取它的值时，它会返回`null`:
 
-```
+```java
 appProps.put("version", 2);
 ```
 
@@ -142,7 +142,7 @@ appProps.put("version", 2);
 
 示例代码:
 
-```
+```java
 String versionBeforeRemoval = appProps.getProperty("version");
 assertEquals("1.0", versionBeforeRemoval);
 
@@ -159,7 +159,7 @@ assertNull(versionAfterRemoval);
 
 示例代码:
 
-```
+```java
 String newAppConfigPropertiesFile = rootPath + "newApp.properties";
 appProps.store(new FileWriter(newAppConfigPropertiesFile), "store to properties file");
 ```
@@ -172,7 +172,7 @@ appProps.store(new FileWriter(newAppConfigPropertiesFile), "store to properties 
 
 示例代码:
 
-```
+```java
 String newAppConfigXmlFile = rootPath + "newApp.xml";
 appProps.storeToXML(new FileOutputStream(newAppConfigXmlFile), "store to xml file");
 ```
@@ -185,7 +185,7 @@ appProps.storeToXML(new FileOutputStream(newAppConfigXmlFile), "store to xml fil
 
 示例代码:
 
-```
+```java
 appProps.list(System.out); // list all key-value pairs
 
 Enumeration<Object> valueEnumeration = appProps.elements();
@@ -210,7 +210,7 @@ assertEquals(3, size);
 
 默认属性:
 
-```
+```java
 site=www.google.com
 name=DefaultAppName
 topic=Properties
@@ -219,7 +219,7 @@ category=core-java
 
 示例代码:
 
-```
+```java
 String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
 
 String defaultConfigPath = rootPath + "default.properties";

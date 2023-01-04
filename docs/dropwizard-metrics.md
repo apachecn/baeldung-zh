@@ -14,7 +14,7 @@
 
 要使用`metrics-core`模块，只需要将一个依赖项添加到`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>io.dropwizard.metrics</groupId>
     <artifactId>metrics-core</artifactId>
@@ -32,13 +32,13 @@
 
 现在让我们创建一个`MetricRegistry`:
 
-```
+```java
 MetricRegistry metricRegistry = new MetricRegistry();
 ```
 
 然后我们可以用这个`MetricRegistry`注册一些指标:
 
-```
+```java
 Meter meter1 = new Meter();
 metricRegistry.register("meter1", meter1);
 
@@ -49,14 +49,14 @@ Meter meter2 = metricRegistry.meter("meter2");
 
 在指标注册中心，每个指标都有一个唯一的名称，就像我们在上面使用“meter1”和“meter2”作为指标名称一样。`MetricRegistry`还提供了一组静态助手方法来帮助我们创建合适的指标名称:
 
-```
+```java
 String name1 = MetricRegistry.name(Filter.class, "request", "count");
 String name2 = MetricRegistry.name("CustomFilter", "response", "count"); 
 ```
 
 如果我们需要管理一组度量注册表，我们可以使用`SharedMetricRegistries`类，它是单例的和线程安全的。我们可以在其中添加一个度量寄存器，从其中检索这个度量寄存器，然后删除它:
 
-```
+```java
 SharedMetricRegistries.add("default", metricRegistry);
 MetricRegistry retrievedMetricRegistry = SharedMetricRegistries.getOrCreate("default");
 SharedMetricRegistries.remove("default"); 
@@ -70,7 +70,7 @@ metrics-core 模块提供了几种常用的度量类型:`Meter`、`Gauge`、`Cou
 
 A `Meter`测量事件发生次数和比率:
 
-```
+```java
 Meter meter = new Meter();
 long initCount = meter.getCount();
 assertThat(initCount, equalTo(0L));
@@ -97,7 +97,7 @@ double fifteenMinRate = meter.getFifteenMinuteRate();
 
 让我们看看如何使用它。首先，我们实现一个类`AttendanceRatioGauge`:
 
-```
+```java
 public class AttendanceRatioGauge extends RatioGauge {
     private int attendanceCount;
     private int courseCount;
@@ -113,7 +113,7 @@ public class AttendanceRatioGauge extends RatioGauge {
 
 然后我们测试它:
 
-```
+```java
 RatioGauge ratioGauge = new AttendanceRatioGauge(15, 20);
 
 assertThat(ratioGauge.getValue(), equalTo(0.75)); 
@@ -121,7 +121,7 @@ assertThat(ratioGauge.getValue(), equalTo(0.75));
 
 `CachedGauge`是另一个可以缓存值的抽象类，因此，当值的计算代价很高时，它非常有用。为了使用它，我们需要实现一个类`ActiveUsersGauge`:
 
-```
+```java
 public class ActiveUsersGauge extends CachedGauge<List<Long>> {
 
     @Override
@@ -141,7 +141,7 @@ public class ActiveUsersGauge extends CachedGauge<List<Long>> {
 
 然后，我们对其进行测试，看它是否如预期的那样工作:
 
-```
+```java
 Gauge<List<Long>> activeUsersGauge = new ActiveUsersGauge(15, TimeUnit.MINUTES);
 List<Long> expected = new ArrayList<>();
 expected.add(12L);
@@ -155,7 +155,7 @@ assertThat(activeUsersGauge.getValue(), equalTo(expected));
 
 让我们看一个例子:
 
-```
+```java
 public class ActiveUserCountGauge extends DerivativeGauge<List<Long>, Integer> {
 
     @Override
@@ -169,7 +169,7 @@ public class ActiveUserCountGauge extends DerivativeGauge<List<Long>, Integer> {
 
 这个`Gauge`从一个`ActiveUsersGauge`中得到它的值，所以我们期望它是来自基本列表大小的值:
 
-```
+```java
 Gauge<List<Long>> activeUsersGauge = new ActiveUsersGauge(15, TimeUnit.MINUTES);
 Gauge<Integer> activeUserCountGauge = new ActiveUserCountGauge(activeUsersGauge);
 
@@ -182,7 +182,7 @@ assertThat(activeUserCountGauge.getValue(), equalTo(1));
 
 `Counter`用于记录增量和减量；
 
-```
+```java
 Counter counter = new Counter();
 long initCount = counter.getCount();
 assertThat(initCount, equalTo(0L));
@@ -204,7 +204,7 @@ assertThat(counter.getCount(), equalTo(5L));
 
 `Histogram`用于跟踪一串`Long`值，并分析它们的统计特征，如`max, min, mean, median, standard deviation, 75th percentile`等；
 
-```
+```java
 Histogram histogram = new Histogram(new UniformReservoir());
 histogram.update(5);
 long count1 = histogram.getCount();
@@ -238,7 +238,7 @@ assertThat(snapshot2.get999thPercentile(), equalTo(20.0));
 
 `Timer`用于跟踪由`Context`对象表示的多个计时持续时间，并提供它们的统计数据:
 
-```
+```java
 Timer timer = new Timer();
 Timer.Context context1 = timer.time();
 TimeUnit.SECONDS.sleep(5);
@@ -262,7 +262,7 @@ assertEquals(0.3, timer.getMeanRate(), 0.1);
 
 这里我们以`ConsoleReporter`为例:
 
-```
+```java
 MetricRegistry metricRegistry = new MetricRegistry();
 
 Meter meter = metricRegistry.meter("meter");
@@ -282,7 +282,7 @@ reporter.report();
 
 这里是`ConsoleReporter:`的输出示例
 
-```
+```java
 -- Histograms ------------------------------------------------------------------
 histogram
 count = 2
@@ -314,7 +314,7 @@ Metrics 有一个扩展 metrics-healthchecks 模块，用于处理健康检查�
 
 为了使用 metrics-healthchecks 模块，我们需要将这个依赖项添加到`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>io.dropwizard.metrics</groupId>
     <artifactId>metrics-healthchecks</artifactId>
@@ -330,7 +330,7 @@ Metrics 有一个扩展 metrics-healthchecks 模块，用于处理健康检查�
 
 例如，我们使用`DatabaseHealthCheck`和`UserCenterHealthCheck`:
 
-```
+```java
 public class DatabaseHealthCheck extends HealthCheck {
 
     @Override
@@ -340,7 +340,7 @@ public class DatabaseHealthCheck extends HealthCheck {
 } 
 ```
 
-```
+```java
 public class UserCenterHealthCheck extends HealthCheck {
 
     @Override
@@ -352,7 +352,7 @@ public class UserCenterHealthCheck extends HealthCheck {
 
 然后，我们需要一个`HealthCheckRegistry`(就像`MetricRegistry`)，并用它注册`DatabaseHealthCheck`和`UserCenterHealthCheck`:
 
-```
+```java
 HealthCheckRegistry healthCheckRegistry = new HealthCheckRegistry();
 healthCheckRegistry.register("db", new DatabaseHealthCheck());
 healthCheckRegistry.register("uc", new UserCenterHealthCheck());
@@ -362,7 +362,7 @@ assertThat(healthCheckRegistry.getNames().size(), equalTo(2));
 
 我们也可以注销`HealthCheck`:
 
-```
+```java
 healthCheckRegistry.unregister("uc");
 
 assertThat(healthCheckRegistry.getNames().size(), equalTo(1)); 
@@ -370,7 +370,7 @@ assertThat(healthCheckRegistry.getNames().size(), equalTo(1));
 
 我们可以运行所有的`HealthCheck`实例:
 
-```
+```java
 Map<String, HealthCheck.Result> results = healthCheckRegistry.runHealthChecks();
 for (Map.Entry<String, HealthCheck.Result> entry : results.entrySet()) {
     assertThat(entry.getValue().isHealthy(), equalTo(true));
@@ -379,7 +379,7 @@ for (Map.Entry<String, HealthCheck.Result> entry : results.entrySet()) {
 
 最后，我们可以运行一个特定的`HealthCheck`实例:
 
-```
+```java
 healthCheckRegistry.runHealthCheck("db"); 
 ```
 
@@ -391,7 +391,7 @@ Metrics 为我们提供了一些有用的 servlets，允许我们通过 HTTP 请
 
 要使用 metrics-servlet 模块，我们需要将这个依赖项添加到`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>io.dropwizard.metrics</groupId>
     <artifactId>metrics-servlets</artifactId>
@@ -405,7 +405,7 @@ Metrics 为我们提供了一些有用的 servlets，允许我们通过 HTTP 请
 
 `HealthCheckServlet`提供健康检查结果。首先，我们需要创建一个公开我们的`HealthCheckRegistry`的`ServletContextListener`:
 
-```
+```java
 public class MyHealthCheckServletContextListener
   extends HealthCheckServlet.ContextListener {
 
@@ -425,7 +425,7 @@ public class MyHealthCheckServletContextListener
 
 然后，我们将这个监听器和`HealthCheckServlet`添加到`web.xml`文件中:
 
-```
+```java
 <listener>
     <listener-class>com.baeldung.metrics.servlets.MyHealthCheckServletContextListener</listener-class>
 </listener>
@@ -441,7 +441,7 @@ public class MyHealthCheckServletContextListener
 
 现在，我们可以启动 web 应用程序，并向“http://localhost:8080/health check”发送 GET 请求来获取健康检查结果。它的反应应该是这样的:
 
-```
+```java
 {
   "db": {
     "healthy": true
@@ -454,7 +454,7 @@ public class MyHealthCheckServletContextListener
 提供关于 JVM 中所有活动线程、它们的状态、它们的堆栈跟踪以及它们可能正在等待的任何锁的状态的信息。
 如果我们想使用它，我们只需将这些添加到`web.xml`文件中:
 
-```
+```java
 <servlet>
     <servlet-name>threadDump</servlet-name>
     <servlet-class>com.codahale.metrics.servlets.ThreadDumpServlet</servlet-class>
@@ -471,7 +471,7 @@ public class MyHealthCheckServletContextListener
 
 `PingServlet`可用于测试应用程序是否正在运行。我们将这些添加到`web.xml`文件中:
 
-```
+```java
 <servlet>
     <servlet-name>ping</servlet-name>
     <servlet-class>com.codahale.metrics.servlets.PingServlet</servlet-class>
@@ -488,7 +488,7 @@ public class MyHealthCheckServletContextListener
 
 `MetricsServlet`提供指标数据。首先，我们需要创建一个公开我们的`MetricRegistry`的`ServletContextListener`:
 
-```
+```java
 public class MyMetricsServletContextListener
   extends MetricsServlet.ContextListener {
     private static MetricRegistry METRIC_REGISTRY
@@ -513,7 +513,7 @@ public class MyMetricsServletContextListener
 
 这个监听器和`MetricsServlet`都需要添加到`web.xml`中:
 
-```
+```java
 <listener>
     <listener-class>com.codahale.metrics.servlets.MyMetricsServletContextListener</listener-class>
 </listener>
@@ -529,7 +529,7 @@ public class MyMetricsServletContextListener
 
 这将在我们的 web 应用程序“http://localhost:8080/metrics”中公开。它的响应应该包含各种度量数据:
 
-```
+```java
 {
   "version": "3.0.0",
   "gauges": {},
@@ -564,7 +564,7 @@ public class MyMetricsServletContextListener
 
 让我们将这些添加到`web.xml`中:
 
-```
+```java
 <servlet>
     <servlet-name>admin</servlet-name>
     <servlet-class>com.codahale.metrics.servlets.AdminServlet</servlet-class>
@@ -587,7 +587,7 @@ public class MyMetricsServletContextListener
 
 要使用这个模块，让我们首先将依赖关系添加到`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>io.dropwizard.metrics</groupId>
     <artifactId>metrics-servlet</artifactId>
@@ -601,7 +601,7 @@ public class MyMetricsServletContextListener
 
 要使用它，我们需要创建一个`ServletContextListener`，它将我们的`MetricRegistry`暴露给`InstrumentedFilter`:
 
-```
+```java
 public class MyInstrumentedFilterContextListener
   extends InstrumentedFilterContextListener {
 
@@ -616,7 +616,7 @@ public class MyInstrumentedFilterContextListener
 
 然后，我们将这些添加到`web.xml`:
 
-```
+```java
 <listener>
      <listener-class>
          com.baeldung.metrics.servlet.MyInstrumentedFilterContextListener

@@ -14,7 +14,7 @@
 
 我们需要将下面的依赖项添加到`pom.xml:`
 
-```
+```java
 <dependency>
     <groupId>org.quartz-scheduler</groupId>
     <artifactId>quartz</artifactId>
@@ -47,7 +47,7 @@ API 的关键接口是:
 
 在我们使用`Scheduler`之前，它需要被实例化。为此，我们可以使用工厂`SchedulerFactory**:**`
 
-```
+```java
 SchedulerFactory schedulerFactory = new StdSchedulerFactory();
 Scheduler scheduler = schedulerFactory.getScheduler();
 ```
@@ -56,7 +56,7 @@ Scheduler scheduler = schedulerFactory.getScheduler();
 
 然而，**`Scheduler`不会对任何触发器起作用，直到它被`start()`方法**启动:
 
-```
+```java
 scheduler.start();
 ```
 
@@ -64,7 +64,7 @@ scheduler.start();
 
 一个`Job` 是实现`Job` 接口的类。它只有一个简单的方法:
 
-```
+```java
 public class SimpleJob implements Job {
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
         System.out.println("This is a quartz job!");
@@ -78,7 +78,7 @@ public class SimpleJob implements Job {
 
 在将`Job`添加到`Scheduler.` 时，Quartz 客户端创建了`JobDetail`对象，它本质上是作业实例 *:* 的定义
 
-```
+```java
 JobDetail job = JobBuilder.newJob(SimpleJob.class)
   .withIdentity("myJob", "group1")
   .build();
@@ -92,7 +92,7 @@ JobDetail job = JobBuilder.newJob(SimpleJob.class)
 
 下面是一个例子，在将任务添加到调度程序之前，在构建`JobDetail`时将数据放入`JobDataMap`:
 
-```
+```java
 JobDetail job = newJob(SimpleJob.class)
   .withIdentity("myJob", "group1")
   .usingJobData("jobSays", "Hello World!")
@@ -102,7 +102,7 @@ JobDetail job = newJob(SimpleJob.class)
 
 下面是一个在作业执行期间如何访问这些数据的示例:
 
-```
+```java
 public class SimpleJob implements Job { 
     public void execute(JobExecutionContext context) throws JobExecutionException {
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
@@ -127,7 +127,7 @@ public class SimpleJob implements Job {
 
 当我们希望调度一个`Job`时，我们需要实例化一个触发器并调整其属性来配置我们的调度需求:
 
-```
+```java
 Trigger trigger = TriggerBuilder.newTrigger()
   .withIdentity("myTrigger", "group1")
   .startNow()
@@ -155,7 +155,7 @@ Trigger trigger = TriggerBuilder.newTrigger()
 
 在下面的例子中，我们有两个优先级不同的触发器。如果没有足够的资源同时触发所有触发器，`triggerA` 将是第一个被触发的:
 
-```
+```java
 Trigger triggerA = TriggerBuilder.newTrigger()
   .withIdentity("triggerA", "group1")
   .startNow()
@@ -183,7 +183,7 @@ Trigger triggerB = TriggerBuilder.newTrigger()
 
 让我们看看下面的例子:
 
-```
+```java
 Trigger misFiredTriggerA = TriggerBuilder.newTrigger()
   .startAt(DateUtils.addSeconds(new Date(), -10))
   .build();
@@ -209,7 +209,7 @@ Trigger misFiredTriggerB = TriggerBuilder.newTrigger()
 
 在下面的代码中，日期`myStartTime` 已经预先定义好了，用于为一个特定的时间戳 **:** 构建触发器
 
-```
+```java
 SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()
   .withIdentity("trigger1", "group1")
   .startAt(myStartTime)
@@ -219,7 +219,7 @@ SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()
 
 接下来，让我们为特定的时刻建立一个触发器，然后每十秒钟重复十次:
 
-```
+```java
 SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()
   .withIdentity("trigger2", "group1")
   .startAt(myStartTime)
@@ -238,7 +238,7 @@ Cron 表达式用于配置`CronTrigger`的实例。这些表达式由七个子�
 
 在下面的示例中，我们构建了一个触发器，在每天上午 8 点到下午 5 点之间每隔一分钟触发一次:
 
-```
+```java
 CronTrigger trigger = TriggerBuilder.newTrigger()
   .withIdentity("trigger3", "group1")
   .withSchedule(CronScheduleBuilder.cronSchedule("0 0/2 8-17 * * ?"))

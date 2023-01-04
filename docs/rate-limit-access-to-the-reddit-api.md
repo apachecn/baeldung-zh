@@ -12,7 +12,7 @@
 
 首先，让我们创建一个 Reddit 模板—**一个 Reddit API** 的小客户端——它将所有底层通信整合到一个组件中:
 
-```
+```java
 @Component
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class RedditTemplate {
@@ -72,7 +72,7 @@ public class RedditTemplate {
 
 接下来，让我们开始在`RedditContoller`中使用这个新的`RedditTemplate`，例如:
 
-```
+```java
 @Controller
 public class RedditController {
     @Autowired

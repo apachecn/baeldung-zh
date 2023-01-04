@@ -29,7 +29,7 @@
 
 我们将使用 MySQL 数据库:
 
-```
+```java
 @Configuration
 @ComponentScan("com.baeldung.jdbc")
 public class SpringJdbcConfig {
@@ -50,7 +50,7 @@ public class SpringJdbcConfig {
 
 下面是一个快速配置，它创建了一个 H2 嵌入式数据库实例，并用简单的 SQL 脚本预先填充它:
 
-```
+```java
 @Bean
 public DataSource dataSource() {
     return new EmbeddedDatabaseBuilder()
@@ -62,7 +62,7 @@ public DataSource dataSource() {
 
 最后，同样的事情可以通过对`datasource`使用 XML 配置来完成:
 
-```
+```java
 <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" 
   destroy-method="close">
     <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
@@ -84,14 +84,14 @@ JDBC 模板是主要的 API，通过它我们可以访问我们感兴趣的大�
 
 首先，让我们从一个简单的例子开始，看看 `JdbcTemplate`能做什么:
 
-```
+```java
 int result = jdbcTemplate.queryForObject(
     "SELECT COUNT(*) FROM EMPLOYEE", Integer.class); 
 ```
 
 这里有一个简单的插页:
 
-```
+```java
 public int addEmplyee(int id) {
     return jdbcTemplate.update(
       "INSERT INTO EMPLOYEE VALUES (?, ?, ?, ?)", id, "Bill", "Gates", "USA");
@@ -110,7 +110,7 @@ public int addEmplyee(int id) {
 
 在幕后，它将命名参数替换为 JDBC `?`占位符，并委托给包装的`JDCTemplate` 来运行查询:
 
-```
+```java
 SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("id", 1);
 return namedParameterJdbcTemplate.queryForObject(
   "SELECT FIRST_NAME FROM EMPLOYEE WHERE ID = :id", namedParameters, String.class);
@@ -120,7 +120,7 @@ return namedParameterJdbcTemplate.queryForObject(
 
 让我们看看如何使用 bean 的属性来确定命名参数:
 
-```
+```java
 Employee employee = new Employee();
 employee.setFirstName("James");
 
@@ -139,7 +139,7 @@ return namedParameterJdbcTemplate.queryForObject(
 
 例如，对于查询返回的每一行，Spring 使用行映射器来填充 java bean:
 
-```
+```java
 public class EmployeeRowMapper implements RowMapper<Employee> {
     @Override
     public Employee mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -157,7 +157,7 @@ public class EmployeeRowMapper implements RowMapper<Employee> {
 
 随后，我们现在可以将行映射器传递给查询 API，并获得完全填充的 Java 对象:
 
-```
+```java
 String query = "SELECT * FROM EMPLOYEE WHERE ID = ?";
 Employee employee = jdbcTemplate.queryForObject(
   query, new Object[] { id }, new EmployeeRowMapper());
@@ -175,7 +175,7 @@ Spring 自带开箱即用的数据异常层次结构——以`DataAccessExceptio
 
 这里有一个自定义实现的简单示例——当出现重复键冲突时自定义错误消息，这在使用 H2 时会导致[错误代码 23505](https://web.archive.org/web/20220630132202/https://www.h2database.com/javadoc/org/h2/api/ErrorCode.html#c23505) :
 
-```
+```java
 public class CustomSQLErrorCodeTranslator extends SQLErrorCodeSQLExceptionTranslator {
     @Override
     protected DataAccessException
@@ -191,7 +191,7 @@ public class CustomSQLErrorCodeTranslator extends SQLErrorCodeSQLExceptionTransl
 
 要使用这个定制的异常翻译器，我们需要通过调用`setExceptionTranslator()` 方法将它传递给`JdbcTemplate`:
 
-```
+```java
 CustomSQLErrorCodeTranslator customSQLErrorCodeTranslator = 
   new CustomSQLErrorCodeTranslator();
 jdbcTemplate.setExceptionTranslator(customSQLErrorCodeTranslator);
@@ -209,14 +209,14 @@ jdbcTemplate.setExceptionTranslator(customSQLErrorCodeTranslator);
 
 首先，让我们创建一个`SimpleJdbcInsert`:
 
-```
+```java
 SimpleJdbcInsert simpleJdbcInsert = 
   new SimpleJdbcInsert(dataSource).withTableName("EMPLOYEE");
 ```
 
 接下来，让我们提供列名和值，并运行操作:
 
-```
+```java
 public int addEmplyee(Employee emp) {
     Map<String, Object> parameters = new HashMap<String, Object>();
     parameters.put("ID", emp.getId());
@@ -230,7 +230,7 @@ public int addEmplyee(Employee emp) {
 
 此外，我们可以使用`executeAndReturnKey()` API 来允许**数据库生成主键**。我们还需要配置实际自动生成的列:
 
-```
+```java
 SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                                         .withTableName("EMPLOYEE")
                                         .usingGeneratedKeyColumns("ID");
@@ -247,12 +247,12 @@ System.out.println("Generated id - " + id.longValue());
 
 我们将利用`SimpleJdbcCall`抽象:
 
-```
+```java
 SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dataSource)
 		                     .withProcedureName("READ_EMPLOYEE"); 
 ```
 
-```
+```java
 public Employee getEmployeeUsingSimpleJdbcCall(int id) {
     SqlParameterSource in = new MapSqlParameterSource().addValue("in_id", id);
     Map<String, Object> out = simpleJdbcCall.execute(in);
@@ -275,7 +275,7 @@ public Employee getEmployeeUsingSimpleJdbcCall(int id) {
 
 这里有趣的部分是简洁但非常有用的`BatchPreparedStatementSetter` 实现:
 
-```
+```java
 public int[] batchUpdateUsingJdbcTemplate(List<Employee> employees) {
     return jdbcTemplate.batchUpdate("INSERT INTO EMPLOYEE VALUES (?, ?, ?, ?)",
         new BatchPreparedStatementSetter() {
@@ -302,7 +302,7 @@ public int[] batchUpdateUsingJdbcTemplate(List<Employee> employees) {
 
 相反，参数值可以作为`SqlParameterSource`的数组传递给`batchUpdate()`方法。
 
-```
+```java
 SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(employees.toArray());
 int[] updateCounts = namedParameterJdbcTemplate.batchUpdate(
     "INSERT INTO EMPLOYEE VALUES (:id, :firstName, :lastName, :address)", batch);
@@ -319,7 +319,7 @@ Spring Boot 为在关系数据库中使用 JDBC 提供了一个开端。
 
 我们需要将 [`spring-boot-starter-jdbc`](https://web.archive.org/web/20220630132202/https://search.maven.org/search?q=a:spring-boot-starter-jdbc) 依赖项作为主依赖项。我们还需要一个我们将使用的数据库的依赖项。在我们的例子中，这是`MySQL`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-jdbc</artifactId>
@@ -335,7 +335,7 @@ Spring Boot 为在关系数据库中使用 JDBC 提供了一个开端。
 
 Spring Boot 为我们自动配置了数据源。我们只需要在一个`properties`文件中提供属性:
 
-```
+```java
 spring.datasource.url=jdbc:mysql://localhost:3306/springjdbc
 spring.datasource.username=guest_user
 spring.datasource.password=guest_password

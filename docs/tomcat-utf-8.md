@@ -14,7 +14,7 @@ UTF-8 是 web 应用程序中最常用的字符编码。它支持目前世界上
 
 让我们将参数`URIEncoding=”UTF-8″`添加到`TOMCAT_ROOT/conf/server.xml`中的所有连接器:
 
-```
+```java
 <Connector 
   URIEncoding="UTF-8" 
   port="8080" 
@@ -35,7 +35,7 @@ UTF-8 是 web 应用程序中最常用的字符编码。它支持目前世界上
 
 让我们定义一个名为`CharacterSetFilter`的类:
 
-```
+```java
 public class CharacterSetFilter implements Filter {
 
     // ...
@@ -56,7 +56,7 @@ public class CharacterSetFilter implements Filter {
 
 我们需要将过滤器添加到应用程序的`web.xml`中，这样它就可以应用于所有的请求和响应:
 
-```
+```java
 <filter>
     <filter-name>CharacterSetFilter</filter-name>
     <filter-class>com.baeldung.CharacterSetFilter</filter-class>
@@ -74,7 +74,7 @@ public class CharacterSetFilter implements Filter {
 
 确保服务器页面中 UTF-8 的最好方法是在每个 JSP 页面的顶部添加这个标签:
 
-```
+```java
 <%@page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
 ```
 
@@ -84,7 +84,7 @@ public class CharacterSetFilter implements Filter {
 
 我们应该在所有 HTML 页面的`head`部分添加这个`<meta>`标签:
 
-```
+```java
 <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
 ```
 
@@ -96,7 +96,7 @@ public class CharacterSetFilter implements Filter {
 
 我们需要找到配置文件，搜索这些参数，并相应地编辑它们:
 
-```
+```java
 [client]
 default-character-set = utf8mb4
 
@@ -117,21 +117,21 @@ MySQL 服务器字符集配置只适用于新数据库。我们需要手动迁�
 
 对于每个数据库:
 
-```
+```java
 ALTER DATABASE database_name CHARACTER SET = utf8mb4 
     COLLATE = utf8mb4_unicode_ci;
 ```
 
 对于每个表:
 
-```
+```java
 ALTER TABLE table_name CONVERT TO 
     CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 对于每个`VARCHAR`或`TEXT`列:
 
-```
+```java
 ALTER TABLE table_name CHANGE column_name column_name 
     VARCHAR(69) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
@@ -140,7 +140,7 @@ ALTER TABLE table_name CHANGE column_name column_name
 
 对于基于 JDBC 的连接，这可以通过以下连接 URL 实现:
 
-```
+```java
 jdbc:mysql://localhost:3306/?useUnicode=yes;characterEncoding=UTF-8
 ```
 

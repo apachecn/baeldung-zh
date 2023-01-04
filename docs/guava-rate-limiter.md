@@ -12,7 +12,7 @@
 
 我们将使用番石榴的图书馆:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -28,19 +28,19 @@
 
 我们可以使用`create()` 工厂方法创建一个`RateLimiter` 实例:
 
-```
+```java
 RateLimiter rateLimiter = RateLimiter.create(2);
 ```
 
 接下来，为了从`RateLimiter,`获得执行许可，我们需要调用`acquire()`方法:
 
-```
+```java
 rateLimiter.acquire(1);
 ```
 
 为了检查这是否有效，我们将对 throttled 方法进行两次后续调用:
 
-```
+```java
 long startTime = ZonedDateTime.now().getSecond();
 rateLimiter.acquire(1);
 doSomeLimitedOperation();
@@ -53,13 +53,13 @@ long elapsedTimeSeconds = ZonedDateTime.now().getSecond() - startTime;
 
 在这种情况下，对`acquire()` 方法的两次调用都不应该阻塞，经过的时间应该少于或低于一秒——因为两个许可都可以立即获得:
 
-```
+```java
 assertThat(elapsedTimeSeconds <= 1);
 ```
 
 此外，我们可以通过一次`acquire()`调用获得所有许可:
 
-```
+```java
 @Test
 public void givenLimitedResource_whenRequestOnce_thenShouldPermitWithoutBlocking() {
     // given
@@ -84,7 +84,7 @@ public void givenLimitedResource_whenRequestOnce_thenShouldPermitWithoutBlocking
 
 我们将创建一个有 100 个许可证的`RateLimiter` 。然后，我们将执行一个需要获取 1000 个许可的操作。根据`RateLimiter,` 的规格，这样的动作至少需要 10 秒才能完成，因为我们每秒只能执行 100 个动作单位:
 
-```
+```java
 @Test
 public void givenLimitedResource_whenUseRateLimiter_thenShouldLimitPermits() {
     // given
@@ -115,7 +115,7 @@ public void givenLimitedResource_whenUseRateLimiter_thenShouldLimitPermits() {
 
 当在给定的超时时间内没有可用的许可时，它返回`false.`。如果`acquire()`成功，它`returns`为真:
 
-```
+```java
 @Test
 public void givenLimitedResource_whenTryAcquire_shouldNotBlockIndefinitely() {
     // given

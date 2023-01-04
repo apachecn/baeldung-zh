@@ -27,7 +27,7 @@
 
 用`EntityManager`删除是删除实体实例最直接的方法:
 
-```
+```java
 Foo foo = new Foo("foo");
 entityManager.persist(foo);
 flushAndClear();
@@ -42,7 +42,7 @@ assertThat(entityManager.find(Foo.class, foo.getId()), nullValue());
 
 在本文的示例中，我们使用一个 helper 方法在需要时刷新和清除持久性上下文:
 
-```
+```java
 void flushAndClear() {
     entityManager.flush();
     entityManager.clear();
@@ -55,7 +55,7 @@ void flushAndClear() {
 
 我们通过定义从`Foo`到`Bar`的`@ManyToOne`关联来说明这一点:
 
-```
+```java
 @Entity
 public class Foo {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -67,7 +67,7 @@ public class Foo {
 
 当我们删除一个被`Foo`实例引用的`Bar`实例时，这个`Bar`实例不会从数据库中删除:
 
-```
+```java
 Bar bar = new Bar("bar");
 Foo foo = new Foo("foo");
 foo.setBar(bar);
@@ -96,7 +96,7 @@ assertThat(entityManager.find(Bar.class, bar.getId()), nullValue());
 
 删除父实体时，删除可以级联到子实体:
 
-```
+```java
 Bar bar = new Bar("bar");
 Foo foo = new Foo("foo");
 foo.setBar(bar);
@@ -121,7 +121,7 @@ assertThat(entityManager.find(Bar.class, bar.getId()), nullValue());
 
 我们通过定义从`Bar`到`Baz:`的关联来说明这一点
 
-```
+```java
 @Entity
 public class Bar {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -133,7 +133,7 @@ public class Bar {
 
 然后，当从父`Bar`实例的列表中删除一个`Baz`实例时，该实例被自动删除:
 
-```
+```java
 Bar bar = new Bar("bar");
 Baz baz = new Baz("baz");
 bar.getBazList().add(baz);
@@ -154,7 +154,7 @@ assertThat(entityManager.find(Baz.class, baz.getId()), nullValue());
 
 Hibernate 支持 DML 风格的删除操作:
 
-```
+```java
 Foo foo = new Foo("foo");
 entityManager.persist(foo);
 flushAndClear();
@@ -172,7 +172,7 @@ assertThat(entityManager.find(Foo.class, foo.getId()), nullValue());
 
 有时，我们需要依靠原生查询来实现 Hibernate 不支持的或者特定于数据库供应商的功能。我们也可以用本地查询删除数据库中的数据:
 
-```
+```java
 Foo foo = new Foo("foo");
 entityManager.persist(foo);
 flushAndClear();
@@ -194,7 +194,7 @@ assertThat(entityManager.find(Foo.class, foo.getId()), nullValue());
 
 为了演示这一点，我们向`Foo`实体添加了`@Where`注释和一个名为`DELETED`的列:
 
-```
+```java
 @Entity
 @Where(clause = "DELETED = 0")
 public class Foo {
@@ -213,7 +213,7 @@ public class Foo {
 
 以下测试确认一切正常:
 
-```
+```java
 Foo foo = new Foo("foo");
 entityManager.persist(foo);
 flushAndClear();

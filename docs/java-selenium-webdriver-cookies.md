@@ -20,7 +20,7 @@
 
 我们需要将 [selenium-java](https://web.archive.org/web/20221205161812/https://search.maven.org/search?q=g:org.seleniumhq.selenium%20a:selenium-java) 依赖项添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.seleniumhq.selenium</groupId>
     <artifactId>selenium-java</artifactId>
@@ -32,7 +32,7 @@
 
 现在让我们来设置我们的测试类:
 
-```
+```java
 public class SeleniumCookiesJUnitLiveTest {
 
     private WebDriver driver;
@@ -51,7 +51,7 @@ public class SeleniumCookiesJUnitLiveTest {
 
 接下来，我们将执行一个简单的测试，在导航到一个网页后，验证 cookies 是否存在于我们的驱动程序中:
 
-```
+```java
 @Test
 public void whenNavigate_thenCookiesExist() {
     driver.navigate().to(navUrl);
@@ -63,7 +63,7 @@ public void whenNavigate_thenCookiesExist() {
 
 **通常，我们可能想要搜索特定的 cookie** :
 
-```
+```java
 @Test
 public void whenNavigate_thenLpCookieIsHasCorrectValue() {
     driver.navigate().to(navUrl);
@@ -79,7 +79,7 @@ public void whenNavigate_thenLpCookieIsHasCorrectValue() {
 
 让我们来看看一些常见的 cookie 属性:
 
-```
+```java
 @Test
 public void whenNavigate_thenLpCookieHasCorrectProps() {
     driver.navigate().to(navUrl);
@@ -99,7 +99,7 @@ public void whenNavigate_thenLpCookieHasCorrectProps() {
 
 我们创建 cookie 并使用`addCookie`方法将其添加到驱动程序中:
 
-```
+```java
 @Test
 public void whenAddingCookie_thenItIsPresent() {
     driver.navigate().to(navUrl);
@@ -115,7 +115,7 @@ public void whenAddingCookie_thenItIsPresent() {
 
 **正如我们所料，我们也可以使用`deleteCookie`方法删除 cookie:**
 
-```
+```java
 @Test
 public void whenDeletingCookie_thenItIsAbsent() {
     driver.navigate().to(navUrl);
@@ -136,7 +136,7 @@ public void whenDeletingCookie_thenItIsAbsent() {
 
 我们可以删除 cookie 并添加一个名称相同但值不同的新 cookie:
 
-```
+```java
 @Test
 public void whenOverridingCookie_thenItIsUpdated() {
     driver.navigate().to(navUrl);

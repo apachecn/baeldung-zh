@@ -14,7 +14,7 @@
 
 像所有 JVM 属性一样，当启动 JVM 时，我们在命令行中使用`-D` 参数来声明它:
 
-```
+```java
 java -Djava.security.egd=file:/dev/urandom -cp . com.baeldung.java.security.JavaSecurityEgdTester
 ```
 
@@ -24,7 +24,7 @@ java -Djava.security.egd=file:/dev/urandom -cp . com.baeldung.java.security.Java
 
 当我们第一次调用从`SecureRandom`读取字节时，我们使它初始化并读取 JVM 的`java.security` 配置文件`.` **该文件包含一个`securerandom.source`属性**:
 
-```
+```java
 securerandom.source=file:/dev/random
 ```
 
@@ -98,7 +98,7 @@ Unix 上的 Provider 实现可能会因仍从`/dev/random`读取而阻塞。在 
 
 首先，让我们用一个`main()`方法创建一个`JavaSecurityEgdTester`类。我们将使用`System.nanoTime()`为我们对`secureRandom.nextBytes()`的呼叫计时，并显示结果:
 
-```
+```java
 public class JavaSecurityEgdTester {
     public static final double NANOSECS = 1000000000.0;
 
@@ -116,19 +116,19 @@ public class JavaSecurityEgdTester {
 
 现在，让我们通过启动新的 Java 实例并为`java.security.egd`属性指定一个值来运行一个`JavaSecurityEgdTester`测试:
 
-```
+```java
 java -Djava.security.egd=file:/dev/random -cp . com.baeldung.java.security.JavaSecurityEgdTester
 ```
 
 让我们检查输出，看看我们的测试花了多长时间，使用了哪种算法:
 
-```
+```java
 java.security.egd=file:/dev/random took 0.692 seconds and used the SHA1PRNG algorithm
 ```
 
 因为我们的系统属性只在初始化时读取，所以让我们在一个新的 JVM 中为每个不同的`java.security.egd`值启动我们的类:
 
-```
+```java
 java -Djava.security.egd=file:/dev/urandom -cp . com.baeldung.java.security.JavaSecurityEgdTester
 java -Djava.security.egd=file:/dev/./urandom -cp . com.baeldung.java.security.JavaSecurityEgdTester
 java -Djava.security.egd=baeldung -cp . com.baeldung.java.security.JavaSecurityEgdTester 
@@ -144,13 +144,13 @@ Java 8 引入了一个 [`SecureRandom.getInstanceStrong()`](https://web.archive.
 
 首先，让我们把我们的`new SecureRandom()`换成`SecureRandom.` `getInstanceStrong()`:
 
-```
+```java
 SecureRandom secureRandom = SecureRandom.getInstanceStrong();
 ```
 
 现在，让我们再次运行测试:
 
-```
+```java
 java -Djava.security.egd=file:/dev/random -cp . com.baeldung.java.security.JavaSecurityEgdTester
 ```
 
@@ -158,7 +158,7 @@ java -Djava.security.egd=file:/dev/random -cp . com.baeldung.java.security.JavaS
 
 让我们再次检查我们的输出，注意不到 0.01 秒的时间。我们还可以观察到，该算法现在是 Windows-PRNG 算法:
 
-```
+```java
 java.security.egd=baeldung took 0.003 seconds and used the Windows-PRNG algorithm
 ```
 

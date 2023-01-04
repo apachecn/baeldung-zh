@@ -18,7 +18,7 @@ Java 中有九个预定义对象来表示八个原语和一个`void` 类型。�
 
 例如，以下语句返回`false`:
 
-```
+```java
 Integer.class.isPrimitive(); 
 ```
 
@@ -28,7 +28,7 @@ Integer.class.isPrimitive();
 
 首先，让我们定义一个 [`HashMap`](/web/20220526060526/https://www.baeldung.com/java-hashmap) 变量，它存储包装器和原始类型类:
 
-```
+```java
 private static final Map<Class<?>, Class<?>> WRAPPER_TYPE_MAP;
 static {
     WRAPPER_TYPE_MAP = new HashMap<Class<?>, Class<?>>(16);
@@ -48,7 +48,7 @@ static {
 
 现在，我们可以创建一个简单的实用方法来确定对象源是否属于原始类型:
 
-```
+```java
 public static boolean isPrimitiveType(Object source) {
     return WRAPPER_TYPE_MAP.containsKey(source.getClass());
 }
@@ -56,7 +56,7 @@ public static boolean isPrimitiveType(Object source) {
 
 让我们验证这是否如预期的那样工作:
 
-```
+```java
 assertTrue(PrimitiveTypeUtil.isPrimitiveType(false));
 assertTrue(PrimitiveTypeUtil.isPrimitiveType(1L));
 assertFalse(PrimitiveTypeUtil.isPrimitiveType(StringUtils.EMPTY));
@@ -68,7 +68,7 @@ assertFalse(PrimitiveTypeUtil.isPrimitiveType(StringUtils.EMPTY));
 
 首先，让我们将来自 [Maven Central](https://web.archive.org/web/20220526060526/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.commons%22%20AND%20a%3A%22commons-lang3%22) 的`commons-lang3`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons<groupId>
     <artifactId>commons-lang3<artifactId>
@@ -78,7 +78,7 @@ assertFalse(PrimitiveTypeUtil.isPrimitiveType(StringUtils.EMPTY));
 
 那我们来测试一下:
 
-```
+```java
 assertTrue(ClassUtils.isPrimitiveOrWrapper(Boolean.False.getClass()));
 assertTrue(ClassUtils.isPrimitiveOrWrapper(boolean.class));
 assertFalse(ClassUtils.isPrimitiveOrWrapper(StringUtils.EMPTY.getClass()));
@@ -90,7 +90,7 @@ assertFalse(ClassUtils.isPrimitiveOrWrapper(StringUtils.EMPTY.getClass()));
 
 同样，让我们先添加来自 [Maven Central](https://web.archive.org/web/20220526060526/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.google.guava%22%20AND%20a%3A%22guava%22) 的依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava<groupId>
     <artifactId>guava<artifactId>
@@ -100,14 +100,14 @@ assertFalse(ClassUtils.isPrimitiveOrWrapper(StringUtils.EMPTY.getClass()));
 
 同样，我们可以使用以下方法测试它:
 
-```
+```java
 assertTrue(Primitives.isWrapperType(Boolean.FALSE.getClass()));
 assertFalse(Primitives.isWrapperType(StringUtils.EMPTY.getClass()));
 ```
 
 然而，`Primitives.isWrapperType`方法不能在原语类上工作，下面的代码将返回 false:
 
-```
+```java
 assertFalse(Primitives.isWrapperType(boolean.class));
 ```
 

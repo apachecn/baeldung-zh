@@ -30,14 +30,14 @@
 
 ### 可用签名
 
-```
+```java
 public String replace(char oldChar, char newChar)
 public String replace(CharSequence target, CharSequence replacement)
 ```
 
 ### 例子
 
-```
+```java
 @Test
 void whenReplaceOldCharNewChar_thenCorrect() {
     String s = "wslcoms to basldung";
@@ -47,7 +47,7 @@ void whenReplaceOldCharNewChar_thenCorrect() {
 
 ```
 
-```
+```java
 @Test
 void whenReplaceTargetReplacement_thenCorrect() {
     String s = "welcome at baeldung, login at your course";

@@ -14,7 +14,7 @@ Java 7 引入了二进制文字。它简化了二进制数的使用。
 
 要使用它，我们需要在号码前加上 0b 或 0B:
 
-```
+```java
 @Test
 public void given_binaryLiteral_thenReturnDecimalValue() {
 
@@ -44,7 +44,7 @@ public void given_binaryLiteral_thenReturnDecimalValue() {
 
 `Integer`有一个名为`toBinaryString `的函数将十进制数转换成二进制字符串:
 
-```
+```java
 @Test
 public void given_decimalNumber_then_convertToBinaryNumber() {
     assertEquals("1000", Integer.toBinaryString(8));
@@ -70,7 +70,7 @@ public void given_decimalNumber_then_convertToBinaryNumber() {
 
 现在让我们实现上面的算法:
 
-```
+```java
 public Integer convertDecimalToBinary(Integer decimalNumber) {
 
     if (decimalNumber == 0) {
@@ -95,7 +95,7 @@ public Integer convertDecimalToBinary(Integer decimalNumber) {
 
 为了解析二进制字符串，`Integer`类提供了一个`parseInt`函数:
 
-```
+```java
 @Test
 public void given_binaryNumber_then_ConvertToDecimalNumber() {
     assertEquals(8, Integer.parseInt("1000", 2));
@@ -123,7 +123,7 @@ public void given_binaryNumber_then_ConvertToDecimalNumber() {
 
 让我们最后对上面的步骤进行编码:
 
-```
+```java
 public Integer convertBinaryToDecimal(Integer binaryNumber) {
 
     Integer decimalNumber = 0;
@@ -156,7 +156,7 @@ public Integer convertBinaryToDecimal(Integer binaryNumber) {
 
 这些规则可以实现为:
 
-```
+```java
 public Integer addBinaryNumber(Integer firstNum, Integer secondNum) {
     StringBuilder output = new StringBuilder();
     int carry = 0;
@@ -184,7 +184,7 @@ public Integer addBinaryNumber(Integer firstNum, Integer secondNum) {
 
 一个数的补码是通过**求二进制数的每一位的反而得到的数。这意味着用 0 代替 1，用 1 代替 0**:
 
-```
+```java
 public Integer getOnesComplement(Integer num) {
     StringBuilder onesComplement = new StringBuilder();
     while (num > 0) {
@@ -209,7 +209,7 @@ public Integer getOnesComplement(Integer num) {
 
 让我们实现上面的步骤:
 
-```
+```java
 public Integer substractBinaryNumber(Integer firstNum, Integer secondNum) {
     int onesComplement = Integer.valueOf(getOnesComplement(secondNum));
     StringBuilder output = new StringBuilder();

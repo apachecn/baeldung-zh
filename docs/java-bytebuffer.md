@@ -20,13 +20,13 @@
 
 使用`allocate`方法，我们将得到一个非直接缓冲区——即一个带有底层`byte`数组的缓冲区实例:
 
-```
+```java
 ByteBuffer buffer = ByteBuffer.allocate(10);
 ```
 
 当我们使用`allocateDirect`方法时，它会生成一个直接缓冲区:
 
-```
+```java
 ByteBuffer buffer = ByteBuffer.allocateDirect(10);
 ```
 
@@ -36,14 +36,14 @@ ByteBuffer buffer = ByteBuffer.allocateDirect(10);
 
 包装允许实例重用现有的`byte`数组:
 
-```
+```java
 byte[] bytes = new byte[10];
 ByteBuffer buffer = ByteBuffer.wrap(bytes);
 ```
 
 上面的代码相当于:
 
-```
+```java
 ByteBuffer buffer = ByteBuffer.wrap(bytes, 0, bytes.length);
 ```
 
@@ -67,7 +67,7 @@ ByteBuffer buffer = ByteBuffer.wrap(bytes, 0, bytes.length);
 
 现在，让我们有意地将`ByteBuffer`类简化成一个带有额外索引的`byte`数组的容器:
 
-```
+```java
 ByteBuffer = byte array + index
 ```
 
@@ -91,7 +91,7 @@ ByteBuffer = byte array + index
 
 此外，这些指数之间存在不变的关系:
 
-```
+```java
 0 <= mark <= position <= limit <= capacity
 ```
 
@@ -99,20 +99,20 @@ ByteBuffer = byte array + index
 
 当我们创建一个新的`ByteBuffer`实例时，`mark`未定义，`position`为 0，`limit`等于`capacity`。例如，让我们分配一个有 10 个数据元素的`ByteBuffer`:
 
-```
+```java
 ByteBuffer buffer = ByteBuffer.allocate(10);
 ```
 
 或者，让我们用 10 个数据元素包装一个现有的字节数组:
 
-```
+```java
 byte[] bytes = new byte[10];
 ByteBuffer buffer = ByteBuffer.wrap(bytes);
 ```
 
 因此，`mark`将为-1，位置将为 0，`limit`和`capacity`都将为 10:
 
-```
+```java
 int position = buffer.position(); // 0
 int limit = buffer.limit();       // 10
 int capacity = buffer.capacity(); // 10
@@ -120,7 +120,7 @@ int capacity = buffer.capacity(); // 10
 
 `capacity`是只读的，不能更改。但是，我们可以使用`position(int)`和`limit(int)`方法来改变相应的`position`和`limit`:
 
-```
+```java
 buffer.position(2);
 buffer.limit(5);
 ```
@@ -133,7 +133,7 @@ buffer.limit(5);
 
 当我们第一次创建一个`ByteBuffer`实例时，`mark`是未定义的。然后，我们可以调用`mark()`方法，将`mark`设置为当前位置。在一些操作之后，调用`reset()`方法会将`position`变回`mark`。
 
-```
+```java
 ByteBuffer buffer = ByteBuffer.allocate(10); // mark = -1, position = 0
 buffer.position(2);                          // mark = -1, position = 2
 buffer.mark();                               // mark = 2,  position = 2
@@ -150,7 +150,7 @@ buffer.reset();                              // mark = 2,  position = 2
 [![](img/d88007086ce6a9fbe4025f0051070920.png)](/web/20220622160706/https://www.baeldung.com/wp-content/uploads/2022/03/ByteBuffer-clear-clip-rewind-compact-1.png) 
 为了比较这些方法，让我们准备一段代码片段:
 
-```
+```java
 ByteBuffer buffer = ByteBuffer.allocate(10); // mark = -1, position = 0, limit = 10
 buffer.position(2);                          // mark = -1, position = 2, limit = 10
 buffer.mark();                               // mark = 2,  position = 2, limit = 10
@@ -160,25 +160,25 @@ buffer.limit(8);                             // mark = 2,  position = 5, limit =
 
 `clear()`方法会将`limit`更改为`capacity`，将`position`更改为 0，将`mark`更改为-1:
 
-```
+```java
 buffer.clear();                              // mark = -1, position = 0, limit = 10
 ```
 
 `flip()`方法会将`limit`更改为`position`，将`position`更改为 0，将`mark`更改为-1:
 
-```
+```java
 buffer.flip();                               // mark = -1, position = 0, limit = 5
 ```
 
 `rewind()`方法保持`limit`不变，并将`position`更改为 0，将`mark`更改为-1:
 
-```
+```java
 buffer.rewind();                             // mark = -1, position = 0, limit = 8
 ```
 
 `compact()`方法会将`limit`更改为`capacity`，将`position`更改为剩余值(`limit – position`，将`mark`更改为-1:
 
-```
+```java
 buffer.compact();                            // mark = -1, position = 3, limit = 10
 ```
 
@@ -199,7 +199,7 @@ buffer.compact();                            // mark = -1, position = 3, limit =
 
 例如，如果一个缓冲区的位置为 2，限制为 8，那么其剩余部分将为 6:
 
-```
+```java
 ByteBuffer buffer = ByteBuffer.allocate(10); // mark = -1, position = 0, limit = 10
 buffer.position(2);                          // mark = -1, position = 2, limit = 10
 buffer.limit(8);                             // mark = -1, position = 2, limit = 8
@@ -219,7 +219,7 @@ int remaining = buffer.remaining();          // 6
 
 我们可以在单次操作中从/向缓冲区的底层数据读取或写入单个字节。这些操作包括:
 
-```
+```java
 public abstract byte get();
 public abstract ByteBuffer put(byte b);
 public abstract byte get(int index);
@@ -232,7 +232,7 @@ public abstract ByteBuffer put(int index, byte b);
 
 **相反，批量操作可以从缓冲区的底层数据中读取或向其写入多个字节。**这些操作包括:
 
-```
+```java
 public ByteBuffer get(byte[] dst);
 public ByteBuffer get(byte[] dst, int offset, int length);
 public ByteBuffer put(byte[] src);
@@ -243,7 +243,7 @@ public ByteBuffer put(byte[] src, int offset, int length);
 
 还有另一个`put()`方法，它接受一个`ByteBuffer`参数:
 
-```
+```java
 public ByteBuffer put(ByteBuffer src);
 ```
 
@@ -251,7 +251,7 @@ public ByteBuffer put(ByteBuffer src);
 
 除了读写`byte`数据之外，`ByteBuffer`类还支持除了`boolean`类型之外的其他原始类型。我们以`int`型为例。相关方法包括:
 
-```
+```java
 public abstract int getInt();
 public abstract ByteBuffer putInt(int value);
 public abstract int getInt(int index);
@@ -276,7 +276,7 @@ public abstract ByteBuffer putInt(int index, int value);
 
 让我们来看看这些差异的图示:
 
-```
+```java
 ByteBuffer buffer = ByteBuffer.allocate(10); // mark = -1, position = 0, limit = 10, capacity = 10
 buffer.position(2);                          // mark = -1, position = 2, limit = 10, capacity = 10
 buffer.mark();                               // mark = 2,  position = 2, limit = 10, capacity = 10
@@ -286,19 +286,19 @@ buffer.limit(8);                             // mark = 2,  position = 5, limit =
 
 `duplicate()`方法创建一个新的`ByteBuffer`实例，就像原来的实例一样。但是，两个缓冲器中的每一个都有其独立的`limit`、`position`和`mark`:
 
-```
+```java
 ByteBuffer view = buffer.duplicate();        // mark = 2,  position = 5, limit = 8,  capacity = 10
 ```
 
 `slice()`方法创建底层数据的共享子视图。视图的`position`将为 0，其`limit`和`capacity`将为原始缓冲区的剩余部分:
 
-```
+```java
 ByteBuffer view = buffer.slice();            // mark = -1, position = 0, limit = 3,  capacity = 3
 ```
 
 与`duplicate()`方法相比，`asReadOnlyBuffer()`方法的工作方式类似，但会产生一个只读缓冲区。这意味着我们不能使用这个只读视图来更改底层数据:
 
-```
+```java
 ByteBuffer view = buffer.asReadOnlyBuffer(); // mark = 2,  position = 5, limit = 8,  capacity = 10
 ```
 
@@ -316,7 +316,7 @@ ByteBuffer view = buffer.asReadOnlyBuffer(); // mark = 2,  position = 5, limit =
 
 现在，让我们以`asIntBuffer()`为例:
 
-```
+```java
 byte[] bytes = new byte[]{
   (byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE, // CAFEBABE ---> cafebabe
   (byte) 0xF0, (byte) 0x07, (byte) 0xBA, (byte) 0x11, // F007BA11 ---> football
@@ -335,7 +335,7 @@ int capacity = intBuffer.capacity();                         // 2
 
 那么，如何才能创建一个直接的缓冲区呢？通过调用具有所需容量的`allocateDirect()`方法创建一个直接`ByteBuffer`:
 
-```
+```java
 ByteBuffer buffer = ByteBuffer.allocateDirect(10);
 ```
 
@@ -373,21 +373,21 @@ ByteBuffer buffer = ByteBuffer.allocateDirect(10);
 
 字节顺序影响如何解释底层数据。例如，假设我们有一个`buffer`实例:
 
-```
+```java
 byte[] bytes = new byte[]{(byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE};
 ByteBuffer buffer = ByteBuffer.wrap(bytes);
 ```
 
 使用`ByteOrder.BIG_ENDIAN`，`val`将会是-889275714 (0xCAFEBABE):
 
-```
+```java
 buffer.order(ByteOrder.BIG_ENDIAN);
 int val = buffer.getInt();
 ```
 
 但是，使用`ByteOrder.LITTLE_ENDIAN`，`val`将会是-1095041334 (0xBEBAFECA):
 
-```
+```java
 buffer.order(ByteOrder.LITTLE_ENDIAN);
 int val = buffer.getInt();
 ```
@@ -398,7 +398,7 @@ int val = buffer.getInt();
 
 例如，具有不同基础数据和索引的两个缓冲区实例可以相等:
 
-```
+```java
 byte[] bytes1 = "World".getBytes(StandardCharsets.UTF_8);
 byte[] bytes2 = "HelloWorld".getBytes(StandardCharsets.UTF_8);
 

@@ -12,7 +12,7 @@
 
 让我们从启用 Velocity 支持开始，包括以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.velocity</groupId>
     <artifactId>velocity</artifactId>
@@ -34,7 +34,7 @@
 
 如果我们不想使用`web.xml`，让我们使用 Java 和初始化器`:`来配置我们的 web 项目
 
-```
+```java
 public class MainWebAppInitializer implements WebApplicationInitializer {
 
     @Override
@@ -53,7 +53,7 @@ public class MainWebAppInitializer implements WebApplicationInitializer {
 
 或者，我们当然可以使用传统的`web.xml`:
 
-```
+```java
 <web-app ...>
     <display-name>Spring MVC Velocity</display-name>
     <servlet>
@@ -88,7 +88,7 @@ public class MainWebAppInitializer implements WebApplicationInitializer {
 
 现在让我们来看一个简单的 Spring 配置——还是从 Java 开始:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages= {
@@ -129,7 +129,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 让我们快速看一下配置的 XML 版本:
 
-```
+```java
 <beans ...>
     <context:component-scan base-package="com.baeldung.mvc.velocity.*" />
     <context:annotation-config /> 
@@ -151,13 +151,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 这里我们告诉 Spring 在哪里寻找带注释的 bean 定义:
 
-```
+```java
 <context:component-scan base-package="com.baeldung.mvc.velocity.*" />
 ```
 
 我们用下面一行来表示我们将在我们的项目中使用注释驱动的配置:
 
-```
+```java
 <context:annotation-config />
 ```
 
@@ -167,7 +167,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 最后，让我们创建我们的模板——从一个通用标题开始:
 
-```
+```java
 <div style="...">
     <div style="float: left">
         <h1>Our tutorials</h1>
@@ -177,7 +177,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 和页脚:
 
-```
+```java
 <div style="...">
     @Copyright baeldung.com
 </div>
@@ -185,7 +185,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 让我们为我们的站点定义一个公共布局，我们将在下面的代码中使用上面带有`parse` 的片段:
 
-```
+```java
 <html>
     <head>
         <title>Spring & Velocity</title>  
@@ -209,7 +209,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 最后，我们将为主要内容创建一个模板:
 
-```
+```java
 <h1>Index</h1>
 
 <h2>Tutorials list</h2>
@@ -235,7 +235,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 我们已经创建了一个简单的控制器，它返回一个教程列表，作为我们布局的内容，其中包含:
 
-```
+```java
 @Controller
 @RequestMapping("/")
 public class MainController {

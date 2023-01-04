@@ -22,7 +22,7 @@ Java 不支持双重分派，但是我们可以使用一些技术来克服这个
 
 例如，让我们看看这个简单的折扣政策界面:
 
-```
+```java
 public interface DiscountPolicy {
     double discount(Order order);
 }
@@ -30,7 +30,7 @@ public interface DiscountPolicy {
 
 `DiscountPolicy`接口有两个实现。平坦的，总是返回相同的折扣:
 
-```
+```java
 public class FlatDiscountPolicy implements DiscountPolicy {
     @Override
     public double discount(Order order) {
@@ -41,7 +41,7 @@ public class FlatDiscountPolicy implements DiscountPolicy {
 
 第二个实现根据订单的总成本返回折扣:
 
-```
+```java
 public class AmountBasedDiscountPolicy implements DiscountPolicy {
     @Override
     public double discount(Order order) {
@@ -59,7 +59,7 @@ public class AmountBasedDiscountPolicy implements DiscountPolicy {
 
 **现在，Java 中的单一分派只是一个众所周知的多态行为，在下面的测试中得到了证明:**
 
-```
+```java
 @DisplayName(
     "given two discount policies, " +
     "when use these policies, " +
@@ -98,7 +98,7 @@ Java 不支持双重调度。
 
 我们来介绍一个新的折扣界面，名为`SpecialDiscountPolicy`:
 
-```
+```java
 public interface SpecialDiscountPolicy extends DiscountPolicy {
     double discount(SpecialOrder order);
 }
@@ -108,7 +108,7 @@ public interface SpecialDiscountPolicy extends DiscountPolicy {
 
 现在，当我们创建一个`SpecialOrder`的实例，但将其声明为普通的`Order`时，则不使用特殊折扣方法:
 
-```
+```java
 @DisplayName(
     "given discount policy accepting special orders, " +
     "when apply the policy on special order declared as regular order, " +
@@ -154,7 +154,7 @@ void test() throws Exception {
 
 首先，我们需要介绍一下`Visitable`接口:
 
-```
+```java
 public interface Visitable<V> {
     void accept(V visitor);
 }
@@ -162,7 +162,7 @@ public interface Visitable<V> {
 
 我们还将使用一个访问者接口，在我们名为`OrderVisitor`的案例中:
 
-```
+```java
 public interface OrderVisitor {
     void visit(Order order);
     void visit(SpecialOrder order);
@@ -177,7 +177,7 @@ public interface OrderVisitor {
 
 注意添加到`Order`和`SpecialOrder`的方法是相同的:
 
-```
+```java
 public class Order implements Visitable<OrderVisitor> {
     @Override
     public void accept(OrderVisitor visitor) {
@@ -197,7 +197,7 @@ public class SpecialOrder extends Order {
 
 最后，让我们看看负责创建 HTML 视图的`OrderVisitor`的实现:
 
-```
+```java
 public class HtmlOrderViewCreator implements OrderVisitor {
 
     private String html;
@@ -221,7 +221,7 @@ public class HtmlOrderViewCreator implements OrderVisitor {
 
 以下示例演示了`HtmlOrderViewCreator`的使用:
 
-```
+```java
 @DisplayName(
         "given collection of regular and special orders, " +
         "when create HTML view using visitor for each order, " +
@@ -260,7 +260,7 @@ void test() throws Exception {
 
 前面，我们介绍了计算所有订单行项目总和的`Order`类及其`totalCost()`方法:
 
-```
+```java
 public class Order {
     public Money totalCost() {
         // ...
@@ -272,7 +272,7 @@ public class Order {
 
 这种设计比简单地将所有可能的折扣策略硬编码到 *Order* 类中灵活得多:
 
-```
+```java
 public interface DiscountPolicy {
     double discount(Order order);
 }
@@ -288,7 +288,7 @@ public interface DiscountPolicy {
 
 例如，`Order`类可以像这样实现`totalCost` :
 
-```
+```java
 public class Order /* ... */ {
     // ...
     public Money totalCost(SpecialDiscountPolicy discountPolicy) {
@@ -308,7 +308,7 @@ public class Order /* ... */ {
 
 根`Order`类需要在运行时分派给折扣策略参数。实现这一点最简单的方法是添加一个受保护的`applyDiscountPolicy`方法:
 
-```
+```java
 public class Order /* ... */ {
     // ...
     public Money totalCost(SpecialDiscountPolicy discountPolicy) {
@@ -326,7 +326,7 @@ public class Order /* ... */ {
 
 让我们演示一下用法:
 
-```
+```java
 @DisplayName(
     "given regular order with items worth $100 total, " +
     "when apply 10% discount policy, " +
@@ -363,7 +363,7 @@ void test() throws Exception {
 
 让我们在`SpecialOrder`类中覆盖这个方法:
 
-```
+```java
 public class SpecialOrder extends Order {
     // ...
     @Override
@@ -376,7 +376,7 @@ public class SpecialOrder extends Order {
 
 我们现在可以使用折扣政策中关于`SpecialOrder`的额外信息来计算正确的折扣:
 
-```
+```java
 @DisplayName(
     "given special order eligible for extra discount with items worth $100 total, " +
     "when apply 20% discount policy for extra discount orders, " +

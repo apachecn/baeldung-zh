@@ -14,7 +14,7 @@
 
 `User`实体:
 
-```
+```java
 public class User {
     public int id;
     public String name;
@@ -24,7 +24,7 @@ public class User {
 
 `Item`实体:
 
-```
+```java
 public class Item {
     public int id;
     public String itemName;
@@ -34,7 +34,7 @@ public class Item {
 
 当我们试图序列化一个"`Item`"的实例时，Jackson 会抛出一个`JsonMappingException`异常:
 
-```
+```java
 @Test(expected = JsonMappingException.class)
 public void givenBidirectionRelation_whenSerializing_thenException()
   throws JsonProcessingException {
@@ -49,7 +49,7 @@ public void givenBidirectionRelation_whenSerializing_thenException()
 
 **满异常**是:
 
-```
+```java
 com.fasterxml.jackson.databind.JsonMappingException:
 Infinite recursion (StackOverflowError) 
 (through reference chain: 
@@ -68,7 +68,7 @@ org.baeldung.jackson.bidirection.Item["owner"]
 
 下面是“`User`”实体:
 
-```
+```java
 public class User {
     public int id;
     public String name;
@@ -80,7 +80,7 @@ public class User {
 
 `Item`还有那个“:
 
-```
+```java
 public class Item {
     public int id;
     public String itemName;
@@ -92,7 +92,7 @@ public class Item {
 
 现在让我们测试一下新的实体:
 
-```
+```java
 @Test
 public void givenBidirectionRelation_whenUsingJacksonReferenceAnnotationWithSerialization_thenCorrect() throws JsonProcessingException {
     final User user = new User(1, "John");
@@ -113,7 +113,7 @@ public void givenBidirectionRelation_whenUsingJacksonReferenceAnnotationWithSeri
 
 以下是序列化项目对象的输出:
 
-```
+```java
 {
  "id":2,
  "itemName":"book"
@@ -122,7 +122,7 @@ public void givenBidirectionRelation_whenUsingJacksonReferenceAnnotationWithSeri
 
 下面是序列化用户对象的输出:
 
-```
+```java
 {
  "id":1,
  "name":"John",
@@ -140,7 +140,7 @@ public void givenBidirectionRelation_whenUsingJacksonReferenceAnnotationWithSeri
 
 另外，请注意，我们不能切换注释。以下内容适用于序列化:
 
-```
+```java
 @JsonBackReference
 public List<Item> userItems;
 
@@ -158,7 +158,7 @@ public User owner;
 
 我们将类级注释添加到我们的“`User`”实体中:
 
-```
+```java
 @JsonIdentityInfo(
   generator = ObjectIdGenerators.PropertyGenerator.class, 
   property = "id")
@@ -167,7 +167,7 @@ public class User { ... }
 
 和到"`Item`"实体:
 
-```
+```java
 @JsonIdentityInfo(
   generator = ObjectIdGenerators.PropertyGenerator.class, 
   property = "id")
@@ -176,7 +176,7 @@ public class Item { ... }
 
 测试时间:
 
-```
+```java
 @Test
 public void givenBidirectionRelation_whenUsingJsonIdentityInfo_thenCorrect()
   throws JsonProcessingException {
@@ -195,7 +195,7 @@ public void givenBidirectionRelation_whenUsingJsonIdentityInfo_thenCorrect()
 
 以下是序列化的输出:
 
-```
+```java
 {
  "id":2,
  "itemName":"book",
@@ -216,7 +216,7 @@ public void givenBidirectionRelation_whenUsingJsonIdentityInfo_thenCorrect()
 
 这里是"`User`"实体:
 
-```
+```java
 public class User {
     public int id;
     public String name;
@@ -228,7 +228,7 @@ public class User {
 
 这是我们的测试:
 
-```
+```java
 @Test
 public void givenBidirectionRelation_whenUsingJsonIgnore_thenCorrect()
   throws JsonProcessingException {
@@ -247,7 +247,7 @@ public void givenBidirectionRelation_whenUsingJsonIgnore_thenCorrect()
 
 以下是序列化的结果:
 
-```
+```java
 {
  "id":2,
  "itemName":"book",
@@ -265,7 +265,7 @@ public void givenBidirectionRelation_whenUsingJsonIgnore_thenCorrect()
 
 在下面的例子中——我们使用**两个 JSON 视图——`Public`和`Internal`T5，其中`Internal`扩展了`Public`:**
 
-```
+```java
 public class Views {
     public static class Public {}
 
@@ -277,7 +277,7 @@ public class Views {
 
 下面是我们的实体"`User`":
 
-```
+```java
 public class User {
     @JsonView(Views.Public.class)
     public int id;
@@ -292,7 +292,7 @@ public class User {
 
 而这里是我们的实体"`Item`":
 
-```
+```java
 public class Item {
     @JsonView(Views.Public.class)
     public int id;
@@ -307,7 +307,7 @@ public class Item {
 
 当我们使用`Public`视图进行序列化时，它可以正确地工作——**，因为我们将`userItems`** 排除在序列化之外:
 
-```
+```java
 @Test
 public void givenBidirectionRelation_whenUsingPublicJsonView_thenCorrect() 
   throws JsonProcessingException {
@@ -327,7 +327,7 @@ public void givenBidirectionRelation_whenUsingPublicJsonView_thenCorrect()
 
 但是如果我们使用`Internal`视图进行序列化，就会抛出`JsonMappingException`,因为所有的字段都包含在内:
 
-```
+```java
 @Test(expected = JsonMappingException.class)
 public void givenBidirectionRelation_whenUsingInternalJsonView_thenException()
   throws JsonProcessingException {
@@ -350,7 +350,7 @@ public void givenBidirectionRelation_whenUsingInternalJsonView_thenException()
 
 下面是“`User`”实体:
 
-```
+```java
 public class User {
     public int id;
     public String name;
@@ -362,7 +362,7 @@ public class User {
 
 而这里是“`CustomListSerializer`”:
 
-```
+```java
 public class CustomListSerializer extends StdSerializer<List<Item>>{
 
    public CustomListSerializer() {
@@ -391,7 +391,7 @@ public class CustomListSerializer extends StdSerializer<List<Item>>{
 
 现在让我们测试一下序列化程序，看看产生了哪种正确的输出:
 
-```
+```java
 @Test
 public void givenBidirectionRelation_whenUsingCustomSerializer_thenCorrect()
   throws JsonProcessingException {
@@ -409,7 +409,7 @@ public void givenBidirectionRelation_whenUsingCustomSerializer_thenCorrect()
 
 以及**用定制串行化器串行化的最终输出**:
 
-```
+```java
 {
  "id":2,
  "itemName":"book",
@@ -428,7 +428,7 @@ public void givenBidirectionRelation_whenUsingCustomSerializer_thenCorrect()
 
 这里是"`User`"实体:
 
-```
+```java
 @JsonIdentityInfo(
   generator = ObjectIdGenerators.PropertyGenerator.class, 
   property = "id")
@@ -437,7 +437,7 @@ public class User { ... }
 
 和“`Item`”实体:
 
-```
+```java
 @JsonIdentityInfo(
   generator = ObjectIdGenerators.PropertyGenerator.class, 
   property = "id")
@@ -446,7 +446,7 @@ public class Item { ... }
 
 现在让我们编写一个快速测试——从我们想要解析的一些手动 JSON 数据开始，以正确构造的实体结束:
 
-```
+```java
 @Test
 public void givenBidirectionRelation_whenDeserializingWithIdentity_thenCorrect() 
   throws JsonProcessingException, IOException {
@@ -470,7 +470,7 @@ public void givenBidirectionRelation_whenDeserializingWithIdentity_thenCorrect()
 
 下面是"`User`"实体:
 
-```
+```java
 public class User {
     public int id;
     public String name;
@@ -482,7 +482,7 @@ public class User {
 
 而这里是我们的“`CustomListDeserializer`”:
 
-```
+```java
 public class CustomListDeserializer extends StdDeserializer<List<Item>>{
 
     public CustomListDeserializer() {
@@ -506,7 +506,7 @@ public class CustomListDeserializer extends StdDeserializer<List<Item>>{
 
 简单的测试是:
 
-```
+```java
 @Test
 public void givenBidirectionRelation_whenUsingCustomDeserializer_thenCorrect()
   throws JsonProcessingException, IOException {

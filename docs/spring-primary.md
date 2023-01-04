@@ -16,7 +16,7 @@
 
 在这个例子中，我们有`Employee`类型的`JohnEmployee()`和`TonyEmployee()`bean:
 
-```
+```java
 @Configuration
 public class Config {
 
@@ -44,7 +44,7 @@ public class Config {
 
 让我们来看看配置类:
 
-```
+```java
 @Configuration
 public class Config {
 
@@ -65,7 +65,7 @@ public class Config {
 
 现在，让我们启动应用程序上下文并从中获取`Employee` bean:
 
-```
+```java
 AnnotationConfigApplicationContext context
   = new AnnotationConfigApplicationContext(Config.class);
 
@@ -75,7 +75,7 @@ System.out.println(employee);
 
 运行应用程序后:
 
-```
+```java
 Employee{name='Tony'}
 ```
 
@@ -85,7 +85,7 @@ Employee{name='Tony'}
 
 我们可以直接在 beans 上使用@Primary。让我们来看看下面的场景:
 
-```
+```java
 public interface Manager {
     String getManagerName();
 }
@@ -93,7 +93,7 @@ public interface Manager {
 
 我们有一个`Manager`接口和两个子类 beans，`DepartmentManager`:
 
-```
+```java
 @Component
 public class DepartmentManager implements Manager {
     @Override
@@ -105,7 +105,7 @@ public class DepartmentManager implements Manager {
 
 还有`GeneralManager` 比恩:
 
-```
+```java
 @Component
 @Primary
 public class GeneralManager implements Manager {
@@ -120,7 +120,7 @@ public class GeneralManager implements Manager {
 
 这次， **`@Primary`只有在我们启用组件扫描**时才有意义:
 
-```
+```java
 @Configuration
 @ComponentScan(basePackages="org.baeldung.primary")
 public class Config {
@@ -129,7 +129,7 @@ public class Config {
 
 让我们创建一个服务来使用依赖注入，同时找到正确的 bean:
 
-```
+```java
 @Service
 public class ManagerService {
 
@@ -146,7 +146,7 @@ public class ManagerService {
 
 **由于我们用`@Primary`标记了`GeneralManager ` bean，它将被选中进行依赖注入**:
 
-```
+```java
 ManagerService service = context.getBean(ManagerService.class);
 Manager manager = service.getManager();
 System.out.println(manager.getManagerName());

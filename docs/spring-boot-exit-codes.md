@@ -24,7 +24,7 @@ Spring Boot 提供了四种方法，允许我们使用退出代码。
 
 让我们创建一个实现`ExitCodeGenerator` 接口`.` 的类。我们必须实现返回整数值的方法`getExitCode()`:
 
-```
+```java
 @SpringBootApplication
 public class ExitCodeGeneratorDemoApplication implements ExitCodeGenerator {
 
@@ -48,7 +48,7 @@ public class ExitCodeGeneratorDemoApplication implements ExitCodeGenerator {
 
 现在让我们看看如何让**基于运行时异常**返回一个退出代码。为此，我们实现了一个总是抛出一个`NumberFormatException`的`CommandLineRunner` ，然后注册了一个`ExitCodeExceptionMapper`类型的 bean:
 
-```
+```java
 @Bean
 CommandLineRunner createException() {
     return args -> Integer.parseInt("test") ;
@@ -72,7 +72,7 @@ ExitCodeExceptionMapper exitCodeToexceptionMapper() {
 
 接下来，我们将捕获一个`ExitCodeEvent`来读取我们的应用程序`.` 的退出代码。为此，我们只需**注册一个订阅** **`ExitCodeEvent` s** (在本例中命名为`DemoListener` )的事件监听器:
 
-```
+```java
 @Bean
 DemoListener demoListenerBean() {
     return new DemoListener();
@@ -92,7 +92,7 @@ private static class DemoListener {
 
 一个异常也可以实现`ExitCodeGenerator`接口。当抛出这样的异常时，Spring Boot 返回由实现的`getExitCode()`方法提供的退出代码。例如:
 
-```
+```java
 public class FailedToStartException extends RuntimeException implements ExitCodeGenerator {
 
     @Override

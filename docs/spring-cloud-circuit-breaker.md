@@ -24,7 +24,7 @@ Spring Cloud 网飞项目实际上只是一个基于注释的包装器库。因�
 
 **为了在我们的应用中使用特定的断路器实现，我们需要添加合适的弹簧启动器。**在我们的例子中，让我们用 [`spring-cloud-starter-circuitbreaker-resilience4j`](https://web.archive.org/web/20221208143837/https://search.maven.org/search?q=spring-cloud-starter-circuitbreaker-resilience4j) :
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
@@ -42,7 +42,7 @@ Spring Cloud 网飞项目实际上只是一个基于注释的包装器库。因�
 
 我们将构建一个简单的 web 服务来返回相册列表。假设原始列表是由第三方服务提供的。为了简单起见，我们将使用由 [Jsonplaceholder](https://web.archive.org/web/20221208143837/https://jsonplaceholder.typicode.com/) 提供的外部伪 API 来检索列表:
 
-```
+```java
 https://jsonplaceholder.typicode.com/albums
 ```
 
@@ -50,7 +50,7 @@ https://jsonplaceholder.typicode.com/albums
 
 让我们创造我们的第一个断路器。我们将从注入一个`CircuitBreakerFactory` bean 的实例开始:
 
-```
+```java
 @Service
 public class AlbumService {
 
@@ -64,7 +64,7 @@ public class AlbumService {
 
 现在，我们可以使用`CircuitBreakerFactory#create`方法轻松创建一个断路器。它将断路器标识符作为参数:
 
-```
+```java
 CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
 ```
 
@@ -72,7 +72,7 @@ CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
 
 为了包装和运行受断路器保护的任务，我们需要调用 r `un`方法，该方法将一个`Supplier`作为参数。
 
-```
+```java
 public String getAlbumList() {
     CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
     String url = "https://jsonplaceholder.typicode.com/albums";
@@ -85,7 +85,7 @@ public String getAlbumList() {
 
 有时，我们的外部服务可能需要很长时间来响应，抛出一个意外的异常，或者外部服务或主机不存在。在这种情况下，**我们可以提供一个回退**作为`run`方法的第二个参数:
 
-```
+```java
 public String getAlbumList() {
     CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
     String url = "http://localhost:1234/not-real";
@@ -105,7 +105,7 @@ public String getAlbumList() {
 
 现在，让我们完成我们的示例并创建一个简单的控制器，该控制器调用服务方法并通过浏览器呈现结果:
 
-```
+```java
 @RestController
 public class Controller {
 
@@ -122,7 +122,7 @@ public class Controller {
 
 最后，让我们调用 REST 服务并查看结果:
 
-```
+```java
 [GET] http://localhost:8080/albums
 ```
 
@@ -136,7 +136,7 @@ public class Controller {
 
 首先，我们将根据 [Resilience4j 教程](/web/20221208143837/https://www.baeldung.com/resilience4j)定义断路器和时间限制器配置类:
 
-```
+```java
 CircuitBreakerConfig circuitBreakerConfig = CircuitBreakerConfig.custom()
   .failureRateThreshold(50)
   .waitDurationInOpenState(Duration.ofMillis(1000))
@@ -149,7 +149,7 @@ TimeLimiterConfig timeLimiterConfig = TimeLimiterConfig.custom()
 
 接下来，让我们通过使用`Resilience4JCircuitBreakerFactory.configureDefault`方法将配置嵌入到`Customizer` bean 中:
 
-```
+```java
 @Configuration
 public class Resilience4JConfiguration {
     @Bean
@@ -171,7 +171,7 @@ public class Resilience4JConfiguration {
 
 类似地，我们可以定义一个或多个`Customizer`bean。然后，我们可以通过使用`Resilience4JCircuitBreakerFactory.configure`方法为每一个提供不同的配置:
 
-```
+```java
 @Bean
 public Customizer<Resilience4JCircuitBreakerFactory> specificCustomConfiguration1() {
 
@@ -186,7 +186,7 @@ public Customizer<Resilience4JCircuitBreakerFactory> specificCustomConfiguration
 
 我们还可以通过向相同的方法提供断路器 id 列表来设置多个具有相同配置的断路器:
 
-```
+```java
 @Bean
 public Customizer<Resilience4JCircuitBreakerFactory> specificCustomConfiguration2() {
 

@@ -16,7 +16,7 @@ Functional Java 库是一个开源库，旨在促进 Java 中的函数式编程�
 
 首先，我们需要将所需的[依赖项](https://web.archive.org/web/20221129012123/https://search.maven.org/search?q=g:org.functionaljava)添加到我们的`pom.xml` 文件中:
 
-```
+```java
 <dependency>
     <groupId>org.functionaljava</groupId>
     <artifactId>functionaljava</artifactId>
@@ -45,7 +45,7 @@ Functional Java 库是一个开源库，旨在促进 Java 中的函数式编程�
 
 如果没有函数式 Java，一个基本的乘法方法看起来会像这样:
 
-```
+```java
 public static final Integer timesTwoRegular(Integer i) {
     return i * 2;
 }
@@ -53,7 +53,7 @@ public static final Integer timesTwoRegular(Integer i) {
 
 使用函数式 Java 库，我们可以更优雅地定义这种功能:
 
-```
+```java
 public static final F<Integer, Integer> timesTwo = i -> i * 2;
 ```
 
@@ -61,7 +61,7 @@ public static final F<Integer, Integer> timesTwo = i -> i * 2;
 
 下面是另一个基本函数的例子，它将一个`Integer`作为输入，但是在这种情况下，返回一个`Boolean`来指示输入是偶数还是奇数:
 
-```
+```java
 public static final F<Integer, Boolean> isEven = i -> i % 2 == 0;
 ```
 
@@ -75,7 +75,7 @@ public static final F<Integer, Boolean> isEven = i -> i % 2 == 0;
 
 在下面的例子中，我们将定义一个整数列表，并对其应用我们的`timesTwo`函数。我们还将使用同一函数的内联定义来调用`map`。当然，我们希望结果是一样的:
 
-```
+```java
 public void multiplyNumbers_givenIntList_returnTrue() {
     List<Integer> fList = List.list(1, 2, 3, 4);
     List<Integer> fList1 = fList.map(timesTwo);
@@ -89,7 +89,7 @@ public void multiplyNumbers_givenIntList_returnTrue() {
 
 下面是一个使用我们的`isEven`函数的类似例子:
 
-```
+```java
 public void calculateEvenNumbers_givenIntList_returnTrue() {
     List<Integer> fList = List.list(3, 4, 5, 6);
     List<Boolean> evenList = fList.map(isEven);
@@ -101,7 +101,7 @@ public void calculateEvenNumbers_givenIntList_returnTrue() {
 
 **由于`map`方法返回一个列表，我们可以对它的输出应用另一个函数。**我们调用`map`函数的顺序会改变我们的结果输出:
 
-```
+```java
 public void applyMultipleFunctions_givenIntList_returnFalse() {
     List<Integer> fList = List.list(1, 2, 3, 4);
     List<Integer> fList1 = fList.map(timesTwo).map(plusOne);
@@ -113,7 +113,7 @@ public void applyMultipleFunctions_givenIntList_returnFalse() {
 
 上述列表的输出将是:
 
-```
+```java
 List(3,5,7,9)
 List(4,6,8,10)
 ```
@@ -124,7 +124,7 @@ List(4,6,8,10)
 
 现在，让我们使用`isEven`函数通过`filter`方法从输入数组中过滤出奇数:
 
-```
+```java
 public void filterList_givenIntList_returnResult() {
     Array<Integer> array = Array.array(3, 4, 5, 6);
     Array<Integer> filteredArray = array.filter(isEven);
@@ -144,7 +144,7 @@ public void filterList_givenIntList_returnResult() {
 
 **函数式 Java 库通过 [`exists`](https://web.archive.org/web/20221129012123/http://www.functionaljava.org/javadoc/4.4/functionaljava/fj/data/Option.html#exists-fj.F-) 和 [`forall`](https://web.archive.org/web/20221129012123/http://www.functionaljava.org/javadoc/4.4/functionaljava/fj/data/Option.html#forall-fj.F-) 方法:**为我们提供了这种逻辑的快捷方式
 
-```
+```java
 public void checkForLowerCase_givenStringArray_returnResult() {
     Array<String> array = Array.array("Welcome", "To", "baeldung");
     assertTrue(array.exists(s -> List.fromString(s).forall(Characters.isLowerCase)));
@@ -166,7 +166,7 @@ public void checkForLowerCase_givenStringArray_returnResult() {
 
 处理代码中的可选值通常需要`== null`或`isNotBlank`检查。Java 8 现在提供了`Optional`类来更优雅地处理这些检查，并且函数式 Java 库提供了类似的构造来通过其[选项](https://web.archive.org/web/20221129012123/http://www.functionaljava.org/javadoc/4.8.1/functionaljava/fj/data/Option.html)类优雅地处理缺失数据:
 
-```
+```java
 public void checkOptions_givenOptions_returnResult() {
     Option<Integer> n1 = Option.some(1);
     Option<Integer> n2 = Option.some(2);
@@ -194,7 +194,7 @@ public void checkOptions_givenOptions_returnResult() {
 
 根据函数在折叠时执行的操作，结果可能会有所不同，这取决于您是从右侧还是左侧开始折叠。这就是函数式 Java 库提供两个版本的原因:
 
-```
+```java
 public void foldLeft_givenArray_returnResult() {
     Array<Integer> intArray = Array.array(17, 44, 67, 2, 22, 80, 1, 27);
 

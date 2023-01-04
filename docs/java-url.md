@@ -10,7 +10,7 @@ URL 是对网络上资源的引用或地址。简单地说，通过网络通信�
 
 Java 平台附带内置的网络支持，打包在`java.net`包中:
 
-```
+```java
 import java.net.*;
 ```
 
@@ -18,7 +18,7 @@ import java.net.*;
 
 让我们首先创建一个`java.net.URL`对象，方法是使用它的构造函数并传入一个表示人类可读的资源地址的字符串:
 
-```
+```java
 URL url = new URL("/a-guide-to-java-sockets");
 ```
 
@@ -26,13 +26,13 @@ URL url = new URL("/a-guide-to-java-sockets");
 
 我们还可以创建**一个相对 URL**；假设我们有代表 Baeldung 主页的 URL 对象:
 
-```
+```java
 URL home = new URL("http://baeldung.com");
 ```
 
 接下来，让我们创建一个指向我们已经知道的资源的新 URL 我们将使用另一个构造函数，它接受一个现有的 URL 和一个相对于该 URL 的资源名:
 
-```
+```java
 URL url = new URL(home, "a-guide-to-java-sockets");
 ```
 
@@ -40,7 +40,7 @@ URL url = new URL(home, "a-guide-to-java-sockets");
 
 我们可以在一个测试中看到这一点:
 
-```
+```java
 @Test
 public void givenBaseUrl_whenCreatesRelativeUrl_thenCorrect() {
     URL baseUrl = new URL("http://baeldung.com");
@@ -53,7 +53,7 @@ public void givenBaseUrl_whenCreatesRelativeUrl_thenCorrect() {
 
 然而，如果检测到相对 URL 在其组成部分中是绝对的，则`baseURL`被忽略:
 
-```
+```java
 @Test
 public void givenAbsoluteUrl_whenIgnoresBaseUrl_thenCorrect() {
     URL baseUrl = new URL("http://baeldung.com");
@@ -81,7 +81,7 @@ URL 由几个部分组成——我们将在这一部分探讨。
 
 为了检索**协议**，我们使用`getProtocol()`方法:
 
-```
+```java
 @Test
 public void givenUrl_whenCanIdentifyProtocol_thenCorrect(){
     URL url = new URL("http://baeldung.com");
@@ -94,7 +94,7 @@ public void givenUrl_whenCanIdentifyProtocol_thenCorrect(){
 
 为了得到**端口**，我们使用`getPort()`方法:
 
-```
+```java
 @Test
 public void givenUrl_whenGetsDefaultPort_thenCorrect(){
     URL url = new URL("http://baeldung.com");
@@ -110,7 +110,7 @@ public void givenUrl_whenGetsDefaultPort_thenCorrect(){
 
 这里有一个例子，我们有一个明确定义的端口:
 
-```
+```java
 @Test
 public void givenUrl_whenGetsPort_thenCorrect(){
     URL url = new URL("http://baeldung.com:8090");
@@ -125,7 +125,7 @@ public void givenUrl_whenGetsPort_thenCorrect(){
 
 我们调用`getHost()`方法来检索主机名:
 
-```
+```java
 @Test
 public void givenUrl_whenCanGetHost_thenCorrect(){
     URL url = new URL("http://baeldung.com");
@@ -138,7 +138,7 @@ public void givenUrl_whenCanGetHost_thenCorrect(){
 
 URL 中主机名后面的内容被称为资源的**文件名。它可以包含路径和查询参数，也可以只包含文件名:**
 
-```
+```java
 @Test
 public void givenUrl_whenCanGetFileName_thenCorrect1() {
     URL url = new URL("http://baeldung.com/guidelines.txt");
@@ -149,7 +149,7 @@ public void givenUrl_whenCanGetFileName_thenCorrect1() {
 
 假设 Baeldung 在 URL `/articles?topic=java&version;=8`下有 java 8 的文章。主机名后面的所有内容都是文件名:
 
-```
+```java
 @Test
 public void givenUrl_whenCanGetFileName_thenCorrect2() {
     URL url = new URL("http://baeldung.com/articles?topic=java&version;=8");
@@ -162,7 +162,7 @@ public void givenUrl_whenCanGetFileName_thenCorrect2() {
 
 我们还可以只检查**路径**参数，在我们的例子中是`/articles`:
 
-```
+```java
 @Test
 public void givenUrl_whenCanGetPathParams_thenCorrect() {
     URL url = new URL("http://baeldung.com/articles?topic=java&version;=8");
@@ -175,7 +175,7 @@ public void givenUrl_whenCanGetPathParams_thenCorrect() {
 
 同样，我们可以检查**的查询参数**，也就是`topic=java&version;=8`:
 
-```
+```java
 @Test
 public void givenUrl_whenCanGetQueryParams_thenCorrect() {
     URL url = new URL("http://baeldung.com/articles?topic=java<em>&version=8</em>");
@@ -190,7 +190,7 @@ public void givenUrl_whenCanGetQueryParams_thenCorrect() {
 
 第一个构造函数分别接受协议、主机名和文件名:
 
-```
+```java
 @Test
 public void givenUrlComponents_whenConstructsCompleteUrl_thenCorrect() {
     String protocol = "http";
@@ -204,7 +204,7 @@ public void givenUrlComponents_whenConstructsCompleteUrl_thenCorrect() {
 
 请记住 filename 在此上下文中的含义，下面的测试应该会使它更清楚:
 
-```
+```java
 @Test
 public void givenUrlComponents_whenConstructsCompleteUrl_thenCorrect2() {
     String protocol = "http";
@@ -218,7 +218,7 @@ public void givenUrlComponents_whenConstructsCompleteUrl_thenCorrect2() {
 
 第二个构造函数分别接受协议、主机名、端口号和文件名:
 
-```
+```java
 @Test
 public void givenUrlComponentsWithPort_whenConstructsCompleteUrl_
   thenCorrect() {

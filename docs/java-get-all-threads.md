@@ -12,7 +12,7 @@
 
 让我们使用 [`printf()`](/web/20220529032210/https://www.baeldung.com/java-printstream-printf) 方法使输出更具可读性:
 
-```
+```java
 Set<Thread> threads = Thread.getAllStackTraces().keySet();
 System.out.printf("%-15s \t %-15s \t %-15s \t %s\n", "Name", "State", "Priority", "isDaemon");
 for (Thread t : threads) {
@@ -22,7 +22,7 @@ for (Thread t : threads) {
 
 输出将如下所示:
 
-```
+```java
 Name            	 State           	 Priority        	 isDaemon
 main            	 RUNNABLE        	 5               	 false
 Signal Dispatcher 	 RUNNABLE        	 9               	 true
@@ -46,7 +46,7 @@ Reference Handler 	 WAITING         	 10              	 true
 
 让我们给我们的`pom.xml`文件添加一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -56,7 +56,7 @@ Reference Handler 	 WAITING         	 10              	 true
 
 只需使用`getAllThreads()`方法来获取所有正在运行的线程:
 
-```
+```java
 System.out.printf("%-15s \t %-15s \t %-15s \t %s\n", "Name", "State", "Priority", "isDaemon");
 for (Thread t : ThreadUtils.getAllThreads()) {
     System.out.printf("%-15s \t %-15s \t %-15d \t %s\n", t.getName(), t.getState(), t.getPriority(), t.isDaemon());

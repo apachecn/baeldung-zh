@@ -14,7 +14,7 @@
 
 因此，我们需要做的就是在代码中导入以下内容:
 
-```
+```java
 import java.lang.reflect.*;
 ```
 
@@ -30,7 +30,7 @@ import java.lang.reflect.*;
 
 下面是 Person 类:
 
-```
+```java
 public class Person {
     private String name;
     private int age;
@@ -41,7 +41,7 @@ public class Person {
 
 为了体会反射的力量，让我们构造一个`Person`对象，并使用 object 作为引用类型:
 
-```
+```java
 @Test
 public void givenObject_whenGetsFieldNamesAtRuntime_thenCorrect() {
     Object person = new Person();
@@ -62,7 +62,7 @@ public void givenObject_whenGetsFieldNamesAtRuntime_thenCorrect() {
 
 这是一个非常基本的代码:
 
-```
+```java
 private static List<String> getFieldNames(Field[] fields) {
     List<String> fieldNames = new ArrayList<>();
     for (Field field : fields)
@@ -93,7 +93,7 @@ private static List<String> getFieldNames(Field[] fields) {
 
 首先，这里是`Eating`界面:
 
-```
+```java
 public interface Eating {
     String eats();
 }
@@ -101,7 +101,7 @@ public interface Eating {
 
 下面是`Eating`接口的具体`Animal`实现:
 
-```
+```java
 public abstract class Animal implements Eating {
 
     public static String CATEGORY = "domestic";
@@ -115,7 +115,7 @@ public abstract class Animal implements Eating {
 
 让我们也创建另一个名为`Locomotion`的界面来描述动物是如何移动的:
 
-```
+```java
 public interface Locomotion {
     String getLocomotion();
 }
@@ -125,7 +125,7 @@ public interface Locomotion {
 
 由于超类实现了`Eating`，`Goat`也必须实现该接口的方法:
 
-```
+```java
 public class Goat extends Animal implements Locomotion {
 
     @Override
@@ -153,7 +153,7 @@ public class Goat extends Animal implements Locomotion {
 
 让我们从从`Class`中获取一个对象的名称开始:
 
-```
+```java
 @Test
 public void givenObject_whenGetsClassName_thenCorrect() {
     Object goat = new Goat("goat");
@@ -169,7 +169,7 @@ public void givenObject_whenGetsClassName_thenCorrect() {
 
 让我们看看如何创建一个`Goat`类的对象，如果我们只知道它的完全限定类名:
 
-```
+```java
 @Test
 public void givenClassName_whenCreatesObject_thenCorrect(){
     Class<?> clazz = Class.forName("com.baeldung.reflection.Goat");
@@ -190,7 +190,7 @@ public void givenClassName_whenCreatesObject_thenCorrect(){
 
 让我们确认一下上面定义的一些类的修饰符:
 
-```
+```java
 @Test
 public void givenClass_whenRecognisesModifiers_thenCorrect() {
     Class<?> goatClass = Class.forName("com.baeldung.reflection.Goat");
@@ -215,7 +215,7 @@ public void givenClass_whenRecognisesModifiers_thenCorrect() {
 
 让我们运行一个测试来检索包名:
 
-```
+```java
 @Test
 public void givenClass_whenGetsPackageInfo_thenCorrect() {
     Goat goat = new Goat("goat");
@@ -236,7 +236,7 @@ public void givenClass_whenGetsPackageInfo_thenCorrect() {
 
 此外，我们还表明`java.lang.String`类是`java.lang.Object`类的子类:
 
-```
+```java
 @Test
 public void givenClass_whenGetsSuperClass_thenCorrect() {
     Goat goat = new Goat("goat");
@@ -256,7 +256,7 @@ public void givenClass_whenGetsSuperClass_thenCorrect() {
 
 让我们检索由`Goat`类和`Animal`抽象类实现的接口的类类型:
 
-```
+```java
 @Test
 public void givenClass_whenGetsImplementedInterfaces_thenCorrect(){
     Class<?> goatClass = Class.forName("com.baeldung.reflection.Goat");
@@ -288,7 +288,7 @@ public void givenClass_whenGetsImplementedInterfaces_thenCorrect(){
 
 让我们看看如何获得`Goat`类的构造函数:
 
-```
+```java
 @Test
 public void givenClass_whenGetsConstructor_thenCorrect(){
     Class<?> goatClass = Class.forName("com.baeldung.reflection.Goat");
@@ -302,7 +302,7 @@ public void givenClass_whenGetsConstructor_thenCorrect(){
 
 我们还可以检查`Animal`类的字段:
 
-```
+```java
 @Test
 public void givenClass_whenGetsFields_thenCorrect(){
     Class<?> animalClass = Class.forName("com.baeldung.reflection.Animal");
@@ -317,7 +317,7 @@ public void givenClass_whenGetsFields_thenCorrect(){
 
 我们同样可以检查`Animal`类的方法:
 
-```
+```java
 @Test
 public void givenClass_whenGetsMethods_thenCorrect(){
     Class<?> animalClass = Class.forName("com.baeldung.reflection.Animal");
@@ -332,7 +332,7 @@ public void givenClass_whenGetsMethods_thenCorrect(){
 
 就像`getFieldNames`一样，我们添加了一个 helper 方法来从一组`Method`对象中检索方法名:
 
-```
+```java
 private static List<String> getMethodNames(Method[] methods) {
     List<String> methodNames = new ArrayList<>();
     for (Method method : methods)
@@ -355,7 +355,7 @@ private static List<String> getMethodNames(Method[] methods) {
 
 我们不会实现`Locomotion`,因此我们可以使用构造函数参数来指定该行为，以增加更多的多样性:
 
-```
+```java
 public class Bird extends Animal {
     private boolean walks;
 
@@ -382,7 +382,7 @@ public class Bird extends Animal {
 
 让我们通过使用反射来确认这个类有三个构造函数:
 
-```
+```java
 @Test
 public void givenClass_whenGetsAllConstructors_thenCorrect() {
     Class<?> birdClass = Class.forName("com.baeldung.reflection.Bird");
@@ -394,7 +394,7 @@ public void givenClass_whenGetsAllConstructors_thenCorrect() {
 
 接下来，我们将通过以声明的顺序传递构造函数的参数类类型来检索`Bird`类的每个构造函数:
 
-```
+```java
 @Test
 public void givenClass_whenGetsEachConstructorByParamTypes_thenCorrect(){
     Class<?> birdClass = Class.forName("com.baeldung.reflection.Bird");
@@ -409,7 +409,7 @@ public void givenClass_whenGetsEachConstructorByParamTypes_thenCorrect(){
 
 在最后一个测试中，我们将看到如何在运行时实例化对象，同时提供它们的参数:
 
-```
+```java
 @Test
 public void givenClass_whenInstantiatesObjectsAtRuntime_thenCorrect() {
     Class<?> birdClass = Class.forName("com.baeldung.reflection.Bird");
@@ -449,7 +449,7 @@ public void givenClass_whenInstantiatesObjectsAtRuntime_thenCorrect() {
 
 例如，当我们在`Bird`类上调用这个方法时，我们将只得到它的超类`Animal`的`CATEGORY`字段，因为`Bird`本身没有声明任何公共字段:
 
-```
+```java
 @Test
 public void givenClass_whenGetsPublicFields_thenCorrect() {
     Class<?> birdClass = Class.forName("com.baeldung.reflection.Bird");
@@ -462,7 +462,7 @@ public void givenClass_whenGetsPublicFields_thenCorrect() {
 
 这个方法还有一个名为`getField`的变体，它通过取字段的名称只返回一个`Field`对象:
 
-```
+```java
 @Test
 public void givenClass_whenGetsPublicFieldByName_thenCorrect() {
     Class<?> birdClass = Class.forName("com.baeldung.reflection.Bird");
@@ -476,7 +476,7 @@ public void givenClass_whenGetsPublicFieldByName_thenCorrect() {
 
 然而，我们可以通过调用`getDeclaredFields`方法来检查我们正在处理的类中声明的私有字段:
 
-```
+```java
 @Test
 public void givenClass_whenGetsDeclaredFields_thenCorrect(){
     Class<?> birdClass = Class.forName("com.baeldung.reflection.Bird");
@@ -489,7 +489,7 @@ public void givenClass_whenGetsDeclaredFields_thenCorrect(){
 
 如果我们知道字段的名称，我们也可以使用它的另一个变体:
 
-```
+```java
 @Test
 public void givenClass_whenGetsFieldsByName_thenCorrect() {
     Class<?> birdClass = Class.forName("com.baeldung.reflection.Bird");
@@ -503,7 +503,7 @@ public void givenClass_whenGetsFieldsByName_thenCorrect() {
 
 现在我们将得到字段类型:
 
-```
+```java
 @Test
 public void givenClassField_whenGetsType_thenCorrect() {
     Field field = Class.forName("com.baeldung.reflection.Bird")
@@ -518,7 +518,7 @@ public void givenClassField_whenGetsType_thenCorrect() {
 
 要获取一个字段的值，更不用说设置它了，我们必须首先通过调用`Field`对象上的`setAccessible`方法并向其传递布尔`true`来设置它的可访问性:
 
-```
+```java
 @Test
 public void givenClassField_whenSetsAndGetsValue_thenCorrect() {
     Class<?> birdClass = Class.forName("com.baeldung.reflection.Bird");
@@ -544,7 +544,7 @@ public void givenClassField_whenSetsAndGetsValue_thenCorrect() {
 
 我们可以只传递`null`来代替它，并且仍然获得该字段的默认值:
 
-```
+```java
 @Test
 public void givenClassField_whenGetsAndSetsWithNull_thenCorrect(){
     Class<?> birdClass = Class.forName("com.baeldung.reflection.Bird");
@@ -565,7 +565,7 @@ public void givenClassField_whenGetsAndSetsWithNull_thenCorrect(){
 
 这意味着通过这个方法，我们可以得到`java.lang.Object`类的公共方法，比如`toString`、`hashCode`和`notifyAll`:
 
-```
+```java
 @Test
 public void givenClass_whenGetsAllPublicMethods_thenCorrect(){
     Class<?> birdClass = Class.forName("com.baeldung.reflection.Bird");
@@ -580,7 +580,7 @@ public void givenClass_whenGetsAllPublicMethods_thenCorrect(){
 
 为了只获得我们感兴趣的类的公共方法，我们必须使用`getDeclaredMethods`方法:
 
-```
+```java
 @Test
 public void givenClass_whenGetsOnlyDeclaredMethods_thenCorrect(){
     Class<?> birdClass = Class.forName("com.baeldung.reflection.Bird");
@@ -598,7 +598,7 @@ public void givenClass_whenGetsOnlyDeclaredMethods_thenCorrect(){
 
 这些方法中的每一个都有一个单独的变体，返回一个我们知道名字的`Method`对象:
 
-```
+```java
 @Test
 public void givenMethodName_whenGetsMethod_thenCorrect() throws Exception {
     Bird bird = new Bird();
@@ -618,7 +618,7 @@ public void givenMethodName_whenGetsMethod_thenCorrect() throws Exception {
 
 我们想调用它的`setWalks`方法，并将其设置为`true`:
 
-```
+```java
 @Test
 public void givenMethod_whenInvokes_thenCorrect() {
     Class<?> birdClass = Class.forName("com.baeldung.reflection.Bird");

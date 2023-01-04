@@ -14,13 +14,13 @@
 
 在 WildFly 安装主目录中，`standalone.xml`可以在`standalone/configuration`文件夹中找到。我们可以在任何文本编辑器中打开该文件，并在下面一行中用我们选择的任何端口替换默认端口 8080:
 
-```
+```java
 <socket-binding name="http" port="${jboss.http.port:8080}"/>
 ```
 
 还有一种方法可以通过调整 XML 来更改默认端口。在同一个`standalone.xml`中，我们可以**为端口**设置一个偏移值:
 
-```
+```java
 <socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}">
 ```
 
@@ -34,13 +34,13 @@
 
 **对于 Windows:**
 
-```
+```java
 standalone.bat -Djboss.http.port=<Desired_Port_Number>
 ```
 
 **对于 Unix/Linux:**
 
-```
+```java
 standalone.sh -Djboss.http.port=<Desired_Port_Number>
 ```
 

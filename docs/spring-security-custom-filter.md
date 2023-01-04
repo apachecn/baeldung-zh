@@ -32,7 +32,7 @@ A quick and practical guide to Spring Boot's default Spring Security configurati
 
 我们只需要实现一个方法:
 
-```
+```java
 public class CustomFilter extends GenericFilterBean {
 
     @Override
@@ -55,7 +55,7 @@ public class CustomFilter extends GenericFilterBean {
 
 例如，它与 [`HttpSecurity`](https://web.archive.org/web/20221208143815/https://docs.spring.io/spring-security/site/docs/5.0.0.M5/api/org/springframework/security/config/annotation/web/builders/HttpSecurity.html) 实例上的`addFilterAfter`方法一起工作:
 
-```
+```java
 @Configuration
 public class CustomWebSecurityConfigurerAdapter {
 
@@ -81,7 +81,7 @@ public class CustomWebSecurityConfigurerAdapter {
 
 例如，它可以由`after`属性指出:
 
-```
+```java
 <http>
     <custom-filter after="BASIC_AUTH_FILTER" ref="myFilter" />
 </http>

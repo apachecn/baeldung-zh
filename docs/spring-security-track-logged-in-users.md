@@ -14,7 +14,7 @@
 
 为了简单起见，我们将为登录用户定义一个充当内存存储的类: 
 
-```
+```java
 public class ActiveUserStore {
 
     public List<String> users;
@@ -29,7 +29,7 @@ public class ActiveUserStore {
 
 我们将把它定义为 Spring 上下文中的标准 bean:
 
-```
+```java
 @Bean
 public ActiveUserStore activeUserStore(){
     return new ActiveUserStore();
@@ -42,7 +42,7 @@ public ActiveUserStore activeUserStore(){
 
 这将基本上侦听类型为`HttpSessionBindingEvent`的事件，每当设置或删除值时，或者换句话说，绑定或解除绑定到 HTTP 会话时，都会触发这些事件:
 
-```
+```java
 @Component
 public class LoggedUser implements HttpSessionBindingListener, Serializable {
 
@@ -93,7 +93,7 @@ public class LoggedUser implements HttpSessionBindingListener, Serializable {
 
 对于登录操作，我们将通过覆盖为我们提供对`session`和`authentication`对象的访问的`onAuthenticationSuccess()`方法，将登录用户的用户名设置为会话的一个属性:
 
-```
+```java
 @Component("myAuthenticationSuccessHandler")
 public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
@@ -117,7 +117,7 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
 
 对于注销操作，我们将通过覆盖`LogoutSuccessHandler`接口的`onLogoutSuccess()`方法来删除用户属性:
 
-```
+```java
 @Component("myLogoutSuccessHandler")
 public class MyLogoutSuccessHandler implements LogoutSuccessHandler{
     @Override
@@ -138,7 +138,7 @@ public class MyLogoutSuccessHandler implements LogoutSuccessHandler{
 
 ### 5.1。控制器
 
-```
+```java
 @Controller
 public class UserController {
 
@@ -155,7 +155,7 @@ public class UserController {
 
 ### 5.2。Users.html
 
-```
+```java
 <html>
 <body>
     <h2>Currently logged in users</h2>
@@ -172,7 +172,7 @@ public class UserController {
 
 对于每个用户，我们可以通过调用方法`getAllSessions()`来查看他们所有会话的列表。为了只获取当前登录的用户，我们必须通过将`getAllSessions()`的第二个参数设置为`false`来排除过期的会话:
 
-```
+```java
 @Autowired
 private SessionRegistry sessionRegistry;
 
@@ -187,7 +187,7 @@ public List<String> getUsersFromSessionRegistry() {
 
 为了使用`SessionRegistry`类，我们必须定义 bean 并将其应用于会话管理，如下所示:
 
-```
+```java
 http
   .sessionManagement()
   .maximumSessions(1).sessionRegistry(sessionRegistry())

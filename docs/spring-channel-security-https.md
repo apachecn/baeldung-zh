@@ -22,7 +22,7 @@
 
 访问由以下配置控制:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests() 
@@ -40,7 +40,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 或者通过 XML:
 
-```
+```java
 <http use-expressions="true">
     <intercept-url pattern="/anonymous*" access="isAnonymous()"/>
     <intercept-url pattern="/login*" access="permitAll"/>
@@ -50,7 +50,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 此时，登录页面位于:
 
-```
+```java
 http://localhost:8080/spring-security-login/login.html
 ```
 
@@ -66,7 +66,7 @@ http://localhost:8080/spring-security-login/login.html
 
 可以在终端中发出以下命令来生成密钥库:
 
-```
+```java
 keytool -genkey -alias tomcat -keyalg RSA -storepass changeit -keypass changeit -dname 'CN=tomcat'
 ```
 
@@ -74,7 +74,7 @@ keytool -genkey -alias tomcat -keyalg RSA -storepass changeit -keypass changeit 
 
 下一步是编辑`conf/server.xml`,使其看起来像这样:
 
-```
+```java
 <Connector port="8080" protocol="HTTP/1.1"
    connectionTimeout="20000"
    redirectPort="8443" />
@@ -89,7 +89,7 @@ keytool -genkey -alias tomcat -keyalg RSA -storepass changeit -keypass changeit 
 
 HTTPS 配置就绪后，登录页面现在也可以在以下 URL 下提供:
 
-```
+```java
 https://localhost:8443/spring-security-login/login.html
 ```
 
@@ -101,14 +101,14 @@ https://localhost:8443/spring-security-login/login.html
 
 **要在登录页面**要求 HTTPS，请通过添加以下内容来修改您的安全配置:
 
-```
+```java
 http.requiresChannel()
   .antMatchers("/login*").requiresSecure();
 ```
 
 或者将`requires-channel=”https”`属性添加到 XML 配置中:
 
-```
+```java
 <intercept-url pattern="/login*" access="permitAll" requires-channel="https"/>
 ```
 
@@ -122,14 +122,14 @@ http.requiresChannel()
 
 但是，如果不能选择只使用 HTTPS，我们可以通过在配置中添加以下内容来配置 Spring 使用 HTTP:
 
-```
+```java
 http.requiresChannel()
   .anyRequest().requiresInsecure();
 ```
 
 或者在 XML 中添加`requires-channel=”http”`属性:
 
-```
+```java
 <intercept‐url pattern="/**" access="isAuthenticated()" requires‐channel="http"/>
 ```
 
@@ -139,7 +139,7 @@ http.requiresChannel()
 
 原始安全教程中的安全配置包含以下内容:
 
-```
+```java
 <form-login login-processing-url="/perform_login"/>
 ```
 
@@ -147,7 +147,7 @@ http.requiresChannel()
 
 为了克服这个问题，我们需要配置 Spring 来使用 HTTPS 来处理 URL:
 
-```
+```java
 http.requiresChannel()
   .antMatchers("/login*", "/perform_login");
 ```
@@ -156,7 +156,7 @@ http.requiresChannel()
 
 XML 配置中的等效内容需要向配置中添加一个新的`<` `intercept-url>`元素:
 
-```
+```java
 <intercept-url pattern="/perform_login" requires-channel="https"/>
 ```
 
@@ -172,7 +172,7 @@ XML 配置中的等效内容需要向配置中添加一个新的`<` `intercept-u
 
 为了避免这种 **s** **设置`[session-fixation-protection](https://web.archive.org/web/20220926195606/https://docs.spring.io/spring-security/site/docs/5.2.12.RELEASE/reference/html/jc-authentication.html#ns-session-fixation)` 到`none`需要**。
 
-```
+```java
 http.sessionManagement()
   .sessionFixation()
   .none();
@@ -180,7 +180,7 @@ http.sessionManagement()
 
 或者通过 XML:
 
-```
+```java
 <session-management session-fixation-protection="none"/> 
 ```
 

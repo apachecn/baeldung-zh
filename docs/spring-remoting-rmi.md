@@ -18,7 +18,7 @@ Java `Remote Method Invocation`允许调用驻留在不同的`Java Virtual Machi
 
 现在让我们继续进行通常的`spring-boot-starter-web`——记住移除`Tomcat`依赖性以排除嵌入式 web 服务:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -35,7 +35,7 @@ Java `Remote Method Invocation`允许调用驻留在不同的`Java Virtual Machi
 
 我们将开始声明一个接口，该接口定义了一个预订出租车的服务，该服务最终将向客户端公开:
 
-```
+```java
 public interface CabBookingService {
     Booking bookRide(String pickUpLocation) throws BookingException;
 }
@@ -43,7 +43,7 @@ public interface CabBookingService {
 
 然后我们将定义一个实现接口的 bean。这是将在服务器上实际执行业务逻辑的 bean:
 
-```
+```java
 @Bean 
 CabBookingService bookingService() {
     return new CabBookingServiceImpl();
@@ -52,7 +52,7 @@ CabBookingService bookingService() {
 
 让我们继续声明使服务对客户端可用的`Exporter`。在这种情况下，我们将使用`RmiServiceExporter`:
 
-```
+```java
 @Bean 
 RmiServiceExporter exporter(CabBookingService implementation) {
     Class<CabBookingService> serviceInterface = CabBookingService.class;
@@ -81,7 +81,7 @@ RmiServiceExporter exporter(CabBookingService implementation) {
 
 我们开始声明`RmiProxyFactoryBean`,它将创建一个 bean，该 bean 具有由运行在服务器端的服务公开的相同接口，并且它将透明地将接收到的调用路由到服务器:
 
-```
+```java
 @Bean 
 RmiProxyFactoryBean service() {
     RmiProxyFactoryBean rmiProxyFactory = new RmiProxyFactoryBean();
@@ -93,7 +93,7 @@ RmiProxyFactoryBean service() {
 
 接下来，让我们编写一个简单的代码来启动客户端应用程序，并使用上一步中定义的代理:
 
-```
+```java
 public static void main(String[] args) throws BookingException {
     CabBookingService service = SpringApplication
       .run(RmiClient.class, args).getBean(CabBookingService.class);

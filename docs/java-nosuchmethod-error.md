@@ -20,7 +20,7 @@
 
 让我们通过一个例子来看看这个错误。为此，我们将创建两个类。第一个是`SpecialToday` ，它将列出餐馆当天的特色菜:
 
-```
+```java
 public class SpecialToday {
     private static String desert = "Chocolate Cake";
 
@@ -32,7 +32,7 @@ public class SpecialToday {
 
 第二个类`MainMenu`从`SpecialsToday:` 调用方法
 
-```
+```java
 public class MainMenu {
     public static void main(String[] args) {
         System.out.println("Today's Specials: " + getSpecials());
@@ -46,13 +46,13 @@ public class MainMenu {
 
 这里的输出将是:
 
-```
+```java
 Today's Specials: Chocolate Cake
 ```
 
 接下来，我们将删除`SpecialToday` 中的方法 getDesert()，只重新编译这个更新后的类。这一次，当我们运行我们的`MainMenu,` 时，我们注意到以下运行时错误:
 
-```
+```java
 Exception in thread "main" java.lang.NoSuchMethodError: SpecialToday.getDesert()Ljava/lang/String;
 ```
 
@@ -66,7 +66,7 @@ Exception in thread "main" java.lang.NoSuchMethodError: SpecialToday.getDesert()
 
 然而，如果我们在运行时仍然遇到这个错误，我们将不得不更深入地挖掘。我们必须**确保编译时和运行时类和 jar 有相同的版本**。为此，我们可以**用-verbose: class 选项**运行应用程序来检查加载的类。我们可以如下运行该命令:
 
-```
+```java
 $ java -verbose:class com.baeldung.exceptions.nosuchmethoderror.MainMenu
 [0.014s][info][class,load] opened: /usr/lib/jvm/java-11-openjdk-amd64/lib/modules
 [0.015s][info][class,load] opened: /usr/share/java/java-atk-wrapper.jar
@@ -78,7 +78,7 @@ $ java -verbose:class com.baeldung.exceptions.nosuchmethoderror.MainMenu
 
 我们还应该**确保在两个或更多的 jar 中没有重复的类**。在大多数情况下，maven 将直接帮助控制冲突的依赖关系。此外，我们可以运行`mvn dependency: tree`命令来获得项目的依赖树，如下所示:
 
-```
+```java
 $ mvn dependency:tree
 [INFO] Scanning for projects...
 [INFO]

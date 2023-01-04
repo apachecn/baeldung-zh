@@ -18,7 +18,7 @@
 
 让我们从在`pom.xml`中添加 Google 的番石榴库依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -34,14 +34,14 @@
 
 *   使用`TreeRangeMap`类中的`create`方法创建一个可变映射:
 
-```
+```java
 RangeMap<Integer, String> experienceRangeDesignationMap
   = TreeRangeMap.create();
 ```
 
 *   如果我们打算创建一个不可变的范围映射，使用`ImmutableRangeMap`类(它遵循一个构建器模式):
 
-```
+```java
 RangeMap<Integer, String> experienceRangeDesignationMap
   = new ImmutableRangeMap.<Integer, String>builder()
   .put(Range.closed(0, 2), "Associate")
@@ -56,7 +56,7 @@ RangeMap<Integer, String> experienceRangeDesignationMap
 
 我们可以得到一个与某个整数范围内的值相关联的值:
 
-```
+```java
 @Test
 public void givenRangeMap_whenQueryWithinRange_returnsSucessfully() {
     RangeMap<Integer, String> experienceRangeDesignationMap 
@@ -90,7 +90,7 @@ public void givenRangeMap_whenQueryWithinRange_returnsSucessfully() {
 
 让我们看看如何删除值。在本例中，我们展示了如何删除与整个范围相关联的值。我们还展示了如何基于部分键范围删除值:
 
-```
+```java
 @Test
 public void givenRangeMap_whenRemoveRangeIsCalled_removesSucessfully() {
     RangeMap<Integer, String> experienceRangeDesignationMap 
@@ -123,7 +123,7 @@ public void givenRangeMap_whenRemoveRangeIsCalled_removesSucessfully() {
 
 如果我们想知道一个`RangeMap` 的总跨度是多少，我们可以使用`span`方法:
 
-```
+```java
 @Test
 public void givenRangeMap_whenSpanIsCalled_returnsSucessfully() {
     RangeMap<Integer, String> experienceRangeDesignationMap = TreeRangeMap.create();
@@ -143,7 +143,7 @@ public void givenRangeMap_whenSpanIsCalled_returnsSucessfully() {
 
 当我们想从`RangeMap`中选择一个零件时，我们可以使用`subRangeMap`方法:
 
-```
+```java
 @Test
 public void givenRangeMap_whenSubRangeMapIsCalled_returnsSubRangeSuccessfully() {
     RangeMap<Integer, String> experienceRangeDesignationMap = TreeRangeMap.create();
@@ -173,7 +173,7 @@ public void givenRangeMap_whenSubRangeMapIsCalled_returnsSubRangeSuccessfully() 
 
 最后，如果我们从一个`RangeMap`中寻找一个`Entry`，我们使用`getEntry`方法:
 
-```
+```java
 @Test
 public void givenRangeMap_whenGetEntryIsCalled_returnsEntrySucessfully() {
     RangeMap<Integer, String> experienceRangeDesignationMap 

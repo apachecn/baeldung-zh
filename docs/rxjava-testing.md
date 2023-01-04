@@ -24,7 +24,7 @@
 
 下面是该测试的有限版本:
 
-```
+```java
 List<String> letters = Arrays.asList("A", "B", "C", "D", "E");
 List<String> results = new ArrayList<>();
 Observable<String> observable = Observable
@@ -48,7 +48,7 @@ RxJava 附带了一个`TestSubsriber`类，允许我们编写使用异步事件�
 
 在测试中，我们可以检查一个`TestSubscriber`的状态，并对该状态做出断言:
 
-```
+```java
 List<String> letters = Arrays.asList("A", "B", "C", "D", "E");
 TestSubscriber<String> subscriber = new TestSubscriber<>();
 
@@ -80,7 +80,7 @@ assertThat(
 
 有时在我们的处理过程中，当一个可观察对象正在发射事件或者一个观察者正在处理事件时，就会发生错误。`TestSubscriber`有一个检查错误状态的特殊方法——`assertError()` 方法将异常的类型作为参数:
 
-```
+```java
 List<String> letters = Arrays.asList("A", "B", "C", "D", "E");
 TestSubscriber<String> subscriber = new TestSubscriber<>();
 
@@ -105,7 +105,7 @@ subscriber.assertNotCompleted();
 
 我们可以使用`Observable.interval()` 方法定义一个基于时间的`Observable`，并传递一个`TimeUnit` 作为参数:
 
-```
+```java
 List<String> letters = Arrays.asList("A", "B", "C", "D", "E");
 TestScheduler scheduler = new TestScheduler();
 TestSubscriber<String> subscriber = new TestSubscriber<>();
@@ -122,20 +122,20 @@ observable.subscribeOn(scheduler)
 
 在测试开始时，我们处于时间零点，因此我们的`TestSubscriber`将不会完成:
 
-```
+```java
 subscriber.assertNoValues();
 subscriber.assertNotCompleted();
 ```
 
 为了在测试中模拟时间流逝，我们需要使用一个`[TestScheduler](https://web.archive.org/web/20220815040207/http://reactivex.io/RxJava/javadoc/rx/schedulers/TestScheduler.html)` 类。我们可以通过在一个`TestScheduler`上调用`advanceTimeBy()` 方法来模拟这一秒钟的过程:
 
-```
+```java
 scheduler.advanceTimeBy(1, TimeUnit.SECONDS);
 ```
 
 `advanceTimeBy()` 方法将使一个可观察产生一个事件。我们可以断言一个事件是通过调用一个`assertValueCount()` 方法产生的:
 
-```
+```java
 subscriber.assertNoErrors();
 subscriber.assertValueCount(1);
 subscriber.assertValues("0-A");
@@ -143,7 +143,7 @@ subscriber.assertValues("0-A");
 
 我们的列表`letters` 中有 5 个元素，所以当我们想让一个可观察对象发出所有事件时，需要经过 6 秒钟的处理。为了模拟这 6 秒，我们使用了`advanceTimeTo()`方法:
 
-```
+```java
 scheduler.advanceTimeTo(6, TimeUnit.SECONDS);
 
 subscriber.assertCompleted();

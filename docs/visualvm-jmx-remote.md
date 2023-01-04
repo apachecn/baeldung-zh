@@ -30,7 +30,7 @@ JVM 通过像`[jstatd](https://web.archive.org/web/20220815124213/https://docs.o
 
 正如我们前面看到的，我们的 JDK 版本可以与 VisualVM 捆绑在一起，也可以不捆绑。在任一情况下，我们都可以通过执行适当的二进制文件来启动它:
 
-```
+```java
 ./jvisualvm
 ```
 
@@ -61,7 +61,7 @@ VisualVM 提供了几个有用的特性:
 
 假设我们有一个打包成`MyApp.jar`的应用程序，让我们看一个包含主要 JMX 配置参数的启动命令示例:
 
-```
+```java
 java -Dcom.sun.management.jmxremote.port=8080 
 -Dcom.sun.management.jmxremote.ssl=false 
 -Dcom.sun.management.jmxremote.authenticate=false 

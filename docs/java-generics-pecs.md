@@ -14,7 +14,7 @@
 
 **必须从产品系列的角度来理解 PECS 规则，这一点很重要。**换句话说，如果我们遍历一个`List` 并处理它的元素，列表将作为我们逻辑的生产者:
 
-```
+```java
 public void sendEmails(List<User> users) {
     for (User user : users) {
         System.out.println("sending email to " + user);
@@ -28,7 +28,7 @@ public void sendEmails(List<User> users) {
 
 为了解决这个问题，我们可以按照 PECS 规则更新`sendEmail`方法。因为用户列表是我们逻辑的一个`producer`，我们将使用`extends`关键字:
 
-```
+```java
 public void sendEmailsFixed(List<? extends User> users) {
     for (User user : users) {
         System.out.println("sending email to " + user);
@@ -38,7 +38,7 @@ public void sendEmailsFixed(List<? extends User> users) {
 
 因此，我们现在可以轻松地为任何泛型类型的列表调用该方法，只要它们继承自`User`类:
 
-```
+```java
 List<Operator> operators = Arrays.asList(new Operator("sam"), new Operator("daniel"));
 List<Customer> customers = Arrays.asList(new Customer("john"), new Customer("arys"));
 
@@ -50,7 +50,7 @@ sendEmailsFixed(customers);
 
 当我们向集合中添加元素时，我们成为生产者，而列表将充当消费者。让我们编写一个方法，它接收一个`Operator`列表，并向其中添加两个元素:
 
-```
+```java
 private void addUsersFromMarketingDepartment(List<Operator> users) {
     users.add(new Operator("john doe"));
     users.add(new Operator("jane doe"));
@@ -61,7 +61,7 @@ private void addUsersFromMarketingDepartment(List<Operator> users) {
 
 因此，我们需要更新这个方法，让它接受一组`Operator`或它的前辈，使用`super`关键字:
 
-```
+```java
 private void addUsersFromMarketingDepartmentFixed(List<? super Operator> users) {
     users.add(new Operator("john doe"));
     users.add(new Operator("jane doe"));
@@ -74,7 +74,7 @@ private void addUsersFromMarketingDepartmentFixed(List<? super Operator> users) 
 
 处理这些情况的唯一方法是使用基类，不使用任何关键字:
 
-```
+```java
 private void addUsersAndSendEmails(List<User> users) {
     users.add(new Operator("john doe"));
     for (User user : users) {

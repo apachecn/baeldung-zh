@@ -12,7 +12,7 @@
 
 要使用 Apache Commons IO，需要在`pom`中添加以下依赖关系:
 
-```
+```java
 <dependency>
     <groupId>commons-io</groupId>
     <artifactId>commons-io</artifactId>
@@ -43,7 +43,7 @@
 
 相反，Apache Commons IO 库在`FileAlterationListener`接口上提供了回调方法，当检测到文件系统位置或目录发生变化时，就会调用这些方法。
 
-```
+```java
 FileAlterationObserver observer = new FileAlterationObserver("pathToDir");
 FileAlterationMonitor monitor = new FileAlterationMonitor(POLL_INTERVAL);
 FileAlterationListener listener = new FileAlterationListenerAdaptor() {

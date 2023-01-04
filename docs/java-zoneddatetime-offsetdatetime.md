@@ -16,14 +16,14 @@
 
 为了获得特定区域的当前`ZonedDateTime`,我们将使用:
 
-```
+```java
 ZoneId zone = ZoneId.of("Europe/Berlin");
 ZonedDateTime zonedDateTime = ZonedDateTime.now(zone);
 ```
 
 `ZonedDateTime`类还提供了将给定日期从一个时区转换到另一个时区的内置方法:
 
-```
+```java
 ZonedDateTime destZonedDateTime = sourceZonedDateTime.withZoneSameInstant(destZoneId);
 ```
 
@@ -35,7 +35,7 @@ ZonedDateTime destZonedDateTime = sourceZonedDateTime.withZoneSameInstant(destZo
 
 让我们从 GMT/UTC 得到当前的`OffsetDateTime `,有两个小时的时差:
 
-```
+```java
 ZoneOffset zoneOffSet= ZoneOffset.of("+02:00");
 OffsetDateTime offsetDateTime = OffsetDateTime.now(zoneOffSet);
 ```

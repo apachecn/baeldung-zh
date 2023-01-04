@@ -10,7 +10,7 @@
 
 **`ENV`语句可用于更新`PATH` 变量。**让我们写一个例子`[Dockerfile](/web/20220926111009/https://www.baeldung.com/ops/docker-compose#2-building-an-image)`来展示这种行为:
 
-```
+```java
 FROM ubuntu:latest
 RUN echo $PATH
 ENV PATH="$PATH:/etc/profile"
@@ -21,7 +21,7 @@ RUN echo $PATH
 
 让我们建立自己的形象:
 
-```
+```java
 $ docker build -t baeldungimage .
 #4 [1/3] FROM docker.io/library/ubuntu:latest
 #5 [2/3] RUN echo /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -38,7 +38,7 @@ $ docker build -t baeldungimage .
 
 这是我们的新`Dockerfile`:
 
-```
+```java
 FROM ubuntu:latest
 RUN echo $PATH
 RUN export PATH="$PATH:/etc/profile"; echo $PATH
@@ -47,7 +47,7 @@ RUN echo $PATH
 
 我们现在可以构建图像:
 
-```
+```java
 $ docker build -t baeldungimage . 
 #7 [1/4] FROM docker.io/library/ubuntu:latest
 #4 [2/4] RUN echo /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -70,7 +70,7 @@ $ docker build -t baeldungimage .
 
 下面是新的`Dockerfile`:
 
-```
+```java
 FROM ubuntu:latest
 RUN echo $PATH
 RUN echo "export PATH=$PATH:/etc/profile" >> ~/.bashrc
@@ -82,7 +82,7 @@ RUN echo $PATH
 
 让我们构建图像:
 
-```
+```java
 $ docker build -t baeldungimage . 
 #4 [1/5] FROM docker.io/library/ubuntu:latest
 #5 [2/5] RUN echo /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -112,7 +112,7 @@ $ docker build -t baeldungimage .
 
 **相反，我们可以[在交互模式](https://web.archive.org/web/20220926111009/https://baeldung-cn.com/ops/docker-container-shell)下运行一个容器，并打开一个 shell 会话:**
 
-```
+```java
 $ docker run -it --name interactiveimage baeldungimage
 [[email protected]](/web/20220926111009/https://www.baeldung.com/cdn-cgi/l/email-protection):/# echo $PATH
 /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/etc/profile

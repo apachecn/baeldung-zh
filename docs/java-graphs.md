@@ -100,7 +100,7 @@ Java 没有图形数据结构的默认实现。
 
 让我们从定义一个顶点开始:
 
-```
+```java
 class Vertex {
     String label;
     Vertex(String label) {
@@ -119,7 +119,7 @@ class Vertex {
 
 让我们看看如何使用邻接表来定义它:
 
-```
+```java
 class Graph {
     private Map<Vertex, List<Vertex>> adjVertices;
 
@@ -139,7 +139,7 @@ class Graph {
 
 让我们定义添加和移除顶点的方法:
 
-```
+```java
 void addVertex(String label) {
     adjVertices.putIfAbsent(new Vertex(label), new ArrayList<>());
 }
@@ -155,7 +155,7 @@ void removeVertex(String label) {
 
 现在，让我们也定义一个添加边的方法:
 
-```
+```java
 void addEdge(String label1, String label2) {
     Vertex v1 = new Vertex(label1);
     Vertex v2 = new Vertex(label2);
@@ -168,7 +168,7 @@ void addEdge(String label1, String label2) {
 
 以类似的方式，我们将定义`removeEdge()`方法:
 
-```
+```java
 void removeEdge(String label1, String label2) {
     Vertex v1 = new Vertex(label1);
     Vertex v2 = new Vertex(label2);
@@ -183,7 +183,7 @@ void removeEdge(String label1, String label2) {
 
 接下来，让我们看看如何使用我们到目前为止定义的方法来创建我们之前绘制的简单图形:
 
-```
+```java
 Graph createGraph() {
     Graph graph = new Graph();
     graph.addVertex("Bob");
@@ -203,7 +203,7 @@ Graph createGraph() {
 
 最后，我们将定义一种方法来获取特定顶点的相邻顶点:
 
-```
+```java
 List<Vertex> getAdjVertices(String label) {
     return adjVertices.get(new Vertex(label));
 }
@@ -223,7 +223,7 @@ List<Vertex> getAdjVertices(String label) {
 
 让我们定义一个方法来执行深度优先遍历:
 
-```
+```java
 Set<String> depthFirstTraversal(Graph graph, String root) {
     Set<String> visited = new LinkedHashSet<String>();
     Stack<String> stack = new Stack<String>();
@@ -245,7 +245,7 @@ Set<String> depthFirstTraversal(Graph graph, String root) {
 
 让我们在上一小节中创建的图表上运行它:
 
-```
+```java
 assertEquals("[Bob, Rob, Maria, Alice, Mark]", depthFirstTraversal(graph, "Bob").toString());
 ```
 
@@ -257,7 +257,7 @@ assertEquals("[Bob, Rob, Maria, Alice, Mark]", depthFirstTraversal(graph, "Bob")
 
 现在让我们定义一个方法来执行广度优先遍历:
 
-```
+```java
 Set<String> breadthFirstTraversal(Graph graph, String root) {
     Set<String> visited = new LinkedHashSet<String>();
     Queue<String> queue = new LinkedList<String>();
@@ -280,7 +280,7 @@ Set<String> breadthFirstTraversal(Graph graph, String root) {
 
 让我们再次在同一个图上运行这个遍历:
 
-```
+```java
 assertEquals(
   "[Bob, Alice, Rob, Mark, Maria]", breadthFirstTraversal(graph, "Bob").toString());
 ```

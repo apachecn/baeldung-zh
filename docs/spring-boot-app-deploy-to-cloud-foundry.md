@@ -10,7 +10,7 @@
 
 由于该项目需要 Spring Cloud 项目的新依赖项，我们将添加 Spring Cloud 依赖项 BOM:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -30,7 +30,7 @@
 
 我们还将添加编译器排除和 Spring Boot 插件来配置包的名称:
 
-```
+```java
 <build>
     <resources>
         <resource>
@@ -63,7 +63,7 @@
 
 我们还想从普通构建中排除特定于云的文件，因此我们向 Maven 编译器插件添加了一个全局配置文件排除:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -81,7 +81,7 @@
 
 然后，我们需要添加 Spring Cloud Starter 和 Spring Cloud Connectors 库，它们为 Cloud Foundry 提供支持:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter</artifactId>
@@ -102,7 +102,7 @@
 
 应用程序容器允许我们将服务绑定到应用程序。接下来，让我们登录 Cloud Foundry 环境:
 
-```
+```java
 cf login -a <url>
 ```
 
@@ -110,11 +110,11 @@ cf login -a <url>
 
 让我们在市场上搜索“MySQL ”,并为我们的应用程序创建一个服务:
 
-```
+```java
 cf marketplace | grep MySQL
 ```
 
-```
+```java
 >
 cleardb     spark, boost*, amp*, shock*         Highly available MySQL for your Apps. 
 ```
@@ -123,11 +123,11 @@ cleardb     spark, boost*, amp*, shock*         Highly available MySQL for your 
 
 接下来，我们使用以下代码列出服务的详细信息:
 
-```
+```java
 cf marketplace -s cleardb
 ```
 
-```
+```java
 >
 service plan description                                                                 free or paid
 spark        Great for getting started and developing your apps                             free
@@ -138,7 +138,7 @@ shock        Designed for apps where you need real MySQL reliability, power and 
 
 现在我们创建一个名为`spring-bootstrap-db`的免费 MySQL 服务实例:
 
-```
+```java
 cf create-service cleardb spark spring-bootstrap-db
 ```
 
@@ -146,7 +146,7 @@ cf create-service cleardb spark spring-bootstrap-db
 
 接下来，我们添加一个带注释的类`@Configuration`，该类扩展了`AbstractCloudConfig`以在名为`org.baeldung.cloud.config`的包中创建一个`DataSource `:
 
-```
+```java
 @Configuration
 @Profile("cloud")
 public class CloudDataSourceConfig extends AbstractCloudConfig {
@@ -162,7 +162,7 @@ public class CloudDataSourceConfig extends AbstractCloudConfig {
 
 然后使用以下内容构建应用程序:
 
-```
+```java
 mvn clean install spring-boot:repackage -P cloudfoundry
 ```
 
@@ -170,7 +170,7 @@ mvn clean install spring-boot:repackage -P cloudfoundry
 
 我们通常将`manifest.yml`文件放在项目文件夹中，但在这种情况下，我们将创建一个`cloudfoundry`文件夹，因为我们将演示部署到多个云原生提供商:
 
-```
+```java
 ---
 applications:
 - name: spring-boot-bootstrap
@@ -187,7 +187,7 @@ applications:
 
 部署应用程序现在就像:
 
-```
+```java
 cd cloudfoundry
 cf push
 ```
@@ -196,23 +196,23 @@ Cloud Foundry 将使用 Java buildpack 来部署应用程序，并创建到应�
 
 我们可以使用以下命令查看日志文件中的最后几个条目:
 
-```
+```java
 cf logs spring-boot-bootstrap --recent
 ```
 
 或者我们可以跟踪日志文件:
 
-```
+```java
 cf logs spring-boot-bootstrap
 ```
 
 最后，我们需要路由名称来测试应用程序:
 
-```
+```java
 cf app spring-boot-bootstrap
 ```
 
-```
+```java
 >
 name:              spring-boot-bootstrap
 requested state:   started
@@ -230,7 +230,7 @@ memory usage:   768M
 
 执行以下命令将添加一本新书:
 
-```
+```java
 curl -i --request POST \
     --header "Content-Type: application/json" \
     --data '{"title": "The Player of Games", "author": "Iain M. Banks"}' \
@@ -241,13 +241,13 @@ http POST https://<app-route>/api/books title="The Player of Games" author="Iain
 
 这个命令将列出所有书籍:
 
-```
+```java
 curl -i https://<app-route>/api/books 
 #OR 
 http https://<app-route>/api/books
 ```
 
-```
+```java
 >
 HTTP/1.1 200 OK
 
@@ -269,7 +269,7 @@ HTTP/1.1 200 OK
 
 最后，在 Cloud Foundry 上扩展应用程序就像使用`scale`命令一样简单:
 
-```
+```java
 cf scale spring-cloud-bootstrap-cloudfoundry <options>
 Options:
 -i <instances>
@@ -280,7 +280,7 @@ Options:
 
 当我们不再需要该应用程序时，请记住将其删除:
 
-```
+```java
 cf delete spring-cloud-bootstrap-cloudfoundry
 ```
 

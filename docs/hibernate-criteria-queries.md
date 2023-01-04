@@ -30,7 +30,7 @@ A quick guide to using Querydsl with the Java Persistence API.[Read more](/web/2
 
 要使用 Hibernate，我们要确保将它的最新版本添加到我们的`pom.xml` 文件中:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>   
@@ -46,7 +46,7 @@ A quick guide to using Querydsl with the Java Persistence API.[Read more](/web/2
 
 我们有一个代表数据库中元组`“ITEM”`的`Item`类:
 
-```
+```java
 public class Item implements Serializable {
 
     private Integer itemId;
@@ -60,7 +60,7 @@ public class Item implements Serializable {
 
 让我们来看一个简单的标准查询，它将从数据库中检索所有的`“ITEM”`行:
 
-```
+```java
 Session session = HibernateUtil.getHibernateSession();
 CriteriaBuilder cb = session.getCriteriaBuilder();
 CriteriaQuery<Item> cr = cb.createQuery(Item.class);
@@ -89,43 +89,43 @@ List<Item> results = query.getResultList();
 
 为了获得价格超过 1000 的项目:
 
-```
+```java
 cr.select(root).where(cb.gt(root.get("itemPrice"), 1000));
 ```
 
 接下来，获取`itemPrice`小于 1000 的项目:
 
-```
+```java
 cr.select(root).where(cb.lt(root.get("itemPrice"), 1000));
 ```
 
 有`itemName`的项目包含`Chair`:
 
-```
+```java
 cr.select(root).where(cb.like(root.get("itemName"), "%chair%"));
 ```
 
 记录的`itemPrice`在 100 和 200 之间:
 
-```
+```java
 cr.select(root).where(cb.between(root.get("itemPrice"), 100, 200));
 ```
 
 `Skate Board`、 `Paint`、`Glue`中有`itemName`的项目:
 
-```
+```java
 cr.select(root).where(root.get("itemName").in("Skate Board", "Paint", "Glue"));
 ```
 
 检查给定属性是否为空:
 
-```
+```java
 cr.select(root).where(cb.isNull(root.get("itemDescription")));
 ```
 
 检查给定属性是否不为空:
 
-```
+```java
 cr.select(root).where(cb.isNotNull(root.get("itemDescription")));
 ```
 
@@ -133,7 +133,7 @@ cr.select(root).where(cb.isNotNull(root.get("itemDescription")));
 
 此外，我们可以结合两个或更多的上述比较。 **T** **he Criteria API 允许我们轻松地链接表达式**:
 
-```
+```java
 Predicate[] predicates = new Predicate[2];
 predicates[0] = cb.isNull(root.get("itemDescription"));
 predicates[1] = cb.like(root.get("itemName"), "chair%");
@@ -142,20 +142,20 @@ cr.select(root).where(predicates);
 
 使用逻辑运算添加两个表达式:
 
-```
+```java
 Predicate greaterThanPrice = cb.gt(root.get("itemPrice"), 1000);
 Predicate chairItems = cb.like(root.get("itemName"), "Chair%");
 ```
 
 用`Logical OR`连接的具有上述定义条件的项目:
 
-```
+```java
 cr.select(root).where(cb.or(greaterThanPrice, chairItems));
 ```
 
 用`Logical AND`连接得到符合上述定义条件的项目:
 
-```
+```java
 cr.select(root).where(cb.and(greaterThanPrice, chairItems));
 ```
 
@@ -165,7 +165,7 @@ cr.select(root).where(cb.and(greaterThanPrice, chairItems));
 
 在下面的示例中，我们先按名称的升序，然后按价格的降序对列表进行排序:
 
-```
+```java
 cr.orderBy(
   cb.asc(root.get("itemName")), 
   cb.desc(root.get("itemPrice")));
@@ -179,7 +179,7 @@ cr.orderBy(
 
 获取行数:
 
-```
+```java
 CriteriaQuery<Long> cr = cb.createQuery(Long.class);
 Root<Item> root = cr.from(Item.class);
 cr.select(cb.count(root));
@@ -189,7 +189,7 @@ List<Long> itemProjected = query.getResultList();
 
 下面是一个聚合函数的例子——`Average`的`Aggregate`函数:
 
-```
+```java
 CriteriaQuery<Double> cr = cb.createQuery(Double.class);
 Root<Item> root = cr.from(Item.class);
 cr.select(cb.avg(root.get("itemPrice")));
@@ -205,7 +205,7 @@ List avgItemPriceList = query.getResultList();
 
 `CriteriaUpdate`有一个`set()`方法，可用于为数据库记录提供新值:
 
-```
+```java
 CriteriaUpdate<Item> criteriaUpdate = cb.createCriteriaUpdate(Item.class);
 Root<Item> root = criteriaUpdate.from(Item.class);
 criteriaUpdate.set("itemPrice", newPrice);
@@ -224,7 +224,7 @@ transaction.commit();
 
 我们只需要创建一个`CriteriaDelete`的实例，并使用`where()`方法来应用限制:
 
-```
+```java
 CriteriaDelete<Item> criteriaDelete = cb.createCriteriaDelete(Item.class);
 Root<Item> root = criteriaDelete.from(Item.class);
 criteriaDelete.where(cb.greaterThan(root.get("itemPrice"), targetPrice));

@@ -16,7 +16,7 @@
 
 下面的代码片段显示了在每个调度后产生的相同优先级的两个线程:
 
-```
+```java
 public class ThreadYield {
     public static void main(String[] args) {
         Runnable r = () -> {
@@ -38,7 +38,7 @@ public class ThreadYield {
 
 运行 1:
 
-```
+```java
 Thread-0
 Thread-1
 Thread-1
@@ -47,7 +47,7 @@ Thread-0
 
 运行 2:
 
-```
+```java
 Thread-0
 Thread-0
 Thread-1

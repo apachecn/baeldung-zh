@@ -16,7 +16,7 @@
 
 一旦我们设置了主应用程序，让我们看看我们的`[Dockerfile](https://web.archive.org/web/20221222154222/https://docs.docker.com/engine/reference/builder/)`:
 
-```
+```java
 FROM node:12.18.1
 ENV NODE_ENV=production
 
@@ -33,7 +33,7 @@ CMD [ "node", "server.js" ]
 
 现在，我们可以构建一个图像，我们称之为`node-docker`:
 
-```
+```java
 $ docker build -t node-docker .
 ```
 
@@ -43,13 +43,13 @@ $ docker build -t node-docker .
 
 让我们运行`docker [history](https://web.archive.org/web/20221222154222/https://docs.docker.com/engine/reference/commandline/history/)`命令来查看图像的不同图层:
 
-```
+```java
 $ docker history --format "ID-> {{.ID}} | Created-> {{.CreatedSince}} | Created By-> {{.CreatedBy}} | Size: {{.Size}}" e870a50eed97
 ```
 
 我们可以使用`–format`选项创建自定义输出，并显示相关命令或大小等信息:
 
-```
+```java
 ID-> e870a50eed97 | Created-> 36 hours ago | Created By-> /bin/sh -c #(nop)  CMD ["node" "server.js"] | Size: 0B
 ID-> 708a43cd0ef2 | Created-> 36 hours ago | Created By-> /bin/sh -c #(nop) COPY dir:7cc2842dd32649457… | Size: 11.3MB
 ID-> d49b84f48e41 | Created-> 36 hours ago | Created By-> /bin/sh -c npm install --production | Size: 14.7MB
@@ -67,13 +67,13 @@ ID-> f5be1883c8e0 | Created-> 2 years ago | Created By-> /bin/sh -c #(nop)  CMD 
 
 假设我们的项目中有一个带密码的文件。我们可以创建一个，例如:
 
-```
+```java
 $ echo 'password' >secret.txt
 ```
 
 现在，我们想从映像中排除这个文件。我们可以将它添加到我们的。`dockerignore`文件:
 
-```
+```java
 # Ignoring the password file 
 secret.txt
 ```
@@ -82,20 +82,20 @@ secret.txt
 
 此外，如果我们添加一个要复制的文件，我们也不会有新层的缓存失效问题。我们也可以用这种方法排除文件夹:
 
-```
+```java
 # Ignore the logs directory
 logs/
 ```
 
 让我们用。`dockerignore`文件。然后，我们可以启动一个容器:
 
-```
+```java
 $ docker run -d --publish 8000:8000 node-docker
 ```
 
 或者，如果我们使用 Docker Compose，我们可以用一个`docker-compose.yml`文件运行`[docker-compose up](https://web.archive.org/web/20221222154222/https://docs.docker.com/engine/reference/commandline/compose_up/)`，例如:
 
-```
+```java
 services:
   node-app:
     image: node-docker:latest
@@ -105,7 +105,7 @@ services:
 
 我们可以通过在容器中执行`bash`命令来进行双重检查:
 
-```
+```java
 $ docker exec -it d8938bc93406 bash
 ```
 
@@ -121,7 +121,7 @@ $ docker exec -it d8938bc93406 bash
 
 让我们用 Nodejs 应用程序制作一个 Docker Compose 示例。我们来看一下`docker-compose.yml`文件:
 
-```
+```java
 services:
   node-app:
     build: .
@@ -133,7 +133,7 @@ services:
 
 我们可以在项目的根目录下运行我们的容器:
 
-```
+```java
 $ docker-compose up -d
 ```
 
@@ -149,7 +149,7 @@ $ docker-compose up -d
 
 同样，让我们看看我们的`docker-compose.yml`文件:
 
-```
+```java
 services:
   node-app:
     build: .
@@ -168,7 +168,7 @@ services:
 
 让我们看看我们的 YAML 文件:
 
-```
+```java
 services:
   node-app:
     build: .
@@ -183,7 +183,7 @@ services:
 
 如果我们要保存数据，我们可以使用一个命名卷:
 
-```
+```java
 volumes:
   - .:/app
   - my-vol:/app/node_modules/

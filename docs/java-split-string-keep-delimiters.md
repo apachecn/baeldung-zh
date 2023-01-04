@@ -24,7 +24,7 @@ Java universe 提供了相当多的库(`java.lang.String`、Guava 和 Apache Com
 
 在本文解释的所有例子中，我们将使用两个简单的`String`:
 
-```
+```java
 String text = "[[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection)@[[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection)@[[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection)@Program";
 String textMixed = "@[[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection):[[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection)#Java#Program";
 ```
@@ -39,13 +39,13 @@ String textMixed = "@[[email protected]](/web/20221128043619/https://www.baeldu
 
 首先，让我们使用 lookahead 断言`“(([[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection)))”` 并将字符串`text`拆分到其匹配项周围:
 
-```
+```java
 String[] splits = text.split("(([[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection)))");
 ```
 
 前瞻正则表达式通过向前匹配`“@”`符号来分割字符串。结果数组的内容是:
 
-```
+```java
 [Hello, @World, @This, @Is, @A, @Java, @Program]
 ```
 
@@ -55,13 +55,13 @@ String[] splits = text.split("(([[email protected]](/web/20221128043619/https:/
 
 我们也可以使用肯定的后视断言`“((?<[[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection)))”`来拆分字符串`text`:
 
-```
+```java
 String[] splits = text.split("((?<[[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection)))");
 ```
 
 但是，结果输出仍然不包含作为数组单个元素的分隔符:
 
-```
+```java
 [[[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection), [[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection), [[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection), [[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection), [[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection), [[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection), Program]
 ```
 
@@ -71,13 +71,13 @@ String[] splits = text.split("((?<[[email protected]](/web/20221128043619/https
 
 **得到的正则表达式`“(([[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection))|(?<[[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection)))”`肯定会给我们想要的结果。**下面的代码片段演示了这一点:
 
-```
+```java
 String[] splits = text.split("(([[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection))|(?<[[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection)))");
 ```
 
 上面的正则表达式拆分字符串，得到的数组包含分隔符:
 
-```
+```java
 [Hello, @, World, @, This, @, Is, @, A, @, Java, @, Program]
 ```
 
@@ -85,13 +85,13 @@ String[] splits = text.split("(([[email protected]](/web/20221128043619/https:/
 
 让我们尝试使用一个合适的正则表达式来分割前面定义的`textMixed `:
 
-```
+```java
 String[] splitsMixed = textMixed.split("((?=:|#|@)|(?<=:|#|@))");
 ```
 
 在执行上面的代码行之后，看到下面的结果并不奇怪:
 
-```
+```java
 [@, HelloWorld, @, This, :, Is, @, A, #, Java, #, Program]
 ```
 
@@ -103,7 +103,7 @@ String[] splitsMixed = textMixed.split("((?=:|#|@)|(?<=:|#|@))");
 
 首先，让我们看看它们在包含单个分隔符`“@”`的字符串`text `上的作用:
 
-```
+```java
 List<String> splits = Splitter.onPattern("(([[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection))|(?<[[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection)))").splitToList(text);
 List<String> splits2 = Splitter.on(Pattern.compile("(([[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection))|(?<[[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection)))")).splitToList(text);
 ```
@@ -112,7 +112,7 @@ List<String> splits2 = Splitter.on(Pattern.compile("(([[email protected]](/web/
 
 同样，我们也可以使用这些方法来拆分包含多个不同分隔符的字符串:
 
-```
+```java
 List<String> splitsMixed = Splitter.onPattern("((?=:|#|@)|(?<=:|#|@))").splitToList(textMixed);
 List<String> splitsMixed2 = Splitter.on(Pattern.compile("((?=:|#|@)|(?<=:|#|@))")).splitToList(textMixed);
 ```
@@ -129,7 +129,7 @@ List<String> splitsMixed2 = Splitter.on(Pattern.compile("((?=:|#|@)|(?<=:|#|@))"
 
 此外，当源字符串始终保持大小写不变时，它会提供最佳结果:
 
-```
+```java
 String[] splits = StringUtils.splitByCharacterType("[[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection);[[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection);[[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection);[[email protected]](/web/20221128043619/https://www.baeldung.com/cdn-cgi/l/email-protection)#10words;Java#Program");
 ```
 
@@ -137,7 +137,7 @@ String[] splits = StringUtils.splitByCharacterType("[[email protected]](/web/20
 
 因此，得到的数组`splits,` 如预期的那样，看起来像:
 
-```
+```java
 [pg, @, no, ;, 10, @, hello, ;, world, @, this, ;, is, @, a, #, 10, words, ;, J, ava, #, P, rogram]
 ```
 

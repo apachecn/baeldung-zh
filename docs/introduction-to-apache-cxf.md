@@ -14,7 +14,7 @@ Apache CXF 是一个完全符合 JAX-WS 规范的框架。
 
 使用 Apache CXF 需要的关键依赖是`org.apache.cxf:cxf–rt–frontend–` `jaxws`。这提供了一个 JAX-WS 实现来替换内置的 JDK 实现:
 
-```
+```java
 <dependency>
     <groupId>org.apache.cxf</groupId>
     <artifactId>cxf-rt-frontend-jaxws</artifactId>
@@ -26,7 +26,7 @@ Apache CXF 是一个完全符合 JAX-WS 规范的框架。
 
 在本教程中，我们不使用 servlet 容器来发布服务，因此需要另一个依赖项来提供必要的 Java 类型定义:
 
-```
+```java
 <dependency>
     <groupId>org.apache.cxf</groupId>
     <artifactId>cxf-rt-transports-http-jetty</artifactId>
@@ -40,7 +40,7 @@ Apache CXF 是一个完全符合 JAX-WS 规范的框架。
 
 让我们从用于配置服务端点的实现类开始:
 
-```
+```java
 @WebService(endpointInterface = "com.baeldung.cxf.introduction.Baeldung")
 public class BaeldungImpl implements Baeldung {
     private Map<Integer, Student> students 
@@ -67,7 +67,7 @@ public class BaeldungImpl implements Baeldung {
 
 这里的`BaeldungImpl`实现类仍然实现下面的端点接口，以表明接口的所有声明方法都已实现，但这是可选的:
 
-```
+```java
 @WebService
 public interface Baeldung {
     public String hello(String name);
@@ -93,7 +93,7 @@ public interface Baeldung {
 
 这就是`Student`接口的定义:
 
-```
+```java
 @XmlJavaTypeAdapter(StudentAdapter.class)
 public interface Student {
     public String getName();
@@ -104,7 +104,7 @@ public interface Student {
 
 `StudentAdapter`类定义如下:
 
-```
+```java
 public class StudentAdapter extends XmlAdapter<StudentImpl, Student> {
     public StudentImpl marshal(Student student) throws Exception {
         if (student instanceof StudentImpl) {
@@ -123,7 +123,7 @@ public class StudentAdapter extends XmlAdapter<StudentImpl, Student> {
 
 下面是`StudentImpl`类的定义:
 
-```
+```java
 @XmlType(name = "Student")
 public class StudentImpl implements Student {
     private String name;
@@ -136,7 +136,7 @@ public class StudentImpl implements Student {
 
 `Baeldung`端点接口的`getStudents`方法返回一个`Map`，并指示一个适配类将`Map`转换为 JAXB 可以处理的类型。类似于`StudentAdapter`类，这个适配类必须实现`XmlAdapter`接口的`marshal`和`unmarshal`方法:
 
-```
+```java
 public class StudentMapAdapter 
   extends XmlAdapter<StudentMap, Map<Integer, Student>> {
     public StudentMap marshal(Map<Integer, Student> boundMap) throws Exception {
@@ -162,7 +162,7 @@ public class StudentMapAdapter
 
 `StudentMapAdapter`类将`Map<Integer, Student>`映射到`StudentMap`值类型，并从值类型映射出，定义如下:
 
-```
+```java
 @XmlType(name = "StudentMap")
 public class StudentMap {
     private List<StudentEntry> entries = new ArrayList<StudentEntry>();
@@ -188,7 +188,7 @@ public class StudentMap {
 
 为了部署上面讨论的 web 服务，我们将利用标准的 JAX-WS API。因为我们使用的是 Apache CXF，所以框架做了一些额外的工作，例如生成和发布 WSDL 模式。下面是服务服务器的定义:
 
-```
+```java
 public class Server {
     public static void main(String args[]) throws InterruptedException {
         BaeldungImpl implementor = new BaeldungImpl();
@@ -206,7 +206,7 @@ public class Server {
 
 在本教程中，我们使用`org.codehaus.mojo:exec-maven-plugin`插件来实例化上述服务器并控制其生命周期。这在 Maven POM 文件中声明如下:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>exec-maven-plugin</artifactId>
@@ -228,7 +228,7 @@ public class Server {
 
 第一步是为测试类声明几个字段:
 
-```
+```java
 public class StudentTest {
     private static QName SERVICE_NAME 
       = new QName("http://introduction.cxf.baeldung.com/", "Baeldung");
@@ -245,7 +245,7 @@ public class StudentTest {
 
 以下初始化程序块用于在运行任何测试之前初始化`javax.xml.ws.Service`类型的`service`字段:
 
-```
+```java
 {
     service = Service.create(SERVICE_NAME);
     String endpointAddress = "http://localhost:8080/baeldung";
@@ -255,7 +255,7 @@ public class StudentTest {
 
 将 JUnit 依赖项添加到 POM 文件后，我们可以使用下面代码片段中的`@Before`注释。该方法在每次测试之前运行，以重新实例化`Baeldung`字段:
 
-```
+```java
 @Before
 public void reinstantiateBaeldungInstances() {
     baeldungImpl = new BaeldungImpl();
@@ -271,7 +271,7 @@ public void reinstantiateBaeldungInstances() {
 
 我们在这一小节中展示的第一个测试用例是验证从服务端点上的`hello`方法的远程调用返回的响应:
 
-```
+```java
 @Test
 public void whenUsingHelloMethod_thenCorrect() {
     String endpointResponse = baeldungProxy.hello("Baeldung");
@@ -284,7 +284,7 @@ public void whenUsingHelloMethod_thenCorrect() {
 
 下一个测试案例演示了`helloStudent`方法的使用:
 
-```
+```java
 @Test
 public void whenUsingHelloStudentMethod_thenCorrect() {
     Student student = new StudentImpl("John Doe");
@@ -298,7 +298,7 @@ public void whenUsingHelloStudentMethod_thenCorrect() {
 
 我们在这里展示的最后一个测试案例更加复杂。根据服务端点实现类的定义，每次客户端调用端点上的`helloStudent`方法时，提交的`Student`对象将被存储在缓存中。这个缓存可以通过在端点上调用`getStudents`方法来检索。下面的测试用例确认了`students`缓存的内容代表了客户端发送给 web 服务的内容:
 
-```
+```java
 @Test
 public void usingGetStudentsMethod_thenCorrect() {
     Student student1 = new StudentImpl("Adam");

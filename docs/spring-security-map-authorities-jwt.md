@@ -26,7 +26,7 @@
 
 为了说明这个策略，让我们创建一个简单的端点，它允许我们检查应用程序可用的`Authentication`实例的一些关键属性:
 
-```
+```java
 @RestController
 @RequestMapping("/user")
 public class UserRestController {
@@ -53,7 +53,7 @@ public class UserRestController {
 
 现在，让我们假设我们调用这个端点传递和编码并签名的 JWT，它包含这个有效负载:
 
-```
+```java
 {
   "aud": "api://f84f66ca-591f-4504-960a-3abc21006b45",
   "iss": "https://sts.windows.net/2e9fde3a-38ec-44f9-8bcd-c184dc1e8033/",
@@ -72,7 +72,7 @@ public class UserRestController {
 
 响应应该是一个 JSON 对象，具有三个属性:
 
-```
+```java
 {
   "tokenAttributes": {
      // ... token claims omitted
@@ -88,7 +88,7 @@ public class UserRestController {
 
 我们可以使用这些作用域来限制对应用程序某些部分的访问，方法是创建一个`SecurityFilterChain`:
 
-```
+```java
 @Bean
 SecurityFilterChain customJwtSecurityChain(HttpSecurity http) throws Exception {
     return http.authorizeRequests(auth -> {
@@ -103,7 +103,7 @@ SecurityFilterChain customJwtSecurityChain(HttpSecurity http) throws Exception {
 
 或者，我们可以使用方法级注释和 SpEL 表达式来达到相同的结果:
 
-```
+```java
 @GetMapping("/authorities")
 @PreAuthorize("hasAuthority('SCOPE_profile.read')")
 public Map<String,Object> getPrincipalInfo(JwtAuthenticationToken principal) {
@@ -124,7 +124,7 @@ public Map<String,Object> getPrincipalInfo(JwtAuthenticationToken principal) {
 
 **改变这个前缀最简单的方法是提供我们自己的`JwtAuthenticationConverter` bean** ，用`JwtGrantedAuthoritiesConverter`配置成我们自己选择的一个:
 
-```
+```java
 @Configuration
 @EnableConfigurationProperties(JwtMappingProperties.class)
 @EnableMethodSecurity
@@ -155,7 +155,7 @@ public class SecurityConfig {
 
 现在，一旦我们将`baeldung.jwt.mapping.authorities-prefix`属性设置为某个值，例如`MY_SCOPE`，并调用`/user/authorities,`，我们将看到定制的权限:
 
-```
+```java
 {
   "tokenAttributes": {
     // ... token claims omitted 
@@ -175,7 +175,7 @@ public class SecurityConfig {
 
 然而，解决这个问题很简单。首先，让我们向我们的`@Configuration`类添加一个`@Bean`方法，该方法返回已配置的前缀。因为这个配置是可选的，所以我们必须确保在没有人给它的情况下返回默认值:
 
-```
+```java
 @Bean
 public String jwtGrantedAuthoritiesPrefix() {
   return mappingProps.getAuthoritiesPrefix() != null ?
@@ -186,7 +186,7 @@ public String jwtGrantedAuthoritiesPrefix() {
 
 现在，我们可以在 SpEL 表达式中使用 [`@<bean-name>`语法来引用这个 bean。这就是我们使用前缀 bean 和`@PreAuthorize`的方式:](https://web.archive.org/web/20220815050014/https://docs.spring.io/spring-security/reference/servlet/authorization/expression-based.html#el-access-web-beans)
 
-```
+```java
 @GetMapping("/authorities")
 @PreAuthorize("hasAuthority(@jwtGrantedAuthoritiesPrefix + 'profile.read')")
 public Map<String,Object> getPrincipalInfo(JwtAuthenticationToken principal) {
@@ -196,7 +196,7 @@ public Map<String,Object> getPrincipalInfo(JwtAuthenticationToken principal) {
 
 在定义`SecurityFilterChain`时，我们也可以使用类似的方法:
 
-```
+```java
 @Bean
 SecurityFilterChain customJwtSecurityChain(HttpSecurity http) throws Exception {
     return http.authorizeRequests(auth -> {
@@ -212,7 +212,7 @@ SecurityFilterChain customJwtSecurityChain(HttpSecurity http) throws Exception {
 
 有时，标准的`sub`声明到`Authentication’`的`name`属性的 Spring 映射带有一个不是很有用的值。Keycloak 生成的 jwt 就是一个很好的例子:
 
-```
+```java
 {
   // ... other claims omitted
   "sub": "0047af40-473a-4dd3-bc46-07c3fe2b69a5",
@@ -227,7 +227,7 @@ SecurityFilterChain customJwtSecurityChain(HttpSecurity http) throws Exception {
 
 在这种情况下，`sub`带有一个内部标识符，但是我们可以看到,`preferred_username`声明有一个更友好的值。**我们可以通过将`JwtAuthenticationConverter`的`principalClaimName`属性设置为所需的声明名称**来轻松修改其行为:
 
-```
+```java
 @Bean
 public JwtAuthenticationConverter customJwtAuthenticationConverter() {
 
@@ -243,7 +243,7 @@ public JwtAuthenticationConverter customJwtAuthenticationConverter() {
 
 现在，如果我们将`baeldung.jwt.mapping.authorities-prefix`属性设置为“preferred_username”，那么`/user/authorities`结果将会相应地改变:
 
-```
+```java
 {
   "tokenAttributes": {
     // ... token claims omitted 
@@ -263,7 +263,7 @@ public JwtAuthenticationConverter customJwtAuthenticationConverter() {
 
 我们可能会尝试扩展`JwtGrantedAuthoritiesConverter,`，但是因为这是一个最终类，我们不能使用这种方法。相反，我们必须编写自己的转换器类，并将其注入到`JwtAuthorizationConverter`中。这个增强的映射器`MappingJwtGrantedAuthoritiesConverter`，实现了`Converter<Jwt, Collection<GrantedAuthority>>`，看起来很像原来的那个:
 
-```
+```java
 public class MappingJwtGrantedAuthoritiesConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
     private static Collection<String> WELL_KNOWN_AUTHORITIES_CLAIM_NAMES = Arrays.asList("scope", "scp");
     private Map<String,String> scopes;
@@ -297,7 +297,7 @@ public class MappingJwtGrantedAuthoritiesConverter implements Converter<Jwt, Col
 
 最后，我们在`@Configuration`的`jwtGrantedAuthoritiesConverter()`方法中使用了这个增强的转换器:
 
-```
+```java
 @Bean
 public Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter() {
     MappingJwtGrantedAuthoritiesConverter converter = new MappingJwtGrantedAuthoritiesConverter(mappingProps.getScopes());
@@ -320,7 +320,7 @@ public Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConvert
 
 第二个选择是使用基于`HttpSecurity`的 DSL 方法，在这里我们可以提供定制的转换器。我们将使用`oauth2ResourceServer`定制器来完成这项工作，它允许我们插入任何实现更通用接口`Converter<Jwt, AbstractAuthorizationToken>`的转换器:
 
-```
+```java
 @Bean
 SecurityFilterChain customJwtSecurityChain(HttpSecurity http) throws Exception {
     return http.oauth2ResourceServer(oauth2 -> {
@@ -333,7 +333,7 @@ SecurityFilterChain customJwtSecurityChain(HttpSecurity http) throws Exception {
 
 我们的`CustomJwtAuthenticationConverter`使用一个`AccountService`(在线可用)基于用户名声明值检索一个`Account`对象。然后使用它为帐户数据创建一个带有额外访问器方法的`CustomJwtAuthenticationToken`:
 
-```
+```java
 public class CustomJwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
     // ...private fields and construtor omitted
@@ -350,7 +350,7 @@ public class CustomJwtAuthenticationConverter implements Converter<Jwt, Abstract
 
 现在，让我们修改我们的`/user/authorities`处理程序来使用我们增强的`Authentication`:
 
-```
+```java
 @GetMapping("/authorities")
 public Map<String,Object> getPrincipalInfo(JwtAuthenticationToken principal) {
 
@@ -364,7 +364,7 @@ public Map<String,Object> getPrincipalInfo(JwtAuthenticationToken principal) {
 
 **采用这种方法的一个优点是，我们现在可以在应用程序的其他部分轻松使用我们的增强认证对象**。例如，我们可以直接从内置变量`authentication`访问 [SpEL](/web/20220815050014/https://www.baeldung.com/spring-expression-language) 表达式中的账户信息:
 
-```
+```java
 @GetMapping("/account/{accountNumber}")
 @PreAuthorize("authentication.account.accountNumber == #accountNumber")
 public Account getAccountById(@PathVariable("accountNumber") String accountNumber, AccountToken authentication) {

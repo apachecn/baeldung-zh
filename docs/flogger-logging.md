@@ -20,7 +20,7 @@ Flogger API 的流畅特性大大提高了它的可读性。
 
 对于传统的日志框架，我们会看到这样的情况:
 
-```
+```java
 int i = 0;
 
 // ...
@@ -33,7 +33,7 @@ if (i % 10 == 0) {
 
 但是现在，有了弗洛格，上述内容可以简化为:
 
-```
+```java
 logger.atInfo().every(10).log("This log shows every 10 iterations");
 ```
 
@@ -43,14 +43,14 @@ logger.atInfo().every(10).log("This log shows every 10 iterations");
 
 只要我们避免在记录的对象上调用`toString`,记录对象就会得到优化:
 
-```
+```java
 User user = new User();
 logger.atInfo().log("The user is: %s", user);
 ```
 
 如果我们记录日志，如上所示，后端有机会优化日志。另一方面，如果我们直接调用`toString `，或者连接字符串，那么这个机会就失去了:
 
-```
+```java
 logger.atInfo().log("Ths user is: %s", user.toString());
 logger.atInfo().log("Ths user is: %s" + user);
 ```
@@ -63,7 +63,7 @@ Flogger 框架已经涵盖了我们对日志框架的大部分基本功能。
 
 **目前，这需要一个单独的支持类。**例如，我们可以通过编写一个`UserLogger `类来扩展 Flogger API:
 
-```
+```java
 logger.at(INFO).forUserId(id).withUsername(username).log("Message: %s", param);
 ```
 
@@ -81,20 +81,20 @@ logger.at(INFO).forUserId(id).withUsername(username).log("Message: %s", param);
 
 典型的日志记录框架会有这些方法:
 
-```
+```java
 level(String, Object)
 level(String, Object...)
 ```
 
 其中`level`可以是大约七个日志级别名称中的一个(例如`severe`)，并且有一个接受附加日志级别的规范日志方法:
 
-```
+```java
 log(Level, Object...)
 ```
 
 除此之外，通常还有方法的变体，这些方法采用与日志语句相关联的原因(一个`Throwable`实例):
 
-```
+```java
 level(Throwable, String, Object)
 level(Throwable, String, Object...)
 ```
@@ -109,7 +109,7 @@ level(Throwable, String, Object...)
 
 我们现在可以看到为什么在链中有两个方法很重要:
 
-```
+```java
 logger.atInfo().withCause(e).log("Message: %s", arg);
 ```
 
@@ -119,7 +119,7 @@ logger.atInfo().withCause(e).log("Message: %s", arg);
 
 设置 Flogger 非常简单。我们只需要将`[flogger](https://web.archive.org/web/20221207002508/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.google.flogger%22)` 和`[flogger-system-backend](https://web.archive.org/web/20221207002508/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.google.flogger%22)`添加到我们的`pom:`中
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>com.google.flogger</groupId>
@@ -141,13 +141,13 @@ logger.atInfo().withCause(e).log("Message: %s", arg);
 
 首先，让我们为我们的记录器声明一个`static`实例:
 
-```
+```java
 private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 ```
 
 现在我们可以开始伐木了。我们从简单的开始:
 
-```
+```java
 int result = 45 / 3;
 logger.atInfo().log("The result is %d", result);
 ```
@@ -160,7 +160,7 @@ Flogger 创建者建议我们避免在日志站点工作。
 
 假设我们有以下长期运行的方法来总结组件的当前状态:
 
-```
+```java
 public static String collectSummaries() {
     longRunningProcess();
     int items = 110;
@@ -171,7 +171,7 @@ public static String collectSummaries() {
 
 很容易在我们的日志语句中直接调用`collectSummaries`:
 
-```
+```java
 logger.atFine().log("stats=%s", collectSummaries());
 ```
 
@@ -181,7 +181,7 @@ logger.atFine().log("stats=%s", collectSummaries());
 
 **相反，我们应该使用`LazyArgs.lazy `方法**:
 
-```
+```java
 logger.atFine().log("stats=%s", LazyArgs.lazy(() -> collectSummaries()));
 ```
 
@@ -189,7 +189,7 @@ logger.atFine().log("stats=%s", LazyArgs.lazy(() -> collectSummaries()));
 
 虽然允许使用`isEnabled`来保护日志语句:
 
-```
+```java
 if (logger.atFine().isEnabled()) {
     logger.atFine().log("summaries=%s", collectSummaries());
 }
@@ -203,7 +203,7 @@ if (logger.atFine().isEnabled()) {
 
 Flogger 附带了一个`withStackTrace`方法，我们可以用它来记录一个`Throwable` 实例:
 
-```
+```java
 try {
     int result = 45 / 0;
 } catch (RuntimeException re) {
@@ -221,13 +221,13 @@ try {
 
 例如，当我们想要将日志记录级别设置为`FINE`时:
 
-```
+```java
 LoggerConfig.of(logger).setLevel(Level.FINE);
 ```
 
 Flogger 支持各种日志记录级别:
 
-```
+```java
 logger.atInfo().log("Info Message");
 logger.atWarning().log("Warning Message");
 logger.atSevere().log("Severe Message");
@@ -243,7 +243,7 @@ logger.atConfig().log("Config Message");
 
 **弗洛格用`every(int n) `方法**来解救我们:
 
-```
+```java
 IntStream.range(0, 100).forEach(value -> {
     logger.atInfo().every(40).log("This log shows every 40 iterations => %d", value);
 });
@@ -251,7 +251,7 @@ IntStream.range(0, 100).forEach(value -> {
 
 当我们运行上面的代码时，我们得到以下输出:
 
-```
+```java
 Sep 18, 2019 5:04:02 PM com.baeldung.flogger.FloggerUnitTest lambda$givenAnInterval_shouldLogAfterEveryTInterval$0
 INFO: This log shows every 40 iterations => 0 [CONTEXT ratelimit_count=40 ]
 Sep 18, 2019 5:04:02 PM com.baeldung.flogger.FloggerUnitTest lambda$givenAnInterval_shouldLogAfterEveryTInterval$0
@@ -262,7 +262,7 @@ INFO: This log shows every 40 iterations => 80 [CONTEXT ratelimit_count=40 ]
 
 如果我们想每 10 秒记录一次呢？那么，**我们可以用`atMostEvery(int n, TimeUnit unit)`** :
 
-```
+```java
 IntStream.range(0, 1_000_0000).forEach(value -> {
     logger.atInfo().atMostEvery(10, TimeUnit.SECONDS).log("This log shows [every 10 seconds] => %d", value);
 });
@@ -270,7 +270,7 @@ IntStream.range(0, 1_000_0000).forEach(value -> {
 
 这样，现在的结果变成了:
 
-```
+```java
 Sep 18, 2019 5:08:06 PM com.baeldung.flogger.FloggerUnitTest lambda$givenATimeInterval_shouldLogAfterEveryTimeInterval$1
 INFO: This log shows [every 10 seconds] => 0 [CONTEXT ratelimit_period="10 SECONDS" ]
 Sep 18, 2019 5:08:16 PM com.baeldung.flogger.FloggerUnitTest lambda$givenATimeInterval_shouldLogAfterEveryTimeInterval$1
@@ -287,7 +287,7 @@ INFO: This log shows [every 10 seconds] => 7236301 [CONTEXT ratelimit_period="10
 
 配置 Slf4j 后端很简单。首先，我们需要将`[flogger-slf4j-backend](https://web.archive.org/web/20221207002508/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.google.flogger%22)`依赖项添加到我们的`pom`中:
 
-```
+```java
 <dependency>
     <groupId>com.google.flogger</groupId>
     <artifactId>flogger-slf4j-backend</artifactId>
@@ -297,7 +297,7 @@ INFO: This log shows [every 10 seconds] => 7236301 [CONTEXT ratelimit_period="10
 
 接下来，我们需要告诉 Flogger，我们希望使用一个不同于默认后端的后端。我们通过系统属性注册一个 Flogger 工厂来实现这一点:
 
-```
+```java
 System.setProperty(
   "flogger.backend_factory", "com.google.common.flogger.backend.slf4j.Slf4jBackendFactory#getInstance");
 ```
@@ -308,7 +308,7 @@ System.setProperty(
 
 我们遵循类似的步骤来配置 Log4j 后端。让我们将`[flogger-log4j-backend](https://web.archive.org/web/20221207002508/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A"com.google.flogger")`依赖项添加到`pom`中:
 
-```
+```java
 <dependency>
     <groupId>com.google.flogger</groupId>
     <artifactId>flogger-log4j-backend</artifactId>
@@ -343,7 +343,7 @@ System.setProperty(
 
 我们还需要为 Log4j 注册一个 Flogger 后端工厂:
 
-```
+```java
 System.setProperty(
   "flogger.backend_factory", "com.google.common.flogger.backend.log4j.Log4jBackendFactory#getInstance");
 ```

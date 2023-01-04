@@ -22,7 +22,7 @@
 
 Spark 团队在 2.0 版本中引入了`SparkSession`，它统一了所有不同的上下文，确保开发人员无需担心创建不同的上下文:
 
-```
+```java
 SparkSession session = SparkSession.builder()
   .appName("TouristDataFrameExample")
   .master("local[*]")
@@ -33,7 +33,7 @@ DataFrameReader dataFrameReader = session.read();
 
 我们将分析`Tourist.csv`文件:
 
-```
+```java
 Dataset<Row> data = dataFrameReader.option("header", "true")
   .csv("data/Tourist.csv");
 ```
@@ -42,7 +42,7 @@ Dataset<Row> data = dataFrameReader.option("header", "true")
 
 我们可以选择我们感兴趣的特定列。我们还可以根据给定的列进行筛选和分组:
 
-```
+```java
 data.select(col("country"), col("year"), col("value"))
   .show();
 
@@ -64,7 +64,7 @@ Spark 团队在 Spark 1.6 中发布了`Dataset` API，正如他们提到的:“S
 
 首先，我们需要创建一个类型为`TouristData`的类:
 
-```
+```java
 public class TouristData {
     private String region;
     private String country;
@@ -79,7 +79,7 @@ public class TouristData {
 
 为了将我们的每个记录映射到指定的类型，我们需要使用编码器。**编码器在 Java 对象和 Spark 的内部二进制格式之间进行转换**:
 
-```
+```java
 // SparkSession initialization and data load
 Dataset<Row> responseWithSelectedColumns = data.select(col("region"), 
   col("country"), col("year"), col("series"), col("value").cast("double"), 
@@ -91,7 +91,7 @@ Dataset<TouristData> typedDataset = responseWithSelectedColumns
 
 与 DataFrame 一样，我们可以按特定的列进行筛选和分组:
 
-```
+```java
 typedDataset.filter((FilterFunction) record -> record.getCountry()
   .equals("Norway"))
   .show();
@@ -103,7 +103,7 @@ typedDataset.groupBy(typedDataset.col("country"))
 
 我们还可以执行一些操作，如按匹配特定范围的列进行筛选，或者计算特定列的总和，以获得它的总值:
 
-```
+```java
 typedDataset.filter((FilterFunction) record -> record.getYear() != null 
   && (Long.valueOf(record.getYear()) > 2010 
   && Long.valueOf(record.getYear()) < 2017)).show();
@@ -136,7 +136,7 @@ typedDataset.filter((FilterFunction) record -> record.getValue() != null
 
 首先，我们需要创建一个`JavaSparkContext`并从`Tourist.csv`文件中加载数据作为 RDD:
 
-```
+```java
 SparkConf conf = new SparkConf().setAppName("uppercaseCountries")
   .setMaster("local[*]");
 JavaSparkContext sc = new JavaSparkContext(conf);
@@ -146,7 +146,7 @@ JavaRDD<String> tourists = sc.textFile("data/Tourist.csv");
 
 接下来，让我们应用 map 函数从每个记录中获取国家的名称，并将名称转换为大写。我们可以将这个新生成的数据集作为文本文件保存在磁盘上:
 
-```
+```java
 JavaRDD<String> upperCaseCountries = tourists.map(line -> {
     String[] columns = line.split(COMMA_DELIMITER);
     return columns[1].toUpperCase();
@@ -157,7 +157,7 @@ upperCaseCountries.saveAsTextFile("data/output/uppercase.txt");
 
 如果我们只想选择一个特定的国家，我们可以对我们的原始游客 RDD 应用过滤函数:
 
-```
+```java
 JavaRDD<String> touristsInMexico = tourists
   .filter(line -> line.split(COMMA_DELIMITER)[1].equals("Mexico"));
 
@@ -172,7 +172,7 @@ Spark 中经常使用的两个操作是 Count 和 Reduce。
 
 让我们统计一下 CSV 文件中的国家总数:
 
-```
+```java
 // Spark Context initialization and data load
 JavaRDD<String> countries = tourists.map(line -> {
     String[] columns = line.split(COMMA_DELIMITER);
@@ -186,7 +186,7 @@ Long numberOfCountries = countries.count();
 
 我们将使用一个`JavaPairRDD`，而不是使用一个`JavaRDD`。**一对 RDD 是一种可以存储键值对的 RDD**。接下来我们来检查一下:
 
-```
+```java
 JavaRDD<String> touristsExpenditure = tourists
   .filter(line -> line.split(COMMA_DELIMITER)[3].contains("expenditure"));
 

@@ -12,7 +12,7 @@
 
 首先，让我们从 [Spring 初始化器](https://web.archive.org/web/20220628161001/https://start.spring.io/)开始创建一个基于 [Spring Boot](/web/20220628161001/https://www.baeldung.com/spring-boot) Maven 的应用程序:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -23,7 +23,7 @@
 
 我们还需要使用几个 Spring Boot 首发:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter</artifactId>
@@ -37,7 +37,7 @@
 
 让我们将 [JUnit 5](/web/20220628161001/https://www.baeldung.com/junit-5) 的依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-api</artifactId>
@@ -48,7 +48,7 @@
 
 此外，为了在我们的测试中使用[可用性](https://web.archive.org/web/20220628161001/https://search.maven.org/search?q=g:org.awaitility%20AND%20a:awaitility)，我们需要添加它的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.awaitility</groupId>
     <artifactId>awaitility</artifactId>
@@ -61,7 +61,7 @@
 
 让我们从创建一个简单的`Counter`类开始:
 
-```
+```java
 @Component
 public class Counter {
     private AtomicInteger count = new AtomicInteger(0);
@@ -81,7 +81,7 @@ public class Counter {
 
 同样，让我们创建一个`ScheduledConfig`类来使用`@EnableScheduling`注释启用调度任务:
 
-```
+```java
 @Configuration
 @EnableScheduling
 @ComponentScan("com.baeldung.scheduled")
@@ -93,7 +93,7 @@ public class ScheduledConfig {
 
 测试我们的类的替代方法之一是使用[集成测试](/web/20220628161001/https://www.baeldung.com/integration-testing-in-spring)。为此，我们需要使用`@SpringJUnitConfig`注释在测试环境中启动应用程序上下文和 beans:
 
-```
+```java
 @SpringJUnitConfig(ScheduledConfig.class)
 public class ScheduledIntegrationTest {
 
@@ -116,7 +116,7 @@ public class ScheduledIntegrationTest {
 
 测试计划任务的另一种方法是使用[可用性](/web/20220628161001/https://www.baeldung.com/awaitlity-testing)。我们可以使用 Awaitility DSL 来使我们的测试更具声明性:
 
-```
+```java
 @SpringJUnitConfig(ScheduledConfig.class)
 public class ScheduledAwaitilityIntegrationTest {
 

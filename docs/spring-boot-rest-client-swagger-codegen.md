@@ -24,7 +24,7 @@ Swagger 提供了一个实用工具 jar，允许我们为各种编程语言和�
 
 让我们通过执行命令`java -jar swagger-code-gen-cli.jar generate:`来生成我们的客户端
 
-```
+```java
 java -jar swagger-codegen-cli.jar generate \
   -i http://petstore.swagger.io/v2/swagger.json \
   --api-package com.baeldung.petstore.client.api \
@@ -49,7 +49,7 @@ java -jar swagger-codegen-cli.jar generate \
 
 要列出所有与 Java 相关的选项，请键入以下命令:
 
-```
+```java
 java -jar swagger-codegen-cli.jar config-help -l java
 ```
 
@@ -76,13 +76,13 @@ Swagger Codegen 由 SmartBear 维护，OpenAPI Generator 由一个社区维护�
 
 也许最简单和最便携的安装方法是使用 [`npm`包](https://web.archive.org/web/20221001011419/https://www.npmjs.com/package/@openapitools/openapi-generator-cli)包装器，它通过在 Java 代码支持的命令行选项上提供一个 CLI 包装器来工作。安装非常简单:
 
-```
+```java
 npm install @openapitools/openapi-generator-cli -g
 ```
 
 对于那些想要 JAR 文件的人，可以在 [Maven Central](https://web.archive.org/web/20221001011419/https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli) 中找到。现在就下载吧:
 
-```
+```java
 wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/4.2.3/openapi-generator-cli-4.2.3.jar \
   -O openapi-generator-cli.jar 
 ```
@@ -93,7 +93,7 @@ wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/4.2.3
 
 接下来，让我们使用`jar`命令生成一个客户机，它相当于我们用 Swagger Codegen 生成的客户机:
 
-```
+```java
 java -jar openapi-generator-cli.jar generate \
   -i http://petstore.swagger.io/v2/swagger.json \
   --api-package com.baeldung.petstore.client.api \
@@ -110,7 +110,7 @@ java -jar openapi-generator-cli.jar generate \
 
 要列出所有与 Java 相关的选项，请键入以下命令:
 
-```
+```java
 java -jar openapi-generator-cli.jar config-help -g java
 ```
 
@@ -139,7 +139,7 @@ OpenAPI Generator 支持所有与 Swagger CodeGen 相同的 Java 库，外加一
 
 我们首先将生成的 API 客户端库的依赖项添加到我们的项目`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.baeldung</groupId>
     <artifactId>spring-swagger-codegen-api-client</artifactId>
@@ -151,7 +151,7 @@ OpenAPI Generator 支持所有与 Swagger CodeGen 相同的 Java 库，外加一
 
 要访问生成的类，我们需要将它们配置为 beans:
 
-```
+```java
 @Configuration
 public class PetStoreIntegrationConfig {
 
@@ -173,7 +173,7 @@ public class PetStoreIntegrationConfig {
 
 例如，如果您正在使用 OAuth:
 
-```
+```java
 @Bean
 public ApiClient apiClient() {
     ApiClient apiClient = new ApiClient();
@@ -189,7 +189,7 @@ public ApiClient apiClient() {
 
 我们需要导入新创建的配置:
 
-```
+```java
 @SpringBootApplication
 @Import(PetStoreIntegrationConfig.class)
 public class PetStoreApplication {
@@ -203,7 +203,7 @@ public class PetStoreApplication {
 
 因为我们将 API 类配置为 beans，所以我们可以自由地将它们注入到 Spring 管理的类中:
 
-```
+```java
 @Autowired
 private PetApi petApi;
 
@@ -222,7 +222,7 @@ public List<Pet> findAvailablePets() {
 
 这是一个基本的代码片段，我们可以将它包含在项目的`pom.xml`中，以自动生成客户端:
 
-```
+```java
 <plugin>
     <groupId>io.swagger</groupId>
     <artifactId>swagger-codegen-maven-plugin</artifactId>
@@ -248,7 +248,7 @@ public List<Pet> findAvailablePets() {
 
 让我们用一个简单的 curl 命令来做一个例子:
 
-```
+```java
 curl -X POST -H "content-type:application/json" \
   -d '{"swaggerUrl":"http://petstore.swagger.io/v2/swagger.json"}' \
   http://generator.swagger.io/api/gen/clients/java
@@ -262,7 +262,7 @@ https://generator . swagger . io 包含 API 的 Swagger 文档，我们可以在
 
 和 Swagger Godegen 一样，OpenAPI Generator 也有一个在线生成器。让我们使用一个简单的 curl 命令来执行一个示例:
 
-```
+```java
 curl -X POST -H "content-type:application/json" \
   -d '{"openAPIUrl":"http://petstore.swagger.io/v2/swagger.json"}' \
   http://api.openapi-generator.tech/api/gen/clients/java

@@ -30,7 +30,7 @@ This article will show how to use dependency injection to insert Mockito mocks i
 
 我们的第一个选择是用`MockitoJUnitRunner` 来注释 JUnit 测试:
 
-```
+```java
 @RunWith(MockitoJUnitRunner.class)
 public class MockitoAnnotationTest {
     ...
@@ -41,7 +41,7 @@ public class MockitoAnnotationTest {
 
 或者，我们可以通过调用`MockitoAnnotations.initMocks()`以编程方式来**启用 Mockito 注释:**
 
-```
+```java
 @Before
 public void init() {
     MockitoAnnotations.initMocks(this);
@@ -52,7 +52,7 @@ public void init() {
 
 最后，**我们可以用一个`MockitoJUnit.rule()`** :
 
-```
+```java
 public class MockitoInitWithMockitoJUnitRuleUnitTest {
 
     @Rule
@@ -70,7 +70,7 @@ Mockito 中使用最广泛的注释是`@Mock`。我们可以使用`@Mock`来创�
 
 在下面的例子中，我们将手动创建一个模拟的`ArrayList`，而不使用`@Mock`注释:
 
-```
+```java
 @Test
 public void whenNotUseMockAnnotation_thenCorrect() {
     List mockList = Mockito.mock(ArrayList.class);
@@ -86,7 +86,7 @@ public void whenNotUseMockAnnotation_thenCorrect() {
 
 现在我们将做同样的事情，但是我们将使用`@Mock`注释注入模拟:
 
-```
+```java
 @Mock
 List<String> mockedList;
 
@@ -109,7 +109,7 @@ public void whenUseMockAnnotation_thenMockIsInjected() {
 
 在下面的例子中，我们创建了一个`List`的间谍，而没有使用`@Spy`注释:
 
-```
+```java
 @Test
 public void whenNotUseSpyAnnotation_thenCorrect() {
     List<String> spyList = Mockito.spy(new ArrayList<String>());
@@ -129,7 +129,7 @@ public void whenNotUseSpyAnnotation_thenCorrect() {
 
 现在我们将做同样的事情，监视列表，但是我们将使用`@Spy`注释:
 
-```
+```java
 @Spy
 List<String> spiedList = new ArrayList<String>();
 
@@ -159,7 +159,7 @@ public void whenUseSpyAnnotation_thenSpyIsInjectedCorrectly() {
 
 在下面的例子中，我们将创建一个`ArgumentCaptor`而不使用`@Captor`注释:
 
-```
+```java
 @Test
 public void whenNotUseCaptorAnnotation_thenCorrect() {
     List mockList = Mockito.mock(List.class);
@@ -174,7 +174,7 @@ public void whenNotUseCaptorAnnotation_thenCorrect() {
 
 现在让**出于同样的目的利用`@Captor`** 来创建一个`ArgumentCaptor` 实例:
 
-```
+```java
 @Mock
 List mockedList;
 
@@ -198,7 +198,7 @@ public void whenUseCaptorAnnotation_thenTheSam() {
 
 在下面的例子中，我们将使用`@InjectMocks`将模拟`wordMap`注入到`MyDictionary`T3 中:
 
-```
+```java
 @Mock
 Map<String, String> wordMap;
 
@@ -215,7 +215,7 @@ public void whenUseInjectMocksAnnotation_thenCorrect() {
 
 下面是这个类:
 
-```
+```java
 public class MyDictionary {
     Map<String, String> wordMap;
 
@@ -235,7 +235,7 @@ public class MyDictionary {
 
 与上面的测试类似，我们可能想给一个间谍注入一个模拟:
 
-```
+```java
 @Mock
 Map<String, String> wordMap;
 
@@ -245,7 +245,7 @@ MyDictionary spyDic = new MyDictionary();
 
 **然而，Mockito 不支持将 mocks 注入间谍，**并且以下测试结果出现异常:
 
-```
+```java
 @Test 
 public void whenUseInjectMocksAnnotation_thenCorrect() { 
     Mockito.when(wordMap.get("aWord")).thenReturn("aMeaning"); 
@@ -256,7 +256,7 @@ public void whenUseInjectMocksAnnotation_thenCorrect() {
 
 如果我们想将 mock 与 spy 一起使用，我们可以通过构造函数手动注入 mock:
 
-```
+```java
 MyDictionary(Map<String, String> wordMap) {
     this.wordMap = wordMap;
 }
@@ -264,7 +264,7 @@ MyDictionary(Map<String, String> wordMap) {
 
 我们现在可以手动创建间谍，而不是使用注释:
 
-```
+```java
 @Mock
 Map<String, String> wordMap; 
 
@@ -283,7 +283,7 @@ public void init() {
 
 当我们试图实际使用标注有`@Mock` 或`@Spy`的实例时，我们经常会**碰到`NullPointerException`** :
 
-```
+```java
 public class MockitoAnnotationsUninitializedUnitTest {
 
     @Mock

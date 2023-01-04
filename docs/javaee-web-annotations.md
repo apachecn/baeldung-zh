@@ -27,7 +27,7 @@ Servlet API 3.1 引入了一组新的注释类型，可以在`Servlet`类中使�
 
 简单地说，这个注释允许我们将 Java 类声明为 servlet*:*
 
-```
+```java
 @WebServlet("/account")
 public class AccountServlet extends javax.servlet.http.HttpServlet {
 
@@ -54,7 +54,7 @@ public class AccountServlet extends javax.servlet.http.HttpServlet {
 
 我们可以使用这些，如下例所示:
 
-```
+```java
 @WebServlet(
   name = "BankAccountServlet", 
   description = "Represents a Bank Account and it's transactions", 
@@ -90,7 +90,7 @@ public class AccountServlet extends javax.servlet.http.HttpServlet {
 
 在本例中，我们将 servlet 初始化参数`type`设置为‘savings’值:
 
-```
+```java
 @WebServlet(
   name = "BankAccountServlet", 
   description = "Represents a Bank Account and it's transactions", 
@@ -117,7 +117,7 @@ public class AccountServlet extends javax.servlet.http.HttpServlet {
 
 在下面的例子中，我们使用 `@WebFilter`注释将任何未授权的访问重定向到登录页面:
 
-```
+```java
 @WebFilter(
   urlPatterns = "/account/*",
   filterName = "LoggingFilter",
@@ -158,7 +158,7 @@ public class LogInFilter implements javax.servlet.Filter {
 
 下面是一个我们如何使用`ServletContextListener` 来配置 web 应用程序的例子:
 
-```
+```java
 @WebListener
 public class BankAppServletContextListener 
   implements ServletContextListener {
@@ -179,7 +179,7 @@ public class BankAppServletContextListener
 
 在这个例子中，我们将使用`@ServletSecurity` 注释来限制对我们的`AccountServlet` 的访问:
 
-```
+```java
 @WebServlet(
   name = "BankAccountServlet", 
   description = "Represents a Bank Account and it's transactions", 
@@ -252,7 +252,7 @@ public class AccountServlet extends javax.servlet.http.HttpServlet {
 
 现在我们将看一个示例 servlet `UploadCustomerDocumentsServlet` 来演示它的用法:
 
-```
+```java
 @WebServlet(urlPatterns = { "/uploadCustDocs" })
 @MultipartConfig(
   fileSizeThreshold = 1024 * 1024 * 20,

@@ -17,7 +17,7 @@
 
 让我们定义一个`Vehicle`类`:`
 
-```
+```java
 @MappedSuperclass
 public class Vehicle {
     @Id
@@ -34,7 +34,7 @@ public class Vehicle {
 
 接下来让我们定义类`Car`，它扩展了`Vehicle.` **它演示了如何扩展一个实体并在一个表中存储一辆汽车的信息。请注意，注释出现在类上:**
 
-```
+```java
 @Entity
 @AttributeOverride(name = "identifier", column = @Column(name = "VIN"))
 public class Car extends Vehicle {
@@ -53,7 +53,7 @@ public class Car extends Vehicle {
 
 让我们首先定义基本地址信息:
 
-```
+```java
 @Embeddable
 public class Address {
     private String name;
@@ -65,7 +65,7 @@ public class Address {
 
 让我们也创建一个包含汽车制造商信息的类:
 
-```
+```java
 @Embeddable
 public class Brand {
     private String name;
@@ -81,7 +81,7 @@ public class Brand {
 
 让我们用`Brand `细节来扩展我们的`Car `:
 
-```
+```java
 @Entity
 @AttributeOverride(name = "identifier", column = @Column(name = "VIN"))
 public class Car extends Vehicle {
@@ -110,7 +110,7 @@ public class Car extends Vehicle {
 
 让我们添加汽车所有者的详细信息:
 
-```
+```java
 @Embeddable
 public class Owner {
     private String name;
@@ -122,7 +122,7 @@ public class Owner {
 
 我们希望拥有一个拥有者和一个地址，所以让我们添加一个拥有者和他们地址的地图`:`
 
-```
+```java
 @Entity
 @AttributeOverride(name = "identifier", column = @Column(name = "VIN"))
 public class Car extends Vehicle {

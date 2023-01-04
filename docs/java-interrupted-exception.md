@@ -44,7 +44,7 @@
 
 让我们快速看一下`Thread`类处理中断的一些关键方法:
 
-```
+```java
 public void interrupt() { ... }
 public boolean isInterrupted() { ... }
 public static boolean interrupted() { ... }
@@ -52,7 +52,7 @@ public static boolean interrupted() { ... }
 
 **`Thread`提供了`interrupt()`中断线程的方法，要查询线程是否被中断，我们可以使用`isInterrupted()`方法**。有时，我们可能希望测试当前线程是否被中断，如果是，立即抛出这个异常。在这里，我们可以使用`interrupted()`方法:
 
-```
+```java
 if (Thread.interrupted()) {
     throw new InterruptedException();
 }
@@ -76,7 +76,7 @@ if (Thread.interrupted()) {
 
 我们可以允许`InterruptedException`在调用栈中向上传播，例如，**通过依次给每个方法添加一个`throws`子句，并让调用者决定如何处理中断**。这可能涉及到我们没有捕获异常，或者捕获并重新抛出异常。让我们通过一个例子来实现这一点:
 
-```
+```java
 public static void propagateException() throws InterruptedException {
     Thread.sleep(1000);
     Thread.currentThread().interrupt();
@@ -88,7 +88,7 @@ public static void propagateException() throws InterruptedException {
 
 这里，我们检查线程是否被中断，如果是，我们抛出一个 *InterruptedException* 。现在，让我们调用`propagateException()`方法:
 
-```
+```java
 public static void main(String... args) throws InterruptedException {
     propagateException();
 }
@@ -96,7 +96,7 @@ public static void main(String... args) throws InterruptedException {
 
 当我们试图运行这段代码时，我们将收到一个带有堆栈跟踪的`InterruptedException`:
 
-```
+```java
 Exception in thread "main" java.lang.InterruptedException
     at com.baeldung.concurrent.interrupt.InterruptExample.propagateException(InterruptExample.java:16)
     at com.baeldung.concurrent.interrupt.InterruptExample.main(InterruptExample.java:7)
@@ -110,7 +110,7 @@ Exception in thread "main" java.lang.InterruptedException
 
 **我们可以再次调用`interrupt()`方法(它会将标志设置回`true`)，这样调用栈中更高层的代码可以看到一个中断被发出。**例如，让我们中断一个线程，并尝试访问其中断状态:
 
-```
+```java
 public class InterruptExample extends Thread {
     public static Boolean restoreTheState() {
         InterruptExample thread1 = new InterruptExample();
@@ -123,7 +123,7 @@ public class InterruptExample extends Thread {
 
 下面是处理这个中断并恢复中断状态的`run()`方法:
 
-```
+```java
 public void run() {
     try {
         Thread.sleep(1000);
@@ -134,7 +134,7 @@ public void run() {
 
 最后，让我们测试状态:
 
-```
+```java
 assertTrue(InterruptExample.restoreTheState());
 ```
 
@@ -148,7 +148,7 @@ assertTrue(InterruptExample.restoreTheState());
 
 让我们创建一个名为`CustomInterruptedException`的自定义检查异常:
 
-```
+```java
 public class CustomInterruptedException extends Exception {
     CustomInterruptedException(String message) {
         super(message);
@@ -158,7 +158,7 @@ public class CustomInterruptedException extends Exception {
 
 **线程中断时我们可以抛出我们的`CustomInterruptedException`**:
 
-```
+```java
 public static void throwCustomException() throws Exception {
     Thread.sleep(1000);
     Thread.currentThread().interrupt();
@@ -170,7 +170,7 @@ public static void throwCustomException() throws Exception {
 
 让我们看看如何检查异常是否抛出了正确的消息:
 
-```
+```java
 @Test
  public void whenThrowCustomException_thenContainsExpectedMessage() {
     Exception exception = assertThrows(CustomInterruptedException.class, () -> InterruptExample.throwCustomException());
@@ -183,7 +183,7 @@ public static void throwCustomException() throws Exception {
 
 **同样，我们可以处理异常并恢复中断状态**:
 
-```
+```java
 public static Boolean handleWithCustomException() throws CustomInterruptedException{
     try {
         Thread.sleep(1000);
@@ -198,7 +198,7 @@ public static Boolean handleWithCustomException() throws CustomInterruptedExcept
 
 我们可以通过检查中断状态来测试代码，以确保它返回`true`:
 
-```
+```java
 assertTrue(InterruptExample.handleWithCustomException());
 ```
 

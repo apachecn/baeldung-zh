@@ -18,7 +18,7 @@ Java 8 引入了新的`Stream` API，让我们以声明的方式处理数据。
 
 让我们使用`Stream` API 来创建一个函数，它将把一个`String`数组加入到一个逗号分隔的`String`中:
 
-```
+```java
 public static String join(String[] arrayOfString){
     return Arrays.asList(arrayOfString)
       .stream()
@@ -35,7 +35,7 @@ public static String join(String[] arrayOfString){
 
 可能会有这样的情况，我们可能想要加入一个带有固定前缀和后缀的`String`。使用`Stream` API，我们可以通过以下方式实现:
 
-```
+```java
 public static String joinWithPrefixPostfix(String[] arrayOfString){
     return Arrays.asList(arrayOfString)
       .stream()
@@ -50,7 +50,7 @@ public static String joinWithPrefixPostfix(String[] arrayOfString){
 
 现在，让我们创建一个函数，它使用`Stream` API 将逗号分隔的`String`拆分成一系列的`String`:
 
-```
+```java
 public static List<String> split(String str){
     return Stream.of(str.split(","))
       .map (elem -> new String(elem))
@@ -60,7 +60,7 @@ public static List<String> split(String str){
 
 也可以使用`Stream` API 直接将`String`转换成`Character`列表:
 
-```
+```java
 public static List<Character> splitToListOfChar(String str) {
     return str.chars()
       .mapToObj(item -> (char) item)
@@ -74,7 +74,7 @@ public static List<Character> splitToListOfChar(String str) {
 
 我们还可以使用`split `和`Collectors.toMap`将`String`数组转换为 map，假设数组中的每一项都包含一个由分隔符连接的键值实体:
 
-```
+```java
 public static Map<String, String> arrayToMap(String[] arrayOfString) {
 	return Arrays.asList(arrayOfString)
 	  .stream()
@@ -87,7 +87,7 @@ public static Map<String, String> arrayToMap(String[] arrayOfString) {
 
 **请记住，为了避免编译错误，我们需要确保代码使用 Java 1.8** 编译。为此，我们需要在`pom.xml`中添加以下插件:
 
-```
+```java
 <build>
     <plugins>
       <plugin>
@@ -109,7 +109,7 @@ public static Map<String, String> arrayToMap(String[] arrayOfString) {
 
 首先，让我们测试一下简单的连接方法:
 
-```
+```java
 @Test
 public void givenArray_transformedToStream_convertToString() {
     String[] programmingLanguages = {"java", "python", "nodejs", "ruby"};
@@ -122,7 +122,7 @@ public void givenArray_transformedToStream_convertToString() {
 
 接下来，让我们创建另一个来测试我们简单的分割功能:
 
-```
+```java
 @Test
 public void givenString_transformedToStream_convertToList() {
     String programmingLanguages = "java,python,nodejs,ruby";
@@ -141,7 +141,7 @@ public void givenString_transformedToStream_convertToList() {
 
 最后，让我们测试一下我们的`String`数组的映射功能:
 
-```
+```java
 @Test
 public void givenStringArray_transformedToStream_convertToMap() {
 

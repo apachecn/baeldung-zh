@@ -16,7 +16,7 @@
 
 从版本 3.5.1 开始，Java 8 的支持包含在主 AssertJ 核心模块中。为了使用该模块，您需要在您的`pom.xml`文件中包含以下部分:
 
-```
+```java
 <dependency>
     <groupId>org.assertj</groupId>
     <artifactId>assertj-core</artifactId>
@@ -37,13 +37,13 @@ AssertJ 通过为 Java 8 类型提供特殊的助手方法和新的断言来利�
 
 让我们创建一个简单的`Optional`实例:
 
-```
+```java
 Optional<String> givenOptional = Optional.of("something");
 ```
 
 我们现在可以很容易地检查一个`Optional`是否包含一些值，以及包含的值是什么:
 
-```
+```java
 assertThat(givenOptional)
   .isPresent()
   .hasValue("something");
@@ -53,13 +53,13 @@ assertThat(givenOptional)
 
 让我们通过检查`String`的长度来创建一个简单的`Predicate`实例:
 
-```
+```java
 Predicate<String> predicate = s -> s.length() > 4;
 ```
 
 现在，您可以轻松检查哪些`String`被`Predicate:`拒绝或接受
 
-```
+```java
 assertThat(predicate)
   .accepts("aaaaa", "bbbbb")
   .rejects("a", "b")
@@ -71,14 +71,14 @@ assertThat(predicate)
 
 让我们从定义两个`LocalDate`对象开始:
 
-```
+```java
 LocalDate givenLocalDate = LocalDate.of(2016, 7, 8);
 LocalDate todayDate = LocalDate.now();
 ```
 
 现在，您可以轻松检查给定日期是在给定日期之前/之后，还是在今天:
 
-```
+```java
 assertThat(givenLocalDate)
   .isBefore(LocalDate.of(2020, 7, 8))
   .isAfterOrEqualTo(LocalDate.of(1989, 7, 8));
@@ -94,13 +94,13 @@ assertThat(todayDate)
 
 让我们创建一个示例`LocalDateTime`对象:
 
-```
+```java
 LocalDateTime givenLocalDate = LocalDateTime.of(2016, 7, 8, 12, 0);
 ```
 
 现在您可以检查:
 
-```
+```java
 assertThat(givenLocalDate)
   .isBefore(LocalDateTime.of(2020, 7, 8, 11, 2));
 ```
@@ -111,13 +111,13 @@ assertThat(givenLocalDate)
 
 让我们创建一个示例`LocalTime`对象:
 
-```
+```java
 LocalTime givenLocalTime = LocalTime.of(12, 15);
 ```
 
 现在你可以断言:
 
-```
+```java
 assertThat(givenLocalTime)
   .isAfter(LocalTime.of(1, 0))
   .hasSameHourAs(LocalTime.of(12, 0));
@@ -129,13 +129,13 @@ assertThat(givenLocalTime)
 
 让我们用`LocalDate`对象创建一个简单的`List`:
 
-```
+```java
 List<LocalDate> givenList = asList(ofYearDay(2016, 5), ofYearDay(2015, 6));
 ```
 
 现在我们可以很容易地检查这个`List`是否包含至少一个 2015 年的`LocalDate`对象:
 
-```
+```java
 assertThat(givenList)
   .flatExtracting(LocalDate::getYear)
   .contains(2015);
@@ -143,7 +143,7 @@ assertThat(givenList)
 
 `flatExtracting`方法并不局限于字段提取。我们总能为它提供任何功能:
 
-```
+```java
 assertThat(givenList)
   .flatExtracting(LocalDate::isLeapYear)
   .contains(true);
@@ -151,7 +151,7 @@ assertThat(givenList)
 
 或者甚至:
 
-```
+```java
 assertThat(givenList)
   .flatExtracting(Object::getClass)
   .contains(LocalDate.class);
@@ -159,7 +159,7 @@ assertThat(givenList)
 
 您也可以一次提取多个属性:
 
-```
+```java
 assertThat(givenList)
   .flatExtracting(LocalDate::getYear, LocalDate::getDayOfMonth)
   .contains(2015, 6);
@@ -171,13 +171,13 @@ assertThat(givenList)
 
 让我们创建一个示例`String`实例:
 
-```
+```java
 String givenString = "someString";
 ```
 
 现在我们可以将断言作为 lambda 主体提供:
 
-```
+```java
 assertThat(givenString)
   .satisfies(s -> {
     assertThat(s).isNotEmpty();
@@ -191,13 +191,13 @@ assertThat(givenString)
 
 让我们创建一个例子`List:`
 
-```
+```java
 List<String> givenList = Arrays.asList("");
 ```
 
 现在你可以断言:
 
-```
+```java
 assertThat(givenList)
   .hasOnlyOneElementSatisfying(s -> assertThat(s).isEmpty());
 ```
@@ -208,13 +208,13 @@ assertThat(givenList)
 
 让我们空出一个`String:`
 
-```
+```java
 String emptyString = "";
 ```
 
 现在我们可以通过提供适当的`Predicate` lambda 函数来检查它的状态:
 
-```
+```java
 assertThat(emptyString)
   .matches(String::isEmpty);
 ```

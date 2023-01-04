@@ -24,7 +24,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 让我们从本教程所需的 [Spring 安全依赖项](/web/20220523231103/https://www.baeldung.com/spring-security-with-maven)开始`:`
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-web</artifactId>
@@ -48,7 +48,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 接下来，我们需要为现有的 Jakarta EE 应用程序设置安全配置:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig 
@@ -71,7 +71,7 @@ public class SpringSecurityConfig
 
 接下来，让我们通过添加`SecurityWebApplicationInitializer` 类将安全性集成到现有系统中:
 
-```
+```java
 public class SecurityWebApplicationInitializer
   extends AbstractSecurityWebApplicationInitializer {
 
@@ -87,7 +87,7 @@ public class SecurityWebApplicationInitializer
 
 我们可以通过重写`WebSecurityConfigurerAdapter`的`configure(HttpSecurity http)`方法来进一步定制 Spring 安全性:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http
@@ -111,14 +111,14 @@ protected void configure(HttpSecurity http) throws Exception {
 
 使用`formLogin()`方法配置自定义登录页面:
 
-```
+```java
 http.formLogin()
   .loginPage("/auth/login")
 ```
 
 如果没有指定，Spring Security 会在`/login`生成一个默认的登录页面:
 
-```
+```java
 <html>
 <head></head>
 <body>
@@ -147,7 +147,7 @@ http.formLogin()
 
 成功登录后，Spring Security 会将用户重定向到应用程序的根目录。我们可以通过指定一个默认的成功 URL 来覆盖它:
 
-```
+```java
 http.formLogin()
   .defaultSuccessUrl("/home", true)
 ```
@@ -158,7 +158,7 @@ http.formLogin()
 
 同样，我们也可以指定一个定制的失败登录页面:
 
-```
+```java
 http.formLogin()
   .failureUrl("/auth/login?error=true")
 ```
@@ -167,7 +167,7 @@ http.formLogin()
 
 我们可以按角色限制对资源的访问:
 
-```
+```java
 http.formLogin()
   .antMatchers("/home/admin*").hasRole("ADMIN")
 ```
@@ -176,7 +176,7 @@ http.formLogin()
 
 我们还可以基于用户的角色来限制 JSP 页面上的数据。这是使用`<security:authorize>`标签完成的:
 
-```
+```java
 <security:authorize access="hasRole('ADMIN')">
     This text is only visible to an admin
     <br/>
@@ -187,7 +187,7 @@ http.formLogin()
 
 要使用这个标签，我们必须在页面顶部包含 Spring 安全标签 taglib:
 
-```
+```java
 <%@ taglib prefix="security" 
   uri="http://www.springframework.org/security/tags" %>
 ```
@@ -200,7 +200,7 @@ http.formLogin()
 
 让我们从配置身份验证管理器和身份验证提供者开始。为了简单起见，我们使用简单的硬编码用户凭证:
 
-```
+```java
 <authentication-manager>
     <authentication-provider>
         <user-service>
@@ -216,7 +216,7 @@ http.formLogin()
 
 或者，我们可以用密码编码器配置我们的身份验证提供程序:
 
-```
+```java
 <authentication-manager>
     <authentication-provider>
         <password-encoder hash="sha"/>
@@ -233,7 +233,7 @@ http.formLogin()
 
 现在我们已经配置了身份验证管理器，让我们设置安全规则并应用访问控制:
 
-```
+```java
 <http auto-config='true' use-expressions="true">
     <form-login default-target-url="/secure.jsp" />
     <intercept-url pattern="/" access="isAnonymous()" />
@@ -250,7 +250,7 @@ http.formLogin()
 
 最后，对于要在应用程序启动期间加载的`security.xml`配置，我们需要向我们的`web.xml`添加以下定义:
 
-```
+```java
 <context-param>                                                                           
     <param-name>contextConfigLocation</param-name>                                        
     <param-value>                                                                         

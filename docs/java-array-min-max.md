@@ -12,7 +12,7 @@
 
 有许多方法可以找到无序数组中的最小值或最大值，它们看起来都像:
 
-```
+```java
 SET MAX to array[0]
 FOR i = 1 to array length - 1
   IF array[i] > MAX THEN
@@ -31,7 +31,7 @@ ENDFOR
 
 因为我们只处理整数，`min`不需要`Comparator`:
 
-```
+```java
 @Test
 public void whenArrayIsOfIntegerThenMinUsesIntegerComparator() {
     int[] integers = new int[] { 20, 98, 12, 7, 35 };
@@ -52,7 +52,7 @@ public void whenArrayIsOfIntegerThenMinUsesIntegerComparator() {
 
 让我们创建一个简单的 POJO:
 
-```
+```java
 public class Car {
     private String model;
     private int topSpeed;
@@ -63,7 +63,7 @@ public class Car {
 
 然后我们可以再次使用`Stream` API 在一组`Car`中找到最快的汽车:
 
-```
+```java
 @Test
 public void whenArrayIsOfCustomTypeThenMaxUsesCustomComparator() {
     Car porsche = new Car("Porsche 959", 319);

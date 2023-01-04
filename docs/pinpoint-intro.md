@@ -27,7 +27,7 @@
 
 现在让我们运行一个快速入门示例，使用一个已经组合好的 Pinpoint 应用程序环境，使用`[docker-compose](/web/20221220053246/https://www.baeldung.com/ops/docker-compose)`:
 
-```
+```java
 $ git clone https://github.com/pinpoint-apm/pinpoint-docker.git
 $ cd pinpoint-docker
 $ docker-compose pull && docker-compose up -d 
@@ -76,7 +76,7 @@ $ docker-compose pull && docker-compose up -d
 
 正是 Pinpoint JVM 代理向用户提供了详细的堆栈跟踪。让我们看看如何启动受监控的 Java 应用程序:
 
-```
+```java
 pinpoint-quickstart:
    //...
    environment:

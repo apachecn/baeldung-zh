@@ -22,7 +22,7 @@ Mustache 模板由用 **{ { } }** (类似于 mustaches——因此得名)包围�
 
 Java 8+:
 
-```
+```java
 <dependency>
     <groupId>com.github.spullara.mustache.java</groupId>
     <artifactId>compiler</artifactId>
@@ -32,7 +32,7 @@ Java 8+:
 
 Java 6/7:
 
-```
+```java
 <dependency>
     <groupId>com.github.spullara.mustache.java</groupId>
     <artifactId>compiler</artifactId>
@@ -54,7 +54,7 @@ Java 6/7:
 
 我们将创建一个简单的模板来显示 todo 任务的详细信息:
 
-```
+```java
 <h2>{{title}}</h2>
 <small>Created on {{createdOn}}</small>
 <p>{{text}}</p>
@@ -69,7 +69,7 @@ Java 6/7:
 
 我们可以编译如下所示的模板:
 
-```
+```java
 MustacheFactory mf = new DefaultMustacheFactory();
 Mustache m = mf.compile("todo.mustache"); 
 ```
@@ -80,7 +80,7 @@ Mustache m = mf.compile("todo.mustache");
 
 提供给模板的数据将是`Todo`类的一个实例，其定义是:
 
-```
+```java
 public class Todo {
     private String title;
     private String text;
@@ -94,7 +94,7 @@ public class Todo {
 
 可以执行编译后的模板来获得 HTML，如下所示:
 
-```
+```java
 Todo todo = new Todo("Todo 1", "Description");
 StringWriter writer = new StringWriter();
 m.execute(writer, todo).flush();
@@ -109,7 +109,7 @@ String html = writer.toString();
 
 它看起来像这样:
 
-```
+```java
 {{#todo}}
 <!-- Other code -->
 {{/todo}}
@@ -123,7 +123,7 @@ String html = writer.toString();
 
 让我们创建一个使用部分的模板`todo-section.mustache`:
 
-```
+```java
 {{#todo}}
 <h2>{{title}}</h2>
 <small>Created on {{createdOn}}</small>
@@ -133,7 +133,7 @@ String html = writer.toString();
 
 让我们来看看这个模板的运行情况:
 
-```
+```java
 @Test
 public void givenTodoObject_whenGetHtml_thenSuccess() 
   throws IOException {
@@ -151,7 +151,7 @@ public void givenTodoObject_whenGetHtml_thenSuccess()
 
 让我们创建另一个模板`todos.mustache`来列出待办事项:
 
-```
+```java
 {{#todos}}
 <h2>{{title}}</h2>
 {{/todos}}
@@ -159,7 +159,7 @@ public void givenTodoObject_whenGetHtml_thenSuccess()
 
 并使用它创建待办事项列表:
 
-```
+```java
 @Test
 public void givenTodoList_whenGetHtml_thenSuccess() 
   throws IOException {
@@ -186,7 +186,7 @@ public void givenTodoList_whenGetHtml_thenSuccess()
 
 让我们用一个`null`值来测试`todo-section.mustache`:
 
-```
+```java
 @Test
 public void givenNullTodoObject_whenGetHtml_thenEmptyHtml() 
   throws IOException {
@@ -199,7 +199,7 @@ public void givenNullTodoObject_whenGetHtml_thenEmptyHtml()
 
 同样，用空列表测试`todos.mustache`:
 
-```
+```java
 @Test
 public void givenEmptyList_whenGetHtml_thenEmptyHtml() 
   throws IOException {
@@ -217,7 +217,7 @@ public void givenEmptyList_whenGetHtml_thenEmptyHtml()
 
 这些以插入符号(^)开始，以斜杠(/)结束，如下所示:
 
-```
+```java
 {{#todos}}
 <h2>{{title}}</h2>
 {{/todos}}
@@ -228,7 +228,7 @@ public void givenEmptyList_whenGetHtml_thenEmptyHtml()
 
 上面的模板提供了一个空列表:
 
-```
+```java
 @Test
 public void givenEmptyList_whenGetHtmlUsingInvertedSection_thenHtml() 
   throws IOException {
@@ -248,7 +248,7 @@ mustache 部分的键的**值可以是函数或 lambda 表达式**。在这种�
 
 我们来看一个模板`todos-lambda.mustache`:
 
-```
+```java
 {{#todos}}
 <h2>{{title}}{{#handleDone}}{{doneSince}}{{/handleDone}}</h2>
 {{/todos}}
@@ -256,7 +256,7 @@ mustache 部分的键的**值可以是函数或 lambda 表达式**。在这种�
 
 `handleDone`键解析为 Java 8 lambda 表达式，如下所示:
 
-```
+```java
 public Function<Object, Object> handleDone() {
     return (obj) -> done ? 
       String.format("<small>Done %s minutes ago<small>", obj) : "";
@@ -265,7 +265,7 @@ public Function<Object, Object> handleDone() {
 
 执行上述模板生成的 HTML 是:
 
-```
+```java
 <h2>Todo 1</h2>
 <h2>Todo 2</h2>
 <h2>Todo 3<small>Done 5 minutes ago<small></h2>

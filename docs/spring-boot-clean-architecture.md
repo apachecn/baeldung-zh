@@ -36,7 +36,7 @@
 
 正如 clean architecture 所建议的，让我们从我们的业务规则开始:
 
-```
+```java
 interface User {
     boolean passwordIsValid();
 
@@ -48,7 +48,7 @@ interface User {
 
 还有，一个`UserFactory`:
 
-```
+```java
 interface UserFactory {
     User create(String name, String password);
 }
@@ -58,7 +58,7 @@ interface UserFactory {
 
 接下来，让我们实现这两者:
 
-```
+```java
 class CommonUser implements User {
 
     String name;
@@ -73,7 +73,7 @@ class CommonUser implements User {
 }
 ```
 
-```
+```java
 class CommonUserFactory implements UserFactory {
     @Override
     public User create(String name, String password) {
@@ -88,7 +88,7 @@ class CommonUserFactory implements UserFactory {
 
 现在，让我们测试一下我们的`CommonUser`:
 
-```
+```java
 @Test
 void given123Password_whenPasswordIsNotValid_thenIsFalse() {
     User user = new CommonUser("Baeldung", "123");
@@ -109,7 +109,7 @@ void given123Password_whenPasswordIsNotValid_thenIsFalse() {
 
 首先，我们将构建我们的`UserRegisterInteractor`,这样我们可以看到我们要去哪里。然后，我们将创建并讨论所有用过的零件:
 
-```
+```java
 class UserRegisterInteractor implements UserInputBoundary {
 
     final UserRegisterDsGateway userDsGateway;
@@ -144,7 +144,7 @@ class UserRegisterInteractor implements UserInputBoundary {
 
 边界是定义组件如何交互的契约。****输入边界将我们的用例暴露给外层:****
 
-```
+```java
 interface UserInputBoundary {
     UserResponseModel create(UserRequestModel requestModel);
 }
@@ -152,7 +152,7 @@ interface UserInputBoundary {
 
 接下来，我们有了利用外层的**输出边界。首先，让我们定义数据源网关:**
 
-```
+```java
 interface UserRegisterDsGateway {
     boolean existsByName(String name);
 
@@ -162,7 +162,7 @@ interface UserRegisterDsGateway {
 
 二、视图演示者:
 
-```
+```java
 interface UserPresenter {
     UserResponseModel prepareSuccessView(UserResponseModel user);
 
@@ -188,7 +188,7 @@ interface UserPresenter {
 
 注意我们所有的边界是如何只处理`String`或`Model`对象的:
 
-```
+```java
 class UserRequestModel {
 
     String login;
@@ -211,7 +211,7 @@ class UserRequestModel {
 
 现在，让我们创建我们的单元测试:
 
-```
+```java
 @Test
 void givenBaeldungUserAnd12345Password_whenCreate_thenSaveItAndPrepareSuccessView() {
     given(userDsGateway.existsByIdentifier("identifier"))
@@ -238,7 +238,7 @@ void givenBaeldungUserAnd12345Password_whenCreate_thenSaveItAndPrepareSuccessVie
 
 首先，让我们用 [`JPA`](/web/20221128043253/https://www.baeldung.com/the-persistence-layer-with-spring-and-jpa) 来映射我们的`user`表:
 
-```
+```java
 @Entity
 @Table(name = "user")
 class UserDataMapper {
@@ -258,7 +258,7 @@ class UserDataMapper {
 
 接下来，`JpaRepository`使用我们的[实体](/web/20221128043253/https://www.baeldung.com/jpa-entities):
 
-```
+```java
 @Repository
 interface JpaUserRepository extends JpaRepository<UserDataMapper, String> {
 }
@@ -268,7 +268,7 @@ interface JpaUserRepository extends JpaRepository<UserDataMapper, String> {
 
 现在，是时候实施我们的`UserRegisterDsGateway:`
 
-```
+```java
 class JpaUser implements UserRegisterDsGateway {
 
     final JpaUserRepository repository;
@@ -294,7 +294,7 @@ class JpaUser implements UserRegisterDsGateway {
 
 现在，让我们创建 HTTP 适配器:
 
-```
+```java
 @RestController
 class UserRegisterController {
 
@@ -315,7 +315,7 @@ class UserRegisterController {
 
 在回应之前，我们应该格式化我们的回应:
 
-```
+```java
 class UserResponseFormatter implements UserPresenter {
 
     @Override
@@ -334,7 +334,7 @@ class UserResponseFormatter implements UserPresenter {
 
 我们的 `UserRegisterInteractor` 迫使我们创造了一个展示者。尽管如此，表示规则只涉及适配器内部。此外， **w** **凡是很难测试的东西，我们都应该把它分为可测试的和不可测试的。** 所以， `UserResponseFormatter` 很容易让我们验证我们的呈现规则:
 
-```
+```java
 @Test
 void givenDateAnd3HourTime_whenPrepareSuccessView_thenReturnOnly3HourTime() {
     UserResponseModel modelResponse = new UserResponseModel("baeldung", "2020-12-20T03:00:00.000");
@@ -350,7 +350,7 @@ void givenDateAnd3HourTime_whenPrepareSuccessView_thenReturnOnly3HourTime() {
 
 事实上，我们通常不在这里编码。这是因为该层**代表与外部代理**的最低级别连接。例如，连接数据库或 web 框架的 H2 驱动程序。在这里，**我们将使用 [spring-boot](/web/20221128043253/https://www.baeldung.com/spring-boot) 作为 [web](/web/20221128043253/https://www.baeldung.com/bootstraping-a-web-application-with-spring-and-java-based-configuration) 和[依赖注入](/web/20221128043253/https://www.baeldung.com/spring-dependency-injection)框架**。所以，我们需要它的启动点:
 
-```
+```java
 @SpringBootApplication
 public class CleanArchitectureApplication {
     public static void main(String[] args) {
@@ -367,7 +367,7 @@ public class CleanArchitectureApplication {
 
 到目前为止，我们遵循了[稳定抽象原则](https://web.archive.org/web/20221128043253/https://wiki.c2.com/?StableAbstractionsPrinciple)。 同样，我们用 [控制反转](/web/20221128043253/https://www.baeldung.com/inversion-control-and-dependency-injection-in-spring) 保护我们的内层免受外部代理的侵害。最后，我们将所有对象的创建和使用分离开来。此时，由我们来 **创建我们剩余的依赖项，并将它们注入我们的项目** :
 
-```
+```java
 @Bean
 BeanFactoryPostProcessor beanFactoryPostProcessor(ApplicationContext beanRegistry) {
     return beanFactory -> {

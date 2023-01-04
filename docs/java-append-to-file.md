@@ -12,7 +12,7 @@
 
 这里有一个简单的测试——读取一个现有文件，附加一些文本，然后确保附加正确:
 
-```
+```java
 @Test
 public void whenAppendToFileUsingFileWriter_thenCorrect()
   throws IOException {
@@ -37,7 +37,7 @@ public void whenAppendToFileUsingFileWriter_thenCorrect()
 
 接下来，让我们看看如何使用`FileOutputStream`进行同样的操作:
 
-```
+```java
 @Test
 public void whenAppendToFileUsingFileOutputStream_thenCorrect()
  throws Exception {
@@ -58,7 +58,7 @@ public void whenAppendToFileUsingFileOutputStream_thenCorrect()
 
 接下来，我们还可以使用`java.nio.file`中的功能将内容添加到文件中，该功能是在 JDK 7 中引入的:
 
-```
+```java
 @Test
 public void whenAppendToFileUsingFiles_thenCorrect() 
  throws IOException {
@@ -79,7 +79,7 @@ public void whenAppendToFileUsingFiles_thenCorrect()
 
 要开始使用番石榴，我们需要将它的依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -89,7 +89,7 @@ public void whenAppendToFileUsingFiles_thenCorrect()
 
 现在，让我们看看如何开始使用 Guava 向现有文件添加内容:
 
-```
+```java
 @Test
 public void whenAppendToFileUsingFileWriter_thenCorrect()
  throws IOException {
@@ -111,7 +111,7 @@ public void whenAppendToFileUsingFileWriter_thenCorrect()
 
 首先，让我们将 Apache Commons IO 依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>commons-io</groupId>
     <artifactId>commons-io</artifactId>
@@ -121,7 +121,7 @@ public void whenAppendToFileUsingFileWriter_thenCorrect()
 
 现在，让我们看一个简单的例子，演示如何使用`FileUtils`将内容添加到现有文件中:
 
-```
+```java
 @Test
 public void whenAppendToFileUsingFiles_thenCorrect()
  throws IOException {

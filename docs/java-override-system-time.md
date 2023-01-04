@@ -20,7 +20,7 @@
 
 要使用它，我们需要一个`Instant`和一个`ZoneOffset`:
 
-```
+```java
 Instant.now(Clock.fixed( 
   Instant.parse("2018-08-22T10:00:00Z"),
   ZoneOffset.UTC))
@@ -30,7 +30,7 @@ Instant.now(Clock.fixed(
 
 换句话说，**可以模拟未来、过去或任意时间点的跑步**:
 
-```
+```java
 Clock constantClock = Clock.fixed(ofEpochMilli(0), ZoneId.systemDefault());
 
 // go to the future:
@@ -53,7 +53,7 @@ clock = Clock.offset(constClock, Duration.ZERO);
 
 实现这一点的一种方法是使用 AspectJ:
 
-```
+```java
 public aspect ChangeCallsToCurrentTimeInMillisMethod {
     long around(): 
       call(public static native long java.lang.System.currentTimeMillis()) 
@@ -81,7 +81,7 @@ public aspect ChangeCallsToCurrentTimeInMillisMethod {
 
 我们可以用一个固定的 [`Clock`](/web/20221129012227/https://www.baeldung.com/java-clock) 实例重载`now()`方法。**在`java.time`包中的许多类都有一个`now()`方法，该方法带有一个`Clock`参数**，这使得它成为我们的首选方法:
 
-```
+```java
 @Test
 public void givenFixedClock_whenNow_thenGetFixedInstant() {
     String instantExpected = "2014-12-22T10:15:30Z";
@@ -97,7 +97,7 @@ public void givenFixedClock_whenNow_thenGetFixedInstant() {
 
 此外，如果我们需要在不发送参数的情况下修改`now()`方法的行为，我们可以使用`[Mockito](/web/20221129012227/https://www.baeldung.com/mockito-mock-static-methods)`:
 
-```
+```java
 @Test
 public void givenInstantMock_whenNow_thenGetFixedInstant() {
     String instantExpected = "2014-12-22T10:15:30Z";
@@ -118,7 +118,7 @@ public void givenInstantMock_whenNow_thenGetFixedInstant() {
 
 `JMockit`为我们提供了两种[嘲讽静态方法的方式](/web/20221129012227/https://www.baeldung.com/jmockit-static-method)。一个是使用`MockUp`类:
 
-```
+```java
 @Test
 public void givenInstantWithJMock_whenNow_thenGetFixedInstant() {
     String instantExpected = "2014-12-21T10:15:30Z";
@@ -138,7 +138,7 @@ public void givenInstantWithJMock_whenNow_thenGetFixedInstant() {
 
 而另一个是使用 [`Expectations`](/web/20221129012227/https://www.baeldung.com/jmockit-expectations) 的类:
 
-```
+```java
 @Test
 public void givenInstantWithExpectations_whenNow_thenGetFixedInstant() {
     Clock clock = Clock.fixed(Instant.parse("2014-12-23T10:15:30.00Z"), ZoneId.of("UTC"));
@@ -162,7 +162,7 @@ public void givenInstantWithExpectations_whenNow_thenGetFixedInstant() {
 
 我们可以使用与之前看到的相同的替代方案来模拟它。比如用固定的`Clock`重载`now()`:
 
-```
+```java
 @Test
 public void givenFixedClock_whenNow_thenGetFixedLocalDateTime() {
     Clock clock = Clock.fixed(Instant.parse("2014-12-22T10:15:30.00Z"), ZoneId.of("UTC"));

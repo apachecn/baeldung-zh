@@ -26,7 +26,7 @@ Learn how to use the Google Guava RangeSet and its implementations through pract
 
 让我们从一个简单的**过滤集合**的例子开始。我们将使用一个由库提供并通过`Predicates`实用程序类构建的现成谓词:
 
-```
+```java
 @Test
 public void whenFilterWithIterables_thenFiltered() {
     List<String> names = Lists.newArrayList("John", "Jane", "Adam", "Tom");
@@ -41,7 +41,7 @@ public void whenFilterWithIterables_thenFiltered() {
 
 或者，我们也可以很好地利用`Collections2.filter()` API:
 
-```
+```java
 @Test
 public void whenFilterWithCollections2_thenFiltered() {
     List<String> names = Lists.newArrayList("John", "Jane", "Adam", "Tom");
@@ -60,7 +60,7 @@ public void whenFilterWithCollections2_thenFiltered() {
 
 理解这一点也很重要，现在，**结果受到谓词**的约束——如果我们添加一个不满足那个`Predicate`的元素，就会抛出一个`IllegalArgumentException`:
 
-```
+```java
 @Test(expected = IllegalArgumentException.class)
 public void givenFilteredCollection_whenAddingInvalidElement_thenException() {
     List<String> names = Lists.newArrayList("John", "Jane", "Adam", "Tom");
@@ -75,7 +75,7 @@ public void givenFilteredCollection_whenAddingInvalidElement_thenException() {
 
 接下来——让我们写自己的`Predicate`,而不是使用库提供的。在下面的示例中，我们将定义一个谓词，该谓词仅获取以“A”或“J”开头的名称:
 
-```
+```java
 @Test
 public void whenFilterCollectionWithCustomPredicate_thenFiltered() {
     Predicate<String> predicate = new Predicate<String>() {
@@ -98,7 +98,7 @@ public void whenFilterCollectionWithCustomPredicate_thenFiltered() {
 我们可以使用`Predicates.or()`和`Predicates.and()`组合多个谓词。
 在下面的例子中，我们过滤了一个`List`名称，以获得以“J”开头或不包含“a”的名称:
 
-```
+```java
 @Test
 public void whenFilterUsingMultiplePredicates_thenFiltered() {
     List<String> names = Lists.newArrayList("John", "Jane", "Adam", "Tom");
@@ -115,7 +115,7 @@ public void whenFilterUsingMultiplePredicates_thenFiltered() {
 
 我们可以通过使用`Predicates.notNull()`过滤来清除集合中的`null`值，如下例所示:
 
-```
+```java
 @Test
 public void whenRemoveNullFromCollection_thenRemoved() {
     List<String> names = 
@@ -132,7 +132,7 @@ public void whenRemoveNullFromCollection_thenRemoved() {
 
 接下来，让我们检查集合中的所有元素是否都符合某个条件。我们将使用`Iterables.all()`来检查是否所有的名字都包含“n”或“m”，然后我们将检查是否所有的元素都包含“a”:
 
-```
+```java
 @Test
 public void whenCheckingIfAllElementsMatchACondition_thenCorrect() {
     List<String> names = Lists.newArrayList("John", "Jane", "Adam", "Tom");
@@ -149,7 +149,7 @@ public void whenCheckingIfAllElementsMatchACondition_thenCorrect() {
 
 现在，让我们看看如何使用芭乐`Function` 来**改造一个系列。在下面的例子中，我们将一个名字的`List`转换成一个`Integers`(名字的长度)的`List`和`Iterables.transform()`:**
 
-```
+```java
 @Test
 public void whenTransformWithIterables_thenTransformed() {
     Function<String, Integer> function = new Function<String, Integer>() {
@@ -168,7 +168,7 @@ public void whenTransformWithIterables_thenTransformed() {
 
 我们也可以像下面的例子一样使用 `Collections2.transform()` API:
 
-```
+```java
 @Test
 public void whenTransformWithCollections2_thenTransformed() {
     Function<String,Integer> func = new Function<String,Integer>(){
@@ -200,7 +200,7 @@ public void whenTransformWithCollections2_thenTransformed() {
 
 在下面的例子中，我们将一个名字`List`转换成一个布尔列表，其中每个元素表示名字是否包含“m”:
 
-```
+```java
 @Test
 public void whenCreatingAFunctionFromAPredicate_thenCorrect() {
     List<String> names = Lists.newArrayList("John", "Jane", "Adam", "Tom");
@@ -221,7 +221,7 @@ public void whenCreatingAFunctionFromAPredicate_thenCorrect() {
 
 在下面的例子中，第一个`Function`将名称转换成它的长度，然后第二个`Function`将长度转换成一个`boolean`值，该值表示名称的长度是否是偶数:
 
-```
+```java
 @Test
 public void whenTransformingUsingComposedFunction_thenTransformed() {
     Function<String,Integer> f1 = new Function<String,Integer>(){
@@ -253,7 +253,7 @@ public void whenTransformingUsingComposedFunction_thenTransformed() {
 
 在下面的例子中，我们过滤名字的`List`，然后使用`FluentIterable`对其进行转换:
 
-```
+```java
 @Test
 public void whenFilteringAndTransformingCollection_thenCorrect() {
     Predicate<String> predicate = new Predicate<String>() {

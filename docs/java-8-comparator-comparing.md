@@ -16,7 +16,7 @@ Java 8 引入了对`Comparator`接口的一些增强，包括一些静态函数�
 
 对于本教程中的示例，让我们创建一个`Employee` bean，并使用它的字段进行比较和排序:
 
-```
+```java
 public class Employee {
     String name;
     int age;
@@ -31,13 +31,13 @@ public class Employee {
 
 我们还将创建一个雇员数组，我们将使用它来存储整个教程中各种测试用例的结果:
 
-```
+```java
 employees = new Employee[] { ... };
 ```
 
 `employees`元素的初始顺序是:
 
-```
+```java
 [Employee(name=John, age=25, salary=3000.0, mobile=9922001), 
 Employee(name=Ace, age=22, salary=2000.0, mobile=5924001), 
 Employee(name=Keith, age=35, salary=4000.0, mobile=3924401)]
@@ -49,7 +49,7 @@ Employee(name=Keith, age=35, salary=4000.0, mobile=3924401)]
 
 让我们声明几个这样的数组:
 
-```
+```java
 @Before
 public void initData() {
     sortedEmployeesByName = new Employee[] {...};
@@ -70,14 +70,14 @@ public void initData() {
 
 `Comparator.comparing`静态函数接受一个排序关键字`Function`并返回一个包含排序关键字的类型的`Comparator`:
 
-```
+```java
 static <T,U extends Comparable<? super U>> Comparator<T> comparing(
    Function<? super T,? extends U> keyExtractor)
 ```
 
 为了看到这一点，我们将使用`Employee`中的`name`字段作为排序键，并将它的方法引用作为类型为`Function.`的参数进行传递。从相同类型返回的`Comparator`用于排序:
 
-```
+```java
 @Test
 public void whenComparing_thenSortedByName() {
     Comparator<Employee> employeeNameComparator
@@ -91,7 +91,7 @@ public void whenComparing_thenSortedByName() {
 
 排序的结果是，`employees `数组值按名称排序:
 
-```
+```java
 [Employee(name=Ace, age=22, salary=2000.0, mobile=5924001), 
 Employee(name=John, age=25, salary=3000.0, mobile=9922001), 
 Employee(name=Keith, age=35, salary=4000.0, mobile=3924401)] 
@@ -101,7 +101,7 @@ Employee(name=Keith, age=35, salary=4000.0, mobile=3924401)]
 
 还有另一个选项，通过提供一个为排序键创建自定义排序的`Comparator`,可以方便地覆盖排序键的自然排序:
 
-```
+```java
 static <T,U> Comparator<T> comparing(
   Function<? super T,? extends U> keyExtractor,
     Comparator<? super U> keyComparator)
@@ -109,7 +109,7 @@ static <T,U> Comparator<T> comparing(
 
 所以我们来修改一下上面的测试。我们将通过提供一个用于按降序排列姓名的`Comparator`作为`Comparator.comparing`的第二个参数，来覆盖按`name`字段排序的自然顺序:
 
-```
+```java
 @Test
 public void whenComparingWithComparator_thenSortedByNameDesc() {
     Comparator<Employee> employeeNameComparator
@@ -126,7 +126,7 @@ public void whenComparingWithComparator_thenSortedByNameDesc() {
 
 如我们所见，结果按照`name`降序排列:
 
-```
+```java
 [Employee(name=Keith, age=35, salary=4000.0, mobile=3924401), 
 Employee(name=John, age=25, salary=3000.0, mobile=9922001), 
 Employee(name=Ace, age=22, salary=2000.0, mobile=5924001)]
@@ -138,7 +138,7 @@ Employee(name=Ace, age=22, salary=2000.0, mobile=5924001)]
 
 我们将使用按照`name`和`reverse` it 对员工进行排序的`Comparator`，以便按照`name`的降序对员工进行排序:
 
-```
+```java
 @Test
 public void whenReversed_thenSortedByNameDesc() {
     Comparator<Employee> employeeNameComparator
@@ -152,7 +152,7 @@ public void whenReversed_thenSortedByNameDesc() {
 
 现在结果按`name`降序排列:
 
-```
+```java
 [Employee(name=Keith, age=35, salary=4000.0, mobile=3924401), 
 Employee(name=John, age=25, salary=3000.0, mobile=9922001), 
 Employee(name=Ace, age=22, salary=2000.0, mobile=5924001)]
@@ -162,7 +162,7 @@ Employee(name=Ace, age=22, salary=2000.0, mobile=5924001)]
 
 还有一个函数，`Comparator.comparingInt,`与`Comparator.comparing`做同样的事情，但是它只使用了`int`选择器。让我们用一个例子来试试，我们通过`age`订购`employees`:
 
-```
+```java
 @Test
 public void whenComparingInt_thenSortedByAge() {
     Comparator<Employee> employeeAgeComparator 
@@ -176,7 +176,7 @@ public void whenComparingInt_thenSortedByAge() {
 
 排序后，`employees `数组值的顺序如下:
 
-```
+```java
 [Employee(name=Ace, age=22, salary=2000.0, mobile=5924001), 
 Employee(name=John, age=25, salary=3000.0, mobile=9922001), 
 Employee(name=Keith, age=35, salary=4000.0, mobile=3924401)]
@@ -186,7 +186,7 @@ Employee(name=Keith, age=35, salary=4000.0, mobile=3924401)]
 
 类似于我们对`int`键所做的，让我们看一个使用`Comparator.comparingLong`的例子，通过按照`mobile`字段对`employees`数组排序来考虑`long`类型的排序键:
 
-```
+```java
 @Test
 public void whenComparingLong_thenSortedByMobile() {
     Comparator<Employee> employeeMobileComparator 
@@ -200,7 +200,7 @@ public void whenComparingLong_thenSortedByMobile() {
 
 排序后，`employees `数组值以`mobile`为关键字，顺序如下:
 
-```
+```java
 [Employee(name=Keith, age=35, salary=4000.0, mobile=3924401), 
 Employee(name=Ace, age=22, salary=2000.0, mobile=5924001), 
 Employee(name=John, age=25, salary=3000.0, mobile=9922001)]
@@ -210,7 +210,7 @@ Employee(name=John, age=25, salary=3000.0, mobile=9922001)]
 
 同样，正如我们对`int`和`long`键所做的那样，让我们看一个使用`Comparator.comparingDouble`的例子，通过按照`salary`字段对`employees`数组排序来考虑`double`类型的排序键:
 
-```
+```java
 @Test
 public void whenComparingDouble_thenSortedBySalary() {
     Comparator<Employee> employeeSalaryComparator
@@ -224,7 +224,7 @@ public void whenComparingDouble_thenSortedBySalary() {
 
 排序后，`employees `数组值的顺序如下，其中`salary`为排序关键字:
 
-```
+```java
 [Employee(name=Ace, age=22, salary=2000.0, mobile=5924001), 
 Employee(name=John, age=25, salary=3000.0, mobile=9922001), 
 Employee(name=Keith, age=35, salary=4000.0, mobile=3924401)]
@@ -236,7 +236,7 @@ Employee(name=Keith, age=35, salary=4000.0, mobile=3924401)]
 
 让我们在我们的`Employee`类中实现`Comparable`，这样我们就可以尝试`Comparator`接口的`naturalOrder`和`reverseOrder`功能:
 
-```
+```java
 public class Employee implements Comparable<Employee>{
     // ...
 
@@ -251,13 +251,13 @@ public class Employee implements Comparable<Employee>{
 
 `naturalOrder`函数返回签名中提到的返回类型的`Comparator`:
 
-```
+```java
 static <T extends Comparable<? super T>> Comparator<T> naturalOrder()
 ```
 
 给定上述基于`name`字段比较雇员的逻辑，让我们使用这个函数获得一个`Comparator`，它以自然顺序对`employees`数组进行排序:
 
-```
+```java
 @Test
 public void whenNaturalOrder_thenSortedByName() {
     Comparator<Employee> employeeNameComparator 
@@ -271,7 +271,7 @@ public void whenNaturalOrder_thenSortedByName() {
 
 排序后，`employees `数组值的顺序如下:
 
-```
+```java
 [Employee(name=Ace, age=22, salary=2000.0, mobile=5924001), 
 Employee(name=John, age=25, salary=3000.0, mobile=9922001), 
 Employee(name=Keith, age=35, salary=4000.0, mobile=3924401)]
@@ -281,7 +281,7 @@ Employee(name=Keith, age=35, salary=4000.0, mobile=3924401)]
 
 类似于我们使用`naturalOrder`的方式，我们将使用`reverseOrder`方法生成一个`Comparator`，它将产生一个与`naturalOrder`例子中的`employees`相反的顺序:
 
-```
+```java
 @Test
 public void whenReverseOrder_thenSortedByNameDesc() {
     Comparator<Employee> employeeNameComparator 
@@ -295,7 +295,7 @@ public void whenReverseOrder_thenSortedByNameDesc() {
 
 排序后，`employees `数组值的顺序如下:
 
-```
+```java
 [Employee(name=Keith, age=35, salary=4000.0, mobile=3924401), 
 Employee(name=John, age=25, salary=3000.0, mobile=9922001), 
 Employee(name=Ace, age=22, salary=2000.0, mobile=5924001)]
@@ -309,7 +309,7 @@ Employee(name=Ace, age=22, salary=2000.0, mobile=5924001)]
 
 让我们在`employees`数组中随机插入`null`值:
 
-```
+```java
 [Employee(name=John, age=25, salary=3000.0, mobile=9922001), 
 null, 
 Employee(name=Ace, age=22, salary=2000.0, mobile=5924001), 
@@ -319,7 +319,7 @@ Employee(name=Keith, age=35, salary=4000.0, mobile=3924401)]
 
 `nullsFirst`函数将返回一个`Comparator`,将所有的`nulls`保持在排序序列的开头:
 
-```
+```java
 @Test
 public void whenNullsFirst_thenSortedByNameWithNullsFirst() {
     Comparator<Employee> employeeNameComparator
@@ -338,7 +338,7 @@ public void whenNullsFirst_thenSortedByNameWithNullsFirst() {
 
 排序后，`employees `数组值的顺序如下:
 
-```
+```java
 [null, 
 null, 
 Employee(name=Ace, age=22, salary=2000.0, mobile=5924001), 
@@ -350,7 +350,7 @@ Employee(name=Keith, age=35, salary=4000.0, mobile=3924401)]
 
 `nullsLast`函数将返回一个`Comparator`，它将所有的`nulls`保持在排序序列的末尾:
 
-```
+```java
 @Test
 public void whenNullsLast_thenSortedByNameWithNullsLast() {
     Comparator<Employee> employeeNameComparator
@@ -367,7 +367,7 @@ public void whenNullsLast_thenSortedByNameWithNullsLast() {
 
 排序后，`employees `数组值的顺序如下:
 
-```
+```java
 [Employee(name=Ace, age=22, salary=2000.0, mobile=5924001), 
 Employee(name=John, age=25, salary=3000.0, mobile=9922001), 
 Employee(name=Keith, age=35, salary=4000.0, mobile=3924401), 
@@ -381,13 +381,13 @@ null]
 
 让我们看看`Employee`类的另一个数组:
 
-```
+```java
 someMoreEmployees = new Employee[] { ... };
 ```
 
 我们将考虑上述数组中的以下元素序列:
 
-```
+```java
 [Employee(name=Jake, age=25, salary=3000.0, mobile=9922001), 
 Employee(name=Jake, age=22, salary=2000.0, mobile=5924001), 
 Employee(name=Ace, age=22, salary=3000.0, mobile=6423001), 
@@ -396,7 +396,7 @@ Employee(name=Keith, age=35, salary=4000.0, mobile=3924401)]
 
 然后，我们将编写一个比较序列，如`age`后跟`name,`，并查看该数组的排序:
 
-```
+```java
 @Test
 public void whenThenComparing_thenSortedByAgeName(){
     Comparator<Employee> employee_Age_Name_Comparator
@@ -411,7 +411,7 @@ public void whenThenComparing_thenSortedByAgeName(){
 
 这里排序将由`age`完成，对于具有相同`age`的值，排序将由`name`完成。我们可以在排序后收到的序列中看到这一点:
 
-```
+```java
 [Employee(name=Ace, age=22, salary=3000.0, mobile=6423001), 
 Employee(name=Jake, age=22, salary=2000.0, mobile=5924001), 
 Employee(name=Jake, age=25, salary=3000.0, mobile=9922001), 
@@ -420,7 +420,7 @@ Employee(name=Keith, age=35, salary=4000.0, mobile=3924401)]
 
 现在我们可以使用另一个版本的`thenComparing`、`thenComparingInt`，将字典顺序改为`name`后接`age`:
 
-```
+```java
 @Test
 public void whenThenComparing_thenSortedByNameAge() {
     Comparator<Employee> employee_Name_Age_Comparator
@@ -436,7 +436,7 @@ public void whenThenComparing_thenSortedByNameAge() {
 
 排序后，`employees `数组值的顺序如下:
 
-```
+```java
 [Employee(name=Ace, age=22, salary=3000.0, mobile=6423001), 
 Employee(name=Jake, age=22, salary=2000.0, mobile=5924001), 
 Employee(name=Jake, age=25, salary=3000.0, mobile=9922001), 

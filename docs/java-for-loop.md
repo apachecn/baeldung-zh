@@ -14,14 +14,14 @@
 
 `for` 循环的语法是:
 
-```
+```java
 for (initialization; Boolean-expression; step) 
   statement;
 ```
 
 让我们看一个简单的例子:
 
-```
+```java
 for (int i = 0; i < 5; i++) {
     System.out.println("Simple for loop: i = " + i);
 }
@@ -29,7 +29,7 @@ for (int i = 0; i < 5; i++) {
 
 **在`for`语句中使用的`initialization`、`Boolean-expression,` 和`step`是可选的。**下面是一个**无限** for 循环的例子:
 
-```
+```java
 for ( ; ; ) {
     // Infinite for loop
 }
@@ -39,7 +39,7 @@ for ( ; ; ) {
 
 我们也可以标记`for` 循环。如果我们有嵌套的 for 循环，这是很有用的，这样我们就可以从一个特定的`for`循环中`break` / `continue`:
 
-```
+```java
 aa: for (int i = 1; i <= 3; i++) {
     if (i == 1)
       continue;
@@ -58,7 +58,7 @@ aa: for (int i = 1; i <= 3; i++) {
 
 `enhanced for` 循环的语法是:
 
-```
+```java
 for(Type item : items)
   statement;
 ```
@@ -72,7 +72,7 @@ for(Type item : items)
 
 让我们来看一个简单的例子:
 
-```
+```java
 int[] intArr = { 0,1,2,3,4 }; 
 for (int num : intArr) {
     System.out.println("Enhanced for-each loop: i = " + num);
@@ -83,7 +83,7 @@ for (int num : intArr) {
 
 给定一个`List<String> list` 对象，我们可以迭代它:
 
-```
+```java
 for (String item : list) {
     System.out.println(item);
 }
@@ -91,7 +91,7 @@ for (String item : list) {
 
 我们可以类似地迭代一个`Set<String> set`:
 
-```
+```java
 for (String item : set) {
     System.out.println(item);
 }
@@ -99,7 +99,7 @@ for (String item : set) {
 
 并且，给定一个`Map<String,Integer> map` ,我们也可以迭代它:
 
-```
+```java
 for (Entry<String, Integer> entry : map.entrySet()) {
     System.out.println(
       "Key: " + entry.getKey() + 
@@ -114,7 +114,7 @@ for (Entry<String, Integer> entry : map.entrySet()) {
 
 在内部，它只是将作业委托给标准循环:
 
-```
+```java
 default void forEach(Consumer<? super T> action) {
     Objects.requireNonNull(action);
     for (T t : this) {
@@ -125,7 +125,7 @@ default void forEach(Consumer<? super T> action) {
 
 让我们来看看这个例子:
 
-```
+```java
 List<String> names = new ArrayList<>();
 names.add("Larry");
 names.add("Steve");

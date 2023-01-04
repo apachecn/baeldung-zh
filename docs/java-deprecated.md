@@ -14,7 +14,7 @@
 
 **`@Deprecated`告诉其他开发者******标记的元素不能再用****。通常还会在`@Deprecated`注释旁边添加一些 Javadoc 来解释什么是服务于正确行为的更好选择:****
 
-```
+```java
 public class Worker {
     /**
      * Calculate period between versions
@@ -44,7 +44,7 @@ public class Worker {
 
 而`forRemoval`是一个`boolean`，它允许我们指定该元素是否会在下一个版本中被移除。其默认值为`false:`
 
-```
+```java
 public class Worker {
     /**
      * Calculate period between versions

@@ -109,7 +109,7 @@ API 对象可以被指定为 JSON 或 YAML 文件。然而，文档建议手动�
 
 名为`demo-backend`的应用程序的规范可能如下所示:
 
-```
+```java
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -143,7 +143,7 @@ spec:
 
 如果我们从集群中查询我们的`Deployment`的状态，响应将类似如下:
 
-```
+```java
 Name:                   demo-backend
 Namespace:              default
 CreationTimestamp:      Thu, 22 Mar 2018 18:58:32 +0100

@@ -12,7 +12,7 @@
 
 **我们可以使用`Timestamp.from()`将`Instant`转换成时间戳:**
 
-```
+```java
 Instant instant = Instant.now();
 Timestamp timestamp = Timestamp.from(instant);
 assertEquals(instant.toEpochMilli(), timestamp.getTime());
@@ -20,7 +20,7 @@ assertEquals(instant.toEpochMilli(), timestamp.getTime());
 
 反之亦然，我们可以用`Timestamp.toInstant()`把`Timestamp` s 转换成`Instant` s:
 
-```
+```java
 instant = timestamp.toInstant();
 assertEquals(instant.toEpochMilli(), timestamp.getTime());
 ```
@@ -35,7 +35,7 @@ assertEquals(instant.toEpochMilli(), timestamp.getTime());
 
 让我们看看分别在`instant`和`timestamp` 上调用`toString()`时会得到什么:
 
-```
+```java
 Instant (in UTC): 2018-10-18T00:00:57.907Z
 Timestamp (in GMT +05:30): 2018-10-18 05:30:57.907
 ```
@@ -46,7 +46,7 @@ Timestamp (in GMT +05:30): 2018-10-18 05:30:57.907
 
 我们也可以通过将`Timestamp`转换为 UTC 时区来验证这一点:
 
-```
+```java
 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 formatter = formatter.withZone(TimeZone.getTimeZone("UTC").toZoneId());
 DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");

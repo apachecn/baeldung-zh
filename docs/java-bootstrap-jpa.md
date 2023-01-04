@@ -22,7 +22,7 @@
 
 **既然我们不会依赖 `“persistence.xml”` 文件，t 他我们需要做的第一件事就是提供我们自己的`PersistenceUnitInfo`实现。**我们将使用 Hibernate 作为我们的持久性提供者:
 
-```
+```java
 public class HibernatePersistenceUnitInfo implements PersistenceUnitInfo {
 
     public static String JPA_VERSION = "2.1";
@@ -59,7 +59,7 @@ public class HibernatePersistenceUnitInfo implements PersistenceUnitInfo {
 
 首先，让我们展示使用`Hibernate's EntityManagerFactoryBuilderImpl`类和我们的`HibernatePersistenceUnitInf` o 类创建**实体管理器工厂和实体管理器**的方法:
 
-```
+```java
 public class JpaEntityManagerFactory {
     private String DB_URL = "jdbc:mysql://databaseurl";
     private String DB_USER_NAME = "username";
@@ -95,7 +95,7 @@ public class JpaEntityManagerFactory {
 
 这些参数包括托管实体类、实体类名、Hibernate 的配置属性和一个`MysqlDataSource`对象:
 
-```
+```java
 public class JpaEntityManagerFactory {
     //...
 
@@ -138,7 +138,7 @@ public class JpaEntityManagerFactory {
 
 最后，让我们看看如何使用一个`JpaEntityManagerFactory`实例来获取 JPA 实体管理器并执行 CRUD 操作。(注意，为了简洁起见，我们省略了`User`类):
 
-```
+```java
 public static void main(String[] args) {
     EntityManager entityManager = getJpaEntityManager();
     User user = entityManager.find(User.class, 1);

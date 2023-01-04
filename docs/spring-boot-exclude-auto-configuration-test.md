@@ -20,7 +20,7 @@ Spring Boot 的自动配置功能非常方便，因为它为我们处理了很�
 
 让我们在一个使用[放心](/web/20220630005345/https://www.baeldung.com/rest-assured-tutorial)进行呼叫的测试中看到这一点:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.DEFINED_PORT)
 public class AutoConfigIntegrationTest {
@@ -37,7 +37,7 @@ public class AutoConfigIntegrationTest {
 
 另一方面，我们可以通过身份验证成功访问主页:
 
-```
+```java
 @Test
 public void givenAuthentication_whenAccessHome_thenOK() {
     int statusCode = RestAssured.given().auth().basic("john", "123")
@@ -56,7 +56,7 @@ public void givenAuthentication_whenAccessHome_thenOK() {
 
 首先，**让我们看看如何使用`@EnableAutoConfiguration(exclude={CLASS_NAME})` 注释**:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.DEFINED_PORT)
 @EnableAutoConfiguration(exclude=SecurityAutoConfiguration.class)
@@ -79,7 +79,7 @@ public class ExcludeAutoConfigIntegrationTest {
 
 接下来，**我们可以用`@TestPropertySource`来注入属性`spring.autoconfigure.exclude`**:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = 
@@ -95,7 +95,7 @@ public class ExcludeAutoConfigIntegrationTest {
 
 **我们还可以使用概要文件:**为我们的测试设置属性“`spring.autoconfigure.exclude`
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("test")
@@ -106,7 +106,7 @@ public class ExcludeAutoConfigIntegrationTest {
 
 并在`application-test.properties`中包含所有`test`配置文件的特定属性:
 
-```
+```java
 spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 ```
 
@@ -114,7 +114,7 @@ spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.security.ser
 
 最后，**我们可以为我们的测试使用单独的配置应用程序**:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = WebEnvironment.DEFINED_PORT)
 public class ExcludeAutoConfigIntegrationTest {
@@ -124,7 +124,7 @@ public class ExcludeAutoConfigIntegrationTest {
 
 并从`@SpringBootApplication(exclude={CLASS_NAME})`中排除自动配置类:
 
-```
+```java
 @SpringBootApplication(exclude=SecurityAutoConfiguration.class)
 public class TestApplication {
 

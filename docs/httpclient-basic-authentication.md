@@ -22,7 +22,7 @@ HttpClient configurations for advanced use cases.[Read more](/web/20220628101144
 
 让我们从在 HttpClient 上配置基本认证的标准方式**开始——通过`CredentialsProvider`T2:**
 
-```
+```java
 CredentialsProvider provider = new BasicCredentialsProvider();
 UsernamePasswordCredentials credentials
  = new UsernamePasswordCredentials("user1", "user1Pass");
@@ -44,7 +44,7 @@ assertThat(statusCode, equalTo(HttpStatus.SC_OK));
 
 现在，为了理解`HttpClient`在幕后实际会做什么，我们需要查看日志:
 
-```
+```java
 # ... request is sent with no credentials
 [main] DEBUG ... - Authentication required
 [main] DEBUG ... - localhost:8080 requested authentication
@@ -71,7 +71,7 @@ assertThat(statusCode, equalTo(HttpStatus.SC_OK));
 
 首先，**我们需要创建`HttpContext`，用预先选择的正确类型的身份验证方案的身份验证缓存**预先填充它。这意味着不再需要上一个示例中的协商—**已经选择了基本认证**:
 
-```
+```java
 HttpHost targetHost = new HttpHost("localhost", 8082, "http");
 CredentialsProvider credsProvider = new BasicCredentialsProvider();
 credsProvider.setCredentials(AuthScope.ANY, 
@@ -88,7 +88,7 @@ context.setAuthCache(authCache);
 
 现在，我们可以使用具有新上下文的客户端，**发送预认证请求**:
 
-```
+```java
 HttpClient client = HttpClientBuilder.create().build();
 response = client.execute(
   new HttpGet(URL_SECURED_BY_BASIC_AUTHENTICATION), context);
@@ -99,7 +99,7 @@ assertThat(statusCode, equalTo(HttpStatus.SC_OK));
 
 让我们看看日志:
 
-```
+```java
 [main] DEBUG ... - Re-using cached 'basic' auth scheme for http://localhost:8082
 [main] DEBUG ... - Executing request GET /spring-security-rest-basic-auth/api/foos/1 HTTP/1.1
 [main] DEBUG ... >> GET /spring-security-rest-basic-auth/api/foos/1 HTTP/1.1
@@ -122,7 +122,7 @@ assertThat(statusCode, equalTo(HttpStatus.SC_OK));
 
 因此，**我们可以控制这个头文件并手工构建它，而不是通过前面相当复杂的例子来设置它**:
 
-```
+```java
 HttpGet request = new HttpGet(URL_SECURED_BY_BASIC_AUTHENTICATION);
 String auth = DEFAULT_USER + ":" + DEFAULT_PASS;
 byte[] encodedAuth = Base64.encodeBase64(
@@ -139,7 +139,7 @@ assertThat(statusCode, equalTo(HttpStatus.SC_OK));
 
 让我们确保它正常工作:
 
-```
+```java
 [main] DEBUG ... - Auth cache not set in the context
 [main] DEBUG ... - Opening connection {}->http://localhost:8080
 [main] DEBUG ... - Connecting to localhost/127.0.0.1:8080

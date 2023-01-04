@@ -20,7 +20,7 @@
 
 我们将设置服务器和客户端`Spring Boot`应用程序来展示`AMQP Remoting`是如何工作的。正如`Spring Boot`经常出现的情况，我们只需选择并导入正确的启动依赖项，[，如下文](/web/20220627075159/https://www.baeldung.com/spring-boot-starters)所述:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-amqp</artifactId>
@@ -43,7 +43,7 @@
 
 让我们从声明一个 bean 开始，这个 bean 实现了我们想要远程调用的服务的接口。这是将在服务器端实际执行服务调用的 bean:
 
-```
+```java
 @Bean 
 CabBookingService bookingService() {
     return new CabBookingServiceImpl();
@@ -52,7 +52,7 @@ CabBookingService bookingService() {
 
 然后让我们定义服务器将从中检索调用的队列。在这种情况下，在构造函数中为它指定一个名称就足够了:
 
-```
+```java
 @Bean 
 Queue queue() {
     return new Queue("remotingQueue");
@@ -65,7 +65,7 @@ Queue queue() {
 
 我们不会显式定义这样的`AmqpTemplate` bean，因为它将由`Spring Boot`的自动配置模块自动提供:
 
-```
+```java
 @Bean AmqpInvokerServiceExporter exporter(
   CabBookingService implementation, AmqpTemplate template) {
 
@@ -81,7 +81,7 @@ Queue queue() {
 
 然后我们将**将这个`container`连接到我们在上一步中创建的`service exporter,`****，以允许它接收排队的消息**。这里的`ConnectionFactory`是由`Spring Boot`自动提供的，与`AmqpTemplate`的方式相同:
 
-```
+```java
 @Bean 
 SimpleMessageListenerContainer listener(
   ConnectionFactory facotry, 
@@ -102,7 +102,7 @@ SimpleMessageListenerContainer listener(
 
 例如，当`RabbitMQ`在运行本示例的同一台机器上运行时，以下配置可能是合理的:
 
-```
+```java
 spring.rabbitmq.dynamic=true
 spring.rabbitmq.port=5672
 spring.rabbitmq.username=guest
@@ -116,7 +116,7 @@ spring.rabbitmq.host=localhost
 
 让我们现在处理客户。同样，我们需要**定义调用消息将被写入**的队列。我们需要仔细检查客户机和服务器是否使用了相同的名称。
 
-```
+```java
 @Bean 
 Queue queue() {
     return new Queue("remotingQueue");
@@ -125,7 +125,7 @@ Queue queue() {
 
 在客户端，我们需要比服务器端稍微复杂一点的设置。事实上，我们需要**用相关的`Binding`定义一个`Exchange`** :
 
-```
+```java
 @Bean 
 Exchange directExchange(Queue someQueue) {
     DirectExchange exchange = new DirectExchange("remoting.exchange");
@@ -141,7 +141,7 @@ Exchange directExchange(Queue someQueue) {
 
 由于 `Spring Boot`不自动配置`AmqpTemplate`，我们必须自己设置一个，指定一个 r `outing key`。这样做时，我们需要再次检查`routing key`和`exchange`是否与上一步中用于定义`Exchange`的匹配:
 
-```
+```java
 @Bean RabbitTemplate amqpTemplate(ConnectionFactory factory) {
     RabbitTemplate template = new RabbitTemplate(factory);
     template.setRoutingKey("remoting.binding");
@@ -152,7 +152,7 @@ Exchange directExchange(Queue someQueue) {
 
 然后，正如我们对其他`Spring Remoting`实现所做的那样，我们**定义了一个`FactoryBean`，它将产生远程公开的服务的本地代理**。这里没有什么太花哨的，我们只需要提供远程服务的接口:
 
-```
+```java
 @Bean AmqpProxyFactoryBean amqpFactoryBean(AmqpTemplate amqpTemplate) {
     AmqpProxyFactoryBean factoryBean = new AmqpProxyFactoryBean();
     factoryBean.setServiceInterface(CabBookingService.class);
@@ -163,7 +163,7 @@ Exchange directExchange(Queue someQueue) {
 
 **我们现在可以使用远程服务，就像它被声明为本地 bean 一样:**
 
-```
+```java
 CabBookingService service = context.getBean(CabBookingService.class);
 out.println(service.bookRide("13 Seagate Blvd, Key Largo, FL 33037"));
 ```

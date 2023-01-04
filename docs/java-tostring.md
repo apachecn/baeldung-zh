@@ -14,7 +14,7 @@ Java 中的每个类都直接或间接地是`Object`类的子类。由于`Object
 
 `Object's` `toString()`方法相当通用:
 
-```
+```java
 public String toString() {
     return getClass().getName()+"@"+Integer.toHexString(hashCode());
 }
@@ -22,7 +22,7 @@ public String toString() {
 
 为了了解这是如何工作的，让我们创建一个将在整个教程中使用的`Customer `对象:
 
-```
+```java
 public class Customer {
     private String firstName;
     private String lastName;
@@ -32,7 +32,7 @@ public class Customer {
 
 现在，如果我们尝试打印我们的`C` `ustomer`对象，将调用`Object` # `toString()`，输出将类似于:
 
-```
+```java
 [[email protected]](/web/20221126214903/https://www.baeldung.com/cdn-cgi/l/email-protection)
 ```
 
@@ -48,7 +48,7 @@ public class Customer {
 
 我们的`Customer`对象同时具有`String`和原始属性。我们需要覆盖`toString()`方法来获得更有意义的输出:
 
-```
+```java
 public class CustomerPrimitiveToString extends Customer {
     private long balance;
 
@@ -62,7 +62,7 @@ public class CustomerPrimitiveToString extends Customer {
 
 让我们看看现在调用`toString() `时会得到什么:
 
-```
+```java
 @Test
 public void givenPrimitive_whenToString_thenCustomerDetails() {
     CustomerPrimitiveToString customer = new CustomerPrimitiveToString();
@@ -80,7 +80,7 @@ public void givenPrimitive_whenToString_thenCustomerDetails() {
 
 所以，让我们再次覆盖`toString()`:
 
-```
+```java
 public class CustomerComplexObjectToString extends Customer {
     private Order order;
     //standard setters and getters
@@ -97,7 +97,7 @@ public class CustomerComplexObjectToString extends Customer {
 
 为了解决这个问题，让我们也覆盖`Order`中的`toString()`:
 
-```
+```java
 public class Order {
 
     private String orderId;
@@ -114,7 +114,7 @@ public class Order {
 
 现在，让我们看看当我们在包含一个`order `属性的`Customer`对象上调用`toString() `方法时会发生什么:
 
-```
+```java
 @Test
 public void givenComplex_whenToString_thenCustomerDetails() {
     CustomerComplexObjectToString customer = new CustomerComplexObjectToString();    
@@ -136,7 +136,7 @@ public void givenComplex_whenToString_thenCustomerDetails() {
 
 为了解决这个问题，让我们将`[Arrays.toString()](/web/20221126214903/https://www.baeldung.com/java-array-to-string) `用于`orders`字段:
 
-```
+```java
 public class CustomerArrayToString  extends Customer {
     private Order[] orders;
 
@@ -151,7 +151,7 @@ public class CustomerArrayToString  extends Customer {
 
 让我们看看调用上面的`toString()`方法的结果:
 
-```
+```java
 @Test
 public void givenArray_whenToString_thenCustomerDetails() {
     CustomerArrayToString customer = new CustomerArrayToString();
@@ -168,7 +168,7 @@ public void givenArray_whenToString_thenCustomerDetails() {
 
 当一个对象完全由[包装器](/web/20221126214903/https://www.baeldung.com/java-wrapper-classes)、[集合](/web/20221126214903/https://www.baeldung.com/java-collections)或 [`StringBuffer` s](/web/20221126214903/https://www.baeldung.com/java-collections) 组成时，不需要定制`toString() `实现，因为这些对象已经用有意义的表示覆盖了`toString()`方法:
 
-```
+```java
 public class CustomerWrapperCollectionToString extends Customer {
     private Integer score; // Wrapper class object
     private List<String> orders; // Collection object
@@ -184,7 +184,7 @@ public class CustomerWrapperCollectionToString extends Customer {
 
 让我们再来看看调用`toString()`的结果:
 
-```
+```java
 @Test
 public void givenWrapperCollectionStrBuffer_whenToString_thenCustomerDetails() {
     CustomerWrapperCollectionToString customer = new CustomerWrapperCollectionToString();

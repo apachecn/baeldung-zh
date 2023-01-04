@@ -16,7 +16,7 @@
 
 首先，让我们创建一个`CharacterEncodingFilter:`
 
-```
+```java
 CharacterEncodingFilter filter = new CharacterEncodingFilter();
 filter.setEncoding("UTF-8");
 filter.setForceEncoding(true);
@@ -28,7 +28,7 @@ filter.setForceEncoding(true);
 
 最后，**我们将** **用`FilterRegistrationBean`** 注册过滤器，这提供了将`Filter`实例注册为过滤器链的一部分的配置:
 
-```
+```java
 FilterRegistrationBean registrationBean = new FilterRegistrationBean();
 registrationBean.setFilter(filter);
 registrationBean.addUrlPatterns("/*");

@@ -14,7 +14,7 @@
 
 例如，让我们检查第三位是否设置在`byte`值中:
 
-```
+```java
 byte val1 = 0b0110_0100;
 byte mask = 0b0000_0100;
 boolean isSet1 = (val1 & mask) > 0;
@@ -23,7 +23,7 @@ assertTrue(isSet1);
 
 这里测试二进制数`01100100`以查看第三位–`00000100`是否通过使用[位与](/web/20220628091014/https://www.baeldung.com/java-bitwise-operators)来设置。结果大于零，确实如此。我们还可以测试它是否未设置:
 
-```
+```java
 byte val2 = 0b0110_0010;
 boolean isSet2 = (val2 & mask) > 0;
 assertFalse(isSet2);
@@ -41,7 +41,7 @@ assertFalse(isSet2);
 
 我们可以通过取值`1`并使用左移运算符将其移动到正确的位置来生成位掩码:
 
-```
+```java
 int val = 0b0110_0100;
 int pos = 2;
 int mask = 1 << pos;
@@ -62,7 +62,7 @@ assertTrue(isSet);
 
 那么我们需要做的就是检查最左边的位是否被置位。由于有符号整数被表示为[二进制补码](/web/20220628091014/https://www.baeldung.com/cs/two-complement)，我们可以通过测试得到的移位数是否为负来测试前导数字是否为 1。
 
-```
+```java
 int val = 0b0110_0100;
 int pos = 2;
 boolean isSet = ((val << (31 - pos)) < 0);
@@ -76,7 +76,7 @@ assertTrue(isSet);
 
 类似地，我们可以使用右移位运算符来测试整数值的一点。将整数值的目标位移动到最右边的位置并使用位掩码`1,`后，我们可以检查结果是否等于 1:
 
-```
+```java
 int val = 0b0110_0100;
 int pos = 2;
 boolean isSet = ((val >> pos) & 1) == 1;
@@ -90,7 +90,7 @@ assertTrue(isSet);
 
 让我们看一下左移解决方案的重写，它可能帮助我们实现这一点。它基于这样的假设，即按位运算通常比算术运算快:
 
-```
+```java
 boolean isSet = ((val << (~pos & 31)) < 0);
 ```
 
@@ -98,7 +98,7 @@ boolean isSet = ((val << (~pos & 31)) < 0);
 
 为什么这两种表达效果一样？我们可以推导出这个过程:
 
-```
+```java
 (31 - pos) = (31 - pos) & 31
             = (31 + (-pos)) & 31
             = (31 & 31) + ((-pos) & 31)
@@ -116,7 +116,7 @@ boolean isSet = ((val << (~pos & 31)) < 0);
 
 再进一步，我们可以使代码更简洁一点:
 
-```
+```java
 boolean isSet = ((val << ~pos) < 0);
 ```
 
@@ -128,7 +128,7 @@ boolean isSet = ((val << ~pos) < 0);
 
 `BigInteger`类可以解决这两个问题。它支持非常大的位数，并提供了一个`testBit`方法:
 
-```
+```java
 int val = 0b0110_0100;
 int pos = 2;
 boolean isSet = BigInteger.valueOf(val).testBit(pos);

@@ -10,7 +10,7 @@
 
 如果我们想开始使用这个库，我们需要在 Maven 的`pom.xml`文件中添加一个条目:
 
-```
+```java
 <dependency>
     <groupId>com.pivovarit</groupId>
     <artifactId>parallel-collectors</artifactId>
@@ -20,7 +20,7 @@
 
 或者 Gradle 的构建文件中的一行:
 
-```
+```java
 compile 'com.pivovarit:parallel-collectors:1.1.0'
 ```
 
@@ -36,7 +36,7 @@ compile 'com.pivovarit:parallel-collectors:1.1.0'
 
 为此，我们可以使用并行流:
 
-```
+```java
 List<Integer> ids = Arrays.asList(1, 2, 3); 
 List<String> results = ids.parallelStream() 
   .map(i -> fetchById(i)) // each operation takes one second
@@ -57,7 +57,7 @@ System.out.println(results); // [user-1, user-2, user-3]
 
 如果我们想重做上面的例子，我们可以简单地写:
 
-```
+```java
 ExecutorService executor = Executors.newFixedThreadPool(10);
 
 List<Integer> ids = Arrays.asList(1, 2, 3);
@@ -76,7 +76,7 @@ System.out.println(results.join()); // [user-1, user-2, user-3]
 
 尽管很直观，但如果我们想并行处理一个`Stream`，并将结果收集到一个`List`或`Set`，我们可以简单地使用`ParallelCollectors.parallelToList`或`parallelToSet`:
 
-```
+```java
 List<Integer> ids = Arrays.asList(1, 2, 3);
 
 List<String> results = ids.stream()
@@ -88,7 +88,7 @@ List<String> results = ids.stream()
 
 如果我们想要将`Stream`元素收集到一个`Map`实例中，就像使用 Stream API 一样，我们需要提供两个映射器:
 
-```
+```java
 List<Integer> ids = Arrays.asList(1, 2, 3);
 
 Map<Integer, String> results = ids.stream()
@@ -98,7 +98,7 @@ Map<Integer, String> results = ids.stream()
 
 我们还可以提供一个定制的`Map`实例`Supplier`:
 
-```
+```java
 Map<Integer, String> results = ids.stream()
   .collect(parallelToMap(i -> i, i -> fetchById(i), TreeMap::new, executor, 4))
   .join(); 
@@ -106,7 +106,7 @@ Map<Integer, String> results = ids.stream()
 
 和自定义冲突解决策略:
 
-```
+```java
 List<Integer> ids = Arrays.asList(1, 2, 3);
 
 Map<Integer, String> results = ids.stream()
@@ -118,7 +118,7 @@ Map<Integer, String> results = ids.stream()
 
 与上面类似，如果我们想要获得打包在自定义容器中的结果，我们可以传递我们的自定义`Collection Supplier`:
 
-```
+```java
 List<String> results = ids.stream()
   .collect(parallelToCollection(i -> fetchById(i), LinkedList::new, executor, 4))
   .join();
@@ -128,7 +128,7 @@ List<String> results = ids.stream()
 
 如果以上还不够，我们实际上可以获得一个`Stream`实例，并在那里继续定制处理:
 
-```
+```java
 Map<Integer, List<String>> results = ids.stream()
   .collect(parallelToStream(i -> fetchById(i), executor, 4))
   .thenApply(stream -> stream.collect(Collectors.groupingBy(i -> i.length())))
@@ -139,7 +139,7 @@ Map<Integer, List<String>> results = ids.stream()
 
 这允许我们以完成顺序流式传输结果:
 
-```
+```java
 ids.stream()
   .collect(parallel(i -> fetchByIdWithRandomDelay(i), executor, 4))
   .forEach(System.out::println);
@@ -155,7 +155,7 @@ ids.stream()
 
 该工具允许像上面一样流式传输结果，但保持原始顺序:
 
-```
+```java
 ids.stream()
   .collect(parallelOrdered(i -> fetchByIdWithRandomDelay(i), executor, 4))
   .forEach(System.out::println);

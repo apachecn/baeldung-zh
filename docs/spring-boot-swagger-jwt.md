@@ -10,7 +10,7 @@
 
 在这个例子中，我们将使用 [springfox-boot-starter](https://web.archive.org/web/20221020153607/https://search.maven.org/search?q=g:io.springfox%20AND%20a:springfox-boot-starter) ，它包含了开始使用 Swagger 和 Swagger UI 所需的所有依赖项。让我们将它添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -26,7 +26,7 @@
 
 首先，我们需要定义我们的`ApiKey` 来包含 JWT 作为授权头:
 
-```
+```java
 private ApiKey apiKey() { 
     return new ApiKey("JWT", "Authorization", "header"); 
 }
@@ -34,7 +34,7 @@ private ApiKey apiKey() {
 
 接下来，让我们用全局`AuthorizationScope`配置 JWT `SecurityContext`:
 
-```
+```java
 private SecurityContext securityContext() { 
     return SecurityContext.builder().securityReferences(defaultAuth()).build(); 
 } 
@@ -49,7 +49,7 @@ private List<SecurityReference> defaultAuth() {
 
 然后，我们配置我们的 API `Docket` bean 以包含 API 信息、安全上下文和安全方案:
 
-```
+```java
 @Bean
 public Docket api() {
     return new Docket(DocumentationType.SWAGGER_2)
@@ -63,7 +63,7 @@ public Docket api() {
 } 
 ```
 
-```
+```java
 private ApiInfo apiInfo() {
     return new ApiInfo(
       "My REST API",
@@ -81,7 +81,7 @@ private ApiInfo apiInfo() {
 
 在我们的`ClientsRestController`中，让我们编写一个简单的`getClients `端点来返回客户端列表:
 
-```
+```java
 @RestController(value = "/clients")
 @Api( tags = "Clients")
 public class ClientsRestController {

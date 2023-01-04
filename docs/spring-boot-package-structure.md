@@ -20,7 +20,7 @@
 
 甚至，一个基于 JPA 的项目需要在主类上有一些额外的注释:
 
-```
+```java
 @SpringBootApplication(scanBasePackages = "example.baeldung.com")
 @EnableJpaRepositories("example.baeldung.com")
 @EntityScan("example.baeldung.com")

@@ -16,7 +16,7 @@
 
 我们只能查看`System.arraycopy()`的签名:
 
-```
+```java
 public static native void arraycopy(Object src, int srcPos, Object dest, int destPos, int length);
 ```
 
@@ -28,7 +28,7 @@ public static native void arraycopy(Object src, int srcPos, Object dest, int des
 
 当用`Object`数组调用时，`copyOf()`将调用反射的`Array.newInstance()`方法:
 
-```
+```java
 public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {
     @SuppressWarnings("unchecked")
     T[] copy = ((Object)newType == (Object)Object[].class) 
@@ -41,7 +41,7 @@ public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]>
 
 然而，当使用原语作为参数调用时，它不需要反射来创建目标数组:
 
-```
+```java
 public static int[] copyOf(int[] original, int newLength) {
     int[] copy = new int[newLength];
     System.arraycopy(original, 0, copy, 0, Math.min(original.length, newLength));
@@ -61,7 +61,7 @@ public static int[] copyOf(int[] original, int newLength) {
 
 首先，让我们定义我们的基准参数:
 
-```
+```java
 @BenchmarkMode(Mode.AverageTime)
 @State(Scope.Thread)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -78,7 +78,7 @@ public static int[] copyOf(int[] original, int newLength) {
 
 在设置方法中，我们简单地用随机参数初始化一个数组。首先，我们定义了原语的基准设置:
 
-```
+```java
 public class PrimitivesCopyBenchmark {
 
     @Param({ "10", "1000000" })
@@ -100,7 +100,7 @@ public class PrimitivesCopyBenchmark {
 
 对象基准测试遵循相同的设置:
 
-```
+```java
 public class ObjectsCopyBenchmark {
 
     @Param({ "10", "1000000" })
@@ -123,7 +123,7 @@ public class ObjectsCopyBenchmark {
 
 我们定义了两个将执行复制操作的基准。首先，我们将调用`System.arraycopy()`:
 
-```
+```java
 @Benchmark
 public Integer[] systemArrayCopyBenchmark() {
     Integer[] target = new Integer[SIZE];
@@ -136,7 +136,7 @@ public Integer[] systemArrayCopyBenchmark() {
 
 其次，我们将测量`Arrays.copyOf()`的性能:
 
-```
+```java
 @Benchmark
 public Integer[] arraysCopyOfBenchmark() {
     return Arrays.copyOf(src, SIZE);
@@ -147,7 +147,7 @@ public Integer[] arraysCopyOfBenchmark() {
 
 运行测试后，让我们看看结果:
 
-```
+```java
 Benchmark                                          (SIZE)  Mode  Cnt        Score       Error  Units
 ObjectsCopyBenchmark.arraysCopyOfBenchmark             10  avgt  100        8.535 ±     0.006  ns/op
 ObjectsCopyBenchmark.arraysCopyOfBenchmark        1000000  avgt  100  2831316.981 ± 15956.082  ns/op

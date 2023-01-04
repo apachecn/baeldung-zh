@@ -14,7 +14,7 @@
 
 这里的想法是将`String`转换为`char[]`，然后在给定的索引处分配新的`char`。最后，我们从该数组中构造所需的`String`。
 
-```
+```java
 public String replaceCharUsingCharArray(String str, char ch, int index) {
     char[] chars = str.toCharArray();
     chars[index] = ch;
@@ -30,7 +30,7 @@ public String replaceCharUsingCharArray(String str, char ch, int index) {
 
 它将创建一个新的`String`，将索引前的原始`String`的子串与索引后的原始`String`的新字符和子串连接起来:
 
-```
+```java
 public String replaceChar(String str, char ch, int index) {
     return str.substring(0, index) + ch + str.substring(index+1);
 } 
@@ -40,7 +40,7 @@ public String replaceChar(String str, char ch, int index) {
 
 我们可以用 [`StringBuilder`](/web/20220628063643/https://www.baeldung.com/java-string-builder-string-buffer) 得到同样的效果。我们可以使用方法`setCharAt():`替换特定索引处的字符
 
-```
+```java
 public String replaceChar(String str, char ch, int index) {
     StringBuilder myString = new StringBuilder(str);
     myString.setCharAt(index, ch);

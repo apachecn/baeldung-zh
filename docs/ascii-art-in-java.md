@@ -14,7 +14,7 @@
 
 虽然这是一项繁琐的任务，但通常是通过在 Java 中创建一个`BufferedImage`实例并从中检索其底层`Graphics`实例来完成的:
 
-```
+```java
 BufferedImage bufferedImage = new BufferedImage(
   width, height, 
   BufferedImage.TYPE_INT_RGB);
@@ -29,7 +29,7 @@ Graphics graphics = bufferedImage.getGraphics();
 
 为了将图像的 RGB 颜色表示为整数，我们将图像类型设置为整数模式:
 
-```
+```java
 BufferedImage bufferedImage = new BufferedImage(
   width, height, 
   BufferedImage.TYPE_INT_RGB);
@@ -47,7 +47,7 @@ BufferedImage bufferedImage = new BufferedImage(
 
 为了能够在 Java 中使用 2D 图形的高级渲染选项，我们将我们的`Graphics`对象转换为一个`Graphics2D`实例`.`，然后在使用“bael dung”`String:`调用`drawString()`方法之前设置所需的渲染参数
 
-```
+```java
 Graphics2D graphics2D = (Graphics2D) graphics;
 graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, 
   RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -60,7 +60,7 @@ graphics2D.drawString("BAELDUNG", 12, 24);
 
 但是为了让我们理解这个概念，我们将遍历二维数组(或矩阵),并将所有带有 ASCII 字符“*”的值替换为:
 
-```
+```java
 for (int y = 0; y < settings.height; y++) {
     StringBuilder stringBuilder = new StringBuilder();
 
@@ -82,7 +82,7 @@ for (int y = 0; y < settings.height; y++) {
 
 如果我们通过仅将等于-16777216 的整数值替换为“*”，而将其余的替换为“”，来区分带“*”的替换:
 
-```
+```java
 for (int y = 0; y < settings.height; y++) {
     StringBuilder stringBuilder = new StringBuilder();
 
@@ -104,7 +104,7 @@ for (int y = 0; y < settings.height; y++) {
 
 最后，我们通过将等于-16777216 的整数值替换为“”并将其余的替换为“*”来反转判别:
 
-```
+```java
 for (int y = 0; y < settings.height; y++) {
     StringBuilder stringBuilder = new StringBuilder();
 

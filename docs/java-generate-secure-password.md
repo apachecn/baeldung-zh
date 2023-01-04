@@ -14,7 +14,7 @@ Passay 是一个密码策略执行库。值得注意的是，我们可以利用�
 
 借助默认的`CharacterData`实现，我们可以制定密码所需的规则。此外，我们可以**制定定制的`CharacterData`实现来满足我们的需求** :
 
-```
+```java
 public String generatePassayPassword() {
     PasswordGenerator gen = new PasswordGenerator();
     CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
@@ -53,7 +53,7 @@ public String generatePassayPassword() {
 
 现在，让我们对照单元测试来检查我们的生成器。例如，我们可以检查两个特殊字符的存在:
 
-```
+```java
 @Test
 public void whenPasswordGeneratedUsingPassay_thenSuccessful() {
     RandomPasswordGenerator passGen = new RandomPasswordGenerator();
@@ -78,7 +78,7 @@ public void whenPasswordGeneratedUsingPassay_thenSuccessful() {
 
 在构建器的帮助下，我们可以很容易地改变随机性的默认实现。此外，我们还可以定义字符串中允许的字符:
 
-```
+```java
 public String generateRandomSpecialCharacters(int length) {
     RandomStringGenerator pwdGenerator = new RandomStringGenerator.Builder().withinRange(33, 45)
         .build();
@@ -88,7 +88,7 @@ public String generateRandomSpecialCharacters(int length) {
 
 现在，使用`RandomStringGenerator`的一个限制是**缺乏指定每个集合中字符数量的能力，就像在 Passay 中一样。**然而，我们可以通过合并多个集合的结果来规避这个问题:
 
-```
+```java
 public String generateCommonTextPassword() {
     String pwString = generateRandomSpecialCharacters(2).concat(generateRandomNumbers(2))
       .concat(generateRandomAlphabet(2, true))
@@ -107,7 +107,7 @@ public String generateCommonTextPassword() {
 
 接下来，让我们通过验证小写字母来验证生成的密码:
 
-```
+```java
 @Test
 public void whenPasswordGeneratedUsingCommonsText_thenSuccessful() {
     RandomPasswordGenerator passGen = new RandomPasswordGenerator();
@@ -126,7 +126,7 @@ public void whenPasswordGeneratedUsingCommonsText_thenSuccessful() {
 
 然而，我们可以使用`usingRandom(TextRandomProvider).` 来设置随机性的来源。例如，我们可以利用`SecureTextRandomProvider`来实现加密安全:
 
-```
+```java
 public String generateRandomSpecialCharacters(int length) {
     SecureTextRandomProvider stp = new SecureTextRandomProvider();
     RandomStringGenerator pwdGenerator = new RandomStringGenerator.Builder()
@@ -143,7 +143,7 @@ public String generateRandomSpecialCharacters(int length) {
 
 让我们看看如何提供密码可接受的代码点范围:
 
-```
+```java
  public String generateCommonLangPassword() {
     String upperCaseLetters = RandomStringUtils.random(2, 65, 90, true, true);
     String lowerCaseLetters = RandomStringUtils.random(2, 97, 122, true, true);
@@ -167,7 +167,7 @@ public String generateRandomSpecialCharacters(int length) {
 
 为了验证生成的密码，让我们验证数字字符的数量:
 
-```
+```java
 @Test
 public void whenPasswordGeneratedUsingCommonsLang3_thenSuccessful() {
     RandomPasswordGenerator passGen = new RandomPasswordGenerator();
@@ -184,7 +184,7 @@ public void whenPasswordGeneratedUsingCommonsLang3_thenSuccessful() {
 
 这里，`RandomStringUtils`默认使用`[Random](https://web.archive.org/web/20221205234344/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Random.html)`作为随机性的来源。但是，库中有一种方法可以让我们指定随机性的来源:
 
-```
+```java
 String lowerCaseLetters = RandomStringUtils.
   random(2, 97, 122, true, true, null, new SecureRandom());
 ```
@@ -195,7 +195,7 @@ String lowerCaseLetters = RandomStringUtils.
 
 我们还可以利用`SecureRandom`类为我们的场景创建一个定制的实用程序类。首先，让我们生成一个长度为 2 的特殊字符串:
 
-```
+```java
 public Stream<Character> getRandomSpecialChars(int count) {
     Random random = new SecureRandom();
     IntStream specialChars = random.ints(count, 33, 45);
@@ -205,7 +205,7 @@ public Stream<Character> getRandomSpecialChars(int count) {
 
 另外，注意`33`和`45`表示 Unicode 字符的范围。现在，我们可以根据我们的需求生成多个流。然后我们可以合并结果集来生成所需的密码:
 
-```
+```java
 public String generateSecureRandomPassword() {
     Stream<Character> pwdStream = Stream.concat(getRandomNumbers(2), 
       Stream.concat(getRandomSpecialChars(2), 
@@ -221,7 +221,7 @@ public String generateSecureRandomPassword() {
 
 现在，让我们验证生成的密码的特殊字符数:
 
-```
+```java
 @Test
 public void whenPasswordGeneratedUsingSecureRandom_thenSuccessful() {
     RandomPasswordGenerator passGen = new RandomPasswordGenerator();

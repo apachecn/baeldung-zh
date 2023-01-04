@@ -10,7 +10,7 @@
 
 首先，我们将通过`pom.xml`依赖关系将 OpenCSV 添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>com.opencsv</groupId>
     <artifactId>opencsv</artifactId>
@@ -22,7 +22,7 @@ OpenCSV 的`.jars`可以在[官方网站](https://web.archive.org/web/2022120814
 
 我们的`.csv`文件将非常简单；我们将保持两列四行:
 
-```
+```java
 colA,colB
 A,B
 C,D
@@ -47,7 +47,7 @@ G,F
 
 让我们通过提供的`readAll()` 和`readNext()`方法来探索`CSVReader`。我们将看看如何同步使用`readAll`():
 
-```
+```java
 public List<String[]> readAllLines(Path filePath) throws Exception {
     try (Reader reader = Files.newBufferedReader(filePath)) {
         try (CSVReader csvReader = new CSVReader(reader)) {
@@ -59,7 +59,7 @@ public List<String[]> readAllLines(Path filePath) throws Exception {
 
 然后我们可以通过传入一个文件`Path`来调用该方法:
 
-```
+```java
 public List<String[]> readAllExample() throws Exception {
     Path path = Paths.get(
       ClassLoader.getSystemResource("csv/twoColumn.csv").toURI())
@@ -70,7 +70,7 @@ public List<String[]> readAllExample() throws Exception {
 
 同样，我们可以抽象出`readNext`()，它逐行读取一个提供的`.csv`:
 
-```
+```java
 public List<String[]> readLineByLine(Path filePath) throws Exception {
     List<String[]> list = new ArrayList<>();
     try (Reader reader = Files.newBufferedReader(filePath)) {
@@ -87,7 +87,7 @@ public List<String[]> readLineByLine(Path filePath) throws Exception {
 
 最后，我们可以通过传入一个文件`Path:`来调用这个方法
 
-```
+```java
 public List<String[]> readLineByLineExample() throws Exception {
     Path path = Paths.get(
       ClassLoader.getSystemResource("csv/twoColumn.csv").toURI())
@@ -98,7 +98,7 @@ public List<String[]> readLineByLineExample() throws Exception {
 
 或者，为了获得更大的灵活性和配置选项，我们可以使用`CSVReaderBuilder`:
 
-```
+```java
 CSVParser parser = new CSVParserBuilder()
     .withSeparator(',')
     .withIgnoreQuotations(true)
@@ -122,7 +122,7 @@ CSVReader csvReader = new CSVReaderBuilder(reader)
 
 让我们看看如何逐行写入一个 `.csv`:
 
-```
+```java
 public String writeLineByLine(List<String[]> lines, Path path) throws Exception {
     try (CSVWriter writer = new CSVWriter(new FileWriter(path.toString()))) {
         for (String[] line : lines) {
@@ -134,7 +134,7 @@ public String writeLineByLine(List<String[]> lines, Path path) throws Exception 
 
 然后，我们将指定保存文件的位置，并调用我们刚刚编写的方法:
 
-```
+```java
 public String writeLinebylineExample() throws Exception {
     Path path = Paths.get(
       ClassLoader.getSystemResource("csv/writtenOneByOne.csv").toURI()
@@ -145,7 +145,7 @@ public String writeLinebylineExample() throws Exception {
 
 我们也可以通过传入代表我们的`.csv:`的行的`String`数组的`List`来一次写入我们的`.csv`
 
-```
+```java
 public String writeAllLines(List<String[]> lines, Path path) throws Exception {
     try (CSVWriter writer = new CSVWriter(new FileWriter(path.toString()))) {
         writer.writeAll(stringArray);
@@ -156,7 +156,7 @@ public String writeAllLines(List<String[]> lines, Path path) throws Exception {
 
 最后，我们这样称呼它:
 
-```
+```java
 public String writeAllExample() throws Exception {
     Path path = Paths.get(
       ClassLoader.getSystemResource("csv/writtenAll.csv").toURI()
@@ -171,7 +171,7 @@ OpenCSV 能够将`.csv`文件序列化为预设的、可重用的模式，作为
 
 这里有一个简单的 bean，我们可以用它来序列化前面的两列 `.csv`:
 
-```
+```java
 public class SimplePositionBean  {
     @CsvBindByPosition(position = 0)
     private String exampleColOne;
@@ -187,13 +187,13 @@ public class SimplePositionBean  {
 
 首先，我们将创建一个名为`CsvBean`的超类，它将允许我们重用和概括我们将在下面构建的方法:
 
-```
+```java
 public class CsvBean { }
 ```
 
 下面是一个子类示例:
 
-```
+```java
 public class NamedColumnBean extends CsvBean {
 
     @CsvBindByName(column = "name")
@@ -209,7 +209,7 @@ public class NamedColumnBean extends CsvBean {
 
 接下来，我们将使用`CsvToBean`抽象一个同步返回的`List` :
 
-```
+```java
 public List<CsvBean> beanBuilderExample(Path path, Class clazz) throws Exception {
     CsvTransfer csvTransfer = new CsvTransfer();
 
@@ -228,7 +228,7 @@ public List<CsvBean> beanBuilderExample(Path path, Class clazz) throws Exception
 
 我们可以用上面写的 `CsvBean` 的子类`SimplePositionBean` 来调用它:
 
-```
+```java
 public List<CsvBean> simplePositionBeanExample() throws Exception {
     Path path = Paths.get(
       ClassLoader.getSystemResource("csv/twoColumn.csv").toURI()); 
@@ -238,7 +238,7 @@ public List<CsvBean> simplePositionBeanExample() throws Exception {
 
 我们也可以在这里用 `CsvBean`的另一个子类`NamedColumnBean,` 来调用它:
 
-```
+```java
 public List<CsvBean> namedColumnBeanExample() throws Exception {
     Path path = Paths.get(
       ClassLoader.getSystemResource("csv/namedColumn.csv").toURI()); 
@@ -250,7 +250,7 @@ public List<CsvBean> namedColumnBeanExample() throws Exception {
 
 最后，让我们来看看如何使用`StatefulBeanToCsv` 类写入一个`.csv`文件:
 
-```
+```java
 public String writeCsvFromBean(Path path) throws Exception {
 
     List<CsvBean> sampleData = Arrays.asList(
@@ -275,7 +275,7 @@ public String writeCsvFromBean(Path path) throws Exception {
 
 在传入所需的输出文件路径后，我们可以调用我们的方法`writeCsvFromBean()`:
 
-```
+```java
 public String writeCsvFromBeanExample() {
     Path path = Paths.get(
       ClassLoader.getSystemResource("csv/writtenBean.csv").toURI()); 

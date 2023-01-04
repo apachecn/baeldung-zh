@@ -14,14 +14,14 @@
 
 首先，让我们建立一个新的数据库`baeldung`和一个样本集合`orders`:
 
-```
+```java
 use baeldung;
 db.createCollection(orders);
 ```
 
 现在让我们使用`insertMany`方法向集合中添加一些文档:
 
-```
+```java
 db.orders.insertMany([
     {
         "customerId": 1023,
@@ -66,7 +66,7 @@ db.orders.insertMany([
 
 如果插入成功，上面的命令将打印一个 JSON，如下所示:
 
-```
+```java
 {
     "acknowledged" : true,
     "insertedIds" : [
@@ -84,7 +84,7 @@ MongoDB 提供了各种类型的数组操作符来更新 MongoDB 文档中的数
 
 现在让我们使用`$push`操作符来研究 shell 查询:
 
-```
+```java
 db.orders.updateOne(
     {
         "customerId": 1023
@@ -102,7 +102,7 @@ db.orders.updateOne(
 
 上述查询将返回以下文档:
 
-```
+```java
 {
     "acknowledged":true,
     "matchedCount":1,
@@ -112,7 +112,7 @@ db.orders.updateOne(
 
 现在让我们检查带有`customerId ` 1023 的文档。在这里，我们可以看到新条目被插入到列表"`items`"的末尾:
 
-```
+```java
 {
     "customerId" : 1023,
     "orderTimestamp" : NumberLong("1646460073000"),
@@ -145,7 +145,7 @@ db.orders.updateOne(
 
 在执行更新操作之前，让我们首先连接到`baeldung`数据库中的`orders`集合:
 
-```
+```java
 mongoClient = new MongoClient("localhost", 27017);
 MongoDatabase database = mongoClient.getDatabase("baeldung");
 MongoCollection<Document> collection = database.getCollection("orders");
@@ -159,7 +159,7 @@ MongoCollection<Document> collection = database.getCollection("orders");
 
 现在让我们看一下 Java 驱动程序代码，将新值插入数组:
 
-```
+```java
 DBObject listItem = new BasicDBObject("items", new BasicDBObject("itemName", "PIZZA MANIA")
   .append("quantity", 1)
   .append("price", 800));
@@ -177,7 +177,7 @@ UpdateResult updateResult = collection.updateOne(searchFilter, updateQuery);
 
 让我们使用`org.bson.Document `类将值推入数组"`items”`:
 
-```
+```java
 Document item = new Document()
   .append("itemName1", "PIZZA MANIA")
   .append("quantity", 1).append("price", 800);
@@ -198,7 +198,7 @@ mongo shell 查询的`$addToSet`操作符类似于`$push`操作符，但是`$add
 
 现在让我们来看看使用`$addToset`将值推入数组的 MongoDB 查询:
 
-```
+```java
 db.orders.updateOne(
     {
         "customerId": 1023
@@ -216,7 +216,7 @@ db.orders.updateOne(
 
 在这种情况下，输出如下:
 
-```
+```java
 {
     "acknowledged":true,
     "matchedCount":1,
@@ -230,7 +230,7 @@ db.orders.updateOne(
 
 与 push 操作符相比,＄`addToSet`操作符提供了一种不同类型的数组更新操作:
 
-```
+```java
 Document item = new Document()
   .append("itemName1", "PIZZA MANIA")
   .append("quantity", 1).append("price", 800);

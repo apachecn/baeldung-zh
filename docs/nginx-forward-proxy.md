@@ -30,7 +30,7 @@
 
 首先，我们找到默认的`Nginx`配置文件并注释掉`server`部分，以便将其保存为归档副本。通常，我们可以在`/etc/nginx/sites-enabled/default`中找到它:
 
-```
+```java
 # Default server configuration
 #server {
     #listen 80 default_server;
@@ -53,7 +53,7 @@
 
 接下来，让我们**创建一个名为`forward`的新文件，并添加所有需要的配置，将 Nginx 转换成一个工作的转发代理**:
 
-```
+```java
 server {
 
     listen 8888;
@@ -77,7 +77,7 @@ server {
 
 在我们更新了所有必要的配置之后，我们需要重启`nginx.service`来使它们生效:
 
-```
+```java
 sudo systemctl restart nginx.service
 ```
 
@@ -89,19 +89,19 @@ sudo systemctl restart nginx.service
 
 接下来，我们需要初始化 NPM 的`package.json`，这样我们就可以安装所有需要的库。我们通过在项目目录内的终端上运行`npm init`命令来实现这一点:
 
-```
+```java
 npm init
 ```
 
 在我们成功初始化存储库之后，我们需要安装[请求](https://web.archive.org/web/20220802202610/https://www.npmjs.com/package/request)库，我们将使用它来构建带有代理配置的定制请求:
 
-```
+```java
 npm install request
 ```
 
 最后，让我们打开一个 IDE 并将下面的代码粘贴到我们的`proxytest.js`文件中:
 
-```
+```java
 var request = require('request');
 
 request({
@@ -117,7 +117,7 @@ request({
 
 现在，让我们运行这段代码:
 
-```
+```java
 node proxytest.js 
 ```
 
@@ -127,7 +127,7 @@ node proxytest.js
 
 接下来，我们来看看 Nginx 的调试日志:
 
-```
+```java
 2022/02/20 13:46:13 [debug] 1790#1790: *1 http script copy: "http://"
 2022/02/20 13:46:13 [debug] 1790#1790: *1 http script var: "www.google.com"
 2022/02/20 13:46:13 [debug] 1790#1790: *1 http script var: "/"
@@ -163,7 +163,7 @@ Connection: close
 
 正如我们看到的，我们的初始请求通过代理。紧接着，代理服务器向目标资源发起新请求，该请求包含初始请求中的所有数据。之后，它从资源中获取响应，并将其返回给我们的客户端:
 
-```
+```java
 2022/02/20 13:46:14 [debug] 1790#1790: *1 http proxy status 200 "200 OK"
 2022/02/20 13:46:14 [debug] 1790#1790: *1 http proxy header: "Date: Sun, 20 Feb 2022 12:46:15 GMT"
 2022/02/20 13:46:14 [debug] 1790#1790: *1 http proxy header: "Expires: -1"

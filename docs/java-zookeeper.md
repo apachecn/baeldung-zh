@@ -14,7 +14,7 @@ ZooKeeper 集群中的节点将它们的数据存储在一个共享的层次名�
 
 Apache ZooKeeper Java 库的最新版本可以在这里找到:
 
-```
+```java
 <dependency>
     <groupId>org.apache.zookeeper</groupId>
     <artifactId>zookeeper</artifactId>
@@ -46,13 +46,13 @@ ZooKeeper 有一个分层的名称空间，很像一个分布式文件系统，�
 
 我们现在将使用 ZooKeeper 命令行界面(CLI)与 ZooKeeper 进行交互:
 
-```
+```java
 bin/zkCli.sh -server 127.0.0.1:2181
 ```
 
 上述命令在本地启动一个独立实例。现在让我们看看如何创建一个 ZNode 并在 ZooKeeper 中存储信息:
 
-```
+```java
 [zk: localhost:2181(CONNECTED) 0] create /MyFirstZNode ZNodeVal
 Created /FirstZnode
 ```
@@ -63,7 +63,7 @@ Created /FirstZnode
 
 现在让我们发出一个`‘get'`命令来获取数据以及与 ZNode 相关联的元数据:
 
-```
+```java
 [zk: localhost:2181(CONNECTED) 1] get /FirstZnode
 
 “Myfirstzookeeper-app”
@@ -84,7 +84,7 @@ numChildren = 0
 
 例如:
 
-```
+```java
 set /MyFirstZNode ZNodeValUpdated
 ```
 
@@ -109,7 +109,7 @@ ZooKeeper Java 绑定主要由两个 Java 包组成:
 
 现在让我们创建`ZKConnection`类，它将用于连接和断开已经运行的 ZooKeeper:
 
-```
+```java
 public class ZKConnection {
     private ZooKeeper zoo;
     CountDownLatch connectionLatch = new CountDownLatch(1);
@@ -149,7 +149,7 @@ public class ZKConnection {
 
 我们现在将创建一个`ZKManager` 接口，它公开不同的操作，比如创建一个 ZNode 并保存一些数据，获取和更新 ZNode 数据:
 
-```
+```java
 public interface ZKManager {
     public void create(String path, byte[] data)
       throws KeeperException, InterruptedException;
@@ -161,7 +161,7 @@ public interface ZKManager {
 
 现在让我们看看上面接口的实现:
 
-```
+```java
 public class ZKManagerImpl implements ZKManager {
     private static ZooKeeper zkeeper;
     private static ZKConnection zkConnection;

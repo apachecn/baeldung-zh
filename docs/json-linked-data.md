@@ -35,7 +35,7 @@
 
 首先，让我们将 [`jackson-jsonld`](https://web.archive.org/web/20220627091154/https://search.maven.org/artifact/com.io-informatics.oss/jackson-jsonld) 作为依赖项添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.io-informatics.oss</groupId>
     <artifactId>jackson-jsonld</artifactId>
@@ -47,7 +47,7 @@
 
 然后，让我们创建我们的示例 POJO，并为`@context`生成进行注释:
 
-```
+```java
 @JsonldResource
 @JsonldNamespace(name = "s", uri = "http://schema.org/")
 @JsonldType("s:Person")
@@ -77,7 +77,7 @@ public class Person {
 
 然后，我们将继续使用`ObjectMapper`来生成 JSON-LD 文档:
 
-```
+```java
 ObjectMapper objectMapper = new ObjectMapper();
 objectMapper.registerModule(new JsonldModule());
 
@@ -87,7 +87,7 @@ String personJsonLd = objectMapper.writeValueAsString(person);
 
 **因此，`personJsonLd`变量现在应该包含:**
 
-```
+```java
 {
   "@type": "s:Person",
   "@context": {
@@ -121,7 +121,7 @@ Hydra-Jsonld 是 [Hydra-Java](https://web.archive.org/web/20220627091154/https:/
 
 首先，让我们将 [`hydra-jsonld`](https://web.archive.org/web/20220627091154/https://search.maven.org/artifact/de.escalon.hypermedia/hydra-jsonld) 的依赖项添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>de.escalon.hypermedia</groupId>
     <artifactId>hydra-jsonld</artifactId>
@@ -139,7 +139,7 @@ Hydra-Jsonld 自动生成一个默认的`@context`，不需要注释。**如果�
 
 在本例中，**让我们用自定义值**覆盖这些默认值:
 
-```
+```java
 @Vocab("http://example.com/vocab/")
 @Expose("person")
 public class Person {
@@ -170,7 +170,7 @@ public class Person {
 
 接下来，让我们配置一个 Jackson `Module`的实例，我们可以在`ObjectMapper`中注册它。**我们将添加`JacksonHydraSerializer`作为`BeanSerializerModifier`，这样它可以应用于所有正在序列化的 POJOs】:**
 
-```
+```java
 SimpleModule getJacksonHydraSerializerModule() {
     return new SimpleModule() {
         @Override
@@ -197,7 +197,7 @@ SimpleModule getJacksonHydraSerializerModule() {
 
 然后让我们在`ObjectMapper`中注册`Module`并使用它`.` **我们还应该设置`ObjectMapper`只包含非`null`值**以生成有效的 JSON-LD 文档:
 
-```
+```java
 ObjectMapper objectMapper = new ObjectMapper();
 objectMapper.registerModule(getJacksonHydraSerializerModule());
 objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -209,7 +209,7 @@ String personJsonLd = objectMapper.writeValueAsString(person);
 
 **现在，`personJsonLd`变量应该包含:**
 
-```
+```java
 {
   "@context": {
     "@vocab": "http://example.com/vocab/",
@@ -243,7 +243,7 @@ String personJsonLd = objectMapper.writeValueAsString(person);
 
 首先，让我们为 [`jsonld-java`](https://web.archive.org/web/20220627091154/https://search.maven.org/artifact/com.github.jsonld-java/jsonld-java) 添加依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.github.jsonld-java</groupId>
     <artifactId>jsonld-java</artifactId>
@@ -255,7 +255,7 @@ String personJsonLd = objectMapper.writeValueAsString(person);
 
 让我们使用这个 JSON-LD 文档作为我们的输入:
 
-```
+```java
 {
   "@context": {
     "@vocab": "http://schema.org/",
@@ -274,7 +274,7 @@ String personJsonLd = objectMapper.writeValueAsString(person);
 
 首先，让我们将其压缩并转换回一个`String`:
 
-```
+```java
 Object jsonObject = JsonUtils.fromString(inputJsonLd);
 Object compact = JsonLdProcessor.compact(jsonObject, new HashMap<>(), new JsonLdOptions());
 String compactContent = JsonUtils.toString(compact);
@@ -285,7 +285,7 @@ String compactContent = JsonUtils.toString(compact);
 
 **`compactContent`变量应该包含:**
 
-```
+```java
 {
   "@id": "http://example.com/person/1234",
   "@type": "http://schema.org/Person",
@@ -298,7 +298,7 @@ String compactContent = JsonUtils.toString(compact);
 
 其次，让我们用 Jackson 注释来定制我们的 POJO，以适应这样的文档结构:
 
-```
+```java
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Person {
     @JsonProperty("@id")
@@ -321,7 +321,7 @@ public class Person {
 
 最后，让我们将 JSON-LD 映射到 POJO:
 
-```
+```java
 ObjectMapper objectMapper = new ObjectMapper();
 Person person = objectMapper.readValue(compactContent, Person.class);
 ```

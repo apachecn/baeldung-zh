@@ -14,7 +14,7 @@
 
 让我们看一个借助于`Process` API 编译和运行另一个 Java 程序的例子:
 
-```
+```java
 @Test
 public void whenExecutedFromAnotherProgram_thenSourceProgramOutput3() throws IOException {
 
@@ -41,7 +41,7 @@ public void whenExecutedFromAnotherProgram_thenSourceProgramOutput3() throws IOE
 
 让我们来看一个打开基于 Windows 的记事本应用程序的演示:
 
-```
+```java
 ProcessBuilder builder = new ProcessBuilder("notepad.exe");
 Process process = builder.start();
 ```
@@ -70,7 +70,7 @@ Process process = builder.start();
 
 让我们看一个例子:
 
-```
+```java
 long pid = /* PID to kill */;
 Optional<ProcessHandle> optionalProcessHandle = ProcessHandle.of(pid);
 optionalProcessHandle.ifPresent(processHandle -> processHandle.destroy()); 
@@ -86,7 +86,7 @@ optionalProcessHandle.ifPresent(processHandle -> processHandle.destroy());
 
 如果返回 true，则执行`destroyForcibly()`:
 
-```
+```java
 ProcessBuilder builder = new ProcessBuilder("notepad.exe");
 Process process = builder.start();
 process.destroy();
@@ -105,7 +105,7 @@ if (process.isAlive()) {
 
 让我们来看看这个例子:
 
-```
+```java
 ProcessBuilder builder = new ProcessBuilder("notepad.exe");
 Process process = builder.start();
 assertThat(process.waitFor() >= 0); 
@@ -119,7 +119,7 @@ assertThat(process.waitFor() >= 0);
 
 让我们来看看这个例子:
 
-```
+```java
 ProcessBuilder builder = new ProcessBuilder("notepad.exe");
 Process process = builder.start();
 assertFalse(process.waitFor(1, TimeUnit.SECONDS));
@@ -139,7 +139,7 @@ assertFalse(process.waitFor(1, TimeUnit.SECONDS));
 
 让我们看一个例子，当子流程成功终止时，`exitValue()`方法返回一个正整数:
 
-```
+```java
 @Test
 public void 
   givenSubProcess_whenCurrentThreadWillNotWaitIndefinitelyforSubProcessToEnd_thenProcessExitValueReturnsGrt0() 
@@ -158,7 +158,7 @@ public void
 
 让我们看一个简单的例子:
 
-```
+```java
 ProcessBuilder builder = new ProcessBuilder("notepad.exe");
 Process process = builder.start();
 Thread.sleep(10000);
@@ -180,7 +180,7 @@ assertTrue(process.isAlive());
 
 让我们看一个例子:
 
-```
+```java
 @Test
 public void givenSubProcess_whenEncounterError_thenErrorStreamNotNull() throws IOException {
     Process process = Runtime.getRuntime().exec(
@@ -195,7 +195,7 @@ public void givenSubProcess_whenEncounterError_thenErrorStreamNotNull() throws I
 
 我们还可以获取子流程生成的输出，并在父流程中使用，从而允许流程之间共享信息:
 
-```
+```java
 @Test
 public void givenSourceProgram_whenReadingInputStream_thenFirstLineEquals3() throws IOException {
     Process process = Runtime.getRuntime().exec(
@@ -213,7 +213,7 @@ public void givenSourceProgram_whenReadingInputStream_thenFirstLineEquals3() thr
 
 我们可以从父流程向子流程发送输入:
 
-```
+```java
 Writer w = new OutputStreamWriter(process.getOutputStream(), "UTF-8");
 w.write("send to child\n");
 ```
@@ -226,7 +226,7 @@ w.write("send to child\n");
 
 之后，我们可以在这个选择性的过程集上执行业务操作:
 
-```
+```java
 @Test
 public void givenRunningProcesses_whenFilterOnProcessIdRange_thenGetSelectedProcessPid() {
     assertThat(((int) ProcessHandle.allProcesses()

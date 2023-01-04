@@ -18,7 +18,7 @@
 
 首先，让我们创建一个网络:
 
-```
+```java
 docker network create network-example
 ```
 
@@ -26,7 +26,7 @@ docker network create network-example
 
 让我们看看我们的 Redis 定义:
 
-```
+```java
 services:
   db:
     image: redis:latest
@@ -43,7 +43,7 @@ networks:
 
 让我们也在不同的文件中为我们的 web 应用程序定义它:
 
-```
+```java
 services:
   my_app:
     image: "web-app:latest"
@@ -62,7 +62,7 @@ networks:
 
 **同样，我们也可以在模板内部定义一个`network`，比如我们的`redis_network` :**
 
-```
+```java
 services:
   db:
     image: redis:latest
@@ -80,7 +80,7 @@ networks:
 
 这一次，当我们设置我们的 web 应用程序模板时，我们需要参考 Redis 现有的网络:
 
-```
+```java
 services:
   my_app:
     image: "web-app:latest"
@@ -102,19 +102,19 @@ networks:
 
 如果我们在一个服务定义中创建一个网络，我们需要首先启动那个服务，就像我们例子中的 Redis 一样:
 
-```
+```java
 docker-compose -f docker-compose-redis-service.yaml up -d && docker-compose -f docker-compose-my-app-service.yaml up -d
 ```
 
 让我们[检查](https://web.archive.org/web/20220904150434/https://docs.docker.com/engine/reference/commandline/inspect/)一个正在运行的容器以查看网络定义，例如，我们的 Redis 服务:
 
-```
+```java
 docker inspect 5c7f8b28480b
 ```
 
 我们将看到`redis_network`的一个条目。对于 web-app 检查，我们将得到相同的输出:
 
-```
+```java
 "Networks": {
     "redis_network": {
         "IPAMConfig": null,
@@ -139,13 +139,13 @@ docker inspect 5c7f8b28480b
 
 同样，我们可以考察一下`redis_network`:
 
-```
+```java
 docker network inspect redis_network
 ```
 
 我们的两种服务属于同一个网络:
 
-```
+```java
 "Containers": {
     "5c7f8b28480ba638ce993c6714841265c0a98d746b27205a756936bbe1850ac2": {
         "Name": "redis",

@@ -16,7 +16,7 @@
 
 首先，让我们声明一下 [Spring WebSocket](https://web.archive.org/web/20220801150137/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-websocket) 的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-websocket</artifactId>
@@ -28,7 +28,7 @@
 
 接下来，让我们定义启用 WebSocket 支持所需的`@Configuration`:
 
-```
+```java
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebsocketConfiguration implements WebSocketMessageBrokerConfigurer {
@@ -48,7 +48,7 @@ public class WebsocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
 此外，让我们创建一个向订阅者发送模拟股票更新的控制器:
 
-```
+```java
 private SimpMessagingTemplate simpMessagingTemplate;
 
 public void sendTicks() { 
@@ -60,7 +60,7 @@ public void sendTicks() {
 
 让我们构建一个显示来自服务器的更新的 [HTML5](https://web.archive.org/web/20220801150137/https://html.spec.whatwg.org/) 页面:
 
-```
+```java
 <div class="spinner-border text-primary" role="status">
     <span class="visually-hidden">Loading ...</span>
 </div> 
@@ -68,7 +68,7 @@ public void sendTicks() {
 
 接下来，让我们使用 [SockJS](https://web.archive.org/web/20220801150137/https://github.com/sockjs/sockjs-client) 连接到 WebSocket 服务器:
 
-```
+```java
 function connect() {
     let socket = new SockJS('/stock-ticks');
     stompClient = Stomp.over(socket);
@@ -86,7 +86,7 @@ function connect() {
 
 让我们启动服务器并在浏览器中打开应用程序:
 
-```
+```java
 mvn spring-boot:run
 ```
 
@@ -201,7 +201,7 @@ Wireshark 是最流行、最广泛、使用最广泛的网络协议嗅探工具�
 
 **在 Linux** **中，使用 [`tcpdump`](/web/20220801150137/https://www.baeldung.com/linux/sniffing-packet-tcpdump) 命令捕获网络流量**。例如，打开一个 shell 终端，使用此命令生成一个数据包捕获文件，`websocket.pcap`:
 
-```
+```java
 tcpdump -w websocket.pcap -s 2500 -vv -i lo
 ```
 
@@ -273,7 +273,7 @@ tcpdump -w websocket.pcap -s 2500 -vv -i lo
 
 最后，**让我们使用一个[基于 Spring 的 Java 客户端](/web/20220801150137/https://www.baeldung.com/websockets-api-java-spring-client)** 来调试 WebSockets:
 
-```
+```java
 WebSocketClient client = new StandardWebSocketClient();
 WebSocketStompClient stompClient = new WebSocketStompClient(client);
 stompClient.setMessageConverter(new MappingJackson2MessageConverter());
@@ -285,7 +285,7 @@ stompClient.connect(URL, sessionHandler);
 
 接下来，**让我们定义一个扩展了 [`StompSessionHandlerAdapter`](https://web.archive.org/web/20220801150137/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/messaging/simp/stomp/StompSessionHandlerAdapter.html)** 的处理程序。有意地，`StompSessionHandlerAdapter`类不提供除了方法`getPayloadType`之外的实现。因此，让我们给这些方法一个有意义的实现:
 
-```
+```java
 public class StompClientSessionHandler extends StompSessionHandlerAdapter {
 
     @Override
@@ -299,7 +299,7 @@ public class StompClientSessionHandler extends StompSessionHandlerAdapter {
 
 接下来，当我们运行这个客户端时，我们会得到类似如下的日志:
 
-```
+```java
 16:35:49.135 [WebSocketClient-AsyncIO-8] INFO StompClientSessionHandler - Subscribed to topic: /topic/ticks
 16:35:50.291 [WebSocketClient-AsyncIO-8] INFO StompClientSessionHandler - Payload -> {MSFT=17, GOOGL=48, AAPL=54, TSLA=73, HPE=89, AMZN=-5} 
 ```

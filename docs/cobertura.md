@@ -14,7 +14,7 @@
 
 为了在您的 Java 项目中开始计算[代码覆盖率](/web/20221002070307/https://www.baeldung.com/cs/code-coverage)，您需要**在您的`pom.xml`文件**的报告部分下声明 Cobertura Maven 插件:
 
-```
+```java
 <reporting>
     <plugins>
         <plugin>
@@ -46,7 +46,7 @@
 
 您可以使用`ignore`和`exclude`标签从代码检测中忽略/排除一组特定的类:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>cobertura-maven-plugin</artifactId>
@@ -68,7 +68,7 @@
 
 下面是一个关于如何配置`check`阶段的基本示例:
 
-```
+```java
 <configuration>
     <check>
         <haltOnFailure>true</haltOnFailure>
@@ -115,7 +115,7 @@ Cobertura 也是一个名为`eCobertura`的 Eclipse 插件。为了安装 Eclips
 
 对于新版 Eclipse(开普勒、露娜等。)，安装`eCobertura`可能会导致一些与 JUnit 相关的问题——**与 Eclipse 打包在一起的较新版本的 JUnit 与`eCobertura`的依赖检查器**不完全兼容
 
-```
+```java
 Cannot complete the install because one or more required items could not be found.
   Software being installed: eCobertura 0.9.8.201007202152 (ecobertura.feature.group
      0.9.8.201007202152)
@@ -143,7 +143,7 @@ Cannot complete the install because one or more required items could not be foun
 
 **Java 8 用户在计算代码覆盖率时可能会遇到一个常见的错误:**
 
-```
+```java
 java.lang.VerifyError: Expecting a stackmap frame at branch target ...
 ```
 

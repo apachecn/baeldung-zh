@@ -30,13 +30,13 @@
 
 ### 可用签名
 
-```
+```java
 public String trim()
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenTrim_thenCorrect() {
     assertEquals("foo", " foo  ".trim());

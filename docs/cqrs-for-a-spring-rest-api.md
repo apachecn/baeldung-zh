@@ -16,7 +16,7 @@
 
 我们从简单的开始——通过识别我们之前的用户服务中的读和写操作——我们将把它分成两个独立的服务—`UserQueryService`和`UserCommandService`:
 
-```
+```java
 public interface IUserQueryService {
 
     List<User> getUsersList(int page, int size, String sortDir, String sort);
@@ -30,7 +30,7 @@ public interface IUserQueryService {
 }
 ```
 
-```
+```java
 public interface IUserCommandService {
 
     void registerNewUser(String username, String email, String password, String appUrl);
@@ -58,7 +58,7 @@ public interface IUserCommandService {
 
 这是我们的`UserQueryRestController`:
 
-```
+```java
 @Controller
 @RequestMapping(value = "/api/users")
 public class UserQueryRestController {
@@ -100,7 +100,7 @@ public class UserQueryRestController {
 
 现在，这是我们的命令控制器实现:
 
-```
+```java
 @Controller
 @RequestMapping(value = "/api/users")
 public class UserCommandRestController {
@@ -166,7 +166,7 @@ public class UserCommandRestController {
 
 在分成命令和查询之后，现在让我们快速回顾一下用户资源的不同表示:
 
-```
+```java
 public class UserQueryDto {
     private Long id;
 
@@ -184,7 +184,7 @@ public class UserQueryDto {
 
 *   `UserRegisterCommandDto` 用于表示用户注册数据`:`
 
-```
+```java
 public class UserRegisterCommandDto {
     private String username;
     private String email;
@@ -194,7 +194,7 @@ public class UserRegisterCommandDto {
 
 *   `UserUpdatePasswordCommandDto` 用于表示更新当前用户密码的数据:
 
-```
+```java
 public class UserUpdatePasswordCommandDto {
     private String oldPassword;
     private String password;
@@ -203,7 +203,7 @@ public class UserUpdatePasswordCommandDto {
 
 *   `UserTriggerResetPasswordCommandDto` 用于表示用户通过发送带有重置密码令牌的电子邮件来触发重置密码的电子邮件:
 
-```
+```java
 public class UserTriggerResetPasswordCommandDto {
     private String email;
 }
@@ -211,7 +211,7 @@ public class UserTriggerResetPasswordCommandDto {
 
 *   `UserChangePasswordCommandDto`用于表示新用户密码–该命令在用户使用密码重置令牌后调用。
 
-```
+```java
 public class UserChangePasswordCommandDto {
     private String password;
 }
@@ -219,7 +219,7 @@ public class UserChangePasswordCommandDto {
 
 *   `UserUpdateCommandDto`用于表示修改后新用户的数据:
 
-```
+```java
 public class UserUpdateCommandDto {
     private Long id;
 

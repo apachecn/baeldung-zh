@@ -16,7 +16,7 @@ Spring Boot 允许我们将样本数据导入我们的数据库——主要是�
 
 在这种情况下，我们希望只为 JUnit 测试加载样本数据。该值必须是要导入的逗号分隔的文件列表:
 
-```
+```java
 spring.jpa.properties.hibernate.hbm2ddl.import_files=import_active_users.sql,import_inactive_users.sql
 ```
 
@@ -28,13 +28,13 @@ spring.jpa.properties.hibernate.hbm2ddl.import_files=import_active_users.sql,imp
 
 初始数据和 **Spring JDBC 支持的配置与 Hibernate 非常相似。我们必须使用 spring . SQL . init . data-locations**属性:
 
-```
+```java
 spring.sql.init.data-locations=import_active_users.sql,import_inactive_users.sql
 ```
 
 如上所述设置该值会产生与 Hibernate 支持中相同的结果。然而，这个解决方案的一个显著的**优势是可以使用 ant 风格的模式**来定义价值:
 
-```
+```java
 spring.sql.init.data-locations=import_*_users.sql 
 ```
 

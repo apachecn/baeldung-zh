@@ -12,7 +12,7 @@
 
 举个例子，我们来泡点茶吧！首先，我们需要一个`Tea` POJO:
 
-```
+```java
 public class Tea {
 
     static final int DEFAULT_TEA_POWDER = 1;
@@ -35,7 +35,7 @@ public class Tea {
 
 **让我们看看如何使用方法重载在 Java 中实现这一点**:
 
-```
+```java
 public Tea(String name, int milk, boolean herbs, int sugar, int teaPowder) {
     this.name = name;
     this.milk = milk;
@@ -65,7 +65,7 @@ public Tea(String name) {
 
 现在，让我们添加一个简单的测试来看看这一点:
 
-```
+```java
 @Test
 public void whenTeaWithOnlyName_thenCreateDefaultTea() {
     Tea blackTea = new Tea("Black Tea");
@@ -88,7 +88,7 @@ public void whenTeaWithOnlyName_thenCreateDefaultTea() {
 
 下面是我们如何在示例中利用允许空参数的第三种方式:
 
-```
+```java
 public Tea(String name, Integer milk, Boolean herbs, Integer sugar, Integer teaPowder) {
     this.name = name;
     this.milk = milk == null ? 0 : milk.intValue();

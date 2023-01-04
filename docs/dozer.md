@@ -16,7 +16,7 @@
 
 这是推土机可以完成的最基本的绘图:
 
-```
+```java
 public class Source {
     private String name;
     private int age;
@@ -34,7 +34,7 @@ public class Source {
 
 然后我们的目的地文件，`Dest.java`:
 
-```
+```java
 public class Dest {
     private String name;
     private int age;
@@ -54,7 +54,7 @@ public class Dest {
 
 为了提高性能，让我们将映射器设为全局的，并创建一个将在整个测试中使用的对象:
 
-```
+```java
 DozerBeanMapper mapper;
 
 @Before
@@ -65,7 +65,7 @@ public void before() throws Exception {
 
 现在，让我们运行我们的第一个测试来确认当我们创建一个`Source`对象时，我们可以将它直接映射到一个`Dest`对象上:
 
-```
+```java
 @Test
 public void givenSourceObjectAndDestClass_whenMapsSameNameFieldsCorrectly_
   thenCorrect() {
@@ -81,7 +81,7 @@ public void givenSourceObjectAndDestClass_whenMapsSameNameFieldsCorrectly_
 
 或者，我们可以只创建`Dest`对象并将它的引用传递给`mapper`,而不是传递给`mapper`类`Dest`:
 
-```
+```java
 @Test
 public void givenSourceObjectAndDestObject_whenMapsSameNameFieldsCorrectly_
   thenCorrect() {
@@ -98,7 +98,7 @@ public void givenSourceObjectAndDestObject_whenMapsSameNameFieldsCorrectly_
 
 现在我们对 Dozer 的工作原理有了基本的了解，让我们给`pom.xml`添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>net.sf.dozer</groupId>
     <artifactId>dozer</artifactId>
@@ -116,7 +116,7 @@ public void givenSourceObjectAndDestObject_whenMapsSameNameFieldsCorrectly_
 
 让我们来看看这个新概念的实际应用:
 
-```
+```java
 public class Source2 {
     private String id;
     private double points;
@@ -134,7 +134,7 @@ public class Source2 {
 
 目的地类别:
 
-```
+```java
 public class Dest2 {
     private int id;
     private int points;
@@ -157,7 +157,7 @@ public class Dest2 {
 
 现在让我们看看 Dozer 如何正确处理转换:
 
-```
+```java
 @Test
 public void givenSourceAndDestWithDifferentFieldTypes_
   whenMapsAndAutoConverts_thenCorrect() {
@@ -185,7 +185,7 @@ public void givenSourceAndDestWithDifferentFieldTypes_
 
 我们有一个带有`name`、`nickname`和`age`字段的`Person`对象:
 
-```
+```java
 public class Person {
     private String name;
     private String nickname;
@@ -206,7 +206,7 @@ public class Person {
 
 我们要解组的对象名为`Personne`，有字段`nom`、`surnom`和`age`:
 
-```
+```java
 public class Personne {
     private String nom;
     private String surnom;
@@ -229,7 +229,7 @@ public class Personne {
 
 我们只需要创建一个定制的映射文件来帮助 Dozer 完成这项工作，我们称之为`dozer_mapping.xml`:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <mappings  
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -264,7 +264,7 @@ public class Personne {
 
 让我们创建一个助手方法，将映射文件添加到我们的`mapper`:
 
-```
+```java
 public void configureMapper(String... mappingFileUrls) {
     mapper.setMappingFiles(Arrays.asList(mappingFileUrls));
 }
@@ -272,7 +272,7 @@ public void configureMapper(String... mappingFileUrls) {
 
 现在让我们测试代码:
 
-```
+```java
 @Test
 public void givenSrcAndDestWithDifferentFieldNamesWithCustomMapper_
   whenMaps_thenCorrect() {
@@ -290,7 +290,7 @@ public void givenSrcAndDestWithDifferentFieldNamesWithCustomMapper_
 
 假设我们现在开始在英语应用程序和法语应用程序之间来回解组这些数据对象。我们不需要在 XML 文件中创建另一个映射， **Dozer 很聪明，只需要一个映射配置就可以双向映射对象**:
 
-```
+```java
 @Test
 public void givenSrcAndDestWithDifferentFieldNamesWithCustomMapper_
   whenMapsBidirectionally_thenCorrect() {
@@ -312,13 +312,13 @@ public void givenSrcAndDestWithDifferentFieldNamesWithCustomMapper_
 
 在 Linux 机器上，我们可以将文件存储在`/home` 下，然后:
 
-```
+```java
 configureMapper("file:/home/dozer_mapping.xml");
 ```
 
 在 Mac OS 上:
 
-```
+```java
 configureMapper("file:/Users/me/dozer_mapping.xml");
 ```
 
@@ -326,7 +326,7 @@ configureMapper("file:/Users/me/dozer_mapping.xml");
 
 该映射文件位于 GitHub 项目的 test/resources 文件夹下:
 
-```
+```java
 @Test
 public void givenMappingFileOutsideClasspath_whenMaps_thenCorrect() {
     configureMapper("file:E:\\dozer_mapping.xml");
@@ -343,7 +343,7 @@ public void givenMappingFileOutsideClasspath_whenMaps_thenCorrect() {
 
 让我们创建第二个名为`dozer_mapping2.xml`的定制映射文件:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <mappings  
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -372,7 +372,7 @@ public void givenMappingFileOutsideClasspath_whenMaps_thenCorrect() {
 
 所以在上面的配置中，我们只想要映射两个字段，省略了`age`:
 
-```
+```java
 @Test
 public void givenSrcAndDest_whenMapsOnlySpecifiedFields_thenCorrect() {
     configureMapper("dozer_mapping2.xml");
@@ -397,7 +397,7 @@ public void givenSrcAndDest_whenMapsOnlySpecifiedFields_thenCorrect() {
 
 为了实现这一点，我们只需要在源对象中的`getter`方法上添加@ `mapper(“destinationFieldName”)`注释。像这样:
 
-```
+```java
 @Mapping("name")
 public String getNom() {
     return nom;
@@ -413,7 +413,7 @@ public String getSurnom() {
 
 现在去掉了所有与 XML 相关的代码，我们的测试代码更短了:
 
-```
+```java
 @Test
 public void givenAnnotatedSrcFields_whenMapsToRightDestField_thenCorrect() {
     Person2 englishAppPerson = new Person2("Jean-Claude Van Damme", "JCVD", 55);
@@ -427,7 +427,7 @@ public void givenAnnotatedSrcFields_whenMapsToRightDestField_thenCorrect() {
 
 我们也可以测试双向的:
 
-```
+```java
 @Test
 public void givenAnnotatedSrcFields_whenMapsToRightDestFieldBidirectionally_
   thenCorrect() {
@@ -448,7 +448,7 @@ Dozer 中另一个类似于注释映射的选择是 API 映射。它们是相似
 
 在这种情况下，我们使用`BeanMappingBuilder`类，在我们最简单的情况下定义如下:
 
-```
+```java
 BeanMappingBuilder builder = new BeanMappingBuilder() {
     @Override
     protected void configure() {
@@ -463,7 +463,7 @@ BeanMappingBuilder builder = new BeanMappingBuilder() {
 
 这些构建器告诉推土机我们正在映射哪个源到目的地字段。然后，我们将 XML 映射文件从`BeanMappingBuilder`传递到`DozerBeanMapper`，只是使用了不同的 API:
 
-```
+```java
 @Test
 public void givenApiMapper_whenMaps_thenCorrect() {
     mapper.addMapping(builder);
@@ -479,7 +479,7 @@ public void givenApiMapper_whenMaps_thenCorrect() {
 
 映射 API 也是双向的:
 
-```
+```java
 @Test
 public void givenApiMapper_whenMapsBidirectionally_thenCorrect() {
     mapper.addMapping(builder);
@@ -495,7 +495,7 @@ public void givenApiMapper_whenMapsBidirectionally_thenCorrect() {
 
 或者，我们可以选择仅使用此构建器配置来映射显式指定的字段:
 
-```
+```java
 BeanMappingBuilder builderMinusAge = new BeanMappingBuilder() {
     @Override
     protected void configure() {
@@ -509,7 +509,7 @@ BeanMappingBuilder builderMinusAge = new BeanMappingBuilder() {
 
 我们的`age==0`测试回来了:
 
-```
+```java
 @Test
 public void givenApiMapper_whenMapsOnlySpecifiedFields_thenCorrect() {
     mapper.addMapping(builderMinusAge); 
@@ -530,19 +530,19 @@ public void givenApiMapper_whenMapsOnlySpecifiedFields_thenCorrect() {
 
 如果我们要解组的数据对象表示一个日期和时间字段，比如一个`long`或 Unix 时间，如下所示:
 
-```
+```java
 1182882159000
 ```
 
 但是我们自己的等价数据对象以这种 ISO 格式表示相同的日期和时间字段和值，比如一个`String:`
 
-```
+```java
 2007-06-26T21:22:39Z
 ```
 
 默认的转换器会简单地将长值映射到一个`String`,如下所示:
 
-```
+```java
 "1182882159000"
 ```
 
@@ -550,7 +550,7 @@ public void givenApiMapper_whenMapsOnlySpecifiedFields_thenCorrect() {
 
 首先，让我们用一个`name,`字段复制远程应用程序的`Person` DTO，然后是出生日期和时间，`dtob`字段:
 
-```
+```java
 public class Personne3 {
     private String name;
     private long dtob;
@@ -567,7 +567,7 @@ public class Personne3 {
 
 这是我们自己的:
 
-```
+```java
 public class Person3 {
     private String name;
     private String dtob;
@@ -586,7 +586,7 @@ public class Person3 {
 
 让我们也创建我们自己的`CustomConverter`以在映射 XML 中传递给 Dozer:
 
-```
+```java
 public class MyCustomConvertor implements CustomConverter {
     @Override
     public Object convert(Object dest, Object source, Class<?> arg2, Class<?> arg3) {
@@ -617,7 +617,7 @@ public class MyCustomConvertor implements CustomConverter {
 
 为了清楚起见，我们将创建一个新的映射文件，`dozer_custom_convertor.xml`:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <mappings  
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -638,7 +638,7 @@ public class MyCustomConvertor implements CustomConverter {
 
 让我们测试一下新的`CustomConverter`代码:
 
-```
+```java
 @Test
 public void givenSrcAndDestWithDifferentFieldTypes_whenAbleToCustomConvert_
   thenCorrect() {
@@ -655,7 +655,7 @@ public void givenSrcAndDestWithDifferentFieldTypes_whenAbleToCustomConvert_
 
 我们还可以测试以确保它是双向的:
 
-```
+```java
 @Test
 public void givenSrcAndDestWithDifferentFieldTypes_
   whenAbleToCustomConvertBidirectionally_thenCorrect() {

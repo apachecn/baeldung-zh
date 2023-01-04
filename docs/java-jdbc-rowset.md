@@ -20,7 +20,7 @@ Oracle 为最常用的一个`RowSet:`定义了五个`RowSet`接口
 
 让我们从`JdbcRowSet`开始——我们将简单地通过向`JdbcRowSetImpl`传递一个`Connection` 对象来创建一个:
 
-```
+```java
 JdbcRowSet jdbcRS = new JdbcRowSetImpl(conn);
 jdbcRS.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
 String sql = "SELECT * FROM customers";
@@ -48,7 +48,7 @@ while (jdbcRS.next()) {
 
 由于`CachedRowSet`接口是所有断开连接的行集对象的**超级接口，我们下面查看的代码同样适用于`WebRowSe` t、`JoinRowSet`或`FilteredRowSe` t:**
 
-```
+```java
 CachedRowSet crs = new CachedRowSetImpl();
 crs.setUsername(username);
 crs.setPassword(password);
@@ -71,7 +71,7 @@ while (crs.next()) {
 
 这也是独一无二的，因为除了提供`CachedRowSet`对象的功能之外，**还可以将自身写入 XML 文档** t，并且还可以读取 XML 文档以将其自身转换回`WebRowSet`:
 
-```
+```java
 WebRowSet wrs = new WebRowSetImpl();
 wrs.setUsername(username);
 wrs.setPassword(password);
@@ -90,7 +90,7 @@ wrs.writeXml(ostream);
 
 让我们在内存中的`RowSet` 对象之间创建一个 SQL `JOIN` 。这很重要，因为它为我们节省了创建一个或多个连接的开销:
 
-```
+```java
 CachedRowSetImpl customers = new CachedRowSetImpl();
 // configuration of settings for CachedRowSet
 CachedRowSetImpl associates = new CachedRowSetImpl();
@@ -110,7 +110,7 @@ jrs.addRowSet(associates,ID);
 
 我们决定如何使用`Predicate`接口的实现来“过滤”数据:
 
-```
+```java
 public class FilterExample implements Predicate {
 
     private Pattern pattern;
@@ -144,7 +144,7 @@ public class FilterExample implements Predicate {
 
 现在我们将滤镜应用于一个`FilteredRowSet`对象:
 
-```
+```java
 RowSetFactory rsf = RowSetProvider.newFactory();
 FilteredRowSet frs = rsf.createFilteredRowSet();
 frs.setCommand("select * from customers");

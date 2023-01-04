@@ -18,7 +18,7 @@
 
 当标记数组中的所有值都设置为`true`时，代码返回 *true* :
 
-```
+```java
 public static boolean isPangram(String str) {
     if (str == null) {
         return false;
@@ -44,7 +44,7 @@ public static boolean isPangram(String str) {
 
 让我们测试一下我们的实现:
 
-```
+```java
 @Test
 public void givenValidString_isPanagram_shouldReturnSuccess() {
     String input = "Two driven jocks help fax my big quiz";
@@ -58,7 +58,7 @@ public void givenValidString_isPanagram_shouldReturnSuccess() {
 
 如果`Map`的大小等于字母表的大小，代码返回成功。对于英语，预期大小为 26:
 
-```
+```java
 public static boolean isPangramWithStreams(String str) {
     if (str == null) {
         return false;
@@ -78,7 +78,7 @@ public static boolean isPangramWithStreams(String str) {
 
 当然，让我们测试一下:
 
-```
+```java
 @Test
 public void givenValidString_isPangramWithStreams_shouldReturnSuccess() {
     String input = "The quick brown fox jumps over the lazy dog";
@@ -92,7 +92,7 @@ public void givenValidString_isPangramWithStreams_shouldReturnSuccess() {
 
 当`Map`的大小等于字母表的大小并且字母表中每个字符的频率正好为 1 时，代码返回*真*:
 
-```
+```java
 public static boolean isPerfectPangram(String str) {
     if (str == null) {
         return false;
@@ -112,7 +112,7 @@ public static boolean isPerfectPangram(String str) {
 
 让我们测试一下:
 
-```
+```java
 @Test
 public void givenPerfectPangramString_isPerfectPangram_shouldReturnSuccess() {
     String input = "abcdefghijklmNoPqrStuVwxyz";
@@ -122,7 +122,7 @@ public void givenPerfectPangramString_isPerfectPangram_shouldReturnSuccess() {
 
 一个完美的盘符应该每个字符都出现一次。因此，我们之前的 pangram 应该会失败:
 
-```
+```java
 String input = "Two driven jocks help fax my big quiz";
 assertFalse(Pangram.isPerfectPangram(input));
 ```

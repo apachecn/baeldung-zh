@@ -14,25 +14,25 @@
 
 让我们看看创建代表 2020 年 1 月 8 日的`LocalDate`的几种方法。我们可以通过向工厂方法`of`传递值来创建一个:
 
-```
+```java
 LocalDate date = LocalDate.of(2020, 1, 8);
 ```
 
 也可以使用`Month`枚举来指定月份:
 
-```
+```java
 LocalDate date = LocalDate.of(2020, Month.JANUARY, 8)
 ```
 
 我们也可以尝试使用大纪元来获取它:
 
-```
+```java
 LocalDate date = LocalDate.ofEpochDay(18269);
 ```
 
 最后，让我们创建一个包含年值和年中某一天值的表:
 
-```
+```java
 LocalDate date = LocalDate.ofYearDay(2020, 8);
 ```
 
@@ -40,13 +40,13 @@ LocalDate date = LocalDate.ofYearDay(2020, 8);
 
 最后一个选项是通过解析字符串来创建日期。我们可以使用只有一个参数的`parse`方法来解析`yyyy-mm-dd`格式的日期:
 
-```
+```java
 LocalDate date = LocalDate.parse("2020-01-08");
 ```
 
 我们还可以使用 [`DateTimeFormatter`](https://web.archive.org/web/20221115155348/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeFormatter.html) 类作为`parse`方法的第二个参数来指定一个不同的模式:
 
-```
+```java
 LocalDate date = LocalDate.parse("8-Jan-2020", DateTimeFormatter.ofPattern("d-MMM-yyyy"));
 ```
 

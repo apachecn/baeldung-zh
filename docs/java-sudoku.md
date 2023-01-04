@@ -20,7 +20,7 @@
 
 为了让我们的解决方案更有趣，也为了验证算法，我们将使用[“世界上最难的数独”](https://web.archive.org/web/20220630142927/https://www.telegraph.co.uk/news/science/science-news/9359579/Worlds-hardest-sudoku-can-you-crack-it.html)棋盘，它是:
 
-```
+```java
 8 . . . . . . . . 
 . . 3 6 . . . . . 
 . 7 . . 9 . 2 . . 
@@ -36,7 +36,7 @@
 
 并且，快速破坏解决方案-正确解决的难题将会给我们以下结果:
 
-```
+```java
 8 1 2 7 5 3 6 4 9 
 9 4 3 6 8 2 1 7 5 
 6 7 5 4 9 1 2 8 3 
@@ -64,7 +64,7 @@
 
 首先，让我们把我们的棋盘定义为一个二维的整数数组。我们将使用 0 作为空单元格。
 
-```
+```java
 int[][] board = {
   { 8, 0, 0, 0, 0, 0, 0, 0, 0 },
   { 0, 0, 3, 6, 0, 0, 0, 0, 0 },
@@ -80,7 +80,7 @@ int[][] board = {
 
 让我们创建一个`solve()`方法，它将`board`作为输入参数，遍历行、列和值，测试每个单元格的有效解:
 
-```
+```java
 private boolean solve(int[][] board) {
     for (int row = BOARD_START_INDEX; row < BOARD_SIZE; row++) {
         for (int column = BOARD_START_INDEX; column < BOARD_SIZE; column++) {
@@ -102,7 +102,7 @@ private boolean solve(int[][] board) {
 
 我们需要的另一个方法是`isValid()`方法，它将检查数独约束，即检查行、列和 3 x 3 网格是否有效:
 
-```
+```java
 private boolean isValid(int[][] board, int row, int column) {
     return (rowConstraint(board, row)
       && columnConstraint(board, column) 
@@ -112,7 +112,7 @@ private boolean isValid(int[][] board, int row, int column) {
 
 这三张支票比较相似。首先，让我们从行检查开始:
 
-```
+```java
 private boolean rowConstraint(int[][] board, int row) {
     boolean[] constraint = new boolean[BOARD_SIZE];
     return IntStream.range(BOARD_START_INDEX, BOARD_SIZE)
@@ -122,7 +122,7 @@ private boolean rowConstraint(int[][] board, int row) {
 
 接下来，我们使用几乎相同的代码来验证列:
 
-```
+```java
 private boolean columnConstraint(int[][] board, int column) {
     boolean[] constraint = new boolean[BOARD_SIZE];
     return IntStream.range(BOARD_START_INDEX, BOARD_SIZE)
@@ -132,7 +132,7 @@ private boolean columnConstraint(int[][] board, int column) {
 
 此外，我们需要验证 3 x 3 子部分:
 
-```
+```java
 private boolean subsectionConstraint(int[][] board, int row, int column) {
     boolean[] constraint = new boolean[BOARD_SIZE];
     int subsectionRowStart = (row / SUBSECTION_SIZE) * SUBSECTION_SIZE;
@@ -152,7 +152,7 @@ private boolean subsectionConstraint(int[][] board, int row, int column) {
 
 最后，我们需要一个`checkConstraint()`方法:
 
-```
+```java
 boolean checkConstraint(
   int[][] board, 
   int row, 
@@ -175,7 +175,7 @@ boolean checkConstraint(
 
 因此，为了直观地检查电路板，我们只需要打印出结果。显然，这不是算法的一部分。
 
-```
+```java
 private void printBoard() {
     for (int row = BOARD_START_INDEX; row < BOARD_SIZE; row++) {
         for (int column = BOARD_START_INDEX; column < BOARD_SIZE; column++) {
@@ -209,7 +209,7 @@ private void printBoard() {
 
 我们可以用矩阵来表示这个问题，其中列是数字，行是集合:
 
-```
+```java
  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 
 A | 1 | 0 | 0 | 1 | 0 | 0 | 1 |
 B | 1 | 0 | 0 | 1 | 0 | 0 | 0 |
@@ -221,7 +221,7 @@ F | 0 | 1 | 0 | 0 | 0 | 0 | 1 |
 
 子集合 S* = {B，D，F}是精确覆盖:
 
-```
+```java
  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 
 B | 1 | 0 | 0 | 1 | 0 | 0 | 0 |
 D | 0 | 0 | 1 | 0 | 1 | 1 | 0 |
@@ -266,7 +266,7 @@ F | 0 | 1 | 0 | 0 | 0 | 0 | 1 |
 
 这总共给出了四个约束，因此在精确的覆盖矩阵中有 9×9×4 列:
 
-```
+```java
 private static int BOARD_SIZE = 9;
 private static int SUBSECTION_SIZE = 3;
 private static int NO_VALUE = 0;
@@ -276,14 +276,14 @@ private static int MAX_VALUE = 9;
 private static int COVER_START_INDEX = 1;
 ```
 
-```
+```java
 private int getIndex(int row, int column, int num) {
     return (row - 1) * BOARD_SIZE * BOARD_SIZE 
       + (column - 1) * BOARD_SIZE + (num - 1);
 }
 ```
 
-```
+```java
 private boolean[][] createExactCoverBoard() {
     boolean[][] coverBoard = new boolean
       [BOARD_SIZE * BOARD_SIZE * MAX_VALUE]
@@ -353,7 +353,7 @@ private int checkCellConstraint(boolean[][] coverBoard, int hBase) {
 
 接下来，我们需要用我们的初始拼图布局更新新创建的板:
 
-```
+```java
 private boolean[][] initializeExactCoverBoard(int[][] board) {
     boolean[][] coverBoard = createExactCoverBoard();
     for (int row = COVER_START_INDEX; row <= BOARD_SIZE; row++) {
@@ -378,14 +378,14 @@ private boolean[][] initializeExactCoverBoard(int[][] board) {
 
 跳舞链接算法基于对节点的双向链接列表的以下操作的基本观察进行操作:
 
-```
+```java
 node.prev.next = node.next
 node.next.prev = node.prev
 ```
 
 删除节点，同时:
 
-```
+```java
 node.prev = node
 node.next = node
 ```
@@ -396,7 +396,7 @@ DLX 的每个节点都与左右上下的节点相连。
 
 `DancingNode`类将拥有添加或删除节点所需的所有操作:
 
-```
+```java
 class DancingNode {
     DancingNode L, R, U, D;
     ColumnNode C;
@@ -451,7 +451,7 @@ class DancingNode {
 
 `ColumnNode`类将列链接在一起:
 
-```
+```java
 class ColumnNode extends DancingNode {
     int size;
     String name;
@@ -489,7 +489,7 @@ class ColumnNode extends DancingNode {
 
 接下来，我们需要创建一个由我们的`DancingNode`和`ColumnNode`对象组成的网格:
 
-```
+```java
 private ColumnNode makeDLXBoard(boolean[][] grid) {
     int COLS = grid[0].length;
 
@@ -525,7 +525,7 @@ private ColumnNode makeDLXBoard(boolean[][] grid) {
 
 我们将使用启发式搜索来查找列并返回矩阵的子集:
 
-```
+```java
 private ColumnNode selectColumnNodeHeuristic() {
     int min = Integer.MAX_VALUE;
     ColumnNode ret = null;
@@ -544,7 +544,7 @@ private ColumnNode selectColumnNodeHeuristic() {
 
 最后，我们可以递归地搜索答案:
 
-```
+```java
 private void search(int k) {
     if (header.R == header) {
         handleSolution(answer);

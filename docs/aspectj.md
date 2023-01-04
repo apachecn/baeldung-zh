@@ -26,7 +26,7 @@ AspectJ 根据其用途提供不同的库。我们可以在 Maven 中央存储�
 
 当运行一个 AspectJ 程序时，类路径应该包含类和方面以及 AspectJ 运行时库`aspectjrt.jar` `:`
 
-```
+```java
 <dependency>
     <groupId>org.aspectj</groupId>
     <artifactId>aspectjrt</artifactId>
@@ -40,7 +40,7 @@ AspectJ 根据其用途提供不同的库。我们可以在 Maven 中央存储�
 
 除了 AspectJ 运行时依赖，我们还需要包含`aspectjweaver.jar` 来在加载时向 Java 类引入通知:
 
-```
+```java
 <dependency>
     <groupId>org.aspectj</groupId>
     <artifactId>aspectjweaver</artifactId>
@@ -62,7 +62,7 @@ AspectJ 提供了 AOP 的一个实现，并且有**三个核心概念:**
 
 首先，让我们创建一个具有给定余额和撤销方法的`Account`类:
 
-```
+```java
 public class Account {
     int balance = 20;
 
@@ -78,7 +78,7 @@ public class Account {
 
 我们将创建一个`AccountAspect.aj`文件来记录帐户信息并验证帐户余额(注意，AspectJ 文件以“`.aj`”文件扩展名结尾):
 
-```
+```java
 public aspect AccountAspect {
     final int MIN_BALANCE = 10;
 
@@ -122,7 +122,7 @@ public aspect AccountAspect {
 
 我们使用 Mojo 的 AspectJ Maven 插件，通过 AspectJ 编译器将 AspectJ 方面编织到我们的类中。
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>aspectj-maven-plugin</artifactId>
@@ -153,7 +153,7 @@ public aspect AccountAspect {
 
 让我们为我们的 Account 类添加一些测试用例:
 
-```
+```java
 public class AccountTest {
     private Account account;
 
@@ -176,7 +176,7 @@ public class AccountTest {
 
 当我们运行测试用例时，控制台中显示的以下文本意味着我们成功地编织了源代码:
 
-```
+```java
 [INFO] Join point 'method-call
 (boolean com.baeldung.aspectj.Account.withdraw(int))' in Type
 'com.baeldung.aspectj.test.AccountTest' (AccountTest.java:20)
@@ -217,7 +217,7 @@ advised by after advice from 'com.baeldung.aspectj.AccountAspect'
 
 为了用 Mojo 的 AspectJ Maven 插件做到这一点，我们需要设置所有我们想在插件配置中编织的 JAR 文件:
 
-```
+```java
 <configuration>
     <weaveDependencies>
         <weaveDependency>  
@@ -244,7 +244,7 @@ advised by after advice from 'com.baeldung.aspectj.AccountAspect'
 
 可以使用 AspectJ 代理启用 AspectJ 加载时编织，该代理可以参与类加载过程，并在 VM 中定义类型之前编织任何类型。我们为 JVM ``-javaagent:pathto/aspectjweaver.jar``指定`javaagent`选项，或者使用 Maven 插件来配置`javaagent` :
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-surefire-plugin</artifactId>
@@ -272,7 +272,7 @@ AspectJ 的加载时编织代理是通过使用`aop.xml`文件来配置的。它
 
 让我们为 weaver 配置一个方面:
 
-```
+```java
 <aspectj>
     <aspects>
         <aspect name="com.baeldung.aspectj.AccountAspect"/>
@@ -291,7 +291,7 @@ AspectJ 的加载时编织代理是通过使用`aop.xml`文件来配置的。它
 
 让我们创建一个注释:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Secured {
@@ -301,7 +301,7 @@ public @interface Secured {
 
 我们使用`@Secured`注释来启用或禁用一个方法:
 
-```
+```java
 public class SecuredMethod {
 
     @Secured(isLocked = true)
@@ -316,7 +316,7 @@ public class SecuredMethod {
 
 接下来，我们使用 AspectJ 注释样式添加一个方面，并根据@Secured 注释的属性检查权限:
 
-```
+```java
 @Aspect
 public class SecuredMethodAspect {
     @Pointcut("@annotation(secured)")
@@ -335,7 +335,7 @@ public class SecuredMethodAspect {
 
 接下来，我们使用加载时织入器织入我们的类和方面，并将`aop.xml`放在`META-INF` 文件夹下:
 
-```
+```java
 <aspectj>
     <aspects>
         <aspect name="com.baeldung.aspectj.SecuredMethodAspect"/>
@@ -348,7 +348,7 @@ public class SecuredMethodAspect {
 
 最后，我们添加单元测试并检查结果:
 
-```
+```java
 @Test
 public void testMethod() throws Exception {
 	SecuredMethod service = new SecuredMethod();
@@ -359,7 +359,7 @@ public void testMethod() throws Exception {
 
 当我们运行测试用例时，我们可以检查控制台输出，以验证我们成功地在源代码中编织了我们的方面和类:
 
-```
+```java
 [INFO] Join point 'method-call
 (void com.baeldung.aspectj.SecuredMethod.unlockedMethod())'
 in Type 'com.baeldung.aspectj.test.SecuredMethodTest'

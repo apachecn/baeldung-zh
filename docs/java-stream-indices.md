@@ -16,7 +16,7 @@ Java 8 `Streams`不是集合，元素不能使用它们的索引来访问，但�
 
 简单地说，我们想要得到一个数组`Strings`，并且只选择偶数索引元素:
 
-```
+```java
 public List<String> getEvenIndexedStrings(String[] names) {
     List<String> evenIndexedNames = IntStream
       .range(0, names.length)
@@ -30,7 +30,7 @@ public List<String> getEvenIndexedStrings(String[] names) {
 
 现在让我们测试一下实现:
 
-```
+```java
 @Test
 public void whenCalled_thenReturnListOfEvenIndexedStrings() {
     String[] names 
@@ -50,7 +50,7 @@ public void whenCalled_thenReturnListOfEvenIndexedStrings() {
 
 首先，您需要将它添加到您的 `pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.codepoetics</groupId>
     <artifactId>protonpack</artifactId>
@@ -60,7 +60,7 @@ public void whenCalled_thenReturnListOfEvenIndexedStrings() {
 
 现在，让我们看看代码:
 
-```
+```java
 public List<Indexed<String>> getEvenIndexedStrings(List<String> names) {
     List<Indexed<String>> list = StreamUtils
       .zipWithIndex(names.stream())
@@ -73,7 +73,7 @@ public List<Indexed<String>> getEvenIndexedStrings(List<String> names) {
 
 以下测试了此方法并成功通过:
 
-```
+```java
 @Test
 public void whenCalled_thenReturnListOfEvenIndexedStrings() {
     List<String> names = Arrays.asList(
@@ -93,7 +93,7 @@ public void whenCalled_thenReturnListOfEvenIndexedStrings() {
 
 我们还可以使用来自 *StreamEx* 库的`EntryStream`类的`filterKeyValue()`来迭代索引(最新版本可以在[这里](https://web.archive.org/web/20221108150357/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22one.util%22%20AND%20a%3A%22streamex%22)找到)。首先，我们需要将它添加到我们的`pom.xml:`
 
-```
+```java
 <dependency>
     <groupId>one.util</groupId>
     <artifactId>streamex</artifactId>
@@ -103,7 +103,7 @@ public void whenCalled_thenReturnListOfEvenIndexedStrings() {
 
 让我们用前面的例子来看看这个方法的一个简单应用:
 
-```
+```java
 public List<String> getEvenIndexedStringsVersionTwo(List<String> names) {
     return EntryStream.of(names)
       .filterKeyValue((index, name) -> index % 2 == 0)
@@ -114,7 +114,7 @@ public List<String> getEvenIndexedStringsVersionTwo(List<String> names) {
 
 我们将使用类似的测试对此进行测试:
 
-```
+```java
 @Test
 public void whenCalled_thenReturnListOfEvenIndexedStringsVersionTwo() {
     String[] names 
@@ -132,7 +132,7 @@ public void whenCalled_thenReturnListOfEvenIndexedStringsVersionTwo() {
 
 另一种可行的迭代方式是使用`Vavr`(以前称为`Javaslang`)的`Stream`实现的`zipWithIndex()`方法:
 
-```
+```java
 public List<String> getOddIndexedStringsVersionTwo(String[] names) {
     return Stream
       .of(names)
@@ -145,7 +145,7 @@ public List<String> getOddIndexedStringsVersionTwo(String[] names) {
 
 我们可以用下面的方法测试这个例子:
 
-```
+```java
 @Test
 public void whenCalled_thenReturnListOfOddStringsVersionTwo() {
     String[] names 

@@ -25,7 +25,7 @@ JVM 跟踪 PermGen 中加载的类元数据。此外，JVM 将所有静态内容
 
 最重要的是， **Oracle 在 JDK 8 版本中完全移除了这个内存空间。**因此，如果我们在 Java 8 和更新版本中使用这些调优标志，我们将得到以下警告:
 
-```
+```java
 >> java -XX:PermSize=100m -XX:MaxPermSize=200m -version
 OpenJDK 64-Bit Server VM warning: Ignoring option PermSize; support was removed in 8.0
 OpenJDK 64-Bit Server VM warning: Ignoring option MaxPermSize; support was removed in 8.0

@@ -12,7 +12,7 @@
 
 让我们从`while`循环开始。这里我们将使用布尔文字`true `来编写`while`循环条件:
 
-```
+```java
 public void infiniteLoopUsingWhile() {
     while (true) {
         // do something
@@ -24,7 +24,7 @@ public void infiniteLoopUsingWhile() {
 
 现在，让我们使用`for`循环来创建一个无限循环:
 
-```
+```java
 public void infiniteLoopUsingFor() {
     for (;;) {
         // do something
@@ -36,7 +36,7 @@ public void infiniteLoopUsingFor() {
 
 使用 Java 中不太常见的`do-while`循环也可以创建无限循环。这里，循环条件在第一次执行后进行评估:
 
-```
+```java
 public void infiniteLoopUsingDoWhile() {
     do {
         // do something

@@ -12,7 +12,7 @@ Apache Cayenne 是一个开源库，在 Apache 许可下发布，为本地持久
 
 首先，我们只需添加以下依赖项，就可以将 Apache Cayenne 和 MySQL connector JDBC 驱动程序放在一起访问我们的`intro_cayenne`数据库:
 
-```
+```java
 <dependency>
     <groupId>org.apache.cayenne</groupId>
     <artifactId>cayenne-server</artifactId>
@@ -28,7 +28,7 @@ Apache Cayenne 是一个开源库，在 Apache 许可下发布，为本地持久
 
 让我们配置 Cayenne modeler 插件，该插件将用于设计或设置映射文件，该文件充当数据库模式和 Java 对象之间的桥梁:
 
-```
+```java
 <plugin>
     <groupId>org.apache.cayenne.plugins</groupId>
     <artifactId>maven-cayenne-modeler-plugin</artifactId>
@@ -50,7 +50,7 @@ Maven 中央存储库托管着最新版本的 [Apache Cayenne](https://web.archi
 
 为了让 Apache Cayenne 查找正确的本地数据库，我们只需要用正确的驱动程序、URL 和位于`resources`目录下的文件`cayenne-project.xml` 中的用户来填充他的配置文件:
 
-```
+```java
 <?xml version="1.0" encoding="utf-8"?>
 <domain project-version="9">
     <node name="datanode"
@@ -141,7 +141,7 @@ Maven 中央存储库托管着最新版本的 [Apache Cayenne](https://web.archi
 
 这里，我们只保存一个`Author`对象，稍后检查数据库中是否只有一个这种类型的记录:
 
-```
+```java
 @Test
 public void whenInsert_thenWeGetOneRecordInTheDatabase() {
     Author author = context.newObject(Author.class);
@@ -160,7 +160,7 @@ public void whenInsert_thenWeGetOneRecordInTheDatabase() {
 
 在保存了一个`Author`之后，我们只需通过一个简单的查询，根据一个特定的属性从中挑选一个:
 
-```
+```java
 @Test
 public void whenInsert_andQueryByFirstName_thenWeGetTheAuthor() {
     Author author = context.newObject(Author.class);
@@ -180,7 +180,7 @@ public void whenInsert_andQueryByFirstName_thenWeGetTheAuthor() {
 
 我们将保存两个作者，并检索一组作者对象，以检查是否只保存了这两个作者:
 
-```
+```java
 @Test
 public void whenInsert_andQueryAll_thenWeGetTwoAuthors() {
     Author firstAuthor = context.newObject(Author.class);
@@ -203,7 +203,7 @@ public void whenInsert_andQueryAll_thenWeGetTwoAuthors() {
 
 更新过程也很容易，但是在修改对象的属性并将其应用到数据库之前，我们首先需要拥有所需的对象:
 
-```
+```java
 @Test
 public void whenUpdating_thenWeGetAnUpatedeAuthor() {
     Author author = context.newObject(Author.class);
@@ -224,7 +224,7 @@ public void whenUpdating_thenWeGetAnUpatedeAuthor() {
 
 我们可以将一篇文章分配给一个作者:
 
-```
+```java
 @Test
 public void whenAttachingToArticle_thenTheRelationIsMade() {
     Author author = context.newObject(Author.class);
@@ -251,7 +251,7 @@ public void whenAttachingToArticle_thenTheRelationIsMade() {
 
 删除保存的对象会将其从数据库中完全删除，此后我们将看到查询结果为`null`:
 
-```
+```java
 @Test
 public void whenDeleting_thenWeLostHisDetails() {
     Author author = context.newObject(Author.class);
@@ -278,7 +278,7 @@ public void whenDeleting_thenWeLostHisDetails() {
 
 也可以使用`SQLTemplate`删除表中的所有记录，这里我们在每个测试方法之后都这样做，以便在每个测试开始之前总是有一个空数据库`:`
 
-```
+```java
 @After
 public void deleteAllRecords() {
     SQLTemplate deleteArticles = new SQLTemplate(

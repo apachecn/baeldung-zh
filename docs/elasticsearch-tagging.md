@@ -18,7 +18,7 @@
 
 最简单的标记实现是一个字符串数组。我们可以通过向我们的数据模型添加一个新字段来实现这一点，如下所示:
 
-```
+```java
 @Document(indexName = "blog", type = "article")
 public class Article {
 
@@ -43,7 +43,7 @@ public class Article {
 
 我们在模型上创建的新的`tag`字段就像我们索引中的其他字段一样。我们可以搜索具有如下特定标签的任何实体:
 
-```
+```java
 @Query("{\"bool\": {\"must\": [{\"match\": {\"tags\": \"?0\"}}]}}")
 Page<Article> findByTagUsingDeclaredQuery(String tag, Pageable pageable);
 ```
@@ -52,13 +52,13 @@ Page<Article> findByTagUsingDeclaredQuery(String tag, Pageable pageable);
 
 同样，我们可以使用 Elasticsearch API:
 
-```
+```java
 boolQuery().must(termQuery("tags", "elasticsearch"));
 ```
 
 假设我们在索引中使用了以下文档:
 
-```
+```java
 [
     {
         "id": 1,
@@ -89,7 +89,7 @@ boolQuery().must(termQuery("tags", "elasticsearch"));
 
 现在我们可以使用这个查询:
 
-```
+```java
 Page<Article> articleByTags 
   = articleService.findByTagUsingDeclaredQuery("elasticsearch", PageRequest.of(0, 10));
 
@@ -107,7 +107,7 @@ assertThat(articleByTags, containsInAnyOrder(
 
 假设我们想返回所有根据用户选择的标签过滤的文章:
 
-```
+```java
 @Query("{\"bool\": {\"must\": " +
   "{\"match_all\": {}}, \"filter\": {\"term\": {\"tags\": \"?0\" }}}}")
 Page<Article> findByFilteredTagQuery(String tag, Pageable pageable);
@@ -119,7 +119,7 @@ Page<Article> findByFilteredTagQuery(String tag, Pageable pageable);
 
 下面是我们如何使用这个查询:
 
-```
+```java
 Page<Article> articleByTags =
   articleService.findByFilteredTagQuery("elasticsearch", PageRequest.of(0, 10));
 
@@ -139,7 +139,7 @@ assertThat(articleByTags, containsInAnyOrder(
 
 这里有一个例子，我们将作者写的文章缩小到只有带有特定标签的文章:
 
-```
+```java
 @Query("{\"bool\": {\"must\": " + 
   "{\"match\": {\"authors.name\": \"?0\"}}, " +
   "\"filter\": {\"term\": {\"tags\": \"?1\" }}}}")
@@ -151,7 +151,7 @@ Page<Article> findByAuthorsNameAndFilteredTagQuery(
 
 让我们看看如何自己构造这个查询:
 
-```
+```java
 QueryBuilder builder = boolQuery().must(
   nestedQuery("authors", boolQuery().must(termQuery("authors.name", "doe")), ScoreMode.None))
   .filter(termQuery("tags", "elasticsearch"));
@@ -161,7 +161,7 @@ QueryBuilder builder = boolQuery().must(
 
 下面是如何使用上面的查询:
 
-```
+```java
 SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(builder)
   .build();
 List<Article> articles = 
@@ -192,7 +192,7 @@ assertThat(articleByTags, containsInAnyOrder(
 
 例如，我们可以将标记字段更改为:
 
-```
+```java
 @Field(type = Nested)
 private List<Tag> tags;
 ```

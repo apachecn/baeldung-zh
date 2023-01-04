@@ -22,7 +22,7 @@ Maven 允许我们使用继承的概念来构建项目。当一个父 POM 定义
 
 让我们通过在 Maven 项目中添加一个实现`maven-enforcer-plugin`的父模块来设置这个场景:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-enforcer-plugin</artifactId>
@@ -32,7 +32,7 @@ Maven 允许我们使用继承的概念来构建项目。当一个父 POM 定义
 
 接下来，让我们向插件添加一个执行来强制执行一个规则，即名为`file-that-must-exist.txt` 的文件必须存在于每个模块的`src`目录中:
 
-```
+```java
 <executions>
     <execution>
         <id>enforce-file-exists</id>
@@ -84,7 +84,7 @@ Maven 允许我们使用继承的概念来构建项目。当一个父 POM 定义
 
 让我们将下面几行添加到子 POM 中，以启用`skip`参数:
 
-```
+```java
 <plugin>
     <artifactId>maven-enforcer-plugin</artifactId>
     <configuration>
@@ -109,7 +109,7 @@ Maven 目标只有在绑定到构建阶段时才会运行。
 
 利用这一点，**我们可以将`phase`参数设置为一个不存在的值。这意味着构建阶段永远不会被执行。**因此目标不会被执行，有效地禁用了插件:
 
-```
+```java
 <plugin>
     <artifactId>maven-enforcer-plugin</artifactId>
     <executions>
@@ -125,7 +125,7 @@ Maven 目标只有在绑定到构建阶段时才会运行。
 
 然而，也许最清楚的方法是完全清除`phase`参数:
 
-```
+```java
 <execution>
     <id>enforce-file-exists</id>
     <phase/>

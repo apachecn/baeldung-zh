@@ -10,13 +10,13 @@
 
 作为解决将`Flux<DataBuffer>`读入单个`InputStream`的问题的第一步，我们将使用 [Spring reactive WebClient](/web/20220910090243/https://www.baeldung.com/spring-5-webclient) 发出一个`GET`请求。此外，我们可以**使用由[gorest.co.in](https://web.archive.org/web/20220910090243/https://gorest.co.in/)**托管的公共 API 端点之一来进行这样的测试场景:
 
-```
+```java
 String REQUEST_ENDPOINT = "https://gorest.co.in/public/v2/users"; 
 ```
 
 接下来，让我们定义获取`WebClient` 类的新实例的`getWebClient()`方法:
 
-```
+```java
 static WebClient getWebClient() {
     WebClient.Builder webClientBuilder = WebClient.builder();
     return webClientBuilder.build();
@@ -31,7 +31,7 @@ static WebClient getWebClient() {
 
 让我们继续创建`body`作为`Flux<DataBuffer>`类型的实例:
 
-```
+```java
 Flux<DataBuffer> body = client
   .get(
   .uri(REQUEST_ENDPOINT)
@@ -44,7 +44,7 @@ Flux<DataBuffer> body = client
 
 此外，我们打算写入`PipedOutputStream`并最终从`PipedInputStream`读取。那么，让我们看看如何创建这两个相连的流:
 
-```
+```java
 PipedOutputStream outputStream = new PipedOutputStream();
 PipedInputStream inputStream = new PipedInputStream(1024*10);
 inputStream.connect(outputStream);
@@ -54,7 +54,7 @@ inputStream.connect(outputStream);
 
 最后，我们使用`DataBufferUtils`类中可用的`write()`实用程序方法，将`body`作为发布者编写到`outputStream`:
 
-```
+```java
 DataBufferUtils.write(body, outputStream).subscribe();
 ```
 
@@ -64,7 +64,7 @@ DataBufferUtils.write(body, outputStream).subscribe();
 
 首先，让我们定义一个助手方法`readContent()`，将一个`InputStream`读取为一个`String`对象:
 
-```
+```java
 String readContent(InputStream stream) throws IOException {
     StringBuffer contentStringBuffer = new StringBuffer();
     byte[] tmp = new byte[stream.available()];
@@ -76,7 +76,7 @@ String readContent(InputStream stream) throws IOException {
 
 接下来，因为在不同的线程 中读取`PipedInputStream`是一个典型的 [**练习，所以让我们创建一个`readContentFromPipedInputStream()`方法，该方法通过调用`readContent()`方法在内部产生一个新的线程来将内容从`PipedInputStream`读取到一个`String`对象中:**](https://web.archive.org/web/20220910090243/https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/PipedInputStream.html)
 
-```
+```java
 String readContentFromPipedInputStream(PipedInputStream stream) throws IOException {
     StringBuffer contentStringBuffer = new StringBuffer();
     try {
@@ -101,7 +101,7 @@ String readContentFromPipedInputStream(PipedInputStream stream) throws IOExcepti
 
 在这个阶段，我们的代码已经准备好用于模拟。让我们来看看它的实际应用:
 
-```
+```java
 WebClient webClient = getWebClient();
 InputStream inputStream = getResponseAsInputStream(webClient, REQUEST_ENDPOINT);
 Thread.sleep(3000);
@@ -113,7 +113,7 @@ logger.info("response content: \n{}", content.replace("}","}\n"));
 
 最后，让我们验证代码执行生成的输出:
 
-```
+```java
 20:45:04.120 [main] INFO com.baeldung.databuffer.DataBufferToInputStream - response content: 
 [{"id":2642,"name":"Bhupen Trivedi","email":"[[email protected]](/web/20220910090243/https://www.baeldung.com/cdn-cgi/l/email-protection)","gender":"male","status":"active"}
 ,{"id":2637,"name":"Preity Patel","email":"[[email protected]](/web/20220910090243/https://www.baeldung.com/cdn-cgi/l/email-protection)","gender":"female","status":"inactive"}

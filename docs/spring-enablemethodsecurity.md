@@ -20,7 +20,7 @@
 
 让我们创建一个示例配置类:
 
-```
+```java
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 @Configuration
@@ -47,7 +47,7 @@ Spring Security 支持三种内置的方法安全注释:
 
 该框架有一个投票机制来拒绝或授予对特定方法的访问。我们可以将此作为`[Jsr250Voter](https://web.archive.org/web/20221115043036/https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/access/annotation/Jsr250Voter.html):`的一个例子
 
-```
+```java
 @Override
 public int vote(Authentication authentication, Object object, Collection<ConfigAttribute> definition) {
     boolean jsr250AttributeFound = false;
@@ -78,7 +78,7 @@ public int vote(Authentication authentication, Object object, Collection<ConfigA
 
 然后，我们的`AccessDecisionManager`评估所有来自可用投票者的回复:
 
-```
+```java
 for (AccessDecisionVoter voter : getDecisionVoters()) {
     int result = voter.vote(authentication, object, configAttributes);
     switch (result) {
@@ -104,7 +104,7 @@ if (deny > 0) {
 
 我们现在对每种类型都有一个配置，而不是一个全局配置。让我们看看，例如， [`Jsr250MethodSecurityConfiguration`](https://web.archive.org/web/20221115043036/https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/access/annotation/Jsr250SecurityConfig.html) :
 
-```
+```java
 @Configuration(proxyBeanMethods = false)
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 class Jsr250MethodSecurityConfiguration {
@@ -124,7 +124,7 @@ class Jsr250MethodSecurityConfiguration {
 
 **`MethodInterceptor`本质上包含一个 [`AuthorizationManager`](https://web.archive.org/web/20221115043036/https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/authorization/AuthorizationManager.html) ，它现在将检查和返回一个`AuthorizationDecision`对象的责任委托给适当的实现**，在本例中是`AuthenticatedAuthorizationManager` **:**
 
-```
+```java
 @Override
 public AuthorizationDecision check(Supplier<Authentication> authentication, T object) {
     boolean granted = isGranted(authentication.get());
@@ -148,7 +148,7 @@ private boolean isAuthorized(Authentication authentication) {
 
 如果我们不能访问资源，`MethodInterceptor`将抛出一个`AccesDeniedException`:
 
-```
+```java
 AuthorizationDecision decision = this.authorizationManager.check(AUTHENTICATION_SUPPLIER, mi);
 if (decision != null && !decision.isGranted()) {
     // ...
@@ -164,7 +164,7 @@ if (decision != null && !decision.isGranted()) {
 
 仍然支持所有授权类型。例如，它仍然符合 [JSR-250](https://web.archive.org/web/20221115043036/https://www.jcp.org/en/jsr/detail?id=250) 。然而，我们不需要将`prePostEnabled` 添加到注释中，因为它现在默认为`true:`
 
-```
+```java
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true) 
 ```
 
@@ -176,7 +176,7 @@ if (decision != null && !decision.isGranted()) {
 
 值得注意的是，`AuthorizationManager`接口是通用的，可以适应任何对象，尽管标准安全性适用于`MethodInvocation`:
 
-```
+```java
 AuthorizationDecision check(Supplier<Authentication> authentication, T object); 
 ```
 
@@ -184,7 +184,7 @@ AuthorizationDecision check(Supplier<Authentication> authentication, T object);
 
 此外，这也意味着`@EnableMethodSecurity`不允许`[@AspectJ](/web/20221115043036/https://www.baeldung.com/aspectj)`像遗留实现中一样使用`AspectJ`方法拦截器进行注释:
 
-```
+```java
 public final class AspectJMethodSecurityInterceptor extends MethodSecurityInterceptor {
     public Object invoke(JoinPoint jp) throws Throwable {
         return super.invoke(new MethodInvocationAdapter(jp));
@@ -195,7 +195,7 @@ public final class AspectJMethodSecurityInterceptor extends MethodSecurityInterc
 
 然而，我们仍然有 AOP 和 T2 的全力支持。例如，让我们看看我们之前讨论过的`Jsr250MethodSecurityConfiguration`使用的拦截器:
 
-```
+```java
 public final class AuthorizationManagerBeforeMethodInterceptor
   implements Ordered, MethodInterceptor, PointcutAdvisor, AopInfrastructureBean {
     // ...
@@ -223,7 +223,7 @@ public final class AuthorizationManagerBeforeMethodInterceptor
 
 第一步，我们通过添加一个字段来访问受限策略，从而定义我们的用户:
 
-```
+```java
 public class SecurityUser implements UserDetails {
     private String userName;
     private String password;
@@ -236,7 +236,7 @@ public class SecurityUser implements UserDetails {
 
 现在，让我们看看我们的身份验证层，它定义了系统中的用户。为此，我们将创建一个自定义 [`UserDetailService`](https://web.archive.org/web/20221115043036/https://docs.spring.io/spring-security/site/docs/5.7.5/api/org/springframework/security/core/userdetails/UserDetailsService.html) 。我们将使用内存映射来存储用户:
 
-```
+```java
 public class CustomUserDetailService implements UserDetailsService {
     private final Map<String, SecurityUser> userMap = new HashMap<>();
 
@@ -266,7 +266,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
 为了演示，我们创建一个 Java 注释`@Policy`来应用于方法和策略枚举:
 
-```
+```java
 @Target(METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Policy {
@@ -274,7 +274,7 @@ public @interface Policy {
 }
 ```
 
-```
+```java
 public enum PolicyEnum {
     RESTRICTED, OPEN
 }
@@ -282,7 +282,7 @@ public enum PolicyEnum {
 
 让我们创建一个我们想要应用这个策略的服务:
 
-```
+```java
 @Service
 public class PolicyService {
     @Policy(PolicyEnum.OPEN)
@@ -299,7 +299,7 @@ public class PolicyService {
 
 我们不能使用内置的授权管理器，比如`Jsr250AuthorizationManager`。它不知道何时以及如何拦截服务策略检查。因此，让我们来定义我们的自定义管理器:
 
-```
+```java
 public class CustomAuthorizationManager<T> implements AuthorizationManager<MethodInvocation> {
     ...
     @Override
@@ -328,7 +328,7 @@ public class CustomAuthorizationManager<T> implements AuthorizationManager<Metho
 
 为此，我们需要定义一个`MethodInterceptor`,例如，在执行之前，但也可能在执行之后。因此，让我们将它与我们的安全配置类包装在一起:
 
-```
+```java
 @EnableWebSecurity
 @EnableMethodSecurity
 @Configuration
@@ -388,7 +388,7 @@ public class SecurityConfig {
 
 让我们定义一个 REST 控制器:
 
-```
+```java
 @RestController
 public class ResourceController {
     // ...
@@ -406,7 +406,7 @@ public class ResourceController {
 
 我们将在应用程序中使用 [Spring Boot 测试](/web/20221115043036/https://www.baeldung.com/spring-boot-testing)来模拟方法安全性:
 
-```
+```java
 @SpringBootTest(classes = EnableMethodSecurityApplication.class)
 public class EnableMethodSecurityTest {
     @Autowired

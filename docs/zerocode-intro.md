@@ -38,7 +38,7 @@ ZeroCode 使用声明式测试，这意味着我们不必编写实际的测试�
 
 让我们在`pom.xml`文件中添加 Maven 依赖项:
 
-```
+```java
  <dependency>
       <groupId>org.jsmart</groupId>
       <artifactId>zerocode-tdd</artifactId>
@@ -53,7 +53,7 @@ ZeroCode 使用声明式测试，这意味着我们不必编写实际的测试�
 
 正如我们上面所说的，ZeroCode 可以支持测试我们应用程序的多个部分。在本文中，我们将关注 REST API 测试。因此，我们将创建一个小型的 Spring Boot web 应用程序，并公开一个端点:
 
-```
+```java
 @PostMapping
 public ResponseEntity create(@RequestBody User user) {
     if (!StringUtils.hasText(user.getFirstName())) {
@@ -70,7 +70,7 @@ public ResponseEntity create(@RequestBody User user) {
 
 让我们看看控制器中引用的`User`类:
 
-```
+```java
 public class User {
     private String id;
     private String firstName;
@@ -86,7 +86,7 @@ public class User {
 
 这个场景在 ZeroCode 中起着核心作用。它由一个或多个步骤组成，这些步骤是我们想要测试的实际内容。让我们用一个步骤编写一个场景，测试用户创建的成功路径:
 
-```
+```java
 {
   "scenarioName": "test user creation endpoint",
   "steps": [
@@ -130,7 +130,7 @@ public class User {
 
 通常，我们在场景中有不止一个步骤。让我们在场景的`steps`数组中添加另一个步骤:
 
-```
+```java
 {
   "name": "test_firstname_validation",
   "url": "/api/users",
@@ -156,7 +156,7 @@ ZeroCode 不能直接运行场景——为此，我们需要一个相应的测�
 
 为了执行我们的场景，让我们编写一个相应的测试用例:
 
-```
+```java
 @RunWith(ZeroCodeUnitRunner.class)
 @TargetEnv("rest_api.properties")
 public class UserEndpointIT {
@@ -187,7 +187,7 @@ public class UserEndpointIT {
 
 我们已经创建了一个场景、属性文件和测试用例。现在，我们准备运行我们的测试。由于 ZeroCode 是一个集成测试工具，我们可以利用 Maven 的`failsafe` 插件:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-failsafe-plugin</artifactId>
@@ -212,7 +212,7 @@ public class UserEndpointIT {
 
 要运行测试，我们可以使用以下命令:
 
-```
+```java
 mvn verify -Dskip.it=false
 ```
 

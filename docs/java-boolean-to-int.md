@@ -18,7 +18,7 @@
 
 为了将一个原始的 `boolean` 值 转换成一个 `int` ，我们对表达式的条件进行求值，以确定我们要返回的整数:
 
-```
+```java
 public int booleanPrimitiveToInt(boolean foo) {
     int bar = 0;
     if (foo) {
@@ -30,7 +30,7 @@ public int booleanPrimitiveToInt(boolean foo) {
 
 我们可以通过使用三元运算符来简化这个函数:
 
-```
+```java
 public int booleanPrimitiveToIntTernary(boolean foo) {
     return (foo) ? 1 : 0;
 }
@@ -49,7 +49,7 @@ public int booleanPrimitiveToIntTernary(boolean foo) {
 
 布尔类有一个`compare `方法，我们可以如下使用:
 
-```
+```java
 public static int booleanObjectToInt(boolean foo) {
     return Boolean.compare(foo, false);
 }
@@ -59,7 +59,7 @@ public static int booleanObjectToInt(boolean foo) {
 
 类似地，我们可以使用相同的静态方法，将第二个参数改为`true`:
 
-```
+```java
 public static int booleanObjectToIntInverse(boolean foo) { 
     return Boolean.compare(foo, true) + 1;
 }
@@ -71,7 +71,7 @@ public static int booleanObjectToIntInverse(boolean foo) {
 
 布尔类对象具有我们可以使用的函数，例如`compareTo` :
 
-```
+```java
 public static int booleanObjectMethodToInt(Boolean foo) {
     return foo.compareTo(false);
 }
@@ -83,7 +83,7 @@ public static int booleanObjectMethodToInt(Boolean foo) {
 
 [Apache Commons](https://web.archive.org/web/20220524050815/https://search.maven.org/search?q=g:org.apache.commons%20AND%20a:commons-lang3) 是一个流行的 Java 开源库，它提供了实用程序类，比如`BooleanUtils`。我们可以在 Maven 中添加这个库作为依赖项，如下所示:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -93,7 +93,7 @@ public static int booleanObjectMethodToInt(Boolean foo) {
 
 一旦库在我们的 pom.xml 文件中，我们可以使用`BooleanUtils `类将布尔值转换成整数:
 
-```
+```java
 public static int booleanUtilsToInt(Boolean foo) {
     return BooleanUtils.toInteger(foo);
 }

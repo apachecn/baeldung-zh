@@ -37,7 +37,7 @@
 
 让我们看一个在 Java 中将`int`值转换成`Integer`对象的例子:
 
-```
+```java
 Integer object = new Integer(1);
 
 Integer anotherObject = Integer.valueOf(1);
@@ -51,7 +51,7 @@ Integer anotherObject = Integer.valueOf(1);
 
 另一方面，**要从一个包装对象转换到一个原语值，我们可以使用相应的方法如`intValue(), doubleValue()`** 等:
 
-```
+```java
 int val = object.intValue(); 
 ```
 
@@ -69,7 +69,7 @@ int val = object.intValue();
 
 这实际上意味着我们可以将一个原语值传递给一个需要包装对象的方法，或者将一个原语赋给一个需要对象的变量:
 
-```
+```java
 List<Integer> list = new ArrayList<>();
 list.add(1); // autoboxing
 
@@ -80,7 +80,7 @@ Integer val = 2; // autoboxing
 
 在内部，它使用`valueOf()`方法来促进转换。例如，以下几行是等效的:
 
-```
+```java
 Integer value = 3;
 
 Integer value = Integer.valueOf(3);
@@ -90,7 +90,7 @@ Integer value = Integer.valueOf(3);
 
 与自动装箱类似，当将对象传递给需要基元的方法或将其赋给基元变量时，取消装箱是自动完成的:
 
-```
+```java
 Integer object = new Integer(1); 
 int val1 = getSquareValue(object); //unboxing
 int val2 = object; //unboxing

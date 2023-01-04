@@ -14,7 +14,7 @@ Spring 5 支持应用程序上下文中的功能 bean 注册。
 
 设置`Spring 5`项目的最快方法是通过将`spring-boot-starter-parent`依赖项添加到`pom.xml:`来使用`Spring Boot`
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -24,7 +24,7 @@ Spring 5 支持应用程序上下文中的功能 bean 注册。
 
 对于我们的例子，我们还需要 [`spring-boot-starter-web`](https://web.archive.org/web/20220628105250/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-web%22%20AND%20g%3A%22org.springframework.boot%22) 和`spring-boot-starter-test`，以便在`JUnit`测试中使用 web 应用程序上下文:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -38,7 +38,7 @@ Spring 5 支持应用程序上下文中的功能 bean 注册。
 
 当然，为了使用新的函数方式注册 bean，`Spring Boot`不是必需的。我们也可以直接添加`spring-core`依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-core</artifactId>
@@ -55,7 +55,7 @@ Spring 5 支持应用程序上下文中的功能 bean 注册。
 
 首先，让我们创建一个非常简单的类定义，我们将使用它来创建 beans:
 
-```
+```java
 public class MyService {
     public int getRandomNumber() {
         return new Random().nextInt(10);
@@ -65,7 +65,7 @@ public class MyService {
 
 让我们添加一个可以用来运行`JUnit`测试的`@SpringBootApplication`类:
 
-```
+```java
 @SpringBootApplication
 public class Spring5Application {
     public static void main(String[] args) {
@@ -76,7 +76,7 @@ public class Spring5Application {
 
 接下来，我们可以使用`@SpringBootTest`注释创建一个`GenericWebApplicationContext`实例来设置我们的测试类:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Spring5Application.class)
 public class BeanRegistrationIntegrationTest {
@@ -91,13 +91,13 @@ public class BeanRegistrationIntegrationTest {
 
 让我们看看如何使用 lambda 表达式注册一个 bean 来创建实例:
 
-```
+```java
 context.registerBean(MyService.class, () -> new MyService());
 ```
 
 让我们验证我们现在可以检索 bean 并使用它:
 
-```
+```java
 MyService myService = (MyService) context.getBean("com.baeldung.functional.MyService"); 
 
 assertTrue(myService.getRandomNumber() < 10);
@@ -105,13 +105,13 @@ assertTrue(myService.getRandomNumber() < 10);
 
 在这个例子中我们可以看到，如果 bean 名称没有被显式定义，它将由类的小写名称决定。上述相同的方法也可以用于显式 bean 名称:
 
-```
+```java
 context.registerBean("mySecondService", MyService.class, () -> new MyService());
 ```
 
 接下来，让我们看看如何通过添加一个 lambda 表达式来定制一个 bean:
 
-```
+```java
 context.registerBean("myCallbackService", MyService.class, 
   () -> new MyService(), bd -> bd.setAutowireCandidate(false));
 ```

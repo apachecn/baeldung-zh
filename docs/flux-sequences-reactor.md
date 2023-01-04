@@ -10,7 +10,7 @@
 
 让我们从几个依赖项开始。我们需要`[reactor-core](https://web.archive.org/web/20220628145912/https://search.maven.org/search?q=g:io.projectreactor%20AND%20a:reactor-core&core=gav) `和 [`reactor-test`](https://web.archive.org/web/20220628145912/https://search.maven.org/search?q=g:io.projectreactor%20AND%20a:reactor-test) :
 
-```
+```java
 <dependency>
     <groupId>io.projectreactor</groupId>
     <artifactId>reactor-core</artifactId>
@@ -30,7 +30,7 @@
 
 但是首先，让我们定义一个类来保存我们的方法，说明`generate`方法:
 
-```
+```java
 public class SequenceGenerator {
     // methods that will follow
 }
@@ -40,7 +40,7 @@ public class SequenceGenerator {
 
 让我们看看如何用 Reactor 生成[斐波那契数列](https://web.archive.org/web/20220628145912/https://en.wikipedia.org/wiki/Fibonacci_number):
 
-```
+```java
 public Flux<Integer> generateFibonacciWithTuples() {
     return Flux.generate(
             () -> Tuples.of(0, 1),
@@ -61,7 +61,7 @@ public Flux<Integer> generateFibonacciWithTuples() {
 
 让我们用 [`StepVerifier`](/web/20220628145912/https://www.baeldung.com/reactive-streams-step-verifier-test-publisher) 来验证生成的序列:
 
-```
+```java
 @Test
 public void whenGeneratingNumbersWithTuplesState_thenFibonacciSequenceIsProduced() {
     SequenceGenerator sequenceGenerator = new SequenceGenerator();
@@ -82,7 +82,7 @@ public void whenGeneratingNumbersWithTuplesState_thenFibonacciSequenceIsProduced
 
 假设我们想要生成具有循环状态的斐波那契数列。为了演示这个用例，让我们首先定义一个类:
 
-```
+```java
 public class FibonacciState {
     private int former;
     private int latter;
@@ -95,7 +95,7 @@ public class FibonacciState {
 
 如果我们修改最初的例子，我们现在将使用带有`generate`的可变状态:
 
-```
+```java
 public Flux<Integer> generateFibonacciWithCustomClass(int limit) {
     return Flux.generate(
       () -> new FibonacciState(0, 1),
@@ -122,7 +122,7 @@ public Flux<Integer> generateFibonacciWithCustomClass(int limit) {
 
 让我们再次做一个快速测试来确认它的工作情况:
 
-```
+```java
 @Test
 public void whenGeneratingNumbersWithCustomClass_thenFibonacciSequenceIsProduced() {
     SequenceGenerator sequenceGenerator = new SequenceGenerator();
@@ -150,7 +150,7 @@ public void whenGeneratingNumbersWithCustomClass_thenFibonacciSequenceIsProduced
 
 首先，我们来看看`create`和`generate`有什么不同:
 
-```
+```java
 public class SequenceCreator {
     public Consumer<List<Integer>> consumer;
 
@@ -170,7 +170,7 @@ public class SequenceCreator {
 
 让我们使用`create`操作符，从两个数字序列开始:
 
-```
+```java
 @Test
 public void whenCreatingNumbers_thenSequenceIsProducedAsynchronously() throws InterruptedException {
     SequenceGenerator sequenceGenerator = new SequenceGenerator();
@@ -185,7 +185,7 @@ public void whenCreatingNumbers_thenSequenceIsProducedAsynchronously() throws In
 
 接下来是两个`Thread`对象，它们将元素注入发布者:
 
-```
+```java
 SequenceCreator sequenceCreator = new SequenceCreator();
 Thread producingThread1 = new Thread(
   () -> sequenceCreator.consumer.accept(sequence1)
@@ -199,7 +199,7 @@ Thread producingThread2 = new Thread(
 
 然后，我们可以听，或`subscribe`，我们的新的，巩固的序列:
 
-```
+```java
 List<Integer> consolidated = new ArrayList<>();
 sequenceCreator.createNumberSequence().subscribe(consolidated::add);
 ```
@@ -208,7 +208,7 @@ sequenceCreator.createNumberSequence().subscribe(consolidated::add);
 
 现在，我们触发看到项目在两个不同线程上移动的整个过程:
 
-```
+```java
 producingThread1.start();
 producingThread2.start();
 producingThread1.join();
@@ -217,7 +217,7 @@ producingThread2.join();
 
 通常，最后一步是验证操作的结果:
 
-```
+```java
 assertThat(consolidated).containsExactlyInAnyOrder(0, 1, 1, 0, 1, 1, 2);
 ```
 
@@ -241,7 +241,7 @@ assertThat(consolidated).containsExactlyInAnyOrder(0, 1, 1, 0, 1, 1, 2);
 
 让我们看一下`handle`方法的简单说明:
 
-```
+```java
 public class SequenceHandler {
     public Flux<Integer> handleIntegerSequence(Flux<Integer> sequence) {
         return sequence.handle((number, sink) -> {
@@ -259,7 +259,7 @@ public class SequenceHandler {
 
 最后，我们需要测试一些东西。让我们最后一次使用`StepVerifier`来确认我们的处理程序工作正常:
 
-```
+```java
 @Test
 public void whenHandlingNumbers_thenSequenceIsMappedAndFiltered() {
     SequenceHandler sequenceHandler = new SequenceHandler();

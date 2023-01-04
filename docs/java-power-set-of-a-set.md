@@ -14,13 +14,13 @@
 
 例如，对于给定的集合:
 
-```
+```java
 {"APPLE", "ORANGE", "MANGO"}
 ```
 
 功率设置为:
 
-```
+```java
 {
     {},
     {"APPLE"},
@@ -35,7 +35,7 @@
 
 由于它也是一组子集，其内部子集的顺序并不重要，它们可以按任何顺序出现:
 
-```
+```java
 {
     {},
     {"MANGO"},
@@ -52,7 +52,7 @@
 
 谷歌[番石榴图书馆有一些有用的`Set`工具](/web/20221208143859/https://www.baeldung.com/guava-sets)，比如 power set。因此，我们也可以很容易地用它来得到给定集合的幂集:
 
-```
+```java
 @Test
 public void givenSet_WhenGuavaLibraryGeneratePowerSet_ThenItContainsAllSubsets() {
     ImmutableSet<String> set = ImmutableSet.of("APPLE", "ORANGE", "MANGO");
@@ -99,7 +99,7 @@ public void givenSet_WhenGuavaLibraryGeneratePowerSet_ThenItContainsAllSubsets()
 
 因此，首先，让我们编写提取一个元素的 Java 代码，并获取其余的子集:
 
-```
+```java
 T element = set.iterator().next();
 Set<T> subsetWithoutElement = new HashSet<>();
 for (T s : set) {
@@ -111,13 +111,13 @@ for (T s : set) {
 
 然后我们想要得到`subsetWithoutElement`的幂集:
 
-```
+```java
 Set<Set<T>> powersetSubSetWithoutElement = recursivePowerSet(subsetWithoutElement);
 ```
 
 接下来，我们需要将该 powerset 添加回原始文件中:
 
-```
+```java
 Set<Set<T>> powersetSubSetWithElement = new HashSet<>();
 for (Set<T> subsetWithoutElement : powerSetSubSetWithoutElement) {
     Set<T> subsetWithElement = new HashSet<>(subsetWithoutElement);
@@ -128,7 +128,7 @@ for (Set<T> subsetWithoutElement : powerSetSubSetWithoutElement) {
 
 最后，`powerSetSubSetWithoutElement`和`powerSetSubSetWithElement`的并集是给定输入集的幂集:
 
-```
+```java
 Set<Set<T>> powerSet = new HashSet<>();
 powerSet.addAll(powerSetSubSetWithoutElement);
 powerSet.addAll(powerSetSubSetWithElement);
@@ -136,7 +136,7 @@ powerSet.addAll(powerSetSubSetWithElement);
 
 如果我们把所有的代码片段放在一起，我们可以看到我们的最终产品:
 
-```
+```java
 public Set<Set<T>> recursivePowerSet(Set<T> set) {
     if (set.isEmpty()) {
         Set<Set<T>> ret = new HashSet<>();
@@ -168,13 +168,13 @@ public Set<Set<T>> recursivePowerSet(Set<T> set) {
 
 要检查电源组的大小，我们可以使用:
 
-```
+```java
 MatcherAssert.assertThat(powerSet, IsCollectionWithSize.hasSize((1 << set.size())));
 ```
 
 并检查每个元素的出现次数:
 
-```
+```java
 Map<String, Integer> counter = new HashMap<>();
 for (Set<String> subset : powerSet) { 
     for (String name : subset) {
@@ -187,7 +187,7 @@ counter.forEach((k, v) -> Assertions.assertEquals((1 << (set.size() - 1)), v.int
 
 最后，如果我们能把所有的放在一个单元测试中:
 
-```
+```java
 @Test
 public void givenSet_WhenPowerSetIsCalculated_ThenItContainsAllSubsets() {
     Set<String> set = RandomSetOfStringGenerator.generateRandomSet();
@@ -233,7 +233,7 @@ public void givenSet_WhenPowerSetIsCalculated_ThenItContainsAllSubsets() {
 
 该函数的一个可能实现是:
 
-```
+```java
 private Map<T, Integer> map = new HashMap<>();
 private List<T> reverseMap = new ArrayList<>();
 
@@ -255,7 +255,7 @@ private void initializeMap(Collection<T> collection) {
 
 每个子集由其值的索引来表示。例如，给定集合 `{“APPLE”, “ORANGE”, “MANGO”}`的索引映射将是:
 
-```
+```java
 {
    {} -> {}
    [0] -> {"APPLE"}
@@ -270,7 +270,7 @@ private void initializeMap(Collection<T> collection) {
 
 因此，我们可以使用给定的映射从索引子集中检索相应的集合:
 
-```
+```java
 private Set<Set<T>> unMapIndex(Set<Set<Integer>> sets) {
     Set<Set<T>> ret = new HashSet<>();
     for (Set<Integer> s : sets) {
@@ -290,7 +290,7 @@ private Set<Set<T>> unMapIndex(Set<Set<Integer>> sets) {
 
 对于我们的水果示例，功率集为:
 
-```
+```java
 {
     [0,0,0] -> {}
     [1,0,0] -> {"APPLE"}
@@ -305,7 +305,7 @@ private Set<Set<T>> unMapIndex(Set<Set<Integer>> sets) {
 
 因此，我们可以使用给定的映射从二进制子集中检索相应的集合:
 
-```
+```java
 private Set<Set<T>> unMapBinary(Collection<List<Boolean>> sets) {
     Set<Set<T>> ret = new HashSet<>();
     for (List<Boolean> s : sets) {
@@ -327,7 +327,7 @@ private Set<Set<T>> unMapBinary(Collection<List<Boolean>> sets) {
 
 在调用其中一个函数之前，我们需要调用`initializeMap` 方法来获取有序列表。同样，在创建我们的数据结构之后，我们需要调用各自的`unMap`函数来检索实际的对象:
 
-```
+```java
 public Set<Set<T>> recursivePowerSetIndexRepresentation(Collection<T> set) {
     initializeMap(set);
     Set<Set<Integer>> powerSetIndices = recursivePowerSetIndexRepresentation(0, set.size());
@@ -337,7 +337,7 @@ public Set<Set<T>> recursivePowerSetIndexRepresentation(Collection<T> set) {
 
 因此，让我们尝试一下指数表示法:
 
-```
+```java
 private Set<Set<Integer>> recursivePowerSetIndexRepresentation(int idx, int n) {
     if (idx == n) {
         Set<Set<Integer>> empty = new HashSet<>();
@@ -357,7 +357,7 @@ private Set<Set<Integer>> recursivePowerSetIndexRepresentation(int idx, int n) {
 
 现在，让我们看看二元方法:
 
-```
+```java
 private Set<List<Boolean>> recursivePowerSetBinaryRepresentation(int idx, int n) {
     if (idx == n) {
         Set<List<Boolean>> powerSetOfEmptySet = new HashSet<>();
@@ -384,7 +384,7 @@ private Set<List<Boolean>> recursivePowerSetBinaryRepresentation(int idx, int n)
 
 因此，如果我们遍历从`0`到`2^n`的数字，我们可以将该索引转换为二进制，并使用它来创建每个子集的布尔表示:
 
-```
+```java
 private List<List<Boolean>> iterativePowerSetByLoopOverNumbers(int n) {
     List<List<Boolean>> powerSet = new ArrayList<>();
     for (int i = 0; i < (1 << n); i++) {
@@ -405,7 +405,7 @@ private List<List<Boolean>> iterativePowerSetByLoopOverNumbers(int n) {
 
 因此，我们可以进一步优化它:
 
-```
+```java
 private List<List<Boolean>> iterativePowerSetByLoopOverNumbersWithGrayCodeOrder(int n) {
     List<List<Boolean>> powerSet = new ArrayList<>();
     for (int i = 0; i < (1 << n); i++) {
@@ -430,7 +430,7 @@ private List<List<Boolean>> iterativePowerSetByLoopOverNumbersWithGrayCodeOrder(
 
 为了解决这个问题，我们将使用两个变量:一个用于大小，即`2^n`，另一个用于当前子集索引。我们的`hasNext()` 函数将检查`position`是否小于`size` `:`
 
-```
+```java
 abstract class ListIterator<K> implements Iterator<K> {
     protected int position = 0;
     private int size;
@@ -446,7 +446,7 @@ abstract class ListIterator<K> implements Iterator<K> {
 
 我们的`next()`函数返回当前`position`的子集，并将`position`的值增加 1:
 
-```
+```java
 @Override
 public Set<E> next() {
     return new Subset<>(map, reverseMap, position++);
@@ -461,7 +461,7 @@ public Set<E> next() {
 
 例如，`size()`是接收`mask`中`1`的数量:
 
-```
+```java
 @Override
 public int size() { 
     return Integer.bitCount(mask);
@@ -470,7 +470,7 @@ public int size() {
 
 而`contains() `功能就是`mask`中的相应位是否为`1`:
 
-```
+```java
 @Override
 public boolean contains(@Nullable Object o) {
     Integer index = map.get(o);
@@ -480,7 +480,7 @@ public boolean contains(@Nullable Object o) {
 
 我们使用另一个变量—`remainingSetBits`——每当我们在子集中检索其各自的元素时，我们将该位更改为`0`,来修改它。然后，`hasNext()` 检查`remainingSetBits` 是否不为零(也就是说，它至少有一个位的值为`1`):
 
-```
+```java
 @Override
 public boolean hasNext() {
     return remainingSetBits != 0;
@@ -489,7 +489,7 @@ public boolean hasNext() {
 
 而`next()`函数使用`remainingSetBits`中最右边的`1` ，然后将其转换为`0`，也返回相应的元素:
 
-```
+```java
 @Override
 public E next() {
     int index = Integer.numberOfTrailingZeros(remainingSetBits);
@@ -507,7 +507,7 @@ public E next() {
 
 `size()`函数只是集合大小的 2 次方:
 
-```
+```java
 @Override
 public int size() {
     return (1 << this.set.size());
@@ -516,7 +516,7 @@ public int size() {
 
 由于幂集将包含输入集的所有可能子集，因此`contains(Object o)`函数检查`object o`的所有元素是否都存在于`reverseMap` (或输入集中):
 
-```
+```java
 @Override
 public boolean contains(@Nullable Object obj) {
     if (obj instanceof Set) {
@@ -529,7 +529,7 @@ public boolean contains(@Nullable Object obj) {
 
 为了检查给定的`Object `与这个类是否相等，我们只能检查输入`set`是否等于给定的`Object`:
 
-```
+```java
 @Override
 public boolean equals(@Nullable Object obj) {
     if (obj instanceof PowerSet) {
@@ -542,7 +542,7 @@ public boolean equals(@Nullable Object obj) {
 
 `iterator()` 函数返回我们已经定义的`ListIterator`的一个实例:
 
-```
+```java
 @Override
 public Iterator<Set<E>> iterator() {
     return new ListIterator<Set<E>>(this.size()) {

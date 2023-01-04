@@ -12,7 +12,7 @@
 
 正如你在 Maven dependencies 配置中看到的，我们将使用 JUnit 运行我们的测试，并使用 **PITest** 库将**突变体**引入我们的代码——不要担心，我们很快就会看到什么是突变体。通过点击这个[链接](https://web.archive.org/web/20221207163049/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22pitest-parent%22)，您可以随时在 maven 中央存储库中查找最新的依赖版本。
 
-```
+```java
 <dependency>
     <groupId>org.pitest</groupId>
     <artifactId>pitest-parent</artifactId>
@@ -23,7 +23,7 @@
 
 为了启动并运行 PITest 库，我们还需要在我们的`pom.xml`配置文件中包含`pitest-maven`插件:
 
-```
+```java
 <plugin>
     <groupId>org.pitest</groupId>
     <artifactId>pitest-maven</artifactId>
@@ -43,7 +43,7 @@
 
 现在我们已经配置了 Maven 依赖项，让我们看看这个不言自明的回文函数:
 
-```
+```java
 public boolean isPalindrome(String inputString) {
     if (inputString.length() == 0) {
         return true;
@@ -58,7 +58,7 @@ public boolean isPalindrome(String inputString) {
 
 我们现在需要的只是一个简单的 JUnit 测试，以确保我们的实现以期望的方式工作:
 
-```
+```java
 @Test
 public void whenPalindrom_thenAccept() {
     Palindrome palindromeTester = new Palindrome();
@@ -127,7 +127,7 @@ public void whenPalindrom_thenAccept() {
 
 让我们以第 6 行的第一个变异——否定条件——为例。突变体存活了下来，因为即使我们改变了代码片段:
 
-```
+```java
 if (inputString.length() == 0) {
     return true;
 }
@@ -135,7 +135,7 @@ if (inputString.length() == 0) {
 
 收件人:
 
-```
+```java
 if (inputString.length() != 0) {
     return true;
 }
@@ -143,7 +143,7 @@ if (inputString.length() != 0) {
 
 测试会通过的，这就是为什么**突变存活了**。这个想法是实施一个新的测试，如果变异体被引入，那么**将会失败。对于剩余的突变体也可以这样做。**
 
-```
+```java
 @Test
 public void whenNotPalindrom_thanReject() {
     Palindrome palindromeTester = new Palindrome();
@@ -167,7 +167,7 @@ public void whenNearPalindrom_thanReject() {
 
 为了最小化执行测试所需的计算资源，定义您计划在变异测试中使用的变异器也很重要:
 
-```
+```java
 <configuration>
     <targetClasses>
         <param>com.baeldung.testing.mutation.*</param>

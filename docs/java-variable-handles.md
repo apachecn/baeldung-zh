@@ -33,7 +33,7 @@ Java 9 为开发人员带来了许多有用的新特性。
 
 让我们声明一个简单的类，它包含我们将在示例中使用的不同类型的变量:
 
-```
+```java
 public class VariableHandlesUnitTest {
     public int publicTestVariable = 1;
     private int privateTestVariable = 1;
@@ -50,7 +50,7 @@ public class VariableHandlesUnitTest {
 
 例如，下面是 Java 本身如何在内部使用`VarHandle`来实现 [`AtomicReference`](https://web.archive.org/web/20220823220128/https://github.com/openjdk/jdk14u/blob/d6d8d4d931b06d919e7688c6106f489a173d8608/src/java.base/share/classes/java/util/concurrent/atomic/AtomicReference.java#L51) :
 
-```
+```java
 private volatile V value;
 private static final VarHandle VALUE;
 static {
@@ -71,7 +71,7 @@ static {
 
 **现在我们可以使用 `findVarHandle()`方法**为我们的`publicTestVariable`获得一个`VarHandle`:
 
-```
+```java
 VarHandle PUBLIC_TEST_VARIABLE = MethodHandles
   .lookup()
   .in(VariableHandlesUnitTest.class)
@@ -87,7 +87,7 @@ assertEquals(VariableHandlesUnitTest.class, PUBLIC_TEST_VARIABLE.coordinateTypes
 
 如果我们有一个私有成员，并且我们需要这样一个变量的变量句柄，**我们可以使用`privateLookupIn()`方法**来获得它:
 
-```
+```java
 VarHandle PRIVATE_TEST_VARIABLE = MethodHandles
   .privateLookupIn(VariableHandlesUnitTest.class, MethodHandles.lookup())
   .findVarHandle(VariableHandlesUnitTest.class, "privateTestVariable", int.class);
@@ -110,7 +110,7 @@ assertEquals(VariableHandlesUnitTest.class, PRIVATE_TEST_VARIABLE.coordinateType
 
 然而，我们也可以获得特定类型数组的`VarHandle`:
 
-```
+```java
 VarHandle arrayVarHandle = MethodHandles.arrayElementVarHandle(int[].class);
 
 assertEquals(2, arrayVarHandle.coordinateTypes().size());
@@ -141,7 +141,7 @@ assertEquals(int[].class, arrayVarHandle.coordinateTypes().get(0));
 
 我们可以很容易地在我们的`VarHandle`上使用`get()`方法:
 
-```
+```java
 assertEquals(1, (int) PUBLIC_TEST_VARIABLE.get(this));
 ```
 
@@ -155,7 +155,7 @@ assertEquals(1, (int) PUBLIC_TEST_VARIABLE.get(this));
 
 我们可以在我们的`VarHandle`上使用`set()`方法:
 
-```
+```java
 VARIABLE_TO_SET.set(this, 15);
 assertEquals(15, (int) VARIABLE_TO_SET.get(this));
 ```
@@ -168,7 +168,7 @@ assertEquals(15, (int) VARIABLE_TO_SET.get(this));
 
 让我们使用`compareAndSet()`方法来看看效果:
 
-```
+```java
 VARIABLE_TO_COMPARE_AND_SET.compareAndSet(this, 1, 100);
 assertEquals(100, (int) VARIABLE_TO_COMPARE_AND_SET.get(this));
 ```
@@ -181,7 +181,7 @@ assertEquals(100, (int) VARIABLE_TO_COMPARE_AND_SET.get(this));
 
 让我们看看如何使用`VarHandle`来执行原子操作:
 
-```
+```java
 int before = (int) VARIABLE_TO_GET_AND_ADD.getAndAdd(this, 200);
 
 assertEquals(0, before);
@@ -196,7 +196,7 @@ assertEquals(200, (int) VARIABLE_TO_GET_AND_ADD.get(this));
 
 让我们看一个使用`getAndBitwiseOr()`方法的例子:
 
-```
+```java
 byte before = (byte) VARIABLE_TO_BITWISE_OR.getAndBitwiseOr(this, (byte) 127);
 
 assertEquals(0, before);

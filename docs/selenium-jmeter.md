@@ -56,7 +56,7 @@ Selenium 之类的 Web 驱动程序可以在客户端(本例中是浏览器)自�
 
 我们可以将下面给出的脚本添加到线程组中:
 
-```
+```java
 WDS.sampleResult.sampleStart()
 WDS.browser.get('http://baeldung.com')
 WDS.sampleResult.sampleEnd()

@@ -34,13 +34,13 @@ Azure Cosmos DB 不仅仅提供两种一致性选择，即一致或不一致。�
 
 **我们将选择在 Docker** for Windows 上运行它。让我们通过运行以下命令来提取 Docker 映像:
 
-```
+```java
 docker pull microsoft/azure-cosmosdb-emulator
 ```
 
 然后，我们可以运行 Docker 映像，并通过运行以下命令启动容器:
 
-```
+```java
 set containerName=azure-cosmosdb-emulator
 set hostDirectory=%LOCALAPPDATA%\azure-cosmosdb-emulator.hostd
 md %hostDirectory% 2>nul
@@ -55,7 +55,7 @@ docker run --name %containerName% --memory 2GB --mount "type=bind,source=%hostDi
 
 我们首先在我们的 `pom.xml`中添加 [spring-data-cosmosdb](https://web.archive.org/web/20220625230703/https://mvnrepository.com/artifact/com.microsoft.azure/spring-data-cosmosdb/2.3.0) 依赖项:
 
-```
+```java
 <dependency> 
     <groupId>com.microsoft.azure</groupId> 
     <artifactId>spring-data-cosmosdb</artifactId> 
@@ -65,7 +65,7 @@ docker run --name %containerName% --memory 2GB --mount "type=bind,source=%hostDi
 
 **要从我们的 Spring 应用程序访问 Azure Cosmos DB，我们需要数据库的 URI，即[访问键](https://web.archive.org/web/20220625230703/https://docs.microsoft.com/en-us/azure/cosmos-db/secure-access-to-data)和数据库名称。**然后我们在`application.properties`中添加连接属性:
 
-```
+```java
 azure.cosmosdb.uri=cosmodb-uri
 azure.cosmosdb.key=cosmodb-primary-key
 azure.cosmosdb.secondaryKey=cosmodb-secondary-key
@@ -80,7 +80,7 @@ azure.cosmosdb.database=cosmodb-name
 
 我们还需要**配置一个`CosmosDBConfig`** 类型的 bean:
 
-```
+```java
 @Configuration
 @EnableCosmosRepositories(basePackages = "com.baeldung.spring.data.cosmosdb.repository")
 public class AzureCosmosDbConfiguration extends AbstractCosmosConfiguration {
@@ -110,7 +110,7 @@ public class AzureCosmosDbConfiguration extends AbstractCosmosConfiguration {
 
 为了与 Azure Cosmos DB 交互，我们使用了实体。因此，让我们创建一个将存储在 Azure Cosmos DB 中的实体。为了使我们的`Product`类、**成为一个实体，我们将使用`@Document`注释:**
 
-```
+```java
 @Document(collection = "products")
 public class Product {
 
@@ -140,7 +140,7 @@ public class Product {
 
 现在**让我们创建一个扩展`CosmosRepository`** 的`ProductRepository`接口。使用这个接口，我们可以在 Azure Cosmos DB 上执行 CRUD 操作:
 
-```
+```java
 @Repository
 public interface ProductRepository extends CosmosRepository<Product, String> {
     List findByProductName(String productName);
@@ -154,7 +154,7 @@ public interface ProductRepository extends CosmosRepository<Product, String> {
 
 现在我们可以创建一个 Junit 测试，使用我们的`ProductRepository`在 Azure Cosmos DB 中保存一个`Product`实体:
 
-```
+```java
 @SpringBootTest
 public class AzureCosmosDbApplicationManualTest {
 

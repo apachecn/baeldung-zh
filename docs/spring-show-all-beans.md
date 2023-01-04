@@ -25,7 +25,7 @@ bean 是 Spring 管理的应用程序的基础；所有 beans 都驻留在 IOC �
 
 首先，我们将创建一些春豆。让我们创建一个简单的弹簧控制器`FooController`:
 
-```
+```java
 @Controller
 public class FooController {
 
@@ -43,7 +43,7 @@ public class FooController {
 
 这个控制器依赖于另一个 Spring bean `FooService`:
 
-```
+```java
 @Service
 public class FooService {
 
@@ -66,7 +66,7 @@ public class FooService {
 
 在执行这个应用程序时，我们将使用`applicationContext` 对象并调用它的`getBeanDefinitionNames()` 方法，这将返回我们的`applicationContext` 容器中的所有 beans:
 
-```
+```java
 @SpringBootApplication
 public class Application {
     private static ApplicationContext applicationContext;
@@ -87,7 +87,7 @@ public class Application {
 
 这将打印来自`applicationContext` 容器的所有 beans:
 
-```
+```java
 fooController
 fooService
 //other beans
@@ -103,7 +103,7 @@ Spring Boot 执行器功能提供了用于监控应用程序统计数据的端�
 
 现在，我们将点击 URL `http://<address>:<management-port>/beans.` ,如果我们没有指定任何单独的管理端口，我们可以使用默认的服务器端口。这将返回一个`JSON` 响应，显示 Spring IoC 容器中的所有 beans:
 
-```
+```java
 [
     {
         "context": "application:8080",

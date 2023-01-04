@@ -28,7 +28,7 @@ Spring 3.1 还引入了新的`@PropertySource`注释作为向环境添加属性�
 
 我们可以结合使用这个注释和`@Configuration`注释:
 
-```
+```java
 @Configuration
 @PropertySource("classpath:foo.properties")
 public class PropertiesWithJavaConfig {
@@ -38,7 +38,7 @@ public class PropertiesWithJavaConfig {
 
 注册新属性文件的另一个非常有用的方法是使用占位符，它允许我们在运行时动态选择正确的文件:
 
-```
+```java
 @PropertySource({ 
   "classpath:persistence-${envTarget:mysql}.properties"
 })
@@ -49,7 +49,7 @@ public class PropertiesWithJavaConfig {
 
 根据 Java 8 惯例，注释`@PropertySource`是可重复的[。因此，如果我们使用 Java 8 或更高版本，我们可以使用这个注释来定义多个属性位置:](https://web.archive.org/web/20221001115719/https://docs.oracle.com/javase/tutorial/java/annotations/repeating.html)
 
-```
+```java
 @PropertySource("classpath:foo.properties")
 @PropertySource("classpath:bar.properties")
 public class PropertiesWithJavaConfig {
@@ -59,7 +59,7 @@ public class PropertiesWithJavaConfig {
 
 当然，**我们也可以使用`@PropertySources`注释并指定一个`@PropertySource`数组。**这适用于任何受支持的 Java 版本，而不仅仅是 Java 8 或更高版本:
 
-```
+```java
 @PropertySources({
     @PropertySource("classpath:foo.properties"),
     @PropertySource("classpath:bar.properties")
@@ -75,14 +75,14 @@ public class PropertiesWithJavaConfig {
 
 **用 [`@Value`标注](/web/20221001115719/https://www.baeldung.com/spring-value-annotation)** 注入一个属性很简单:
 
-```
+```java
 @Value( "${jdbc.url}" )
 private String jdbcUrl;
 ```
 
 **我们还可以为属性指定一个默认值:**
 
-```
+```java
 @Value( "${jdbc.url:aDefaultUrl}" )
 private String jdbcUrl;
 ```
@@ -91,7 +91,7 @@ Spring 3.1 中新增的`PropertySourcesPlaceholderConfigurer`**解析 bean 定�
 
 最后，我们可以使用`Environment` API 获得属性的值:
 
-```
+```java
 @Autowired
 private Environment env;
 ...
@@ -112,7 +112,7 @@ Boot 将其典型的配置惯例应用于属性文件。这意味着**我们可�
 
 如果需要，我们还可以使用环境属性在运行时配置不同的文件:
 
-```
+```java
 java -jar app.jar --spring.config.location=classpath:/another-location.properties
 ```
 
@@ -120,7 +120,7 @@ java -jar app.jar --spring.config.location=classpath:/another-location.propertie
 
 例如，我们可以将`spring.config.location `属性设置为`config/*/`:
 
-```
+```java
 java -jar app.jar --spring.config.location=config/*/
 ```
 
@@ -128,7 +128,7 @@ java -jar app.jar --spring.config.location=config/*/
 
 从版本`2.4.0`，**开始，Spring Boot 支持使用多文档属性文件**，类似于[YAML 对](https://web.archive.org/web/20221001115719/https://yaml.org/spec/1.2/spec.html#id2760395)的设计:
 
-```
+```java
 baeldung.customProperty=defaultValue
 #---
 baeldung.customProperty=overriddenValue
@@ -158,7 +158,7 @@ baeldung.customProperty=overriddenValue
 
 **这允许我们为一个特定的测试环境设置测试属性，优先于默认的属性源:**
 
-```
+```java
 @RunWith(SpringRunner.class)
 @TestPropertySource("/foo.properties")
 public class FilePropertyInjectionUnitTest {
@@ -175,7 +175,7 @@ public class FilePropertyInjectionUnitTest {
 
 如果我们不想使用文件，我们可以直接指定名称和值:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @TestPropertySource(properties = {"foo=bar"})
 public class PropertyInjectionUnitTest {
@@ -192,7 +192,7 @@ public class PropertyInjectionUnitTest {
 
 **我们也可以使用`[@SpringBootTest](https://web.archive.org/web/20221001115719/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/test/context/SpringBootTest.html)`注释的`properties` 参数:**达到类似的效果
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(
   properties = {"foo=bar"}, classes = SpringBootPropertiesTestApplication.class)
@@ -214,7 +214,7 @@ public class SpringBootPropertyInjectionIntegrationTest {
 
 让我们看一些用于配置数据库连接的属性:
 
-```
+```java
 database.url=jdbc:postgresql:/localhost:5432/instance
 database.username=foo
 database.password=bar
@@ -222,7 +222,7 @@ database.password=bar
 
 然后让我们使用注释将它们映射到一个数据库对象:
 
-```
+```java
 @ConfigurationProperties(prefix = "database")
 public class Database {
     String url;
@@ -245,7 +245,7 @@ Spring 也支持 YAML 文件。
 
 **YAML 特别擅长分层物业存储**；以下属性文件:
 
-```
+```java
 database.url=jdbc:postgresql:/localhost:5432/instance
 database.username=foo
 database.password=bar
@@ -254,7 +254,7 @@ secret: foo
 
 与以下 YAML 文件同义:
 
-```
+```java
 database:
   url: jdbc:postgresql:/localhost:5432/instance
   username: foo
@@ -281,7 +281,7 @@ secret: foo
 
 让我们看一个有效的例子:
 
-```
+```java
 spring.config.import=classpath:additional-application.properties,
   classpath:additional-application[.yml],
   optional:file:./external.properties,
@@ -296,13 +296,13 @@ Spring 将把 imports 作为一个新文档，直接插入到 import 声明的�
 
 除了使用文件，我们还可以在命令行上直接传递属性:
 
-```
+```java
 java -jar app.jar --property="value"
 ```
 
 我们也可以通过系统属性做到这一点，这些属性是在`-jar` 命令之前而不是之后提供的:
 
-```
+```java
 java -Dproperty.name="value" -jar app.jar
 ```
 
@@ -310,7 +310,7 @@ java -Dproperty.name="value" -jar app.jar
 
 Spring Boot 还将检测环境变量，将其视为属性:
 
-```
+```java
 export name=value
 java -jar app.jar 
 ```
@@ -319,7 +319,7 @@ java -jar app.jar
 
 如果我们不想要决定论的属性值，我们可以使用`[RandomValuePropertySource](https://web.archive.org/web/20221001115719/https://docs.spring.io/spring-boot/docs/1.5.7.RELEASE/api/org/springframework/boot/context/config/RandomValuePropertySource.html)`来随机化属性值:
 
-```
+```java
 random.number=${random.int}
 random.long=${random.long}
 random.uuid=${random.uuid}
@@ -337,7 +337,7 @@ Spring Boot 支持多种属性来源，实现了一个经过深思熟虑的排�
 
 让我们看看如何使用 Java 配置来定义这个 bean:
 
-```
+```java
 @Bean
 public static PropertySourcesPlaceholderConfigurer properties(){
     PropertySourcesPlaceholderConfigurer pspc

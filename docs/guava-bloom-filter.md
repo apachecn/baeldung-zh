@@ -16,7 +16,7 @@
 
 我们将使用 Bloom filter 的 Guava 实现，所以让我们添加`guava`依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -40,7 +40,7 @@
 
 我们可以使用`Guava` 库中的`BloomFilter` 类来实现这一点。我们需要传递我们期望插入到过滤器中的元素数量和期望的误报概率:
 
-```
+```java
 BloomFilter<Integer> filter = BloomFilter.create(
   Funnels.integerFunnel(),
   500,
@@ -49,7 +49,7 @@ BloomFilter<Integer> filter = BloomFilter.create(
 
 现在让我们给过滤器添加一些数字:
 
-```
+```java
 filter.put(1);
 filter.put(2);
 filter.put(3);
@@ -57,7 +57,7 @@ filter.put(3);
 
 我们只添加了三个元素，并且我们定义了插入的最大数量是 500，所以我们的 Bloom filter **应该产生非常精确的结果**。让我们使用`mightContain()`方法来测试它:
 
-```
+```java
 assertThat(filter.mightContain(1)).isTrue();
 assertThat(filter.mightContain(2)).isTrue();
 assertThat(filter.mightContain(3)).isTrue();
@@ -75,7 +75,7 @@ assertThat(filter.mightContain(100)).isFalse();
 
 假设我们创建了一个过滤器，其所需的误报概率为百分之一，预期的一些元素等于五，但是我们插入了 100，000 个元素:
 
-```
+```java
 BloomFilter<Integer> filter = BloomFilter.create(
   Funnels.integerFunnel(),
   5,
@@ -88,7 +88,7 @@ IntStream.range(0, 100_000).forEach(filter::put);
 
 然而，随着我们添加的项目比预期的多，**过滤器变得过饱和，返回假阳性结果**的概率比预期的 1%高得多:
 
-```
+```java
 assertThat(filter.mightContain(1)).isTrue();
 assertThat(filter.mightContain(2)).isTrue();
 assertThat(filter.mightContain(3)).isTrue();

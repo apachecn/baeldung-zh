@@ -22,14 +22,14 @@ Java 抛出了*NumberFormatException-*[一个未检查的异常](/web/2022081702
 
 这两条语句都会抛出`NumberFormatException`:
 
-```
+```java
 Integer aIntegerObj = new Integer("one");
 Double doubleDecimalObj = new Double("two.2");
 ```
 
 让我们看看当我们将无效输入“一”传递给第 1 行的`Integer`构造函数时得到的堆栈跟踪:
 
-```
+```java
 Exception in thread "main" java.lang.NumberFormatException: For input string: "one"
 	at java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)
 	at java.lang.Integer.parseInt(Integer.java:580)
@@ -41,7 +41,7 @@ Exception in thread "main" java.lang.NumberFormatException: For input string: "o
 
 Java Number API 不把单词解析成数字，所以我们只需简单地把代码改成一个期望值就可以了:
 
-```
+```java
 Integer aIntegerObj = new Integer("1");
 Double doubleDecimalObj = new Double("2.2");
 ```
@@ -52,7 +52,7 @@ Double doubleDecimalObj = new Double("2.2");
 
 如果我们尝试用这些做同样的转换:
 
-```
+```java
 int aIntPrim = Integer.parseInt("two");
 double aDoublePrim = Double.parseDouble("two.two");
 Integer aIntObj = Integer.valueOf("three");
@@ -63,7 +63,7 @@ Long decodedLong = Long.decode("64403L");
 
 而且，我们可以用类似的方法修复它们:
 
-```
+```java
 int aIntPrim = Integer.parseInt("2");
 double aDoublePrim = Double.parseDouble("2.2");
 Integer aIntObj = Integer.valueOf("3");
@@ -74,7 +74,7 @@ Long decodedLong = Long.decode("64403");
 
 或者，如果我们试图将一个字符串转换成一个输入中带有**无关数据的数字，比如空格或特殊字符:**
 
-```
+```java
 Short shortInt = new Short("2 ");
 int bIntPrim = Integer.parseInt("_6000");
 ```
@@ -83,7 +83,7 @@ int bIntPrim = Integer.parseInt("_6000");
 
 我们可以通过一点字符串操作来纠正这些错误:
 
-```
+```java
 Short shortInt = new Short("2 ".trim());
 int bIntPrim = Integer.parseInt("_6000".replaceAll("_", ""));
 int bIntPrim = Integer.parseInt("-6000");
@@ -97,7 +97,7 @@ int bIntPrim = Integer.parseInt("-6000");
 
 默认情况下，我们将通过尝试解析包含逗号的值来获取`NumberFormatException`:
 
-```
+```java
 double aDoublePrim = Double.parseDouble("4000,1");
 ```
 
@@ -107,7 +107,7 @@ double aDoublePrim = Double.parseDouble("4000,1");
 
 让我们以法国的`Locale`为例来看看它的实际应用:
 
-```
+```java
 NumberFormat numberFormat = NumberFormat.getInstance(Locale.FRANCE);
 Number parsedNumber = numberFormat.parse("4000,1");
 assertEquals(4000.1, parsedNumber.doubleValue());

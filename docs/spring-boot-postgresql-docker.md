@@ -10,13 +10,13 @@
 
 **让我们去 [Spring Initializer](https://web.archive.org/web/20221126222426/https://start.spring.io/) 创建我们的 Spring Boot 项目**。我们将添加`PostgreSQL Driver`和`Spring Data JPA`模块。下载生成的 ZIP 文件并将其解压缩到一个文件夹后，我们就可以运行新的应用程序了:
 
-```
+```java
 ./mvnw spring-boot:run
 ```
 
 应用程序失败，因为它无法连接到数据库:
 
-```
+```java
 ***************************
 APPLICATION FAILED TO START
 ***************************
@@ -32,7 +32,7 @@ Reason: Failed to determine a suitable driver class
 
 在使用 Docker Compose 启动 PostgreSQL 之前，**我们需要将我们的 Spring Boot 应用程序转换成 Docker 映像**。第一步是将应用程序打包成一个 JAR 文件:
 
-```
+```java
 ./mvnw clean package -DskipTests
 ```
 
@@ -42,13 +42,13 @@ Reason: Failed to determine a suitable driver class
 
 让我们创建新的 `src/main/docker`目录。之后，我们将应用程序 JAR 文件复制到那里:
 
-```
+```java
 cp target/docker-spring-boot-postgres-0.0.1-SNAPSHOT.jar src/main/docker
 ```
 
 最后，我们在同一个目录中创建这个`Dockerfile`:
 
-```
+```java
 FROM adoptopenjdk:11-jre-hotspot
 ARG JAR_FILE=*.jar
 COPY ${JAR_FILE} application.jar
@@ -61,7 +61,7 @@ ENTRYPOINT ["java", "-jar", "application.jar"]
 
 现在让我们编写 Docker 编写文件`docker-compose.yml`，并将其保存在`src/main/docker`中:
 
-```
+```java
 version: '2'
 
 services:
@@ -103,13 +103,13 @@ services:
 
 **让我们用 Docker Compose 运行我们的 Spring Boot 应用程序和 PostgreSQL】:**
 
-```
+```java
 docker-compose up
 ```
 
 首先，这将为我们的 Spring Boot 应用程序构建 Docker 映像。接下来，它将启动一个 PostgreSQL 容器。最后，它将启动我们的应用程序 Docker image。这一次，我们的应用程序运行良好:
 
-```
+```java
 Starting DemoApplication v0.0.1-SNAPSHOT using Java 11.0.9 on f94e79a2c9fc with PID 1 (/application.jar started by root in /)
 [...]
 Finished Spring Data repository scanning in 28 ms. Found 0 JPA repository interfaces.
@@ -121,7 +121,7 @@ Started DemoApplication in 4.751 seconds (JVM running for 6.512)
 
 如果我们想停止所有的容器，我们需要先按[Ctrl-C]。然后我们可以停止 Docker 编写:
 
-```
+```java
 docker-compose down
 ```
 
@@ -129,7 +129,7 @@ docker-compose down
 
 为了在我们的应用程序中使用 PostgreSQL 数据库，**我们将创建一个简单的客户实体**:
 
-```
+```java
 @Entity
 @Table(name = "customer")
 public class Customer {
@@ -149,7 +149,7 @@ public class Customer {
 
 现在，**我们可以为这个实体**编写存储库接口:
 
-```
+```java
 public interface CustomerRepository extends JpaRepository<Customer, Long> { }
 ```
 
@@ -157,7 +157,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> { }
 
 最后，我们将在应用程序中使用这些方法:
 
-```
+```java
 @SpringBootApplication
 public class DemoApplication {
     @Autowired 
@@ -189,14 +189,14 @@ public class DemoApplication {
 
 **要运行更新后的 Spring Boot 应用程序，我们需要首先重新构建它**。因此，我们在项目根目录中再次执行这些命令:
 
-```
+```java
 ./mvnw clean package -DskipTests
 cp target/docker-spring-boot-postgres-0.0.1-SNAPSHOT.jar src/main/docker
 ```
 
 我们如何用这个更新的应用程序 JAR 文件重建 Docker 映像？最好的方法是删除现有的 Docker 图像，我们在`docker-compose.yml`中指定了它的名称。这迫使 Docker 在下次启动 Docker 合成文件时重新构建图像:
 
-```
+```java
 cd src/main/docker
 docker-compose down
 docker rmi docker-spring-boot-postgres:latest
@@ -207,7 +207,7 @@ docker-compose up
 
 下面是应用程序的输出:
 
-```
+```java
 Finished Spring Data repository scanning in 180 ms. Found 1 JPA repository interfaces.
 [...]
 Number of customers: 0

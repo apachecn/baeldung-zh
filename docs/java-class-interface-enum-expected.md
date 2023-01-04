@@ -14,7 +14,7 @@
 
 让我们看一个例子:
 
-```
+```java
 public class MyClass {
     public static void main(String args[]) {
       System.out.println("Baeldung");
@@ -23,7 +23,7 @@ public class MyClass {
 }
 ```
 
-```
+```java
 /MyClass.java:6: error: class, interface, or enum expected
 }
 ^
@@ -34,7 +34,7 @@ public class MyClass {
 
 让我们看看发生此错误的另一个场景:
 
-```
+```java
 public class MyClass {
     public static void main(String args[]) {
         //Implementation
@@ -45,7 +45,7 @@ public static void printHello() {
 }
 ```
 
-```
+```java
 /MyClass.java:6: error: class, interface, or enum expected
 public static void printHello()
 ^

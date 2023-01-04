@@ -12,7 +12,7 @@
 
 假设我们的应用程序在启动时读取一个文件:
 
-```
+```java
 try (FileReader fileReader = new FileReader("src/main/resources/input.txt"); 
      BufferedReader reader = new BufferedReader(fileReader)) {
     String contents = reader.lines()
@@ -26,13 +26,13 @@ try (FileReader fileReader = new FileReader("src/main/resources/input.txt");
 
 当我们在命令行运行它时:
 
-```
+```java
 java -jar core-java-io2.jar
 ```
 
 我们将看到以下错误:
 
-```
+```java
 Exception in thread "main" java.io.FileNotFoundException: 
     src/main/resources/input.txt (No such file or directory)
 	at java.io.FileInputStream.open0(Native Method)
@@ -52,7 +52,7 @@ Exception in thread "main" java.io.FileNotFoundException:
 
 然而，在相应的 JAR 结构中，我们看到:
 
-```
+```java
 META-INF/MANIFEST.MF
 META-INF/
 com/
@@ -75,7 +75,7 @@ META-INF/maven/com.baeldung/core-java-io-files/pom.properties
 
 让我们使用资源加载来从类路径而不是特定的文件位置加载资源。不管代码是如何打包的，这都是可行的:
 
-```
+```java
 try (InputStream inputStream = getClass().getResourceAsStream("/input.txt");
     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
     String contents = reader.lines()

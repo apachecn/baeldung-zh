@@ -20,13 +20,13 @@
 
 我们可以创建一个`Foo`类来表示我们正在创建的 bean:
 
-```
+```java
 public class Foo {}
 ```
 
 然后，我们创建一个包含工厂方法`createInstance`的`InstanceFooFactory`类，它创建了我们的`Foo ` bean:
 
-```
+```java
 public class InstanceFooFactory {
 
     public Foo createInstance() {
@@ -43,7 +43,7 @@ public class InstanceFooFactory {
 
 将此应用于 Spring XML 配置，我们最终会得到:
 
-```
+```java
 <beans ...>
 
     <bean id="instanceFooFactory"
@@ -58,7 +58,7 @@ public class InstanceFooFactory {
 
 最后，我们自动连接我们想要的`Foo` bean。然后 Spring 将使用我们的`createInstance`工厂方法创建我们的 bean:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/factorymethod/instance-config.xml")
 public class InstanceFooFactoryIntegrationTest {
@@ -79,7 +79,7 @@ public class InstanceFooFactoryIntegrationTest {
 
 首先，我们创建一个类`Bar`，它利用了一个参数:
 
-```
+```java
 public class Bar {
 
     private String name;
@@ -94,7 +94,7 @@ public class Bar {
 
 接下来，我们创建一个实例工厂类`InstanceBarFactory`，它具有一个工厂方法，该方法接受一个参数并返回一个`Bar` bean:
 
-```
+```java
 public class InstanceBarFactory {
 
     public Bar createInstance(String name) {
@@ -105,7 +105,7 @@ public class InstanceBarFactory {
 
 最后，我们将一个`constructor-arg`元素添加到我们的`Bar` bean 定义中:
 
-```
+```java
 <beans ...>
 
     <bean id="instanceBarFactory"
@@ -122,7 +122,7 @@ public class InstanceBarFactory {
 
 然后，我们可以像对`Foo` bean 那样自动连接`Bar` bean:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/factorymethod/instance-bar-config.xml")
 public class InstanceBarFactoryIntegrationTest {
@@ -150,7 +150,7 @@ public class InstanceBarFactoryIntegrationTest {
 
 使用我们的`Foo`类作为我们想要的 bean，我们可以创建一个类`SingletonFooFactory`，它包含一个`createInstance`工厂方法，该方法返回一个`Foo`的单独实例:
 
-```
+```java
 public class SingletonFooFactory {
 
     private static final Foo INSTANCE = new Foo();
@@ -168,7 +168,7 @@ public class SingletonFooFactory {
 
 将此应用于我们的 Spring XML 配置，我们得到:
 
-```
+```java
 <beans ...>
 
     <bean id="foo"
@@ -180,7 +180,7 @@ public class SingletonFooFactory {
 
 最后，我们使用与之前相同的结构自动连接我们的`Foo` bean:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/factorymethod/static-foo-config.xml")
 public class SingletonFooFactoryIntegrationTest {
@@ -201,7 +201,7 @@ public class SingletonFooFactoryIntegrationTest {
 
 为此，我们创建了一个新的工厂方法，它接受我们想要的参数:
 
-```
+```java
 public class SingletonBarFactory {
 
     private static final Bar INSTANCE = new Bar("unnamed");
@@ -215,7 +215,7 @@ public class SingletonBarFactory {
 
 之后，我们使用`constructor-arg`元素配置 Spring 来传入所需的参数:
 
-```
+```java
 <beans ...>
 
     <bean id="bar"
@@ -229,7 +229,7 @@ public class SingletonBarFactory {
 
 最后，我们使用与之前相同的结构自动连接我们的`Bar` bean:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/factorymethod/static-bar-config.xml")
 public class SingletonBarFactoryIntegrationTest {

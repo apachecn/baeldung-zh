@@ -10,7 +10,7 @@
 
 对于开发，我们需要以下依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -24,7 +24,7 @@
 
 为了让我们的应用程序能够确定当前正在使用哪个语言环境，我们需要添加一个`LocaleResolver` bean:
 
-```
+```java
 @Bean
 public LocaleResolver localeResolver() {
     SessionLocaleResolver slr = new SessionLocaleResolver();
@@ -41,7 +41,7 @@ public LocaleResolver localeResolver() {
 
 接下来，我们需要添加一个拦截器 bean，它将根据附加到请求的参数`lang`的值切换到一个新的语言环境:
 
-```
+```java
 @Bean
 public LocaleChangeInterceptor localeChangeInterceptor() {
     LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
@@ -54,7 +54,7 @@ public LocaleChangeInterceptor localeChangeInterceptor() {
 
 为了实现这一点，我们的`@Configuration`类必须实现`WebMvcConfigurer`接口并覆盖`addInterceptors()`方法:
 
-```
+```java
 @Override
 public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(localeChangeInterceptor());
@@ -73,7 +73,7 @@ public void addInterceptors(InterceptorRegistry registry) {
 
 让我们为英语定义一个名为`messages.properties`的默认消息文件:
 
-```
+```java
 greeting=Hello! Welcome to our website!
 lang.change=Change the language
 lang.eng=English
@@ -82,7 +82,7 @@ lang.fr=French
 
 接下来，让我们用相同的关键字为法语创建一个名为`messages_fr.properties`的文件:
 
-```
+```java
 greeting=Bonjour! Bienvenue sur notre site!
 lang.change=Changez la langue
 lang.eng=Anglais
@@ -93,7 +93,7 @@ lang.fr=Francais
 
 让我们创建一个控制器映射，该映射将返回一个名为 `international.html`的简单 HTML 页面，我们希望以两种不同的语言查看该页面:
 
-```
+```java
 @Controller
 public class PageController {
 
@@ -106,13 +106,13 @@ public class PageController {
 
 因为我们使用百里香叶来显示 HTML 页面，所以将使用带有语法`#{key}`的键来访问特定于地区的值:
 
-```
+```java
 <h1 th:text="#{greeting}"></h1>
 ```
 
 如果使用 JSP 文件，语法是:
 
-```
+```java
 <h1><spring:message code="greeting" text="default"/></h1>
 ```
 
@@ -122,7 +122,7 @@ public class PageController {
 
 让我们向 HTML 页面添加一个下拉列表，其中包含两个语言环境，它们的名称也在我们的属性文件中进行了本地化:
 
-```
+```java
 <span th:text="#{lang.change}"></span>:
 <select id="locales">
     <option value=""></option>
@@ -133,7 +133,7 @@ public class PageController {
 
 然后，我们可以添加一个 jQuery 脚本，该脚本将根据选择的下拉选项，使用相应的`lang`参数调用 `/international` URL:
 
-```
+```java
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
 </script>
 <script type="text/javascript">
@@ -152,7 +152,7 @@ $(document).ready(function() {
 
 为了初始化我们的应用程序，我们必须添加用`@SpringBootApplication`注释的主类:
 
-```
+```java
 @SpringBootApplication
 public class InternationalizationApp {
 

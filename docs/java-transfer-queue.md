@@ -18,7 +18,7 @@
 
 让我们看看`Producer` 类是什么样子的:
 
-```
+```java
 class Producer implements Runnable {
     private TransferQueue<String> transferQueue;
 
@@ -53,7 +53,7 @@ class Producer implements Runnable {
 
 接下来，我们来看看`Consumer`类:
 
-```
+```java
 class Consumer implements Runnable {
 
     private TransferQueue<String> transferQueue;
@@ -91,7 +91,7 @@ class Consumer implements Runnable {
 
 现在，让我们从一个制片人开始我们的节目:
 
-```
+```java
 @Test
 public void whenUseOneProducerAndNoConsumers_thenShouldFailWithTimeout() 
   throws InterruptedException {
@@ -113,7 +113,7 @@ public void whenUseOneProducerAndNoConsumers_thenShouldFailWithTimeout()
 
 我们希望向队列发送三个元素，但是生产者在第一个元素上被阻塞，并且没有消费者从队列中获取该元素`.`我们使用的是`tryTransfer()` 方法，它将阻塞，直到消息被消费或超时。超时后，它将返回`false`表示传输失败，并尝试传输下一个。这是上一个示例的输出:
 
-```
+```java
 Producer: 1 is waiting to transfer...
 can not add an element due to the timeout
 Producer: 1 is waiting to transfer...
@@ -123,7 +123,7 @@ Producer: 1 is waiting to transfer...
 
 让我们测试一个有一个生产者和一个消费者的情况:
 
-```
+```java
 @Test
 public void whenUseOneConsumerAndOneProducer_thenShouldProcessAllMessages() 
   throws InterruptedException {
@@ -148,7 +148,7 @@ public void whenUseOneConsumerAndOneProducer_thenShouldProcessAllMessages()
 
 `TransferQueue`被用作交换点，在消费者消费完队列中的一个元素之前，生产者不能继续向队列中添加另一个元素。让我们看看程序输出:
 
-```
+```java
 Producer: 1 is waiting to transfer...
 Consumer: 1 is waiting to take element...
 Producer: 1 transferred element: A0
@@ -169,7 +169,7 @@ Consumer: 1 received element: A2
 
 在最后一个例子中，我们将考虑拥有多个消费者和多个生产者:
 
-```
+```java
 @Test
 public void whenMultipleConsumersAndProducers_thenProcessAllMessages() 
   throws InterruptedException {
@@ -198,7 +198,7 @@ public void whenMultipleConsumersAndProducers_thenProcessAllMessages()
 
 在这个例子中，我们有两个消费者和两个生产者。当程序启动时，我们看到两个生产者都可以生产一个元素，之后，他们将阻塞，直到其中一个消费者从队列中取出该元素:
 
-```
+```java
 Producer: 1 is waiting to transfer...
 Consumer: 1 is waiting to take element...
 Producer: 2 is waiting to transfer...

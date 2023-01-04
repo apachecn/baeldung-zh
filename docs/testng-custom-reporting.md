@@ -14,7 +14,7 @@ TestNG 提供了自己的报告特性——以 HTML/XML 格式生成报告。如
 
 在我们实现定制日志之前，让我们通过执行`mvn test` 命令`:`来查看默认日志
 
-```
+```java
 Tests run: 11, Failures: 1, Errors: 0, Skipped: 0, 
   Time elapsed: 1.21 sec <<< FAILURE! 
 - in TestSuite
@@ -43,7 +43,7 @@ Tests run: 11, Failures: 1, Errors: 0, Skipped: 0
 
 让我们继续实现一些简单的自定义日志记录:
 
-```
+```java
 public class CustomisedListener implements ITestListener {
 
     // ...
@@ -69,7 +69,7 @@ public class CustomisedListener implements ITestListener {
 
 现在让我们在 XML 配置中包含这个监听器:
 
-```
+```java
 <suite name="My test suite">
     <listeners>
         <listener class-name="com.baeldung.reports.CustomisedListener" />
@@ -88,7 +88,7 @@ public class CustomisedListener implements ITestListener {
 
 输出日志:
 
-```
+```java
 ...
 INFO CUSTOM_LOGS - Started testing on: Sat Apr 22 14:39:43 IST 2017
 INFO CUSTOM_LOGS - Testing: 
@@ -118,7 +118,7 @@ INFO CUSTOM_LOGS - Test completed on: Sat Apr 22 14:39:43 IST 2017
 
 如果我们想使用 TestNG XML 文件运行一个特定的测试套件，我们需要在 surefire-plugin `configuration` 标签中列出它:
 
-```
+```java
 <configuration>
     <suiteXmlFiles>
         <suiteXmlFile>
@@ -130,7 +130,7 @@ INFO CUSTOM_LOGS - Test completed on: Sat Apr 22 14:39:43 IST 2017
 
 在定制日志之后，现在让我们尝试创建一些定制报告，其中我们实现了`org.testng.IReporter` 接口并覆盖了`generateReport()` 方法:
 
-```
+```java
 public void generateReport(
   List<XmlSuite> xmlSuites, 
   List<ISuite> suites, String outputDirectory) {
@@ -156,7 +156,7 @@ public void generateReport(
 
 我们使用`initReportTemplate()`方法加载一个 HTML 模板，`suiteToResults()`函数调用`resultsToRow()`函数来处理生成报告的内部过程:
 
-```
+```java
 private Function<ISuite, Stream<? extends String>> suiteToResults() {
     return suite -> suite.getResults().entrySet()
       .stream()
@@ -189,7 +189,7 @@ private Function<Map.Entry<String, ISuiteResult>,
 
 在 XML 配置文件中包含报表程序:
 
-```
+```java
 <suite name="suite">
     <listeners>
         <listener class-name="com.baeldung.reports.CustomisedReports" />

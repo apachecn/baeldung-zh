@@ -24,7 +24,7 @@ Spring 框架支持自动依赖注入。换句话说，**通过在一个 Spring 
 
 为了在我们的应用程序中使用基于 Java 的配置，让我们启用注释驱动注入来加载我们的 Spring 配置:
 
-```
+```java
 @Configuration
 @ComponentScan("com.baeldung.autowire.sample")
 public class AppConfig {}
@@ -36,7 +36,7 @@ public class AppConfig {}
 
 让我们在应用程序的主类中使用这个注释:
 
-```
+```java
 @SpringBootApplication
 class VehicleFactoryApplication {
     public static void main(String[] args) {
@@ -57,7 +57,7 @@ class VehicleFactoryApplication {
 
 首先，让我们定义一个`fooFormatter` bean:
 
-```
+```java
 @Component("fooFormatter")
 public class FooFormatter {
     public String format() {
@@ -68,7 +68,7 @@ public class FooFormatter {
 
 然后，我们将使用字段定义上的`@Autowired`将这个 bean 注入到`FooService` bean 中:
 
-```
+```java
 @Component
 public class FooService {  
     @Autowired
@@ -84,7 +84,7 @@ public class FooService {
 
 在下面的例子中，创建`FooService`时，setter 方法被调用，并带有`FooFormatter` 的实例:
 
-```
+```java
 public class FooService {
     private FooFormatter fooFormatter;
     @Autowired
@@ -100,7 +100,7 @@ public class FooService {
 
 我们将看到一个`FooFormatter`的实例被 Spring 作为参数注入到`FooService`构造函数中:
 
-```
+```java
 public class FooService {
     private FooFormatter fooFormatter;
     @Autowired
@@ -116,7 +116,7 @@ public class FooService {
 
 因此，它会阻止 Spring 容器成功启动，但以下形式除外:
 
-```
+```java
 Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: 
 No qualifying bean of type [com.autowire.sample.FooDAO] found for dependency: 
 expected at least 1 bean which qualifies as autowire candidate for this dependency. 
@@ -126,7 +126,7 @@ Dependency annotations:
 
 要解决这个问题，我们需要声明所需类型的 bean:
 
-```
+```java
 public class FooService {
     @Autowired(required = false)
     private FooDAO dataAccessor; 
@@ -145,7 +145,7 @@ public class FooService {
 
 首先，我们将定义两个类型为`Formatter`的 beans:
 
-```
+```java
 @Component("fooFormatter")
 public class FooFormatter implements Formatter {
     public String format() {
@@ -154,7 +154,7 @@ public class FooFormatter implements Formatter {
 }
 ```
 
-```
+```java
 @Component("barFormatter")
 public class BarFormatter implements Formatter {
     public String format() {
@@ -165,7 +165,7 @@ public class BarFormatter implements Formatter {
 
 现在让我们尝试将一个`Formatter` bean 注入到`FooService`类中:
 
-```
+```java
 public class FooService {
     @Autowired
     private Formatter formatter;
@@ -174,7 +174,7 @@ public class FooService {
 
 在我们的例子中，Spring 容器有两个具体的`Formatter`实现。因此， **Spring 在构造`FooService`:时会抛出一个`NoUniqueBeanDefinitionException` 异常**
 
-```
+```java
 Caused by: org.springframework.beans.factory.NoUniqueBeanDefinitionException: 
 No qualifying bean of type [com.autowire.sample.Formatter] is defined: 
 expected single matching bean but found 2: barFormatter,fooFormatter 
@@ -182,7 +182,7 @@ expected single matching bean but found 2: barFormatter,fooFormatter
 
 **我们可以通过使用`@Qualifier`注释:**缩小实现来避免这种情况
 
-```
+```java
 public class FooService {
     @Autowired
     @Qualifier("fooFormatter")
@@ -198,7 +198,7 @@ public class FooService {
 
 Spring 还允许我们**创建自己的自定义`@Qualifier`注释**。为此，我们应该为`@Qualifier` 注释提供定义:
 
-```
+```java
 @Qualifier
 @Target({
   ElementType.FIELD, ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER})
@@ -210,7 +210,7 @@ public @interface FormatterType {
 
 然后我们可以在各种实现中使用`FormatterType`来指定一个自定义值:
 
-```
+```java
 @FormatterType("Foo")
 @Component
 public class FooFormatter implements Formatter {
@@ -220,7 +220,7 @@ public class FooFormatter implements Formatter {
 }
 ```
 
-```
+```java
 @FormatterType("Bar")
 @Component
 public class BarFormatter implements Formatter {
@@ -232,7 +232,7 @@ public class BarFormatter implements Formatter {
 
 最后，我们的自定义限定符注释已经可以用于自动连接了:
 
-```
+```java
 @Component
 public class FooService {  
     @Autowired
@@ -249,7 +249,7 @@ Spring 使用 bean 的名称作为默认的限定符值。它将检查容器并�
 
 因此，在我们的例子中，Spring 将`fooFormatter` 属性名与`FooFormatter`实现相匹配。因此，它在构造`FooService`时注入了那个特定的实现:
 
-```
+```java
 public class FooService {
  @Autowired 
 private Formatter fooFormatter; 

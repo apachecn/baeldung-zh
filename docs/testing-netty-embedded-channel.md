@@ -16,7 +16,7 @@ Netty 是一个非常通用的框架，用于编写高性能的异步应用程�
 
 依赖关系可以在 [Maven Central](https://web.archive.org/web/20221208143832/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22io.netty%22%20AND%20a%3A%22netty-all%22) 上找到:
 
-```
+```java
 <dependency>
     <groupId>io.netty</groupId>
     <artifactId>netty-all</artifactId>
@@ -34,14 +34,14 @@ Netty 是一个非常通用的框架，用于编写高性能的异步应用程�
 
 **初始化`EmbeddedChannel `最常见的方式是将`ChannelHandlers `的列表传递给它的构造函数:**
 
-```
+```java
 EmbeddedChannel channel = new EmbeddedChannel(
   new HttpMessageHandler(), new CalculatorOperationHandler());
 ```
 
 如果我们想对处理程序插入管道的顺序有更多的控制，我们可以用默认的构造函数创建一个`EmbeddedChannel`并直接添加处理程序:
 
-```
+```java
 channel.pipeline()
   .addFirst(new HttpMessageHandler())
   .addLast(new CalculatorOperationHandler());
@@ -51,7 +51,7 @@ channel.pipeline()
 
 当我们想要使用自定义配置时，比如降低默认的连接超时值，我们可以通过使用`config()`方法来访问`ChannelConfig `对象:
 
-```
+```java
 DefaultChannelConfig channelConfig = (DefaultChannelConfig) channel
   .config();
 channelConfig.setConnectTimeoutMillis(500);
@@ -66,14 +66,14 @@ channelConfig.setConnectTimeoutMillis(500);
 
 **read 方法检索并删除入站/出站队列中的第一个元素。**当我们需要在不删除任何元素的情况下访问整个消息队列时，我们可以使用`outboundMessages() `方法:
 
-```
+```java
 Object lastOutboundMessage = channel.readOutbound();
 Queue<Object> allOutboundMessages = channel.outboundMessages();
 ```
 
 **当消息成功添加到`Channel:`** 的入站/出站管道时，写方法返回`true `
 
-```
+```java
 channel.writeInbound(httpRequest)
 ```
 
@@ -83,7 +83,7 @@ channel.writeInbound(httpRequest)
 
 让我们看一个简单的例子，在这个例子中，我们想测试一个由两个`ChannelHandlers `组成的管道，这两个管道接收一个 HTTP 请求，并期待一个包含计算结果的 HTTP 响应:
 
-```
+```java
 EmbeddedChannel channel = new EmbeddedChannel(
   new HttpMessageHandler(), new CalculatorOperationHandler());
 ```
@@ -92,7 +92,7 @@ EmbeddedChannel channel = new EmbeddedChannel(
 
 现在，让我们编写 HTTP 请求，看看入站管道是否处理它:
 
-```
+```java
 FullHttpRequest httpRequest = new DefaultFullHttpRequest(
   HttpVersion.HTTP_1_1, HttpMethod.GET, "/calculate?a=10&b;=5");
 httpRequest.headers().add("Operator", "Add");
@@ -106,13 +106,13 @@ assertThat(inboundChannelResponse).isEqualTo(15);
 
 现在，让我们检查我们的 Netty 服务器是否用正确的 HTTP 响应消息进行响应。为此，我们将检查出站管道上是否存在消息:
 
-```
+```java
 assertThat(channel.outboundMessages().size()).isEqualTo(1);
 ```
 
 在本例中，出站消息是一个 HTTP 响应，因此让我们检查内容是否正确。我们通过读取出站管道中的最后一条消息来做到这一点:
 
-```
+```java
 FullHttpResponse httpResponse = channel.readOutbound();
 String httpResponseContent = httpResponse.content()
   .toString(Charset.defaultCharset());
@@ -129,7 +129,7 @@ assertThat(httpResponseContent).isEqualTo("15");
 
 这样我们可以捕捉到`Exception `并检查`ChannelHandler`是否应该抛出它:
 
-```
+```java
 assertThatThrownBy(() -> {
     channel.pipeline().fireChannelRead(wrongHttpRequest);
     channel.checkException();

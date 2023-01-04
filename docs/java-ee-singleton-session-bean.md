@@ -14,7 +14,7 @@
 
 让我们为 EJB 的部署定义 EJB API 和嵌入式 EJB 容器的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>javax</groupId>
     <artifactId>javaee-api</artifactId>
@@ -65,7 +65,7 @@ bean 的单个实例在多个客户机之间共享，并且可以被并发访问
 
 对于这个例子，让我们使用`javax.ejb.Local`注释来定义接口:
 
-```
+```java
 @Local
 public interface CountryState {
    List<String> getStates(String country);
@@ -79,7 +79,7 @@ public interface CountryState {
 
 此外，让我们用 javax `.ejb.Startup`注释标记 bean，通知 EJB 容器在启动时初始化 bean:
 
-```
+```java
 @Singleton
 @Startup
 public class CountryStateContainerManagedBean implements CountryState {
@@ -93,7 +93,7 @@ public class CountryStateContainerManagedBean implements CountryState {
 
 `@DependsOn`注释的值是我们的 Bean 所依赖的 Bean 类名的数组:
 
-```
+```java
 @Singleton 
 @Startup 
 @DependsOn({"DependentBean1", "DependentBean2"}) 
@@ -106,7 +106,7 @@ public class CountryStateCacheBean implements CountryState {
 
 有了这个注释，容器将在实例化 bean 时调用它:
 
-```
+```java
 @PostConstruct
 public void initialize() {
 
@@ -138,7 +138,7 @@ public void initialize() {
 
 让我们使用带有值`javax.ejb.ConcurrencyManagementType.CONTAINER`的`@ConcurrencyManagement` 注释:
 
-```
+```java
 @Singleton
 @Startup
 @ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
@@ -157,7 +157,7 @@ public class CountryStateContainerManagedBean implements CountryState {
 
 为了允许客户端并发读取数据，我们将用`@Lock(LockType.READ)`来注释`getStates()`:
 
-```
+```java
 @Singleton 
 @Startup 
 @ConcurrencyManagement(ConcurrencyManagementType.CONTAINER) 
@@ -191,7 +191,7 @@ public class CountryStateContainerManagedBean implements CountryState {
 
 对于 bean 管理的并发性，让我们为单一会话 Bean 类定义带有`javax.ejb.ConcurrencyManagementType.BEAN`值的`@ConcurrencyManagement`注释:
 
-```
+```java
 @Singleton 
 @Startup 
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN) 
@@ -202,7 +202,7 @@ public class CountryStateBeanManagedBean implements CountryState {
 
 接下来，我们将编写使用`synchronized`关键字改变 bean 状态的`setStates()`方法:
 
-```
+```java
 public synchronized void setStates(String country, List<String> states) {
     countryStatesMap.put(country, states);
 }
@@ -220,7 +220,7 @@ public synchronized void setStates(String country, List<String> states) {
 
 首先，我们将创建一个`EJBContainer`的实例。该容器实例将搜索并初始化类路径中存在的所有 EJB 模块:
 
-```
+```java
 public class CountryStateCacheBeanTest {
 
     private EJBContainer ejbContainer = null;
@@ -237,7 +237,7 @@ public class CountryStateCacheBeanTest {
 
 接下来，我们将从初始化的容器对象中获取`javax.naming.Context`对象。使用`Context` 实例，我们可以获得对`CountryStateContainerManagedBean`的引用并调用方法:
 
-```
+```java
 @Test
 public void whenCallGetStatesFromContainerManagedBean_ReturnsStatesForCountry() throws Exception {
 
@@ -269,7 +269,7 @@ public void whenCallSetStatesFromContainerManagedBean_SetsStatesForCountry() thr
 
 类似地，我们可以使用`Context`实例来获取 Bean 管理的单例 Bean 的引用，并调用相应的方法:
 
-```
+```java
 @Test
 public void whenCallGetStatesFromBeanManagedBean_ReturnsStatesForCountry() throws Exception {
 
@@ -300,7 +300,7 @@ public void whenCallSetStatesFromBeanManagedBean_SetsStatesForCountry() throws E
 
 通过关闭`close()`方法中的`EJBContainer`来结束我们的测试:
 
-```
+```java
 @After
 public void close() {
     if (ejbContainer != null) {

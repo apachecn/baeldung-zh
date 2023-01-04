@@ -12,7 +12,7 @@
 
 为了使用`Reflections`，我们需要在我们的项目中包含它的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.reflections</groupId>
     <artifactId>reflections</artifactId>
@@ -36,7 +36,7 @@ URL 告诉库要扫描类路径的哪些部分，而扫描器是扫描给定 URL
 
 例如，我们可以通过使用代表包名、类或类加载器的`String`实例化`Reflections`来添加 URL:
 
-```
+```java
 Reflections reflections = new Reflections("com.baeldung.reflections");
 Reflections reflections = new Reflections(MyClass.class);
 Reflections reflections = new Reflections(MyClass.class.getClassLoader());
@@ -44,7 +44,7 @@ Reflections reflections = new Reflections(MyClass.class.getClassLoader());
 
 此外，因为`Reflections`有一个 varargs 构造函数，我们可以组合所有上述配置的类型来实例化它:
 
-```
+```java
 Reflections reflections = new Reflections("com.baeldung.reflections", MyClass.class);
 ```
 
@@ -52,7 +52,7 @@ Reflections reflections = new Reflections("com.baeldung.reflections", MyClass.cl
 
 我们可以通过使用`ConfigurationBuilder`获得相同的结果:
 
-```
+```java
 Reflections reflections = new Reflections(new ConfigurationBuilder()
   .setUrls(ClasspathHelper.forPackage("com.baeldung.reflections"))));
 ```
@@ -77,7 +77,7 @@ Reflections reflections = new Reflections(new ConfigurationBuilder()
 
 例如，让我们添加上面列表中的前两个扫描仪:
 
-```
+```java
 Reflections reflections = new Reflections("com.baeldung.reflections"), 
   new FieldAnnotationsScanner(), 
   new MethodParameterScanner());
@@ -85,7 +85,7 @@ Reflections reflections = new Reflections("com.baeldung.reflections"),
 
 同样，这两个扫描器可以通过使用`ConfigurationBuilder`助手类来配置:
 
-```
+```java
 Reflections reflections = new Reflections(new ConfigurationBuilder()
   .setUrls(ClasspathHelper.forPackage("com.baeldung.reflections"))
   .setScanners(new FieldAnnotationsScanner(), new MethodParameterScanner()));
@@ -97,7 +97,7 @@ Reflections reflections = new Reflections(new ConfigurationBuilder()
 
 我们可以把它作为一个参数添加到`Reflections`构造函数中，或者通过`ConfigurationBuilder`:
 
-```
+```java
 Reflections reflections = new Reflections(new ConfigurationBuilder()
   .setUrls(ClasspathHelper.forPackage("com.baeldung.reflections"))
   .setScanners(new SubTypesScanner(), new TypeAnnotationsScanner())
@@ -112,7 +112,7 @@ Reflections reflections = new Reflections(new ConfigurationBuilder()
 
 举例来说，我们可以配置过滤器来排除对测试包的扫描:
 
-```
+```java
 Reflections reflections = new Reflections(new ConfigurationBuilder()
   .setUrls(ClasspathHelper.forPackage("com.baeldung.reflections"))
   .setScanners(new SubTypesScanner(), new TypeAnnotationsScanner())
@@ -131,7 +131,7 @@ Reflections reflections = new Reflections(new ConfigurationBuilder()
 
 让我们从检索`Reflections`提供的所有扫描仪开始:
 
-```
+```java
 public Set<Class<? extends Scanner>> getReflectionsSubTypes() {
     Reflections reflections = new Reflections(
       "org.reflections", new SubTypesScanner());
@@ -145,7 +145,7 @@ public Set<Class<? extends Scanner>> getReflectionsSubTypes() {
 
 所以，让我们检索一下`java.util.function `包的所有功能接口:
 
-```
+```java
 public Set<Class<?>> getJDKFunctinalInterfaces() {
     Reflections reflections = new Reflections("java.util.function", 
       new TypeAnnotationsScanner());
@@ -157,7 +157,7 @@ public Set<Class<?>> getJDKFunctinalInterfaces() {
 
 现在，让我们使用`MethodAnnotationsScanner`来获取用给定注释注释的所有方法:
 
-```
+```java
 public Set<Method> getDateDeprecatedMethods() {
     Reflections reflections = new Reflections(
       "java.util.Date", 
@@ -170,7 +170,7 @@ public Set<Method> getDateDeprecatedMethods() {
 
 此外，我们可以获得所有不推荐使用的构造函数:
 
-```
+```java
 public Set<Constructor> getDateDeprecatedConstructors() {
     Reflections reflections = new Reflections(
       "java.util.Date", 
@@ -183,7 +183,7 @@ public Set<Constructor> getDateDeprecatedConstructors() {
 
 此外，我们可以使用`MethodParameterScanner`找到给定参数类型的所有方法:
 
-```
+```java
 public Set<Method> getMethodsWithDateParam() {
     Reflections reflections = new Reflections(
       java.text.SimpleDateFormat.class, 
@@ -198,7 +198,7 @@ public Set<Method> getMethodsWithDateParam() {
 
 假设我们想要找到返回`void`的`SimpleDateFormat` 的所有方法:
 
-```
+```java
 public Set<Method> getMethodsWithVoidReturn() {
     Reflections reflections = new Reflections(
       "java.text.SimpleDateFormat", 
@@ -211,7 +211,7 @@ public Set<Method> getMethodsWithVoidReturn() {
 
 最后，让我们使用`ResourcesScanner`在我们的类路径中查找给定的文件名:
 
-```
+```java
 public Set<String> getPomXmlPaths() {
     Reflections reflections = new Reflections(new ResourcesScanner());
     return reflections.getResources(Pattern.compile(".*pom\\.xml"));
@@ -238,7 +238,7 @@ public Set<String> getPomXmlPaths() {
 
 让我们将其配置为将扫描结果保存到文件中:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.gmavenplus</groupId>
     <artifactId>gmavenplus-plugin</artifactId>
@@ -265,7 +265,7 @@ public Set<String> getPomXmlPaths() {
 
 稍后，通过调用`collect()`方法，**我们可以检索保存的结果** **并使它们可供进一步使用，而不必执行新的扫描:**
 
-```
+```java
 Reflections reflections
   = isProduction() ? Reflections.collect() : new Reflections("com.baeldung.reflections");
 ```

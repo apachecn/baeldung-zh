@@ -20,7 +20,7 @@ Maven 是一个构建自动化工具，允许 Java 开发人员从一个集中�
 
 让我们从添加插件到我们的`pom.xml`开始:
 
-```
+```java
 <project>
     ...
     <build>
@@ -50,7 +50,7 @@ Maven 是一个构建自动化工具，允许 Java 开发人员从一个集中�
 
 然后，让我们在项目根目录下创建一个名为`source-files.`的文件夹，其中包含一个我们想要复制的文本文件:`foo.txt`。然后，我们将向`maven-resources-plugin`添加一个配置元素，以将该文件复制到`target/destination-folder`:
 
-```
+```java
 <plugin>
     <artifactId>maven-resources-plugin</artifactId>
     <version>3.0.2</version>
@@ -85,7 +85,7 @@ Maven 是一个构建自动化工具，允许 Java 开发人员从一个集中�
 
 `pom.xml`中的插件定义如下:
 
-```
+```java
 <project>
     [...]
     <build>
@@ -116,7 +116,7 @@ Maven 是一个构建自动化工具，允许 Java 开发人员从一个集中�
 
 我们将执行与上面相同的示例:将`source-files/foo.txt`复制到`target/destination-folder/foo.txt`——我们将通过定义一个 Ant 任务来执行复制来实现这一点:
 
-```
+```java
 <configuration>
     <target>
         <mkdir dir="${basedir}/target/destination-folder" />
@@ -135,7 +135,7 @@ Maven 是一个构建自动化工具，允许 Java 开发人员从一个集中�
 
 可以通过将以下条目添加到我们的`pom.xml`来安装该插件:
 
-```
+```java
 <project>
     ...
     <build>
@@ -164,7 +164,7 @@ Maven 是一个构建自动化工具，允许 Java 开发人员从一个集中�
 
 我们现在将添加一些配置来执行复制:`source-files/foo.txt`到`target/destination-folder/foo.txt`:
 
-```
+```java
 <configuration>
     <sourceFile>source-files/foo.txt</sourceFile>
     <destinationFile>target/destination-folder/foo.txt</destinationFile>

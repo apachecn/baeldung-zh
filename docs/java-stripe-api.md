@@ -14,7 +14,7 @@ Stripe 提供了一个抽象层，降低了接收支付的复杂性。因此，*
 
 为了在项目中使用 Java 的 [Stripe API，我们将相应的依赖项添加到我们的`pom.xml`:](https://web.archive.org/web/20221024195932/https://github.com/stripe/stripe-java)
 
-```
+```java
 <dependency>
     <groupId>com.stripe</groupId>
     <artifactId>stripe-java</artifactId>
@@ -26,7 +26,7 @@ Stripe 提供了一个抽象层，降低了接收支付的复杂性。因此，*
 
 对于我们的示例项目，我们将利用`spring-boot-starter-parent`:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -38,7 +38,7 @@ Stripe 提供了一个抽象层，降低了接收支付的复杂性。因此，*
 
 因为我们使用`spring-boot-starter-parent`来管理这些库的版本，所以我们不必在`pom.xml`中包含它们的版本:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId> 
     <artifactId>spring-boot-starter-web</artifactId>
@@ -108,7 +108,7 @@ Stripe 提供了一个抽象层，降低了接收支付的复杂性。因此，*
 
 然后，我们将分派到保存签出表单的签出视图:
 
-```
+```java
 @Controller
 public class CheckoutController {
 
@@ -133,7 +133,7 @@ public class CheckoutController {
 
 “用卡支付”按钮和结帐对话框是通过添加一个内部带有脚本的表单来实现的，该表单正确配置了数据属性:
 
-```
+```java
 <form action='/charge' method='POST' id='checkout-form'>
     <input type='hidden' th:value='${amount}' name='amount' />
     <label>Price:<span th:text='${amount/100}' /></label>
@@ -172,7 +172,7 @@ public class CheckoutController {
 
 让我们定义一下在收费操作中我们将用作业务实体的`ChargeRequest` POJO:
 
-```
+```java
 @Data
 public class ChargeRequest {
 
@@ -191,7 +191,7 @@ public class ChargeRequest {
 
 让我们写一个`StripeService`类给**传达实际的充电操作给条带**:
 
-```
+```java
 @Service
 public class StripeService {
 
@@ -227,7 +227,7 @@ public class StripeService {
 
 请注意，“`ChargeRequest`”参数会自动初始化为表单中包含的请求参数“`amount`”、“`stripeEmail`”和“`stripeToken`”:
 
-```
+```java
 @Controller
 public class ChargeController {
 
@@ -267,7 +267,7 @@ public class ChargeController {
 
 用于显示结果的 HTML 是一个基本的百里香模板，它显示一个 charge 操作的结果。`ChargeController`提示用户充电操作是否成功:
 
-```
+```java
 <!DOCTYPE html>
 <html xmlns='http://www.w3.org/1999/xhtml' xmlns:th='http://www.thymeleaf.org'>
     <head>

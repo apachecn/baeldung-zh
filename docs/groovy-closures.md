@@ -24,7 +24,7 @@
 
 ### 3.1.基本声明
 
-```
+```java
 def printWelcome = {
     println "Welcome to Closures!"
 }
@@ -32,7 +32,7 @@ def printWelcome = {
 
 这里，闭包`printWelcome`在被调用时打印一条语句。现在，让我们写一个一元闭包的快速例子:
 
-```
+```java
 def print = { name ->
     println name 
 }
@@ -42,7 +42,7 @@ def print = { name ->
 
 **由于闭包的定义看起来类似于方法**，让我们来比较一下:
 
-```
+```java
 def formatToLowerCase(name) {
     return name.toLowerCase()
 }
@@ -59,14 +59,14 @@ def formatToLowerCaseClosure = { name ->
 
 例如，作为常规方法:
 
-```
+```java
 print("Hello! Closure")
 formatToLowerCaseClosure("Hello! Closure") 
 ```
 
 用`call`方法执行:
 
-```
+```java
 print.call("Hello! Closure") 
 formatToLowerCaseClosure.call("Hello! Closure")
 ```
@@ -79,7 +79,7 @@ Groovy 闭包的参数类似于常规方法的参数。
 
 我们可以定义一个没有参数的一元闭包，因为**当没有定义参数时，Groovy 会假设一个名为`it”`** 的隐式参数:
 
-```
+```java
 def greet = {
     return "Hello! ${it}"
 }
@@ -90,7 +90,7 @@ assert greet("Alex") == "Hello! Alex"
 
 这里有一个闭包，它接受两个参数并返回它们相乘的结果:
 
-```
+```java
 def multiply = { x, y -> 
     return x*y 
 }
@@ -101,7 +101,7 @@ assert multiply(2, 4) == 8
 
 在到目前为止的例子中，我们的参数没有提供任何类型。我们还可以设置闭包参数的类型。例如，让我们重写`multiply`方法来考虑其他操作:
 
-```
+```java
 def calculate = {int x, int y, String operation ->
     def result = 0    
     switch(operation) {
@@ -128,7 +128,7 @@ assert calculate(43, 8, "DIV") == 5.375
 
 我们可以在闭包中声明可变数量的参数，类似于常规方法。例如:
 
-```
+```java
 def addAll = { int... args ->
     return args.sum()
 }
@@ -145,7 +145,7 @@ assert addAll(12, 10, 14) == 36
 
 因此，我们将编写`volume`方法，该方法将闭包`areaCalculator`作为参数，我们将在调用期间传递面积计算的实现:
 
-```
+```java
 def volume(Closure areaCalculator, int... dimensions) {
     if(dimensions.size() == 3) {
         return areaCalculator(dimensions[0], dimensions[1]) * dimensions[2]
@@ -160,7 +160,7 @@ assert volume({ l, b -> return l*b }, 12, 6, 10) == 720
 
 让我们用同样的方法求一个圆锥体的体积:
 
-```
+```java
 assert volume({ radius -> return Math.PI*radius*radius/3 }, 5, 10) == Math.PI * 250
 ```
 
@@ -170,7 +170,7 @@ assert volume({ radius -> return Math.PI*radius*radius/3 }, 5, 10) == Math.PI * 
 
 例如，让我们给已经讨论过的`calculate`闭包添加一个日志功能:
 
-```
+```java
 def calculate = {int x, int y, String operation ->
 
     def log = {
@@ -204,7 +204,7 @@ def calculate = {int x, int y, String operation ->
 
 Groovy `String`通常在创建时被评估和插入。例如:
 
-```
+```java
 def name = "Samwell"
 def welcomeMsg = "Welcome! $name"
 
@@ -213,14 +213,14 @@ assert welcomeMsg == "Welcome! Samwell"
 
 即使我们修改了变量 `name`的值，变量`welcomeMsg`也不会改变:
 
-```
+```java
 name = "Tarly"
 assert welcomeMsg != "Welcome! Tarly"
 ```
 
 **闭合插值允许我们提供`String` s** 的惰性评估，从它们周围的当前值重新计算。例如:
 
-```
+```java
 def fullName = "Tarly Samson"
 def greetStr = "Hello! ${-> fullName}"
 
@@ -229,7 +229,7 @@ assert greetStr == "Hello! Tarly Samson"
 
 只是这一次，更改变量也会影响插值字符串的值:
 
-```
+```java
 fullName = "Jon Smith"
 assert greetStr == "Hello! Jon Smith"
 ```
@@ -238,7 +238,7 @@ assert greetStr == "Hello! Jon Smith"
 
 Groovy 集合在其许多 API 中使用闭包。例如，让我们定义一个条目列表，并使用一元闭包`each`打印它们，它有一个隐式参数:
 
-```
+```java
 def list = [10, 11, 12, 13, 14, true, false, "BUNTHER"]
 
 list.each {
@@ -250,7 +250,7 @@ assert [13, 14] == list.findAll{ it instanceof Integer && it >= 13 }
 
 通常，基于某种标准，我们可能需要从地图中创建一个列表。例如:
 
-```
+```java
 def map = [1:10, 2:30, 4:5]
 
 assert [10, 60, 20] == map.collect{it.key * it.value} 

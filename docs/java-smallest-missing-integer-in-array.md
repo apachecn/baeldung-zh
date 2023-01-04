@@ -22,7 +22,7 @@
 
 我们来考虑下面这个排序后的数组:`[0, 1, 3, 4, 6, 7]`。现在，让我们看看哪个值匹配哪个索引:
 
-```
+```java
 Index: 0 1 2 3 4 5
 Value: 0 1 3 4 6 7
 ```
@@ -31,7 +31,7 @@ Value: 0 1 3 4 6 7
 
 用 Java 实现这个算法怎么样？让我们首先用方法`searchInSortedArray()`创建一个类`SmallestMissingPositiveInteger`:
 
-```
+```java
 public class SmallestMissingPositiveInteger {
     public static int searchInSortedArray(int[] input) {
         // ...
@@ -41,7 +41,7 @@ public class SmallestMissingPositiveInteger {
 
 现在，我们可以迭代数组，**搜索第一个不包含自身作为值**的索引，并将其作为结果返回:
 
-```
+```java
 for (int i = 0; i < input.length; i++) {
     if (i != input[i]) {
         return i;
@@ -51,19 +51,19 @@ for (int i = 0; i < input.length; i++) {
 
 最后，**如果我们完成了循环而没有找到丢失的元素，我们必须返回下一个整数，这是数组长度**，因为我们从索引`0`开始:
 
-```
+```java
 return input.length;
 ```
 
 让我们检查一下这一切是否如预期的那样工作。想象一个从`0`到`5`的整数数组，缺少数字`3`:
 
-```
+```java
 int[] input = new int[] {0, 1, 2, 4, 5};
 ```
 
 然后，如果我们搜索第一个丢失的整数，应该返回`3`:
 
-```
+```java
 int result = SmallestMissingPositiveInteger.searchInSortedArray(input);
 
 assertThat(result).isEqualTo(3);
@@ -71,13 +71,13 @@ assertThat(result).isEqualTo(3);
 
 但是，如果我们在一个没有丢失任何整数的数组中搜索一个丢失的数字:
 
-```
+```java
 int[] input = new int[] {0, 1, 2, 3, 4, 5};
 ```
 
 我们会发现第一个缺失的整数是`6`，它是数组的长度:
 
-```
+```java
 int result = SmallestMissingPositiveInteger.searchInSortedArray(input);
 
 assertThat(result).isEqualTo(input.length);
@@ -95,7 +95,7 @@ assertThat(result).isEqualTo(input.length);
 
 **因此，我们将重用我们的算法，但首先，我们需要对输入数组进行排序。**为了做到这一点，我们将使用`Arrays.sort()`:
 
-```
+```java
 Arrays.sort(input);
 ```
 
@@ -103,19 +103,19 @@ Arrays.sort(input);
 
 之后，我们可以用现在排序的输入调用我们的算法:
 
-```
+```java
 return searchInSortedArray(input);
 ```
 
 就这样，我们现在可以检查一切是否如预期的那样工作。让我们想象一下下面的数组，其中有未排序的整数和缺少的数字`1`和`3`:
 
-```
+```java
 int[] input = new int[] {4, 2, 0, 5};
 ```
 
 由于`1`是最小的缺失整数，我们希望它是调用我们的方法的结果:
 
-```
+```java
 int result = SmallestMissingPositiveInteger.searchInUnsortedArraySortingFirst(input);
 
 assertThat(result).isEqualTo(1);
@@ -123,7 +123,7 @@ assertThat(result).isEqualTo(1);
 
 现在，让我们在一个没有遗漏数字的数组上尝试一下:
 
-```
+```java
 int[] input = new int[] {4, 5, 1, 3, 0, 2};
 
 int result = SmallestMissingPositiveInteger.searchInUnsortedArraySortingFirst(input);
@@ -141,7 +141,7 @@ assertThat(result).isEqualTo(input.length);
 
 之后，让我们创建布尔数组，`flags`和**对于输入数组中与`boolean`数组的索引相匹配的每个整数，我们将相应的值设置为`true`** :
 
-```
+```java
 boolean[] flags = new boolean[input.length];
 for (int number : input) {
     if (number < flags.length) {
@@ -152,7 +152,7 @@ for (int number : input) {
 
 现在，我们的`flags`数组为输入数组中的每个整数保存`true`，否则保存`false`。然后，我们可以**遍历`flags`数组并返回第一个索引保存`false`** 。如果没有，我们返回数组长度:
 
-```
+```java
 for (int i = 0; i < flags.length; i++) {
     if (!flags[i]) {
         return i;
@@ -164,13 +164,13 @@ return flags.length;
 
 同样，让我们用我们的例子来试试这个算法。我们将首先重用缺少`1`和`3`的数组:
 
-```
+```java
 int[] input = new int[] {4, 2, 0, 5};
 ```
 
 然后，当用我们的新算法搜索最小的缺失整数时，答案仍然是`1`:
 
-```
+```java
 int result = SmallestMissingPositiveInteger.searchInUnsortedArrayBooleanArray(input);
 
 assertThat(result).isEqualTo(1);
@@ -178,7 +178,7 @@ assertThat(result).isEqualTo(1);
 
 对于整个数组，答案也没有改变，仍然是`6`:
 
-```
+```java
 int[] input = new int[] {4, 5, 1, 3, 0, 2};
 
 int result = SmallestMissingPositiveInteger.searchInUnsortedArrayBooleanArray(input);

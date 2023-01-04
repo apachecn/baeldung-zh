@@ -12,7 +12,7 @@
 
 让我们看一个简单的 Java 接口示例:
 
-```
+```java
 public interface Electronic {
 
     // Constant variable
@@ -40,7 +40,7 @@ public interface Electronic {
 
 接下来，让我们也创建一个实现我们刚刚创建的`Electronic`接口的`Computer`类:
 
-```
+```java
 public class Computer implements Electronic {
 
     @Override
@@ -75,7 +75,7 @@ public class Computer implements Electronic {
 
 我们使用接口来添加某些不相关的类可以使用的行为功能。例如，`Comparable`、`Comparator`和`Cloneable`是可以由不相关的类实现的 Java 接口。下面是一个用于比较`Employee `类的两个实例的`Comparator`接口的例子:
 
-```
+```java
 public class Employee {
 
     private double salary;
@@ -112,7 +112,7 @@ Java 类支持单一继承。然而，通过使用接口，我们也能够实现
 
 例如，在下面的例子中，我们注意到`Car`类实现了`Fly`和`Transform`接口。通过这样做，它继承了方法`fly`和`transform`:
 
-```
+```java
 public interface Transform {
     void transform();
 }
@@ -143,7 +143,7 @@ public class Car implements Fly, Transform {
 
 让我们从定义`Shape`接口开始:
 
-```
+```java
 public interface Shape {
     String name();
 } 
@@ -151,7 +151,7 @@ public interface Shape {
 
 现在让我们也创建一个`Circle`类:
 
-```
+```java
 public class Circle implements Shape {
 
     @Override
@@ -163,7 +163,7 @@ public class Circle implements Shape {
 
 还有`Square` 类:
 
-```
+```java
 public class Square implements Shape {
 
     @Override
@@ -175,7 +175,7 @@ public class Square implements Shape {
 
 最后，是时候使用我们的`Shape`接口和它的实现来看看多态的作用了。让我们实例化一些`Shape`对象，将它们添加到一个`List`T3 中，最后，在一个循环中打印它们的名称:
 
-```
+```java
 List<Shape> shapes = new ArrayList<>();
 Shape circleShape = new Circle();
 Shape squareShape = new Square();
@@ -204,7 +204,7 @@ Java 7 及更低版本中的传统接口不提供向后兼容性。
 
 当一个接口`extends`继承另一个接口时，它继承了该接口的所有抽象方法。让我们首先创建两个接口，`HasColor`和`Shape`:
 
-```
+```java
 public interface HasColor {
     String getColor();
 }
@@ -220,7 +220,7 @@ public interface Box extends HasColor {
 
 当一个抽象类实现一个接口时，它继承它所有的抽象和默认方法。让我们考虑一下`Transform`接口和实现它的`abstract`类`Vehicle`:
 
-```
+```java
 public interface Transform {
 
     void transform();

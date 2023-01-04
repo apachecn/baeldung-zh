@@ -18,7 +18,7 @@
 
 让我们调用两个类中的`toString`来看看区别:
 
-```
+```java
 Date: Sat Oct 19 17:12:30 2019
 OffsetDateTime: 2019-10-19T17:12:30.174Z
 ```
@@ -29,7 +29,7 @@ OffsetDateTime: 2019-10-19T17:12:30.174Z
 
 将`Date`转换成`OffsetDateTime`非常简单。如果我们的`Date`是 UTC，我们可以用一个表达式来转换它:
 
-```
+```java
 Date date = new Date();
 OffsetDateTime offsetDateTime = date.toInstant()
   .atOffset(ZoneOffset.UTC);
@@ -39,7 +39,7 @@ OffsetDateTime offsetDateTime = date.toInstant()
 
 假设我们最初的`Date`是+3:30(德黑兰时间):
 
-```
+```java
 int hour = 3;
 int minute = 30;
 offsetDateTime = date.toInstant()

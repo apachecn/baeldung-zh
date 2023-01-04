@@ -25,7 +25,7 @@
 
 如果`config.xml`文件不在上述路径中，我们可以使用 [`find`](https://web.archive.org/web/20221208143832/https://man7.org/linux/man-pages/man1/find.1.html) 命令在整个机器中搜索:
 
-```
+```java
 $ find / -name config.xml
 ```
 
@@ -33,13 +33,13 @@ $ find / -name config.xml
 
 一旦我们找到了`config.xml`文件，让我们将下面的安全属性从`true`更新为`false`:
 
-```
+```java
 <useSecurity>false</useSecurity>
 ```
 
 如果无法访问[编辑器](/web/20221208143832/https://www.baeldung.com/linux/vi-editor)，让我们使用 [`sed`](https://web.archive.org/web/20221208143832/https://www.gnu.org/software/sed/manual/sed.html) 命令更新`config.xml` 文件:
 
-```
+```java
 $ sed -i 's/<useSecurity>true<\/useSecurity>/<useSecurity>false<\/useSecurity>/g' /var/lib/jenkins/config.xml
 ```
 
@@ -47,7 +47,7 @@ $ sed -i 's/<useSecurity>true<\/useSecurity>/<useSecurity>false<\/useSecurity>/g
 
 最后，我们将重新启动 Jenkins 以使更改生效。如果 Jenkins 是使用软件包管理器安装的，请使用以下命令:
 
-```
+```java
 $ systemctl restart jenkins
 ```
 
@@ -63,13 +63,13 @@ $ systemctl restart jenkins
 
 在进一步深入之前，让我们深入研究一下 Jenkins 目录结构。Jenkins 创建了一个`users`目录来存储所有用户帐户的详细信息。这个目录将存在于 Jenkins 工作目录中。我们将在以下文件路径中找到对应于每个 Jenkins 用户的`config.xml`文件:
 
-```
+```java
 <Jenkins_Working_Directory>/users/<Jenkins_User_Folder>/config.xml
 ```
 
 这里的`Jenkins_Working_Directory`是一个存储所有日志、配置和构建工件的目录。Jenkins 工作目录的默认路径是`/var/lib/jenkins.` 。 `Jenkins_User_Folder` 是 Jenkins 用户的文件夹名:
 
-```
+```java
 $ cd /var/lib/jenkins/users/
 $ ls
 user1_4268539434599263174  user2_948489902389144094  user3_162302090988132370  users.xml
@@ -92,7 +92,7 @@ config.xml
 
 现在让我们替换用户`config.xml`文件中的`passwordHash`:
 
-```
+```java
 <passwordHash>#jbcrypt:$2a$10$a7XcruSVvyb0.6ckv97/hOqqTuVx.qzuf7oq9He6HG7puq8DzYwFq</passwordHash>
 ```
 
@@ -110,7 +110,7 @@ config.xml
 
 默认情况下，Jenkins 会在初始安装时提供注册选项。让我们通过将主`config.xml` ( `/var/lib/jenkins/config.xml`或`~/.jenkins/config.xml`)文件中的`disableSignup`属性设置为`false`来启用它:
 
-```
+```java
 <disableSignup>false</disableSignup>
 ```
 
@@ -120,7 +120,7 @@ config.xml
 
 让我们首先从 Jenkins 控制台注册一个新用户(`myuser`)。然后，通过更新主`config.xml`文件，将管理员权限赋予该用户:
 
-```
+```java
 <roleMap type="globalRoles">
     <role name="admin" pattern=".*">
         <permissions>
@@ -157,7 +157,7 @@ config.xml
 
 我们可以从`config.xml`中删除`useSecurity`和`authorizationStrategy`安全属性，以禁用 Jenkins 中的安全设置:
 
-```
+```java
 $ sudo ex +g/useSecurity/d +g/authorizationStrategy/d -scwq /var/lib/jenkins/config.xml
 ```
 
@@ -167,7 +167,7 @@ $ sudo ex +g/useSecurity/d +g/authorizationStrategy/d -scwq /var/lib/jenkins/con
 
 我们还可以删除 Jenkins `config.xml`文件来禁用安全性:
 
-```
+```java
 $ rm -f /var/lib/jenkins/config.xml
 ```
 

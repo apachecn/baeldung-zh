@@ -24,7 +24,7 @@ MicroProfile 的目标是定义构建微服务的标准 API，并在多个 Micro
 
 构建 Eclipse MicroProfile 应用程序所需的所有依赖项都由这个 BOM(物料清单)依赖项提供:
 
-```
+```java
 <dependency>
     <groupId>org.eclipse.microprofile</groupId>
     <artifactId>microprofile</artifactId>
@@ -40,7 +40,7 @@ MicroProfile 的目标是定义构建微服务的标准 API，并在多个 Micro
 
 让我们从创建一个快速资源类开始:
 
-```
+```java
 public class Book {
     private String id;
     private String name;
@@ -58,7 +58,7 @@ public class Book {
 
 现在让我们创建一个 CDI 托管 bean 作为图书表示的存储:
 
-```
+```java
 @ApplicationScoped
 public class BookManager {
 
@@ -93,7 +93,7 @@ JAX-RS 应用程序标识了我们在 Web 应用程序中公开资源的基础 U
 
 让我们创建以下 JAX 遥感应用程序:
 
-```
+```java
 @ApplicationPath("/library")
 public class LibraryApplication extends Application {
 }
@@ -111,7 +111,7 @@ public class LibraryApplication extends Application {
 
 现在，我们将创建一个公开该表示的 JAX-RS 端点:
 
-```
+```java
 @Path("books")
 @RequestScoped
 public class BookEndpoint {
@@ -162,7 +162,7 @@ JAX RS 运行时支持 JSON-P 开箱即用，这样我们就可以使用`JsonObj
 
 为了将 JSON 输入流封送到`Book` POJO，这就调用了一个带有类型`Book,`参数的资源方法，我们需要创建一个类`BookMessageBodyReader:`
 
-```
+```java
 @Provider
 @Consumes(MediaType.APPLICATION_JSON)
 public class BookMessageBodyReader implements MessageBodyReader<Book> {
@@ -191,7 +191,7 @@ public class BookMessageBodyReader implements MessageBodyReader<Book> {
 
 我们用同样的过程将一个`Book`解组到 JSON 输出流，这是通过创建一个`BookMessageBodyWriter:`来调用一个返回类型为`Book,`的资源方法
 
-```
+```java
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 public class BookMessageBodyWriter 
@@ -233,7 +233,7 @@ public class BookMessageBodyWriter
 
 我们通过配置文件`server.xml`配置 Open Liberty 运行时:
 
-```
+```java
 <server description="OpenLiberty MicroProfile server">
     <featureManager>
         <feature>jaxrs-2.0</feature>
@@ -249,7 +249,7 @@ public class BookMessageBodyWriter
 
 让我们将插件`liberty-maven-plugin`添加到 pom.xml 中:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
     <groupId>net.wasdev.wlp.maven.plugins</groupId>
@@ -298,7 +298,7 @@ public class BookMessageBodyWriter
 
 这个插件可以通过一组属性进行配置:
 
-```
+```java
 <properties>
     <!--...-->
     <app.name>library</app.name>
@@ -311,25 +311,25 @@ public class BookMessageBodyWriter
 
 要创建可执行 jar，请运行以下命令:
 
-```
+```java
 mvn package 
 ```
 
 为了运行我们的微服务，我们使用以下命令:
 
-```
+```java
 java -jar target/library-service.jar
 ```
 
 这将启动 Open Liberty 运行时并部署我们的服务。我们可以访问我们的端点，并通过以下 URL 获取所有书籍:
 
-```
+```java
 curl http://localhost:9080/library/books
 ```
 
 结果是一个 JSON:
 
-```
+```java
 [
   {
     "id": "0001-201802",
@@ -343,13 +343,13 @@ curl http://localhost:9080/library/books
 
 要获得一本书，我们需要以下 URL:
 
-```
+```java
 curl http://localhost:9080/library/books/0001-201802
 ```
 
 结果是 JSON:
 
-```
+```java
 {
     "id": "0001-201802",
     "isbn": "1",
@@ -361,7 +361,7 @@ curl http://localhost:9080/library/books/0001-201802
 
 现在，我们将通过与 API 交互来添加一本新书:
 
-```
+```java
 curl 
   -H "Content-Type: application/json" 
   -X POST 
@@ -371,7 +371,7 @@ curl
 
 正如我们所看到的，响应的状态是 201，表明图书已经成功创建，而`Location`是我们可以访问它的 URI:
 
-```
+```java
 < HTTP/1.1 201 Created
 < Location: http://localhost:9080/library/books/0009-201802
 ```

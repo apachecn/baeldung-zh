@@ -10,7 +10,7 @@
 
 通常，我们只需要使用`String.format()`方法:
 
-```
+```java
 double d = 10.01d;
 String.format("%.2f", d);
 ```
@@ -19,7 +19,7 @@ String.format("%.2f", d);
 
 如果它不是一个点，我们可以**使用这个方法的重载版本，在这里我们传入我们的自定义`Locale`** :
 
-```
+```java
 String.format(Locale.US, "%.2f", d);
 ```
 
@@ -27,7 +27,7 @@ String.format(Locale.US, "%.2f", d);
 
 我们可以用一个 [`DecimalFormat`](/web/20220627170218/https://www.baeldung.com/java-decimalformat) 对象的`format()`方法来达到同样的目的:
 
-```
+```java
 DecimalFormatSymbols decimalFormatSymbols = DecimalFormatSymbols.getInstance();
 decimalFormatSymbols.setDecimalSeparator('.');
 new DecimalFormat("0.00", decimalFormatSymbols).format(d);
@@ -37,7 +37,7 @@ new DecimalFormat("0.00", decimalFormatSymbols).format(d);
 
 我们也可以用`format()`的方法得到一个 [`Formatter`](/web/20220627170218/https://www.baeldung.com/java-string-formatter) 的对象:
 
-```
+```java
 new Formatter(Locale.US).format("%.2f", d)
 ```
 
@@ -45,7 +45,7 @@ new Formatter(Locale.US).format("%.2f", d)
 
 当然，我们可以为我们的应用手动配置`Locale`，但是不建议**更改默认`Locale`**:
 
-```
+```java
 Locale.setDefault(Locale.US);
 String.format("%.2f", d);
 ```
@@ -54,7 +54,7 @@ String.format("%.2f", d);
 
 为我们的应用程序配置`Locale`的另一种方式是设置`user.language`和`user.region`虚拟机选项:
 
-```
+```java
 -Duser.language=en -Duser.region=US
 ```
 
@@ -62,7 +62,7 @@ String.format("%.2f", d);
 
 如果我们不需要得到格式化字符串的值而只是把它打印出来，我们可以使用 [`printf()`](/web/20220627170218/https://www.baeldung.com/java-printstream-printf) 方法:
 
-```
+```java
 System.out.printf(Locale.US, "%.2f", d);
 ```
 

@@ -10,7 +10,7 @@
 
 让我们首先创建一个程序来检索`Console`对象:
 
-```
+```java
 void printConsoleObject() {
     Console console = System.console();
     console.writer().print(console);
@@ -23,7 +23,7 @@ void printConsoleObject() {
 
 或者，如果我们运行如下程序:
 
-```
+```java
 $ java ConsoleAndOut > test.txt
 ```
 
@@ -33,7 +33,7 @@ $ java ConsoleAndOut > test.txt
 
 让我们看看实际情况:
 
-```
+```java
 void readPasswordFromConsole() {
     Console console = System.console();
     char[] password = console.readPassword("Enter password: ");
@@ -47,7 +47,7 @@ void readPasswordFromConsole() {
 
 现在让我们打印`System.out`的对象:
 
-```
+```java
 System.out.println(System.out);
 ```
 
@@ -59,7 +59,7 @@ System.out.println(System.out);
 
 我们可以按如下方式运行程序:
 
-```
+```java
 $ java ConsoleAndOut > test.txt
 ```
 

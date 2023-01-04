@@ -16,7 +16,7 @@ Spring Boot 是快速启动新项目的绝佳框架。它帮助开发人员快�
 
 大多数 Spring Boot 项目继承自 [spring-boot-starter-parent 工件](https://web.archive.org/web/20220727020730/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-parent)，后者本身继承自 [spring-boot-dependencies](https://web.archive.org/web/20220727020730/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-dependencies) 工件。**后一个工件是 Spring Boot BOM** ，它只是一个 Maven POM 文件，有一个很大的`dependencyManagement`部分:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -33,7 +33,7 @@ Spring Boot 是快速启动新项目的绝佳框架。它帮助开发人员快�
 
 Spring Boot BOM 中的一个条目如下:
 
-```
+```java
 <dependency>
     <groupId>org.apache.activemq</groupId>
     <artifactId>activemq-amqp</artifactId>
@@ -53,7 +53,7 @@ Spring Boot BOM 中的一个条目如下:
 
 对于 Maven，我们有两个选项来覆盖 Spring Boot 托管的依赖项。首先，对于 Spring Boot BOM 用属性占位符**指定版本的任何依赖项，我们只需要在我们的项目 POM** 中设置该属性:
 
-```
+```java
 <properties>
     <activemq.version>5.16.3</activemq.version>
 </properties>
@@ -63,7 +63,7 @@ Spring Boot BOM 中的一个条目如下:
 
 此外，如果版本是在 BOM 中的`dependency`标记中显式指定的，而不是作为占位符，那么我们可以简单地在项目依赖项中显式覆盖`version`:
 
-```
+```java
 <dependency>
     <groupId>org.apache.activemq</groupId>
     <artifactId>activemq-amqp</artifactId>
@@ -75,7 +75,7 @@ Spring Boot BOM 中的一个条目如下:
 
 Gradle 需要一个插件来支持来自 Spring Boot BOM 的依赖管理。因此，要开始，我们必须包含插件并导入 BOM:
 
-```
+```java
 apply plugin: "io.spring.dependency-management"
 dependencyManagement {
   imports {
@@ -86,13 +86,13 @@ dependencyManagement {
 
 现在，如果我们想要覆盖依赖关系的特定版本，我们只需要从 BOM 中指定相应的属性作为 Gradle `ext`属性:
 
-```
+```java
 ext['activemq.version'] = '5.16.3'
 ```
 
 如果 BOM 中没有要覆盖的属性，我们可以在声明依赖关系时直接指定版本:
 
-```
+```java
 compile 'org.apache.activemq:activemq-amqp:5.16.3'
 ```
 
@@ -112,13 +112,13 @@ compile 'org.apache.activemq:activemq-amqp:5.16.3'
 
 Maven 提供了一个[目标](/web/20220727020730/https://www.baeldung.com/maven-goals-phases)，我们可以用它来显示所有依赖项及其版本的列表。例如，如果我们运行以下命令:
 
-```
+```java
 mvn dependency:tree
 ```
 
 我们应该看到类似于以下内容的输出:
 
-```
+```java
 [INFO] com.baeldung:dependency-demo:jar:0.0.1-SNAPSHOT
 [INFO] +- org.springframework.boot:spring-boot-starter-web:jar:2.5.7-SNAPSHOT:compile
 [INFO] |  +- org.springframework.boot:spring-boot-starter:jar:2.5.7-SNAPSHOT:compile
@@ -137,13 +137,13 @@ mvn dependency:tree
 
 Gradle 提供了一个生成类似依赖树的任务。例如，如果我们运行以下命令:
 
-```
+```java
 gradle dependencies
 ```
 
 我们将得到类似于以下内容的输出:
 
-```
+```java
 compileClasspath - Compile classpath for source set 'main'.
 \--- org.springframework.boot:spring-boot-starter-web -> 1.3.8.RELEASE
      +--- org.springframework.boot:spring-boot-starter:1.3.8.RELEASE

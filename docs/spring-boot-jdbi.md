@@ -12,7 +12,7 @@
 
 首先，让我们将适当的 JDBI 依赖项添加到项目中。**这一次，我们将使用 JDBI 的 Spring 集成插件，它带来了所有需要的核心依赖项**。我们还将引入 SqlObject 插件，它为我们将在示例中使用的基本 JDBI 添加了一些额外的特性:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-jdbc</artifactId>
@@ -38,7 +38,7 @@
 
 我们还需要一个合适的 JDBC 驱动程序来访问我们的数据库。在本文中，我们将使用 [H2](https://web.archive.org/web/20221205142150/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.h2database%22%20AND%20a%3A%22h2%22) ，因此我们也必须将它的驱动程序添加到依赖列表中:
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -55,7 +55,7 @@
 
 我们还将把任何发现的插件和`RowMapper`实例传递给这个方法，以便它们被预先注册:
 
-```
+```java
 @Configuration
 public class JdbiConfiguration {
     @Bean
@@ -77,7 +77,7 @@ public class JdbiConfiguration {
 
 我们的例子使用了一个非常简单的领域模型，只包含两个类:`CarMaker`和`CarModel`。由于 JDBI 不需要对我们的域类进行任何注释，我们可以使用简单的 POJOs:
 
-```
+```java
 public class CarMaker {
     private Long id;
     private String name;
@@ -101,7 +101,7 @@ public class CarModel {
 
 我们只需要定义一个带有一些注释的接口，自动地， **JDBI 将处理所有底层的东西，比如处理 JDBC 连接，创建/处理语句和`ResultSet` s** :
 
-```
+```java
 @UseClasspathSqlLocator
 public interface CarMakerDao {
     @SqlUpdate
@@ -159,7 +159,7 @@ public interface CarModelDao {
 
 在 Spring 上下文中，最简单的方法是使用`onDemand`方法为每个 DAO 创建一个 bean:
 
-```
+```java
 @Bean
 public CarMakerDao carMakerDao(Jdbi jdbi) {        
     return jdbi.onDemand(CarMakerDao.class);       
@@ -183,7 +183,7 @@ public CarModelDao carModelDao(Jdbi jdbi) {
 
 JDBI 提供了一个`@Transaction`注释**，但是我们不能在这里使用它**，因为它不知道可能参与同一业务事务的其他资源。相反，我们将在我们的服务方法中使用 Spring 的`@Transactional`注释:
 
-```
+```java
 @Service
 public class CarMakerService {
 

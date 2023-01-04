@@ -10,7 +10,7 @@
 
 要使用`TestRestTemplate`，您需要有一个适当的依赖关系，如:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-test</artifactId>
@@ -30,7 +30,7 @@
 
 下面是一个简单的 GET 请求示例:
 
-```
+```java
 TestRestTemplate testRestTemplate = new TestRestTemplate();
 ResponseEntity<String> response = testRestTemplate.
   getForEntity(FOO_RESOURCE_URL + "/1", String.class);
@@ -48,7 +48,7 @@ Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
 
 使用此实例执行的所有请求都将使用提供的凭据进行身份验证:
 
-```
+```java
 TestRestTemplate testRestTemplate
  = new TestRestTemplate("user", "passwd");
 ResponseEntity<String> response = testRestTemplate.
@@ -63,7 +63,7 @@ Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
 
 让我们看一个简单的例子:
 
-```
+```java
 TestRestTemplate testRestTemplate = new TestRestTemplate("user", 
   "passwd", TestRestTemplate.HttpClientOption.ENABLE_COOKIES);
 ResponseEntity<String> response = testRestTemplate.
@@ -82,7 +82,7 @@ Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
 
 构造函数不仅可以用指定的凭据创建模板。我们还可以在创建模板后添加凭证。`TestRestTemplate`为我们提供了一个方法`withBasicAuth()` ,它将凭证添加到一个已经存在的模板中:
 
-```
+```java
 TestRestTemplate testRestTemplate = new TestRestTemplate();
 ResponseEntity<String> response = testRestTemplate.withBasicAuth(
   "user", "passwd").getForEntity(URL_SECURED_BY_AUTHENTICATION, 
@@ -95,7 +95,7 @@ Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
 
 `TestRestTemplate` 可以作为`RestTemplate`的包装器，例如，如果我们因为处理遗留代码而被迫使用它。您可以在下面看到如何创建这样一个简单的包装器:
 
-```
+```java
 RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
 restTemplateBuilder.configure(restTemplate);
 TestRestTemplate testRestTemplate = new TestRestTemplate(restTemplateBuilder);

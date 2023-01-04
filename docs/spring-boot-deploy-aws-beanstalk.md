@@ -19,12 +19,12 @@
 
 因此，鉴于此，我们需要登录并初始化我们的应用程序:
 
-```
+```java
 cd .../spring-boot-bootstrap
 eb init 
 ```
 
-```
+```java
 >
 Select a default region
 1) us-east-1 : US East (N. Virginia)
@@ -52,7 +52,7 @@ Select a default region
 
 最后，我们可以选择应用程序:
 
-```
+```java
 >
 Select an application to use
 1) baeldung-demo
@@ -66,7 +66,7 @@ Select an application to use
 
 现在，我们可以在 AWS Web 控制台上或通过 CLI 使用以下命令创建数据库:
 
-```
+```java
 eb create --single --database
 ```
 
@@ -74,7 +74,7 @@ eb create --single --database
 
 创建好数据库后，现在让我们为应用程序配置 RDS 凭证。我们将通过在应用程序中创建`src/main/resources/application-beanstalk.properties` 在名为`beanstalk`的 Spring 概要文件中这样做:
 
-```
+```java
 spring.datasource.url=jdbc:mysql://${rds.hostname}:${rds.port}/${rds.db.name}
 spring.datasource.username=${rds.username}
 spring.datasource.password=${rds.password} 
@@ -86,7 +86,7 @@ spring.datasource.password=${rds.password}
 
 现在，我们将为`pom.xml`添加一个 Beanstalk `–`特有的 Maven 概要文件:
 
-```
+```java
 <profile>
     <id>beanstalk</id>
     <build>
@@ -112,14 +112,14 @@ spring.datasource.password=${rds.password}
 
 **接下来，我们将把工件指定到弹性豆茎配置文件`.elasticbeanstalk/config.yml` :**
 
-```
+```java
 deploy:
   artifact: target/spring-boot-bootstrap-eb.jar 
 ```
 
 最后，我们将在弹性豆茎中包含两个环境变量。第一个将指定活动的 Spring 配置文件，第二个将确保使用 Beanstalk 期望的默认端口 5000:
 
-```
+```java
 eb setenv SPRING_PROFILES_ACTIVE=beanstalk,mysql
 eb setenv SERVER_PORT=5000
 ```
@@ -128,20 +128,20 @@ eb setenv SERVER_PORT=5000
 
 **现在我们已经准备好构建和部署:**
 
-```
+```java
 mvn clean package spring-boot:repackage
 eb deploy 
 ```
 
 接下来，我们将检查状态并确定部署的应用程序的 DNS 名称:
 
-```
+```java
 eb status
 ```
 
 我们的输出应该是这样的:
 
-```
+```java
 Environment details for: BaeldungDemo-env
   Application name: baeldung-demo
   Region: us-east-2
@@ -159,13 +159,13 @@ Environment details for: BaeldungDemo-env
 
 现在让我们向图书馆添加一本书:
 
-```
+```java
 http POST http://baeldungdemo-env.uv3tr7qfy9.us-east-2.elasticbeanstalk.com/api/books title="The Player of Games" author="Iain M. Banks"
 ```
 
 如果一切顺利的话，我们应该会得到这样的结果:
 
-```
+```java
 HTTP/1.1 201 
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Connection: keep-alive
@@ -190,7 +190,7 @@ X-XSS-Protection: 1; mode=block
 
 最后，我们扩展部署以运行两个实例:
 
-```
+```java
 eb scale 2
 ```
 

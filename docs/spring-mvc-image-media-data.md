@@ -12,7 +12,7 @@
 
 图像下载最基本的方法是直接操作一个`response`对象并模仿一个纯粹的`Servlet`实现，并使用下面的代码片段进行演示:
 
-```
+```java
 @RequestMapping(value = "/image-manual-response", method = RequestMethod.GET)
 public void getImageAsByteArray(HttpServletResponse response) throws IOException {
     InputStream in = servletContext.getResourceAsStream("/WEB-Iimg/image-example.jpg");
@@ -23,7 +23,7 @@ public void getImageAsByteArray(HttpServletResponse response) throws IOException
 
 发出以下请求将在浏览器中呈现图像:
 
-```
+```java
 http://localhost:8080/spring-mvc-xml/image-manual-response.jpg
 ```
 
@@ -48,7 +48,7 @@ http://localhost:8080/spring-mvc-xml/image-manual-response.jpg
 
 这个标签应该在`<mvc:annotation-driven>`标签中定义，如下例所示:
 
-```
+```java
 <mvc:annotation-driven>
     <mvc:message-converters>
         <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter">
@@ -67,7 +67,7 @@ http://localhost:8080/spring-mvc-xml/image-manual-response.jpg
 
 此外，您可以使用 Java 配置注册消息转换器**:**
 
-```
+```java
 @Override
 public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
     converters.add(byteArrayHttpMessageConverter());
@@ -93,7 +93,7 @@ private List<MediaType> getSupportedMediaTypes() {
 
 现在我们可以实现我们的方法来处理对媒体的请求。如上所述，您需要用`@ResponseBody`注释标记您的控制器方法，并使用`byte[]`作为返回类型:
 
-```
+```java
 @RequestMapping(value = "/image-byte-array", method = RequestMethod.GET)
 public @ResponseBody byte[] getImageAsByteArray() throws IOException {
     InputStream in = servletContext.getResourceAsStream("/WEB-Iimg/image-example.jpg");
@@ -103,7 +103,7 @@ public @ResponseBody byte[] getImageAsByteArray() throws IOException {
 
 要测试该方法，请在浏览器中发出以下请求:
 
-```
+```java
 http://localhost:8080/spring-mvc-xml/image-byte-array.jpg
 ```
 
@@ -115,7 +115,7 @@ http://localhost:8080/spring-mvc-xml/image-byte-array.jpg
 
 您可以返回一个包装在`Response Entity`中的图像`byte[]`。Spring MVC `ResponseEntity`不仅支持对 HTTP 响应主体的控制，还支持对头部和响应状态代码的控制。按照这种方法，您需要将方法的返回类型定义为`ResponseEntity<byte[]>`，并在方法体中创建返回的`ResponseEntity`对象。
 
-```
+```java
 @RequestMapping(value = "/image-response-entity", method = RequestMethod.GET)
 public ResponseEntity<byte[]> getImageAsResponseEntity() {
     HttpHeaders headers = new HttpHeaders();
@@ -144,7 +144,7 @@ public ResponseEntity<byte[]> getImageAsResponseEntity() {
 
 ### 5.1。实施
 
-```
+```java
 @ResponseBody
 @RequestMapping(value = "/image-resource", method = RequestMethod.GET)
 public Resource getImageAsResource() {
@@ -154,7 +154,7 @@ public Resource getImageAsResource() {
 
 或者，如果我们希望对响应头有更多的控制:
 
-```
+```java
 @RequestMapping(value = "/image-resource", method = RequestMethod.GET)
 @ResponseBody
 public ResponseEntity<Resource> getImageAsResource() {

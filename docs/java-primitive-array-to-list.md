@@ -10,7 +10,7 @@
 
 让我们从问题的定义开始。**我们有一个原语数组** ( `int[]`)，**，我们希望将该数组转换成一个`List`** ( `List<Integer>`)。直观的第一次尝试可能是:
 
-```
+```java
 int[] input = new int[]{1,2,3,4};
 List<Integer> output = Arrays.asList(input);
 ```
@@ -25,7 +25,7 @@ List<Integer> output = Arrays.asList(input);
 
 由于自动装箱处理单个原始元素，**一个简单的解决方案是迭代数组的元素，然后将它们逐个添加到`List`**:
 
-```
+```java
 int[] input = new int[]{1,2,3,4};
 List<Integer> output = new ArrayList<Integer>();
 for (int value : input) {
@@ -39,14 +39,14 @@ for (int value : input) {
 
 **从 Java 8 开始，我们可以使用 [`Stream` API](/web/20220926181526/https://www.baeldung.com/java-streams)** 。我们可以使用`Stream`提供一行解决方案:
 
-```
+```java
 int[] input = new int[]{1,2,3,4};
 List<Integer> output = Arrays.stream(input).boxed().collect(Collectors.toList());
 ```
 
 或者，我们可以使用`IntStream`:
 
-```
+```java
 int[] input = new int[]{1,2,3,4};
 List<Integer> output = IntStream.of(input).boxed().collect(Collectors.toList());
 ```
@@ -57,7 +57,7 @@ List<Integer> output = IntStream.of(input).boxed().collect(Collectors.toList());
 
 **[番石榴](/web/20220926181526/https://www.baeldung.com/category/guava/)库为这个问题提供了一个包装器**。让我们从添加 [Maven](https://web.archive.org/web/20220926181526/https://search.maven.org/artifact/com.google.guava/guava) 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -68,7 +68,7 @@ List<Integer> output = IntStream.of(input).boxed().collect(Collectors.toList());
 
 我们可以使用`Ints.asList()`，对于其他原始类型，我们可以使用类似的实用程序类:
 
-```
+```java
 int[] input = new int[]{1,2,3,4};
 List<Integer> output = Ints.asList(input);
 ```
@@ -77,7 +77,7 @@ List<Integer> output = Ints.asList(input);
 
 另一个库是 Apache Commons Lang。同样，让我们为这个库添加 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -87,7 +87,7 @@ List<Integer> output = Ints.asList(input);
 
 更准确地说，我们使用了`ArrayUtils` 类:
 
-```
+```java
 int[] input = new int[]{1,2,3,4};
 Integer[] outputBoxed = ArrayUtils.toObject(input);
 List<Integer> output = Arrays.asList(outputBoxed);

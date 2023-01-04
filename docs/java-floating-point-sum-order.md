@@ -10,7 +10,7 @@
 
 当我们看下面这段代码的时候，我们很容易预测出正确答案(13.22 + 4.88 + 21.45 = 39.55)。对我们来说容易的事情，Java 编译器可能会有不同的解释:
 
-```
+```java
 double a = 13.22;
 double b = 4.88;
 double c = 21.45;
@@ -30,7 +30,7 @@ System.out.println("a + c + b = " + acb); // Outputs: a + c + b = 39.55000000000
 
 当我们改变顺序时，我们也改变了存储在存储器中的中间值，因此结果可能不同。在下一个例子中，我们简单地从 A+B 或 A+C 的和开始:
 
-```
+```java
 double ab = 18.1; // = 13.22 + 4.88
 double ac = 34.67; // = 13.22 + 21.45
 double sum_ab_c = ab + c;
@@ -43,7 +43,7 @@ System.out.println("ac + b = " + sum_ac_b); // Outputs: 39.550000000000004
 
 由于众所周知的浮点数的不精确性，double 不应该用于精确值。这包括货币。对于精确的值，我们可以使用`BigDecimal`类:
 
-```
+```java
 BigDecimal d = new BigDecimal(String.valueOf(a));
 BigDecimal e = new BigDecimal(String.valueOf(b));
 BigDecimal f = new BigDecimal(String.valueOf(c));

@@ -18,7 +18,7 @@
 
 例 2.1。–**上传包含两个文本部分和一个文件的表单**
 
-```
+```java
 File file = new File(textFileName);
 HttpPost post = new HttpPost("http://echo.200please.com");
 FileBody fileBody = new FileBody(file, ContentType.DEFAULT_BINARY);
@@ -46,7 +46,7 @@ HttpResponse response = client.execute(post);
 
 例 3.1。–**上传文本和文本文件部分**
 
-```
+```java
 HttpPost post = new HttpPost("http://echo.200please.com");
 File file = new File(textFileName);
 String message = "This is a multipart post";
@@ -70,7 +70,7 @@ HttpResponse response = client.execute(post);
 
 例 3.2。–**上传一个Zip 文件、一个图像文件和一个文本部分**
 
-```
+```java
 HttpPost post = new HttpPost("http://echo.200please.com");
 InputStream inputStream = new FileInputStream(zipFileName);
 File file = new File(imageFileName);
@@ -96,7 +96,7 @@ HttpResponse response = client.execute(post);
 
 例 3.3。–**上传字节数组和文本**
 
-```
+```java
 HttpPost post = new HttpPost("http://echo.200please.com");
 String message = "This is a multipart post";
 byte[] bytes = "binary code".getBytes(); 

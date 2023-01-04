@@ -10,7 +10,7 @@
 
 让我们从 Java 解决方案开始:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenConvertingStringIntoReader_thenCorrect() throws IOException {
     String initialString = "With Plain Java";
@@ -25,7 +25,7 @@ public void givenUsingPlainJava_whenConvertingStringIntoReader_thenCorrect() thr
 
 接下来——番石榴溶液:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenConvertingStringIntoReader_thenCorrect() throws IOException {
     String initialString = "With Google Guava";
@@ -40,7 +40,7 @@ public void givenUsingGuava_whenConvertingStringIntoReader_thenCorrect() throws 
 
 最后，这是 Commons IO 解决方案，也使用了现成的`Reader`实现:
 
-```
+```java
 @Test
 public void givenUsingCommonsIO_whenConvertingStringIntoReader_thenCorrect() throws IOException {
     String initialString = "With Apache Commons IO";

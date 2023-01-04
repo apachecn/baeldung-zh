@@ -16,7 +16,7 @@
 
 在我们跳到 Java 代码之前，我们需要在项目的`pom.xml`中声明 [evrete-core](https://web.archive.org/web/20221226104059/https://search.maven.org/search?q=g:org.evrete%20a:evrete-core) Maven 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.evrete</groupId>
     <artifactId>evrete-core</artifactId>
@@ -30,7 +30,7 @@
 
 我们的领域数据模型将包括两个简单的类— `Customer`和`Invoice`:
 
-```
+```java
 public class Customer {
     private double total = 0.0;
     private final String name;
@@ -46,7 +46,7 @@ public class Customer {
 }
 ```
 
-```
+```java
 public class Invoice {
     private final Customer customer;
     private final double amount;
@@ -78,7 +78,7 @@ public class Invoice {
 
 通过规则构建器，我们可以使用流畅的接口来声明我们的两个规则:
 
-```
+```java
 KnowledgeService service = new KnowledgeService();
 Knowledge knowledge = service
   .newKnowledge()
@@ -107,7 +107,7 @@ Knowledge knowledge = service
 
 熟悉 Drools 规则引擎的人会发现我们的规则声明在语义上等同于相同逻辑的以下`DRL`版本:
 
-```
+```java
 rule "Clear total sales"
   when
     $c: Customer
@@ -128,7 +128,7 @@ end
 
 我们将在三个客户和 10 万张随机金额的发票上测试我们的规则集，并在客户中随机分配:
 
-```
+```java
 List<Customer> customers = Arrays.asList(
   new Customer("Customer A"),
   new Customer("Customer B"),
@@ -150,7 +150,7 @@ for (int i = 0; i < 100_000; i++) {
 
 我们现在需要做的就是将所有 100，003 个对象(100，000 张发票和三个客户)提供给一个新的会话实例，并调用它的`fire()`方法:
 
-```
+```java
 knowledge
   .newStatelessSession()
   .insert(sessionData)
@@ -163,7 +163,7 @@ for(Customer c : customers) {
 
 最后几行将打印每个客户的最终销售量:
 
-```
+```java
 Customer A:	$1,664,730.73
 Customer B:	$1,666,508.11
 Customer C:	$1,672,685.10 
@@ -186,7 +186,7 @@ Customer C:	$1,672,685.10
 
 带注释的 Java 规则是一个 [Evrete 的](https://web.archive.org/web/20221226104059/https://www.evrete.org/ "Evrete Home")服务提供者接口(SPI)的实现，需要一个额外的 [evrete-dsl-java](https://web.archive.org/web/20221226104059/https://search.maven.org/search?q=g:org.evrete%20a:evrete-dsl-java) Maven 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.evrete</groupId>
     <artifactId>evrete-dsl-java</artifactId>
@@ -198,7 +198,7 @@ Customer C:	$1,672,685.10
 
 让我们使用注释创建相同的规则集。我们将选择普通的 Java 源代码，而不是类和捆绑的 jar:
 
-```
+```java
 public class SalesRuleset {
 
     @Rule
@@ -221,7 +221,7 @@ public class SalesRuleset {
 
 然后我们告诉引擎从外部位置读取我们的规则集定义:
 
-```
+```java
 KnowledgeService service = new KnowledgeService();
 URL rulesetUrl = new URL("ruleset.java"); // or file.toURI().toURL(), etc
 Knowledge knowledge = service.newKnowledge(

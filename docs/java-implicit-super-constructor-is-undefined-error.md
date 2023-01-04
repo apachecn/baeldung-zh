@@ -14,7 +14,7 @@
 
 首先，让我们创建一个父类`Person`:
 
-```
+```java
 public class Person {
 
     String name;
@@ -31,7 +31,7 @@ public class Person {
 
 现在，让我们创建一个子类`Employee` ，它的父类是 `Person`:
 
-```
+```java
 public class Employee extends Person {
 
     Double salary;
@@ -46,7 +46,7 @@ public class Employee extends Person {
 
 现在，在我们的 IDE 中，我们将看到错误:
 
-```
+```java
 Implicit super constructor Person() is undefined. Must explicitly invoke another constructor
 ```
 
@@ -54,7 +54,7 @@ Implicit super constructor Person() is undefined. Must explicitly invoke another
 
 例如，让我们考虑没有构造函数的`Employee`:
 
-```
+```java
 public class Employee extends Person {
 
     Double salary;
@@ -65,7 +65,7 @@ public class Employee extends Person {
 
 我们将在 IDE 中看到错误:
 
-```
+```java
 Implicit super constructor Person() is undefined for default constructor. Must define an explicit constructor
 ```
 
@@ -79,7 +79,7 @@ Implicit super constructor Person() is undefined for default constructor. Must d
 
 让我们假设我们的`Person`类不包含任何构造函数，也没有父类。一旦我们编译，我们可以看到编译器已经添加了默认的构造函数:
 
-```
+```java
 public Person() {
     super();
 }
@@ -89,7 +89,7 @@ public Person() {
 
 现在，如果我们创建扩展了`Person,`的子类`Employee`，我们会在`Employee`类中得到一个错误:
 
-```
+```java
 Implicit super constructor Person() is undefined for default constructor. Must define an explicit constructor
 ```
 
@@ -101,7 +101,7 @@ Implicit super constructor Person() is undefined for default constructor. Must d
 
 我们需要做的第一件事是从`Employee`构造函数中显式调用`super`构造函数:
 
-```
+```java
 public Employee(String name, Integer age, Double salary) {
     super(name, age);
     this.salary = salary;
@@ -110,7 +110,7 @@ public Employee(String name, Integer age, Double salary) {
 
 现在，假设我们需要创建一个只有`salary`字段的`Employee`对象。让我们编写构造函数:
 
-```
+```java
 public Employee(Double salary) {
     super();
     this.salary = salary;
@@ -119,7 +119,7 @@ public Employee(Double salary) {
 
 尽管向`Employee`构造函数**添加了`super`调用，我们仍然会收到一个错误，因为`Person`类仍然缺少一个匹配的构造函数**。我们可以通过在`Person`类中显式创建一个无参数构造函数来解决这个问题:
 
-```
+```java
 public Person(String name, Integer age) {
     this.name = name;
     this.age = age;

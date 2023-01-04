@@ -18,7 +18,7 @@
 
 我们将在本文中实现的 AOP 类型是注释驱动的。如果我们使用过弹簧 [`@Transactional`](https://web.archive.org/web/20220902075953/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html) 的注释，我们可能已经很熟悉了:
 
-```
+```java
 @Transactional
 public void orderGoods(Order order) {
    // A series of database calls to be performed in a transaction
@@ -35,7 +35,7 @@ public void orderGoods(Order order) {
 
 在本例中，我们将使用 Spring Boot，因为它的配置方法传统让我们可以尽快启动并运行:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -56,7 +56,7 @@ public void orderGoods(Order order) {
 
 我们将要创建的注释将用于记录一个方法执行所花费的时间。让我们创建我们的注释:
 
-```
+```java
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LogExecutionTime {
@@ -74,7 +74,7 @@ public @interface LogExecutionTime {
 
 现在我们有了注释，让我们创建我们的方面。这只是封装我们横切关注点的模块，我们的例子是方法执行时间日志。它只是一个类，注释为`[@Aspect](https://web.archive.org/web/20220902075953/https://www.eclipse.org/aspectj/doc/released/aspectj5rt-api/org/aspectj/lang/annotation/Aspect.html?is-external=true):`
 
-```
+```java
 @Aspect
 @Component
 public class ExampleAspect {
@@ -88,7 +88,7 @@ public class ExampleAspect {
 
 现在，让我们创建切入点和建议。这将是一个存在于我们方面的带注释的方法:
 
-```
+```java
 @Around("@annotation(LogExecutionTime)")
 public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
     return joinPoint.proceed();
@@ -109,7 +109,7 @@ public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
 
 现在我们已经有了框架，我们需要做的就是给我们的建议添加一些额外的逻辑。除了调用原始方法之外，这将记录执行时间。让我们将这个额外的行为添加到我们的建议中:
 
-```
+```java
 @Around("@annotation(LogExecutionTime)")
 public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
     long start = System.currentTimeMillis();
@@ -127,7 +127,7 @@ public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
 
 现在，让我们尝试用`@LogExecutionTime,` 注释一个方法，然后执行它，看看会发生什么。请注意，这必须是一个 Spring Bean 才能正常工作:
 
-```
+```java
 @LogExecutionTime
 public void serve() throws InterruptedException {
     Thread.sleep(2000);
@@ -136,7 +136,7 @@ public void serve() throws InterruptedException {
 
 执行后，我们应该看到控制台记录了以下内容:
 
-```
+```java
 void org.baeldung.Service.serve() executed in 2030ms
 ```
 

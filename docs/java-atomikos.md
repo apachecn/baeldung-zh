@@ -77,7 +77,7 @@ Atomikos 是一个分布式事务管理器，提供了比 JTA/XA 要求更多的
 
 首先，我们需要设置依赖关系。在这里，我们所要做的就是在 Maven `pom.xml`文件中声明依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.atomikos</groupId>
     <artifactId>transactions-jdbc</artifactId>
@@ -96,7 +96,7 @@ Atomikos 是一个分布式事务管理器，提供了比 JTA/XA 要求更多的
 
 Atomikos 提供了几个配置参数，每个参数都有合理的默认值。覆盖这些参数最简单的方法是**在类路径**中提供一个`transactions.properties`文件。我们可以为事务服务的初始化和操作添加几个参数。让我们看一个简单的配置来覆盖创建日志文件的目录:
 
-```
+```java
 com.atomikos.icatch.file=path_to_your_file
 ```
 
@@ -108,7 +108,7 @@ com.atomikos.icatch.file=path_to_your_file
 
 我们的库存数据库将有一个简单的表来存放产品库存:
 
-```
+```java
 CREATE TABLE INVENTORY (
     productId VARCHAR PRIMARY KEY,
     balance INT
@@ -117,7 +117,7 @@ CREATE TABLE INVENTORY (
 
 此外，我们的订单数据库将有一个简单的表来存放下的订单:
 
-```
+```java
 CREATE TABLE ORDERS (
     orderId VARCHAR PRIMARY KEY,
     productId VARCHAR,
@@ -137,7 +137,7 @@ CREATE TABLE ORDERS (
 
 首先，我们需要从 Atomikos 实例化一个`UserTransaction`:
 
-```
+```java
 UserTransactionImp utx = new UserTransactionImp();
 ```
 
@@ -147,13 +147,13 @@ UserTransactionImp utx = new UserTransactionImp();
 
  **第一个是`AtomikosDataSourceBean`，它知道一个底层的`XADataSource`:
 
-```
+```java
 AtomikosDataSourceBean dataSource = new AtomikosDataSourceBean();
 ```
 
 而`AtomikosNonXADataSourceBean`使用任何常规的 JDBC 驱动程序类:
 
-```
+```java
 AtomikosNonXADataSourceBean dataSource = new AtomikosNonXADataSourceBean();
 ```
 
@@ -165,7 +165,7 @@ AtomikosNonXADataSourceBean dataSource = new AtomikosNonXADataSourceBean();
 
 配置完成后，在我们的应用程序中的事务上下文中使用`DataSource`相当容易:
 
-```
+```java
 public void placeOrder(String productId, int amount) throws Exception {
     String orderId = UUID.randomUUID().toString();
     boolean rollback = false;
@@ -204,7 +204,7 @@ public void placeOrder(String productId, int amount) throws Exception {
 
 最后，我们必须能够用简单的单元测试来测试我们的应用程序，以验证事务行为是否符合预期:
 
-```
+```java
 @Test
 public void testPlaceOrderSuccess() throws Exception {
     int amount = 1;
@@ -252,7 +252,7 @@ Spring 支持几种事务 API，包括分布式事务的 JTA。我们可以在 S
 
 让我们看看如何解决之前的问题，这次利用 Spring。我们将从重写`Application`类开始:
 
-```
+```java
 public class Application {
     private DataSource inventoryDataSource;
     private DataSource orderDataSource;
@@ -289,7 +289,7 @@ public class Application {
 
 当然，我们还得向 Spring 提供相关配置。我们可以使用一个简单的 Java 类来配置这些元素:
 
-```
+```java
 @Configuration
 @EnableTransactionManagement
 public class Config {
@@ -342,7 +342,7 @@ Hibernate 是 JPA 规范最流行的实现之一。 **Atomikos 对几种 JPA 实
 
 让我们看看 **Spring、JPA 和 Hibernate 如何使我们的应用程序更加简洁，同时通过 Atomikos** 提供分布式事务的好处。和以前一样，我们将从重写`Application`类开始:
 
-```
+```java
 public class Application {
     @Autowired
     private InventoryRepository inventoryRepository;
@@ -366,7 +366,7 @@ public class Application {
 
 正如我们所看到的，我们现在没有处理任何底层的数据库 API。然而，为了让这种魔力发挥作用，我们确实需要配置 Spring Data JPA 类和配置。我们将从定义我们的域实体开始:
 
-```
+```java
 @Entity
 @Table(name = "INVENTORY")
 public class Inventory {
@@ -377,7 +377,7 @@ public class Inventory {
 }
 ```
 
-```
+```java
 @Entity
 @Table(name = "ORDERS")
 public class Order {
@@ -392,7 +392,7 @@ public class Order {
 
 接下来，我们需要为这些实体提供存储库:
 
-```
+```java
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, String> {
 }
@@ -406,7 +406,7 @@ public interface OrderRepository extends JpaRepository<Order, String> {
 
 最后，我们需要为库存和订单数据库以及事务管理器的数据源提供相关的配置:
 
-```
+```java
 @Configuration
 @EnableJpaRepositories(basePackages = "com.baeldung.atomikos.spring.jpa.inventory",
   entityManagerFactoryRef = "inventoryEntityManager", transactionManagerRef = "transactionManager")
@@ -429,7 +429,7 @@ public class InventoryConfig {
 }
 ```
 
-```
+```java
 @Configuration
 @EnableJpaRepositories(basePackages = "com.baeldung.atomikos.spring.jpa.order", 
   entityManagerFactoryRef = "orderEntityManager", transactionManagerRef = "transactionManager")
@@ -452,7 +452,7 @@ public class OrderConfig {
 }
 ```
 
-```
+```java
 @Configuration
 @EnableTransactionManagement
 public class Config {

@@ -24,7 +24,7 @@ Apache DeltaSpike 数据模块用于**简化存储库模式**的实现。它允�
 
 当 Maven 是我们的构建工具时，我们必须使用:
 
-```
+```java
 <dependency>
     <groupId>org.apache.deltaspike.modules</groupId>
     <artifactId>deltaspike-data-module-api</artifactId>
@@ -41,7 +41,7 @@ Apache DeltaSpike 数据模块用于**简化存储库模式**的实现。它允�
 
 当我们使用 Gradle 时:
 
-```
+```java
 runtime 'org.apache.deltaspike.modules:deltaspike-data-module-impl'
 compile 'org.apache.deltaspike.modules:deltaspike-data-module-api' 
 ```
@@ -65,7 +65,7 @@ Apache DeltaSpike 数据模块工件可以在 Maven Central 上获得:
 
 我们可以通过使用 CDI 生成器来实现这一点:
 
-```
+```java
 public class EntityManagerProducer {
 
     @PersistenceContext(unitName = "primary")
@@ -83,7 +83,7 @@ public class EntityManagerProducer {
 
 下面我们来看一个定义的例子:
 
-```
+```java
 <persistence-unit name="primary" transaction-type="JTA">
    <jta-data-source>java:jboss/datasources/baeldung-jee7-seedDS</jta-data-source>
    <properties>
@@ -99,7 +99,7 @@ public class EntityManagerProducer {
 
 **如果我们使用 JTA 事务类型作为数据源，那么我们必须定义将在 Apache DeltaSpike 存储库中使用的事务策略**。我们可以在`apache-deltaspike.properties`文件中完成(在`META-INF`目录下):
 
-```
+```java
 globalAlternatives.org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy=org.apache.deltaspike.jpa.impl.transaction.ContainerManagedTransactionStrategy
 ```
 
@@ -122,7 +122,7 @@ globalAlternatives.org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy
 
 **我们所要做的就是** **添加一个`@Repository`** **注释**和一个`forEntity`属性，它定义了我们的存储库应该处理的 JPA 实体:
 
-```
+```java
 @Entity
 public class User {
     // ...
@@ -136,7 +136,7 @@ public interface SimpleUserRepository {
 
 或者用一个抽象类:
 
-```
+```java
 @Repository(forEntity = User.class)
 public abstract class SimpleUserRepository { 
     // ... 
@@ -153,7 +153,7 @@ public abstract class SimpleUserRepository {
 
 它看起来像下面这样:
 
-```
+```java
 (Entity|Optional<Entity>|List<Entity>|Stream<Entity>) (prefix)(Property[Comparator]){Operator Property [Comparator]} 
 ```
 
@@ -165,13 +165,13 @@ public abstract class SimpleUserRepository {
 
 如果有多个具有给定名称的`User`,下面的方法将抛出异常:
 
-```
+```java
 public abstract User findByFirstName(String firstName);
 ```
 
 反之则不然——我们可以将返回值定义为`Collection`,即使结果只是一个实体。
 
-```
+```java
 public abstract Collection<User> findAnyByFirstName(String firstName);
 ```
 
@@ -189,19 +189,19 @@ public abstract Collection<User> findAnyByFirstName(String firstName);
 
 这个动作有很多前缀，比如`findBy`、`findAny`、`findAll. `详细列表请查看官方 Apache DeltaSpike [文档](https://web.archive.org/web/20221205135355/https://deltaspike.apache.org/documentation/data.html#UsingMethodExpressions):
 
-```
+```java
 public abstract User findAnyByLastName(String lastName);
 ```
 
 但是，也有**其他方法模板用于计数和移除实体**。我们可以`count`表格中的所有行:
 
-```
+```java
 public abstract int count();
 ```
 
 另外，`remove`方法模板已经存在，我们可以将其添加到我们的存储库中:
 
-```
+```java
 public abstract void remove(User user);
 ```
 
@@ -213,7 +213,7 @@ public abstract void remove(User user);
 
 在查询中，我们可以使用**多属性结合`and`运算符**。
 
-```
+```java
 public abstract Collection<User> findByFirstNameAndLastName(
   String firstName, String lastName);
 public abstract Collection<User> findByFirstNameOrLastName(
@@ -228,7 +228,7 @@ public abstract Collection<User> findByFirstNameOrLastName(
 
 在下面的示例中，`User`实体具有类型为`Address`的地址属性，而`Address`实体具有类型为`city`的属性:
 
-```
+```java
 @Entity
 public class Address {
 private String city;
@@ -247,7 +247,7 @@ public abstract Collection<User> findByAddress_city(String city);
 
 DeltaSpike 允许我们**定义结果返回的顺序**。我们可以定义升序和降序:
 
-```
+```java
 public abstract List<User> findAllOrderByFirstNameAsc();
 ```
 
@@ -255,7 +255,7 @@ public abstract List<User> findAllOrderByFirstNameAsc();
 
 我们可以轻松合并许多订单:
 
-```
+```java
 public abstract List<User> findAllOrderByFirstNameAscLastNameDesc(); 
 ```
 
@@ -265,7 +265,7 @@ public abstract List<User> findAllOrderByFirstNameAscLastNameDesc();
 
 有些情况下，我们希望从整个结果中检索前几行。这就是所谓的查询限制。数据模块也很简单:
 
-```
+```java
 public abstract Collection<User> findTop2OrderByFirstNameAsc();
 public abstract Collection<User> findFirst2OrderByFirstNameAsc();
 ```
@@ -274,7 +274,7 @@ public abstract Collection<User> findFirst2OrderByFirstNameAsc();
 
 然后我们可以通过提供两个额外的参数`@FirstResult`和`@MaxResult`**来启用查询分页:**
 
-```
+```java
 public abstract Collection<User> findAllOrderByFirstNameAsc(@FirstResult int start, @MaxResults int size);
 ```
 
@@ -288,7 +288,7 @@ Apache DeltaSpike 提供了很少的基本类型，我们可以使用它们来�
 
 为了**获得一些基本的存储库方法，我们的存储库应该扩展 Apache DeltaSpike** 提供的基本类型。有一些像`EntityRepository`、`FullEntityRepository,` 等。：
 
-```
+```java
 @Repository
 public interface UserRepository 
   extends FullEntityRepository<User, Long> {
@@ -298,7 +298,7 @@ public interface UserRepository
 
 或者使用抽象类:
 
-```
+```java
 @Repository
 public abstract class UserRepository extends AbstractEntityRepository<User, Long> {
     // ...
@@ -313,7 +313,7 @@ public abstract class UserRepository extends AbstractEntityRepository<User, Long
 
 **抽象库基类，例如`AbstractEntityRepository`给我们提供了对字段(通过 getters)或实用方法的访问，我们可以使用它们来创建查询**:
 
-```
+```java
 public List<User> findByFirstName(String firstName) {
     return typedQuery("select u from User u where u.firstName = ?1")
       .setParameter(1, firstName)
@@ -331,7 +331,7 @@ public List<User> findByFirstName(String firstName) {
 
 默认情况下，这是一个 JPQL 查询:
 
-```
+```java
 @Query("select u from User u where u.firstName = ?1")
 public abstract Collection<User> findUsersWithFirstName(String firstName); 
 ```
@@ -340,7 +340,7 @@ public abstract Collection<User> findUsersWithFirstName(String firstName);
 
 如果我们想通过原生 SQL 而不是 JPQL 传递查询，我们需要定义额外的查询属性–`isNative`以及真值:
 
-```
+```java
 @Query(value = "select * from User where firstName = ?1", isNative = true)
 public abstract Collection<User> findUsersWithFirstNameNative(String firstName);
 ```

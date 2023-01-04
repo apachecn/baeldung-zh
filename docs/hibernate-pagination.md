@@ -24,7 +24,7 @@ Learn how you can configure logging of the generated SQL statements in your Spri
 
 在 Hibernate 中进行分页最简单也是最常见的方式是使用 HQL 的**:**
 
-```
+```java
 Session session = sessionFactory.openSession();
 Query query = sess.createQuery("From Foo");
 query.setFirstResult(0);
@@ -36,7 +36,7 @@ List<Foo> fooList = fooList = query.list();
 
 如果我们为 Hibernate 打开**日志，我们将看到下面的 SQL 正在运行:**
 
-```
+```java
 Hibernate: 
     select
         foo0_.id as id1_1_,
@@ -49,7 +49,7 @@ Hibernate:
 
 在不知道实体总数的情况下，分页解决方案是不完整的:
 
-```
+```java
 String countQ = "Select count (f.id) from Foo f";
 Query countQuery = session.createQuery(countQ);
 Long countResults = (Long) countQuery.uniqueResult();
@@ -57,14 +57,14 @@ Long countResults = (Long) countQuery.uniqueResult();
 
 最后，根据总数和给定的页面大小，我们可以计算出最后一页的大小:
 
-```
+```java
 int pageSize = 10;
 int lastPageNumber = (int) (Math.ceil(countResults / pageSize));
 ```
 
 此时，我们可以看一下**分页**的完整示例，其中我们计算最后一页，然后检索它:
 
-```
+```java
 @Test
 public void givenEntitiesExist_whenRetrievingLastPage_thenCorrectSize() {
     int pageSize = 10;
@@ -86,7 +86,7 @@ public void givenEntitiesExist_whenRetrievingLastPage_thenCorrectSize() {
 
 使用`ScrollableResul` ts 实现分页有可能**减少数据库调用**。这种方法在程序滚动时对结果集进行流式处理，因此不需要重复查询来填充每个页面:
 
-```
+```java
 String hql = "FROM Foo f order by f.name";
 Query query = session.createQuery(hql);
 int pageSize = 10;
@@ -105,7 +105,7 @@ while (pageSize > i++) {
 
 这种方法不仅省时(只有一次数据库调用)，而且允许用户访问结果集的总计数**，而不需要额外的查询**:
 
-```
+```java
 resultScroll.last();
 int totalResults = resultScroll.getRowNumber() + 1;
 ```
@@ -116,7 +116,7 @@ int totalResults = resultScroll.getRowNumber() + 1;
 
 最后，让我们看看**一个更灵活的解决方案**——使用标准:
 
-```
+```java
 Criteria criteria = session.createCriteria(Foo.class);
 criteria.setFirstResult(0);
 criteria.setMaxResults(pageSize);
@@ -125,7 +125,7 @@ List<Foo> firstPage = criteria.list();
 
 Hibernate Criteria query API 也使得**获得总计数**变得非常简单——通过使用一个`Projection`对象:
 
-```
+```java
 Criteria criteriaCount = session.createCriteria(Foo.class);
 criteriaCount.setProjection(Projections.rowCount());
 Long count = (Long) criteriaCount.uniqueResult();

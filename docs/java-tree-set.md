@@ -23,7 +23,7 @@
 
 因此，让我们创建一个`TreeSet`的实例:
 
-```
+```java
 Set<String> treeSet = new TreeSet<>();
 ```
 
@@ -31,13 +31,13 @@ Set<String> treeSet = new TreeSet<>();
 
 可选地，我们可以用一个构造函数构造一个`TreeSet`,让我们通过使用`Comparable`或`Comparator:`来定义元素排序的顺序
 
-```
+```java
 Set<String> treeSet = new TreeSet<>(Comparator.comparing(String::length));
 ```
 
 **虽然 `TreeSet` 不是线程安全的，但是它可以使用`Collections.synchronizedSet()`包装器:**在外部同步
 
-```
+```java
 Set<String> syncTreeSet = Collections.synchronizedSet(treeSet);
 ```
 
@@ -51,7 +51,7 @@ Set<String> syncTreeSet = Collections.synchronizedSet(treeSet);
 
 让我们给一个`TreeSet`添加一个元素:
 
-```
+```java
 @Test
 public void whenAddingElement_shouldAddElement() {
     Set<String> treeSet = new TreeSet<>();
@@ -62,7 +62,7 @@ public void whenAddingElement_shouldAddElement() {
 
 **`add` 方法极其重要，因为该方法的实现细节说明了`TreeSet`如何在**内部工作，它如何利用`TreeMap's` `put`方法来存储元素:
 
-```
+```java
 public boolean add(E e) {
     return m.put(e, PRESENT) == null;
 }
@@ -70,13 +70,13 @@ public boolean add(E e) {
 
 变量`m`指的是内部支持`TreeMap`(注意`TreeMap`实现`NavigateableMap`):
 
-```
+```java
 private transient NavigableMap<E, Object> m;
 ```
 
 因此，`TreeSet` 在内部依赖于一个后备`NavigableMap`，当`TreeSet`的一个实例被创建时，这个后备`NavigableMap`用`TreeMap`的一个实例初始化:
 
-```
+```java
 public TreeSet() {
     this(new TreeMap<E,Object>());
 }
@@ -90,7 +90,7 @@ public TreeSet() {
 
 让我们来看看`contains()`的行动:
 
-```
+```java
 @Test
 public void whenCheckingForElement_shouldSearchForElement() {
     Set<String> treeSetContains = new TreeSet<>();
@@ -108,7 +108,7 @@ public void whenCheckingForElement_shouldSearchForElement() {
 
 让我们来看看它的实际应用:
 
-```
+```java
 @Test
 public void whenRemovingElement_shouldRemoveElement() {
     Set<String> removeFromTreeSet = new TreeSet<>();
@@ -122,7 +122,7 @@ public void whenRemovingElement_shouldRemoveElement() {
 
 如果我们想从集合中删除所有的项目，我们可以使用`clear()` 方法:
 
-```
+```java
 @Test
 public void whenClearingTreeSet_shouldClearTreeSet() {
     Set<String> clearTreeSet = new TreeSet<>();
@@ -137,7 +137,7 @@ public void whenClearingTreeSet_shouldClearTreeSet() {
 
 `size()` 方法用于识别`TreeSet`中出现的元素数量。这是 API 中的基本方法之一:
 
-```
+```java
 @Test
 public void whenCheckingTheSizeOfTreeSet_shouldReturnThesize() {
     Set<String> treeSetSize = new TreeSet<>();
@@ -151,7 +151,7 @@ public void whenCheckingTheSizeOfTreeSet_shouldReturnThesize() {
 
 `isEmpty()`方法可用于判断给定的`TreeSet`实例是否为空:
 
-```
+```java
 @Test
 public void whenCheckingForEmptyTreeSet_shouldCheckForEmpty() {
     Set<String> emptyTreeSet = new TreeSet<>();
@@ -166,7 +166,7 @@ public void whenCheckingForEmptyTreeSet_shouldCheckForEmpty() {
 
 我们可以在这里观察到递增的迭代顺序:
 
-```
+```java
 @Test
 public void whenIteratingTreeSet_shouldIterateTreeSetInAscendingOrder() {
     Set<String> treeSet = new TreeSet<>();
@@ -184,7 +184,7 @@ public void whenIteratingTreeSet_shouldIterateTreeSetInAscendingOrder() {
 
 让我们看看实际情况:
 
-```
+```java
 @Test
 public void whenIteratingTreeSet_shouldIterateTreeSetInDescendingOrder() {
     TreeSet<String> treeSet = new TreeSet<>();
@@ -202,7 +202,7 @@ public void whenIteratingTreeSet_shouldIterateTreeSetInDescendingOrder() {
 
 让我们为此创建一个测试:
 
-```
+```java
 @Test(expected = ConcurrentModificationException.class)
 public void whenModifyingTreeSetWhileIterating_shouldThrowException() {
     Set<String> treeSet = new TreeSet<>();
@@ -219,7 +219,7 @@ public void whenModifyingTreeSetWhileIterating_shouldThrowException() {
 
 或者，如果我们使用了迭代器的 remove 方法，那么我们就不会遇到异常:
 
-```
+```java
 @Test
 public void whenRemovingElementUsingIterator_shouldRemoveElement() {
 
@@ -248,7 +248,7 @@ public void whenRemovingElementUsingIterator_shouldRemoveElement() {
 
 让我们看一个例子:
 
-```
+```java
 @Test
 public void whenCheckingFirstElement_shouldReturnFirstElement() {
     TreeSet<String> treeSet = new TreeSet<>();
@@ -262,7 +262,7 @@ public void whenCheckingFirstElement_shouldReturnFirstElement() {
 
 与上面的示例类似，如果集合不为空，此方法将返回最后一个元素:
 
-```
+```java
 @Test
 public void whenCheckingLastElement_shouldReturnLastElement() {
     TreeSet<String> treeSet = new TreeSet<>();
@@ -277,7 +277,7 @@ public void whenCheckingLastElement_shouldReturnLastElement() {
 
 该方法将返回从`fromElement`到`toElement.` 的元素，注意`fromElement`是包含的，`toElement`是排他的:
 
-```
+```java
 @Test
 public void whenUsingSubSet_shouldReturnSubSetElements() {
     SortedSet<Integer> treeSet = new TreeSet<>();
@@ -304,7 +304,7 @@ public void whenUsingSubSet_shouldReturnSubSetElements() {
 
 该方法将返回小于指定元素的`TreeSet`元素:
 
-```
+```java
 @Test
 public void whenUsingHeadSet_shouldReturnHeadSetElements() {
     SortedSet<Integer> treeSet = new TreeSet<>();
@@ -325,7 +325,7 @@ public void whenUsingHeadSet_shouldReturnHeadSetElements() {
 
 该方法将返回大于或等于指定元素的`TreeSet`的元素:
 
-```
+```java
 @Test
 public void whenUsingTailSet_shouldReturnTailSetElements() {
     NavigableSet<Integer> treeSet = new TreeSet<>();
@@ -350,7 +350,7 @@ public void whenUsingTailSet_shouldReturnTailSetElements() {
 
 当我们将元素添加到`TreeSet,` 中时，这些元素根据它们的自然顺序或按照`comparator.`的指定进行排序，因此当与现有元素进行比较时，添加一个`null,`,导致一个`NullPointerException` ,因为`null`不能与任何值进行比较:
 
-```
+```java
 @Test(expected = NullPointerException.class)
 public void whenAddingNullToNonEmptyTreeSet_shouldThrowException() {
     Set<String> treeSet = new TreeSet<>();
@@ -363,7 +363,7 @@ public void whenAddingNullToNonEmptyTreeSet_shouldThrowException() {
 
 让我们看一个例子:
 
-```
+```java
 class Element {
     private Integer id;
 

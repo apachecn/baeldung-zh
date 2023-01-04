@@ -23,13 +23,13 @@
 
 要覆盖 CMD 指令，我们可以简单地在`docker run [image_name]`后添加另一个命令。例如:
 
-```
+```java
 docker run ubuntu echo "Hello World"
 ```
 
 要覆盖 ENTRYPOINT 指令，我们需要在图像名之前添加`–entrypoint`标志和所需的命令，并在图像名之后添加任何参数。例如:
 
-```
+```java
 docker run --entrypoint echo ubuntu "Hello World"
 ```
 
@@ -44,7 +44,7 @@ docker run --entrypoint echo ubuntu "Hello World"
 
 让我们看一个小例子:
 
-```
+```java
 docker run ubuntu bash 
 ```
 
@@ -52,7 +52,7 @@ docker run ubuntu bash
 
 命令运行，但是容器在命令完成后停止，这几乎是立即完成的。我们可以使用`docker ps`命令对此进行测试:
 
-```
+```java
 docker ps -a
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 c8f8f8f8f8f8        ubuntu              bash                2 minutes ago      Exited (0)          22/tcp               mystifying_snyder 
@@ -72,19 +72,19 @@ c8f8f8f8f8f8        ubuntu              bash                2 minutes ago      E
 
 我们可以使用`tail -f `命令来读取`/dev/null`文件。该命令一直在文件中寻找要显示的新更改。因此，只要文件存在，它就不会结束。让我们来看看这个命令:
 
-```
+```java
 docker run ubuntu tail -f /dev/null 
 ```
 
 我们可以使用下面的命令运行一个什么也不做的无限循环:
 
-```
+```java
 docker run ubuntu while true; do sleep 1; done
 ```
 
 下面的命令使容器保持空闲，不做任何事情:
 
-```
+```java
 docker run ubuntu sleep infinity 
 ```
 
@@ -103,13 +103,13 @@ docker run ubuntu sleep infinity
 
 如果我们想与容器交互，我们可以将它与`-i`标志结合起来。这将允许我们使用终端在容器中运行命令。下面是该命令的一个示例:
 
-```
+```java
 docker run -it ubuntu bash 
 ```
 
 或者，如果我们的目的只是无限期地运行容器，我们可以使用`-d`标志:
 
-```
+```java
 docker run -d -t ubuntu 
 ```
 

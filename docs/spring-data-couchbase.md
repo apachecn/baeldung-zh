@@ -10,7 +10,7 @@
 
 首先，我们将下面的 Maven 依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-couchbase</artifactId>
@@ -22,7 +22,7 @@
 
 为了增加对 JSR-303 bean 验证的支持，我们还包括了以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-validator</artifactId>
@@ -32,7 +32,7 @@
 
 Spring Data Couchbase 通过传统的 date 和 Calendar 类以及 Joda 时间库支持日期和时间持久性，我们包括如下内容:
 
-```
+```java
 <dependency>
     <groupId>joda-time</groupId>
     <artifactId>joda-time</artifactId>
@@ -48,7 +48,7 @@ Spring Data Couchbase 通过传统的 date 和 Calendar 类以及 Joda 时间库
 
 对于 Java 类配置，我们简单地扩展了`AbstractCouchbaseConfiguration`类:
 
-```
+```java
 @Configuration
 @EnableCouchbaseRepositories(basePackages={"com.baeldung.spring.data.couchbase"})
 public class MyCouchbaseConfig extends AbstractCouchbaseConfiguration {
@@ -72,7 +72,7 @@ public class MyCouchbaseConfig extends AbstractCouchbaseConfiguration {
 
 如果您的项目需要对 Couchbase 环境进行更多的定制，您可以通过覆盖`getEnvironment()`方法来提供:
 
-```
+```java
 @Override
 protected CouchbaseEnvironment getEnvironment() {
    ...
@@ -83,7 +83,7 @@ protected CouchbaseEnvironment getEnvironment() {
 
 下面是等效的 XML 配置:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -117,7 +117,7 @@ protected CouchbaseEnvironment getEnvironment() {
 
 为了表示 JSON 文档的属性，我们添加了用`@Field`标注的私有成员变量。我们使用`@NotNull`注释来根据需要标记某些字段:
 
-```
+```java
 @Document
 public class Person {
     @Id
@@ -144,7 +144,7 @@ public class Person {
 
 注意，用`@Id`注释的属性仅仅代表文档键，并不一定是存储的 JSON 文档的一部分，除非它也用`@Field`注释，如下所示:
 
-```
+```java
 @Id
 @Field
 private String id;
@@ -152,14 +152,14 @@ private String id;
 
 如果您想在实体类中命名一个不同于存储在 JSON 文档中的字段，只需限定它的`@Field`注释，如下例所示:
 
-```
+```java
 @Field("fname")
 private String firstName;
 ```
 
 下面的例子展示了持久化的`Person`文档的外观:
 
-```
+```java
 {
     "firstName": "John",
     "lastName": "Smith",
@@ -172,7 +172,7 @@ private String firstName;
 
 例如，如果您想要指定一个名为`“dataType”`的字段来保存类名，您可以将它添加到您的 Couchbase 配置类中:
 
-```
+```java
 @Override
 public String typeKey() {
     return "dataType";
@@ -181,7 +181,7 @@ public String typeKey() {
 
 覆盖`typeKey()`的另一个普遍原因是，如果您使用的 Couchbase Mobile 版本不支持带下划线前缀的字段。在这种情况下，您可以像前面的例子一样选择自己的替代类型字段，或者使用 Spring 提供的替代类型:
 
-```
+```java
 @Override
 public String typeKey() {
     // use "javaClass" instead of "_class"
@@ -195,7 +195,7 @@ Spring Data Couchbase 提供了与 JPA 等其他 Spring 数据模块相同的内
 
 我们通过扩展`CrudRepository<String,Person>`并添加一个可派生的查询方法来为`Person`类声明一个存储库接口:
 
-```
+```java
 public interface PersonRepository extends CrudRepository<Person, String> {
     List<Person> findByFirstName(String firstName);
 }
@@ -207,7 +207,7 @@ public interface PersonRepository extends CrudRepository<Person, String> {
 
 要添加对 N1QL 的支持，您必须在 bucket 上创建一个主索引。您可以通过使用`cbq`命令行查询处理器(参见 Couchbase 文档，了解如何为您的环境启动`cbq`工具)并发出以下命令来创建索引:
 
-```
+```java
 CREATE PRIMARY INDEX ON baeldung USING GSI;
 ```
 
@@ -219,7 +219,7 @@ CREATE PRIMARY INDEX ON baeldung USING GSI;
 
 例如，要在`firstName`字段上添加索引，在`cbq`工具中发出以下命令:
 
-```
+```java
 CREATE INDEX idx_firstName ON baeldung(firstName) USING GSI;
 ```
 
@@ -229,7 +229,7 @@ CREATE INDEX idx_firstName ON baeldung(firstName) USING GSI;
 
 无论您运行的是哪个版本的 Couchbase Server，您都必须创建一个名为`“all”`的支持视图来支持内置的“`findAll”`存储库方法。这是我们的`Person`类的`“all”`视图的地图函数:
 
-```
+```java
 function (doc, meta) {
     if(doc._class == "com.baeldung.spring.data.couchbase.model.Person") {
         emit(meta.id, null);
@@ -241,7 +241,7 @@ function (doc, meta) {
 
 视图支持的自定义方法必须用`@View`进行注释，如下例所示:
 
-```
+```java
 @View
 List<Person> findByFirstName(String firstName);
 ```
@@ -250,7 +250,7 @@ List<Person> findByFirstName(String firstName);
 
 下面是如何为`“byFirstName”`视图编写映射函数:
 
-```
+```java
 function (doc, meta) {
     if(doc._class == "com.baeldung.spring.data.couchbase.model.Person"
       && doc.firstName) {
@@ -261,7 +261,7 @@ function (doc, meta) {
 
 通过用相应的支持视图的名称限定每个`@View`注释，您可以忽略这个命名约定并使用您自己的视图名称。例如:
 
-```
+```java
 @View("myCustomView")
 List<Person> findByFirstName(String lastName);
 ```
@@ -270,7 +270,7 @@ List<Person> findByFirstName(String lastName);
 
 对于我们的服务层，我们定义了一个接口和两个实现:一个使用 Spring 数据仓库抽象，另一个使用 Spring 数据模板抽象。这里是我们的`PersonService`界面:
 
-```
+```java
 public interface PersonService {
     Person findOne(String id);
     List<Person> findAll();
@@ -286,7 +286,7 @@ public interface PersonService {
 
 下面是一个使用我们上面定义的存储库的实现:
 
-```
+```java
 @Service
 @Qualifier("PersonRepositoryService")
 public class PersonRepositoryService implements PersonService {
@@ -333,7 +333,7 @@ public class PersonRepositoryService implements PersonService {
 
 下面是使用模板抽象的实现:
 
-```
+```java
 @Service
 @Qualifier("PersonTemplateService")
 public class PersonTemplateService implements PersonService {

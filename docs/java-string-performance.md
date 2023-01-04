@@ -24,7 +24,7 @@
 
 我们的配置:
 
-```
+```java
 @BenchmarkMode(Mode.SingleShotTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Measurement(batchSize = 10000, iterations = 10)
@@ -41,7 +41,7 @@ public class StringPerformance {
 
 现在，让我们添加第一个微基准:
 
-```
+```java
 @Benchmark
 public String benchmarkStringConstructor() {
     return new String("baeldung");
@@ -57,7 +57,7 @@ public String benchmarkStringLiteral() {
 
 让我们用循环迭代计数 `= 1,000,000`来运行测试，看看结果:
 
-```
+```java
 Benchmark                   Mode  Cnt  Score    Error     Units
 benchmarkStringConstructor  ss     10  16.089 ± 3.355     ms/op
 benchmarkStringLiteral      ss     10  9.523  ± 3.331     ms/op
@@ -69,7 +69,7 @@ benchmarkStringLiteral      ss     10  9.523  ± 3.331     ms/op
 
 让我们来看看动态`String`拼接的例子:
 
-```
+```java
 @State(Scope.Thread)
 public static class StringPerformanceHints {
     String result = "";
@@ -84,7 +84,7 @@ public String benchmarkStringDynamicConcat() {
 
 在我们的结果中，我们希望看到平均执行时间。输出数字格式设置为毫秒:
 
-```
+```java
 Benchmark                       1000     10,000
 benchmarkStringDynamicConcat    47.331   4370.411
 ```
@@ -97,7 +97,7 @@ benchmarkStringDynamicConcat    47.331   4370.411
 
 连接`Strings`的另一种方法是使用`concat()`方法:
 
-```
+```java
 @Benchmark
 public String benchmarkStringConcat() {
     return result.concat(baeldung);
@@ -106,7 +106,7 @@ public String benchmarkStringConcat() {
 
 输出时间单位是毫秒，迭代次数是 100，000。结果表如下所示:
 
-```
+```java
 Benchmark              Mode  Cnt  Score     Error     Units
 benchmarkStringConcat    ss   10  3403.146 ± 852.520  ms/op
 ```
@@ -117,7 +117,7 @@ benchmarkStringConcat    ss   10  3403.146 ± 852.520  ms/op
 
 让我们编写 JMH 测试用例:
 
-```
+```java
 String formatString = "hello %s, nice to meet you";
 
 @Benchmark
@@ -128,7 +128,7 @@ public String benchmarkStringFormat_s() {
 
 之后，我们运行它并查看结果:
 
-```
+```java
 Number of Iterations      10,000   100,000   1,000,000
 benchmarkStringFormat_s   17.181   140.456   1636.279    ms/op
 ```
@@ -143,7 +143,7 @@ benchmarkStringFormat_s   17.181   140.456   1636.279    ms/op
 
 在对`StringBuffer`和`StringBuilder, `进行修改和运行动态连接测试后，我们得到:
 
-```
+```java
 Benchmark               Mode  Cnt  Score   Error  Units
 benchmarkStringBuffer   ss    10  1.409  ± 1.665  ms/op
 benchmarkStringBuilder  ss    10  1.200  ± 0.648  ms/op
@@ -165,7 +165,7 @@ benchmarkStringBuilder  ss    10  1.200  ± 0.648  ms/op
 
 现在，是时候进行基准测试了:
 
-```
+```java
 @Benchmark
 public String benchmarkStringReplace() {
     return longString.replace("average", " average !!!");
@@ -179,7 +179,7 @@ public String benchmarkStringUtilsReplace() {
 
 将`batchSize`设置为 100，000，我们给出结果:
 
-```
+```java
 Benchmark                     Mode  Cnt  Score   Error   Units
 benchmarkStringReplace         ss   10   6.233  ± 2.922  ms/op
 benchmarkStringUtilsReplace    ss   10   5.355  ± 2.497  ms/op
@@ -189,7 +189,7 @@ benchmarkStringUtilsReplace    ss   10   5.355  ± 2.497  ms/op
 
 在最新的 JDK 9+(我们的测试在 JDK 10 上运行)版本中，两种实现都有相当好的结果。现在，让我们将 JDK 版本降级到 8，并再次进行测试:
 
-```
+```java
 Benchmark                     Mode  Cnt   Score    Error     Units
 benchmarkStringReplace         ss   10    48.061   ± 17.157  ms/op
 benchmarkStringUtilsReplace    ss   10    14.478   ±  5.752  ms/op
@@ -207,7 +207,7 @@ benchmarkStringUtilsReplace    ss   10    14.478   ±  5.752  ms/op
 
 现在，是时候为`String.split()`选项编写基准测试了:
 
-```
+```java
 String emptyString = " ";
 
 @Benchmark
@@ -218,7 +218,7 @@ public String [] benchmarkStringSplit() {
 
 `Pattern.split()`:
 
-```
+```java
 @Benchmark
 public String [] benchmarkStringSplitPattern() {
     return spacePattern.split(longString, 0);
@@ -227,7 +227,7 @@ public String [] benchmarkStringSplitPattern() {
 
 `StringTokenizer`:
 
-```
+```java
 List stringTokenizer = new ArrayList<>();
 
 @Benchmark
@@ -242,7 +242,7 @@ public List benchmarkStringTokenizer() {
 
 `String.indexOf()`:
 
-```
+```java
 List stringSplit = new ArrayList<>();
 
 @Benchmark
@@ -259,7 +259,7 @@ public List benchmarkStringIndexOf() {
 
 番石榴`Splitter`:
 
-```
+```java
 @Benchmark
 public List<String> benchmarkGuavaSplitter() {
     return Splitter.on(" ").trimResults()
@@ -270,7 +270,7 @@ public List<String> benchmarkGuavaSplitter() {
 
 最后，我们运行并比较`batchSize = 100,000`的结果:
 
-```
+```java
 Benchmark                     Mode  Cnt    Score    Error    Units
 benchmarkGuavaSplitter         ss   10    4.008  ± 1.836     ms/op
 benchmarkStringIndexOf         ss   10    1.144  ± 0.322     ms/op
@@ -287,7 +287,7 @@ benchmarkStringTokenizer       ss   10    2.277  ± 0.448     ms/op
 
 在这一节中，我们将测量字符串转换的运行时得分。更具体地说，我们将检查`Integer.toString()`连接方法:
 
-```
+```java
 int sampleNumber = 100;
 
 @Benchmark
@@ -298,7 +298,7 @@ public String benchmarkIntegerToString() {
 
 `String.valueOf()`:
 
-```
+```java
 @Benchmark
 public String benchmarkStringValueOf() {
     return String.valueOf(sampleNumber);
@@ -307,7 +307,7 @@ public String benchmarkStringValueOf() {
 
 `[some integer value] + “”`:
 
-```
+```java
 @Benchmark
 public String benchmarkStringConvertPlus() {
     return sampleNumber + "";
@@ -316,7 +316,7 @@ public String benchmarkStringConvertPlus() {
 
 `String.format()`:
 
-```
+```java
 String formatDigit = "%d";
 
 @Benchmark
@@ -327,7 +327,7 @@ public String benchmarkStringFormat_d() {
 
 运行测试后，我们将看到`batchSize = 10,000`的输出:
 
-```
+```java
 Benchmark                     Mode  Cnt   Score    Error  Units
 benchmarkIntegerToString      ss   10   0.953 ±  0.707  ms/op
 benchmarkStringConvertPlus    ss   10   1.464 ±  1.670  ms/op
@@ -345,7 +345,7 @@ benchmarkStringValueOf        ss   10   2.847 ± 11.153  ms/op
 
 以下是我们对`String.equals()`操作的基准测试:
 
-```
+```java
 @Benchmark
 public boolean benchmarkStringEquals() {
     return longString.equals(baeldung);
@@ -354,7 +354,7 @@ public boolean benchmarkStringEquals() {
 
 `String.equalsIgnoreCase()`:
 
-```
+```java
 @Benchmark
 public boolean benchmarkStringEqualsIgnoreCase() {
     return longString.equalsIgnoreCase(baeldung);
@@ -363,7 +363,7 @@ public boolean benchmarkStringEqualsIgnoreCase() {
 
 `String.matches()`:
 
-```
+```java
 @Benchmark
 public boolean benchmarkStringMatches() {
     return longString.matches(baeldung);
@@ -372,7 +372,7 @@ public boolean benchmarkStringMatches() {
 
 `String.compareTo()`:
 
-```
+```java
 @Benchmark
 public int benchmarkStringCompareTo() {
     return longString.compareTo(baeldung);
@@ -381,7 +381,7 @@ public int benchmarkStringCompareTo() {
 
 之后，我们运行测试并显示结果:
 
-```
+```java
 Benchmark                         Mode  Cnt    Score    Error  Units
 benchmarkStringCompareTo           ss   10    2.561 ±  0.899   ms/op
 benchmarkStringEquals              ss   10    1.712 ±  0.839   ms/op
@@ -399,7 +399,7 @@ benchmarkStringMatches             ss   10    118.364 ± 43.203 ms/op
 
 所以每次我们调用`String.matches()`，它都会编译`Pattern:`
 
-```
+```java
 @Benchmark
 public boolean benchmarkStringMatches() {
     return longString.matches(baeldung);
@@ -408,7 +408,7 @@ public boolean benchmarkStringMatches() {
 
 第二种方法重用`Pattern`对象:
 
-```
+```java
 Pattern longPattern = Pattern.compile(longString);
 
 @Benchmark
@@ -419,7 +419,7 @@ public boolean benchmarkPrecompiledMatches() {
 
 现在结果是:
 
-```
+```java
 Benchmark                      Mode  Cnt    Score    Error   Units
 benchmarkPrecompiledMatches    ss   10    29.594  ± 12.784   ms/op
 benchmarkStringMatches         ss   10    106.821 ± 46.963   ms/op
@@ -431,7 +431,7 @@ benchmarkStringMatches         ss   10    106.821 ± 46.963   ms/op
 
 最后，我们来对比一下`String.isEmpty()`的方法:
 
-```
+```java
 @Benchmark
 public boolean benchmarkStringIsEmpty() {
     return longString.isEmpty();
@@ -440,7 +440,7 @@ public boolean benchmarkStringIsEmpty() {
 
 和`String.length()`方法:
 
-```
+```java
 @Benchmark
 public boolean benchmarkStringLengthZero() {
     return emptyString.length() == 0;
@@ -449,7 +449,7 @@ public boolean benchmarkStringLengthZero() {
 
 首先，我们称它们为`longString = “Hello baeldung, I am a bit longer than other Strings in average” String.``batchSize`是`10,000`:
 
-```
+```java
 Benchmark                  Mode  Cnt  Score   Error  Units
 benchmarkStringIsEmpty       ss   10  0.295 ± 0.277  ms/op
 benchmarkStringLengthZero    ss   10  0.472 ± 0.840  ms/op
@@ -457,7 +457,7 @@ benchmarkStringLengthZero    ss   10  0.472 ± 0.840  ms/op
 
 之后，让我们设置`longString = “”`空字符串并再次运行测试:
 
-```
+```java
 Benchmark                  Mode  Cnt  Score   Error  Units
 benchmarkStringIsEmpty       ss   10  0.245 ± 0.362  ms/op
 benchmarkStringLengthZero    ss   10  0.351 ± 0.473  ms/op
@@ -492,7 +492,7 @@ benchmarkStringLengthZero    ss   10  0.351 ± 0.473  ms/op
 
 为了获得一些经过验证的数字，让我们进行一个基准测试:
 
-```
+```java
 @Benchmark
 public String benchmarkStringIntern() {
     return baeldung.intern();
@@ -501,7 +501,7 @@ public String benchmarkStringIntern() {
 
 此外，输出分数以毫秒为单位:
 
-```
+```java
 Benchmark               1000   10,000  100,000  1,000,000
 benchmarkStringIntern   0.433  2.243   19.996   204.373
 ```
@@ -512,7 +512,7 @@ benchmarkStringIntern   0.433  2.243   19.996   204.373
 
 首先，**这个选项是 G1 垃圾收集器的一部分。**默认情况下，此功能被禁用。因此，我们需要使用以下命令来启用它:
 
-```
+```java
  -XX:+UseG1GC -XX:+UseStringDeduplication
 ```
 

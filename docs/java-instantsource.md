@@ -12,7 +12,7 @@
 
 它是在 Java 17 **中添加的，目的是提供一种安全的方式来访问当前时刻**，正如我们在下面的例子中看到的:
 
-```
+```java
 class AQuickTest {
     InstantSource source;
     ...
@@ -24,7 +24,7 @@ class AQuickTest {
 
 然后，我们可以简单地得到一个瞬间:
 
-```
+```java
 var quickTest = new AQuickTest(InstantSource.system());
 quickTest.getInstant();
 ```
@@ -47,7 +47,7 @@ quickTest.getInstant();
 
 `InstantExample`类使用一个`InstantWrapper`(或变通方法)来恢复一个瞬间:
 
-```
+```java
 class InstantExample {
     InstantWrapper instantWrapper;
     Instant getCurrentInstantFromInstantWrapper() {
@@ -58,7 +58,7 @@ class InstantExample {
 
 我们的`InstantWrapper`工作区类本身看起来是这样的:
 
-```
+```java
 class InstantWrapper {
     Clock clock;
     InstantWrapper() {
@@ -75,7 +75,7 @@ class InstantWrapper {
 
 然后，我们可以用它来为测试提供一个固定的瞬间:
 
-```
+```java
 // given
 LocalDateTime now = LocalDateTime.now();
 InstantExample tested = new InstantExample(InstantWrapper.of(now), null);
@@ -90,7 +90,7 @@ assertEquals(currentInstant, returnedInstant);
 
 本质上，我们上面应用的解决方法就是`InstantSource`所做的。**它提供了一个`Instants`的外部工厂，我们可以在任何需要**的地方使用。Java 17 提供了一个默认的系统级实现(在`Clock`类中)，我们也可以提供自己的实现:
 
-```
+```java
 class InstantExample {
     InstantSource instantSource;
     Instant getCurrentInstantFromInstantSource() {
@@ -101,7 +101,7 @@ class InstantExample {
 
 `InstantSource`是可插拔的。也就是说，它可以使用依赖注入框架注入，或者只是作为构造函数参数传递到我们正在测试的对象中。因此，我们可以很容易地创建一个存根`InstantSource,` 提供给被测试的对象，并让它返回我们想要测试的时刻:
 
-```
+```java
 // given
 LocalDateTime now = LocalDateTime.now();
 InstantSource instantSource = InstantSource.fixed(now.toInstant(ZoneOffset.UTC));
@@ -119,25 +119,25 @@ assertEquals(currentInstant, returnedInstant);
 
 例如，让我们看看当我们在`Clock`类上请求 instant 时会发生什么:
 
-```
+```java
 Clock.systemDefaultZone().instant();
 ```
 
 该代码将产生以下结果:
 
-```
+```java
 2022-01-05T06:47:15.001890204Z
 ```
 
 让我们从不同的来源问同样的问题:
 
-```
+```java
 LocalDateTime.now().toInstant(ZoneOffset.UTC);
 ```
 
 这会产生以下输出:
 
-```
+```java
 2022-01-05T07:47:15.001890204Z
 ```
 
@@ -169,7 +169,7 @@ LocalDateTime.now().toInstant(ZoneOffset.UTC);
 
 Java 17 中当前默认的实现是`Clock.SystemInstantSource`类。
 
-```
+```java
 Instant i = InstantSource.system().instant();
 ```
 
@@ -177,26 +177,26 @@ Instant i = InstantSource.system().instant();
 
 基于前面的例子:
 
-```
+```java
 Instant i = InstantSource.system().instant();
 System.out.println(i);
 ```
 
 运行这段代码后，我们将得到以下输出:
 
-```
+```java
 2022-01-05T07:44:44.861040341Z
 ```
 
 但是，如果我们应用 2 小时的分笔成交点持续时间:
 
-```
+```java
 Instant i = InstantSource.tick(InstantSource.system(), Duration.ofHours(2)).instant();
 ```
 
 然后，我们会得到下面的结果:
 
-```
+```java
 2022-01-05T06:00:00Z
 ```
 
@@ -204,7 +204,7 @@ Instant i = InstantSource.tick(InstantSource.system(), Duration.ofHours(2)).inst
 
 当我们需要创建一个存根`InstantSource`用于测试时，这种方法很方便:
 
-```
+```java
 LocalDateTime fixed = LocalDateTime.of(2022, 1, 1, 0, 0);
 Instant i = InstantSource.fixed(fixed.toInstant(ZoneOffset.UTC)).instant();
 System.out.println(i);
@@ -212,7 +212,7 @@ System.out.println(i);
 
 上述内容总是返回相同的瞬间:
 
-```
+```java
 2022-01-01T00:00:00Z
 ```
 
@@ -220,7 +220,7 @@ System.out.println(i);
 
 基于前面的例子，我们将对固定的`InstantSource`应用一个偏移量，看看它返回什么:
 
-```
+```java
 LocalDateTime fixed = LocalDateTime.of(2022, 1, 1, 0, 0);
 InstantSource fixedSource = InstantSource.fixed(fixed.toInstant(ZoneOffset.UTC));
 Instant i = InstantSource.offset(fixedSource, Duration.ofDays(5)).instant();
@@ -229,7 +229,7 @@ System.out.println(i);
 
 执行此代码后，我们将获得以下输出:
 
-```
+```java
 2022-01-06T00:00:00Z
 ```
 
@@ -245,14 +245,14 @@ System.out.println(i);
 
 这种方法的最基本用法是:
 
-```
+```java
 Instant i = InstantSource.system().instant();
 System.out.println(i);
 ```
 
 运行此代码将向我们显示以下输出:
 
-```
+```java
 2022-01-05T08:29:17.641839778Z
 ```
 
@@ -260,14 +260,14 @@ System.out.println(i);
 
 为了从一个`InstantSource`获得纪元:
 
-```
+```java
 long m = InstantSource.system().millis();
 System.out.println(m);
 ```
 
 运行之后，我们将得到以下结果:
 
-```
+```java
 1641371476655
 ```
 
@@ -275,14 +275,14 @@ System.out.println(m);
 
 让我们为特定的`ZoneId`获取一个`Clock`实例:
 
-```
+```java
 Clock c = InstantSource.system().withZone(ZoneId.of("-4"));
 System.out.println(c);
 ```
 
 这将简单地打印以下内容:
 
-```
+```java
 SystemClock[-04:00]
 ```
 

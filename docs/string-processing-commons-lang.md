@@ -12,7 +12,7 @@ Apache Commons Lang 3 库提供了对 Java APIs 核心类的操作支持。这�
 
 为了使用 Commons Lang 3 库，只需使用以下依赖项从中央 Maven 存储库中取出它:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -34,7 +34,7 @@ Apache Commons Lang 3 库提供了对 Java APIs 核心类的操作支持。这�
 
 下面的代码片段演示了此方法的两种重载形式在结果验证中的使用:
 
-```
+```java
 String string = "baeldung.com";
 boolean contained1 = StringUtils.containsAny(string, 'a', 'b', 'c');
 boolean contained2 = StringUtils.containsAny(string, 'x', 'y', 'z');
@@ -53,7 +53,7 @@ assertFalse(contained4);
 
 以下代码片段验证了当忽略大小写时`String “baeldung.com”`包含`“BAELDUNG”`:
 
-```
+```java
 String string = "baeldung.com";
 boolean contained = StringUtils.containsIgnoreCase(string, "BAELDUNG");
 
@@ -66,7 +66,7 @@ assertTrue(contained);
 
 下面是这个方法的演示，确认在`String` `“welcome to www.baeldung.com”`中`‘w'`出现四次，`“com”`出现两次:
 
-```
+```java
 String string = "welcome to www.baeldung.com";
 int charNum = StringUtils.countMatches(string, 'w');
 int stringNum = StringUtils.countMatches(string, "com");
@@ -83,7 +83,7 @@ assertEquals(2, stringNum);
 
 在下面的例子中，`appendIfMissing`和`prependIfMissing`方法用于为`String “baeldung.com”`添加后缀和前缀，而这些词缀不会重复:
 
-```
+```java
 String string = "baeldung.com";
 String stringWithSuffix = StringUtils.appendIfMissing(string, ".com");
 String stringWithPrefix = StringUtils.prependIfMissing(string, "www.");
@@ -98,7 +98,7 @@ assertEquals("www.baeldung.com", stringWithPrefix);
 
 `swapCase`方法将`String,`的大小写从大写转换为小写，从小写转换为大写:
 
-```
+```java
 String originalString = "baeldung.COM";
 String swappedString = StringUtils.swapCase(originalString);
 
@@ -107,7 +107,7 @@ assertEquals("BAELDUNG.com", swappedString);
 
 `capitalize`方法将给定的`String`的第一个字符转换成大写，其余的字符保持不变:
 
-```
+```java
 String originalString = "baeldung";
 String capitalizedString = StringUtils.capitalize(originalString);
 
@@ -116,7 +116,7 @@ assertEquals("Baeldung", capitalizedString);
 
 `uncapitalize`方法将给定的`String`的第一个字符转换成小写，其余的字符保持不变:
 
-```
+```java
 String originalString = "Baeldung";
 String uncapitalizedString = StringUtils.uncapitalize(originalString);
 
@@ -129,7 +129,7 @@ assertEquals("baeldung", uncapitalizedString);
 
 以下代码片段反转字符串`“baeldung”`并验证结果:
 
-```
+```java
 String originalString = "baeldung";
 String reversedString = StringUtils.reverse(originalString);
 
@@ -138,7 +138,7 @@ assertEquals("gnudleab", reversedString);
 
 使用`reverseDelimited`方法，字符成组反转，而不是单个反转:
 
-```
+```java
 String originalString = "www.baeldung.com";
 String reversedString = StringUtils.reverseDelimited(originalString, '.');
 
@@ -149,7 +149,7 @@ assertEquals("com.baeldung.www", reversedString);
 
 `rotate()`方法将`String`的字符循环移位若干个位置。下面的代码片段将`String “baeldung”`的所有字符向右移动四个位置，并验证结果:
 
-```
+```java
 String originalString = "baeldung";
 String rotatedString = StringUtils.rotate(originalString, 4);
 
@@ -160,7 +160,7 @@ assertEquals("dungbael", rotatedString);
 
 `difference`方法比较两个字符串，从与第一个不同的位置开始返回第二个`String,`的剩余部分。以下代码片段在两个方向上比较两个`Strings: “Baeldung Tutorials”`和`“Baeldung Courses”`，并验证结果:
 
-```
+```java
 String tutorials = "Baeldung Tutorials";
 String courses = "Baeldung Courses";
 String diff1 = StringUtils.difference(tutorials, courses);

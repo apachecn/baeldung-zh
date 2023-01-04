@@ -16,7 +16,7 @@
 
 首先，让我们创建一个名为 *FirstClass* 的类，包含一个`protected`字段、方法和构造函数:
 
-```
+```java
 public class FirstClass {
 
     protected String name;
@@ -39,7 +39,7 @@ public class FirstClass {
 
 现在，让我们看看如何通过创建一个新的*泛型类*来访问`protected`字段，该类在与`FirstClass`相同的包中声明:
 
-```
+```java
 public class GenericClass {
 
     public static void main(String[] args) {
@@ -56,7 +56,7 @@ public class GenericClass {
 
 现在让我们尝试与这些字段进行交互，这些字段来自一个不同于`FirstClass`的包中声明的类:
 
-```
+```java
 public class SecondGenericClass {
 
     public static void main(String[] args) {
@@ -69,7 +69,7 @@ public class SecondGenericClass {
 
 正如我们所见，**我们得到编译错误**:
 
-```
+```java
 The constructor FirstClass(String) is not visible
 The method getName() from the type FirstClass is not visible
 The field FirstClass.name is not visible
@@ -81,7 +81,7 @@ The field FirstClass.name is not visible
 
 现在让我们看看当我们声明**是一个扩展`FirstClass `的类，但是在不同的包**中声明时会发生什么:
 
-```
+```java
 public class SecondClass extends FirstClass {
 
     public SecondClass(String name) {
@@ -100,7 +100,7 @@ public class SecondClass extends FirstClass {
 
 让我们在第一个类中创建这个空的内部类:
 
-```
+```java
 package com.baeldung.core.modifiers;
 
 public class FirstClass {
@@ -119,7 +119,7 @@ public class FirstClass {
 
 为了测试这一点，让我们编辑我们的*泛型类*:
 
-```
+```java
 public class GenericClass {
 
     public static void main(String[] args) {
@@ -135,7 +135,7 @@ public class GenericClass {
 
 让我们试着从我们的`SecondGenericClass`中实例化一个`InnerClass`，我们记得，它在`FirstClass'` 包之外:
 
-```
+```java
 public class SecondGenericClass {
 
     public static void main(String[] args) {
@@ -148,7 +148,7 @@ public class SecondGenericClass {
 
 不出所料，**我们得到一个编译错误**:
 
-```
+```java
 The type FirstClass.InnerClass is not visible
 ```
 
@@ -156,7 +156,7 @@ The type FirstClass.InnerClass is not visible
 
 让我们试着从`SecondClass`开始做同样的事情:
 
-```
+```java
 public class SecondClass extends FirstClass {
 
     public SecondClass(String name) {
@@ -169,13 +169,13 @@ public class SecondClass extends FirstClass {
 
 **我们期望轻松地实例化我们的`InnerClass`。然而，我们在这里也得到了一个编译错误:**
 
-```
+```java
 The constructor FirstClass.InnerClass() is not visible
 ```
 
 让我们来看看我们的`InnerClass`宣言:
 
-```
+```java
 protected static class InnerClass {
 }
 ```
@@ -186,7 +186,7 @@ protected static class InnerClass {
 
 如果我们希望**解决这个问题**并允许我们的`SecondClass`实例化一个`InnerClass`对象，**我们可以显式声明一个公共构造函数**:
 
-```
+```java
 protected static class InnerClass {
     public InnerClass() {
     }

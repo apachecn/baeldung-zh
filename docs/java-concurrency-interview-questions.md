@@ -31,7 +31,7 @@ Java 中的并发性是技术访谈中提出的最复杂、最高级的话题之
 
 要创建线程的实例，有两种选择。首先，将一个`Runnable`实例传递给它的构造函数，并调用`start()`。`Runnable`是一个函数接口，所以可以作为 lambda 表达式传递:
 
-```
+```java
 Thread thread1 = new Thread(() ->
   System.out.println("Hello World from Runnable!"));
 thread1.start();
@@ -39,7 +39,7 @@ thread1.start();
 
 Thread 也实现了`Runnable`，所以另一种启动线程的方式是创建一个匿名子类，覆盖它的`run()`方法，然后调用`start()`:
 
-```
+```java
 Thread thread2 = new Thread() {
     @Override
     public void run() {
@@ -70,7 +70,7 @@ thread2.start();
 
 要启动一个线程作为守护进程，您应该在调用`start()`之前使用`setDaemon()`方法:
 
-```
+```java
 Thread daemon = new Thread(()
   -> System.out.println("Hello from daemon!"));
 daemon.setDaemon(true);
@@ -156,7 +156,7 @@ JVM 基本上保证类的`final`字段将在任何线程获得对象之前被初
 
 块前的`synchronized`关键字意味着任何进入该块的线程都必须获取监视器(括号中的对象)。如果监视器已经被另一个线程获取，前一个线程将进入`BLOCKED`状态，并等待直到监视器被释放。
 
-```
+```java
 synchronized(object) {
     // ...
 }
@@ -164,7 +164,7 @@ synchronized(object) {
 
 一个`synchronized`实例方法具有相同的语义，但是实例本身充当监视器。
 
-```
+```java
 synchronized void instanceMethod() {
     // ...
 }
@@ -172,7 +172,7 @@ synchronized void instanceMethod() {
 
 对于一个`static synchronized`方法，监视器是代表声明类的`Class`对象。
 
-```
+```java
 static synchronized void staticMethod() {
     // ...
 }
@@ -192,7 +192,7 @@ static synchronized void staticMethod() {
 
 下面的`BlockingQueue`实现展示了多线程如何通过`wait-notify`模式协同工作。如果我们将一个元素`put`到一个空队列中，所有在`take`方法中等待的线程都会醒来并尝试接收这个值。如果我们`put`一个元素进入一个满队列，那么`put`方法`wait` s 用于调用`get`方法。`get`方法删除一个元素，并通知在`put`方法中等待的线程，队列中有一个空位置用于存放新的项目。
 
-```
+```java
 public class BlockingQueue<T> {
 
     private List<T> queue = new LinkedList<T>();

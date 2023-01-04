@@ -21,7 +21,7 @@
 
 通过这种方法，我们将使用一种简单的`String`处理方法来查找扩展:
 
-```
+```java
 public Optional<String> getExtensionByStringHandling(String filename) {
     return Optional.ofNullable(filename)
       .filter(f -> f.contains("."))
@@ -42,7 +42,7 @@ public Optional<String> getExtensionByStringHandling(String filename) {
 
 在第二种方法中，我们将使用 Apache Commons IO 库提供的实用程序类来找到扩展:
 
-```
+```java
 public String getExtensionByApacheCommonLib(String filename) {
     return FilenameUtils.getExtension(filename);
 }
@@ -69,7 +69,7 @@ public String getExtensionByApacheCommonLib(String filename) {
 
 要添加一个番石榴库，我们可以将下面的依赖项添加到我们的`pom.xml:`
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -81,7 +81,7 @@ public String getExtensionByApacheCommonLib(String filename) {
 
 添加库之后，我们可以简单地使用它的`getFileExtension`方法:
 
-```
+```java
 public String getExtensionByGuava(String filename) {
     return Files.getFileExtension(filename);
 } 

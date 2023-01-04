@@ -21,7 +21,7 @@ ORMLite 是一个用于 Java 应用程序的轻量级 ORM 库。它为最常见�
 
 要开始使用 ORMLite，我们需要将`[ormlite-jdbc](https://web.archive.org/web/20220526045555/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22ormlite-jdbc%22)`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.j256.ormlite</groupId>
     <artifactId>ormlite-jdbc</artifactId>
@@ -42,7 +42,7 @@ ORMLite 是一个用于 Java 应用程序的轻量级 ORM 库。它为最常见�
 
 让我们首先定义一个带有一个`name`字段和一个`libraryId`字段的`Library`实体，这也是一个主键:
 
-```
+```java
 @DatabaseTable(tableName = "libraries")
 public class Library {	
 
@@ -75,7 +75,7 @@ public class Library {
 
 在使用`JPA`标准注释之前，我们定义的`Library`实体的等效实体是:
 
-```
+```java
 @Entity
 public class LibraryJPA {
 
@@ -100,7 +100,7 @@ public class LibraryJPA {
 
 为此，我们可以使用创建单个连接的`JdbcConnectionSource`类，或者使用代表简单池连接源的`JdbcPooledConnectionSource`:
 
-```
+```java
 JdbcPooledConnectionSource connectionSource 
   = new JdbcPooledConnectionSource("jdbc:h2:mem:myDb");
 
@@ -122,7 +122,7 @@ connectionSource.close();
 
 让我们看看如何使用`TableUtils`为我们的`Library`类创建表格:
 
-```
+```java
 TableUtils.createTableIfNotExists(connectionSource, Library.class);
 ```
 
@@ -130,7 +130,7 @@ TableUtils.createTableIfNotExists(connectionSource, Library.class);
 
 ORMLite 包含了**一个`DaoManager`类，它可以用 CRUD 功能**为我们创建`DAO`对象:
 
-```
+```java
 Dao<Library, Long> libraryDao 
   = DaoManager.createDao(connectionSource, Library.class);
 ```
@@ -139,7 +139,7 @@ Dao<Library, Long> libraryDao
 
 接下来，我们可以对`Library`对象执行 CRUD 操作:
 
-```
+```java
 Library library = new Library();
 library.setName("My Library");
 libraryDao.create(library);
@@ -154,7 +154,7 @@ libraryDao.delete(library);
 
 `DAO`也是一个迭代器，可以遍历所有记录:
 
-```
+```java
 libraryDao.forEach(lib -> {
     System.out.println(lib.getName());
 });
@@ -164,7 +164,7 @@ libraryDao.forEach(lib -> {
 
 因此，ORMLite 文档建议我们直接使用迭代器:
 
-```
+```java
 try (CloseableWrappedIterable<Library> wrappedIterable 
   = libraryDao.getWrappedIterable()) {
     wrappedIterable.forEach(lib -> {
@@ -179,7 +179,7 @@ try (CloseableWrappedIterable<Library> wrappedIterable
 
 如果我们想要扩展所提供的`DAO` 对象的行为，我们可以创建一个扩展`Dao`类型的新接口:
 
-```
+```java
 public interface LibraryDao extends Dao<Library, Long> {
     public List<Library> findByName(String name) throws SQLException;
 }
@@ -187,7 +187,7 @@ public interface LibraryDao extends Dao<Library, Long> {
 
 然后，让我们添加一个实现这个接口并扩展了`BaseDaoImpl`类的类:
 
-```
+```java
 public class LibraryDaoImpl extends BaseDaoImpl<Library, Long> 
   implements LibraryDao {
     public LibraryDaoImpl(ConnectionSource connectionSource) throws SQLException {
@@ -205,7 +205,7 @@ public class LibraryDaoImpl extends BaseDaoImpl<Library, Long>
 
 最后，为了使用我们的定制`DAO,`，我们需要将类名添加到`Library`类定义中:
 
-```
+```java
 @DatabaseTable(tableName = "libraries", daoClass = LibraryDaoImpl.class)
 public class Library { 
     // ...
@@ -214,14 +214,14 @@ public class Library {
 
 这使我们能够使用`DaoManager`来创建自定义类的实例:
 
-```
+```java
 LibraryDao customLibraryDao 
   = DaoManager.createDao(connectionSource, Library.class);
 ```
 
 然后我们可以使用标准`DAO`类中的所有方法，以及我们的自定义方法:
 
-```
+```java
 Library library = new Library();
 library.setName("My Library");
 
@@ -242,7 +242,7 @@ ORMLite 使用“外来”对象或集合的概念来定义实体之间的持久
 
 首先，让我们定义一个名为`Address`的新实体类:
 
-```
+```java
 @DatabaseTable(tableName="addresses")
 public class Address {
     @DatabaseField(generatedId = true)
@@ -257,7 +257,7 @@ public class Address {
 
 接下来，我们可以将类型为`Address`的字段添加到标记为`foreign`的`Library`类中:
 
-```
+```java
 @DatabaseTable(tableName = "libraries")
 public class Library {      
     //...
@@ -280,7 +280,7 @@ public class Library {
 
 让我们添加一个带有`Address`字段的新的`Library`对象，并调用`libraryDao`来持久化这两个对象:
 
-```
+```java
 Library library = new Library();
 library.setName("My Library");
 library.setAddress(new Address("Main Street nr 20"));
@@ -292,7 +292,7 @@ libraryDao.create(library);
 
 然后，我们可以调用`addressDao`来验证`Address`也被保存了:
 
-```
+```java
 Dao<Address, Long> addressDao 
   = DaoManager.createDao(connectionSource, Address.class);
 assertEquals(1, 
@@ -306,7 +306,7 @@ assertEquals(1,
 
 让我们像上面一样创建一个新的`Book`实体，然后在`Library`类中添加一个一对多关系:
 
-```
+```java
 @DatabaseTable(tableName = "libraries")
 public class Library {  
     // ...
@@ -320,7 +320,7 @@ public class Library {
 
 除此之外，我们还需要在`Book`类中添加一个类型为`Library`的字段:
 
-```
+```java
 @DatabaseTable
 public class Book {
     // ...
@@ -333,7 +333,7 @@ public class Book {
 
 **`ForeignCollection`有`add()`和`remove()`方法**，它们操作类型`Book:`的记录
 
-```
+```java
 Library library = new Library();
 library.setName("My Library");
 libraryDao.create(library);
@@ -349,7 +349,7 @@ library.getBooks().add(new Book("1984"));
 
 我们还可以通过设置`Book`类中的`library` 字段来创建关系:
 
-```
+```java
 Book book = new Book("It");
 book.setLibrary(library);
 bookDao.create(book);
@@ -357,7 +357,7 @@ bookDao.create(book);
 
 为了验证两个`Book`对象都被添加到了`library`中，我们可以使用`queryForEq()`方法找到所有带有给定`library_id`的`Book`记录
 
-```
+```java
 assertEquals(2, bookDao.queryForEq("library_id", library).size());
 ```
 
@@ -371,7 +371,7 @@ assertEquals(2, bookDao.queryForEq("library_id", library).size());
 
 让我们来看一个例子，看看如何找到所有与多个`Book`相关联的`Library`记录:
 
-```
+```java
 List<Library> libraries = libraryDao.queryBuilder()
   .where()
   .in("libraryId", bookDao.queryBuilder()

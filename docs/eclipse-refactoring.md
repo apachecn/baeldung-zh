@@ -63,7 +63,7 @@ Eclipse 提供了多种实现提取的方法，我们将在接下来的小节中
 
 假设我们的代码库中有下面的`Car`类:
 
-```
+```java
 public class Car {
 
     private String licensePlate;
@@ -89,7 +89,7 @@ public class Car {
 
 **我们还可以在前进之前预览代码。**当我们点击`OK`时，Eclipse 将创建一个名为`Driver`的新类，之前的代码将被重构为:
 
-```
+```java
 public class Car {
 
     private String licensePlate;
@@ -109,7 +109,7 @@ public class Car {
 
 我们也可以用类似的方式提取一个接口。假设我们有下面的`EmployeeService`类:
 
-```
+```java
 public class EmployeeService {
 
     public void save(Employee emp) {
@@ -133,7 +133,7 @@ public class EmployeeService {
 
 作为这一重构的结果，我们将拥有一个接口`IEmpService`，并且我们的`EmployeeService`类也将被改变:
 
-```
+```java
 public class EmployeeService implements IEmpService {
 
     @Override
@@ -153,7 +153,7 @@ public class EmployeeService implements IEmpService {
 
 假设我们有一个包含几个属性的`Employee`类，这些属性不一定与这个人的职业有关:
 
-```
+```java
 public class Employee {
 
     private String name;
@@ -182,7 +182,7 @@ public class Employee {
 
 这将使用我们选择的变量和方法创建一个新的`Person`类，并且`Employee`类将被重构为:
 
-```
+```java
 public class Employee extends Person {
 
     private int experienceInMonths;
@@ -199,7 +199,7 @@ public class Employee extends Person {
 
 例如，假设我们的方法中嵌入了一个 for 循环:
 
-```
+```java
 public class Test {
     public static void main(String[] args) {
         for (int i = 0; i < args.length; i++) {
@@ -223,7 +223,7 @@ public class Test {
 
 这将重构我们的代码:
 
-```
+```java
 public class Test {
 
     public static void main(String[] args) {
@@ -244,7 +244,7 @@ public class Test {
 
 当我们有一个*字符串*时，这很方便:
 
-```
+```java
 public class Test {
 
     public static void main(String[] args) {
@@ -268,7 +268,7 @@ public class Test {
 
 这是这次重构的结果:
 
-```
+```java
 public class Test {
 
     public static void main(String[] args) {
@@ -284,7 +284,7 @@ public class Test {
 
 我们可以将`3.14 `值提取到一个局部变量中，正如我们刚刚看到的:
 
-```
+```java
 public class MathUtil {
 
     public double circumference(double radius) {
@@ -306,7 +306,7 @@ public class MathUtil {
 
 现在，我们的代码看起来更易读了:
 
-```
+```java
 public class MathUtil {
 
     private static final double PI = 3.14;
@@ -323,7 +323,7 @@ public class MathUtil {
 
 考虑一个`Util `类，它有一个只使用一次的局部变量:
 
-```
+```java
 public class Util {
 
     public void isNumberPrime(int num) {
@@ -352,7 +352,7 @@ public class Util {
 
 之后，我们又少了一个需要跟踪的变量:
 
-```
+```java
 public class Util {
 
     public void isNumberPrime(int num) {
@@ -408,7 +408,7 @@ public class Util {
 
 考虑我们有一个`Movie`类的场景:
 
-```
+```java
 public class Movie {
 
     private String title;
@@ -421,7 +421,7 @@ public class Movie {
 
 而`MovieType`是一个简单的枚举:
 
-```
+```java
 public enum MovieType {
     NEW, REGULAR
 }
@@ -429,7 +429,7 @@ public enum MovieType {
 
 假设我们有一个要求，如果一个`Customer`租了一部`NEW`的电影，它将被多收两美元，我们的`Customer`类有以下逻辑来计算`totalCost`():
 
-```
+```java
 public class Customer {
 
     private String name;
@@ -469,7 +469,7 @@ Eclipse 足够聪明，能够意识到这个逻辑应该在我们的`Movie`类�
 
 最终的`Customer`类代码将被重构为:
 
-```
+```java
 public class Customer {
 
     private String name;

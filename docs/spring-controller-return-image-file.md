@@ -12,7 +12,7 @@
 
 首先，我们需要向我们的`pom.xml`添加一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -25,7 +25,7 @@
 
 第一个简单的解决方案是在控制器方法上使用 *@ResponseBody* 注释，以指示该方法返回的对象应该直接封送到 HTTP 响应体:
 
-```
+```java
 @GetMapping("/get-text")
 public @ResponseBody String getText() {
     return "Hello world";
@@ -40,7 +40,7 @@ public @ResponseBody String getText() {
 
 返回字节数组允许我们返回几乎任何东西，比如图像或文件:
 
-```
+```java
 @GetMapping(value = "/image")
 public @ResponseBody byte[] getImage() throws IOException {
     InputStream in = getClass()
@@ -53,7 +53,7 @@ public @ResponseBody byte[] getImage() throws IOException {
 
 为了定义返回的字节数组对应于一个图像，我们可以将 *@GetMapping* 注释的 *produces* 属性精确地设置为返回对象的 MIME 类型:
 
-```
+```java
 @GetMapping(
   value = "/get-image-with-media-type",
   produces = MediaType.IMAGE_JPEG_VALUE
@@ -75,7 +75,7 @@ public @ResponseBody byte[] getImageWithMediaType() throws IOException {
 
 如果我们想返回一个原始文件，我们可以简单地使用*APPLICATION _ OCTET _ STREAM _ VALUE*:
 
-```
+```java
 @GetMapping(
   value = "/get-file",
   produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
@@ -91,7 +91,7 @@ public @ResponseBody byte[] getFile() throws IOException {
 
 现在我们将说明如何动态设置响应的内容类型。在这种情况下，我们不能使用`produces` 参数，因为它需要一个常量。我们需要直接将 [`ResponseEntity`](/web/20221225091828/https://www.baeldung.com/spring-response-entity) 中的`contentType`改为:
 
-```
+```java
 @GetMapping("/get-image-dynamic-type")
 @ResponseBody
 public ResponseEntity<InputStreamResource> getImageDynamicType(@RequestParam("jpg") boolean jpg) {

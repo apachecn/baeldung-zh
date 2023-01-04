@@ -36,7 +36,7 @@ A quick guide to understanding password encryption in Spring Security 5 and migr
 
 先把**编码成一个简单的`String`** :
 
-```
+```java
 String originalInput = "test input";
 String encodedString = Base64.getEncoder().encodeToString(originalInput.getBytes()); 
 ```
@@ -45,7 +45,7 @@ String encodedString = Base64.getEncoder().encodeToString(originalInput.getBytes
 
 现在让我们将`String`解码回原始形式:
 
-```
+```java
 byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
 String decodedString = new String(decodedBytes);
 ```
@@ -58,7 +58,7 @@ String decodedString = new String(decodedBytes);
 
 有时候，我们需要**跳过输出**的填充。例如，产生的`String`将永远不会被解码回来。所以，我们可以简单地选择**编码而不填充**:
 
-```
+```java
 String encodedString = 
   Base64.getEncoder().withoutPadding().encodeToString(originalInput.getBytes());
 ```
@@ -67,14 +67,14 @@ String encodedString =
 
 URL 编码与基本编码器非常相似。此外，它使用安全的 Base64 字母表的 URL 和文件名。此外，它不添加任何分隔线:
 
-```
+```java
 String originalUrl = "https://www.google.co.nz/?gfe_rd=cr&ei;=dzbFV&gws;_rd=ssl#q=java";
 String encodedUrl = Base64.getUrlEncoder().encodeToString(originalURL.getBytes()); 
 ```
 
 解码也是如此。`getUrlDecoder()`实用程序方法返回一个`java.util.Base64.Decoder`。所以，我们用它来解码 URL:
 
-```
+```java
 byte[] decodedBytes = Base64.getUrlDecoder().decode(encodedUrl);
 String decodedUrl = new String(decodedBytes); 
 ```
@@ -83,7 +83,7 @@ String decodedUrl = new String(decodedBytes);
 
 让我们从生成一些要编码的基本 MIME 输入开始:
 
-```
+```java
 private static StringBuilder getMimeBuffer() {
     StringBuilder buffer = new StringBuilder();
     for (int count = 0; count < 10; ++count) {
@@ -97,7 +97,7 @@ MIME 编码器使用基本字母表生成 Base64 编码的输出。但是，这�
 
 输出的每行不超过 76 个字符。此外，它以回车结束，后跟换行符(`\r\n`):
 
-```
+```java
 StringBuilder buffer = getMimeBuffer();
 byte[] encodedAsBytes = buffer.toString().getBytes();
 String encodedMime = Base64.getMimeEncoder().encodeToString(encodedAsBytes);
@@ -105,7 +105,7 @@ String encodedMime = Base64.getMimeEncoder().encodeToString(encodedAsBytes);
 
 在解码过程中，我们可以使用返回一个`java.util.Base64.Decoder`的`getMimeDecoder()`方法:
 
-```
+```java
 byte[] decodedBytes = Base64.getMimeDecoder().decode(encodedMime);
 String decodedMime = new String(decodedBytes); 
 ```
@@ -114,7 +114,7 @@ String decodedMime = new String(decodedBytes);
 
 首先，我们需要定义`pom.xml`中的`[commons-codec](https://web.archive.org/web/20221017115849/https://search.maven.org/classic/#search|gav|1|g%3A%22commons-codec%22%20AND%20a%3A%22commons-codec%22)`依赖关系:
 
-```
+```java
 <dependency>
     <groupId>commons-codec</groupId>
     <artifactId>commons-codec</artifactId>
@@ -130,7 +130,7 @@ String decodedMime = new String(decodedBytes);
 
 一旦创建了 Base64 API，编码和解码都非常简单:
 
-```
+```java
 String originalInput = "test input";
 Base64 base64 = new Base64();
 String encodedString = new String(base64.encode(originalInput.getBytes())); 
@@ -138,13 +138,13 @@ String encodedString = new String(base64.encode(originalInput.getBytes()));
 
 此外，`Base64` 类的`decode()`方法返回解码后的字符串:
 
-```
+```java
 String decodedString = new String(base64.decode(encodedString.getBytes())); 
 ```
 
 另一个选择是**使用`Base64`** 的静态 API，而不是创建一个实例:
 
-```
+```java
 String originalInput = "test input";
 String encodedString = new String(Base64.encodeBase64(originalInput.getBytes()));
 String decodedString = new String(Base64.decodeBase64(encodedString.getBytes()));
@@ -154,7 +154,7 @@ String decodedString = new String(Base64.decodeBase64(encodedString.getBytes()))
 
 有时候，我们需要将一个`String`转换成一个`byte[]`。最简单的办法就是使用`String`的`getBytes()`方法:
 
-```
+```java
 String originalInput = "test input";
 byte[] result = originalInput.getBytes();
 
@@ -163,7 +163,7 @@ assertEquals(originalInput.length(), result.length);
 
 我们也可以提供编码，不依赖默认编码。因此，它依赖于系统:
 
-```
+```java
 String originalInput = "test input";
 byte[] result = originalInput.getBytes(StandardCharsets.UTF_16);
 
@@ -172,7 +172,7 @@ assertTrue(originalInput.length() < result.length);
 
 **如果我们的`String`是`Base64`编码的，我们可以使用`the Base64`解码器**:
 
-```
+```java
 String originalInput = "dGVzdCBpbnB1dA==";
 byte[] result = Base64.getDecoder().decode(originalInput);
 
@@ -181,7 +181,7 @@ assertEquals("test input", new String(result));
 
 **我们也可以使用`DatatypeConverter parseBase64Binary()`方法**:
 
-```
+```java
 String originalInput = "dGVzdCBpbnB1dA==";
 byte[] result = DatatypeConverter.parseBase64Binary(originalInput);
 
@@ -190,7 +190,7 @@ assertEquals("test input", new String(result));
 
 **最后，我们可以使用`DatatypeConverter.parseHexBinary` 方法**将十六进制的`String`转换为`byte[]`:
 
-```
+```java
 String originalInput = "7465737420696E707574";
 byte[] result = DatatypeConverter.parseHexBinary(originalInput);
 

@@ -12,7 +12,7 @@
 
 让我们看一个使用简单的`while`循环以及`java.util.Date`和`java.util.Calendar`类的例子:
 
-```
+```java
 void iterateBetweenDatesJava7(Date start, Date end) {
     Date current = start;
 
@@ -33,7 +33,7 @@ void iterateBetweenDatesJava7(Date start, Date end) {
 
 让我们使用一个简单的`for`循环、`LocalDate`类和方法`plusDays(1)`在日期范围内向前移动:
 
-```
+```java
 void iterateBetweenDatesJava8(LocalDate start, LocalDate end) {
     for (LocalDate date = start; date.isBefore(end); date = date.plusDays(1)) {
         processDate(date);
@@ -51,7 +51,7 @@ void iterateBetweenDatesJava8(LocalDate start, LocalDate end) {
 
 让我们更新示例代码，以利用这一特性:
 
-```
+```java
 void iterateBetweenDatesJava9(LocalDate start, LocalDate end) {
     start.datesUntil(end).forEach(this::processDate);
 }

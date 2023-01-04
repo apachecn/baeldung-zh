@@ -40,7 +40,7 @@
 
 让我们来看一个示例实体类:
 
-```
+```java
 @Entity
 public class Student {
 
@@ -109,7 +109,7 @@ JPA 为我们提供了两种不同的乐观锁模式(和两个别名):
 
 要请求乐观锁定，我们可以将适当的`LockModeType`作为参数来传递，以找到`EntityManager`的方法:
 
-```
+```java
 entityManager.find(Student.class, studentId, LockModeType.OPTIMISTIC);
 ```
 
@@ -117,7 +117,7 @@ entityManager.find(Student.class, studentId, LockModeType.OPTIMISTIC);
 
 启用锁定的另一种方式是使用`Query`对象的`setLockMode`方法:
 
-```
+```java
 Query query = entityManager.createQuery("from Student where id = :id");
 query.setParameter("id", studentId);
 query.setLockMode(LockModeType.OPTIMISTIC_INCREMENT);
@@ -128,7 +128,7 @@ query.getResultList()
 
 我们可以通过调用 EntityManager 的`lock`方法来设置锁:
 
-```
+```java
 Student student = entityManager.find(Student.class, id);
 entityManager.lock(student, LockModeType.OPTIMISTIC);
 ```
@@ -137,7 +137,7 @@ entityManager.lock(student, LockModeType.OPTIMISTIC);
 
 我们可以像前面的方法一样调用`refresh`方法:
 
-```
+```java
 Student student = entityManager.find(Student.class, id);
 entityManager.refresh(student, LockModeType.READ);
 ```
@@ -146,7 +146,7 @@ entityManager.refresh(student, LockModeType.READ);
 
 最后一个选项是使用带有`lockMode`属性的@NamedQuery:
 
-```
+```java
 @NamedQuery(name="optimisticLock",
   query="SELECT s FROM Student s WHERE s.id LIKE :id",
   lockMode = WRITE)

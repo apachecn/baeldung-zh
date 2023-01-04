@@ -22,7 +22,7 @@
 
 有几种不同的方法来检查图像。让我们从找到本地回购中的所有图像开始:
 
-```
+```java
 $ docker image ls
 spring-petclinic    2.7.0-SNAPSHOT    0f9d2d05687b   2 months ago    266MB
 spring-petclinic    2.6.0-SNAPSHOT    1d79d5bd7779   3 months ago    265MB
@@ -32,7 +32,7 @@ spring-petclinic    2.6.0-SNAPSHOT    1d79d5bd7779   3 months ago    265MB
 
 我们可以做的第一件事是运行`inspect`命令:
 
-```
+```java
 $ docker inspect 0f9d2d05687b
 [
     {
@@ -53,13 +53,13 @@ $ docker inspect 0f9d2d05687b
 
 然而，它并没有告诉我们太多关于里面的内容。为此，我们必须首先将映像保存到文件系统:
 
-```
+```java
 $ docker save 0f9d2d05687b > 0f9d2d05687b.tar
 ```
 
 该命令将图像保存为 tar 文件。现在我们可以使用熟悉的 [`tar`命令](/web/20220810171619/https://www.baeldung.com/linux/tar-command)来检查它:
 
-```
+```java
 $ tar tvf 0f9d2d05687b.tar
 drwxr-xr-x  0 0      0           0 Dec 31  1979 02805fa4a4f35efdcf3804bc1218af1bc22d28ee521cc944cab5cac5dbe5abfe/
 -rw-r--r--  0 0      0           3 Dec 31  1979 02805fa4a4f35efdcf3804bc1218af1bc22d28ee521cc944cab5cac5dbe5abfe/VERSION
@@ -87,7 +87,7 @@ drwxr-xr-x  0 0      0           0 Dec 31  1979 0f915e8772f0e40420852f1e2929e4ae
 
 例如，让我们比较前面示例中的两张 Spring pet clinic 图像:
 
-```
+```java
 $ /usr/local/bin/container-diff diff \
 daemon://spring-petclinic:2.6.0-SNAPSHOT \
 daemon://spring-petclinic:2.7.0-SNAPSHOT \
@@ -98,7 +98,7 @@ daemon://spring-petclinic:2.7.0-SNAPSHOT \
 
 输出通常分为三个部分。首先，它告诉我们哪些文件存在于第一个映像中，而不存在于第二个映像中:
 
-```
+```java
 /workspace/BOOT-INF/lib/byte-buddy-1.12.10.jar                                                    3.7M
 /workspace/BOOT-INF/lib/classgraph-4.8.139.jar                                                    551.7K
 /workspace/BOOT-INF/lib/ehcache-3.10.0.jar                                                        1.7M
@@ -109,7 +109,7 @@ daemon://spring-petclinic:2.7.0-SNAPSHOT \
 
 接下来，它告诉我们哪些文件存在于第二个映像中，而不存在于第一个映像中:
 
-```
+```java
 These entries have been deleted from spring-petclinic:2.6.0-SNAPSHOT:
 FILE                                                                        SIZE
 /workspace/BOOT-INF/lib/byte-buddy-1.11.22.jar                              3.5M
@@ -124,7 +124,7 @@ FILE                                                                        SIZE
 
 最后，最后一部分说明了两者中存在哪些文件，但它们是不同的:
 
-```
+```java
 These entries have been changed between spring-petclinic:2.6.0-SNAPSHOT and spring-petclinic:2.7.0-SNAPSHOT:
 FILE                                                                                                 SIZE1        SIZE2
 /layers/config/metadata.toml                                                                         16.6K        1.9K

@@ -32,7 +32,7 @@
 
 在本地设置了 Kong 之后，让我们通过代理我们简单的股票查询端点来体验一下 Kong 的强大功能:
 
-```
+```java
 @RestController
 @RequestMapping("/stock")
 public class QueryController {
@@ -50,7 +50,7 @@ public class QueryController {
 
 管理 API 可通过`http://localhost:8001`访问，因此我们所有的 API 管理操作都将通过这个基本 URI 完成:
 
-```
+```java
 APIObject stockAPI = new APIObject(
   "stock-api", "stock.api", "http://localhost:8080", "/");
 HttpEntity<APIObject> apiEntity = new HttpEntity<>(stockAPI);
@@ -62,7 +62,7 @@ assertEquals(HttpStatus.CREATED, addAPIResp.getStatusCode());
 
 这里，我们添加了一个具有以下配置的 API:
 
-```
+```java
 {
     "name": "stock-api",
     "hosts": "stock.api",
@@ -77,13 +77,13 @@ assertEquals(HttpStatus.CREATED, addAPIResp.getStatusCode());
 
 如果我们想弃用某个 API 或者配置错误，我们可以简单地删除它:
 
-```
+```java
 restTemplate.delete("http://localhost:8001/apis/stock-api");
 ```
 
 添加 API 后，可以通过`http://localhost:8000`使用它们:
 
-```
+```java
 String apiListResp = restTemplate.getForObject(
   "http://localhost:8001/apis/", String.class);
 
@@ -111,7 +111,7 @@ assertEquals("10000", stockPriceResp.getBody());
 
 为 API 添加消费者就像添加 API 一样简单。消费者的姓名(或 id)是所有消费者属性的唯一必填字段:
 
-```
+```java
 ConsumerObject consumer = new ConsumerObject("eugenp");
 HttpEntity<ConsumerObject> addConsumerEntity = new HttpEntity<>(consumer);
 ResponseEntity<String> addConsumerResp = restTemplate.postForEntity(
@@ -122,7 +122,7 @@ assertEquals(HttpStatus.CREATED, addConsumerResp.getStatusCode());
 
 在这里，我们添加了“eugenp”作为新的消费者:
 
-```
+```java
 {
     "username": "eugenp"
 }
@@ -134,7 +134,7 @@ assertEquals(HttpStatus.CREATED, addConsumerResp.getStatusCode());
 
 现在，我们将对代理股票查询 API 应用一个 auth 插件:
 
-```
+```java
 PluginObject authPlugin = new PluginObject("key-auth");
 ResponseEntity<String> enableAuthResp = restTemplate.postForEntity(
   "http://localhost:8001/apis/stock-api/plugins", 
@@ -145,7 +145,7 @@ assertEquals(HttpStatus.CREATED, enableAuthResp.getStatusCode());
 
 如果我们试图通过代理 URI 查询一只股票的价格，这个请求会被拒绝:
 
-```
+```java
 HttpHeaders headers = new HttpHeaders();
 headers.set("Host", "stock.api");
 RequestEntity<String> requestEntity = new RequestEntity<>(
@@ -158,7 +158,7 @@ assertEquals(HttpStatus.UNAUTHORIZED, stockPriceResp.getStatusCode());
 
 记住`Eugen`是我们的 API 消费者之一，所以我们应该通过添加一个认证密钥来允许他使用这个 API:
 
-```
+```java
 String consumerKey = "eugenp.pass";
 KeyAuthObject keyAuth = new KeyAuthObject(consumerKey);
 ResponseEntity<String> keyAuthResp = restTemplate.postForEntity(
@@ -170,7 +170,7 @@ assertTrue(HttpStatus.CREATED == keyAuthResp.getStatusCode());
 
 然后`Eugen`可以像以前一样使用这个 API:
 
-```
+```java
 HttpHeaders headers = new HttpHeaders();
 headers.set("Host", "stock.api");
 headers.set("apikey", consumerKey);
@@ -200,7 +200,7 @@ Kong 支持加权循环和基于哈希的平衡算法。**默认情况下，使�
 
 首先，让我们准备上游:
 
-```
+```java
 UpstreamObject upstream = new UpstreamObject("stock.api.service");
 ResponseEntity<String> addUpstreamResp = restTemplate.postForEntity(
   "http://localhost:8001/upstreams", 
@@ -212,7 +212,7 @@ assertEquals(HttpStatus.CREATED, addUpstreamResp.getStatusCode());
 
 然后，为上游添加两个目标，一个带有`weight=10`的测试版本和一个带有`weight=40`的发布版本:
 
-```
+```java
 TargetObject testTarget = new TargetObject("localhost:8080", 10);
 ResponseEntity<String> addTargetResp = restTemplate.postForEntity(
   "http://localhost:8001/upstreams/stock.api.service/targets",
@@ -232,7 +232,7 @@ assertEquals(HttpStatus.CREATED, addTargetResp.getStatusCode());
 
 有了上面的配置，我们可以假设 1/5 的请求将进入测试版本，4/5 将进入发布版本:
 
-```
+```java
 APIObject stockAPI = new APIObject(
   "balanced-stock-api", 
   "balanced.stock.api", 
@@ -271,7 +271,7 @@ assertTrue(Math.round(releaseCount * 1.0 / testCount) == 4);
 
 或者，我们可以让 Kong 充当 Admin API 本身的代理。假设我们想用路径“/admin-api”来管理 api，我们可以像这样添加一个 API:
 
-```
+```java
 APIObject stockAPI = new APIObject(
   "admin-api", 
   "admin.api", 
@@ -288,7 +288,7 @@ assertEquals(HttpStatus.CREATED, addAPIResp.getStatusCode());
 
 现在，我们可以使用代理管理 API 来管理 API:
 
-```
+```java
 HttpHeaders headers = new HttpHeaders();
 headers.set("Host", "admin.api");
 APIObject baeldungAPI = new APIObject(

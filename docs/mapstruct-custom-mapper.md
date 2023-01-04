@@ -12,7 +12,7 @@
 
 让我们将 [mapstruct](https://web.archive.org/web/20221204132225/https://search.maven.org/search?q=g:org.mapstruct%20a:mapstruct) 库添加到我们的 Maven `pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.mapstruct</groupId>
     <artifactId>mapstruct</artifactId>
@@ -22,7 +22,7 @@
 
 要查看项目的`target folder`中自动生成的方法，我们必须将`annotationProcessorPaths` 添加到`maven-compiler-plugin`插件中:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-compiler-plugin</artifactId>
@@ -51,7 +51,7 @@
 
 在开始之前，我们必须定义一个 DTO 类来保存帝国价值观:
 
-```
+```java
 public class UserBodyImperialValuesDTO {
     private int inch;
     private int pound;
@@ -61,7 +61,7 @@ public class UserBodyImperialValuesDTO {
 
 接下来，让我们定义一个 DTO 类来保存度量值:
 
-```
+```java
 public class UserBodyValues {
     private double kilogram;
     private double centimeter;
@@ -73,7 +73,7 @@ public class UserBodyValues {
 
 要开始使用定制映射器，让我们用`@Mapper`注释创建一个接口:
 
-```
+```java
 @Mapper 
 public interface UserBodyValuesMapper {
     //...
@@ -82,7 +82,7 @@ public interface UserBodyValuesMapper {
 
 其次，让我们用我们想要的返回类型和我们需要转换的参数创建我们的自定义方法。我们必须使用带有 value 参数的@ `Named`注释来通知 MapStruct 关于自定义映射器方法的信息:
 
-```
+```java
 @Mapper
 public interface UserBodyValuesMapper {
 
@@ -97,7 +97,7 @@ public interface UserBodyValuesMapper {
 
 最后，让我们用`@Mapping`注释定义 mapper 接口方法。在这个注释中，我们将告诉 MapStruct 关于源类型、目标类型以及它将使用的方法:
 
-```
+```java
 @Mapper
 public interface UserBodyValuesMapper {
     UserBodyValuesMapper INSTANCE = Mappers.getMapper(UserBodyValuesMapper.class);
@@ -114,7 +114,7 @@ public interface UserBodyValuesMapper {
 
 让我们测试一下我们的自定义映射器:
 
-```
+```java
 UserBodyImperialValuesDTO dto = new UserBodyImperialValuesDTO();
 dto.setInch(10);
 
@@ -130,7 +130,7 @@ assertEquals(25.4, obj.getCentimeter(), 0);
 
 让我们看看如何定义注释:
 
-```
+```java
 @Qualifier
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.CLASS)
@@ -140,7 +140,7 @@ public @interface PoundToKilogramMapper {
 
 让我们将`@PoundToKilogramMapper`注释添加到`poundToKilogram`方法中:
 
-```
+```java
 @PoundToKilogramMapper
 public static double poundToKilogram(int pound) {
     return pound * 0.4535;
@@ -149,7 +149,7 @@ public static double poundToKilogram(int pound) {
 
 现在，让我们用`@Mapping`注释定义 mapper 接口方法。在映射注释中，我们将告诉 MapStruct 关于源类型、目标类型和它将使用的注释类的信息:
 
-```
+```java
 @Mapper
 public interface UserBodyValuesMapper {
     UserBodyValuesMapper INSTANCE = Mappers.getMapper(UserBodyValuesMapper.class);
@@ -166,7 +166,7 @@ public interface UserBodyValuesMapper {
 
 最后，让我们测试我们的定制映射器:
 
-```
+```java
 UserBodyImperialValuesDTO dto = new UserBodyImperialValuesDTO();
 dto.setPound(100);
 

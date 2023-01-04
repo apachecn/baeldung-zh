@@ -10,7 +10,7 @@
 
 **`MultipartFile`有一个`getBytes()`方法**返回文件内容的字节数组。我们可以用这个方法**把字节写到一个文件**:
 
-```
+```java
 MultipartFile multipartFile = new MockMultipartFile("sourceFile.tmp", "Hello World".getBytes());
 
 File file = new File("src/main/resources/targetFile.tmp");
@@ -29,7 +29,7 @@ assertThat(FileUtils.readFileToString(new File("src/main/resources/targetFile.tm
 
 接下来我们来看看 **`MultipartFile`的`getInputStream()`法**:
 
-```
+```java
 MultipartFile multipartFile = new MockMultipartFile("sourceFile.tmp", "Hello World".getBytes());
 
 InputStream initialStream = multipartFile.getInputStream();
@@ -54,7 +54,7 @@ assertThat(FileUtils.readFileToString(new File("src/main/resources/targetFile.tm
 
 最后，我们来看看 **`MultipartFile`的`transferTo()`法**:
 
-```
+```java
 MultipartFile multipartFile = new MockMultipartFile("sourceFile.tmp", "Hello World".getBytes());
 
 File file = new File("src/main/resources/targetFile.tmp");

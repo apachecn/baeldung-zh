@@ -40,7 +40,7 @@
 
 我们将保持简单，只使用二维数组:
 
-```
+```java
 double[][] firstMatrix = {
   new double[]{1d, 5d},
   new double[]{2d, 3d},
@@ -55,7 +55,7 @@ double[][] secondMatrix = {
 
 这是我们例子中的两个矩阵。让我们创建一个预期的乘法结果:
 
-```
+```java
 double[][] expected = {
   new double[]{26d, 12d, 43d, 12d},
   new double[]{17d, 10d, 30d, 17d},
@@ -65,7 +65,7 @@ double[][] expected = {
 
 现在一切都设置好了，让我们实现乘法算法。**我们将首先创建一个空的结果数组，并遍历它的单元格来存储每个单元格中的预期值:**
 
-```
+```java
 double[][] multiplyMatrices(double[][] firstMatrix, double[][] secondMatrix) {
     double[][] result = new double[firstMatrix.length][secondMatrix[0].length];
 
@@ -81,7 +81,7 @@ double[][] multiplyMatrices(double[][] firstMatrix, double[][] secondMatrix) {
 
 最后，让我们实现单个单元格的计算。为了实现这一点，**我们将使用之前在示例**的演示中显示的公式:
 
-```
+```java
 double multiplyMatricesCell(double[][] firstMatrix, double[][] secondMatrix, int row, int col) {
     double cell = 0;
     for (int i = 0; i < secondMatrix.length; i++) {
@@ -93,7 +93,7 @@ double multiplyMatricesCell(double[][] firstMatrix, double[][] secondMatrix, int
 
 最后，让我们检查算法的结果是否与我们的预期结果相匹配:
 
-```
+```java
 double[][] actual = multiplyMatrices(firstMatrix, secondMatrix);
 assertThat(actual).isEqualTo(expected);
 ```
@@ -104,7 +104,7 @@ assertThat(actual).isEqualTo(expected);
 
 我们必须将[依赖项添加到我们的`pom.xml`中的库](https://web.archive.org/web/20221206031235/https://search.maven.org/search?q=g:org.ejml%20AND%20a:ejml-all):
 
-```
+```java
 <dependency>
     <groupId>org.ejml</groupId>
     <artifactId>ejml-all</artifactId>
@@ -118,7 +118,7 @@ assertThat(actual).isEqualTo(expected);
 
 它可以接受一个二维`double`数组作为其构造函数的输入:
 
-```
+```java
 SimpleMatrix firstMatrix = new SimpleMatrix(
   new double[][] {
     new double[] {1d, 5d},
@@ -137,7 +137,7 @@ SimpleMatrix secondMatrix = new SimpleMatrix(
 
 现在，让我们定义乘法的预期矩阵:
 
-```
+```java
 SimpleMatrix expected = new SimpleMatrix(
   new double[][] {
     new double[] {26d, 12d, 43d, 12d},
@@ -149,7 +149,7 @@ SimpleMatrix expected = new SimpleMatrix(
 
 现在我们都设置好了，让我们看看如何将两个矩阵相乘。**`SimpleMatrix`类提供了一个`mult()`方法**，将另一个`SimpleMatrix`作为参数，返回两个矩阵的乘积:
 
-```
+```java
 SimpleMatrix actual = firstMatrix.mult(secondMatrix);
 ```
 
@@ -157,7 +157,7 @@ SimpleMatrix actual = firstMatrix.mult(secondMatrix);
 
 由于`SimpleMatrix`没有覆盖`equals()`方法，我们不能依赖它来做验证。但是，**提供了一个替代方案:`isIdentical()`方法**，它不仅采用了另一个矩阵参数，还采用了一个`double`容错参数，以忽略由于双精度导致的微小差异:
 
-```
+```java
 assertThat(actual).matches(m -> m.isIdentical(expected, 0d));
 ```
 
@@ -169,7 +169,7 @@ assertThat(actual).matches(m -> m.isIdentical(expected, 0d));
 
 首先，我们必须得到[库依赖关系](https://web.archive.org/web/20221206031235/https://search.maven.org/search?q=g:org.nd4j%20AND%20a:nd4j-native):
 
-```
+```java
 <dependency>
     <groupId>org.nd4j</groupId>
     <artifactId>nd4j-native</artifactId>
@@ -181,7 +181,7 @@ assertThat(actual).matches(m -> m.isIdentical(expected, 0d));
 
 为了简洁起见，我们不会重写二维`double` 数组，而只关注它们如何与每个库一起使用。因此，对于 ND4J，我们必须创建一个`INDArray`。为了做到这一点，**我们将调用`Nd4j.create()`工厂方法，并传递给它一个代表我们的矩阵**的`double` 数组:
 
-```
+```java
 INDArray matrix = Nd4j.create(/* a two dimensions double array */);
 ```
 
@@ -189,13 +189,13 @@ INDArray matrix = Nd4j.create(/* a two dimensions double array */);
 
 之后，我们想要使用`INDArray.mmul()` 方法实际执行前两个矩阵之间的乘法:
 
-```
+```java
 INDArray actual = firstMatrix.mmul(secondMatrix);
 ```
 
 然后，我们再次检查实际结果是否与预期结果相匹配。这一次我们可以依靠等式检查:
 
-```
+```java
 assertThat(actual).isEqualTo(expected);
 ```
 
@@ -207,7 +207,7 @@ assertThat(actual).isEqualTo(expected);
 
 同样，我们必须在我们的`pom.xml`中指定[依赖关系](https://web.archive.org/web/20221206031235/https://search.maven.org/search?q=g:org.apache.commons%20AND%20a:commons-math3):
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-math3</artifactId>
@@ -217,19 +217,19 @@ assertThat(actual).isEqualTo(expected);
 
 一旦设置好，我们就可以使用**`RealMatrix`接口及其`Array2DRowRealMatrix`实现**来创建我们常用的矩阵。实现类的构造函数将一个二维的`double` 数组作为它的参数:
 
-```
+```java
 RealMatrix matrix = new Array2DRowRealMatrix(/* a two dimensions double array */);
 ```
 
 对于矩阵乘法，**`RealMatrix`接口提供了一个`multiply()`方法**带另一个`RealMatrix`参数:
 
-```
+```java
 RealMatrix actual = firstMatrix.multiply(secondMatrix);
 ```
 
 我们最终可以验证结果是否与我们期望的一样:
 
-```
+```java
 assertThat(actual).isEqualTo(expected);
 ```
 
@@ -241,7 +241,7 @@ assertThat(actual).isEqualTo(expected);
 
 让我们也为这个添加依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.la4j</groupId>
     <artifactId>la4j</artifactId>
@@ -251,19 +251,19 @@ assertThat(actual).isEqualTo(expected);
 
 现在，LA4J 的工作方式与其他库非常相似。**它提供了一个带有`Basic2DMatrix`实现**的`Matrix`接口，该接口将一个二维`double` 数组作为输入:
 
-```
+```java
 Matrix matrix = new Basic2DMatrix(/* a two dimensions double array */);
 ```
 
 正如在 Apache Commons Math3 模块中一样，**的乘法方法是`multiply()`** ，并以另一个`Matrix` 作为其参数:
 
-```
+```java
 Matrix actual = firstMatrix.multiply(secondMatrix);
 ```
 
 我们可以再次检查结果是否符合我们的预期:
 
-```
+```java
 assertThat(actual).isEqualTo(expected);
 ```
 
@@ -275,7 +275,7 @@ assertThat(actual).isEqualTo(expected);
 
 和前面的库一样，我们必须让[拥有正确的依赖关系](https://web.archive.org/web/20221206031235/https://search.maven.org/search?q=g:colt%20AND%20a:colt):
 
-```
+```java
 <dependency>
     <groupId>colt</groupId>
     <artifactId>colt</artifactId>
@@ -287,20 +287,20 @@ assertThat(actual).isEqualTo(expected);
 
 出于我们的目的，我们将使用`dense` 实例。这一次，**调用的方法是`make()`** ，它再次使用二维的`double array`，产生一个`DoubleMatrix2D`对象:
 
-```
+```java
 DoubleMatrix2D matrix = doubleFactory2D.make(/* a two dimensions double array */);
 ```
 
 一旦我们的矩阵被实例化，我们就要把它们相乘。这一次，matrix 对象上没有这样做的方法。我们已经创建了一个 **`Algebra`类的实例，它有一个`mult()`方法**，接受两个矩阵作为参数:
 
-```
+```java
 Algebra algebra = new Algebra();
 DoubleMatrix2D actual = algebra.mult(firstMatrix, secondMatrix);
 ```
 
 然后，我们可以将实际结果与预期结果进行比较:
 
-```
+```java
 assertThat(actual).isEqualTo(expected);
 ```
 
@@ -314,7 +314,7 @@ assertThat(actual).isEqualTo(expected);
 
 **为了实施性能测试，我们将使用**[**【JMH】标杆库**](/web/20221206031235/https://www.baeldung.com/java-microbenchmark-harness) 。让我们用以下选项配置一个基准测试类:
 
-```
+```java
 public static void main(String[] args) throws Exception {
     Options opt = new OptionsBuilder()
       .include(MatrixMultiplicationBenchmarking.class.getSimpleName())
@@ -333,7 +333,7 @@ public static void main(String[] args) throws Exception {
 
 然后，我们必须创建一个包含数组的状态对象:
 
-```
+```java
 @State(Scope.Benchmark)
 public class MatrixProvider {
     private double[][] firstMatrix;
@@ -360,7 +360,7 @@ public class MatrixProvider {
 
 最后，我们将使用我们的`main` 方法运行基准测试流程。这给了我们以下结果:
 
-```
+```java
 Benchmark                                                           Mode  Cnt   Score   Error  Units
 MatrixMultiplicationBenchmarking.apacheCommonsMatrixMultiplication  avgt   20   1,008 ± 0,032  us/op
 MatrixMultiplicationBenchmarking.coltMatrixMultiplication           avgt   20   0,219 ± 0,014  us/op
@@ -378,7 +378,7 @@ MatrixMultiplicationBenchmarking.nd4jMatrixMultiplication           avgt   20  1
 
 现在，如果我们采用更大的矩阵，比如 3000×3000，会发生什么？为了检查发生了什么，让我们首先创建另一个 state 类，提供该大小的生成矩阵:
 
-```
+```java
 @State(Scope.Benchmark)
 public class BigMatrixProvider {
     private double[][] firstMatrix;
@@ -410,7 +410,7 @@ public class BigMatrixProvider {
 
 现在让我们创建基准测试类:
 
-```
+```java
 public class BigMatrixMultiplicationBenchmarking {
     public static void main(String[] args) throws Exception {
         Map<String, String> parameters = parseParameters(args);
@@ -479,7 +479,7 @@ public class BigMatrixMultiplicationBenchmarking {
 
 当我们运行该基准测试时，我们获得了完全不同的结果:
 
-```
+```java
 Benchmark                                                              Mode  Cnt    Score    Error  Units
 BigMatrixMultiplicationBenchmarking.apacheCommonsMatrixMultiplication  avgt   20  511.140 ± 13.535   s/op
 BigMatrixMultiplicationBenchmarking.coltMatrixMultiplication           avgt   20  197.914 ±  2.453   s/op

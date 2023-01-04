@@ -14,7 +14,7 @@ Redis 由基于 keystore 的数据结构驱动来持久化数据，可以用作�
 
 让我们从在`pom.xml`中声明 Spring 数据 Redis 依赖关系开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-redis</artifactId>
@@ -33,7 +33,7 @@ Redis 由基于 keystore 的数据结构驱动来持久化数据，可以用作�
 
 或者，我们可以使用 Redis 的 Spring Boot 启动器，这将消除对单独的`spring-data`和`jedis`依赖项的需要:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -55,7 +55,7 @@ Redis 由基于 keystore 的数据结构驱动来持久化数据，可以用作�
 
 让我们从配置 bean 定义开始: 
 
-```
+```java
 @Bean
 JedisConnectionFactory jedisConnectionFactory() {
     return new JedisConnectionFactory();
@@ -81,7 +81,7 @@ public RedisTemplate<String, Object> redisTemplate() {
 
 但是，如果我们需要配置连接细节，我们总是可以修改`jedisConnectionFactory`配置:
 
-```
+```java
 @Bean
 JedisConnectionFactory jedisConnectionFactory() {
     JedisConnectionFactory jedisConFactory
@@ -96,7 +96,7 @@ JedisConnectionFactory jedisConnectionFactory() {
 
 让我们使用一个`Student`实体:
 
-```
+```java
 @RedisHash("Student")
 public class Student implements Serializable {
 
@@ -116,7 +116,7 @@ public class Student implements Serializable {
 
 现在让我们创建`StudentRepository`:
 
-```
+```java
 @Repository
 public interface StudentRepository extends CrudRepository<Student, String> {}
 ```
@@ -129,7 +129,7 @@ public interface StudentRepository extends CrudRepository<Student, String> {}
 
 让我们在数据存储中保存一个新的学生对象:
 
-```
+```java
 Student student = new Student(
   "Eng2015001", "John Doe", Student.Gender.MALE, 1);
 studentRepository.save(student);
@@ -139,7 +139,7 @@ studentRepository.save(student);
 
 我们可以通过获取学生数据来验证前面部分中学生的正确插入:
 
-```
+```java
 Student retrievedStudent = 
   studentRepository.findById("Eng2015001").get();
 ```
@@ -148,7 +148,7 @@ Student retrievedStudent =
 
 让我们更改上面检索到的学生姓名并再次保存:
 
-```
+```java
 retrievedStudent.setName("Richard Watson");
 studentRepository.save(student);
 ```
@@ -159,7 +159,7 @@ studentRepository.save(student);
 
 我们可以删除插入的学生数据:
 
-```
+```java
 studentRepository.deleteById(student.getId());
 ```
 
@@ -169,7 +169,7 @@ studentRepository.deleteById(student.getId());
 
 我们可以插入一些学生对象:
 
-```
+```java
 Student engStudent = new Student(
   "Eng2015001", "John Doe", Student.Gender.MALE, 1);
 Student medStudent = new Student(
@@ -182,7 +182,7 @@ studentRepository.save(medStudent);
 
 要查找所有插入的学生，我们可以使用`findAll()`方法:
 
-```
+```java
 List<Student> students = new ArrayList<>();
 studentRepository.findAll().forEach(students::add);
 ```

@@ -24,7 +24,7 @@
 
 让我们从定义一个简单的服务器开始:
 
-```
+```java
 int port = 8443;
 ServerSocketFactory factory = SSLServerSocketFactory.getDefault();
 try (ServerSocket listener = factory.createServerSocket(port)) {
@@ -47,7 +47,7 @@ try (ServerSocket listener = factory.createServerSocket(port)) {
 
 接下来，让我们定义一个基本客户端，我们将把它连接到我们的`SimpleServer:`
 
-```
+```java
 String host = "localhost";
 int port = 8443;
 SocketFactory factory = SSLSocketFactory.getDefault();
@@ -77,7 +77,7 @@ SSL 在网络通信中提供了保密性、完整性和真实性。证书在确�
 
 **要实现这一点，我们可以使用`keytool, `JDK 的哪些船只:**
 
-```
+```java
 $ keytool -genkey -keypass password \
                   -storepass password \
                   -keystore serverkeystore.jks
@@ -89,7 +89,7 @@ $ keytool -genkey -keypass password \
 
 我们可以进一步使用`keytool `从生成的密钥库文件中提取公共证书:
 
-```
+```java
 $ keytool -export -storepass password \
                   -file server.cer \
                   -keystore serverkeystore.jks
@@ -97,7 +97,7 @@ $ keytool -export -storepass password \
 
 上面的命令将公钥证书作为文件`server.cer`从 keystore 导出。让我们通过将导出的证书添加到客户端的信任库中来使用它:
 
-```
+```java
 $ keytool -import -v -trustcacerts \
                      -file server.cer \
                      -keypass password \
@@ -146,7 +146,7 @@ SSL 握手的典型步骤是:
 
 让我们试着运行`SimpleServer`并通过`SimpleClient`连接它。当我们期待看到“你好，世界！”，我们会看到一个例外:
 
-```
+```java
 Exception in thread "main" javax.net.ssl.SSLHandshakeException: 
   Received fatal alert: handshake_failure
 ```
@@ -155,7 +155,7 @@ Exception in thread "main" javax.net.ssl.SSLHandshakeException:
 
 为了解决这个问题，我们将使用之前生成的密钥库，将它们作为系统属性传递给服务器:
 
-```
+```java
 -Djavax.net.ssl.keyStore=serverkeystore.jks -Djavax.net.ssl.keyStorePassword=password
 ```
 
@@ -167,7 +167,7 @@ Exception in thread "main" javax.net.ssl.SSLHandshakeException:
 
 当我们使用前面小节中的更改再次运行`SimpleServer`和`SimpleClient`时，我们得到的输出是什么:
 
-```
+```java
 Exception in thread "main" javax.net.ssl.SSLHandshakeException: 
   sun.security.validator.ValidatorException: 
   PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: 
@@ -182,7 +182,7 @@ Exception in thread "main" javax.net.ssl.SSLHandshakeException:
 
 为了解决这个问题，我们必须强制`SimpleClient`信任`SimpleServer`提供的证书。让我们使用前面生成的信任库，将它们作为系统属性传递给客户机:
 
-```
+```java
 -Djavax.net.ssl.trustStore=clienttruststore.jks -Djavax.net.ssl.trustStorePassword=password
 ```
 
@@ -194,14 +194,14 @@ Exception in thread "main" javax.net.ssl.SSLHandshakeException:
 
 让我们应用前面小节中的更改，再次尝试运行 SimpleServer 和 SimpleClient:
 
-```
+```java
 Exception in thread "main" java.net.SocketException: 
   Software caused connection abort: recv failed
 ```
 
 同样，这不是我们所期望的。这里的`SocketException` 告诉我们服务器不能信任客户端。这是因为我们已经建立了一个双向 SSL。在我们的`SimpleServer `中，我们有:
 
-```
+```java
 ((SSLServerSocket) listener).setNeedClientAuth(true);
 ```
 
@@ -211,7 +211,7 @@ Exception in thread "main" java.net.SocketException:
 
 我们将重新启动服务器，并向其传递以下系统属性:
 
-```
+```java
 -Djavax.net.ssl.keyStore=serverkeystore.jks \
     -Djavax.net.ssl.keyStorePassword=password \
     -Djavax.net.ssl.trustStore=clienttruststore.jks \
@@ -220,7 +220,7 @@ Exception in thread "main" java.net.SocketException:
 
 然后，我们将通过传递这些系统属性来重新启动客户端:
 
-```
+```java
 -Djavax.net.ssl.keyStore=serverkeystore.jks \
     -Djavax.net.ssl.keyStorePassword=password \
     -Djavax.net.ssl.trustStore=clienttruststore.jks \
@@ -229,7 +229,7 @@ Exception in thread "main" java.net.SocketException:
 
 最后，我们得到了我们想要的输出:
 
-```
+```java
 Hello World!
 ```
 
@@ -237,13 +237,13 @@ Hello World!
 
 除了上述错误之外，握手可能由于与我们如何创建证书相关的各种原因而失败。一个常见的错误与不正确的 CN 有关。让我们研究一下我们之前创建的服务器密钥库的详细信息:
 
-```
+```java
 keytool -v -list -keystore serverkeystore.jks
 ```
 
 当我们运行上面的命令时，我们可以看到密钥库的详细信息，特别是所有者:
 
-```
+```java
 ...
 Owner: CN=localhost, OU=technology, O=baeldung, L=city, ST=state, C=xx
 ...
@@ -253,7 +253,7 @@ Owner: CN=localhost, OU=technology, O=baeldung, L=city, ST=state, C=xx
 
 让我们尝试用 CN 重新生成服务器证书，而不是本地主机。当我们现在使用重新生成的证书运行`SimpleServer`和`SimpleClient`时，它立即失败:
 
-```
+```java
 Exception in thread "main" javax.net.ssl.SSLHandshakeException: 
     java.security.cert.CertificateException: 
     No name matching localhost found
@@ -263,7 +263,7 @@ Exception in thread "main" javax.net.ssl.SSLHandshakeException:
 
 请注意，默认情况下， **JSSE 不会强制进行主机名验证。**我们已经通过明确使用 HTTPS 在`SimpleClient`中启用了主机名验证:
 
-```
+```java
 SSLParameters sslParams = new SSLParameters();
 sslParams.setEndpointIdentificationAlgorithm("HTTPS");
 ((SSLSocket) connection).setSSLParameters(sslParams);
@@ -281,13 +281,13 @@ sslParams.setEndpointIdentificationAlgorithm("HTTPS");
 
 在我们的`SimpleClient`中，让我们将协议更改为与为服务器设置的协议不兼容的协议:
 
-```
+```java
 ((SSLSocket) connection).setEnabledProtocols(new String[] { "TLSv1.1" });
 ```
 
 当我们再次运行我们的客户端时，我们将得到一个`SSLHandshakeException`:
 
-```
+```java
 Exception in thread "main" javax.net.ssl.SSLHandshakeException: 
   No appropriate protocol (protocol is disabled or cipher suites are inappropriate)
 ```
@@ -302,14 +302,14 @@ Exception in thread "main" javax.net.ssl.SSLHandshakeException:
 
 在我们的`SimpleClient`中，让我们将密码套件更改为与我们的服务器使用的密码套件不兼容:
 
-```
+```java
 ((SSLSocket) connection).setEnabledCipherSuites(
   new String[] { "TLS_RSA_WITH_AES_128_GCM_SHA256" });
 ```
 
 当我们重启客户端时，我们将得到一个`SSLHandshakeException`:
 
-```
+```java
 Exception in thread "main" javax.net.ssl.SSLHandshakeException: 
   Received fatal alert: handshake_failure
 ```

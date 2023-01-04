@@ -60,7 +60,7 @@
 
 为了演示错误共享如何影响应用程序的吞吐量或延迟，我们将在这一部分作弊。让我们定义两个空类:
 
-```
+```java
 abstract class Striped64 extends Number {}
 public class LongAdder extends Striped64 implements Serializable {}
 ```
@@ -69,7 +69,7 @@ public class LongAdder extends Striped64 implements Serializable {}
 
 对于我们的`Striped64 `类，我们可以从`[java.util.concurrent.atomic.Striped64](https://web.archive.org/web/20220625084255/https://github.com/openjdk/jdk/blob/master/src/java.base/share/classes/java/util/concurrent/atomic/Striped64.java) `类中复制所有内容并粘贴到我们的类中。请确保也复制`import `报表。此外，如果使用 Java 8，我们应该确保将对`[sun.misc.Unsafe.getUnsafe()](https://web.archive.org/web/20220625084255/https://github.com/openjdk/jdk/blob/faf4d7ccb792b16092c791c0ac77acdd440dbca1/src/java.base/share/classes/jdk/internal/misc/Unsafe.java#L91) `方法的任何调用替换为自定义调用:
 
-```
+```java
 private static Unsafe getUnsafe() {
     try {
         Field field = Unsafe.class.getDeclaredField("theUnsafe");
@@ -92,7 +92,7 @@ private static Unsafe getUnsafe() {
 
 为了对比这些类，让我们编写一个简单的 [JMH](/web/20220625084255/https://www.baeldung.com/java-microbenchmark-harness) 基准:
 
-```
+```java
 @State(Scope.Benchmark)
 public class FalseSharing {
 
@@ -113,7 +113,7 @@ public class FalseSharing {
 
 如果我们在吞吐量基准测试模式下用两个分支和 16 个线程运行这个基准测试(相当于传递`“`–`-bm thrpt -f 2 -t 16″ `参数)，那么 JMH 将打印这些统计数据:
 
-```
+```java
 Benchmark              Mode  Cnt          Score          Error  Units
 FalseSharing.builtin  thrpt   40  523964013.730 ± 10617539.010  ops/s
 FalseSharing.custom   thrpt   40  112940117.197 ±  9921707.098  ops/s
@@ -123,7 +123,7 @@ FalseSharing.custom   thrpt   40  112940117.197 ±  9921707.098  ops/s
 
 让我们来看看延迟之间的区别:
 
-```
+```java
 Benchmark             Mode  Cnt   Score   Error  Units
 FalseSharing.builtin  avgt   40  28.396 ± 0.357  ns/op
 FalseSharing.custom   avgt   40  51.595 ± 0.663  ns/op
@@ -141,13 +141,13 @@ FalseSharing.custom   avgt   40  51.595 ± 0.663  ns/op
 
 因此，我们可以使用 perf 事件来查看在运行这两个基准测试时 CPU 级别发生了什么。例如，如果我们运行:
 
-```
+```java
 perf stat -d java -jar benchmarks.jar -f 2 -t 16 --bm thrpt custom
 ```
 
 Perf 将让 JMH 针对复制粘贴的解决方案运行基准测试，并打印统计数据:
 
-```
+```java
 161657.133662      task-clock (msec)         #    3.951 CPUs utilized
          9321      context-switches          #    0.058 K/sec
           185      cpu-migrations            #    0.001 K/sec
@@ -162,7 +162,7 @@ Perf 将让 JMH 针对复制粘贴的解决方案运行基准测试，并打印�
 
 `L1-dcache-load-misses `字段表示 L1 数据高速缓存的高速缓存未命中的数量。如上所示，该解决方案遇到了大约 10 亿次缓存未命中(准确地说是 1，036，004，767 次)。如果我们为内置方法收集相同的统计数据:
 
-```
+```java
 161742.243922      task-clock (msec)         #    3.955 CPUs utilized
          9041      context-switches          #    0.056 K/sec
           220      cpu-migrations            #    0.001 K/sec
@@ -185,7 +185,7 @@ Perf 将让 JMH 针对复制粘贴的解决方案运行基准测试，并打印�
 
 `Striped64 `类负责这种内存争用的分配，这就是这个类如何实现那些计数器的[数组:](https://web.archive.org/web/20220625084255/https://github.com/openjdk/jdk/blob/faf4d7ccb792b16092c791c0ac77acdd440dbca1/src/java.base/share/classes/java/util/concurrent/atomic/Striped64.java#L124)
 
-```
+```java
 @jdk.internal.vm.annotation.Contended 
 static final class Cell {
     volatile long value;
@@ -216,7 +216,7 @@ transient volatile Cell[] cells;
 
 为了[消除这种仅限内部的限制](https://web.archive.org/web/20220625084255/https://github.com/openjdk/jdk/blob/985061ac28af56eb4593c6cd7d69d6556b5608f9/src/hotspot/share/classfile/classFileParser.cpp#L2118)，我们可以在重新运行基准测试时使用`[-XX:-RestrictContended](https://web.archive.org/web/20220625084255/https://github.com/openjdk/jdk/blob/195c45a0e11207e15c277e7671b2a82b8077c5fb/src/hotspot/share/runtime/globals.hpp#L777) `调优标志:
 
-```
+```java
 Benchmark              Mode  Cnt          Score          Error  Units
 FalseSharing.builtin  thrpt   40  541148225.959 ± 18336783.899  ops/s
 FalseSharing.custom   thrpt   40  546022431.969 ± 16406252.364  ops/s

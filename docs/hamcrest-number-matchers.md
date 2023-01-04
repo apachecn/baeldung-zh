@@ -12,7 +12,7 @@ Hamcrest 提供了静态匹配器，有助于使单元测试断言更简单、�
 
 要获得 Hamcrest，我们只需将以下 Maven 依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.hamcrest</groupId>
     <artifactId>java-hamcrest</artifactId>
@@ -28,7 +28,7 @@ Hamcrest 提供了静态匹配器，有助于使单元测试断言更简单、�
 
 更正式地说:
 
-```
+```java
 value - error <= element <= value + error
 ```
 
@@ -42,14 +42,14 @@ value - error <= element <= value + error
 
 那就是:
 
-```
+```java
 1 - 0.5 <= actual <= 1 + 0.5
     0.5 <= actual <= 1.5
 ```
 
 现在让我们使用`isClose` 匹配器创建一个单元测试:
 
-```
+```java
 @Test
 public void givenADouble_whenCloseTo_thenCorrect() {
     double actual = 1.3;
@@ -62,7 +62,7 @@ public void givenADouble_whenCloseTo_thenCorrect() {
 
 由于 1.3 介于 0.5 和 1.5 之间，测试将通过。同样，我们可以测试负面场景:
 
-```
+```java
 @Test
 public void givenADouble_whenNotCloseTo_thenCorrect() {
     double actual = 1.6;
@@ -79,7 +79,7 @@ public void givenADouble_whenNotCloseTo_thenCorrect() {
 
 **`isClose` 是重载的，可以和 double 值一样使用，但是和`BigDecimal`对象**一起使用:
 
-```
+```java
 @Test
 public void givenABigDecimal_whenCloseTo_thenCorrect() {
     BigDecimal actual = new BigDecimal("1.0003");
@@ -123,7 +123,7 @@ public void givenABigDecimal_whenNotCloseTo_thenCorrect() {
 
 因此，让我们继续创建一些测试:
 
-```
+```java
 @Test
 public void given5_whenComparesEqualTo5_thenCorrect() {
     Integer five = 5;
@@ -194,7 +194,7 @@ public void given5_whenLessThanOrEqualTo5_thenCorrect() {
 
 我们来看一些`Strings:`的例子
 
-```
+```java
 @Test
 public void givenBenjamin_whenGreaterThanAmanda_thenCorrect() {
     String amanda = "Amanda";
@@ -220,7 +220,7 @@ public void givenAmanda_whenLessThanBenajmin_thenCorrect() {
 
 和`Strings`一样，我们可以比较日期。让我们看看上面创建的相同示例，但是使用了`LocalDate` 对象:
 
-```
+```java
 @Test
 public void givenToday_whenGreaterThanYesterday_thenCorrect() {
     LocalDate today = LocalDate.now();
@@ -246,7 +246,7 @@ public void givenToday_whenLessThanTomorrow_thenCorrect() {
 
 让我们从创建一个`Person` bean 开始:
 
-```
+```java
 public class Person {
     String name;
     int age;
@@ -257,7 +257,7 @@ public class Person {
 
 现在，让我们实现`Comparable`:
 
-```
+```java
 public class Person implements Comparable<Person> {
 
     // ...
@@ -273,7 +273,7 @@ public class Person implements Comparable<Person> {
 
 我们的`compareTo` 实现通过年龄来比较两个人。现在让我们创建几个新的测试:
 
-```
+```java
 @Test
 public void givenAmanda_whenOlderThanBenjamin_thenCorrect() {
     Person amanda = new Person("Amanda", 20);
@@ -298,7 +298,7 @@ givenBenjamin_whenYoungerThanAmanda_thenCorrect() {
 
 Hamcrest 提供了一个额外的数字匹配器来定义一个数字实际上是不是一个数字:
 
-```
+```java
 @Test
 public void givenNaN_whenIsNotANumber_thenCorrect() {
     double zero = 0d;

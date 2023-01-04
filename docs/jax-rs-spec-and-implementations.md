@@ -38,7 +38,7 @@ JAX-RS 只不过是一个规范，是 Java EE 提供的一组接口和注释。�
 
 如果你想开始玩 JAX-RS，最短的路径是:在`pom.xml`中有一个具有以下依赖关系的 Maven webapp 项目:
 
-```
+```java
 <dependency>
     <groupId>javax</groupId>
     <artifactId>javaee-api</artifactId>
@@ -51,7 +51,7 @@ JAX-RS 只不过是一个规范，是 Java EE 提供的一组接口和注释。�
 
 添加完依赖项后，我们首先必须编写入口类:一个空类，它扩展了`javax.ws.rs.core.Application` ，并用`javax.ws.rs.ApplicationPath:` 进行了注释
 
-```
+```java
 @ApplicationPath("/api")
 public class RestApplication extends Application {
 } 
@@ -61,7 +61,7 @@ public class RestApplication extends Application {
 
 接下来，我们来看一个资源:
 
-```
+```java
 @Path("/notifications")
 public class NotificationsResource {
     @GET
@@ -93,7 +93,7 @@ public class NotificationsResource {
 
 将这个 war 部署在任何实现 JEE7 的应用服务器上，下面的命令将会起作用:
 
-```
+```java
 curl http://localhost:8080/simple-jaxrs-ex/api/notifications/ping/
 
 curl http://localhost:8080/simple-jaxrs-ex/api/notifications/get/1

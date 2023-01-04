@@ -10,7 +10,7 @@
 
 在看这个例子之前，让我们看一下这个方法的签名:
 
-```
+```java
 public double pow(double a, double b)
 ```
 
@@ -18,7 +18,7 @@ public double pow(double a, double b)
 
 现在让我们看一个简单的例子:
 
-```
+```java
 int intResult = (int) Math.pow(2, 3);
 ```
 
@@ -26,7 +26,7 @@ int intResult = (int) Math.pow(2, 3);
 
 现在让我们传递一个`double`作为参数，看看结果:
 
-```
+```java
 double dblResult = Math.pow(4.2, 3);
 ```
 
@@ -34,7 +34,7 @@ double dblResult = Math.pow(4.2, 3);
 
 这里我们没有将结果强制转换成一个`int`，因为我们感兴趣的是一个`double`值。由于我们有一个`double`值，我们可以很容易地配置并使用一个`DecimalFormat`将该值四舍五入到两位小数，结果是 74.09:
 
-```
+```java
 DecimalFormat df = new DecimalFormat(".00");
 double dblResult = Math.pow(4.2, 3);
 ```

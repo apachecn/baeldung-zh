@@ -37,7 +37,7 @@
 
 我们需要创建一个 invoker 来创建 executor 实例:
 
-```
+```java
 public class Invoker implements Executor {
     @Override
     public void execute(Runnable r) {
@@ -48,7 +48,7 @@ public class Invoker implements Executor {
 
 现在，我们可以使用这个调用程序来执行任务。
 
-```
+```java
 public void execute() {
     Executor executor = new Invoker();
     executor.execute( () -> {
@@ -65,7 +65,7 @@ public void execute() {
 
 为了使用`ExecutorService,` ，我们需要创建一个`Runnable`类。
 
-```
+```java
 public class Task implements Runnable {
     @Override
     public void run() {
@@ -76,7 +76,7 @@ public class Task implements Runnable {
 
 现在我们可以创建`ExecutorService`实例并分配这个任务。在创建时，我们需要指定线程池的大小。
 
-```
+```java
 ExecutorService executor = Executors.newFixedThreadPool(10);
 ```
 
@@ -84,7 +84,7 @@ ExecutorService executor = Executors.newFixedThreadPool(10);
 
 一旦创建了执行程序，我们就可以使用它来提交任务。
 
-```
+```java
 public void execute() { 
     executor.submit(new Task()); 
 }
@@ -92,7 +92,7 @@ public void execute() {
 
 我们还可以在提交任务时创建`Runnable`实例。
 
-```
+```java
 executor.submit(() -> {
     new Task();
 });
@@ -102,7 +102,7 @@ executor.submit(() -> {
 
 还有另一种方法`awaitTermination(long timeout, TimeUnit unit)`，在触发关机事件或发生执行超时，或者执行线程本身中断后，强制阻塞，直到所有任务执行完毕。
 
-```
+```java
 try {
     executor.awaitTermination( 20l, TimeUnit.NANOSECONDS );
 } catch (InterruptedException e) {
@@ -118,7 +118,7 @@ try {
 
 我们可以同时使用`Runnable`和`Callable`接口来定义任务。
 
-```
+```java
 public void execute() {
     ScheduledExecutorService executorService
       = Executors.newSingleThreadScheduledExecutor();
@@ -138,7 +138,7 @@ public void execute() {
 
 `ScheduledExecutorService`也可以在给定的固定延迟后调度任务**:**
 
-```
+```java
 executorService.scheduleAtFixedRate(() -> {
     // ...
 }, 1, 10, TimeUnit.SECONDS);
@@ -162,7 +162,7 @@ executorService.scheduleWithFixedDelay(() -> {
 
 我们可以使用下面的代码片段来创建一个未来实例:
 
-```
+```java
 public void invoke() {
     ExecutorService executorService = Executors.newFixedThreadPool(10);
 
@@ -176,7 +176,7 @@ public void invoke() {
 
 我们可以使用下面的代码片段来检查未来的结果是否准备好了，如果计算完成了，就获取数据:
 
-```
+```java
 if (future.isDone() && !future.isCancelled()) {
     try {
         str = future.get();
@@ -188,7 +188,7 @@ if (future.isDone() && !future.isCancelled()) {
 
 我们还可以为给定的操作指定超时。如果任务花费的时间超过这个时间，就会抛出一个`TimeoutException`:
 
-```
+```java
 try {
     future.get(10, TimeUnit.SECONDS);
 } catch (InterruptedException | ExecutionException | TimeoutException e) {
@@ -210,7 +210,7 @@ try {
 
 我们需要创建一个`Runnable`任务实例来启动障碍条件:
 
-```
+```java
 public class Task implements Runnable {
 
     private CyclicBarrier barrier;
@@ -237,7 +237,7 @@ public class Task implements Runnable {
 
 现在我们可以调用一些线程来争用屏障条件:
 
-```
+```java
 public void start() {
 
     CyclicBarrier cyclicBarrier = new CyclicBarrier(3, () -> {
@@ -273,7 +273,7 @@ public void start() {
 
 以下代码片段可用于实现信号量:
 
-```
+```java
 static Semaphore semaphore = new Semaphore(10);
 
 public void execute() throws InterruptedException {
@@ -302,7 +302,7 @@ public void execute() throws InterruptedException {
 
 我们可以定义一个`ThreadFactory`:
 
-```
+```java
 public class BaeldungThreadFactory implements ThreadFactory {
     private int threadId;
     private String name;
@@ -325,7 +325,7 @@ public class BaeldungThreadFactory implements ThreadFactory {
 
 我们可以使用这个`newThread(Runnable r)`方法在运行时创建一个新线程:
 
-```
+```java
 BaeldungThreadFactory factory = new BaeldungThreadFactory( 
     "BaeldungThreadFactory");
 for (int i = 0; i < 10; i++) { 

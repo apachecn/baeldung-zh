@@ -14,7 +14,7 @@
 
 正则表达式`\s`是一个预定义的字符类。它表示一个空白字符。让我们回顾一下空白字符集:
 
-```
+```java
 [ \t\n\x0B\f\r]
 ```
 
@@ -30,13 +30,13 @@
 
 我们将使用一个字符串作为所有示例的输入文本:
 
-```
+```java
 String INPUT_STR = "Text   With     Whitespaces!   ";
 ```
 
 让我们尝试将`\s`作为参数传递给`replaceAll()`方法:
 
-```
+```java
 String result = INPUT_STR.replaceAll("\\s", "_");
 assertEquals("Text___With_____Whitespaces!___", result);
 ```
@@ -45,7 +45,7 @@ assertEquals("Text___With_____Whitespaces!___", result);
 
 接下来，让我们将正则表达式`\s+`传递给`replaceAll()`方法:
 
-```
+```java
 String result = INPUT_STR.replaceAll("\\s+", "_");
 assertEquals("Text_With_Whitespaces!_", result);
 ```
@@ -60,21 +60,21 @@ assertEquals("Text_With_Whitespaces!_", result);
 
 让我们看看，如果我们使用带有`\s` 正则表达式的`replaceAll()`方法删除空白字符，会得到什么结果:
 
-```
+```java
 String result1 = INPUT_STR.replaceAll("\\s", "");
 assertEquals("TextWithWhitespaces!", result1);
 ```
 
 现在，我们将把另一个正则表达式`\s+`传递给`replaceAll()` 方法:
 
-```
+```java
 String result2 = INPUT_STR.replaceAll("\\s+", "");
 assertEquals("TextWithWhitespaces!", result2); 
 ```
 
 因为替换是一个空字符串，所以两个`replaceAll()`调用产生相同的结果，即使两个正则表达式有不同的含义:
 
-```
+```java
 assertEquals(result1, result2);
 ```
 

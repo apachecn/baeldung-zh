@@ -30,7 +30,7 @@ Cassandra 查询语言(CQL)是 Cassandra 数据库的查询语言，而`CqlTempl
 
 `CassandraTemplate`在 Spring 上下文中是可用的，因为我们的主 Cassandra Spring 配置扩展了 AbstractCassandraConfiguration:
 
-```
+```java
 @Configuration
 @EnableCassandraRepositories(basePackages = "com.baeldung.spring.data.cassandra.repository")
 public class CassandraConfig extends AbstractCassandraConfiguration { ... }
@@ -38,7 +38,7 @@ public class CassandraConfig extends AbstractCassandraConfiguration { ... }
 
 然后，我们可以简单地连接模板——或者通过它的确切类型 CassandraTemplate，或者作为更通用的接口`CassandraOperations:`
 
-```
+```java
 @Autowired
 private CassandraOperations cassandraTemplate;
 ```
@@ -51,7 +51,7 @@ private CassandraOperations cassandraTemplate;
 
 我们可以将一本新书保存到书店:
 
-```
+```java
 Book javaBook = new Book(
   UUIDs.timeBased(), "Head First Java", "O'Reilly Media",
   ImmutableSet.of("Computer", "Software"));
@@ -60,7 +60,7 @@ cassandraTemplate.insert(javaBook);
 
 然后，我们可以在数据库中检查插入图书的可用性:
 
-```
+```java
 Select select = QueryBuilder.select().from("book")
   .where(QueryBuilder.eq("title", "Head First Java"))
   .and(QueryBuilder.eq("publisher", "O'Reilly Media"));
@@ -73,7 +73,7 @@ Book retrievedBook = cassandraTemplate.selectOne(select, Book.class);
 
 我们可以使用列表一次将多本书保存到书店:
 
-```
+```java
 Book javaBook = new Book(
   UUIDs.timeBased(), "Head First Java", "O'Reilly Media",
   ImmutableSet.of("Computer", "Software"));
@@ -90,7 +90,7 @@ cassandraTemplate.insert(bookList);
 
 让我们从插入一本新书开始:
 
-```
+```java
 Book javaBook = new Book(
   UUIDs.timeBased(), "Head First Java", "O'Reilly Media",
   ImmutableSet.of("Computer", "Software"));
@@ -99,14 +99,14 @@ cassandraTemplate.insert(javaBook);
 
 我们去拿书吧:
 
-```
+```java
 Select select = QueryBuilder.select().from("book");
 Book retrievedBook = cassandraTemplate.selectOne(select, Book.class);
 ```
 
 然后我们给检索到的书添加一些额外的标签:
 
-```
+```java
 retrievedBook.setTags(ImmutableSet.of("Java", "Programming"));
 cassandraTemplate.update(retrievedBook);
 ```
@@ -115,7 +115,7 @@ cassandraTemplate.update(retrievedBook);
 
 让我们插入一本新书:
 
-```
+```java
 Book javaBook = new Book(
   UUIDs.timeBased(), "Head First Java", "O'Reilly Media",
   ImmutableSet.of("Computer", "Software"));
@@ -124,7 +124,7 @@ cassandraTemplate.insert(javaBook);
 
 然后删除该书:
 
-```
+```java
 cassandraTemplate.delete(javaBook);
 ```
 
@@ -132,7 +132,7 @@ cassandraTemplate.delete(javaBook);
 
 现在让我们插入一些新书:
 
-```
+```java
 Book javaBook = new Book(
   UUIDs.timeBased(), "Head First Java", "O'Reilly Media",
   ImmutableSet.of("Computer", "Software"));
@@ -145,7 +145,7 @@ cassandraTemplate.insert(dPatternBook);
 
 然后删除所有的书:
 
-```
+```java
 cassandraTemplate.deleteAll(Book.class);
 ```
 
@@ -161,7 +161,7 @@ cassandraTemplate.deleteAll(Book.class);
 
 `QueryBuilder` 可用于建立数据库中数据操作的查询。几乎所有的标准操作都可以使用现成的构造块来构建:
 
-```
+```java
 Insert insertQueryBuider = QueryBuilder.insertInto("book")
  .value("isbn", UUIDs.timeBased())
  .value("title", "Head First Java")
@@ -178,7 +178,7 @@ cassandraTemplate.execute(insertQueryBuider);
 
 A `PreparedStatement`只准备一次，有助于确保高性能:
 
-```
+```java
 UUID uuid = UUIDs.timeBased();
 String insertPreparedCql = 
   "insert into book (isbn, title, publisher, tags) values (?, ?, ?, ?)";
@@ -196,7 +196,7 @@ cassandraTemplate.ingest(insertPreparedCql, bookList);
 
 我们可以直接使用 CQL 语句来查询如下数据:
 
-```
+```java
 UUID uuid = UUIDs.timeBased();
 String insertCql = "insert into book (isbn, title, publisher, tags) 
   values (" + uuid + ", 'Head First Java', 'OReilly Media', {'Software'})";

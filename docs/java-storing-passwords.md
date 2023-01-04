@@ -28,7 +28,7 @@ Java 中的是不可变的，这意味着我们不能使用任何高级 API 来�
 
 第一个为`String`:
 
-```
+```java
 System.out.print("Original String password value: ");
 System.out.println(stringPassword);
 System.out.println("Original String password hashCode: "
@@ -46,7 +46,7 @@ System.out.println(
 
 输出将是:
 
-```
+```java
 Original String password value: password
 Original String password hashCode: 4889ba9b
 String value after trying to replace it: password
@@ -55,7 +55,7 @@ hashCode after trying to replace the original String: 4889ba9b
 
 现在为`char[]`:
 
-```
+```java
 char[] charPassword = new char[]{'p', 'a', 's', 's', 'w', 'o', 'r', 'd'};
 
 System.out.print("Original char password value: ");
@@ -75,7 +75,7 @@ System.out.println(
 
 输出是:
 
-```
+```java
 Original char password value: password
 Original char password hashCode: 7cc355be
 Changed char password value: ********
@@ -92,7 +92,7 @@ Changed char password hashCode: 7cc355be
 
 让我们看看下一段代码:
 
-```
+```java
 String passwordString = "password";
 char[] passwordArray = new char[]{'p', 'a', 's', 's', 'w', 'o', 'r', 'd'};
 System.out.println("Printing String password -> " + passwordString);
@@ -101,7 +101,7 @@ System.out.println("Printing char[] password -> " + passwordArray);
 
 使用输出:
 
-```
+```java
 Printing String password -> password
 Printing char[] password -> [[[email protected]](/web/20220630131119/https://www.baeldung.com/cdn-cgi/l/email-protection)
 ```

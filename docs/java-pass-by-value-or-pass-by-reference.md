@@ -50,7 +50,7 @@ Java 编程语言有八种原始数据类型。**原始变量直接存储在堆�
 
 让我们借助一个代码示例来理解它:
 
-```
+```java
 public class PrimitivesUnitTest {
 
     @Test
@@ -97,7 +97,7 @@ public class PrimitivesUnitTest {
 
 让我们借助一个代码示例来理解这一点:
 
-```
+```java
 public class NonPrimitivesUnitTest {
 
     @Test

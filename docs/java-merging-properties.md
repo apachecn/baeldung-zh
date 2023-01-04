@@ -24,7 +24,7 @@
 
 为了简单起见，我们将以编程方式为我们的示例设置属性:
 
-```
+```java
 private Properties propertiesA() {
     Properties properties = new Properties();
     properties.setProperty("application.name", "my-app");
@@ -41,7 +41,7 @@ private Properties propertiesA() {
 
 现在让我们看看如何使用迭代合并两个或更多的 properties 对象:
 
-```
+```java
 private Properties mergePropertiesByIteratingKeySet(Properties... properties) {
     Properties mergedProperties = new Properties();
     for (Properties property : properties) {
@@ -67,7 +67,7 @@ private Properties mergePropertiesByIteratingKeySet(Properties... properties) {
 
 现在我们来看看另一个使用`putAll()`方法合并属性的常见解决方案:
 
-```
+```java
 private Properties mergePropertiesByUsingPutAll(Properties... properties) {
     Properties mergedProperties = new Properties();
     for (Properties property : properties) {
@@ -87,7 +87,7 @@ private Properties mergePropertiesByUsingPutAll(Properties... properties) {
 
 最后，我们将看看如何使用流 API 来合并多个`Properties`对象:
 
-```
+```java
 private Properties mergePropertiesByUsingStreamApi(Properties... properties) {
     return Stream.of(properties)
         .collect(Properties::new, Map::putAll, Map::putAll);

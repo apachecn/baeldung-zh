@@ -32,7 +32,7 @@ Spring 3.0 引入了`@Async`注释。`@Async`的目标是允许应用程序在�
 
 让我们通过编写我们的应用程序类`AsyncVsWebFluxApp`来开始实现。H `ere, @EnableAsync`为我们的 Spring Boot 应用启用异步的魔力在于:
 
-```
+```java
 @SpringBootApplication
 @EnableAsync
 public class AsyncVsWebFluxApp {
@@ -44,7 +44,7 @@ public class AsyncVsWebFluxApp {
 
 然后我们有`AsyncFilter`，它实现了`javax.servlet.Filter.` 别忘了在 `doFilter`方法中模拟延迟:
 
-```
+```java
 @Component
 public class AsyncFilter implements Filter {
     ...
@@ -59,7 +59,7 @@ public class AsyncFilter implements Filter {
 
 最后，我们用“`/async_result`”端点开发我们的`AsyncController`:
 
-```
+```java
 @RestController
 public class AsyncController {
     @GetMapping("/async_result")
@@ -75,7 +75,7 @@ public class AsyncController {
 
 考试时间！让我们运行应用程序，安装 Apache ab 或任何工具来模拟负载。然后，我们可以通过“async_result”端点发送大量并发请求。我们可以执行 JConsole 并将其附加到我们的 java 应用程序来监控该过程:
 
-```
+```java
 ab -n 1600 -c 40 localhost:8080/async_result
 ```
 
@@ -95,7 +95,7 @@ Spring WebFlux 允许我们使用`Mono, Flux,`及其丰富的操作符集以声�
 
 对于 [WebFlux 实现](/web/20221025153926/https://www.baeldung.com/spring-webflux)，我们走与 async 相同的道路。首先，让我们创建`AsyncVsWebFluxApp`:
 
-```
+```java
 @SpringBootApplication
 public class AsyncVsWebFluxApp {
     public static void main(String[] args) {
@@ -106,7 +106,7 @@ public class AsyncVsWebFluxApp {
 
 然后让我们编写我们的`WebFluxFilter`，它实现了`WebFilter.`，我们将生成一个有意的延迟，然后将请求传递给过滤器链:
 
-```
+```java
 @Component
 public class WebFluxFilter implements org.springframework.web.server.WebFilter {
 
@@ -123,7 +123,7 @@ public class WebFluxFilter implements org.springframework.web.server.WebFilter {
 
 最后，我们有了我们的`WebFluxController`。它公开了一个名为`“/flux_result”`的端点，并返回一个`Mono<String>`作为响应:
 
-```
+```java
 @RestController
 public class WebFluxController {
 
@@ -137,7 +137,7 @@ public class WebFluxController {
 
 对于测试，我们采用了与异步示例应用程序相同的方法。以下是:的示例结果
 
-```
+```java
 ab -n 1600 -c 40 localhost:8080/flux_result
 ```
 

@@ -18,7 +18,7 @@
 
 从 Spring 3.2 开始，现在支持在集成测试 : 中加载一个`WebApplicationContext`
 
-```
+```java
 @WebAppConfiguration
 @ContextConfiguration(classes = WebConfig.class)
 public class EmployeeControllerTest {
@@ -36,13 +36,13 @@ public class EmployeeControllerTest {
 
 然而，我们可以通过简单地提供一个到`@WebAppConfiguration`注释的替代路径来覆盖它:
 
-```
+```java
 @WebAppConfiguration("src/test/webapp")
 ```
 
 我们还可以从类路径而不是文件系统引用基本资源路径:
 
-```
+```java
 @WebAppConfiguration("classpath:test-web-resources")
 ```
 
@@ -56,7 +56,7 @@ public class EmployeeControllerTest {
 
 既然我们理解了为什么我们需要在我们的测试类中添加`@WebAppConfiguration` 注释，让我们看看**如果我们在使用`WebApplicationContext`的时候错过了添加**会发生什么。
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 // @WebAppConfiguration omitted on purpose
 @ContextConfiguration(classes = WebConfig.class)
@@ -82,7 +82,7 @@ public class EmployeeTest {
 
 让我们来看看:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 // @WebAppConfiguration omitted on purpose
 @ContextConfiguration(classes = WebConfig.class)
@@ -97,7 +97,7 @@ public class EmployeeTestWithoutMockMvc {
 
 即使上面的例子没有自动连接一个`WebApplicationContext` ，它仍然会失败，因为它试图使用一个支持 web 的配置—`WebConfig`:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 @ComponentScan("com.baeldung.web")
@@ -108,7 +108,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 注释`@EnableWebMvc`是这里的罪魁祸首——这基本上需要一个支持 web 的 Spring 上下文，没有它——我们会看到测试失败:
 
-```
+```java
 Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: 
   No qualifying bean of type [javax.servlet.ServletContext] found for dependency: 
     expected at least 1 bean which qualifies as autowire candidate for this dependency. 

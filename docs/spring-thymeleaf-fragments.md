@@ -12,7 +12,7 @@
 
 我们需要几个依赖项来启用百里香:
 
-```
+```java
 <dependency>
     <groupId>org.thymeleaf</groupId>
     <artifactId>thymeleaf</artifactId>
@@ -35,7 +35,7 @@
 
 我们还将为一些静态资源设置目录:
 
-```
+```java
 @Bean
 public ViewResolver htmlViewResolver() {
     ThymeleafViewResolver resolver = new ThymeleafViewResolver();
@@ -71,7 +71,7 @@ public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
 最后一个加载了一些数据，这些数据通过模型显示在视图上:
 
-```
+```java
 @Controller
 public class FragmentsController {
 
@@ -116,7 +116,7 @@ public class FragmentsController {
 
 下一个例子，`fragments.html,`展示了所有三种方式的使用。这个百里香模板在文档的头和正文中添加了片段:
 
-```
+```java
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -134,7 +134,7 @@ public class FragmentsController {
 
 **现在，让我们来看一个包含一些片段的页面。**它被称为`general.html`，它就像一整页，其中一些部分被定义为随时可用的片段:
 
-```
+```java
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="headerfiles">
@@ -166,7 +166,7 @@ public class FragmentsController {
 
 在渲染和片段包含之后，返回的内容是:
 
-```
+```java
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -197,7 +197,7 @@ public class FragmentsController {
 
 例如，该页面包括来自`general.html`文件的一些组件:一个`aside`块和一个`div.another`块:
 
-```
+```java
 <body>
     <header th:insert="fragments/general.html :: header"> </header>
     <div th:replace="fragments/general.html :: aside"></div>
@@ -212,7 +212,7 @@ public class FragmentsController {
 
 在本例中，我们为通用表单字段定义了一个片段:
 
-```
+```java
 <div th:fragment="formField (field, value, size)">
     <div>
         <label th:for="${#strings.toLowerCase(field)}"> <span
@@ -229,7 +229,7 @@ public class FragmentsController {
 
 下面是这个片段的一个简单用法，我们向它传递参数:
 
-```
+```java
 <body>
     <header th:insert="fragments/general.html :: header"> </header>
     <div th:replace="fragments/forms.html
@@ -241,7 +241,7 @@ public class FragmentsController {
 
 返回的字段将是这样的:
 
-```
+```java
 <div>
     <div>
         <label for="name"> <span>Name</span>
@@ -263,14 +263,14 @@ public class FragmentsController {
 
 例如，我们可以用一些内容来定义这个片段，我们将根据给定的条件来显示这些内容。这可能是一个包含不同类型块的文件:
 
-```
+```java
 <div th:fragment="dataPresent">Data received</div>
 <div th:fragment="noData">No data</div>
 ```
 
 这就是我们如何用一个表达式来装载它们:
 
-```
+```java
 <div
     th:replace="${#lists.size(data) > 0} ? 
         ~{fragments/menus.html :: dataPresent} : 
@@ -284,7 +284,7 @@ public class FragmentsController {
 
 下一个例子还展示了片段的另外两个有趣的用法，即**用数据**呈现一个表格。这是可重用的表片段，有两个重要部分:可以更改的表头和呈现数据的表体:
 
-```
+```java
 <table>
     <thead th:fragment="fields(theadFields)">
         <tr th:replace="${theadFields}">
@@ -303,7 +303,7 @@ public class FragmentsController {
 
 当我们想要使用这个表时，我们可以使用`fields`函数传递我们自己的表头。头文件被类`myFields`引用。通过将数据作为参数传递给`tableBody`函数来加载表体:
 
-```
+```java
 <body>
     <header th:replace="fragments/general.html :: header"> </header>
     <table>
@@ -325,7 +325,7 @@ public class FragmentsController {
 
 这是最终页面的样子:
 
-```
+```java
 <body>
     <div>
         <h1>Thymeleaf Fragments sample</h1>

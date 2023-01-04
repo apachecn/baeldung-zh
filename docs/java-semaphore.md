@@ -12,7 +12,7 @@
 
 在下面的示例中，我们将实现一个简单的登录队列来限制系统中的用户数量:
 
-```
+```java
 class LoginQueueUsingSemaphore {
 
     private Semaphore semaphore;
@@ -44,7 +44,7 @@ class LoginQueueUsingSemaphore {
 
 为了测试我们的登录队列，我们将首先尝试达到限制，并检查下一次登录尝试是否会被阻止:
 
-```
+```java
 @Test
 public void givenLoginQueue_whenReachLimit_thenBlocked() {
     int slots = 10;
@@ -61,7 +61,7 @@ public void givenLoginQueue_whenReachLimit_thenBlocked() {
 
 接下来，我们将查看注销后是否有可用的插槽:
 
-```
+```java
 @Test
 public void givenLoginQueue_whenLogout_thenSlotsAvailable() {
     int slots = 10;
@@ -84,7 +84,7 @@ public void givenLoginQueue_whenLogout_thenSlotsAvailable() {
 
 我们可以使用`TimedSemaphore`建立一个简单的延迟队列，如下所示:
 
-```
+```java
 class DelayQueueUsingTimedSemaphore {
 
     private TimedSemaphore semaphore;
@@ -106,7 +106,7 @@ class DelayQueueUsingTimedSemaphore {
 
 当我们使用以一秒钟为时间段的延迟队列，并且在一秒钟内使用了所有时隙之后，应该没有可用的时隙:
 
-```
+```java
 public void givenDelayQueue_whenReachLimit_thenBlocked() {
     int slots = 50;
     ExecutorService executorService = Executors.newFixedThreadPool(slots);
@@ -124,7 +124,7 @@ public void givenDelayQueue_whenReachLimit_thenBlocked() {
 
 但是在休眠一段时间后，**信号量应该复位并释放许可**:
 
-```
+```java
 @Test
 public void givenDelayQueue_whenTimePass_thenSlotsAvailable() throws InterruptedException {
     int slots = 50;
@@ -147,7 +147,7 @@ public void givenDelayQueue_whenTimePass_thenSlotsAvailable() throws Interrupted
 
 在下面的例子中，我们将使用一个简单的二进制信号量来构建一个计数器:
 
-```
+```java
 class CounterUsingMutex {
 
     private Semaphore mutex;
@@ -178,7 +178,7 @@ class CounterUsingMutex {
 
 当许多线程试图同时访问计数器时，**它们会被简单地阻塞在一个队列中**:
 
-```
+```java
 @Test
 public void whenMutexAndMultipleThreads_thenBlocked()
  throws InterruptedException {
@@ -202,7 +202,7 @@ public void whenMutexAndMultipleThreads_thenBlocked()
 
 当我们等待时，所有线程都将访问计数器，队列中没有线程剩余:
 
-```
+```java
 @Test
 public void givenMutexAndMultipleThreads_ThenDelay_thenCorrectCount()
  throws InterruptedException {

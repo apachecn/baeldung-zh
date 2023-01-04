@@ -18,7 +18,7 @@ Spring Security 允许通过扩展一个`WebSecurityConfigurerAdapter`类为端�
 
 首先，让我们定义我们的配置类:
 
-```
+```java
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
@@ -36,7 +36,7 @@ public class SecurityConfig {
 
 **现在，如果我们想避免被弃用，我们可以定义一个`UserDetailsManager`或`UserDetailsService` 组件:**
 
-```
+```java
 @Bean
 public UserDetailsService userDetailsService(BCryptPasswordEncoder bCryptPasswordEncoder) {
     InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
@@ -54,7 +54,7 @@ public UserDetailsService userDetailsService(BCryptPasswordEncoder bCryptPasswor
 
 或者，给定我们的`UserDetailService`，我们甚至可以设置一个`AuthenticationManager`:
 
-```
+```java
 @Bean
 public AuthenticationManager authManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder, UserDetailService userDetailService) 
   throws Exception {
@@ -74,7 +74,7 @@ public AuthenticationManager authManager(HttpSecurity http, BCryptPasswordEncode
 
 例如，假设我们想要保护依赖于角色的端点，并只为登录留下一个匿名入口点。我们还将任何删除请求限制为管理员角色。我们将使用[基本认证:](/web/20220916120910/https://www.baeldung.com/spring-security-basic-authentication)
 
-```
+```java
 @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf()
@@ -108,7 +108,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 让我们添加一个调试级别，忽略一些路径，如图像或脚本:
 
-```
+```java
 @Bean
 public WebSecurityCustomizer webSecurityCustomizer() {
     return (web) -> web.debug(securityDebug)
@@ -121,7 +121,7 @@ public WebSecurityCustomizer webSecurityCustomizer() {
 
 让我们为我们的应用程序定义一个简单的 REST 控制器类:
 
-```
+```java
 @RestController
 public class ResourceController {
     @GetMapping("/login")
@@ -161,7 +161,7 @@ public class ResourceController {
 
 匿名用户可以访问`/login`端点。如果他们试图访问其他东西，他们将是未经授权的(`401`):
 
-```
+```java
 @Test
 @WithAnonymousUser
 public void whenAnonymousAccessLogin_thenOk() throws Exception {
@@ -183,7 +183,7 @@ public void whenAnonymousAccessRestrictedEndpoint_thenIsUnauthorized() throws Ex
 
 用户角色可以访问通用端点和我们授予该角色的所有其他路径:
 
-```
+```java
 @Test
 @WithUserDetails()
 public void whenUserAccessUserSecuredEndpoint_thenOk() throws Exception {
@@ -221,7 +221,7 @@ public void whenUserAccessDeleteSecuredEndpoint_thenIsForbidden() throws Excepti
 
 如我们所见，具有管理员角色的人可以访问任何端点:
 
-```
+```java
 @Test
 @WithUserDetails(value = "admin")
 public void whenAdminAccessUserEndpoint_thenOk() throws Exception {

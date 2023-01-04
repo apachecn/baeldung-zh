@@ -10,7 +10,7 @@
 
 Maven 属性是值占位符。首先，**我们需要在我们的`pom.xml`** 文件中的`properties`标签下定义它们:
 
-```
+```java
 <properties>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
@@ -23,7 +23,7 @@ Maven 属性是值占位符。首先，**我们需要在我们的`pom.xml`** 文
 
 然后，我们可以在其他标签中使用它们。例如，在这种情况下，我们将在`commons-io`依赖关系中使用“`commons.version`”值:
 
-```
+```java
 <dependency>
     <groupId>commons-io</groupId>
     <artifactId>commons-io</artifactId>
@@ -37,7 +37,7 @@ Maven 属性是值占位符。首先，**我们需要在我们的`pom.xml`** 文
 
 有时，我们在开发时不知道属性值。在这种情况下，我们可以使用语法`${some_property}`留下一个占位符而不是值，并且 **Maven 将在运行时**覆盖占位符值。让我们为`COMMON_VERSION_CMD`设置一个占位符:
 
-```
+```java
 <properties>
     <maven.compiler.source>1.7</maven.compiler.source>
     <commons.version>2.5</commons.version>
@@ -49,7 +49,7 @@ Maven 属性是值占位符。首先，**我们需要在我们的`pom.xml`** 文
 
 现在，让我们像往常一样从终端运行 Maven，例如使用`package`命令。但是在这种情况下，让我们也添加符号`-D`,后跟一个属性名:
 
-```
+```java
 mvn package -DCOMMON_VERSION_CMD=2.5
 ```
 

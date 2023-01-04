@@ -18,13 +18,13 @@
 
 后者是一种更先进的方法，但不用担心，它只需要四个步骤。我们首先需要转到我们想要安装的目录:
 
-```
+```java
 cd directory_path_name
 ```
 
 在不离开目录的情况下，我们可以运行:
 
-```
+```java
 wget https://download.bell-sw.com/java/11.0.14.1+1/bellsoft-jdk11.0.14.1+1-linux-amd64.tar.gz
 ```
 
@@ -32,7 +32,7 @@ wget https://download.bell-sw.com/java/11.0.14.1+1/bellsoft-jdk11.0.14.1+1-linux
 
 这样，我们将把运行时解包到我们所在的目录中:
 
-```
+```java
 tar -zxvf bellsoft-jdk11.0.14.1+1-linux-amd64.tar.gz
 ```
 
@@ -40,7 +40,7 @@ tar -zxvf bellsoft-jdk11.0.14.1+1-linux-amd64.tar.gz
 
 最后，我们需要通过指向 Liberica JDK 目录来设置`JAVA_HOME`变量:
 
-```
+```java
 export JAVA_HOME=$(pwd)/jdk-11.0.14.1
 ```
 
@@ -50,7 +50,7 @@ export JAVA_HOME=$(pwd)/jdk-11.0.14.1
 
 我们可以通过运行以下命令获得带有 petclinic 应用程序示例的 Spring Native 项目:
 
-```
+```java
 git clone https://github.com/spring-projects-experimental/spring-native.git
 ```
 
@@ -58,19 +58,19 @@ git clone https://github.com/spring-projects-experimental/spring-native.git
 
 我们希望使用整个 Spring 原生项目中的一个样本，所以通过运行以下命令转到 spring petclinic JDBC 的目录:
 
-```
+```java
 export PROJECT_DIR=$(pwd)/spring-native/samples/petclinic-jdbc && cd $PROJECT_DIR
 ```
 
 要构建 JAR 文件，我们可以应用以下命令:
 
-```
+```java
 ./mvnw clean install
 ```
 
 这将为我们提供一个 24 MB 的`target/petclinic-jdbc-0.0.1-SNAPSHOT.jar`。我们将通过运行以下命令来测试它:
 
-```
+```java
 java -jar target/petclinic-jdbc-0.0.1-SNAPSHOT.jar
 ```
 
@@ -80,13 +80,13 @@ java -jar target/petclinic-jdbc-0.0.1-SNAPSHOT.jar
 
 确保我们的 [Docker 守护进程](/web/20220627153941/https://www.baeldung.com/ops/docker-cannot-connect)正在运行。注意，如果我们使用 Windows 或 macOS x86，我们需要为 Docker 分配至少 8 GB 的内存。从 Spring petclinic JDBC 应用程序目录中，我们需要输入命令:
 
-```
+```java
 ./mvnw spring-boot:build-image
 ```
 
 这将使用 Spring Boot 构建本机映像容器，我们可以使用:
 
-```
+```java
 docker run -it docker.io/library/petclinic-jdbc:0.0.1-SNAPSHOT
 ```
 
@@ -98,7 +98,7 @@ docker run -it docker.io/library/petclinic-jdbc:0.0.1-SNAPSHOT
 
 我们首先需要转到我们想要安装的目录:
 
-```
+```java
 cd directory_path_name
 ```
 
@@ -106,31 +106,31 @@ cd directory_path_name
 
 在我们的例子中，我们将获得 NIK Java 11 Linux 版:
 
-```
+```java
 wget https://download.bell-sw.com/vm/22.0.0.2/bellsoft-liberica-vm-openjdk11-22.0.0.2-linux-amd64.tar.gz
 ```
 
 然后，我们通过运行以下命令来解压文件:
 
-```
+```java
 tar -xzf bellsoft-liberica-vm-openjdk11-22.0.0.2-linux-amd64.tar.gz
 ```
 
 通过指向 NIK 利贝雷卡定义$JAVA_HOME 变量:
 
-```
+```java
 export JAVA_HOME=$(pwd)/bellsoft-liberica-vm-openjdk11-22.0.0.2
 ```
 
 现在，我们转到 petclinic JDBC 应用程序目录:
 
-```
+```java
 cd $PROJECT_DIR
 ```
 
 我们可以通过运行以下命令来创建本机映像:
 
-```
+```java
 ./mvnw -Pnative install
 ```
 

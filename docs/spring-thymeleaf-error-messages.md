@@ -20,7 +20,7 @@
 
 让我们添加我们需要的所有 Spring Boot 启动器 MVC 位的[Web](https://web.archive.org/web/20220728105348/https://search.maven.org/search?q=a:spring-boot-starter-web%20AND%20g:org.springframework.boot), hibernate 实体验证的[验证](https://web.archive.org/web/20220728105348/https://search.maven.org/search?q=a:spring-boot-starter-validation%20AND%20g:org.springframework.boot), UI 的[百里香](https://web.archive.org/web/20220728105348/https://search.maven.org/search?q=a:spring-boot-starter-thymeleaf%20AND%20g:org.springframework.boot),存储库的 [JPA](https://web.archive.org/web/20220728105348/https://search.maven.org/search?q=a:spring-boot-starter-data-jpa%20AND%20g:org.springframework.boot) 。此外，我们需要一个 [H2](https://web.archive.org/web/20220728105348/https://search.maven.org/search?q=a:h2%20AND%20g:com.h2database) 依赖项来拥有一个内存数据库:
 
-```
+```java
 <dependency> 
     <groupId>org.springframework.boot</groupId> 
     <artifactId>spring-boot-starter-web</artifactId> 
@@ -53,7 +53,7 @@
 
 这是我们的`User`实体:
 
-```
+```java
 @Entity
 public class User {
     @Id
@@ -87,7 +87,7 @@ public class User {
 
 我们将使用一个简单的 [JPA 存储库](/web/20220728105348/https://www.baeldung.com/the-persistence-layer-with-spring-data-jpa)作为我们的基本用例:
 
-```
+```java
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {}
 ```
@@ -96,7 +96,7 @@ public interface UserRepository extends JpaRepository<User, Long> {}
 
 最后，为了在后端将所有东西连接在一起，让我们组装一个`UserController`:
 
-```
+```java
 @Controller
 public class UserController {
 
@@ -131,20 +131,20 @@ public class UserController {
 
 Thymeleaf 提供了一个内置的`field.hasErrors`方法，该方法根据给定字段是否存在错误返回一个布尔值。结合 [`th:if`](/web/20220728105348/https://www.baeldung.com/spring-mvc-thymeleaf-conditional-css-classes#using-thif) 我们可以选择显示错误是否存在:
 
-```
+```java
 <p th:if="${#fields.hasErrors('age')}">Invalid Age</p>
 ```
 
 接下来，如果我们希望**添加任何样式，我们可以有条件地使用[`th:class`](/web/20220728105348/https://www.baeldung.com/spring-mvc-thymeleaf-conditional-css-classes#using-thclass)**:
 
-```
+```java
 <p  th:if="${#fields.hasErrors('age')}" th:class="${#fields.hasErrors('age')}? error">
   Invalid Age</p>
 ```
 
 我们简单的嵌入式 CSS 类`error`将元素变成红色:
 
-```
+```java
 <style>
     .error {
         color: red;
@@ -154,7 +154,7 @@ Thymeleaf 提供了一个内置的`field.hasErrors`方法，该方法根据给�
 
 另一个百里香属性`th:errors`给了我们在指定的选择器上显示所有错误的能力，比如说`email:`
 
-```
+```java
 <div>
     <label for="email">Email</label> <input type="text" th:field="*{email}" />
     <p th:if="${#fields.hasErrors('email')}" th:errorclass="error" th:errors="*{email}" />
@@ -165,7 +165,7 @@ Thymeleaf 提供了一个内置的`field.hasErrors`方法，该方法根据给�
 
 或者，我们可以选择使用 [`th:each`](/web/20220728105348/https://www.baeldung.com/thymeleaf-iteration) 迭代给定字段上的所有验证消息:
 
-```
+```java
 <div>
     <label for="fullName">Name</label> <input type="text" th:field="*{fullName}" 
       id="fullName" placeholder="Full Name">
@@ -189,7 +189,7 @@ Thymeleaf 提供了一个内置的`field.hasErrors`方法，该方法根据给�
 
 为此，**我们将使用百里香的`fields.hasAnyErrors()`方法**:
 
-```
+```java
 <div th:if="${#fields.hasAnyErrors()}">
     <ul>
         <li th:each="err : ${#fields.allErrors()}" th:text="${err}" />
@@ -211,7 +211,7 @@ Thymeleaf 提供了一个内置的`field.hasErrors`方法，该方法根据给�
 
 在这种情况下，**不使用选择或`(*{….})`，我们只需要使用格式为`(${….})`** 的全限定变量名:
 
-```
+```java
 <h4>Errors on a single field:</h4>
 <div th:if="${#fields.hasErrors('${user.email}')}"
  th:errors="*{user.email}"></div>
@@ -224,7 +224,7 @@ Thymeleaf 提供了一个内置的`field.hasErrors`方法，该方法根据给�
 
 现在，**让我们看看如何一次显示所有消息**:
 
-```
+```java
 <h4>All errors:</h4>
 <ul>
 <li th:each="err : ${#fields.errors('user.*')}" th:text="${err}" />
@@ -245,7 +245,7 @@ Thymeleaf 提供了一个内置的`field.hasErrors`方法，该方法根据给�
 
 首先，我们将添加一个 [`Service`](/web/20220728105348/https://www.baeldung.com/spring-component-repository-service) 来执行这个验证:
 
-```
+```java
 @Service
 public class UserValidationService {
     public String validateUser(User user) {
@@ -265,7 +265,7 @@ public class UserValidationService {
 
 其次，我们需要调整控制器的`PostMapping`:
 
-```
+```java
 @PostMapping("/add")
 public String addUser(@Valid User user, BindingResult result, Model model) {
     String err = validationService.validateUser(user);
@@ -284,7 +284,7 @@ public String addUser(@Valid User user, BindingResult result, Model model) {
 
 最后，在百里香模板中，**我们将添加常量`global`来显示这种类型的错误**:
 
-```
+```java
 <div th:if="${#fields.hasErrors('global')}">
     <h3>Global errors:</h3>
     <p th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error" />

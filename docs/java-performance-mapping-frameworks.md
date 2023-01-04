@@ -18,7 +18,7 @@
 
 为了使用 Dozer 框架，我们需要将这种依赖性添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>com.github.dozermapper</groupId>
     <artifactId>dozer-core</artifactId>
@@ -38,7 +38,7 @@ Orika 的一般工作原理类似于推土机。两者的主要区别在于， *
 
 为了使用它，我们需要向我们的项目添加这样的依赖:
 
-```
+```java
 <dependency>
     <groupId>ma.glasnost.orika</groupId>
     <artifactId>orika-core</artifactId>
@@ -60,7 +60,7 @@ MapStruct 还能够在不同的数据类型之间进行转换。关于如何使�
 
 要将 MapStruct 添加到我们的项目中，我们需要包含以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.mapstruct</groupId>
     <artifactId>mapstruct</artifactId>
@@ -78,7 +78,7 @@ ModelMapper 是一个旨在简化对象映射的框架，它通过基于约定�
 
 要在我们的项目中包含模型映射器，我们需要添加以下依赖项:
 
-```
+```java
 <dependency>
   <groupId>org.modelmapper</groupId>
   <artifactId>modelmapper</artifactId>
@@ -100,7 +100,7 @@ JMapper 是映射框架，旨在提供 Java Beans 之间的易用、高性能的
 
 要将 JMapper 包含在我们的项目中，我们需要添加它的依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.googlecode.jmapper-framework</groupId>
     <artifactId>jmapper-core</artifactId>
@@ -118,7 +118,7 @@ JMapper 是映射框架，旨在提供 Java Beans 之间的易用、高性能的
 
 简单的源模型如下所示:
 
-```
+```java
 public class SourceCode {
     String code;
     // getter and setter
@@ -127,7 +127,7 @@ public class SourceCode {
 
 它的目的地很相似:
 
-```
+```java
 public class DestinationCode {
     String code;
     // getter and setter
@@ -136,7 +136,7 @@ public class DestinationCode {
 
 源 bean 的真实示例如下所示:
 
-```
+```java
 public class SourceOrder {
     private String orderFinishDate;
     private PaymentType paymentType;
@@ -154,7 +154,7 @@ public class SourceOrder {
 
 目标类如下所示:
 
-```
+```java
 public class Order {
     private User orderingUser;
     private List<Product> orderedProducts;
@@ -176,7 +176,7 @@ public class Order {
 
 为了简化测试设置的设计，我们创建了`Converter`接口:
 
-```
+```java
 public interface Converter {
     Order convert(SourceOrder sourceOrder);
     DestinationCode convert(SourceCode sourceCode);
@@ -189,7 +189,7 @@ public interface Converter {
 
 Orika 允许完整的 API 实现，这大大简化了映射器的创建:
 
-```
+```java
 public class OrikaConverter implements Converter{
     private MapperFacade mapperFacade;
 
@@ -218,7 +218,7 @@ public class OrikaConverter implements Converter{
 
 Dozer 需要 XML 映射文件，包含以下部分:
 
-```
+```java
 <mappings 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://dozermapper.github.io/schema/bean-mapping
@@ -241,7 +241,7 @@ Dozer 需要 XML 映射文件，包含以下部分:
 
 定义 XML 映射后，我们可以从代码中使用它:
 
-```
+```java
 public class DozerConverter implements Converter {
     private final Mapper mapper;
 
@@ -267,7 +267,7 @@ public class DozerConverter implements Converter {
 
 MapStruct 定义非常简单，因为它完全基于代码生成:
 
-```
+```java
 @Mapper
 public interface MapStructConverter extends Converter {
     MapStructConverter MAPPER = Mappers.getMapper(MapStructConverter.class);
@@ -285,7 +285,7 @@ public interface MapStructConverter extends Converter {
 
 需要做更多的工作。实现接口后:
 
-```
+```java
 public class JMapperConverter implements Converter {
     JMapper realLifeMapper;
     JMapper simpleMapper;
@@ -314,7 +314,7 @@ public class JMapperConverter implements Converter {
 
 我们还需要给目标类的每个字段添加`@JMap `注释。此外，JMapper 本身不能在枚举类型之间转换，它需要我们创建自定义映射函数:
 
-```
+```java
 @JMapConversion(from = "paymentType", to = "paymentType")
 public PaymentType conversion(com.baeldung.performancetests.model.source.PaymentType type) {
     PaymentType paymentType = null;
@@ -339,7 +339,7 @@ public PaymentType conversion(com.baeldung.performancetests.model.source.Payment
 
 `ModelMapperConverter`要求我们只提供我们想要映射的类:
 
-```
+```java
 public class ModelMapperConverter implements Converter {
     private ModelMapper modelMapper;
 

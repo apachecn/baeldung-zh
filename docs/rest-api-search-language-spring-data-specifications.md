@@ -21,7 +21,7 @@
 
 首先，让我们从搜索 API 的一个简单的`User`实体开始:
 
-```
+```java
 @Entity
 public class User {
     @Id
@@ -44,7 +44,7 @@ public class User {
 
 我们将创建一个实现`Specification`接口的`UserSpecification`，并且我们将**传入我们自己的约束来构造实际的查询**:
 
-```
+```java
 public class UserSpecification implements Specification<User> {
 
     private SearchCriteria criteria;
@@ -76,7 +76,7 @@ public class UserSpecification implements Specification<User> {
 
 正如我们所看到的，**我们基于一些简单的约束**创建了一个`Specification`，我们在下面的`SearchCriteria`类中表示它:
 
-```
+```java
 public class SearchCriteria {
     private String key;
     private String operation;
@@ -98,7 +98,7 @@ public class SearchCriteria {
 
 我们只是扩展了`JpaSpecificationExecutor`来获得新的规范 API:
 
-```
+```java
 public interface UserRepository 
   extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {}
 ```
@@ -109,7 +109,7 @@ public interface UserRepository
 
 首先，让我们创建一些用户，让他们在测试运行时做好准备:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { PersistenceJPAConfig.class })
 @Transactional
@@ -143,7 +143,7 @@ public class JPASpecificationIntegrationTest {
 
 接下来，让我们看看如何查找姓氏为的用户:
 
-```
+```java
 @Test
 public void givenLast_whenGettingListOfUsers_thenCorrect() {
     UserSpecification spec = 
@@ -158,7 +158,7 @@ public void givenLast_whenGettingListOfUsers_thenCorrect() {
 
 现在，我们将找到一个名为**，姓为**的用户:
 
-```
+```java
 @Test
 public void givenFirstAndLastName_whenGettingListOfUsers_thenCorrect() {
     UserSpecification spec1 = 
@@ -177,7 +177,7 @@ public void givenFirstAndLastName_whenGettingListOfUsers_thenCorrect() {
 
 接下来，让我们找到一个具有给定的**姓氏和最小年龄**的用户:
 
-```
+```java
 @Test
 public void givenLastAndAge_whenGettingListOfUsers_thenCorrect() {
     UserSpecification spec1 = 
@@ -195,7 +195,7 @@ public void givenLastAndAge_whenGettingListOfUsers_thenCorrect() {
 
 现在我们来看看如何搜索一个**实际上并不存在的`User`**:
 
-```
+```java
 @Test
 public void givenWrongFirstAndLast_whenGettingListOfUsers_thenCorrect() {
     UserSpecification spec1 = 
@@ -213,7 +213,7 @@ public void givenWrongFirstAndLast_whenGettingListOfUsers_thenCorrect() {
 
 最后，我们将找到一个仅给出名字一部分的`User` **:**
 
-```
+```java
 @Test
 public void givenPartialFirst_whenGettingListOfUsers_thenCorrect() {
     UserSpecification spec = 
@@ -232,7 +232,7 @@ public void givenPartialFirst_whenGettingListOfUsers_thenCorrect() {
 
 我们将实现一个生成器— `UserSpecificationsBuilder` —来轻松流畅地组合`Specifications`:
 
-```
+```java
 public class UserSpecificationsBuilder {
 
     private final List<SearchCriteria> params;
@@ -274,7 +274,7 @@ public class UserSpecificationsBuilder {
 
 最后，让我们使用这个新的持久性搜索/过滤功能，**通过一个简单的`search`操作创建一个`UserController`来设置 REST API** :
 
-```
+```java
 @Controller
 public class UserController {
 
@@ -299,19 +299,19 @@ public class UserController {
 
 注意，为了支持其他非英语系统，`Pattern`对象可以更改为:
 
-```
+```java
 Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),", Pattern.UNICODE_CHARACTER_CLASS);
 ```
 
 下面是一个测试 API 的测试 URL:
 
-```
+```java
 http://localhost:8080/users?search=lastName:doe,age>25
 ```
 
 下面是我的回答:
 
-```
+```java
 [{
     "id":2,
     "firstName":"tom",
@@ -327,7 +327,7 @@ http://localhost:8080/users?search=lastName:doe,age>25
 
 另一种选择是改变模式，搜索引号之间的值，然后从搜索词中去掉这些值:
 
-```
+```java
 Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\"([^\"]+)\")");
 ```
 

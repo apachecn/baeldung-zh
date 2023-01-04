@@ -16,7 +16,7 @@ Builder 是面向对象语言中使用最广泛的[创建设计模式](/web/2022
 
 在我们继续 FreeBuilder 之前，让我们为我们的`Employee `类实现一个样板生成器:
 
-```
+```java
 public class Employee {
 
     private final String name;
@@ -33,7 +33,7 @@ public class Employee {
 
 和一个内部的`Builder `类:
 
-```
+```java
 public static class Builder {
 
     private String name;
@@ -63,7 +63,7 @@ public static class Builder {
 
 因此，我们现在可以使用构建器来实例化`Employee `对象:
 
-```
+```java
 Employee.Builder emplBuilder = new Employee.Builder();
 
 Employee employee = emplBuilder
@@ -81,7 +81,7 @@ Employee employee = emplBuilder
 
 为了添加 FreeBuilder 库，我们将在我们的`pom.xml`中添加 [FreeBuilder Maven 依赖项](https://web.archive.org/web/20220628155456/https://search.maven.org/search?q=g:org.inferred%20AND%20a:freebuilder&core=gav):
 
-```
+```java
 <dependency>
     <groupId>org.inferred</groupId>
     <artifactId>freebuilder</artifactId>
@@ -97,7 +97,7 @@ FreeBuilder 是一个开源库，帮助开发人员在实现构建器类时避�
 
 我们将**用`@`** `**FreeBuilder** `注释前面章节中的`Employee `类，看看它如何自动生成构建器类:
 
-```
+```java
 @FreeBuilder
 public interface Employee {
 
@@ -120,7 +120,7 @@ public interface Employee {
 
 最后，我们已经编译了我们的项目，现在可以使用`Employee.Builder `类:
 
-```
+```java
 Employee.Builder builder = new Employee.Builder();
 
 Employee employee = builder.name("baeldung")
@@ -139,7 +139,7 @@ Employee employee = builder.name("baeldung")
 
 为了强制 FreeBuilder 遵循 JavaBean 命名约定，我们必须**在`Employee `中重命名我们的方法，并在方法前加上前缀** `**get**:`
 
-```
+```java
 @FreeBuilder
 public interface Employee {
 
@@ -154,7 +154,7 @@ public interface Employee {
 
 这将生成遵循 JavaBean 命名约定的 getters 和 setters:
 
-```
+```java
 Employee employee = builder
   .setName("baeldung")
   .setAge(10)
@@ -168,7 +168,7 @@ Employee employee = builder
 
 假设我们的`Employee` 类也有一个薪水字段:
 
-```
+```java
 @FreeBuilder
 public interface Employee {
     Optional<Double> getSalaryInUSD();
@@ -177,7 +177,7 @@ public interface Employee {
 
 现在假设我们需要转换作为输入提供的工资货币:
 
-```
+```java
 long salaryInEuros = INPUT_SALARY_EUROS;
 Employee.Builder builder = new Employee.Builder();
 
@@ -200,7 +200,7 @@ FreeBuilder 为所有字段提供了这样的映射器方法。
 
 我们可以在`Employee.Builder `构造函数中设置默认值:
 
-```
+```java
 @FreeBuilder
 public interface Employee {
 
@@ -223,7 +223,7 @@ public interface Employee {
 
 这种约束要求我们对输入值进行验证。并且 **FreeBuilder 允许我们仅仅通过覆盖`setter `方法**来添加这些验证:
 
-```
+```java
 @FreeBuilder
 public interface Employee {
 
@@ -253,7 +253,7 @@ public interface Employee {
 
 一些对象包含可选字段，其值可以为空。 **FreeBuilder 允许我们使用 [Java `Optional`](/web/20220628155456/https://www.baeldung.com/java-optional) 类型**来定义这样的字段:
 
-```
+```java
 @FreeBuilder
 public interface Employee {
 
@@ -273,7 +273,7 @@ public interface Employee {
 
 现在我们可以跳过为`Optional `字段提供任何值:
 
-```
+```java
 Employee employee = builder.setName("baeldung")
   .setAge(10)
   .setPermanent(true)
@@ -286,7 +286,7 @@ Employee employee = builder.setName("baeldung")
 
 尽管在 Java 中建议使用`Optional` 来处理`null` s，FreeBuilder 允许 **us 使用`[@Nullable](/web/20220628155456/https://www.baeldung.com/java-avoid-null-check)` 来向后兼容**:
 
-```
+```java
 @FreeBuilder
 public interface Employee {
 
@@ -311,7 +311,7 @@ public interface Employee {
 
 FreeBuilder 特别支持收藏和地图:
 
-```
+```java
 @FreeBuilder
 public interface Employee {
 
@@ -330,7 +330,7 @@ public interface Employee {
 
 FreeBuilder 添加了**方便的方法，将输入元素添加到 Builder 类**的集合中:
 
-```
+```java
 Employee employee = builder.setName("baeldung")
   .setAge(10)
   .addAccessTokens(1221819L)
@@ -340,7 +340,7 @@ Employee employee = builder.setName("baeldung")
 
 builder 类中还有一个`getAccessTokens() `方法，**返回一个不可修改的列表**。同样，对于`Map:`
 
-```
+```java
 Employee employee = builder.setName("baeldung")
   .setAge(10)
   .addAccessTokens(1221819L)
@@ -357,7 +357,7 @@ Employee employee = builder.setName("baeldung")
 
 例如，假设我们在`Employee `类中有一个嵌套的复杂类型`Address `:
 
-```
+```java
 @FreeBuilder
 public interface Address {
 
@@ -370,7 +370,7 @@ public interface Address {
 
 现在，FreeBuilder 生成了将`Address.Builder`作为输入的`setter `方法和`Address `类型:
 
-```
+```java
 Address.Builder addressBuilder = new Address.Builder();
 addressBuilder.setCity(CITY_NAME);
 
@@ -381,7 +381,7 @@ Employee employee = builder.setName("baeldung")
 
 值得注意的是，FreeBuilder 还增加了一个方法来**自定义** `**Employee**:`中已有的`Address `对象
 
-```
+```java
 Employee employee = builder.setName("baeldung")
   .setAddress(addressBuilder)
   .mutateAddress(a -> a.setPinCode(112200))
@@ -398,7 +398,7 @@ Employee employee = builder.setName("baeldung")
 
 为了放松这些限制，FreeBuilder 允许我们构建部分对象:
 
-```
+```java
 Employee employee = builder.setName("baeldung")
   .setAge(10)
   .setEmail("[[email protected]](/web/20220628155456/https://www.baeldung.com/cdn-cgi/l/email-protection)")
@@ -413,7 +413,7 @@ assertNotNull(employee.getEmail());
 
 对于值对象，**我们经常需要添加一个自定义的`toString() `实现。** FreeBuilder 通过`abstract `类允许这样做:
 
-```
+```java
 @FreeBuilder
 public abstract class Employee {
 

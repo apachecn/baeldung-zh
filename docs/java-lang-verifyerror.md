@@ -16,7 +16,7 @@
 
 因此，当将旧的`.class`文件与新的**JVM 链接时，JVM 可能会抛出类似如下的`java.lang.VerifyError`** :
 
-```
+```java
 java.lang.VerifyError: Expecting a stackmap frame at branch target X
 Exception Details:
   Location:
@@ -53,7 +53,7 @@ com/example/baeldung.Foo(Lcom/example/baeldung/Bar:Baz;)Lcom/example/baeldung/Fo
 
 还要注意，从 JDK 13 开始，[这个解决方案已经被弃用了](https://web.archive.org/web/20220926200514/https://bugs.openjdk.java.net/browse/JDK-8218003)，我们不应该期望这个解决方案能在未来的 Java 版本中工作。禁用验证将导致以下警告:
 
-```
+```java
 Java HotSpot(TM) 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated
   in JDK 13 and will likely be removed in a future release.
 ```
@@ -64,7 +64,7 @@ Java HotSpot(TM) 64-Bit Server VM warning: Options -Xverify:none and -noverify w
 
 要在命令行上禁用验证，请将`noverify`标志传递给`java`命令:
 
-```
+```java
 java -noverify Foo.class
 ```
 
@@ -74,7 +74,7 @@ java -noverify Foo.class
 
 要在 [Maven](/web/20220926200514/https://www.baeldung.com/maven) 构建中禁用验证，将`noverify`标志传递给任何所需的插件:
 
-```
+```java
 <plugin>
     <groupId>com.example.baeldung</groupId>
     <artifactId>example-plugin</artifactId>
@@ -90,7 +90,7 @@ java -noverify Foo.class
 
 要在 [Gradle](/web/20220926200514/https://www.baeldung.com/gradle) 构建中禁用验证，请将`noverify`标志传递给任何所需的任务:
 
-```
+```java
 someTask {
     // ...
     jvmArgs = jvmArgs << "-noverify"

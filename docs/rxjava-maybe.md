@@ -14,7 +14,7 @@
 
 因为它只能发出一个值，所以它不像`Flowable`那样支持背压处理:
 
-```
+```java
 Maybe.just(1)
   .map(x -> x + 7)
   .filter(x -> x > 0)
@@ -24,7 +24,7 @@ Maybe.just(1)
 
 从`Maybe` 信号源可以订阅`onSuccess, onError` 和`onComplete` 信号:
 
-```
+```java
 Maybe.just(1)
     .subscribe(
         x -> System.out.print("Emitted item: " + x),
@@ -48,7 +48,7 @@ Maybe.just(1)
 
 `Maybe`类型的另一个用例是与`Flowable.` 结合使用。`firstElement()`方法可用于从`Flowable`创建`Maybe` :
 
-```
+```java
 Flowable<String> visitors = ...
 visitors
   .skip(1000)

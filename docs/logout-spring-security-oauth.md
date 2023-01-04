@@ -20,7 +20,7 @@
 
 让我们回忆一下我们是如何保存`access_token`的，我们将同样保存`id_token`:
 
-```
+```java
 saveToken(token) {
   var expireDate = new Date().getTime() + (1000 * token.expires_in);
   Cookie.set("access_token", token.access_token, expireDate);
@@ -35,7 +35,7 @@ saveToken(token) {
 
 我们将修改`[App Service](/web/20221004045854/https://www.baeldung.com/rest-api-spring-oauth2-angular#app-service-1)`中的函数`logout`:
 
-```
+```java
 logout() {
   let token = Cookie.get('id_token');
   Cookie.delete('access_token');
@@ -67,7 +67,7 @@ logout() {
 
 首先，让我们为我们的 [`application.yml`](/web/20221004045854/https://www.baeldung.com/spring-security-oauth2-refresh-token-angular#zuul) 中的代理添加另一条路由:
 
-```
+```java
 zuul:
   routes:
     //...
@@ -89,7 +89,7 @@ zuul:
 
 **注销需要的表单参数与[刷新令牌](/web/20221004045854/https://www.baeldung.com/spring-security-oauth2-refresh-token-angular#injectToken)请求的表单参数类似，只是没有`grant_type`** :
 
-```
+```java
 @Component 
 public class CustomPostZuulFilter extends ZuulFilter { 
     //... 
@@ -117,7 +117,7 @@ public class CustomPostZuulFilter extends ZuulFilter {
 
 为此，让我们添加拦截`/auth/refresh/revoke` URL 的`CustomPostZuulFilter`实现，这样当遇到这个 URL 时，它将**删除`refreshToken` cookie** :
 
-```
+```java
 @Component
 public class CustomPostZuulFilter extends ZuulFilter {
     //...
@@ -141,7 +141,7 @@ public class CustomPostZuulFilter extends ZuulFilter {
 
 让我们为角度控制器添加一个方法，该方法清除`access_token` cookie 并调用`/auth/refresh/revoke` POST 映射:
 
-```
+```java
 logout() {
   let headers = new HttpHeaders({
     'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
@@ -159,7 +159,7 @@ logout() {
 
 当点击注销按钮时，将调用此函数:
 
-```
+```java
 <a class="btn btn-default pull-right"(click)="logout()" href="#">Logout</a>
 ```
 

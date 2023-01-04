@@ -25,7 +25,7 @@
 
 首先，在我们的`pom.xml`中，我们需要以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -53,7 +53,7 @@
 
 接下来，最重要的部分，我们的客户端应用程序的安全配置:
 
-```
+```java
 @Configuration
 @EnableOAuth2Sso
 public class UiSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -78,7 +78,7 @@ public class UiSecurityConfig extends WebSecurityConfigurerAdapter {
 
 而`application.yml`:
 
-```
+```java
 server:
     port: 8082
     servlet:
@@ -117,14 +117,14 @@ spring:
 
 我们的客户端应用程序有一个非常简单的前端；下面是`index.html`:
 
-```
+```java
 <h1>Spring Security SSO</h1>
 <a href="securedPage">Login</a>
 ```
 
 而`securedPage.html`:
 
-```
+```java
 <h1>Secured Page</h1>
 Welcome, <span th:text="${#authentication.name}">Name</span>
 ```
@@ -139,7 +139,7 @@ Welcome, <span th:text="${#authentication.name}">Name</span>
 
 首先，我们需要在我们的`pom.xml`中定义依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -157,7 +157,7 @@ Welcome, <span th:text="${#authentication.name}">Name</span>
 
 让我们从资源服务器的配置开始——它也是我们的主要启动应用程序:
 
-```
+```java
 @SpringBootApplication
 @EnableResourceServer
 public class AuthorizationServerApplication extends SpringBootServletInitializer {
@@ -169,7 +169,7 @@ public class AuthorizationServerApplication extends SpringBootServletInitializer
 
 然后，我们将配置我们的授权服务器:
 
-```
+```java
 @Configuration
 @EnableAuthorizationServer
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
@@ -206,14 +206,14 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
 首先，我们将禁用默认的基本认证，通过我们的`application.properties`:
 
-```
+```java
 server.port=8081
 server.servlet.context-path=/auth
 ```
 
 现在，让我们转到配置，定义一个简单的表单登录机制:
 
-```
+```java
 @Configuration
 @Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -250,7 +250,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 最后，我们将创建之前在配置中使用的用户端点:
 
-```
+```java
 @RestController
 public class UserController {
     @GetMapping("/user/me")

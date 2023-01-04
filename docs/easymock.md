@@ -12,7 +12,7 @@
 
 在我们开始之前，让我们将下面的依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.easymock</groupId>
     <artifactId>easymock</artifactId>
@@ -53,7 +53,7 @@
 
 让我们从创建以下模型开始:
 
-```
+```java
 public class BaeldungReader {
 
     private ArticleReader articleReader;
@@ -87,7 +87,7 @@ public class BaeldungReader {
 
 我们期望当读者跳过一篇文章时调用`articleReader.next()`方法:
 
-```
+```java
 @Test
 public void whenReadNext_thenNextArticleRead(){
     ArticleReader mockArticleReader = mock(ArticleReader.class);
@@ -111,7 +111,7 @@ public void whenReadNext_thenNextArticleRead(){
 
 如果我们只是:
 
-```
+```java
 mockArticleReader.next();
 replay(mockArticleReader);
 ```
@@ -120,7 +120,7 @@ EasyMock 会抱怨这一点，因为如果方法返回任何东西，它需要�
 
 如果是一种`void`方法，我们可以把`expect`它的动作用 [`expectLastCall()`](https://web.archive.org/web/20220703033325/http://easymock.org/api/org/easymock/EasyMock.html#expectLastCall--) 这样表示:
 
-```
+```java
 mockArticleReader.someVoidMethod();
 expectLastCall();
 replay(mockArticleReader);
@@ -130,7 +130,7 @@ replay(mockArticleReader);
 
 如果我们需要以特定的顺序重放动作，我们可以更加严格:
 
-```
+```java
 @Test
 public void whenReadNextAndSkimTopics_thenAllAllowed(){
     ArticleReader mockArticleReader
@@ -153,7 +153,7 @@ public void whenReadNextAndSkimTopics_thenAllAllowed(){
 
 **为了允许模拟的任何方法调用，我们可以使用`niceMock(…)` :**
 
-```
+```java
 @Test
 public void whenReadNextAndOthers_thenAllowed(){
     ArticleReader mockArticleReader = niceMock(ArticleReader.class);
@@ -175,7 +175,7 @@ public void whenReadNextAndOthers_thenAllowed(){
 
 现在，让我们继续模仿接口`IArticleWriter`，以及如何处理预期的`Throwables`:
 
-```
+```java
 @Test
 public void whenWriteMaliciousContent_thenArgumentIllegal() {
     // mocking and initialization
@@ -204,7 +204,7 @@ EasyMock 还支持使用注释注入模拟。为了使用它们，我们需要�
 
 让我们重写之前的片段:
 
-```
+```java
 @RunWith(EasyMockRunner.class)
 public class BaeldungReaderAnnotatedTest {
 
@@ -232,7 +232,7 @@ public class BaeldungReaderAnnotatedTest {
 
 **注意，如果我们想要使用另一个测试运行器而不是`EasyMockRunner`，我们可以使用 JUnit 测试规则 [`EasyMockRule`](https://web.archive.org/web/20220703033325/http://easymock.org/api/org/easymock/EasyMockRule.html) :**
 
-```
+```java
 public class BaeldungReaderAnnotatedWithRuleTest {
 
     @Rule
@@ -255,7 +255,7 @@ public class BaeldungReaderAnnotatedWithRuleTest {
 
 有时我们需要在一个测试中引入多个模拟，我们必须手动重复:
 
-```
+```java
 replay(A);
 replay(B);
 replay(C);
@@ -269,7 +269,7 @@ verify(C);
 
 幸运的是，我们在 EasyMock 中有一个类 **`EasyMockSupport`来帮助处理这个问题。它**有助于跟踪模拟，这样我们就可以在**像这样批量重放和验证它们:**
 
-```
+```java
 //...
 public class BaeldungReaderMockSupportTest extends EasyMockSupport{
 
@@ -302,7 +302,7 @@ public class BaeldungReaderMockSupportTest extends EasyMockSupport{
 
 我们也可以通过委托使用`EasyMockSupport`:
 
-```
+```java
 EasyMockSupport easyMockSupport = new EasyMockSupport();
 
 @Test

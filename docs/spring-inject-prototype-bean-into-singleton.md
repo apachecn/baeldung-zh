@@ -14,7 +14,7 @@
 
 为了描述这个问题，让我们配置以下 beans:
 
-```
+```java
 @Configuration
 public class AppConfig {
 
@@ -35,7 +35,7 @@ public class AppConfig {
 
 现在，让我们将原型范围的 bean 注入到 singleton 中——然后通过`getPrototypeBean()`方法公开 if:
 
-```
+```java
 public class SingletonBean {
 
     // ..
@@ -56,7 +56,7 @@ public class SingletonBean {
 
 然后，让我们加载`ApplicationContext`并两次获取单例 bean:
 
-```
+```java
 public static void main(String[] args) throws InterruptedException {
     AnnotationConfigApplicationContext context 
       = new AnnotationConfigApplicationContext(AppConfig.class);
@@ -74,7 +74,7 @@ public static void main(String[] args) throws InterruptedException {
 
 以下是控制台的输出:
 
-```
+```java
 Singleton Bean created
 Prototype Bean created
 11:06:57.894
@@ -90,7 +90,7 @@ Prototype Bean created
 
 **要实现这一点，要么使用`@Autowire`注释，要么实现`ApplicationContextAware`接口:**
 
-```
+```java
 public class SingletonAppContextBean implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
@@ -117,7 +117,7 @@ public class SingletonAppContextBean implements ApplicationContextAware {
 
 另一个解决问题的方法是用 **`@Lookup`标注**的方法注入:
 
-```
+```java
 @Component
 public class SingletonLookupBean {
 
@@ -138,7 +138,7 @@ Spring 将覆盖用`@Lookup.`注释的`getPrototypeBean()`方法，然后将 bea
 
 这是单例 bean:
 
-```
+```java
 public class SingletonProviderBean {
 
     @Autowired
@@ -160,7 +160,7 @@ public class SingletonProviderBean {
 
 为此，我们修改了`Appconfig`类来添加一个新的`@Scope`注释:
 
-```
+```java
 @Scope(
   value = ConfigurableBeanFactory.SCOPE_PROTOTYPE, 
   proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -172,7 +172,7 @@ public class SingletonProviderBean {
 
 Spring 提供了[object factory<T>接口来按需生成给定类型的对象:](https://web.archive.org/web/20220611184746/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/config/ObjectFactoryCreatingFactoryBean.html)
 
-```
+```java
 public class SingletonObjectFactoryBean {
 
     @Autowired
@@ -194,7 +194,7 @@ public class SingletonObjectFactoryBean {
 
 为了查看这方面的示例，让我们向我们的`PrototypeBean`类添加一个名称字段:
 
-```
+```java
 public class PrototypeBean {
     private String name;
 
@@ -209,7 +209,7 @@ public class PrototypeBean {
 
 接下来，我们将通过使用`java.util.Function`接口将 bean 工厂注入到我们的 singleton bean 中:
 
-```
+```java
 public class SingletonFunctionBean {
 
     @Autowired
@@ -225,7 +225,7 @@ public class SingletonFunctionBean {
 
 最后，我们必须在配置中定义工厂 bean、原型 bean 和独立 bean:
 
-```
+```java
 @Configuration
 public class AppConfig {
     @Bean
@@ -251,7 +251,7 @@ public class AppConfig {
 
 现在让我们编写一个简单的 JUnit 测试来测试使用`ObjectFactory`接口的情况:
 
-```
+```java
 @Test
 public void givenPrototypeInjection_WhenObjectFactory_ThenNewInstanceReturn() {
 

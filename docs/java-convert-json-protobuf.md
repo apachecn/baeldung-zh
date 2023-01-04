@@ -12,7 +12,7 @@ Protobuf 是一种免费开源的跨平台数据格式，用于[序列化](https
 
 首先，让我们通过包含`[protobuf-java-util](https://web.archive.org/web/20220918130523/https://search.maven.org/artifact/com.google.protobuf/protobuf-java-util)`依赖项来创建一个 [Spring Boot](/web/20220918130523/https://www.baeldung.com/spring-boot) 项目:
 
-```
+```java
 <dependency>
     <groupId>com.google.protobuf</groupId>
     <artifactId>protobuf-java-util</artifactId>
@@ -26,7 +26,7 @@ Protobuf 是一种免费开源的跨平台数据格式，用于[序列化](https
 
 让我们创建一个接受 JSON 并生成 protobuf 消息的方法:
 
-```
+```java
 public static Message fromJson(String json) throws IOException {
     Builder structBuilder = Struct.newBuilder();
     JsonFormat.parser().ignoringUnknownFields().merge(json, structBuilder);
@@ -36,7 +36,7 @@ public static Message fromJson(String json) throws IOException {
 
 让我们使用以下示例 JSON:
 
-```
+```java
 {
     "boolean": true,
     "color": "gold",
@@ -50,7 +50,7 @@ public static Message fromJson(String json) throws IOException {
 
 现在，让我们编写一个简单的测试来验证从 JSON 到 protobuf 消息的转换:
 
-```
+```java
 @Test
 public void givenJson_convertToProtobuf() throws IOException {
     Message protobuf = ProtobufUtil.fromJson(jsonStr);
@@ -63,7 +63,7 @@ public void givenJson_convertToProtobuf() throws IOException {
 
 **我们可以使用`JsonFormat`的`printer()`** 方法将 protobuf 消息转换成 JSON，该方法接受 protobuf 作为一个`MessageOrBuilder`:
 
-```
+```java
 public static String toJson(MessageOrBuilder messageOrBuilder) throws IOException {
     return JsonFormat.printer().print(messageOrBuilder);
 }
@@ -71,7 +71,7 @@ public static String toJson(MessageOrBuilder messageOrBuilder) throws IOExceptio
 
 让我们编写一个简单的测试来验证从 protobuf 到 JSON 消息的转换:
 
-```
+```java
 @Test
 public void givenProtobuf_convertToJson() throws IOException {
     Message protobuf = ProtobufUtil.fromJson(jsonStr);

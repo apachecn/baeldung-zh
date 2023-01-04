@@ -10,7 +10,7 @@
 
 为了在我们的应用程序中使用`MockServer`,我们需要添加两个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.mock-server</groupId>
     <artifactId>mockserver-netty</artifactId>
@@ -42,7 +42,7 @@
 
 这将在`process-test-class`阶段启动服务器，并在`verify`阶段停止:
 
-```
+```java
 <plugin>
     <groupId>org.mock-server</groupId>
     <artifactId>mockserver-maven-plugin</artifactId>
@@ -76,7 +76,7 @@
 
 我们可以使用`startClientAndServer()` Java API 来启动服务器。通常，我们会在运行所有测试之前启动服务器:
 
-```
+```java
 public class TestMockServer {
 
     private ClientAndServer mockServer;
@@ -126,7 +126,7 @@ public class TestMockServer {
 
 让我们看看如何**创造期望**:
 
-```
+```java
 public class TestMockServer {
     private void createExpectationForInvalidAuth() {
         new MockServerClient("127.0.0.1", 1080)
@@ -165,7 +165,7 @@ public class TestMockServer {
 
 让我们看一个转发请求的例子:
 
-```
+```java
 private void createExpectationForForward(){
     new MockServerClient("127.0.0.1", 1080)
       .when(
@@ -190,7 +190,7 @@ private void createExpectationForForward(){
 
 让我们看一个关于回调的期望的例子:
 
-```
+```java
 private void createExpectationForCallBack() {
     mockServer
       .when(
@@ -206,7 +206,7 @@ private void createExpectationForCallBack() {
 
 在这种情况下，当 MockServer 接收到带有`/callback,` 的请求时，将执行在指定类中实现的回调句柄方法:
 
-```
+```java
 public class TestExpectationCallback implements ExpectationCallback {
 
     public HttpResponse handle(HttpRequest httpRequest) {
@@ -226,7 +226,7 @@ public class TestExpectationCallback implements ExpectationCallback {
 
 能够检查被测系统是否发送了请求:
 
-```
+```java
 private void verifyPostRequest() {
     new MockServerClient("localhost", 1080).verify(
       request()

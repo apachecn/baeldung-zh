@@ -16,7 +16,7 @@
 
 我们可以使用`split()`方法对 S `tring`进行标记，并获得最后一个标记，这将是我们的结果:
 
-```
+```java
 public String getLastWordUsingSplit(String input) {
     String[] tokens = input.split(" ");
     return tokens[tokens.length - 1];
@@ -35,7 +35,7 @@ public String getLastWordUsingSplit(String input) {
 
 让我们结合`substring()`和`lastIndexOf`找到一个输入的最后一个单词`String`:
 
-```
+```java
 public String getLastWordUsingSubString(String input) {
     return input.substring(input.lastIndexOf(" ") + 1);
 }

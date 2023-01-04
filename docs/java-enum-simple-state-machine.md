@@ -16,7 +16,7 @@ Java 枚举是一种特殊类型的类，它定义了一个常量列表。这允
 
 保存休假请求状态的最简单的枚举是:
 
-```
+```java
 public enum LeaveRequestState {
     Submitted,
     Escalated,
@@ -26,7 +26,7 @@ public enum LeaveRequestState {
 
 我们可以参考这个枚举的常量:
 
-```
+```java
 LeaveRequestState state = LeaveRequestState.Submitted;
 ```
 
@@ -36,7 +36,7 @@ LeaveRequestState state = LeaveRequestState.Submitted;
 
 下面是一个包含抽象方法的枚举示例:
 
-```
+```java
 public enum LeaveRequestState {
     Submitted {
         @Override
@@ -65,14 +65,14 @@ public enum LeaveRequestState {
 
 在这种情况下，我们用一个`responsiblePerson()`方法扩展了第一个例子。这告诉我们负责执行每个动作的人。所以，如果我们试图检查负责`Escalated`状态的人，它会给我们“组长”:
 
-```
+```java
 LeaveRequestState state = LeaveRequestState.Escalated;
 assertEquals("Team Leader", state.responsiblePerson());
 ```
 
 同样，如果我们检查谁负责批准请求，它将为我们提供“部门经理”:
 
-```
+```java
 LeaveRequestState state = LeaveRequestState.Approved;
 assertEquals("Department Manager", state.responsiblePerson());
 ```
@@ -93,7 +93,7 @@ assertEquals("Department Manager", state.responsiblePerson());
 
 使用 enum 实现状态机的要点是**我们不必处理显式设置状态**。相反，我们可以提供如何从一个状态转换到下一个状态的逻辑。让我们开始吧:
 
-```
+```java
 public enum LeaveRequestState {
 
     Submitted {
@@ -139,7 +139,7 @@ public enum LeaveRequestState {
 
 下面是一个测试来检查我们的实现:
 
-```
+```java
 LeaveRequestState state = LeaveRequestState.Submitted;
 
 state = state.nextState();

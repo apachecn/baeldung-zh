@@ -10,7 +10,7 @@
 
 我们将使用以下 Dockerfile 文件:
 
-```
+```java
 FROM ubuntu:latest
 RUN echo 'This is a Baeldung tutorial'
 ```
@@ -22,7 +22,7 @@ RUN echo 'This is a Baeldung tutorial'
 
 让我们建立我们的[形象](https://web.archive.org/web/20221110103941/https://baeldung-cn.com/ops/docker-images-vs-containers):
 
-```
+```java
 $ docker build -t baeldungimage .
 #4 [1/2] FROM docker.io/library/ubuntu:latest
 #5 [2/2] RUN echo 'This is a Baeldung tutorial'
@@ -36,7 +36,7 @@ Docker 打印了(在我们没有列出的其他行中)成功运行的两个步�
 
 让我们看看如何修改 docker 文件来添加一些单行注释:
 
-```
+```java
 # Declare parent image
 FROM ubuntu:latest
 # Print sentence
@@ -45,7 +45,7 @@ RUN echo 'This is a Baeldung tutorial'
 
 让我们构建修改后的图像:
 
-```
+```java
 $ docker build -t baeldungimage .
 #4 [1/2] FROM docker.io/library/ubuntu:latest
 #5 [2/2] RUN echo 'This is a Baeldung tutorial'
@@ -57,7 +57,7 @@ $ docker build -t baeldungimage .
 
 Docker 中没有专门的语法来编写多行注释。**因此，编写多行注释的唯一方法是在一行中编写多个单行注释**:
 
-```
+```java
 # This file is a demonstration
 # For a Baeldung article
 FROM ubuntu:latest
@@ -66,7 +66,7 @@ RUN echo 'This is a Baeldung tutorial'
 
 构建映像仍然打印与之前相同的步骤:
 
-```
+```java
 $ docker build -t baeldungimage .
 #4 [1/2] FROM docker.io/library/ubuntu:latest
 #5 [2/2] RUN echo 'This is a Baeldung tutorial'
@@ -80,14 +80,14 @@ $ docker build -t baeldungimage .
 
 在 Docker 中，不可能在行尾添加注释。让我们看看，如果我们尝试在一条指令的末尾添加一个句子，格式类似单行注释，会发生什么情况:
 
-```
+```java
 FROM ubuntu:latest
 RUN echo 'This is a Baeldung tutorial' # Print sentence
 ```
 
 我们现在将构建图像:
 
-```
+```java
 $ docker build -t baeldungimage .
 #4 [1/2] FROM docker.io/library/ubuntu:latest
 #5 [2/2] RUN echo 'This is a Baeldung tutorial' # Print sentence
@@ -98,14 +98,14 @@ $ docker build -t baeldungimage .
 
 实际上，`# Print sentence`是作为附加参数传递给`RUN`命令的。在这种情况下，这个命令碰巧忽略了额外的参数。为了说服我们自己，现在让我们在 docker 文件的第一行末尾添加一个类似的句子:
 
-```
+```java
 FROM ubuntu:latest # Declare parent image
 RUN echo 'This is a Baeldung tutorial'
 ```
 
 让我们试着建立这样的形象:
 
-```
+```java
 $ docker build -t baeldungimage .
 failed to solve with frontend dockerfile.v0: failed to create LLB definition: dockerfile parse error line 1: FROM requires either one or three arguments
 ```
@@ -118,7 +118,7 @@ failed to solve with frontend dockerfile.v0: failed to create LLB definition: do
 
 此外，我们应该注意解析器指令必须在 docker 文件的顶部。例如，我们将在文件中使用`escape`解析器指令。该指令更改文件中使用的转义符:
 
-```
+```java
 # escape=`
 FROM ubuntu:latest
 RUN echo 'This is a Baeldung tutorial&' `
@@ -127,7 +127,7 @@ RUN echo 'This is a Baeldung tutorial&' `
 
 这里，我们在`RUN`命令中添加了另一个`echo`指令。为了提高可读性，我们将这条指令放在了新的一行。默认的行分隔符是`\`。然而，由于我们使用了解析器指令，我们需要使用`` ` ``来代替。现在让我们建立我们的形象，看看会发生什么:
 
-```
+```java
 $ docker build -t baeldungimage .
 #4 [1/2] FROM docker.io/library/ubuntu:latest
 #5 [2/2] RUN echo 'This is a Baeldung tutorial&' && echo 'Print more stuff'

@@ -10,7 +10,7 @@
 
 首先，我们需要将以下依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>info.cukes</groupId>
     <artifactId>cucumber-java8</artifactId>
@@ -25,7 +25,7 @@
 
 接下来，我们将讨论如何使用 Java 8 lambda 表达式编写我们的步骤定义:
 
-```
+```java
 public class ShoppingStepsDef implements En {
 
     private int budget = 0;
@@ -43,7 +43,7 @@ public class ShoppingStepsDef implements En {
 
 我们以一个简单的购物功能为例:
 
-```
+```java
 Given("I have (\\d+) in my wallet", (Integer money) -> budget = money);
 ```
 
@@ -56,7 +56,7 @@ Given("I have (\\d+) in my wallet", (Integer money) -> budget = money);
 
 最后，让我们看看我们的测试场景:
 
-```
+```java
 Feature: Shopping
 
     Scenario: Track my budget 
@@ -72,7 +72,7 @@ Feature: Shopping
 
 和测试配置:
 
-```
+```java
 @RunWith(Cucumber.class)
 @CucumberOptions(features = { "classpath:features/shopping.feature" })
 public class ShoppingIntegrationTest {

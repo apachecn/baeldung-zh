@@ -14,7 +14,7 @@ Java 提供了一组[位操作符](/web/20221208143917/https://www.baeldung.com/
 
 像往常一样，我们通过一个例子来理解这个问题。但是，首先，让我们来看看一个简单的方法:
 
-```
+```java
 public void checkNumber() {
     List<Integer> intList = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
     intList.forEach(i -> {
@@ -33,7 +33,7 @@ public void checkNumber() {
 
 然而，当我们尝试测试上面的方法时，代码令人惊讶地无法编译:
 
-```
+```java
 java: bad operand types for binary operator '&'
   first type:  java.lang.Integer
   second type: boolean
@@ -85,13 +85,13 @@ Java 提供了相当多的[操作符](/web/20221208143917/https://www.baeldung.c
 
 既然我们了解了问题的原因，解决问题就不是一件困难的工作。我们只需要给按位 AND 运算加上括号:
 
-```
+```java
 if (i & 1 == 1)  -->  if ((i & 1) == 1)
 ```
 
 修复后，如果我们再次运行该方法，我们会看到编译器不再抱怨，并且我们会收到预期的输出:
 
-```
+```java
 1 is odd.
 2 is even.
 3 is odd.

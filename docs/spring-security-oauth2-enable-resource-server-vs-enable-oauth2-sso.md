@@ -40,7 +40,7 @@ OAuth2 中有四种不同的 [`roles`](https://web.archive.org/web/2022062716570
 
 让我们首先创建一个`Zuul`应用程序，它将充当我们的边缘节点，并负责使用 OAuth2 `Authorization` `Server`对用户进行身份验证:
 
-```
+```java
 @Configuration
 @EnableZuulProxy
 @EnableOAuth2Sso
@@ -71,7 +71,7 @@ public class AppConfiguration extends WebSecurityConfigurerAdapter {
 
 在我们进入`Resource` `Server,`之前，我们需要配置一些属性:
 
-```
+```java
 zuul:
   routes:
     resource-server-mvc-1: /resource-server-mvc-1/**
@@ -108,7 +108,7 @@ security:
 
 现在我们已经有了我们的`Zuul`应用程序，让我们创建我们的`Resource` `Server`:
 
-```
+```java
 @SpringBootApplication
 @EnableResourceServer
 @Controller
@@ -131,7 +131,7 @@ class ResourceServerApplication {
 
 最后，我们来配置一些属性:
 
-```
+```java
 security:
   basic:
     enabled: false

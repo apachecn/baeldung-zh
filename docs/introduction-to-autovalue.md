@@ -10,7 +10,7 @@
 
 下面的代码片段是**一个抽象类的快速示例**，当编译时会产生一个名为`AutoValue_Person`的值对象。
 
-```
+```java
 @AutoValue
 abstract class Person {
     static Person create(String name, int age) {
@@ -28,7 +28,7 @@ abstract class Person {
 
 要在 Maven 项目中使用 AutoValue，您需要在`pom.xml`中包含以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.auto.value</groupId>
     <artifactId>auto-value</artifactId>
@@ -60,7 +60,7 @@ abstract class Person {
 
 我们将创建一个 final 类，并将它的所有字段都标记为 final。然后我们将使用 IDE 生成构造函数、`hashCode()`方法、`equals(Object)`方法、`getters` 作为强制方法和一个`toString()`方法，我们将有一个类似这样的类:
 
-```
+```java
 public final class Foo {
     private final String text;
     private final int number;
@@ -121,7 +121,7 @@ public final class Foo {
 
 假设我们想要创建一个货币对象，如下所示:
 
-```
+```java
 public class MutableMoney {
     private long amount;
     private String currency;
@@ -138,7 +138,7 @@ public class MutableMoney {
 
 我们可以对它运行下面的测试来测试它的相等性:
 
-```
+```java
 @Test
 public void givenTwoSameValueMoneyObjects_whenEqualityTestFails_thenCorrect() {
     MutableMoney m1 = new MutableMoney(10000, "USD");
@@ -155,7 +155,7 @@ public void givenTwoSameValueMoneyObjects_whenEqualityTestFails_thenCorrect() {
 
 现在让我们创建一个等价的值对象，这次我们将让 IDE 生成大部分代码:
 
-```
+```java
 public final class ImmutableMoney {
     private final long amount;
     private final String currency;
@@ -192,7 +192,7 @@ public final class ImmutableMoney {
 
 唯一的区别是我们覆盖了 `equals(Object)`和`hashCode()`方法，现在我们可以控制我们希望 Java 如何比较我们的货币对象。让我们运行它的等价测试:
 
-```
+```java
 @Test
 public void givenTwoSameValueMoneyValueObjects_whenEqualityTestPasses_thenCorrect() {
     ImmutableMoney m1 = new ImmutableMoney(10000, "USD");
@@ -237,7 +237,7 @@ AutoValue 解决的问题是将我们在上一节中谈到的所有样板代码�
 
 我们将查看完全相同的`Money` 示例，但这次使用的是 AutoValue。为了一致起见，我们将这个类称为`AutoValueMoney`:
 
-```
+```java
 @AutoValue
 public abstract class AutoValueMoney {
     public abstract String getCurrency();
@@ -251,7 +251,7 @@ public abstract class AutoValueMoney {
 
 我们编写了一个抽象类，为它定义了抽象访问器，但没有字段，我们用`@AutoValue` 注释了这个类，总共只有 8 行代码，`javac`为我们生成了一个具体的子类，如下所示:
 
-```
+```java
 public final class AutoValue_AutoValueMoney extends AutoValueMoney {
     private final String currency;
     private final long amount;
@@ -297,7 +297,7 @@ public final class AutoValue_AutoValueMoney extends AutoValueMoney {
 
 下面是一个测试，验证我们的字段设置是否正确:
 
-```
+```java
 @Test
 public void givenValueTypeWithAutoValue_whenFieldsCorrectlySet_thenCorrect() {
     AutoValueMoney m = AutoValueMoney.create("USD", 10000);
@@ -308,7 +308,7 @@ public void givenValueTypeWithAutoValue_whenFieldsCorrectlySet_thenCorrect() {
 
 验证具有相同货币和相同金额的两个`AutoValueMoney`对象相等的测试如下:
 
-```
+```java
 @Test
 public void given2EqualValueTypesWithAutoValue_whenEqual_thenCorrect() {
     AutoValueMoney m1 = AutoValueMoney.create("USD", 5000);
@@ -319,7 +319,7 @@ public void given2EqualValueTypesWithAutoValue_whenEqual_thenCorrect() {
 
 当我们将一个货币对象的货币类型更改为 GBP 时，测试: `5000 GBP == 5000 USD`不再成立:
 
-```
+```java
 @Test
 public void given2DifferentValueTypesWithAutoValue_whenNotEqual_thenCorrect() {
     AutoValueMoney m1 = AutoValueMoney.create("GBP", 5000);
@@ -340,7 +340,7 @@ public void given2DifferentValueTypesWithAutoValue_whenNotEqual_thenCorrect() {
 
 我们的 AutoValue 类实际上没有太大的变化，除了静态工厂方法被一个生成器所取代:
 
-```
+```java
 @AutoValue
 public abstract class AutoValueMoneyWithBuilder {
     public abstract String getCurrency();
@@ -360,7 +360,7 @@ public abstract class AutoValueMoneyWithBuilder {
 
 生成的类与第一个完全相同，但是生成了一个具体的内部类，并实现了构建器中的抽象方法:
 
-```
+```java
 static final class Builder extends AutoValueMoneyWithBuilder.Builder {
     private String currency;
     private long amount;
@@ -404,7 +404,7 @@ static final class Builder extends AutoValueMoneyWithBuilder.Builder {
 
 如果我们想知道字段值实际上是通过构建器正确设置的，我们可以执行这个测试:
 
-```
+```java
 @Test
 public void givenValueTypeWithBuilder_whenFieldsCorrectlySet_thenCorrect() {
     AutoValueMoneyWithBuilder m = AutoValueMoneyWithBuilder.builder().
@@ -416,7 +416,7 @@ public void givenValueTypeWithBuilder_whenFieldsCorrectlySet_thenCorrect() {
 
 要测试等式是否依赖于内部状态:
 
-```
+```java
 @Test
 public void given2EqualValueTypesWithBuilder_whenEqual_thenCorrect() {
     AutoValueMoneyWithBuilder m1 = AutoValueMoneyWithBuilder.builder()
@@ -429,7 +429,7 @@ public void given2EqualValueTypesWithBuilder_whenEqual_thenCorrect() {
 
 当字段值不同时:
 
-```
+```java
 @Test
 public void given2DifferentValueTypesBuilder_whenNotEqual_thenCorrect() {
     AutoValueMoneyWithBuilder m1 = AutoValueMoneyWithBuilder.builder()

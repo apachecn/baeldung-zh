@@ -22,7 +22,7 @@ JAXB 使用 Java 注释为生成的类增加附加信息。将这样的注释添
 
 让我们首先创建一个简单的 Java 对象来说明编组和解组:
 
-```
+```java
 @XmlRootElement(name = "book")
 @XmlType(propOrder = { "id", "name", "date" })
 public class Book {
@@ -66,7 +66,7 @@ public class Book {
 
 让我们使用`JAXBContext`创建一个简单的程序，它为管理实现 JAXB 绑定框架操作所必需的 XML/Java 绑定信息提供了一个抽象:
 
-```
+```java
 public void marshal() throws JAXBException, IOException {
     Book book = new Book();
     book.setId(1L);
@@ -87,7 +87,7 @@ public void marshal() throws JAXBException, IOException {
 
 当我们运行上面的代码时，我们可以检查`book.xml`中的结果，以验证我们已经成功地将 Java 对象转换为 XML 数据:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <book id="1">
     <title>Book1</title>
@@ -101,7 +101,7 @@ public void marshal() throws JAXBException, IOException {
 
 让我们使用 JAXB `Unmarshaller`将我们的`book.xml`解组回一个 Java 对象:
 
-```
+```java
 public Book unmarshall() throws JAXBException, IOException {
     JAXBContext context = JAXBContext.newInstance(Book.class);
     return (Book) context.createUnmarshaller()
@@ -111,7 +111,7 @@ public Book unmarshall() throws JAXBException, IOException {
 
 当我们运行上面的代码时，我们可以检查控制台输出，以验证我们已经成功地将 XML 数据转换为 Java 对象:
 
-```
+```java
 Book [id=1, name=Book1, author=null, date=Sat Nov 12 11:38:18 ICT 2016]
 ```
 
@@ -123,7 +123,7 @@ Book [id=1, name=Book1, author=null, date=Sat Nov 12 11:38:18 ICT 2016]
 
 让我们创建一个适配器来指定编组时的日期格式:
 
-```
+```java
 public class DateAdapter extends XmlAdapter<String, Date> {
 
     private static final ThreadLocal<DateFormat> dateFormat 
@@ -151,7 +151,7 @@ public class DateAdapter extends XmlAdapter<String, Date> {
 
 让我们将`DateAdapter`应用于我们的`Book`:
 
-```
+```java
 @XmlRootElement(name = "book")
 @XmlType(propOrder = { "id", "name", "date" })
 public class Book {
@@ -184,7 +184,7 @@ public class Book {
 
 当我们运行上面的代码时，我们可以检查`book.xml`中的结果，以验证我们已经使用新的日期格式`yyyy-MM-dd HH:mm:ss`成功地将 Java 对象转换为 XML:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <book id="1">
     <title>Book1</title>
@@ -204,7 +204,7 @@ JAXB-2 Maven 插件使用 JDK 提供的工具 XJC，这是一个 JAXB 绑定编�
 
 让我们创建一个简单的`user.xsd`文件，并使用 JAXB-2 Maven 插件从这个 XSD 模式生成 Java 类:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <schema 
     targetNamespace="/jaxb/gen"
@@ -234,7 +234,7 @@ JAXB-2 Maven 插件使用 JDK 提供的工具 XJC，这是一个 JAXB 绑定编�
 
 让我们配置 JAXB-2 Maven 插件:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>jaxb2-maven-plugin</artifactId>
@@ -266,7 +266,7 @@ JAXB-2 Maven 插件使用 JDK 提供的工具 XJC，这是一个 JAXB 绑定编�
 
 此外，我们可以配置一个覆盖默认绑定规则的全局 JAXB 绑定:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <jaxb:bindings version="2.0" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
     xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
@@ -293,7 +293,7 @@ JAXB-2 Maven 插件使用 JDK 提供的工具 XJC，这是一个 JAXB 绑定编�
 
 我们将重用上一个示例中的 Java 类文件来配置插件:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>jaxb2-maven-plugin</artifactId>

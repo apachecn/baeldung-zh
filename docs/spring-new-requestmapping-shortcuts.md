@@ -12,13 +12,13 @@
 
 通常，如果我们想使用传统的`@RequestMapping`注释来实现 URL 处理程序，应该是这样的:
 
-```
+```java
 @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
 ```
 
 新的方法可以将其简化为:
 
-```
+```java
 @GetMapping("/get/{id}")
 ```
 
@@ -38,7 +38,7 @@ Spring 目前支持五种类型的内置注释来处理不同类型的传入 HTT
 
 例如，如果我们看一下`@GetMapping`注释的源代码，我们可以看到它已经用下面的方式用`RequestMethod.GET` 进行了注释:
 
-```
+```java
 @Target({ java.lang.annotation.ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
@@ -58,7 +58,7 @@ public @interface GetMapping {
 
 请注意，因为我们将使用 Maven 构建项目，使用 Spring MVC 创建应用程序，所以我们需要在`pom.xml:`中添加必要的依赖项
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-webmvc</artifactId>
@@ -72,14 +72,14 @@ public @interface GetMapping {
 
 ### 4.1。`@GetMapping`
 
-```
+```java
 @GetMapping("/get")
 public @ResponseBody ResponseEntity<String> get() {
     return new ResponseEntity<String>("GET Response", HttpStatus.OK);
 } 
 ```
 
-```
+```java
 @GetMapping("/get/{id}")
 public @ResponseBody ResponseEntity<String>
   getById(@PathVariable String id) {
@@ -90,7 +90,7 @@ public @ResponseBody ResponseEntity<String>
 
 ### 4.2。`@PostMapping`
 
-```
+```java
 @PostMapping("/post")
 public @ResponseBody ResponseEntity<String> post() {
     return new ResponseEntity<String>("POST Response", HttpStatus.OK);
@@ -99,7 +99,7 @@ public @ResponseBody ResponseEntity<String> post() {
 
 ### 4.3。`@PutMapping`
 
-```
+```java
 @PutMapping("/put")
 public @ResponseBody ResponseEntity<String> put() {
     return new ResponseEntity<String>("PUT Response", HttpStatus.OK);
@@ -108,7 +108,7 @@ public @ResponseBody ResponseEntity<String> put() {
 
 ### 4.4。`@DeleteMapping`
 
-```
+```java
 @DeleteMapping("/delete")
 public @ResponseBody ResponseEntity<String> delete() {
     return new ResponseEntity<String>("DELETE Response", HttpStatus.OK);
@@ -117,7 +117,7 @@ public @ResponseBody ResponseEntity<String> delete() {
 
 ### 4.5。`@PatchMapping`
 
-```
+```java
 @PatchMapping("/patch")
 public @ResponseBody ResponseEntity<String> patch() {
     return new ResponseEntity<String>("PATCH Response", HttpStatus.OK);
@@ -136,7 +136,7 @@ public @ResponseBody ResponseEntity<String> patch() {
 
 让我们简化一下`@GetMapping:`的示例测试用例
 
-```
+```java
 @Test 
 public void giventUrl_whenGetRequest_thenFindGetResponse() 
   throws Exception {
@@ -157,7 +157,7 @@ public void giventUrl_whenGetRequest_thenFindGetResponse()
 
 现在，让我们创建测试用例来测试`@PostMapping`:
 
-```
+```java
 @Test 
 public void givenUrl_whenPostRequest_thenFindPostResponse() 
   throws Exception {

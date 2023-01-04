@@ -18,7 +18,7 @@
 
 首先，我们需要将[历史记录-地图依赖关系](https://web.archive.org/web/20221206104322/https://search.maven.org/search?q=g:net.openhft%20AND%20a:chronicle-map)添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>net.openhft</groupId>
     <artifactId>chronicle-map</artifactId>
@@ -38,7 +38,7 @@
 
 让我们看一个简单的例子:
 
-```
+```java
 ChronicleMap<LongValue, CharSequence> inMemoryCountryMap = ChronicleMap
   .of(LongValue.class, CharSequence.class)
   .name("country-map")
@@ -57,7 +57,7 @@ ChronicleMap<LongValue, CharSequence> inMemoryCountryMap = ChronicleMap
 
 与内存中的映射不同，**实现将持久化的映射保存到磁盘**。现在让我们看看如何创建持久化地图:
 
-```
+```java
 ChronicleMap<LongValue, CharSequence> persistedCountryMap = ChronicleMap
   .of(LongValue.class, CharSequence.class)
   .name("country-map")
@@ -111,7 +111,7 @@ ChronicleMap<LongValue, CharSequence> persistedCountryMap = ChronicleMap
 
 单键查询是处理单个键的操作。`ChronicleMap`支持来自 Java `Map`接口和`ConcurrentMap`接口的所有操作；
 
-```
+```java
 LongValue qatarKey = Values.newHeapInstance(LongValue.class);
 qatarKey.setValue(1);
 inMemoryCountryMap.put(qatarKey, "Qatar");
@@ -123,7 +123,7 @@ CharSequence country = inMemoryCountryMap.get(key);
 
 除了正常的 get 和 put 操作， **`ChronicleMap`增加了一个特殊的操作，`getUsing(),`在检索和处理条目**时减少内存占用。让我们来看看实际情况:
 
-```
+```java
 LongValue key = Values.newHeapInstance(LongValue.class);
 StringBuilder country = new StringBuilder();
 key.setValue(1);
@@ -137,7 +137,7 @@ assertThat(country.toString(), is(equalTo("India")));
 
 这里我们使用了同一个`StringBuilder`对象，通过将它传递给`getUsing()`方法来检索不同键的值。它基本上重用同一个对象来检索不同的条目。在我们的例子中，`getUsing()`方法相当于:
 
-```
+```java
 country.setLength(0);
 country.append(persistedCountryMap.get(key));
 ```
@@ -148,7 +148,7 @@ country.append(persistedCountryMap.get(key));
 
 让我们首先创建一个 multimap 并给它添加一些值:
 
-```
+```java
 Set<Integer> averageValue = IntStream.of(1, 2).boxed().collect(Collectors.toSet());
 ChronicleMap<Integer, Set<Integer>> multiMap = ChronicleMap
   .of(Integer.class, (Class<Set<Integer>>) (Class) Set.class)
@@ -169,7 +169,7 @@ multiMap.put(2, set2);
 
 **为了处理多个条目，我们必须锁定这些条目，以防止由于并发更新而可能出现的不一致:**
 
-```
+```java
 try (ExternalMapQueryContext<Integer, Set<Integer>, ?> fistContext = multiMap.queryContext(1)) {
     try (ExternalMapQueryContext<Integer, Set<Integer>, ?> secondContext = multiMap.queryContext(2)) {
         fistContext.updateLock().lock();
@@ -196,7 +196,7 @@ try (ExternalMapQueryContext<Integer, Set<Integer>, ?> fistContext = multiMap.qu
 
 现在我们已经完成了对地图的处理，让我们对地图对象调用`close()`方法来释放堆外内存和与之相关的资源:
 
-```
+```java
 persistedCountryMap.close();
 inMemoryCountryMap.close();
 multiMap.close();

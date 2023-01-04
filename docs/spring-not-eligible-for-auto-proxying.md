@@ -18,7 +18,7 @@
 
 首先，我们将创建一个定制的`RandomInt`注释。我们将使用它来注释应该插入指定范围内的随机整数的字段:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RandomInt {
     int min();
@@ -29,7 +29,7 @@ public @interface RandomInt {
 
 其次，让我们创建一个简单的 Spring 组件`DataCache`类。我们希望为缓存分配一个随机组，例如，该组可能用于支持分片。为此，我们将使用自定义注释对该字段进行注释:
 
-```
+```java
 @Component
 public class DataCache {
     @RandomInt(min = 2, max = 10)
@@ -40,7 +40,7 @@ public class DataCache {
 
 现在，我们来看看`RandomIntGenerator`类。这是一个 Spring 组件，我们将使用它将随机的`int`值插入到由`RandomInt`注释标注的字段中:
 
-```
+```java
 @Component
 public class RandomIntGenerator {
     private Random random = new Random();
@@ -60,7 +60,7 @@ public class RandomIntGenerator {
 
 最后，让我们创建一个`RandomIntProcessor`类，它将负责查找用`RandomInt`注释标注的字段，并将随机值插入其中:
 
-```
+```java
 public class RandomIntProcessor implements BeanPostProcessor {
     private final RandomIntGenerator randomIntGenerator;
 
@@ -92,13 +92,13 @@ public class RandomIntProcessor implements BeanPostProcessor {
 
 即使一切编译正确，当我们运行我们的 Spring 应用程序并查看它的日志时，我们会看到一条由 Spring 的`BeanPostProcessorChecker`类生成的“`not eligible for auto proxying`”消息:
 
-```
+```java
 INFO org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'randomIntGenerator' of type [com.baeldung.autoproxying.RandomIntGenerator] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
 ```
 
 此外，我们看到依赖于这种机制的`DataCache` bean 并没有按照我们的意图进行初始化:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RandomIntProcessor.class, DataCache.class, RandomIntGenerator.class})
 public class NotEligibleForAutoProxyingIntegrationTest {
@@ -129,7 +129,7 @@ public class NotEligibleForAutoProxyingIntegrationTest {
 
 为了摆脱"`not eligible for auto proxying”` 消息，我们需要**打破`BeanPostProcessor`实现和它的 bean 依赖**之间的循环。在我们的例子中，我们需要告诉 IoC 容器惰性地初始化`RandomIntGenerator` bean。我们可以用弹簧的 [`Lazy`](/web/20220810012722/https://www.baeldung.com/spring-lazy-annotation) 标注:
 
-```
+```java
 public class RandomIntProcessor implements BeanPostProcessor {
     private final RandomIntGenerator randomIntGenerator;
 
@@ -149,7 +149,7 @@ public class RandomIntProcessor implements BeanPostProcessor {
 
 事实上，如果我们运行我们的应用程序，我们不会在日志中看到“`not eligible for auto proxying”` 消息。此外，`DataCache` bean 将有一个用随机整数填充的组字段:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RandomIntProcessor.class, DataCache.class, RandomIntGenerator.class})
 public class NotEligibleForAutoProxyingIntegrationTest {

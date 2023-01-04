@@ -24,7 +24,7 @@
 
 让我们考虑一个使用 Spring Boot 开发的简单用户注册表单。首先，我们只有`name`和`password`属性:
 
-```
+```java
 public class UserAccount {
 
     @NotNull
@@ -41,7 +41,7 @@ public class UserAccount {
 
 接下来，我们来看看控制器。这里我们将使用带有`@Valid`注释的`saveBasicInfo`方法来验证用户输入:
 
-```
+```java
 @RequestMapping(value = "/saveBasicInfo", method = RequestMethod.POST)
 public String saveBasicInfo(
   @Valid @ModelAttribute("useraccount") UserAccount useraccount, 
@@ -56,7 +56,7 @@ public String saveBasicInfo(
 
 现在让我们来测试这个方法:
 
-```
+```java
 @Test
 public void givenSaveBasicInfo_whenCorrectInput_thenSuccess() throws Exception {
     this.mockMvc.perform(MockMvcRequestBuilders.post("/saveBasicInfo")
@@ -71,7 +71,7 @@ public void givenSaveBasicInfo_whenCorrectInput_thenSuccess() throws Exception {
 
 在确认测试成功运行后，我们将扩展功能。下一个合乎逻辑的步骤是将它转换成一个多步注册表单，就像大多数向导一样。第一步的`name`和`password`保持不变。第二步，我们将获取额外的信息，如`age`和`phone`。然后，我们将使用这些附加字段更新我们的域对象:
 
-```
+```java
 public class UserAccount {
 
     @NotNull
@@ -98,7 +98,7 @@ public class UserAccount {
 
 我们将为第一步提供 `BasicInfo` 接口，为第二步提供`AdvanceInfo`接口。此外，我们将更新我们的`UserAccount`类来使用这些标记接口:
 
-```
+```java
 public class UserAccount {
 
     @NotNull(groups = BasicInfo.class)
@@ -121,7 +121,7 @@ public class UserAccount {
 
 此外，我们将更新我们的控制器，使用`@Validated`注释代替`@Valid`:
 
-```
+```java
 @RequestMapping(value = "/saveBasicInfoStep1", method = RequestMethod.POST)
 public String saveBasicInfoStep1(
   @Validated(BasicInfo.class) 
@@ -136,7 +136,7 @@ public String saveBasicInfoStep1(
 
 由于这次更新，我们的测试现在可以成功运行了。我们还将测试这个新方法:
 
-```
+```java
 @Test
 public void givenSaveBasicInfoStep1_whenCorrectInput_thenSuccess() throws Exception {
     this.mockMvc.perform(MockMvcRequestBuilders.post("/saveBasicInfoStep1")
@@ -157,7 +157,7 @@ public void givenSaveBasicInfoStep1_whenCorrectInput_thenSuccess() throws Except
 
 **`@Valid` 注释用于标记嵌套的属性，特别是**。这将触发嵌套对象的验证。例如，在我们当前的场景中，我们可以创建一个`UserAddress `对象:
 
-```
+```java
 public class UserAddress {
 
     @NotBlank
@@ -169,7 +169,7 @@ public class UserAddress {
 
 为了确保这个嵌套对象的有效性，我们将用`@Valid`注释来修饰这个属性:
 
-```
+```java
 public class UserAccount {
 
     //...

@@ -16,7 +16,7 @@
 
 为了从 API 中获益，我们将把依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-validator</artifactId>
@@ -38,7 +38,7 @@
 
 让我们创建一个新的`@interface`来定义我们的注释:
 
-```
+```java
 @Documented
 @Constraint(validatedBy = ContactNumberValidator.class)
 @Target( { ElementType.METHOD, ElementType.FIELD })
@@ -56,7 +56,7 @@ public @interface ContactNumberConstraint {
 
 现在让我们创建一个执行验证规则的验证器类:
 
-```
+```java
 public class ContactNumberValidator implements 
   ConstraintValidator<ContactNumberConstraint, String> {
 
@@ -87,14 +87,14 @@ public class ContactNumberValidator implements
 
 在我们的例子中，我们创建了一个简单的类，其中有一个应用验证规则的字段。在这里，我们设置要验证的注释字段:
 
-```
+```java
 @ContactNumberConstraint
 private String phone;
 ```
 
 我们定义了一个字符串字段，并用我们的自定义注释对其进行了注释，在我们的控制器中，我们创建了映射并处理了任何错误:
 
-```
+```java
 @Controller
 public class ValidatedPhoneController {
 
@@ -123,7 +123,7 @@ public class ValidatedPhoneController {
 
 我们的视图是一个基本的 JSP 页面，其表单只有一个字段。当用户提交表单时，我们的自定义验证器将验证该字段，并重定向到相同的页面，显示验证成功或失败的消息:
 
-```
+```java
 <form:form 
   action="/${pageContext.request.contextPath}/addValidatePhone"
   modelAttribute="validatedPhone">
@@ -138,7 +138,7 @@ public class ValidatedPhoneController {
 
 现在，让我们测试一下我们的控制器，看看它是否给出了适当的响应和视图:
 
-```
+```java
 @Test
 public void givenPhonePageUri_whenMockMvc_thenReturnsPhonePage(){
     this.mockMvc.
@@ -148,7 +148,7 @@ public void givenPhonePageUri_whenMockMvc_thenReturnsPhonePage(){
 
 我们还要测试我们的字段是否基于用户输入进行了验证:
 
-```
+```java
 @Test
 public void 
   givenPhoneURIWithPostAndFormData_whenMockMVC_thenVerifyErrorResponse() {
@@ -176,7 +176,7 @@ public void
 
 让我们添加一个名为`FieldsValueMatch`的新注释，它可以在以后应用于一个类。注释将有两个参数，`field`和`fieldMatch,`，它们代表要比较的字段的名称:
 
-```
+```java
 @Constraint(validatedBy = FieldsValueMatchValidator.class)
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
@@ -202,7 +202,7 @@ public @interface FieldsValueMatch {
 
 接下来我们需要添加包含实际验证逻辑的`FieldsValueMatchValidator`类:
 
-```
+```java
 public class FieldsValueMatchValidator 
   implements ConstraintValidator<FieldsValueMatch, Object> {
 
@@ -239,7 +239,7 @@ public class FieldsValueMatchValidator
 
 因为我们有两个字段要检查它们对应的匹配字段，所以让我们在`NewUserForm`类上添加两个`@FieldsValueMatch`注释，一个用于`email`值，一个用于`password`值:
 
-```
+```java
 @FieldsValueMatch.List({ 
     @FieldsValueMatch(
       field = "password", 
@@ -264,7 +264,7 @@ public class NewUserForm {
 
 为了在 Spring MVC 中验证模型，让我们创建一个带有`/user` POST 映射的控制器，它接收一个用`@Valid`注释的`NewUserForm`对象，并验证是否有任何验证错误:
 
-```
+```java
 @Controller
 public class NewUserController {
 
@@ -290,7 +290,7 @@ public class NewUserController {
 
 为了验证我们的自定义类级注释，让我们编写一个`JUnit`测试，将匹配信息发送到`/user`端点，然后验证响应不包含错误:
 
-```
+```java
 public class ClassValidationMvcTest {
   private MockMvc mockMvc;
 
@@ -318,7 +318,7 @@ public class ClassValidationMvcTest {
 
 然后，我们还将添加一个`JUnit`测试，它向`/user`端点发送不匹配的信息，并断言结果将包含两个错误:
 
-```
+```java
 @Test
 public void givenNotMatchingEmailPassword_whenPostNewUserForm_thenOk() 
   throws Exception {

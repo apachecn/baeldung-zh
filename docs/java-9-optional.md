@@ -16,7 +16,7 @@
 
 Java 9 引入了`or()` 方法，如果我们的`Optional`为空，该方法会延迟返回另一个`Optional`。如果我们的第一个`Optional` 有一个已定义的值，传递给`or()` 方法的 lambda 将不会被调用，值也不会被计算和返回:
 
-```
+```java
 @Test
 public void givenOptional_whenPresent_thenShouldTakeAValueFromIt() {
     //given
@@ -34,7 +34,7 @@ public void givenOptional_whenPresent_thenShouldTakeAValueFromIt() {
 
 在 `Optional`为空`ng`的情况下，返回的`result` 将与`defaultValue:`相同
 
-```
+```java
 @Test
 public void givenOptional_whenEmpty_thenShouldTakeAValueFromOr() {
     // given
@@ -58,7 +58,7 @@ public void givenOptional_whenEmpty_thenShouldTakeAValueFromOr() {
 
 假设我们有一个已定义的`Optional` ，如果该值存在，我们希望递增一个特定的计数器:
 
-```
+```java
 @Test
 public void givenOptional_whenPresent_thenShouldExecuteProperCallback() {
     // given
@@ -81,7 +81,7 @@ public void givenOptional_whenPresent_thenShouldExecuteProperCallback() {
 
 在空的`Optional,`的情况下，第二个回调被执行:
 
-```
+```java
 @Test
 public void givenOptional_whenNotPresent_thenShouldExecuteProperCallback() {
     // given
@@ -108,7 +108,7 @@ Java 有一个非常流畅优雅的 API，可以在集合上操作，并利用�
 
 假设我们有一个已定义的`Optional` ,我们正在调用它的`stream()` 方法。这将创建一个元素的`Stream` ,在这个元素上我们可以使用`Stream` API `:`中所有可用的方法
 
-```
+```java
 @Test
 public void givenOptionalOfSome_whenToStream_thenShouldTreatItAsOneElementStream() {
     // given
@@ -124,7 +124,7 @@ public void givenOptionalOfSome_whenToStream_thenShouldTreatItAsOneElementStream
 
 另一方面，如果`Optional`不存在，调用它的`stream()` 方法将创建一个空的`Stream:`
 
-```
+```java
 @Test
 public void givenOptionalOfNone_whenToStream_thenShouldTreatItAsZeroElementStream() {
     // given

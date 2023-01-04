@@ -34,7 +34,7 @@ XML APIs 表
 
 在以下示例中，我们将使用一个简单的 XML 文件，其结构如下:
 
-```
+```java
 <tutorials>
     <tutorial tutId="01" type="java">
         <title>Guava</title>
@@ -56,7 +56,7 @@ XML APIs 表
 
 让我们看一下，例如，我们如何通过给定的 id 选择元素过滤。
 
-```
+```java
 SAXReader reader = new SAXReader();
 Document document = reader.read(file);
 List<Node> elements = document.selectNodes("//*[@tutId='" + id + "']");
@@ -67,7 +67,7 @@ return elements.get(0);
 
 我们可以加载现有的文档，对其内容进行更改，然后更新原始文件。
 
-```
+```java
 for (Node node : nodes) {
     Element element = (Element)node;
     Iterator<Element> iterator = element.elementIterator("title");
@@ -90,7 +90,7 @@ writer.close();
 
 从头开始创建一个新文档就像我们下面看到的一样简单。
 
-```
+```java
 Document document = DocumentHelper.createDocument();
 Element root = document.addElement("XMLTutorials");
 Element tutorialElement = root.addElement("tutorial").addAttribute("tutId", "01");
@@ -114,7 +114,7 @@ writer.close();
 
 `JDOM's`工作方式与`DOM4J's`非常相似，所以我们只看几个例子:
 
-```
+```java
 SAXBuilder builder = new SAXBuilder();
 Document doc = builder.build(this.getFile());
 Element tutorials = doc.getRootElement();
@@ -123,7 +123,7 @@ List<Element> titles = tutorials.getChildren("tutorial");
 
 在上面的例子中，我们以一种非常简单的方式从根元素中检索所有元素，就像我们可以用`DOM4J:` 做的那样
 
-```
+```java
 SAXBuilder builder = new SAXBuilder();
 Document document = (Document) builder.build(file);
 String filter = "//*[@tutId='" + id + "']";
@@ -140,7 +140,7 @@ List<Element> node = expr.evaluate(document);
 
 首先，我们需要创建一个`Tutorial`类:
 
-```
+```java
 public class Tutorial {
     private String tutId;
     private String type;
@@ -155,7 +155,7 @@ public class Tutorial {
 
 然后我们准备跟进:
 
-```
+```java
 List<Tutorial> tutorials = new ArrayList<>();
 XMLInputFactory factory = XMLInputFactory.newInstance();
 XMLEventReader eventReader = factory.createXMLEventReader(new FileReader(this.getFile()));
@@ -194,7 +194,7 @@ while (eventReader.hasNext()) {
 
 我们只需要创建正确的 java 实体来绑定`XML`就行了。
 
-```
+```java
 JAXBContext jaxbContext = JAXBContext.newInstance(Tutorials.class);
 Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 Tutorials tutorials = (Tutorials) jaxbUnmarshaller.unmarshal(this.getFile());
@@ -206,7 +206,7 @@ Tutorials tutorials = (Tutorials) jaxbUnmarshaller.unmarshal(this.getFile());
 
 首先，我们将修改我们的`Tutorial`类，为`getters`和`setters`添加`JAXB`注释:
 
-```
+```java
 public class Tutorial {
     ...
 
@@ -238,7 +238,7 @@ public class Tutorials {
 
 那么我们可以接着说:
 
-```
+```java
 Tutorials tutorials = new Tutorials();
 tutorials.setTutorial(new ArrayList<>());
 Tutorial tut = new Tutorial();
@@ -259,7 +259,7 @@ jaxbMarshaller.marshal(tutorials, file);
 
 我们可以创建 XPath 表达式，并根据许多受支持的文档编译它们。
 
-```
+```java
 String expression = "/tutorials/tutorial";
 XPath path = new DOMXPath(expression);
 List result = path.selectNodes(xmlDocument);

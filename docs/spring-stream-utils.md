@@ -12,7 +12,7 @@
 
 `StreamUtils`类在 spring-core 模块中可用，所以让我们将它添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-core</artifactId>
@@ -36,7 +36,7 @@
 
 让我们看看如何将一个`InputStream`的内容复制到一个给定的`OutputStream`:
 
-```
+```java
 @Test
 public void whenCopyInputStreamToOutputStream_thenCorrect() throws IOException {
     String inputFileName = "src/test/resources/input.txt";
@@ -60,7 +60,7 @@ public void whenCopyInputStreamToOutputStream_thenCorrect() throws IOException {
 
 我们不必复制`InputStream`的全部内容，我们可以使用`copyRange()`方法将一部分内容复制到给定的`OutputStream`:
 
-```
+```java
 @Test
 public void whenCopyRangeOfInputStreamToOutputStream_thenCorrect() throws IOException {
     String inputFileName = "src/test/resources/input.txt";
@@ -83,7 +83,7 @@ public void whenCopyRangeOfInputStreamToOutputStream_thenCorrect() throws IOExce
 
 让我们看看如何将一个`String`的内容复制到一个给定的`OutputStream`:
 
-```
+```java
 @Test
 public void whenCopyStringToOutputStream_thenCorrect() throws IOException {
     String string = "Should be copied to OutputStream.";
@@ -105,7 +105,7 @@ public void whenCopyStringToOutputStream_thenCorrect() throws IOException {
 
 下面是我们如何将一个给定的`InputStream`的内容复制到一个新的`String`:
 
-```
+```java
 @Test
 public void whenCopyInputStreamToString_thenCorrect() throws IOException {
     String inputFileName = "src/test/resources/input.txt";
@@ -119,7 +119,7 @@ public void whenCopyInputStreamToString_thenCorrect() throws IOException {
 
 我们也可以将给定字节数组的内容复制到一个`OutputStream`:
 
-```
+```java
 public void whenCopyByteArrayToOutputStream_thenCorrect() throws IOException {
     String outputFileName = "src/test/resources/output.txt";
     String string = "Should be copied to OutputStream.";
@@ -136,7 +136,7 @@ public void whenCopyByteArrayToOutputStream_thenCorrect() throws IOException {
 
 或者，我们可以将给定的`InputStream`的内容复制到一个新的字节数组中:
 
-```
+```java
 public void whenCopyInputStreamToByteArray_thenCorrect() throws IOException {
     String inputFileName = "src/test/resources/input.txt";
     InputStream is = new FileInputStream(inputFileName);
@@ -153,13 +153,13 @@ public void whenCopyInputStreamToByteArray_thenCorrect() throws IOException {
 
 可以将一个`InputStream`作为参数传递给方法`drain()`,以移除流中所有剩余的数据:
 
-```
+```java
 StreamUtils.drain(in);
 ```
 
 我们也可以使用方法`emptyInput()`来得到一个有效的空值`InputStream`:
 
-```
+```java
 public InputStream getInputStream() {
     return StreamUtils.emptyInput();
 }
@@ -167,7 +167,7 @@ public InputStream getInputStream() {
 
 有两个名为`nonClosing()`的重载方法。可以将一个`InputStream`或一个`OutputStream`作为参数传递给这些方法，以获得一个忽略对`close()`方法调用的`InputStream`或`OutputStream`的变体:
 
-```
+```java
 public InputStream getNonClosingInputStream() throws IOException {
     InputStream in = new FileInputStream("src/test/resources/input.txt");
     return StreamUtils.nonClosing(in);

@@ -20,14 +20,14 @@
 
 例如，尝试将`{“name”:”HP EliteBook”}`作为值发送:
 
-```
+```java
 String url = "http://products.api.com/get?key=a123456789z&criterion;={\"name\":\"HP EliteBook\"}";
 Product product = restTemplate.getForObject(url, Product.class);
 ```
 
 只会导致`RestTemplate`抛出异常:
 
-```
+```java
 java.lang.IllegalArgumentException: Not enough variable values available to expand 'name'
 ```
 
@@ -39,7 +39,7 @@ java.lang.IllegalArgumentException: Not enough variable values available to expa
 
 首先，让我们创建我们的模型类`Product`:
 
-```
+```java
 public class Product {
 
     private int id;
@@ -52,7 +52,7 @@ public class Product {
 
 接下来，我们将定义一个 spring 控制器来封装 REST API 的逻辑:
 
-```
+```java
 @RestController
 @RequestMapping("/api")
 public class ProductApi {
@@ -101,7 +101,7 @@ public class ProductApi {
 
 这是我们的`Criterion`类的样子:
 
-```
+```java
 public class Criterion {
 
     private String prop;
@@ -113,7 +113,7 @@ public class Criterion {
 
 最后，让我们尝试向映射到处理程序方法`get()`的 URL 发送一个 GET 请求。
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { RestTemplate.class, RestTemplateExceptionApplication.class })
 public class RestTemplateExceptionLiveTest {
@@ -137,7 +137,7 @@ public class RestTemplateExceptionLiveTest {
 
 然而，尽管不推荐，使用 GET 的一个可能的解决方案是**定义一个包含我们的标准的`String`对象，并在 URL** 中提供一个真实的 URI 变量。
 
-```
+```java
 @Test
 public void givenGetUrl_whenJsonIsPassed_thenGetProduct() {
     String criterion = "{\"prop\":\"name\",\"value\":\"ASUS VivoBook\"}";
@@ -150,7 +150,7 @@ public void givenGetUrl_whenJsonIsPassed_thenGetProduct() {
 
 让我们看看另一个使用`[UriComponentsBuilder](/web/20220525141537/https://www.baeldung.com/spring-uricomponentsbuilder)`类的解决方案:
 
-```
+```java
 @Test
 public void givenGetUrl_whenJsonIsPassed_thenReturnProduct() {
     String criterion = "{\"prop\":\"name\",\"value\":\"Acer Aspire 5\"}";

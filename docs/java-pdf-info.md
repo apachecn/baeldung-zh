@@ -14,7 +14,7 @@ iText 是一个用于[创建](/web/20221120022800/https://www.baeldung.com/java-
 
 让我们首先在我们的`pom.xml`中声明 [`itextpdf`](https://web.archive.org/web/20221120022800/https://search.maven.org/search?q=g:com.itextpdf%20AND%20a:itextpdf) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.itextpdf</groupId>
     <artifactId>itextpdf</artifactId>
@@ -26,7 +26,7 @@ iText 是一个用于[创建](/web/20221120022800/https://www.baeldung.com/java-
 
 让我们用返回 PDF 文档页数的`getNumberOfPages()`方法创建一个`PdfInfoIText`类:
 
-```
+```java
 public class PdfInfoIText {
 
     public static int getNumberOfPages(final String pdfFile) throws IOException {
@@ -40,7 +40,7 @@ public class PdfInfoIText {
 
 在我们的例子中，首先，**我们使用`PdfReader`类从`File`对象**加载 PDF。之后，我们使用`getNumberOfPages()`方法。最后，我们关闭`PdfReader`对象。让我们为它声明一个测试用例:
 
-```
+```java
 @Test
 public void givenPdf_whenGetNumberOfPages_thenOK() throws IOException {
     Assert.assertEquals(4, PdfInfoIText.getNumberOfPages(PDF_FILE));
@@ -53,7 +53,7 @@ public void givenPdf_whenGetNumberOfPages_thenOK() throws IOException {
 
 现在让我们看看如何获取文档的元数据。**我们将使用`getInfo()`方法**。这个方法可以获得文件的信息，比如标题、作者、创建日期、创建者、制作者等等。让我们将`getInfo()`方法添加到我们的`PdfInfoIText`类中:
 
-```
+```java
 public static Map<String, String> getInfo(final String pdfFile) throws IOException {
     PdfReader reader = new PdfReader(pdfFile);
     Map<String, String> info = reader.getInfo();
@@ -64,7 +64,7 @@ public static Map<String, String> getInfo(final String pdfFile) throws IOExcepti
 
 现在，让我们编写一个测试用例来获取文档的创建者和生产者:
 
-```
+```java
 @Test
 public void givenPdf_whenGetInfo_thenOK() throws IOException {
     Map<String, String> info = PdfInfoIText.getInfo(PDF_FILE);
@@ -77,7 +77,7 @@ public void givenPdf_whenGetInfo_thenOK() throws IOException {
 
 我们现在想知道**文档**是否有密码保护。为此，让我们将`isEncrypted()`方法添加到`PdfInfoIText`类中:
 
-```
+```java
 public static boolean isPasswordRequired(final String pdfFile) throws IOException {
     PdfReader reader = new PdfReader(pdfFile);
     boolean isEncrypted = reader.isEncrypted();
@@ -88,7 +88,7 @@ public static boolean isPasswordRequired(final String pdfFile) throws IOExceptio
 
 现在，让我们创建一个测试用例来看看这个方法是如何工作的:
 
-```
+```java
 @Test
 public void givenPdf_whenIsPasswordRequired_thenOK() throws IOException {
     Assert.assertFalse(PdfInfoIText.isPasswordRequired(PDF_FILE));
@@ -105,7 +105,7 @@ public void givenPdf_whenIsPasswordRequired_thenOK() throws IOException {
 
 我们需要在我们的项目中包含 [`pdfbox`](https://web.archive.org/web/20221120022800/https://search.maven.org/search?q=g:org.apache.pdfbox%20AND%20a:pdfbox) Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.pdfbox</groupId>
     <artifactId>pdfbox</artifactId>
@@ -117,7 +117,7 @@ public void givenPdf_whenIsPasswordRequired_thenOK() throws IOException {
 
 PDFBox 库提供了处理 PDF 文档的能力。**为了获得页数，我们简单地使用`Loader`类及其`loadPDF()`方法从`File`对象中加载文档。之后，我们使用`PDDocument`类**的 `getNumberOfPages()`方法:
 
-```
+```java
 public class PdfInfoPdfBox {
 
     public static int getNumberOfPages(final String pdfFile) throws IOException {
@@ -132,7 +132,7 @@ public class PdfInfoPdfBox {
 
 让我们为它创建一个测试用例:
 
-```
+```java
 @Test
 public void givenPdf_whenGetNumberOfPages_thenOK() throws IOException {
     Assert.assertEquals(4, PdfInfoPdfBox.getNumberOfPages(PDF_FILE));
@@ -143,7 +143,7 @@ public void givenPdf_whenGetNumberOfPages_thenOK() throws IOException {
 
 获取 PDF 元数据也很简单。**我们需要使用`getDocumentInformation()`方法。这个方法将文档元数据(比如文档的作者或创建日期)作为一个`PDDocumentInformation`对象**返回:
 
-```
+```java
 public static PDDocumentInformation getInfo(final String pdfFile) throws IOException {
     File file = new File(pdfFile);
     PDDocument document = Loader.loadPDF(file);
@@ -155,7 +155,7 @@ public static PDDocumentInformation getInfo(final String pdfFile) throws IOExcep
 
 让我们为它编写一个测试用例:
 
-```
+```java
 @Test
 public void givenPdf_whenGetInfo_thenOK() throws IOException {
     PDDocumentInformation info = PdfInfoPdfBox.getInfo(PDF_FILE);
@@ -170,7 +170,7 @@ public void givenPdf_whenGetInfo_thenOK() throws IOException {
 
 我们可以使用`PDDocument`类的`isEncrypted()`方法检查 PDF 是否有密码保护:
 
-```
+```java
 public static boolean isPasswordRequired(final String pdfFile) throws IOException {
     File file = new File(pdfFile);
     PDDocument document = Loader.loadPDF(file);
@@ -182,7 +182,7 @@ public static boolean isPasswordRequired(final String pdfFile) throws IOExceptio
 
 让我们创建一个验证密码保护的测试案例:
 
-```
+```java
 @Test
 public void givenPdf_whenIsPasswordRequired_thenOK() throws IOException {
     Assert.assertFalse(PdfInfoPdfBox.isPasswordRequired(PDF_FILE));

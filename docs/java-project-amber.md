@@ -16,7 +16,7 @@
 
 Java 7 引入了[菱形操作符](/web/20220926192256/https://www.baeldung.com/java-diamond-operator)，以使泛型更容易与一起工作。这个特性意味着，当我们定义变量时，不再需要在同一个语句中多次编写通用信息:
 
-```
+```java
 List<String> strings = new ArrayList<String>(); // Java 6
 List<String> strings = new ArrayList<>(); // Java 7
 ```
@@ -25,7 +25,7 @@ List<String> strings = new ArrayList<>(); // Java 7
 
 有了这项工作，**每当我们定义一个局部变量时，我们可以使用`var`关键字代替完整的类型定义**，编译器将自动计算出要使用的正确类型信息:
 
-```
+```java
 var strings = new ArrayList<String>();
 ```
 
@@ -37,7 +37,7 @@ var strings = new ArrayList<String>();
 
 只有当我们提供一个实际类型作为声明的一部分时，我们才能使用局部类型推断。当值显式为`null,` 时，当根本没有提供值时，或者当提供的值不能确定确切的类型时，它被故意设计为不起作用-例如，Lambda 定义:
 
-```
+```java
 var unknownType; // No value provided to infer type from
 var nullType = null; // Explicit value provided but it's null
 var lambdaType = () -> System.out.println("Lambda"); // Lambda without defining the interface
@@ -45,7 +45,7 @@ var lambdaType = () -> System.out.println("Lambda"); // Lambda without defining 
 
 然而，**的值可以是`null`，如果它是某个其他调用**的返回值，因为调用本身提供了类型信息:
 
-```
+```java
 Optional<String> name = Optional.empty();
 var nullName = name.orElse(null);
 ```
@@ -60,7 +60,7 @@ var nullName = name.orElse(null);
 
 在 Java 10 中，我们可以用两种方式定义 Lambda 函数——要么显式声明类型，要么完全省略它们:
 
-```
+```java
 names.stream()
   .filter(String name -> name.length() > 5)
   .map(name -> name.toUpperCase());
@@ -70,7 +70,7 @@ names.stream()
 
 **Java 11 允许这种情况发生**，所以我们可以改为写:
 
-```
+```java
 names.stream()
   .filter(var name -> name.length() > 5)
   .map(var name -> name.toUpperCase());
@@ -80,7 +80,7 @@ names.stream()
 
 Lambdas 总是限制我们要么对每个参数使用完整的类型名，要么不使用完整的类型名。这没有改变，并且**`var`的使用必须用于每个参数或者不用于任何参数**:
 
-```
+```java
 numbers.stream()
     .reduce(0, (var a, var b) -> a + b); // Valid
 
@@ -105,7 +105,7 @@ numbers.stream()
 
 有了这些变化，**定义 switch 语句的语法看起来类似于 lambdas** 的语法，只是使用了`->`符号。这位于大小写匹配和要执行的代码之间:
 
-```
+```java
 switch (month) {
     case FEBRUARY -> System.out.println(28);
     case APRIL -> System.out.println(30);
@@ -120,7 +120,7 @@ switch (month) {
 
 **箭头的右边必须是表达式、块或 throws 语句**。其他的都是错误。这也解决了在 switch 语句中定义变量的问题——这只能发生在一个块中，这意味着它们会自动作用于该块:
 
-```
+```java
 switch (month) {
     case FEBRUARY -> {
         int days = 28;
@@ -136,7 +136,7 @@ switch (month) {
 
 **箭头的左边可以是任意数量的逗号分隔值** **。**这是为了实现一些与 fallthrough 相同的功能，但仅限于整场比赛，绝不是偶然的:
 
-```
+```java
 switch (month) {
     case FEBRUARY -> System.out.println(28);
     case APRIL, JUNE, SEPTEMBER, NOVEMBER -> System.out.println(30);
@@ -148,7 +148,7 @@ switch (month) {
 
 **这允许`switch`表达式解析为一个值，然后在其他语句**中使用该值——例如，赋值:
 
-```
+```java
 final var days = switch (month) {
     case FEBRUARY -> 28;
     case APRIL, JUNE, SEPTEMBER, NOVEMBER -> 30;
@@ -176,7 +176,7 @@ final var days = switch (month) {
 
 例如:
 
-```
+```java
 // File system path
 "C:\\Dev\\file.txt"
 `C:\Dev\file.txt`
@@ -195,7 +195,7 @@ World`
 
 **新的原始字符串文字也允许我们在不增加复杂性的情况下包含反勾号。用于开始和结束字符串的反勾号的数量可以根据需要任意长，不必只有一个反勾号。只有当我们达到相同长度的反斜线时，字符串才会结束。比如说:**
 
-```
+```java
 ``This string allows a single "`" because it's wrapped in two backticks``
 ```
 
@@ -209,7 +209,7 @@ JEP-302 对 lambdas 的工作方式进行了一些小的改进。
 
 Java 8 引入了一个变化，因此使用下划线作为名称是一个警告。Java 9 随后把这变成了一个错误，阻止我们使用它们。这个即将到来的变化允许他们为 lambda 参数而不引起任何冲突。例如，这将允许以下代码:
 
-```
+```java
 jdbcTemplate.queryForObject("SELECT * FROM users WHERE user_id = 1", (rs, _) -> parseUser(rs))
 ```
 
@@ -217,7 +217,7 @@ jdbcTemplate.queryForObject("SELECT * FROM users WHERE user_id = 1", (rs, _) -> 
 
 这个增强的另一个主要变化是允许 lambda 参数隐藏当前上下文中的名字。目前这是不允许的，这会导致我们编写一些不太理想的代码。例如:
 
-```
+```java
 String key = computeSomeKey();
 map.computeIfAbsent(key, key2 -> key2.length());
 ```
@@ -226,7 +226,7 @@ map.computeIfAbsent(key, key2 -> key2.length());
 
 相反，这种增强允许我们以更明显和简单的方式编写它:
 
-```
+```java
 String key = computeSomeKey();
 map.computeIfAbsent(key, key -> key.length());
 ```
@@ -235,7 +235,7 @@ map.computeIfAbsent(key, key -> key.length());
 
 例如**目前编译器认为以下方法是二义性的**:
 
-```
+```java
 m(Predicate<String> ps) { ... }
 m(Function<String, String> fss) { ... }
 ```
@@ -250,7 +250,7 @@ m(Function<String, String> fss) { ... }
 
 目前，在 Java 中比较类型时，我们必须使用 `instanceof`运算符来查看值是否属于正确的类型，然后，我们需要将值强制转换为正确的类型:
 
-```
+```java
 if (obj instanceof String) {
     String s = (String) obj;
     // use s
@@ -261,7 +261,7 @@ if (obj instanceof String) {
 
 **这个增强对`instanceof`操作符进行了类似的调整，就像之前在 Java 7** 的`try-with-resources`中所做的一样。随着这一变化，比较、造型和变量声明变成了一条语句:
 
-```
+```java
 if (obj instanceof String s) {
     // use s
 }
@@ -271,7 +271,7 @@ if (obj instanceof String s) {
 
 这也将跨分支正确工作，允许以下工作:
 
-```
+```java
 if (obj instanceof String s) {
     // can use s here
 } else {
@@ -281,7 +281,7 @@ if (obj instanceof String s) {
 
 **在适当的情况下，增强功能还可以跨不同的范围正确工作**。如预期的那样，由`instanceof`子句声明的变量将正确地隐藏在其外部定义的变量。不过，这只会发生在适当的区块中:
 
-```
+```java
 String s = "Hello";
 if (obj instanceof String s) {
     // s refers to obj
@@ -292,7 +292,7 @@ if (obj instanceof String s) {
 
 **这也在同一个`if`子句**中起作用，与我们依赖`null`检查的方式相同:
 
-```
+```java
 if (obj instanceof String s && s.length() > 5) {
     // s is a String of greater than 5 characters
 }
@@ -306,7 +306,7 @@ if (obj instanceof String s && s.length() > 5) {
 
 **现在，我们可以用三种不同的方式定义 Lambda**:用一个体，作为一个单独的表达式，或者作为一个方法引用:
 
-```
+```java
 ToIntFunction<String> lenFn = (String s) -> { return s.length(); };
 ToIntFunction<String> lenFn = (String s) -> s.length();
 ToIntFunction<String> lenFn = String::length;
@@ -318,13 +318,13 @@ ToIntFunction<String> lenFn = String::length;
 
 例如，getter 方法不需要完整的方法体，但可以替换为一个表达式:
 
-```
+```java
 String getName() -> name;
 ```
 
 同样，我们可以用一个方法引用调用来替换简单地包装其他方法的方法，包括通过以下方式传递参数:
 
-```
+```java
 int length(String s) = String::length
 ```
 
@@ -338,7 +338,7 @@ JEP-301 之前被安排为琥珀计划的一部分。**这会给枚举带来一�
 
 例如，它将允许:
 
-```
+```java
 enum Primitive<X> {
     INT<Integer>(Integer.class, 0) {
        int mod(int x, int y) { return x % y; }

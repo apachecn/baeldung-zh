@@ -20,7 +20,7 @@
 
 在附加调试器之前，我们必须首先配置 JVM 以允许调试。我们通过为 JVM 设置命令行参数来实现这一点:
 
-```
+```java
 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000
 ```
 
@@ -62,19 +62,19 @@ Spring Boot 应用程序[可以通过几种方式启动](https://web.archive.org
 
 要启用调试，我们只需使用`-D`选项添加调试参数:
 
-```
+```java
 java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -jar myapp.jar
 ```
 
 有了 Maven，我们可以使用提供的`run`目标来启动我们的应用程序并启用调试:
 
-```
+```java
 mvn spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000"
 ```
 
 同样，对于 Gradle，我们可以使用`bootRun`任务。首先，我们必须更新`build.gradle`文件，以确保 Gradle 将命令行参数传递给 JVM:
 
-```
+```java
 bootRun {
    systemProperties = System.properties
 }
@@ -82,7 +82,7 @@ bootRun {
 
 现在我们可以执行`bootRun`任务了:
 
-```
+```java
 gradle bootRun -Dagentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000
 ```
 
@@ -96,7 +96,7 @@ gradle bootRun -Dagentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=80
 
 [Tomcat](/web/20220628114829/https://www.baeldung.com/spring-boot-war-tomcat-deploy) 的启动脚本命名为`catalina.sh`(Windows 上的`catalina.bat`)。要在启用调试的情况下启动 Tomcat 服务器，我们可以在参数前面加上`jpda`:
 
-```
+```java
 catalina.sh jpda start
 ```
 
@@ -126,7 +126,7 @@ Weblogic 的最新版本还提供了启动和停止服务器的 Maven 插件。�
 
 Glassfish 的启动脚本是`asadmin`。要在启用调试的情况下启动 Glassfish 服务器，我们必须使用`–debug`:
 
-```
+```java
 asadmin start-domain --debug
 ```
 
@@ -192,19 +192,19 @@ Eclipse 的默认安装不支持开箱即用的 Spring 或 Spring Boot。然而�
 
 我们可以将`–expose`与`docker run`命令一起使用:
 
-```
+```java
 docker run --expose 8000 mydockerimage
 ```
 
 我们还可以将`EXPOSE`指令添加到`Dockerfile`中:
 
-```
+```java
 EXPOSE 8000
 ```
 
 或者，如果我们使用 Docker Compose，我们可以将它添加到 YAML 中:
 
-```
+```java
 expose:
  - "8000"
 ```

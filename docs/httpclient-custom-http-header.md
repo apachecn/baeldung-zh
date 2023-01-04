@@ -26,7 +26,7 @@ Explore the new Java HttpClient API which provides a lot of flexibility and pow
 
 HttpClient 4.3 引入了一种新的构建请求的方式——即`RequestBuilder`。为了设置一个标题，**我们将使用`setHeader`方法——在构建器上:**
 
-```
+```java
 HttpClient client = HttpClients.custom().build();
 HttpUriRequest request = RequestBuilder.get()
   .setUri(SAMPLE_URL)
@@ -39,7 +39,7 @@ client.execute(request);
 
 在 http client 4.3 之前的版本中，**我们可以通过对请求进行简单的`setHeader`调用来为请求设置任何自定义头:**
 
-```
+```java
 HttpClient client = new DefaultHttpClient();
 HttpGet request = new HttpGet(SAMPLE_URL);
 request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -52,7 +52,7 @@ client.execute(request);
 
 我们也可以**在客户端**上将其配置为默认报头，而不是在每个请求上设置报头:
 
-```
+```java
 Header header = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 List<Header> headers = Lists.newArrayList(header);
 HttpClient client = HttpClients.custom().setDefaultHeaders(headers).build();

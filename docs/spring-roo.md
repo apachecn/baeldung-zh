@@ -28,7 +28,7 @@ Roo 可以用作从操作系统命令行运行的独立应用程序。不需要�
 
 为了验证 Roo 安装是否正确，我们可以打开命令行并执行以下命令:
 
-```
+```java
 mkdir baeldung
 cd baeldung
 roo quit
@@ -36,7 +36,7 @@ roo quit
 
 几秒钟后我们会看到:
 
-```
+```java
  _
  ___ _ __  _ __(_)_ __   __ _   _ __ ___   ___
 / __| '_ \| '__| | '_ \ / _` | | '__/ _ \ / _ \
@@ -73,7 +73,7 @@ Roo 已经安装，并且正在运行。请注意，Spring Roo 版本会有所�
 
 在 STS 中，这将为我们运行以下命令:
 
-```
+```java
 project setup --topLevelPackage com.baeldung --projectName "roo" --java 8 --packaging JAR
 ```
 
@@ -81,7 +81,7 @@ project setup --topLevelPackage com.baeldung --projectName "roo" --java 8 --pack
 
 如果我们得到以下错误:
 
-```
+```java
 Could not calculate build plan: Plugin org.codehaus.mojo:aspectj-maven-plugin:1.8 
   or one of its dependencies could not be resolved: 
   Failed to read artifact descriptor for org.codehaus.mojo:aspectj-maven-plugin:jar:1.8
@@ -89,7 +89,7 @@ Could not calculate build plan: Plugin org.codehaus.mojo:aspectj-maven-plugin:1.
 
 最简单的解决方法是手动编辑`pom.xml`文件，将`aspectj.plugin.version`从`1.8`更新为`1.9`:
 
-```
+```java
 <aspectj.plugin.version>1.9</aspectj.plugin.version>
 ```
 
@@ -101,7 +101,7 @@ Could not calculate build plan: Plugin org.codehaus.mojo:aspectj-maven-plugin:1.
 
 因此，让我们回到 Roo Shell 窗口。在其中，让我们通过键入“h”并按 CTRL+SPACE 来运行第一个命令:
 
-```
+```java
 roo> h
 
 help    hint
@@ -113,7 +113,7 @@ Roo Shell 的另一个伟大特性是**上下文感知**。例如，`hint`命令
 
 现在让我们执行`hint`命令，看看会发生什么:
 
-```
+```java
 roo> hint 
 Roo requires the installation of a persistence configuration.
 
@@ -130,7 +130,7 @@ Once JPA is installed, type 'hint' and ENTER for the next suggestion.
 
 它为我们提供了需要执行的后续步骤。现在让我们添加一个数据库:
 
-```
+```java
 roo> jpa setup --provider HIBERNATE --database HYPERSONIC_IN_MEMORY 
 Created SRC_MAIN_RESOURCES\application.properties
 Updated SRC_MAIN_RESOURCES\application.properties
@@ -142,7 +142,7 @@ Updated ROOT\pom.xml [added dependencies org.springframework.boot:spring-boot-st
 
 **让我们先运行命令**，然后我们将仔细检查它们:
 
-```
+```java
 roo> 
 entity jpa --class ~.domain.Book
 field string --fieldName title --notNull 

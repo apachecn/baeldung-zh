@@ -14,7 +14,7 @@
 
 让我们手动触发身份验证，然后将得到的`Authentication`对象设置为当前的`SecurityContext`,框架使用它来保存当前登录的用户:
 
-```
+```java
 UsernamePasswordAuthenticationToken authReq
  = new UsernamePasswordAuthenticationToken(user, pass);
 Authentication auth = authManager.authenticate(authReq);
@@ -32,7 +32,7 @@ sc.setAuthentication(auth);
 
 因此，为了对请求设置身份验证，从而使**对来自客户端**的所有后续请求可用，我们需要在 HTTP 会话中手动设置包含`Authentication`的`SecurityContext`:
 
-```
+```java
 public void login(HttpServletRequest req, String user, String pass) { 
     UsernamePasswordAuthenticationToken authReq
       = new UsernamePasswordAuthenticationToken(user, pass);

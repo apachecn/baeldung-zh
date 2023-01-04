@@ -16,14 +16,14 @@
 
 在我们开始编写 HTTP 客户端之前，我们需要启动我们的嵌入式模拟服务器:
 
-```
+```java
 @Rule
 public WireMockRule serviceMock = new WireMockRule(8089);
 ```
 
 当我们创建一个`HttpGet` 实例时，我们可以简单地使用一个`setHeader()`方法来传递头部的名称和值。该标头将被添加到 HTTP 请求中:
 
-```
+```java
 String userAgent = "BaeldungAgent/1.0"; 
 HttpClient httpClient = HttpClients.createDefault();
 
@@ -39,7 +39,7 @@ assertEquals(response.getStatusLine().getStatusCode(), 200);
 
 当 GET 请求被发送给一个 URL `/detail` ，其标题`User-Agent` 的值等于“BaeldungAgent/1.0”时，那么`serviceMock`将返回 200 个 HTTP 响应代码:
 
-```
+```java
 serviceMock.stubFor(get(urlEqualTo("/detail"))
   .withHeader("User-Agent", equalTo(userAgent))
   .willReturn(aResponse().withStatus(200)));
@@ -49,7 +49,7 @@ serviceMock.stubFor(get(urlEqualTo("/detail"))
 
 通常，当我们执行 HTTP POST 方法时，我们希望传递一个实体作为请求体。当创建一个`HttpPost` 对象的实例时，我们可以使用一个`setEntity()` 方法将主体添加到请求中:
 
-```
+```java
 String xmlBody = "<xml><id>1</id></xml>";
 HttpClient httpClient = HttpClients.createDefault();
 HttpPost httpPost = new HttpPost("http://localhost:8089/person");
@@ -65,7 +65,7 @@ assertEquals(response.getStatusLine().getStatusCode(), 200);
 
 我们正在创建一个主体为`XML`格式的`StringEntity` 实例。将`Content-Type` 头设置为“`application/xml`”以向服务器传递关于我们发送的内容类型的信息是很重要的。当`serviceMock` 收到带有 XML 主体的 POST 请求时，它用状态代码 200 OK 进行响应:
 
-```
+```java
 serviceMock.stubFor(post(urlEqualTo("/person"))
   .withHeader("Content-Type", equalTo("application/xml"))
   .withRequestBody(equalTo(xmlBody))
@@ -78,7 +78,7 @@ serviceMock.stubFor(post(urlEqualTo("/person"))
 
 为了测试这个场景，我们需要启动另一个嵌入式 web 服务器:
 
-```
+```java
 @Rule
 public WireMockRule proxyMock = new WireMockRule(8090);
 ```
@@ -87,7 +87,7 @@ public WireMockRule proxyMock = new WireMockRule(8090);
 
 我们正在配置我们的`HttpClient`,通过创建一个将`HttpHost`实例代理作为参数的`DefaultProxyRoutePlanner`,通过代理发送所有请求:
 
-```
+```java
 HttpHost proxy = new HttpHost("localhost", 8090);
 DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
 HttpClient httpclient = HttpClients.custom()
@@ -97,7 +97,7 @@ HttpClient httpclient = HttpClients.custom()
 
 我们的代理服务器将所有请求重定向到监听 8090 端口的实际服务。在测试的最后，我们验证请求是通过代理发送到我们的实际服务的:
 
-```
+```java
 proxyMock.stubFor(get(urlMatching(".*"))
   .willReturn(aResponse().proxiedFrom("http://localhost:8089/")));
 
@@ -119,7 +119,7 @@ serviceMock.verify(getRequestedFor(urlEqualTo("/private")));
 
 我们需要用将通过代理授权的用户的凭证创建`BasicCredentialsProvider` 实例。为了让`HttpClient` 自动添加具有适当值的`Authorization` 头，我们需要创建一个提供凭证的`HttpClientContext` 和一个存储凭证的`BasicAuthCache` :
 
-```
+```java
 HttpHost proxy = new HttpHost("localhost", 8090);
 DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
 
@@ -147,14 +147,14 @@ HttpClient httpclient = HttpClients.custom()
 
 让我们对服务执行一个实际的请求:
 
-```
+```java
 HttpGet httpGet = new HttpGet("http://localhost:8089/private");
 HttpResponse response = httpclient.execute(httpGet, context);
 ```
 
 用我们的配置验证`httpClient`上的`execute()` 方法，确认请求通过了带有`Authorization`头的代理:
 
-```
+```java
 proxyMock.stubFor(get(urlMatching("/private"))
   .willReturn(aResponse().proxiedFrom("http://localhost:8089/")));
 serviceMock.stubFor(get(urlEqualTo("/private"))

@@ -30,7 +30,7 @@ Apache Kafka 支持**服务器级保留策略，我们可以通过配置三个�
 
 首先，让我们通过从 [Apache Kafka 目录](https://web.archive.org/web/20220524030209/https://kafka.apache.org/documentation/#quickstart)中执行 [`grep`](/web/20220524030209/https://www.baeldung.com/linux/grep-sed-awk-differences#grep) 命令来检查保留的默认值:
 
-```
+```java
 $ grep -i 'log.retention.[hms].*\=' config/server.properties
 log.retention.hours=168 
 ```
@@ -39,7 +39,7 @@ log.retention.hours=168
 
 要将消息仅保留十分钟，我们可以在`config/server.properties`中设置`log.retention.minutes`属性的值:
 
-```
+```java
 log.retention.minutes=10 
 ```
 
@@ -49,7 +49,7 @@ Apache Kafka 包包含几个 shell 脚本，我们可以使用它们来执行管
 
 让我们从在`functions.sh`到**中添加两个函数开始，分别创建一个主题并描述其配置**:
 
-```
+```java
 function create_topic {
     topic_name="$1"
     bin/kafka-topics.sh --create --topic ${topic_name} --if-not-exists \
@@ -67,7 +67,7 @@ function describe_topic_config {
 
 接下来，让我们创建两个独立的脚本，`create-topic.sh` 和`get-topic-retention-time.sh`:
 
-```
+```java
 bash-5.1# cat create-topic.sh
 #!/bin/bash
 . ./functions.sh
@@ -76,7 +76,7 @@ create_topic "${topic_name}"
 exit $? 
 ```
 
-```
+```java
 bash-5.1# cat get-topic-retention-time.sh
 #!/bin/bash
 . ./functions.sh
@@ -89,7 +89,7 @@ exit $?
 
 最后，让我们[启动 Kafka 环境](https://web.archive.org/web/20220524030209/https://kafka.apache.org/documentation/#quickstart_startserver)并验证新样本主题的保留期配置:
 
-```
+```java
 bash-5.1# ./create-topic.sh test-topic
 Created topic test-topic.
 bash-5.1# ./get-topic-retention-time.sh test-topic
@@ -104,7 +104,7 @@ retention.ms=600000
 
 让我们在我们的`functions.sh`脚本中添加一个方法来配置主题的属性:
 
-```
+```java
 function alter_topic_config {
     topic_name="$1"
     config_name="$2"
@@ -118,7 +118,7 @@ function alter_topic_config {
 
 然后，我们可以在一个`alter-topic-config.sh`脚本中使用它:
 
-```
+```java
 #!/bin/sh
 . ./functions.sh
 
@@ -128,7 +128,7 @@ exit $?
 
 最后，让我们将`test-topic`的保留时间设置为五分钟，并进行验证:
 
-```
+```java
 bash-5.1# ./alter-topic-config.sh test-topic retention.ms 300000
 Completed updating config for topic test-topic.
 
@@ -144,7 +144,7 @@ retention.ms=300000
 
 让我们在内部的`functions.sh.` 中添加`produce_message`和`consume_message`函数，它们分别使用`kafka-console-producer.sh`和`kafka-console-consumer.sh`来产生/消费一条消息:
 
-```
+```java
 function produce_message {
     topic_name="$1"
     message="$2"
@@ -169,7 +169,7 @@ function consume_message {
 
 接下来，让我们创建一个独立的消息生成器:
 
-```
+```java
 bash-5.1# cat producer.sh
 #!/bin/sh
 . ./functions.sh
@@ -182,7 +182,7 @@ exit $?
 
 最后，让我们有一个独立的消息消费者:
 
-```
+```java
 bash-5.1# cat consumer.sh
 #!/bin/sh
 . ./functions.sh
@@ -197,7 +197,7 @@ exit $?
 
 现在我们已经准备好了基本的设置，让我们生成一条消息并立即使用它两次:
 
-```
+```java
 bash-5.1# ./producer.sh "test-topic-2" "message1"
 bash-5.1# ./consumer.sh test-topic-2 10000
 message1
@@ -211,7 +211,7 @@ Processed a total of 1 messages
 
 现在，让我们引入一个五分钟的睡眠延迟，然后尝试使用该消息:
 
-```
+```java
 bash-5.1# sleep 300 && ./consumer.sh test-topic 10000
 [2021-02-06 21:55:00,896] ERROR Error processing message, terminating consumer process:  (kafka.tools.ConsoleConsumer$)
 org.apache.kafka.common.errors.TimeoutException

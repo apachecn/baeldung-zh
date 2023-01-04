@@ -38,7 +38,7 @@ Spring 提供了一个名为`JdbcUtils.supportsBatchUpdates()`的实用方法，
 
 在这个例子中，**我们将使用 Postgres 14 作为我们的数据库服务器**。因此，我们需要将相应的 [postgresql](https://web.archive.org/web/20220913070550/https://search.maven.org/search?q=a:postgresql%20AND%20g:org.postgresql) JDBC 驱动程序添加到我们的依赖项中:
 
-```
+```java
 <dependency>
     <groupId>org.postgresql</groupId>
     <artifactId>postgresql</artifactId>
@@ -48,7 +48,7 @@ Spring 提供了一个名为`JdbcUtils.supportsBatchUpdates()`的实用方法，
 
 然后，为了使用 Spring 的 JDBC 抽象，让我们添加 [spring-boot-starter-jdbc](https://web.archive.org/web/20220913070550/https://search.maven.org/search?q=a:spring-boot-starter-jdbc) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-jdbc</artifactId>
@@ -59,7 +59,7 @@ Spring 提供了一个名为`JdbcUtils.supportsBatchUpdates()`的实用方法，
 
 让我们先从简单的`Product`表开始:
 
-```
+```java
 CREATE TABLE product (
     id              SERIAL PRIMARY KEY,
     title           VARCHAR(40),
@@ -70,7 +70,7 @@ CREATE TABLE product (
 
 下面是相应的模型`Product`类:
 
-```
+```java
 public class Product {
     private long id;
     private String title;
@@ -85,7 +85,7 @@ public class Product {
 
 通过将下面的配置添加到我们的`application.properties`中，Spring Boot 为我们创建了一个`DataSource`和一个`JdbcTemplate` bean:
 
-```
+```java
 spring.datasource.url=jdbc:postgresql://localhost:5432/sample-baeldung-db
 spring.datasource.username=postgres
 spring.datasource.password=root
@@ -96,7 +96,7 @@ spring.datasource.driver-class-name=org.postgresql.Driver
 
 我们首先创建一个简单的存储库接口来保存产品列表:
 
-```
+```java
 public interface ProductRepository {
     void saveAll(List<Product> products);
 } 
@@ -104,7 +104,7 @@ public interface ProductRepository {
 
 然后，第一个实现简单地遍历产品，并将它们一个接一个地插入到同一个事务中:
 
-```
+```java
 @Repository
 public class SimpleProductRepository implements ProductRepository {
 
@@ -131,7 +131,7 @@ public class SimpleProductRepository implements ProductRepository {
 
 现在，我们需要一个服务类`ProductService`，它生成给定数量的产品对象并开始插入过程。首先，我们有一个方法来使用一些预定义的值以随机的方式生成给定数量的`Product` 实例:
 
-```
+```java
 public class ProductService {
 
     private ProductRepository productRepository;
@@ -165,7 +165,7 @@ public class ProductService {
 
 其次，我们将另一个方法添加到`ProductService`类中，该方法获取生成的`Product`实例并插入它们:
 
-```
+```java
 @Transactional
 public long createProducts(int count) {
   List<Product> products = generate(count);
@@ -177,7 +177,7 @@ public long createProducts(int count) {
 
 为了使`ProductService `成为一个 Spring bean，让我们也添加下面的配置:
 
-```
+```java
 @Configuration
 public class AppConfig {
 
@@ -194,7 +194,7 @@ public class AppConfig {
 
 现在，是时候看看春天 JDBC 批量支持的行动了。首先，让我们开始创建我们的`ProductRepository`类的另一个批处理实现:
 
-```
+```java
 @Repository
 public class BatchProductRepository implements ProductRepository {
 
@@ -228,7 +228,7 @@ public class BatchProductRepository implements ProductRepository {
 
 现在，我们在`AppConfig`类中添加一个额外的`ProductService ` bean 配置:
 
-```
+```java
 @Bean
 public ProductService batchProductService(BatchProductRepository batchProductRepository) {
   return new ProductService(batchProductRepository, new Random(), Clock.systemUTC());
@@ -239,7 +239,7 @@ public ProductService batchProductService(BatchProductRepository batchProductRep
 
 是时候运行我们的示例并查看一下基准测试了。为了简单起见，我们通过实现 Spring 提供的`CommandLineRunner `接口来准备一个[命令行 Spring Boot](/web/20220913070550/https://www.baeldung.com/spring-boot-console-app) 应用程序。对于这两种方法，我们多次运行我们的示例:
 
-```
+```java
 @SpringBootApplication
 public class SpringJdbcBatchPerformanceApplication implements CommandLineRunner {
 
@@ -278,7 +278,7 @@ public class SpringJdbcBatchPerformanceApplication implements CommandLineRunner 
 
 这是我们的基准测试结果:
 
-```
+```java
 --------------------------------------------------
 Regular inserts     |    1         |          14ms
 Batch inserts       |    1         |           8ms
@@ -314,7 +314,7 @@ Total gain: 72 %
 
 然而，这还不是全部。一些数据库如 Postgres、MySQL 和 SQL Server 支持多值插入。它有助于减小 insert 语句的整体大小。让我们看看这是如何工作的:
 
-```
+```java
 -- REGULAR INSERTS TO INSERT 4 RECORDS
 INSERT INTO PRODUCT
 (TITLE, CREATED_TS, PRICE)
@@ -352,7 +352,7 @@ VALUES
 
 让我们在启用该特性的情况下重新运行我们的应用程序，看看有什么不同:
 
-```
+```java
 --------------------------------------------------
 Regular inserts     |    1         |          15ms
 Batch inserts       |    1         |          10ms

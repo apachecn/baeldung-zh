@@ -12,21 +12,21 @@
 
 但是，为了防止 Jsoup 删除换行符，我们可以更改 Jsoup 的 [`OutputSetting`](https://web.archive.org/web/20220926191721/https://jsoup.org/apidocs/org/jsoup/nodes/Document.OutputSettings.html#prettyPrint(boolean)) 并禁用 pretty-print。**如果禁用了漂亮打印，HTML 输出方法将不会重新格式化输出，输出将类似于输入:**
 
-```
+```java
 Document.OutputSettings outputSettings = new Document.OutputSettings();
 outputSettings.prettyPrint(false);
 ```
 
 此外，我们可以使用 [`Jsoup` # `clean`](https://web.archive.org/web/20220926191721/https://jsoup.org/apidocs/org/jsoup/Jsoup.html#clean(java.lang.String,java.lang.String,org.jsoup.safety.Whitelist,org.jsoup.nodes.Document.OutputSettings)) 从字符串中删除所有的 HTML 标签:
 
-```
+```java
 String strHTML = "<html><body>Hello\nworld</body></html>";
 String strWithNewLines = Jsoup.clean(strHTML, "", Whitelist.none(), outputSettings);
 ```
 
 让我们看看我们的输出字符串`strWithNewLines`是什么样子的:
 
-```
+```java
 assertEquals("Hello\nworld", strWithNewLines);
 ```
 
@@ -40,14 +40,14 @@ assertEquals("Hello\nworld", strWithNewLines);
 
 为了保留与这些标签相关联的换行符，我们首先需要从我们的 HTML 字符串创建一个 [Jsoup `Document`](https://web.archive.org/web/20220926191721/https://jsoup.org/apidocs/org/jsoup/nodes/Document.html) :
 
-```
+```java
 String strHTML = "<html><body>Hello<br>World<p>Paragraph</p></body></html>";
 Document jsoupDoc = Jsoup.parse(strHTML);
 ```
 
 接下来，我们在`<br>`和`<p>`标签前添加一个换行符——同样，我们也禁用了漂亮打印输出设置:
 
-```
+```java
 Document.OutputSettings outputSettings = new Document.OutputSettings();
 outputSettings.prettyPrint(false);
 jsoupDoc.outputSettings(outputSettings);
@@ -59,19 +59,19 @@ jsoupDoc.select("p").before("\\n");
 
 之后，我们从`jsoupDoc`获取 HTML 字符串，保留原来的新行:
 
-```
+```java
 String str = jsoupDoc.html().replaceAll("\\\\n", "\n");
 ```
 
 最后，我们用`Whitelist` # `none`调用`Jsoup` # `clean`，并且禁用漂亮打印输出设置:
 
-```
+```java
 String strWithNewLines = Jsoup.clean(str, "", Whitelist.none(), outputSettings);
 ```
 
 我们的输出字符串`strWithNewLines`看起来像:
 
-```
+```java
 assertEquals("Hello\nWorld\nParagraph", strWithNewLines);
 ```
 

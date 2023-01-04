@@ -12,7 +12,7 @@
 
 让我们从添加所需的 Maven 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-ldap</artifactId>
@@ -28,7 +28,7 @@ Spring LDAP 项目通过使用[对象-目录映射(ODM)](https://web.archive.org
 
 让我们定义将用于映射 LDAP 目录的实体，这些目录已经在 [Spring LDAP 文章](/web/20220707143821/https://www.baeldung.com/spring-ldap)中进行了配置。
 
-```
+```java
 @Entry(
   base = "ou=users", 
   objectClasses = { "person", "inetOrgPerson", "top" })
@@ -59,7 +59,7 @@ Spring Data LDAP 提供了类似的抽象，它提供了包括 LDAP 目录的基
 
 让我们定义我们的存储库接口，它将用于管理`User Entry:`
 
-```
+```java
 @Repository
 public interface UserRepository extends LdapRepository<User> {
     User findByUsername(String username);
@@ -76,7 +76,7 @@ public interface UserRepository extends LdapRepository<User> {
 
 我们可以使用基于 Java 的`@Configuration`类或 XML 名称空间来配置 Spring 数据 LDAP。让我们使用基于 Java 的方法来配置存储库:
 
-```
+```java
 @Configuration
 @EnableLdapRepositories(basePackages = "com.baeldung.ldap.**")
 public class AppConfig {
@@ -91,7 +91,7 @@ public class AppConfig {
 
 要启用自动配置，我们需要确保在 pom.xml 中将`spring-boot-starter-data-ldap` Starter 或`spring-ldap-core`定义为依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-ldap</artifactId>
@@ -100,7 +100,7 @@ public class AppConfig {
 
 要连接到 LDAP，我们需要在应用程序中提供连接设置。属性:
 
-```
+```java
 spring.ldap.url=ldap://localhost:18889
 spring.ldap.base=dc=example,dc=com
 spring.ldap.username=uid=admin,ou=system
@@ -109,7 +109,7 @@ spring.ldap.password=secret
 
 关于 Spring 数据 LDAP 自动配置的更多细节可以在[官方文档](https://web.archive.org/web/20220707143821/https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#features.nosql.ldap)中找到。Spring Boot 引入了 [LdapAutoConfiguration](https://web.archive.org/web/20220707143821/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/autoconfigure/ldap/LdapAutoConfiguration.html) ，它负责`LdapTemplate` 的检测，然后可以将这些检测注入到所需的服务类中:
 
-```
+```java
 @Autowired
 private LdapTemplate ldapTemplate;
 ```
@@ -118,7 +118,7 @@ private LdapTemplate ldapTemplate;
 
 让我们定义我们的服务类，它将使用`UserRepository` 来操作 LDAP 目录:
 
-```
+```java
 @Service
 public class UserService {
     @Autowired
@@ -134,7 +134,7 @@ public class UserService {
 
 现在让我们实现一个简单的逻辑来验证现有用户:
 
-```
+```java
 public Boolean authenticate(String u, String p) {
     return userRepository.findByUsernameAndPassword(u, p) != null;
 }
@@ -144,7 +144,7 @@ public Boolean authenticate(String u, String p) {
 
 接下来，让我们创建一个新用户并存储一个密码的哈希:
 
-```
+```java
 public void create(String username, String password) {
     User newUser = new User(username,digestSHA(password));
     newUser.setId(LdapUtils.emptyLdapName());
@@ -156,7 +156,7 @@ public void create(String username, String password) {
 
 我们可以使用以下方法修改现有用户或条目:
 
-```
+```java
 public void modify(String u, String p) {
     User user = userRepository.findByUsername(u);
     user.setPassword(p);
@@ -168,7 +168,7 @@ public void modify(String u, String p) {
 
 我们可以使用自定义方法搜索现有用户:
 
-```
+```java
 public List<String> search(String u) {
     List<User> userList = userRepository
       .findByUsernameLikeIgnoreCase(u);
@@ -187,7 +187,7 @@ public List<String> search(String u) {
 
 最后，我们可以快速测试一个简单的身份验证场景:
 
-```
+```java
 @Test
 public void givenLdapClient_whenCorrectCredentials_thenSuccessfulLogin() {
     Boolean isValid = userService.authenticate(USER3, USER3_PWD);

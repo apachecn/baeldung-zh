@@ -71,7 +71,7 @@ ML 允许我们用对人类友好的方式来解决问题。然而，这一事�
 
 **为了评估我们将要构建的模型的效率，我们将输入数据分成训练集和测试集:**
 
-```
+```java
 DataSetIterator train = new RecordReaderDataSetIterator(...);
 DataSetIterator test = new RecordReaderDataSetIterator(...);
 ```
@@ -89,7 +89,7 @@ LeNet-5 是一种神经网络，由一系列层组成，将 28×28 像素图像�
 
 例如，如果输出向量具有以下形式:
 
-```
+```java
 {0.1, 0.0, 0.3, 0.2, 0.1, 0.1, 0.0, 0.1, 0.1, 0.0}
 ```
 
@@ -99,7 +99,7 @@ LeNet-5 是一种神经网络，由一系列层组成，将 28×28 像素图像�
 
 我们通过创建一个`MultiLayerNetwork`对象来建立模型:
 
-```
+```java
 MultiLayerNetwork model = new MultiLayerNetwork(config);
 ```
 
@@ -107,7 +107,7 @@ MultiLayerNetwork model = new MultiLayerNetwork(config);
 
 让我们展示一下我们是如何使用第一个和第二个来实现这一点的:
 
-```
+```java
 ConvolutionLayer layer1 = new ConvolutionLayer
     .Builder(5, 5).nIn(channels)
     .stride(1, 1)
@@ -125,7 +125,7 @@ SubsamplingLayer layer2 = new SubsamplingLayer
 
 现在，我们准备构建`MultiLayerConfiguration`对象:
 
-```
+```java
 MultiLayerConfiguration config = new NeuralNetConfiguration.Builder()
     // preparation steps
     .list()
@@ -143,20 +143,20 @@ MultiLayerConfiguration config = new NeuralNetConfiguration.Builder()
 
 培训阶段非常简单:
 
-```
+```java
 model.fit(train); 
 ```
 
 最初，431080 参数具有一些随机值，但是在训练之后，它们获得一些决定模型性能的值。我们可以评估模型的预测性:
 
-```
+```java
 Evaluation eval = model.evaluate(test);
 logger.info(eval.stats());
 ```
 
 LeNet-5 模型甚至在仅仅一次训练迭代(历元)中就实现了几乎 99%的相当高的准确度。如果我们想要达到更高的精度，我们应该使用简单的`for-loop`进行更多的迭代:
 
-```
+```java
 for (int i = 0; i < epochs; i++) {
     model.fit(train);
     train.reset();
@@ -168,14 +168,14 @@ for (int i = 0; i < epochs; i++) {
 
 现在，由于我们训练了该模型，并且我们对其在测试数据上的预测感到满意，我们可以在一些全新的输入上尝试该模型。为此，让我们创建一个新的类`MnistPrediction`，在这个类中，我们将从文件系统中选择的一个文件中加载一个图像:
 
-```
+```java
 INDArray image = new NativeImageLoader(height, width, channels).asMatrix(file);
 new ImagePreProcessingScaler(0, 1).transform(image);
 ```
 
 变量`image`包含我们被缩小到 28×28 灰度的图片。我们可以把它输入到我们的模型中:
 
-```
+```java
 INDArray output = model.output(image);
 ```
 

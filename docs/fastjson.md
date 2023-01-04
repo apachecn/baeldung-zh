@@ -12,7 +12,7 @@
 
 为了开始使用 FastJson，我们首先需要将它添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>fastjson</artifactId>
@@ -26,7 +26,7 @@
 
 让我们定义下面的`Person` Java bean:
 
-```
+```java
 public class Person {
 
     @JSONField(name = "AGE")
@@ -51,7 +51,7 @@ public class Person {
 
 我们可以使用 **`JSON.toJSONString()`** 将 Java 对象转换成 JSON 字符串:
 
-```
+```java
 private List<Person> listOfPersons = new ArrayList<Person>();
 
 @Before
@@ -68,7 +68,7 @@ public void whenJavaList_thanConvertToJsonCorrect() {
 
 这是结果:
 
-```
+```java
 [  
     {  
         "AGE":15,
@@ -87,7 +87,7 @@ public void whenJavaList_thanConvertToJsonCorrect() {
 
 例如，让我们更新 bean 并添加几个字段:
 
-```
+```java
 @JSONField(name="AGE", serialize=false)
 private int age;
 
@@ -109,7 +109,7 @@ private Date dateOfBirth;
 
 这是新的结果:
 
-```
+```java
 [
     {
         "FIRST NAME":"Doe",
@@ -126,13 +126,13 @@ private Date dateOfBirth;
 
 FastJson 还支持一个非常有趣的 **`BeanToArray`序列化**特性:
 
-```
+```java
 String jsonOutput= JSON.toJSONString(listOfPersons, SerializerFeature.BeanToArray);
 ```
 
 这种情况下的输出如下所示:
 
-```
+```java
 [
     [
         15,
@@ -151,7 +151,7 @@ String jsonOutput= JSON.toJSONString(listOfPersons, SerializerFeature.BeanToArra
 
 像[的其他 JSON 库](/web/20220815040838/https://www.baeldung.com/java-json)一样，从头开始创建一个 JSON 对象非常简单，只需要组合 **`JSONObject`** 和`**JSONArray**` 对象:
 
-```
+```java
 @Test
 public void whenGenerateJson_thanGenerationCorrect() throws ParseException {
     JSONArray jsonArray = new JSONArray();
@@ -168,7 +168,7 @@ public void whenGenerateJson_thanGenerationCorrect() throws ParseException {
 
 这里是输出的样子:
 
-```
+```java
 [
    {
       "AGE":"10",
@@ -187,7 +187,7 @@ public void whenGenerateJson_thanGenerationCorrect() throws ParseException {
 
 既然我们已经知道了如何从头开始创建 JSON 对象，以及如何将 Java 对象转换成它们的 JSON 表示，那么让我们把重点放在如何解析 JSON 表示上:
 
-```
+```java
 @Test
 public void whenJson_thanConvertToObjectCorrect() {
     Person person = new Person(20, "John", "Doe", new Date());
@@ -205,20 +205,20 @@ public void whenJson_thanConvertToObjectCorrect() {
 
 下面是这个简单测试的输出:
 
-```
+```java
 Person [age=20, fullName=John Doe, dateOfBirth=Wed Jul 20 08:51:12 WEST 2016]
 ```
 
 通过使用`@JSONField`注释中的选项`deserialize`，我们可以忽略特定字段的反序列化，在这种情况下，默认值将自动应用于被忽略的字段:
 
-```
+```java
 @JSONField(name = "DATE OF BIRTH", deserialize=false)
 private Date dateOfBirth;
 ```
 
 这是新创建的对象:
 
-```
+```java
 Person [age=20, fullName=John Doe, dateOfBirth=null]
 ```
 
@@ -228,7 +228,7 @@ Person [age=20, fullName=John Doe, dateOfBirth=null]
 
 在这种情况下，我们可以利用 **`ContextValueFilter`** 对象对转换流进行额外的过滤和自定义处理:
 
-```
+```java
 @Test
 public void givenContextFilter_whenJavaObject_thanJsonCorrect() {
     ContextValueFilter valueFilter = new ContextValueFilter () {
@@ -250,7 +250,7 @@ public void givenContextFilter_whenJavaObject_thanJsonCorrect() {
 
 在这个例子中，我们隐藏了`DATE OF BIRTH`字段，通过强制一个常数值，我们也忽略了所有不是`John`或`Doe:` 的字段
 
-```
+```java
 [
     {
         "FULL NAME":"JOHN DOE",
@@ -267,7 +267,7 @@ FastJson 提供了一套工具，用于在处理任意对象时定制 Json 操�
 
 假设我们有一个编译版本的`Person` Java bean，最初在本文中声明，我们需要对字段命名和基本格式进行一些增强:
 
-```
+```java
 @Test
 public void givenSerializeConfig_whenJavaObject_thanJsonCorrect() {
     NameFilter formatName = new NameFilter() {
@@ -290,7 +290,7 @@ public void givenSerializeConfig_whenJavaObject_thanJsonCorrect() {
 
 这是输出结果:
 
-```
+```java
 [  
     {  
         "full_name":"John Doe",

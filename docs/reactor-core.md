@@ -26,7 +26,7 @@
 
 在我们开始之前，让我们添加我们的 [Maven](https://web.archive.org/web/20220710141727/https://search.maven.org/classic/#search%7Cga%7C1%7C%20(g%3A%22io.projectreactor%22%20AND%20a%3A%22reactor-core%22)%20OR%20(g%3A%22ch.qos.logback%22%20AND%20a%3A%22logback-classic%22)) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.projectreactor</groupId>
     <artifactId>reactor-core</artifactId>
@@ -54,7 +54,7 @@
 
 第一种方法是用`[Flux](https://web.archive.org/web/20220710141727/https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Flux.html).` 它是一个可以发出`0..n` 元素的流。让我们试着创建一个简单的:
 
-```
+```java
 Flux<Integer> just = Flux.just(1, 2, 3, 4);
 ```
 
@@ -64,7 +64,7 @@ Flux<Integer> just = Flux.just(1, 2, 3, 4);
 
 第二种方法是使用一个由`0..1` 元素组成的流`[Mono](https://web.archive.org/web/20220710141727/https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Mono.html),` 。让我们试着实例化一个:
 
-```
+```java
 Mono<Integer> just = Mono.just(1);
 ```
 
@@ -76,7 +76,7 @@ Mono<Integer> just = Mono.just(1);
 
 首先，应该注意到`Flux`和`Mono`都是反应流`[Publisher](https://web.archive.org/web/20220710141727/http://www.reactive-streams.org/reactive-streams-1.0.3-javadoc/org/reactivestreams/Publisher.html)` 接口的实现。这两个类都符合规范，我们可以用这个接口来代替它们:
 
-```
+```java
 Publisher<String> just = Mono.just("foo");
 ```
 
@@ -90,7 +90,7 @@ Publisher<String> just = Mono.just("foo");
 
 让我们使用 `subscribe()` 方法收集流中的所有元素:
 
-```
+```java
 List<Integer> elements = new ArrayList<>();
 
 Flux.just(1, 2, 3, 4)
@@ -106,7 +106,7 @@ assertThat(elements).containsExactly(1, 2, 3, 4);
 
 有了日志记录，我们可以使用它来可视化数据是如何流经我们的流的:
 
-```
+```java
 20:25:19.550 [main] INFO  reactor.Flux.Array.1 - | onSubscribe([Synchronous Fuseable] FluxArray.ArraySubscription)
 20:25:19.553 [main] INFO  reactor.Flux.Array.1 - | request(unbounded)
 20:25:19.553 [main] INFO  reactor.Flux.Array.1 - | onNext(1)
@@ -127,7 +127,7 @@ assertThat(elements).containsExactly(1, 2, 3, 4);
 
 这是作为反应流规范的一部分在`[Subscriber](https://web.archive.org/web/20220710141727/http://www.reactive-streams.org/reactive-streams-1.0.3-javadoc/org/reactivestreams/Subscriber.html)` 接口中布置的流，实际上，这是我们调用`onSubscribe().` 时在幕后实例化的内容。这是一个有用的方法，但是为了更好地理解发生了什么，让我们直接提供一个`Subscriber`接口:
 
-```
+```java
 Flux.just(1, 2, 3, 4)
   .log()
   .subscribe(new Subscriber<Integer>() {
@@ -155,7 +155,7 @@ Flux.just(1, 2, 3, 4)
 
 看起来我们仍然有一些 Java 8 `Stream`做收集的同义词:
 
-```
+```java
 List<Integer> collected = Stream.of(1, 2, 3, 4)
   .collect(toList());
 ```
@@ -174,7 +174,7 @@ List<Integer> collected = Stream.of(1, 2, 3, 4)
 
 我们可以修改我们的`Subscriber` 实现来应用背压。让我们使用`request()`告诉上游一次只发送两个元素:
 
-```
+```java
 Flux.just(1, 2, 3, 4)
   .log()
   .subscribe(new Subscriber<Integer>() {
@@ -206,7 +206,7 @@ Flux.just(1, 2, 3, 4)
 
 现在，如果我们再次运行我们的代码，我们会看到`request(2)` 被调用，接着是两个`onNext()` 调用，然后是`request(2)` 。
 
-```
+```java
 23:31:15.395 [main] INFO  reactor.Flux.Array.1 - | onSubscribe([Synchronous Fuseable] FluxArray.ArraySubscription)
 23:31:15.397 [main] INFO  reactor.Flux.Array.1 - | request(2)
 23:31:15.397 [main] INFO  reactor.Flux.Array.1 - | onNext(1)
@@ -230,7 +230,7 @@ Flux.just(1, 2, 3, 4)
 
 我们可以执行的一个简单操作是应用转换。在这种情况下，让我们将流中的所有数字加倍:
 
-```
+```java
 Flux.just(1, 2, 3, 4)
   .log()
   .map(i -> i * 2)
@@ -243,7 +243,7 @@ Flux.just(1, 2, 3, 4)
 
 然后，我们可以通过将另一个流与这个流相结合来使事情变得更有趣。让我们通过使用`zip()` 函数`:`来尝试一下
 
-```
+```java
 Flux.just(1, 2, 3, 4)
   .log()
   .map(i -> i * 2)
@@ -260,7 +260,7 @@ assertThat(elements).containsExactly(
 
 在这里，我们创建了另一个`Flux`,它一直递增 1，并与原来的那个一起流式传输。通过检查日志，我们可以看到这些是如何协同工作的:
 
-```
+```java
 20:04:38.064 [main] INFO  reactor.Flux.Array.1 - | onSubscribe([Synchronous Fuseable] FluxArray.ArraySubscription)
 20:04:38.065 [main] INFO  reactor.Flux.Array.1 - | onNext(1)
 20:04:38.066 [main] INFO  reactor.Flux.Range.2 - | onSubscribe([Synchronous Fuseable] FluxRange.RangeSubscription)
@@ -288,7 +288,7 @@ assertThat(elements).containsExactly(
 
 产生热流的一种方法是将冷流转换成热流。让我们创建一个持久的`Flux`，将结果输出到控制台，这将模拟来自外部资源的无限数据流:
 
-```
+```java
 ConnectableFlux<Object> publish = Flux.create(fluxSink -> {
     while(true) {
         fluxSink.next(System.currentTimeMillis());
@@ -299,14 +299,14 @@ ConnectableFlux<Object> publish = Flux.create(fluxSink -> {
 
 通过调用`publish()` ,我们得到一个`[ConnectableFlux](https://web.archive.org/web/20220710141727/https://projectreactor.io/docs/core/release/api/reactor/core/publisher/ConnectableFlux.html).` ,这意味着调用`subscribe()`不会导致它开始发射，允许我们添加多个订阅:
 
-```
+```java
 publish.subscribe(System.out::println);        
 publish.subscribe(System.out::println);
 ```
 
 如果我们尝试运行这段代码，什么也不会发生。直到我们调用`connect(),` 时，`Flux`才会开始发射:
 
-```
+```java
 publish.connect();
 ```
 
@@ -314,7 +314,7 @@ publish.connect();
 
 如果我们运行我们的代码，我们的控制台将被日志淹没。这是在模拟一种情况，向我们的消费者传递了太多的数据。让我们试着用节流来解决这个问题:
 
-```
+```java
 ConnectableFlux<Object> publish = Flux.create(fluxSink -> {
     while(true) {
         fluxSink.next(System.currentTimeMillis());
@@ -332,7 +332,7 @@ ConnectableFlux<Object> publish = Flux.create(fluxSink -> {
 
 我们上面的所有例子目前都运行在主线程上。然而，如果我们愿意，我们可以控制我们的代码在哪个线程上运行。 [`Scheduler`](https://web.archive.org/web/20220710141727/https://projectreactor.io/docs/core/release/api/reactor/core/scheduler/Scheduler.html) 接口提供了异步代码的抽象，为我们提供了许多实现。让我们尝试订阅不同的线程来维护:
 
-```
+```java
 Flux.just(1, 2, 3, 4)
   .log()
   .map(i -> i * 2)
@@ -342,7 +342,7 @@ Flux.just(1, 2, 3, 4)
 
 调度程序将导致我们的订阅在不同的线程上运行，我们可以通过查看日志来证明这一点。我们看到第一个条目来自于`main`线程，而 Flux 在另一个叫做`parallel-1`的线程中运行。
 
-```
+```java
 20:03:27.505 [main] DEBUG reactor.util.Loggers$LoggerFactory - Using Slf4j logging framework
 20:03:27.529 [parallel-1] INFO  reactor.Flux.Array.1 - | onSubscribe([Synchronous Fuseable] FluxArray.ArraySubscription)
 20:03:27.531 [parallel-1] INFO  reactor.Flux.Array.1 - | request(unbounded)

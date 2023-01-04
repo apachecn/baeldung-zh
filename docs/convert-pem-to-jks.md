@@ -16,7 +16,7 @@ JKS 是一种特定于 Java 的文件格式，在 Java 8 之前是密匙库的�
 
 此外，PEM 文件可以包含一个或多个实例，每个实例由纯文本页眉和页脚分隔:
 
-```
+```java
 -----BEGIN CERTIFICATE-----
 
 // base64 encoded
@@ -34,7 +34,7 @@ JKS 是一种特定于 Java 的文件格式，在 Java 8 之前是密匙库的�
 
 **我们首先使用`openssl`** 生成两个文件`key.pem`和`cert.pem`:
 
-```
+```java
 openssl req -newkey rsa:2048 -x509 -keyout key.pem -out cert.pem -days 365 
 ```
 
@@ -53,19 +53,19 @@ openssl req -newkey rsa:2048 -x509 -keyout key.pem -out cert.pem -days 365 
 
 让我们**将 PEM 转换成 PKCS12 格式**:
 
-```
+```java
 openssl pkcs12 -export -in cert.pem -inkey key.pem -out certificate.p12 -name "certificate"
 ```
 
 命令运行时，系统会提示我们输入之前为 `key.pem`创建的密码:
 
-```
+```java
 Enter pass phrase for key.pem:
 ```
 
 然后我们会看到提示要求输入`certificate.p12`的新密码:
 
-```
+```java
 Enter Export Password:
 ```
 
@@ -75,25 +75,25 @@ Enter Export Password:
 
 最后一步是将 PKCS12 转换为 JKS 格式:
 
-```
+```java
 keytool -importkeystore -srckeystore certificate.p12 -srcstoretype pkcs12 -destkeystore cert.jks
 ```
 
 当命令执行时，它会提示为` cert.jks`文件输入一个新密码:
 
-```
+```java
 Enter destination keystore password:
 ```
 
 它会提示我们输入之前创建的`certificate.p12`密码:
 
-```
+```java
 Enter source keystore password:
 ```
 
 然后，我们应该会看到最终的输出:
 
-```
+```java
 Entry for alias certificate successfully imported.
 Import command completed: 1 entries successfully imported, 0 entries failed or cancelled
 ```

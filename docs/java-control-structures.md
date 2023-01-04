@@ -20,7 +20,7 @@
 
 虽然`if`可以单独使用，但最常见的使用场景是使用`if/else`在两条路径之间进行选择:
 
-```
+```java
 if (count > 2) {
     System.out.println("Count is higher than 2");
 } else {
@@ -38,7 +38,7 @@ if (count > 2) {
 
 让我们再看看我们的`if/else`例子:
 
-```
+```java
 if (count > 2) {
     System.out.println("Count is higher than 2");
 } else {
@@ -48,7 +48,7 @@ if (count > 2) {
 
 我们可以用三元组来重构它，如下所示:
 
-```
+```java
 System.out.println(count > 2 ? "Count is higher than 2" : "Count is lower or equal than 2");
 ```
 
@@ -60,7 +60,7 @@ System.out.println(count > 2 ? "Count is higher than 2" : "Count is lower or equ
 
 让我们再看一个简单的例子:
 
-```
+```java
 int count = 3;
 switch (count) {
 case 0:
@@ -85,7 +85,7 @@ default:
 
 让我们来看一个比较`for`和`while`类型循环的快速示例:
 
-```
+```java
 for (int i = 1; i <= 50; i++) {
     methodToRepeat();
 }
@@ -105,7 +105,7 @@ while (whileCounter <= 50) {
 
 让我们看一个简单的例子:
 
-```
+```java
 List<String> names = getNameList();
 String name = "John Doe";
 int index = 0;
@@ -124,7 +124,7 @@ for ( ; index < names.length; index++) {
 
 简单来说， [`continue`](/web/20221126221703/https://www.baeldung.com/java-continue-and-break) **的意思是跳过我们所在的循环的其余部分:**
 
-```
+```java
 List<String> names = getNameList();
 String name = "John Doe";
 String list = "";

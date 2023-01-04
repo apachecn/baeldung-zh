@@ -14,7 +14,7 @@
 
 为此，我们将使用以下代码所示的简单模型:
 
-```
+```java
 public class Book {
     private long id;
 
@@ -32,7 +32,7 @@ public class Book {
 
 让我们来看看下面这个返回`allBooks`页面的`Controller`方法:
 
-```
+```java
 @GetMapping("/all")
 public String showAll(Model model) {
     model.addAttribute("books", bookService.findAll());
@@ -42,7 +42,7 @@ public String showAll(Model model) {
 
 这里，我们添加了`Book`对象的`List`作为发送到视图的模型属性，我们将使用 HTML 表显示它:
 
-```
+```java
 <table>
     <thead>
         <tr>
@@ -70,7 +70,7 @@ public String showAll(Model model) {
 
 相反，**我们必须添加一个包装器对象来保存提交的列表:**
 
-```
+```java
 public class BooksCreationDto {
     private List<Book> books;
 
@@ -88,7 +88,7 @@ public class BooksCreationDto {
 
 首先，我们将准备表单页面，将我们的命令对象作为一个`Model`属性传递:
 
-```
+```java
 @GetMapping("/create")
 public String showCreateForm(Model model) {
     BooksCreationDto booksForm = new BooksCreationDto();
@@ -106,7 +106,7 @@ public String showCreateForm(Model model) {
 
 接下来，我们需要将表单添加到百里香页面:
 
-```
+```java
 <form action="#" th:action="@{/books/save}" th:object="${form}"
   method="post">
     <fieldset>
@@ -138,7 +138,7 @@ public String showCreateForm(Model model) {
 
 下一件值得注意的事情是，我们使用选择表达式来访问列表:
 
-```
+```java
 <tr th:each="book, itemStat : *{books}">
 ```
 
@@ -146,13 +146,13 @@ public String showCreateForm(Model model) {
 
 然而，我们还需要使用`itemStat` 变量来定义我们引用的列表元素，如:
 
-```
+```java
 th:field="*{books[__${itemStat.index}__].title}"
 ```
 
 最后一步实际上是在后端操作提交的数据。我们将在控制器的`@PostMapping`方法中使用命令对象作为`@ModelAttribute`，保存检索到的图书列表，并将所有现有图书返回给用户:
 
-```
+```java
 @PostMapping("/save")
 public String saveBooks(@ModelAttribute BooksCreationDto form, Model model) {
     bookService.saveAll(form.getBooks());
@@ -170,7 +170,7 @@ public String saveBooks(@ModelAttribute BooksCreationDto form, Model model) {
 
 对于这个例子，我们首先将所有现有的书籍加载到命令对象中:
 
-```
+```java
 @GetMapping("/edit")
 public String showEditForm(Model model) {
     List<Book> books = new ArrayList<>();
@@ -183,7 +183,7 @@ public String showEditForm(Model model) {
 
 HTML 页面是相似的，最值得注意的区别在`th:each`块中:
 
-```
+```java
 <tr th:each="book, itemStat : ${form.books}">
     <td>
         <input hidden th:name="|books[${itemStat.index}].id|" th:value="${book.getId()}"/>

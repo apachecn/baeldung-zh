@@ -12,7 +12,7 @@
 
 首先，让我们设置一个`Spring Boot`项目，因为它通过将`spring-boot-parent`依赖项添加到`pom.xml`中，使得配置`Spring Data`更快:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -23,7 +23,7 @@
 
 显然，我们还需要`vavr`依赖项，以及其他一些用于`Spring Data`和测试的依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.vavr</groupId>
     <artifactId>vavr</artifactId>
@@ -47,7 +47,7 @@
 
 在这个例子中，我们只使用了`Spring Boot`，因为它提供了`Spring Data`自动配置。如果您在一个非`Boot`项目中工作，您可以直接添加`spring-data-commons`依赖项和`Vavr`支持:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-commons</artifactId>
@@ -61,7 +61,7 @@
 
 首先，让我们创建一个简单的实体类来操作:
 
-```
+```java
 @Entity
 public class User {
 
@@ -77,7 +77,7 @@ public class User {
 
 接下来，让我们通过实现`Repository`接口并定义两个查询方法来创建`JPA`存储库:
 
-```
+```java
 public interface VavrUserRepository extends Repository<User, Long> {
 
     Option<User> findById(long id);
@@ -92,7 +92,7 @@ public interface VavrUserRepository extends Repository<User, Long> {
 
 我们还需要一个主`Spring Boot`类来自动配置`Spring Data`并引导我们的应用程序:
 
-```
+```java
 @SpringBootApplication
 public class Application {
     public static void main(String[] args) {
@@ -107,7 +107,7 @@ public class Application {
 
 让我们添加一个 JUnit 测试来验证我们的存储库方法:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 public class VavrRepositoryIntegrationTest {

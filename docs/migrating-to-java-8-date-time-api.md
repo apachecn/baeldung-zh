@@ -48,7 +48,7 @@ Java 8 引入了一个全新的日期时间 API ( `java.util.time.*`)，它大�
 
 所有的变异方法可以链接在一起，允许在一行代码中实现复杂的转换。
 
-```
+```java
 ZonedDateTime nextFriday = LocalDateTime.now()
   .plusHours(1)
   .with(TemporalAdjusters.next(DayOfWeek.FRIDAY))
@@ -61,7 +61,7 @@ ZonedDateTime nextFriday = LocalDateTime.now()
 
 **获取当前时间**
 
-```
+```java
 // Old
 Date now = new Date();
 
@@ -71,7 +71,7 @@ ZonedDateTime now = ZonedDateTime.now();
 
 **代表特定时间**
 
-```
+```java
 // Old
 Date birthDay = new GregorianCalendar(1990, Calendar.DECEMBER, 15).getTime();
 
@@ -81,7 +81,7 @@ LocalDate birthDay = LocalDate.of(1990, Month.DECEMBER, 15);
 
 **提取特定字段**
 
-```
+```java
 // Old
 int month = new GregorianCalendar().get(Calendar.MONTH);
 
@@ -91,7 +91,7 @@ Month month = LocalDateTime.now().getMonth();
 
 **加减时间**
 
-```
+```java
 // Old
 GregorianCalendar calendar = new GregorianCalendar();
 calendar.add(Calendar.HOUR_OF_DAY, -5);
@@ -103,7 +103,7 @@ LocalDateTime fiveHoursBefore = LocalDateTime.now().minusHours(5);
 
 **更改特定字段**
 
-```
+```java
 // Old
 GregorianCalendar calendar = new GregorianCalendar();
 calendar.set(Calendar.MONTH, Calendar.JUNE);
@@ -117,7 +117,7 @@ LocalDateTime inJune = LocalDateTime.now().withMonth(Month.JUNE.getValue());
 
 截断会重置所有小于指定字段的时间字段。在下面的例子中，分钟和下面的一切都将被设置为零
 
-```
+```java
 // Old
 Calendar now = Calendar.getInstance();
 now.set(Calendar.MINUTE, 0);
@@ -131,7 +131,7 @@ LocalTime truncated = LocalTime.now().truncatedTo(ChronoUnit.HOURS);
 
 **时区转换**
 
-```
+```java
 // Old
 GregorianCalendar calendar = new GregorianCalendar();
 calendar.setTimeZone(TimeZone.getTimeZone("CET"));
@@ -143,7 +143,7 @@ ZonedDateTime centralEastern = LocalDateTime.now().atZone(ZoneId.of("CET"));
 
 **获取两个时间点之间的时间跨度**
 
-```
+```java
 // Old
 GregorianCalendar calendar = new GregorianCalendar();
 Date now = new Date();
@@ -161,7 +161,7 @@ Duration span = Duration.between(now, hourLater);
 
 DateTimeFormatter 替代了旧的 SimpleDateFormat，它是线程安全的，并提供了附加功能。
 
-```
+```java
 // Old
 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 Date now = new Date();
@@ -177,7 +177,7 @@ LocalDate parsedDate = LocalDate.parse(formattedDate, formatter);
 
 **一个月的天数**
 
-```
+```java
 // Old
 Calendar calendar = new GregorianCalendar(1990, Calendar.FEBRUARY, 20);
 int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -192,7 +192,7 @@ int daysInMonth = YearMonth.of(1990, 2).lengthOfMonth();
 
 在 Java 8 中，旧的日期库类被扩展了一些方法，这些方法把它们转换成新的日期 API 中相应的对象。新的类提供了相似的功能。
 
-```
+```java
 Instant instantFromCalendar = GregorianCalendar.getInstance().toInstant();
 ZonedDateTime zonedDateTimeFromCalendar = new GregorianCalendar().toZonedDateTime();
 Date dateFromInstant = Date.from(Instant.now());

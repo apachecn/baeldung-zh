@@ -18,7 +18,7 @@
 
 让我们通过创建一个`Worker` 并使用一个`CountDownLatch` 字段在它完成时发出信号来尝试这种模式:
 
-```
+```java
 public class Worker implements Runnable {
     private List<String> outputScraper;
     private CountDownLatch countDownLatch;
@@ -39,7 +39,7 @@ public class Worker implements Runnable {
 
 然后，让我们创建一个测试来证明我们可以让`CountDownLatch` 等待`Worker` 实例完成:
 
-```
+```java
 @Test
 public void whenParallelProcessing_thenMainThreadWillBlockUntilCompletion()
   throws InterruptedException {
@@ -79,7 +79,7 @@ public void whenParallelProcessing_thenMainThreadWillBlockUntilCompletion()
 
 让我们修改我们的`run()`方法，让它在处理之前阻塞:
 
-```
+```java
 public class WaitingWorker implements Runnable {
 
     private List<String> outputScraper;
@@ -117,7 +117,7 @@ public class WaitingWorker implements Runnable {
 
 现在，让我们修改我们的测试，让它阻塞，直到所有的`Workers` 都已经启动，解除阻塞`Workers,` ，然后阻塞，直到`Workers`已经完成:
 
-```
+```java
 @Test
 public void whenDoingLotsOfThreadsInParallel_thenStartThemAtTheSameTime()
  throws InterruptedException {
@@ -158,7 +158,7 @@ public void whenDoingLotsOfThreadsInParallel_thenStartThemAtTheSameTime()
 
 有时，我们可能会遇到这样的情况，在倒计数`CountDownLatch.` 之前`Workers`错误地终止，这可能导致它永远不会到达零，并且`await()`永远不会终止:
 
-```
+```java
 @Override
 public void run() {
     if (true) {
@@ -171,7 +171,7 @@ public void run() {
 
 让我们修改我们之前的测试，使用一个`BrokenWorker,` 来展示`await()` 将如何永远阻塞:
 
-```
+```java
 @Test
 public void whenFailingToParallelProcess_thenMainThreadShouldGetNotGetStuck()
   throws InterruptedException {
@@ -192,7 +192,7 @@ public void whenFailingToParallelProcess_thenMainThreadShouldGetNotGetStuck()
 
 为了解决这个问题，让我们在对`await().`的调用中添加一个超时参数
 
-```
+```java
 boolean completed = countDownLatch.await(3L, TimeUnit.SECONDS);
 assertThat(completed).isFalse();
 ```

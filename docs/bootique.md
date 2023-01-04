@@ -12,7 +12,7 @@
 
 让我们开始使用`Bootique`，将下面的依赖项添加到`pom.xml:`中
 
-```
+```java
 <dependency>
     <groupId>io.bootique.jersey</groupId>
     <artifactId>bootique-jersey</artifactId>
@@ -27,7 +27,7 @@
 
 但是，`Bootique`也需要申报几个`BOM (“Bill of Material”)`进口。这就是为什么需要在`pom.xml:`中增加以下`<dependencyManagement>`部分的原因
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -45,7 +45,7 @@
 
 为了构建一个可运行的 jar，`Bootique`依赖于 [maven-shade-plugin](https://web.archive.org/web/20221128114922/https://maven.apache.org/plugins/maven-shade-plugin/) 。这就是为什么我们还需要添加以下配置:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -60,7 +60,7 @@
 
 启动`Bootique`应用程序最简单的方法是从主方法中调用`[Bootique](https://web.archive.org/web/20221128114922/https://github.com/bootique/bootique/blob/master/bootique/src/main/java/io/bootique/Bootique.java)`的`exec()`方法:
 
-```
+```java
 public class App {
     public static void main(String[] args) {
         Bootique.app(args)
@@ -72,7 +72,7 @@ public class App {
 
 **然而，这不会启动嵌入式服务器。**一旦运行以上代码，将显示以下日志:
 
-```
+```java
 NAME
       com.baeldung.bootique.App
 
@@ -102,7 +102,7 @@ OPTIONS
 
 为了了解其工作原理，让我们创建一个接口:
 
-```
+```java
 public interface HelloService {
     boolean save();
 }
@@ -110,7 +110,7 @@ public interface HelloService {
 
 现在，我们需要创建一个实现:
 
-```
+```java
 public class HelloServiceImpl implements HelloService {
 
     @Override
@@ -126,7 +126,7 @@ public class HelloServiceImpl implements HelloService {
 
 这里，我们可以使用`Guice`的`[Module](https://web.archive.org/web/20221128114922/https://google.github.io/guice/api-docs/latest/javadoc/index.html?com/google/inject/Module.html)`接口来绑定实例:
 
-```
+```java
 public class ModuleBinder implements Module {
 
     @Override
@@ -140,7 +140,7 @@ public class ModuleBinder implements Module {
 
 一旦定义了模块，我们需要将这个定制模块映射到`Bootique`实例:
 
-```
+```java
 Bootique
   .app(args)
     .module(module)
@@ -153,7 +153,7 @@ Bootique
 
 这里，我们需要做的就是用`BQModuleProvider`定义前面创建的模块绑定器:
 
-```
+```java
 public class ModuleProvider implements BQModuleProvider {
 
     @Override
@@ -167,13 +167,13 @@ public class ModuleProvider implements BQModuleProvider {
 
 我们只需要在`/resources/META-INF/services/io.bootique.BQModuleProvider`中创建一个文件，写下`ModuleProvider`的全名，包括包名，剩下的由`Bootique`负责:
 
-```
+```java
 com.baeldung.bootique.module.ModuleProvider
 ```
 
 现在，我们可以使用`[@Inject](https://web.archive.org/web/20221128114922/https://google.github.io/guice/api-docs/latest/javadoc/index.html?com/google/inject/Inject.html)`注释在运行时使用服务实例:
 
-```
+```java
 @Inject
 HelloService helloService;
 ```
@@ -184,7 +184,7 @@ HelloService helloService;
 
 使用 JAX-RS API 创建 REST 端点很简单:
 
-```
+```java
 @Path("/")
 public class IndexController {
 
@@ -202,7 +202,7 @@ public class IndexController {
 
 为了将端点映射到`Bootique`自己的`Jersey`实例中，我们需要定义一个 [`JerseyModule`](https://web.archive.org/web/20221128114922/https://github.com/bootique/bootique-jersey/blob/master/bootique-jersey/src/main/java/io/bootique/jersey/JerseyModule.java) :
 
-```
+```java
 Module module = binder -> JerseyModule
   .extend(binder)
   .addResource(IndexController.class);
@@ -214,7 +214,7 @@ Module module = binder -> JerseyModule
 
 例如，如果我们想在自定义端口上启动应用程序，并添加默认的 URI 上下文“hello ”,我们可以使用以下 YAML 配置:
 
-```
+```java
 jetty:
     context: /hello
     connector:
@@ -223,7 +223,7 @@ jetty:
 
 现在，在启动应用程序时，我们需要在 config 参数中提供这个文件的位置:
 
-```
+```java
 --config=/home/baeldung/bootique/config.yml
 ```
 
@@ -231,7 +231,7 @@ jetty:
 
 开箱即用的`Bootique`带有一个 [`bootique-logback`](https://web.archive.org/web/20221128114922/http://bootique.io/docs/0/bootique-logback-docs/) 模块。要使用该模块，我们需要在`pom.xml`中添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.bootique.logback</groupId>
     <artifactId>bootique-logback</artifactId>
@@ -240,7 +240,7 @@ jetty:
 
 这个模块带有一个`[BootLogger](https://web.archive.org/web/20221128114922/https://github.com/bootique/bootique/blob/master/bootique/src/main/java/io/bootique/log/BootLogger.java)`接口，我们可以覆盖它来实现自定义日志记录:
 
-```
+```java
 Bootique.app(args)
   .module(module)
   .module(ModuleBinder.class)
@@ -266,7 +266,7 @@ Bootique.app(args)
 
 此外，我们可以在`config.yaml`文件中定义日志配置信息:
 
-```
+```java
 log:
     level: warn
     appenders:
@@ -285,21 +285,21 @@ log:
 
 使用 [`BQTestFactory`](https://web.archive.org/web/20221128114922/https://github.com/bootique/bootique/blob/master/bootique-test/src/main/java/io/bootique/test/junit/BQTestFactory.java) 可以初始化“前台”环境:
 
-```
+```java
 @Rule
 public BQTestFactory bqTestFactory = new BQTestFactory();
 ```
 
 使用 [`BQDaemonTestFactory`](https://web.archive.org/web/20221128114922/https://github.com/bootique/bootique/blob/master/bootique-test/src/main/java/io/bootique/test/junit/BQDaemonTestFactory.java) 可以初始化“后台”环境:
 
-```
+```java
 @Rule
 public BQDaemonTestFactory bqDaemonTestFactory = new BQDaemonTestFactory();
 ```
 
 一旦环境工厂准备就绪，我们就可以编写简单的测试用例来测试服务:
 
-```
+```java
 @Test
 public void givenService_expectBoolen() {
     BQRuntime runtime = bqTestFactory

@@ -28,7 +28,7 @@
 
 让我们定义方法签名:
 
-```
+```java
 public List<Coordinate> solve(Maze maze) {
 }
 ```
@@ -67,14 +67,14 @@ public List<Coordinate> solve(Maze maze) {
 
 首先，我们需要明确四个方向。我们可以用坐标来定义。当将这些坐标添加到任何给定的坐标时，将返回相邻坐标之一:
 
-```
+```java
 private static int[][] DIRECTIONS 
   = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } }; 
 ```
 
 我们还需要一个实用方法来添加两个坐标:
 
-```
+```java
 private Coordinate getNextCoordinate(
   int row, int col, int i, int j) {
     return new Coordinate(row + i, col + j);
@@ -83,7 +83,7 @@ private Coordinate getNextCoordinate(
 
 我们现在可以定义方法签名`solve.` **这里的逻辑很简单**——如果有从入口到出口的路径，那么返回该路径，否则，返回一个空列表:
 
-```
+```java
 public List<Coordinate> solve(Maze maze) {
     List<Coordinate> path = new ArrayList<>();
     if (
@@ -106,7 +106,7 @@ public List<Coordinate> solve(Maze maze) {
 
 最后，如果找不到出口，我们递归地向所有方向移动:
 
-```
+```java
 private boolean explore(
   Maze maze, int row, int col, List<Coordinate> path) {
     if (
@@ -174,7 +174,7 @@ private boolean explore(
 
 让我们首先定义一个实用方法，从一个给定的节点回溯到它的根。一旦找到出口，这将用于跟踪路径:
 
-```
+```java
 private List<Coordinate> backtrackPath(
   Coordinate cur) {
     List<Coordinate> path = new ArrayList<>();
@@ -193,7 +193,7 @@ private List<Coordinate> backtrackPath(
 
 我们只做一点小小的修改。代替递归遍历，我们将使用 FIFO 数据结构来跟踪邻居并迭代它们:
 
-```
+```java
 public List<Coordinate> solve(Maze maze) {
     LinkedList<Coordinate> nextToVisit 
       = new LinkedList<>();

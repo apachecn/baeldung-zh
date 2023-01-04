@@ -14,7 +14,7 @@
 
 对于开发，我们需要以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-test</artifactId>
@@ -43,7 +43,7 @@
 
 让我们创建一个简单的`Student` 类，它将被标记为一个实体:
 
-```
+```java
 @Entity
 public class Student {
 
@@ -58,7 +58,7 @@ public class Student {
 
 接下来，让我们基于 Spring 数据 JPA 创建一个存储库接口:
 
-```
+```java
 public interface StudentRepository extends JpaRepository<Student, Long> {
 }
 ```
@@ -77,7 +77,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 让我们在`src/main/resources`文件夹中创建一个`persistence-student.properties`文件，它定义了 MySQL 数据源的属性:
 
-```
+```java
 dbc.driverClassName=com.mysql.jdbc.Driver
 jdbc.url=jdbc:mysql://localhost:3306/myDb
 jdbc.user=tutorialuser
@@ -91,7 +91,7 @@ hibernate.hbm2ddl.auto=create-drop
 
 因为我们想要使用内存数据库进行测试，所以我们将在`src/test/resources`文件夹中创建一个具有相同名称的类似文件，包含具有相同关键字和`H2`数据库特定值的属性:
 
-```
+```java
 jdbc.driverClassName=org.h2.Driver
 jdbc.url=jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1
 
@@ -105,7 +105,7 @@ hibernate.hbm2ddl.auto=create
 
 让我们创建一个`@Configuration`类，它搜索名为`persistence-student.properties`的文件作为属性源，并使用其中定义的数据库属性创建一个`DataSource`:
 
-```
+```java
 @Configuration
 @EnableJpaRepositories(basePackages = "com.baeldung.persistence.dao")
 @PropertySource("persistence-student.properties")
@@ -138,7 +138,7 @@ public class StudentJpaConfig {
 
 让我们基于上述配置编写一个简单的 JUnit 测试，它使用`StudentRepository` 来保存和检索一个`Student` 实体:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
   classes = { StudentJpaConfig.class }, 
@@ -162,7 +162,7 @@ public class InMemoryDBTest {
 
 **我们的测试将以完全独立的方式运行** —它将创建一个内存中的`H2`数据库，执行语句，然后关闭连接并删除数据库，正如我们在日志中看到的:
 
-```
+```java
 INFO: HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
 Hibernate: drop table Student if exists
 Hibernate: create table Student (id bigint not null, name varchar(255), primary key (id))

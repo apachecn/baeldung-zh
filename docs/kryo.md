@@ -12,7 +12,7 @@ Kryo 是一个专注于速度、效率和用户友好的 API 的 Java 序列化�
 
 我们需要做的第一件事是将`kryo`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.esotericsoftware</groupId>
     <artifactId>kryo</artifactId>
@@ -40,7 +40,7 @@ Kryo 是一个专注于速度、效率和用户友好的 API 的 Java 序列化�
 
 在深入示例之前，让我们首先创建一个实用方法来初始化一些变量，我们将在本文的每个测试用例中使用这些变量:
 
-```
+```java
 @Before
 public void init() {
     kryo = new Kryo();
@@ -51,7 +51,7 @@ public void init() {
 
 现在，我们可以看看使用 Kryo 读写一个对象是多么容易:
 
-```
+```java
 @Test
 public void givenObject_whenSerializing_thenReadCorrectly() {
     Object someObject = "Some string";
@@ -70,7 +70,7 @@ public void givenObject_whenSerializing_thenReadCorrectly() {
 
 序列化多个对象同样简单:
 
-```
+```java
 @Test
 public void givenObjects_whenSerializing_thenReadCorrectly() {
     String someString = "Multiple Objects";
@@ -103,7 +103,7 @@ public void givenObjects_whenSerializing_thenReadCorrectly() {
 
 让我们看看这个是什么样子的。首先，让我们创建一个`Person`类:
 
-```
+```java
 public class Person {
     private String name = "John Doe";
     private int age = 18;
@@ -115,7 +115,7 @@ public class Person {
 
 现在，让我们从这个类中编写一个对象，然后读回它:
 
-```
+```java
 @Test
 public void givenPerson_whenSerializing_thenReadCorrectly() {
     Person person = new Person();
@@ -138,7 +138,7 @@ public void givenPerson_whenSerializing_thenReadCorrectly() {
 
 为了演示第一个选项，让我们创建一个扩展`Serializer`的类:
 
-```
+```java
 public class PersonSerializer extends Serializer<Person> {
 
     public void write(Kryo kryo, Output output, Person object) {
@@ -164,7 +164,7 @@ public class PersonSerializer extends Serializer<Person> {
 
 现在，让我们来测试一下:
 
-```
+```java
 @Test
 public void givenPerson_whenUsingCustomSerializer_thenReadCorrectly() {
     Person person = new Person();
@@ -186,7 +186,7 @@ public void givenPerson_whenUsingCustomSerializer_thenReadCorrectly() {
 
 我们还可以使用`@DefaultSerializer`注释来让 Kryo 知道，每当它需要处理一个`Person`对象时，我们都要使用`PersonSerializer`。这有助于避免调用`register()`方法:
 
-```
+```java
 @DefaultSerializer(PersonSerializer.class)
 public class Person implements KryoSerializable {
     // ...
@@ -195,7 +195,7 @@ public class Person implements KryoSerializable {
 
 对于第二个选项，让我们修改我们的`Person`类来扩展`KryoSerializable`接口:
 
-```
+```java
 public class Person implements KryoSerializable {
     // ...
 
@@ -219,7 +219,7 @@ public class Person implements KryoSerializable {
 
 下面是一个使用上述序列化程序的示例:
 
-```
+```java
 public class ComplexObject implements Serializable {
     private String name = "Bael";
 
@@ -227,7 +227,7 @@ public class ComplexObject implements Serializable {
 }
 ```
 
-```
+```java
 @Test
 public void givenJavaSerializable_whenSerializing_thenReadCorrectly() {
     ComplexClass complexObject = new ComplexClass();

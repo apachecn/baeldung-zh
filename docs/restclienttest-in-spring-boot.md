@@ -18,7 +18,7 @@ Spring Boot 是一个方便的框架，它提供了许多具有典型设置的�
 
 测试 REST 客户端也是如此。在 Spring Boot 1.4.0 之前，测试 Spring REST 客户端的过程与任何其他基于 Spring 的应用程序没有太大的不同。您将创建一个`MockRestServiceServer`实例，将它绑定到测试中的`RestTemplate`实例，并向它提供对请求的模拟响应，如下所示:
 
-```
+```java
 RestTemplate restTemplate = new RestTemplate();
 
 MockRestServiceServer mockServer =
@@ -43,7 +43,7 @@ mockServer.verify();
 
 首先，您需要确保您的项目使用的是 Spring Boot 1.4.x 或更高版本:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -51,7 +51,7 @@ mockServer.verify();
 </parent>
 ```
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -71,7 +71,7 @@ mockServer.verify();
 
 Spring Boot 带来了自动配置的`RestTemplateBuilder`来简化创建`RestTemplates`，以及匹配的`@RestClientTest`注释来测试用`RestTemplateBuilder`构建的客户端。下面是如何创建一个简单的 REST 客户端，并自动注入`RestTemplateBuilder`:
 
-```
+```java
 @Service
 public class DetailsServiceClient {
 
@@ -98,7 +98,7 @@ public class DetailsServiceClient {
 
 `@RestClientTest`确保 Jackson 和 GSON 支持是自动配置的，还将预先配置的`RestTemplateBuilder`和`MockRestServiceServer`实例添加到上下文中。被测 bean 用`@RestClientTest`注释的`value`或`components`属性指定:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @RestClientTest(DetailsServiceClient.class)
 public class DetailsServiceClientTest {

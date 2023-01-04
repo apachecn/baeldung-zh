@@ -62,7 +62,7 @@
 
 **这个模型的一个具体实现在 Java EE 规范中以`@HttpConstraint`注释及其 XML 等价物**的形式出现。这是注释应用于 servlet 时的典型用法:
 
-```
+```java
 @WebServlet(name="rbac", urlPatterns = {"/protected"})
 @DeclareRoles("USER")
 @ServletSecurity(
@@ -114,7 +114,7 @@ public class RBACController  extends HttpServlet {
 
 Spring Security ACL 库是 ACL 库的一个很好的例子。它使用专用的数据库模式和缓存来实现 ACL，并与 Spring Security 紧密集成。这是一个简短的例子，改编自[我们关于这个库的文章](/web/20220625080741/https://www.baeldung.com/spring-security-acl)，展示了如何在对象级实现访问控制:
 
-```
+```java
 @PreAuthorize("hasPermission(#postMessage, 'WRITE')")
 PostMessage save(@Param("noticeMessage")PostMessage postMessage); 
 ```
@@ -131,7 +131,7 @@ Windows ACLs 非常强大(或者很复杂，这取决于我们向谁提问)，�
 
 XACML 标准可能是这种模型最著名的例子，它使用 XML 文档来描述访问策略。这就是我们如何使用该标准来描述数字钱包取款规则:
 
-```
+```java
 <Policy  
   PolicyId="urn:baeldung:atm:WithdrawalPolicy"
   Version="1.0" 
@@ -162,7 +162,7 @@ XACML 标准可能是这种模型最著名的例子，它使用 XML 文档来描
 
 此`RequestContext`中呈现的信息类型是该模型区别于之前模型的主要方面。例如，在我们的数字钱包应用程序中，为授权取款而构建的请求上下文的 XML 表示:
 
-```
+```java
 <Request 
 
     CombinedDecision="true"
@@ -190,7 +190,7 @@ ABAC 模式的主要优势在于其灵活性。我们可以简单地通过改变
 
 一旦我们建立了 PDP，使用它需要两个步骤。首先，我们创建并填充一个`RequestContext`,其中包含关于我们想要评估的请求的信息:
 
-```
+```java
 ... attribute categories creation omitted
 RequestContext request = RequestContext.builder()
   .attributes(actionCategory,environmentCategory,atmTxCategory)
@@ -201,7 +201,7 @@ RequestContext request = RequestContext.builder()
 
 接下来，我们将这个对象传递给`PolicyDecisionPoint` 服务的`decide()`方法进行评估:
 
-```
+```java
 ResponseContext response = pdp.decide(request);
 assertTrue(response.getDecision() == Decision.DENY); 
 ```

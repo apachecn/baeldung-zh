@@ -26,7 +26,7 @@ Learn how to inject the contents of a resource file into our beans as a String, 
 
 为了从类路径访问资源，我们可以简单地使用`ClassPathResource`:
 
-```
+```java
 public Resource loadEmployeesWithClassPathResource() {
     return new ClassPathResource("data/employees.dat");
 }
@@ -36,13 +36,13 @@ public Resource loadEmployeesWithClassPathResource() {
 
 但是，我们也可以指示类加载器直接使用:
 
-```
+```java
 return new ClassPathResource("data/employees.dat", this.getClass().getClassLoader());
 ```
 
 或间接通过指定的类:
 
-```
+```java
 return new ClassPathResource(
   "data/employees.dat", 
   Employee.class.getClassLoader());
@@ -52,7 +52,7 @@ return new ClassPathResource(
 
 这里需要注意的另一点是，上述方法只适用于绝对路径。如果我们想指定一个相对路径，我们可以传递第二个`class`参数。该路径将相对于此类:
 
-```
+```java
 new ClassPathResource("../../../data/employees.dat", Example.class).getFile();
 ```
 
@@ -62,7 +62,7 @@ new ClassPathResource("../../../data/employees.dat", Example.class).getFile();
 
 我们也可以用`@Value`注入一个`Resource`:
 
-```
+```java
 @Value("classpath:data/resource-data.txt")
 Resource resourceFile;
 ```
@@ -73,14 +73,14 @@ Resource resourceFile;
 
 如果我们想延迟加载我们的资源，我们可以使用`ResourceLoader`:
 
-```
+```java
 @Autowired
 ResourceLoader resourceLoader;
 ```
 
 然后我们用`getResource`检索我们的资源:
 
-```
+```java
 public Resource loadEmployeesWithResourceLoader() {
     return resourceLoader.getResource(
       "classpath:data/employees.dat");
@@ -89,7 +89,7 @@ public Resource loadEmployeesWithResourceLoader() {
 
 还要注意的是，`ResourceLoader`是由所有具体的`ApplicationContext`实现的，这意味着如果`ApplicationContext `更适合我们的情况，我们也可以简单地依赖它:
 
-```
+```java
 ApplicationContext context;
 
 public Resource loadEmployeesWithApplicationContext() {
@@ -103,7 +103,7 @@ public Resource loadEmployeesWithApplicationContext() {
 
 如果我们在代码中看到`ResourceUtils `的用法:
 
-```
+```java
 public File loadEmployeesWithSpringInternalClass() 
   throws FileNotFoundException {
     return ResourceUtils.getFile(
@@ -119,7 +119,7 @@ public File loadEmployeesWithSpringInternalClass()
 
 假设我们在类路径`:`中有下面的文件 `data/employees.dat`
 
-```
+```java
 Joe Employee,Jan Employee,James T. Employee
 ```
 
@@ -127,7 +127,7 @@ Joe Employee,Jan Employee,James T. Employee
 
 现在我们可以通过调用`getFile:`来读取它的内容
 
-```
+```java
 @Test
 public void whenResourceAsFile_thenReadSuccessful() 
   throws IOException {
@@ -150,7 +150,7 @@ public void whenResourceAsFile_thenReadSuccessful()
 
 那么我们可以把一个`Resource`读成一个`InputStream`:
 
-```
+```java
 @Test
 public void whenResourceAsStream_thenReadSuccessful() 
   throws IOException {

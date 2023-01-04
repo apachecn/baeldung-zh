@@ -12,7 +12,7 @@
 
 首先，让我们通过创建一个简单的`Item`类来设置我们的示例:
 
-```
+```java
 public class Item {
     private int id;
     private String name;
@@ -23,7 +23,7 @@ public class Item {
 
 现在，让我们创建我们的控制器:
 
-```
+```java
 @Controller
 public class PathVariablesController {
 
@@ -51,7 +51,7 @@ public class PathVariablesController {
 
 在我们的`index.html`模板中，让我们遍历我们的项目并创建调用`singlePathVariable`方法的链接:
 
-```
+```java
 <div th:each="item : ${items}">
     <a th:href="@{/pathvars/single/{id}(id = ${item.id})}">
         <span th:text="${item.name}"></span>
@@ -61,7 +61,7 @@ public class PathVariablesController {
 
 我们刚刚创建的代码生成了这样的 URL:
 
-```
+```java
 http://localhost:8080/pathvars/single/1
 ```
 
@@ -69,7 +69,7 @@ http://localhost:8080/pathvars/single/1
 
 我们也可以使用串联来达到相同的结果:
 
-```
+```java
 <div th:each="item : ${items}">
     <a th:href="@{'/pathvars/single/' + ${item.id}}">
         <span th:text="${item.name}"></span>
@@ -83,7 +83,7 @@ http://localhost:8080/pathvars/single/1
 
 首先，我们将创建一个`Detail`类，并修改我们的`Item`类以包含它们的列表:
 
-```
+```java
 public class Detail {
     private int id;
     private String description;
@@ -94,13 +94,13 @@ public class Detail {
 
 接下来，我们来添加一个`Detail`到`Item`的列表:
 
-```
+```java
 private List<Detail> details;
 ```
 
 现在，让我们更新控制器，添加一个使用多个`@PathVariable`注释的方法:
 
-```
+```java
 @GetMapping("/pathvars/item/{itemId}/detail/{dtlId}")
 public String multiplePathVariable(@PathVariable("itemId") int itemId, 
   @PathVariable("dtlId") int dtlId, Model model) {
@@ -120,7 +120,7 @@ public String multiplePathVariable(@PathVariable("itemId") int itemId,
 
 最后，让我们修改我们的`index.html`模板，为每个详细记录创建 URL:
 
-```
+```java
 <ul>
     <li th:each="detail : ${item.details}">
         <a th:href="@{/pathvars/item/{itemId}/detail/{dtlId}(itemId = ${item.id}, dtlId = ${dtl.id})}">

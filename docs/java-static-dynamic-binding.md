@@ -16,7 +16,7 @@
 
 例如，让我们创建一个超类`Animal:`
 
-```
+```java
 public class Animal {
 
     static Logger logger = LoggerFactory.getLogger(Animal.class);
@@ -36,7 +36,7 @@ public class Animal {
 
 和子类`Dog`:
 
-```
+```java
 public class Dog extends Animal {
 
     static Logger logger = LoggerFactory.getLogger(Dog.class);
@@ -55,7 +55,7 @@ public class Dog extends Animal {
 
 为了理解这是如何工作的，让我们编写一小段代码来调用这些类及其方法:
 
-```
+```java
 Animal animal = new Animal();
 
 // calling methods of animal object
@@ -70,7 +70,7 @@ dogAnimal.makeNoise();
 The output of the above code will be:
 ```
 
-```
+```java
 com.baeldung.binding.Animal - generic animal noise 
 com.baeldung.binding.Animal - generic animal noise countdown 3
 com.baeldung.binding.Animal - generic animal noise countdown 2
@@ -80,7 +80,7 @@ com.baeldung.binding.Dog - woof woof!
 
 现在，让我们创建一个类:
 
-```
+```java
 class AnimalActivity {
 
     public static void eat(Animal animal) {
@@ -95,13 +95,13 @@ class AnimalActivity {
 
 让我们将这一行添加到主类中:
 
-```
+```java
 AnimalActivity.eat(dogAnimal);
 ```
 
 输出将是:
 
-```
+```java
 com.baeldung.binding.AnimalActivity - Animal is eating
 ```
 

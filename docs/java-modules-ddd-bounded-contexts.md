@@ -31,7 +31,7 @@
 [![](img/808256e4d6529bc9816c6db064ea7229.png)](/web/20220628162506/https://www.baeldung.com/wp-content/uploads/2020/03/OrderContext.svg)
 `CustomerOrder`实体是一个[聚合根](/web/20220628162506/https://www.baeldung.com/spring-persisting-ddd-aggregates):
 
-```
+```java
 public class CustomerOrder {
     private int orderId;
     private String paymentMethod;
@@ -49,7 +49,7 @@ public class CustomerOrder {
 
 接下来，让我们创建`OrderItem`类:
 
-```
+```java
 public class OrderItem {
     private int productId;
     private int quantity;
@@ -60,7 +60,7 @@ public class OrderItem {
 
 我们已经定义了实体，但是我们还需要向应用程序的其他部分公开一些 API。让我们创建`CustomerOrderService`类:
 
-```
+```java
 public class CustomerOrderService implements OrderService {
     public static final String EVENT_ORDER_READY_FOR_SHIPMENT = "OrderReadyForShipmentEvent";
 
@@ -85,7 +85,7 @@ public class CustomerOrderService implements OrderService {
 
 这里，我们要强调一些要点。`placeOrder`方法负责处理客户订单。**订单处理后，事件发布到`EventBus`** 。我们将在下一章讨论事件驱动的通信。该服务提供了`OrderService`接口的默认实现:
 
-```
+```java
 public interface OrderService extends ApplicationService {
     void placeOrder(CustomerOrder order);
 
@@ -95,7 +95,7 @@ public interface OrderService extends ApplicationService {
 
 此外，该服务要求`CustomerOrderRepository`保存订单:
 
-```
+```java
 public interface CustomerOrderRepository {
     void saveCustomerOrder(CustomerOrder order);
 }
@@ -111,7 +111,7 @@ public interface CustomerOrderRepository {
 
 让我们从`ShippableOrder`实体开始:
 
-```
+```java
 public class ShippableOrder {
     private int orderId;
     private String address;
@@ -123,7 +123,7 @@ public class ShippableOrder {
 
 另外，`Parcel`实体特定于运输上下文:
 
-```
+```java
 public class Parcel {
     private int orderId;
     private String address;
@@ -150,7 +150,7 @@ public class Parcel {
 
 最后，我们来定义一下`ParcelShippingService`:
 
-```
+```java
 public class ParcelShippingService implements ShippingService {
     public static final String EVENT_ORDER_READY_FOR_SHIPMENT = "OrderReadyForShipmentEvent";
     private ShippingOrderRepository orderRepository;
@@ -208,7 +208,7 @@ public class ParcelShippingService implements ShippingService {
 
 让我们从`EventBus`界面开始:
 
-```
+```java
 public interface EventBus {
     <E extends ApplicationEvent> void publish(E event);
 
@@ -222,7 +222,7 @@ public interface EventBus {
 
 接下来，我们用默认方法创建一个基本服务接口来支持事件驱动的通信:
 
-```
+```java
 public interface ApplicationService {
 
     default <E extends ApplicationEvent> void publishEvent(E event) {
@@ -268,7 +268,7 @@ Java 平台模块系统(JPMS)鼓励构建更可靠、封装更强的模块。因
 
 让我们从 SharedKernel 模块开始，它对其他模块没有任何依赖性。所以，`module-info.java`看起来像是:
 
-```
+```java
 module com.baeldung.dddmodules.sharedkernel {
     exports com.baeldung.dddmodules.sharedkernel.events;
     exports com.baeldung.dddmodules.sharedkernel.service;
@@ -281,7 +281,7 @@ module com.baeldung.dddmodules.sharedkernel {
 
 接下来，让我们将焦点转移到 OrderContext 模块。它只需要 SharedKernel 模块中定义的接口:
 
-```
+```java
 module com.baeldung.dddmodules.ordercontext {
     requires com.baeldung.dddmodules.sharedkernel;
     exports com.baeldung.dddmodules.ordercontext.service;
@@ -298,7 +298,7 @@ module com.baeldung.dddmodules.ordercontext {
 
 与前面的模块类似，让我们创建 ShippingContext 模块定义文件:
 
-```
+```java
 module com.baeldung.dddmodules.shippingcontext {
     requires com.baeldung.dddmodules.sharedkernel;
     exports com.baeldung.dddmodules.shippingcontext.service;
@@ -315,7 +315,7 @@ module com.baeldung.dddmodules.shippingcontext {
 
 现在是描述基础设施模块的时候了。该模块包含已定义接口的实现细节。我们将从为`EventBus`接口创建一个简单的实现开始:
 
-```
+```java
 public class SimpleEventBus implements EventBus {
     private final Map<String, Set<EventSubscriber>> subscribers = new ConcurrentHashMap<>();
 
@@ -352,7 +352,7 @@ public class SimpleEventBus implements EventBus {
 
 首先，让我们创建一个代表整个持久模型的类:
 
-```
+```java
 public static class PersistenceOrder {
     public int orderId;
     public String paymentMethod;
@@ -372,7 +372,7 @@ public static class PersistenceOrder {
 
 为了简单起见，让我们模拟一个内存数据库:
 
-```
+```java
 public class InMemoryOrderStore implements CustomerOrderRepository, ShippingOrderRepository {
     private Map<Integer, PersistenceOrder> ordersDb = new HashMap<>();
 
@@ -411,7 +411,7 @@ public class InMemoryOrderStore implements CustomerOrderRepository, ShippingOrde
 
 最后，让我们创建模块定义:
 
-```
+```java
 module com.baeldung.dddmodules.infrastructure {
     requires transitive com.baeldung.dddmodules.sharedkernel;
     requires transitive com.baeldung.dddmodules.ordercontext;
@@ -433,7 +433,7 @@ module com.baeldung.dddmodules.infrastructure {
 
 最后，让我们定义一个模块作为应用程序的入口点:
 
-```
+```java
 module com.baeldung.dddmodules.mainapp {
     uses com.baeldung.dddmodules.sharedkernel.events.EventBus;
     uses com.baeldung.dddmodules.ordercontext.service.OrderService;
@@ -456,7 +456,7 @@ module com.baeldung.dddmodules.mainapp {
 
 我们的项目包含[五个模块和父模块](/web/20220628162506/https://www.baeldung.com/maven-multi-module-project-java-jpms)。让我们看看我们的项目结构:
 
-```
+```java
 ddd-modules (the root directory)
 pom.xml
 |-- infrastructure
@@ -500,7 +500,7 @@ pom.xml
 
 现在，除了主应用程序之外，我们已经拥有了一切，所以让我们定义我们的`main`方法:
 
-```
+```java
 public static void main(String args[]) {
     Map<Class<?>, Object> container = createContainer();
     OrderService orderService = (OrderService) container.get(OrderService.class);
@@ -537,7 +537,7 @@ public static void main(String args[]) {
 
 现在，让我们应用加载程序来解决我们的依赖性:
 
-```
+```java
 public static Map<Class<?>, Object> createContainer() {
     EventBus eventBus = ServiceLoader.load(EventBus.class).findFirst().get();
 
@@ -569,7 +569,7 @@ public static Map<Class<?>, Object> createContainer() {
 
 然而，如果我们使用`load`方法请求这些接口中的每一个，我们将得到`InMemoryOrderStore`的不同实例。这不是我们想要的行为，所以让我们使用`provider`方法技术来缓存实例:
 
-```
+```java
 public class InMemoryOrderStore implements CustomerOrderRepository, ShippingOrderRepository {
     private volatile static InMemoryOrderStore instance = new InMemoryOrderStore();
 

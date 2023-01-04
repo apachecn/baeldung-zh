@@ -12,7 +12,7 @@
 
 首先，让我们看看我们的代码。我们将编写一个`User`类:
 
-```
+```java
 public class User {
 
     // implementation details
@@ -22,7 +22,7 @@ public class User {
 
 现在，让我们创建一个扩展了`User`的`Lender`类:
 
-```
+```java
 public class Lender extends User {
 
     // implementation details
@@ -32,7 +32,7 @@ public class Lender extends User {
 
 同样，我们将创建一个扩展了`User`的`Borrower`类:
 
-```
+```java
 public class Borrower extends User {
 
     // implementation details
@@ -44,7 +44,7 @@ public class Borrower extends User {
 
 正如我们所见，`getClass()`表明我们的`lender`对象的类属于`Lender`类型，但不属于`User`类型:
 
-```
+```java
 @Test
 public void givenLender_whenGetClass_thenEqualsLenderType() {
     User lender = new Lender();
@@ -63,7 +63,7 @@ public void givenLender_whenGetClass_thenEqualsLenderType() {
 
 如果我们检查下面的代码，我们会发现代码无法编译:
 
-```
+```java
 @Ignore
 @Test
 public void givenBorrower_whenDoubleOrNotString_thenRequestLoan() {
@@ -83,7 +83,7 @@ public void givenBorrower_whenDoubleOrNotString_thenRequestLoan() {
 
 让我们使用`isInstance()`方法来检查自动装箱的运行情况:
 
-```
+```java
 @Test
 public void givenBorrower_whenLoanAmountIsDouble_thenRequestLoan() {
     Borrower borrower = new Borrower();
@@ -98,7 +98,7 @@ public void givenBorrower_whenLoanAmountIsDouble_thenRequestLoan() {
 
 现在，让我们尝试在运行时评估我们的对象:
 
-```
+```java
 @Test
 public void givenBorrower_whenLoanAmountIsNotString_thenRequestLoan() {
     Borrower borrower = new Borrower();
@@ -113,7 +113,7 @@ public void givenBorrower_whenLoanAmountIsNotString_thenRequestLoan() {
 
 我们也可以使用`isInstance()`到**来验证一个对象在被转换成**之前是否可以被转换成另一个类:
 
-```
+```java
 @Test
 public void givenUser_whenIsInstanceOfLender_thenDowncast() {
     User user = new Lender();
@@ -135,7 +135,7 @@ public void givenUser_whenIsInstanceOfLender_thenDowncast() {
 
 我们可以评估一个`Lender`对象是类型`Lender`还是类型 `User`:
 
-```
+```java
 @Test
 public void givenLender_whenInstanceOf_thenReturnTrue() {
     User lender = new Lender();

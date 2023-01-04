@@ -24,7 +24,7 @@ This short tutorial shows how the Jackson library can be used to serialize Java 
 
 ## 2。Maven 配置
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -42,7 +42,7 @@ This short tutorial shows how the Jackson library can be used to serialize Java 
 
 对于一个简单的例子，让我们创建一个`Map<String, String>`并将其序列化为 JSON:
 
-```
+```java
 Map<String, String> map = new HashMap<>();
 map.put("key", "value");
 
@@ -53,7 +53,7 @@ String jsonResult = mapper.writerWithDefaultPrettyPrinter()
 
 `ObjectMapper` 是杰克逊的序列化映射器。它允许我们序列化我们的`map,`，并使用`String`中的`toString()`方法将它写成一个漂亮的 JSON `String`:
 
-```
+```java
 {
   "key" : "value"
 }
@@ -65,7 +65,7 @@ String jsonResult = mapper.writerWithDefaultPrettyPrinter()
 
 注意:getter/setter 应该是公共的，我们用`@JsonValue` 注释`toString()` 以确保 Jackson 在序列化时使用这个自定义的`toString()`:
 
-```
+```java
 public class MyPair {
 
     private String first;
@@ -83,7 +83,7 @@ public class MyPair {
 
 然后我们会告诉 Jackson 如何通过扩展 Jackson 的`JsonSerializer`来序列化`MyPair`:
 
-```
+```java
 public class MyPairSerializer extends JsonSerializer<MyPair> {
 
     private ObjectMapper mapper = new ObjectMapper();
@@ -105,14 +105,14 @@ public class MyPairSerializer extends JsonSerializer<MyPair> {
 
 接下来，我们用`@JsonSerialize`注释将`MyPairSerializer`应用到我们的`Map<MyPair, String>`。注意，我们只告诉 Jackson 如何序列化`MyPair` ，因为它已经知道如何序列化`String:`
 
-```
+```java
 @JsonSerialize(keyUsing = MyPairSerializer.class) 
 Map<MyPair, String> map;
 ```
 
 然后让我们测试我们的地图序列化:
 
-```
+```java
 map = new HashMap<>();
 MyPair key = new MyPair("Abbott", "Costello");
 map.put(key, "Comedy");
@@ -123,7 +123,7 @@ String jsonResult = mapper.writerWithDefaultPrettyPrinter()
 
 序列化的 JSON 输出是:
 
-```
+```java
 {
   "Abbott and Costello" : "Comedy"
 }
@@ -133,7 +133,7 @@ String jsonResult = mapper.writerWithDefaultPrettyPrinter()
 
 最复杂的情况是序列化一个`Map<Object, Object>`，但是大部分工作已经完成了。让我们使用杰克森的`MapSerializer` 作为我们的映射，使用上一节的`MyPairSerializer,`作为映射的键和值类型:
 
-```
+```java
 @JsonSerialize(keyUsing = MapSerializer.class)
 Map<MyPair, MyPair> map;
 
@@ -146,7 +146,7 @@ MyPair mapValue;
 
 然后让我们测试序列化我们的`Map<MyPair, MyPair>`:
 
-```
+```java
 mapKey = new MyPair("Abbott", "Costello");
 mapValue = new MyPair("Comedy", "1940s");
 map.put(mapKey, mapValue);
@@ -157,7 +157,7 @@ String jsonResult = mapper.writerWithDefaultPrettyPrinter()
 
 使用`MyPair`的`toString()`方法的序列化 JSON 输出是:
 
-```
+```java
 {
   "Abbott and Costello" : "Comedy and 1940s"
 }
@@ -171,7 +171,7 @@ String jsonResult = mapper.writerWithDefaultPrettyPrinter()
 
 举个简单的例子，让我们取一个 JSON 格式的输入字符串，并将其转换成一个`Map<String, String>` Java 集合:
 
-```
+```java
 String jsonInput = "{\"key\": \"value\"}";
 TypeReference<HashMap<String, String>> typeRef 
   = new TypeReference<HashMap<String, String>>() {};
@@ -180,7 +180,7 @@ Map<String, String> map = mapper.readValue(jsonInput, typeRef);
 
 我们使用 Jackson 的`ObjectMapper,`作为序列化，使用`readValue()` 处理输入。此外，请注意我们对 Jackson 的`TypeReference`的使用，我们将在所有的反序列化示例中使用它来描述目的地的类型`Map`。这是我们地图的`toString()` 表示:
 
-```
+```java
 {key=value}
 ```
 
@@ -188,7 +188,7 @@ Map<String, String> map = mapper.readValue(jsonInput, typeRef);
 
 现在让我们将输入 JSON 和目的地的`TypeReference` 改为 `Map<MyPair, String>`:
 
-```
+```java
 String jsonInput = "{\"Abbott and Costello\" : \"Comedy\"}";
 
 TypeReference<HashMap<MyPair, String>> typeRef 
@@ -198,7 +198,7 @@ Map<MyPair,String> map = mapper.readValue(jsonInput, typeRef);
 
 我们需要为`MyPair`创建一个构造函数，它接受带有两个元素的`String`,并将它们解析为`MyPair`元素:
 
-```
+```java
 public MyPair(String both) {
     String[] pairs = both.split("and");
     this.first = pairs[0].trim();
@@ -208,13 +208,13 @@ public MyPair(String both) {
 
 我们的`Map<MyPair,String>`对象的`toString()`是:
 
-```
+```java
 {Abbott and Costello=Comedy}
 ```
 
 **当我们反序列化为包含`Map;` 的 Java 类时，还有另一种选择，我们可以使用 Jackson 的`KeyDeserializer`类**，Jackson 提供的众多[反序列化](https://web.archive.org/web/20220912110321/https://github.com/FasterXML/jackson-databind/blob/master/docs/javadoc/2.3/com/fasterxml/jackson/databind/deser/package-summary.html)类中的一个。让我们用`@JsonCreator`、`@JsonProperty`和`@JsonDeserialize:`来注释我们的`ClassWithAMap`
 
-```
+```java
 public class ClassWithAMap {
 
   @JsonProperty("map")
@@ -232,7 +232,7 @@ public class ClassWithAMap {
 
 在这里，我们告诉 Jackson 对包含在`ClassWithAMap`中的`Map<MyPair, String>` 进行反序列化，所以我们需要扩展`KeyDeserializer` 来描述如何从输入`String`中反序列化 map 的键，一个`MyPair` 对象:
 
-```
+```java
 public class MyPairDeserializer extends KeyDeserializer {
 
   @Override
@@ -248,7 +248,7 @@ public class MyPairDeserializer extends KeyDeserializer {
 
 然后我们可以使用`readValue`测试反序列化:
 
-```
+```java
 String jsonInput = "{\"Abbott and Costello\":\"Comedy\"}";
 
 ClassWithAMap classWithMap = mapper.readValue(jsonInput,
@@ -257,7 +257,7 @@ ClassWithAMap classWithMap = mapper.readValue(jsonInput,
 
 同样，我们的`ClassWithAMap's`映射的`toString()`方法给出了我们期望的输出:
 
-```
+```java
 {Abbott and Costello=Comedy}
 ```
 
@@ -265,7 +265,7 @@ ClassWithAMap classWithMap = mapper.readValue(jsonInput,
 
 最后，让我们将输入 JSON 和目的地的`TypeReference`改为`Map<MyPair, MyPair>`:
 
-```
+```java
 String jsonInput = "{\"Abbott and Costello\" : \"Comedy and 1940s\"}";
 TypeReference<HashMap<MyPair, MyPair>> typeRef 
   = new TypeReference<HashMap<MyPair, MyPair>>() {};
@@ -274,7 +274,7 @@ Map<MyPair,MyPair> map = mapper.readValue(jsonInput, typeRef);
 
 我们的`Map<MyPair, MyPair>`对象的`toString()`是:
 
-```
+```java
 {Abbott and Costello=Comedy and 1940s}
 ```
 

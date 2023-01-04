@@ -16,7 +16,7 @@
 
 首先，我们可以用`spring-cloud-task-dependencies:`添加依赖管理部分
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -34,7 +34,7 @@
 
 我们需要添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-task</artifactId>
@@ -51,7 +51,7 @@
 
 我们将使用 Spring Data JPA 作为 ORM 工具，因此我们也需要为其添加依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -67,7 +67,7 @@
 
 为了引导 Spring Cloud Task 的功能，我们需要添加`@EnableTask`注释:
 
-```
+```java
 @SpringBootApplication
 @EnableTask
 public class TaskDemo {
@@ -91,7 +91,7 @@ public class TaskDemo {
 
 现在，我们可以将配置好的`Datasource`作为构造函数参数发送给超类的构造函数:
 
-```
+```java
 @Autowired
 private DataSource dataSource;
 
@@ -104,7 +104,7 @@ public class HelloWorldTaskConfigurer extends DefaultTaskConfigurer{
 
 为了让上面的配置生效，我们需要用`@Autowired` 注释来注释`DataSource` 的实例，并将该实例作为上面定义的`HelloWorldTaskConfigurer` bean 的构造函数参数注入:
 
-```
+```java
 @Bean
 public HelloWorldTaskConfigurer getTaskConfigurer() {
     return new HelloWorldTaskConfigurer(dataSource);
@@ -119,7 +119,7 @@ public HelloWorldTaskConfigurer getTaskConfigurer() {
 
 我们需要实现这些接口的`run` 方法，并将实现类声明为 bean:
 
-```
+```java
 @Component
 public static class HelloWorldApplicationRunner 
   implements ApplicationRunner {
@@ -143,7 +143,7 @@ public static class HelloWorldApplicationRunner
 
 我们需要在我们的`TaskDemo`类中声明实现类的 bean:
 
-```
+```java
 @Bean
 public TaskListener taskListener() {
     return new TaskListener();
@@ -154,7 +154,7 @@ public TaskListener taskListener() {
 
 我们可以将 Spring 批处理作业作为一个任务来执行，并使用 Spring Cloud Task 来记录作业执行的事件。要启用此功能，我们需要添加与引导和云相关的批处理依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-batch</artifactId>
@@ -169,7 +169,7 @@ public TaskListener taskListener() {
 
 要将作业配置为任务，我们需要在`JobConfiguration`类中注册作业 bean:
 
-```
+```java
 @Bean
 public Job job2() {
     return jobBuilderFactory.get("job2")
@@ -188,7 +188,7 @@ public Job job2() {
 
 **我们需要用`@EnableBatchProcessing`注释**来修饰`TaskDemo`类:
 
-```
+```java
 //..Other Annotation..
 @EnableBatchProcessing
 public class TaskDemo {
@@ -204,7 +204,7 @@ public class TaskDemo {
 
 我们可以从春云流中触发任务。为了达到这个目的，我们使用了`@EnableTaskLaucnher`注释。一旦我们用 Spring Boot 应用程序添加了注释，TaskSink 就可用了:
 
-```
+```java
 @SpringBootApplication
 @EnableTaskLauncher
 public class StreamTaskSinkApplication {
@@ -218,7 +218,7 @@ public class StreamTaskSinkApplication {
 
 **为了让`TaskSink`起作用，我们需要一个配置为实现 `TaskLauncher`接口**的 bean。出于测试目的，我们在这里模拟实现:
 
-```
+```java
 @Bean
 public TaskLauncher taskLauncher() {
     return mock(TaskLauncher.class);
@@ -227,7 +227,7 @@ public TaskLauncher taskLauncher() {
 
 **这里需要注意的是`TaskLauncher` 界面只有在添加了 [`spring-cloud-deployer-local`](https://web.archive.org/web/20220926183253/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-cloud-deployer-local%22) 依赖:**后才可用
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-deployer-local</artifactId>
@@ -237,7 +237,7 @@ public TaskLauncher taskLauncher() {
 
 我们可以通过调用`Sink` 接口的`input` 来测试任务是否启动:
 
-```
+```java
 public class StreamTaskSinkApplicationTests {
 
     @Autowired

@@ -10,7 +10,7 @@
 
 让我们从在`pom.xml`中添加 Spring 的库依赖开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context</artifactId>
@@ -26,7 +26,7 @@ Spring 依赖的最新版本可以在[这里](https://web.archive.org/web/202210
 
 假设我们有一个应用程序类，它依赖于一个实际处理业务逻辑的服务:
 
-```
+```java
 public class IndexApp {
     private IService service;
     // standard constructors/getters/setters
@@ -35,7 +35,7 @@ public class IndexApp {
 
 现在假设`IService`是一个接口:
 
-```
+```java
 public interface IService {
     public String serve();
 } 
@@ -45,7 +45,7 @@ public interface IService {
 
 让我们快速看一下一个潜在的实现:
 
-```
+```java
 public class IndexService implements IService {
     @Override
     public String serve() {
@@ -66,7 +66,7 @@ public class IndexService implements IService {
 
 让我们看看如何使用基于 XML 的配置将依赖关系连接在一起:
 
-```
+```java
 <bean 
   id="indexService" 
   class="com.baeldung.di.spring.IndexService" />
@@ -86,7 +86,7 @@ public class IndexService implements IService {
 
 我们可以使用构造函数注入依赖关系，而不是通过 setter 方法注入 bean:
 
-```
+```java
 <bean 
   id="indexApp" 
   class="com.baeldung.di.spring.IndexApp">
@@ -98,7 +98,7 @@ public class IndexService implements IService {
 
 我们也可以注入一个工厂返回的 bean。让我们创建一个简单的工厂，它根据提供的数字返回一个`IService`的实例:
 
-```
+```java
 public class StaticServiceFactory {
     public static IService getNumber(int number) {
         // ...
@@ -108,7 +108,7 @@ public class StaticServiceFactory {
 
 现在让我们看看如何使用上述实现，通过基于 XML 的配置将 bean 注入到`IndexApp`中:
 
-```
+```java
 <bean id="messageService"
   class="com.baeldung.di.spring.StaticServiceFactory"
   factory-method="getService">
@@ -126,7 +126,7 @@ public class StaticServiceFactory {
 
 让我们考虑一个实例工厂，它根据提供的数字返回一个`IService`的实例。这一次，方法不是静态的:
 
-```
+```java
 public class InstanceServiceFactory {
     public IService getNumber(int number) {
         // ...
@@ -136,7 +136,7 @@ public class InstanceServiceFactory {
 
 现在让我们看看如何使用上面的实现通过 XML 配置将 bean 注入到`IndexApp`中:
 
-```
+```java
 <bean id="indexServiceFactory" 
   class="com.baeldung.di.spring.InstanceServiceFactory" />
 <bean id="messageService"
@@ -155,7 +155,7 @@ public class InstanceServiceFactory {
 
 这是我们访问已配置 beans 的方式:
 
-```
+```java
 @Test
 public void whenGetBeans_returnsBean() {
     ApplicationContext applicationContext = new ClassPathXmlApplicationContext("...");

@@ -10,7 +10,7 @@
 
 在这种方法中，我们将简单地迭代输入字符串以找到所有的子字符串。同时，我们将检查子字符串是否是回文:
 
-```
+```java
 public Set<String> findAllPalindromesUsingBruteForceApproach(String input) {
     Set<String> palindromes = new HashSet<>();
     for (int i = 0; i < input.length(); i++) {
@@ -26,7 +26,7 @@ public Set<String> findAllPalindromesUsingBruteForceApproach(String input) {
 
 在上面的例子中，我们只是比较子串和它的反串，看看它是否是一个回文:
 
-```
+```java
 private boolean isPalindrome(String input) {
     StringBuilder plain = new StringBuilder(input);
     StringBuilder reverse = plain.reverse();
@@ -46,7 +46,7 @@ private boolean isPalindrome(String input) {
 
 让我们来看一个快速演示，其中我们将把每个字符视为一个回文的中心:
 
-```
+```java
 public Set<String> findAllPalindromesUsingCenter(String input) {
     Set<String> palindromes = new HashSet<>();
     for (int i = 0; i < input.length(); i++) {
@@ -59,7 +59,7 @@ public Set<String> findAllPalindromesUsingCenter(String input) {
 
 在上面的循环中，我们向两个方向扩展，得到所有以每个位置为中心的回文集合。我们将通过在循环`:`中调用方法`findPalindromes` 两次来找到偶数和奇数长度的回文
 
-```
+```java
 private Set<String> findPalindromes(String input, int low, int high) {
     Set<String> result = new HashSet<>();
     while (low >= 0 && high < input.length() && input.charAt(low) == input.charAt(high)) {
@@ -81,20 +81,20 @@ private Set<String> findPalindromes(String input, int low, int high) {
 
 首先，在将结果字符串转换为字符数组之前，我们将在开头和结尾用边界字符保护输入字符串:
 
-```
+```java
 String formattedInput = "@" + input + "#";
 char inputCharArr[] = formattedInput.toCharArray();
 ```
 
 然后，我们将使用一个有两行的二维数组`radius`——一行存储奇数长度的回文，另一行存储偶数长度的回文:
 
-```
+```java
 int radius[][] = new int[2][input.length() + 1];
 ```
 
 接下来，我们将遍历输入数组，找到以位置`i `为中心的回文长度，并将该长度存储在 `radius[][]`中:
 
-```
+```java
 Set<String> palindromes = new HashSet<>();
 int max;
 for (int j = 0; j <= 1; j++) {
@@ -118,7 +118,7 @@ for (int j = 0; j <= 1; j++) {
 
 最后，我们将遍历数组`radius[][]` 来计算以每个位置为中心的回文子字符串:
 
-```
+```java
 for (int i = 1; i <= input.length(); i++) {
     for (int j = 0; j <= 1; j++) {
         for (max = radius[j][i]; max > 0; max--) {

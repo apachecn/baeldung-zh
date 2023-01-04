@@ -20,7 +20,7 @@ Spring Boot 应用程序可以有复杂的组件图、启动阶段和资源初�
 
 要启用 Spring Boot 执行器，让我们将 [`spring-boot-starter-actuator`](https://web.archive.org/web/20220524021633/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-actuator) 依赖项添加到 POM 中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-actuator</artifactId>
@@ -30,7 +30,7 @@ Spring Boot 应用程序可以有复杂的组件图、启动阶段和资源初�
 
 我们还将添加 [`spring-boot-starter-web`](https://web.archive.org/web/20220524021633/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-web) 依赖项，因为这是通过 HTTP 访问端点所必需的:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -40,7 +40,7 @@ Spring Boot 应用程序可以有复杂的组件图、启动阶段和资源初�
 
 此外，我们还将通过在我们的`application.properties`文件中设置配置属性来通过 HTTP 公开所需的端点:
 
-```
+```java
 management.endpoints.web.exposure.include=startup
 ```
 
@@ -58,7 +58,7 @@ management.endpoints.web.exposure.include=startup
 
 让我们首先为我们的应用程序创建一个简单的应用程序:
 
-```
+```java
 @SpringBootApplication
 public class StartupTrackingApplication {
 
@@ -80,7 +80,7 @@ public class StartupTrackingApplication {
 
 让我们使用`curl`调用这个 POST 端点，并使用`jq`格式化 JSON 输出:
 
-```
+```java
 > curl 'http://localhost:8080/actuator/startup' -X POST | jq
 {
   "springBootVersion": "2.5.4",
@@ -145,7 +145,7 @@ public class StartupTrackingApplication {
 
 我们可以过滤检测事件，只存储我们可能感兴趣的事件:
 
-```
+```java
 BufferingApplicationStartup startup = new BufferingApplicationStartup(2048);
 startup.addFilter(startupStep -> startupStep.getName().matches("spring.beans.instantiate"); 
 ```
@@ -166,7 +166,7 @@ startup.addFilter(startupStep -> startupStep.getName().matches("spring.beans.ins
 
 由于响应非常冗长，让我们过滤与名称`spring.beans.instantiate`匹配的步骤，并按持续时间对它们进行排序:
 
-```
+```java
 > curl 'http://localhost:8080/actuator/startup' -X POST \
 | jq '[.timeline.events
  | sort_by(.duration) | reverse[]
@@ -182,7 +182,7 @@ startup.addFilter(startupStep -> startupStep.getName().matches("spring.beans.ins
 
 因此，输出显示了在应用程序启动期间实例化的各种 beans 的简洁、有序和经过筛选的视图:
 
-```
+```java
 [
   {
     "beanName": "resourceInitializer",

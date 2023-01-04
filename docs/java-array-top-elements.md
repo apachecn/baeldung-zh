@@ -10,7 +10,7 @@
 
 这个问题的强力解决方案是**遍历给定的数组`k`次**。**在每次迭代中，我们将** **找到最大值**。然后，我们将从数组中删除该值，并将其放入输出列表:
 
-```
+```java
 public List findTopK(List input, int k) {
     List array = new ArrayList<>(input);
     List topKList = new ArrayList<>();
@@ -41,7 +41,7 @@ public List findTopK(List input, int k) {
 
 `TreeSet`有一个 [**红黑树**](/web/20221208143956/https://www.baeldung.com/cs/red-black-trees) **数据结构**作为主干。因此，给这个集合赋值需要花费`O(log n)`。`TreeSet`是一个经过整理的集合。因此，我们可以将`TreeSet`****中的所有值提取出其中的第一个`k`** :**
 
-```
+```java
 public List<Integer> findTopK(List<Integer> input, int k) {
     Set<Integer> sortedSet = new TreeSet<>(Comparator.reverseOrder());
     sortedSet.addAll(input);
@@ -60,7 +60,7 @@ public List<Integer> findTopK(List<Integer> input, int k) {
 
 算法**通过给定的数组**迭代一次。在每次迭代中，我们将向堆中添加一个新元素。此外，我们将保持堆的大小小于或等于`k`。因此，我们必须从堆中移除多余的元素，并添加新的元素。因此，在遍历数组之后，堆将包含`k`个最大值:
 
-```
+```java
 public List<Integer> findTopK(List<Integer> input, int k) {
     PriorityQueue<Integer> maxHeap = new PriorityQueue<>();
 

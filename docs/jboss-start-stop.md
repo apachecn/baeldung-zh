@@ -40,25 +40,25 @@ JBoss 还在同一目录中提供了一些替代配置:
 
 此外，我们将通过运行以下命令，使用默认配置启动独立服务器:
 
-```
+```java
 standalone.sh
 ```
 
 在 OSX/Linux 或 Windows 中:
 
-```
+```java
 standalone.bat
 ```
 
 类似地，我们可以通过执行以下命令来启动具有备用配置(比如 EE8 功能)的独立服务器:
 
-```
+```java
 standalone.sh --server-config=standalone-ee8.xml
 ```
 
 在 OSX/Linux 或 Windows 中:
 
-```
+```java
 standalone.bat --server-config=standalone-ee8.xml
 ```
 
@@ -72,13 +72,13 @@ standalone.bat --server-config=standalone-ee8.xml
 
 让我们打开一个新的终端或命令提示符并运行:
 
-```
+```java
 ./jboss-cli.sh --connect command:shutdown
 ```
 
 在 OSX/Linux 和 Windows 中:
 
-```
+```java
 ./jboss-cli.bat --connect command:shutdown
 ```
 
@@ -109,31 +109,31 @@ OSX/Linux 的域启动脚本`domain.sh`和 Windows 的`domain.bat`利用了:
 
 让我们打开一个新的终端或命令提示符并运行:
 
-```
+```java
 jboss-cli.sh --connect
 ```
 
 在 OSX/Linux 或 Windows 中:
 
-```
+```java
 jboss-cli.bat --connect
 ```
 
 目前，我们已连接到域控制器。在这里，我们可以向服务器的多个实例发出命令。例如，要查看该域下的所有服务器:
 
-```
+```java
 /host=master:read-children-names(child-type=server-config)
 ```
 
 类似地，要停止服务器的特定实例，我们将执行:
 
-```
+```java
 /host=master/server-config=<server-name>:stop
 ```
 
 因此，我们可以检查该服务器的状态:
 
-```
+```java
 /host=master/server-config=<server-name>:read-resource(include-runtime=true)
 ```
 

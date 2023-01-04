@@ -20,7 +20,7 @@
 
 让我们看一个使用`for` -each 语句迭代`List`中元素的例子:
 
-```
+```java
 List<Integer> numbers = getNumbers();
 for (Integer number : numbers) {
     System.out.println(number);
@@ -29,7 +29,7 @@ for (Integer number : numbers) {
 
 类似地，我们可以将`forEach()`方法与 lambda 表达式结合使用:
 
-```
+```java
 List<Integer> numbers = getNumbers();
 numbers.forEach(System.out::println);
 ```
@@ -42,7 +42,7 @@ numbers.forEach(System.out::println);
 
 `ShoppingCart`类实现了`Iterable`接口并覆盖了它的`iterate()`方法:
 
-```
+```java
 public class ShoppingCart<E> implements Iterable<E> {
 
     private E[] elementData;
@@ -68,7 +68,7 @@ public class ShoppingCart<E> implements Iterable<E> {
 
 现在，让我们在`ShoppingCart`类中创建一个内部类来表示我们的自定义迭代器:
 
-```
+```java
 public class ShoppingCartIterator implements Iterator<E> {
     int cursor;
     int lastReturned = -1;
@@ -97,7 +97,7 @@ public class ShoppingCartIterator implements Iterator<E> {
 
 最后，让我们创建一个 iterable 类的实例，并在增强的`for`循环中使用它:
 
-```
+```java
 ShoppingCart<Product> shoppingCart  = new ShoppingCart<>();
 
 shoppingCart.add(new Product("Tuna", 42));
@@ -126,7 +126,7 @@ for (Product product : shoppingCart) {
 
 `List`接口是`Collection`的一部分，因此，它扩展了`Iterable`接口。要从集合中获取迭代器，我们只需调用`iterator()`方法:
 
-```
+```java
 List<Integer> numbers = new ArrayList<>();
 numbers.add(10);
 numbers.add(20);
@@ -138,7 +138,7 @@ Iterator<Integer> iterator = numbers.iterator();
 
 此外，我们可以通过调用`hasNext()`方法来检查迭代器是否还有剩余的元素。之后，我们可以通过调用`next()`方法获得一个元素:
 
-```
+```java
 while (iterator.hasNext()) {
    System.out.println(iterator.next());
 }
@@ -154,7 +154,7 @@ while (iterator.hasNext()) {
 
 首先，让我们创建一个包含数值元素集合的类:
 
-```
+```java
 class Numbers {
 
     private static final List<Integer> NUMBER_LIST =
@@ -164,7 +164,7 @@ class Numbers {
 
 此外，让我们定义一个`Iterator`接口的具体实现:
 
-```
+```java
 private static class PrimeIterator implements Iterator<Integer> {
 
     private int cursor;
@@ -199,7 +199,7 @@ private static class PrimeIterator implements Iterator<Integer> {
 
 让我们在`Number`类中定义一个方法，该方法返回`PrimeIterator`类的新实例:
 
-```
+```java
 public static Iterator<Integer> iterator() {
     return new PrimeIterator();
 }
@@ -207,7 +207,7 @@ public static Iterator<Integer> iterator() {
 
 最后，我们可以在`while`语句中使用自定义迭代器:
 
-```
+```java
 Iterator<Integer> iterator = Numbers.iterator();
 
 while (iterator.hasNext()) {

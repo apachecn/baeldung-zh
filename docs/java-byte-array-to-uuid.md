@@ -10,7 +10,7 @@
 
 在普通 Java 中，我们可以很容易地将`UUID`转换成字节数组:
 
-```
+```java
 public static byte[] convertUUIDToBytes(UUID uuid) {
     ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
     bb.putLong(uuid.getMostSignificantBits());
@@ -23,7 +23,7 @@ public static byte[] convertUUIDToBytes(UUID uuid) {
 
 将一个字节数组转换成`UUID`也很简单:
 
-```
+```java
 public static UUID convertBytesToUUID(byte[] bytes) {
     ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
     long high = byteBuffer.getLong();
@@ -36,7 +36,7 @@ public static UUID convertBytesToUUID(byte[] bytes) {
 
 让我们测试一下我们的方法:
 
-```
+```java
 UUID uuid = UUID.randomUUID();
 System.out.println("Original UUID: " + uuid);
 
@@ -49,7 +49,7 @@ System.out.println("Converted UUID: " + uuidNew);
 
 结果将类似于:
 
-```
+```java
 Original UUID: bd9c7f32-8010-4cfe-97c0-82371e3276fa
 Converted byte array: [-67, -100, 127, 50, -128, 16, 76, -2, -105, -64, -126, 55, 30, 50, 118, -6]
 Converted UUID: bd9c7f32-8010-4cfe-97c0-82371e3276fa

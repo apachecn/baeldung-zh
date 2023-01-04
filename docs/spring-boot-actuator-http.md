@@ -14,7 +14,7 @@
 
 我们需要做的第一件事是将[Spring Boot 致动器依赖](https://web.archive.org/web/20221208143830/https://search.maven.org/search?q=a:spring-boot-starter-actuator%20AND%20g:org.springframework.boot)添加到我们的项目中:
 
-```
+```java
 <dependency>
   <groupId>org.springframework.boot</groupId>
   <artifactId>spring-boot-starter-actuator</artifactId>
@@ -25,7 +25,7 @@
 
 为此，我们只需要**修改我们的`application.properties`文件来包含`httpTrace`端点**:
 
-```
+```java
 management.endpoints.web.exposure.include=httptrace
 ```
 
@@ -33,7 +33,7 @@ management.endpoints.web.exposure.include=httptrace
 
 现在，我们的`httpTrace`端点应该出现在应用程序的执行器端点列表中:
 
-```
+```java
 {
   "_links": {
     "self": {
@@ -56,7 +56,7 @@ management.endpoints.web.exposure.include=httptrace
 
 让我们向服务发出一些请求，调用`/actuator/httptrace` 端点并获取一个返回的跟踪:
 
-```
+```java
 {
   "traces": [
     {
@@ -122,13 +122,13 @@ management.endpoints.web.exposure.include=httptrace
 
 如果我们觉得这个回答过于冗长，我们可以根据自己的需要进行调整。我们可以通过在我们的`application.properties`的`management.trace.http.include`属性中指定**来告诉 Spring 我们想要返回哪些字段:**
 
-```
+```java
 management.trace.http.include=RESPONSE_HEADERS
 ```
 
 在这种情况下，我们指定只需要响应头。因此，我们可以看到以前包含的字段，如请求头或花费的时间，现在在响应中不存在了:
 
-```
+```java
 {
   "traces": [
     {
@@ -171,7 +171,7 @@ management.trace.http.include=RESPONSE_HEADERS
 
 为简单起见，我们的存储库也将在内存中存储跟踪，我们将只存储最后一个命中我们服务的 GET 请求:
 
-```
+```java
 @Repository
 public class CustomTraceRepository implements HttpTraceRepository {
 
@@ -200,7 +200,7 @@ public class CustomTraceRepository implements HttpTraceRepository {
 
 如果我们在向我们的服务发出一些请求后稍微使用一下`httpTrace`端点，我们可以看到我们还获得了执行器请求的跟踪:
 
-```
+```java
 {
   "traces": [
     {
@@ -216,7 +216,7 @@ public class CustomTraceRepository implements HttpTraceRepository {
 
 我们可能不会发现这些痕迹对我们有用，我们宁愿排除它们。在这种情况下，我们只需要**创建我们自己的`HttpTraceFilter`** ，并在`shouldNotFilter`方法中指定我们希望**忽略的路径:**
 
-```
+```java
 @Component
 public class TraceRequestFilter extends HttpTraceFilter {
 

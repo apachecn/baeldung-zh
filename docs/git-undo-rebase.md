@@ -14,14 +14,14 @@ git rebase 是编写干净的代码提交历史的推荐最佳实践，特别是
 
 ![](img/a566459d48e29569048b33e22ac2bc6b.png)现在，假设我们已经为项目准备好了上述版本，让我们检查一下`feature2`分支:
 
-```
+```java
 $ git branch --show-current
 feature2
 ```
 
 最后，让我们看看`feature1`和`feature2`分支的代码提交历史:
 
-```
+```java
 $ git log feature1
 commit e5e9afbbd82e136fc20957d47d05e72a38d8d10d
 Author: Tapan Avasthi <[[email protected]](/web/20220923112234/https://www.baeldung.com/cdn-cgi/l/email-protection)>
@@ -55,7 +55,7 @@ Date:   Sun Jul 31 16:27:22 2022 +0530
 
 让我们以一个简单的场景开始，检查`feature2`分支的当前提交:
 
-```
+```java
 $ git log HEAD
 commit 728ceb3219cc5010eae5840c992072cac7a5da00 (HEAD -> feature2)
 Author: Tapan Avasthi <[[email protected]](/web/20220923112234/https://www.baeldung.com/cdn-cgi/l/email-protection)>
@@ -72,13 +72,13 @@ Date:   Sun Jul 31 16:46:56 2022 +0530
 
 现在，让我们将`feature2 `分支放在`feature1`分支之上:
 
-```
+```java
 $ git rebase feature1 
 ```
 
 完成重置基础操作后，让我们看看`HEAD`参考:
 
-```
+```java
 $ git log HEAD
 commit 9d38b792d0c9a8d0cd8e517fcb2ca5260989cc4a
 Author: Tapan Avasthi <[[email protected]](/web/20220923112234/https://www.baeldung.com/cdn-cgi/l/email-protection)>
@@ -101,7 +101,7 @@ Date:   Sun Jul 31 16:46:56 2022 +0530
 
 此外，我们可以验证`ORIG_HEAD`仍然指向`728ceb3219cc5010eae5840c992072cac7a5da00`提交:
 
-```
+```java
 $ git log ORIG_HEAD
 commit 728ceb3219cc5010eae5840c992072cac7a5da00
 Author: Tapan Avasthi <[[email protected]](/web/20220923112234/https://www.baeldung.com/cdn-cgi/l/email-protection)>
@@ -118,7 +118,7 @@ Date:   Sun Jul 31 16:46:56 2022 +0530
 
 最后，**我们用`ORIG_HEAD`引用**做一个`reset`:
 
-```
+```java
 $ git reset --hard ORIG_HEAD
 $ git log HEAD -1
 commit 728ceb3219cc5010eae5840c992072cac7a5da00
@@ -134,7 +134,7 @@ Date:   Sun Jul 31 16:46:56 2022 +0530
 
 同样，让我们从一个全新的场景设置开始:
 
-```
+```java
 $ git log HEAD
 commit 07b98ef156732ba41e2cbeef7939b5bcc9c364bb
 Author: Tapan Avasthi <[[email protected]](/web/20220923112234/https://www.baeldung.com/cdn-cgi/l/email-protection)>
@@ -151,7 +151,7 @@ Date:   Sun Jul 31 17:53:35 2022 +0530
 
 现在，让我们重新排序并检查提交历史记录:
 
-```
+```java
 $ git rebase feature1
 $ git log HEAD
 commit b6ea25bf83ade2caca5ed92f6c5e5e6a3cb2ca7b
@@ -175,7 +175,7 @@ Date:   Sun Jul 31 17:53:35 2022 +0530
 
 接下来，让**使用 [`git reflog`](https://web.archive.org/web/20220923112234/https://git-scm.com/docs/git-reflog) 命令在粒度级别检查事件记录**:
 
-```
+```java
 $ git reflog
 b6ea25b [[email protected]](/web/20220923112234/https://www.baeldung.com/cdn-cgi/l/email-protection){0}: rebase (continue) (finish): returning to refs/heads/feature2
 b6ea25b [[email protected]](/web/20220923112234/https://www.baeldung.com/cdn-cgi/l/email-protection){1}: rebase (continue): Add feature-2
@@ -192,7 +192,7 @@ d6c52eb [[email protected]](/web/20220923112234/https://www.baeldung.com/cdn-cg
 
 因此，作为最后一步，让我们通过执行`git reset`来恢复之前的状态:
 
-```
+```java
 $ git reset --hard [[email protected]](/web/20220923112234/https://www.baeldung.com/cdn-cgi/l/email-protection){3}
 $ git log HEAD
 commit 07b98ef156732ba41e2cbeef7939b5bcc9c364bb

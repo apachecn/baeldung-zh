@@ -25,7 +25,7 @@
 
 Java 中的静态方法在编译时被解析，不能在运行时被覆盖。因此，静态类不能真正受益于运行时多态性:
 
-```
+```java
 public class SuperUtility {
 
     public static String echoIt(String data) {
@@ -50,7 +50,7 @@ public void whenStaticUtilClassInheritance_thenOverridingFails() {
 
 相比之下，**singleton 可以像任何其他类一样通过从基类**派生来利用运行时多态性:
 
-```
+```java
 public class MyLock {
 
     protected String takeLock(int locks) {
@@ -79,7 +79,7 @@ public void whenSingletonDerivesBaseClass_thenRuntimePolymorphism() {
 
 此外，**singleton 还可以实现接口**，这让它们比静态类更有优势:
 
-```
+```java
 public class FileSystemSingleton implements SingletonInterface {
 
     // private constructor and getInstance method
@@ -115,7 +115,7 @@ public void whenSingletonImplementsInterface_thenRuntimePolymorphism() {
 
 由于它本质上是一个对象，**我们可以很容易地将 singleton 传递给其他方法**作为参数:
 
-```
+```java
 @Test
 public void whenSingleton_thenPassAsArguments() {
     SingletonInterface singleton = FileSystemSingleton.getInstance();
@@ -129,7 +129,7 @@ public void whenSingleton_thenPassAsArguments() {
 
 单例可以有实例变量，就像任何其他对象一样，它可以维护这些变量的状态:
 
-```
+```java
 @Test
 public void whenSingleton_thenAllowState() {
     SingletonInterface singleton = FileSystemSingleton.getInstance();
@@ -141,7 +141,7 @@ public void whenSingleton_thenAllowState() {
 
 此外，**单例可以被[序列化](/web/20220526055001/https://www.baeldung.com/java-serialization)以保持其状态或者通过媒介**传输，例如网络:
 
-```
+```java
 new ObjectOutputStream(baos).writeObject(singleton);
 SerializableSingleton singletonNew = (SerializableSingleton) new ObjectInputStream
    (new ByteArrayInputStream(baos.toByteArray())).readObject();
@@ -149,7 +149,7 @@ SerializableSingleton singletonNew = (SerializableSingleton) new ObjectInputStre
 
 最后，实例的存在也为使用`Object's` 克隆方法[克隆](/web/20220526055001/https://www.baeldung.com/java-deep-copy)它提供了可能性:
 
-```
+```java
 @Test
 public void whenSingleton_thenAllowCloneable() {
     Assert.assertEquals(2, ((SerializableCloneableSingleton) singleton.cloneObject()).getState());

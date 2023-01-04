@@ -14,7 +14,7 @@
 
 为了说明这一点，让我们看一个简单的默认方法示例:
 
-```
+```java
 interface HelloWorld {
     default String hello() {
         return "world";
@@ -24,7 +24,7 @@ interface HelloWorld {
 
 有了这个增强，我们可以使用反射调用该接口的代理上的默认方法:
 
-```
+```java
 Object proxy = Proxy.newProxyInstance(getSystemClassLoader(), new Class<?>[] { HelloWorld.class },
     (prox, method, args) -> {
         if (method.isDefault()) {
@@ -41,7 +41,7 @@ assertThat(method.invoke(proxy)).isEqualTo("world");
 
 DateTimeFormatter 新增的[是一天中的时段符号“`B`”，它提供了 am/pm 格式的另一种选择:](https://web.archive.org/web/20220824083848/https://bugs.openjdk.java.net/browse/JDK-8247781)
 
-```
+```java
 LocalTime date = LocalTime.parse("15:25:08.690791");
 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h B");
 assertThat(date.format(formatter)).isEqualTo("3 in the afternoon");
@@ -53,7 +53,7 @@ assertThat(date.format(formatter)).isEqualTo("3 in the afternoon");
 
 目的是用一些常用的`Stream`收集器减少样板文件，比如`Collectors.toList`和`Collectors.toSet`:
 
-```
+```java
 List<String> integersAsString = Arrays.asList("1", "2", "3");
 List<Integer> ints = integersAsString.stream().map(Integer::parseInt).collect(Collectors.toList());
 List<Integer> intsEquivalent = integersAsString.stream().map(Integer::parseInt).toList();
@@ -67,7 +67,7 @@ Vector API 正处于 Java 16 的初始培育阶段。这个 API 的想法是提�
 
 让我们看看传统上我们如何将两个数组相乘:
 
-```
+```java
 int[] a = {1, 2, 3, 4};
 int[] b = {5, 6, 7, 8};
 
@@ -80,7 +80,7 @@ for (int i = 0; i < a.length; i++) {
 
 对于长度为 4 的数组，标量计算的这个例子将在 4 个周期内执行。现在，让我们看看等效的基于矢量的计算:
 
-```
+```java
 int[] a = {1, 2, 3, 4};
 int[] b = {5, 6, 7, 8};
 
@@ -108,7 +108,7 @@ vectorC.intoArray(c, 0);
 
 首先，让我们定义一个`Book`类:
 
-```
+```java
 public final class Book {
     private final String title;
     private final String author;
@@ -154,7 +154,7 @@ public final class Book {
 
 这里的`Book`改写为`Record`:
 
-```
+```java
 public record Book(String title, String author, String isbn) {
 }
 ```
@@ -165,7 +165,7 @@ public record Book(String title, String author, String isbn) {
 
 随着 Java 16 的发布，我们现在可以将记录定义为内部类的类成员。这是由于在 [JEP-384](https://web.archive.org/web/20220824083848/https://openjdk.java.net/jeps/384) 下 Java 15 的增量发布中遗漏了放宽限制:
 
-```
+```java
 class OuterClass {
     class InnerClass {
         Book book = new Book("Title", "author", "isbn");
@@ -179,7 +179,7 @@ class OuterClass {
 
 以前，我们可能会编写这样的代码:
 
-```
+```java
 Object obj = "TEST";
 
 if (obj instanceof String) {
@@ -192,7 +192,7 @@ if (obj instanceof String) {
 
 随着模式匹配的引入，我们可以重写这段代码:
 
-```
+```java
 Object obj = "TEST";
 
 if (obj instanceof String t) {
@@ -210,7 +210,7 @@ Java 15 中首次引入的密封类[，提供了一种机制来确定哪些子�
 
 让我们通过定义一个接口和两个实现类来说明这一点:
 
-```
+```java
 public sealed interface JungleAnimal permits Monkey, Snake  {
 }
 
@@ -231,7 +231,7 @@ public non-sealed class Snake implements JungleAnimal {
 
 密封类的一个显著优点是，它们允许进行详尽的模式匹配检查，而不需要捕捉所有未覆盖的情况。例如，使用我们定义的类，我们可以有逻辑来覆盖`JungleAnimal`的所有可能的子类:
 
-```
+```java
 JungleAnimal j = // some JungleAnimal instance
 
 if (j instanceof Monkey m) {

@@ -12,7 +12,7 @@
 
 首先，我们需要用户。为了简单起见，我们将使用预加载的地图。让我们用`User`来定义它:
 
-```
+```java
 public class User {
     static HashMap<String, User> DB = new HashMap<>();
     static {
@@ -31,7 +31,7 @@ public class User {
 
 我们将首先创建一个[过滤器](/web/20220706232948/https://www.baeldung.com/intercepting-filter-pattern-in-java)来检查无会话请求，阻止对我们的 servlets 的直接访问:
 
-```
+```java
 @WebFilter("/*")
 public class UserCheckFilter implements Filter {
 
@@ -55,7 +55,7 @@ public class UserCheckFilter implements Filter {
 
 为了构建我们的登录表单，我们需要从 [JSTL](/web/20220706232948/https://www.baeldung.com/jstl) 导入核心 Taglib。同样，让我们在`page`指令中将`session`属性设置为`false`。因此，不会自动创建新会话，我们可以完全控制:
 
-```
+```java
 <%@ page session="false"%>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 
@@ -66,13 +66,13 @@ public class UserCheckFilter implements Filter {
 
 然后，在我们的`form`中，我们将有一个隐藏的输入来保存`origin`:
 
-```
+```java
 <input type="hidden" name="origin" value="${origin}">
 ```
 
 接下来，我们将包含一个条件元素来输出错误:
 
-```
+```java
 <c:if test="${not empty error}">
     * error: ${error} 
 </c:if>
@@ -80,7 +80,7 @@ public class UserCheckFilter implements Filter {
 
 最后，让我们添加一些`input`标签，以便用户可以输入和提交凭证:
 
-```
+```java
 <input type="text" name="name">
 <input type="password" name="password"> 
 <input type="submit">
@@ -90,7 +90,7 @@ public class UserCheckFilter implements Filter {
 
 在我们的 servlet 中，如果请求是一个`GET`，我们将把它转发到我们的登录表单。**最重要的是，如果是`POST`** ，我们会验证登录:
 
-```
+```java
 @WebServlet("/login")
 public class UserCheckLoginServlet extends HttpServlet {
     // ...
@@ -99,7 +99,7 @@ public class UserCheckLoginServlet extends HttpServlet {
 
 因此，在我们的`doGet()`方法中，我们将只重定向到我们的登录 JSP，向前传递`origin`:
 
-```
+```java
 protected void doGet(HttpServletRequest request, HttpServletResponse response) {
     String referer = (String) request.getAttribute("origin");
     request.setAttribute("origin", referer);
@@ -109,7 +109,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 
 在我们的`doPost()`中，我们验证凭证并创建一个会话，将`User`对象向前传递并重定向到`origin`:
 
-```
+```java
 protected void doPost(HttpServletRequest request, HttpServletResponse response) {
     String key = request.getParameter("name");
     String pass = request.getParameter("password");
@@ -134,7 +134,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 
 最后，让我们创建我们的主页。它只显示会话信息，并有一个注销链接:
 
-```
+```java
 <body>
     current session info: ${user.name}
 
@@ -144,7 +144,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 
 我们的 home servlet 所做的就是将`User`转发到主页:
 
-```
+```java
 @WebServlet("/home")
 public class UserCheckServlet extends HttpServlet {
 
@@ -165,7 +165,7 @@ public class UserCheckServlet extends HttpServlet {
 
 **要注销，我们只需使当前会话无效并重定向到主页**。之后，我们的`UserCheckFilter`将检测到一个无会话请求，并将我们重定向回登录页面，重新开始这个过程:
 
-```
+```java
 @WebServlet("/logout")
 public class UserCheckLogoutServlet extends HttpServlet {
 

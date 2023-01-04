@@ -12,7 +12,7 @@
 
 首先，请记住，当用户登录到应用程序时，客户端正在获取访问令牌:
 
-```
+```java
 function obtainAccessToken(params) {
     var req = {
         method: 'POST',
@@ -39,7 +39,7 @@ function obtainAccessToken(params) {
 
 还要注意我们实际是如何调用这个`obtainAccessToken()`函数的:
 
-```
+```java
 $scope.loginData = {
     grant_type:"password", 
     username: "", 
@@ -58,7 +58,7 @@ $scope.login = function() {
 
 让我们配置代理的路由:
 
-```
+```java
 zuul:
   routes:
     oauth:
@@ -74,7 +74,7 @@ zuul:
 
 代理的第一个用途很简单——我们将使用 Zuul 预过滤器添加授权头来访问令牌请求，而不是在 javascript 中显示我们的应用程序“`client secret`”:
 
-```
+```java
 @Component
 public class CustomPreZuulFilter extends ZuulFilter {
     @Override
@@ -121,7 +121,7 @@ public class CustomPreZuulFilter extends ZuulFilter {
 
 我们将设置一个 Zuul 后置过滤器，从响应的 JSON 主体中提取刷新令牌，并将其设置在 cookie 中:
 
-```
+```java
 @Component
 public class CustomPostZuulFilter extends ZuulFilter {
     private ObjectMapper mapper = new ObjectMapper();
@@ -180,7 +180,7 @@ public class CustomPostZuulFilter extends ZuulFilter {
 
 为此，我们将创建一个配置类:
 
-```
+```java
 @Configuration
 public class SameSiteConfig implements WebMvcConfigurer {
     @Bean
@@ -202,7 +202,7 @@ public class SameSiteConfig implements WebMvcConfigurer {
 
 因此，我们现在将在代理中有另一个过滤器，它将从 cookie 中提取刷新令牌，并将其作为 HTTP 参数转发，这样请求就是有效的:
 
-```
+```java
 public Object run() {
     RequestContext ctx = RequestContext.getCurrentContext();
     ...
@@ -232,7 +232,7 @@ private String extractRefreshToken(HttpServletRequest req) {
 
 这里是我们的`CustomHttpServletRequest` ——用来**注入我们的刷新令牌参数**:
 
-```
+```java
 public class CustomHttpServletRequest extends HttpServletRequestWrapper {
     private Map<String, String[]> additionalParams;
     private HttpServletRequest request;
@@ -268,7 +268,7 @@ public class CustomHttpServletRequest extends HttpServletRequestWrapper {
 
 下面是我们的函数`refreshAccessToken()`:
 
-```
+```java
 $scope.refreshAccessToken = function() {
     obtainAccessToken($scope.refreshData);
 }
@@ -276,7 +276,7 @@ $scope.refreshAccessToken = function() {
 
 这里是我们的`$scope.refreshData`:
 
-```
+```java
 $scope.refreshData = {grant_type:"refresh_token"};
 ```
 

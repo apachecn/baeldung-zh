@@ -16,7 +16,7 @@
 
 `find()`是获取实体的最常见方法:
 
-```
+```java
 Game game = entityManager.find(Game.class, 1L); 
 ```
 
@@ -26,7 +26,7 @@ Game game = entityManager.find(Game.class, 1L);
 
 类似于`find()`方法，`getReference()`也是另一种检索实体的方法:
 
-```
+```java
 Game game = entityManager.getReference(Game.class, 1L); 
 ```
 
@@ -42,7 +42,7 @@ Game game = entityManager.getReference(Game.class, 1L);
 
 首先，让我们定义一个名为`Game:`的实体
 
-```
+```java
 @Entity
 public class Game {
 
@@ -58,7 +58,7 @@ public class Game {
 
 接下来，我们定义我们的`Player`实体:
 
-```
+```java
 @Entity
 public class Player {
 
@@ -76,7 +76,7 @@ public class Player {
 
 我们需要**配置一个从`Player`到`Game`到**的`@ManyToOne`关系。因此，让我们为我们的`Player`实体添加一个`game`属性:
 
-```
+```java
 @ManyToOne
 private Game game; 
 ```
@@ -85,7 +85,7 @@ private Game game;
 
 在我们开始编写我们的测试方法之前，单独定义我们的测试数据是一个很好的实践:
 
-```
+```java
 entityManager.getTransaction().begin();
 
 entityManager.persist(new Game(1L, "Game 1"));
@@ -99,7 +99,7 @@ entityManager.getTransaction().commit();
 
 此外，为了检查底层 SQL 查询，我们应该**在我们的`persistence.xml`中配置 Hibernate 的`hibernate.show_sql`属性**:
 
-```
+```java
 <property name="hibernate.show_sql" value="true"/> 
 ```
 
@@ -109,7 +109,7 @@ entityManager.getTransaction().commit();
 
 因此，让我们先编写一个测试方法来获取`Game`实体，然后简单地更新它的`name`字段:
 
-```
+```java
 Game game1 = entityManager.find(Game.class, 1L);
 game1.setName("Game Updated 1");
 
@@ -118,7 +118,7 @@ entityManager.persist(game1);
 
 运行测试方法向我们展示了执行的 SQL 查询:
 
-```
+```java
 Hibernate: select game0_.id as id1_0_0_, game0_.name as name2_0_0_ from Game game0_ where game0_.id=?
 Hibernate: update Game set name=? where id=? 
 ```
@@ -127,7 +127,7 @@ Hibernate: update Game set name=? where id=?
 
 因此，让我们看看`getReference()`方法在相同场景中的表现:
 
-```
+```java
 Game game1 = entityManager.getReference(Game.class, 1L);
 game1.setName("Game Updated 2");
 
@@ -146,19 +146,19 @@ entityManager.persist(game1);
 
 让我们定义另外两个测试方法来删除一个`Player`实体:
 
-```
+```java
 Player player2 = entityManager.find(Player.class, 2L);
 entityManager.remove(player2); 
 ```
 
-```
+```java
 Player player3 = entityManager.getReference(Player.class, 3L);
 entityManager.remove(player3); 
 ```
 
 运行这些测试方法向我们展示了相同的查询:
 
-```
+```java
 Hibernate: select
     player0_.id as id1_1_0_,
     player0_.game_id as game_id3_1_0_,
@@ -182,7 +182,7 @@ Hibernate: delete from Player where id=?
 
 让我们添加另一个方法，通过简单地更新`Player`的`game`属性来演示`Player`参与到`Game`中:
 
-```
+```java
 Game game1 = entityManager.find(Game.class, 1L);
 
 Player player1 = entityManager.find(Player.class, 1L);
@@ -193,7 +193,7 @@ entityManager.persist(player1);
 
 再次运行测试给我们一个类似的结果，当使用`find()`方法时**我们仍然可以看到`SELECT`查询:**
 
-```
+```java
 Hibernate: select game0_.id as id1_0_0_, game0_.name as name2_0_0_ from Game game0_ where game0_.id=?
 Hibernate: select
     player0_.id as id1_1_0_,
@@ -208,7 +208,7 @@ Hibernate: update Player set game_id=?, name=? where id=?
 
 现在，让我们为**定义另一个测试，看看`getReference()`方法在这种情况下如何工作**:
 
-```
+```java
 Game game2 = entityManager.getReference(Game.class, 2L);
 
 Player player1 = entityManager.find(Player.class, 1L);
@@ -219,7 +219,7 @@ entityManager.persist(player1);
 
 希望运行测试能给我们预期的行为:
 
-```
+```java
 Hibernate: select
     player0_.id as id1_1_0_,
     player0_.game_id as game_id3_1_0_,
@@ -243,7 +243,7 @@ Hibernate: update Player set game_id=?, name=? where id=?
 
 让我们设想一种情况，在我们操作之前，我们的实体已经被加载到持久化上下文中:
 
-```
+```java
 entityManager.getTransaction().begin();
 entityManager.persist(new Game(1L, "Game 1"));
 entityManager.persist(new Player(1L, "Player 1"));
@@ -261,7 +261,7 @@ entityManager.getTransaction().commit();
 
 运行测试表明，只有更新查询被执行:
 
-```
+```java
 Hibernate: update Player set game_id=?, name=? where id=? 
 ```
 
@@ -281,7 +281,7 @@ Hibernate: update Player set game_id=?, name=? where id=?
 
 在这种情况下，我们可以考虑将`hibernate.jpa.compliance.proxy`属性设置为`true`:
 
-```
+```java
 <property name="hibernate.jpa.compliance.proxy" value="true"/> 
 ```
 

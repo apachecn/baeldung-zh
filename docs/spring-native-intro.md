@@ -70,7 +70,7 @@ Java 平台的另一个特点是它在目标系统上的可扩展性，只需将
 
 [Spring Boot Maven 插件](https://web.archive.org/web/20221126235145/https://docs.spring.io/spring-boot/docs/3.0.0-RC2/maven-plugin/reference/htmlsingle/)的目标是 AOT 处理(即，不是 AOT 编译本身，而是为 AOT 编译器收集元数据，例如，在代码中注册反射的用法)和构建可以用 Docker 运行的 OCI 映像。我们可以直接调用这些目标:
 
-```
+```java
 mvn spring-boot:process-aot
 mvn spring-boot:process-test-aot
 mvn spring-boot:build-image
@@ -78,19 +78,19 @@ mvn spring-boot:build-image
 
 我们不需要这样做，因为 Spring Boot 的父 POM 定义了一个`native`概要文件，将这些目标绑定到构建中。我们需要使用这个激活的配置文件进行构建:
 
-```
+```java
 mvn clean package -Pnative
 ```
 
 如果我们还想执行本地测试，我们可以激活第二个概要文件:
 
-```
+```java
 mvn clean package -Pnative,nativeTest
 ```
 
 如果我们想要构建一个原生映像，我们必须添加相应的目标`native-maven-plugin`。因此，我们也可以定义一个`native`概要文件。因为这个插件是由父 POM 管理的，所以我们可以保留版本号:
 
-```
+```java
 <profiles>
     <profile>
         <id>native</id>
@@ -117,7 +117,7 @@ mvn clean package -Pnative,nativeTest
 
 目前，在本地测试执行中不支持 Mockito。因此，我们可以排除模拟测试，或者简单地跳过本地测试，将它添加到我们的 POM 中:
 
-```
+```java
 <build>
     <pluginManagement>
         <plugins>
@@ -137,7 +137,7 @@ mvn clean package -Pnative,nativeTest
 
 如果我们不能从 Spring Boot 的父 POM 继承，而是把它作为一个 [`import`范围的依赖](https://web.archive.org/web/20221126235145/https://docs.spring.io/spring-boot/docs/3.0.0-RC2/maven-plugin/reference/htmlsingle/#using.import)，我们必须自己配置插件和配置文件。然后，我们必须将它添加到我们的 POM 中:
 
-```
+```java
 <build>
     <pluginManagement>
         <plugins>
@@ -252,7 +252,7 @@ mvn clean package -Pnative,nativeTest
 
 [Spring Boot Gradle 插件](https://web.archive.org/web/20221126235145/https://docs.spring.io/spring-boot/docs/3.0.0-RC2/gradle-plugin/reference/htmlsingle/)为 AOT 处理(即，不是 AOT 编译本身，而是为 AOT 编译器收集元数据，例如，在代码中注册反射的使用)和构建可以用 Docker:
 
-```
+```java
 gradle processAot
 gradle processTestAot
 gradle bootBuildImage
@@ -260,7 +260,7 @@ gradle bootBuildImage
 
 如果我们想要构建一个原生映像，我们必须为 GraalVM 原生映像构建添加 [Gradle 插件:](https://web.archive.org/web/20221126235145/https://graalvm.github.io/native-build-tools/latest/gradle-plugin.html)
 
-```
+```java
 plugins {
     // ...
     id 'org.graalvm.buildtools.native' version '0.9.17'
@@ -269,14 +269,14 @@ plugins {
 
 然后，我们可以运行测试并通过调用
 
-```
+```java
 gradle nativeTest
 gradle nativeCompile
 ```
 
 **目前，在本地测试执行中不支持 Mockito。**所以我们可以通过如下配置`graalvmNative`扩展来排除模拟测试或者跳过本地测试:
 
-```
+```java
 graalvmNative {
     testSupport = false
 }
@@ -292,13 +292,13 @@ graalvmNative {
 
 在 MVC web 应用程序中，REST 控制器方法的每个返回值都由 Jackson 序列化，并将每个属性自动命名为一个 JSON 元素。我们可以通过在应用程序属性文件中配置 Jackson 的 PropertyNamingStrategy 来全面影响名称映射:
 
-```
+```java
 spring.jacksonproperty-naming-strategy=SNAKE_CASE
 ```
 
 `SNAKE_CASE`是`PropertyNamingStrategies`类型的静态成员的名称。不幸的是，这个成员是通过反射解决的。所以 AOT 编译器需要知道这一点，否则，我们会得到一个错误消息:
 
-```
+```java
 Caused by: java.lang.IllegalArgumentException: Constant named 'SNAKE_CASE' not found
   at org.springframework.util.Assert.notNull(Assert.java:219) ~[na:na]
   at org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
@@ -308,7 +308,7 @@ Caused by: java.lang.IllegalArgumentException: Constant named 'SNAKE_CASE' not f
 
 为此，我们可以用一种简单的方式实现并注册`RuntimeHintsRegistrar`,如下所示:
 
-```
+```java
 @Configuration
 @ImportRuntimeHints(JacksonRuntimeHints.PropertyNamingStrategyRegistrar.class)
 public class JacksonRuntimeHints {
@@ -336,7 +336,7 @@ public class JacksonRuntimeHints {
 
 如果我们想[实现一个 GraphQL API](/web/20221126235145/https://www.baeldung.com/spring-graphql) ，我们需要创建一个模式文件，并将其放在`“classpath:/graphql/*.graphqls”`下，在这里它会被 Springs GraphQL 自动配置自动检测到。这是通过类路径扫描以及集成的 GraphiQL 测试客户端的欢迎页面来完成的。因此，为了在本机可执行文件中正确工作，AOT 编译器需要了解这一点。我们可以用同样的方式注册:
 
-```
+```java
 @ImportRuntimeHints(GraphQlRuntimeHints.GraphQlResourcesRegistrar.class)
 @Configuration
 public class GraphQlRuntimeHints {
@@ -360,7 +360,7 @@ Spring GraphQL 团队已经在做这个了，所以我们可能会在未来的�
 
 为了测试`RuntimeHintsRegistrar`实现，我们甚至不需要运行 Spring Boot 测试，我们可以创建一个简单的 JUnit 测试，如下所示:
 
-```
+```java
 @Test
 void shouldRegisterSnakeCasePropertyNamingStrategy() {
     // arrange
@@ -378,7 +378,7 @@ void shouldRegisterSnakeCasePropertyNamingStrategy() {
 
 如果我们想用集成测试来测试它，我们可以检查 Jackson `ObjectMapper`以获得正确的配置:
 
-```
+```java
 @SpringBootTest
 class JacksonAutoConfigurationIntegrationTest {
 
@@ -396,7 +396,7 @@ class JacksonAutoConfigurationIntegrationTest {
 
 为了用本地模式测试它，我们必须运行一个本地测试:
 
-```
+```java
 # Maven
 mvn clean package -Pnative,nativeTest
 # Gradle
@@ -413,7 +413,7 @@ Spring 6 和 Spring Boot 3 在原生映像构建方面迈出了一大步。但�
 
 首先，我们必须为 Spring Native 添加 Maven 依赖性:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.experimental</groupId>
     <artifactId>spring-native</artifactId>
@@ -431,7 +431,7 @@ Spring 6 和 Spring Boot 3 在原生映像构建方面迈出了一大步。但�
 
 对于 Maven，我们将要求 [`spring-boot-maven-plugin`](https://web.archive.org/web/20221126235145/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-maven-plugin) 使用 [Paketo Java 构建包](https://web.archive.org/web/20221126235145/https://paketo.io/docs/buildpacks/language-family-buildpacks/java/)进行本机映像配置:
 
-```
+```java
 <build>
     <pluginManagement>
         <plugins>
@@ -456,7 +456,7 @@ Spring 6 和 Spring Boot 3 在原生映像构建方面迈出了一大步。但�
 
 类似地，当使用 Gradle 时，我们可以将`tiny`构建器和`BP_NATIVE_IMAGE`环境变量一起添加到`build.gradle`文件中:
 
-```
+```java
 bootBuildImage {
     builder = "paketobuildpacks/builder:tiny"
     environment = [
@@ -471,7 +471,7 @@ bootBuildImage {
 
 所以，让我们把最新的 [`spring-aot-maven-plugin`](https://web.archive.org/web/20221126235145/https://repo.spring.io/artifactory/release/org/springframework/experimental/spring-aot-maven-plugin/) Maven 依赖添加到我们的`pom.xml`:
 
-```
+```java
 <plugin>
     <groupId>org.springframework.experimental</groupId>
     <artifactId>spring-aot-maven-plugin</artifactId>
@@ -489,7 +489,7 @@ bootBuildImage {
 
 同样，对于一个 Gradle 项目，我们可以在`build.gradle`文件中添加最新的 [`org.springframework.experimental.aot`](https://web.archive.org/web/20221126235145/https://repo.spring.io/artifactory/release/org/springframework/experimental/aot/org.springframework.experimental.aot.gradle.plugin/) 依赖项:
 
-```
+```java
 plugins {
     id 'org.springframework.experimental.aot' version '0.10.0'
 }
@@ -503,7 +503,7 @@ Spring AOT 插件为[提供了几个选项来确定源代码生成](https://web.
 
 就是这样！我们准备使用 Maven 命令构建我们的 Spring Boot 项目的本机映像:
 
-```
+```java
 $ mvn spring-boot:build-image
 ```
 
@@ -511,7 +511,7 @@ $ mvn spring-boot:build-image
 
 接下来，我们将添加一个名为`native`的概要文件，它支持一些插件，如 [`native-maven-plugin`](https://web.archive.org/web/20221126235145/https://search.maven.org/search?q=g:org.graalvm.buildtools%20a:native-maven-plugin) 和`spring-boot-maven-plugin`:
 
-```
+```java
 <profiles>
     <profile>
         <id>native</id>
@@ -548,7 +548,7 @@ $ mvn spring-boot:build-image
 
 但是，在使用 Gradle 时，我们会将最新的 [`org.graalvm.buildtools.native`](https://web.archive.org/web/20221126235145/https://search.maven.org/search?q=g:org.graalvm.buildtools.native%20a:org.graalvm.buildtools.native.gradle.plugin) 插件添加到`build.gradle`文件中:
 
-```
+```java
 plugins {
     id 'org.graalvm.buildtools.native' version '0.9.17'
 }
@@ -556,7 +556,7 @@ plugins {
 
 就是这样！我们准备通过在 Maven `package`命令中提供本机概要文件来构建我们的本机映像:
 
-```
+```java
 mvn clean package -Pnative
 ```
 

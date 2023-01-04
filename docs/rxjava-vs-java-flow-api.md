@@ -33,7 +33,7 @@ Java 流 API 是在 Java 9 中作为反应式流规范的实现而引入的。
 
 让我们实现 `VideoFrame`作为我们的数据项:
 
-```
+```java
 public class VideoFrame {
     private long number;
     // additional data fields
@@ -52,7 +52,7 @@ JDK 9 中的流 API 对应于反应流规范。使用 Flow API，如果应用程
 
 让我们将`VideoStreamServer`实现为`VideoFrame`的发布者。
 
-```
+```java
 public class VideoStreamServer extends SubmissionPublisher<VideoFrame> {
 
     public VideoStreamServer() {
@@ -67,7 +67,7 @@ public class VideoStreamServer extends SubmissionPublisher<VideoFrame> {
 
 现在让我们定义`VideoPlayer,` ，它消耗了`VideoFrame.` 的流，因此它必须实现`Flow::Subscriber`。
 
-```
+```java
 public class VideoPlayer implements Flow.Subscriber<VideoFrame> {
 
     Flow.Subscription subscription = null;
@@ -101,7 +101,7 @@ public class VideoPlayer implements Flow.Subscriber<VideoFrame> {
 
 最后，让我们把事情放在一起:
 
-```
+```java
 VideoStreamServer streamServer = new VideoStreamServer();
 streamServer.subscribe(new VideoPlayer());
 
@@ -131,7 +131,7 @@ RxJava 的最新主要版本是 3.x. RxJava 从 2.x 版本开始就支持带有`
 
 现在，让我们制作一个视频流生成器，它是一个无限的惰性流:
 
-```
+```java
 Stream<VideoFrame> videoStream = Stream.iterate(new VideoFrame(0), videoFrame -> {
     // sleep for 1ms;
     return new VideoFrame(videoFrame.getNumber() + 1);
@@ -140,7 +140,7 @@ Stream<VideoFrame> videoStream = Stream.iterate(new VideoFrame(0), videoFrame ->
 
 然后我们定义一个`Flowable`实例在一个单独的线程上生成帧:
 
-```
+```java
 Flowable
   .fromStream(videoStream)
   .subscribeOn(Schedulers.from(Executors.newSingleThreadExecutor()))
@@ -148,7 +148,7 @@ Flowable
 
 需要注意的是，无限流对我们来说已经足够了，但是如果我们需要一种更灵活的方式来生成我们的流，那么`Flowable.create`是一个不错的选择。
 
-```
+```java
 Flowable
   .create(new FlowableOnSubscribe<VideoFrame>() {
       AtomicLong frame = new AtomicLong();
@@ -164,7 +164,7 @@ Flowable
 
 然后，在下一步，VideoPlayer 订阅这个流，并在一个单独的线程上观察项目。
 
-```
+```java
 videoFlowable
   .observeOn(Schedulers.from(Executors.newSingleThreadExecutor()))
   .subscribe(item -> {
@@ -175,7 +175,7 @@ videoFlowable
 
 最后，我们将配置[背压](/web/20220625232110/https://www.baeldung.com/rxjava-backpressure)的策略。如果我们想在帧丢失的情况下停止视频，因此我们必须在缓冲区已满时使用`BackpressureOverflowStrategy::ERROR`。
 
-```
+```java
 Flowable
   .fromStream(videoStream)
   .subscribeOn(Schedulers.from(Executors.newSingleThreadExecutor()))

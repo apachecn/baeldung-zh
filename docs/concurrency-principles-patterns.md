@@ -58,7 +58,7 @@
 
 Scala 并发编程的主要构造是 actors。Actors 是 Scala 中的普通对象，我们可以通过实例化`Actor`类来创建。此外， [Scala Actors 库](https://web.archive.org/web/20220715114240/https://docs.scala-lang.org/overviews/core/actors.html)提供了许多有用的 actor 操作:
 
-```
+```java
 class myActor extends Actor {
     def act() {
         while(true) {
@@ -84,7 +84,7 @@ class myActor extends Actor {
 
 基本上，事件循环只不过是一个事件调度器！事件循环本身可以只在一个本机线程上运行。那么，事件循环中到底发生了什么？让我们看一个非常简单的事件循环的伪代码作为例子:
 
-```
+```java
 while(true) {
     events = getEvents();
     for(e in events)
@@ -112,7 +112,7 @@ while(true) {
 
 考虑一个应用程序，其中多个线程试图访问相同的代码:
 
-```
+```java
 boolean open = false;
 if(!open) {
     // Do Something
@@ -122,7 +122,7 @@ if(!open) {
 
 显然，上面的代码不是线程安全的，它在多线程环境中的行为是不可预测的。这里我们的选择是要么用锁同步这段代码，要么使用原子操作:
 
-```
+```java
 AtomicBoolean open = new AtomicBoolean(false);
 if(open.compareAndSet(false, true) {
     // Do Something

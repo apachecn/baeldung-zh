@@ -35,7 +35,7 @@
 
 [`FileNotFoundException`](/web/20221101183553/https://www.baeldung.com/java-filenotfound-exception) 是使用文件系统时常见的`IOException`类型:
 
-```
+```java
 try {
     new FileReader(new File("/invalid/file/location"));
 } catch (FileNotFoundException e) {
@@ -47,7 +47,7 @@ try {
 
 当使用 URL 时，如果我们的 URL 无效，我们可能会遇到`MalformedURLException – `。
 
-```
+```java
 try {
     new URL("malformedurl");
 } catch (MalformedURLException e) {
@@ -61,7 +61,7 @@ Java 使用文本解析根据给定的`String.` **创建一个对象，如果解
 
 例如，我们可以用不同的方式表示`Date`，例如`dd/mm/yyyy`或`dd,mm,yyyy,` ，但是尝试用不同的格式解析`string`:
 
-```
+```java
 try {
     new SimpleDateFormat("MM, dd, yyyy").parse("invalid-date");
 } catch (ParseException e) {
@@ -86,7 +86,7 @@ try {
 
 这种情况会导致`InterruptedException:`
 
-```
+```java
 class ChildThread extends Thread {
 
     public void run() {
@@ -125,14 +125,14 @@ public class MainThread {
 
 调用没有对象实例的类的方法:
 
-```
+```java
 String strObj = null;
 strObj.equals("Hello World"); // throws NullPointerException.
 ```
 
 同样，如果一个应用程序试图访问或修改一个带有`null`引用的实例变量，我们会得到一个`NullPointerException:`
 
-```
+```java
 Person personObj = null;
 String name = personObj.personName; // Accessing the field of a null object
 personObj.personName = "Jon Doe"; // Modifying the field of a null object
@@ -146,7 +146,7 @@ personObj.personName = "Jon Doe"; // Modifying the field of a null object
 
 让我们看几个抛出`ArrayIndexOutOfBoundException`的例子:
 
-```
+```java
 int[] nums = new int[] {1, 2, 3};
 int numFromNegativeIndex = nums[-1]; // Trying to access at negative index
 int numFromGreaterIndex = nums[4];   // Trying to access at greater index
@@ -163,7 +163,7 @@ Java 中的`String`类提供了访问字符串中特定字符或从`String.`中�
 
 当我们试图访问索引长度等于`String's`的字符或者其他非法索引时，类`String`的方法`charAt(index)`抛出这个异常:
 
-```
+```java
 String str = "Hello World";
 char charAtNegativeIndex = str.charAt(-1); // Trying to access at negative index
 char charAtLengthIndex = str.charAt(11);   // Trying to access at index equal to size of the string 
@@ -181,7 +181,7 @@ char charAtLengthIndex = str.charAt(11);   // Trying to access at index equal to
 
 因此，这导致了`NumberFormatException:`
 
-```
+```java
 String str = "100ABCD";
 int x = Integer.parseInt(str); // Throws NumberFormatException
 int y = Integer.valueOf(str); //Throws NumberFormatException
@@ -193,7 +193,7 @@ int y = Integer.valueOf(str); //Throws NumberFormatException
 
 例如，如果我们试图将一个整数除以零，我们得到一个`ArithmeticException`:
 
-```
+```java
 int illegalOperation = 30/0; // Throws ArithmeticException
 ```
 
@@ -207,7 +207,7 @@ Java 允许在对象之间进行[类型转换](/web/20221101183553/https://www.b
 
 运行时实例是类型转换中真正重要的东西。考虑`Animal`、`Dog, and Lion`之间的如下继承关系:
 
-```
+```java
 class Animal {}
 
 class Dog extends Animal {}
@@ -221,7 +221,7 @@ class Lion extends Animal {}
 
 这导致了`ClassCastException:`
 
-```
+```java
 Animal animal = new Lion(); // At runtime the instance is Lion
 Dog tommy = (Dog) animal; // Throws ClassCastException
 ```
@@ -232,7 +232,7 @@ Dog tommy = (Dog) animal; // Throws ClassCastException
 
 例如，`Thread`类的`sleep()`方法期望正的时间，而我们传递负的时间间隔作为参数。这导致了`IllegalArgumentException`:
 
-```
+```java
 Thread.currentThread().sleep(-10000); // Throws IllegalArgumentException
 ```
 
@@ -248,7 +248,7 @@ Thread.currentThread().sleep(-10000); // Throws IllegalArgumentException
 
 在这个上下文中，程序试图调用列表中的`remove`方法:
 
-```
+```java
 //Initialized with index at -1
 Iterator<Integer> intListIterator = new ArrayList<>().iterator(); 
 

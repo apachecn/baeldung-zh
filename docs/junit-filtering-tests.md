@@ -16,7 +16,7 @@
 
 使用 JUnit 5，我们可以通过在唯一的标签名称下标记测试子集来过滤测试。例如，假设我们使用 JUnit 5 实现了单元测试和集成测试。我们可以在两组测试用例上添加标签:
 
-```
+```java
 @Test
 @Tag("IntegrationTest")
 public void testAddEmployeeUsingSimpelJdbcInsert() {
@@ -36,7 +36,7 @@ public void givenNumberOfEmployeeWhenCountEmployeeThenCountMatch() {
 
 JUnit 5 允许我们实现测试套件，通过它我们可以执行标记的测试用例:
 
-```
+```java
 @SelectPackages("com.baeldung.tags")
 @IncludeTags("UnitTest")
 public class EmployeeDAOUnitTestSuite {
@@ -49,7 +49,7 @@ public class EmployeeDAOUnitTestSuite {
 
 为了在 Maven 构建的各个阶段过滤 JUnit 测试，我们可以使用 Maven Surefire 插件。**Surefire 插件允许我们在插件配置中包含或排除标签**:
 
-```
+```java
 <plugin>
     <artifactId>maven-surefire-plugin</artifactId>
     <version>2.22.2</version>
@@ -61,7 +61,7 @@ public class EmployeeDAOUnitTestSuite {
 
 如果我们现在执行这个插件，它将执行所有被标记为`UnitTest. `的测试。类似地，我们可以排除标记名称下的测试用例:
 
-```
+```java
 <excludedGroups>IntegrationTest</excludedGroups>
 ```
 
@@ -89,21 +89,21 @@ JUnit 4 允许我们通过将它们添加到不同的类别中来执行 JUnit �
 
 **我们可以通过实现[标记接口](/web/20220926195143/https://www.baeldung.com/java-marker-interfaces)来创建尽可能多的类别，其中标记接口的名称代表类别的名称。**对于我们的例子，我们将实现两个类别，`UnitTest:`
 
-```
+```java
 public interface UnitTest {
 }
 ```
 
 和`IntegrationTest:`
 
-```
+```java
 public interface IntegrationTest {
 }
 ```
 
 现在，我们可以通过用`Category`注释对 JUnit 进行注释来对其进行分类:
 
-```
+```java
 @Test
 @Category(IntegrationTest.class)
 public void testAddEmployeeUsingSimpelJdbcInsert() {
@@ -121,7 +121,7 @@ public void givenNumberOfEmployeeWhenCountEmployeeThenCountMatch() {
 
 为了在一个类别中执行 JUnit 测试，我们需要实现一个测试套件类:
 
-```
+```java
 @RunWith(Categories.class)
 @IncludeCategory(UnitTest.class)
 @SuiteClasses(EmployeeDAOCategoryIntegrationTest.class)
@@ -131,7 +131,7 @@ public class EmployeeDAOUnitTestSuite {
 
 这个测试套件可以从 IDE 中执行，并且可以执行所有属于`UnitTest`类别的 JUnit 测试。类似地，我们也可以在套件中排除一类测试:
 
-```
+```java
 @RunWith(Categories.class)
 @ExcludeCategory(IntegrationTest.class)
 @SuiteClasses(EmployeeDAOCategoryIntegrationTest.class)
@@ -145,7 +145,7 @@ public class EmployeeDAOUnitTestSuite {
 
 为此，我们将使用 Maven Surefire 插件:
 
-```
+```java
 <plugin>
     <artifactId>maven-surefire-plugin</artifactId>
     <version>2.22.2</version>
@@ -157,7 +157,7 @@ public class EmployeeDAOUnitTestSuite {
 
 同样，我们可以从 Maven 构建中排除一个类别:
 
-```
+```java
 <plugin>
     <artifactId>maven-surefire-plugin</artifactId>
     <version>2.22.2</version>
@@ -175,7 +175,7 @@ public class EmployeeDAOUnitTestSuite {
 
 现在我们将使用 [Maven Surefire 插件](/web/20220926195143/https://www.baeldung.com/maven-surefire-plugin)来执行单元测试或集成测试:
 
-```
+```java
 <plugin>
     <artifactId>maven-surefire-plugin</artifactId>
     <version>2.22.2</version>

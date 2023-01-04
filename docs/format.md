@@ -34,14 +34,14 @@
 
 ### 可用签名
 
-```
+```java
 public static String format(String format, Object... args)
 public static String format(Locale l, String format, Object... args)
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenFormat_thenCorrect() {
     String value = "Baeldung";
@@ -55,7 +55,7 @@ public void whenFormat_thenCorrect() {
 
 *   `IllegalFormatException`–如果格式`String`包含无效语法。
 
-```
+```java
 @Test(expected = IllegalFormatException.class)
 public void whenInvalidFormatSyntax_thenIllegalFormatExceptionThrown() {
     String value = "Baeldung";

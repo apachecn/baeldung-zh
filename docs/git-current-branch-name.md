@@ -12,7 +12,7 @@
 
 首先，让我们准备一个名为`myRepo`的 Git 存储库:
 
-```
+```java
 $ git branch -a
 * feature
   master
@@ -30,14 +30,14 @@ $ git branch -a
 
 当前分支信息由`.git/HEAD`文件存储或链接，这取决于 Git 版本。例如，在这台机器上，`.git/HEAD`文件包含:
 
-```
+```java
 $ cat .git/HEAD
 ref: refs/heads/feature 
 ```
 
 所以，它指向了一个`symbolic ref`。**[`git symbolic-ref`](https://web.archive.org/web/20220803043636/https://git-scm.com/docs/git-symbolic-ref)命令允许我们读取和修改符号参考**。我们可以使用这个命令获得简短的当前分支名称:
 
-```
+```java
 $ git symbolic-ref --short HEAD
 feature 
 ```
@@ -46,7 +46,7 @@ feature
 
 **从 Git 1.7 版本开始，我们也可以使用 [`git rev-parse`](https://web.archive.org/web/20220803043636/https://git-scm.com/docs/git-rev-parse) 命令来获取当前的分支名称**:
 
-```
+```java
 $ git rev-parse --abbrev-ref HEAD
 feature 
 ```
@@ -55,7 +55,7 @@ feature
 
 Git 的 [`git name-rev`](https://web.archive.org/web/20220803043636/https://git-scm.com/docs/git-name-rev) 命令可以找到给定版本的符号名称。因此，为了得到当前的分支名称，我们可以读取 rev `HEAD`的名称:
 
-```
+```java
 $ git name-rev --name-only HEAD
 feature
 ```
@@ -66,7 +66,7 @@ feature
 
 我们知道，如果我们启动没有任何选项的`git branch`命令，Git 将打印所有本地分支，并将当前分支放在第一行，在名称前面有一个“*”字符:
 
-```
+```java
 $ git branch
 * feature
   master 
@@ -74,14 +74,14 @@ $ git branch
 
 因此，我们可以解析`git branch`命令的输出来获得分支名称。让我们看一个组合`git branch`和 [`sed`](/web/20220803043636/https://www.baeldung.com/linux/sed-editor) 命令的例子:
 
-```
+```java
 $ git branch | sed -n '1{s/^* *//;p}'
 feature 
 ```
 
 实际上，**从 2.22 版本开始，Git 在`git branch`命令**中引入了`–show-current`选项，这样我们可以直接得到当前分支的名称:
 
-```
+```java
 $ git branch --show-current
 feature 
 ```

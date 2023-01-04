@@ -22,7 +22,7 @@ Learn about the standard Java main() method along with some uncommon, but still 
 
 我们将从一个`HelloWorld`程序开始:
 
-```
+```java
 public class HelloWorld {
     public static void main(String[] args) {
         System.out.println("Hello world..!!!");
@@ -32,7 +32,7 @@ public class HelloWorld {
 
 现在让我们编译它:
 
-```
+```java
 $ javac HelloWorld.java
 ```
 
@@ -44,13 +44,13 @@ $ javac HelloWorld.java
 
 要运行 Java 编译器生成的`.class`文件，我们可以使用这个命令:
 
-```
+```java
 java <.class filename>
 ```
 
 现在让我们运行我们的程序:
 
-```
+```java
 $ java helloworld
 Error: Could not find or load main class helloworld
 ```
@@ -61,7 +61,7 @@ Error: Could not find or load main class helloworld
 
 让我们用正确的大小写再试一次:
 
-```
+```java
 $ java HelloWorld
 Hello world..!!!
 ```
@@ -72,20 +72,20 @@ Hello world..!!!
 
 要编译一个 Java 程序，我们必须提供带有扩展名(.`java`):
 
-```
+```java
 $ javac HelloWorld.java
 ```
 
 但是要运行一个.`class`文件，我们需要提供类名，而不是文件名。所以不需要提供`.class`扩展:
 
-```
+```java
 $ java HelloWorld.class
 Error: Could not find or load main class HelloWorld.class
 ```
 
 同样，让我们使用正确的类名运行我们的程序:
 
-```
+```java
 $ java HelloWorld 
 Hello world..!!!
 ```
@@ -96,7 +96,7 @@ Hello world..!!!
 
 让我们将`HelloWorld`类移到`com.baeldung`包中:
 
-```
+```java
 package com.baeldung;
 
 public class HelloWorld {
@@ -108,7 +108,7 @@ public class HelloWorld {
 
 现在让我们像以前一样编译并运行更新后的`HelloWorld`程序:
 
-```
+```java
 $ java HelloWorld
 Error: Could not find or load main class HelloWorld
 ```
@@ -121,13 +121,13 @@ Error: Could not find or load main class HelloWorld
 
 现在，当我们创建`com.baeldung`包时，我们实际上创建了这个文件夹结构:
 
-```
+```java
 com/baeldung/HelloWorld.java
 ```
 
 首先，让我们试着从`com/baeldung`目录运行我们的程序:
 
-```
+```java
 $ java com.baeldung.HelloWorld
 Error: Could not find or load main class com.baeldung.HelloWorld
 ```
@@ -140,7 +140,7 @@ Error: Could not find or load main class com.baeldung.HelloWorld
 
 现在让我们回到父文件夹并运行它:
 
-```
+```java
 $ java com.baeldung.HelloWorld
 Hello world..!!!
 ```
@@ -155,7 +155,7 @@ Hello world..!!!
 
 运行程序时，我们可以使用`-classpath`选项提供类路径:
 
-```
+```java
 java -classpath /my_programs/compiled_classes HelloWorld
 ```
 
@@ -165,7 +165,7 @@ java -classpath /my_programs/compiled_classes HelloWorld
 
 为了从目录`com/baeldung`运行我们的程序，我们可以简单地声明我们的类路径在两个目录之上——每个包部分一个目录:
 
-```
+```java
 $ java -claspath ../../ com.baeldung.HelloWorld
 Hello world..!!!
 ```

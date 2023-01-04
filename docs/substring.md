@@ -32,14 +32,14 @@
 
 ### 可用签名
 
-```
+```java
 public String substring(int beginIndex)
 public String substring(int beginIndex, int endIndex)
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenCallSubstring_thenCorrect() {
     String s = "Welcome to Baeldung";
@@ -52,7 +52,7 @@ public void whenCallSubstring_thenCorrect() {
 
 *   `IndexOutOfBoundsException –`如果第一个索引为负，则第一个索引大于第二个索引或者第二个索引大于`String`的长度
 
-```
+```java
 @Test(expected = IndexOutOfBoundsException.class)
 public void whenSecondIndexEqualToLengthOfString_thenCorrect() {
     String s = "Welcome to Baeldung";

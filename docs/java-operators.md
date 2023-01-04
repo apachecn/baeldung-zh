@@ -20,7 +20,7 @@ Java 提供了许多组操作符。它们按功能分类。
 
 加法运算符(+)允许我们将两个值相加或连接两个字符串:
 
-```
+```java
 int ten = 5 + 5;
 String youAndMe = "You " + "and" + " Me";
 ```
@@ -29,7 +29,7 @@ String youAndMe = "You " + "and" + " Me";
 
 通常，我们使用减法运算符(-)从一个值中减去另一个值:
 
-```
+```java
 int five = 10 - 5;
 int negative80 = 20 - 100;
 ```
@@ -38,7 +38,7 @@ int negative80 = 20 - 100;
 
 乘法运算符(*)用于将两个值或变量相乘:
 
-```
+```java
 int hundred = 20 * 5;
 int fifteen = -5 * -3;
 ```
@@ -47,7 +47,7 @@ int fifteen = -5 * -3;
 
 除法运算符(/)允许我们将左边的值除以右边的值:
 
-```
+```java
 int four = 20 / 5;
 int seven = 15 / 2;
 ```
@@ -60,7 +60,7 @@ int seven = 15 / 2;
 
 我们可以用除法运算符得到商。但是，**如果我们只想得到除法运算的余数**，可以使用[模运算符](/web/20220707143821/https://www.baeldung.com/modulo-java) (%):
 
-```
+```java
 int one = 15 % 2;
 int zero = 10 % 5;
 ```
@@ -75,7 +75,7 @@ int zero = 10 % 5;
 
 一元加号运算符(+)表示正值。如果数字是正数，我们可以省略'+'运算符:
 
-```
+```java
 int five = +5; // same as: int five = 5
 ```
 
@@ -83,7 +83,7 @@ int five = +5; // same as: int five = 5
 
 与一元加号运算符相反，一元减号运算符(-)对值或表达式求反:
 
-```
+```java
 int negativeFive = -5;
 int eighty = -(20 - 100);
 ```
@@ -92,7 +92,7 @@ int eighty = -(20 - 100);
 
 逻辑补码运算符(！)也被称为[【非】运算符](/web/20220707143821/https://www.baeldung.com/java-using-not-in-if-conditions)。我们可以用它来反转一个`boolean`变量或值的值:
 
-```
+```java
 boolean aTrue = true;
 boolean bFalse = !aTrue;
 ```
@@ -101,7 +101,7 @@ boolean bFalse = !aTrue;
 
 增量运算符(++)允许我们将变量的值增加 1:
 
-```
+```java
 int number = 5;
 number++; // number = 6
 ```
@@ -110,7 +110,7 @@ number++; // number = 6
 
 减量运算符(–)的作用与增量运算符相反。它将变量的值减少 1:
 
-```
+```java
 int number = 5;
 number--; // number = 4
 ```
@@ -125,7 +125,7 @@ number--; // number = 4
 
 我们使用“等于”运算符(==)来比较两边的值。如果它们相等，操作返回`true`:
 
-```
+```java
 int number1 = 5;
 int number2 = 5;
 boolean theyAreEqual = number1 == number2;
@@ -139,7 +139,7 @@ boolean theyAreEqual = number1 == number2;
 
 “不等于”运算符(！=)与' == '运算符相反。如果两边的值不相等，操作返回`true`:
 
-```
+```java
 int number1 = 5;
 int number2 = 7;
 boolean notEqual = number1 != number2;
@@ -149,7 +149,7 @@ boolean notEqual = number1 != number2;
 
 当我们用“大于”运算符(>)比较两个值时，如果左边的值大于右边的值，则返回`true`:
 
-```
+```java
 int number1 = 7;
 int number2 = 5;
 boolean greater = number1 > number2;
@@ -159,7 +159,7 @@ boolean greater = number1 > number2;
 
 “大于或等于”运算符(> =)比较两边的值，如果左边的操作数大于或等于右边的操作数，则返回`true`:
 
-```
+```java
 int number1 = 7;
 int number2 = 5;
 boolean greaterThanOrEqualTo = number1 >= number2;
@@ -171,7 +171,7 @@ greaterThanOrEqualTo = number1 >= number2;
 
 “小于”运算符(true:
 
-```
+```java
 int number1 = 4;
 int number2 = 5;
 boolean lessThan = number1 < number2;
@@ -181,7 +181,7 @@ boolean lessThan = number1 < number2;
 
 类似地，“小于或等于”运算符(< =)比较两边的值，如果左边的操作数小于或等于右边的操作数，则返回`true`:
 
-```
+```java
 int number1 = 4;
 int number2 = 5;
 boolean lessThanOrEqualTo = number1 <= number2;
@@ -201,7 +201,7 @@ Java 中有两个逻辑操作符:逻辑 AND 和 OR 操作符。基本上，它�
 
 仅当两个操作数都是`true`时，逻辑 AND 运算符(`&&`)才返回`true`:
 
-```
+```java
 int number1 = 7;
 int number2 = 5;
 boolean resultTrue = (number1 > 0) && (number1 > number2);
@@ -211,7 +211,7 @@ boolean resultTrue = (number1 > 0) && (number1 > number2);
 
 与'`&&`'运算符不同，如果至少有一个操作数为`true`，逻辑 or 运算符(`||`)将返回`true`:
 
-```
+```java
 int number1 = 7;
 int number2 = 5;
 boolean resultTrue = (number1 > 100) || (number1 > number2);
@@ -223,7 +223,7 @@ boolean resultTrue = (number1 > 100) || (number1 > number2);
 
 一个[三元运算符](/web/20220707143821/https://www.baeldung.com/java-ternary-operator)是`if-then-else`语句的缩写形式。它有三个操作数，所以叫三元数。首先，让我们看看标准的`if-then-else`语句语法:
 
-```
+```java
 if ( condition ) {
     expression1
 } else {
@@ -235,13 +235,13 @@ if ( condition ) {
 
 让我们看看它的语法:
 
-```
+```java
 condition ? expression1 : expression2
 ```
 
 接下来，让我们通过一个简单的例子来理解三元运算符是如何工作的:
 
-```
+```java
 int number = 100;
 String greaterThan50 = number > 50 ? "The number is greater than 50" : "The number is NOT greater than 50";
 ```
@@ -254,7 +254,7 @@ String greaterThan50 = number > 50 ? "The number is greater than 50" : "The numb
 
 按位 AND 运算符(&)返回输入值的逐位 AND:
 
-```
+```java
 int number1 = 12;
 int number2 = 14;
 int twelve = number1 & number2; // 00001100 & 00001110 = 00001100 = 12
@@ -264,7 +264,7 @@ int twelve = number1 & number2; // 00001100 & 00001110 = 00001100 = 12
 
 按位 or 运算符(|)返回输入值的逐位 OR 值:
 
-```
+```java
 int number1 = 12;
 int number2 = 14;
 int fourteen = number1 | number2; // 00001100 | 00001110 = 00001110 = 14
@@ -274,7 +274,7 @@ int fourteen = number1 | number2; // 00001100 | 00001110 = 00001110 = 14
 
 [位异或](/web/20220707143821/https://www.baeldung.com/java-xor-operator)(异或)运算符(^)返回输入值的逐位异或:
 
-```
+```java
 int number1 = 12;
 int number2 = 14;
 int two = number1 ^ number2; // 00001100 ^ 00001110 = 00000010 = 2
@@ -284,7 +284,7 @@ int two = number1 ^ number2; // 00001100 ^ 00001110 = 00000010 = 2
 
 按位求补运算符(~)是一元运算符。它返回值的补码表示，将输入值的所有位反转:
 
-```
+```java
 int number = 12;
 int negative13 = ~number; // ~00001100 = 11110011 = -13
 ```
@@ -297,7 +297,7 @@ int negative13 = ~number; // ~00001100 = 11110011 = -13
 
 接下来，让我们将数字 12 左移两次:
 
-```
+```java
 int fourtyeight = 12 << 2; // 00001100 << 2 = 00110000 = 48
 ```
 
@@ -311,7 +311,7 @@ int fourtyeight = 12 << 2; // 00001100 << 2 = 00110000 = 48
 
 接下来，让我们对数字 12 和-12 进行两次“有符号右移”来看看区别:
 
-```
+```java
 int three = 12 >> 2; // 00001100 >> 2 = 00000011 = 3
 int negativeThree = -12 >> 2; // 11110100 >> 2 = 11111101 = -3
 ```
@@ -326,7 +326,7 @@ int negativeThree = -12 >> 2; // 11110100 >> 2 = 11111101 = -3
 
 接下来，让我们对数字 12 和-12 进行两次无符号右移，看看有什么不同:
 
-```
+```java
 int three = 12 >>> 2; // 00001100 >> 2 = 00000011 = 3
 int result = -12 >>> 2; // result = 1073741821 (11111111111111111111111111110100 >>> 2 = 00111111111111111111111111111101)
 ```
@@ -337,7 +337,7 @@ int result = -12 >>> 2; // result = 1073741821 (11111111111111111111111111110100
 
 有时，当我们有一个对象时，我们想测试它是否是给定类型的[实例。“`instanceof`”运算符可以帮助我们做到这一点:](/web/20220707143821/https://www.baeldung.com/java-instanceof)
 
-```
+```java
 boolean resultTrue = Long.valueOf(20) instanceof Number;
 ```
 
@@ -349,7 +349,7 @@ boolean resultTrue = Long.valueOf(20) instanceof Number;
 
 简单赋值操作符(=)是 Java 中一个简单但重要的操作符。实际上，在前面的例子中，我们已经使用过很多次了。它将右边的值赋给左边的操作数:
 
-```
+```java
 int seven = 7;
 ```
 
@@ -361,7 +361,7 @@ int seven = 7;
 
 最后，让我们通过例子来了解 Java 中所有受支持的复合赋值:
 
-```
+```java
 // Assuming all variables (a,b,c,d,e) have the initial value 10
 a += 4; // a = 14, same as a = a + 4
 b -= 4; // b = 6, same as b = b - 4

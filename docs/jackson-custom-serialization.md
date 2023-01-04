@@ -12,7 +12,7 @@
 
 让我们定义两个简单的实体，看看 Jackson 如何在没有任何定制逻辑的情况下序列化它们:
 
-```
+```java
 public class User {
     public int id;
     public String name;
@@ -26,14 +26,14 @@ public class Item {
 
 现在，让我们用一个`User`实体序列化一个`Item`实体:
 
-```
+```java
 Item myItem = new Item(1, "theItem", new User(2, "theUser"));
 String serialized = new ObjectMapper().writeValueAsString(myItem);
 ```
 
 这将为两个实体产生一个完整的 JSON 表示:
 
-```
+```java
 {
     "id": 1,
     "itemName": "theItem",
@@ -48,7 +48,7 @@ String serialized = new ObjectMapper().writeValueAsString(myItem);
 
 现在，**让我们简化上面的 JSON 输出**，只序列化`User`的`id`，而不是整个`User`对象；我们希望得到以下更简单的 JSON:
 
-```
+```java
 {
     "id": 25,
     "itemName": "FEDUfRgS",
@@ -58,7 +58,7 @@ String serialized = new ObjectMapper().writeValueAsString(myItem);
 
 简单地说，我们必须**为`Item`对象定义一个定制的序列化器**:
 
-```
+```java
 public class ItemSerializer extends StdSerializer<Item> {
 
     public ItemSerializer() {
@@ -85,7 +85,7 @@ public class ItemSerializer extends StdSerializer<Item> {
 
 现在，我们需要用`Item`类的`ObjectMapper`注册这个定制序列化程序，并执行序列化:
 
-```
+```java
 Item myItem = new Item(1, "theItem", new User(2, "theUser"));
 ObjectMapper mapper = new ObjectMapper();
 
@@ -102,7 +102,7 @@ String serialized = mapper.writeValueAsString(myItem);
 
 我们也可以直接在类上注册序列化器，而不是在类`ObjectMapper`上注册:
 
-```
+```java
 @JsonSerialize(using = ItemSerializer.class)
 public class Item {
     ...
@@ -111,14 +111,14 @@ public class Item {
 
 现在，当执行**标准序列化**时:
 
-```
+```java
 Item myItem = new Item(1, "theItem", new User(2, "theUser"));
 String serialized = new ObjectMapper().writeValueAsString(myItem);
 ```
 
 我们将获得定制的 JSON 输出，由序列化程序创建，通过`@JsonSerialize`指定:
 
-```
+```java
 {
     "id": 25,
     "itemName": "FEDUfRgS",

@@ -35,7 +35,7 @@ JPA 关系可以是单向的，也可以是双向的。这仅仅意味着我们�
 
 `@JoinColumn`注释定义了拥有方的实际物理映射:
 
-```
+```java
 @Entity
 public class Email {
 
@@ -64,7 +64,7 @@ public class Email {
 
 因此，让我们定义我们的`Employee`实体:
 
-```
+```java
 @Entity
 public class Employee {
 

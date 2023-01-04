@@ -22,13 +22,13 @@ Tesseract 可在所有主要操作系统上下载/安装。
 
 例如，如果我们使用 macOS，我们可以使用[自制软件](https://web.archive.org/web/20220628065817/https://brew.sh/)安装 OCR 引擎:
 
-```
+```java
 brew install tesseract 
 ```
 
 我们将观察到，默认情况下，该包包含一组语言数据文件，如英语、方向和脚本检测(OSD ):
 
-```
+```java
 ==> Installing tesseract 
 ==> Downloading https://homebrew.bintray.com/bottles/tesseract-4.1.1.high_sierra.bottle.tar.gz
 ==> Pouring tesseract-4.1.1.high_sierra.bottle.tar.gz
@@ -41,19 +41,19 @@ If you need any other supported languages, run `brew install tesseract-lang`.
 
 但是，我们可以安装`tesseract-lang`模块来支持其他语言:
 
-```
+```java
 brew install tesseract-lang
 ```
 
 对于 Linux，我们可以使用`yum`命令安装 Tesseract:
 
-```
+```java
 yum install tesseract
 ```
 
 同样，让我们添加语言支持:
 
-```
+```java
 yum install tesseract-langpack-eng
 yum install tesseract-langpack-spa
 ```
@@ -74,13 +74,13 @@ yum install tesseract-langpack-spa
 
 然后，我们将运行`tesseract`命令来读取`baeldung.png` 快照，并将文本写入`output.txt`文件:
 
-```
+```java
 tesseract baeldung.png output
 ```
 
 `output.txt`文件将看起来像这样:
 
-```
+```java
 a REST with Spring Learn Spring (new!)
 The canonical reference for building a production
 grade API with Spring.
@@ -101,13 +101,13 @@ Java Weekly Reviews
 
 首先，让我们用默认的英语语言处理图像:
 
-```
+```java
 tesseract multiLanguageText.png output 
 ```
 
 输出将类似于:
 
-```
+```java
 Der ,.schnelle” braune Fuchs springt
 iiber den faulen Hund. Le renard brun
 «rapide» saute par-dessus le chien
@@ -120,13 +120,13 @@ salta sobre 0 cao preguicoso.
 
 然后，让我们用葡萄牙语处理图像:
 
-```
+```java
 tesseract multiLanguageText.png output -l por
 ```
 
 因此，OCR 引擎也将检测葡萄牙字母:
 
-```
+```java
 Der ,.schnelle” braune Fuchs springt
 iber den faulen Hund. Le renard brun
 «rapide» saute par-dessus le chien
@@ -139,7 +139,7 @@ salta sobre o cão preguiçoso.
 
 同样，我们可以声明语言的组合:
 
-```
+```java
 tesseract multiLanguageText.png output -l spa+por
 ```
 
@@ -151,7 +151,7 @@ Tesseract 支持各种页面分段模式，如 OSD、自动页面分段和稀疏
 
 我们可以通过使用值为 0 到 13 的`–psm`参数声明页面分段模式，用于各种模式:
 
-```
+```java
 tesseract multiLanguageText.png output --psm 1
 ```
 
@@ -167,7 +167,7 @@ tesseract multiLanguageText.png output --psm 1
 
 为此，我们可以使用值为 0 到 3 的`–oem`参数:
 
-```
+```java
 tesseract multiLanguageText.png output --oem 1
 ```
 
@@ -185,7 +185,7 @@ OCR 引擎模式有:
 
 如果我们使用遗留的 OCR 引擎而不提供支持的训练数据，Tesseract 将抛出一个错误:
 
-```
+```java
 Error: Tesseract (legacy) engine requested, but components are not present in /usr/local/share/tessdata/eng.traineddata!!
 Failed loading language 'eng'
 Tesseract couldn't load any languages!
@@ -193,7 +193,7 @@ Tesseract couldn't load any languages!
 
 因此，我们应该下载所需的`.traineddata`文件，或者将它们保存在默认的`tessdata`位置，或者使用`–tessdata-dir` 参数声明该位置:
 
-```
+```java
 tesseract multiLanguageText.png output --tessdata-dir /image-processing/tessdata
 ```
 
@@ -203,7 +203,7 @@ tesseract multiLanguageText.png output --tessdata-dir /image-processing/tessdata
 
 例如，要获得可搜索的 PDF 输出:
 
-```
+```java
 tesseract multiLanguageText.png output pdf
 ```
 
@@ -211,7 +211,7 @@ tesseract multiLanguageText.png output pdf
 
 同样，对于 hOCR 输出:
 
-```
+```java
 tesseract multiLanguageText.png output hocr
 ```
 
@@ -223,7 +223,7 @@ Tess4J 是 Tesseract APIs 的 Java 包装器，它为 JPEG、GIF、PNG 和 BMP �
 
 首先，让我们将最新的 [`tess4j`](https://web.archive.org/web/20220628065817/https://search.maven.org/search?q=g:net.sourceforge.tess4j%20a:tess4j) Maven 依赖添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>net.sourceforge.tess4j</groupId>
     <artifactId>tess4j</artifactId>
@@ -233,7 +233,7 @@ Tess4J 是 Tesseract APIs 的 Java 包装器，它为 JPEG、GIF、PNG 和 BMP �
 
 然后，我们可以使用`tess4j`提供的 [`Tesseract`](https://web.archive.org/web/20220628065817/http://tess4j.sourceforge.net/docs/docs-4.4/net/sourceforge/tess4j/Tesseract.html) 类来处理图像:
 
-```
+```java
 File image = new File("src/main/resourcimg/multiLanguageText.png");
 Tesseract tesseract = new Tesseract();
 tesseract.setDatapath("src/main/resources/tessdata");
@@ -247,20 +247,20 @@ String result = tesseract.doOCR(image);
 
 最后，我们可以验证经过处理的图像的`String`输出:
 
-```
+```java
 Assert.assertTrue(result.contains("Der ,.schnelle” braune Fuchs springt"));
 Assert.assertTrue(result.contains("salta sopra il cane pigro. El zorro"));
 ```
 
 此外，我们可以使用`setHocr`方法获得 HTML 输出:
 
-```
+```java
 tesseract.setHocr(true);
 ```
 
 默认情况下，库处理整个图像。然而，我们可以通过使用 [`java.awt.Rectangle`](https://web.archive.org/web/20220628065817/https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/Rectangle.html) 对象同时调用`doOCR`方法来处理图像的特定部分:
 
-```
+```java
 result = tesseract.doOCR(imageFile, new Rectangle(1200, 200));
 ```
 

@@ -16,7 +16,7 @@
 
 `WebClient`使用的默认`HttpClient` 是 Netty 实现，因此**在我们将`reactor.netty.http.client` 日志记录级别更改为 `DEBUG,`** 后，我们可以看到一些请求日志记录，但是如果我们需要定制的日志，我们可以通过 [`WebClient#filters`](/web/20221128043825/https://www.baeldung.com/spring-webclient-filters) 配置`e`我们的日志记录器:
 
-```
+```java
 WebClient
   .builder()
   .filters(exchangeFilterFunctions -> {
@@ -30,7 +30,7 @@ WebClient
 
 让我们通过使用`ExchangeFilterFunction#ofRequestProcessor`来实现`logRequest` :
 
-```
+```java
 ExchangeFilterFunction logRequest() {
     return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
         if (log.isDebugEnabled()) {
@@ -60,7 +60,7 @@ HTTP 客户端具有记录请求和响应主体的特性。因此，**为了实�
 
 首先，让我们将 [`jetty-reactive-httpclient`](https://web.archive.org/web/20221128043825/https://search.maven.org/search?q=a:jetty-reactive-httpclient) 的 Maven 依赖项添加到 pom 中:
 
-```
+```java
 <dependency>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-reactive-httpclient</artifactId>
@@ -70,7 +70,7 @@ HTTP 客户端具有记录请求和响应主体的特性。因此，**为了实�
 
 然后我们将创建一个定制的 Jetty `HttpClient`:
 
-```
+```java
 SslContextFactory.Client sslContextFactory = new SslContextFactory.Client();
 HttpClient httpClient = new HttpClient(sslContextFactory) {
     @Override
@@ -85,7 +85,7 @@ HttpClient httpClient = new HttpClient(sslContextFactory) {
 
 接下来，我们需要用请求注册事件，以便我们可以在请求的每个部分可用时进行记录:
 
-```
+```java
 Request enhance(Request request) {
     StringBuilder group = new StringBuilder();
     request.onRequestBegin(theRequest -> {
@@ -124,7 +124,7 @@ Request enhance(Request request) {
 
 最后，我们必须构建`WebClient`实例:
 
-```
+```java
 WebClient
   .builder()
   .clientConnector(new JettyClientHttpConnector(httpClient))
@@ -137,7 +137,7 @@ WebClient
 
 首先，让我们创建一个 Netty `HttpClient`:
 
-```
+```java
 HttpClient httpClient = HttpClient
   .create()
   .wiretap(true)
@@ -147,13 +147,13 @@ HttpClient httpClient = HttpClient
 
 接下来，我们必须将 Netty 的客户端包的日志级别`reactor.netty.http.client`设置为`DEBUG`:
 
-```
+```java
 logging.level.reactor.netty.http.client=DEBUG
 ```
 
 现在，让我们来构建`WebClient`:
 
-```
+```java
 WebClient
   .builder()
   .clientConnector(new ReactorClientHttpConnector(httpClient))
@@ -164,7 +164,7 @@ WebClient
 
 因此，如果我们只需要 Netty 的文本记录器，我们可以配置`HttpClient`:
 
-```
+```java
 HttpClient httpClient = HttpClient
   .create()
   .wiretap("reactor.netty.http.client.HttpClient", 

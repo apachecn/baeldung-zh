@@ -45,7 +45,7 @@ Grinder 与其他两个工具的不同之处还在于它支持控制台和代理
 
 让我们通过查看一些方法存根来快速了解 API:
 
-```
+```java
 @PostMapping(path="/rewards/add")
 public @ResponseBody RewardsAccount addRewardsAcount(@RequestBody RewardsAccount body)
 
@@ -88,7 +88,7 @@ public @ResponseBody Iterable<Transaction> findTransactions(@PathVariable Intege
 
 加特林的 API 采用了一种构建 DSL 的方法，正如我们在它的步骤 4 中看到的:
 
-```
+```java
 .exec(http("get_reward")
   .get("/rewards/find/${custId}")
   .check(jsonPath("$.id").saveAs("rwdId"))) 
@@ -98,7 +98,7 @@ public @ResponseBody Iterable<Transaction> findTransactions(@PathVariable Intege
 
 另外，加特林的表达式语言使得动态请求体变得更加容易
 
-```
+```java
 .body(StringBody(
   """{ 
     "customerRewardsId":"${rwdId}",
@@ -109,7 +109,7 @@ public @ResponseBody Iterable<Transaction> findTransactions(@PathVariable Intege
 
 最后，我们的比较配置。将 1000 次运行设置为整个场景的重复，`atOnceUsers `方法设置线程/用户:
 
-```
+```java
 val scn = scenario("RewardsScenario")
   .repeat(1000) {
   ...
@@ -125,11 +125,11 @@ val scn = scenario("RewardsScenario")
 
 **JMeter 在 GUI 配置后生成一个 XML 文件。**该文件包含 JMeter 特定对象，这些对象具有已设置的属性及其值，例如:
 
-```
+```java
 <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Add Transaction" enabled="true">
 ```
 
-```
+```java
 <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Transaction Id Extractor" enabled="true">
 ```
 
@@ -137,7 +137,7 @@ val scn = scenario("RewardsScenario")
 
 我们在 JMeter 中对运行和用户的配置使用了`ThreadGroups`:
 
-```
+```java
 <stringProp name="ThreadGroup.num_threads">100</stringProp>
 ```
 
@@ -147,7 +147,7 @@ val scn = scenario("RewardsScenario")
 
 没有 Scala 和 GUI 的函数式编程，我们为 Grinder 编写的 Jython 脚本看起来非常简单。添加一些系统 Java 类，我们的代码就少了很多。
 
-```
+```java
 customerId = str(random.nextInt());
 result = request1.POST("http://localhost:8080/transactions/add",
   "{"'"customerRewardsId"'":null,"'"customerId"'":"+ customerId + ","'"transactionDate"'":null}")
@@ -158,7 +158,7 @@ txnId = parseJsonString(result.getText(), "id")
 
 使用 Grinder，我们在外部属性文件中定义线程、进程和运行值:
 
-```
+```java
 grinder.threads = 100
 grinder.processes = 1
 grinder.runs = 1000
@@ -176,7 +176,7 @@ grinder.runs = 1000
 
 加特林只要求我们设置好`JAVA_HOME`和`GATLING_HOME`。为了执行加特林，我们使用:
 
-```
+```java
 ./gatling.sh
 ```
 
@@ -184,13 +184,13 @@ grinder.runs = 1000
 
 当启动 GUI 进行配置时，JMeter 需要一个参数来禁用测试的 GUI:
 
-```
+```java
 ./jmeter.sh -n -t TestPlan.jmx -l log.jtl
 ```
 
 和加特林一样，Grinder 要求我们设置`JAVA_HOME`和`GRINDERPATH`。然而，它还需要几个属性:
 
-```
+```java
 export CLASSPATH=/home/lore/Documents/grinder-3/lib/grinder.jar:$CLASSPATH
 export GRINDERPROPERTIES=/home/lore/Documents/grinder-3/examples/grinder.properties
 ```
@@ -199,11 +199,11 @@ export GRINDERPROPERTIES=/home/lore/Documents/grinder-3/examples/grinder.propert
 
 最后，我们通过以下方式引导控制台和代理:
 
-```
+```java
 java -classpath $CLASSPATH net.grinder.Console
 ```
 
-```
+```java
 java -classpath $CLASSPATH net.grinder.Grinder $GRINDERPROPERTIES
 ```
 

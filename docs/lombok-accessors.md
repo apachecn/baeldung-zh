@@ -16,7 +16,7 @@
 
 首先，让我们创建我们的类:
 
-```
+```java
 @Getter
 @Setter
 public class StandardAccount {
@@ -27,7 +27,7 @@ public class StandardAccount {
 
 现在让我们创建一个测试用例。我们可以在测试中看到，Lombok 添加了典型的 getter 和 setter 方法:
 
-```
+```java
 @Test
 public void givenStandardAccount_thenUseStandardAccessors() {
     StandardAccount account = new StandardAccount();
@@ -45,7 +45,7 @@ public void givenStandardAccount_thenUseStandardAccessors() {
 
 让我们从`fluent`选项开始:
 
-```
+```java
 @Accessors(fluent = true)
 ```
 
@@ -53,7 +53,7 @@ public void givenStandardAccount_thenUseStandardAccessors() {
 
 我们一会儿会看一下`chain` 选项，但是因为它是默认启用的，所以现在让我们显式地禁用它:
 
-```
+```java
 @Accessors(fluent = true, chain = false)
 @Getter
 @Setter
@@ -65,7 +65,7 @@ public class FluentAccount {
 
 现在，我们的测试仍然表现相同，但是我们改变了访问和改变状态的方式:
 
-```
+```java
 @Test
 public void givenFluentAccount_thenUseFluentAccessors() {
     FluentAccount account = new FluentAccount();
@@ -83,7 +83,7 @@ public void givenFluentAccount_thenUseFluentAccessors() {
 
 现在让我们来看看`chain`选项:
 
-```
+```java
 @Accessors(chain = true)
 ```
 
@@ -93,7 +93,7 @@ public void givenFluentAccount_thenUseFluentAccessors() {
 
 让我们构建我们的`fluent`访问器，并将`chain`选项改为`true`:
 
-```
+```java
 @Accessors(fluent = true, chain = true)
 @Getter 
 @Setter 
@@ -105,13 +105,13 @@ public class ChainedFluentAccount {
 
 如果我们省略`chain`并且只指定:
 
-```
+```java
 @Accessors(fluent = true)
 ```
 
 现在让我们看看这对我们的测试用例有什么影响:
 
-```
+```java
 @Test
 public void givenChainedFluentAccount_thenUseChainedFluentAccessors() {
     ChainedFluentAccount account = new ChainedFluentAccount()
@@ -133,7 +133,7 @@ public void givenChainedFluentAccount_thenUseChainedFluentAccessors() {
 
 让我们考虑下面的类，它的字段使用匈牙利符号:
 
-```
+```java
 public class PrefixedAccount { 
     private String sName; 
     private BigDecimal bdBalance; 
@@ -144,7 +144,7 @@ public class PrefixedAccount {
 
 `prefix`选项允许我们告诉 Lombok 要忽略哪些前缀:
 
-```
+```java
 @Accessors(prefix = {"s", "bd"})
 @Getter
 @Setter
@@ -156,7 +156,7 @@ public class PrefixedAccount {
 
 因此，让我们看看这是如何影响我们的测试用例的:
 
-```
+```java
 @Test
 public void givenPrefixedAccount_thenRemovePrefixFromAccessors() {
     PrefixedAccount account = new PrefixedAccount();
@@ -178,7 +178,7 @@ public void givenPrefixedAccount_thenRemovePrefixFromAccessors() {
 
 让我们添加一个前缀为`s_:`的字段`s_notes`
 
-```
+```java
 @Accessors(prefix = "s_")
 private String s_notes;
 ```
@@ -189,7 +189,7 @@ private String s_notes;
 
 我们可以通过向一个`lombok.config`文件添加配置属性，为我们最喜欢的设置组合设置一个项目或目录范围的缺省值:
 
-```
+```java
 lombok.accessors.chain=true
 lombok.accessors.fluent=true
 ```

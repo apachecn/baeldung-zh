@@ -24,7 +24,7 @@ Docker 为 STDOUT 或 STDERR 生成日志，包括日志来源、输出流数据
 
 在我们继续之前，让我们先运行一个示例 Postgres Docker 容器:
 
-```
+```java
 $ docker run -itd -e POSTGRES_USER=baeldung -e POSTGRES_PASSWORD=baeldung -p 5432:5432 -v /data:/var/lib/postgresql/data --name postgresql-baedlung postgres
 Unable to find image 'postgres:latest' locally
 latest: Pulling from library/postgres
@@ -38,7 +38,7 @@ bce34bb3c6175fe92c50d6e5c8d2045062c2b502b9593a258ceb6cafc9a2356a
 
 为了说明这一点，让我们检查一下`postgresql-baedlung`容器的`containerId`:
 
-```
+```java
 $ docker ps 
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
 bce34bb3c617        postgres            "docker-entrypoint.s…"   12 seconds ago      Up 10 seconds       0.0.0.0:5432->5432/tcp   postgresql-baedlung
@@ -46,7 +46,7 @@ bce34bb3c617        postgres            "docker-entrypoint.s…"   12 seconds ag
 
 从上面命令的输出中我们可以看到，`postgresql-baedlung`正在用 container id“BCE 34 bb 3c 617”运行。现在让我们研究一下用于监控日志的`docker logs`命令:
 
-```
+```java
 $ docker logs bce34bb3c617
 2022-05-16 18:13:58.868 UTC [1] LOG:  starting PostgreSQL 14.2 (Debian 14.2-1.pgdg110+1)
   on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
@@ -58,7 +58,7 @@ $ docker logs bce34bb3c617
 
 `“–follow”`选项是最有用的 Docker 选项之一，因为它允许我们监控容器的实时日志:
 
-```
+```java
 $ docker logs --follow  bce34bb3c617
 2022-05-16 18:13:58.868 UTC [1] LOG:  starting PostgreSQL 14.2 (Debian 14.2-1.pgdg110+1)
   on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
@@ -68,14 +68,14 @@ $ docker logs --follow  bce34bb3c617
 
 上面命令的一个缺点是它从一开始就包含了所有的日志。我们来看看这个命令，查看包含最近记录的连续日志输出:
 
-```
+```java
 $ docker logs --follow --tail 1 bce34bb3c617
 2022-05-16 18:13:59.018 UTC [1] LOG:  database system is ready to accept connections 
 ```
 
 我们还可以使用带有`docker log`命令的`“since”`选项来查看特定时间的文件:
 
-```
+```java
 $ docker logs --since 2022-05-16  bce34bb3c617
 2022-05-16 18:13:58.868 UTC [1] LOG:  starting PostgreSQL 14.2 (Debian 14.2-1.pgdg110+1)
   on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
@@ -85,7 +85,7 @@ $ docker logs --since 2022-05-16  bce34bb3c617
 
 或者，我们也可以使用 [`docker container logs`](https://web.archive.org/web/20221021012638/https://docs.docker.com/engine/reference/commandline/container_logs/) 命令代替`docker logs`命令:
 
-```
+```java
 $ docker container logs --since 2022-05-16  bce34bb3c617
 2022-05-16 18:13:58.868 UTC [1] LOG:  starting PostgreSQL 14.2 (Debian 14.2-1.pgdg110+1)
   on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
@@ -101,7 +101,7 @@ Docker 以 JSON 格式存储所有的 STDOUT 和 STDERR 输出。此外，还可
 
 为了演示，让我们检查一下我们的`postgress-baeldung`容器的日志文件:
 
-```
+```java
 $ cat /var/lib/docker/containers/bce34bb3c6175fe92c50d6e5c8d2045062c2b502b9593a258ceb6cafc9a2356a/
   bce34bb3c6175fe92c50d6e5c8d2045062c2b502b9593a258ceb6cafc9a2356a-json.log 
 {"log":"\r\n","stream":"stdout","time":"2022-05-16T18:13:58.833312658Z"}
@@ -117,19 +117,19 @@ $ cat /var/lib/docker/containers/bce34bb3c6175fe92c50d6e5c8d2045062c2b502b9593a2
 
 下面是清除存储在主机上的所有日志文件的命令:
 
-```
+```java
 $ truncate -s 0 /var/lib/docker/containers/*/*-json.log 
 ```
 
 请注意，上面的命令不会删除日志文件。相反，它将删除日志文件中的所有内容。通过执行以下命令，我们可以删除与特定容器相关联的日志文件:
 
-```
+```java
 $ truncate -s 0 /var/lib/docker/containers/dd207f11ebf083f97355be1ae18420427dd2e80b061a7bf6fb0afc326ad04b10/*-json.log 
 ```
 
 在容器的开始，我们还可以使用`docker run`命令的`“–log-opt max-size”`和`–log-opt max-file”` 选项在外部限制日志文件的大小:
 
-```
+```java
 $ docker run --log-opt max-size=1k --log-opt max-file=5 -itd -e POSTGRES_USER=baeldung -e POSTGRES_PASSWORD=baeldung -p 5432:5432
   -v /data:/var/lib/postgresql/data --name postgresql-baedlung postgres
 3eec82654fe6c6ffa579752cc9d1fa034dc34b5533b8672ebe7778449726da32
@@ -137,7 +137,7 @@ $ docker run --log-opt max-size=1k --log-opt max-file=5 -itd -e POSTGRES_USER=ba
 
 现在，让我们检查一下`/var/lib/docker/containers/3eec82654fe6c6ffa579752cc9d1fa034dc34b5533b8672ebe7778449726da32`目录中日志文件的数量和大小:
 
-```
+```java
 $ ls -la
 total 68
 drwx------. 4 root root 4096 May 17 02:06 .
@@ -161,7 +161,7 @@ drwx------. 2 root root    6 May 17 02:02 mounts
 
 我们也可以在`/etc/docker/daemon.json`文件中提供日志`max-size`和`max-file`的配置。让我们看看 daemon.json 文件的配置:
 
-```
+```java
 {
     "log-driver": "json-file",
     "log-opts": {
@@ -179,7 +179,7 @@ drwx------. 2 root root    6 May 17 02:02 mounts
 
 为了说明这一点，我们来看看重定向容器日志的命令:
 
-```
+```java
 $ docker logs -f containername &> baeldung-postgress.log &
 ```
 

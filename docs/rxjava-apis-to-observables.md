@@ -12,7 +12,7 @@
 
 首先，我们必须添加 [RxJava2](https://web.archive.org/web/20220524031317/https://search.maven.org/search?q=g:io.reactivex.rxjava2%20AND%20a:rxjava&core=gav) 和 [RxJava2Extensions](https://web.archive.org/web/20220524031317/https://search.maven.org/search?q=g:com.github.akarnokd%20AND%20a:rxjava2-extensions&core=gav) 作为 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.reactivex.rxjava2</groupId>
     <artifactId>rxjava</artifactId>
@@ -41,14 +41,14 @@ RxJava2 为反应式编程的各种用例定义了大量的操作符。
 
 该操作符返回一个`Observable`,当订阅者订阅它时，调用作为参数传递的函数，然后发出从该函数返回的值。让我们创建一个返回整数并对其进行转换的函数:
 
-```
+```java
 AtomicInteger counter = new AtomicInteger();
 Callable<Integer> callable = () -> counter.incrementAndGet();
 ```
 
 现在，让我们将它转换成一个`Observable`并通过订阅它来测试它:
 
-```
+```java
 Observable<Integer> source = Observable.fromCallable(callable);
 
 for (int i = 1; i < 5; i++) {
@@ -69,7 +69,7 @@ for (int i = 1; i < 5; i++) {
 
 `start()`操作员是`RxJava2Extension`模块的一部分。它将异步调用指定的函数，并返回一个发出结果的`Observable`:
 
-```
+```java
 Observable<Integer> source = AsyncObservable.start(callable);
 
 for (int i = 1; i < 5; i++) {
@@ -90,14 +90,14 @@ for (int i = 1; i < 5; i++) {
 
 首先，让我们将之前创建的函数变成异步的:
 
-```
+```java
 ExecutorService executor = Executors.newSingleThreadExecutor();
 Future<Integer> future = executor.submit(callable);
 ```
 
 接下来，让我们通过转换它来进行测试:
 
-```
+```java
 Observable<Integer> source = Observable.fromFuture(future);
 
 for (int i = 1; i < 5; i++) {
@@ -115,7 +115,7 @@ executor.shutdown();
 
 所以，我们可以通过**结合`source`可观测值的`doOnDispose()`** 函数和`future`上的`cancel`方法来确定取消未来:
 
-```
+```java
 source.doOnDispose(() -> future.cancel(true));
 ```
 
@@ -123,7 +123,7 @@ source.doOnDispose(() -> future.cancel(true));
 
 顾名思义，这个操作符将立即启动指定的`Future`,并在订户订阅时发出返回值。与缓存结果供下次使用的`fromFuture`操作符不同，**该操作符将在每次获得订阅时执行异步方法**:
 
-```
+```java
 ExecutorService executor = Executors.newSingleThreadExecutor();
 Observable<Integer> source = AsyncObservable.startFuture(() -> executor.submit(callable));
 
@@ -142,7 +142,7 @@ executor.shutdown();
 
 因此，让我们首先创建异步工厂函数:
 
-```
+```java
 List<Integer> list = Arrays.asList(new Integer[] { counter.incrementAndGet(), 
   counter.incrementAndGet(), counter.incrementAndGet() });
 ExecutorService exec = Executors.newSingleThreadExecutor();
@@ -151,7 +151,7 @@ Callable<Observable<Integer>> callable = () -> Observable.fromIterable(list);
 
 然后我们可以做一个快速测试:
 
-```
+```java
 Observable<Integer> source = AsyncObservable.deferFuture(() -> exec.submit(callable));
 for (int i = 1; i < 4; i++) {
     source.test()

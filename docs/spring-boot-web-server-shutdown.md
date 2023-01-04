@@ -12,7 +12,7 @@
 
 **为了实现正常关机，我们所要做的就是在我们的`application.properties`文件中将`server.shutdown`属性设置为`graceful`** :
 
-```
+```java
 server.shutdown=graceful
 ```
 
@@ -22,7 +22,7 @@ server.shutdown=graceful
 
 在正常关机阶段开始之前，有些请求可能会被接受。在这种情况下， **t** **服务器将等待那些活动的请求在指定的时间内完成它们的工作**。我们可以使用`spring.lifecycle.timeout-per-shutdown-phase` 配置属性来配置这个宽限期:
 
-```
+```java
 spring.lifecycle.timeout-per-shutdown-phase=1m
 ```
 

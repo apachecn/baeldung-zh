@@ -10,7 +10,7 @@
 
 除了**第一个条件评估发生在循环的第一次迭代之后:**之外，`do-while`循环的工作方式与`while`循环类似
 
-```
+```java
 do {
     statement;
 } while (Boolean-expression);
@@ -18,7 +18,7 @@ do {
 
 让我们看一个简单的例子:
 
-```
+```java
 int i = 0;
 do {
     System.out.println("Do-While loop: i = " + i++);

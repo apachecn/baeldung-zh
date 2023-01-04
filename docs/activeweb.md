@@ -18,7 +18,7 @@ Activeweb 利用“约定胜于配置”——这意味着它是可配置的，�
 
 首先，让我们添加必要的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.javalite</groupId>
     <artifactId>activeweb</artifactId>
@@ -30,7 +30,7 @@ Activeweb 利用“约定胜于配置”——这意味着它是可配置的，�
 
 此外，为了测试应用程序，我们需要`activeweb-testing` 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.javalite</groupId>
     <artifactId>activeweb-testing</artifactId>
@@ -53,7 +53,7 @@ Activeweb 利用“约定胜于配置”——这意味着它是可配置的，�
 
 部署描述符或`web.xml` 通常应该包含一个`<filter>` 和相应的`<filter-mapping>.` ，因为框架是一个 servlet 过滤器，而不是一个`<servlet>` 配置，有一个过滤器配置:
 
-```
+```java
 ...
 <filter>
     <filter-name>dispatcher</filter-name>
@@ -65,7 +65,7 @@ Activeweb 利用“约定胜于配置”——这意味着它是可配置的，�
 
 我们还需要一个`<init-param>` `root_controller` 来定义应用程序的默认控制器——类似于一个`home`控制器:
 
-```
+```java
 ...
 <init-param>
     <param-name>root_controller</param-name>
@@ -78,7 +78,7 @@ Activeweb 利用“约定胜于配置”——这意味着它是可配置的，�
 
 控制器是 ActiveWeb 应用程序的主要组件；而且，如前所述，所有控制器都应位于`app.controllers` 包内:
 
-```
+```java
 public class ArticleController extends AppController {
     // ...
 }
@@ -90,13 +90,13 @@ public class ArticleController extends AppController {
 
 控制器根据约定自动映射到一个 URL。例如，`ArticleController` 将被映射到:
 
-```
+```java
 http://host:port/contextroot/article
 ```
 
 现在，这会将它们映射到控制器中的默认动作。动作只不过是控制器内部的方法。将默认方法命名为`index():`
 
-```
+```java
 public class ArticleController extends AppController {
     // ...
     public void index() {
@@ -108,7 +108,7 @@ public class ArticleController extends AppController {
 
 对于其他方法或操作，将方法名称附加到 URL:
 
-```
+```java
 public class ArticleController extends AppController {
     // ...
 
@@ -120,7 +120,7 @@ public class ArticleController extends AppController {
 
 网址:
 
-```
+```java
 http://host:port/contextroot/article/search
 ```
 
@@ -130,19 +130,19 @@ http://host:port/contextroot/article/search
 
 框架使用控制器名称和子包名称来生成控制器 URL。例如`app.controllers.ArticleController.java`URL:
 
-```
+```java
 http://host:port/contextroot/article
 ```
 
 如果控制器在子包中，URL 就变成:
 
-```
+```java
 http://host:port/contextroot/baeldung/article
 ```
 
 对于不止一个单词的控制器名称(例如`app.controllers.PublishedArticleController.java`，URL 将使用下划线分隔:
 
-```
+```java
 http://host:port/contextroot/published_article
 ```
 
@@ -150,7 +150,7 @@ http://host:port/contextroot/published_article
 
 在控制器内部，我们使用来自`AppController class.` 的`param()` 或`params()` 方法访问请求参数。第一个方法接受一个字符串参数——要检索的参数的名称:
 
-```
+```java
 public void search() {
 
     String keyword = param("key");  
@@ -161,7 +161,7 @@ public void search() {
 
 如果需要，我们可以稍后使用来获取所有参数:
 
-```
+```java
 public void search() {
 
     Map<String, String[]> criterion = params();
@@ -181,7 +181,7 @@ public void search() {
 
 这并不总是我们想要的。有时，我们可能希望返回一些基于内部业务逻辑的视图。在这个场景中，**我们可以使用父`org.javalite.activeweb.AppController` 类中的`render()` 方法**来控制流程:
 
-```
+```java
 public void index() {
     render("articles");    
 }
@@ -189,7 +189,7 @@ public void index() {
 
 请注意，自定义视图的位置也应该位于该控制器的同一视图目录中。如果不是这样，在模板名前面加上模板所在的目录名，并将其传递给`render()`方法:
 
-```
+```java
 render("/common/error");
 ```
 
@@ -197,7 +197,7 @@ render("/common/error");
 
 为了向视图发送数据，`org.javalite.activeweb.AppController` 提供了`view()` 方法:
 
-```
+```java
 view("articles", articleService.getArticles());
 ```
 
@@ -205,13 +205,13 @@ view("articles", articleService.getArticles());
 
 我们还可以使用`assign()`方法将数据传递给视图。view()和`assign()`方法之间完全没有区别——我们可以选择其中的任何一个:
 
-```
+```java
 assign("article", articleService.search(keyword));
 ```
 
 让我们映射模板中的数据:
 
-```
+```java
 <@content for="title">Articles</@content>
 ...
 <#list articles as article>
@@ -233,7 +233,7 @@ assign("article", articleService.search(keyword));
 
 让我们首先创建一个服务接口:
 
-```
+```java
 public interface ArticleService {
 
     List<Article> getArticles();   
@@ -244,7 +244,7 @@ public interface ArticleService {
 
 以及实现:
 
-```
+```java
 public class ArticleServiceImpl implements ArticleService {
 
     public List<Article> getArticles() {
@@ -264,7 +264,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 现在，让我们将这个服务绑定为一个 Guice 模块:
 
-```
+```java
 public class ArticleServiceModule extends AbstractModule {
 
     @Override
@@ -277,7 +277,7 @@ public class ArticleServiceModule extends AbstractModule {
 
 最后，在应用程序上下文中注册它，并根据需要将其注入控制器:
 
-```
+```java
 public class AppBootstrap extends Bootstrap {
 
     public void init(AppContext context) {
@@ -293,7 +293,7 @@ public class AppBootstrap extends Bootstrap {
 
 最后，下面是我们将它注入控制器的方法:
 
-```
+```java
 @Inject
 private ArticleService articleService;
 ```
@@ -304,7 +304,7 @@ ActiveWeb 应用程序的单元测试是使用 JavaLite 的 [JSpec](https://web.
 
 我们将使用 JSpec 中的`org.javalite.activeweb.ControllerSpec` 类来测试我们的控制器，我们将按照类似的约定来命名测试类:
 
-```
+```java
 public class ArticleControllerSpec extends ControllerSpec {
     // ...
 }
@@ -314,7 +314,7 @@ public class ArticleControllerSpec extends ControllerSpec {
 
 下面是测试案例:
 
-```
+```java
 @Test
 public void whenReturnedArticlesThenCorrect() {
     request().get("index");
@@ -327,7 +327,7 @@ public void whenReturnedArticlesThenCorrect() {
 
 我们还可以使用`params()`方法将参数传递给控制器:
 
-```
+```java
 @Test
 public void givenKeywordWhenFoundArticleThenCorrect() {
     request().param("key", "Java").get("search");
@@ -342,7 +342,7 @@ public void givenKeywordWhenFoundArticleThenCorrect() {
 
 可以将应用程序部署在任何 servlet 容器中，如 Tomcat、WildFly 或 Jetty。当然，最简单的部署和测试方法是使用 Maven Jetty 插件:
 
-```
+```java
 ...
 <plugin>
     <groupId>org.eclipse.jetty</groupId>
@@ -360,7 +360,7 @@ public void givenKeywordWhenFoundArticleThenCorrect() {
 
 现在，我们终于可以开始了:
 
-```
+```java
 mvn jetty:run
 ```
 

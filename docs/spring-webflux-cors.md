@@ -20,7 +20,7 @@
 
 让我们将这个注释添加到映射的请求方法中:
 
-```
+```java
 @CrossOrigin
 @PutMapping("/cors-enabled-endpoint")
 public Mono<String> corsEnabledEndpoint() {
@@ -30,7 +30,7 @@ public Mono<String> corsEnabledEndpoint() {
 
 我们将使用一个`WebTestClient`(正如我们在第 4 节中解释的。对[这篇文章](/web/20220701013321/https://www.baeldung.com/spring-5-functional-web)进行‘测试’，以分析我们从该端点获得的响应:
 
-```
+```java
 ResponseSpec response = webTestClient.put()
   .uri("/cors-enabled-endpoint")
   .header("Origin", "http://any-origin.com")
@@ -42,7 +42,7 @@ response.expectHeader()
 
 此外，我们可以尝试一个飞行前请求，以确保 CORS 配置按预期工作:
 
-```
+```java
 ResponseSpec response = webTestClient.options()
   .uri("/cors-enabled-endpoint")
   .header("Origin", "http://any-origin.com")
@@ -73,7 +73,7 @@ response.expectHeader()
 
 如果类级别的配置不适合我们所有的方法，我们可以注释这两个元素来获得想要的结果:
 
-```
+```java
 @CrossOrigin(value = { "http://allowed-origin.com" },
   allowedHeaders = { "Baeldung-Allowed" },
   maxAge = 900
@@ -102,7 +102,7 @@ public class CorsOnClassController {
 
 此外，实现需要`@EnableWebFlux`注释来在普通的 Spring 应用程序中导入 Spring WebFlux 配置。如果我们使用 Spring Boot，那么我们只需要这个注释来覆盖自动配置:
 
-```
+```java
 @Configuration
 @EnableWebFlux
 public class CorsGlobalConfiguration implements WebFluxConfigurer {
@@ -136,7 +136,7 @@ public class CorsGlobalConfiguration implements WebFluxConfigurer {
 
 **Spring 提供了内置的`CorsWebFilter`来轻松处理跨原点配置:**
 
-```
+```java
 @Bean
 CorsWebFilter corsWebFilter() {
     CorsConfiguration corsConfig = new CorsConfiguration();

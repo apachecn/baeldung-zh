@@ -21,7 +21,7 @@
 
 首先，让我们创建一个`ShipmentInfo`  实体:
 
-```
+```java
 @Entity
 public class ShipmentInfo {
 
@@ -37,7 +37,7 @@ public class ShipmentInfo {
 
 接下来，让我们创建一个 `LineItem` 实体:
 
-```
+```java
 @Entity
 public class LineItem {
 
@@ -56,7 +56,7 @@ public class LineItem {
 
 最后，让我们通过创建一个 *OrderRequest* 实体将所有这些放在一起:
 
-```
+```java
 @Entity
 public class OrderRequest {
 
@@ -88,7 +88,7 @@ public class OrderRequest {
 
 当删除一个`OrderRequest`时，为了验证从数据库中删除 `ShipmentInfo` ，让我们创建一个简单的集成测试:
 
-```
+```java
 @Test
 public void whenOrderRequestIsDeleted_thenDeleteShipmentInfo() {
     createOrderRequestWithShipmentInfo();
@@ -128,7 +128,7 @@ private void createOrderRequestWithShipmentInfo() {
 
 为了验证从数据库中删除孤立的 `LineItem` ，让我们创建另一个集成测试:
 
-```
+```java
 @Test
 public void whenLineItemIsRemovedFromOrderRequest_thenDeleteOrphanedLineItem() {
     createOrderRequestWithLineItems();
@@ -168,7 +168,7 @@ private void createOrderRequestWithLineItems() {
 
 为了验证所陈述的行为，让我们创建一个最终的集成测试:
 
-```
+```java
 @Test(expected = PersistenceException.class)
 public void whenLineItemsIsReassigned_thenThrowAnException() {
     createOrderRequestWithLineItems();

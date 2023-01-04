@@ -31,7 +31,7 @@
 
 用 Java 实现这个想法对我们来说并不困难:
 
-```
+```java
 static Set<Integer> getAllFactorsVer1(int n) {
     Set<Integer> factors = new HashSet<>();
     for (int i = 1; i <= n; i++) {
@@ -45,7 +45,7 @@ static Set<Integer> getAllFactorsVer1(int n) {
 
 接下来，让我们编写一些测试来检查我们的方法是否如预期的那样工作。首先，让我们创建一个`Map`来准备一些要测试的数字及其预期因素:
 
-```
+```java
 final static Map<Integer, Set<Integer>> FACTOR_MAP = ImmutableMap.of(
     0, ImmutableSet.of(),
     1, ImmutableSet.of(1),
@@ -59,7 +59,7 @@ final static Map<Integer, Set<Integer>> FACTOR_MAP = ImmutableMap.of(
 
 现在，对于上面的`FACTOR_MAP`中的每个数字，我们调用已经实现的`getAllFactorsVer1()`方法，看看它是否能找到想要的因子:
 
-```
+```java
 FACTOR_MAP.forEach((number, expected) -> assertEquals(expected, FactorsOfInteger.getAllFactorsVer1(number)));
 ```
 
@@ -73,7 +73,7 @@ FACTOR_MAP.forEach((number, expected) -> assertEquals(expected, FactorsOfInteger
 
 让我们回顾一下该方法中的主要逻辑:
 
-```
+```java
 for (int i = 1; i <= n; i++) {
    if (n % i == 0) {
        factors.add(i);
@@ -83,7 +83,7 @@ for (int i = 1; i <= n; i++) {
 
 如上面的代码所示，我们将执行`n % i`次计算`n`。现在，如果我们检查一个整数的因子，我们会看到**因子总是成对出现**。让我们以`n =100`为例来了解这一因素特征:
 
-```
+```java
  1    2    4    5    10    20    25    50    100
    │    │    │    │    |      │     │     │     │
    │    │    │    │  [10,10]  │     │     │     │
@@ -101,7 +101,7 @@ for (int i = 1; i <= n; i++) {
 
 接下来，让我们优化我们的版本 1 方法:
 
-```
+```java
 static Set<Integer> getAllFactorsVer2(int n) {
     Set<Integer> factors = new HashSet<>();
     for (int i = 1; i <= Math.sqrt(n); i++) {
@@ -118,7 +118,7 @@ static Set<Integer> getAllFactorsVer2(int n) {
 
 现在，让我们用相同的测试数据测试第二个版本的实现:
 
-```
+```java
 FACTOR_MAP.forEach((number, expected) -> assertEquals(expected, FactorsOfInteger.getAllFactorsVer2(number)));
 ```
 
@@ -138,7 +138,7 @@ FACTOR_MAP.forEach((number, expected) -> assertEquals(expected, FactorsOfInteger
 
 接下来，让我们在版本 3 中实现这个想法:
 
-```
+```java
 static Set<Integer> getAllFactorsVer3(int n) {
     Set<Integer> factors = new HashSet<>();
     int step = n % 2 == 0 ? 1 : 2;
@@ -158,7 +158,7 @@ static Set<Integer> getAllFactorsVer3(int n) {
 
 最后，让我们测试我们的版本 3 解决方案:
 
-```
+```java
 FACTOR_MAP.forEach((number, expected) -> assertEquals(expected, FactorsOfInteger.getAllFactorsVer3(number)));
 ```
 

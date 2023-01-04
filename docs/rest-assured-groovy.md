@@ -18,13 +18,13 @@
 
 在这个例子中，我们将只关注`methods`、`closures`和`it`隐式变量。让我们首先创建一个很棒的单词集合:
 
-```
+```java
 def words = ['ant', 'buffalo', 'cat', 'dinosaur']
 ```
 
 现在，让我们用长度超过四个字母的单词创建另一个集合:
 
-```
+```java
 def wordsWithSizeGreaterThanFour = words.findAll { it.length() > 4 }
 ```
 
@@ -36,7 +36,7 @@ def wordsWithSizeGreaterThanFour = words.findAll { it.length() > 4 }
 
 隐式变量`it`保存循环中的当前单词。新的集合`wordsWithSizeGreaterThanFour`将包含单词`buffalo`和`dinosaur`。
 
-```
+```java
 ['buffalo', 'dinosaur']
 ```
 
@@ -46,19 +46,19 @@ def wordsWithSizeGreaterThanFour = words.findAll { it.length() > 4 }
 
 最后是`collect`，它对集合中的每一项调用闭包，并返回一个包含每一项结果的新集合。让我们根据`words`系列中每件商品的尺寸创建一个新系列:
 
-```
+```java
 def sizes = words.collect{it.length()} 
 ```
 
 结果是:
 
-```
+```java
 [3,7,3,8]
 ```
 
 顾名思义，我们使用`sum`将集合中的所有元素加起来。我们可以这样总结`sizes`系列中的商品:
 
-```
+```java
 def charCount = sizes.sum()
 ```
 
@@ -68,7 +68,7 @@ def charCount = sizes.sum()
 
 `max/min`操作符被直观地命名为寻找集合中的最大或最小数:
 
-```
+```java
 def maximum = sizes.max()
 ```
 
@@ -78,7 +78,7 @@ def maximum = sizes.max()
 
 我们使用`find`只搜索一个匹配闭包谓词的集合值。
 
-```
+```java
 def greaterThanSeven=sizes.find{it>7}
 ```
 
@@ -88,7 +88,7 @@ def greaterThanSeven=sizes.find{it>7}
 
 如果我们在`http://localhost:8080/odds`有一个服务，它会返回我们最喜欢的足球比赛的赔率列表，如下所示:
 
-```
+```java
 {
     "odds": [{
         "price": 1.30,
@@ -119,7 +119,7 @@ def greaterThanSeven=sizes.find{it>7}
 
 如果我们想验证状态大于 1 的赔率有价格`1.20`和 5 `.25`，那么我们这样做:
 
-```
+```java
 @Test
 public void givenUrl_whenVerifiesOddPricesAccuratelyByStatus_thenCorrect() {
     get("/odds").then().body("odds.findAll { it.status > 0 }.price",
@@ -137,7 +137,7 @@ public void givenUrl_whenVerifiesOddPricesAccuratelyByStatus_thenCorrect() {
 
 假设我们在`http://localhost:8080/teachers`有一个服务，它返回一个教师列表，按照他们的`id`、`department`和`subjects`授课，如下所示:
 
-```
+```java
 <teachers>
     <teacher department="science" id=309>
         <subject>math</subject>
@@ -152,7 +152,7 @@ public void givenUrl_whenVerifiesOddPricesAccuratelyByStatus_thenCorrect() {
 
 现在我们可以验证在响应中返回的科学老师既教数学又教物理:
 
-```
+```java
 @Test
 public void givenUrl_whenVerifiesScienceTeacherFromXml_thenCorrect() {
     get("/teachers").then().body(

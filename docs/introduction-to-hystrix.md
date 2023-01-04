@@ -20,7 +20,7 @@ Hystrix 提供容错和延迟的方式是隔离和包装对远程服务的调用
 
 在这个简单的例子中，我们将调用包装在`HystrixCommand:`的`run()`方法中
 
-```
+```java
 class CommandHelloWorld extends HystrixCommand<String> {
 
     private String name;
@@ -39,7 +39,7 @@ class CommandHelloWorld extends HystrixCommand<String> {
 
 我们如下执行调用:
 
-```
+```java
 @Test
 public void givenInputBobAndDefaultSettings_whenCommandExecuted_thenReturnHelloBob(){
     assertThat(new CommandHelloWorld("Bob").execute(), equalTo("Hello Bob!"));
@@ -50,7 +50,7 @@ public void givenInputBobAndDefaultSettings_whenCommandExecuted_thenReturnHelloB
 
 要在 Maven 项目中使用 Hystrix，我们需要在项目`pom.xml`中拥有来自网飞的`hystrix-core`和`rxjava-core`依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.netflix.hystrix</groupId>
     <artifactId>hystrix-core</artifactId>
@@ -60,7 +60,7 @@ public void givenInputBobAndDefaultSettings_whenCommandExecuted_thenReturnHelloB
 
 最新版本总是可以在[这里](https://web.archive.org/web/20220708040045/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22hystrix-core%22)找到。
 
-```
+```java
 <dependency>
     <groupId>com.netflix.rxjava</groupId>
     <artifactId>rxjava-core</artifactId>
@@ -76,7 +76,7 @@ public void givenInputBobAndDefaultSettings_whenCommandExecuted_thenReturnHelloB
 
 **在下面**的例子中，类`RemoteServiceTestSimulator`代表远程服务器上的服务。它有一个方法，在给定的时间后用一条消息来响应。我们可以想象这种等待是对远程系统上耗时过程的模拟，导致对调用服务的响应延迟:
 
-```
+```java
 class RemoteServiceTestSimulator {
 
     private long wait;
@@ -96,7 +96,7 @@ class RemoteServiceTestSimulator {
 
 对服务的调用被隔离并包装在`HystrixCommand.`的`run()`方法中，正是这种包装提供了我们上面提到的弹性:
 
-```
+```java
 class RemoteServiceTestCommand extends HystrixCommand<String> {
 
     private RemoteServiceTestSimulator remoteService;
@@ -117,7 +117,7 @@ class RemoteServiceTestCommand extends HystrixCommand<String> {
 
 以下测试演示了这是如何实现的:
 
-```
+```java
 @Test
 public void givenSvcTimeoutOf100AndDefaultSettings_whenRemoteSvcExecuted_thenReturnSuccess()
   throws InterruptedException {
@@ -141,7 +141,7 @@ public void givenSvcTimeoutOf100AndDefaultSettings_whenRemoteSvcExecuted_thenRet
 
 让我们先来看看如何在`HystrixCommand`上设置超时，以及它如何通过短路来提供帮助:
 
-```
+```java
 @Test
 public void givenSvcTimeoutOf5000AndExecTimeoutOf10000_whenRemoteSvcExecuted_thenReturnSuccess()
   throws InterruptedException {
@@ -163,7 +163,7 @@ public void givenSvcTimeoutOf5000AndExecTimeoutOf10000_whenRemoteSvcExecuted_the
 
 现在让我们看看当执行超时小于服务超时调用时会发生什么:
 
-```
+```java
 @Test(expected = HystrixRuntimeException.class)
 public void givenSvcTimeoutOf15000AndExecTimeoutOf5000_whenRemoteSvcExecuted_thenExpectHre()
   throws InterruptedException {
@@ -200,7 +200,7 @@ public void givenSvcTimeoutOf15000AndExecTimeoutOf5000_whenRemoteSvcExecuted_the
 
 让我们看看如何在`HystrixCommand`中设置线程池的大小:
 
-```
+```java
 @Test
 public void givenSvcTimeoutOf500AndExecTimeoutOf10000AndThreadPool_whenRemoteSvcExecuted
   _thenReturnSuccess() throws InterruptedException {
@@ -236,7 +236,7 @@ public void givenSvcTimeoutOf500AndExecTimeoutOf10000AndThreadPool_whenRemoteSvc
 
 让我们看看 Hystrix 是如何实现这种模式的:
 
-```
+```java
 @Test
 public void givenCircuitBreakerSetup_whenRemoteSvcCmdExecuted_thenReturnSuccess()
   throws InterruptedException {
@@ -276,7 +276,7 @@ public void givenCircuitBreakerSetup_whenRemoteSvcCmdExecuted_thenReturnSuccess(
 }
 ```
 
-```
+```java
 public String invokeRemoteService(HystrixCommand.Setter config, int timeout)
   throws InterruptedException {
 

@@ -10,7 +10,7 @@
 
 让我们从标准的 Java 6 解决方案开始:
 
-```
+```java
 @Test
 public void givenUsingJDK6_whenDeletingAFile_thenCorrect() throws IOException {
     new File("src/test/resources/fileToDelete_jdk6.txt").createNewFile();
@@ -28,7 +28,7 @@ public void givenUsingJDK6_whenDeletingAFile_thenCorrect() throws IOException {
 
 让我们来看看 JDK 7 解决方案:
 
-```
+```java
 @Test
 public void givenUsingJDK7nio2_whenDeletingAFile_thenCorrect() throws IOException {
     Files.createFile(Paths.get("src/test/resources/fileToDelete_jdk7.txt"));
@@ -40,7 +40,7 @@ public void givenUsingJDK7nio2_whenDeletingAFile_thenCorrect() throws IOExceptio
 
 现在——这将更好地利用异常。如果文件在删除操作被触发时不存在，API 将抛出一个`NoSuchFileException`:
 
-```
+```java
 java.nio.file.NoSuchFileException: srctestresourcesfileToDelete_jdk7.txt
     at s.n.f.WindowsException.translateToIOException(WindowsException.java:79)
 ```
@@ -49,7 +49,7 @@ java.nio.file.NoSuchFileException: srctestresourcesfileToDelete_jdk7.txt
 
 Commons IO 允许我们在删除文件时控制异常行为。对于隐藏任何可能异常的安静删除:
 
-```
+```java
 @Test
 public void givenUsingCommonsIo_whenDeletingAFileV1_thenCorrect() throws IOException {
     FileUtils.touch(new File("src/test/resources/fileToDelete_commonsIo.txt"));
@@ -64,7 +64,7 @@ public void givenUsingCommonsIo_whenDeletingAFileV1_thenCorrect() throws IOExcep
 
 现在——如果我们想抛出一个异常:
 
-```
+```java
 @Test
 public void givenUsingCommonsIo_whenDeletingAFileV2_thenCorrect() throws IOException {
     FileUtils.touch(new File("src/test/resources/fileToDelete.txt"));
@@ -75,7 +75,7 @@ public void givenUsingCommonsIo_whenDeletingAFileV2_thenCorrect() throws IOExcep
 
 如果文件系统中不存在要删除的文件，API 将抛出一个标准的`FileNotFoundException`:
 
-```
+```java
 java.io.FileNotFoundException: File does not exist: srctestresourcesfileToDelete.txt
     at org.apache.commons.io.FileUtils.forceDelete(FileUtils.java:2275)
 ```

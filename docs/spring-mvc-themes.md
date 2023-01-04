@@ -24,7 +24,7 @@
 
 我们将需要 [Spring WebMVC](https://web.archive.org/web/20220701013736/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework%22%20AND%20a%3A%22spring-webmvc%22) 和 [Spring Context](https://web.archive.org/web/20220701013736/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework%22%20AND%20a%3A%22spring-context%22) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-webmvc</artifactId>
@@ -39,7 +39,7 @@
 
 由于我们将在示例中使用 JSP，我们将需要[Java servlet](https://web.archive.org/web/20220701013736/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22javax.servlet%22%20AND%20a%3A%22javax.servlet-api%22)、 [JSP](https://web.archive.org/web/20220701013736/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22javax.servlet.jsp%22%20AND%20a%3A%22javax.servlet.jsp-api%22) 和 [JSTL](https://web.archive.org/web/20220701013736/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22javax.servlet%22%20AND%20a%3A%22jstl%22) :
 
-```
+```java
 <dependency>
     <groupId>javax.servlet</groupId>
     <artifactId>javax.servlet-api</artifactId>
@@ -65,14 +65,14 @@
 
 对于黑暗主题，让我们创建`dark.properties`:
 
-```
+```java
 styleSheet=themes/black.css
 background=black
 ```
 
 而对于光的主题，`light.properties`:
 
-```
+```java
 styleSheet=themes/white.css
 background=white
 ```
@@ -85,7 +85,7 @@ background=white
 
 而且，我们必须配置一个`ResourceHandler`来使 Spring MVC 在被请求时正确定位文件:
 
-```
+```java
 @Override 
 public void addResourceHandlers(ResourceHandlerRegistry registry) {
     registry.addResourceHandler("/themes/**").addResourceLocations("classpath:/themes/");
@@ -96,7 +96,7 @@ public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
 我们可以管理这些特定主题。`properties`文件为 [`ResourceBundle` s](/web/20220701013736/https://www.baeldung.com/java-resourcebundle) 经`ResourceBundleThemeSource`:
 
-```
+```java
 @Bean
 public ResourceBundleThemeSource resourceBundleThemeSource() {
     return new ResourceBundleThemeSource();
@@ -109,7 +109,7 @@ public ResourceBundleThemeSource resourceBundleThemeSource() {
 
 对于我们的例子，让我们如名称所示配置`CookieThemeResolver. `,这将从浏览器 cookie 中解析主题信息，或者如果该信息不可用，则返回到缺省值:
 
-```
+```java
 @Bean
 public ThemeResolver themeResolver() {
     CookieThemeResolver themeResolver = new CookieThemeResolver();
@@ -131,25 +131,25 @@ public ThemeResolver themeResolver() {
 
 对于 JSP，我们可以导入一个标记库来完成这项工作:
 
-```
+```java
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 ```
 
 然后我们可以引用任何指定了适当属性名的属性:
 
-```
+```java
 <link rel="stylesheet" href="<spring:theme code='styleSheet'/>"/>
 ```
 
 或者:
 
-```
+```java
 <body bgcolor="<spring:theme code='background'/>">
 ```
 
 因此，现在让我们将一个名为`index.jsp`的视图添加到我们的应用程序中，并将其放在`WEB-INF/`目录中:
 
-```
+```java
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
@@ -198,7 +198,7 @@ public ThemeResolver themeResolver() {
 
 现在让我们添加一个`ThemeChangeInterceptor`并配置它来寻找一个`theme`请求参数:
 
-```
+```java
 @Override
 public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(themeChangeInterceptor());
@@ -218,7 +218,7 @@ public ThemeChangeInterceptor themeChangeInterceptor() {
 
 为了实现这一点，我们将需要 [Spring Security](https://web.archive.org/web/20220701013736/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.security%22%20AND%20a%3A%22spring-security-web%22) 来识别用户:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-web</artifactId>
@@ -240,7 +240,7 @@ public ThemeChangeInterceptor themeChangeInterceptor() {
 
 以及用于存储用户偏好的[春季数据](https://web.archive.org/web/20220701013736/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.data%22%20AND%20a%3A%22spring-data-jpa%22)、[休眠、](https://web.archive.org/web/20220701013736/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.hibernate%22%20AND%20a%3A%22hibernate-core%22)和 [HSQLDB](https://web.archive.org/web/20220701013736/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.hsqldb%22%20AND%20a%3A%22hsqldb%22) :
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-jpa</artifactId>
@@ -265,7 +265,7 @@ public ThemeChangeInterceptor themeChangeInterceptor() {
 
 为了实现这一点，让我们首先添加一个`UserPreference `实体:
 
-```
+```java
 @Entity
 @Table(name = "preferences")
 public class UserPreference {
@@ -280,7 +280,7 @@ public class UserPreference {
 
 让我们首先通过实现`UserPreferenceThemeResolver#resolveThemeName`来解决名称解析问题:
 
-```
+```java
 @Override
 public String resolveThemeName(HttpServletRequest request) {
     String themeName = findThemeFromRequest(request)
@@ -309,7 +309,7 @@ private Optional<UserPreference> getUserPreference(Authentication authentication
 
 现在我们可以在`UserPreferenceThemeResolver#setThemeName`中编写保存主题的实现了:
 
-```
+```java
 @Override
 public void setThemeName(HttpServletRequest request, HttpServletResponse response, String theme) {
     Authentication authentication = SecurityContextHolder.getContext()
@@ -326,7 +326,7 @@ public void setThemeName(HttpServletRequest request, HttpServletResponse respons
 
 最后，现在让我们改变应用程序中的`ThemeResolver `:
 
-```
+```java
 @Bean 
 public ThemeResolver themeResolver() { 
     return new UserPreferenceThemeResolver();

@@ -16,7 +16,7 @@
 
 然后，我们可以用这些`Config`类来**提供我们的上下文:**
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { BirdConfig.class, CatConfig.class, DogConfig.class })
 class ConfigUnitTest {
@@ -44,7 +44,7 @@ class ConfigUnitTest {
 
 @ `Import`注释有一个解决方案，它能够对`Configuration`类进行分组:
 
-```
+```java
 @Configuration
 @Import({ DogConfig.class, CatConfig.class })
 class MammalConfiguration {
@@ -53,7 +53,7 @@ class MammalConfiguration {
 
 现在，我们只需要记住`mammals`:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { MammalConfiguration.class })
 class ConfigUnitTest {
@@ -78,7 +78,7 @@ class ConfigUnitTest {
 
 嗯，可能我们很快就会忘记我们的`Bird`，所以让我们再做**一组来包括所有的`animal`配置类**:
 
-```
+```java
 @Configuration
 @Import({ MammalConfiguration.class, BirdConfig.class })
 class AnimalConfiguration {
@@ -87,7 +87,7 @@ class AnimalConfiguration {
 
 最后，没有人掉队，我们只需要记住一节课:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { AnimalConfiguration.class })
 class AnimalConfigUnitTest {
@@ -105,7 +105,7 @@ class AnimalConfigUnitTest {
 
 让我们使用@ `Import`添加一个新的@ `Component`:
 
-```
+```java
 @Configuration
 @Import(Bug.class)
 class BugConfig {
@@ -144,7 +144,7 @@ class Bug {
 
 然后我们可以有一个 **@ `ComponentScan`只是为了我们的`animal`套餐**:
 
-```
+```java
 package com.baeldung.importannotation.animal;
 
 // imports...
@@ -157,7 +157,7 @@ public class AnimalScanConfiguration {
 
 和一个 **`@Import`到** **保持对我们将添加**到上下文的控制:
 
-```
+```java
 package com.baeldung.importannotation.zoo;
 
 // imports...

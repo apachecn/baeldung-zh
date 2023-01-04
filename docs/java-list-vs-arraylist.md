@@ -12,7 +12,7 @@
 
 **T0 是 Java 中最常用的`List`实现**之一。它建立在一个数组之上，可以随着我们添加/删除元素而动态地增长和收缩。当我们知道列表会变大时，用初始容量初始化列表是很好的:
 
-```
+```java
 ArrayList<String> list = new ArrayList<>(25);
 ```
 
@@ -22,7 +22,7 @@ ArrayList<String> list = new ArrayList<>(25);
 
 让我们编写一个基本的乘客处理应用程序:
 
-```
+```java
 public class ArrayListDemo {
     private ArrayList<Passenger> passengers = new ArrayList<>(20);
 
@@ -53,7 +53,7 @@ public class ArrayListDemo {
 
 Java 提供了另一个名为`[LinkedList](/web/20220524051922/https://www.baeldung.com/java-linkedlist)`的`List`实现来存储可变大小的数据`.` **`LinkedList`使用链接节点的集合来存储和检索元素。**如果我们决定将基础实现从`ArrayList`更改为`LinkedList`会怎么样:
 
-```
+```java
 private LinkedList<Passenger> passengers = new LinkedList<>();
 ```
 
@@ -63,13 +63,13 @@ private LinkedList<Passenger> passengers = new LinkedList<>();
 
 让我们看看如何通过使用`List`接口类型来处理这种情况:
 
-```
+```java
 private List<Passenger> passengers = new ArrayList<>(20);
 ```
 
 这里，我们使用`List`接口作为引用类型，而不是更具体的`ArrayList`类型。我们可以将相同的原则应用于所有的函数调用和返回类型。例如:
 
-```
+```java
 public List<Passenger> getPassengersBySource(String source) {
     return passengers.stream()
         .filter(it -> it.getSource().equals(source))
@@ -85,11 +85,11 @@ public List<Passenger> getPassengersBySource(String source) {
 
 此外，Java 中可用的实用程序类返回抽象类型，而不是具体类型。例如，下面的实用函数返回`List` 类型:
 
-```
+```java
 Collections.singletonList(...), Collections.unmodifiableList(...)
 ```
 
-```
+```java
 Arrays.asList(...), ArrayList.sublist(...)
 ```
 

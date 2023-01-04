@@ -12,7 +12,7 @@
 
 我们的起点将是一个新的`XSSFWorkbook,` 一个`XSSFCell,` 和一个已经创建的`CellStyle:`
 
-```
+```java
 XSSFWorkbook wb = new XSSFWorkbook();
 CellStyle cellStyle = wb.createCellStyle();
 wb.createSheet();
@@ -31,7 +31,7 @@ dateCell.setCellValue(new Date());
 
 首先，我们需要创建一个新的`CreationHelper`。有了`CreationHelper, `，我们可以创建一个新的`DataFormat `和一个特定的`Format`。这个`DataFormat`是内部存储的，由一个短整型变量引用。我们必须将它添加到`CellStyle`本身，并将`CellStyle`应用到`Cell`:
 
-```
+```java
 CreationHelper createHelper = wb.getCreationHelper();
 short format = createHelper.createDataFormat().getFormat("m.d.yy h:mm");
 cellStyle.setDataFormat(format);
@@ -40,7 +40,7 @@ dateCell.setCellStyle(cellStyle);
 
 在我们设置了这个自定义`CellStyle`之后，我们的日期将被格式化为:
 
-```
+```java
 02.12.2022 21:30
 ```
 
@@ -50,20 +50,20 @@ dateCell.setCellStyle(cellStyle);
 
 正如我们所了解的，Apache POI 使用缩写链接到不同的`DataFormats.` Excel 已经有许多**内置`DataFormats`，我们可以通过使用它们的缩写直接调用它们**来使用它们:
 
-```
+```java
 cellStyle.setDataFormat((short) 14);
 dateCell.setCellStyle(cellStyle);
 ```
 
 之后，我们可以用下面的代码行获得一个`String`表示中的`DataFormat`:
 
-```
+```java
 cellStyle.getDataFormatString();
 ```
 
 在我们的示例中，我们会得到以下结果:
 
-```
+```java
 m/d/yy
 ```
 

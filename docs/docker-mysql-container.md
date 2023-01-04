@@ -20,7 +20,7 @@
 
 此外，**我们还指示工具使用在`.env`** 文件中定义为环境变量的默认参数。最后，`ports`标签将绑定容器和主机端口 3306。让我们看看我们用来启动 MySQL 服务的`docker-compose` YAML 文件的内容:
 
-```
+```java
 # cat docker-compose.yml
 version: '3.3'
 services:
@@ -41,7 +41,7 @@ services:
 
 在内部，`docker-compose`使用指定路径中的 Dockerfile 构建镜像并为 MySQL 设置环境。我们的 Dockerfile 从 DockerHub 下载图像，并用定义的变量旋转容器:
 
-```
+```java
 # cat Dockerfile
 FROM mysql:latest
 
@@ -81,7 +81,7 @@ EXPOSE 3306
 
 此外，我们可以在当前路径中创建一个环境变量文件`.env`。该文件包含合成文件中涉及的所有变量:
 
-```
+```java
 # cat .env
 MYSQL_DATABASE=my_db_name
 MYSQL_USER=baeldung
@@ -96,7 +96,7 @@ MYSQL_PORT=3306
 
 下面，我们展示了使用`SELECT`查询的表数据，该查询从请求的表中获取数据:
 
-```
+```java
 mysql> select * from Customers;
 +--------------+-----------------+---------------+-----------+------------+---------+
 | CustomerName | ContactName     | Address       | City      | PostalCode | Country |
@@ -112,7 +112,7 @@ mysql> select * from Customers;
 *   -u: MySQL 用户名
 *   -p: MySQL 密码
 
-```
+```java
 # mysqldump -u [user name] –p [password] [database_name] > [dumpfilename.sql]
 
 # mysqldump -u root -p my_db_name > data.sql
@@ -121,7 +121,7 @@ Enter password:
 
 在高级别上，备份文件将删除所选数据库中任何名为`Customers`的表，并将所有备份的数据插入其中:
 
-```
+```java
 # cat data.sql
 -- MySQL dump 10.13  Distrib 8.0.26, for Linux (x86_64)
 ...
@@ -146,7 +146,7 @@ UNLOCK TABLES;
 
 但是，数据库的创建或删除不是在创建的转储文件中管理的。我们将在`data.sql`文件中添加下面的代码片段，如果数据库不存在，它将创建数据库。它通过管理数据库和表来完成这个循环。最后，它还通过`USE`命令使用创建的数据库:
 
-```
+```java
 --
 -- Create a database using `MYSQL_DATABASE` placeholder
 --
@@ -156,7 +156,7 @@ USE `MYSQL_DATABASE`;
 
 目前，目录结构如下所示:
 
-```
+```java
 # tree -a
 .
 ├── data.sql
@@ -173,7 +173,7 @@ USE `MYSQL_DATABASE`;
 
 随后，它还创建数据库并加载在`data.sql`文件中指定的数据:
 
-```
+```java
 # docker-compose up
 Building mysql
 Sending build context to Docker daemon  7.168kB
@@ -220,7 +220,7 @@ mysql_1  | 2022-07-28 00:49:16+00:00 [Note] [Entrypoint]: /usr/local/bin/docker-
 
 **我们可以使用`-d`选项在分离模式下运行容器**:
 
-```
+```java
 # docker-compose up -d
 Building mysql
 Sending build context to Docker daemon  7.168kB
@@ -243,7 +243,7 @@ Creating b015_mysql_1 ... done
 
 必须安装一个[客户端](/web/20220928150307/https://www.baeldung.com/linux/mysql-client-utilities)才能轻松访问 MySQL 服务器。根据我们的需要，我们可以将客户端安装在主机或任何其他与服务器容器具有 IP 可达性的机器或容器上:
 
-```
+```java
 $ sudo apt install mysql-client -y
 Reading package lists... Done
 Building dependency tree
@@ -256,7 +256,7 @@ mysql-client is already the newest version (5.7.37-0ubuntu0.18.04.1).
 
 现在，让我们提取 MySQL 客户端的安装路径和版本:
 
-```
+```java
 $ which mysql
 /usr/bin/mysql
 $ mysql --version
@@ -269,21 +269,21 @@ mysql  Ver 14.14 Distrib 5.7.37, for Linux (x86_64) using  EditLine wrapper
 
 让我们使用`docker ps`命令查看创建的容器 id 和状态:
 
-```
+```java
 # docker ps | grep b015_mysql
 9ce4da8eb682   b015_mysql                "docker-entrypoint.s…"   21 minutes ago   Up 21 minutes         0.0.0.0:3306->3306/tcp, :::3306->3306/tcp, 33060/tcp                                                                    b015_mysql_1
 ```
 
 接下来，让我们使用安装的客户机服务获取容器 IP 地址来访问数据库。**如果我们发出`docker inspect`命令，我们将看到 JSON 格式的容器的详细信息。**我们也可以从生成的 JSON 中选择任何字段。这里，我们从`range.NetworkSettings.Networks -> IPAddress`获取 IP 地址:
 
-```
+```java
 # docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' 9ce4da8eb682
 172.19.0.2
 ```
 
 然后，我们可以使用配置的主机和端口信息，通过客户端登录 MySQL 服务器:
 
-```
+```java
 # mysql -h 172.17.0.2 -P 3306 --protocol=tcp -u root -p
 Enter password:
 Welcome to the MySQL monitor.  Commands end with ; or \g.
@@ -311,7 +311,7 @@ Database changed
 
 在这里，我们可以看到数据是从`data.sql`文件中自动恢复的:
 
-```
+```java
 mysql> select * from Customers;
 +--------------+-----------------+---------------+-----------+------------+---------+
 | CustomerName | ContactName     | Address       | City      | PostalCode | Country |
@@ -324,14 +324,14 @@ mysql> select * from Customers;
 
 现在，让我们尝试向现有的数据库表中添加几行。我们将使用一个`INSERT`查询向表中添加数据:
 
-```
+```java
 mysql> INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country) VALUES ('White Clover Markets', 'Karl Jablonski', '305 - 14th Ave. S. Suite 3B', 'Seattle', '98128', 'USA');
 Query OK, 1 row affected (0.00 sec)
 ```
 
 我们还成功地在恢复的表中插入了一个新行。恭喜你。让我们看看结果:
 
-```
+```java
 mysql> select * from Customers;
 +----------------------+-----------------+-----------------------------+-----------+------------+---------+
 | CustomerName         | ContactName     | Address                     | City      | PostalCode | Country |
@@ -347,7 +347,7 @@ mysql> select * from Customers;
 
 `docker exec`命令帮助使用容器 id 登录到正在运行的容器。选项`-i`保持 STDIN 打开，`-t`将分配伪 TTY，最后，最后的`/bin/bash`让我们进入 BASH 提示符:
 
-```
+```java
 # docker exec -it 9ce4da8eb682 /bin/bash
 [[email protected]](/web/20220928150307/https://www.baeldung.com/cdn-cgi/l/email-protection):/# mysql -h localhost -u root -p
 Enter password:

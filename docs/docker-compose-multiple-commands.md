@@ -14,7 +14,7 @@ Docker Compose 允许我们在 Docker 容器中执行命令。在容器启动期
 
 让我们看一下`docker-compose.yml`，它在容器中运行一个简单的命令:
 
-```
+```java
 version: "3"
 services:
  server:
@@ -32,7 +32,7 @@ services:
 
 我们将首先创建一个简单的`docker-compose.yml`文件来演示 Docker Compose 如何运行多个命令:
 
-```
+```java
 version: "3"
 services:
  server:
@@ -44,7 +44,7 @@ services:
 
 为了演示结果，让我们使用 [`docker-compose up`](https://web.archive.org/web/20221002153728/https://docs.docker.com/engine/reference/commandline/compose_up/) 命令运行这个图像:
 
-```
+```java
 $ docker-compose up
 Creating dockercompose_server_1 ... done
 Attaching to dockercompose_server_1
@@ -61,7 +61,7 @@ dockercompose_server_1 exited with code 0
 
 为了说明`|`操作符是如何工作的，让我们更新一下我们的`docker-compose.yml`:
 
-```
+```java
 version: "3"
 services:
  server:
@@ -80,7 +80,7 @@ services:
 
 让我们用`docker-compose up`命令再次运行 Docker 容器:
 
-```
+```java
 $ docker-compose up
 Creating dockercompose_server_1 ... done
 Attaching to dockercompose_server_1

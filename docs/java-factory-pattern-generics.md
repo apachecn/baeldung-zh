@@ -28,7 +28,7 @@
 
 `Notifier`接口是一个原型，其他通知程序类实现了它:
 
-```
+```java
 public interface Notifier<T> {
     void notify(T obj);
 }
@@ -40,7 +40,7 @@ public interface Notifier<T> {
 
 现在让我们实现另外两个通知程序类:
 
-```
+```java
 public class StringNotifier implements Notifier<String> {
 
     @Override
@@ -62,7 +62,7 @@ public class StringNotifier implements Notifier<String> {
 
 每次调用工厂类的唯一方法`getNotifier()`时，它都会生成一个通知程序实例:
 
-```
+```java
 public class NotifierFactory {
 
     public <T> Notifier<T> getNotifier(Class<T> c) {
@@ -84,7 +84,7 @@ public class NotifierFactory {
 
 **`Record`枚举保存有效通知类的记录，并在工厂类每次调用它时创建一个实例**:
 
-```
+```java
 public enum Record {
     STRING {
         @Override
@@ -109,7 +109,7 @@ public enum Record {
 
 让我们使用我们的`Main`类中的工厂:
 
-```
+```java
 public static void main(String[] args) {
     NotifierFactory factory = new NotifierFactory();
     Notifier<String> stringNotifier = factory.getNotifier(String.class);
@@ -122,7 +122,7 @@ public static void main(String[] args) {
 
 现在我们应该编译并运行我们的代码:
 
-```
+```java
 $ javac Main.java
 $ java Main
 Notifying: Hello world!

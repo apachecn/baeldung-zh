@@ -16,7 +16,7 @@
 
 让我们通过扩展`Thread`类来尝试一个基本的例子:
 
-```
+```java
 public class NewThread extends Thread {
     public void run() {
         long startTime = System.currentTimeMillis();
@@ -37,7 +37,7 @@ public class NewThread extends Thread {
 
 现在我们编写第二个类来初始化和启动我们的线程:
 
-```
+```java
 public class SingleThreadExample {
     public static void main(String[] args) {
         NewThread t = new NewThread();
@@ -50,7 +50,7 @@ public class SingleThreadExample {
 
 现在让我们假设我们需要启动多个线程:
 
-```
+```java
 public class MultipleThreadsExample {
     public static void main(String[] args) {
         NewThread t1 = new NewThread();
@@ -93,7 +93,7 @@ public class MultipleThreadsExample {
 
 让我们看看如何向我们的执行器提交一个异步任务:
 
-```
+```java
 ExecutorService executor = Executors.newFixedThreadPool(10);
 ...
 executor.submit(() -> {
@@ -117,7 +117,7 @@ executor.submit(() -> {
 
 提交任务的实现要简单得多:
 
-```
+```java
 CompletableFuture.supplyAsync(() -> "Hello");
 ```
 
@@ -144,7 +144,7 @@ Java 几乎没有什么工具可以帮助我们运行延迟或重复的操作:
 
 如果我们想在延迟一秒钟后运行一个任务，让我们看看代码是什么样子的:
 
-```
+```java
 TimerTask task = new TimerTask() {
     public void run() {
         System.out.println("Task performed on: " + new Date() + "n" 
@@ -158,7 +158,7 @@ timer.schedule(task, delay);
 
 现在让我们添加一个重复计划:
 
-```
+```java
 timer.scheduleAtFixedRate(repeatedTask, delay, period);
 ```
 
@@ -170,7 +170,7 @@ timer.scheduleAtFixedRate(repeatedTask, delay, period);
 
 `ScheduledThreadPoolExecutor`有类似于`Timer`类的方法:
 
-```
+```java
 ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
 ScheduledFuture<Object> resultFuture
   = executorService.schedule(callableTask, 1, TimeUnit.SECONDS);
@@ -178,7 +178,7 @@ ScheduledFuture<Object> resultFuture
 
 为了结束我们的例子，我们使用`scheduleAtFixedRate()`来表示周期性任务:
 
-```
+```java
 ScheduledFuture<Object> resultFuture
  = executorService.scheduleAtFixedRate(runnableTask, 100, 450, TimeUnit.MILLISECONDS);
 ```

@@ -14,7 +14,7 @@
 
 要设置我们的 Feign 客户端，我们应该首先添加[Spring Cloud open Feign](https://web.archive.org/web/20221126220215/https://search.maven.org/artifact/org.springframework.cloud/spring-cloud-starter-openfeign)Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-openfeign</artifactId>
@@ -23,7 +23,7 @@
 
 之后，让我们为我们的模型创建一个`Book`类:
 
-```
+```java
 public class Book {
     private String title;
     private String author;
@@ -32,7 +32,7 @@ public class Book {
 
 最后，让我们创建我们的虚拟客户端接口:
 
-```
+```java
 @FeignClient(value="simple-books-client", url="${book.service.url}")
 public interface BooksClient {
 
@@ -52,7 +52,7 @@ public interface BooksClient {
 
 因此，让我们添加 [WireMock](https://web.archive.org/web/20221126220215/https://search.maven.org/artifact/com.github.tomakehurst/wiremock) Maven 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.github.tomakehurst</groupId>
     <artifactId>wiremock</artifactId>
@@ -62,7 +62,7 @@ public interface BooksClient {
 
 并配置模拟服务器:
 
-```
+```java
 @TestConfiguration
 public class WireMockConfig {
 
@@ -83,7 +83,7 @@ public class WireMockConfig {
 
 让我们将属性`book.service.url`添加到指向`WireMockServer`端口的`application-test.yml` 中:
 
-```
+```java
 book:
   service:
     url: http://localhost:9561
@@ -91,7 +91,7 @@ book:
 
 让我们也为`/books`端点准备一个模拟响应`get-books-response.json`:
 
-```
+```java
 [
   {
     "title": "Dune",
@@ -106,7 +106,7 @@ book:
 
 现在让我们为`/books`端点上的`GET`请求配置模拟响应:
 
-```
+```java
 public class BookMocks {
 
     public static void setupMockBooksResponse(WireMockServer mockService) throws IOException {
@@ -129,7 +129,7 @@ public class BookMocks {
 
 让我们创建一个集成测试`BooksClientIntegrationTest`:
 
-```
+```java
 @SpringBootTest
 @ActiveProfiles("test")
 @EnableConfigurationProperties
@@ -156,7 +156,7 @@ class BooksClientIntegrationTest {
 
 最后，让我们添加我们的测试方法:
 
-```
+```java
 @Test
 public void whenGetBooks_thenBooksShouldBeReturned() {
     assertFalse(booksClient.getBooks().isEmpty());
@@ -177,7 +177,7 @@ public void whenGetBooks_thenTheCorrectBooksShouldBeReturned() {
 
 在客户端界面中，我们需要做的就是删除硬编码的服务 URL，代之以通过服务名`book-service`引用服务:
 
-```
+```java
 @FeignClient("books-service")
 public interface BooksClient {
 ...
@@ -185,7 +185,7 @@ public interface BooksClient {
 
 接下来，添加[网飞丝带](https://web.archive.org/web/20221126220215/https://search.maven.org/artifact/org.springframework.cloud/spring-cloud-starter-netflix-ribbon) Maven 依赖:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
@@ -194,7 +194,7 @@ public interface BooksClient {
 
 最后，在`application-test.yml`文件中，我们现在应该删除`book.service.url`并定义功能区`listOfServers`:
 
-```
+```java
 books-service:
   ribbon:
     listOfServers: http://localhost:9561
@@ -208,7 +208,7 @@ books-service:
 
 为此，让我们创建另一个测试配置，`RibbonTestConfig:`
 
-```
+```java
 @TestConfiguration
 @ActiveProfiles("ribbon-test")
 public class RibbonTestConfig {
@@ -245,7 +245,7 @@ public class RibbonTestConfig {
 
 现在我们已经配置了我们的带状负载平衡器，**让我们确保我们的`BooksClient`在两个模拟服务器:**之间正确地交替
 
-```
+```java
 @SpringBootTest
 @ActiveProfiles("ribbon-test")
 @EnableConfigurationProperties
@@ -298,7 +298,7 @@ class LoadBalancerBooksClientIntegrationTest {
 
 在继续之前，让我们添加一下[测试容器](https://web.archive.org/web/20221126220215/https://search.maven.org/artifact/org.testcontainers/testcontainers)和[网飞尤里卡客户端](https://web.archive.org/web/20221126220215/https://search.maven.org/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client) Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
@@ -314,7 +314,7 @@ class LoadBalancerBooksClientIntegrationTest {
 
 让我们创建一个 TestContainer 配置来启动我们的 Eureka 服务器:
 
-```
+```java
 public class EurekaContainerConfig {
 
     public static class Initializer implements ApplicationContextInitializer {
@@ -345,7 +345,7 @@ public class EurekaContainerConfig {
 
 既然我们的 Eureka 服务器已经启动并运行，我们需要注册一个模拟的`books-service`。我们通过简单地创建一个 RestController 来实现这一点:
 
-```
+```java
 @Configuration
 @RestController
 @ActiveProfiles("eureka-test")
@@ -366,7 +366,7 @@ public class MockBookServiceConfig {
 
 同样，我们已经有了所有需要的配置，所以让我们将它们放在一起进行测试:
 
-```
+```java
 @ActiveProfiles("eureka-test")
 @EnableConfigurationProperties
 @ExtendWith(SpringExtension.class)

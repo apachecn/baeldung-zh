@@ -22,7 +22,7 @@ Java 中的正则表达式 API，`java.util.regex` 广泛用于模式匹配。�
 
 这个测试表明，对于给定的输入字符串`foof`当模式`foo`时。(`foo`以点字符结尾)匹配，则返回一个值`true`，表示匹配成功。
 
-```
+```java
 @Test
 public void givenRegexWithDot_whenMatchingStr_thenMatches() {
     String strInput = "foof";
@@ -59,7 +59,7 @@ public void givenRegexWithDot_whenMatchingStr_thenMatches() {
 
 因此，在我们的示例中，我们需要更改正则表达式，如本测试所示:
 
-```
+```java
 @Test
 public void givenRegexWithDotEsc_whenMatchingStr_thenNotMatching() {
     String strInput = "foof";
@@ -87,7 +87,7 @@ public void givenRegexWithDotEsc_whenMatchingStr_thenNotMatching() {
 
 这里，转义是通过在`\Q`和`\E`之间放置管道字符来完成的:
 
-```
+```java
 @Test
 public void givenRegexWithPipeEscaped_whenSplitStr_thenSplits() {
     String strInput = "foo|bar|hello|world";
@@ -105,7 +105,7 @@ public void givenRegexWithPipeEscaped_whenSplitStr_thenSplits() {
 
 让我们来看看这种方法的实际应用:
 
-```
+```java
 @Test
 public void givenRegexWithPipeEscQuoteMeth_whenSplitStr_thenSplits() {
     String strInput = "foo|bar|hello|world";
@@ -133,7 +133,7 @@ public void givenRegexWithPipeEscQuoteMeth_whenSplitStr_thenSplits() {
 
 这个测试演示了模式`$`如何被传递而不被转义:
 
-```
+```java
 @Test
 public void givenRegexWithDollar_whenReplacing_thenNotReplace() {
 
@@ -155,7 +155,7 @@ public void givenRegexWithDollar_whenReplacing_thenNotReplace() {
 
 现在，如果我们对 regex 模式进行转义，替换会正确发生，并且测试会通过，如下面的代码片段所示:
 
-```
+```java
 @Test
 public void givenRegexWithDollarEsc_whenReplacing_thenReplace() {
 

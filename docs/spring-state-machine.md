@@ -10,7 +10,7 @@
 
 首先，我们需要添加主要的 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.statemachine</groupId>
     <artifactId>spring-statemachine-core</artifactId>
@@ -24,7 +24,7 @@
 
 现在，让我们从定义一个简单的状态机开始:
 
-```
+```java
 @Configuration
 @EnableStateMachine
 public class SimpleStateMachineConfiguration 
@@ -66,26 +66,26 @@ public class SimpleStateMachineConfiguration
 
 现在，我们需要启动一个 Spring 上下文，并获取对我们的配置所定义的状态机的引用:
 
-```
+```java
 @Autowired
 private StateMachine<String, String> stateMachine;
 ```
 
 一旦我们有了状态机，就需要启动它:
 
-```
+```java
 stateMachine.start();
 ```
 
 现在我们的机器处于初始状态，我们可以发送事件，从而触发转换:
 
-```
+```java
 stateMachine.sendEvent("E1");
 ```
 
 我们总是可以检查状态机的当前状态:
 
-```
+```java
 stateMachine.getState();
 ```
 
@@ -93,7 +93,7 @@ stateMachine.getState();
 
 让我们添加一些围绕状态转换执行的操作。首先，我们在同一个配置文件中将我们的操作定义为一个 Spring bean:
 
-```
+```java
 @Bean
 public Action<String, String> initAction() {
     return ctx -> System.out.println(ctx.getTarget().getId());
@@ -102,7 +102,7 @@ public Action<String, String> initAction() {
 
 然后，我们可以在配置类中注册上面创建的转换操作:
 
-```
+```java
 @Override
 public void configure(
   StateMachineTransitionConfigurer<String, String> transitions)
@@ -116,7 +116,7 @@ public void configure(
 
 当通过事件`E1`从`SI`转换到`S1`时，将执行该动作。行动可以附属于国家本身:
 
-```
+```java
 @Bean
 public Action<String, String> executeAction() {
     return ctx -> System.out.println("Do" + ctx.getTarget().getId());
@@ -131,7 +131,7 @@ states
 
 错误操作处理程序与任何其他操作没有太大的不同，但是如果在评估状态操作期间任何时候抛出异常，就会调用它:
 
-```
+```java
 @Bean
 public Action<String, String> errorAction() {
     return ctx -> System.out.println(
@@ -141,7 +141,7 @@ public Action<String, String> errorAction() {
 
 也可以注册`entry`、`do`和`exit`状态转换的单个动作:
 
-```
+```java
 @Bean
 public Action<String, String> entryAction() {
     return ctx -> System.out.println(
@@ -161,7 +161,7 @@ public Action<String, String> exitAction() {
 }
 ```
 
-```
+```java
 states
   .withStates()
   .stateEntry("S3", entryAction())
@@ -179,7 +179,7 @@ states
 
 我们需要通过扩展`StateMachineListenerAdapter`来定义一个监听器:
 
-```
+```java
 public class StateMachineListener extends StateMachineListenerAdapter {
 
     @Override
@@ -198,7 +198,7 @@ Spring 状态机跟踪它的状态，但是为了跟踪我们的`application`状
 
 假设我们想确保一个帐户申请通过两级审批。我们可以使用存储在扩展状态中的整数来跟踪批准数:
 
-```
+```java
 @Bean
 public Action<String, String> executeAction() {
     return ctx -> {
@@ -215,7 +215,7 @@ public Action<String, String> executeAction() {
 
 在执行状态转换之前，可以使用保护来验证一些数据。一个守卫看起来很像一个动作:
 
-```
+```java
 @Bean
 public Guard<String, String> simpleGuard() {
     return ctx -> (int) ctx.getExtendedState()
@@ -228,7 +228,7 @@ public Guard<String, String> simpleGuard() {
 
 支持 SPeL 担任警卫的表情也存在。上面的例子也可以写成:
 
-```
+```java
 .guardExpression("extendedState.variables.approvalCount > 0")
 ```
 
@@ -236,7 +236,7 @@ public Guard<String, String> simpleGuard() {
 
 `StateMachineBuilder`可用于创建状态机，无需使用 Spring 注释或创建 Spring 上下文:
 
-```
+```java
 StateMachineBuilder.Builder<String, String> builder 
   = StateMachineBuilder.builder();
 builder.configureStates().withStates()
@@ -257,7 +257,7 @@ StateMachine<String, String> machine = builder.build();
 
 可以通过使用多个`withStates()`和`parent()`来配置分层状态:
 
-```
+```java
 states
   .withStates()
     .initial("SI")
@@ -273,7 +273,7 @@ states
 
 这种设置允许状态机有多个状态，因此对`getState()`的调用将产生多个 id。例如，在启动后，下面的表达式会立即导致:
 
-```
+```java
 stateMachine.getState().getIds()
 ["SI", "SUB1"]
 ```
@@ -284,7 +284,7 @@ stateMachine.getState().getIds()
 
 首先，我们需要在状态定义中将一个状态标记为一个交叉点(选择):
 
-```
+```java
 states
   .withStates()
   .junction("SJ")
@@ -292,7 +292,7 @@ states
 
 然后在转换中，我们定义了对应于 if-then-else 结构的 first/then/last 选项:
 
-```
+```java
 .withJunction()
   .source("SJ")
   .first("high", highGuard())
@@ -302,7 +302,7 @@ states
 
 `first`和`then`采用第二个参数，这是一个常规的守卫，它将被调用来找出要采取的路径:
 
-```
+```java
 @Bean
 public Guard<String, String> mediumGuard() {
     return ctx -> false;
@@ -326,7 +326,7 @@ public Guard<String, String> highGuard() {
 
 首先，我们需要将一个节点指定为分叉节点，并创建状态机将执行拆分的分层区域:
 
-```
+```java
 states
   .withStates()
   .initial("SI")
@@ -345,7 +345,7 @@ states
 
 然后定义分叉转换:
 
-```
+```java
 .withFork()
   .source("SFork")
   .target("Sub1-1")
@@ -360,7 +360,7 @@ fork 操作的补充是 join。它允许我们设置一个依赖于完成其他�
 
 与分叉一样，我们需要在状态定义中指定一个连接节点:
 
-```
+```java
 states
   .withStates()
   .join("SJoin")
@@ -368,7 +368,7 @@ states
 
 然后，在转换中，我们定义需要完成哪些状态才能启用我们的加入状态:
 
-```
+```java
 transitions
   .withJoin()
     .source("Sub1-2")
@@ -384,7 +384,7 @@ transitions
 
 首先，我们需要定义系统中所有可能的状态和事件:
 
-```
+```java
 public enum ApplicationReviewStates {
     PEER_REVIEW, PRINCIPAL_REVIEW, APPROVED, REJECTED
 }
@@ -396,7 +396,7 @@ public enum ApplicationReviewEvents {
 
 在扩展配置时，我们还需要将枚举作为一般参数传递:
 
-```
+```java
 public class SimpleEnumStateMachineConfiguration 
   extends StateMachineConfigurerAdapter
   <ApplicationReviewStates, ApplicationReviewEvents>
@@ -404,7 +404,7 @@ public class SimpleEnumStateMachineConfiguration
 
 一旦定义好，我们就可以使用枚举常量来代替字符串。例如，要定义过渡:
 
-```
+```java
 transitions.withExternal()
   .source(ApplicationReviewStates.PEER_REVIEW)
   .target(ApplicationReviewStates.PRINCIPAL_REVIEW)

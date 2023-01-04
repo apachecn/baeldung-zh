@@ -26,7 +26,7 @@ Auth0 Java JWT 库提供了各种算法实现来签署 JWT，如 HMAC、RSA 和 
 
 让我们来看一个 JWT 题头的例子:
 
-```
+```java
 {
   "alg": "HS256",
   "typ": "JWT"
@@ -47,7 +47,7 @@ JWT 有效载荷包含一组声明。声明基本上是关于一个实体以及�
 
 让我们来看一个样本 JWT 有效载荷:
 
-```
+```java
 {
   "sub": "Baeldung Details",
   "nbf": 1669463994,
@@ -71,7 +71,7 @@ JWT 有效载荷包含一组声明。声明基本上是关于一个实体以及�
 
 最后，结合所有三个部分，我们得到我们的 JWT:
 
-```
+```java
 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJCYWVsZHVuZyBEZXRhaWxzIiwibmJmIjoxNjY5NDYzOTk0LCJpc3MiOiJCYWVsZHVuZyIsImV4cCI6MTY2OTQ2Mzk5OCwidXNlcklkIjoiMTIzNCIsImlhdCI6MTY2OTQ2Mzk5MywianRpIjoiYjQ0YmQ2YzYtZjEyOC00NDE1LTg0NTgtNmQ4YjRiYzk4ZTRhIn0.14jm1FVPXFDJCUBARDTQkUErMmUTqdt5uMTGW6hDuV0
 ```
 
@@ -85,7 +85,7 @@ Auth0 为创建和管理 jwt 提供了一个易于使用的 Java 库。
 
 首先，我们将 Auth0 Java JWT 库的 [Maven 依赖项](https://web.archive.org/web/20230103152516/https://search.maven.org/search?q=g:com.auth0%20AND%20a:java-jwt)添加到我们项目的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.auth0</groupId>
     <artifactId>java-jwt</artifactId>
@@ -97,7 +97,7 @@ Auth0 为创建和管理 jwt 提供了一个易于使用的 Java 库。
 
 我们首先创建一个`Algorithm`类的实例。在本教程中，我们将使用 HMAC256 算法来签署我们的 JWT:
 
-```
+```java
 Algorithm algorithm = Algorithm.HMAC256("baeldung");
 ```
 
@@ -105,7 +105,7 @@ Algorithm algorithm = Algorithm.HMAC256("baeldung");
 
 此外，让我们初始化一个`JWTVerifier`实例，我们将使用它来验证创建的令牌:
 
-```
+```java
 JWTVerifier verifier = JWT.require(algorithm)
   .withIssuer("Baeldung")
   .build();
@@ -119,7 +119,7 @@ JWTVerifier verifier = JWT.require(algorithm)
 
 **要创建一个 JWT，我们使用`JWT.create()`方法**。该方法返回一个`JWTCreator.Builder`类的实例。我们将使用这个`Builder`类通过使用`Algorithm`实例签署声明来构建 JWT 令牌:
 
-```
+```java
 String jwtToken = JWT.create()
   .withIssuer("Baeldung")
   .withSubject("Baeldung Details")
@@ -134,7 +134,7 @@ String jwtToken = JWT.create()
 
 上面的代码片段返回了一个 JWT:
 
-```
+```java
 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJCYWVsZHVuZyBEZXRhaWxzIiwibmJmIjoxNjY5NDYzOTk0LCJpc3MiOiJCYWVsZHVuZyIsImV4cCI6MTY2OTQ2Mzk5OCwidXNlcklkIjoiMTIzNCIsImlhdCI6MTY2OTQ2Mzk5MywianRpIjoiYjQ0YmQ2YzYtZjEyOC00NDE1LTg0NTgtNmQ4YjRiYzk4ZTRhIn0.14jm1FVPXFDJCUBARDTQkUErMmUTqdt5uMTGW6hDuV0
 ```
 
@@ -156,7 +156,7 @@ eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJCYWVsZHVuZyBEZXRhaWxzIiwibmJmIjo
 
 让我们解码我们之前创建的 JWT:
 
-```
+```java
 try {
     DecodedJWT decodedJWT = verifier.verify(jwtToken);
 } catch (JWTVerificationException e) {
@@ -168,13 +168,13 @@ try {
 
 例如，为了获得自定义声明，我们使用了`DecodedJWT.getClaim(String)`方法。这个方法返回一个`Claim`的实例:
 
-```
+```java
 Claim claim = decodedJWT.getClaim("userId");
 ```
 
 这里，我们将获取我们在创建 JWT 时设置的自定义声明`userId`。我们现在可以通过调用`Claim.asString()`或任何其他基于索赔数据类型的可用方法来获得索赔值:
 
-```
+```java
 String userId = claim.asString();
 ```
 

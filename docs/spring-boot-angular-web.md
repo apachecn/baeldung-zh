@@ -26,7 +26,7 @@ Learn how to set up OAuth2 for a Spring REST API using Spring Security 5 and how
 
 以下是我们 Spring Boot 项目的依赖项:
 
-```
+```java
 <dependency> 
     <groupId>org.springframework.boot</groupId> 
     <artifactId>spring-boot-starter-web</artifactId> 
@@ -50,7 +50,7 @@ Learn how to set up OAuth2 for a Spring REST API using Spring Security 5 and how
 
 为了快速原型化我们的应用程序的域层，让我们定义一个简单的 JPA 实体类，它将负责建模用户:
 
-```
+```java
 @Entity
 public class User {
 
@@ -68,7 +68,7 @@ public class User {
 
 由于我们将需要在`User`实体上的基本 CRUD 功能，我们还必须定义一个`UserRepository`接口:
 
-```
+```java
 @Repository
 public interface UserRepository extends CrudRepository<User, Long>{} 
 ```
@@ -77,7 +77,7 @@ public interface UserRepository extends CrudRepository<User, Long>{}
 
 现在让我们实现 REST API。在这种情况下，它只是一个简单的 REST 控制器:
 
-```
+```java
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
@@ -112,7 +112,7 @@ public class UserController {
 
 最后，让我们创建一个标准的 Spring Boot 引导类，并用几个`User`实体填充数据库:
 
-```
+```java
 @SpringBootApplication
 public class Application {
 
@@ -135,7 +135,7 @@ public class Application {
 
 现在让我们运行应用程序。正如预期的那样，我们应该在启动时看到控制台上打印出的`User`实体列表:
 
-```
+```java
 User{id=1, name=John, [[email protected]](/web/20220923002451/https://www.baeldung.com/cdn-cgi/l/email-protection)}
 User{id=2, name=Julie, [[email protected]](/web/20220923002451/https://www.baeldung.com/cdn-cgi/l/email-protection)}
 User{id=3, name=Jennifer, [[email protected]](/web/20220923002451/https://www.baeldung.com/cdn-cgi/l/email-protection)}
@@ -155,7 +155,7 @@ Angular CLI 是一个非常有价值的工具，因为**它允许我们从头开
 
 一旦我们安装了 [npm](https://web.archive.org/web/20220923002451/https://www.npmjs.com/) (节点包管理器)，我们将打开一个命令控制台并键入命令:
 
-```
+```java
 npm install -g @angular/[[email protected]](/web/20220923002451/https://www.baeldung.com/cdn-cgi/l/email-protection)
 ```
 
@@ -167,7 +167,7 @@ npm install -g @angular/[[email protected]](/web/20220923002451/https://www.bae
 
 相反，我们将让 Angular CLI 为我们做这些困难的工作。因此，我们可以打开一个命令控制台，然后导航到要创建应用程序的文件夹，并键入命令:
 
-```
+```java
 ng new angularclient
 ```
 
@@ -181,7 +181,7 @@ ng new angularclient
 
 让我们编辑这个文件:
 
-```
+```java
 <!doctype html>
 <html lang="en">
 <head>
@@ -211,7 +211,7 @@ ng new angularclient
 
 为了更好地理解 Angular 如何将 HTML 模板绑定到组件，让我们转到`src/app`目录并编辑`app.component.ts` TypeScript 文件，根组件:
 
-```
+```java
 import { Component } from '@angular/core';
 
 @Component({
@@ -249,7 +249,7 @@ export class AppComponent {
 
 如果我们点击第一个按钮，Angular 将显示一个包含数据库中存储的`User`实体列表的表格。类似地，如果我们单击第二个按钮，它将呈现一个 HTML 表单，我们可以用它向数据库添加新的实体:
 
-```
+```java
 <div class="container">
   <div class="row">
     <div class="col-md-12">
@@ -290,13 +290,13 @@ export class AppComponent {
 
 让我们打开终端控制台并创建一个`model`目录:
 
-```
+```java
 ng generate class user
 ```
 
 Angular CLI 将生成一个空的`User`类，所以让我们用几个字段填充它:
 
-```
+```java
 export class User {
     id: string;
     name: string;
@@ -312,13 +312,13 @@ export class User {
 
 让我们打开一个控制台终端，然后创建一个`service`目录，并在该目录中发出以下命令:
 
-```
+```java
 ng generate service user-service
 ```
 
 现在让我们打开 Angular CLI 刚刚创建的`user.service.ts`文件并重构它:
 
-```
+```java
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../model/user';
@@ -359,7 +359,7 @@ export class UserService {
 
 让我们打开一个终端控制台，然后创建一个`user-list`目录，并生成一个用户列表组件:
 
-```
+```java
 ng generate component user-list
 ```
 
@@ -367,7 +367,7 @@ Angular CLI 将生成一个实现`[ngOnInit](https://web.archive.org/web/2022092
 
 让我们重构这个类，以便它可以在构造函数中接受一个`UserService`实例:
 
-```
+```java
 import { Component, OnInit } from '@angular/core';
 import { User } from '../model/user';
 import { UserService } from '../service/user.service';
@@ -396,7 +396,7 @@ export class UserListComponent implements OnInit {
 
 此外，我们需要编辑组件的 HTML 文件，`user-list.component.html,`来创建显示实体列表的表格:
 
-```
+```java
 <div class="card my-5">
   <div class="card-body">
     <table class="table table-bordered table-striped">
@@ -429,13 +429,13 @@ export class UserListComponent implements OnInit {
 
 让我们创建一个`user-form`目录，并键入以下内容:
 
-```
+```java
 ng generate component user-form 
 ```
 
 接下来让我们打开`user-form.component.ts`文件，并向`UserFormComponent`类添加一个保存`User`对象的方法:
 
-```
+```java
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../service/user.service';
@@ -473,7 +473,7 @@ export class UserFormComponent {
 
 此外，我们需要编辑`user-form.component.html`文件，并创建用于在数据库中持久化新用户的 HTML 表单:
 
-```
+```java
 <div class="card my-5">
   <div class="card-body">
     <form (ngSubmit)="onSubmit()" #userForm="ngForm">
@@ -526,7 +526,7 @@ export class UserFormComponent {
 
 这就是 [`RouterModule`](https://web.archive.org/web/20220923002451/https://angular.io/api/router/RouterModule) 发挥作用的地方。让我们打开`app-routing.module.ts`文件并配置模块，这样它就可以向匹配的组件发送请求:
 
-```
+```java
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { UserListComponent } from './user-list/user-list.component';
@@ -561,7 +561,7 @@ export class AppRoutingModule { }
 
 此外，我们需要指定我们将使用哪个提供者来创建和注入`UserService`类。否则，Angular 将无法将其注入组件类:
 
-```
+```java
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
@@ -598,7 +598,7 @@ export class AppModule { }
 
 一旦 Spring Boot 应用程序启动，我们将打开一个命令控制台，并键入以下命令:
 
-```
+```java
 ng serve --open
 ```
 

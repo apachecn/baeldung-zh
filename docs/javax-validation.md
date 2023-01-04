@@ -34,7 +34,7 @@ JSR 380 是用于 bean 验证的 Java API 的规范，是 Jakarta EE 和 JavaSE 
 
 根据 JSR 380 规范，*验证-api* 依赖关系包含标准验证 api:
 
-```
+```java
 <dependency>
     <groupId>javax.validation</groupId>
     <artifactId>validation-api</artifactId>
@@ -48,7 +48,7 @@ Hibernate Validator 是验证 API 的参考实现。
 
 要使用它，我们需要添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate.validator</groupId>
     <artifactId>hibernate-validator</artifactId>
@@ -64,7 +64,7 @@ JSR 380 支持变量插值，允许在违规消息中使用表达式。
 
 为了解析这些表达式，我们将添加来自 GlassFish 的 [`javax.el`](https://web.archive.org/web/20220706124058/https://search.maven.org/artifact/org.glassfish/javax.el) 依赖项，它包含表达式语言规范的实现:
 
-```
+```java
 <dependency>
     <groupId>org.glassfish</groupId>
     <artifactId>javax.el</artifactId>
@@ -76,7 +76,7 @@ JSR 380 支持变量插值，允许在违规消息中使用表达式。
 
 这里，我们将使用一个`User` bean，并向它添加一些简单的验证:
 
-```
+```java
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -129,7 +129,7 @@ public class User {
 
 **验证注释也可以应用于集合的元素**:
 
-```
+```java
 List<@NotBlank String> preferences;
 ```
 
@@ -137,7 +137,7 @@ List<@NotBlank String> preferences;
 
 此外，规范**支持 Java 8 中新的`Optional`类型**:
 
-```
+```java
 private LocalDate dateOfBirth;
 
 public Optional<@Past LocalDate> getDateOfBirth() {
@@ -153,7 +153,7 @@ public Optional<@Past LocalDate> getDateOfBirth() {
 
 现在让我们走手动路线，以编程方式进行设置:
 
-```
+```java
 ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 Validator validator = factory.getValidator(); 
 ```
@@ -164,7 +164,7 @@ Validator validator = factory.getValidator();
 
 我们现在要设置这个无效的用户——使用一个空值`name`:
 
-```
+```java
 User user = new User();
 user.setWorking(true);
 user.setAboutMe("Its all about me!");
@@ -177,13 +177,13 @@ user.setAge(50);
 
 任何违反在`User`对象中定义的约束的行为都将作为*集合*返回:
 
-```
+```java
 Set<ConstraintViolation<User>> violations = validator.validate(user); 
 ```
 
 通过迭代违例，我们可以使用 *getMessage* 方法获得所有违例消息:
 
-```
+```java
 for (ConstraintViolation<User> violation : violations) {
     log.error(violation.getMessage()); 
 } 

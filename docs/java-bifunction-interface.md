@@ -14,7 +14,7 @@ Java 8 引入了[函数式编程](/web/20220731202352/https://www.baeldung.com/j
 
 让我们快速回顾一下如何使用单参数或一元函数，就像我们在 [streams](/web/20220731202352/https://www.baeldung.com/java-8-streams-introduction) 中所做的那样:
 
-```
+```java
 List<String> mapped = Stream.of("hello", "world")
   .map(word -> word + "!")
   .collect(Collectors.toList());
@@ -36,7 +36,7 @@ assertThat(mapped).containsExactly("hello!", "world!");
 
 `BiFunction`的 lambda 实现以两个参数为前缀，用括号括起来:
 
-```
+```java
 String result = Stream.of("hello", "world")
   .reduce("", (a, b) -> b + "-" + a);
 
@@ -49,7 +49,7 @@ assertThat(result).isEqualTo("world-hello-");
 
 此外，我们应该注意到 Java 的类型推断允许我们在大多数情况下省略参数的类型。在上下文中 lambda 的类型不明确的情况下，我们可以为参数使用类型:
 
-```
+```java
 String result = Stream.of("hello", "world")
   .reduce("", (String a, String b) -> b + "-" + a);
 ```
@@ -58,7 +58,7 @@ String result = Stream.of("hello", "world")
 
 如果我们想让上面的算法不在末尾加一个破折号呢？我们可以在 lambda 中编写更多的代码，但这可能会变得混乱。让我们提取一个函数来代替:
 
-```
+```java
 private String combineWithoutTrailingDash(String a, String b) {
     if (a.isEmpty()) {
         return b;
@@ -69,7 +69,7 @@ private String combineWithoutTrailingDash(String a, String b) {
 
 然后称之为:
 
-```
+```java
 String result = Stream.of("hello", "world") 
   .reduce("", (a, b) -> combineWithoutTrailingDash(a, b)); 
 
@@ -84,7 +84,7 @@ assertThat(result).isEqualTo("world-hello");
 
 让我们重写代码以使用方法引用:
 
-```
+```java
 String result = Stream.of("hello", "world")
   .reduce("", this::combineWithoutTrailingDash);
 
@@ -99,7 +99,7 @@ assertThat(result).isEqualTo("world-hello");
 
 假设我们正在创建一个算法，通过对每一对元素执行运算，将两个大小相同的列表合并成第三个列表:
 
-```
+```java
 List<String> list1 = Arrays.asList("a", "b", "c");
 List<Integer> list2 = Arrays.asList(1, 2, 3);
 
@@ -115,7 +115,7 @@ assertThat(result).containsExactly("a1", "b2", "c3");
 
 **我们可以使用一个`BiFunction`** 作为组合器来概括这个特殊函数:
 
-```
+```java
 private static <T, U, R> List<R> listCombiner(
   List<T> list1, List<U> list2, BiFunction<T, U, R> combiner) {
     List<R> result = new ArrayList<>();
@@ -134,7 +134,7 @@ private static <T, U, R> List<R> listCombiner(
 
 我们的组合器是一个`BiFunction`，它允许我们注入一个算法，不管输入和输出是什么类型。让我们试一试:
 
-```
+```java
 List<String> list1 = Arrays.asList("a", "b", "c");
 List<Integer> list2 = Arrays.asList(1, 2, 3);
 
@@ -147,7 +147,7 @@ assertThat(result).containsExactly("a1", "b2", "c3");
 
 让我们注入一个算法来确定第一个列表中的值是否大于第二个列表中的值，并产生一个`boolean`结果:
 
-```
+```java
 List<Double> list1 = Arrays.asList(1.0d, 2.1d, 3.3d);
 List<Float> list2 = Arrays.asList(0.1f, 0.2f, 4f);
 
@@ -160,7 +160,7 @@ assertThat(result).containsExactly(true, true, false);
 
 让我们用提取的方法和方法引用重写上面的代码:
 
-```
+```java
 List<Double> list1 = Arrays.asList(1.0d, 2.1d, 3.3d);
 List<Float> list2 = Arrays.asList(0.1f, 0.2f, 4f);
 
@@ -179,7 +179,7 @@ private boolean firstIsGreaterThanSecond(Double a, Float b) {
 
 假设我们想使用上述基于`BiFunction-`的算法来确定两个列表是否相等:
 
-```
+```java
 List<Float> list1 = Arrays.asList(0.1f, 0.2f, 4f);
 List<Float> list2 = Arrays.asList(0.1f, 0.2f, 4f);
 
@@ -190,7 +190,7 @@ assertThat(result).containsExactly(true, true, true);
 
 我们实际上可以简化解决方案:
 
-```
+```java
 List<Boolean> result = listCombiner(list1, list2, Float::equals);
 ```
 
@@ -200,7 +200,7 @@ List<Boolean> result = listCombiner(list1, list2, Float::equals);
 
 如果我们可以使用方法引用来做和我们的数字列表比较例子一样的事情会怎么样呢？
 
-```
+```java
 List<Double> list1 = Arrays.asList(1.0d, 2.1d, 3.3d);
 List<Double> list2 = Arrays.asList(0.1d, 0.2d, 4d);
 
@@ -215,7 +215,7 @@ assertThat(result).containsExactly(1, 1, -1);
 
 接下来，让我们创建一个函数，将我们的方法引用`Double::compareTo`强制转换为`BiFunction`:
 
-```
+```java
 private static <T, U, R> BiFunction<T, U, R> asBiFunction(BiFunction<T, U, R> function) {
     return function;
 }
@@ -225,7 +225,7 @@ private static <T, U, R> BiFunction<T, U, R> asBiFunction(BiFunction<T, U, R> fu
 
 现在，我们可以使用`andThen`在第一个函数上添加行为:
 
-```
+```java
 List<Double> list1 = Arrays.asList(1.0d, 2.1d, 3.3d);
 List<Double> list2 = Arrays.asList(0.1d, 0.2d, 4d);
 

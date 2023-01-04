@@ -10,7 +10,7 @@
 
 让我们从一个简单的`if-else` 语句开始:
 
-```
+```java
 boolean isValid = true;
 
 if (isValid) {
@@ -24,7 +24,7 @@ if (isValid) {
 
 一种选择是简单地删除`if`块中的代码:
 
-```
+```java
 boolean isValid = true;
 
 if (isValid) {
@@ -36,7 +36,7 @@ if (isValid) {
 
 然而，一个空的`if` 块看起来可能是不完整的代码，并且似乎是一种冗长的只处理负面情况的方式。我们可以试着测试我们的逻辑表达式是否等于`false`:
 
-```
+```java
 boolean isValid = true;
 
 if (isValid == false) {
@@ -46,7 +46,7 @@ if (isValid == false) {
 
 上面的版本相对容易阅读，尽管如果逻辑表达式更复杂的话可能会更难。不过，Java 为我们提供了另一种选择，即`not`操作符:
 
-```
+```java
 boolean isValid = true;
 
 if (!isValid) {
@@ -64,7 +64,7 @@ if (!isValid) {
 
 例如:
 
-```
+```java
 System.out.println(!true);   // prints false 
 System.out.println(!false);  // prints true 
 System.out.println(!!false); // prints false
@@ -76,14 +76,14 @@ System.out.println(!!false); // prints false
 
 例如:
 
-```
+```java
 int count = 2;
 
 System.out.println(!(count > 2));  // prints true
 System.out.println(!(count <= 2)); // prints false
 ```
 
-```
+```java
 boolean x = true;
 boolean y = false;
 
@@ -95,7 +95,7 @@ System.out.println(!(x || y));  // prints false
 
 例如:
 
-```
+```java
 !(x && y) is same as !x || !y
 !(x || y) is same as !x && !y
 !(a < 3 && b == 10) is same as a >= 3 || b != 10 
@@ -111,13 +111,13 @@ System.out.println(!(x || y));  // prints false
 
 例如:
 
-```
+```java
 if (product.isActive()) {...}
 ```
 
 比更好读
 
-```
+```java
 if (!product.isNotActive()) {...}
 ```
 
@@ -127,7 +127,7 @@ if (!product.isNotActive()) {...}
 
 `not`操作符有时会使已经很复杂的表达式变得更加难以阅读和理解。当这种情况发生时，我们可以通过颠倒条件或提取方法来简化代码。让我们来看一些由`not`操作符变得复杂的条件的例子，以及我们如何通过反转条件来简化它们:
 
-```
+```java
 if (!true) // Complex
 if (false) // Simplified
 

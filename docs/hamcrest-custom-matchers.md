@@ -12,7 +12,7 @@
 
 为了获得 Hamcrest，我们需要**将下面的 Maven 依赖项添加到我们的`pom.xml`** 中:
 
-```
+```java
 <dependency>
     <groupId>org.hamcrest</groupId>
     <artifactId>java-hamcrest</artifactId>
@@ -48,7 +48,7 @@
 
 从我们的匹配器开始，我们将创建一个扩展`TypeSafeMatcher`的类:
 
-```
+```java
 public class IsOnlyDigits extends TypeSafeMatcher<String> {
 
     @Override
@@ -67,7 +67,7 @@ public class IsOnlyDigits extends TypeSafeMatcher<String> {
 
 现在我们准备添加我们的实现:
 
-```
+```java
 public class IsOnlyDigits extends TypeSafeMatcher<String> {
 
     @Override
@@ -95,7 +95,7 @@ public class IsOnlyDigits extends TypeSafeMatcher<String> {
 
 因此，我们将添加类似这样的内容:
 
-```
+```java
 public static Matcher<String> onlyDigits() {
     return new IsOnlyDigits();
 }
@@ -107,7 +107,7 @@ public static Matcher<String> onlyDigits() {
 
 为了**使用我们全新的匹配器，我们将创建一个测试**:
 
-```
+```java
 @Test
 public void givenAString_whenIsOnlyDigits_thenCorrect() {
     String digits = "1234";
@@ -118,13 +118,13 @@ public void givenAString_whenIsOnlyDigits_thenCorrect() {
 
 仅此而已。这个测试将通过，因为输入`String`只包含数字。记住，为了使它更清晰一点，**我们可以使用匹配器`is` 作为任何其他匹配器**的包装器:
 
-```
+```java
 assertThat(digits, is(onlyDigits()));
 ```
 
 最后，如果我们运行相同的测试，但是输入“123ABC”，输出消息将是:
 
-```
+```java
 java.lang.AssertionError: 
 Expected: only digits
      but: was "123ABC"
@@ -138,7 +138,7 @@ Expected: only digits
 
 让我们看看如何做到这一点:
 
-```
+```java
 public class IsDivisibleBy extends TypeSafeMatcher<Integer> {
 
     private Integer divider;
@@ -166,7 +166,7 @@ public class IsDivisibleBy extends TypeSafeMatcher<Integer> {
 
 很简单，**我们只是在我们的类中添加了一个新属性，并在构造过程中赋予它**。然后，我们将它作为参数传递给静态方法:
 
-```
+```java
 @Test
 public void givenAnEvenInteger_whenDivisibleByTwo_thenCorrect() {
     Integer ten = 10;

@@ -14,7 +14,7 @@
 
 让我们从一个简单的例子开始。我们将获取一个有序的电影列表，并输出它们的排名。
 
-```
+```java
 List<String> IMDB_TOP_MOVIES = Arrays.asList("The Shawshank Redemption",
   "The Godfather", "The Godfather II", "The Dark Knight");
 ```
@@ -23,7 +23,7 @@ List<String> IMDB_TOP_MOVIES = Arrays.asList("The Shawshank Redemption",
 
 一个 [`for`循环](/web/20220703122515/https://www.baeldung.com/java-for-loop)使用一个计数器来引用当前项，所以这是一个操作列表中数据及其索引的简单方法:
 
-```
+```java
 List rankings = new ArrayList<>();
 for (int i = 0; i < movies.size(); i++) {
     String ranking = (i + 1) + ": " + movies.get(i);
@@ -33,7 +33,7 @@ for (int i = 0; i < movies.size(); i++) {
 
 由于这个`List`可能是一个`ArrayList`，`get`操作是高效的，上面的代码是我们问题的简单解决方案。
 
-```
+```java
 assertThat(getRankingsWithForLoop(IMDB_TOP_MOVIES))
   .containsExactly("1: The Shawshank Redemption",
       "2: The Godfather", "3: The Godfather II", "4: The Dark Knight");
@@ -45,7 +45,7 @@ assertThat(getRankingsWithForLoop(IMDB_TOP_MOVIES))
 
 我们将继续使用我们的电影列表，但是让我们假设我们只能使用 Java 的 for each 构造来迭代它:
 
-```
+```java
 for (String movie : IMDB_TOP_MOVIES) {
    // use movie value
 }
@@ -53,7 +53,7 @@ for (String movie : IMDB_TOP_MOVIES) {
 
 这里我们需要使用一个单独的变量来跟踪当前的索引。我们可以构造循环外部，并在内部递增:
 
-```
+```java
 int i = 0;
 for (String movie : movies) {
     String ranking = (i + 1) + ": " + movie;
@@ -71,7 +71,7 @@ for (String movie : movies) {
 
 首先，我们应该将循环内部的行为视为集合中的项和索引的消费者。这可以使用`BiConsumer`来建模，它定义了一个带两个参数的`accept`函数
 
-```
+```java
 @FunctionalInterface
 public interface BiConsumer<T, U> {
    void accept(T t, U u);
@@ -80,7 +80,7 @@ public interface BiConsumer<T, U> {
 
 由于循环内部使用了两个值，我们可以编写一个通用的循环操作。它可以获取源数据的【the for each 循环将在其上运行),以及对每个项目及其索引执行操作的`BiConsumer`。我们可以用类型参数`T`使其通用化:
 
-```
+```java
 static <T> void forEachWithCounter(Iterable<T> source, BiConsumer<Integer, T> consumer) {
     int i = 0;
     for (T item : source) {
@@ -92,7 +92,7 @@ static <T> void forEachWithCounter(Iterable<T> source, BiConsumer<Integer, T> co
 
 我们可以通过将`BiConsumer`的实现作为 lambda 来使用这个电影排名示例:
 
-```
+```java
 List rankings = new ArrayList<>();
 forEachWithCounter(movies, (i, movie) -> {
     String ranking = (i + 1) + ": " + movies.get(i);
@@ -106,7 +106,7 @@ forEachWithCounter(movies, (i, movie) -> {
 
 `Stream forEach`函数使用一个`Consumer `来处理下一个项目。然而，我们可以创建`Consumer`来跟踪计数器，并将商品传递给`BiConsumer`:
 
-```
+```java
 public static <T> Consumer<T> withCounter(BiConsumer<Integer, T> consumer) {
     AtomicInteger counter = new AtomicInteger(0);
     return item -> consumer.accept(counter.getAndIncrement(), item);
@@ -119,7 +119,7 @@ public static <T> Consumer<T> withCounter(BiConsumer<Integer, T> consumer) {
 
 让我们来看看我们的电影排名示例与名为`movies`的`Stream`的对比:
 
-```
+```java
 List rankings = new ArrayList<>();
 movies.forEach(withCounter((i, movie) -> {
     String ranking = (i + 1) + ": " + movie;

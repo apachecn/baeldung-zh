@@ -16,7 +16,7 @@
 
 让我们从一个简单的例子开始，看看网关处理器如何使用`RouteLocator`解析路由配置:
 
-```
+```java
 @Bean
 public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
     return builder.routes()
@@ -46,7 +46,7 @@ public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 
 路由配置可以通过使用纯 Java ( `RouteLocator`，如第 2 节中的示例所示)或使用属性配置来创建:
 
-```
+```java
 spring:
   application:
     name: gateway-service  
@@ -81,7 +81,7 @@ Spring Cloud Gateway 包括许多内置的 WebFilter 工厂以及创建自定义
 
 Spring Cloud Gateway 可以很容易地与服务发现和注册库集成，比如 Eureka Server 和 Consul:
 
-```
+```java
 @Configuration
 @EnableDiscoveryClient
 public class GatewayDiscoveryConfiguration {
@@ -119,7 +119,7 @@ Spring Cloud Gateway 目前在 2.0.0.RC2 版本的里程碑库中，这也是我
 
 为了添加项目，我们将使用依赖关系管理系统:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -135,7 +135,7 @@ Spring Cloud Gateway 目前在 2.0.0.RC2 版本的里程碑库中，这也是我
 
 接下来，我们将添加必要的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-actuator</artifactId>
@@ -154,7 +154,7 @@ Spring Cloud Gateway 目前在 2.0.0.RC2 版本的里程碑库中，这也是我
 
 现在我们在`application.yml`文件中创建一个简单的路由配置:
 
-```
+```java
 spring:
   cloud:
     gateway:
@@ -172,7 +172,7 @@ management:
 
 这是网关应用程序代码:
 
-```
+```java
 @SpringBootApplication
 public class GatewayApplication {
     public static void main(String[] args) {
@@ -183,7 +183,7 @@ public class GatewayApplication {
 
 在应用程序启动后，我们可以访问 url ` “http://localhost/actuator/gateway/routes/baeldung_route”`来检查所有创建的路由配置:
 
-```
+```java
 {
     "id":"baeldung_route",
     "predicates":[{

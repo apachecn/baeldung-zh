@@ -22,7 +22,7 @@
 
 如果我们想在测试中用**修改日志级别**，我们可以在`src/test/resources/` `application.properties`中设置一个属性:
 
-```
+```java
 logging.level.com.baeldung.testloglevel=DEBUG
 ```
 
@@ -30,13 +30,13 @@ logging.level.com.baeldung.testloglevel=DEBUG
 
 类似地，我们可以通过**设置根日志级别**来改变所有包的日志级别:
 
-```
+```java
 logging.level.root=INFO
 ```
 
 现在，让我们通过添加一个写一些日志的 REST 端点来尝试我们的日志设置:
 
-```
+```java
 @RestController
 public class TestLogLevelController {
 
@@ -62,7 +62,7 @@ public class TestLogLevelController {
 
 正如所料，如果我们在测试中调用这个端点`, ` **，我们将能够看到来自`TestLogLevelController`的`DEBUG`日志**:
 
-```
+```java
 2019-04-01 14:08:27.545 DEBUG 56585 --- [nio-8080-exec-1] c.b.testloglevel.TestLogLevelController  : This is a DEBUG log
 2019-04-01 14:08:27.545  INFO 56585 --- [nio-8080-exec-1] c.b.testloglevel.TestLogLevelController  : This is an INFO log
 2019-04-01 14:08:27.546 ERROR 56585 --- [nio-8080-exec-1] c.b.testloglevel.TestLogLevelController  : This is an ERROR log
@@ -78,7 +78,7 @@ public class TestLogLevelController {
 
 在这种情况下，**我们可以通过使用`ActiveProfiles`注释将[弹簧剖面](/web/20220628063812/https://www.baeldung.com/spring-profiles)添加到我们的测试**中:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = TestLogLevelApplication.class)
 @EnableAutoConfiguration(exclude = SecurityAutoConfiguration.class)
@@ -92,14 +92,14 @@ public class TestLogLevelWithProfileIntegrationTest {
 
 我们的日志记录设置将保存在`src/test/resources`中的一个特殊的`application-logging-test.properties`文件中:
 
-```
+```java
 logging.level.com.baeldung.testloglevel=TRACE
 logging.level.root=ERROR
 ```
 
 如果我们用描述的设置从我们的测试中调用`TestLogLevelController`，我们现在将从我们的控制器中看到`TRACE `日志，并且将不再有来自其他包的`INFO `日志:
 
-```
+```java
 2019-04-01 14:08:27.545 DEBUG 56585 --- [nio-8080-exec-1] c.b.testloglevel.TestLogLevelController  : This is a DEBUG log
 2019-04-01 14:08:27.545  INFO 56585 --- [nio-8080-exec-1] c.b.testloglevel.TestLogLevelController  : This is an INFO log
 2019-04-01 14:08:27.546 ERROR 56585 --- [nio-8080-exec-1] c.b.testloglevel.TestLogLevelController  : This is an ERROR log
@@ -110,7 +110,7 @@ logging.level.root=ERROR
 
 如果我们使用在 Spring Boot 默认使用的[回退](/web/20220628063812/https://www.baeldung.com/logback)，我们可以**在`src/test/resources:`内设置`logback-test.xml`文件**中的日志级别
 
-```
+```java
 <configuration>
     <include resource="/org/springframework/boot/logging/logback/base.xml"/>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -130,7 +130,7 @@ logging.level.root=ERROR
 
 同样，让我们检查应用上述设置后的输出:
 
-```
+```java
 2019-04-01 14:08:27.545 DEBUG 56585 --- [nio-8080-exec-1] c.b.testloglevel.TestLogLevelController  : This is a DEBUG log
 2019-04-01 14:08:27.545  INFO 56585 --- [nio-8080-exec-1] c.b.testloglevel.TestLogLevelController  : This is an INFO log
 2019-04-01 14:08:27.546 ERROR 56585 --- [nio-8080-exec-1] c.b.testloglevel.TestLogLevelController  : This is an ERROR log
@@ -142,13 +142,13 @@ logging.level.root=ERROR
 
 **为我们的测试设置特定于概要文件的配置**的另一种方法是在`application.properties`中为我们的概要文件设置`logging.config `属性:
 
-```
+```java
 logging.config=classpath:logback-testloglevel.xml
 ```
 
 或者，**如果我们想在我们的类路径上有一个单独的日志回溯配置，**我们可以使用`logback.xml`中的`springProfile `元素:
 
-```
+```java
 <configuration>
     <include resource="/org/springframework/boot/logging/logback/base.xml"/>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -171,7 +171,7 @@ logging.config=classpath:logback-testloglevel.xml
 
 现在，如果我们在测试中用概要文件`logback-test1`调用`TestLogLevelController`，我们将得到以下输出:
 
-```
+```java
 2019-04-01 14:08:27.545  INFO 56585 --- [nio-8080-exec-1] c.b.testloglevel.TestLogLevelController  : This is an INFO log
 2019-04-01 14:08:27.546 ERROR 56585 --- [nio-8080-exec-1] c.b.testloglevel.TestLogLevelController  : This is an ERROR log
 2019-04-01 14:08:27.546  INFO 56585 --- [nio-8080-exec-1] c.b.component.OtherComponent  : This is an INFO log from another package
@@ -180,7 +180,7 @@ logging.config=classpath:logback-testloglevel.xml
 
 相反，如果我们将配置文件更改为`logback-test2`，输出将为:
 
-```
+```java
 2019-04-01 14:08:27.545 DEBUG 56585 --- [nio-8080-exec-1] c.b.testloglevel.TestLogLevelController  : This is a DEBUG log
 2019-04-01 14:08:27.545  INFO 56585 --- [nio-8080-exec-1] c.b.testloglevel.TestLogLevelController  : This is an INFO log
 2019-04-01 14:08:27.546 ERROR 56585 --- [nio-8080-exec-1] c.b.testloglevel.TestLogLevelController  : This is an ERROR log
@@ -192,7 +192,7 @@ logging.config=classpath:logback-testloglevel.xml
 
 或者，如果我们使用 [Log4J2](/web/20220628063812/https://www.baeldung.com/log4j2-appenders-layouts-filters) ，我们可以**在`src/test/resources:`内设置`log4j2-spring.xml`文件**中的日志级别
 
-```
+```java
 <Configuration>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
@@ -213,13 +213,13 @@ logging.config=classpath:logback-testloglevel.xml
 
 我们可以通过设置`application.properties`中的`logging.config `属性来设置我们的`Log4J `配置的路径:
 
-```
+```java
 logging.config=classpath:log4j-testloglevel.xml
 ```
 
 最后，让我们检查应用上述设置后的输出:
 
-```
+```java
 2019-04-01 14:08:27.545 DEBUG 56585 --- [nio-8080-exec-1] c.b.testloglevel.TestLogLevelController  : This is a DEBUG log
 2019-04-01 14:08:27.545  INFO 56585 --- [nio-8080-exec-1] c.b.testloglevel.TestLogLevelController  : This is an INFO log
 2019-04-01 14:08:27.546 ERROR 56585 --- [nio-8080-exec-1] c.b.testloglevel.TestLogLevelController  : This is an ERROR log

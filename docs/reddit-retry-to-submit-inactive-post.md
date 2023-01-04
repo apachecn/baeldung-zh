@@ -16,7 +16,7 @@
 
 因此，我们将在 Reddit `Resource`中添加`edit`范围:
 
-```
+```java
 @Bean
 public OAuth2ProtectedResourceDetails reddit() {
     AuthorizationCodeResourceDetails details = 
@@ -30,7 +30,7 @@ public OAuth2ProtectedResourceDetails reddit() {
 
 现在，让我们在我们的`Post`实体中添加额外的信息:
 
-```
+```java
 @Entity
 public class Post {
     ...
@@ -50,7 +50,7 @@ public class Post {
 
 接下来，让我们在我们的`PostRepository`界面中添加一些新的操作，以便在我们需要检查帖子时方便地检索它们:
 
-```
+```java
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findBySubmissionDateBeforeAndIsSent(Date date, boolean sent);
@@ -65,7 +65,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 现在，让我们在调度程序中定义一个新任务，即重新提交任务:
 
-```
+```java
 @Scheduled(fixedRate = 3 * 60 * 1000)
 public void checkAndReSubmitPosts() {
     List<Post> submitted = 
@@ -80,7 +80,7 @@ public void checkAndReSubmitPosts() {
 
 这里是`checkAndReSubmit()`方法:
 
-```
+```java
 private void checkAndReSubmit(Post post) {
     try {
         checkAndReSubmitInternal(post);
@@ -119,7 +119,7 @@ private void resetPost(Post post) {
 
 我们还需要在第一次提交给 Reddit 时跟踪`redditID`:
 
-```
+```java
 private void submitPostInternal(Post post) {
     ...
     JsonNode node = redditRestTemplate.postForObject(
@@ -138,7 +138,7 @@ private void submitPostInternal(Post post) {
 
 现在，让我们看看如何从 Reddit 获得这篇文章的当前得分:
 
-```
+```java
 private int getPostScore(String redditId) {
     JsonNode node = redditRestTemplate.getForObject(
       "https://oauth.reddit.com/api/info?id=t3_" + redditId, JsonNode.class);
@@ -156,7 +156,7 @@ private int getPostScore(String redditId) {
 
 接下来，让我们看看如何使用 id 删除 Reddit 帖子:
 
-```
+```java
 private void deletePost(String redditId) {
     MultiValueMap<String, String> param = new LinkedMultiValueMap<String, String>();
     param.add("id", "t3_" + redditId);
@@ -169,7 +169,7 @@ private void deletePost(String redditId) {
 
 现在，让我们将新信息添加到控制器中:
 
-```
+```java
 @RequestMapping(value = "/schedule", method = RequestMethod.POST)
 public String schedule(Model model, 
   @RequestParam Map<String, String> formParams) throws ParseException {
@@ -188,7 +188,7 @@ public String schedule(Model model,
 
 最后，让我们修改非常简单的时间表，添加并重新提交新的设置:
 
-```
+```java
 <label class="col-sm-3">Resubmit Settings</label>
 
 <label>Number of Attempts</label> 

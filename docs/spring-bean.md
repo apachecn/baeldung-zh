@@ -38,7 +38,7 @@ Learn about the different variants of Spring's BeanFactory.getBean() method for 
 
 假设我们有一个类声明:
 
-```
+```java
 public class Company {
     private Address address;
 
@@ -52,7 +52,7 @@ public class Company {
 
 该类需要一个类型为`Address`的合作者:
 
-```
+```java
 public class Address {
     private String street;
     private int number;
@@ -70,7 +70,7 @@ public class Address {
 
 通常，我们用类的构造函数创建对象:
 
-```
+```java
 Address address = new Address("High Street", 1000);
 Company company = new Company(address);
 ```
@@ -87,7 +87,7 @@ Company company = new Company(address);
 
 首先，让我们用`@Component`注释来装饰`Company`类:
 
-```
+```java
 @Component
 public class Company {
     // this body is the same as before
@@ -96,7 +96,7 @@ public class Company {
 
 下面是一个为 IoC 容器提供 bean 元数据的配置类:
 
-```
+```java
 @Configuration
 @ComponentScan(basePackageClasses = Company.class)
 public class Config {
@@ -115,13 +115,13 @@ public class Config {
 
 因为我们在配置类中定义了 beans，**我们将需要一个`AnnotationConfigApplicationContext`类的实例来构建一个容器**:
 
-```
+```java
 ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
 ```
 
 一个快速测试验证了 beans 的存在和属性值:
 
-```
+```java
 Company company = context.getBean("company", Company.class);
 assertEquals("High Street", company.getAddress().getStreet());
 assertEquals(1000, company.getAddress().getNumber());

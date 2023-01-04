@@ -24,7 +24,7 @@
 
 所以，让我们从我们的树的类开始:
 
-```
+```java
 public class Tree {
     private int value;
     private Tree left;
@@ -42,7 +42,7 @@ public class Tree {
 
 在介绍我们的主方法之前，让我们看看它应该返回什么:
 
-```
+```java
 private class Result {
     private boolean isBalanced;
     private int height;
@@ -64,7 +64,7 @@ private class Result {
 
 现在，让我们看看我们的深度优先方法:
 
-```
+```java
 private Result isBalancedRecursive(Tree tree, int depth) {
     if (tree == null) {
         return new Result(true, -1);
@@ -92,7 +92,7 @@ private Result isBalancedRecursive(Tree tree, int depth) {
 
 最后，我们可以返回关于平衡和高度的信息。用 facade 方法简化第一个递归调用也是一个好主意:
 
-```
+```java
 public boolean isBalanced(Tree tree) {
     return isBalancedRecursive(tree, -1).isBalanced;
 }

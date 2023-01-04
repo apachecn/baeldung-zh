@@ -22,7 +22,7 @@
 
 首先，我们需要将这些依赖项添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -48,7 +48,7 @@
 
 令人惊讶的是，**我们需要**来启用由关系数据库支持的 Spring 会话**的唯一配置属性在**T0 中
 
-```
+```java
 spring.session.store-type=jdbc
 ```
 
@@ -64,7 +64,7 @@ spring.session.store-type=jdbc
 
 现在让我们为`Spring Session JDBC`添加一个配置类:
 
-```
+```java
 @Configuration
 @EnableJdbcHttpSession
 public class Config
@@ -96,7 +96,7 @@ public class Config
 
 首先，让我们添加一个`Controller`类来存储和显示`HttpSession`中的信息:
 
-```
+```java
 @Controller
 public class SpringSessionJdbcController {
 
@@ -143,7 +143,7 @@ public class SpringSessionJdbcController {
 
 让我们先来设置一下:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(
   webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -197,7 +197,7 @@ public class SpringSessionJdbcApplicationTests {
 
 让我们首先断言数据库中的会话表是空的:
 
-```
+```java
 @Test
 public void whenH2DbIsQueried_thenSessionInfoIsEmpty() 
   throws SQLException {
@@ -211,7 +211,7 @@ public void whenH2DbIsQueried_thenSessionInfoIsEmpty()
 
 接下来，我们测试 GET 端点:
 
-```
+```java
 @Test
 public void whenH2DbIsQueried_thenOneSessionIsCreated() 
   throws SQLException {
@@ -227,7 +227,7 @@ public void whenH2DbIsQueried_thenOneSessionIsCreated()
 
 最后，我们通过提供一种喜爱的颜色来测试 POST 端点:
 
-```
+```java
 @Test
 public void whenH2DbIsQueried_thenSessionAttributeIsRetrieved()
   throws Exception {
@@ -264,7 +264,7 @@ public void whenH2DbIsQueried_thenSessionAttributeIsRetrieved()
 
 通过添加以下属性，我们可以查看存储来自 URL 的会话信息的表—[http://localhost:8080/H2-console/](https://web.archive.org/web/20221208143845/http://localhost:8080/h2-console/):
 
-```
+```java
 spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
 ```

@@ -20,7 +20,7 @@ Java `Collection`通过提供 [`List`](/web/20220628065735/https://www.baeldung.
 
 例如，我们可以使用`stream`和 `parallelStream`方法将`Collection`转换成`Stream`:
 
-```
+```java
 public Stream<String> userNames() {
     ArrayList<String> userNameSource = new ArrayList<>();
     userNameSource.add("john");
@@ -32,7 +32,7 @@ public Stream<String> userNames() {
 
 类似地，我们可以使用流 API 的`collect`方法将`Stream`转换成`Collection`:
 
-```
+```java
 public List<String> userNameList() {
     return userNames().collect(Collectors.toList());
 }
@@ -40,7 +40,7 @@ public List<String> userNameList() {
 
 这里，我们使用`Collectors.toList()`方法将 [a `Stream`转换成了`List`。同样，我们可以将](/web/20220628065735/https://www.baeldung.com/java-8-collectors#1-collectorstolist)[中的`Stream`转换成`Set`中的](/web/20220628065735/https://www.baeldung.com/java-8-collectors#2-collectorstoset)或将[转换成`Map`中的](/web/20220628065735/https://www.baeldung.com/java-8-collectors#4-collectorstomap):
 
-```
+```java
 public static Set<String> userNameSet() {
     return userNames().collect(Collectors.toSet());
 }
@@ -60,13 +60,13 @@ Stream API 提供了惰性执行和动态结果过滤，这是降低物化成本
 
 然而，[`Files`类也提供了返回`Stream`](/web/20220628065735/https://www.baeldung.com/reading-file-in-java#%20id=) 的`lines`方法，我们可以用它来呈现所有的行，或者使用`limit`方法更好地限制结果集的大小——两者都是延迟执行:
 
-```
+```java
 Files.lines(path).limit(10).collect(toList());
 ```
 
 同样，`Stream`不会执行中间操作，直到我们对它调用[终端操作，如`forEach`](/web/20220628065735/https://www.baeldung.com/java-collection-stream-foreach) :
 
-```
+```java
 userNames().filter(i -> i.length() >= 4).forEach(System.out::println);
 ```
 
@@ -86,7 +86,7 @@ userNames().filter(i -> i.length() >= 4).forEach(System.out::println);
 
 例如，我们可以使用流 API 上可用的各种操作来过滤/排序/限制结果:
 
-```
+```java
 public static Stream<String> filterUserNames() {
     return userNames().filter(i -> i.length() >= 4);
 }
@@ -106,7 +106,7 @@ A `Stream`是功能性的。当以不同的方式处理时，它不允许对源�
 
 例如，让我们从初选`Stream`得到`filter`和`limit`一组结果:
 
-```
+```java
 userNames().filter(i -> i.length() >= 4).limit(3).forEach(System.out::println);
 ```
 
@@ -132,7 +132,7 @@ userNames().filter(i -> i.length() >= 4).limit(3).forEach(System.out::println);
 
 当结果以`Collection`的形式返回时，可以很容易地多次遍历它。但是， [a `Stream`穿越一次视为消耗，重用](/web/20220628065735/https://www.baeldung.com/java-stream-operated-upon-or-closed-exception)时抛出`IllegalStateException` :
 
-```
+```java
 public static void tryStreamTraversal() {
     Stream<String> userNameStream = userNames();
     userNameStream.forEach(System.out::println);
@@ -153,7 +153,7 @@ public static void tryStreamTraversal() {
 
 例如，我们可以使用`add` / `remove`方法修改一个`ArrayList`:
 
-```
+```java
 userNameList().add("bob");
 userNameList().add("pepper");
 userNameList().remove(2);
@@ -161,7 +161,7 @@ userNameList().remove(2);
 
 类似地，像`put`和`remove`这样的方法允许修改地图:
 
-```
+```java
 Map<String, String> userNameMap = userNameMap();
 userNameMap.put("bob", "bob");
 userNameMap.remove("alfred");

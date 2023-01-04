@@ -28,7 +28,7 @@
 
 首先，我们将建立一个新的包含`[javax.servlet-api](https://web.archive.org/web/20220812061115/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22javax.servlet%22%20AND%20a%3A%22javax.servlet-api%22)` 的`Maven WAR`项目:
 
-```
+```java
 <dependency>
     <groupId>javax.servlet</groupId>
     <artifactId>javax.servlet-api</artifactId>
@@ -39,7 +39,7 @@
 
 以及`[jetty-maven-plugin](https://web.archive.org/web/20220812061115/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.eclipse.jetty%22%20AND%20a%3A%22jetty-maven-plugin%22)`:
 
-```
+```java
 <plugin>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-maven-plugin</artifactId>
@@ -56,7 +56,7 @@
 
 接下来，我们将定义一个`Model`类和一个模型`Repository`。我们将使用下面的`Book` 类作为我们的模型:
 
-```
+```java
 public class Book {
     private String author;
     private String title;
@@ -68,7 +68,7 @@ public class Book {
 
 这将是存储库，您可以查找具体实现的源代码，或者自己提供一个:
 
-```
+```java
 public interface Bookshelf {
     default void init() {
         add(new Book("Wilson, Robert Anton & Shea, Robert", 
@@ -93,7 +93,7 @@ Servlet 本身的实现相当简单。我们从请求中提取命令名，动态
 
 另一种选择是使用静态的条件逻辑来实现 Servlet。这具有编译时错误检查的优势:
 
-```
+```java
 public class FrontControllerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, 
@@ -125,7 +125,7 @@ public class FrontControllerServlet extends HttpServlet {
 
 这个类可以访问`ServletContext`及其请求和响应对象。此外，它将处理视图分辨率:
 
-```
+```java
 public abstract class FrontCommand {
     protected ServletContext context;
     protected HttpServletRequest request;
@@ -152,7 +152,7 @@ public abstract class FrontCommand {
 
 这个抽象`FrontCommand`的一个具体实现是一个`SearchCommand`。这将包括图书被找到或图书丢失时的条件逻辑:
 
-```
+```java
 public class SearchCommand extends FrontCommand {
     @Override
     public void process() throws ServletException, IOException {
@@ -174,7 +174,7 @@ public class SearchCommand extends FrontCommand {
 
 为了总结我们的场景，我们将实现第二个命令，该命令在所有情况下都作为后备命令触发，Servlet 不知道命令请求:
 
-```
+```java
 public class UnknownCommand extends FrontCommand {
     @Override
     public void process() throws ServletException, IOException {
@@ -189,7 +189,7 @@ public class UnknownCommand extends FrontCommand {
 
 因为我们决定创建一个`WAR` 文件项目，所以我们需要一个 web 部署描述符。有了这个`web.xml` ,我们能够在任何 Servlet 容器中运行我们的 web 应用程序:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

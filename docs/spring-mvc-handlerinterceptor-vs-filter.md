@@ -16,7 +16,7 @@ Spring Security 是使用过滤器进行认证和授权的一个很好的例子�
 
 为了创建一个过滤器，首先，我们创建一个实现`[javax.servlet.Filter](https://web.archive.org/web/20221220114603/https://docs.oracle.com/javaee/7/api/javax/servlet/Filter.html) interface`的类:
 
-```
+```java
 @Component
 public class LogFilter implements Filter {
 
@@ -50,7 +50,7 @@ public class LogFilter implements Filter {
 
 让我们将日志记录添加到测试拦截器的三个方法中:
 
-```
+```java
 public class LogInterceptor implements HandlerInterceptor {
 
     private Logger logger = LoggerFactory.getLogger(LogInterceptor.class);

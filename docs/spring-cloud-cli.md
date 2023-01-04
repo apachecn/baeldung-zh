@@ -14,19 +14,19 @@ Spring Boot 云 CLI 1.3.x 需要 Spring Boot CLI 1.5.x，所以一定要从 [Mav
 
 要确保 CLI 已安装并可以使用，只需运行:
 
-```
+```java
 $ spring --version
 ```
 
 验证您的 Spring Boot CLI 安装后，安装最新稳定版本的云 CLI:
 
-```
+```java
 $ spring install org.springframework.cloud:spring-cloud-cli:1.3.2.RELEASE
 ```
 
 然后验证云 CLI:
 
-```
+```java
 $ spring cloud --version
 ```
 
@@ -38,55 +38,55 @@ CLI 提供了七种核心服务，可以使用单行命令运行和部署。
 
 要在`http://localhost:8888`启动云配置服务器:
 
-```
+```java
 $ spring cloud configserver
 ```
 
 要在`http://localhost:8761`上启动 Eureka 服务器:
 
-```
+```java
 $ spring cloud eureka
 ```
 
 要在`http://localhost:9095`上启动 H2 服务器:
 
-```
+```java
 $ spring cloud h2
 ```
 
 要在`http://localhost:9091`上启动 Kafka 服务器:
 
-```
+```java
 $ spring cloud kafka
 ```
 
 要在`http://localhost:9411`上启动 Zipkin 服务器:
 
-```
+```java
 $ spring cloud zipkin
 ```
 
 要在 http://localhost:9393 上启动数据流服务器:
 
-```
+```java
 $ spring cloud dataflow
 ```
 
 在`http://localhost:7979`上启动 Hystrix 仪表板:
 
-```
+```java
 $ spring cloud hystrixdashboard
 ```
 
 列出当前运行的云服务:
 
-```
+```java
 $ spring cloud --list
 ```
 
 方便的帮助命令:
 
-```
+```java
 $ spring help cloud
 ```
 
@@ -96,7 +96,7 @@ $ spring help cloud
 
 通过云 CLI 部署的每个服务也可以使用相应命名的`.yml` 文件进行配置:
 
-```
+```java
 spring:
   profiles:
     active: git
@@ -117,7 +117,7 @@ spring:
 
 我们还可以直接在`cloud.yml`中指定几个不同的模块和服务:
 
-```
+```java
 spring:
   cloud:
     launcher:
@@ -140,7 +140,7 @@ spring:
 
 下面是一个最小 REST API 实现的例子:
 
-```
+```java
 @RestController
 @RequestMapping('/api')
 class api {
@@ -152,13 +152,13 @@ class api {
 
 假设脚本保存为`rest.groovy`，我们可以像这样启动我们的最小服务器:
 
-```
+```java
 $ spring run rest.groovy
 ```
 
 Pinging】应显示:
 
-```
+```java
 {"message":"Hello"}
 ```
 
@@ -178,31 +178,31 @@ Cloud CLI 和 Spring Cloud Config Server 都使用`org.springframework.security.
 
 要通过终端加密“`my_value`”，调用:
 
-```
+```java
 $ spring encrypt my_value --key my_key
 ```
 
 可以使用“@”后跟路径(通常用于 RSA 公钥)来替换密钥名(如上面的“`my_key`”):
 
-```
+```java
 $ spring encrypt my_value --key @${WORKSPACE}/foos/foo.pub
 ```
 
 `my_value`'现在将被加密为类似于:
 
-```
+```java
 c93cb36ce1d09d7d62dffd156ef742faaa56f97f135ebd05e90355f80290ce6b
 ```
 
 此外，它将存储在内存中的键'`my_key`'下。这允许我们通过命令行将'`my_key`'解密回'`my_value`':
 
-```
+```java
 $ spring decrypt --key my_key
 ```
 
 我们现在还可以在配置 YAML 或属性文件中使用加密值，加载时云配置服务器会自动解密该值:
 
-```
+```java
 encrypted_credential: "{cipher}c93cb36ce1d09d7d62dffd156ef742faaa56f97f135ebd05e90355f80290ce6b"
 ```
 
@@ -214,7 +214,7 @@ Spring Cloud Config Server 公开了 RESTful 端点，其中的密钥和加密�
 
 一旦 Spring Cloud Config Server 使用'`spring cloud configserver`'命令进行了配置并开始运行，您将能够调用它的 API:
 
-```
+```java
 $ curl localhost:8888/encrypt -d mysecret
 //682bc583f4641835fa2db009355293665d2647dade3375c0ee201de2a49f7bda
 $ curl localhost:8888/decrypt -d 682bc583f4641835fa2db009355293665d2647dade3375c0ee201de2a49f7bda

@@ -12,7 +12,7 @@
 
 首先，我们将添加**番石榴**库作为`pom.xml:`中的依赖项
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -26,7 +26,7 @@
 
 让我们首先定义将应用于集合元素的函数:
 
-```
+```java
  Function<Integer, String> function = new Function<Integer, String>() {
         @Override
         public String apply(Integer from) {
@@ -43,13 +43,13 @@ Guava 提供了一个关于`Map`实例的静态实用程序类。其中，它有
 
 下面的代码片段展示了如何创建一个不可变的`Map`:
 
-```
+```java
 Map<Integer, String> immutableMap = Maps.toMap(set, function);
 ```
 
 以下测试断言集合被正确转换:
 
-```
+```java
 @Test
 public void givenStringSetAndSimpleMap_whenMapsToElementLength_thenCorrect() {
     Set set = new TreeSet(Arrays.asList(32, 64, 128));
@@ -66,13 +66,13 @@ public void givenStringSetAndSimpleMap_whenMapsToElementLength_thenCorrect() {
 
 如果我们使用前面的例子并使用`Maps.asMap`方法创建地图:
 
-```
+```java
 Map<Integer, String> liveMap = Maps.asMap(set, function);
 ```
 
 我们将得到**一个实时地图视图**，这意味着对原始设置的更改也将反映在地图上:
 
-```
+```java
 @Test
 public void givenStringSet_whenMapsToElementLength_thenCorrect() {
     Set<Integer> set = new TreeSet<Integer>(Arrays.asList(32, 64, 128));
@@ -94,7 +94,7 @@ public void givenStringSet_whenMapsToElementLength_thenCorrect() {
 
 在 live `Map` 视图中，对`Set`的更改应该会实时更新`Map`和`EntrySet`。我们将创建自己的泛型`Map`，子类 `AbstractMap<K,V` `>`，就像这样:
 
-```
+```java
 public class GuavaMapFromSet<K, V> extends AbstractMap<K, V> {
     public GuavaMapFromSet(Set<K> keys, 
         Function<? super K, ? extends V> function) { 
@@ -108,13 +108,13 @@ public class GuavaMapFromSet<K, V> extends AbstractMap<K, V> {
 
 我们的`Map`中的另一个属性是`entries`，代表我们的`EntrySet:`
 
-```
+```java
 private Set<Entry<K, V>> entries;
 ```
 
 使用来自**构造函数**的输入`Set` 将始终初始化`entries`字段
 
-```
+```java
 public GuavaMapFromSet(Set<K> keys,Function<? super K, ? extends V> function) {
     this.entries=keys;
 }
@@ -124,7 +124,7 @@ public GuavaMapFromSet(Set<K> keys,Function<? super K, ? extends V> function) {
 
 在履行`AbstractMap<K,V` `>`的契约时，我们实现了`entrySet`方法，然后返回`entries`:
 
-```
+```java
 @Override
 public Set<java.util.Map.Entry<K, V>> entrySet() {
     return this.entries;
@@ -135,7 +135,7 @@ public Set<java.util.Map.Entry<K, V>> entrySet() {
 
 该`Map`存储通过**将`Function`应用于`Set:`** 获得的值
 
-```
+```java
 private WeakHashMap<K, V> cache;
 ```
 
@@ -147,7 +147,7 @@ private WeakHashMap<K, V> cache;
 
 首先，让我们看看`Map`中的单个条目看起来会是什么样子:
 
-```
+```java
 private class SingleEntry implements Entry<K, V> {
     private K key;
     public SingleEntry( K key) {
@@ -185,7 +185,7 @@ private class SingleEntry implements Entry<K, V> {
 
 我们现在将实现`EntrySet`:
 
-```
+```java
 private class MyEntrySet extends AbstractSet<Entry<K, V>> {
     private Set<K> keys;
     public MyEntrySet(Set<K> keys) {
@@ -212,7 +212,7 @@ private class MyEntrySet extends AbstractSet<Entry<K, V>> {
 
 下面是我们的`iterator`对上面`EntrySet`的实现:
 
-```
+```java
 public class LiveViewIterator implements Iterator<Entry<K, V>> {
     private Iterator<K> inner;
 
@@ -244,7 +244,7 @@ public class LiveViewIterator implements Iterator<Entry<K, V>> {
 
 在将我们在本教程中所涉及的内容拼接在一起之后，让我们用之前的示例中的`liveMap`变量来替换它，并用我们的自定义地图来替换它:
 
-```
+```java
 @Test
 public void givenIntSet_whenMapsToElementBinaryValue_thenCorrect() {
     Set<Integer> set = new TreeSet<>(Arrays.asList(32, 64, 128));
@@ -258,7 +258,7 @@ public void givenIntSet_whenMapsToElementBinaryValue_thenCorrect() {
 
 改变输入`Set`的内容，我们将看到`Map` 实时更新:
 
-```
+```java
 @Test
 public void givenStringSet_whenMapsToElementLength_thenCorrect() {
     Set<Integer> set = new TreeSet<Integer>(Arrays.asList(32, 64, 128));

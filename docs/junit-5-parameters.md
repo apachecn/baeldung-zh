@@ -14,7 +14,7 @@
 
 ### 2.1。`FooParameterResolver`
 
-```
+```java
 public class FooParameterResolver implements ParameterResolver {
   @Override
   public boolean supportsParameter(ParameterContext parameterContext, 
@@ -37,7 +37,7 @@ public class FooParameterResolver implements ParameterResolver {
 
 ### 2.2。`FooTest`
 
-```
+```java
 @ExtendWith(FooParameterResolver.class)
 public class FooTest {
     @Test
@@ -71,7 +71,7 @@ public class FooTest {
 
 ### 3.1。`ValidPersonParameterResolver`
 
-```
+```java
 public class ValidPersonParameterResolver implements ParameterResolver {
 
   public static Person[] VALID_PERSONS = {
@@ -91,7 +91,7 @@ public class ValidPersonParameterResolver implements ParameterResolver {
 1.  分离单元测试和驱动它的数据之间的关注点
 2.  重用，如果其他单元测试需要有效的`Person`对象来驱动它们
 
-```
+```java
 @Override
 public boolean supportsParameter(ParameterContext parameterContext, 
   ExtensionContext extensionContext) throws ParameterResolutionException {
@@ -107,7 +107,7 @@ public boolean supportsParameter(ParameterContext parameterContext,
 
 这有什么关系？虽然本文中的例子很简单，但是在现实世界的应用程序中，单元测试类可能非常庞大和复杂，有许多采用不同参数类型的测试方法。在当前影响范围内解析参数**时，JUnit 平台必须检查所有注册的`ParameterResolver`。**
 
-```
+```java
 @Override
 public Object resolveParameter(ParameterContext parameterContext, 
   ExtensionContext extensionContext) throws ParameterResolutionException {
@@ -123,7 +123,7 @@ public Object resolveParameter(ParameterContext parameterContext,
 
 ### 3.2。`InvalidPersonParameterResolver`
 
-```
+```java
 public class InvalidPersonParameterResolver implements ParameterResolver {
   public static Person[] INVALID_PERSONS = {
       new Person().setId(1L).setLastName("Ad_ams").setFirstName("Jill,"),
@@ -137,7 +137,7 @@ public class InvalidPersonParameterResolver implements ParameterResolver {
 
 注意`Person` 对象的`INVALID_PERSONS`数组。就像`ValidPersonParameterResolver`一样，这个类包含一个“坏的”(即无效的)数据的存储，供单元测试使用，以确保例如`PersonValidator.ValidationExceptions`在无效数据出现时被正确抛出:
 
-```
+```java
 @Override
 public Object resolveParameter(ParameterContext parameterContext, 
   ExtensionContext extensionContext) throws ParameterResolutionException {
@@ -173,7 +173,7 @@ public boolean supportsParameter(ParameterContext parameterContext,
 
 通过使用@ `Nested`类，我们能够在同一个测试类中测试有效和无效数据，同时使它们彼此完全隔离:
 
-```
+```java
 @DisplayName("Testing PersonValidator")
 public class PersonValidatorTest {
 

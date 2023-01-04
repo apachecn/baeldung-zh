@@ -30,7 +30,7 @@ WebJars 解决的主要问题是使客户端依赖关系在 Maven Central 上可
 
 让我们直接进入主题，将 Twitter Bootstrap 和 jQuery 添加到`pom.xml` :
 
-```
+```java
 <dependency>
     <groupId>org.webjars</groupId>
     <artifactId>bootstrap</artifactId>
@@ -57,7 +57,7 @@ WebJars 解决的主要问题是使客户端依赖关系在 Maven Central 上可
 
 随着简单项目的建立，我们将为新的客户端依赖项定义一些映射:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
@@ -73,7 +73,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 我们当然也可以通过 XML 做到这一点:
 
-```
+```java
 <mvc:resources mapping="/webjars/**" location="/webjars/"/>
 ```
 
@@ -83,7 +83,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 为了启用这个特性，我们将添加`webjars-locator`库作为应用程序的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.webjars</groupId>
     <artifactId>webjars-locator</artifactId>
@@ -97,7 +97,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 让我们在应用程序中添加一个简单的 HTML 欢迎页面(这是`index.html`):
 
-```
+```java
 <html>
     <head>
         <title>WebJars Demo</title>
@@ -109,25 +109,25 @@ public class WebConfig implements WebMvcConfigurer {
 
 现在我们可以在项目中使用 Twitter Bootstrap 和 jQuery 让我们在欢迎页面中同时使用这两者，从 Bootstrap 开始:
 
-```
+```java
 <script src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
 ```
 
 对于版本无关的方法:
 
-```
+```java
 <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 ```
 
 添加 jQuery:
 
-```
+```java
 <script src="/webjars/jquery/3.1.1/jquery.min.js"></script>
 ```
 
 与版本无关的方法:
 
-```
+```java
 <script src="/webjars/jquery/jquery.min.js"></script>
 ```
 
@@ -137,7 +137,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 我们将在页面中添加一个引导程序`alert`:
 
-```
+```java
 <div class="container"><br/>
     <div class="alert alert-success">         
         <strong>Success!</strong> It is working as we expected.
@@ -151,27 +151,27 @@ public class WebConfig implements WebMvcConfigurer {
 
 现在让我们使用 jQuery。我们将在此警报中添加一个关闭按钮:
 
-```
+```java
 <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a> 
 ```
 
 现在我们需要为关闭按钮功能添加`jQuery`和`bootstrap.min.js` ，所以将它们添加到`index.html,` 的主体标签中，如下所示:
 
-```
+```java
 <script src="/webjars/jquery/3.1.1/jquery.min.js"></script>
 <script src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script> 
 ```
 
 注意:如果您使用版本无关的方法，请确保只从路径中删除版本，否则，相对导入可能无法工作:
 
-```
+```java
 <script src="/webjars/jquery/jquery.min.js"></script>
 <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 ```
 
 这是我们最终欢迎页面的外观:
 
-```
+```java
 <html>
     <head>
         <script src="/webjars/jquery/3.1.1/jquery.min.js"></script>

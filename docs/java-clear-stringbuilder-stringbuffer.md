@@ -12,7 +12,7 @@
 
 **方法`setLength` 更新`StringBuilder`的内部长度。**当操作`StringBuilder`T3 时，长度之后的所有条目都被忽略。因此，用 0 调用它会清除其内容:
 
-```
+```java
 @Test
 void whenSetLengthToZero_ThenStringBuilderIsCleared() {
     StringBuilder stringBuilder = new StringBuilder();
@@ -37,7 +37,7 @@ void whenSetLengthToZero_ThenStringBuilderIsCleared() {
 
 因此，`StringBuilder`的所有内容都被删除:
 
-```
+```java
 @Test
 void whenDeleteAll_ThenStringBuilderIsCleared() {
     StringBuilder stringBuilder = new StringBuilder();
@@ -56,7 +56,7 @@ void whenDeleteAll_ThenStringBuilderIsCleared() {
 **所有适用于`StringBuilder` 的方法与`StringBuffer`的工作方式相同。**此外，所有关于客体能力的言论仍然有效。
 让我们用`setLength` 法展示一个例子:
 
-```
+```java
 @Test
 void whenSetLengthToZero_ThenStringBufferIsCleared() {
     StringBuffer stringBuffer = new StringBuffer();
@@ -70,7 +70,7 @@ void whenSetLengthToZero_ThenStringBufferIsCleared() {
 
  `也可以使用`delete`方法:
 
-```
+```java
 @Test
 void whenDeleteAll_ThenStringBufferIsCleared() {
     StringBuffer stringBuffer = new StringBuffer();
@@ -86,7 +86,7 @@ void whenDeleteAll_ThenStringBufferIsCleared() {
 
 让我们和 [JMH](/web/20220824120057/https://www.baeldung.com/java-microbenchmark-harness) 做一个快速的性能比较。让我们比较一下`StringBuilder`的三种方法:
 
-```
+```java
 @State(Scope.Benchmark)
 public static class MyState {
     final String HELLO = "Hello World";
@@ -108,7 +108,7 @@ public void evaluateDelete(Blackhole blackhole, MyState state) {
 
 我们已经测量了每秒的运算次数。该基准导致以下结果:
 
-```
+```java
 Benchmark                  Mode   Cnt         Score          Error  Units
 evaluateDelete             thrpt   25  67943684.417 ± 18116791.770  ops/s
 evaluateSetLength          thrpt   25  37310891.158 ±   994382.978  ops/s

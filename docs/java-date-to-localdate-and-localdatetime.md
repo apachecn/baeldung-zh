@@ -30,7 +30,7 @@ In this article we will take a look at the new Java 8 APIs for Date and Time and
 
 首先，我们使用默认系统`ZoneId`:
 
-```
+```java
 public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
     return dateToConvert.toInstant()
       .atZone(ZoneId.systemDefault())
@@ -40,7 +40,7 @@ public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
 
 **和一个类似的解决方案，但是创建`Instant`对象**的方式不同——使用`ofEpochMilli()`方法:
 
-```
+```java
 public LocalDate convertToLocalDateViaMilisecond(Date dateToConvert) {
     return Instant.ofEpochMilli(dateToConvert.getTime())
       .atZone(ZoneId.systemDefault())
@@ -54,7 +54,7 @@ public LocalDate convertToLocalDateViaMilisecond(Date dateToConvert) {
 
 在这种情况下，我们不需要担心时区:
 
-```
+```java
 public LocalDate convertToLocalDateViaSqlDate(Date dateToConvert) {
     return new java.sql.Date(dateToConvert.getTime()).toLocalDate();
 }
@@ -68,7 +68,7 @@ public LocalDate convertToLocalDateViaSqlDate(Date dateToConvert) {
 
 就像之前一样，我们可以使用两种可能的解决方案从`java.util.Date`获取一个`Instant`对象:
 
-```
+```java
 public LocalDateTime convertToLocalDateTimeViaInstant(Date dateToConvert) {
     return dateToConvert.toInstant()
       .atZone(ZoneId.systemDefault())
@@ -84,13 +84,13 @@ public LocalDateTime convertToLocalDateTimeViaMilisecond(Date dateToConvert) {
 
 注意，对于 1582 年 10 月 10 日之前的日期，需要将 Calendar 设置为公历，并调用方法`**[setGregorianChange](https://web.archive.org/web/20221213225508/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/GregorianCalendar.html#setGregorianChange(java.util.Date))():**`
 
-```
+```java
 GregorianCalendar calendar = new GregorianCalendar(); calendar.setGregorianChange(new Date(Long.MIN_VALUE)); Date dateToConvert = calendar.getTime();
 ```
 
 并且从 Java 8 开始，我们还可以**使用 `java.sql.Timestamp`获得一个`LocalDateTime`** :
 
-```
+```java
 ocalDateTime convertToLocalDateTimeViaSqlTimestamp(Date dateToConvert) {
     return new java.sql.Timestamp(
       dateToConvert.getTime()).toLocalDateTime();
@@ -105,7 +105,7 @@ ocalDateTime convertToLocalDateTimeViaSqlTimestamp(Date dateToConvert) {
 
 首先，我们使用 `**java.sql.Date**`对象中提供的一个新的 **`valueOf(LocalDate date)`方法，它将`LocalDate`作为一个参数:**
 
-```
+```java
 public Date convertToDateViaSqlDate(LocalDate dateToConvert) {
     return java.sql.Date.valueOf(dateToConvert);
 }
@@ -115,7 +115,7 @@ public Date convertToDateViaSqlDate(LocalDate dateToConvert) {
 
 在另一个 Java 8 例子中，我们使用一个`Instant`对象，我们将它传递给 `**java.util.Date**`对象的`**from(Instant instant)**` **方法:**
 
-```
+```java
 public Date convertToDateViaInstant(LocalDate dateToConvert) {
     return java.util.Date.from(dateToConvert.atStartOfDay()
       .atZone(ZoneId.systemDefault())
@@ -131,7 +131,7 @@ public Date convertToDateViaInstant(LocalDate dateToConvert) {
 
 从`LocalDateTime`获得 **a `java.util.Date`的最简单方法是使用对** `**java.sql.Timestamp**`的扩展 Java 8 中可用:
 
-```
+```java
 public Date convertToDateViaSqlTimestamp(LocalDateTime dateToConvert) {
     return java.sql.Timestamp.valueOf(dateToConvert);
 }
@@ -139,7 +139,7 @@ public Date convertToDateViaSqlTimestamp(LocalDateTime dateToConvert) {
 
 当然，另一个解决方案是使用**和`Instant`对象，我们从`ZonedDateTime`和**中获得:
 
-```
+```java
 Date convertToDateViaInstant(LocalDateTime dateToConvert) {
     return java.util.Date
       .from(dateToConvert.atZone(ZoneId.systemDefault())
@@ -153,7 +153,7 @@ Date convertToDateViaInstant(LocalDateTime dateToConvert) {
 
 `**LocalDate.ofInstant(Instant instant, ZoneId zone)**`和`**LocalDateTime.ofInstant(Instant instant, ZoneId zone)**`提供了便捷的快捷方式:
 
-```
+```java
 public LocalDate convertToLocalDate(Date dateToConvert) {
     return LocalDate.ofInstant(
       dateToConvert.toInstant(), ZoneId.systemDefault());

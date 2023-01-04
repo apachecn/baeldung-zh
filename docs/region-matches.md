@@ -38,14 +38,14 @@
 
 ### 可用签名
 
-```
+```java
 boolean regionMatches(int toffset, String other, int ooffset, int len)
 boolean regionMatches(boolean ignoreCase, int toffset, String other, int ooffset, int len)
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenCallRegionMatches_thenCorrect() {
     assertTrue("welcome to baeldung".regionMatches(false, 11, "baeldung", 0, 8));

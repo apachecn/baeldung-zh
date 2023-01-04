@@ -18,7 +18,7 @@
 
 首先，我们将探索最简单的标记实现:字符串列表。我们可以通过向实体添加一个新字段来实现标记，如下所示:
 
-```
+```java
 @Entity
 public class Student {
     // ...
@@ -46,7 +46,7 @@ public class Student {
 
 下面是我们如何搜索包含特定标签的实体:
 
-```
+```java
 @Query("SELECT s FROM Student s JOIN s.tags t WHERE t = LOWER(:tag)")
 List<Student> retrieveByTag(@Param("tag") String tag);
 ```
@@ -55,7 +55,7 @@ List<Student> retrieveByTag(@Param("tag") String tag);
 
 首先，让我们设置一些测试数据:
 
-```
+```java
 Student student = new Student(0, "Larry");
 student.setTags(Arrays.asList("full time", "computer science"));
 studentRepository.save(student);
@@ -75,7 +75,7 @@ studentRepository.save(student4);
 
 接下来，让我们测试一下，确保它能正常工作:
 
-```
+```java
 // Grab only the first result
 Student student2 = studentRepository.retrieveByTag("full time").get(0);
 assertEquals("name incorrect", "Larry", student2.getName());
@@ -85,7 +85,7 @@ assertEquals("name incorrect", "Larry", student2.getName());
 
 此外，我们可以扩展这个例子来展示如何过滤更大的数据集。下面是一个例子:
 
-```
+```java
 List<Student> students = studentRepository.retrieveByTag("full time");
 assertEquals("size incorrect", 2, students.size());
 ```
@@ -98,7 +98,7 @@ assertEquals("size incorrect", 2, students.size());
 
 因为我们还需要过滤其他搜索，所以让我们看一个例子:
 
-```
+```java
 @Query("SELECT s FROM Student s JOIN s.tags t WHERE s.name = LOWER(:name) AND t = LOWER(:tag)")
 List<Student> retrieveByNameFilterByTag(@Param("name") String name, @Param("tag") String tag);
 ```
@@ -107,7 +107,7 @@ List<Student> retrieveByNameFilterByTag(@Param("name") String name, @Param("tag"
 
 我们的使用示例看起来也很熟悉:
 
-```
+```java
 Student student2 = studentRepository.retrieveByNameFilterByTag(
   "Moe", "full time").get(0);
 assertEquals("name incorrect", "moe", student2.getName());

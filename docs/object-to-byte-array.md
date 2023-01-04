@@ -10,7 +10,7 @@
 
 例如，假设我们有一个`User`类:
 
-```
+```java
 public class User implements Serializable {
     private String name;
 
@@ -27,7 +27,7 @@ public class User implements Serializable {
 
 让我们不要忘记使用 [try-with-resources](/web/20220524020401/https://www.baeldung.com/java-try-with-resources) ，这样我们就不必担心关闭流:
 
-```
+```java
 User user = new User();
 user.setName("Josh");
 try (ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
@@ -38,7 +38,7 @@ try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
 然后，我们将使用`ByteArrayInputStream`和`ObjectInputStream`将接收到的字节数组反序列化为一个对象，最后将其转换为`User`:
 
-```
+```java
 try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
      ObjectInputStream ois = new ObjectInputStream(bis)) {
     User deserializedUser = (User) ois.readObject();
@@ -54,13 +54,13 @@ try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
 
 这个类有一个名为`serialize()`的方法，用于将一个对象序列化为一个字节数组:
 
-```
+```java
 byte[] data = SerializationUtils.serialize(user);
 ```
 
 和一个将字节数组反序列化为对象的`deserialize()`方法:
 
-```
+```java
 User deserializedUser = SerializationUtils.deserialize(data);
 ```
 
@@ -72,13 +72,13 @@ User deserializedUser = SerializationUtils.deserialize(data);
 
 首先，我们可以将我们的`User`对象序列化为一个字节数组:
 
-```
+```java
 byte[] data = SerializationUtils.serialize(user);
 ```
 
 我们可以将结果反序列化回一个`User`对象:
 
-```
+```java
 User deserializedUser = SerializationUtils.deserialize(data);
 ```
 

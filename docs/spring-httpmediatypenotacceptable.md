@@ -20,7 +20,7 @@ HTTP 还有专用的`“Accept”`头——用于指定客户端识别和可以�
 
 我们将使用一个 POST 端点——它只能与`“application/` json `“`一起工作，并返回 json 数据:
 
-```
+```java
 @PostMapping(
   value = "/test", 
   consumes = MediaType.APPLICATION_JSON_VALUE, 
@@ -32,7 +32,7 @@ public Map<String, String> example() {
 
 然后，让我们使用 CURL 发送一个不可识别内容类型的请求:
 
-```
+```java
 curl -X POST --header "Accept: application/pdf" http://localhost:8080/test -v
 
 > POST /test HTTP/1.1
@@ -43,7 +43,7 @@ curl -X POST --header "Accept: application/pdf" http://localhost:8080/test -v
 
 我们得到的回应是:
 
-```
+```java
 < HTTP/1.1 406 
 < Content-Length: 0
 ```
@@ -56,7 +56,7 @@ curl -X POST --header "Accept: application/pdf" http://localhost:8080/test -v
 
 在我们的例子中，只有*“应用程序/JSON”*:
 
-```
+```java
 @ResponseBody
 @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
 public String handleHttpMediaTypeNotAcceptableException() {

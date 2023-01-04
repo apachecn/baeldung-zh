@@ -26,7 +26,7 @@ Docker Hub 私人账户是付费的，在云中存储多个图像是一个昂贵
 
 在`/etc/docker/daemon.json`中添加以下配置:
 
-```
+```java
 {
     "insecure-registries":[
         "localhost:5000"
@@ -36,13 +36,13 @@ Docker Hub 私人账户是付费的，在云中存储多个图像是一个昂贵
 
 在上面的 JSON 中，我们在“`insecure-registries`”属性中添加了带有端口`5000`的`localhost`。要应用上述更改，让我们使用命令行重新加载 Docker 守护进程:
 
-```
+```java
 $ sudo systemctl daemon-reload
 ```
 
 现在，我们将重新启动 Docker 服务:
 
-```
+```java
 $ sudo systemctl restart docker
 ```
 
@@ -52,7 +52,7 @@ $ sudo systemctl restart docker
 
 要运行一个私有注册中心，我们必须将一个 [`registry`](https://web.archive.org/web/20221128042924/https://hub.docker.com/_/registry) 映像存储在公共 Docker Hub 上:
 
-```
+```java
 $ docker pull registry
 Using default tag: latest
 latest: Pulling from library/registry
@@ -66,7 +66,7 @@ docker.io/library/registry:latest
 
 我们还可以提取特定版本的注册表。现在让我们使用`docker images`命令来验证注册表映像:
 
-```
+```java
 $ docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 registry            latest              773dbf02e42e        21 hours ago        24.1MB
@@ -74,14 +74,14 @@ registry            latest              773dbf02e42e        21 hours ago        
 
 现在，让我们使用`registry`图像运行一个 Docker 容器:
 
-```
+```java
 $ docker run -itd -p 5000:5000 --name baeldung-registry registry
 e2d09cd3a5ef9c88e17e0393f7125b6eeffad175fa0ce69fa3daa7803a0b3067 
 ```
 
 容器的内部服务器使用端口 T1。因此，我们暴露了主机上的`5000`端口:
 
-```
+```java
 $ docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
 e2d09cd3a5ef        registry            "/entrypoint.sh /etc…"   3 minutes ago       Up 2 minutes        0.0.0.0:5000->5000/tcp   baeldung-registry
@@ -93,7 +93,7 @@ e2d09cd3a5ef        registry            "/entrypoint.sh /etc…"   3 minutes ago
 
 要将映像推送到私有注册中心，我们首先从公共 Docker 注册中心获取最新的 [centos](https://web.archive.org/web/20221128042924/https://hub.docker.com/_/centos) 映像:
 
-```
+```java
 $ docker pull centos
 Using default tag: latest
 latest: Pulling from library/centos
@@ -105,13 +105,13 @@ docker.io/library/centos:latest
 
 这里，我们提取了一个 Docker 图像样本，可以将它推送到 Docker 私有注册中心。首先，我们将标记`centos`图像，稍后将它推送到私有 docker 注册中心。在这里，我们将它标记为`localhost:5000/baeldung-centos`:
 
-```
+```java
 $ docker tag centos:latest localhost:5000/baeldung-centos
 ```
 
 现在，让我们检查主机上的所有图像:
 
-```
+```java
 $ docker images
 REPOSITORY                          TAG                 IMAGE ID            CREATED             SIZE
 registry                            latest              773dbf02e42e        22 hours ago        24.1MB
@@ -123,7 +123,7 @@ centos                              latest              5d0da3dc9764        8 mo
 
 让我们来看看将图像推送到 docker 私有注册表的命令:
 
-```
+```java
 $ docker push localhost:5000/baeldung-centos
 The push refers to repository [localhost:5000/baeldung-centos]
 74ddd0ec08fa: Pushed 
@@ -136,13 +136,13 @@ latest: digest: sha256:a1801b843b1bfaf77c501e7a6d3f709401a1e0c83863037fa3aab063a
 
 从私有注册表中提取映像的命令类似于从 Docker Hub 中提取映像。这里，首先，我们将删除所有 imageId 为`5d0da3dc9764`的图像:
 
-```
+```java
 $ docker rmi 5d0da3dc9764
 ```
 
 让我们来看看存储在主机上的所有图像:
 
-```
+```java
 $ docker-registry]# docker images
 REPOSITORY                       TAG                 IMAGE ID            CREATED             SIZE
 registry                         latest              773dbf02e42e        22 hours ago        24.1MB
@@ -150,7 +150,7 @@ registry                         latest              773dbf02e42e        22 hour
 
 我们可以看到，imageId 为`5d0da3dc9764`的图像已经被删除。让我们看看从私有 Docker 注册表中提取图像的命令:
 
-```
+```java
 $ docker pull  localhost5000/baeldung-centos
 Using default tag: latest
 latest: Pulling from baeldung-centos
@@ -168,13 +168,13 @@ Docker 允许我们将图像存储在本地的中央服务器上，但有时，�
 
 让我们首先创建一个单独的目录来存储 Docker 注册表凭证:
 
-```
+```java
 $ mkdir -p Docker_registry/auth
 ```
 
 接下来，让我们运行一个`httpd`容器来创建一个带有密码的`htpasswd`受保护用户:
 
-```
+```java
 $ cd Docker_registry &&docker run \
   --entrypoint htpasswd \
   httpd:2 -Bbn baeldung-user baeldung > auth/htpasswd
@@ -184,7 +184,7 @@ $ cd Docker_registry &&docker run \
 
 现在，让我们使用`auth/htpasswd`认证文件运行同一个 Docker 注册容器:
 
-```
+```java
 $ docker run -itd \
   -p 5000:5000 \
   --name registry \
@@ -198,7 +198,7 @@ $ docker run -itd \
 
 由于 Docker 注册中心使用基本身份验证运行，我们现在可以使用以下命令测试登录:
 
-```
+```java
 $ docker login  localhost:5000 -u baeldung-user -p baeldung
 WARNING! Using --password via the CLI is insecure. Use --password-stdin.
 WARNING! Your password will be stored unencrypted in /root/.docker/config.json.

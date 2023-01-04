@@ -22,7 +22,7 @@
 
 [字符串文字被汇集](/web/20221108113415/https://www.baeldung.com/java-string-pool)并经常在 Java 中重用。因此，不建议使用带有 [`synchronized`关键字的`String`类型进行同步](/web/20221108113415/https://www.baeldung.com/java-synchronized#the-synchronized-keyword):
 
-```
+```java
 public void stringBadPractice1() {
     String stringLock = "LOCK_STRING";
     synchronized (stringLock) {
@@ -33,7 +33,7 @@ public void stringBadPractice1() {
 
 类似地，如果我们使用`private final String`文字，它仍然是从常量池中引用的:
 
-```
+```java
 private final String stringLock = "LOCK_STRING";
 public void stringBadPractice2() {
     synchronized (stringLock) {
@@ -44,7 +44,7 @@ public void stringBadPractice2() {
 
 此外，将`intern`与`String`同步也被认为是一种不好的做法:
 
-```
+```java
 private final String internedStringLock = new String("LOCK_STRING").intern();
 public void stringBadPractice3() {
   synchronized (internedStringLock) {
@@ -67,7 +67,7 @@ public void stringBadPractice3() {
 
 然后，我们保留对象`private`和`final`以防止任何外部/不可信代码访问它:
 
-```
+```java
 private final String stringLock = new String("LOCK_STRING");
 public void stringSolution() {
     synchronized (stringLock) {
@@ -82,7 +82,7 @@ public void stringSolution() {
 
 让我们来看一个在`Boolean`锁对象上同步的糟糕代码示例:
 
-```
+```java
 private final Boolean booleanLock = Boolean.FALSE;
 public void booleanBadPractice() {
     synchronized (booleanLock) {
@@ -103,7 +103,7 @@ public void booleanBadPractice() {
 
 例如，让我们编写一个在装箱类型`Integer`上同步的糟糕代码示例:
 
-```
+```java
 private int count = 0;
 private final Integer intLock = count; 
 public void boxedPrimitiveBadPractice() { 
@@ -120,7 +120,7 @@ public void boxedPrimitiveBadPractice() {
 
 类似于`String`对象，我们应该使用`new`关键字创建一个`Integer`对象的唯一实例，它有自己的内在锁，并保持它的`private`和`final`:
 
-```
+```java
 private int count = 0;
 private final Integer intLock = new Integer(count);
 public void boxedPrimitiveSolution() {
@@ -141,7 +141,7 @@ public void boxedPrimitiveSolution() {
 
 例如，让我们用`synchronized`方法`setName` 和`setOwner`方法`synchronized`块创建`Animal`类:
 
-```
+```java
 public class Animal {
     private String name;
     private String owner;
@@ -162,7 +162,7 @@ public class Animal {
 
 现在，让我们编写一些糟糕的代码，创建一个`Animal`类的实例并在其上同步:
 
-```
+```java
 Animal animalObj = new Animal("Tommy", "John");
 synchronized (animalObj) {
     while(true) {
@@ -183,7 +183,7 @@ synchronized (animalObj) {
 
 因此，让我们对我们的`Animal`类进行必要的修改:
 
-```
+```java
 public class Animal {
     // ...
 
@@ -208,7 +208,7 @@ public class Animal {
 
 此外，如果实现`synchronized`块的方法修改了`static`变量，我们必须通过锁定`static`对象来同步:
 
-```
+```java
 private static int staticCount = 0;
 private static final Object staticObjLock = new Object();
 public void staticVariableSolution() {

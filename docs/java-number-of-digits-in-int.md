@@ -30,7 +30,7 @@ Explore the Java's DecimalFormat class along with its practical usages.[Read mor
 
 也许获得一个`Integer`的位数最简单的方法是将其转换成`String`，并调用`length()`方法。这将返回我们的数字的`String`表示的长度:
 
-```
+```java
 int length = String.valueOf(number).length();
 ```
 
@@ -42,7 +42,7 @@ int length = String.valueOf(number).length();
 
 对于以十进制形式表示的数字，如果我们以 10 为基数取它们的对数并向上取整，我们将得到该数字的位数:
 
-```
+```java
 int length = (int) (Math.log10(number) + 1);
 ```
 
@@ -54,7 +54,7 @@ int length = (int) (Math.log10(number) + 1);
 
 在这个方法中，我们将获取一个临时变量(初始化为 1 ),并不断将它乘以 10，直到它大于我们的数字。在这个过程中，我们还将使用一个`length`变量，它将跟踪数字的长度:
 
-```
+```java
 int length = 0;
 long temp = 1;
 while (temp <= number) {
@@ -70,7 +70,7 @@ return length;
 
 如果我们知道我们的数字范围，那么我们可以使用一个变量，这将进一步减少我们的比较。这种方法将数字除以 2 的幂(例如 1、2、4、8 等)。):
 
-```
+```java
 int length = 1;
 if (number >= 100000000) {
     length += 8;
@@ -100,7 +100,7 @@ return length;
 
 我们可以从三四个简单的陈述中找到答案:
 
-```
+```java
 if (number < 100000) {
     if (number < 100) {
         if (number < 10) {
@@ -148,7 +148,7 @@ if (number < 100000) {
 
 下表显示了每个操作的平均处理时间(以纳秒为单位):
 
-```
+```java
 Benchmark                            Mode  Cnt   Score   Error  Units
 Benchmarking.stringBasedSolution     avgt  200  32.736 ± 0.589  ns/op
 Benchmarking.logarithmicApproach     avgt  200  26.123 ± 0.064  ns/op

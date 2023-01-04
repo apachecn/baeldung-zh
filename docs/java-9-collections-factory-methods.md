@@ -14,7 +14,7 @@ Java 9 带来了期待已久的语法糖，可以使用简洁的一行代码创�
 
 让我们举一个`Set`的例子:
 
-```
+```java
 Set<String> set = new HashSet<>();
 set.add("foo");
 set.add("bar");
@@ -28,7 +28,7 @@ set = Collections.unmodifiableSet(set);
 
 然而，对于`List`，有一个工厂方法:
 
-```
+```java
 List<String> list = Arrays.asList("foo", "bar", "baz");
 ```
 
@@ -36,7 +36,7 @@ List<String> list = Arrays.asList("foo", "bar", "baz");
 
 还有其他减少冗长的方法，如**双括号初始化**技术:
 
-```
+```java
 Set<String> set = Collections.unmodifiableSet(new HashSet<String>() {{
     add("foo"); add("bar"); add("baz");
 }});
@@ -44,7 +44,7 @@ Set<String> set = Collections.unmodifiableSet(new HashSet<String>() {{
 
 或者通过使用 Java 8 `Streams`:
 
-```
+```java
 Stream.of("foo", "bar", "baz")
   .collect(collectingAndThen(toSet(), Collections::unmodifiableSet));
 ```
@@ -65,14 +65,14 @@ Stream.of("foo", "bar", "baz")
 
 `List`和`Set`工厂方法的签名和特征是相同的:
 
-```
+```java
 static <E> List<E> of(E e1, E e2, E e3)
 static <E> Set<E>  of(E e1, E e2, E e3)
 ```
 
 方法的使用:
 
-```
+```java
 List<String> list = List.of("foo", "bar", "baz");
 Set<String> set = Set.of("foo", "bar", "baz");
 ```
@@ -83,7 +83,7 @@ Set<String> set = Set.of("foo", "bar", "baz");
 
 但是，这个方法有 12 个重载版本——11 个有 0 到 10 个参数，1 个有 var-args:
 
-```
+```java
 static <E> List<E> of()
 static <E> List<E> of(E e1)
 static <E> List<E> of(E e1, E e2)
@@ -100,7 +100,7 @@ static <E> List<E> of(E... elems)
 
 在使用工厂方法创建`Set`的过程中，如果重复的元素作为参数传递，那么`IllegalArgumentException`在运行时被抛出:
 
-```
+```java
 @Test(expected = IllegalArgumentException.class)
 public void onDuplicateElem_IfIllegalArgExp_thenSuccess() {
     Set.of("foo", "bar", "baz", "foo");
@@ -113,7 +113,7 @@ public void onDuplicateElem_IfIllegalArgExp_thenSuccess() {
 
 例如:
 
-```
+```java
 int[] arr = { 1, 2, 3, 4, 5 };
 List<int[]> list = List.of(arr);
 ```
@@ -124,13 +124,13 @@ List<int[]> list = List.of(arr);
 
 `Map`工厂方法的签名是:
 
-```
+```java
 static <K,V> Map<K,V> of(K k1, V v1, K k2, V v2, K k3, V v3)
 ```
 
 以及用法:
 
-```
+```java
 Map<String, String> map = Map.of("foo", "a", "bar", "b", "baz", "c");
 ```
 
@@ -138,13 +138,13 @@ Map<String, String> map = Map.of("foo", "a", "bar", "b", "baz", "c");
 
 在`Map`的情况下，有一个不同的方法用于 10 个以上的键值对:
 
-```
+```java
 static <K,V> Map<K,V> ofEntries(Map.Entry<? extends K,? extends V>... entries)
 ```
 
 它的用法是:
 
-```
+```java
 Map<String, String> map = Map.ofEntries(
   new AbstractMap.SimpleEntry<>("foo", "a"),
   new AbstractMap.SimpleEntry<>("bar", "b"),
@@ -153,7 +153,7 @@ Map<String, String> map = Map.ofEntries(
 
 为 Key 传入重复的值会抛出一个`IllegalArgumentException`:
 
-```
+```java
 @Test(expected = IllegalArgumentException.class)
 public void givenDuplicateKeys_ifIllegalArgExp_thenSuccess() {
     Map.of("foo", "a", "foo", "b");
@@ -174,7 +174,7 @@ public void givenDuplicateKeys_ifIllegalArgExp_thenSuccess() {
 
 使用工厂方法创建的集合是不可变的，改变一个元素、添加新元素或者删除一个元素都会抛出`UnsupportedOperationException`:
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public void onElemAdd_ifUnSupportedOpExpnThrown_thenSuccess() {
     Set<String> set = Set.of("foo", "bar");
@@ -182,7 +182,7 @@ public void onElemAdd_ifUnSupportedOpExpnThrown_thenSuccess() {
 }
 ```
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public void onElemModify_ifUnSupportedOpExpnThrown_thenSuccess() {
     List<String> list = List.of("foo", "bar");
@@ -190,7 +190,7 @@ public void onElemModify_ifUnSupportedOpExpnThrown_thenSuccess() {
 }
 ```
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public void onElemRemove_ifUnSupportedOpExpnThrown_thenSuccess() {
     Map<String, String> map = Map.of("foo", "a", "bar", "b");
@@ -202,7 +202,7 @@ public void onElemRemove_ifUnSupportedOpExpnThrown_thenSuccess() {
 
 在`List`和`Set`的情况下，没有元素可以是`null`。在`Map`的情况下，键和值都不能是`null`。传递`null`参数抛出一个`NullPointerException`:
 
-```
+```java
 @Test(expected = NullPointerException.class)
 public void onNullElem_ifNullPtrExpnThrown_thenSuccess() {
     List.of("foo", "bar", null);
@@ -217,7 +217,7 @@ public void onNullElem_ifNullPtrExpnThrown_thenSuccess() {
 
 因此，如果我们创建具有相同值的列表，它们可能引用也可能不引用堆上的相同对象:
 
-```
+```java
 List<String> list1 = List.of("foo", "bar");
 List<String> list2 = List.of("foo", "bar");
 ```

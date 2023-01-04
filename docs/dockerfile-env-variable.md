@@ -28,7 +28,7 @@
 
 我们将创建一个名为 `greetings.sh`的简单 bash 脚本，它使用一个环境变量将问候打印到控制台:
 
-```
+```java
 #!/bin/sh
 
 echo Hello $env_name
@@ -36,7 +36,7 @@ echo Hello $env_name
 
 现在，让我们在同一个目录中创建一个`Dockerfile`:
 
-```
+```java
 FROM alpine:latest
 
 COPY greetings.sh .
@@ -48,19 +48,19 @@ CMD ["/greetings.sh"]
 
 它复制我们的脚本，使其可执行，并运行它。让我们构建图像:
 
-```
+```java
 docker build -t baeldung_greetings . 
 ```
 
 那么，让我们运行它:
 
-```
+```java
 docker run baeldung_greetings
 ```
 
 我们应该在控制台中只看到一行:
 
-```
+```java
 Hello
 ```
 
@@ -74,7 +74,7 @@ Hello
 
 传递环境值最简单的方法是在`Dockerfile`中硬编码。在某些情况下，这已经足够好了。让我们将`John `硬编码为 docker 文件中的默认名称:
 
-```
+```java
 FROM alpine:latest
 
 ENV env_name John
@@ -94,7 +94,7 @@ CMD ["/greetings.sh"]
 
 `Dockerfile`不提供动态工具来在构建过程中设置 ENV 值。但是，这个问题是有解决办法的。我们得用`ARG`。 **ARG 值的工作方式与 ENV 不同，因为一旦映像被构建**，w **e 就不能再访问它们了。让我们看看如何解决这个问题:**
 
-```
+```java
 ARG name
 ENV env_name $name
 ```
@@ -103,13 +103,13 @@ ENV env_name $name
 
 当我们要设置这个参数时，我们用 `–build-arg` 标志传递它:
 
-```
+```java
 docker build -t baeldung_greetings --build-arg name=Baeldung .
 ```
 
 现在，让我们运行我们的容器。我们应该看到:
 
-```
+```java
 Hello Baeldung
 ```
 

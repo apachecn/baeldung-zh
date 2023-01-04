@@ -10,7 +10,7 @@
 
 要在 Maven 项目中使用 Couchbase，请将 Couchbase SDK 导入到您的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.couchbase.client</groupId>
     <artifactId>java-client</artifactId>
@@ -34,7 +34,7 @@
 
 让我们看一个`map`函数的例子，它在桶中所有文档的`name`字段上创建一个索引，这些文档的`type`字段等于`“StudentGrade”`:
 
-```
+```java
 function (doc, meta) {
     if(doc.type == "StudentGrade" && doc.name) {    
         emit(doc.name, null);
@@ -68,7 +68,7 @@ function (doc, meta) {
 
 为了构造针对 Couchbase 视图的查询，您需要提供它的设计文档名和视图名来创建一个`ViewQuery`对象:
 
-```
+```java
 ViewQuery query = ViewQuery.from("design-document-name", "view-name");
 ```
 
@@ -76,7 +76,7 @@ ViewQuery query = ViewQuery.from("design-document-name", "view-name");
 
 要构建针对开发视图的查询，您可以在创建查询时应用`development()`方法:
 
-```
+```java
 ViewQuery query 
   = ViewQuery.from("design-doc-name", "view-name").development();
 ```
@@ -85,7 +85,7 @@ ViewQuery query
 
 一旦我们有了一个`ViewQuery`对象，我们就可以执行查询来获得一个`ViewResult`:
 
-```
+```java
 ViewResult result = bucket.query(query);
 ```
 
@@ -93,7 +93,7 @@ ViewResult result = bucket.query(query);
 
 现在我们有了一个`ViewResult`，我们可以遍历这些行来获得文档 id 和/或内容:
 
-```
+```java
 for(ViewRow row : result.allRows()) {
     JsonDocument doc = row.document();
     String id = doc.id();
@@ -105,7 +105,7 @@ for(ViewRow row : result.allRows()) {
 
 在本教程的剩余部分，我们将为一组学生成绩文档编写 MapReduce 视图和查询，这些文档具有以下格式，成绩限制在 0 到 100 的范围内:
 
-```
+```java
 { 
     "type": "StudentGrade",
     "name": "John Doe",
@@ -117,7 +117,7 @@ for(ViewRow row : result.allRows()) {
 
 我们将这些文档存储在“`baeldung-tutorial`”桶中，并将所有视图存储在名为“`studentGrades`”的设计文档中让我们看一下打开存储桶所需的代码，以便我们可以查询它:
 
-```
+```java
 Bucket bucket = CouchbaseCluster.create("127.0.0.1")
   .openBucket("baeldung-tutorial");
 ```
@@ -126,7 +126,7 @@ Bucket bucket = CouchbaseCluster.create("127.0.0.1")
 
 假设您想要查找某门课程或一组课程的所有学生成绩。让我们使用下面的`map`函数编写一个名为`findByCourse`的视图:
 
-```
+```java
 function (doc, meta) {
     if(doc.type == "StudentGrade" && doc.course && doc.grade) {
         emit(doc.course, null);
@@ -140,7 +140,7 @@ function (doc, meta) {
 
 为了找到历史课程的所有分数，我们将`key`方法应用于我们的基本查询:
 
-```
+```java
 ViewQuery query 
   = ViewQuery.from("studentGrades", "findByCourse").key("History");
 ```
@@ -149,7 +149,7 @@ ViewQuery query
 
 如果您想要查找数学和科学课程的所有分数，您可以将`keys`方法应用于基本查询，向其传递一个键值数组:
 
-```
+```java
 ViewQuery query = ViewQuery
   .from("studentGrades", "findByCourse")
   .keys(JsonArray.from("Math", "Science"));
@@ -165,7 +165,7 @@ ViewQuery query = ViewQuery
 
 为了找到具有一系列`grade`值的所有文档，而不考虑`course`字段的值，我们需要一个只显示`grade`字段的视图。让我们为“`findByGrade`”视图编写`map`函数:
 
-```
+```java
 function (doc, meta) {
     if(doc.type == "StudentGrade" && doc.grade) {
         emit(doc.grade, null);
@@ -175,7 +175,7 @@ function (doc, meta) {
 
 让我们使用这个视图在 Java 中编写一个查询来查找所有相当于字母“B”的成绩(80 到 89，包括 80 和 89):
 
-```
+```java
 ViewQuery query = ViewQuery.from("studentGrades", "findByGrade")
   .startKey(80)
   .endKey(89)
@@ -186,7 +186,7 @@ ViewQuery query = ViewQuery.from("studentGrades", "findByGrade")
 
 如果所有的分数都是整数，那么下面的查询将产生相同的结果:
 
-```
+```java
 ViewQuery query = ViewQuery.from("studentGrades", "findByGrade")
   .startKey(80)
   .endKey(90)
@@ -195,7 +195,7 @@ ViewQuery query = ViewQuery.from("studentGrades", "findByGrade")
 
 要找到所有“A”级(90 及以上)，我们只需指定下限:
 
-```
+```java
 ViewQuery query = ViewQuery
   .from("studentGrades", "findByGrade")
   .startKey(90);
@@ -203,7 +203,7 @@ ViewQuery query = ViewQuery
 
 为了找出所有不及格的分数(60 分以下)，我们只需指定上限:
 
-```
+```java
 ViewQuery query = ViewQuery
   .from("studentGrades", "findByGrade")
   .endKey(60)
@@ -218,7 +218,7 @@ ViewQuery query = ViewQuery
 
 让我们看看视图“`findByCourseAndGrade`”的`map`函数:
 
-```
+```java
 function (doc, meta) {
     if(doc.type == "StudentGrade" && doc.course && doc.grade) {
         emit([doc.course, doc.grade], null);
@@ -228,7 +228,7 @@ function (doc, meta) {
 
 当在 Couchbase 中填充这个视图时，索引条目按照`course`和`grade`排序。以下是“`findByCourseAndGrade`”视图中键的子集，按其自然排序顺序显示:
 
-```
+```java
 ["History", 80]
 ["History", 90]
 ["History", 94]
@@ -244,19 +244,19 @@ function (doc, meta) {
 
 这意味着，为了找到所有在数学课程中获得“B”级(80 到 89)的学生，您应该将下限设置为:
 
-```
+```java
 ["Math", 80]
 ```
 
 上限为:
 
-```
+```java
 ["Math", 89]
 ```
 
 让我们用 Java 编写范围查询:
 
-```
+```java
 ViewQuery query = ViewQuery
   .from("studentGrades", "findByCourseAndGrade")
   .startKey(JsonArray.from("Math", 80))
@@ -266,7 +266,7 @@ ViewQuery query = ViewQuery
 
 如果我们要查找所有数学成绩为“A ”( 90 分及以上)的学生，我们可以写:
 
-```
+```java
 ViewQuery query = ViewQuery
   .from("studentGrades", "findByCourseAndGrade")
   .startKey(JsonArray.from("Math", 90))
@@ -277,7 +277,7 @@ ViewQuery query = ViewQuery
 
 并找出所有不及格的数学成绩(低于 60 分):
 
-```
+```java
 ViewQuery query = ViewQuery
   .from("studentGrades", "findByCourseAndGrade")
   .startKey(JsonArray.from("Math", 0))
@@ -289,7 +289,7 @@ ViewQuery query = ViewQuery
 
 最后，为了找到五个最高的数学分数(排除任何平局)，您可以告诉 Couchbase 执行降序排序，并限制结果集的大小:
 
-```
+```java
 ViewQuery query = ViewQuery
   .from("studentGrades", "findByCourseAndGrade")
   .descending()
@@ -315,7 +315,7 @@ MapReduce 视图的一个主要优点是，它们对于针对大型数据集运�
 
 首先，让我们为一个视图编写`map`函数来计算每门课程的学生人数:
 
-```
+```java
 function (doc, meta) {
     if(doc.type == "StudentGrade" && doc.course && doc.name) {
         emit([doc.course, doc.name], null);
@@ -327,7 +327,7 @@ function (doc, meta) {
 
 要统计每门课程的学生人数:
 
-```
+```java
 ViewQuery query = ViewQuery
   .from("studentGrades", "countStudentsByCourse")
   .reduce()
@@ -338,7 +338,7 @@ ViewQuery query = ViewQuery
 
 让我们运行查询并将计数提取到一个`java.util.Map`:
 
-```
+```java
 ViewResult result = bucket.query(query);
 Map<String, Long> numStudentsByCourse = new HashMap<>();
 for(ViewRow row : result.allRows()) {
@@ -353,7 +353,7 @@ for(ViewRow row : result.allRows()) {
 
 接下来，让我们编写一个视图，计算每个学生尝试的学分小时数的总和。我们将这个视图称为“`sumHoursByStudent`”，并指定它将使用内置的`“_sum”`函数:
 
-```
+```java
 function (doc, meta) {
     if(doc.type == "StudentGrade"
          && doc.name
@@ -368,7 +368,7 @@ function (doc, meta) {
 
 让我们编写一个查询来查找每个学生的总学分:
 
-```
+```java
 ViewQuery query = ViewQuery
   .from("studentGrades", "sumCreditsByStudent")
   .reduce()
@@ -377,7 +377,7 @@ ViewQuery query = ViewQuery
 
 现在，让我们运行查询，并将合计金额提取到一个`java.util.Map`:
 
-```
+```java
 ViewResult result = bucket.query(query);
 Map<String, Long> hoursByStudent = new HashMap<>();
 for(ViewRow row : result.allRows()) {
@@ -397,7 +397,7 @@ for(ViewRow row : result.allRows()) {
 
 让我们创建一个名为`“sumGradePointsByStudent”`的视图，它计算每门课程所获得的分数。我们将使用内置的`“_sum”`函数来简化下面的`map`函数:
 
-```
+```java
 function (doc, meta) {
     if(doc.type == "StudentGrade"
          && doc.name
@@ -424,7 +424,7 @@ function (doc, meta) {
 
 现在让我们查询这个视图，并将总和提取到一个`java.util.Map`:
 
-```
+```java
 ViewQuery query = ViewQuery.from(
   "studentGrades",
   "sumGradePointsByStudent")
@@ -442,7 +442,7 @@ for(ViewRow row : result.allRows()) {
 
 最后，让我们结合两个`Map`来计算每个学生的 GPA:
 
-```
+```java
 Map<String, Float> result = new HashMap<>();
 for(Entry<String, Long> creditHoursEntry : hoursByStudent.entrySet()) {
     String name = creditHoursEntry.getKey();

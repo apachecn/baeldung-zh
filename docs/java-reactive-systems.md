@@ -82,7 +82,7 @@
 
 让我们首先定义一个控制器来公开一些端点:
 
-```
+```java
 @GetMapping
 public List<Product> getAllProducts() {
     return productService.getProducts();
@@ -101,7 +101,7 @@ public Order revertOrder(@RequestBody Order order) {
 
 以及封装我们业务逻辑的服务:
 
-```
+```java
 @Transactional
 public Order handleOrder(Order order) {       
     order.getLineItems()
@@ -143,7 +143,7 @@ public Order revertOrder(Order order) {
 
 像以前一样，我们将定义一个控制器来公开我们的端点，实际上只是一个端点:
 
-```
+```java
 @PostMapping
 public Order process(@RequestBody Order order) {
     return shippingService.handleOrder(order);
@@ -152,7 +152,7 @@ public Order process(@RequestBody Order order) {
 
 以及封装与订单发货相关的业务逻辑的服务:
 
-```
+```java
 public Order handleOrder(Order order) {
     LocalDate shippingDate = null;
     if (LocalTime.now().isAfter(LocalTime.parse("10:00"))
@@ -177,7 +177,7 @@ public Order handleOrder(Order order) {
 
 让我们用所需的端点来定义控制器:
 
-```
+```java
 @PostMapping
 public Order create(@RequestBody Order order) {
     Order processedOrder = orderService.createOrder(order);
@@ -194,7 +194,7 @@ public List<Order> getAll() {
 
 以及封装与订单相关的业务逻辑的服务:
 
-```
+```java
 public Order createOrder(Order order) {
     boolean success = true;
     Order savedOrder = orderRepository.save(order);
@@ -241,7 +241,7 @@ public List<Order> getOrders() {
 
 我们需要**在 Angular 中创建一个简单的组件来处理创建和获取命令**。特别重要的是我们调用 API 来创建订单的部分:
 
-```
+```java
 createOrder() {
     let headers = new HttpHeaders({'Content-Type': 'application/json'});
     let options = {headers: headers}
@@ -261,7 +261,7 @@ createOrder() {
 
 同样重要的是我们获得以前创建的订单的部分:
 
-```
+```java
 getOrders() {
   this.previousOrders = this.http.get(''http://localhost:8080/api/orders'')
 }
@@ -269,7 +269,7 @@ getOrders() {
 
 请注意， [Angular HTTP 模块](https://web.archive.org/web/20220831185610/https://angular.io/guide/http)本质上是**异步的，因此返回 RxJS `Observable` s** 。我们可以在视图中通过异步管道传递响应:
 
-```
+```java
 <div class="container" *ngIf="previousOrders !== null">
   <h2>Your orders placed so far:</h2>
   <ul>
@@ -292,7 +292,7 @@ getOrders() {
 
 让我们看看这个`docker-compose.yml`文件是什么样子的:
 
-```
+```java
 version: '3'
 services:
   frontend:
@@ -341,14 +341,14 @@ services:
 
 我们将从更改端点以发出反应性发布者开始:
 
-```
+```java
 @GetMapping
 public Flux<Product> getAllProducts() {
     return productService.getProducts();
 }
 ```
 
-```
+```java
 @PostMapping
 public Mono<Order> processOrder(@RequestBody Order order) {
     return productService.handleOrder(order);
@@ -362,7 +362,7 @@ public Mono<Order> revertOrder(@RequestBody Order order) {
 
 显然，我们还必须对服务进行必要的更改:
 
-```
+```java
 @Transactional
 public Mono<Order> handleOrder(Order order) {
     return Flux.fromIterable(order.getLineItems())
@@ -402,7 +402,7 @@ public Mono<Order> revertOrder(Order order) {
 
 类似地，我们将更改我们的运输服务的端点:
 
-```
+```java
 @PostMapping
 public Mono<Order> process(@RequestBody Order order) {
     return shippingService.handleOrder(order);
@@ -411,7 +411,7 @@ public Mono<Order> process(@RequestBody Order order) {
 
 以及服务中的相应变化，以利用反应式编程:
 
-```
+```java
 public Mono<Order> handleOrder(Order order) {
     return Mono.just(order)
       .flatMap(o -> {
@@ -435,7 +435,7 @@ public Mono<Order> handleOrder(Order order) {
 
 我们必须在订单服务的端点中进行类似的更改:
 
-```
+```java
 @PostMapping
 public Mono<Order> create(@RequestBody Order order) {
     return orderService.createOrder(order)
@@ -456,7 +456,7 @@ public Flux<Order> getAll() {
 
 对服务的更改将更加复杂，因为我们将不得不使用 Spring `WebClient`来调用库存和运输反应端点:
 
-```
+```java
 public Mono<Order> createOrder(Order order) {
     return Mono.just(order)
       .flatMap(orderRepository::save)
@@ -514,7 +514,7 @@ public Flux<Order> getOrders() {
 
 让我们看看如何将我们之前的所有订单作为一个事件流进行提取和处理:
 
-```
+```java
 getOrderStream() {
     return Observable.create((observer) => {
         let eventSource = new EventSource('http://localhost:8080/api/orders')
@@ -557,7 +557,7 @@ getOrderStream() {
 
 让我们首先为我们的库存服务定义消息生产者:
 
-```
+```java
 @Autowired
 private KafkaTemplate<String, Order> kafkaTemplate;
 
@@ -568,7 +568,7 @@ public void sendMessage(Order order) {
 
 接下来，我们必须为库存服务定义一个消息消费者，以对主题的不同消息做出反应:
 
-```
+```java
 @KafkaListener(topics = "orders", groupId = "inventory")
 public void consume(Order order) throws IOException {
     if (OrderStatus.RESERVE_INVENTORY.equals(order.getOrderStatus())) {
@@ -599,7 +599,7 @@ public void consume(Order order) throws IOException {
 
 运输服务中的变化与我们之前在库存服务中所做的相对相似。消息生产者是相同的，而消息消费者特定于运输逻辑:
 
-```
+```java
 @KafkaListener(topics = "orders", groupId = "shipping")
 public void consume(Order order) throws IOException {
     if (OrderStatus.PREPARE_SHIPPING.equals(order.getOrderStatus())) {
@@ -624,7 +624,7 @@ public void consume(Order order) throws IOException {
 
 尽管如此，消息生产者保持不变，而消息消费者采用特定于订单服务的逻辑:
 
-```
+```java
 @KafkaListener(topics = "orders", groupId = "orders")
 public void consume(Order order) throws IOException {
     if (OrderStatus.INITIATION_SUCCESS.equals(order.getOrderStatus())) {
@@ -670,7 +670,7 @@ public void consume(Order order) throws IOException {
 
 最后，我们的订单服务也必须进行更改以支持这种编排:
 
-```
+```java
 public Mono<Order> createOrder(Order order) {
     return Mono.just(order)
       .flatMap(orderRepository::save)
@@ -704,7 +704,7 @@ public Mono<Order> createOrder(Order order) {
 
 让我们看看如何为我们的应用程序定义一个 Kubernetes 部署:
 
-```
+```java
 apiVersion: apps/v1
 kind: Deployment
 metadata: 

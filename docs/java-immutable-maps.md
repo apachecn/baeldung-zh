@@ -12,7 +12,7 @@
 
 **不可修改的地图只是可修改地图的包装，不允许直接修改:**
 
-```
+```java
 Map<String, String> mutableMap = new HashMap<>();
 mutableMap.put("USA", "North America");
 
@@ -23,7 +23,7 @@ assertThrows(UnsupportedOperationException.class,
 
 但是底层的可变映射仍然可以被改变，并且修改也反映在不可修改的映射中:
 
-```
+```java
 mutableMap.remove("USA");
 assertFalse(unmodifiableMap.containsKey("USA"));
 
@@ -45,14 +45,14 @@ assertTrue(unmodifiableMap.containsKey("Mexico"));
 
 首先，让我们使用 `ImmutableMap.copyOf()`方法返回原始地图中所有条目的副本:
 
-```
+```java
 ImmutableMap<String, String> immutableMap = ImmutableMap.copyOf(mutableMap);
 assertTrue(immutableMap.containsKey("USA"));
 ```
 
 它不能被直接或间接修改:
 
-```
+```java
 assertThrows(UnsupportedOperationException.class,
   () -> immutableMap.put("Canada", "North America"));
 
@@ -69,7 +69,7 @@ assertFalse(immutableMap.containsKey("Mexico"));
 
 此外，我们可以使用这种方法添加原始地图中不存在的附加条目:
 
-```
+```java
 ImmutableMap<String, String> immutableMap = ImmutableMap.<String, String>builder()
   .putAll(mutableMap)
   .put("Costa Rica", "North America")
@@ -80,7 +80,7 @@ assertTrue(immutableMap.containsKey("Costa Rica"));
 
 与前面的例子一样，我们不能直接或间接地修改它:
 
-```
+```java
 assertThrows(UnsupportedOperationException.class,
   () -> immutableMap.put("Canada", "North America"));
 
@@ -95,7 +95,7 @@ assertFalse(immutableMap.containsKey("Mexico"));
 
 **最后，我们可以使用`ImmutableMap.of()`方法创建一个不可变的映射，其中包含一组动态提供的条目。它最多支持五个键/值对:**
 
-```
+```java
 ImmutableMap<String, String> immutableMap
   = ImmutableMap.of("USA", "North America", "Costa Rica", "North America");
 assertTrue(immutableMap.containsKey("USA"));
@@ -104,7 +104,7 @@ assertTrue(immutableMap.containsKey("Costa Rica"));
 
 我们也不能修改它:
 
-```
+```java
 assertThrows(UnsupportedOperationException.class,
   () -> immutableMap.put("Canada", "North America"));
 ```

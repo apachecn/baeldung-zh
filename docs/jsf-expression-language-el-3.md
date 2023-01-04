@@ -14,7 +14,7 @@
 
 本文中展示的例子也已经在 Tomcat 8 上测试过了。要使用 EL3.0，您必须添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>javax.el</groupId>
     <artifactId>javax.el-api</artifactId>
@@ -34,14 +34,14 @@
 
 此功能的基本用途是允许我们将 lambda 表达式指定为 EL 值表达式中的值类型:
 
-```
+```java
 <h:outputText id="valueOutput" 
   value="#{(x->x*x*x);(ELBean.pageCounter)}"/>
 ```
 
 由此延伸，可以在 EL 中命名 lambda 函数，以便在复合语句中重用，就像在 Java SE 的 lambda 表达式中一样。复合 lambda 表达式可以用分号(`;`)分隔:
 
-```
+```java
 <h:outputText id="valueOutput" 
   value="#{cube=(x->x*x*x);cube(ELBean.pageCounter)}"/> 
 ```
@@ -52,14 +52,14 @@
 
 让我们更进一步:通过将逻辑封装在 EL 表达式中(作为 lambda)并将其传递给 JSF 支持 bean，我们可以获得很大的灵活性:
 
-```
+```java
 <h:outputText id="valueOutput" 
   value="#{ELBean.multiplyValue(x->x*x*x)}"/> 
 ```
 
 这现在允许我们将 lambda 表达式整体作为`javax.el.LambdaExpression`的一个实例来处理:
 
-```
+```java
 public String multiplyValue(LambdaExpression expr){
     return (String) expr.invoke( 
       FacesContext.getCurrentInstance().getELContext(), pageCounter);
@@ -82,7 +82,7 @@ public String multiplyValue(LambdaExpression expr){
 
 *   列表:
 
-```
+```java
  <h:dataTable var="listItem" value="#{['1','2','3']}">
        <h:column id="nameCol">
            <h:outputText id="name" value="#{listItem}"/>
@@ -92,7 +92,7 @@ public String multiplyValue(LambdaExpression expr){
 
 *   集合:
 
-```
+```java
  <h:dataTable var="setResult" value="#{{'1','2','3'}}">
     ....
    </h:dataTable> 
@@ -102,7 +102,7 @@ public String multiplyValue(LambdaExpression expr){
 
 *   地图:
 
-```
+```java
  <h:dataTable var="mapResult" 
      value="#{{'one':'1','two':'2','three':'3'}}"> 
 ```
@@ -113,7 +113,7 @@ public String multiplyValue(LambdaExpression expr){
 
 EL3.0 支持高级查询语义，结合了 lambda 表达式的强大功能、新的流 API 和类似 SQL 的操作，如连接和分组。我们不会在本文中涉及这些，因为这些是高级主题。让我们看一个例子来展示它的威力:
 
-```
+```java
 <h:dataTable var="streamResult" 
   value="#{['1','2','3'].stream().filter(x-> x>1).toList()}">
     <h:column id="nameCol">
@@ -124,7 +124,7 @@ EL3.0 支持高级查询语义，结合了 lambda 表达式的强大功能、新
 
 上表将使用传递的 lambda 表达式过滤后备列表
 
-```
+```java
  <h:outputLabel id="avgLabel" for="avg" 
    value="Average of integer list value"/>
  <h:outputText id="avg" 
@@ -137,13 +137,13 @@ EL3.0 支持高级查询语义，结合了 lambda 表达式的强大功能、新
 
 `**Tip:**` 您可以使用 JSTL `<c:set/>` 标签将您的数据结构声明为页面级变量，并在整个 JSF 页面中操作它:
 
-```
+```java
  <c:set var='pageLevelNumberList' value="#{[1,2,3]}"/> 
 ```
 
 您现在可以在整个页面中引用`“#{pageLevelNumberList}”`,就像它是真正的 JSF 组件或 bean 一样。这允许在整个页面中进行大量的重用
 
-```
+```java
 <h:outputText id="avg" 
   value="#{pageLevelNumberList.stream().average().get()}"/>
 ```
@@ -154,7 +154,7 @@ EL3.0 支持高级查询语义，结合了 lambda 表达式的强大功能、新
 
 首先，我们必须手动将包含常量的类导入到 EL 上下文中。这最好是尽早完成。这里我们在 JSF 管理的 bean 的`@PostConstruct` 初始化器中做这件事(一个`ServletContextListener` 也是一个可行的候选者):
 
-```
+```java
  @PostConstruct
  public void init() {
      FacesContext.getCurrentInstance()
@@ -170,14 +170,14 @@ EL3.0 支持高级查询语义，结合了 lambda 表达式的强大功能、新
 
 然后，我们在所需的类中定义一个`String` 常量字段(如果您愿意，也可以定义一个`Enum` ):
 
-```
+```java
 public static final String constantField 
   = "THIS_IS_NOT_CHANGING_ANYTIME_SOON"; 
 ```
 
 之后，我们现在可以访问 EL 中的变量:
 
-```
+```java
  <h:outputLabel id="staticLabel" 
    for="staticFieldOutput" value="Constant field access: "/>
  <h:outputText id="staticFieldOutput" 
@@ -191,7 +191,7 @@ public static final String constantField
 *   语法要求字段和方法是`public, static` (对于方法是`final`)
 *   The syntax changed between the initial draft of the EL 3.0 specification and the release version. So in some textbooks, you might still find something that looks like:
 
-    ```
+    ```java
     T(YourClass).yourStaticVariableOrMethod
     ```
 

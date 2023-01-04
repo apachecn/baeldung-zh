@@ -54,7 +54,7 @@ Spring Boot 基本上是 Spring 框架的扩展，它消除了设置 Spring 应�
 
 首先，让我们看看使用 Spring 创建 web 应用程序所需的最少依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-web</artifactId>
@@ -69,7 +69,7 @@ Spring Boot 基本上是 Spring 框架的扩展，它消除了设置 Spring 应�
 
 与 Spring 不同，Spring Boot 只需要一个依赖项就可以启动并运行一个 web 应用程序:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -99,7 +99,7 @@ Spring Boot 为不同的 Spring 模块提供了大量的启动依赖。一些最
 
 **Spring 需要定义 dispatcher servlet、映射和其他支持配置。**我们可以使用`web.xml`文件或`Initializer`类来完成这项工作:
 
-```
+```java
 public class MyWebAppInitializer implements WebApplicationInitializer {
 
     @Override
@@ -121,7 +121,7 @@ public class MyWebAppInitializer implements WebApplicationInitializer {
 
 我们还需要将`@EnableWebMvc`注释添加到`@Configuration`类中，并定义一个视图解析器来解析从控制器返回的视图:
 
-```
+```java
 @EnableWebMvc
 @Configuration
 public class ClientWebConfig implements WebMvcConfigurer { 
@@ -139,7 +139,7 @@ public class ClientWebConfig implements WebMvcConfigurer {
 
 相比之下，**一旦我们添加了 web starter，**Spring Boot 只需要几个属性就可以让它工作了
 
-```
+```java
 spring.mvc.view.prefix=/WEB-INF/jsp/
 spring.mvc.view.suffix=.jsp
 ```
@@ -156,7 +156,7 @@ spring.mvc.view.suffix=.jsp
 
 在 Spring 中，我们需要为视图解析器添加 [`thymeleaf-spring5`](https://web.archive.org/web/20221115195203/https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf-spring5) 依赖和一些配置:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 public class MvcWebConfig implements WebMvcConfigurer {
@@ -205,7 +205,7 @@ Spring Boot 1 只需要依赖`spring-boot-starter-thymeleaf `来启用 web 应�
 
 接下来**我们需要添加一个扩展`WebSecurityConfigurerAdapter`并使用`@EnableWebSecurity`** 注释的类:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
@@ -270,7 +270,7 @@ Spring 既支持传统的`web.xml`自举方式，也支持最新的 Servlet 3+�
 
 **Spring Boot 应用程序的入口点是用`@SpringBootApplication` :** 标注的类
 
-```
+```java
 @SpringBootApplication
 public class Application {
     public static void main(String[] args) {
@@ -287,7 +287,7 @@ Spring Boot 的另一个特性是，它会自动扫描主类的同一个包或�
 
 此外，Spring Boot 提供了在外部容器中将其部署为 web 归档的选项。在这种情况下，我们必须扩展`SpringBootServletInitializer`:
 
-```
+```java
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
     // ...

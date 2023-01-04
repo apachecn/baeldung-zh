@@ -14,7 +14,7 @@
 
 让我们为 Jackson CSV 数据格式化程序添加依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.dataformat</groupId>
     <artifactId>jackson-dataformat-csv</artifactId>
@@ -26,7 +26,7 @@
 
 我们还将添加核心 Jackson 数据绑定的依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -47,7 +47,7 @@
 
 这意味着，如果我们的 JSON 文档有一个对象数组，我们可以将每个对象重新格式化为 CSV 文件的一个新行。因此，作为一个例子，让我们使用一个 JSON 文档，其中包含订单中的以下商品列表:
 
-```
+```java
 [ {
   "item" : "No. 9 Sprockets",
   "quantity" : 12,
@@ -61,7 +61,7 @@
 
 我们将使用 JSON 文档中的字段名作为列标题，并将其重新格式化为下面的 CSV 文件:
 
-```
+```java
 item,quantity,unitPrice
 "No. 9 Sprockets",12,1.23
 "Widget (10mm)",4,3.45
@@ -71,13 +71,13 @@ item,quantity,unitPrice
 
 首先，我们使用 Jackson 的`ObjectMapper`将示例 JSON 文档读入一个由`JsonNode`对象组成的树:
 
-```
+```java
 JsonNode jsonTree = new ObjectMapper().readTree(new File("src/main/resources/orderLines.json"));
 ```
 
 接下来，让我们创建一个`CsvSchema`。这决定了 CSV 文件中的列标题、类型和列顺序。为此，我们创建一个`CsvSchema Builder`并设置列标题以匹配 JSON 字段名称:
 
-```
+```java
 Builder csvSchemaBuilder = CsvSchema.builder();
 JsonNode firstObject = jsonTree.elements().next();
 firstObject.fieldNames().forEachRemaining(fieldName -> {csvSchemaBuilder.addColumn(fieldName);} );
@@ -86,7 +86,7 @@ CsvSchema csvSchema = csvSchemaBuilder.build().withHeader();
 
 **然后，我们用我们的`CsvSchema`创建一个`CsvMapper`，最后，我们将`jsonTree`写入我们的 CSV 文件**:
 
-```
+```java
 CsvMapper csvMapper = new CsvMapper();
 csvMapper.writerFor(JsonNode.class)
   .with(csvSchema)
@@ -99,7 +99,7 @@ csvMapper.writerFor(JsonNode.class)
 
 现在，让我们使用 Jackson 的`CsvMapper`将我们的 CSV 文件读入到`OrderLine`对象的`List`中。为此，我们首先创建一个简单的 POJO 形式的`OrderLine`类:
 
-```
+```java
 public class OrderLine {
     private String item;
     private int quantity;
@@ -111,7 +111,7 @@ public class OrderLine {
 
 我们将使用 CSV 文件中的列标题来定义我们的`CsvSchema`。**然后，** **我们使用`CsvMapper`将数据从 CSV** 读取到`OrderLine`对象的`MappingIterator`中:
 
-```
+```java
 CsvSchema orderLineSchema = CsvSchema.emptySchema().withHeader();
 CsvMapper csvMapper = new CsvMapper();
 MappingIterator<OrderLine> orderLines = csvMapper.readerFor(OrderLine.class)
@@ -121,7 +121,7 @@ MappingIterator<OrderLine> orderLines = csvMapper.readerFor(OrderLine.class)
 
 接下来，我们将使用`MappingIterator`来获得`OrderLine`对象的`List`。然后，我们使用 Jackson 的`ObjectMapper`将列表写成一个 JSON 文档:
 
-```
+```java
 new ObjectMapper()
   .configure(SerializationFeature.INDENT_OUTPUT, true)
   .writeValue(new File("src/main/resources/orderLinesFromCsv.json"), orderLines.readAll());
@@ -135,7 +135,7 @@ new ObjectMapper()
 
 因此，我们预期的 CSV 文件变成了:
 
-```
+```java
 count,name
 12,"No. 9 Sprockets"
 4,"Widget (10mm)"
@@ -143,7 +143,7 @@ count,name
 
 我们将创建一个新的抽象类来定义 CSV 文件所需的格式:
 
-```
+```java
 @JsonPropertyOrder({
     "count",
     "name"
@@ -164,7 +164,7 @@ public abstract class OrderLineForCsv {
 
 然后，我们使用我们的`OrderLineForCsv`类创建一个`CsvSchema`:
 
-```
+```java
 CsvMapper csvMapper = new CsvMapper();
 CsvSchema csvSchema = csvMapper
   .schemaFor(OrderLineForCsv.class)
@@ -173,13 +173,13 @@ CsvSchema csvSchema = csvMapper
 
 我们也使用`OrderLineForCsv`作为杰克逊混音。这告诉 Jackson 在处理一个`OrderLine`对象时使用我们添加到`OrderLineForCsv`类的注释:
 
-```
+```java
 csvMapper.addMixIn(OrderLine.class, OrderLineForCsv.class); 
 ```
 
 最后，我们使用一个`ObjectMapper`将我们的 JSON 文档读入一个`OrderLine`数组，并使用我们的`csvMapper`将它写入一个 CSV 文件:
 
-```
+```java
 OrderLine[] orderLines = new ObjectMapper()
     .readValue(new File("src/main/resources/orderLines.json"), OrderLine[].class);
 

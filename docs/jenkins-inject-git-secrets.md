@@ -16,7 +16,7 @@ Jenkins 是一个自动化软件构建和交付的优秀工具，尤其是在使
 
 因为 git 秘密使用 GPG 密钥，我们必须首先确保我们有一个有效的密钥可以使用:
 
-```
+```java
 $ gpg --gen-key
 ```
 
@@ -32,7 +32,7 @@ git-secret 实用程序是 git 的一个附件，可以在 git 存储库中存�
 
 安装后，我们可以初始化任何 git 存储库中的秘密:
 
-```
+```java
 $ git secret init
 ```
 
@@ -42,7 +42,7 @@ $ git secret init
 
 接下来，我们需要向 git secret repo 密匙环添加一个用户:
 
-```
+```java
 $ git secret tell [[email protected]](/web/20220727020730/https://www.baeldung.com/cdn-cgi/l/email-protection)
 ```
 
@@ -54,25 +54,25 @@ $ git secret tell [[email protected]](/web/20220727020730/https://www.baeldung.
 
 举个例子，假设我们想在一个名为`dbpassword.txt`的文件中存储数据库的密码。我们首先创建文件:
 
-```
+```java
 $ echo "Password123" > dbpassword.txt
 ```
 
 现在我们加密文件:
 
-```
+```java
 $ git secret add dbpassword.txt
 ```
 
 最后，我们必须使用`hide`命令提交秘密:
 
-```
+```java
 $ git secret hide
 ```
 
 此时，我们应该提交我们的更改，以确保文件安全地存储在我们的 repo 中。这是使用标准 git 命令完成的:
 
-```
+```java
 $ git add .
 $ git commit -m "Add encrypted DB password"
 $ git push
@@ -82,14 +82,14 @@ $ git push
 
 为了证实这一点，如果我们要对存储库进行另一次签出，我们将看到以下内容:
 
-```
+```java
 $ ls
 dbpassword.txt.secret
 ```
 
 **注意，`.secret`文件的内容是加密的，无法读取**。在我们能阅读它们之前，我们必须解密文件:
 
-```
+```java
 $ git secret reveal -p <PASSPHRASE>
 $ git secret cat dbpassword.txt
 ```
@@ -104,7 +104,7 @@ $ git secret cat dbpassword.txt
 
 首先，我们必须导出之前生成的 GPG 私钥:
 
-```
+```java
 $ gpg -a --export-secret-keys [[email protected]](/web/20220727020730/https://www.baeldung.com/cdn-cgi/l/email-protection) > gpg-secret.key
 $ gpg --export-ownertrust > gpg-ownertrust.txt
 ```
@@ -148,7 +148,7 @@ $ gpg --export-ownertrust > gpg-ownertrust.txt
 
 首先，我们添加一个`environment`声明:
 
-```
+```java
 environment {
     gpg_secret = credentials("gpg-secret")
     gpg_trust = credentials("gpg-ownertrust")
@@ -160,7 +160,7 @@ environment {
 
 接下来，我们将 GPG 密钥和信任导入本地代理环境:
 
-```
+```java
 steps {
     sh """
         gpg --batch --import $gpg_secret
@@ -171,7 +171,7 @@ steps {
 
 最后，我们可以在 repo 内部执行`git secret`命令:
 
-```
+```java
 steps {
     sh """
         cd $WORKSPACE
@@ -183,7 +183,7 @@ steps {
 
 当我们执行管道时，我们应该在最后看到数据库密码输出:
 
-```
+```java
 + git secret cat dbpassword.txt
 Password123
 ```
@@ -204,7 +204,7 @@ Password123
 
 与管道一样，我们应该看到在作业执行结束时打印的数据库密码:
 
-```
+```java
 + git secret cat dbpassword.txt
 Password123
 Finished: SUCCESS

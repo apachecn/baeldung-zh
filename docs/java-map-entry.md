@@ -12,7 +12,7 @@
 
 假设我们有一个以作者姓名为关键字的书名图:
 
-```
+```java
 Map<String, String> map = new HashMap<>();
 
 map.put("Robert C. Martin", "Clean Code");
@@ -25,7 +25,7 @@ map.put("Joshua Bloch", "Effective Java");
 
 首先，考虑以下情况:
 
-```
+```java
 for (String key : bookMap.keySet()) {
     System.out.println("key: " + key + " value: " + bookMap.get(key));
 }
@@ -39,7 +39,7 @@ for (String key : bookMap.keySet()) {
 
 让我们重写我们的迭代以使用`entrySet`:
 
-```
+```java
 for (Map.Entry<String, String> book: bookMap.entrySet()) {
     System.out.println("key: " + book.getKey() + " value: " + book.getValue());
 }
@@ -57,7 +57,7 @@ for (Map.Entry<String, String> book: bookMap.entrySet()) {
 
 首先，考虑一下`Book`类:
 
-```
+```java
 public class Book {
     private String title;
     private String author;
@@ -71,13 +71,13 @@ public class Book {
 
 接下来，让我们创建一个以 ISBN 为键，以`Book`对象为值的`Map.Entry`元组:
 
-```
+```java
 Map.Entry<String, Book> tuple; 
 ```
 
 最后，让我们用`AbstractMap.SimpleEntry`实例化我们的元组:
 
-```
+```java
 tuple = new AbstractMap.SimpleEntry<>("9780134685991", new Book("Effective Java 3d Edition", "Joshua Bloch")); 
 ```
 
@@ -87,13 +87,13 @@ tuple = new AbstractMap.SimpleEntry<>("9780134685991", new Book("Effective Java 
 
 首先，我们将定义元组列表:
 
-```
+```java
 List<Map.Entry<String, Book>> orderedTuples = new ArrayList<>(); 
 ```
 
 其次，让我们在列表中添加一些条目:
 
-```
+```java
 orderedTuples.add(new AbstractMap.SimpleEntry<>("9780134685991", 
   new Book("Effective Java 3d Edition", "Joshua Bloch")));
 orderedTuples.add(new AbstractMap.SimpleEntry<>("9780132350884", 
@@ -104,14 +104,14 @@ orderedTuples.add(new AbstractMap.SimpleEntry<>("9780132350884",
 
 为了比较与`Map`的区别，让我们添加一个新条目，它带有一个已经存在的键:
 
-```
+```java
 orderedTuples.add(new AbstractMap.SimpleEntry<>("9780132350884", 
   new Book("Clean Code", "Robert C Martin"))); 
 ```
 
 其次，我们将遍历列表，显示所有的键和值:
 
-```
+```java
 for (Map.Entry<String, Book> tuple : orderedTuples) {
     System.out.println("key: " + tuple.getKey() + " value: " + tuple.getValue());
 }
@@ -119,7 +119,7 @@ for (Map.Entry<String, Book> tuple : orderedTuples) {
 
 最后，让我们看看输出:
 
-```
+```java
 key: 9780134685991 value: Book{title='Effective Java 3d Edition', author='Joshua Bloch'}
 key: 9780132350884 value: Book{title='Clean Code', author='Robert C Martin'}
 key: 9780132350884 value: Book{title='Clean Code', author='Robert C Martin'}

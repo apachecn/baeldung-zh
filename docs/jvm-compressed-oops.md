@@ -58,7 +58,7 @@ HotSpot JVM 使用一种叫做 [`oop` s](/web/20221011080836/https://www.baeldun
 
 我们可以使用压缩指针计算最大可能堆大小，如下所示:
 
-```
+```java
 4 GB * ObjectAlignmentInBytes
 ```
 

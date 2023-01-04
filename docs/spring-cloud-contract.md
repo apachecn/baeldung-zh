@@ -14,7 +14,7 @@
 
 我们将编写一个生产者端 CDC，以`EvenOddController` 的形式——它只是告诉我们`number`参数是偶数还是奇数:
 
-```
+```java
 @RestController
 public class EvenOddController {
 
@@ -29,7 +29,7 @@ public class EvenOddController {
 
 对于我们的生产者来说，我们需要 [`spring-cloud-starter-contract-verifier`](https://web.archive.org/web/20220926190605/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.cloud%22%20AND%20a%3A%22spring-cloud-starter-contract-verifier%22) 的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-contract-verifier</artifactId>
@@ -40,7 +40,7 @@ public class EvenOddController {
 
 我们需要用我们的基本测试类的名称来配置 [`spring-cloud-contract-maven-plugin`](https://web.archive.org/web/20220926190605/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.cloud%22%20AND%20a%3A%22spring-cloud-contract-maven-plugin%22) ，我们将在下一节描述它:
 
-```
+```java
 <plugin>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-contract-maven-plugin</artifactId>
@@ -58,7 +58,7 @@ public class EvenOddController {
 
 我们需要在加载 Spring 上下文的测试包中添加一个基类:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @DirtiesContext
@@ -79,7 +79,7 @@ public class BaseTestClass {
 
 **在`/src/test/resources/contracts/` 包中，我们将添加测试存根**，比如文件`shouldReturnEvenWhenRequestParamIsEven.groovy`中的这个:
 
-```
+```java
 import org.springframework.cloud.contract.spec.Contract
 Contract.make {
     description "should return even when number input is even"
@@ -104,7 +104,7 @@ Contract.make {
 
 让我们来看看这个自动生成的测试类:
 
-```
+```java
 public class ContractVerifierTest extends BaseTestClass {
 
 @Test
@@ -136,7 +136,7 @@ public void validate_shouldReturnEvenWhenRequestParamIsEven() throws Exception {
 
 我们将添加`BasicMathController,` ,它将发出一个 HTTP 请求，从生成的存根中获取响应:
 
-```
+```java
 @RestController
 public class BasicMathController {
 
@@ -163,7 +163,7 @@ public class BasicMathController {
 
 对于我们的消费者，我们需要添加 [`spring-cloud-contract-wiremock`](https://web.archive.org/web/20220926190605/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.cloud%22%20AND%20a%3A%22spring-cloud-contract-wiremock%22) 和 [`spring-cloud-contract-stub-runner`](https://web.archive.org/web/20220926190605/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.cloud%22%20AND%20a%3A%22spring-cloud-contract-stub-runner%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-contract-wiremock</artifactId>
@@ -182,7 +182,7 @@ public class BasicMathController {
 
 现在是配置存根控件的时候了，它将通知我们的用户本地 Maven 存储库中的可用存根:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc

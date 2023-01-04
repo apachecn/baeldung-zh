@@ -20,7 +20,7 @@ Apache POI 是一个流行的开源 Java 库，它为程序员提供 API 来**�
 
 首先，我们需要将 POI 依赖项添加到我们的项目`pom.xml`文件中。**要使用 Excel 2007+工作簿，我们应该使用`[poi-ooxml](https://web.archive.org/web/20221128040353/https://search.maven.org/search?q=g:org.apache.poi%20a:poi-ooxml)`** :
 
-```
+```java
 <dependency>
     <groupId>org.apache.poi</groupId>
     <artifactId>poi-ooxml</artifactId>
@@ -34,7 +34,7 @@ Apache POI 是一个流行的开源 Java 库，它为程序员提供 API 来**�
 
 首先，让我们打开文件并构建适当的工作簿:
 
-```
+```java
 FileInputStream inputStream = new FileInputStream(new File(fileLocation));
 XSSFWorkbook excel = new XSSFWorkbook(inputStream);
 ```
@@ -43,7 +43,7 @@ XSSFWorkbook excel = new XSSFWorkbook(inputStream);
 
 这是在第一张纸上的第一行，我们可以要求 POI 提供第一个空白列:
 
-```
+```java
 XSSFSheet sheet = excel.getSheetAt(0);
 int lastCellNum = sheet.getRow(0).getLastCellNum();
 XSSFCell formulaCell = sheet.getRow(0).createCell(lastCellNum + 1);
@@ -55,19 +55,19 @@ XSSFCell formulaCell = sheet.getRow(0).createCell(lastCellNum + 1);
 
 如前所述，让我们从 a 列的总和中减去 B 列的总和。在 Excel 中，这将是:
 
-```
+```java
 =SUM(A:A)-SUM(B:B)
 ```
 
 我们可以用`setCellFormula`方法将它写入我们的`formulaCell`:
 
-```
+```java
 formulaCell.setCellFormula("SUM(A:A)-SUM(B:B)");
 ```
 
 **现在，这个就不评价公式了。**为此，我们需要使用 POI 的`XSSFFormulaEvaluator`:
 
-```
+```java
 XSSFFormulaEvaluator formulaEvaluator = 
   excel.getCreationHelper().createFormulaEvaluator();
 formulaEvaluator.evaluateFormulaCell(formulaCell);

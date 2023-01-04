@@ -22,7 +22,7 @@
 
 让我们将这个值加倍:
 
-```
+```java
 byte b1 = 100;
 byte b2 = (byte) (b1 << 1);
 ```
@@ -33,7 +33,7 @@ byte b2 = (byte) (b1 << 1);
 
 快速测试可以验证结果:
 
-```
+```java
 assertEquals(-56, b2);
 ```
 
@@ -55,21 +55,21 @@ assertEquals(-56, b2);
 
 让我们从位于`int`数据类型边界的两个数字开始:
 
-```
+```java
 int positive = Integer.MAX_VALUE;
 int negative = Integer.MIN_VALUE;
 ```
 
 如果我们将这些数字作为有符号值进行比较，`positive`显然大于`negative`:
 
-```
+```java
 int signedComparison = Integer.compare(positive, negative);
 assertEquals(1, signedComparison);
 ```
 
 将数字作为无符号值进行比较时，最左边的位被视为最高有效位，而不是符号位。因此，结果是不同的，`positive`小于`negative`:
 
-```
+```java
 int unsignedComparison = Integer.compareUnsigned(positive, negative);
 assertEquals(-1, unsignedComparison);
 ```
@@ -81,7 +81,7 @@ assertEquals(-1, unsignedComparison);
 
 当最左边的位是常规值位时，`MIN_VALUE`比二进制中的`MAX_VALUE`大一个单位。该测试证实:
 
-```
+```java
 assertEquals(negative, positive + 1);
 ```
 
@@ -89,7 +89,7 @@ assertEquals(negative, positive + 1);
 
 就像比较运算一样，**无符号除法和模运算将所有位作为值位处理。**因此，当我们对有符号和无符号数执行这些运算时，商和余数是不同的:
 
-```
+```java
 int positive = Integer.MAX_VALUE;
 int negative = Integer.MIN_VALUE;
 
@@ -108,7 +108,7 @@ assertEquals(1, Integer.remainderUnsigned(negative, positive));
 
 以下测试用例验证解析结果:
 
-```
+```java
 Throwable thrown = catchThrowable(() -> Integer.parseInt("2147483648"));
 assertThat(thrown).isInstanceOf(NumberFormatException.class);
 
@@ -123,7 +123,7 @@ assertEquals(Integer.MAX_VALUE + 1, Integer.parseUnsignedInt("2147483648"));
 
 以下测试用例在两种情况下确认了`MIN_VALUE`的格式化结果——有符号和无符号:
 
-```
+```java
 String signedString = Integer.toString(Integer.MIN_VALUE);
 assertEquals("-2147483648", signedString);
 

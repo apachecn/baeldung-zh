@@ -18,13 +18,13 @@
 
 **`Arrays.toString()`返回一个带有输入数组内容的字符串。**新创建的字符串是一个逗号分隔的数组元素列表，用方括号(“[]”)括起来:
 
-```
+```java
 String[] strArray = { "one", "two", "three" };
 String joinedString = Arrays.toString(strArray);
 assertEquals("[one, two, three]", joinedString);
 ```
 
-```
+```java
 int[] intArray = { 1,2,3,4,5 }; 
 joinedString = Arrays.toString(intArray);
 assertEquals("[1, 2, 3, 4, 5]", joinedString);
@@ -36,7 +36,7 @@ assertEquals("[1, 2, 3, 4, 5]", joinedString);
 
 首先，让我们看看如何使用`StringBuilder.append()`进行这种转换:
 
-```
+```java
 String[] strArray = { "Convert", "Array", "With", "Java" };
 StringBuilder stringBuilder = new StringBuilder();
 for (int i = 0; i < strArray.length; i++) {
@@ -52,14 +52,14 @@ assertEquals("ConvertArrayWithJava", joinedString);
 
 Java 8 和更高版本提供了`String.join()`方法，通过连接元素并用指定的分隔符分隔它们来产生新的字符串，在我们的例子中只是空字符串:
 
-```
+```java
 String joinedString = String.join("", new String[]{ "Convert", "With", "Java", "Streams" });
 assertEquals("ConvertWithJavaStreams", joinedString);
 ```
 
 此外，我们可以使用 Java Streams API 中的`Collectors.joining()`方法，该方法按照与源数组相同的顺序连接来自`Stream`的字符串:
 
-```
+```java
 String joinedString = Arrays
     .stream(new String[]{ "Convert", "With", "Java", "Streams" })
     .collect(Collectors.joining());
@@ -72,7 +72,7 @@ Apache Commons Lang 永远不会被排除在这样的任务之外。
 
 `StringUtils`类有几个`StringUtils.join()`方法，可以用来将字符串数组变成单个字符串:
 
-```
+```java
 String joinedString = StringUtils.join(new String[]{ "Convert", "With", "Apache", "Commons" });
 assertEquals("ConvertWithApacheCommons", joinedString);
 ```
@@ -83,7 +83,7 @@ assertEquals("ConvertWithApacheCommons", joinedString);
 
 例如，我们可以添加一个分隔符或跳过空值:
 
-```
+```java
 String joinedString = Joiner.on("")
         .skipNulls()
         .join(new String[]{ "Convert", "With", "Guava", null });
@@ -98,13 +98,13 @@ assertEquals("ConvertWithGuava", joinedString);
 
 首先，让我们从使用没有分隔符的`String.split()`方法分割空白开始:
 
-```
+```java
 String[] strArray = "loremipsum".split("");
 ```
 
 它产生:
 
-```
+```java
 ["l", "o", "r", "e", "m", "i", "p", "s", "u", "m"]
 ```
 
@@ -114,13 +114,13 @@ String[] strArray = "loremipsum".split("");
 
 在字符串对象上的许多空安全方法中，我们可以找到默认情况下的`StringUtils.split().` ,它假定了一个空白分隔符:
 
-```
+```java
 String[] splitted = StringUtils.split("lorem ipsum dolor sit amet");
 ```
 
 这导致:
 
-```
+```java
 ["lorem", "ipsum", "dolor", "sit", "amet"]
 ```
 
@@ -130,7 +130,7 @@ String[] splitted = StringUtils.split("lorem ipsum dolor sit amet");
 
 最后，我们还可以将`Guava`与它的`Splitter` fluent API 一起使用:
 
-```
+```java
 List<String> resultList = Splitter.on(' ')
     .trimResults()
     .omitEmptyStrings()
@@ -140,7 +140,7 @@ String[] strArray = resultList.toArray(new String[0]);
 
 这会产生:
 
-```
+```java
 ["lorem", "ipsum", "dolor", "sit", "amet"]
 ```
 

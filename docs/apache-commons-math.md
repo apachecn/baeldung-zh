@@ -18,7 +18,7 @@ Apache Commons Math 由数学函数( *erf* 举例)、表示数学概念的结构
 
 如果您使用的是 Maven，只需添加[这个依赖关系](https://web.archive.org/web/20221208143856/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22commons-math3%22):
 
-```
+```java
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-math3</artifactId>
@@ -53,7 +53,7 @@ Apache Commons Math 分为几个包:
 
 包*org . Apache . commons . math 3 . stat*为统计计算提供了几个工具。例如，为了计算平均值、标准差等等，我们可以使用*描述统计*:
 
-```
+```java
 double[] values = new double[] {65, 51 , 16, 11 , 6519, 191 ,0 , 98, 19854, 1, 32};
 DescriptiveStatistics descriptiveStatistics = new DescriptiveStatistics();
 for (double v : values) {
@@ -75,7 +75,7 @@ double standardDeviation = descriptiveStatistics.getStandardDeviation();
 
 下面是如何根据均值为 10、标准差为 3 的正态分布生成随机值:
 
-```
+```java
 NormalDistribution normalDistribution = new NormalDistribution(10, 3);
 double randomValue = normalDistribution.sample(); 
 ```
@@ -92,7 +92,7 @@ double randomValue = normalDistribution.sample();
 
 在这里，我们试图找到*v->(v * v)-2*的根:
 
-```
+```java
 UnivariateFunction function = v -> Math.pow(v, 2) - 2;
 UnivariateSolver solver = new BracketingNthOrderBrentSolver(1.0e-12, 1.0e-8, 5);
 double c = solver.solve(100, function, -10.0, 10.0, 0); 
@@ -106,7 +106,7 @@ double c = solver.solve(100, function, -10.0, 10.0, 0);
 
 集成的工作方式几乎和求根一样:
 
-```
+```java
 UnivariateFunction function = v -> v;
 UnivariateIntegrator integrator = new SimpsonIntegrator(1.0e-12, 1.0e-8, 1, 32);
 double i = integrator.integrate(100, function, 0, 10); 
@@ -118,7 +118,7 @@ double i = integrator.integrate(100, function, 0, 10);
 
 如果我们有一个 AX = B 形式的线性方程组，其中 A 是一个实数矩阵，B 是一个实数向量——Commons Math 提供了表示矩阵和向量的结构，还提供了求解器来计算 X 的值:
 
-```
+```java
 RealMatrix a = new Array2DRowRealMatrix(
   new double[][] { { 2, 3, -2 }, { -1, 7, 6 }, { 4, -3, -5 } },
   false);
@@ -153,7 +153,7 @@ RealVector solution = solver.solve(b);
 
 当使用上面提到的类时，执行一些计算是可能的。例如，下面的代码执行两条 2D 线交点的计算:
 
-```
+```java
 Line l1 = new Line(new Vector2D(0, 0), new Vector2D(1, 1), 0);
 Line l2 = new Line(new Vector2D(0, 1), new Vector2D(1, 1.5), 0);
 
@@ -206,7 +206,7 @@ Commons-Math 提供了在 *java.lang.Math* 中没有实现的标准数学函数(
 
 例如，如果我们想计算 10 的阶乘，我们可以简单地这样做:
 
-```
+```java
 long factorial = CombinatorialUtils.factorial(10); 
 ```
 
@@ -218,7 +218,7 @@ long factorial = CombinatorialUtils.factorial(10);
 
 然后，我们可以计算两个分数的和，并将结果显示为分数的字符串表示形式(即，在“a / b”形式下):
 
-```
+```java
 Fraction lhs = new Fraction(1, 3);
 Fraction rhs = new Fraction(2, 5);
 Fraction sum = lhs.add(rhs);
@@ -228,7 +228,7 @@ String str = new FractionFormat().format(sum);
 
 或者，我们可以快速计算复数的幂:
 
-```
+```java
 Complex first = new Complex(1.0, 3.0);
 Complex second = new Complex(2.0, 5.0);
 

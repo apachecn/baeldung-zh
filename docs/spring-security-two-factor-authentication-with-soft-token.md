@@ -22,7 +22,7 @@
 
 我们将使用一个简单的服务器端[库](https://web.archive.org/web/20220822105735/https://github.com/aerogear/aerogear-otp-java)，通过向我们的`pom.xml`添加以下依赖项来生成/验证一次性密码:
 
-```
+```java
 <dependency>
     <groupId>org.jboss.aerogear</groupId>
     <artifactId>aerogear-otp-java</artifactId>
@@ -34,7 +34,7 @@
 
 接下来，我们将修改用户实体以保存额外信息，如下所示:
 
-```
+```java
 @Entity
 public class User {
     ...
@@ -60,7 +60,7 @@ public class User {
 
 这是我们的`CustomWebAuthenticationDetailsSource`:
 
-```
+```java
 @Component
 public class CustomWebAuthenticationDetailsSource implements 
   AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> {
@@ -74,7 +74,7 @@ public class CustomWebAuthenticationDetailsSource implements
 
 这里是`CustomWebAuthenticationDetails`:
 
-```
+```java
 public class CustomWebAuthenticationDetails extends WebAuthenticationDetails {
 
     private String verificationCode;
@@ -92,7 +92,7 @@ public class CustomWebAuthenticationDetails extends WebAuthenticationDetails {
 
 我们的安全配置:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class LssSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -111,7 +111,7 @@ public class LssSecurityConfig extends WebSecurityConfigurerAdapter {
 
 最后，向我们的登录表单添加额外的参数:
 
-```
+```java
 <labelth:text="#{label.form.login2fa}">
     Google Authenticator Verification Code
 </label>
@@ -124,7 +124,7 @@ public class LssSecurityConfig extends WebSecurityConfigurerAdapter {
 
 接下来，我们需要一个定制的`AuthenticationProvider`来处理额外的参数验证:
 
-```
+```java
 public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
 
     @Autowired
@@ -172,7 +172,7 @@ public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
 
 这是我们的身份验证提供者 bean
 
-```
+```java
 @Bean
 public DaoAuthenticationProvider authProvider() {
     CustomAuthenticationProvider authProvider = new CustomAuthenticationProvider();
@@ -190,13 +190,13 @@ public DaoAuthenticationProvider authProvider() {
 
 首先，我们将这个简单的输入添加到注册表中:
 
-```
+```java
 Use Two step verification <input type="checkbox" name="using2FA" value="true"/>
 ```
 
 然后，在我们的`RegistrationController`中，我们根据用户确认注册后的选择重定向用户:
 
-```
+```java
 @GetMapping("/registrationConfirm")
 public String confirmRegistration(@RequestParam("token") String token, ...) {
     String result = userService.validateVerificationToken(token);
@@ -217,7 +217,7 @@ public String confirmRegistration(@RequestParam("token") String token, ...) {
 
 这是我们的方法:
 
-```
+```java
 public static String QR_PREFIX = 
   "https://chart.googleapis.com/chart?chs=200x200&chld;=M%%7C0&cht;=qr&chl;=";
 
@@ -232,7 +232,7 @@ public String generateQRUrl(User user) {
 
 这是我们的`qrcode.html`:
 
-```
+```java
 <html>
 <body>
 <div id="qr">
@@ -258,7 +258,7 @@ public String generateQRUrl(User user) {
 
 接下来，我们将确保用户可以随时更改他们的登录首选项，如下所示:
 
-```
+```java
 @PostMapping("/user/update/2fa")
 public GenericResponse modifyUser2FA(@RequestParam("use2FA") boolean use2FA) 
   throws UnsupportedEncodingException {
@@ -272,7 +272,7 @@ public GenericResponse modifyUser2FA(@RequestParam("use2FA") boolean use2FA)
 
 这里是`updateUser2FA()`:
 
-```
+```java
 @Override
 public User updateUser2FA(boolean use2FA) {
     Authentication curAuth = SecurityContextHolder.getContext().getAuthentication();
@@ -289,7 +289,7 @@ public User updateUser2FA(boolean use2FA) {
 
 这是前端:
 
-```
+```java
 <div th:if="${#authentication.principal.using2FA}">
     You are using Two-step authentication 
     <a href="#" onclick="disable2FA()">Disable 2FA</a> 

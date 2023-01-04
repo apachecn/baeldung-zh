@@ -30,7 +30,7 @@ Apache POI 库提供了多种处理边界的方法。一种简单的方法是引
 
 要引用一系列单元格，我们可以使用`CellRangeAddress` class:
 
-```
+```java
 CellRangeAddress region = new CellRangeAddress(7, 8, 1, 5);
 ```
 
@@ -38,7 +38,7 @@ CellRangeAddress region = new CellRangeAddress(7, 8, 1, 5);
 
 我们也可以使用`CellRangeAddress`类来引用一个单元格:
 
-```
+```java
 CellRangeAddress region = new CellRangeAddress(1, 1, 5, 5);
 ```
 
@@ -50,7 +50,7 @@ CellRangeAddress region = new CellRangeAddress(1, 1, 5, 5);
 
 我们可以使用`RangeUtil`类设置边框:
 
-```
+```java
 RegionUtil.setBorderTop(BorderStyle.DASH_DOT, region, sheet);
 RegionUtil.setBorderBottom(BorderStyle.DOUBLE, region, sheet);
 RegionUtil.setBorderLeft(BorderStyle.DOTTED, region, sheet);
@@ -63,7 +63,7 @@ RegionUtil.setBorderRight(BorderStyle.SLANTED_DASH_DOT, region, sheet);
 
 我们可以使用`RangeUtil`类设置边框颜色:
 
-```
+```java
 RegionUtil.setTopBorderColor(IndexedColors.RED.index, region, sheet);
 RegionUtil.setBottomBorderColor(IndexedColors.GREEN.index, region, sheet);
 RegionUtil.setLeftBorderColor(IndexedColors.BLUE.index, region, sheet);

@@ -10,7 +10,7 @@
 
 要使用百里香叶，我们需要添加`[spring-boot-starter-thymeleaf](https://web.archive.org/web/20221126214451/https://search.maven.org/search?q=a:spring-boot-starter-thymeleaf%20g:org.springframework.boot)`和`[spring-boot-starter-web](https://web.archive.org/web/20221126214451/https://search.maven.org/search?q=a:spring-boot-starter-web%20g:org.springframework.boot)`依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -29,7 +29,7 @@
 
 `Article`类将由两个`String`字段`name`和`url`组成:
 
-```
+```java
 public class Article {
     private String name;
     private String url;
@@ -42,7 +42,7 @@ public class Article {
 
 让我们快速看一下我们的弹簧控制器:
 
-```
+```java
 @Controller
 @RequestMapping("/api/articles")
 public class ArticlesController {
@@ -71,13 +71,13 @@ public class ArticlesController {
 
 现在，让我们进入百里香 HTML 模板。它应该具有标准的 HTML 文档结构，只带有额外的百里香命名空间定义:
 
-```
+```java
 <html xmlns:th="http://www.thymeleaf.org">
 ```
 
 我们将在接下来的例子中使用它作为模板，我们将只替换`<main>`标签的内容:
 
-```
+```java
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -96,7 +96,7 @@ public class ArticlesController {
 
 有两种方法可以在百里香模板中定义变量。第一种选择是在迭代数组时采用单个元素:
 
-```
+```java
 <div th:each="article : ${articles}">
     <a th:text="${article.name}" th:href="${article.url}"></a>
 </div>
@@ -106,7 +106,7 @@ public class ArticlesController {
 
 另一种方法是基于另一个变量定义一个新变量。例如，我们可以获取 articles 数组的第一个元素:
 
-```
+```java
 <div th:with="firstArticle=${articles[0]}">
     <a th:text="${firstArticle.name}" th:href="${firstArticle.url}"></a>
 </div>
@@ -114,7 +114,7 @@ public class ArticlesController {
 
 或者我们可以创建一个新变量，只保存文章的名称:
 
-```
+```java
 <div th:each="article : ${articles}", th:with="articleName=${article.name}">
     <a th:text="${articleName}" th:href="${article.url}"></a>
 </div>
@@ -124,7 +124,7 @@ public class ArticlesController {
 
 也可以定义多个变量。例如，我们可以创建两个单独的变量来保存文章名称和 URL:
 
-```
+```java
 <div th:each="article : ${articles}" th:with="articleName=${article.name}, articleUrl=${article.url}">
     <a th:text="${articleName}" th:href="${articleUrl}"></a>
 </div>
@@ -138,7 +138,7 @@ public class ArticlesController {
 
 例如，下面的代码是正确的，因为`<a>`元素在`firstDiv`中:
 
-```
+```java
 <div id="firstDiv" th:with="firstArticle=${articles[0]}">
     <a th:text="${firstArticle.name}" th:href="${firstArticle.url}"></a>
 </div>
@@ -146,7 +146,7 @@ public class ArticlesController {
 
 另一方面，当我们试图在另一个`div`中使用`firstArticle`时:
 
-```
+```java
 <div id="firstDiv" th:with="firstArticle=${articles[0]}">
     <a th:text="${firstArticle.name}" th:href="${firstArticle.url}"></a>
 </div>
@@ -157,7 +157,7 @@ public class ArticlesController {
 
 我们会在编译时得到一个异常，说`firstArticle`是`null`:
 
-```
+```java
 org.springframework.expression.spel.SpelEvaluationException: EL1007E: Property or field 'name' cannot be found on null
 ```
 
@@ -169,7 +169,7 @@ org.springframework.expression.spel.SpelEvaluationException: EL1007E: Property o
 
 也可以在给定范围内覆盖变量值:
 
-```
+```java
 <div id="mainDiv" th:with="articles = ${ { articles[0], articles[1] } }">
     <div th:each="article : ${articles}">
         <a th:text="${article.name}" th:href="${article.url}"></a>

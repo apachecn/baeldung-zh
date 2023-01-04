@@ -16,7 +16,7 @@
 
 让我们用一个简单的例子来尝试一下。我们有一张把食物和食物类型联系起来的地图:
 
-```
+```java
 HashMap<String, String> foodItemTypeMap = new HashMap<>();
 foodItemTypeMap.put("Apple", "Fruit");
 foodItemTypeMap.put("Grape", "Fruit");
@@ -28,7 +28,7 @@ foodItemTypeMap.put("Spinach", "Vegetable");
 
 让我们删除带有关键字“Apple”的条目:
 
-```
+```java
 foodItemTypeMap.remove("Apple");
 // Current Map Status: {Potato=Vegetable, Carrot=Vegetable, Grape=Fruit, Mango=Fruit, Spinach=Vegetable}
 ```
@@ -41,7 +41,7 @@ foodItemTypeMap.remove("Apple");
 
 因此，以下操作不会导致任何更新:
 
-```
+```java
 foodItemTypeMap.remove("Grape", "Vegetable");
 // Current Map Status: {Potato=Vegetable, Carrot=Vegetable, Grape=Fruit, Mango=Fruit, Spinach=Vegetable}
 ```
@@ -60,7 +60,7 @@ foodItemTypeMap.remove("Grape", "Vegetable");
 
 让我们使用这种方法从`foodItemTypeMap`中删除一个条目:
 
-```
+```java
 Iterator<Entry<String, String>> iterator = foodItemTypeMap.entrySet().iterator();
 while (iterator.hasNext()) {
     if (iterator.next().getKey().equals("Carrot"))
@@ -72,7 +72,7 @@ while (iterator.hasNext()) {
 
 **我们可以在 Java 8 或更高版本中使用`removeIf`操作**获得相同的结果:
 
-```
+```java
 foodItemTypeMap.entrySet()
   .removeIf(entry -> entry.getKey().equals("Grape"));
 ```
@@ -85,7 +85,7 @@ foodItemTypeMap.entrySet()
 
 让我们使用基本的`remove `方法来删除`ConcurrentHashMap`中的条目:
 
-```
+```java
 ConcurrentHashMap<String, String> foodItemTypeConcMap = new ConcurrentHashMap<>();
 foodItemTypeConcMap.put("Apple", "Fruit");
 foodItemTypeConcMap.put("Carrot", "Vegetable");

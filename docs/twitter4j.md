@@ -23,7 +23,7 @@
 
 我们需要从在我们的`pom.xml`中定义 Twitter4J 的依赖关系开始:
 
-```
+```java
 <dependency>
     <groupId>org.twitter4j</groupId>
     <artifactId>twitter4j-stream</artifactId>
@@ -43,7 +43,7 @@
 
 我们可以使用一个名为`twitter4j.properties`的纯文本文件来保存我们的配置细节。让我们看看需要提供的属性:
 
-```
+```java
 oauth.consumerKey =       // your key
 oauth.consumerSecret =    // your secret
 oauth.accessToken =       // your token
@@ -56,7 +56,7 @@ oauth.accessTokenSecret = // your token secret
 
 我们还可以使用一个 [ConfigurationBuilder](https://web.archive.org/web/20220814014500/http://twitter4j.org/ja/javadoc/twitter4j/conf/ConfigurationBuilder.html) 类在 Java 中以编程方式配置 Twitter4J:
 
-```
+```java
 ConfigurationBuilder cb = new ConfigurationBuilder();
 cb.setDebugEnabled(true)
   .setOAuthConsumerKey("your consumer key")
@@ -73,7 +73,7 @@ Twitter twitter = tf.getInstance();
 
 通过环境变量进行配置是我们的另一种选择。如果我们这样做，请注意，我们需要在变量中添加一个`twitter4j`前缀:
 
-```
+```java
 $ export twitter4j.oauth.consumerKey =       // your key
 $ export twitter4j.oauth.consumerSecret =    // your secret
 $ export twitter4j.oauth.accessToken =       // your access token
@@ -90,7 +90,7 @@ $ export twitter4j.oauth.accessTokenSecret = // your access token secret
 
 我们先在 Twitter 上更新一条推文:
 
-```
+```java
 public String createTweet(String tweet) throws TwitterException {
     Twitter twitter = getTwitterinstance();
     Status status = twitter.updateStatus("creating baeldung API");
@@ -104,7 +104,7 @@ public String createTweet(String tweet) throws TwitterException {
 
 我们还可以从用户的时间表中获取推文列表:
 
-```
+```java
 public List<String> getTimeLine() throws TwitterException {
     Twitter twitter = getTwitterinstance();
 
@@ -120,7 +120,7 @@ public List<String> getTimeLine() throws TwitterException {
 
 也可以使用 Twitter4j 向关注者发送和接收直接消息:
 
-```
+```java
 public static String sendDirectMessage(String recipientName, String msg) 
   throws TwitterException {
 
@@ -143,7 +143,7 @@ public static String sendDirectMessage(String recipientName, String msg)
 
 让我们看看如何执行这样的搜索:
 
-```
+```java
 public static List<String> searchtweets() throws TwitterException {
 
     Twitter twitter = getTwitterinstance();
@@ -164,7 +164,7 @@ public static List<String> searchtweets() throws TwitterException {
 
 让我们创建一个侦听器来侦听来自用户的 tweet 更新:
 
-```
+```java
 public static void streamFeed() {
 
     StatusListener listener = new StatusListener() {

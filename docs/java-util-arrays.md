@@ -16,7 +16,7 @@
 
 要使用`copyOfRange`，我们需要我们的原始数组以及我们想要复制的开始索引(包含)和结束索引(不包含):
 
-```
+```java
 String[] intro = new String[] { "once", "upon", "a", "time" };
 String[] abridgement = Arrays.copyOfRange(storyIntro, 0, 3); 
 
@@ -26,7 +26,7 @@ assertFalse(Arrays.equals(intro, abridgement));
 
 为了使用`copyOf`，我们采用 *intro* 和一个目标数组大小，我们将得到一个该长度的新数组:
 
-```
+```java
 String[] revised = Arrays.copyOf(intro, 3);
 String[] expanded = Arrays.copyOf(intro, 5);
 
@@ -40,7 +40,7 @@ assertNull(expanded[4]);
 
 另一种方法，我们可以创建一个固定长度的数组，就是`fill, `，当我们想要一个所有元素都相同的数组时，这很有用:
 
-```
+```java
 String[] stutter = new String[3];
 Arrays.fill(stutter, "once");
 
@@ -60,7 +60,7 @@ assertTrue(Stream.of(stutter)
 
 我们可以使用`equals`通过大小和内容进行简单的数组比较。如果我们添加一个 null 作为元素之一，内容检查将失败:
 
-```
+```java
 assertTrue(
   Arrays.equals(new String[] { "once", "upon", "a", "time" }, intro));
 assertFalse(
@@ -69,7 +69,7 @@ assertFalse(
 
 当我们有嵌套或多维数组时，我们不仅可以使用`deepEquals` 来检查顶级元素，还可以递归地执行检查:
 
-```
+```java
 Object[] story = new Object[] 
   { intro, new String[] { "chapter one", "chapter two" }, end };
 Object[] copy = new Object[] 
@@ -89,7 +89,7 @@ assertFalse(Arrays.equals(story, copy));
 
 `hashCode`的实现将给我们推荐给 Java 对象的`equals` / `hashCode`契约的另一部分。我们使用`hashCode` 根据数组的内容计算一个整数:
 
-```
+```java
 Object[] looping = new Object[]{ intro, intro }; 
 int hashBefore = Arrays.hashCode(looping);
 int deepHashBefore = Arrays.deepHashCode(looping);
@@ -97,20 +97,20 @@ int deepHashBefore = Arrays.deepHashCode(looping);
 
 现在，我们将原始数组的一个元素设置为 null，并重新计算哈希值:
 
-```
+```java
 intro[3] = null;
 int hashAfter = Arrays.hashCode(looping); 
 ```
 
 或者，`deepHashCode`检查嵌套数组中元素和内容的数量是否匹配。如果我们用`deepHashCode`重新计算:
 
-```
+```java
 int deepHashAfter = Arrays.deepHashCode(looping);
 ```
 
 现在，我们可以看到这两种方法的区别:
 
-```
+```java
 assertEquals(hashAfter, hashBefore);
 assertNotEquals(deepHashAfter, deepHashBefore); 
 ```
@@ -125,7 +125,7 @@ assertNotEquals(deepHashAfter, deepHashBefore);
 
 如果我们的元素是原语或者它们实现了`Comparable`，我们可以使用`sort `来执行内嵌排序:
 
-```
+```java
 String[] sorted = Arrays.copyOf(intro, 4);
 Arrays.sort(sorted);
 
@@ -144,7 +144,7 @@ assertArrayEquals(
 
 在一个未排序的数组中搜索是线性的，但是如果我们有一个已排序的数组，那么我们可以在`O(log n)`中做，这就是我们可以用`binarySearch:`做的
 
-```
+```java
 int exact = Arrays.binarySearch(sorted, "time");
 int caseInsensitive = Arrays.binarySearch(sorted, "TiMe", String::compareToIgnoreCase);
 
@@ -165,7 +165,7 @@ assertEquals(exact, caseInsensitive);
 
 `stream`让我们能够完全访问阵列的流 API:
 
-```
+```java
 Assert.assertEquals(Arrays.stream(intro).count(), 4);
 
 exception.expect(ArrayIndexOutOfBoundsException.class);
@@ -182,13 +182,13 @@ Arrays.stream(intro, 2, 1).count();
 
 我们获得原始数组的可读版本的一个好方法是使用`toString:`
 
-```
+```java
 assertEquals("[once, upon, a, time]", Arrays.toString(storyIntro)); 
 ```
 
 同样**我们必须使用深度版本来打印嵌套数组的内容**:
 
-```
+```java
 assertEquals(
   "[[once, upon, a, time], [chapter one, chapter two], [the, end]]",
   Arrays.deepToString(story));
@@ -198,7 +198,7 @@ assertEquals(
 
 在所有的`Arrays`方法中，最方便我们使用的是`asList.`,我们有一个简单的方法将数组转换成列表:
 
-```
+```java
 List<String> rets = Arrays.asList(storyIntro);
 
 assertTrue(rets.contains("upon"));
@@ -214,7 +214,7 @@ assertEquals(rets.size(), 4);
 
 使用`setAll`，我们可以用一个函数接口设置一个数组的所有元素。生成器实现将位置索引作为参数:
 
-```
+```java
 String[] longAgo = new String[4];
 Arrays.setAll(longAgo, i -> this.getWord(i)); 
 assertArrayEquals(longAgo, new String[]{"a","long","time","ago"});
@@ -230,7 +230,7 @@ assertArrayEquals(longAgo, new String[]{"a","long","time","ago"});
 
 如果运算符执行加法，如下例所示，`[1, 2, 3, 4]` 将导致`[1, 3, 6, 10]:`
 
-```
+```java
 int[] arr = new int[] { 1, 2, 3, 4};
 Arrays.parallelPrefix(arr, (left, right) -> left + right);
 assertThat(arr, is(new int[] { 1, 3, 6, 10}));
@@ -238,7 +238,7 @@ assertThat(arr, is(new int[] { 1, 3, 6, 10}));
 
 此外，我们可以为操作指定一个子范围:
 
-```
+```java
 int[] arri = new int[] { 1, 2, 3, 4, 5 };
 Arrays.parallelPrefix(arri, 1, 4, (left, right) -> left + right);
 assertThat(arri, is(new int[] { 1, 2, 5, 9, 5 }));
@@ -248,7 +248,7 @@ assertThat(arri, is(new int[] { 1, 2, 5, 9, 5 }));
 
 对于非关联函数:
 
-```
+```java
 int nonassociativeFunc(int left, int right) {
     return left + right*left;
 }
@@ -256,7 +256,7 @@ int nonassociativeFunc(int left, int right) {
 
 使用`parallelPrefix`会产生不一致的结果:
 
-```
+```java
 @Test
 public void whenPrefixNonAssociative_thenError() {
     boolean consistent = true;
@@ -282,7 +282,7 @@ public void whenPrefixNonAssociative_thenError() {
 
 并行前缀计算通常比顺序循环更有效，尤其是对于大型数组。在采用 [JMH](/web/20220525140934/https://www.baeldung.com/java-microbenchmark-harness) 的英特尔至强处理器(6 核)上运行微基准测试时，我们可以看到巨大的性能提升:
 
-```
+```java
 Benchmark                      Mode        Cnt       Score   Error        Units
 largeArrayLoopSum             thrpt         5        9.428 ± 0.075        ops/s
 largeArrayParallelPrefixSum   thrpt         5       15.235 ± 0.075        ops/s
@@ -294,7 +294,7 @@ largeArrayParallelPrefixSum   avgt          5       65.676 ± 0.828        ops/s
 
 下面是基准代码:
 
-```
+```java
 @Benchmark
 public void largeArrayLoopSum(BigArray bigArray, Blackhole blackhole) {
   for (int i = 0; i < ARRAY_SIZE - 1; i++) {

@@ -16,7 +16,7 @@
 
 创建一个新的 Spring Boot 项目，并将这些依赖项添加到`pom.xml:`
 
-```
+```java
 <dependency>
     <groupId>io.zipkin.java</groupId>
     <artifactId>zipkin-server</artifactId>
@@ -34,7 +34,7 @@
 
 为了启用`Zipkin`服务器，我们必须向主应用程序类添加一些注释:
 
-```
+```java
 @SpringBootApplication
 @EnableZipkinServer
 public class ZipkinApplication {...}
@@ -48,7 +48,7 @@ public class ZipkinApplication {...}
 
 让我们给它添加这些属性:
 
-```
+```java
 spring.cloud.config.name=zipkin
 spring.cloud.config.discovery.service-id=config
 spring.cloud.config.discovery.enabled=true
@@ -63,7 +63,7 @@ eureka.client.serviceUrl.defaultZone=
 
 在这个目录中，我们添加一个名为`zipkin.properties`的文件，并添加以下内容:
 
-```
+```java
 spring.application.name=zipkin
 server.port=9411
 eureka.client.region=default
@@ -89,7 +89,7 @@ logging.level.org.springframework.web=debug
 
 为了开始向我们的`Zipkin`服务器发送跨度，我们将把这个依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-zipkin</artifactId>
@@ -102,7 +102,7 @@ logging.level.org.springframework.web=debug
 
 我们需要添加一些配置，以便**预订服务**将使用`Eureka` 找到我们的`Zipkin` 服务。打开`BookServiceApplication.java`并将这段代码添加到文件中:
 
-```
+```java
 @Autowired
 private EurekaClient eurekaClient;
 
@@ -148,7 +148,7 @@ public ZipkinSpanReporter makeZipkinSpanReporter() {
 
 现在让我们向配置存储库中的`book-service.properties`文件添加一些配置:
 
-```
+```java
 spring.sleuth.sampler.percentage=1.0
 spring.sleuth.web.skipPattern=(^cleanup.*)
 ```
@@ -165,7 +165,7 @@ spring.sleuth.web.skipPattern=(^cleanup.*)
 
 遵循相同的步骤**预订服务**。但是当向网关*添加配置时。属性*改为添加这些:
 
-```
+```java
 spring.sleuth.sampler.percentage=1.0
 spring.sleuth.web.skipPattern=(^cleanup.*|.+favicon.*)
 ```

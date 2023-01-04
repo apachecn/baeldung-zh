@@ -18,7 +18,7 @@
 
 当将一个`byte`数组转换成一个`int`值时，我们使用`<<`(左移)运算符:
 
-```
+```java
 int value = 0;
 for (byte b : bytes) {
     value = (value << 8) + (b & 0xFF);
@@ -29,7 +29,7 @@ for (byte b : bytes) {
 
 为了验证转换的正确性，让我们定义两个常数:
 
-```
+```java
 byte[] INT_BYTE_ARRAY = new byte[] {
     (byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE
 };
@@ -40,7 +40,7 @@ int INT_VALUE = 0xCAFEBABE;
 
 然后，让我们检查一下这个转换是否正确:
 
-```
+```java
 int value = convertByteArrayToIntUsingShiftOperator(INT_BYTE_ARRAY);
 
 assertEquals(INT_VALUE, value);
@@ -52,7 +52,7 @@ assertEquals(INT_VALUE, value);
 
 当将一个`int`值转换为一个`byte`数组时，我们可以使用`>>`(有符号右移)或`>>>`(无符号右移)运算符:
 
-```
+```java
 byte[] bytes = new byte[Integer.BYTES];
 int length = bytes.length;
 for (int i = 0; i < length; i++) {
@@ -65,7 +65,7 @@ for (int i = 0; i < length; i++) {
 
 然后，我们可以检查上述转换的正确性:
 
-```
+```java
 byte[] bytes = convertIntToByteArrayUsingShiftOperator(INT_VALUE);
 
 assertArrayEquals(INT_BYTE_ARRAY, bytes);
@@ -77,7 +77,7 @@ assertArrayEquals(INT_BYTE_ARRAY, bytes);
 
 **当[将一个`byte`数组转换成一个`float`](/web/20221008082518/https://www.baeldung.com/java-convert-float-to-byte-array) 数组时，我们利用了`Float.intBitsToFloat()`方法**:
 
-```
+```java
 // convert bytes to int
 int intValue = 0;
 for (byte b : bytes) {
@@ -92,7 +92,7 @@ float value = Float.intBitsToFloat(intValue);
 
 为了验证转换的正确性，让我们定义两个常数:
 
-```
+```java
 byte[] FLOAT_BYTE_ARRAY = new byte[] {
     (byte) 0x40, (byte) 0x48, (byte) 0xF5, (byte) 0xC3
 };
@@ -101,7 +101,7 @@ float FLOAT_VALUE = 3.14F;
 
 然后，让我们检查一下这个转换是否正确:
 
-```
+```java
 float value = convertByteArrayToFloatUsingShiftOperator(FLOAT_BYTE_ARRAY);
 
 assertEquals(Float.floatToIntBits(FLOAT_VALUE), Float.floatToIntBits(value));
@@ -113,7 +113,7 @@ assertEquals(Float.floatToIntBits(FLOAT_VALUE), Float.floatToIntBits(value));
 
 **当把一个`float`转换成一个`byte`数组时，我们可以利用`Float.floatToIntBits()`方法**:
 
-```
+```java
 // convert float to int
 int intValue = Float.floatToIntBits(value);
 
@@ -128,7 +128,7 @@ for (int i = 0; i < length; i++) {
 
 然后，让我们检查一下这个转换是否正确:
 
-```
+```java
 byte[] bytes = convertFloatToByteArrayUsingShiftOperator(FLOAT_VALUE);
 
 assertArrayEquals(FLOAT_BYTE_ARRAY, bytes);
@@ -144,7 +144,7 @@ assertArrayEquals(FLOAT_BYTE_ARRAY, bytes);
 
 现在，我们使用`ByteBuffer`类将一个`byte`数组转换成一个`int`值:
 
-```
+```java
 ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
 buffer.put(bytes);
 buffer.rewind();
@@ -153,7 +153,7 @@ int value = buffer.getInt();
 
 然后，我们使用`ByteBuffer`类将一个`int`值转换成一个`byte`数组:
 
-```
+```java
 ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
 buffer.putInt(value);
 buffer.rewind();
@@ -173,7 +173,7 @@ byte[] bytes = buffer.array();
 
 此外，`ByteBuffer.wrap(byte[])`方法允许我们重用现有的`byte`数组，而无需创建新的数组:
 
-```
+```java
 ByteBuffer.wrap(bytes).getFloat();
 ```
 
@@ -187,13 +187,13 @@ ByteBuffer.wrap(bytes).getFloat();
 
 现在，让我们使用`BigInteger`类将一个`byte`数组转换成一个`int`值:
 
-```
+```java
 int value = new BigInteger(bytes).intValue();
 ```
 
 类似地，`BigInteger`类有一个`longValue()`方法将一个`byte`数组转换成一个`long`值:
 
-```
+```java
 long value = new BigInteger(bytes).longValue();
 ```
 
@@ -201,7 +201,7 @@ long value = new BigInteger(bytes).longValue();
 
 当将一个`int`或一个`long`值转换成一个`byte`数组时，我们可以使用相同的代码片段:
 
-```
+```java
 byte[] bytes = BigInteger.valueOf(value).toByteArray();
 ```
 
@@ -211,14 +211,14 @@ byte[] bytes = BigInteger.valueOf(value).toByteArray();
 
 虽然`BigInteger`类有一个`floatValue()`方法，但是我们不能像预期的那样用它将一个`byte`数组转换成一个`float`值。那么，我们该怎么办呢？我们可以使用一个`int`值作为中间步骤，将一个`byte`数组转换成一个`float`值:
 
-```
+```java
 int intValue = new BigInteger(bytes).intValue();
 float value = Float.intBitsToFloat(intValue);
 ```
 
 同样，我们可以将一个`float`值转换成一个`byte`数组:
 
-```
+```java
 int intValue = Float.floatToIntBits(value);
 byte[] bytes = BigInteger.valueOf(intValue).toByteArray();
 ```
@@ -233,19 +233,19 @@ byte[] bytes = BigInteger.valueOf(intValue).toByteArray();
 
 在 Guava 中，`com.google.common.primitives`包中的`Ints`类包含一个`fromByteArray()`方法。因此，我们很容易将一个`byte`数组转换成一个`int`值:
 
-```
+```java
 int value = Ints.fromByteArray(bytes);
 ```
 
 `Ints`类也有一个`toByteArray()`方法，可以用来将一个`int`值转换成一个`byte`数组:
 
-```
+```java
 byte[] bytes = Ints.toByteArray(value);
 ```
 
 并且，`Longs`类在使用上类似于`Ints`类:
 
-```
+```java
 long value = Longs.fromByteArray(bytes);
 byte[] bytes = Longs.toByteArray(value);
 ```
@@ -268,7 +268,7 @@ byte[] bytes = Longs.toByteArray(value);
 
 现在，让我们将一个`byte`数组转换成一个`int`值:
 
-```
+```java
 byte[] copyBytes = Arrays.copyOf(bytes, bytes.length);
 ArrayUtils.reverse(copyBytes);
 int value = Conversion.byteArrayToInt(copyBytes, 0, 0, 0, copyBytes.length);
@@ -278,7 +278,7 @@ int value = Conversion.byteArrayToInt(copyBytes, 0, 0, 0, copyBytes.length);
 
 然后，让我们将一个`int`值转换成一个`byte`数组:
 
-```
+```java
 byte[] bytes = new byte[Integer.BYTES];
 Conversion.intToByteArray(value, 0, bytes, 0, bytes.length);
 ArrayUtils.reverse(bytes);

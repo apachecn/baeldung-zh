@@ -12,7 +12,7 @@ Spring Boot 附带了一个嵌入式 Tomcat 服务器，非常方便。但是，
 
 首先，我们来创建一个 REST API。我们将定义一个`GreetingsController`来问候用户:
 
-```
+```java
 @GetMapping("/greetings/{username}")
 public String getGreetings(@PathVariable("username") String userName) {
     return "Hello " + userName + ", Good day...!!!";
@@ -34,13 +34,13 @@ public String getGreetings(@PathVariable("username") String userName) {
 
 不过，我们可以通过向`application.properties`添加一个属性来轻松启用它们:
 
-```
+```java
 server.tomcat.accesslog.enabled=true
 ```
 
 类似地，我们可以使用 VM 参数来启用访问日志:
 
-```
+```java
 java -jar -Dserver.tomcat.basedir=tomcat -Dserver.tomcat.accesslog.enabled=true app.jar
 ```
 
@@ -50,14 +50,14 @@ java -jar -Dserver.tomcat.basedir=tomcat -Dserver.tomcat.accesslog.enabled=true 
 
 因此，启用该属性后，我们将在运行的应用程序中看到如下内容:
 
-```
+```java
 0:0:0:0:0:0:0:1 - - [13/May/2019:23:14:51 +0530] "GET /greetings/Harry HTTP/1.1" 200 27
 0:0:0:0:0:0:0:1 - - [13/May/2019:23:17:23 +0530] "GET /greetings/Harry HTTP/1.1" 200 27
 ```
 
 这些是访问日志，格式如下:
 
-```
+```java
 %h %l %u %t \"%r\" %>s %b
 ```
 
@@ -81,7 +81,7 @@ java -jar -Dserver.tomcat.basedir=tomcat -Dserver.tomcat.accesslog.enabled=true 
 
 首先，要更改默认日志文件名:
 
-```
+```java
 server.tomcat.accesslog.suffix=.log
 server.tomcat.accesslog.prefix=access_log
 server.tomcat.accesslog.file-date-format=.yyyy-MM-dd
@@ -89,14 +89,14 @@ server.tomcat.accesslog.file-date-format=.yyyy-MM-dd
 
 此外，我们可以更改日志文件的位置:
 
-```
+```java
 server.tomcat.basedir=tomcat
 server.tomcat.accesslog.directory=logs
 ```
 
 最后，我们可以覆盖日志在日志文件中的写入方式:
 
-```
+```java
 server.tomcat.accesslog.pattern=common
 ```
 
@@ -108,14 +108,14 @@ Tomcat 服务器的内部日志对于解决任何服务器端的问题都非常�
 
 要查看这些日志，我们必须在`application.properties`中添加以下日志记录配置:
 
-```
+```java
 logging.level.org.apache.tomcat=DEBUG
 logging.level.org.apache.catalina=DEBUG
 ```
 
 然后我们会看到这样的情况:
 
-```
+```java
 2019-05-17 15:41:07.261 DEBUG 31160 --- [0124-Acceptor-0] o.apache.tomcat.util.threads.LimitLatch  : Counting up[http-nio-40124-Acceptor-0] latch=1
 2019-05-17 15:41:07.262 DEBUG 31160 --- [0124-Acceptor-0] o.apache.tomcat.util.threads.LimitLatch  : Counting up[http-nio-40124-Acceptor-0] latch=2
 2019-05-17 15:41:07.278 DEBUG 31160 --- [io-40124-exec-1] org.apache.tomcat.util.modeler.Registry  : Managed= Tomcat:type=RequestProcessor,worker="http-nio-40124",name=HttpRequest1

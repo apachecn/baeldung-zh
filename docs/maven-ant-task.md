@@ -18,7 +18,7 @@ Maven 插件允许我们在 Maven 中运行 Ant 任务。
 
 要使用这个插件，我们需要将它添加到我们的 Maven 项目的构建插件中:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-antrun-plugin</artifactId>
@@ -37,7 +37,7 @@ Maven 插件允许我们在 Maven 中运行 Ant 任务。
 
 在下面的例子中，我们定义了一个绑定到 Maven 的*包*阶段的执行，它将从项目的目标目录中压缩最终的 JAR 文件:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-ant-run-plugin</artifactId>
@@ -63,7 +63,7 @@ Maven 插件允许我们在 Maven 中运行 Ant 任务。
 
 要执行插件，我们运行命令:
 
-```
+```java
 mvn package
 ```
 
@@ -77,7 +77,7 @@ mvn package
 
 下面是一个项目的 Ant `build.xml`文件的示例，其中定义了一个目标，将 zip 文件从项目的基本目录上传到 FTP 服务器:
 
-```
+```java
 <project name="MyProject" default="dist" basedir=".">
    <description>Project Description</description>
 
@@ -100,7 +100,7 @@ mvn package
 
 为了使用上面的`build.xml`文件，我们在插件声明中定义了执行:
 
-```
+```java
 <execution>
     <id>deploy-artifact</id>
     <phase>install</phase>
@@ -119,7 +119,7 @@ mvn package
 
 由于`ftp`任务不包含在`ant.jar`中，我们需要将 Ant 的可选依赖项添加到我们的插件配置中:
 
-```
+```java
 <plugin>
     <executions>
        ...
@@ -141,7 +141,7 @@ mvn package
 
 要执行插件，我们运行命令:
 
-```
+```java
 mvn install
 ```
 

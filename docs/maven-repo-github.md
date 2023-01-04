@@ -18,7 +18,7 @@
 
 这个项目的`pom.xml`如下:
 
-```
+```java
 <project  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -46,7 +46,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 
 我们将把本地回购定义添加到我们的`pom.xml`:
 
-```
+```java
 <distributionManagement> 
     <repository>
         <id>internal.repo</id> 
@@ -58,7 +58,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 
 现在，让**将 [`maven-deploy-plugin`](https://web.archive.org/web/20220717092619/https://maven.apache.org/plugins/maven-deploy-plugin/) 配置**添加到我们的`pom.xml`中。我们将使用这个插件将我们的工件添加到目录`${project.build.directory}/mvn-artifact`中的本地存储库中:
 
-```
+```java
 <plugin>
     <artifactId>maven-deploy-plugin</artifactId>
     <version>2.8.2</version>
@@ -72,7 +72,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 
 另外，**如果我们想将带有 Maven 工件的源文件推送到 GitHub，那么我们也需要包含源代码插件**:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-source-plugin</artifactId>
@@ -102,7 +102,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 
 要使用 GitHub 用户名和密码，我们将在我们的`settings.xml`中配置它们:
 
-```
+```java
 <settings>
     <servers>
         <server>
@@ -118,7 +118,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 
 **使用 GitHub API 或命令行时，推荐的认证方式是使用[个人访问令牌(PAT)](https://web.archive.org/web/20220717092619/https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)** :
 
-```
+```java
 <settings>
     <servers> 
         <server>
@@ -133,7 +133,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 
 最后一步是**配置 [`site-maven plugin`](https://web.archive.org/web/20220717092619/https://github.com/github/maven-plugins) 推送我们本地的分期回购**。该暂存回购存在于`target`目录中:
 
-```
+```java
 <plugin>
     <groupId>com.github.github</groupId>
     <artifactId>site-maven-plugin</artifactId>

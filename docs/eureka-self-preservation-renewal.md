@@ -28,7 +28,7 @@
 
 首先，通过用`@EnableEurekaServer`注释我们的 Spring Boot 主类来创建 Eureka 服务器:
 
-```
+```java
 @SpringBootApplication
 @EnableEurekaServer
 public class EurekaServerApplication {
@@ -40,7 +40,7 @@ public class EurekaServerApplication {
 
 但是现在，让我们添加启动服务器的基本配置:
 
-```
+```java
 eureka.client.registerWithEureka=false
 eureka.client.fetchRegistry=false
 eureka.instance.hostname=localhost
@@ -69,7 +69,7 @@ eureka.instance.hostname=localhost
 
 现在，让我们创建一个 Eureka 客户端并旋转六个实例:
 
-```
+```java
 @SpringBootApplication
 @EnableEurekaClient
 public class EurekaClientApplication {
@@ -82,7 +82,7 @@ public class EurekaClientApplication {
 
 以下是客户端的配置:
 
-```
+```java
 spring.application.name=Eurekaclient
 server.port=${PORT:0}
 eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka

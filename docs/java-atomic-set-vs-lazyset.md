@@ -22,7 +22,7 @@ Java 中的原子变量允许我们轻松地对类引用或字段执行线程安
 
 为了展示上述功能，让我们创建一个最小的[生产者-消费者](/web/20221208143845/https://www.baeldung.com/java-producer-consumer-problem)控制台应用程序:
 
-```
+```java
 public class Application {
 
     AtomicInteger atomic = new AtomicInteger(0);
@@ -52,7 +52,7 @@ public class Application {
 
 在控制台中，我们应该看到一系列“设置”和“获取”消息:
 
-```
+```java
 Set: 3
 Set: 4
 Get: 4
@@ -71,7 +71,7 @@ Get: 5
 
 为了看到这一点，让我们在之前的控制台应用程序中更改第一个线程的`Runnable`:
 
-```
+```java
 for (int i = 0; i < 10; i++) {
     app.atomic.lazySet(i);
     System.out.println("Set: " + i);
@@ -81,7 +81,7 @@ for (int i = 0; i < 10; i++) {
 
 新的“设置”和“获取”消息可能不总是递增的:
 
-```
+```java
 Set: 4
 Set: 5
 Get: 4

@@ -16,7 +16,7 @@
 
 系统属性是 Java 运行时提供的键值对。`java.version`是提供 Java 版本的系统属性。让我们定义一个获取版本的方法:
 
-```
+```java
 public void givenJava_whenUsingSystemProp_thenGetVersion() {
     int expectedVersion = 8;
     String[] versionElements = System.getProperty("java.version").split("\\.");
@@ -37,7 +37,7 @@ public void givenJava_whenUsingSystemProp_thenGetVersion() {
 
 获得 Java 版本的第二种方法是通过 [Apache Commons Lang 3](/web/20221128042423/https://www.baeldung.com/java-commons-lang-3) 库。我们首先需要将 [`commons-lang3`](https://web.archive.org/web/20221128042423/https://search.maven.org/search?q=g:org.apache.commons%20AND%20a:commons-lang3&core=gav) Maven 依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -47,7 +47,7 @@ public void givenJava_whenUsingSystemProp_thenGetVersion() {
 
 我们将使用 [`SystemUtils`](/web/20221128042423/https://www.baeldung.com/java-commons-lang-3#the-systemutils-class) 类来获取关于 Java 平台的信息。让我们为此定义一个方法:
 
-```
+```java
 public void givenJava_whenUsingCommonsLang_thenGetVersion() {
     int expectedVersion = 8;
     String[] versionElements = SystemUtils.JAVA_SPECIFICATION_VERSION.split("\\.");
@@ -68,7 +68,7 @@ public void givenJava_whenUsingCommonsLang_thenGetVersion() {
 
 在 Java 9 及以上版本中，我们可以使用`Runtime.version()`来获取版本信息。让我们为此定义一个方法:
 
-```
+```java
 public void givenJava_whenUsingRuntime_thenGetVersion(){
     String expectedVersion = "15";
     Runtime.Version runtimeVersion = Runtime.version();

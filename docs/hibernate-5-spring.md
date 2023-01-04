@@ -18,7 +18,7 @@
 
 让我们首先向我们的`pom.xml`添加必要的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>
@@ -28,7 +28,7 @@
 
 [spring-orm 模块](https://web.archive.org/web/20220707035940/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework%22%20AND%20a%3A%22spring-orm%22)提供了与 Hibernate 的 spring 集成:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-orm</artifactId>
@@ -38,7 +38,7 @@
 
 为了简单起见，我们将使用 [H2](https://web.archive.org/web/20220707035940/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.h2database%22%20AND%20a%3A%22h2%22) 作为数据库:
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId> 
     <artifactId>h2</artifactId>
@@ -48,7 +48,7 @@
 
 最后，我们将使用 [Tomcat JDBC 连接池](https://web.archive.org/web/20220707035940/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.tomcat%22%20AND%20a%3A%22tomcat-dbcp%22)，它比 Spring 提供的`DriverManagerDataSource`更适合生产目的:
 
-```
+```java
 <dependency>
     <groupId>org.apache.tomcat</groupId>
     <artifactId>tomcat-dbcp</artifactId>
@@ -72,7 +72,7 @@
 
 让我们创建我们的`HibernateConfig`类来**用 Spring** 配置 Hibernate 5:
 
-```
+```java
 @Configuration
 @EnableTransactionManagement
 public class HibernateConf {
@@ -123,7 +123,7 @@ public class HibernateConf {
 
 作为第二个选择，我们还可以用基于 XML 的配置来配置 Hibernate 5:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans >
 
@@ -164,7 +164,7 @@ public class HibernateConf {
 
 **为了将 XML 引导到 Spring 上下文**，如果应用程序配置了 Java 配置，我们可以使用一个简单的 Java 配置文件:
 
-```
+```java
 @Configuration
 @EnableTransactionManagement
 @ImportResource({"classpath:hibernate5Configuration.xml"})
@@ -179,7 +179,7 @@ public class HibernateXMLConf {
 
 至此，Hibernate 5 已经完全配置了 Spring，我们可以在任何需要的时候直接**注入原始 Hibernate `SessionFactory`** :
 
-```
+```java
 public abstract class BarHibernateDAO {
 
     @Autowired

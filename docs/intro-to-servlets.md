@@ -18,7 +18,7 @@ Servlet 由另一个名为 **`Servlet Container.`** 的 Java 应用程序控制�
 
 为了在我们的 web 应用程序中添加 Servlet 支持，`javax`。`servlet-api`需要依赖关系:
 
-```
+```java
 <dependency>
     <groupId>javax.servlet</groupId>
     <artifactId>javax.servlet-api</artifactId>
@@ -44,7 +44,7 @@ Servlet 由另一个名为 **`Servlet Container.`** 的 Java 应用程序控制�
 
 在 servlet 可以接收任何请求之前，`init`方法必须成功完成。如果`init`方法抛出一个`ServletException`或者在 Web 服务器定义的时间段内没有返回，servlet 容器就不能将 servlet 投入使用。
 
-```
+```java
 public void init() throws ServletException {
     // Initialization code like set up database etc....
 }
@@ -56,7 +56,7 @@ public void init() throws ServletException {
 
 容器调用`service()`方法来处理来自客户端的请求，解释 HTTP 请求类型(`GET`、`POST`、`PUT`、`DELETE`等)。)并调用`doGet`、`doPost`、`doPut`、`doDelete`等。适当的方法。
 
-```
+```java
 public void service(ServletRequest request, ServletResponse response) 
   throws ServletException, IOException {
     // ...
@@ -69,7 +69,7 @@ public void service(ServletRequest request, ServletResponse response)
 
 只有当 servlet 的`service`方法中的所有线程都退出时，或者超时时间过去后，才会调用该方法。容器调用这个方法后，不会在 Servlet 上再次调用`service`方法。
 
-```
+```java
 public void destroy() {
     // 
 }
@@ -79,7 +79,7 @@ public void destroy() {
 
 首先，[将上下文根](/web/20221126234027/https://www.baeldung.com/tomcat-root-application)从 `javax-servlets-1.0-SNAPSHOT`更改为/ add:
 
-```
+```java
 <Context path="/" docBase="javax-servlets-1.0-SNAPSHOT"></Context>
 ```
 
@@ -89,7 +89,7 @@ public void destroy() {
 
 首先，让我们定义一个带有映射`/calculateServlet`的 servlet，它将捕获表单发布的信息，并使用 [RequestDispatcher](https://web.archive.org/web/20221126234027/https://docs.oracle.com/javaee/6/api/javax/servlet/RequestDispatcher.html) 返回结果:
 
-```
+```java
 @WebServlet(name = "FormServlet", urlPatterns = "/calculateServlet")
 public class FormServlet extends HttpServlet {
 
@@ -128,7 +128,7 @@ public class FormServlet extends HttpServlet {
 
 如果我们希望映射不带注释的 Servlet，我们可以使用传统的`web.xml`来代替:
 
-```
+```java
 <web-app ...>
 
     <servlet>
@@ -145,7 +145,7 @@ public class FormServlet extends HttpServlet {
 
 接下来，让我们创建一个基本的 HTML `form`:
 
-```
+```java
 <form name="bmiForm" action="calculateServlet" method="POST">
     <table>
         <tr>
@@ -165,7 +165,7 @@ public class FormServlet extends HttpServlet {
 
 最后，为了确保一切按预期运行，让我们也编写一个快速测试:
 
-```
+```java
 public class FormServletLiveTest {
 
     @Test

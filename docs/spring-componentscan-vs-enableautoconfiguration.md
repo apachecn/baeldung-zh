@@ -29,7 +29,7 @@
 
 特别是，`@ComponentScan` 注释与`@Configuration` 注释一起使用，指定 Spring 扫描组件的包:
 
-```
+```java
 @Configuration
 @ComponentScan
 public class EmployeeApplication {
@@ -42,7 +42,7 @@ public class EmployeeApplication {
 
 **或者，Spring 也可以从指定的包开始扫描，我们可以使用`basePackageClasses()` 或`basePackages()` `.`** **来定义。如果没有指定包，那么它会将声明了`@ComponentScan`** 注释的类的包视为起始包 **:**
 
-```
+```java
 package com.baeldung.annotations.componentscanautoconfigure;
 
 // ...
@@ -63,7 +63,7 @@ public class EmployeeApplication {
 
 Spring 在指定的包及其所有子包中搜索用`@Configuration` `.` **注释的类。另外`,` `Configuration`类可以包含`@Bean` 注释，这些注释将方法注册为 Spring 应用程序上下文**中的 beans。此后@ `ComponentScan `注释可以自动检测这样的 beans:
 
-```
+```java
 @Configuration
 public class Hospital {
     @Bean
@@ -77,7 +77,7 @@ public class Hospital {
 
 例如，我们可以创建一个`Employee` 类作为可以被@ `ComponentScan `注释扫描的组件:
 
-```
+```java
 @Component("employee")
 public class Employee {
     // ...
@@ -92,7 +92,7 @@ public class Employee {
 
 **声明`@EnableAutoConfiguration`注释的类的包被认为是默认的**。因此，我们应该总是在根包中应用`@EnableAutoConfiguration`注释，以便可以检查每个子包和类:
 
-```
+```java
 @Configuration
 @EnableAutoConfiguration
 public class EmployeeApplication {
@@ -107,7 +107,7 @@ public class EmployeeApplication {
 
 我们可以使用`exclude`来禁用我们不想自动配置的类列表:
 
-```
+```java
 @Configuration
 @EnableAutoConfiguration(exclude={JdbcTemplateAutoConfiguration.class})
 public class EmployeeApplication {
@@ -120,7 +120,7 @@ public class EmployeeApplication {
 
 我们可以使用`excludeName` 来定义我们想要从自动配置中排除的类名的完全限定列表:
 
-```
+```java
 @Configuration
 @EnableAutoConfiguration(excludeName = {"org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration"})
 public class EmployeeApplication {
@@ -133,7 +133,7 @@ public class EmployeeApplication {
 
 从 Spring Boot 1.2.0 开始，我们可以使用 **`@SpringBootApplication `注释，它是三个注释`@Configuration, @EnableAutoConfiguration,` 和`@ComponentScan` 及其默认属性**的组合:
 
-```
+```java
 @SpringBootApplication
 public class EmployeeApplication {
     public static void main(String[] args) {

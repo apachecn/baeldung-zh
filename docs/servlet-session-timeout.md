@@ -10,7 +10,7 @@
 
 所有 Http 会话的超时可以在 web 应用程序的`web.xml`中配置:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app ...>
 
@@ -30,7 +30,7 @@
 
 当前会话**的超时只有**可以通过`javax.servlet.http.HttpSession`的 API 以编程方式指定:
 
-```
+```java
 HttpSession session = request.getSession();
 session.setMaxInactiveInterval(10*60);
 ```
@@ -41,7 +41,7 @@ session.setMaxInactiveInterval(10*60);
 
 所有的 Tomcat 服务器都为[提供了一个默认的`web.xml`文件](https://web.archive.org/web/20220812054347/https://tomcat.apache.org/tomcat-7.0-doc/default-servlet.html "Default Servlet Configuration for Tomcat 7")，可以为整个 web 服务器进行全局配置——这个文件位于:
 
-```
+```java
 $tomcat_home/conf/web.xml
 ```
 
@@ -51,7 +51,7 @@ $tomcat_home/conf/web.xml
 
 请注意，Jetty 中的[也可能是相同的](https://web.archive.org/web/20220812054347/https://www.eclipse.org/jetty/documentation/current/webdefault-xml.html "The webdefault-xml defaults for web.xml"):该文件位于:
 
-```
+```java
 $jetty_home/etc/webdefault.xml
 ```
 

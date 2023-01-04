@@ -18,7 +18,7 @@ Spring Data JPA 提供了很多处理实体的方法，包括[查询方法](/web
 
 这里是`Book`实体:
 
-```
+```java
 @Entity
 class Book {
 
@@ -40,7 +40,7 @@ class Book {
 
 为此，我们只需要一个`EntityManager`实例，我们可以自动连接它:
 
-```
+```java
 @Repository
 class BookDao {
 
@@ -86,7 +86,7 @@ class BookDao {
 
 自定义界面如下所示:
 
-```
+```java
 interface BookRepositoryCustom {
     List<Book> findBooksByAuthorNameAndTitle(String authorName, String title);
 }
@@ -94,13 +94,13 @@ interface BookRepositoryCustom {
 
 这里是`@Repository`界面:
 
-```
+```java
 interface BookRepository extends JpaRepository<Book, Long>, BookRepositoryCustom {}
 ```
 
 我们还必须修改之前的 DAO 类来实现`BookRepositoryCustom,`，并将其重命名为`BookRepositoryImpl`:
 
-```
+```java
 @Repository
 class BookRepositoryImpl implements BookRepositoryCustom {
 
@@ -122,7 +122,7 @@ class BookRepositoryImpl implements BookRepositoryCustom {
 
 有多种方法可以做到这一点，比如只有当传递的参数不是`null`时才应用谓词:
 
-```
+```java
 @Override
 List<Book> findBooksByAuthorNameAndTitle(String authorName, String title) {
     CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -151,7 +151,7 @@ List<Book> findBooksByAuthorNameAndTitle(String authorName, String title) {
 
 Spring Data 引入了`org.springframework.data.jpa.domain.Specification`接口来封装单个谓词:
 
-```
+```java
 interface Specification<T> {
     Predicate toPredicate(Root<T> root, CriteriaQuery query, CriteriaBuilder cb);
 }
@@ -159,7 +159,7 @@ interface Specification<T> {
 
 我们可以提供创建`Specification`实例的方法:
 
-```
+```java
 static Specification<Book> hasAuthor(String author) {
     return (book, cq, cb) -> cb.equal(book.get("author"), author);
 }
@@ -171,13 +171,13 @@ static Specification<Book> titleContains(String title) {
 
 为了使用它们，我们需要我们的存储库来扩展`org.springframework.data.jpa.repository.JpaSpecificationExecutor<T>`:
 
-```
+```java
 interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {}
 ```
 
 这个接口**声明了使用规范**的简便方法。例如，现在我们可以用这个一行程序找到指定作者的所有`Book`实例:
 
-```
+```java
 bookRepository.findAll(hasAuthor(author));
 ```
 
@@ -185,7 +185,7 @@ bookRepository.findAll(hasAuthor(author));
 
 例如，我们可以用一个逻辑`and`组合两个`Specification`实例:
 
-```
+```java
 bookRepository.findAll(where(hasAuthor(author)).and(titleContains(title)));
 ```
 

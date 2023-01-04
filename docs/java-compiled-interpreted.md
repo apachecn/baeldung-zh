@@ -117,7 +117,7 @@ JIT 编译器将整个方法的字节码编译成机器本地代码，因此它�
 
 我们将使用一个简单的递归方法来计算第 n 个斐波那契数:
 
-```
+```java
 private static int fibonacci(int index) {
     if (index <= 1) {
         return index;
@@ -128,7 +128,7 @@ private static int fibonacci(int index) {
 
 为了测量重复方法调用的性能优势，我们将运行斐波纳契方法 100 次:
 
-```
+```java
 for (int i = 0; i < 100; i++) {
     long startTime = System.nanoTime();
     int result = fibonacci(12);

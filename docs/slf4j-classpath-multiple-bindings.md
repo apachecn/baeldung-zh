@@ -12,7 +12,7 @@
 
 首先，让我们看一个示例警告:
 
-```
+```java
 SLF4J: Class path contains multiple SLF4J bindings.
 SLF4J: Found binding in [jar:file:.../slf4j-log4j12-1.7.21.jar!/org/slf4j/impl/StaticLoggerBinder.class]
 SLF4J: Found binding in [jar:file:.../logback-classic-1.1.7.jar!/org/slf4j/impl/StaticLoggerBinder.class]
@@ -40,13 +40,13 @@ Java (SLF4J) 的[简单日志门面作为各种](/web/20220524024034/https://www
 
 如果无法从警告中识别出依赖关系，我们可以使用`dependency:tree` maven 目标:
 
-```
+```java
 mvn dependency:tree
 ```
 
 这将显示项目的依赖关系树:
 
-```
+```java
 [INFO] +- org.docx4j:docx4j:jar:3.3.5:compile 
 [INFO] |  +- org.slf4j:slf4j-log4j12:jar:1.7.21:compile 
 [INFO] |  +- log4j:log4j:jar:1.2.17:compile 
@@ -60,7 +60,7 @@ mvn dependency:tree
 
 既然我们知道了有问题的依赖项，我们只需要从`docx4j`依赖项中排除`slf4j-log4j12` JAR:
 
-```
+```java
 <dependency>
     <groupId>org.docx4j</groupId>
     <artifactId>docx4j</artifactId>

@@ -87,7 +87,7 @@
 
 让我们将它添加到我们项目的`pom.xml` 中:
 
-```
+```java
 <plugin>
     <groupId>com.lazerycode.jmeter</groupId>
     <artifactId>jmeter-maven-plugin</artifactId>

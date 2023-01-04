@@ -14,7 +14,7 @@ AWS Lambda 是由亚马逊网络服务提供的无服务器计算服务，而 [W
 
 要启用 lambda，我们需要以下依赖关系，这些依赖关系可以在 [Maven Central](https://web.archive.org/web/20220626210605/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.amazonaws%22%20AND%20a%3A%22aws-lambda-java-core%22) 上找到:
 
-```
+```java
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>aws-lambda-java-core</artifactId>
@@ -24,7 +24,7 @@ AWS Lambda 是由亚马逊网络服务提供的无服务器计算服务，而 [W
 
 为了使用不同的 AWS 资源，我们需要以下依赖关系，这也可以在 [Maven Central](https://web.archive.org/web/20220626210605/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.amazonaws%22%20AND%20a%3A%22aws-lambda-java-events%22) 上找到:
 
-```
+```java
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>aws-lambda-java-events</artifactId>
@@ -34,7 +34,7 @@ AWS Lambda 是由亚马逊网络服务提供的无服务器计算服务，而 [W
 
 为了构建应用程序，我们将使用 [Maven Shade 插件](https://web.archive.org/web/20220626210605/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.maven.plugins%22%20AND%20a%3A%22maven-shade-plugin%22):
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-shade-plugin</artifactId>
@@ -63,7 +63,7 @@ AWS Lambda 是由亚马逊网络服务提供的无服务器计算服务，而 [W
 
 我们将在应用程序中使用`RequestHandler`接口。我们将接受 JSON 格式的`PersonRequest`，响应将是`PersonResponse` 也是`JSON`格式的 *:*
 
-```
+```java
 public class PersonRequest {
     private String firstName;
     private String lastName;
@@ -72,7 +72,7 @@ public class PersonRequest {
 } 
 ```
 
-```
+```java
 public class PersonResponse {
     private String message;
 
@@ -82,7 +82,7 @@ public class PersonResponse {
 
 接下来是我们的入口点类，它将实现`RequestHandler`接口，如下所示:
 
-```
+```java
 public class SavePersonHandler 
   implements RequestHandler<PersonRequest, PersonResponse> {
 
@@ -135,7 +135,7 @@ public class SavePersonHandler
 
 为了构建 lambda 应用程序，我们需要执行以下 Maven 命令:
 
-```
+```java
 mvn clean package shade:shade
 ```
 
@@ -181,7 +181,7 @@ Lambda 应用程序将被编译并打包成目标文件夹下的一个`jar`文�
 *   点击**“测试”**按钮
 *   将显示**“输入测试事件”**窗口。这里，我们将为我们的请求提供 JSON 输入:
 
-```
+```java
 {
   "id": 1,
   "firstName": "John",
@@ -194,7 +194,7 @@ Lambda 应用程序将被编译并打包成目标文件夹下的一个`jar`文�
 *   点击**“保存并测试”**或**“保存”**按钮
 *   在**“执行结果”**部分可以看到输出:
 
-```
+```java
 {
   "message": "Saved Successfully!!!"
 }

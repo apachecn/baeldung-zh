@@ -28,7 +28,7 @@ API 的可发现性是一个没有得到足够重视的话题。因此，很少�
 
 API 还应该帮助客户端发现特定资源所允许的有效 HTTP 方法。为此，**我们可以在响应中使用`Allow` HTTP 头:**
 
-```
+```java
 @Test
 public void
   whenInvalidPOSTIsSentToValidURIOfResource_thenAllowHeaderListsTheAllowedActions(){
@@ -51,7 +51,7 @@ public void
 
 现在，如果客户端在 URI 上执行 GET 操作，资源应该是可用的:
 
-```
+```java
 @Test
 public void whenResourceIsCreated_thenUriOfTheNewlyCreatedResourceIsDiscoverable() {
     // When
@@ -77,7 +77,7 @@ public void whenResourceIsCreated_thenUriOfTheNewlyCreatedResourceIsDiscoverable
 
 为此，我们可以再次使用`Link`标题:
 
-```
+```java
 @Test
 public void whenResourceIsRetrieved_thenUriToGetAllResourcesIsDiscoverable() {
     // Given

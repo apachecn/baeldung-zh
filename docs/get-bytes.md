@@ -32,7 +32,7 @@
 
 ### 可用签名
 
-```
+```java
 public byte[] getBytes()
 public byte[] getBytes(Charset charset)
 public byte[] getBytes(String charsetName)
@@ -40,7 +40,7 @@ public byte[] getBytes(String charsetName)
 
 ### 例子
 
-```
+```java
 @Test
 public void whenGetBytes_thenCorrect() throws UnsupportedEncodingException {
     byte[] byteArray1 = "abcd".getBytes();

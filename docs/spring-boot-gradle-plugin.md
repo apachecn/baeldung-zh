@@ -12,7 +12,7 @@ Spring Boot Gradle 插件帮助我们管理 Spring Boot 的依赖关系，并在
 
 首先，**我们需要将 Spring Boot 插件添加到我们的`build.gradle`** 文件中，方法是将它包含在我们的`plugins`部分:
 
-```
+```java
 plugins {
     id "org.springframework.boot" version "2.0.1.RELEASE"
 }
@@ -20,7 +20,7 @@ plugins {
 
 如果我们使用的是 2.1 之前的 Gradle 版本，或者我们需要动态配置，我们可以这样添加它:
 
-```
+```java
 buildscript {
     ext {
         springBootVersion = '2.0.1.RELEASE'
@@ -41,7 +41,7 @@ apply plugin: 'org.springframework.boot'
 
 **我们可以使用`build`命令:**将我们的应用程序打包成一个可执行的归档文件(jar 或 war 文件)
 
-```
+```java
 ./gradlew build
 ```
 
@@ -49,13 +49,13 @@ apply plugin: 'org.springframework.boot'
 
 如果我们想生成一个可执行的`jar`文件，那么我们还需要应用`java`插件:
 
-```
+```java
 apply plugin: 'java'
 ```
 
 另一方面，如果我们需要一个`war`文件，我们将应用`war`插件:
 
-```
+```java
 apply plugin: 'war'
 ```
 
@@ -71,7 +71,7 @@ apply plugin: 'war'
 
 让我们看看如何直接执行`bootJar`任务:
 
-```
+```java
 ./gradlew bootJar
 ```
 
@@ -79,7 +79,7 @@ apply plugin: 'war'
 
 我们可以使用以下命令来执行`bootWar`任务:
 
-```
+```java
 ./gradlew bootWar
 ```
 
@@ -87,7 +87,7 @@ apply plugin: 'war'
 
 我们也可以配置这两项任务。例如，让我们使用`mainClassName`属性来设置主类:
 
-```
+```java
 bootJar {
     mainClassName = 'com.baeldung.Application'
 }
@@ -95,7 +95,7 @@ bootJar {
 
 或者，我们可以使用 Spring Boot DSL 中的相同属性:
 
-```
+```java
 springBoot {
     mainClassName = 'com.baeldung.Application'
 }
@@ -107,13 +107,13 @@ springBoot {
 
 我们可以使用以下命令直接执行`bootRepackage`任务:
 
-```
+```java
 ./gradlew bootRepackage
 ```
 
 类似于 Boot 2.x 版本，我们可以在我们的`build.gradle:`中向`bootRepackage`任务添加配置
 
-```
+```java
 bootRepackage {
     mainClass = 'com.example.demo.Application'
 }
@@ -121,7 +121,7 @@ bootRepackage {
 
 我们也可以通过将`enabled`选项设置为`false:`来禁用`bootRepackage`任务
 
-```
+```java
 bootRepackage {
     enabled = false
 }
@@ -131,13 +131,13 @@ bootRepackage {
 
 构建完应用程序后，**我们可以在生成的可执行 jar 文件上使用`java -jar`命令**来运行它:
 
-```
+```java
 java -jar build/libs/demo.jar
 ```
 
 **Spring Boot·格拉德插件还为我们提供了`bootRun`任务**，使我们无需先构建应用程序就能运行它:
 
-```
+```java
 ./gradlew bootRun
 ```
 
@@ -145,7 +145,7 @@ java -jar build/libs/demo.jar
 
 例如，我们可以定义主类:
 
-```
+```java
 bootRun {
     main = 'com.example.demo.Application'
 }
@@ -159,7 +159,7 @@ bootRun {
 
 但是从 Spring Boot 2.x 开始，如果我们需要这个功能，我们需要在我们的`build.gradle`中显式地应用它:
 
-```
+```java
 apply plugin: 'io.spring.dependency-management'
 ```
 

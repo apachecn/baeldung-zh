@@ -41,7 +41,7 @@ Java 异常可以检查和不检查。在下一节中，我们将讨论这两种
 
 让我们考虑一段返回文件第一行的代码:
 
-```
+```java
 try (Scanner file = new Scanner(new File(fileName))) {
     if (file.hasNextLine()) return file.nextLine();
 } catch(FileNotFoundException e) {
@@ -55,7 +55,7 @@ try (Scanner file = new Scanner(new File(fileName))) {
 
 让我们通过创建一个名为`IncorrectFileNameException`的自定义检查异常来看看这个例子:
 
-```
+```java
 public class IncorrectFileNameException extends Exception { 
     public IncorrectFileNameException(String errorMessage) {
         super(errorMessage);
@@ -69,7 +69,7 @@ public class IncorrectFileNameException extends Exception {
 
 接下来，让我们看看如何在示例中使用自定义异常:
 
-```
+```java
 try (Scanner file = new Scanner(new File(fileName))) {
     if (file.hasNextLine())
         return file.nextLine();
@@ -87,7 +87,7 @@ try (Scanner file = new Scanner(new File(fileName))) {
 
 为了解决这个问题，我们还可以向构造函数添加一个`java.lang.Throwable`参数。这样，我们可以将根异常传递给方法调用:
 
-```
+```java
 public IncorrectFileNameException(String errorMessage, Throwable err) {
     super(errorMessage, err);
 } 
@@ -95,7 +95,7 @@ public IncorrectFileNameException(String errorMessage, Throwable err) {
 
 现在`IncorrectFileNameException` 与异常的根本原因一起使用:
 
-```
+```java
 try (Scanner file = new Scanner(new File(fileName))) {
     if (file.hasNextLine()) {
         return file.nextLine();
@@ -119,7 +119,7 @@ try (Scanner file = new Scanner(new File(fileName))) {
 
 **要创建一个定制的未检查异常，我们需要扩展`java.lang.RuntimeException`类**:
 
-```
+```java
 public class IncorrectFileExtensionException 
   extends RuntimeException {
     public IncorrectFileExtensionException(String errorMessage, Throwable err) {
@@ -130,7 +130,7 @@ public class IncorrectFileExtensionException
 
 这样，我们可以在示例中使用这个自定义的未检查异常:
 
-```
+```java
 try (Scanner file = new Scanner(new File(fileName))) {
     if (file.hasNextLine()) {
         return file.nextLine();

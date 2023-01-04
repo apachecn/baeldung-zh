@@ -16,14 +16,14 @@
 
 一个包:
 
-```
+```java
 // @ any collection mapping annotation
 private List<T> collection;
 ```
 
 一个`List`:
 
-```
+```java
 // @ any collection mapping annotation
 @OrderColumn(name = "position")
 private List<T> collection;
@@ -39,7 +39,7 @@ private List<T> collection;
 
 鉴于此，让我们创建*艺术家*实体:
 
-```
+```java
 @Entity
 class Artist {
 
@@ -63,7 +63,7 @@ class Artist {
 
 相反，让我们将一个或两个集合的获取类型转换为 lazy:
 
-```
+```java
 @OneToMany(mappedBy = "artist")
 private List<Song> songs;
 
@@ -81,7 +81,7 @@ private List<Offer> offers;
 
 现在，让我们创建集成测试，让我们尝试使用 JPQL: 同时获取 `songs` 和 `offers`
 
-```
+```java
 @Test
 public void whenFetchingMoreThanOneBag_thenThrowAnException() {
     IllegalArgumentException exception =
@@ -112,7 +112,7 @@ public void whenFetchingMoreThanOneBag_thenThrowAnException() {
 
 首先，让我们看一下`Album`实体:
 
-```
+```java
 @Entity
 class Album {
 
@@ -137,7 +137,7 @@ class Album {
 
 接下来，这里是*用户*实体:
 
-```
+```java
 @Entity
 class User {
 
@@ -170,7 +170,7 @@ class User {
 
 使用集成测试，让我们尝试通过 id 检索一个`Album`,同时在一个 JPQL 查询中获取它的两个集合:
 
-```
+```java
 @Test
 public void whenFetchingOneBagAndSet_thenRetrieveSuccess() {
     String jpql = "SELECT DISTINCT album FROM Album album "
@@ -201,7 +201,7 @@ public void whenFetchingOneBagAndSet_thenRetrieveSuccess() {
 
 为了演示，让我们创建一个集成测试:
 
-```
+```java
 @Test
 public void whenFetchingOneBagAndOneList_thenRetrieveSuccess() {
     String jpql = "SELECT DISTINCT user FROM User user "
@@ -230,7 +230,7 @@ public void whenFetchingOneBagAndOneList_thenRetrieveSuccess() {
 
 再一次，也是最后一次，让我们快速创建一个检索所有艺术家的集成测试:
 
-```
+```java
 @Test
 public void whenUsingMultipleQueries_thenRetrieveSuccess() {
     String jpql = "SELECT DISTINCT artist FROM Artist artist "

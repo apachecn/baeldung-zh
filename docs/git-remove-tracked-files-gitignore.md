@@ -12,7 +12,7 @@
 
 为了删除单个文件，我们首先必须将文件名添加到`.gitignore`中，然后运行`git rm`命令，之后是提交:
 
-```
+```java
 git rm --cached <filename>
 git commit -m "<Message>"
 ```
@@ -23,14 +23,14 @@ git commit -m "<Message>"
 
 我们可以通过首先将文件夹名称添加到`.gitignore`并运行`git`命令来删除整个文件夹:
 
-```
+```java
 git rm --cached -r <folder>
 git commit -m "<Message>"
 ```
 
 **注意命令中添加的`-r`，如果没有它，命令将因**而失败:
 
-```
+```java
 fatal: not removing 'folder' recursively without -r.
 ```
 
@@ -38,7 +38,7 @@ fatal: not removing 'folder' recursively without -r.
 
 在这里，我们将删除当前在`.gitignore`中被忽略的所有文件:
 
-```
+```java
 git rm -r --cached .
 git add .
 git commit -m "Removes all .gitignore files and folders"

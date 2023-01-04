@@ -12,7 +12,7 @@
 
 让我们用非静态的`@BeforeAll`和`@AfterAll`方法创建一个测试类:
 
-```
+```java
 public class BeforeAndAfterAnnotationsUnitTest {
 
     String input;
@@ -39,7 +39,7 @@ public class BeforeAndAfterAnnotationsUnitTest {
 
 如果我们运行上面的代码，它将抛出一个异常:
 
-```
+```java
 org.junit.platform.commons.JUnitException:  ...
 ```
 
@@ -51,7 +51,7 @@ org.junit.platform.commons.JUnitException:  ...
 
 让我们重做我们的测试类并添加`@TestInstance(TestInstance.` `Lifecycle.PER_CLASS):`
 
-```
+```java
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BeforeAndAfterAnnotationsUnitTest {
 

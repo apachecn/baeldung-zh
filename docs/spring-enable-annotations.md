@@ -25,7 +25,7 @@ Spring 附带了一组 **`@Enable`注释，使得开发人员更容易配置 Spr
 
 配置可以由实现`WebMvcConfigurer`的`@Configuration`类定制:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 public class SpringMvcConfig implements WebMvcConfigurer {
@@ -47,7 +47,7 @@ public class SpringMvcConfig implements WebMvcConfigurer {
 
 具有类似功能的 XML 等价物是`<cache:*>`名称空间:
 
-```
+```java
 @Configuration
 @EnableCaching
 public class CacheConfig {
@@ -70,7 +70,7 @@ public class CacheConfig {
 
 这个配置也可以由实现`CachingConfigurerSupport`类的`@Configuration`类定制:
 
-```
+```java
 @Configuration
 @EnableCaching
 public class CacheConfig extends CachingConfigurerSupport {
@@ -100,7 +100,7 @@ public class CacheConfig extends CachingConfigurerSupport {
 
 这个配置也可以由实现`SchedulingConfigurer`类的`@Configuration`类定制:
 
-```
+```java
 @Configuration
 @EnableScheduling
 public class SchedulingConfig implements SchedulingConfigurer {
@@ -124,7 +124,7 @@ public class SchedulingConfig implements SchedulingConfigurer {
 
 在我们的应用程序中，`@EnableAsync`注释**支持异步处理。具有类似功能的 XML 等价物是使用`executor`属性的`<task:*>`名称空间。**
 
-```
+```java
 @Configuration
 @EnableAync
 public class AsyncConfig { ... }
@@ -136,7 +136,7 @@ public class AsyncConfig { ... }
 
 `@EnableWebSocket`注释用于**配置 web socket 请求**的处理。定制可以通过实现`WebSocketConfigurer`类来完成:
 
-```
+```java
 @Configuration
 @EnableWebSocket
 public class MyConfiguration implements WebSocketConfigurer {
@@ -159,7 +159,7 @@ public class MyConfiguration implements WebSocketConfigurer {
 
 `@EnableJpaRepositories`注释**通过扫描带注释的配置类包中的存储库来启用 Spring Data JPA 存储库**。
 
-```
+```java
 @Configuration
 @EnableJpaRepositories
 public class JpaConfig { ... }
@@ -176,7 +176,7 @@ public class JpaConfig { ... }
 
 `@EnableTransactionManagement`注释**启用了 Spring 的注释驱动的事务管理能力**。XML 的对等物是`<tx:*>`名称空间。
 
-```
+```java
 @Configuration
 @EnableTransactionManagement
 public class JpaConfig { ... }
@@ -188,7 +188,7 @@ public class JpaConfig { ... }
 
 `@EnableJpaAuditing`注释**支持对 JPA 实体**进行审计。
 
-```
+```java
 @Configuration
 @EnableJpaAuditing
 public class JpaConfig {

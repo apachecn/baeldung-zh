@@ -10,7 +10,7 @@
 
 在 Java 中，**一个静态块在对象初始化**之前执行代码。静态块是带有 [`static`](/web/20220915120117/https://www.baeldung.com/java-static) 关键字的代码块:
 
-```
+```java
 static {
     // definition of the static block
 }
@@ -20,7 +20,7 @@ static {
 
 一个类可以有多个静态块，它们将按照在类中出现的顺序执行:
 
-```
+```java
 public class StaticBlockExample {
 
     static {
@@ -39,7 +39,7 @@ public class StaticBlockExample {
 
 上述代码片段的输出是:
 
-```
+```java
 static block 1
 static block 2
 Main Method
@@ -57,7 +57,7 @@ Main Method
 
 实例初始化程序块看起来就像静态初始化程序块，但是没有 [`static`](/web/20220915120117/https://www.baeldung.com/java-static) 关键字:
 
-```
+```java
 {
      // definition of the Instance initialization block
 }
@@ -65,7 +65,7 @@ Main Method
 
 静态初始化块总是在实例初始化块之前执行，因为静态块在类加载时运行。但是，实例块在实例创建时运行。Java 编译器将初始化器块复制到每个构造函数中。因此，多个构造函数可以使用这种方法来共享一个代码块:
 
-```
+```java
 public class InstanceBlockExample {
 
     {
@@ -89,7 +89,7 @@ public class InstanceBlockExample {
 
 因此，在这种情况下，上述代码的输出将是:
 
-```
+```java
 Instance initializer block 1
 Instance initializer block 2
 Class constructor

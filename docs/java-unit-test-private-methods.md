@@ -24,7 +24,7 @@
 
 我们将编写一个私有方法来返回一个`Integer`的 double 值。对于`null`的值，我们想返回`null`:
 
-```
+```java
 private static Integer doubleInteger(Integer input) {
     if (input == null) {
         return null;
@@ -37,7 +37,7 @@ private static Integer doubleInteger(Integer input) {
 
 这个方法接收一个`Integer`作为输入。它验证这个`Integer`不是`null`，否则抛出一个 [`IllegalArgumentException`](/web/20220815003257/https://www.baeldung.com/java-illegalargumentexception-or-nullpointerexception) 。之后，它调用私有方法返回两倍于`Integer`的值:
 
-```
+```java
 public static Integer validateAndDouble(Integer input) {
     if (input == null) {
         throw new IllegalArgumentException("input should not be null");
@@ -50,7 +50,7 @@ public static Integer validateAndDouble(Integer input) {
 
 首先，让我们编写一个测试，确保如果输入是`null`，则抛出 [`IllegalArgumentException`](/web/20220815003257/https://www.baeldung.com/java-illegalargumentexception-or-nullpointerexception) :
 
-```
+```java
 @Test
 void givenNull_WhenValidateAndDouble_ThenThrows() {
     assertThrows(IllegalArgumentException.class, () -> validateAndDouble(null));
@@ -59,7 +59,7 @@ void givenNull_WhenValidateAndDouble_ThenThrows() {
 
 现在，让我们检查一个非空的`Integer`是否被正确地双精度化:
 
-```
+```java
 @Test
 void givenANonNullInteger_WhenValidateAndDouble_ThenDoublesIt() {
     assertEquals(4, validateAndDouble(2));
@@ -80,7 +80,7 @@ void givenANonNullInteger_WhenValidateAndDouble_ThenDoublesIt() {
 
 我们的封装类叫做`Utils`。这个想法是访问名为`doubleInteger`的私有方法，该方法接受一个`Integer`作为参数。然后我们将修改它的可见性，使其可以从`Utils`类外部访问。让我们看看如何做到这一点:
 
-```
+```java
 private Method getDoubleIntegerMethod() throws NoSuchMethodException {
     Method method = Utils.class.getDeclaredMethod("doubleInteger", Integer.class);
     method.setAccessible(true);
@@ -90,7 +90,7 @@ private Method getDoubleIntegerMethod() throws NoSuchMethodException {
 
 现在，我们可以用这种方法。让我们编写一个测试，检查给定一个`null`对象，我们的私有方法是否返回`null`。我们需要将该方法应用于一个参数，这个参数将是`null`:
 
-```
+```java
 @Test
 void givenNull_WhenDoubleInteger_ThenNull() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
     assertEquals(null, getDoubleIntegerMethod().invoke(null, new Integer[] { null }));
@@ -101,7 +101,7 @@ void givenNull_WhenDoubleInteger_ThenNull() throws InvocationTargetException, Il
 
 最后，让我们演示如何测试非空输入的情况:
 
-```
+```java
 @Test
 void givenANonNullInteger_WhenDoubleInteger_ThenDoubleIt() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     assertEquals(74, getDoubleIntegerMethod().invoke(null, 37));

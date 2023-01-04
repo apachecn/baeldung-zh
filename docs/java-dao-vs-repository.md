@@ -20,7 +20,7 @@
 
 首先，让我们创建一个基本的`User`域类:
 
-```
+```java
 public class User {
     private Long id;
     private String userName;
@@ -35,7 +35,7 @@ public class User {
 
 然后，我们将创建为`User`域提供简单 CRUD 操作的`UserDao`接口:
 
-```
+```java
 public interface UserDao {
     void create(User user);
     User read(Long id);
@@ -48,7 +48,7 @@ public interface UserDao {
 
 最后，我们将创建实现`UserDao`接口的`UserDaoImpl`类:
 
-```
+```java
 public class UserDaoImpl implements UserDao {
     private final EntityManager entityManager;
 
@@ -84,7 +84,7 @@ public class UserDaoImpl implements UserDao {
 
 首先，让我们创建`UserRepository`接口:
 
-```
+```java
 public interface UserRepository {
     User get(Long id);
     void add(User user);
@@ -99,7 +99,7 @@ public interface UserRepository {
 
 然后，我们将创建`UserRepositoryImpl` 类，提供`UserRepository`接口的实现:
 
-```
+```java
 public class UserRepositoryImpl implements UserRepository {
     private UserDaoImpl userDaoImpl;
 
@@ -134,7 +134,7 @@ public class UserRepositoryImpl implements UserRepository {
 
 首先，我们将创建带有几个保存 tweet 信息的属性的`Tweet`类:
 
-```
+```java
 public class Tweet {
     private String email;
     private String tweetText;    
@@ -148,7 +148,7 @@ public class Tweet {
 
 然后，类似于`UserDao`，我们将创建允许获取 tweets 的`TweetDao`接口:
 
-```
+```java
 public interface TweetDao {
     List<Tweet> fetchTweets(String email);    
 }
@@ -156,7 +156,7 @@ public interface TweetDao {
 
 同样，我们将创建提供`fetchTweets`方法实现的`TweetDaoImpl`类:
 
-```
+```java
 public class TweetDaoImpl implements TweetDao {
     @Override
     public List<Tweet> fetchTweets(String email) {
@@ -177,7 +177,7 @@ public class TweetDaoImpl implements TweetDao {
 
 最后，让我们创建`User`类的`UserSocialMedia`子类来保存`Tweet`对象的列表:
 
-```
+```java
 public class UserSocialMedia extends User {
     private List<Tweet> tweets;
 
@@ -191,7 +191,7 @@ public class UserSocialMedia extends User {
 
 现在，我们将升级我们的`UserRepositoryImpl` 类来提供一个`User`域对象以及一列推文:
 
-```
+```java
 public class UserRepositoryImpl implements UserRepository {
     private UserDaoImpl userDaoImpl;
     private TweetDaoImpl tweetDaoImpl;

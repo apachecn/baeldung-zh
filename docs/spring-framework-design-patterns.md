@@ -37,7 +37,7 @@ Spring 的方法不同于严格定义的 singleton，因为一个应用程序可
 
 接下来，我们创建`LibraryController`，它使用`BookRepository`返回图书馆中的图书数量:
 
-```
+```java
 @RestController
 public class LibraryController {
 
@@ -54,7 +54,7 @@ public class LibraryController {
 
 最后，我们创建一个`BookController`，它关注于`Book`特定的动作，比如通过 ID 查找一本书:
 
-```
+```java
 @RestController
 public class BookController {
 
@@ -71,14 +71,14 @@ public class BookController {
 
 然后，我们启动这个应用程序并在`/count`和`/book/1:`上执行 GET
 
-```
+```java
 curl -X GET http://localhost:8080/count
 curl -X GET http://localhost:8080/book/1
 ```
 
 在应用程序输出中，我们看到两个`BookRepository`对象具有相同的对象 ID:
 
-```
+```java
 [[email protected]](/web/20221207170657/https://www.baeldung.com/cdn-cgi/l/email-protection)
 [[email protected]](/web/20221207170657/https://www.baeldung.com/cdn-cgi/l/email-protection)
 ```
@@ -109,7 +109,7 @@ Spring 在其[依赖注入(DI)框架](/web/20221207170657/https://www.baeldung.c
 
 因此，Spring 将`BeanFactory`接口定义为 bean 容器的抽象:
 
-```
+```java
 public interface BeanFactory {
 
     getBean(Class<T> requiredType);
@@ -128,7 +128,7 @@ public interface BeanFactory {
 
 首先，我们创建一个简单的应用程序配置:
 
-```
+```java
 @Configuration
 @ComponentScan(basePackageClasses = ApplicationConfig.class)
 public class ApplicationConfig {
@@ -137,7 +137,7 @@ public class ApplicationConfig {
 
 接下来，我们创建一个简单的类`Foo`，它不接受任何构造函数参数:
 
-```
+```java
 @Component
 public class Foo {
 }
@@ -145,7 +145,7 @@ public class Foo {
 
 然后创建另一个接受单个构造函数参数的类`Bar`:
 
-```
+```java
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class Bar {
@@ -162,7 +162,7 @@ public class Bar {
 
 最后，我们通过`ApplicationContext`的`AnnotationConfigApplicationContext`实现来创建 beans:
 
-```
+```java
 @Test
 public void whenGetSimpleBean_thenReturnConstructedBean() {
 
@@ -198,7 +198,7 @@ public void whenGetPrototypeBean_thenReturnConstructedBean() {
 
 例如，我们可以将`AnnotationConfigApplicationContext`更改为基于 XML 的配置类，如 [`ClassPathXmlApplicationContext`](/web/20221207170657/https://www.baeldung.com/spring-classpathxmlapplicationcontext) :
 
-```
+```java
 @Test 
 public void givenXmlConfiguration_whenGetPrototypeBean_thenReturnConstructedBean() { 
 
@@ -223,7 +223,7 @@ public void givenXmlConfiguration_whenGetPrototypeBean_thenReturnConstructedBean
 
 在 Spring 中，bean 被代理来控制对底层 bean 的访问。我们在使用事务时会看到这种方法:
 
-```
+```java
 @Service
 public class BookManager {
 
@@ -246,7 +246,7 @@ public class BookManager {
 
 当我们调用我们的`BookManager#create`方法时，我们可以看到输出:
 
-```
+```java
 com.baeldung.patterns.proxy.BookRepository$EnhancerBySpringCGLIB$3dc2b55c
 ```
 
@@ -282,7 +282,7 @@ com.baeldung.patterns.proxy.BookRepository$EnhancerBySpringCGLIB$3dc2b55c
 
 在数据库查询的情况下，我们可以创建一个模板:
 
-```
+```java
 public abstract DatabaseQuery {
 
     public void execute() {
@@ -315,7 +315,7 @@ public abstract DatabaseQuery {
 
 首先，我们创建回调方法，该方法接受一个`Results`对象并将其映射到一个类型为`T`的对象:
 
-```
+```java
 public interface ResultsMapper<T> {
     public T map(Results results);
 }
@@ -323,7 +323,7 @@ public interface ResultsMapper<T> {
 
 然后我们修改我们的`DatabaseQuery`类来利用这个回调:
 
-```
+```java
 public abstract DatabaseQuery {
 
     public <T> T execute(String query, ResultsMapper<T> mapper) {
@@ -345,7 +345,7 @@ public abstract DatabaseQuery {
 
 `JdbcTemplate`类提供了`query`方法，该方法接受查询`String`和`ResultSetExtractor`对象:
 
-```
+```java
 public class JdbcTemplate {
 
     public <T> T query(final String sql, final ResultSetExtractor<T> rse) throws DataAccessException {
@@ -358,7 +358,7 @@ public class JdbcTemplate {
 
 `ResultSetExtractor`将代表查询结果的`ResultSet`对象转换为`T`类型的域对象:
 
-```
+```java
 @FunctionalInterface
 public interface ResultSetExtractor<T> {
     T extractData(ResultSet rs) throws SQLException, DataAccessException;
@@ -369,7 +369,7 @@ Spring 通过创建更具体的回调接口来进一步减少样板代码。
 
 例如，`RowMapper`接口用于将一行 SQL 数据转换成类型为`T`的域对象。
 
-```
+```java
 @FunctionalInterface
 public interface RowMapper<T> {
     T mapRow(ResultSet rs, int rowNum) throws SQLException;
@@ -378,7 +378,7 @@ public interface RowMapper<T> {
 
 为了使`RowMapper`接口适应预期的`ResultSetExtractor`，Spring 创建了`RowMapperResultSetExtractor`类:
 
-```
+```java
 public class JdbcTemplate {
 
     public <T> List<T> query(String sql, RowMapper<T> rowMapper) throws DataAccessException {
@@ -391,7 +391,7 @@ public class JdbcTemplate {
 
 我们可以提供如何转换单个行的逻辑，而不是提供转换整个`ResultSet`对象的逻辑，包括对行的迭代:
 
-```
+```java
 public class BookRowMapper implements RowMapper<Book> {
 
     @Override
@@ -410,7 +410,7 @@ public class BookRowMapper implements RowMapper<Book> {
 
 有了这个转换器，我们就可以使用`JdbcTemplate`查询数据库并映射每个结果行:
 
-```
+```java
 JdbcTemplate template = // create template...
 template.query("SELECT * FROM books", new BookRowMapper());
 ```

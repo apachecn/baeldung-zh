@@ -14,7 +14,7 @@
 
 对于本文中的这个例子和所有其他例子，我们将使用下面的类:
 
-```
+```java
 public class Employee {
 
     private Integer employeeNumber;
@@ -26,7 +26,7 @@ public class Employee {
 
 为了简单起见，我们还将对所有示例使用以下方法:
 
-```
+```java
 private List<Employee> buildEmployeeList() {
     return Arrays.asList(
       new Employee(1, "Mike", 1),
@@ -48,7 +48,7 @@ private List<String> employeeNameFilter() {
 
 现在，让我们看看传统的方法——**循环遍历两个列表寻找匹配:**
 
-```
+```java
 @Test
 public void givenEmployeeList_andNameFilterList_thenObtainFilteredEmployeeList_usingForEachLoop() {
     List<Employee> filteredList = new ArrayList<>();
@@ -78,7 +78,7 @@ public void givenEmployeeList_andNameFilterList_thenObtainFilteredEmployeeList_u
 
 **我们现在将通过使用 lambdas 来重构前面的方法，以简化语法并提高可读性**。让我们也使用`List#contains`方法作为`[lambda filter](/web/20221208143941/https://www.baeldung.com/java-stream-filter-lambda)`:
 
-```
+```java
 @Test
 public void givenEmployeeList_andNameFilterList_thenObtainFilteredEmployeeList_usingLambda() {
     List<Employee> filteredList;
@@ -99,7 +99,7 @@ public void givenEmployeeList_andNameFilterList_thenObtainFilteredEmployeeList_u
 
 为了提高性能，我们必须使用`HashSet#contains`方法。**这个方法与`List#contains`不同，因为它执行了一个`hash code` 查找，给我们一个常数时间的操作数:**
 
-```
+```java
 @Test
 public void givenEmployeeList_andNameFilterList_thenObtainFilteredEmployeeList_usingLambdaAndHashSet() {
     List<Employee> filteredList;

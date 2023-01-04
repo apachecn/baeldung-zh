@@ -14,7 +14,7 @@
 
 我们将从启动我们的 Elasticsearch 实例开始:
 
-```
+```java
 docker run -d --name es762 -p 9200:9200 -e "discovery.type=single-node" elasticsearch:7.6.2
 ```
 
@@ -30,7 +30,7 @@ Spring 数据有助于避免样板代码。例如，如果我们定义一个存�
 
 Spring Data Elasticsearch 为搜索引擎提供了一个 Java API。为了使用它，我们需要向`pom.xml`添加一个新的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-elasticsearch</artifactId>
@@ -46,7 +46,7 @@ Spring Data Elasticsearch 为搜索引擎提供了一个 Java API。为了使用
 
 在我们的示例中，我们将在自定义搜索方法中使用分页功能:
 
-```
+```java
 public interface ArticleRepository extends ElasticsearchRepository<Article, String> {
 
     Page<Article> findByAuthorsName(String name, Pageable pageable);
@@ -64,7 +64,7 @@ public interface ArticleRepository extends ElasticsearchRepository<Article, Stri
 
 在我们的 Java 应用程序中配置 Elasticsearch 时，我们需要定义如何连接到 Elasticsearch 实例。为此，我们将使用 Elasticsearch 依赖项提供的`RestHighLevelClient,`:
 
-```
+```java
 @Configuration
 @EnableElasticsearchRepositories(basePackages = "com.baeldung.spring.data.es.repository")
 @ComponentScan(basePackages = { "com.baeldung.spring.data.es.service" })
@@ -99,7 +99,7 @@ public class Config {
 
 我们的实体是一个简单的文档，`Article,`，其中`id`的类型是`String`。我们还将指定这样的文档必须存储在`article`类型中名为`blog`的索引中。
 
-```
+```java
 @Document(indexName = "blog", type = "article")
 public class Article {
 
@@ -123,13 +123,13 @@ public class Article {
 
 Spring Data Elasticsearch 通常会根据项目中的实体自动创建索引。但是，我们也可以通过客户端模板以编程方式创建索引:
 
-```
+```java
 elasticsearchTemplate.indexOps(Article.class).create();
 ```
 
 然后我们可以将文档添加到索引中:
 
-```
+```java
 Article article = new Article("Spring Data Elasticsearch");
 article.setAuthors(asList(new Author("John Smith"), new Author("John Doe")));
 articleRepository.save(article);
@@ -141,7 +141,7 @@ articleRepository.save(article);
 
 当我们使用基于方法名的查询时，我们编写方法来定义我们想要执行的查询。在设置过程中，Spring Data 将解析方法签名并相应地创建查询:
 
-```
+```java
 String nameToFind = "John Smith";
 Page<Article> articleByAuthorName
   = articleRepository.findByAuthorsName(nameToFind, PageRequest.of(0, 10));
@@ -157,7 +157,7 @@ Page<Article> articleByAuthorName
 
 如果我们想搜索标题中有单词“`data`”的文章，我们可以在`title:`上创建一个带有过滤器的`NativeSearchQueryBuilder`
 
-```
+```java
 Query searchQuery = new NativeSearchQueryBuilder()
    .withFilter(regexpQuery("title", ".*data.*"))
    .build();
@@ -169,7 +169,7 @@ SearchHits<Article> articles =
 
 为了更新文档，我们必须首先检索它:
 
-```
+```java
 String articleTitle = "Spring Data Elasticsearch";
 Query searchQuery = new NativeSearchQueryBuilder()
   .withQuery(matchQuery("title", articleTitle).minimumShouldMatch("75%"))
@@ -182,26 +182,26 @@ Article article = articles.getSearchHit(0).getContent();
 
 然后，我们可以通过使用对象的评估器编辑对象的内容来对文档进行更改:
 
-```
+```java
 article.setTitle("Getting started with Search Engines");
 articleRepository.save(article);
 ```
 
 至于删除，有几种选择。我们可以检索文档并使用`delete`方法删除它:
 
-```
+```java
 articleRepository.delete(article);
 ```
 
 一旦我们知道了，我们也可以通过`id`删除它:
 
-```
+```java
 articleRepository.deleteById("article_id");
 ```
 
 还可以创建定制的`deleteBy`查询，并利用 Elasticsearch 提供的批量删除功能:
 
-```
+```java
 articleRepository.deleteByTitle("title");
 ```
 

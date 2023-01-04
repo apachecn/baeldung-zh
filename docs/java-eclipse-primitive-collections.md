@@ -10,7 +10,7 @@
 
 假设我们想要创建一个简单的整数列表:
 
-```
+```java
 List<Integer> myList = new ArrayList<>; 
 int one = 1; 
 myList.add(one);
@@ -34,7 +34,7 @@ myList.add(one);
 
 我们将使用 [Maven](https://web.archive.org/web/20220626210131/https://search.maven.org/search?q=g:org.eclipse.collections) 来包含所需的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.eclipse.collections</groupId>
     <artifactId>eclipse-collections-api</artifactId>
@@ -54,7 +54,7 @@ Eclipse Collections 为所有的[原语](/web/20220626210131/https://www.baeldun
 
 首先，让我们来看看一系列的`long`:
 
-```
+```java
 @Test
 public void whenListOfLongHasOneTwoThree_thenSumIsSix() {
     MutableLongList longList = LongLists.mutable.of(1L, 2L, 3L);
@@ -66,7 +66,7 @@ public void whenListOfLongHasOneTwoThree_thenSumIsSix() {
 
 同样，我们可以创建一个不可变的`int`列表:
 
-```
+```java
 @Test
 public void whenListOfIntHasOneTwoThree_thenMaxIsThree() {
     ImmutableIntList intList = IntLists.immutable.of(1, 2, 3);
@@ -78,7 +78,7 @@ public void whenListOfIntHasOneTwoThree_thenMaxIsThree() {
 
 除了`Map`接口方法，Eclipse 集合为每个原语配对提供了新的接口方法:
 
-```
+```java
 @Test
 public void testOperationsOnIntIntMap() {
     MutableIntIntMap map = new IntIntHashMap();
@@ -92,7 +92,7 @@ public void testOperationsOnIntIntMap() {
 
 此外，Eclipse Collections 与`Iterable`一起工作:
 
-```
+```java
 @Test
 public void whenConvertFromIterableToPrimitive_thenValuesAreEqual() {
     Iterable<Integer> iterable = Interval.oneTo(3);
@@ -104,7 +104,7 @@ public void whenConvertFromIterableToPrimitive_thenValuesAreEqual() {
 
 此外，我们可以从`Iterable:`创建一个原始地图
 
-```
+```java
 @Test
 public void whenCreateMapFromStream_thenValuesMustMatch() {
     Iterable<Integer> integers = Interval.oneTo(3);
@@ -125,7 +125,7 @@ public void whenCreateMapFromStream_thenValuesMustMatch() {
 
 因为 Java 已经有了原始流，并且 Eclipse 集合与它们很好地集成在一起:
 
-```
+```java
 @Test
 public void whenCreateDoubleStream_thenAverageIsThree() {
     DoubleStream doubleStream = DoubleLists

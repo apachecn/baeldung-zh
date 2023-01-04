@@ -27,7 +27,7 @@ Java 9 对`CompletableFuture`类做了一些改变。这些变化是作为 [JEP 
 
 返回用于不指定`Executor`的异步方法的默认`Executor`。
 
-```
+```java
 new CompletableFuture().defaultExecutor()
 ```
 
@@ -39,7 +39,7 @@ new CompletableFuture().defaultExecutor()
 
 `newIncompleteFuture`也称为“虚拟构造函数”，用于获取相同类型的新的可完成的未来实例。
 
-```
+```java
 new CompletableFuture().newIncompleteFuture()
 ```
 
@@ -54,7 +54,7 @@ new CompletableFuture().newIncompleteFuture()
 *   当这个正常完成时，新的也正常完成
 *   当这个异常 X 异常完成时，新的也异常完成，带有一个以 X 为原因的`CompletionException`
 
-```
+```java
 new CompletableFuture().copy()
 ```
 
@@ -66,7 +66,7 @@ new CompletableFuture().copy()
 
 该方法返回一个新的`CompletionStage`,其行为方式与 copy 方法描述的完全相同，但是，这样的新实例在每次尝试检索或设置解析的值时都会抛出`UnsupportedOperationException`。
 
-```
+```java
 new CompletableFuture().minimalCompletionStage()
 ```
 
@@ -78,7 +78,7 @@ new CompletableFuture().minimalCompletionStage()
 
 **签名**:
 
-```
+```java
 CompletableFuture<T> completeAsync(Supplier<? extends T> supplier, Executor executor)
 CompletableFuture<T> completeAsync(Supplier<? extends T> supplier)
 ```
@@ -89,7 +89,7 @@ CompletableFuture<T> completeAsync(Supplier<? extends T> supplier)
 
 **签名** : `CompletableFuture<T> orTimeout(long timeout, TimeUnit unit)`
 
-```
+```java
 new CompletableFuture().orTimeout(1, TimeUnit.SECONDS)
 ```
 
@@ -99,7 +99,7 @@ new CompletableFuture().orTimeout(1, TimeUnit.SECONDS)
 
 **签名** : `CompletableFuture<T> completeOnTimeout(T value, long timeout, TimeUnit unit)`
 
-```
+```java
 new CompletableFuture().completeOnTimeout(value, 1, TimeUnit.SECONDS)
 ```
 
@@ -119,7 +119,7 @@ new CompletableFuture().completeOnTimeout(value, 1, TimeUnit.SECONDS)
 
 **签名**:
 
-```
+```java
 Executor delayedExecutor(long delay, TimeUnit unit, Executor executor)
 Executor delayedExecutor(long delay, TimeUnit unit)
 ```
@@ -130,7 +130,7 @@ Executor delayedExecutor(long delay, TimeUnit unit)
 
 **签名**:
 
-```
+```java
 <U> CompletionStage<U> completedStage(U value)
 <U> CompletionStage<U> failedStage(Throwable ex)
 ```
@@ -151,7 +151,7 @@ failedFuture 方法增加了指定已经完成的异常`CompleatebleFuture`实�
 
 这个例子将展示如何用一个特定的值将一个`CompletableFuture`的完成延迟一秒。这可以通过使用`completeAsync`方法和`delayedExecutor`来实现。
 
-```
+```java
 CompletableFuture<Object> future = new CompletableFuture<>();
 future.completeAsync(() -> input, CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS));
 ```
@@ -160,7 +160,7 @@ future.completeAsync(() -> input, CompletableFuture.delayedExecutor(1, TimeUnit.
 
 另一种实现延迟结果的方法是使用`completeOnTimeout`方法。这个例子定义了一个`CompletableFuture`,如果给定的输入在 1 秒钟后仍未被解析，它将被解析。
 
-```
+```java
 CompletableFuture<Object> future = new CompletableFuture<>();
 future.completeOnTimeout(input, 1, TimeUnit.SECONDS);
 ```
@@ -169,7 +169,7 @@ future.completeOnTimeout(input, 1, TimeUnit.SECONDS);
 
 另一种可能是超时，用`TimeoutException`异常解决未来。例如，让`CompletableFuture`在给定的 1 秒后超时，在此之前不会完成。
 
-```
+```java
 CompletableFuture<Object> future = new CompletableFuture<>();
 future.orTimeout(1, TimeUnit.SECONDS);
 ```

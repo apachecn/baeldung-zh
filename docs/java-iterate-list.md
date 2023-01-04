@@ -28,7 +28,7 @@ Learn several ways of iterating over Java 8 Streams using indices[Read more](/we
 
 我们将首先为我们的示例定义一个国家列表:
 
-```
+```java
 List<String> countries = Arrays.asList("Germany", "Panama", "Australia");
 ```
 
@@ -40,7 +40,7 @@ List<String> countries = Arrays.asList("Germany", "Panama", "Australia");
 
 这里我们简单地使用一个整数变量作为索引:
 
-```
+```java
 for (int i = 0; i < countries.size(); i++) {
     System.out.println(countries.get(i));
 }
@@ -58,7 +58,7 @@ update 子句用于修改索引变量的当前状态，增加或减少它，直�
 
 注意，增强的`for`循环比基本的`for`循环简单:
 
-```
+```java
 for (String country : countries) {
     System.out.println(country); 
 }
@@ -78,7 +78,7 @@ for (String country : countries) {
 
 这里我们将演示两者的用法:
 
-```
+```java
 Iterator<String> countriesIterator = countries.iterator();
 
 while(countriesIterator.hasNext()) {
@@ -98,7 +98,7 @@ while(countriesIterator.hasNext()) {
 
 正如我们所见，`ListIterator`看起来与我们之前使用的`Iterator`非常相似:
 
-```
+```java
 ListIterator<String> listIterator = countries.listIterator();
 
 while(listIterator.hasNext()) {
@@ -114,7 +114,7 @@ while(listIterator.hasNext()) {
 
 语法非常简单:
 
-```
+```java
 countries.forEach(System.out::println);
 ```
 
@@ -128,7 +128,7 @@ countries.forEach(System.out::println);
 
 这里我们将演示流的一个典型用法:
 
-```
+```java
 countries.stream().forEach((c) -> System.out.println(c));
 ```
 

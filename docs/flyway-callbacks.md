@@ -42,7 +42,7 @@ Flyway 的作者提供了这些额外的钩子，让我们在 Flyway 使用的�
 
 为了了解回调在实践中是如何工作的，让我们看一个简单的例子。我们可以通过在我们的`pom.xml`中声明 flyway-core 为依赖项来开始我们的示例:
 
-```
+```java
 <dependency>
     <groupId>org.flywaydb</groupId>
     <artifactId>flyway-core</artifactId>
@@ -64,7 +64,7 @@ Flyway 使我们能够使用两种不同的方法创建回调，Java 或 SQL。�
 
 在最简单的情况下，要创建自定义回调，我们需要实现`Callback`接口，如我们的`ExampleFlywayCallback:`所示
 
-```
+```java
 public class ExampleFlywayCallback implements Callback {
 
     private final Log log = LogFactory.getLog(getClass());
@@ -105,7 +105,7 @@ public class ExampleFlywayCallback implements Callback {
 
 没有必要为迁移和 SQL 回调配置单独的位置，但是我们在示例中以这种方式进行设置，以演示如何将它们分开:
 
-```
+```java
 @Test
 public void migrateWithSqlAndJavaCallbacks() {
     Flyway flyway = Flyway.configure()
@@ -121,7 +121,7 @@ public void migrateWithSqlAndJavaCallbacks() {
 
 这可以从上述测试的输出中看出:
 
-```
+```java
 21:50:45.677 [main] INFO  c.b.f.FlywayApplicationUnitTest - > migrateWithSqlAndJavaCallbacks
 21:50:45.848 [main] INFO  o.f.c.i.license.VersionPrinter - Flyway Community Edition 8.0.0 by Redgate
 21:50:45.849 [main] INFO  o.f.c.i.d.base.BaseDatabaseType - Database: jdbc:h2:mem:DATABASE (H2 1.4)

@@ -20,7 +20,7 @@ Zuul 是一种边缘服务，允许我们将传入的 HTTP 请求路由到多个
 
 让我们从给我们的项目添加 Zuul 开始。我们通过添加 [`spring-cloud-starter-netflix-zuul`](https://web.archive.org/web/20220630130959/https://search.maven.org/search?q=g:org.springframework.cloud%20AND%20a:spring-cloud-starter-netflix-zuul) 工件来做到这一点:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
@@ -36,7 +36,7 @@ Zuul 是一种边缘服务，允许我们将传入的 HTTP 请求路由到多个
 
 为此，我们将创建一个新的 Spring Boot 应用程序，名为`GatewayApplication`。然后，我们将简单地用`@EnableZuulProxy`注释来修饰这个应用程序类，这将导致一个 Zuul 实例的产生:
 
-```
+```java
 @EnableZuulProxy
 @SpringBootApplication
 public class GatewayApplication {
@@ -50,7 +50,7 @@ public class GatewayApplication {
 
 在我们继续之前，我们需要配置一些 Zuul 属性。我们首先要配置的是 Zuul 监听传入连接的端口。这需要放到`/src/main/resources/application.yml`文件中:
 
-```
+```java
 server:
     port: 8080 
 ```
@@ -67,7 +67,7 @@ server:
 
 现在让我们将一些路线映射到这些服务中的每一项:
 
-```
+```java
 zuul:
   routes:
     spring-security-oauth-resource:
@@ -92,7 +92,7 @@ zuul:
 
 这就完成了我们的 Zuul 配置:
 
-```
+```java
 server:
   port: 8080
 zuul:
@@ -112,7 +112,7 @@ zuul:
 
 首先，我们需要将 Spring 安全依赖项引入我们的项目。我们想要 [spring-security-oauth2](https://web.archive.org/web/20220630130959/https://mvnrepository.com/artifact/org.springframework.security.oauth/spring-security-oauth2) 和 [spring-security-jwt:](https://web.archive.org/web/20220630130959/https://mvnrepository.com/artifact/org.springframework.security/spring-security-jwt)
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security.oauth</groupId>
     <artifactId>spring-security-oauth2</artifactId>
@@ -127,7 +127,7 @@ zuul:
 
 现在让我们通过扩展`ResourceServerConfigurerAdapter:`为我们想要保护的路由编写一个配置
 
-```
+```java
 @Configuration
 @Configuration
 @EnableResourceServer
@@ -157,7 +157,7 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
 
 让我们从将工件添加到我们的项目开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security.oauth.boot</groupId>
     <artifactId>spring-security-oauth2-autoconfigure</artifactId>
@@ -167,7 +167,7 @@ public class GatewayConfiguration extends ResourceServerConfigurerAdapter {
 
 接下来，我们需要在我们的`application.yaml`文件中添加几行配置来定义用于签署 JWT 的密钥:
 
-```
+```java
 security:
   oauth2:
     resource:
@@ -189,7 +189,7 @@ security:
 
 这里我们用一个**用户名和密码交换一个访问令牌**。在这种情况下，我们使用'`john`'作为用户名，使用'`123`'作为密码:
 
-```
+```java
 curl -X POST \
   http://localhost:8080/oauth/token \
   -H 'Authorization: Basic Zm9vQ2xpZW50SWRQYXNzd29yZDpzZWNyZXQ=' \
@@ -204,7 +204,7 @@ curl -X POST \
 
 对于客户机(在本例中是 cURL 请求)来说，用户名和密码就像用户一样:
 
-```
+```java
 {    
     "access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX...",
     "token_type":"bearer",    
@@ -220,7 +220,7 @@ curl -X POST \
 
 然后，我们可以使用从授权服务器检索到的 JWT 对资源服务器执行查询:
 
-```
+```java
 curl -X GET \
 curl -X GET \
   http:/localhost:8080/spring-security-oauth-resource/users/extra \
@@ -235,7 +235,7 @@ Zuul edge 服务现在将在路由到资源服务器之前验证 JWT。
 
 然后，它从 JWT 中提取关键字段，并在响应请求之前检查更细粒度的授权:
 
-```
+```java
 {
     "user_name":"john",
     "scope":["foo","read","write"],

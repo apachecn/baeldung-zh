@@ -14,7 +14,7 @@ JAX-RS 2.0 引入了一个新的客户端 API，这样你就可以向你的远�
 
 在您的 **`pom.xml`** 中添加以下依赖项:
 
-```
+```java
 <properties>
     <resteasy.version>4.7.2.Final</resteasy.version>
 </properties>
@@ -55,7 +55,7 @@ JAX-RS 2.0 引入了一个新的客户端 API，这样你就可以向你的远�
 
 ### 3.1。`ServicesClient`界面
 
-```
+```java
 @Path("/movies")
 public interface ServicesInterface {
 
@@ -82,7 +82,7 @@ public interface ServicesInterface {
 
 ### 3.2。电影课
 
-```
+```java
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "movie", propOrder = { "imdbId", "title" })
 public class Movie {
@@ -98,7 +98,7 @@ public class Movie {
 
 我们现在将生成一个代理客户端，我们可以使用它来消费 API:
 
-```
+```java
 String transformerImdbId = "tt0418279";
 Movie transformerMovie = new Movie("tt0418279", "Transformer 2");
 UriBuilder FULL_PATH = UriBuilder.fromPath("http://127.0.0.1:8082/resteasy/rest");
@@ -135,14 +135,14 @@ moviesResponse.close();
 
 前一个例子中的一个注意事项是，我们只有一个可用的连接。例如，如果我们尝试:
 
-```
+```java
 Response batmanResponse = proxy.addMovie(batmanMovie);
 Response transformerResponse = proxy.addMovie(transformerMovie); 
 ```
 
 没有 invoke`close()`on`batmanResponse`–执行第二行时会抛出异常:
 
-```
+```java
 java.lang.IllegalStateException:
 Invalid use of BasicClientConnManager: connection still allocated.
 Make sure to release the connection before allocating another one. 
@@ -152,7 +152,7 @@ Make sure to release the connection before allocating another one.
 
 现在——为了解决这个限制——必须以不同的方式创建 `RestEasyClient`实例(使用连接池):
 
-```
+```java
 PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
 CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(cm).build();
 cm.setMaxTotal(200); // Increase max total connection to 200

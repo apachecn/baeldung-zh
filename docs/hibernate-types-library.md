@@ -10,7 +10,7 @@
 
 要启用 Hibernate 类型，我们只需添加[适当的`hibernate-types`依赖](https://web.archive.org/web/20220926185317/https://search.maven.org/artifact/com.vladmihalcea/hibernate-types-52):
 
-```
+```java
 <dependency>
     <groupId>com.vladmihalcea</groupId>
     <artifactId>hibernate-types-52</artifactId>
@@ -26,7 +26,7 @@
 
 因此，要运行和创建我们的数据库，我们只需要执行:
 
-```
+```java
 $ ./create-database.sh
 ```
 
@@ -44,7 +44,7 @@ $ ./create-database.sh
 
 对于本教程，我们将只为专辑和歌曲创建表格:
 
-```
+```java
 public class Album extends BaseEntity {
     @Type(type = "json")
     @Column(columnDefinition = "json")
@@ -57,7 +57,7 @@ public class Album extends BaseEntity {
 }
 ```
 
-```
+```java
 public class Song extends BaseEntity {
 
     private Long length = 0L;
@@ -72,7 +72,7 @@ public class Song extends BaseEntity {
 
 **使用`JsonStringType` 我们将封面艺术和艺术家表示为这些表中的 JSON 列:**
 
-```
+```java
 public class Artist implements Serializable {
 
     private String name;
@@ -83,7 +83,7 @@ public class Artist implements Serializable {
 }
 ```
 
-```
+```java
 public class CoverArt implements Serializable {
 
     private String frontCoverArtUrl;
@@ -100,7 +100,7 @@ public class CoverArt implements Serializable {
 
 我们定义了专辑和歌曲模型来包含数据库将存储为 JSON 的成员。这是因为使用了提供的`json`类型。为了使该类型可供我们使用，我们必须使用类型定义来定义它:
 
-```
+```java
 @TypeDefs({
   @TypeDef(name = "json", typeClass = JsonStringType.class),
   @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
@@ -118,7 +118,7 @@ public class BaseEntity {
 
 最终，我们的类型将使用 JDBC 和 Hibernate 自动转换成 SQL。所以，现在我们可以创建一些歌曲对象，一个专辑对象，并把它们保存到数据库中。随后，Hibernate 生成以下 SQL 语句:
 
-```
+```java
 insert into song (name, artist, length, id) values ('A Happy Song', '{"name":"Superstar","country":"England","genre":"Pop"}', 240, 3);
 insert into song (name, artist, length, id) values ('A Sad Song', '{"name":"Superstar","country":"England","genre":"Pop"}', 120, 4);
 insert into song (name, artist, length, id) values ('A New Song', '{"name":"Newcomer","country":"Jamaica","genre":"Reggae"}', 300, 6)
@@ -135,7 +135,7 @@ insert into album (name, cover_art, id) values ('Album 0', '{"frontCoverArtUrl":
 
 例如，假设我们想要将一首歌曲的录制日期添加到我们的`song`模型中，并将其作为一个`Integer`存储在我们的数据库中。我们可以在我们的`Song`实体类定义中使用`YearMonthIntegerType`:
 
-```
+```java
 @TypeDef(
   typeClass = YearMonthIntegerType.class,
   defaultForType = YearMonth.class

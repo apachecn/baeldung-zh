@@ -28,7 +28,7 @@ Learn the semantics of the @NotNull, @NotEmpty, and @NotBlank bean validation an
 
 该项目的依赖项相当标准:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -49,7 +49,7 @@ Learn the semantics of the @NotNull, @NotEmpty, and @NotBlank bean validation an
 
 从 Boot 2.3 开始，我们还需要显式添加 [`spring-boot-starter-validation`](https://web.archive.org/web/20221003130442/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-starter-validation) 依赖项:
 
-```
+```java
 <dependency> 
     <groupId>org.springframework.boot</groupId> 
     <artifactId>spring-boot-starter-validation</artifactId> 
@@ -62,7 +62,7 @@ Learn the semantics of the @NotNull, @NotEmpty, and @NotBlank bean validation an
 
 让我们来看看这个类:
 
-```
+```java
 @Entity
 public class User {
 
@@ -91,7 +91,7 @@ public class User {
 
 由于我们将使用 [Spring Data JPA](/web/20221003130442/https://www.baeldung.com/the-persistence-layer-with-spring-data-jpa) 将用户保存到内存中的 H2 数据库，我们还需要定义一个简单的存储库接口，以便在`User`对象上拥有基本的 CRUD 功能:
 
-```
+```java
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {}
 ```
@@ -106,7 +106,7 @@ Spring Boot 通过实现一个 REST 控制器使这个看似复杂的过程变�
 
 让我们看看 REST 控制器的实现:
 
-```
+```java
 @RestController
 public class UserController {
 
@@ -137,7 +137,7 @@ public class UserController {
 
 因此，我们可以用它来处理验证错误:
 
-```
+```java
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 @ExceptionHandler(MethodArgumentNotValidException.class)
 public Map<String, String> handleValidationExceptions(
@@ -166,7 +166,7 @@ public Map<String, String> handleValidationExceptions(
 
 让我们开始模仿/自动连接`UserRepository`接口实现，以及`UserController`实例和`[MockMvc](https://web.archive.org/web/20221003130442/https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/MockMvc.html)`对象:
 
-```
+```java
 @RunWith(SpringRunner.class) 
 @WebMvcTest
 @AutoConfigureMockMvc
@@ -190,7 +190,7 @@ public class UserControllerIntegrationTest {
 
 现在让我们用请求体中传递的有效和无效的`User`对象来测试`addUser()`方法:
 
-```
+```java
 @Test
 public void whenPostRequestToUsersAndValidUser_thenCorrectResponse() throws Exception {
     MediaType textPlainUtf8 = new MediaType(MediaType.TEXT_PLAIN, Charset.forName("UTF-8"));
@@ -223,7 +223,7 @@ public void whenPostRequestToUsersAndInValidUser_thenCorrectResponse() throws Ex
 
 最后，我们可以用标准的`main()`方法运行我们的示例项目:
 
-```
+```java
 @SpringBootApplication
 public class Application {
 
@@ -250,7 +250,7 @@ public class Application {
 
 同样，带有不带`name`和`email`值的`User` 对象的 POST 请求将返回以下响应:
 
-```
+```java
 {
   "name":"Name is mandatory",
   "email":"Email is mandatory"

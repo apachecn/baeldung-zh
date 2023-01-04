@@ -31,7 +31,7 @@ CORS 的第一步是一个`OPTIONS`请求，以确定请求的目标是否支持
 
 为了模拟这个问题，让我们首先创建一个支持跨源请求的简单 REST API:
 
-```
+```java
 @RestController
 @CrossOrigin("http://localhost:4200")
 public class ResourceController {
@@ -49,7 +49,7 @@ public class ResourceController {
 
 现在让我们用 Spring Security 来保护我们的 REST API:
 
-```
+```java
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -70,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 现在我们已经创建了 REST API，让我们使用`curl`尝试一个飞行前请求:
 
-```
+```java
 curl -v -H "Access-Control-Request-Method: GET" -H "Origin: http://localhost:4200" 
   -X OPTIONS http://localhost:8080/user
 ...
@@ -102,7 +102,7 @@ curl -v -H "Access-Control-Request-Method: GET" -H "Origin: http://localhost:420
 
 Spring 提供了一个开箱即用的解决方案来从授权检查中排除选项请求:
 
-```
+```java
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override

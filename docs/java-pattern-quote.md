@@ -12,7 +12,7 @@
 
 让我们考虑一个包含金额列表的字符串:
 
-```
+```java
 String dollarAmounts = "$100.25, $100.50, $150.50, $100.50, $100.75";
 ```
 
@@ -22,7 +22,7 @@ String dollarAmounts = "$100.25, $100.50, $150.50, $100.50, $100.75";
 
 首先，让我们看看**如果我们执行正则表达式搜索而不转义任何元字符**会发生什么:
 
-```
+```java
 public void whenMetacharactersNotEscaped_thenNoMatchesFound() {
     Pattern pattern = Pattern.compile(patternStr);
     Matcher matcher = pattern.matcher(dollarAmounts);
@@ -44,7 +44,7 @@ public void whenMetacharactersNotEscaped_thenNoMatchesFound() {
 
 其次，在执行搜索之前，让我们对正则表达式中的元字符进行转义:
 
-```
+```java
 public void whenMetacharactersManuallyEscaped_thenMatchingSuccessful() {
     String metaEscapedPatternStr = "\\Q" + patternStr + "\\E";
     Pattern pattern = Pattern.compile(metaEscapedPatternStr);
@@ -70,7 +70,7 @@ public void whenMetacharactersManuallyEscaped_thenMatchingSuccessful() {
 
 **Java 提供了一个** [**`quote()`方法**在它们的`Pattern`类](https://web.archive.org/web/20220628162615/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/regex/Pattern.html#quote(java.lang.String))里面检索一个字符串的文字模式:
 
-```
+```java
 public void whenMetacharactersEscapedUsingPatternQuote_thenMatchingSuccessful() {
     String literalPatternStr = Pattern.quote(patternStr);
     Pattern pattern = Pattern.compile(literalPatternStr);

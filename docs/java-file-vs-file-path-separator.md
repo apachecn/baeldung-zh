@@ -20,19 +20,19 @@ Java 帮助我们选择一个合适的分隔符，并提供一些函数来帮助
 
 我们可以使用`File.separator`得到分隔符作为`String`:
 
-```
+```java
 String fileSeparator = File.separator;
 ```
 
 我们也可以将这个分隔符作为带有`File.separatorChar`的`char` :
 
-```
+```java
 char fileSeparatorChar = File.separatorChar;
 ```
 
 从 Java 7 开始，我们也可以使用`FileSystems`:
 
-```
+```java
 String fileSeparator = FileSystems.getDefault().getSeparator();
 ```
 
@@ -44,37 +44,37 @@ Java 提供了两种从目录列表中构造文件路径的方法。
 
 这里，我们使用的是`Paths`类:
 
-```
+```java
 Path path = Paths.get("dir1", "dir2");
 ```
 
 让我们在 Microsoft Windows 上测试一下:
 
-```
+```java
 assertEquals("dir1\\dir2", path.toString());
 ```
 
 同样，我们可以在 Linux 或 Mac 上测试它:
 
-```
+```java
 assertEquals("dir1/dir2", path.toString()); 
 ```
 
 我们也可以使用`File` 类:
 
-```
+```java
 File file = new File("file1", "file2");
 ```
 
 让我们在 Microsoft Windows 上测试一下:
 
-```
+```java
 assertEquals("file1\\file2", file.toString());
 ```
 
 同样，我们可以在 Linux 或 Mac 上测试它:
 
-```
+```java
 assertEquals("file1/file2", file.toString());
 ```
 
@@ -88,13 +88,13 @@ assertEquals("file1/file2", file.toString());
 
 我们可以使用`File.pathSeparator`获得路径分隔符作为`String`:
 
-```
+```java
 String pathSeparator = File.pathSeparator;
 ```
 
 我们也可以将路径分隔符作为一个 `char`:
 
-```
+```java
 char pathSeparatorChar = File.pathSeparatorChar;
 ```
 
@@ -106,26 +106,26 @@ char pathSeparatorChar = File.pathSeparatorChar;
 
 **让我们试试 `String.join` 的方法:**
 
-```
+```java
 String[] pathNames = { "path1", "path2", "path3" };
 String path = String.join(File.pathSeparator, pathNames);
 ```
 
 这里我们在 Windows 上测试我们的代码:
 
-```
+```java
 assertEquals("path1;path2;path3", path);
 ```
 
 和文件路径在 Linux 或 Mac 上会有所不同:
 
-```
+```java
 assertEquals("path1:path2:path3", path);
 ```
 
 **同样，我们可以使用`StringJoiner`类:**
 
-```
+```java
 public static StringJoiner buildPathUsingStringJoiner(String path1, String path2) {
     StringJoiner joiner = new StringJoiner(File.pathSeparator);
     joiner.add(path1);
@@ -136,13 +136,13 @@ public static StringJoiner buildPathUsingStringJoiner(String path1, String path2
 
 让我们在 Microsoft Windows 上测试我们的代码:
 
-```
+```java
 assertEquals("path1;path2", buildPathUsingStringJoiner("path1", "path2"));
 ```
 
 它在 Mac 或 Unix 上的行为会有所不同:
 
-```
+```java
 assertEquals("path1:path2", buildPathUsingStringJoiner("path1", "path2"));
 ```
 

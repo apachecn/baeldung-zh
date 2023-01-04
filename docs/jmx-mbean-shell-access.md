@@ -14,7 +14,7 @@
 
 为了测试我们的工具，我们需要一个 MBean。**首先，让我们创建一个简单的计算器，从它的接口开始:**
 
-```
+```java
 public interface CalculatorMBean {
 
     Integer sum();
@@ -31,7 +31,7 @@ public interface CalculatorMBean {
 
 然后，让我们看看实现:
 
-```
+```java
 public class Calculator implements CalculatorMBean {
 
     private Integer a = 0;
@@ -50,7 +50,7 @@ public class Calculator implements CalculatorMBean {
 
 为了澄清，`ObjectName`接收一个任意的`String.`，但是为了[遵循惯例](https://web.archive.org/web/20221125062820/https://www.oracle.com/java/technologies/javase/management-extensions-best-practices.html)，我们将包含我们的包名作为域名，以及一个“`key=value`对列表:
 
-```
+```java
 public class JmxCalculatorMain {
 
     public static void main(String[] args) throws Exception {
@@ -68,7 +68,7 @@ public class JmxCalculatorMain {
 
 **最后，为了防止我们的应用程序终止，我们将让它等待用户输入:**
 
-```
+```java
 try (Scanner scanner = new Scanner(System.in)) {
     System.out.println("<press enter to terminate>");
     scanner.nextLine();
@@ -77,7 +77,7 @@ try (Scanner scanner = new Scanner(System.in)) {
 
 为了简化我们的示例，我们将在[端口](/web/20221125062820/https://www.baeldung.com/jmx-ports) `11234.`上运行我们的应用程序。同样，让我们使用这些 [JVM 参数](/web/20221125062820/https://www.baeldung.com/jvm-parameters)禁用身份验证和 SSL:
 
-```
+```java
 -Dcom.sun.management.jmxremote.port=11234
 -Dcom.sun.management.jmxremote.authenticate=false
 -Dcom.sun.management.jmxremote.ssl=false
@@ -95,7 +95,7 @@ try (Scanner scanner = new Scanner(System.in)) {
 
 所以，让我们创建一个名为`jmxterm.sh:`的文件
 
-```
+```java
 #!/bin/sh
 
 jar='/tmp/jmxterm-1.0.4-uber.jar'
@@ -110,7 +110,7 @@ command="info -b $mbean"
 
 然后，我们将做一些[参数解析](/web/20221125062820/https://www.baeldung.com/linux/bash-parse-command-line-arguments)，通过构建`command`变量来处理`–run`、`–set`和`–get`选项:
 
-```
+```java
 while test $# -gt 0
 do
     case "$1" in
@@ -138,7 +138,7 @@ done
 
 最后，我们`[echo](/web/20221125062820/https://www.baeldung.com/linux/echo-command#:~:text=The%20echo%20command%20writes%20text%20to%20standard%20output%20(stdout).&text=Some%20common%20usages%20of%20the,echo%20command%20in%20later%20sections.)`将我们的`command`、[管道](/web/20221125062820/https://www.baeldung.com/linux/pipes-redirection)连同我们正在运行的应用程序的`address`一起传送到 Jmxterm jar。`-v silent`选项关闭详细性，而`-n`告诉 Jmxterm 不要打印用户提示。因此，这个选项很有帮助，因为我们没有交互地使用它:
 
-```
+```java
 echo $command | java -jar $jar -l $address -n -v silent 
 ```
 
@@ -146,13 +146,13 @@ echo $command | java -jar $jar -l $address -n -v silent
 
 在使我们的脚本[可执行](/web/20221125062820/https://www.baeldung.com/linux/chown-chmod-permissions)之后，我们将不带参数地运行它，以查看它的默认行为。假设脚本在[当前目录](/web/20221125062820/https://www.baeldung.com/linux/run-script-different-working-dir)中，让我们运行它:
 
-```
+```java
 ./jmxterm.sh
 ```
 
 **这将查询我们的 MBean 上的信息:**
 
-```
+```java
 # attributes
   %0   - A (java.lang.Integer, rw)
   %1   - B (java.lang.Integer, rw)
@@ -164,32 +164,32 @@ echo $command | java -jar $jar -l $address -n -v silent
 
 **那么，我们就叫`setA()` :**
 
-```
+```java
 ./jmxterm.sh --set A 1
 ```
 
 因此，如果一切正常，就没有输出。**所以现在让我们调用`getA()`来检查当前值:**
 
-```
+```java
 ./jmxterm.sh --get A
 ```
 
 下面是我们得到的输出:
 
-```
+```java
 A = 1;
 ```
 
 **现在，让我们将`B`设置为 2，并调用`sum()` :**
 
-```
+```java
 ./jmxter.sh --set B 2
 ./jmxter.sh --run sum
 ```
 
 这是输出结果:
 
-```
+```java
 3
 ```
 
@@ -201,7 +201,7 @@ A = 1;
 
 为了简洁起见，让我们看一个如何从命令行调用它的例子。首先，我们将设置属性值，然后执行一个操作:
 
-```
+```java
 jar=cmdline-jmxclient-0.10.3.jar
 address=localhost:11234
 mbean=com.baeldung.jxmshell:name=calculator,type=basic
@@ -214,7 +214,7 @@ java -jar $jar - $address $mbean sum
 
 以下是运行这些命令的输出:
 
-```
+```java
 11/11/2022 22:10:15 -0300 org.archive.jmx.Client sum: 2
 ```
 
@@ -224,7 +224,7 @@ java -jar $jar - $address $mbean sum
 
 **因为可用的选项已经很老了，所以这是了解 MBeans 如何工作的绝佳时机。**所以让我们开始实现我们的解决方案，用一个包装器包装我们需要的来自`javax.management`包的类:
 
-```
+```java
 public class JmxConnectionWrapper {
 
     private final Map<String, MBeanAttributeInfo> attributeMap;
@@ -252,7 +252,7 @@ public class JmxConnectionWrapper {
 
 现在，让我们写一些助手方法。我们将从获取和设置属性值的方法开始。当我们收到一个值时，我们在返回当前值之前设置它:
 
-```
+```java
 public Object attributeValue(String name, String value) throws Exception {
     if (value != null)
         connection.setAttribute(objectName, new Attribute(name, Integer.valueOf(value)));
@@ -265,7 +265,7 @@ public Object attributeValue(String name, String value) throws Exception {
 
 同样，因为我们知道我们的 MBean 只包含无参数操作，所以我们在我们的`connection`上调用`invoke()`，并为`params`和`signature`传递空数组:
 
-```
+```java
 public Object invoke(String operation) throws Exception {
     Object[] params = new Object[] {};
     String[] signature = new String[] {};
@@ -279,7 +279,7 @@ public Object invoke(String operation) throws Exception {
 
 最后，让我们创建一个 [CLI 应用程序](/web/20221125062820/https://www.baeldung.com/java-command-line-arguments)来从 shell 操作我们的 MBean:
 
-```
+```java
 public class JmxInvoker {
 
     public static void main(String... args) throws Exception {
@@ -303,7 +303,7 @@ public class JmxInvoker {
 
 我们的`main()`方法将参数传递给`execute()`，后者对参数进行处理以决定我们是要执行操作还是获取/设置属性:
 
-```
+```java
 if (connection.hasAttribute(operation)) {
     Object value = connection.attributeValue(operation, attributeValue);
     return operation + "=" + value;
@@ -319,7 +319,7 @@ if (connection.hasAttribute(operation)) {
 
 假设我们[将我们的应用程序打包在一个 jar](/web/20221125062820/https://www.baeldung.com/java-create-jar) 中，并将其放在由`jar`变量指定的位置，让我们定义我们的默认值:
 
-```
+```java
 jar=/tmp/jmx-invoker.jar
 address='service:jmx:rmi:///jndi/rmi://localhost:11234/jmxrmi'
 invoker='com.baeldung.jmxshell.custom.JmxInvoker'
@@ -328,7 +328,7 @@ mbean='com.baeldung.jxmshell:name=calculator,type=basic'
 
 **然后，我们运行这些命令来设置属性，并在我们的`MBean`中执行`sum()`方法，与前面的解决方案类似:**
 
-```
+```java
 $ java -cp $jar $invoker $address $mbean A 1
 A=1
 

@@ -23,7 +23,7 @@ JSR 356 或 Java API for WebSocket 指定了一个 API，Java 开发人员可以
 
 我们首先将最新的依赖项添加到`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>javax.websocket</groupId>
     <artifactId>javax.websocket-api</artifactId>
@@ -35,7 +35,7 @@ JSR 356 或 Java API for WebSocket 指定了一个 API，Java 开发人员可以
 
 为了将 Java `Objects`转换成 JSON 表示，反之亦然，我们将使用 Gson:
 
-```
+```java
 <dependency>
     <groupId>com.google.code.gson</groupId>
     <artifactId>gson</artifactId>
@@ -60,7 +60,7 @@ JSR 356 或 Java API for WebSocket 指定了一个 API，Java 开发人员可以
 
 我们通过用`@ServerEndpoint`对 Java 类`WebSocket`服务器端点进行注释来声明它。我们还指定部署端点的 URI。URI 是相对于服务器容器的根目录定义的，并且必须以正斜杠开头:
 
-```
+```java
 @ServerEndpoint(value = "/chat/{username}")
 public class ChatEndpoint {
 
@@ -88,7 +88,7 @@ public class ChatEndpoint {
 
 上面的代码是我们类似聊天的应用程序的服务器端点框架。如您所见，我们有 4 个注释映射到它们各自的方法。下面你可以看到这样的方法的实现:
 
-```
+```java
 @ServerEndpoint(value="/chat/{username}")
 public class ChatEndpoint {
 
@@ -177,7 +177,7 @@ WebSocket 规范支持两种在线数据格式——文本和二进制。API 支
 
 在下面的代码中，我们定义了要编码的类`Message`，在方法`encode` 中，我们使用 Gson 将 Java 对象编码为 JSON:
 
-```
+```java
 public class Message {
     private String from;
     private String to;
@@ -187,7 +187,7 @@ public class Message {
 }
 ```
 
-```
+```java
 public class MessageEncoder implements Encoder.Text<Message> {
 
     private static Gson gson = new Gson();
@@ -215,7 +215,7 @@ public class MessageEncoder implements Encoder.Text<Message> {
 
 正如我们在编码器中看到的，`decode` 方法是我们获取发送到端点的消息中检索到的 JSON，并使用 Gson 将其转换为名为`Message:`的 Java 类
 
-```
+```java
 public class MessageDecoder implements Decoder.Text<Message> {
 
     private static Gson gson = new Gson();
@@ -246,7 +246,7 @@ public class MessageDecoder implements Decoder.Text<Message> {
 
 让我们通过在类级注释`@ServerEndpoint`中添加为编码和解码数据而创建的类，将所有内容放在一起:
 
-```
+```java
 @ServerEndpoint( 
   value="/chat/{username}", 
   decoders = MessageDecoder.class, 

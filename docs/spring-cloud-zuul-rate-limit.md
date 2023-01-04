@@ -12,7 +12,7 @@
 
 除了 Spring Cloud 网飞 Zuul 依赖项，我们需要将 [Spring Cloud Zuul RateLimit](https://web.archive.org/web/20220703151955/https://mvnrepository.com/artifact/com.marcosbarbero.cloud/spring-cloud-zuul-ratelimit) 添加到我们的应用程序的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
@@ -30,7 +30,7 @@
 
 下面是一个简单的 Spring 控制器类，有两个端点:
 
-```
+```java
 @Controller
 @RequestMapping("/greeting")
 public class GreetingController {
@@ -53,7 +53,7 @@ public class GreetingController {
 
 其次，让我们在我们的`application.yml`文件中添加以下 Zuul 属性:
 
-```
+```java
 zuul:
   routes:
     serviceSimple:
@@ -96,7 +96,7 @@ zuul:
 
 接下来，让我们测试速率限制:
 
-```
+```java
 @Test
 public void whenRequestNotExceedingCapacity_thenReturnOkResponse() {
     ResponseEntity<String> response = restTemplate.getForEntity(SIMPLE_GREETING, String.class);
@@ -118,7 +118,7 @@ public void whenRequestNotExceedingCapacity_thenReturnOkResponse() {
 
 另一个关键点是**对于每个响应，我们都得到返回头，为我们提供关于速率限制的进一步信息。**对于上述请求，我们将获得以下标题:
 
-```
+```java
 X-RateLimit-Limit-rate-limit-application_serviceSimple_127.0.0.1: 5
 X-RateLimit-Remaining-rate-limit-application_serviceSimple_127.0.0.1: 4
 X-RateLimit-Reset-rate-limit-application_serviceSimple_127.0.0.1: 60000
@@ -132,7 +132,7 @@ X-RateLimit-Reset-rate-limit-application_serviceSimple_127.0.0.1: 60000
 
 此外，如果我们立即再次触发同一个端点，我们可能会得到:
 
-```
+```java
 X-RateLimit-Limit-rate-limit-application_serviceSimple_127.0.0.1: 5
 X-RateLimit-Remaining-rate-limit-application_serviceSimple_127.0.0.1: 3
 X-RateLimit-Reset-rate-limit-application_serviceSimple_127.0.0.1: 57031
@@ -144,7 +144,7 @@ X-RateLimit-Reset-rate-limit-application_serviceSimple_127.0.0.1: 57031
 
 让我们看看当我们超过速率限制时会发生什么:
 
-```
+```java
 @Test
 public void whenRequestExceedingCapacity_thenReturnTooManyRequestsResponse() throws InterruptedException {
     ResponseEntity<String> response = this.restTemplate.getForEntity(ADVANCED_GREETING, String.class);
@@ -174,7 +174,7 @@ public void whenRequestExceedingCapacity_thenReturnTooManyRequestsResponse() thr
 
 以下是达到速率限制时返回的标题:
 
-```
+```java
 X-RateLimit-Limit-rate-limit-application_serviceAdvanced_127.0.0.1: 1
 X-RateLimit-Remaining-rate-limit-application_serviceAdvanced_127.0.0.1: 0
 X-RateLimit-Reset-rate-limit-application_serviceAdvanced_127.0.0.1: 268
@@ -188,7 +188,7 @@ X-RateLimit-Reset-rate-limit-application_serviceAdvanced_127.0.0.1: 268
 
 例如，这可以通过创建一个定制的`RateLimitKeyGenerator`实现来完成。我们可以添加更多的限定符或完全不同的东西:
 
-```
+```java
 @Bean
 public RateLimitKeyGenerator rateLimitKeyGenerator(RateLimitProperties properties, 
   RateLimitUtils rateLimitUtils) {
@@ -204,7 +204,7 @@ public RateLimitKeyGenerator rateLimitKeyGenerator(RateLimitProperties propertie
 
 上面的代码将 REST 方法名附加到键上。例如:
 
-```
+```java
 X-RateLimit-Limit-rate-limit-application_serviceSimple_127.0.0.1_GET: 5
 ```
 
@@ -216,7 +216,7 @@ X-RateLimit-Limit-rate-limit-application_serviceSimple_127.0.0.1_GET: 5
 
 当我们需要以不同的方式处理错误时，我们可以定义一个定制的`RateLimiterErrorHandler` bean:
 
-```
+```java
 @Bean
 public RateLimiterErrorHandler rateLimitErrorHandler() {
     return new DefaultRateLimiterErrorHandler() {

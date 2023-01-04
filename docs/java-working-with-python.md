@@ -12,13 +12,13 @@ Python 是一种越来越受欢迎的编程语言，尤其是在科学界，因�
 
 在整个教程中，我们将使用一个非常简单的 Python 脚本，我们将在一个名为`hello.py`的专用文件中定义它:
 
-```
+```java
 print("Hello Baeldung Readers!!")
 ```
 
 假设我们有一个工作的 Python 安装，当我们运行我们的脚本时，我们应该看到打印的消息:
 
-```
+```java
 $ python hello.py 
 Hello Baeldung Readers!!
 ```
@@ -31,7 +31,7 @@ Hello Baeldung Readers!!
 
 让我们首先来看看如何使用 [`ProcessBuilder` API](/web/20220812012137/https://www.baeldung.com/java-lang-processbuilder-api) 创建一个本地操作系统进程来启动`python`并执行我们的简单脚本:
 
-```
+```java
 @Test
 public void givenPythonScript_whenPythonProcessInvoked_thenSuccess() throws Exception {
     ProcessBuilder processBuilder = new ProcessBuilder("python", resolvePythonScriptPath("hello.py"));
@@ -69,7 +69,7 @@ public void givenPythonScript_whenPythonProcessInvoked_thenSuccess() throws Exce
 
 由于 Jython 可以从 [Maven Central](https://web.archive.org/web/20220812012137/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22jython%22) 获得，我们可以将它包含在我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.python</groupId>
     <artifactId>jython</artifactId>
@@ -81,13 +81,13 @@ public void givenPythonScript_whenPythonProcessInvoked_thenSuccess() throws Exce
 
 让我们列出所有可用的脚本引擎:
 
-```
+```java
 ScriptEngineManagerUtils.listEngines();
 ```
 
 如果我们有可能使用 Jython，我们应该会看到显示的适当的脚本引擎:
 
-```
+```java
 ...
 Engine name: jython
 Version: 2.7.2
@@ -99,7 +99,7 @@ jython
 
 既然我们知道可以使用 Jython 脚本引擎，那么让我们来看看如何调用我们的`hello.py`脚本:
 
-```
+```java
 @Test
 public void givenPythonScriptEngineIsAvailable_whenScriptInvoked_thenOutputDisplayed() throws Exception {
     StringWriter writer = new StringWriter();
@@ -123,7 +123,7 @@ public void givenPythonScriptEngineIsAvailable_whenScriptInvoked_thenOutputDispl
 
 继续 Jython，我们也有可能将 Python 代码直接嵌入到我们的 Java 代码中。我们可以使用`PythonInterpretor`类来做到这一点:
 
-```
+```java
 @Test
 public void givenPythonInterpreter_whenPrintExecuted_thenOutputDisplayed() {
     try (PythonInterpreter pyInterp = new PythonInterpreter()) {
@@ -141,7 +141,7 @@ public void givenPythonInterpreter_whenPrintExecuted_thenOutputDisplayed() {
 
 现在让我们看一个将两个数字相加的例子:
 
-```
+```java
 @Test
 public void givenPythonInterpreter_whenNumbersAdded_thenOutputDisplayed() {
     try (PythonInterpreter pyInterp = new PythonInterpreter()) {
@@ -156,7 +156,7 @@ public void givenPythonInterpreter_whenNumbersAdded_thenOutputDisplayed() {
 
 在我们最后的 Jython 示例中，我们将看到当错误发生时会发生什么:
 
-```
+```java
 try (PythonInterpreter pyInterp = new PythonInterpreter()) {
     pyInterp.exec("import syds");
 }
@@ -164,7 +164,7 @@ try (PythonInterpreter pyInterp = new PythonInterpreter()) {
 
 当我们运行这段代码时，会抛出一个`PyException`,我们会看到相同的错误，就好像我们在使用原生 Python 一样:
 
-```
+```java
 Traceback (most recent call last):
   File "<string>", line 1, in <module>
 ImportError: No module named syds
@@ -182,7 +182,7 @@ ImportError: No module named syds
 
 `commons-exec`神器可以从 [Maven Central](https://web.archive.org/web/20220812012137/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22commons-exec%22) 获得:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-exec</artifactId>
@@ -192,7 +192,7 @@ ImportError: No module named syds
 
 现在让我们看看如何使用这个库:
 
-```
+```java
 @Test
 public void givenPythonScript_whenPythonProcessExecuted_thenSuccess() 
   throws ExecuteException, IOException {
@@ -222,7 +222,7 @@ public void givenPythonScript_whenPythonProcessExecuted_thenSuccess()
 
 **事实上，Python 附带了一个简单的内置 HTTP 服务器，我们可以使用它通过 HTTP** 共享内容或文件:
 
-```
+```java
 python -m http.server 9000
 ```
 

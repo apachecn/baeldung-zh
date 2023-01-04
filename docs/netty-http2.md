@@ -32,7 +32,7 @@ HTTP/2 中的通信通过一组称为帧的字节进行，多个帧形成一个�
 
 Netty 支持通过 TLS 的 HTTP/2 的 [APN 协商。所以，我们首先需要创建一个服务器](https://web.archive.org/web/20221208143856/https://tools.ietf.org/html/rfc7301) [`SslContext`](https://web.archive.org/web/20221208143856/https://netty.io/4.1/api/io/netty/handler/ssl/SslContext.html) :
 
-```
+```java
 SelfSignedCertificate ssc = new SelfSignedCertificate();
 SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey())
   .sslProvider(SslProvider.JDK)
@@ -53,7 +53,7 @@ SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKe
 
 我们将使用这个通道中前面的`sslContext`来启动管道，然后引导服务器:
 
-```
+```java
 public final class Http2Server {
 
     static final int PORT = 8443;
@@ -90,7 +90,7 @@ public final class Http2Server {
 
 作为该通道初始化的一部分，我们将在我们自己的实用程序类`Http2Util`中定义的实用程序方法`getServerAPNHandler()` 中向管道添加一个 APN 处理程序:
 
-```
+```java
 public static ApplicationProtocolNegotiationHandler getServerAPNHandler() {
     ApplicationProtocolNegotiationHandler serverAPNHandler = 
       new ApplicationProtocolNegotiationHandler(ApplicationProtocolNames.HTTP_2) {
@@ -115,14 +115,14 @@ public static ApplicationProtocolNegotiationHandler getServerAPNHandler() {
 
 出于本教程的目的，**我们将在`io.netty.buffer.ByteBuf`** 中定义一个静态的`Hello World`响应，这是在 Netty 中读写字节的首选对象:
 
-```
+```java
 static final ByteBuf RESPONSE_BYTES = Unpooled.unreleasableBuffer(
   Unpooled.copiedBuffer("Hello World", CharsetUtil.UTF_8));
 ```
 
 这个缓冲区将在我们的处理程序的`channelRead`方法中被设置为一个数据帧，并被写入`ChannelHandlerContext`:
 
-```
+```java
 @Override
 public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
     if (msg instanceof Http2HeadersFrame) {
@@ -145,13 +145,13 @@ public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception 
 
 为了进行快速测试，启动服务器并使用`–http2`选项发出 curl 命令:
 
-```
+```java
 curl -k -v --http2 https://127.0.0.1:8443
 ```
 
 这将给出类似于以下内容的响应:
 
-```
+```java
 > GET / HTTP/2
 > Host: 127.0.0.1:8443
 > User-Agent: curl/7.64.1
@@ -174,7 +174,7 @@ Hello World* Closing connection 0
 
 不过还是那句话，首先让我们看看客户端的`SslContext`是怎么设置的。我们将把它作为客户机 JUnit 设置的一部分:
 
-```
+```java
 @Before
 public void setup() throws Exception {
     SslContext sslCtx = SslContextBuilder.forClient()
@@ -200,7 +200,7 @@ public void setup() throws Exception {
 
 首先，**我们需要一个名为`Http2SettingsHandler`的处理程序来处理 HTTP/2 的设置帧**。它扩展了 Netty 的`SimpleChannelInboundHandler`:
 
-```
+```java
 public class Http2SettingsHandler extends SimpleChannelInboundHandler<Http2Settings> {
     private final ChannelPromise promise;
 
@@ -218,7 +218,7 @@ public class Http2SettingsHandler extends SimpleChannelInboundHandler<Http2Setti
 
 它还有一个实用方法`awaitSettings`，我们的客户端将使用它来等待初始握手完成:
 
-```
+```java
 public void awaitSettings(long timeout, TimeUnit unit) throws Exception {
     if (!promise.awaitUninterruptibly(timeout, unit)) {
         throw new IllegalStateException("Timed out waiting for settings");
@@ -230,7 +230,7 @@ public void awaitSettings(long timeout, TimeUnit unit) throws Exception {
 
 其次，**我们需要一个处理程序来处理从服务器**获得的响应，我们将其命名为`Http2ClientResponseHandler`:
 
-```
+```java
 public class Http2ClientResponseHandler extends SimpleChannelInboundHandler {
 
     private final Map<Integer, MapValues> streamidMap;
@@ -241,7 +241,7 @@ public class Http2ClientResponseHandler extends SimpleChannelInboundHandler {
 
 这个类还扩展了`SimpleChannelInboundHandler`并声明了`MapValues`的`streamidMap`，它是我们`Http2ClientResponseHandler`的内部类:
 
-```
+```java
 public static class MapValues {
     ChannelFuture writeFuture;
     ChannelPromise promise;
@@ -254,7 +254,7 @@ public static class MapValues {
 
 当然，处理程序也有一个实用方法`put`，用于将值放入`streamidMap`:
 
-```
+```java
 public MapValues put(int streamId, ChannelFuture writeFuture, ChannelPromise promise) {
     return streamidMap.put(streamId, new MapValues(writeFuture, promise));
 } 
@@ -266,7 +266,7 @@ public MapValues put(int streamId, ChannelFuture writeFuture, ChannelPromise pro
 
 在本例中，我们将只记录它:
 
-```
+```java
 @Override
 protected void channelRead0(ChannelHandlerContext ctx, FullHttpResponse msg) throws Exception {
     Integer streamId = msg.headers().getInt(HttpConversionUtil.ExtensionHeaderNames.STREAM_ID.text());
@@ -297,7 +297,7 @@ protected void channelRead0(ChannelHandlerContext ctx, FullHttpResponse msg) thr
 
 作为我们描述的第一个处理程序，这个类还包含一个供我们的客户端使用的实用方法。该方法让我们的事件循环一直等到`ChannelPromise`成功。或者，换句话说，它一直等到响应处理完成:
 
-```
+```java
 public String awaitResponses(long timeout, TimeUnit unit) {
     Iterator<Entry<Integer, MapValues>> itr = streamidMap.entrySet().iterator();        
     String response = null;
@@ -334,7 +334,7 @@ public String awaitResponses(long timeout, TimeUnit unit) {
 
 正如我们在服务器的例子中看到的,`ChannelInitializer`的目的是建立一个管道:
 
-```
+```java
 public class Http2ClientInitializer extends ChannelInitializer {
 
     private final SslContext sslCtx;
@@ -366,7 +366,7 @@ public class Http2ClientInitializer extends ChannelInitializer {
 
 然后，`ApplicationProtocolNegotiationHandler`负责在管道中排列连接处理程序和我们的定制处理程序:
 
-```
+```java
 public static ApplicationProtocolNegotiationHandler getClientAPNHandler(
   int maxContentLength, Http2SettingsHandler settingsHandler, Http2ClientResponseHandler responseHandler) {
     final Http2FrameLogger logger = new Http2FrameLogger(INFO, Http2ClientInitializer.class);
@@ -409,7 +409,7 @@ public static ApplicationProtocolNegotiationHandler getClientAPNHandler(
 
 如前所述，我们将把它写成一个 JUnit 测试:
 
-```
+```java
 @Test
 public void whenRequestSent_thenHelloWorldReceived() throws Exception {
 

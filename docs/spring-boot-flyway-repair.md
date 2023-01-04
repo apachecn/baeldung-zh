@@ -16,7 +16,7 @@ Flyway 迁移并不总是按计划进行。在本教程中，我们将**探索�
 
 首先，让我们添加两个不同的概要文件。这将使我们能够轻松地针对不同的数据库引擎运行迁移:
 
-```
+```java
 <profile>
     <id>h2</id>
     <activation>
@@ -44,7 +44,7 @@ Flyway 迁移并不总是按计划进行。在本教程中，我们将**探索�
 
 首先，我们创建`application-h2.properties`:
 
-```
+```java
 flyway.url=jdbc:h2:file:./testdb;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;MODE=MySQL;DATABASE_TO_UPPER=false;
 flyway.user=testuser
 flyway.password=password
@@ -52,7 +52,7 @@ flyway.password=password
 
 之后，让我们创建 PostgreSQL `application-postgre.properties`:
 
-```
+```java
 flyway.url=jdbc:postgresql://127.0.0.1:5431/testdb
 flyway.user=testuser
 flyway.password=password
@@ -64,7 +64,7 @@ flyway.password=password
 
 让我们添加我们的第一个迁移文件，`V1_0__add_table.sql`:
 
-```
+```java
 create table table_one (
   id numeric primary key
 );
@@ -72,7 +72,7 @@ create table table_one (
 
 现在让我们添加第二个包含错误的迁移文件，`V1_1__add_table.sql:`
 
-```
+```java
 create table <span style="color: #ff0000">table_one</span> (
   id numeric primary key
 );
@@ -86,19 +86,19 @@ create table <span style="color: #ff0000">table_one</span> (
 
 首先为默认的`h2`配置文件:
 
-```
+```java
 mvn spring-boot:run
 ```
 
 然后对于`postgre`轮廓:
 
-```
+```java
 mvn spring-boot:run -Ppostgre
 ```
 
 正如所料，第一次迁移成功，而第二次迁移失败:
 
-```
+```java
 Migration V1_1__add_table.sql failed
 ...
 Message    : Table "TABLE_ONE" already exists; SQL statement:
@@ -108,13 +108,13 @@ Message    : Table "TABLE_ONE" already exists; SQL statement:
 
 在修复数据库之前，让我们通过运行以下命令来检查 Flyway 迁移状态:
 
-```
+```java
 mvn flyway:info -Ph2
 ```
 
 如预期的那样，这将返回:
 
-```
+```java
 +-----------+---------+-------------+------+---------------------+---------+
 | Category  | Version | Description | Type | Installed On        | State   |
 +-----------+---------+-------------+------+---------------------+---------+
@@ -125,13 +125,13 @@ mvn flyway:info -Ph2
 
 但是当我们用以下命令检查 PostgreSQL 的状态时:
 
-```
+```java
 mvn flyway:info -Ppostgre
 ```
 
 我们注意到第二次迁移的状态是`Pending` 而不是`Failed:`
 
-```
+```java
 +-----------+---------+-------------+------+---------------------+---------+
 | Category  | Version | Description | Type | Installed On        | State   |
 +-----------+---------+-------------+------+---------------------+---------+
@@ -148,13 +148,13 @@ mvn flyway:info -Ppostgre
 
 现在，让我们再次尝试运行该应用程序:
 
-```
+```java
 mvn spring-boot:run -Ph2
 ```
 
 我们现在注意到 H2 迁移失败，原因如下:
 
-```
+```java
 Validate failed: 
 Detected failed migration to version 1.1 (add table)
 ```
@@ -171,7 +171,7 @@ Detected failed migration to version 1.1 (add table)
 
 让我们简单地对数据库运行以下 SQL 语句:
 
-```
+```java
 delete from flyway_schema_history where version = '1.1';
 ```
 
@@ -187,13 +187,13 @@ delete from flyway_schema_history where version = '1.1';
 
 另一种修复数据库状态的方法是使用 `[flyway:repair](https://web.archive.org/web/20220628131626/https://flywaydb.org/documentation/command/repair)` 工具。更正 SQL 文件后，我们可以运行以下命令，而不是手动操作`flyway_schema_history`表:
 
-```
+```java
 mvn flyway:repair
 ```
 
 这将导致:
 
-```
+```java
 Successfully repaired schema history table "PUBLIC"."flyway_schema_history"
 ```
 
@@ -211,7 +211,7 @@ Successfully repaired schema history table "PUBLIC"."flyway_schema_history"
 
 现在运行应用程序，我们看到一条**“迁移校验和不匹配”的错误消息**，如下所示:
 
-```
+```java
 Migration checksum mismatch for migration version 1.1
 -> Applied to database : 314944264
 -> Resolved locally    : 1304013179
@@ -231,7 +231,7 @@ Migration checksum mismatch for migration version 1.1
 
 我们首先创建 SQL 回调文件`db/callback/afterMigrateError__repair.sql`:
 
-```
+```java
 DELETE FROM flyway_schema_history WHERE success=false;
 ```
 
@@ -239,13 +239,13 @@ DELETE FROM flyway_schema_history WHERE success=false;
 
 让我们创建一个`application-callbacks.properties`配置文件配置，它将在飞行路线位置列表中包含`db/callback`文件夹:
 
-```
+```java
 spring.flyway.locations=classpath:db/migration,classpath:db/callback
 ```
 
 现在，在添加了另一个中断的迁移`V1_3__add_table.sql,` 之后，我们运行包含`callbacks`配置文件的应用程序:
 
-```
+```java
 mvn spring-boot:run -Dspring-boot.run.profiles=h2,callbacks
 ...
 Migrating schema "PUBLIC" to version 1.3 - add table

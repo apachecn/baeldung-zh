@@ -18,7 +18,7 @@
 
 在列出特定 Kafka 集群上的消费者之前，让我们先使用`kafka-topics.sh` shell 脚本[添加几个主题](https://web.archive.org/web/20220628091626/https://kafka.apache.org/documentation/#basic_ops_add_topic):
 
-```
+```java
 $ ./bin/kafka-topics.sh --create --topic users.registrations --replication-factor 1 \ 
   --partitions 2 --zookeeper localhost:2181
 $ ./bin/kafka-topics.sh --create --topic users.verfications --replication-factor 1 \ 
@@ -27,7 +27,7 @@ $ ./bin/kafka-topics.sh --create --topic users.verfications --replication-factor
 
 现在，我们需要**添加一些消费群体**。最简单的方法是**使用捆绑在 Kafka 发行版中的控制台消费者**:
 
-```
+```java
 $ ./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic users.registrations --group new-user
 $ ./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic users.registrations --group new-user
 ```
@@ -36,7 +36,7 @@ $ ./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic user
 
 让我们从另一个话题开始:
 
-```
+```java
 $ ./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic users.verifications
 ```
 
@@ -48,7 +48,7 @@ $ ./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic user
 
 要列出 Kafka 集群中的消费者，我们可以使用`kafka-consumer-groups.sh ` shell 脚本。**`–list `选项将列出所有的消费群体**:
 
-```
+```java
 $ ./bin/kafka-consumer-groups.sh --list --bootstrap-server localhost:9092
 new-user
 console-consumer-40123
@@ -58,7 +58,7 @@ console-consumer-40123
 
 **要查看第一组**的成员，我们可以使用`“–group <name> –describe –members”` 选项:
 
-```
+```java
 $ ./bin/kafka-consumer-groups.sh --describe --group new-user --members --bootstrap-server localhost:9092
 GROUP           CONSUMER-ID                    HOST            CLIENT-ID            #PARTITIONS
 new-user        consumer-new-user-1-b90...     /127.0.0.1      consumer-new-user-1  1
@@ -69,7 +69,7 @@ new-user        consumer-new-user-1-af8...     /127.0.0.1      consumer-new-user
 
 如果我们省略`–members `选项，它将列出组中的用户、每个用户正在监听的分区号以及它们的偏移量:
 
-```
+```java
 $ ./bin/kafka-consumer-groups.sh --describe --group new-user --bootstrap-server localhost:9092
 GROUP           TOPIC                       PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG          
 new-user        users.registrations         1          3               3               0              
@@ -78,7 +78,7 @@ new-user        users.registrations         0          5               5        
 
 还有一点需要注意，这个命令需要集群或引导服务器地址。**如果我们忽略集群连接信息，shell 脚本将抛出一个错误**:
 
-```
+```java
 $ ./bin/kafka-consumer-groups.sh --list
 Missing required argument "[bootstrap-server]"
 // truncated

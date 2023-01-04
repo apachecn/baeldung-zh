@@ -10,7 +10,7 @@
 
 让我们从简单的 Java 解决方案开始:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenWritingReaderContentsToFile_thenCorrect() 
   throws IOException {
@@ -38,7 +38,7 @@ public void givenUsingPlainJava_whenWritingReaderContentsToFile_thenCorrect()
 
 Guava 解决方案更简单——我们现在有 API 来处理将阅读器写入文件:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenWritingReaderContentsToFile_thenCorrect() 
   throws IOException {
@@ -58,7 +58,7 @@ public void givenUsingGuava_whenWritingReaderContentsToFile_thenCorrect()
 
 最后，Commons IO 解决方案——也使用更高级别的 API 从`Reader`读取数据并将数据写入文件:
 
-```
+```java
 @Test
 public void givenUsingCommonsIO_whenWritingReaderContentsToFile_thenCorrect() 
   throws IOException {

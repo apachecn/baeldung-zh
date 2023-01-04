@@ -30,7 +30,7 @@ The article discusses Java 8 Collectors, showing examples of built-in collectors
 
 在使用`reduce()`方法的第一种方法中，累加器函数是一个 lambda 表达式，它将两个`Integer`值相加并返回一个`Integer`值:
 
-```
+```java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
 Integer sum = integers.stream()
   .reduce(0, (a, b) -> a + b);
@@ -38,7 +38,7 @@ Integer sum = integers.stream()
 
 同样，我们可以使用一个已经存在的 Java 方法:
 
-```
+```java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
 Integer sum = integers.stream()
   .reduce(0, Integer::sum);
@@ -46,7 +46,7 @@ Integer sum = integers.stream()
 
 或者我们可以定义并使用我们的自定义方法:
 
-```
+```java
 public class ArithmeticUtils {
 
     public static int add(int a, int b) {
@@ -57,7 +57,7 @@ public class ArithmeticUtils {
 
 然后我们可以将这个函数作为参数传递给`reduce()`方法:
 
-```
+```java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
 Integer sum = integers.stream()
   .reduce(0, ArithmeticUtils::add); 
@@ -67,7 +67,7 @@ Integer sum = integers.stream()
 
 计算整数列表总和的第二种方法是使用`[collect()](/web/20221009225805/https://www.baeldung.com/java-8-collectors)`终端操作:
 
-```
+```java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
 Integer sum = integers.stream()
   .collect(Collectors.summingInt(Integer::intValue));
@@ -83,7 +83,7 @@ Stream API 为我们提供了 **`mapToInt()`** 中间操作，将我们的流转
 
 让我们看一个如何使用它的快速示例:
 
-```
+```java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
 Integer sum = integers.stream()
   .mapToInt(Integer::intValue)
@@ -98,7 +98,7 @@ Integer sum = integers.stream()
 
 例如，通过使用`IntStream.sum()`:
 
-```
+```java
 Integer sum = map.values()
   .stream()
   .mapToInt(Integer::valueOf)
@@ -111,7 +111,7 @@ Integer sum = map.values()
 
 例如:
 
-```
+```java
 public class Item {
 
     private int id;
@@ -128,7 +128,7 @@ public class Item {
 
 接下来，假设我们要计算以下列表中所有商品的总价:
 
-```
+```java
 Item item1 = new Item(1, 10);
 Item item2 = new Item(2, 15);
 Item item3 = new Item(3, 25);
@@ -141,31 +141,31 @@ List<Item> items = Arrays.asList(item1, item2, item3, item4);
 
 因此，我们可以用`Stream.reduce(), ` `Stream.collect(), and ` `IntStream.sum()`来计算总和:
 
-```
+```java
 Integer sum = items.stream()
   .map(x -> x.getPrice())
   .reduce(0, ArithmeticUtils::add); 
 ```
 
-```
+```java
 Integer sum = items.stream()
   .map(x -> x.getPrice())
   .reduce(0, Integer::sum);
 ```
 
-```
+```java
 Integer sum = items.stream()
   .map(item -> item.getPrice())
   .reduce(0, (a, b) -> a + b);
 ```
 
-```
+```java
 Integer sum = items.stream()
   .map(x -> x.getPrice())
   .collect(Collectors.summingInt(Integer::intValue));
 ```
 
-```
+```java
 items.stream()
   .mapToInt(x -> x.getPrice())
   .sum();
@@ -179,7 +179,7 @@ items.stream()
 
 让我们看看所有这些步骤的实际操作:
 
-```
+```java
 String string = "Item1 10 Item2 25 Item3 30 Item4 45";
 
 Integer sum = Arrays.stream(string.split(" "))

@@ -22,7 +22,7 @@ Vavr 的验证接口是基于一个被称为[应用函子](https://web.archive.o
 
 让我们验证通过登录表单提交的用户名和电子邮件。首先，我们需要将 [Vavr 的 Maven 神器](https://web.archive.org/web/20220524003107/https://search.maven.org/classic/#search%7Cga%7C1%7Cvavr)包含到`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>io.vavr</groupId>
     <artifactId>vavr</artifactId>
@@ -32,7 +32,7 @@ Vavr 的验证接口是基于一个被称为[应用函子](https://web.archive.o
 
 接下来，让我们创建一个对用户对象建模的域类:
 
-```
+```java
 public class User {
     private String name;
     private String email;
@@ -43,7 +43,7 @@ public class User {
 
 最后，让我们定义我们的自定义验证器:
 
-```
+```java
 public class UserValidator {
     private static final String NAME_PATTERN = ...
     private static final String NAME_ERROR = ...
@@ -83,7 +83,7 @@ public class UserValidator {
 
 验证过程最相关的方面是`combine()`方法。在内部，这个方法使用了`Validation.Builder`类，它允许组合多达 8 个不同的`Validation`实例，这些实例可以用不同的方法计算:
 
-```
+```java
 static <E, T1, T2> Builder<E, T1, T2> combine(
   Validation<E, T1> validation1, Validation<E, T2> validation2) {
     Objects.requireNonNull(validation1, "validation1 is null");
@@ -94,7 +94,7 @@ static <E, T1, T2> Builder<E, T1, T2> combine(
 
 最简单的`Validation.Builder`类有两个验证实例:
 
-```
+```java
 final class Builder<E, T1, T2> {
 
     private Validation<E, T1> v1;
@@ -121,7 +121,7 @@ final class Builder<E, T1, T2> {
 
 实现不同的机制来处理验证结果是非常容易的。但是我们首先如何验证数据呢？为此，我们使用了`UserValidator`类:
 
-```
+```java
 UserValidator userValidator = new UserValidator(); 
 Validation<Seq<String>, User> validation = userValidator
   .validateUser("John", "[[email protected]](/web/20220524003107/https://www.baeldung.com/cdn-cgi/l/email-protection)");
@@ -135,7 +135,7 @@ Validation<Seq<String>, User> validation = userValidator
 
 这是迄今为止最简单的方法。它包括用`Valid`和`Invalid`实例检查验证结果:
 
-```
+```java
 @Test
 public void 
   givenInvalidUserParams_whenValidated_thenInvalidInstance() {
@@ -159,7 +159,7 @@ public void
 
 使用串联`isValid()` / `isInvalid()`类似于前面的方法，不同之处在于这些方法根据验证结果返回`true`或`false`:
 
-```
+```java
 @Test
 public void 
   givenInvalidUserParams_whenValidated_thenIsInvalidIsTrue() {
@@ -179,7 +179,7 @@ public void
 
 `Invalid`实例包含所有的验证错误。它们可以通过`getError()`方法获取:
 
-```
+```java
 @Test
 public void 
   givenInValidUserParams_withGetErrorMethod_thenGetErrorMessages() {
@@ -194,7 +194,7 @@ public void
 
 相反，如果结果有效，可以用`get()`方法获取一个`User`实例:
 
-```
+```java
 @Test
 public void 
   givenValidUserParams_withGetMethod_thenGetUserInstance() {
@@ -211,7 +211,7 @@ public void
 
 如果结果有效，结果将存储在`Right`实例中。在我们的例子中，这相当于一个有效的`User`对象。相反，如果结果无效，错误将存储在`Left`实例中:
 
-```
+```java
 @Test
 public void 
   givenValidUserParams_withtoEitherMethod_thenRightInstance() {
@@ -226,7 +226,7 @@ public void
 
 让我们看看如何使用`fold()`方法来处理验证结果:
 
-```
+```java
 @Test
 public void 
   givenValidUserParams_withFoldMethod_thenEqualstoParamsLength() {

@@ -24,7 +24,7 @@
 
 让我们首先创建一个名为`Media` 的类，它有`id`、`title`和`artist`。这个类将充当基类。`VideoMedia`和`AudioMedia`将扩展这个类的功能:
 
-```
+```java
 public class Media {
 
     private int id;
@@ -36,7 +36,7 @@ public class Media {
 
 现在，让我们创建另一个名为`VideoMedia`的类，它继承了`Media`的`extends`类的属性`.`此外，它还有自己的属性，如`resolution`和`aspectRatio`:
 
-```
+```java
 public class VideoMedia extends Media {
 
     private String resolution;
@@ -47,7 +47,7 @@ public class VideoMedia extends Media {
 
 类似地，职业`AudioMedia` 也是`extends`职业`Media `，并且将拥有自己的附加属性，如`bitrate`和`frequency`:
 
-```
+```java
 public class AudioMedia extends Media {
 
     private int bitrate;
@@ -63,7 +63,7 @@ public class AudioMedia extends Media {
 
 让我们为基类和派生类创建对象来查看继承的属性:
 
-```
+```java
 Media media = new Media();
 media.setId(001);
 media.setTitle("Media1");
@@ -90,7 +90,7 @@ System.out.println(videoMedia);
 
 这三个类都打印相关的属性:
 
-```
+```java
 Media{id=1, title='Media1', artist='Artist001'}
 AudioMedia{id=101, title='Audio1', artist='Artist101', bitrate=3500, frequency='256kbps'} 
 VideoMedia{id=201, title='Video1', artist='Artist201'resolution='1024x768', aspectRatio='16:9'} 
@@ -102,7 +102,7 @@ VideoMedia{id=201, title='Video1', artist='Artist201'resolution='1024x768', aspe
 
 **在 Java 中，接口不需要显式声明一个方法为`abstract`或`public`。**实现接口`MediaPlayer` 的类将定义这些方法:
 
-```
+```java
 public interface MediaPlayer {
 
     void play();
@@ -113,7 +113,7 @@ public interface MediaPlayer {
 
 `AudioMediaPlayer` 类`implements` `MediaPlayer,` ，它将定义音频媒体的`play`和`pause`方法:
 
-```
+```java
 public class AudioMediaPlayer implements MediaPlayer {
 
     @Override
@@ -130,7 +130,7 @@ public class AudioMediaPlayer implements MediaPlayer {
 
 同样，`VideoMediaPlayer implements` `MediaPlayer`也给`play`和`pause`视频媒体提供了一个方法定义:
 
-```
+```java
 public class VideoMediaPlayer implements MediaPlayer {
 
     @Override
@@ -147,7 +147,7 @@ public class VideoMediaPlayer implements MediaPlayer {
 
 此外，让我们创建一个`AudioMediaPlayer `和`VideoMediaPlayer` 的实例，并为它们调用`play`和`pause `方法:
 
-```
+```java
 AudioMediaPlayer audioMediaPlayer = new AudioMediaPlayer();
 audioMediaPlayer.play();
 audioMediaPlayer.pause();
@@ -159,7 +159,7 @@ videoMediaPlayer.pause();
 
 `AudioMediaPlayer` 和`VideoMediaPlayer `分别调用各自的`play`和`pause`的实现:
 
-```
+```java
 AudioMediaPlayer is Playing
 AudioMediaPlayer is Paused
 
@@ -171,7 +171,7 @@ VideoMediaPlayer is Paused
 
 **由于歧义问题，Java 不直接支持多重继承。**当一个类从不止一个父类继承，并且两个父类都有相同名称的方法或属性时，就会出现不明确的问题。因此，子类不能解决要继承的方法或属性的冲突。**然而，一个类可以从多个接口继承。**让我们创建一个界面`AdvancedPlayerOptions`:
 
-```
+```java
 public interface AdvancedPlayerOptions {
 
     void seek();
@@ -182,7 +182,7 @@ public interface AdvancedPlayerOptions {
 
 类`MultiMediaPlayer` `implements` `MediaPlayer` 和`AdvancedPlayerOptions`并定义了两个接口中声明的方法:
 
-```
+```java
 public class MultiMediaPlayer implements MediaPlayer, AdvancedPlayerOptions {
 
     @Override
@@ -209,7 +209,7 @@ public class MultiMediaPlayer implements MediaPlayer, AdvancedPlayerOptions {
 
 现在，我们将创建一个`MultiMediaPlayer `类的实例，并调用所有实现的方法:
 
-```
+```java
 MultiMediaPlayer multiMediaPlayer = new MultiMediaPlayer();
 multiMediaPlayer.play();
 multiMediaPlayer.pause();
@@ -219,7 +219,7 @@ multiMediaPlayer.fastForward();
 
 正如所料，`MultiMediaPlayer` 调用了它的`play`和`pause`的实现:
 
-```
+```java
 MultiMediaPlayer is Playing
 MultiMediaPlayer is Paused 
 MultiMediaPlayer is being seeked 

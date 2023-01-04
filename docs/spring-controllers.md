@@ -35,7 +35,7 @@
 
 为了能够与`Spring MVC`一起工作，让我们首先处理 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-webmvc</artifactId>
@@ -51,7 +51,7 @@
 
 让我们首先看看如何在不使用`web.xml`的情况下设置`DispatcherServlet`——而是使用初始化器:
 
-```
+```java
 public class StudentControllerConfig implements WebApplicationInitializer {
 
     @Override
@@ -79,7 +79,7 @@ public class StudentControllerConfig implements WebApplicationInitializer {
 
 下面是`web.xml` 的样子:
 
-```
+```java
 <servlet>
     <servlet-name>test-mvc</servlet-name>
     <servlet-class>
@@ -99,7 +99,7 @@ public class StudentControllerConfig implements WebApplicationInitializer {
 
 最后，让我们设置`DispatcherServlet` 并将其映射到一个特定的`URL`——在这里完成我们基于`Front Controller`的系统:
 
-```
+```java
 <servlet-mapping>
     <servlet-name>test-mvc</servlet-name>
     <url-pattern>/test/*</url-pattern>
@@ -112,7 +112,7 @@ public class StudentControllerConfig implements WebApplicationInitializer {
 
 现在让我们看看如何使用 `Spring Config`设置`Dispatcher Servlet`:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages= {
@@ -139,7 +139,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 现在让我们看看如何使用`XML`来设置`Dispatcher Servlet`。`DispatcherServlet XML`文件的快照——`DispatcherServlet` 用来加载自定义`controllers`和其他`Spring` `entities`的`XML`文件如下所示:
 
-```
+```java
 <context:component-scan base-package="com.baledung.controller" />
 <mvc:annotation-driven />
 <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -164,7 +164,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 注意我们是如何返回一个`ModelAndView`对象的——它包含一个`model map`和一个`view object`；两者都将被 V `iew Resolver`用于数据渲染:
 
-```
+```java
 @Controller
 @RequestMapping(value = "/test")
 public class TestController {
@@ -200,7 +200,7 @@ public class TestController {
 
 现在让我们开始看看 RESTful 控制器。当然，一个好的起点是我们需要的额外的 Maven 依赖项:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework</groupId>
@@ -232,7 +232,7 @@ API 通常会简单地将原始数据返回给客户端——`XML`和`JSON`表�
 
 让我们来看看一个简单的 RESTful 控制器实现:
 
-```
+```java
 @Controller
 public class RestController {
 
@@ -263,7 +263,7 @@ Spring Boot 的`@RestController`注释基本上是一个快捷的方式，让我
 
 下面是使用这个新注释的前一个示例控制器:
 
-```
+```java
 @RestController
 public class RestAnnotatedController {
     @GetMapping(value = "/annotated/student/{studentId}")

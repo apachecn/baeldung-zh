@@ -14,7 +14,7 @@
 
 让我们先看看如何使用普通 Java 将数组**转换为`Set`:**
 
-```
+```java
 @Test
 public void givenUsingCoreJavaV1_whenArrayConvertedToSet_thenCorrect() {
     Integer[] sourceArray = { 0, 1, 2, 3, 4, 5 };
@@ -24,7 +24,7 @@ public void givenUsingCoreJavaV1_whenArrayConvertedToSet_thenCorrect() {
 
 或者，可以先创建`Set`,然后用数组元素填充:
 
-```
+```java
 @Test
 public void givenUsingCoreJavaV2_whenArrayConvertedToSet_thenCorrect() {
     Integer[] sourceArray = { 0, 1, 2, 3, 4, 5 };
@@ -37,7 +37,7 @@ public void givenUsingCoreJavaV2_whenArrayConvertedToSet_thenCorrect() {
 
 接下来，让我们看看**从数组到集合**的番石榴转换:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenArrayConvertedToSet_thenCorrect() {
     Integer[] sourceArray = { 0, 1, 2, 3, 4, 5 };
@@ -49,7 +49,7 @@ public void givenUsingGuava_whenArrayConvertedToSet_thenCorrect() {
 
 最后，让我们使用 Apache 的 Commons 集合库进行转换:
 
-```
+```java
 @Test
 public void givenUsingCommonsCollections_whenArrayConvertedToSet_thenCorrect() {
     Integer[] sourceArray = { 0, 1, 2, 3, 4, 5 };
@@ -64,7 +64,7 @@ public void givenUsingCommonsCollections_whenArrayConvertedToSet_thenCorrect() {
 
 现在让我们来看看相反的情况—**将现有的集合转换成数组**:
 
-```
+```java
 @Test
 public void givenUsingCoreJava_whenSetConvertedToArray_thenCorrect() {
     Set<Integer> sourceSet = Sets.newHashSet(0, 1, 2, 3, 4, 5);
@@ -78,7 +78,7 @@ public void givenUsingCoreJava_whenSetConvertedToArray_thenCorrect() {
 
 接下来——番石榴溶液:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenSetConvertedToArray_thenCorrect() {
     Set<Integer> sourceSet = Sets.newHashSet(0, 1, 2, 3, 4, 5);

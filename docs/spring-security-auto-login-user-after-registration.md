@@ -16,7 +16,7 @@
 
 一种非常简单的以编程方式强制认证的方法是利用`HttpServletRequest [login()](https://web.archive.org/web/20221101023954/https://docs.oracle.com/javaee/6/api/javax/servlet/http/HttpServletRequest.html#login%28java.lang.String,%20java.lang.String%29)`方法:
 
-```
+```java
 public void authWithHttpServletRequest(HttpServletRequest request, String username, String password) {
     try {
         request.login(username, password);
@@ -34,7 +34,7 @@ public void authWithHttpServletRequest(HttpServletRequest request, String userna
 
 接下来，我们也可以直接创建一个`UsernamePasswordAuthenticationToken`–然后手动通过标准的`AuthenticationManager` :
 
-```
+```java
 public void authWithAuthManager(HttpServletRequest request, String username, String password) {
     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
     authToken.setDetails(new WebAuthenticationDetails(request));
@@ -57,7 +57,7 @@ public void authWithAuthManager(HttpServletRequest request, String username, Str
 
 此外，请记住，在这一点上，我们不再能够访问他们实际的原始凭据。我们只能访问用户的编码密码，这就是我们在这里使用的密码:
 
-```
+```java
 public void authWithoutPassword(User user){
 
     List<Privilege> privileges = user.getRoles().stream().map(Role::getPrivileges)

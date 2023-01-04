@@ -35,7 +35,7 @@
 
 为了检查 JVM 中对象的内存布局，我们将广泛使用 Java 对象布局( [JOL](https://web.archive.org/web/20220628094821/https://openjdk.java.net/projects/code-tools/jol/) )。因此，我们需要添加 [`jol-core`](https://web.archive.org/web/20220628094821/https://search.maven.org/artifact/org.openjdk.jol/jol-core) 的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.openjdk.jol</groupId>
     <artifactId>jol-core</artifactId>
@@ -47,13 +47,13 @@
 
 让我们先来看看虚拟机的一般详细信息:
 
-```
+```java
 System.out.println(VM.current().details());
 ```
 
 这将打印:
 
-```
+```java
 # Running 64-bit HotSpot VM.
 # Objects are 8 bytes aligned.
 # Field sizes by type: 4, 1, 1, 2, 2, 4, 4, 8, 8 [bytes]
@@ -64,7 +64,7 @@ System.out.println(VM.current().details());
 
 同样，如果我们通过`-XX:-UseCompressedOops, `禁用[压缩引用](/web/20220628094821/https://www.baeldung.com/jvm-compressed-oops)，只有引用大小变为 8 字节:
 
-```
+```java
 # Field sizes by type: 8, 1, 1, 2, 2, 4, 4, 8, 8 [bytes]
 # Array element sizes: 8, 1, 1, 2, 2, 4, 4, 8, 8 [bytes]
 ```
@@ -73,7 +73,7 @@ System.out.println(VM.current().details());
 
 让我们考虑一个`SimpleInt`类:
 
-```
+```java
 public class SimpleInt {
     private int state;
 }
@@ -81,13 +81,13 @@ public class SimpleInt {
 
 如果我们打印它的类布局:
 
-```
+```java
 System.out.println(ClassLayout.parseClass(SimpleInt.class).toPrintable());
 ```
 
 我们会看到类似这样的内容:
 
-```
+```java
 SimpleInt object internals:
  OFFSET  SIZE   TYPE DESCRIPTION                               VALUE
       0    12        (object header)                           N/A
@@ -108,14 +108,14 @@ Space losses: 0 bytes internal + 0 bytes external = 0 bytes total
 
 让我们看看一个对象实例的内存布局:
 
-```
+```java
 SimpleInt instance = new SimpleInt();
 System.out.println(ClassLayout.parseInstance(instance).toPrintable());
 ```
 
 HotSpot JVM 缓慢地计算身份哈希代码:
 
-```
+```java
 SimpleInt object internals:
  OFFSET  SIZE   TYPE DESCRIPTION               VALUE
       0     4        (object header)           01 00 00 00 (00000001 00000000 00000000 00000000) (1) # mark
@@ -130,14 +130,14 @@ Space losses: 0 bytes internal + 0 bytes external = 0 bytes total
 
 然而，如果我们在对象实例上调用`[System.identityHashCode()](https://web.archive.org/web/20220628094821/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/System.html#identityHashCode(java.lang.Object)) `甚至`Object.hashCode() `，这将会改变:
 
-```
+```java
 System.out.println("The identity hash code is " + System.identityHashCode(instance));
 System.out.println(ClassLayout.parseInstance(instance).toPrintable());
 ```
 
 现在，我们可以将身份散列码视为标记字的一部分:
 
-```
+```java
 The identity hash code is 1702146597
 SimpleInt object internals:
  OFFSET  SIZE   TYPE DESCRIPTION               VALUE
@@ -149,7 +149,7 @@ SimpleInt object internals:
 
 HotSpot JVM 将标识 hashcode 存储为标记字中的“25 b2 74 65”。最高有效字节是 65，因为 JVM 以 little-endian 格式存储该值。因此，要恢复十进制的哈希码值(1702146597)，我们必须以相反的顺序读取“25 b2 74 65”字节序列:
 
-```
+```java
 65 74 b2 25 = 01100101 01110100 10110010 00100101 = 1702146597
 ```
 
@@ -159,7 +159,7 @@ HotSpot JVM 将标识 hashcode 存储为标记字中的“25 b2 74 65”。最�
 
 例如，考虑一下`SimpleLong`类:
 
-```
+```java
 public class SimpleLong {
     private long state;
 }
@@ -167,13 +167,13 @@ public class SimpleLong {
 
 如果我们解析类布局:
 
-```
+```java
 System.out.println(ClassLayout.parseClass(SimpleLong.class).toPrintable());
 ```
 
 然后 JOL 将打印内存布局:
 
-```
+```java
 SimpleLong object internals:
  OFFSET  SIZE   TYPE DESCRIPTION                               VALUE
       0    12        (object header)                           N/A
@@ -187,7 +187,7 @@ Space losses: 4 bytes internal + 0 bytes external = 4 bytes total
 
 **我们也可以通过`-XX:ObjectAlignmentInBytes `调谐标志改变默认的校准尺寸。**例如，对于同一个类，`-XX:ObjectAlignmentInBytes=16 `的内存布局是:
 
-```
+```java
 SimpleLong object internals:
  OFFSET  SIZE   TYPE DESCRIPTION                               VALUE
       0    12        (object header)                           N/A
@@ -206,7 +206,7 @@ Space losses: 4 bytes internal + 8 bytes external = 12 bytes total
 
 **当一个类有多个字段时，JVM 可能会以最小化填充浪费的方式来分配这些字段。**例如，考虑一下`FieldsArrangement`类:
 
-```
+```java
 public class FieldsArrangement {
     private boolean first;
     private char second;
@@ -218,7 +218,7 @@ public class FieldsArrangement {
 
 字段声明顺序及其在内存布局中的顺序是不同的:
 
-```
+```java
 OFFSET  SIZE      TYPE DESCRIPTION                               VALUE
       0    12           (object header)                           N/A
      12     4       int FieldsArrangement.fourth                  N/A
@@ -235,13 +235,13 @@ OFFSET  SIZE      TYPE DESCRIPTION                               VALUE
 
 JVM 还维护标记字中的锁信息。让我们来看看实际情况:
 
-```
+```java
 public class Lock {}
 ```
 
 如果我们创建这个类`,`的一个实例，它的内存布局将是:
 
-```
+```java
 Lock object internals:
  OFFSET  SIZE   TYPE DESCRIPTION                               VALUE
       0     4        (object header)                           01 00 00 00 
@@ -253,7 +253,7 @@ Instance size: 16 bytes
 
 但是，如果我们在此实例上同步:
 
-```
+```java
 synchronized (lock) {
     System.out.println(ClassLayout.parseInstance(lock).toPrintable());
 }
@@ -261,7 +261,7 @@ synchronized (lock) {
 
 内存布局更改为:
 
-```
+```java
 Lock object internals:
  OFFSET  SIZE   TYPE DESCRIPTION                               VALUE
       0     4        (object header)                           f0 78 12 03
@@ -278,7 +278,7 @@ Lock object internals:
 
 为了模拟较小的 GC，我们将通过将一个对象赋给一个`volatile `变量来创建大量的垃圾。这样我们可以防止 JIT 编译器可能的[死代码消除](/web/20220628094821/https://www.baeldung.com/java-microbenchmark-harness#dead-code-elimination):
 
-```
+```java
 volatile Object consumer;
 Object instance = new Object();
 long lastAddr = VM.current().addressOf(instance);
@@ -302,7 +302,7 @@ for (int i = 0; i < 10_000; i++) {
 
 标记字的前 4 个字节随时间的变化如下:
 
-```
+```java
 09 00 00 00 (00001001 00000000 00000000 00000000)
               ^^^^
 11 00 00 00 (00010001 00000000 00000000 00000000)
@@ -327,7 +327,7 @@ for (int i = 0; i < 10_000; i++) {
 
 为了更好地理解这一点，让我们考虑一个例子:
 
-```
+```java
 public class Isolated {
 
     @Contended
@@ -340,7 +340,7 @@ public class Isolated {
 
 如果我们检查这个类的内存布局，我们会看到类似这样的内容:
 
-```
+```java
 Isolated object internals:
  OFFSET  SIZE   TYPE DESCRIPTION                               VALUE
       0    12        (object header)                           N/A
@@ -362,14 +362,14 @@ Space losses: 256 bytes internal + 0 bytes external = 256 bytes total
 
 **正如我们之前提到的，数组长度也是数组 oop 的一部分。**例如，对于一个包含 3 个元素的`boolean`数组:
 
-```
+```java
 boolean[] booleans = new boolean[3];
 System.out.println(ClassLayout.parseInstance(booleans).toPrintable());
 ```
 
 内存布局如下所示:
 
-```
+```java
 [Z object internals:
  OFFSET  SIZE      TYPE DESCRIPTION                               VALUE
       0     4           (object header)                           01 00 00 00 # mark
@@ -392,7 +392,7 @@ Space losses: 0 bytes internal + 5 bytes external = 5 bytes total
 
 让我们看看当使用`-XX:-UseCompressedOops `调整标志禁用压缩 oops 时，同一阵列示例的内存布局:
 
-```
+```java
 [Z object internals:
  OFFSET  SIZE      TYPE DESCRIPTION                               VALUE
       0     4           (object header)                           01 00 00 00 # mark

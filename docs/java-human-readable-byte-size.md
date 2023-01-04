@@ -33,7 +33,7 @@
 
 正如我们所知，**一个单位乘以 1024 将转移到下一级单位**。因此，我们可以创建常数，用它们的基值表示所有必需的单位:
 
-```
+```java
 private static long BYTE = 1L;
 private static long KiB = BYTE << 10;
 private static long MiB = KiB << 10;
@@ -47,7 +47,7 @@ private static long EiB = PiB << 10;
 
 对于 SI 前缀**，一个单元乘以 1000 将过渡到下一级的单元**。因此，我们可以创建常数，用它们的基值表示所有必需的单位:
 
-```
+```java
 private static long KB = BYTE * 1000;
 private static long MB = KB * 1000;
 private static long GB = MB * 1000;
@@ -60,7 +60,7 @@ private static long EB = PB * 1000;
 
 假设我们已经确定了正确的单位，并希望将文件大小表示为两位小数，我们可以创建一个方法来输出结果:
 
-```
+```java
 private static DecimalFormat DEC_FORMAT = new DecimalFormat("#.##");
 
 private static String formatSize(long size, long divider, String unitName) {
@@ -80,7 +80,7 @@ private static String formatSize(long size, long divider, String unitName) {
 
 我们先来看看单位确定方法的实现:
 
-```
+```java
 public static String toHumanReadableBinaryPrefixes(long size) {
     if (size < 0)
         throw new IllegalArgumentException("Invalid file size: " + size);
@@ -94,7 +94,7 @@ public static String toHumanReadableBinaryPrefixes(long size) {
 } 
 ```
 
-```
+```java
 public static String toHumanReadableSIPrefixes(long size) {
     if (size < 0)
         throw new IllegalArgumentException("Invalid file size: " + size);
@@ -120,7 +120,7 @@ public static String toHumanReadableSIPrefixes(long size) {
 
 现在，让我们编写一个单元测试方法来验证我们的解决方案是否如预期的那样工作。为了简化测试方法，让我们用[初始化一个`Map`](/web/20221208143917/https://www.baeldung.com/java-initialize-hashmap) `<Long, String>` 保存输入和相应的预期结果:
 
-```
+```java
 private static Map<Long, String> DATA_MAP_BINARY_PREFIXES = new HashMap<Long, String>() {{
     put(0L, "0 Bytes");
     put(1023L, "1023 Bytes");
@@ -132,7 +132,7 @@ private static Map<Long, String> DATA_MAP_BINARY_PREFIXES = new HashMap<Long, St
 }}; 
 ```
 
-```
+```java
 private final static Map<Long, String> DATA_MAP_SI_PREFIXES = new HashMap<Long, String>() {{
     put(0L, "0 Bytes");
     put(999L, "999 Bytes");
@@ -146,7 +146,7 @@ private final static Map<Long, String> DATA_MAP_SI_PREFIXES = new HashMap<Long, 
 
 接下来，让[遍历`Map`](/web/20221208143917/https://www.baeldung.com/java-iterate-map) `DATA_MAP`，将每个键值作为输入，验证是否能得到预期的结果:
 
-```
+```java
 DATA_MAP.forEach((in, expected) -> Assert.assertEquals(expected, FileSizeFormatUtil.toHumanReadable(in)));
 ```
 
@@ -167,7 +167,7 @@ DATA_MAP.forEach((in, expected) -> Assert.assertEquals(expected, FileSizeFormatU
 
 实际上，我们可以将单位常数转换成一个 [`enum`](/web/20221208143917/https://www.baeldung.com/a-guide-to-java-enums) ,这样我们就不必在方法中硬编码名称了:
 
-```
+```java
 enum SizeUnitBinaryPrefixes {
     Bytes(1L),
     KiB(Bytes.unitBase << 10),
@@ -188,7 +188,7 @@ enum SizeUnitBinaryPrefixes {
 } 
 ```
 
-```
+```java
 enum SizeUnitSIPrefixes {
     Bytes(1L),
     KB(Bytes.unitBase * 1000),
@@ -221,7 +221,7 @@ enum SizeUnitSIPrefixes {
 
 由于我们的`SizeUnit enum` 可以按降序提供`List`中的所有单元，我们可以用一个`for`循环来替换`if`语句集:
 
-```
+```java
 public static String toHumanReadableWithEnum(long size) {
     List<SizeUnit> units = SizeUnit.unitsInDescending();
     if (size < 0) {
@@ -242,7 +242,7 @@ public static String toHumanReadableWithEnum(long size) {
 
 为了确保它按预期工作，让我们测试我们的解决方案:
 
-```
+```java
 DATA_MAP.forEach((in, expected) -> Assert.assertEquals(expected, FileSizeFormatUtil.toHumanReadableWithEnum(in)));
 ```
 
@@ -262,7 +262,7 @@ DATA_MAP.forEach((in, expected) -> Assert.assertEquals(expected, FileSizeFormatU
 
 由于 **Java 的`Long`类型是 64 位整数，`Long.numberOfLeadingZeros(0L) = 64`。**举几个例子可以帮助我们快速理解这种方法:
 
-```
+```java
 1L  = 00... (63 zeros in total) ..            0001 -> Long.numberOfLeadingZeros(1L) = 63
 1024L = 00... (53 zeros in total) .. 0100 0000 0000 -> Long.numberOfLeadingZeros(1024L) = 53
 ```
@@ -275,7 +275,7 @@ DATA_MAP.forEach((in, expected) -> Assert.assertEquals(expected, FileSizeFormatU
 
 我们知道单位之间的因子是 1024，也就是 2 的 10 次方(`2^10`)。因此，**如果我们计算每个单元基值的前导零个数，那么两个相邻单元的差值总是 10** :
 
-```
+```java
 Index  Unit	numberOfLeadingZeros(unit.baseValue)
 ----------------------------------------------------
 0      Byte	63
@@ -291,7 +291,7 @@ Index  Unit	numberOfLeadingZeros(unit.baseValue)
 
 接下来，我们来看一个例子，如何确定尺寸 4096 的单位并计算单位基准值:
 
-```
+```java
 if 4096 < 1024 (Byte's base value)  -> Byte 
 else:
     numberOfLeadingZeros(4096) = 51
@@ -306,7 +306,7 @@ else:
 
 让我们创建一个方法来实现我们刚才讨论的想法:
 
-```
+```java
 public static String toHumanReadableByNumOfLeadingZeros(long size) {
     if (size < 0) {
         throw new IllegalArgumentException("Invalid file size: " + size);
@@ -323,7 +323,7 @@ public static String toHumanReadableByNumOfLeadingZeros(long size) {
 
 同样，让我们编写一个测试方法来确保它按预期工作:
 
-```
+```java
 DATA_MAP.forEach((in, expected) -> Assert.assertEquals(expected, FileSizeFormatUtil.toHumanReadableByNumOfLeadingZeros(in)));
 ```
 
@@ -339,13 +339,13 @@ Apache Commons-IO 的`[FileUtils](/web/20221208143917/https://www.baeldung.com/a
 
 最后，让我们用输入数据测试一下`byteCountToDisplaySize`方法，看看它会打印出什么:
 
-```
+```java
 DATA_MAP.forEach((in, expected) -> System.out.println(in + " bytes -> " + FileUtils.byteCountToDisplaySize(in)));
 ```
 
 测试输出:
 
-```
+```java
 0 bytes -> 0 bytes
 1024 bytes -> 1 KB
 1777777777777777777 bytes -> 1 EB

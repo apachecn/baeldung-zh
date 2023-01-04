@@ -25,7 +25,7 @@ Java 和大多数其他当代编程语言不包含任何被认为是合适的内
 
 可以使用来自`java.util.function`包的`Function`接口在 Java 中实现`Functor`。下面是一个 Java 中的`Functor`类的例子，它接受一个`Function`对象并将其应用于一个值:
 
-```
+```java
 public class Functor<T> {
     private final T value;
     public Functor(T value) {
@@ -40,7 +40,7 @@ public class Functor<T> {
 
 我们可以注意到，`map()`方法负责执行操作。对于新的类，我们定义了一个最终值属性。该属性是函数将被应用的地方。此外，我们需要一种比较值的方法。让我们将这个函数添加到`Functor`类中:
 
-```
+```java
 public class Functor<T> {
     // Definitions
     boolean eq(T other) {
@@ -54,7 +54,7 @@ public class Functor<T> {
 
 下面是如何使用该仿函数类的示例:
 
-```
+```java
 @Test
 public void whenProvideAValue_ShouldMapTheValue() {
     Functor<Integer> functor = new Functor<>(5);
@@ -68,7 +68,7 @@ public void whenProvideAValue_ShouldMapTheValue() {
 
 所以，我们需要测试一下。在我们的第一个方法之后，让我们使用我们的`Functor`类来演示函子法则。首先是同一律。在这种情况下，我们的代码片段是:
 
-```
+```java
 @Test
 public void whenApplyAnIdentityToAFunctor_thenResultIsEqualsToInitialValue() {
     String value = "baeldung";
@@ -87,7 +87,7 @@ public void whenApplyAnIdentityToAFunctor_thenResultIsEqualsToInitialValue() {
 
 之后，我们准备实施我们的测试来演示复合/结合法则。下面是我们实现的一段代码:
 
-```
+```java
 @Test
 public void whenApplyAFunctionToOtherFunction_thenResultIsEqualsBetweenBoth() {
     int value = 100;
@@ -108,7 +108,7 @@ public void whenApplyAFunctionToOtherFunction_thenResultIsEqualsBetweenBoth() {
 
 另一方面，我们可以通过使用 Enum 的功能来设计一个`Functor`。虽然这不是最优答案，但它确实符合函子法则，也许最重要的是，它完成了工作。让我们定义一下我们的`EnumFunctor`类:
 
-```
+```java
 public enum EnumFunctor {
     PLUS {
         public int apply(int a, int b) {
@@ -133,7 +133,7 @@ public enum EnumFunctor {
 
 在这个例子中，对每个常量值调用`apply`方法，使用两个整数作为参数。该方法执行必要的数学运算并返回结果。此外，`abstract`关键字在这个例子中被用来表示`apply`过程不是在`Enum`本身中实现的，而是必须由每个常数值实现的。现在，让我们测试我们的实现:
 
-```
+```java
 @Test
 public void whenApplyOperationsToEnumFunctors_thenGetTheProperResult() {
     assertEquals(15, EnumFunctor.PLUS.apply(10, 5));

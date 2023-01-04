@@ -20,14 +20,14 @@ Spring 5.0 版本增加了一个非常容易使用的 URI 变量语法:{*foo}来
 
 让我们看看 URI 变量模式 `{*foo}`的一个例子，另一个例子使用了`@GetMapping`和一个处理程序方法。无论我们在`“/spring5”`后的路径中给出什么，都将存储在路径变量“id”中:
 
-```
+```java
 @GetMapping("/spring5/{*id}")
 public String URIVariableHandler(@PathVariable String id) {
     return id;
 }
 ```
 
-```
+```java
 @Test
 public void whenMultipleURIVariablePattern_thenGotPathVariable() {
 
@@ -53,7 +53,7 @@ public void whenMultipleURIVariablePattern_thenGotPathVariable() {
 
 让我们看一个使用`RouterFunction`的新 URI 变量路径模式的例子:
 
-```
+```java
 private RouterFunction<ServerResponse> routingFunction() {
     return route(GET("/test/{*id}"), 
       serverRequest -> ok().body(fromValue(serverRequest.pathVariable("id"))));
@@ -62,7 +62,7 @@ private RouterFunction<ServerResponse> routingFunction() {
 
 在这种情况下，我们在“/test”之后写的任何路径都将被捕获到路径变量“id”中。因此，它的测试用例可能是:
 
-```
+```java
 @Test
 public void whenMultipleURIVariablePattern_thenGotPathVariable() 
   throws Exception {
@@ -85,7 +85,7 @@ public void whenMultipleURIVariablePattern_thenGotPathVariable()
 
 我们访问`/files/`目录下文件资源的路由函数:
 
-```
+```java
 private RouterFunction<ServerResponse> routingFunction() { 
     return RouterFunctions.resources(
       "/files/{*filepaths}", 
@@ -95,7 +95,7 @@ private RouterFunction<ServerResponse> routingFunction() {
 
 假设我们的文本文件 `hello.txt`和`test.txt`分别包含`“hello”`和`“test”`。这可以用一个 JUnit 测试用例来演示:
 
-```
+```java
 @Test 
 public void whenMultipleURIVariablePattern_thenGotPathVariable() 
   throws Exception { 
@@ -127,7 +127,7 @@ public void whenMultipleURIVariablePattern_thenGotPathVariable()
 
 使用`RouterFunction`的示例代码及其 JUnit 测试用例:
 
-```
+```java
 private RouterFunction<ServerResponse> routingFunction() { 
     return route(GET("/t?st"), 
       serverRequest -> ok().body(fromValue("Path /t?st is accessed"))); 
@@ -151,7 +151,7 @@ public void whenGetPathWithSingleCharWildcard_thenGotPathPattern()
 
 如果我们将路径模式指定为:`“/baeldung/*Id”,`这将匹配路径模式`like:”/baeldung/Id”, “/baeldung/tutorialId”,` "/baeldung/articleId "，等等:
 
-```
+```java
 private RouterFunction<ServerResponse> routingFunction() { 
     returnroute(
       GET("/baeldung/*Id"), 
@@ -174,7 +174,7 @@ public void whenGetMultipleCharWildcard_thenGotPathPattern()
 
 在这种情况下，模式匹配不限于单个路径段。如果我们将模式指定为`“/resources/**”,`，它会将所有路径匹配到`“/resources/”:`之后的任意数量的路径段
 
-```
+```java
 private RouterFunction<ServerResponse> routingFunction() { 
     return RouterFunctions.resources(
       "/resources/**", 
@@ -197,7 +197,7 @@ public void whenAccess_thenGot() throws Exception {
 
 我们还可以为 path 变量的值指定一个正则表达式。因此，如果我们的模式类似于`“/{baeldung:[a-z]+}”,`，路径变量`“baeldung”`的值将是匹配给定正则表达式的任何路径段:
 
-```
+```java
 private RouterFunction<ServerResponse> routingFunction() { 
     return route(GET("/{baeldung:[a-z]+}"), 
       serverRequest ->  ok()
@@ -224,7 +224,7 @@ public void whenGetRegexInPathVarible_thenGotPathVariable()
 
 Spring 5 确保了只有在用分隔符分隔时，单个路径段中才允许多个路径变量。只有这样，Spring 才能区分两个不同的路径变量:
 
-```
+```java
 private RouterFunction<ServerResponse> routingFunction() { 
 
     return route(

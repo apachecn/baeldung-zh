@@ -10,7 +10,7 @@
 
 所需的工件可以在 Atlassian 的公共 Maven 资源库中找到:
 
-```
+```java
 <repository>
     <id>atlassian-public</id>
     <url>https://packages.atlassian.com/maven/repository/public</url>
@@ -19,7 +19,7 @@
 
 一旦存储库被添加到`pom.xml`，我们需要添加下面的依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.atlassian.jira</groupId>
     <artifactId>jira-rest-java-client-core</artifactId>
@@ -44,7 +44,7 @@
 
 一旦我们有了这些细节，我们就可以实例化我们的吉拉客户端:
 
-```
+```java
 MyJiraClient myJiraClient = new MyJiraClient(
   "user.name", 
   "password", 
@@ -53,7 +53,7 @@ MyJiraClient myJiraClient = new MyJiraClient(
 
 该类的构造函数:
 
-```
+```java
 public MyJiraClient(String username, String password, String jiraUrl) {
     this.username = username;
     this.password = password;
@@ -64,7 +64,7 @@ public MyJiraClient(String username, String password, String jiraUrl) {
 
 `getJiraRestClient()`利用所有提供的信息并返回一个`JiraRestClient`的实例。这是我们与吉拉 REST API 通信的主要接口:
 
-```
+```java
 private JiraRestClient getJiraRestClient() {
     return new AsynchronousJiraRestClientFactory()
       .createWithBasicHttpAuthentication(getJiraUri(), this.username, this.password);
@@ -75,7 +75,7 @@ private JiraRestClient getJiraRestClient() {
 
 `getUri()`方法只是将`jiraUrl`转换成`java.net.URI`的一个实例:
 
-```
+```java
 private URI getJiraUri() {
     return URI.create(this.jiraUrl);
 }
@@ -87,7 +87,7 @@ private URI getJiraUri() {
 
 让我们从创建一个新问题开始。我们将在本文的所有其他示例中使用这个新创建的问题:
 
-```
+```java
 public String createIssue(String projectKey, Long issueType, String issueSummary) {
     IssueRestClient issueClient = restClient.getIssueClient();
     IssueInput newIssue = new IssueInputBuilder(
@@ -104,7 +104,7 @@ public String createIssue(String projectKey, Long issueType, String issueSummary
 
 吉拉的每一期都有一个独特的`String`，就像`MYKEY-123`一样。我们需要这个问题密钥来与 rest API 交互，并更新问题的描述:
 
-```
+```java
 public void updateIssueDescription(String issueKey, String newDescription) {
     IssueInput input = new IssueInputBuilder()
       .setDescription(newDescription)
@@ -117,7 +117,7 @@ public void updateIssueDescription(String issueKey, String newDescription) {
 
 描述更新后，我们不要回读更新后的描述:
 
-```
+```java
 public Issue getIssue(String issueKey) {
     return restClient.getIssueClient()
       .getIssue(issueKey) 
@@ -127,7 +127,7 @@ public Issue getIssue(String issueKey) {
 
 `Issue`实例表示由`issueKey`识别的问题。我们可以用这个实例来阅读这个问题的描述:
 
-```
+```java
 Issue issue = myJiraClient.getIssue(issueKey);
 System.out.println(issue.getDescription());
 ```
@@ -138,7 +138,7 @@ System.out.println(issue.getDescription());
 
 一旦我们获得了问题的实例，我们也可以使用它来执行更新/编辑操作。让我们为这个问题投票:
 
-```
+```java
 public void voteForAnIssue(Issue issue) {
     restClient.getIssueClient()
       .vote(issue.getVotesUri())
@@ -148,7 +148,7 @@ public void voteForAnIssue(Issue issue) {
 
 这将代表其凭证被使用的用户向`issue`添加投票。这可以通过检查计票来验证:
 
-```
+```java
 public int getTotalVotesCount(String issueKey) {
     BasicVotes votes = getIssue(issueKey).getVotes();
     return votes == null ? 0 : votes.getVotes();
@@ -161,7 +161,7 @@ public int getTotalVotesCount(String issueKey) {
 
 我们可以使用同一个`Issue`实例来代表用户添加评论。像添加投票一样，添加评论也非常简单:
 
-```
+```java
 public void addComment(Issue issue, String commentBody) {
     restClient.getIssueClient()
       .addComment(issue.getCommentsUri(), Comment.valueOf(commentBody));
@@ -172,7 +172,7 @@ public void addComment(Issue issue, String commentBody) {
 
 让我们获取一个新的`Issue`实例，并读取所有的`Comment`:
 
-```
+```java
 public List<Comment> getAllComments(String issueKey) {
     return StreamSupport.stream(getIssue(issueKey).getComments().spliterator(), false)
       .collect(Collectors.toList());
@@ -183,7 +183,7 @@ public List<Comment> getAllComments(String issueKey) {
 
 删除问题也相当简单。我们只需要识别问题的问题密钥:
 
-```
+```java
 public void deleteIssue(String issueKey, boolean deleteSubtasks) {
     restClient.getIssueClient()
       .deleteIssue(issueKey, deleteSubtasks)

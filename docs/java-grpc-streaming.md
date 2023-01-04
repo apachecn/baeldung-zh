@@ -24,7 +24,7 @@ gRPC 使用 [HTTP/2](https://web.archive.org/web/20221205160713/https://en.wikip
 
 我们使用`stock_quote.proto`来定义服务接口和有效载荷消息的结构:
 
-```
+```java
 service StockQuoteProvider {
 
   rpc serverSideStreamingGetListStockQuotes(Stock) returns (stream StockQuote) {}
@@ -59,7 +59,7 @@ message StockQuote {
 
 `StockServer`构造函数使用 gRPC `Server`来监听和调度传入的请求:
 
-```
+```java
 public class StockServer {
     private int port;
     private io.grpc.Server server;
@@ -84,7 +84,7 @@ public class StockServer {
 
 **客户发送一个报价请求，得到几个响应，每个响应都有不同的商品报价**:
 
-```
+```java
 @Override
 public void serverSideStreamingGetListStockQuotes(Stock request, StreamObserver<StockQuote> responseObserver) {
     for (int i = 1; i <= 5; i++) {
@@ -105,7 +105,7 @@ public void serverSideStreamingGetListStockQuotes(Stock request, StreamObserver<
 
 **客户端发送多只股票，服务器返回一只`StockQuote`** :
 
-```
+```java
 @Override
 public StreamObserver<Stock> clientSideStreamingGetStatisticsOfStocks(StreamObserver<StockQuote> responseObserver) {
     return new StreamObserver<Stock>() {
@@ -147,7 +147,7 @@ public StreamObserver<Stock> clientSideStreamingGetStatisticsOfStocks(StreamObse
 
 **客户端发送几只股票，服务器为每个请求返回一组价格**:
 
-```
+```java
 @Override
 public StreamObserver<Stock> bidirectionalStreamingGetListsStockQuotes(StreamObserver<StockQuote> responseObserver) {
     return new StreamObserver<Stock>() {
@@ -183,7 +183,7 @@ public StreamObserver<Stock> bidirectionalStreamingGetListsStockQuotes(StreamObs
 
 `StockClient`的构造函数接受一个 gRPC 通道，并实例化由 gRPC Maven 插件生成的存根类:
 
-```
+```java
 public class StockClient {
     private StockQuoteProviderBlockingStub blockingStub;
     private StockQuoteProviderStub nonBlockingStub;
@@ -204,7 +204,7 @@ public class StockClient {
 
 客户机向服务器发出一个请求股票价格的调用，并返回一个报价列表:
 
-```
+```java
 public void serverSideStreamingListOfStockPrices() {
     Stock request = Stock.newBuilder()
       .setTickerSymbol("AU")
@@ -231,7 +231,7 @@ public void serverSideStreamingListOfStockPrices() {
 
 客户端向服务器发送一个`Stock`流，并返回一个带有一些统计信息的`StockQuote`:
 
-```
+```java
 public void clientSideStreamingGetStatisticsOfStocks() throws InterruptedException {
     StreamObserver<StockQuote> responseObserver = new StreamObserver<StockQuote>() {
         @Override
@@ -271,7 +271,7 @@ public void clientSideStreamingGetStatisticsOfStocks() throws InterruptedExcepti
 
 客户端发送一个`Stock`流，并返回每个`Stock`的价格列表。
 
-```
+```java
 public void bidirectionalStreamingGetListsStockQuotes() throws InterruptedException{
     StreamObserver<StockQuote> responseObserver = new StreamObserver<StockQuote>() {
         @Override
@@ -310,13 +310,13 @@ public void bidirectionalStreamingGetListsStockQuotes() throws InterruptedExcept
 
 要运行服务器，请执行以下操作:
 
-```
+```java
 mvn exec:java -Dexec.mainClass=com.baeldung.grpc.streaming.StockServer
 ```
 
 要运行客户端:
 
-```
+```java
 mvn exec:java -Dexec.mainClass=com.baeldung.grpc.streaming.StockClient
 ```
 

@@ -14,7 +14,7 @@
 
 因此，任何具有默认配置的引导应用程序都可以通过以下方式进行访问:
 
-```
+```java
 http://localhost:8080/
 ```
 
@@ -22,13 +22,13 @@ http://localhost:8080/
 
 让我们使用`application.properties` 文件来配置它:
 
-```
+```java
 server.servlet.context-path=/demo
 ```
 
 因此，应用程序主页将是:
 
-```
+```java
 http://localhost:8080/demo
 ```
 
@@ -38,7 +38,7 @@ http://localhost:8080/demo
 
 **servlet path 代表主 [`DispatcherServlet`](/web/20220625073830/https://www.baeldung.com/spring-dispatcherservlet)** 的路径。`DispatcherServlet`是一个实际的 [`Servlet`](/web/20220625073830/https://www.baeldung.com/intro-to-servlets) ，它继承自`HttpSerlvet`基类。**默认值类似于上下文路径，即(“/”):**
 
-```
+```java
 spring.mvc.servlet.path=/
 ```
 
@@ -48,7 +48,7 @@ spring.mvc.servlet.path=/
 
 让我们修改 servlet 路径:
 
-```
+```java
 spring.mvc.servlet.path=/baeldung
 ```
 

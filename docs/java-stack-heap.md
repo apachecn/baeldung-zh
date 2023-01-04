@@ -57,7 +57,7 @@
 
 基于我们到目前为止所学的内容，让我们分析一个简单的 Java 代码来评估如何管理内存:
 
-```
+```java
 class Person {
     int id;
     String name;

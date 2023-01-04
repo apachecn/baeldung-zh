@@ -16,7 +16,7 @@
 
 我们可以简单地打开它，更新下面一行中的`-Xmx`选项(根据需要更改数字):
 
-```
+```java
 JAVA_OPTS="-Xms64m -Xmx512m ..."
 ```
 
@@ -28,19 +28,19 @@ JAVA_OPTS="-Xms64m -Xmx512m ..."
 
 **对于 Windows:**
 
-```
+```java
 set JAVA_OPTS=-Xms256m -Xmx1024m ...
 ```
 
 **对于 Unix/Linux:**
 
-```
+```java
 export JAVA_OPTS=-Xms256m -Xmx1024m ...
 ```
 
 一旦设置完成，我们可以在启动 WildFly 服务器时在日志中看到结果:
 
-```
+```java
 JAVA_OPTS already set in environment; overriding default settings with values ...
 ```
 

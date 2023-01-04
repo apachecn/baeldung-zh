@@ -12,7 +12,7 @@
 
 让我们定义以下枚举:
 
-```
+```java
 public enum Distance {
     KILOMETER("km", 1000), 
     MILE("miles", 1609.34),
@@ -39,19 +39,19 @@ public enum Distance {
 
 默认情况下，Jackson 将 Java 枚举表示为一个简单的字符串。例如:
 
-```
+```java
 new ObjectMapper().writeValueAsString(Distance.MILE);
 ```
 
 将导致:
 
-```
+```java
 "MILE"
 ```
 
 然而，当将这个**枚举封送到 JSON 对象**时，我们希望得到类似这样的结果:
 
-```
+```java
 {"unit":"miles","meters":1609.34} 
 ```
 
@@ -59,14 +59,14 @@ new ObjectMapper().writeValueAsString(Distance.MILE);
 
 从 Jackson 2.1.2 开始，现在有一个配置选项可以处理这种表示。这可以通过类级别的`@JsonFormat`注释来完成:
 
-```
+```java
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Distance { ... }
 ```
 
 当序列化此`enum`英里的`Distance.`时，这将导致期望的结果:
 
-```
+```java
 {"unit":"miles","meters":1609.34}
 ```
 
@@ -74,7 +74,7 @@ public enum Distance { ... }
 
 控制枚举的封送输出的另一个简单方法是在 getter 上使用`@JsonValue`注释:
 
-```
+```java
 public enum Distance { 
     ...
 
@@ -87,7 +87,7 @@ public enum Distance {
 
 我们在这里表达的是`getMeters()`是这个枚举的实际表示。因此序列化的结果将是:
 
-```
+```java
 1609.34
 ```
 
@@ -95,7 +95,7 @@ public enum Distance {
 
 如果我们使用的是 2.1.2 之前的 Jackson 版本，或者如果 enum 需要更多的定制，我们可以使用**定制 Jackson 序列化程序。**首先，我们需要定义它:
 
-```
+```java
 public class DistanceSerializer extends StdSerializer {
 
     public DistanceSerializer() {
@@ -123,14 +123,14 @@ public class DistanceSerializer extends StdSerializer {
 
 然后，我们可以将序列化程序应用于将要序列化的类:
 
-```
+```java
 @JsonSerialize(using = DistanceSerializer.class)
 public enum TypeEnum { ... }
 ```
 
 这导致:
 
-```
+```java
 {"name":"MILE","unit":"miles","meters":1609.34}
 ```
 
@@ -138,7 +138,7 @@ public enum TypeEnum { ... }
 
 首先，让我们定义一个拥有`Distance` 成员的`City`类:
 
-```
+```java
 public class City {
 
     private Distance distance;
@@ -154,13 +154,13 @@ public class City {
 
 例如，它将反序列化 JSON:
 
-```
+```java
 {"distance":"KILOMETER"}
 ```
 
 到一个`Distance.KILOMETER`对象:
 
-```
+```java
 City city = new ObjectMapper().readValue(json, City.class);
 assertEquals(Distance.KILOMETER, city.getDistance());
 ```
@@ -171,7 +171,7 @@ assertEquals(Distance.KILOMETER, city.getDistance());
 
 首先，让我们将`@JsonValue`与其中一个 getter 方法`getMeters()`一起使用:
 
-```
+```java
 public enum Distance {
     ...
 
@@ -184,13 +184,13 @@ public enum Distance {
 
 `getMeters()`方法的返回值表示枚举对象。因此，在反序列化示例 JSON 时:
 
-```
+```java
 {"distance":"0.0254"}
 ```
 
 Jackson 将寻找具有返回值 0.0254 的枚举对象。在这种情况下，对象是 `Distance.`英寸:
 
-```
+```java
 assertEquals(Distance.INCH, city.getDistance()); 
 ```
 
@@ -198,7 +198,7 @@ assertEquals(Distance.INCH, city.getDistance());
 
 `@JsonProperty`注释用于枚举实例:
 
-```
+```java
 public enum Distance {
     @JsonProperty("distance-in-km")
     KILOMETER("km", 1000), 
@@ -213,13 +213,13 @@ public enum Distance {
 
 作为上述声明的结果，示例 JSON 字符串:
 
-```
+```java
 {"distance": "distance-in-km"}
 ```
 
 将被映射到`Distance.KILOMETER`对象:
 
-```
+```java
 assertEquals(Distance.KILOMETER, city.getDistance());
 ```
 
@@ -229,7 +229,7 @@ assertEquals(Distance.KILOMETER, city.getDistance());
 
 考虑 JSON 表示:
 
-```
+```java
 {
     "distance": {
         "unit":"miles", 
@@ -240,7 +240,7 @@ assertEquals(Distance.KILOMETER, city.getDistance());
 
 然后我们将使用`@JsonCreator`注释定义`forValues()`工厂方法:
 
-```
+```java
 public enum Distance {
 
     @JsonCreator
@@ -264,7 +264,7 @@ public enum Distance {
 
 然后，当我们反序列化 JSON 示例时，我们将得到结果:
 
-```
+```java
 assertEquals(Distance.MILE, city.getDistance());
 ```
 
@@ -274,7 +274,7 @@ assertEquals(Distance.MILE, city.getDistance());
 
 根据[我们的自定义反序列化文章](/web/20220628093902/https://www.baeldung.com/jackson-deserialization)，为了反序列化前一节中提供的 JSON，我们将从创建反序列化类开始:
 
-```
+```java
 public class CustomEnumDeserializer extends StdDeserializer<Distance> {
 
     @Override
@@ -300,7 +300,7 @@ public class CustomEnumDeserializer extends StdDeserializer<Distance> {
 
 然后，我们将使用 Enum 上的`@JsonDeserialize`注释来指定我们的自定义反序列化器:
 
-```
+```java
 @JsonDeserialize(using = CustomEnumDeserializer.class)
 public enum Distance {
    ...
@@ -309,7 +309,7 @@ public enum Distance {
 
 我们的结果是:
 
-```
+```java
 assertEquals(Distance.MILE, city.getDistance());
 ```
 

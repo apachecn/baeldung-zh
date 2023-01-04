@@ -26,7 +26,7 @@
 
 首先，让我们借助于 [`rpush`](https://web.archive.org/web/20220703150911/https://redis.io/commands/rpush) 命令，将数据集以`sports-name` _ `ball-weight `的格式存储在一个名为`balls`的 Redis 链表中:
 
-```
+```java
 % redis-cli -h 127.0.0.1 -p 6379
 127.0.0.1:6379> RPUSH balls "cricket_160"
 (integer) 1
@@ -38,14 +38,14 @@
 
 我们可以注意到，**成功插入列表输出了列表的新长度**。然而，在大多数情况下，我们对数据插入活动视而不见。因此，我们可以使用 [`llen`](https://web.archive.org/web/20220703150911/https://redis.io/commands/llen) 命令找出链表的长度:
 
-```
+```java
 127.0.0.1:6379> llen balls
 (integer) 3
 ```
 
 当我们已经知道列表的长度时，很方便**使用 [`lrange`](https://web.archive.org/web/20220703150911/https://redis.io/commands/lrange) 命令**轻松检索整个数据集:
 
-```
+```java
 127.0.0.1:6379> lrange balls 0 2
 1) "cricket_160"
 2) "football_450"
@@ -56,7 +56,7 @@
 
 接下来，让我们看看当我们决定将数据集存储在 Redis 集中时，我们如何浏览数据集。为此，我们首先需要使用 [`sadd`](https://web.archive.org/web/20220703150911/https://redis.io/commands/sadd) 命令将数据集填充到名为 balls 的 Redis 集中:
 
-```
+```java
 127.0.0.1:6379> sadd balls "cricket_160" "football_450" "volleyball_270" "cricket_160"
 (integer) 3
 ```
@@ -65,7 +65,7 @@
 
 现在，我们可以通过**利用 [`smembers`](https://web.archive.org/web/20220703150911/https://redis.io/commands/smembers) 命令查看所有集合成员**:
 
-```
+```java
 127.0.0.1:6379> smembers balls
 1) "volleyball_270"
 2) "cricket_160"
@@ -76,14 +76,14 @@
 
 现在，让我们使用 Redis 的散列数据结构将数据集存储在名为 balls 的散列关键字中，这样散列的字段就是运动名称，字段值就是球的重量。我们可以在`[hmset](https://web.archive.org/web/20220703150911/https://redis.io/commands/hmset)`命令的帮助下做到这一点:
 
-```
+```java
 127.0.0.1:6379> hmset balls cricket 160 football 450 volleyball 270
 OK
 ```
 
 为了查看存储在我们 hash 中的信息，我们可以使用**命令`[hgetall](https://web.archive.org/web/20220703150911/https://redis.io/commands/hgetall)`T2:**
 
-```
+```java
 127.0.0.1:6379> hgetall balls
 1) "cricket"
 2) "160"
@@ -97,14 +97,14 @@ OK
 
 除了唯一的成员值之外，有序集合允许我们在它们旁边保留一个分数。在我们的用例中，我们可以将运动的名称作为成员值，将球的重量作为分数。让我们使用`[zadd](https://web.archive.org/web/20220703150911/https://redis.io/commands/zadd)`命令来存储我们的数据集:
 
-```
+```java
 127.0.0.1:6379> zadd balls 160 cricket 450 football 270 volleyball
 (integer) 3
 ```
 
 现在，我们可以首先使用`[zcard](https://web.archive.org/web/20220703150911/https://redis.io/commands/zcard)`命令来查找有序集的长度，然后使用 **`[zrange](https://web.archive.org/web/20220703150911/https://redis.io/commands/zrange)`命令来探索完整集**:
 
-```
+```java
 127.0.0.1:6379> zcard balls
 (integer) 3
 127.0.0.1:6379> zrange balls 0 2
@@ -117,14 +117,14 @@ OK
 
 我们也可以把**通常的键值字符串看作是一个肤浅的项目集合**。让我们首先使用`[mset](https://web.archive.org/web/20220703150911/https://redis.io/commands/mset)`命令填充数据集:
 
-```
+```java
 127.0.0.1:6379> mset balls:cricket 160 balls:football 450 balls:volleyball 270
 OK
 ```
 
 我们必须注意，我们添加了前缀“balls: `”` ,这样我们就可以从 Redis 数据库中的其他键中识别出这些键。此外，这种命名策略允许我们使用 [`keys`](https://web.archive.org/web/20220703150911/https://redis.io/commands/keys) 命令在前缀模式匹配的帮助下探索我们的数据集:
 
-```
+```java
 127.0.0.1:6379> keys balls*
 1) "balls:cricket"
 2) "balls:volleyball"
@@ -139,7 +139,7 @@ OK
 
 在本节中，我们将在我们的实现中使用`[Jedis](/web/20220703150911/https://www.baeldung.com/jedis-java-redis-client-library)`客户端库来实现 Redis:
 
-```
+```java
 <dependency>
     <groupId>redis.clients</groupId>
     <artifactId>jedis</artifactId>
@@ -157,7 +157,7 @@ Jedis 库附带了与 Redis-CLI 同名的方法。然而，建议我们**创建�
 
 首先，让我们为我们的客户机创建一个私有构造函数，当`RedisClient`类的实例被创建时，它将在内部初始化`JedisPool`:
 
-```
+```java
 private static JedisPool jedisPool;
 
 private RedisClient(String ip, int port) {
@@ -173,7 +173,7 @@ private RedisClient(String ip, int port) {
 
 接下来，我们需要一个单点客户端的访问点。因此，让我们为此创建一个静态方法`getInstance()`:
 
-```
+```java
 private static volatile RedisClient instance = null;
 
 public static RedisClient getInstance(String ip, final int port) {
@@ -190,7 +190,7 @@ public static RedisClient getInstance(String ip, final int port) {
 
 最后，让我们看看如何在 Jedis 的`lrange method`之上创建一个包装器方法:
 
-```
+```java
 public List lrange(final String key, final long start, final long stop) {
     try (Jedis jedis = jedisPool.getResource()) {
         return jedis.lrange(key, start, stop);
@@ -239,7 +239,7 @@ Redis 提供了几种扫描策略，使用基于光标的方法从集合中读�
 
 让我们使用`SCAN`命令扫描字符串类型的键。**要开始扫描，我们需要使用光标值为" 0"** ，匹配模式字符串为" ball* ":
 
-```
+```java
 127.0.0.1:6379> mset balls:cricket 160 balls:football 450 balls:volleyball 270
 OK
 127.0.0.1:6379> SCAN 0 MATCH ball* COUNT 1
@@ -263,7 +263,7 @@ OK
 
 如果我们深入了解由`Jedis`类提供的核心扫描功能，我们会发现扫描不同集合类型的策略:
 
-```
+```java
 public ScanResult<String> scan(final String cursor, final ScanParams params);
 public ScanResult<String> sscan(final String key, final String cursor, final ScanParams params);
 public ScanResult<Map.Entry<String, String>> hscan(final String key, final String cursor,
@@ -273,14 +273,14 @@ public ScanResult<Tuple> zscan(final String key, final String cursor, final Scan
 
 `Jedis`需要两个可选参数，**搜索模式和结果大小，以有效地控制扫描-`ScanParams`使其发生**。为此，它依赖于`match()`和`count()`方法，这两种方法大致基于[构建器设计模式](/web/20220703150911/https://www.baeldung.com/creational-design-patterns#builder):
 
-```
+```java
 public ScanParams match(final String pattern);
 public ScanParams count(final Integer count);
 ```
 
 既然我们已经掌握了关于`Jedis's`扫描方法的基础知识，让我们通过`ScanStrategy`界面来模拟这些策略:
 
-```
+```java
 public interface ScanStrategy<T> {
     ScanResult<T> scan(Jedis jedis, String cursor, ScanParams scanParams);
 }
@@ -288,7 +288,7 @@ public interface ScanStrategy<T> {
 
 首先，让我们研究最简单的`scan`策略，它独立于集合类型，读取键，但不读取键的值:
 
-```
+```java
 public class Scan implements ScanStrategy<String> {
     public ScanResult<String> scan(Jedis jedis, String cursor, ScanParams scanParams) {
         return jedis.scan(cursor, scanParams);
@@ -298,7 +298,7 @@ public class Scan implements ScanStrategy<String> {
 
 接下来，让我们来看看`hscan`策略，它是为读取特定散列键的所有字段键和字段值而定制的:
 
-```
+```java
 public class Hscan implements ScanStrategy<Map.Entry<String, String>> {
 
     private String key;
@@ -312,7 +312,7 @@ public class Hscan implements ScanStrategy<Map.Entry<String, String>> {
 
 最后，让我们为集合和有序集合建立策略。`sscan`策略可以读取一个集合的所有成员，而`zscan`策略可以读取成员以及他们以`Tuple` s:
 
-```
+```java
 public class Sscan implements ScanStrategy<String> {
 
     private String key;
@@ -344,7 +344,7 @@ public class Zscan implements ScanStrategy<Tuple> {
 
 我们现在可以在我们的`RedisIterator`类中定义这些成员:
 
-```
+```java
 private final JedisPool jedisPool;
 private ScanParams scanParams;
 private String cursor;
@@ -353,7 +353,7 @@ private ScanStrategy<T> strategy;
 
 我们的阶段是为迭代器定义特定于迭代器的功能。为此，我们的`RedisIterator`类必须实现 [`Iterator`](/web/20220703150911/https://www.baeldung.com/java-iterator) 接口:
 
-```
+```java
 public class RedisIterator<T> implements Iterator<List<T>> {
 }
 ```
@@ -362,7 +362,7 @@ public class RedisIterator<T> implements Iterator<List<T>> {
 
 首先，让我们挑选最容易摘到的果子——`hasNext()`方法——因为它的基本逻辑很简单。**当光标值变为“0”时，我们知道已经完成了**扫描。那么，让我们看看如何用一行代码实现它:
 
-```
+```java
 @Override
 public boolean hasNext() {
     return !"0".equals(cursor);
@@ -371,7 +371,7 @@ public boolean hasNext() {
 
 接下来，让我们来研究执行繁重扫描的`next()`方法:
 
-```
+```java
 @Override
 public List next() {
     if (cursor == null) {
@@ -392,7 +392,7 @@ public List next() {
 
 最后，我们可以启用在`RedisClient`类中创建`RedisIterator`的功能:
 
-```
+```java
 public RedisIterator iterator(int initialScanCount, String pattern, ScanStrategy strategy) {
     return new RedisIterator(jedisPool, initialScanCount, pattern, strategy);
 }
@@ -404,7 +404,7 @@ public RedisIterator iterator(int initialScanCount, String pattern, ScanStrategy
 
 为了完整和简单起见，我们首先将与运动球相关的数据集存储在 Redis 散列中。之后，我们将使用`RedisClient`创建一个使用`Hscan`扫描策略的迭代器。让我们通过实际操作来测试我们的实现:
 
-```
+```java
 @Test
 public void testHscanStrategy() {
     HashMap<String, String> hash = new HashMap<String, String>();

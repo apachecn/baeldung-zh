@@ -18,7 +18,7 @@ Spring 框架附带了相当多的视图解析器，例如`InternalResourceViewR
 
 先说 web 配置；我们用`@EnableWebMvc`、`@Configuration`和`@ComponentScan`来标注:
 
-```
+```java
 @EnableWebMvc
 @Configuration
 @ComponentScan("com.baeldung.web")
@@ -33,7 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 这个`ViewResolver`允许我们为视图名设置前缀或后缀等属性，以生成最终的视图页面 URL:
 
-```
+```java
 @Bean
 public ViewResolver internalResourceViewResolver() {
     InternalResourceViewResolver bean = new InternalResourceViewResolver();
@@ -48,7 +48,7 @@ public ViewResolver internalResourceViewResolver() {
 
 我们只需要一个简单的`jsp`页面，放置在配置中定义的`/WEB-INF/view`文件夹中:
 
-```
+```java
 <html>
     <head></head>
     <body>
@@ -63,7 +63,7 @@ public ViewResolver internalResourceViewResolver() {
 
 首先，我们将`BeanNameViewResolver` 添加到之前的配置中:
 
-```
+```java
 @Bean
 public BeanNameViewResolver beanNameViewResolver(){
     return new BeanNameViewResolver();
@@ -72,7 +72,7 @@ public BeanNameViewResolver beanNameViewResolver(){
 
 一旦定义了 ViewResolver，我们需要定义类型为`View`的 beans，这样它就可以被`DispatcherServlet `执行来呈现视图:
 
-```
+```java
 @Bean
 public View sample() {
     return new JstlView("/WEB-INF/view/sample.jsp");
@@ -81,7 +81,7 @@ public View sample() {
 
 下面是控制器类中相应的处理程序方法:
 
-```
+```java
 @GetMapping("/sample")
 public String showForm() {
     return "sample";
@@ -100,7 +100,7 @@ Spring MVC 也支持**多视图解析器**。
 
 要定义顺序，我们可以将以下代码行添加到我们的视图解析器的配置中:
 
-```
+```java
 bean.setOrder(0);
 ```
 
@@ -114,7 +114,7 @@ bean.setOrder(0);
 
 例如，通过向我们的 pom.xml 添加 [`spring-boot-starter-thymeleaf`](https://web.archive.org/web/20220812064115/https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf) 依赖项，百里香叶被启用，并且不需要额外的配置:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>

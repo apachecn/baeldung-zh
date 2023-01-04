@@ -16,7 +16,7 @@
 
 默认情况下，MongoDB 运行在端口`27017,` 上，但是我们也可以在其他端口上运行它。我们可以使用简单的 mongo 命令连接到 MongoDB 服务器:
 
-```
+```java
 $ mongo
 MongoDB shell version v4.4.2
 connecting to: mongodb://localhost:27017/?compressors=disabled&gssapiServiceName;=mongodb
@@ -26,7 +26,7 @@ MongoDB server version: 4.0.1-rc0-2-g54f1582fc6
 
 在上面的命令中，默认情况下，MongoDB 假定端口为`27017`。如果 MongoDB 服务器关闭，我们会得到以下错误:
 
-```
+```java
 $ mongo --host localhost --port 27017 admin
 MongoDB shell version v4.4.2
 connecting to: mongodb://localhost:27017/admin?compressors=disabled&gssapiServiceName;=mongodb
@@ -44,7 +44,7 @@ exiting with code 1
 
 MongoDB 可以通过身份验证来保护。在这种情况下，我们需要在命令中传递用户名和密码:
 
-```
+```java
 $ mongo mongodb://baeldung:[[email protected]](/web/20220814143201/https://www.baeldung.com/cdn-cgi/l/email-protection):27017
 ```
 
@@ -54,13 +54,13 @@ $ mongo mongodb://baeldung:[[email protected]](/web/20220814143201/https://www.
 
 我们还可以在自定义端口上运行 MongoDB。我们需要做的就是在`mongod.conf`文件中进行修改。如果 MongoDB 运行在其他端口上，我们需要在命令中提供该端口:
 
-```
+```java
 $ mongo mongodb://localhost:27001
 ```
 
 这里，在 mongo shell 中，我们还可以检查数据库服务器的当前活动连接。
 
-```
+```java
 var status = db.serverStatus();
 status.connections
 {
@@ -75,7 +75,7 @@ status.connections
 
 到目前为止，我们已经学会了使用 shell 检查与 MongoDB 的连接。现在让我们使用 Java 驱动程序代码来研究同样的问题:
 
-```
+```java
 MongoClientOptions.Builder builder = MongoClientOptions.builder();
 // builder settings
 ServerAddress ServerAddress = new ServerAddress("localhost", 27017);

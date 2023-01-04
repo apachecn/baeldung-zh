@@ -23,7 +23,7 @@
 
 下面是这种配置的一个简单示例:
 
-```
+```java
 <beans >
     <bean id="processEngineConfiguration" class=
       "org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration">
@@ -41,7 +41,7 @@
 
 而现在，我们可以获得`ProcessEngine`:
 
-```
+```java
 ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
 ```
 
@@ -56,7 +56,7 @@ ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
 
 如第 2.1 节所述。–我们可以通过编程定义`ProcessEngineConfiguration` ，并使用该实例构建`ProcessEngine`:
 
-```
+```java
 @Test 
 public void givenXMLConfig_whenCreateDefaultConfiguration_thenGotProcessEngine() {
     ProcessEngineConfiguration processEngineConfiguration 
@@ -79,7 +79,7 @@ public void givenXMLConfig_whenCreateDefaultConfiguration_thenGotProcessEngine()
 
 首先，我们将更改配置文件名，并要求 API 使用我们的自定义文件:
 
-```
+```java
 @Test 
 public void givenDifferentNameXMLConfig_whenGetProcessEngineConfig_thenGotResult() {
     ProcessEngineConfiguration processEngineConfiguration 
@@ -97,7 +97,7 @@ public void givenDifferentNameXMLConfig_whenGetProcessEngineConfig_thenGotResult
 
 现在，让我们也更改 bean 的名称:
 
-```
+```java
 @Test 
 public void givenDifferentBeanNameInXMLConfig_whenGetProcessEngineConfig_thenGotResult() {
     ProcessEngineConfiguration processEngineConfiguration 
@@ -132,7 +132,7 @@ public void givenDifferentBeanNameInXMLConfig_whenGetProcessEngineConfig_thenGot
 
 下面是一个用于创建独立流程引擎配置的 JUnit 测试:
 
-```
+```java
 @Test 
 public void givenNoXMLConfig_whenCreateProcessEngineConfig_thenCreated() {
     ProcessEngineConfiguration processEngineConfiguration 
@@ -152,7 +152,7 @@ public void givenNoXMLConfig_whenCreateProcessEngineConfig_thenCreated() {
 
 类似地，我们将编写一个 JUnit 测试用例，使用内存数据库创建独立的流程引擎配置:
 
-```
+```java
 @Test 
 public void givenNoXMLConfig_whenCreateInMemProcessEngineConfig_thenCreated() {
     ProcessEngineConfiguration processEngineConfiguration 
@@ -183,7 +183,7 @@ public void givenNoXMLConfig_whenCreateInMemProcessEngineConfig_thenCreated() {
 
 我们可以将数据库配置定义为 JDBC 属性:
 
-```
+```java
 <property name="jdbcUrl" value="jdbc:h2:mem:activiti;DB_CLOSE_DELAY=1000" />
 <property name="jdbcDriver" value="org.h2.Driver" />
 <property name="jdbcUsername" value="sa" />
@@ -193,7 +193,7 @@ public void givenNoXMLConfig_whenCreateInMemProcessEngineConfig_thenCreated() {
 
 或者，如果我们使用`DataSource`:
 
-```
+```java
 <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" >
     <property name="driverClassName" value="com.mysql.jdbc.Driver" />
     <property name="url" value="jdbc:mysql://localhost:3306/activiti" />

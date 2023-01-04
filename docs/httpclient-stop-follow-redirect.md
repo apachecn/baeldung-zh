@@ -18,7 +18,7 @@
 
 在 Http 客户端的旧版本(4.3 之前)中，我们可以如下配置客户端对重定向的操作:
 
-```
+```java
 @Test
 public void givenRedirectsAreDisabled_whenConsumingUrlWhichRedirects_thenNotRedirected() 
   throws ClientProtocolException, IOException {
@@ -38,7 +38,7 @@ public void givenRedirectsAreDisabled_whenConsumingUrlWhichRedirects_thenNotRedi
 
 请注意可用于配置重定向行为**而无需设置实际原始`http.protocol.handle-redirects`参数**的替代 API:
 
-```
+```java
 HttpClientParams.setRedirecting(params, false);
 ```
 
@@ -48,7 +48,7 @@ HttpClientParams.setRedirecting(params, false);
 
 **HttpClient 4.3 引入了更干净、更高级别的 API** 来构建和配置客户端:
 
-```
+```java
 @Test
 public void givenRedirectsAreDisabled_whenConsumingUrlWhichRedirects_thenNotRedirected() 
   throws ClientProtocolException, IOException {

@@ -18,7 +18,7 @@
 
 在以下代码片段中，我们将使用以下列表作为示例输入:
 
-```
+```java
 List<String> list1 = Arrays.asList("1", "2", "3", "4");
 List<String> list2 = Arrays.asList("1", "2", "3", "4");
 List<String> list3 = Arrays.asList("1", "2", "4", "3");
@@ -28,7 +28,7 @@ List<String> list3 = Arrays.asList("1", "2", "4", "3");
 
 在纯 JUnit 测试中，以下断言将是正确的:
 
-```
+```java
 @Test
 public void whenTestingForEquality_ShouldBeEqual() throws Exception {
     Assert.assertEquals(list1, list2);
@@ -41,7 +41,7 @@ public void whenTestingForEquality_ShouldBeEqual() throws Exception {
 
 当使用 TestNG 的断言时，它们看起来与 JUnit 的断言非常相似，但是需要注意的是 [`Assert`](https://web.archive.org/web/20221022111202/https://static.javadoc.io/org.testng/testng/6.9.5/org/testng/Assert.html) 类来自不同的包:
 
-```
+```java
 @Test
 public void whenTestingForEquality_ShouldBeEqual() throws Exception {
     Assert.assertEquals(list1, list2);
@@ -54,7 +54,7 @@ public void whenTestingForEquality_ShouldBeEqual() throws Exception {
 
 如果您喜欢使用 [AssertJ](https://web.archive.org/web/20221022111202/https://joel-costigliola.github.io/assertj/) ，它的断言将如下所示:
 
-```
+```java
 @Test
 public void whenTestingForEquality_ShouldBeEqual() throws Exception {
     assertThat(list1)

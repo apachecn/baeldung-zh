@@ -12,7 +12,7 @@
 
 让我们首先将标准的 [`JUnit`](https://web.archive.org/web/20221128040443/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22junit%22) 依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
   <groupId>junit</groupId>
   <artifactId>junit</artifactId>
@@ -28,7 +28,7 @@
 
 这里，我们实现了`Runner`类的抽象方法:
 
-```
+```java
 public class TestRunner extends Runner {
 
     private Class testClass;
@@ -74,7 +74,7 @@ public class TestRunner extends Runner {
 
 让我们在测试类中使用 runner:
 
-```
+```java
 public class Calculator {
     public int add(int a, int b) {
         return a + b;
@@ -95,7 +95,7 @@ public class CalculatorTest {
 
 我们得到的结果是:
 
-```
+```java
 -------------------------------------------------------
  T E S T S
 -------------------------------------------------------
@@ -119,7 +119,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 
 让我们看一个例子:
 
-```
+```java
 public class BlockingTestRunner extends BlockJUnit4ClassRunner {
     public BlockingTestRunner(Class<?> klass) throws InitializationError {
         super(klass);
@@ -135,7 +135,7 @@ public class BlockingTestRunner extends BlockJUnit4ClassRunner {
 
 用`@RunWith(JUnit4.class)` 注释一个类将总是调用当前版本 JUnit 中默认的 JUnit 4 runner 该类是当前默认 JUnit 4 类运行器的别名:
 
-```
+```java
 @RunWith(JUnit4.class)
 public class CalculatorTest {
     Calculator calculator = new Calculator();

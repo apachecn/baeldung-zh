@@ -18,7 +18,7 @@
 
 接下来，我们有一个使用 Log4j2 中的一些参数来显示线程信息的例子:
 
-```
+```java
 <Property name="LOG_PATTERN"> %d{yyyy-MM-dd HH:mm:ss.SSS} --- thread_id="%tid" thread_name="%tn" thread_priority="%tp" --- [%p] %m%n </Property>
 ```
 
@@ -30,7 +30,7 @@ Log4j2 在其模式中使用参数来引用数据。在初学者中，所有参�
 
 首先，正如建议的那样，**我们添加了关于线程**的 id、名称和优先级的信息。因此，为了可视化它，我们需要创建一个简单的应用程序来创建新线程并记录一些信息:
 
-```
+```java
 public class Log4j2ThreadInfo{
     private static final Logger logger = LogManager.getLogger(Log4j2ThreadInfo.class);
 
@@ -46,7 +46,7 @@ public class Log4j2ThreadInfo{
 
 换句话说，我们只是借助于 [Java Streams](/web/20221208143830/https://www.baeldung.com/java-8-streams) 在 0 到 5 的范围内运行一个 forEach，然后启动一个新线程并进行一些日志记录。因此，我们将拥有:
 
-```
+```java
 2022-01-14 23:44:56.893 --- thread_id="22" thread_name="Thread-2" thread_priority="5" --- [INFO] Logging info
 2022-01-14 23:44:56.893 --- thread_id="21" thread_name="Thread-1" thread_priority="5" --- [INFO] Logging info
 2022-01-14 23:44:56.893 --- thread_id="20" thread_name="Thread-0" thread_priority="5" --- [INFO] Logging info

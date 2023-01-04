@@ -20,14 +20,14 @@
 
 让我们首先声明日期的预期`String`表示，并定义期望的日期格式模式:
 
-```
+```java
 private static final String EXPECTED_STRING_DATE = "Aug 1, 2018 12:00 PM";
 private static final String DATE_FORMAT = "MMM d, yyyy HH:mm a";
 ```
 
 现在我们需要我们想要转换的实际的`Date`对象。我们将使用一个`Calendar`实例来创建它:
 
-```
+```java
 TimeZone.setDefault(TimeZone.getTimeZone("CET"));
 Calendar calendar = Calendar.getInstance();
 calendar.set(2018, Calendar.AUGUST, 1, 12, 0);
@@ -42,13 +42,13 @@ Date date = calendar.getTime();
 
 在这个例子中，我们将使用`[SimpleDateFormat](https://web.archive.org/web/20220625220918/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/SimpleDateFormat.html)` 类的`format()`方法。让我们使用日期格式创建一个实例:
 
-```
+```java
 DateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
 ```
 
 在此之后，我们可以格式化我们的日期，并将其与预期的输出进行比较:
 
-```
+```java
 String formattedDate = formatter.format(date);
 
 assertEquals(EXPECTED_STRING_DATE, formattedDate);
@@ -60,7 +60,7 @@ assertEquals(EXPECTED_STRING_DATE, formattedDate);
 
 我们将使用它来实现与上面相同的输出:
 
-```
+```java
 String formattedDate = DateFormat
   .getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT)
   .format(date);
@@ -74,7 +74,7 @@ String formattedDate = DateFormat
 
 虽然这可能不是可读性最好的解决方案，**但这是一个线程安全的一行程序，非常有用，尤其是在多线程环境中**(我们应该记住`SimpleDateFormat`不是线程安全的):
 
-```
+```java
 String formattedDate = String.format("%1$tb %1$te, %1$tY %1$tI:%1$tM %1$Tp", date);
 ```
 
@@ -86,19 +86,19 @@ Java 8 的`Date/Time` API 比`java.util.Date`和`java.util.Calendar `类强大�
 
 这一次，我们将使用第 2.1 节中声明的`[DateTimeFormatter](https://web.archive.org/web/20220625220918/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeFormatter.html)` 类及其`format()`方法，以及相同的日期模式:
 
-```
+```java
 DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
 ```
 
 为了使用新的 API，我们需要**将我们的`Date`对象转换成一个`Instant`对象:**
 
-```
+```java
 Instant instant = date.toInstant();
 ```
 
 由于我们期望的`String`既有日期部分又有时间部分，**我们还需要将`Instant`对象转换成`LocalDateTime` :**
 
-```
+```java
 LocalDateTime ldt = instant
   .atZone(ZoneId.of("CET"))
   .toLocalDateTime();
@@ -106,7 +106,7 @@ LocalDateTime ldt = instant
 
 最后，我们可以很容易地得到格式化的`String`:
 
-```
+```java
 String formattedDate = ldt.format(formatter);
 ```
 

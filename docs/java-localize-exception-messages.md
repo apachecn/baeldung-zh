@@ -12,7 +12,7 @@ Java 中的异常用来表示程序中出现了错误。除了抛出异常，我
 
 我们需要一种方法来查找消息，使用`messageKey`来标识消息，使用 [`Locale`](/web/20221208143832/https://www.baeldung.com/java-8-localization#localization) 来标识哪个翻译将为`messageKey`提供值。我们将创建一个简单的类来抽象对我们的 [`ResourceBundle`](/web/20221208143832/https://www.baeldung.com/java-resourcebundle) 的访问，以检索英语和法语消息翻译:
 
-```
+```java
 public class Messages {
 
     public static String getMessageForLocale(String messageKey, Locale locale) {
@@ -25,12 +25,12 @@ public class Messages {
 
 我们的`Messages`类使用`ResourceBundle`将属性文件加载到我们的 bundle 中，bundle 位于我们的类路径的根位置。我们有两个文件，一个用于我们的英语信息，一个用于我们的法语信息:
 
-```
+```java
 # messages.properties
 message.exception = I am an exception.
 ```
 
-```
+```java
 # messages_fr.properties
 message.exception = Je suis une exception.
 ```
@@ -43,7 +43,7 @@ message.exception = Je suis une exception.
 
 让我们创建我们的`Exception`子类。为此，我们可以扩展`RuntimeException`或`Exception`。让我们扩展`Exception`并覆盖`getLocalizedMessage`:
 
-```
+```java
 public class LocalizedException extends Exception {
 
     private final String messageKey;
@@ -68,7 +68,7 @@ public class LocalizedException extends Exception {
 
 让我们创建一些单元测试来验证一切正常。我们将为英语和法语翻译创建测试，以验证在构建期间向异常传递自定义的`Locale`:
 
-```
+```java
 @Test
 public void givenUsEnglishProvidedLocale_whenLocalizingMessage_thenMessageComesFromDefaultMessage() {
     LocalizedException localizedException = new LocalizedException("message.exception", Locale.US);
@@ -88,7 +88,7 @@ public void givenFranceFrenchProvidedLocale_whenLocalizingMessage_thenMessageCom
 
 我们的异常也可以使用默认的`Locale`。让我们再创建两个测试来验证默认的`Locale`功能是否有效:
 
-```
+```java
 @Test
 public void givenUsEnglishDefaultLocale_whenLocalizingMessage_thenMessageComesFromDefaultMessages() {
     Locale.setDefault(Locale.US);

@@ -10,7 +10,7 @@
 
 首先，让我们在我们的`pom.xml`文件的构建插件部分中包含我们的目标为`wsimport`的 JAX-WS Maven 插件:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -35,7 +35,7 @@
 
 在我们的 Maven 插件部分，**`wsdlDirectory`配置属性通知插件我们的 WSDL 文件位于哪里**。在这个例子中，我们将告诉插件获取我们项目的`src/main/resources`目录中的所有 WSDL 文件:
 
-```
+```java
 <plugin>
     ...
     <configuration>
@@ -48,7 +48,7 @@
 
 此外，我们可以使用`wsdlFiles` 配置属性来定义生成类时要考虑的 WSDL 文件列表:
 
-```
+```java
 <plugin>
     ...
     <configuration>
@@ -68,7 +68,7 @@
 
 或者，我们可以配置插件的`wsdlUrl`配置属性:
 
-```
+```java
 <plugin>
     ...
     <configuration>
@@ -86,7 +86,7 @@
 
 接下来，在`packageName` 属性中，我们可以设置生成的类的包名，并在`sourceDestDir`中，输出目录:
 
-```
+```java
 <plugin>
     ...
     <configuration>
@@ -100,7 +100,7 @@
 
 因此，我们使用`wsdlDirectory` 选项的插件配置的最终版本是:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>jaxws-maven-plugin</artifactId>
@@ -126,11 +126,11 @@
 
 最后，配置好插件后，我们可以用 Maven 生成我们的类，并检查输出日志:
 
-```
+```java
 mvn clean install
 ```
 
-```
+```java
 [INFO] --- jaxws-maven-plugin:2.6:wsimport (default) @ jaxws ---
 [INFO] Processing: file:/D:/projetos/baeldung/tutorials/maven-modules/maven-plugins/jaxws/src/main/resources/country.wsdl
 [INFO] jaxws:wsimport args: [-keep, -s, 'D:\projetos\baeldung\tutorials\maven-modules\maven-plugins\jaxws\target\generated-sources', -d, 'D:\projetos\baeldung\tutorials\maven-modules\maven-plugins\jaxws\target\classes', -encoding, UTF-8, -Xnocompile, -p, com.baeldung.soap.ws.client, "file:/D:/projetos/baeldung/tutorials/maven-modules/maven-plugins/jaxws/src/main/resources/country.wsdl"]
@@ -144,7 +144,7 @@ Generating code...
 
 按照在`packageName`属性中的配置，可以在`com.baeldung.soap.ws.client`中找到生成的类:
 
-```
+```java
 com.baeldung.soap.ws.client.Country.java
 com.baeldung.soap.ws.client.CountryService.java  
 com.baeldung.soap.ws.client.CountryServiceImplService.java

@@ -24,14 +24,14 @@ FTL 指令是我们在应用中遵循 DRY 原则的一种方式。我们将在�
 
 一个这样的用例是当我们想要在许多页面中包含菜单部分时。首先，我们将在一个文件中定义菜单部分——我们称之为`menu.ftl`——其内容如下:
 
-```
+```java
 <a href="#dashboard">Dashboard</a>
 <a href="#newEndpoint">Add new endpoint</a>
 ```
 
 在我们的 HTML 页面上，让我们包含创建的`menu.ftl`:
 
-```
+```java
 <!DOCTYPE html>
 <html>
 <body>
@@ -49,13 +49,13 @@ FTL 会将任何`null`值视为缺失值。因此，我们需要格外小心，*
 
 我们可以使用`??`操作符来检查一个属性或者嵌套属性是否存在。结果是一个布尔值:
 
-```
+```java
 ${attribute??}
 ```
 
 因此，我们已经测试了`null,` 的属性，但这并不总是足够的。现在让我们定义一个默认值作为这个缺失值的后备。为此，我们需要将`!`操作符放在变量名称之后:
 
-```
+```java
 ${attribute!'default value'}
 ```
 
@@ -63,13 +63,13 @@ ${attribute!'default value'}
 
 例如，为了检查属性是否存在，以及是否有一个嵌套属性与另一个嵌套属性，我们包装所有内容:
 
-```
+```java
 ${(attribute.nestedProperty.nestedProperty)??}
 ```
 
 最后，将所有内容放在一起，我们可以将它们嵌入静态内容中:
 
-```
+```java
 <p>Testing is student property exists: ${student???c}</p>
 <p>Using default value for missing student: ${student!'John Doe'}</p>
 <p>Wrapping student nested properties: ${(student.address.street)???c}</p>
@@ -77,7 +77,7 @@ ${(attribute.nestedProperty.nestedProperty)??}
 
 如果 `student` 是`null`，我们会看到:
 
-```
+```java
 <p>Testing is student property exists: false</p>
 <p>Using default value for missing student: John Doe</p>
 <p>Wrapping student nested properties: false</p>
@@ -89,7 +89,7 @@ ${(attribute.nestedProperty.nestedProperty)??}
 
 FreeMarker 中存在控制结构，传统的 if-else 可能很熟悉:
 
-```
+```java
 <#if condition>
     <!-- block to execute if condition is true -->
 <#elseif condition2>
@@ -118,7 +118,7 @@ FreeMarker 中存在控制结构，传统的 if-else 可能很熟悉:
 
 将它放在一起，用于以下模板:
 
-```
+```java
 <#if status??>
     <p>${status.reason}</p>
 <#else>
@@ -128,7 +128,7 @@ FreeMarker 中存在控制结构，传统的 if-else 可能很熟悉:
 
 我们最终得到的 HTML 代码是:
 
-```
+```java
  <!-- When status attribute exists -->
 <p>404 Not Found</p>
 
@@ -148,7 +148,7 @@ FreeMarker 中存在控制结构，传统的 if-else 可能很熟悉:
 
 我们可以用两种基本方法迭代一个容器。第一个是迭代每个值，并为每个值设定逻辑:
 
-```
+```java
 <#list sequence as item>
     <!-- do something with ${item} -->
 </#list>
@@ -156,7 +156,7 @@ FreeMarker 中存在控制结构，传统的 if-else 可能很熟悉:
 
 或者，当我们想要迭代一个`Hash`，访问键和值:
 
-```
+```java
 <#list hash as key, value>
     <!-- do something with ${key} and ${value} -->
 </#list>
@@ -164,7 +164,7 @@ FreeMarker 中存在控制结构，传统的 if-else 可能很熟悉:
 
 第二种形式更强大，因为它还允许我们定义在迭代的各个步骤中应该发生的逻辑:
 
-```
+```java
 <#list sequence>
     <!-- one-time logic if the sequence is not empty -->
     <#items as item>
@@ -180,7 +180,7 @@ FreeMarker 中存在控制结构，传统的 if-else 可能很熟悉:
 
 作为一个实践示例，我们将定义一个模板，在其中列出一些状态:
 
-```
+```java
 <#list statuses>
     <ul>
     <#items as status>
@@ -194,7 +194,7 @@ FreeMarker 中存在控制结构，传统的 if-else 可能很熟悉:
 
 当我们的容器为`[“200 OK”, “404 Not Found”, “500 Internal Server Error”]`时，这将返回以下 HTML:
 
-```
+```java
 <ul>
 <li>200 OK</li>
 <li>404 Not Found</li>
@@ -227,7 +227,7 @@ FreeMarker 附带了大量用于处理对象的函数(内置的)。我们来看�
 
 现在让我们使用其中的几个函数:
 
-```
+```java
 <p>${'http://myurl.com/?search=Hello World'?urlPath}</p>
 <p>${'Using " in text'?jsString}</p>
 <p>${'my value?upperCase}</p>
@@ -236,7 +236,7 @@ FreeMarker 附带了大量用于处理对象的函数(内置的)。我们来看�
 
 上面模板的输出将是:
 
-```
+```java
 <p>http%3A//myurl.com/%3Fsearch%3DHello%20World</p>
 <p>MY VALUE</p>
 <p>Using \" in text</p>
@@ -253,7 +253,7 @@ FreeMarker 附带了大量用于处理对象的函数(内置的)。我们来看�
 
 让我们做一连串的数学运算:
 
-```
+```java
 <p>${(7.3?round + 3.4?ceiling + 0.1234)?string('0.##')}</p>
 <!-- (7 + 4 + 0.1234) with 2 decimals -->
 ```
@@ -268,13 +268,13 @@ FreeMarker 附带了大量用于处理对象的函数(内置的)。我们来看�
 
 我们现在将获取当前时间，并将输出格式化为仅包含小时和分钟的字符串:
 
-```
+```java
 <p>${.now?time?string('HH:mm')}</p>
 ```
 
 生成的 HTML 将是:
 
-```
+```java
 <p>15:39</p>
 ```
 
@@ -286,7 +286,7 @@ FreeMarker 附带了大量用于处理对象的函数(内置的)。我们来看�
 
 语法是:
 
-```
+```java
 <#attempt>
     <!-- block to try -->
 <#recover>
@@ -298,7 +298,7 @@ FreeMarker 附带了大量用于处理对象的函数(内置的)。我们来看�
 
 记住这个语法，让我们将模板定义为:
 
-```
+```java
 <p>Preparing to evaluate</p>
 <#attempt>
     <p>Attribute is ${attributeWithPossibleValue??}</p>
@@ -310,7 +310,7 @@ FreeMarker 附带了大量用于处理对象的函数(内置的)。我们来看�
 
 当`attributeWithPossibleValue`缺失时，我们会看到:
 
-```
+```java
 <p>Preparing to evaluate</p>
     <p>Attribute is missing</p>
 <p>Done with the evaluation</p>
@@ -318,7 +318,7 @@ FreeMarker 附带了大量用于处理对象的函数(内置的)。我们来看�
 
 当`attributeWithPossibleValue`存在时的输出为:
 
-```
+```java
 <p>Preparing to evaluate</p>
     <p>Attribute is 200 OK</p>
 <p>Done with the evaluation</p>
@@ -342,7 +342,7 @@ FreeMarker 附带了大量用于处理对象的函数(内置的)。我们来看�
 
 要开始访问静态成员，我们可以更新我们的全局 FreeMarker 配置，或者在模型上添加一个 S `taticModels`类型属性，在属性名`statics`下:
 
-```
+```java
 model.addAttribute("statics", new DefaultObjectWrapperBuilder(new Version("2.3.28"))
     .build().getStaticModels());
 ```
@@ -353,7 +353,7 @@ model.addAttribute("statics", new DefaultObjectWrapperBuilder(new Version("2.3.2
 
 下面是我们如何在模板中导入`Math`类，显示静态`PI`字段的值，并使用静态`pow`方法:
 
-```
+```java
 <#assign MathUtils=statics['java.lang.Math']>
 <p>PI value: ${MathUtils.PI}</p>
 <p>2*10 is: ${MathUtils.pow(2, 10)}</p>
@@ -361,7 +361,7 @@ model.addAttribute("statics", new DefaultObjectWrapperBuilder(new Version("2.3.2
 
 产生的 HTML 是:
 
-```
+```java
 <p>PI value: 3.142</p>
 <p>2*10 is: 1,024</p>
 ```
@@ -372,19 +372,19 @@ Bean 成员非常容易访问:**使用点号(。)**就这样！
 
 对于我们的下一个例子，我们将添加一个`Random`对象到我们的模型:
 
-```
+```java
 model.addAttribute("random", new Random());
 ```
 
 在我们的 FreeMarker 模板中，让我们生成一个随机数:
 
-```
+```java
 <p>Random value: ${random.nextInt()}</p>
 ```
 
 这将导致类似于以下内容的输出:
 
-```
+```java
 <p>Random value: 1,329,970,768</p>
 ```
 
@@ -392,7 +392,7 @@ model.addAttribute("random", new Random());
 
 添加自定义方法的第一步是拥有一个实现 FreeMarker 的`TemplateMethodModelEx`接口并在`exec`方法中定义我们的逻辑的类:
 
-```
+```java
 public class LastCharMethod implements TemplateMethodModelEx {
     public Object exec(List arguments) throws TemplateModelException {
         if (arguments.size() != 1 || StringUtils.isEmpty(arguments.get(0)))
@@ -405,19 +405,19 @@ public class LastCharMethod implements TemplateMethodModelEx {
 
 我们将添加一个新类的实例作为模型的属性:
 
-```
+```java
 model.addAttribute("lastChar", new LastCharMethod());
 ```
 
 下一步是在模板中使用我们的新方法:
 
-```
+```java
 <p>Last char example: ${lastChar('mystring')}</p>
 ```
 
 最后，得到的输出是:
 
-```
+```java
 <p>Last char example: g</p>
 ```
 

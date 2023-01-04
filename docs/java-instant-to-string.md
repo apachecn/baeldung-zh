@@ -26,7 +26,7 @@ Java 8 附带了一个名为`Instant`的方便的类来表示时间轴上的一�
 
 例如，假设我们想要使用`dd.MM.yyyy`格式显示我们的`Instant`实例:
 
-```
+```java
 public class FormatInstantUnitTest {
 
     private static final String PATTERN_FORMAT = "dd.MM.yyyy";
@@ -49,7 +49,7 @@ public class FormatInstantUnitTest {
 
 请记住，**未指定时区将导致`[UnsupportedTemporalTypeException](https://web.archive.org/web/20220613105332/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/temporal/UnsupportedTemporalTypeException.html)`** :
 
-```
+```java
 @Test(expected = UnsupportedTemporalTypeException.class)
 public void givenInstant_whenNotSpecifyingTimeZone_thenThrowException() {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_FORMAT);
@@ -65,7 +65,7 @@ public void givenInstant_whenNotSpecifyingTimeZone_thenThrowException() {
 
 让我们用一个测试用例来举例说明`toString()`方法的使用:
 
-```
+```java
 @Test
 public void givenInstant_whenUsingToString_thenFormat() {
     Instant instant = Instant.ofEpochMilli(1641828224000L);
@@ -85,7 +85,7 @@ public void givenInstant_whenUsingToString_thenFormat() {
 
 那么，我们来举例说明如何使用`DateTimeFormatter` 将一个瞬间转换成一个字符串:
 
-```
+```java
 @Test
 public void givenInstant_whenUsingJodaTime_thenFormat() {
     org.joda.time.Instant instant = new org.joda.time.Instant("2022-03-20T10:11:12");

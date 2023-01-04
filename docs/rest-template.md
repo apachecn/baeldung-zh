@@ -36,7 +36,7 @@ Learn how to use the new TestRestTemplate in Spring Boot to test a simple API.[R
 
 让我们从简单的开始谈论 GET 请求，用**一个使用`getForEntity()` API** 的简单例子:
 
-```
+```java
 RestTemplate restTemplate = new RestTemplate();
 String fooResourceUrl
   = "http://localhost:8080/spring-rest/foos";
@@ -47,7 +47,7 @@ Assertions.assertEquals(response.getStatusCode(), HttpStatus.OK);
 
 **注意，我们拥有对 HTTP 响应**的完全访问权限，因此我们可以做一些事情，比如检查状态代码以确保操作成功，或者处理响应的实际主体:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 JsonNode root = mapper.readTree(response.getBody());
 JsonNode name = root.path("name");
@@ -60,7 +60,7 @@ Assertions.assertNotNull(name.asText());
 
 我们还可以将回应直接映射到资源 DTO:
 
-```
+```java
 public class Foo implements Serializable {
     private long id;
 
@@ -71,7 +71,7 @@ public class Foo implements Serializable {
 
 现在我们可以简单地在模板中使用`getForObject` API:
 
-```
+```java
 Foo foo = restTemplate
   .getForObject(fooResourceUrl + "/1", Foo.class);
 Assertions.assertNotNull(foo.getName());
@@ -84,7 +84,7 @@ Assertions.assertEquals(foo.getId(), 1L);
 
 我们将在这里使用`headForHeaders()` API:
 
-```
+```java
 HttpHeaders httpHeaders = restTemplate.headForHeaders(fooResourceUrl);
 Assertions.assertTrue(httpHeaders.getContentType().includes(MediaType.APPLICATION_JSON));
 ```
@@ -97,7 +97,7 @@ Assertions.assertTrue(httpHeaders.getContentType().includes(MediaType.APPLICATIO
 
 ### 5.1。`postForObject()`API
 
-```
+```java
 RestTemplate restTemplate = new RestTemplate();
 
 HttpEntity<Foo> request = new HttpEntity<>(new Foo("bar"));
@@ -110,7 +110,7 @@ Assertions.assertEquals(foo.getName(), "bar");
 
 类似地，让我们看看这个操作，它不是返回完整的资源，而是返回新创建的资源的`Location`:
 
-```
+```java
 HttpEntity<Foo> request = new HttpEntity<>(new Foo("bar"));
 URI location = restTemplate
   .postForLocation(fooResourceUrl, request);
@@ -121,7 +121,7 @@ Assertions.assertNotNull(location);
 
 让我们来看看如何用更通用的`exchange` API 写一篇文章:
 
-```
+```java
 RestTemplate restTemplate = new RestTemplate();
 HttpEntity<Foo> request = new HttpEntity<>(new Foo("bar"));
 ResponseEntity<Foo> response = restTemplate
@@ -143,27 +143,27 @@ Assertions.assertEquals(foo.getName(), "bar");
 
 这确保了可以向服务器发送一个大的查询字符串，其中包含由`&`分隔的名称/值对:
 
-```
+```java
 HttpHeaders headers = new HttpHeaders();
 headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 ```
 
 我们可以将表单变量包装成一个`[LinkedMultiValueMap](https://web.archive.org/web/20221129014436/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/LinkedMultiValueMap.html)`:
 
-```
+```java
 MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
 map.add("id", "1");
 ```
 
 接下来，**我们使用一个 [`HttpEntity`](https://web.archive.org/web/20221129014436/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/HttpEntity.html) 实例**构建请求:
 
-```
+```java
 HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 ```
 
 最后，我们可以通过在端点上调用 [`restTemplate.postForEntity()`](https://web.archive.org/web/20221129014436/https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/client/RestTemplate.html#postForEntity-java.net.URI-java.lang.Object-java.lang.Class-) 来连接到 REST 服务:`/` foos `/form`
 
-```
+```java
 ResponseEntity<String> response = restTemplate.postForEntity(
   fooResourceUrl+"/form", request , String.class);
 Assertions.assertEquals(response.getStatusCode(), HttpStatus.CREATED); 
@@ -173,7 +173,7 @@ Assertions.assertEquals(response.getStatusCode(), HttpStatus.CREATED);
 
 接下来，我们将快速了解如何使用 OPTIONS 请求，并探索使用此类请求在特定 URI 上允许的操作；API 是`optionsForAllow`:
 
-```
+```java
 Set<HttpMethod> optionsForAllow = restTemplate.optionsForAllow(fooResourceUrl);
 HttpMethod[] supportedMethods
   = {HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE};
@@ -188,7 +188,7 @@ Assertions.assertTrue(optionsForAllow.containsAll(Arrays.asList(supportedMethods
 
 我们将从一个简单的针对 API 的 PUT 操作开始——请记住，该操作不是将主体返回给客户端:
 
-```
+```java
 Foo updatedInstance = new Foo("newName");
 updatedInstance.setId(createResponse.getBody().getId());
 String resourceUrl = 
@@ -203,7 +203,7 @@ template.exchange(resourceUrl, HttpMethod.PUT, requestUpdate, Void.class);
 
 让我们确保准备好回调，在回调中我们可以设置我们需要的所有头和请求体:
 
-```
+```java
 RequestCallback requestCallback(final Foo updatedInstance) {
     return clientHttpRequest -> {
         ObjectMapper mapper = new ObjectMapper();
@@ -218,7 +218,7 @@ RequestCallback requestCallback(final Foo updatedInstance) {
 
 接下来，我们用 POST 请求创建资源:
 
-```
+```java
 ResponseEntity<Foo> response = restTemplate
   .exchange(fooResourceUrl, HttpMethod.POST, request, Foo.class);
 Assertions.assertEquals(response.getStatusCode(), HttpStatus.CREATED); 
@@ -226,7 +226,7 @@ Assertions.assertEquals(response.getStatusCode(), HttpStatus.CREATED);
 
 然后我们更新资源:
 
-```
+```java
 Foo updatedInstance = new Foo("newName");
 updatedInstance.setId(response.getBody().getId());
 String resourceUrl =fooResourceUrl + '/' + response.getBody().getId();
@@ -241,7 +241,7 @@ restTemplate.execute(
 
 要删除现有资源，我们将快速使用`delete()` API:
 
-```
+```java
 String entityUrl = fooResourceUrl + "/" + existingResource.getId();
 restTemplate.delete(entityUrl); 
 ```
@@ -250,7 +250,7 @@ restTemplate.delete(entityUrl);
 
 我们可以通过简单地使用`ClientHttpRequestFactory`来配置`RestTemplate`超时:
 
-```
+```java
 RestTemplate restTemplate = new RestTemplate(getClientHttpRequestFactory());
 
 private ClientHttpRequestFactory getClientHttpRequestFactory() {
@@ -264,7 +264,7 @@ private ClientHttpRequestFactory getClientHttpRequestFactory() {
 
 我们可以使用`HttpClient`获得更多配置选项:
 
-```
+```java
 private ClientHttpRequestFactory getClientHttpRequestFactory() {
     int timeout = 5000;
     RequestConfig config = RequestConfig.custom()

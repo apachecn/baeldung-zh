@@ -25,7 +25,7 @@
 
 让我们借助一些`boolean`变量来理解:
 
-```
+```java
 boolean condition1 = true; 
 boolean condition2 = true; 
 boolean condition3 = false; 
@@ -34,28 +34,28 @@ boolean condition4 = false;
 
 当我们对两个`true`操作数应用逻辑 OR 时，结果将是`true`:
 
-```
+```java
 boolean result = condition1 || condition2;
 assertTrue(result);
 ```
 
 当我们对一个`true`和一个`false`操作数应用逻辑 OR 时，结果将是`true`:
 
-```
+```java
 boolean result = condition1 || condition3; 
 assertTrue(result);
 ```
 
 当我们对两个`false`操作数应用逻辑 OR 时，结果将是`false`:
 
-```
+```java
 boolean result = condition3 || condition4; 
 assertFalse(result);
 ```
 
 当有多个操作数时，从左到右有效地执行**评估。因此，表达式`condition1 || condition2 || condition3 || condition4` 将产生与以下相同的逻辑:**
 
-```
+```java
 boolean result1 = condition1 || condition2; 
 boolean result2 = result1 || condition3;
 boolean finalResult = result2 || condition4;
@@ -70,7 +70,7 @@ assertTrue(finalResult);
 
 让我们考虑下面的例子:
 
-```
+```java
 boolean returnAndLog(boolean value) { 
     System.out.println("Returning " + value); 
     return value; 
@@ -94,7 +94,7 @@ Returning true
 
 我们应该注意，如果调用的任何方法有副作用，这可能会导致意想不到的结果。如果我们重写第一个示例，在`if`语句之前捕获`boolean`值，我们会得到不同的结果:
 
-```
+```java
 boolean result1 = returnAndLog(true);
 boolean result2 = returnAndLog(false);
 
@@ -123,7 +123,7 @@ Returning false
 
 让我们考虑一个例子:
 
-```
+```java
 int four = 4; //0100 = 4
 int three = 3; //0011 = 3
 int fourORthree = four | three;
@@ -139,7 +139,7 @@ assertEquals(7, fourORthree); // 0111 = 7
 
 然后，对各个位进行按位“或”运算，得到代表最终结果的二进制表示:
 
-```
+```java
 0100
 0011
 ----
@@ -150,7 +150,7 @@ assertEquals(7, fourORthree); // 0111 = 7
 
 **当有多个操作数时，求值从左到右进行**。因此，表达式`1 | 2 | 3 | 4` 将被计算为:
 
-```
+```java
 int result1 = 1 | 2; 
 int result2 = result1 | 3;
 int finalResult = result2 | 4;
@@ -175,7 +175,7 @@ assertEquals(finalResult,7);
 
 让我们借助示例中的一些`boolean`变量来理解:
 
-```
+```java
 boolean condition1 = true;
 boolean condition2 = true;
 boolean condition3 = false;
@@ -204,7 +204,7 @@ assertFalse(condition3_OR_condition4);
 
 一个简单的例子将帮助我们更好地理解这一点:
 
-```
+```java
 boolean result = 2 + 4 == 5 || 3 < 5;
 assertTrue(result);
 ```
@@ -219,7 +219,7 @@ assertTrue(result);
 
 现在，考虑另一个使用按位 OR 运算符的示例:
 
-```
+```java
 int result = 1 + 2 | 5 - 1;
 assertEquals(7, result);
 ```

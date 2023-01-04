@@ -14,7 +14,7 @@ Spring 提供了一种简单的方法来实现调度作业的 API。在我们部
 
 要在 Spring 中使用 ShedLock，我们需要添加 [和`shedlock-spring`依赖关系](https://web.archive.org/web/20220626082247/https://search.maven.org/search?q=g:net.javacrumbs.shedlock%20AND%20a:shedlock-spring&core=gav):
 
-```
+```java
 <dependency>
     <groupId>net.javacrumbs.shedlock</groupId>
     <artifactId>shedlock-spring</artifactId>
@@ -32,7 +32,7 @@ Spring 提供了一种简单的方法来实现调度作业的 API。在我们部
 
 为了让它工作，我们需要提供 [H2 数据库](https://web.archive.org/web/20220626082247/https://search.maven.org/search?q=g:com.h2database%20AND%20a:h2)和[谢德洛克 JDBC 依赖关系](https://web.archive.org/web/20220626082247/https://search.maven.org/search?q=g:net.javacrumbs.shedlock%20AND%20a:shedlock-provider-jdbc-template&core=gav):
 
-```
+```java
 <dependency>
     <groupId>net.javacrumbs.shedlock</groupId>
     <artifactId>shedlock-provider-jdbc-template</artifactId>
@@ -47,7 +47,7 @@ Spring 提供了一种简单的方法来实现调度作业的 API。在我们部
 
 接下来，我们需要为 ShedLock 创建一个数据库表来保存关于调度器锁的信息:
 
-```
+```java
 CREATE TABLE shedlock (
   name VARCHAR(64),
   lock_until TIMESTAMP(3) NULL,
@@ -61,7 +61,7 @@ CREATE TABLE shedlock (
 
 这里我们用`application.yml`来定义 H2 数据库的数据源:
 
-```
+```java
 spring:
   datasource:
     driverClassName: org.h2.Driver
@@ -74,7 +74,7 @@ spring:
 
 Spring 可以让它变得非常简单:
 
-```
+```java
 @Configuration
 public class SchedulerConfiguration {
     @Bean
@@ -86,7 +86,7 @@ public class SchedulerConfiguration {
 
 我们必须提供的其他配置需求是 Spring 配置类上的`@EnableScheduling`和`@EnableSchedulerLock`注释:
 
-```
+```java
 @SpringBootApplication
 @EnableScheduling
 @EnableSchedulerLock(defaultLockAtMostFor = "PT30S")
@@ -106,7 +106,7 @@ public class Application {
 
 要创建一个由 ShedLock 处理的调度任务，我们只需在一个方法上添加`@Scheduled`和`@SchedulerLock`注释:
 
-```
+```java
 @Component
 class BaeldungTaskScheduler {
 

@@ -24,7 +24,7 @@
 
 下面是一个 GraphQL 错误的例子:
 
-```
+```java
 mutation {
   addVehicle(vin: "NDXT155NDFTV59834", year: 2021, make: "Toyota", model: "Camry", trim: "XLE",
              location: {zipcode: "75024", city: "Dallas", state: "TX"}) {
@@ -39,7 +39,7 @@ mutation {
 
 违反唯一约束时的错误响应如下所示:
 
-```
+```java
 {
   "data": null,
   "errors": [
@@ -76,7 +76,7 @@ mutation {
 
 让我们看一个演示无效输入语法的例子:
 
-```
+```java
 query {
   searchByVin(vin: "error) {
     vin
@@ -90,7 +90,7 @@ query {
 
 下面是对语法错误的请求错误响应，在本例中是缺少引号:
 
-```
+```java
 {
   "data": null,
   "errors": [
@@ -119,7 +119,7 @@ query {
 
 让我们看另一个例子:
 
-```
+```java
 query {
   searchAll {
     vin
@@ -135,7 +135,7 @@ query {
 
 然而，其中一辆车的信息有一个空值`trim`,所以我们只得到部分数据——那些`trim`值不为空的车——以及错误:
 
-```
+```java
 {
   "data": {
     "searchAll": [
@@ -198,7 +198,7 @@ query {
 
 我们还使用了 [`graphql-java-tools`](https://web.archive.org/web/20220602150241/https://search.maven.org/search?q=g:com.graphql-java%20AND%20a:graphql-java-tools) 模块，这有助于将 GraphQL 模式映射到现有的 Java 对象，对于单元测试，我们使用了 [`graphql-spring-boot-starter-test`](https://web.archive.org/web/20220602150241/https://search.maven.org/search?q=g:com.graphql-java%20AND%20a:graphql-spring-boot-starter-test) :
 
-```
+```java
 <dependency>
     <groupId>com.graphql-java</groupId>
     <artifactId>graphql-spring-boot-starter</artifactId>
@@ -214,7 +214,7 @@ query {
 
 对于测试，我们使用`graphql-spring-boot-starter-test`:
 
-```
+```java
 <dependency>
     <groupId>com.graphql-java</groupId>
     <artifactId>graphql-spring-boot-starter-test</artifactId>
@@ -237,7 +237,7 @@ query {
 
 通常，在 REST 应用程序中，我们通过扩展`RuntimeException`或`Throwable`来创建一个定制的运行时异常类:
 
-```
+```java
 public class InvalidInputException extends RuntimeException {
     public InvalidInputException(String message) {
         super(message);
@@ -247,7 +247,7 @@ public class InvalidInputException extends RuntimeException {
 
 使用这种方法，我们可以看到 GraphQL 引擎返回以下响应:
 
-```
+```java
 {
   "data": null,
   "errors": [
@@ -274,7 +274,7 @@ public class InvalidInputException extends RuntimeException {
 
 让我们实现我们的自定义异常:
 
-```
+```java
 public class AbstractGraphQLException extends RuntimeException implements GraphQLError {
     private Map<String, Object> parameters = new HashMap();
 
@@ -311,7 +311,7 @@ public class AbstractGraphQLException extends RuntimeException implements GraphQ
 }
 ```
 
-```
+```java
 public class VehicleAlreadyPresentException extends AbstractGraphQLException {
 
      public VehicleAlreadyPresentException(String message) {
@@ -330,7 +330,7 @@ public class VehicleAlreadyPresentException extends AbstractGraphQLException {
 
 下面的代码片段显示了 GraphQL 引擎执行使用`DataFetcherExceptionHandlerParameters`类来设置错误字段的位置和路径。这些值作为构造函数参数传递给`ExceptionWhileDataFetching`:
 
-```
+```java
 ...
 public void accept(DataFetcherExceptionHandlerParameters handlerParameters) {
         Throwable exception = handlerParameters.getException();
@@ -346,7 +346,7 @@ public void accept(DataFetcherExceptionHandlerParameters handlerParameters) {
 
 让我们来看一个来自`ExceptionWhileDataFetching` 类的片段。在这里，我们可以看到错误类型是`DataFetchingException`:
 
-```
+```java
 ...
 @Override
 public List<SourceLocation> getLocations() {

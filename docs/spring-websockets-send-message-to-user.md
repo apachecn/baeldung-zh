@@ -28,7 +28,7 @@
 
 现在，让我们学习如何配置我们的应用程序，以便我们可以向特定用户发送消息:
 
-```
+```java
 public class SocketBrokerConfig extends 
   AbstractWebSocketMessageBrokerConfigurer {
 
@@ -56,7 +56,7 @@ public class SocketBrokerConfig extends
 
 我们希望我们的客户端使用符合以下模式的 URL 映射来订阅队列:
 
-```
+```java
 "/user/queue/updates"
 ```
 
@@ -64,13 +64,13 @@ public class SocketBrokerConfig extends
 
 例如，如果我们有一个名为`“user123”`的用户，对应的地址应该是:
 
-```
+```java
 "/queue/updates-user123"
 ```
 
 在服务器端，我们将使用以下 URL 映射模式发送特定于用户的响应:
 
-```
+```java
 "/user/{username}/queue/updates"
 ```
 
@@ -87,7 +87,7 @@ public class SocketBrokerConfig extends
 
 我们可以从`SimpMessagingTemplate` 或`SimpMessageSendingOperations`非静态地调用 `convertAndSendToUser()`:
 
-```
+```java
 @Autowired
 private SimpMessagingTemplate simpMessagingTemplate;
 
@@ -107,7 +107,7 @@ public void sendSpecific(
 
 你可能已经注意到了:
 
-```
+```java
 @Header("simpSessionId") String sessionId
 ```
 
@@ -117,7 +117,7 @@ public void sendSpecific(
 
 在客户端，我们将使用 JavaScript 中的`connect()`来**初始化 SockJS 实例，并使用 STOMP:** 连接到我们的 WebSocket 服务器
 
-```
+```java
 var socket = new SockJS('/secured/room'); 
 var stompClient = Stomp.over(socket);
 var sessionId = "";
@@ -135,7 +135,7 @@ stompClient.connect({}, function (frame) {
 
 我们还访问提供的`sessionId`，并将其附加到“ `secured/room` `“` URL 映射中。**这使我们能够动态和手动地提供特定于用户的订阅队列:**
 
-```
+```java
 stompClient.subscribe('secured/user/queue/specific-user' 
   + '-user' + that.sessionId, function (msgOut) {
      //handle messages

@@ -40,7 +40,7 @@
 
 在下面的代码中，我们定义了一个计数为 2 的`CountDownLatch` 。接下来，我们从一个线程中调用`countDown()`两次:
 
-```
+```java
 CountDownLatch countDownLatch = new CountDownLatch(2);
 Thread t = new Thread(() -> {
     countDownLatch.countDown();
@@ -60,7 +60,7 @@ assertEquals(0, countDownLatch.getCount());
 
 类似于上面的例子，我们再次创建一个计数为 2 的`CyclicBarrier,` ,并对其调用`await()`,这次是从同一个线程:
 
-```
+```java
 CyclicBarrier cyclicBarrier = new CyclicBarrier(2);
 Thread t = new Thread(() -> {
     try {
@@ -90,7 +90,7 @@ assertFalse(cyclicBarrier.isBroken());
 
 在给定的代码中，我们定义了一个计数为 7 的`CountDownLatch`,并通过 20 个不同的调用对其进行计数:
 
-```
+```java
 CountDownLatch countDownLatch = new CountDownLatch(7);
 ExecutorService es = Executors.newFixedThreadPool(20);
 for (int i = 0; i < 20; i++) {
@@ -111,7 +111,7 @@ assertTrue(outputScraper.size() <= 7);
 
 类似于上面的例子，我们定义了一个计数为 7 的`CyclicBarrier `,并从 20 个不同的线程中等待它:
 
-```
+```java
 CyclicBarrier cyclicBarrier = new CyclicBarrier(7);
 
 ExecutorService es = Executors.newFixedThreadPool(20);

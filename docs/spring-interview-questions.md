@@ -185,7 +185,7 @@ Spring Beans 是由 Spring IoC 容器初始化的 Java 对象。
 
 我们可以加载多个基于 Java 的配置文件:
 
-```
+```java
 @Configuration
 @Import({MainConfig.class, SchedulerConfig.class})
 public class AppConfig {
@@ -193,13 +193,13 @@ public class AppConfig {
 
 或者，我们可以加载一个包含所有其他配置的 XML 文件:
 
-```
+```java
 ApplicationContext context = new ClassPathXmlApplicationContext("spring-all.xml");
 ```
 
 在这个 XML 文件中，我们将有以下内容:
 
-```
+```java
 <import resource="main.xml"/>
 <import resource="scheduler.xml"/>
 ```
@@ -240,7 +240,7 @@ Scope `prototype`意味着每次我们调用 Bean 的实例时，Spring 都会�
 
 我们还可以在这些 beans 上使用`@Autowired`注释:
 
-```
+```java
 @Autowired
 ServletContext servletContext;
 
@@ -274,7 +274,7 @@ Spring JDBC 模板是主要的 API，通过它我们可以访问我们感兴趣�
 
 为了使用它，我们需要定义`DataSource`的简单配置:
 
-```
+```java
 @Configuration
 @ComponentScan("org.baeldung.jdbc")
 public class SpringJdbcConfig {
@@ -365,13 +365,13 @@ Spring Framework 5 中的 WebFlux 框架使用[反应器](https://web.archive.or
 
 `Mono`实现`Publisher`并返回 0 或 1 个元素:
 
-```
+```java
 public abstract class Mono<T> implements Publisher<T> {...}
 ```
 
 并且` Flux`实现`Publisher`并返回`N`元素:
 
-```
+```java
 public abstract class Flux<T> implements Publisher<T> {...}
 ```
 
@@ -405,7 +405,7 @@ public abstract class Flux<T> implements Publisher<T> {...}
 
 我们将首先创建一个新类，它包含一个返回`String`“hello world”的方法。我们将把它放在一个新的 Java 项目中— `HelloWorldModule`:
 
-```
+```java
 package com.hello;
 public class HelloWorld {
     public String sayHello(){
@@ -416,7 +416,7 @@ public class HelloWorld {
 
 然后我们创建一个新模块:
 
-```
+```java
 module com.hello {
     export com.hello;
 }
@@ -424,7 +424,7 @@ module com.hello {
 
 现在让我们创建一个新的 Java 项目`HelloWorldClient`，通过定义一个模块来使用上面的模块:
 
-```
+```java
 module com.hello.client {
     requires com.hello;
 }
@@ -432,7 +432,7 @@ module com.hello.client {
 
 上述模块现在可用于测试:
 
-```
+```java
 public class HelloWorldClient {
     public static void main(String[] args){
         HelloWorld helloWorld = new HelloWorld();

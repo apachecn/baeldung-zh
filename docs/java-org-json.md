@@ -22,7 +22,7 @@ Learn ways to escape a JSON String core Java or a library[Read more](/web/202210
 
 我们首先需要在我们的`pom.xml`中添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.json</groupId>
     <artifactId>json</artifactId>
@@ -77,7 +77,7 @@ Learn ways to escape a JSON String core Java or a library[Read more](/web/202210
 
 我们可以使用`put()` 方法并提供键和值作为参数:
 
-```
+```java
 JSONObject jo = new JSONObject();
 jo.put("name", "jon doe");
 jo.put("age", "22");
@@ -86,7 +86,7 @@ jo.put("city", "chicago");
 
 现在我们的`JSONObject`看起来像这样:
 
-```
+```java
 {"city":"chicago","name":"jon doe","age":"22"}
 ```
 
@@ -98,7 +98,7 @@ jo.put("city", "chicago");
 
 该示例将产生与上面相同的结果:
 
-```
+```java
 Map<String, String> map = new HashMap<>();
 map.put("name", "jon doe");
 map.put("age", "22");
@@ -112,7 +112,7 @@ JSONObject jo = new JSONObject(map);
 
 该示例将产生与上面相同的结果:
 
-```
+```java
 JSONObject jo = new JSONObject(
   "{\"city\":\"chicago\",\"name\":\"jon doe\",\"age\":\"22\"}"
 );
@@ -126,7 +126,7 @@ JSONObject jo = new JSONObject(
 
 为了从 Java 对象中获取一个`JSONObject`，我们必须使用一个有效的 [Java Bean](https://web.archive.org/web/20221012233633/https://en.wikipedia.org/wiki/JavaBeans) 的类:
 
-```
+```java
 DemoBean demo = new DemoBean();
 demo.setId(1);
 demo.setName("lorem ipsum");
@@ -137,7 +137,7 @@ JSONObject jo = new JSONObject(demo);
 
 这里是`JSONObject jo`:
 
-```
+```java
 {"name":"lorem ipsum","active":true,"id":1}
 ```
 
@@ -163,7 +163,7 @@ JSONObject jo = new JSONObject(demo);
 
 一旦我们初始化了 JSONArray 对象，我们就可以使用`put()`和`get()` 方法简单地添加和检索元素:
 
-```
+```java
 JSONArray ja = new JSONArray();
 ja.put(Boolean.TRUE);
 ja.put("lorem ipsum");
@@ -178,7 +178,7 @@ ja.put(jo);
 
 以下是我们的`JSONArray` 的内容(为了清楚起见，代码被格式化):
 
-```
+```java
 [
     true,
     "lorem ipsum",
@@ -194,7 +194,7 @@ ja.put(jo);
 
 和`JSONObject`一样，`JSONArray`也有一个直接从 JSON `String`创建 Java 对象的构造函数:
 
-```
+```java
 JSONArray ja = new JSONArray("[true, \"lorem ipsum\", 215]");
 ```
 
@@ -206,7 +206,7 @@ JSONArray ja = new JSONArray("[true, \"lorem ipsum\", 215]");
 
 我们简单地将它们作为参数传递给构造函数，它将返回一个`JSONArray`对象:
 
-```
+```java
 List<String> list = new ArrayList<>();
 list.add("California");
 list.add("Texas");
@@ -218,7 +218,7 @@ JSONArray ja = new JSONArray(list);
 
 现在我们的`JSONArray`包括以下内容:
 
-```
+```java
 ["California","Texas","Hawaii","Alaska"]
 ```
 
@@ -228,7 +228,7 @@ JSONArray ja = new JSONArray(list);
 
 我们可能不会在很多情况下直接使用这个类，因为我们可以使用其他更简单的方法(比如`string.toCharArray()`)来实现相同的功能:
 
-```
+```java
 JSONTokener jt = new JSONTokener("lorem");
 
 while(jt.more()) {
@@ -240,7 +240,7 @@ while(jt.more()) {
 
 以下是从上一个示例中收到的令牌:
 
-```
+```java
 l
 o
 r
@@ -256,13 +256,13 @@ m
 
 为了直接从逗号分隔的文本中产生一个`JSONArray`，我们可以使用静态方法`rowToJSONArray()`，它接受一个`JSONTokener`:
 
-```
+```java
 JSONArray ja = CDL.rowToJSONArray(new JSONTokener("England, USA, Canada"));
 ```
 
 现在我们的`JSONArray`由以下内容组成:
 
-```
+```java
 ["England","USA","Canada"]
 ```
 
@@ -270,14 +270,14 @@ JSONArray ja = CDL.rowToJSONArray(new JSONTokener("England, USA, Canada"));
 
 让我们看看如何颠倒上一步，从`JSONArray`中取回逗号分隔的文本:
 
-```
+```java
 JSONArray ja = new JSONArray("[\"England\",\"USA\",\"Canada\"]");
 String cdt = CDL.rowToString(ja);
 ```
 
 `String` `cdt`现在包含以下内容:
 
-```
+```java
 England,USA,Canada
 ```
 
@@ -289,7 +289,7 @@ England,USA,Canada
 
 第一行被解释为标题列表，所有后续行被视为数据:
 
-```
+```java
 String string = "name, city, age \n" +
   "john, chicago, 22 \n" +
   "gary, florida, 35 \n" +
@@ -300,7 +300,7 @@ JSONArray result = CDL.toJSONArray(string);
 
 对象`JSONArray result` 现在由以下内容组成(为了清楚起见，输出被格式化):
 
-```
+```java
 [
     {
         "name": "john",
@@ -324,7 +324,7 @@ JSONArray result = CDL.toJSONArray(string);
 
 同样，我们使用回车符`(\r)`或换行符`(\n)`来分隔不同的行:
 
-```
+```java
 JSONArray ja = new JSONArray();
 ja.put("name");
 ja.put("city");
@@ -352,7 +352,7 @@ JSONArray result = CDL.toJSONArray(ja, string);
 
 为了将 cookie `String`转换成`JSONObject`，我们将使用静态方法`Cookie.toJSONObject()`:
 
-```
+```java
 String cookie = "username=John Doe; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
 JSONObject cookieJO = Cookie.toJSONObject(cookie);
 ```
@@ -361,7 +361,7 @@ JSONObject cookieJO = Cookie.toJSONObject(cookie);
 
 现在我们将把一个`JSONObject` 转换成 cookie `String`。这与上一步相反:
 
-```
+```java
 String cookie = Cookie.toString(cookieJO);
 ```
 
@@ -378,7 +378,7 @@ String cookie = Cookie.toString(cookieJO);
 
 `HTTP.toString()`方法用于将一个`JSONObject`转换成 HTTP 头`String`:
 
-```
+```java
 JSONObject jo = new JSONObject();
 jo.put("Method", "POST");
 jo.put("Request-URI", "http://www.example.com/");
@@ -388,7 +388,7 @@ String httpStr = HTTP.toString(jo);
 
 以下是我们的`String httpStr` 将包含的内容:
 
-```
+```java
 POST "http://www.example.com/" HTTP/1.1
 ```
 
@@ -398,7 +398,7 @@ POST "http://www.example.com/" HTTP/1.1
 
 这里我们将把上一步中得到的 HTTP 字符串转换回我们在那一步中创建的那个`JSONObject`:
 
-```
+```java
 JSONObject obj = HTTP.toJSONObject("POST \"http://www.example.com/\" HTTP/1.1");
 ```
 

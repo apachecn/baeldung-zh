@@ -16,7 +16,7 @@ NullAway 是一个构建工具，它帮助我们消除 Java 代码中的 npe。
 
 空值依赖于容易出错的 T2。因此，我们将添加`errorprone`插件:
 
-```
+```java
 plugins {
   id "net.ltgt.errorprone" version "1.1.1"
 }
@@ -24,7 +24,7 @@ plugins {
 
 我们还将在不同的范围中添加四个依赖项:`annotationProcessor`、`compileOnly`、`errorprone,`和`errorproneJavac`:
 
-```
+```java
 dependencies {
   annotationProcessor "com.uber.nullaway:nullaway:0.7.9"
   compileOnly "com.google.code.findbugs:jsr305:3.0.2"
@@ -35,7 +35,7 @@ dependencies {
 
 最后，我们将添加 Gradle 任务，该任务配置 NullAway 在编译期间的工作方式:
 
-```
+```java
 import net.ltgt.gradle.errorprone.CheckSeverity
 
 tasks.withType(JavaCompile) {
@@ -58,7 +58,7 @@ tasks.withType(JavaCompile) {
 
 假设我们有一个`Person`类，包含一个`age`属性。此外，我们有一个`getAge`方法，它将一个`Person`实例作为参数:
 
-```
+```java
 Integer getAge(Person person) {
     return person.getAge();
 }
@@ -70,7 +70,7 @@ NullAway 假设每个方法参数、返回值和字段都是非`-null.` 的，�
 
 让我们假设在我们的代码中有一个地方，实际上，传递一个空引用到`getAge`:
 
-```
+```java
 Integer yearsToRetirement() {
     Person p = null;
     // ... p never gets set correctly...
@@ -80,14 +80,14 @@ Integer yearsToRetirement() {
 
 然后，运行构建将产生以下错误:
 
-```
+```java
 error: [NullAway] passing @Nullable parameter 'null' where @NonNull is required
     getAge(p);
 ```
 
 我们可以通过给我们的参数添加一个`@Nullable`注释来修复这个错误:
 
-```
+```java
 Integer getAge(@Nullable Person person) { 
     // ... same as earlier
 }
@@ -95,7 +95,7 @@ Integer getAge(@Nullable Person person) {
 
 现在，当我们运行构建时，我们会看到一个新的错误:
 
-```
+```java
 error: [NullAway] dereferenced expression person is @Nullable
     return person.getAge();
             ^
@@ -103,7 +103,7 @@ error: [NullAway] dereferenced expression person is @Nullable
 
 这是在告诉我们，`person`实例有成为`null`的可能性。我们可以通过添加一个标准的空值检查来解决这个问题:
 
-```
+```java
 Integer getAge(@Nullable Person person) {
     if (person != null) {
         return person.getAge();

@@ -40,7 +40,7 @@ Next, let's see these methods in action.
 
 首先，让我们看看如何使用`Entry` `**Set**`通过`Map`进行迭代:
 
-```
+```java
 public void iterateUsingEntrySet(Map<String, Integer> map) {
     for (Map.Entry<String, Integer> entry : map.entrySet()) {
         System.out.println(entry.getKey() + ":" + entry.getValue());
@@ -54,7 +54,7 @@ public void iterateUsingEntrySet(Map<String, Integer> map) {
 
 或者，我们可以首先使用`keySet`方法获取`Map`中的所有键，然后通过每个键遍历映射:
 
-```
+```java
 public void iterateUsingKeySetAndForeach(Map<String, Integer> map) {
     for (String key : map.keySet()) {
         System.out.println(key + ":" + map.get(key));
@@ -66,7 +66,7 @@ public void iterateUsingKeySetAndForeach(Map<String, Integer> map) {
 
 有时，我们**只对地图中的值感兴趣，不管哪些键与它们相关联**。在这种情况下，`values()`是我们最好的选择:
 
-```
+```java
 public void iterateValues(Map<String, Integer> map) {
     for (Integer value : map.values()) {
         System.out.println(value);
@@ -82,7 +82,7 @@ public void iterateValues(Map<String, Integer> map) {
 
 首先，让我们使用迭代器和`entrySet()`遍历地图:
 
-```
+```java
 public void iterateUsingIteratorAndEntry(Map<String, Integer> map) {
     Iterator<Map.Entry<String, Integer>> iterator = map.entrySet().iterator();
     while (iterator.hasNext()) {
@@ -98,7 +98,7 @@ public void iterateUsingIteratorAndEntry(Map<String, Integer> map) {
 
 类似地，我们可以使用`Iterator`和`keySet()`来迭代`Map`:
 
-```
+```java
 public void iterateUsingIteratorAndKeySet(Map<String, Integer> map) {
     Iterator<String> iterator = map.keySet().iterator();
     while (iterator.hasNext()) {
@@ -112,7 +112,7 @@ public void iterateUsingIteratorAndKeySet(Map<String, Integer> map) {
 
 我们还可以使用`Iterator`和`values()`方法遍历地图的值:
 
-```
+```java
 public void iterateUsingIteratorAndValues(Map<String, Integer> map) {
     Iterator<Integer> iterator = map.values().iterator();
     while (iterator.hasNext()) {
@@ -130,7 +130,7 @@ public void iterateUsingIteratorAndValues(Map<String, Integer> map) {
 
 像 Java 8 中的大多数其他东西一样，这比其他选择要简单得多。我们将利用`forEach()`方法:
 
-```
+```java
 public void iterateUsingLambda(Map<String, Integer> map) {
     map.forEach((k, v) -> System.out.println((k + ":" + v)));
 } 
@@ -140,7 +140,7 @@ public void iterateUsingLambda(Map<String, Integer> map) {
 
 当然，我们可以从键开始迭代地图:
 
-```
+```java
 public void iterateByKeysUsingLambda(Map<String, Integer> map) {
     map.keySet().foreach(k -> System.out.println((k + ":" + map.get(k))));
 } 
@@ -148,7 +148,7 @@ public void iterateByKeysUsingLambda(Map<String, Integer> map) {
 
 类似地，我们可以对`values()`方法使用相同的技术:
 
-```
+```java
 public void iterateValuesUsingLambda(Map<String, Integer> map) {
     map.values().forEach(v -> System.out.println(("value: " + v)));
 } 
@@ -162,7 +162,7 @@ API 是 Java 8 的一个重要特性。我们也可以使用这个特性来遍�
 
 让我们以`entrySet()`为例来看看`Stream` API 是如何工作的:
 
-```
+```java
 public void iterateUsingStreamAPI(Map<String, Integer> map) {
     map.entrySet().stream()
       // ... some other Stream processings

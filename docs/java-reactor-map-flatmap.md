@@ -12,7 +12,7 @@
 
 为了编写一些代码示例，我们需要[反应堆核心依赖关系](https://web.archive.org/web/20220526060607/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22io.projectreactor%22%20AND%20a%3A%22reactor-core%22):
 
-```
+```java
 <dependency>
     <groupId>io.projectreactor</groupId>
     <artifactId>reactor-core</artifactId>
@@ -26,13 +26,13 @@
 
 `Flux#map`方法需要一个单独的`Function`参数，可以很简单:
 
-```
+```java
 Function<String, String> mapper = String::toUpperCase;
 ```
 
 这个映射器将字符串转换成大写形式。我们可以将其应用于`Flux`流:
 
-```
+```java
 Flux<String> inFlux = Flux.just("baeldung", ".", "com");
 Flux<String> outFlux = inFlux.map(mapper);
 ```
@@ -41,7 +41,7 @@ Flux<String> outFlux = inFlux.map(mapper);
 
 让我们证明:
 
-```
+```java
 StepVerifier.create(outFlux)
   .expectNext("BAELDUNG", ".", "COM")
   .expectComplete()
@@ -60,7 +60,7 @@ StepVerifier.create(outFlux)
 
 这里有一个例子:
 
-```
+```java
 Function<String, Publisher<String>> mapper = s -> Flux.just(s.toUpperCase().split(""));
 ```
 
@@ -68,7 +68,7 @@ Function<String, Publisher<String>> mapper = s -> Flux.just(s.toUpperCase().spli
 
 我们现在可以将给定的映射器传递给一个`flatMap`方法:
 
-```
+```java
 Flux<String> inFlux = Flux.just("baeldung", ".", "com");
 Flux<String> outFlux = inFlux.flatMap(mapper);
 ```
@@ -77,7 +77,7 @@ Flux<String> outFlux = inFlux.flatMap(mapper);
 
 然后，我们可以订阅这个新形成的流来触发管道并验证输出:
 
-```
+```java
 List<String> output = new ArrayList<>();
 outFlux.subscribe(output::add);
 assertThat(output).containsExactlyInAnyOrder("B", "A", "E", "L", "D", "U", "N", "G", ".", "C", "O", "M");

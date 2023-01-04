@@ -12,13 +12,13 @@
 
 假设我们想找出一个雇员的电子邮件地址:
 
-```
+```java
 String emailAddress = employee.getPersonalDetails().getEmailAddress().toLowerCase();
 ```
 
 如果`employee`对象、`getPersonalDetails()`或`getEmailAddress()` 是 `null,`，JVM 抛出一个`NullPointerException`:
 
-```
+```java
 Exception in thread "main" java.lang.NullPointerException
   at com.baeldung.java14.npe.HelpfulNullPointerException.main(HelpfulNullPointerException.java:10)
 ```
@@ -37,7 +37,7 @@ JEP 358 通过描述变量`null`以及方法、文件名和行号带来了详细
 
 最重要的是，**详细的异常消息在 JDK 14** 中被默认关闭。要启用它，我们需要使用命令行选项:
 
-```
+```java
 -XX:+ShowCodeDetailsInExceptionMessages
 ```
 
@@ -45,7 +45,7 @@ JEP 358 通过描述变量`null`以及方法、文件名和行号带来了详细
 
 让我们考虑在激活了`ShowCodeDetailsInExceptionMessages` 标志的情况下再次运行代码:
 
-```
+```java
 Exception in thread "main" java.lang.NullPointerException: 
   Cannot invoke "String.toLowerCase()" because the return value of 
 "com.baeldung.java14.npe.HelpfulNullPointerException$PersonalDetails.getEmailAddress()" is null
@@ -56,7 +56,7 @@ Exception in thread "main" java.lang.NullPointerException:
 
 JVM 由两部分组成详细的异常消息。**第一部分代表失败的操作，引用为`null`的结果，而第二部分识别`null`引用**的原因:
 
-```
+```java
 Cannot invoke "String.toLowerCase()" because the return value of "getEmailAddress()" is null
 ```
 
@@ -74,14 +74,14 @@ Cannot invoke "String.toLowerCase()" because the return value of "getEmailAddres
 
 考虑一个简单的例子，我们已经编译了这个例子来包含这个额外的调试信息:
 
-```
+```java
 Employee employee = null;
 employee.getName();
 ```
 
 当我们运行这段代码时，异常消息打印出局部变量名:
 
-```
+```java
 Cannot invoke 
   "com.baeldung.java14.npe.HelpfulNullPointerException$Employee.getName()" 
 because "employee" is null
@@ -89,7 +89,7 @@ because "employee" is null
 
 相反，如果没有额外的调试信息，JVM 只在详细消息中提供它所知道的变量信息:
 
-```
+```java
 Cannot invoke 
   "com.baeldung.java14.npe.HelpfulNullPointerException$Employee.getName()" 
 because "<local1>" is null

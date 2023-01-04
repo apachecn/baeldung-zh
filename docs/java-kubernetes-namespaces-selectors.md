@@ -26,7 +26,7 @@ Kubernetes 的 API 支持三种方式来限制这些搜索的范围:
 
 在 Java API 中，命名空间查询方法遵循模式`listNamespacedXXX().`例如，要列出特定命名空间中的[窗格](https://web.archive.org/web/20220626072122/https://kubernetes.io/docs/concepts/workloads/pods/)，我们可以使用`listNamespacedPod()`:
 
-```
+```java
 ApiClient client  = Config.defaultClient();
 CoreV1Api api = new CoreV1Api(client);
 String ns = "ns1";
@@ -51,7 +51,7 @@ items.getItems()
 
 **[字段选择器](https://web.archive.org/web/20220626072122/https://kubernetes.io/docs/concepts/overview/working-with-objects/field-selectors/)提供了一种基于其`fields`** 之一的值来选择资源的方法。按照 Kubernetes 的说法，A `field`就是与资源的 YAML 或 JSON 文档中的给定值相关联的 JSON 路径。例如，这是一个运行 Apache HTTP 服务器的 pod 的典型 Kubernetes YAML:
 
-```
+```java
 apiVersion: v1
 kind: Pod
 metadata:
@@ -68,7 +68,7 @@ status:
 
 字段`status.phase`包含现有`Pod. `的状态。相应的`field selector`表达式只是字段名称，后跟一个运算符和值。现在，让我们编写一个查询，返回所有名称空间中所有正在运行的窗格:
 
-```
+```java
 String fs = "status.phase=Running";        
 V1PodList items = api.listPodForAllNamespaces(null, null, fs, null, null, null, null, null, 10, false);
 // ... process items
@@ -76,7 +76,7 @@ V1PodList items = api.listPodForAllNamespaces(null, null, fs, null, null, null, 
 
 字段选择器表达式仅支持等式(' = '或' == ')和不等式('！= ')运算符。此外，我们可以在同一个调用中传递多个逗号分隔的表达式。在这种情况下，最终结果是它们将被“与”在一起以产生最终结果:
 
-```
+```java
 String fs = "metadata.namespace=ns1,status.phase=Running";        
 V1PodList items = api.listPodForAllNamespaces(null, null, fs, null, null, null, null, null, 10, false);
 // ... process items 
@@ -99,7 +99,7 @@ V1PodList items = api.listPodForAllNamespaces(null, null, fs, null, null, null, 
 
 让我们看看查找所有标签为“app”且值为“httpd”的 pod 的代码:
 
-```
+```java
 String ls = "app=httpd";        
 V1PodList items = api.listPodForAllNamespaces(null, null, null, ls, null, null, null, null, 10, false);
 // ... process items
@@ -107,21 +107,21 @@ V1PodList items = api.listPodForAllNamespaces(null, null, null, ls, null, null, 
 
 `in`操作符类似于它的 SQL 对应物，允许我们在查询中创建一些 or 逻辑:
 
-```
+```java
 String ls = "app in ( httpd, test )";        
 V1PodList items = api.listPodForAllNamespaces(null, null, null, ls, null, null, null, null, 10, false);
 ```
 
 此外，我们可以使用`labelname`或`!` labelname 语法检查字段是否存在:
 
-```
+```java
 String ls = "app";
 V1PodList items = api.listPodForAllNamespaces(null, null, null, ls, null, null, null, null, 10, false);
 ```
 
 最后，我们可以在一个 API 调用中链接多个表达式。结果项列表仅包含满足所有表达式的资源:
 
-```
+```java
 String ls = "app in ( httpd, test ),version=1,foo";
 V1PodList items = api.listPodForAllNamespaces(null, null, null, ls, null, null, null, null, 10, false);
 ```

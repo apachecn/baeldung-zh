@@ -24,7 +24,7 @@ jar 文件是 ZIP 文件格式的扩展，包括一个清单文件。清单文�
 
 为了创建 JAR 文件，我们必须首先开始清单:
 
-```
+```java
 public class JarTool {    
     private Manifest manifest = new Manifest();
 
@@ -36,7 +36,7 @@ public class JarTool {
 
 如果我们希望 jar 是可执行的，我们必须设置主类:
 
-```
+```java
 public void setMainClass(String mainFQCN) {
     if (mainFQCN != null && !mainFQCN.equals("")) {
         manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, mainFQCN);
@@ -46,13 +46,13 @@ public void setMainClass(String mainFQCN) {
 
 此外，如果我们想要指定附加属性，我们可以将它们添加到清单中，例如:
 
-```
+```java
 addToManifest("Can-Redefine-Classes", "true");
 ```
 
 方法如下:
 
-```
+```java
 public void addToManifest(String key, String value) {
      manifest.getMainAttributes().put(new Attributes.Name(key), value);
 }
@@ -62,7 +62,7 @@ public void addToManifest(String key, String value) {
 
 清单完成后，我们现在可以将条目写入 JAR 文件。为此，我们必须首先打开罐子:
 
-```
+```java
 public JarOutputStream openJar(String jarFile) throws IOException {        
     return new JarOutputStream(new FileOutputStream(jarFile), manifest);
 } 
@@ -76,7 +76,7 @@ public JarOutputStream openJar(String jarFile) throws IOException {
 
 理解了这一点，我们现在可以用这个方法完成我们的`JarTool`类:
 
-```
+```java
 public void addFile(JarOutputStream target, String rootPath, String source) 
   throws FileNotFoundException, IOException {
     String remaining = "";
@@ -108,7 +108,7 @@ public void addFile(JarOutputStream target, String rootPath, String source)
 
 为了演示可执行 jar 的最低要求，我们将编写一个应用程序类，然后看看它是如何工作的:
 
-```
+```java
 public class Driver {
     public static void main(String[] args) throws IOException {
         JarTool tool = new JarTool();
@@ -126,7 +126,7 @@ public class Driver {
 
 HelloWorld 类是一个非常简单的类，只有一个 main()方法来打印文本:
 
-```
+```java
 public class HelloWorld {
     public static void main(String[] args) {
         System.out.println("Hello World!");
@@ -136,7 +136,7 @@ public class HelloWorld {
 
 为了证明这是可行的，我们举了这个例子:
 
-```
+```java
 $ javac -cp src/main/java src/main/java/com/baeldung/createjar/HelloWorld.java
 $ javac -cp src/main/java src/main/java/com/baeldung/createjar/JarTool.java
 $ javac -cp src/main/java src/main/java/com/baeldung/createjar/Driver.java

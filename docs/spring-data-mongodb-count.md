@@ -16,7 +16,7 @@
 
 我们将从创建模型类开始。它基于汽车的几个特性:
 
-```
+```java
 @Document
 public class Car {
     private String name;
@@ -37,7 +37,7 @@ public class Car {
 
 让我们不使用任何方法来定义我们的存储库:
 
-```
+```java
 public interface CarRepository extends MongoRepository<Car, String> {
 }
 ```
@@ -50,7 +50,7 @@ public interface CarRepository extends MongoRepository<Car, String> {
 
 **让我们参考我们的存储库来定义它:**
 
-```
+```java
 @Service
 public class CountCarService {
 
@@ -65,7 +65,7 @@ public class CountCarService {
 
 我们所有的测试都将在我们的服务类上运行。我们只需要一点设置，这样我们就不会以重复的代码结束:
 
-```
+```java
 public class CountCarServiceIntegrationTest {
     @Autowired
     private CountCarService service;
@@ -90,7 +90,7 @@ public class CountCarServiceIntegrationTest {
 
 因此，在我们的第一个 count 示例中，我们的存储库中没有任何方法，我们可以在服务中调用它:
 
-```
+```java
 public long getCountWithCrudRepository() {
     return repo.count();
 }
@@ -98,7 +98,7 @@ public long getCountWithCrudRepository() {
 
 我们可以测试它:
 
-```
+```java
 @Test
 public void givenAllDocs_whenCrudRepositoryCount_thenCountEqualsSize() {
     List<Car> all = service.findCars();
@@ -117,7 +117,7 @@ public void givenAllDocs_whenCrudRepositoryCount_thenCountEqualsSize() {
 
 如果我们想对具有特定属性值的文档进行计数,`CrudRepository`也有帮助。**`count()`方法有一个重载版本，它接收一个[示例](/web/20220904120154/https://www.baeldung.com/spring-data-query-by-example)对象:**
 
-```
+```java
 public long getCountWithExample(Car item) {
     return repo.count(Example.of(item));
 }
@@ -125,7 +125,7 @@ public long getCountWithExample(Car item) {
 
 因此，这简化了任务。现在我们只需用我们想要过滤的属性填充一个对象，Spring 会完成剩下的工作。让我们在测试中涵盖它:
 
-```
+```java
 @Test
 public void givenFilteredDocs_whenExampleCount_thenCountEqualsSize() {
     long all = service.findCars()
@@ -143,7 +143,7 @@ public void givenFilteredDocs_whenExampleCount_thenCountEqualsSize() {
 
 我们的下一个例子将基于`@Query`注释:
 
-```
+```java
 @Query(value = "{}", count = true)
 Long countWithAnnotation();
 ```
@@ -154,7 +154,7 @@ Long countWithAnnotation();
 
 让我们来测试一下:
 
-```
+```java
 @Test
 public void givenAllDocs_whenQueryAnnotationCount_thenCountEqualsSize() {
     List<Car> all = service.findCars();
@@ -169,7 +169,7 @@ public void givenAllDocs_whenQueryAnnotationCount_thenCountEqualsSize() {
 
 **我们可以扩展我们的例子，用`brand`过滤。**让我们向我们的资源库添加一个新方法:
 
-```
+```java
 @Query(value = "{brand: ?0}", count = true)
 public long countBrand(String brand);
 ```
@@ -184,7 +184,7 @@ MongoDB 查询有一个 JSON 结构，在这个结构中，我们指定字段名
 
 **因为我们的`CrudRepository`中已经有了一个`count()`方法，所以让我们创建一个按特定品牌计数的示例:**
 
-```
+```java
 Long countByBrand(String brand);
 ```
 
@@ -192,7 +192,7 @@ Long countByBrand(String brand);
 
 现在，让我们将它添加到我们的服务中:
 
-```
+```java
 public long getCountBrandWithQueryMethod(String brand) {
     return repo.countByBrand(brand);
 }
@@ -200,7 +200,7 @@ public long getCountBrandWithQueryMethod(String brand) {
 
 然后，我们通过将其与过滤的流计数操作进行比较来确保我们的方法行为正确:
 
-```
+```java
 @Test
 public void givenFilteredDocs_whenQueryMethodCountByBrand_thenCountEqualsSize() {
     String filter = "B-A";
@@ -225,14 +225,14 @@ public void givenFilteredDocs_whenQueryMethodCountByBrand_thenCountEqualsSize() 
 
 访问它的一种方法是扩展`SimpleMongoRepository`并创建一个定制的实现，而不是简单地扩展`MongoRepository`。但是，有一个更简单的方法。我们可以将它注入到我们的服务中:
 
-```
+```java
 @Autowired
 private MongoTemplate mongo;
 ```
 
 然后我们可以创建新的计数方法，将`Query`传递给`MongoTemplate`中的`count()`方法:
 
-```
+```java
 public long getCountBrandWithCriteria(String brand) {
     Query query = new Query();
     query.addCriteria(Criteria.where("brand")
@@ -247,7 +247,7 @@ public long getCountBrandWithCriteria(String brand) {
 
 **`Criteria`对象也允许我们传递一个`Example`对象:**
 
-```
+```java
 public long getCountWithExampleCriteria(Car item) {
     Query query = new Query();
     query.addCriteria(Criteria.byExample(item));

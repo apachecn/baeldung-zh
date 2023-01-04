@@ -14,19 +14,19 @@
 
 通常，我们可以在配置文件中编写如下内容:
 
-```
+```java
 <logger name="org.springframework.security" level="DEBUG" /> 
 ```
 
 **然而，如果我们正在运行一个 [Spring Boot](/web/20221208143830/https://www.baeldung.com/spring-boot) 应用**，**我们可以在我们的`application.properties`** 文件中进行配置:
 
-```
+```java
 logging.level.org.springframework.security=DEBUG
 ```
 
 同样，我们可以使用`yaml`语法:
 
-```
+```java
 logging:
   level:
     org:
@@ -38,7 +38,7 @@ logging:
 
 此外， **Spring Security 提供了记录关于请求和应用过滤器的特定信息的可能性**:
 
-```
+```java
 @EnableWebSecurity
 public class SecurityConfig {
 
@@ -57,7 +57,7 @@ public class SecurityConfig {
 
 最后，为了测试我们的应用程序，让我们定义一个简单的控制器:
 
-```
+```java
 @Controller
 public class LoggingController {
 
@@ -71,14 +71,14 @@ public class LoggingController {
 
 如果我们点击了 `/logging` 端点，我们可以查看我们的日志:
 
-```
+```java
 2022-02-10 21:30:32.104 DEBUG 5489 --- [nio-8080-exec-1] o.s.s.w.a.i.FilterSecurityInterceptor    : Authorized filter invocation [GET /logging] with attributes [permitAll]
 2022-02-10 21:30:32.105 DEBUG 5489 --- [nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Secured GET /logging
 2022-02-10 21:30:32.141 DEBUG 5489 --- [nio-8080-exec-1] w.c.HttpSessionSecurityContextRepository : Did not store anonymous SecurityContext
 2022-02-10 21:30:32.146 DEBUG 5489 --- [nio-8080-exec-1] s.s.w.c.SecurityContextPersistenceFilter : Cleared SecurityContextHolder to complete request
 ```
 
-```
+```java
 Request received for GET '/logging':
 
 [[email protected]](/web/20221208143830/https://www.baeldung.com/cdn-cgi/l/email-protection)

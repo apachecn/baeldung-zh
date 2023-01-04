@@ -14,7 +14,7 @@
 
 首先，让我们将度量 AspectJ Maven 依赖项添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>io.astefanutti.metrics.aspectj</groupId>
     <artifactId>metrics-aspectj</artifactId>
@@ -37,7 +37,7 @@
 
 我们还需要 [`aspectj-maven-plugin`](https://web.archive.org/web/20221208143830/https://search.maven.org/search?q=g:org.codehaus.mojo%20AND%20a:aspectj-maven-plugin) 来设置度量注释的编译时处理:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>aspectj-maven-plugin</artifactId>
@@ -69,7 +69,7 @@
 
 首先，让我们创建一个方法并用`@Timed`注释对其进行注释。我们还将用计时器的名称填充`name`属性:
 
-```
+```java
 import com.codahale.metrics.annotation.Timed;
 import io.astefanutti.metrics.aspectj.Metrics;
 
@@ -91,7 +91,7 @@ public class ObjectRunner {
 
 现在，让我们定义一个类来启动应用程序并配置我们的`MetricsRegistry`:
 
-```
+```java
 public class ApplicationMain {
     static final MetricRegistry registry = new MetricRegistry();
 
@@ -126,7 +126,7 @@ public class ApplicationMain {
 
 我们的应用程序将调用 timed 方法五次。让我们用 Maven 编译它，然后执行它:
 
-```
+```java
 -- Timers ----------------------------------------------------------------------
 ObjectRunner.timerName
              count = 5

@@ -10,19 +10,19 @@
 
 首先，我们来看一个`String`数组例子:
 
-```
+```java
 String[] stringArray = new String[] { "1", "2", "3", "4", "5", "6", "42" };
 ```
 
 我们用七根弦创建了`stringArray`。现在，我们需要将`stringArray`转换成一个整数数组:
 
-```
+```java
 int[] expected = new int[] { 1, 2, 3, 4, 5, 6, 42 };
 ```
 
 如上例所示，需求非常简单。然而，在现实世界中，字符串数组可能来自不同的来源，如用户输入或另一个系统。因此，输入数组可能包含一些不是有效数字格式的值，例如:
 
-```
+```java
 String[] stringArrayWithInvalidNum = new String[] { "1", "2", "hello", "4", "world", "6", "42" };
 ```
 
@@ -30,7 +30,7 @@ String[] stringArrayWithInvalidNum = new String[] { "1", "2", "hello", "4", "wor
 
 在本教程中，**我们将使用 Java 的最小整数作为无效字符串元素**的后备:
 
-```
+```java
 int[] expectedWithInvalidInput = new int[] { 1, 2, Integer.MIN_VALUE, 4, Integer.MIN_VALUE, 6, 42 };
 ```
 
@@ -42,7 +42,7 @@ int[] expectedWithInvalidInput = new int[] { 1, 2, Integer.MIN_VALUE, 4, Integer
 
 让我们首先使用[流 API](/web/20230103082815/https://www.baeldung.com/java-8-streams) 转换包含所有有效元素的字符串数组:
 
-```
+```java
 int[] result = Arrays.stream(stringArray).mapToInt(Integer::parseInt).toArray();
 assertArrayEquals(expected, result);
 ```
@@ -57,7 +57,7 @@ assertArrayEquals(expected, result);
 
 因此，我们需要用 lambda 表达式替换`mapToInt()`方法中的[方法引用](/web/20230103082815/https://www.baeldung.com/java-method-references) `Integer::parseInt`，并用[处理 lambda 表达式](/web/20230103082815/https://www.baeldung.com/java-lambda-exceptions)中的`NumberFormatException`异常:
 
-```
+```java
 int[] result = Arrays.stream(stringArrayWithInvalidNum).mapToInt(s -> {
     try {
         return Integer.parseInt(s);
@@ -82,7 +82,7 @@ assertArrayEquals(expectedWithInvalidInput, result);
 
 既然我们知道`Integer.parseInt()`完成了主要的转换工作，**我们可以遍历数组中的元素，并对每个字符串元素**调用`Integer.parseInt()`方法:
 
-```
+```java
 int[] result = new int[stringArray.length];
 for (int i = 0; i < stringArray.length; i++) {
     result[i] = Integer.parseInt(stringArray[i]);
@@ -95,7 +95,7 @@ assertArrayEquals(expected, result);
 
 接下来，让我们扩展实现以添加错误处理逻辑。类似于流 API 方法，只需**用`try-catch`块包装转换行就可以解决问题**:
 
-```
+```java
 int[] result = new int[stringArrayWithInvalidNum.length];
 for (int i = 0; i < stringArrayWithInvalidNum.length; i++) {
     try {

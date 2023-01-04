@@ -28,7 +28,7 @@ X.509 是定义公钥证书格式的标准。 所以这种格式描述了一个�
 
 PEM 文件还包含描述编码数据类型的页眉和页脚:
 
-```
+```java
 -----BEGIN PUBLIC KEY-----
 ...Base64 encoding of the DER encoded certificate...
 -----END PUBLIC KEY-----
@@ -40,7 +40,7 @@ PEM 文件还包含描述编码数据类型的页眉和页脚:
 
 让我们从读取 PEM 文件开始，并将它的内容存储到一个字符串:
 
-```
+```java
 String key = new String(Files.readAllBytes(file.toPath()), Charset.defaultCharset());
 ```
 
@@ -48,7 +48,7 @@ String key = new String(Files.readAllBytes(file.toPath()), Charset.defaultCharse
 
 现在我们将构建一个实用方法，从 PEM 编码的字符串中获取公钥:
 
-```
+```java
 -----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsjtGIk8SxD+OEiBpP2/T
 JUAF0upwuKGMk6wH8Rwov88VvzJrVm2NCticTk5FUg+UG5r8JArrV4tJPRHQyvqK
@@ -62,7 +62,7 @@ QQIDAQAB
 
 假设我们收到一个`File`作为参数:
 
-```
+```java
 public static RSAPublicKey readPublicKey(File file) throws Exception {
     String key = new String(Files.readAllBytes(file.toPath()), Charset.defaultCharset());
 
@@ -91,7 +91,7 @@ public static RSAPublicKey readPublicKey(File file) throws Exception {
 
 我们将使用 PKCS8 格式的 PEM 编码私钥。让我们看看页眉和页脚是什么样子的:
 
-```
+```java
 -----BEGIN PRIVATE KEY-----
 ...Base64 encoded key...
 -----END PRIVATE KEY-----
@@ -101,7 +101,7 @@ public static RSAPublicKey readPublicKey(File file) throws Exception {
 
 那么我们来看看算法:
 
-```
+```java
 public RSAPrivateKey readPrivateKey(File file) throws Exception {
     String key = new String(Files.readAllBytes(file.toPath()), Charset.defaultCharset());
 
@@ -126,7 +126,7 @@ public RSAPrivateKey readPrivateKey(File file) throws Exception {
 
 让我们得到公钥:
 
-```
+```java
 public RSAPublicKey readPublicKey(File file) throws Exception {
     KeyFactory factory = KeyFactory.getInstance("RSA");
 
@@ -148,7 +148,7 @@ public RSAPublicKey readPublicKey(File file) throws Exception {
 
 让我们看看另一种方法，将 Java 的类(`X509EncodedKeySpec, KeyFactory`)包装到 BouncyCastle 自己的类(`JcaPEMKeyConverter`)中:
 
-```
+```java
 public RSAPublicKey readPublicKeySecondApproach(File file) throws IOException {
     try (FileReader keyReader = new FileReader(file)) {
         PEMParser pemParser = new PEMParser(keyReader);
@@ -165,7 +165,7 @@ public RSAPublicKey readPublicKeySecondApproach(File file) throws IOException {
 
 在第一个例子中，我们只需要用`PKCS8EncodedKeySpec`类替换`X509EncodedKeySpec`类，并返回一个`RSAPrivateKey`对象而不是一个`RSAPublicKey`:
 
-```
+```java
 public RSAPrivateKey readPrivateKey(File file) throws Exception {
     KeyFactory factory = KeyFactory.getInstance("RSA");
 
@@ -182,7 +182,7 @@ public RSAPrivateKey readPrivateKey(File file) throws Exception {
 
 现在，让我们稍微修改一下上一节中的第二种方法，以便读取私钥:
 
-```
+```java
 public RSAPrivateKey readPrivateKeySecondApproach(File file) throws IOException {
     try (FileReader keyReader = new FileReader(file)) {
 

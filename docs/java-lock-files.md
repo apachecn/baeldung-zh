@@ -26,7 +26,7 @@ Java NIO 库支持在操作系统级别锁定文件。一个`[FileChannel](https
 
 或者，我们可以通过静态的`open` 方法直接创建一个`FileChannel`:
 
-```
+```java
 try (FileChannel channel = FileChannel.open(path, openOptions)) {
   // write to the channel
 }
@@ -47,7 +47,7 @@ try (FileChannel channel = FileChannel.open(path, openOptions)) {
 
 要获得一个排他锁，我们必须使用一个可写的`FileChannel`。我们可以通过`FileOutputStream`或`RandomAccessFile`的`getChannel()`方法来创建它。或者，如前所述，我们可以使用`FileChannel`类的静态`open`方法。我们只需要将第二个参数设置为`StandardOpenOption.APPEND`:
 
-```
+```java
 try (FileChannel channel = FileChannel.open(path, StandardOpenOption.APPEND)) { 
     // write to channel
 }
@@ -57,7 +57,7 @@ try (FileChannel channel = FileChannel.open(path, StandardOpenOption.APPEND)) {
 
 从`FileOutputStream`创建的`FileChannel`是可写的。因此，我们可以获得一个独占锁:
 
-```
+```java
 try (FileOutputStream fileOutputStream = new FileOutputStream("/tmp/testfile.txt");
      FileChannel channel = fileOutputStream.getChannel();
      FileLock lock = channel.lock()) { 
@@ -75,7 +75,7 @@ try (FileOutputStream fileOutputStream = new FileOutputStream("/tmp/testfile.txt
 
 在这里，我们将使用读写权限打开文件:
 
-```
+```java
 try (RandomAccessFile file = new RandomAccessFile("/tmp/testfile.txt", "rw");
       FileChannel channel = file.getChannel();
       FileLock lock = channel.lock()) {
@@ -89,7 +89,7 @@ try (RandomAccessFile file = new RandomAccessFile("/tmp/testfile.txt", "rw");
 
 如前所述，独占锁需要一个可写通道。因此，我们不能通过从`FileInputStream`创建的`FileChannel`来获得排他锁:
 
-```
+```java
 Path path = Files.createTempFile("foo","txt");
 Logger log = LoggerFactory.getLogger(this.getClass());
 try (FileInputStream fis = new FileInputStream(path.toFile()); 
@@ -110,7 +110,7 @@ try (FileInputStream fis = new FileInputStream(path.toFile());
 
 这样的`FileChannel`可以通过在`FileInputStream`或`RandomAccessFile`上调用`getChannel()`方法来获得。同样，另一种选择是使用`FileChannel` 类的静态`open`方法。在这种情况下，我们将第二个参数设置为`StandardOpenOption.READ`:
 
-```
+```java
 try (FileChannel channel = FileChannel.open(path, StandardOpenOption.READ);
     FileLock lock = channel.lock(0, Long.MAX_VALUE, true)) {
     // read from the channel
@@ -125,7 +125,7 @@ try (FileChannel channel = FileChannel.open(path, StandardOpenOption.READ);
 
 从`FileInputStream`获得的`FileChannel`是可读的。因此，我们可以获得一个共享锁:
 
-```
+```java
 try (FileInputStream fileInputStream = new FileInputStream("/tmp/testfile.txt");
     FileChannel channel = fileInputStream.getChannel();
     FileLock lock = channel.lock(0, Long.MAX_VALUE, true)) {
@@ -139,7 +139,7 @@ try (FileInputStream fileInputStream = new FileInputStream("/tmp/testfile.txt");
 
 这一次，我们可以只使用**读**权限打开文件:
 
-```
+```java
 try (RandomAccessFile file = new RandomAccessFile("/tmp/testfile.txt", "r"); 
      FileChannel channel = file.getChannel();
      FileLock lock = channel.lock(0, Long.MAX_VALUE, true)) {
@@ -153,7 +153,7 @@ try (RandomAccessFile file = new RandomAccessFile("/tmp/testfile.txt", "r");
 
 因此，我们不能通过从`FileOutputStream`创建的`FileChannel`获取共享锁:
 
-```
+```java
 Path path = Files.createTempFile("foo","txt");
 try (FileOutputStream fis = new FileOutputStream(path.toFile()); 
     FileLock lock = fis.getChannel().lock(0, Long.MAX_VALUE, true)) {

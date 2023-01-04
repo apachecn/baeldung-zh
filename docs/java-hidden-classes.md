@@ -34,7 +34,7 @@ Java 15 引入了大量的[特性](/web/20220815034151/https://www.baeldung.com/
 
 首先，让我们创建一个`Lookup`对象:
 
-```
+```java
 MethodHandles.Lookup lookup = MethodHandles.lookup();
 ```
 
@@ -42,7 +42,7 @@ MethodHandles.Lookup lookup = MethodHandles.lookup();
 
 为了简单起见，我们将定义一个简单的名为`HiddenClass`的类，它有一个将给定的字符串转换成大写的方法:
 
-```
+```java
 public class HiddenClass {
     public String convertToUpperCase(String s) {
         return s.toUpperCase();
@@ -52,7 +52,7 @@ public class HiddenClass {
 
 让我们获取类的路径，并将其加载到输入流中。之后，我们将使用`IOUtils.toByteArray()`把这个类转换成字节:
 
-```
+```java
 Class<?> clazz = HiddenClass.class;
 String className = clazz.getName();
 String classAsPath = className.replace('.', '/') + ".class";
@@ -63,7 +63,7 @@ byte[] bytes = IOUtils.toByteArray();
 
 最后，我们将这些构造的字节传递给`Lookup::defineHiddenClass`:
 
-```
+```java
 Class<?> hiddenClass = lookup.defineHiddenClass(IOUtils.toByteArray(stream),
   true, ClassOption.NESTMATE).lookupClass();
 ```
@@ -80,13 +80,13 @@ Class<?> hiddenClass = lookup.defineHiddenClass(IOUtils.toByteArray(stream),
 
 因为对从`Lookup.defineHiddenClass`获得的类进行造型不可能使用任何其他类对象，所以我们使用`Object`来存储隐藏的类实例。如果我们希望转换隐藏类，我们可以定义一个接口并创建一个实现该接口的隐藏类:
 
-```
+```java
 Object hiddenClassObject = hiddenClass.getConstructor().newInstance();
 ```
 
 现在，让我们从隐藏类中获取方法。获得该方法后，我们将像调用任何其他标准方法一样调用它:
 
-```
+```java
 Method method = hiddenClassObject.getClass()
     .getDeclaredMethod("convertToUpperCase", String.class); Assertions.assertEquals("HELLO", method.invoke(hiddenClassObject, "Hello"));
 ```
@@ -95,26 +95,26 @@ Method method = hiddenClassObject.getClass()
 
 方法`isHidden()`将为此类返回`true`:
 
-```
+```java
 Assertions.assertEquals(true, hiddenClass.isHidden());
 ```
 
 此外，由于隐藏类没有实际的名称，它的规范名称将是`null`:
 
-```
+```java
 Assertions.assertEquals(null, hiddenClass.getCanonicalName());
 ```
 
 隐藏类将拥有与执行查找的类相同的定义加载器。由于查找发生在同一个类中，下面的断言将会成功:
 
-```
+```java
 Assertions.assertEquals(this.getClass()
     .getClassLoader(), hiddenClass.getClassLoader());
 ```
 
 如果我们试图通过任何方法访问隐藏类，他们将抛出`ClassNotFoundException`。这是显而易见的，因为隐藏的类名非常不常见，并且没有限定，因此对其他类来说是可见的。让我们检查几个断言来证明隐藏类是不可发现的:
 
-```
+```java
 Assertions.assertThrows(ClassNotFoundException.class, () -> Class.forName(hiddenClass.getName())); Assertions.assertThrows(ClassNotFoundException.class, () -> lookup.findClass(hiddenClass.getName()));
 ```
 

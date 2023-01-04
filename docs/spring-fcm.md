@@ -85,7 +85,7 @@ Firebase 项目充当我们将在应用程序中使用的云资源的容器。�
 
 现在我们已经准备好了 Firebase 项目，是时候编写发送通知的服务器组件了。除了 MVC 应用程序的常规 Spring Boot 启动器，我们还必须添加`firebase-admin`依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.firebase</groupId>
     <artifactId>firebase-admin</artifactId>
@@ -99,7 +99,7 @@ Firebase 项目充当我们将在应用程序中使用的云资源的容器。�
 
 **`FirebaseMessaging`类是主要的外观，通过它我们将使用 FCM** 发送消息。由于这个类是线程安全的，我们将在一个`@Configuration`类中使用一个`@Bean`方法来创建它的一个实例，并使它对我们的控制器可用:
 
-```
+```java
 @Bean
 FirebaseMessaging firebaseMessaging(FirebaseApp firebaseApp) {
     return FirebaseMessaging.getInstance(firebaseApp);
@@ -110,7 +110,7 @@ FirebaseMessaging firebaseMessaging(FirebaseApp firebaseApp) {
 
 为了解决这个问题，让我们创建另一个创建定制的`FirebaseApp`实例的`@Bean`方法:
 
-```
+```java
 @Bean
 FirebaseApp firebaseApp(GoogleCredentials credentials) {
     FirebaseOptions options = FirebaseOptions.builder()
@@ -130,7 +130,7 @@ FirebaseApp firebaseApp(GoogleCredentials credentials) {
 
 最后一项配置是凭证本身。我们将创建另一个`@Bean`，它使用通过[配置属性](/web/20221130224544/https://www.baeldung.com/configuration-properties-in-spring-boot)提供的服务帐户或者使用默认的凭证链来创建一个`GoogleCredentials`实例:
 
-```
+```java
 @Bean
 GoogleCredentials googleCredentials() {
     if (firebaseProperties.getServiceAccount() != null) {
@@ -151,7 +151,7 @@ GoogleCredentials googleCredentials() {
 
 向主题发送消息需要两个步骤:构建一个`Message`对象并使用`FirebaseMessaging`的方法之一发送它。使用熟悉的[构建器模式](/web/20221130224544/https://www.baeldung.com/java-builder-pattern-freebuilder) : 创建 **`Message`实例**
 
-```
+```java
 Message msg = Message.builder()
   .setTopic(topic)
   .putData("body", "some data")
@@ -160,7 +160,7 @@ Message msg = Message.builder()
 
 一旦我们有了一个`Message`实例，我们使用`send()`来请求它的交付:
 
-```
+```java
 String id = fcm.send(msg);
 ```
 
@@ -172,7 +172,7 @@ String id = fcm.send(msg);
 
 正如我们之前提到的，每个客户端都有一个与之相关联的唯一订阅令牌。当构建一个`Message`而不是一个主题名时，我们使用这个标记作为它的“地址”:
 
-```
+```java
 Message msg = Message.builder()
   .setToken(registrationToken)
   .putData("body", "some data")
@@ -181,7 +181,7 @@ Message msg = Message.builder()
 
 对于我们想要向几个客户端发送相同消息的用例，我们可以使用`MulticastMessage`和`sendMulticast().`,它们的工作方式与单播版本相同，但允许我们在一次呼叫中向多达 500 个客户端发送消息:
 
-```
+```java
 MulticastMessage msg = MulticastMessage.builder()
   .addAllTokens(message.getRegistrationTokens())
   .putData("body", "some data")
@@ -196,13 +196,13 @@ BatchResponse response = fcm.sendMulticast(msg);
 
 FCM 允许我们指定一个条件来定义消息的目标受众。**`condition`是一个逻辑表达式，它根据客户订阅(或不订阅)的主题来选择客户**。例如，给定三个主题(T1、T2 和 T3)，该表达式的目标设备是 T1 或 T2 的用户，而不是 T3 的用户:
 
-```
+```java
 ('T1' in topics || 'T2' in topics) && !('T3' in topics)
 ```
 
 这里，`topics` 变量表示给定客户端已经订阅的所有主题。我们现在可以使用构建器中可用的`setCondition() `方法来构建满足该条件的发往客户端的消息:
 
-```
+```java
 Message msg = Message.builder()
   .setCondition("('T1' in topics || 'T2' in topics) && !('T3' in topics)")
   .putData("body", "some data")
@@ -215,7 +215,7 @@ String id = fcm.send(msg);
 
 我们使用`subscribeToTopic() (`或其异步变体`subscribeToTopicAsync()`方法来创建一个订阅，该订阅将一个客户端与一个主题相关联。该方法接受客户端注册标记列表和主题名称作为参数:
 
-```
+```java
 fcm.subscribeToTopic(registrationTokens, topic);
 ```
 
@@ -223,7 +223,7 @@ fcm.subscribeToTopic(registrationTokens, topic);
 
 要取消订阅客户端，我们使用`unsubscribeFromTopic():`
 
-```
+```java
 fcm.subscribeToTopic(List.of(registrationToken), topic);
 ```
 

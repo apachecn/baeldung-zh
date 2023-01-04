@@ -20,7 +20,7 @@ Spring 提供了两个略有不同的实现来解决这个问题。两者都使�
 
 首先，我们需要在数据库中有登录信息，我们需要创建一个表来保存数据:
 
-```
+```java
 create table if not exists persistent_logins ( 
   username varchar_ignorecase(100) not null, 
   series varchar(64) primary key, 
@@ -31,7 +31,7 @@ create table if not exists persistent_logins (
 
 这是在启动时通过以下 XML 配置自动创建的**(使用内存中的 H2 数据库):**
 
-```
+```java
 <!-- create H2 embedded database table on startup -->
 <jdbc:embedded-database id="dataSource" type="H2">
     <jdbc:script location="classpath:/persisted_logins_create_table.sql"/> 
@@ -40,7 +40,7 @@ create table if not exists persistent_logins (
 
 为了完整起见，下面是建立持久性的方式:
 
-```
+```java
 @Configuration
 @EnableTransactionManagement
 @PropertySource({ "classpath:persistence-h2.properties" })
@@ -64,7 +64,7 @@ public class DatabaseConfig {
 
 第一个关键配置是 Remember-Me Http 配置(注意`dataSource`属性):
 
-```
+```java
 <http use-expressions="true">
     ...
     <remember-me data-source-ref="dataSource" token-validity-seconds="86400"/>
@@ -73,7 +73,7 @@ public class DatabaseConfig {
 
 接下来——我们需要配置实际的`RememberMeService`和`JdbcTokenRepository`(这也利用了`dataSource)`:
 
-```
+```java
 <!-- Persistent Remember Me Service -->
 <beans:bean id="rememberMeAuthenticationProvider" class=
   "org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices">

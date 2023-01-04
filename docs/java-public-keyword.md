@@ -27,7 +27,7 @@
 
 例如，Java API 公开了`Connection`接口来定义数据库连接操作，将实际实现留给每个供应商。在运行时，我们根据项目设置获得所需的连接:
 
-```
+```java
 Connection connection = DriverManager.getConnection(url);
 ```
 
@@ -37,7 +37,7 @@ Connection connection = DriverManager.getConnection(url);
 
 我们定义公共类，以便客户端可以通过实例化和静态引用来使用它们的成员:
 
-```
+```java
 assertEquals(0, new BigDecimal(0).intValue()); // instance member
 assertEquals(2147483647, Integer.MAX_VALUE); // static member 
 ```
@@ -46,7 +46,7 @@ assertEquals(2147483647, Integer.MAX_VALUE); // static member
 
 例如，Java collections 框架提供了`AbstractList`类作为创建定制列表的基础:
 
-```
+```java
 public class ListOfThree<E> extends AbstractList<E> {
 
     @Override
@@ -73,7 +73,7 @@ public class ListOfThree<E> extends AbstractList<E> {
 
 一个例子是来自核心 Java API 的`Map` `.` `Entry`接口:
 
-```
+```java
 for (Map.Entry<String, String> entry : mapObject.entrySet()) { }
 ```
 
@@ -85,13 +85,13 @@ for (Map.Entry<String, String> entry : mapObject.entrySet()) { }
 
 公共方法使用户能够执行现成的操作。一个例子是`String` API 中的公共`toLowerCase`方法:
 
-```
+```java
 assertEquals("alex", "ALEX".toLowerCase());
 ```
 
 如果公共方法不使用任何实例字段，我们可以安全地将其设为静态。来自`Integer`类的`parseInt`方法是一个公共静态方法的例子:
 
-```
+```java
 assertEquals(1, Integer.parseInt("1"));
 ```
 
@@ -113,7 +113,7 @@ assertEquals(1, Integer.parseInt("1"));
 
 相反，最好使用私有修饰符隐藏这些字段，并使用公共 setter:
 
-```
+```java
 public class Student {
 
     private int age;
@@ -134,7 +134,7 @@ public class Student {
 
 通过赋予字段私有范围和使用访问器，我们可以灵活地更改内部表示，同时保持旧的数据类型:
 
-```
+```java
  public class Student {
 
     private StudentGrade grade; //new data representation
@@ -151,7 +151,7 @@ public class Student {
 
 使用公共字段的唯一例外是使用静态最终不可变字段来表示常量:
 
-```
+```java
 public static final String SLASH = "/";
 ```
 

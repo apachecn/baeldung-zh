@@ -12,7 +12,7 @@ spring Data JPA repository populator 支持 JSON 和 XML 文件格式。在接�
 
 首先，假设我们有一个`Fruit`实体类和一个水果库存来填充我们的数据库:
 
-```
+```java
 @Entity
 public class Fruit {
     @Id
@@ -26,7 +26,7 @@ public class Fruit {
 
 我们将扩展`JpaRepository `以从数据库中读取`Fruit`数据:
 
-```
+```java
 @Repository
 public interface FruitRepository extends JpaRepository<Fruit, Long> {
     // ...
@@ -39,7 +39,7 @@ public interface FruitRepository extends JpaRepository<Fruit, Long> {
 
 让我们用`Fruit`数据创建一个 JSON 文件。我们将在`src/main/resources`中创建这个文件，并将其命名为`fruit-data.json`:
 
-```
+```java
 [
     {
         "_class": "com.baeldung.entity.Fruit",
@@ -60,7 +60,7 @@ public interface FruitRepository extends JpaRepository<Fruit, Long> {
 
 现在，我们将在`pom.xml`中添加 [`jackson-databind`](https://web.archive.org/web/20220629001722/https://search.maven.org/search?q=g:com.fasterxml.jackson.core%20a:jackson-databind) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -70,7 +70,7 @@ public interface FruitRepository extends JpaRepository<Fruit, Long> {
 
 最后，我们必须添加一个存储库填充器 bean。这个存储库填充器 bean 将从`fruit-data.json`文件中读取数据，并在应用程序启动时将其填充到数据库中:
 
-```
+```java
 @Bean
 public Jackson2RepositoryPopulatorFactoryBean getRespositoryPopulator() {
     Jackson2RepositoryPopulatorFactoryBean factory = new Jackson2RepositoryPopulatorFactoryBean();
@@ -81,7 +81,7 @@ public Jackson2RepositoryPopulatorFactoryBean getRespositoryPopulator() {
 
 我们已经准备好对我们的配置进行单元测试:
 
-```
+```java
 @Test
 public void givenFruitJsonPopulatorThenShouldInsertRecordOnStart() {
     List<Fruit> fruits = fruitRepository.findAll();
@@ -107,7 +107,7 @@ public void givenFruitJsonPopulatorThenShouldInsertRecordOnStart() {
 
 `apple-fruit-data.xml`:
 
-```
+```java
 <fruit>
     <id>1</id>
     <name>apple</name>
@@ -117,7 +117,7 @@ public void givenFruitJsonPopulatorThenShouldInsertRecordOnStart() {
 
 `guava-fruit-data.xml`:
 
-```
+```java
 <fruit>
     <id>2</id>
     <name>guava</name>
@@ -129,7 +129,7 @@ public void givenFruitJsonPopulatorThenShouldInsertRecordOnStart() {
 
 此外，我们将在`pom.xml`中添加`[spring-oxm](https://web.archive.org/web/20220629001722/https://search.maven.org/search?q=g:org.springframework%20a:spring-oxm)` maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-oxm</artifactId>
@@ -139,7 +139,7 @@ public void givenFruitJsonPopulatorThenShouldInsertRecordOnStart() {
 
 此外，我们需要给我们的实体类添加`@XmlRootElement` 注释:
 
-```
+```java
 @XmlRootElement
 @Entity
 public class Fruit {
@@ -149,7 +149,7 @@ public class Fruit {
 
 最后，我们将定义一个存储库填充器 bean。该 bean 将读取 XML 文件并填充数据:
 
-```
+```java
 @Bean
 public UnmarshallerRepositoryPopulatorFactoryBean repositoryPopulator() {
     Jaxb2Marshaller unmarshaller = new Jaxb2Marshaller();

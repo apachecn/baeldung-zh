@@ -10,7 +10,7 @@
 
 之前，我们已经介绍了如何以编程方式运行 JUnit 测试。对于我们的示例，我们将使用相同的 JUnit 测试:
 
-```
+```java
 public class FirstUnitTest {
 
     @Test
@@ -30,7 +30,7 @@ public class FirstUnitTest {
 }
 ```
 
-```
+```java
 public class SecondUnitTest {
 
     @Test
@@ -51,7 +51,7 @@ public class SecondUnitTest {
 
 此外，我们还需要一个目录来包含所有已编译的类:
 
-```
+```java
 $ mkdir target
 ```
 
@@ -61,19 +61,19 @@ $ mkdir target
 
 在运行测试类之前，让我们编译它:
 
-```
+```java
 $ javac -d target -cp target:junit-platform-console-standalone-1.7.2.jar src/test/java/com/baeldung/commandline/FirstUnitTest.java
 ```
 
 现在，我们将使用 Junit 控制台启动器运行编译后的测试类:
 
-```
+```java
 $ java -jar junit-platform-console-standalone-1.7.2.jar --class-path target --select-class com.baeldung.commandline.FirstUnitTest
 ```
 
 这将为我们提供测试运行结果:
 
-```
+```java
 Test run finished after 60 ms
 [         3 containers found      ]
 [         0 containers skipped    ]
@@ -93,19 +93,19 @@ Test run finished after 60 ms
 
 同样，让我们编译我们想要运行的测试类:
 
-```
+```java
 $ javac -d target -cp target:junit-platform-console-standalone-1.7.2.jar src/test/java/com/baeldung/commandline/FirstUnitTest.java src/test/java/com/baeldung/commandline/SecondUnitTest.java 
 ```
 
 我们现在将使用控制台启动器运行编译后的测试类:
 
-```
+```java
 $ java -jar junit-platform-console-standalone-1.7.2.jar --class-path target --select-class com.baeldung.commandline.FirstUnitTest --select-class com.baeldung.commandline.SecondUnitTest
 ```
 
 我们现在的结果表明，所有五种测试方法都是成功的:
 
-```
+```java
 Test run finished after 68 ms
 ...
 [         5 tests found           ]
@@ -118,13 +118,13 @@ Test run finished after 68 ms
 
 要运行包中的所有测试类，让我们编译包中的所有测试类:
 
-```
+```java
 $ javac -d target -cp target:junit-platform-console-standalone-1.7.2.jar src/test/java/com/baeldung/commandline/*.java
 ```
 
 同样，我们将运行我们的包中已编译的测试类:
 
-```
+```java
 $ java -jar junit-platform-console-standalone-1.7.2.jar --class-path target --select-package com.baeldung.commandline
 ...
 Test run finished after 68 ms
@@ -139,7 +139,7 @@ Test run finished after 68 ms
 
 让我们运行所有的测试用例:
 
-```
+```java
 $ java -jar junit-platform-console-standalone-1.7.2.jar --class-path target  --scan-class-path
 ...
 Test run finished after 68 ms
@@ -158,13 +158,13 @@ Test run finished after 68 ms
 
 要在控制台上运行单个测试用例，让我们通过指定测试类名来执行以下命令:
 
-```
+```java
 $ mvn test -Dtest=SecondUnitTest 
 ```
 
 这将为我们提供测试运行结果:
 
-```
+```java
 [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s - in com.baeldung.commandline.SecondUnitTest 
 [INFO] 
 [INFO] Results:
@@ -182,7 +182,7 @@ $ mvn test -Dtest=SecondUnitTest 
 
 为了在控制台上运行多个测试用例，让我们执行命令，指定我们想要执行的所有测试类的名称:
 
-```
+```java
 $ mvn test -Dtest=FirstUnitTest,SecondUnitTest
 ...
 [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s - in com.baeldung.commandline.SecondUnitTest
@@ -204,7 +204,7 @@ $ mvn test -Dtest=FirstUnitTest,SecondUnitTest
 
 要在控制台上运行一个包中的所有测试用例，我们需要在命令中指定包名:
 
-```
+```java
 $ mvn test -Dtest="com.baeldung.commandline.**"
 ...
 [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s - in com.baeldung.commandline.SecondUnitTest
@@ -226,7 +226,7 @@ $ mvn test -Dtest="com.baeldung.commandline.**"
 
 最后，为了在控制台上使用 Maven 运行所有测试用例，我们只需执行`mvn clean test`:
 
-```
+```java
 $ mvn clean test
 ...
 [INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s - in com.baeldung.commandline.SecondUnitTest

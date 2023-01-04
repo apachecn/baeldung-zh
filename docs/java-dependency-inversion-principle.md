@@ -41,7 +41,7 @@
 
 让我们考虑一个简单的`StringProcessor`类，它使用一个`StringReader`组件获得一个`String`值，并使用一个`StringWriter`组件将它写在其他地方:
 
-```
+```java
 public class StringProcessor {
 
     private final StringReader stringReader;
@@ -99,7 +99,7 @@ public class StringProcessor {
 
 让我们从**定义高级组件**开始:
 
-```
+```java
 public class CustomerService {
 
     private final CustomerDao customerDao;
@@ -122,7 +122,7 @@ public class CustomerService {
 
 因为这是一个直接的 DIP 实现，所以让我们将抽象定义为同一个包`CustomerService`中的一个接口:
 
-```
+```java
 public interface CustomerDao {
 
     Optional<Customer> findById(int id);
@@ -138,7 +138,7 @@ public interface CustomerDao {
 
 现在，让我们在不同的包中创建底层组件。在这种情况下，它只是一个基本的`CustomerDao`实现:
 
-```
+```java
 public class SimpleCustomerDao implements CustomerDao {
 
     // standard constructor / getter
@@ -157,7 +157,7 @@ public class SimpleCustomerDao implements CustomerDao {
 
 最后，让我们创建一个单元测试来检查`CustomerService`类的功能:
 
-```
+```java
 @Before
 public void setUpCustomerServiceInstance() {
     var customers = new HashMap<Integer, Customer>();
@@ -214,7 +214,7 @@ public void givenCustomerServiceInstance_whenCalledFindByIdWithNullCustomer_then
 
 以下是模块化项目结构的外观:
 
-```
+```java
 project base directory (could be anything, like dipmodular)
 |- com.baeldung.dip.services
    module-info.java
@@ -259,7 +259,7 @@ project base directory (could be anything, like dipmodular)
 
 我们将在根目录`com.baeldung.dip.services,` 中创建这个模块，并添加模块描述符`module-info.java`:
 
-```
+```java
 module com.baeldung.dip.services {
     requires com.baeldung.dip.entities;
     requires com.baeldung.dip.daos;
@@ -280,7 +280,7 @@ module com.baeldung.dip.services {
 
 同样，我们需要将`CustomerDao`接口放在它自己的模块中。因此，让我们在根目录`com.baeldung.dip.daos`中创建模块，并添加模块描述符:
 
-```
+```java
 module com.baeldung.dip.daos {
     requires com.baeldung.dip.entities;
     exports com.baeldung.dip.daos;
@@ -295,7 +295,7 @@ module com.baeldung.dip.daos {
 
 让我们在根目录`com.baeldung.dip.daoimplementations`中创建新模块，并包含模块描述符:
 
-```
+```java
 module com.baeldung.dip.daoimplementations {
     requires com.baeldung.dip.entities;
     requires com.baeldung.dip.daos;
@@ -320,7 +320,7 @@ module com.baeldung.dip.daoimplementations {
 
 此外，我们必须创建另一个模块来放置`Customer.java`类。正如我们之前所做的，让我们创建根目录`com.baeldung.dip.entities`并包含模块描述符:
 
-```
+```java
 module com.baeldung.dip.entities {
     exports com.baeldung.dip.entities;
 }
@@ -328,7 +328,7 @@ module com.baeldung.dip.entities {
 
 在包的根目录中，让我们创建目录`com/baeldung/dip/entities`并添加下面的`Customer.java`文件:
 
-```
+```java
 public class Customer {
 
     private final String name;
@@ -342,7 +342,7 @@ public class Customer {
 
 接下来，我们需要创建一个额外的模块，允许我们定义演示应用程序的入口点。因此，让我们创建另一个根目录`com.baeldung.dip.mainapp`，并在其中放置模块描述符:
 
-```
+```java
 module com.baeldung.dip.mainapp {
     requires com.baeldung.dip.entities;
     requires com.baeldung.dip.daos;
@@ -354,7 +354,7 @@ module com.baeldung.dip.mainapp {
 
 现在，让我们导航到模块的根目录，并创建以下目录结构:`com/baeldung/dip/mainapp.`在该目录中，让我们添加一个`MainApplication.java`文件，该文件简单地实现了一个`main()`方法:
 
-```
+```java
 public class MainApplication {
 
     public static void main(String args[]) {
@@ -371,7 +371,7 @@ public class MainApplication {
 
 正如预期的那样，当应用程序启动时，我们应该看到控制台输出的一列`Customer`对象:
 
-```
+```java
 Customer{name=John}
 Customer{name=Susan} 
 ```

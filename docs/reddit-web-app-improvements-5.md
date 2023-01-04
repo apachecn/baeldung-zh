@@ -23,7 +23,7 @@ Reddit 丢失了电子邮件通知——简单明了。我希望看到的是—�
 
 首先，我们需要通过添加以下内容来修改我们的首选实体和 d to:
 
-```
+```java
 private boolean sendEmailReplies;
 ```
 
@@ -33,7 +33,7 @@ private boolean sendEmailReplies;
 
 接下来，这是我们的简单调度程序:
 
-```
+```java
 @Component
 public class NotificationRedditScheduler {
 
@@ -59,7 +59,7 @@ public class NotificationRedditScheduler {
 
 现在，让我们讨论一下我们的通知服务:
 
-```
+```java
 @Service
 public class NotificationRedditService implements INotificationRedditService {
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -141,7 +141,7 @@ public class NotificationRedditService implements INotificationRedditService {
 
 这是我们的简单事件:
 
-```
+```java
 public class OnNewPostReplyEvent extends ApplicationEvent {
     private String email;
     private String content;
@@ -158,7 +158,7 @@ public class OnNewPostReplyEvent extends ApplicationEvent {
 
 最后，这是我们的听众:
 
-```
+```java
 @Component
 public class ReplyListener implements ApplicationListener<OnNewPostReplyEvent> {
     @Autowired
@@ -190,7 +190,7 @@ public class ReplyListener implements ApplicationListener<OnNewPostReplyEvent> {
 
 接下来，让我们设置一些关于应用程序允许的并发会话数量的更严格的规则。更重要的是—**我们不允许并发会话**:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http.sessionManagement()
@@ -201,7 +201,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 注意——因为我们正在使用定制的`UserDetails`实现——我们需要覆盖`equals()`和`hashcode()`,因为会话控制策略将所有主体存储在一个映射中，并且需要能够检索它们:
 
-```
+```java
 public class UserPrincipal implements UserDetails {
 
     private User user;
@@ -244,7 +244,7 @@ public class UserPrincipal implements UserDetails {
 
 现在让我们将这两个主要职责分开，并把它们放入两个不同的 servlets 中:
 
-```
+```java
 @Bean
 public ServletRegistrationBean frontendServlet() {
     ServletRegistrationBean registration = 
@@ -290,7 +290,7 @@ protected SpringApplicationBuilder configure(final SpringApplicationBuilder appl
 
 这是我们的`WebFrontendConfig`:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 @ComponentScan({ "org.baeldung.web.controller.general" })
@@ -330,7 +330,7 @@ public class WebFrontendConfig implements WebMvcConfigurer {
 
 和`WebApiConfig`:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 @ComponentScan({ "org.baeldung.web.controller.rest", "org.baeldung.web.dto" })
@@ -351,7 +351,7 @@ public class WebApiConfig implements WebMvcConfigurer {
 
 因此，当我们将文章的链接发布到 Reddit 时，我们实际上发布了正确的原始 URL:
 
-```
+```java
 @RequestMapping(value = "/url/original")
 @ResponseBody
 public String getOriginalLink(@RequestParam("url") String sourceUrl) {

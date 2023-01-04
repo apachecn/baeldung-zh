@@ -12,7 +12,7 @@
 
 IN 操作符允许我们在 WHERE 子句中指定多个值。例如，我们可以使用它来查找 id 在指定 id 列表中的所有雇员:
 
-```
+```java
 SELECT * FROM EMPLOYEE WHERE id IN (1, 2, 3)
 ```
 
@@ -22,7 +22,7 @@ SELECT * FROM EMPLOYEE WHERE id IN (1, 2, 3)
 
 用 [`JdbcTemplate`](https://web.archive.org/web/20220625172019/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html) ，我们可以用“？”字符作为值列表的占位符。“？”的数量字符将与列表的大小相同:
 
-```
+```java
 List<Employee> getEmployeesFromIdList(List<Integer> ids) {
     String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
 
@@ -38,7 +38,7 @@ List<Employee> getEmployeesFromIdList(List<Integer> ids) {
 
 在这个方法中，我们首先生成一个包含`ids.size()` ['？'的占位符字符串用逗号分隔的字符](/web/20220625172019/https://www.baeldung.com/java-strings-concatenation)。然后，我们将这个字符串放入 SQL 语句的 IN 子句中。例如，如果我们在`ids`列表中有三个数字，SQL 语句是:
 
-```
+```java
 SELECT * FROM EMPLOYEE WHERE id IN (?,?,?)
 ```
 
@@ -48,7 +48,7 @@ SELECT * FROM EMPLOYEE WHERE id IN (?,?,?)
 
 另一种处理动态值列表的方法是使用 [`NamedParameterJdbcTemplate`](https://web.archive.org/web/20220625172019/https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/jdbc/core/namedparam/NamedParameterJdbcTemplate.html) 。例如，我们可以直接为输入列表创建一个命名参数:
 
-```
+```java
 List<Employee> getEmployeesFromIdListNamed(List<Integer> ids) {
     SqlParameterSource parameters = new MapSqlParameterSource("ids", ids);
 
@@ -76,7 +76,7 @@ List<Employee> getEmployeesFromIdListNamed(List<Integer> ids) {
 
 让我们为 H2 数据库创建一个临时表:
 
-```
+```java
 List<Employee> getEmployeesFromLargeIdList(List<Integer> ids) {
     jdbcTemplate.execute("CREATE TEMPORARY TABLE IF NOT EXISTS employee_tmp (id INT NOT NULL)");
 

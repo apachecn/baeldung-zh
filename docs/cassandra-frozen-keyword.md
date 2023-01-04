@@ -24,13 +24,13 @@
 
 让我们使用 [docker 映像](https://web.archive.org/web/20220529024638/https://github.com/bitnami/bitnami-docker-cassandra)创建一个数据库，并使用`cqlsh`将其连接到数据库。接下来，我们应该创建一个`keyspace`:
 
-```
+```java
 CREATE KEYSPACE mykeyspace WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 1};
 ```
 
 对于本教程，我们创建了一个只有一个数据副本的`keyspace `。现在，让我们将客户端会话连接到一个`keyspace`:
 
-```
+```java
 USE mykeyspace;
 ```
 
@@ -42,7 +42,7 @@ USE mykeyspace;
 
 要声明一个`frozen`集合，我们必须在集合定义前添加关键字:
 
-```
+```java
 CREATE TABLE mykeyspace.users
 (
     id         uuid PRIMARY KEY,
@@ -54,14 +54,14 @@ CREATE TABLE mykeyspace.users
 
 让我们插入一些数据:
 
-```
+```java
 INSERT INTO mykeyspace.users (id, ip_numbers)
 VALUES (6ab09bec-e68e-48d9-a5f8-97e6fb4c9b47, {'10.10.11.1', '10.10.10.1', '10.10.12.1'});
 ```
 
 重要的是，如上所述，一个 **`frozen`集合只能作为一个整体**来替换。这意味着我们不能添加或删除元素。让我们尝试向`ip_numbers`集合添加一个新元素:
 
-```
+```java
 UPDATE mykeyspace.users
 SET ip_numbers = ip_numbers + {'10.10.14.1'}
 WHERE id = 6ab09bec-e68e-48d9-a5f8-97e6fb4c9b47; 
@@ -69,13 +69,13 @@ WHERE id = 6ab09bec-e68e-48d9-a5f8-97e6fb4c9b47;
 
 执行更新后，我们将得到错误:
 
-```
+```java
 InvalidRequest: Error from server: code=2200 [Invalid query] message="Invalid operation (ip_numbers = ip_numbers + {'10.10.14.1'}) for frozen collection column ip_numbers"
 ```
 
 如果我们想要更新集合中的数据，我们需要更新整个集合:
 
-```
+```java
 UPDATE mykeyspace.users
 SET ip_numbers = {'11.10.11.1', '11.10.10.1', '11.10.12.1'}
 WHERE id = 6ab09bec-e68e-48d9-a5f8-97e6fb4c9b47; 
@@ -85,7 +85,7 @@ WHERE id = 6ab09bec-e68e-48d9-a5f8-97e6fb4c9b47;
 
 有时我们不得不在 Cassandra 数据库中使用嵌套集合。**只有当我们将嵌套集合标记为`frozen`** 时，它们才是可能的。这意味着这个集合将是不可变的。我们可以冻结`frozen`和 `non-frozen`集合中的嵌套集合。让我们看一个例子:
 
-```
+```java
 CREATE TABLE mykeyspace.users_score
 (
     id    uuid PRIMARY KEY,
@@ -97,7 +97,7 @@ CREATE TABLE mykeyspace.users_score
 
 用户定义类型(udt)可以将多个数据字段(每个字段都有名称和类型)附加到一个列。用于创建用户定义类型的字段可以是任何有效的数据类型，包括集合或其他 udt。让我们创造我们的 UDT:
 
-```
+```java
 CREATE TYPE mykeyspace.address (
     city text,
     street text,
@@ -108,7 +108,7 @@ CREATE TYPE mykeyspace.address (
 
 让我们看看一个`frozen `用户定义类型的声明:
 
-```
+```java
 CREATE TABLE mykeyspace.building
 (
     id      uuid PRIMARY KEY,
@@ -120,7 +120,7 @@ CREATE TABLE mykeyspace.building
 
 首先，让我们插入一些数据:
 
-```
+```java
 INSERT INTO mykeyspace.building (id, address)
 VALUES (6ab09bec-e68e-48d9-a5f8-97e6fb4c9b48,
   {city: 'City', street: 'Street', streetNo: 2,zipcode: '02-212'});
@@ -128,7 +128,7 @@ VALUES (6ab09bec-e68e-48d9-a5f8-97e6fb4c9b48,
 
 让我们看看当我们试图只更新一个字段时会发生什么:
 
-```
+```java
 UPDATE mykeyspace.building
 SET address.city = 'City2'
 WHERE id = 6ab09bec-e68e-48d9-a5f8-97e6fb4c9b48; 
@@ -136,13 +136,13 @@ WHERE id = 6ab09bec-e68e-48d9-a5f8-97e6fb4c9b48;
 
 我们将再次得到错误:
 
-```
+```java
 InvalidRequest: Error from server: code=2200 [Invalid query] message="Invalid operation (address.city = 'City2') for frozen UDT column address"
 ```
 
 因此，让我们更新整个值:
 
-```
+```java
 UPDATE mykeyspace.building
 SET address = {city : 'City2', street : 'Street2'}
 WHERE id = 6ab09bec-e68e-48d9-a5f8-97e6fb4c9b48;

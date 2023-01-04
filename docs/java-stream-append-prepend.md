@@ -10,7 +10,7 @@
 
 通过调用静态的`Stream.` concat `()`方法，我们可以很容易地将给定的元素添加到`Stream`中:
 
-```
+```java
 @Test
 public void givenStream_whenPrependingObject_thenPrepended() {
     Stream<Integer> anStream = Stream.of(1, 2, 3, 4, 5);
@@ -27,7 +27,7 @@ public void givenStream_whenPrependingObject_thenPrepended() {
 
 请记住， **`Streams`可以表示无限序列**,所以有些情况下您可能永远也找不到新元素:
 
-```
+```java
 @Test
 public void givenStream_whenAppendingObject_thenAppended() {
     Stream<String> anStream = Stream.of("a", "b", "c", "d", "e");
@@ -50,7 +50,7 @@ public void givenStream_whenAppendingObject_thenAppended() {
 
 在这种情况下，由于流没有被贪婪地消耗，它仍然是部分懒惰的:
 
-```
+```java
 private static  Stream insertInStream(Stream stream, T elem, int index) {
     Spliterator spliterator = stream.spliterator();
     Iterator iterator = Spliterators.iterator(spliterator);
@@ -62,7 +62,7 @@ private static  Stream insertInStream(Stream stream, T elem, int index) {
 
 现在，让我们测试我们的代码，以确保一切按预期运行:
 
-```
+```java
 @Test
 public void givenStream_whenInsertingObject_thenInserted() {
     Stream<Double> anStream = Stream.of(1.1, 2.2, 3.3);

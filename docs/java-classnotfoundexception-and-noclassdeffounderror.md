@@ -16,7 +16,7 @@
 
 例如，让我们尝试加载 JDBC 驱动程序类，而不添加必要的依赖项，这会让我们`ClassNotFoundException:`
 
-```
+```java
 @Test(expected = ClassNotFoundException.class)
 public void givenNoDrivers_whenLoadDriverClass_thenClassNotFoundException() 
   throws ClassNotFoundException {
@@ -37,13 +37,13 @@ public void givenNoDrivers_whenLoadDriverClass_thenClassNotFoundException()
 
 如果我们再次尝试加载同一个类，我们会得到`NoClassDefFoundError:`
 
-```
+```java
 public class ClassWithInitErrors {
     static int data = 1 / 0;
 }
 ```
 
-```
+```java
 public class NoClassDefFoundErrorExample {
     public ClassWithInitErrors getClassWithInitErrors() {
         ClassWithInitErrors test;
@@ -60,7 +60,7 @@ public class NoClassDefFoundErrorExample {
 
 让我们为这个场景编写一个测试用例:
 
-```
+```java
 @Test(expected = NoClassDefFoundError.class)
 public void givenInitErrorInClass_whenloadClass_thenNoClassDefFoundError() {
 

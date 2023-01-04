@@ -16,7 +16,7 @@ Docker 注册表提供了与注册表交互的 API。这个 **API 包含 Docker 
 
 让我们看看注册表 API 的端点格式:
 
-```
+```java
 /<api-version>/<repository-name>/<resource>/<params> 
 ```
 
@@ -29,7 +29,7 @@ Docker 注册表提供了与注册表交互的 API。这个 **API 包含 Docker 
 
 基于上述规则，下面是一个端点的具体示例:
 
-```
+```java
 GET /v2/ubuntu/nginx/manifests/latest 
 ```
 
@@ -43,14 +43,14 @@ GET /v2/ubuntu/nginx/manifests/latest
 
 要在注册表中列出图像，我们可以使用 _/ `catalog`端点:
 
-```
+```java
 $ curl -X GET my-registry.io/v2/_catalog
 {"repositories":["centos","ubuntu"]} 
 ```
 
 我们应该注意，如果已经启用了身份验证，那么访问某些存储库可能需要身份验证。在这种情况下，我们可以使用`-u `选项将用户名和密码作为参数传递给`curl`命令。
 
-```
+```java
 $ curl -u user:password -X GET my-registry.io/v2/_catalog 
 {"repositories":["centos","ubuntu"]}
 ```
@@ -59,7 +59,7 @@ $ curl -u user:password -X GET my-registry.io/v2/_catalog
 
 有时，注册表会有大量的图像。在这种情况下，**我们可以向 _/ `catalog`端点添加一个`n=<number of results>`参数，以获得分页的响应:**
 
-```
+```java
 $ curl -X GET my-registry.io/v2/_catalog?n=1
 {"repositories":["centos"]} 
 ```
@@ -71,7 +71,7 @@ $ curl -X GET my-registry.io/v2/_catalog?n=1
 *   `A l` `ast`参数到 _/ `catalog`端点，包含上一次请求中返回的最后一个图像名。
 *   将新请求链接到前一个请求的标头。标题的格式如下:
 
-```
+```java
 Link: <my-registry.io/v2/_catalog?n=1&last;=centos>; rel="next" 
 ```
 
@@ -79,7 +79,7 @@ Link: <my-registry.io/v2/_catalog?n=1&last;=centos>; rel="next"
 
 所以让我们提出下一个要求:
 
-```
+```java
 $ curl -H 'Link: <my-registry.io/v2/_catalog?n=1&last;=centos>; rel="next"' -X GET "my-registry.io/v2/_catalog?n=1&last;=centos"
 {"repositories":["ubuntu"]} 
 ```
@@ -90,7 +90,7 @@ $ curl -H 'Link: <my-registry.io/v2/_catalog?n=1&last;=centos>; rel="next"' -X G
 
 要列出图像的[标签，我们可以使用`/tags/list`端点:](/web/20221128054910/https://www.baeldung.com/ops/docker-tag)
 
-```
+```java
 $ curl -X GET my-registry.io/v2/ubuntu/tags/list
 {"name":"ubuntu","tags":["latest","16.04"]} 
 ```
@@ -107,7 +107,7 @@ We can also use pagination with the same rules as we saw for image listing.
 
 v1 中没有列出图像的直接端点。相反，我们可以使用`docker search`命令来搜索包含给定字符串的图像:
 
-```
+```java
 $ docker search my-registry.io/centos 
 ```
 
@@ -123,7 +123,7 @@ $ docker search my-registry.io/centos
 
 列出标签的方法类似于 v2 API。但是，在这种情况下，输出是不同的:
 
-```
+```java
 $ curl -X GET https://registry.hub.docker.com/v1/repositories/baeldung/mesos-marathon-demo/tags
 [{"layer": "", "name": "32"}, {"layer": "", "name": "33"}, {"layer": "", "name": "34"}] 
 ```
@@ -132,7 +132,7 @@ $ curl -X GET https://registry.hub.docker.com/v1/repositories/baeldung/mesos-mar
 
 如果需要，我们可以将响应转换为数组。为此，让我们将输出通过管道传输到[的`jq`命令](/web/20221128054910/https://www.baeldung.com/linux/jq-command-json)中，并解析 JSON:
 
-```
+```java
 $ curl -s GET https://registry.hub.docker.com/v1/repositories/baeldung/mesos-marathon-demo/tags | jq -r '[.[].name]'
 [
   "32",

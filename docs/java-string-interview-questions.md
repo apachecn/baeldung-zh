@@ -29,7 +29,7 @@
 *   穿过
 *   通过`new`关键字:
 
-    ```
+    ```java
     String s = new String("abc");
     ```
 
@@ -123,14 +123,14 @@ Java 中的所有字符串都是`String`类的实例。
 
 `String`类本身为我们提供了[`String#``split `方法](/web/20221208143926/https://www.baeldung.com/string/split)，它接受一个正则表达式分隔符。它返回给我们一个`String[]`数组:
 
-```
+```java
 String[] parts = "john,peter,mary".split(",");
 assertEquals(new String[] { "john", "peter", "mary" }, parts);
 ```
 
 **关于`split`的一件棘手的事情是，当拆分一个空字符串**时，我们可能会得到一个非空数组:
 
-```
+```java
 assertEquals(new String[] { "" }, "".split(","));
 ```
 
@@ -140,7 +140,7 @@ assertEquals(new String[] { "" }, "".split(","));
 
 `[StringJoiner](/web/20221208143926/https://www.baeldung.com/java-string-joiner) `是 Java 8 中引入的一个类，用于将单独的字符串连接成一个字符串，就像**获取一个颜色列表并以逗号分隔的字符串**的形式返回它们。我们可以提供分隔符以及前缀和后缀:
 
-```
+```java
 StringJoiner joiner = new StringJoiner(",", "[", "]");
 joiner.add("Red")
   .add("Green")
@@ -155,7 +155,7 @@ assertEquals("[Red,Green,Blue]", joiner.toString());
 
 例如，如果我们在字符串`str1 `创建后添加它:
 
-```
+```java
 String str1 = "abc";
 str1 = str1 + "def";
 ```
@@ -188,7 +188,7 @@ Java 会自动替换所有使用字符串文字创建的字符串，但是如果
 
 我们可以调用`intern()`方法告诉 JVM 将它添加到字符串池中(如果它还不存在的话),并返回一个被保留的字符串的引用:
 
-```
+```java
 String s1 = "Baeldung";
 String s2 = new String("Baeldung");
 String s3 = new String("Baeldung").intern();
@@ -201,13 +201,13 @@ assertThat(s1 == s3).isTrue();
 
 将`String`转换为`Integer` 的最直接的方法是使用`Integer#` `parseInt`:
 
-```
+```java
 int num = Integer.parseInt("22");
 ```
 
 反过来，我们可以使用`Integer#` `toString`:
 
-```
+```java
 String s = Integer.toString(num);
 ```
 
@@ -215,7 +215,7 @@ String s = Integer.toString(num);
 
 [`String#format`](/web/20221208143926/https://www.baeldung.com/string/format) 使用指定的格式字符串和参数返回格式化字符串。
 
-```
+```java
 String title = "Baeldung"; 
 String formatted = String.format("Title is %s", title);
 assertEquals("Title is Baeldung", formatted);
@@ -223,7 +223,7 @@ assertEquals("Title is Baeldung", formatted);
 
 我们还需要记住指定用户的`Locale, `,除非我们接受操作系统的默认设置:
 
-```
+```java
 Locale usersLocale = Locale.ITALY;
 assertEquals("1.024",
   String.format(usersLocale, "There are %,d shirts to choose from. Good luck.", 1024))
@@ -235,14 +235,14 @@ assertEquals("1.024",
 
 尽管如此，Javadocs 提醒我们需要指定用户的`L` `ocale`以确保正确性:
 
-```
+```java
 String s = "Welcome to Baeldung!";
 assertEquals("WELCOME TO BAELDUNG!", s.toUpperCase(Locale.US));
 ```
 
 同样，要转换成小写，我们有 [`String#toLowerCase`](/web/20221208143926/https://www.baeldung.com/string/to-lower-case) :
 
-```
+```java
 String s = "Welcome to Baeldung!";
 assertEquals("welcome to baeldung!", s.toLowerCase(Locale.UK));
 ```
@@ -251,7 +251,7 @@ assertEquals("welcome to baeldung!", s.toLowerCase(Locale.UK));
 
 `String`提供`toCharArray`，它返回其内部`char`数组在 JDK9 之前的副本(并将`String`转换为 JDK9+中新的`char`数组):
 
-```
+```java
 char[] hello = "hello".toCharArray();
 assertArrayEquals(new String[] { 'h', 'e', 'l', 'l', 'o' }, hello);
 ```
@@ -262,7 +262,7 @@ assertArrayEquals(new String[] { 'h', 'e', 'l', 'l', 'o' }, hello);
 
 虽然 API 不要求我们指定字符集，但是为了确保安全性和可移植性，我们应该指定字符集:
 
-```
+```java
 byte[] byteArray2 = "efgh".getBytes(StandardCharsets.US_ASCII);
 byte[] byteArray3 = "ijkl".getBytes("UTF-8");
 ```
@@ -283,7 +283,7 @@ byte[] byteArray3 = "ijkl".getBytes("UTF-8");
 
 Java 8 真正简化了如下聚合任务:
 
-```
+```java
 long count = "hello".chars().filter(ch -> (char)ch == 'l').count();
 assertEquals(2, count);
 ```
@@ -294,7 +294,7 @@ assertEquals(2, count);
 
 有许多方法可以做到这一点，最直接的方法是使用来自`StringBuilder`(或`StringBuffer`)的`reverse`方法:
 
-```
+```java
 String reversed = new StringBuilder("baeldung").reverse().toString();
 assertEquals("gnudleab", reversed);
 ```

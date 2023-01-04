@@ -14,7 +14,7 @@
 
 让我们看一个使用 Java 实现`LinkedList`的例子:
 
-```
+```java
 public static Optional<String> findMiddleElementLinkedList(
   LinkedList<String> linkedList) {
     if (linkedList == null || linkedList.isEmpty()) {
@@ -28,7 +28,7 @@ public static Optional<String> findMiddleElementLinkedList(
 
 如果我们检查`LinkedList`类的内部代码，我们可以看到，在这个例子中，我们只是遍历列表，直到到达中间元素:
 
-```
+```java
 Node<E> node(int index) {
     if (index < (size >> 1)) {
         Node<E> x = first;
@@ -54,7 +54,7 @@ Node<E> node(int index) {
 
 让我们创建一个`Node`类，它存储`String`值:
 
-```
+```java
 public static class Node {
 
     private Node next;
@@ -78,7 +78,7 @@ public static class Node {
 
 此外，我们将在测试用例中使用这个助手方法来创建一个只使用我们的节点的单链表:
 
-```
+```java
 private static Node createNodesList(int n) {
     Node head = new Node("1");
     Node current = head;
@@ -99,7 +99,7 @@ private static Node createNodesList(int n) {
 
 让我们来看看这个解决方案的实际应用:
 
-```
+```java
 public static Optional<String> findMiddleElementFromHead(Node head) {
     if (head == null) {
         return Optional.empty();
@@ -133,7 +133,7 @@ public static Optional<String> findMiddleElementFromHead(Node head) {
 
 当较快的指针到达列表末尾时，较慢的指针将位于中间:
 
-```
+```java
 public static Optional<String> findMiddleElementFromHead1PassIteratively(Node head) {
     if (head == null) {
         return Optional.empty();
@@ -153,7 +153,7 @@ public static Optional<String> findMiddleElementFromHead1PassIteratively(Node he
 
 我们可以用一个简单的单元测试来测试这个解决方案，使用奇数和偶数元素的列表:
 
-```
+```java
 @Test
 public void whenFindingMiddleFromHead1PassIteratively_thenMiddleFound() {
 
@@ -172,7 +172,7 @@ public void whenFindingMiddleFromHead1PassIteratively_thenMiddleFound() {
 
 为了在 Java 中做到这一点，我们将创建一个辅助类，在所有递归调用的执行过程中保存列表大小和中间元素的引用:
 
-```
+```java
 private static class MiddleAuxRecursion {
     Node middle;
     int length = 0;
@@ -181,7 +181,7 @@ private static class MiddleAuxRecursion {
 
 现在，让我们实现递归方法:
 
-```
+```java
 private static void findMiddleRecursively(
   Node node, MiddleAuxRecursion middleAux) {
     if (node == null) {
@@ -203,7 +203,7 @@ private static void findMiddleRecursively(
 
 最后，让我们创建一个调用递归方法的方法:
 
-```
+```java
 public static Optional<String> findMiddleElementFromHead1PassRecursively(Node head) {
 
     if (head == null) {
@@ -218,7 +218,7 @@ public static Optional<String> findMiddleElementFromHead1PassRecursively(Node he
 
 同样，我们可以像以前一样测试它:
 
-```
+```java
 @Test
 public void whenFindingMiddleFromHead1PassRecursively_thenMiddleFound() {
     assertEquals("3", MiddleElementLookup

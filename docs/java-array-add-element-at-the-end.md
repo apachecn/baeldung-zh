@@ -12,7 +12,7 @@
 
 首先，我们来看看`Arrays.copyOf`。我们将复制数组并向副本中添加一个新元素:
 
-```
+```java
 public Integer[] addElementUsingArraysCopyOf(Integer[] srcArray, int elementToAdd) {
     Integer[] destArray = Arrays.copyOf(srcArray, srcArray.length + 1);
     destArray[destArray.length - 1] = elementToAdd;
@@ -32,7 +32,7 @@ public Integer[] addElementUsingArraysCopyOf(Integer[] srcArray, int elementToAd
 
 我们将首先**将数组转换为** `**ArrayList**` ，然后添加元素。然后我们将**将`ArrayList`转换回数组**:
 
-```
+```java
 public Integer[] addElementUsingArrayList(Integer[] srcArray, int elementToAdd) {
     Integer[] destArray = new Integer[srcArray.length + 1];
     ArrayList<Integer> arrayList = new ArrayList<>(Arrays.asList(srcArray));
@@ -49,7 +49,7 @@ public Integer[] addElementUsingArrayList(Integer[] srcArray, int elementToAdd) 
 
 最后，我们来看看`System.arraycopy`，它与`Arrays.copyOf`非常相似:
 
-```
+```java
 public Integer[] addElementUsingSystemArrayCopy(Integer[] srcArray, int elementToAdd) {
     Integer[] destArray = new Integer[srcArray.length + 1];
     System.arraycopy(srcArray, 0, destArray, 0, srcArray.length);

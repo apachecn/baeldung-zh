@@ -22,7 +22,7 @@
 
 接下来，我们将使用示例 JAR 文件运行`Jarcomp`可执行 JAR:
 
-```
+```java
 $ java -jar jarcomp_02.jar mallet-2.0.7.jar mallet-2.0.8.jar 
 ```
 
@@ -44,19 +44,19 @@ $ java -jar jarcomp_02.jar mallet-2.0.7.jar mallet-2.0.8.jar
 
 首先，我们将 [下载](https://web.archive.org/web/20221231132800/https://lvc.github.io/pkgdiff/#Downloads) 我们机器上的工具。然后，我们将提取下载的 tar.gz:
 
-```
+```java
 $ tar -xvf pkgdiff-1.7.2.tar.gz
 ```
 
 接下来，让我们转到提取的文件:
 
-```
+```java
 $ cd pkgdiff-1.7.2
 ```
 
 最后，让我们使用 makefile 安装该工具:
 
-```
+```java
 $ sudo make install
 ```
 
@@ -68,7 +68,7 @@ $ sudo make install
 
 然后让我们使用`pkgdiff`命令来比较示例 JAR 文件:
 
-```
+```java
 $ pkgdiff  mallet-2.0.7.jar mallet-2.0.8.jar 
 ```
 
@@ -88,19 +88,19 @@ Java API 一致性检查器(JAPICC)是一个评估 Java 库之间相似性的工
 
 首先，我们将 [下载](https://web.archive.org/web/20221231132800/https://github.com/lvc/japi-compliance-checker/releases) 我们机器上的工具。然后，我们将解压下载的 zip 文件:
 
-```
+```java
 $ unzip japi-compliance-checker-2.4.zip
 ```
 
 解压缩 zip 文件后，我们将进入目录:
 
-```
+```java
 $ cd japi-compliance-checker-2.4
 ```
 
 最后，我们将使用 makefile 在我们的系统上安装它:
 
-```
+```java
 $ sudo make install
 ```
 
@@ -110,7 +110,7 @@ $ sudo make install
 
 我们将使用我们的安装工具来比较示例 JAR 文件。首先，我们将创建一个新目录并将 JAR 文件移动到其中。然后我们将打开我们的终端，进入我们的新目录。最后，我们将运行`japi-compliance`命令来比较两个 JAR 文件:
 
-```
+```java
 $ japi-compliance-checker mallet-2.0.7.jar mallet-2.0.8.jar
 ```
 

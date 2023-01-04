@@ -18,7 +18,7 @@ Maven 提供了各种各样的插件来帮助我们构建项目。然而，我�
 
 既然我们知道了我们要开发什么，接下来我们需要做的就是创建一个 Maven 项目。在`pom.xml`中，我们将定义插件的`groupId`、`artifactId`和`version`:
 
-```
+```java
 <project 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -43,7 +43,7 @@ Maven 提供了各种各样的插件来帮助我们构建项目。然而，我�
 
 在本例中，我们已经手动创建了项目，但是我们也可以通过使用`maven-archetype-mojo`来完成:
 
-```
+```java
 mvn archetype:generate 
   -DgroupId=com.baeldung 
   -DartifactId=counter-maven-plugin 
@@ -64,7 +64,7 @@ mvn archetype:generate
 
 在创建 mojo 之前，我们需要向我们的`pom.xml`添加一些依赖项:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.apache.maven</groupId>
@@ -93,7 +93,7 @@ mvn archetype:generate
 
 **一个 mojo 必须实现`Mojo`接口**。在我们的例子中，我们将从`AbstractMojo`扩展，所以我们只需要实现`execute`方法:
 
-```
+```java
 @Mojo(name = "dependency-counter", defaultPhase = LifecyclePhase.COMPILE)
 public class DependencyCounterMojo extends AbstractMojo {
     // ...
@@ -104,7 +104,7 @@ public class DependencyCounterMojo extends AbstractMojo {
 
 要访问项目信息，我们必须添加一个`MavenProject`作为参数:
 
-```
+```java
 @Parameter(defaultValue = "${project}", required = true, readonly = true)
 MavenProject project;
 ```
@@ -113,7 +113,7 @@ MavenProject project;
 
 此时，我们能够实现 execute 方法并计算项目依赖项的数量:
 
-```
+```java
 public void execute() throws MojoExecutionException, MojoFailureException {
     List<Dependency> dependencies = project.getDependencies();
     long numDependencies = dependencies.stream().count();          
@@ -131,7 +131,7 @@ public void execute() throws MojoExecutionException, MojoFailureException {
 
 因此，让我们在 mojo 中创建一个`scope`参数:
 
-```
+```java
 @Parameter(property = "scope")
 String scope;
 ```
@@ -140,7 +140,7 @@ String scope;
 
 现在我们将修改我们的`execute`方法来使用这个参数，并在计数时过滤依赖性:
 
-```
+```java
 public void execute() throws MojoExecutionException, MojoFailureException {
     List<Dependency> dependencies = project.getDependencies();
     long numDependencies = dependencies.stream()
@@ -158,7 +158,7 @@ public void execute() throws MojoExecutionException, MojoFailureException {
 
 首先，我们必须在本地存储库中安装插件:
 
-```
+```java
 mvn clean install
 ```
 
@@ -168,25 +168,25 @@ mvn clean install
 
 我们可以在命令行中通过指定完全限定名来运行插件的目标:
 
-```
+```java
 mvn groupId:artifactId:version:goal
 ```
 
 在我们的例子中，它看起来像这样:
 
-```
+```java
 mvn com.baeldung:counter-maven-plugin:0.0.1-SNAPSHOT:dependency-counter
 ```
 
 然而，**如果我们遵循了我们在本教程开始时提到的插件命名约定，Maven 将解析我们插件**的[前缀](https://web.archive.org/web/20221206084553/https://maven.apache.org/guides/introduction/introduction-to-plugin-prefix-mapping.html)，我们可以缩短命令:
 
-```
+```java
 mvn counter:dependency-counter
 ```
 
 注意，这个命令使用的是最新版本的插件。另外，请记住，我们必须将我们的`groupId`添加到我们的`settings.xml`的`pluginGroups`中，因此 Maven 也在这个组中进行搜索:
 
-```
+```java
 <pluginGroups>
     <pluginGroup>com.baeldung</pluginGroup>
 </pluginGroups>
@@ -194,7 +194,7 @@ mvn counter:dependency-counter
 
 如果我们检查命令的输出，我们可以看到插件计算了插件的`pom.xml`中依赖项的数量:
 
-```
+```java
 [INFO] Scanning for projects...
 [INFO] 
 [INFO] -----------------< com.baeldung:counter-maven-plugin >------------------
@@ -213,7 +213,7 @@ mvn counter:dependency-counter
 
 我们也可以通过命令行属性设置`scope`参数:
 
-```
+```java
 mvn counter:dependency-counter -Dscope=test
 ```
 
@@ -225,7 +225,7 @@ mvn counter:dependency-counter -Dscope=test
 
 我们将创建一个非常简单的 Maven 项目，其中包含一些我们的插件将会考虑到的依赖项:
 
-```
+```java
 <project 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -254,7 +254,7 @@ mvn counter:dependency-counter -Dscope=test
 
 最后一件事是将我们的插件添加到构建中。我们必须明确设定我们想要运行的`dependency-counter`目标:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -280,13 +280,13 @@ mvn counter:dependency-counter -Dscope=test
 
 现在，我们只需要运行`compile`阶段来执行我们的插件:
 
-```
+```java
 mvn clean compile
 ```
 
 我们的插件将打印出`test`依赖项的数量:
 
-```
+```java
 [INFO] Scanning for projects...
 [INFO] 
 [INFO] ------------------------< com.baeldung:example >------------------------
@@ -317,7 +317,7 @@ mvn clean compile
 
 同样，我们将对 [`maven-site-plugin`](https://web.archive.org/web/20221206084553/https://search.maven.org/search?q=g:org.apache.maven.plugins%20AND%20a:maven-site-plugin) 做同样的事情:
 
-```
+```java
 <build>
     <pluginManagement>
         <plugins>
@@ -338,7 +338,7 @@ mvn clean compile
 
 然后，我们必须确保我们已经将`javadoc`添加到了`Mojo`中，并且在插件的`pom.xml`中添加了一些元数据:
 
-```
+```java
 <organization>
     <name>Baeldung</name>
     <url>https://www.baeldung.com/</url>
@@ -347,7 +347,7 @@ mvn clean compile
 
 之后，我们需要在我们的`pom.xml`中添加一个报告部分:
 
-```
+```java
 <reporting>
     <plugins>
         <plugin>
@@ -367,7 +367,7 @@ mvn clean compile
 
 最后，我们将使用 maven site 命令生成文档:
 
-```
+```java
 mvn site
 ```
 

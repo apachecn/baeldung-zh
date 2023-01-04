@@ -22,7 +22,7 @@ TLS 是一种互联网协议，可在双方之间提供安全、可信的通信�
 
 让我们使用由`HttpClients#custom`构建器方法公开的`HttpClientBuilder`来定制我们的`HTTPClient`配置。这个构建器模式允许我们传入我们自己的`SSLConnectionSocketFactory`，它将使用所需的一组受支持的 TLS 版本进行实例化:
 
-```
+```java
 SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
   SSLContexts.createDefault(),
   new String[] { "TLSv1.2", "TLSv1.3" },
@@ -38,19 +38,19 @@ CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(sslsf)
 
 或者，我们可以使用 Java 的`https.protocols`系统属性来配置支持的 TLS 版本。这种方法避免了将值硬编码到应用程序代码中。相反，我们将配置`HttpClient`在建立连接时使用系统属性。HttpClient API 提供了两种方法来实现这一点。第一种是经由`HttpClients#createSystem`:
 
-```
+```java
 CloseableHttpClient httpClient = HttpClients.createSystem();
 ```
 
 如果需要更多的客户端配置，我们可以使用构建器方法:
 
-```
+```java
 CloseableHttpClient httpClient = HttpClients.custom().useSystemProperties().build();
 ```
 
 这两种方法都告诉`HttpClient`在连接配置期间使用系统属性。这允许我们在应用程序运行时使用命令行参数设置所需的 TLS 版本。例如:
 
-```
+```java
 $ java -Dhttps.protocols=TLSv1.1,TLSv1.2,TLSv1.3 -jar webClient.jar
 ```
 
@@ -58,7 +58,7 @@ $ java -Dhttps.protocols=TLSv1.1,TLSv1.2,TLSv1.3 -jar webClient.jar
 
 还可以根据主机名和端口等连接细节来设置 TLS 版本。我们将扩展`SSLConnectionSocketFactory`并覆盖`prepareSocket`方法。客户端在启动新连接之前调用`prepareSocket`方法。**这将让我们决定基于每个连接使用哪些 TLS 协议。**也可以启用对旧 TLS 版本的支持，但前提是远程主机有特定的子域:
 
-```
+```java
 SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(SSLContexts.createDefault()){
 
     @Override

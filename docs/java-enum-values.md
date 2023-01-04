@@ -30,7 +30,7 @@ Learn the basics about constructors in Java as well as some advanced tips[Read m
 
 我们经常创建一个简单的值列表`enum`。例如，元素周期表的前两行是一个简单的`enum`:
 
-```
+```java
 public enum Element {
     H, HE, LI, BE, B, C, N, O, F, NE
 }
@@ -48,7 +48,7 @@ public enum Element {
 
 **我们将使用构造函数**将这些名字设置到一个`final`变量中:
 
-```
+```java
 public enum Element {
     H("Hydrogen"),
     HE("Helium"),
@@ -73,7 +73,7 @@ public enum Element {
 
 最后，`label`字段是公共的，所以我们可以直接访问标签:
 
-```
+```java
 System.out.println(BE.label);
 ```
 
@@ -85,7 +85,7 @@ Java 为所有的`enum`类型提供了一个`valueOf(String)`方法。
 
 因此，我们总是可以基于声明的名称获得一个`enum`值:
 
-```
+```java
 assertSame(Element.LI, Element.valueOf("LI"));
 ```
 
@@ -93,7 +93,7 @@ assertSame(Element.LI, Element.valueOf("LI"));
 
 为此，我们可以添加一个`static`方法:
 
-```
+```java
 public static Element valueOfLabel(String label) {
     for (Element e : values()) {
         if (e.label.equals(label)) {
@@ -108,7 +108,7 @@ public static Element valueOfLabel(String label) {
 
 让我们看一个使用我们的`valueOfLabel()`方法的简单例子:
 
-```
+```java
 assertSame(Element.LI, Element.valueOfLabel("Lithium"));
 ```
 
@@ -118,7 +118,7 @@ assertSame(Element.LI, Element.valueOfLabel("Lithium"));
 
 为此，我们定义了一个`static final Map`，并在类加载时填充它:
 
-```
+```java
 public enum Element {
 
     // ... enum values
@@ -149,7 +149,7 @@ public enum Element {
 
 为了说明，让我们添加原子序数作为一个`int`和原子量作为一个`float`:
 
-```
+```java
 public enum Element {
     H("Hydrogen", 1, 1.008f),
     HE("Helium", 2, 4.0026f),
@@ -210,7 +210,7 @@ public enum Element {
 
 超越`toString()`可能是超越`name()`的替代方案:
 
-```
+```java
 @Override 
 public String toString() { 
     return this.label; 
@@ -225,7 +225,7 @@ public String toString() {
 
 让我们考虑这个接口:
 
-```
+```java
 public interface Labeled {
     String label();
 }
@@ -237,7 +237,7 @@ public interface Labeled {
 
 最后，我们可以在我们的`enum`中实现接口:
 
-```
+```java
 public enum Element implements Labeled {
 
     // ...

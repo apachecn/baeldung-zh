@@ -30,14 +30,14 @@
 
 ### 可用签名
 
-```
+```java
 public boolean startsWith(String prefix)
 public boolean startsWith(String prefix, int toffset)
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenCallStartsWith_thenCorrect() {
     String str = "foo";

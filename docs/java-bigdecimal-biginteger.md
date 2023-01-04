@@ -21,7 +21,7 @@
 
 **我们可以从`String`、字符数组、`int`、`long`、`BigInteger`、T6 中创建一个`BigDecimal`对象:**
 
-```
+```java
 @Test
 public void whenBigDecimalCreated_thenValueMatches() {
     BigDecimal bdFromString = new BigDecimal("0.1");
@@ -41,7 +41,7 @@ public void whenBigDecimalCreated_thenValueMatches() {
 
 我们也可以从`double`创建`BigDecimal`:
 
-```
+```java
 @Test
 public void whenBigDecimalCreatedFromDouble_thenValueMayNotMatch() {
     BigDecimal bdFromDouble = new BigDecimal(0.1d);
@@ -58,7 +58,7 @@ public void whenBigDecimalCreatedFromDouble_thenValueMayNotMatch() {
 
 此外，我们可以使用`valueOf`静态方法将`double`和`long`转换为`BigDecimal`:
 
-```
+```java
 @Test
 public void whenBigDecimalCreatedUsingValueOf_thenValueMatches() {
     BigDecimal bdFromLong1 = BigDecimal.valueOf(123412345678901L);
@@ -83,7 +83,7 @@ public void whenBigDecimalCreatedUsingValueOf_thenValueMatches() {
 
 **`BigDecimal`有提取各种属性的方法，比如精度、小数位数、符号**:
 
-```
+```java
 @Test
 public void whenGettingAttributes_thenExpectedResult() {
     BigDecimal bd = new BigDecimal("-12345.6789");
@@ -96,7 +96,7 @@ public void whenGettingAttributes_thenExpectedResult() {
 
 **我们使用`compareTo`方法**比较两位大小数的值:
 
-```
+```java
 @Test
 public void whenComparingBigDecimals_thenExpectedResult() {
     BigDecimal bd1 = new BigDecimal("1.0");
@@ -116,7 +116,7 @@ public void whenComparingBigDecimals_thenExpectedResult() {
 
 另一方面，**`equals`方法认为只有当两个`BigDecimal`对象的值和比例**相等时，它们才相等。因此，用这种方法比较时，`BigDecimals` 1.0 和 1.00 是不相等的。
 
-```
+```java
 @Test
 public void whenEqualsCalled_thenSizeAndScaleMatched() {
     BigDecimal bd1 = new BigDecimal("1.0");
@@ -128,7 +128,7 @@ public void whenEqualsCalled_thenSizeAndScaleMatched() {
 
 **我们通过调用相应的方法**来执行算术运算:
 
-```
+```java
 @Test
 public void whenPerformingArithmetic_thenExpectedResult() {
     BigDecimal bd1 = new BigDecimal("4.0");
@@ -178,7 +178,7 @@ public void whenPerformingArithmetic_thenExpectedResult() {
 
 使用这个类，我们可以使用指定的精度和舍入行为来舍入一个`BigDecimal`数:
 
-```
+```java
 @Test
 public void whenRoundingDecimal_thenExpectedResult() {
     BigDecimal bd = new BigDecimal("2.5");
@@ -194,7 +194,7 @@ public void whenRoundingDecimal_thenExpectedResult() {
 
 让我们写一个方法，在给定数量和单价的情况下，计算一个项目的总支付金额。让我们也应用贴现率和销售税率。我们使用`setScale`方法将最终结果四舍五入到美分:
 
-```
+```java
 public static BigDecimal calculateTotalAmount(BigDecimal quantity,
     BigDecimal unitPrice, BigDecimal discountRate, BigDecimal taxRate) { 
     BigDecimal amount = quantity.multiply(unitPrice);
@@ -212,7 +212,7 @@ public static BigDecimal calculateTotalAmount(BigDecimal quantity,
 
 现在，让我们为这个方法编写一个单元测试:
 
-```
+```java
 @Test
 public void givenPurchaseTxn_whenCalculatingTotalAmount_thenExpectedResult() {
     BigDecimal quantity = new BigDecimal("4.5");
@@ -237,7 +237,7 @@ public void givenPurchaseTxn_whenCalculatingTotalAmount_thenExpectedResult() {
 
 **我们可以从一个`byte`数组或者`String`** 中创建`BigInteger`:
 
-```
+```java
 @Test
 public void whenBigIntegerCreatedFromConstructor_thenExpectedResult() {
     BigInteger biFromString = new BigInteger("1234567890987654321");
@@ -254,7 +254,7 @@ public void whenBigIntegerCreatedFromConstructor_thenExpectedResult() {
 
 另外，**我们可以使用静态方法** `**valueOf**:`将`long`转换为`BigInteger`
 
-```
+```java
 @Test
 public void whenLongConvertedToBigInteger_thenValueMatches() {
     BigInteger bi =  BigInteger.valueOf(2305843009213693951L);
@@ -271,7 +271,7 @@ public void whenLongConvertedToBigInteger_thenValueMatches() {
 
 **我们使用`compareTo`方法比较两个大整数的值:**
 
-```
+```java
 @Test
 public void givenBigIntegers_whentCompared_thenExpectedResult() {
     BigInteger i = new BigInteger("123456789012345678901234567890");
@@ -286,7 +286,7 @@ public void givenBigIntegers_whentCompared_thenExpectedResult() {
 
 **我们通过调用相应的方法进行算术运算:**
 
-```
+```java
 @Test
 public void givenBigIntegers_whenPerformingArithmetic_thenExpectedResult() {
     BigInteger i = new BigInteger("4");
@@ -308,7 +308,7 @@ public void givenBigIntegers_whenPerformingArithmetic_thenExpectedResult() {
 
 **`BigInteger`有类似于`int``long`**的位操作。但是，我们需要使用方法而不是运算符:
 
-```
+```java
 @Test
 public void givenBigIntegers_whenPerformingBitOperations_thenExpectedResult() {
     BigInteger i = new BigInteger("17");
@@ -334,7 +334,7 @@ public void givenBigIntegers_whenPerformingBitOperations_thenExpectedResult() {
 
 **它有额外的位操作方法**:
 
-```
+```java
 @Test
 public void givenBigIntegers_whenPerformingBitManipulations_thenExpectedResult() {
     BigInteger i = new BigInteger("1018");
@@ -359,7 +359,7 @@ public void givenBigIntegers_whenPerformingBitManipulations_thenExpectedResult()
 
 **`BigInteger`提供 GCD 计算和模运算的方法**:
 
-```
+```java
 @Test
 public void givenBigIntegers_whenModularCalculation_thenExpectedResult() {
     BigInteger i = new BigInteger("31");
@@ -380,7 +380,7 @@ public void givenBigIntegers_whenModularCalculation_thenExpectedResult() {
 
 **它还具有与素数生成和素性测试相关的方法**:
 
-```
+```java
 @Test
 public void givenBigIntegers_whenPrimeOperations_thenExpectedResult() {
     BigInteger i = BigInteger.probablePrime(100, new Random());

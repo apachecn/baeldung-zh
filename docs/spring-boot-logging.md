@@ -24,7 +24,7 @@ Learn which beans are automatically configured in your Spring Boot application b
 
 现在让我们创建我们唯一的类文件，`LoggingController`:
 
-```
+```java
 @RestController
 public class LoggingController {
 
@@ -69,7 +69,7 @@ Spring Boot 用图案和 ANSI 颜色对其进行了预配置，以使标准输�
 
 为了在不改变配置的情况下激活它们，**我们可以在命令行**上传递`–debug`或`–trace`参数:
 
-```
+```java
 java -jar target/spring-boot-logging-0.0.1-SNAPSHOT.jar --trace 
 ```
 
@@ -79,14 +79,14 @@ Spring Boot 还通过环境变量让我们访问更细粒度的日志级别设�
 
 首先，我们可以在虚拟机选项中设置日志记录级别:
 
-```
+```java
 -Dlogging.level.org.springframework=TRACE 
 -Dlogging.level.com.baeldung=TRACE
 ```
 
 或者，如果我们使用 Maven，我们可以通过命令行定义我们的日志设置:
 
-```
+```java
 mvn spring-boot:run 
   -Dspring-boot.run.arguments=--logging.level.org.springframework=TRACE,--logging.level.com.baeldung=TRACE
 ```
@@ -95,13 +95,13 @@ mvn spring-boot:run
 
 完成后，我们运行应用程序:
 
-```
+```java
 ./gradlew bootRun -Pargs=--logging.level.org.springframework=TRACE,--logging.level.com.baeldung=TRACE
 ```
 
 如果我们想永久地改变详细程度，我们可以在`application.properties`文件中这样做，如[这里所描述的](https://web.archive.org/web/20220923115304/https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-logging.html#boot-features-custom-log-levels):
 
-```
+```java
 logging.level.root=WARN
 logging.level.com.baeldung=TRACE 
 ```
@@ -110,7 +110,7 @@ logging.level.com.baeldung=TRACE
 
 我们提到过 Spring Boot 启动器默认使用 Logback。让我们来看看如何定义一个回退配置文件的片段，在该文件中我们为两个独立的包设置级别:
 
-```
+```java
 <logger name="org.springframework" level="INFO" />
 <logger name="com.baeldung" level="INFO" />
 ```
@@ -138,7 +138,7 @@ logging.level.com.baeldung=TRACE
 
 让我们写一个简单的`logback-spring.xml`:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
@@ -204,7 +204,7 @@ logging.level.com.baeldung=TRACE
 
 对于每个像这样的启动器(在我们的例子中是唯一的，但是我们可以有很多这样的启动器):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -213,7 +213,7 @@ logging.level.com.baeldung=TRACE
 
 我们需要将它转换成一个精简版本，并(只一次)通过 starter 本身添加我们的备选库:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -239,7 +239,7 @@ logging.level.com.baeldung=TRACE
 
 让我们写一个简单的`log4j2-spring.xml`:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
     <Appenders>
@@ -293,7 +293,7 @@ logging.level.com.baeldung=TRACE
 
 为了做到这一点，我们简单地使用本地类:
 
-```
+```java
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 // [...]
@@ -312,7 +312,7 @@ Logger logger = LogManager.getLogger(LoggingController.class);
 
 我们首先需要在构建脚本中添加 Lombok 依赖项来使用它:
 
-```
+```java
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>
@@ -329,7 +329,7 @@ SLF4J 和 Apache Commons 日志 API 允许我们在不影响代码的情况下�
 
 为了查看这些注释，让我们创建一个类似于`LoggingController`的类，但是没有 logger 实例。我们将其命名为`LombokLoggingController`，并标注为`@Slf4j`:
 
-```
+```java
 @RestController
 @Slf4j
 public class LombokLoggingController {
@@ -357,7 +357,7 @@ public class LombokLoggingController {
 
 我们可以使用注释`@Log4j2` 直接使用 Log4j2。因此，我们对`LombokLoggingController`做了一个简单的修改，用`@Log4j2`代替`@Slf4j`或`@CommonsLog`:
 
-```
+```java
 @RestController
 @Log4j2
 public class LombokLoggingController {
@@ -399,7 +399,7 @@ Spring Boot 也支持 JDK 日志，通过`logging.properties`配置文件。
 
 [回退](https://web.archive.org/web/20220923115304/https://logback.qos.ch/manual/layouts.html#coloring):
 
-```
+```java
 <configuration debug="true">
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <withJansi>true</withJansi>

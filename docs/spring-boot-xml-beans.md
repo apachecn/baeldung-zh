@@ -14,7 +14,7 @@
 
 假设我们有一个包含 bean 定义的`beans.xml`文件:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -30,7 +30,7 @@
 
 为了在 Spring Boot 应用程序中使用它，我们可以**使用`@ImportResource` 注释**，告诉它在哪里可以找到配置文件:
 
-```
+```java
 @Configuration
 @ImportResource("classpath:beans.xml")
 public class SpringBootXmlApplication implements CommandLineRunner {
@@ -50,13 +50,13 @@ public class SpringBootXmlApplication implements CommandLineRunner {
 
 如何在 XML 配置文件中使用属性？假设我们想要使用在我们的`application.properties`文件中声明的一个属性:
 
-```
+```java
 sample=string loaded from properties!
 ```
 
 让我们更新`beans.xml`中的`Pojo`定义，以包含`sample`属性:
 
-```
+```java
 <bean class="com.baeldung.springbootxml.Pojo">
     <property name="field" value="${sample}"></property>
 </bean>
@@ -64,7 +64,7 @@ sample=string loaded from properties!
 
 接下来，让我们验证是否正确包含了该属性:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SpringBootXmlApplication.class)
 public class SpringBootXmlApplicationIntegrationTest {
@@ -85,7 +85,7 @@ public class SpringBootXmlApplicationIntegrationTest {
 
 不幸的是，这个测试会失败，因为默认情况下，**XML 配置文件不能解析占位符**。但是，我们可以通过包括 [`@EnableAutoConfiguration`](https://web.archive.org/web/20220628090426/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/autoconfigure/EnableAutoConfiguration.html) 的注释来解决这个问题:
 
-```
+```java
 @Configuration
 @EnableAutoConfiguration
 @ImportResource("classpath:beans.xml")

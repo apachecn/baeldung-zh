@@ -26,7 +26,7 @@
 
 让我们快速看一个例子:
 
-```
+```java
 IntStream stream = IntStream.of(5, 10, 0, 2, -8);
 ```
 
@@ -34,14 +34,14 @@ IntStream stream = IntStream.of(5, 10, 0, 2, -8);
 
 类似地，我们可以从现有的`ints`数组中创建一个`IntStream`:
 
-```
+```java
 int[] primitives = {5, 10, 0, 2, -8};
 IntStream stream = IntStream.of(primitives);
 ```
 
 此外，我们可以应用标准的流 API 操作来迭代、过滤和聚合`ints`。例如，我们可以计算正`int`值的平均值:
 
-```
+```java
 OptionalDouble average = stream.filter(i -> i > 0).average();
 ```
 
@@ -55,7 +55,7 @@ Trove 是一个高性能的库，它为 Java 提供了原始集合。
 
 为了用 Maven 设置 Trove，我们需要在我们的`pom.xml`中包含[和`trov4j `依赖关系](https://web.archive.org/web/20220815130058/https://search.maven.org/search?q=net.sf.trove4j%20trove4j):
 
-```
+```java
 <dependency>
     <groupId>net.sf.trove4j</groupId>
     <artifactId>trove4j</artifactId>
@@ -67,7 +67,7 @@ Trove 是一个高性能的库，它为 Java 提供了原始集合。
 
 例如，有一个接口`TIntList`及其`TIntArrayList`实现来处理一列`int`值:
 
-```
+```java
 TIntList tList = new TIntArrayList();
 ```
 
@@ -79,7 +79,7 @@ TIntList tList = new TIntArrayList();
 
 另一个处理原语的高性能库是 [Fastutil](https://web.archive.org/web/20220815130058/http://fastutil.di.unimi.it/) 。让我们添加 [`fastutil`依赖](https://web.archive.org/web/20220815130058/https://search.maven.org/search?q=it.unimi.dsi%20fastutil):
 
-```
+```java
 <dependency>
     <groupId>it.unimi.dsi</groupId>
     <artifactId>fastutil</artifactId>
@@ -89,13 +89,13 @@ TIntList tList = new TIntArrayList();
 
 现在，我们可以使用它了:
 
-```
+```java
 IntArrayList list = new IntArrayList();
 ```
 
 **默认构造函数`IntArrayList()`在内部创建一个原语数组，默认容量为 16** 。同样，我们可以从现有数组初始化它:
 
-```
+```java
 int[] primitives = new int[] {5, 10, 0, 2, -8};
 IntArrayList list = new IntArrayList(primitives);
 ```
@@ -106,7 +106,7 @@ IntArrayList list = new IntArrayList(primitives);
 
 首先，让我们添加 [`colt`依赖关系](https://web.archive.org/web/20220815130058/https://search.maven.org/search?q=colt%20colt):
 
-```
+```java
 <dependency>
     <groupId>colt</groupId>
     <artifactId>colt</artifactId>
@@ -116,7 +116,7 @@ IntArrayList list = new IntArrayList(primitives);
 
 提供这个库的原语列表是`cern.colt.list.IntArrayList:`
 
-```
+```java
 cern.colt.list.IntArrayList coltList = new cern.colt.list.IntArrayList();
 ```
 
@@ -130,13 +130,13 @@ cern.colt.list.IntArrayList coltList = new cern.colt.list.IntArrayList();
 
 让我们假设，我们有下面的`int`值数组:
 
-```
+```java
 int[] primitives = new int[] {5, 10, 0, 2};
 ```
 
 我们可以简单地用数组创建一个列表:
 
-```
+```java
 ImmutableIntArray list = ImmutableIntArray.builder().addAll(primitives).build();
 ```
 

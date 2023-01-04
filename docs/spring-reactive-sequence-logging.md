@@ -12,7 +12,7 @@
 
 让我们将 Spring WebFlux 依赖项添加到我们的项目中，这样我们就可以创建反应流:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-webflux</artifactId>
@@ -25,13 +25,13 @@
 
 首先，让我们使用`Flux`创建一个反应流，并使用`log() `方法来启用日志记录:
 
-```
+```java
 Flux<Integer> reactiveStream = Flux.range(1, 5).log(); 
 ```
 
 接下来，我们将订阅它来消费生成的值:
 
-```
+```java
 reactiveStream.subscribe(); 
 ```
 
@@ -39,7 +39,7 @@ reactiveStream.subscribe();
 
 运行上面的应用程序后，我们看到我们的日志记录器在运行:
 
-```
+```java
 2018-11-11 22:37:04 INFO | onSubscribe([Synchronous Fuseable] FluxRange.RangeSubscription)
 2018-11-11 22:37:04 INFO | request(unbounded)
 2018-11-11 22:37:04 INFO | onNext(1)
@@ -56,13 +56,13 @@ reactiveStream.subscribe();
 
 我们可以修改我们的应用程序，看到一个更有趣的场景。让我们将`take()`添加到`Flux`中，这将指示流只提供特定数量的事件:
 
-```
+```java
 Flux<Integer> reactiveStream = Flux.range(1, 5).log().take(3); 
 ```
 
 执行代码后，我们将看到以下输出:
 
-```
+```java
 2018-11-11 22:45:35 INFO | onSubscribe([Synchronous Fuseable] FluxRange.RangeSubscription)
 2018-11-11 22:45:35 INFO | request(unbounded)
 2018-11-11 22:45:35 INFO | onNext(1)
@@ -75,13 +75,13 @@ Flux<Integer> reactiveStream = Flux.range(1, 5).log().take(3);
 
 **在你的信息流中`log()`的位置至关重要**。让我们看看将`log()`放在`take()`之后会产生怎样不同的输出:
 
-```
+```java
 Flux<Integer> reactiveStream = Flux.range(1, 5).take(3).log(); 
 ```
 
 输出是:
 
-```
+```java
 2018-11-11 22:49:23 INFO | onSubscribe([Fuseable] FluxTake.TakeFuseableSubscriber)
 2018-11-11 22:49:23 INFO | request(unbounded)
 2018-11-11 22:49:23 INFO | onNext(1)

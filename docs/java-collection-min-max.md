@@ -10,7 +10,7 @@
 
 我们可以使用通过`java.util.Stream`接口提供的`max()`方法，它接受一个方法引用:
 
-```
+```java
 @Test
 public void whenListIsOfIntegerThenMaxCanBeDoneUsingIntegerComparator() {
     // given
@@ -40,7 +40,7 @@ public void whenListIsOfIntegerThenMaxCanBeDoneUsingIntegerComparator() {
 
 让我们首先定义自定义 POJO:
 
-```
+```java
 class Person {
     String name;
     Integer age;
@@ -51,7 +51,7 @@ class Person {
 
 我们想找到最小年龄的`Person`对象:
 
-```
+```java
 @Test
 public void whenListIsOfPersonObjectThenMinCanBeDoneUsingCustomComparatorThroughLambda() {
     // given

@@ -10,7 +10,7 @@
 
 让我们在项目中添加一个新的依赖项，以编写更简单、更易读的断言:
 
-```
+```java
 <dependency>
     <groupId>org.hamcrest</groupId>
     <artifactId>hamcrest-all</artifactId>
@@ -26,7 +26,7 @@
 
 我们将从`navigateTo(String url)` 方法开始——它将帮助我们浏览应用程序的不同页面:
 
-```
+```java
 public void navigateTo(String url) {
     driver.navigate().to(url);
 }
@@ -34,7 +34,7 @@ public void navigateTo(String url) {
 
 然后，`clickElement(WebElement element)`——顾名思义——将负责在指定的元素上执行点击操作:
 
-```
+```java
 public void clickElement(WebElement element) {
     element.click();
 }
@@ -56,7 +56,7 @@ public void clickElement(WebElement element) {
 
 好了，现在让我们继续,**创建我们的页面对象**——在本例中，我们的主页:
 
-```
+```java
 public class BaeldungHomePage {
 
     private SeleniumConfig config;
@@ -83,7 +83,7 @@ public class BaeldungHomePage {
 
 例如，`@FindBy`注释允许我们预先填充我们的`WebElements`，这也可以通过 API 使用[来表示:](https://web.archive.org/web/20221128115839/https://seleniumhq.github.io/selenium/docs/api/java/org/openqa/selenium/By.html)
 
-```
+```java
 private WebElement title = By.cssSelector(".header--menu > a");
 ```
 
@@ -91,7 +91,7 @@ private WebElement title = By.cssSelector(".header--menu > a");
 
 另外，请注意链接——我们的`clickOnStartHere()` 方法返回一个`StartHerePage` 对象——在这里我们可以继续交互:
 
-```
+```java
 public class StartHerePage {
 
     // Includes a SeleniumConfig attribute
@@ -109,7 +109,7 @@ public class StartHerePage {
 
 让我们编写一个快速测试，我们只需导航到页面并检查其中一个元素:
 
-```
+```java
 @Test
 public void givenHomePage_whenNavigate_thenShouldBeInStartHere() {
     homePage.navigate();
@@ -132,7 +132,7 @@ public void givenHomePage_whenNavigate_thenShouldBeInStartHere() {
 
 我们可以考虑的另一种可能性可能是分离关注点(甚至更多)，通过拥有两个独立的类，一个将负责拥有我们页面的所有属性`(WebElement`或`By)`:
 
-```
+```java
 public class BaeldungAboutPage {
 
     @FindBy(css = ".page-header > h1")
@@ -142,7 +142,7 @@ public class BaeldungAboutPage {
 
 另一个负责我们想要测试的功能的所有实现:
 
-```
+```java
 public class BaeldungAbout {
 
     private SeleniumConfig config;
@@ -160,7 +160,7 @@ public class BaeldungAbout {
 
 值得一提的是，我们需要传递包含注释的类，在本例中是`BaeldungAboutPage`类，这与我们在上一个示例中传递`this`关键字的做法不同。
 
-```
+```java
 @Test
 public void givenAboutPage_whenNavigate_thenTitleMatch() {
     about.navigateTo();

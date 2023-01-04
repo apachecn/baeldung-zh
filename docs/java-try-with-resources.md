@@ -26,7 +26,7 @@ Learn the differences between Java's checked and unchecked exception with some e
 
 简单地说，要自动关闭，资源必须在`try`中声明和初始化:
 
-```
+```java
 try (PrintWriter writer = new PrintWriter(new File("test.txt"))) {
     writer.println("Hello World");
 } 
@@ -40,7 +40,7 @@ try (PrintWriter writer = new PrintWriter(new File("test.txt"))) {
 
 第一个是典型的`try-catch-finally` 块:
 
-```
+```java
 Scanner scanner = null;
 try {
     scanner = new Scanner(new File("test.txt"));
@@ -58,7 +58,7 @@ try {
 
 这里是使用`try-with-resources`的新的超级简洁的解决方案:
 
-```
+```java
 try (Scanner scanner = new Scanner(new File("test.txt"))) {
     while (scanner.hasNext()) {
         System.out.println(scanner.nextLine());
@@ -74,7 +74,7 @@ try (Scanner scanner = new Scanner(new File("test.txt"))) {
 
 我们可以在一个`try-with-resources`块中声明多个资源，用分号分隔它们:
 
-```
+```java
 try (Scanner scanner = new Scanner(new File("testRead.txt"));
     PrintWriter writer = new PrintWriter(new File("testWrite.txt"))) {
     while (scanner.hasNext()) {
@@ -87,7 +87,7 @@ try (Scanner scanner = new Scanner(new File("testRead.txt"));
 
 为了构建一个将由`try-with-resources`块正确处理的自定义资源，该类应该实现`Closeable`或`AutoCloseable`接口并覆盖`close`方法:
 
-```
+```java
 public class MyResource implements AutoCloseable {
     @Override
     public void close() throws Exception {
@@ -102,7 +102,7 @@ public class MyResource implements AutoCloseable {
 
 **资源 1:**
 
-```
+```java
 public class AutoCloseableResourcesFirst implements AutoCloseable {
 
     public AutoCloseableResourcesFirst() {
@@ -122,7 +122,7 @@ public class AutoCloseableResourcesFirst implements AutoCloseable {
 
 **资源 2:**
 
-```
+```java
 public class AutoCloseableResourcesSecond implements AutoCloseable {
 
     public AutoCloseableResourcesSecond() {
@@ -142,7 +142,7 @@ public class AutoCloseableResourcesSecond implements AutoCloseable {
 
 **代码:**
 
-```
+```java
 private void orderOfClosingResources() throws Exception {
     try (AutoCloseableResourcesFirst af = new AutoCloseableResourcesFirst();
         AutoCloseableResourcesSecond as = new AutoCloseableResourcesSecond()) {
@@ -169,7 +169,7 @@ private void orderOfClosingResources() throws Exception {
 
 在 Java 9 之前，我们只能在`try-with-resources `块中使用新变量:
 
-```
+```java
 try (Scanner scanner = new Scanner(new File("testRead.txt")); 
     PrintWriter writer = new PrintWriter(new File("testWrite.txt"))) { 
     // omitted
@@ -178,7 +178,7 @@ try (Scanner scanner = new Scanner(new File("testRead.txt"));
 
 如上所示，当声明多个资源时，这尤其冗长。从 Java 9 开始，作为 [JEP 213](https://web.archive.org/web/20220829103433/https://openjdk.java.net/jeps/213) 、**的一部分，我们现在可以在`try-with-resources` 块**中使用 [`final `甚至有效的 final](/web/20220829103433/https://www.baeldung.com/java-effectively-final) 变量:
 
-```
+```java
 final Scanner scanner = new Scanner(new File("testRead.txt"));
 PrintWriter writer = new PrintWriter(new File("testWrite.txt"))
 try (scanner;writer) { 

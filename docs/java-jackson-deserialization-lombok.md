@@ -12,7 +12,7 @@
 
 我们需要从添加到我们的`pom.xml`中的`[org.projectlombok](https://web.archive.org/web/20221125202732/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.projectlombok%22)`开始:
 
-```
+```java
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>
@@ -22,7 +22,7 @@
 
 当然，我们还需要 [`jackson-databind`](https://web.archive.org/web/20221125202732/https://search.maven.org/search?q=g:com.fasterxml.jackson.core) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -34,7 +34,7 @@
 
 让我们继续定义一个支持 Lombok 的类，用一个 id 和一个名称来表示一种水果:
 
-```
+```java
 @Data
 @Builder
 @Jacksonized
@@ -60,7 +60,7 @@ public class Fruit {
 
 现在已经定义了我们的域模型，让我们继续编写一个单元测试来使用 Jackson 反序列化一个水果:
 
-```
+```java
 @Test
 public void withFruitJSON_thenDeserializeSucessfully() throws IOException {
     String json = "{\"name\":\"Apple\",\"id\":101}";
@@ -74,7 +74,7 @@ public void withFruitJSON_thenDeserializeSucessfully() throws IOException {
 
 同样，我们可以使用`writeValue()` API 将`Fruit`对象序列化为 JSON 输出:
 
-```
+```java
 @Test
 void withFruitObject_thenSerializeSucessfully() throws IOException {
     Fruit fruit = Fruit.builder()
@@ -95,7 +95,7 @@ void withFruitObject_thenSerializeSucessfully() throws IOException {
 
 假设我们想要反序列化以下 JSON 字符串:
 
-```
+```java
 {
     "id": 5,
     "name": "Bob"
@@ -104,7 +104,7 @@ void withFruitObject_thenSerializeSucessfully() throws IOException {
 
 但是我们 POJO 上的属性不匹配:
 
-```
+```java
 @Data
 @Builder(builderClassName = "EmployeeBuilder")
 @JsonDeserialize(builder = Employee.EmployeeBuilder.class)
@@ -119,7 +119,7 @@ public class Employee {
 
 **在这个场景中，我们可以将`@JsonDeserialize` 注释与`@JsonPOJOBuilder`注释**一起使用，我们可以将其插入到生成的构建器类中，以覆盖 Jackson 的默认值:
 
-```
+```java
 @JsonPOJOBuilder(buildMethodName = "createEmployee", withPrefix = "construct")
 public static class EmployeeBuilder {
 
@@ -144,7 +144,7 @@ public static class EmployeeBuilder {
 
 然后我们可以像以前一样编写一个测试:
 
-```
+```java
 @Test
 public void withEmployeeJSON_thenDeserializeSucessfully() throws IOException {
     String json = "{\"id\":5,\"name\":\"Bob\"}";

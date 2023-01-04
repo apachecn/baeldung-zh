@@ -38,7 +38,7 @@
 
 我们可以直接从`Cipher`类获得一个 IV:
 
-```
+```java
 byte[] iv = cipher.getIV();
 ```
 
@@ -46,7 +46,7 @@ byte[] iv = cipher.getIV();
 
 首先，让我们使用`SecureRandom`创建一个随机的 IV:
 
-```
+```java
 public static IvParameterSpec getIVSecureRandom(String algorithm) throws NoSuchAlgorithmException, NoSuchPaddingException {
     SecureRandom random = SecureRandom.getInstanceStrong();
     byte[] iv = new byte[Cipher.getInstance(algorithm).getBlockSize()];
@@ -57,7 +57,7 @@ public static IvParameterSpec getIVSecureRandom(String algorithm) throws NoSuchA
 
 接下来，我们将通过从`Cipher`类获取参数来创建 IV:
 
-```
+```java
 public static IvParameterSpec getIVInternal(Cipher cipher) throws InvalidParameterSpecException {
     AlgorithmParameters params = cipher.getParameters();
     byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
@@ -67,7 +67,7 @@ public static IvParameterSpec getIVInternal(Cipher cipher) throws InvalidParamet
 
 我们可以使用上述任何一种方法来生成随机的、不可预测的 IV。然而，**对于像 GCM 这样的一些模式，我们将 IV 与计数器**一起使用。在这种情况下，我们使用前几个字节，主要是 12 个字节用于 IV，接下来的 4 个字节用于计数器:
 
-```
+```java
 public static byte[] getRandomIVWithSize(int size) {
     byte[] nonce = new byte[size];
     new SecureRandom().nextBytes(nonce);
@@ -91,7 +91,7 @@ public static byte[] getRandomIVWithSize(int size) {
 
 为了在 ECB 模式下加密数据，我们使用:
 
-```
+```java
 Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 cipher.init(Cipher.ENCRYPT_MODE, key);
 ciphertext = cipher.doFinal(data);
@@ -99,7 +99,7 @@ ciphertext = cipher.doFinal(data);
 
 为了在 ECB 模式下解密数据，我们写:
 
-```
+```java
 Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 cipher.init(Cipher.DECRYPT_MODE, key);
 plaintext = cipher.doFinal(cipherText);
@@ -113,20 +113,20 @@ plaintext = cipher.doFinal(cipherText);
 
 让我们使用`getIVSecureRandom`得到随机 IV:
 
-```
+```java
 IvParameterSpec iv = CryptoUtils.getIVSecureRandom("AES"); 
 ```
 
 首先，我们将使用 IV 以 CBC 模式加密数据:
 
-```
+```java
 Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 cipher.init(Cipher.ENCRYPT_MODE, key, iv);
 ```
 
 接下来，让我们使用`IvParameterSpec`对象传递相同的 IV 进行解密:
 
-```
+```java
 Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
 ```
@@ -137,7 +137,7 @@ cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
 
 让我们为 CFB 模式生成一个随机 IV:
 
-```
+```java
 IvParameterSpec iv = CryptoUtils.getIVSecureRandom("AES/CFB/NoPadding");
 ```
 
@@ -151,7 +151,7 @@ IvParameterSpec iv = CryptoUtils.getIVSecureRandom("AES/CFB/NoPadding");
 
 这里，让我们创建一个 IV:
 
-```
+```java
 IvParameterSpec ivSpec = CryptoUtils.getIVSecureRandom("AES");
 ```
 
@@ -169,20 +169,20 @@ IvParameterSpec ivSpec = CryptoUtils.getIVSecureRandom("AES");
 
 为了在 GCM 模式下创建一个 IV，我们需要设置`GCMParameterSpec`。让我们创建一个 IV:
 
-```
+```java
 byte[] iv = CryptoUtils.getRandomIVWithSize(12); 
 ```
 
 首先，让我们获取一个`Cipher`的实例，并使用 IV:
 
-```
+```java
 Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
 cipher.init(Cipher.ENCRYPT_MODE, key, new GCMParameterSpec(128, iv));
 ```
 
 现在，我们将用 IV 创建并初始化`Cipher`以进行解密:
 
-```
+```java
 cipher.init(Cipher.DECRYPT_MODE, key, new GCMParameterSpec(128, iv)); 
 ```
 

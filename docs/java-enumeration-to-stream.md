@@ -12,7 +12,7 @@
 
 让我们以一个例子来说明`Enumeration`对象的使用:
 
-```
+```java
 public static <T> void print(Enumeration<T> enumeration) {
     while (enumeration.hasMoreElements()) {
         System.out.println(enumeration.nextElement());
@@ -26,7 +26,7 @@ public static <T> void print(Enumeration<T> enumeration) {
 
 作为第一步，我们将为抽象类`AbstractSpliterator`创建一个具体的类。这个类是使`Enumeration`对象适应`Spliterator`接口所必需的:
 
-```
+```java
 public class EnumerationSpliterator<T> extends AbstractSpliterator<T> {
 
     private final Enumeration<T> enumeration;
@@ -42,7 +42,7 @@ public class EnumerationSpliterator<T> extends AbstractSpliterator<T> {
 
 我们还需要覆盖`tryAdvance`和`forEachRemaining`方法。它们将被`Stream` API 用来对`Enumeration`的元素执行动作:
 
-```
+```java
 @Override
 public boolean tryAdvance(Consumer<? super T> action) {
     if (enumeration.hasMoreElements()) {
@@ -63,7 +63,7 @@ public void forEachRemaining(Consumer<? super T> action) {
 
 现在，使用`EnumerationSpliterator`类，我们能够使用`StreamSupport` API 来执行转换:
 
-```
+```java
 public static <T> Stream<T> convert(Enumeration<T> enumeration) {
     EnumerationSpliterator<T> spliterator 
       = new EnumerationSpliterator<T>(Long.MAX_VALUE, Spliterator.ORDERED, enumeration);
@@ -81,7 +81,7 @@ public static <T> Stream<T> convert(Enumeration<T> enumeration) {
 
 通过测试我们的`convert`方法，我们可以观察到现在我们能够基于`Enumeration`创建一个有效的`Stream`对象:
 
-```
+```java
 @Test
 public void givenEnumeration_whenConvertedToStream_thenNotNull() {
     Vector<Integer> input = new Vector<>(Arrays.asList(1, 2, 3, 4, 5));

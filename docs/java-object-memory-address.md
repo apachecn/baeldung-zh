@@ -14,7 +14,7 @@
 
 为了找到 JVM 中对象的内存地址，我们将使用 Java 对象布局( [JOL](https://web.archive.org/web/20220628052827/https://openjdk.java.net/projects/code-tools/jol/) )工具。因此，我们需要添加 [`jol-core`](https://web.archive.org/web/20220628052827/https://search.maven.org/artifact/org.openjdk.jol/jol-core) 的依赖关系:
 
-```
+```java
 <dependency> 
     <groupId>org.openjdk.jol</groupId> 
     <artifactId>jol-core</artifactId>    
@@ -26,7 +26,7 @@
 
 为了找到 JVM 中特定对象的内存地址，我们可以使用`[addressOf()](https://web.archive.org/web/20220628052827/https://www.javadoc.io/doc/org.openjdk.jol/jol-core/latest/org/openjdk/jol/vm/VirtualMachine.html#sizeOf-java.lang.Object-) `方法:
 
-```
+```java
 String answer = "42";
 
 System.out.println("The memory address is " + VM.current().addressOf(answer));
@@ -34,7 +34,7 @@ System.out.println("The memory address is " + VM.current().addressOf(answer));
 
 这将打印:
 
-```
+```java
 The memory address is 31864981224
 ```
 
@@ -48,7 +48,7 @@ HotSpot JVM 中有不同的[压缩参考模式](https://web.archive.org/web/2022
 
 让我们检查一下这个假设:
 
-```
+```java
 Object obj = new Object();
 
 System.out.println("Memory address: " + VM.current().addressOf(obj));
@@ -59,7 +59,7 @@ System.out.println("hashCode: " + System.identityHashCode(obj));
 
 这将打印以下内容:
 
-```
+```java
 Memory address: 31879960584
 toString: [[email protected]](/web/20220628052827/https://www.baeldung.com/cdn-cgi/l/email-protection)
 hashCode: 1622006612

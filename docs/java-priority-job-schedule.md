@@ -12,7 +12,7 @@
 
 假设我们有一些希望根据优先级执行的作业:
 
-```
+```java
 public class Job implements Runnable {
     private String jobName;
     private JobPriority jobPriority;
@@ -34,7 +34,7 @@ public class Job implements Runnable {
 
 最后，`JobPriority`是一个简单的枚举:
 
-```
+```java
 public enum JobPriority {
     HIGH,
     MEDIUM,
@@ -46,7 +46,7 @@ public enum JobPriority {
 
 我们需要编写一个定义自定义标准的比较器；并且，在 [Java 8 中，它是微不足道的](/web/20221126224409/https://www.baeldung.com/java-8-comparator-comparing):
 
-```
+```java
 Comparator.comparing(Job::getJobPriority);
 ```
 
@@ -54,7 +54,7 @@ Comparator.comparing(Job::getJobPriority);
 
 完成所有设置后，现在让我们实现一个简单的作业调度器——它使用一个单线程执行器在`PriorityBlockingQueue`中寻找作业并执行它们:
 
-```
+```java
 public class PriorityJobScheduler {
 
     private ExecutorService priorityJobPoolExecutor;
@@ -95,7 +95,7 @@ public class PriorityJobScheduler {
 
 最后，这里有一个调度程序的快速演示:
 
-```
+```java
 private static int POOL_SIZE = 1;
 private static int QUEUE_SIZE = 10;
 
@@ -126,7 +126,7 @@ public void whenMultiplePriorityJobsQueued_thenHighestPriorityJobIsPicked() {
 
 这是我们在其中一次运行中得到的示例输出:
 
-```
+```java
 Job:Job3 Priority:HIGH
 Job:Job6 Priority:HIGH
 Job:Job4 Priority:MEDIUM

@@ -18,7 +18,7 @@
 
 让我们来看看这个简单的例子:
 
-```
+```java
 public class Country implements Externalizable {
 
     private static final long serialVersionUID = 1L;
@@ -55,7 +55,7 @@ public class Country implements Externalizable {
 
 让我们测试一下我们在上面实现的行为:
 
-```
+```java
 @Test
 public void whenSerializing_thenUseExternalizable() 
   throws IOException, ClassNotFoundException {
@@ -94,7 +94,7 @@ public void whenSerializing_thenUseExternalizable()
 
 打印的`c2`对象的输出:
 
-```
+```java
 Country{name='Armenia', code=374}
 ```
 
@@ -108,7 +108,7 @@ Country{name='Armenia', code=374}
 
 让我们看看下面的`Region`类，它扩展了上一节中的`Country`类:
 
-```
+```java
 public class Region extends Country implements Externalizable {
 
     private static final long serialVersionUID = 1L;
@@ -140,7 +140,7 @@ public class Region extends Country implements Externalizable {
 
 让我们用以下数据运行单元测试:
 
-```
+```java
 Region r = new Region();
 r.setCode(374);
 r.setName("Armenia");
@@ -150,7 +150,7 @@ r.setPopulation(120.000);
 
 下面是反序列化的对象:
 
-```
+```java
 Region{
   country='Country{
     name='Armenia',

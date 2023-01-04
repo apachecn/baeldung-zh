@@ -14,7 +14,7 @@
 
 让我们来看看它的实际应用:
 
-```
+```java
 public static List<String> usingSplitMethod(String text, int n) {
     String[] results = text.split("(?<=\\G.{" + n + "})");
 
@@ -26,7 +26,7 @@ public static List<String> usingSplitMethod(String text, int n) {
 
 现在，让我们创建一个测试用例来检查一切是否按预期运行:
 
-```
+```java
 public class SplitStringEveryNthCharUnitTest {
 
     public static final String TEXT = "abcdefgh123456";
@@ -46,7 +46,7 @@ public class SplitStringEveryNthCharUnitTest {
 
 基本上，我们可以遍历字符串并调用`substring` 来根据指定的`n`字符将它分成多个部分:
 
-```
+```java
 public static List<String> usingSubstringMethod(String text, int n) {
     List<String> results = new ArrayList<>();
     int length = text.length();
@@ -63,7 +63,7 @@ public static List<String> usingSubstringMethod(String text, int n) {
 
 现在，让我们用一个测试案例来证实这一点:
 
-```
+```java
 @Test
 public void givenString_whenUsingSubstring_thenSplit() {
     List<String> results = SplitStringEveryNthChar.usingSubstringMethod(TEXT, 4);
@@ -78,7 +78,7 @@ public void givenString_whenUsingSubstring_thenSplit() {
 
 因此，有了正确的正则表达式，我们可以使用`Pattern` 来实现我们的目标:
 
-```
+```java
 public static List<String> usingPattern(String text, int n) {
     return Pattern.compile(".{1," + n + "}")
         .matcher(text)
@@ -92,7 +92,7 @@ public static List<String> usingPattern(String text, int n) {
 
 最后，让我们编写一个简单的测试:
 
-```
+```java
 @Test
 public void givenString_whenUsingPattern_thenSplit() {
     List<String> results = SplitStringEveryNthChar.usingPattern(TEXT, 5);
@@ -105,7 +105,7 @@ public void givenString_whenUsingPattern_thenSplit() {
 
 既然我们已经知道了如何使用核心 Java 方法将一个字符串拆分成每`n`个字符，让我们看看如何使用[番石榴](/web/20220627173129/https://www.baeldung.com/guava-guide)库做同样的事情:
 
-```
+```java
 public static List<String> usingGuava(String text, int n) {
     Iterable<String> parts = Splitter.fixedLength(n).split(text);
 
@@ -117,7 +117,7 @@ Guava 提供了`Splitter`类来简化从字符串中提取子字符串的逻辑�
 
 让我们用一个测试案例来验证我们的方法:
 
-```
+```java
 @Test
 public void givenString_whenUsingGuava_thenSplit() {
     List<String> results = SplitStringEveryNthChar.usingGuava(TEXT, 6);

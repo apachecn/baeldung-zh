@@ -12,7 +12,7 @@
 
 让我们从 Maven 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-engine</artifactId>
@@ -53,7 +53,7 @@ Junit5 不完全支持 Powermock。此外，`powermock-module-junit4`仅用于�
 
 让我们考虑这样一种情况，我们有一个带有公共非抽象方法的抽象类:
 
-```
+```java
 public abstract class AbstractIndependent {
     public abstract int abstractFunc();
 
@@ -69,7 +69,7 @@ public abstract class AbstractIndependent {
 
 创建一个扩展`AbstractIndependent `类的具体类，并用它来测试方法:
 
-```
+```java
 public class ConcreteImpl extends AbstractIndependent {
 
     @Override
@@ -79,7 +79,7 @@ public class ConcreteImpl extends AbstractIndependent {
 }
 ```
 
-```
+```java
 @Test
 public void givenNonAbstractMethod_whenConcreteImpl_testCorrectBehaviour() {
     ConcreteImpl conClass = new ConcreteImpl();
@@ -95,7 +95,7 @@ public void givenNonAbstractMethod_whenConcreteImpl_testCorrectBehaviour() {
 
 或者，我们可以使用`Mockito `来创建一个模拟:
 
-```
+```java
 @Test
 public void givenNonAbstractMethod_whenMockitoMock_testCorrectBehaviour() {
     AbstractIndependent absCls = Mockito.mock(
@@ -112,7 +112,7 @@ public void givenNonAbstractMethod_whenMockitoMock_testCorrectBehaviour() {
 
 在这种情况下，非抽象方法定义了全局执行流，而抽象方法可以根据用例以不同的方式编写:
 
-```
+```java
 public abstract class AbstractMethodCalling {
 
     public abstract String abstractFunc();
@@ -126,7 +126,7 @@ public abstract class AbstractMethodCalling {
 
 为了测试这段代码，我们可以使用与前面相同的两种方法——要么创建一个具体的类，要么使用 Mockito 创建一个 mock:
 
-```
+```java
 @Test
 public void givenDefaultImpl_whenMockAbstractFunc_thenExpectedBehaviour() {
     AbstractMethodCalling cls = Mockito.mock(AbstractMethodCalling.class);
@@ -148,7 +148,7 @@ public void givenDefaultImpl_whenMockAbstractFunc_thenExpectedBehaviour() {
 
 在测试目标方法之前，我们需要绕过阻碍测试的方法:
 
-```
+```java
 public abstract class AbstractPrivateMethods {
 
     public abstract int abstractFunc();
@@ -169,7 +169,7 @@ public abstract class AbstractPrivateMethods {
 
 相反，我们需要使用 [PowerMock](/web/20220804203719/https://www.baeldung.com/intro-to-powermock) ( **n** **注意，这个例子只适用于 JUnit 4，因为 JUnit 5** 不支持这种依赖关系):
 
-```
+```java
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(AbstractPrivateMethods.class)
 public class AbstractPrivateMethodsUnitTest {
@@ -206,7 +206,7 @@ public class AbstractPrivateMethodsUnitTest {
 
 但如果是私人的，我们就得用`PowerMockito`:
 
-```
+```java
 public abstract class AbstractInstanceFields {
     protected int count;
     private boolean active = false;
@@ -228,7 +228,7 @@ public abstract class AbstractInstanceFields {
 
 另一方面，为了测试私有`active`字段的行为，我们将再次使用`PowerMockito`和它的`Whitebox`类:
 
-```
+```java
 @Test
 public void whenPowerMockitoAndActiveFieldTrue_thenCorrectBehaviour() {
     AbstractInstanceFields instClass = PowerMockito.mock(AbstractInstanceFields.class);

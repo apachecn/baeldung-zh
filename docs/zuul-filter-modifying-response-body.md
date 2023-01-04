@@ -14,7 +14,7 @@
 
 我们将在 Spring Cloud 环境中与 Zuul 合作。因此，让我们将以下内容添加到我们的`pom.xml:`的依赖性管理部分
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -42,7 +42,7 @@
 
 **后置过滤器是扩展抽象类`ZuulFilter`的常规类，过滤器类型为`post`** :
 
-```
+```java
 public class ResponseLogFilter extends ZuulFilter {
 
     @Override
@@ -81,7 +81,7 @@ public class ResponseLogFilter extends ZuulFilter {
 
 例如，我们可以读取响应正文并记录其内容:
 
-```
+```java
 @Override
 public Object run() throws ZuulException {
 

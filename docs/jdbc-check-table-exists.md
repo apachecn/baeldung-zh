@@ -10,13 +10,13 @@
 
 [JDBC](/web/20220626115117/https://www.baeldung.com/java-jdbc) 为我们提供了读写数据库数据的工具。除了存储在表中的实际数据，我们还可以读取描述数据库的元数据。为此，我们将使用可以从 JDBC 连接中获得的 [`DatabaseMetaData`](/web/20220626115117/https://www.baeldung.com/jdbc-database-metadata) 对象:
 
-```
+```java
 DatabaseMetaData databaseMetaData = connection.getMetaData();
 ```
 
 `DatabaseMetaData`提供了很多有用的方法，但是我们只需要一个:`getTables`。**让我们用它来打印所有可用的表格:**
 
-```
+```java
 ResultSet resultSet = databaseMetaData.getTables(null, null, null, new String[] {"TABLE"});
 
 while (resultSet.next()) {
@@ -28,7 +28,7 @@ while (resultSet.next()) {
 
 因为我们没有提供前三个参数，所以我们获得了所有目录和模式中的所有表。例如，我们还可以将查询范围缩小到只有一个模式:
 
-```
+```java
 ResultSet resultSet = databaseMetaData.getTables(null, "PUBLIC", null, new String[] {"TABLE"});
 ```
 
@@ -36,13 +36,13 @@ ResultSet resultSet = databaseMetaData.getTables(null, "PUBLIC", null, new Strin
 
 如果我们想检查一个表是否存在，我们不需要迭代结果集。我们只需要检查结果集是否不为空。让我们首先创建一个“雇员”表:
 
-```
+```java
 connection.createStatement().executeUpdate("create table EMPLOYEE (id int primary key auto_increment, name VARCHAR(255))");
 ```
 
 现在，我们可以使用元数据对象来断言我们刚刚创建的表确实存在:
 
-```
+```java
 boolean tableExists(Connection connection, String tableName) throws SQLException {
     DatabaseMetaData meta = connection.getMetaData();
     ResultSet resultSet = meta.getTables(null, null, tableName, new String[] {"TABLE"});
@@ -59,7 +59,7 @@ boolean tableExists(Connection connection, String tableName) throws SQLException
 
 让我们查询“`tables`”表，并统计提取了多少个结果。如果表存在，我们期望得到 1，如果不存在，我们期望得到 0:
 
-```
+```java
 SELECT count(*) FROM information_schema.tables
 WHERE table_name = 'EMPLOYEE' 
 LIMIT 1;
@@ -67,7 +67,7 @@ LIMIT 1;
 
 将它与 JDBC 一起使用就是创建一个简单的[预准备语句](/web/20220626115117/https://www.baeldung.com/java-statement-preparedstatement)，然后检查结果计数是否不等于零:
 
-```
+```java
 static boolean tableExistsSQL(Connection connection, String tableName) throws SQLException {
     PreparedStatement preparedStatement = connection.prepareStatement("SELECT count(*) "
       + "FROM information_schema.tables "

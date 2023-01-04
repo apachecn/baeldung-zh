@@ -12,7 +12,7 @@
 
 为了在您的项目中使用不变量，您需要将以下依赖项添加到您的`pom.xml`文件的`dependencies`部分:
 
-```
+```java
 <dependency>
     <groupId>org.immutables</groupId>
     <artifactId>value</artifactId>
@@ -39,7 +39,7 @@
 
 让我们创建一个简单的`abstract`类`Person`，它由两个代表将要生成的字段的`abstract`访问器方法组成，然后用`@Value.Immutable` 注释对该类进行注释:
 
-```
+```java
 @Value.Immutable
 public abstract class Person {
 
@@ -51,7 +51,7 @@ public abstract class Person {
 
 注释处理完成后，我们可以在`target/generated-sources`目录中找到一个现成的、**新生成的`ImmutablePerson`类:**
 
-```
+```java
 @Generated({"Immutables.generator", "Person"})
 public final class ImmutablePerson extends Person {
 
@@ -84,7 +84,7 @@ public final class ImmutablePerson extends Person {
 
 如果我们想使用构建器构建一个实例，我们可以简单地编写代码:
 
-```
+```java
 ImmutablePerson john = ImmutablePerson.builder()
   .age(42)
   .name("John")
@@ -95,17 +95,17 @@ ImmutablePerson john = ImmutablePerson.builder()
 
 让我们更新`john's`年龄并创建一个新的`john43`对象:
 
-```
+```java
 ImmutablePerson john43 = john.withAge(43); 
 ```
 
 在这种情况下，下列断言将是正确的:
 
-```
+```java
 assertThat(john).isNotSameAs(john43);
 ```
 
-```
+```java
 assertThat(john.getAge()).isEqualTo(42);
 ```
 
@@ -119,7 +119,7 @@ assertThat(john.getAge()).isEqualTo(42);
 
 如果您像这样注释您的类:
 
-```
+```java
 @Value.Immutable
 public abstract class Person {
 
@@ -133,7 +133,7 @@ public abstract class Person {
 
 可以通过以下方式实例化它:
 
-```
+```java
 ImmutablePerson.of("John", 42);
 ```
 
@@ -141,7 +141,7 @@ ImmutablePerson.of("John", 42);
 
 `@Value.Default`注释允许您指定一个缺省值，当没有提供初始值时应该使用这个缺省值。为此，您需要创建一个返回固定值的非抽象访问器方法，并用`@Value.Default`对其进行注释:
 
-```
+```java
 @Value.Immutable
 public abstract class Person {
 
@@ -156,7 +156,7 @@ public abstract class Person {
 
 以下断言将是正确的:
 
-```
+```java
 ImmutablePerson john = ImmutablePerson.builder()
   .name("John")
   .build();
@@ -170,7 +170,7 @@ assertThat(john.getAge()).isEqualTo(42);
 
 如果您像这样注释您的类:
 
-```
+```java
 @Value.Immutable
 public abstract class Person {
 
@@ -185,7 +185,7 @@ public abstract class Person {
 
 当使用`auxiliary`字段时，以下断言将为真:
 
-```
+```java
 ImmutablePerson john1 = ImmutablePerson.builder()
   .name("John")
   .age(42)
@@ -199,15 +199,15 @@ ImmutablePerson john2 = ImmutablePerson.builder()
   .build(); 
 ```
 
-```
+```java
 assertThat(john1.equals(john2)).isTrue();
 ```
 
-```
+```java
 assertThat(john1.toString()).isEqualTo(john2.toString()); 
 ```
 
-```
+```java
 assertThat(john1.hashCode()).isEqualTo(john2.hashCode());
 ```
 
@@ -217,7 +217,7 @@ assertThat(john1.hashCode()).isEqualTo(john2.hashCode());
 
 如果您像这样注释您的类:
 
-```
+```java
 @Value.Immutable(prehash = true)
 public abstract class Person {
 
@@ -229,7 +229,7 @@ public abstract class Person {
 
 当检查生成的类时，您可以看到`hashcode`值现在已经预先计算并存储在一个字段中:
 
-```
+```java
 @Generated({"Immutables.generator", "Person"})
 public final class ImmutablePerson extends Person {
 

@@ -12,7 +12,7 @@
 
 为此，我们将使用来自`Robot`类的`createScreenCapture()`方法。它将一个`Rectangle`作为参数来设置屏幕截图的边界，并返回一个`BufferedImage` 对象。`BufferedImage`可以进一步用来创建一个图像文件:
 
-```
+```java
 @Test
 public void givenMainScreen_whenTakeScreenshot_thenSaveToFile() throws Exception {
     Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
@@ -36,7 +36,7 @@ public void givenMainScreen_whenTakeScreenshot_thenSaveToFile() throws Exception
 
 接下来，我们将获取每个单独屏幕的边界，并创建一个适合所有屏幕的`Rectangle`:
 
-```
+```java
 @Test
 public void givenMultipleScreens_whenTakeScreenshot_thenSaveToFile() throws Exception {
     GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -68,7 +68,7 @@ public void givenMultipleScreens_whenTakeScreenshot_thenSaveToFile() throws Exce
 
 在这种情况下，我们不打算使用`Robot` API。相反，我们将使用来自`Component`类的`paint()`方法，该方法将内容直接提取到`BufferedImage`中:
 
-```
+```java
 @Test
 public void givenComponent_whenTakeScreenshot_thenSaveToFile(Component component) throws Exception {
     Rectangle componentRect = component.getBounds();

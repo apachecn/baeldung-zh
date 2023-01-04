@@ -30,7 +30,7 @@
 
 我们将从一个简单的`Product`实体开始:
 
-```
+```java
 @Entity
 public class Product {
 
@@ -44,7 +44,7 @@ public class Product {
 
 让我们实现一个简单的操作——根据名称找到一个`Product`:
 
-```
+```java
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Product findByName(String productName);
@@ -59,7 +59,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 现在让我们来看看 [`CrudRepository`](https://web.archive.org/web/20220816182031/http://static.springsource.org/spring-data/data-commons/docs/current/api/org/springframework/data/repository/CrudRepository.html) 界面的代码:
 
-```
+```java
 public interface CrudRepository<T, ID extends Serializable>
   extends Repository<T, ID> {
 
@@ -92,7 +92,7 @@ public interface CrudRepository<T, ID extends Serializable>
 
 现在，让我们看看另一个存储库接口，它扩展了`CrudRepository`:
 
-```
+```java
 public interface PagingAndSortingRepository<T, ID extends Serializable> 
   extends CrudRepository<T, ID> {
 
@@ -112,7 +112,7 @@ public interface PagingAndSortingRepository<T, ID extends Serializable>
 
 因此，让我们假设我们想要显示按`lastName,`升序排序的结果集的第一页，每一页不超过五条记录。这就是我们如何使用一个`PageRequest`和一个`Sort`定义来实现的:
 
-```
+```java
 Sort sort = new Sort(new Sort.Order(Direction.ASC, "lastName"));
 Pageable pageable = new PageRequest(0, 5, sort);
 ```
@@ -123,7 +123,7 @@ Pageable pageable = new PageRequest(0, 5, sort);
 
 最后，我们来看看 [`JpaRepository`](https://web.archive.org/web/20220816182031/http://static.springsource.org/spring-data/data-jpa/docs/current/api/org/springframework/data/jpa/repository/JpaRepository.html) 界面:
 
-```
+```java
 public interface JpaRepository<T, ID extends Serializable> extends
   PagingAndSortingRepository<T, ID> {
 

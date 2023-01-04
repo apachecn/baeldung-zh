@@ -22,7 +22,7 @@ Spring Boot 的许多伟大特征之一是内置的[致动器](/web/202205240223
 
 [InfluxDB](https://web.archive.org/web/20220524022349/https://www.influxdata.com/products/influxdb-overview/) 是一个开源的时间序列数据库。开始使用 InfluxDB 的最快方法是在本地将其作为 Docker 容器运行:
 
-```
+```java
 docker run -p 8086:8086 -v /tmp:/var/lib/influxdb influxdb
 ```
 
@@ -30,7 +30,7 @@ docker run -p 8086:8086 -v /tmp:/var/lib/influxdb influxdb
 
 一旦 InfluxDB 开始运行，**我们可以通过添加[适当的千分尺依赖项](https://web.archive.org/web/20220524022349/https://search.maven.org/search?q=g:io.micrometer%20a:micrometer-registry-influx)** 来配置我们的 Spring Boot 应用程序向其发布指标:
 
-```
+```java
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>micrometer-registry-influx</artifactId>
@@ -39,7 +39,7 @@ docker run -p 8086:8086 -v /tmp:/var/lib/influxdb influxdb
 
 此外，我们需要向`application.properties`文件添加一个新条目:
 
-```
+```java
 management.metrics.export.influx.uri=http://localhost:8086
 ```
 
@@ -47,7 +47,7 @@ management.metrics.export.influx.uri=http://localhost:8086
 
 但是，我们可以使用专用属性覆盖默认值:
 
-```
+```java
 management.metrics.export.influx.db=customDbName
 management.metrics.export.influx.user-name=myUserName
 management.metrics.export.influx.password=mySecret
@@ -63,7 +63,7 @@ Prometheus 是一个开源的监控和警报工具包，最初由 SoundCloud 开
 
 首先，我们配置我们的 Spring Boot 应用程序来公开一个新的 Prometheus 执行器端点。我们通过包含[千分尺-配准-普罗米修斯](https://web.archive.org/web/20220524022349/https://search.maven.org/search?q=g:io.micrometer%20a:micrometer-registry-prometheus)相关性来做到这一点:
 
-```
+```java
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>micrometer-registry-prometheus</artifactId>
@@ -76,7 +76,7 @@ Prometheus 是一个开源的监控和警报工具包，最初由 SoundCloud 开
 
 以下配置指示 Prometheus 使用新的执行器端点每 5 秒轮询一次我们的应用程序:
 
-```
+```java
 scrape_configs:
   - job_name: 'spring-actuator'
     metrics_path: '/actuator/prometheus'
@@ -87,7 +87,7 @@ scrape_configs:
 
 最后，我们可以使用 Docker 启动一个本地 Prometheus 服务器。这假设我们的定制配置文件位于本地文件`/etc/prometheus/prometheus.yml`中:
 
-```
+```java
 docker run -d \
 --name=prometheus \
 -p 9090:9090 \
@@ -104,7 +104,7 @@ Prometheus 提供了自己的可视化工具来查看收集的指标。可以通
 
 [Graphite](https://web.archive.org/web/20220524022349/https://graphiteapp.org/) 是另一个开源的时间序列数据库。它的架构比我们看到的其他数据库稍微复杂一些，但是使用 Docker，在本地运行一个实例很简单:
 
-```
+```java
 docker run -d \
  --name graphite \
  --restart=always \
@@ -118,7 +118,7 @@ docker run -d \
 
 然后，我们可以通过添加[micrometer-registry-graphite](https://web.archive.org/web/20220524022349/https://search.maven.org/search?q=g:io.micrometer%20a:micrometer-registry-graphite)依赖项来配置 Spring Boot 向我们的实例发布指标:
 
-```
+```java
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>micrometer-registry-graphite</artifactId>
@@ -127,7 +127,7 @@ docker run -d \
 
 以及将配置属性添加到`application.properties`:
 
-```
+```java
 management.metrics.export.graphite.host=127.0.0.1
 management.metrics.export.graphite.port=2004
 ```
@@ -150,7 +150,7 @@ Grafana 通常提供比大多数内置可视化工具更好的配置和更高级
 
 要在本地运行 Grafana，我们可以使用 Docker:
 
-```
+```java
 docker run -d -p 3000:3000 grafana/grafana
 ```
 

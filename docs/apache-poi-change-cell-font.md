@@ -14,7 +14,7 @@ Apache POI 是一个开源库，供软件开发人员创建和操作微软 Offic
 
 让我们将 [Apache POI](https://web.archive.org/web/20220528125435/https://search.maven.org/search?q=g:org.apache.poi%20a:poi) 作为依赖项添加到我们的项目`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.poi</groupId> 
     <artifactId>poi</artifactId> 
@@ -26,20 +26,20 @@ Apache POI 是一个开源库，供软件开发人员创建和操作微软 Offic
 
 让我们从实例化`CellStyle`开始:
 
-```
+```java
 Workbook workbook = new XSSFWorkbook(fileLocation);
 CellStyle cellStyle = wb.createCellStyle();
 ```
 
 接下来，我们设置所需的格式属性。例如，下面的代码会将其设置为日期格式:
 
-```
+```java
 cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("m/d/yy h:mm"));
 ```
 
 最重要的是，我们可以设置一个`CellStyle`的多个格式属性来获得想要的样式组合。例如，我们将下面的代码应用于同一个`CellStyle`对象。因此，它具有日期格式样式和居中对齐的文本样式:
 
-```
+```java
 cellStyle.setAlignment(HorizontalAlignment.CENTER); 
 ```
 
@@ -68,7 +68,7 @@ cellStyle.setAlignment(HorizontalAlignment.CENTER);
 
 让我们从前面的例子继续。我们将编写一个名为`CellStyler`的类，其中包含一个为警告文本创建样式的方法:
 
-```
+```java
 public class CellStyler {
     public CellStyle createWarningColor(Workbook workbook) {
         CellStyle style = workbook.createCellStyle();
@@ -88,21 +88,21 @@ public class CellStyler {
 
 现在，让我们创建一个 Apache POI 工作簿并获取第一张工作表:
 
-```
+```java
 Workbook workbook = new XSSFWorkbook(fileLocation);
 Sheet sheet = workbook.getSheetAt(0);
 ```
 
 请注意，我们正在**设置行高，以便我们可以看到文本对齐的效果**:
 
-```
+```java
 Row row1 = sheet.createRow(0);
 row1.setHeightInPoints((short) 40);
 ```
 
 让我们实例化这个类，并用它来设置样式
 
-```
+```java
 CellStyler styler = new CellStyler();
 CellStyle style = styler.createWarningColor(workbook);
 
@@ -127,7 +127,7 @@ cell2.setCellValue("world!");
 
 首先，从单元格获取`CellStyle`并开始修改它是一个常见的错误。关于`getCellStyle`方法的 Apache POI 文档提到**一个单元格的`getCellStyle`方法将总是返回一个非空值**。这意味着单元格有默认值，这也是工作簿中所有单元格最初使用的默认样式。因此，下面的代码将使所有单元格都具有日期格式:
 
-```
+```java
 cell.setCellValue(rdf.getEffectiveDate());
 cell.getCellStyle().setDataFormat(HSSFDataFormat.getBuiltinFormat("d-mmm-yy"));
 ```
@@ -136,7 +136,7 @@ cell.getCellStyle().setDataFormat(HSSFDataFormat.getBuiltinFormat("d-mmm-yy"));
 
 另一个常见的错误是在一个工作簿中有太多相似的样式:
 
-```
+```java
 CellStyle style1 = codeToCreateCellStyle();
 Cell cell1 = row1.createCell(0);
 cell1.setCellStyle(style1);
@@ -148,7 +148,7 @@ cell2.setCellStyle(style2);
 
 一个 **`CellStyle`的作用域是一个工作簿**。因此，相似的样式应该由多个单元格共享。在上面的例子中，样式应该只创建一次，并在`cell1`和`cell2`之间共享:
 
-```
+```java
 CellStyle style1 = codeToCreateCellStyle();
 Cell cell1 = row1.createCell(0);
 cell1.setCellStyle(style1);

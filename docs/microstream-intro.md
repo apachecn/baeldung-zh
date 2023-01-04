@@ -56,7 +56,7 @@ MicroStream 试图通过仅使用一个数据结构和一个数据模型来简�
 
 在我们开始使用 MicroStream 存储对象图之前，我们需要添加两个[依赖关系](https://web.archive.org/web/20221120190808/https://search.maven.org/search?q=microstream-storage-embedded):
 
-```
+```java
 <dependency>
     <groupId>one.microstream</groupId>
     <artifactId>microstream-storage-embedded</artifactId>
@@ -75,7 +75,7 @@ MicroStream 试图通过仅使用一个数据结构和一个数据模型来简�
 
 对象图实例，包括根实例，可以是任何 Java 类型。因此，一个简单的 [`String`](/web/20221120190808/https://www.baeldung.com/java-string) 实例可以注册为实体图的根:
 
-```
+```java
 EmbeddedStorageManager storageManager = EmbeddedStorage.start(directory);
 storageManager.setRoot("baeldung-demo");
 storageManager.storeRoot();
@@ -83,7 +83,7 @@ storageManager.storeRoot();
 
 然而，由于这个根实例不包含子实例，所以我们的`String`实例包含了整个数据库。因此，我们通常需要**为我们的应用**定义一个定制的根类型:
 
-```
+```java
 public class RootInstance {
 
     private final String name;
@@ -100,7 +100,7 @@ public class RootInstance {
 
 我们可以通过调用`setRoot()`和`storeRoot()`方法，以类似的方式使用自定义类型注册一个根实例:
 
-```
+```java
 EmbeddedStorageManager storageManager = EmbeddedStorage.start(directory);
 storageManager.setRoot(new RootInstance("baeldung-demo"));
 storageManager.storeRoot();
@@ -108,7 +108,7 @@ storageManager.storeRoot();
 
 现在，我们的图书列表将是空的，但是使用我们的自定义根，我们将能够在以后存储图书实例:
 
-```
+```java
 RootInstance rootInstance = (RootInstance) storageManager.root();
 assertThat(rootInstance.getName()).isEqualTo("baeldung-demo");
 assertThat(rootInstance.getBooks()).isEmpty()
@@ -125,7 +125,7 @@ storageManager.shutdown();
 
 当存储新实例时，我们需要确保在正确的对象上调用`store()`方法。正确的对象是新创建的实例的所有者——在我们的例子中，是一个列表`:`
 
-```
+```java
 RootInstance rootInstance = (RootInstance) storageManager.root();
 List<Book> books = rootInstance.getBooks();
 books.addAll(booksToStore);
@@ -141,7 +141,7 @@ assertThat(books).hasSize(2);
 
 启动一个`EmbeddedStorageManager`实例后，我们可以通过获取对象图的根实例来加载数据:
 
-```
+```java
 EmbeddedStorageManager storageManager = EmbeddedStorage.start(directory);
 if (storageManager.root() == null) {
     RootInstance rootInstance = new RootInstance("baeldung-demo");
@@ -161,19 +161,19 @@ if (storageManager.root() == null) {
 
 `Lazy`是一个简单的包装类，类似于 JDK 的`[WeakReference](/web/20221120190808/https://www.baeldung.com/java-weak-reference).`,它的实例内部保存一个标识符和一个对实际实例的引用:
 
-```
+```java
 private final Lazy<List<Book>> books;
 ```
 
 包装在`Lazy` 中的新`ArrayList`可以使用`Reference()`方法实例化:
 
-```
+```java
 books = Lazy.Reference(new ArrayList<>());
 ```
 
 就像使用`WeakReference`一样，为了获得实际的实例，我们需要调用一个简单的`get()`方法:
 
-```
+```java
 public List<Book> getBooks() {
     return Lazy.get(books);
 }
@@ -185,7 +185,7 @@ public List<Book> getBooks() {
 
 使用 MicroStream 删除数据不需要执行显式删除操作。相反，我们只需要**清除我们的对象图**中对该对象的任何引用，并存储这些更改:
 
-```
+```java
 List<Book> books = rootInstance.getBooks();
 books.remove(1);
 storageManager.store(books);
@@ -199,7 +199,7 @@ storageManager.store(books);
 
 一种常见的方法可能是将 [`Streams`](/web/20221120190808/https://www.baeldung.com/java-streams) 与标准 Java [集合](/web/20221120190808/https://www.baeldung.com/java-collections)一起使用:
 
-```
+```java
 List<Book> booksFrom1998 = rootInstance.getBooks().stream()
     .filter(book -> book.getYear() == 1998)
     .collect(Collectors.toList());

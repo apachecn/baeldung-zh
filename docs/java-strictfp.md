@@ -12,7 +12,7 @@
 
 我们可以使用`strictfp`关键字作为类、非抽象方法或接口的非访问修饰符:
 
-```
+```java
 public strictfp class ScientificCalculator {
     ...
 
@@ -44,7 +44,7 @@ public strictfp interface Circle {
 
 每当我们非常关心所有浮点计算的确定性行为时，Java `strictfp`关键字就派上了用场:
 
-```
+```java
 @Test
 public void whenMethodOfstrictfpClassInvoked_thenIdenticalResultOnAllPlatforms() {
     ScientificCalculator calculator = new ScientificCalculator();

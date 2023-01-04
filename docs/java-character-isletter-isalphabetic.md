@@ -16,13 +16,13 @@
 
 让我们看看第一个方法的签名:
 
-```
+```java
 public static int getType(char ch)
 ```
 
 此方法不能处理补充字符。为了处理所有的 Unicode 字符，包括补充字符，Java 的`Character`类提供了一个重载的 [`getType`](https://web.archive.org/web/20220630131429/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Character.html#getType(int)) 方法，该方法具有以下签名:
 
-```
+```java
 public static int getType(int codePoint)
 ```
 
@@ -34,7 +34,7 @@ public static int getType(int codePoint)
 
 当我们对一个大写字母调用`Character` # `getType`方法时，例如，`U`，该方法返回值 1，这相当于`UPPERCASE_LETTER`枚举值:
 
-```
+```java
 assertEquals(Character.UPPERCASE_LETTER, Character.getType('U'));
 ```
 
@@ -44,7 +44,7 @@ assertEquals(Character.UPPERCASE_LETTER, Character.getType('U'));
 
 当对小写字母调用`Character` # `getType`方法时，例如，`u`，该方法将返回值 2，与`LOWERCASE_LETTER`的枚举值相同:
 
-```
+```java
 assertEquals(Character.LOWERCASE_LETTER, Character.getType('u'));
 ```
 
@@ -54,7 +54,7 @@ assertEquals(Character.LOWERCASE_LETTER, Character.getType('u'));
 
 有些字符看起来像成对的拉丁字母。当我们对这样的 Unicode 字符调用`Character` # `getType`方法时，这将返回值 3，它等于`TITLECASE_LETTER`枚举值:
 
-```
+```java
 assertEquals(Character.TITLECASE_LETTER, Character.getType('\u01f2'));
 ```
 
@@ -68,7 +68,7 @@ assertEquals(Character.TITLECASE_LETTER, Character.getType('\u01f2'));
 
 例如，修饰符字母 small `H`、‘`ʰ`’在传递给`Character` # `getType`方法时，返回值 4，这与`MODIFIER_LETTER`的枚举值相同:
 
-```
+```java
 assertEquals(Character.MODIFIER_LETTER, Character.getType('\u02b0'));
 ```
 
@@ -82,7 +82,7 @@ Unicode 字符'`\u020b`'代表修饰字母 small `H`。
 
 让我们看一个希伯来字母 Alef，'`א`'的例子，当我们把它传递给`Character` # `getType`方法时，它返回值 5，等于`OTHER_LETTER`的枚举值:
 
-```
+```java
 assertEquals(Character.OTHER_LETTER, Character.getType('\u05d0'));
 ```
 
@@ -94,7 +94,7 @@ Unicode 字符'`\u05d0`'代表希伯来字母 Alef。
 
 例如，罗马数字属于`LETTER_NUMBER`大类。当我们用罗马数字 5 'ⅴ'调用`Character` # `getType`方法时，它返回值 10，等于枚举`LETTER_NUMBER`值:
 
-```
+```java
 assertEquals(Character.LETTER_NUMBER, Character.getType('\u2164'));
 ```
 
@@ -106,7 +106,7 @@ Unicode 字符'`\u2164`'代表罗马数字五。
 
 首先，我们来看看 [`isAlphabetic`](https://web.archive.org/web/20220630131429/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Character.html#isAlphabetic(int)) 的签名方法:
 
-```
+```java
 public static boolean isAlphabetic(int codePoint)
 ```
 
@@ -125,7 +125,7 @@ public static boolean isAlphabetic(int codePoint)
 
 让我们看几个字母字符的例子:
 
-```
+```java
 assertTrue(Character.isAlphabetic('A'));
 assertTrue(Character.isAlphabetic('\u01f2'));
 ```
@@ -136,7 +136,7 @@ assertTrue(Character.isAlphabetic('\u01f2'));
 
 Java 的`Character`类提供了`isLetter()`方法来确定一个指定的字符是否是一个字母。让我们看看方法签名:
 
-```
+```java
 public static boolean isLetter(char ch)
 ```
 
@@ -152,7 +152,7 @@ public static boolean isLetter(char ch)
 
 但是，此方法不能处理补充字符。为了处理所有的 Unicode 字符，包括补充字符，Java 的`Character`类提供了一个重载版本的`isLetter()`方法:
 
-```
+```java
 public static boolean isLetter(int codePoint)
 ```
 
@@ -160,7 +160,7 @@ public static boolean isLetter(int codePoint)
 
 让我们来看几个字母字符的例子:
 
-```
+```java
 assertTrue(Character.isAlphabetic('a'));
 assertTrue(Character.isAlphabetic('\u02b0'));
 ```
@@ -175,7 +175,7 @@ assertTrue(Character.isAlphabetic('\u02b0'));
 
 首先，让我们看一个既是字母又是字母表的字符的例子——字符'`a`':
 
-```
+```java
 assertTrue(Character.isLetter('a')); 
 assertTrue(Character.isAlphabetic('a'));
 ```
@@ -184,7 +184,7 @@ assertTrue(Character.isAlphabetic('a'));
 
 接下来，让我们看一个例子，一个字符是一个字母表，但不是一个字母。在这种情况下，我们将使用 Unicode 字符'`\u2164`'，它代表罗马数字五:
 
-```
+```java
 assertFalse(Character.isLetter('\u2164'));
 assertTrue(Character.isAlphabetic('\u2164'));
 ```

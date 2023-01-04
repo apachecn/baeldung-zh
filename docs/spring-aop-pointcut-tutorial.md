@@ -12,14 +12,14 @@
 
 切入点表达式可以作为`@Pointcut`注释的值出现:
 
-```
+```java
 @Pointcut("within(@org.springframework.stereotype.Repository *)")
 public void repositoryClassMethods() {}
 ```
 
 方法声明被称为**切入点签名**。它提供了一个名称，建议注释可以用它来引用这个切入点:
 
-```
+```java
 @Around("repositoryClassMethods()")
 public Object measureMethodExecutionTime(ProceedingJoinPoint pjp) throws Throwable {
     ...
@@ -28,7 +28,7 @@ public Object measureMethodExecutionTime(ProceedingJoinPoint pjp) throws Throwab
 
 切入点表达式也可以作为`aop:pointcut`标签的`expression`属性的值出现:
 
-```
+```java
 <aop:config>
     <aop:pointcut id="anyDaoMethod" 
       expression="@target(org.springframework.stereotype.Repository)"/>
@@ -43,13 +43,13 @@ public Object measureMethodExecutionTime(ProceedingJoinPoint pjp) throws Throwab
 
 主要的 Spring PCD 是`execution`，它匹配方法执行连接点:
 
-```
+```java
 @Pointcut("execution(public String com.baeldung.pointcutadvice.dao.FooDao.findById(Long))")
 ```
 
 这个示例切入点将完全匹配`FooDao`类的`findById`方法的执行。这是可行的，但是不太灵活。假设我们想要匹配`FooDao`类的所有方法，这些方法可能有不同的签名、返回类型和参数。为此，我们可以使用通配符:
 
-```
+```java
 @Pointcut("execution(* com.baeldung.pointcutadvice.dao.FooDao.*(..))")
 ```
 
@@ -59,13 +59,13 @@ public Object measureMethodExecutionTime(ProceedingJoinPoint pjp) throws Throwab
 
 获得与上一节相同结果的另一种方法是使用`within` PCD，它将匹配限制在某些类型的连接点:
 
-```
+```java
 @Pointcut("within(com.baeldung.pointcutadvice.dao.FooDao)")
 ```
 
 我们还可以匹配`com.baeldung`包或子包中的任何类型:
 
-```
+```java
 @Pointcut("within(com.baeldung..*)")
 ```
 
@@ -73,7 +73,7 @@ public Object measureMethodExecutionTime(ProceedingJoinPoint pjp) throws Throwab
 
 `this`将匹配限制在 bean 引用是给定类型的实例的连接点，而`target` 将匹配限制在目标对象是给定类型的实例的连接点。前者在 Spring AOP 创建基于 CGLIB 的代理时起作用，后者在创建基于 JDK 的代理时使用。假设目标类实现了一个接口:
 
-```
+```java
 public class FooDao implements BarDao {
     ...
 }
@@ -81,13 +81,13 @@ public class FooDao implements BarDao {
 
 在这种情况下，Spring AOP 将使用基于 JDK 的代理，我们应该使用`target` PCD，因为被代理的对象将是`Proxy`类的实例并实现`BarDao`接口:
 
-```
+```java
 @Pointcut("target(com.baeldung.pointcutadvice.dao.BarDao)")
 ```
 
 另一方面，如果`FooDao`没有实现任何接口，或者`proxyTargetClass`属性被设置为 true，那么被代理的对象将是`FooDao` 的子类，我们可以使用`this` PCD:
 
-```
+```java
 @Pointcut("this(com.baeldung.pointcutadvice.dao.FooDao)")
 ```
 
@@ -95,13 +95,13 @@ public class FooDao implements BarDao {
 
 我们可以使用这个 PCD 来匹配特定的方法参数:
 
-```
+```java
 @Pointcut("execution(* *..find*(Long))")
 ```
 
 这个切入点匹配任何以 find 开始并且只有一个类型为`Long`的参数的方法。如果我们想要匹配一个有任意数量参数的方法，但是仍然有第一个类型为`Long`的参数，我们可以使用下面的表达式:
 
-```
+```java
 @Pointcut("execution(* *..find*(Long,..))")
 ```
 
@@ -109,7 +109,7 @@ public class FooDao implements BarDao {
 
 `@target` PCD(不要与上面描述的`target` PCD 混淆)将匹配限制在执行对象的类具有给定类型注释的连接点:
 
-```
+```java
 @Pointcut("@target(org.springframework.stereotype.Repository)")
 ```
 
@@ -117,14 +117,14 @@ public class FooDao implements BarDao {
 
 这个 PCD 将匹配限制在连接点上，在这些连接点上，传递的实际参数的运行时类型具有给定类型的注释。假设我们想要跟踪所有接受用`@Entity`注释标注的 beans 的方法:
 
-```
+```java
 @Pointcut("@args(com.baeldung.pointcutadvice.annotations.Entity)")
 public void methodsAcceptingEntities() {}
 ```
 
 要访问该参数，我们应该为建议提供一个`JoinPoint`参数:
 
-```
+```java
 @Before("methodsAcceptingEntities()")
 public void logMethodAcceptionEntityAnnotatedBean(JoinPoint jp) {
     logger.info("Accepting beans with @Entity annotation: " + jp.getArgs()[0]);
@@ -135,13 +135,13 @@ public void logMethodAcceptionEntityAnnotatedBean(JoinPoint jp) {
 
 这个 PCD 限制匹配具有给定注释的类型中的连接点:
 
-```
+```java
 @Pointcut("@within(org.springframework.stereotype.Repository)")
 ```
 
 这相当于:
 
-```
+```java
 @Pointcut("within(@org.springframework.stereotype.Repository *)")
 ```
 
@@ -149,14 +149,14 @@ public void logMethodAcceptionEntityAnnotatedBean(JoinPoint jp) {
 
 这个 PCD 将匹配限制在连接点的主题具有给定注释的连接点上。例如，我们可以创建一个`@Loggable`注释:
 
-```
+```java
 @Pointcut("@annotation(com.baeldung.pointcutadvice.annotations.Loggable)")
 public void loggableMethods() {}
 ```
 
 然后，我们可以记录由该注释标记的方法的执行情况:
 
-```
+```java
 @Before("loggableMethods()")
 public void logMethod(JoinPoint jp) {
     String methodName = jp.getSignature().getName();
@@ -168,7 +168,7 @@ public void logMethod(JoinPoint jp) {
 
 切入点表达式可以使用 **& &** 、 **||** 和**进行组合！**操作员:
 
-```
+```java
 @Pointcut("@target(org.springframework.stereotype.Repository)")
 public void repositoryMethods() {}
 

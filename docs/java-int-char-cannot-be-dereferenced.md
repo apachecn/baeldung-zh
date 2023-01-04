@@ -14,14 +14,14 @@
 
 首先，让我们创建一个类`Test`和**比较一个`int`和其他值**:
 
-```
+```java
 int x = 10;
 System.out.println(x.equals(10));
 ```
 
 当从终端编译代码时，我们会得到错误:
 
-```
+```java
 $ javac Test.java
 Test.java:8: error: int cannot be dereferenced
         System.out.println(x.toString());
@@ -37,7 +37,7 @@ Test.java:8: error: int cannot be dereferenced
 
 在 Java 中，引用是某个对象/变量的地址。解引用意味着通过引用来访问对象特性的行为。**对一个原语执行任何解引用都会导致错误“X 不能被解引用”，这里 X 是一个原语类型。**原因是[原语不被视为对象](/web/20220712150220/https://www.baeldung.com/java-primitives-vs-objects)——它们代表原始值:
 
-```
+```java
 int x = 10;
 System.out.println(x.equals(10));
 ```
@@ -46,7 +46,7 @@ System.out.println(x.equals(10));
 
 然而，使用`Object`，它工作得很好:
 
-```
+```java
 Object testObj = new Object();
 testObj.toString();
 ```
@@ -59,7 +59,7 @@ testObj.toString();
 
 对于我们的问题，**的第一个解决方案是对原始类型**使用`==`而不是`equals()`:
 
-```
+```java
 int x = 10;
 System.out.println(x == 10);
 ```
@@ -72,7 +72,7 @@ Java 为每个原始类型提供了[包装类](/web/20220712150220/https://www.b
 
 例如，如果我们必须使用`equals()`，我们可以将基本类型转换为包装对象:
 
-```
+```java
 Integer x = 10;
 System.out.println(x.equals(10));
 ```

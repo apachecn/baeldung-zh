@@ -16,13 +16,13 @@
 
 让我们从破折号分隔的日期模式开始，如下所示:
 
-```
+```java
 "dd-MM-yyyy"
 ```
 
 这将正确地设置日期格式，从当月的当天开始，到今年的当月，最后到今年。我们可以用一个简单的单元测试来测试我们的新格式化程序。我们将实例化一个新的`SimpleDateFormat `对象，并传入一个已知的日期:
 
-```
+```java
 SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 assertEquals("24-05-1977", formatter.format(new Date(233345223232L))); 
 ```
@@ -35,7 +35,7 @@ assertEquals("24-05-1977", formatter.format(new Date(233345223232L)));
 
 当使用这些工厂方法时，上面的示例看起来有些不同:
 
-```
+```java
 DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT);
 assertEquals("5/24/77", formatter.format(new Date(233345223232L)));
 ```
@@ -52,7 +52,7 @@ assertEquals("5/24/77", formatter.format(new Date(233345223232L)));
 
 解决这个问题的最佳方法是将它们与`[ThreadLocal](/web/20220625080956/https://www.baeldung.com/java-threadlocal)`结合使用。**这样，每个线程都有自己的`SimpleDateFormat `** **实例，共享的缺乏使得程序线程安全:**
 
-```
+```java
 private final ThreadLocal<SimpleDateFormat> formatter = ThreadLocal
   .withInitial(() -> new SimpleDateFormat("dd-MM-yyyy"));
 ```
@@ -61,7 +61,7 @@ private final ThreadLocal<SimpleDateFormat> formatter = ThreadLocal
 
 然后我们可以通过`ThreadLocal`实例使用格式化程序:
 
-```
+```java
 formatter.get().format(date)
 ```
 
@@ -82,7 +82,7 @@ formatter.get().format(date)
 
 `SimpleDateFormat `和`DateFormat `不仅允许我们格式化日期——还可以反向操作。使用`parse `方法，我们可以**输入日期的`String `表示并返回`Date `** 对象的等价物:
 
-```
+```java
 SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 Date myDate = new Date(233276400000L);
 Date parsedDate = formatter.parse("24-05-1977");
@@ -104,13 +104,13 @@ assertEquals(myDate.getTime(), parsedDate.getTime());
 
 日期组件返回的**输出也很大程度上依赖于在`String`中使用的字符数**。例如，让我们以六月为例。如果我们将日期字符串定义为:
 
-```
+```java
 "MM"
 ```
 
 那么我们的结果将显示为数字代码–06。但是，如果我们在日期字符串中添加另一个 M:
 
-```
+```java
 "MMM"
 ```
 
@@ -122,7 +122,7 @@ assertEquals(myDate.getTime(), parsedDate.getTime());
 
 让我们通过用法语格式化日期来实践这一点。我们将实例化一个`SimpleDateFormat `对象，同时将`Locale.FRANCE `提供给构造函数。
 
-```
+```java
 SimpleDateFormat franceDateFormatter = new SimpleDateFormat("EEEEE dd-MMMMMMM-yyyy", Locale.FRANCE);
 Date myWednesday = new Date(1539341312904L);
 assertTrue(franceDateFormatter.format(myWednesday).startsWith("vendredi"));
@@ -136,7 +136,7 @@ assertTrue(franceDateFormatter.format(myWednesday).startsWith("vendredi"));
 
 由于`SimpleDateFormat `扩展了`DateFormat `类，我们也可以**使用`setTimeZone `方法**来操纵时区。让我们来看看这是怎么回事:
 
-```
+```java
 Date now = new Date();
 
 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE dd-MMM-yy HH:mm:ssZ");
@@ -152,7 +152,7 @@ logger.info(simpleDateFormat.format(now));
 
 点击 run，我们可以看到与两个时区相关的当前时间:
 
-```
+```java
 INFO: Friday 12-Oct-18 12:46:14+0100
 INFO: Friday 12-Oct-18 07:46:14-0400
 ```

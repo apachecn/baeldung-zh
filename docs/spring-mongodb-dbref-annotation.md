@@ -28,7 +28,7 @@
 
 让我们将`[spring-boot-starter-data-mongodb](https://web.archive.org/web/20220707143816/https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb)`添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -39,7 +39,7 @@
 
 现在，我们通过向`application.properties`文件添加以下配置来建立连接:
 
-```
+```java
 spring.data.mongodb.host=localhost
 spring.data.mongodb.port=27017
 spring.data.mongodb.database=person_database
@@ -47,7 +47,7 @@ spring.data.mongodb.database=person_database
 
 让我们运行应用程序来测试我们是否能连接到数据库。我们应该在日志中看到类似这样的消息:
 
-```
+```java
 Opened connection [connectionId{localValue:2, serverValue:37}] to localhost:27017
 ```
 
@@ -65,7 +65,7 @@ Opened connection [connectionId{localValue:2, serverValue:37}] to localhost:2701
 
 让我们将这个文档插入到`Dog`集合中:
 
-```
+```java
 {
     _id: ObjectID("622112d71f9dac417b84227d"), 
     name: "Max"
@@ -74,7 +74,7 @@ Opened connection [connectionId{localValue:2, serverValue:37}] to localhost:2701
 
 那么，我们把这个文档插入 *猫* 收藏:
 
-```
+```java
 {
     _id: ObjectID("622112781f9dac417b84227b"),
     name: "Loki"
@@ -83,7 +83,7 @@ Opened connection [connectionId{localValue:2, serverValue:37}] to localhost:2701
 
 现在，让我们创建一个 *人* 集合，并在其中插入一个文档:
 
-```
+```java
 {
     _id: ObjectId(),
     name: "Bob",
@@ -110,7 +110,7 @@ Opened connection [connectionId{localValue:2, serverValue:37}] to localhost:2701
 
 为了简化，我们不会为`Dog`和`Cat`数据类型创建单独的类。相反，我们将使用一个包含 ID 和名称的`Pet`类:
 
-```
+```java
 public class Pet {
     private String id;
     private String name;
@@ -126,7 +126,7 @@ public class Pet {
 
 现在，我们将创建 *人* 类，并通过 *@DBRef:* 将一个关联包含到 *宠物* 类
 
-```
+```java
 @Document(collection = "Person")
 public class Person {
 
@@ -149,13 +149,13 @@ public class Person {
 
 接下来，让我们创建一个简单的[存储库](/web/20220707143816/https://www.baeldung.com/spring-data-mongodb-tutorial#using-mongorepository)来查询数据:
 
-```
+```java
 public interface PersonRepository extends MongoRepository<Person, String> {}
 ```
 
 我们将通过创建一个在启动应用程序时执行 MongoDB 查询的 [ApplicationRunner](/web/20220707143816/https://www.baeldung.com/running-setup-logic-on-startup-in-spring#7-spring-boot-applicationrunner) 来测试一切。让我们覆盖`run()`方法并放置一个日志语句，这样我们就可以看到`Person`集合的内容:
 
-```
+```java
 @Override
 public void run(ApplicationArguments args) throws Exception {
     logger.info("{}", personRepository.findAll());
@@ -164,7 +164,7 @@ public void run(ApplicationArguments args) throws Exception {
 
 这将生成一个与此类似的日志输出，因为我们在实体类中覆盖了`toString()`方法:
 
-```
+```java
 com.baeldung.mongodb.dbref.DbRefTester : [Person [id=62249c5c7ffe83c50ad12700, name=Bob, pets=[Pet [id=622112781f9dac417b84227b, name=Loki], Pet [id=622112d71f9dac417b84227d, name=Max]]]]
 ```
 

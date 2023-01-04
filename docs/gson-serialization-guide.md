@@ -6,7 +6,7 @@
 
 让我们从介绍一个简单的实体开始，我们将在下面的例子中使用它:
 
-```
+```java
 public class SourceClass {
     private int intValue;
     private String stringValue;
@@ -19,7 +19,7 @@ public class SourceClass {
 
 首先，让我们用 Gson 序列化一个对象数组:
 
-```
+```java
 @Test
 public void givenArrayOfObjects_whenSerializing_thenCorrect() {
     SourceClass[] sourceArray = {new SourceClass(1, "one"), new SourceClass(2, "two")};
@@ -35,7 +35,7 @@ public void givenArrayOfObjects_whenSerializing_thenCorrect() {
 
 接下来，让我们对一组对象进行同样的操作:
 
-```
+```java
 @Test
 public void givenCollection_whenSerializing_thenCorrect() {
     Collection<SourceClass> sourceCollection = 
@@ -54,7 +54,7 @@ public void givenCollection_whenSerializing_thenCorrect() {
 
 我们将把包含字段`intValue`和`stringValue` 的实体序列化为带有`otherIntValue`和`otherStringValue`的 json:
 
-```
+```java
 @Test
 public void givenUsingCustomSerializer_whenChangingNameOfFieldOnSerializing_thenCorrect() {
     SourceClass sourceObject = new SourceClass(7, "seven");
@@ -69,7 +69,7 @@ public void givenUsingCustomSerializer_whenChangingNameOfFieldOnSerializing_then
 
 请注意，我们在这里使用自定义序列化程序来更改字段的名称:
 
-```
+```java
 public class DifferentNameSerializer implements JsonSerializer<SourceClass> {
     @Override
     public JsonElement serialize
@@ -90,7 +90,7 @@ public class DifferentNameSerializer implements JsonSerializer<SourceClass> {
 
 现在让我们**在执行序列化时完全忽略字段**:
 
-```
+```java
 @Test
 public void givenIgnoringAField_whenSerializingWithCustomSerializer_thenFieldIgnored() {
     SourceClass sourceObject = new SourceClass(7, "seven");
@@ -105,7 +105,7 @@ public void givenIgnoringAField_whenSerializingWithCustomSerializer_thenFieldIgn
 
 与前面的例子类似，我们在这里也使用了一个定制的序列化器:
 
-```
+```java
 public class IgnoringFieldsSerializer implements JsonSerializer<SourceClass> {
     @Override
     public JsonElement serialize
@@ -127,7 +127,7 @@ public class IgnoringFieldsSerializer implements JsonSerializer<SourceClass> {
 
 例如，如果 int 值是正数，我们只序列化它，如果它是负数，我们就跳过它:
 
-```
+```java
 @Test
 public void givenUsingCustomDeserializer_whenFieldNotMatchesCriteria_thenIgnored() {
     SourceClass sourceObject = new SourceClass(-1, "minus 1");
@@ -145,7 +145,7 @@ public void givenUsingCustomDeserializer_whenFieldNotMatchesCriteria_thenIgnored
 
 当然，我们在这里也使用了定制的序列化器:
 
-```
+```java
 public class IgnoringFieldsNotMatchingCriteriaSerializer 
   implements JsonSerializer<SourceClass> {
     @Override

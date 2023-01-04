@@ -12,7 +12,7 @@
 
 由于 JSR 352 只是一个规范，我们需要包括[它的 API](https://web.archive.org/web/20220524022111/https://search.maven.org/artifact/javax.batch/javax.batch-api) 和[实现](https://web.archive.org/web/20220524022111/https://search.maven.org/search?q=org.jberet)，比如`[jberet](https://web.archive.org/web/20220524022111/https://github.com/jberet/jsr352)`:
 
-```
+```java
 <dependency>
     <groupId>javax.batch</groupId>
     <artifactId>javax.batch-api</artifactId>
@@ -64,7 +64,7 @@ JSR 352 引入了几个概念，我们可以这样看:
 
 在这种情况下，我们将创建一个只发出数字 1 到 10 的读取器:
 
-```
+```java
 @Named
 public class SimpleChunkItemReader extends AbstractItemReader {
     private Integer[] tokens;
@@ -105,7 +105,7 @@ public class SimpleChunkItemReader extends AbstractItemReader {
 
 所以，让我们在这里说，我们只想保留偶数。我们可以使用一个通过返回`null`来拒绝奇数的`ItemProcessor`:
 
-```
+```java
 @Named
 public class SimpleChunkItemProcessor implements ItemProcessor {
     @Override
@@ -122,7 +122,7 @@ public class SimpleChunkItemProcessor implements ItemProcessor {
 
 最后，作业将调用`ItemWriter`,这样我们就可以编写转换后的项目:
 
-```
+```java
 @Named
 public class SimpleChunkWriter extends AbstractItemWriter {
     List<Integer> processed = new ArrayList<>();
@@ -139,7 +139,7 @@ public class SimpleChunkWriter extends AbstractItemWriter {
 
 现在，我们使用 JSL 或作业规范语言将所有这些放在一个 XML 文件中。请注意，我们将列出我们的阅读器、处理器、分块器以及块大小:
 
-```
+```java
 <job id="simpleChunk">
     <step id="firstChunkStep" >
         <chunk item-count="3">
@@ -159,7 +159,7 @@ public class SimpleChunkWriter extends AbstractItemWriter {
 
 **现在，任务是异步执行的，这使得它们很难测试。**在示例中，请务必查看我们的`BatchTestHelper `，它会进行轮询并等待任务完成:
 
-```
+```java
 @Test
 public void givenChunk_thenBatch_completesWithSuccess() throws Exception {
     JobOperator jobOperator = BatchRuntime.getJobOperator();
@@ -178,7 +178,7 @@ public void givenChunk_thenBatch_completesWithSuccess() throws Exception {
 
 batchlet 的合同非常简单:
 
-```
+```java
 @Named
 public class SimpleBatchLet extends AbstractBatchlet {
 
@@ -191,7 +191,7 @@ public class SimpleBatchLet extends AbstractBatchlet {
 
 JSL 也是如此:
 
-```
+```java
 <job id="simpleBatchLet">
     <step id="firstStep" >
         <batchlet ref="simpleBatchLet"/>
@@ -201,7 +201,7 @@ JSL 也是如此:
 
 我们可以使用与之前相同的方法进行测试:
 
-```
+```java
 @Test
 public void givenBatchlet_thenBatch_completeWithSuccess() throws Exception {
     JobOperator jobOperator = BatchRuntime.getJobOperator();
@@ -226,7 +226,7 @@ public void givenBatchlet_thenBatch_completeWithSuccess() throws Exception {
 
 但是，我们可以用自己的`CheckpointAlgorithm`对其进行定制:
 
-```
+```java
 @Named
 public class CustomCheckPoint extends AbstractCheckpointAlgorithm {
 
@@ -247,7 +247,7 @@ public class CustomCheckPoint extends AbstractCheckpointAlgorithm {
 
 **然后，我们将它与我们的块**下的 XML 中的`checkout-algorithm `指令进行匹配:
 
-```
+```java
 <job id="customCheckPoint">
     <step id="firstChunkStep" >
         <chunk item-count="3" checkpoint-policy="custom">
@@ -262,7 +262,7 @@ public class CustomCheckPoint extends AbstractCheckpointAlgorithm {
 
 让我们测试代码，再次注意一些样板步骤隐藏在`BatchTestHelper`中:
 
-```
+```java
 @Test
 public void givenChunk_whenCustomCheckPoint_thenCommitCountIsThree() throws Exception {
     // ... start job and wait for completion
@@ -285,7 +285,7 @@ public void givenChunk_whenCustomCheckPoint_thenCommitCountIsThree() throws Exce
 
 让我们改变我们的项目阅读器，以确保它失败:
 
-```
+```java
 @Override
 public Integer readItem() throws Exception {
     if (tokens.hasMoreTokens()) {
@@ -298,7 +298,7 @@ public Integer readItem() throws Exception {
 
 然后测试:
 
-```
+```java
 @Test
 public void whenChunkError_thenBatch_CompletesWithFailed() throws Exception {
     // ... start job and wait for completion
@@ -314,7 +314,7 @@ public void whenChunkError_thenBatch_CompletesWithFailed() throws Exception {
 
 因此，我们可以编辑我们的作业，使其忽略`RuntimeException`，以及其他几个，这只是为了说明:
 
-```
+```java
 <job id="simpleErrorSkipChunk" >
     <step id="errorStep" >
         <chunk checkpoint-policy="item" item-count="3" skip-limit="3" retry-limit="3">
@@ -336,7 +336,7 @@ public void whenChunkError_thenBatch_CompletesWithFailed() throws Exception {
 
 现在我们的代码将通过:
 
-```
+```java
 @Test
 public void givenChunkError_thenErrorSkipped_CompletesWithSuccess() throws Exception {
    // ... start job and wait for completion
@@ -357,7 +357,7 @@ public void givenChunkError_thenErrorSkipped_CompletesWithSuccess() throws Excep
 
 为了执行批处理作业中的下一步，我们必须使用步骤定义中的`next`属性明确指定:
 
-```
+```java
 <job id="simpleJobSequence">
     <step id="firstChunkStepStep1" next="firstBatchStepStep2">
         <chunk item-count="3">
@@ -376,7 +376,7 @@ public void givenChunkError_thenErrorSkipped_CompletesWithSuccess() throws Excep
 
 我们可以在 API 中看到这是什么样子:
 
-```
+```java
 @Test
 public void givenTwoSteps_thenBatch_CompleteWithSuccess() throws Exception {
     // ... start job and wait for completion
@@ -391,7 +391,7 @@ public void givenTwoSteps_thenBatch_CompleteWithSuccess() throws Exception {
 
 比方说，我们可以在一个流程中执行两个步骤，然后将该流程转换为一个独立的步骤:
 
-```
+```java
 <job id="flowJobSequence">
     <flow id="flow1" next="firstBatchStepStep3">
         <step id="firstChunkStepStep1" next="firstBatchStepStep2">
@@ -413,7 +413,7 @@ public void givenTwoSteps_thenBatch_CompleteWithSuccess() throws Exception {
 
 而且我们仍然可以看到每个步骤独立地执行:
 
-```
+```java
 @Test
 public void givenFlow_thenBatch_CompleteWithSuccess() throws Exception {
     // ... start job and wait for completion
@@ -431,7 +431,7 @@ public void givenFlow_thenBatch_CompleteWithSuccess() throws Exception {
 
 让我们看看如何配置作业:
 
-```
+```java
 <job id="decideJobSequence">
      <step id="firstBatchStepStep1" next="firstDecider">
 	 <batchlet ref="simpleBatchLet" />
@@ -457,7 +457,7 @@ public void givenFlow_thenBatch_CompleteWithSuccess() throws Exception {
 
 非常方便，因为它们允许我们同时执行流:
 
-```
+```java
 <job id="splitJobSequence">
    <split id="split1" next="splitJobSequenceStep3">
       <flow id="flow1">
@@ -481,7 +481,7 @@ public void givenFlow_thenBatch_CompleteWithSuccess() throws Exception {
 
 让我们确认他们仍然都得到运行。**流程步骤将以任意顺序执行，但隔离步骤将始终在最后:**
 
-```
+```java
 @Test
 public void givenSplit_thenBatch_CompletesWithSuccess() throws Exception {
     // ... start job and wait for completion
@@ -503,7 +503,7 @@ public void givenSplit_thenBatch_CompletesWithSuccess() throws Exception {
 
 当我们希望在作业级别使用属性时:
 
-```
+```java
 @Inject
 JobContext jobContext;
 ...
@@ -513,7 +513,7 @@ jobProperties = jobContext.getProperties();
 
 这也可以在步骤级别消耗:
 
-```
+```java
 @Inject
 StepContext stepContext;
 ...
@@ -523,7 +523,7 @@ stepProperties = stepContext.getProperties();
 
 当我们想要在批处理工件级别使用属性时:
 
-```
+```java
 @Inject
 @BatchProperty(name = "name")
 private String nameString;
@@ -535,7 +535,7 @@ private String nameString;
 
 为了理解每个分区应该完成的工作部分，我们可以将属性与分区结合起来:
 
-```
+```java
 <job id="injectSimpleBatchLet">
     <properties>
         <property name="jobProp1" value="job-value1"/>
@@ -569,31 +569,31 @@ private String nameString;
 
 我们已经在单元测试中看到，我们可以从`BatchRuntime`中获得`JobOperator `的实例:
 
-```
+```java
 JobOperator jobOperator = BatchRuntime.getJobOperator();
 ```
 
 然后，我们可以开始工作了:
 
-```
+```java
 Long executionId = jobOperator.start("simpleBatchlet", new Properties());
 ```
 
 但是，我们也可以停止作业:
 
-```
+```java
 jobOperator.stop(executionId);
 ```
 
 最后，我们可以重新启动作业:
 
-```
+```java
 executionId = jobOperator.restart(executionId, new Properties());
 ```
 
 让我们看看如何停止正在运行的作业:
 
-```
+```java
 @Test
 public void givenBatchLetStarted_whenStopped_thenBatchStopped() throws Exception {
     JobOperator jobOperator = BatchRuntime.getJobOperator();
@@ -607,7 +607,7 @@ public void givenBatchLetStarted_whenStopped_thenBatchStopped() throws Exception
 
 如果一个批处理是`STOPPED`，那么我们可以重新启动它:
 
-```
+```java
 @Test
 public void givenBatchLetStopped_whenRestarted_thenBatchCompletesSuccess() {
     // ... start and stop the job
@@ -632,7 +632,7 @@ public void givenBatchLetStopped_whenRestarted_thenBatchCompletesSuccess() {
 
 由此，我们可以通过`StepExecution#getMetrics:`得到[关于该步骤的几个度量](https://web.archive.org/web/20220524022111/https://docs.oracle.com/javaee/7/api/javax/batch/runtime/Metric.MetricType.html)
 
-```
+```java
 @Test
 public void givenChunk_whenJobStarts_thenStepsHaveMetrics() throws Exception {
     // ... start job and wait for completion

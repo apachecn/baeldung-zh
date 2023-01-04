@@ -14,7 +14,7 @@ Java 11 引入了一个名为 Epsilon 的[无操作垃圾收集器](https://web.
 
 我们首先需要一个会产生垃圾的应用程序:
 
-```
+```java
 class MemoryPolluter {
 
     static final int MEGABYTE_IN_BYTES = 1024 * 1024;
@@ -38,20 +38,20 @@ class MemoryPolluter {
 
 **要启用 Epsilon GC，我们需要传递以下 VM 参数:**
 
-```
+```java
 -XX:+UnlockExperimentalVMOptions -XX:+UseEpsilonGC
 ```
 
 当我们运行应用程序时，我们会得到以下错误:
 
-```
+```java
 Starting pollution
 Terminating due to java.lang.OutOfMemoryError: Java heap space
 ```
 
 但是，当我们使用标准虚拟机选项运行相同的应用程序时，它运行良好:
 
-```
+```java
 Starting pollution
 Terminating
 ```

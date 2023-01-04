@@ -22,7 +22,7 @@ Git i **是一个版本控制系统(VCS ),允许保存和跟踪文件随时间�
 
 为了查看我们是否已经安装了 Git，让我们打开一个终端并执行:
 
-```
+```java
 $ git version
 git version 2.24.3 (Apple Git-128)
 ```
@@ -33,7 +33,7 @@ git version 2.24.3 (Apple Git-128)
 
 在我们创建第一个存储库之前，让我们运行 [`git` `help`](https://web.archive.org/web/20221123141012/https://git-scm.com/docs/git-help) 命令。**它显示关于 Git 本身的有用信息**:
 
-```
+```java
 $ git help
 usage: git [--version] [--help] [-C <path>] [-c <name>=<value>]
            [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
@@ -45,7 +45,7 @@ usage: git [--version] [--help] [-C <path>] [-c <name>=<value>]
 
 我们还可以通过多种方式查看手册中的特定命令:
 
-```
+```java
 $ git --help init
 $ git help init
 $ git init --help
@@ -55,7 +55,7 @@ $ git init --help
 
 通过`-g` 选项`,` ,我们还可以访问内部指南列表来发展我们的技能:
 
-```
+```java
 $ git help -g
 The common Git guides are:
    attributes          Defining attributes per path
@@ -83,7 +83,7 @@ Git 支持不同级别的选项，如`system`、`global`、`local`、`worktree`�
 
 例如，让我们配置提交历史中使用的用户名:
 
-```
+```java
 $ git config --global user.name "Baeldung User"
 ```
 
@@ -93,7 +93,7 @@ $ git config --global user.name "Baeldung User"
 
 要打印有效选项列表，我们使用:
 
-```
+```java
 $ git config -l
 user.name=Baeldung User
 ```
@@ -108,7 +108,7 @@ user.name=Baeldung User
 
 如果我们决定初始化一个新的存储库，我们需要使用 [`git init`](https://web.archive.org/web/20221123141012/https://git-scm.com/docs/git-init) 命令。**它将当前目录转换为 Git 存储库**，并开始跟踪其内容:
 
-```
+```java
 $ mkdir simple-repo; cd simple-repo; git init
 Initialized empty Git repository in /simple-repo/.git/
 ```
@@ -117,7 +117,7 @@ Git 还在其中创建了一个名为`.git`的隐藏目录。这个目录存储�
 
 之后，在大多数情况下，我们希望将已经创建的存储库与远程存储库连接起来。我们使用**[`git remote`](https://web.archive.org/web/20221123141012/https://git-scm.com/docs/git-remote)命令来管理当前存储库**的远程链接:
 
-```
+```java
 $ git remote add origin https://github.com/eugenp/tutorials.git
 ```
 
@@ -129,7 +129,7 @@ $ git remote add origin https://github.com/eugenp/tutorials.git
 
 **[`git clone`](https://web.archive.org/web/20221123141012/https://git-scm.com/docs/git-clone)命令将存储库克隆到一个新目录中**:
 
-```
+```java
 $ git clone https://github.com/eugenp/tutorials.git
 Cloning into 'repo'...
 ```
@@ -138,7 +138,7 @@ Cloning into 'repo'...
 
 此外，克隆的存储库已经配置并与外部源连接:
 
-```
+```java
 $ cd tutorials
 $ git remote -v
 origin	https://github.com/eugenp/tutorials.git (fetch)
@@ -169,7 +169,7 @@ Git 将使用这些原始链接来管理任何进一步的更改。
 
 让我们创建一个简单的文件，并将其添加到我们的存储库中。之后，我们执行 [`git status`](https://web.archive.org/web/20221123141012/https://git-scm.com/docs/git-status) 命令并分析其输出:
 
-```
+```java
 $ "Hello World" >> myfile.txt
 $ git status
 On branch master
@@ -190,7 +190,7 @@ nothing added to commit but untracked files present (use "git add" to track)
 
 为了开始跟踪变更，**我们需要通过使用 [`git add`](https://web.archive.org/web/20221123141012/https://git-scm.com/docs/git-add)** 命令将它们移动到`Index`:
 
-```
+```java
 $ git add myfile.txt
 $ git stage *
 ```
@@ -201,7 +201,7 @@ $ git stage *
 
 现在让我们来验证状态:
 
-```
+```java
 $ git status
 On branch master
 Your branch is up to date with 'origin/master'.
@@ -217,7 +217,7 @@ Changes to be committed:
 
 Git 允许从`Index`中删除文件。如果我们错误地将我们的变更移动到其中，并且**想要暂时禁止跟踪它们，我们使用`[git restore](https://web.archive.org/web/20221123141012/https://git-scm.com/docs/git-restore):`**
 
-```
+```java
 $ git restore -S myfile.txt
 $ git status
 On branch master
@@ -244,7 +244,7 @@ Untracked files:
 
 要提交更改，让我们使用 [`git commit`](https://web.archive.org/web/20221123141012/https://git-scm.com/docs/git-commit) 命令:
 
-```
+```java
 $ git commit -m "My first commit"
 [master 8451901] My first commit
  1 file changed, 1 insertion(+)
@@ -259,7 +259,7 @@ $ git commit -m "My first commit"
 
 最后，让我们检查状态:
 
-```
+```java
 $ git status
 On branch master
 Your branch is ahead of 'origin/master' by 1 commit.
@@ -276,7 +276,7 @@ nothing to commit, working tree clean
 
 为了**打印当前分支的提交列表，我们使用 [`git log`](https://web.archive.org/web/20221123141012/https://git-scm.com/docs/git-log)** 命令:
 
-```
+```java
 $ git log
 commit 845190154ed7a491a6143669c4ce88058fb93f8a (HEAD -> master)
 Author: ...
@@ -294,7 +294,7 @@ commit 9a1e11ec981b41e4b4b9c245a7a96cd6707f4705 (origin/master, origin/HEAD)
 
 当我们想要更深入地了解一个提交时，我们使用 [`git show`](https://web.archive.org/web/20221123141012/https://git-scm.com/docs/git-show) 命令，后跟请求的提交 id，打印其详细信息:
 
-```
+```java
 $ git show 845190154ed7a491a6143669c4ce88058fb93f8a
 commit 845190154ed7a491a6143669c4ce88058fb93f8a (HEAD -> master)
 Author: ...
@@ -319,7 +319,7 @@ index 0000000..557db03
 
 让我们创建另一个文件并将其添加到`Staging Area`中。之后，让我们执行`git stash`:
 
-```
+```java
 $ touch myfile-2.txt; git add *
 $ git stash push
 Saved working directory and index state WIP on master: 8451901 My first commit
@@ -335,7 +335,7 @@ Saved working directory and index state WIP on master: 8451901 My first commit
 
 我们可以使用`list`选项打印所有隐藏的修改:
 
-```
+```java
 $ git stash list
 [[email protected]](/web/20221123141012/https://www.baeldung.com/cdn-cgi/l/email-protection){0}: WIP on master: 8451901 My first commit
 ```
@@ -344,7 +344,7 @@ $ git stash list
 
 为了检查其细节，我们使用`show`选项:
 
-```
+```java
 $ git stash show
  myfile-2.txt | 0
  1 file changed, 0 insertions(+), 0 deletions(-)
@@ -354,7 +354,7 @@ $ git stash show
 
 最后，如果我们想要恢复更改，我们使用`pop`选项:
 
-```
+```java
 $ git stash pop
 ...
 $ ls myfile-2.txt 
@@ -375,7 +375,7 @@ myfile-2.txt
 
 让我们回顾一下上次提交:
 
-```
+```java
 $ git show --summary
 commit 845190154ed7a491a6143669c4ce88058fb93f8a (HEAD -> master)
 Author: ...
@@ -388,7 +388,7 @@ Date: ...
 
 让我们的`my-file2.txt`从存储中弹出，让我们使用`amend`选项提交它:
 
-```
+```java
 $ git commit --amend
 [master 0ed9f03] My first commit
  2 files changed, 1 insertion(+)
@@ -404,7 +404,7 @@ $ git commit --amend
 
 让我们在存储库中创建另一个提交:
 
-```
+```java
 $ touch myfile-3.txt
 $ git add *
 $ git commit -m "My second commit"
@@ -414,13 +414,13 @@ $ git commit -m "My second commit"
 
 让我们开始以交互模式重新调整这两个提交:
 
-```
+```java
 git rebase -i HEAD~2
 ```
 
 这将打开一个编辑器，我们可以在其中使用命令操作历史:
 
-```
+```java
 pick 82d8635 My first commit
 pick 6d58108 My second commit
 
@@ -441,7 +441,7 @@ pick 6d58108 My second commit
 
 有时，我们可能希望放弃当前状态，恢复到历史快照。为此，我们使用 [`git reset`](https://web.archive.org/web/20221123141012/https://git-scm.com/docs/git-reset) 选项`:`
 
-```
+```java
 $ git reset 82d8635
 ```
 
@@ -459,7 +459,7 @@ $ git reset 82d8635
 
 [`git fetch`](https://web.archive.org/web/20221123141012/https://git-scm.com/docs/git-fetch) 命令帮助我们这样做:
 
-```
+```java
 $ git fetch
 ```
 
@@ -473,7 +473,7 @@ $ git fetch
 
 让我们更新我们的分支:
 
-```
+```java
 $ git merge origin/master
 ```
 
@@ -503,7 +503,7 @@ $ git merge origin/master
 
 最后，我们检查历史:
 
-```
+```java
 $ git log
 commit 6d5810884c3ce63ca08084959e3a21405a1187df (HEAD -> master, origin/master, origin/HEAD)
 Author: ...
@@ -523,7 +523,7 @@ Date: ...
 
 **[`git branch`](https://web.archive.org/web/20221123141012/https://git-scm.com/docs/git-branch) 帮助我们管理分公司**。要创建一个新的，我们只需指定它的名称:
 
-```
+```java
 $ git branch new-branch
 ```
 
@@ -531,7 +531,7 @@ $ git branch new-branch
 
 我们现在可以通过列出所有分支来查看新创建的分支:
 
-```
+```java
 $ git branch --list --all
 * master
   new-branch
@@ -547,7 +547,7 @@ $ git branch --list --all
 
 如果**我们想切换当前支路，我们使用 [`git checkout`](https://web.archive.org/web/20221123141012/https://git-scm.com/docs/git-checkout) 或** [`**git switch**`](https://web.archive.org/web/20221123141012/https://git-scm.com/docs/git-switch) 功能:
 
-```
+```java
 $ git switch new-branch
 Switched to branch 'new-branch'
 $ git checkout master

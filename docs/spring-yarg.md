@@ -12,7 +12,7 @@
 
 为了开始使用 YARG，我们需要将以下依赖项添加到我们的`pom:`
 
-```
+```java
 <repositories>
     <repository>
         <snapshots>
@@ -33,7 +33,7 @@
 
 接下来，**我们需要一个数据模板**；我们将使用一个简单的`Letter.docx`:
 
-```
+```java
 ${Main.title}
 
 Hello ${Main.name},
@@ -55,7 +55,7 @@ ${Main.content}
 
 首先，让我们创建一个`DocumentController`:
 
-```
+```java
 @RestController
 public class DocumentController {
 
@@ -70,7 +70,7 @@ public class DocumentController {
 
 现在我们将为模板添加加载逻辑:
 
-```
+```java
 ReportBuilder reportBuilder = new ReportBuilder();
 ReportTemplateBuilder reportTemplateBuilder = new ReportTemplateBuilder()
   .documentPath("./src/main/resources/Letter.docx")
@@ -86,7 +86,7 @@ reportBuilder.template(reportTemplateBuilder.build());
 
 现在我们需要定义将要插入到文档中的数据，这将是一个包含以下内容的`Data.json` 文件:
 
-```
+```java
 {
     "main": {
         "title" : "INTRODUCTION TO YARG",
@@ -100,7 +100,7 @@ reportBuilder.template(reportTemplateBuilder.build());
 
 现在，让我们继续将数据加载到我们的`ReportBuilder`:
 
-```
+```java
 BandBuilder bandBuilder = new BandBuilder();
 String json = FileUtils.readFileToString(
   new File("./src/main/resources/Data.json"));
@@ -121,7 +121,7 @@ Report report = reportBuilder.build();
 
 最后一步是定义`Reporting`对象，它负责将数据插入模板并生成最终文档:
 
-```
+```java
 Reporting reporting = new Reporting();
 reporting.setFormatterFactory(new DefaultFormatterFactory());
 reporting.setLoaderFactory(

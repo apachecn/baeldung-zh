@@ -31,7 +31,7 @@
 
 ### 3.1。简单小数
 
-```
+```java
 double d = 1234567.89;    
 assertThat(
   new DecimalFormat("#.##").format(d)).isEqualTo("1234567.89");
@@ -41,7 +41,7 @@ assertThat(
 
 正如我们所看到的，整数部分永远不会被丢弃，无论模式是否小于数字。
 
-```
+```java
 assertThat(new DecimalFormat("#########.###").format(d))
   .isEqualTo("1234567.89");
 assertThat(new DecimalFormat("000000000.000").format(d))
@@ -56,14 +56,14 @@ assertThat(new DecimalFormat("000000000.000").format(d))
 
 这里，0.89 部分被舍入到 0.90，然后 0 被删除:
 
-```
+```java
 assertThat(new DecimalFormat("#.#").format(d))
   .isEqualTo("1234567.9"); 
 ```
 
 在这里，0.89 部分被舍入到 1.00，然后 0.00 被丢弃，1 被求和为 7:
 
-```
+```java
 assertThat(new DecimalFormat("#").format(d))
   .isEqualTo("1234568"); 
 ```
@@ -74,7 +74,7 @@ assertThat(new DecimalFormat("#").format(d))
 
 分组分隔符用于指定自动重复的子模式:
 
-```
+```java
 assertThat(new DecimalFormat("#,###.#").format(d))
   .isEqualTo("1,234,567.9");
 assertThat(new DecimalFormat("#,###").format(d))
@@ -97,7 +97,7 @@ assertThat(new DecimalFormat("#,###").format(d))
 
 可以在模式中混合使用`String`文字:
 
-```
+```java
 assertThat(new DecimalFormat("The # number")
   .format(d))
   .isEqualTo("The 1234568 number"); 
@@ -105,7 +105,7 @@ assertThat(new DecimalFormat("The # number")
 
 也可以通过转义使用特殊字符作为`String`文字:
 
-```
+```java
 assertThat(new DecimalFormat("The '#' # number")
   .format(d))
   .isEqualTo("The # 1234568 number"); 
@@ -121,7 +121,7 @@ assertThat(new DecimalFormat("The '#' # number")
 
 我们可以这样做:
 
-```
+```java
 assertThat(new DecimalFormat("#,###.##", 
   new DecimalFormatSymbols(Locale.ENGLISH)).format(d))
   .isEqualTo("1,234,567.89");
@@ -132,7 +132,7 @@ assertThat(new DecimalFormat("#,###.##",
 
 如果我们感兴趣的`Locale`不在`DecimalFormatSymbols`构造函数覆盖的范围内，我们可以用 [`getInstance`](https://web.archive.org/web/20220915122120/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/NumberFormat.html#getInstance()) 方法指定它:
 
-```
+```java
 Locale customLocale = new Locale("it", "IT");
 assertThat(new DecimalFormat(
   "#,###.##", 
@@ -148,7 +148,7 @@ assertThat(new DecimalFormat(
 
 可以使用代表十的指数的`E`模式字符用科学记数法来表示一个数:
 
-```
+```java
 assertThat(new DecimalFormat("00.#######E0").format(d))
   .isEqualTo("12.3456789E5");
 assertThat(new DecimalFormat("000.000000E0").format(d))
@@ -165,7 +165,7 @@ assertThat(new DecimalFormat("000.000000E0").format(d))
 
 这迫使指数是最大数的倍数，因此对于这个用例，我们希望最大数是 3:
 
-```
+```java
 assertThat(new DecimalFormat("##0.######E0")
   .format(d)).isEqualTo("1.23456789E6");		
 assertThat(new DecimalFormat("###.000000E0")
@@ -176,7 +176,7 @@ assertThat(new DecimalFormat("###.000000E0")
 
 让我们看看如何用 parse 方法将 `String`解析成`Number`:
 
-```
+```java
 assertThat(new DecimalFormat("", new DecimalFormatSymbols(Locale.ENGLISH))
   .parse("1234567.89"))
   .isEqualTo(1234567.89);
@@ -189,7 +189,7 @@ assertThat(new DecimalFormat("", new DecimalFormatSymbols(Locale.ITALIAN))
 
 我们还可以获得如下的`BigDecimal`:
 
-```
+```java
 NumberFormat nf = new DecimalFormat(
   "", 
   new DecimalFormatSymbols(Locale.ENGLISH));

@@ -12,7 +12,7 @@
 
 让我们从添加一些依赖项到我们的`pom.xml`文件开始:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -48,7 +48,7 @@
 
 接下来，让我们创建我们的*客户端*实体类，用`name` 和`email` 属性来表示我们的数据模型:
 
-```
+```java
 @Entity
 @Table(name = "client")
 public class Client {
@@ -68,7 +68,7 @@ public class Client {
 
 然后我们将创建从`JpaRepository`扩展而来的`ClientRepository`类**，以提供 JPA CRUD 功能**:
 
-```
+```java
 public interface ClientRepository extends JpaRepository<Client, Long> {
 }
 ```
@@ -77,7 +77,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
 最后，让我们通过创建一个控制器来与`ClientRepository`交互，从而公开一个 **REST API:**
 
-```
+```java
 @RestController
 @RequestMapping("/clients")
 public class ClientsController {
@@ -126,7 +126,7 @@ public class ClientsController {
 
 完成后，我们现在准备开始我们的 Spring Boot API。我们可以使用`spring-boot-maven-plugin`来做到这一点:
 
-```
+```java
 mvn spring-boot:run
 ```
 
@@ -136,7 +136,7 @@ mvn spring-boot:run
 
 此外，我们可以使用 [Postman](/web/20220827170201/https://www.baeldung.com/postman-testing-collections) 创建一些客户端:
 
-```
+```java
 curl -X POST http://localhost:8080/clients -d '{"name": "John Doe", "email": "[[email protected]](/web/20220827170201/https://www.baeldung.com/cdn-cgi/l/email-protection)"}'
 ```
 
@@ -148,13 +148,13 @@ React 是一个用于创建用户界面的 JavaScript 库。使用 React 需要�
 
 [创建 React App](https://web.archive.org/web/20220827170201/https://reactjs.org/docs/create-a-new-react-app.html) 是一个命令实用程序，**为我们**生成 React 项目。让我们运行以下命令，在 Spring Boot 应用程序基本目录中创建我们的`frontend`应用程序:
 
-```
+```java
 npx create-react-app frontend
 ```
 
 app 创建过程完成后，我们将在`frontend`目录中安装[引导](https://web.archive.org/web/20220827170201/https://getbootstrap.com/)、[反应路由器](https://web.archive.org/web/20220827170201/https://reactrouter.com/)和[反应陷阱](https://web.archive.org/web/20220827170201/https://reactstrap.github.io/):
 
-```
+```java
 npm install --save [[email protected]](/web/20220827170201/https://www.baeldung.com/cdn-cgi/l/email-protection) [[email protected]](/web/20220827170201/https://www.baeldung.com/cdn-cgi/l/email-protection) [[email protected]](/web/20220827170201/https://www.baeldung.com/cdn-cgi/l/email-protection) [[email protected]](/web/20220827170201/https://www.baeldung.com/cdn-cgi/l/email-protection)
 ```
 
@@ -162,7 +162,7 @@ npm install --save [[email protected]](/web/20220827170201/https://www.baeldung
 
 让我们在`app/src/index.js`中添加 Bootstrap 的 CSS 文件作为导入:
 
-```
+```java
 import 'bootstrap/dist/css/bootstrap.min.css';
 ```
 
@@ -170,7 +170,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 现在我们准备开始我们的`frontend`应用程序:
 
-```
+```java
 npm start
 ```
 
@@ -184,7 +184,7 @@ npm start
 
 为此，我们将在`package.json`中包含 API 的 URL:
 
-```
+```java
 ...
 "proxy": "http://localhost:8080",
 ...
@@ -192,7 +192,7 @@ npm start
 
 接下来，让我们编辑`frontend/src/App.js`，以便它调用我们的 API 来显示具有`name`和`email`属性的客户端列表:
 
-```
+```java
 class App extends Component {
   state = {
     clients: []
@@ -240,7 +240,7 @@ export default App;
 
 让我们在`frontend/src/ClientList.js`中创建一个文件:
 
-```
+```java
 import React, { Component } from 'react';
 import { Button, ButtonGroup, Container, Table } from 'reactstrap';
 import AppNavbar from './AppNavbar';
@@ -267,7 +267,7 @@ export default ClientList;
 
 当我们想要删除一个客户端时，我们还将包含`remove`函数来处理对 API 的`DELETE`调用。此外，我们将创建`render`函数，该函数将呈现带有`Edit`、`Delete`和`Add Client`动作的 HTML:
 
-```
+```java
 async remove(id) {
     await fetch(`/clients/${id}`, {
         method: 'DELETE',
@@ -333,7 +333,7 @@ render() {
 
 让我们在`frontend/src/ClientEdit.js`中创建一个文件:
 
-```
+```java
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Container, Form, FormGroup, Input, Label } from 'reactstrap';
@@ -360,7 +360,7 @@ export default withRouter(ClientEdit);
 
 让我们添加`componentDidMount`函数来检查我们是在处理创建还是编辑特性；在编辑的情况下，它将从 API 中获取我们的客户端:
 
-```
+```java
 async componentDidMount() {
     if (this.props.match.params.id !== 'new') {
         const client = await (await fetch(`/clients/${this.props.match.params.id}`)).json();
@@ -371,7 +371,7 @@ async componentDidMount() {
 
 然后在`handleChange` 函数中，我们将更新组件状态项属性，该属性将在提交表单时使用:
 
-```
+```java
 handleChange(event) {
     const target = event.target;
     const value = target.value;
@@ -384,7 +384,7 @@ handleChange(event) {
 
 在`handeSubmit`中，我们将调用我们的 API，根据我们调用的特性将请求发送给`PUT`或`POST`方法。为此，我们可以检查`id`属性是否被填充:
 
-```
+```java
 async handleSubmit(event) {
     event.preventDefault();
     const {item} = this.state;
@@ -403,7 +403,7 @@ async handleSubmit(event) {
 
 最后但同样重要的是，我们的`render`函数将处理我们的表单:
 
-```
+```java
 render() {
     const {item} = this.state;
     const title = <h2>{item.id ? 'Edit Client' : 'Add Client'}</h2>;
@@ -439,7 +439,7 @@ render() {
 
 **为了让我们的应用程序** **具有更好的导航性**，让我们在`frontend/src/AppNavbar.js`中创建一个文件:
 
-```
+```java
 import React, {Component} from 'react';
 import {Navbar, NavbarBrand} from 'reactstrap';
 import {Link} from 'react-router-dom';
@@ -473,7 +473,7 @@ export default class AppNavbar extends Component {
 
 让我们在`frontend/src/Home.js`中创建一个文件:
 
-```
+```java
 import React, { Component } from 'react';
 import './App.css';
 import AppNavbar from './AppNavbar';
@@ -503,7 +503,7 @@ export default Home;
 
 让我们改变一下我们的`App.js`:
 
-```
+```java
 import React, { Component } from 'react';
 import './App.css';
 import Home from './Home';
@@ -544,7 +544,7 @@ export default App;
 
 这个插件将负责将我们的`frontend`应用程序打包并复制到我们的 Spring Boot API 构建文件夹中:
 
-```
+```java
 <properties>
     ...
     <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
@@ -581,7 +581,7 @@ export default App;
 
 让我们仔细看看我们的 [`maven-resources-plugin`](https://web.archive.org/web/20220827170201/https://maven.apache.org/plugins/maven-resources-plugin/) ，它负责将我们的`frontend`源复制到应用`target`文件夹:
 
-```
+```java
 ...
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
@@ -610,7 +610,7 @@ export default App;
 
 我们的`front-end-maven-plugin `将负责安装`Node.js`和[纱线](https://web.archive.org/web/20220827170201/https://yarnpkg.com/)，然后构建和测试我们的`frontend`应用程序:
 
-```
+```java
 ...
 <plugin>
     <groupId>com.github.eirslett</groupId>
@@ -671,7 +671,7 @@ export default App;
 
 最后，通过添加插件，我们可以运行以下命令来访问我们的应用程序:
 
-```
+```java
 mvn spring-boot:run
 ```
 

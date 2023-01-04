@@ -12,7 +12,7 @@ Spring MVC 和百里香 leaf 的基础可以在[这里](/web/20221208143909/http
 
 在我们的`pom.xml`文件中，我们需要添加的唯一依赖项是 SpringMVC 和 Thymeleaf:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -30,7 +30,7 @@ Spring MVC 和百里香 leaf 的基础可以在[这里](/web/20221208143909/http
 
 这通过向模型对象传递一个数组来响应，这将使它可被视图访问:
 
-```
+```java
 @Controller
 public class ThymeleafArrayController {
 
@@ -56,7 +56,7 @@ public class ThymeleafArrayController {
 
 我们要检查的第一个属性是数组的长度。我们可以这样检查它:
 
-```
+```java
 <p>...<span th:text="${continents.length}"></span>...</p>
 ```
 
@@ -64,7 +64,7 @@ public class ThymeleafArrayController {
 
 因此，**我们通过索引访问数组`continents`中每个元素的值，就像我们在普通的 Java 代码**中所做的一样:
 
-```
+```java
 <ol>
     <li th:text="${continents[2]}"></li>
     <li th:text="${continents[0]}"></li>
@@ -84,7 +84,7 @@ public class ThymeleafArrayController {
 
 在百里香，我们可以这样做:
 
-```
+```java
 <ul th:each="continet : ${continents}">
     <li th:text="${continent}"></li>
 </ul>
@@ -92,7 +92,7 @@ public class ThymeleafArrayController {
 
 当使用 **`th:each`关键字迭代数组**的元素时，我们并不仅限于使用列表标签。我们可以使用任何能够在页面上显示文本的 HTML 标签。例如:
 
-```
+```java
 <h4 th:each="continent : ${continents}" th:text="${continent}"></h4>
 ```
 
@@ -104,7 +104,7 @@ public class ThymeleafArrayController {
 
 让我们来看看这个:
 
-```
+```java
 <p>The greatest <span th:text="${#arrays.length(continents)}"></span> continents.</p>
 
 <p>Europe is a continent: <span th:text="${#arrays.contains(continents, 'Europe')}"></span>.</p>

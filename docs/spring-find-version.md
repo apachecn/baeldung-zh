@@ -12,7 +12,7 @@
 
 为了做到这一点，**我们将使用 [`SpringVersion`](https://web.archive.org/web/20220627171002/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/SpringVersion.html) 类的**方法:
 
-```
+```java
 assertEquals("5.1.10.RELEASE", SpringVersion.getVersion());
 ```
 
@@ -24,13 +24,13 @@ assertEquals("5.1.10.RELEASE", SpringVersion.getVersion());
 
 在内部，Spring 4.x `JdkVersion `类从 [`SystemProperties`](https://web.archive.org/web/20220627171002/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/system/SystemProperties.html) 类获取版本，所以我们可以做同样的事情。利用类`SystemProperties,` 我们将访问属性`java.version` :
 
-```
+```java
 assertEquals("1.8.0_191", SystemProperties.get("java.version"));
 ```
 
 或者，我们可以不使用 Spring 类直接访问属性:
 
-```
+```java
 assertEquals("1.8.0_191", System.getProperty("java.version"));
 ```
 
@@ -38,7 +38,7 @@ assertEquals("1.8.0_191", System.getProperty("java.version"));
 
 最后，我们将看到如何获得我们的应用程序运行的 Java 版本。为此，**我们将使用 [`JavaVersion`](https://web.archive.org/web/20220627171002/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/system/JavaVersion.html)** :
 
-```
+```java
 assertEquals("1.8", JavaVersion.getJavaVersion().toString());
 ```
 

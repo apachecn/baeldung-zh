@@ -18,13 +18,13 @@ Springdoc-OpenAPI 是一个基于 [OpenAPI 3](https://web.archive.org/web/202212
 
 让我们声明项目所需的 maven 依赖项。首先，我们将添加 [`springdoc-openapi-ui`](https://web.archive.org/web/20221219081705/https://search.maven.org/artifact/org.springdoc/springdoc-openapi-ui/1.6.13/jar) ，负责与 [Swagger-UI](https://web.archive.org/web/20221219081705/https://swagger.io/tools/swagger-ui/) 集成，并提供默认可访问的可视化工具:
 
-```
+```java
 http://localhost:8080/swagger-ui.html
 ```
 
 其次，增加了 [`springdoc-openapi-security`](https://web.archive.org/web/20221219081705/https://search.maven.org/artifact/org.springdoc/springdoc-openapi-security/1.6.13/jar) 模块，为 Spring 安全提供了支持:
 
-```
+```java
 <dependency>
      <groupId>org.springdoc</groupId>
      <artifactId>springdoc-openapi-ui</artifactId>
@@ -41,7 +41,7 @@ http://localhost:8080/swagger-ui.html
 
 对于本文，我们将实现一个虚拟 REST 控制器，作为用 Springdoc 生成文档的来源。此外，我们将举例说明通过 Swagger-UI 与`FooController`的受保护端点进行交互的认证方法。
 
-```
+```java
 @RestController
 @RequestMapping(value = "foos", produces = MediaType.APPLICATION_JSON_VALUE)
 @OpenAPIDefinition(info = @Info(title = "Foos API", version = "v1"))
@@ -70,7 +70,7 @@ public class FooController {
 
 我们将利用 Spring Security 的内存认证来注册我们的测试用户凭证:
 
-```
+```java
 @Autowired
 public void configureGlobal(AuthenticationManagerBuilder auth, PasswordEncoder passwordEncoder) throws Exception {
     auth.inMemoryAuthentication()
@@ -88,7 +88,7 @@ public void configureGlobal(AuthenticationManagerBuilder auth, PasswordEncoder p
 
 这里我们定义了安全配置来授权表单登录请求:
 
-```
+```java
 @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
@@ -109,7 +109,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 默认情况下，框架提供的登录端点没有记录。因此，我们需要通过设置相应的配置属性来使其可见。此外，可以在库的[文档](https://web.archive.org/web/20221219081705/https://springdoc.org/#springdoc-openapi-core-properties)中找到有用的配置属性:
 
-```
+```java
 springdoc.show-login-endpoint=true
 ```
 
@@ -127,7 +127,7 @@ springdoc.show-login-endpoint=true
 
 **Springdoc 不像登录**那样提供自动检测注销端点的方法。在这种情况下，我们需要定义一个假的 REST 控制器，为`/logout`路径公开一个请求后映射。然而，我们不需要添加实现，因为 Spring Security 会拦截并处理请求:
 
-```
+```java
 @RestController
 public class LogoutController {
 
@@ -148,7 +148,7 @@ public class LogoutController {
 
 使用基本身份验证保护端点的简单安全配置:
 
-```
+```java
 @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
@@ -168,7 +168,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 为了配置 OpenAPI 安全方案，我们需要提供一个基于`@SecurityScheme`注释的配置:
 
-```
+```java
 @Configuration
 @SecurityScheme(
   type = SecuritySchemeType.HTTP,
@@ -179,7 +179,7 @@ public class SpringdocConfig {}
 
 然后，我们还必须用`@SecurityRequirement(name = “basicAuth”)`来注释我们的`FooController`。如果我们只想保护一些端点或使用不同的方案，我们可以在方法级别应用此注释:
 
-```
+```java
 @RestController
 @OpenAPIDefinition(info = @Info(title = "Foos API", version = "v1"))
 @SecurityRequirement(name = "basicAuth")

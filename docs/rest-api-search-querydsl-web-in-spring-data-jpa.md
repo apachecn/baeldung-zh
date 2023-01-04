@@ -20,7 +20,7 @@
 
 首先，让我们从我们的 maven 配置开始:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -55,7 +55,7 @@
 
 接下来，让我们看看我们的存储库:
 
-```
+```java
 public interface UserRepository extends 
   JpaRepository<User, Long>, QueryDslPredicateExecutor<User>, QuerydslBinderCustomizer<QUser> {
     @Override
@@ -79,7 +79,7 @@ public interface UserRepository extends
 
 现在，让我们来看看控制器:
 
-```
+```java
 @RequestMapping(method = RequestMethod.GET, value = "/users")
 @ResponseBody
 public Iterable<User> findAllByWebQuerydsl(
@@ -92,13 +92,13 @@ public Iterable<User> findAllByWebQuerydsl(
 
 以下是包含这种类型查询的 URL 的外观:
 
-```
+```java
 http://localhost:8080/users?firstName=john
 ```
 
 下面是一个潜在反应是如何构成的:
 
-```
+```java
 [
    {
       "id":1,
@@ -114,7 +114,7 @@ http://localhost:8080/users?firstName=john
 
 最后，让我们测试一下新的 Querydsl Web 支持:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
@@ -148,7 +148,7 @@ public class UserLiveTest {
 
 首先，让我们获取系统中的所有用户:
 
-```
+```java
 @Test
 public void whenGettingListOfUsers_thenCorrect() {
     Response response = givenAuth().get("http://localhost:8080/users");
@@ -159,7 +159,7 @@ public void whenGettingListOfUsers_thenCorrect() {
 
 接下来，让我们通过**的名字**来查找用户:
 
-```
+```java
 @Test
 public void givenFirstName_whenGettingListOfUsers_thenCorrect() {
     Response response = givenAuth().get("http://localhost:8080/users?firstName=john");
@@ -171,7 +171,7 @@ public void givenFirstName_whenGettingListOfUsers_thenCorrect() {
 
 接下来，以免通过**部分姓氏**找到用户:
 
-```
+```java
 @Test
 public void givenPartialLastName_whenGettingListOfUsers_thenCorrect() {
     Response response = givenAuth().get("http://localhost:8080/users?lastName=do");
@@ -182,7 +182,7 @@ public void givenPartialLastName_whenGettingListOfUsers_thenCorrect() {
 
 现在，让我们试着通过**电子邮件**找到用户:
 
-```
+```java
 @Test
 public void givenEmail_whenGettingListOfUsers_thenIgnored() {
     Response response = givenAuth().get("http://localhost:8080/users?email=john");

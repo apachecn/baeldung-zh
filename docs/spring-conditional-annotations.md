@@ -14,7 +14,7 @@
 
 最常见的用法是**包含或排除整个配置类**:
 
-```
+```java
 @Configuration
 @Conditional(IsDevEnvCondition.class)
 class DevEnvLoggingConfiguration {
@@ -24,7 +24,7 @@ class DevEnvLoggingConfiguration {
 
 或者只是一颗豆子:
 
-```
+```java
 @Configuration
 class DevEnvLoggingConfiguration {
 
@@ -40,7 +40,7 @@ class DevEnvLoggingConfiguration {
 
 使组件有条件的另一种方法是将条件直接放在组件类上:
 
-```
+```java
 @Service
 @Conditional(IsDevEnvCondition.class)
 class LoggingService {
@@ -56,7 +56,7 @@ Spring 附带了一组预定义的条件注释。让我们来看看一些最受�
 
 首先，让我们看看如何将一个组件基于一个配置属性值 :
 
-```
+```java
 @Service
 @ConditionalOnProperty(
   value="logging.enabled", 
@@ -71,7 +71,7 @@ class LoggingService {
 
 类似地，我们可以**将条件基于表达式**:
 
-```
+```java
 @Service
 @ConditionalOnExpression(
   "${logging.enabled:true} and '${logging.level}'.equals('DEBUG')"
@@ -85,7 +85,7 @@ class LoggingService {
 
 我们可以应用的另一个条件是检查给定的 bean 是否被创建:
 
-```
+```java
 @Service
 @ConditionalOnBean(CustomLoggingConfiguration.class)
 class LoggingService {
@@ -95,7 +95,7 @@ class LoggingService {
 
 或者给定的类存在于类路径中:
 
-```
+```java
 @Service
 @ConditionalOnClass(CustomLogger.class)
 class LoggingService {
@@ -107,7 +107,7 @@ class LoggingService {
 
 此外，我们可以**让我们的组件依赖于给定的 Java 版本**:
 
-```
+```java
 @Service
 @ConditionalOnJava(JavaVersion.EIGHT)
 class LoggingService {
@@ -119,7 +119,7 @@ class LoggingService {
 
 最后，我们可以使用 [`@ConditionalOnWarDeployment`](https://web.archive.org/web/20220827110142/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/autoconfigure/condition/ConditionalOnWarDeployment.html) 注释来启用 bean only in war 打包:
 
-```
+```java
 @Configuration
 @ConditionalOnWarDeployment
 class AdditionalWebConfiguration {
@@ -133,7 +133,7 @@ class AdditionalWebConfiguration {
 
 Spring 允许我们通过**创建我们的定制条件模板**来定制`@Conditional`注释的行为。要创建一个，我们只需实现 [`Condition`](https://web.archive.org/web/20220827110142/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/Condition.html) 接口:
 
-```
+```java
 class Java8Condition implements Condition {
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
@@ -148,7 +148,7 @@ class Java8Condition implements Condition {
 
 之后，我们应该把我们的新条件作为属性放在`@Conditional`注释中:
 
-```
+```java
 @Service
 @Conditional(Java8Condition.class)
 public class Java8DependedService {
@@ -166,7 +166,7 @@ public class Java8DependedService {
 
 例如，让我们创建一个需要 Java 8 或 Java 9 的条件:
 
-```
+```java
 class Java8OrJava9 extends AnyNestedCondition {
 
     Java8OrJava9() {
@@ -184,7 +184,7 @@ class Java8OrJava9 extends AnyNestedCondition {
 
 另一方面，AND 运算符要简单得多。我们可以简单地对条件进行分组:
 
-```
+```java
 @Service
 @Conditional({IsWindowsCondition.class, Java8Condition.class})
 @ConditionalOnJava(JavaVersion.EIGHT)

@@ -10,7 +10,7 @@
 
 让我们假设我们有字符串:
 
-```
+```java
 String inputString = "hello there, Baeldung";
 ```
 
@@ -18,7 +18,7 @@ String inputString = "hello there, Baeldung";
 
 所以，让我们把关键字放入一个数组:
 
-```
+```java
 String[] words = {"hello", "Baeldung"};
 ```
 
@@ -30,7 +30,7 @@ String[] words = {"hello", "Baeldung"};
 
 让我们遍历关键字数组，检查每个条目在`inputString:`中的出现情况
 
-```
+```java
 public static boolean containsWords(String inputString, String[] items) {
     boolean found = true;
     for (String item : items) {
@@ -51,7 +51,7 @@ public static boolean containsWords(String inputString, String[] items) {
 
 类似于使用`String.contains()`方法的解决方案，**我们可以通过使用 [`String.indexOf()`](/web/20220627091544/https://www.baeldung.com/string/index-of) 方法**来检查关键字的索引。为此，我们需要一个接受`inputString`和关键字列表的方法:
 
-```
+```java
 public static boolean containsWordsIndexOf(String inputString, String[] words) {
     boolean found = true;
     for (String word : words) {
@@ -72,13 +72,13 @@ public static boolean containsWordsIndexOf(String inputString, String[] words) {
 
 首先，让我们定义字符串表达式。因为我们需要匹配两个关键字，所以我们将使用两个前瞻来构建正则表达式规则:
 
-```
+```java
 Pattern pattern = Pattern.compile("(?=.*hello)(?=.*Baeldung)");
 ```
 
 对于一般情况:
 
-```
+```java
 StringBuilder regexp = new StringBuilder();
 for (String word : words) {
     regexp.append("(?=.*").append(word).append(")");
@@ -87,7 +87,7 @@ for (String word : words) {
 
 之后，我们将使用`matcher()`方法来`find()`事件:
 
-```
+```java
 public static boolean containsWordsPatternMatch(String inputString, String[] words) {
 
     StringBuilder regexp = new StringBuilder();
@@ -107,14 +107,14 @@ public static boolean containsWordsPatternMatch(String inputString, String[] wor
 
 最后，我们可以使用 Java 8 的[流 API](/web/20220627091544/https://www.baeldung.com/java-8-streams-introduction) 。但是首先，让我们对初始数据做一些小的转换:
 
-```
+```java
 List<String> inputString = Arrays.asList(inputString.split(" "));
 List<String> words = Arrays.asList(words);
 ```
 
 现在，是时候使用流 API 了:
 
-```
+```java
 public static boolean containsWordsJava8(String inputString, String[] words) {
     List<String> inputStringList = Arrays.asList(inputString.split(" "));
     List<String> wordsList = Arrays.asList(words);
@@ -127,7 +127,7 @@ public static boolean containsWordsJava8(String inputString, String[] words) {
 
 或者，**我们可以简单地使用[集合框架](/web/20220627091544/https://www.baeldung.com/java-collections)** 的`containsAll()`方法来获得想要的结果:
 
-```
+```java
 public static boolean containsWordsArray(String inputString, String[] words) {
     List<String> inputStringList = Arrays.asList(inputString.split(" "));
     List<String> wordsList = Arrays.asList(words);
@@ -144,7 +144,7 @@ public static boolean containsWordsArray(String inputString, String[] words) {
 
 让我们在我们的`pom.xml`中包含 [Aho-Corasick 算法依赖](https://web.archive.org/web/20220627091544/https://search.maven.org/search?q=g:org.ahocorasick%20a:ahocorasick):
 
-```
+```java
 <dependency>
     <groupId>org.ahocorasick</groupId>
     <artifactId>ahocorasick</artifactId>
@@ -154,32 +154,32 @@ public static boolean containsWordsArray(String inputString, String[] words) {
 
 首先，让我们用关键字的*单词*数组构建 trie 管道。为此，我们将使用 [Trie](/web/20220627091544/https://www.baeldung.com/trie-java) 数据结构:
 
-```
+```java
 Trie trie = Trie.builder().onlyWholeWords().addKeywords(words).build();
 ```
 
 之后，让我们用`inputString`文本调用解析器方法，我们希望在其中找到关键字并将结果保存在`emits`集合中:
 
-```
+```java
 Collection<Emit> emits = trie.parseText(inputString);
 ```
 
 最后，如果我们打印我们的结果:
 
-```
+```java
 emits.forEach(System.out::println);
 ```
 
 对于每个关键字，我们将看到该关键字在文本中的开始位置、结束位置和关键字本身:
 
-```
+```java
 0:4=hello
 13:20=Baeldung
 ```
 
 最后，让我们看看完整的实现:
 
-```
+```java
 public static boolean containsWordsAhoCorasick(String inputString, String[] words) {
     Trie trie = Trie.builder().onlyWholeWords().addKeywords(words).build();
 

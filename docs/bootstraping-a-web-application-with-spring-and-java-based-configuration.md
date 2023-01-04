@@ -30,7 +30,7 @@ See how to properly migrate from a Spring to Spring Boot.[Read more](/web/202207
 
 首先，我们需要 [spring-boot-starter-web](https://web.archive.org/web/20220727020632/https://search.maven.org/search?q=a:spring-boot-starter-web) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -47,7 +47,7 @@ See how to properly migrate from a Spring to Spring Boot.[Read more](/web/202207
 
 **开始使用 Spring Boot 最直接的方法是创建一个主类并用`@SpringBootApplication`** 对其进行注释:
 
-```
+```java
 @SpringBootApplication
 public class SpringBootRestApplication {
 
@@ -63,7 +63,7 @@ public class SpringBootRestApplication {
 
 **接下来，对于 Spring beans 的基于 Java 的配置，我们需要创建一个 config 类并用`@Configuration`注释**对其进行注释:
 
-```
+```java
 @Configuration
 public class WebConfig {
 
@@ -82,7 +82,7 @@ public class WebConfig {
 
 首先，我们需要 spring-webmvc 的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-webmvc</artifactId>
@@ -94,7 +94,7 @@ public class WebConfig {
 
 接下来，我们将添加带有`@Configuration`注释的配置类:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "com.baeldung.controller")
@@ -113,7 +113,7 @@ public class WebConfig {
 
 接下来，我们需要**添加一个实现`WebApplicationInitializer`接口的类:**
 
-```
+```java
 public class AppInitializer implements WebApplicationInitializer {
 
     @Override
@@ -140,7 +140,7 @@ public class AppInitializer implements WebApplicationInitializer {
 
 让我们快速看一下等效的 XML web 配置:
 
-```
+```java
 <context:component-scan base-package="com.baeldung.controller" />
 <mvc:annotation-driven />
 ```

@@ -16,7 +16,7 @@ Apache Cassandra 是一个强大的开源 NoSQL 分布式数据库。在之前�
 
 当然，我们需要为 Apache Cassandra 添加标准的 [Datastax Java 驱动程序](https://web.archive.org/web/20220525141857/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.datastax.oss%22%20AND%20a%3A%22java-driver-core%22)到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.datastax.oss</groupId>
     <artifactId>java-driver-core</artifactId>
@@ -26,7 +26,7 @@ Apache Cassandra 是一个强大的开源 NoSQL 分布式数据库。在之前�
 
 为了用嵌入式数据库服务器测试我们的代码，我们还应该将 [`cassandra-unit`](https://web.archive.org/web/20220525141857/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.cassandraunit%22%20AND%20a%3A%22cassandra-unit%22) 依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.cassandraunit</groupId>
     <artifactId>cassandra-unit</artifactId>
@@ -41,7 +41,7 @@ Apache Cassandra 是一个强大的开源 NoSQL 分布式数据库。在之前�
 
 在本教程中，我们测试的重点将是一个简单的人员表，我们通过一个简单的 [CQL](/web/20220525141857/https://www.baeldung.com/cassandra-data-types) 脚本来控制它:
 
-```
+```java
 CREATE TABLE person(
     id varchar,
     name varchar,
@@ -65,7 +65,7 @@ INSERT INTO person(id, name) values('5678','Michael');
 
 让我们先来看看如何使用 CassandraUnit 自带的原生 API。首先，我们将继续定义我们的单元测试和测试设置:
 
-```
+```java
 public class NativeEmbeddedCassandraUnitTest {
 
     private CqlSession session;
@@ -83,14 +83,14 @@ public class NativeEmbeddedCassandraUnitTest {
 
 这将使用固定端口 9142 启动我们的数据库服务器:
 
-```
+```java
 11:13:36.754 [pool-2-thread-1] INFO  o.apache.cassandra.transport.Server
   - Starting listening for CQL clients on localhost/127.0.0.1:9142 (unencrypted)...
 ```
 
 如果我们喜欢使用随机可用的端口，我们可以使用提供的卡珊德拉 YAML 配置文件:
 
-```
+```java
 EmbeddedCassandraServerHelper
   .startEmbeddedCassandra(EmbeddedCassandraServerHelper.CASSANDRA_RNDPORT_YML_FILE);
 ```
@@ -101,7 +101,7 @@ EmbeddedCassandraServerHelper
 
 现在我们已经加载了一些数据，我们的嵌入式服务器已经启动并运行，我们可以继续编写一个简单的单元测试:
 
-```
+```java
 @Test
 public void givenEmbeddedCassandraInstance_whenStarted_thenQuerySuccess() throws Exception {
     ResultSet result = session.execute("select * from person WHERE id=1234");
@@ -113,7 +113,7 @@ public void givenEmbeddedCassandraInstance_whenStarted_thenQuerySuccess() throws
 
 最后，当我们拆除测试时，我们将清理我们的嵌入式实例:
 
-```
+```java
 @After
 public void tearDown() throws Exception {
     EmbeddedCassandraServerHelper.cleanEmbeddedCassandra();
@@ -126,7 +126,7 @@ public void tearDown() throws Exception {
 
 为了帮助简化我们在上一节看到的例子，CassandraUnit 提供了一个抽象测试用例类`AbstractCassandraUnit4CQLTestCase,`,它负责我们之前看到的设置和拆除:
 
-```
+```java
 public class AbstractTestCaseWithEmbeddedCassandraUnitTest
   extends AbstractCassandraUnit4CQLTestCase {
 
@@ -152,7 +152,7 @@ public class AbstractTestCaseWithEmbeddedCassandraUnitTest
 
 如果我们不想强迫我们的测试扩展`AbstractCassandraUnit4CQLTestCase,` ，那么幸运的是 CassandraUnit 也提供了一个标准的 [JUnit 规则](/web/20220525141857/https://www.baeldung.com/junit-4-rules):
 
-```
+```java
 public class JUnitRuleWithEmbeddedCassandraUnitTest {
 
     @Rule
@@ -174,7 +174,7 @@ public class JUnitRuleWithEmbeddedCassandraUnitTest {
 
 为了利用这种支持，我们需要向我们的项目添加 [`cassandra-unit-spring`](https://web.archive.org/web/20220525141857/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.cassandraunit%22%20AND%20a%3A%22cassandra-unit-spring%22) Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.cassandraunit</groupId>
     <artifactId>cassandra-unit-spring</artifactId>
@@ -185,7 +185,7 @@ public class JUnitRuleWithEmbeddedCassandraUnitTest {
 
 现在我们可以访问大量的注释和类，我们可以在测试中使用它们。让我们继续编写一个使用最基本的弹簧配置的测试:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({ CassandraUnitTestExecutionListener.class })
 @CassandraDataSet(value = "people.cql", keyspace = "people")

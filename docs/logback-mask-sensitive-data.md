@@ -20,7 +20,7 @@
 
 假设我们在 web 请求的上下文中记录用户详细信息。我们需要屏蔽与用户相关的敏感数据。假设我们的应用程序收到了我们记录的以下请求或响应:
 
-```
+```java
 {
     "user_id":"87656",
     "ssn":"786445563",
@@ -42,7 +42,7 @@
 
 让我们构建`MaskingPatternLayout` 类:
 
-```
+```java
 public class MaskingPatternLayout extends PatternLayout {
 
     private Pattern multilinePattern;
@@ -86,31 +86,31 @@ public class MaskingPatternLayout extends PatternLayout {
 
 例如，对于 SSN，我们可以使用这样的正则表达式:
 
-```
+```java
 \"SSN\"\s*:\s*\"(.*)\"
 ```
 
 对于地址，我们可以使用:
 
-```
+```java
 \"address\"\s*:\s*\"(.*?)\" 
 ```
 
 此外，对于 IP 地址数据模式(192.169.0.1)，我们可以使用正则表达式:
 
-```
+```java
 (\d+\.\d+\.\d+\.\d+)
 ```
 
 最后，对于电子邮件，我们可以这样写:
 
-```
+```java
 (\[[email protected]](/web/20221208143830/https://www.baeldung.com/cdn-cgi/l/email-protection)\w+\.\w+)
 ```
 
 现在，我们将把这些正则表达式模式添加到我们的`logback.xml`文件中的`maskPattern`标签中:
 
-```
+```java
 <configuration>
     <appender name="mask" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
@@ -130,7 +130,7 @@ public class MaskingPatternLayout extends PatternLayout {
 
 现在，我们将为上面的例子创建 JSON，并使用`logger.info()`来记录细节:
 
-```
+```java
 Map<String, String> user = new HashMap<String, String>();
 user.put("user_id", "87656");
 user.put("SSN", "786445563");
@@ -146,14 +146,14 @@ logger.info("User JSON: {}", userDetails);
 
 执行此操作后，我们可以看到输出:
 
-```
+```java
 INFO  [2021-06-01 16:04:12,059] [main] com.baeldung.logback.MaskingPatternLayoutExample: User JSON: 
 {"email_id":"*******************","address":"*********","user_id":"87656","city":"Chicago","Country":"U.S.", "ip_address":"***********","SSN":"*********"} 
 ```
 
 在这里，我们可以看到记录器中的用户 JSON 被屏蔽了:
 
-```
+```java
 {
     "user_id":"87656",
     "ssn":"*********",

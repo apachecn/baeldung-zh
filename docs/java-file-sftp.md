@@ -16,7 +16,7 @@
 
 我们需要将`jsch`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.jcraft</groupId>
     <artifactId>jsch</artifactId>
@@ -32,7 +32,7 @@
 
 JSch 使我们能够使用密码认证或公钥认证来访问远程服务器。在本例中，**我们将使用密码认证**:
 
-```
+```java
 private ChannelSftp setupJsch() throws JSchException {
     JSch jsch = new JSch();
     jsch.setKnownHosts("/Users/john/.ssh/known_hosts");
@@ -45,7 +45,7 @@ private ChannelSftp setupJsch() throws JSchException {
 
 在上面的例子中，`remoteHost`代表远程服务器的名称或 IP 地址(即`example.com`)。我们可以将测试中使用的变量定义为:
 
-```
+```java
 private String remoteHost = "HOST_NAME_HERE";
 private String username = "USERNAME_HERE";
 private String password = "PASSWORD_HERE";
@@ -53,7 +53,7 @@ private String password = "PASSWORD_HERE";
 
 我们也可以使用以下命令生成`known_hosts`文件:
 
-```
+```java
 ssh-keyscan -H -t rsa REMOTE_HOSTNAME >> known_hosts
 ```
 
@@ -61,7 +61,7 @@ ssh-keyscan -H -t rsa REMOTE_HOSTNAME >> known_hosts
 
 **上传文件到远程服务器，我们将使用`ChannelSftp.put()`** 的方法:
 
-```
+```java
 @Test
 public void whenUploadFileUsingJsch_thenSuccess() throws JSchException, SftpException {
     ChannelSftp channelSftp = setupJsch();
@@ -82,7 +82,7 @@ public void whenUploadFileUsingJsch_thenSuccess() throws JSchException, SftpExce
 
 我们还可以使用`ChannelSftp.get()`**从远程服务器下载文件:**
 
-```
+```java
 @Test
 public void whenDownloadFileUsingJsch_thenSuccess() throws JSchException, SftpException {
     ChannelSftp channelSftp = setupJsch();
@@ -107,7 +107,7 @@ public void whenDownloadFileUsingJsch_thenSuccess() throws JSchException, SftpEx
 
 首先，我们将依赖关系添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.hierynomus</groupId>
     <artifactId>sshj</artifactId>
@@ -125,7 +125,7 @@ SSHJ 还允许我们使用密码或公钥认证来访问远程服务器。
 
 我们将在示例中使用密码认证:
 
-```
+```java
 private SSHClient setupSshj() throws IOException {
     SSHClient client = new SSHClient();
     client.addHostKeyVerifier(new PromiscuousVerifier());
@@ -139,7 +139,7 @@ private SSHClient setupSshj() throws IOException {
 
 类似于 JSch，**我们将使用`SFTPClient.put()`方法上传一个文件到远程服务器**:
 
-```
+```java
 @Test
 public void whenUploadFileUsingSshj_thenSuccess() throws IOException {
     SSHClient sshClient = setupSshj();
@@ -154,7 +154,7 @@ public void whenUploadFileUsingSshj_thenSuccess() throws IOException {
 
 这里我们有两个新变量要定义:
 
-```
+```java
 private String localFile = "src/main/resources/input.txt";
 private String remoteDir = "remote_sftp_test/";
 ```
@@ -163,7 +163,7 @@ private String remoteDir = "remote_sftp_test/";
 
 从远程服务器下载文件也是如此；我们将使用`SFTPClient.get()`:
 
-```
+```java
 @Test
 public void whenDownloadFileUsingSshj_thenSuccess() throws IOException {
     SSHClient sshClient = setupSshj();
@@ -178,7 +178,7 @@ public void whenDownloadFileUsingSshj_thenSuccess() throws IOException {
 
 我们将添加上面使用的两个变量:
 
-```
+```java
 private String remoteFile = "welcome.txt";
 private String localDir = "src/main/resources/";
 ```
@@ -193,7 +193,7 @@ private String localDir = "src/main/resources/";
 
 我们需要将`commons-vfs2`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-vfs2</artifactId>
@@ -211,7 +211,7 @@ Apache Commons VFS 有点不同。
 
 在这个例子中，我们将使用方法`FileObject.copyFrom()`上传一个文件:
 
-```
+```java
 @Test
 public void whenUploadFileUsingVfs_thenSuccess() throws IOException {
     FileSystemManager manager = VFS.getManager();
@@ -234,7 +234,7 @@ public void whenUploadFileUsingVfs_thenSuccess() throws IOException {
 
 从远程服务器下载文件非常类似；**我们还将使用`FileObject.copyFrom()`从`remoteFile` :** 中复制`localFile`
 
-```
+```java
 @Test
 public void whenDownloadFileUsingVfs_thenSuccess() throws IOException {
     FileSystemManager manager = VFS.getManager();

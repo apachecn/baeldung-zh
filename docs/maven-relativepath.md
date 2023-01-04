@@ -15,7 +15,7 @@
 
 管理多模块项目时，将一个 Maven 项目放入另一个项目是最佳实践。例如，我们有一个聚合器项目，具有以下 GAV 坐标:
 
-```
+```java
 <groupId>com.baeldung.maven-parent-pom-resolution</groupId>
 <artifactId>aggregator</artifactId>
 <version>1.0.0-SNAPSHOT</version>
@@ -27,7 +27,7 @@
 
 因此，模块 1 POM 可以包括以下部分:
 
-```
+```java
 <artifactId>module1</artifactId>
 <parent>
     <groupId>com.baeldung.maven-parent-pom-resolution</groupId>
@@ -40,7 +40,7 @@
 
 我们必须确保聚合器 POM 具有匹配的 GAV 坐标。否则，我们会得到一个构建错误:
 
-```
+```java
 [ERROR]     Non-resolvable parent POM for com.baeldung.maven-parent-pom-resolution:module1:1.0.0-SNAPSHOT:
   Could not find artifact com.baeldung.maven-parent-pom-resolution:aggregator:pom:1.0-SNAPSHOT
   and 'parent.relativePath' points at wrong local POM @ line 7, column 13
@@ -52,7 +52,7 @@
 
 [![](img/0ddb8f46c532d64efcabfcd26fd76ca5.png)](/web/20220628123205/https://www.baeldung.com/wp-content/uploads/2021/09/module2.svg)
 
-```
+```java
 <artifactId>module2</artifactId>
 <parent>
     <groupId>com.baeldung.maven-parent-pom-resolution</groupId>
@@ -68,7 +68,7 @@
 
 为了跳过本地文件搜索，直接在 Maven 存储库中搜索父 POM，我们需要显式地将`relativePath`设置为空值:
 
-```
+```java
 <parent>
     <groupId>com.baeldung</groupId>
     <artifactId>external-project</artifactId>

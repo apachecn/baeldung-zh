@@ -12,7 +12,7 @@
 
 让我们从向标准 Spring Boot 应用程序添加 Maven 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>com.vaadin</groupId>
     <artifactId>vaadin-spring-boot-starter</artifactId>
@@ -23,7 +23,7 @@ Vaadin 也是被 [Spring 初始化器](https://web.archive.org/web/2022062620382
 
 本教程使用比 starter 模块中的默认版本更新的 Vaadin 版本。要使用较新的版本，只需像这样定义 Vaadin 物料清单(BOM ):
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -41,7 +41,7 @@ Vaadin 也是被 [Spring 初始化器](https://web.archive.org/web/2022062620382
 
 我们将使用具有`firstName`和`lastName`属性的`Employee`实体对其执行 CRUD 操作:
 
-```
+```java
 @Entity
 public class Employee {
 
@@ -56,7 +56,7 @@ public class Employee {
 
 下面是简单的相应的 Spring 数据存储库——用于管理 CRUD 操作:
 
-```
+```java
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     List<Employee> findByLastNameStartsWithIgnoreCase(String lastName);
 }
@@ -66,7 +66,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
 让我们也用几个示例`Employee`预先填充数据库:
 
-```
+```java
 @Bean
 public CommandLineRunner loadData(EmployeeRepository repository) {
     return (args) -> {
@@ -84,7 +84,7 @@ public CommandLineRunner loadData(EmployeeRepository repository) {
 
 `MainView`类是 Vaadin 的 UI 逻辑的入口点。**注释`@Route`告诉 Spring Boot 自动选取它并显示在 web 应用程序的根目录:**
 
-```
+```java
 @Route
 public class MainView extends VerticalLayout {
     private EmployeeRepository employeeRepository;
@@ -97,7 +97,7 @@ public class MainView extends VerticalLayout {
 
 我们可以通过给`@Route`注释一个参数来定制显示视图的 URL:
 
-```
+```java
 @Route(value="myhome")
 ```
 
@@ -121,7 +121,7 @@ public class MainView extends VerticalLayout {
 
 我们为带有+图标的按钮提供一个标签。
 
-```
+```java
 this.grid = new Grid<>(Employee.class);
 this.filter = new TextField();
 this.addNewBtn = new Button("New employee", VaadinIcon.PLUS.create());
@@ -129,14 +129,14 @@ this.addNewBtn = new Button("New employee", VaadinIcon.PLUS.create());
 
 我们使用`HorizontalLayout`来水平排列过滤文本字段和按钮。然后将此布局、网格和编辑器添加到父垂直布局中:
 
-```
+```java
 HorizontalLayout actions = new HorizontalLayout(filter, addNewBtn);
 add(actions, grid, editor);
 ```
 
 提供网格高度和列名。我们还在文本字段中添加帮助文本:
 
-```
+```java
 grid.setHeight("200px");
 grid.setColumns("id", "firstName", "lastName");
 grid.getColumnByKey("id").setWidth("50px").setFlexGrow(0);
@@ -154,14 +154,14 @@ filter.setPlaceholder("Filter by last name");
 
 我们还为值更改事件设置了一个监听器，它根据`filter:`中提供的文本返回经过过滤的雇员列表
 
-```
+```java
 filter.setValueChangeMode(ValueChangeMode.EAGER);
 filter.addValueChangeListener(e -> listEmployees(e.getValue()));
 ```
 
 在网格中选择一行时，我们将显示`Employee`表单，允许用户编辑名字和姓氏:
 
-```
+```java
 grid.asSingleSelect().addValueChangeListener(e -> {
     editor.editEmployee(e.getValue());
 });
@@ -169,13 +169,13 @@ grid.asSingleSelect().addValueChangeListener(e -> {
 
 单击 add new employee 按钮，我们将显示空白的`Employee`表单:
 
-```
+```java
 addNewBtn.addClickListener(e -> editor.editEmployee(new Employee("", "")));
 ```
 
 最后，我们听取编辑器所做的更改，并用来自后端的数据刷新网格:
 
-```
+```java
 editor.setChangeHandler(() -> {
     editor.setVisible(false);
     listEmployees(filter.getValue());
@@ -184,7 +184,7 @@ editor.setChangeHandler(() -> {
 
 `listEmployees`函数获取过滤后的`Employee`列表并更新网格:
 
-```
+```java
 void listEmployees(String filterText) {
     if (StringUtils.isEmpty(filterText)) {
         grid.setItems(employeeRepository.findAll());
@@ -198,7 +198,7 @@ void listEmployees(String filterText) {
 
 我们将使用一个简单的表单供用户添加/编辑员工:
 
-```
+```java
 @SpringComponent
 @UIScope
 public class EmployeeEditor extends VerticalLayout implements KeyNotifier {
@@ -233,13 +233,13 @@ public class EmployeeEditor extends VerticalLayout implements KeyNotifier {
 
 我们使用一个 **`Binder`，它使用命名约定** : 将表单字段与`Employee`属性绑定在一起
 
-```
+```java
 binder.bindInstanceFields(this);
 ```
 
 我们根据用户操作调用适当的 EmployeeRepositor 方法:
 
-```
+```java
 void delete() {
     repository.delete(employee);
     changeHandler.onChange();

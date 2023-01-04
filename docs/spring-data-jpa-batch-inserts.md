@@ -12,7 +12,7 @@
 
 首先，我们需要一个简单的实体。姑且称之为`Customer`:
 
-```
+```java
 @Entity
 public class Customer {
 
@@ -28,7 +28,7 @@ public class Customer {
 
 然后，我们需要我们的存储库:
 
-```
+```java
 public interface CustomerRepository extends CrudRepository<Customer, Long> {
 } 
 ```
@@ -37,7 +37,7 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
 
 因此，让我们在控制器中利用这一点:
 
-```
+```java
 @RestController
 public class CustomerController {   
     @Autowired
@@ -62,7 +62,7 @@ public class CustomerController {
 
 用`MockMvc`测试我们的代码很简单:
 
-```
+```java
 @Autowired
 private MockMvc mockMvc;
 
@@ -79,13 +79,13 @@ public void whenInsertingCustomers_thenCustomersAreCreated() throws Exception {
 
 首先，让我们将下面的属性添加到`application.properties `来查看一些统计数据:
 
-```
+```java
 spring.jpa.properties.hibernate.generate_statistics=true 
 ```
 
 此时，如果我们运行测试，我们将看到如下所示的统计信息:
 
-```
+```java
 11232586 nanoseconds spent preparing 4 JDBC statements;
 4076610 nanoseconds spent executing 4 JDBC statements;
 0 nanoseconds spent executing 0 JDBC batches; 
@@ -99,7 +99,7 @@ spring.jpa.properties.hibernate.generate_statistics=true
 
 所以，让我们打开它:
 
-```
+```java
 spring.jpa.properties.hibernate.jdbc.batch_size=4
 spring.jpa.properties.hibernate.order_inserts=true 
 ```
@@ -108,7 +108,7 @@ spring.jpa.properties.hibernate.order_inserts=true
 
 **因此，第二次运行测试时，我们会看到插入被分批:**
 
-```
+```java
 16577314 nanoseconds spent preparing 4 JDBC statements;
 2207548 nanoseconds spent executing 4 JDBC statements;
 2003005 nanoseconds spent executing 1 JDBC batches; 

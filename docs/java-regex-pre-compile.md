@@ -27,7 +27,7 @@
 
 实际上，如果我们看一下`String#matches`的实现:
 
-```
+```java
 public boolean matches(String regex) {
     return Pattern.matches(regex, this);
 }
@@ -35,7 +35,7 @@ public boolean matches(String regex) {
 
 并且在`Pattern#matches`:
 
-```
+```java
 public static boolean matches(String regex, CharSequence input) {
     Pattern p = compile(regex);
     Matcher m = p.matcher(input);
@@ -47,7 +47,7 @@ public static boolean matches(String regex, CharSequence input) {
 
 第二点是这些方法没有重用创建的`Pattern`和`Matcher`实例。正如我们将在基准测试中看到的，**这会使性能降低六倍**:
 
-```
+```java
  @Benchmark
 public void matcherFromPreCompiledPatternResetMatches(Blackhole bh) {
     for (String value : values) {
@@ -87,7 +87,7 @@ public void stringMatchs(Blackhole bh) {
 
 看看基准测试的结果，毫无疑问，**预编译的`Pattern`和重用的`Matcher`以比**快六倍多的结果胜出:
 
-```
+```java
 Benchmark                                                               Mode  Cnt     Score     Error  Units
 PatternPerformanceComparison.matcherFromPreCompiledPatternResetMatches  avgt   20   278.732 ±  22.960  ms/op
 PatternPerformanceComparison.preCompiledPatternMatcherMatches           avgt   20   500.393 ±  34.182  ms/op
@@ -124,7 +124,7 @@ PatternPerformanceComparison.patternMatches                             avgt   2
 
 让我们看一下`splitAsStream`的一些代码，它从给定的输入序列中围绕模式匹配创建一个流:
 
-```
+```java
 @Test
 public void givenPreCompiledPattern_whenCallSplitAsStream_thenReturnArraySplitByThePattern() {
     Pattern splitPreCompiledPattern = Pattern.compile("__");
@@ -139,13 +139,13 @@ public void givenPreCompiledPattern_whenCallSplitAsStream_thenReturnArraySplitBy
 
 `asPredicate`方法创建了一个谓词，其行为就好像它从输入序列中创建了一个匹配器，然后调用 find:
 
-```
+```java
 string -> matcher(string).find();
 ```
 
 让我们创建一个模式，该模式匹配一个列表中的姓名，该列表中的姓名至少包含三个字母:
 
-```
+```java
 @Test
 public void givenPreCompiledPattern_whenCallAsPredicate_thenReturnPredicateToFindPatternInTheList() {
     List<String> namesToValidate = Arrays.asList("Fabio Silva", "Mr. Silva");
@@ -165,13 +165,13 @@ public void givenPreCompiledPattern_whenCallAsPredicate_thenReturnPredicateToFin
 
 **Java 11 引入了`asMatchPredicate`方法**,该方法创建一个谓词，其行为就像从输入序列创建一个匹配器，然后调用 matches:
 
-```
+```java
 string -> matcher(string).matches();
 ```
 
 让我们创建一个模式，该模式匹配一个列表中的名字，该列表只有名字和姓氏，每个名字至少有三个字母:
 
-```
+```java
 @Test
 public void givenPreCompiledPattern_whenCallAsMatchPredicate_thenReturnMatchPredicateToMatchesPattern() {
     List<String> namesToValidate = Arrays.asList("Fabio Silva", "Fabio Luis Silva");

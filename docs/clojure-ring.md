@@ -19,7 +19,7 @@
 
 我们可以将这些添加到我们的 Leiningen 项目中:
 
-```
+```java
  :dependencies [[org.clojure/clojure "1.10.0"]
                  [ring/ring-core "1.7.1"]
                  [ring/ring-jetty-adapter "1.7.1"]]
@@ -27,7 +27,7 @@
 
 然后，我们可以将它添加到一个最小的项目中:
 
-```
+```java
 (ns ring.core
   (:use ring.adapter.jetty))
 
@@ -73,14 +73,14 @@ Leiningen 有几个核心概念，所有东西都是围绕这些概念构建的:
 
 其中最基本的是`ring.util.response/response`函数，它创建一个简单的响应，状态代码为`200 OK`:
 
-```
+```java
 ring.core=> (ring.util.response/response "Hello")
 {:status 200, :headers {}, :body "Hello"}
 ```
 
 **对于常见的状态码**，还有其他一些方法，例如`bad-request`、`not-found`和`redirect`:
 
-```
+```java
 ring.core=> (ring.util.response/bad-request "Hello")
 {:status 400, :headers {}, :body "Hello"}
 ring.core=> (ring.util.response/created "/post/123")
@@ -91,14 +91,14 @@ ring.core=> (ring.util.response/redirect "https://ring-clojure.github.io/ring/")
 
 我们还有`status `方法，它将把现有的响应转换成任意的状态代码:
 
-```
+```java
 ring.core=> (ring.util.response/status (ring.util.response/response "Hello") 409)
 {:status 409, :headers {}, :body "Hello"}
 ```
 
 **然后我们有一些方法来调整类似**响应的其他特征——例如，`content-type, header `或`set-cookie`:
 
-```
+```java
 ring.core=> (ring.util.response/content-type (ring.util.response/response "Hello") "text/plain")
 {:status 200, :headers {"Content-Type" "text/plain"}, :body "Hello"}
 ring.core=> (ring.util.response/header (ring.util.response/response "Hello") "X-Tutorial-For" "Baeldung")
@@ -117,7 +117,7 @@ ring.core=> (ring.util.response/set-cookie (ring.util.response/response "Hello")
 
 最简单的是，我们可以编写一个总是返回相同响应的函数:
 
-```
+```java
 (defn handler [request] (ring.util.response/response "Hello"))
 ```
 
@@ -125,7 +125,7 @@ ring.core=> (ring.util.response/set-cookie (ring.util.response/response "Hello")
 
 例如，我们可以编写一个处理程序来返回传入的 IP 地址:
 
-```
+```java
 (defn check-ip-handler [request]
     (ring.util.response/content-type
         (ring.util.response/response (:remote-addr request))
@@ -142,7 +142,7 @@ ring.core=> (ring.util.response/set-cookie (ring.util.response/response "Hello")
 
 **中间件可以根据需要使用许多其他参数**。例如，我们可以使用下面的代码为来自包装处理程序的每个响应设置`Content-Type`头:
 
-```
+```java
 (defn wrap-content-type [handler content-type]
   (fn [request]
     (let [response (handler request)]
@@ -153,7 +153,7 @@ ring.core=> (ring.util.response/set-cookie (ring.util.response/response "Hello")
 
 我们可以用它来产生一个新的处理程序，只需将它们链接在一起:
 
-```
+```java
 (def app-handler (wrap-content-type handler "text/html"))
 ```
 
@@ -161,7 +161,7 @@ Clojure 还提供了一种以更自然的方式将许多链接在一起的方法
 
 **具体来说，我们需要线程优先宏，** `**->**.` 这将允许我们用提供的值作为第一个参数来调用每个中间件:
 
-```
+```java
 (def app-handler
   (-> handler
       (wrap-content-type "text/html")
@@ -183,21 +183,21 @@ Clojure 还提供了一种以更自然的方式将许多链接在一起的方法
 
 **`wrap-file`中间件在文件系统**上获取一个目录。如果传入的请求与此目录中的文件匹配，则返回该文件，而不是调用处理函数:
 
-```
+```java
 (use 'ring.middleware.file) 
 ```
 
-```
+```java
 (def app-handler (wrap-file your-handler "/var/www/public"))
 ```
 
 以非常相似的方式，**`wrap-resource`中间件使用一个类路径前缀，它在这个前缀中查找文件**:
 
-```
+```java
 (use 'ring.middleware.resource) 
 ```
 
-```
+```java
 (def app-handler (wrap-resource your-handler "public"))
 ```
 
@@ -205,7 +205,7 @@ Clojure 还提供了一种以更自然的方式将许多链接在一起的方法
 
 Ring 还提供了额外的中间件来使这些更干净地在 HTTP API 上使用:
 
-```
+```java
 (use 'ring.middleware.resource
      'ring.middleware.content-type
      'ring.middleware.not-modified)
@@ -225,7 +225,7 @@ Ring 还提供了额外的中间件来使这些更干净地在 HTTP API 上使�
 
 **在我们可以使用参数之前，我们必须使用`wrap-params`中间件来包装处理程序**。这将正确解析参数，支持 URL 编码，并使它们可用于请求。这可以选择指定要使用的字符编码，如果没有指定，默认为 UTF-8:
 
-```
+```java
 (def app-handler
   (-> your-handler
       (wrap-params {:encoding "UTF-8"})
@@ -240,7 +240,7 @@ Ring 还提供了额外的中间件来使这些更干净地在 HTTP API 上使�
 
 我们可以完全按照预期在请求处理程序中利用这一点。
 
-```
+```java
 (defn echo-handler [{params :params}]
     (ring.util.response/content-type
         (ring.util.response/response (get params "input"))
@@ -253,7 +253,7 @@ Ring 还提供了额外的中间件来使这些更干净地在 HTTP API 上使�
 
 例如，我们得到以下参数映射:
 
-```
+```java
 // /echo?input=hello
 {"input "hello"}
 
@@ -272,7 +272,7 @@ Ring 还提供了额外的中间件来使这些更干净地在 HTTP API 上使�
 
 `wrap-multipart-params` 自动解码并存储任何上传到文件系统的文件，并告诉处理程序它们的位置，以便处理它们:
 
-```
+```java
 (def app-handler
   (-> your-handler
       wrap-params
@@ -286,7 +286,7 @@ Ring 还提供了额外的中间件来使这些更干净地在 HTTP API 上使�
 
 如果需要，我们也可以编写我们的存储引擎，只要它满足 API 要求。
 
-```
+```java
 (def app-handler
   (-> your-handler
       wrap-params
@@ -298,7 +298,7 @@ Ring 还提供了额外的中间件来使这些更干净地在 HTTP API 上使�
 
 例如，默认的临时文件存储返回值:
 
-```
+```java
  {"file" {:filename     "words.txt"
            :content-type "text/plain"
            :tempfile     #object[java.io.File ...]
@@ -315,7 +315,7 @@ Ring 有中间件，可以让我们轻松地使用 cookies】。 这将自动解
 
 配置这个中间件遵循与以前相同的模式:
 
-```
+```java
 (def app-handler
   (-> your-handler
       wrap-cookies
@@ -324,13 +324,13 @@ Ring 有中间件，可以让我们轻松地使用 cookies】。 这将自动解
 
 此时，**所有传入的请求都将解析它们的 cookies，并放入请求**的`:cookies`键中。这将包含 cookie 名称和值的映射:
 
-```
+```java
 {"session_id" {:value "session-id-hash"}}
 ```
 
 **然后，我们可以通过将`:cookies`键添加到输出响应**来将 cookies 添加到输出响应中。我们可以通过直接创建响应来做到这一点:
 
-```
+```java
 {:status 200
  :headers {}
  :cookies {"session_id" {:value "session-id-hash"}}
@@ -339,7 +339,7 @@ Ring 有中间件，可以让我们轻松地使用 cookies】。 这将自动解
 
 **还有一个助手函数，我们可以用它来给响应**添加 cookies，类似于我们之前设置状态代码或标题的方式:
 
-```
+```java
 (ring.util.response/set-cookie 
     (ring.util.response/response "Setting a cookie.") 
     "session_id" 
@@ -356,7 +356,7 @@ Ring 有中间件，可以让我们轻松地使用 cookies】。 这将自动解
 *   `:expires`–浏览器删除 cookie 之前的特定时间戳
 *   `:same-site`–如果设置为`:strict`，则浏览器不会将此 cookie 与跨站点请求一起发回。
 
-```
+```java
 (ring.util.response/set-cookie
     (ring.util.response/response "Setting a cookie.")
     "session_id"
@@ -370,7 +370,7 @@ Cookies 让我们能够存储客户在每次请求时发送回服务器的信息
 
 和这里的其他东西一样，**会话是使用中间件函数**实现的:
 
-```
+```java
 (def app-handler
   (-> your-handler
       wrap-session
@@ -381,7 +381,7 @@ Cookies 让我们能够存储客户在每次请求时发送回服务器的信息
 
 与上传文件一样，**如果需要的话，我们可以提供存储功能**。
 
-```
+```java
 (def app-handler
   (-> your-handler
       wrap-cookies
@@ -393,7 +393,7 @@ Cookies 让我们能够存储客户在每次请求时发送回服务器的信息
 
 例如，要使会话 cookie 持续一小时，我们可以这样做:
 
-```
+```java
 (def app-handler
   (-> your-handler
       wrap-cookies
@@ -409,7 +409,7 @@ Cookies 让我们能够存储客户在每次请求时发送回服务器的信息
 
 例如，下面记录了处理程序被请求的次数:
 
-```
+```java
 (defn handler [{session :session}]
   (let [count   (:count session 0)
         session (assoc session :count (inc count))]
@@ -419,7 +419,7 @@ Cookies 让我们能够存储客户在每次请求时发送回服务器的信息
 
 通过这种方式，我们可以简单地通过不包含键来从会话中删除数据。我们还可以通过返回新地图的`nil`来删除整个会话。
 
-```
+```java
 (defn handler [request]
   (-> (response "Session deleted.")
       (assoc :session nil)))
@@ -431,14 +431,14 @@ Ring 为 [Leiningen 构建工具](/web/20221126231944/https://www.baeldung.com/l
 
 我们通过向`project.clj`文件添加正确的插件细节来设置插件:
 
-```
+```java
  :plugins [[lein-ring "0.12.5"]]
   :ring {:handler ring.core/handler}
 ```
 
 **重要的是 [`lein-ring`](https://web.archive.org/web/20221126231944/https://mvnrepository.com/artifact/lein-ring/lein-ring) 的版本对于戒指**的版本是正确的。这里我们一直用的是 Ring 1.7.1，也就是说我们需要`lein-ring ` 0.12.5。一般来说，最安全的方法是使用两者的最新版本，就像在 Maven central 上看到的那样，或者使用`lein search`命令:
 
-```
+```java
 $ lein search ring-core
 Searching clojars ...
 [ring/ring-core "1.7.1"]
@@ -458,7 +458,7 @@ Searching clojars ...
 
 设置好之后，**我们现在可以构建一个 WAR 文件，我们可以将它部署到任何标准的 servlet 容器**:
 
-```
+```java
 $ lein ring uberwar
 2019-04-12 07:10:08.033:INFO::main: Logging initialized @1054ms to org.eclipse.jetty.util.log.StdErrLog
 Created ./clojure/ring/target/uberjar/ring-0.1.0-SNAPSHOT-standalone.war
@@ -466,7 +466,7 @@ Created ./clojure/ring/target/uberjar/ring-0.1.0-SNAPSHOT-standalone.war
 
 **我们还可以构建一个独立的 JAR 文件，完全按照预期运行我们的处理程序**:
 
-```
+```java
 $ lein ring uberjar
 Compiling ring.core
 2019-04-12 07:11:27.669:INFO::main: Logging initialized @3016ms to org.eclipse.jetty.util.log.StdErrLog
@@ -476,7 +476,7 @@ Created ./clojure/ring/target/uberjar/ring-0.1.0-SNAPSHOT-standalone.jar
 
 **这个 JAR 文件将包含一个主类，它将启动我们包含的**的嵌入式容器中的处理程序。这也将支持一个环境变量`PORT`,允许我们在生产环境中轻松运行它:
 
-```
+```java
 PORT=2000 java -jar ./clojure/ring/target/uberjar/ring-0.1.0-SNAPSHOT-standalone.jar
 2019-04-12 07:14:08.954:INFO::main: Logging initialized @1009ms to org.eclipse.jetty.util.log.StdErrLog
 WARNING: seqable? already refers to: #'clojure.core/seqable? in namespace: clojure.core.incubator, being replaced by: #'clojure.core.incubator/seqable?
@@ -490,7 +490,7 @@ Started server on port 2000
 
 出于开发目的，**我们可以直接从 Leiningen 运行处理程序，而不需要手动构建和运行它**。这使得在真实的浏览器中测试我们的应用程序变得更加容易:
 
-```
+```java
 $ lein ring server
 2019-04-12 07:16:28.908:INFO::main: Logging initialized @1403ms to org.eclipse.jetty.util.log.StdErrLog
 2019-04-12 07:16:29.026:INFO:oejs.Server:main: jetty-9.4.12.v20180830; built: 2018-08-30T13:59:14.071Z; git: 27208684755d94a92186989f695db2d7b21ebc51; jvm 1.8.0_77-b03
@@ -502,7 +502,7 @@ $ lein ring server
 
 另外，**我们可以将一个环开发库添加到我们的项目**中。如果这是可用的，那么**开发服务器将尝试自动重新加载任何检测到的源代码变更**。这可以给我们一个高效的工作流程来改变代码，并在我们的浏览器中看到它。这需要添加`ring-devel`依赖项:
 
-```
+```java
 [ring/ring-devel "1.7.1"]
 ```
 

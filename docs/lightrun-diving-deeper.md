@@ -160,7 +160,7 @@ Lightrun 提供的另一个功能是能够动态地将[日志记录语句](/web/
 
 当我们对日志这样做时，我们将表达式直接添加到日志消息中。这是通过用花括号将表达式括起来实现的:
 
-```
+```java
 Searching tasks: status={status}, createdBy={createdBy}
 ```
 

@@ -26,7 +26,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 首先，我们需要将[spring-boot-starter-security](https://web.archive.org/web/20220524054638/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-security)和[spring-security-oauth 2-auto configure](https://web.archive.org/web/20220524054638/https://search.maven.org/search?q=g:org.springframework.security.oauth.boot%20a:spring-security-oauth2-autoconfigure)依赖项添加到我们的`pom.xml`中。因为我们正在构建一个 web 应用程序，所以我们还需要包含 [spring-boot-starter-web](https://web.archive.org/web/20220524054638/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-web) 和[spring-boot-starter-百里香叶](https://web.archive.org/web/20220524054638/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-thymeleaf)工件。
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -50,7 +50,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 接下来，让我们将 OAuth 配置添加到我们的`application.properties`文件中，以便能够连接 GitHub 帐户:
 
-```
+```java
 github.client.clientId=[CLIENT_ID]
 github.client.clientSecret=[CLIENT_SECRET]
 github.client.userAuthorizationUri=https://github.com/login/oauth/authorize
@@ -75,7 +75,7 @@ github.resource.repoUri=https://api.github.com/user/repos
 
 首先，让我们扩展`WebSecurityConfigurerAdapter`来利用 Spring 的配置助手:
 
-```
+```java
 @Configuration
 @EnableOAuth2Client
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -95,7 +95,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 其次，我们将为我们的`OAuth2RestTemplate`创建 bean:
 
-```
+```java
 @Bean
 public OAuth2RestTemplate restTemplate() {
     return new OAuth2RestTemplate(githubClient(), oauth2ClientContext);
@@ -116,7 +116,7 @@ public AuthorizationCodeResourceDetails githubClient() {
 
 第三，我们需要一个身份验证过滤器来处理 OAuth2 流:
 
-```
+```java
 private Filter oauth2ClientFilter() {
     OAuth2ClientAuthenticationProcessingFilter oauth2ClientFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/github");
     OAuth2RestTemplate restTemplate = restTemplate();
@@ -140,7 +140,7 @@ public ResourceServerProperties githubResource() {
 
 最后，让我们注册`OAuth2ClientContextFilter`并创建一个 web 安全配置:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests().antMatchers("/", "/login**", "/error**")
@@ -173,7 +173,7 @@ public FilterRegistrationBean<OAuth2ClientContextFilter> oauth2ClientFilterRegis
 
 让我们用登录和主页选项创建`index.html`文件:
 
-```
+```java
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -198,7 +198,7 @@ public FilterRegistrationBean<OAuth2ClientContextFilter> oauth2ClientFilterRegis
 
 现在，让我们创建一个控制器来问候经过身份验证的 GitHub 用户:
 
-```
+```java
 @Controller
 public class AppController {
 
@@ -220,7 +220,7 @@ public class AppController {
 
 我们来看看`home.html`模板:
 
-```
+```java
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -249,7 +249,7 @@ public class AppController {
 
 首先，我们需要创建`GithubRepo`类来表示存储库:
 
-```
+```java
 public class GithubRepo {
     Long id;
     String name;
@@ -261,7 +261,7 @@ public class GithubRepo {
 
 其次，让我们添加一个存储库映射到前面的`AppController`:
 
-```
+```java
 @GetMapping("/repos")
 public String repos(Model model) {
     Collection<GithubRepo> repos = restTemplate.getForObject("https://api.github.com/user/repos", Collection.class);
@@ -274,7 +274,7 @@ public String repos(Model model) {
 
 最后，让我们创建`repositories.html`模板来迭代存储库集合:
 
-```
+```java
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>

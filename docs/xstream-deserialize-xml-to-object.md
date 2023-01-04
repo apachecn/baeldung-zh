@@ -12,7 +12,7 @@
 
 首先，假设我们有以下 XML:
 
-```
+```java
 <com.baeldung.pojo.Customer>
     <firstName>John</firstName>
     <lastName>Doe</lastName>
@@ -22,7 +22,7 @@
 
 我们需要将它转换成一个 Java `Customer`对象:
 
-```
+```java
 public class Customer {
 
     private String firstName;
@@ -35,7 +35,7 @@ public class Customer {
 
 XML 可以通过多种方式输入，包括`File`、`InputStream`、`Reader`或`String`。为了简单起见，我们假设上面的 XML 在一个`String`对象中。
 
-```
+```java
 Customer convertedCustomer = (Customer) xstream.fromXML(customerXmlString);
 Assert.assertTrue(convertedCustomer.getFirstName().equals("John"));
 ```
@@ -48,7 +48,7 @@ Assert.assertTrue(convertedCustomer.getFirstName().equals("John"));
 
 出于我们教程的目的，让我们假设我们所有的类都是“安全的”。因此，我们需要配置 XStream:
 
-```
+```java
 XStream xstream = new XStream();
 xstream.allowTypesByWildcard(new String[]{"com.baeldung.**"}); 
 ```
@@ -59,7 +59,7 @@ xstream.allowTypesByWildcard(new String[]{"com.baeldung.**"});
 
 例如，假设我们修改了 XML，不使用外部标记的全限定类名:
 
-```
+```java
 <customer>
     <firstName>John</firstName>
     <lastName>Doe</lastName>
@@ -73,7 +73,7 @@ xstream.allowTypesByWildcard(new String[]{"com.baeldung.**"});
 
 我们通过编程或使用注释向 XStream 实例注册别名。我们可以用`@XStreamAlias`来注释我们的`Customer`类:
 
-```
+```java
 @XStreamAlias("customer")
 public class Customer {
     //...
@@ -82,13 +82,13 @@ public class Customer {
 
 现在我们需要配置 XStream 实例来使用这个注释:
 
-```
+```java
 xstream.processAnnotations(Customer.class);
 ```
 
 或者，如果我们希望以编程方式配置别名，我们可以使用下面的代码:
 
-```
+```java
 xstream.alias("customer", Customer.class);
 ```
 
@@ -96,7 +96,7 @@ xstream.alias("customer", Customer.class);
 
 假设我们有以下 XML:
 
-```
+```java
 <customer>
     <fn>John</fn>
     <lastName>Doe</lastName>
@@ -106,14 +106,14 @@ xstream.alias("customer", Customer.class);
 
 `fn`标签与我们的`Customer`对象中的任何字段都不匹配，所以如果我们希望反序列化它，我们将需要为该字段定义一个别名。我们可以使用以下注释来实现这一点:
 
-```
+```java
 @XStreamAlias("fn")
 private String firstName;
 ```
 
 或者，我们可以通过编程实现相同的目标:
 
-```
+```java
 xstream.aliasField("fn", Customer.class, "firstName");
 ```
 
@@ -121,7 +121,7 @@ xstream.aliasField("fn", Customer.class, "firstName");
 
 假设我们有下面的 XML，包含一个简单的`ContactDetails`列表:
 
-```
+```java
 <customer>
     <firstName>John</firstName>
     <lastName>Doe</lastName>
@@ -136,14 +136,14 @@ xstream.aliasField("fn", Customer.class, "firstName");
 
 我们希望将列表`ContactDetails`加载到 Java 对象的`List<ContactDetails>`字段中。我们可以通过使用以下注释来实现这一点:
 
-```
+```java
 @XStreamImplicit
 private List<ContactDetails> contactDetailsList;
 ```
 
 或者，我们可以通过编程实现相同的目标:
 
-```
+```java
 xstream.addImplicitCollection(Customer.class, "contactDetailsList");
 ```
 
@@ -151,7 +151,7 @@ xstream.addImplicitCollection(Customer.class, "contactDetailsList");
 
 假设我们有以下 XML:
 
-```
+```java
 <customer>
     <firstName>John</firstName>
     <lastName>Doe</lastName>
@@ -164,7 +164,7 @@ xstream.addImplicitCollection(Customer.class, "contactDetailsList");
 
 如果我们试图反序列化上面的 xml 而不考虑任何额外的元素，程序会抛出一个`UnknownFieldException`。
 
-```
+```java
 No such field com.baeldung.pojo.Customer.fullName
 ```
 
@@ -172,7 +172,7 @@ No such field com.baeldung.pojo.Customer.fullName
 
 为了解决这个问题，我们需要将其配置为忽略未知元素:
 
-```
+```java
 xstream.ignoreUnknownElements();
 ```
 
@@ -180,7 +180,7 @@ xstream.ignoreUnknownElements();
 
 假设我们有带有属性的 XML 作为元素的一部分，我们希望将其反序列化为对象中的一个字段。我们将为我们的`ContactDetails`对象添加一个`contactType`属性:
 
-```
+```java
 <ContactDetails contactType="Office">
     <mobile>6673543265</mobile>
     <landline>0124-2460311</landline>
@@ -189,14 +189,14 @@ xstream.ignoreUnknownElements();
 
 如果我们想要反序列化`contactType` XML 属性，我们可以在希望它出现的字段上使用`@XStreamAsAttribute`注释:
 
-```
+```java
 @XStreamAsAttribute
 private String contactType;
 ```
 
 或者，我们可以通过编程实现相同的目标:
 
-```
+```java
 xstream.useAttributeFor(ContactDetails.class, "contactType");
 ```
 

@@ -27,7 +27,7 @@
 
 让我们想象一个`SimpleClass`类，它有一个命名不当的加法方法`someAdditionMethod`，在`main`方法中被调用:
 
-```
+```java
 public class SimpleClass {
     public static void main(String[] args) {
         new SimpleClass().someAdditionMethod(1, 2);
@@ -41,7 +41,7 @@ public class SimpleClass {
 
 因此，如果我们选择将此方法重命名为`add`，IntelliJ 将生成以下代码:
 
-```
+```java
 public class SimpleClass() {
     public static void main(String[] args) {
         new SimpleClass().add(1, 2);
@@ -67,7 +67,7 @@ public class SimpleClass() {
 
 让我们向我们的方法添加一些 Javadoc，然后重命名它的第一个参数`a`:
 
-```
+```java
 /**
   * Adds a and b
   * @param a the first number
@@ -78,7 +78,7 @@ public int add(int a, int b) {...}
 
 通过检查确认弹出窗口中的第一个选项，IntelliJ 匹配方法的 Javadoc 注释中提到的任何参数，并提供对它们的重命名:
 
-```
+```java
 /**
   * Adds firstNumber and b
   * @param firstNumber the first number
@@ -112,7 +112,7 @@ IntelliJ 将根据表达式返回的内容，尝试猜测我们提取的表达�
 
 让我们用一个例子来说明。我们可以想象向我们的`SimpleClass`类添加一个方法，告诉我们当前日期是否在两个给定日期之间:
 
-```
+```java
 public static boolean isNowBetween(LocalDate startingDate, LocalDate endingDate) {
     return LocalDate.now().isAfter(startingDate) && LocalDate.now().isBefore(endingDate);
 }
@@ -124,7 +124,7 @@ public static boolean isNowBetween(LocalDate startingDate, LocalDate endingDate)
 
 然后，我们的`LocalDate.now()`调用在一个局部变量中被捕获:
 
-```
+```java
 public static boolean isNowBetween(LocalDate startingDate, LocalDate endingDate) {
     LocalDate now = LocalDate.now();
     return now.isAfter(startingDate) && now.isBefore(endingDate);
@@ -155,7 +155,7 @@ public static boolean isNowBetween(LocalDate startingDate, LocalDate endingDate)
 
 然后，我们将获得以下代码:
 
-```
+```java
 public static boolean isNowBetween(LocalDate startingDate, LocalDate endingDate) {
     LocalDate now = LocalDate.now();
     return isDateBetween(now, startingDate, endingDate);
@@ -181,7 +181,7 @@ private static boolean isDateBetween(LocalDate date, LocalDate startingDate, Loc
 
 比方说，在触发特性之前，我们在`main`方法中调用与日期相关的方法:
 
-```
+```java
 isNowBetween(LocalDate.MIN, LocalDate.MAX);
 isDateBetween(LocalDate.of(2019, 1, 1), LocalDate.MIN, LocalDate.MAX);
 ```
@@ -192,7 +192,7 @@ isDateBetween(LocalDate.of(2019, 1, 1), LocalDate.MIN, LocalDate.MAX);
 
 触发该特性会产生以下代码:
 
-```
+```java
 public class DateUtils {
     public static boolean isNowBetween(LocalDate startingDate, LocalDate endingDate) {
         LocalDate now = LocalDate.now();
@@ -209,7 +209,7 @@ public class DateUtils {
 
 在我们的例子中，`isDateBetween`用于`SimpleClass:`的`main `方法中
 
-```
+```java
 DateUtils.isNowBetween(LocalDate.MIN, LocalDate.MAX);
 DateUtils.isDateBetween(LocalDate.of(2019, 1, 1), LocalDate.MIN, LocalDate.MAX);
 ```
@@ -236,7 +236,7 @@ DateUtils.isDateBetween(LocalDate.of(2019, 1, 1), LocalDate.MIN, LocalDate.MAX);
 
 通过内联该变量，我们将获得以下结果:
 
-```
+```java
 public static boolean isNowBetween(LocalDate startingDate, LocalDate endingDate) {
     return isDateBetween(LocalDate.now(), startingDate, endingDate);
 }
@@ -248,7 +248,7 @@ public static boolean isNowBetween(LocalDate startingDate, LocalDate endingDate)
 
 选择第一个会用方法体替换所有调用，并删除该方法。至于第二个，它会用方法体替换所有调用，但保留方法。最后，最后一个只会用方法体替换当前调用:
 
-```
+```java
 public class DateUtils {
     public static boolean isNowBetween(LocalDate startingDate, LocalDate endingDate) {
         LocalDate date = LocalDate.now();
@@ -279,7 +279,7 @@ public class DateUtils {
 
 假设我们向我们的`SimpleClass`，`isDateOutstide()`添加了一个新方法，它将告诉我们一个日期是否位于日期间隔之外:
 
-```
+```java
 public static boolean isDateOutside(LocalDate date, LocalDate startingDate, LocalDate endingDate) {
     return !DateUtils.isDateBetween(date, startingDate, endingDate);
 }
@@ -291,7 +291,7 @@ public static boolean isDateOutside(LocalDate date, LocalDate startingDate, Loca
 
 我们的方法现在在`DateUtils`类中。我们可以看到方法中对`DateUtils`的引用已经消失，因为不再需要它了:
 
-```
+```java
 public static boolean isDateOutside(LocalDate date, LocalDate startingDate, LocalDate endingDate) {
     return !isDateBetween(date, startingDate, endingDate);
 }
@@ -325,7 +325,7 @@ public static boolean isDateOutside(LocalDate date, LocalDate startingDate, Loca
 
 通过更改方法签名，我们可以添加这个参数，给它命名并给它一个默认值:
 
-```
+```java
 public static boolean isDateBetween(LocalDate date, LocalDate startingDate,
    LocalDate endingDate, boolean inclusive) {
     return date.isBefore(endingDate) && date.isAfter(startingDate);
@@ -355,7 +355,7 @@ public static boolean isDateBetween(LocalDate date, LocalDate startingDate,
 
 假设我们有一个名为`Derived.` 的派生类，它使用一个私有的`doubleValue()`方法:
 
-```
+```java
 public class Derived extends Base {
 
     public static void main(String[] args) {
@@ -382,7 +382,7 @@ public class Derived extends Base {
 
 之后的`Base`类现在有了方法:
 
-```
+```java
 public class Base {
     protected int doubleValue(int number) {
         return number + number;
@@ -409,7 +409,7 @@ public class Base {
 
 让我们把刚刚拉上来的方法再往下推一次。上一节末尾的`Base`类是这样的:
 
-```
+```java
 public class Base {
     protected int doubleValue(int number) {
         return number + number;
@@ -423,7 +423,7 @@ public class Base {
 
 这是上图对话框中按下“Refactor”后的`Derived`类。`doubleValue()`方法回来了:
 
-```
+```java
 public class Derived extends Base {
     private int theField = 5;
 

@@ -14,7 +14,7 @@
 
 让我们看一个例子:
 
-```
+```java
 Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     .filter(i -> i % 2 == 0)
     .skip(2)
@@ -23,7 +23,7 @@ Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
 在这个流中，我们选择流中的偶数，但是我们跳过前两个。因此，我们的结果是:
 
-```
+```java
 6 8 10
 ```
 
@@ -37,7 +37,7 @@ Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
 让我们在一个例子中使用它:
 
-```
+```java
 Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     .filter(i -> i % 2 == 0)
     .limit(2)
@@ -46,7 +46,7 @@ Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
 在这种情况下，我们只从我们的`int`流中选取两个偶数:
 
-```
+```java
 2 4
 ```
 
@@ -56,7 +56,7 @@ Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
 当处理无限流时，`limit()`对于将流截断成有限流非常有用:
 
-```
+```java
 Stream.iterate(0, i -> i + 1)
     .filter(i -> i % 2 == 0)
     .limit(10)
@@ -71,7 +71,7 @@ Stream.iterate(0, i -> i + 1)
 
 假设我们想修改前面的例子，使它以十为一批得到偶数。我们可以简单地通过在同一个流中使用`skip()`和`limit()`来实现:
 
-```
+```java
 private static List<Integer> getEvenNumbers(int offset, int limit) {
     return Stream.iterate(0, i -> i + 1)
         .filter(i -> i % 2 == 0)

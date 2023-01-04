@@ -24,21 +24,21 @@ Spring 中的`Environment`抽象表示当前应用程序运行的环境。同时
 
 我们将使用它来读取几个环境变量:
 
-```
+```java
 calculation_mode=GROSS 
 gross_calculation_tax_rate=0.15
 ```
 
 我们将使用后处理器以特定于应用的方式公开这些内容，在本例中使用自定义前缀:
 
-```
+```java
 com.baeldung.environmentpostprocessor.calculation.mode=GROSS
 com.baeldung.environmentpostprocessor.gross.calculation.tax.rate=0.15
 ```
 
 然后，我们可以非常简单地将新属性添加到`Environment`中:
 
-```
+```java
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class PriceCalculationEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
@@ -73,7 +73,7 @@ public class PriceCalculationEnvironmentPostProcessor implements EnvironmentPost
 
 为了调用 Spring Boot 引导过程中的实现，我们需要在`META-INF/spring.factories`中注册这个类:
 
-```
+```java
 org.springframework.boot.env.EnvironmentPostProcessor=
   com.baeldung.environmentpostprocessor.PriceCalculationEnvironmentPostProcessor
 ```
@@ -84,7 +84,7 @@ org.springframework.boot.env.EnvironmentPostProcessor=
 
 在我们的实现中， **[我们可以只使用`@Value`](/web/20220627174907/https://www.baeldung.com/spring-value-annotation) 来检索我们的新属性:**
 
-```
+```java
 public class GrossPriceCalculator implements PriceCalculator {
     @Value("${com.baeldung.environmentpostprocessor.gross.calculation.tax.rate}")
     double taxRate;
@@ -104,7 +104,7 @@ public class GrossPriceCalculator implements PriceCalculator {
 
 我们将创建自动配置类来读取这些属性。该类将根据不同的属性值初始化并连接应用程序上下文中的 beans:
 
-```
+```java
 @Configuration
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 public class PriceCalculationAutoConfig {
@@ -128,7 +128,7 @@ public class PriceCalculationAutoConfig {
 
 类似于`EnvironmentPostProcessor`实现，自动配置类也需要在`META-INF/spring.factories`中注册:
 
-```
+```java
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=
   com.baeldung.environmentpostprocessor.autoconfig.PriceCalculationAutoConfig
 ```
@@ -141,21 +141,21 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=
 
 现在是时候测试我们的代码了。我们可以通过运行以下命令在 Windows 中设置系统环境变量:
 
-```
+```java
 set calculation_mode=GROSS
 set gross_calculation_tax_rate=0.15
 ```
 
 或者在 Linux/Unix 中，我们可以将它们改为:
 
-```
+```java
 export calculation_mode=GROSS 
 export gross_calculation_tax_rate=0.15
 ```
 
 之后，我们可以用`mvn spring-boot:run`命令开始测试:
 
-```
+```java
 mvn spring-boot:run
   -Dstart-class=com.baeldung.environmentpostprocessor.PriceCalculationApplication
   -Dspring-boot.run.arguments="100,4"

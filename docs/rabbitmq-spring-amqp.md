@@ -16,7 +16,7 @@
 
 **Spring AMQP 允许我们将队列、交换和绑定的所有声明聚集在一个`Declarables`对象中:**
 
-```
+```java
 @Bean
 public Declarables fanoutBindings() {
     Queue fanoutQueue1 = new Queue("fanout.queue1", false);
@@ -36,7 +36,7 @@ public Declarables fanoutBindings() {
 
 现在，我们还将建立一个带有两个队列的主题交换，每个队列都有不同的绑定模式:
 
-```
+```java
 @Bean
 public Declarables topicBindings() {
     Queue topicQueue1 = new Queue(topicQueue1Name, false);
@@ -71,7 +71,7 @@ public Declarables topicBindings() {
 
 我们将使用`RabbitTemplate`的`convertAndSend`方法来发送我们的示例消息:
 
-```
+```java
  String message = " payload is broadcast";
     return args -> {
         rabbitTemplate.convertAndSend(FANOUT_EXCHANGE_NAME, "", "fanout" + message);
@@ -92,7 +92,7 @@ public Declarables topicBindings() {
 
 最后，让我们设置四个消费者——每个队列一个——来接收生成的消息:
 
-```
+```java
  @RabbitListener(queues = {FANOUT_QUEUE_1_NAME})
     public void receiveMessageFromFanout1(String message) {
         System.out.println("Received fanout 1 message: " + message);
@@ -126,7 +126,7 @@ public Declarables topicBindings() {
 
 当我们用 body“Test”向这个 URI 发送请求时，我们应该在输出中看到类似这样的内容:
 
-```
+```java
 Received fanout 1 message: fanout payload is broadcast
 Received topic 1 (*.important.*) message: topic important warn payload is broadcast
 Received topic 2 (#.error) message: topic important error payload is broadcast

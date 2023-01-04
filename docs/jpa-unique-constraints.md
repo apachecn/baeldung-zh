@@ -55,7 +55,7 @@ JPA 中的[实体](/web/20220526054411/https://www.baeldung.com/jpa-entities)表
 
 让我们从创建一个域实体并将其映射到一个数据库表开始。对于这个例子，我们将创建一个*人*实体:
 
-```
+```java
 @Entity
 @Table
 public class Person implements Serializable {
@@ -77,7 +77,7 @@ public class Person implements Serializable {
 
 `address`字段是来自`Address`实体的引用字段:
 
-```
+```java
 @Entity
 @Table
 public class Address implements Serializable {
@@ -107,7 +107,7 @@ public class Address implements Serializable {
 
 让我们来看看定义:
 
-```
+```java
 @Target(value={METHOD,FIELD})
 @Retention(value=RUNTIME)
 public @interface Column {
@@ -126,28 +126,28 @@ public @interface Column {
 
 让我们在*人员编号*字段上定义一个唯一约束:
 
-```
+```java
 @Column(unique=true)
 private Long personNumber;
 ```
 
 当我们执行模式创建过程时，我们可以从日志中验证它:
 
-```
+```java
 [main] DEBUG org.hibernate.SQL -
     alter table Person add constraint UK_d44q5lfa9xx370jv2k7tsgsqt unique (personNumber)
 ```
 
 类似地，如果我们想限制一个*人*注册一个唯一的电子邮件，我们可以在*电子邮件*字段上添加一个唯一的约束:
 
-```
+```java
 @Column(unique=true)
 private String email;
 ```
 
 让我们执行模式创建过程并检查约束条件:
 
-```
+```java
 [main] DEBUG org.hibernate.SQL -
     alter table Person add constraint UK_585qcyc8qh7bg1fwgm1pj4fus unique (email)
 ```
@@ -164,7 +164,7 @@ private String email;
 
 让我们来看看定义:
 
-```
+```java
 @Target(value={})
 @Retention(value=RUNTIME)
 public @interface UniqueConstraint {
@@ -183,26 +183,26 @@ public @interface UniqueConstraint {
 
 JPA 通过`@UniqueConstraint`注释帮助我们实现了这一点。我们在 *uniqueConstraints* 属性下的 [`@Table`](https://web.archive.org/web/20220526054411/https://javaee.github.io/javaee-spec/javadocs/javax/persistence/Table.html) 注释中使用它。让我们记住指定列的名称:
 
-```
+```java
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "personNumber", "isActive" }) })
 ```
 
 一旦模式生成，我们就可以验证它:
 
-```
+```java
 [main] DEBUG org.hibernate.SQL -
     alter table Person add constraint UK5e0bv5arhh7jjhsls27bmqp4a unique (personNumber, isActive)
 ```
 
 这里需要注意的一点是，如果我们不指定名称，它就是一个提供者生成的值。 **从 JPA 2.0 开始，我们可以为我们唯一的约束提供一个名字:**
 
-```
+```java
 @Table(uniqueConstraints = { @UniqueConstraint(name = "UniqueNumberAndStatus", columnNames = { "personNumber", "isActive" }) })
 ```
 
 我们可以验证这一点:
 
-```
+```java
 [main] DEBUG org.hibernate.SQL -
     alter table Person add constraint UniqueNumberAndStatus unique (personNumber, isActive)
 ```
@@ -215,7 +215,7 @@ JPA 通过`@UniqueConstraint`注释帮助我们实现了这一点。我们在 *u
 
 让我们收集我们的唯一索引并立即指定它们。我们通过在大括号中重复`@UniqueConstraint` 注释来做到这一点，并用逗号分隔:
 
-```
+```java
 @Table(uniqueConstraints = {
    @UniqueConstraint(name = "UniqueNumberAndStatus", columnNames = {"personNumber", "isActive"}),
    @UniqueConstraint(name = "UniqueSecurityAndDepartment", columnNames = {"securityNumber", "departmentCode"})})
@@ -223,7 +223,7 @@ JPA 通过`@UniqueConstraint`注释帮助我们实现了这一点。我们在 *u
 
 现在让我们看看日志，并检查约束条件:
 
-```
+```java
 [main] DEBUG org.hibernate.SQL -
     alter table Person add constraint UniqueNumberAndStatus unique (personNumber, isActive)
 [main] DEBUG org.hibernate.SQL -
@@ -244,14 +244,14 @@ JPA 通过`@UniqueConstraint`注释帮助我们实现了这一点。我们在 *u
 
 因此，让我们在`Person`的`address`字段上定义一个惟一的约束:
 
-```
+```java
 @Column(unique = true)
 private Address address;
 ```
 
 现在让我们快速检查一下这个约束:
 
-```
+```java
 [main] DEBUG org.hibernate.SQL -
    alter table Person add constraint UK_7xo3hsusabfaw1373oox9uqoe unique (address)
 ```
@@ -264,7 +264,7 @@ private Address address;
 
 让我们定义对`personNumber`和`address,`的唯一约束，并将其添加到`uniqueConstraints`数组中:
 
-```
+```java
 @Entity
 @Table(uniqueConstraints = 
   { //other constraints
@@ -273,7 +273,7 @@ private Address address;
 
 最后，让我们看看独特的约束条件:
 
-```
+```java
 [main] DEBUG org.hibernate.SQL -
     alter table Person add constraint UniqueNumberAndAddress unique (personNumber, address)
 ```

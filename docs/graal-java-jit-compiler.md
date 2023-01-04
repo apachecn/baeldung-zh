@@ -50,7 +50,7 @@ Graal 是一个高性能的 JIT 编译器。它接受 JVM 字节码并产生机�
 
 Graal 编译器就是考虑到这些优点而创建的。它使用新的 JVM 编译器接口–JVMCI 与 VM 通信。为了能够使用新的 JIT 编译器，我们需要在从命令行运行 Java 时设置以下选项:
 
-```
+```java
 -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI -XX:+UseJVMCICompiler
 ```
 
@@ -64,7 +64,7 @@ JVMCI 实际上允许我们做的是排除标准的分层编译，插入我们�
 
 界面相当简单。当 Graal 编译一个方法时，它会将该方法的字节码作为输入传递给 JVMCI。作为输出，我们将得到编译后的机器码。输入和输出都只是字节数组:
 
-```
+```java
 interface JVMCICompiler {
     byte[] compileMethod(byte[] bytecode);
 }
@@ -78,7 +78,7 @@ interface JVMCICompiler {
 
 Graal 本身是由 VM 执行的，所以当它变热时，它将首先被解释和 JIT 编译。让我们来看一个例子，这个例子也可以在 [GraalVM 的官方网站](https://web.archive.org/web/20221014200950/https://www.graalvm.org/examples/java-performance-examples/)上找到:
 
-```
+```java
 public class CountUppercase {
     static final int ITERATIONS = Math.max(Integer.getInteger("iterations", 1), 1);
 
@@ -108,14 +108,14 @@ public class CountUppercase {
 
 现在，我们将编译并运行它:
 
-```
+```java
 javac CountUppercase.java
 java -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI -XX:+UseJVMCICompiler
 ```
 
 这将导致类似如下的输出:
 
-```
+```java
 1 (1581 ms)
 2 (480 ms)
 3 (364 ms)
@@ -132,7 +132,7 @@ total: 59999994 (3436 ms)
 
 如果我们想查看 Graal 编译的统计数据，我们需要在执行程序时添加以下标志:
 
-```
+```java
 -Dgraal.PrintCompilation=true
 ```
 
@@ -142,7 +142,7 @@ total: 59999994 (3436 ms)
 
 现在让我们将上述结果与用顶层编译器编译的相同程序的执行进行比较。为此，我们需要告诉 VM 不要使用 JVMCI 编译器:
 
-```
+```java
 java -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI -XX:-UseJVMCICompiler 
 1 (510 ms)
 2 (375 ms)
@@ -182,7 +182,7 @@ total: 59999994 (4004 ms)
 
 让我们看一个简单的例子:
 
-```
+```java
 int average(int a, int b) {
     return (a + b) / 2;
 }
@@ -196,7 +196,7 @@ int average(int a, int b) {
 
 我们现在将改变前面的例子，使其适用于一组数字:
 
-```
+```java
 int average(int[] values) {
     int sum = 0;
     for (int n = 0; n < values.length; n++) {

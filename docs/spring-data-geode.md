@@ -20,7 +20,7 @@ Spring Data Geode 库类似于 [Spring Data Gemfire](/web/20220627173722/https:/
 
 让我们将最新的 [`spring-geode-starter`](https://web.archive.org/web/20220627173722/https://search.maven.org/search?q=g:org.springframework.geode%20a:spring-geode-starter) 依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.geode</groupId>
     <artifactId>spring-geode-starter</artifactId>
@@ -32,7 +32,7 @@ Spring Data Geode 库类似于 [Spring Data Gemfire](/web/20220627173722/https:/
 
 首先，让我们使用`@SpringBootApplication`创建一个 Spring Boot `ClientCacheApp`:
 
-```
+```java
 @SpringBootApplication 
 public class ClientCacheApp {
     public static void main(String[] args) {
@@ -43,7 +43,7 @@ public class ClientCacheApp {
 
 然后，为了将`ClientCacheApp`类转换成 Apache Geode 缓存客户端，我们将添加 Spring 数据 Geode 提供的 [`@ClientCacheApplication`](https://web.archive.org/web/20220627173722/https://docs.spring.io/spring-data/geode/docs/current/api/org/springframework/data/gemfire/config/annotation/ClientCacheApplication.html) :
 
-```
+```java
 @ClientCacheApplication
 // existing annotations
 public class ClientCacheApp {
@@ -61,23 +61,23 @@ public class ClientCacheApp {
 
 为此，让我们在`gfsh` CLI 中运行以下命令:
 
-```
+```java
 gfsh>start locator --name="basicLocator"
 ```
 
-```
+```java
 gfsh>start server --name="basicServer"
 ```
 
 一旦服务器开始运行，我们可以列出所有成员:
 
-```
+```java
 gfsh>list members
 ```
 
 CLI 输出应该列出定位器和服务器:
 
-```
+```java
  Name     | Id
 ------------ | ------------------------------------------------------------------
 basicLocator | 10.25.3.192(basicLocator:25461:locator)<ec><v0>:1024 [Coordinator]
@@ -86,7 +86,7 @@ basicServer  | 10.25.3.192(basicServer:25546)<v1>:1025
 
 瞧啊。我们已经准备好使用 Maven 命令运行我们的缓存客户端应用程序:
 
-```
+```java
 mvn spring-boot:run
 ```
 
@@ -98,7 +98,7 @@ mvn spring-boot:run
 
 首先，我们将创建一个名为`Author` 的实体，然后将其定义为 Apache Geode`Region.``Region`类似于 RDBMS 中的一个表:
 
-```
+```java
 @Region("Authors")
 public class Author {
     @Id
@@ -122,7 +122,7 @@ public class Author {
 
 此外，我们将添加 [`@EnableClusterConfiguration`](https://web.archive.org/web/20220627173722/https://docs.spring.io/spring-data/geode/docs/current/api/org/springframework/data/gemfire/config/annotation/EnableClusterConfiguration.html) ，让应用程序在 Apache Geode 服务器中创建区域:
 
-```
+```java
 @EnableEntityDefinedRegions(basePackageClasses = Author.class)
 @EnableClusterConfiguration
 // existing annotations
@@ -133,7 +133,7 @@ public class ClientCacheApp {
 
 因此，重新启动应用程序将自动创建区域:
 
-```
+```java
 gfsh>list regions
 
 List of regions
@@ -147,14 +147,14 @@ Authors
 
 为此，让我们创建一个名为`AuthorRepository,`的存储库，它扩展了 Spring Data 的 [`CrudRepository`](/web/20220627173722/https://www.baeldung.com/spring-data-repositories#crudrepository) :
 
-```
+```java
 public interface AuthorRepository extends CrudRepository<Author, Long> {
 }
 ```
 
 然后，我们将通过添加 [`@EnableGemfireRepositories`](https://web.archive.org/web/20220627173722/https://docs.spring.io/spring-data/geode/docs/current/api/org/springframework/data/gemfire/repository/config/EnableGemfireRepositories.html) 来启用`AuthorRepository`:
 
-```
+```java
 @EnableGemfireRepositories(basePackageClasses = AuthorRepository.class)
 // existing annotations
 public class ClientCacheApp {
@@ -170,7 +170,7 @@ Spring Data Geode 提供了一种在 Apache Geode 服务器中创建和启用索
 
 首先，我们将把 [`@EnableIndexing`](https://web.archive.org/web/20220627173722/https://docs.spring.io/spring-data/geode/docs/current/api/org/springframework/data/gemfire/config/annotation/EnableIndexing.html) 添加到`ClientCacheApp`类中:
 
-```
+```java
 @EnableIndexing
 // existing annotations
 public class ClientCacheApp {
@@ -180,7 +180,7 @@ public class ClientCacheApp {
 
 然后，让我们将`@Indexed`添加到`Author`类的一个属性中:
 
-```
+```java
 public class Author {
     @Id
     private Long id;
@@ -198,7 +198,7 @@ public class Author {
 
 现在，让我们重新启动应用程序，并确认在 Apache Geode 服务器中创建的索引:
 
-```
+```java
 gfsh> list indexes
 
 Member Name | Region Path |       Name        | Type  | Indexed Expression | From Clause | Valid Index
@@ -215,7 +215,7 @@ basicServer | /Authors    | AuthorsIdHashIdx  | RANGE | id                 | /Au
 
 为了添加功能，我们将创建`AuthorService`并添加带有匹配查询的 [`@ContinuousQuery`](https://web.archive.org/web/20220627173722/https://docs.spring.io/spring-data/geode/docs/current/api/org/springframework/data/gemfire/listener/annotation/ContinuousQuery.html) :
 
-```
+```java
 @Service
 public class AuthorService {
     @ContinuousQuery(query = "SELECT * FROM /Authors a WHERE a.id = 1")
@@ -227,7 +227,7 @@ public class AuthorService {
 
 为了使用连续查询，我们将启用服务器到客户端的订阅:
 
-```
+```java
 @ClientCacheApplication(subscriptionEnabled = true)
 // existing annotations
 public class ClientCacheApp {

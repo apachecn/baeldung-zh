@@ -35,7 +35,7 @@ Docker 为容器使用客户机-服务器架构，而 Podman 使用 Linux 进程
 
 `docker version`的样本输出:
 
-```
+```java
 Client:
  Version:       17.12.0-ce
  API version:   1.35
@@ -57,7 +57,7 @@ Server:
 
 `podman version`的样本输出:
 
-```
+```java
 Version:       0.3.2-dev
 Go Version:    go1.9.4
 Git Commit:    "4f4a78abb40fa0e8407e8a55d5a67a2650d8fd96"
@@ -71,7 +71,7 @@ OS/Arch:       linux/amd64
 
 如前所述，Podman 不需要 root 访问权限来运行它的命令。**另一方面，Docker 依赖于守护进程，需要 root 权限或要求用户成为`docker`组**的一部分，才能在没有 root 权限的情况下运行 Docker 命令**。**
 
-```
+```java
 $ sudo usermod -aG docker $USER
 ```
 
@@ -79,13 +79,13 @@ $ sudo usermod -aG docker $USER
 
 让我们从安装机器人开始。 `podman info`命令显示 Podman 系统信息，并帮助检查安装状态。
 
-```
+```java
 $ podman info
 ```
 
 此命令显示与主机相关的信息，如内核版本、已用和可用的交换空间，以及与 Podman 相关的信息，如它有权获取和推送映像的注册表、它使用的存储驱动程序、存储位置等:
 
-```
+```java
 host:
   MemFree: 546578432
   MemTotal: 1040318464
@@ -125,7 +125,7 @@ store:
 
 首先，我们将看看如何使用 Podman 创建图像。让我们从创建一个包含以下内容的`Dockerfile`开始:
 
-```
+```java
 FROM centos:latest
 RUN yum -y install httpd
 CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
@@ -134,7 +134,7 @@ EXPOSE 80
 
 现在让我们使用`build`命令创建图像:
 
-```
+```java
 $ podman build .
 ```
 
@@ -146,13 +146,13 @@ $ podman build .
 
 `podman images`命令列出了所有可用的图像。它还支持[各种选项](https://web.archive.org/web/20220626082433/https://podman.readthedocs.io/en/latest/markdown/podman-images.1.html#options)来过滤图像。
 
-```
+```java
 $ podman images
 ```
 
 该命令列出了本地存储库中所有可用的图像。它包含图像来自哪个存储库、标记、图像 id、创建时间和大小等信息。
 
-```
+```java
 REPOSITORY                 TAG      IMAGE ID         CREATED         SIZE
 docker.io/library/centos   latest  0f3e07c0138f    2 months ago      227MB
 <none>                     <none   49030e844ce7   27 seconds ago     277MB
@@ -162,7 +162,7 @@ docker.io/library/centos   latest  0f3e07c0138f    2 months ago      227MB
 
 `run`命令创建一个给定图像的容器，然后运行它。让我们运行之前创建的 CentOS 映像
 
-```
+```java
 $ podman run  -p 80:80 -dit centos
 ```
 
@@ -174,7 +174,7 @@ $ podman run  -p 80:80 -dit centos
 
 `rmi`命令删除本地存储库中的图像。通过在输入中以空格分隔的方式提供图像的 id，可以删除多个图像。指定`-a`标志会删除所有图像
 
-```
+```java
 $ podman rmi 785188cd988c
 ```
 
@@ -182,13 +182,13 @@ $ podman rmi 785188cd988c
 
 使用`ps -a`命令可以列出所有可用的容器，包括没有运行的容器。类似于`images` 命令，这也可以与[各种选项](https://web.archive.org/web/20220626082433/https://podman.readthedocs.io/en/latest/markdown/podman-ps.1.html#options)一起使用。
 
-```
+```java
 $ podman ps -a
 ```
 
 上述命令的输出列出了所有容器的信息，如创建它的映像、用于启动它的命令、它的状态、它运行的端口以及分配给它的名称。
 
-```
+```java
 CONTAINER ID   IMAGE    COMMAND     CREATED AT                      STATUS              PORTS                                    NAMES
 eed30719cd37   centos   /bin/bash   2019-12-09 02:57:37 +0000 UTC   Up 14 minutes ago   0.0.0.0:80->80/udp, 0.0.0.0:80->80/tcp   reverent_liskov
 ```
@@ -197,7 +197,7 @@ eed30719cd37   centos   /bin/bash   2019-12-09 02:57:37 +0000 UTC   Up 14 minute
 
 `rm`命令移除容器。此命令不会删除处于运行或暂停状态的容器。它们需要首先被阻止，然后被移除。
 
-```
+```java
 $ podman stop eed30719cd37
 
 $ podman rm eed30719cd37
@@ -207,13 +207,13 @@ $ podman rm eed30719cd37
 
 `pod create`命令创建一个 pod。创建命令支持[不同的选项](https://web.archive.org/web/20220626082433/https://podman.readthedocs.io/en/latest/markdown/podman-pod-create.1.html#options)。
 
-```
+```java
 $ podman pod create
 ```
 
 `pod create`命令创建一个 pod，默认情况下有一个`infra`容器与之相关联，除非将 infra 标志明确设置为`false.`
 
-```
+```java
 $ podman pod create --infra = false
 ```
 
@@ -223,13 +223,13 @@ Infra container 允许 Podman 连接 pod 中的各种容器。
 
 `pod list `命令显示所有可用的窗格
 
-```
+```java
 $ podman pod list
 ```
 
 此命令的输出会显示诸如 pod id、其名称、关联容器的数量、基础容器的 id(如果可用)等信息:
 
-```
+```java
 POD ID         NAME             STATUS      CREATED       # OF CONTAINERS   INFRA ID
 7e0a68528aed   gallant_raman    Running    5 seconds ago        1           c6d06673c667
 ```

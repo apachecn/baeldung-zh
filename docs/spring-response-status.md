@@ -14,14 +14,14 @@
 
 如果我们想要指定一个控制器方法的**响应状态，我们可以用`@ResponseStatus.` 标记该方法，它有两个可互换的参数用于期望的响应状态:`code,`和`value.`例如，我们可以[指示服务器拒绝煮咖啡，因为它是一个茶壶](https://web.archive.org/web/20220625233643/https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/418):**
 
-```
+```java
 @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
 void teaPot() {}
 ```
 
 当我们想要发出一个错误信号时，我们可以通过`reason`参数提供一个错误消息:
 
-```
+```java
 @ResponseStatus(HttpStatus.BAD_REQUEST, reason = "Some parameters are invalid")
 void onIllegalArgumentException(IllegalArgumentException exception) {}
 ```
@@ -44,7 +44,7 @@ void onIllegalArgumentException(IllegalArgumentException exception) {}
 
 当我们不需要动态错误响应时，最直接的解决方案是第三种:用`@ResponseStatus:`标记异常类
 
-```
+```java
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
 class CustomException extends RuntimeException {}
 ```

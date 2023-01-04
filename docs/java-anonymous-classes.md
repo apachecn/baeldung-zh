@@ -22,7 +22,7 @@
 
 在括号中，我们指定了我们正在扩展的类的构造函数所需的参数:
 
-```
+```java
 new Book("Design Patterns") {
     @Override
     public String description() {
@@ -41,7 +41,7 @@ new Book("Design Patterns") {
 
 显然，Java 的接口没有构造函数，所以括号总是空的。这是我们实现接口方法的唯一方式:
 
-```
+```java
 new Runnable() {
     @Override
     public void run() {
@@ -54,7 +54,7 @@ new Runnable() {
 
 我们可以使用 Java 表达式的标准语法来做到这一点:
 
-```
+```java
 Runnable action = new Runnable() {
     @Override
     public void run() {
@@ -67,7 +67,7 @@ Runnable action = new Runnable() {
 
 显然，如果我们以内联方式创建实例，就可以避免将实例赋给变量:
 
-```
+```java
 List<Runnable> actions = new ArrayList<Runnable>();
 actions.add(new Runnable() {
     @Override
@@ -98,7 +98,7 @@ actions.add(new Runnable() {
 
 例如，这不会编译:
 
-```
+```java
 new Runnable() {
     static final int x = 0;
     static int y = 0; // compilation error!
@@ -110,7 +110,7 @@ new Runnable() {
 
 相反，我们将得到以下错误:
 
-```
+```java
 The field y cannot be declared static in a non-static inner type, unless initialized with a constant expression
 ```
 
@@ -118,7 +118,7 @@ The field y cannot be declared static in a non-static inner type, unless initial
 
 匿名类捕获我们声明该类的块范围内的局部变量:
 
-```
+```java
 int count = 1;
 Runnable action = new Runnable() {
     @Override
@@ -132,7 +132,7 @@ Runnable action = new Runnable() {
 
 **注意，为了能够使用局部变量，它们必须是有效的 final。**从 JDK 8 开始，我们不再需要用关键字`final`声明变量。然而，那些变量必须是`final`。否则，我们会得到一个编译错误:
 
-```
+```java
 [ERROR] local variables referenced from an inner class must be final or effectively final
 ```
 
@@ -156,7 +156,7 @@ Runnable action = new Runnable() {
 
 在具有图形界面的应用程序中，匿名类最常见的用例是创建各种事件侦听器。例如，在下面的代码片段中:
 
-```
+```java
 button.addActionListener(new ActionListener() {
     public void actionPerformed(ActionEvent e) {
         ...

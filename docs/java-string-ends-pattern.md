@@ -20,7 +20,7 @@
 
 所以，让我们来看看它的作用:
 
-```
+```java
 public static boolean usingStringEndsWithMethod(String text, String suffix) {
     if (text == null || suffix == null) {
         return false;
@@ -37,7 +37,7 @@ public static boolean usingStringEndsWithMethod(String text, String suffix) {
 
 基本上，我们需要做的就是指定适合我们用例的正则表达式:
 
-```
+```java
 public static boolean usingStringMatchesMethod(String text, String suffix) {
     if (text == null || suffix == null) {
         return false;
@@ -55,7 +55,7 @@ public static boolean usingStringMatchesMethod(String text, String suffix) {
 
 现在，让我们用一个例子来说明这一点:
 
-```
+```java
 public static boolean usingStringRegionMatchesMethod(String text, String suffix) {
     if (text == null || suffix == null) {
         return false;
@@ -73,7 +73,7 @@ public static boolean usingStringRegionMatchesMethod(String text, String suffix)
 
 事不宜迟，让我们重用在上一节中指定的相同正则表达式:
 
-```
+```java
 public static boolean usingPatternClass(String text, String suffix) {
     if (text == null || suffix == null) {
         return false;
@@ -93,7 +93,7 @@ public static boolean usingPatternClass(String text, String suffix) {
 
 现在，让我们举例说明`StringUtils.endsWith` 方法的使用:
 
-```
+```java
 public static boolean usingApacheCommonsLang(String text, String suffix) {
     return StringUtils.endsWith(text, suffix);
 }

@@ -20,7 +20,7 @@ Java 8 引入了一个新的类型推断规则，规定只要允许，就将一�
 
 正如我们已经提到的，编译器和 Jave 运行时可以看到不同的东西:
 
-```
+```java
 public static <E extends Throwable> void sneakyThrow(Throwable e) throws E {
     throw (E) e;
 }
@@ -34,7 +34,7 @@ private static void throwSneakyIOException() {
 
 这个快速测试演示了这个场景:
 
-```
+```java
 @Test
 public void throwSneakyIOException_IOExceptionShouldBeThrown() {
     assertThatThrownBy(() -> throwSneakyIOException())
@@ -54,7 +54,7 @@ public void throwSneakyIOException_IOExceptionShouldBeThrown() {
 
 这段代码将抛出`Exception` 实例，因此您不需要将它包装在`RuntimeException:`中
 
-```
+```java
 @SneakyThrows
 public static void throwSneakyIOExceptionUsingLombok() {
     throw new IOException("lombok sneaky");
@@ -65,7 +65,7 @@ public static void throwSneakyIOExceptionUsingLombok() {
 
 现在，让我们调用`throwSneakyIOExceptionUsingLombok `并期待 Lombok 抛出 IOException:
 
-```
+```java
 @Test
 public void throwSneakyIOExceptionUsingLombok_IOExceptionShouldBeThrown() {
     assertThatThrownBy(() -> throwSneakyIOExceptionUsingLombok())

@@ -14,7 +14,7 @@
 
 在抽象类中，它的后代可以使用`super()`调用抽象默认构造函数:
 
-```
+```java
 public abstract class AbstractClass {
     // compiler creates a default constructor
 }
@@ -33,7 +33,7 @@ public class ConcreteClass extends AbstractClass {
 
 让我们用一个抽象类的两个子类来验证这个行为:
 
-```
+```java
 public abstract class AbstractClass {
     public AbstractClass() {
         System.out.println("Initializing AbstractClass");
@@ -52,13 +52,13 @@ public class ConcreteClassB extends AbstractClass {
 
 让我们看看调用 `new ConcreateClassA()`时得到的输出:
 
-```
+```java
 Initializing AbstractClass
 ```
 
 而调用`new ConcreteClassB()`的输出将是:
 
-```
+```java
 Initializing AbstractClass
 Initializing ConcreteClassB
 ```
@@ -71,7 +71,7 @@ Initializing ConcreteClassB
 
 让我们看看如何使用无参数构造函数来确保安全初始化:
 
-```
+```java
 public abstract class Counter {
 
     int value;
@@ -86,7 +86,7 @@ public abstract class Counter {
 
 我们的`SimpleCounter`子类用`++`操作符实现了`increment()`方法。它在每次调用时将`value`递增 1:
 
-```
+```java
 public class SimpleCounter extends Counter {
 
     @Override
@@ -100,7 +100,7 @@ public class SimpleCounter extends Counter {
 
 下面的单元测试演示了构造函数如何安全地初始化`value`属性:
 
-```
+```java
 @Test
 void givenNoArgAbstractConstructor_whenSubclassCreation_thenCalled() {
     Counter counter = new SimpleCounter();
@@ -116,7 +116,7 @@ void givenNoArgAbstractConstructor_whenSubclassCreation_thenCalled() {
 
 首先，我们需要将构造函数设为私有，以防止子类拥有访问权限:
 
-```
+```java
 private Counter() {
     this.value = 0;
     System.out.println("Counter No-Arguments constructor");
@@ -125,7 +125,7 @@ private Counter() {
 
 其次，让我们为子类创建另一个构造函数来调用:
 
-```
+```java
 public Counter(int value) {
     this.value = value;
     System.out.println("Parametrized Counter constructor");
@@ -134,7 +134,7 @@ public Counter(int value) {
 
 最后，我们的`SimpleCounter`需要覆盖参数化的构造函数，否则，它不会编译:
 
-```
+```java
 public class SimpleCounter extends Counter {
 
     public SimpleCounter(int value) {
@@ -153,7 +153,7 @@ public class SimpleCounter extends Counter {
 
 我们从抽象的`Car`类开始，表示所有类型的汽车。我们还需要一个`distance`属性来知道它移动了多少:
 
-```
+```java
 public abstract class Car {
 
     int distance;
@@ -168,7 +168,7 @@ public abstract class Car {
 
 让我们看看如何限制对`distance`的访问，并使用构造函数安全地初始化它:
 
-```
+```java
 public abstract class Car {
 
     private int distance;
@@ -190,7 +190,7 @@ public abstract class Car {
 
 为了使用我们的`distance`属性，让我们添加一些行为来获取和显示汽车的基本信息:
 
-```
+```java
 abstract String getInformation();
 
 protected void display() {
@@ -205,7 +205,7 @@ protected void display() {
 
 现在让我们创建`ElectricCar`和`FuelCar`子类:
 
-```
+```java
 public class ElectricCar extends Car {
     int chargingTime;
 
@@ -239,7 +239,7 @@ public class FuelCar extends Car {
 
 让我们看看这些子类的作用:
 
-```
+```java
 ElectricCar electricCar = new ElectricCar(8);
 electricCar.display();
 
@@ -249,7 +249,7 @@ fuelCar.display();
 
 产生的输出如下所示:
 
-```
+```java
 Car default constructor
 Electric Car
 Charging Time: 8

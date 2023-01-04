@@ -10,7 +10,7 @@
 
 首先，我们需要将以下 Maven 依赖项添加到 pom 中:
 
-```
+```java
 <dependency>
     <groupId>io.atomix</groupId>
     <artifactId>atomix-all</artifactId>
@@ -34,7 +34,7 @@ Atomix 由一组用于创建有状态分布式资源的副本组成。每个副�
 
 为了引导单节点集群，我们需要首先创建一个 *AtomixReplica* 的实例:
 
-```
+```java
 AtomixReplica replica = AtomixReplica.builder(
   new Address("localhost", 8700))
    .withStorage(storage)
@@ -44,7 +44,7 @@ AtomixReplica replica = AtomixReplica.builder(
 
 这里副本配置了*存储*和*传输*。声明存储的代码段:
 
-```
+```java
 Storage storage = Storage.builder()
   .withDirectory(new File("logs"))
   .withStorageLevel(StorageLevel.DISK)
@@ -53,7 +53,7 @@ Storage storage = Storage.builder()
 
 一旦副本被声明并配置了存储和传输，我们就可以通过简单地调用 *bootstrap()* 来引导它，这将返回一个 *CompletableFuture* ，它可用于阻塞，直到服务器通过调用相关的阻塞 *join()* 方法来引导:
 
-```
+```java
 CompletableFuture<AtomixReplica> future = replica.bootstrap();
 future.join();
 ```
@@ -62,7 +62,7 @@ future.join();
 
 为此，我们需要创建其他副本，并将它们加入现有集群；我们需要生成一个新线程来调用 *join(Address)* 方法:
 
-```
+```java
 AtomixReplica replica2 = AtomixReplica.builder(
   new Address("localhost", 8701))
     .withStorage(storage)
@@ -87,7 +87,7 @@ replica3.join(
 
 现在我们有了一个三节点集群引导。或者，我们可以通过在 *bootstrap(列表<地址> )* 方法中传递地址的*列表*来引导集群:
 
-```
+```java
 List<Address> cluster = Arrays.asList(
   new Address("localhost", 8700), 
   new Address("localhost", 8701), 
@@ -121,7 +121,7 @@ Atomix 服务器可以作为独立的服务器运行，可以从 Maven Central �
 
 以下是引导集群的命令:
 
-```
+```java
 java -jar atomix-standalone-server.jar 
   -address 127.0.0.1:8700 -bootstrap -config atomix.properties
 ```
@@ -130,7 +130,7 @@ java -jar atomix-standalone-server.jar
 
 它的格式是:
 
-```
+```java
 java -jar atomix-standalone-server.jar 
   -address 127.0.0.1:8701 -join 127.0.0.1:8700
 ```
@@ -143,7 +143,7 @@ Atomix 支持创建一个客户机，通过 *AtomixClient* API 远程访问它�
 
 让我们创建一个带有传输的客户机:
 
-```
+```java
 AtomixClient client = AtomixClient.builder()
   .withTransport(new NettyTransport())
   .build();
@@ -153,7 +153,7 @@ AtomixClient client = AtomixClient.builder()
 
 我们可以声明一个*地址*的*列表*，并将*列表*作为参数传递给客户端的 *connect()* 方法:
 
-```
+```java
 client.connect(cluster)
   .thenRun(() -> {
       System.out.println("Client is connected to the cluster!");
@@ -168,7 +168,7 @@ Atomix 的真正强大之处在于它为创建和管理分布式资源提供了�
 
 考虑到*副本*是*原子副本*的实例，创建分布式地图资源并为其设置值的代码片段:
 
-```
+```java
 replica.getMap("map")
   .thenCompose(m -> m.put("bar", "Hello world!"))
   .thenRun(() -> System.out.println("Value is set in Distributed Map"))
@@ -179,7 +179,7 @@ replica.getMap("map")
 
 我们可以在最后使用`get()` 方法来等待结果:
 
-```
+```java
 String value = client.getMap("map"))
   .thenCompose(m -> m.get("bar"))
   .thenApply(a -> (String) a)

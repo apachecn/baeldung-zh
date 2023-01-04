@@ -28,7 +28,7 @@
 
 由于 ksqlDB 运行在 Kafka 之上，我们将使用 Docker Compose 来运行 Kafka 组件、ksqlDB 服务器和 ksqlDB CLI 客户端:
 
-```
+```java
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:6.2.0
@@ -69,19 +69,19 @@ services:
 
 首先，让我们运行以下命令来打开堆栈:
 
-```
+```java
 docker-compose up
 ```
 
 接下来，在所有服务启动后，让我们连接到交互式 CLI。这对测试和与服务器交互很有用:
 
-```
+```java
 docker exec -it ksqldb-cli ksql http://ksqldb-server:8088
 ```
 
 我们还将告诉 ksqlDB 从每个主题中最早的点开始所有查询:
 
-```
+```java
 ksql> SET 'auto.offset.reset' = 'earliest';
 ```
 
@@ -89,7 +89,7 @@ ksql> SET 'auto.offset.reset' = 'earliest';
 
 在这个项目中，我们将主要使用 Java 客户端与 ksqlDB 进行交互。更具体地说，我们将把 ksqlDB 用于汇合平台(CP ),所以我们需要将 [CP Maven 库](https://web.archive.org/web/20220628055254/http://packages.confluent.io/maven/)添加到我们的 POM 文件中:
 
-```
+```java
 <repository>
     <id>confluent</id>
     <name>confluent-repo</name>
@@ -99,7 +99,7 @@ ksql> SET 'auto.offset.reset' = 'earliest';
 
 现在，让我们为客户端添加[依赖关系](https://web.archive.org/web/20220628055254/http://packages.confluent.io/maven/io/confluent/ksql/ksqldb-api-client/6.2.0/):
 
-```
+```java
 <dependency>
     <groupId>io.confluent.ksql</groupId>
     <artifactId>ksqldb-api-client</artifactId>
@@ -117,7 +117,7 @@ ksql> SET 'auto.offset.reset' = 'earliest';
 
 让我们从创建存储传入传感器数据的流开始:
 
-```
+```java
 CREATE STREAM readings (sensor_id VARCHAR KEY, timestamp VARCHAR, reading INT)
   WITH (KAFKA_TOPIC = 'readings',
         VALUE_FORMAT = 'JSON',
@@ -130,7 +130,7 @@ CREATE STREAM readings (sensor_id VARCHAR KEY, timestamp VARCHAR, reading INT)
 
 接下来，我们将使用 ksqlDB 服务器连接详细信息创建一个 [`Client`](https://web.archive.org/web/20220628055254/https://docs.ksqldb.io/en/latest/developer-guide/ksqldb-clients/java-client/) 实例，并使用它来执行我们的 SQL 语句:
 
-```
+```java
 ClientOptions options = ClientOptions.create()
   .setHost(KSQLDB_SERVER_HOST)
   .setPort(KSQLDB_SERVER_PORT);
@@ -155,7 +155,7 @@ CompletableFuture<ExecuteStatementResult> result =
 
 在我们的例子中，当每个传感器的平均读数在 30 分钟内超过 25 时，它应该发出警报:
 
-```
+```java
 CREATE TABLE alerts AS
   SELECT
     sensor_id,
@@ -177,7 +177,7 @@ CREATE TABLE alerts AS
 
 和前面一样，让我们使用客户机异步执行这条语句，并创建我们的物化视图:
 
-```
+```java
 CompletableFuture<ExecuteStatementResult> result = 
   client.executeStatement(CREATE_ALERTS_TABLE, properties)
 ```
@@ -190,7 +190,7 @@ CompletableFuture<ExecuteStatementResult> result =
 
 让我们使用`KsqlObject`为流列提供键/值映射:
 
-```
+```java
 List<KsqlObject> rows = Arrays.asList(
   new KsqlObject().put("sensor_id", "sensor-1")
     .put("timestamp", "2021-08-01 09:00:00").put("reading", 22),
@@ -223,7 +223,7 @@ CompletableFuture<Void> result = CompletableFuture.allOf(
 
 让我们创建一个简单的推送查询来订阅前面创建的`alerts`物化视图的结果:
 
-```
+```java
 SELECT * FROM alerts EMIT CHANGES;
 ```
 
@@ -231,7 +231,7 @@ SELECT * FROM alerts EMIT CHANGES;
 
 接下来，我们订阅查询结果以接收流数据:
 
-```
+```java
 public CompletableFuture<Void> subscribeOnAlerts(Subscriber<Row> subscriber) {
     return client.streamQuery(ALERTS_QUERY, PROPERTIES)
       .thenAccept(streamedQueryResult -> streamedQueryResult.subscribe(subscriber))
@@ -247,7 +247,7 @@ public CompletableFuture<Void> subscribeOnAlerts(Subscriber<Row> subscriber) {
 
 我们现在可以使用我们的组合文件和来自 [Testcontainers](https://web.archive.org/web/20220628055254/https://www.testcontainers.org/) 的 [`DockerComposeContainer`](https://web.archive.org/web/20220628055254/https://www.testcontainers.org/modules/docker_compose/) 来测试这个:
 
-```
+```java
 @Testcontainers
 class KsqlDBApplicationLiveTest {
 
@@ -290,7 +290,7 @@ class KsqlDBApplicationLiveTest {
 
 举个简单的例子，让我们创建一个查询来检索特定传感器 id 触发的所有警报:
 
-```
+```java
 String pullQuery = "SELECT * FROM alerts WHERE sensor_id = 'sensor-2';";
 
 List<Row> rows = client.executeQuery(pullQuery, PROPERTIES).get() 

@@ -35,7 +35,7 @@
 
 让我们从定义一个基类`Car`开始:
 
-```
+```java
 public class Car {
     int wheels;
     String model;
@@ -47,7 +47,7 @@ public class Car {
 
 类`ArmoredCar`可以通过**在其声明**中使用关键字`extends`来继承`Car`类的成员:
 
-```
+```java
 public class ArmoredCar extends Car {
     int bulletProofWindows;
     void remoteStartCar() {
@@ -70,7 +70,7 @@ public class ArmoredCar extends Car {
 
 要访问继承的属性或方法，我们可以简单地直接使用它们:
 
-```
+```java
 public class ArmoredCar extends Car {
     public String registerModel() {
         return model;
@@ -88,19 +88,19 @@ public class ArmoredCar extends Car {
 
 想象一下，一个超级间谍需要我们在上一节中定义的`ArmoredCar`。于是`Car`制造公司想到了增加飞行和漂浮功能:
 
-```
+```java
 public interface Floatable {
     void floatOnWater();
 }
 ```
 
-```
+```java
 public interface Flyable {
     void fly();
 }
 ```
 
-```
+```java
 public class ArmoredCar extends Car implements Floatable, Flyable{
     public void floatOnWater() {
         System.out.println("I can float!");
@@ -128,7 +128,7 @@ Java 不允许继承在不同接口中定义的相同方法的多个实现。
 
 这里有一个例子:
 
-```
+```java
 public interface Floatable {
     default void repair() {
     	System.out.println("Repairing Floatable object");	
@@ -136,7 +136,7 @@ public interface Floatable {
 }
 ```
 
-```
+```java
 public interface Flyable {
     default void repair() {
     	System.out.println("Repairing Flyable object");	
@@ -144,7 +144,7 @@ public interface Flyable {
 }
 ```
 
-```
+```java
 public class ArmoredCar extends Car implements Floatable, Flyable {
     // this won't compile
 }
@@ -154,19 +154,19 @@ public class ArmoredCar extends Car implements Floatable, Flyable {
 
 如果前面例子中的接口定义了同名的变量，比如说`duration`，我们不能在变量名前面加上接口名来访问它们:
 
-```
+```java
 public interface Floatable {
     int duration = 10;
 }
 ```
 
-```
+```java
 public interface Flyable {
     int duration = 20;
 }
 ```
 
-```
+```java
 public class ArmoredCar extends Car implements Floatable, Flyable {
 
     public void aMethod() {
@@ -181,19 +181,19 @@ public class ArmoredCar extends Car implements Floatable, Flyable {
 
 一个接口可以扩展多个接口。这里有一个例子:
 
-```
+```java
 public interface Floatable {
     void floatOnWater();
 }
 ```
 
-```
+```java
 interface interface Flyable {
     void fly();
 }
 ```
 
-```
+```java
 public interface SpaceTraveller extends Floatable, Flyable {
     void remoteControl();
 }
@@ -209,7 +209,7 @@ public interface SpaceTraveller extends Floatable, Flyable {
 
 例如，假设有这样一种情况，某个组织维护着其员工拥有的汽车列表。当然，所有员工可能拥有不同的汽车型号。那么我们如何引用不同的汽车实例呢？解决方案如下:
 
-```
+```java
 public class Employee {
     private String name;
     private Car car;
@@ -220,7 +220,7 @@ public class Employee {
 
 因为`Car`的所有派生类都继承了类型`Car`，所以可以通过使用类`Car`的变量来引用派生类实例:
 
-```
+```java
 Employee e1 = new Employee("Shreya", new ArmoredCar());
 Employee e2 = new Employee("Paul", new SpaceCar());
 Employee e3 = new Employee("Pavni", new BMW());
@@ -234,7 +234,7 @@ Employee e3 = new Employee("Pavni", new BMW());
 
 `this`关键字指的是使用它的实例。`super`关键字(显而易见)指的是父类实例:
 
-```
+```java
 public class ArmoredCar extends Car {
     private String model;
     public String getAValue() {
@@ -253,7 +253,7 @@ public class ArmoredCar extends Car {
 
 让我们用一个例子来找出答案:
 
-```
+```java
 public class Car {
     public static String msg() {
         return "Car";
@@ -261,7 +261,7 @@ public class Car {
 }
 ```
 
-```
+```java
 public class ArmoredCar extends Car {
     public static String msg() {
         return super.msg(); // this won't compile.
@@ -273,13 +273,13 @@ public class ArmoredCar extends Car {
 
 由于静态成员属于一个类，我们可以如下修改前面的调用:
 
-```
+```java
 return Car.msg();
 ```
 
 考虑下面的例子，其中基类和派生类都用相同的签名定义了一个静态方法`msg()`:
 
-```
+```java
 public class Car {
     public static String msg() {
         return "Car";
@@ -287,7 +287,7 @@ public class Car {
 }
 ```
 
-```
+```java
 public class ArmoredCar extends Car {
     public static String msg() {
         return "ArmoredCar";
@@ -297,7 +297,7 @@ public class ArmoredCar extends Car {
 
 我们可以这样称呼它们:
 
-```
+```java
 Car first = new ArmoredCar();
 ArmoredCar second = new ArmoredCar();
 ```

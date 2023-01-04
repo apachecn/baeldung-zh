@@ -10,7 +10,7 @@
 
 让我们从导入 [Spring Boot 百里香依赖](https://web.archive.org/web/20220728105348/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-thymeleaf)开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId> 
     <artifactId>spring-boot-starter-thymeleaf</artifactId> 
@@ -22,7 +22,7 @@
 
 我们的项目将是一个简单的 Spring web 应用程序，**根据用户的地区显示货币。**让我们在`resources/templates/currencies`中创建百里香模板 `currencies.html`:
 
-```
+```java
 <!DOCTYPE html>
 <html 
   xmlns:th="http://www.thymeleaf.org">
@@ -35,7 +35,7 @@
 
 我们还可以创建一个控制器类来处理我们的请求:
 
-```
+```java
 @Controller
 public class CurrenciesController {
     @GetMapping(value = "/currency")
@@ -56,13 +56,13 @@ public class CurrenciesController {
 
 由百里叶提供的 [`Numbers`](https://web.archive.org/web/20220728105348/https://www.thymeleaf.org/apidocs/thymeleaf/3.0.11.RELEASE/org/thymeleaf/expression/Numbers.html) 类支持格式化货币。因此，让我们通过调用`formatCurrency`方法来更新视图
 
-```
+```java
 <p th:text="${#numbers.formatCurrency(param.amount)}"></p>
 ```
 
 当我们运行我们的示例时，我们将看到货币被正确格式化:
 
-```
+```java
 @Test
 public void whenCallCurrencyWithUSALocale_ThenReturnProperCurrency() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get("/currency")
@@ -79,7 +79,7 @@ public void whenCallCurrencyWithUSALocale_ThenReturnProperCurrency() throws Exce
 
 我们还可以使用`Numbers`类来格式化数组。因此，我们将向控制器添加另一个请求参数:
 
-```
+```java
 @GetMapping(value = "/currency")
 public String exchange(
   @RequestParam(value = "amount") String amount,
@@ -90,13 +90,13 @@ public String exchange(
 
 接下来，我们可以更新我们的视图，以包含对`listFormatCurrency`方法的调用:
 
-```
+```java
 <p th:text="${#numbers.listFormatCurrency(param.amountList)}"></p> 
 ```
 
 现在让我们看看结果是什么样的:
 
-```
+```java
 @Test
 public void whenCallCurrencyWithUkLocaleWithArrays_ThenReturnLocaleCurrencies() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get("/currency")
@@ -113,13 +113,13 @@ public void whenCallCurrencyWithUkLocaleWithArrays_ThenReturnLocaleCurrencies() 
 
 使用 [`Strings#replace`](https://web.archive.org/web/20220728105348/https://www.thymeleaf.org/apidocs/thymeleaf/3.0.11.RELEASE/org/thymeleaf/expression/Strings.html) ，我们可以**去掉后面的零**。
 
-```
+```java
 <p th:text="${#strings.replace(#numbers.formatCurrency(param.amount), '.00', '')}"></p>
 ```
 
 现在我们可以看到没有尾随双零的全部金额:
 
-```
+```java
 @Test
 public void whenCallCurrencyWithUSALocaleWithoutDecimal_ThenReturnCurrencyWithoutTrailingZeros()
   throws Exception {
@@ -135,13 +135,13 @@ public void whenCallCurrencyWithUSALocaleWithoutDecimal_ThenReturnCurrencyWithou
 
 根据语言环境的不同，小数的格式可能会有所不同。因此，如果我们想用逗号替换小数点，可以使用`Numbers`类提供的`formatDecimal`方法:
 
-```
+```java
 <p th:text="${#numbers.formatDecimal(param.amount, 1, 2, 'COMMA')}"></p>
 ```
 
 让我们看看测试的结果:
 
-```
+```java
 @Test
 public void whenCallCurrencyWithUSALocale_ThenReturnReplacedDecimalPoint() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get("/currency")

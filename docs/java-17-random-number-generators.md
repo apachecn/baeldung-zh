@@ -28,7 +28,7 @@
 
 为了生成一个随机数流，我们需要**创建一个随机数生成器类的实例——`Random`**:
 
-```
+```java
 Random random = new Random();
 int number = random.nextInt(10);
 assertThat(number).isPositive().isLessThan(10);
@@ -108,7 +108,7 @@ assertThat(number).isPositive().isLessThan(10);
 
 我们可以用它来**打印所有注册的生成器工厂，并检查它们的算法**的属性:
 
-```
+```java
 RandomGeneratorFactory.all()
   .sorted(Comparator.comparing(RandomGeneratorFactory::name))
   .forEach(factory -> System.out.println(String.format("%s\t%s\t%s\t%s",
@@ -124,7 +124,7 @@ RandomGeneratorFactory.all()
 
 我们还可以利用`all`方法通过随机数生成器算法的属性**查询工厂:**
 
-```
+```java
 RandomGeneratorFactory.all()
   .filter(RandomGeneratorFactory::isJumpable)
   .findAny()
@@ -144,7 +144,7 @@ RandomGeneratorFactory.all()
 
 这是 Java 17 中新推荐的方法，作为创建`Random`实例的替代方法:
 
-```
+```java
 RandomGenerator generator = RandomGenerator.getDefault();
 ```
 
@@ -156,7 +156,7 @@ RandomGenerator generator = RandomGenerator.getDefault();
 
 另一方面，当我们有特定的生成器需求时，我们可以使用`of`方法来**检索特定的生成器:**
 
-```
+```java
 RandomGenerator generator = RandomGenerator.of("L128X256MixRandom");
 ```
 
@@ -175,7 +175,7 @@ RandomGenerator generator = RandomGenerator.of("L128X256MixRandom");
 
 我们可以使用`SplittableGenerator`实现第二种情况:
 
-```
+```java
 List<Integer> numbers = Collections.synchronizedList(new ArrayList<>());
 ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -198,7 +198,7 @@ sourceGenerator.splits(20).forEach((splitGenerator) -> {
 
 我们将使用相同的方法测试生成器，生成四种不同类型的随机数:
 
-```
+```java
 private static void generateRandomNumbers(RandomGenerator generator) {
     generator.nextLong();
     generator.nextInt();

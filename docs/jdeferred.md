@@ -12,7 +12,7 @@
 
 我们可以在任何应用程序中使用`JDeferred`,方法是将下面的依赖项添加到我们的`pom.xml:`中
 
-```
+```java
 <dependency>
     <groupId>org.jdeferred</groupId>
     <artifactId>jdeferred-core</artifactId>
@@ -28,7 +28,7 @@
 
 在简单的 JQuery 中，上述场景可以通过以下方式解决:
 
-```
+```java
 $.ajax("/GetEmployees")
     .done(
         function() {
@@ -53,7 +53,7 @@ $.ajax("/GetEmployees")
 
 我们可以很容易地创建这种类型的异步工作流:
 
-```
+```java
 Deferred<String, String, String> deferred
   = new DeferredObject<>();
 Promise<String, String, String> promise = deferred.promise();
@@ -88,7 +88,7 @@ deferred.reject("oops");
 
 一旦过滤完成，我们将得到线程安全的延迟对象:
 
-```
+```java
 private static String modifiedMsg;
 
 static String filter(String msg) {
@@ -109,7 +109,7 @@ static String filter(String msg) {
 
 与过滤器类似，`JDeferred`提供了 [`DonePipe`](https://web.archive.org/web/20221205135244/https://github.com/jdeferred/jdeferred/blob/master/subprojects/jdeferred-core/src/main/java/org/jdeferred2/DonePipe.java) 接口，以便在解决了延迟的对象挂起操作后执行复杂的过滤后操作。
 
-```
+```java
 public enum Result { 
     SUCCESS, FAILURE 
 }; 
@@ -145,7 +145,7 @@ public static Result validate(int num) {
 
 这就是为什么`JDeferred`带有 [`DeferredManager`](https://web.archive.org/web/20221205135244/https://github.com/jdeferred/jdeferred/blob/master/subprojects/jdeferred-core/src/main/java/org/jdeferred2/DeferredManager.java) 接口，为所有的承诺创建一个公共的观察者。因此，使用这个共同的观察者，我们可以为所有的承诺创建共同的行动:
 
-```
+```java
 Deferred<String, String, String> deferred = new DeferredObject<>();
 DeferredManager dm = new DefaultDeferredManager();
 Promise<String, String, String> p1 = deferred.promise(), 
@@ -159,14 +159,14 @@ deferred.resolve("Hello Baeldung");
 
 我们也可以将带有自定义线程池的 [`ExecutorService`](https://web.archive.org/web/20221205135244/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/ExecutorService.html) 分配给`DeferredManager`:
 
-```
+```java
 ExecutorService executor = Executors.newFixedThreadPool(10);
 DeferredManager dm = new DefaultDeferredManager(executor);
 ```
 
 事实上，我们完全可以忽略`Promise`的使用，可以直接定义 [`Callable`](https://web.archive.org/web/20221205135244/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Callable.html) 接口来完成任务:
 
-```
+```java
 DeferredManager dm = new DefaultDeferredManager();
 dm.when(() -> {
     // return something and raise an exception to interrupt the task
@@ -180,7 +180,7 @@ dm.when(() -> {
 
 在这种情况下，我们只能使用`Object`的`wait()`方法来**等待所有延迟的任务完成**:
 
-```
+```java
 DeferredManager dm = new DefaultDeferredManager();
 Deferred<String, String, String> deferred = new DeferredObject<>();
 Promise<String, String, String> p1 = deferred.promise();
@@ -204,7 +204,7 @@ deferred.resolve("Hello Baeldung");
 
 或者，我们可以使用`Promise`接口的`waitSafely()`方法来实现同样的功能。
 
-```
+```java
 try {
     p.waitSafely();
 } catch (InterruptedException e) {
@@ -220,7 +220,7 @@ try {
 
 对于 APKLIB 构建，我们需要在`pom.xml`中添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.jdeferred</groupId>
     <artifactId>jdeferred-android</artifactId>
@@ -231,7 +231,7 @@ try {
 
 对于`AAR`构建，我们需要在`pom.xml`中添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.jdeferred</groupId>
     <artifactId>jdeferred-android-aar</artifactId>

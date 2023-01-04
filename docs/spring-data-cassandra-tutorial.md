@@ -26,7 +26,7 @@ Learn how to display events on an interactive map, based on data stored in an As
 
 让我们从定义`pom.xml`中的依赖项开始，用 Maven:
 
-```
+```java
 <dependency>
     <groupId>com.datastax.cassandra</groupId>
     <artifactId>cassandra-driver-core</artifactId>
@@ -42,7 +42,7 @@ Learn how to display events on an interactive map, based on data stored in an As
 
 我们将为此使用 Java 风格的配置。让我们从主配置类开始——当然是通过类级别 `@Configuration` 驱动的注释:
 
-```
+```java
 @Configuration
 public class CassandraConfig extends AbstractCassandraConfiguration {
 
@@ -76,7 +76,7 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
 
 让我们通过`application.properties` : 进行卡珊德拉配置
 
-```
+```java
 spring.data.cassandra.keyspace-name=testKeySpace
 spring.data.cassandra.port=9142
 spring.data.cassandra.contact-points=127.0.0.1
@@ -98,7 +98,7 @@ spring.data.cassandra.contact-points=127.0.0.1
 
 让我们创建要在配置中使用的`CassandraRepository`:
 
-```
+```java
 @Repository
 public interface BookRepository extends CassandraRepository<Book> {
     //
@@ -109,7 +109,7 @@ public interface BookRepository extends CassandraRepository<Book> {
 
 现在，我们可以扩展 3.1 节中的配置，在 `CassandraConfig:`中添加`@EnableCassandraRepositories`类级注释来标记我们在 4.1 节中创建的 Cassandra 库
 
-```
+```java
 @Configuration
 @EnableCassandraRepositories(
   basePackages = "com.baeldung.spring.data.cassandra.repository")
@@ -124,7 +124,7 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
 
 使用`@Table` 注释，bean 被直接映射到 Cassandra 数据表。每个属性也被定义为一种主键或一个简单的列:
 
-```
+```java
 @Table
 public class Book {
     @PrimaryKeyColumn(
@@ -151,7 +151,7 @@ public class Book {
 
 如果您想在嵌入式模式下运行 Cassandra(不需要手动安装单独的 Cassandra 服务器)，您需要将与`cassandra-unit`相关的依赖项添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.cassandraunit</groupId>
     <artifactId>cassandra-unit-spring</artifactId>
@@ -181,7 +181,7 @@ public class Book {
 
 这个嵌入式服务器也兼容 Spring JUnit 测试。在这里，我们可以使用`@RunWith`注释和嵌入式服务器来设置`SpringJUnit4ClassRunner`。因此，在没有外部 Cassandra 服务运行的情况下，实现完整的测试套件是可能的。
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = CassandraConfig.class)
 public class BookRepositoryIntegrationTest {
@@ -195,7 +195,7 @@ public class BookRepositoryIntegrationTest {
 
 我们必须为整个测试套件启动一次服务器，所以服务器启动方法用`@BeforeClass` 标注:
 
-```
+```java
 @BeforeClass
 public static void startCassandraEmbedded() { 
     EmbeddedCassandraServerHelper.startEmbeddedCassandra(); 
@@ -207,7 +207,7 @@ public static void startCassandraEmbedded() {
 
 接下来，我们必须确保服务器在测试套件执行完成后停止:
 
-```
+```java
 @AfterClass
 public static void stopCassandraEmbedded() {
     EmbeddedCassandraServerHelper.cleanEmbeddedCassandra();
@@ -220,7 +220,7 @@ public static void stopCassandraEmbedded() {
 
 现在，我们可以在服务器启动时创建数据表:
 
-```
+```java
 @Before
 public void createTable() {
     adminTemplate.createTable(
@@ -231,7 +231,7 @@ public void createTable() {
 
 并在每个测试用例执行后删除:
 
-```
+```java
 @After
 public void dropTable() {
     adminTemplate.dropTable(CqlIdentifier.cqlId(DATA_TABLE_NAME));
@@ -246,7 +246,7 @@ public void dropTable() {
 
 我们可以将一本新书保存到书店:
 
-```
+```java
 Book javaBook = new Book(
   UUIDs.timeBased(), "Head First Java", "O'Reilly Media", 
   ImmutableSet.of("Computer", "Software"));
@@ -255,7 +255,7 @@ bookRepository.save(ImmutableSet.of(javaBook));
 
 然后，我们可以在数据库中检查插入图书的可用性:
 
-```
+```java
 Iterable<Book> books = bookRepository.findByTitleAndPublisher(
   "Head First Java", "O'Reilly Media");
 assertEquals(javaBook.getId(), books.iterator().next().getId());
@@ -265,7 +265,7 @@ assertEquals(javaBook.getId(), books.iterator().next().getId());
 
 让我们从插入一本新书开始:
 
-```
+```java
 Book javaBook = new Book(
   UUIDs.timeBased(), "Head First Java", "O'Reilly Media", 
   ImmutableSet.of("Computer", "Software"));
@@ -274,21 +274,21 @@ bookRepository.save(ImmutableSet.of(javaBook));
 
 我们按书名取这本书吧:
 
-```
+```java
 Iterable<Book> books = bookRepository.findByTitleAndPublisher(
   "Head First Java", "O'Reilly Media");
 ```
 
 那我们换个书名:
 
-```
+```java
 javaBook.setTitle("Head First Java Second Edition");
 bookRepository.save(ImmutableSet.of(javaBook));
 ```
 
 最后，让我们检查数据库中的标题是否已更新:
 
-```
+```java
 Iterable<Book> books = bookRepository.findByTitleAndPublisher(
   "Head First Java Second Edition", "O'Reilly Media");
 assertEquals(
@@ -299,7 +299,7 @@ assertEquals(
 
 插入一本新书:
 
-```
+```java
 Book javaBook = new Book(
   UUIDs.timeBased(), "Head First Java", "O'Reilly Media",
   ImmutableSet.of("Computer", "Software"));
@@ -308,13 +308,13 @@ bookRepository.save(ImmutableSet.of(javaBook));
 
 然后删除新输入的图书:
 
-```
+```java
 bookRepository.delete(javaBook); 
 ```
 
 现在我们可以检查删除:
 
-```
+```java
 Iterable<Book> books = bookRepository.findByTitleAndPublisher(
   "Head First Java", "O'Reilly Media");
 assertNotEquals(javaBook.getId(), books.iterator().next().getId());
@@ -326,7 +326,7 @@ assertNotEquals(javaBook.getId(), books.iterator().next().getId());
 
 首先插入一本新书:
 
-```
+```java
 Book javaBook = new Book(
   UUIDs.timeBased(), "Head First Java", "O'Reilly Media", 
   ImmutableSet.of("Computer", "Software"));
@@ -339,13 +339,13 @@ bookRepository.save(ImmutableSet.of(dPatternBook));
 
 查找所有书籍:
 
-```
+```java
 Iterable<Book> books = bookRepository.findAll();
 ```
 
 然后，我们可以查看数据库中现有图书的数量:
 
-```
+```java
 int bookCount = 0;
 for (Book book : books) bookCount++;
 assertEquals(bookCount, 2);

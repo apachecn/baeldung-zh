@@ -28,7 +28,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 让我们把它添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.apache.shiro</groupId>
     <artifactId>shiro-core</artifactId>
@@ -44,7 +44,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 在本教程中，我们将在桌面环境中探索该框架。要配置框架，我们需要在资源文件夹中创建一个`shiro.ini`文件，内容如下:
 
-```
+```java
 [users]
 user = password, admin
 user2 = password2, editor
@@ -66,7 +66,7 @@ author = articles:compose,articles:save
 
 让我们使用`IniRealm`从`shiro.ini`文件中加载我们的用户和角色定义，然后使用它来配置`DefaultSecurityManager`对象:
 
-```
+```java
 IniRealm iniRealm = new IniRealm("classpath:shiro.ini");
 SecurityManager securityManager = new DefaultSecurityManager(iniRealm);
 
@@ -84,7 +84,7 @@ Subject currentUser = SecurityUtils.getSubject();
 
 现在我们有了`currentUser`对象，我们可以对提供的凭证执行认证:
 
-```
+```java
 if (!currentUser.isAuthenticated()) {               
   UsernamePasswordToken token                       
     = new UsernamePasswordToken("user", "password");
@@ -123,7 +123,7 @@ if (!currentUser.isAuthenticated()) {
 
 让我们欢迎基于角色的当前用户:
 
-```
+```java
 if (currentUser.hasRole("admin")) {       
     log.info("Welcome Admin");              
 } else if(currentUser.hasRole("editor")) {
@@ -137,7 +137,7 @@ if (currentUser.hasRole("admin")) {
 
 现在，让我们看看当前用户在系统中被允许做什么:
 
-```
+```java
 if(currentUser.isPermitted("articles:compose")) {            
     log.info("You can compose an article");                    
 } else {                                                     
@@ -169,7 +169,7 @@ if(currentUser.isPermitted("articles:publish")) {
 
 让我们通过子类化`JdbcRealm`类来创建一个领域:
 
-```
+```java
 public class MyCustomRealm extends JdbcRealm {
     //...
 }
@@ -177,7 +177,7 @@ public class MyCustomRealm extends JdbcRealm {
 
 为了简单起见，我们使用`java.util.Map`来模拟一个数据库:
 
-```
+```java
 private Map<String, String> credentials = new HashMap<>();
 private Map<String, Set<String>> roles = new HashMap<>();
 private Map<String, Set<String>> perm = new HashMap<>();
@@ -201,7 +201,7 @@ private Map<String, Set<String>> perm = new HashMap<>();
 
 让我们继续并覆盖`doGetAuthenticationInfo()`:
 
-```
+```java
 protected AuthenticationInfo 
   doGetAuthenticationInfo(AuthenticationToken token)
   throws AuthenticationException {
@@ -227,7 +227,7 @@ protected AuthenticationInfo
 
 如果用户凭证用 salt 散列，我们需要返回一个带有相关 salt 的`SimpleAuthenticationInfo`:
 
-```
+```java
 return new SimpleAuthenticationInfo(
   uToken.getUsername(), 
   credentials.get(uToken.getUsername()), 
@@ -240,7 +240,7 @@ return new SimpleAuthenticationInfo(
 
 最后，让我们将自定义领域插入到`securityManager`中。我们需要做的就是用我们的自定义领域替换上面的`IniRealm` ，并将其传递给`DefaultSecurityManager`的构造函数:
 
-```
+```java
 Realm realm = new MyCustomRealm();
 SecurityManager securityManager = new DefaultSecurityManager(realm);
 ```
@@ -257,7 +257,7 @@ SecurityManager securityManager = new DefaultSecurityManager(realm);
 
 现在我们已经验证了用户，是时候实现注销了。只需调用一个方法就可以做到这一点，该方法会使用户会话无效并注销用户:
 
-```
+```java
 currentUser.logout();
 ```
 
@@ -269,7 +269,7 @@ currentUser.logout();
 
 让我们看一个简单的例子，并与当前用户的会话进行交互:
 
-```
+```java
 Session session = currentUser.getSession();                
 session.setAttribute("key", "value");                      
 String value = (String) session.getAttribute("key");       
@@ -288,7 +288,7 @@ if (value.equals("value")) {
 
 首先，我们需要将 Spring Boot 父依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -298,7 +298,7 @@ if (value.equals("value")) {
 
 接下来，我们必须将以下依赖项添加到同一个`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -322,7 +322,7 @@ if (value.equals("value")) {
 
 因此，在运行 Spring Boot 应用程序的主类中，让我们添加以下`Bean`定义:
 
-```
+```java
 @Bean
 public Realm realm() {
     return new MyCustomRealm();
@@ -350,7 +350,7 @@ public ShiroFilterChainDefinition shiroFilterChainDefinition() {
 
 我们可以通过向我们的`application.properties`添加以下条目来更改这个默认登录 URL 和其他默认设置:
 
-```
+```java
 shiro.loginUrl = /login
 shiro.successUrl = /secure
 shiro.unauthorizedUrl = /login
@@ -364,7 +364,7 @@ shiro.unauthorizedUrl = /login
 
 `login()`方法是我们如上所述实现实际用户认证的地方。如果身份验证成功，用户将被重定向到安全页面:
 
-```
+```java
 Subject subject = SecurityUtils.getSubject();
 
 if(!subject.isAuthenticated()) {
@@ -384,7 +384,7 @@ return "redirect:/secure";
 
 现在在`secure()`实现中，`currentUser`是通过调用`SecurityUtils.getSubject().`获得的，用户的角色和权限以及用户的主体都被传递到安全页面:
 
-```
+```java
 Subject currentUser = SecurityUtils.getSubject();
 String role = "", permission = "";
 

@@ -44,7 +44,7 @@ Spring 会创建 bean C，然后创建 bean B(并将 bean C 注入其中)，然�
 
 让我们定义两个相互依赖的 beans(通过构造函数注入):
 
-```
+```java
 @Component
 public class CircularDependencyA {
 
@@ -57,7 +57,7 @@ public class CircularDependencyA {
 }
 ```
 
-```
+```java
 @Component
 public class CircularDependencyB {
 
@@ -74,7 +74,7 @@ public class CircularDependencyB {
 
 让我们假设我们的 beans 是在包"`com.baeldung.circulardependency`"中定义的:
 
-```
+```java
 @Configuration
 @ComponentScan(basePackages = { "com.baeldung.circulardependency" })
 public class TestConfig {
@@ -85,7 +85,7 @@ public class TestConfig {
 
 测试可以为空，因为循环依赖将在上下文加载期间被检测到:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { TestConfig.class })
 public class CircularDependencyIntegrationTest {
@@ -99,7 +99,7 @@ public class CircularDependencyIntegrationTest {
 
 如果我们尝试运行这个测试，我们将得到这个异常:
 
-```
+```java
 BeanCurrentlyInCreationException: Error creating bean with name 'circularDependencyA':
 Requested bean is currently in creation: Is there an unresolvable circular reference?
 ```
@@ -120,7 +120,7 @@ Requested bean is currently in creation: Is there an unresolvable circular refer
 
 为了在我们的代码中尝试这一点，我们可以更改`CircularDependencyA`:
 
-```
+```java
 @Component
 public class CircularDependencyA {
 
@@ -143,7 +143,7 @@ public class CircularDependencyA {
 
 因此，让我们更改我们的类，使用 setter 注入，并添加另一个字段(`message`)到`CircularDependencyB`，这样我们就可以进行适当的单元测试:
 
-```
+```java
 @Component
 public class CircularDependencyA {
 
@@ -160,7 +160,7 @@ public class CircularDependencyA {
 }
 ```
 
-```
+```java
 @Component
 public class CircularDependencyB {
 
@@ -181,7 +181,7 @@ public class CircularDependencyB {
 
 现在，我们必须对我们的单元测试进行一些更改:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { TestConfig.class })
 public class CircularDependencyIntegrationTest {
@@ -220,7 +220,7 @@ public class CircularDependencyIntegrationTest {
 
 我们的 beans 可能有这样的代码:
 
-```
+```java
 @Component
 public class CircularDependencyA {
 
@@ -238,7 +238,7 @@ public class CircularDependencyA {
 }
 ```
 
-```
+```java
 @Component
 public class CircularDependencyB {
 
@@ -266,7 +266,7 @@ public class CircularDependencyB {
 
 以下是我们的 beans 的代码:
 
-```
+```java
 @Component
 public class CircularDependencyA implements ApplicationContextAware, InitializingBean {
 
@@ -290,7 +290,7 @@ public class CircularDependencyA implements ApplicationContextAware, Initializin
 }
 ```
 
-```
+```java
 @Component
 public class CircularDependencyB {
 

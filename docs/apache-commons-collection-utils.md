@@ -17,7 +17,7 @@
 
 我们需要添加下面的依赖关系来开始`CollectionUtils:`
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -31,7 +31,7 @@
 
 让我们加上`Customer` 和 `Address classes:`
 
-```
+```java
 public class Customer {
     private Integer id;
     private String name;
@@ -50,7 +50,7 @@ public class Address {
 
 我们还将准备好下面的`Customer` 和`List` 实例来测试我们的实现:
 
-```
+```java
 Customer customer1 = new Customer(1, "Daniel", "locality1", "city1");
 Customer customer2 = new Customer(2, "Fredrik", "locality2", "city2");
 Customer customer3 = new Customer(3, "Kyle", "locality3", "city3");
@@ -75,7 +75,7 @@ List<Customer> linkedList1 = new LinkedList<>(list1);
 
 此方法的第一个参数是我们要添加元素的集合，第二个参数是我们要添加的元素:
 
-```
+```java
 @Test
 public void givenList_whenAddIgnoreNull_thenNoNullAdded() {
     CollectionUtils.addIgnoreNull(list1, null);
@@ -90,7 +90,7 @@ public void givenList_whenAddIgnoreNull_thenNoNullAdded() {
 
 **我们可以使用`collate` 方法来整理两个已经排序的列表。**这个方法将我们想要合并的两个列表作为参数，并返回一个排序列表:
 
-```
+```java
 @Test
 public void givenTwoSortedLists_whenCollated_thenSorted() {
     List<Customer> sortedList = CollectionUtils.collate(list1, list2);
@@ -107,7 +107,7 @@ public void givenTwoSortedLists_whenCollated_thenSorted() {
 
 该操作的结果是 B 类对象的列表:
 
-```
+```java
 @Test
 public void givenListOfCustomers_whenTransformed_thenListOfAddress() {
     Collection<Address> addressCol = CollectionUtils.collect(list1, 
@@ -131,7 +131,7 @@ public void givenListOfCustomers_whenTransformed_thenListOfAddress() {
 
 **如果输入列表被修改，即至少有一个对象从列表中被过滤掉:**，则`filter` 和`filterInverse` 都返回`true`
 
-```
+```java
 @Test
 public void givenCustomerList_WhenFiltered_thenCorrectSize() {
 
@@ -152,13 +152,13 @@ public void givenCustomerList_WhenFiltered_thenCorrectSize() {
 
 当我们想检查一个列表中是否至少有一个元素时，这个方法非常方便。同样的另一种检查方式是:
 
-```
+```java
 boolean isNotEmpty = (list != null && list.size() > 0);
 ```
 
 虽然上面的代码行做了同样的事情，但是`CollectionUtils.isNotEmpty` 让我们的代码更干净:
 
-```
+```java
 @Test
 public void givenNonEmptyList_whenCheckedIsNotEmpty_thenTrue() {
     assertTrue(CollectionUtils.isNotEmpty(list1));
@@ -167,7 +167,7 @@ public void givenNonEmptyList_whenCheckedIsNotEmpty_thenTrue() {
 
 **`isEmpty`则相反。**它检查给定的列表是否为空或者列表中是否有零个元素:
 
-```
+```java
 List<Customer> emptyList = new ArrayList<>();
 List<Customer> nullList = null;
 
@@ -179,7 +179,7 @@ assertTrue(CollectionUtils.isEmpty(emptyList));
 
 我们可以使用`isSubCollection` 来检查一个集合是否包含在另一个集合中。`isSubCollection` 接受两个集合作为参数，如果第一个集合是第二个集合的子集合，则返回`true` :
 
-```
+```java
 @Test
 public void givenCustomerListAndASubcollection_whenChecked_thenTrue() {
     assertTrue(CollectionUtils.isSubCollection(list3, list1));
@@ -192,7 +192,7 @@ public void givenCustomerListAndASubcollection_whenChecked_thenTrue() {
 
 **我们可以用`CollectionUtils.intersection` 的方法得到两个集合的交集。**该方法采用两个集合，并返回两个输入集合中相同元素的集合:
 
-```
+```java
 @Test
 public void givenTwoLists_whenIntersected_thenCheckSize() {
     Collection<Customer> intersection = CollectionUtils.intersection(list1, list3);
@@ -206,7 +206,7 @@ public void givenTwoLists_whenIntersected_thenCheckSize() {
 
 `**CollectionUtils.subtract**` 接受两个集合作为输入，返回一个集合，该集合包含第一个集合中有而第二个集合中没有的元素:
 
-```
+```java
 @Test
 public void givenTwoLists_whenSubtracted_thenCheckElementNotPresentInA() {
     Collection<Customer> result = CollectionUtils.subtract(list1, list3);
@@ -220,7 +220,7 @@ public void givenTwoLists_whenSubtracted_thenCheckElementNotPresentInA() {
 
 执行两个集合的并集运算，并返回一个包含第一个或第二个集合中所有元素的集合。
 
-```
+```java
 @Test
 public void givenTwoLists_whenUnioned_thenCheckElementPresentInResult() {
     Collection<Customer> union = CollectionUtils.union(list1, list2);

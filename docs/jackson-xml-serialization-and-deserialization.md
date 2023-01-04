@@ -12,13 +12,13 @@
 
 `XmlMapper` 是 Jackson 2.x 中帮助我们序列化的主类，所以我们需要创建它的一个实例:
 
-```
+```java
 XmlMapper mapper = new XmlMapper();
 ```
 
 这个 `mapper` 在`jackson-dataformat-xml` jar 中是可用的，所以我们必须将它作为一个依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.dataformat</groupId>
     <artifactId>jackson-dataformat-xml</artifactId>
@@ -34,7 +34,7 @@ XmlMapper mapper = new XmlMapper();
 
 让我们看看如何使用它来进行实际的序列化。让我们首先创建一个 Java 类:
 
-```
+```java
 class SimpleBean {
     private int x = 1;
     private int y = 2;
@@ -47,7 +47,7 @@ class SimpleBean {
 
 我们可以将 Java 对象序列化成 XML `String`:
 
-```
+```java
 @Test
 public void whenJavaSerializedToXmlStr_thenCorrect() throws JsonProcessingException {
     XmlMapper xmlMapper = new XmlMapper();
@@ -58,7 +58,7 @@ public void whenJavaSerializedToXmlStr_thenCorrect() throws JsonProcessingExcept
 
 结果，我们会得到:
 
-```
+```java
 <SimpleBean>
     <x>1</x>
     <y>2</y>
@@ -69,7 +69,7 @@ public void whenJavaSerializedToXmlStr_thenCorrect() throws JsonProcessingExcept
 
 我们还可以将 Java 对象序列化为 XML 文件:
 
-```
+```java
 @Test
 public void whenJavaSerializedToXmlFile_thenCorrect() throws IOException {
     XmlMapper xmlMapper = new XmlMapper();
@@ -81,7 +81,7 @@ public void whenJavaSerializedToXmlFile_thenCorrect() throws IOException {
 
 下面我们可以看到名为`simple_bean.xml`的结果文件的内容:
 
-```
+```java
 <SimpleBean>
     <x>1</x>
     <y>2</y>
@@ -96,7 +96,7 @@ public void whenJavaSerializedToXmlFile_thenCorrect() throws IOException {
 
 与序列化一样，我们也可以将 XML 字符串反序列化为 Java 对象:
 
-```
+```java
 @Test
 public void whenJavaGotFromXmlStr_thenCorrect() throws IOException {
     XmlMapper xmlMapper = new XmlMapper();
@@ -110,7 +110,7 @@ public void whenJavaGotFromXmlStr_thenCorrect() throws IOException {
 
 同样，如果我们有一个 XML 文件，我们可以将其转换回 Java 对象。
 
-```
+```java
 @Test
 public void whenJavaGotFromXmlFile_thenCorrect() throws IOException {
     File file = new File("simple_bean.xml");
@@ -128,7 +128,7 @@ public void whenJavaGotFromXmlFile_thenCorrect() throws IOException {
 
 假设我们有一个字段大写的 XML:
 
-```
+```java
 <SimpleBeanForCapitalizedFields>
     <X>1</X>
     <y>2</y>
@@ -137,7 +137,7 @@ public void whenJavaGotFromXmlFile_thenCorrect() throws IOException {
 
 为了正确处理大写的元素，我们需要用`@JsonProperty`注释来注释“x”字段:
 
-```
+```java
 class SimpleBeanForCapitalizedFields {
     @JsonProperty("X")
     private int x = 1;
@@ -149,7 +149,7 @@ class SimpleBeanForCapitalizedFields {
 
 我们现在可以正确地将 XML `String`反序列化回 Java 对象:
 
-```
+```java
 @Test
 public void whenJavaGotFromXmlStrWithCapitalElem_thenCorrect() throws IOException {
     XmlMapper xmlMapper = new XmlMapper();
@@ -165,7 +165,7 @@ public void whenJavaGotFromXmlStrWithCapitalElem_thenCorrect() throws IOExceptio
 
 通过用`@JsonProperty,`注释必需的字段，我们可以正确地将一个 Java 对象序列化为一个 XML `String`,其中包含一个或多个大写的元素:
 
-```
+```java
 @Test
 public void whenJavaSerializedToXmlFileWithCapitalizedField_thenCorrect()
   throws IOException {
@@ -185,7 +185,7 @@ public void whenJavaSerializedToXmlFileWithCapitalizedField_thenCorrect()
 
 我们最终的 XML 看起来会像这样:
 
-```
+```java
 <Person>
     <firstName>Rohan</firstName>
     <lastName>Daye</lastName>
@@ -208,7 +208,7 @@ public void whenJavaSerializedToXmlFileWithCapitalizedField_thenCorrect()
 
 我们可以通过`Person`类中的`@JacksonXMLElementWrapper`注释来表达这种细微差别:
 
-```
+```java
 public final class Person {
     private String firstName;
     private String lastName;
@@ -224,7 +224,7 @@ public final class Person {
 
 然后我们将定义我们的`Address` 类型:
 
-```
+```java
 public class Address {
     String streetName;
     String city;
@@ -234,7 +234,7 @@ public class Address {
 
 **杰克逊为我们处理剩下的事情。**像以前一样，我们可以简单地再叫`writeValue`:
 
-```
+```java
 private static final String XML = "<Person>...</Person>";
 
 @Test
@@ -253,7 +253,7 @@ Jackson 也可以读取包含对象列表的 XML。
 
 如果我们像以前一样使用相同的 XML，`readValue` 方法就很好:
 
-```
+```java
 @Test
 public void whenJavaDeserializedFromXmlFile_thenCorrect() throws IOException {
     XmlMapper xmlMapper = new XmlMapper();

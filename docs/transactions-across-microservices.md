@@ -24,7 +24,7 @@
 
 `user`微服务将关注用户档案(创建新用户、编辑档案数据等。)和下面的基础域类:
 
-```
+```java
 @Entity
 public class User implements Serializable {
 
@@ -45,7 +45,7 @@ public class User implements Serializable {
 
 微服务将与广播有关。它封装了实体`Message`及其周围的一切:
 
-```
+```java
 @Entity
 public class Message implements Serializable {
 

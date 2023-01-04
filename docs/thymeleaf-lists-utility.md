@@ -12,13 +12,13 @@
 
 首先，**`size`方法返回一个列表的长度。**我们可以通过`th:text` 属性包含它:
 
-```
+```java
 size: <span th:text="${#lists.size(myList)}"/>
 ```
 
 `myList` 是我们自己的对象。我们已经通过控制器通过了[:](/web/20220728105348/https://www.baeldung.com/thymeleaf-in-spring-mvc)
 
-```
+```java
 @GetMapping("/size")
 public String usingSize(Model model) {
     model.addAttribute("myList", getColors());
@@ -30,13 +30,13 @@ public String usingSize(Model model) {
 
 **如果给定列表没有元素，`isEmpty`方法**返回 true:
 
-```
+```java
 <span th:text="${#lists.isEmpty(myList)}"/> 
 ```
 
 通常，该实用方法与条件句–`th:if` 和`th:unless`一起使用:
 
-```
+```java
 <span th:unless="${#lists.isEmpty(myList)}">List is not empty</span>
 ```
 
@@ -44,13 +44,13 @@ public String usingSize(Model model) {
 
 **`contains`方法**检查一个元素是否是给定列表的成员:
 
-```
+```java
 myList contains red: <span th:text="${#lists.contains(myList, 'red')}"/>
 ```
 
 类似地，**我们可以使用`containsAll`方法检查多个元素**的成员资格:
 
-```
+```java
 myList contains red and green: <span th:text='${#lists.containsAll(myList, {"red", "green"})}'/>
 ```
 
@@ -58,7 +58,7 @@ myList contains red and green: <span th:text='${#lists.containsAll(myList, {"red
 
 **`sort`方法**使我们能够对列表进行排序:
 
-```
+```java
 sort: <span th:text="${#lists.sort(myList)}"/>
 
 sort with Comparator: <span th:text="${#lists.sort(myList, reverse)}"/>
@@ -70,7 +70,7 @@ sort with Comparator: <span th:text="${#lists.sort(myList, reverse)}"/>
 
 最后，**我们可以使用`toList`方法将`Iterable`和数组转换为`List`。**
 
-```
+```java
 <span th:with="convertedList=${#lists.toList(myArray)}">
     converted list size: <span th:text="${#lists.size(convertedList)}"/>
 </span>

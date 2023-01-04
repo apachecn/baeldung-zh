@@ -28,7 +28,7 @@ A quick and practical guide to handling duplicate keys by using multimaps in Jav
 
 `map()`方法与`Optional`配合得很好——如果函数返回我们需要的确切类型:
 
-```
+```java
 Optional<String> s = Optional.of("test");
 assertEquals(Optional.of("TEST"), s.map(String::toUpperCase));
 ```
@@ -37,7 +37,7 @@ assertEquals(Optional.of("TEST"), s.map(String::toUpperCase));
 
 让我们看另一个例子来更好地理解这种情况:
 
-```
+```java
 assertEquals(Optional.of(Optional.of("STRING")), 
   Optional
   .of("string")
@@ -48,7 +48,7 @@ assertEquals(Optional.of(Optional.of("STRING")),
 
 这正是`flatMap()` 帮助我们做的:
 
-```
+```java
 assertEquals(Optional.of("STRING"), Optional
   .of("string")
   .flatMap(s -> Optional.of("STRING")));
@@ -62,7 +62,7 @@ assertEquals(Optional.of("STRING"), Optional
 
 这里，`map()`产生一个`Stream`，它由将`toUpperCase()`方法应用于输入`Stream`的元素的结果组成:
 
-```
+```java
 List<String> myList = Stream.of("a", "b")
   .map(String::toUpperCase)
   .collect(Collectors.toList());
@@ -73,7 +73,7 @@ assertEquals(asList("A", "B"), myList);
 
 让我们看看它是如何工作的:
 
-```
+```java
 List<List<String>> list = Arrays.asList(
   Arrays.asList("a"),
   Arrays.asList("b"));
@@ -84,7 +84,7 @@ System.out.println(list);
 
 现在让我们用一个`flatMap()`:
 
-```
+```java
 System.out.println(list
   .stream()
   .flatMap(Collection::stream)

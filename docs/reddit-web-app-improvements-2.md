@@ -14,7 +14,7 @@
 
 我们将使用 Spring 数据来生成我们需要的操作，充分利用`Pageable`接口来检索用户预定的帖子:
 
-```
+```java
 public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByUser(User user, Pageable pageable);
 }
@@ -22,7 +22,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 这是我们的控制器方法`getScheduledPosts()`:
 
-```
+```java
 private static final int PAGE_SIZE = 10;
 
 @RequestMapping("/scheduledPosts")
@@ -41,7 +41,7 @@ public List<Post> getScheduledPosts(
 
 现在，让我们在前端实现一个简单的分页控件:
 
-```
+```java
 <table>
 <thead><tr><th>Post title</th></thead>
 </table>
@@ -52,7 +52,7 @@ public List<Post> getScheduledPosts(
 
 下面是我们如何用普通 jQuery 加载页面:
 
-```
+```java
 $(function(){ 
     loadPage(0); 
 }); 
@@ -85,7 +85,7 @@ function loadPage(page){
 
 如果用户已登录，他们应该会看到自己的主页/仪表板。如果他们没有登录，他们应该会看到登录页面:
 
-```
+```java
 @RequestMapping("/")
 public String homePage() {
     if (SecurityContextHolder.getContext().getAuthentication() != null) {
@@ -115,7 +115,7 @@ public String homePage() {
 
 首先，我们需要修改我们的`Post`实体:
 
-```
+```java
 @Entity
 public class Post {
     ...
@@ -135,7 +135,7 @@ public class Post {
 
 现在让我们将这些有趣的新选项集成到调度程序中:
 
-```
+```java
 @Scheduled(fixedRate = 3 * 60 * 1000)
 public void checkAndDeleteAll() {
     List<Post> submitted = 
@@ -149,7 +149,7 @@ public void checkAndDeleteAll() {
 
 关于更有趣的部分——`checkAndDelete()`的实际逻辑:
 
-```
+```java
 private void checkAndDelete(Post post) {
     if (didIntervalPass(post.getSubmissionDate(), post.getTimeInterval())) {
         if (didPostGoalFail(post)) {
@@ -168,7 +168,7 @@ private void checkAndDelete(Post post) {
 
 下面是`didPostGoalFail()`实现—**检查帖子是否没有达到预定义的目标/分数**:
 
-```
+```java
 private boolean didPostGoalFail(Post post) {
     PostScores postScores = getPostScores(post);
     int score = postScores.getScore();
@@ -182,7 +182,7 @@ private boolean didPostGoalFail(Post post) {
 
 我们还需要修改从 Reddit 检索`Post`信息的逻辑，以确保我们收集到更多的数据:
 
-```
+```java
 public PostScores getPostScores(Post post) {
     JsonNode node = restTemplate.getForObject(
       "http://www.reddit.com/r/" + post.getSubreddit() + 
@@ -203,7 +203,7 @@ public PostScores getPostScores(Post post) {
 
 当我们从 Reddit API 中提取分数时，我们使用一个简单的值对象来表示分数:
 
-```
+```java
 public class PostScores {
     private int score;
     private int upvoteRatio;
@@ -213,7 +213,7 @@ public class PostScores {
 
 最后，我们需要修改 `checkAndReSubmit()`，将成功重新提交的帖子的`redditID`设置为`null`:
 
-```
+```java
 private void checkAndReSubmit(Post post) {
     if (didIntervalPass(post.getSubmissionDate(), post.getTimeInterval())) {
         if (didPostGoalFail(post)) {
@@ -237,7 +237,7 @@ private void checkAndReSubmit(Post post) {
 
 我们需要将新的修改添加到我们的`schedulePostForm.html`:
 
-```
+```java
 <input type="number" name="minUpvoteRatio"/>
 <input type="checkbox" name="keepIfHasComments" value="true"/>
 <input type="checkbox" name="deleteAfterLastAttempt" value="true"/>
@@ -249,7 +249,7 @@ private void checkAndReSubmit(Post post) {
 
 首先，我们将向我们的`pom.xml`添加一些必需的依赖项:
 
-```
+```java
 <dependency>
     <groupId>javax.activation</groupId>
     <artifactId>activation</artifactId>
@@ -264,7 +264,7 @@ private void checkAndReSubmit(Post post) {
 
 然后，我们将为我们的`logback.xml`添加一个`SMTPAppender`:
 
-```
+```java
 <configuration>
 
     <appender name="STDOUT" ...
@@ -305,7 +305,7 @@ private void checkAndReSubmit(Post post) {
 
 首先，让我们检索最流行的子编辑，并将它们保存到一个普通文件中:
 
-```
+```java
 public void getAllSubreddits() {
     JsonNode node;
     String srAfter = "";
@@ -340,7 +340,7 @@ public void getAllSubreddits() {
 
 接下来，让我们确保**子编辑在应用程序启动**时被加载到内存中——通过让服务实现`InitializingBean`:
 
-```
+```java
 public void afterPropertiesSet() {
     loadSubreddits();
 }
@@ -362,7 +362,7 @@ private void loadSubreddits() {
 
 现在子编辑数据已经全部加载到内存中，**我们可以搜索子编辑，而不用点击 Reddit API** :
 
-```
+```java
 public List<String> searchSubreddit(String query) {
     return subreddits.stream().
       filter(sr -> sr.startsWith(query)).
@@ -373,7 +373,7 @@ public List<String> searchSubreddit(String query) {
 
 公开子编辑建议的 API 当然保持不变:
 
-```
+```java
 @RequestMapping(value = "/subredditAutoComplete")
 @ResponseBody
 public List<String> subredditAutoComplete(@RequestParam("term") String term) {
@@ -389,7 +389,7 @@ public List<String> subredditAutoComplete(@RequestParam("term") String term) {
 
 这里简单的`MetricFilter`:
 
-```
+```java
 @Component
 public class MetricFilter implements Filter {
 
@@ -413,7 +413,7 @@ public class MetricFilter implements Filter {
 
 我们还需要将它添加到我们的`ServletInitializer`:
 
-```
+```java
 @Override
 public void onStartup(ServletContext servletContext) throws ServletException {
     super.onStartup(servletContext);
@@ -428,7 +428,7 @@ public void onStartup(ServletContext servletContext) throws ServletException {
 
 这是我们的`MetricService`:
 
-```
+```java
 public interface IMetricService {
     void increaseCount(String request, int status);
 
@@ -443,7 +443,7 @@ public interface IMetricService {
 
 她的基本控制器负责通过 HTTP 公开这些指标:
 
-```
+```java
 @Controller
 public class MetricController {
 

@@ -10,7 +10,7 @@
 
 让我们从一个简单的 Java 解决方案开始:
 
-```
+```java
 @Test
 public void givenPlainJava_whenConvertingByteArrayIntoWriter_thenCorrect() 
   throws IOException {
@@ -29,7 +29,7 @@ public void givenPlainJava_whenConvertingByteArrayIntoWriter_thenCorrect()
 
 接下来，让我们看看一个更复杂的番石榴解决方案:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenConvertingByteArrayIntoWriter_thenCorrect() 
   throws IOException {
@@ -57,7 +57,7 @@ public void givenUsingGuava_whenConvertingByteArrayIntoWriter_thenCorrect()
 
 最后，让我们检查一下我们的 Commons IO 解决方案:
 
-```
+```java
 @Test
 public void givenUsingCommonsIO_whenConvertingByteArrayIntoWriter_thenCorrect() 
   throws IOException {

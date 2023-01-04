@@ -30,7 +30,7 @@ kubelet 将使用就绪探测器来确定应用程序何时准备好接受请求
 
 例如，我们可以将这些添加到我们的 pod 定义中，以将活跃度探测配置为 HTTP GET 请求:
 
-```
+```java
 livenessProbe:
   httpGet:
     path: /actuator/health/liveness
@@ -43,7 +43,7 @@ livenessProbe:
 
 如果我们使用的是 Spring Boot 2.3.0 或 2.3.1，我们可以通过一个配置属性来启用上述探测器:
 
-```
+```java
 management.health.probes.enabled=true
 ```
 
@@ -51,7 +51,7 @@ management.health.probes.enabled=true
 
 如果我们使用 Spring Boot 2.3.2，我们可以使用新的属性来启用活性和就绪性探测:
 
-```
+```java
 management.endpoint.health.probes.enabled=true
 management.health.livenessState.enabled=true
 management.health.readinessState.enabled=true
@@ -85,13 +85,13 @@ Spring Boot 使用两个枚举来封装不同的就绪和活动状态。对于�
 
 应用程序组件可以通过注入`[ApplicationAvailability](https://web.archive.org/web/20220628163033/https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot/src/main/java/org/springframework/boot/availability/ApplicationAvailability.java) `接口来检索当前的就绪和活动状态:
 
-```
+```java
 @Autowired private ApplicationAvailability applicationAvailability;
 ```
 
 那么我们可以如下使用它:
 
-```
+```java
 assertThat(applicationAvailability.getLivenessState())
   .isEqualTo(LivenessState.CORRECT);
 assertThat(applicationAvailability.getReadinessState())
@@ -104,7 +104,7 @@ assertThat(applicationAvailability.getState(ReadinessState.class))
 
 我们还可以通过发布一个`AvailabilityChangeEvent `事件来更新应用程序状态:
 
-```
+```java
 assertThat(applicationAvailability.getLivenessState())
   .isEqualTo(LivenessState.CORRECT);
 mockMvc.perform(get("/actuator/health/liveness"))
@@ -122,7 +122,7 @@ mockMvc.perform(get("/actuator/health/liveness"))
 
 如上所示，在发布任何事件之前，`/actuator/health/liveness `端点返回一个 200 OK 响应，带有以下 JSON:
 
-```
+```java
 {
     "status": "OK"
 }
@@ -130,7 +130,7 @@ mockMvc.perform(get("/actuator/health/liveness"))
 
 然后，在打破活跃度状态之后，同一个端点返回 503 服务不可用响应，其中包含以下 JSON:
 
-```
+```java
 {
     "status": "DOWN"
 }
@@ -138,7 +138,7 @@ mockMvc.perform(get("/actuator/health/liveness"))
 
 当我们改变到准备状态`REFUSING_TRAFFIC, `时，`status `值将是`OUT_OF_SERVICE:`
 
-```
+```java
 assertThat(applicationAvailability.getReadinessState())
   .isEqualTo(ReadinessState.ACCEPTING_TRAFFIC);
 mockMvc.perform(get("/actuator/health/readiness"))
@@ -158,7 +158,7 @@ mockMvc.perform(get("/actuator/health/readiness"))
 
 我们可以注册事件侦听器，以便在应用程序可用性状态发生变化时得到通知:
 
-```
+```java
 @Component
 public class LivenessEventListener {
 

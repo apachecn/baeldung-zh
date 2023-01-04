@@ -20,7 +20,7 @@ Spring Security 提供了几种方法来检查 Java 代码中的用户角色。�
 
 然后， [Spring Security 提供了两个表达式](/web/20221022193028/https://www.baeldung.com/basic-and-digest-authentication-for-a-rest-api-with-spring-security),我们可以使用它们和`@PreAuthorize`注释来检查用户角色:
 
-```
+```java
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 @GetMapping("/user/{id}")
 public String getUser(@PathVariable("id") String id) {
@@ -30,7 +30,7 @@ public String getUser(@PathVariable("id") String id) {
 
 我们还可以在一个表达式中检查多个角色:
 
-```
+```java
 @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
 @GetMapping("/users")
 public String getUsers() {
@@ -50,7 +50,7 @@ public String getUsers() {
 
 要使用它，我们只需调用`SecurityContextHolder`中的静态方法:
 
-```
+```java
 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
     ...
@@ -65,7 +65,7 @@ if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority(
 
 我们在 Java 代码中查找用户角色的第三种方法是使用 [`UserDetailsService`](/web/20221022193028/https://www.baeldung.com/spring-security-authentication-with-a-database) 。我们可以将这个 bean 注入到应用程序的任何地方，并根据需要调用它:
 
-```
+```java
 @GetMapping("/users")
 public String getUsers() {
     UserDetails details = userDetailsService.loadUserByUsername("mike");
@@ -84,7 +84,7 @@ public String getUsers() {
 
 如果我们使用的是 [Spring MVC](/web/20221022193028/https://www.baeldung.com/intro-to-servlets) ，我们也可以使用`HttpServletRequest`类在 Java 中检查用户角色:
 
-```
+```java
 @GetMapping("/users")
 public String getUsers(HttpServletRequest request) {
     if (request.isUserInRole("ROLE_ADMIN")) {

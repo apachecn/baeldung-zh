@@ -22,7 +22,7 @@ Docker 是一个容器化的平台，它将应用程序及其所有依赖项打�
 
 出于演示目的，让我们首先运行一个 [Alpine](https://web.archive.org/web/20220928130110/https://hub.docker.com/_/alpine) Docker 容器，并向其传递一些环境变量:
 
-```
+```java
 docker run -itd --env "my_env_var=baeldung" --name mycontainer alpine
 9de9045b5264d2de737a7ec6ba23c754f034ff4f35746317aeefcea605d46e84
 ```
@@ -31,7 +31,7 @@ docker run -itd --env "my_env_var=baeldung" --name mycontainer alpine
 
 现在让我们使用 [`docker exec`](https://web.archive.org/web/20220928130110/https://docs.docker.com/engine/reference/commandline/exec/) 命令来获取名为`my_env_var`的环境变量:
 
-```
+```java
 $ docker exec mycontainer /usr/bin/env
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 HOSTNAME=9de9045b5264
@@ -43,7 +43,7 @@ HOME=/root
 
 我们也可以使用以下命令来实现类似的结果:
 
-```
+```java
 $ docker exec mycontainer /bin/sh -c /usr/bin/env
 HOSTNAME=9de9045b5264
 SHLVL=1
@@ -57,7 +57,7 @@ PWD=/
 
 另外，`/bin/sh` shell 并不一定要出现在所有的 Docker 映像中。例如，在 [centos](https://web.archive.org/web/20220928130110/https://hub.docker.com/_/centos) Docker 图像中，其中包含了`/bin/bash` shell，我们将 检索环境 变量 使用跟随 命令:
 
-```
+```java
 $ docker run -itd --env "container_type=centos" --name centos_container centos
 aee6f2718f18723906f7ab18ab9c37a539b6b2c737f588be71c56709948de9eb
 $ docker exec centos_container bash -c /usr/bin/env
@@ -72,7 +72,7 @@ _=/usr/bin/env
 
 我们还可以使用`docker exec`命令获取单个环境变量的值:
 
-```
+```java
 $ docker exec mycontainer printenv my_env_var
 baeldung 
 ```
@@ -89,7 +89,7 @@ baeldung
 
 让我们操作`docker inspect`命令来只显示容器的环境变量:
 
-```
+```java
 $ docker inspect mycontainer --format "{{.Config.Env}}"
 [my_env_var=baeldung PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin]
 ```
@@ -98,7 +98,7 @@ $ docker inspect mycontainer --format "{{.Config.Env}}"
 
 我们还可以使用`docker inspect`命令获取一个环境变量:
 
-```
+```java
 $ docker inspect mycontainer | jq -r '.[].Config.Env[]|select(match("^my_env_var"))|.[index("=")+1:]'
 baeldung
 ```

@@ -12,13 +12,13 @@
 
 例如，让我们考虑一个场景，我们需要在一个流中分组相等的`String`并计算它们的出现次数:
 
-```
+```java
 List<String> list = new ArrayList<>(Arrays.asList("Foo", "Bar", "Bar", "Bar", "Foo"));
 ```
 
 我们可以将相等的字符串分组，在本例中是“Foo”和“Bar”。结果`Map`将把这些字符串存储为键。这些键的值将是出现的次数。“Foo”的值将是 2，“Bar”的值将是 3:
 
-```
+```java
 Map<String, Long> result = list.stream()
   .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 Assert.assertEquals(new Long(2), result.get("Foo"));
@@ -37,13 +37,13 @@ Assert.assertEquals(new Long(3), result.get("Bar"));
 
 例如，对于输入列表:
 
-```
+```java
 List<String> list = new ArrayList<>(Arrays.asList("Adam", "Bill", "Jack", "Joe", "Ian"));
 ```
 
 我们可以使用`Collectors.groupingByConcurrent()`将等长的字符串分组:
 
-```
+```java
 Map<Integer, Long> result = list.stream()
   .collect(Collectors.groupingByConcurrent(String::length, Collectors.counting()));
 Assert.assertEquals(new Long(2), result.get(3));

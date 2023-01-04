@@ -16,7 +16,7 @@ Java 中有很多方法[读取一个文件。一旦我们读取了一个文件�
 
 有多个构造函数可用于初始化一个`FileReader:`
 
-```
+```java
 FileReader f = new FileReader(String filepath);
 FileReader f = new FileReader(File f);
 FileReader f = new FileReader(FileDescriptor fd);
@@ -28,7 +28,7 @@ FileReader f = new FileReader(FileDescriptor fd);
 
 在下面的代码中，我们将演示如何使用`FileReader:`将文件中的行读入`ArrayList,`
 
-```
+```java
 ArrayList<String> result = new ArrayList<>();
 
 try (FileReader f = new FileReader(filename)) {
@@ -57,14 +57,14 @@ return result;
 
 `BufferedReader`的构造函数将`Reader`作为输入。此外，我们还可以在构造函数中提供缓冲区大小，但是，对于大多数用例，默认大小已经足够大了:
 
-```
+```java
 BufferedReader br = new BufferedReader(new FileReader(filename));
 BufferedReader br = new BufferedReader(new FileReader(filename), size);
 ```
 
 除了从`Reader`类继承的方法之外，`BufferedReader also `还提供了`readLine()`方法，将一整行作为`String:`来读取
 
-```
+```java
 ArrayList<String> result = new ArrayList<>();
 
 try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
@@ -82,14 +82,14 @@ try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 
 读取文件时，使用`File`或`FileReader`对象初始化`Scanner`:
 
-```
+```java
 Scanner s = new Scanner(new File(filename));
 Scanner s = new Scanner(new FileReader(filename));
 ```
 
 类似于`BufferedReader, Scanner` 提供了 `readLine()`方法来读取整行`.` 另外`, `还提供了`hasNext()`方法来指示是否有更多的值可供读取:
 
-```
+```java
 ArrayList<String> result = new ArrayList<>();
 
 try (Scanner s = new Scanner(new FileReader(filename))) {
@@ -102,7 +102,7 @@ try (Scanner s = new Scanner(new FileReader(filename))) {
 
 `Scanner`使用一个分隔符将其输入分成多个记号，默认分隔符是空白。通过使用各种可用的`next ` ( `nextInt`、`nextLong`等)方法，可以将这些令牌转换为不同类型的值:
 
-```
+```java
 ArrayList<Integer> result = new ArrayList<>();
 
 try (Scanner s = new Scanner(new FileReader(filename))) {
@@ -117,13 +117,13 @@ try (Scanner s = new Scanner(new FileReader(filename))) {
 
 读取文件并将其所有行解析成一个`ArrayList`的最简单的方法可能是使用`Files`:中可用的 **`readAllLines() `方法**
 
-```
+```java
 List<String> result = Files.readAllLines(Paths.get(filename));
 ```
 
 这个方法也可以接受一个 charset 参数，按照特定的字符编码读取:
 
-```
+```java
 Charset charset = Charset.forName("ISO-8859-1");
 List<String> result = Files.readAllLines(Paths.get(filename), charset);
 ```

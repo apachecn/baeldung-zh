@@ -14,7 +14,7 @@ web 应用程序中异步的最基本动机是处理长时间运行的请求。�
 
 为了在 Spring MVC 中使用异步集成，我们需要在我们的`pom.xml`中包含以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-web</artifactId>
@@ -35,13 +35,13 @@ Spring 安全依赖的最新版本可以在[这里](https://web.archive.org/web/
 
 第一步是确保我们的`springSecurityFilterChain`被设置为处理异步请求。我们可以在 Java 配置中这样做，在我们的 *Servlet* 配置类中添加下面一行:
 
-```
+```java
 dispatcher.setAsyncSupported(true);
 ```
 
 或者在 XML 配置中:
 
-```
+```java
 <filter>
     <filter-name>springSecurityFilterChain</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -57,7 +57,7 @@ dispatcher.setAsyncSupported(true);
 
 我们还需要在 servlet 配置中启用`async-supported`参数:
 
-```
+```java
 <servlet>
     ...
     <async-supported>true</async-supported>
@@ -73,7 +73,7 @@ Spring Security 中的内部机制将确保当在另一个`Thread` 中提交响�
 
 让我们通过一个简单的例子来看看这一点:
 
-```
+```java
 @Override
 public Callable<Boolean> checkIfPrincipalPropagated() {
     Object before 
@@ -95,7 +95,7 @@ public Callable<Boolean> checkIfPrincipalPropagated() {
 
 上面介绍的方法将自动执行它的`Callable`,包括`SecurityContext`,如日志所示:
 
-```
+```java
 web - 2017-01-02 10:42:19,011 [http-nio-8081-exec-3] INFO
   o.baeldung.web.service.AsyncService - Before new thread:
   [[email protected]](/web/20220815045631/https://www.baeldung.com/cdn-cgi/l/email-protection):

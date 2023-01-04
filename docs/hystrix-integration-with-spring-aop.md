@@ -16,7 +16,7 @@
 
 让我们看看应用程序现有的客户端调用者，它调用我们在上一篇文章中创建的`RemoteServiceTestSimulator`:
 
-```
+```java
 @Component("springClient")
 public class SpringExistingClient {
 
@@ -37,7 +37,7 @@ public class SpringExistingClient {
 
 为此，**我们将定义一个`Around`建议，它将在`invokeRemoteService` 被执行**时生效:
 
-```
+```java
 @Around("@annotation(com.baeldung.hystrix.HystrixCircuitBreaker)")
 public Object circuitBreakerAround(ProceedingJoinPoint aJoinPoint) {
     return new RemoteServiceCommand(config, aJoinPoint).execute();
@@ -48,7 +48,7 @@ public Object circuitBreakerAround(ProceedingJoinPoint aJoinPoint) {
 
 现在让我们看看`HystrixCircuitBreaker`注释`:`的定义
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface HystrixCircuitBreaker {}
@@ -58,7 +58,7 @@ public @interface HystrixCircuitBreaker {}
 
 现在我们来看看`RemoteServiceCommand`。它在示例代码中被实现为一个`static inner class`,以封装 Hystrix 调用逻辑:
 
-```
+```java
 private static class RemoteServiceCommand extends HystrixCommand<String> {
 
     private ProceedingJoinPoint joinPoint;
@@ -85,7 +85,7 @@ private static class RemoteServiceCommand extends HystrixCommand<String> {
 
 一旦定义了方面，我们就可以用如下所示的`@HystrixCircuitBreaker` 来注释我们的客户端方法，并且每次调用被注释的方法都会触发 Hystrix:
 
-```
+```java
 @HystrixCircuitBreaker
 public String invokeRemoteServiceWithHystrix() throws InterruptedException{
     return new RemoteServiceTestSimulator(remoteServiceDelay).execute();
@@ -98,7 +98,7 @@ public String invokeRemoteServiceWithHystrix() throws InterruptedException{
 
 出于演示的目的，我们定义了两条方法执行路线，一条有 Hystrix，另一条没有。
 
-```
+```java
 public class SpringAndHystrixIntegrationTest {
 
     @Autowired

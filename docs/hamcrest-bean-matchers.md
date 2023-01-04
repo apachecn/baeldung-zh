@@ -12,7 +12,7 @@ Hamcrest 是一个库，它提供了称为匹配器的方法，帮助开发人�
 
 要获得 Hamcrest，我们只需要**将下面的 Maven 依赖项添加到我们的`pom.xml`** 中:
 
-```
+```java
 <dependency>
     <groupId>org.hamcrest</groupId>
     <artifactId>java-hamcrest</artifactId>
@@ -29,7 +29,7 @@ Bean 匹配器**对于检查 POJO**上的条件非常有用，这是编写大多
 
 在开始之前，我们将创建一个类来帮助我们完成示例:
 
-```
+```java
 public class City {
     String name;
     String state;
@@ -45,7 +45,7 @@ public class City {
 
 这个匹配器基本上是用来**检查某个 bean 是否包含由属性名**标识的特定属性
 
-```
+```java
 @Test
 public void givenACity_whenHasProperty_thenCorrect() {
     City city = new City("San Francisco", "CA");
@@ -58,7 +58,7 @@ public void givenACity_whenHasProperty_thenCorrect() {
 
 按照这种想法，我们也可以测试一个 bean 是否具有某种属性，并且该属性具有某种值:
 
-```
+```java
 @Test
 public void givenACity_whenHasPropertyWithValueEqualTo_thenCorrect() {
     City city = new City("San Francisco", "CA");
@@ -71,7 +71,7 @@ public void givenACity_whenHasPropertyWithValueEqualTo_thenCorrect() {
 
 所以，我们也可以这样做:
 
-```
+```java
 @Test
 public void givenACity_whenHasPropertyWithValueEqualToIgnoringCase_thenCorrect() {
     City city = new City("San Francisco", "CA");
@@ -86,7 +86,7 @@ public void givenACity_whenHasPropertyWithValueEqualToIgnoringCase_thenCorrect()
 
 有时**当我们必须检查一个 bean 的许多属性时，用期望的值**创建一个新的 bean 可能更简单。然后，我们可以检查测试的 bean 和新的 bean 之间是否相等。当然，Hamcrest 为这种情况提供了一个匹配器:
 
-```
+```java
 @Test
 public void givenACity_whenSamePropertyValuesAs_thenCorrect() {
     City city = new City("San Francisco", "CA");
@@ -98,7 +98,7 @@ public void givenACity_whenSamePropertyValuesAs_thenCorrect() {
 
 这导致更少的断言和更简单的代码。同样，我们可以测试否定的情况:
 
-```
+```java
 @Test
 public void givenACity_whenNotSamePropertyValuesAs_thenCorrect() {
     City city = new City("San Francisco", "CA");
@@ -114,7 +114,7 @@ public void givenACity_whenNotSamePropertyValuesAs_thenCorrect() {
 
 在某些情况下，探索一个职业结构可能会派上用场。 Hamcrest 为此提供了一些实用方法:
 
-```
+```java
 @Test
 public void givenACity_whenGetPropertyDescriptor_thenCorrect() {
     City city = new City("San Francisco", "CA");
@@ -134,7 +134,7 @@ public void givenACity_whenGetPropertyDescriptor_thenCorrect() {
 
 除了 bean 的所有属性之外，这个方法的**基本上与上一节中的方法相同。我们还需要指定我们希望在类层次结构中达到的高度:**
 
-```
+```java
 @Test
 public void givenACity_whenGetPropertyDescriptorsFor_thenCorrect() {
     City city = new City("San Francisco", "CA");

@@ -22,7 +22,7 @@
 
 [`onStatus`](https://web.archive.org/web/20220627165341/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/reactive/function/client/WebClient.ResponseSpec.html#onStatus-java.util.function.Predicate-java.util.function.Function-) 是一个内置的机制，可以用来处理`WebClient`响应。**这允许我们基于特定的响应**(比如 400、500、503 等)应用细粒度的功能。)或状态类别(如 4XX 和 5XX 等)。):
 
-```
+```java
 WebClient
   .builder()
   .build()
@@ -40,7 +40,7 @@ WebClient
 
 **我们可以链接`onStatus`调用**，以便能够为不同的状态条件提供功能:
 
-```
+```java
 Mono<String> response = WebClient
   .builder()
   .build()
@@ -69,7 +69,7 @@ Mono<String> response = WebClient
 
 首先，我们将定义一个方法来处理基于给定状态码的返回逻辑:
 
-```
+```java
 private static Mono<ClientResponse> exchangeFilterResponseProcessor(ClientResponse response) {
     HttpStatus status = response.statusCode();
     if (HttpStatus.INTERNAL_SERVER_ERROR.equals(status)) {
@@ -86,7 +86,7 @@ private static Mono<ClientResponse> exchangeFilterResponseProcessor(ClientRespon
 
 接下来，我们将定义过滤器，并使用对处理程序的方法引用:
 
-```
+```java
 ExchangeFilterFunction errorResponseFilter = ExchangeFilterFunction
   .ofResponseProcessor(WebClientStatusCodeHandler::exchangeFilterResponseProcessor);
 ```
@@ -95,7 +95,7 @@ ExchangeFilterFunction errorResponseFilter = ExchangeFilterFunction
 
 现在，让我们**将其应用到一个`WebClient`的实例中，以达到与`onStatus`** 链式调用相同的效果:
 
-```
+```java
 Mono<String> response = WebClient
   .builder()
   .filter(errorResponseFilter)

@@ -14,7 +14,7 @@ POJO 不为属性和方法使用任何命名约定。
 
 让我们定义一个基本的`EmployeePOJO`对象，它有三个属性:
 
-```
+```java
 public class EmployeePOJO {
 
     private String firstName;
@@ -51,7 +51,7 @@ JavaBean 很大程度上类似于 POJO，对于如何实现它有一些严格的
 
 因为 JavaBean 本质上是一个 POJO，所以让我们通过实现必要的 Bean 规则将`EmployeePOJO`转换成 JavaBean:
 
-```
+```java
 public class EmployeeBean implements Serializable {
 
     private static final long serialVersionUID = -3760445487636086034L;
@@ -102,7 +102,7 @@ dto 基本上映射到一个域模型，从而将数据发送到一个方法或�
 
 让我们创建`EmployeeDTO`，它将创建一个雇员所需的所有细节组合在一起。我们将在一个请求中将这些数据发送到服务器，以优化与 API 的交互:
 
-```
+```java
 public class EmployeeDTO {
 
     private String firstName;
@@ -125,7 +125,7 @@ VO 应该总是覆盖`equals()`和`hashCode()`方法。VO 通常封装小对象�
 
 让我们定义`EmployeeVO`并覆盖`equals()`和`hashCode()`方法:
 
-```
+```java
 public class EmployeeVO {
 
     private String firstName;

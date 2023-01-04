@@ -10,7 +10,7 @@
 
 为了有一个更好的形象，让我们先来看看一个简单 POJO 的 JSON 和 YAML 表示:
 
-```
+```java
 class Person {
     String name;
     Integer age;
@@ -21,7 +21,7 @@ class Person {
 
 **首先，我们来看看它的 JSON 表示:**
 
-```
+```java
 {
     "name":"John Smith",
     "age":26,
@@ -44,7 +44,7 @@ JSON 语法有点麻烦，因为它使用特殊的语法，如花括号`{}`和�
 
 接下来，让我们看看同样的结构在 YAML 会是什么样子:
 
-```
+```java
 name: John Smith
 age: 26
 hobbies:
@@ -70,7 +70,7 @@ YAML 的语法看起来更友好一些，因为它用空格来表示对象之间
 
 让我们想象一个深度嵌套的结构，其中一个父节点和五个子节点表示为 JSON:
 
-```
+```java
 {
     "child":{
         "child":{
@@ -90,7 +90,7 @@ YAML 的语法看起来更友好一些，因为它用空格来表示对象之间
 
 同样的建筑在 YAML 看起来会很相似:
 
-```
+```java
 child:
   child:
     child:
@@ -102,7 +102,7 @@ child:
 
 乍一看，JSON 似乎占用了更多的空间，但是，实际上，JSON 规范并不关心空格或换行符，它可以简化为:
 
-```
+```java
 {"child":{"child":{"child":{"child":{"child":{"child":{"child":null}}}}}}}
 ```
 
@@ -116,7 +116,7 @@ child:
 
 **YAML 允许使用`#`进行注释，这是一个在处理 JSON 文件时经常需要的特性:**
 
-```
+```java
 # This is a simple comment
 name: John
 ```
@@ -125,7 +125,7 @@ name: John
 
 JSON 中缺少的另一个特性是 YAML 的[多行字符串](/web/20220628055216/https://www.baeldung.com/yaml-multi-line):
 
-```
+```java
 website: |
   line1
   line2
@@ -136,7 +136,7 @@ website: |
 
 我们可以很容易地使用`&`为一个特定的项目分配一个别名，并使用`*`锚定(引用)它:
 
-```
+```java
 httpPort: 80
 httpsPort: &httpsPort; 443
 defaultPort: *httpsPort
@@ -150,7 +150,7 @@ defaultPort: *httpsPort
 
 对于 YAML 基准，我们将使用众所周知的 [`snake-yaml`](/web/20220628055216/https://www.baeldung.com/java-snake-yaml) 库，对于我们的 JSON 基准，我们将使用 [`org-json`](/web/20220628055216/https://www.baeldung.com/java-org-json) :
 
-```
+```java
 @BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.SECONDS)
 @Measurement(batchSize = 10_000, iterations = 5)
@@ -181,7 +181,7 @@ class Bench {
 
 正如我们所料，JSON 是赢家，速度快了大约 30 倍:
 
-```
+```java
 Benchmark             Mode  Cnt    Score   Error  Units
 Main2.benchmarkJson  thrpt   50  644.085 ± 9.962  ops/s
 Main2.benchmarkYaml  thrpt   50   20.351 ± 0.312  ops/s

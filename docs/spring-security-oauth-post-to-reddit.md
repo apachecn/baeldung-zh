@@ -26,7 +26,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 为了**提交一个到 Reddit** 的链接，我们需要用`submit`的`scope`定义一个 OAuth 保护资源:
 
-```
+```java
 @Bean
 public OAuth2ProtectedResourceDetails reddit() {
     AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
@@ -50,7 +50,7 @@ Reddit **的新用户必须填写验证码**才能提交；这是在他们通过
 
 对于这些用户，我们首先需要检查是否需要验证码:
 
-```
+```java
 private String needsCaptcha() {
     String result = redditRestTemplate.getForObject(
       "https://oauth.reddit.com/api/needs_captcha.json", String.class);
@@ -82,7 +82,7 @@ private String getNewCaptcha() {
 
 让我们看看如何显示这个简单的提交页面:
 
-```
+```java
 @RequestMapping("/post")
 public String showSubmissionForm(Model model) throws JsonProcessingException, IOException {
     String needsCaptchaResult = needsCaptcha();
@@ -96,7 +96,7 @@ public String showSubmissionForm(Model model) throws JsonProcessingException, IO
 
 当然还有最基本的`submissionForm.html`:
 
-```
+```java
 <form>
     <input name="title"/>
     <input name="url" />
@@ -137,7 +137,7 @@ function submitPost(){
 
 我们将使用来自`submissionForm`的参数向 Reddit 提交一个提交请求:
 
-```
+```java
 @Controller
 @RequestMapping(value = "/api/posts")
 public class RedditPostRestController {
@@ -155,7 +155,7 @@ public class RedditPostRestController {
 
 下面是实际的方法实现:
 
-```
+```java
 public List<String> submitPost(PostDto postDto) {
     MultiValueMap<String, String> param1 = constructParams(postDto);
     JsonNode node = redditTemplate.submitPost(param1);
@@ -183,7 +183,7 @@ private MultiValueMap<String, String> constructParams(PostDto postDto) {
 
 以及简单的解析逻辑，**处理来自 Reddit API 的响应**:
 
-```
+```java
 private List<String> parseResponse(JsonNode node) {
     String result = "";
     JsonNode errorNode = node.get("json").get("errors").get(0);
@@ -206,7 +206,7 @@ private List<String> parseResponse(JsonNode node) {
 
 所有这一切都与**一个基本的 DTO** 一起工作:
 
-```
+```java
 public class PostDto {
     @NotNull
     private String title;
@@ -226,7 +226,7 @@ public class PostDto {
 
 最后——第`submissionResponse.html`:
 
-```
+```java
 <html>
 <body>
     <h1 th:text="${msg}">Hello</h1>

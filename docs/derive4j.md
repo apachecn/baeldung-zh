@@ -16,7 +16,7 @@ Derive4J 是一个注释处理器，支持 Java 8 中的各种功能概念。
 
 要使用 Derive4J，我们需要将[依赖项](https://web.archive.org/web/20221128043333/https://search.maven.org/search?q=g:org.derive4j%20AND%20a:derive4j)包含到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.derive4j</groupId>
     <artifactId>derive4j</artifactId>
@@ -60,7 +60,7 @@ ADT 通常分为两大类:
 
 为了在 Derive4J 中创建`Either` 数据类型，我们需要创建一个`interface`:
 
-```
+```java
 @Data
 interface Either<A, B> {
     <X> X match(Function<A, X> left, Function<B, X> right);
@@ -73,7 +73,7 @@ interface Either<A, B> {
 
 现在，我们可以使用生成的代码来创建`Either` ADT，并验证它是否正常工作:
 
-```
+```java
 public void testEitherIsCreatedFromRight() {
     Either<Exception, String> either = Eithers.right("Okay");
     Optional<Exception> leftOptional = Eithers.getLeft(either);
@@ -85,7 +85,7 @@ public void testEitherIsCreatedFromRight() {
 
 我们还可以使用生成的`match() `方法来执行一个函数，这取决于`Either` 的哪一侧存在:
 
-```
+```java
 public void testEitherIsMatchedWithRight() {
     Either<Exception, String> either = Eithers.right("Okay");
     Function<Exception, String> leftFunction = Mockito.mock(Function.class);
@@ -111,7 +111,7 @@ public void testEitherIsMatchedWithRight() {
 
 让我们将我们的请求类建模为 Derive4J 中的 ADT，从`HTTPRequest`接口开始:
 
-```
+```java
 @Data
 interface HTTPRequest {
     interface Cases<R>{
@@ -131,7 +131,7 @@ interface HTTPRequest {
 
 首先，让我们创建一个简单的`HTTPResponse `类，它将作为服务器对客户端的响应:
 
-```
+```java
 public class HTTPResponse {
     int statusCode;
     String responseBody;
@@ -145,7 +145,7 @@ public class HTTPResponse {
 
 然后，我们可以创建使用模式匹配来发送正确响应的服务器:
 
-```
+```java
 public class HTTPServer {
     public static String GET_RESPONSE_BODY = "Success!";
     public static String PUT_RESPONSE_BODY = "Resource Created!";
@@ -164,7 +164,7 @@ public class HTTPServer {
 
 我们的`class`的`acceptRequest() `方法对请求的类型使用模式匹配，并将根据请求的类型返回不同的响应:
 
-```
+```java
 @Test
 public void whenRequestReachesServer_thenProperResponseIsReturned() {
     HTTPServer server = new HTTPServer();
@@ -179,7 +179,7 @@ public void whenRequestReachesServer_thenProperResponseIsReturned() {
 
 Derive4J 允许我们引入惰性的概念，这意味着我们的对象在我们对它们执行一个操作之前不会被初始化。让我们将`interface`声明为`LazyRequest `，并将生成的类配置为命名为`LazyRequestImpl`:
 
-```
+```java
 @Data(value = @Derive(
   inClass = "{ClassName}Impl",
   make = {Make.lazyConstructor, Make.constructors}
@@ -198,7 +198,7 @@ public interface LazyRequest {
 
 我们现在可以验证生成的惰性构造函数是否正常工作:
 
-```
+```java
 @Test
 public void whenRequestIsReferenced_thenRequestIsLazilyContructed() {
     LazyRequestSupplier mockSupplier = Mockito.spy(new LazyRequestSupplier());

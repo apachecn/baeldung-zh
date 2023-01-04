@@ -24,7 +24,7 @@
 
 例如，尝试解决以下问题:
 
-```
+```java
 package animal;
 public abstract class Animal {
 
@@ -48,7 +48,7 @@ public class Horse extends Animal {
 }
 ```
 
-```
+```java
 Which of the following is true?
 A. The output is false
 B. Compilation fails on Line 10
@@ -64,7 +64,7 @@ D. None of the above
 
 例如，尝试解决以下问题:
 
-```
+```java
 public abstract class Animal {
 
     protected abstract boolean canFly() {
@@ -93,7 +93,7 @@ public class Frog extends Amphibian {
 }
 ```
 
-```
+```java
 Which are true? (Choose all that apply.)
 A. Compilation error on line 3
 B. Compilation error on line 6
@@ -110,7 +110,7 @@ E. Compilation error on line 22
 
 例如，尝试解决以下问题:
 
-```
+```java
 public abstract class Animal {
 
     protected abstract boolean canFly();
@@ -138,7 +138,7 @@ public class Frog extends Amphibian {
 }
 ```
 
-```
+```java
 Which are true? (Choose all that apply)
 A. Compilation error on line 8
 B. Compilation error on line 11
@@ -155,7 +155,7 @@ E. No compilation error
 
 **`abstract `关键字不能与`static`、`private,`或`final`关键字**组合。因此，不允许使用以下任何语句:
 
-```
+```java
 public final abstract class Animal {
 }
 
@@ -182,7 +182,7 @@ Java 中的`[final](/web/20221205143313/https://www.baeldung.com/java-final) `�
 
 例如，尝试解决以下问题:
 
-```
+```java
 public abstract class Animal {
 
     public final void eat() {
@@ -203,7 +203,7 @@ public class Horse extends Animal {
 }
 ```
 
-```
+```java
 What is the output?
 A. Eat...
 B. Eat Grass
@@ -226,7 +226,7 @@ E. The code will not compile because of line 10
 
 例如，尝试解决以下问题:
 
-```
+```java
 public class Animal {
 
     class EatingHabbits {
@@ -252,7 +252,7 @@ public class Zookeeper {
 }
 ```
 
-```
+```java
 What is the result? (Choose all that apply.)
 A. Compilation error on line 7
 B. Compilation error on line 19
@@ -266,7 +266,7 @@ D. No compilation error
 
 查找内部类中`this `关键字的不正确使用:
 
-```
+```java
 public class Animal {
     private int age = 10;
 
@@ -295,7 +295,7 @@ public class Animal {
 
 例如，尝试解决以下问题:
 
-```
+```java
 public class Animal {
     private int age = 10;
 
@@ -317,7 +317,7 @@ public class Animal {
 }
 ```
 
-```
+```java
 What is the result of the following code?
 
 A. The age is 0
@@ -341,7 +341,7 @@ E. An exception is thrown
 
 因此，注意那些涉及`static`嵌套类但表现为非`static`嵌套类的问题是很重要的:
 
-```
+```java
 public class Animal {
 
     private int age = 10;
@@ -367,7 +367,7 @@ public class Animal {
 
 例如，尝试解决以下问题:
 
-```
+```java
 public class Animal {
 
     public void feed() {
@@ -388,7 +388,7 @@ public class Zookeeper {
 }
 ```
 
-```
+```java
 What is the result?
 
 A. An exception occurs at runtime
@@ -405,7 +405,7 @@ F. Compilation fails because of an error on line 15
 
 注意那些试图**实例化一个接口而不是实现它的问题:**
 
-```
+```java
 Runnable r = new Runnable(); // compilation error
 
 Runnable r = new Runnable() { // legal statement
@@ -428,7 +428,7 @@ Runnable r = new Runnable() { // legal statement
 
 例如，尝试解决以下问题:
 
-```
+```java
 public enum AnimalSpecies {
     MAMMAL(false), FISH(true), BIRD(false),
     REPTILE(false), AMPHIBIAN(true)
@@ -445,7 +445,7 @@ public enum AnimalSpecies {
 }
 ```
 
-```
+```java
 What is the result of the following code? (Choose all that apply.)
 
 A. Compiler error on line 2
@@ -468,7 +468,7 @@ E. The code compiles successfully
 
 例如，尝试解决以下问题:
 
-```
+```java
 public enum AnimalSpecies {
     MAMMAL(false), FISH(true){
         @Override
@@ -499,7 +499,7 @@ public class Zookeeper {
 }
 ```
 
-```
+```java
 What is the result of the following code? (Choose all that apply.)
 
 A. Compilation error on line 2
@@ -519,7 +519,7 @@ Java 为迭代`enum `值的[提供了静态方法。我们必须预料到要求
 
 例如，尝试解决以下问题:
 
-```
+```java
 public enum AnimalSpecies {
     MAMMAL, FISH, BIRD, REPTILE, AMPHIBIAN
 }
@@ -533,7 +533,7 @@ public class Zookeeper {
 }
 ```
 
-```
+```java
 What is the result? (Choose all that apply.)
 
 A. FISH
@@ -555,7 +555,7 @@ E. Compilation fails due to an error on line 10
 
 例如，尝试解决以下问题:
 
-```
+```java
 class Bird implements Flyable {
     public void fly() {
     }
@@ -580,7 +580,7 @@ interface Flyable {
 }
 ```
 
-```
+```java
 What is the result? (Choose all that apply.)
 
 A. Compilation succeeds
@@ -596,7 +596,7 @@ E. Compilation fails with an error on line 14
 
 另一个这样的编译错误来自于`implements `和`extends:`的使用
 
-```
+```java
 interface Bird extends Flyable, Wings {}
 
 public class GreaterFlamingo extends Flamingos implements Bird, Vegetarian {}
@@ -612,7 +612,7 @@ public class GreaterFlamingo extends Flamingos, Bird {}
 
 例如，尝试解决以下问题:
 
-```
+```java
 public interface Vegetarian {
 
     default void eat() {
@@ -641,7 +641,7 @@ public class Racoon implements Vegetarian, NonVegetarian {
 }
 ```
 
-```
+```java
 What is the result?
 
 A. Eat Veg
@@ -662,7 +662,7 @@ F. An exception is thrown at runtime
 
 例如，尝试解决以下问题:
 
-```
+```java
 public abstract class Flamingo {
 
     public abstract String color();
@@ -693,7 +693,7 @@ public class GreaterFlamingo extends Flamingo {
 }
 ```
 
-```
+```java
 What is the result? (Choose all that apply.)
 
 A. Pink
@@ -716,7 +716,7 @@ lambda 表达式的语法有点复杂。为了找出考试中的语法错误，�
 
 例如，尝试解决以下问题:
 
-```
+```java
 List<String> birds = Arrays.asList("eagle", "seagull", "albatross", "buzzard", "goose");
 int longest = 0;
 birds.forEach(b -> {
@@ -728,7 +728,7 @@ birds.forEach(b -> {
 System.out.println("Longest bird name is length: " + longest);
 ```
 
-```
+```java
 What is the result?
 
 A. "Longest bird name is length: 9"

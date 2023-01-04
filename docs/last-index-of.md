@@ -32,7 +32,7 @@
 
 ### 可用签名
 
-```
+```java
 public int lastIndexOf(int ch)
 public int lastIndexOf(int ch, int fromIndex)
 public int lastIndexOf(String str)
@@ -40,7 +40,7 @@ public int lastIndexOf(String str)
 
 ### 例子
 
-```
+```java
 @Test
 public void whenCallLastIndexOf_thenCorrect() {
     assertEquals(2, "foo".lastIndexOf("o"));

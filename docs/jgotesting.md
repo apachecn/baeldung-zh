@@ -12,7 +12,7 @@
 
 首先，让我们将`jgotesting`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.jgotesting</groupId>
     <artifactId>jgotesting</artifactId>
@@ -36,7 +36,7 @@ JGoTesting 允许我们编写与 JUnit 兼容的测试。对于 JGoTesting 提�
 
 为了编写我们的测试，让我们首先导入 JGoTesting 的断言方法:
 
-```
+```java
 import static org.jgotesting.Assert.*; // same methods as JUnit
 import static org.jgotesting.Check.*; // aliases starting with "check"
 import static org.jgotesting.Testing.*;
@@ -46,7 +46,7 @@ import static org.jgotesting.Testing.*;
 
 让我们创建一个类来声明这样的规则:
 
-```
+```java
 public class JGoTestingUnitTest {
 
     @Rule
@@ -64,7 +64,7 @@ JGoTesting 提供了两组断言方法来编写我们的测试。第一组中的
 
 这里有一个使用两个版本测试一个数字是否等于另一个数字的例子:
 
-```
+```java
 @Test
 public void whenComparingIntegers_thenEqual() {
     int anInt = 10;
@@ -82,7 +82,7 @@ API 的其余部分是不言自明的，所以我们不会深入讨论细节。�
 
 下面的示例展示了这一点:
 
-```
+```java
 @Test
 public void whenComparingStrings_thenMultipleFailingAssertions() {
     String aString = "The test string";
@@ -96,7 +96,7 @@ public void whenComparingStrings_thenMultipleFailingAssertions() {
 
 执行测试后，我们得到以下输出:
 
-```
+```java
 org.junit.ComparisonFailure: Strings are not equal!
   expected:<[the test s]tring> but was:<[The Test S]tring>
 // ...
@@ -110,7 +110,7 @@ java.lang.AssertionError: Strings are not the same
 
 让我们编写一个测试方法来实践这一点:
 
-```
+```java
 @Test
 public void whenComparingNumbers_thenLoggedMessage() {
     log("There was something wrong when comparing numbers");
@@ -126,7 +126,7 @@ public void whenComparingNumbers_thenLoggedMessage() {
 
 测试执行后，我们得到以下输出:
 
-```
+```java
 org.jgotesting.events.LogMessage: There was something wrong
   when comparing numbers
 // ...
@@ -141,7 +141,7 @@ JGoTesting 提供了几种当测试用例不能通过给定的前提条件时终
 
 下面是一个由于所需文件不存在而提前结束的**测试的例子:**
 
-```
+```java
 @Test
 public void givenFile_whenDoesnotExists_thenTerminated() throws Exception {
     File aFile = new File("a_dummy_file.txt");
@@ -161,7 +161,7 @@ public void givenFile_whenDoesnotExists_thenTerminated() throws Exception {
 
 让我们看一个例子，它使用我们的`JGoTestRule`实例将对`String`对象的多个检查链接在一起:
 
-```
+```java
 @Test
 public void whenComparingStrings_thenMultipleAssertions() {
     String aString = "This is a string";
@@ -179,7 +179,7 @@ public void whenComparingStrings_thenMultipleAssertions() {
 
 下面是一个使用上述接口验证`String`是否匹配特定正则表达式的例子:
 
-```
+```java
 @Test
 public void givenChecker_whenComparingStrings_thenEqual() throws Exception {
     Checker<String> aChecker = s -> s.matches("\\d+");

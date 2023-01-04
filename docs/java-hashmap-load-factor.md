@@ -26,7 +26,7 @@
 
 让我们创建我们的`HashMap`:
 
-```
+```java
 Map<String, String> mapWithDefaultParams = new HashMap<>();
 mapWithDefaultParams.put("1", "one");
 mapWithDefaultParams.put("2", "two");
@@ -48,7 +48,7 @@ mapWithDefaultParams.put("4", "four");
 
 首先，让我们用初始容量创建一个`Map`:
 
-```
+```java
 Map<String, String> mapWithInitialCapacity = new HashMap<>(5); 
 ```
 
@@ -58,7 +58,7 @@ Map<String, String> mapWithInitialCapacity = new HashMap<>(5);
 
 类似地，我们可以使用初始容量和负载系数来创建我们的`Map`:
 
-```
+```java
 Map<String, String> mapWithInitialCapacityAndLF = new HashMap<>(5, 0.5f); 
 ```
 
@@ -88,7 +88,7 @@ Map<String, String> mapWithInitialCapacityAndLF = new HashMap<>(5, 0.5f);
 
 让我们初始化我们的`Map`:
 
-```
+```java
 Map<String, String> mapWithInitialCapacityAndLF = new HashMap<>(5,0.75f);
 mapWithInitialCapacityAndLF.put("1", "one");
 mapWithInitialCapacityAndLF.put("2", "two");
@@ -103,7 +103,7 @@ mapWithInitialCapacityAndLF.put("5", "five");
 
 现在，让我们添加更多的条目到我们的`Map`:
 
-```
+```java
 mapWithInitialCapacityAndLF.put("6", "Six");
 mapWithInitialCapacityAndLF.put("7", "Seven");
 //.. more entries

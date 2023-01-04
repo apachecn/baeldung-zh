@@ -17,7 +17,7 @@
 
 让我们创建一个测试，并在实践中使用这个注释:
 
-```
+```java
 @SpringJUnitConfig(SpringJUnitConfigIntegrationTest.Config.class)
 public class SpringJUnitConfigIntegrationTest {
 
@@ -30,7 +30,7 @@ public class SpringJUnitConfigIntegrationTest {
 
 我们现在可以验证 Spring 上下文是否真的被加载了:
 
-```
+```java
 @Autowired
 private ApplicationContext applicationContext;
 
@@ -42,7 +42,7 @@ void givenAppContext_WhenInjected_ThenItShouldNotBeNull() {
 
 最后，这里我们有`@SpringJUnitConfig(SpringJUnitConfigTest.Config.class):`的等价代码
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = SpringJUnitConfigTest.Config.class)
 ```
@@ -53,7 +53,7 @@ void givenAppContext_WhenInjected_ThenItShouldNotBeNull() {
 
 让我们看看这个注释是如何工作的:
 
-```
+```java
 @SpringJUnitWebConfig(SpringJUnitWebConfigIntegrationTest.Config.class)
 public class SpringJUnitWebConfigIntegrationTest {
 
@@ -69,7 +69,7 @@ public class SpringJUnitWebConfigIntegrationTest {
 
 现在让我们验证一下`WebApplicationContext`是否真的加载了:
 
-```
+```java
 @Autowired
 private WebApplicationContext webAppContext;
 
@@ -81,7 +81,7 @@ void givenWebAppContext_WhenInjected_ThenItShouldNotBeNull() {
 
 同样，这里我们有不使用`@SpringJUnitWebConfig`的等价代码:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = SpringJUnitWebConfigIntegrationTest.Config.class)

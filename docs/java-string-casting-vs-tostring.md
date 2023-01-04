@@ -10,13 +10,13 @@
 
 让我们先快速回顾一下。使用`(String) `语法与 Java 中的[类型转换紧密相关。简而言之，使用这种语法的主要任务是**将一个源变量转换成** `**String**:`](/web/20221129000201/https://www.baeldung.com/java-type-casting)
 
-```
+```java
 String str = (String) object; 
 ```
 
 我们知道，Java 中的每个类都是`Object` 类的直接或间接扩展，它实现了[`toStr``ing()`方法](/web/20221129000201/https://www.baeldung.com/java-tostring)。我们用它来**得到任何`Object`** 的一个`String`表示:
 
-```
+```java
 String str = object.toString();
 ```
 
@@ -30,7 +30,7 @@ String str = object.toString();
 
 首先，让我们介绍一个简单的实用方法，将一个`Object`转换成一个`String`:
 
-```
+```java
 public static String castToString(Object object) {
     if (object instanceof String) {
         return (String) object;
@@ -41,7 +41,7 @@ public static String castToString(Object object) {
 
 正如我们所看到的，在造型之前，我们必须检查我们的`object` 变量是一个`String`的实例。如果我们不这样做，它可能会失败并产生一个`ClassCastException`:
 
-```
+```java
 @Test(expected = ClassCastException.class)
 public void givenIntegerObject_whenCastToObjectAndString_thenCastClassException() {
     Integer input = 1234;
@@ -53,7 +53,7 @@ public void givenIntegerObject_whenCastToObjectAndString_thenCastClassException(
 
 但是，这个操作是空安全的。在非实例化变量上使用它，即使它以前没有被应用于`String`变量，也会成功:
 
-```
+```java
 @Test
 public void givenNullInteger_whenCastToObjectAndString_thenSameAndNoException() {
     Integer input = null;
@@ -69,7 +69,7 @@ public void givenNullInteger_whenCastToObjectAndString_thenSameAndNoException() 
 
 现在，是时候在请求的对象上实现另一个调用`toString()`的实用函数了:
 
-```
+```java
 public static String getStringRepresentation(Object object) {
     if (object != null) {
         return object.toString();
@@ -80,7 +80,7 @@ public static String getStringRepresentation(Object object) {
 
 在这种情况下，我们不需要知道对象的类型，它可以在没有类型转换的对象上成功执行。我们只需添加一个简单的`null`检查。如果我们不添加这个检查，当向方法传递一个非实例化变量时，我们可能会得到一个`NullPointerException`:
 
-```
+```java
 @Test(expected = NullPointerException.class)
 public void givenNullInteger_whenToString_thenNullPointerException() {
     Integer input = null;
@@ -91,7 +91,7 @@ public void givenNullInteger_whenToString_thenNullPointerException() {
 
 此外，由于核心的`String`实现，对`String`变量执行`toString()`方法会返回相同的对象:
 
-```
+```java
 @Test
 public void givenString_whenToString_thenSame() {
     String str = "baeldung";
@@ -103,7 +103,7 @@ public void givenString_whenToString_thenSame() {
 
 让我们回到我们的问题——我们应该在对象变量上使用哪种语法？正如我们在上面看到的，如果我们知道**我们的变量是一个`String`实例，我们应该使用类型转换**:
 
-```
+```java
 @Test
 public void givenString_whenCastToObject_thenCastToStringReturnsSame() {
     String input = "baeldung";
@@ -118,7 +118,7 @@ public void givenString_whenCastToObject_thenCastToStringReturnsSame() {
 
 当我们传递**任何其他对象类型时，我们需要显式调用`toString()`方法**。重要的是要记住它根据实现返回一个`String`值:
 
-```
+```java
 @Test
 public void givenIntegerNotNull_whenCastToObject_thenGetToStringReturnsString() {
     Integer input = 1234;

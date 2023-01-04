@@ -18,7 +18,7 @@ BST 最坏情况下的时间复杂度是树的高度的函数。特别是从树�
 
 让我们为我们的树定义一个`Node` 对象:
 
-```
+```java
 public class Node {
     int key;
     int height;
@@ -30,7 +30,7 @@ public class Node {
 
 接下来，我们来定义一下`AVLTree`:
 
-```
+```java
 public class AVLTree {
 
     private Node root;
@@ -72,7 +72,7 @@ public class AVLTree {
 
 让我们来看看`AVLTree`的正确旋转操作:
 
-```
+```java
 Node rotateRight(Node y) {
     Node x = y.left;
     Node z = x.right;
@@ -96,7 +96,7 @@ Node rotateRight(Node y) {
 
 让我们来看看`AVLTree`的左旋转操作:
 
-```
+```java
 Node rotateLeft(Node y) {
     Node x = y.right;
     Node z = x.left;
@@ -138,7 +138,7 @@ Y 的左子中的高度大于它的右子中的高度，所以我们用 z 的右
 
 让我们来看看`AVLTree`的重新平衡操作:
 
-```
+```java
 Node rebalance(Node z) {
     updateHeight(z);
     int balance = getBalance(z);
@@ -173,7 +173,7 @@ Node rebalance(Node z) {
 
 让我们来看看插入操作:
 
-```
+```java
 Node insert(Node node, int key) {
     if (node == null) {
         return new Node(key);
@@ -204,7 +204,7 @@ Node insert(Node node, int key) {
 
 下面是我们的删除方法:
 
-```
+```java
 Node delete(Node node, int key) {
     if (node == null) {
         return node;
@@ -240,7 +240,7 @@ Node delete(Node node, int key) {
 
 让我们看看示例代码:
 
-```
+```java
 Node find(int key) {
     Node current = root;
     while (current != null) {

@@ -12,7 +12,7 @@
 
 首先，我们需要确保在`pom.xml`中有`rxjava`依赖关系:
 
-```
+```java
 <dependency>
     <groupId>io.reactivex</groupId>
     <artifactId>rxjava</artifactId>
@@ -26,7 +26,7 @@
 
 **我们可以通过实现`[Operator](https://web.archive.org/web/20220625222813/http://reactivex.io/RxJava/1.x/javadoc/rx/Observable.Operator.html)`接口**来创建我们的自定义操作符，在下面的例子中，我们实现了一个简单的操作符，用于从`String`中删除非字母数字字符:
 
-```
+```java
 public class ToCleanString implements Operator<String, String> {
 
     public static ToCleanString toCleanString() {
@@ -72,13 +72,13 @@ public class ToCleanString implements Operator<String, String> {
 
 现在，我们可以使用 [`lift`](https://web.archive.org/web/20220625222813/http://reactivex.io/RxJava/1.x/javadoc/rx/Observable.html#lift(rx.Observable.Operator)) 运算符轻松地将我们的自定义运算符与其他运算符链接起来:
 
-```
+```java
 observable.lift(toCleanString())....
 ```
 
 下面是对我们的自定义操作符的一个简单测试:
 
-```
+```java
 @Test
 public void whenUseCleanStringOperator_thenSuccess() {
     List<String> list = Arrays.asList("john_1", "tom-3");
@@ -98,7 +98,7 @@ public void whenUseCleanStringOperator_thenSuccess() {
 
 我们也可以通过实现 [`Transformer`](https://web.archive.org/web/20220625222813/http://reactivex.io/RxJava/1.x/javadoc/rx/Observable.Transformer.html) 接口来创建我们的操作员:
 
-```
+```java
 public class ToLength implements Transformer<String, Integer> {
 
     public static ToLength toLength() {
@@ -120,13 +120,13 @@ public class ToLength implements Transformer<String, Integer> {
 
 我们将需要一个 [`compose`](https://web.archive.org/web/20220625222813/http://reactivex.io/RxJava/1.x/javadoc/rx/Observable.html#compose(rx.Observable.Transformer)) 操作员来使用我们的变压器:
 
-```
+```java
 observable.compose(toLength())...
 ```
 
 这里有一个简单的测试:
 
-```
+```java
 @Test
 public void whenUseToLengthOperator_thenSuccess() {
     List<String> list = Arrays.asList("john", "tom");
@@ -150,7 +150,7 @@ public void whenUseToLengthOperator_thenSuccess() {
 
 我们可以将自定义操作符实现为一个函数，而不是`public class`:
 
-```
+```java
 Operator<String, String> cleanStringFn = subscriber -> {
     return new Subscriber<String>(subscriber) {
         @Override
@@ -180,7 +180,7 @@ Operator<String, String> cleanStringFn = subscriber -> {
 
 这里有一个简单的测试:
 
-```
+```java
 List<String> results = new ArrayList<>();
 Observable.from(Arrays.asList("[[email protected]](/web/20220625222813/https://www.baeldung.com/cdn-cgi/l/email-protection)", "or-an?ge"))
   .lift(cleanStringFn)
@@ -193,7 +193,7 @@ assertThat(results, hasItems("apple", "orange"));
 
 类似地，以`Transformer`为例:
 
-```
+```java
 @Test
 public void whenUseFunctionTransformer_thenSuccess() {
     Transformer<String, Integer> toLengthFn = s -> s.map(String::length);

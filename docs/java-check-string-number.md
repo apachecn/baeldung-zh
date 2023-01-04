@@ -30,7 +30,7 @@ Learn the various causes of NumberFormatException in Java and some best practice
 
 在本文的后半部分，我们将使用 Apache Commons 外部库在我们的`pom.xml`中添加它的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -52,7 +52,7 @@ Learn the various causes of NumberFormatException in Java and some best practice
 
 如果这些方法没有抛出任何`[NumberFormatException](https://web.archive.org/web/20221017232038/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/NumberFormatException.html "class in java.lang")`，那么这意味着解析成功并且`String`是数字:
 
-```
+```java
 public static boolean isNumeric(String strNum) {
     if (strNum == null) {
         return false;
@@ -68,7 +68,7 @@ public static boolean isNumeric(String strNum) {
 
 让我们来看看这种方法的实际应用:
 
-```
+```java
 assertThat(isNumeric("22")).isTrue();
 assertThat(isNumeric("5.05")).isTrue();
 assertThat(isNumeric("-200")).isTrue(); 
@@ -100,7 +100,7 @@ assertThat(isNumeric("abc")).isFalse();
 
 现在，让我们使用上面的正则表达式创建一个方法:
 
-```
+```java
 private Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
 
 public boolean isNumeric(String strNum) {
@@ -113,7 +113,7 @@ public boolean isNumeric(String strNum) {
 
 现在让我们来看看上面方法的一些断言:
 
-```
+```java
 assertThat(isNumeric("22")).isTrue();
 assertThat(isNumeric("5.05")).isTrue();
 assertThat(isNumeric("-200")).isTrue();
@@ -141,7 +141,7 @@ Apache Commons 的`[NumberUtils](https://web.archive.org/web/20221017232038/http
 
 让我们使用这种方法运行一些测试:
 
-```
+```java
 assertThat(NumberUtils.isCreatable("22")).isTrue();
 assertThat(NumberUtils.isCreatable("5.05")).isTrue();
 assertThat(NumberUtils.isCreatable("-200")).isTrue();
@@ -174,7 +174,7 @@ assertThat(NumberUtils.isCreatable("09")).isFalse();
 
 让我们来看看一些肯定的说法:
 
-```
+```java
 assertThat(NumberUtils.isParsable("22")).isTrue();
 assertThat(NumberUtils.isParsable("-23")).isTrue();
 assertThat(NumberUtils.isParsable("2.2")).isTrue();
@@ -203,7 +203,7 @@ assertThat(NumberUtils.isParsable("2.99e+8")).isFalse();
 
 现在让我们来看看这个方法的实际应用:
 
-```
+```java
 assertThat(StringUtils.isNumeric("123")).isTrue();
 assertThat(StringUtils.isNumeric("١٢٣")).isTrue();
 assertThat(StringUtils.isNumeric("१२३")).isTrue();
@@ -223,7 +223,7 @@ assertThat(StringUtils.isNumeric("-123")).isFalse();
 
 [`StringUtils.isNumericSpace(CharSequence)`](https://web.archive.org/web/20221017232038/https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/StringUtils.html#isNumericSpace-java.lang.CharSequence-) 严格检查 Unicode 数字和/或空格。这与`StringUtils.isNumeric()` 相同，除了它也接受空格，不仅是前导空格和尾随空格，而且如果它们在数字之间:
 
-```
+```java
 assertThat(StringUtils.isNumericSpace("123")).isTrue();
 assertThat(StringUtils.isNumericSpace("١٢٣")).isTrue();
 assertThat(StringUtils.isNumericSpace("")).isTrue();
@@ -244,7 +244,7 @@ assertThat(StringUtils.isNumericSpace("-123")).isFalse();
 
 首先，我们采取一个简单的方法。我们选择一个字符串值——对于我们的测试，我们使用`Integer.MAX_VALUE`。该价值将在我们的所有实施中进行测试:
 
-```
+```java
 Benchmark                                     Mode  Cnt    Score   Error  Units
 Benchmarking.usingCoreJava                    avgt   20   57.241 ± 0.792  ns/op
 Benchmarking.usingNumberUtils_isCreatable     avgt   20   26.711 ± 1.110  ns/op
@@ -269,7 +269,7 @@ Benchmarking.usingStringUtils_isNumericSpace  avgt   20   31.979 ± 1.393  ns/op
 
 执行相同的测试后，我们将看到结果:
 
-```
+```java
 Benchmark                                     Mode  Cnt      Score     Error  Units
 Benchmarking.usingCoreJava                    avgt   20  10162.872 ± 798.387  ns/op
 Benchmarking.usingNumberUtils_isCreatable     avgt   20   1703.243 ± 108.244  ns/op

@@ -12,7 +12,7 @@
 
 让我们来看一个 UUID 的例子，后面是 UUID 的规范表示:
 
-```
+```java
 123e4567-e89b-42d3-a456-556642440000
 xxxxxxxx-xxxx-Bxxx-Axxx-xxxxxxxxxxxx
 ```
@@ -27,7 +27,7 @@ xxxxxxxx-xxxx-Bxxx-Axxx-xxxxxxxxxxxx
 
 变量由`A`的三个最高有效位决定:
 
-```
+```java
  MSB1    MSB2    MSB3
    0       X       X     reserved (0)
    1       0       X     current variant (2)
@@ -55,7 +55,7 @@ Java 有一个内置的实现来管理 UUID 标识符，不管我们是想要随
 
 `UUID`类**有一个单独的构造函数**:
 
-```
+```java
 UUID uuid = new UUID(long mostSignificant64Bits, long leastSignificant64Bits);
 ```
 
@@ -65,19 +65,19 @@ UUID uuid = new UUID(long mostSignificant64Bits, long leastSignificant64Bits);
 
 第一种方法从给定的字节数组创建版本 3 UUID:
 
-```
+```java
 UUID uuid = UUID.nameUUIDFromBytes(byte[] bytes);
 ```
 
 其次，`randomUUID()`方法创建了版本 4 的 UUID。这是创建`UUID`实例最方便的方式:
 
-```
+```java
 UUID uuid = UUID.randomUUID();
 ```
 
 给定给定 UUID 的字符串表示，第三个静态方法返回一个`UUID`对象:
 
-```
+```java
 UUID uuid = UUID.fromString(String uuidHexDigitString);
 ```
 
@@ -97,7 +97,7 @@ UUID uuid = UUID.fromString(String uuidHexDigitString);
 
 首先，我们将生成 64 个最低和最高有效位作为`long`值:
 
-```
+```java
 private static long get64LeastSignificantBitsForVersion1() {
     Random random = new Random();
     long random63BitLong = random.nextLong() & 0x3FFFFFFFFFFFFFFFL;
@@ -120,7 +120,7 @@ private static long get64MostSignificantBitsForVersion1() {
 
 然后我们可以将这两个值传递给`UUID`的构造函数:
 
-```
+```java
 public static UUID generateType1UUID() {
 
     long most64SigBits = get64MostSignificantBitsForVersion1();
@@ -134,13 +134,13 @@ public static UUID generateType1UUID() {
 
 让我们生成一个版本 4 `UUID`:
 
-```
+```java
 UUID uuid = UUID.randomUUID();
 ```
 
 然后，让我们使用“SHA-256”和一个随机的`UUID`生成一个唯一的密钥:
 
-```
+```java
 MessageDigest salt = MessageDigest.getInstance("SHA-256");
 salt.update(UUID.randomUUID().toString().getBytes("UTF-8"));
 String digest = bytesToHex(salt.digest());
@@ -150,7 +150,7 @@ String digest = bytesToHex(salt.digest());
 
 UUIDs 是使用名称空间和名称的散列生成的。名称空间标识符是 UUIDs，如域名系统(DNS)、对象标识符(oid)和 URL。让我们看看算法的伪代码:
 
-```
+```java
 UUID = hash(NAMESPACE_IDENTIFIER + NAME)
 ```
 
@@ -160,7 +160,7 @@ UUID = hash(NAMESPACE_IDENTIFIER + NAME)
 
 因此，让我们首先从名称空间和特定名称中提取字节表示，并将它们连接到一个数组中，以将其发送给 UUID api:
 
-```
+```java
 byte[] nameSpaceBytes = bytesFromUUID(namespace);
 byte[] nameBytes = name.getBytes("UTF-8");
 byte[] result = joinBytes(nameSpaceBytes, nameBytes);
@@ -168,7 +168,7 @@ byte[] result = joinBytes(nameSpaceBytes, nameBytes);
 
 最后一步是将我们从前面的过程中得到的结果传递给`nameUUIDFromBytes()`方法。该方法还将设置变量和版本字段:
 
-```
+```java
 UUID uuid = UUID.nameUUIDFromBytes(result);
 ```
 
@@ -176,7 +176,7 @@ UUID uuid = UUID.nameUUIDFromBytes(result);
 
 让我们检查代码以生成最低和最高有效位，同样作为`long`值:
 
-```
+```java
 public static long getLeastAndMostSignificantBitsVersion5(final byte[] src, final int offset, final ByteOrder order) {
     long ans = 0;
     if (order == ByteOrder.BIG_ENDIAN) {
@@ -196,7 +196,7 @@ public static long getLeastAndMostSignificantBitsVersion5(final byte[] src, fina
 
 现在，我们需要定义一个方法，该方法需要一个名称来生成 UUID。该方法将使用在`UUID`类中定义的默认构造函数:
 
-```
+```java
 private static UUID generateType5UUID(String name) { 
     byte[] bytes = name.getBytes(StandardCharsets.UTF_8);
     MessageDigest md = MessageDigest.getInstance("SHA-1");

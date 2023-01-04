@@ -14,7 +14,7 @@
 
 有了 Spring，你可以使用 AspectJ 注释声明通知，但是你必须首先**将`@EnableAspectJAutoProxy`注释应用到你的配置类**，这将支持处理用 AspectJ 的`@Aspect`注释标记的组件。
 
-```
+```java
 @Configuration
 @EnableAspectJAutoProxy
 public class AopConfiguration {
@@ -32,7 +32,7 @@ public class AopConfiguration {
 
 考虑下面这个方面，它只是在调用方法之前记录方法名:
 
-```
+```java
 @Component
 @Aspect
 public class LoggingAspect {
@@ -62,7 +62,7 @@ public class LoggingAspect {
 
 相反，我们可以通过定义以下方面来实现这一点:
 
-```
+```java
 @Component
 @Aspect
 public class PublishingAspect {
@@ -94,7 +94,7 @@ public class PublishingAspect {
 
 接下来，我们创建一个监听器，它将简单地记录[事件](/web/20221026180855/https://www.baeldung.com/spring-events):
 
-```
+```java
 @Component
 public class FooCreationEventListener implements ApplicationListener<FooCreationEvent> {
 
@@ -115,7 +115,7 @@ public class FooCreationEventListener implements ApplicationListener<FooCreation
 
 为了演示它的使用，假设我们想要测量方法执行时间。让我们为此创建一个方面:
 
-```
+```java
 @Aspect
 @Component
 public class PerformanceAspect {

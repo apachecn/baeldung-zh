@@ -21,7 +21,7 @@
 
 为了在我们的项目中使用 XStream，我们将添加以下 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.thoughtworks.xstream</groupId>
     <artifactId>xstream</artifactId>
@@ -33,7 +33,7 @@
 
 `XStream`类是 API 的一个门面。当创建`XStream`的实例时，我们还需要注意线程安全问题:
 
-```
+```java
 XStream xstream = new XStream();
 ```
 
@@ -45,7 +45,7 @@ XStream xstream = new XStream();
 
 默认情况下使用 XPP3 驱动程序，但是我们当然可以轻松地更改驱动程序:
 
-```
+```java
 XStream xstream = new XStream(new StaxDriver()); 
 ```
 
@@ -53,7 +53,7 @@ XStream xstream = new XStream(new StaxDriver());
 
 让我们首先为–`Customer`定义一个简单的 POJO:
 
-```
+```java
 public class Customer {
 
     private String firstName;
@@ -66,14 +66,14 @@ public class Customer {
 
 现在让我们生成对象的 XML 表示:
 
-```
+```java
 Customer customer = new Customer("John", "Doe", new Date());
 String dataXml = xstream.toXML(customer);
 ```
 
 使用默认设置，将产生以下输出:
 
-```
+```java
 <com.baeldung.pojo.Customer>
     <firstName>John</firstName>
     <lastName>Doe</lastName>
@@ -97,25 +97,25 @@ String dataXml = xstream.toXML(customer);
 
 现在让我们用`@XStreamAlias`来注释我们的`Customer`类:
 
-```
+```java
 @XStreamAlias("customer")
 ```
 
 现在我们需要配置我们的实例来使用这个注释:
 
-```
+```java
 xstream.processAnnotations(Customer.class);
 ```
 
 或者，如果我们希望以编程方式配置别名，我们可以使用下面的代码:
 
-```
+```java
 xstream.alias("customer", Customer.class);
 ```
 
 无论是使用别名还是编程配置，`Customer`对象的输出将更加清晰:
 
-```
+```java
 <customer>
     <firstName>John</firstName>
     <lastName>Doe</lastName>
@@ -127,14 +127,14 @@ xstream.alias("customer", Customer.class);
 
 我们还可以使用用于别名类的相同注释为字段添加别名。例如，如果我们希望在 XML 表示中用`fn`替换字段`firstName`，我们可以使用下面的注释:
 
-```
+```java
 @XStreamAlias("fn")
 private String firstName;
 ```
 
 或者，我们可以通过编程实现相同的目标:
 
-```
+```java
 xstream.aliasField("fn", Customer.class, "firstName");
 ```
 
@@ -142,7 +142,7 @@ xstream.aliasField("fn", Customer.class, "firstName");
 
 无论使用哪种方法，输出都是一样的:
 
-```
+```java
 <customer>
     <fn>John</fn>
     <lastName>Doe</lastName>
@@ -154,7 +154,7 @@ xstream.aliasField("fn", Customer.class, "firstName");
 
 课程有几个预先注册的别名，以下是其中的几个:
 
-```
+```java
 alias("float", Float.class);
 alias("date", Date.class);
 alias("gregorian-calendar", Calendar.class);
@@ -168,13 +168,13 @@ alias("currency", Currency.class);
 
 现在我们将在`Customer`类中添加一个`ContactDetails`列表。
 
-```
+```java
 private List<ContactDetails> contactDetailsList;
 ```
 
 对于集合处理的默认设置，以下是输出:
 
-```
+```java
 <customer>
     <firstName>John</firstName>
     <lastName>Doe</lastName>
@@ -194,13 +194,13 @@ private List<ContactDetails> contactDetailsList;
 
 假设我们需要省略`contactDetailsList` 父标签`,`，我们只希望每个`ContactDetails`元素是`customer`元素的子元素。让我们再次修改我们的例子:
 
-```
+```java
 xstream.addImplicitCollection(Customer.class, "contactDetailsList");
 ```
 
 现在，当生成 XML 时，根标签被省略，产生下面的 XML:
 
-```
+```java
 <customer>
     <firstName>John</firstName>
     <lastName>Doe</lastName>
@@ -218,7 +218,7 @@ xstream.addImplicitCollection(Customer.class, "contactDetailsList");
 
 使用注释也可以达到同样的效果:
 
-```
+```java
 @XStreamImplicit
 private List<ContactDetails> contactDetailsList;
 ```
@@ -233,13 +233,13 @@ XStream 使用一个`Converter`实例的映射，每个实例都有自己的转�
 
 假设我们对使用默认设置生成`dob` 标签的方式不满意。我们可以修改 XStream ( `DateConverter`)提供的`Date`的自定义转换器:
 
-```
+```java
 xstream.registerConverter(new DateConverter("dd-MM-yyyy", null));
 ```
 
 以上将产生“`dd-MM-yyyy`”格式的输出:
 
-```
+```java
 <customer>
     <firstName>John</firstName>
     <lastName>Doe</lastName>
@@ -251,7 +251,7 @@ xstream.registerConverter(new DateConverter("dd-MM-yyyy", null));
 
 我们还可以创建一个自定义转换器来实现与上一节相同的输出:
 
-```
+```java
 public class MyDateConverter implements Converter {
 
     private SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
@@ -274,13 +274,13 @@ public class MyDateConverter implements Converter {
 
 最后，我们注册我们的`MyDateConverter` 类如下:
 
-```
+```java
 xstream.registerConverter(new MyDateConverter());
 ```
 
 我们还可以创建实现`SingleValueConverter` 接口的转换器，该接口被设计成将对象转换成字符串。
 
-```
+```java
 public class MySingleValueConverter implements SingleValueConverter {
 
     @Override
@@ -303,13 +303,13 @@ public class MySingleValueConverter implements SingleValueConverter {
 
 最后，我们注册`MySingleValueConverter`:
 
-```
+```java
 xstream.registerConverter(new MySingleValueConverter()); 
 ```
 
 使用`MySingleValueConverter`，一个`Customer`的 XML 输出如下:
 
-```
+```java
 <customer>John,Doe,14-02-1986</customer>
 ```
 
@@ -323,7 +323,7 @@ xstream.registerConverter(new MySingleValueConverter());
 
 API 提供了几个命名的优先级值:
 
-```
+```java
 private static final int PRIORITY_NORMAL = 0;
 private static final int PRIORITY_LOW = -10;
 private static final int PRIORITY_VERY_LOW = -20; 
@@ -333,20 +333,20 @@ private static final int PRIORITY_VERY_LOW = -20;
 
 我们可以使用注释或编程配置从生成的 XML 中省略字段。为了使用注释省略一个字段，我们简单地将`@XStreamOmitField`注释应用到有问题的字段:
 
-```
+```java
 @XStreamOmitField 
 private String firstName;
 ```
 
 为了以编程方式省略该字段，我们使用以下方法:
 
-```
+```java
 xstream.omitField(Customer.class, "firstName");
 ```
 
 无论我们选择哪种方法，输出都是一样的:
 
-```
+```java
 <customer> 
     <lastName>Doe</lastName> 
     <dob>14-02-1986</dob> 
@@ -357,26 +357,26 @@ xstream.omitField(Customer.class, "firstName");
 
 有时我们可能希望将字段序列化为元素的属性，而不是元素本身。假设我们添加了一个`contactType`字段:
 
-```
+```java
 private String contactType;
 ```
 
 如果我们想将`contactType`设置为 XML 属性，我们可以使用`@XStreamAsAttribute`注释:
 
-```
+```java
 @XStreamAsAttribute
 private String contactType; 
 ```
 
 或者，我们可以通过编程实现相同的目标:
 
-```
+```java
 xstream.useAttributeFor(ContactDetails.class, "contactType");
 ```
 
 以上两种方法的输出是相同的:
 
-```
+```java
 <ContactDetails contactType="Office">
     <mobile>6673543265</mobile>
     <landline>0124-2460311</landline>

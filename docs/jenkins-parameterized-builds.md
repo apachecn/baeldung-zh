@@ -47,13 +47,13 @@ Jenkins 支持几种参数类型。下面列出了最常见的参数类型，但
 
 假设我们有一个名为`packageType`的构建参数。在 shell 脚本中，我们可以像访问任何其他环境变量一样使用 shell 语法来访问构建参数:
 
-```
+```java
 ${packageType}
 ```
 
 对于批处理命令，我们使用本机 Windows 语法:
 
-```
+```java
 %packageType%
 ```
 
@@ -65,7 +65,7 @@ ${packageType}
 
 首先，所有构建参数都被放入一个`params`变量中。这意味着我们可以使用点符号来访问参数值:
 
-```
+```java
 pipeline {
     agent any
     stages {
@@ -80,7 +80,7 @@ pipeline {
 
 其次，将构建参数添加到管道的环境中。这意味着我们可以在执行 shell 脚本的步骤中使用较短的 shell 语法:
 
-```
+```java
 pipeline {
     agent any
     stages {
@@ -115,7 +115,7 @@ pipeline {
 
 Jenkins 作业也可以通过[远程 API 调用](https://web.archive.org/web/20221107193203/https://www.jenkins.io/doc/book/using/remote-access-api/)来执行。为此，我们在 Jenkins 服务器上调用了一个特殊的作业 URL:
 
-```
+```java
 http://<JENKINS_URL>/job/<JOB_NAME>/buildWithParameters/packageType=war&jdkVersion;=11&debug;=true
 ```
 
@@ -123,7 +123,7 @@ http://<JENKINS_URL>/job/<JOB_NAME>/buildWithParameters/packageType=war&jdkVersi
 
 让我们看看使用`curl`的完整示例:
 
-```
+```java
 curl -X POST --user user:apiToken \
     http://<JENKINS_URL>/job/<JOB_NAME>/buildWithParameters/packageType=war&jdkVersion;=11&debug;=true
 ```

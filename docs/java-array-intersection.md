@@ -16,7 +16,7 @@
 
 因此，我们需要一个`Function`或者更确切地说是一个`Predicate`来决定第二个数组中的成员。由于`List`提供了这样一个现成的方法，我们将把它转换成一个`List`:
 
-```
+```java
 Predicate isContainedInB = Arrays.asList(b)::contains; 
 ```
 
@@ -26,7 +26,7 @@ Predicate isContainedInB = Arrays.asList(b)::contains;
 
 API 为我们提供了所需的方法。**首先，我们将创建一个`Stream`，然后使用成员资格- `Predicate`进行过滤，最后我们将创建一个新数组:**
 
-```
+```java
 public static Integer[] intersectionSimple(Integer[] a, Integer[] b){
     return Stream.of(a)
       .filter(Arrays.asList(b)::contains)
@@ -40,7 +40,7 @@ public static Integer[] intersectionSimple(Integer[] a, Integer[] b){
 
 但是对于集合，元素不能出现多次。**我们可以通过使用`distinct()`方法进行归档:**
 
-```
+```java
 public static Integer[] intersectionSet(Integer[] a, Integer[] b){
     return Stream.of(a)
       .filter(Arrays.asList(b)::contain)
@@ -59,7 +59,7 @@ public static Integer[] intersectionSet(Integer[] a, Integer[] b){
 
 为此可以使用`remove()`方法，该方法返回成员并使用元素。因此，在消耗完`‘b'`中所有相等的元素后，不会再有相等的元素添加到结果中:
 
-```
+```java
 public static Integer[] intersectionSet(Integer[] a, Integer[] b){
     return Stream.of(a)
       .filter(new LinkedList<>(Arrays.asList(b))::remove)

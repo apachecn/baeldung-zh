@@ -38,7 +38,7 @@ OpenFeign 是一个声明式 REST 客户端，我们可以在 T2 Spring Boot T3 
 
 我们将`Access Type`设置为`credential `，并启用`Service Accounts Enabled`选项。然后，我们将领域细节导出为`feign-realm.json`，并在我们的`application-feign.yml`中设置领域文件:
 
-```
+```java
 keycloak:
   server:
     contextPath: /auth
@@ -54,7 +54,7 @@ keycloak:
 
 **现在我们已经配置了授权服务器，让我们设置资源服务器`.`** 为此，我们将使用 GitHub 上可用的资源服务器项目[。首先，我们添加`Payment`类作为资源:](https://web.archive.org/web/20220524065125/https://github.com/Baeldung/spring-security-oauth/tree/master/oauth-resource-server/resource-server-jwt)
 
-```
+```java
 public class Payment {
 
     private String id;
@@ -66,7 +66,7 @@ public class Payment {
 
 然后，我们在`PaymentController`类中声明一个 API:
 
-```
+```java
 @RestController
 public class PaymentController {
 
@@ -87,7 +87,7 @@ public class PaymentController {
 
 API 返回一个支付列表。此外，我们在我们的`application-feign.yml`文件中配置资源服务器:
 
-```
+```java
 spring:
   security:
     oauth2:
@@ -98,7 +98,7 @@ spring:
 
 现在，`getPayments()` API 使用 OAuth2 授权服务器是安全的，我们必须为调用这个 API 提供有效的访问令牌:
 
-```
+```java
 curl --location --request POST 'http://localhost:8083/auth/realms/master/protocol/openid-connect/token' \
   --header 'Content-Type: application/x-www-form-urlencoded' \
   --data-urlencode 'client_id=payment-app' \
@@ -108,7 +108,7 @@ curl --location --request POST 'http://localhost:8083/auth/realms/master/protoco
 
 获得访问令牌后，我们将它设置在请求的`Authorization`头中:
 
-```
+```java
 curl --location --request GET 'http://localhost:8081/resource-server-jwt/payments' \
   --header 'Authorization: Bearer Access_Token' 
 ```
@@ -121,7 +121,7 @@ curl --location --request GET 'http://localhost:8081/resource-server-jwt/payment
 
 要使用 Spring Cloud OpenFeign 调用安全 API，我们需要将 [`spring-cloud-starter-openfeign`](https://web.archive.org/web/20220524065125/https://search.maven.org/search?q=g:org.springframework.cloud%20AND%20a:spring-cloud-starter-openfeign) 添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-openfeign</artifactId>
@@ -131,7 +131,7 @@ curl --location --request GET 'http://localhost:8081/resource-server-jwt/payment
 
 另外，我们需要将 [`spring-cloud-dependencies`](https://web.archive.org/web/20220524065125/https://search.maven.org/search?q=g:org.springframework.cloud%20AND%20a:spring-cloud-dependencies) 添加到`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-dependencies</artifactId>
@@ -144,7 +144,7 @@ curl --location --request GET 'http://localhost:8081/resource-server-jwt/payment
 
 首先，我们需要将 [`@EnableFeignClients`](/web/20220524065125/https://www.baeldung.com/spring-cloud-openfeign#client) 添加到我们的主类中:
 
-```
+```java
 @SpringBootApplication
 @EnableFeignClients
 public class ExampleApplication {
@@ -156,7 +156,7 @@ public class ExampleApplication {
 
 然后，我们定义调用`getPayments()` API 的`PaymentClient`接口。此外，我们需要将`[@FeignClient](/web/20220524065125/https://www.baeldung.com/spring-cloud-openfeign#client)`添加到我们的`PaymentClient`接口中:
 
-```
+```java
 @FeignClient(
   name = "payment-client", 
   url = "http://localhost:8081/resource-server-jwt", 
@@ -170,7 +170,7 @@ public interface PaymentClient {
 
 我们根据资源服务器的地址设置`url`。在这种情况下，`@FeignClient`的主要参数是支持 OpenFeign 的 OAuth2 的`configuration`属性。之后，我们定义了一个`PaymentController`类，并将`PaymentClient`注入其中:
 
-```
+```java
 @RestController
 public class PaymentController {
 
@@ -194,7 +194,7 @@ public class PaymentController {
 
 要将 OAuth2 支持添加到 Spring Cloud OpenFeign，我们需要将 [`spring-security-oauth2-client`](https://web.archive.org/web/20220524065125/https://search.maven.org/search?q=g:org.springframework.security%20AND%20a:spring-security-oauth2-client) 和 [`spring-boot-starter-security`](https://web.archive.org/web/20220524065125/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-starter-security) 添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -211,7 +211,7 @@ public class PaymentController {
 
 现在，我们想要创建一个配置。**这个想法是获取一个访问令牌并将其添加到 OpenFeign 请求中。** **拦截器可以为每个 HTTP 请求/响应执行这个任务**。添加拦截器是 Feign 提供的一个有用的特性。**我们将使用一个 [`RequestInterceptor`](/web/20220524065125/https://www.baeldung.com/spring-cloud-openfeign#1-implementing-requestinterceptor) ，它通过添加一个授权承载头将 OAuth2 访问令牌注入到 OpenFeign 客户端**的请求中。让我们定义`OAuthFeignConfig`配置类并定义`requestInterceptor()` bean:
 
-```
+```java
 @Configuration
 public class OAuthFeignConfig {
 
@@ -240,7 +240,7 @@ public class OAuthFeignConfig {
 
 在`requestInterceptor()` bean 中，我们使用`ClientRegistration`和`OAuthClientCredentialsFeignManager`类来注册 oauth2 客户端并从授权服务器获取访问令牌。为此，我们需要在我们的`application.properties`文件中定义`oauth2`客户端属性:
 
-```
+```java
 spring.security.oauth2.client.registration.keycloak.authorization-grant-type=client_credentials
 spring.security.oauth2.client.registration.keycloak.client-id=payment-app
 spring.security.oauth2.client.registration.keycloak.client-secret=863e9de4-33d4-4471-b35e-f8d2434385bb
@@ -249,7 +249,7 @@ spring.security.oauth2.client.provider.keycloak.token-uri=http://localhost:8083/
 
 让我们创建`OAuthClientCredentialsFeignManager`类并定义`getAccessToken()`方法:
 
-```
+```java
 public String getAccessToken() {
     try {
         OAuth2AuthorizeRequest oAuth2AuthorizeRequest = OAuth2AuthorizeRequest
@@ -274,7 +274,7 @@ public String getAccessToken() {
 
 为了测试 OpenFeign 客户端，让我们创建`PaymentClientUnitTest`类:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class PaymentClientUnitTest {

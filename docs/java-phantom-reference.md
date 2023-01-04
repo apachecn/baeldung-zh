@@ -28,7 +28,7 @@
 
 首先，我们需要一个 [`PhantomReference`](https://web.archive.org/web/20221104133502/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ref/PhantomReference.html) 类的子类来定义一个清除资源的方法:
 
-```
+```java
 public class LargeObjectFinalizer extends PhantomReference<Object> {
 
     public LargeObjectFinalizer(
@@ -45,7 +45,7 @@ public class LargeObjectFinalizer extends PhantomReference<Object> {
 
 现在我们要编写一个增强的细粒度终结:
 
-```
+```java
 ReferenceQueue<Object> referenceQueue = new ReferenceQueue<>();
 List<LargeObjectFinalizer> references = new ArrayList<>();
 List<Object> largeObjects = new ArrayList<>();

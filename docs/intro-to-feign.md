@@ -14,7 +14,7 @@ Feign 的目标是简化 HTTP API 客户端。简单地说，开发人员只需�
 
 我们可以轻松地克隆项目并在本地运行它:
 
-```
+```java
 mvn install spring-boot:run
 ```
 
@@ -22,7 +22,7 @@ mvn install spring-boot:run
 
 首先，让我们添加所需的依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.github.openfeign</groupId>
     <artifactId>feign-okhttp</artifactId>
@@ -46,7 +46,7 @@ mvn install spring-boot:run
 
 在我们继续创建我们的客户端接口之前，首先我们将建立一个用于保存数据的`Book`模型:
 
-```
+```java
 public class Book {
     private String isbn;
     private String author;
@@ -62,7 +62,7 @@ public class Book {
 
 事实上，我们的 REST 提供者是一个[超媒体驱动的 API](/web/20220627092521/https://www.baeldung.com/spring-hateoas-tutorial) `,`，所以我们还需要一个简单的包装类:
 
-```
+```java
 public class BookResource {
     private Book book;
 
@@ -78,13 +78,13 @@ public class BookResource {
 
 让我们用一个简单的 curl shell 命令来列出所有的书。我们需要记住给所有的调用加上前缀`/api`，这是应用程序的 servlet 上下文:
 
-```
+```java
 curl http://localhost:8081/api/books
 ```
 
 因此，我们将获得一个完整的图书仓库，表示为 JSON:
 
-```
+```java
 [
   {
     "book": {
@@ -124,7 +124,7 @@ curl http://localhost:8081/api/books
 
 我们还可以通过将 ISBN 附加到 get 请求来查询单个的`Book` 资源:
 
-```
+```java
 curl http://localhost:8081/api/books/1447264533
 ```
 
@@ -134,7 +134,7 @@ curl http://localhost:8081/api/books/1447264533
 
 我们将使用`@RequestLine`注释来指定 HTTP 动词和路径部分作为参数。将使用`@Param` 注释对参数进行建模:
 
-```
+```java
 public interface BookClient {
     @RequestLine("GET /{isbn}")
     BookResource findByIsbn(@Param("isbn") String isbn);
@@ -152,7 +152,7 @@ public interface BookClient {
 
 **就这些！**现在我们将使用`Feign.builder()`来配置我们基于界面的客户端。实际的实现将在运行时提供:
 
-```
+```java
 BookClient bookClient = Feign.builder()
   .client(new OkHttpClient())
   .encoder(new GsonEncoder())
@@ -168,7 +168,7 @@ Feign 支持各种插件，比如 JSON/XML 编码器和解码器，或者用于�
 
 让我们创建三个测试用例来测试我们的客户端。注意，我们对`org.hamcrest.CoreMatchers.*`和`org.junit.Assert.*`使用静态导入:
 
-```
+```java
 @Test
 public void givenBookClient_shouldRunSuccessfully() throws Exception {
    List<Book> books = bookClient.findAll().stream()
@@ -207,7 +207,7 @@ public void givenBookClient_shouldPostBook() throws Exception {
 
 我们可以通过将 [Ribbon](https://web.archive.org/web/20220627092521/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22io.github.openfeign%22%20AND%20a%3A%22feign-ribbon%22) 添加到我们的类路径中来实现这一点，并像这样使用构建器:
 
-```
+```java
 BookClient bookClient = Feign.builder()
   .client(RibbonClient.create())
   .target(BookClient.class, "http://localhost:8081/api/books");

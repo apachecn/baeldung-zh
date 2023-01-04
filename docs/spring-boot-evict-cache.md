@@ -18,7 +18,7 @@ Spring 提供了两种方法来驱逐缓存，要么在方法上使用`@CacheEvi
 
 让我们用`@CacheEvict`注释创建一个空方法，并提供我们想要清除的缓存名称作为注释的参数。在这种情况下，我们希望清除名为“first”的缓存:
 
-```
+```java
 @CacheEvict(value = "first", allEntries = true)
 public void evictAllCacheValues() {}
 ```
@@ -27,7 +27,7 @@ public void evictAllCacheValues() {}
 
 也可以基于特定的键来驱逐值。为此，我们所要做的就是将缓存键作为参数传递给注释，而不是`allEntries`标志:
 
-```
+```java
 @CacheEvict(value = "first", key = "#cacheKey")
 public void evictSingleCacheValue(String cacheKey) {}
 ```
@@ -40,7 +40,7 @@ public void evictSingleCacheValue(String cacheKey) {}
 
 然后，我们可以根据自己的需要，用它来清除缓存:
 
-```
+```java
 @Autowired
 CacheManager cacheManager;
 
@@ -63,7 +63,7 @@ Spring 没有提供开箱即用的功能来清除所有的缓存，但是我们�
 
 现在让我们看看如何按需清除所有缓存。为了创建触发点，我们必须首先公开一个端点:
 
-```
+```java
 @RestController
 public class CachingController {
 
@@ -79,7 +79,7 @@ public class CachingController {
 
 在`CachingService`中，我们可以**通过迭代从缓存管理器**获得的缓存名称来清除所有缓存:
 
-```
+```java
 public void evictAllCaches() {
     cacheManager.getCacheNames().stream()
       .forEach(cacheName -> cacheManager.getCache(cacheName).clear());
@@ -90,7 +90,7 @@ public void evictAllCaches() {
 
 在某些用例中，应该以特定的时间间隔自动执行缓存回收。在这种情况下，**我们可以利用 Spring 的任务调度器**:
 
-```
+```java
 @Scheduled(fixedRate = 6000)
 public void evictAllcachesAtIntervals() {
     evictAllCaches();

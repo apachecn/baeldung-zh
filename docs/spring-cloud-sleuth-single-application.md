@@ -20,7 +20,7 @@
 
 我们首先在我们最喜欢的 IDE 中创建一个`Spring Boot` web 项目，并将这个依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-sleuth</artifactId>
@@ -33,7 +33,7 @@
 
 在我们的`application.properties`文件中添加这一行:
 
-```
+```java
 spring.application.name=Baeldung Sleuth Tutorial
 ```
 
@@ -51,7 +51,7 @@ spring.application.name=Baeldung Sleuth Tutorial
 
 首先，让我们创建一个控制器类作为使用的入口点:
 
-```
+```java
 @RestController
 public class SleuthController {
 
@@ -65,7 +65,7 @@ public class SleuthController {
 
 让我们运行我们的应用程序并导航到“http://localhost:8080”。查看日志，查看如下所示的输出:
 
-```
+```java
 2017-01-10 22:36:38.254  INFO 
   [Baeldung Sleuth Tutorial,4e30f7340b3fb631,4e30f7340b3fb631,false] 12516 
   --- [nio-8080-exec-1] c.b.spring.session.SleuthController : Hello Sleuth
@@ -86,7 +86,7 @@ public class SleuthController {
 
 让我们首先用一个方法创建一个服务:
 
-```
+```java
 @Service
 public class SleuthService {
 
@@ -99,7 +99,7 @@ public class SleuthService {
 
 现在，让我们将服务注入到控制器中，并添加一个访问它的请求映射方法:
 
-```
+```java
 @Autowired
 private SleuthService sleuthService;
 
@@ -113,7 +113,7 @@ private SleuthService sleuthService;
 
 最后，重新启动应用程序并导航到“http://localhost:8080/same-span”。观察日志输出，如下所示:
 
-```
+```java
 2017-01-10 22:51:47.664  INFO 
   [Baeldung Sleuth Tutorial,b77a5ea79036d5b9,b77a5ea79036d5b9,false] 12516 
   --- [nio-8080-exec-3] c.b.spring.session.SleuthController      : Same Span
@@ -130,7 +130,7 @@ private SleuthService sleuthService;
 
 首先，让我们添加一个新的控制器:
 
-```
+```java
 @GetMapping("/new-span")
 public String helloSleuthNewSpan() {
     logger.info("New Span");
@@ -141,7 +141,7 @@ public String helloSleuthNewSpan() {
 
 现在让我们将新方法添加到我们的服务中:
 
-```
+```java
 @Autowired
 private Tracer tracer;
 // ...
@@ -166,7 +166,7 @@ public void doSomeWorkNewSpan() throws InterruptedException {
 
 重新启动应用程序并导航到“http://localhost:8080/new-span”。观察日志输出，如下所示:
 
-```
+```java
 2017-01-11 21:07:54.924  
   INFO [Baeldung Sleuth Tutorial,9cdebbffe8bbbade,9cdebbffe8bbbade,false] 12516 
   --- [nio-8080-exec-6] c.b.spring.session.SleuthController      : New Span
@@ -192,7 +192,7 @@ public void doSomeWorkNewSpan() throws InterruptedException {
 
 为了演示`Sleuth`的线程能力，让我们首先添加一个配置类来设置一个线程池:
 
-```
+```java
 @Configuration
 public class ThreadConfig {
 
@@ -216,7 +216,7 @@ public class ThreadConfig {
 
 现在让我们将这个执行器连接到我们的控制器中，并在一个新的请求映射方法中使用它:
 
-```
+```java
 @Autowired
 private Executor executor;
 
@@ -240,7 +240,7 @@ private Executor executor;
 
 有了 runnable 之后，让我们重新启动应用程序并导航到“http://localhost:8080/new-thread”。观察日志输出，如下所示:
 
-```
+```java
 2017-01-11 21:18:15.949  
   INFO [Baeldung Sleuth Tutorial,96076a78343c364d,96076a78343c364d,false] 12516 
   --- [nio-8080-exec-9] c.b.spring.session.SleuthController      : New Thread
@@ -262,7 +262,7 @@ private Executor executor;
 
 要添加异步支持，让我们首先修改我们的`ThreadConfig`类来启用这个特性:
 
-```
+```java
 @Configuration
 @EnableAsync
 public class ThreadConfig extends AsyncConfigurerSupport {
@@ -284,7 +284,7 @@ public class ThreadConfig extends AsyncConfigurerSupport {
 
 现在让我们为我们的服务添加一个异步方法:
 
-```
+```java
 @Async
 public void asyncMethod() {
     logger.info("Start Async Method");
@@ -295,7 +295,7 @@ public void asyncMethod() {
 
 现在让我们从控制器调用这个方法:
 
-```
+```java
 @GetMapping("/async")
 public String helloSleuthAsync() {
     logger.info("Before Async Method Call");
@@ -308,7 +308,7 @@ public String helloSleuthAsync() {
 
 最后，让我们重新启动服务并导航到“http://localhost:8080/async”。观察日志输出，如下所示:
 
-```
+```java
 2017-01-11 21:30:40.621  
   INFO [Baeldung Sleuth Tutorial,c187f81915377fff,c187f81915377fff,false] 10072 
   --- [nio-8080-exec-2] c.b.spring.session.SleuthController      : 
@@ -335,7 +335,7 @@ public String helloSleuthAsync() {
 
 最后，让我们看看`Sleuth` 如何与`@Scheduled` 方法一起工作。为此，让我们更新我们的`ThreadConfig`类来启用调度:
 
-```
+```java
 @Configuration
 @EnableAsync
 @EnableScheduling
@@ -360,7 +360,7 @@ public class ThreadConfig extends AsyncConfigurerSupport
 
 接下来，让我们为计划任务添加一个服务:
 
-```
+```java
 @Service
 public class SchedulingService {
 
@@ -382,7 +382,7 @@ public class SchedulingService {
 
 现在让我们重新启动我们的应用程序，等待我们的任务被执行。观察控制台的如下输出:
 
-```
+```java
 2017-01-11 21:30:58.866  
   INFO [Baeldung Sleuth Tutorial,3605f5deaea28df2,3605f5deaea28df2,false] 10072 
   --- [pool-1-thread-1] c.b.spring.session.SchedulingService     : 

@@ -16,7 +16,7 @@ Cucumber 提出了一个解决方案，通过使用`Scenario Outline coupled wit
 
 要在一个简单的 Maven 项目中添加对 Cucumber 的支持，我们需要添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>info.cukes</groupId>
     <artifactId>cucumber-junit</artifactId>
@@ -47,7 +47,7 @@ Cucumber 提出了一个解决方案，通过使用`Scenario Outline coupled wit
 
 让我们首先定义我们想要为其编写测试的逻辑:
 
-```
+```java
 public class Calculator {
     public int add(int a, int b) {
         return a + b;
@@ -59,7 +59,7 @@ public class Calculator {
 
 ### 4.1。定义特征文件
 
-```
+```java
 Feature: Calculator
   As a user
   I want to use a calculator to add numbers
@@ -82,7 +82,7 @@ Feature: Calculator
 
 为了测试这些场景，我必须用相应的代码定义每个步骤，以便将语句转换成功能代码:
 
-```
+```java
 public class CalculatorRunSteps {
 
     private int total;
@@ -115,7 +115,7 @@ public class CalculatorRunSteps {
 
 为了集成特性和粘合代码，我们可以使用 JUnit runners:
 
-```
+```java
 @RunWith(Cucumber.class)
 @CucumberOptions(
   features = { "classpath:features/calculator.feature" },
@@ -127,7 +127,7 @@ public class CalculatorTest {}
 
 我们在 4.1 节看到。定义特征文件是一项耗时的任务，并且更容易出错。使用`Scenario Outline:`可以将相同的特征文件减少到仅仅几行
 
-```
+```java
 Feature: Calculator
   As a user
   I want to use a calculator to add numbers
@@ -152,7 +152,7 @@ Feature: Calculator
 
 定义`Examples`的示例如下所示:
 
-```
+```java
 Examples:
   | Parameter_Name1 | Parameter_Name2 |
   | Value-1 | Value-2 |

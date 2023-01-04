@@ -20,7 +20,7 @@
 
 现在，让我们从定义一个我们将在本教程中使用的简单实体开始:
 
-```
+```java
 @Entity
 public class Person {
 
@@ -35,7 +35,7 @@ public class Person {
 
 此外，让我们定义一个将用于我们的实现的存储库类:
 
-```
+```java
 @Repository
 public class PersonInsertRepository {
 
@@ -51,7 +51,7 @@ public class PersonInsertRepository {
 
 对于手动创建的查询，我们可以使用`EntityManager#createNativeQuery`方法。它允许我们创建任何类型的 SQL 查询，而不仅仅是 JPA 支持的查询。让我们向我们的存储库类添加一个新方法:
 
-```
+```java
 @Transactional
 public void insertWithQuery(Person person) {
     entityManager.createNativeQuery("INSERT INTO person (id, first_name, last_name) VALUES (?,?,?)")
@@ -66,7 +66,7 @@ public void insertWithQuery(Person person) {
 
 我们现在可以测试我们的存储库了:
 
-```
+```java
 @Test
 public void givenPersonEntity_whenInsertedTwiceWithNativeQuery_thenPersistenceExceptionExceptionIsThrown() {
     Person person = new Person(1L, "firstname", "lastname");
@@ -90,7 +90,7 @@ public void givenPersonEntity_whenInsertedTwiceWithNativeQuery_thenPersistenceEx
 
 和前面的例子一样，让我们用一个定制的方法来扩展我们的存储库类:
 
-```
+```java
 @Transactional
 public void insertWithEntityManager(Person person) {
     this.entityManager.persist(person);
@@ -99,7 +99,7 @@ public void insertWithEntityManager(Person person) {
 
 现在，我们可以再次测试我们的方法
 
-```
+```java
 @Test
 public void givenPersonEntity_whenInsertedTwiceWithEntityManager_thenEntityExistsExceptionIsThrown() {
     assertThatExceptionOfType(EntityExistsException.class).isThrownBy(() -> {

@@ -12,7 +12,7 @@
 
 要开始在我们的项目中使用 Fugue，我们需要添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.atlassian.fugue</groupId>
     <artifactId>fugue</artifactId>
@@ -30,7 +30,7 @@
 
 换句话说，`Option` 要么是某种类型的`Some` 值，要么是`None`:
 
-```
+```java
 Option<Object> none = Option.none();
 assertFalse(none.isDefined());
 
@@ -47,7 +47,7 @@ Option<Integer> maybe = Option.option(someInputValue);
 
 该方法将提供的函数应用于`Option`的值(如果它存在的话):
 
-```
+```java
 Option<String> some = Option.some("value") 
   .map(String::toUpperCase);
 assertEquals("VALUE", some.get());
@@ -59,7 +59,7 @@ assertEquals("VALUE", some.get());
 
 **我们不能直接创建一个持有`null`值**的非空`Option` :
 
-```
+```java
 Option.some(null);
 ```
 
@@ -67,7 +67,7 @@ Option.some(null);
 
 **然而，我们可以通过使用`map()`操作得到一个:**
 
-```
+```java
 Option<Object> some = Option.some("value")
   .map(x -> null);
 assertNull(some.get());
@@ -83,7 +83,7 @@ assertNull(some.get());
 
 现在，例如，可以与另一个系列连接:
 
-```
+```java
 Option<String> some = Option.some("value");
 Iterable<String> strings = Iterables
   .concat(some, Arrays.asList("a", "b", "c"));
@@ -95,7 +95,7 @@ Iterable<String> strings = Iterables
 
 转换后，如果选项存在，`Stream`实例将只有一个元素，否则为零:
 
-```
+```java
 assertEquals(0, Option.none().toStream().count());
 assertEquals(1, Option.some("value").toStream().count());
 ```
@@ -104,7 +104,7 @@ assertEquals(1, Option.some("value").toStream().count());
 
 如果我们需要一个标准的`Optional`实现，我们可以使用`toOptional()`方法轻松获得:
 
-```
+```java
 Optional<Object> optional = Option.none()
   .toOptional();
 assertTrue(Option.fromOptional(optional)
@@ -119,7 +119,7 @@ assertTrue(Option.fromOptional(optional)
 
 此外，它还有几个将`Function<A,B>`提升为`Function<Option<A>, Option<B>>`的`lift` 方法的变体:
 
-```
+```java
 Function<Integer, Integer> f = (Integer x) -> x > 0 ? x + 1 : null;
 Function<Option<Integer>, Option<Integer>> lifted = Options.lift(f);
 
@@ -131,7 +131,7 @@ assertTrue(lifted.apply(Option.none()).isEmpty());
 
 注意，就像`map` 方法一样， **`lift`不会将 null 映射到`None` :**
 
-```
+```java
 assertEquals(null, lifted.apply(Option.some(0)).get());
 ```
 
@@ -153,13 +153,13 @@ assertEquals(null, lifted.apply(Option.some(0)).get());
 
 如果我们想要一个包含`Right`值`:`的`Either`，我们就调用`right`
 
-```
+```java
 Either<Integer, String> right = Either.right("value");
 ```
 
 否则，我们称之为`left`:
 
-```
+```java
 Either<Integer, String> left = Either.left(-1);
 ```
 
@@ -169,7 +169,7 @@ Either<Integer, String> left = Either.left(-1);
 
 当我们有一个`Either` 实例时，我们可以检查它是左还是右，并相应地采取行动:
 
-```
+```java
 if (either.isRight()) {
     ...
 }
@@ -177,7 +177,7 @@ if (either.isRight()) {
 
 更有趣的是，我们可以使用函数式风格来链接操作:
 
-```
+```java
 either
   .map(String::toUpperCase)
   .getOrNull();
@@ -191,7 +191,7 @@ either
 
 **左投影和右投影是分别聚焦在左值或右值**上的`Either` 的镜面视图:
 
-```
+```java
 either.left()
   .map(x -> decodeSQLErrorCode(x));
 ```
@@ -214,7 +214,7 @@ either.left()
 
 因此，`Try` 既可以是`Success` 也可以是`Failure`:
 
-```
+```java
 assertTrue(Try.failure(new Exception("Fail!")).isFailure());
 assertTrue(Try.successful("OK").isSuccess());
 ```
@@ -225,14 +225,14 @@ assertTrue(Try.successful("OK").isSuccess());
 
 `Checked.of` 调用一个给定的函数并返回一个`Try` 封装它的返回值或任何抛出的异常:
 
-```
+```java
 assertTrue(Checked.of(() -> "ok").isSuccess());
 assertTrue(Checked.of(() -> { throw new Exception("ko"); }).isFailure());
 ```
 
 另一个方法，`Checked.lift`采用一个潜在的抛出函数，`lifts`将其传递给一个返回`Try`的函数:
 
-```
+```java
 Checked.Function<String, Object, Exception> throwException = (String x) -> {
     throw new Exception(x);
 };
@@ -254,7 +254,7 @@ assertTrue(Checked.lift(throwException).apply("ko").isFailure());
 
 为了提取这个值，我们使用了`getOrElse`方法:
 
-```
+```java
 assertEquals(42, failedTry.getOrElse(() -> 42));
 ```
 
@@ -262,7 +262,7 @@ assertEquals(42, failedTry.getOrElse(() -> 42));
 
 没有`getOrThrow` 或类似的，但是由于`getOrElse`没有捕捉到任何异常，我们可以很容易地编写它:
 
-```
+```java
 someTry.getOrElse(() -> {
     throw new NoSuchElementException("Nothing to get");
 });
@@ -274,7 +274,7 @@ someTry.getOrElse(() -> {
 
 这是我们在`Option`、`Either` 以及大多数其他容器和集合中发现的典型的`map` 方法:
 
-```
+```java
 Try<Integer> aTry = Try.successful(42).map(x -> x + 1);
 ```
 
@@ -282,7 +282,7 @@ Try<Integer> aTry = Try.successful(42).map(x -> x + 1);
 
 当然，我们也有`flatMap` 品种:
 
-```
+```java
 Try.successful(42).flatMap(x -> Try.successful(x + 1));
 ```
 
@@ -294,7 +294,7 @@ Try.successful(42).flatMap(x -> Try.successful(x + 1));
 
 因此，我们可以用`recover`产生一个新值:
 
-```
+```java
 Try<Object> recover = Try
   .failure(new Exception("boo!"))
   .recover((Exception e) -> e.getMessage() + " recovered.");
@@ -307,7 +307,7 @@ assertEquals("boo! recovered.", recover.getOrElse(() -> null));
 
 如果恢复函数本身抛出，结果是另一个失败的`Try`:
 
-```
+```java
 Try<Object> failure = Try.failure(new Exception("boo!")).recover(x -> {
     throw new RuntimeException(x);
 });
@@ -317,7 +317,7 @@ assertTrue(failure.isFailure());
 
 与`flatMap` 类似的称为`recoverWith`:
 
-```
+```java
 Try<Object> recover = Try
   .failure(new Exception("boo!"))
   .recoverWith((Exception e) -> Try.successful("recovered again!"));
@@ -334,7 +334,7 @@ assertEquals("recovered again!", recover.getOrElse(() -> null));
 
 一个`Pair` 是一个非常简单和通用的数据结构，由两个同等重要的组件组成，Fugue 称之为`left` 和`right`:
 
-```
+```java
 Pair<Integer, String> pair = Pair.pair(1, "a");
 
 assertEquals(1, (int) pair.left());
@@ -353,7 +353,7 @@ assertEquals("a", pair.right());
 
 它取代了 void 返回类型和`Void` 类，去掉了`null`:
 
-```
+```java
 Unit doSomething() {
     System.out.println("Hello! Side effect");
     return Unit();

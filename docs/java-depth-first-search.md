@@ -30,7 +30,7 @@
 *   遍历`left`子树
 *   遍历`right`子树
 
-```
+```java
 public void traversePreOrder(Node node) {
     if (node != null) {
         visit(node.value);
@@ -50,7 +50,7 @@ public void traversePreOrder(Node node) {
     *   访问`current`节点
     *   推`right`子，然后`left`子到`stack`
 
-```
+```java
 public void traversePreOrderWithoutRecursion() {
     Stack<Node> stack = new Stack<Node>();
     Node current = root;
@@ -77,7 +77,7 @@ public void traversePreOrderWithoutRecursion() {
 
 我们可以使用递归简单地实现有序遍历:
 
-```
+```java
 public void traverseInOrder(Node node) {
     if (node != null) {
         traverseInOrder(node.left);
@@ -95,7 +95,7 @@ public void traverseInOrder(Node node) {
     *   从`stack`弹出并访问最左边的节点
     *   将`current`设置为弹出节点的`right` 子节点
 
-```
+```java
 public void traverseInOrderWithoutRecursion() {
     Stack stack = new Stack<>();
     Node current = root;
@@ -119,7 +119,7 @@ public void traverseInOrderWithoutRecursion() {
 
 我们可以遵循我们之前的**递归解**:
 
-```
+```java
 public void traversePostOrder(Node node) {
     if (node != null) {
         traversePostOrder(node.left);
@@ -136,7 +136,7 @@ public void traversePostOrder(Node node) {
     *   检查我们是否已经遍历了左边和右边的子树
     *   如果没有，则将`right`子节点和`left`子节点推到`stack`上
 
-```
+```java
 public void traversePostOrderWithoutRecursion() {
     Stack<Node> stack = new Stack<Node>();
     Node prev = root;
@@ -182,7 +182,7 @@ public void traversePostOrderWithoutRecursion() {
 *   访问`current`节点
 *   遍历未访问的相邻顶点
 
-```
+```java
 public void dfs(int start) {
     boolean[] isVisited = new boolean[adjVertices.size()];
     dfsRecursive(start, isVisited);
@@ -209,7 +209,7 @@ private void dfsRecursive(int current, boolean[] isVisited) {
     *   访问`current`节点
     *   推动未访问的相邻顶点
 
-```
+```java
 public void dfsWithoutRecursion(int start) {
     Stack<Integer> stack = new Stack<Integer>();
     boolean[] isVisited = new boolean[adjVertices.size()];
@@ -238,7 +238,7 @@ public void dfsWithoutRecursion(int start) {
 *   我们需要将访问过的顶点保存在堆栈中，因为拓扑排序是访问过的顶点的逆序
 *   我们仅在遍历了所有的邻居之后，才把被访问的节点推到堆栈中
 
-```
+```java
 public List<Integer> topologicalSort(int start) {
     LinkedList<Integer> result = new LinkedList<Integer>();
     boolean[] isVisited = new boolean[adjVertices.size()];

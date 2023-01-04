@@ -14,7 +14,7 @@
 
 首先，我们需要在 `pom.xml` 文件中添加依赖项，这样我们就可以使用`[spring-boot-starter-data-mongodb](https://web.archive.org/web/20221206033711/https://spring.io/projects/spring-data-mongodb)`和`[spring-boot-starter-data-cassandra](https://web.archive.org/web/20221206033711/https://spring.io/projects/spring-data-cassandra)` Spring Boot 数据绑定:
 
-```
+```java
 <dependency>
   <groupId>org.springframework.boot</groupId>
   <artifactId>spring-boot-starter-data-cassandra</artifactId>
@@ -31,7 +31,7 @@
 
 接下来，**我们需要通过使用预先构建的 [Docker](https://web.archive.org/web/20221206033711/https://docs.docker.com/install/) 图像 [Cassandra](https://web.archive.org/web/20221206033711/https://hub.docker.com/_/cassandra) 和 [Mongo](https://web.archive.org/web/20221206033711/https://hub.docker.com/_/mongo) **:** 来建立实际的数据库**
 
-```
+```java
 $ docker run --name mongo-db -d -p 27017:27017 mongo:latest
 $ docker run --name cassandra-db -d -p 9042:9042 cassandra:latest 
 ```
@@ -44,7 +44,7 @@ $ docker run --name cassandra-db -d -p 9042:9042 cassandra:latest
 
 首先，我们附加到 Cassandra 容器的`bash` 外壳:
 
-```
+```java
 $ docker exec -it cassandra-db /bin/bash
 [[email protected]](/web/20221206033711/https://www.baeldung.com/cdn-cgi/l/email-protection):/# cqlsh
 Connected to Test Cluster at 127.0.0.1:9042.
@@ -70,7 +70,7 @@ cqlsh> CREATE TABLE bookaudit(
 
 最后，我们在`application.properties`中配置数据库的相关信息:
 
-```
+```java
 spring.data.cassandra.username=cassandra
 spring.data.cassandra.password=cassandra
 spring.data.cassandra.keyspaceName=baeldung
@@ -89,7 +89,7 @@ spring.data.mongodb.database=baeldung
 
 第一种机制试图确定存储库是否扩展了特定于 Spring 数据模块的存储库类型:
 
-```
+```java
 public interface BookAuditRepository extends CassandraRepository<BookAudit, String> {
 
 }
@@ -97,7 +97,7 @@ public interface BookAuditRepository extends CassandraRepository<BookAudit, Stri
 
 在我们的例子中，`BookAudit.java` 包含一些基本的存储结构，用于跟踪借书的用户:
 
-```
+```java
 public class BookAudit {
   private String bookId;
   private String rentalRecNo;
@@ -110,7 +110,7 @@ public class BookAudit {
 
 这同样适用于 MongoDB 相关的存储库定义:
 
-```
+```java
 public interface BookDocumentRepository extends MongoRepository<BookDocument, String> {
 
 }
@@ -118,7 +118,7 @@ public interface BookDocumentRepository extends MongoRepository<BookDocument, St
 
 这个存储了书的内容和一些相关的元数据:
 
-```
+```java
 public class BookDocument {
   private String bookId;
   private String bookName;
@@ -131,7 +131,7 @@ public class BookDocument {
 
 当应用程序上下文被加载时，**框架将使用从其派生的基类来匹配每个存储库类型**:
 
-```
+```java
 @Test
 public void givenBookAudit_whenPersistWithBookAuditRepository_thenSuccess() {
 
@@ -157,13 +157,13 @@ public void givenBookAudit_whenPersistWithBookAuditRepository_thenSuccess() {
 
 让我们扩展一个通用的`CrudRepostitory`,现在依靠托管对象注释进行检测:
 
-```
+```java
 public interface BookAuditCrudRepository extends CrudRepository<BookAudit, String> {
 
 }
 ```
 
-```
+```java
 public interface BookDocumentCrudRepository extends CrudRepository<BookDocument, String> {
 
 } 
@@ -171,7 +171,7 @@ public interface BookDocumentCrudRepository extends CrudRepository<BookDocument,
 
 `BookAudit.java`现在用 Cassandra 特有的`@Table`进行注释，并且需要一个复合主键:
 
-```
+```java
 @Table
 public class BookAudit {
 
@@ -190,7 +190,7 @@ public class BookAudit {
 
 对于`BookDocument.java`,我们使用特定于 MongoDB 的`@Document` 注释:
 
-```
+```java
 @Document
 public class BookDocument {
 
@@ -205,7 +205,7 @@ public class BookDocument {
 
 用`CrudRepository` 触发`BookDocument` 保存仍然成功，但是第 11 行返回的类型现在是`Iterable` 而不是`List`:
 
-```
+```java
 @Test
 public void givenBookAudit_whenPersistWithBookDocumentCrudRepository_thenSuccess() {
 
@@ -229,7 +229,7 @@ public void givenBookAudit_whenPersistWithBookDocumentCrudRepository_thenSuccess
 
 最后，**我们可以通过使用`@EnableCassandraRepositories`和`@EnableMongoRepositories`注释来指定定义库的基础包**:
 
-```
+```java
 @EnableCassandraRepositories(basePackages="com.baeldung.multipledatamodules.cassandra")
 @EnableMongoRepositories(basePackages="com.baeldung.multipledatamodules.mongo")
 public class SpringDataMultipleModules {

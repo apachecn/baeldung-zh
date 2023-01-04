@@ -31,7 +31,7 @@ JDK 中有很多静态工厂方法的例子，展示了上面概述的许多优�
 
 由于众所周知的[`String`](/web/20221208143921/https://www.baeldung.com/java-string-pool)，我们不太可能使用 [`String`](https://web.archive.org/web/20221208143921/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) 类构造函数来创建一个新的`String`对象。即便如此，这也是完全合法的:
 
-```
+```java
 String value = new String("Baeldung");
 ```
 
@@ -39,7 +39,7 @@ String value = new String("Baeldung");
 
 或者，如果我们想要**使用静态工厂方法**创建一个新的`String`对象，我们可以使用下面的一些`valueOf()`方法的实现:
 
-```
+```java
 String value1 = String.valueOf(1);
 String value2 = String.valueOf(1.0L);
 String value3 = String.valueOf(true);
@@ -54,7 +54,7 @@ String value4 = String.valueOf('a');
 
 JDK 中静态工厂方法的另一个典型例子是 [`Optional`](https://web.archive.org/web/20221208143921/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html) 类。这个类**实现了一些具有相当有意义的名字**的工厂方法，包括`[empty()](https://web.archive.org/web/20221208143921/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html#empty())`、`[of()](https://web.archive.org/web/20221208143921/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html#of(T))`和`[ofNullable()](https://web.archive.org/web/20221208143921/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html#ofNullable(T))`:
 
-```
+```java
 Optional<String> value1 = Optional.empty();
 Optional<String> value2 = Optional.of("Baeldung");
 Optional<String> value3 = Optional.ofNullable(null);
@@ -68,7 +68,7 @@ Optional<String> value3 = Optional.ofNullable(null);
 
 以下是该类的工厂方法的一些典型示例:
 
-```
+```java
 Collection syncedCollection = Collections.synchronizedCollection(originalCollection);
 Set syncedSet = Collections.synchronizedSet(new HashSet());
 List<Integer> unmodifiableList = Collections.unmodifiableList(originalList);
@@ -87,7 +87,7 @@ JDK 中静态工厂方法的数量非常多，因此为了简洁起见，我们�
 
 让我们考虑一下这个天真的`User`类:
 
-```
+```java
 public class User {
 
     private final String name;
@@ -112,7 +112,7 @@ public class User {
 
 我们可以使用静态工厂方法来代替:
 
-```
+```java
 public static User createWithDefaultCountry(String name, String email) {
     return new User(name, email, "Argentina");
 }
@@ -120,7 +120,7 @@ public static User createWithDefaultCountry(String name, String email) {
 
 下面是我们如何获得一个将默认值分配给`country`字段的`User`实例:
 
-```
+```java
 User user = User.createWithDefaultCountry("John", "[[email protected]](/web/20221208143921/https://www.baeldung.com/cdn-cgi/l/email-protection)");
 ```
 
@@ -134,7 +134,7 @@ User user = User.createWithDefaultCountry("John", "[[email protected]](/web/202
 
 我们可以用静态工厂方法来保持我们的设计整洁:
 
-```
+```java
 public class User {
 
     private static final Logger LOGGER = Logger.getLogger(User.class.getName());
@@ -154,7 +154,7 @@ public class User {
 
 下面是我们如何创建改进的`User`实例:
 
-```
+```java
 User user 
   = User.createWithLoggedInstantiationTime("John", "[[email protected]](/web/20221208143921/https://www.baeldung.com/cdn-cgi/l/email-protection)", "Argentina");
 ```
@@ -165,7 +165,7 @@ User user
 
 例如，**假设我们想让我们的`User`类成为单例类。我们可以通过实现一个实例控制的静态工厂方法来实现这一点:**
 
-```
+```java
 public class User {
 
     private static volatile User instance = null;
@@ -193,7 +193,7 @@ public class User {
 
 正如所料，用这个方法获得一个`User`对象看起来与前面的例子非常相似:
 
-```
+```java
 User user = User.getSingletonInstance("John", "[[email protected]](/web/20221208143921/https://www.baeldung.com/cdn-cgi/l/email-protection)", "Argentina");
 ```
 

@@ -8,7 +8,7 @@
 
 驻留在 Java 核心库中，所以你不需要任何额外的库。为了使用它，只需添加以下导入语句:
 
-```
+```java
 import java.util.ArrayList;
 ```
 
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 
 ### 2.1。默认无参数构造函数
 
-```
+```java
 List<String> list = new ArrayList<>();
 assertTrue(list.isEmpty());
 ```
@@ -40,7 +40,7 @@ assertTrue(list.isEmpty());
 
 ### 2.2。接受初始容量的构造器
 
-```
+```java
 List<String> list = new ArrayList<>(20);
 ```
 
@@ -48,7 +48,7 @@ List<String> list = new ArrayList<>(20);
 
 ### 2.3。建造师接受`Collection`
 
-```
+```java
 Collection<Integer> number 
   = IntStream.range(0, 10).boxed().collect(toSet());
 
@@ -63,7 +63,7 @@ assertTrue(numbers.containsAll(list));
 
 您可以在末尾或特定位置插入元素:
 
-```
+```java
 List<Long> list = new ArrayList<>();
 
 list.add(1L);
@@ -75,7 +75,7 @@ assertThat(Arrays.asList(1L, 3L, 2L), equalTo(list));
 
 您也可以一次插入一个集合或多个元素:
 
-```
+```java
 List<Long> list = new ArrayList<>(Arrays.asList(1L, 2L, 3L));
 LongStream.range(4, 10).boxed()
   .collect(collectingAndThen(toCollection(ArrayList::new), ys -> list.addAll(0, ys)));
@@ -90,7 +90,7 @@ assertThat(Arrays.asList(4L, 5L, 6L, 7L, 8L, 9L, 1L, 2L, 3L), equalTo(list));
 
 这里我们将只向您展示`ListIterator`:
 
-```
+```java
 List<Integer> list = new ArrayList<>(
   IntStream.range(0, 10).boxed().collect(toCollection(ArrayList::new))
 );
@@ -110,7 +110,7 @@ assertThat(result, equalTo(list));
 
 我们将使用一个集合演示搜索是如何工作的:
 
-```
+```java
 List<String> list = LongStream.range(0, 16)
   .boxed()
   .map(Long::toHexString)
@@ -123,14 +123,14 @@ stringsToSearch.addAll(list);
 
 为了找到一个元素，你可以使用`indexOf()`或`lastIndexOf()`方法。它们都接受一个对象并返回`int`值:
 
-```
+```java
 assertEquals(10, stringsToSearch.indexOf("a"));
 assertEquals(26, stringsToSearch.lastIndexOf("a"));
 ```
 
 如果你想找到满足一个谓词的所有元素，你可以使用 Java 8 `Stream API` (在这里阅读更多关于它的[)像这样使用`Predicate`:](/web/20220529012209/https://www.baeldung.com/java-8-streams)
 
-```
+```java
 Set<String> matchingStrings = new HashSet<>(Arrays.asList("a", "c", "9"));
 
 List<String> result = stringsToSearch
@@ -143,7 +143,7 @@ assertEquals(6, result.size());
 
 也可以使用`for`循环或迭代器:
 
-```
+```java
 Iterator<String> it = stringsToSearch.iterator();
 Set<String> matchingStrings = new HashSet<>(Arrays.asList("a", "c", "9"));
 
@@ -160,7 +160,7 @@ while (it.hasNext()) {
 
 如果你有一个排序的数组，那么你可以使用一个比线性搜索更快的二分搜索法算法:
 
-```
+```java
 List<String> copy = new ArrayList<>(stringsToSearch);
 Collections.sort(copy);
 int index = Collections.binarySearch(copy, "f");
@@ -173,7 +173,7 @@ assertThat(index, not(equalTo(-1)));
 
 为了删除一个元素，你应该找到它的索引，然后通过`remove()`方法执行删除。此方法的重载版本，它接受一个对象，搜索该对象并移除第一个相等元素:
 
-```
+```java
 List<Integer> list = new ArrayList<>(
   IntStream.range(0, 10).boxed().collect(toCollection(ArrayList::new))
 );
@@ -190,7 +190,7 @@ assertFalse(list.contains(0));
 
 您也可以使用前面提到的`Stream API`来删除几个项目，但我们不会在这里显示它。为此，我们将使用迭代器:
 
-```
+```java
 Set<String> matchingStrings
  = HashSet<>(Arrays.asList("a", "b", "c", "d", "e", "f"));
 

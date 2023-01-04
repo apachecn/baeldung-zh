@@ -16,7 +16,7 @@ Apache Kafka 是一个强大的分布式容错流处理系统。在之前的教�
 
 当然，我们需要将标准的 [`spring-kafka`依赖关系](https://web.archive.org/web/20220626083646/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.kafka%22%20AND%20a%3A%22spring-kafka%22)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.kafka</groupId>
     <artifactId>spring-kafka</artifactId>
@@ -28,7 +28,7 @@ Apache Kafka 是一个强大的分布式容错流处理系统。在之前的教�
 
 首先，我们将添加 [`spring-kafka-test`神器](https://web.archive.org/web/20220626083646/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.kafka%22%20AND%20a%3A%22spring-kafka-test%22):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.kafka</groupId>
     <artifactId>spring-kafka-test</artifactId>
@@ -39,7 +39,7 @@ Apache Kafka 是一个强大的分布式容错流处理系统。在之前的教�
 
 最后，我们将添加 Testcontainers Kafka 依赖项，它也可以在 [Maven Central](https://web.archive.org/web/20220626083646/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.testcontainers%22%20AND%20a%3A%22kafka%22) 上获得:
 
-```
+```java
 <dependency>
     <groupId>org.testcontainers</groupId>
     <artifactId>kafka</artifactId>
@@ -56,7 +56,7 @@ Apache Kafka 是一个强大的分布式容错流处理系统。在之前的教�
 
 让我们从定义应用程序入口点开始:
 
-```
+```java
 @SpringBootApplication
 public class KafkaProducerConsumerApplication {
 
@@ -72,7 +72,7 @@ public class KafkaProducerConsumerApplication {
 
 接下来，让我们考虑一个生产者 bean，我们将使用它向给定的 Kafka 主题发送消息:
 
-```
+```java
 @Component
 public class KafkaProducer {
 
@@ -94,7 +94,7 @@ public class KafkaProducer {
 
 同样，我们现在将定义一个简单的消费者 bean，它将侦听 Kafka 主题并接收消息:
 
-```
+```java
 @Component
 public class KafkaConsumer {
 
@@ -136,7 +136,7 @@ public class KafkaConsumer {
 
 我们将在我们的`src/test/resources/application.yml`文件中定义这些属性:
 
-```
+```java
 spring:
   kafka:
     consumer:
@@ -160,7 +160,7 @@ test:
 
 记住这一点，让我们继续编写我们的第一个集成测试:
 
-```
+```java
 @SpringBootTest
 @DirtiesContext
 @EmbeddedKafka(partitions = 1, brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" })
@@ -209,7 +209,7 @@ class EmbeddedKafkaIntegrationTest {
 
 当我们运行测试时，我们将在冗长的 Spring 输出中看到以下内容:
 
-```
+```java
 ...
 12:45:35.099 [main] INFO  c.b.kafka.embedded.KafkaProducer -
   sending payload='Sending with our own simple KafkaProducer' to topic='embedded-test-topic'
@@ -232,7 +232,7 @@ class EmbeddedKafkaIntegrationTest {
 
 让我们定义另一个集成测试，它与我们在上一节中看到的非常相似:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @Import(com.baeldung.kafka.testcontainers.KafkaTestContainersLiveTest.KafkaTestContainersConfiguration.class)
 @SpringBootTest(classes = KafkaProducerConsumerApplication.class)
@@ -273,7 +273,7 @@ public class KafkaTestContainersLiveTest {
 
 出于这个原因，我们使用类`KafkaTestContainersConfiguration`提供了一个定制的消费者和生产者工厂配置:
 
-```
+```java
 @Bean
 public Map<String, Object> consumerConfigs() {
     Map<String, Object> props = new HashMap<>();
@@ -299,7 +299,7 @@ public ProducerFactory<String, String> producerFactory() {
 
 **我们通过调用`getBootstrapServers()`方法来实现这一点，该方法将返回引导服务器位置**:
 
-```
+```java
 bootstrap.servers = [PLAINTEXT://localhost:32789]
 ```
 
@@ -312,7 +312,7 @@ bootstrap.servers = [PLAINTEXT://localhost:32789]
 
 同样，通过检查测试输出可以确认这一点:
 
-```
+```java
 13:33:10.396 [main] INFO  ? [confluentinc/cp-kafka:5.4.3]
   - Creating container for image: confluentinc/cp-kafka:5.4.3
 13:33:10.454 [main] INFO  ? [confluentinc/cp-kafka:5.4.3]

@@ -33,7 +33,7 @@
 
 使用锁的推荐代码块应该包含一个`try/catch`和`finally`块:
 
-```
+```java
 Lock lock = ...; 
 lock.lock();
 try {
@@ -58,7 +58,7 @@ try {
 
 让我们看看如何使用`ReentrantLock`进行同步:
 
-```
+```java
 public class SharedObject {
     //...
     ReentrantLock lock = new ReentrantLock();
@@ -81,7 +81,7 @@ public class SharedObject {
 
 让我们看看`tryLock()` 是如何工作的:
 
-```
+```java
 public void performTryLock(){
     //...
     boolean isLockAcquired = lock.tryLock(1, TimeUnit.SECONDS);
@@ -110,7 +110,7 @@ public void performTryLock(){
 
 让我们看看如何利用`ReadWriteLock`:
 
-```
+```java
 public class SynchronizedHashMapWithReadWriteLock {
 
     Map<String,String> syncHashMap = new HashMap<>();
@@ -141,7 +141,7 @@ public class SynchronizedHashMapWithReadWriteLock {
 
 对于这两种写方法，我们需要用写锁包围临界区—只有一个线程可以访问它:
 
-```
+```java
 Lock readLock = lock.readLock();
 //...
 public String get(String key){
@@ -171,7 +171,7 @@ public boolean containsKey(String key) {
 
 但是，锁获取方法返回一个标记，用于释放锁或检查锁是否仍然有效:
 
-```
+```java
 public class StampedLockDemo {
     Map<String,String> map = new HashMap<>();
     private StampedLock lock = new StampedLock();
@@ -200,7 +200,7 @@ public class StampedLockDemo {
 
 相反，我们可以升级到读锁:
 
-```
+```java
 public String readWithOptimisticLock(String key) {
     long stamp = lock.tryOptimisticRead();
     String value = map.get(key);
@@ -227,7 +227,7 @@ public String readWithOptimisticLock(String key) {
 
 有相似的机制，但是我们也可以指定多个条件:
 
-```
+```java
 public class ReentrantLockWithCondition {
 
     Stack<String> stack = new Stack<>();

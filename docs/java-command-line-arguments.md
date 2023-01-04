@@ -14,7 +14,7 @@
 
 传统的方法是使用一个`String`数组:
 
-```
+```java
 public static void main(String[] args) {
     // handle arguments
 }
@@ -22,7 +22,7 @@ public static void main(String[] args) {
 
 但是 Java 5 引入了 varargs，这是披着羊皮的数组。因此，我们可以用一个`String`变量来定义我们的`main`:
 
-```
+```java
 public static void main(String... args) {
     // handle arguments
 }
@@ -34,7 +34,7 @@ public static void main(String... args) {
 
 例如，我们可以在标准输出中打印参数的数量及其值:
 
-```
+```java
 public static void main(String[] args) {
     System.out.println("Argument count: " + args.length);
     for (int i = 0; i < args.length; i++) {
@@ -55,25 +55,25 @@ public static void main(String[] args) {
 
 然后，我们可以使用以下命令运行它:
 
-```
+```java
 java com.baeldung.commandlinearguments.CliExample
 ```
 
 它产生以下输出:
 
-```
+```java
 Argument count: 0
 ```
 
 现在，我们可以在类名后传递参数:
 
-```
+```java
 java com.baeldung.commandlinearguments.CliExample Hello World!
 ```
 
 输出是:
 
-```
+```java
 Argument count: 2
 Argument 0: Hello
 Argument 1: World!
@@ -83,13 +83,13 @@ Argument 1: World!
 
 现在，我们可以按如下方式不带参数地运行它:
 
-```
+```java
 java -jar cli-example.jar
 ```
 
 或带参数:
 
-```
+```java
 java -jar cli-example.jar Hello World!
 Argument count: 2 
 Argument 0: Hello 

@@ -44,7 +44,7 @@
 
 `Document`类:
 
-```
+```java
 public class Document extends Element {
 
     List<Element> elements = new ArrayList<>();
@@ -62,7 +62,7 @@ public class Document extends Element {
 
 `Element`类有一个接受`Visitor `接口的抽象方法:
 
-```
+```java
 public abstract void accept(Visitor v);
 ```
 
@@ -70,7 +70,7 @@ public abstract void accept(Visitor v);
 
 然而，由于访问者模式的性质，实现是相同的，所以在大多数情况下，需要我们从其他已经存在的元素中复制粘贴样板代码:
 
-```
+```java
 public class JsonElement extends Element {
 
     // ...
@@ -85,7 +85,7 @@ public class JsonElement extends Element {
 
 因此，我们的访问者对于给定的类型将有一个单独的方法:
 
-```
+```java
 public class ElementVisitor implements Visitor {
 
     @Override
@@ -110,7 +110,7 @@ public class ElementVisitor implements Visitor {
 
 出于测试目的，让我们看看`VisitorDemo`类:
 
-```
+```java
 public class VisitorDemo {
 
     public static void main(String[] args) {
@@ -135,7 +135,7 @@ public class VisitorDemo {
 
 输出应该是这样的:
 
-```
+```java
 processing a JSON element with uuid: fdbc75d0-5067-49df-9567-239f38f01b04
 processing a JSON element with uuid: 81e6c856-ddaf-43d5-aec5-8ef977d3745e
 processing an XML element with uuid: 091bfcb8-2c68-491a-9308-4ada2687e203

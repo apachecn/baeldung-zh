@@ -16,7 +16,7 @@
 
 让我们看看`BufferedReader`构造函数，它们接受不同的输入:
 
-```
+```java
 BufferedReader br = new BufferedReader(
   new StringReader("Bufferedreader vs Console vs Scanner in Java"));
 BufferedReader br = new BufferedReader(
@@ -31,7 +31,7 @@ BufferedReader br =  new BufferedReader(
 
 类似地，`Scanner`类也可以在其构造函数中接受不同的输入:
 
-```
+```java
 Scanner sc = new Scanner("Bufferedreader vs Console vs Scanner in Java")
 Scanner sc = new Scanner(new File("file.txt"));
 Scanner sc = new Scanner(System.in);
@@ -42,7 +42,7 @@ Scanner sc =  new Scanner(socket.getInputStream());
 
 `Console`类只能通过方法调用获得:
 
-```
+```java
 Console console = System.console();
 ```
 
@@ -52,7 +52,7 @@ Console console = System.console();
 
 **与不向输出流写入任何内容的`BufferedReader`和`Scanner`类相反，`Console`类提供了一些方便的方法**，如`readPassword (String fmt, Object… args), readLine (String fmt, Object… args),` 和`printf (String format,Object… args)`、**来将提示写入系统控制台的输出流**:
 
-```
+```java
 String firstName = console.readLine("Enter your first name please: ");
 console.printf("Welcome " + firstName );
 ```
@@ -65,7 +65,7 @@ console.printf("Welcome " + firstName );
 
 它使用自定义分隔符模式将其输入分解成标记，默认情况下匹配空格:
 
-```
+```java
 String input = "Bufferedreader vs Console vs Scanner";
 Scanner sc = new Scanner(input).useDelimiter("\\s*vs\\s*");
 System.out.println(sc.next());
@@ -80,7 +80,7 @@ sc.close();
 
 `Console`类有方法`readPassword()`和`readPassword (String` fmt `, Object… args) `在回显被禁用的情况下读取安全数据，因此用户不会看到他们正在键入的内容:
 
-```
+```java
 String password = String.valueOf(console.readPassword("Password :")); 
 ```
 

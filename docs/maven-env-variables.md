@@ -12,7 +12,7 @@
 
 例如，让我们在构建过程中使用它来[具体化 Java 版本](/web/20220726094420/https://www.baeldung.com/maven-java-version):
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -32,7 +32,7 @@
 
 要针对这样的构建文件运行 Maven 目标或阶段，我们应该首先导出环境变量。例如:
 
-```
+```java
 $ export JAVA_VERSION=9
 $ mvn clean package
 ```
@@ -41,7 +41,7 @@ $ mvn clean package
 
 **为了在`JAVA_VERSION `环境变量丢失时提供默认值，我们可以使用一个 Maven 概要文件**:
 
-```
+```java
 <profiles>
     <profile>
         <id>default-java</id>

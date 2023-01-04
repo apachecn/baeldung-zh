@@ -38,7 +38,7 @@
 
 我们还将存储我们找到的最佳位置和适应性分数，因为我们需要它们来更新粒子速度:
 
-```
+```java
 public class Particle {
     private long[] position;
     private long[] speed;
@@ -64,7 +64,7 @@ public class Particle {
 
 这将减少运行算法所需的计算能力和时间:
 
-```
+```java
 public class Swarm {
     private Particle[] particles;
     private long[] bestPosition;
@@ -98,7 +98,7 @@ public class Swarm {
 
 我们还将存储一个对 fitness 函数的引用供以后使用:
 
-```
+```java
 public class Multiswarm {
     private Swarm[] swarms;
     private long[] bestPosition;
@@ -126,7 +126,7 @@ public class Multiswarm {
 
 此方法将粒子位置作为参数，并返回一个值来指示它有多好:
 
-```
+```java
 public interface FitnessFunction {
     public double getFitness(long[] particlePosition);
 }
@@ -143,7 +143,7 @@ public interface FitnessFunction {
 
 这要么是在前一种情况下发现的数量，要么是在后一种情况下无法获得的黄金数量:
 
-```
+```java
 public class LolFitnessFunction implements FitnessFunction {
 
     @Override
@@ -181,7 +181,7 @@ public class LolFitnessFunction implements FitnessFunction {
 
 目前，我们将速度更新留到下一节，通过创建一个专用的方法:
 
-```
+```java
 public void mainLoop() {
     for (Swarm swarm : swarms) {
         for (Particle particle : swarm.getParticles()) {
@@ -220,7 +220,7 @@ public void mainLoop() {
 
 为了增加一些变化，我们将这些权重乘以 0 到 1 之间的一个随机数。**我们还将在公式**中增加一个惯性因子，以激励粒子不要减速太多:
 
-```
+```java
 private int getNewParticleSpeedForIndex(
   Particle particle, Swarm swarm, int index) {
 

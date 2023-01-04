@@ -18,7 +18,7 @@ Docker Compose 是一个帮助我们克服这个问题的工具，并且可以�
 
 几乎每个规则都替换了一个特定的 Docker 命令，所以最后我们只需要运行:
 
-```
+```java
 docker-compose up
 ```
 
@@ -26,7 +26,7 @@ docker-compose up
 
 在这个文件中，我们需要指定合成文件格式的`version`，至少一个`service`，可选`volumes`和`networks`:
 
-```
+```java
 version: "3.7"
 services:
   ...
@@ -44,7 +44,7 @@ networks:
 
 例如，让我们看一个由前端、后端和数据库组成的 dockerized web 应用程序:我们可能会将这些组件分成三个映像，并在配置中将它们定义为三个不同的服务:
 
-```
+```java
 services:
   frontend:
     image: my-vue-app
@@ -77,7 +77,7 @@ services:
 
 如果是这种情况，那么我们通过指定图像名称和标签，用`image`属性来引用它:
 
-```
+```java
 services: 
   my-service:
     image: ubuntu:latest
@@ -90,7 +90,7 @@ services:
 
 这一次，我们将使用`build`关键字，将 Dockerfile 的路径作为值传递:
 
-```
+```java
 services: 
   my-custom-app:
     build: /path/to/dockerfile/
@@ -99,7 +99,7 @@ services:
 
 我们也可以[使用 URL](https://web.archive.org/web/20220926111035/https://gist.github.com/derianpt/420617ffa5d2409f9d2a4a1a60cfa9ae#file-build-contexts-yml) 来代替路径:
 
-```
+```java
 services: 
   my-custom-app:
     build: https://github.com/my-company/my-project.git
@@ -108,7 +108,7 @@ services:
 
 此外，我们可以指定一个与`build`属性相结合的`image`名称，该属性将在图像创建后对其进行命名，[，使其可供其他服务使用](https://web.archive.org/web/20220926111035/https://stackoverflow.com/a/35662191/1654265):
 
-```
+```java
 services: 
   my-custom-app:
     build: https://github.com/my-company/my-project.git
@@ -120,7 +120,7 @@ services:
 
 **Docker 容器在由 Docker Compose 创建的网络中相互通信，无论是隐式的还是通过配置实现的**。一个服务可以通过简单地引用容器名和端口(例如`network-example-service:80`)与同一网络上的另一个服务通信，前提是我们已经通过`expose`关键字使端口可访问:
 
-```
+```java
 services:
   network-example-service:
     image: karthequian/helloworld:latest
@@ -132,7 +132,7 @@ services:
 
 **要从主机**、**到达容器，端口必须通过`ports`关键字**以声明方式公开，这也允许我们选择是否在主机中以不同方式公开端口:
 
-```
+```java
 services:
   network-example-service:
     image: karthequian/helloworld:latest
@@ -155,7 +155,7 @@ services:
 
 最后，我们可以定义附加的虚拟网络来隔离我们的容器:
 
-```
+```java
 services:
   network-example-service:
     image: karthequian/helloworld:latest
@@ -187,7 +187,7 @@ networks:
 
 我们可以在服务级别配置主机卷，在配置的外部级别配置命名卷，以使后者对其他容器可见，而不仅仅是对它们所属的容器可见:
 
-```
+```java
 services:
   volumes-example-service:
     image: alpine:latest
@@ -216,7 +216,7 @@ volumes:
 
 通常，我们需要在我们的服务之间创建一个依赖链，以便一些服务在其他服务之前加载(之后卸载)。我们可以通过`depends_on`关键字达到这个结果:
 
-```
+```java
 services:
   kafka:
     image: wurstmeister/kafka:2.11-0.11.0.3
@@ -234,7 +234,7 @@ services:
 
 在 Compose 中使用环境变量很容易。我们可以定义静态环境变量，也可以用`${}`符号定义动态变量:
 
-```
+```java
 services:
   database: 
     image: "postgres:${POSTGRES_VERSION}"
@@ -247,14 +247,14 @@ services:
 
 例如，将它们设置在同一目录下的`.env`文件中，结构类似于`.properties`文件、`key=value`:
 
-```
+```java
 POSTGRES_VERSION=alpine
 USER=foo
 ```
 
 否则，我们可以在调用命令之前在操作系统中设置它们:
 
-```
+```java
 export POSTGRES_VERSION=alpine
 export USER=foo
 docker-compose up 
@@ -262,7 +262,7 @@ docker-compose up
 
 最后，我们可能会发现在 shell 中使用简单的一行程序很方便:
 
-```
+```java
 POSTGRES_VERSION=alpine USER=foo docker-compose up 
 ```
 
@@ -280,7 +280,7 @@ POSTGRES_VERSION=alpine USER=foo docker-compose up
 
 另一方面，我们可以利用[Docker Swarm](https://web.archive.org/web/20220926111035/https://docs.docker.com/engine/swarm/)——一个 Docker 引擎集群——并通过`deploy`部分的`replicas`属性声明性地自动缩放我们的容器:
 
-```
+```java
 services:
   worker:
     image: dockersamples/examplevotingapp_worker
@@ -308,7 +308,7 @@ services:
 
 Spring Cloud 数据流是一个复杂的项目，但是简单到可以理解。让我们[下载它的 YAML 文件](https://web.archive.org/web/20220926111035/https://dataflow.spring.io/docs/installation/local/docker/)并运行:
 
-```
+```java
 DATAFLOW_VERSION=2.1.0.RELEASE SKIPPER_VERSION=2.0.2.RELEASE docker-compose up 
 ```
 
@@ -320,7 +320,7 @@ Compose 将下载、配置和启动每个组件，然后**将容器的日志在�
 
 运行全新的 Docker Compose 安装时，我们可能会收到以下错误:
 
-```
+```java
 lookup registry-1.docker.io: no such host
 ```
 
@@ -330,7 +330,7 @@ lookup registry-1.docker.io: no such host
 
 让我们最后仔细看看 Docker Compose 的语法:
 
-```
+```java
 docker-compose [-f <arg>...] [options] [COMMAND] [ARGS...] 
 ```
 
@@ -340,25 +340,25 @@ docker-compose [-f <arg>...] [options] [COMMAND] [ARGS...]
 
 我们已经看到，我们可以使用`up`创建和启动配置中定义的容器、网络和卷:
 
-```
+```java
 docker-compose up
 ```
 
 然而，在第一次之后，我们可以简单地使用`start`来启动服务:
 
-```
+```java
 docker-compose start
 ```
 
 如果我们的文件与默认文件名(`docker-compose.yml`)不同，我们可以利用`-f`和`–` `–` `file`标志来指定一个替代文件名:
 
-```
+```java
 docker-compose -f custom-compose-file.yml start
 ```
 
 使用`-d`选项启动时，Compose 也可以作为守护进程在后台运行:
 
-```
+```java
 docker-compose up -d
 ```
 
@@ -366,13 +366,13 @@ docker-compose up -d
 
 为了安全地停止活动的服务，我们可以使用`stop`，它将保留容器、卷和网络，以及对它们进行的每一次修改:
 
-```
+```java
 docker-compose stop
 ```
 
 相反，为了重置我们项目的状态，我们只需运行`down`、**，这将销毁除外部卷**之外的所有内容:
 
-```
+```java
 docker-compose down
 ```
 

@@ -24,7 +24,7 @@ EJB 提供了一个健壮的编程模型，它促进了企业级软件模块的�
 
 让我们首先定义一个单独的远程业务接口，用 *@Remote* 注释进行修饰。根据 [EJB 3.x 规范](https://web.archive.org/web/20220627185241/https://download.oracle.com/otn-pub/jcp/ejb-3.1-fr-eval-oth-JSpec/ejb-3_1-fr-spec.pdf)，这是强制性的，因为 bean 将从远程客户端访问:
 
-```
+```java
 @Remote
 public interface TextProcessorRemote {
     String processText(String text);
@@ -35,7 +35,7 @@ public interface TextProcessorRemote {
 
 接下来，让我们通过实现上述远程接口来实现业务逻辑:
 
-```
+```java
 @Stateless
 public class TextProcessorBean implements TextProcessorRemote {
     public String processText(String text) {
@@ -56,7 +56,7 @@ bean 的行为是确定的，也就是说，它没有副作用，正如一个设
 
 接下来，我们需要将 [*javaee-api*](https://web.archive.org/web/20220627185241/https://search.maven.org/classic/#search%7Cga%7C1%7Cjavaee-api) Maven 工件添加到模块中，它提供了所有的 Java EE 7 规范 api，包括 EJB 所需的 API:
 
-```
+```java
 <dependency>
     <groupId>javax</groupId>
     <artifactId>javaee-api</artifactId>
@@ -71,7 +71,7 @@ bean 的行为是确定的，也就是说，它没有副作用，正如一个设
 
 有几种方法可以实现这一点。最简单的方法是执行 Maven 生命周期的*清理-安装*构建阶段:
 
-```
+```java
 mvn clean install
 ```
 
@@ -87,7 +87,7 @@ mvn clean install
 
 我们需要包含以下 Maven 工件，以便 EJB 客户端能够按预期工作:
 
-```
+```java
 <dependency>
     <groupId>javax</groupId>
     <artifactId>javaee-api</artifactId>
@@ -114,7 +114,7 @@ mvn clean install
 
 考虑到 EJB 客户端调用了一个 *TextProcessorBean* 的代理，我们将非常务实地将客户端类命名为 *TextApplication* :
 
-```
+```java
 public class TextApplication {
 
     public static void main(String[] args) throws NamingException {
@@ -170,7 +170,7 @@ public class TextApplication {
 
 客户端应该知道与哪个主机和端口建立连接来执行 bean 查找。在这个意义上，**客户端需要设置专有的 WildFly EJB 上下文，这个上下文是用放置在其类路径中的*JBoss-EJ b-client . properties*文件**定义的，通常在 *src/main/resources* 文件夹下:
 
-```
+```java
 endpoint.name=client-endpoint
 remote.connectionprovider.create.options.org.xnio.Options.SSL_ENABLED=false
 remote.connections=default

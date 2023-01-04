@@ -16,7 +16,7 @@ Jersey 是一个用于开发 REST web 服务的开源框架，提供对`JAX-RS`A
 
 首先，我们需要在`pom.xml`文件中包含以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.glassfish.jersey.bundles</groupId>
     <artifactId>jaxrs-ri</artifactId>
@@ -41,7 +41,7 @@ Jersey 是一个用于开发 REST web 服务的开源框架，提供对`JAX-RS`A
 
 此处显示的端点是如何将纯文本作为 Jersey 响应返回的简单示例:
 
-```
+```java
 @GET
 @Path("/ok")
 public Response getOkResponse() {
@@ -57,13 +57,13 @@ public Response getOkResponse() {
 
 我们可以使用`curl`进行 HTTP GET 来验证响应:
 
-```
+```java
 curl -XGET http://localhost:8080/jersey/response/ok
 ```
 
 该端点将发送回如下响应:
 
-```
+```java
 This is a text response
 ```
 
@@ -73,7 +73,7 @@ This is a text response
 
 **错误也可以作为 Jersey 响应发送回**:
 
-```
+```java
 @GET
 @Path("/not_ok")
 public Response getNOkTextResponse() {
@@ -89,13 +89,13 @@ public Response getNOkTextResponse() {
 
 为了验证响应，我们可以使用`curl`进行 HTTP GET 请求:
 
-```
+```java
 curl -XGET http://localhost:8080/jersey/response/not_ok
 ```
 
 错误消息将在响应中发回:
 
-```
+```java
 There was an internal server error
 ```
 
@@ -103,7 +103,7 @@ There was an internal server error
 
 我们还可以返回**简单的纯文本响应**:
 
-```
+```java
 @GET
 @Path("/text_plain")
 public Response getTextResponseTypeDefined() {
@@ -120,19 +120,19 @@ public Response getTextResponseTypeDefined() {
 
 同样，我们可以使用`curl`进行 HTTP GET 来验证响应:
 
-```
+```java
 curl -XGET http://localhost:8080/jersey/response/text_plain
 ```
 
 回应如下:
 
-```
+```java
 This is a plain text response
 ```
 
 同样的结果也可以通过`Produces `注释来实现，而不是在`Response`中使用`type()`方法:
 
-```
+```java
 @GET
 @Path("/text_plain_annotation")
 @Produces({ MediaType.TEXT_PLAIN })
@@ -149,13 +149,13 @@ public Response getTextResponseTypeAnnotated() {
 
 我们可以使用`curl`进行响应验证:
 
-```
+```java
 curl -XGET http://localhost:8080/jersey/response/text_plain_annotation
 ```
 
 以下是回应:
 
-```
+```java
 This is a plain text response via annotation
 ```
 
@@ -165,7 +165,7 @@ This is a plain text response via annotation
 
 我们有一个非常简单的 POJO，如下所示，我们将使用它来构建一个响应:
 
-```
+```java
 public class Person {
     String name;
     String address;
@@ -177,7 +177,7 @@ public class Person {
 
 现在可以使用`Person` POJO 作为响应体返回 JSON:
 
-```
+```java
 @GET
 @Path("/pojo")
 public Response getPojoResponse() {
@@ -193,13 +193,13 @@ public Response getPojoResponse() {
 
 可以通过下面的`curl`命令来验证这个 GET 端点的工作情况:
 
-```
+```java
 curl -XGET http://localhost:8080/jersey/response/pojo
 ```
 
 POJO 这个人将被转换成一个 JSON，并作为响应发送回去:
 
-```
+```java
 {"address":"Nepal","name":"Abhinayak"}
 ```
 
@@ -209,7 +209,7 @@ POJO 这个人将被转换成一个 JSON，并作为响应发送回去:
 
 以下端点是如何在 Jersey 响应中将表示为`String`的 JSON 作为 JSON 发回的示例:
 
-```
+```java
 @GET
 @Path("/json")
 public Response getJsonResponse() {
@@ -226,13 +226,13 @@ public Response getJsonResponse() {
 
 这可以通过使用`curl`执行 HTTP GET 来验证响应:
 
-```
+```java
 curl -XGET http://localhost:8080/jersey/response/json
 ```
 
 调用该资源将返回一个 JSON:
 
-```
+```java
 {"hello":"This is a JSON response"}
 ```
 

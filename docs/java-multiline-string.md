@@ -14,7 +14,7 @@
 
 我们可以通过用**“”****(三个双引号)**声明字符串来使用`Text Blocks`:
 
-```
+```java
 public String textBlocks() {
     return """
         Get busy living
@@ -36,7 +36,7 @@ public String textBlocks() {
 
 在 Java 中，很容易得到操作系统的行分隔符:
 
-```
+```java
 String newLine = System.getProperty("line.separator");
 ```
 
@@ -46,7 +46,7 @@ String newLine = System.getProperty("line.separator");
 
 字符串串联是一种简单的本地方法，可用于创建多行字符串:
 
-```
+```java
 public String stringConcatenation() {
     return "Get busy living"
             .concat(newLine)
@@ -62,7 +62,7 @@ public String stringConcatenation() {
 
 Java 编译器以同样的方式翻译`concat()`和+运算符:
 
-```
+```java
 public String stringConcatenation() {
     return "Get busy living"
             + newLine
@@ -80,7 +80,7 @@ Java 8 引入了 [`String#join`](https://web.archive.org/web/20221129214038/http
 
 它返回一个最终字符串，其中所有输入字符串都用分隔符连接在一起:
 
-```
+```java
 public String stringJoin() {
     return String.join(newLine,
                        "Get busy living",
@@ -96,7 +96,7 @@ public String stringJoin() {
 
 这是在循环中构建巨大字符串的好选择:
 
-```
+```java
 public String stringBuilder() {
     return new StringBuilder()
             .append("Get busy living")
@@ -116,7 +116,7 @@ public String stringBuilder() {
 
 `println`功能自动添加新行:
 
-```
+```java
 public String stringWriter() {
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter = new PrintWriter(stringWriter);
@@ -136,7 +136,7 @@ public String stringWriter() {
 
 [番石榴有一个`Joiner`类](/web/20221129214038/https://www.baeldung.com/guava-joiner-and-splitter-tutorial)，能够构建多行字符串:
 
-```
+```java
 public String guavaJoiner() {
     return Joiner.on(newLine).join(ImmutableList.of("Get busy living",
         "or",
@@ -151,7 +151,7 @@ Java 完全按照文件的原样读取文件。这意味着，如果我们在一
 
 将长字符串从代码中分离出来实际上是一个很好的做法:
 
-```
+```java
 public String loadFromFile() throws IOException {
     return new String(Files.readAllBytes(Paths.get("src/main/resources/stephenking.txt")));
 }

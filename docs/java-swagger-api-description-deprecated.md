@@ -14,7 +14,7 @@
 
 要将 Swagger 2 用于 Spring Boot REST API，我们可以使用 [Springfox](https://web.archive.org/web/20220626211616/https://github.com/springfox/springfox) 库。我们需要在`pom.xml`文件中添加 [`springfox-boot-starter`](https://web.archive.org/web/20220626211616/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22io.springfox%22%20a%3A%22springfox-boot-starter%22) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>io.springfox</groupId>
     <artifactId>springfox-boot-starter</artifactId>
@@ -24,19 +24,19 @@
 
 Springfox 库提供了`@Api`注释来将类配置为 Swagger 资源。以前，`@Api`注释提供了一个`description`属性来定制 API 文档:
 
-```
+```java
 @Api(value = "", description = "")
 ```
 
 然而，如前所述，**的`description`属性已被弃用**。幸运的是，还有一个选择。我们可以**使用`tags`属性**:
 
-```
+```java
 @Api(value = "", tags = {"tag_name"})
 ```
 
 在 Swagger 1.5 中，我们将使用`@SwaggerDefinition`注释来定义`tag`。但是，在 Swagger 2 中已经不支持了。因此，在 Swagger 2 中，我们将`Docket` bean 中的`tags`和`descriptions`定义为:
 
-```
+```java
 @Configuration
 public class SwaggerConfiguration {
 
@@ -57,7 +57,7 @@ public class SwaggerConfiguration {
 
 这里，我们使用`Docket` bean 中的`Tag`类来创建我们的`tag`。这样，我们可以引用控制器中的`tag`:
 
-```
+```java
 @RestController
 @RequestMapping("/api/book")
 @Api(tags = {SwaggerConfiguration.BOOK_TAG})
@@ -74,7 +74,7 @@ public class BookController {
 
 OpenAPI 3 是 OpenAPI `Specification.`的最新版本，它是 OpenAPI 2 (Swagger 2)的继任者。为了使用 OpenAPI 3 描述 API，我们可以使用`@Tag`注释。此外，`@Tag`注释提供了一个`description`和外部链接。让我们定义一下`BookController`类:
 
-```
+```java
 @RestController
 @RequestMapping("/api/book")
 @Tag(name = "book service", description = "the book API with description tag annotation")

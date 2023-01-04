@@ -19,7 +19,7 @@
 
 为此，让我们在`consumer1`模块的`gradle.settings.kts `文件中添加以下内容:
 
-```
+```java
 plugins {
     id("java")
 }
@@ -49,11 +49,11 @@ tasks.getByName<Test>("test") {
 
 现在，让我们运行 dependencies 任务，看看选择了哪个提供者模块:
 
-```
+```java
 gradle -PisLocal dependencies --configuration implementation
 ```
 
-```
+```java
 > Task :consumer1:dependencies
 
 ------------------------------------------------------------
@@ -73,11 +73,11 @@ BUILD SUCCESSFUL in 591ms
 
 正如我们所看到的，传递属性导致了`provider1`模块的包含。现在，让我们在不指定任何属性的情况下运行依赖项任务:
 
-```
+```java
 gradle dependencies --configuration implementation
 ```
 
-```
+```java
 > Task :consumer1:dependencies
 
 ------------------------------------------------------------
@@ -103,7 +103,7 @@ BUILD SUCCESSFUL in 649ms
 
 让我们将以下配置添加到我们的`consumer2`模块中来实现这一目标:
 
-```
+```java
 plugins {
     id("java")
 }
@@ -138,11 +138,11 @@ tasks.getByName<Test>("test") {
 
 现在，如果我们再次运行相同的命令，我们应该会得到类似的结果。让我们首先运行指定的`isLocal` 属性:
 
-```
+```java
 gradle -PisLocal dependencies --configuration compilePath
 ```
 
-```
+```java
 > Task :consumer2:dependencies
 
 ------------------------------------------------------------
@@ -160,11 +160,11 @@ BUILD SUCCESSFUL in 1s
 
 果然，我们看到`provider1`项目被`provider2`项目所取代。现在让我们在没有指定属性的情况下尝试一下:
 
-```
+```java
 gradle dependencies --configuration compilePath
 ```
 
-```
+```java
 > Task :consumer2:dependencies
 
 ------------------------------------------------------------
@@ -190,20 +190,20 @@ BUILD SUCCESSFUL in 623ms
 
 其次，尽管第二种方法涉及更多的配置，但它看起来更习惯。在第二种方法中，我们利用 Gradle 本身提供的替换机制。它还允许我们指定替换的原因。此外，在日志中，我们可以注意到发生了替换，这与第一种方法不同，在第一种方法中没有这样的信息:
 
-```
+```java
 compileClasspath - Compile classpath for source set 'main'. 
 \--- project :provider1 -> project :provider2
 ```
 
 我们还注意到，在第一种方法中，不需要依赖解析。我们可以通过以下方式获得结果:
 
-```
+```java
 gradle -PisLocal dependencies --configuration implementation
 ```
 
 而在第二种方法中，如果我们检查`implementation`配置，我们将看不到预期的结果。原因是它仅在依赖关系解析发生时起作用。因此，它可以使用`compilePath`配置:
 
-```
+```java
 gradle -PisLocal dependencies --configuration compilePath
 ```
 

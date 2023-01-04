@@ -18,7 +18,7 @@
 
 它可能会为泰语返回一个`BuddhistCalendar`,为日本返回一个`JapaneseImperialCalendar`。不知道被返回的实例的类型可能会导致`ClassCastException` `:`
 
-```
+```java
 @Test(expected = ClassCastException.class)
 public void test_Class_Cast_Exception() {
     TimeZone tz = TimeZone.getTimeZone("GMT+9:00");
@@ -34,13 +34,13 @@ public void test_Class_Cast_Exception() {
 
 默认构造函数将使用操作系统的时区和区域设置中的当前日期和时间来初始化日历:
 
-```
+```java
 new GregorianCalendar();
 ```
 
 我们可以用默认的区域设置指定默认时区的`year, month, dayOfMonth, hourOfDay, minute`和秒:
 
-```
+```java
 new GregorianCalendar(2018, 6, 27, 16, 16, 47);
 ```
 
@@ -48,19 +48,19 @@ new GregorianCalendar(2018, 6, 27, 16, 16, 47);
 
 我们可以将时区作为一个参数来传递，以便在这个时区中创建一个带有默认区域设置的日历:
 
-```
+```java
 new GregorianCalendar(TimeZone.getTimeZone("GMT+5:30"));
 ```
 
 我们可以将地区作为一个参数传递，以在该地区创建一个带有默认时区的日历:
 
-```
+```java
 new GregorianCalendar(new Locale("en", "IN"));
 ```
 
 最后，我们可以将时区和地区作为参数传递:
 
-```
+```java
 new GregorianCalendar(TimeZone.getTimeZone("GMT+5:30"), new Locale("en", "IN"));
 ```
 
@@ -74,7 +74,7 @@ new GregorianCalendar(TimeZone.getTimeZone("GMT+5:30"), new Locale("en", "IN"));
 
 例如，我们可以利用这一点来确保在继续我们的应用程序逻辑之前，我们有一个特定类型的日历:
 
-```
+```java
 @Test
 public void test_Calendar_Return_Type_Valid() {
     Calendar calendar = Calendar.getInstance();
@@ -90,7 +90,7 @@ public void test_Calendar_Return_Type_Valid() {
 
 **`add()`方法允许我们根据日历的内部规则集以指定单位**向日历添加时间:
 
-```
+```java
 @Test
 public void test_whenAddOneDay_thenMonthIsChanged() {
     int finalDay1 = 1;
@@ -106,7 +106,7 @@ public void test_whenAddOneDay_thenMonthIsChanged() {
 
 我们还可以使用`add()`方法从日历对象中减去时间:
 
-```
+```java
 @Test
 public void test_whenSubtractOneDay_thenMonthIsChanged() {
     int finalDay31 = 31;
@@ -129,7 +129,7 @@ public void test_whenSubtractOneDay_thenMonthIsChanged() {
 
 在这种情况下，`YEAR`是一个较大的字段，不会递增:
 
-```
+```java
 @Test
 public void test_whenRollUpOneMonth_thenYearIsUnchanged() {
     int rolledUpMonthJuly = 7, orginalYear2018 = 2018;
@@ -143,7 +143,7 @@ public void test_whenRollUpOneMonth_thenYearIsUnchanged() {
 
 同样，我们可以向下滚动几个月:
 
-```
+```java
 @Test
 public void test_whenRollDownOneMonth_thenYearIsUnchanged() {
     int rolledDownMonthJune = 5, orginalYear2018 = 2018;
@@ -161,7 +161,7 @@ public void test_whenRollDownOneMonth_thenYearIsUnchanged() {
 
 让我们看一个将月份字段设置为 3(即四月)的示例:
 
-```
+```java
 @Test
 public void test_setMonth() {
     GregorianCalendarExample calendarDemo = new GregorianCalendarExample();
@@ -180,7 +180,7 @@ JAXB 允许将 Java 类映射到 XML 表示。`javax.xml.datatype.XMLGregorianCa
 
 让我们看一个从`GregorianCalendar`类型转换成`XMLGregorianCalendar`类型的例子:
 
-```
+```java
 @Test
 public void test_toXMLGregorianCalendar() throws Exception {
     GregorianCalendarExample calendarDemo = new GregorianCalendarExample();
@@ -200,7 +200,7 @@ public void test_toXMLGregorianCalendar() throws Exception {
 
 让我们看一个如何从`XMLGregorianCalendar`类型转换回`GregorianCalendar`类型的例子:
 
-```
+```java
 @Test
 public void test_toDate() throws DatatypeConfigurationException {
     GregorianCalendar calendarActual = new GregorianCalendar(2018, 6, 28);
@@ -218,7 +218,7 @@ public void test_toDate() throws DatatypeConfigurationException {
 
 我们可以使用`Calendar`类的`compareTo()`方法来比较日期。如果基准日期在未来，则结果为正，如果基准数据在我们比较的日期的过去，则结果为负:
 
-```
+```java
 @Test
 public void test_Compare_Date_FirstDate_Greater_SecondDate() {
     GregorianCalendar firstDate = new GregorianCalendar(2018, 6, 28);
@@ -245,7 +245,7 @@ public void test_Compare_Date_Both_Dates_Equal() {
 
 我们可以通过使用`ZonedDateTime`和`DateTimeFormatter`的组合将`GregorianCalendar`转换成特定的格式，以获得想要的输出:
 
-```
+```java
 @Test
 public void test_dateFormatdMMMuuuu() {
     String expectedDate = new GregorianCalendar(2018, 6, 28).toZonedDateTime()
@@ -260,49 +260,49 @@ public void test_dateFormatdMMMuuuu() {
 
 *   **`getActualMaximum(int field)`–**返回指定日历字段的最大值，并考虑当前时间值。以下示例将为`DAY_OF_MONTH`字段返回值 30，因为六月有 30 天:
 
-    ```
+    ```java
     GregorianCalendar calendar = new GregorianCalendar(2018 , 5, 28);
     assertTrue(30 == calendar.getActualMaximum(calendar.DAY_OF_MONTH));
     ```
 
 *   **`getActualMinimum(int field)`–**返回指定日历字段的最小值，并考虑当前时间值:
 
-    ```
+    ```java
     GregorianCalendar calendar = new GregorianCalendar(2018 , 5, 28);
     assertTrue(1 == calendar.getActualMinimum(calendar.DAY_OF_MONTH));
     ```
 
 *   **`getGreatestMinimum(int field)`–**返回给定日历字段的最大最小值:
 
-    ```
+    ```java
     GregorianCalendar calendar = new GregorianCalendar(2018 , 5, 28);
     assertTrue(1 == calendar.getGreatestMinimum(calendar.DAY_OF_MONTH));
     ```
 
 *   **`getLeastMaximum(int field)`–**返回给定日历字段的最小最大值。对于`DAY_OF_MONTH`字段，这是 28，因为二月可能只有 28 天:
 
-    ```
+    ```java
     GregorianCalendar calendar = new GregorianCalendar(2018 , 5, 28);
     assertTrue(28 == calendar.getLeastMaximum(calendar.DAY_OF_MONTH));
     ```
 
 *   **`getMaximum(int field)`–**返回给定日历字段的最大值:
 
-    ```
+    ```java
     GregorianCalendar calendar = new GregorianCalendar(2018 , 5, 28);
     assertTrue(31 == calendar.getMaximum(calendar.DAY_OF_MONTH));
     ```
 
 *   **`getMinimum(int field)`–**返回给定日历字段的最小值:
 
-    ```
+    ```java
     GregorianCalendar calendar = new GregorianCalendar(2018 , 5, 28);
     assertTrue(1 == calendar.getMinimum(calendar.DAY_OF_MONTH));
     ```
 
 *   **`getWeekYear()`–**返回该`GregorianCalendar` :
 
-    ```
+    ```java
     GregorianCalendar calendar = new GregorianCalendar(2018 , 5, 28);
     assertTrue(2018 == calendar.getWeekYear());
     ```
@@ -310,14 +310,14 @@ public void test_dateFormatdMMMuuuu() {
     所代表的年的星期
 *   **`getWeeksInWeekYear()`–**返回日历年中一周的周数:
 
-    ```
+    ```java
     GregorianCalendar calendar = new GregorianCalendar(2018 , 5, 28);
     assertTrue(52 == calendar.getWeeksInWeekYear());
     ```
 
 *   **`isLeapYear()`–**如果年份是闰年，则返回 true:
 
-    ```
+    ```java
     GregorianCalendar calendar = new GregorianCalendar(2018 , 5, 28);
     assertTrue(false == calendar.isLeapYear(calendar.YEAR));
     ```

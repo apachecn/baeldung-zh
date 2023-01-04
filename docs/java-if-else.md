@@ -14,7 +14,7 @@
 
 `if`语句**总是需要一个 [`boolean`](/web/20220926185233/https://www.baeldung.com/java-primitives) 表达式作为其参数**。
 
-```
+```java
 if (condition) {
     // Executes when condition is true.
 } else {
@@ -30,7 +30,7 @@ if (condition) {
 
 假设我们只希望在我们的`count`变量大于 1 的情况下发生一些事情:
 
-```
+```java
 if (count > 1) {
     System.out.println("Count is higher than 1");
 }
@@ -42,7 +42,7 @@ if (count > 1) {
 
 当然，如果我们愿意，我们可以向块中添加更多的指令:
 
-```
+```java
 if (count > 1) {
     System.out.println("Count is higher than 1");
     System.out.println("Count is equal to: " + count);
@@ -53,7 +53,7 @@ if (count > 1) {
 
 接下来，我们可以**一起使用`if`和`else`在两个动作过程**中进行选择:
 
-```
+```java
 if (count > 2) {
     System.out.println("Count is higher than 2");
 } else {
@@ -69,7 +69,7 @@ if (count > 2) {
 
 我们可以用它来**在三个或更多选项中选择**:
 
-```
+```java
 if (count > 2) {
     System.out.println("Count is higher than 2");
 } else if (count <= 0) {

@@ -16,7 +16,7 @@
 
 我们可以选择任意一个内置的谓词工厂，这些工厂在 [`spring-cloud-gateway-core`](https://web.archive.org/web/20221117030334/https://github.com/spring-cloud/spring-cloud-gateway/tree/v2.1.3.RELEASE/spring-cloud-gateway-core) 模块的 [`org.springframework.cloud.gateway.handler.predicate`](https://web.archive.org/web/20221117030334/https://github.com/spring-cloud/spring-cloud-gateway/tree/v2.1.3.RELEASE/spring-cloud-gateway-core/src/main/java/org/springframework/cloud/gateway/handler/predicate) 包中有。我们可以很容易地找到现存的，因为它们的名字都以`RoutePredicateFactory`结尾。 [`HeaderRouterPredicateFactory`](https://web.archive.org/web/20221117030334/https://github.com/spring-cloud/spring-cloud-gateway/blob/v2.1.3.RELEASE/spring-cloud-gateway-core/src/main/java/org/springframework/cloud/gateway/handler/predicate/HeaderRoutePredicateFactory.java) 就是一个很好的例子:
 
-```
+```java
 public class HeaderRoutePredicateFactory extends 
   AbstractRoutePredicateFactory<HeaderRoutePredicateFactory.Config> {
 
@@ -61,7 +61,7 @@ public class HeaderRoutePredicateFactory extends
 
 有了这些信息，我们现在可以编写自定义谓词了。我们将保留现有的命名约定，并将我们的类命名为`GoldenCustomerRoutePredicateFactory`:
 
-```
+```java
 public class GoldenCustomerRoutePredicateFactory extends 
   AbstractRoutePredicateFactory<GoldenCustomerRoutePredicateFactory.Config> {
 
@@ -109,7 +109,7 @@ public class GoldenCustomerRoutePredicateFactory extends
 
 这里，我们将使用一个`@Configuration`类来创建我们的 bean:
 
-```
+```java
 @Configuration
 public class CustomPredicatesConfig {
     @Bean
@@ -130,7 +130,7 @@ public class CustomPredicatesConfig {
 
 当我们必须以编程方式创建复杂对象时，流畅的 API 是一种流行的设计选择。在我们的例子中，我们在一个 `@Bean`中定义路由，它使用一个`RouteLocatorBuilder`和我们的定制谓词工厂创建一个`RouteLocator`对象:
 
-```
+```java
 @Bean
 public RouteLocator routes(RouteLocatorBuilder builder, GoldenCustomerRoutePredicateFactory gf ) {
     return builder.routes()
@@ -150,7 +150,7 @@ public RouteLocator routes(RouteLocatorBuilder builder, GoldenCustomerRoutePredi
 
 我们可以使用属性或 YAML 文件以声明的方式实现与以前相同的结果。在这里，我们将使用 YAML，因为它更容易阅读:
 
-```
+```java
 spring:
   cloud:
     gateway:
@@ -182,7 +182,7 @@ spring:
 
 首先，让我们测试“公共客户端”场景。随着网关的启动和运行，我们使用 curl 来调用`httpbin`的`headers` API，它将简单地回显所有接收到的头:
 
-```
+```java
 $ curl http://localhost:8080/api/headers
 {
   "headers": {
@@ -199,7 +199,7 @@ $ curl http://localhost:8080/api/headers
 
 正如所料，我们看到发送的`Goldencustomer`报头带有一个`false`值。现在让我们来试试一位“黄金”客户:
 
-```
+```java
 $ curl -b customerId=baeldung http://localhost:8080/api/headers
 {
   "headers": {

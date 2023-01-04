@@ -12,7 +12,7 @@
 
 让我们看看在 Javadoc 注释中使用`@link`标签引用方法的语法:
 
-```
+```java
 {@link path_to_member label}
 ```
 
@@ -26,13 +26,13 @@
 
 引用方法最简单的方式是在同一个类中:
 
-```
+```java
 {@link #methodName() LabelName}
 ```
 
 假设我们正在记录一个方法，我们想引用同一个类中的另一个方法:
 
-```
+```java
 /**
  * Also, check the {@link #move() Move} method for more movement details.
  */
@@ -49,7 +49,7 @@ public void move() {
 
 考虑以下引用重载方法的示例:
 
-```
+```java
 /**
  * Check this {@link #move(String) Move} method for direction-oriented movement.
  */
@@ -68,7 +68,7 @@ public void move(String direction) {
 
 要引用另一个类中的方法，我们将使用类名，后跟一个 hashtag，然后是方法名:
 
-```
+```java
 {@link ClassName#methodName() LabelName}
 ```
 
@@ -76,7 +76,7 @@ public void move(String direction) {
 
 现在，让我们考虑引用另一个类中的方法的例子:
 
-```
+```java
 /**
  * Additionally, check this {@link Animal#run(String) Run} method for direction based run.
  */
@@ -87,7 +87,7 @@ public void run() {
 
 被引用的方法在`Animal`类中，这个类是同一个包中的**:**
 
-```
+```java
 public void run(String direction) {
 
 }
@@ -95,7 +95,7 @@ public void run(String direction) {
 
 如果我们想要引用驻留在另一个包中的方法，我们有两个选择。一种方法是**直接指定包以及类名**:
 
-```
+```java
 /**
  * Also consider checking {@link com.baeldung.sealed.classes.Vehicle#Vehicle() Vehicle} 
  * constructor to initialize vehicle object.
@@ -109,7 +109,7 @@ public void goToWork() {
 
 另外，我们可以**导入包并单独提到类名**:
 
-```
+```java
 import com.baeldung.sealed.records.Car;
 
 /**

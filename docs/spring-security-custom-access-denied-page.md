@@ -16,7 +16,7 @@
 
 为了用自定义页面替换 Spring 403 状态响应页面，**让我们首先创建一个名为`accessDenied.jsp` :** 的`JSP`文件
 
-```
+```java
 <body>
 <h2>Sorry, you do not have permission to view this page.</h2>
 
@@ -37,7 +37,7 @@ to go back to the Homepage.
 
 让我们创建一个身份验证配置，将`“/admin/**`URL 限制为`ADMIN`角色，并将拒绝访问页面设置为我们的自定义`accessDenied.jsp`页面:
 
-```
+```java
 @Override
 protected void configure(final HttpSecurity http) throws Exception {
     http
@@ -49,7 +49,7 @@ protected void configure(final HttpSecurity http) throws Exception {
 
 让我们看看拒绝访问页面的等效 XML 配置:
 
-```
+```java
 <http use-expressions="true">
     <access-denied-handler error-page="/accessDenied"/>
  </http>
@@ -61,7 +61,7 @@ protected void configure(final HttpSecurity http) throws Exception {
 
 让我们创建一个定制的`AccessDeniedHandler`类，它为每个拒绝访问的尝试记录一条警告消息，其中包含进行尝试的用户和他们试图访问的受保护的 URL:
 
-```
+```java
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     public static final Logger LOG
@@ -88,7 +88,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
 在安全配置中，**我们将定义 bean 并设置自定义的`AccessDeniedHandler` :**
 
-```
+```java
 @Bean
 public AccessDeniedHandler accessDeniedHandler(){
     return new CustomAccessDeniedHandler();
@@ -100,7 +100,7 @@ public AccessDeniedHandler accessDeniedHandler(){
 
 如果我们想使用 XML 配置上面定义的`CustomAccessDeniedHandler`类，配置看起来会略有不同:
 
-```
+```java
 <bean name="customAccessDeniedHandler" 
   class="com.baeldung.security.CustomAccessDeniedHandler" />
 
@@ -113,7 +113,7 @@ public AccessDeniedHandler accessDeniedHandler(){
 
 **通过定义一个`error-page`标签，可以通过 web 应用程序的`web.xml`文件来处理拒绝访问错误。**它包含两个子标记`error-code,`，指定要拦截的状态代码，以及`location,`，表示遇到错误代码时用户将被重定向到的 URL:
 
-```
+```java
 <error-page>
     <error-code>403</error-code>
     <location>/accessDenied</location>

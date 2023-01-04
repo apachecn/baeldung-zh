@@ -12,7 +12,7 @@ JAX-RS 为我们提供了许多处理异常的机制，我们可以选择和组�
 
 我们的最小设置包括创建一个[存储库](/web/20220617075716/https://www.baeldung.com/the-persistence-layer-with-spring-data-jpa)、几个 beans 和一些端点。这要从我们的资源配置说起。在那里，我们将使用`@ApplicationPath`定义我们的起始 URL 和我们的端点包:
 
-```
+```java
 @ApplicationPath("/exception-handling/*")
 public class ExceptionHandlingConfig extends ResourceConfig {
     public ExceptionHandlingConfig() {
@@ -25,7 +25,7 @@ public class ExceptionHandlingConfig extends ResourceConfig {
 
 我们只需要两颗豆子:`Stock`和`Wallet`，这样我们就可以把`Stock` s 存起来买了。对于我们的`Stock`，我们只需要一个`price`属性来帮助验证。更重要的是，我们的`Wallet`类将拥有验证方法来帮助构建我们的场景:
 
-```
+```java
 public class Wallet {
     private String id;
     private Double balance = 0.0;
@@ -46,14 +46,14 @@ public class Wallet {
 
 类似地，我们的 API 将有两个端点。这些将定义保存和检索 beans 的标准方法:
 
-```
+```java
 @Path("/stocks")
 public class StocksResource {
     // POST and GET methods
 }
 ```
 
-```
+```java
 @Path("/wallets")
 public class WalletsResource {
     // POST and GET methods
@@ -62,7 +62,7 @@ public class WalletsResource {
 
 例如，让我们看看`StocksResource`中的 GET 方法:
 
-```
+```java
 @GET
 @Path("/{ticker}")
 @Produces(MediaType.APPLICATION_JSON)
@@ -91,7 +91,7 @@ public Response get(@PathParam("ticker") String id) {
 
 使用`WebApplicationException`，我们可以创建定制的异常。**这种特殊类型的`RuntimeException`让我们定义响应状态和实体。**我们将从创建一个`InvalidTradeException`开始，它设置消息和状态:
 
-```
+```java
 public class InvalidTradeException extends WebApplicationException {
     public InvalidTradeException() {
         super("invalid trade operation", Response.Status.NOT_ACCEPTABLE);
@@ -105,7 +105,7 @@ public class InvalidTradeException extends WebApplicationException {
 
 我们可以创建简单的 Java 类，并将它们包含在我们的`Response`中。在我们的例子中，我们有一个`subject`属性，我们将使用它来包装上下文数据:
 
-```
+```java
 public class RestErrorResponse {
     private Object subject;
     private String message;
@@ -120,7 +120,7 @@ public class RestErrorResponse {
 
 为了了解如何使用自定义异常，让我们定义一个购买`Stock`的方法:
 
-```
+```java
 @POST
 @Path("/{wallet}/buy/{ticker}")
 @Produces(MediaType.APPLICATION_JSON)
@@ -159,7 +159,7 @@ public Response postBuyStock(
 
 首先，让我们创建一个`Stock`:
 
-```
+```java
 $ curl 'http://localhost:8080/jersey/exception-handling/stocks' -H 'Content-Type: application/json' -d '{
     "id": "STOCK",
     "price": 51.57
@@ -170,7 +170,7 @@ $ curl 'http://localhost:8080/jersey/exception-handling/stocks' -H 'Content-Type
 
 然后一个`Wallet`买下来:
 
-```
+```java
 $ curl 'http://localhost:8080/jersey/exception-handling/wallets' -H 'Content-Type: application/json' -d '{
     "id": "WALLET",
     "balance": 100.0
@@ -181,7 +181,7 @@ $ curl 'http://localhost:8080/jersey/exception-handling/wallets' -H 'Content-Typ
 
 之后，我们将使用我们的`Wallet`购买`Stock`:
 
-```
+```java
 $ curl -X POST 'http://localhost:8080/jersey/exception-handling/wallets/WALLET/buy/STOCK'
 
 {"balance": 48.43, "id": "WALLET"}
@@ -189,7 +189,7 @@ $ curl -X POST 'http://localhost:8080/jersey/exception-handling/wallets/WALLET/b
 
 我们将在响应中获得更新后的余额。此外，如果我们再次尝试购买，我们将获得详细的`RestErrorResponse`:
 
-```
+```java
 {
     "message": "insufficient balance",
     "subject": {
@@ -203,7 +203,7 @@ $ curl -X POST 'http://localhost:8080/jersey/exception-handling/wallets/WALLET/b
 
 澄清一下，抛出一个`WebApplicationException`不足以摆脱默认的错误页面。我们必须为我们的`Response`指定一个实体，这不是`InvalidTradeException`的情况。通常，尽管我们试图处理所有的场景，但未处理的异常仍然可能发生。所以从处理这些开始是个好主意。**使用`ExceptionMapper`，我们为特定类型的异常定义捕捉点，并在提交之前修改`Response`:**
 
-```
+```java
 public class ServerExceptionMapper implements ExceptionMapper<WebApplicationException> {
     @Override
     public Response toResponse(WebApplicationException exception) {
@@ -221,7 +221,7 @@ public class ServerExceptionMapper implements ExceptionMapper<WebApplicationExce
 
 例如，我们只是将异常信息重新传递到我们的`Response`中，它将准确显示我们返回的内容。随后，我们可以更进一步，在构建我们的`Response`之前检查状态代码:
 
-```
+```java
 switch (status) {
     case METHOD_NOT_ALLOWED:
         message = "HTTP METHOD NOT ALLOWED";
@@ -238,7 +238,7 @@ switch (status) {
 
 如果有一个特定的`Exception`经常被抛出，我们也可以为它创建一个`ExceptionMapper`。**在我们的端点中，我们抛出一个`IllegalArgumentException`用于简单的验证，所以让我们从它的映射器开始。**这一次，有了 JSON 的回应:
 
-```
+```java
 public class IllegalArgumentExceptionMapper
   implements ExceptionMapper<IllegalArgumentException> {
     @Override
@@ -263,7 +263,7 @@ public class IllegalArgumentExceptionMapper
 
 要激活我们的异常映射器，我们必须返回到我们的 Jersey 资源配置并注册它们:
 
-```
+```java
 public ExceptionHandlingConfig() {
     // packages ...
     register(IllegalArgumentExceptionMapper.class);
@@ -273,7 +273,7 @@ public ExceptionHandlingConfig() {
 
 这足以摆脱默认的错误页面。**然后，根据抛出的内容，当发生未处理的异常时，Jersey 将使用我们的一个异常映射器。**例如，当试图获取一个不存在的`Stock`时，将使用`IllegalArgumentExceptionMapper`:
 
-```
+```java
 $ curl 'http://localhost:8080/jersey/exception-handling/stocks/NONEXISTENT'
 
 {"message": "an illegal argument was provided: ticker"}
@@ -281,7 +281,7 @@ $ curl 'http://localhost:8080/jersey/exception-handling/stocks/NONEXISTENT'
 
 同样，对于其他未处理的异常，将使用更宽的`ServerExceptionMapper`。例如，当我们使用错误的 HTTP 方法时:
 
-```
+```java
 $ curl -X POST 'http://localhost:8080/jersey/exception-handling/stocks/STOCK'
 
 Method Not Allowed: HTTP 405 Method Not Allowed

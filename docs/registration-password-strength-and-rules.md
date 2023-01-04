@@ -21,7 +21,7 @@
 
 首先，让我们创建一个自定义约束`ValidPassword`:
 
-```
+```java
 @Documented
 @Constraint(validatedBy = PasswordConstraintValidator.class)
 @Target({ TYPE, FIELD, ANNOTATION_TYPE })
@@ -39,7 +39,7 @@ public @interface ValidPassword {
 
 并在`UserDto`中使用它:
 
-```
+```java
 @ValidPassword
 private String password;
 ```
@@ -50,7 +50,7 @@ private String password;
 
 我们将创建密码验证器`PasswordConstraintValidator`–我们将定义密码的规则:
 
-```
+```java
 public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
 
     @Override
@@ -86,7 +86,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
 
 最后，让我们将`Passay`库添加到我们的 pom 中:
 
-```
+```java
 <dependency>
 	<groupId>org.passay</groupId>
 	<artifactId>passay</artifactId>
@@ -102,7 +102,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
 
 我们将使用一个简单的 jQuery 插件-[jQuery 密码强度计用于 Twitter 引导](https://web.archive.org/web/20221226054238/https://plugins.jquery.com/pwstrength-bootstrap/)-在`registration.html`中显示密码强度:
 
-```
+```java
 <input id="password" name="password" type="password"/>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>

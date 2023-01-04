@@ -14,7 +14,7 @@
 
 让我们将所需的依赖项添加到项目的`pom.xml`中。**我们需要 [Spring JMS](https://web.archive.org/web/20220910150059/https://search.maven.org/artifact/org.springframework/spring-jms/4.3.4.RELEASE/jar) 来监听 JMS 消息。我们将使用 [ActiveMQ-Junit](https://web.archive.org/web/20220910150059/https://search.maven.org/artifact/org.apache.activemq.tooling/activemq-junit/5.17.1/jar) 为一部分测试启动一个嵌入式 ActiveMQ 实例，并使用 [TestContainers](https://web.archive.org/web/20220910150059/https://search.maven.org/artifact/org.testcontainers/testcontainers/1.17.3/jar) 在其他测试中运行一个 ActiveMQ Docker 容器:**
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-jms</artifactId>
@@ -40,7 +40,7 @@
 
 现在让我们创建一个可以监听消息的 Spring 应用程序:
 
-```
+```java
 @ComponentScan
 public class JmsApplication {
     public static void main(String[] args) {
@@ -51,7 +51,7 @@ public class JmsApplication {
 
 我们需要创建一个配置类，**使用 [`@EnableJms`注释](/web/20220910150059/https://www.baeldung.com/spring-jms#Configuration)启用 JMS，并配置 [`ConnectionFactory`](/web/20220910150059/https://www.baeldung.com/spring-jms#Connection) 连接到我们的 ActiveMQ 实例**:
 
-```
+```java
 @Configuration
 @EnableJms
 public class JmsConfig {
@@ -77,7 +77,7 @@ public class JmsConfig {
 
 之后，让我们创建可以接收和处理消息的侦听器:
 
-```
+```java
 @Component
 public class MessageListener {
 
@@ -92,7 +92,7 @@ public class MessageListener {
 
 我们还需要一个可以发送消息的类:
 
-```
+```java
 @Component
 public class MessageSender {
 
@@ -112,7 +112,7 @@ public class MessageSender {
 
 让我们测试我们的应用程序。我们将首先使用一个嵌入式 ActiveMQ 实例。让我们创建测试类，并添加一个管理 ActiveMQ 实例的 JUnit 规则:
 
-```
+```java
 @RunWith(SpringRunner.class)
 public class EmbeddedActiveMqTests4 {
 
@@ -129,7 +129,7 @@ public class EmbeddedActiveMqTests4 {
 
 让我们运行这个空测试并检查日志。**我们可以看到，嵌入式代理是从我们的测试**开始的:
 
-```
+```java
 INFO | Starting embedded ActiveMQ broker: embedded-broker
 INFO | Using Persistence Adapter: MemoryPersistenceAdapter
 INFO | Apache ActiveMQ 5.14.1 (embedded-broker, ID:DESKTOP-52539-254421135-0:1) is starting
@@ -143,7 +143,7 @@ INFO | Successfully connected to vm://embedded-broker?create=false
 
 我们需要配置我们的应用程序来连接到这个 ActiveMQ 实例，以便我们可以正确地测试我们的`MessageListener`和`MessageSender`类:
 
-```
+```java
 @Configuration
 @EnableJms
 static class TestConfiguration {
@@ -168,7 +168,7 @@ static class TestConfiguration {
 
 这个类使用一个特殊的`ConnectionFactory`,它从我们的嵌入式代理获取 URL。现在我们需要通过向包含我们的测试的类添加`@ContextConfiguration`注释来使用这个配置:
 
-```
+```java
 @ContextConfiguration(classes = { TestConfiguration.class, MessageSender.class }) public class EmbeddedActiveMqTests {
 ```
 
@@ -176,14 +176,14 @@ static class TestConfiguration {
 
 让我们编写第一个测试并检查我们的`MessageSender`类的功能。首先，我们需要通过简单地将它作为一个字段注入来获得对这个类的一个实例的引用:
 
-```
+```java
 @Autowired
 private MessageSender messageSender;
 ```
 
 让我们向 ActiveMQ 发送一条简单的消息，并添加一些[断言](/web/20220910150059/https://www.baeldung.com/junit-assertions#assertions)来检查功能:
 
-```
+```java
 @Test
 public void whenSendingMessage_thenCorrectQueueAndMessageText() throws JMSException {
     String queueName = "queue-2";
@@ -205,14 +205,14 @@ public void whenSendingMessage_thenCorrectQueueAndMessageText() throws JMSExcept
 
 让我们用[模仿](/web/20220910150059/https://www.baeldung.com/mockito-series)来检查听者的行为。我们将使用 [`@SpyBean`](/web/20220910150059/https://www.baeldung.com/mockito-series) 注释来获得`MessageListener:`的一个实例
 
-```
+```java
 @SpyBean
 private MessageListener messageListener;
 ```
 
 然后，我们将[检查该方法是否被调用](/web/20220910150059/https://www.baeldung.com/mockito-verify)，并用 [`ArgumentCaptor`](/web/20220910150059/https://www.baeldung.com/mockito-argumentcaptor) 捕获接收到的方法参数:
 
-```
+```java
 @Test
 public void whenListening_thenReceivingCorrectMessage() throws JMSException {
     String queueName = "queue-1";
@@ -238,7 +238,7 @@ public void whenListening_thenReceivingCorrectMessage() throws JMSException {
 
 让我们创建一个新的测试类，并将 Docker 容器作为一个 JUnit 规则包含进来:
 
-```
+```java
 @RunWith(SpringRunner.class)
 public class TestContainersActiveMqTests {
 
@@ -254,7 +254,7 @@ public class TestContainersActiveMqTests {
 
 让我们运行这个测试并检查日志。**我们可以看到一些与 TestContainers 相关的信息，因为它正在提取指定的 docker 图像，并且启动了容器:**
 
-```
+```java
 INFO | Creating container for image: rmohr/activemq:5.14.3
 INFO | Container rmohr/activemq:5.14.3 is starting: e9b0ddcd45c54fc9994aff99d734d84b5fae14b55fdc70887c4a2c2309b229a7
 INFO | Container rmohr/activemq:5.14.3 started in PT2.635S 
@@ -262,7 +262,7 @@ INFO | Container rmohr/activemq:5.14.3 started in PT2.635S
 
 让我们创建一个类似于我们用 ActiveMQ 实现的配置类。唯一不同的是`ConnectionFactory`的配置:
 
-```
+```java
 @Bean
 public ConnectionFactory connectionFactory() {
     String brokerUrlFormat = "tcp://%s:%d";
@@ -275,7 +275,7 @@ public ConnectionFactory connectionFactory() {
 
 让我们测试一下我们的`MessageSender`类，看看它是否适用于这个 Docker 容器。**这次我们不能使用`EmbeddedBroker,`上的方法，但是弹簧`JmsTemplate`也很容易使用:**
 
-```
+```java
 @Autowired
 private MessageSender messageSender;
 
@@ -302,7 +302,7 @@ public void whenSendingMessage_thenCorrectQueueAndMessageText() throws JMSExcept
 
 测试我们的监听器类也没什么不同。**让我们使用`JmsTemplate`发送一条消息，并验证我们的监听器是否收到了正确的文本:**
 
-```
+```java
 @SpyBean
 private MessageListener messageListener;
 

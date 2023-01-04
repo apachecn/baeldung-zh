@@ -18,7 +18,7 @@
 
 假设我们有一个需求，根据是圣诞节、复活节还是新年，对采购应用不同类型的折扣。首先，让我们创建一个将由我们的每个策略实现的`Discounter` 接口:
 
-```
+```java
 public interface Discounter {
     BigDecimal applyDiscount(BigDecimal amount);
 } 
@@ -26,7 +26,7 @@ public interface Discounter {
 
 然后，假设我们想在复活节打五折，在圣诞节打九折。让我们为每个策略实现我们的接口:
 
-```
+```java
 public static class EasterDiscounter implements Discounter {
     @Override
     public BigDecimal applyDiscount(final BigDecimal amount) {
@@ -44,7 +44,7 @@ public static class ChristmasDiscounter implements Discounter {
 
 最后，让我们在测试中尝试一个策略:
 
-```
+```java
 Discounter easterDiscounter = new EasterDiscounter();
 
 BigDecimal discountedValue = easterDiscounter
@@ -56,7 +56,7 @@ assertThat(discountedValue)
 
 这工作得很好，但是问题是必须为每个策略创建一个具体的类可能有点痛苦。另一种方法是使用匿名内部类型，但这仍然很冗长，并且不比前面的解决方案方便多少:
 
-```
+```java
 Discounter easterDiscounter = new Discounter() {
     @Override
     public BigDecimal applyDiscount(final BigDecimal amount) {
@@ -75,7 +75,7 @@ Discounter easterDiscounter = new Discounter() {
 
 让我们尝试使用 lambda 表达式创建一个内联`EasterDiscounter,` :
 
-```
+```java
 Discounter easterDiscounter = amount -> amount.multiply(BigDecimal.valueOf(0.5)); 
 ```
 
@@ -83,7 +83,7 @@ Discounter easterDiscounter = amount -> amount.multiply(BigDecimal.valueOf(0.5))
 
 当我们想要在队列中声明更多的`Discounters` 时，这个优势变得更加明显:
 
-```
+```java
 List<Discounter> discounters = newArrayList(
   amount -> amount.multiply(BigDecimal.valueOf(0.9)),
   amount -> amount.multiply(BigDecimal.valueOf(0.8)),
@@ -95,7 +95,7 @@ List<Discounter> discounters = newArrayList(
 
 因此，与其在具体类或匿名内部类型之间进行选择，不如让我们尝试在单个类中创建 lambdas:
 
-```
+```java
 public interface Discounter {
     BigDecimal applyDiscount(BigDecimal amount);
 
@@ -119,7 +119,7 @@ public interface Discounter {
 
 让我们修改我们的`Discounter` 接口，使其扩展`UnaryOperator` 接口，然后添加一个`combine()` 方法:
 
-```
+```java
 public interface Discounter extends UnaryOperator<BigDecimal> {
     default Discounter combine(Discounter after) {
         return value -> after.apply(this.apply(value));
@@ -133,7 +133,7 @@ public interface Discounter extends UnaryOperator<BigDecimal> {
 
 现在，让我们尝试将倍数`Discounters` 累计应用于一个金额。我们将通过使用函数`reduce()` 和我们的`combine():`来做到这一点
 
-```
+```java
 Discounter combinedDiscounter = discounters
   .stream()
   .reduce(v -> v, Discounter::combine);

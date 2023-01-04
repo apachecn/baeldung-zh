@@ -14,14 +14,14 @@
 
 让我们看一些代码:
 
-```
+```java
 @DBRef
 private EmailAddress emailAddress; 
 ```
 
 `EmailAddress`看起来像:
 
-```
+```java
 @Document
 public class EmailAddress {
     @Id
@@ -47,7 +47,7 @@ Spring Data MongoDB 发布了一些非常有用的生命周期事件——比如
 
 让我们看看我们之前的例子——用`emailAddress`保存`user`。我们现在可以监听在一个域对象进入转换器之前被调用的`onBeforeConvert`事件:
 
-```
+```java
 public class UserCascadeSaveMongoEventListener extends AbstractMongoEventListener<Object> {
     @Autowired
     private MongoOperations mongoOperations;
@@ -64,7 +64,7 @@ public class UserCascadeSaveMongoEventListener extends AbstractMongoEventListene
 
 现在我们只需要将监听器注册到`MongoConfig`:
 
-```
+```java
 @Bean
 public UserCascadeSaveMongoEventListener userCascadingMongoEventListener() {
     return new UserCascadeSaveMongoEventListener();
@@ -73,7 +73,7 @@ public UserCascadeSaveMongoEventListener userCascadingMongoEventListener() {
 
 或者作为 XML:
 
-```
+```java
 <bean class="org.baeldung.event.UserCascadeSaveMongoEventListener" />
 ```
 
@@ -83,7 +83,7 @@ public UserCascadeSaveMongoEventListener userCascadingMongoEventListener() {
 
 现在让我们通过**使级联功能通用化来改进前面的解决方案。**让我们从定义一个自定义注释开始:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface CascadeSave {
@@ -93,7 +93,7 @@ public @interface CascadeSave {
 
 现在**让我们使用自定义监听器**来处理这些字段，而不必强制转换为任何特定的实体:
 
-```
+```java
 public class CascadeSaveMongoEventListener extends AbstractMongoEventListener<Object> {
 
     @Autowired
@@ -110,7 +110,7 @@ public class CascadeSaveMongoEventListener extends AbstractMongoEventListener<Ob
 
 因此，我们使用 Spring 的反射实用程序，并对符合我们标准的所有字段运行回调:
 
-```
+```java
 @Override
 public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
     ReflectionUtils.makeAccessible(field);
@@ -133,7 +133,7 @@ public void doWith(Field field) throws IllegalArgumentException, IllegalAccessEx
 
 让我们看看`FieldCallback`类，我们用它来检查孩子是否有一个`@Id`注释:
 
-```
+```java
 public class FieldCallback implements ReflectionUtils.FieldCallback {
     private boolean idFound;
 
@@ -153,7 +153,7 @@ public class FieldCallback implements ReflectionUtils.FieldCallback {
 
 最后，为了让它们一起工作，我们当然需要对`emailAddress`字段进行正确的注释:
 
-```
+```java
 @DBRef
 @CascadeSave
 private EmailAddress emailAddress;
@@ -163,7 +163,7 @@ private EmailAddress emailAddress;
 
 现在让我们来看一个场景——我们用`emailAddress`保存一个`User`,保存操作自动级联到这个嵌入的实体:
 
-```
+```java
 User user = new User();
 user.setName("Brendan");
 EmailAddress emailAddress = new EmailAddress();
@@ -174,7 +174,7 @@ mongoTemplate.insert(user);
 
 让我们检查一下我们的数据库:
 
-```
+```java
 {
     "_id" : ObjectId("55cee9cc0badb9271768c8b9"),
     "name" : "Brendan",

@@ -23,13 +23,13 @@
 
 现在，我们将使用加特林录音机录制我们的场景，如下所示:
 
-```
+```java
 $GATLING_HOME/bin/recorder.sh
 ```
 
 对于 Windows 用户:
 
-```
+```java
 %GATLING_HOME%\bin\recorder.bat
 ```
 
@@ -62,7 +62,7 @@ HAR 是 HTTP Archive 的缩写——这是一种基本上**记录关于浏览会
 
 生成的模拟文件同样是用 Scala 编写的。总体还可以，但不是超级可读，所以我们会做一些调整来清理。这是我们最后的模拟:
 
-```
+```java
 class RestSimulation extends Simulation {
 
     val httpProtocol = http.baseURL("http://staging.baeldung.com")
@@ -90,13 +90,13 @@ class RestSimulation extends Simulation {
 
 现在，我们可以运行我们的模拟，如下所示:
 
-```
+```java
 $GATLING_HOME/bin/gatling.sh
 ```
 
 对于 Windows 用户:
 
-```
+```java
 %GATLING_HOME%\bin\gatling.bat
 ```
 
@@ -106,7 +106,7 @@ $GATLING_HOME/bin/gatling.sh
 
 对于一个用户:
 
-```
+```java
 > request count                                304 (OK=304    KO=0)
 > min response time                             75 (OK=75     KO=-)
 > max response time                          13745 (OK=13745  KO=-)
@@ -124,7 +124,7 @@ $GATLING_HOME/bin/gatling.sh
 
 对于 5 个并发用户:
 
-```
+```java
 > request count                               1520 (OK=1520   KO=0)
 > min response time                             70 (OK=70     KO=-)
 > max response time                          30289 (OK=30289  KO=-)
@@ -142,7 +142,7 @@ $GATLING_HOME/bin/gatling.sh
 
 对于 10 个并发用户:
 
-```
+```java
 > request count                               3058 (OK=3018   KO=40)
 > min response time                              0 (OK=69     KO=0)
 > max response time                          44916 (OK=44916  KO=30094)

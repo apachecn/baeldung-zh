@@ -16,7 +16,7 @@
 
 对于本文中的代码示例，我们将使用`Student` 实体作为数据模型:
 
-```
+```java
 @Entity
 public class Student {
 
@@ -34,7 +34,7 @@ public class Student {
 
 让我们添加一个通过`firstName`查询所有学生的方法。对于 Spring Data JPA，我们只需向`JpaRepository`添加一个方法，该方法接收一个`Pableable`作为参数并返回一个`Slice`:
 
-```
+```java
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
     Slice<Student> findAllByFirstName(String firstName, Pageable page);
@@ -45,7 +45,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 此外，在方法`nextPageable().` 的帮助下，我们可以从一个切片移动到下一个切片。该方法返回请求下一个切片所需的`Pageable`对象。因此，我们可以在一个`while`循环中结合使用这两种方法，一片一片地检索所有数据:
 
-```
+```java
 void processStudentsByFirstName(String firstName) {
     Slice<Student> slice = repository.findAllByFirstName(firstName, PageRequest.of(0, BATCH_SIZE));
     List<Student> studentsInBatch = slice.getContent();
@@ -60,7 +60,7 @@ void processStudentsByFirstName(String firstName) {
 
 让我们使用小批量运行一个简短的测试，并遵循 SQL 语句。我们希望执行多个查询:
 
-```
+```java
 [main] DEBUG org.hibernate.SQL - select student0_.id as id1_0_, student0_.first_name as first_na2_0_, student0_.last_name as last_nam3_0_ from student student0_ where student0_.first_name=? limit ?
 [main] DEBUG org.hibernate.SQL - select student0_.id as id1_0_, student0_.first_name as first_na2_0_, student0_.last_name as last_nam3_0_ from student student0_ where student0_.first_name=? limit ? offset ?
 [main] DEBUG org.hibernate.SQL - select student0_.id as id1_0_, student0_.first_name as first_na2_0_, student0_.last_name as last_nam3_0_ from student student0_ where student0_.first_name=? limit ? offset ?
@@ -70,7 +70,7 @@ void processStudentsByFirstName(String firstName) {
 
 作为`Slice` < >的替代，我们也可以使用`Page<>` 作为查询的返回类型:
 
-```
+```java
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
     Slice<Student> findAllByFirstName(String firstName, Pageable page);
@@ -84,7 +84,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 另一方面，使用`Page` s 会导致对满足条件的行进行计数的额外查询:
 
-```
+```java
 [main] DEBUG org.hibernate.SQL - select student0_.id as id1_0_, student0_.first_name as first_na2_0_, student0_.last_name as last_nam3_0_ from student student0_ where student0_.last_name=? limit ?
 [main] DEBUG org.hibernate.SQL - select count(student0_.id) as col_0_0_ from student student0_ where student0_.last_name=?
 [main] DEBUG org.hibernate.SQL - select student0_.id as id1_0_, student0_.first_name as first_na2_0_, student0_.last_name as last_nam3_0_ from student student0_ where student0_.last_name=? limit ? offset ?
@@ -98,7 +98,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
 Spring Data JPA 还允许我们从结果集中流式传输数据:
 
-```
+```java
 Stream<Student> findAllByFirstName(String firstName);
 ```
 
@@ -106,7 +106,7 @@ Stream<Student> findAllByFirstName(String firstName);
 
 最后，即使我们一行一行地处理，我们也必须确保持久化上下文没有保存对所有实体的引用。我们可以通过在使用流之前手动分离实体来实现这一点:
 
-```
+```java
 private final EntityManager entityManager;
 
 @Transactional(readOnly = true)

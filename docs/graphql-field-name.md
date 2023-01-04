@@ -12,7 +12,7 @@ GraphQL 已经被广泛用作 web 服务中的一种通信模式。**graph QL �
 
 让我们以一个[博客](/web/20220817142632/https://www.baeldung.com/spring-graphql)拥有不同`Authors`的`Posts`为例。GraphQL 模式如下所示:
 
-```
+```java
 type Post {
     id: ID!
     title: String!
@@ -44,7 +44,7 @@ query {
 
 在这里我们可以获取最近的帖子。**每一个`post` 都会伴随着它的`author`。**查询的结果如下:
 
-```
+```java
 {
     "data": {
         "recentPosts": [
@@ -77,7 +77,7 @@ query {
 
 让我们更新 `post`的模式定义:
 
-```
+```java
 type Post {
     id: ID!
     title: String!
@@ -93,7 +93,7 @@ type Post {
 
 以下是查询:
 
-```
+```java
 query{
     recentPosts(count: 1,offset: 0){
         id
@@ -111,7 +111,7 @@ query{
 
 上述查询的结果如下:
 
-```
+```java
 {
     "data": {
         "recentPosts": [
@@ -144,7 +144,7 @@ query{
 
 下面是查询的演示:
 
-```
+```java
 query{
     recentPosts(count: 1,offset: 0){
         id
@@ -162,7 +162,7 @@ query{
 
 上述查询的结果如下:
 
-```
+```java
 {
     "data": {
         "recentPosts": [
@@ -184,7 +184,7 @@ query{
 
 让我们注意，查询本身正在请求第一个帖子。另一个客户端应用程序可能会请求使用`first_post` 而不是`recentPosts.`,别名将再次派上用场。
 
-```
+```java
 query{
     first_post: recentPosts(count: 1,offset: 0){
         id
@@ -202,7 +202,7 @@ query{
 
 上述查询的结果如下:
 
-```
+```java
 {
     "data": {
         "first_post": [

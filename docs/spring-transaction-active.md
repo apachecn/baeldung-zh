@@ -24,7 +24,7 @@ Spring 已经提供了一个名为`TransactionSychronizationManager`的类。幸
 
 为了测试这一点，让我们用`@Transactional`注释一个测试方法。我们可以断言`isActualTransactionActive()`返回`true`:
 
-```
+```java
 @Test
 @Transactional
 public void givenTransactional_whenCheckingForActiveTransaction_thenReceiveTrue() {
@@ -34,7 +34,7 @@ public void givenTransactional_whenCheckingForActiveTransaction_thenReceiveTrue(
 
 类似地，当我们移除`@Transactional`注释时，测试应该断言`false`被返回:
 
-```
+```java
 @Test
 public void givenNoTransactional_whenCheckingForActiveTransaction_thenReceiveFalse() {
     assertFalse(TransactionSynchronizationManager.isActualTransactionActive());
@@ -45,13 +45,13 @@ public void givenNoTransactional_whenCheckingForActiveTransaction_thenReceiveFal
 
 也许我们不需要以编程方式检测事务。如果我们想在应用程序的日志中查看事务发生的时间，我们可以在属性文件中启用 Spring 的事务日志:
 
-```
+```java
 logging.level.org.springframework.transaction.interceptor = TRACE
 ```
 
 一旦我们启用了该日志记录级别，事务日志将开始出现:
 
-```
+```java
 2020-10-02 14:45:07,162 TRACE - Getting transaction for [com.Class.method]
 2020-10-02 14:45:07,273 TRACE - Completing transaction for [com.Class.method]
 ```

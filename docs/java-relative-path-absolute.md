@@ -10,7 +10,7 @@
 
 在我们开始之前，让我们快速回顾一下。对于文本中的所有示例，我们将在用户的主目录中使用相同的文件结构:
 
-```
+```java
 / (root)
 |-- baeldung
     \-- bar
@@ -22,7 +22,7 @@
 
 绝对路径描述了一个位置，从根节点开始，不考虑当前的工作目录。以下是我们文件的绝对路径:
 
-```
+```java
 one.txt -> /baeldung/bar/one.txt
 two.txt -> /baeldung/bar/two.txt
 three.txt -> /baeldung/foo/three.txt
@@ -32,7 +32,7 @@ three.txt -> /baeldung/foo/three.txt
 
 另一方面，**相对路径描述了目标节点相对于其源节点**的位置。如果我们在`baeldung`目录中，让我们看看文件的相对路径:
 
-```
+```java
 one.txt -> ./bar/one.txt
 two.txt -> ./bar/two.txt
 three.txt -> ./foo/three.txt
@@ -40,7 +40,7 @@ three.txt -> ./foo/three.txt
 
 现在，让我们移到`bar`子目录，再次检查相对路径:
 
-```
+```java
 one.txt -> ./one.txt
 two.txt -> ./two.txt
 three.txt -> ../foo/three.txt
@@ -54,7 +54,7 @@ three.txt -> ../foo/three.txt
 
 让我们从为我们的文件构造`Path`对象开始:
 
-```
+```java
 Path pathOne = Paths.get("/baeldung/bar/one.txt");
 Path pathTwo = Paths.get("/baeldung/bar/two.txt");
 Path pathThree = Paths.get("/baeldung/foo/three.txt");
@@ -62,7 +62,7 @@ Path pathThree = Paths.get("/baeldung/foo/three.txt");
 
 要构建源节点和给定节点之间的相对路径，我们可以使用由`Path`类提供的 [`relativize(Path)`](https://web.archive.org/web/20221109203447/https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html#relativize-java.nio.file.Path-) 方法:
 
-```
+```java
 Path result = pathOne.relativize(pathTwo);
 
 assertThat(result)
@@ -78,7 +78,7 @@ assertThat(result)
 
 如果我们想使结果相对于源目录，我们可以使用 [`getParent()`](https://web.archive.org/web/20221109203447/https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html#getParent--) 的方法:
 
-```
+```java
 Path result = pathOne.getParent().relativize(pathTwo);
 
 assertThat(result)
@@ -90,7 +90,7 @@ assertThat(result)
 
 最后，让我们检查一下`one.txt`和`three.txt`文件之间的相对路径:
 
-```
+```java
 Path resultOneToThree = pathOne.relativize(pathThree);
 Path resultThreeToOne = pathThree.relativize(pathOne);
 
@@ -110,7 +110,7 @@ assertThat(result)
 
 让我们为我们的文件构造`URI`对象:
 
-```
+```java
 URI uriOne = pathOne.toURI();
 // URI uriOne = URI.create("file:///baeldung/bar/one.txt")
 URI uriTwo = pathTwo.toURI();
@@ -121,7 +121,7 @@ URI uriThree = pathThree.toURI();
 
 和以前一样，`URI`类也提供了一个 [`relativize(URI)`](https://web.archive.org/web/20221109203447/https://docs.oracle.com/javase/8/docs/api/java/net/URI.html#relativize-java.net.URI-) 方法。让我们用它来构造相对路径:
 
-```
+```java
 URI result = uriOne.relativize(uriTwo);
 
 assertThat(result)
@@ -135,7 +135,7 @@ assertThat(result)
 
 为了返回一个相对路径，我们可以将我们的 source `URI`设置为第一个文件的目录:
 
-```
+```java
 URI uriOneParent = pathOne.getParent().toUri(); // file:///baeldung/bar/
 URI result = uriOneParent.relativize(uriTwo);
 

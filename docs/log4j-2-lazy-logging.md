@@ -16,7 +16,7 @@
 
 首先，让我们看看跟踪级别的简单日志语句:
 
-```
+```java
 logger.trace("Number is {}", getRandomNumber());
 ```
 
@@ -26,7 +26,7 @@ logger.trace("Number is {}", getRandomNumber());
 
 在添加对 lambda 表达式的支持之前，我们可以通过在执行 log 语句之前显式检查日志级别来避免构造不被记录的消息:
 
-```
+```java
 if (logger.isTraceEnabled()) {
     logger.trace("Number is {}", getRandomNumer());
 }
@@ -36,7 +36,7 @@ if (logger.isTraceEnabled()) {
 
 通过使用 lambda 表达式，我们可以进一步简化上面的代码:
 
-```
+```java
 logger.trace("Number is {}", () -> getRandomNumber());
 ```
 
@@ -44,7 +44,7 @@ logger.trace("Number is {}", () -> getRandomNumber());
 
 我们还可以对一条日志消息使用多个 lambda 表达式:
 
-```
+```java
 logger.trace("Name is {} and age is {}", () -> getName(), () -> getRandomNumber());
 ```
 

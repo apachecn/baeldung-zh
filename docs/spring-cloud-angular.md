@@ -20,7 +20,7 @@
 
 首先，让我们更新网关`SecurityConfig.java`类中的`configure(HttpSecurity http)`方法:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) {
     http
@@ -49,7 +49,7 @@ protected void configure(HttpSecurity http) {
 
 在 gateway 项目中，添加一个`AuthenticationController`类:
 
-```
+```java
 @RestController
 public class AuthenticationController {
 
@@ -68,7 +68,7 @@ public class AuthenticationController {
 
 在`src/main/resources/static,`中，让我们添加一个带有登录页面链接的`index.html`文件:
 
-```
+```java
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -91,7 +91,7 @@ public class AuthenticationController {
 
 首先，我们需要使用`npm`下载并安装 Angular 命令行界面。打开终端并运行:
 
-```
+```java
 npm install -g @angular/cli
 ```
 
@@ -101,7 +101,7 @@ npm install -g @angular/cli
 
 仍然在终端中，导航到 gateway 项目并进入 gateway/src/main 文件夹。创建一个名为“angular”的目录并导航到它。从这里开始运行:
 
-```
+```java
 ng new ui
 ```
 
@@ -113,7 +113,7 @@ ng new ui
 
 一旦`new`命令完成。导航到创建并运行的`ui`文件夹:
 
-```
+```java
 ng serve
 ```
 
@@ -127,7 +127,7 @@ ng serve
 
 让我们使用 npm 来安装 bootstrap。从 ui 目录运行以下命令:
 
-```
+```java
 npm install [[email protected]](/web/20220626203939/https://www.baeldung.com/cdn-cgi/l/email-protection) --save
 ```
 
@@ -135,7 +135,7 @@ npm install [[email protected]](/web/20220626203939/https://www.baeldung.com/cd
 
 在`ui`目录中，打开`.angular-cli.json`文件。这是配置我们项目的一些属性的文件。找到`apps > styles`属性并添加我们的引导 CSS 类的文件位置:
 
-```
+```java
 "styles": [
     "styles.css",
     "../node_modules/bootstrap/dist/css/bootstrap.min.css"
@@ -155,7 +155,7 @@ npm install [[email protected]](/web/20220626203939/https://www.baeldung.com/cd
 
 再次打开`.angular-cli.json`文件，找到`apps > outDir`属性。更新那个`string:`
 
-```
+```java
 "outDir": "../../resources/static/home",
 ```
 
@@ -165,7 +165,7 @@ npm install [[email protected]](/web/20220626203939/https://www.baeldung.com/cd
 
 最后，我们将设置一个在编译代码时运行的自动化构建。每当“mvn 编译”运行时，该 ant 任务将运行 Angular CLI 构建任务。将这一步添加到网关的 POM.xml 中，以确保我们每次编译时都能获得最新的 ui 更改:
 
-```
+```java
 <plugin>
     <artifactId>maven-antrun-plugin</artifactId>
     <executions>
@@ -216,7 +216,7 @@ npm install [[email protected]](/web/20220626203939/https://www.baeldung.com/cd
 
 在这里，我们将添加一些代码来显示带有登录表单的导航栏:
 
-```
+```java
 <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
     <button class="navbar-toggler navbar-toggler-right" type="button" 
       data-toggle="collapse" data-target="#navbarCollapse" 
@@ -257,7 +257,7 @@ npm install [[email protected]](/web/20220626203939/https://www.baeldung.com/cd
 
 从同一目录中打开 app.component.ts 文件。在这个文件中，我们将添加所有的 typescript 属性和方法，使我们的模板函数:
 
-```
+```java
 import {Component} from "@angular/core";
 import {Principal} from "./principal";
 import {Response} from "@angular/http";
@@ -314,7 +314,7 @@ export class AppComponent {
 
 在同一个目录下创建一个名为`“http.service.ts”`的文件。在该文件中添加以下代码以支持登录和注销方法:
 
-```
+```java
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
 import {Response, Http, Headers, RequestOptions} from "@angular/http";
@@ -347,7 +347,7 @@ export class HttpService {
 
 现在我们需要再做一件事来让`HttpService`在依赖注入系统中注册。打开`app.module.ts`文件并找到 providers 属性。将`HttpService`添加到数组中。结果应该是这样的:
 
-```
+```java
 providers: [HttpService],
 ```
 
@@ -355,7 +355,7 @@ providers: [HttpService],
 
 接下来，让我们在我们的类型脚本代码中添加我们的主要 DTO 对象。在同一个目录中，添加一个名为“principal.ts”的文件，并添加以下代码:
 
-```
+```java
 export class Principal {
     public authenticated: boolean;
     public authorities: Authority[] = [];
@@ -391,7 +391,7 @@ export class Authority {
 
 让我们回到网关服务的 Java 代码。在`GatewayApplication` 类所在的位置添加一个名为`ErrorPageConfig`的新类:
 
-```
+```java
 @Component
 public class ErrorPageConfig implements ErrorPageRegistrar {
 

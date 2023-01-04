@@ -30,7 +30,7 @@ A quick, practical tutorial on how to configure a separate data source for testi
 
 让我们看看我们的演示项目的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -59,7 +59,7 @@ A quick, practical tutorial on how to configure a separate data source for testi
 
 **最简单的方法是定义一个`DataSource`工厂方法，并把它放在一个用 [`@Configuration`](https://web.archive.org/web/20221205184009/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/Configuration.html) 注释**注释的类中:
 
-```
+```java
 @Configuration
 public class DataSourceConfig {
 
@@ -83,7 +83,7 @@ public class DataSourceConfig {
 
 当然，也可以部分具体化我们的`DataSource`配置。例如，我们可以在工厂方法中定义一些基本的`DataSource`属性:
 
-```
+```java
 @Bean 
 public DataSource getDataSource() { 
     DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create(); 
@@ -95,7 +95,7 @@ public DataSource getDataSource() {
 
 然后我们可以在`application.properties`文件中指定几个额外的:
 
-```
+```java
 spring.datasource.url=jdbc:h2:mem:test
 spring.datasource.driver-class-name=org.h2.Driver 
 ```
@@ -116,7 +116,7 @@ spring.datasource.driver-class-name=org.h2.Driver
 
 让我们从定义示例 JPA 实体类开始，它将为用户建模:
 
-```
+```java
 @Entity
 @Table(name = "users")
 public class User {
@@ -138,7 +138,7 @@ public class User {
 
 由于我们使用的是 [Spring Data JPA](/web/20221205184009/https://www.baeldung.com/the-persistence-layer-with-spring-data-jpa) ，我们不必从头开始创建我们自己的 [DAO](/web/20221205184009/https://www.baeldung.com/java-dao-pattern) 实现。我们只需扩展 [`CrudRepository`](https://web.archive.org/web/20221205184009/https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html) 接口就可以得到一个可用的存储库实现:
 
-```
+```java
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {} 
 ```
@@ -147,7 +147,7 @@ public interface UserRepository extends CrudRepository<User, Long> {}
 
 最后，我们需要检查我们以编程方式配置的`DataSource`是否真的在工作。我们可以通过集成测试轻松实现这一点:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class UserRepositoryIntegrationTest {
@@ -173,7 +173,7 @@ public class UserRepositoryIntegrationTest {
 
 最后，我们可以使用标准的`main()`方法运行我们的演示应用程序:
 
-```
+```java
 @SpringBootApplication
 public class Application {
 

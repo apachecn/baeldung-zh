@@ -22,7 +22,7 @@
 
 让我们看看如何在我们的 Spring Boot 应用程序的`main`方法中实现这一点:
 
-```
+```java
 @SpringBootApplication
 public class Application {
 
@@ -50,7 +50,7 @@ public class Application {
 
 此外，让我们添加一个 REST 端点，通过它我们可以触发重启:
 
-```
+```java
 @RestController
 public class RestartController {
 
@@ -65,7 +65,7 @@ public class RestartController {
 
 然后，我们可以调用新的端点来重启应用程序:
 
-```
+```java
 curl -X POST localhost:port/restart
 ```
 
@@ -77,7 +77,7 @@ curl -X POST localhost:port/restart
 
 首先，让我们添加所需的 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-actuator</artifactId>
@@ -90,13 +90,13 @@ curl -X POST localhost:port/restart
 
 接下来，我们必须在我们的`application.properties`文件中启用内置重启端点:
 
-```
+```java
 management.endpoint.restart.enabled=true
 ```
 
 现在我们已经设置好了一切，我们可以将`Restart` `Endpoint `注入到我们的服务中:
 
-```
+```java
 @Service
 public class RestartService {
 
@@ -121,7 +121,7 @@ public class RestartService {
 
 不幸的是，如果我们在 Spring Boot 的 web 应用程序中尝试这样做，我们将得到以下错误:
 
-```
+```java
 java.lang.IllegalStateException: GenericApplicationContext does not support multiple refresh attempts:
 just call 'refresh' once
 ```

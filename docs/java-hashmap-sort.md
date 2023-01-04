@@ -20,7 +20,7 @@
 
 首先，让我们定义一个`HashMap`并用一些数据初始化它:
 
-```
+```java
 Map<String, Employee> map = new HashMap<>();
 
 Employee employee1 = new Employee(1L, "Mher");
@@ -35,7 +35,7 @@ map.put(employee4.getName(), employee4);
 
 对于`Employee`类，**注意，我们实现了`Comparable` :**
 
-```
+```java
 public class Employee implements Comparable<Employee> {
 
     private Long id;
@@ -53,20 +53,20 @@ public class Employee implements Comparable<Employee> {
 
 接下来，我们通过使用其构造函数将条目存储在`TreeMap `中:
 
-```
+```java
 TreeMap<String, Employee> sorted = new TreeMap<>(map);
 ```
 
 我们也可以使用`putAll`方法来复制数据:
 
-```
+```java
 TreeMap<String, Employee> sorted = new TreeMap<>();
 sorted.putAll(map);
 ```
 
 就是这样！为了确保我们的地图条目按关键字排序，让我们将它们打印出来:
 
-```
+```java
 Annie=Employee{id=22, name='Annie'}
 George=Employee{id=2, name='George'}
 John=Employee{id=8, name='John'}
@@ -83,14 +83,14 @@ Mher=Employee{id=1, name='Mher'}
 
 让我们将密钥集加载到一个`ArrayList`中:
 
-```
+```java
 List<String> employeeByKey = new ArrayList<>(map.keySet());
 Collections.sort(employeeByKey);
 ```
 
 输出是:
 
-```
+```java
 [Annie, George, John, Mher]
 ```
 
@@ -100,13 +100,13 @@ Collections.sort(employeeByKey);
 
 首先，让我们将值复制到列表中:
 
-```
+```java
 List<Employee> employeeById = new ArrayList<>(map.values());
 ```
 
 然后我们对其进行分类:
 
-```
+```java
 Collections.sort(employeeById);
 ```
 
@@ -114,7 +114,7 @@ Collections.sort(employeeById);
 
 为了检查结果，我们打印了`employeeById`:
 
-```
+```java
 [Employee{id=1, name='Mher'}, 
 Employee{id=2, name='George'}, 
 Employee{id=8, name='John'}, 
@@ -129,7 +129,7 @@ Employee{id=22, name='Annie'}]
 
 首先，让我们在初始地图中添加一些重复的条目:
 
-```
+```java
 Employee employee5 = new Employee(1L, "Mher");
 map.put(employee5.getName(), employee5);
 Employee employee6 = new Employee(22L, "Annie");
@@ -140,13 +140,13 @@ map.put(employee6.getName(), employee6);
 
 要按关键字条目对地图进行排序，请执行以下操作:
 
-```
+```java
 SortedSet<String> keySet = new TreeSet<>(map.keySet());
 ```
 
 让我们打印`keySet`并查看输出:
 
-```
+```java
 [Annie, George, John, Mher]
 ```
 
@@ -156,13 +156,13 @@ SortedSet<String> keySet = new TreeSet<>(map.keySet());
 
 同样，对于映射值，转换代码如下所示:
 
-```
+```java
 SortedSet<Employee> values = new TreeSet<>(map.values());
 ```
 
 结果是:
 
-```
+```java
 [Employee{id=1, name='Mher'}, 
 Employee{id=2, name='George'}, 
 Employee{id=8, name='John'}, 
@@ -179,7 +179,7 @@ Employee{id=22, name='Annie'}]
 
 为了按键排序，我们使用了`comparingByKey `比较器:
 
-```
+```java
 map.entrySet()
   .stream()
   .sorted(Map.Entry.<String, Employee>comparingByKey())
@@ -188,7 +188,7 @@ map.entrySet()
 
 最后的`forEach`阶段打印出结果:
 
-```
+```java
 Annie=Employee{id=22, name='Annie'}
 George=Employee{id=2, name='George'}
 John=Employee{id=8, name='John'}
@@ -201,7 +201,7 @@ Mher=Employee{id=1, name='Mher'}
 
 当然，我们也可以按`Employee`对象排序:
 
-```
+```java
 map.entrySet()
   .stream()
   .sorted(Map.Entry.comparingByValue())
@@ -210,7 +210,7 @@ map.entrySet()
 
 正如我们所看到的，上面的代码打印出了一个按照`Employee`对象的`id`字段排序的地图:
 
-```
+```java
 Mher=Employee{id=1, name='Mher'}
 George=Employee{id=2, name='George'}
 John=Employee{id=8, name='John'}
@@ -219,7 +219,7 @@ Annie=Employee{id=22, name='Annie'}
 
 此外，我们可以将结果收集到新的地图中:
 
-```
+```java
 Map<String, Employee> result = map.entrySet()
   .stream()
   .sorted(Map.Entry.comparingByValue())
@@ -237,20 +237,20 @@ Map<String, Employee> result = map.entrySet()
 
 首先，让我们声明一个 [`Ordering`](/web/20221201083836/https://www.baeldung.com/guava-ordering) ，因为我们想通过`Employee's` `Id`字段对我们的地图进行排序:
 
-```
+```java
 Ordering naturalOrdering = Ordering.natural()
   .onResultOf(Functions.forMap(map, null));
 ```
 
 现在我们只需要用`ImmutableSortedMap `来说明结果:
 
-```
+```java
 ImmutableSortedMap.copyOf(map, naturalOrdering);
 ```
 
 同样，输出是按`id`字段排序的地图:
 
-```
+```java
 Mher=Employee{id=1, name='Mher'}
 George=Employee{id=2, name='George'}
 John=Employee{id=8, name='John'}

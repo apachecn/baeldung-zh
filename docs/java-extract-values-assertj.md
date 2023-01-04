@@ -12,7 +12,7 @@ AssertJ 是一个 Java 断言库，它允许我们流畅地编写断言，并使
 
 让我们从一个`Person`示例类开始:
 
-```
+```java
 class Person {
     private String firstName;
     private String lastName;
@@ -30,7 +30,7 @@ class Person {
 
 每个`Person`将与一些`Address:`相关联
 
-```
+```java
 class Address {
     private String street;
     private String city;
@@ -48,7 +48,7 @@ class Address {
 
 并且每个`Address`将有一个`ZipCode`被包括作为一个类:
 
-```
+```java
 class ZipCode {
     private long zipcode;
 
@@ -71,43 +71,43 @@ class ZipCode {
 
 给定以下`Person`对象:
 
-```
+```java
 Person person = new Person("aName", "aLastName", new Address("aStreet", "aCity", new ZipCode(90210)));
 ```
 
 我们可以提取`Address`对象:
 
-```
+```java
 Address address = person.getAddress();
 ```
 
 那么我们可以断言`Adress`不为空:
 
-```
+```java
 assertThat(address).isNotNull();
 ```
 
 我们还可以检查`Address`是否不在受限地址列表中:
 
-```
+```java
 assertThat(address).isNotIn(RESTRICTED_ADDRESSES);
 ```
 
 下一步是检查`ZipCode`:
 
-```
+```java
 ZipCode zipCode = address.getZipCode();
 ```
 
 并断言它不为空:
 
-```
+```java
 assertThat(zipCode).isNotNull();
 ```
 
 最后，我们可以提取`ZipCode`值并断言它在 1000 到 100000 之间:
 
-```
+```java
 assertThat(zipCode.getZipcode()).isBetween(1000L, 100_000L);
 ```
 
@@ -117,7 +117,7 @@ assertThat(zipCode.getZipcode()).isBetween(1000L, 100_000L);
 
 现在让我们看看提取方法如何帮助我们:
 
-```
+```java
 assertThat(person)
   .extracting(Person::getAddress)
   .isNotNull()

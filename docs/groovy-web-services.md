@@ -16,7 +16,7 @@
 
 首先，我们将调用`URL`类的`openConnection`方法，然后设置`requestMethod`来获取:
 
-```
+```java
 def postmanGet = new URL('https://postman-echo.com/get')
 def getConnection = postmanGet.openConnection()
 getConnection.requestMethod = 'GET'
@@ -25,7 +25,7 @@ assert getConnection.responseCode == 200
 
 类似地，我们可以通过将`requestMethod` 设置为 POST 来发出 POST 请求:
 
-```
+```java
 def postmanPost = new URL('https://postman-echo.com/post')
 def postConnection = postmanPost.openConnection()
 postConnection.requestMethod = 'POST'
@@ -34,7 +34,7 @@ assert postConnection.responseCode == 200
 
 同样，我们可以使用 [`outputStream.withWriter`](/web/20220630132241/https://www.baeldung.com/groovy-io#writing) 将参数传递给 POST 请求:
 
-```
+```java
 def form = "param1=This is request parameter."
 postConnection.doOutput = true
 def text
@@ -51,7 +51,7 @@ assert postConnection.responseCode == 200
 
 让我们使用`JsonSlurper`将`String`响应解析成 JSON:
 
-```
+```java
 JsonSlurper jsonSlurper = new JsonSlurper()
 assert jsonSlurper.parseText(text)?.json.param1 == "This is request parameter."
 ```
@@ -64,7 +64,7 @@ RSS 和 [Atom](https://web.archive.org/web/20220630132241/https://en.wikipedia.o
 
 让我们来读一些来自谷歌新闻的头条新闻:
 
-```
+```java
 def rssFeed = new XmlParser()
     .parse("https://news.google.com/rss?hl=en-US&gl;=US&ceid;=US:en")
 def stories = []
@@ -77,7 +77,7 @@ assert stories.size() == 5
 
 类似地，我们可以读取 Atom 提要。然而，由于两种协议的规范存在差异，我们将在 Atom 提要中以不同的方式访问内容:
 
-```
+```java
 def atomFeed = new XmlParser()
     .parse("https://news.google.com/atom?hl=en-US&gl;=US&ceid;=US:en")
 def stories = []
@@ -96,7 +96,7 @@ SOAP 是应用程序用来在 web 上公开其服务的最流行的 web 服务�
 
 我们将使用 [groovy-wslite](https://web.archive.org/web/20220630132241/https://github.com/jwagenleitner/groovy-wslite) 库来消费 SOAP APIs。让我们将它最新的[依赖](https://web.archive.org/web/20220630132241/https://mvnrepository.com/artifact/com.github.groovy-wslite/groovy-wslite)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.github.groovy-wslite</groupId>
     <artifactId>groovy-wslite</artifactId>
@@ -106,13 +106,13 @@ SOAP 是应用程序用来在 web 上公开其服务的最流行的 web 服务�
 
 或者，我们可以使用 Gradle 添加最新的依赖项:
 
-```
+```java
 compile group: 'com.github.groovy-wslite', name: 'groovy-wslite', version: '1.1.3'
 ```
 
 或者如果我们想写一个 Groovy 脚本。我们可以用`@Grab`直接添加:
 
-```
+```java
 @Grab(group='com.github.groovy-wslite', module='groovy-wslite', version='1.1.3')
 ```
 
@@ -120,7 +120,7 @@ compile group: 'com.github.groovy-wslite', name: 'groovy-wslite', version: '1.1.
 
 让我们使用`SOAPClient`来消费一个[号码转换 SOAP 服务](https://web.archive.org/web/20220630132241/http://www.dataaccess.com/webservicesserver/numberconversion.wso):
 
-```
+```java
 def url = "http://www.dataaccess.com/webservicesserver/numberconversion.wso"
 def soapClient = new SOAPClient(url)
 def message = new SOAPMessageBuilder().build({
@@ -145,7 +145,7 @@ REST 是用于创建 web 服务的另一种流行的架构风格。此外，API 
 
 让我们向已经讨论过的 Postman API 发出一个 GET 请求:
 
-```
+```java
 RESTClient client = new RESTClient("https://postman-echo.com")
 def path = "/get"
 def response
@@ -162,7 +162,7 @@ try {
 
 现在，让我们向 Postman API 发出一个 POST 请求。同时，我们将把表单参数作为 JSON 传递:
 
-```
+```java
 client.defaultAcceptHeader = ContentType.JSON
 def path = "/post"
 def params = ["foo":1,"bar":2]
@@ -187,7 +187,7 @@ assert response.json?.data == params
 
 我们可以使用已经讨论过的`RESTClient `类。让我们使用带有凭证的`HTTPBasicAuthorization` 类来执行基本认证:
 
-```
+```java
 def path = "/basic-auth"
 client.authorization = new HTTPBasicAuthorization("postman", "password")
 response = client.get(path: path)
@@ -197,7 +197,7 @@ assert response.json?.authenticated == true
 
 或者，我们可以直接在`headers`参数中传递凭证(Base64 编码):
 
-```
+```java
 def response = client
 .get(path: path, headers: ["Authorization": "Basic cG9zdG1hbjpwYXNzd29yZA=="])
 ```
@@ -208,7 +208,7 @@ def response = client
 
 然而，由于我们不像对其他机制那样内置对 OAuth 1.0 的支持，我们必须自己完成这项工作:
 
-```
+```java
 def path = "/oauth1"
 def params = [oauth_consumer_key: "RKCGzna7bv9YD57c", 
     oauth_signature_method: "HMAC-SHA1", 

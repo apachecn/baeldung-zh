@@ -24,7 +24,7 @@
 
 首先，我们需要在我们的`pom.xml`文件中包含 Spring Web、Spring Data JPA 和内存中的 H2 数据库的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -44,7 +44,7 @@
 
 让我们首先创建域对象。对于地址簿，让我们定义一个名为`Address`的`Entity`类，我们将使用它存储个人的地址信息。为了简单起见，对于我们的`Address`实体，我们将使用三个字段——`name`、`city`和`postalCode`:
 
-```
+```java
 @Entity
 public class Address {
 
@@ -59,7 +59,7 @@ public class Address {
 
 下一步是从数据库中访问数据。为简单起见，我们将利用 [Spring Data JPA 的](/web/20220630011322/https://www.baeldung.com/the-persistence-layer-with-spring-data-jpa) `JpaRepository. `这将允许我们在不编写任何额外代码的情况下对数据执行 CRUD 功能:
 
-```
+```java
 public interface AddressRepository extends JpaRepository<Address, Long> {
 }
 ```
@@ -70,7 +70,7 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
 
 这里，**将定义一个@ `PostMapping`来创建新地址**并将它们存储在数据库**中，以及一个`@PutMapping`来根据请求 URI 更新地址簿**的内容。如果找不到 URI，它将创建一个新地址并将其存储在数据库中:
 
-```
+```java
 @RestController
 public class AddressController {
 
@@ -108,7 +108,7 @@ public class AddressController {
 
 为了创建新的地址，我们将以 JSON 格式封装数据，并通过 POST 请求发送它:
 
-```
+```java
 curl -X POST --header 'Content-Type: application/json' \
     -d '{ "name": "John Doe", "city": "Berlin", "postalCode": "10585" }' \ 
     http://localhost:8080/addresses
@@ -116,7 +116,7 @@ curl -X POST --header 'Content-Type: application/json' \
 
 现在，让我们更新我们创建的地址的内容。我们将使用 URL 中该地址的`id`发送一个 PUT 请求。在本例中，我们将更新刚刚创建的地址的`city`和`postalCode`部分——我们假设它是用`id` =1 保存的:
 
-```
+```java
 curl -X PUT --header 'Content-Type: application/json' \
   -d '{ "name": "John Doe", "city": "Frankfurt", "postalCode": "60306" }' \ 
   http://localhost:8080/addresses/1

@@ -24,7 +24,7 @@
 
 对于我们的后端，我们将使用`Spring Boot`，所以我们需要以下依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -56,7 +56,7 @@
 
 我们的`index.html`将有我们需要的导入和表格网格的简单实现:
 
-```
+```java
 <!DOCTYPE html>
 <html lang="en" ng-app="app">
     <head>
@@ -87,7 +87,7 @@
 
 我们先来定义一下`app.js`中的模块:
 
-```
+```java
 var app = angular.module('app', ['ui.grid','ui.grid.pagination']);
 ```
 
@@ -95,7 +95,7 @@ var app = angular.module('app', ['ui.grid','ui.grid.pagination']);
 
 接下来，我们将定义控制器:
 
-```
+```java
 app.controller('StudentCtrl', ['$scope','StudentService', 
     function ($scope, StudentService) {
         var paginationOptions = {
@@ -151,7 +151,7 @@ app.controller('StudentCtrl', ['$scope','StudentService',
 
 并将请求发送给 API:
 
-```
+```java
 app.service('StudentService',['$http', function ($http) {
 
     function getStudents(pageNumber,size) {
@@ -173,7 +173,7 @@ app.service('StudentService',['$http', function ($http) {
 
 下面是支持分页的简单 RESTful API 实现:
 
-```
+```java
 @RestController
 public class StudentDirectoryRestController {
 
@@ -210,7 +210,7 @@ public class StudentDirectoryRestController {
 
 我们的服务将简单地根据控制器提供的页面和大小返回记录:
 
-```
+```java
 @Service
 public class StudentServiceImpl implements StudentService {
 
@@ -230,7 +230,7 @@ public class StudentServiceImpl implements StudentService {
 
 首先，我们需要设置我们的持久性配置:
 
-```
+```java
 @EnableJpaRepositories("com.baeldung.web.dao")
 @ComponentScan(basePackages = { "com.baeldung.web" })
 @EntityScan("com.baeldung.web.entity") 
@@ -262,7 +262,7 @@ public class PersistenceConfig {
 
 现在是时候创建我们的数据存储库了:
 
-```
+```java
 public interface StudentRepository extends JpaRepository<Student, Long> {} 
 ```
 
@@ -272,7 +272,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {}
 
 当调用 API `– http://localhost:8080/student/get?page=1&size;=5`时，JSON 响应看起来会像这样:
 
-```
+```java
 {
     "content":[
         {"studentId":"1","name":"Bryan","gender":"Male","age":20},
@@ -313,7 +313,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {}
 
 为了便于开发我们的测试类，我们将添加静态导入:
 
-```
+```java
 io.restassured.RestAssured.*
 io.restassured.matcher.RestAssuredMatchers.*
 org.hamcrest.Matchers.*
@@ -321,7 +321,7 @@ org.hamcrest.Matchers.*
 
 接下来，我们将设置启用弹簧的测试:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
@@ -338,7 +338,7 @@ org.hamcrest.Matchers.*
 
 这是我们的第一个测试案例:
 
-```
+```java
 @Test
 public void givenRequestForStudents_whenPageIsOne_expectContainsNames() {
     given().params("page", "0", "size", "2").get(ENDPOINT)
@@ -357,7 +357,7 @@ public void givenRequestForStudents_whenPageIsOne_expectContainsNames() {
 
 我们增加了几个测试用例:
 
-```
+```java
 @Test
 public void givenRequestForStudents_whenResourcesAreRetrievedPaged_thenExpect200() {
     given().params("page", "0", "size", "2").get(ENDPOINT)
@@ -368,7 +368,7 @@ public void givenRequestForStudents_whenResourcesAreRetrievedPaged_thenExpect200
 
 该测试断言，当实际调用该点时，收到 OK 响应:
 
-```
+```java
 @Test
 public void givenRequestForStudents_whenSizeIsTwo_expectNumberOfElementsTwo() {
     given().params("page", "0", "size", "2").get(ENDPOINT)
@@ -379,7 +379,7 @@ public void givenRequestForStudents_whenSizeIsTwo_expectNumberOfElementsTwo() {
 
 该测试断言，当请求页面大小为 2 时，返回的页面大小实际上是 2:
 
-```
+```java
 @Test
 public void givenResourcesExist_whenFirstPageIsRetrieved_thenPageContainsResources() {
     given().params("page", "0", "size", "2").get(ENDPOINT)

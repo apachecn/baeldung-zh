@@ -28,7 +28,7 @@
 
 意思是，**我们在迭代`HashMap` :** 的`keys`和`values`时不能假定任何顺序
 
-```
+```java
 @Test
 public void whenInsertObjectsHashMap_thenRandomOrder() {
     Map<Integer, String> hashmap = new HashMap<>();
@@ -44,7 +44,7 @@ public void whenInsertObjectsHashMap_thenRandomOrder() {
 
 如果`TreeMap`对象不能按照自然顺序排序，那么我们可以利用`Comparator` 或`Comparable` 来定义元素在`Map:`中的排列顺序
 
-```
+```java
 @Test
 public void whenInsertObjectsTreeMap_thenNaturalOrder() {
     Map<Integer, String> treemap = new TreeMap<>();
@@ -62,7 +62,7 @@ public void whenInsertObjectsTreeMap_thenNaturalOrder() {
 
 让我们看一个例子:
 
-```
+```java
 @Test
 public void whenInsertNullInHashMap_thenInsertsNull() {
     Map<Integer, String> hashmap = new HashMap<>();
@@ -76,7 +76,7 @@ public void whenInsertNullInHashMap_thenInsertsNull() {
 
 不允许使用`null` 键，因为`compareTo()`或`compare()` 方法抛出了`NullPointerException:`
 
-```
+```java
 @Test(expected = NullPointerException.class)
 public void whenInsertNullInTreeMap_thenException() {
     Map<Integer, String> treemap = new TreeMap<>();
@@ -115,7 +115,7 @@ public void whenInsertNullInTreeMap_thenException() {
 
 执行此转换的代码如下所示:
 
-```
+```java
 if(binCount >= TREEIFY_THRESHOLD - 1) {
     treeifyBin(tab, hash);
 }
@@ -163,7 +163,7 @@ if(binCount >= TREEIFY_THRESHOLD - 1) {
 
 `TreeMap`和`HashMap`都不支持重复键。如果添加，它将覆盖前面的元素(没有错误或异常):
 
-```
+```java
 @Test
 public void givenHashMapAndTreeMap_whenputDuplicates_thenOnlyUnique() {
     Map<Integer, String> treeMap = new HashMap<>();
@@ -196,7 +196,7 @@ public void givenHashMapAndTreeMap_whenputDuplicates_thenOnlyUnique() {
 
 让我们看一个例子:
 
-```
+```java
 @Test
 public void whenModifyMapDuringIteration_thenThrowExecption() {
     Map<Integer, String> hashmap = new HashMap<>();

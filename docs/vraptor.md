@@ -38,7 +38,7 @@
 
 **如果我们面对`java.lang.LinkageError: loader constraint violation”,` 那么，我们必须修改`pom.xml`中的下列依赖关系**:
 
-```
+```java
 <dependency>
     <groupId>org.jboss.weld.servlet</groupId>
     <artifactId>weld-servlet-core</artifactId>
@@ -67,7 +67,7 @@
 
 沿着这条线将需要以下依赖项，所以让我们将它们包含在`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>br.com.caelum.vraptor</groupId>
     <artifactId>vraptor-freemarker</artifactId>
@@ -75,7 +75,7 @@
 </dependency>
 ```
 
-```
+```java
 <dependency>
     <groupId>mysql</groupId>
     <artifactId>mysql-connector-java</artifactId>
@@ -113,13 +113,13 @@ VRaptor 使用一种称为生产者的技术来使对象可用于 DI 管理。�
 
 此外，在定义路径时，可以在花括号中指定路径变量:
 
-```
+```java
 @Get("/posts/{id}")
 ```
 
 然后可以在控制器方法中访问`id`的值:
 
-```
+```java
 @Get("/posts/{id}")
 public void view(int id) {
     // ...
@@ -136,7 +136,7 @@ public void view(int id) {
 
 让我们从在默认视图目录(src/main/resources/templates)中创建`index.ftl and saving` 开始:
 
-```
+```java
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -150,7 +150,7 @@ It works!! ${variable}
 
 现在，我们可以使用带有`FreemarkerView` 类的已定义视图进行视图渲染:
 
-```
+```java
 @Path("/")
 public void index() {
     result.include("variable", "VRaptor!");
@@ -168,7 +168,7 @@ public void index() {
 
 让我们看看如何处理带有验证的表单提交:
 
-```
+```java
 @Post("/post/add")
 public void add(Post post) {
     post.setAuthor(userInfo.getUser());
@@ -199,7 +199,7 @@ public void add(Post post) {
 
 例如，负责添加新文章的视图有输入字段:`post.title`和`post.post`，它们对应于`Post`中的字段`title` 和`post` 。`java` 分别为:
 
-```
+```java
 <input type="text" class="form-control" placeholder="Title" 
   id="title" name="post.title" required />
 
@@ -211,7 +211,7 @@ public void add(Post post) {
 
 如果表单提交中有错误，错误消息会被包含进来，用户会被重定向到同一个`add()`方法:
 
-```
+```java
 if(validator.hasErrors()) {
     result.include("errors", validator.getErrors());
 }

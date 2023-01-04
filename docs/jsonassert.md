@@ -10,7 +10,7 @@
 
 首先，让我们添加 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.skyscreamer</groupId>
     <artifactId>jsonassert</artifactId>
@@ -26,7 +26,7 @@
 
 让我们从一个简单的 JSON 字符串比较开始我们的测试:
 
-```
+```java
 String actual = "{id:123, name:\"John\"}";
 JSONAssert.assertEquals(
   "{id:123,name:\"John\"}", actual, JSONCompareMode.LENIENT);
@@ -36,7 +36,7 @@ JSONAssert.assertEquals(
 
 比较**模式`LENIENT`意味着即使实际 JSON 包含扩展字段，测试仍然会通过:**
 
-```
+```java
 String actual = "{id:123, name:\"John\", zip:\"33025\"}";
 JSONAssert.assertEquals(
   "{id:123,name:\"John\"}", actual, JSONCompareMode.LENIENT);
@@ -50,7 +50,7 @@ JSONAssert.assertEquals(
 
 使用`STRICT`比较模式可以很容易地改变前一小节中提到的行为:
 
-```
+```java
 String actual = "{id:123,name:\"John\"}";
 JSONAssert.assertNotEquals(
   "{name:\"John\"}", actual, JSONCompareMode.STRICT);
@@ -62,7 +62,7 @@ JSONAssert.assertNotEquals(
 
 也可以使用重载方法定义比较模式，该方法采用`boolean`而不是`JSONCompareMode`，其中`LENIENT = false`和`STRICT = true`:
 
-```
+```java
 String actual = "{id:123,name:\"John\",zip:\"33025\"}";
 JSONAssert.assertEquals(
   "{id:123,name:\"John\"}", actual, JSONCompareMode.LENIENT);
@@ -80,7 +80,7 @@ JSONAssert.assertNotEquals(
 
 如前所述，`JSONAssert`对数据进行逻辑比较。这意味着在处理 JSON 对象时，元素的顺序并不重要:
 
-```
+```java
 String result = "{id:1,name:\"John\"}";
 JSONAssert.assertEquals(
   "{name:\"John\",id:1}", result, JSONCompareMode.STRICT);
@@ -92,7 +92,7 @@ JSONAssert.assertEquals(
 
 逻辑比较的另一个示例可以通过对相同的值使用不同的类型来演示:
 
-```
+```java
 JSONObject expected = new JSONObject();
 JSONObject actual = new JSONObject();
 expected.put("id", Integer.valueOf(12345));
@@ -105,7 +105,7 @@ JSONAssert.assertEquals(expected, actual, JSONCompareMode.LENIENT);
 
 即使在我们有嵌套对象表示的情况下，这个库也能很好地工作:
 
-```
+```java
 String result = "{id:1,name:\"Juergen\", 
   address:{city:\"Hollywood\", state:\"LA\", zip:91601}}";
 JSONAssert.assertEquals("{id:1,name:\"Juergen\", 
@@ -116,7 +116,7 @@ JSONAssert.assertEquals("{id:1,name:\"Juergen\",
 
 所有的`assertEquals()`和`assertNotEquals()`方法都接受一个`String`消息作为第一个参数。该消息通过在测试失败的情况下提供有意义的消息，为我们的测试用例提供了一些定制:
 
-```
+```java
 String actual = "{id:123,name:\"John\"}";
 String failureMessage = "Only one field is expected: name";
 try {
@@ -129,7 +129,7 @@ try {
 
 在任何失败的情况下，整个错误消息将更有意义:
 
-```
+```java
 Only one field is expected: name 
 Unexpected: id
 ```
@@ -144,7 +144,7 @@ Unexpected: id
 
 第一个区别是**在`STRICT`比较模式**中，数组中元素的顺序必须完全相同。然而，对于`LENIENT`比较模式，顺序并不重要:
 
-```
+```java
 String result = "[Alex, Barbera, Charlie, Xavier]";
 JSONAssert.assertEquals(
   "[Charlie, Alex, Xavier, Barbera]", result, JSONCompareMode.LENIENT);
@@ -160,7 +160,7 @@ JSONAssert.assertNotEquals(
 
 另一个区别是在处理 JSON 数组时不允许使用**扩展元素:**
 
-```
+```java
 String result = "[1,2,3,4,5]";
 JSONAssert.assertEquals(
   "[1,2,3,4,5]", result, JSONCompareMode.LENIENT);
@@ -178,7 +178,7 @@ JSONAssert.assertNotEquals(
 
 假设我们想要验证数组的大小。这可以通过使用具体的语法作为期望值来实现:
 
-```
+```java
 String names = "{names:[Alex, Barbera, Charlie, Xavier]}";
 JSONAssert.assertEquals(
   "{names:[4]}", 
@@ -190,7 +190,7 @@ JSONAssert.assertEquals(
 
 让我们来看看另一种比较技术:
 
-```
+```java
 String ratings = "{ratings:[3.2,3.5,4.1,5,1]}";
 JSONAssert.assertEquals(
   "{ratings:[1,5]}", 
@@ -206,7 +206,7 @@ JSONAssert.assertEquals(
 
 上述正则表达式可以与一个`CustomComparator`组合，并应用于所有`id`的所有值。如果任何一个`id`与正则表达式不匹配，测试将失败:
 
-```
+```java
 JSONAssert.assertEquals("{entry:{id:x}}", "{entry:{id:1, id:2}}", 
   new CustomComparator(
   JSONCompareMode.STRICT, 

@@ -10,14 +10,14 @@
 
 假设我们有两个字符串，一个包含空格，另一个只包含非空格字符:
 
-```
+```java
 String normalString = "ABCDEF";
 String stringWithSpaces = " AB  CD EF ";
 ```
 
 我们可以简单地比较它们，同时使用`String`类的内置`replaceAll()`方法忽略空格:
 
-```
+```java
 assertEquals(normalString.replaceAll("\\s+",""), stringWithSpaces.replaceAll("\\s+",""));
 ```
 
@@ -31,7 +31,7 @@ assertEquals(normalString.replaceAll("\\s+",""), stringWithSpaces.replaceAll("\\
 
 这个类有一个方法`deleteWhitespace()`，用来删除一个`String`中的所有空格:
 
-```
+```java
 assertEquals(StringUtils.deleteWhitespace(normalString), StringUtils.deleteWhitespace(stringWithSpaces));
 ```
 
@@ -41,7 +41,7 @@ assertEquals(StringUtils.deleteWhitespace(normalString), StringUtils.deleteWhite
 
 使用这个时间的方法是`trimAllWhitespace()`:
 
-```
+```java
 assertEquals(StringUtils.trimAllWhitespace(normalString), StringUtils.trimAllWhitespace(stringWithSpaces));
 ```
 

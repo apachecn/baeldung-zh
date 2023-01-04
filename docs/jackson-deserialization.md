@@ -26,7 +26,7 @@ Control your JSON output with Jackson 2 by using a Custom Serializer.[Read more]
 
 让我们从定义两个实体开始，看看 Jackson 如何在没有任何定制的情况下将 JSON 表示反序列化为这些实体:
 
-```
+```java
 public class User {
     public int id;
     public String name;
@@ -40,7 +40,7 @@ public class Item {
 
 现在让我们定义想要反序列化的 JSON 表示:
 
-```
+```java
 {
     "id": 1,
     "itemName": "theItem",
@@ -53,7 +53,7 @@ public class Item {
 
 最后，让我们将这个 JSON 解组到 Java 实体:
 
-```
+```java
 Item itemWithOwner = new ObjectMapper().readValue(json, Item.class);
 ```
 
@@ -63,7 +63,7 @@ Item itemWithOwner = new ObjectMapper().readValue(json, Item.class);
 
 接下来，我们将简化 JSON:
 
-```
+```java
 {
     "id": 1,
     "itemName": "theItem",
@@ -73,7 +73,7 @@ Item itemWithOwner = new ObjectMapper().readValue(json, Item.class);
 
 默认情况下，当将其解组到完全相同的实体时，这当然会失败:
 
-```
+```java
 com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException: 
 Unrecognized field "createdBy" (class org.baeldung.jackson.dtos.Item), 
 not marked as ignorable (3 known properties: "id", "owner", "itemName"])
@@ -83,7 +83,7 @@ not marked as ignorable (3 known properties: "id", "owner", "itemName"])
 
 我们将通过使用自定义反序列化器进行**我们自己的反序列化来解决这个问题:**
 
-```
+```java
 public class ItemDeserializer extends StdDeserializer<Item> { 
 
     public ItemDeserializer() { 
@@ -111,7 +111,7 @@ public class ItemDeserializer extends StdDeserializer<Item> {
 
 简单地说，我们需要**注册这个定制的反序列化器**并正常反序列化 JSON:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 SimpleModule module = new SimpleModule();
 module.addDeserializer(Item.class, new ItemDeserializer());
@@ -124,7 +124,7 @@ Item readValue = mapper.readValue(json, Item.class);
 
 或者，我们也可以**在类**上直接注册反序列化器:
 
-```
+```java
 @JsonDeserialize(using = ItemDeserializer.class)
 public class Item {
     ...
@@ -133,7 +133,7 @@ public class Item {
 
 有了在类级别定义的反序列化器，就不需要在`ObjectMapper`上注册它了——一个默认的映射器就可以了:
 
-```
+```java
 Item itemWithOwner = new ObjectMapper().readValue(json, Item.class);
 ```
 

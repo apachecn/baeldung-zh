@@ -12,7 +12,7 @@
 
 要使用协议缓冲区是 Java，我们需要添加一个 Maven 依赖到一个 [protobuf-java](https://web.archive.org/web/20220626074844/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.google.protobuf%22%20AND%20a%3A%22protobuf-java%22) :
 
-```
+```java
 <dependency>
     <groupId>com.google.protobuf</groupId>
     <artifactId>protobuf-java</artifactId>
@@ -28,7 +28,7 @@
 
 先说个例子。我们可以用 protobuf 格式定义一个非常简单的协议:
 
-```
+```java
 message Person {
     required string name = 1;
 }
@@ -40,7 +40,7 @@ message Person {
 
 包 protobuf
 
-```
+```java
 package protobuf;
 
 option java_package = "com.baeldung.protobuf";
@@ -73,7 +73,7 @@ message AddressBook {
 
 首先，我们需要在我们的机器上安装 protobuf 。一旦我们这样做了，我们就可以通过执行一个`protoc`命令来生成代码:
 
-```
+```java
 protoc -I=. --java_out=. addressbook.proto
 ```
 
@@ -85,7 +85,7 @@ protoc -I=. --java_out=. addressbook.proto
 
 我们可以很容易地使用生成的代码来创建一个`Person` 类的 Java 实例:
 
-```
+```java
 String email = "[[email protected]](/web/20220626074844/https://www.baeldung.com/cdn-cgi/l/email-protection)";
 int id = new Random().nextInt();
 String name = "Michael Program";
@@ -112,7 +112,7 @@ assertEquals(person.getNumbers(0), number);
 
 接下来，我们希望将该文件保存到光盘上——我们可以使用自动生成代码中的一个`writeTo()` util 方法:
 
-```
+```java
 AddressBookProtos.AddressBook addressBook 
   = AddressBookProtos.AddressBook.newBuilder().addPeople(person).build();
 FileOutputStream fos = new FileOutputStream(filePath);
@@ -121,7 +121,7 @@ addressBook.writeTo(fos);
 
 执行该方法后，我们的对象将被序列化为二进制格式并保存在磁盘上。要从磁盘加载数据并将其反序列化回`AddressBook` 对象，我们可以使用一个`mergeFrom()` 方法:
 
-```
+```java
 AddressBookProtos.AddressBook deserialized
   = AddressBookProtos.AddressBook.newBuilder()
     .mergeFrom(new FileInputStream(filePath)).build();

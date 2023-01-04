@@ -10,7 +10,7 @@
 
 首先，为了使用 Spring Security OAuth——我们需要将以下依赖项添加到我们的`pom.xml` 中(当然还有您可能使用的任何其他 Spring 依赖项):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security.oauth</groupId>
     <artifactId>spring-security-oauth2</artifactId>
@@ -22,7 +22,7 @@
 
 接下来——让我们配置 OAuth2 客户端——`OAuth2RestTemplate`——和一个用于所有认证相关属性的`reddit.properties`文件:
 
-```
+```java
 @Configuration
 @EnableOAuth2Client
 @PropertySource("classpath:reddit.properties")
@@ -74,7 +74,7 @@ protected static class ResourceConfiguration {
 
 还有“`reddit.properties`”:
 
-```
+```java
 clientID=xxxxxxxx
 clientSecret=xxxxxxxx
 accessTokenUri=https://www.reddit.com/api/v1/access_token
@@ -100,7 +100,7 @@ Reddit 做的一件非标准的事情是——当我们重定向用户并提示�
 
 因此，在扩展了`AuthorizationCodeAccessTokenProvider`之后，我们在`getRedirectForAuthorization()`方法中添加了这个参数:
 
-```
+```java
  requestParameters.put("duration", "permanent");
 ```
 
@@ -112,7 +112,7 @@ Reddit 做的一件非标准的事情是——当我们重定向用户并提示�
 
 我们需要添加一个 id 为`oauth2ClientContextFilter`的过滤 bean，这样我们就可以用它来存储当前的上下文:
 
-```
+```java
 public class ServletInitializer extends AbstractDispatcherServletInitializer {
 
     @Override
@@ -153,7 +153,7 @@ public class ServletInitializer extends AbstractDispatcherServletInitializer {
 
 现在，让我们来看看我们简单的 web 应用程序的 MVC 配置:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = { "org.baeldung.web" })
@@ -194,7 +194,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 接下来，让我们来看一下**主要的 Spring 安全配置**:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -231,7 +231,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 我们使用方法`redditLogin()`从他的 Reddit 帐户获取用户信息，并从中加载一个身份验证——如下例所示:
 
-```
+```java
 @Controller
 public class RedditController {
 
@@ -262,7 +262,7 @@ public class RedditController {
 
 最后，让我们看一下`home.jsp`，显示从用户的 Reddit 帐户中检索到的信息:
 
-```
+```java
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <html>

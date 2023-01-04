@@ -28,7 +28,7 @@ HMAC 使用加密哈希函数，如 [MD5](/web/20221207080813/https://www.baeldu
 
 让我们定义一种使用各种哈希算法(如 MD5、SHA-1、SHA-224、SHA-256、SHA-384 和 SHA-512)计算 HMAC 的方法:
 
-```
+```java
 public static String hmacWithJava(String algorithm, String data, String key)
   throws NoSuchAlgorithmException, InvalidKeyException {
     SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), algorithm);
@@ -40,7 +40,7 @@ public static String hmacWithJava(String algorithm, String data, String key)
 
 让我们编写一个示例测试来说明 HMAC 计算:
 
-```
+```java
 @Test
 public void givenDataAndKeyAndAlgorithm_whenHmacWithJava_thenSuccess()
     throws NoSuchAlgorithmException, InvalidKeyException {
@@ -66,7 +66,7 @@ Apache Commons 库也为 HMAC 计算提供了一个实用类。
 
 要使用 Apache Commons 实用程序类，我们需要将 [commons-codec](https://web.archive.org/web/20221207080813/https://search.maven.org/search?q=g:commons-codec) 添加到 pom.xml:
 
-```
+```java
 <dependency>
     <groupId>commons-codec</groupId>
     <artifactId>commons-codec</artifactId>
@@ -80,7 +80,7 @@ Apache Commons 库也为 HMAC 计算提供了一个实用类。
 
 让我们创建一个生成 HMAC 的方法:
 
-```
+```java
 public static String hmacWithApacheCommons(String algorithm, String data, String key) {
     String hmac = new HmacUtils(algorithm, key).hmacHex(data);
     return hmac;
@@ -89,7 +89,7 @@ public static String hmacWithApacheCommons(String algorithm, String data, String
 
 让我们编写一个示例测试:
 
-```
+```java
 @Test
 public void givenDataAndKeyAndAlgorithm_whenHmacWithApacheCommons_thenSuccess() {
 
@@ -114,7 +114,7 @@ public void givenDataAndKeyAndAlgorithm_whenHmacWithApacheCommons_thenSuccess() 
 
 在我们开始使用这个库之前，我们需要将 [bcpkix-jdk15to18](https://web.archive.org/web/20221207080813/https://search.maven.org/search?q=a:bcpkix-jdk15to18) 依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.bouncycastle</groupId>
     <artifactId>bcpkix-jdk15to18</artifactId>
@@ -126,7 +126,7 @@ public void givenDataAndKeyAndAlgorithm_whenHmacWithApacheCommons_thenSuccess() 
 
 我们将从基于我们想要使用的散列算法的**实例化`HMac`类开始。然后我们将使用`update()`方法用输入数据更新 HMAC 对象。最后，我们将调用`doFinal()`方法来生成 HMAC 代码:**
 
-```
+```java
 public static String hmacWithBouncyCastle(String algorithm, String data, String key) {
     Digest digest = getHashDigest(algorithm);
 
@@ -158,7 +158,7 @@ private static Digest getHashDigest(String algorithm) {
 
 以下示例为字符串数据生成 HMAC，然后对其进行验证:
 
-```
+```java
 @Test
 public void givenDataAndKeyAndAlgorithm_whenHmacWithBouncyCastle_thenSuccess() {
 

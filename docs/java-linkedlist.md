@@ -18,7 +18,7 @@
 
 虽然`LinkedList`不是同步的，但是我们可以通过调用`[Collections.synchronizedList](https://web.archive.org/web/20220706104859/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collections.html#synchronizedList(java.util.List))`方法来检索它的同步版本，比如:
 
-```
+```java
 List list = Collections.synchronizedList(new LinkedList(...));
 ```
 
@@ -46,7 +46,7 @@ List list = Collections.synchronizedList(new LinkedList(...));
 
 ### 4.1。创作
 
-```
+```java
 LinkedList<Object> linkedList = new LinkedList<>();
 ```
 
@@ -64,7 +64,7 @@ LinkedList<Object> linkedList = new LinkedList<>();
 
 `Deque`接口提供了类似队列的行为(实际上`Deque`扩展了`Queue`接口):
 
-```
+```java
 linkedList.poll();
 linkedList.pop();
 ```
@@ -75,7 +75,7 @@ linkedList.pop();
 
 下面是`push` API 如何工作的例子:
 
-```
+```java
 linkedList.push(Object o);
 ```
 

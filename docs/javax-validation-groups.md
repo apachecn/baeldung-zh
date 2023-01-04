@@ -26,14 +26,14 @@
 
 让我们看看第一个约束组，`BasicInfo`:
 
-```
+```java
 public interface BasicInfo {
 }
 ```
 
 下一个约束组是`AdvanceInfo`:
 
-```
+```java
 public interface AdvanceInfo {
 }
 ```
@@ -42,7 +42,7 @@ public interface AdvanceInfo {
 
 现在我们已经声明了约束组，是时候在我们的`RegistrationForm` Java bean 中使用它们了:
 
-```
+```java
 public class RegistrationForm {
     @NotBlank(groups = BasicInfo.class)
     private String firstName;
@@ -81,7 +81,7 @@ public class RegistrationForm {
 
 首先，当基本信息不完整时，我们将使用我们的`BasicInfo`约束组进行验证。对于我们在字段的`@NotBlank`约束的`groups`属性中使用了`BasicInfo.class` 的任何空白字段，我们应该会得到一个约束冲突:
 
-```
+```java
 public class RegistrationFormUnitTest {
     private static Validator validator;
 
@@ -120,7 +120,7 @@ public class RegistrationFormUnitTest {
 
 在下一个场景中，我们将检查高级信息何时不完整，使用我们的`AdvanceInfo`约束组进行验证:
 
-```
+```java
 @Test
 public void whenAdvanceInfoIsNotComplete_thenShouldGiveConstraintViolationsOnlyForAdvanceInfo() {
     RegistrationForm form = buildRegistrationFormWithAdvanceInfo();
@@ -155,7 +155,7 @@ private RegistrationForm populateAdvanceInfo(RegistrationForm form) {
 
 我们可以为一个约束指定多个组。在我们的用例中，我们在基本和高级信息中都使用了`captcha`。我们先用`BasicInfo`来测试一下`captcha`:
 
-```
+```java
 @Test
 public void whenCaptchaIsBlank_thenShouldGiveConstraintViolationsForBasicInfo() {
     RegistrationForm form = buildRegistrationFormWithBasicInfo();
@@ -173,7 +173,7 @@ public void whenCaptchaIsBlank_thenShouldGiveConstraintViolationsForBasicInfo() 
 
 现在让我们用`AdvanceInfo`来测试`captcha`:
 
-```
+```java
 @Test
 public void whenCaptchaIsBlank_thenShouldGiveConstraintViolationsForAdvanceInfo() {
     RegistrationForm form = buildRegistrationFormWithAdvanceInfo();
@@ -202,7 +202,7 @@ public void whenCaptchaIsBlank_thenShouldGiveConstraintViolationsForAdvanceInfo(
 
 这是一种简单的约束排序方式。让我们用``GroupSequence`` 标注实体，并指定约束的顺序:
 
-```
+```java
 @GroupSequence({BasicInfo.class, AdvanceInfo.class})
 public class RegistrationForm {
     @NotBlank(groups = BasicInfo.class)
@@ -216,7 +216,7 @@ public class RegistrationForm {
 
 我们还可以使用`interface`来指定约束验证的顺序。这种方法的优点是相同的序列可以用于其他实体。让我们看看如何将`GroupSequence`与我们上面定义的接口一起使用:
 
-```
+```java
 @GroupSequence({BasicInfo.class, AdvanceInfo.class})
 public interface CompleteInfo {
 }
@@ -226,7 +226,7 @@ public interface CompleteInfo {
 
 现在让我们先测试`GroupSequence.` ，我们将测试如果`BasicInfo`不完整，那么`AdvanceInfo` 组约束将不会被求值:
 
-```
+```java
 @Test
 public void whenBasicInfoIsNotComplete_thenShouldGiveConstraintViolationsForBasicInfoOnly() {
     RegistrationForm form = buildRegistrationFormWithBasicInfo();
@@ -244,7 +244,7 @@ public void whenBasicInfoIsNotComplete_thenShouldGiveConstraintViolationsForBasi
 
 接下来，测试当`BasicInfo`完成时，应该评估`AdvanceInfo`约束:
 
-```
+```java
 @Test
 public void whenBasicAndAdvanceInfoIsComplete_thenShouldNotGiveConstraintViolationsWithCompleteInfoValidationGroup() {
     RegistrationForm form = buildRegistrationFormWithBasicAndAdvanceInfo();

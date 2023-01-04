@@ -16,7 +16,7 @@ JDK 发行版提供了一个 [`keytool `实用程序](/web/20220628090540/https
 
 **我们还可以将自签名或 CA 签名的证书导入到 JKS 文件中，并将其用作信任库**:
 
-```
+```java
 keytool -importcert -alias trustme -file baeldung.cer -keystore cacerts
 
 Enter keystore password:
@@ -29,7 +29,7 @@ Certificate was added to keystore
 
 如果我们现在列出密钥库中的证书，我们将看到一个别名`trustme`:
 
-```
+```java
 keytool -list -keystore cacerts
 
 trustme, Oct 31, 2020, trustedCertEntry,
@@ -42,7 +42,7 @@ Certificate fingerprint (SHA1): 04:40:6C:B0:06:65:EE:80:9A:90:A5:E9:DA:19:05:4A:
 
 要将证书导入到 PKCS12 密钥库中，我们也可以使用`[openssl](https://web.archive.org/web/20220628090540/https://www.openssl.org/)` :
 
-```
+```java
 openssl pkcs12 -export -in baeldung.cer -inkey baeldung.key -out baeldung.keystore -name trustme
 ```
 
@@ -50,7 +50,7 @@ openssl pkcs12 -export -in baeldung.cer -inkey baeldung.key -out baeldung.keysto
 
 我们可以在密钥库中看到导入的证书:
 
-```
+```java
 openssl pkcs12 -info -in baeldung.keystore
 Enter Import Password:
 MAC: sha1, Iteration 2048

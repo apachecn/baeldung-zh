@@ -20,7 +20,7 @@
 
 让我们打开生成项目的`pom.xml`,添加适当的依赖项以及一些早期发布的 Spring 存储库:
 
-```
+```java
 <dependencies>
      <dependency>
         <groupId>org.springframework.data</groupId>
@@ -48,7 +48,7 @@
 
 因此，我们现在将添加连接到实例的详细信息:
 
-```
+```java
 @Configuration
 @EnableR2dbcRepositories
 class R2DBCConfiguration extends AbstractR2dbcConfiguration {
@@ -70,7 +70,7 @@ class R2DBCConfiguration extends AbstractR2dbcConfiguration {
 
 我们的下一步是创建存储库:
 
-```
+```java
 interface PlayerRepository extends ReactiveCrudRepository<Player, Integer> {}
 ```
 
@@ -78,7 +78,7 @@ interface PlayerRepository extends ReactiveCrudRepository<Player, Integer> {}
 
 最后，我们将定义我们的模型类。我们将使用 Lombok 来避免样板代码:
 
-```
+```java
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -94,7 +94,7 @@ class Player {
 
 是时候测试我们的代码了。因此，让我们从创建几个测试用例开始:
 
-```
+```java
 @Test
 public void whenDeleteAll_then0IsExpected() {
     playerRepository.deleteAll()
@@ -117,7 +117,7 @@ public void whenInsert6_then6AreExpected() {
 
 **我们还可以生成自定义查询**。为了添加它，我们需要更改我们的`PlayerRepository`:
 
-```
+```java
 @Query("select id, name, age from player where name = $1")
 Flux<Player> findAllByName(String name);
 
@@ -127,7 +127,7 @@ Flux<Player> findByAge(int age);
 
 除了现有的测试，我们将向最近更新的存储库中添加测试:
 
-```
+```java
 @Test
 public void whenSearchForCR7_then1IsExpected() {
     insertPlayers();
@@ -165,7 +165,7 @@ R2DBC 的另一个特性是创建批处理。批处理在执行多个 SQL 语句
 
 为了创建一个`Batch`，我们需要一个`Connection`对象:
 
-```
+```java
 Batch batch = connection.createBatch();
 ```
 
@@ -173,7 +173,7 @@ Batch batch = connection.createBatch();
 
 所以让我们直接进入代码，看看如何创建一个`Batch`:
 
-```
+```java
 @Test
 public void whenBatchHas2Operations_then2AreExpected() {
     Mono.from(factory.create())

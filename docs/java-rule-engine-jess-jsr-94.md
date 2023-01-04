@@ -40,14 +40,14 @@ JSR 94 提供了一个 API，我们可以用它来独立于我们选择的规则
 
 让我们看看`Jess71p2/examples`目录，其中`jess`目录保存了一些示例规则集。`pricing_engine`目录显示了一个可以通过 [ant](/web/20220628131443/https://www.baeldung.com/ant-maven-gradle) `build.xml` 脚本执行的集成。让我们将目录更改为定价引擎示例，并通过`ant test`运行程序:
 
-```
+```java
 cd Jess71p2/examples/pricing_engine
 ant test
 ```
 
 这将构建并运行一个示例定价规则集:
 
-```
+```java
 Buildfile: Jess71p2\examples\pricing_engine\build.xml
 ...
 test:
@@ -65,26 +65,26 @@ Total time: 1 second
 
 现在我们已经让 Jess 工作了，让我们[下载 JSR 94](https://web.archive.org/web/20220628131443/https://jcp.org/aboutJava/communityprocess/final/jsr094/index.html) ，然后解压缩它以创建一个 jsr94-1.0 目录，其中包含 ant、doc、lib 和 src 目录。
 
-```
+```java
 unzip jreng-1_0a-fr-spec-api.zip
 ```
 
 这为我们提供了 JSR 94 API 和 Jess 参考驱动程序，但它没有附带许可的 Jess 实现，所以如果我们现在尝试运行一个示例，我们会得到以下错误:
 
-```
+```java
 Error: The reference implementation Jess could not be found.
 ```
 
 因此，让我们添加 Jess 参考实现`jess.jar`，它是我们之前下载的 Jess71p2 的一部分，并将其复制到 JSR 94 lib 目录，然后运行示例:
 
-```
+```java
 cp Jess71p2/lib/jess.jar jsr94-1.0/lib/
 java -jar jsr94-1.0/lib/jsr94-example.jar
 ```
 
 该示例运行一些规则来确定客户在支付发票时的剩余信用:
 
-```
+```java
 Administration API Acquired RuleAdministrator: [[email protected]](/web/20220628131443/https://www.baeldung.com/cdn-cgi/l/email-protection)
 ...
 Runtime API Acquired RuleRuntime: [[email protected]](/web/20220628131443/https://www.baeldung.com/cdn-cgi/l/email-protection)
@@ -104,13 +104,13 @@ Released Stateful Rule Session.
 
 Jess 没有可用的 Maven 依赖项，所以如果我们还没有这样做，让我们下载并解压 Jess jar ( `jess.jar`)和`[mvn install](https://web.archive.org/web/20220628131443/https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html)`到我们的本地 Maven 存储库:
 
-```
+```java
 mvn install:install-file -Dfile=jess.jar -DgroupId=gov.sandia -DartifactId=jess -Dversion=7.1p2 -Dpackaging=jar -DgeneratePom=true
 ```
 
 然后，我们可以以通常的方式将它添加为依赖项:
 
-```
+```java
 <dependency>
     <groupId>gov.sandia</groupId>
     <artifactId>jess</artifactId>
@@ -122,7 +122,7 @@ mvn install:install-file -Dfile=jess.jar -DgroupId=gov.sandia -DartifactId=jess 
 
 接下来，让我们创建最简单的规则文件来打印消息。我们将规则文件保存为`hellojess.clp`:
 
-```
+```java
 (printout t "Hello from Jess!" crlf)
 ```
 
@@ -130,7 +130,7 @@ mvn install:install-file -Dfile=jess.jar -DgroupId=gov.sandia -DartifactId=jess 
 
 现在，让我们创建一个 Jess `Rete` 规则引擎的实例，`reset()`将其初始化，在`hellojess.clp`中加载规则，并运行它们:
 
-```
+```java
 public class HelloJess {
     public static void main(String[] args) throws JessException {
     Rete engine = new Rete();
@@ -144,7 +144,7 @@ public class HelloJess {
 
 当我们运行程序时，我们将看到输出:
 
-```
+```java
 Hello from Jess!
 ```
 
@@ -158,7 +158,7 @@ Hello from Jess!
 
 让我们创建一些简单的`Question`和`Answer`类:
 
-```
+```java
 public class Question {
     private String question;
     private int balance;
@@ -188,7 +188,7 @@ public class Answer {
 
 首先，我们`import`我们的`Question`和`Answer`类，然后使用 Jess 的`deftemplate`函数使它们对规则引擎可用:
 
-```
+```java
 (import com.baeldung.rules.jsr94.jess.model.*)
 (deftemplate Question     (declare (from-class Question)))
 (deftemplate Answer       (declare (from-class Answer)))
@@ -198,7 +198,7 @@ public class Answer {
 
 现在，让我们使用`defrule`在 Jess 的扩展 Lisp 格式中添加一个规则`avoid-overdraft`,如果我们的`Question`中的余额低于零，它会给我们 50 美元的奖金:
 
-```
+```java
 (defrule avoid-overdraft "Give $50 to anyone overdrawn"
     ?q <- (Question { balance < 0 })
     =>
@@ -213,14 +213,14 @@ public class Answer {
 
 我们可以使用`add()`一次向规则引擎的工作内存添加一个对象，或者使用`addAll()`添加一组数据。让我们用`add()`来增加一个问题:
 
-```
+```java
 Question question = new Question("Can I have a bonus?", -5);
 engine.add(data);
 ```
 
 有了所有的数据，让我们执行我们的规则:
 
-```
+```java
 engine.run();
 ```
 
@@ -228,7 +228,7 @@ Jess `Rete`引擎将发挥其魔力，并在所有相关规则执行完毕后返
 
 让我们使用一个`jess.Filter`将规则引擎中的`Answer`提取到一个`Iterable`结果对象`:`
 
-```
+```java
 Iterator results = engine.getObjects(new jess.Filter.ByClass(Answer.class));
 while (results.hasNext()) {
     Answer answer = (Answer) results.next();
@@ -238,7 +238,7 @@ while (results.hasNext()) {
 
 在我们的简单示例中，我们没有任何引用数据，但是当我们有引用数据时，我们可以使用一个`WorkingMemoryMarker`和`engine.mark()`来标记添加数据后规则引擎的工作内存的状态。然后我们可以叫`engine`。`resetToMark`使用我们的标记将工作内存重置为“已加载”状态，并针对不同的对象集高效地重用规则引擎:
 
-```
+```java
 WorkingMemoryMarker marker;
 // load reference data
 marker = engine.mark();
@@ -263,7 +263,7 @@ JSR 94 API 有两个主要的包:
 
 首先，让我们为`jsr94`添加一个 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>jsr94</groupId>
     <artifactId>jsr94</artifactId>
@@ -275,7 +275,7 @@ JSR 94 API 有两个主要的包:
 
 要开始使用 JSR 94，我们需要实例化一个`RuleServiceProvider`。让我们创建一个，传递给我们的 Jess 规则驱动程序:
 
-```
+```java
 String RULE_SERVICE_PROVIDER="jess.jsr94";
 Class.forName(RULE_SERVICE_PROVIDER + ".RuleServiceProviderImpl");
 RuleServiceProvider ruleServiceProvider = RuleServiceProviderManager.getRuleServiceProvider(RULE_SERVICE_PROVIDER);
@@ -283,7 +283,7 @@ RuleServiceProvider ruleServiceProvider = RuleServiceProviderManager.getRuleServ
 
 现在，让我们获取 Jess 的 JSR 94 `RuleAdministrator`，将我们的示例规则集加载到 JSR 94 `RuleExecutionSet,`中，并注册它以便用我们选择的 URI 执行:
 
-```
+```java
 RuleAdministrator ruleAdministrator = serviceProvider.getRuleAdministrator();
 
 InputStream ruleInput = JessRunner.class.getResourceAsStream(rulesFile);
@@ -303,7 +303,7 @@ Jess 驱动不需要我们提供给`RuleAdministrator`的`vendorProperties`地�
 
 在运行它们之前，我们需要一个运行时实例和一个会话来运行它们。让我们也添加一个占位符，`calculateResults(),`来表示魔法将在哪里发生，并释放会话:
 
-```
+```java
 RuleRuntime ruleRuntime = ruleServiceProvider.getRuleRuntime();
 StatelessRuleSession statelessRuleSession
   = (StatelessRuleSession) ruleRuntime.createRuleSession(rulesURI, new HashMap(), RuleRuntime.STATELESS_SESSION_TYPE);
@@ -315,7 +315,7 @@ statelessRuleSession.release();
 
 现在一切就绪，让我们实现`calculateResults`来提供初始数据，在无状态会话中执行我们的规则，并提取结果:
 
-```
+```java
 List data = new ArrayList();
 data.add(new Question("Can I have a bonus?", -5));
 List results = statelessRuleSession.executeRules(data);
@@ -323,7 +323,7 @@ List results = statelessRuleSession.executeRules(data);
 
 因为 JSR 94 是在 JDK 5 出现之前写的，API 不使用泛型，所以让我们只使用一个`Iterator`来看看结果:
 
-```
+```java
 Iterator itr = results.iterator();
 while (itr.hasNext()) {
     Object obj = itr.next();

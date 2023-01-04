@@ -14,7 +14,7 @@ Feign 是一个可插入的声明式 web 服务客户端，它使得编写 web �
 
 当错误发生时，**Feign 客户端隐藏原始消息，为了检索它，我们需要编写一个自定义的** `**[ErrorDecoder](https://web.archive.org/web/20220617075719/https://appdoc.app/artifact/com.netflix.feign/feign-core/8.11.0/feign/codec/ErrorDecoder.html)**` 。如果没有这样的定制，我们会得到下面的错误:
 
-```
+```java
 feign.FeignException$NotFound: [404] during [POST] to [http://localhost:8080/upload-error-1] [UploadClient#fileUploadError(MultipartFile)]: [{"timestamp":"2022-02-18T13:25:22.083+00:00","status":404,"error":"Not Found","path":"/upload-error-1"}]
 	at feign.FeignException.clientErrorStatus(FeignException.java:219) ~[feign-core-11.7.jar:na]
 	at feign.FeignException.errorStatus(FeignException.java:194) ~[feign-core-11.7.jar:na] 
@@ -22,7 +22,7 @@ feign.FeignException$NotFound: [404] during [POST] to [http://localhost:8080/upl
 
 为了处理这个错误，我们将创建一个简单的`ExceptionMessage` Java bean 来表示错误消息:
 
-```
+```java
 public class ExceptionMessage {
     private String timestamp;
     private int status;
@@ -35,7 +35,7 @@ public class ExceptionMessage {
 
 让我们通过在定制的`ErrorDecoder`实现中提取原始消息来检索它:
 
-```
+```java
 public class RetreiveMessageErrorDecoder implements ErrorDecoder {
     private ErrorDecoder errorDecoder = new Default();
 
@@ -67,7 +67,7 @@ public class RetreiveMessageErrorDecoder implements ErrorDecoder {
 
 为了配置我们定制的 `ErrorDecoder`，我们将把我们的实现作为 bean 添加到 Feign 配置中:
 
-```
+```java
 @Bean
 public ErrorDecoder errorDecoder() {
     return new RetreiveMessageErrorDecoder();
@@ -76,7 +76,7 @@ public ErrorDecoder errorDecoder() {
 
 现在，让我们看看原始消息的异常:
 
-```
+```java
 com.baeldung.cloud.openfeign.exception.NotFoundException: Page Not found
 	at com.baeldung.cloud.openfeign.fileupload.config.RetreiveMessageErrorDecoder.decode(RetreiveMessageErrorDecoder.java:30) ~[classes/:na]
 	at feign.AsyncResponseHandler.handleResponse(AsyncResponseHandler.java:96) ~[feign-core-11.7.jar:na] 

@@ -14,7 +14,7 @@
 
 让我们看一个将文件大小限制为 5 MB 的示例:
 
-```
+```java
 @Bean
 public MultipartResolver multipartResolver() {
     CommonsMultipartResolver multipartResolver
@@ -28,7 +28,7 @@ public MultipartResolver multipartResolver() {
 
 接下来，让我们定义一个控制器方法来处理文件的上传和保存到服务器:
 
-```
+```java
 @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
 public ModelAndView uploadFile(MultipartFile file) throws IOException {
 
@@ -63,7 +63,7 @@ public ModelAndView uploadFile(MultipartFile file) throws IOException {
 
 让我们重写`resolveException()`方法，以便在捕获的异常是类型`MaxUploadSizeExceededException`的情况下显示一条消息:
 
-```
+```java
 @Override
 public ModelAndView resolveException(
   HttpServletRequest request,
@@ -85,7 +85,7 @@ public ModelAndView resolveException(
 
 另一个是我们可以创建一个方法，只针对我们想要处理的异常，允许框架委托异常处理，而不必使用`instanceof`来检查抛出了什么类型的异常:
 
-```
+```java
 @ControllerAdvice
 public class FileUploadExceptionAdvice {
 
@@ -114,7 +114,7 @@ public class FileUploadExceptionAdvice {
 
 这是在`TOMCAT_HOME/conf/server.xml`文件中完成的:
 
-```
+```java
 <Connector port="8080" protocol="HTTP/1.1"
   connectionTimeout="20000"
   redirectPort="8443" 

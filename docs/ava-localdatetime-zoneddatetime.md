@@ -16,7 +16,7 @@ Java `LocalDateTime` API 表示并操作日期和时间的组合。`ZonedDateTim
 
 **来自`LocalDateTime`实例的`atZone()`方法执行到`ZonedDateTime` 的转换，并保持相同的日期时间值**:
 
-```
+```java
 LocalDateTime localDateTime = LocalDateTime.of(2022, 1, 1, 0, 30, 22);
 ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.of("Canada/Atlantic"));
 
@@ -32,7 +32,7 @@ assertEquals(localDateTime.getSecond(), zonedDateTime.getSecond());
 
 **调用`withZoneSameInstant()`方法使用`ZoneOffSet`时间差**转换成实际的日期时间值:
 
-```
+```java
 LocalDateTime localDateTime = LocalDateTime.of(2022, 1, 1, 0, 30, 22);
 ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.of("Africa/Lagos")).withZoneSameInstant(ZoneId.of("Canada/Atlantic"));
 
@@ -48,7 +48,7 @@ assertEquals("-04:00", zonedDateTime.getOffset().toString());
 
 `ZonedDateTime`类还提供了一个静态的`of()`方法来创建一个`ZonedDateTime` 对象。该方法接受`LocalDateTime`和`ZoneId`的实例作为参数，并返回一个`ZonedDateTime`对象:
 
-```
+```java
 LocalDateTime localDateTime = LocalDateTime.of(2022, 11, 5, 7, 30, 22);
 ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.of("Africa/Accra")).withZoneSameInstant(ZoneId.of("Africa/Lagos"));
 
@@ -64,14 +64,14 @@ assertEquals(localDateTime.getYear(), zonedDateTime.getYear());
 
 静态的`ofInstant()`方法接受`LocalDateTime`、`ZoneOffSet`和`ZoneId`对象作为参数:
 
-```
+```java
 LocalDateTime localDateTime = LocalDateTime.of(2022, 1, 5, 17, 30, 22);
 ZoneId zoneId = ZoneId.of("Africa/Lagos");
 ZoneOffset zoneOffset = zoneId.getRules().getOffset(localDateTime);
 ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(localDateTime, zoneOffset, zoneId);
 ```
 
-```
+```java
 assertEquals("2022-01-05T17:30:22+01:00[Africa/Lagos]", zonedDateTime.toString());
 ```
 
@@ -81,14 +81,14 @@ assertEquals("2022-01-05T17:30:22+01:00[Africa/Lagos]", zonedDateTime.toString()
 
 静态的`ofLocal()`方法从`LocalDateTime`对象创建一个`ZonedDateTime`，首选的`ZoneOffSet`对象作为参数传递:
 
-```
+```java
 LocalDateTime localDateTime = LocalDateTime.of(2022, 8 , 25, 8, 35, 22);
 ZoneId zoneId = ZoneId.of("Africa/Lagos");
 ZoneOffset zoneOffset = zoneId.getRules().getOffset(localDateTime);
 ZonedDateTime zonedDateTime = ZonedDateTime.ofLocal(localDateTime, zoneId, zoneOffset);
 ```
 
-```
+```java
 assertEquals("2022-08-25T08:35:22+01:00[Africa/Lagos]", zonedDateTime.toString());
 ```
 
@@ -100,20 +100,20 @@ assertEquals("2022-08-25T08:35:22+01:00[Africa/Lagos]", zonedDateTime.toString()
 
 类似地，静态`ofStrict()`方法通过严格验证`LocalDateTime`、`ZoneOffSet`和`ZoneID`参数的组合来返回一个`ZonedDateTime`对象:
 
-```
+```java
 LocalDateTime localDateTime = LocalDateTime.of(2022, 12, 25, 6, 18, 2);
 ZoneId zoneId = ZoneId.of("Asia/Tokyo");
 ZoneOffset zoneOffset = zoneId.getRules().getOffset(localDateTime);
 ZonedDateTime zonedDateTime = ZonedDateTime.ofStrict(localDateTime, zoneOffset, zoneId);
 ```
 
-```
+```java
 assertEquals("2002-12-25T06:18:02+09:00[Asia/Tokyo]", zonedDateTime.toString());
 ```
 
 如果我们提供了无效的参数组合，该方法将抛出一个`DateTimeException`:
 
-```
+```java
 zoneId = ZoneId.of("Asia/Tokyo");
 zoneOffset = ZoneOffset.UTC;
 assertThrows(DateTimeException.class, () -> ZonedDateTime.ofStrict(localDateTime, zoneOffset, zoneId));
@@ -127,7 +127,7 @@ assertThrows(DateTimeException.class, () -> ZonedDateTime.ofStrict(localDateTime
 
 我们可以使用`toLocalDateTime()`方法将`ZonedDateTime`的实例转换为`LocalDateTime` :
 
-```
+```java
 ZonedDateTime zonedDateTime = ZonedDateTime.of(2011, 2, 12, 6, 14, 1, 58086000, ZoneId.of("Asia/Tokyo"));
 LocalDateTime localDateTime = zonedDateTime.toLocalDateTime();
 

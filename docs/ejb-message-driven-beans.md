@@ -73,7 +73,7 @@ MDB 只有两种状态:
 
 为了处理传入的消息，我们必须实现`MessageListener`接口的`onMessage()`方法:
 
-```
+```java
 @MessageDriven(activationConfig = { 
     @ActivationConfigProperty(
       propertyName = "destination", 
@@ -110,7 +110,7 @@ public class ReadMessageMDB implements MessageListener {
 
 我们将使用 Java Servlets 生成消息:
 
-```
+```java
 @Override
 protected void doGet(
   HttpServletRequest req, 

@@ -12,7 +12,7 @@
 
 Boot 提供了开箱即用的无容器部署功能:我们需要做的只是在`pom.xml:`中添加一些配置
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -54,7 +54,7 @@ Boot 提供了开箱即用的无容器部署功能:我们需要做的只是在`p
 
 大多数时候不需要额外的配置，一切都“正常工作”，但是在一些特定的情况下，我们可能需要明确地告诉`spring-boot` 主类是什么。一种方法是添加一个属性:
 
-```
+```java
 <properties>
     <start-class>org.baeldung.boot.Application</start-class>
 </properties>
@@ -62,7 +62,7 @@ Boot 提供了开箱即用的无容器部署功能:我们需要做的只是在`p
 
 如果我们继承了 spring-boot-starter-parent，我们需要在 Maven 插件中这样做:
 
-```
+```java
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -76,7 +76,7 @@ Boot 提供了开箱即用的无容器部署功能:我们需要做的只是在`p
 
 在一些罕见的情况下，我们可能需要做的另一件事是指示 Maven`unpack` 一些依赖关系:
 
-```
+```java
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>

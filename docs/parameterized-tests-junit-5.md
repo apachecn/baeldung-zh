@@ -28,7 +28,7 @@ A quick and practical guide to a very useful library which will help you write p
 
 为了使用 JUnit 5 参数化测试，我们需要从 JUnit 平台导入 [`junit-jupiter-params`](https://web.archive.org/web/20221102025235/https://search.maven.org/search?q=a:junit-jupiter-params%20AND%20g:org.junit.jupiter) 工件。这意味着，当使用 Maven 时，我们将向我们的`pom.xml`添加以下内容:
 
-```
+```java
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-params</artifactId>
@@ -39,7 +39,7 @@ A quick and practical guide to a very useful library which will help you write p
 
 此外，在使用 Gradle 时，我们将稍微不同地指定它:
 
-```
+```java
 testCompile("org.junit.jupiter:junit-jupiter-params:5.8.1")
 ```
 
@@ -47,7 +47,7 @@ testCompile("org.junit.jupiter:junit-jupiter-params:5.8.1")
 
 假设我们有一个现有的效用函数，我们希望对它的行为有信心:
 
-```
+```java
 public class Numbers {
     public static boolean isOdd(int number) {
         return number % 2 != 0;
@@ -57,7 +57,7 @@ public class Numbers {
 
 参数化测试与其他测试相似，除了我们添加了`@ParameterizedTest`注释:
 
-```
+```java
 @ParameterizedTest
 @ValueSource(ints = {1, 3, 5, -3, 15, Integer.MAX_VALUE}) // six numbers
 void isOdd_ShouldReturnTrueForOddNumbers(int number) {
@@ -86,7 +86,7 @@ JUnit 5 test runner 执行上述测试——以及随后的`isOdd `方法——
 
 假设我们要测试我们简单的`isBlank`方法:
 
-```
+```java
 public class Strings {
     public static boolean isBlank(String input) {
         return input == null || input.trim().isEmpty();
@@ -96,7 +96,7 @@ public class Strings {
 
 我们期望从这个方法中为空字符串的`null`返回`true`。因此，我们可以编写一个参数化的测试来断言这种行为:
 
-```
+```java
 @ParameterizedTest
 @ValueSource(strings = {"", "  "})
 void isBlank_ShouldReturnTrueForNullOrBlankStrings(String input) {
@@ -126,7 +126,7 @@ void isBlank_ShouldReturnTrueForNullOrBlankStrings(String input) {
 
 **从 JUnit 5.4 开始，我们可以使用`@NullSource`** 将单个`null `值传递给参数化的测试方法:
 
-```
+```java
 @ParameterizedTest
 @NullSource
 void isBlank_ShouldReturnTrueForNullInputs(String input) {
@@ -138,7 +138,7 @@ void isBlank_ShouldReturnTrueForNullInputs(String input) {
 
 同样，我们可以使用`@EmptySource `注释传递空值:
 
-```
+```java
 @ParameterizedTest
 @EmptySource
 void isBlank_ShouldReturnTrueForEmptyStrings(String input) {
@@ -152,7 +152,7 @@ void isBlank_ShouldReturnTrueForEmptyStrings(String input) {
 
 为了传递`null `和空值，我们可以使用组合的`@NullAndEmptySource `注释:
 
-```
+```java
 @ParameterizedTest
 @NullAndEmptySource
 void isBlank_ShouldReturnTrueForNullAndEmptyStrings(String input) {
@@ -164,7 +164,7 @@ void isBlank_ShouldReturnTrueForNullAndEmptyStrings(String input) {
 
 为了将更多的空字符串变体传递给参数化测试，**我们可以将`@ValueSource`、 `@NullSource`、 `and @EmptySource`组合在一起**:
 
-```
+```java
 @ParameterizedTest
 @NullAndEmptySource
 @ValueSource(strings = {"  ", "\t", "\n"})
@@ -179,7 +179,7 @@ void isBlank_ShouldReturnTrueForAllTypesOfBlankStrings(String input) {
 
 例如，我们可以断言所有月份的数字都在 1 到 12 之间:
 
-```
+```java
 @ParameterizedTest
 @EnumSource(Month.class) // passing all 12 months
 void getValueForAMonth_IsAlwaysBetweenOneAndTwelve(Month month) {
@@ -192,7 +192,7 @@ void getValueForAMonth_IsAlwaysBetweenOneAndTwelve(Month month) {
 
 我们还可以断言，四月、九月、六月和十一月都是 30 天:
 
-```
+```java
 @ParameterizedTest
 @EnumSource(value = Month.class, names = {"APRIL", "JUNE", "SEPTEMBER", "NOVEMBER"})
 void someMonths_Are30DaysLong(Month month) {
@@ -205,7 +205,7 @@ void someMonths_Are30DaysLong(Month month) {
 
 我们可以通过将`mode`属性设置为`EXCLUDE`来改变这种情况:
 
-```
+```java
 @ParameterizedTest
 @EnumSource(
   value = Month.class,
@@ -219,7 +219,7 @@ void exceptFourMonths_OthersAre31DaysLong(Month month) {
 
 除了文字字符串，我们还可以将一个正则表达式传递给`names` 属性:
 
-```
+```java
 @ParameterizedTest
 @EnumSource(value = Month.class, names = ".+BER", mode = EnumSource.Mode.MATCH_ANY)
 void fourMonths_AreEndingWithBer(Month month) {
@@ -245,7 +245,7 @@ void fourMonths_AreEndingWithBer(Month month) {
 
 `@CsvSource`是这些来源之一:
 
-```
+```java
 @ParameterizedTest
 @CsvSource({"test,TEST", "tEst,TEST", "Java,JAVA"})
 void toUpperCase_ShouldGenerateTheExpectedUppercaseValue(String input, String expected) {
@@ -260,7 +260,7 @@ void toUpperCase_ShouldGenerateTheExpectedUppercaseValue(String input, String ex
 
 默认情况下，逗号是列分隔符，但是我们可以使用`delimiter` 属性对其进行定制:
 
-```
+```java
 @ParameterizedTest
 @CsvSource(value = {"test:test", "tEst:test", "Java:java"}, delimiter = ':')
 void toLowerCase_ShouldGenerateTheExpectedLowercaseValue(String input, String expected) {
@@ -277,7 +277,7 @@ void toLowerCase_ShouldGenerateTheExpectedLowercaseValue(String input, String ex
 
 例如，我们可以使用这样的 CSV 文件:
 
-```
+```java
 input,expected
 test,TEST
 tEst,TEST
@@ -286,7 +286,7 @@ Java,JAVA
 
 我们可以加载 CSV 文件并且**忽略标题列**和`@CsvFileSource`:
 
-```
+```java
 @ParameterizedTest
 @CsvFileSource(resources = "/data.csv", numLinesToSkip = 1)
 void toUpperCase_ShouldGenerateTheExpectedUppercaseValueCSVFile(
@@ -315,7 +315,7 @@ void toUpperCase_ShouldGenerateTheExpectedUppercaseValueCSVFile(
 
 让我们用一个`@MethodSource`来测试`isBlank `方法:
 
-```
+```java
 @ParameterizedTest
 @MethodSource("provideStringsForIsBlank")
 void isBlank_ShouldReturnTrueForNullOrBlankStrings(String input, boolean expected) {
@@ -327,7 +327,7 @@ void isBlank_ShouldReturnTrueForNullOrBlankStrings(String input, boolean expecte
 
 所以，让我们接下来写一个`provideStringsForIsBlank`，**的`static `方法，返回一个`Argument`的 `Stream`**:
 
-```
+```java
 private static Stream<Arguments> provideStringsForIsBlank() {
     return Stream.of(
       Arguments.of(null, true),
@@ -342,7 +342,7 @@ private static Stream<Arguments> provideStringsForIsBlank() {
 
 如果我们要为每个测试调用提供一个参数，那么就没有必要使用`Arguments `抽象:
 
-```
+```java
 @ParameterizedTest
 @MethodSource // hmm, no method name ...
 void isBlank_ShouldReturnTrueForNullOrBlankStringsOneArgument(String input) {
@@ -358,7 +358,7 @@ private static Stream<String> isBlank_ShouldReturnTrueForNullOrBlankStringsOneAr
 
 有时，在不同的测试类之间共享参数是有用的。在这些情况下，我们可以通过完全限定名引用当前类之外的源方法:
 
-```
+```java
 class StringsUnitTest {
 
     @ParameterizedTest
@@ -382,7 +382,7 @@ public class StringParams {
 
 另一种传递测试参数的高级方法是使用一个名为`ArgumentsProvider`的接口的定制实现:
 
-```
+```java
 class BlankStringsArgumentsProvider implements ArgumentsProvider {
 
     @Override
@@ -398,7 +398,7 @@ class BlankStringsArgumentsProvider implements ArgumentsProvider {
 
 然后我们可以用`@ArgumentsSource `注释来注释我们的测试，以使用这个定制的提供者:
 
-```
+```java
 @ParameterizedTest
 @ArgumentsSource(BlankStringsArgumentsProvider.class)
 void isBlank_ShouldReturnTrueForNullOrBlankStringsArgProvider(String input) {
@@ -412,7 +412,7 @@ void isBlank_ShouldReturnTrueForNullOrBlankStringsArgProvider(String input) {
 
 假设我们想从一个静态变量加载测试参数:
 
-```
+```java
 static Stream<Arguments> arguments = Stream.of(
   Arguments.of(null, true), // null strings should be considered blank
   Arguments.of("", true),
@@ -432,7 +432,7 @@ void isBlank_ShouldReturnTrueForNullOrBlankStringsVariableSource(
 
 首先，我们可以创建一个注释:
 
-```
+```java
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -453,7 +453,7 @@ public @interface VariableSource {
 
 因此，我们接下来需要让`VariableArgumentsProvider `类从指定的静态变量中读取，并将其值作为测试参数返回:
 
-```
+```java
 class VariableArgumentsProvider 
   implements ArgumentsProvider, AnnotationConsumer<VariableSource> {
 
@@ -501,7 +501,7 @@ class VariableArgumentsProvider
 
 让我们用@ `CsvSource`重写其中一个`@EnumTest`:
 
-```
+```java
 @ParameterizedTest
 @CsvSource({"APRIL", "JUNE", "SEPTEMBER", "NOVEMBER"}) // Pssing strings
 void someMonths_Are30DaysLongCsv(Month month) {
@@ -531,7 +531,7 @@ JUnit 5 将`String `参数转换为指定的枚举类型。为了支持这样�
 
 首先，我们需要实现`ArgumentConverter`接口:
 
-```
+```java
 class SlashyDateConverter implements ArgumentConverter {
 
     @Override
@@ -557,7 +557,7 @@ class SlashyDateConverter implements ArgumentConverter {
 
 然后我们应该通过`@ConvertWith `注释来引用转换器:
 
-```
+```java
 @ParameterizedTest
 @CsvSource({"2018/12/25,2018", "2019/02/11,2019"})
 void getYear_ShouldWorkAsExpected(
@@ -574,7 +574,7 @@ void getYear_ShouldWorkAsExpected(
 
 让我们考虑一下我们的`Person`类:
 
-```
+```java
 class Person {
 
     String firstName;
@@ -595,7 +595,7 @@ class Person {
 
 为了测试`fullName()`方法，我们将传递四个参数:`firstName`、 `middleName`、 `lastName`和`expected fullName`。我们可以使用`ArgumentsAccessor `来检索测试参数，而不是将它们声明为方法参数:
 
-```
+```java
 @ParameterizedTest
 @CsvSource({"Isaac,,Newton,Isaac Newton", "Charles,Robert,Darwin,Charles Robert Darwin"})
 void fullName_ShouldGenerateTheExpectedFullName(ArgumentsAccessor argumentsAccessor) {
@@ -621,7 +621,7 @@ void fullName_ShouldGenerateTheExpectedFullName(ArgumentsAccessor argumentsAcces
 
 为此，我们实现了`ArgumentsAggregator `接口:
 
-```
+```java
 class PersonAggregator implements ArgumentsAggregator {
 
     @Override
@@ -635,7 +635,7 @@ class PersonAggregator implements ArgumentsAggregator {
 
 然后我们通过`@AggregateWith `注释引用它:
 
-```
+```java
 @ParameterizedTest
 @CsvSource({"Isaac Newton,Isaac,,Newton", "Charles Robert Darwin,Charles,Robert,Darwin"})
 void fullName_ShouldGenerateTheExpectedFullName(
@@ -652,7 +652,7 @@ void fullName_ShouldGenerateTheExpectedFullName(
 
 默认情况下，参数化测试的显示名称包含一个调用索引以及所有传递参数的一个`String `表示:
 
-```
+```java
 ├─ someMonths_Are30DaysLongCsv(Month)
 │     │  ├─ [1] APRIL
 │     │  ├─ [2] JUNE
@@ -662,7 +662,7 @@ void fullName_ShouldGenerateTheExpectedFullName(
 
 然而，我们可以通过`@ParameterizedTest`注释的`name`属性定制这个显示:
 
-```
+```java
 @ParameterizedTest(name = "{index} {0} is 30 days long")
 @EnumSource(value = Month.class, names = {"APRIL", "JUNE", "SEPTEMBER", "NOVEMBER"})
 void someMonths_Are30DaysLong(Month month) {
@@ -673,7 +673,7 @@ void someMonths_Are30DaysLong(Month month) {
 
 `April is 30 days long` 肯定是一个更易读的显示名称:
 
-```
+```java
 ├─ someMonths_Are30DaysLong(Month)
 │     │  ├─ 1 APRIL is 30 days long
 │     │  ├─ 2 JUNE is 30 days long

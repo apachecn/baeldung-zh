@@ -42,7 +42,7 @@ Java 编译器和 JVM 必须是相同的 Java 版本，包括我们想要使用�
 
 让我们尝试编译并运行一段使用文本块的代码，这是 JDK 13:
 
-```
+```java
 String query = """
     SELECT 'Hello World'
     FROM DUAL;
@@ -72,7 +72,7 @@ System.out.println(query);
 
 这个应该可以了。但是，如果错误仍然存在，我们必须手动添加编译器参数来启用预览功能。假设这是一个 Maven 项目，`pom.xml` 中的编译器插件应该包含:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -96,7 +96,7 @@ System.out.println(query);
 
 在编译时，`javac`命令需要两个参数——T1 和 T2:T3
 
-```
+```java
 javac --release 13 --enable-preview ClassUsingTextBlocks.java
 ```
 
@@ -108,7 +108,7 @@ javac --release 13 --enable-preview ClassUsingTextBlocks.java
 
 在运行时，`java`命令只需要`enable-preview`参数:
 
-```
+```java
 java --enable-preview ClassUsingTextBlocks
 ```
 

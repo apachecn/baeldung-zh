@@ -12,7 +12,7 @@
 
 首先，我们需要向我们的`pom.xml`添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.hamcrest</groupId>
     <artifactId>java-hamcrest</artifactId>
@@ -31,7 +31,7 @@ Hamcrest 提供了几个匹配器来验证常用的`File`属性。
 
 让我们看看如何使用`aFileNamed()`和`String`匹配器来验证`File`名称:
 
-```
+```java
 @Test
 public void whenVerifyingFileName_thenCorrect() {
     File file = new File("src/test/resources/test1.in");
@@ -42,7 +42,7 @@ public void whenVerifyingFileName_thenCorrect() {
 
 我们还可以评估文件路径——再次结合使用`String`匹配器:
 
-```
+```java
 @Test
 public void whenVerifyingFilePath_thenCorrect() {
     File file = new File("src/test/resources/test1.in");
@@ -54,7 +54,7 @@ public void whenVerifyingFilePath_thenCorrect() {
 
 让我们看看文件的大小，以字节为单位:
 
-```
+```java
 @Test
 public void whenVerifyingFileSize_thenCorrect() {
     File file = new File("src/test/resources/test1.in");
@@ -66,7 +66,7 @@ public void whenVerifyingFileSize_thenCorrect() {
 
 最后，我们可以检查一个`File`是否可读可写:
 
-```
+```java
 @Test
 public void whenVerifyingFileIsReadableAndWritable_thenCorrect() {
     File file = new File("src/test/resources/test1.in");
@@ -80,7 +80,7 @@ public void whenVerifyingFileIsReadableAndWritable_thenCorrect() {
 
 如果我们想验证一个`File`或目录是否存在，我们可以使用`anExistingFile()`或`anExistingDirectory()`匹配器:
 
-```
+```java
 @Test
 public void whenVerifyingFileOrDirExist_thenCorrect() {
     File file = new File("src/test/resources/test1.in");

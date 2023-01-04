@@ -20,7 +20,7 @@
 
 对于 Maven 项目，我们需要添加所需的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -34,13 +34,13 @@
 
 要创建一个`CircularFifoQueue`对象，我们可以使用默认的构造函数，它创建一个默认大小为 32:
 
-```
+```java
 CircularFifoQueue<String> bits = new CircularFifoQueue();
 ```
 
 如果我们知道期望的队列最大大小，我们可以使用构造函数，该函数将一个`int`作为参数来指定大小:
 
-```
+```java
 CircularFifoQueue<String> colors = new CircularFifoQueue<>(5);
 ```
 
@@ -48,7 +48,7 @@ CircularFifoQueue<String> colors = new CircularFifoQueue<>(5);
 
 在这种情况下，队列将被集合的元素填充，其大小将与集合的大小相同:
 
-```
+```java
 CircularFifoQueue<String> daysOfWeek = new CircularFifoQueue<>(days);
 ```
 
@@ -62,7 +62,7 @@ CircularFifoQueue<String> daysOfWeek = new CircularFifoQueue<>(days);
 
 让我们看看如何使用`add`方法向我们的`colors`队列添加元素:
 
-```
+```java
 colors.add("Red");
 colors.add("Blue");
 colors.add("Green");
@@ -70,7 +70,7 @@ colors.add("Green");
 
 让我们使用`offer`方法添加一些元素:
 
-```
+```java
 colors.offer("White");
 colors.offer("Black");
 ```
@@ -85,7 +85,7 @@ colors.offer("Black");
 
 只要在两次调用之间队列中的元素没有任何变化，这个方法将总是返回相同的元素。**如果队列为空，`peek`将返回`null:`**
 
-```
+```java
 String colorsHead = colors.peek();
 ```
 
@@ -95,7 +95,7 @@ String colorsHead = colors.peek();
 
 然而，如果队列为空，`element`方法会抛出一个异常:
 
-```
+```java
 colorsHead = colors.element();
 ```
 
@@ -105,7 +105,7 @@ colorsHead = colors.element();
 
 让我们从前面填充了元素的`colors`队列中获取一个元素:
 
-```
+```java
 String color = colors.get(1);
 ```
 
@@ -113,7 +113,7 @@ String color = colors.get(1);
 
 现在让我们向队列中添加三个元素，并再次检查这个结果:
 
-```
+```java
 colors.add("Orange");
 colors.add("Violet");
 colors.add("Pink");
@@ -127,7 +127,7 @@ color = colors.get(1);
 
 `poll`方法**移除队列的头元素并返回该元素**。如果队列没有元素，`poll`方法返回`null:`
 
-```
+```java
 colorsHead = colors.poll();
 ```
 
@@ -135,7 +135,7 @@ colorsHead = colors.poll();
 
 **`remove`方法** **的操作与`poll`方法**非常相似——它返回队列的头部并移除返回的元素。然而**，如果队列为空，`remove`将抛出一个异常**:
 
-```
+```java
 colorsHead = colors.remove();
 ```
 
@@ -143,7 +143,7 @@ colorsHead = colors.remove();
 
 当我们想清空队列时，可以使用`clear`方法:
 
-```
+```java
 colors.clear();
 ```
 
@@ -155,7 +155,7 @@ colors.clear();
 
 `maxSize`方法将返回队列最大大小的`integer`值:
 
-```
+```java
 int maxSize = bits.maxSize();
 ```
 
@@ -163,7 +163,7 @@ int maxSize = bits.maxSize();
 
 `size`方法将返回当前存储在队列中的元素数量:
 
-```
+```java
 int size = colors.size();
 ```
 
@@ -171,13 +171,13 @@ int size = colors.size();
 
 `isEmpty`方法将返回一个`boolean`值，指示队列是否为空:
 
-```
+```java
 boolean isEmpty = bits.isEmpty();
 ```
 
 为了检查我们的队列是否已满，我们可以使用**的`isAtFullCapacity`方法**。这个方法**只有在队列中的元素达到最大值**时才返回`true`:
 
-```
+```java
 boolean isFull = daysOfWeek.isAtFullCapacity();
 ```
 
@@ -185,7 +185,7 @@ boolean isFull = daysOfWeek.isAtFullCapacity();
 
 另一个我们可以用来检查队列是否已满的方法是`isFull`方法。对于`CircularFifoQueue`，**，`isFull`方法将总是返回`false,`，因为队列总是可以接受新元素**:
 
-```
+```java
 boolean isFull = daysOfWeek.isFull();
 ```
 

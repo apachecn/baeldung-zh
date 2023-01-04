@@ -124,13 +124,13 @@ OpenTracing 规范定义了 span 捕获的状态:
 
 我们将从安装 [Jaeger](https://web.archive.org/web/20220526050747/https://www.jaegertracing.io/) 开始，这是我们将使用的 OpenTracing 兼容追踪器。虽然它有几个组件，但我们可以用一个简单的 Docker 命令安装它们:
 
-```
+```java
 docker run -d -p 5775:5775/udp -p 16686:16686 jaegertracing/all-in-one:latest
 ```
 
 接下来，我们需要在应用程序中导入必要的依赖项。对于基于 Maven 的应用程序，这就像[添加依赖关系](https://web.archive.org/web/20220526050747/https://search.maven.org/artifact/io.opentracing.contrib/opentracing-spring-jaeger-web-starter/3.3.1/jar)一样简单:
 
-```
+```java
 <dependency>
     <groupId>io.opentracing.contrib</groupId>
     <artifactId>opentracing-spring-jaeger-web-starter</artifactId>
@@ -142,7 +142,7 @@ docker run -d -p 5775:5775/udp -p 16686:16686 jaegertracing/all-in-one:latest
 
 在应用程序方面，我们需要创建一个`Tracer`:
 
-```
+```java
 @Bean
 public Tracer getTracer() {
     Configuration.SamplerConfiguration samplerConfig = Configuration
@@ -160,7 +160,7 @@ public Tracer getTracer() {
 
 这足以为请求所经过的服务生成跨度。如有必要，我们还可以在服务中生成子跨度:
 
-```
+```java
 Span span = tracer.buildSpan("my-span").start();
 // Some code for which which the span needs to be reported
 span.finish();
@@ -200,7 +200,7 @@ OpenCensus 为各种语言提供了**库，允许我们从应用程序中收集�
 
 因为我们将使用 Prometheus 作为我们的后端，我们应该从安装它开始。这是快速和简单的使用官方 Docker 图像。Prometheus 通过收集受监控目标上的指标端点来收集这些目标的指标。所以，我们需要提供普罗米修斯配置 YAML 文件中的细节，`prometheus.yml`:
 
-```
+```java
 scrape_configs:
   - job_name: 'spring_opencensus'
     scrape_interval: 10s
@@ -210,21 +210,21 @@ scrape_configs:
 
 这是一个基本配置，它告诉 Prometheus 从哪个目标获取度量。现在，**我们可以用一个简单的命令启动普罗米修斯**:
 
-```
+```java
 docker run -d -p 9090:9090 -v \
   ./prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
 ```
 
 为了定义自定义指标，我们从**定义度量**开始:
 
-```
+```java
 MeasureDouble M_LATENCY_MS = MeasureDouble
   .create("math-service/latency", "The latency in milliseconds", "ms");
 ```
 
 接下来，我们需要**记录我们刚刚定义的度量**的度量:
 
-```
+```java
 StatsRecorder STATS_RECORDER = Stats.getStatsRecorder();
 STATS_RECORDER.newMeasureMap()
   .put(M_LATENCY_MS, 17.0)
@@ -233,7 +233,7 @@ STATS_RECORDER.newMeasureMap()
 
 然后，我们需要**为我们的度量定义一个聚合和视图，这将使我们能够将其导出为指标**:
 
-```
+```java
 Aggregation latencyDistribution = Distribution.create(BucketBoundaries.create(
   Arrays.asList(0.0, 25.0, 100.0, 200.0, 400.0, 800.0, 10000.0)));
 View view = View.create(
@@ -249,7 +249,7 @@ manager.registerView(view);
 
 最后，为了将视图导出到 Prometheus，我们需要创建并注册收集器，并运行一个 HTTP 服务器作为守护进程:
 
-```
+```java
 PrometheusStatsCollector.createAndRegister();
 HTTPServer server = new HTTPServer("localhost", 8887, true);
 ```
@@ -262,7 +262,7 @@ OpenCensus 提供了名为 zPages 的进程内网页，显示从它们所连接�
 
 使用官方 Docker 镜像安装 Grafana 非常简单:
 
-```
+```java
 docker run -d --name=grafana -p 3000:3000 grafana/grafana
 ```
 
@@ -310,7 +310,7 @@ Elasticsearch **将索引存储为文档，文档是存储的基本单位**。�
 
 启动单节点 Elasticsearch 集群就像运行 Docker 命令一样简单:
 
-```
+```java
 docker run -p 9200:9200 -p 9300:9300 \
   -e "discovery.type=single-node" \
   docker.elastic.co/elasticsearch/elasticsearch:7.13.0
@@ -318,7 +318,7 @@ docker run -p 9200:9200 -p 9300:9300 \
 
 同样，安装 Kibana 并将其连接到 Elasticsearch 集群也很容易:
 
-```
+```java
 docker run -p 5601:5601 \
   -e "ELASTICSEARCH_HOSTS=http://localhost:9200" \
   docker.elastic.co/kibana/kibana:7.13.0
@@ -326,7 +326,7 @@ docker run -p 5601:5601 \
 
 安装和配置 Logstash 稍微复杂一些，因为我们必须为数据处理提供必要的设置和管道。实现这一点的一个简单方法是在官方图像上创建一个自定义图像:
 
-```
+```java
 FROM docker.elastic.co/logstash/logstash:7.13.0
 RUN rm -f /usr/share/logstash/pipeline/logstash.conf
 ADD pipeline/ /usr/share/logstash/pipeline/
@@ -335,7 +335,7 @@ ADD config/ /usr/share/logstash/config/
 
 让我们来看一个集成了 Elasticsearch 和 Beats 的 Logstash 的配置文件示例:
 
-```
+```java
 input {
   tcp {
   port => 4560
@@ -358,7 +358,7 @@ output{
 
 根据数据源的不同，有几种可用的节拍类型。对于我们的例子，我们将使用 Filebeat。安装和配置 Beats 最好借助自定义映像来完成:
 
-```
+```java
 FROM docker.elastic.co/beats/filebeat:7.13.0
 COPY filebeat.yml /usr/share/filebeat/filebeat.yml
 USER root
@@ -368,7 +368,7 @@ USER filebeat
 
 让我们看一个 Spring Boot 应用程序的示例`filebeat.yml`:
 
-```
+```java
 filebeat.inputs:
 - type: log
 enabled: true

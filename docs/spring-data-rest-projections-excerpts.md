@@ -14,7 +14,7 @@
 
 让我们来看看`Book`实体类:
 
-```
+```java
 @Entity
 public class Book {
 
@@ -34,7 +34,7 @@ public class Book {
 
 和`Author`型号:
 
-```
+```java
 @Entity
 public class Author {
 
@@ -60,17 +60,17 @@ public class Author {
 
 接下来，让我们为每个模型定义标准的 Spring Data REST 存储库:
 
-```
+```java
 public interface BookRepository extends CrudRepository<Book, Long> {}
 ```
 
-```
+```java
 public interface AuthorRepository extends CrudRepository<Author, Long> {}
 ```
 
 现在，我们可以访问`Book`端点，使用其在`http://localhost:8080/books/{id}:`的 id 来获取特定的`Book's`细节
 
-```
+```java
 {
   "title" : "Animal Farm",
   "isbn" : "978-1943138425",
@@ -98,7 +98,7 @@ public interface AuthorRepository extends CrudRepository<Author, Long> {}
 
 我们将从创建一个简单的名为`CustomBook`的`Projection`开始:
 
-```
+```java
 @Projection(
   name = "customBook", 
   types = { Book.class }) 
@@ -113,7 +113,7 @@ public interface CustomBook {
 
 在创建了我们的`Projection:`之后，让我们再来看看我们的`Book`表示
 
-```
+```java
 {
   "title" : "Animal Farm",
   "isbn" : "978-1943138425",
@@ -134,7 +134,7 @@ public interface CustomBook {
 
 太好了，我们可以看到一个链接到我们的投影。让我们检查一下我们在`http://localhost:8080/books/1?projection=customBook`创建的视图:
 
-```
+```java
 {
   "title" : "Animal Farm",
   "_links" : {
@@ -158,7 +158,7 @@ public interface CustomBook {
 
 另外，请注意，我们需要在与模型相同的包中定义我们的`Projection`。或者，我们可以使用`RepositoryRestConfigurerAdapter`来显式添加它:
 
-```
+```java
 @Configuration
 public class RestConfig implements RepositoryRestConfigurer {
 
@@ -183,7 +183,7 @@ public class RestConfig implements RepositoryRestConfigurer {
 
 为了在结果中看到 id，我们可以显式地包含`id`字段:
 
-```
+```java
 @Projection(
   name = "customBook", 
   types = { Book.class }) 
@@ -197,7 +197,7 @@ public interface CustomBook {
 
 现在在`http://localhost:8080/books/1?projection={projection name}` 的输出将是:
 
-```
+```java
 {
   "id" : 1,
   "title" : "Animal Farm",
@@ -215,7 +215,7 @@ public interface CustomBook {
 
 例如，我们可以在预测中包括作者数量:
 
-```
+```java
 @Projection(name = "customBook", types = { Book.class }) 
 public interface CustomBook {
 
@@ -231,7 +231,7 @@ public interface CustomBook {
 
 我们可以在`http://localhost:8080/books/1?projection=customBook`查看:
 
-```
+```java
 {
   "id" : 1,
   "title" : "Animal Farm",
@@ -246,7 +246,7 @@ public interface CustomBook {
 
 最后，如果我们经常需要访问相关资源——就像我们的例子中的一本书的作者，我们可以通过显式包含它来避免额外的请求:
 
-```
+```java
 @Projection(
   name = "customBook", 
   types = { Book.class }) 
@@ -266,7 +266,7 @@ public interface CustomBook {
 
 最终的`Projection`输出将是:
 
-```
+```java
 {
   "id" : 1,
   "title" : "Animal Farm",
@@ -299,14 +299,14 @@ public interface CustomBook {
 
 为此，我们将使用`@RepositoryRestResource`注释的`excerptProjection`属性:
 
-```
+```java
 @RepositoryRestResource(excerptProjection = CustomBook.class)
 public interface BookRepository extends CrudRepository<Book, Long> {}
 ```
 
 现在我们可以通过调用`http://localhost:8080/books`来确保`customBook`是图书收藏的默认视图:
 
-```
+```java
 {
   "_embedded" : {
     "books" : [ {
@@ -343,7 +343,7 @@ public interface BookRepository extends CrudRepository<Book, Long> {}
 
 这同样适用于在`http://localhost:8080/authors/1/books`查看特定作者的书籍:
 
-```
+```java
 {
   "_embedded" : {
     "books" : [ {

@@ -18,7 +18,7 @@
 
 我们可以很容易地创建不可变的 dto:
 
-```
+```java
 public record Person (String name, String address) {}
 ```
 
@@ -28,7 +28,7 @@ public record Person (String name, String address) {}
 
 使用 [JEP 378](https://web.archive.org/web/20220915070649/https://openjdk.java.net/jeps/378) ，现在可以创建多行文本块，而无需在换行符上连接字符串:
 
-```
+```java
 String textBlock = """
 Hello, this is a
 multi-line
@@ -40,7 +40,7 @@ text block.
 
 Java 12 引入了开关表达式( [JEP 361](https://web.archive.org/web/20220915070649/https://openjdk.java.net/jeps/361) )，它(像所有表达式一样)计算单个值，并且可以在语句中使用。代替组合嵌套的`if`–`else`-操作符(`?:`)，我们现在可以使用`switch`–`case`-构造:
 
-```
+```java
 DayOfWeek day = DayOfWeek.FRIDAY;
 int numOfLetters = switch (day) {
     case MONDAY, FRIDAY, SUNDAY -> 6;
@@ -56,7 +56,7 @@ int numOfLetters = switch (day) {
 
 我们可以用`instanceof`直接使用它们:
 
-```
+```java
 if (obj instanceof String s) {
     System.out.println(s.toLowerCase());
 }
@@ -64,7 +64,7 @@ if (obj instanceof String s) {
 
 我们也可以在`switch`–`case`语句中使用它:
 
-```
+```java
 static double getDoubleUsingSwitch(Object o) {
     return switch (o) {
         case Integer i -> i.doubleValue();
@@ -79,7 +79,7 @@ static double getDoubleUsingSwitch(Object o) {
 
 密封类可以通过指定允许的子类来限制继承:
 
-```
+```java
 public abstract sealed class Pet permits Dog, Cat {}
 ```
 
@@ -91,13 +91,13 @@ public abstract sealed class Pet permits Dog, Cat {}
 
 例如，当我们访问 Spring MVC 控制器中的`HttpServletRequest`对象时，我们需要替换:
 
-```
+```java
 import javax.servlet.http.HttpServletRequest;
 ```
 
 使用:
 
-```
+```java
 import jakarta.servlet.http.HttpServletRequest;
 ```
 
@@ -127,7 +127,7 @@ Spring Framework 6 和 Spring Boot 3 需要以下最低版本:
 
 对于 AOT 一代，没有必要包含单独的插件，我们可以只使用一个[的新目标](https://web.archive.org/web/20220915070649/https://docs.spring.io/spring-boot/docs/3.0.0-M3/maven-plugin/reference/htmlsingle/#aot)的`spring-boot-maven-plugin`:
 
-```
+```java
 mvn spring-boot:aot-generate
 ```
 
@@ -145,7 +145,7 @@ Spring Observability 优于以前基于代理的 Observability，因为它在本
 
 另一个较小的变化是 [HttpMethod](https://web.archive.org/web/20220915070649/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/HttpMethod.html) 不再是一个 enum，而是一个允许为扩展的 HTTP 方法创建实例的类，例如 WebDAV 定义的方法:
 
-```
+```java
 HttpMethod lock = HttpMethod.valueOf("LOCK");
 ```
 

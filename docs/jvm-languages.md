@@ -34,7 +34,7 @@ Java 字节码指令类似于机器码，但是它们由特定于主机操作系
 
 让我们看看一句简单的“你好，世界！”示例如下:
 
-```
+```java
 public class HelloWorld {
     public static void main(String[] args) {
         System.out.println("Hello, World!");
@@ -46,13 +46,13 @@ public class HelloWorld {
 
 接下来，**我们将使用`javac`命令生成可以在 JVM 上执行的字节码**:
 
-```
+```java
 javac HelloWorld.java
 ```
 
 最后，**`java`命令在 JVM 上执行生成的字节码:**
 
-```
+```java
 java HelloWorld
 ```
 
@@ -82,7 +82,7 @@ Scala 的几个重要特性是:
 
 首先，我们来看看同样的“你好，世界！”和前面一样，这次是在 Scala 中:
 
-```
+```java
 object HelloWorld {
     def main(args: Array[String]): Unit = println("Hello, world!")
 }
@@ -92,13 +92,13 @@ object HelloWorld {
 
 接下来，为了编译它，我们可以使用`scalac`:
 
-```
+```java
 scalac HelloWorld.scala
 ```
 
 `scala`命令在 JVM 上执行生成的字节码:
 
-```
+```java
 scala HelloWorld
 ```
 
@@ -125,7 +125,7 @@ Kotlin 的一些重要特性:
 
 让我们看看“你好，世界！”科特林的例子:
 
-```
+```java
 fun main(args: Array<String>) { println("Hello, World!") }
 ```
 
@@ -133,7 +133,7 @@ fun main(args: Array<String>) { println("Hello, World!") }
 
 然后，**我们将使用`kotlinc`命令来编译这个**，并生成可以在 JVM 上执行的字节码:
 
-```
+```java
 kotlinc helloWorld.kt -include-runtime -d helloWorld.jar
 ```
 
@@ -141,13 +141,13 @@ kotlinc helloWorld.kt -include-runtime -d helloWorld.jar
 
 然后，`java`命令在 JVM 上执行生成的字节码:
 
-```
+```java
 java -jar helloWorld.jar
 ```
 
 让我们看看另一个使用`for`循环打印项目列表的例子:
 
-```
+```java
 fun main(args: Array<String>) {
     val items = listOf(1, 2, 3, 4)
     for (i in items) println(i)
@@ -175,7 +175,7 @@ Groovy 可以轻松地与任何 Java 程序集成，并立即添加强大的功�
 
 首先，让我们看看我们的“你好，世界！”Groovy 中的示例:
 
-```
+```java
 println("Hello world")
 ```
 
@@ -183,31 +183,31 @@ println("Hello world")
 
 我们可以使用`groovyc` 命令编译一个`.groovy`文件，如下所示:
 
-```
+```java
 groovyc HelloWorld.groovy
 ```
 
 然后，我们将使用`java`命令来执行 groovy 代码:
 
-```
+```java
 java -cp <GROOVY_HOME>\embeddable\groovy-all-<VERSION>.jar;. HelloWorld
 ```
 
 例如，上面的命令可能类似于:
 
-```
+```java
 java -cp C:\utils\groovy-1.8.1\embeddable\groovy-all-1.8.1.jar;. HelloWorld
 ```
 
 让我们看看如何使用`groovy`命令执行`.groovy`文件而不编译:
 
-```
+```java
 groovy HelloWorld.groovy
 ```
 
 最后，这里是打印带有索引的项目列表的另一个示例:
 
-```
+```java
 list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 list.eachWithIndex { it, i -> println "$i: $it"}
 ```
@@ -237,13 +237,13 @@ Clojure 的设计者想要设计现代的可以在 JVM 上运行的 Lisp。这�
 
 首先，我们将使用以下命令创建一个带有默认模板的简单项目:
 
-```
+```java
 lein new hello-world
 ```
 
 将使用以下文件结构创建项目:
 
-```
+```java
 ./project.clj
 ./src
 ./src/hello-world
@@ -252,7 +252,7 @@ lein new hello-world
 
 现在我们需要用以下内容更新`./project.ctj`文件来设置主源文件:
 
-```
+```java
 (defproject hello-world "0.1.0-SNAPSHOT"
   :main hello-world.core
   :dependencies [[org.clojure/clojure "1.5.1"]])
@@ -260,7 +260,7 @@ lein new hello-world
 
 现在，我们将更新代码，打印“Hello，World！”在`./src/hello-world/core.` clj 文件中:
 
-```
+```java
 (ns hello-world.core)
 
 (defn -main [& args]
@@ -269,7 +269,7 @@ lein new hello-world
 
 最后，在移动到项目的根目录后，我们将使用`lein`命令来执行上面的代码:
 
-```
+```java
 cd hello-world
 lein run
 ```
@@ -286,7 +286,7 @@ Jython 包含了 Python 语言的大部分模块。它还可以导入和使用 J
 
 让我们看一个快速的“你好，世界！”示例:
 
-```
+```java
 print "Hello, world!"
 ```
 
@@ -298,7 +298,7 @@ JRuby 语言是高性能和多线程的，有大量来自 Java 和 Ruby 的可�
 
 让我们印上“你好，世界！”在 JRuby 中:
 
-```
+```java
 require "java"
 
 stringHello= "Hello World"

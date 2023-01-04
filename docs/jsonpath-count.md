@@ -12,7 +12,7 @@ JsonPath 提供了一种标准机制来遍历 JSON 文档的特定部分。我�
 
 我们使用下面的 [JsonPath](https://web.archive.org/web/20220715114006/https://github.com/json-path/JsonPath) Maven 依赖项，当然，它可以在 [Maven Central](https://web.archive.org/web/20220715114006/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.jayway.jsonpath%22) 上获得:
 
-```
+```java
 <dependency>
     <groupId>com.jayway.jsonpath</groupId>
     <artifactId>json-path</artifactId>
@@ -24,7 +24,7 @@ JsonPath 提供了一种标准机制来遍历 JSON 文档的特定部分。我�
 
 下面的 JSON 将用于说明这些示例:
 
-```
+```java
 {
     "items":{
         "book":[
@@ -54,7 +54,7 @@ JsonPath 提供了一种标准机制来遍历 JSON 文档的特定部分。我�
 
 根元素由美元符号“`$”`表示。在下面的 JUnit 测试中，我们用 JSON `String`和我们想要计数的 JSON 路径“$”调用`JsonPath.read()`:
 
-```
+```java
 public void shouldMatchCountOfObjects() {
     Map<String, String> objectMap = JsonPath.read(json, "$");
     assertEquals(3, objectMap.keySet().size());
@@ -67,7 +67,7 @@ public void shouldMatchCountOfObjects() {
 
 在下面的 JUnit 测试中，我们查询 JSON 来查找包含所有在`items`元素下的`books`的数组:
 
-```
+```java
 public void shouldMatchCountOfArrays() {
     JSONArray jsonArray = JsonPath.read(json, "$.items.book[*]");
     assertEquals(2, jsonArray.size());

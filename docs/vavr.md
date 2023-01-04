@@ -12,7 +12,7 @@ Vavr 是 Java 8+的**函数库，提供不可变的数据类型和函数控制�
 
 为了使用 Vavr，您需要添加依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.vavr</groupId>
     <artifactId>vavr</artifactId>
@@ -30,7 +30,7 @@ Vavr 是 Java 8+的**函数库，提供不可变的数据类型和函数控制�
 
 因为 Java 中的任何对象引用都可以有一个`null`值，所以我们通常必须在使用它之前用`if`语句检查是否为空。这些检查使代码健壮而稳定:
 
-```
+```java
 @Test
 public void givenValue_whenNullCheckNeeded_thenCorrect() {
     Object possibleNullObj = null;
@@ -43,7 +43,7 @@ public void givenValue_whenNullCheckNeeded_thenCorrect() {
 
 如果没有检查，应用程序可能会因为一个简单的`NPE:`而崩溃
 
-```
+```java
 @Test(expected = NullPointerException.class)
 public void givenValue_whenNullCheckNeeded_thenCorrect2() {
     Object possibleNullObj = null;
@@ -57,7 +57,7 @@ public void givenValue_whenNullCheckNeeded_thenCorrect2() {
 
 使用`Option`时，`null`值将计算为`None`的实例，而非空值将计算为`Some`的实例:
 
-```
+```java
 @Test
 public void givenValue_whenCreatesOption_thenCorrect() {
     Option<Object> noneOption = Option.of(null);
@@ -74,7 +74,7 @@ public void givenValue_whenCreatesOption_thenCorrect() {
 
 在这一部分的第二个片段中，我们需要一个`null`检查，在尝试使用变量之前，我们将为变量分配一个默认值。`Option`可以在一行中处理这个，即使有一个 null:
 
-```
+```java
 @Test
 public void givenNull_whenCreatesOption_thenCorrect() {
     String name = null;
@@ -86,7 +86,7 @@ public void givenNull_whenCreatesOption_thenCorrect() {
 
 或非空值:
 
-```
+```java
 @Test
 public void givenNonNull_whenCreatesOption_thenCorrect() {
     String name = "baeldung";
@@ -106,7 +106,7 @@ Vavr 给 Java 8 带来了元组。元组的类型是`Tuple1, Tuple2`到`Tuple8`�
 
 目前有八个元素的上限。我们访问像`tuple` `._n`这样的元组元素，其中`n`类似于数组中的索引概念:
 
-```
+```java
 public void whenCreatesTuple_thenCorrect1() {
     Tuple2<String, Integer> java8 = Tuple.of("Java", 8);
     String element1 = java8._1;
@@ -119,7 +119,7 @@ public void whenCreatesTuple_thenCorrect1() {
 
 注意，第一个元素是用`n==1`检索的。所以元组不像数组一样使用零基。将要存储在元组中的元素的类型必须在其类型声明中声明，如下图所示:
 
-```
+```java
 @Test
 public void whenCreatesTuple_thenCorrect2() {
     Tuple3<String, Integer, Double> java8 = Tuple.of("Java", 8, 1.8);
@@ -143,7 +143,7 @@ public void whenCreatesTuple_thenCorrect2() {
 
 以下面的代码为例:
 
-```
+```java
 @Test(expected = ArithmeticException.class)
 public void givenBadCode_whenThrowsException_thenCorrect() {
     int i = 1 / 0;
@@ -152,7 +152,7 @@ public void givenBadCode_whenThrowsException_thenCorrect() {
 
 如果没有`try-catch`块，应用程序将会崩溃。为了避免这种情况，您需要将语句包装在一个`try-catch`块中。使用 Vavr，我们可以将相同的代码包装在一个`Try`实例中，并得到一个结果:
 
-```
+```java
 @Test
 public void givenBadCode_whenTryHandles_thenCorrect() {
     Try<Integer> result = Try.of(() -> 1 / 0);
@@ -165,7 +165,7 @@ public void givenBadCode_whenTryHandles_thenCorrect() {
 
 在上面的代码片段中，我们选择了简单地检查成功或失败。我们也可以选择返回一个默认值:
 
-```
+```java
 @Test
 public void givenBadCode_whenTryHandles_thenCorrect2() {
     Try<Integer> computation = Try.of(() -> 1 / 0);
@@ -177,7 +177,7 @@ public void givenBadCode_whenTryHandles_thenCorrect2() {
 
 或者甚至显式抛出我们选择的异常:
 
-```
+```java
 @Test(expected = ArithmeticException.class)
 public void givenBadCode_whenTryHandles_thenCorrect3() {
     Try<Integer> result = Try.of(() -> 1 / 0);
@@ -193,7 +193,7 @@ public void givenBadCode_whenTryHandles_thenCorrect3() {
 
 然而，Java 8 只提供了两个基本功能。其中一个只接受一个参数并产生一个结果:
 
-```
+```java
 @Test
 public void givenJava8Function_whenWorks_thenCorrect() {
     Function<Integer, Integer> square = (num) -> num * num;
@@ -205,7 +205,7 @@ public void givenJava8Function_whenWorks_thenCorrect() {
 
 第二个函数只接受两个参数并产生一个结果:
 
-```
+```java
 @Test
 public void givenJava8BiFunction_whenWorks_thenCorrect() {
     BiFunction<Integer, Integer, Integer> sum = 
@@ -220,7 +220,7 @@ public void givenJava8BiFunction_whenWorks_thenCorrect() {
 
 就像元组一样，这些函数接口是根据它们接受的参数个数来命名的:`Function0`、`Function1`、`Function2`等。对于 Vavr，我们应该这样编写上面的两个函数:
 
-```
+```java
 @Test
 public void givenVavrFunction_whenWorks_thenCorrect() {
     Function1<Integer, Integer> square = (num) -> num * num;
@@ -232,7 +232,7 @@ public void givenVavrFunction_whenWorks_thenCorrect() {
 
 还有这个:
 
-```
+```java
 @Test
 public void givenVavrBiFunction_whenWorks_thenCorrect() {
     Function2<Integer, Integer, Integer> sum = 
@@ -245,7 +245,7 @@ public void givenVavrBiFunction_whenWorks_thenCorrect() {
 
 当没有参数但我们仍然需要一个输出时，在 Java 8 中我们需要使用一个*供应商*类型，在 Vavr 中`Function0`有帮助:
 
-```
+```java
 @Test
 public void whenCreatesFunction_thenCorrect0() {
     Function0<String> getClazzName = () -> this.getClass().getName();
@@ -257,7 +257,7 @@ public void whenCreatesFunction_thenCorrect0() {
 
 五参数函数怎么样，只是使用`Function5`的问题:
 
-```
+```java
 @Test
 public void whenCreatesFunction_thenCorrect5() {
     Function5<String, String, String, String, String, String> concat = 
@@ -271,7 +271,7 @@ public void whenCreatesFunction_thenCorrect5() {
 
 我们还可以结合任何函数的静态工厂方法`FunctionN.of`,从方法引用创建一个 Vavr 函数。比如我们有下面的`sum`方法:
 
-```
+```java
 public int sum(int a, int b) {
     return a + b;
 }
@@ -279,7 +279,7 @@ public int sum(int a, int b) {
 
 我们可以这样创建一个函数:
 
-```
+```java
 @Test
 public void whenCreatesFunctionFromMethodRef_thenCorrect() {
     Function2<Integer, Integer, Integer> sum = Function2.of(this::sum);
@@ -295,7 +295,7 @@ Vavr 团队在设计新的集合 API 方面投入了大量精力，以满足函�
 
 **Java 集合是可变的，这使得它们成为程序失败的一个重要来源**，尤其是在并发的情况下。`Collection`接口提供了这样的方法:
 
-```
+```java
 interface Collection<E> {
     void clear();
 }
@@ -309,7 +309,7 @@ interface Collection<E> {
 
 在 Java 中为集合添加不变性的其他现有策略仍然会产生更多的问题，即异常:
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public void whenImmutableCollectionThrows_thenCorrect() {
     java.util.List<String> wordList = Arrays.asList("abracadabra");
@@ -322,7 +322,7 @@ public void whenImmutableCollectionThrows_thenCorrect() {
 
 要在 Vavr 中创建列表:
 
-```
+```java
 @Test
 public void whenCreatesVavrList_thenCorrect() {
     List<Integer> intList = List.of(1, 2, 3);
@@ -336,7 +336,7 @@ public void whenCreatesVavrList_thenCorrect() {
 
 API 也可用于就地对列表执行计算:
 
-```
+```java
 @Test
 public void whenSumsVavrList_thenCorrect() {
     int sum = List.of(1, 2, 3).sum().intValue();
@@ -361,7 +361,7 @@ Vavr 将`Applicative Functor`的概念从函数式编程世界带到了 Java。�
 
 假设我们通过`name`和`age`注册用户，我们希望首先获取所有输入，并决定是创建一个`Person`实例还是返回一个错误列表。下面是我们的`Person`班:
 
-```
+```java
 public class Person {
     private String name;
     private int age;
@@ -372,7 +372,7 @@ public class Person {
 
 接下来，我们创建一个名为`PersonValidator`的类。每个字段将通过一种方法进行验证，另一种方法可用于将所有结果合并到一个`Validation`实例中:
 
-```
+```java
 class PersonValidator {
     String NAME_ERR = "Invalid characters in name: ";
     String AGE_ERR = "Age must be at least 0";
@@ -399,7 +399,7 @@ class PersonValidator {
 
 `age`的规则是它应该是大于 0 的整数，而`name`的规则是它不应该包含特殊字符:
 
-```
+```java
 @Test
 public void whenValidationWorks_thenCorrect() {
     PersonValidator personValidator = new PersonValidator();
@@ -429,7 +429,7 @@ public void whenValidationWorks_thenCorrect() {
 
 `Lazy`是一个容器，它表示一个延迟计算的值，即计算被推迟到需要结果时。此外，评估值被缓存或存储，并在每次需要时反复返回，而无需重复计算:
 
-```
+```java
 @Test
 public void givenFunction_whenEvaluatesWithLazy_thenCorrect() {
     Lazy<Double> lazy = Lazy.of(Math::random);
@@ -457,7 +457,7 @@ public void givenFunction_whenEvaluatesWithLazy_thenCorrect() {
 
 相反，每当我们想要基于接收到的输入执行计算或返回值时，我们使用多个`if`语句来解析要执行的正确代码:
 
-```
+```java
 @Test
 public void whenIfWorksAsMatcher_thenCorrect() {
     int input = 3;
@@ -486,7 +486,7 @@ public void whenIfWorksAsMatcher_thenCorrect() {
 
 另一种方法是使用`switch`语句:
 
-```
+```java
 @Test
 public void whenSwitchWorksAsMatcher_thenCorrect() {
     int input = 2;
@@ -519,7 +519,7 @@ public void whenSwitchWorksAsMatcher_thenCorrect() {
 
 最后，像`$()`这样的原子模式取代了条件，然后条件计算一个表达式或值。我们还将其作为第二个参数提供给`Case`:
 
-```
+```java
 @Test
 public void whenMatchworks_thenCorrect() {
     int input = 2;
@@ -537,7 +537,7 @@ public void whenMatchworks_thenCorrect() {
 
 例如，我们可以用谓词代替原子表达式。假设我们正在解析控制台命令的`help`和`version`标志:
 
-```
+```java
 Match(arg).of(
     Case($(isIn("-h", "--help")), o -> run(this::displayHelp)),
     Case($(isIn("-v", "--version")), o -> run(this::displayVersion)),

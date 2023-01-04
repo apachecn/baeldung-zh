@@ -20,7 +20,7 @@ JMockit 提供了一组实用字段，使参数匹配更加通用。这些实用
 
 让我们看一个例子:
 
-```
+```java
 public interface ExpectationsCollaborator {
     String methodForAny1(String s, int i, Boolean b);
     void methodForAny2(Long l, List<String> lst);
@@ -50,7 +50,7 @@ JMockit 还提供了几种方法来帮助进行泛型参数匹配。这些是`wi
 
 这些字段允许比`anyX`字段更高级的匹配。我们可以在这里看到一个例子，我们将定义一个方法的期望，该方法将由一个包含`foo`、一个不等于 1 的整数、一个非空的`Boolean`和`List`类的任何实例的字符串触发:
 
-```
+```java
 public interface ExpectationsCollaborator {
     String methodForWith1(String s, int i);
     void methodForWith2(Boolean b, List<String> l);
@@ -84,7 +84,7 @@ public void testForWith(@Mocked ExpectationsCollaborator mock) throws Exception 
 
 对于下一个例子，我们将定义一个模拟的行为，当传递的参数是:任何字符串、任何列表和一个`null`引用时，将触发该行为:
 
-```
+```java
 public interface ExpectationsCollaborator {
     String methodForNulls1(String s, List<String> l);
     void methodForNulls2(String s, List<String> l);
@@ -114,7 +114,7 @@ public void testWithNulls(@Mocked ExpectationsCollaborator mock){
 
 有时，我们希望**约束** **被模仿方法预期的调用次数**。为此，JMockit 有保留字`times`、`minTimes`和`maxTimes`(三者只允许非负整数)。
 
-```
+```java
 public interface ExpectationsCollaborator {
     void methodForTimes1();
     void methodForTimes2();
@@ -157,7 +157,7 @@ public void testWithTimes(@Mocked ExpectationsCollaborator mock) {
 
 让我们看一个将特定的类与传递的对象相匹配的例子:
 
-```
+```java
 public interface ExpectationsCollaborator {
     void methodForArgThat(Object o);
 }
@@ -202,7 +202,7 @@ public void testCustomArgumentMatching(@Mocked ExpectationsCollaborator mock) {
 
 下面的代码片段更容易显示这一点:
 
-```
+```java
 public interface ExpectationsCollaborator{
     String methodReturnsString();
     int methodReturnsInt();
@@ -252,7 +252,7 @@ public void testResultAndReturns(@Mocked ExpectationsCollaborator mock) {
 
 我们将看到一个简单解释的例子:
 
-```
+```java
 public interface ExpectationsCollaborator {
     int methodForDelegate(int i);
 }

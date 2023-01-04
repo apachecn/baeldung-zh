@@ -23,7 +23,7 @@
 
 让我们来看看实际情况:
 
-```
+```java
 public class SimpleExclusiveLockByKey {
 
     private static Set<String> usedKeys= ConcurrentHashMap.newKeySet();
@@ -41,7 +41,7 @@ public class SimpleExclusiveLockByKey {
 
 下面是我们如何使用这个类:
 
-```
+```java
 String key = "key";
 SimpleExclusiveLockByKey lockByKey = new SimpleExclusiveLockByKey();
 try {
@@ -71,7 +71,7 @@ try {
 
 让我们从在内部类中包装我们的`Lock`开始。这个类将能够跟踪当前等待锁定该项的线程数。它将公开两个方法，一个用于递增线程计数器，另一个用于递减它:
 
-```
+```java
 private static class LockWrapper {
     private final Lock lock = new ReentrantLock();
     private final AtomicInteger numberOfThreadsInQueue = new AtomicInteger(1);
@@ -92,7 +92,7 @@ private static class LockWrapper {
 
 此外，我们将继续使用一个`ConcurrentHashMap`。但是，我们将使用`LockWrapper `对象作为值，而不是像以前那样简单地提取`Map` 的键:
 
-```
+```java
 private static ConcurrentHashMap<String, LockWrapper> locks = new ConcurrentHashMap<String, LockWrapper>(); 
 ```
 
@@ -103,7 +103,7 @@ private static ConcurrentHashMap<String, LockWrapper> locks = new ConcurrentHash
 
 让我们看看这是如何做到的:
 
-```
+```java
 public void lock(String key) {
     LockWrapper lockWrapper = locks.compute(key, (k, v) -> v == null ? new LockWrapper() : v.addThreadInQueue());
     lockWrapper.lock.lock();
@@ -120,7 +120,7 @@ public void lock(String key) {
 
 此外，当一个线程释放一个锁时，我们将减少与`LockWrapper`相关的线程数量。如果计数下降到零，那么我们将从`ConcurrentHashMap`中移除密钥:
 
-```
+```java
 public void unlock(String key) {
     LockWrapper lockWrapper = locks.get(key);
     lockWrapper.lock.unlock();
@@ -135,7 +135,7 @@ public void unlock(String key) {
 
 一言以蔽之，让我们看看我们整个班级最后是什么样子的:
 
-```
+```java
 public class LockByKey {
 
     private static class LockWrapper {
@@ -174,7 +174,7 @@ public class LockByKey {
 
 这种用法与我们之前的用法非常相似:
 
-```
+```java
 String key = "key"; 
 LockByKey lockByKey = new LockByKey(); 
 try { 
@@ -199,7 +199,7 @@ try {
 
 全局功能和代码看起来与我们的锁非常相似:
 
-```
+```java
 public class SimultaneousEntriesLockByKey {
 
     private static final int ALLOWED_THREADS = 2;
@@ -224,7 +224,7 @@ public class SimultaneousEntriesLockByKey {
 
 用法是相同的:
 
-```
+```java
 String key = "key"; 
 SimultaneousEntriesLockByKey lockByKey = new SimultaneousEntriesLockByKey(); 
 try { 

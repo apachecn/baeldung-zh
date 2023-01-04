@@ -16,14 +16,14 @@
 
 首先，让我们创建一个新的二维`ArrayList`:
 
-```
+```java
 int vertexCount = 3;
 ArrayList<ArrayList<Integer>> graph = new ArrayList<>(vertexCount);
 ```
 
 接下来，我们将用另一个`ArrayList`初始化`ArrayList`的每个元素:
 
-```
+```java
 for(int i=0; i < vertexCount; i++) {
     graph.add(new ArrayList());
 }
@@ -31,7 +31,7 @@ for(int i=0; i < vertexCount; i++) {
 
 最后，我们可以将所有的边(0，1)、(1，2)和(2，0)添加到我们的 2d`ArrayList`:
 
-```
+```java
 graph.get(0).add(1);
 graph.get(1).add(2);
 graph.get(2).add(0);
@@ -39,7 +39,7 @@ graph.get(2).add(0);
 
 让我们也假设我们的图不是一个有向图。因此，我们还需要将边(1，0)、(2，1)和(0，2)添加到我们的 2d`ArrayList`:
 
-```
+```java
 graph.get(1).add(0);
 graph.get(2).add(1);
 graph.get(0).add(2);
@@ -47,7 +47,7 @@ graph.get(0).add(2);
 
 然后，为了遍历整个图，我们可以使用双 for 循环:
 
-```
+```java
 int vertexCount = graph.size();
 for (int i = 0; i < vertexCount; i++) {
     int edgeCount = graph.get(i).size();
@@ -71,7 +71,7 @@ for (int i = 0; i < vertexCount; i++) {
 
 让我们首先初始化变量和 3d`ArrayList`:
 
-```
+```java
 int x_axis_length = 2;
 int y_axis_length = 2;
 int z_axis_length = 2;	
@@ -80,7 +80,7 @@ ArrayList<ArrayList<ArrayList<String>>> space = new ArrayList<>(x_axis_length);
 
 然后，让我们用`ArrayList<ArrayList<String>>`初始化`ArrayList`的每个元素:
 
-```
+```java
 for (int i = 0; i < x_axis_length; i++) {
     space.add(new ArrayList<ArrayList<String>>(y_axis_length));
     for (int j = 0; j < y_axis_length; j++) {
@@ -91,14 +91,14 @@ for (int i = 0; i < x_axis_length; i++) {
 
 现在，我们可以给空间中的点添加颜色。让我们为点(0，0，0)和(0，0，1)添加红色:
 
-```
+```java
 space.get(0).get(0).add(0,"Red");
 space.get(0).get(0).add(1,"Red");
 ```
 
 然后，让我们为点(0，1，0)和(0，1，1)设置蓝色:
 
-```
+```java
 space.get(0).get(1).add(0,"Blue");
 space.get(0).get(1).add(1,"Blue");
 ```
@@ -107,7 +107,7 @@ space.get(0).get(1).add(1,"Blue");
 
 请注意，坐标为(I，j，k)的点的颜色信息存储在以下 3-D `ArrayList`元素中:
 
-```
+```java
 space.get(i).get(j).get(k) 
 ```
 

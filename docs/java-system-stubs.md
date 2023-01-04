@@ -16,7 +16,7 @@ Java 没有提供设置环境变量的直接方法，我们冒着在一个测试
 
 最初的系统规则库只适用于 JUnit 4。在 JUnit 5 下，它仍然可以与 JUnit Vintage 一起使用，但是这需要继续创建 JUnit 4 测试。这个库的创建者开发了一个测试框架不可知的版本，叫做[系统λ](/web/20220627090235/https://www.baeldung.com/java-system-rules-junit)，它是为了在每个测试方法中使用:
 
-```
+```java
 @Test
 void aSingleSystemLambda() throws Exception {
     restoreSystemProperties(() -> {
@@ -40,7 +40,7 @@ System Lambda 方法的好处是，在其工厂类中有一些用于执行特定
 
 然而，当我们试图一次设置多个工具时，这种方法最麻烦的地方就来了。假设我们想要设置一些环境变量和系统属性。在测试代码开始之前，我们最终需要两级嵌套:
 
-```
+```java
 @Test
 void multipleSystemLambdas() throws Exception {
     restoreSystemProperties(() -> {
@@ -60,7 +60,7 @@ void multipleSystemLambdas() throws Exception {
 
 我们应该期望能够用最少的样板文件编写我们的测试:
 
-```
+```java
 @SystemStub
 private EnvironmentVariables environmentVariables = ...;
 
@@ -105,7 +105,7 @@ void multipleSystemStubs() {
 
 JUnit 5 扩展需要一个合理的最新版本的 [JUnit 5](https://web.archive.org/web/20220627090235/https://search.maven.org/artifact/org.junit.jupiter/junit-jupiter) :
 
-```
+```java
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter</artifactId>
@@ -116,7 +116,7 @@ JUnit 5 扩展需要一个合理的最新版本的 [JUnit 5](https://web.archive
 
 让我们将所有的[系统存根](https://web.archive.org/web/20220627090235/https://search.maven.org/search?q=system-stubs&g=uk.org.webcompere)库依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <!-- for testing with only lambda pattern -->
 <dependency>
     <groupId>uk.org.webcompere</groupId>
@@ -150,7 +150,7 @@ JUnit 5 扩展需要一个合理的最新版本的 [JUnit 5](https://web.archive
 
 我们可以通过在类型为`EnvironmentVariablesRule`的测试类中声明一个 JUnit 4 `@Rule`注释字段来控制环境变量。这将在我们的测试运行时被 JUnit 4 激活，并允许我们在测试中设置环境变量:
 
-```
+```java
 @Rule
 public EnvironmentVariablesRule environmentVariablesRule = new EnvironmentVariablesRule();
 
@@ -164,7 +164,7 @@ public void givenEnvironmentCanBeModified_whenSetEnvironment_thenItIsSet() {
 
 在实践中，我们可能更喜欢在一个`@Before`方法中设置环境变量值，这样设置可以在所有测试中共享:
 
-```
+```java
 @Before
 public void before() {
     environmentVariablesRule.set("ENV", "value1")
@@ -176,7 +176,7 @@ public void before() {
 
 我们还可以使用`EnvironmentVariablesRule`对象的构造函数来提供构造值:
 
-```
+```java
 @Rule
 public EnvironmentVariablesRule environmentVariablesRule =
   new EnvironmentVariablesRule("ENV", "value1",
@@ -191,7 +191,7 @@ public EnvironmentVariablesRule environmentVariablesRule =
 
 在 JUnit 5 测试中使用系统存根对象之前，我们必须将扩展添加到我们的测试类中:
 
-```
+```java
 @ExtendWith(SystemStubsExtension.class)
 class EnvironmentVariablesJUnit5 {
     // tests
@@ -200,7 +200,7 @@ class EnvironmentVariablesJUnit5 {
 
 然后我们可以在测试类中为 JUnit 5 创建一个字段来管理我们。我们用`@SystemStub`对此进行注释，以便扩展知道激活它:
 
-```
+```java
 @SystemStub
 private EnvironmentVariables environmentVariables;
 ```
@@ -211,7 +211,7 @@ private EnvironmentVariables environmentVariables;
 
 我们现在可以使用对象来帮助我们在一个测试中设置环境变量:
 
-```
+```java
 @Test
 void givenEnvironmentCanBeModified_whenSetEnvironment_thenItIsSet() {
     environmentVariables.set("ENV", "value1");
@@ -222,7 +222,7 @@ void givenEnvironmentCanBeModified_whenSetEnvironment_thenItIsSet() {
 
 如果我们想从测试方法之外提供适用于所有测试的环境变量，我们可以在一个`@BeforeEach`方法内这样做，或者可以使用`EnvironmentVariables`的构造函数来设置我们的值:
 
-```
+```java
 @SystemStub
 private EnvironmentVariables environmentVariables =
   new EnvironmentVariables("ENV", "value1");
@@ -230,7 +230,7 @@ private EnvironmentVariables environmentVariables =
 
 和`EnvironmentVariablesRule`一样，构造函数有几种重载，允许我们以多种方式设置想要的变量。如果我们愿意，我们也可以流畅地使用`set`方法来设置值:
 
-```
+```java
 @SystemStub
 private EnvironmentVariables environmentVariables =
   new EnvironmentVariables()
@@ -244,7 +244,7 @@ private EnvironmentVariables environmentVariables =
 
 虽然在所有测试中使用存根对象时，将它们放在字段中是有用的，但我们可能更喜欢仅在选定的测试中使用它们。这可以通过 JUnit 5 参数注入来实现:
 
-```
+```java
 @Test
 void givenEnvironmentCanBeModified(EnvironmentVariables environmentVariables) {
     environmentVariables.set("ENV", "value1");
@@ -261,7 +261,7 @@ void givenEnvironmentCanBeModified(EnvironmentVariables environmentVariables) {
 
 用于创建存根的原始 System Lambda facade 方法也可以通过`SystemStubs` 类获得。在内部，它们通过创建存根对象的实例来实现。有时从配方返回的对象是存根对象，供进一步配置和使用:
 
-```
+```java
 withEnvironmentVariable("ENV3", "val")
     .execute(() -> {
         assertThat(System.getenv("ENV3")).isEqualTo("val");
@@ -270,7 +270,7 @@ withEnvironmentVariable("ENV3", "val")
 
 在幕后，`withEnvironmentVariable`正在做着相当于:
 
-```
+```java
 return new EnvironmentVariables().set("ENV3", "val");
 ```
 
@@ -278,7 +278,7 @@ return new EnvironmentVariables().set("ENV3", "val");
 
 如果测试代码返回一个值，那么该值可以由`execute`返回:
 
-```
+```java
 String extracted = new EnvironmentVariables("PROXY", "none")
   .execute(() -> System.getenv("PROXY"));
 
@@ -297,7 +297,7 @@ assertThat(extracted).isEqualTo("none");
 
 这可以通过使用`with` / `execute`方法来实现。这些通过使用单个`execute`从多个存根对象创建一个组合来工作:
 
-```
+```java
 with(new EnvironmentVariables("FOO", "bar"), new SystemProperties("prop", "val"))
   .execute(() -> {
       assertThat(System.getenv("FOO")).isEqualTo("bar");
@@ -315,7 +315,7 @@ with(new EnvironmentVariables("FOO", "bar"), new SystemProperties("prop", "val")
 
 通过将规则添加到 JUnit 4 测试类中，我们可以将每个测试与其他测试方法中的任何`System.setProperty`调用隔离开来。我们还可以通过构造函数提供一些前期属性:
 
-```
+```java
 @Rule
 public SystemPropertiesRule systemProperties =
   new SystemPropertiesRule("db.connection", "false");
@@ -323,7 +323,7 @@ public SystemPropertiesRule systemProperties =
 
 使用这个对象，我们还可以在 JUnit `@Before`方法中设置一些额外的属性:
 
-```
+```java
 @Before
 public void before() {
     systemProperties.set("before.prop", "before");
@@ -338,7 +338,7 @@ public void before() {
 
 恢复系统属性需要我们向测试类添加 JUnit 5 扩展和一个`SystemProperties`字段:
 
-```
+```java
 @ExtendWith(SystemStubsExtension.class)
 class RestoreSystemProperties {
     @SystemStub
@@ -351,7 +351,7 @@ class RestoreSystemProperties {
 
 我们也可以通过参数注入对选定的测试执行此操作:
 
-```
+```java
 @Test
 void willRestorePropertiesAfter(SystemProperties systemProperties) {
 
@@ -360,7 +360,7 @@ void willRestorePropertiesAfter(SystemProperties systemProperties) {
 
 如果我们希望在测试中设置属性，那么我们可以在构造我们的`SystemProperties `对象时分配这些属性，或者使用一个`@BeforeEach`方法:
 
-```
+```java
 @ExtendWith(SystemStubsExtension.class)
 class SetSomeSystemProperties {
     @SystemStub
@@ -379,7 +379,7 @@ class SetSomeSystemProperties {
 
 `SystemStubs`类提供了一个`restoreSystemProperties`方法，允许我们运行恢复了属性的测试代码:
 
-```
+```java
 restoreSystemProperties(() -> {
     // test code
     System.setProperty("unrestored", "true");
@@ -390,7 +390,7 @@ assertThat(System.getProperty("unrestored")).isNull();
 
 这需要一个不返回任何值的 lambda。如果我们希望使用一个公共的设置函数来创建属性，从测试方法中获得一个返回值，或者通过`with` / `execute`将`SystemProperties`与其他存根结合起来，那么我们可以显式地创建对象:
 
-```
+```java
 String result = new SystemProperties()
   .execute(() -> {
       System.setProperty("unrestored", "true");
@@ -407,14 +407,14 @@ assertThat(System.getProperty("unrestored")).isNull();
 
 在`PropertySource`类中有 helper 方法，用于从文件或资源中加载 Java 属性。这些属性文件是名称/值对:
 
-```
+```java
 name=baeldung
 version=1.0
 ```
 
 我们可以通过使用`fromResource`函数从资源`test.properties`加载:
 
-```
+```java
 SystemProperties systemProperties =
   new SystemProperties(PropertySource.fromResource("test.properties")); 
 ```
@@ -425,7 +425,7 @@ SystemProperties systemProperties =
 
 当我们的应用程序写入`System.out,`时，可能很难测试。这有时通过使用接口作为输出的目标并在测试时模仿它来解决:
 
-```
+```java
 interface LogOutput {
    void write(String line);
 }
@@ -445,14 +445,14 @@ class Component {
 
 为了在 JUnit 4 测试中将输出捕获到`System.out`，我们添加了`SystemOutRule`:
 
-```
+```java
 @Rule
 public SystemOutRule systemOutRule = new SystemOutRule();
 ```
 
 之后，可以在测试中读取`System.out`的任何输出:
 
-```
+```java
 System.out.println("line1");
 System.out.println("line2");
 
@@ -462,21 +462,21 @@ assertThat(systemOutRule.getLines())
 
 我们有多种文本格式可供选择。上面的例子使用了`getLines`提供的`Stream<String>`。我们也可以选择获取整个文本块:
 
-```
+```java
 assertThat(systemOutRule.getText())
   .startsWith("line1");
 ```
 
 但是，我们应该注意，这个文本将有换行符，这些换行符因平台而异。通过使用规范化形式，我们可以在每个平台上用`\n`替换换行符:
 
-```
+```java
 assertThat(systemOutRule.getLinesNormalized())
   .isEqualTo("line1\nline2\n");
 ```
 
 `SystemErrRule`的工作方式与`System.err`的`System.out`相同:
 
-```
+```java
 @Rule
 public SystemErrRule systemErrRule = new SystemErrRule();
 
@@ -496,7 +496,7 @@ public void whenCodeWritesToSystemErr_itCanBeRead() {
 
 与其他系统存根对象一样，我们只需要声明一个类型为`SystemOut`或`SystemErr`的字段或参数。这将为我们提供输出的捕获:
 
-```
+```java
 @SystemStub
 private SystemOut systemOut;
 
@@ -519,7 +519,7 @@ void whenWriteToOutput_thenItCanBeAsserted() {
 
 `SystemStubs` facade 提供了一些函数来获取输出并将其作为`String`返回:
 
-```
+```java
 @Test
 void givenTapOutput_thenGetOutput() throws Exception {
     String output = tapSystemOutNormalized(() -> {
@@ -535,7 +535,7 @@ void givenTapOutput_thenGetOutput() throws Exception {
 
 但是，可以直接使用`SystemOut`、 `SystemErr,`和`SystemErrAndOut `对象。例如，我们可以将它们与一些`SystemProperties`结合起来:
 
-```
+```java
 SystemOut systemOut = new SystemOut();
 SystemProperties systemProperties = new SystemProperties("a", "!");
 with(systemOut, systemProperties)
@@ -550,7 +550,7 @@ assertThat(systemOut.getLines()).containsExactly("a: !");
 
 有时我们的目的不是捕获输出，而是防止它扰乱我们的测试运行日志。我们可以使用`muteSystemOut`或`muteSystemErr`函数来实现这一点:
 
-```
+```java
 muteSystemOut(() -> {
     System.out.println("nothing is output");
 });
@@ -558,14 +558,14 @@ muteSystemOut(() -> {
 
 我们可以通过 JUnit 4 `SystemOutRule`在所有测试中实现同样的事情:
 
-```
+```java
 @Rule
 public SystemOutRule systemOutRule = new SystemOutRule(new NoopStream());
 ```
 
 在 JUnit 5 中，我们可以使用相同的技术:
 
-```
+```java
 @SystemStub
 private SystemOut systemOut = new SystemOut(new NoopStream());
 ```
@@ -576,7 +576,7 @@ private SystemOut systemOut = new SystemOut(new NoopStream());
 
 我们可以提供自己的目标来捕获输出，作为`Output`的实现。我们已经看到了第一个例子中使用的`Output`类`TapStream`。`NoopStream`用于静音。我们也有`DisallowWriteStream`,如果有东西写入，它会抛出一个错误:
 
-```
+```java
 // throws an exception:
 new SystemOut(new DisallowWriteStream())
   .execute(() -> System.out.println("boo"));
@@ -594,7 +594,7 @@ new SystemOut(new DisallowWriteStream())
 
 系统存根提供了一系列的`AltInputStream`类作为从`InputStream` 读取的任何代码的**可选输入:**
 
-```
+```java
 LinesAltStream testInput = new LinesAltStream("line1", "line2");
 
 Scanner scanner = new Scanner(testInput);
@@ -607,7 +607,7 @@ assertThat(scanner.nextLine()).isEqualTo("line1");
 
 我们可以使用`SystemInRule`在 JUnit 4 测试中提供输入行:
 
-```
+```java
 @Rule
 public SystemInRule systemInRule =
   new SystemInRule("line1", "line2", "line3");
@@ -615,7 +615,7 @@ public SystemInRule systemInRule =
 
 然后，测试代码可以从`System.in`读取该输入:
 
-```
+```java
 @Test
 public void givenInput_canReadFirstLine() {
     assertThat(new Scanner(System.in).nextLine())
@@ -627,7 +627,7 @@ public void givenInput_canReadFirstLine() {
 
 对于 JUnit 5 测试，我们创建一个`SystemIn`字段:
 
-```
+```java
 @SystemStub
 private SystemIn systemIn = new SystemIn("line1", "line2", "line3");
 ```
@@ -638,7 +638,7 @@ private SystemIn systemIn = new SystemIn("line1", "line2", "line3");
 
 `SystemStubs` facade 提供了作为工厂方法的`withTextFromSystemIn`,它创建了一个`SystemIn`对象，用于它的`execute`方法:
 
-```
+```java
 withTextFromSystemIn("line1", "line2", "line3")
   .execute(() -> {
       assertThat(new Scanner(System.in).nextLine())
@@ -662,14 +662,14 @@ withTextFromSystemIn("line1", "line2", "line3")
 
 让我们将`SystemExitRule`添加到一个测试类中，作为防止任何`System.exit`停止 JVM 的安全措施:
 
-```
+```java
 @Rule
 public SystemExitRule systemExitRule = new SystemExitRule();
 ```
 
 然而，**我们可能也想看看是否使用了正确的退出代码**。为此，我们需要断言代码抛出了`AbortExecutionException`，这是调用了`System.exit`的系统存根信号。
 
-```
+```java
 @Test
 public void whenExit_thenExitCodeIsAvailable() {
     assertThatThrownBy(() -> {
@@ -686,7 +686,7 @@ public void whenExit_thenExitCodeIsAvailable() {
 
 对于 JUnit 5 测试，我们声明了`@SystemStub`字段:
 
-```
+```java
 @SystemStub
 private SystemExit systemExit;
 ```
@@ -697,7 +697,7 @@ private SystemExit systemExit;
 
 `SystemStubs`类提供内部使用`SystemExit`的`execute`函数的`catchSystemExit,`:
 
-```
+```java
 int exitCode = catchSystemExit(() -> {
     System.exit(123);
 });
@@ -720,7 +720,7 @@ JUnit 5 有一个更复杂的资源管理模式。对于简单的用例，可以
 
 假设我们想为一些测试打开一个到数据库的连接，然后关闭它:
 
-```
+```java
 public class FakeDatabaseTestResource implements TestResource {
     // let's pretend this is a database connection
     private String databaseConnection = "closed";
@@ -747,7 +747,7 @@ public class FakeDatabaseTestResource implements TestResource {
 
 现在让我们尝试将它与执行循环模式一起使用:
 
-```
+```java
 FakeDatabaseTestResource fake = new FakeDatabaseTestResource();
 assertThat(fake.getDatabaseConnection()).isEqualTo("closed");
 
@@ -762,7 +762,7 @@ fake.execute(() -> {
 
 我们也可以在 JUnit 5 测试中使用它:
 
-```
+```java
 @ExtendWith(SystemStubsExtension.class)
 class FakeDatabaseJUnit5UnitTest {
 
@@ -785,7 +785,7 @@ class FakeDatabaseJUnit5UnitTest {
 
 在系统存根文档中提供了一个完整的示例。我们首先创建一个外部类:
 
-```
+```java
 @ExtendWith(SystemStubsExtension.class)
 public class SpringAppWithDynamicPropertiesTest {
 
@@ -797,7 +797,7 @@ public class SpringAppWithDynamicPropertiesTest {
 
 在这种情况下,@ `SystemStub `字段是`static`并且在`@BeforeAll`方法中被初始化:
 
-```
+```java
 @BeforeAll
 static void beforeAll() {
      String baseUrl = ...;
@@ -810,7 +810,7 @@ static void beforeAll() {
 
 然后，我们可以把春考放到一个`@Nested`类中。这导致它仅在设置了父类时运行:
 
-```
+```java
 @Nested
 @SpringBootTest(classes = {RestApi.class, App.class},
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

@@ -22,7 +22,7 @@ CDI 可移植扩展观察这些事件，然后修改或添加信息到由容器�
 
 让我们从在`pom.xml`中添加 CDI API 所需的依赖项开始。这足以实现一个空的扩展。
 
-```
+```java
 <dependency>
     <groupId>javax.enterprise</groupId>
     <artifactId>cdi-api</artifactId>
@@ -32,7 +32,7 @@ CDI 可移植扩展观察这些事件，然后修改或添加信息到由容器�
 
 为了运行应用程序，我们可以使用任何兼容的 CDI 实现。在本文中，我们将使用 Weld 实现。
 
-```
+```java
 <dependency>
     <groupId>org.jboss.weld.se</groupId>
     <artifactId>weld-se-core</artifactId>
@@ -49,7 +49,7 @@ CDI 可移植扩展观察这些事件，然后修改或添加信息到由容器�
 
 让我们来看看下面这个取自`Flyway` `:`的[官方网站的例子](https://web.archive.org/web/20220523232107/https://flywaydb.org/)
 
-```
+```java
 DataSource dataSource = //...
 Flyway flyway = new Flyway();
 flyway.setDataSource(dataSource);
@@ -86,14 +86,14 @@ CDI 可移植扩展的目的是观察这些事件，检查关于发现的 beans 
 
 首先，我们从提供`Extension`实现开始。稍后，我们将向 CDI 容器引导事件添加观察者方法:
 
-```
+```java
 public class FlywayExtension implements Extension {
 }
 ```
 
 然后，我们添加一个文件名`META-INF/services/javax.enterprise.inject.spi.Extension`,内容如下:
 
-```
+```java
 com.baeldung.cdi.extension.FlywayExtension
 ```
 
@@ -103,7 +103,7 @@ com.baeldung.cdi.extension.FlywayExtension
 
 在这个例子中，我们在扫描过程开始之前让 CDI 容器知道`Flyway`类。这是在`registerFlywayType()`观察器方法中完成的:
 
-```
+```java
 public void registerFlywayType(
   @Observes BeforeBeanDiscovery bbdEvent) {
     bbdEvent.addAnnotatedType(
@@ -115,7 +115,7 @@ public void registerFlywayType(
 
 接下来，我们将观察`ProcessAnnotatedType`事件，使`Flyway`类成为 CDI 管理的 bean:
 
-```
+```java
 public void processAnnotatedType(@Observes ProcessAnnotatedType<Flyway> patEvent) {
     patEvent.configureAnnotatedType()
       .add(ApplicationScoped.Literal.INSTANCE)
@@ -132,7 +132,7 @@ public void processAnnotatedType(@Observes ProcessAnnotatedType<Flyway> patEvent
 
 上述操作的最终结果与容器扫描下面的`Flyway` bean 具有相同的效果:
 
-```
+```java
 @ApplicationScoped
 @FlywayType
 public class Flyway {
@@ -149,7 +149,7 @@ public class Flyway {
 
 为此，我们将在容器中注册一个`DataSource` Bean，并使用`AfterBeanDiscovery`事件:
 
-```
+```java
 void afterBeanDiscovery(@Observes AfterBeanDiscovery abdEvent, BeanManager bm) {
     abdEvent.addBean()
       .types(javax.sql.DataSource.class, DataSource.class)
@@ -170,7 +170,7 @@ void afterBeanDiscovery(@Observes AfterBeanDiscovery abdEvent, BeanManager bm) {
 
 我们可以使用以下注释来注释任何受管 bean:
 
-```
+```java
 @DataSourceDefinition(
   name = "ds", 
   className = "org.h2.Driver", 
@@ -179,7 +179,7 @@ void afterBeanDiscovery(@Observes AfterBeanDiscovery abdEvent, BeanManager bm) {
 
 为了提取这些属性，我们观察`ProcessAnnotatedType`事件和`@WithAnnotations`注释:
 
-```
+```java
 public void detectDataSourceDefinition(
   @Observes @WithAnnotations(DataSourceDefinition.class) ProcessAnnotatedType<?> patEvent) {
     AnnotatedType at = patEvent.getAnnotatedType();
@@ -189,7 +189,7 @@ public void detectDataSourceDefinition(
 
 最后，我们监听`AfterDeployementValidation`事件，从 CDI 容器中获取想要的`Flyway` bean，然后调用`migrate()`方法:
 
-```
+```java
 void runFlywayMigration(
   @Observes AfterDeploymentValidation adv, 
   BeanManager manager) {

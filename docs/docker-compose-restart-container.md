@@ -10,7 +10,7 @@
 
 Docker Compose 是一个将多个容器作为单一服务进行管理的工具。然而，Docker Compose CLI 包括可以应用于单个容器的命令。例如，**`restart` 命令让我们提供我们想要重启的服务的名称，而不影响其他正在运行的服务:**
 
-```
+```java
 docker-compose restart service-name
 ```
 
@@ -22,13 +22,13 @@ docker-compose restart service-name
 
 首先，我们必须通过从项目根目录运行以下命令来确认我们可以运行这两个容器:
 
-```
+```java
 docker-compose up --detach --build
 ```
 
 现在，我们应该能够通过执行`docker-compose ps`看到两个服务都在运行:
 
-```
+```java
 $ docker ps
      Name                   Command              State            Ports         
 --------------------------------------------------------------------------------
@@ -48,19 +48,19 @@ product-server   java -jar /product-server.jar   Up      0.0.0.0:19999->9999/tcp
 
 两个容器都在运行，我们选择其中一个服务来重启。在这种情况下，我们将使用`message-server`容器:
 
-```
+```java
 docker-compose restart message-server
 ```
 
 在终端中运行该命令后，我们应该能够看到以下消息:
 
-```
+```java
 Restarting message-server ... done
 ```
 
 一旦终端提示输入另一个命令，我们可以通过运行 Docker 命令`ps`来检查所有正在运行的进程的状态，从而确认`message-server`已经成功重启:
 
-```
+```java
 $ docker ps
 CONTAINER ID   IMAGE                   COMMAND                  CREATED          STATUS          PORTS                     NAMES
 b6541d1c4ddf   product-server:latest   "java -jar /product-…"   10 minutes ago   Up 42 seconds   0.0.0.0:19999->9999/tcp   product-server
@@ -75,7 +75,7 @@ b6541d1c4ddf   product-server:latest   "java -jar /product-…"   10 minutes ago
 
 在两个容器都运行的情况下，让我们首先更改代码，以确认我们将在重新启动之前用最新的代码更新服务。在`DockerProductController` 类中，让我们将`return`语句修改成这样:
 
-```
+```java
 public String getMessage() {
     return "This is a brand new product";
 }
@@ -83,7 +83,7 @@ public String getMessage() {
 
 现在，让我们构建 Maven 包:
 
-```
+```java
 mvn clean package
 ```
 
@@ -91,13 +91,13 @@ mvn clean package
 
 让我们运行命令来重建并重启容器:
 
-```
+```java
 docker-compose up --detach --build product-server
 ```
 
 现在，我们可以通过运行`docker ps`并查看输出来验证`product-server` 容器是否以最新的代码重启:
 
-```
+```java
 $ docker ps
 CONTAINER ID   IMAGE                   COMMAND                  CREATED          STATUS          PORTS                     NAMES
 78a4364e75e6   product-server:latest   "java -jar /product-…"   6 seconds ago    Up 5 seconds    0.0.0.0:19999->9999/tcp   product-server

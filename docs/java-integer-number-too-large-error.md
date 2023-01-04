@@ -14,19 +14,19 @@ Java 使用 32 位内存存储`Integer`。因此， **`Integer`(或`int`)的范�
 
 当我们将一个超出上述整数范围的文字数字赋给一个`int`变量时，Java 编译器会报错。例如，假设我们编译这个赋值:
 
-```
+```java
 int a = 12345678912345;
 ```
 
 编译器会报告这个错误:
 
-```
+```java
 java: integer number too large
 ```
 
 我们可以通过阅读错误信息快速找到问题。我们可能认为`int`不适合这么大的数字，所以我们将类型改为`long`:
 
-```
+```java
 long a = 12345678912345;
 ```
 
@@ -38,13 +38,13 @@ long a = 12345678912345;
 
 因此，要解决这个问题，我们应该在文字数字后添加一个'`L`':
 
-```
+```java
 long a = 12345678912345L;
 ```
 
 值得一提的是**当我们使用不带任何后缀的十进制文字时，Java 将其视为`double`。如果我们希望它们是`float,`，我们必须添加一个“`F`或“`f`”后缀:**
 
-```
+```java
 float a = 1024.42; // compiler error -  java: incompatible types: possible lossy conversion from double to float
 float a = 1024.42F; // compiled
 ```
@@ -53,7 +53,7 @@ float a = 1024.42F; // compiled
 
 现在我们知道应该为类型`long `的整数文字添加后缀`L`。接下来，我们来看另一个例子:
 
-```
+```java
 long a = 007L;
 ```
 
@@ -61,7 +61,7 @@ long a = 007L;
 
 现在，让我们声明另一个变量:
 
-```
+```java
 long b = 008L;
 ```
 
@@ -75,7 +75,7 @@ long b = 008L;
 
 在我们了解了问题的原因之后，解决方法非常简单——删除前导零:
 
-```
+```java
 long b = 8L;
 ```
 

@@ -40,7 +40,7 @@
 
 在构建一个新的 Spring Boot 应用程序后，我们需要确保包含 [Discord4J 核心](https://web.archive.org/web/20220703155159/https://search.maven.org/artifact/com.discord4j/bom)依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.discord4j</groupId>
     <artifactId>discord4j-core</artifactId>
@@ -52,13 +52,13 @@ Discord4J 的工作原理是用我们之前创建的 bot 令牌初始化一个 [
 
 首先，让我们将 bot 令牌添加到我们的`application.yml`文件中:
 
-```
+```java
 token: 'our-token-here'
 ```
 
 接下来，让我们将它注入到一个`@Configuration`类中，在这里我们可以实例化我们的`GatewayDiscordClient`:
 
-```
+```java
 @Configuration
 public class BotConfiguration {
 
@@ -83,7 +83,7 @@ public class BotConfiguration {
 
 我们可以监听许多类型的事件。然而，注册一个监听器对所有事件监听器都是一样的，所以让我们首先为所有事件监听器创建一个接口:
 
-```
+```java
 import discord4j.core.event.domain.Event;
 
 public interface EventListener<T extends Event> {
@@ -104,7 +104,7 @@ public interface EventListener<T extends Event> {
 
 在我们实现我们的第一个事件监听器之前，让我们修改我们的客户端`@Bean`配置来期望一个`EventListener`列表，这样它可以注册在 [Spring `ApplicationContext`](/web/20220703155159/https://www.baeldung.com/spring-application-context) 中找到的每一个:
 
-```
+```java
 @Bean
 public <T extends Event> GatewayDiscordClient gatewayDiscordClient(List<EventListener<T>> eventListeners) {
     GatewayDiscordClient client = DiscordClientBuilder.create(token)
@@ -139,7 +139,7 @@ public <T extends Event> GatewayDiscordClient gatewayDiscordClient(List<EventLis
 
 因为我们可以通过它们的`Message`对象完全操作这两个事件，所以让我们将所有下游逻辑放在一个公共位置，这样两个事件监听器都可以使用它:
 
-```
+```java
 import discord4j.core.object.entity.Message;
 
 public abstract class MessageListener {
@@ -163,7 +163,7 @@ public abstract class MessageListener {
 
 要接收来自用户的新消息，我们必须监听`MessageCreateEvent`。由于命令处理逻辑已经存在于`MessageListener`中，我们可以扩展它来继承该功能。此外，我们需要实现我们的`EventListener`接口，以符合我们的注册设计:
 
-```
+```java
 @Service
 public class MessageCreateListener extends MessageListener implements EventListener<MessageCreateEvent> {
 
@@ -189,7 +189,7 @@ public class MessageCreateListener extends MessageListener implements EventListe
 
 出于我们的目的，我们只关心消息内容被更改时的事件。我们可以忽略这个事件的其他实例。幸运的是，我们可以使用`isContentChanged()`方法过滤掉这样的实例:
 
-```
+```java
 @Service
 public class MessageUpdateListener extends MessageListener implements EventListener<MessageUpdateEvent> {
 

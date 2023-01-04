@@ -12,7 +12,7 @@
 
 让我们从简单的**在`Timer`的帮助下运行单个任务**开始:
 
-```
+```java
 @Test
 public void givenUsingTimer_whenSchedulingTaskOnce_thenCorrect() {
     TimerTask task = new TimerTask() {
@@ -40,7 +40,7 @@ public void givenUsingTimer_whenSchedulingTaskOnce_thenCorrect() {
 
 我们可以创建一个`DatabaseMigrationTask`类来处理这个迁移:
 
-```
+```java
 public class DatabaseMigrationTask extends TimerTask {
     private List<String> oldDatabase;
     private List<String> newDatabase;
@@ -61,7 +61,7 @@ public class DatabaseMigrationTask extends TimerTask {
 
 为了在期望的时刻执行迁移，**我们必须使用重载版本的`schedule` `()`方法**:
 
-```
+```java
 List<String> oldDatabase = Arrays.asList("Harrison Ford", "Carrie Fisher", "Mark Hamill");
 List<String> newDatabase = new ArrayList<>();
 
@@ -75,7 +75,7 @@ new Timer().schedule(new DatabaseMigrationTask(oldDatabase, newDatabase), twoSec
 
 然后在由`twoSecondsLater`指示的时间执行迁移:
 
-```
+```java
 while (LocalDateTime.now().isBefore(twoSecondsLater)) {
     assertThat(newDatabase).isEmpty();
     Thread.sleep(500);
@@ -95,7 +95,7 @@ assertThat(newDatabase).containsExactlyElementsOf(oldDatabase);
 
 假设我们希望每两秒调度一个任务，第一次执行用了一秒，第二次执行用了两秒，但是延迟了一秒。然后第三次执行在第五秒开始:
 
-```
+```java
 0s     1s    2s     3s           5s
 |--T1--|
 |-----2s-----|--1s--|-----T2-----|
@@ -106,7 +106,7 @@ assertThat(newDatabase).containsExactlyElementsOf(oldDatabase);
 
 让我们重复使用之前的例子。在固定速率下，第二个任务将在三秒钟后开始(由于延迟)，但第三个任务将在四秒钟后开始(考虑到每两秒钟执行一次的初始计划):
 
-```
+```java
 0s     1s    2s     3s    4s
 |--T1--|       
 |-----2s-----|--1s--|-----T2-----|
@@ -131,7 +131,7 @@ assertThat(newDatabase).containsExactlyElementsOf(oldDatabase);
 
 首先，我们将设计一个`NewsletterTask`:
 
-```
+```java
 public class NewsletterTask extends TimerTask {
     @Override
     public void run() {
@@ -146,7 +146,7 @@ public class NewsletterTask extends TimerTask {
 
 那么如果我们想在固定延迟模式下每秒调度一次这个任务呢？我们将不得不使用我们之前提到的`schedule()`的重载版本:
 
-```
+```java
 new Timer().schedule(new NewsletterTask(), 0, 1000);
 
 for (int i = 0; i < 3; i++) {
@@ -156,7 +156,7 @@ for (int i = 0; i < 3; i++) {
 
 当然，我们只对少数情况进行测试:
 
-```
+```java
 Email sent at: 2020-01-01T10:50:30.860
 Email sent at: 2020-01-01T10:50:31.860
 Email sent at: 2020-01-01T10:50:32.861
@@ -169,7 +169,7 @@ Email sent at: 2020-01-01T10:50:33.861
 
 如果我们使用固定速率的重复会怎么样？那么我们将不得不使用`scheduledAtFixedRate()`方法:
 
-```
+```java
 new Timer().scheduleAtFixedRate(new NewsletterTask(), 0, 1000);
 
 for (int i = 0; i < 3; i++) {
@@ -179,7 +179,7 @@ for (int i = 0; i < 3; i++) {
 
 这一次，**的执行不会被之前的**延迟:
 
-```
+```java
 Email sent at: 2020-01-01T10:55:03.805
 Email sent at: 2020-01-01T10:55:04.805
 Email sent at: 2020-01-01T10:55:05.805
@@ -190,7 +190,7 @@ Email sent at: 2020-01-01T10:55:06.805
 
 接下来，让我们**每天运行一次任务**:
 
-```
+```java
 @Test
 public void givenUsingTimer_whenSchedulingDailyTask_thenCorrect() {
     TimerTask repeatedTask = new TimerTask() {
@@ -214,7 +214,7 @@ public void givenUsingTimer_whenSchedulingDailyTask_thenCorrect() {
 
 第一个选项是调用 *run()* 方法实现 *TimerTask* 本身内部的 *TimerTask.cancel()* 方法:
 
-```
+```java
 @Test
 public void givenUsingTimer_whenCancelingTimerTask_thenCorrect()
   throws InterruptedException {
@@ -236,7 +236,7 @@ public void givenUsingTimer_whenCancelingTimerTask_thenCorrect()
 
 另一个选项是在一个*定时器*对象上调用*定时器. cancel()* 方法:
 
-```
+```java
 @Test
 public void givenUsingTimer_whenCancelingTimer_thenCorrect() 
   throws InterruptedException {
@@ -258,7 +258,7 @@ public void givenUsingTimer_whenCancelingTimer_thenCorrect()
 
 我们还可以停止任务的`run`方法中的线程，从而取消整个任务:
 
-```
+```java
 @Test
 public void givenUsingTimer_whenStoppingThread_thenTimerTaskIsCancelled() 
   throws InterruptedException {
@@ -286,7 +286,7 @@ public void givenUsingTimer_whenStoppingThread_thenTimerTaskIsCancelled()
 
 下面是如何以指定的时间间隔运行重复任务的快速示例:
 
-```
+```java
 @Test
 public void givenUsingExecutorService_whenSchedulingRepeatedTask_thenCorrect() 
   throws InterruptedException {

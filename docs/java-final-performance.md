@@ -22,7 +22,7 @@
 
 我们将利用 [JMH 工具](/web/20220628060709/https://www.baeldung.com/java-microbenchmark-harness)来测量基准测试方法的平均执行时间。在我们的基准方法中，我们将对非最终局部变量进行简单的字符串连接:
 
-```
+```java
 @Benchmark
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @BenchmarkMode(Mode.AverageTime)
@@ -35,7 +35,7 @@ public static String concatNonFinalStrings() {
 
 接下来，我们将重复相同的性能测试，但这次使用最终的局部变量:
 
-```
+```java
 @Benchmark
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @BenchmarkMode(Mode.AverageTime)
@@ -48,7 +48,7 @@ public static String concatFinalStrings() {
 
 JMH 将负责运行预热迭代，以便让 [JIT 编译器](/web/20220628060709/https://www.baeldung.com/ahead-of-time-compilation)优化生效。最后，让我们来看看以纳秒为单位的平均性能测量值:
 
-```
+```java
 Benchmark                              Mode  Cnt  Score   Error  Units
 BenchmarkRunner.concatFinalStrings     avgt  200  2,976 ± 0,035  ns/op
 BenchmarkRunner.concatNonFinalStrings  avgt  200  7,375 ± 0,119  ns/op
@@ -62,7 +62,7 @@ BenchmarkRunner.concatNonFinalStrings  avgt  200  7,375 ± 0,119  ns/op
 
 使用非最终局部变量，编译器生成以下字节码来连接两个字符串:
 
-```
+```java
 NEW java/lang/StringBuilder
 DUP
 INVOKESPECIAL java/lang/StringBuilder.<init> ()V
@@ -76,7 +76,7 @@ ARETURN
 
 通过添加`final`关键字，我们帮助编译器断定字符串连接结果实际上永远不会改变。因此，编译器能够完全避免字符串连接，并静态优化生成的字节码:
 
-```
+```java
 LDC "xy"
 ARETURN
 ```
@@ -89,14 +89,14 @@ ARETURN
 
 通过将 [`static`](/web/20220628060709/https://www.baeldung.com/java-static) 关键字添加到类的成员变量来声明类变量。另外，**通过将`final` 关键字应用于一个类变量，我们定义了一个常量**。我们可以在常量声明时或者在静态初始化程序块中赋值:
 
-```
+```java
 static final boolean doX = false;
 static final boolean doY = true;
 ```
 
 让我们用使用这些`boolean`常量的条件编写一个简单的方法:
 
-```
+```java
 Console console = System.console();
 if (doX) {
     console.writer().println("x");

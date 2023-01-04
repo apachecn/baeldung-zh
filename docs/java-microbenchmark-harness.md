@@ -12,7 +12,7 @@
 
 首先，我们实际上可以继续使用 Java 8，并简单地定义依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.openjdk.jmh</groupId>
     <artifactId>jmh-core</artifactId>
@@ -29,7 +29,7 @@
 
 接下来，利用`@Benchmark`注释(在任何公共类中)创建一个简单的基准:
 
-```
+```java
 @Benchmark
 public void init() {
     // Do nothing
@@ -38,7 +38,7 @@ public void init() {
 
 然后我们添加开始基准测试过程的主类:
 
-```
+```java
 public class BenchmarkRunner {
     public static void main(String[] args) throws Exception {
         org.openjdk.jmh.Main.main(args);
@@ -48,7 +48,7 @@ public class BenchmarkRunner {
 
 现在运行`BenchmarkRunner`将执行我们可能有点无用的基准测试。运行完成后，会显示一个汇总表:
 
-```
+```java
 # Run complete. Total time: 00:06:45
 Benchmark      Mode  Cnt Score            Error        Units
 BenchMark.init thrpt 200 3099210741.962 ± 17510507.589 ops/s
@@ -58,7 +58,7 @@ BenchMark.init thrpt 200 3099210741.962 ± 17510507.589 ops/s
 
 JMH 支持一些可能的基准:`Throughput,` `AverageTime,` `SampleTime`和`SingleShotTime`。这些可以通过`@BenchmarkMode`注释进行配置:
 
-```
+```java
 @Benchmark
 @BenchmarkMode(Mode.AverageTime)
 public void init() {
@@ -68,7 +68,7 @@ public void init() {
 
 生成的表将有一个平均时间度量(而不是吞吐量):
 
-```
+```java
 # Run complete. Total time: 00:00:40
 Benchmark Mode Cnt  Score Error Units
 BenchMark.init avgt 20 ≈ 10⁻⁹ s/op
@@ -78,7 +78,7 @@ BenchMark.init avgt 20 ≈ 10⁻⁹ s/op
 
 通过使用`@Fork`注释，我们可以设置基准执行是如何发生的:`value`参数控制基准将被执行的次数，而`warmup`参数控制在收集结果之前基准将被试运行的次数，例如:
 
-```
+```java
 @Benchmark
 @Fork(value = 1, warmups = 2)
 @BenchmarkMode(Mode.Throughput)
@@ -97,7 +97,7 @@ public void init() {
 
 我们可以通过使用一个`State`对象来研究性能影响:
 
-```
+```java
 @State(Scope.Benchmark)
 public class ExecutionPlan {
 
@@ -117,7 +117,7 @@ public class ExecutionPlan {
 
 我们的基准方法将会是这样的:
 
-```
+```java
 @Fork(value = 1, warmups = 1)
 @Benchmark
 @BenchmarkMode(Mode.Throughput)
@@ -135,7 +135,7 @@ public void benchMurmur3_128(ExecutionPlan plan) {
 
 当执行完成时，我们将得到与下面类似的结果:
 
-```
+```java
 # Run complete. Total time: 00:06:47
 
 Benchmark                   (iterations)   Mode  Cnt      Score      Error  Units
@@ -152,7 +152,7 @@ BenchMark.benchMurmur3_128          1000  thrpt   20   8960.008 ±  658.524  ops
 
 为了更具体一点，让我们考虑一个例子:
 
-```
+```java
 @Benchmark
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @BenchmarkMode(Mode.AverageTime)
@@ -169,7 +169,7 @@ public void objectCreation() {
 
 我们期望对象分配比什么都不做花费更多。但是，如果我们运行基准测试:
 
-```
+```java
 Benchmark                 Mode  Cnt  Score   Error  Units
 BenchMark.doNothing       avgt   40  0.609 ± 0.006  ns/op
 BenchMark.objectCreation  avgt   40  0.613 ± 0.007  ns/op
@@ -181,7 +181,7 @@ BenchMark.objectCreation  avgt   40  0.613 ± 0.007  ns/op
 
 为了防止这种优化，我们应该设法欺骗编译器，让它认为代码被其他组件使用。实现这一点的一种方法是返回创建的对象:
 
-```
+```java
 @Benchmark
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @BenchmarkMode(Mode.AverageTime)
@@ -192,7 +192,7 @@ public Object pillarsOfCreation() {
 
 同样，我们可以让`[Blackhole](https://web.archive.org/web/20221012100327/http://javadox.com/org.openjdk.jmh/jmh-core/1.6.3/org/openjdk/jmh/infra/Blackhole.html)`消耗它:
 
-```
+```java
 @Benchmark
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @BenchmarkMode(Mode.AverageTime)
@@ -203,7 +203,7 @@ public void blackHole(Blackhole blackhole) {
 
 让`Blackhole`消费对象是说服 JIT 编译器不应用死代码消除优化的一种方式。无论如何，如果我们再次运行这些基准，这些数字会更有意义:
 
-```
+```java
 Benchmark                    Mode  Cnt  Score   Error  Units
 BenchMark.blackHole          avgt   20  4.126 ± 0.173  ns/op
 BenchMark.doNothing          avgt   20  0.639 ± 0.012  ns/op
@@ -215,7 +215,7 @@ BenchMark.pillarsOfCreation  avgt   20  4.061 ± 0.037  ns/op
 
 让我们考虑另一个例子:
 
-```
+```java
 @Benchmark
 public double foldedLog() {
     int x = 8;
@@ -226,7 +226,7 @@ public double foldedLog() {
 
 **基于常数的计算可能会返回完全相同的输出，而不管执行的次数。因此，JIT 编译器很有可能会用对数函数调用的结果来替换它:**
 
-```
+```java
 @Benchmark
 public double foldedLog() {
     return 2.0794415416798357;
@@ -237,7 +237,7 @@ public double foldedLog() {
 
 为了防止常量合并，我们可以将常量状态封装在一个状态对象中:
 
-```
+```java
 @State(Scope.Benchmark)
 public static class Log {
     public int x = 8;
@@ -251,7 +251,7 @@ public double log(Log input) {
 
 如果我们相互比较这些基准:
 
-```
+```java
 Benchmark             Mode  Cnt          Score          Error  Units
 BenchMark.foldedLog  thrpt   20  449313097.433 ± 11850214.900  ops/s
 BenchMark.log        thrpt   20   35317997.064 ±   604370.461  ops/s

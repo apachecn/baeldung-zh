@@ -12,7 +12,7 @@
 
 在类的括号(`{}`)内用`private`访问修饰符声明但在任何方法外声明的每个变量都有类范围。因此，**这些变量可以在类中的任何地方使用，但不能在类外使用**:
 
-```
+```java
 public class ClassScopeExample {
     private Integer amount = 0;
     public void exampleMethod() {
@@ -32,7 +32,7 @@ public class ClassScopeExample {
 
 当一个变量在一个方法中被声明时，它有方法作用域和**，它只在同一个方法中有效:**
 
-```
+```java
 public class MethodScopeExample {
     public void methodA() {
         Integer area = 2;
@@ -50,7 +50,7 @@ public class MethodScopeExample {
 
 如果我们在一个循环中声明一个变量，它将有一个循环范围，并且**将只在循环中可用:**
 
-```
+```java
 public class LoopScopeExample {
     List<String> listOfNames = Arrays.asList("Joe", "Susan", "Pattrick");
     public void iterationOfNames() {
@@ -70,7 +70,7 @@ public class LoopScopeExample {
 
 **我们可以使用括号** ( `{}`)在任何地方定义额外的作用域:
 
-```
+```java
 public class BracketScopeExample {    
     public void mathOperationExample() {
         Integer sum = 0;
@@ -90,7 +90,7 @@ public class BracketScopeExample {
 
 假设我们有一个类变量，我们想声明一个同名的方法变量:
 
-```
+```java
 public class NestedScopesExample {
     String title = "Baeldung";
     public void printTitle() {

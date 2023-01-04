@@ -20,7 +20,7 @@
 
 在本教程中，我们将使用下面显示的`Service`接口作为测试用例中的合作者:
 
-```
+```java
 public interface Service {
     void doAction(String request, Callback<Response> callback);
 }
@@ -28,7 +28,7 @@ public interface Service {
 
 在`Callback`参数中，我们传递一个使用`reply(T response)`方法处理响应的类:
 
-```
+```java
 public interface Callback<T> {
     void reply(T response);
 } 
@@ -38,7 +38,7 @@ public interface Callback<T> {
 
 我们还将使用一个简单的**服务示例来演示如何传递和调用回调**:
 
-```
+```java
 public void doAction() {
     service.doAction("our-request", new Callback<Response>() {
         @Override
@@ -51,7 +51,7 @@ public void doAction() {
 
 在向`Response`对象添加一些数据之前，`handleResponse`方法检查响应是否有效:
 
-```
+```java
 private void handleResponse(Response response) {
     if (response.isValid()) {
         response.setData(new Data("Successful data response"));
@@ -61,7 +61,7 @@ private void handleResponse(Response response) {
 
 为了清楚起见，我们选择不使用 Java Lamda 表达式，但是`service.doAction` **调用也可以写得更简洁**:
 
-```
+```java
 service.doAction("our-request", response -> handleResponse(response)); 
 ```
 
@@ -71,7 +71,7 @@ service.doAction("our-request", response -> handleResponse(response));
 
 现在让我们看看**我们如何使用一个** `**ArgumentCaptor**:`来使用 Mockito 抓取`Callback`对象
 
-```
+```java
 @Test
 public void givenServiceWithValidResponse_whenCallbackReceived_thenProcessed() {
     ActionHandler handler = new ActionHandler(service);
@@ -101,7 +101,7 @@ public void givenServiceWithValidResponse_whenCallbackReceived_thenProcessed() {
 
 现在我们来看一个**通用解决方案，它使用 Mockito 的 **`Answer`对象和`doAnswer`方法来存根化 void 方法** `doAction:`回调**的方法
 
-```
+```java
 @Test
 public void givenServiceWithInvalidResponse_whenCallbackReceived_thenNotProcessed() {
     Response response = new Response();

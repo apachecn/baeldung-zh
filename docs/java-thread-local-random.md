@@ -26,7 +26,7 @@
 
 到目前为止，我们已经确定了`Random `类在高度并发的环境中表现不佳。为了更好地理解这一点，让我们看看它的主要操作之一 [`next(int)`](https://web.archive.org/web/20220625171946/https://github.com/openjdk/jdk/blob/a8a2246158bc53414394b007cbf47413e62d942e/src/java.base/share/classes/java/util/Random.java#L198) 是如何实现的:
 
-```
+```java
 private final AtomicLong seed;
 
 protected int next(int bits) {
@@ -59,7 +59,7 @@ protected int next(int bits) {
 
 让我们生成一个没有任何界限的随机`int`值:
 
-```
+```java
 int unboundedRandomValue = ThreadLocalRandom.current().nextInt());
 ```
 
@@ -67,7 +67,7 @@ int unboundedRandomValue = ThreadLocalRandom.current().nextInt());
 
 这里有一个生成 0 到 100 之间的随机`int`值的例子:
 
-```
+```java
 int boundedRandomValue = ThreadLocalRandom.current().nextInt(0, 100);
 ```
 
@@ -85,7 +85,7 @@ Java 8 还添加了`nextGaussian()`方法来生成下一个正态分布值，其
 
 首先，让我们创建一个例子，其中所有线程共享一个`Random.`实例。这里，我们将使用`Random`实例生成随机值的任务提交给一个`ExecutorService:`
 
-```
+```java
 ExecutorService executor = Executors.newWorkStealingPool();
 List<Callable<Integer>> callables = new ArrayList<>();
 Random random = new Random();
@@ -99,7 +99,7 @@ executor.invokeAll(callables);
 
 让我们使用 JMH 基准测试来检查上面代码的性能:
 
-```
+```java
 # Run complete. Total time: 00:00:36
 Benchmark                                            Mode Cnt Score    Error    Units
 ThreadLocalRandomBenchMarker.randomValuesUsingRandom avgt 20  771.613 ± 222.220 us/op
@@ -107,7 +107,7 @@ ThreadLocalRandomBenchMarker.randomValuesUsingRandom avgt 20  771.613 ± 222.220
 
 类似地，现在让我们使用`ThreadLocalRandom` 而不是`Random`实例，它为池中的每个线程使用一个`ThreadLocalRandom`实例:
 
-```
+```java
 ExecutorService executor = Executors.newWorkStealingPool();
 List<Callable<Integer>> callables = new ArrayList<>();
 for (int i = 0; i < 1000; i++) {
@@ -120,7 +120,7 @@ executor.invokeAll(callables);
 
 下面是使用`ThreadLocalRandom:`的结果
 
-```
+```java
 # Run complete. Total time: 00:00:36
 Benchmark                                                       Mode Cnt Score    Error   Units
 ThreadLocalRandomBenchMarker.randomValuesUsingThreadLocalRandom avgt 20  624.911 ± 113.268 us/op
@@ -138,7 +138,7 @@ ThreadLocalRandomBenchMarker.randomValuesUsingThreadLocalRandom avgt 20  624.911
 
 **然而，从 Java 8 开始，随着`ThreadLocalRandom `变成了单例**，这种一致性完全被打破了。下面是 Java 8+中的 [`current()`](https://web.archive.org/web/20220625171946/https://github.com/openjdk/jdk14u/blob/89deef4dd8b7aac7c3cea6e13c494a438d34d4c4/src/java.base/share/classes/java/util/concurrent/ThreadLocalRandom.java#L176) 方法:
 
-```
+```java
 static final ThreadLocalRandom instance = new ThreadLocalRandom();
 
 public static ThreadLocalRandom current() {
@@ -153,7 +153,7 @@ public static ThreadLocalRandom current() {
 
 **每个线程不需要一个专用的`Random`实例，每个线程只需要维护自己的`seed `值**。从 Java 8 开始，`[Thread](https://web.archive.org/web/20220625171946/https://github.com/openjdk/jdk14u/blob/d48548f5b7713e0d51b107a5e2dfd60383edbd88/src/java.base/share/classes/java/lang/Thread.java#L2059) `类本身已经被改进以保持`seed `值:
 
-```
+```java
 public class Thread implements Runnable {
     // omitted
 

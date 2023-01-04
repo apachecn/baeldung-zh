@@ -81,7 +81,7 @@ AES 算法有六种工作模式:
 
 如前所述，AES 的块大小为 128 位或 16 字节。AES 不改变大小，密文大小等于明文大小。此外，在 ECB 和 CBC 模式下，我们应该使用类似于`PKCS 5.`的填充算法，因此加密后的数据大小为:
 
-```
+```java
 ciphertext_size (bytes) = cleartext_size + (16 - (cleartext_size % 16))
 ```
 
@@ -103,7 +103,7 @@ AES 的输入数据可以是基于字符串、文件、对象和密码的。
 
 为了生成密钥，我们可以使用`KeyGenerator`类。让我们定义一种生成大小为`n` (128、192 和 256)位的 AES 密钥的方法:
 
-```
+```java
 public static SecretKey generateKey(int n) throws NoSuchAlgorithmException {
     KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
     keyGenerator.init(n);
@@ -118,7 +118,7 @@ public static SecretKey generateKey(int n) throws NoSuchAlgorithmException {
 
 让我们定义一种从给定密码生成 AES 密钥的方法，该方法迭代 65，536 次，密钥长度为 256 位:
 
-```
+```java
 public static SecretKey getKeyFromPassword(String password, String salt)
     throws NoSuchAlgorithmException, InvalidKeySpecException {
 
@@ -136,7 +136,7 @@ IV 是一个伪随机值，与加密的块大小相同。我们可以使用`Secu
 
 让我们定义一种生成 IV 的方法:
 
-```
+```java
 public static IvParameterSpec generateIv() {
     byte[] iv = new byte[16];
     new SecureRandom().nextBytes(iv);
@@ -152,7 +152,7 @@ public static IvParameterSpec generateIv() {
 
 此外，我们使用带有密钥、IV 和加密模式的`init()`方法配置一个密码实例。最后，我们通过调用`doFinal()`方法来加密输入字符串。此方法获取字节的输入，并以字节为单位返回密文:
 
-```
+```java
 public static String encrypt(String algorithm, String input, SecretKey key,
     IvParameterSpec iv) throws NoSuchPaddingException, NoSuchAlgorithmException,
     InvalidAlgorithmParameterException, InvalidKeyException,
@@ -168,7 +168,7 @@ public static String encrypt(String algorithm, String input, SecretKey key,
 
 为了解密输入字符串，我们可以使用`DECRYPT_MODE`初始化我们的密码来解密内容:
 
-```
+```java
 public static String decrypt(String algorithm, String cipherText, SecretKey key,
     IvParameterSpec iv) throws NoSuchPaddingException, NoSuchAlgorithmException,
     InvalidAlgorithmParameterException, InvalidKeyException,
@@ -184,7 +184,7 @@ public static String decrypt(String algorithm, String cipherText, SecretKey key,
 
 让我们编写一个加密和解密字符串输入的测试方法:
 
-```
+```java
 @Test
 void givenString_whenEncrypt_thenSuccess()
     throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException,
@@ -204,7 +204,7 @@ void givenString_whenEncrypt_thenSuccess()
 
 现在让我们使用 AES 算法加密一个文件。步骤是相同的，但是我们需要一些`IO`类来处理这些文件。让我们加密一个文本文件:
 
-```
+```java
 public static void encryptFile(String algorithm, SecretKey key, IvParameterSpec iv,
     File inputFile, File outputFile) throws IOException, NoSuchPaddingException,
     NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException,
@@ -237,7 +237,7 @@ public static void encryptFile(String algorithm, SecretKey key, IvParameterSpec 
 
 同样，让我们定义一个加密和解密文本文件的测试方法。在这个方法中，我们从测试资源目录中读取`baeldung.txt`文件，将其加密成一个名为`baeldung.encrypted`的文件，然后将该文件解密成一个新文件:
 
-```
+```java
 @Test
 void givenFile_whenEncrypt_thenSuccess() 
     throws NoSuchAlgorithmException, IOException, IllegalBlockSizeException, 
@@ -266,7 +266,7 @@ void givenFile_whenEncrypt_thenSuccess()
 
 让我们写一个测试方法:
 
-```
+```java
 @Test
 void givenPassword_whenEncrypt_thenSuccess() 
     throws InvalidKeySpecException, NoSuchAlgorithmException, 
@@ -289,7 +289,7 @@ void givenPassword_whenEncrypt_thenSuccess()
 
 为了加密一个 Java 对象，我们需要使用`SealedObject`类。对象应该是`Serializable`。让我们从定义一个`Student`类开始:
 
-```
+```java
 public class Student implements Serializable {
     private String name;
     private int age;
@@ -300,7 +300,7 @@ public class Student implements Serializable {
 
 接下来，让我们加密`Student`对象:
 
-```
+```java
 public static SealedObject encryptObject(String algorithm, Serializable object,
     SecretKey key, IvParameterSpec iv) throws NoSuchPaddingException,
     NoSuchAlgorithmException, InvalidAlgorithmParameterException, 
@@ -315,7 +315,7 @@ public static SealedObject encryptObject(String algorithm, Serializable object,
 
 加密的对象稍后可以使用正确的密码解密:
 
-```
+```java
 public static Serializable decryptObject(String algorithm, SealedObject sealedObject,
     SecretKey key, IvParameterSpec iv) throws NoSuchPaddingException,
     NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException,
@@ -331,7 +331,7 @@ public static Serializable decryptObject(String algorithm, SealedObject sealedOb
 
 现在让我们编写一个测试用例:
 
-```
+```java
 @Test
 void givenObject_whenEncrypt_thenSuccess() 
     throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException,

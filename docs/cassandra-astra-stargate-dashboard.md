@@ -42,7 +42,7 @@ Cassandra 旨在以非常高的吞吐量处理大量数据，并以表格形式�
 
 `statuses`集合包含一个包含仪表板数据的文档，仪表板数据是进入`events` 集合的数据的非规范化的汇总视图。该文档将类似于以下内容:
 
-```
+```java
 {
     "falcon": {
 	"realName": "Sam Wilson",
@@ -98,7 +98,7 @@ Cassandra 旨在以非常高的吞吐量处理大量数据，并以表格形式�
 
 在继续之前，我们还需要配置我们的 Cassandra 凭证。这些都是从阿斯特拉仪表板上获取的信息:
 
-```
+```java
 ASTRA_DB_ID=e26d52c6-fb2d-4951-b606-4ea11f7309ba
 ASTRA_DB_REGION=us-east-1
 ASTRA_DB_KEYSPACE=avengers
@@ -113,7 +113,7 @@ ASTRA_DB_APPLICATION_TOKEN=AstraCS:xxx-token-here
 
 为了管理这一点，我们将编写一个封装所有这一切的`DocumentClient` bean:
 
-```
+```java
 @Repository
 public class DocumentClient {
   @Value("https://${ASTRA_DB_ID}-${ASTRA_DB_REGION}.apps.astra.datastax.com/api/rest/v2/namespaces/${ASTRA_DB_KEYSPACE}")
@@ -171,7 +171,7 @@ public class DocumentClient {
 
 为了表示这些，我们需要一个[记录](/web/20220625170842/https://www.baeldung.com/java-record-keyword),如下所示:
 
-```
+```java
 public record Status(String avenger, 
   String name, 
   String realName, 
@@ -181,7 +181,7 @@ public record Status(String avenger,
 
 我们还需要一个记录来表示从 Cassandra 中检索到的所有状态:
 
-```
+```java
 public record Statuses(Map<String, Status> data) {}
 ```
 
@@ -189,7 +189,7 @@ public record Statuses(Map<String, Status> data) {}
 
 然后，我们需要一个服务层从 Cassandra 检索状态，并返回它们以供使用:
 
-```
+```java
 @Service
 public class StatusesService {
   @Autowired
@@ -217,7 +217,7 @@ public class StatusesService {
 
 首先，控制器:
 
-```
+```java
 @Controller
 public class StatusesController {
   @Autowired
@@ -237,7 +237,7 @@ public class StatusesController {
 
 我们的主“dashboard.html”模板如下:
 
-```
+```java
 <!doctype html>
 <html lang="en">
 <head>
@@ -277,7 +277,7 @@ public class StatusesController {
 
 这使用了另一个嵌套模板“common/status.html”来显示单个复仇者的状态:
 
-```
+```java
 <div class="card-body">
   <h5 class="card-title" th:text="${data.name}"></h5>
   <h6 class="card-subtitle"><span th:if="${data.realName}" th:text="${data.realName}"></span> </h6>
@@ -302,7 +302,7 @@ public class StatusesController {
 
 我们用执行更新的`StatusesService`类中的新方法来实现这一点:
 
-```
+```java
 public void updateStatus(String avenger, String location, String status) throws Exception {
   client.patchSubDocument("statuses", "latest", avenger, 
     Map.of("location", location, "status", status));
@@ -313,7 +313,7 @@ public void updateStatus(String avenger, String location, String status) throws 
 
 **我们现在需要一个可以被调用的控制器来触发这些更新。**这将是一个新的`RestController`端点，接受复仇者 ID 和最新事件详情:
 
-```
+```java
 @RestController
 public class UpdateController {
   @Autowired

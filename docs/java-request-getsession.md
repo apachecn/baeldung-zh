@@ -25,7 +25,7 @@
 
 首先，让我们创建一个 servlet，我们在它的`doGet()`方法中使用了`HttpServletRequest#getSession()` :
 
-```
+```java
 protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     HttpSession session = request.getSession();
     session.setAttribute("userId", request.getParameter("userId"));
@@ -40,7 +40,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 
 所以现在，我们将使用`HttpServletRequest#getSession(boolean)` 和`false`值`:`
 
-```
+```java
 protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     HttpSession session = request.getSession(false);
     if (session != null) {

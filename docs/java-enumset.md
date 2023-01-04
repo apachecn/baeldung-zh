@@ -47,7 +47,7 @@
 
 `EnumSet`工厂方法根据`enum`的元素数量创建一个或另一个实现的实例:
 
-```
+```java
 if (universe.length <= 64)
     return new RegularEnumSet<>(elementType, universe);
 else
@@ -72,7 +72,7 @@ else
 
 在我们的例子中，我们将使用一个`Color` `enum`:
 
-```
+```java
 public enum Color {
     RED, YELLOW, GREEN, BLUE, BLACK, WHITE
 }
@@ -82,13 +82,13 @@ public enum Color {
 
 **创建`EnumSet`最简单的方法是`allOf()`和`noneOf()`。**这样我们可以很容易地创建一个包含所有`Color`枚举元素的`EnumSet`:
 
-```
+```java
 EnumSet.allOf(Color.class);
 ```
 
 同样，我们可以使用`noneOf()`做相反的事情，创建一个空的`Color`集合:
 
-```
+```java
 EnumSet.noneOf(Color.class);
 ```
 
@@ -100,13 +100,13 @@ Javadoc 声明由于数组的创建，`varargs`版本的性能可能比其他版
 
 **创建`enum`子集的另一种方法是使用`range()`方法:**
 
-```
+```java
 EnumSet.range(Color.YELLOW, Color.BLUE);
 ```
 
 在上面的例子中，`EnumSet`包含了从`Yellow`到`Blue.`的所有元素，它们遵循`enum`中定义的顺序:
 
-```
+```java
 [YELLOW, GREEN, BLUE]
 ```
 
@@ -114,19 +114,19 @@ EnumSet.range(Color.YELLOW, Color.BLUE);
 
 **另一个有用的工厂方法是`complementOf()`，它允许我们排除作为参数**传递的元素。让我们用所有的`Color`元素创建一个`EnumSet`，除了黑色和白色:
 
-```
+```java
 EnumSet.complementOf(EnumSet.of(Color.BLACK, Color.WHITE));
 ```
 
 如果我们打印这个集合，我们可以看到它包含所有其他元素:
 
-```
+```java
 [RED, YELLOW, GREEN, BLUE]
 ```
 
 最后，**我们可以通过复制另一个`EnumSet` :** 中的所有元素来创建一个`EnumSet`
 
-```
+```java
 EnumSet.copyOf(EnumSet.of(Color.BLACK, Color.WHITE));
 ```
 
@@ -134,7 +134,7 @@ EnumSet.copyOf(EnumSet.of(Color.BLACK, Color.WHITE));
 
 此外，**我们还可以从任何包含`enum`元素**的`Collection`中复制所有元素。让我们用它来复制一个列表的所有元素:
 
-```
+```java
 List<Color> colorsList = new ArrayList<>();
 colorsList.add(Color.RED);
 EnumSet<Color> listCopy = EnumSet.copyOf(colorsList);
@@ -148,7 +148,7 @@ EnumSet<Color> listCopy = EnumSet.copyOf(colorsList);
 
 因此，我们可以很容易地创建一个空的`EnumSet`并添加一些元素:
 
-```
+```java
 EnumSet<Color> set = EnumSet.noneOf(Color.class);
 set.add(Color.RED);
 set.add(Color.YELLOW)
@@ -156,19 +156,19 @@ set.add(Color.YELLOW)
 
 检查集合是否包含特定元素:
 
-```
+```java
 set.contains(Color.RED);
 ```
 
 迭代元素:
 
-```
+```java
 set.forEach(System.out::println);
 ```
 
 或者简单地删除元素:
 
-```
+```java
 set.remove(Color.RED);
 ```
 

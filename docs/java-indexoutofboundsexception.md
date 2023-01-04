@@ -10,7 +10,7 @@
 
 让我们从使用`Collections.copy`方法创建一个`List `副本的方法开始:
 
-```
+```java
 static List<Integer> copyList(List<Integer> source) {
     List<Integer> destination = new ArrayList<>(source.size());
     Collections.copy(destination, source);
@@ -20,7 +20,7 @@ static List<Integer> copyList(List<Integer> source) {
 
 这里，`copyList`方法创建一个新的列表[，其初始容量](/web/20221208143854/https://www.baeldung.com/java-arraylist#2-constructor-accepting-initial-capacity)等于源列表的大小。然后，它尝试将源列表的元素复制到目标列表:
 
-```
+```java
 List<Integer> source = Arrays.asList(1, 2, 3, 4, 5);
 List<Integer> copy = copyList(source);
 ```
@@ -43,7 +43,7 @@ List<Integer> copy = copyList(source);
 
 让我们看一个使用`Collections.copy `方法将一个`List` 复制到另一个`List`的工作示例:
 
-```
+```java
 List<Integer> destination = Arrays.asList(1, 2, 3, 4, 5);
 List<Integer> source = Arrays.asList(11, 22, 33);
 Collections.copy(destination, source);
@@ -55,7 +55,7 @@ Collections.copy(destination, source);
 
 完成此复制操作后，目标列表如下所示:
 
-```
+```java
 [11, 22, 33, 4, 5]
 ```
 
@@ -65,7 +65,7 @@ Collections.copy(destination, source);
 
 复制一个`List `的最简单的方法是使用一个带`Collection`参数的[构造函数:](/web/20221208143854/https://www.baeldung.com/java-arraylist#3-constructor-accepting-collection)
 
-```
+```java
 List<Integer> source = Arrays.asList(11, 22, 33);
 List<Integer> destination = new ArrayList<>(source);
 ```
@@ -80,7 +80,7 @@ List<Integer> destination = new ArrayList<>(source);
 
 另一个简单的方法是使用 [`addAll `的方法`List`](/web/20221208143854/https://www.baeldung.com/java-arraylist#Adding) :
 
-```
+```java
 List<Integer> destination = new ArrayList<>();
 destination.addAll(source);
 ```
@@ -98,7 +98,7 @@ Java 8 引入了[流 API](/web/20221208143854/https://www.baeldung.com/java-8-st
 
 使用`stream()`方法，我们使用流 API `:`制作列表的副本
 
-```
+```java
 List<Integer> copy = source.stream()
   .collect(Collectors.toList());
 ```
@@ -107,7 +107,7 @@ List<Integer> copy = source.stream()
 
 在 Java 10 中复制一个`List`甚至更简单。使用`copyOf()`方法允许我们创建一个包含给定`Collection`元素的不可变列表:
 
-```
+```java
 List<Integer> destination = List.copyOf(sourceList);
 ```
 

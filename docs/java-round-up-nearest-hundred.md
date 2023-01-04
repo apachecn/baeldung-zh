@@ -19,7 +19,7 @@
 
 下面是我们的实现:
 
-```
+```java
 static long round(double input) {
     long i = (long) Math.ceil(input);
     return ((i + 99) / 100) * 100;
@@ -30,7 +30,7 @@ static long round(double input) {
 
 让我们测试一下实现:
 
-```
+```java
 @Test
 public void givenInput_whenRound_thenRoundUpToTheNearestHundred() {
     assertEquals("Rounded up to hundred", 100, RoundUpToHundred.round(99));

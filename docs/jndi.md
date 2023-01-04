@@ -18,13 +18,13 @@ Java 命名和目录接口(JNDI)提供了命名和/或目录服务作为 Java AP
 
 ### 2.1.`Name`界面
 
-```
+```java
 Name objectName = new CompositeName("java:comp/env/jdbc");
 ```
 
 `Name`接口提供了管理组件名称和 JNDI 名称语法的能力。字符串的第一个标记代表全局上下文，之后添加的每个字符串代表下一个子上下文:
 
-```
+```java
 Enumeration<String> elements = objectName.getAll();
 while(elements.hasMoreElements()) {
   System.out.println(elements.nextElement());
@@ -33,7 +33,7 @@ while(elements.hasMoreElements()) {
 
 我们的输出看起来像:
 
-```
+```java
 java:comp
 env
 jdbc
@@ -41,13 +41,13 @@ jdbc
 
 正如我们所见，`/` 是`Name` 子上下文的分隔符。现在，让我们添加一个子上下文:
 
-```
+```java
 objectName.add("example");
 ```
 
 然后我们测试我们的加法:
 
-```
+```java
 assertEquals("example", objectName.get(objectName.size() - 1));
 ```
 
@@ -55,14 +55,14 @@ assertEquals("example", objectName.get(objectName.size() - 1));
 
 `Context` 包含命名和目录服务`.` 的属性。这里，为了方便起见，让我们使用 Spring 的一些助手代码来构建一个`Context`:
 
-```
+```java
 SimpleNamingContextBuilder builder = new SimpleNamingContextBuilder(); 
 builder.activate();
 ```
 
 Spring 的`SimpleNamingContextBuilder`创建一个 JNDI 提供者，然后用 [`NamingManager`](https://web.archive.org/web/20221206020025/https://docs.oracle.com/en/java/javase/11/docs/api/java.naming/javax/naming/spi/NamingManager.html) 激活构建者:
 
-```
+```java
 JndiTemplate jndiTemplate = new JndiTemplate();
 ctx = (InitialContext) jndiTemplate.getContext();
 ```
@@ -73,7 +73,7 @@ ctx = (InitialContext) jndiTemplate.getContext();
 
 现在我们已经看到了如何使用`Name`和`Context`，让我们使用 JNDI 来存储一个 JDBC `DataSource`:
 
-```
+```java
 ds = new DriverManagerDataSource("jdbc:h2:mem:mydb");
 ```
 
@@ -81,7 +81,7 @@ ds = new DriverManagerDataSource("jdbc:h2:mem:mydb");
 
 因为我们有一个上下文，让我们将对象绑定到它:
 
-```
+```java
 ctx.bind("java:comp/env/jdbc/datasource", ds);
 ```
 
@@ -95,13 +95,13 @@ ctx.bind("java:comp/env/jdbc/datasource", ds);
 
 让我们来看看我们的`DataSource`:
 
-```
+```java
 DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/datasource");
 ```
 
 然后让我们测试一下，确保`DataSource` 如预期的那样:
 
-```
+```java
 assertNotNull(ds.getConnection());
 ```
 
@@ -111,13 +111,13 @@ assertNotNull(ds.getConnection());
 
 ### 4.1.`NameNotFoundException`
 
-```
+```java
 ctx.lookup("badJndiName");
 ```
 
 由于该名称未在此上下文中绑定，因此我们看到以下堆栈跟踪:
 
-```
+```java
 javax.naming.NameNotFoundException: Name [badJndiName] not bound; 0 bindings: []
   at org.springframework.mock.jndi.SimpleNamingContext.lookup(SimpleNamingContext.java:140)
   at java.naming/javax.naming.InitialContext.lookup(InitialContext.java:409)
@@ -129,7 +129,7 @@ javax.naming.NameNotFoundException: Name [badJndiName] not bound; 0 bindings: []
 
 任何与`InitialContext`的交互都会抛出`NoInitialContextException`:
 
-```
+```java
 assertThrows(NoInitialContextException.class, () -> {
   JndiTemplate jndiTemplate = new JndiTemplate();
   InitialContext ctx = (InitialContext) jndiTemplate.getContext();
@@ -139,7 +139,7 @@ assertThrows(NoInitialContextException.class, () -> {
 
 我们应该注意，JNDI 的这种用法是有效的，就像我们前面使用它一样。但是，这一次没有 JNDI 上下文提供程序，将会抛出一个异常:
 
-```
+```java
 javax.naming.NoInitialContextException: Need to specify class name in environment or system property, 
   or in an application resource file: java.naming.factory.initial
     at java.naming/javax.naming.spi.NamingManager.getInitialContext(NamingManager.java:685)

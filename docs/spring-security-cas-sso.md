@@ -14,7 +14,7 @@ What is SSO? When you log in to YouTube, Gmail and Maps with the same credential
 
 服务器使用 Maven (Gradle) War 覆盖样式来简化设置和部署:
 
-```
+```java
 git clone https://github.com/apereo/cas-overlay-template.git cas-server
 ```
 
@@ -22,7 +22,7 @@ git clone https://github.com/apereo/cas-overlay-template.git cas-server
 
 我们将涉及的一些方面包括 JSON 服务注册和 JDBC 数据库连接。因此，我们将把它们的模块添加到`build.gradle`文件的`dependencies`部分:
 
-```
+```java
 compile "org.apereo.cas:cas-server-support-json-service-registry:${casServerVersion}"
 compile "org.apereo.cas:cas-server-support-jdbc:${casServerVersion}"
 ```
@@ -33,7 +33,7 @@ compile "org.apereo.cas:cas-server-support-jdbc:${casServerVersion}"
 
 在启动 CAS 服务器之前，我们需要添加一些基本配置。让我们从创建一个`cas-server/src/main/resources`文件夹开始，在这个文件夹中。随后在文件夹中也将创建`application.properties`:
 
-```
+```java
 server.port=8443
 spring.main.allow-bean-definition-overriding=true
 server.ssl.key-store=classpath:/etc/cas/thekeystore
@@ -44,13 +44,13 @@ server.ssl.key-store-password=changeit
 
 然后，我们需要将目录更改为`cas-server/src/main/resources/etc/cas` ，并运行命令生成`thekeystore`:
 
-```
+```java
 keytool -genkey -keyalg RSA -alias thekeystore -keystore thekeystore -storepass changeit -validity 360 -keysize 2048
 ```
 
 为了避免 SSL 握手错误，我们应该使用`localhost`作为名字和姓氏的值。我们也应该对组织名称和单位使用相同的名称。此外，我们需要将`thekeystore`导入到 JDK/JRE 中，我们将用它来运行我们的客户端应用程序:
 
-```
+```java
 keytool -importkeystore -srckeystore thekeystore -destkeystore $JAVA11_HOME/jre/lib/security/cacerts
 ```
 
@@ -58,7 +58,7 @@ keytool -importkeystore -srckeystore thekeystore -destkeystore $JAVA11_HOME/jre/
 
 我们使用 JDK11 是因为它是 CAS 版本 6.1.x 所要求的。此外，我们定义了指向其主目录的环境变量$JAVA11_HOME。我们现在可以启动 CAS 服务器了:
 
-```
+```java
 ./gradlew run -Dorg.gradle.java.home=$JAVA11_HOME
 ```
 
@@ -68,13 +68,13 @@ keytool -importkeystore -srckeystore thekeystore -destkeystore $JAVA11_HOME/jre/
 
 我们还不能登录，因为我们还没有配置任何用户。CAS 有不同的[管理配置](https://web.archive.org/web/20220707095557/https://apereo.github.io/cas/6.1.x/configuration/Configuration-Server-Management.html)的方法，包括独立模式。让我们创建一个配置文件夹`cas-server/src/main/resources/etc/cas/config`，我们将在其中创建一个属性文件`cas.properties`。现在，我们可以在属性文件中定义一个静态用户:
 
-```
+```java
 cas.authn.accept.users=casuser::Mellon
 ```
 
 我们必须将配置文件夹的位置告知 CAS 服务器，以使设置生效。让我们更新`tasks.gradle`,这样我们可以从命令行将位置作为 JVM 参数传递:
 
-```
+```java
 task run(group: "build", description: "Run the CAS web application in embedded container mode") {
     dependsOn 'build'
     doLast {
@@ -95,7 +95,7 @@ task run(group: "build", description: "Run the CAS web application in embedded c
 
 然后，我们保存文件并运行:
 
-```
+```java
 ./gradlew run
   -Dorg.gradle.java.home=$JAVA11_HOME
   -Pargs="-Dcas.standalone.configurationDirectory=/cas-server/src/main/resources/etc/cas/config"
@@ -107,7 +107,7 @@ task run(group: "build", description: "Run the CAS web application in embedded c
 
 我们将使用 [Spring Initializr](https://web.archive.org/web/20220707095557/https://start.spring.io/) 来生成一个 Spring Boot 客户端应用程序。它将有`Web`、`Security`、`Freemarker`和`DevTools` 依赖项。此外，我们还将为 [Spring Security CAS](https://web.archive.org/web/20220707095557/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.security%22%20a%3A%22spring-security-cas%22) 模块添加对其`pom.xml`的依赖:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-cas</artifactId>
@@ -117,7 +117,7 @@ task run(group: "build", description: "Run the CAS web application in embedded c
 
 最后，让我们添加以下 Spring Boot 属性来配置应用程序:
 
-```
+```java
 server.port=8900
 spring.freemarker.suffix=.ftl
 ```
@@ -130,7 +130,7 @@ spring.freemarker.suffix=.ftl
 
 我们将创建一个 JSON 文件，其中包含我们的客户机应用程序的定义。文件名`casSecuredApp-8900.json,`遵循模式 s `erviceName-Id.json`:
 
-```
+```java
 {
   "@class" : "org.apereo.cas.services.RegexRegisteredService",
   "serviceId" : "http://localhost:8900/login/cas",
@@ -147,7 +147,7 @@ spring.freemarker.suffix=.ftl
 
 **We also configure the logout type to be `BACK_CHANNEL` and the URL to be [`http://localhost:8900/exit/cas`](https://web.archive.org/web/20220707095557/http://localhost:8900/exit/cas) so that we can do single logout later.**Before the CAS server can make use of our JSON configuration file, we have to enable the JSON registry in our `cas.properties`:
 
-```
+```java
 cas.serviceRegistry.initFromJson=true
 cas.serviceRegistry.json.location=classpath:/etc/cas/services
 ```
@@ -158,7 +158,7 @@ cas.serviceRegistry.json.location=classpath:/etc/cas/services
 
 让我们将以下 bean 配置添加到 Spring Boot 应用程序的`CasSecuredApplication`类中:
 
-```
+```java
 @Bean
 public CasAuthenticationFilter casAuthenticationFilter(
   AuthenticationManager authenticationManager,
@@ -215,7 +215,7 @@ public CasAuthenticationProvider casAuthenticationProvider(
 
 最后，让我们配置`HttpSecurity`来保护`WebSecurityConfig`中的一些路由。在这个过程中，我们还将添加异常处理的身份验证入口点:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests().antMatchers( "/secured", "/login") 
@@ -238,7 +238,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 为了使幕后发生的事情更加明显，我们将创建一个`logout()`方法来处理本地注销。如果成功，它会将我们重定向到一个带有单点注销链接的页面:
 
-```
+```java
 @GetMapping("/logout")
 public String logout(
   HttpServletRequest request, 
@@ -258,7 +258,7 @@ public String logout(
 
 说到这里，让我们为我们的客户端应用程序添加一些 bean 配置。具体来说，在`CasSecuredApplicaiton`中:
 
-```
+```java
 @Bean
 public SecurityContextLogoutHandler securityContextLogoutHandler() {
     return new SecurityContextLogoutHandler();
@@ -288,7 +288,7 @@ public SingleSignOutFilter singleSignOutFilter() {
 
 我们可以配置 CAS 服务器从 MySQL 数据库中读取凭证。我们将使用运行在本地机器上的 MySQL 服务器的`test`数据库。来更新一下`cas-server/src/main/resources/etc/cas/config/cas.properties`:
 
-```
+```java
 cas.authn.accept.users=
 
 cas.authn.jdbc.query[0].sql=SELECT * FROM users WHERE email = ?
@@ -314,7 +314,7 @@ cas.authn.jdbc.query[0].passwordEncoder.type=NONE
 
 让我们将`CasAuthenticationProvider`更新为与 CAS 服务器相同的用户名:
 
-```
+```java
 @Bean
 public CasAuthenticationProvider casAuthenticationProvider() {
     CasAuthenticationProvider provider = new CasAuthenticationProvider();

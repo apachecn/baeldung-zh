@@ -24,7 +24,7 @@
 
 让我们来看看`HideVariable`类:
 
-```
+```java
 public class HideVariable {
 
     private String message = "this is instance variable";
@@ -50,7 +50,7 @@ public class HideVariable {
 
 让我们测试一个对象的初始化和调用方法:
 
-```
+```java
 HideVariable variable = new HideVariable();
 variable.printLocalVariable();
 
@@ -59,7 +59,7 @@ variable.printInstanceVariable();
 
 上面代码的输出是:
 
-```
+```java
 constructor local variable
 method local variable
 this is instance variable
@@ -75,7 +75,7 @@ this is instance variable
 
 假设我们有父类:
 
-```
+```java
 public class ParentVariable {
 
     String instanceVariable = "parent variable";
@@ -88,7 +88,7 @@ public class ParentVariable {
 
 之后，我们定义一个子类:
 
-```
+```java
 public class ChildVariable extends ParentVariable {
 
     String instanceVariable = "child variable";
@@ -101,7 +101,7 @@ public class ChildVariable extends ParentVariable {
 
 为了测试它，让我们初始化两个实例。一个包含父类，另一个包含子类，然后对它们分别调用`printInstanceVariable()`方法:
 
-```
+```java
 ParentVariable parentVariable = new ParentVariable();
 ParentVariable childVariable = new ChildVariable();
 
@@ -111,7 +111,7 @@ childVariable.printInstanceVariable();
 
 输出显示隐藏的属性:
 
-```
+```java
 parent variable
 child variable
 ```
@@ -126,7 +126,7 @@ child variable
 
 现在，让我们来看看这个实际的例子:
 
-```
+```java
 public class BaseMethodClass {
 
     public static void printMessage() {
@@ -139,7 +139,7 @@ public class BaseMethodClass {
 
 接下来，让我们创建一个与基类具有相同签名的子类:
 
-```
+```java
 public class ChildMethodClass extends BaseMethodClass {
 
     public static void printMessage() {
@@ -150,13 +150,13 @@ public class ChildMethodClass extends BaseMethodClass {
 
 它是这样工作的:
 
-```
+```java
 ChildMethodClass.printMessage();
 ```
 
 调用`printMessage()`方法后的输出:
 
-```
+```java
 child static method
 ```
 

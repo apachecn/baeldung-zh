@@ -12,7 +12,7 @@
 
 这就是为什么我们应该指定最小和最大堆大小。以下参数可用于实现这一目标:
 
-```
+```java
 -Xms<heap size>[unit] 
 -Xmx<heap size>[unit]
 ```
@@ -21,13 +21,13 @@
 
 例如，如果我们想给 JVM 分配最小 2 GB 和最大 5 GB，我们需要编写:
 
-```
+```java
 -Xms2G -Xmx5G
 ```
 
 从 Java 8 开始，`[Metaspace](https://web.archive.org/web/20221105162029/https://matthung0807.blogspot.com/2019/03/about-g1-garbage-collector-permanent.html)`的大小就没有定义了。一旦达到全局限制，JVM 会自动增加它，然而，为了克服任何不必要的不稳定性，我们可以用以下方式设置`Metaspace`的大小:
 
-```
+```java
 -XX:MaxMetaspaceSize=<metaspace size>[unit]
 ```
 
@@ -37,7 +37,7 @@
 
 我们可以明确地分配它们:
 
-```
+```java
 -XX:NewSize=<young size>[unit] 
 -XX:MaxNewSize=<young size>[unit]
 ```
@@ -55,7 +55,7 @@ JVM 有四种类型的`GC`实现:
 
 这些实现可以用下面的参数来声明:
 
-```
+```java
 -XX:+UseSerialGC
 -XX:+UseParallelGC
 -XX:+USeParNewGC
@@ -70,7 +70,7 @@ JVM 有四种类型的`GC`实现:
 
 使用以下参数，我们可以记录`GC`活动:
 
-```
+```java
 -XX:+UseGCLogFileRotation 
 -XX:NumberOfGCLogFiles=< number of log files > 
 -XX:GCLogFileSize=< file size >[ unit ]
@@ -83,7 +83,7 @@ JVM 有四种类型的`GC`实现:
 
 例如，如果我们想要分配最多 100 个`GC`日志文件，每个文件的最大大小为 50 MB，并且想要将它们存储在“`/home/user/log/'` 位置，我们可以使用下面的语法:
 
-```
+```java
 -XX:+UseGCLogFileRotation  
 -XX:NumberOfGCLogFiles=10
 -XX:GCLogFileSize=50M 
@@ -98,7 +98,7 @@ JVM 有四种类型的`GC`实现:
 
 这就是 JVM 附带一些参数的原因，这些参数将堆内存转储到一个物理文件中，稍后可以使用该文件来查找泄漏:
 
-```
+```java
 -XX:+HeapDumpOnOutOfMemoryError 
 -XX:HeapDumpPath=./java_pid<pid>.hprof
 -XX:OnOutOfMemoryError="< cmd args >;< cmd args >" 
@@ -111,7 +111,7 @@ JVM 有四种类型的`GC`实现:
 *   **`HeapDumpPath`** 表示要写入文件的路径；可以给出任何文件名；但是，如果 JVM 在文件名中发现一个 **< pid >** 标签，那么导致内存不足错误的当前进程的进程 id 将被附加到文件名的后面，格式为`.hprof`
 *   `**OnOutOfMemoryError**`用于发布紧急命令，在出现内存不足错误时执行；应该在 cmd 参数空间中使用正确的命令。例如，如果我们想在出现内存不足时立即重启服务器，我们可以设置参数:
 
-```
+```java
 -XX:OnOutOfMemoryError="shutdown -r"
 ```
 
@@ -123,7 +123,7 @@ JVM 有四种类型的`GC`实现:
 
 如果我们想手动将环境设置为 64 位，我们可以使用以下参数:
 
-```
+```java
 -d<OS bit>
 ```
 

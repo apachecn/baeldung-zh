@@ -25,7 +25,7 @@
 
 我们将设置以下依赖关系集:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -51,7 +51,7 @@
 
 现在，让我们开始配置负责管理访问令牌的授权服务器:
 
-```
+```java
 @Configuration
 @EnableAuthorizationServer
 public class AuthServerOAuth2Config
@@ -114,7 +114,7 @@ public class AuthServerOAuth2Config
 
 接下来，让我们配置我们的数据源供`JdbcTokenStore`使用:
 
-```
+```java
 @Value("classpath:schema.sql")
 private Resource schemaScript;
 
@@ -145,7 +145,7 @@ public DataSource dataSource() {
 
 注意，由于我们使用了`JdbcTokenStore`，我们需要初始化数据库模式，所以我们使用了`DataSourceInitializer`和下面的 SQL 模式:
 
-```
+```java
 drop table if exists oauth_client_details;
 create table oauth_client_details (
   client_id VARCHAR(255) PRIMARY KEY,
@@ -227,7 +227,7 @@ create table ClientDetails (
 
 当客户端应用程序需要获取访问令牌时，它将在一个简单的表单登录驱动的身份验证过程之后完成:
 
-```
+```java
 @Configuration
 public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -270,7 +270,7 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
 
 接下来，我们将配置我们的`TokenStore`来访问授权服务器用来存储访问令牌的同一个数据库:
 
-```
+```java
 @Autowired
 private Environment env;
 
@@ -298,7 +298,7 @@ public TokenStore tokenStore() {
 
 在我们的资源服务器中不使用`TokenStore`，我们可以使用`RemoteTokeServices`:
 
-```
+```java
 @Primary
 @Bean
 public RemoteTokenServices tokenService() {
@@ -321,7 +321,7 @@ public RemoteTokenServices tokenService() {
 
 接下来，让我们实现一个简单的控制器，公开一个`Foo`资源:
 
-```
+```java
 @Controller
 public class FooController {
 
@@ -339,7 +339,7 @@ public class FooController {
 
 我们还需要启用全局方法安全性并配置`MethodSecurityExpressionHandler`:
 
-```
+```java
 @Configuration
 @EnableResourceServer
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -355,7 +355,7 @@ public class OAuth2ResourceServerConfig
 
 这是我们的基本资源:
 
-```
+```java
 public class Foo {
     private long id;
     private String name;
@@ -366,7 +366,7 @@ public class Foo {
 
 最后，让我们为 API 设置一个非常基本的 web 配置:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 @ComponentScan({ "org.baeldung.web.controller" })
@@ -383,7 +383,7 @@ public class ResourceWebConfig implements WebMvcConfigurer {}
 
 然后，我们需要使用 [`frontend-maven-plugin`](https://web.archive.org/web/20220707143817/https://github.com/eirslett/frontend-maven-plugin) 来使用 maven 构建我们的 Angular 项目:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -425,7 +425,7 @@ public class ResourceWebConfig implements WebMvcConfigurer {}
 
 最后，**使用 Angular CLI 生成新模块:**
 
-```
+```java
 ng new oauthApp
 ```
 
@@ -449,7 +449,7 @@ ng new oauthApp
 *   `checkCredentials()`:检查用户是否登录
 *   `logout()`:删除访问令牌 cookie 并注销用户
 
-```
+```java
 export class Foo {
   constructor(
     public id: number,
@@ -523,7 +523,7 @@ cookie 存储在这里尤其重要，因为我们只是将 cookie 用于存储�
 
 接下来，让我们看看负责登录表单的`LoginComponent`:
 
-```
+```java
 @Component({
   selector: 'login-form',
   providers: [AppService],  
@@ -546,7 +546,7 @@ export class LoginComponent {
 
 接下来，我们的`HomeComponent`负责显示和操作我们的主页:
 
-```
+```java
 @Component({
     selector: 'home-header',
     providers: [AppService],
@@ -573,7 +573,7 @@ export class HomeComponent {
 
 最后，我们的`FooComponent`显示我们的 Foo 细节:
 
-```
+```java
 @Component({
   selector: 'foo-details',
   providers: [AppService],  
@@ -602,7 +602,7 @@ export class FooComponent {
 
 我们简单的`AppComponent`充当根组件:
 
-```
+```java
 @Component({
     selector: 'app-root',
     template: `<router-outlet></router-outlet>`
@@ -613,7 +613,7 @@ export class AppComponent {}
 
 我们包装所有组件、服务和路线的地方:
 
-```
+```java
 @NgModule({
   declarations: [
     AppComponent,
@@ -643,7 +643,7 @@ export class AppModule { }
 
 类似地，我们将从我们的服务开始，但是这一次我们将使用库 [angular-oauth2-oidc](https://web.archive.org/web/20220707143817/https://github.com/manfredsteyer/angular-oauth2-oidc) 而不是自己获取访问令牌:
 
-```
+```java
 @Injectable()
 export class AppService {
 
@@ -692,7 +692,7 @@ export class AppService {
 
 我们的`HomeComponent`处理我们简单的主页:
 
-```
+```java
 @Component({
     selector: 'home-header',
     providers: [AppService],
@@ -734,7 +734,7 @@ export class HomeComponent {
 
 最后，我们的`AppModule`:
 
-```
+```java
 @NgModule({
   declarations: [
     AppComponent,
@@ -759,31 +759,31 @@ export class AppModule { }
 
 1.要运行我们的任何前端模块，我们需要首先构建应用程序:
 
-```
+```java
 mvn clean install
 ```
 
 2.然后我们需要导航到我们的 Angular 应用程序目录:
 
-```
+```java
 cd src/main/resources
 ```
 
 3.最后，我们将启动我们的应用:
 
-```
+```java
 npm start
 ```
 
 默认情况下，服务器将在端口 4200 上启动，要更改任何模块的端口，请更改
 
-```
+```java
 "start": "ng serve"
 ```
 
 以`package.json`中让它在 8086 端口上运行为例:
 
-```
+```java
 "start": "ng serve --port 8086"
 ```
 

@@ -26,7 +26,7 @@ Ratpack 的主要优势:
 
 首先，让我们将以下依赖项添加到我们的`pom.xml:`中
 
-```
+```java
 <dependency>
     <groupId>io.ratpack</groupId>
     <artifactId>ratpack-core</artifactId>
@@ -45,7 +45,7 @@ Ratpack 的主要优势:
 
 我们可以使用下面的构建 Gradle 脚本:
 
-```
+```java
 buildscript {
     repositories {
       jcenter()
@@ -74,7 +74,7 @@ test {
 
 配置好构建管理后，我们需要创建一个类来启动嵌入式`Netty`服务器，并构建一个简单的上下文来处理默认请求:
 
-```
+```java
 public class Application {
 
     public static void main(String[] args) throws Exception {
@@ -94,7 +94,7 @@ public class Application {
 
 在下一个例子中，我们需要在应用程序中捕获一些 URL 路径参数。在 Ratpack 中，我们使用 [PathTokens](https://web.archive.org/web/20220628094108/https://ratpack.io/manual/current/api/ratpack/path/PathTokens.html) 来捕获它们:
 
-```
+```java
 RatpackServer.start(server -> server
   .handlers(chain -> chain
   .get(":name", ctx -> ctx.render("Hello " 
@@ -109,7 +109,7 @@ RatpackServer.start(server -> server
 
 例如，我们需要修改响应中的以下头:`Access-Control-Allow-Origin`、`Accept-Language`和`Accept-Charset`:
 
-```
+```java
 RatpackServer.start(server -> server.handlers(chain -> chain.all(ctx -> {
     MutableHeaders headers = ctx.getResponse().getHeaders();
     headers.set("Access-Control-Allow-Origin", "*");
@@ -124,13 +124,13 @@ RatpackServer.start(server -> server.handlers(chain -> chain.all(ctx -> {
 
 同样，我们也可以检查传入的请求头:
 
-```
+```java
 ctx.getRequest().getHeaders().get("//TODO")
 ```
 
 同样可以通过创建过滤器来实现。Ratpack 有一个`[Handler](https://web.archive.org/web/20220628094108/https://ratpack.io/manual/current/api/ratpack/handling/Handler.html)` 接口`,`，可以实现它来创建一个过滤器。它只有一个方法`handle(),`，以电流`Context`为参数:
 
-```
+```java
 public class RequestValidatorFilter implements Handler {
 
     @Override
@@ -144,7 +144,7 @@ public class RequestValidatorFilter implements Handler {
 
 我们可以按以下方式使用此过滤器:
 
-```
+```java
 RatpackServer.start(
     server -> server.handlers(chain -> chain
       .all(new RequestValidatorFilter())
@@ -158,7 +158,7 @@ Ratpack 内部使用`faster-jackson`进行 JSON 解析。我们可以使用[杰�
 
 让我们创建一个简单的 POJO 类，它将用于解析:
 
-```
+```java
 public class Employee {
 
     private Long id;
@@ -172,7 +172,7 @@ public class Employee {
 
 这里，我们创建了一个名为`Employee`的简单 POJO 类，它有三个参数:`id, title`和`name`。现在，我们将使用这个`Employee`对象转换成 JSON，并在点击某个 URL 时返回相同的内容:
 
-```
+```java
 List<Employee> employees = new ArrayList<Employee>();
 employees.add(new Employee(1L, "Mr", "John Doe"));
 employees.add(new Employee(2L, "Mr", "White Snow"));
@@ -191,7 +191,7 @@ RatpackServer.start(
 
 Ratpack 为内存数据库提供了一流的支持。它使用 [HikariCP](https://web.archive.org/web/20220628094108/https://github.com/brettwooldridge/HikariCP) 进行 JDBC 连接池。为了使用它，我们需要在`pom.xml`中添加 Ratpack 的 [HikariCP 模块依赖](https://web.archive.org/web/20220628094108/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22ratpack-hikari%22):
 
-```
+```java
 <dependency>
     <groupId>io.ratpack</groupId>
     <artifactId>ratpack-hikari</artifactId>
@@ -201,7 +201,7 @@ Ratpack 为内存数据库提供了一流的支持。它使用 [HikariCP](https:
 
 如果我们使用`Gradle`，同样需要添加到 Gradle 构建文件中:
 
-```
+```java
 compile ratpack.dependency('hikari')
 ```
 
@@ -211,7 +211,7 @@ compile ratpack.dependency('hikari')
 
 现在，通过使用 HikariModule，我们可以在运行时初始化数据库:
 
-```
+```java
 RatpackServer.start(
     server -> server.registry(Guice.registry(bindings -> 
       bindings.module(HikariModule.class, config -> {
@@ -225,7 +225,7 @@ RatpackServer.start(
 
 如前所述，Ratpack 对 jUnit 测试用例有一流的支持。通过使用[mainclassapplicationundest](https://web.archive.org/web/20220628094108/https://ratpack.io/manual/current/api/ratpack/test/MainClassApplicationUnderTest.html)，我们可以轻松地创建测试用例并测试端点:
 
-```
+```java
 @RunWith(JUnit4.class)
 public class ApplicationTest {
 

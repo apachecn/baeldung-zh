@@ -18,7 +18,7 @@
 
 首先，让我们创建一个`HelloWorld`类和一个相应的模块:
 
-```
+```java
 public class HelloWorld {
     private static final Logger LOG = Logger.getLogger(HelloWorld.class.getName());
     public static void main(String[] args) {
@@ -27,7 +27,7 @@ public class HelloWorld {
 }
 ```
 
-```
+```java
 module jlinkModule {
     requires java.logging;
 }
@@ -51,23 +51,23 @@ module jlinkModule {
 
 首先，让我们从命令行编译上面提到的程序:
 
-```
+```java
 javac -d out module-info.java
 ```
 
-```
+```java
 javac -d out --module-path out com\baeldung\jlink\HelloWorld.java
 ```
 
 现在，让我们运行程序:
 
-```
+```java
 java --module-path out --module jlinkModule/com.baeldung.jlink.HelloWorld
 ```
 
 输出将是:
 
-```
+```java
 Mar 13, 2019 10:15:40 AM com.baeldung.jlink.HelloWorld main
 INFO: Hello World!
 ```
@@ -78,13 +78,13 @@ INFO: Hello World!
 
 让我们使用 `[jdeps](https://web.archive.org/web/20221123135231/https://docs.oracle.com/javase/9/tools/jdeps.htm#JSWOR690)` 命令来获取应用程序中使用的依赖模块:
 
-```
+```java
 jdeps --module-path out -s --module jlinkModule
 ```
 
 输出将是:
 
-```
+```java
 jlinkModule -> java.base
 jlinkModule -> java.logging
 ```
@@ -95,7 +95,7 @@ jlinkModule -> java.logging
 
 要为基于模块的应用程序创建定制的 JRE，我们可以使用`jlink` 命令。下面是它的基本语法:
 
-```
+```java
 jlink [options] –module-path modulepath
   –add-modules module [, module…]
   --output <target-directory>
@@ -103,7 +103,7 @@ jlink [options] –module-path modulepath
 
 现在，让我们使用 Java 11 为我们的程序创建一个定制的 JRE:
 
-```
+```java
 jlink --module-path "%JAVA_HOME%\jmods";out
   --add-modules jlinkModule
   --output customjre
@@ -121,7 +121,7 @@ jlink --module-path "%JAVA_HOME%\jmods";out
 
 为了测试我们的 JRE，让我们尝试通过在我们的`customjre`目录的`bin`文件夹中导航并运行下面的命令来运行我们的模块:
 
-```
+```java
 java --module jlinkModule/com.baeldung.jlink.HelloWorld
 ```
 
@@ -133,7 +133,7 @@ java --module jlinkModule/com.baeldung.jlink.HelloWorld
 
 为此，我们需要运行带有额外的**参数`–launcher`的`jlink` 命令，用我们的模块和主类**创建我们的启动器:
 
-```
+```java
 jlink --launcher customjrelauncher=jlinkModule/com.baeldung.jlink.HelloWorld
   --module-path "%JAVA_HOME%\jmods";out
   --add-modules jlinkModule
@@ -144,13 +144,13 @@ jlink --launcher customjrelauncher=jlinkModule/com.baeldung.jlink.HelloWorld
 
 让我们运行脚本:
 
-```
+```java
 customjrelauncher.bat
 ```
 
 输出将是:
 
-```
+```java
 Mar 18, 2019 12:34:21 AM com.baeldung.jlink.HelloWorld main
 INFO: Hello World!
 ```

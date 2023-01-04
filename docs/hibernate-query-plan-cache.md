@@ -31,7 +31,7 @@
 
 让我们先来看看我们将在示例中使用的实体，`DeptEmployee`和`Department`:
 
-```
+```java
 @Entity
 public class DeptEmployee {
     @Id
@@ -51,7 +51,7 @@ public class DeptEmployee {
 }
 ```
 
-```
+```java
 @Entity
 public class Department {
     @Id
@@ -75,7 +75,7 @@ public class Department {
 
 *   ` **findEmployeesByDepartmentName**`
 
-```
+```java
 session.createQuery("SELECT e FROM DeptEmployee e " +
   "JOIN e.department WHERE e.department.name = :deptName")
   .setMaxResults(30)
@@ -84,7 +84,7 @@ session.createQuery("SELECT e FROM DeptEmployee e " +
 
 *   `**findEmployeesByDesignation**`
 
-```
+```java
 session.createQuery("SELECT e FROM DeptEmployee e " +
   "WHERE e.title = :designation")
   .setHint(QueryHints.SPEC_HINT_TIMEOUT, 1000);
@@ -92,7 +92,7 @@ session.createQuery("SELECT e FROM DeptEmployee e " +
 
 *   `**findDepartmentOfAnEmployee**`
 
-```
+```java
 session.createQuery("SELECT e.department FROM DeptEmployee e " +
   "JOIN e.department WHERE e.employeeNumber = :empId");
 ```
@@ -103,7 +103,7 @@ session.createQuery("SELECT e.department FROM DeptEmployee e " +
 
 **我们将改变缓存大小，从 1 到 3**–之后，我们的所有三个查询都将在缓存中。因此，没有必要进一步增加它:
 
-```
+```java
 @State(Scope.Thread)
 public static class QueryPlanCacheBenchMarkState {
     @Param({"1", "2", "3"})
@@ -131,7 +131,7 @@ public static class QueryPlanCacheBenchMarkState {
 
 接下来，让我们看一下用来测量 Hibernate 编译查询所用平均时间的基准代码:
 
-```
+```java
 @Benchmark
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)

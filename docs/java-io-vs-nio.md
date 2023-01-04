@@ -38,7 +38,7 @@ Java 1.0 中引入了 **`java.io`包**，Java 1.1 中引入了`Reader`。它提�
 
 让我们为 WireMock 添加 Maven 依赖项，作用域为`test`:
 
-```
+```java
 <dependency>
     <groupId>com.github.tomakehurst</groupId>
     <artifactId>wiremock-jre8</artifactId>
@@ -49,7 +49,7 @@ Java 1.0 中引入了 **`java.io`包**，Java 1.1 中引入了`Reader`。它提�
 
 在一个测试类中，让我们定义一个 JUnit `@Rule`来在一个空闲端口上启动 WireMock up。然后，当我们请求预定义的资源时，我们将对其进行配置，以返回 HTTP 200 响应，消息体为 JSON 格式的一些文本:
 
-```
+```java
 @Rule public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort());
 
 private String REQUESTED_RESOURCE = "/test.json";
@@ -73,7 +73,7 @@ public void setup() {
 
 在这个例子中，我们将创建一个 GET 请求来检索我们的资源。首先，让我们**创建一个`Socket`来访问我们的 WireMock 服务器正在监听的端口**:
 
-```
+```java
 Socket socket = new Socket("localhost", wireMockRule.port())
 ```
 
@@ -81,7 +81,7 @@ Socket socket = new Socket("localhost", wireMockRule.port())
 
 现在让我们用**在**的插座上打开一个`OutputStream`，用一个`OutputStreamWriter`包裹，然后把它传给一个`PrintWriter`来写我们的消息。让我们确保刷新缓冲区，以便发送我们的请求:
 
-```
+```java
 OutputStream clientOutput = socket.getOutputStream();
 PrintWriter writer = new PrintWriter(new OutputStreamWriter(clientOutput));
 writer.print("GET " + TEST_JSON + " HTTP/1.0\r\n\r\n");
@@ -92,7 +92,7 @@ writer.flush();
 
 让我们**在 socket** 上打开一个`InputStream` **来访问响应，用一个`[BufferedReader](/web/20220628100032/https://www.baeldung.com/java-buffered-reader)`读取流，并存储在一个`StringBuilder`中:**
 
-```
+```java
 InputStream serverInput = socket.getInputStream();
 BufferedReader reader = new BufferedReader(new InputStreamReader(serverInput));
 StringBuilder ourStore = new StringBuilder();
@@ -100,7 +100,7 @@ StringBuilder ourStore = new StringBuilder();
 
 让我们使用`reader.readLine()`来阻塞，等待一个完整的行，然后将该行追加到我们的存储中。我们将继续读取，直到得到一个表示流结束的`null,` :
 
-```
+```java
 for (String line; (line = reader.readLine()) != null;) {
    ourStore.append(line);
    ourStore.append(System.lineSeparator());
@@ -117,14 +117,14 @@ for (String line; (line = reader.readLine()) != null;) {
 
 首先，让我们打开我们的`SocketChannel`:
 
-```
+```java
 InetSocketAddress address = new InetSocketAddress("localhost", wireMockRule.port());
 SocketChannel socketChannel = SocketChannel.open(address);
 ```
 
 现在，让我们用一个标准的 UTF-8 `Charset`来编码和书写我们的信息:
 
-```
+```java
 Charset charset = StandardCharsets.UTF_8;
 socket.write(charset.encode(CharBuffer.wrap("GET " + REQUESTED_RESOURCE + " HTTP/1.0\r\n\r\n")));
 ```
@@ -135,7 +135,7 @@ socket.write(charset.encode(CharBuffer.wrap("GET " + REQUESTED_RESOURCE + " HTTP
 
 既然我们要处理文本，我们需要一个 [`ByteBuffer`](https://web.archive.org/web/20220628100032/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/ByteBuffer.html) 用于原始字节，一个 [`CharBuffer`](https://web.archive.org/web/20220628100032/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/CharBuffer.html) 用于转换后的字符(由 [`CharsetDecoder`](https://web.archive.org/web/20220628100032/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/charset/CharsetDecoder.html) 辅助):
 
-```
+```java
 ByteBuffer byteBuffer = ByteBuffer.allocate(8192);
 CharsetDecoder charsetDecoder = charset.newDecoder();
 CharBuffer charBuffer = CharBuffer.allocate(8192);
@@ -149,7 +149,7 @@ CharBuffer charBuffer = CharBuffer.allocate(8192);
 
  **因此，让我们从我们的`SocketChannel` 中读取**，将它传递给我们的`ByteBuffer`来存储我们的数据。我们来自`SocketChannel`的`read`将以我们`ByteBuffer`的**当前位置设置为下一个要写入**(就在写入的最后一个字节之后)**的字节结束，但其限制不变**:**
 
-```
+```java
 socketChannel.read(byteBuffer)
 ```
 
@@ -161,7 +161,7 @@ socketChannel.read(byteBuffer)
 
 由于我们的数据可能是部分到达的，让我们用终止条件将我们的缓冲区读取代码包装在一个循环中，以检查我们的套接字是否仍然连接，或者我们是否已经断开连接，但仍然有数据留在我们的缓冲区中:
 
-```
+```java
 while (socketChannel.read(byteBuffer) != -1 || byteBuffer.position() > 0) {
     byteBuffer.flip();
     storeBufferContents(byteBuffer, charBuffer, charsetDecoder, ourStore);
@@ -171,7 +171,7 @@ while (socketChannel.read(byteBuffer) != -1 || byteBuffer.position() > 0) {
 
 让我们不要忘记`close()`我们的套接字(除非我们在 try-with-resources 块中打开它):
 
-```
+```java
 socketChannel.close();
 ```
 
@@ -183,7 +183,7 @@ socketChannel.close();
 
 现在，让我们实现我们完整的`storeBufferContents()`方法，在我们的缓冲区中传递`CharsetDecoder`和`StringBuilder`:
 
-```
+```java
 void storeBufferContents(ByteBuffer byteBuffer, CharBuffer charBuffer, 
   CharsetDecoder charsetDecoder, StringBuilder ourStore) {
     charsetDecoder.decode(byteBuffer, charBuffer, true);

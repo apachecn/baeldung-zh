@@ -8,7 +8,7 @@
 
 要在您的应用程序中使用`WatchService`接口，您需要导入适当的类:
 
-```
+```java
 import java.nio.file.*;
 ```
 
@@ -30,19 +30,19 @@ import java.nio.file.*;
 
 要使用`WatchService`特性，第一步是使用`java.nio.file.FileSystems`类创建一个`WatchService`实例:
 
-```
+```java
 WatchService watchService = FileSystems.getDefault().newWatchService();
 ```
 
 接下来，我们必须创建我们想要监视的目录的路径:
 
-```
+```java
 Path path = Paths.get("pathToDir");
 ```
 
 在这一步之后，我们必须向 watch 服务注册路径。在这个阶段，有两个重要的概念需要理解。`StandardWatchEventKinds`级和`WatchKey`级。看一下下面的注册码，就可以了解每个人的位置。我们将对此进行同样的解释:
 
-```
+```java
 WatchKey watchKey = path.register(
   watchService, StandardWatchEventKinds...);
 ```
@@ -66,7 +66,7 @@ Watch 服务不提供任何回调方法，只要有事件发生，就会调用�
 
 我们可以使用`poll` API:
 
-```
+```java
 WatchKey watchKey = watchService.poll();
 ```
 
@@ -74,7 +74,7 @@ WatchKey watchKey = watchService.poll();
 
 我们还可以使用一个带`timeout`参数的重载版本:
 
-```
+```java
 WatchKey watchKey = watchService.poll(long timeout, TimeUnit units);
 ```
 
@@ -82,7 +82,7 @@ WatchKey watchKey = watchService.poll(long timeout, TimeUnit units);
 
 最后，我们可以使用`take` API:
 
-```
+```java
 WatchKey watchKey = watchService.take();
 ```
 
@@ -90,7 +90,7 @@ WatchKey watchKey = watchService.take();
 
 这里我们必须注意一些非常重要的事情:**当`WatchKey`实例被`poll`或`take`API 返回时，如果它的重置 API 没有被调用，它将不会捕获更多的事件:**
 
-```
+```java
 watchKey.reset();
 ```
 
@@ -98,7 +98,7 @@ watchKey.reset();
 
 watcher 服务最实际的应用需要一个循环，在这个循环中，我们不断地检查被监视目录中的变化，并相应地进行处理。我们可以使用下面的习语来实现这一点:
 
-```
+```java
 WatchKey key;
 while ((key = watchService.take()) != null) {
     for (WatchEvent<?> event : key.pollEvents()) {
@@ -122,7 +122,7 @@ while ((key = watchService.take()) != null) {
 
 该代码只包含几行代码，所以我们只将它保留在 main 方法中:
 
-```
+```java
 public class DirectoryWatcherExample {
 
     public static void main(String[] args) {
@@ -156,7 +156,7 @@ public class DirectoryWatcherExample {
 
 例如，假设您进入用户主页，右键单击空白处，选择``new – > file``创建一个新文件，然后将其命名为`testFile`。然后你添加一些内容并保存。控制台的输出如下所示:
 
-```
+```java
 Event kind:ENTRY_CREATE. File affected: New Text Document.txt.
 Event kind:ENTRY_DELETE. File affected: New Text Document.txt.
 Event kind:ENTRY_CREATE. File affected: testFile.txt.

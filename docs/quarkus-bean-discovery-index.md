@@ -26,7 +26,7 @@ Quarkus 使用 [Jandex](https://web.archive.org/web/20220525135902/https://githu
 
 对于我们自己的模块来说，实现这一点最明显的方法是使用 [Jandex Maven 插件](https://web.archive.org/web/20220525135902/https://github.com/wildfly/jandex-maven-plugin):
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -52,7 +52,7 @@ Quarkus 使用 [Jandex](https://web.archive.org/web/20220525135902/https://githu
 
 对于 Gradle 构建，我们可以使用`org.kordamp.gradle.jandex`插件:
 
-```
+```java
 plugins {
     id 'org.kordamp.gradle.jandex' version '0.11.0'
 }

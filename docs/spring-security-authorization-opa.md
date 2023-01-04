@@ -42,7 +42,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 安装 OPA 非常简单:只需下载我们平台的二进制文件，把它放在操作系统路径下的一个文件夹中，我们就可以开始了。我们可以用一个简单的命令来验证它是否安装正确:
 
-```
+```java
 $ opa version
 Version: 0.39.0
 Build Commit: cc965f6
@@ -61,7 +61,7 @@ OPA 评估用 [REGO](https://web.archive.org/web/20220525034250/https://www.open
 
 用 REGO 编写的简单授权策略如下所示:
 
-```
+```java
 package baeldung.auth.account
 
 # Not authorized by default
@@ -113,7 +113,7 @@ allow["account_api_authorized"] {
 
 让我们使用上一节中定义的策略来评估授权请求。在我们的例子中，我们将使用一个 JSON 结构构建这个授权请求，该结构包含来自传入请求的一些片段:
 
-```
+```java
 {
     "input": {
         "principal": "user1",
@@ -131,7 +131,7 @@ allow["account_api_authorized"] {
 
 为了测试我们的策略是否按预期工作，让我们在服务器模式下本地运行 OPA，并手动提交一些测试请求:
 
-```
+```java
 $ opa run  -w -s src/test/rego
 ```
 
@@ -139,7 +139,7 @@ $ opa run  -w -s src/test/rego
 
 现在，我们可以使用`curl`或其他工具来发送请求:
 
-```
+```java
 $ curl --location --request POST 'http://localhost:8181/v1/data/baeldung/auth/account' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -159,7 +159,7 @@ $ curl --location --request POST 'http://localhost:8181/v1/data/baeldung/auth/ac
 
 响应将是一个 JSON 对象，包含根据输入数据评估策略产生的所有结果:
 
-```
+```java
 {
   "result": {
     "allow": [],
@@ -177,7 +177,7 @@ $ curl --location --request POST 'http://localhost:8181/v1/data/baeldung/auth/ac
 
 首先，我们需要实现使用 OPA 作为后端的`ReactiveAuthorizationManager` bean:
 
-```
+```java
 @Bean
 public ReactiveAuthorizationManager<AuthorizationContext> opaAuthManager(WebClient opaWebClient) {
 
@@ -197,7 +197,7 @@ public ReactiveAuthorizationManager<AuthorizationContext> opaAuthManager(WebClie
 
 现在，我们使用这个 bean 来构建一个`SecurityWebFilterChain:`
 
-```
+```java
 @Bean
 public SecurityWebFilterChain accountAuthorization(ServerHttpSecurity http, @Qualifier("opaWebClient") WebClient opaWebClient) {
     return http
@@ -220,7 +220,7 @@ public SecurityWebFilterChain accountAuthorization(ServerHttpSecurity http, @Qua
 
 最后但同样重要的是，让我们构建一个集成测试来将所有东西放在一起。首先，让我们确保“快乐之路”行得通。这意味着给定一个经过身份验证的用户，他们应该能够访问自己的帐户:
 
-```
+```java
 @Test
 @WithMockUser(username = "user1", roles = { "account:read:0001"} )
 void testGivenValidUser_thenSuccess() {
@@ -235,7 +235,7 @@ void testGivenValidUser_thenSuccess() {
 
 其次，我们还必须验证经过身份验证的用户应该只能访问他们自己的帐户:
 
-```
+```java
 @Test
 @WithMockUser(username = "user1", roles = { "account:read:0002"} )
 void testGivenValidUser_thenUnauthorized() {
@@ -250,7 +250,7 @@ void testGivenValidUser_thenUnauthorized() {
 
 最后，让我们测试一下经过身份验证的用户没有权限的情况:
 
-```
+```java
 @Test
 @WithMockUser(username = "user1", roles = {} )
 void testGivenNoAuthorities_thenForbidden() {

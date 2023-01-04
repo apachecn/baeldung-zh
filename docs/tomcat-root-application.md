@@ -32,7 +32,7 @@
 
 为此，我们必须在`<Host>`标签中插入以下内容:
 
-```
+```java
 <Context path="" docBase="ExampleApp"></Context>
 ```
 
@@ -40,7 +40,7 @@
 
 为了防止这种情况，我们必须在`<Host>`标签中设置`autoDeploy=”false”`和`deployOnStartup=”false”`:
 
-```
+```java
 <Host name="localhost" appBase="webapps" unpackWARs="true"
   autoDeploy="false" deployOnStartup="false">
     <Context path="" docBase="ExampleApp"></Context>
@@ -57,7 +57,7 @@
 
 因此，我们必须在`$CATALINA_HOME\conf\Catalina\localhost`处创建一个`ROOT.xml`，其内容如下:
 
-```
+```java
 <Context docBase="../deploy/ExampleApp.war"/>
 ```
 

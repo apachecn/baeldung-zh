@@ -16,7 +16,7 @@ Maven 是一个流行的构建管理工具，广泛用于 Java EE 项目中处�
 
 首先，我们将向构建我们的 Spring Boot web 应用程序所需的`pom.xml`文件添加依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -34,7 +34,7 @@ Maven 是一个流行的构建管理工具，广泛用于 Java EE 项目中处�
 
 接下来，让我们创建我们的`MainController`类。在这个类中，我们将创建一个单独的`GET`控制器方法来查看我们的 HTML 文件:
 
-```
+```java
 @Controller
 public class MainController {
 
@@ -48,7 +48,7 @@ public class MainController {
 
 最后，是时候创建我们的`index.html`文件了。项目中还包含了引导 CSS 文件，我们的`index.html`文件中使用了一些 CSS 类:
 
-```
+```java
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
@@ -85,7 +85,7 @@ Maven WAR 插件中有一些明确的目标:
 
 让我们将 Maven WAR 插件添加到我们的`pom.xml`文件中:
 
-```
+```java
 <plugin>
     <artifactId>maven-war-plugin</artifactId>
     <version>3.3.1</version>
@@ -100,7 +100,7 @@ Maven WAR 插件中有一些明确的目标:
 
 使用 Maven WAR 插件，我们可以过滤一个 WAR 文件的内容。让我们配置 Maven WAR 插件，在 WAR 文件中包含一个`additional_resources`文件夹:
 
-```
+```java
 <plugin>
     <artifactId>maven-war-plugin</artifactId>
     <version>3.3.1</version>
@@ -122,7 +122,7 @@ Maven WAR 插件中有一些明确的目标:
 
 让我们配置 Maven WAR 插件，将类路径添加到`manifest`文件中:
 
-```
+```java
 <plugin>
     <artifactId>maven-war-plugin</artifactId>
     <version>3.3.1</version>

@@ -23,7 +23,7 @@ gRPC 是一个高性能、开源的 RPC 框架，最初由 Google 开发。它�
 
 让我们添加 [grpc-netty](https://web.archive.org/web/20220626205430/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22grpc-netty%22) 、 [grpc-protobuf](https://web.archive.org/web/20220626205430/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22grpc-protobuf%22) 和 [grpc-stub](https://web.archive.org/web/20220626205430/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22grpc-stub%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.grpc</groupId>
     <artifactId>grpc-netty</artifactId>
@@ -51,7 +51,7 @@ gRPC 是一个高性能、开源的 RPC 框架，最初由 Google 开发。它�
 
 让我们为我们的示例`HelloService`创建一个`HelloService.proto`文件。我们从添加一些基本配置细节开始:
 
-```
+```java
 syntax = "proto3";
 option java_multiple_files = true;
 package org.baeldung.grpc;
@@ -65,7 +65,7 @@ package org.baeldung.grpc;
 
 接下来，我们定义消息:
 
-```
+```java
 message HelloRequest {
     string firstName = 1;
     string lastName = 2;
@@ -80,7 +80,7 @@ message HelloRequest {
 
 请注意，我们可以在多种消息类型中使用相同的标记:
 
-```
+```java
 message HelloResponse {
     string greeting = 1;
 }
@@ -90,7 +90,7 @@ message HelloResponse {
 
 最后，让我们来定义服务契约。对于我们的`HelloService`,我们定义一个`hello()`操作:
 
-```
+```java
 service HelloService {
     rpc hello(HelloRequest) returns (HelloResponse);
 }
@@ -110,7 +110,7 @@ service HelloService {
 
 最后，我们可以使用下面的命令来生成代码:
 
-```
+```java
 protoc --plugin=protoc-gen-grpc-java=$PATH_TO_PLUGIN -I=$SRC_DIR 
   --java_out=$DST_DIR --grpc-java_out=$DST_DIR $SRC_DIR/HelloService.proto
 ```
@@ -119,7 +119,7 @@ protoc --plugin=protoc-gen-grpc-java=$PATH_TO_PLUGIN -I=$SRC_DIR
 
 作为开发人员，您会希望代码生成与您的构建系统紧密集成。gRPC 为 Maven 构建系统提供了一个 [`protobuf-maven-plugin`](https://web.archive.org/web/20220626205430/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.xolstice.maven.plugins%22%20AND%20a%3A%22protobuf-maven-plugin%22) :
 
-```
+```java
 <build>
   <extensions>
     <extension>
@@ -171,7 +171,7 @@ protoc --plugin=protoc-gen-grpc-java=$PATH_TO_PLUGIN -I=$SRC_DIR
 
 我们将扩展这个类并覆盖我们的服务定义中提到的`hello()`方法:
 
-```
+```java
 public class HelloServiceImpl extends HelloServiceImplBase {
 
     @Override
@@ -207,7 +207,7 @@ gRPC 使用构建器来创建对象。我们使用`HelloResponse.newBuilder()`�
 
 接下来，我们需要启动 gRPC 服务器来监听传入的请求:
 
-```
+```java
 public class GrpcServer {
     public static void main(String[] args) {
         Server server = ServerBuilder
@@ -230,7 +230,7 @@ gRPC 提供了一个通道构造，它抽象出底层细节，如连接、连接
 
 我们将使用没有任何加密的纯文本:
 
-```
+```java
 public class GrpcClient {
     public static void main(String[] args) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8080)

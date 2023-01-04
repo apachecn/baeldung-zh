@@ -18,7 +18,7 @@
 
 首先，如果我们返回一个`Resource`作为我们的返回类型会发生什么:
 
-```
+```java
 Resource download() {
     return new ClassPathResource(locationForLargeFile);
 }
@@ -39,7 +39,7 @@ Resource download() {
 
 让我们实现一个`ResponseExtractor` 来将主体写到一个临时文件`:`
 
-```
+```java
 File file = restTemplate.execute(FILE_URL, HttpMethod.GET, null, clientHttpResponse -> {
     File ret = File.createTempFile("download", "tmp");
     StreamUtils.copy(clientHttpResponse.getBody(), new FileOutputStream(ret));
@@ -60,7 +60,7 @@ Assertions
 
 所以首先让我们检查下载 URL 是否支持 resume:
 
-```
+```java
 HttpHeaders headers = restTemplate.headForHeaders(FILE_URL);
 
 Assertions
@@ -73,7 +73,7 @@ Assertions
 
 然后我们可以实现一个`RequestCallback`来设置“Range”头并继续下载:
 
-```
+```java
 restTemplate.execute(
   FILE_URL,
   HttpMethod.GET,
@@ -92,7 +92,7 @@ Assertions
 
 如果我们不知道确切的内容长度，我们可以使用`String.format`设置`Range`头值:
 
-```
+```java
 String.format("bytes=%d-", file.length())
 ```
 

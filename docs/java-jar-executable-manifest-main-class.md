@@ -16,7 +16,7 @@
 
 让我们用 main 方法编写一个简单的 Java 类:
 
-```
+```java
 public class AppExample {
     public static void main(String[] args){
         System.out.println("AppExample executed!");
@@ -26,25 +26,25 @@ public class AppExample {
 
 要将我们的示例类打包到 JAR 归档文件中，我们必须进入操作系统的外壳并编译它:
 
-```
+```java
 javac -d . AppExample.java 
 ```
 
 然后我们可以把它装进一个罐子里:
 
-```
+```java
 jar cvf example.jar com/baeldung/manifest/AppExample.class 
 ```
 
 我们的`example.jar`将包含一个默认的清单文件。我们现在可以尝试执行 JAR:
 
-```
+```java
 java -jar example.jar 
 ```
 
 执行将失败，并出现错误:
 
-```
+```java
 no main manifest attribute, in example.jar 
 ```
 
@@ -54,7 +54,7 @@ no main manifest attribute, in example.jar
 
 让我们在代码中包含一个适当的清单属性。我们需要创建一个包含单行的`MANIFEST.MF`文件:
 
-```
+```java
 Main-Class: com.baeldung.manifest.AppExample 
 ```
 
@@ -62,13 +62,13 @@ Main-Class: com.baeldung.manifest.AppExample
 
 我们将把它和我们的清单文件打包在一起:
 
-```
+```java
 jar cvmf MANIFEST.MF example.jar com/baeldung/manifest/AppExample.class 
 ```
 
 这一次 JAR 按预期执行并输出:
 
-```
+```java
 AppExample executed!
 ```
 

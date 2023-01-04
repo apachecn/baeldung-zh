@@ -10,7 +10,7 @@
 
 要开始使用 Log4j 2，我们只需要在我们的`pom.xml`中包含 [log4j-core](https://web.archive.org/web/20220730031635/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.logging.log4j%22%20AND%20a%3A%22log4j-core%22) 和 [log4j-slf4j-impl](https://web.archive.org/web/20220730031635/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.logging.log4j%22%20AND%20a%3A%22log4j-slf4j-impl%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-core</artifactId>
@@ -31,7 +31,7 @@ Log4j 2 提供了几种获取`ConfigurationBuilder`的方法。
 
 让我们从最直接的方式开始:
 
-```
+```java
 ConfigurationBuilder<BuiltConfiguration> builder
  = ConfigurationBuilderFactory.newConfigurationBuilder();
 ```
@@ -44,7 +44,7 @@ ConfigurationBuilder<BuiltConfiguration> builder
 
 让我们通过配置一个`appender`来告诉`builder`将每个日志行发送到哪里:
 
-```
+```java
 AppenderComponentBuilder console 
   = builder.newAppender("stdout", "Console"); 
 
@@ -65,7 +65,7 @@ builder.add(file);
 
 这使得它有类似于`addAttribute` 和`addComponent `的方法，而不是`setFileName`和`addTriggeringPolicy`:
 
-```
+```java
 AppenderComponentBuilder rollingFile 
   = builder.newAppender("rolling", "RollingFile");
 rollingFile.addAttribute("fileName", "rolling.log");
@@ -82,7 +82,7 @@ builder.add(rollingFile);
 
 让我们使用控制台附加器上的`MarkerFilter`插件:
 
-```
+```java
 FilterComponentBuilder flow = builder.newFilter(
   "MarkerFilter", 
   Filter.Result.ACCEPT,
@@ -102,7 +102,7 @@ console.add(flow);
 
 接下来，让我们定义每个日志行的布局。在这种情况下，我们将使用`PatternLayout`插件:
 
-```
+```java
 LayoutComponentBuilder standard 
   = builder.newLayout("PatternLayout");
 standard.addAttribute("pattern", "%d [%t] %-5level: %msg%n%throwable");
@@ -122,7 +122,7 @@ rolling.add(standard);
 
 因此，让我们使用一个根日志记录器将默认日志记录级别设置为`ERROR`并将默认 appender 设置为上面的`stdout` appender:
 
-```
+```java
 RootLoggerComponentBuilder rootLogger 
   = builder.newRootLogger(Level.ERROR);
 rootLogger.add(builder.newAppenderRef("stdout"));
@@ -138,7 +138,7 @@ builder.add(rootLogger);
 
 让我们为应用程序中的`com`包添加一个日志记录器，将日志记录级别设置为`DEBUG`,并让它们进入我们的`log `附加器:
 
-```
+```java
 LoggerComponentBuilder logger = builder.newLogger("com", Level.DEBUG);
 logger.add(builder.newAppenderRef("log"));
 logger.addAttribute("additivity", false);
@@ -156,7 +156,7 @@ builder.add(logger);
 
 例如，因为没有`TriggeringPolicyComponentBuilder`，我们需要使用`newComponent `来指定滚动文件附加器的触发策略:
 
-```
+```java
 ComponentBuilder triggeringPolicies = builder.newComponent("Policies")
   .addComponent(builder.newComponent("CronTriggeringPolicy")
     .addAttribute("schedule", "0 0 0 * * ?"))
@@ -170,13 +170,13 @@ rolling.addComponent(triggeringPolicies);
 
 `ConfigurationBuilder `提供了一种简便的方法来打印出等价的 XML:
 
-```
+```java
 builder.writeXmlConfiguration(System.out);
 ```
 
 运行上面的行打印出:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
    <Appenders>
@@ -214,7 +214,7 @@ builder.writeXmlConfiguration(System.out);
 
 现在我们已经完全配置好了，让我们告诉 Log4j 2 使用我们的配置:
 
-```
+```java
 Configurator.initialize(builder.build());
 ```
 
@@ -226,7 +226,7 @@ Configurator.initialize(builder.build());
 
 现在我们已经看到了一种获取和应用`ConfigurationBuilder`的方法，让我们再来看看另一种方法:
 
-```
+```java
 public class CustomConfigFactory
   extends ConfigurationFactory {
 
@@ -262,7 +262,7 @@ public class CustomConfigFactory
 
 Log4j 2 支持静态初始化时调用`setConfigurationFactory `:
 
-```
+```java
 static {
     ConfigurationFactory custom = new CustomConfigFactory();
     ConfigurationFactory.setConfigurationFactory(custom);
@@ -275,7 +275,7 @@ static {
 
 如果我们可以访问 Java 启动命令，那么 Log4j 2 也支持通过一个`-D`参数指定要使用的`ConfigurationFactory `:
 
-```
+```java
 -Dlog4j2.configurationFactory=com.baeldung.log4j2.CustomConfigFactory
 ```
 
@@ -285,7 +285,7 @@ static {
 
 最后，在我们不想通过添加`-D`来篡改 Java 启动命令的情况下，我们可以简单地用 Log4j 2 `@Plugin `注释来注释我们的`CustomConfigurationFactory`:
 
-```
+```java
 @Plugin(
   name = "CustomConfigurationFactory", 
   category = ConfigurationFactory.CATEGORY)
@@ -303,7 +303,7 @@ Log4j 2 将在类路径中扫描带有`@Plugin `注释的类，如果在`Config
 
 使用`ConfigurationFactory`扩展的另一个好处是，我们可以轻松地将我们的定制配置与其他配置源(如 XML)结合起来:
 
-```
+```java
 public Configuration createConfiguration(
   LoggerContext context, 
   ConfigurationSource src) {
@@ -315,7 +315,7 @@ public Configuration createConfiguration(
 
 我们可以将配置文件发送给我们的定制实现`XmlConfiguration`,在那里我们可以放置我们需要的任何覆盖配置:
 
-```
+```java
 public class WithXmlConfiguration extends XmlConfiguration {
 
     @Override

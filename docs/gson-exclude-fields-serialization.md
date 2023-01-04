@@ -10,7 +10,7 @@
 
 让我们首先定义我们的类:
 
-```
+```java
 @Data
 @AllArgsConstructor
 public class MyClass {
@@ -33,7 +33,7 @@ public class MySubClass {
 
 现在让我们填充它们:
 
-```
+```java
 MySubClass subclass = new MySubClass(42L, "the answer", "Verbose field not to serialize")
 MyClass source = new MyClass(1L, "foo", "bar", subclass); 
 ```
@@ -42,7 +42,7 @@ MyClass source = new MyClass(1L, "foo", "bar", subclass);
 
 我们期望得到的输出是:
 
-```
+```java
 {
   "id":1,
   "name":"foo",
@@ -55,7 +55,7 @@ MyClass source = new MyClass(1L, "foo", "bar", subclass);
 
 在 Java 中:
 
-```
+```java
 String expectedResult = "{\"id\":1,\"name\":\"foo\",\"subclass\":{\"id\":42,\"description\":\"the answer\"}}"; 
 ```
 
@@ -63,7 +63,7 @@ String expectedResult = "{\"id\":1,\"name\":\"foo\",\"subclass\":{\"id\":42,\"de
 
 我们可以用`transient`修饰符标记一个字段:
 
-```
+```java
 public class MyClass {
     private long id;
     private String name;
@@ -80,7 +80,7 @@ public class MySubClass {
 
 Gson 序列化程序将忽略每个声明为瞬态的字段:
 
-```
+```java
 String jsonString = new Gson().toJson(source);
 assertEquals(expectedResult, jsonString); 
 ```
@@ -97,7 +97,7 @@ Gson `com.google.gson.annotations [**@Expose**](https://web.archive.org/web/2022
 
 我们可以使用它来声明要序列化的字段，并忽略其他字段:
 
-```
+```java
 public class MyClass {
     @Expose 
     private long id;
@@ -119,7 +119,7 @@ public class MySubClass {
 
 为此，我们需要用 GsonBuilder 实例化 Gson:
 
-```
+```java
 Gson gson = new GsonBuilder()
   .excludeFieldsWithoutExposeAnnotation()
   .create();
@@ -131,7 +131,7 @@ assertEquals(expectedResult, jsonString);
 
 让我们看看如何防止`MyClass.other`被序列化，但允许它在从 JSON 反序列化的过程中被填充:
 
-```
+```java
 @Expose(serialize = false, deserialize = true) 
 private String other; 
 ```
@@ -144,7 +144,7 @@ private String other;
 
 它允许我们定义一个策略(在外部或者使用匿名的内部类)来指示 GsonBuilder 是否使用自定义标准来序列化字段(和/或类)。
 
-```
+```java
 Gson gson = new GsonBuilder()
   .addSerializationExclusionStrategy(strategy)
   .create();
@@ -159,7 +159,7 @@ assertEquals(expectedResult, jsonString);
 
 当然，我们也可以硬编码一个或多个字段/类名:
 
-```
+```java
 ExclusionStrategy strategy = new ExclusionStrategy() {
     @Override
     public boolean shouldSkipField(FieldAttributes field) {
@@ -187,7 +187,7 @@ ExclusionStrategy strategy = new ExclusionStrategy() {
 
 在下面的例子中，我们将把每个以“other”开头的字段标识为不应该序列化的字段，不管它们属于哪个类:
 
-```
+```java
 ExclusionStrategy strategy = new ExclusionStrategy() {
     @Override
     public boolean shouldSkipClass(Class<?> clazz) {
@@ -205,7 +205,7 @@ ExclusionStrategy strategy = new ExclusionStrategy() {
 
 另一个聪明的方法是创建自定义注释:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Exclude {} 
@@ -213,7 +213,7 @@ public @interface Exclude {}
 
 然后我们可以利用`ExclusionStrategy`,让它完全像使用`@Expose`注释一样工作，但是反过来:
 
-```
+```java
 public class MyClass {
     private long id;
     private String name;
@@ -232,7 +232,7 @@ public class MySubClass {
 
 策略是这样的:
 
-```
+```java
 ExclusionStrategy strategy = new ExclusionStrategy() {
     @Override
     public boolean shouldSkipClass(Class<?> clazz) {
@@ -256,19 +256,19 @@ ExclusionStrategy strategy = new ExclusionStrategy() {
 
 仅在序列化期间:
 
-```
+```java
 Gson gson = new GsonBuilder().addSerializationExclusionStrategy(strategy) 
 ```
 
 仅在反序列化期间:
 
-```
+```java
 Gson gson = new GsonBuilder().addDeserializationExclusionStrategy(strategy) 
 ```
 
 总是:
 
-```
+```java
 Gson gson = new GsonBuilder().setExclusionStrategies(strategy); 
 ```
 

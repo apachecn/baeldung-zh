@@ -14,7 +14,7 @@
 
 在我们开始之前，让我们定义一个类:
 
-```
+```java
 public class User {
 
     private String name;
@@ -33,7 +33,7 @@ public class User {
 
 **它的 SAM(单一抽象方法)是返回一个泛型值的方法`call()`，可能抛出一个异常:**
 
-```
+```java
 V call() throws Exception;
 ```
 
@@ -41,7 +41,7 @@ V call() throws Exception;
 
 因此，让我们定义一个实现:
 
-```
+```java
 public class AgeCalculatorCallable implements Callable<Integer> {
 
     private final LocalDate birthDate;
@@ -61,7 +61,7 @@ public class AgeCalculatorCallable implements Callable<Integer> {
 
 让我们定义一个只执行一个异步任务的方法:
 
-```
+```java
 public User execute(User user) {
     ExecutorService executorService = Executors.newCachedThreadPool();
     try {
@@ -76,7 +76,7 @@ public User execute(User user) {
 
 我们可以通过 lambda 表达式重写`submit()` 的内部块:
 
-```
+```java
 Future<Integer> ageFuture = executorService.submit(
   () -> Period.between(user.getBirthDate(), LocalDate.now()).getYears());
 ```
@@ -92,7 +92,7 @@ Future<Integer> ageFuture = executorService.submit(
 
 所以让我们定义一个新的`Callable`:
 
-```
+```java
 public class CarDriverValidatorCallable implements Callable<Boolean> {
 
     private final Integer age;
@@ -107,7 +107,7 @@ public class CarDriverValidatorCallable implements Callable<Boolean> {
 
 接下来，让我们定义一个任务链，其中第二个任务将前一个任务的结果作为输入参数:
 
-```
+```java
 public User execute(User user) {
     ExecutorService executorService = Executors.newCachedThreadPool();
     try {
@@ -136,7 +136,7 @@ public User execute(User user) {
 
 **它不接受任何参数，返回一个值，并且只抛出未检查的异常:**
 
-```
+```java
 T get();
 ```
 
@@ -154,7 +154,7 @@ T get();
 
 让我们定义一个只执行一个异步任务的方法:
 
-```
+```java
 public User execute(User user) {
     ExecutorService executorService = Executors.newCachedThreadPool();
     CompletableFuture<Integer> ageFut = CompletableFuture.supplyAsync(() -> Period.between(user.getBirthDate(), LocalDate.now())
@@ -173,7 +173,7 @@ public User execute(User user) {
 
 我们还可以在`Supplier`接口和`CompletableFuture`的支持下开发一系列任务:
 
-```
+```java
 public User execute(User user) {
     ExecutorService executorService = Executors.newCachedThreadPool();
     CompletableFuture<Integer> ageFut = CompletableFuture.supplyAsync(() -> Period.between(user.getBirthDate(), LocalDate.now())

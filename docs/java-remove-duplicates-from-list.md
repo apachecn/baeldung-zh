@@ -12,7 +12,7 @@
 
 我们可以使用标准的 Java 集合框架**通过集合**轻松地从列表中删除重复的元素:
 
-```
+```java
 public void 
   givenListContainsDuplicates_whenRemovingDuplicatesWithPlainJava_thenCorrect() {
     List<Integer> listWithDuplicates = Lists.newArrayList(5, 0, 3, 1, 2, 3, 0, 0);
@@ -30,7 +30,7 @@ public void
 
 如果我们需要保留顺序，我们可以使用`LinkedHashSet`来代替:
 
-```
+```java
 public void 
   givenListContainsDuplicates_whenRemovingDuplicatesPreservingOrderWithPlainJava_thenCorrect() {
     List<Integer> listWithDuplicates = Lists.newArrayList(5, 0, 3, 1, 2, 3, 0, 0);
@@ -60,7 +60,7 @@ Have a look at some quick ways to find an element in a list in Java[Read more](/
 
 我们也可以用番石榴做同样的事情:
 
-```
+```java
 public void 
   givenListContainsDuplicates_whenRemovingDuplicatesWithGuava_thenCorrect() {
     List<Integer> listWithDuplicates = Lists.newArrayList(5, 0, 3, 1, 2, 3, 0, 0);
@@ -78,7 +78,7 @@ public void
 
 如果我们使用`LinkedHashSet`实现，我们将保留初始顺序:
 
-```
+```java
 public void 
   givenListContainsDuplicates_whenRemovingDuplicatesPreservingOrderWithGuava_thenCorrect() {
     List<Integer> listWithDuplicates = Lists.newArrayList(5, 0, 3, 1, 2, 3, 0, 0);
@@ -96,7 +96,7 @@ public void
 
 此外，**对于有序流，不同元素的选择是稳定的**。这意味着，对于重复的元素，将保留遇到顺序中第一个出现的元素:
 
-```
+```java
 public void 
   givenListContainsDuplicates_whenRemovingDuplicatesWithJava8_thenCorrect() {
     List<Integer> listWithDuplicates = Lists.newArrayList(5, 0, 3, 1, 2, 3, 0, 0);

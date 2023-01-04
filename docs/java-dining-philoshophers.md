@@ -22,7 +22,7 @@
 
 最初的解决方案是让每个哲学家遵循以下协议:
 
-```
+```java
 while(true) { 
     // Initially, thinking about life, universe, and everything
     think();
@@ -46,7 +46,7 @@ while(true) {
 
 我们将每个哲学家建模为实现`Runnable`接口的类，这样我们就可以将它们作为单独的线程运行。每个`Philosopher`都可以使用左右两侧的两个叉子:
 
-```
+```java
 public class Philosopher implements Runnable {
 
     // The forks on either side of this Philosopher 
@@ -68,7 +68,7 @@ public class Philosopher implements Runnable {
 
 我们也有一个方法来指导`Philosopher`执行一个动作——吃饭、思考，或者拿起叉子准备吃饭:
 
-```
+```java
 public class Philosopher implements Runnable {
 
     // Member variables, standard constructor
@@ -91,7 +91,7 @@ public class Philosopher implements Runnable {
 
 为了实现这一点，我们使用`synchronized`关键字来获取 fork 对象的内部监视器，并防止其他线程也这样做。Java 中的关键字`synchronized`的指南可以在[这里](/web/20220628082340/https://www.baeldung.com/java-synchronized)找到。我们现在继续在`Philosopher`类中实现`run()`方法:
 
-```
+```java
 public class Philosopher implements Runnable {
 
    // Member variables, methods defined earlier
@@ -138,7 +138,7 @@ public class Philosopher implements Runnable {
 
 为了启动整个过程，我们编写了一个客户机，它创建 5 个`Philosophers`线程并启动它们:
 
-```
+```java
 public class DiningPhilosophers {
 
     public static void main(String[] args) throws Exception {
@@ -168,7 +168,7 @@ public class DiningPhilosophers {
 
 运行这段代码会产生类似如下的输出。您的输出很可能与下面给出的不同，主要是因为在不同的时间间隔调用了`sleep()`方法:
 
-```
+```java
 Philosopher 1 8038014601251: Thinking
 Philosopher 2 8038014828862: Thinking
 Philosopher 3 8038015066722: Thinking
@@ -194,7 +194,7 @@ Philosopher 5 8038111040317: Picked up left fork
 
 我们可以通过运行上面的代码几次来确认这一点，并检查一些时候，代码只是挂起。以下是演示上述问题的示例输出:
 
-```
+```java
 Philosopher 1 8487540546530: Thinking
 Philosopher 2 8487542012975: Thinking
 Philosopher 3 8487543057508: Thinking
@@ -217,7 +217,7 @@ Philosopher 2 8487631148853: Picked up left fork
 
 我们通过对代码进行相对较小的更改，在现有代码中实现了这一点:
 
-```
+```java
 public class DiningPhilosophers {
 
     public static void main(String[] args) throws Exception {
@@ -253,7 +253,7 @@ public class DiningPhilosophers {
 
 下面的输出显示了一种情况，其中所有的`Philosopher`都有机会思考和吃饭，而不会导致死锁:
 
-```
+```java
 Philosopher 1 88519839556188: Thinking
 Philosopher 2 88519840186495: Thinking
 Philosopher 3 88519840647695: Thinking

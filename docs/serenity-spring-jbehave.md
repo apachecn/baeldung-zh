@@ -12,7 +12,7 @@
 
 为了在我们的 Spring 项目中启用 Serenity，我们需要将`[serenity-core](https://web.archive.org/web/20220626204235/https://search.maven.org/classic/#artifactdetails%7Cnet.serenity-bdd%7Cserenity-core%7C1.4.0%7Cjar)`和`[serenity-spring](https://web.archive.org/web/20220626204235/https://search.maven.org/classic/#artifactdetails%7Cnet.serenity-bdd%7Cserenity-spring%7C1.4.0%7Cjar)`添加到`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>net.serenity-bdd</groupId>
     <artifactId>serenity-core</artifactId>
@@ -29,7 +29,7 @@
 
 我们还需要配置 [`serenity-maven-plugin`](https://web.archive.org/web/20220626204235/https://search.maven.org/classic/#artifactdetails%7Cnet.serenity-bdd.maven.plugins%7Cserenity-maven-plugin%7C1.4.0%7Cjar) ，这对生成 Serenity 测试报告很重要:
 
-```
+```java
 <plugin>
     <groupId>net.serenity-bdd.maven.plugins</groupId>
     <artifactId>serenity-maven-plugin</artifactId>
@@ -60,7 +60,7 @@
 
 假设我们有一个属性要注入到 beans 中:
 
-```
+```java
 <util:properties id="props">
     <prop key="adder">4</prop>
 </util:properties>
@@ -68,7 +68,7 @@
 
 现在让我们添加`SpringIntegrationMethodRule`来在我们的测试中启用值注入:
 
-```
+```java
 @RunWith(SerenityRunner.class)
 @ContextConfiguration(locations = "classpath:adder-beans.xml")
 public class AdderMethodRuleIntegrationTest {
@@ -94,7 +94,7 @@ public class AdderMethodRuleIntegrationTest {
 
 它还支持`spring test`的方法级注释。如果某些测试方法弄脏了测试上下文，我们可以在上面标记 [`@DirtiesContext`](https://web.archive.org/web/20220626204235/https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/annotation/DirtiesContext.html) :
 
-```
+```java
 @RunWith(SerenityRunner.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ContextConfiguration(classes = AdderService.class)
@@ -126,7 +126,7 @@ public class AdderMethodDirtiesContextIntegrationTest {
 
 在上面的例子中，当我们调用`adderServiceSteps.whenAccumulate()`时，`adderServiceSteps`中注入的`@Service`的基数字段将会改变:
 
-```
+```java
 @ContextConfiguration(classes = AdderService.class)
 public class AdderServiceSteps {
 
@@ -164,7 +164,7 @@ public class AdderServiceSteps {
 
 具体来说，我们将总和分配给基数:
 
-```
+```java
 @Service
 public class AdderService {
 
@@ -196,7 +196,7 @@ public class AdderService {
 
 为了解决这个问题，我们可以在当前的测试实例中注入`@Service`，并使服务成为`@Steps`的显式依赖:
 
-```
+```java
 @RunWith(SerenityRunner.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ContextConfiguration(classes = AdderService.class)
@@ -215,7 +215,7 @@ public class AdderMethodDirtiesContextDependencyWorkaroundIntegrationTest {
 }
 ```
 
-```
+```java
 public class AdderConstructorDependencySteps {
 
     private AdderService adderService;
@@ -230,7 +230,7 @@ public class AdderConstructorDependencySteps {
 
 或者，我们可以将条件初始化步骤放在`@Before`部分，以避免脏上下文。但是这种解决方案在一些复杂的情况下可能不可用。
 
-```
+```java
 @RunWith(SerenityRunner.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ContextConfiguration(classes = AdderService.class)
@@ -251,7 +251,7 @@ public class AdderMethodDirtiesContextInitWorkaroundIntegrationTest {
 
 要启用类级注释，我们应该使用`SpringIntegrationClassRule`。假设我们有以下测试类:每一个都污染了环境:
 
-```
+```java
 @RunWith(SerenityRunner.class)
 @ContextConfiguration(classes = AdderService.class)
 public static abstract class Base {
@@ -277,7 +277,7 @@ public static abstract class Base {
 }
 ```
 
-```
+```java
 @DirtiesContext(classMode = AFTER_CLASS)
 public static class DirtiesContextIntegrationTest extends Base {
 
@@ -291,7 +291,7 @@ public static class DirtiesContextIntegrationTest extends Base {
 }
 ```
 
-```
+```java
 @DirtiesContext(classMode = AFTER_CLASS)
 public static class AnotherDirtiesContextIntegrationTest extends Base {
 
@@ -311,7 +311,7 @@ public static class AnotherDirtiesContextIntegrationTest extends Base {
 
 有一个方便的类`SpringIntegrationSerenityRunner`可以自动添加上面的两个集成规则。我们可以用这个运行器运行上面的测试，以避免在我们的测试中指定方法或类测试规则:
 
-```
+```java
 @RunWith(SpringIntegrationSerenityRunner.class)
 @ContextConfiguration(locations = "classpath:adder-beans.xml")
 public class AdderSpringSerenityRunnerIntegrationTest {
@@ -337,7 +337,7 @@ public class AdderSpringSerenityRunnerIntegrationTest {
 
 我们需要将[放心的 spring-mock-mvc](https://web.archive.org/web/20220626204235/https://search.maven.org/classic/#artifactdetails%7Cio.rest-assured%7Cspring-mock-mvc%7C3.0.3%7Cjar) 依赖添加到`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>io.rest-assured</groupId>
     <artifactId>spring-mock-mvc</artifactId>
@@ -350,7 +350,7 @@ public class AdderSpringSerenityRunnerIntegrationTest {
 
 现在让我们测试以下控制器:
 
-```
+```java
 @RequestMapping(value = "/adder", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @RestController
 public class PlainAdderController {
@@ -371,7 +371,7 @@ public class PlainAdderController {
 
 我们可以像这样利用`RestAssuredMockMvc`的模拟 MVC 实用程序:
 
-```
+```java
 @RunWith(SerenityRunner.class)
 public class AdderMockMvcIntegrationTest {
 
@@ -393,7 +393,7 @@ public class AdderMockMvcIntegrationTest {
 
 那么剩下的部分就和我们怎么用`rest-assured`没什么区别了:
 
-```
+```java
 public class AdderRestSteps {
 
     private MockMvcResponse mockMvcResponse;
@@ -432,7 +432,7 @@ public class AdderRestSteps {
 
 Serenity 的 Spring 集成支持与 [JBehave](/web/20220626204235/https://www.baeldung.com/jbehave-rest-testing) 无缝协作。让我们将测试场景写成一个 JBehave 故事:
 
-```
+```java
 Scenario: A user can submit a number to adder and get the sum
 Given a number
 When I submit another number 5 to adder
@@ -441,7 +441,7 @@ Then I get a sum of the numbers
 
 我们可以在`@Service` 中实现逻辑，并通过 API 公开动作:
 
-```
+```java
 @RequestMapping(value = "/adder", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @RestController
 public class AdderController {
@@ -466,7 +466,7 @@ public class AdderController {
 
 现在我们可以在`RestAssuredMockMvc`的帮助下构建 Serenity-JBehave 测试，如下所示:
 
-```
+```java
 @ContextConfiguration(classes = { 
   AdderController.class, AdderService.class })
 public class AdderIntegrationTest extends SerenityStory {
@@ -480,7 +480,7 @@ public class AdderIntegrationTest extends SerenityStory {
 }
 ```
 
-```
+```java
 public class AdderStory {
 
     @Steps AdderRestSteps restSteps;

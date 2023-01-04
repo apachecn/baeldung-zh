@@ -10,7 +10,7 @@
 
 让我们从一个简单的 web 应用程序开始。它可以通过简单的 REST 调用来问候、更改问候并将其重置回默认值。除了主类，我们使用一个简单的`RestController`来提供功能:
 
-```
+```java
 @RestController
 @RequestMapping("/hello")
 public class WebController {
@@ -32,7 +32,7 @@ public class WebController {
 
 对于斯波克本身和 T2 弹簧支架，我们需要两个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.spockframework</groupId>
     <artifactId>spock-core</artifactId>
@@ -54,7 +54,7 @@ public class WebController {
 
 为了使用 [Spring Boot 测试](https://web.archive.org/web/20220628064519/https://search.maven.org/classic/#search%7Cga%7C1%7C%20(g%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-test%22))的测试工具，我们需要以下依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-test</artifactId>
@@ -67,7 +67,7 @@ public class WebController {
 
 由于 Spock 是基于 [Groovy](/web/20220628064519/https://www.baeldung.com/groovy-language) ，**的，我们必须添加和配置`gmavenplus`-插件以及**，以便能够在我们的测试中使用这种语言:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.gmavenplus</groupId>
     <artifactId>gmavenplus-plugin</artifactId>
@@ -88,7 +88,7 @@ public class WebController {
 
 一个简单的测试是**检查 Spring 应用程序上下文中的所有 Beans 是否都已创建**:
 
-```
+```java
 @SpringBootTest
 class LoadContextTest extends Specification {
 
@@ -110,7 +110,7 @@ class LoadContextTest extends Specification {
 
 同样，我们可以测试`WebController`的行为:
 
-```
+```java
 @AutoConfigureMockMvc
 @WebMvcTest
 class WebControllerTest extends Specification {

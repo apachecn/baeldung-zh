@@ -34,7 +34,7 @@
 
 首先，让我们定义我们的上下文，这将是一个`Package`类:
 
-```
+```java
 public class Package {
 
     private PackageState state = new OrderedState();
@@ -61,7 +61,7 @@ public class Package {
 
 接下来，我们将有`PackageState`，它有三个带有以下签名的方法:
 
-```
+```java
 public interface PackageState {
 
     void next(Package pkg);
@@ -74,7 +74,7 @@ public interface PackageState {
 
 第一个具体状态将是`OrderedState`:
 
-```
+```java
 public class OrderedState implements PackageState {
 
     @Override
@@ -98,7 +98,7 @@ public class OrderedState implements PackageState {
 
 让我们来看看`DeliveredState`类:
 
-```
+```java
 public class DeliveredState implements PackageState {
 
     @Override
@@ -122,7 +122,7 @@ public class DeliveredState implements PackageState {
 
 最后的状态是`ReceivedState`:
 
-```
+```java
 public class ReceivedState implements PackageState {
 
     @Override
@@ -145,7 +145,7 @@ public class ReceivedState implements PackageState {
 
 让我们看看实现是如何工作的。首先，让我们验证设置转换是否按预期工作:
 
-```
+```java
 @Test
 public void givenNewPackage_whenPackageReceived_thenStateReceived() {
     Package pkg = new Package();
@@ -162,7 +162,7 @@ public void givenNewPackage_whenPackageReceived_thenStateReceived() {
 
 然后，快速检查我们的包是否能以其状态返回:
 
-```
+```java
 @Test
 public void givenDeliveredPackage_whenPrevState_thenStateOrdered() {
     Package pkg = new Package();
@@ -175,7 +175,7 @@ public void givenDeliveredPackage_whenPrevState_thenStateOrdered() {
 
 之后，让我们验证更改状态，看看`printStatus()`方法的实现如何在运行时更改其实现:
 
-```
+```java
 public class StateDemo {
 
     public static void main(String[] args) {
@@ -197,7 +197,7 @@ public class StateDemo {
 
 这将为我们提供以下输出:
 
-```
+```java
 Package ordered, not delivered to the office yet.
 Package delivered to post office, not received yet.
 Package was received by client.

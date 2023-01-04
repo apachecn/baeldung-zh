@@ -18,7 +18,7 @@
 
 让我们从一个简单的项目结构开始:
 
-```
+```java
 source-sets 
   ├── src 
   │    ├── main 
@@ -33,7 +33,7 @@ source-sets
 
 现在让我们来看看`build.gradle`:
 
-```
+```java
 apply plugin : "java"
 description = "Source Sets example"
 test {
@@ -51,7 +51,7 @@ Java 插件假设 **`src/main/java` 和`src/test/java`为默认源目录** `. `
 
 让我们设计一个简单的实用程序任务:
 
-```
+```java
 task printSourceSetInformation(){
     doLast{
         sourceSets.each { srcSet ->
@@ -68,7 +68,7 @@ task printSourceSetInformation(){
 
 让我们运行它，看看我们得到了什么:
 
-```
+```java
 $ ./gradlew printSourceSetInformation
 
 > Task :source-sets:printSourceSetInformation
@@ -92,7 +92,7 @@ Java 插件也自动为我们创建一些默认的[配置](https://web.archive.o
 
 我们用它们来声明`build.gradle`中的依赖关系:
 
-```
+```java
 dependencies { 
     implementation('org.apache.httpcomponents:httpclient:4.5.12') 
     testImplementation('junit:junit:4.12') 
@@ -105,7 +105,7 @@ dependencies {
 
 让我们改进我们的助手任务，看看这是怎么回事:
 
-```
+```java
 task printSourceSetInformation(){
 
     doLast{
@@ -125,7 +125,7 @@ task printSourceSetInformation(){
 
 让我们来看看输出:
 
-```
+```java
 [main]
 // same output as before
 -->Compile classpath:
@@ -151,7 +151,7 @@ task printSourceSetInformation(){
 
 接下来，让我们创建我们的单元测试:
 
-```
+```java
 public class SourceSetsTest {
 
     @Test
@@ -169,7 +169,7 @@ public class SourceSetsTest {
 
 接下来，让我们从 Gradle 运行这个:
 
-```
+```java
 ./gradlew clean test
 
 > Task :source-sets:test
@@ -187,7 +187,7 @@ com.baeldung.test.SourceSetsTest > whenRunThenSuccess PASSED
 
 让我们为集成测试创建一个单独的源目录:
 
-```
+```java
 source-sets 
   ├── src 
   │    └── main 
@@ -203,7 +203,7 @@ source-sets
 
 接下来，让我们使用`sourceSets`构造在我们的`build.gradle` 中对其进行**配置:**
 
-```
+```java
 sourceSets {
     itest {
         java {
@@ -221,7 +221,7 @@ dependencies {
 
 我们可以**定制`srcDirs`属性**包含哪些目录:
 
-```
+```java
 sourceSets{
     itest {
         java {
@@ -233,7 +233,7 @@ sourceSets{
 
 还记得我们一开始的助手任务吗？让我们重新运行它，看看它打印什么:
 
-```
+```java
 $ ./gradlew printSourceSetInformation
 
 > Task :source-sets:printSourceSetInformation
@@ -257,7 +257,7 @@ $ ./gradlew printSourceSetInformation
 
 **让我们使用`itestImplementation`来分配一个新的依赖关系** :
 
-```
+```java
 dependencies {
     implementation('org.apache.httpcomponents:httpclient:4.5.12')
     testImplementation('junit:junit:4.12')
@@ -269,7 +269,7 @@ dependencies {
 
 让我们修改之前的测试，并将其添加为集成测试:
 
-```
+```java
 public class SourceSetsItest {
 
     @Test
@@ -287,7 +287,7 @@ public class SourceSetsItest {
 
 为了能够**运行它**，我们需要**定义一个使用编译输出**的定制测试任务:
 
-```
+```java
 // source sets declarations
 
 // dependencies declarations 
@@ -306,7 +306,7 @@ task itest(type: Test) {
 
 让我们看看运行测试会发生什么:
 
-```
+```java
 $ ./gradlew clean itest
 
 // some compilation issues
@@ -326,7 +326,7 @@ Execution failed for task ':source-sets:compileItestJava'.
 
 让我们在 Gradle 配置中解决这个问题:
 
-```
+```java
 sourceSets{
     itest {
         compileClasspath += sourceSets.main.output
@@ -345,7 +345,7 @@ configurations {
 
 现在让我们重新运行我们的集成测试:
 
-```
+```java
 $ ./gradlew clean itest
 
 > Task :source-sets:itest
@@ -365,7 +365,7 @@ com.baeldung.itest.SourceSetsItest > givenImmutableList_whenRun_ThenSuccess PASS
 
 然而，如果我们从 Gradle 运行集成测试，我们没有得到错误:
 
-```
+```java
 $ ./gradlew clean itest
 
 > Task :source-sets:itest
@@ -379,7 +379,7 @@ com.baeldung.itest.SourceSetsItest > givenImmutableList_whenRun_ThenSuccess PASS
 
 让我们在`build.gradle` 中解决这个问题:
 
-```
+```java
 apply plugin: "eclipse"
 
 // previous declarations

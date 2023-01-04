@@ -12,7 +12,7 @@
 
 我们实现该功能所需的所有类都打包在一个包中:
 
-```
+```java
 import java.nio.file.*;
 ```
 
@@ -22,7 +22,7 @@ import java.nio.file.*;
 
 `FileVisitor`接口的典型实现如下所示:
 
-```
+```java
 public class FileVisitorImpl implements FileVisitor<Path> {
 
     @Override
@@ -66,7 +66,7 @@ public class FileVisitorImpl implements FileVisitor<Path> {
 
 我们只需调用`Files`类的静态`walkFileTree` API，并向其传递一个代表遍历起点的`Path`类的实例，然后传递一个`FileVisitor`类的实例:
 
-```
+```java
 Path startingDir = Paths.get("pathToDir");
 FileVisitorImpl visitor = new FileVisitorImpl();
 Files.walkFileTree(startingDir, visitor);
@@ -82,7 +82,7 @@ Files.walkFileTree(startingDir, visitor);
 
 我们将这个类称为`FileSearchExample.java`:
 
-```
+```java
 public class FileSearchExample implements FileVisitor<Path> {
     private String fileName;
     private Path startDir;
@@ -99,7 +99,7 @@ public class FileSearchExample implements FileVisitor<Path> {
 
 让我们从实现`preVisitDirectory` API 开始:
 
-```
+```java
 @Override
 public FileVisitResult preVisitDirectory(
   Path dir, BasicFileAttributes attrs) {
@@ -115,7 +115,7 @@ public FileVisitResult preVisitDirectory(
 
 接下来，我们将实现`visitFile` API。这是主要活动发生的地方。每次遇到文件时都会调用这个 API。我们利用这一点来检查文件属性，并与我们的标准进行比较，然后返回适当的结果:
 
-```
+```java
 @Override
 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
     String fileName = file.getFileName().toString();
@@ -135,7 +135,7 @@ public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
 
 接下来，我们将实现`visitFileFailed` API。当 JVM 无法访问某个特定文件时，就会调用这个 API。可能它已被另一个应用程序锁定，或者可能只是权限问题:
 
-```
+```java
 @Override
 public FileVisitResult visitFileFailed(Path file, IOException exc) {
     System.out.println("Failed to access file: " + file.toString());
@@ -149,7 +149,7 @@ public FileVisitResult visitFileFailed(Path file, IOException exc) {
 
 最后，我们将实现`postVisitDirectory` API。每次完全遍历目录时，都会调用此 API:
 
-```
+```java
 @Override
 public FileVisitResult postVisitDirectory(Path dir, IOException exc){
     boolean finishedSearch = Files.isSameFile(dir, START_DIR);
@@ -167,7 +167,7 @@ public FileVisitResult postVisitDirectory(Path dir, IOException exc){
 
 我们现在可以添加我们的主方法来执行`FileSearchExample`应用程序:
 
-```
+```java
 public static void main(String[] args) {
     Path startingDir = Paths.get("C:/Users/user/Desktop");
     String fileToSearch = "hibernate-guide.txt"

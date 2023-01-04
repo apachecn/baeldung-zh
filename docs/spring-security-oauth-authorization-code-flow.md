@@ -12,7 +12,7 @@
 
 在我们到达前端之前，我们需要在我们的授权服务器配置中添加我们的客户端详细信息:
 
-```
+```java
 @Configuration
 @EnableAuthorizationServer
 public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
@@ -40,7 +40,7 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
 
 由于我们将在这里的应用程序中使用 Angular 6，我们需要在我们的 Spring Boot 应用程序中使用`frontend-maven-plugin`插件:
 
-```
+```java
 <plugin>
     <groupId>com.github.eirslett</groupId>
     <artifactId>frontend-maven-plugin</artifactId>
@@ -91,7 +91,7 @@ ng new authCode
 
 下面是我们简单的`AppModule`:
 
-```
+```java
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
@@ -124,7 +124,7 @@ export class AppModule { }
 
 让我们从我们的`AppComponent`开始，它是根组件:
 
-```
+```java
 import {Component} from '@angular/core';
 
 @Component({
@@ -146,7 +146,7 @@ export class AppComponent {}
 
 接下来是我们的主要组件，`HomeComponent`:
 
-```
+```java
 import {Component} from '@angular/core';
 import {AppService} from './app.service'
 
@@ -198,7 +198,7 @@ export class HomeComponent {
 
 我们的第三个也是最后一个组件是`FooComponent`；这将显示从资源服务器获得的`Foo`资源:
 
-```
+```java
 import { Component } from '@angular/core';
 import {AppService, Foo} from './app.service'
 
@@ -238,7 +238,7 @@ export class FooComponent {
 
 现在，让我们来看看`AppService`:
 
-```
+```java
 import {Injectable} from '@angular/core';
 import { Cookie } from 'ng2-cookies';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -317,19 +317,19 @@ export class AppService {
 
 我们需要首先构建我们的应用程序:
 
-```
+```java
 mvn clean install
 ```
 
 然后将目录更改为 src/main/resources:
 
-```
+```java
 cd src/main/resources
 ```
 
 然后在端口 8089 上运行我们的应用程序:
 
-```
+```java
 npm start
 ```
 

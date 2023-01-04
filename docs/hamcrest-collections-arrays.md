@@ -10,7 +10,7 @@
 
 首先，让我们做一个快速的静态导入来涵盖我们接下来要使用的大多数实用 API:
 
-```
+```java
 import static org.hamcrest.Matchers.*;
 ```
 
@@ -32,7 +32,7 @@ In this very practical tutorial, we focus on using the Hamcrest API and on writi
 
 **检查单个元素是否在集合中**
 
-```
+```java
 List<String> collection = Lists.newArrayList("ab", "cd", "ef");
 assertThat(collection, hasItem("cd"));
 assertThat(collection, not(hasItem("zz")));
@@ -40,7 +40,7 @@ assertThat(collection, not(hasItem("zz")));
 
 **检查集合中是否有多个元素**
 
-```
+```java
 List<String> collection = Lists.newArrayList("ab", "cd", "ef");
 assertThat(collection, hasItems("cd", "ef"));
 ```
@@ -49,63 +49,63 @@ assertThat(collection, hasItems("cd", "ef"));
 
 **–有严格的顺序**
 
-```
+```java
 List<String> collection = Lists.newArrayList("ab", "cd", "ef");
 assertThat(collection, contains("ab", "cd", "ef"));
 ```
 
 **–任意顺序**
 
-```
+```java
 List<String> collection = Lists.newArrayList("ab", "cd", "ef");
 assertThat(collection, containsInAnyOrder("cd", "ab", "ef"));
 ```
 
 **检查集合是否为空**
 
-```
+```java
 List<String> collection = Lists.newArrayList();
 assertThat(collection, empty());
 ```
 
 **检查数组是否为空**
 
-```
+```java
 String[] array = new String[] { "ab" };
 assertThat(array, not(emptyArray()));
 ```
 
 **检查地图是否为空**
 
-```
+```java
 Map<String, String> collection = Maps.newHashMap();
 assertThat(collection, equalTo(Collections.EMPTY_MAP));
 ```
 
 **检查 Iterable 是否为空**
 
-```
+```java
 Iterable<String> collection = Lists.newArrayList();
 assertThat(collection, emptyIterable());
 ```
 
 **检查集合大小**
 
-```
+```java
 List<String> collection = Lists.newArrayList("ab", "cd", "ef");
 assertThat(collection, hasSize(3));
 ```
 
 **检查可迭代的大小**
 
-```
+```java
 Iterable<String> collection = Lists.newArrayList("ab", "cd", "ef");
 assertThat(collection, Matchers.<String> iterableWithSize(3));
 ```
 
 **检查每一项的情况**
 
-```
+```java
 List<Integer> collection = Lists.newArrayList(15, 20, 25, 30);
 assertThat(collection, everyItem(greaterThan(10)));
 ```

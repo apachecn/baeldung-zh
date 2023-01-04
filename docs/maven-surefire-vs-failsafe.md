@@ -16,7 +16,7 @@
 
 项目 POM 默认包含这个插件，但是我们也可以显式地配置它:
 
-```
+```java
 <build>
     <pluginManagement>
         <plugins>
@@ -33,7 +33,7 @@
 
 该插件绑定到默认[生命周期](/web/20220628051932/https://www.baeldung.com/maven#introduction-8)的`test`阶段。因此，让我们用以下命令执行它:
 
-```
+```java
 mvn clean test
 ```
 
@@ -51,7 +51,7 @@ Maven 为此提供了另一个插件。
 
 首先，让我们在项目 POM 中对此进行配置:
 
-```
+```java
 <plugin>
     <artifactId>maven-failsafe-plugin</artifactId>
     <version>3.0.0-M5</version>
@@ -71,7 +71,7 @@ Maven 为此提供了另一个插件。
 
 现在，让我们从命令行执行`verify`阶段:
 
-```
+```java
 mvn clean verify
 ```
 
@@ -85,7 +85,7 @@ mvn clean verify
 
 首先，让我们将 Jetty 插件添加到 POM 中:
 
-```
+```java
 <plugin>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-maven-plugin</artifactId>
@@ -114,7 +114,7 @@ mvn clean verify
 
 现在，让我们再次执行集成测试，并查看控制台输出:
 
-```
+```java
 ....
 [INFO] <<< jetty-maven-plugin:9.4.11.v20180605:start (start-jetty) 
   < validate @ maven-integration-test <<<

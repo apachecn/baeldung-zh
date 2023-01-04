@@ -26,7 +26,7 @@
 
 我们首先将下面几行添加到我们的`web.xml**:**`
 
-```
+```java
 <error-page>
     <location>/errors</location>
 </error-page>
@@ -42,7 +42,7 @@
 
 继续，我们现在创建我们的`ErrorController`。我们创建一个单一的统一方法来拦截错误并显示错误页面:
 
-```
+```java
 @Controller
 public class ErrorController {
 
@@ -86,7 +86,7 @@ public class ErrorController {
 
 出于演示的目的，我们将保持我们的错误页面非常简单和紧凑。该页面将只包含一条显示在白色屏幕上的消息。创建一个名为`errorPage.jsp :`的`jsp` 文件
 
-```
+```java
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page session="false"%>
 <html>
@@ -107,7 +107,7 @@ public class ErrorController {
 
 让我们看看当一个处理程序方法抛出一个`NullPointerException.` 时会发生什么
 
-```
+```java
 @RequestMapping(value = "500Error", method = RequestMethod.GET)
 public void throwRuntimeException() {
     throw new NullPointerException("Throwing a null pointer exception");

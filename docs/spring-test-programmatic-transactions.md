@@ -18,7 +18,7 @@ Spring 在整个[应用代码](/web/20221128051929/https://www.baeldung.com/tran
 
 让我们考虑一个标准的测试类——注释为事务性的:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { HibernateConf.class })
 @Transactional
@@ -43,13 +43,13 @@ public class HibernateBootstrapIntegrationTest { ... }
 
 因此，我们可能希望检查当前是否有活动的事务:
 
-```
+```java
 assertTrue(TestTransaction.isActive());
 ```
 
 或者，我们可能有兴趣检查当前事务是否被标记为回滚:
 
-```
+```java
 assertTrue(TestTransaction.isFlaggedForRollback());
 ```
 
@@ -59,14 +59,14 @@ assertTrue(TestTransaction.isFlaggedForRollback());
 
 我们可以通过编程方式更改策略，在关闭事务之前提交或回滚事务:
 
-```
+```java
 TestTransaction.flagForCommit();
 TestTransaction.flagForRollback();
 ```
 
 通常，测试中的事务在开始时会被标记为回滚。然而，如果方法有一个`@Commit` 注释，它们开始被标记为提交:
 
-```
+```java
 @Test
 @Commit
 public void testFlagForCommit() {
@@ -80,13 +80,13 @@ public void testFlagForCommit() {
 
 要提交或回滚事务，我们要么让方法退出，要么显式结束它:
 
-```
+```java
 TestTransaction.end();
 ```
 
 如果以后我们想再次与数据库交互，我们必须启动一个新的事务:
 
-```
+```java
 TestTransaction.start();
 ```
 
@@ -102,7 +102,7 @@ TestTransaction.start();
 
 让我们直接看代码:
 
-```
+```java
 TransactionContext transactionContext
   = TransactionContextHolder.getCurrentTransactionContext();
 ```

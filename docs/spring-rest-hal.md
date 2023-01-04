@@ -40,7 +40,7 @@ HAL 浏览器是由开发 HAL 的同一个人创建的，**提供了一个浏览
 
 首先，[基于 Maven 的项目的依赖关系](https://web.archive.org/web/20220630011921/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.data%22%20AND%20a%3A%22spring-data-rest-hal-browser%22):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-rest-hal-explorer</artifactId>
@@ -50,7 +50,7 @@ HAL 浏览器是由开发 HAL 的同一个人创建的，**提供了一个浏览
 
 如果您使用 Gradle 进行构建，您可以将这一行添加到您的`build.gradle `文件中:
 
-```
+```java
 compile group: 'org.springframework.data', name: 'spring-data-rest-hal-explorer', version: '3.4.1.RELEASE'
 ```
 
@@ -62,7 +62,7 @@ compile group: 'org.springframework.data', name: 'spring-data-rest-hal-explorer'
 
 这里，我们定义了一个简单的 book 实体，它包含适当的注释，这样我们就可以用 Hibernate 持久化数据:
 
-```
+```java
 @Entity
 public class Book {
 
@@ -94,7 +94,7 @@ public class Book {
 
 这个类**提供了简单的 CRUD 命令，以及开箱即用的分页和排序功能**:
 
-```
+```java
 @Repository
 public interface BookRepository extends PagingAndSortingRepository<Book, Long> {
 
@@ -141,7 +141,7 @@ HAL 浏览器分为两部分——浏览器和检查员。我们将分解并分�
 
 这些**链接由相邻部分的 HAL** 生成:
 
-```
+```java
 "_links": {
     "first": {
       "href": "http://localhost:8080/books?page=0&size;=20"
@@ -167,7 +167,7 @@ HAL 浏览器分为两部分——浏览器和检查员。我们将分解并分�
 
 如果我们转到搜索端点，我们还可以查看我们使用`PagingAndSortingRepository:`创建的定制端点
 
-```
+```java
 {
   "_links": {
     "title-contains": {

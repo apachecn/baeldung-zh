@@ -47,7 +47,7 @@ Spring Boot 是一个固执己见的框架。尽管如此，我们通常会在�
 
 让我们看一个`bootstrap.properties`文件的例子:
 
-```
+```java
 spring.application.name=config-client
 spring.profiles.active=development
 spring.cloud.config.uri=http://localhost:8888

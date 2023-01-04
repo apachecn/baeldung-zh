@@ -17,7 +17,7 @@
 
 现在，让我们看看如何使用这些参数来获得集群中所有可用 pod 的列表，方法如下:
 
-```
+```java
 ApiClient client = Config.defaultClient();
 CoreV1Api api = new CoreV1Api(client);
 String continuationToken = null;
@@ -87,7 +87,7 @@ do {
 
 可以想象，在任何地方实现回调都需要大量的样板代码。为了避免这种情况，我们将使用一个[调用助手](https://web.archive.org/web/20220628055841/https://github.com/eugenp/tutorials/blob/master/kubernetes/k8s-intro/src/main/java/com/baeldung/kubernetes/intro/AsyncHelper.java)来稍微简化这个任务:
 
-```
+```java
 // Start async call
 CompletableFuture<V1NodeList> p = AsyncHelper.doAsync(api,(capi,cb) ->
   capi.listNodeAsync(null, null, null, null, null, null, null, null, 10, false, cb)

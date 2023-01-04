@@ -28,7 +28,7 @@ In this article, we explore new Stream collectors that were introduced in JDK 9[
 
 下面是我们如何定义我们的`Book`类:
 
-```
+```java
 class Book {
     private String name;
     private int releaseYear;
@@ -40,7 +40,7 @@ class Book {
 
 我们将创建一个图书列表来验证我们的代码:
 
-```
+```java
 List<Book> bookList = new ArrayList<>();
 bookList.add(new Book("The Fellowship of the Ring", 1954, "0395489318"));
 bookList.add(new Book("The Two Towers", 1954, "0345339711"));
@@ -49,14 +49,14 @@ bookList.add(new Book("The Return of the King", 1955, "0618129111"));
 
 对于这个场景，我们将使用下面的`toMap()`方法重载:
 
-```
+```java
 Collector<T, ?, Map<K,U>> toMap(Function<? super T, ? extends K> keyMapper,
   Function<? super T, ? extends U> valueMapper)
 ```
 
 **使用`toMap`，我们可以指示如何为地图**获取键和值的策略:
 
-```
+```java
 public Map<String, String> listToMap(List<Book> books) {
     return books.stream().collect(Collectors.toMap(Book::getIsbn, Book::getName));
 }
@@ -64,7 +64,7 @@ public Map<String, String> listToMap(List<Book> books) {
 
 我们可以很容易地验证它的工作原理:
 
-```
+```java
 @Test
 public void whenConvertFromListToMap() {
     assertTrue(convertToMap.listToMap(bookList).size() == 3);
@@ -77,7 +77,7 @@ public void whenConvertFromListToMap() {
 
 让我们想象一下，我们用每个`Book`的发布年份作为`Map`的关键字:
 
-```
+```java
 public Map<Integer, Book> listToMapWithDupKeyError(List<Book> books) {
     return books.stream().collect(
       Collectors.toMap(Book::getReleaseYear, Function.identity()));
@@ -86,7 +86,7 @@ public Map<Integer, Book> listToMapWithDupKeyError(List<Book> books) {
 
 根据我们之前的书单，我们会看到一个`IllegalStateException`:
 
-```
+```java
 @Test(expected = IllegalStateException.class)
 public void whenMapHasDuplicateKey_without_merge_function_then_runtime_exception() {
     convertToMap.listToMapWithDupKeyError(bookList);
@@ -95,7 +95,7 @@ public void whenMapHasDuplicateKey_without_merge_function_then_runtime_exception
 
 为了解决这个问题，我们需要使用一个不同的方法和一个额外的参数`mergeFunction`:
 
-```
+```java
 Collector<T, ?, M> toMap(Function<? super T, ? extends K> keyMapper,
   Function<? super T, ? extends U> valueMapper,
   BinaryOperator<U> mergeFunction) 
@@ -103,7 +103,7 @@ Collector<T, ?, M> toMap(Function<? super T, ? extends K> keyMapper,
 
 让我们引入一个合并函数，它表示在发生冲突的情况下，我们保留现有的条目:
 
-```
+```java
 public Map<Integer, Book> listToMapWithDupKey(List<Book> books) {
     return books.stream().collect(Collectors.toMap(Book::getReleaseYear, Function.identity(),
       (existing, replacement) -> existing));
@@ -112,7 +112,7 @@ public Map<Integer, Book> listToMapWithDupKey(List<Book> books) {
 
 换句话说，我们得到了先赢行为:
 
-```
+```java
 @Test
 public void whenMapHasDuplicateKeyThenMergeFunctionHandlesCollision() {
     Map<Integer, Book> booksByYear = convertToMap.listToMapWithDupKey(bookList);
@@ -127,7 +127,7 @@ public void whenMapHasDuplicateKeyThenMergeFunctionHandlesCollision() {
 
 **但是我们可以返回不同的`Map`实现**:
 
-```
+```java
 Collector<T, ?, M> toMap(Function<? super T, ? extends K> keyMapper,
   Function<? super T, ? extends U> valueMapper,
   BinaryOperator<U> mergeFunction,
@@ -140,7 +140,7 @@ Collector<T, ?, M> toMap(Function<? super T, ? extends K> keyMapper,
 
 让我们举同一个例子，添加一个`mapSupplier`函数来返回一个`ConcurrentHashMap`:
 
-```
+```java
 public Map<Integer, Book> listToConcurrentMap(List<Book> books) {
     return books.stream().collect(Collectors.toMap(Book::getReleaseYear, Function.identity(),
       (o1, o2) -> o1, ConcurrentHashMap::new));
@@ -149,7 +149,7 @@ public Map<Integer, Book> listToConcurrentMap(List<Book> books) {
 
 我们将继续测试我们的代码:
 
-```
+```java
 @Test
 public void whenCreateConcurrentHashMap() {
     assertTrue(convertToMap.listToConcurrentMap(bookList) instanceof ConcurrentHashMap);
@@ -162,7 +162,7 @@ public void whenCreateConcurrentHashMap() {
 
 因为默认情况下,`TreeMap`是根据其键的自然顺序进行排序的，所以我们不必自己显式地对`books`进行排序:
 
-```
+```java
 public TreeMap<String, Book> listToSortedMap(List<Book> books) {
     return books.stream() 
       .collect(
@@ -172,7 +172,7 @@ public TreeMap<String, Book> listToSortedMap(List<Book> books) {
 
 所以在我们的例子中，返回的`TreeMap`将按照书名的字母顺序排序:
 
-```
+```java
 @Test
 public void whenMapisSorted() {
     assertTrue(convertToMap.listToSortedMap(bookList).firstKey().equals(

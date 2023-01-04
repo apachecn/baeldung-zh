@@ -22,7 +22,7 @@
 
 当使用 Spring Cloud 库时，设置一个依赖管理配置来为我们处理依赖关系总是一个不错的选择:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -38,7 +38,7 @@
 
 现在，我们可以添加我们的 Spring Cloud 库，而无需指定我们正在使用的实际版本:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-gateway</artifactId>
@@ -57,7 +57,7 @@
 
 为了实现这一点，我们将使用`application properties`来配置这条路由:
 
-```
+```java
 spring:
   cloud:
     gateway:
@@ -72,7 +72,7 @@ spring:
 
 此外，为了能够正确跟踪网关进程，我们还将启用一些日志:
 
-```
+```java
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
@@ -93,7 +93,7 @@ logging:
 
 **要创建一个定制的全局过滤器，我们所要做的就是实现 Spring Cloud Gateway `GlobalFilter `接口，并将其作为 bean 添加到上下文中:**
 
-```
+```java
 @Component
 public class LoggingGlobalPreFilter implements GlobalFilter {
 
@@ -120,7 +120,7 @@ public class LoggingGlobalPreFilter implements GlobalFilter {
 
 例如，我们可以在配置类中定义“后”过滤器:
 
-```
+```java
 @Configuration
 public class LoggingGlobalFiltersConfigurations {
 
@@ -144,7 +144,7 @@ public class LoggingGlobalFiltersConfigurations {
 
 现在，让我们通过调用网关服务中的`/service/resource` URL 来尝试一下，并检查日志控制台:
 
-```
+```java
 DEBUG --- o.s.c.g.h.RoutePredicateHandlerMapping:
   Route matched: service_route
 DEBUG --- o.s.c.g.h.RoutePredicateHandlerMapping:
@@ -169,7 +169,7 @@ DEBUG --- r.n.http.client.HttpClientOperations:
 
 自然，我们可以在一个过滤器中结合“前置”和“后置”逻辑:
 
-```
+```java
 @Component
 public class FirstPreLastPostGlobalFilter
   implements GlobalFilter, Ordered {
@@ -208,7 +208,7 @@ public class FirstPreLastPostGlobalFilter
 
 为了实现一个`GatewayFilter`，我们必须实现`GatewayFilterFactory` 接口。Spring Cloud Gateway 还提供了一个抽象类来简化这个过程，这个`AbstractGatewayFilterFactory `类:
 
-```
+```java
 @Component
 public class LoggingGatewayFilterFactory extends 
   AbstractGatewayFilterFactory<LoggingGatewayFilterFactory.Config> {
@@ -235,7 +235,7 @@ public class LoggingGatewayFilterFactory extends
 
 例如，在这种情况下，我们可以在配置中定义三个基本字段:
 
-```
+```java
 public static class Config {
     private String baseMessage;
     private boolean preLogger;
@@ -253,7 +253,7 @@ public static class Config {
 
 现在我们可以使用这些配置来检索一个`GatewayFilter`实例，这个实例也可以用 lambda 函数来表示:
 
-```
+```java
 @Override
 public GatewayFilter apply(Config config) {
     return (exchange, chain) -> {
@@ -278,7 +278,7 @@ public GatewayFilter apply(Config config) {
 
 现在，我们可以轻松地将过滤器注册到之前在应用程序属性中定义的路由:
 
-```
+```java
 ...
 filters:
 - RewritePath=/service(?<segment>/?.*), $\{segment}
@@ -293,7 +293,7 @@ filters:
 
 如果我们想使用紧凑符号来配置滤波器，我们可以这样做:
 
-```
+```java
 filters:
 - RewritePath=/service(?<segment>/?.*), $\{segment}
 - Logging=My Custom Message, true, true
@@ -301,7 +301,7 @@ filters:
 
 我们需要对我们的工厂进行更多的调整。简而言之，我们必须覆盖`shortcutFieldOrder` 方法，以指示快捷方式属性将使用的顺序和多少个参数:
 
-```
+```java
 @Override
 public List<String> shortcutFieldOrder() {
     return Arrays.asList("baseMessage",
@@ -314,7 +314,7 @@ public List<String> shortcutFieldOrder() {
 
 **如果我们想要配置过滤器在过滤器链中的位置，我们可以从`AbstractGatewayFilterFactory#apply `方法中检索一个`OrderedGatewayFilter` 实例**，而不是普通的 lambda 表达式:
 
-```
+```java
 @Override
 public GatewayFilter apply(Config config) {
     return new OrderedGatewayFilter((exchange, chain) -> {
@@ -327,7 +327,7 @@ public GatewayFilter apply(Config config) {
 
 此外，我们也可以通过编程来注册我们的过滤器。让我们重新定义我们一直使用的路线，这次通过设置一个`RouteLocator ` bean:
 
-```
+```java
 @Bean
 public RouteLocator routes(
   RouteLocatorBuilder builder,
@@ -366,7 +366,7 @@ public RouteLocator routes(
 
 让我们将网关过滤器配置为“预”过滤器，然后:
 
-```
+```java
 (exchange, chain) -> {
     if (exchange.getRequest()
       .getHeaders()
@@ -382,7 +382,7 @@ public RouteLocator routes(
 
 在这里，我们关注逻辑的第一个方面。我们可以看到检查`ServerHttpRequest `对象真的很简单。在这一点上，我们只访问了它的头，但是正如我们接下来将看到的，我们可以同样容易地获得其他属性:
 
-```
+```java
 String queryParamLocale = exchange.getRequest()
   .getQueryParams()
   .getFirst("locale");
@@ -398,7 +398,7 @@ Locale requestLocale = Optional.ofNullable(queryParamLocale)
 
 修改头很简单，因为我们可以获得对`HttpHeaders` map 对象的引用:
 
-```
+```java
 exchange.getRequest()
   .mutate()
   .headers(h -> h.setAcceptLanguageAsLocales(
@@ -409,7 +409,7 @@ exchange.getRequest()
 
 我们必须从原始的`exchange `对象获得一个新的`ServerWebExchange `实例，修改原始的`ServerHttpRequest` 实例:
 
-```
+```java
 ServerWebExchange modifiedExchange = exchange.mutate()
   // Here we'll modify the original request:
   .request(originalRequest -> originalRequest)
@@ -420,7 +420,7 @@ return chain.filter(modifiedExchange);
 
 现在是时候通过删除查询参数来更新原始请求 URI 了:
 
-```
+```java
 originalRequest -> originalRequest.uri(
   UriComponentsBuilder.fromUri(exchange.getRequest()
     .getURI())
@@ -437,7 +437,7 @@ originalRequest -> originalRequest.uri(
 
 因此，我们希望我们的新过滤器添加这个响应头，但是只有当请求包含我们在上一节中介绍的`locale`头时。
 
-```
+```java
 (exchange, chain) -> {
     return chain.filter(exchange)
       .then(Mono.fromRunnable(() -> {
@@ -474,7 +474,7 @@ originalRequest -> originalRequest.uri(
 
 在我们的过滤器中，我们将首先向语言服务发出请求:
 
-```
+```java
 (exchange, chain) -> {
     return WebClient.create().get()
       .uri(config.getLanguageEndpoint())
@@ -487,7 +487,7 @@ originalRequest -> originalRequest.uri(
 
 下一步是提取语言——如果响应不成功，则从响应正文或配置中提取——并解析它:
 
-```
+```java
 // ...
 .flatMap(response -> {
     return (response.statusCode()
@@ -498,7 +498,7 @@ originalRequest -> originalRequest.uri(
 
 最后，我们将像以前一样将`LanguageRange` 值设置为请求头，并继续过滤链:
 
-```
+```java
 .map(range -> {
     exchange.getRequest()
       .mutate()

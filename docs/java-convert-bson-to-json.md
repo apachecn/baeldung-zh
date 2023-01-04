@@ -18,7 +18,7 @@
 
 下面是我们的示例实体，它包括各种属性类型:
 
-```
+```java
 @Entity("Books")
 public class Book {
     @Id
@@ -39,7 +39,7 @@ public class Book {
 
 然后，让我们为我们的测试创建一个新的 BSON 实体，并将其保存到 MongoDB:
 
-```
+```java
 public class BsonToJsonIntegrationTest {
 
     private static final String DB_NAME = "library";
@@ -65,7 +65,7 @@ public class BsonToJsonIntegrationTest {
 
 现在让我们测试一下默认的转换，这非常简单:简单地从 BSON `Document`类中调用 **`toJson`方法:**
 
-```
+```java
 @Test
 public void givenBsonDocument_whenUsingStandardJsonTransformation_thenJsonDateIsObjectEpochTime() {
      String json = null;
@@ -79,7 +79,7 @@ public void givenBsonDocument_whenUsingStandardJsonTransformation_thenJsonDateIs
 
 `expectedJson`值为:
 
-```
+```java
 {
     "_id": "isbn",
     "className": "com.baeldung.morphia.domain.Book",
@@ -104,7 +104,7 @@ public void givenBsonDocument_whenUsingStandardJsonTransformation_thenJsonDateIs
 
 例如，如果我们想要一个更经典的 ISO 日期表示(比如对于一个 JavaScript 客户端)，我们可以将 **`relaxed` JSON 模式传递给`toJson`方法，使用`JsonWriterSettings.builder`** :
 
-```
+```java
 bson.toJson(JsonWriterSettings
   .builder()
   .outputMode(JsonMode.RELAXED)
@@ -113,7 +113,7 @@ bson.toJson(JsonWriterSettings
 
 因此，我们可以看到`publishDate`字段的“宽松”转换:
 
-```
+```java
 {
     ...
     "publishDate": {
@@ -129,7 +129,7 @@ bson.toJson(JsonWriterSettings
 
 首先，我们必须为类型`Long`实现 **BSON `Converter`接口**，因为日期值从纪元时间开始以毫秒表示。我们使用`DateTimeFormatter.ISO_INSTANT`来获得预期的输出格式:
 
-```
+```java
 public class JsonDateTimeConverter implements Converter<Long> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonDateTimeConverter.class);
@@ -151,7 +151,7 @@ public class JsonDateTimeConverter implements Converter<Long> {
 
 然后，我们可以将这个类**的一个实例作为日期时间转换器传递给`JsonWriterSettings`构建器**:
 
-```
+```java
 bson.toJson(JsonWriterSettings
   .builder()
   .dateTimeConverter(new JsonDateTimeConverter())
@@ -160,7 +160,7 @@ bson.toJson(JsonWriterSettings
 
 最后，我们得到一个普通的 JSON ISO 日期格式:
 
-```
+```java
 {
     ...
     "publishDate": "2020-01-01T17:13:32Z"

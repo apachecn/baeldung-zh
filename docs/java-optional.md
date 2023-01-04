@@ -30,7 +30,7 @@ A quick and practical guide to filtering Streams of Optionals in Java 8 and Java
 
 要创建一个空的`Optional`对象，我们只需要使用它的`empty()`静态方法:
 
-```
+```java
 @Test
 public void whenCreatesEmptyOptional_thenCorrect() {
     Optional<String> empty = Optional.empty();
@@ -42,7 +42,7 @@ public void whenCreatesEmptyOptional_thenCorrect() {
 
 我们也可以用静态方法`of()`创建一个`Optional`对象:
 
-```
+```java
 @Test
 public void givenNonNull_whenCreatesNonNullable_thenCorrect() {
     String name = "baeldung";
@@ -53,7 +53,7 @@ public void givenNonNull_whenCreatesNonNullable_thenCorrect() {
 
 然而，传递给`of()`方法的参数不能是`null.`，否则，我们将得到一个`NullPointerException`:
 
-```
+```java
 @Test(expected = NullPointerException.class)
 public void givenNull_whenThrowsErrorOnCreate_thenCorrect() {
     String name = null;
@@ -63,7 +63,7 @@ public void givenNull_whenThrowsErrorOnCreate_thenCorrect() {
 
 但是如果我们期望一些`null`值，我们可以使用`ofNullable()`方法:
 
-```
+```java
 @Test
 public void givenNonNull_whenCreatesNullable_thenCorrect() {
     String name = "baeldung";
@@ -74,7 +74,7 @@ public void givenNonNull_whenCreatesNullable_thenCorrect() {
 
 通过这样做，如果我们传入一个`null`引用，它不会抛出异常，而是返回一个空的`Optional`对象:
 
-```
+```java
 @Test
 public void givenNull_whenCreatesNullable_thenCorrect() {
     String name = null;
@@ -87,7 +87,7 @@ public void givenNull_whenCreatesNullable_thenCorrect() {
 
 当我们有一个从方法返回的或者我们自己创建的`Optional`对象时，我们可以用`isPresent()`方法检查它是否有值:
 
-```
+```java
 @Test
 public void givenOptional_whenIsPresentWorks_thenCorrect() {
     Optional<String> opt = Optional.of("Baeldung");
@@ -102,7 +102,7 @@ public void givenOptional_whenIsPresentWorks_thenCorrect() {
 
 同样，从 Java 11 开始，我们可以用`isEmpty `方法做相反的事情:
 
-```
+```java
 @Test
 public void givenAnEmptyOptional_thenIsEmptyBehavesAsExpected() {
     Optional<String> opt = Optional.of("Baeldung");
@@ -117,7 +117,7 @@ public void givenAnEmptyOptional_thenIsEmptyBehavesAsExpected() {
 
 `ifPresent()`方法使我们能够对包装的值运行一些代码，如果发现它不是`null`的话。在`Optional`之前，我们会做:
 
-```
+```java
 if(name != null) {
     System.out.println(name.length());
 }
@@ -135,7 +135,7 @@ if(name != null) {
 
 在典型的函数式编程风格中，我们可以对实际存在的对象执行一个动作:
 
-```
+```java
 @Test
 public void givenOptional_whenIfPresentWorks_thenCorrect() {
     Optional<String> opt = Optional.of("baeldung");
@@ -149,7 +149,7 @@ public void givenOptional_whenIfPresentWorks_thenCorrect() {
 
 `orElse()`方法用于检索包装在`Optional`实例中的值。它接受一个参数，作为默认值。`orElse()` 方法返回包装的值，如果它存在，否则返回它的参数:
 
-```
+```java
 @Test
 public void whenOrElseWorks_thenCorrect() {
     String nullName = null;
@@ -162,7 +162,7 @@ public void whenOrElseWorks_thenCorrect() {
 
 `orElseGet()`方法类似于`orElse()`。然而，如果`Optional`值不存在，它并不返回一个值，而是采用一个供应商功能接口，该接口被调用并返回调用的值:
 
-```
+```java
 @Test
 public void whenOrElseGetWorks_thenCorrect() {
     String nullName = null;
@@ -179,7 +179,7 @@ public void whenOrElseGetWorks_thenCorrect() {
 
 让我们在 test 类中创建一个名为`getMyDefault()`的方法，它没有参数并返回一个默认值:
 
-```
+```java
 public String getMyDefault() {
     System.out.println("Getting Default Value");
     return "Default Value";
@@ -188,7 +188,7 @@ public String getMyDefault() {
 
 让我们来看两个测试，观察它们的副作用，以确定`orElse()`和`orElseGet()` 的重叠之处和不同之处:
 
-```
+```java
 @Test
 public void whenOrElseGetAndOrElseOverlap_thenCorrect() {
     String text = null;
@@ -205,7 +205,7 @@ public void whenOrElseGetAndOrElseOverlap_thenCorrect() {
 
 副作用是:
 
-```
+```java
 Getting default value...
 Getting default value...
 ```
@@ -214,7 +214,7 @@ Getting default value...
 
 现在让我们运行另一个测试，这个值是存在的，理想情况下，甚至不应该创建默认值:
 
-```
+```java
 @Test
 public void whenOrElseGetAndOrElseDiffer_thenCorrect() {
     String text = "Text present";
@@ -234,7 +234,7 @@ public void whenOrElseGetAndOrElseDiffer_thenCorrect() {
 
 现在让我们来看看运行这段代码的副作用:
 
-```
+```java
 Using orElseGet:
 Using orElse:
 Getting default value...
@@ -252,7 +252,7 @@ Getting default value...
 
 当包装值不存在时，它不返回默认值，而是引发一个异常:
 
-```
+```java
 @Test(expected = IllegalArgumentException.class)
 public void whenOrElseThrowWorks_thenCorrect() {
     String nullName = null;
@@ -265,7 +265,7 @@ Java 8 中的方法引用在这里派上了用场，可以传入异常构造函�
 
 **Java 10 引入了一个简化的无参数版本的`orElseThrow()`方法**。如果`Optional`为空，它会抛出一个`NoSuchElementException`:
 
-```
+```java
 @Test(expected = NoSuchElementException.class)
 public void whenNoArgOrElseThrowWorks_thenCorrect() {
     String nullName = null;
@@ -277,7 +277,7 @@ public void whenNoArgOrElseThrowWorks_thenCorrect() {
 
 检索包装值的最后一种方法是`get()`方法:
 
-```
+```java
 @Test
 public void givenOptional_whenGetsValue_thenCorrect() {
     Optional<String> opt = Optional.of("baeldung");
@@ -288,7 +288,7 @@ public void givenOptional_whenGetsValue_thenCorrect() {
 
 但是，与前三种方法不同，`get()`只能在包装的对象不是`null`时返回值；否则，它会抛出一个 no 这样的元素异常:
 
-```
+```java
 @Test(expected = NoSuchElementException.class)
 public void givenOptionalWithNull_whenGetThrowsException_thenCorrect() {
     Optional<String> opt = Optional.ofNullable(null);
@@ -306,7 +306,7 @@ public void givenOptionalWithNull_whenGetThrowsException_thenCorrect() {
 
 但是，如果谓词返回`false`，那么它将返回一个空的`Optional`:
 
-```
+```java
 @Test
 public void whenOptionalFilterWorks_thenCorrect() {
     Integer year = 2016;
@@ -324,7 +324,7 @@ public void whenOptionalFilterWorks_thenCorrect() {
 
 我们从某个网站接收关于调制解调器价格的推送通知，并将这些通知存储在对象中:
 
-```
+```java
 public class Modem {
     private Double price;
 
@@ -339,7 +339,7 @@ public class Modem {
 
 现在让我们看看没有`Optional`的代码:
 
-```
+```java
 public boolean priceIsInRange1(Modem modem) {
     boolean isInRange = false;
 
@@ -355,7 +355,7 @@ public boolean priceIsInRange1(Modem modem) {
 
 注意我们要写多少代码才能实现这一点，尤其是在`if`条件下。对于应用程序来说，`if`条件中唯一关键的部分是最后一次价格范围检查；其余的检查是防御性的:
 
-```
+```java
 @Test
 public void whenFiltersWithoutOptional_thenCorrect() {
     assertTrue(priceIsInRange1(new Modem(10.0)));
@@ -370,7 +370,7 @@ public void whenFiltersWithoutOptional_thenCorrect() {
 
 现在我们来看一个带有`Optional#filter`的变体:
 
-```
+```java
 public boolean priceIsInRange2(Modem modem2) {
      return Optional.ofNullable(modem2)
        .map(Modem::getPrice)
@@ -388,7 +388,7 @@ public boolean priceIsInRange2(Modem modem2) {
 
 其次，我们在它的主体中编写的唯一逻辑正是方法名所描述的——价格范围检查。其他的由你负责:
 
-```
+```java
 @Test
 public void whenFiltersWithOptional_thenCorrect() {
     assertTrue(priceIsInRange2(new Modem(10.0)));
@@ -407,7 +407,7 @@ public void whenFiltersWithOptional_thenCorrect() {
 
 我们可以使用类似的语法通过`map()` 方法来转换`Optional`值:
 
-```
+```java
 @Test
 public void givenOptional_whenMapWorks_thenCorrect() {
     List<String> companyNames = Arrays.asList(
@@ -427,7 +427,7 @@ public void givenOptional_whenMapWorks_thenCorrect() {
 
 请注意，`filter`方法只是对值执行检查，并返回一个描述该值的`Optional`,前提是它匹配给定的谓词。否则返回一个空的`Optional.`。然而`map`方法获取现有值，使用该值执行计算，并返回包装在`Optional`对象中的计算结果:
 
-```
+```java
 @Test
 public void givenOptional_whenMapWorks_thenCorrect2() {
     String name = "baeldung";
@@ -444,7 +444,7 @@ public void givenOptional_whenMapWorks_thenCorrect2() {
 
 假设我们想要检查用户输入的密码的正确性。我们可以使用`map`转换清理密码，并使用`filter`检查其正确性:
 
-```
+```java
 @Test
 public void givenOptional_whenMapWorksWithFilter_thenCorrect() {
     String password = " password ";
@@ -471,7 +471,7 @@ public void givenOptional_whenMapWorksWithFilter_thenCorrect() {
 
 为了更清楚地了解这种差异，让我们来看一个`Person`对象，它记录一个人的详细信息，如姓名、年龄和密码:
 
-```
+```java
 public class Person {
     private String name;
     private int age;
@@ -497,14 +497,14 @@ public class Person {
 
 或者，它可以通过另一个方法调用返回给我们:
 
-```
+```java
 Person person = new Person("john", 26);
 Optional<Person> personOptional = Optional.of(person);
 ```
 
 请注意，当我们包装一个`Person`对象时，它将包含嵌套的`Optional`实例:
 
-```
+```java
 @Test
 public void givenOptional_whenFlatMapWorks_thenCorrect2() {
     Person person = new Person("john", 26);
@@ -540,7 +540,7 @@ public void givenOptional_whenFlatMapWorks_thenCorrect2() {
 
 让我们首先介绍几个我们将在本节中使用的方法:
 
-```
+```java
 private Optional<String> getEmpty() {
     return Optional.empty();
 }
@@ -563,7 +563,7 @@ private Optional<String> createOptional(String input) {
 
 为了链接几个`Optional`对象并在 Java 8 中获得第一个非空对象，我们可以使用`Stream` API:
 
-```
+```java
 @Test
 public void givenThreeOptionals_whenChaining_thenFirstNonEmptyIsReturned() {
     Optional<String> found = Stream.of(getEmpty(), getHello(), getBye())
@@ -579,7 +579,7 @@ public void givenThreeOptionals_whenChaining_thenFirstNonEmptyIsReturned() {
 
 如果我们想延迟评估传递给`Stream.of()`的方法，我们需要使用方法引用和`Supplier`接口:
 
-```
+```java
 @Test
 public void givenThreeOptionals_whenChaining_thenFirstNonEmptyIsReturnedAndRestNotEvaluated() {
     Optional<String> found =
@@ -595,7 +595,7 @@ public void givenThreeOptionals_whenChaining_thenFirstNonEmptyIsReturnedAndRestN
 
 如果我们需要使用带参数的方法，我们必须求助于 lambda 表达式:
 
-```
+```java
 @Test
 public void givenTwoOptionalsReturnedByOneArgMethod_whenChaining_thenFirstNonEmptyIsReturned() {
     Optional<String> found = Stream.<Supplier<Optional<String>>>of(
@@ -613,7 +613,7 @@ public void givenTwoOptionalsReturnedByOneArgMethod_whenChaining_thenFirstNonEmp
 
 通常，我们会希望返回一个默认值，以防所有链接的`Optional`都是空的。我们可以通过添加对`orElse()`或`orElseGet()`的呼叫来实现:
 
-```
+```java
 @Test
 public void givenTwoEmptyOptionals_whenChaining_thenDefaultIsReturned() {
     String found = Stream.<Supplier<Optional<String>>>of(
@@ -648,7 +648,7 @@ Java 9 的发布给`Optional` API 增加了更多的新方法:
 
 这个参数是可选的，我们用这个方法:
 
-```
+```java
 public static List<Person> search(List<Person> people, String name, Optional<Integer> age) {
     // Null checks for people and name
     return people.stream()
@@ -660,7 +660,7 @@ public static List<Person> search(List<Person> people, String name, Optional<Int
 
 然后我们发布我们的方法，另一个开发人员试图使用它:
 
-```
+```java
 someObject.search(people, "Peter", null);
 ```
 
@@ -668,7 +668,7 @@ someObject.search(people, "Peter", null);
 
 以下是我们本可以做得更好的一些可能性:
 
-```
+```java
 public static List<Person> search(List<Person> people, String name, Integer age) {
     // Null checks for people and name
     final Integer ageFilter = age != null ? age : 0;
@@ -684,7 +684,7 @@ public static List<Person> search(List<Person> people, String name, Integer age)
 
 另一种可能性是**创建两个重载方法**:
 
-```
+```java
 public static List<Person> search(List<Person> people, String name) {
     return doSearch(people, name, 0);
 }

@@ -19,7 +19,7 @@
 
 在使用 Minishift 之前，我们需要为开发人员用户配置权限:
 
-```
+```java
 minishift addons install --defaults
 minishift addons enable admin-user
 minishift start
@@ -28,7 +28,7 @@ oc adm policy --as system:admin add-cluster-role-to-user cluster-admin developer
 
 现在我们想使用 Openshift 控制台创建一个 MySQL 服务。我们可以使用以下方式启动浏览器 URL:
 
-```
+```java
 minishift console
 ```
 
@@ -40,7 +40,7 @@ minishift console
 
 我们还需要允许应用程序读取像 Kubernetes Secrets 和 ConfigMaps 这样的配置:
 
-```
+```java
 oc create rolebinding default-view --clusterrole=view \
   --serviceaccount=baeldung-demo:default --namespace=baeldung-demo
 ```
@@ -49,7 +49,7 @@ oc create rolebinding default-view --clusterrole=view \
 
 **我们将使用 [Spring Cloud Kubernetes](https://web.archive.org/web/20221207181235/https://github.com/spring-cloud/spring-cloud-kubernetes) 项目为支持 Openshift 的 Kubernetes 启用云原生 API:**
 
-```
+```java
 <profile>
   <id>openshift</id>
   <dependencyManagement>
@@ -86,7 +86,7 @@ oc create rolebinding default-view --clusterrole=view \
 
 **我们还将使用 [Fabric8 Maven 插件](https://web.archive.org/web/20221207181235/https://github.com/fabric8io/fabric8-maven-plugin)来构建和部署容器:**
 
-```
+```java
 <plugin>
     <groupId>io.fabric8</groupId>
     <artifactId>fabric8-maven-plugin</artifactId>
@@ -111,7 +111,7 @@ oc create rolebinding default-view --clusterrole=view \
 
 我们还需要为 Spring Boot 执行器添加一个段，因为 Fabric8 中的默认仍然试图访问`/health`而不是`/actuator/health:`
 
-```
+```java
 spec:
   template:
     spec:
@@ -145,7 +145,7 @@ spec:
 
 接下来，**我们将在** `**openshift/configmap.yml**,`中保存一个`ConfigMap`，它包含了带有 MySQL URL 的`application.properties`的数据:
 
-```
+```java
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -157,19 +157,19 @@ data:
 
 **在使用命令行客户端与 Openshift 交互之前，我们需要登录**。在 web 控制台的右上角是一个用户图标，我们可以从中选择标有“复制登录命令”的下拉菜单。然后在外壳中使用:
 
-```
+```java
 oc login https://192.168.42.122:8443 --token=<some-token>
 ```
 
 让我们确保使用正确的项目:
 
-```
+```java
 oc project baeldung-demo
 ```
 
 然后**我们上传了`ConfigMap`** `:`
 
-```
+```java
 oc create -f openshift/configmap.yml
 ```
 
@@ -177,7 +177,7 @@ oc create -f openshift/configmap.yml
 
 在部署期间，Fabric8 Maven 插件尝试确定配置的端口。我们的示例应用程序中现有的`application.properties`文件使用一个表达式来定义端口，插件无法解析这个表达式。因此，我们必须注释这一行:
 
-```
+```java
 #server.port=${port:8080}
 ```
 
@@ -185,19 +185,19 @@ oc create -f openshift/configmap.yml
 
 我们现在准备好部署了:
 
-```
+```java
 mvn clean fabric8:deploy -P openshift 
 ```
 
 我们可以观察部署进度，直到看到我们的应用程序正在运行:
 
-```
+```java
 oc get pods -w
 ```
 
 应提供一份清单:
 
-```
+```java
 NAME                            READY     STATUS    RESTARTS   AGE
 baeldung-db-1-9m2cr             1/1       Running   1           1h
 spring-boot-bootstrap-1-x6wj5   1/1       Running   0          46s 
@@ -205,27 +205,27 @@ spring-boot-bootstrap-1-x6wj5   1/1       Running   0          46s
 
 在测试应用程序之前，我们需要确定路线:
 
-```
+```java
 oc get routes
 ```
 
 将打印当前项目中的路线:
 
-```
+```java
 NAME                    HOST/PORT                                                   PATH      SERVICES                PORT      TERMINATION   WILDCARD
 spring-boot-bootstrap   spring-boot-bootstrap-baeldung-demo.192.168.42.122.nip.io             spring-boot-bootstrap   8080                    None 
 ```
 
 现在，让我们通过添加一本书来验证我们的应用程序是否正常工作:
 
-```
+```java
 http POST http://spring-boot-bootstrap-baeldung-demo.192.168.42.122.nip.io/api/books \
   title="The Player of Games" author="Iain M. Banks" 
 ```
 
 需要以下输出:
 
-```
+```java
 HTTP/1.1 201 
 {
     "author": "Iain M. Banks",
@@ -238,7 +238,7 @@ HTTP/1.1 201
 
 让我们扩展部署以运行 2 个实例:
 
-```
+```java
 oc scale --replicas=2 dc spring-boot-bootstrap
 ```
 

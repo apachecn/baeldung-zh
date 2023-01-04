@@ -20,7 +20,7 @@ ANTLR(另一种语言识别工具)是一种处理结构化文本的工具。
 
 首先，让我们从添加 [antlr-runtime](https://web.archive.org/web/20220625235751/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.antlr%22%20AND%20a%3A%22antlr4-runtime%22) 到我们的`pom.xml`开始:
 
-```
+```java
 <dependency>
     <groupId>org.antlr</groupId>
     <artifactId>antlr4-runtime</artifactId>
@@ -30,7 +30,7 @@ ANTLR(另一种语言识别工具)是一种处理结构化文本的工具。
 
 还有 [antlr-maven 插件](https://web.archive.org/web/20220625235751/https://search.maven.org/classic/#search%7Cga%7C1%7Corg.antlr%20antlr-maven-plugin):
 
-```
+```java
 <plugin>
     <groupId>org.antlr</groupId>
     <artifactId>antlr4-maven-plugin</artifactId>
@@ -61,7 +61,7 @@ ANTLR(另一种语言识别工具)是一种处理结构化文本的工具。
 
 让我们首先使用 ANTLR 来分析大小写错误的方法的代码:
 
-```
+```java
 public class SampleClass {
 
     public void DoSomethingElse() {
@@ -84,7 +84,7 @@ public class SampleClass {
 
 ANTLR 通过生成对应于我们给它的语法文件的 Java 代码来工作，maven 插件使它变得简单:
 
-```
+```java
 mvn package
 ```
 
@@ -109,7 +109,7 @@ mvn package
 
 例如，语法定义了方法名、参数列表和 throws 子句，如下所示:
 
-```
+```java
 methodDeclarator
 	:	Identifier '(' formalParameterList? ')' dims?
 	;
@@ -119,7 +119,7 @@ methodDeclarator
 
 因此，让我们忽略`enterMethodDeclarator`，拔出`Identifier`，并执行我们的检查:
 
-```
+```java
 public class UppercaseMethodListener extends Java8BaseListener {
 
     private List<String> errors = new ArrayList<>();
@@ -143,14 +143,14 @@ public class UppercaseMethodListener extends Java8BaseListener {
 
 现在，让我们做一些测试。首先，我们构建 lexer:
 
-```
+```java
 String javaClassContent = "public class SampleClass { void DoSomething(){} }";
 Java8Lexer java8Lexer = new Java8Lexer(CharStreams.fromString(javaClassContent));
 ```
 
 然后，我们实例化解析器:
 
-```
+```java
 CommonTokenStream tokens = new CommonTokenStream(lexer);
 Java8Parser parser = new Java8Parser(tokens);
 ParseTree tree = parser.compilationUnit();
@@ -158,14 +158,14 @@ ParseTree tree = parser.compilationUnit();
 
 然后，行者和听者:
 
-```
+```java
 ParseTreeWalker walker = new ParseTreeWalker();
 UppercaseMethodListener listener= new UppercaseMethodListener();
 ```
 
 最后，我们告诉 ANTLR 遍历我们的示例类`:`
 
-```
+```java
 walker.walk(listener, tree);
 
 assertThat(listener.getErrors().size(), is(1));
@@ -177,7 +177,7 @@ assertThat(listener.getErrors().get(0),
 
 现在，让我们尝试一些稍微复杂一点的东西，比如解析日志文件:
 
-```
+```java
 2018-May-05 14:20:18 INFO some error occurred
 2018-May-05 14:20:19 INFO yet another error
 2018-May-05 14:20:20 INFO some method started
@@ -204,7 +204,7 @@ assertThat(listener.getErrors().get(0),
 
 让我们从定义片段开始，这些片段是 lexer 规则的可重用构件。
 
-```
+```java
 fragment DIGIT : [0-9];
 fragment TWODIGIT : DIGIT DIGIT;
 fragment LETTER : [A-Za-z];
@@ -212,7 +212,7 @@ fragment LETTER : [A-Za-z];
 
 接下来，让我们定义剩余的 lexer 规则:
 
-```
+```java
 DATE : TWODIGIT TWODIGIT '-' LETTER LETTER LETTER '-' TWODIGIT;
 TIME : TWODIGIT ':' TWODIGIT ':' TWODIGIT;
 TEXT   : LETTER+ ;
@@ -221,26 +221,26 @@ CRLF : '\r'? '\n' | '\r';
 
 有了这些构建块，我们就可以为基本结构构建解析器规则了:
 
-```
+```java
 log : entry+;
 entry : timestamp ' ' level ' ' message CRLF;
 ```
 
 然后我们将添加`timestamp`的细节:
 
-```
+```java
 timestamp : DATE ' ' TIME;
 ```
 
 对于`level`:
 
-```
+```java
 level : 'ERROR' | 'INFO' | 'DEBUG';
 ```
 
 对于`message`:
 
-```
+```java
 message : (TEXT | ' ')+;
 ```
 
@@ -256,7 +256,7 @@ message : (TEXT | ' ')+;
 
 因此，让我们从一个简单的日志条目模型类开始:
 
-```
+```java
 public class LogEntry {
 
     private LogLevel level;
@@ -269,7 +269,7 @@ public class LogEntry {
 
 现在，我们需要像以前一样子类化`LogBaseListener`:
 
-```
+```java
 public class LogListener extends LogBaseListener {
 
     private List<LogEntry> entries = new ArrayList<>();
@@ -278,7 +278,7 @@ public class LogListener extends LogBaseListener {
 
 `current `将保留当前的日志行，我们可以根据我们的语法在每次再次输入`logEntry, `时重新初始化它:
 
-```
+```java
  @Override
     public void enterEntry(LogParser.EntryContext ctx) {
         this.current = new LogEntry();
@@ -287,7 +287,7 @@ public class LogListener extends LogBaseListener {
 
 接下来，我们将使用`enterTimestamp`、`enterLevel,`和`enterMessage`来设置适当的`LogEntry` 属性:
 
-```
+```java
  @Override
     public void enterTimestamp(LogParser.TimestampContext ctx) {
         this.current.setTimestamp(
@@ -307,7 +307,7 @@ public class LogListener extends LogBaseListener {
 
 最后，让我们使用`exitEntry `方法来创建和添加新的`LogEntry`:
 
-```
+```java
  @Override
     public void exitLogEntry(LogParser.EntryContext ctx) {
         this.entries.add(this.current);
@@ -320,7 +320,7 @@ public class LogListener extends LogBaseListener {
 
 现在我们可以像上次一样再次测试:
 
-```
+```java
 @Test
 public void whenLogContainsOneErrorLogEntry_thenOneErrorIsReturned()
   throws Exception {

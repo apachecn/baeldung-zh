@@ -42,7 +42,7 @@
 
 对于表单登录，`SavedRequestAwareAuthenticationSuccessHandler`被用作默认`AuthenticationSuccessHandler`。
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class RedirectionSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -66,7 +66,7 @@ public class RedirectionSecurityConfig extends WebSecurityConfigurerAdapter {
 
 等效的 XML 应该是:
 
-```
+```java
 <http>
     <intercept-url pattern="/login" access="permitAll"/>
     <intercept-url pattern="/**" access="isAuthenticated()"/>
@@ -76,7 +76,7 @@ public class RedirectionSecurityConfig extends WebSecurityConfigurerAdapter {
 
 假设我们在位置“/secured”有一个安全的资源。第一次访问资源时，我们会被重定向到登录页面；填写凭据并发布登录表单后，我们将被重定向回最初请求的资源位置:
 
-```
+```java
 @Test
 public void givenAccessSecuredResource_whenAuthenticated_thenRedirectedBack() 
   throws Exception {
@@ -115,7 +115,7 @@ public void givenAccessSecuredResource_whenAuthenticated_thenRedirectedBack()
 
 我们可以通过`setUserReferer(true)`启用基于引用的重定向:
 
-```
+```java
 public class RefererRedirectionAuthenticationSuccessHandler 
   extends SimpleUrlAuthenticationSuccessHandler
   implements AuthenticationSuccessHandler {
@@ -130,7 +130,7 @@ public class RefererRedirectionAuthenticationSuccessHandler
 
 然后将其作为`RedirectionSecurityConfig`中的`AuthenticationSuccessHandler`:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http
@@ -147,7 +147,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 对于 XML 配置:
 
-```
+```java
 <http>
     <intercept-url pattern="/login" access="permitAll"/>
     <intercept-url pattern="/**" access="isAuthenticated()"/>
@@ -165,7 +165,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 `AuthenticationException` 将在`[ExceptionTranslationFilter](https://web.archive.org/web/20221004133411/https://github.com/spring-projects/spring-security/blob/master/web/src/main/java/org/springframework/security/web/access/ExceptionTranslationFilter.java),` 中被捕获，其中认证过程将开始，导致重定向到登录页面。
 
-```
+```java
 public class ExceptionTranslationFilter extends GenericFilterBean {
 
     //...

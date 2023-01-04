@@ -12,7 +12,7 @@
 
 让我们演示一下这种方法:
 
-```
+```java
 public static void copyDirectory(String sourceDirectoryLocation, String destinationDirectoryLocation) 
   throws IOException {
     Files.walk(Paths.get(sourceDirectoryLocation))
@@ -36,7 +36,7 @@ public static void copyDirectory(String sourceDirectoryLocation, String destinat
 
 然而，如果我们想与旧的 Java 版本保持兼容，我们可以使用递归复制一个目录**和 [`java.io.File`](https://web.archive.org/web/20220627080539/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html) 特性**:
 
-```
+```java
 private static void copyDirectory(File sourceDirectory, File destinationDirectory) throws IOException {
     if (!destinationDirectory.exists()) {
         destinationDirectory.mkdir();
@@ -49,7 +49,7 @@ private static void copyDirectory(File sourceDirectory, File destinationDirector
 
 在本例中，**我们将在目标目录中为源目录树**中的每个目录创建一个目录。然后我们将调用`copyDirectoryCompatibityMode()`方法:
 
-```
+```java
 public static void copyDirectoryCompatibityMode(File source, File destination) throws IOException {
     if (source.isDirectory()) {
         copyDirectory(source, destination);
@@ -61,7 +61,7 @@ public static void copyDirectoryCompatibityMode(File source, File destination) t
 
 同样，**让我们看看如何使用 [`FileInputStream`](https://web.archive.org/web/20220627080539/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/FileInputStream.html) 和 [`FileOutputStream`](https://web.archive.org/web/20220627080539/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/FileOutputStream.html)** 来复制一个文件:
 
-```
+```java
 private static void copyFile(File sourceFile, File destinationFile) 
   throws IOException {
     try (InputStream in = new FileInputStream(sourceFile); 
@@ -81,7 +81,7 @@ private static void copyFile(File sourceFile, File destinationFile)
 
 让我们将 [commons-io](https://web.archive.org/web/20220627080539/https://search.maven.org/search?q=a:commons-io%20g:commons-io) 添加到我们的 `pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>commons-io</groupId>
     <artifactId>commons-io</artifactId>
@@ -91,7 +91,7 @@ private static void copyFile(File sourceFile, File destinationFile)
 
 最后，让我们使用这种方法复制一个目录:
 
-```
+```java
 public static void copyDirectory(String sourceDirectoryLocation, String destinationDirectoryLocation) throws IOException {
     File sourceDirectory = new File(sourceDirectoryLocation);
     File destinationDirectory = new File(destinationDirectoryLocation);

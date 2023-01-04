@@ -30,7 +30,7 @@ Learn various ways of changing the context path in your Spring Boot application[
 
 **那么，让我们看看如何在`application.properties`文件**中提供不同的值:
 
-```
+```java
 server.port=8081
 ```
 
@@ -38,7 +38,7 @@ server.port=8081
 
 如果我们使用的是`application.yml`文件，我们也可以这样做:
 
-```
+```java
 server:
   port : 8081
 ```
@@ -53,13 +53,13 @@ server:
 
 例如，我们将有一个包含以下内容的`application-dev.properties`文件:
 
-```
+```java
 server.port=8081
 ```
 
 然后我们将添加另一个带有不同端口的`application-qa.properties`文件:
 
-```
+```java
 server.port=8082
 ```
 
@@ -71,7 +71,7 @@ server.port=8082
 
 首先，让我们看看如何在主`@SpringBootApplication`类中设置属性:
 
-```
+```java
 @SpringBootApplication
 public class CustomApplication {
     public static void main(String[] args) {
@@ -85,7 +85,7 @@ public class CustomApplication {
 
 接下来，为了定制服务器配置，我们必须实现`WebServerFactoryCustomizer`接口:
 
-```
+```java
 @Component
 public class ServerPortCustomizer 
   implements WebServerFactoryCustomizer<ConfigurableWebServerFactory> {
@@ -105,13 +105,13 @@ public class ServerPortCustomizer
 
 当将我们的应用程序打包成 jar 并运行时，我们可以用`java`命令设置`server.port`参数:
 
-```
+```java
 java -jar spring-5.jar --server.port=8083
 ```
 
 或者使用等效的语法:
 
-```
+```java
 java -jar -Dserver.port=8083 spring-5.jar
 ```
 

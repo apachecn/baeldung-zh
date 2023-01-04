@@ -12,7 +12,7 @@
 
 回想一下，实现[单例模式](/web/20221206042903/https://www.baeldung.com/java-singleton)的一种常见方式是使用静态实例和私有构造函数:
 
-```
+```java
 public final class Singleton {
     private static final Singleton instance = new Singleton();
 
@@ -34,7 +34,7 @@ public final class Singleton {
 
 正如我们所见，用 CDI 实现单例非常简单:
 
-```
+```java
 @Singleton
 public class CarServiceSingleton {
     // ...
@@ -45,7 +45,7 @@ public class CarServiceSingleton {
 
 我们可以用一个简单的 JUnit 测试来验证它是同一个实例，这个测试两次询问类的上下文。注意，为了可读性，我们在这里得到了一个 [`getBean`](https://web.archive.org/web/20221206042903/https://github.com/eugenp/tutorials/blob/master/web-modules/jee-7/src/test/java/com/baeldung/singleton/CarServiceIntegrationTest.java#L69) 帮助器方法:
 
-```
+```java
 @Test
 public void givenASingleton_whenGetBeanIsCalledTwice_thenTheSameInstanceIsReturned() {       
     CarServiceSingleton one = getBean(CarServiceSingleton.class);
@@ -70,7 +70,7 @@ public void givenASingleton_whenGetBeanIsCalledTwice_thenTheSameInstanceIsReturn
 
 我们可以通过一个简单的测试来验证这种行为。我们将为我们的单例类引入一个服务队列模拟:
 
-```
+```java
 private static int serviceQueue;
 
 public int service(Car car) {
@@ -86,7 +86,7 @@ public int service(Car car) {
 
 我们可以通过一个简单的测试来检查这种行为:
 
-```
+```java
 @Test
 public void whenEjb_thenLockingIsProvided() {
     for (int i = 0; i < 10; i++) {

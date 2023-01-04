@@ -16,7 +16,7 @@
 
 首先，我们将定义一个颜色界面:
 
-```
+```java
 public interface Color {
     String fill();
 }
@@ -24,7 +24,7 @@ public interface Color {
 
 现在我们将为这个接口创建一个具体的类:
 
-```
+```java
 public class Blue implements Color {
     @Override
     public String fill() {
@@ -35,7 +35,7 @@ public class Blue implements Color {
 
 现在让我们创建一个抽象的`Shape`类，它包含一个对`Color` 对象的引用(桥):
 
-```
+```java
 public abstract class Shape {
     protected Color color;
 
@@ -47,7 +47,7 @@ public abstract class Shape {
 
 我们现在将创建一个`Shape` 接口的具体类，它也将利用来自`Color` 接口的方法:
 
-```
+```java
 public class Square extends Shape {
 
     public Square(Color color) {
@@ -63,7 +63,7 @@ public class Square extends Shape {
 
 对于这种模式，以下断言将是正确的:
 
-```
+```java
 @Test
 public void whenBridgePatternInvoked_thenConfigSuccess() {
     //a square with red color
@@ -75,7 +75,7 @@ public void whenBridgePatternInvoked_thenConfigSuccess() {
 
 这里，我们使用桥模式并传递所需的颜色对象。正如我们在输出中可以注意到的，该形状以所需的颜色绘制:
 
-```
+```java
 Square drawn. Color: Red
 Triangle drawn. Color: Blue
 ```

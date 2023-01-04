@@ -10,7 +10,7 @@
 
 首先，让我们看看简单的 Java 解决方案——使用现成的`InputStreamReader`:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenConvertingInputStreamIntoReader_thenCorrect() 
   throws IOException {
@@ -26,7 +26,7 @@ public void givenUsingPlainJava_whenConvertingInputStreamIntoReader_thenCorrect(
 
 接下来——让我们看看**番石榴解**—使用中间字节数组和字符串:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenConvertingInputStreamIntoReader_thenCorrect() 
   throws IOException {
@@ -45,7 +45,7 @@ public void givenUsingGuava_whenConvertingInputStreamIntoReader_thenCorrect()
 
 最后，使用 Apache Commons IO 的解决方案也使用了中间字符串:
 
-```
+```java
 @Test
 public void givenUsingCommonsIO_whenConvertingInputStreamIntoReader_thenCorrect() 
   throws IOException {

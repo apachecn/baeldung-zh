@@ -16,7 +16,7 @@
 
 为了创建一个存储过程，我们使用了`CREATE PROCEDURE`语句:
 
-```
+```java
 DELIMITER //
     CREATE PROCEDURE GetAllFoos()
         LANGUAGE SQL
@@ -32,7 +32,7 @@ DELIMITER;
 
 我们可以使用`[CALL](https://web.archive.org/web/20220626115431/https://dev.mysql.com/doc/refman/5.7/en/call.html)`语句来确保我们的过程以期望的方式运行:
 
-```
+```java
 CALL GetAllFoos();
 ```
 
@@ -54,7 +54,7 @@ CALL GetAllFoos();
 
 Hibernate 允许直接用**原生 SQL** 格式表达查询。因此，我们可以直接创建一个原生 SQL 查询，并使用`CALL` 语句调用`getAllFoos()`存储过程:
 
-```
+```java
 Query query = session.createSQLQuery("CALL GetAllFoos()").addEntity(Foo.class);
 List<Foo> allFoos = query.list(); 
 ```
@@ -69,7 +69,7 @@ List<Foo> allFoos = query.list();
 
 **`@NamedNativeQueries`** 用于指定本地 **SQL** 命名查询**的数组，作用域为持久化单元:**
 
-```
+```java
 @NamedNativeQueries({ 
   @NamedNativeQuery(
     name = "callGetAllFoos", 
@@ -84,7 +84,7 @@ public class Foo implements Serializable {
 
 显然，每个命名查询都有一个**名称**属性，实际的 **SQL 查询**，以及引用 **Foo** 映射实体的`**resultClass**` 。
 
-```
+```java
 Query query = session.getNamedQuery("callGetAllFoos");
 List<Foo> allFoos = query.list();
 ```
@@ -99,7 +99,7 @@ List<Foo> allFoos = query.list();
 
 **`@NamedStoredProcedureQuery`** 注释可以用来声明一个存储过程:
 
-```
+```java
 @NamedStoredProcedureQuery(
   name="GetAllFoos",
   procedureName="GetAllFoos",
@@ -113,7 +113,7 @@ public class Foo implements Serializable {
 
 为了调用我们的命名存储过程查询，我们需要实例化一个`**EntityManager,**` ，然后调用`**createNamedStoredProcedureQuery()**`方法来创建过程 ***:***
 
-```
+```java
 StoredProcedureQuery spQuery = 
   entityManager.createNamedStoredProcedureQuery("getAllFoos"); 
 ```
@@ -128,7 +128,7 @@ StoredProcedureQuery spQuery =
 
 该过程返回一个列表，其中包含名称属性与`fooName` 参数匹配的`Foo` 对象:
 
-```
+```java
 DELIMITER //
     CREATE PROCEDURE GetFoosByName(IN fooName VARCHAR(255))
         LANGUAGE SQL
@@ -142,7 +142,7 @@ DELIMITER;
 
 为了调用`**GetFoosByName()**` 过程，我们将使用命名参数:
 
-```
+```java
 Query query = session.createSQLQuery("CALL GetFoosByName(:fooName)")
   .addEntity(Foo.class)
   .setParameter("fooName","New Foo");
@@ -150,7 +150,7 @@ Query query = session.createSQLQuery("CALL GetFoosByName(:fooName)")
 
 同样，命名参数 **`:fooName`** 可以与`**@NamedNativeQuery**`注释一起使用:
 
-```
+```java
 @NamedNativeQuery(
   name = "callGetFoosByName", 
   query = "CALL GetFoosByName(:fooName)", 
@@ -160,14 +160,14 @@ Query query = session.createSQLQuery("CALL GetFoosByName(:fooName)")
 
 命名查询的调用如下:
 
-```
+```java
 Query query = session.getNamedQuery("callGetFoosByName")
   .setParameter("fooName","New Foo");
 ```
 
 当使用 **`@NamedStoredProcedureQuery`** 标注时，我们可以使用 **`@StoredProcedureParameter`标注**来指定参数:
 
-```
+```java
 @NamedStoredProcedureQuery(
   name="GetFoosByName",
   procedureName="GetFoosByName",
@@ -180,7 +180,7 @@ Query query = session.getNamedQuery("callGetFoosByName")
 
 我们可以利用 `**setParameter()**`方法调用带有`fooName` 参数的存储过程:
 
-```
+```java
 StoredProcedureQuery spQuery = entityManager.createNamedStoredProcedureQuery("GetFoosByName")
   .setParameter("fooName", "NewFooName");
 ```

@@ -41,7 +41,7 @@ Maven 阶段代表了 Maven 构建生命周期的一个阶段。每个阶段负�
 
 各个阶段以特定的顺序执行。这意味着，如果我们使用以下命令运行特定阶段:
 
-```
+```java
 mvn <PHASE>
 ```
 
@@ -49,7 +49,7 @@ mvn <PHASE>
 
 例如，如果我们运行`deploy`阶段，这是`default`构建生命周期的最后一个阶段，它将执行`deploy`阶段之前的所有阶段，这是整个`default`生命周期:
 
-```
+```java
 mvn deploy
 ```
 
@@ -69,19 +69,19 @@ mvn deploy
 
 我们可以使用以下命令列出绑定到特定阶段的所有目标及其插件:
 
-```
+```java
 mvn help:describe -Dcmd=PHASENAME
 ```
 
 例如，要列出绑定到`compile`阶段的所有目标，我们可以运行:
 
-```
+```java
 mvn help:describe -Dcmd=compile
 ```
 
 然后我们会得到示例输出:
 
-```
+```java
 compile' is a phase corresponding to this plugin:
 org.apache.maven.plugins:maven-compiler-plugin:3.1:compile
 ```
@@ -94,7 +94,7 @@ org.apache.maven.plugins:maven-compiler-plugin:3.1:compile
 
 例如，下面是 Maven Failsafe 插件的简单配置，它负责运行集成测试:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -120,19 +120,19 @@ org.apache.maven.plugins:maven-compiler-plugin:3.1:compile
 
 我们可以使用下面的命令**列出特定插件**中的所有目标:
 
-```
+```java
 mvn <PLUGIN>:help
 ```
 
 例如，要列出故障保护插件中的所有目标，我们可以运行:
 
-```
+```java
 mvn failsafe:help
 ```
 
 输出将是:
 
-```
+```java
 This plugin has 3 goals:
 
 failsafe:help
@@ -149,13 +149,13 @@ failsafe:verify
 
 **要运行一个特定的目标而不执行其整个阶段(以及之前的阶段)，**我们可以使用命令:
 
-```
+```java
 mvn <PLUGIN>:<GOAL>
 ```
 
 例如，要从故障保护插件运行`integration-test`目标，我们需要运行:
 
-```
+```java
 mvn failsafe:integration-test
 ```
 
@@ -163,31 +163,31 @@ mvn failsafe:integration-test
 
 为了构建 Maven 项目，我们需要通过运行其中一个阶段来执行其中一个生命周期:
 
-```
+```java
 mvn deploy
 ```
 
 这将执行整个`default`生命周期。或者，我们可以在`install`阶段停止:
 
-```
+```java
 mvn install
 ```
 
 但是通常，我们会在新构建之前运行 *清理* 生命周期来清理项目:
 
-```
+```java
 mvn clean install
 ```
 
 我们也可以只运行一个特定目标的插件:
 
-```
+```java
 mvn compiler:compile
 ```
 
 注意，如果我们试图在没有指定阶段或目标的情况下构建 Maven 项目，我们会得到一个错误:
 
-```
+```java
 [ERROR] No goals have been specified for this build. You must specify a valid lifecycle phase or a goal
 ```
 

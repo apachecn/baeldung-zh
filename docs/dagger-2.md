@@ -26,7 +26,7 @@
 
 为了在项目中使用 Dagger，我们需要将[的`dagger`依赖](https://web.archive.org/web/20221023105416/https://search.maven.org/classic/#artifactdetails%7Ccom.google.dagger%7Cdagger%7C2.16%7Cjar)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.google.dagger</groupId>
     <artifactId>dagger</artifactId>
@@ -36,7 +36,7 @@
 
 此外，我们还需要[包含 Dagger 编译器](https://web.archive.org/web/20221023105416/https://search.maven.org/classic/#artifactdetails%7Ccom.google.dagger%7Cdagger-compiler%7C2.16%7Cjar)，用于将我们的注释类转换成用于注入的代码:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-compiler-plugin</artifactId>
@@ -59,7 +59,7 @@
 
 或者，如果我们在 Gradle 上使用 Android，我们可以包含两个依赖项:
 
-```
+```java
 compile 'com.google.dagger:dagger:2.16'
 annotationProcessor 'com.google.dagger:dagger-compiler:2.16'
 ```
@@ -74,7 +74,7 @@ annotationProcessor 'com.google.dagger:dagger-compiler:2.16'
 
 我们可以给字段或构造函数添加注释。但是，由于 **Dagger 不支持私有字段**上的注入，我们将使用构造函数注入来保持封装:
 
-```
+```java
 public class Car {
 
     private Engine engine;
@@ -104,7 +104,7 @@ public class Car {
 
 为了创建一个模块，**我们需要用`@Module` 注释**来注释这个类。此注释表明该类可以使依赖项对容器可用:
 
-```
+```java
 @Module
 public class VehiclesModule {
 }
@@ -112,7 +112,7 @@ public class VehiclesModule {
 
 然后，**我们需要在构造依赖关系的方法上添加`@Provides`注释**:
 
-```
+```java
 @Module
 public class VehiclesModule {
     @Provides
@@ -136,7 +136,7 @@ public class VehiclesModule {
 
 简单地说，我们需要一个返回`Car` 和**的方法签名，我们需要用`@Component`注释**来标记这个类:
 
-```
+```java
 @Singleton
 @Component(modules = VehiclesModule.class)
 public interface VehiclesComponent {
@@ -154,7 +154,7 @@ public interface VehiclesComponent {
 
 之后，我们将找到与接口同名的组件实现，只是前缀为“`Dagger`”:
 
-```
+```java
 @Test
 public void givenGeneratedComponent_whenBuildingCar_thenDependenciesInjected() {
     VehiclesComponent component = DaggerVehiclesComponent.create();

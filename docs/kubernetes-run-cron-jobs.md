@@ -31,7 +31,7 @@ Cron 作业按计划运行。使用[标准符号](/web/20220815225448/https://ww
 
 Kubernetes 中的 Cron 作业类似于其他工作负载，比如部署或守护进程集。事实上，定义 cron 工作的 YAML 看起来非常相似:
 
-```
+```java
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -79,13 +79,13 @@ spec:
 
 首先，假设我们将把 cron 作业 YAML 定义放到一个名为`cronjob.yaml`的文件中。然后，我们可以使用`kubelet`命令创建 cron 作业:
 
-```
+```java
 kubelet create -f /path/to/cronjob.yaml
 ```
 
 此外，我们可以使用以下命令列出所有 cron 作业:
 
-```
+```java
 kubectl get cronjob
 NAME          SCHEDULE    SUSPEND   ACTIVE   LAST SCHEDULE   AGE
 cleanup-job   * 2 * * *   False     0        15s             32s
@@ -93,7 +93,7 @@ cleanup-job   * 2 * * *   False     0        15s             32s
 
 我们还可以使用`describe`命令查看特定 cron 作业的详细信息，包括运行历史:
 
-```
+```java
 kubectl describe cronjob hello
 Name:                          cleanup-job
 Namespace:                     default
@@ -133,7 +133,7 @@ Events:
 
 最后，当我们不再需要 cron 作业时，我们可以使用以下命令删除它:
 
-```
+```java
 kubectl delete cronjob cleanup-job
 ```
 
@@ -155,25 +155,25 @@ cron 作业计划语法包含由空格分隔的五个参数。每个参数可以
 
 让我们看一些例子。首先，我们可以安排一个作业在每天上午 8:00 运行:
 
-```
+```java
 0 8 * * *
 ```
 
 让我们看看每周二下午 5:00 运行作业的计划参数:
 
-```
+```java
 0 17 * * 2
 ```
 
 最后，让我们看看如何在每月 15 日每隔一小时的 30 分钟运行一个作业:
 
-```
+```java
 30 0,2,4,6,8,10,12,14,16,18,20,22 15 * *
 ```
 
 **注意，上述时间表也可以使用 skip 语法**来简化:
 
-```
+```java
 30 0-23/2 15 * *
 ```
 
@@ -193,7 +193,7 @@ cron 作业计划语法包含由空格分隔的五个参数。每个参数可以
 
 从 Kubernetes 版本 1.24 开始，可以将时区指定为 cron 作业规范的一部分:
 
-```
+```java
 spec:
   schedule: "0 2 * * *"
   timeZone: "GMT"

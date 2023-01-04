@@ -24,7 +24,7 @@ BDD 鼓励用自然的、人类可读的语言编写测试，关注应用程序�
 
 **mock ITO 的 BDD 版本是`mockito-core`库**的一部分，为了开始，我们只需要包含工件:
 
-```
+```java
 <dependency>
     <groupId>org.mockito</groupId>
     <artifactId>mockito-core</artifactId>
@@ -38,7 +38,7 @@ BDD 鼓励用自然的、人类可读的语言编写测试，关注应用程序�
 
 如果我们包含以下静态导入，我们的测试将变得更具可读性:
 
-```
+```java
 import static org.mockito.BDDMockito.*;
 ```
 
@@ -54,7 +54,7 @@ Mockito 中的传统嘲讽是使用 *when(obj)* 来执行的。`then*()`在排�
 
 让我们看一个使用传统 Mockito 的测试体的例子:
 
-```
+```java
 when(phoneBookRepository.contains(momContactName))
   .thenReturn(false);
 
@@ -66,7 +66,7 @@ verify(phoneBookRepository)
 
 让我们看看这与`BDDMockito`相比如何:
 
-```
+```java
 given(phoneBookRepository.contains(momContactName))
   .willReturn(false);
 
@@ -81,7 +81,7 @@ then(phoneBookRepository)
 
 让我们试着测试一下`PhoneBookService`，我们需要模拟一下`PhoneBookRepository:`
 
-```
+```java
 public class PhoneBookService {
     private PhoneBookRepository phoneBookRepository;
 
@@ -107,7 +107,7 @@ public class PhoneBookService {
 
 使用`BDDMockito,` ,我们可以很容易地将 Mockito 配置为每当调用我们的模拟对象目标方法时返回一个固定的结果:
 
-```
+```java
 given(phoneBookRepository.contains(momContactName))
   .willReturn(false);
 
@@ -122,7 +122,7 @@ then(phoneBookRepository)
 
 `BDDMockito`允许我们提供一种更复杂的方式来返回值。我们可以根据输入返回一个动态结果:
 
-```
+```java
 given(phoneBookRepository.contains(momContactName))
   .willReturn(true);
 given(phoneBookRepository.getPhoneNumberByContactName(momContactName))
@@ -140,7 +140,7 @@ then(phoneBookRepository)
 
 告诉 Mockito 抛出异常非常简单:
 
-```
+```java
 given(phoneBookRepository.contains(xContactName))
   .willReturn(false);
 willThrow(new RuntimeException())

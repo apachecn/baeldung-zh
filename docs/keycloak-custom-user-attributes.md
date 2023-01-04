@@ -18,7 +18,7 @@ Keycloak 是一个第三方授权服务器，管理我们的网络或移动应�
 
 这里的第一步是进入 Keycloak 的管理控制台。为此，我们需要从 Keycloak 发行版的`bin`文件夹中运行这个命令来启动服务器:
 
-```
+```java
 ./standalone.sh -Djboss.socket.binding.port-offset=100
 ```
 
@@ -56,7 +56,7 @@ Keycloak 是一个第三方授权服务器，管理我们的网络或移动应�
 
 在我们的 [Spring Boot 应用程序](/web/20220625235456/https://www.baeldung.com/spring-boot-keycloak#springboot)的基础上，让我们添加一个新的 REST 控制器来获得我们添加的用户属性:
 
-```
+```java
 @Controller
 public class CustomUserAttrController {
 
@@ -92,7 +92,7 @@ public class CustomUserAttrController {
 
 这是一个名为`userInfo.html,`的模板，我们将使用它来显示这些信息:
 
-```
+```java
 <div id="container">
     <h1>Hello, <span th:text="${username}">--name--</span>.</h1>
     <h3>Your Date of Birth as per our records is <span th:text="${dob}"/>.</h3>
@@ -117,7 +117,7 @@ public class CustomUserAttrController {
 
 要将属性`DOB`添加到我们的用户`[[email protected]](/web/20220625235456/https://www.baeldung.com/cdn-cgi/l/email-protection)`，首先，我们需要配置它的属性:
 
-```
+```java
 "attributes" : {
     "DOB" : "1984-07-01"
 },
@@ -125,7 +125,7 @@ public class CustomUserAttrController {
 
 然后为`DOB`添加协议映射器:
 
-```
+```java
 "protocolMappers": [
     {
     "id": "c5237a00-d3ea-4e87-9caf-5146b02d1a15",
@@ -155,7 +155,7 @@ public class CustomUserAttrController {
 
 让我们为它编写一个 API:
 
-```
+```java
 @RestController
 public class CustomUserAttrController {
     @GetMapping("/user/info/custom")
@@ -171,7 +171,7 @@ public class CustomUserAttrController {
 
 我们首先需要获得一个访问令牌，然后调用资源服务器上的`/user/info/custom` API 端点:
 
-```
+```java
 @Test
 public void givenUserWithReadScope_whenGetUserInformationResource_thenSuccess() {
     String accessToken = obtainAccessToken("read");

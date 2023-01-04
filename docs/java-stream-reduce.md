@@ -36,7 +36,7 @@ Learn some common patterns for Java functional interfaces that take two paramete
 
 为了更好地理解 identity、accumulator 和 combiner 元素的功能，让我们看一些基本的例子:
 
-```
+```java
 List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
 int result = numbers
   .stream()
@@ -48,7 +48,7 @@ assertThat(result).isEqualTo(21);
 
 同样，**λ表达式**:
 
-```
+```java
 subtotal, element -> subtotal + element
 ```
 
@@ -56,7 +56,7 @@ subtotal, element -> subtotal + element
 
 为了使代码更加简洁，我们可以使用方法引用来代替 lambda 表达式:
 
-```
+```java
 int result = numbers.stream().reduce(0, Integer::sum);
 assertThat(result).isEqualTo(21);
 ```
@@ -65,7 +65,7 @@ assertThat(result).isEqualTo(21);
 
 例如，我们可以在一组`String`元素上使用`reduce()`,并将它们合并成一个结果:
 
-```
+```java
 List<String> letters = Arrays.asList("a", "b", "c", "d", "e");
 String result = letters
   .stream()
@@ -75,14 +75,14 @@ assertThat(result).isEqualTo("abcde");
 
 类似地，我们可以切换到使用方法引用的版本:
 
-```
+```java
 String result = letters.stream().reduce("", String::concat);
 assertThat(result).isEqualTo("abcde");
 ```
 
 让我们使用`reduce()`操作来连接`letters`数组的大写元素:
 
-```
+```java
 String result = letters
   .stream()
   .reduce(
@@ -92,7 +92,7 @@ assertThat(result).isEqualTo("ABCDE");
 
 此外，我们可以在并行化的流中使用`reduce()`(稍后会详细介绍):
 
-```
+```java
 List<Integer> ages = Arrays.asList(25, 30, 45, 28, 32);
 int computedAges = ages.parallelStream().reduce(0, (a, b) -> a + b, Integer::sum);
 ```
@@ -101,7 +101,7 @@ int computedAges = ages.parallelStream().reduce(0, (a, b) -> a + b, Integer::sum
 
 有趣的是，这段代码无法编译:
 
-```
+```java
 List<User> users = Arrays.asList(new User("John", 30), new User("Julie", 35));
 int computedAges = 
   users.stream().reduce(0, (partialAgeResult, user) -> partialAgeResult + user.getAge()); 
@@ -111,7 +111,7 @@ int computedAges =
 
 我们可以通过使用合并器来解决这个问题:
 
-```
+```java
 int result = users.stream()
   .reduce(0, (partialAgeResult, user) -> partialAgeResult + user.getAge(), Integer::sum);
 assertThat(result).isEqualTo(65);
@@ -139,7 +139,7 @@ assertThat(result).isEqualTo(65);
 
 让我们创建一个简单的[JMH](/web/20221208143903/https://www.baeldung.com/java-microbenchmark-harness)(Java 微基准测试工具)基准测试，并比较在顺序流和并行流上使用`reduce()`操作时各自的执行时间:
 
-```
+```java
 @State(Scope.Thread)
 private final List<User> userList = createUsers();
 
@@ -164,7 +164,7 @@ public Integer executeReduceOnSequentialStream() {
 
 这些是我们的基准测试结果:
 
-```
+```java
 Benchmark                                                   Mode  Cnt  Score    Error  Units
 JMHStreamReduceBenchMark.executeReduceOnParallelizedStream  avgt    5  0,007 ±  0,001   s/op
 JMHStreamReduceBenchMark.executeReduceOnSequentialStream    avgt    5  0,010 ±  0,001   s/op
@@ -176,7 +176,7 @@ JMHStreamReduceBenchMark.executeReduceOnSequentialStream    avgt    5  0,010 ± 
 
 例如，假设我们需要将一个流的所有元素除以一个提供的因子，然后将它们相加:
 
-```
+```java
 List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
 int divider = 2;
 int result = numbers.stream().reduce(0, a / divider + b / divider); 
@@ -186,7 +186,7 @@ int result = numbers.stream().reduce(0, a / divider + b / divider);
 
 我们可以很容易地捕捉异常并对其做一些有用的事情，比如记录它、从它恢复等等，这取决于用例，通过使用 [try/catch](/web/20221208143903/https://www.baeldung.com/java-exceptions) 块:
 
-```
+```java
 public static int divideListElements(List<Integer> values, int divider) {
     return values.stream()
       .reduce(0, (a, b) -> {
@@ -204,7 +204,7 @@ public static int divideListElements(List<Integer> values, int divider) {
 
 为了解决这个问题，我们可以使用[提取函数重构技术](https://web.archive.org/web/20221208143903/https://refactoring.com/catalog/extractFunction.html) **并将`try/catch`块提取到一个单独的方法**:
 
-```
+```java
 private static int divide(int value, int factor) {
     int result = 0;
     try {
@@ -218,7 +218,7 @@ private static int divide(int value, int factor) {
 
 现在,`divideListElements()`方法的实现再次变得清晰而流畅:
 
-```
+```java
 public static int divideListElements(List<Integer> values, int divider) {
     return values.stream().reduce(0, (a, b) -> divide(a, divider) + divide(b, divider));
 } 
@@ -226,21 +226,21 @@ public static int divideListElements(List<Integer> values, int divider) {
 
 假设`divideListElements()`是一个由抽象`NumberUtils`类实现的实用方法，我们可以创建一个单元测试来检查`divideListElements()`方法的行为:
 
-```
+```java
 List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
 assertThat(NumberUtils.divideListElements(numbers, 1)).isEqualTo(21); 
 ```
 
 当提供的`Integer`值的`List`包含 0 时，让我们也测试一下`divideListElements()`方法:
 
-```
+```java
 List<Integer> numbers = Arrays.asList(0, 1, 2, 3, 4, 5, 6);
 assertThat(NumberUtils.divideListElements(numbers, 1)).isEqualTo(21); 
 ```
 
 最后，让我们测试分频器也为 0 时的方法实现:
 
-```
+```java
 List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
 assertThat(NumberUtils.divideListElements(numbers, 0)).isEqualTo(0);
 ```
@@ -255,7 +255,7 @@ assertThat(NumberUtils.divideListElements(numbers, 0)).isEqualTo(0);
 
 每个`Review` 应该包含一个简单的评论和分数:
 
-```
+```java
 public class Review {
 
     private int points;
@@ -267,7 +267,7 @@ public class Review {
 
 接下来，我们需要定义我们的`Rating,` ，它将在`points`字段旁边保存我们的评论。随着我们添加更多评论，该字段将相应增加或减少:
 
-```
+```java
 public class Rating {
 
     double points;
@@ -300,7 +300,7 @@ public class Rating {
 
 接下来，让我们定义一个`User`列表，每个列表都有自己的评论集:
 
-```
+```java
 User john = new User("John", 30);
 john.getRating().add(new Review(5, ""));
 john.getRating().add(new Review(3, "not bad"));
@@ -315,7 +315,7 @@ List<User> users = Arrays.asList(john, julie);
 
 **作为一个`identity`，如果我们的输入列表为空**，让我们返回一个新的`Rating`:
 
-```
+```java
 Rating averageRating = users.stream()
   .reduce(new Rating(), 
     (rating, user) -> Rating.average(rating, user.getRating()), 
@@ -324,7 +324,7 @@ Rating averageRating = users.stream()
 
 如果我们算一下，我们应该会发现平均分数是 3.6:
 
-```
+```java
 assertThat(averageRating.getPoints()).isEqualTo(3.6);
 ```
 

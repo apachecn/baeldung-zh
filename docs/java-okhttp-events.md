@@ -29,7 +29,7 @@ OkHttp 是一款适用于 Android 和 Java 应用的高效 HTTP & HTTP/2 客户�
 
 当然，我们需要将标准的 [`okhttp`依赖关系](https://web.archive.org/web/20220630004056/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.squareup.okhttp3%22%20AND%20a%3A%22okhttp%22)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.squareup.okhttp3</groupId>
     <artifactId>okhttp</artifactId>
@@ -39,7 +39,7 @@ OkHttp 是一款适用于 Android 和 Java 应用的高效 HTTP & HTTP/2 客户�
 
 我们还需要另一个专门用于测试的依赖项。再来补充一下 OkHttp [`mockwebserver`神器](https://web.archive.org/web/20220630004056/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.squareup.okhttp3%22%20AND%20a%3A%22mockwebserver%22):
 
-```
+```java
 <dependency>
     <groupId>com.squareup.okhttp3</groupId>
     <artifactId>mockwebserver</artifactId>
@@ -106,7 +106,7 @@ OkHttp 是一款适用于 Android 和 Java 应用的高效 HTTP & HTTP/2 客户�
 
 让我们从定义我们自己的 even 监听器开始。为了简单起见，**我们的事件监听器将记录调用开始和结束的时间，以及一些请求和响应头信息**:
 
-```
+```java
 public class SimpleLogEventsListener extends EventListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleLogEventsListener.class);
@@ -141,7 +141,7 @@ public class SimpleLogEventsListener extends EventListener {
 
 要真正利用这个监听器，我们需要做的就是在构建我们的`OkHttpClient`实例时调用`eventListener`方法，它应该可以正常工作:
 
-```
+```java
 OkHttpClient client = new OkHttpClient.Builder() 
   .eventListener(new SimpleLogEventsListener())
   .build();
@@ -153,7 +153,7 @@ OkHttpClient client = new OkHttpClient.Builder()
 
 现在，我们已经定义了第一个事件监听器；让我们继续编写我们的第一个集成测试:
 
-```
+```java
 @Rule
 public MockWebServer server = new MockWebServer();
 
@@ -190,7 +190,7 @@ public void givenSimpleEventLogger_whenRequestSent_thenCallsLogged() throws IOEx
 
 当我们运行测试时，我们将看到我们的事件被记录:
 
-```
+```java
 callStart at 2021-05-04T17:51:33.024
 ...
 requestHeadersEnd at 2021-05-04T17:51:33.046 with headers User-Agent: A Baeldung Reader
@@ -206,7 +206,7 @@ callEnd at 2021-05-04T17:51:33.055
 
 现在，让我们假设我们想要构建简单的日志示例，并记录调用链中每个步骤的运行时间:
 
-```
+```java
 public class EventTimer extends EventListener {
 
     private long start;
@@ -233,7 +233,7 @@ public class EventTimer extends EventListener {
 
 让我们来看看我们是否在一个真实的网站上运行它，比如我们自己的[https://www.baeldung.com/](/web/20220630004056/https://www.baeldung.com/):
 
-```
+```java
 0.000 callStart
 0.012 proxySelectStart
 0.012 proxySelectEnd
@@ -260,7 +260,7 @@ public class EventTimer extends EventListener {
 
 到目前为止，我们关注的是成功的 HTTP 请求，但是我们也可以捕获失败的事件:
 
-```
+```java
 @Test (expected = SocketTimeoutException.class)
 public void givenConnectionError_whenRequestSent_thenFailedCallsLogged() throws IOException {
     OkHttpClient client = new OkHttpClient.Builder()
@@ -279,7 +279,7 @@ public void givenConnectionError_whenRequestSent_thenFailedCallsLogged() throws 
 
 现在让我们来看看运行测试时的输出:
 
-```
+```java
 0.000 callStart
 ...
 10.008 responseFailed

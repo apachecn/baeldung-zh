@@ -16,7 +16,7 @@
 
 分别将`@EnableDataFlowServer`注释添加到`server's`主类中，将`@`注释添加到 shell 的主类中后，可以通过执行以下命令来启动它们:
 
-```
+```java
 mvn spring-boot:run
 ```
 
@@ -38,7 +38,7 @@ mvn spring-boot:run
 
 首先，让我们添加几个 Maven 依赖项。由于这是一个批处理应用程序，我们需要从`Spring Batch Project`导入库:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-batch</artifactId>
@@ -47,7 +47,7 @@ mvn spring-boot:run
 
 此外，由于 Spring Cloud 任务使用关系数据库来存储执行任务的结果，我们需要向 RDBMS 驱动程序添加一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -62,7 +62,7 @@ mvn spring-boot:run
 
 启用所需功能的关键点是将`@EnableTask`和`@EnableBatchProcessing` 注释添加到`Spring Boot's`主类中。这个类级注释告诉 Spring Cloud Task 引导所有内容:
 
-```
+```java
 @EnableTask
 @EnableBatchProcessing
 @SpringBootApplication
@@ -78,7 +78,7 @@ public class BatchJobApplication {
 
 最后，让我们配置一个作业——在本例中，简单地将`String`打印到一个日志文件中:
 
-```
+```java
 @Configuration
 public class JobConfiguration {
 
@@ -113,7 +113,7 @@ D 关于如何配置和定义作业的详细信息不在本文的讨论范围之
 
 最后，我们的应用程序准备好了。让我们将它安装在本地 Maven 存储库中。要做到这一点,`cd`进入项目的根目录并发出命令:
 
-```
+```java
 mvn clean install
 ```
 
@@ -125,7 +125,7 @@ mvn clean install
 
 转到`Spring Cloud Data Flow Shell`并在提示符下发出命令:
 
-```
+```java
 app register --name batch-job --type task 
   --uri maven://com.baeldung.spring.cloud:batch-job:jar:0.0.1-SNAPSHOT
 ```
@@ -134,7 +134,7 @@ app register --name batch-job --type task
 
 可以使用以下命令创建任务定义:
 
-```
+```java
 task create myjob --definition batch-job
 ```
 
@@ -142,7 +142,7 @@ task create myjob --definition batch-job
 
 可以使用以下命令获得当前任务定义的列表:
 
-```
+```java
 task list
 ```
 
@@ -150,13 +150,13 @@ task list
 
 要启动一项任务，我们可以使用以下命令:
 
-```
+```java
 task launch myjob
 ```
 
 一旦任务启动，任务的状态就存储在关系数据库中。我们可以使用以下命令检查任务执行的状态:
 
-```
+```java
 task execution list
 ```
 
@@ -166,7 +166,7 @@ task execution list
 
 要查看结果，我们可以跟踪日志:
 
-```
+```java
 tail -f PATH_TO_LOG\spring-cloud-dataflow-2385233467298102321\myjob-1472827120414\myjob
 [...] --- [main] o.s.batch.core.job.SimpleStepHandler: Executing step: [jobStep1]
 [...] --- [main] o.b.spring.cloud.JobConfiguration: Job was run

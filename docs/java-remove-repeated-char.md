@@ -14,7 +14,7 @@
 
 下面，我们从一个给定的字符串对象中获取一个`Int` `S` `tream`的实例。然后，我们使用`distinct`方法删除重复的内容。最后，我们调用`forEach`方法来循环不同的字符，并将它们附加到我们的 [`StringBuilder`](/web/20220913031431/https://www.baeldung.com/java-string-builder-string-buffer) :
 
-```
+```java
 StringBuilder sb = new StringBuilder();
 str.chars().distinct().forEach(c -> sb.append((char) c));
 ```
@@ -31,7 +31,7 @@ str.chars().distinct().forEach(c -> sb.append((char) c));
 
 从字符串中删除重复项的简单方法是**遍历输入，并使用 [`indexOf` 方法](/web/20220913031431/https://www.baeldung.com/string/index-of)检查当前字符是否已经存在于结果字符串**中:
 
-```
+```java
 StringBuilder sb = new StringBuilder();
 int idx;
 for (int i = 0; i < str.length(); i++) {
@@ -57,7 +57,7 @@ for (int i = 0; i < str.length(); i++) {
 
 正如我们在下面看到的，我们正在创建两个`for`循环，并且我们正在检查每个元素是否在字符串中重复。如果发现重复，我们不会将其附加到`StringBuilder`:
 
-```
+```java
 char[] chars = str.toCharArray();
 StringBuilder sb = new StringBuilder();
 boolean repeatedChar;
@@ -89,7 +89,7 @@ for (int i = 0; i < chars.length; i++) {
 
 在每次迭代中，我们都要将数组中的每个元素与前一个元素进行比较。如果元素不同，那么我们将把当前字符附加到`StringBuilder:`
 
-```
+```java
 StringBuilder sb = new StringBuilder();
 if(!str.isEmpty()) {
     char[] chars = str.toCharArray();
@@ -118,7 +118,7 @@ if(!str.isEmpty()) {
 
 在这两种情况下，我们将遍历输入字符串并将每个字符添加到`Set`中。一旦字符被插入到集合中，我们将迭代它以将它们添加到`StringBuilder `并返回结果字符串:
 
-```
+```java
 StringBuilder sb = new StringBuilder();
 Set<Character> linkedHashSet = new LinkedHashSet<>();
 

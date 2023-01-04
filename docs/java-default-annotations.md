@@ -47,7 +47,7 @@ Java 8 允许我们以一种更加函数化的方式编写代码。
 
 [单一抽象方法接口](/web/20220625164214/https://www.baeldung.com/java-8-functional-interfaces)是其中很大的一部分。**如果我们打算让 lambdas 使用一个 SAM 接口，我们可以选择用`@FunctionalInterface`** 标记它:
 
-```
+```java
 @FunctionalInterface
 public interface Adder {
     int add(int a, int b);
@@ -58,14 +58,14 @@ public interface Adder {
 
 现在，不管我们是否使用`@FunctionalInterface` ，我们仍然可以以同样的方式使用`Adder` :
 
-```
+```java
 Adder adder = (a,b) -> a + b;
 int result = adder.add(4,5);
 ```
 
 但是，如果我们给`Adder,` 添加第二个方法，那么编译器会抱怨:
 
-```
+```java
 @FunctionalInterface
 public interface Adder { 
     // compiler complains that the interface is not a SAM
@@ -83,7 +83,7 @@ public interface Adder {
 
 从 Java 8 开始，`java.lang.annotation `包中有一个新的注释叫做`[Native](https://web.archive.org/web/20220625164214/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Native.html). ``@Native `注释只适用于字段。**表示注释字段是一个常量，可以从本机代码**中引用。例如，下面是它在`Integer `类中的用法:
 
-```
+```java
 public final class Integer {
     @Native public static final int MIN_VALUE = 0x80000000;
     // omitted
@@ -112,7 +112,7 @@ public final class Integer {
 
 `@Target`可以与 [12 种不同的元素类型](https://web.archive.org/web/20220625164214/https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/lang/annotation/ElementType.html)一起工作。如果我们看一下`@SafeVarargs`的源代码，那么我们可以看到它必须只附加到构造函数或方法上:
 
-```
+```java
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.CONSTRUCTOR, ElementType.METHOD})
@@ -136,7 +136,7 @@ public @interface SafeVarargs {
 
 如果我们有一个应该在运行时可访问的注释:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(TYPE)
 public @interface RetentionAnnotation {
@@ -145,7 +145,7 @@ public @interface RetentionAnnotation {
 
 然后，如果我们给一个类添加一些注释:
 
-```
+```java
 @RetentionAnnotation
 @Generated("Available only on source code")
 public class AnnotatedClass {
@@ -154,7 +154,7 @@ public class AnnotatedClass {
 
 现在我们可以反思一下`AnnotatedClass`，看看保留了多少注释:
 
-```
+```java
 @Test
 public void whenAnnotationRetentionPolicyRuntime_shouldAccess() {
     AnnotatedClass anAnnotatedClass = new AnnotatedClass();
@@ -173,7 +173,7 @@ public void whenAnnotationRetentionPolicyRuntime_shouldAccess() {
 
 如果我们将`@Inherited` 应用于我们的自定义注释，然后将它应用于`BaseClass`:
 
-```
+```java
 @Inherited
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -190,7 +190,7 @@ public class DerivedClass extends BaseClass {
 
 然后，在扩展了基类之后，我们应该看到`DerivedClass` 在运行时似乎有相同的注释:
 
-```
+```java
 @Test
 public void whenAnnotationInherited_thenShouldExist() {
     DerivedClass derivedClass = new DerivedClass();
@@ -211,7 +211,7 @@ public void whenAnnotationInherited_thenShouldExist() {
 
 如果我们创建一个使用`@Documented`的定制注释:
 
-```
+```java
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -222,7 +222,7 @@ public @interface ExcelCell {
 
 并将它应用到适当的 Java 元素:
 
-```
+```java
 public class Employee {
     @ExcelCell(0)
     public String name;
@@ -239,7 +239,7 @@ public class Employee {
 
 在 Java 7 之前，我们必须将注释组合到一个容器注释中:
 
-```
+```java
 @Schedules({
     @Schedule(time = "15:05"),
     @Schedule(time = "23:00")
@@ -250,7 +250,7 @@ void scheduledAlarm() {
 
 然而，Java 7 带来了更干净的方法。**用****`@Repeatable`****标注，我们可以使标注可重复**:
 
-```
+```java
 @Repeatable(Schedules.class)
 public @interface Schedule {
     String time() default "09:00";
@@ -259,7 +259,7 @@ public @interface Schedule {
 
 要使用`@Repeatable`，我们也需要一个容器注释`.` 在这种情况下，我们将重用`@Schedules`:
 
-```
+```java
 public @interface Schedules {
     Schedule[] value();
 }
@@ -267,7 +267,7 @@ public @interface Schedules {
 
 当然，这看起来很像 Java 7 之前的样子。但是，现在的价值是，当我们需要重复`@Schedule`时，不再指定包装器`@Schedules`:
 
-```
+```java
 @Schedule
 @Schedule(time = "15:05")
 @Schedule(time = "23:00")

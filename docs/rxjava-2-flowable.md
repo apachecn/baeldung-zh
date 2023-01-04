@@ -32,7 +32,7 @@ RxJava 2 引入了这两种源之间的明显区别——背压感知源现在�
 
 我们可以使用`just()`方法创建一个`Flowable`，就像我们使用`Observable :` 一样
 
-```
+```java
 Flowable<Integer> integerFlowable = Flowable.just(1, 2, 3, 4);
 ```
 
@@ -42,7 +42,7 @@ Flowable<Integer> integerFlowable = Flowable.just(1, 2, 3, 4);
 
 **当我们有一个`Observable`时，我们可以使用`toFlowable()`方法**轻松地将其转换为`Flowable` :
 
-```
+```java
 Observable<Integer> integerObservable = Observable.just(1, 2, 3);
 Flowable<Integer> integerFlowable = integerObservable
   .toFlowable(BackpressureStrategy.BUFFER);
@@ -58,7 +58,7 @@ Flowable<Integer> integerFlowable = integerObservable
 
 当我们有了`FlowableOnSubscribe`之后，我们可以用它来创建`Flowable`:
 
-```
+```java
 FlowableOnSubscribe<Integer> flowableOnSubscribe
  = flowable -> flowable.onNext(1);
 Flowable<Integer> integerFlowable = Flowable
@@ -83,7 +83,7 @@ RxJava 2 中有五种不同的策略。
 
 **如果我们使用`BackpressureStrategy.BUFFER` `,` ，源将缓冲所有事件，直到订户可以消费它们**:
 
-```
+```java
 public void thenAllValuesAreBufferedAndReceived() {
     List testList = IntStream.range(0, 100000)
       .boxed()
@@ -115,7 +115,7 @@ public void thenAllValuesAreBufferedAndReceived() {
 
 这同样类似于在`Flowable`上使用`onBackpressureDrop` `()`:
 
-```
+```java
 public void whenDropStrategyUsed_thenOnBackpressureDropped() {
 
     Observable observable = Observable.fromIterable(testList);
@@ -140,7 +140,7 @@ public void whenDropStrategyUsed_thenOnBackpressureDropped() {
 
 **使用`BackpressureStrategy.LATEST`将强制源仅保留最新的事件，因此如果消费者跟不上，将覆盖任何先前的值:**
 
-```
+```java
 public void whenLatestStrategyUsed_thenTheLastElementReceived() {
 
     Observable observable = Observable.fromIterable(testList);
@@ -172,7 +172,7 @@ public void whenLatestStrategyUsed_thenTheLastElementReceived() {
 
 当我们使用`BackpressureStrategy.ERROR,`时，我们只是说**我们不希望背压出现**。因此，如果消费者跟不上来源，应该抛出一个`MissingBackpressureException`:
 
-```
+```java
 public void whenErrorStrategyUsed_thenExceptionIsThrown() {
     Observable observable = Observable.range(1, 100000);
     TestSubscriber subscriber = observable
@@ -191,7 +191,7 @@ public void whenErrorStrategyUsed_thenExceptionIsThrown() {
 
 在这种情况下，下游必须处理溢出:
 
-```
+```java
 public void whenMissingStrategyUsed_thenException() {
     Observable observable = Observable.range(1, 100000);
     TestSubscriber subscriber = observable

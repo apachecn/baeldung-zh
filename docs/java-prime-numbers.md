@@ -16,7 +16,7 @@
 
 如果数字是质数，以下逻辑将返回`true`:
 
-```
+```java
 public boolean isPrime(int number) {
     return number > 1 
       && IntStream.rangeClosed(2, (int) Math.sqrt(number))
@@ -32,7 +32,7 @@ public boolean isPrime(int number) {
 
 **快速补充说明**—`isProbablePrime`API 使用所谓的“米勒-拉宾和卢卡斯-莱默”素性测试来检查数字是否可能是质数。在数小于 100 位的情况下，仅使用“米勒-拉宾”检验，否则，两种检验都用于检查数的素性。
 
-```
+```java
 public boolean isPrime(int number) {
     BigInteger bigInt = BigInteger.valueOf(number);
     return bigInt.isProbablePrime(100);
@@ -45,7 +45,7 @@ Apache Commons Math API 提供了一个名为`org.apache.commons.math3.primes.Pr
 
 首先，我们需要通过在我们的`pom.xml`中添加以下依赖项来导入 Apache Commons 数学库:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-math3</artifactId>
@@ -57,7 +57,7 @@ commons-math3 的最新版本可以在[这里](https://web.archive.org/web/20221
 
 我们可以通过调用方法来进行检查:
 
-```
+```java
 Primes.isPrime(number);
 ```
 

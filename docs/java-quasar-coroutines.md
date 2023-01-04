@@ -14,7 +14,7 @@
 
 Quasar 提供了三个依赖项,我们需要将它们包含在我们的构建中:
 
-```
+```java
 <dependency>
     <groupId>co.paralleluniverse</groupId>
     <artifactId>quasar-core</artifactId>
@@ -43,7 +43,7 @@ Quasar 的实现依赖于字节码插装来正确工作。为了执行字节码�
 
 为了用 Maven 运行 Java 代理，我们需要包含`[maven-dependency-plugin](https://web.archive.org/web/20221208143839/https://maven.apache.org/plugins/maven-dependency-plugin/)`来总是运行`properties`目标:
 
-```
+```java
 <plugin>
     <artifactId>maven-dependency-plugin</artifactId>
     <version>3.1.1</version>
@@ -62,7 +62,7 @@ Quasar 的实现依赖于字节码插装来正确工作。为了执行字节码�
 
 为了执行我们的应用程序，我们将使用 [`exec-maven-plugin`](https://web.archive.org/web/20221208143839/https://www.mojohaus.org/exec-maven-plugin/) :
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>exec-maven-plugin</artifactId>
@@ -81,7 +81,7 @@ Quasar 的实现依赖于字节码插装来正确工作。为了执行字节码�
 
 为了使用该插件并启动我们的应用程序，我们将运行 Maven:
 
-```
+```java
 mvn compile dependency:properties exec:exec
 ```
 
@@ -91,7 +91,7 @@ mvn compile dependency:properties exec:exec
 
 为了启动`fiber,`,我们创建了一个`Fiber<T>`类的实例，它将包装我们想要执行的代码并调用`start`方法:
 
-```
+```java
 new Fiber<Void>(() -> {
     System.out.println("Inside fiber coroutine...");
 }).start();

@@ -22,7 +22,7 @@ Quarkus 扩展只是一个可以在 Quarkus 应用程序上运行的模块。Qua
 
 Liquibase 框架的入口点是 Liquibase API。要使用它，我们需要一个 changelog 文件、一个用于访问该文件的`ClassLoader`和一个用于底层数据库的`Connection`:
 
-```
+```java
 Connection c = DriverManager.getConnection("jdbc:h2:mem:testdb", "user", "password");
 ResourceAccessor resourceAccessor = new ClassLoaderResourceAccessor();
 String changLogFile = "db/liquibase-changelog-master.xml";
@@ -31,7 +31,7 @@ Liquibase liquibase = new Liquibase(changLogFile, resourceAccessor, new JdbcConn
 
 有了这个实例，我们只需调用`update()`方法来更新数据库以匹配 changelog 文件。
 
-```
+```java
 liquibase.update(new Contexts());
 ```
 
@@ -43,7 +43,7 @@ liquibase.update(new Contexts());
 
 因此，让我们首先创建一个名为`quarkus-liquibase-parent`的 Maven 多模块项目，它包含两个子模块`runtime`和`deployment`:
 
-```
+```java
 <modules>
     <module>runtime</module>
     <module>deployment</module>
@@ -62,7 +62,7 @@ liquibase.update(new Contexts());
 
 运行时模块将依赖于`[quarkus-core](https://web.archive.org/web/20221121100642/https://search.maven.org/search?q=g:io.quarkus%20AND%20a:quarkus-core&core=gav)`模块，并最终依赖于所需扩展的运行时模块。这里，我们需要[`quarkus-agroal`依赖项](https://web.archive.org/web/20221121100642/https://search.maven.org/artifact/io.quarkus/quarkus-agroal)，因为我们的扩展需要一个`Datasource.`，我们还将在这里包含 [Liquibase 库](https://web.archive.org/web/20221121100642/https://search.maven.org/search?q=g:org.liquibase%20AND%20a:liquibase-core&core=gav):
 
-```
+```java
 <dependency>
     <groupId>io.quarkus</groupId>
     <artifactId>quarkus-core</artifactId>
@@ -86,7 +86,7 @@ liquibase.update(new Contexts());
 
 无论哪种方式，我们都可以找到位于`META-INF/quarkus-extension.properties`下的扩展描述符:
 
-```
+```java
 deployment-artifact=com.baeldung.quarkus.liquibase\:deployment\:1.0-SNAPSHOT
 ```
 
@@ -94,7 +94,7 @@ deployment-artifact=com.baeldung.quarkus.liquibase\:deployment\:1.0-SNAPSHOT
 
 为了提供 changelog 文件，我们需要实现一个配置类:
 
-```
+```java
 @ConfigRoot(name = "liquibase", phase = ConfigPhase.BUILD_AND_RUN_TIME_FIXED)
 public final class LiquibaseConfig {
     @ConfigItem
@@ -104,7 +104,7 @@ public final class LiquibaseConfig {
 
 我们用`@ConfigRoot`注释类，用`@ConfigItem.`注释属性，因此，`changeLog`字段，即变更日志的 camel case 形式，将通过位于 Quarkus 应用程序类路径中的`application.properties`文件中的`quarkus.liquibase.change-log` 键提供:
 
-```
+```java
 quarkus.liquibase.change-log=db/liquibase-changelog-master.xml
 ```
 
@@ -116,7 +116,7 @@ quarkus.liquibase.change-log=db/liquibase-changelog-master.xml
 
 现在，我们将复制相同的代码，但是作为一个 CDI bean，我们将使用一个 CDI 生成器来实现这个目的:
 
-```
+```java
 @Produces
 public Liquibase produceLiquibase() throws Exception {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -131,7 +131,7 @@ public Liquibase produceLiquibase() throws Exception {
 
 在这一步，我们将编写一个记录器类，作为记录字节码和设置运行时逻辑的代理:
 
-```
+```java
 @Recorder
 public class LiquibaseRecorder {
 
@@ -166,7 +166,7 @@ public class LiquibaseRecorder {
 
 部署模块应该依赖于相应的运行时模块，并最终依赖于所需扩展的部署模块:
 
-```
+```java
 <dependency>
     <groupId>io.quarkus</groupId>
     <artifactId>quarkus-core-deployment</artifactId>
@@ -196,7 +196,7 @@ Quarkus 扩展的最新稳定版本与运行时模块相同。
 
 现在，让我们实现两个构建步骤处理器来记录字节码。第一个构建步骤处理器是`build()`方法，它将记录在静态 init 方法中执行的字节码。我们通过`STATIC_INIT`值对此进行配置:
 
-```
+```java
 @Record(ExecutionTime.STATIC_INIT)
 @BuildStep
 void build(BuildProducer<AdditionalBeanBuildItem> additionalBeanProducer,
@@ -221,7 +221,7 @@ void build(BuildProducer<AdditionalBeanBuildItem> additionalBeanProducer,
 
 反过来，`processMigration(),`将记录在 main 方法中执行的调用，因为它是使用用于记录的`RUNTIME_INIT`参数配置的。
 
-```
+```java
 @Record(ExecutionTime.RUNTIME_INIT)
 @BuildStep
 void processMigration(LiquibaseRecorder recorder, 
@@ -236,7 +236,7 @@ void processMigration(LiquibaseRecorder recorder,
 
 为了测试我们的扩展，我们将首先使用`quarkus-maven-plugin`创建一个 Quarkus 应用程序:
 
-```
+```java
 mvn io.quarkus:quarkus-maven-plugin:1.0.0.CR1:create\
 -DprojectGroupId=com.baeldung.quarkus.app\
 -DprojectArtifactId=quarkus-app
@@ -244,7 +244,7 @@ mvn io.quarkus:quarkus-maven-plugin:1.0.0.CR1:create\
 
 接下来，除了对应于底层数据库的 Quarkus JDBC 扩展之外，我们将添加我们的扩展作为依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.baeldung.quarkus.liquibase</groupId>
     <artifactId>runtime</artifactId>
@@ -259,7 +259,7 @@ mvn io.quarkus:quarkus-maven-plugin:1.0.0.CR1:create\
 
 接下来，我们需要在 pom 文件中有 [`quarkus-maven-plugin`](https://web.archive.org/web/20221121100642/https://search.maven.org/artifact/io.quarkus/quarkus-maven-plugin) :
 
-```
+```java
 <plugin>
     <groupId>io.quarkus</groupId>
     <artifactId>quarkus-maven-plugin</artifactId>
@@ -278,7 +278,7 @@ mvn io.quarkus:quarkus-maven-plugin:1.0.0.CR1:create\
 
 接下来，我们将通过位于`src/main/resources`中的`application.properties`文件提供数据源配置:
 
-```
+```java
 quarkus.datasource.url=jdbc:h2:mem:testdb
 quarkus.datasource.driver=org.h2.Driver
 quarkus.datasource.username=user
@@ -287,19 +287,19 @@ quarkus.datasource.password=password
 
 接下来，我们将为我们的 changelog 文件提供 changelog 配置:
 
-```
+```java
 quarkus.liquibase.change-log=db/liquibase-changelog-master.xml
 ```
 
 最后，我们可以在开发模式下启动应用程序:
 
-```
+```java
 mvn compile quarkus:dev
 ```
 
 或者在生产模式下:
 
-```
+```java
 mvn clean package
 java -jar target/quarkus-app-1.0-SNAPSHOT-runner.jar
 ```

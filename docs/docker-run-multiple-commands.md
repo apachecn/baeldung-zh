@@ -14,7 +14,7 @@
 
 例如，为了在一个单独的运行命令中运行 [`whoami`](/web/20221221193922/https://www.baeldung.com/linux/get-current-user) 和 `[date](/web/20221221193922/https://www.baeldung.com/linux/date-command)` 命令，我们可以使用下面的命令:
 
-```
+```java
 $ docker run centos:latest whoami && date
 root
 Sun Dec 18 10:09:30 UTC 2022 
@@ -24,7 +24,7 @@ Sun Dec 18 10:09:30 UTC 2022
 
 或者，**我们可以使用`-c`选项和****[shell](/web/20221221193922/https://www.baeldung.com/linux/sh-vs-bash)****同时执行多个命令**。`sh` `-c`选项允许我们传递一个包含多个命令的字符串作为参数。让我们使用`sh -c` : 运行`whoami`和`date`命令
 
-```
+```java
 $ docker run centos:latest sh -c "whoami && date"
 root
 Sun Dec 18 10:10:12 UTC 2022
@@ -32,7 +32,7 @@ Sun Dec 18 10:10:12 UTC 2022
 
 在一个运行命令中同时执行`whoami`和`date`命令。我们也可以使用`;` 操作符和`sh`的`-c`选项来运行多个命令。此外，让我们使用`-w`选项来指定命令在 Docker 容器中执行的工作目录:
 
-```
+```java
 $ docker run -w /home centos:latest sh -c "whoami ; pwd"
 root
 /home
@@ -48,14 +48,14 @@ root
 
 让我们看看在`ENTRYPOINT`部分指定多个命令的`Dockerfile`:
 
-```
+```java
 FROM centos 
 ENTRYPOINT ["sh", "-c", "whoami && date"]
 ```
 
 为了运行容器，我们需要首先构建映像:
 
-```
+```java
 $ docker build -f Dockerfile -t baeldung_run .
 Sending build context to Docker daemon  2.048kB
 Step 1/2 : FROM centos
@@ -70,14 +70,14 @@ Successfully tagged baeldung_run:latest
 
 让我们使用上面的 *baeldung_run:最新的* image:
 
-```
+```java
 $ docker run -itd --name baeldung_run baeldung_run 
 b2a8ff012797d6110fd73dfffbf3c39e081f111dc50aac5d9d62fa73845b8a59
 ```
 
 现在，我们可以通过查看*bael dung _ run*容器的日志文件来验证命令的执行:
 
-```
+```java
 $ docker logs -f baeldung_run
 root
 Sun Dec 18 10:13:44 UTC 2022
@@ -87,7 +87,7 @@ Sun Dec 18 10:13:44 UTC 2022
 
 我们也可以使用`CMD`指令运行多个命令。让我们看看带有`CMD`指令的`Dockerfile`:
 
-```
+```java
 FROM centos 
 CMD ["sh", "-c", "whoami && date"]
 ```

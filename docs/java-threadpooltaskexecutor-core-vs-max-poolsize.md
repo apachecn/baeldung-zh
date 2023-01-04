@@ -30,7 +30,7 @@ Spring [`ThreadPoolTaskExecutor`](https://web.archive.org/web/20221127063856/htt
 
 首先，假设我们有一个执行新线程的方法，从`ThreadPoolTaskExecutor`开始，命名为`startThreads`:
 
-```
+```java
 public void startThreads(ThreadPoolTaskExecutor taskExecutor, CountDownLatch countDownLatch, 
   int numThreads) {
     for (int i = 0; i < numThreads; i++) {
@@ -48,7 +48,7 @@ public void startThreads(ThreadPoolTaskExecutor taskExecutor, CountDownLatch cou
 
 让我们测试一下`ThreadPoolTaskExecutor`的默认配置，它定义了一个线程的`corePoolSize`，一个无界的`maxPoolSize,`和一个无界的`queueCapacity`。因此，我们希望无论我们启动多少任务，都只有一个线程在运行:
 
-```
+```java
 @Test
 public void whenUsingDefaults_thenSingleThread() {
     ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
@@ -65,7 +65,7 @@ public void whenUsingDefaults_thenSingleThread() {
 
 现在，让我们将`corePoolSize`改为最多五个线程，并确保它的行为与宣传的一样。因此，无论提交给`ThreadPoolTaskExecutor`的任务数量有多少，我们都希望启动五个线程:
 
-```
+```java
 @Test
 public void whenCorePoolSizeFive_thenFiveThreads() {
     ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
@@ -83,7 +83,7 @@ public void whenCorePoolSizeFive_thenFiveThreads() {
 
 类似地，我们可以将`maxPoolSize`增加到 10，而将`corePoolSize`保持在 5。因此，我们预计只启动五个线程。澄清一下，只有五个线程启动，因为`queueCapacity`仍然是无界的:
 
-```
+```java
 @Test
 public void whenCorePoolSizeFiveAndMaxPoolSizeTen_thenFiveThreads() {
     ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
@@ -102,7 +102,7 @@ public void whenCorePoolSizeFiveAndMaxPoolSizeTen_thenFiveThreads() {
 
 此外，我们现在将重复之前的测试，但是将`queueCapacity`增加到 10，并启动 20 个线程。因此，我们现在期望总共启动十个线程:
 
-```
+```java
 @Test
 public void whenCorePoolSizeFiveAndMaxPoolSizeTenAndQueueCapacityTen_thenTenThreads() {
     ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();

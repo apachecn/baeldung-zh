@@ -45,7 +45,7 @@ OIDC 规格套件非常广泛。它包括核心功能和其他几个可选功能
 
 我们首先将这些依赖项添加到我们的项目 pom 文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-oauth2-client</artifactId>
@@ -66,7 +66,7 @@ starter 工件聚合了所有与 Spring Security 客户端相关的依赖项，�
 
 **使用 Spring Boot 使这变得非常简单，因为我们所要做的就是定义两个应用程序属性**:
 
-```
+```java
 spring:
   security:
     oauth2:
@@ -110,7 +110,7 @@ Google 是一个知名的提供商，因此该框架提供了一些预定义的�
 
 我们可以很容易地在控制器中访问这个实体:
 
-```
+```java
 @GetMapping("/oidc-principal")
 public OidcUser getOidcUserPrincipal(
   @AuthenticationPrincipal OidcUser principal) {
@@ -120,7 +120,7 @@ public OidcUser getOidcUserPrincipal(
 
 或者我们可以在 bean 中使用`SecurityContextHolder`:
 
-```
+```java
 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 if (authentication.getPrincipal() instanceof OidcUser) {
     OidcUser principal = ((OidcUser) authentication.getPrincipal());
@@ -135,7 +135,7 @@ if (authentication.getPrincipal() instanceof OidcUser) {
 
 这些权限可用于限制对某些资源的访问:
 
-```
+```java
 @EnableWebSecurity
 public class MappedAuthorities extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) {
@@ -163,7 +163,7 @@ public class MappedAuthorities extends WebSecurityConfigurerAdapter {
 
 为了清楚地看到这一点，让我们启用`RestTemplate `日志来查看服务正在执行的请求:
 
-```
+```java
 logging:
   level:
     org.springframework.web.client.RestTemplate: DEBUG
@@ -183,7 +183,7 @@ logging:
 
 我们可以通过创建和提供自己的`OidcUserService` 实例来适应这种行为:
 
-```
+```java
 @Configuration
 public class OAuth2LoginSecurityConfig
   extends WebSecurityConfigurerAdapter {
@@ -262,7 +262,7 @@ Spring 受益于此，它允许我们只使用一个简单的属性来配置一�
 
 我们将定义一个定制的`ClientRegistration` 实例:
 
-```
+```java
 spring:
   security:
     oauth2:
@@ -312,7 +312,7 @@ spring:
 
 在我们的应用程序中，我们可以用属性定义客户端注册数据:
 
-```
+```java
 spring:
   security:
     oauth2:
@@ -332,7 +332,7 @@ OIDC 表示 OP 注销端点可以在发现文档中指定为`end_session_endpoin
 
 接下来，我们必须通过提供一个定制的`LogoutSuccessHandler` 实例来配置`HttpSecurity `注销逻辑:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http
@@ -347,7 +347,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 现在让我们看看如何使用 Spring Security 提供的特殊类`OidcClientInitiatedLogoutSuccessHandler`创建一个`LogoutSuccessHandler` :
 
-```
+```java
 @Autowired
 private ClientRegistrationRepository clientRegistrationRepository;
 

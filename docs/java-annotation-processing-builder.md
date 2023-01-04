@@ -38,7 +38,7 @@
 
 最新版本的[自动服务](https://web.archive.org/web/20221005021228/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.google.auto.service%22%20AND%20a%3A%22auto-service%22)库和 [maven-compiler-plugin](https://web.archive.org/web/20221005021228/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.maven.plugins%22%20AND%20a%3A%22maven-compiler-plugin%22) 可以在 Maven Central repository 中找到:
 
-```
+```java
 <properties>
     <auto-service.version>1.0-rc2</auto-service.version>
     <maven-compiler-plugin.version>
@@ -76,7 +76,7 @@
 
 带有注释源代码的`annotation-user` Maven 模块不需要任何特殊的调优，除了在 dependencies 部分添加对注释处理器模块的依赖:
 
-```
+```java
 <dependency>
     <groupId>com.baeldung</groupId>
     <artifactId>annotation-processing</artifactId>
@@ -88,7 +88,7 @@
 
 假设在我们的`annotation-user`模块中有一个简单的 POJO 类，它有几个字段:
 
-```
+```java
 public class Person {
 
     private int age;
@@ -102,7 +102,7 @@ public class Person {
 
 我们想创建一个生成器助手类来更流畅地实例化`Person`类:
 
-```
+```java
 Person person = new PersonBuilder()
   .setAge(25)
   .setName("John")
@@ -113,7 +113,7 @@ Person person = new PersonBuilder()
 
 让我们在`annotation-processor`模块中为 setter 方法创建一个`@BuilderProperty`注释。它将允许我们为每个带有 setter 方法注释的类生成`Builder`类:
 
-```
+```java
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
 public @interface BuilderProperty {
@@ -126,7 +126,7 @@ public @interface BuilderProperty {
 
 带有用`@BuilderProperty`注释标注的属性的`Person`类将如下所示:
 
-```
+```java
 public class Person {
 
     private int age;
@@ -158,7 +158,7 @@ public class Person {
 
 `@AutoService`注释是`auto-service`库的一部分，允许生成处理器元数据，这将在下面的章节中解释。
 
-```
+```java
 @SupportedAnnotationTypes(
   "com.baeldung.annotation.processor.BuilderProperty")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -189,7 +189,7 @@ public class BuilderProcessor extends AbstractProcessor {
 
 尽管如此，出于完整性考虑，最好将`process`方法实现为一个迭代周期:
 
-```
+```java
 @Override
 public boolean process(Set<? extends TypeElement> annotations, 
   RoundEnvironment roundEnv) {
@@ -211,7 +211,7 @@ public boolean process(Set<? extends TypeElement> annotations,
 
 在下面的代码中，我们使用`Collectors.partitioningBy()`收集器将带注释的方法分成两个集合:带正确注释的 setters 和其他带错误注释的方法:
 
-```
+```java
 Map<Boolean, List<Element>> annotatedMethods = annotatedElements.stream().collect(
   Collectors.partitioningBy(element ->
     ((ExecutableType) element.asType()).getParameterTypes().size() == 1
@@ -225,7 +225,7 @@ List<Element> otherMethods = annotatedMethods.get(false);
 
 我们应该警告用户不正确的注释方法，所以让我们使用可从`AbstractProcessor.processingEnv`受保护字段访问的`Messager`实例。在源处理阶段，以下行将为每个错误注释的元素输出一个错误:
 
-```
+```java
 otherMethods.forEach(element ->
   processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
     "@BuilderProperty must be applied to a setXxx method " 
@@ -234,7 +234,7 @@ otherMethods.forEach(element ->
 
 当然，如果正确的 setters 集合为空，那么继续当前的类型元素集合迭代就没有意义了:
 
-```
+```java
 if (setters.isEmpty()) {
     continue;
 }
@@ -242,14 +242,14 @@ if (setters.isEmpty()) {
 
 如果 setters 集合至少有一个元素，我们将使用它从封闭元素中获得完全限定的类名，在 setter 方法的情况下，它看起来是源类本身:
 
-```
+```java
 String className = ((TypeElement) setters.get(0)
   .getEnclosingElement()).getQualifiedName().toString();
 ```
 
 生成构建器类所需的最后一点信息是设置器名称和它们的参数类型名称之间的映射:
 
-```
+```java
 Map<String, String> setterMap = setters.stream().collect(Collectors.toMap(
     setter -> setter.getSimpleName().toString(),
     setter -> ((ExecutableType) setter.asType())
@@ -263,7 +263,7 @@ Map<String, String> setterMap = setters.stream().collect(Collectors.toMap(
 
 为了生成输出文件，我们将使用由`AbstractProcessor.processingEnv`受保护属性中的对象再次提供的`Filer`实例:
 
-```
+```java
 JavaFileObject builderFile = processingEnv.getFiler()
   .createSourceFile(builderClassName);
 try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
@@ -273,7 +273,7 @@ try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
 
 下面提供了`writeBuilderFile`方法的完整代码。我们只需要计算包名、完全合格的构建器类名以及源类和构建器类的简单类名。代码的其余部分非常简单。
 
-```
+```java
 private void writeBuilderFile(
   String className, Map<String, String> setterMap) 
   throws IOException {
@@ -352,7 +352,7 @@ private void writeBuilderFile(
 
 生成的 `PersonBuilder`类可以在`annotation-user/target/generated-sources/annotations/com/baeldung/annotation/PersonBuilder.java`文件中找到，应该如下所示:
 
-```
+```java
 package com.baeldung.annotation;
 
 public class PersonBuilder {
@@ -389,20 +389,20 @@ public class PersonBuilder {
 
 请注意，处理器本身和注释必须已经在单独的编译中编译为类，并且存在于类路径中，因此您应该做的第一件事是:
 
-```
+```java
 javac com/baeldung/annotation/processor/BuilderProcessor
 javac com/baeldung/annotation/processor/BuilderProperty
 ```
 
 然后，用`-processor`键指定刚刚编译的注释处理器类，对源代码进行实际编译:
 
-```
+```java
 javac -processor com.baeldung.annotation.processor.MyProcessor Person.java
 ```
 
 要一次指定多个注释处理器，可以用逗号分隔它们的类名，如下所示:
 
-```
+```java
 javac -processor package1.Processor1,package2.Processor2 SourceFile.java
 ```
 
@@ -414,7 +414,7 @@ javac -processor package1.Processor1,package2.Processor2 SourceFile.java
 
 请注意，`BuilderProcessor`类应该已经编译好了，例如，从构建依赖关系中的另一个 jar 导入:
 
-```
+```java
 <build>
     <plugins>
 
@@ -446,13 +446,13 @@ javac -processor package1.Processor1,package2.Processor2 SourceFile.java
 
 为了自动获取它，编译器必须知道处理器类的名称。因此，您必须在`META-INF/services/javax.annotation.processing.Processor`文件中将其指定为处理器的完全限定类名:
 
-```
+```java
 com.baeldung.annotation.processor.BuilderProcessor
 ```
 
 您还可以从这个 jar 中指定几个要自动选取的处理器，方法是用一个新行将它们分开:
 
-```
+```java
 package1.Processor1
 package2.Processor2
 package3.Processor3
@@ -460,7 +460,7 @@ package3.Processor3
 
 如果您使用 Maven 构建这个 jar 并尝试将这个文件直接放入`src/main/resources/META-INF/services`目录，您将会遇到以下错误:
 
-```
+```java
 [ERROR] Bad service configuration file, or exception thrown while 
 constructing Processor object: javax.annotation.processing.Processor: 
 Provider com.baeldung.annotation.processor.BuilderProcessor not found
@@ -474,7 +474,7 @@ Google `auto-service`库(将在下一节讨论)允许使用一个简单的注释
 
 要自动生成注册文件，您可以使用 Google 的`auto-service`库中的`@AutoService`注释，如下所示:
 
-```
+```java
 @AutoService(Processor.class)
 public BuilderProcessor extends AbstractProcessor {
     // …

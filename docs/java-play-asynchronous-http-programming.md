@@ -20,7 +20,7 @@ WS 是一个强大的库，使用 Java 提供异步 HTTP 调用。
 
 让我们构建一个简单的`Consumer`来记录一些响应数据:
 
-```
+```java
 ws.url(url)
   .thenAccept(r -> 
     log.debug("Thread#" + Thread.currentThread().getId() 
@@ -41,19 +41,19 @@ ws.url(url)
 
 首先，我们使用`sbt new`命令创建初始项目:
 
-```
+```java
 sbt new playframework/play-java-seed.g8
 ```
 
 在新文件夹中，我们然后**编辑`build.sbt`文件并添加 WS 库依赖:**
 
-```
+```java
 libraryDependencies += javaWs
 ```
 
 现在我们可以用`sbt run`命令启动服务器:
 
-```
+```java
 $ sbt run
 ...
 --- (Running the application, auto-reloading is enabled) ---
@@ -69,7 +69,7 @@ $ sbt run
 
 首先，我们需要扩展`WithServer`，它将提供服务器生命周期:
 
-```
+```java
 public class HomeControllerTest extends WithServer { 
 ```
 
@@ -79,7 +79,7 @@ public class HomeControllerTest extends WithServer {
 
 我们可以用 [`Guice`](/web/20221126234321/https://www.baeldung.com/guice) 的`GuiceApplicationBuilder`来创建它:
 
-```
+```java
 @Override
 protected Application provideApplication() {
     return new GuiceApplicationBuilder().build();
@@ -88,7 +88,7 @@ protected Application provideApplication() {
 
 最后，我们设置测试中使用的服务器 URL，使用测试服务器提供的端口号:
 
-```
+```java
 @Override
 @Before
 public void setup() {
@@ -116,26 +116,26 @@ public void setup() {
 
 在实际应用中，我们可以通过依赖注入获得一个使用默认设置自动配置的客户端:
 
-```
+```java
 @Autowired
 WSClient ws;
 ```
 
 不过，在我们的测试类中，我们使用 [`WSTestClient`](https://web.archive.org/web/20221126234321/https://www.playframework.com/documentation/2.8.x/api/java/play/test/WSTestClient.html) ，可从[中获得测试框架](https://web.archive.org/web/20221126234321/https://www.playframework.com/documentation/2.8.x/JavaFunctionalTest):
 
-```
+```java
 WSClient ws = play.test.WSTestClient.newClient(port);
 ```
 
 一旦我们有了客户端，我们就可以通过调用`url`方法来初始化一个`WSRequest`对象:
 
-```
+```java
 ws.url(url)
 ```
 
 **`url`方法足以让我们发出请求。**但是，我们可以通过添加一些自定义设置来进一步自定义它:
 
-```
+```java
 ws.url(url)
   .addHeader("key", "value")
   .addQueryParameter("num", "" + num);
@@ -149,7 +149,7 @@ ws.url(url)
 
 要触发 GET 请求，我们只需调用我们的`WSRequest`对象上的`get`方法:
 
-```
+```java
 ws.url(url)
   ...
   .get();
@@ -171,7 +171,7 @@ ws.url(url)
 
 要触发请求，我们只需调用`post`方法:
 
-```
+```java
 ws.url(url)
   ...
   .setContentType("application/x-www-form-urlencoded")
@@ -188,7 +188,7 @@ ws.url(url)
 
 在源内部，我们可以包装表单所需的所有不同数据类型:
 
-```
+```java
 Source<ByteString, ?> file = FileIO.fromPath(Paths.get("hello.txt"));
 FilePart<Source<ByteString, ?>> file = 
   new FilePart<>("fileParam", "myfile.txt", "text/plain", file);
@@ -215,7 +215,7 @@ ws.url(url)
 
 使用`CompletableFuture` API，我们只需要对代码做一些修改就可以实现这个场景:
 
-```
+```java
 WSResponse response = ws.url(url)
   .get()
   .toCompletableFuture()
@@ -230,7 +230,7 @@ WSResponse response = ws.url(url)
 
 例如，让我们在前面的示例中添加一个`Consumer`来记录响应:
 
-```
+```java
 ws.url(url)
   .addHeader("key", "value")
   .addQueryParameter("num", "" + 1)
@@ -244,7 +244,7 @@ ws.url(url)
 
 然后，我们会在日志中看到响应:
 
-```
+```java
 [debug] c.HomeControllerTest - Thread#30 Request complete: Response code = 200 | Response: {
   "Result" : "ok",
   "Params" : {
@@ -275,7 +275,7 @@ ws.url(url)
 
 例如，我们可以将它的主体写在一个文件中:
 
-```
+```java
 ws.url(url)
   .stream()
   .thenAccept(
@@ -303,7 +303,7 @@ ws.url(url)
 
 我们可以使用调优参数为所有请求设置一个全局超时。对于特定于请求的超时，我们可以使用`setRequestTimeout`添加到请求中:
 
-```
+```java
 ws.url(url)
   .setRequestTimeout(Duration.of(1, SECONDS));
 ```
@@ -316,7 +316,7 @@ ws.url(url)
 
 让我们在代码中模拟一个非常长的过程:
 
-```
+```java
 ws.url(url)
   .get()
   .thenApply(
@@ -334,7 +334,7 @@ ws.url(url)
 
 相反，使用`timeout`包装器，我们指示我们的代码等待不超过 1 秒:
 
-```
+```java
 CompletionStage<Result> f = futures.timeout(
   ws.url(url)
     .get()
@@ -358,7 +358,7 @@ CompletionStage<Result> f = futures.timeout(
 
 假设我们想要返回结果(如果我们已经得到了结果),或者记录错误并返回异常以便进一步处理:
 
-```
+```java
 CompletionStage<Object> res = f.handleAsync((result, e) -> {
     if (e != null) {
         log.error("Exception thrown", e);
@@ -373,14 +373,14 @@ CompletionStage<Object> res = f.handleAsync((result, e) -> {
 
 我们可以通过简单地调用返回的异常对象的类上的`assertEquals`来验证它:
 
-```
+```java
 Class<?> clazz = res.toCompletableFuture().get().getClass();
 assertEquals(TimeoutException.class, clazz);
 ```
 
 运行测试时，它还会记录我们收到的异常:
 
-```
+```java
 [error] c.HomeControllerTest - Exception thrown
 java.util.concurrent.TimeoutException: Timeout after 1 second
 ...
@@ -400,7 +400,7 @@ java.util.concurrent.TimeoutException: Timeout after 1 second
 
 在这种情况下，我们只需要设置`AhcCurlRequestLogger`:
 
-```
+```java
 ws.url(url)
   ...
   .setRequestFilter(new AhcCurlRequestLogger())
@@ -410,7 +410,7 @@ ws.url(url)
 
 生成的日志具有类似于`curl`的格式:
 
-```
+```java
 [info] p.l.w.a.AhcCurlRequestLogger - curl \
   --verbose \
   --request GET \
@@ -432,7 +432,7 @@ ws.url(url)
 
 要配置缓存，我们首先需要在我们的`build.sbt`中添加依赖关系:
 
-```
+```java
 libraryDependencies += ehcache
 ```
 
@@ -446,7 +446,7 @@ libraryDependencies += ehcache
 
 为了避免这一点，我们可以通过向我们的`application.conf`添加一个设置来强制启发式缓存:
 
-```
+```java
 play.ws.cache.heuristics.enabled=true
 ```
 
@@ -458,7 +458,7 @@ play.ws.cache.heuristics.enabled=true
 
 **为了解决这个问题，我们可以使用`application.conf` :** 中的属性来调优我们的 WS 客户端
 
-```
+```java
 play.ws.followRedirects=false
 play.ws.useragent=MyPlayApplication
 play.ws.compressionEnabled=true

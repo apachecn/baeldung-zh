@@ -14,7 +14,7 @@
 
 让我们添加[spring-boot-starter-jersey](https://web.archive.org/web/20220930101318/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-jersey)工件，将 Jersey 集成到 Spring Boot 应用程序中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-jersey</artifactId>
@@ -23,7 +23,7 @@
 
 要配置安全 OAuth2，我们需要[spring-boot-starter-Security](https://web.archive.org/web/20220930101318/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-security)和[spring-Security-oauth 2-client](https://web.archive.org/web/20220930101318/https://search.maven.org/search?q=g:org.springframework.security%20a:spring-security-oauth2-client):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -44,7 +44,7 @@
 
 下面是包含端点定义的类:
 
-```
+```java
 @Path("/")
 public class JerseyResource {
     // endpoint definitions
@@ -59,7 +59,7 @@ public class JerseyResource {
 
 下面是处理登录请求的方法:
 
-```
+```java
 @GET
 @Path("login")
 @Produces(MediaType.TEXT_HTML)
@@ -76,7 +76,7 @@ public String login() {
 
 让我们定义另一种方法来处理对根路径的请求:
 
-```
+```java
 @GET
 @Produces(MediaType.TEXT_PLAIN)
 public String home(@Context SecurityContext securityContext) {
@@ -95,7 +95,7 @@ public String home(@Context SecurityContext securityContext) {
 
 让我们向 servlet 容器注册资源类，以启用 Jersey 服务。幸运的是，这很简单:
 
-```
+```java
 @Component
 public class RestConfig extends ResourceConfig {
     public RestConfig() {
@@ -112,7 +112,7 @@ public class RestConfig extends ResourceConfig {
 
 我们可以像配置普通 Spring 应用程序一样配置 Jersey 的安全性:
 
-```
+```java
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
@@ -160,7 +160,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 让我们向类路径添加一个名为`jersey-application.properties`的属性文件:
 
-```
+```java
 server.port=8083
 spring.security.oauth2.client.registration.github.client-id=<your-client-id>
 spring.security.oauth2.client.registration.github.client-secret=<your-client-secret>
@@ -170,7 +170,7 @@ spring.security.oauth2.client.registration.github.client-secret=<your-client-sec
 
 最后，将该文件作为属性源添加到 Spring Boot 应用程序中:
 
-```
+```java
 @SpringBootApplication
 @PropertySource("classpath:jersey-application.properties")
 public class JerseyApplication {
@@ -196,7 +196,7 @@ public class JerseyApplication {
 
 通过查看 URL，我们可以看到重定向的请求携带了许多查询参数，如`response_type`、`client_id`和`scope`:
 
-```
+```java
 https://github.com/login/oauth/authorize?response_type=code&client;_id=c30a16c45a9640771af5&scope;=read:user&state;=dpTme3pB87wA7AZ--XfVRWSkuHD3WIc9Pvn17yeqw38%3D&redirect;_uri=http://localhost:8083/login/oauth2/code/github
 ```
 
@@ -204,7 +204,7 @@ https://github.com/login/oauth/authorize?response_type=code&client;_id=c30a16c45
 
 当授权页面出现时，我们需要授权应用程序继续。授权成功后，浏览器将重定向到应用程序中预定义的端点，以及一些查询参数:
 
-```
+```java
 http://localhost:8083/login/oauth2/code/github?code=561d99681feeb5d2edd7&state;=dpTme3pB87wA7AZ--XfVRWSkuHD3WIc9Pvn17yeqw38%3D
 ```
 
@@ -232,7 +232,7 @@ http://localhost:8083/login/oauth2/code/github?code=561d99681feeb5d2edd7&state;=
 
 下面是保存我们的测试方法的类:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @TestPropertySource(properties = "spring.security.oauth2.client.registration.github.client-id:test-id")
@@ -262,7 +262,7 @@ public class JerseyResourceUnitTest {
 
 我们将证明，当未经身份验证的用户试图访问主页时，**他们将被重定向到登录页面进行身份验证:**
 
-```
+```java
 @Test
 public void whenUserIsUnauthenticated_thenTheyAreRedirectedToLoginPage() {
     ResponseEntity<Object> response = restTemplate.getForEntity(basePath, Object.class);
@@ -279,7 +279,7 @@ public void whenUserIsUnauthenticated_thenTheyAreRedirectedToLoginPage() {
 
 让我们验证**访问登录页面将导致授权路径被返回:**
 
-```
+```java
 @Test
 public void whenUserAttemptsToLogin_thenAuthorizationPathIsReturned() {
     ResponseEntity response = restTemplate.getForEntity(basePath + "login", String.class);
@@ -292,7 +292,7 @@ public void whenUserAttemptsToLogin_thenAuthorizationPathIsReturned() {
 
 最后，当向授权端点发送请求时，**浏览器将使用适当的参数重定向到 OAuth2 提供者的授权页面:**
 
-```
+```java
 @Test
 public void whenUserAccessesAuthorizationEndpoint_thenTheyAresRedirectedToProvider() {
     ResponseEntity response = restTemplate.getForEntity(basePath + "oauth2/authorization/github", String.class);

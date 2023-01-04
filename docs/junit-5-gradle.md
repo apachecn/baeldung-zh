@@ -16,7 +16,7 @@
 
 最简单的方法是运行`gradle -v`命令:
 
-```
+```java
 $> gradle -v
 ------------------------------------------------------------
 Gradle 4.10.2
@@ -29,7 +29,7 @@ Gradle 4.10.2
 
 我们可以从向构建工具提供单元测试平台开始:
 
-```
+```java
 test {
     useJUnitPlatform()
 } 
@@ -43,7 +43,7 @@ API 是用`junit-jupiter-api`来表示的。JUnit 5 的运行时是`junit-jupite
 
 我们将分别在`testImplementation `和`timeRuntimeOnly`中提供这两个:
 
-```
+```java
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
@@ -54,7 +54,7 @@ dependencies {
 
 让我们编写第一个测试。它看起来就像早期版本:
 
-```
+```java
 @Test
 public void testAdd() {
     assertEquals(42, Integer.sum(19, 23));
@@ -65,14 +65,14 @@ public void testAdd() {
 
 为了验证我们使用的是 JUnit 5，我们可以查看导入。**`@Test`和`assertEquals`的进口应该有一个以`org.junit.jupiter.api:`** 开头的包
 
-```
+```java
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 ```
 
 因此，在最后一个例子中，我们创建了一个使用“旧”功能的测试，它已经工作了很多年。我们现在将创建另一个示例，它使用了 JUnit 5 中的一些新功能:
 
-```
+```java
 @Test
 public void testDivide() {
     assertThrows(ArithmeticException.class, () -> {
@@ -89,7 +89,7 @@ public void testDivide() {
 
 假设我们的套件中有两种类型的测试:长期运行和短期运行。我们可以使用 JUnit 5 `@Tag `注释:
 
-```
+```java
 public class CalculatorJUnit5Test {
     @Tag("slow")
     @Test
@@ -109,7 +109,7 @@ public class CalculatorJUnit5Test {
 
 然后，我们告诉构建工具执行哪一个。在我们的例子中，让我们只执行短期(快速)测试:
 
-```
+```java
 test {
     useJUnitPlatform {
     	includeTags 'fast'
@@ -124,7 +124,7 @@ test {
 
 首先，我们向现有的构建配置添加一些依赖项:
 
-```
+```java
 testCompileOnly 'junit:junit:4.12' 
 testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.8.1'
 ```
@@ -133,7 +133,7 @@ testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.8.1'
 
 现在我们创建一个新类，并复制粘贴我们之前创建的`testDivide`方法。然后，我们添加`@Test`和`assertEquals`的进口。然而，这一次我们确保使用旧的版本 4 包开始哪个`org.junit:`
 
-```
+```java
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 public class CalculatorJUnit4Test {

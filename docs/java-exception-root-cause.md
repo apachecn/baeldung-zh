@@ -16,7 +16,7 @@
 
 让我们首先为我们的错误情况创建异常:
 
-```
+```java
 static class InvalidFormatException extends DateParseException {
 
     InvalidFormatException(String input, Throwable thr) {
@@ -35,7 +35,7 @@ static class DateOutOfRangeException extends DateParseException {
 
 这两个异常都继承自一个公共的父异常，这将使我们的代码更加清晰:
 
-```
+```java
 static class DateParseException extends RuntimeException {
 
     DateParseException(String input) {
@@ -50,7 +50,7 @@ static class DateParseException extends RuntimeException {
 
 之后，我们可以用解析日期的方法实现`AgeCalculator`类:
 
-```
+```java
 static class AgeCalculator {
 
     private static LocalDate parseDate(String birthDateAsString) {
@@ -74,7 +74,7 @@ static class AgeCalculator {
 
 最后，让我们向我们的类添加一个公共方法，该方法接收日期，解析它，然后计算年龄:
 
-```
+```java
 public static int calculateAge(String birthDate) {
     if (birthDate == null || birthDate.isEmpty()) {
         throw new IllegalArgumentException();
@@ -92,7 +92,7 @@ public static int calculateAge(String birthDate) {
 
 如图所示，我们再次包装了异常。在这种情况下，我们将它们包装到一个我们必须创建的`CalculationException`中:
 
-```
+```java
 static class CalculationException extends RuntimeException {
 
     CalculationException(DateParseException ex) {
@@ -103,7 +103,7 @@ static class CalculationException extends RuntimeException {
 
 现在，我们已经准备好使用我们的计算器，以 ISO 格式传递任何日期:
 
-```
+```java
 AgeCalculator.calculateAge("2019-10-01");
 ```
 
@@ -113,7 +113,7 @@ AgeCalculator.calculateAge("2019-10-01");
 
 我们将用来查找根本原因异常的第一种方法是通过**创建一个定制方法，该方法循环遍历所有原因，直到到达根本原因**:
 
-```
+```java
 public static Throwable findCauseUsingPlainJava(Throwable throwable) {
     Objects.requireNonNull(throwable);
     Throwable rootCause = throwable;
@@ -128,7 +128,7 @@ public static Throwable findCauseUsingPlainJava(Throwable throwable) {
 
 如果我们传递一个无效的格式给我们的`AgeCalculator`，我们将得到`DateTimeParseException`作为根本原因:
 
-```
+```java
 try {
     AgeCalculator.calculateAge("010102");
 } catch (CalculationException ex) {
@@ -138,7 +138,7 @@ try {
 
 然而，如果我们使用未来的日期，我们将得到一个`DateOutOfRangeException`:
 
-```
+```java
 try {
     AgeCalculator.calculateAge("2020-04-04");
 } catch (CalculationException ex) {
@@ -148,7 +148,7 @@ try {
 
 此外，我们的方法也适用于非嵌套异常:
 
-```
+```java
 try {
     AgeCalculator.calculateAge(null);
 } catch (Exception ex) {
@@ -166,7 +166,7 @@ Apache Commons Lang 提供了一个`[ExceptionUtils](https://web.archive.org/web
 
 我们将在前面的例子中使用`getRootCause()` 方法:
 
-```
+```java
 try {
     AgeCalculator.calculateAge("010102");
 } catch (CalculationException ex) {
@@ -182,7 +182,7 @@ try {
 
 让我们用同一个例子来尝试一下:
 
-```
+```java
 try {
     AgeCalculator.calculateAge("010102");
 } catch (CalculationException ex) {

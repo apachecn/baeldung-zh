@@ -10,7 +10,7 @@
 
 让我们用两个字段定义一个`Person`类，`name`和`age`。在我们的例子中，我们将首先基于`name`然后基于`age`来比较`Person`对象:
 
-```
+```java
 public class Person {
     @Nonnull private String name;
     private int age;
@@ -30,7 +30,7 @@ Java 提供了`[Comparator](/web/20221120022818/https://www.baeldung.com/java-co
 
 让我们一个接一个地比较这些字段:
 
-```
+```java
 public class CheckFieldsOneByOne implements Comparator<Person> {
     @Override
     public int compare(Person o1, Person o2) {
@@ -51,7 +51,7 @@ public class CheckFieldsOneByOne implements Comparator<Person> {
 
 首先，让我们将谷歌番石榴库[依赖项](https://web.archive.org/web/20221120022818/https://search.maven.org/artifact/com.google.guava/guava-bom/31.1-jre/pom)添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -61,7 +61,7 @@ public class CheckFieldsOneByOne implements Comparator<Person> {
 
 我们可以通过使用该库中的`ComparisonChain`类来简化逻辑:
 
-```
+```java
 public class ComparisonChainExample implements Comparator<Person> {
     @Override
     public int compare(Person o1, Person o2) {
@@ -81,7 +81,7 @@ public class ComparisonChainExample implements Comparator<Person> {
 
 首先，让我们将 Apache Commons 的[依赖项](https://web.archive.org/web/20221120022818/https://search.maven.org/artifact/org.apache.commons/commons-lang3/3.12.0/jar)添加到`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -91,7 +91,7 @@ public class ComparisonChainExample implements Comparator<Person> {
 
 与前面的例子类似，我们可以使用 Apache Commons 中的`CompareToBuilder`来减少所需的样板代码:
 
-```
+```java
 public class CompareToBuilderExample implements Comparator<Person> {
     @Override
     public int compare(Person o1, Person o2) {
@@ -109,7 +109,7 @@ public class CompareToBuilderExample implements Comparator<Person> {
 
 从 Java 8 开始，`Comparator`接口中增加了几个`static`方法，它们可以使用 lambda 表达式创建一个`Comparator`对象。我们可以用它的 [`comparing()`方法](/web/20221120022818/https://www.baeldung.com/java-8-comparator-comparing)来构造我们需要的`Comparator`:
 
-```
+```java
 public static Comparator<Person> createPersonLambdaComparator() {
     return Comparator.comparing(Person::getName)
       .thenComparing(Person::getAge);
@@ -126,7 +126,7 @@ public static Comparator<Person> createPersonLambdaComparator() {
 
 让我们测试我们看到的四个比较器，并检查它们的行为。所有这些比较器都可以以相同的方式调用，并且应该产生相同的结果:
 
-```
+```java
 @Test
 public void testComparePersonsFirstNameThenAge() {
     Person person1 = new Person("John", 21);

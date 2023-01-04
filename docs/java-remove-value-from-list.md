@@ -14,7 +14,7 @@
 
 既然我们知道如何**移除单个元素，那么在一个循环中重复执行**看起来就足够简单了:
 
-```
+```java
 void removeAll(List<Integer> list, int element) {
     while (list.contains(element)) {
         list.remove(element);
@@ -24,7 +24,7 @@ void removeAll(List<Integer> list, int element) {
 
 然而，它并不像预期的那样工作:
 
-```
+```java
 // given
 List<Integer> list = list(1, 2, 3);
 int valueToRemove = 1;
@@ -46,7 +46,7 @@ assertThatThrownBy(() -> removeAll(list, valueToRemove))
 
 我们可以通过将该值作为`Integer:`传递来纠正它
 
-```
+```java
 void removeAll(List<Integer> list, Integer element) {
     while (list.contains(element)) {
         list.remove(element);
@@ -56,7 +56,7 @@ void removeAll(List<Integer> list, Integer element) {
 
 现在代码如预期的那样工作了:
 
-```
+```java
 // given
 List<Integer> list = list(1, 2, 3);
 int valueToRemove = 1;
@@ -72,7 +72,7 @@ assertThat(list).isEqualTo(list(2, 3));
 
 如果我们存储第一次出现的索引，我们可以做得更好:
 
-```
+```java
 void removeAll(List<Integer> list, Integer element) {
     int index;
     while ((index = list.indexOf(element)) >= 0) {
@@ -83,7 +83,7 @@ void removeAll(List<Integer> list, Integer element) {
 
 我们可以验证它是否有效:
 
-```
+```java
 // given
 List<Integer> list = list(1, 2, 3);
 int valueToRemove = 1;
@@ -107,7 +107,7 @@ assertThat(list).isEqualTo(list(2, 3));
 
 这样，我们可以执行移除，直到`List`改变:
 
-```
+```java
 void removeAll(List<Integer> list, int element) {
     while (list.remove(element));
 }
@@ -115,7 +115,7 @@ void removeAll(List<Integer> list, int element) {
 
 它像预期的那样工作:
 
-```
+```java
 // given
 List<Integer> list = list(1, 1, 2, 3);
 int valueToRemove = 1;
@@ -133,7 +133,7 @@ assertThat(list).isEqualTo(list(2, 3));
 
 我们可以通过使用一个`for`循环遍历元素来跟踪我们的进度，如果匹配就删除当前的元素:
 
-```
+```java
 void removeAll(List<Integer> list, int element) {
     for (int i = 0; i < list.size(); i++) {
         if (Objects.equals(element, list.get(i))) {
@@ -145,7 +145,7 @@ void removeAll(List<Integer> list, int element) {
 
 它像预期的那样工作:
 
-```
+```java
 // given
 List<Integer> list = list(1, 2, 3);
 int valueToRemove = 1;
@@ -159,7 +159,7 @@ assertThat(list).isEqualTo(list(2, 3));
 
 但是，如果我们尝试使用不同的输入，它会提供不正确的输出:
 
-```
+```java
 // given
 List<Integer> list = list(1, 1, 2, 3);
 int valueToRemove = 1;
@@ -184,7 +184,7 @@ assertThat(list).isEqualTo(list(1, 2, 3));
 
 当我们移除元素时减少它:
 
-```
+```java
 void removeAll(List<Integer> list, int element) {
     for (int i = 0; i < list.size(); i++) {
         if (Objects.equals(element, list.get(i))) {
@@ -197,7 +197,7 @@ void removeAll(List<Integer> list, int element) {
 
 只有当我们不移除元素时才增加它:
 
-```
+```java
 void removeAll(List<Integer> list, int element) {
     for (int i = 0; i < list.size();) {
         if (Objects.equals(element, list.get(i))) {
@@ -213,7 +213,7 @@ void removeAll(List<Integer> list, int element) {
 
 这两种解决方案都按预期工作:
 
-```
+```java
 // given
 List<Integer> list = list(1, 1, 2, 3);
 int valueToRemove = 1;
@@ -234,7 +234,7 @@ assertThat(list).isEqualTo(list(2, 3));
 
 从 Java 5 开始，我们可以使用`for-each`循环来遍历`List`。让我们用它来删除元素:
 
-```
+```java
 void removeAll(List<Integer> list, int element) {
     for (Integer number : list) {
         if (Objects.equals(number, element)) {
@@ -250,7 +250,7 @@ void removeAll(List<Integer> list, int element) {
 
 虽然看起来很干净，但不幸的是，它不起作用:
 
-```
+```java
 // given
 List<Integer> list = list(1, 1, 2, 3);
 int valueToRemove = 1;
@@ -268,7 +268,7 @@ assertThatThrownBy(() -> removeWithForEachLoop(list, valueToRemove))
 
 我们可以直接使用`Iterator`来遍历和修改`List`:
 
-```
+```java
 void removeAll(List<Integer> list, int element) {
     for (Iterator<Integer> i = list.iterator(); i.hasNext();) {
         Integer number = i.next();
@@ -281,7 +281,7 @@ void removeAll(List<Integer> list, int element) {
 
 这样，**`Iterator`就可以跟踪`List`** 的状态(因为它做出了修改)。因此，上面的代码按预期工作:
 
-```
+```java
 // given
 List<Integer> list = list(1, 1, 2, 3);
 int valueToRemove = 1;
@@ -301,7 +301,7 @@ assertThat(list).isEqualTo(list(2, 3));
 
 在此之前，我们通过删除不需要的项目来修改原始的`List`对象。相反，我们可以**创建一个新的`List`并收集我们想要保留的物品**:
 
-```
+```java
 List<Integer> removeAll(List<Integer> list, int element) {
     List<Integer> remainingElements = new ArrayList<>();
     for (Integer number : list) {
@@ -315,7 +315,7 @@ List<Integer> removeAll(List<Integer> list, int element) {
 
 因为我们在一个新的`List`对象中提供了结果，所以我们必须从方法中返回它。因此，我们需要以另一种方式使用该方法:
 
-```
+```java
 // given
 List<Integer> list = list(1, 1, 2, 3);
 int valueToRemove = 1;
@@ -338,7 +338,7 @@ assertThat(result).isEqualTo(list(2, 3));
 
 同样，我们可以修改我们的实现，使**获得旧的行为**；我们清除原始的`List`,并将收集的元素添加到其中:
 
-```
+```java
 void removeAll(List<Integer> list, int element) {
     List<Integer> remainingElements = new ArrayList<>();
     for (Integer number : list) {
@@ -354,7 +354,7 @@ void removeAll(List<Integer> list, int element) {
 
 它的工作方式和之前的一样:
 
-```
+```java
 // given
 List<Integer> list = list(1, 1, 2, 3);
 int valueToRemove = 1;
@@ -372,7 +372,7 @@ assertThat(list).isEqualTo(list(2, 3));
 
 Java 8 引入了 lambda 表达式和流 API。有了这些强大的功能，我们可以用非常简洁的代码来解决我们的问题:
 
-```
+```java
 List<Integer> removeAll(List<Integer> list, int element) {
     return list.stream()
       .filter(e -> !Objects.equals(e, element))
@@ -384,7 +384,7 @@ List<Integer> removeAll(List<Integer> list, int element) {
 
 **结果，它有相同的特征**，我们要用它来返回结果:
 
-```
+```java
 // given
 List<Integer> list = list(1, 1, 2, 3);
 int valueToRemove = 1;
@@ -404,7 +404,7 @@ assertThat(result).isEqualTo(list(2, 3));
 
 它期待一个`Predicate`，当我们想要删除元素时，它应该返回 **`true`，与前面的例子相反，在前面的例子中，当我们想要保留元素时，我们必须返回`true`:**
 
-```
+```java
 void removeAll(List<Integer> list, int element) {
     list.removeIf(n -> Objects.equals(n, element));
 }
@@ -412,7 +412,7 @@ void removeAll(List<Integer> list, int element) {
 
 它的工作原理与上述其他解决方案类似:
 
-```
+```java
 // given
 List<Integer> list = list(1, 1, 2, 3);
 int valueToRemove = 1;

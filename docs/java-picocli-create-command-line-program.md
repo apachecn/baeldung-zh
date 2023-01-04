@@ -14,7 +14,7 @@
 
 首先，我们需要将[依赖项添加到`picocli`项目](https://web.archive.org/web/20220917215308/https://search.maven.org/search?q=g:info.picocli%20AND%20a:picocli)中:
 
-```
+```java
 <dependency>
     <groupId>info.picocli</groupId>
     <artifactId>picocli</artifactId>
@@ -26,7 +26,7 @@
 
 既然已经设置了依赖项，那么让我们创建 Hello World 命令。为了做到这一点，**我们将使用来自库**的`@Command`注释:
 
-```
+```java
 @Command(
   name = "hello",
   description = "Says hello"
@@ -39,7 +39,7 @@ public class HelloWorldCommand {
 
 目前，我们对这个命令无能为力。为了让它做点什么，我们需要添加一个调用**的`main`方法，方便的`CommandLine.run(Runnable, String[])`方法**。这需要两个参数:一个是我们命令的实例，它必须实现 *Runnable* 接口，另一个是代表命令参数(选项、参数和子命令)的`String` 数组:
 
-```
+```java
 public class HelloWorldCommand implements Runnable {
     public static void main(String[] args) {
         CommandLine.run(new HelloWorldCommand(), args);
@@ -56,7 +56,7 @@ public class HelloWorldCommand implements Runnable {
 
 [当打包到 jar](/web/20220917215308/https://www.baeldung.com/java-create-jar) 中时，我们可以使用`java`命令运行 Hello World 命令:
 
-```
+```java
 java -cp "pathToPicocliJar;pathToCommandJar" com.baeldung.picoli.helloworld.HelloWorldCommand
 ```
 
@@ -70,7 +70,7 @@ java -cp "pathToPicocliJar;pathToCommandJar" com.baeldung.picoli.helloworld.Hell
 
 首先，我们必须创建一个`GitCommand`类，就像我们为 Hello World 命令所做的那样:
 
-```
+```java
 @Command
 public class GitCommand implements Runnable {
     public static void main(String[] args) {
@@ -94,7 +94,7 @@ public class GitCommand implements Runnable {
 
 **`@Command`注释提供了通过`subcommands`参数**注册子命令的可能性:
 
-```
+```java
 @Command(
   subcommands = {
       GitAddCommand.class,
@@ -105,7 +105,7 @@ public class GitCommand implements Runnable {
 
 在我们的例子中，我们添加了两个新的类:`GitAddCommand`和`GitCommitCommand`。两者都标注了`@Command`并实现了`Runnable`。**给它们一个名字很重要，因为这些名字将被`picocli`用来识别要执行的子命令:**
 
-```
+```java
 @Command(
   name = "add"
 )
@@ -117,7 +117,7 @@ public class GitAddCommand implements Runnable {
 }
 ```
 
-```
+```java
 @Command(
   name = "commit"
 )
@@ -135,7 +135,7 @@ public class GitCommitCommand implements Runnable {
 
 声明子命令的另一种方式是**创建`@Command`带注释的方法，表示`GitCommand`类**中的那些命令:
 
-```
+```java
 @Command(name = "add")
 public void addCommand() {
     System.out.println("Adding some files to the staging area");
@@ -153,7 +153,7 @@ public void commitCommand() {
 
 **最后，`picocli`为我们提供了以编程方式注册子命令的可能性。**这个有点复杂，因为我们必须创建一个`CommandLine`对象来包装我们的命令，然后向其中添加子命令:
 
-```
+```java
 CommandLine commandLine = new CommandLine(new GitCommand());
 commandLine.addSubcommand("add", new GitAddCommand());
 commandLine.addSubcommand("commit", new GitCommitCommand());
@@ -161,7 +161,7 @@ commandLine.addSubcommand("commit", new GitCommitCommand());
 
 之后，我们仍然必须运行我们的命令，但是**我们不能再使用`CommandLine.run()`方法**。现在，我们必须在新创建的 C `ommandLine`对象上调用`parseWithHandler()`方法:
 
-```
+```java
 commandLine.parseWithHandler(new RunLast(), args);
 ```
 
@@ -175,7 +175,7 @@ commandLine.parseWithHandler(new RunLast(), args);
 
 现在让我们看看如何给我们的命令添加一些选项。事实上，我们想告诉我们的`add`命令，它应该添加所有修改过的文件。为了实现这一点，**我们将向我们的`GitAddCommand`类添加一个用 [`@Option`](https://web.archive.org/web/20220917215308/https://picocli.info/#_options) 注释**注释的字段:
 
-```
+```java
 @Option(names = {"-A", "--all"})
 private boolean allFiles;
 
@@ -197,7 +197,7 @@ public void run() {
 
 然而，可以注册带参数的选项。**我们可以简单地通过声明我们的字段为不同的类型来做到这一点。**让我们给`commit`命令添加一个`message`选项:
 
-```
+```java
 @Option(names = {"-m", "--message"})
 private String message;
 
@@ -216,7 +216,7 @@ public void run() {
 
 但是现在，如果我们希望我们的命令接受多个消息，就像真正的 [`git commit`](https://web.archive.org/web/20220917215308/https://git-scm.com/docs/git-commit) 命令所做的那样，该怎么办呢？别担心，**让我们把我们的领域变成一个`array`或者一个`Collection`** ，我们已经基本完成了:
 
-```
+```java
 @Option(names = {"-m", "--message"})
 private String[] messages;
 
@@ -234,13 +234,13 @@ public void run() {
 
 现在，我们可以多次使用`message`选项:
 
-```
+```java
 commit -m "My commit is great" -m "My commit is beautiful"
 ```
 
 但是，我们也可能希望只给选项一次，并用正则表达式分隔符分隔不同的参数。因此，我们可以使用`@Option`注释的`split`参数:
 
-```
+```java
 @Option(names = {"-m", "--message"}, split = ",")
 private String[] messages;
 ```
@@ -251,14 +251,14 @@ private String[] messages;
 
 **有时候，我们可能有一个必需的选项。默认为`false`的`required`参数允许我们这样做:**
 
-```
+```java
 @Option(names = {"-m", "--message"}, required = true)
 private String[] messages;
 ```
 
 现在不指定`message`选项就无法调用`commit`命令。如果我们尝试这样做，`picocli`将打印一个错误:
 
-```
+```java
 Missing required option '--message=<messages>'
 Usage: git commit -m=<messages> [-m=<messages>]...
   -m, --message=<messages>
@@ -274,13 +274,13 @@ Usage: git commit -m=<messages> [-m=<messages>]...
 
 在我们的示例中，这将使我们能够做类似于以下的事情:
 
-```
+```java
 add file1 file2
 ```
 
 为了捕捉**的位置参数，我们将利用 [`@Parameters`](https://web.archive.org/web/20220917215308/https://picocli.info/#_positional_parameters) 标注**:
 
-```
+```java
 @Parameters
 private List<Path> files;
 
@@ -298,7 +298,7 @@ public void run() {
 
 现在，我们之前的命令会打印出来:
 
-```
+```java
 Adding file1 to the staging area
 Adding file2 to the staging area
 ```
@@ -307,7 +307,7 @@ Adding file2 to the staging area
 
 由于注释的`index` 参数，可以更细粒度地确定要捕获哪些位置参数。该索引是从零开始的。因此，如果我们定义:
 
-```
+```java
 @Parameters(index="2..*")
 ```
 
@@ -325,7 +325,7 @@ Adding file2 to the staging area
 
 假设我们想要将`config`子命令添加到`git`命令中，但是我们不希望用户更改不存在的配置元素。因此，我们决定将这些元素映射到一个枚举:
 
-```
+```java
 public enum ConfigElement {
     USERNAME("user.name"),
     EMAIL("user.email");
@@ -352,7 +352,7 @@ public enum ConfigElement {
 
 另外，在我们新创建的`GitConfigCommand`类中，让我们添加两个位置参数:
 
-```
+```java
 @Parameters(index = "0")
 private ConfigElement element;
 
@@ -369,7 +369,7 @@ public void run() {
 
 最后，我们必须注册我们的转换器。美妙的是，如果使用 Java 8 或更高版本，我们甚至不必创建实现`ITypeConverter`接口的类。**我们可以将一个 lambda 或方法引用传递给`registerConverter()`方法:**
 
-```
+```java
 CommandLine commandLine = new CommandLine(new GitCommand());
 commandLine.registerConverter(ConfigElement.class, ConfigElement::from);
 
@@ -380,7 +380,7 @@ commandLine.parseWithHandler(new RunLast(), args);
 
 当与未处理的配置元素一起使用时，该命令将显示帮助消息和一条信息，告诉我们无法将参数转换为`ConfigElement`:
 
-```
+```java
 Invalid value for positional parameter at index 0 (<element>): 
 cannot convert 'user.phone' to ConfigElement 
 (java.lang.IllegalArgumentException: The argument user.phone doesn't match any ConfigElement)
@@ -395,7 +395,7 @@ Usage: git config <element> <value>
 
 事实上，我们可能在 Spring Boot 环境中工作，并且希望在我们的命令行程序中受益于它。为了做到这一点，**我们必须创建一个`SpringBootApplication` 来实现`CommandLineRunner`接口**:
 
-```
+```java
 @SpringBootApplication
 public class Application implements CommandLineRunner {
     public static void main(String[] args) {
@@ -410,7 +410,7 @@ public class Application implements CommandLineRunner {
 
 另外，**让我们用 Spring `@Component`注释**来注释我们所有的命令和子命令，并在我们的`Application`中自动连接它们:
 
-```
+```java
 private GitCommand gitCommand;
 private GitAddCommand addCommand;
 private GitCommitCommand commitCommand;
@@ -427,7 +427,7 @@ public Application(GitCommand gitCommand, GitAddCommand addCommand,
 
 注意，我们必须自动连接每个子命令。不幸的是，这是因为，就目前而言，`picocli`还不能从声明性声明的 Spring 上下文中检索子命令(带注释)。因此，我们必须以编程的方式自己进行连接:
 
-```
+```java
 @Override
 public void run(String... args) {
     CommandLine commandLine = new CommandLine(gitCommand);

@@ -12,7 +12,7 @@
 
 在我们深入实际实现之前，让我们将[旁观者](https://web.archive.org/web/20220628091209/https://search.maven.org/artifact/com.netflix.spectator/spectator-api)依赖项添加到`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.netflix.spectator</groupId>
     <artifactId>spectator-api</artifactId>
@@ -38,7 +38,7 @@
 
 可以使用如下的`Registry`实现:
 
-```
+```java
 Registry registry = new DefaultRegistry();
 ```
 
@@ -66,7 +66,7 @@ Registry registry = new DefaultRegistry();
 
 让我们首先在初始化时向`Registry`对象注册一个计数器:
 
-```
+```java
 insertCounter = registry.counter("list.insert.count");
 removeCounter = registry.counter("list.remove.count");
 ```
@@ -75,7 +75,7 @@ removeCounter = registry.counter("list.remove.count");
 
 现在，我们可以增加或减少`Counter`计数器，分别用于添加到列表或从列表中删除:
 
-```
+```java
 requestList.add(element);
 insertCounter.increment();
 
@@ -98,13 +98,13 @@ removeCounter.increment();
 
 首先，我们需要在`Registry`中注册该仪表:
 
-```
+```java
 requestLatency = registry.timer("app.request.latency");
 ```
 
 接下来，我们可以调用`Timer`的`record()` 方法来测量处理请求所花费的时间:
 
-```
+```java
 requestLatency.record(() -> handleRequest(input));
 ```
 
@@ -114,13 +114,13 @@ requestLatency.record(() -> handleRequest(input));
 
 同样，作为第一步，我们需要注册该仪表:
 
-```
+```java
 refreshDuration = LongTaskTimer.get(registry, registry.createId("metadata.refreshDuration"));
 ```
 
 接下来，我们可以使用`LongTaskTimer`开始和停止围绕长期运行任务的测量:
 
-```
+```java
 long taskId = refreshDuration.start();
 try {
     Thread.sleep(input);
@@ -148,7 +148,7 @@ try {
 
 现在，让我们看看如何使用这个标尺来监控`List`的尺寸:
 
-```
+```java
 PolledMeter.using(registry)
   .withName("list.size")
   .monitorValue(listSize);
@@ -160,13 +160,13 @@ PolledMeter.using(registry)
 
 这种类型的计量器需要定期手动更新与监控任务中的更新相关的值。这是一个使用主动仪表的例子`:`
 
-```
+```java
 gauge = registry.gauge("list.size");
 ```
 
 我们首先在`Registry`中注册这个量规。然后，我们在列表中添加或删除元素时手动更新它:
 
-```
+```java
 list.add(element);
 gauge.set(listSize);
 list.remove(0);
@@ -179,13 +179,13 @@ gauge.set(listSize);
 
 首先，像往常一样，我们在`Registry`中注册这个仪表:
 
-```
+```java
 distributionSummary = registry.distributionSummary("app.request.size");
 ```
 
 现在，我们可以使用这个类似于`Timer`的计量器来记录请求的大小:
 
-```
+```java
 distributionSummary.record((long) input.length());
 handleRequest();
 ```

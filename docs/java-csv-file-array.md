@@ -14,7 +14,7 @@
 
 然后，我们将根据逗号分隔符将该行拆分成标记:
 
-```
+```java
 List<List<String>> records = new ArrayList<>();
 try (BufferedReader br = new BufferedReader(new FileReader("book.csv"))) {
     String line;
@@ -31,7 +31,7 @@ try (BufferedReader br = new BufferedReader(new FileReader("book.csv"))) {
 
 接下来，我们将使用一个`java.util.Scanner`遍历文件的内容，并一行接一行地检索行:
 
-```
+```java
 List<List<String>> records = new ArrayList<>();
 try (Scanner scanner = new Scanner(new File("book.csv"));) {
     while (scanner.hasNextLine()) {
@@ -42,7 +42,7 @@ try (Scanner scanner = new Scanner(new File("book.csv"));) {
 
 然后，我们将解析这些行，并将其存储到一个数组中:
 
-```
+```java
 private List<String> getRecordFromLine(String line) {
     List<String> values = new ArrayList<String>();
     try (Scanner rowScanner = new Scanner(line)) {
@@ -65,7 +65,7 @@ OpenCSV 是一个第三方库，它提供了一个处理 CSV 文件的 API。
 
 我们将使用`CSVReader`中的`readNext()`方法来读取文件中的记录:
 
-```
+```java
 List<List<String>> records = new ArrayList<List<String>>();
 try (CSVReader csvReader = new CSVReader(new FileReader("book.csv"));) {
     String[] values = null;

@@ -39,7 +39,7 @@ MongoDB 为大多数现代编程语言提供了[软件驱动](https://web.archiv
 
 首先，我们将 [MongoDB 驱动程序](https://web.archive.org/web/20221225164858/https://search.maven.org/search?q=g:org.mongodb%20AND%20a:mongodb-driver-sync)作为一个依赖项添加到我们的应用程序中:
 
-```
+```java
 <dependency>
     <groupId>org.mongodb</groupId>
     <artifactId>mongodb-driver-sync</artifactId>
@@ -49,7 +49,7 @@ MongoDB 为大多数现代编程语言提供了[软件驱动](https://web.archiv
 
 然后我们创建一个到 MongoDB 数据库和集合的连接:
 
-```
+```java
 MongoClient mongoClient = MongoClients.create();
 MongoDatabase database = mongoClient.getDatabase("myDB");
 MongoCollection<Document> collection = database.getCollection("employees");
@@ -61,7 +61,7 @@ MongoCollection<Document> collection = database.getCollection("employees");
 
 假设我们有下面的 JSON，我们想把它作为一个新文档插入到一个`employees`集合中:
 
-```
+```java
 {
   "first_name" : "Joe",
   "last_name" : "Smith",
@@ -79,7 +79,7 @@ MongoCollection<Document> collection = database.getCollection("employees");
 
 为了使用 BSON 来插入它，我们将使用 MongoDB 的`Document` API:
 
-```
+```java
 Document employee = new Document()
     .append("first_name", "Joe")
     .append("last_name", "Smith")
@@ -98,7 +98,7 @@ collection.insertOne(employee);
 
 为了在 MongoDB 中找到一个文档，我们提供了一个搜索文档，指定要查询哪些字段。例如，要查找姓氏为“Smith”的所有文档，我们可以使用下面的 JSON 文档:
 
-```
+```java
 {  
   "last_name": "Smith"
 }
@@ -106,7 +106,7 @@ collection.insertOne(employee);
 
 如果写在 BSON，这将是:
 
-```
+```java
 Document query = new Document("last_name", "Smith");
 List results = new ArrayList<>();
 collection.find(query).into(results);
@@ -116,7 +116,7 @@ collection.find(query).into(results);
 
 为了解决这个问题，MongoDB 提供了`or`查询操作符:
 
-```
+```java
 {
   "$or": [
     { "first_name": "Joe" },
@@ -127,7 +127,7 @@ collection.find(query).into(results);
 
 这将查找名字为“Joe”或姓氏为“Smith”的所有文档。要将它写成 BSON，我们将使用嵌套的`Document`，就像上面的插入查询一样:
 
-```
+```java
 Document query = 
   new Document("$or", Arrays.asList(
       new Document("last_name", "Smith"),
@@ -147,7 +147,7 @@ collection.find(query).into(results);
 
 在 JSON 中，这两个查询类似于:
 
-```
+```java
 {
   "skills": { 
     $elemMatch:  { 
@@ -165,7 +165,7 @@ collection.find(query).into(results);
 
 在 BSON，他们会是:
 
-```
+```java
 Document query = new Document(
   "skills",
   new Document(
@@ -183,7 +183,7 @@ MongoDB 中的删除查询使用与查找查询相同的语法。我们只是提
 
 例如，假设我们在员工数据库中发现了一个错误，并意外地创建了服务年限为负值的员工 a。为了找到它们，我们将使用下面的 JSON:
 
-```
+```java
 {
   "years_of_service" : { 
     "$lt" : 0
@@ -193,7 +193,7 @@ MongoDB 中的删除查询使用与查找查询相同的语法。我们只是提
 
 相应的 BSON 文件将是:
 
-```
+```java
 Document query = new Document(
   "years_of_service", 
   new Document("$lt", 0));

@@ -26,7 +26,7 @@ Docker 首先给每个容器分配一个 [IP](https://web.archive.org/web/202211
 
 例如，我们可以为 MySQL 服务运行一个容器。让我们来看看 [Docker 作曲](/web/20221115175831/https://www.baeldung.com/ops/docker-compose) YAML 的定义:
 
-```
+```java
 services:
   db:
     image: mysql:latest
@@ -51,19 +51,19 @@ networks:
 
 像往常一样，我们运行我们的容器:
 
-```
+```java
 docker-compose up -d
 ```
 
 让我们从容器的角度用`format` 语法检查网络，使用`[jq](/web/20221115175831/https://www.baeldung.com/linux/jq-command-json)`获得 JSON 输出:
 
-```
+```java
 docker inspect --format='{{json .NetworkSettings.Networks}}' 2d3f4c69a213 | jq .
 ```
 
 Docker Compose 根据当前目录分配网络名称。例如，如果我们在`project`目录中，我们可以看到类似的输出:
 
-```
+```java
 {
   "project_network": {
     "IPAMConfig": null,
@@ -93,13 +93,13 @@ Docker Compose 根据当前目录分配网络名称。例如，如果我们在`p
 
 现在，我们可以检查网络:
 
-```
+```java
 docker inspect network project_network
 ```
 
 这一次，我们对网络有了更深入的了解:
 
-```
+```java
 [
     {
         "Name": "project_network",
@@ -154,19 +154,19 @@ docker inspect network project_network
 
 如果我们使用 Docker CLI，我们将通过首先创建子网来实现这一结果:
 
-```
+```java
 docker network create --subnet=10.5.0.0/16 mynet 
 ```
 
 然后，我们使用静态 IP 运行容器，同样使用 MySQL 服务:
 
-```
+```java
 docker run --net mynet --ip 10.5.0.1 -p 3306:3306 --mount source=db,target=/var/lib/mysql -e MYSQL_ROOT_PASSWORD=password mysql:latest
 ```
 
 我们可以使用 Docker Compose 来总结一个完整的示例:
 
-```
+```java
 services:
   db:
     container_name: mysql_db
@@ -202,7 +202,7 @@ networks:
 
 最后，我们添加一个 SQL 脚本来创建一个用户、一个数据库和一个表:
 
-```
+```java
 CREATE DATABASE IF NOT EXISTS test;
 CREATE USER 'db_user'@'10.5.0.1' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON *.* TO 'db_user'@'10.5.0.1' WITH GRANT OPTION;
@@ -221,20 +221,20 @@ INSERT INTO TEST_TABLE VALUES (3, 'TEST_3');
 
 容器启动后，我们可以用 [`docker ps`](https://web.archive.org/web/20221115175831/https://docs.docker.com/engine/reference/commandline/ps/) 来看看它的定义:
 
-```
+```java
 CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS                                                  NAMES
 97812e199512   mysql:latest   "docker-entrypoint.s…"   7 minutes ago   Up 7 minutes   0.0.0.0:3306->3306/tcp, :::3306->3306/tcp, 33060/tcp   mysql_db 
 ```
 
 我们现在可以通过输入密码连接到数据库。我们使用容器名称或 ID 作为 DNS 的别名:
 
-```
+```java
 mysql --host=mysql_db -u db_user -p
 ```
 
 现在，使用`status`命令，我们可以测试我们的 MySQL 主机解析为容器 ID:
 
-```
+```java
 Connection id:          10
 Current database:       test
 Current user:           [[email protected]](/web/20221115175831/https://www.baeldung.com/cdn-cgi/l/email-protection)
@@ -257,7 +257,7 @@ TCP port:               3306
 
 让我们检查一下集装箱。在静态 IP 的情况下，我们可以看到`IPAM`配置现在有了一个 IPv4 地址:
 
-```
+```java
 {
   "project_network": {
     "IPAMConfig": {

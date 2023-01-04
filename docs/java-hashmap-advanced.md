@@ -22,7 +22,7 @@
 
 为了在散列图中存储一个值，我们调用带两个参数的`put`API；一个键和相应的值:
 
-```
+```java
 V put(K key, V value);
 ```
 
@@ -30,7 +30,7 @@ V put(K key, V value);
 
 为了看到这一点，让我们创建一个充当键的对象。我们将只创建一个属性作为哈希代码来模拟哈希的第一阶段:
 
-```
+```java
 public class MyKey {
     private int id;
 
@@ -46,7 +46,7 @@ public class MyKey {
 
 我们现在可以使用这个对象来映射哈希表中的一个值:
 
-```
+```java
 @Test
 public void whenHashCodeIsCalledOnPut_thenCorrect() {
     MyKey key = new MyKey(1);
@@ -57,7 +57,7 @@ public void whenHashCodeIsCalledOnPut_thenCorrect() {
 
 上面的代码没有什么变化，但是请注意控制台的输出。实际上，调用了`hashCode`方法:
 
-```
+```java
 Calling hashCode()
 ```
 
@@ -67,7 +67,7 @@ Calling hashCode()
 
 `HashMap`的`hash`函数是这样的:
 
-```
+```java
 static final int hash(Object key) {
     int h;
     return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
@@ -78,7 +78,7 @@ static final int hash(Object key) {
 
 在`put`函数内部，最终的哈希值是这样使用的:
 
-```
+```java
 public V put(K key, V value) {
     return putVal(hash(key), key, value, false, true);
 }
@@ -92,7 +92,7 @@ public V put(K key, V value) {
 
 如前所述，所有 Java 集合框架接口都扩展了`Collection`接口，但`Map`没有。对比一下我们之前看到的地图接口的声明和`Set`接口的声明:
 
-```
+```java
 public interface Set<E> extends Collection<E>
 ```
 
@@ -104,7 +104,7 @@ public interface Set<E> extends Collection<E>
 
 散列映射的一个特殊属性是它接受`null`值和空键:
 
-```
+```java
 @Test
 public void givenNullKeyAndVal_whenAccepts_thenCorrect(){
     Map<String, String> map = new HashMap<>();
@@ -118,7 +118,7 @@ public void givenNullKeyAndVal_whenAccepts_thenCorrect(){
 
 在一个`put`操作中，当我们使用一个先前已经使用过的键来存储一个值时，它返回与该键相关的先前值:
 
-```
+```java
 @Test
 public void givenExistingKey_whenPutReturnsPrevValue_thenCorrect() {
     Map<String, String> map = new HashMap<>();
@@ -132,7 +132,7 @@ public void givenExistingKey_whenPutReturnsPrevValue_thenCorrect() {
 
 否则，它返回`null:`
 
-```
+```java
 @Test
 public void givenNewKey_whenPutReturnsNull_thenCorrect() {
     Map<String, String> map = new HashMap<>();
@@ -145,7 +145,7 @@ public void givenNewKey_whenPutReturnsNull_thenCorrect() {
 
 当`put`返回 null 时，也可能意味着与键相关联的前一个值为 null，而不一定是新的键-值映射:
 
-```
+```java
 @Test
 public void givenNullVal_whenPutReturnsNull_thenCorrect() {
     Map<String, String> map = new HashMap<>();
@@ -162,7 +162,7 @@ public void givenNullVal_whenPutReturnsNull_thenCorrect() {
 
 要检索已经存储在哈希表中的对象，我们必须知道它存储在哪个键下。我们调用`get` API 并传递给它一个关键对象:
 
-```
+```java
 @Test
 public void whenGetWorks_thenCorrect() {
     Map<String, String> map = new HashMap<>();
@@ -176,7 +176,7 @@ public void whenGetWorks_thenCorrect() {
 
 在内部，使用相同的散列原理。`The hashCode()`调用 key 对象的 API 获取初始哈希值:
 
-```
+```java
 @Test
 public void whenHashCodeIsCalledOnGet_thenCorrect() {
     MyKey key = new MyKey(1);
@@ -188,7 +188,7 @@ public void whenHashCodeIsCalledOnGet_thenCorrect() {
 
 这次调用了两次`MyKey`的`hashCode`API；一次用于`put`，一次用于`get`:
 
-```
+```java
 Calling hashCode()
 Calling hashCode()
 ```
@@ -201,7 +201,7 @@ Calling hashCode()
 
 当返回值为 null 时，可能意味着键对象与哈希映射中的任何值都没有关联:
 
-```
+```java
 @Test
 public void givenUnmappedKey_whenGetReturnsNull_thenCorrect() {
     Map<String, String> map = new HashMap<>();
@@ -214,7 +214,7 @@ public void givenUnmappedKey_whenGetReturnsNull_thenCorrect() {
 
 或者它可能仅仅意味着该键被显式映射到一个空实例:
 
-```
+```java
 @Test
 public void givenNullVal_whenRetrieves_thenCorrect() {
     Map<String, String> map = new HashMap<>();
@@ -228,7 +228,7 @@ public void givenNullVal_whenRetrieves_thenCorrect() {
 
 为了区分这两种情况，我们可以使用`containsKey` API，我们将键传递给它，当且仅当在哈希映射中为指定的键创建了映射时，它才返回 true:
 
-```
+```java
 @Test
 public void whenContainsDistinguishesNullValues_thenCorrect() {
     Map<String, String> map = new HashMap<>();
@@ -254,7 +254,7 @@ public void whenContainsDistinguishesNullValues_thenCorrect() {
 
 `HashMap`提供了三个视图，使我们能够将其键和值视为另一个集合。我们可以得到地图的所有**键的集合:**
 
-```
+```java
 @Test
 public void givenHashMap_whenRetrievesKeyset_thenCorrect() {
     Map<String, String> map = new HashMap<>();
@@ -271,7 +271,7 @@ public void givenHashMap_whenRetrievesKeyset_thenCorrect() {
 
 布景由地图本身支撑。因此**对集合所做的任何更改都会反映在映射图**中:
 
-```
+```java
 @Test
 public void givenKeySet_whenChangeReflectsInMap_thenCorrect() {
     Map<String, String> map = new HashMap<>();
@@ -289,7 +289,7 @@ public void givenKeySet_whenChangeReflectsInMap_thenCorrect() {
 
 我们还可以获得值的**集合视图:**
 
-```
+```java
 @Test
 public void givenHashMap_whenRetrievesValues_thenCorrect() {
     Map<String, String> map = new HashMap<>();
@@ -308,7 +308,7 @@ public void givenHashMap_whenRetrievesValues_thenCorrect() {
 
 最后，我们可以获得地图中所有条目的**集合视图:**
 
-```
+```java
 @Test
 public void givenHashMap_whenRetrievesEntries_thenCorrect() {
     Map<String, String> map = new HashMap<>();
@@ -335,7 +335,7 @@ public void givenHashMap_whenRetrievesEntries_thenCorrect() {
 
 如果在迭代器创建后对映射进行了任何结构修改，将会抛出并发修改异常:
 
-```
+```java
 @Test(expected = ConcurrentModificationException.class)
 public void givenIterator_whenFailsFastOnModification_thenCorrect() {
     Map<String, String> map = new HashMap<>();
@@ -353,7 +353,7 @@ public void givenIterator_whenFailsFastOnModification_thenCorrect() {
 
 唯一**允许的结构修改是通过迭代器本身执行的`remove`** 操作:
 
-```
+```java
 public void givenIterator_whenRemoveWorks_thenCorrect() {
     Map<String, String> map = new HashMap<>();
     map.put("name", "baeldung");
@@ -383,7 +383,7 @@ public void givenIterator_whenRemoveWorks_thenCorrect() {
 
 默认初始容量为`16`，默认负载系数为`0.75`。我们可以使用初始容量和 LF 的自定义值创建一个哈希映射:
 
-```
+```java
 Map<String,String> hashMapWithCapacity=new HashMap<>(32);
 Map<String,String> hashMapWithCapacityAndLF=new HashMap<>(32, 0.5f);
 ```
@@ -418,7 +418,7 @@ Java 团队设置的默认值在大多数情况下都得到了很好的优化。
 
 为了模拟这种冲突解决技术，让我们稍微修改一下前面的关键对象:
 
-```
+```java
 public class MyKey {
     private String name;
     private int id;
@@ -453,7 +453,7 @@ public class MyKey {
 
 现在让我们继续存储和检索一些在某个点碰撞的对象:
 
-```
+```java
 @Test
 public void whenCallsEqualsOnCollision_thenCorrect() {
     HashMap<MyKey, String> map = new HashMap<>();
@@ -487,7 +487,7 @@ public void whenCallsEqualsOnCollision_thenCorrect() {
 
 当我们运行测试时，它应该通过，表明冲突已经解决，我们将使用生成的日志来确认冲突确实发生了:
 
-```
+```java
 storing value for k1
 Calling hashCode()
 storing value for k2

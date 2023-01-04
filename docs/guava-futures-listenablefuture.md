@@ -36,7 +36,7 @@ Guava 为我们提供了比默认 Java`Future.` 更丰富的 API，让我们看�
 
 **我们获得`ListenableFuture`的最简单的方法是提交一个任务给`ListeningExecutorService`** (就像我们如何使用一个普通的`ExecutorService `来获得一个普通的`Future`):
 
-```
+```java
 ExecutorService execService = Executors.newSingleThreadExecutor();
 ListeningExecutorService lExecService = MoreExecutors.listeningDecorator(execService);
 
@@ -50,7 +50,7 @@ ListenableFuture<Integer> asyncTask = lExecService.submit(() -> {
 
 如果我们已经有了一个返回`Future`的 API，我们需要将它转换成`ListenableFuture`，这很容易通过初始化它的具体实现`ListenableFutureTask:`来完成
 
-```
+```java
 // old api
 public FutureTask<String> fetchConfigTask(String configKey) {
     return new FutureTask<>(() -> {
@@ -76,7 +76,7 @@ public ListenableFutureTask<String> fetchConfigListenableTask(String configKey) 
 
 我们可以**向`ListenableFuture`添加监听器的一种方式是通过向`Futures.addCallback(),` 注册一个回调，当成功或失败发生时，为我们提供对结果或异常的访问:**
 
-```
+```java
 Executor listeningExecutor = Executors.newSingleThreadExecutor();
 
 ListenableFuture<Integer> asyncTask = new ListenableFutureService().succeedingTask()
@@ -95,7 +95,7 @@ Futures.addCallback(asyncTask, new FutureCallback<Integer>() {
 
 我们还可以通过直接添加到`ListenableFuture.` 来**添加一个监听器。注意，这个监听器将在未来成功或异常完成时运行。另外，请注意，我们无法访问异步任务的结果:**
 
-```
+```java
 Executor listeningExecutor = Executors.newSingleThreadExecutor();
 
 int nextTask = 1;
@@ -116,7 +116,7 @@ asyncTask.addListener(() -> runningTasks.remove(nextTask), listeningExecutor);
 
 番石榴为我们提供了两种方法。但是，我们应该根据我们的要求谨慎选择正确的方法。假设我们需要协调以下异步任务:
 
-```
+```java
 ListenableFuture<String> task1 = service.fetchConfig("config.0");
 ListenableFuture<String> task2 = service.fetchConfig("config.1");
 ListenableFuture<String> task3 = service.fetchConfig("config.2");
@@ -124,7 +124,7 @@ ListenableFuture<String> task3 = service.fetchConfig("config.2");
 
 **一种放大多种期货的方法是使用`Futures.allAsList()` 方法。这允许我们收集所有期货的结果，如果它们都成功，**按照提供的期货的顺序。如果这些未来中的任何一个失败了，那么整个结果就是失败的未来:
 
-```
+```java
 ListenableFuture<List<String>> configsTask = Futures.allAsList(task1, task2, task3);
 Futures.addCallback(configsTask, new FutureCallback<List<String>>() {
     @Override
@@ -141,7 +141,7 @@ Futures.addCallback(configsTask, new FutureCallback<List<String>>() {
 
 **如果我们需要收集所有异步任务的结果，不管它们是否失败，我们可以使用`Futures.successfulAsList()`** 。这将返回一个列表，其结果将与传递到参数中的任务具有相同的顺序，并且失败的任务将有`null`被分配给它们在列表中各自的位置:
 
-```
+```java
 ListenableFuture<List<String>> configsTask = Futures.successfulAsList(task1, task2, task3);
 Futures.addCallback(configsTask, new FutureCallback<List<String>>() {
     @Override
@@ -166,7 +166,7 @@ Futures.addCallback(configsTask, new FutureCallback<List<String>>() {
 
 让我们看看如何使用`Futures.whenAllSucceed()` 来组合来自多个未来的不同结果类型:
 
-```
+```java
 ListenableFuture<Integer> cartIdTask = service.getCartId();
 ListenableFuture<String> customerNameTask = service.getCustomerName();
 ListenableFuture<List<String>> cartItemsTask = service.getCartItems();
@@ -200,7 +200,7 @@ Futures.addCallback(cartInfoTask, new FutureCallback<CartInfo>() {
 
 让我们看看如何使用**来转换未来的结果。这个只要变换计算量不大就可以用:**
 
-```
+```java
 ListenableFuture<List<String>> cartItemsTask = service.getCartItems();
 
 Function<List<String>, Integer> itemCountFunc = cartItems -> {
@@ -219,7 +219,7 @@ ListenableFuture<Integer> itemCountTask = Futures.transform(cartItemsTask, itemC
 
 让我们看看如何**使用`Futures.submitAsync()` 从提交的`Callable `中调用一个未来:**
 
-```
+```java
 AsyncCallable<String> asyncConfigTask = () -> {
     ListenableFuture<String> configTask = service.fetchConfig("config.a");
     TimeUnit.MILLISECONDS.sleep(500); //some long running task
@@ -231,7 +231,7 @@ ListenableFuture<String> configTask = Futures.submitAsync(asyncConfigTask, execu
 
 如果我们想要真正的链接，一个未来的结果被输入到另一个未来的计算中，我们可以使用`Futures.transformAsync()` :
 
-```
+```java
 ListenableFuture<String> usernameTask = service.generateUsername("john");
 AsyncFunction<String, String> passwordFunc = username -> {
     ListenableFuture<String> generatePasswordTask = service.generatePassword(username);
@@ -252,7 +252,7 @@ Guava 还为我们提供了`Futures.scheduleAsync()`和`Futures.catchingAsync()`
 
 使用番石榴期货时，理解工作执行者和倾听执行者的区别是很重要的。例如，假设我们有一个获取配置的异步任务:
 
-```
+```java
 public ListenableFuture<String> fetchConfig(String configKey) {
     return lExecService.submit(() -> {
         TimeUnit.MILLISECONDS.sleep(500);
@@ -263,7 +263,7 @@ public ListenableFuture<String> fetchConfig(String configKey) {
 
 我们还可以说，我们想给上述未来附加一个监听器:
 
-```
+```java
 ListenableFuture<String> configsTask = service.fetchConfig("config.0");
 Futures.addCallback(configsTask, someListener, listeningExecutor);
 ```
@@ -286,7 +286,7 @@ Futures.addCallback(configsTask, someListener, listeningExecutor);
 
 当使用链式期货时，我们应该小心不要从另一个期货内部调用一个期货，以免创建嵌套期货:
 
-```
+```java
 public ListenableFuture<String> generatePassword(String username) {
     return lExecService.submit(() -> {
         TimeUnit.MILLISECONDS.sleep(500);

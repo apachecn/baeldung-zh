@@ -38,7 +38,7 @@ web 应用程序的最低层是持久层。换句话说，它负责与用户的�
 
 首先，我们只有姓名、年龄、电话和密码属性:
 
-```
+```java
 public class UserAccount {
 
     @NotNull(message = "Password must be between 4 to 15 characters")
@@ -66,7 +66,7 @@ public class UserAccount {
 
 接下来，让我们在服务类中实现我们的验证:
 
-```
+```java
 @Service
 public class UserAccountService {
 
@@ -102,7 +102,7 @@ public class UserAccountService {
 
 在此之后，让我们构建 Spring REST 控制器类来向客户端或最终用户显示服务，并评估应用程序的输入验证:
 
-```
+```java
 @RestController
 public class UserAccountController {
 
@@ -122,7 +122,7 @@ public class UserAccountController {
 
 现在，让我们通过运行 Spring Boot 应用程序来测试这个方法。之后，使用 Postman 或任何其他 API 测试工具，我们将 JSON 输入发布到`localhost:8080/addUserAccount` URL:
 
-```
+```java
 {
    "name":"Baeldung",
    "age":25,
@@ -136,7 +136,7 @@ public class UserAccountController {
 
 After confirming that the test runs successfully, let's now check if the validation is working as per the expectation. The next logical step is to test the application with few invalid inputs. Hence, we'll update our input JSON with invalid values:
 
-```
+```java
 {
    "name":"",
    "age":25,
@@ -150,7 +150,7 @@ After confirming that the test runs successfully, let's now check if the validat
 
 The console now shows the error message, Hence, **we can see how the usage of Validator is essential for validation**:
 
-```
+```java
 Error occurred: Password must be between 4 to 15 characters, Name must not be blank
 ```
 

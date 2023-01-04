@@ -14,13 +14,13 @@
 
 为了简单起见，我们将使用单元测试断言来验证我们的转换是否如预期的那样工作。因此，让我们先对整数列表进行初始化:
 
-```
+```java
 List<Integer> INTEGER_LIST = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
 ```
 
 如上面的代码所示，我们在`INTEGER_LIST`对象中有七个整数。现在，我们的目标是**将`INTEGER_LIST`中的每个整数元素转换成一个** `**String**,` ，例如`1`转换成`“1”`，`2`转换成`“2”`，等等。最后，结果应该等于:
 
-```
+```java
 List<String> EXPECTED_LIST = Arrays.asList("1", "2", "3", "4", "5", "6", "7");
 ```
 
@@ -38,13 +38,13 @@ Java Stream API 在 Java 8 和更高版本上可用。它提供了许多方便�
 
 例如，**将`List<TypeA>`转换为`List<TypeB>`的一个典型方法是`Stream`的`map()`方法**:
 
-```
+```java
 theList.stream().map( .. the conversion logic.. ).collect(Collectors.toList());
 ```
 
 那么接下来，让我们看看如何使用`map()`方法将`List<Integer>`转换为`List<String>`:
 
-```
+```java
 List<String> result = INTEGER_LIST.stream().map(i -> i.toString()).collect(Collectors.toList());
 assertEquals(EXPECTED_LIST, result);
 ```
@@ -59,7 +59,7 @@ assertEquals(EXPECTED_LIST, result);
 
 例如，我们可以通过一个简单的`for`循环进行转换:
 
-```
+```java
 List<String> result = new ArrayList<>();
 for (Integer i : INTEGER_LIST) {
     result.add(i.toString());
@@ -80,7 +80,7 @@ assertEquals(EXPECTED_LIST, result);
 
 首先，让我们在`pom.xml`中添加 Guava 库依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -92,7 +92,7 @@ assertEquals(EXPECTED_LIST, result);
 
 接下来，我们可以用芭乐的 [`Lists.transform()`](/web/20221224002731/https://www.baeldung.com/guava-filter-and-transform-a-collection#transform-a-collection) 方法来解决我们的问题:
 
-```
+```java
 List<String> result = Lists.transform(INTEGER_LIST, Functions.toStringFunction());
 assertEquals(EXPECTED_LIST, result);
 ```

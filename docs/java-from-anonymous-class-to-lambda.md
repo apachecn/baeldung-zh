@@ -16,7 +16,7 @@
 
 例如，我们可以使用`Runnable`作为匿名类，在 Java 中创建新线程。语法类似于构造函数的调用，只是我们需要将类定义放在块中:
 
-```
+```java
 Thread thread = new Thread(new Runnable() {
     @Override
     public void run() {
@@ -37,7 +37,7 @@ Lambda 表达式提供了一种便捷的方式来更简洁直接地定义匿名�
 
 例如，让我们考虑一下`Sender`接口:
 
-```
+```java
 public interface Sender {
     String send(String message);
 }
@@ -47,7 +47,7 @@ public interface Sender {
 
 接下来，让我们创建`SenderService`接口:
 
-```
+```java
 public interface SenderService {
     String callSender(Sender sender);
 }
@@ -59,7 +59,7 @@ public interface SenderService {
 
 首先，让我们创建`EmailSenderService`类:
 
-```
+```java
 public class EmailSenderService implements SenderService {
 
     @Override
@@ -71,7 +71,7 @@ public class EmailSenderService implements SenderService {
 
 接下来，让我们创建`SmsSenderService`类:
 
-```
+```java
 public class SmsSenderService implements SenderService {
 
     @Override
@@ -83,7 +83,7 @@ public class SmsSenderService implements SenderService {
 
 既然我们已经把这些部分放在了一起，让我们创建第一个测试用例，其中我们将`Sender`对象作为匿名类传递:
 
-```
+```java
 @Test
 public void whenPassingAnonymousClass_thenSuccess() {
     SenderService emailSenderService = new EmailSenderService();
@@ -109,7 +109,7 @@ public void whenPassingAnonymousClass_thenSuccess() {
 
 为了转换匿名类，**我们需要省略`new`关键字和方法名**:
 
-```
+```java
 @Test
 public void whenPassingLambdaExpression_thenSuccess() {
     SenderService smsSenderService = new SmsSenderService();
@@ -126,7 +126,7 @@ public void whenPassingLambdaExpression_thenSuccess() {
 
 我们可以进一步增强:**我们可以通过移除参数类型和`return`语句**将 lambda 语句改为 lambda 表达式:
 
-```
+```java
 String smsNotif = smsSenderService.callSender(message -> message);
 ```
 

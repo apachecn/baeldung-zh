@@ -33,7 +33,7 @@
 
 让我们在类中创建一个简单的方法，并使用`{@code}`标签添加一些 Javadoc:
 
-```
+```java
 /**
   * This method takes a {@code String} 
   * and searches in the given list {@code List<String>}
@@ -57,7 +57,7 @@ public Boolean isAvenger(String name, List<String> avengers) {
 
 **同样，我们可以看到我们不需要对' @ '字符进行转义:**
 
-```
+```java
 /**
   * This is sample for showing @ use without any manual escape.
   * {@code @AnyAnnotaion}
@@ -85,7 +85,7 @@ public void javadocTest() {
 
 让我们再次考虑同一个例子。我们可以看到**生成的 Javadoc HTML 在我们的段落**中的`List`后缺少了`<String>`参数化类型:
 
-```
+```java
 /**
   * This method takes a <code>String</code>
   * and searches in the given <code>List<String></code>
@@ -104,7 +104,7 @@ public Boolean isAvenger(String name, List<String> avengers) {
 [![method3](img/981441f4020484ee1049ea548a6e0a82.png)](/web/20221208143830/https://www.baeldung.com/wp-content/uploads/2021/09/method3-1024x459-1.png) 
 在这里，如果我们在我们的方法注释中对特殊字符'<'和'>'进行转义，那么它将在 Javadoc 中呈现正确的`<String>`:
 
-```
+```java
 /**
   * This method takes a <code>String</code>
   * and searches in the given <code>List<String></code>

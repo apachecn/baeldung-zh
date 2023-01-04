@@ -14,7 +14,7 @@
 
 类似于标准的 Java 类，我们可以使用点符号来访问它们的值。因此，要访问`PizzaDeliveryStatusEnum`的`READY`值，我们可以使用:
 
-```
+```java
 PizzaStatusEnum readyStatus = PizzaStatusEnum.READY;
 ```
 
@@ -22,13 +22,13 @@ PizzaStatusEnum readyStatus = PizzaStatusEnum.READY;
 
 另一方面，`enum`类型的**提供了一个`valueOf()`方法，该方法将一个`String`作为参数，并返回相应的`enum`对象:**
 
-```
+```java
 PizzaStatusEnum readyStatus = PizzaStatusEnum.valueOf("READY");
 ```
 
 我们可以通过单元测试来检查这种方法是否有效:
 
-```
+```java
 @Test
 public void whenConvertedIntoEnum_thenGetsConvertedCorrectly() {
 
@@ -41,7 +41,7 @@ public void whenConvertedIntoEnum_thenGetsConvertedCorrectly() {
 
 重要的是要记住，`valueOf()` 方法对提供给它的参数进行区分大小写的匹配，因此传递一个与任何原始`enum`值的大小写都不匹配的值将导致一个`IllegalArgumentException`:
 
-```
+```java
 @Test(expected = IllegalArgumentException.class)
 public void whenConvertedIntoEnum_thenThrowsException() {
 
@@ -53,7 +53,7 @@ public void whenConvertedIntoEnum_thenThrowsException() {
 
 传递一个不是原始`enum`值的一部分的值也会导致一个`IllegalArgumentException`:
 
-```
+```java
 @Test(expected = IllegalArgumentException.class)
 public void whenConvertedIntoEnum_thenThrowsException() {
     String pizzaEnumValue = "invalid";

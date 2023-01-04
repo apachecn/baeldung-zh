@@ -18,7 +18,7 @@ Spring 云安全模块在 Spring Boot 应用程序中提供了与基于令牌的
 
 首先，我们需要添加 [`spring-cloud-starter-oauth2`](https://web.archive.org/web/20220926192518/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-cloud-starter-oauth2%22) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-oauth2</artifactId>
@@ -40,7 +40,7 @@ Spring 云安全模块在 Spring Boot 应用程序中提供了与基于令牌的
 
 我们现在可以在客户端应用程序的配置类中添加注释:
 
-```
+```java
 @Configuration
 @EnableOAuth2Sso
 public class SiteSecurityConfigurer
@@ -55,7 +55,7 @@ public class SiteSecurityConfigurer
 
 任何需要认证的请求都将被重定向到授权服务器。为此，我们还必须定义服务器属性:
 
-```
+```java
 security:
   oauth2:
     client:
@@ -75,7 +75,7 @@ security:
 
 由于我们已经声明了`@EnableOauth2Sso`注释，Spring Boot 在请求范围中添加了一个`OAuth2ClientContext` bean。基于此，我们可以在我们的客户端应用程序中创建我们自己的`OAuth2RestTemplate`:
 
-```
+```java
 @Bean
 public OAuth2RestOperations restOperations(
   OAuth2ProtectedResourceDetails resource, OAuth2ClientContext context) {
@@ -91,7 +91,7 @@ public OAuth2RestOperations restOperations(
 
 首先，让我们在资源服务器中定义一个需要身份验证的端点:
 
-```
+```java
 @GetMapping("/person")
 @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public @ResponseBody Person personInfo(){        
@@ -103,7 +103,7 @@ public @ResponseBody Person personInfo(){
 
 现在，**我们可以使用`getForObject()`方法从客户端应用程序发送一个请求，该方法将令牌中继到资源服务器**:
 
-```
+```java
 @Autowired
 private RestOperations restOperations;
 
@@ -124,7 +124,7 @@ public ModelAndView person() {
 
 首先，我们需要添加 Maven 依赖项来使用 Zuul:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
@@ -133,7 +133,7 @@ public ModelAndView person() {
 
 接下来，我们需要在客户端应用程序的配置类中添加@ `EnableZuulProxy`注释:
 
-```
+```java
 @Configuration
 @EnableOAuth2Sso
 @EnableZuulProxy
@@ -145,7 +145,7 @@ public class SiteSecurityConfigurer
 
 剩下要做的就是将 Zuul 配置属性添加到我们的`application.yml`文件中:
 
-```
+```java
 zuul:
   sensitiveHeaders: Cookie,Set-Cookie  
   routes:

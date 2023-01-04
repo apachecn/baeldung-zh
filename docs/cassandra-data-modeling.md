@@ -62,7 +62,7 @@ Cassandra 是一个分布式数据库，数据在集群中的多个节点上进�
 
 让我们为这个用例定义 Cassandra 表模式:
 
-```
+```java
 CREATE TABLE posts_facebook (
   user_id uuid,
   post_id timeuuid, 
@@ -73,7 +73,7 @@ WITH CLUSTERING ORDER BY (post_id DESC);
 
 现在，让我们编写一个查询来查找用户`Anna`的前 20 篇帖子:
 
-```
+```java
 SELECT content FROM posts_facebook WHERE user_id = "Anna_id" LIMIT 20
 ```
 
@@ -87,7 +87,7 @@ SELECT content FROM posts_facebook WHERE user_id = "Anna_id" LIMIT 20
 
 让我们为这个例子定义 Cassandra 表模式:
 
-```
+```java
 CREATE TABLE gyms_by_city (
  country_code text,
  state text,
@@ -102,7 +102,7 @@ CREATE TABLE gyms_by_city (
 
 现在，让我们来看一个查询，该查询根据美国亚利桑那州凤凰城的开业日期获取前十家健身房:
 
-```
+```java
 SELECT * FROM gyms_by_city
   WHERE country_code = "us" AND state = "Arizona" AND city = "Phoenix"
   LIMIT 10
@@ -110,7 +110,7 @@ SELECT * FROM gyms_by_city
 
 接下来，我们来看一个查询，它获取了美国亚利桑那州凤凰城最近开业的 10 家健身房:
 
-```
+```java
 SELECT * FROM gyms_by_city
   WHERE country_code = "us" and state = "Arizona" and city = "Phoenix"
   ORDER BY opening_date DESC 
@@ -134,7 +134,7 @@ SELECT * FROM gyms_by_city
 
 让我们看看这个例子的 Cassandra 表模式:
 
-```
+```java
 CREATE TABLE Customer (
   cust_id text,
   first_name text, 
@@ -170,13 +170,13 @@ CREATE TABLE Product_Liked_By_Customer (
 
 让我们看看这个查询，找出最近最喜欢产品“`Pepsi`”的十个客户:
 
-```
+```java
 SELECT * FROM Customer_By_Liked_Product WHERE title = "Pepsi" LIMIT 10
 ```
 
 让我们来看一个查询，该查询查找名为“`Anna`”的客户最近喜欢的产品(最多十个):
 
-```
+```java
 SELECT * FROM Product_Liked_By_Customer 
   WHERE first_name = "Anna" LIMIT 10
 ```

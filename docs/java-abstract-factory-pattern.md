@@ -22,7 +22,7 @@ JDK 中抽象工厂设计模式的一个例子是`javax.xml.parsers.DocumentBuil
 
 下面是`Animal`界面:
 
-```
+```java
 public interface Animal {
     String getAnimal();
     String makeSound();
@@ -31,7 +31,7 @@ public interface Animal {
 
 还有一个具体的实现`Duck`:
 
-```
+```java
 public class Duck implements Animal {
 
     @Override
@@ -54,7 +54,7 @@ public class Duck implements Animal {
 
 现在我们已经准备好了多个系列，我们可以为它们创建一个`AbstractFactory`接口:
 
-```
+```java
 public interface AbstractFactory<T> {
     T create(String animalType) ;
 }
@@ -62,7 +62,7 @@ public interface AbstractFactory<T> {
 
 接下来，我们将使用我们在上一节中讨论的工厂方法设计模式来实现一个`AnimalFactory`:
 
-```
+```java
 public class AnimalFactory implements AbstractFactory<Animal> {
 
     @Override
@@ -83,7 +83,7 @@ public class AnimalFactory implements AbstractFactory<Animal> {
 
 当所有这些都设置好后，我们将创建一个`FactoryProvider`类，它将根据我们提供给`getFactory()`方法的参数为我们提供`AnimalFactory`或`ColorFactory`的实现:
 
-```
+```java
 public class FactoryProvider {
     public static AbstractFactory getFactory(String choice){
 

@@ -18,7 +18,7 @@
 
 让我们直接进入代码。首先，在我们的示例应用程序中，我们定义了`MotorVehicle`接口。这个接口只有一个方法`build()`。这种方法用于制造特定的机动车辆。该界面的代码片段:
 
-```
+```java
 public interface MotorVehicle {
     void build();
 }
@@ -26,7 +26,7 @@ public interface MotorVehicle {
 
 下一步是实现实现`MotorVehicle`接口的具体类。我们创建两种类型:`Motorcycle`和`Car`。第一个的代码是:
 
-```
+```java
 public class Motorcycle implements MotorVehicle {
     @Override
     public void build() {
@@ -37,7 +37,7 @@ public class Motorcycle implements MotorVehicle {
 
 对于`Car`类，代码是:
 
-```
+```java
 public class Car implements MotorVehicle {
     @Override
     public void build() {
@@ -48,7 +48,7 @@ public class Car implements MotorVehicle {
 
 然后，我们创建了`MotorVehicleFactory`类。这个类负责创建每个新的车辆实例。这是一个抽象类，因为它为特定的工厂制造特定的车辆。这个类的代码是:
 
-```
+```java
 public abstract class MotorVehicleFactory {
     public MotorVehicle create() {
         MotorVehicle vehicle = createMotorVehicle();
@@ -63,7 +63,7 @@ public abstract class MotorVehicleFactory {
 
 一、`MotorcycleFactory` 类:
 
-```
+```java
 public class MotorcycleFactory extends MotorVehicleFactory {
     @Override
     protected MotorVehicle createMotorVehicle() {
@@ -74,7 +74,7 @@ public class MotorcycleFactory extends MotorVehicleFactory {
 
 然后，`CarFactory`类:
 
-```
+```java
 public class CarFactory extends MotorVehicleFactory {
     @Override
     protected MotorVehicle createMotorVehicle() {
@@ -97,7 +97,7 @@ public class CarFactory extends MotorVehicleFactory {
 
 我们已经有了`MotorVehicle`接口。此外，我们必须添加一个接口来表示电动汽车。新接口的代码片段如下:
 
-```
+```java
 public interface ElectricVehicle {
     void build();
 }
@@ -105,7 +105,7 @@ public interface ElectricVehicle {
 
 接下来，我们创建抽象工厂。新类是抽象的，因为对象创建的责任将由我们的具体工厂承担。该行为遵循 [OCP](/web/20221116222751/https://www.baeldung.com/solid-principles#o) 和 [SRP](/web/20221116222751/https://www.baeldung.com/solid-principles#s) 。让我们跳到类定义:
 
-```
+```java
 public abstract class Corporation {
     public abstract MotorVehicle createMotorVehicle();
     public abstract ElectricVehicle createElectricVehicle();
@@ -114,7 +114,7 @@ public abstract class Corporation {
 
 在我们为每个公司创建混凝土工厂之前，我们必须为我们的新公司实现一些工具。让我们为`FutureVehicle`公司制作一些新的班级。
 
-```
+```java
 public class FutureVehicleMotorcycle implements MotorVehicle {
     @Override
     public void build() {
@@ -125,7 +125,7 @@ public class FutureVehicleMotorcycle implements MotorVehicle {
 
 然后，电动汽车的实例:
 
-```
+```java
 public class FutureVehicleElectricCar implements ElectricVehicle {
     @Override
     public void build() {
@@ -136,7 +136,7 @@ public class FutureVehicleElectricCar implements ElectricVehicle {
 
 我们为`NexGen`公司做同样的事情:
 
-```
+```java
 public class NextGenMotorcycle implements MotorVehicle {
     @Override
     public void build() {
@@ -147,7 +147,7 @@ public class NextGenMotorcycle implements MotorVehicle {
 
 此外，其他电动汽车的具体实现:
 
-```
+```java
 public class NextGenElectricCar implements ElectricVehicle {
     @Override
     public void build() {
@@ -158,7 +158,7 @@ public class NextGenElectricCar implements ElectricVehicle {
 
 最后，我们准备建造我们的混凝土工厂。第一，`FutureVehicle `工厂:
 
-```
+```java
 public class FutureVehicleCorporation extends Corporation {
     @Override
     public MotorVehicle createMotorVehicle() {
@@ -173,7 +173,7 @@ public class FutureVehicleCorporation extends Corporation {
 
 接下来，另一个:
 
-```
+```java
 public class NextGenCorporation extends Corporation {
     @Override
     public MotorVehicle createMotorVehicle() {

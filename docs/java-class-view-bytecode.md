@@ -24,13 +24,13 @@ Java 命令行附带了 **`javap`工具，该工具显示关于类文件的字�
 
 让我们使用`javap`命令来查看最常见的`Object`类的字节码:
 
-```
+```java
 $ javap java.lang.Object
 ```
 
 该命令的输出将显示`Object`类的最小构造:
 
-```
+```java
 public class java.lang.Object {
   public java.lang.Object();
   public final native java.lang.Class<?> getClass();
@@ -54,7 +54,7 @@ public class java.lang.Object {
 
 要查看所有的类和成员，我们可以使用`-p`参数:
 
-```
+```java
 public class java.lang.Object {
   public java.lang.Object();
   private static native void registerNatives();
@@ -72,7 +72,7 @@ public class java.lang.Object {
 
 类似地，我们可以使用 **`-v`参数来查看详细信息，比如堆栈大小和`Object` 类**的方法参数:
 
-```
+```java
 Classfile jar:file:/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/jre/lib/rt.jar!/java/lang/Object.class
   Last modified Mar 15, 2017; size 1497 bytes
   MD5 checksum 5916745820b5eb3e5647da3b6cc6ef65
@@ -108,7 +108,7 @@ SourceFile: "Object.java"
 
 另外， **`javap`命令允许使用`-c`参数**反汇编整个 Java 类:
 
-```
+```java
 Compiled from "Object.java"
 public class java.lang.Object {
   public java.lang.Object();
@@ -142,7 +142,7 @@ ASM 是一个流行的面向性能的低级 Java 字节码操作和分析框架�
 
 首先，让我们将最新的`[asm](https://web.archive.org/web/20221205181949/https://search.maven.org/search?q=g:org.ow2.asm%20a:asm)`和 [`asm-util`](https://web.archive.org/web/20221205181949/https://search.maven.org/search?q=g:org.ow2.asm%20a:asm-util) Maven 依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.ow2.asm</groupId>
     <artifactId>asm</artifactId>
@@ -159,7 +159,7 @@ ASM 是一个流行的面向性能的低级 Java 字节码操作和分析框架�
 
 然后，我们将使用 [`ClassReader`](https://web.archive.org/web/20221205181949/https://asm.ow2.io/javadoc/org/objectweb/asm/ClassReader.html) 和 [`TraceClassVisitor`](https://web.archive.org/web/20221205181949/https://asm.ow2.io/javadoc/org/objectweb/asm/util/TraceClassVisitor.html) 来查看`Object`类的字节码:
 
-```
+```java
 try {
     ClassReader reader = new ClassReader("java.lang.Object");
     StringWriter sw = new StringWriter();
@@ -172,7 +172,7 @@ try {
 
 这里，我们会注意到 [`TraceClassVisitor`对象需要`PrintWriter`对象](/web/20221205181949/https://www.baeldung.com/java-asm#1-using-the-traceclassvisitor)来提取和产生字节码:
 
-```
+```java
 // class version 52.0 (52)
 // access flags 0x21
 public class java/lang/Object {
@@ -213,7 +213,7 @@ public class java/lang/Object {
 
 像往常一样，让我们将最新的 [`bcel`](https://web.archive.org/web/20221205181949/https://search.maven.org/search?q=g:org.apache.bcel%20%20a:bcel) Maven 依赖添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.apache.bcel</groupId>
     <artifactId>bcel</artifactId>
@@ -225,7 +225,7 @@ public class java/lang/Object {
 
 然后，我们可以使用 [`Repository`](https://web.archive.org/web/20221205181949/https://commons.apache.org/proper/commons-bcel/apidocs/org/apache/bcel/Repository.html) 类来生成 [`JavaClass`](https://web.archive.org/web/20221205181949/https://commons.apache.org/proper/commons-bcel/apidocs/org/apache/bcel/classfile/JavaClass.html) 对象:
 
-```
+```java
 try { 
     JavaClass objectClazz = Repository.lookupClass("java.lang.Object");
     System.out.println(objectClazz.toString());
@@ -236,7 +236,7 @@ try {
 
 这里，我们在`objectClazz`对象上使用了`toString` 方法，以简洁的格式查看字节码:
 
-```
+```java
 public class java.lang.Object
 file name		java.lang.Object
 compiled from		Object.java
@@ -264,7 +264,7 @@ Attribute(s):
 
 此外， **`JavaClass`类提供了类似于`getConstantPool`、`getFields`和`getMethods` 的方法来查看被分解的类**的细节。
 
-```
+```java
 assertEquals(objectClazz.getFileName(), "java.lang.Object");
 assertEquals(objectClazz.getMethods().length, 14);
 assertTrue(objectClazz.toString().contains("public class java.lang.Object")); 
@@ -280,7 +280,7 @@ assertTrue(objectClazz.toString().contains("public class java.lang.Object"));
 
 首先，我们将最新的`[javassist](https://web.archive.org/web/20221205181949/https://search.maven.org/search?q=g:org.javassist%20a:javassist)` Maven 依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.javassist</groupId>
     <artifactId>javassist</artifactId>
@@ -292,7 +292,7 @@ assertTrue(objectClazz.toString().contains("public class java.lang.Object"));
 
 然后，我们可以使用 [`ClassPool`](https://web.archive.org/web/20221205181949/http://www.javassist.org/html/javassist/ClassPool.html) 和 [`ClassFile`](https://web.archive.org/web/20221205181949/https://www.javassist.org/html/javassist/bytecode/ClassFile.html) 类[来生成一个 Java 类](/web/20221205181949/https://www.baeldung.com/javassist#generating-a-java-class):
 
-```
+```java
 try {
     ClassPool cp = ClassPool.getDefault();
     ClassFile cf = cp.get("java.lang.Object").getClassFile();
@@ -304,7 +304,7 @@ try {
 
 这里，我们使用了`write`方法，它允许我们使用`DataOutputStream`对象编写类文件:
 
-```
+```java
 // Compiled from Object.java (version 1.8 : 52.0, super bit)
 public class java.lang.Object {
 
@@ -330,7 +330,7 @@ public class java.lang.Object {
 
 另外，`ClassFile`类的对象提供了对常量池、字段和方法的访问:
 
-```
+```java
 assertEquals(cf.getName(), "java.lang.Object"); 
 assertEquals(cf.getMethods().size(), 14);
 ```

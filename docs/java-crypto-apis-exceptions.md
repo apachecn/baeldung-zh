@@ -12,13 +12,13 @@
 
 如果我们使用一个虚构的算法运行下面的代码来获得一个`Cipher` 的实例:
 
-```
+```java
 Cipher.getInstance("ABC");
 ```
 
 我们将看到一个堆栈跟踪开始:
 
-```
+```java
 java.security.NoSuchAlgorithmException: Cannot find any provider supporting ABC
     at javax.crypto.Cipher.getInstance(Cipher.java:543)
 ```
@@ -33,7 +33,7 @@ java.security.NoSuchAlgorithmException: Cannot find any provider supporting ABC
 
 让我们确保这些字段的值也与给定的文档相匹配。否则，我们会看到一个异常:
 
-```
+```java
 Cipher.getInstance("AES/ABC"); // invalid, causes exception
 
 Cipher.getInstance("AES/CBC/ABC"); // invalid, causes exception
@@ -59,7 +59,7 @@ Cipher.getInstance("AES/CBC/PKCS5Padding"); // valid, no exception
 
 让我们写一个非常简单的解密方法:
 
-```
+```java
 Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 cipher.init(Cipher.DECRYPT_MODE, key);
 
@@ -70,7 +70,7 @@ return cipher.doFinal(cipherTextBytes);
 
 有时，我们可能会看到一个`IllegalBlockSizeException:`
 
-```
+```java
 javax.crypto.IllegalBlockSizeException: Input length not multiple of 16 bytes
     at com.sun.crypto.provider.CipherCore.finalNoPadding(CipherCore.java:1109)
     at com.sun.crypto.provider.CipherCore.fillOutputBuffer(CipherCore.java:1053)
@@ -87,7 +87,7 @@ javax.crypto.IllegalBlockSizeException: Input length not multiple of 16 bytes
 
 对于我们的算法，要找出一个块中有多少字节，我们可以使用:
 
-```
+```java
 Cipher.getInstance("AES/ECB/PKCS5Padding").getBlockSize();
 ```
 
@@ -113,7 +113,7 @@ Cipher.getInstance("AES/ECB/PKCS5Padding").getBlockSize();
 
 现在，让我们在尝试加密文本“`https://www.baeldung.com/`”时看看这个异常:
 
-```
+```java
 String plainText = "https://www.baeldung.com/";
 byte[] plainTextBytes = plainText.getBytes();
 
@@ -139,7 +139,7 @@ return cipher.doFinal(plainTextBytes);
 
 我们所要做的就是在我们的`Cipher`实例上**设置一个填充操作，就像 [PKCS #5](https://web.archive.org/web/20221231082749/https://www.rfc-editor.org/rfc/rfc8018) ，而不是指定“no padding”:**
 
-```
+```java
 Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 ```
 
@@ -161,7 +161,7 @@ Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 
 假设我们的文本“`https://www.baeldung.com/`”是使用填充的 ISO 10126 加密的:
 
-```
+```java
 Cipher cipher = Cipher.getInstance("AES/ECB/ISO10126Padding");
 cipher.init(Cipher.ENCRYPT_MODE, key);
 byte[] cipherTextBytes = cipher.doFinal(plainTextBytes);
@@ -169,7 +169,7 @@ byte[] cipherTextBytes = cipher.doFinal(plainTextBytes);
 
 然后，如果我们尝试使用不同的填充来解密它，比如 PKCS #5:
 
-```
+```java
 cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 cipher.init(Cipher.DECRYPT_MODE, encryptionKey);
 
@@ -178,7 +178,7 @@ return cipher.doFinal(cipherTextBytes);
 
 我们的代码会抛出一个异常:
 
-```
+```java
 javax.crypto.BadPaddingException: Given final block not properly padded. Such issues can arise if a bad key is used during decryption.
   at com.sun.crypto.provider.CipherCore.unpad(CipherCore.java:975)
   at com.sun.crypto.provider.CipherCore.fillOutputBuffer(CipherCore.java:1056)
@@ -197,7 +197,7 @@ javax.crypto.BadPaddingException: Given final block not properly padded. Such is
 
 正如堆栈跟踪所示，当我们没有使用正确的加密密钥进行解密时，我们可能会看到这个异常:
 
-```
+```java
 SecretKey encryptionKey = CryptoUtils.getKeyForText("BaeldungIsASuperCoolSite");
 SecretKey differentKey = CryptoUtils.getKeyForText("ThisGivesUsAnAlternative");
 
@@ -225,7 +225,7 @@ return cipher.doFinal(cipherTextBytes);
 
 如果我们尝试使用与数据加密方式不同的算法或算法模式进行解密，我们可能会看到类似的症状:
 
-```
+```java
 Cipher cipher = Cipher.getInstance("AES/ECB/ISO10126Padding");
 cipher.init(Cipher.ENCRYPT_MODE, key);
 byte[] cipherTextBytes = cipher.doFinal(plainTextBytes);
@@ -254,7 +254,7 @@ IV 防止加密文本的重复，因此是某些加密模式(如 CBC)所必需�
 
 让我们尝试初始化一个没有 IV 集的`Cipher`的实例:
 
-```
+```java
 Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 cipher.init(Cipher.DECRYPT_MODE, encryptionKey);
 cipher.doFinal(cipherTextBytes);
@@ -262,7 +262,7 @@ cipher.doFinal(cipherTextBytes);
 
 如果我们运行上面的代码，我们会看到下面的 stacktrace:
 
-```
+```java
 java.security.InvalidKeyException: Parameters missing
   at com.sun.crypto.provider.CipherCore.init(CipherCore.java:469)
   at com.sun.crypto.provider.AESCipher.engineInit(AESCipher.java:313)
@@ -274,7 +274,7 @@ java.security.InvalidKeyException: Parameters missing
 
 幸运的是，这个问题很容易解决，因为**我们只需要用 IV 初始化`Cipher `:**
 
-```
+```java
 byte[] ivBytes = new byte[]{'B', 'a', 'e', 'l', 'd', 'u', 'n', 'g', 'I', 's', 'G', 'r', 'e', 'a', 't', '!'};
 IvParameterSpec ivParameterSpec = new IvParameterSpec(ivBytes);
 
@@ -291,7 +291,7 @@ byte[] decryptedBytes = cipher.doFinal(cipherTextBytes);
 
 如果我们尝试使用不同的字节数，我们会得到一个非常清晰的`InvalidAlgorithmParameterException:`
 
-```
+```java
 java.security.InvalidAlgorithmParameterException: Wrong IV length: must be 16 bytes long
   at com.sun.crypto.provider.CipherCore.init(CipherCore.java:525)
   at com.sun.crypto.provider.AESCipher.engineInit(AESCipher.java:346)
@@ -307,7 +307,7 @@ java.security.InvalidAlgorithmParameterException: Wrong IV length: must be 16 by
 
 如果我们试图使用一个长度不正确的键，那么我们会看到一个简单的异常:
 
-```
+```java
 java.security.InvalidKeyException: Invalid AES key length: X bytes
   at com.sun.crypto.provider.AESCrypt.init(AESCrypt.java:87)
   at com.sun.crypto.provider.CipherBlockChaining.init(CipherBlockChaining.java:93)

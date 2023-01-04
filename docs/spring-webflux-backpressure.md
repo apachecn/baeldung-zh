@@ -77,7 +77,7 @@ WebFlux 使用 TCP 流量控制来调节背压(以字节为单位)。但是它�
 
 为了实现这些例子，我们将简单地将 [Spring WebFlux starter](https://web.archive.org/web/20220714042345/https://search.maven.org/search?q=a:spring-boot-starter-webflux) 和 [Reactor test](https://web.archive.org/web/20220714042345/https://search.maven.org/search?q=a:reactor-test) 依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-webflux</artifactId>
@@ -94,7 +94,7 @@ WebFlux 使用 TCP 流量控制来调节背压(以字节为单位)。但是它�
 
 **第一个选项是** **让消费者控制它可以处理的事件**。因此，发布者一直等到接收者请求新事件。总之，客户端订阅了`Flux` ，然后根据它的需求处理事件:
 
-```
+```java
 @Test
 public void whenRequestingChunks10_thenMessagesAreReceived() {
     Flux request = Flux.range(1, 50);
@@ -134,7 +134,7 @@ public void whenRequestingChunks10_thenMessagesAreReceived() {
 
 第二个选项是使用 Project Reactor 中的`limitRange()`操作符。**允许设置一次预取的项目数量**。一个有趣的特性是**即使当订阅者请求更多的事件来处理**时，这个限制仍然适用。发射器将事件分成块，避免每个请求消耗超过限制:
 
-```
+```java
 @Test
 public void whenLimitRateSet_thenSplitIntoChunks() throws InterruptedException {
     Flux<Integer> limit = Flux.range(1, 25);
@@ -162,7 +162,7 @@ public void whenLimitRateSet_thenSplitIntoChunks() throws InterruptedException {
 
 最后，**消费者可以随时取消要接收的事件**。对于这个例子，我们将使用另一种方法。Project Reactor 允许实现我们自己的`Subscriber`或扩展`BaseSubscriber`。因此，让我们看看接收器如何在任何时候中止新事件的接收，从而覆盖上述类:
 
-```
+```java
 @Test
 public void whenCancel_thenSubscriptionFinished() {
     Flux<Integer> cancel = Flux.range(1, 10).log();

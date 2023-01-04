@@ -26,7 +26,7 @@ Learn how to apply if/else logic to Java 8 Streams.[Read more](/web/202210301953
 
 Java 中的三元运算符`?:`是唯一接受三个操作数的运算符**:**
 
-```
+```java
 booleanExpression ? expression1 : expression2
 ```
 
@@ -36,7 +36,7 @@ booleanExpression ? expression1 : expression2
 
 让我们考虑这个`if-else`结构:
 
-```
+```java
 int num = 8;
 String msg = "";
 if(num > 10) {
@@ -51,7 +51,7 @@ else {
 
 我们可以通过简单地用一个三元结构替换`if-else`语句来使这段代码更加可读和安全:
 
-```
+```java
 final String msg = num > 10 
   ? "Number is greater than 10" 
   : "Number is less than or equal to 10";
@@ -63,7 +63,7 @@ final String msg = num > 10
 
 我们可以通过编写一个简单的`JUnit`测试用例来验证这一点:
 
-```
+```java
 @Test
 public void whenConditionIsTrue_thenOnlyFirstExpressionIsEvaluated() {
     int exp1 = 0, exp2 = 0;
@@ -79,7 +79,7 @@ public void whenConditionIsTrue_thenOnlyFirstExpressionIsEvaluated() {
 
 同样，让我们考虑一下在`false`条件下会发生什么:
 
-```
+```java
 @Test
 public void whenConditionIsFalse_thenOnlySecondExpressionIsEvaluated() {
     int exp1 = 0, exp2 = 0;
@@ -99,14 +99,14 @@ public void whenConditionIsFalse_thenOnlySecondExpressionIsEvaluated() {
 
 所以，这个结构在 Java 中是有效的:
 
-```
+```java
 String msg = num > 10 ? "Number is greater than 10" : 
   num > 5 ? "Number is greater than 5" : "Number is less than equal to 5";
 ```
 
 为了提高上面代码的可读性，我们可以在任何需要的地方使用大括号`()` :
 
-```
+```java
 String msg = num > 10 ? "Number is greater than 10" 
   : (num > 5 ? "Number is greater than 5" : "Number is less than equal to 5");
 ```

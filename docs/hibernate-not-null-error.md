@@ -21,7 +21,7 @@ Hibernate 主要会在两种情况下抛出`PropertyValueException` :
 
 现在，让我们利用 Hibernate 的验证机制来重现一个简单用例的错误。我们将尝试保存一个`@Entity`而不设置它的强制字段。对于这个例子，我们将使用简单的 *Book* 类:
 
-```
+```java
 @Entity
 public class Book {
 
@@ -38,7 +38,7 @@ public class Book {
 
 *标题*列的`nullable` 标志被设置为 `false.`,我们现在可以保存一个`Book` 对象，而不用设置它的标题并断言`PropertyValueException`被抛出:
 
-```
+```java
 @Test
 public void whenSavingEntityWithNullMandatoryField_thenThrowPropertyValueException() {    
     Book book = new Book();
@@ -55,7 +55,7 @@ public void whenSavingEntityWithNullMandatoryField_thenThrowPropertyValueExcepti
 
 在这一节中，我们将探索一个更复杂设置的常见场景。对于这个例子，我们将使用共享双向关系的`Author`和`Article`实体:
 
-```
+```java
 @Entity
 public class Author {
 
@@ -75,7 +75,7 @@ public class Author {
 
 `articles` 字段具有`@Cascade(CascadeType.` ALL)注释。因此，当我们保存一个`Author` 实体时，操作将通过所有的`Article` 对象传播:
 
-```
+```java
 @Entity
 public class Article {
 
@@ -94,7 +94,7 @@ public class Article {
 
 现在，让我们试着保存一个`Author `和一些`Articles`，看看会发生什么:
 
-```
+```java
 @Test
 public void whenSavingBidirectionalEntityiesithCorrectParent_thenDoNotThrowException() {
     Author author = new Author("John Doe");
@@ -110,7 +110,7 @@ public void whenSavingBidirectionalEntityiesithCorrectParent_thenDoNotThrowExcep
 
 为了说明本文中出现的所有用例，我们将为此创建一个不同的方法。但是，从父实体的`setter`设置这些字段是一个好的做法:
 
-```
+```java
 public void addArticles(List<Article> articles) {
     this.articles = articles;
     articles.forEach(article -> article.setAuthor(this));
@@ -119,7 +119,7 @@ public void addArticles(List<Article> articles) {
 
 我们现在可以使用新方法来设置赋值，并且不会出现错误:
 
-```
+```java
 @Test
 public void whenSavingBidirectionalEntitesWithCorrectParent_thenDoNotThrowException() {
     Author author = new Author("John Doe");

@@ -26,7 +26,7 @@ In this article we explore how to configure Spring REST mechanism to utilize bin
 
 要使用 JsonPath，我们只需要在 Maven pom 中包含一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.jayway.jsonpath</groupId>
     <artifactId>json-path</artifactId>
@@ -38,7 +38,7 @@ In this article we explore how to configure Spring REST mechanism to utilize bin
 
 我们将使用下面的 JSON 结构来演示 JsonPath 的语法和 API:
 
-```
+```java
 {
     "tool": 
     {
@@ -80,13 +80,13 @@ JsonPath 使用特殊的符号来表示节点以及它们与 JsonPath 中相邻�
 
 首先，我们将看到带有点符号的路径:
 
-```
+```java
 $.tool.jsonpath.creator.location[2]
 ```
 
 现在让我们看看括号符号:
 
-```
+```java
 $['tool']['jsonpath']['creator']['location'][2]
 ```
 
@@ -118,13 +118,13 @@ JsonPath 还有一些函数，我们可以在路径的末尾使用它们来合�
 
 JsonPath 有一种方便的方法来访问 JSON 文档。我们通过静态`read`API 来实现这一点:
 
-```
+```java
 <T> T JsonPath.read(String jsonString, String jsonPath, Predicate... filters);
 ```
 
 `read`API 可以与静态流畅 API 一起工作，以提供更大的灵活性:
 
-```
+```java
 <T> T JsonPath.parse(String jsonString).read(String jsonPath, Predicate... filters);
 ```
 
@@ -134,14 +134,14 @@ JsonPath 有一种方便的方法来访问 JSON 文档。我们通过静态`read
 
 让我们首先定义两个要处理的示例路径:
 
-```
+```java
 String jsonpathCreatorNamePath = "$['tool']['jsonpath']['creator']['name']";
 String jsonpathCreatorLocationPath = "$['tool']['jsonpath']['creator']['location'][*]";
 ```
 
 接下来，我们将通过解析给定的 JSON 源`jsonDataSourceString`来创建一个`DocumentContext`对象。然后，新创建的对象将用于通过上面定义的路径读取内容:
 
-```
+```java
 DocumentContext jsonContext = JsonPath.parse(jsonDataSourceString);
 String jsonpathCreatorName = jsonContext.read(jsonpathCreatorNamePath);
 List<String> jsonpathCreatorLocation = jsonContext.read(jsonpathCreatorLocationPath);
@@ -151,7 +151,7 @@ List<String> jsonpathCreatorLocation = jsonContext.read(jsonpathCreatorLocationP
 
 我们将使用 JUnit `Assert` API 来确认这些方法是否按预期工作:
 
-```
+```java
 assertEquals("Jayway Inc.", jsonpathCreatorName);
 assertThat(jsonpathCreatorLocation.toString(), containsString("Malmo"));
 assertThat(jsonpathCreatorLocation.toString(), containsString("San Francisco"));
@@ -162,7 +162,7 @@ assertThat(jsonpathCreatorLocation.toString(), containsString("Helsingborg"));
 
 现在我们有了基础知识，让我们定义一个新的 JSON 示例，并说明如何创建和使用谓词:
 
-```
+```java
 {
     "book": 
     [
@@ -201,7 +201,7 @@ assertThat(jsonpathCreatorLocation.toString(), containsString("Helsingborg"));
 
 谓词为过滤器确定真或假的输入值，以便将返回的列表缩小到仅匹配的对象或数组。我们可以很容易地将一个`Predicate`集成到一个`Filter`中，方法是将它作为静态工厂方法的参数。然后可以使用那个*过滤器*从 JSON 字符串中读出请求的内容:
 
-```
+```java
 Filter expensiveFilter = Filter.filter(Criteria.where("price").gt(20.00));
 List<Map<String, Object>> expensive = JsonPath.parse(jsonDataSourceString)
   .read("$['book'][?]", expensiveFilter);
@@ -210,7 +210,7 @@ predicateUsageAssertionHelper(expensive);
 
 我们还可以定义我们定制的`Predicate`，并将其用作`read` API 的参数:
 
-```
+```java
 Predicate expensivePredicate = new Predicate() {
     public boolean apply(PredicateContext context) {
         String value = context.item(Map.class).get("price").toString();
@@ -224,7 +224,7 @@ predicateUsageAssertionHelper(expensive);
 
 最后，谓词可以直接应用于`read` API，而无需创建任何对象，这被称为内联谓词:
 
-```
+```java
 List<Map<String, Object>> expensive = JsonPath.parse(jsonDataSourceString)
   .read("$['book'][?(@['price'] > $['price range']['medium'])]");
 predicateUsageAssertionHelper(expensive);
@@ -232,7 +232,7 @@ predicateUsageAssertionHelper(expensive);
 
 上面的所有三个`Predicate` 例子都在下面的断言助手方法的帮助下得到验证:
 
-```
+```java
 private void predicateUsageAssertionHelper(List<?> predicate) {
     assertThat(predicate.toString(), containsString("Beginning JSON"));
     assertThat(predicate.toString(), containsString("JSON at Work"));
@@ -255,13 +255,13 @@ Jayway JsonPath 提供了几个选项来调整默认配置:
 
 以下是如何从头开始应用`Option`:
 
-```
+```java
 Configuration configuration = Configuration.builder().options(Option.<OPTION>).build();
 ```
 
 以及如何将其添加到现有配置中:
 
-```
+```java
 Configuration newConfiguration = configuration.addOptions(Option.<OPTION>);
 ```
 
@@ -281,7 +281,7 @@ Configuration newConfiguration = configuration.addOptions(Option.<OPTION>);
 
 假设我们有一个电影信息服务，它返回以下结构:
 
-```
+```java
 [
     {
         "id": 1,
@@ -353,14 +353,14 @@ Configuration newConfiguration = configuration.addOptions(Option.<OPTION>);
 
 第一步是选择正确的数据对象:
 
-```
+```java
 Object dataObject = JsonPath.parse(jsonString).read("$[?(@.id == 2)]");
 String dataString = dataObject.toString();
 ```
 
 JUnit `Assert` API 确认了几个字段的存在:
 
-```
+```java
 assertThat(dataString, containsString("2"));
 assertThat(dataString, containsString("Quantum of Solace"));
 assertThat(dataString, containsString("Twenty-second James Bond movie"));
@@ -372,7 +372,7 @@ assertThat(dataString, containsString("Twenty-second James Bond movie"));
 
 随后的测试将说明如何做到这一点，并验证返回的结果:
 
-```
+```java
 @Test
 public void givenStarring_whenRequestingMovieTitle_thenSucceed() {
     List<Map<String, Object>> dataList = JsonPath.parse(jsonString)
@@ -389,7 +389,7 @@ public void givenStarring_whenRequestingMovieTitle_thenSucceed() {
 
 让我们看看实现和测试:
 
-```
+```java
 @Test
 public void givenCompleteStructure_whenCalculatingTotalRevenue_thenSucceed() {
     DocumentContext context = JsonPath.parse(jsonString);
@@ -409,7 +409,7 @@ public void givenCompleteStructure_whenCalculatingTotalRevenue_thenSucceed() {
 
 首先，我们需要提取所有电影票房收入的列表。然后我们把它转换成一个数组进行排序:
 
-```
+```java
 DocumentContext context = JsonPath.parse(jsonString);
 List<Object> revenueList = context.read("$[*]['box office']");
 Integer[] revenueArray = revenueList.toArray(new Integer[0]);
@@ -418,7 +418,7 @@ Arrays.sort(revenueArray);
 
 我们可以很容易地从`revenueArray`排序数组中选取`highestRevenue`变量，然后用它来计算出收入最高的电影记录的路径:
 
-```
+```java
 int highestRevenue = revenueArray[revenueArray.length - 1];
 Configuration pathConfiguration = 
   Configuration.builder().options(Option.AS_PATH_LIST).build();
@@ -428,14 +428,14 @@ List<String> pathList = JsonPath.using(pathConfiguration).parse(jsonString)
 
 基于计算出的路径，我们将确定并返回相应电影的`title`:
 
-```
+```java
 Map<String, String> dataRecord = context.read(pathList.get(0));
 String title = dataRecord.get("title");
 ```
 
 整个过程由`Assert` API 验证:
 
-```
+```java
 assertEquals("Skyfall", title);
 ```
 
@@ -445,14 +445,14 @@ assertEquals("Skyfall", title);
 
 首先，我们创建一个由`Sam Mendes`导演的所有电影的列表:
 
-```
+```java
 DocumentContext context = JsonPath.parse(jsonString);
 List<Map<String, Object>> dataList = context.read("$[?(@.director == 'Sam Mendes')]");
 ```
 
 然后，我们使用该列表提取发布日期。这些日期将存储在一个数组中，然后进行排序:
 
-```
+```java
 List<Object> dateList = new ArrayList<>();
 for (Map<String, Object> item : dataList) {
     Object date = item.get("release date");
@@ -464,7 +464,7 @@ Arrays.sort(dateArray);
 
 我们使用`lastestTime`变量(排序数组的最后一个元素)结合`director`字段的值来确定所请求电影的`title`:
 
-```
+```java
 long latestTime = dateArray[dateArray.length - 1];
 List<Map<String, Object>> finalDataList = context.read("$[?(@['director'] 
   == 'Sam Mendes' && @['release date'] == " + latestTime + ")]");
@@ -473,7 +473,7 @@ String title = (String) finalDataList.get(0).get("title");
 
 下面的断言证明了一切都按预期工作:
 
-```
+```java
 assertEquals("Spectre", title);
 ```
 

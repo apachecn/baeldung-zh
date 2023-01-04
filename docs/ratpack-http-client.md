@@ -16,7 +16,7 @@
 
 首先，让我们添加所需的 [Ratpack 依赖关系](https://web.archive.org/web/20220627182323/https://search.maven.org/search?q=io.ratpack):
 
-```
+```java
 <dependency>
     <groupId>io.ratpack</groupId>
     <artifactId>ratpack-core</artifactId>
@@ -44,7 +44,7 @@ Ratpack 使用基于处理程序的方法来处理请求。这个想法本身很
 
 最简单的形式是，我们可以让每个处理程序在每个特定的路径上处理请求:
 
-```
+```java
 public class FooHandler implements Handler {
     @Override
     public void handle(Context ctx) throws Exception {
@@ -59,7 +59,7 @@ public class FooHandler implements Handler {
 
 以下面的处理程序为例:
 
-```
+```java
 Handler allHandler = context -> {
     Long id = Long.valueOf(context.getPathTokens().get("id"));
     Employee employee = new Employee(id, "Mr", "NY");
@@ -71,7 +71,7 @@ Handler allHandler = context -> {
 
 **通过使用`Registry`，我们可以实现处理器间的通信**。下面的`handler`使用对象类型从`Registry`查询先前计算的结果:
 
-```
+```java
 Handler empNameHandler = ctx -> {
     Employee employee = ctx.get(Employee.class);
     ctx.getResponse()
@@ -85,7 +85,7 @@ Handler empNameHandler = ctx -> {
 
 例如:
 
-```
+```java
 Action<Chain> chainAction = chain -> chain.prefix("employee/:id", empChain -> {
     empChain.all(allHandler)
       .get("name", empNameHandler)
@@ -97,7 +97,7 @@ Action<Chain> chainAction = chain -> chain.prefix("employee/:id", empChain -> {
 
 以下测试案例展示了这些结构的使用:
 
-```
+```java
 @Test
 public void givenAnyUri_GetEmployeeFromSameRegistry() throws Exception {
     EmbeddedApp.fromHandlers(chainAction)
@@ -138,7 +138,7 @@ Ratpack `Promise`可以被认为类似于 Java `Future`对象。**它本质上�
 
 下面是一个利用了`Promise`的处理器实现:
 
-```
+```java
 public class EmployeeHandler implements Handler {
     @Override
     public void handle(Context ctx) throws Exception {
@@ -156,7 +156,7 @@ public class EmployeeHandler implements Handler {
 
 如果我们需要发回一个承诺，但是数据源是同步的，我们仍然可以这样做:
 
-```
+```java
 @Test
 public void givenSyncDataSource_GetDataFromPromise() throws Exception {
     String value = ExecHarness.yieldSingle(execution -> Promise.sync(() -> "Foo"))
@@ -173,7 +173,7 @@ Ratpack 提供了一个异步 HTTP 客户端，可以从服务器注册表中检
 
 利用这一点，我们可以根据我们的偏好调整我们的客户端:
 
-```
+```java
 HttpClient httpClient = HttpClient.of(httpClientSpec -> {
     httpClientSpec.poolSize(10)
       .connectTimeout(Duration.of(60, ChronoUnit.SECONDS))
@@ -188,7 +188,7 @@ HttpClient httpClient = HttpClient.of(httpClientSpec -> {
 
 举例来说，让一个客户端使用这个`HttpClient`调用我们的`EmployeeHandler`:
 
-```
+```java
 public class RedirectHandler implements Handler {
 
     @Override
@@ -207,7 +207,7 @@ public class RedirectHandler implements Handler {
 
 一个快速的 [cURL](/web/20220627182323/https://www.baeldung.com/curl-rest) 呼叫会确认我们得到了预期的响应:
 
-```
+```java
 curl http://localhost:5050/redirect
 JANE DOE
 ```

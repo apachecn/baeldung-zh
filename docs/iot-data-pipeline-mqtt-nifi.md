@@ -118,13 +118,13 @@ NiFi 跟踪流文件存储库中的流文件的状态。流文件的实际内容
 
 Eclipse Mosquito 的[官方下载页面提供了几个平台的二进制文件。安装后，从安装目录启动 Mosquitto 非常简单:](https://web.archive.org/web/20221014122027/https://mosquitto.org/download/)
 
-```
+```java
 net start mosquitto
 ```
 
 此外， [NiFi 二进制文件也可以从其官方网站下载](https://web.archive.org/web/20221014122027/https://nifi.apache.org/download.html)。我们必须将下载的档案文件解压到一个合适的目录中。由于 MiNiFi 将使用站点到站点协议连接到 NiFi，**我们必须在<NIFI _ HOME>/conf/NiFi . properties 中指定站点到站点输入套接字端口**:
 
-```
+```java
 # Site to Site properties
 nifi.remote.input.host=
 nifi.remote.input.secure=false
@@ -135,7 +135,7 @@ nifi.remote.input.http.transaction.ttl=30 sec
 
 然后，我们可以开始 NiFi:
 
-```
+```java
 <NIFI_HOME>/bin/run-nifi.bat
 ```
 
@@ -143,19 +143,19 @@ nifi.remote.input.http.transaction.ttl=30 sec
 
 默认情况下，MiNiFi**配备了一组非常少的处理器**。因为我们将使用 MQTT 中的数据，所以我们必须将 MQTT 处理器复制到< MINIFI_HOME > /lib 目录中。这些被打包成 NiFi 存档(NAR)文件，可以位于< NIFI_HOME > /lib 目录下:
 
-```
+```java
 COPY <NIFI_HOME>/lib/nifi-mqtt-nar-x.x.x.nar <MINIFI_HOME>/lib/nifi-mqtt-nar-x.x.x.nar
 ```
 
 然后，我们可以启动 MiNiFi 代理:
 
-```
+```java
 <MINIFI_HOME>/bin/run-minifi.bat
 ```
 
 最后，我们可以从其官方网站下载 InfluxDB 的开源版本。和以前一样，我们可以提取归档文件，并使用一个简单的命令启动 InfluxDB:
 
-```
+```java
 <INFLUXDB_HOME>/influxd.exe
 ```
 
@@ -183,13 +183,13 @@ COPY <NIFI_HOME>/lib/nifi-mqtt-nar-x.x.x.nar <MINIFI_HOME>/lib/nifi-mqtt-nar-x.x
 
 我们可以将该数据流保存为模板，并将其下载为 XML 文件。我们把这个文件命名为`config.xml`。现在，我们可以使用[转换器工具包](https://web.archive.org/web/20221014122027/https://nifi.apache.org/minifi/minifi-toolkit.html)将这个模板从 XML 转换成 YAML，MiNiFi 代理使用它:
 
-```
+```java
 <MINIFI_TOOLKIT_HOME>/bin/config.bat transform config.xml config.yml
 ```
 
 这将为我们提供`config.yml`文件，我们必须在其中手动添加 NiFi 服务器的主机和端口:
 
-```
+```java
  Input Ports:
   - id: 19442f9d-aead-3569-b94c-1ad397e8291c
     name: From MiNiFi
@@ -209,7 +209,7 @@ COPY <NIFI_HOME>/lib/nifi-mqtt-nar-x.x.x.nar <MINIFI_HOME>/lib/nifi-mqtt-nar-x.x
 
 最后，我们准备测试我们的数据管道！由于我们没有使用真实传感器的自由，我们将创建一个小的模拟。我们将**使用一个小的 Java 程序**生成传感器数据:
 
-```
+```java
 class Sensor implements Callable<Boolean> {
     String city;
     String station;
@@ -254,7 +254,7 @@ class Sensor implements Callable<Boolean> {
 
 这里，我们使用 [Eclipse Paho Java 客户端](https://web.archive.org/web/20221014122027/https://www.eclipse.org/paho/index.php?page=clients/java/index.php)生成消息给 MQTT 代理。我们可以添加任意数量的传感器来创建我们的模拟:
 
-```
+```java
 ExecutorService executorService = Executors.newCachedThreadPool();
 List<Callable<Boolean>> sensors = Arrays.asList(
   new Simulation.Sensor("london", "central", "ozone", "air-quality/ozone"),

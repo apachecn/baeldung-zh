@@ -12,25 +12,25 @@
 
 让我们看一些例子。我们将从逗号分隔开始:
 
-```
+```java
 String[] splitted = "peter,james,thomas".split(",");
 ```
 
 让我们用空格分开:
 
-```
+```java
 String[] splitted = "car jeep scooter".split(" ");
 ```
 
 让我们也用一个点来分割:
 
-```
+```java
 String[] splitted = "192.168.1.178".split("\\.")
 ```
 
 现在让我们用多个字符来分割——逗号、空格和连字符，通过正则表达式:
 
-```
+```java
 String[] splitted = "b a, e, l.d u, n g".split("\\s+|,\\s*|\\.\\s*"));
 ```
 
@@ -38,13 +38,13 @@ String[] splitted = "b a, e, l.d u, n g".split("\\s+|,\\s*|\\.\\s*"));
 
 Apache 的公共 lang 包提供了一个`StringUtils`类——它包含一个空安全的`split()`方法，该方法使用空白作为默认分隔符进行拆分:
 
-```
+```java
 String[] splitted = StringUtils.split("car jeep scooter");
 ```
 
 此外，它忽略了额外的空格:
 
-```
+```java
 String[] splitted = StringUtils.split("car   jeep  scooter");
 ```
 
@@ -52,7 +52,7 @@ String[] splitted = StringUtils.split("car   jeep  scooter");
 
 最后，番石榴还有一个很好的流畅的 API:
 
-```
+```java
 List<String> resultList = Splitter.on(',')
   .trimResults()
   .omitEmptyStrings()
@@ -65,13 +65,13 @@ List<String> resultList = Splitter.on(',')
 
 假设我们有这样一个输入:
 
-```
+```java
 String input = " car , jeep, scooter ";
 ```
 
 要删除分隔符前后多余的空格，我们可以使用 regex:
 
-```
+```java
 String[] splitted = input.trim().split("\\s*,\\s*");
 ```
 
@@ -79,7 +79,7 @@ String[] splitted = input.trim().split("\\s*,\\s*");
 
 我们可以通过使用 Java 8 `Stream`的特性达到同样的效果:
 
-```
+```java
 String[] splitted = Arrays.stream(input.split(","))
   .map(String::trim)
   .toArray(String[]::new);

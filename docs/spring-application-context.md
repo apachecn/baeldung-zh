@@ -42,7 +42,7 @@ Spring 框架的主要特性之一是 IoC(控制反转)容器。Spring IoC 容�
 
 现在让我们定义一个简单的 Java 类，我们将在本教程中将其用作 Spring bean:
 
-```
+```java
 public class AccountService {
 
   @Autowired
@@ -66,7 +66,7 @@ Java 配置通常在一个`@Configuration`类中使用 **`@Bean`注释的方法�
 
 现在让我们创建一个配置类，将我们的`AccountService`类定义为一个 Spring bean:
 
-```
+```java
 @Configuration
 public class AccountConfig {
 
@@ -94,7 +94,7 @@ Spring 2.5 引入了基于注释的配置，作为在 Java 中启用 bean 配置
 
 首先，我们将创建 XML 配置`user-bean-config.xml`，以启用注释:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -114,7 +114,7 @@ Spring 2.5 引入了基于注释的配置，作为在 Java 中启用 bean 配置
 
 其次，我们将创建`UserService`类，并使用`@Component`注释将其定义为一个 Spring bean:
 
-```
+```java
 @Component
 public class UserService {
   // user service code
@@ -123,7 +123,7 @@ public class UserService {
 
 然后我们将编写一个简单的测试用例来测试这个配置:
 
-```
+```java
 ApplicationContext context = new ClassPathXmlApplicationContext("applicationcontext/user-bean-config.xml");
 UserService userService = context.getBean(UserService.class);
 assertNotNull(userService);
@@ -137,7 +137,7 @@ assertNotNull(userService);
 
 因此，让我们创建一个 XML 配置文件`account-bean-config.xml`，并为我们的`AccountService`类定义 beans:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -163,7 +163,7 @@ Spring 提供了适合不同需求的不同类型的`ApplicationContext`容器�
 
 因此，让我们看一个简单的例子，将`AnnotationConfigApplicationContext`容器用于我们基于 Java 的配置:
 
-```
+```java
 ApplicationContext context = new AnnotationConfigApplicationContext(AccountConfig.class);
 AccountService accountService = context.getBean(AccountService.class);
 ```
@@ -176,7 +176,7 @@ AccountService accountService = context.getBean(AccountService.class);
 
 此外，从 Spring 3.0 开始，我们还可以通过编程来配置这个应用程序上下文容器。我们需要做的就是实现 [`WebApplicationInitializer`](https://web.archive.org/web/20221001115718/https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/WebApplicationInitializer.html) 接口:
 
-```
+```java
 public class MyWebApplicationInitializer implements WebApplicationInitializer {
 
   public void onStartup(ServletContext container) throws ServletException {
@@ -195,7 +195,7 @@ public class MyWebApplicationInitializer implements WebApplicationInitializer {
 
 事实上，配置这个容器就像配置`AnnotationConfigWebApplicationContext`类一样，这意味着我们可以在`web.xml,`中配置它或者实现`WebApplicationInitializer` 接口:
 
-```
+```java
 public class MyXmlWebApplicationInitializer implements WebApplicationInitializer {
 
   public void onStartup(ServletContext container) throws ServletException {
@@ -214,7 +214,7 @@ public class MyXmlWebApplicationInitializer implements WebApplicationInitializer
 
 例如，让我们看看如何创建这个 Spring 容器，并为基于 XML 的配置加载 beans:
 
-```
+```java
 String path = "C:/myProject/src/main/resources/applicationcontext/account-bean-config.xml";
 
 ApplicationContext context = new FileSystemXmlApplicationContext(path);
@@ -227,7 +227,7 @@ AccountService accountService = context.getBean("accountService", AccountService
 
 让我们看一个使用这个类的例子:
 
-```
+```java
 ApplicationContext context = new ClassPathXmlApplicationContext("applicationcontext/account-bean-config.xml");
 AccountService accountService = context.getBean("accountService", AccountService.class);
 ```
@@ -246,13 +246,13 @@ AccountService accountService = context.getBean("accountService", AccountService
 
 首先，我们将在类路径上创建`messages.properties`文件:
 
-```
+```java
 account.name=TestAccount
 ```
 
 其次，我们将在我们的`AccountConfig`类中添加一个 bean 定义:
 
-```
+```java
 @Bean
 public MessageSource messageSource() {
   ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
@@ -263,14 +263,14 @@ public MessageSource messageSource() {
 
 第三，我们将在`AccountService`中注入`MessageSource`:
 
-```
+```java
 @Autowired
 private MessageSource messageSource;
 ```
 
 最后，我们可以在`AccountService`中的任何地方使用`getMessage`方法来读取消息:
 
-```
+```java
 messageSource.getMessage("account.name", null, Locale.ENGLISH);
 ```
 

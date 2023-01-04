@@ -10,7 +10,7 @@
 
 让我们创建一个基本的`Runnable`，它只会记录一条消息，然后暂停一毫秒:
 
-```
+```java
 static Runnable RUNNABLE = () -> {
     try {
         System.out.println("launching runnable");
@@ -22,7 +22,7 @@ static Runnable RUNNABLE = () -> {
 
 我们现在将创建`Runnable.`的`L` `ist`。在本例中，我们将重复添加相同的`Runnable.`。实现这一点的一种方法是使用`[IntStream](/web/20221107202803/https://www.baeldung.com/java-intstream-convert)`:
 
-```
+```java
 List<Runnable> runnables = IntStream.range(0, 5)
     .mapToObj(x -> RUNNABLE)
     .collect(Collectors.toList());
@@ -38,7 +38,7 @@ List<Runnable> runnables = IntStream.range(0, 5)
 
 出于进一步的目的，我们希望将所有的结果`CompletableFuture`包装在一个`[array](/web/20221107202803/https://www.baeldung.com/java-arrays-guide)`中:
 
-```
+```java
 CompletableFuture<?>[] completableFutures = runnables.stream()
     .map(CompletableFuture::runAsync)
     .toArray(CompletableFuture<?>[]::new);
@@ -48,7 +48,7 @@ CompletableFuture<?>[] completableFutures = runnables.stream()
 
 为了查明是否所有的执行都在程序中的任意点完成，我们将从数组中创建一个新的包装`CompletableFuture`。`allOf()`方法将允许我们这样做。然后，我们将把`isDone()`方法直接应用于包装`CompletableFuture`:
 
-```
+```java
 boolean isEveryRunnableDone = CompletableFuture.allOf(completableFutures)
     .isDone();
 ```
@@ -63,14 +63,14 @@ boolean isEveryRunnableDone = CompletableFuture.allOf(completableFutures)
 
 让我们创建一个有五个线程的`ThreadPoolExecutor`。然后我们将通过使用`execute()`方法提交每个`Runnable`来执行:
 
-```
+```java
 ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(5);
 runnables.forEach(executor::execute);
 ```
 
 **现在我们可以使用`getActiveCount()`方法来计算`ThreadPoolExecutor`中正在运行的任务的数量:**
 
-```
+```java
 int numberOfActiveThreads = executor.getActiveCount();
 ```
 
@@ -82,13 +82,13 @@ int numberOfActiveThreads = executor.getActiveCount();
 
 **另一方面，`awaitTermination()`方法会让我们知道是否所有的任务都完成了。**但是首先，我们需要在执行程序上调用`shutdown()`方法。调用此方法将确保所有提交的任务都将完成。但是，它会阻止向执行器添加新任务:
 
-```
+```java
 executor.shutdown();
 ```
 
 我们已经确保我们的`ThreadPoolExecutor`将正确关闭。我们现在可以通过调用 [`awaitTermination()`](/web/20221107202803/https://www.baeldung.com/java-executor-wait-for-threads#after-executors-shutdown) 随时检查这个池是否有任何正在运行的任务。此方法将一直阻塞，直到给定的超时或所有任务都完成为止。例如，为了我们的例子，让我们使用一秒钟的超时:
 
-```
+```java
 boolean isEveryRunnableDome = executor.awaitTermination(1000, TimeUnit.MILLISECONDS);
 ```
 

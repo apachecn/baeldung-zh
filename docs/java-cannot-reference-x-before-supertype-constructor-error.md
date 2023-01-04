@@ -24,7 +24,7 @@
 
 在下一个例子中，我们将在第 5 行看到编译错误`**Cannot reference “X” before supertype constructor has been called**`。请注意，构造函数试图过早使用实例方法`getErrorCode()`:
 
-```
+```java
 public class MyException extends RuntimeException {
     private int errorCode = 0;
 
@@ -44,7 +44,7 @@ public class MyException extends RuntimeException {
 
 在下一个例子中，我们看到了带有实例字段而不是实例方法的异常。让我们看看**第一个构造函数如何在实例本身准备好之前尝试使用实例成员:**
 
-```
+```java
 public class MyClass {
 
     private int myField1 = 10;
@@ -66,7 +66,7 @@ public class MyClass {
 
 记住**所有的类都是从类`Object`** 隐式派生的，所以编译器添加了一个隐式的`super() `调用:
 
-```
+```java
 public MyClass(int i) {
     super(); // added by compiler
     myField2 = i;
@@ -81,7 +81,7 @@ public MyClass(int i) {
 
 在这种情况下，我们将把`myField1` 的值复制到`myField2`中:
 
-```
+```java
 public class MyClass {
 
     private int myField1 = 10;
@@ -101,7 +101,7 @@ public class MyClass {
 
 但是，如果我们调用第二个构造函数是有原因的，例如，为了避免重复代码，**我们可以将代码移到方法:**
 
-```
+```java
 public class MyClass {
 
     private int myField1 = 10;
@@ -125,7 +125,7 @@ public class MyClass {
 
 第三个解决方案可能是我们使用静态字段或方法 T2。如果我们将`myField1` 改为静态常数，那么编译器也很高兴:
 
-```
+```java
 public class MyClass {
 
     private static final int SOME_CONSTANT = 10;

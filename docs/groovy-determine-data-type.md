@@ -20,7 +20,7 @@ Groovy 支持与 Java 相同数量的原语类型。**我们可以通过三种�
 
 首先，我们从`instanceof` 运算符开始:
 
-```
+```java
 @Test
 public void givenWhenParameterTypeIsInteger_thenReturnTrue() {
     Person personObj = new Person(10)
@@ -34,7 +34,7 @@ public void givenWhenParameterTypeIsInteger_thenReturnTrue() {
 
 然后，我们也可以从 Object 类中使用`getClass()`方法。它返回实例的运行时类:
 
-```
+```java
 @Test
 public void givenWhenParameterTypeIsDouble_thenReturnTrue() {
     Person personObj = new Person(10.0)
@@ -44,7 +44,7 @@ public void givenWhenParameterTypeIsDouble_thenReturnTrue() {
 
 最后，让我们应用。`class` 运算符查找数据类型:
 
-```
+```java
 @Test
 public void givenWhenParameterTypeIsString_thenReturnTrue() {
     Person personObj = new Person("10 years")
@@ -60,7 +60,7 @@ Groovy 支持各种集合类型。
 
 让我们在 Groovy 中定义一个简单的列表:
 
-```
+```java
 @Test
 public void givenGroovyList_WhenFindClassName_thenReturnTrue() {
     def ageList = ['ageAsString','ageAsDouble', 10]
@@ -71,7 +71,7 @@ public void givenGroovyList_WhenFindClassName_thenReturnTrue() {
 
 但是在地图上，不能应用`.class`运算符:
 
-```
+```java
 @Test
 public void givenGrooyMap_WhenFindClassName_thenReturnTrue() {
     def ageMap = [ageAsString: '10 years', ageAsDouble: 10.0]
@@ -87,7 +87,7 @@ public void givenGrooyMap_WhenFindClassName_thenReturnTrue() {
 
 为了了解类变量是如何工作的，让我们假设我们有一个类`Person`:
 
-```
+```java
 @Test
 public void givenClassName_WhenParameterIsInteger_thenReturnTrue() {
     Assert.assertTrue(Person.class.getDeclaredField('ageAsInt').type == int.class)
@@ -98,7 +98,7 @@ public void givenClassName_WhenParameterIsInteger_thenReturnTrue() {
 
 我们可以使用`instanceof, getClass()` 和 `.class` 运算符找到任何对象的类型:
 
-```
+```java
 @Test
 public void givenWhenObjectIsInstanceOfType_thenReturnTrue() {
     Person personObj = new Person()
@@ -108,7 +108,7 @@ public void givenWhenObjectIsInstanceOfType_thenReturnTrue() {
 
 此外，我们还可以使用 Groovy 成员操作符`in`:
 
-```
+```java
 @Test
 public void givenWhenInstanceIsOfSubtype_thenReturnTrue() {
     Student studentObj = new Student()

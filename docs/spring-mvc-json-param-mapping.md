@@ -16,7 +16,7 @@
 
 让我们从一个示例 JSON 主体开始:
 
-```
+```java
 {
    "firstName" : "John",
    "lastName"  :"Smith",
@@ -33,7 +33,7 @@
 
 接下来，让我们创建匹配 JSON 输入的[dto](/web/20220929070049/https://www.baeldung.com/java-dto-pattern):
 
-```
+```java
 public class UserDto {
     private String firstName;
     private String lastName;
@@ -44,7 +44,7 @@ public class UserDto {
 }
 ```
 
-```
+```java
 public class AddressDto {
 
     private String streetName;
@@ -59,7 +59,7 @@ public class AddressDto {
 
 最后，我们将使用[标准方法](/web/20220929070049/https://www.baeldung.com/spring-mvc-send-json-parameters)，通过`@RequestBody`注释将 JSON 请求反序列化为`UserDto`:
 
-```
+```java
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -91,7 +91,7 @@ public class UserController {
 
 首先，让我们创建一个自定义注释，我们可以使用它将请求处理程序参数映射到 JSON 路径:
 
-```
+```java
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JsonArg {
@@ -101,7 +101,7 @@ public @interface JsonArg {
 
 接下来，我们将创建一个请求处理程序，它使用注释将`firstName`和`city`映射为独立的参数，这些参数与来自 JSON POST 主体的属性相关联:
 
-```
+```java
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -121,7 +121,7 @@ public class UserController {
 
 让我们定义一个`HandlerMethodArgumentResolver`的实现，它将处理所有用`@JsonArg`标注的请求处理器参数:
 
-```
+```java
 public class JsonArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String JSON_BODY_ATTRIBUTE = "JSON_REQUEST_BODY";
@@ -168,7 +168,7 @@ public class JsonArgumentResolver implements HandlerMethodArgumentResolver {
 
 为了让 Spring MVC 使用我们的`JsonArgumentResolver`，我们需要注册它:
 
-```
+```java
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
@@ -186,7 +186,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 为了说明这也适用于定制 Java 类，让我们用强类型 POJO 参数定义一个请求处理程序:
 
-```
+```java
 @PostMapping("/process/custompojo")
 public ResponseEntity process(
   @JsonArg("firstName") String firstName, @JsonArg("lastName") String lastName,
@@ -204,7 +204,7 @@ public ResponseEntity process(
 
 让我们编写一个测试用例来证明`JsonArgumentResolver`按预期工作:
 
-```
+```java
 @Test
 void whenSendingAPostJSON_thenReturnFirstNameAndCity() throws Exception {
 
@@ -221,7 +221,7 @@ void whenSendingAPostJSON_thenReturnFirstNameAndCity() throws Exception {
 
 接下来，让我们编写一个测试，调用第二个端点将 JSON 直接解析成 POJOs:
 
-```
+```java
 @Test
 void whenSendingAPostJSON_thenReturnUserAndAddress() throws Exception {
     String jsonString = "{\"firstName\":\"John\",\"lastName\":\"Smith\",\"address\":{\"streetName\":\"Example Street\",\"streetNumber\":\"10A\",\"postalCode\":\"1QW34\",\"city\":\"Timisoara\",\"country\":\"Romania\"}}";

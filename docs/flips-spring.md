@@ -12,7 +12,7 @@
 
 在我们开始之前，我们需要将翻转库添加到我们的`pom.xml:`
 
-```
+```java
 <dependency>
     <groupId>com.github.feature-flip</groupId>
     <artifactId>flips-core</artifactId>
@@ -24,7 +24,7 @@ Maven Central 有[最新版本的库](https://web.archive.org/web/20220703153300
 
 当然，我们还需要包括一个弹簧:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -40,7 +40,7 @@ Maven Central 有[最新版本的库](https://web.archive.org/web/20220703153300
 
 我们的 REST 应用程序将提供对`Foo` 资源的访问:
 
-```
+```java
 public class Foo {
     private String name;
     private int id;
@@ -49,7 +49,7 @@ public class Foo {
 
 我们将简单地创建一个`Service`来维护一个`Foos`列表:
 
-```
+```java
 @Service
 public class FlipService {
 
@@ -69,7 +69,7 @@ public class FlipService {
 
 当然，我们需要创建一个控制器:
 
-```
+```java
 @RestController
 public class FlipController {
 
@@ -94,7 +94,7 @@ public class FlipController {
 
 让我们将新请求添加到控制器中:
 
-```
+```java
 @GetMapping("/foos/{id}")
 @FlipOnEnvironmentProperty(
   property = "feature.foo.by.id", 
@@ -113,7 +113,7 @@ public Foo getFooById(@PathVariable int id) {
 
 当我们调用属性设置为`N`的 API 时，我们看到的是:
 
-```
+```java
 Status = 501
 Headers = {Content-Type=[application/json;charset=UTF-8]}
 Content type = application/json;charset=UTF-8
@@ -134,7 +134,7 @@ Spring 早就给了我们将 beans 映射到不同的[配置文件](/web/2022070
 
 让我们看看如何根据活动的[弹簧轮廓](/web/20220703153300/https://www.baeldung.com/spring-profiles)启用或禁用功能:
 
-```
+```java
 @RequestMapping(value = "/foos", method = RequestMethod.GET)
 @FlipOnProfiles(activeProfiles = "dev")
 public List getAllFoos() {
@@ -152,7 +152,7 @@ Spring 的表达式语言(SpEL) 是操纵运行时环境的强大机制。翻转
 
 让我们用一个简单的表达式来控制一个新特性:
 
-```
+```java
 @FlipOnSpringExpression(expression = "(2 + 2) == 4")
 @GetMapping("/foo/new")
 public Foo getNewFoo() {
@@ -164,7 +164,7 @@ public Foo getNewFoo() {
 
 要完全禁用某项功能，请使用`@FlipOff`:
 
-```
+```java
 @GetMapping("/foo/first")
 @FlipOff
 public Foo getFirstFoo() {
@@ -186,13 +186,13 @@ public Foo getFirstFoo() {
 
 因此，让我们设置一个属性，指示将于 3 月 1 日激活的新功能:
 
-```
+```java
 first.active.after=2018-03-01T00:00:00Z
 ```
 
 然后我们将编写一个 API 来检索第一个 Foo:
 
-```
+```java
 @GetMapping("/foo/first")
 @FlipOnDateTime(cutoffDateTimeProperty = "first.active.after")
 public Foo getFirstFoo() {
@@ -206,7 +206,7 @@ public Foo getFirstFoo() {
 
 该库提供了`@FlipOnDaysOfWeek`，对于 A/B 测试等操作很有用:
 
-```
+```java
 @GetMapping("/foo/{id}")
 @FlipOnDaysOfWeek(daysOfWeek={DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY})
 public Foo getFooByNewId(@PathVariable int id) {
@@ -224,7 +224,7 @@ public Foo getFooByNewId(@PathVariable int id) {
 
 我们将创建一个行为与`FlipService`不同的新服务:
 
-```
+```java
 @Service
 public class NewFlipService {
     public Foo getNewFoo() {
@@ -235,7 +235,7 @@ public class NewFlipService {
 
 我们将用新版本替换旧服务的`getNewFoo()`:
 
-```
+```java
 @FlipBean(with = NewFlipService.class)
 public Foo getNewFoo() {
     return new Foo("New Foo!", 99);
@@ -250,7 +250,7 @@ public Foo getNewFoo() {
 
 让我们结合前面的两个例子:
 
-```
+```java
 @FlipBean(
   with = NewFlipService.class)
 @FlipOnEnvironmentProperty(

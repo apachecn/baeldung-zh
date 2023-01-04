@@ -22,7 +22,7 @@ Swagger 是一组实现 [**OpenAPI 规范**](https://web.archive.org/web/2022112
 
 让我们使用 OAS 定义一个`User`实体:
 
-```
+```java
 components:
   User:
     type: "object"
@@ -50,7 +50,7 @@ components:
 
 此外，如果我们还想指定时间，我们将使用`date-time` 作为格式`.`让我们看一个例子:
 
-```
+```java
 createdAt:
   type: string
   format: date-time
@@ -64,7 +64,7 @@ createdAt:
 
 使用 OAS，我们也可以用其他格式描述日期。为此，让我们使用`pattern`字段:
 
-```
+```java
 customDate: 
   type: string 
   pattern: '^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])

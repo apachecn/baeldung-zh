@@ -12,7 +12,7 @@ Spring Batch 是一个强大的框架，用于开发健壮的批处理应用程�
 
 首先，让我们将 [`spring-boot-starter-batch`](https://web.archive.org/web/20220626090639/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3Aorg.springframework.boot%20a%3Aspring-boot-starter-batch) 添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-batch</artifactId>
@@ -22,7 +22,7 @@ Spring Batch 是一个强大的框架，用于开发健壮的批处理应用程�
 
 我们还将添加`org.hsqldb` 依赖项，它也可以从 [Maven Central](https://web.archive.org/web/20220626090639/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.hsqldb%22%20AND%20a%3A%22hsqldb%22) 获得:
 
-```
+```java
 <dependency>
     <groupId>org.hsqldb</groupId>
     <artifactId>hsqldb</artifactId>
@@ -39,7 +39,7 @@ Spring Batch 是一个强大的框架，用于开发健壮的批处理应用程�
 
 让我们从定义应用程序入口点开始:
 
-```
+```java
 @SpringBootApplication
 public class SpringBootBatchProcessingApplication {
 
@@ -53,13 +53,13 @@ public class SpringBootBatchProcessingApplication {
 
 我们将在我们的`src/main/resources/application.properties`文件中定义这些属性:
 
-```
+```java
 file.input=coffee-list.csv
 ```
 
 该属性包含我们输入咖啡列表的位置。每一行都包含品牌、产地和我们咖啡的一些特征:
 
-```
+```java
 Blue Mountain,Jamaica,Fruity
 Lavazza,Colombia,Strong
 Folgers,America,Smokey
@@ -69,7 +69,7 @@ Folgers,America,Smokey
 
 接下来，我们将添加一个 SQL 脚本`schema-all.sql`来创建我们的`coffee`表来存储数据:
 
-```
+```java
 DROP TABLE coffee IF EXISTS;
 
 CREATE TABLE coffee  (
@@ -86,7 +86,7 @@ CREATE TABLE coffee  (
 
 随后，我们需要一个简单的域类来保存我们的咖啡项目:
 
-```
+```java
 public class Coffee {
 
     private String brand;
@@ -113,7 +113,7 @@ public class Coffee {
 
 现在，我们来看看关键部分，我们的工作配置。我们将一步一步来，逐步构建我们的配置并解释每一部分:
 
-```
+```java
 @Configuration
 @EnableBatchProcessing
 public class BatchConfiguration {
@@ -141,7 +141,7 @@ public class BatchConfiguration {
 
 现在，我们可以在配置中定义一个阅读器 bean:
 
-```
+```java
 @Bean
 public FlatFileItemReader reader() {
     return new FlatFileItemReaderBuilder().name("coffeeItemReader")
@@ -159,7 +159,7 @@ public FlatFileItemReader reader() {
 
 同样，我们定义了一个编写器 bean:
 
-```
+```java
 @Bean
 public JdbcBatchItemWriter writer(DataSource dataSource) {
     return new JdbcBatchItemWriterBuilder()
@@ -176,7 +176,7 @@ public JdbcBatchItemWriter writer(DataSource dataSource) {
 
 最后，我们需要添加实际的作业步骤和配置:
 
-```
+```java
 @Bean
 public Job importUserJob(JobCompletionNotificationListener listener, Step step1) {
     return jobBuilderFactory.get("importUserJob")
@@ -220,7 +220,7 @@ public CoffeeItemProcessor processor() {
 
 让我们详细了解一下我们之前在作业配置中定义的自定义处理器:
 
-```
+```java
 public class CoffeeItemProcessor implements ItemProcessor<Coffee, Coffee> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CoffeeItemProcessor.class);
@@ -247,7 +247,7 @@ public class CoffeeItemProcessor implements ItemProcessor<Coffee, Coffee> {
 
 此外，我们还将编写一个`JobCompletionNotificationListener `来在我们的工作完成时提供一些反馈:
 
-```
+```java
 @Override
 public void afterJob(JobExecution jobExecution) {
     if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
@@ -266,7 +266,7 @@ public void afterJob(JobExecution jobExecution) {
 
 现在我们已经准备好了运行我们工作的一切，有趣的部分来了。让我们继续运行我们的作业:
 
-```
+```java
 ...
 17:41:16.336 [main] INFO  c.b.b.JobCompletionNotificationListener -
   !!! JOB FINISHED! Time to verify the results

@@ -38,7 +38,7 @@ Kubernetes 是一个抽象概念，它将一组 pod 作为网络服务公开。`
 
 让我们看一个示例服务定义:
 
-```
+```java
 apiVersion: v1
 kind: Service
 metadata:
@@ -78,7 +78,7 @@ spec:
 
 让我们使用 nginx `ingress controller`检查一个示例配置:
 
-```
+```java
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -119,7 +119,7 @@ Kubernetes 中的负载平衡器与`ingresses`有很多重叠。这是因为它�
 
 让我们看一个带有负载平衡器的服务的简单示例:
 
-```
+```java
 apiVersion: v1
 kind: Service
 metadata:

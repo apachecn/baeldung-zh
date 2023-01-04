@@ -12,7 +12,7 @@
 
 首先，让我们从基础开始，看看他们的签名:
 
-```
+```java
 public T orElse(T other)
 
 public T orElseGet(Supplier<? extends T> other)
@@ -33,14 +33,14 @@ public T orElseGet(Supplier<? extends T> other)
 
 假设我们已经正确配置了[记录器](/web/20220823125659/https://www.baeldung.com/java-logging-intro)，让我们从编写一段简单的代码开始:
 
-```
+```java
 String name = Optional.of("baeldung")
   .orElse(getRandomName());
 ```
 
 注意，`getRandomName() `是一个从`names:`的`List<String>`返回随机`name `的方法
 
-```
+```java
 public String getRandomName() {
     LOG.info("getRandomName() method - start");
 
@@ -54,7 +54,7 @@ public String getRandomName() {
 
 在执行我们的代码时，我们会在控制台中看到以下消息:
 
-```
+```java
 getRandomName() method - start
 getRandomName() method - end
 ```
@@ -67,7 +67,7 @@ getRandomName() method - end
 
 现在让我们尝试使用`orElseGet()`编写类似的代码:
 
-```
+```java
 String name = Optional.of("baeldung")
   .orElseGet(() -> getRandomName());
 ```
@@ -82,7 +82,7 @@ String name = Optional.of("baeldung")
 
 现在，为了了解性能上的差异，让我们使用 [JMH](/web/20220823125659/https://www.baeldung.com/java-microbenchmark-harness) 来看一些实际数字:
 
-```
+```java
 @Benchmark
 @BenchmarkMode(Mode.AverageTime)
 public String orElseBenchmark() {
@@ -92,7 +92,7 @@ public String orElseBenchmark() {
 
 和`orElseGet()`:
 
-```
+```java
 @Benchmark
 @BenchmarkMode(Mode.AverageTime)
 public String orElseGetBenchmark() {
@@ -102,7 +102,7 @@ public String orElseGetBenchmark() {
 
 在执行我们的基准方法时，我们得到:
 
-```
+```java
 Benchmark           Mode  Cnt      Score       Error  Units
 orElseBenchmark     avgt   20  60934.425 ± 15115.599  ns/op
 orElseGetBenchmark  avgt   20      3.798 ±     0.030  ns/op
@@ -121,7 +121,7 @@ orElseGetBenchmark  avgt   20      3.798 ±     0.030  ns/op
 *   如果这个方法会执行一些额外的逻辑会怎么样呢？例如，进行一些数据库插入或更新
 *   即使我们将一个对象赋给了`orElse() `参数，我们仍然会无缘无故地创建`“Other”` 对象`:`
 
-    ```
+    ```java
     String name = Optional.of("baeldung").orElse("Other")
     ```
 

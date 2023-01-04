@@ -26,7 +26,7 @@
 
 要将 PDF 转换成 Base64，我们首先需要获取它的字节数，然后**通过`java.util.Base64.Encoder`的`encode`方法**传递它:
 
-```
+```java
 byte[] inFileBytes = Files.readAllBytes(Paths.get(IN_FILE)); 
 byte[] encoded = java.util.Base64.getEncoder().encode(inFileBytes);
 ```
@@ -37,7 +37,7 @@ byte[] encoded = java.util.Base64.getEncoder().encode(inFileBytes);
 
 对于较大的文件或内存有限的系统，**使用流执行编码比读取内存中的所有数据更有效**。让我们看看如何实现这一点:
 
-```
+```java
 try (OutputStream os = java.util.Base64.getEncoder().wrap(new FileOutputStream(OUT_FILE));
   FileInputStream fis = new FileInputStream(IN_FILE)) {
     byte[] bytes = new byte[1024];
@@ -56,7 +56,7 @@ try (OutputStream os = java.util.Base64.getEncoder().wrap(new FileOutputStream(O
 
 所以我们现在需要**解码它以获得我们的原始字节，并将它们写入`FileOutputStream`以获得解码的 PDF** :
 
-```
+```java
 byte[] decoded = java.util.Base64.getDecoder().decode(encoded);
 
 FileOutputStream fos = new FileOutputStream(OUT_FILE);
@@ -75,7 +75,7 @@ fos.close();
 
 为了能够使用 Apache 库，我们需要向我们的`pom.xml`添加一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>commons-codec</groupId>
     <artifactId>commons-codec</artifactId>
@@ -89,7 +89,7 @@ fos.close();
 
 步骤与 Java 8 相同，只是这次我们将原始字节传递给 [`org.apache.commons.codec.binary.Base64`](https://web.archive.org/web/20221129003820/https://commons.apache.org/proper/commons-codec/apidocs/org/apache/commons/codec/binary/Base64.html) 类的`encodeBase64`方法:
 
-```
+```java
 byte[] inFileBytes = Files.readAllBytes(Paths.get(IN_FILE));
 byte[] encoded = org.apache.commons.codec.binary.Base64.encodeBase64(inFileBytes); 
 ```
@@ -102,7 +102,7 @@ byte[] encoded = org.apache.commons.codec.binary.Base64.encodeBase64(inFileBytes
 
 同样，我们简单地调用`decodeBase64`方法并将结果写入文件:
 
-```
+```java
 byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(encoded);
 
 FileOutputStream fos = new FileOutputStream(OUT_FILE);
@@ -115,7 +115,7 @@ fos.close();
 
 现在我们将使用一个简单的 JUnit 测试来测试我们的编码和解码:
 
-```
+```java
 public class EncodeDecodeUnitTest {
 
     private static final String IN_FILE = // path to file to be encoded from;

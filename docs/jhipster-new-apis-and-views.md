@@ -32,7 +32,7 @@ JHipster 为创建新的[控制器](/web/20220627073805/https://www.baeldung.com
 
 第一步是更新生成的`BookResource`类。**我们添加前端代码**将调用的新端点:
 
-```
+```java
 @GetMapping("/books/purchase/{id}")
 public ResponseEntity<BookDTO> purchase(@PathVariable Long id) {
     Optional<BookDTO> bookDTO = bookService.purchase(id);
@@ -46,13 +46,13 @@ public ResponseEntity<BookDTO> purchase(@PathVariable Long id) {
 
 现在，**我们需要更新`BookService`接口来包含一个新的`purchase`方法:**
 
-```
+```java
 Optional<BookDTO> purchase(Long id);
 ```
 
 然后，我们需要在`BookServiceImpl`类中实现新方法:
 
-```
+```java
 @Override
 public Optional<BookDTO> purchase(Long id) {
     Optional<BookDTO> bookDTO = findOne(id);
@@ -82,7 +82,7 @@ public Optional<BookDTO> purchase(Long id) {
 
 所需的最后一项更改在`SecurityConfiguration`类中:
 
-```
+```java
 .antMatchers("/api/books/purchase/**").authenticated()
 ```
 
@@ -96,7 +96,7 @@ public Optional<BookDTO> purchase(Long id) {
 
 首先，**我们需要向现有的`book.service.ts`文件添加一个新方法。**这个文件已经包含了操作图书对象的方法，所以这是为我们的新 API 添加逻辑的好地方:
 
-```
+```java
 purchase(id: number): Observable<EntityResponseType> {
     return this.http
         .get<IBook>(`${this.resourceUrl}/purchase/${id}`, { observe: 'response' })
@@ -108,7 +108,7 @@ purchase(id: number): Observable<EntityResponseType> {
 
 然后，**我们需要更新`book.component.ts`中的组件代码。**我们将创建一个函数来调用 Angular book 服务中的新方法，然后监听来自服务器的响应:
 
-```
+```java
 purchase(id: number) {
     this.bookService.purchase(id).subscribe(
         (res: HttpResponse<IBook>) => {
@@ -123,7 +123,7 @@ purchase(id: number) {
 
 最后，**我们可以向图书视图**添加一个按钮，调用组件中的新购买方法:
 
-```
+```java
 <button type="button"
              class="btn btn-primary"
              (click)="purchase(book.id)">

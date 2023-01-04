@@ -16,7 +16,7 @@
 
 为此，**我们需要实现我们自己的`OAuth2AuthorizationRequestResolver` :**
 
-```
+```java
 public class CustomAuthorizationRequestResolver 
   implements OAuth2AuthorizationRequestResolver {
 
@@ -35,7 +35,7 @@ public class CustomAuthorizationRequestResolver
 
 我们还将覆盖`resolve()`方法来添加我们的定制逻辑:
 
-```
+```java
 public class CustomAuthorizationRequestResolver 
   implements OAuth2AuthorizationRequestResolver {
 
@@ -71,7 +71,7 @@ public class CustomAuthorizationRequestResolver
 
 在实现我们的自定义`OAuth2AuthorizationRequestResolver`之后，我们需要将它添加到我们的安全配置中:
 
-```
+```java
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -97,7 +97,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 例如，我们可以生成自己的`“state”`参数:
 
-```
+```java
 private OAuth2AuthorizationRequest customizeAuthorizationRequest(
   OAuth2AuthorizationRequest req) {
     return OAuth2AuthorizationRequest
@@ -109,7 +109,7 @@ private OAuth2AuthorizationRequest customizeAuthorizationRequest(
 
 **我们还可以使用`OAuth2AuthorizationRequest`的`additionalParameters()`方法并传入一个`Map:`来给我们的`OAuth2AuthorizationRequest`** 添加额外的参数
 
-```
+```java
 private OAuth2AuthorizationRequest customizeAuthorizationRequest(
   OAuth2AuthorizationRequest req) {
     Map<String,Object> extraParams = new HashMap<String,Object>();
@@ -133,7 +133,7 @@ private OAuth2AuthorizationRequest customizeAuthorizationRequest(
 
 默认情况下，身份提供者是 Okta，但是我们可以使用`idp`参数对其进行定制:
 
-```
+```java
 private OAuth2AuthorizationRequest customizeOktaReq(OAuth2AuthorizationRequest req) {
     Map<String,Object> extraParams = new HashMap<String,Object>();
     extraParams.putAll(req.getAdditionalParameters()); 
@@ -155,7 +155,7 @@ private OAuth2AuthorizationRequest customizeOktaReq(OAuth2AuthorizationRequest r
 
 我们可以通过提供定制的`RequestEntityConverter`来定制令牌请求本身，我们甚至可以通过定制`DefaultAuthorizationCodeTokenResponseClient` `RestOperations`来定制令牌响应处理:
 
-```
+```java
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -195,7 +195,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 现在，我们将看到如何通过构建一个定制的`Converter`来向令牌请求添加额外的参数:
 
-```
+```java
 public class CustomRequestEntityConverter implements 
   Converter<OAuth2AuthorizationCodeGrantRequest, RequestEntity<?>> {
 
@@ -229,7 +229,7 @@ public class CustomRequestEntityConverter implements
 
 **我们将实现`CustomTokenResponseConverter`来不同地处理`“scope”`参数:**
 
-```
+```java
 public class CustomTokenResponseConverter implements 
   Converter<Map<String, String>, OAuth2AccessTokenResponse> {
     private static final Set<String> TOKEN_RESPONSE_PARAMETER_NAMES = Stream.of(
@@ -275,7 +275,7 @@ public class CustomTokenResponseConverter implements
 
 我们可以简单地实现我们自己的令牌响应转换器，并手动设置`token_type`:
 
-```
+```java
 public class LinkedinTokenResponseConverter 
   implements Converter<Map<String, String>, OAuth2AccessTokenResponse> {
 

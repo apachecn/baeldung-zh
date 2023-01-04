@@ -14,7 +14,7 @@ JPQL 提供了一种简单直接的方法来从表中获取所有实体。
 
 让我们看看使用 JPQL 从一个表中检索所有学生是什么样子:
 
-```
+```java
 public List<Student> findAllStudentsWithJpql() {
     return session.createQuery("SELECT a FROM Student a", Student.class).getResultList();      
 } 
@@ -32,7 +32,7 @@ public List<Student> findAllStudentsWithJpql() {
 
 我们刚刚看到了一个使用 JPQL 的全选查询。让我们使用 Criteria API 来看看它的对等物:
 
-```
+```java
 public List<Student> findAllStudentsWithCriteriaQuery() {
     CriteriaBuilder cb = session.getCriteriaBuilder();
     CriteriaQuery<Student> cq = cb.createQuery(Student.class);

@@ -14,7 +14,7 @@
 
 JDK 1.8 包括一个名为`jjs` 的命令行解释器，可以用来运行 JavaScript 文件，或者，如果启动时没有参数，可以作为一个 REPL(交互式 shell):
 
-```
+```java
 $ $JAVA_HOME/bin/jjs hello.js
 Hello World
 ```
@@ -23,7 +23,7 @@ Hello World
 
 相同的代码可以以交互方式运行:
 
-```
+```java
 $ $JAVA_HOME/bin/jjs
 jjs> print("Hello World")
 Hello World
@@ -31,7 +31,7 @@ Hello World
 
 您还可以通过添加一个`#!$JAVA_HOME/bin/jjs` 作为第一行来指示*nix 运行时使用`jjs` 来运行目标脚本:
 
-```
+```java
 #!$JAVA_HOME/bin/jjs
 var greeting = "Hello World";
 print(greeting);
@@ -39,7 +39,7 @@ print(greeting);
 
 然后该文件可以正常运行:
 
-```
+```java
 $ ./hello.js
 Hello World
 ```
@@ -50,7 +50,7 @@ Hello World
 
 让我们创建一个 JavaScript 引擎:
 
-```
+```java
 ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
 
 Object result = engine.eval(
@@ -65,7 +65,7 @@ Object result = engine.eval(
 
 通过定义一个`Bindings` 对象并将其作为第二个参数传递给`eval` 函数，可以将数据传递给引擎:
 
-```
+```java
 Bindings bindings = engine.createBindings();
 bindings.put("count", 3);
 bindings.put("name", "baeldung");
@@ -85,7 +85,7 @@ Object bindingsResult = engine.eval(script, bindings);
 
 当然，可以从 Java 代码中调用 JavaScript 函数:
 
-```
+```java
 engine.eval("function composeGreeting(name) {" +
   "return 'Hello ' + name" +
   "}");
@@ -102,7 +102,7 @@ Object funcResult = invocable.invokeFunction("composeGreeting", "baeldung");
 
 这是通过使用一个`Java` 对象来实现的:
 
-```
+```java
 Object map = engine.eval("var HashMap = Java.type('java.util.HashMap');" +
   "var map = new HashMap();" +
   "map.put('hello', 'world');" +
@@ -117,7 +117,7 @@ Object map = engine.eval("var HashMap = Java.type('java.util.HashMap');" +
 
 `For-each`是一个方便的扩展，使各种集合的迭代更加容易:
 
-```
+```java
 String script = "var list = [1, 2, 3, 4, 5];" +
   "var result = '';" +
   "for each (var i in list) {" +
@@ -136,7 +136,7 @@ engine.eval(script);
 
 在简单的函数声明中，可以省略花括号:
 
-```
+```java
 function increment(in) ++in
 ```
 
@@ -146,7 +146,7 @@ function increment(in) ++in
 
 可以添加仅在指定条件为真时才执行的保护性 catch 子句:
 
-```
+```java
 try {
     throw "BOOM";
 } catch(e if typeof e === 'string') {
@@ -162,7 +162,7 @@ try {
 
 可以使用 Java 类型化数组，也可以在 JavaScript 数组之间进行转换:
 
-```
+```java
 function arrays(arr) {
     var javaIntArray = Java.to(arr, "int[]");
     print(javaIntArray[0]);
@@ -181,7 +181,7 @@ function arrays(arr) {
 
 `Nashorn` 定义一个 API 扩展，使我们能够改变对象的原型:
 
-```
+```java
 Object.setPrototypeOf(obj, newProto)
 ```
 
@@ -191,7 +191,7 @@ Object.setPrototypeOf(obj, newProto)
 
 可以在一个对象上定义方法，每当访问一个`undefined`属性或调用一个`undefined`方法时，这些方法都会被调用:
 
-```
+```java
 var demo = {
     __noSuchProperty__: function (propName) {
         print("Accessed non-existing property: " + propName);
@@ -208,7 +208,7 @@ demo.callNonExistingMethod()
 
 这将打印:
 
-```
+```java
 Accessed non-existing property: doesNotExist
 Invoked non-existing method: callNonExistingMethod
 ```
@@ -217,7 +217,7 @@ Invoked non-existing method: callNonExistingMethod
 
 `Object.bindProperties`可用于将一个对象的属性绑定到另一个对象:
 
-```
+```java
 var first = {
     name: "Whiskey",
     age: 5
@@ -241,7 +241,7 @@ print(first.volume);
 
 当前文件名、目录和行可以从全局变量`__FILE__, __DIR__, __LINE__:`中获得
 
-```
+```java
 print(__FILE__, __LINE__, __DIR__)
 ```
 
@@ -249,7 +249,7 @@ print(__FILE__, __LINE__, __DIR__)
 
 `Nashorn` 在`String`原型上提供了两个简单但非常有用的扩展。这些是`trimRight` 和`trimLeft` 函数，不出所料，它们返回删除了空格的`String`的副本:
 
-```
+```java
 print("   hello world".trimLeft());
 print("hello world     ".trimRight());
 ```
@@ -262,7 +262,7 @@ print("hello world     ".trimRight());
 
 也就是说，如果它本身或者通过它可传递到达的任何对象是一个 JavaScript 数组，那么这样的对象将被公开为`JSObject`，它还实现了用于公开数组元素的`List`接口。
 
-```
+```java
 Object obj = engine.eval("Java.asJSONCompatible(
   { number: 42, greet: 'hello', primes: [2,3,5,7,11,13] })");
 Map<String, Object> map = (Map<String, Object>)obj;
@@ -278,26 +278,26 @@ System.out.println(List.class.isAssignableFrom(map.get("primes").getClass()));
 
 也可以从`ScriptEngine`中加载另一个 JavaScript 文件:
 
-```
+```java
 load('classpath:script.js')
 ```
 
 也可以从 URL 加载脚本:
 
-```
+```java
 load('/script.js')
 ```
 
 请记住，JavaScript 没有名称空间的概念，所以所有东西都堆在全局范围内。这使得加载的脚本可能与您的代码或彼此之间产生命名冲突。这可以通过使用`loadWithNewGlobal` 功能来缓解:
 
-```
+```java
 var math = loadWithNewGlobal('classpath:math_module.js')
 math.increment(5);
 ```
 
 用下面的`math_module.js`:
 
-```
+```java
 var math = {
     increment: function(num) {
         return ++num;

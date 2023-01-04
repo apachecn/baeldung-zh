@@ -16,7 +16,7 @@
 
 首先，我们需要为 [`hll`](https://web.archive.org/web/20221012192025/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22net.agkn%22%20AND%20a%3A%22hll%22) 库添加 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>net.agkn</groupId>
     <artifactId>hll</artifactId>
@@ -37,7 +37,7 @@
 
 **当每个新元素被插入到`HLL`中时，它需要被预先散列。**我们将使用来自番石榴库的`Hashing.murmur3_128()` (包含在`hll`依赖项中)，因为它既准确又快速。
 
-```
+```java
 HashFunction hashFunction = Hashing.murmur3_128();
 long numberOfElements = 100_000_000;
 long toleratedDifference = 1_000_000;
@@ -48,7 +48,7 @@ HLL hll = new HLL(14, 5);
 
 接下来，让我们插入 1 亿个元素:
 
-```
+```java
 LongStream.range(0, numberOfElements).forEach(element -> {
     long hashedValue = hashFunction.newHasher().putLong(element).hash().asLong();
     hll.addRaw(hashedValue);
@@ -58,7 +58,7 @@ LongStream.range(0, numberOfElements).forEach(element -> {
 
 最后，我们可以测试由`HLL` 返回的基数是否在我们期望的错误阈值之内:
 
-```
+```java
 long cardinality = hll.cardinality();
 assertThat(cardinality)
   .isCloseTo(numberOfElements, Offset.offset(toleratedDifference));
@@ -84,7 +84,7 @@ assertThat(cardinality)
 
 让我们通过创建两个`HLLs –`来测试该属性，一个填充 0 到 1 亿的值，第二个填充 1 亿到 2 亿的值:
 
-```
+```java
 HashFunction hashFunction = Hashing.murmur3_128();
 long numberOfElements = 100_000_000;
 long toleratedDifference = 1_000_000;
@@ -114,7 +114,7 @@ LongStream.range(numberOfElements, numberOfElements * 2).forEach(element -> {
 
 接下来，让我们使用`union()` 方法联合`firstHll` 和`secondHll` 。正如您所看到的，估计的基数在一个错误阈值内，就好像我们从一个有 2 亿个元素的`HLL` 中获取基数一样:
 
-```
+```java
 firstHll.union(secondHLL);
 long cardinality = firstHll.cardinality();
 assertThat(cardinality)

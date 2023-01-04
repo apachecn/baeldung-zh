@@ -24,7 +24,7 @@ A short example of redirection after login in Spring Security[Read more](/web/20
 
 使用`logout()`方法的 **Spring 注销功能**的基本配置非常简单:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -42,7 +42,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 
 并使用 XML 配置:
 
-```
+```java
 <http>
 
     ...    
@@ -57,7 +57,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 
 继续这个简单的例子，在 web 应用程序中提供**注销链接**的方法是:
 
-```
+```java
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
    <head></head>
@@ -73,7 +73,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 
 注销过程成功执行后，Spring Security 会将用户重定向到指定的页面。默认情况下，这是根页面(`“/”`)，但这是可配置的:
 
-```
+```java
 //...
 .logout()
 .logoutSuccessUrl("/afterlogout.html")
@@ -82,13 +82,13 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 
 这也可以使用 XML 配置来完成:
 
-```
+```java
 <logout logout-success-url="/afterlogout.html" />
 ```
 
 根据应用程序的不同，一个好的做法是将用户重定向回登录页面:
 
-```
+```java
 //...
 .logout()
 .logoutSuccessUrl("/login.html")
@@ -101,14 +101,14 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 
 但是，更改这个默认值是一个好主意，这样可以确保不会发布关于使用什么框架来保护应用程序的信息:
 
-```
+```java
 .logout()
 .logoutUrl("/perform_logout")
 ```
 
 通过 XML:
 
-```
+```java
 <logout 
   logout-success-url="/anonymous.html" 
   logout-url="/perform_logout" />
@@ -120,7 +120,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 
 `deleteCookies`方法也很简单:
 
-```
+```java
 .logout()
 .logoutUrl("/perform_logout")
 .invalidateHttpSession(true)
@@ -129,7 +129,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 
 XML 版本是:
 
-```
+```java
 <logout 
   logout-success-url="/anonymous.html" 
   logout-url="/perform_logout"
@@ -140,7 +140,7 @@ XML 版本是:
 
 对于更高级的场景，名称空间不够灵活，Spring 上下文中的`LogoutSuccessHandler` bean 可以替换为自定义引用:
 
-```
+```java
 @Bean
 public LogoutSuccessHandler logoutSuccessHandler() {
     return new CustomLogoutSuccessHandler();
@@ -154,7 +154,7 @@ public LogoutSuccessHandler logoutSuccessHandler() {
 
 等效的 XML 配置是:
 
-```
+```java
 <logout 
   logout-url="/perform_logout"
   delete-cookies="JSESSIONID"
@@ -166,7 +166,7 @@ public LogoutSuccessHandler logoutSuccessHandler() {
 
 当用户成功注销时需要运行的任何**定制应用程序逻辑都可以用定制注销成功处理程序来实现。例如，一个简单的审计机制跟踪用户触发注销时所在的最后一个页面:**
 
-```
+```java
 public class CustomLogoutSuccessHandler extends 
   SimpleUrlLogoutSuccessHandler implements LogoutSuccessHandler {
 

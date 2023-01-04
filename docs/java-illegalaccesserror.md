@@ -16,7 +16,7 @@
 
 首先，让我们观察一下`IllegalAccessError:`的类层次
 
-```
+```java
 java.lang.Object
   |_java.lang.Throwable
     |_java.lang.Error
@@ -33,7 +33,7 @@ java.lang.Object
 
 让我们用一个简单的程序来理解这一点:
 
-```
+```java
 public class Class1 {
     public void bar() {
         System.out.println("SUCCESS");
@@ -54,7 +54,7 @@ public class Class2 {
 
 接下来，用新编译的版本替换先前定义的`Class1 (the .`类文件`)` ，并重新运行程序:
 
-```
+```java
 java.lang.IllegalAccessError: 
   class Class2 tried to access private method Class1.bar()
 ```
@@ -77,7 +77,7 @@ java.lang.IllegalAccessError:
 
 考虑以下接口和类定义:
 
-```
+```java
 interface Baeldung {
     public default void foobar() {
         System.out.println("This is a default method.");
@@ -93,13 +93,13 @@ class Super {
 
 同样，让我们扩展`Super `并实现`Baeldung:`
 
-```
+```java
 class MySubClass extends Super implements Baeldung {}
 ```
 
 最后，让我们通过实例化`MySubClass:`来调用`foobar()`
 
-```
+```java
 new MySubClass().foobar();
 ```
 
@@ -107,7 +107,7 @@ new MySubClass().foobar();
 
 因此，编译器不会抱怨，但在运行时，我们会得到一个错误:
 
-```
+```java
 java.lang.IllegalAccessError:
   class IllegalAccessErrorExample tried to access private method 'void Super.foobar()'
 ```

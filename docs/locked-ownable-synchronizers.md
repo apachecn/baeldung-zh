@@ -16,7 +16,7 @@
 
 我们可以在典型的线程转储中查看该列表:
 
-```
+```java
 "Thread-0" #1 prio=5 os_prio=0 tid=0x000002411a452800 nid=0x1c18 waiting on condition [0x00000051a2bff000]
    java.lang.Thread.State: TIMED_WAITING (sleeping)
         at java.lang.Thread.sleep(Native Method)
@@ -28,7 +28,7 @@
 
 根据我们用来生成它的工具，我们可能需要提供一个特定的选项。例如，使用 [jstack](/web/20220905041908/https://www.baeldung.com/java-thread-dump#1-jstack) ，我们运行以下命令:
 
-```
+```java
 jstack -l <pid>
 ```
 
@@ -38,7 +38,7 @@ jstack -l <pid>
 
 **可拥有的同步器列表帮助我们识别可能的应用程序死锁**。例如，我们可以在线程转储中看到一个名为`Thread-1`的不同线程是否正在等待获取同一个`Lock`对象的锁:
 
-```
+```java
 "Thread-1" #12 prio=5 os_prio=0 tid=0x00000241374d7000 nid=0x4da4 waiting on condition [0x00000051a42fe000]
    java.lang.Thread.State: WAITING (parking)
         at sun.misc.Unsafe.park(Native Method)
@@ -53,7 +53,7 @@ jstack -l <pid>
 
 让我们看一些简单的代码来说明以上所有内容。我们将用两个线程和两个`ReentrantLock `对象创建一个死锁场景:
 
-```
+```java
 public class Application {
 
     public static void main(String[] args) throws Exception {
@@ -77,7 +77,7 @@ public class Application {
 
 `createThread()`方法用各自的锁生成我们的每个线程:
 
-```
+```java
 public static Thread createThread(String threadName, ReentrantLock primaryLock, ReentrantLock secondaryLock) {
     return new Thread(() -> {
         primaryLock.lock();
@@ -102,7 +102,7 @@ public static Thread createThread(String threadName, ReentrantLock primaryLock, 
 
 运行这段代码将会挂起，并且永远不会打印出最终的控制台输出。如果我们运行 jstack，我们将看到以下内容:
 
-```
+```java
 "Thread-0" #12 prio=5 os_prio=0 tid=0x0000027e1e31e800 nid=0x7d0 waiting on condition [0x000000a29acfe000]
    java.lang.Thread.State: WAITING (parking)
         at sun.misc.Unsafe.park(Native Method)

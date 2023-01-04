@@ -26,7 +26,7 @@ Have a look at the @ResponseStatus annotation and how to use it to set the respo
 
 `ResponseEntity`是泛型。因此，我们可以使用任何类型作为响应体:
 
-```
+```java
 @GetMapping("/hello")
 ResponseEntity<String> hello() {
     return new ResponseEntity<>("Hello World!", HttpStatus.OK);
@@ -35,7 +35,7 @@ ResponseEntity<String> hello() {
 
 因为我们以编程方式指定响应状态，所以我们可以为不同的场景返回不同的状态代码:
 
-```
+```java
 @GetMapping("/age")
 ResponseEntity<String> age(
   @RequestParam("yearOfBirth") int yearOfBirth) {
@@ -54,7 +54,7 @@ ResponseEntity<String> age(
 
 此外，我们可以设置 HTTP 头:
 
-```
+```java
 @GetMapping("/customHeader")
 ResponseEntity<String> customHeader() {
     HttpHeaders headers = new HttpHeaders();
@@ -69,7 +69,7 @@ ResponseEntity<String> customHeader() {
 
 最简单的情况是带有正文和 HTTP 200 响应代码的响应:
 
-```
+```java
 @GetMapping("/hello")
 ResponseEntity<String> hello() {
     return ResponseEntity.ok("Hello World!");
@@ -78,7 +78,7 @@ ResponseEntity<String> hello() {
 
 对于最流行的 [HTTP 状态码](/web/20220916105012/https://www.baeldung.com/cs/http-status-codes)，我们得到静态方法:
 
-```
+```java
 BodyBuilder accepted();
 BodyBuilder badRequest();
 BodyBuilder created(java.net.URI location);
@@ -91,7 +91,7 @@ BodyBuilder ok();
 
 最后，用`ResponseEntity<T> BodyBuilder.body(T body)`我们可以设置 HTTP 响应体:
 
-```
+```java
 @GetMapping("/age")
 ResponseEntity<String> age(@RequestParam("yearOfBirth") int yearOfBirth) {
     if (isInFuture(yearOfBirth)) {
@@ -106,7 +106,7 @@ ResponseEntity<String> age(@RequestParam("yearOfBirth") int yearOfBirth) {
 
 我们还可以设置自定义标题:
 
-```
+```java
 @GetMapping("/customHeader")
 ResponseEntity<String> customHeader() {
     return ResponseEntity.ok()
@@ -147,7 +147,7 @@ Spring 3.2 带来了对全局 **`@ExceptionHandler `的支持，新的`@Control
 
 Spring 还让我们直接访问`javax.servlet.http.HttpServletResponse`对象；我们只需要将它声明为方法参数:
 
-```
+```java
 @GetMapping("/manual")
 void manual(HttpServletResponse response) throws IOException {
     response.setHeader("Custom-Header", "foo");

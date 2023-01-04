@@ -14,7 +14,7 @@
 
 为了看到这一点，让我们将名为`params` 的参数定义为`string`，尽管我们将在后端将其解析为 JSON:
 
-```
+```java
 swagger: "2.0"
 ...
 paths:
@@ -33,13 +33,13 @@ paths:
 
 因此，代替:
 
-```
+```java
 GET http://localhost:8080/api/tickets?type=foo&color;=green
 ```
 
 我们会做:
 
-```
+```java
 GET http://localhost:8080/api/tickets?params={"type":"foo","color":"green"}
 ```
 
@@ -49,7 +49,7 @@ OpenAPI 3 引入了对对象作为查询参数的支持。
 
 要指定 JSON 参数，我们需要在定义中添加一个`content` 部分，其中包含 MIME 类型和模式:
 
-```
+```java
 openapi: 3.0.1
 ...
 paths:
@@ -74,13 +74,13 @@ paths:
 
 我们的请求现在看起来像这样:
 
-```
+```java
 GET http://localhost:8080/api/tickets?params[type]=foo&params;[color]=green
 ```
 
 实际上，它看起来仍然像:
 
-```
+```java
 GET http://localhost:8080/api/tickets?params={"type":"foo","color":"green"}
 ```
 
@@ -94,13 +94,13 @@ GET http://localhost:8080/api/tickets?params={"type":"foo","color":"green"}
 
 所以，要发送以下 URL:
 
-```
+```java
 GET /tickets?params={"type":"foo","color":"green"}
 ```
 
 我们实际上会做:
 
-```
+```java
 GET /tickets?params=%7B%22type%22%3A%22foo%22%2C%22color%22%3A%22green%22%7D
 ```
 

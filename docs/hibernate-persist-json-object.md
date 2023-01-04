@@ -14,7 +14,7 @@
 
 在本教程中，我们将使用[基本 Hibernate 核心依赖关系](https://web.archive.org/web/20220628235228/https://search.maven.org/search?q=g:org.hibernate%20AND%20a:hibernate-core):
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>
@@ -24,7 +24,7 @@
 
 我们还将使用 [Jackson](https://web.archive.org/web/20220628235228/https://search.maven.org/search?q=g:com.fasterxml.jackson.core%20AND%20a:jackson-databind) 作为我们的 JSON 库:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -46,7 +46,7 @@
 
 一个标准的 JSON 对象将这些属性表示为一个`HashMap`，所以这就是我们在这里使用的:
 
-```
+```java
 @Entity
 @Table(name = "Customers")
 public class Customer {
@@ -69,7 +69,7 @@ public class Customer {
 
 首先，**我们将创建一个序列化方法，该方法将获取我们的`customerAttributes`并将其转换为一个 JSON 字符串**:
 
-```
+```java
 public void serializeCustomerAttributes() throws JsonProcessingException {
     this.customerAttributeJSON = objectMapper.writeValueAsString(customerAttributes);
 }
@@ -79,7 +79,7 @@ public void serializeCustomerAttributes() throws JsonProcessingException {
 
 接下来，**我们将创建一个方法，当我们从数据库中检索`Customer`时，将 JSON 字符串反序列化回一个`HashMap`对象**:
 
-```
+```java
 public void deserializeCustomerAttributes() throws IOException {
     this.customerAttributes = objectMapper.readValue(customerAttributeJSON, HashMap.class);
 }
@@ -89,7 +89,7 @@ public void deserializeCustomerAttributes() throws IOException {
 
 因此，持久化和检索我们的`Customer`对象看起来像这样:
 
-```
+```java
 @Test
 public void whenStoringAJsonColumn_thenDeserializedVersionMatches() {
     Customer customer = new Customer();
@@ -118,7 +118,7 @@ public void whenStoringAJsonColumn_thenDeserializedVersionMatches() {
 
 首先，我们将创建一个`AttributeConverter`的实现。我们将重用之前的代码:
 
-```
+```java
 public class HashMapConverter implements AttributeConverter<Map<String, Object>, String> {
 
     @Override
@@ -152,7 +152,7 @@ public class HashMapConverter implements AttributeConverter<Map<String, Object>,
 
 接下来，我们告诉 Hibernate 使用新的`AttributeConverter`作为`customerAttributes`字段，我们就完成了:
 
-```
+```java
 @Convert(converter = HashMapConverter.class)
 private Map<String, Object> customerAttributes;
 ```

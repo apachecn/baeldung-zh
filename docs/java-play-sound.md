@@ -22,7 +22,7 @@ API 是一个用于 Java 的无缓冲或内存声音 API。`Clip`类是`javax.so
 
 让我们首先创建一个示例类`SoundPlayerWithClip`，它实现了`LineListener`接口，以便接收用于回放的行事件(`OPEN`、`CLOSE`、`START`和`STOP`)。我们将从`LineListener` 实现`update()`方法来检查回放状态:
 
-```
+```java
 public class SoundPlayerUsingClip implements LineListener {
 
     boolean isPlaybackCompleted;
@@ -41,26 +41,26 @@ public class SoundPlayerUsingClip implements LineListener {
 
 其次，让我们从项目的资源文件夹中读取音频文件。我们的资源文件夹包含三种不同格式的音频文件，即 WAV、MP3 和 MPEG:
 
-```
+```java
 InputStream inputStream = getClass().getClassLoader().getResourceAsStream(audioFilePath);
 ```
 
 第三，从文件流中，我们将创建一个`AudioInputStream`:
 
-```
+```java
 AudioInputStream audioStream = AudioSystem.getAudioInputStream(inputStream);
 ```
 
 现在，我们将创建一个`DataLine.Info`对象:
 
-```
+```java
 AudioFormat audioFormat = audioStream.getFormat();
 DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
 ```
 
 让我们从这个`DataLine.Info`创建一个`Clip`对象并打开流，然后调用`start`开始播放音频:
 
-```
+```java
 Clip audioClip = (Clip) AudioSystem.getLine(info);
 audioClip.addLineListener(this);
 audioClip.open(audioStream);
@@ -69,7 +69,7 @@ audioClip.start();
 
 最后，我们需要关闭任何打开的资源:
 
-```
+```java
 audioClip.close();
 audioStream.close();
 ```
@@ -82,19 +82,19 @@ audioStream.close();
 
 例如，我们可以将其设置为播放音频五次:
 
-```
+```java
 audioClip.loop(4); 
 ```
 
 或者，我们可以将其设置为无限期播放音频(或直到中断):
 
-```
+```java
 audioClip.loop(Clip.LOOP_CONTINUOUSLY);
 ```
 
 `Clip.setMicrosecondPosition`设定媒体位置。当剪辑下次开始播放时，它将从这个位置开始。例如，从第 30 秒开始，我们可以将其设置为:
 
-```
+```java
 audioClip.setMicrosecondPosition(30_000_000);
 ```
 
@@ -106,26 +106,26 @@ API 是一个用于 java 的缓冲或流式声音 API。`SourceDataLine`类是 `
 
 让我们首先创建一个示例类，并从项目的 resource 文件夹中读取音频文件。我们的资源文件夹包含三种不同格式的音频文件，即 WAV、MP3 和 MPEG:
 
-```
+```java
 InputStream inputStream = getClass().getClassLoader().getResourceAsStream(audioFilePath);
 ```
 
 其次，从文件输入流中，我们将创建一个`AudioInputStream`:
 
-```
+```java
 AudioInputStream audioStream = AudioSystem.getAudioInputStream(inputStream);
 ```
 
 现在，我们将创建一个`DataLine.Info`对象:
 
-```
+```java
 AudioFormat audioFormat = audioStream.getFormat();
 DataLine.Info info = new DataLine.Info(Clip.class, audioFormat);
 ```
 
 让我们从这个`DataLine.Info`创建一个`SourceDataLine`对象，打开流，调用`start`开始播放音频:
 
-```
+```java
 SourceDataLine sourceDataLine = (SourceDataLine) AudioSystem.getLine(info);
 sourceDataLine.open(audioFormat);
 sourceDataLine.start();
@@ -133,13 +133,13 @@ sourceDataLine.start();
 
 现在，在`SourceDataLine`、**的情况下，音频数据是分块加载的，我们需要提供缓冲区大小**:
 
-```
+```java
 private static final int BUFFER_SIZE = 4096;
 ```
 
 现在，让我们从`AudioInputStream`读取音频数据，并将其发送到`SourceDataLine’s`播放缓冲区，直到其到达流的末尾:
 
-```
+```java
 byte[] bufferBytes = new byte[BUFFER_SIZE];
 int readBytes = -1;
 while ((readBytes = audioStream.read(bufferBytes)) != -1) {
@@ -149,7 +149,7 @@ while ((readBytes = audioStream.read(bufferBytes)) != -1) {
 
 最后，让我们关闭任何打开的资源:
 
-```
+```java
 sourceDataLine.drain();
 sourceDataLine.close();
 audioStream.close();
@@ -181,7 +181,7 @@ audioStream.close();
 
 我们可以使用`AudioSystem`检查支持的音频格式:
 
-```
+```java
 Type[] list = AudioSystem.getAudioFileTypes();
 StringBuilder supportedFormat = new StringBuilder("Supported formats:");
 for (Type type : list) {
@@ -194,7 +194,7 @@ System.out.println(supportedFormat.toString());
 
 如果我们将 MP3 格式文件提供给`Clip`或`SourceDataLine` API，我们将得到`UnsupportedAudioFileException`:
 
-```
+```java
 javax.sound.sampled.UnsupportedAudioFileException: could not get audio input stream from input file
     at javax.sound.sampled.AudioSystem.getAudioInputStream(AudioSystem.java:1189)
 ```
@@ -209,7 +209,7 @@ javax.sound.sampled.UnsupportedAudioFileException: could not get audio input str
 
 让我们创建一个示例类，并使用`Media`和`MediaPlayer`类来播放我们的 MP3 文件:
 
-```
+```java
 String audioFilePath = "AudioFileWithMp3Format.mp3";
 SoundPlayerUsingJavaFx soundPlayerWithJavaFx = new SoundPlayerUsingJavaFx();
 try {
@@ -231,7 +231,7 @@ try {
 
 让我们使用 Javazoom `Player`类创建一个示例类:
 
-```
+```java
 String audioFilePath = "AudioFileWithMp3Format.mp3";
 SoundPlayerUsingJavaZoom player = new SoundPlayerUsingJavaZoom();
 try {

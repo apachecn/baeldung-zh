@@ -16,7 +16,7 @@
 
 首先，我们需要设置我们的环境。让我们将春天[上下文](https://web.archive.org/web/20220627171921/https://search.maven.org/search?q=g:org.springframework%20AND%20a:spring-context)，春天[表达式](https://web.archive.org/web/20220627171921/https://search.maven.org/search?q=g:org.springframework%20AND%20a:spring-expression)，以及[番石榴](https://web.archive.org/web/20220627171921/https://search.maven.org/search?q=g:com.google.guava%20AND%20a:guava)依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context</artifactId>
@@ -50,7 +50,7 @@
 
 为了使用，我们将定义一个`EventBus`包装器来提供一些静态方法，以便为将由`BeanPostProcessor`使用的事件注册和注销 beans:
 
-```
+```java
 public final class GlobalEventBus {
 
     public static final String GLOBAL_EVENT_BUS_EXPRESSION
@@ -88,7 +88,7 @@ public final class GlobalEventBus {
 
 接下来，让我们定义一个定制的标记注释，它将被`BeanPostProcessor`用来识别 beans 以自动注册/取消注册事件:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
@@ -101,7 +101,7 @@ public @interface Subscriber {
 
 现在，我们将定义`BeanPostProcessor`，它将检查每个 bean 的`Subscriber`注释。这个类也是一个`DestructionAwareBeanPostProcessor,` ，它是一个 Spring 接口，为`BeanPostProcessor`添加了一个销毁前回调。如果注释存在，我们将在 bean 初始化时用注释的 SpEL 表达式标识的`EventBus`注册它，并在 bean 销毁时注销它:
 
-```
+```java
 public class GuavaEventBusBeanPostProcessor
   implements DestructionAwareBeanPostProcessor {
 
@@ -142,7 +142,7 @@ public class GuavaEventBusBeanPostProcessor
 
 现在让我们来看看`process`方法:
 
-```
+```java
 private void process(Object bean, BiConsumer<EventBus, Object> consumer, String action) {
     Object proxy = this.getTargetObject(bean);
     Subscriber annotation = AnnotationUtils.getAnnotation(proxy.getClass(), Subscriber.class);
@@ -173,7 +173,7 @@ private void process(Object bean, BiConsumer<EventBus, Object> consumer, String 
 
 方法`getTargetObject`的实现如下:
 
-```
+```java
 private Object getTargetObject(Object proxy) throws BeansException {
     if (AopUtils.isJdkDynamicProxy(proxy)) {
         try {
@@ -190,7 +190,7 @@ private Object getTargetObject(Object proxy) throws BeansException {
 
 接下来，让我们定义我们的`StockTrade`模型对象:
 
-```
+```java
 public class StockTrade {
 
     private String symbol;
@@ -206,7 +206,7 @@ public class StockTrade {
 
 然后，让我们定义一个监听器类来通知我们收到了一个交易，这样我们就可以编写我们的测试了:
 
-```
+```java
 @FunctionalInterface
 public interface StockTradeListener {
     void stockTradePublished(StockTrade trade);
@@ -215,7 +215,7 @@ public interface StockTradeListener {
 
 最后，我们将为新的`StockTrade`事件定义一个接收器:
 
-```
+```java
 @Subscriber
 public class StockTradePublisher {
 
@@ -254,7 +254,7 @@ public class StockTradePublisher {
 
 现在让我们用一个集成测试来结束我们的编码，以验证`BeanPostProcessor`工作正常。首先，我们需要一个 Spring 上下文:
 
-```
+```java
 @Configuration
 public class PostProcessorConfiguration {
 
@@ -277,7 +277,7 @@ public class PostProcessorConfiguration {
 
 现在我们可以实现我们的测试了:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = PostProcessorConfiguration.class)
 public class StockTradeIntegrationTest {

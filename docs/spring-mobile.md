@@ -23,7 +23,7 @@ Spring Mobile 是流行的`Spring Web MVC`框架的现代扩展，它有助于�
 
 在开始之前，我们需要在`pom.xml`中添加以下 Spring Mobile 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.mobile</groupId>
     <artifactId>spring-mobile-device</artifactId>
@@ -33,7 +33,7 @@ Spring Mobile 是流行的`Spring Web MVC`框架的现代扩展，它有助于�
 
 请注意，最新的依赖项在 Spring Milestones 存储库中可用，所以让我们也将它添加到我们的`pom.xml`中:
 
-```
+```java
 <repositories>
     <repository>
         <id>spring-milestones</id>
@@ -54,7 +54,7 @@ Spring Mobile 是流行的`Spring Web MVC`框架的现代扩展，它有助于�
 
 我们需要在`src/main/resources/templates`下创建两个名为`mobile`和`tablet`的文件夹，并相应地放置 Freemarker 文件。最终的结构应该是这样的:
 
-```
+```java
 └── src
     └── main
         └── resources
@@ -68,7 +68,7 @@ Spring Mobile 是流行的`Spring Web MVC`框架的现代扩展，它有助于�
 
 现在，让我们将下面的`HTML`放到`index.ftl`文件中:
 
-```
+```java
 <h1>You are into browser version</h1>
 ```
 
@@ -78,13 +78,13 @@ Spring Mobile 是流行的`Spring Web MVC`框架的现代扩展，它有助于�
 
 为了启用 Spring Mobile `DeviceDelegatingViewresolver`服务，我们需要在 `application.properties:`中放置以下属性
 
-```
+```java
 spring.mobile.devicedelegatingviewresolver.enabled: true 
 ```
 
 当您包含 Spring Mobile starter 时，默认情况下在 Spring Boot 启用站点首选项功能。但是，可以通过将以下属性设置为 false 来禁用它:
 
-```
+```java
 spring.mobile.sitepreference.enabled: true
 ```
 
@@ -92,7 +92,7 @@ spring.mobile.sitepreference.enabled: true
 
 为了让 Spring Boot 能够找到并呈现我们的模板，我们需要将以下内容添加到我们的`application.properties`:
 
-```
+```java
 spring.freemarker.template-loader-path: classpath:/templates
 spring.freemarker.suffix: .ftl
 ```
@@ -101,7 +101,7 @@ spring.freemarker.suffix: .ftl
 
 现在我们需要创建一个`Controller`类来处理传入的请求。我们将使用简单的`@GetMapping`注释来处理请求:
 
-```
+```java
 @Controller
 public class IndexController {
 
@@ -142,7 +142,7 @@ public class IndexController {
 
 为了在 Spring web 应用程序中启用设备检测，我们还需要添加一些配置:
 
-```
+```java
 @Configuration
 public class AppConfig implements WebMvcConfigurer {
 
@@ -170,7 +170,7 @@ public class AppConfig implements WebMvcConfigurer {
 
 我们差不多完成了。最后要做的一件事是构建一个 Spring Boot 配置类来启动应用程序:
 
-```
+```java
 @SpringBootApplication
 public class Application {
 
@@ -208,7 +208,7 @@ public class Application {
 
 要模拟一个实时场景，用户希望以一种移动友好的方式查看网站，只需在默认 URL 的末尾添加以下 URL 参数:
 
-```
+```java
 ?site_preference=mobile
 ```
 
@@ -216,7 +216,7 @@ public class Application {
 
 以同样的方式模拟平板电脑偏好，只需在默认 URL 的末尾添加以下 URL 参数:
 
-```
+```java
 ?site_preference=tablet
 ```
 

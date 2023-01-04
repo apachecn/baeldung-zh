@@ -16,7 +16,7 @@ Java 9 最受关注的特性之一是模块系统。Java 9 模块系统的目标
 
 尝试运行使用`JAXBException`的应用程序将导致:
 
-```
+```java
 NoClassDefFoundError: javax/xml/bind/JAXBException
 ```
 
@@ -26,7 +26,7 @@ NoClassDefFoundError: javax/xml/bind/JAXBException
 
 确保 JAXB API 类对应用程序可用的最快方法是使用`–add-modules `命令行参数添加**:**
 
-```
+```java
 --add-modules java.xml.bind
 ```
 
@@ -46,7 +46,7 @@ NoClassDefFoundError: javax/xml/bind/JAXBException
 
 解决方案是**利用诸如 Maven** 这样的依赖管理工具。使用这种方法，我们可以像添加任何其他库一样，将 JAXB API 库作为一个依赖项来添加:
 
-```
+```java
 <dependency>
     <groupId>javax.xml.bind</groupId>
     <artifactId>jaxb-api</artifactId>

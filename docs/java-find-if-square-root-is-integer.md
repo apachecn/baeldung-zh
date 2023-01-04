@@ -20,7 +20,7 @@
 
 **检查一个整数是否是正方的最简单直接的方法是使用`sqrt`函数**。我们知道，`sqrt`函数返回一个`double`值。所以，我们需要做的就是把结果投射到`int`上，然后自己相乘。然后，我们检查结果是否等于我们开始时的整数:
 
-```
+```java
 public static boolean isPerfectSquareByUsingSqrt(long n) {
     if (n <= 0) {
         return false;
@@ -43,7 +43,7 @@ public static boolean isPerfectSquareByUsingSqrt(long n) {
 
 由于数的范围是从 1 到 2 ^(63) ，所以根在 1 和 2 ^(31.5) 之间。因此，二分搜索法算法需要大约 16 次迭代才能得到平方根:
 
-```
+```java
 public boolean isPerfectSquareByUsingBinarySearch(long low, long high, long number) {
     long check = (low + high) / 2L;
     if (high < low) {
@@ -71,7 +71,7 @@ public boolean isPerfectSquareByUsingBinarySearch(long low, long high, long numb
 
 因此，我们可以**建立一个查找表，根据从**开始的数字的位数来指定平方根的范围。这将缩小二分搜索法的范围。因此，得到平方根需要更少的迭代:
 
-```
+```java
 public class BinarySearchRange {
     private long low;
     private long high;
@@ -80,7 +80,7 @@ public class BinarySearchRange {
 }
 ```
 
-```
+```java
 private void initiateOptimizedBinarySearchLookupTable() {
     lookupTable.add(new BinarySearchRange());
     lookupTable.add(new BinarySearchRange(1L, 4L));
@@ -94,7 +94,7 @@ private void initiateOptimizedBinarySearchLookupTable() {
 }
 ```
 
-```
+```java
 public boolean isPerfectSquareByUsingOptimizedBinarySearch(long number) {
     int numberOfDigits = Long.toString(number).length();
     return isPerfectSquareByUsingBinarySearch(
@@ -109,7 +109,7 @@ public boolean isPerfectSquareByUsingOptimizedBinarySearch(long number) {
 
 然而，通过对牛顿方法的一些修改，我们可以用它来检查一个整数是否是一个完美的平方:
 
-```
+```java
 public static boolean isPerfectSquareByUsingNewtonMethod(long n) {
     long x1 = n;
     long x2 = 1L;
@@ -129,7 +129,7 @@ public static boolean isPerfectSquareByUsingNewtonMethod(long n) {
 
 我们可以利用的一个事实是**“完美的正方形只能以 16 为基数以 0、1、4 或 9 结尾”**。因此，在开始计算之前，我们可以将一个整数转换为基数为 16 的整数。之后，我们排除将数字视为非完美平方根的情况:
 
-```
+```java
 public static boolean isPerfectSquareWithOptimization(long n) {
     if (n < 0) {
         return false;

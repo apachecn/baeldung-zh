@@ -18,7 +18,7 @@ Spring Boot 通过其自动配置特性使 Spring 的配置变得更加容易。
 
 我们使用这个注释来标记 Spring Boot 应用程序的主类:
 
-```
+```java
 @SpringBootApplication
 class VehicleFactoryApplication {
 
@@ -36,7 +36,7 @@ class VehicleFactoryApplication {
 
 注意，我们必须将这个注释与`@Configuration`一起使用:
 
-```
+```java
 @Configuration
 @EnableAutoConfiguration
 class VehicleFactoryConfig {}
@@ -54,7 +54,7 @@ class VehicleFactoryConfig {}
 
 使用这些条件，如果注释的**参数中的类存在/不存在**，Spring 将只使用标记的自动配置 bean:
 
-```
+```java
 @Configuration
 @ConditionalOnClass(DataSource.class)
 class MySQLAutoconfiguration {
@@ -66,7 +66,7 @@ class MySQLAutoconfiguration {
 
 当我们想要基于特定 bean 的**存在或不存在来定义条件时，我们可以使用这些注释:**
 
-```
+```java
 @Bean
 @ConditionalOnBean(name = "dataSource")
 LocalContainerEntityManagerFactoryBean entityManagerFactory() {
@@ -78,7 +78,7 @@ LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 
 有了这个注释，我们可以对属性的**值设置条件:**
 
-```
+```java
 @Bean
 @ConditionalOnProperty(
     name = "usemysql", 
@@ -93,7 +93,7 @@ DataSource dataSource() {
 
 我们可以让 Spring 只在特定的**资源存在时使用定义**:
 
-```
+```java
 @ConditionalOnResource(resources = "classpath:mysql.properties")
 Properties additionalProperties() {
     // ...
@@ -104,7 +104,7 @@ Properties additionalProperties() {
 
 有了这些注释，我们可以根据当前的**应用程序是否是 web 应用程序**来创建条件:
 
-```
+```java
 @ConditionalOnWebApplication
 HealthCheckController healthCheckController() {
     // ...
@@ -115,7 +115,7 @@ HealthCheckController healthCheckController() {
 
 我们可以在更复杂的情况下使用这种注释。当 **SpEL 表达式被评估为 true** 时，Spring 将使用标记的定义:
 
-```
+```java
 @Bean
 @ConditionalOnExpression("${usemysql} && ${mysqlserver == 'local'}")
 DataSource dataSource() {
@@ -127,7 +127,7 @@ DataSource dataSource() {
 
 对于更复杂的条件，我们可以创建一个评估定制条件的类。我们告诉 Spring 使用这个带有`@Conditional`的自定义条件:
 
-```
+```java
 @Conditional(HibernateCondition.class)
 Properties additionalProperties() {
     //...

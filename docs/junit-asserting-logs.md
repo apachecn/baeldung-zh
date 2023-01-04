@@ -12,7 +12,7 @@
 
 在我们开始之前，让我们添加 [`logback`](https://web.archive.org/web/20221130232653/https://search.maven.org/search?q=g:%22ch.qos.logback%22%20AND%20a:%22logback-classic%22) 依赖项。由于它本身实现了`slf4j-api`，所以它会被 Maven transitivity 自动下载并注入到项目中:
 
-```
+```java
 <dependency>
     <groupId>ch.qos.logback</groupId>
     <artifactId>logback-classic</artifactId>. 
@@ -22,7 +22,7 @@
 
 [`AssertJ`](https://web.archive.org/web/20221130232653/https://search.maven.org/search?q=g:%22org.assertj%22%20AND%20a:%22assertj-core%22) 在测试时提供了非常有用的函数，所以让我们也将它的依赖项添加到项目中:
 
-```
+```java
 <dependency>
     <groupId>org.assertj</groupId>
     <artifactId>assertj-core</artifactId>
@@ -37,7 +37,7 @@
 
 我们的`BusinessWorker`对象将只公开一个方法。此方法将为每个日志级别生成具有相同内容的日志。尽管这种方法在现实世界中并不那么有用，但它将很好地服务于我们的测试目的:
 
-```
+```java
 public class BusinessWorker {
     private static Logger LOGGER = LoggerFactory.getLogger(BusinessWorker.class);
 
@@ -55,7 +55,7 @@ public class BusinessWorker {
 
 我们想要生成日志，所以让我们在`src/test/resources`文件夹中创建一个`logback.xml`文件。让我们尽可能简单地将所有日志重定向到一个`CONSOLE`附加器:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -76,7 +76,7 @@ public class BusinessWorker {
 
 现在，让我们创建一个在内存中保存日志的**定制 appender】。我们将**扩展`logback`提供的**的`ListAppender<ILoggingEvent>`，并且我们将用一些有用的方法来丰富它:**
 
-```
+```java
 public class MemoryAppender extends ListAppender<ILoggingEvent> {
     public void reset() {
         this.list.clear();
@@ -137,7 +137,7 @@ public class MemoryAppender extends ListAppender<ILoggingEvent> {
 
 对于我们的测试，我们将级别设置为`DEBUG`:
 
-```
+```java
 @Before
 public void setup() {
     Logger logger = (Logger) LoggerFactory.getLogger(LOGGER_NAME);
@@ -151,7 +151,7 @@ public void setup() {
 
 现在我们可以创建一个简单的测试，我们实例化我们的`BusinessWorker`类并调用`generateLogs`方法。然后，我们可以对它生成的日志做出断言:
 
-```
+```java
 @Test
 public void test() {
     BusinessWorker worker = new BusinessWorker();

@@ -16,7 +16,7 @@
 
 首先，这里有一个简单的单元测试:
 
-```
+```java
 @Test
 void someUnitTest() {
 
@@ -26,7 +26,7 @@ void someUnitTest() {
 
 其次，让我们进行一个需要更多时间来执行的集成测试:
 
-```
+```java
 @Test
 void someIntegrationTest() throws Exception {
 
@@ -37,7 +37,7 @@ void someIntegrationTest() throws Exception {
 
 最后，我们可以模拟一个缓慢的端到端用户场景:
 
-```
+```java
 @Test
 void someEndToEndTest() throws Exception {
 
@@ -76,7 +76,7 @@ Eclipse 还提供了一个嵌入式 JUnit runner 。我们可以在 test results
 
 Maven Surefire 插件用于在构建生命周期的测试阶段执行单元测试。surefire 插件是默认 Maven 配置的一部分。但是，如果需要特定版本或[附加配置](https://web.archive.org/web/20220626200250/https://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html)，我们可以在`pom.xml`中声明:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-surefire-plugin</artifactId>
@@ -102,7 +102,7 @@ Maven Surefire 插件用于在构建生命周期的测试阶段执行单元测�
 
 Surefire 在构建日志中显示每个测试用例的执行状态和时间:
 
-```
+```java
 [INFO] Running com.baeldung.execution.time.SampleExecutionTimeUnitTest
 [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.003 s 
 - in com.baeldung.execution.time.SampleExecutionTimeUnitTest
@@ -114,7 +114,7 @@ Surefire 在构建日志中显示每个测试用例的执行状态和时间:
 
 surefire 插件还在。txt 和。xml 格式。这些一般都是**存放在项目**的目标目录下。Surefire 遵循两种文本报告的标准格式:
 
-```
+```java
 ----------------------------------------------
 Test set: com.baeldung.execution.time.SampleExecutionTimeUnitTest
 ----------------------------------------------
@@ -124,7 +124,7 @@ Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.003 s
 
 和 XML 报告:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuite
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -150,7 +150,7 @@ Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.003 s
 
 我们可以使用`[maven-surefire-report-plugin](https://web.archive.org/web/20220626200250/https://search.maven.org/search?q=g:org.apache.maven.plugins%20AND%20a:maven-surefire-report-plugin&core=gav)`在浏览器中查看 HTML 格式的测试报告:
 
-```
+```java
 <reporting>
     <plugins>
         <plugin>

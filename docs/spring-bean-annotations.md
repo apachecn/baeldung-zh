@@ -23,7 +23,7 @@
 
 `@ComponentScan`配置哪些**包扫描带有注释配置**的类。我们可以用`basePackages`或`value`参数之一来直接指定基础包名(`value`是`basePackages`的别名):
 
-```
+```java
 @Configuration
 @ComponentScan(basePackages = "com.baeldung.annotations")
 class VehicleFactoryConfig {}
@@ -31,7 +31,7 @@ class VehicleFactoryConfig {}
 
 同样，我们可以用`basePackageClasses`参数指向基础包中的类:
 
-```
+```java
 @Configuration
 @ComponentScan(basePackageClasses = VehicleFactoryConfig.class)
 class VehicleFactoryConfig {}
@@ -43,7 +43,7 @@ class VehicleFactoryConfig {}
 
 `@ComponentScan`利用 Java 8 的重复注释特性，这意味着我们可以用它多次标记一个类:
 
-```
+```java
 @Configuration
 @ComponentScan(basePackages = "com.baeldung.annotations")
 @ComponentScan(basePackageClasses = VehicleFactoryConfig.class)
@@ -52,7 +52,7 @@ class VehicleFactoryConfig {}
 
 或者，我们可以使用`@ComponentScans`来指定多个`@ComponentScan`配置:
 
-```
+```java
 @Configuration
 @ComponentScans({ 
   @ComponentScan(basePackages = "com.baeldung.annotations"), 
@@ -63,7 +63,7 @@ class VehicleFactoryConfig {}
 
 当**使用 XML 配置**时，配置组件扫描同样简单:
 
-```
+```java
 <context:component-scan base-package="com.baeldung" />
 ```
 
@@ -71,7 +71,7 @@ class VehicleFactoryConfig {}
 
 `@Component`是类级注释。在组件扫描期间， **Spring Framework 自动检测用`@Component:`** 标注的类
 
-```
+```java
 @Component
 class CarUtility {
     // ...
@@ -86,7 +86,7 @@ class CarUtility {
 
 DAO 或 Repository 类通常代表应用程序中的数据库访问层，应该用`@Repository:`进行注释
 
-```
+```java
 @Repository
 class VehicleRepository {
     // ...
@@ -97,7 +97,7 @@ class VehicleRepository {
 
 **为了启用异常转换**，我们需要声明我们自己的`PersistenceExceptionTranslationPostProcessor` bean:
 
-```
+```java
 @Bean
 public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
     return new PersistenceExceptionTranslationPostProcessor();
@@ -108,7 +108,7 @@ public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
 
 或者通过 XML 配置:
 
-```
+```java
 <bean class=
   "org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 ```
@@ -117,7 +117,7 @@ public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
 
 应用程序的**业务逻辑**通常驻留在服务层中，因此我们将使用`@Service`注释来表示一个类属于该层:
 
-```
+```java
 @Service
 public class VehicleService {
     // ...    
@@ -128,7 +128,7 @@ public class VehicleService {
 
 *@Controller* 是一个类级别的注释，它告诉 Spring 框架这个类在 Spring MVC 中作为一个**控制器:**
 
-```
+```java
 @Controller
 public class VehicleController {
     // ...
@@ -139,7 +139,7 @@ public class VehicleController {
 
 `Configuration`类可以**包含用`@Bean`标注的 bean 定义方法**:
 
-```
+```java
 @Configuration
 class VehicleFactoryConfig {
 
@@ -157,7 +157,7 @@ class VehicleFactoryConfig {
 
 例如，假设我们想从 DAO 层测量方法的执行时间。我们将利用`@Repository`原型创建以下方面(使用 AspectJ 注释):
 
-```
+```java
 @Aspect
 @Component
 public class PerformanceAspect {

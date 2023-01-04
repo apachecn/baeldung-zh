@@ -14,7 +14,7 @@
 
 这里有一个简单的例子来说明如何做到这一点——在对`max-age=31536000`的响应上设置`Cache-Control`头，这将导致浏览器使用文件的缓存版本一年:
 
-```
+```java
 @EnableWebMvc
 public class MvcConfig implements WebMvcConfigurer {
     @Override
@@ -30,7 +30,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
 **因此，当客户端第一次请求`foo.js`**时，他将通过网络接收整个文件(在本例中为 37 个字节),并带有状态代码`200 OK.` 。响应将具有以下标头以控制缓存行为:
 
-```
+```java
 Cache-Control: max-age=31536000
 ```
 
@@ -48,7 +48,7 @@ Chrome 浏览器用户在测试时需要小心，因为如果你通过按屏幕�
 
 为了在 Spring Boot 中定制`Cache-Control `头，我们可以使用`[spring.resources.cache.cachecontrol](https://web.archive.org/web/20221012201738/https://github.com/spring-projects/spring-boot/tree/main/spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/web) `属性名称空间下的属性。例如，要将`max-age `更改为一年，我们可以在`application.properties`中添加以下内容:
 
-```
+```java
 spring.resources.cache.cachecontrol.max-age=365d
 ```
 
@@ -74,7 +74,7 @@ spring.resources.cache.cachecontrol.max-age=365d
 
 我们需要向路径添加一个`VersionResourceResolver` ,以便在它的 URL 中为其下的文件提供更新的版本字符串:
 
-```
+```java
 @Override
 public void addResourceHandlers(ResourceHandlerRegistry registry) {
     registry.addResourceHandler("/js/**")
@@ -89,13 +89,13 @@ public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
 利用这种配置，当客户端发出对`http://localhost:8080/js/`46944c7e3a9bd20cc30fdc085cae46f2.js:`` 的请求时
 
-```
+```java
 curl -i http://localhost:8080/js/foo-46944c7e3a9bd20cc30fdc085cae46f2.js
 ```
 
 服务器将使用缓存控制头进行响应，告诉客户端浏览器将文件缓存一年:
 
-```
+```java
 HTTP/1.1 200 OK
 Server: Apache-Coyote/1.1
 Last-Modified: Tue, 09 Aug 2016 06:43:26 GMT
@@ -106,7 +106,7 @@ Cache-Control: max-age=31536000
 
 为了在 Spring Boot 实现相同的基于内容的版本控制，我们只需在 [`spring.resources.chain.strategy.content`](https://web.archive.org/web/20221012201738/https://github.com/spring-projects/spring-boot/blob/bb568c5bffcf70169245d749f3642bfd9dd33143/spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/web/servlet/WebMvcAutoConfiguration.java#L532) 属性名称空间下使用一些配置。例如，我们可以通过添加以下配置来实现与之前相同的结果:
 
-```
+```java
 spring.resources.chain.strategy.content.enabled=true
 spring.resources.chain.strategy.content.paths=/**
 ```
@@ -117,13 +117,13 @@ spring.resources.chain.strategy.content.paths=/**
 
 在我们将 version 插入 URL 之前，我们可以使用一个简单的`script`标签来导入`foo.js`:
 
-```
+```java
 <script type="text/javascript" src="/js/foo.js">
 ```
 
 既然我们在 URL 下提供了带有版本的相同文件，我们需要在页面上反映它:
 
-```
+```java
 <script type="text/javascript" 
   src="<em>/js/foo-46944c7e3a9bd20cc30fdc085cae46f2.js</em>"> 
 ```
@@ -132,7 +132,7 @@ spring.resources.chain.strategy.content.paths=/**
 
 `ResourceURLEncodingFilter`可以照常在`web.xml`下注册:
 
-```
+```java
 <filter>
     <filter-name>resourceUrlEncodingFilter</filter-name>
     <filter-class>
@@ -147,19 +147,19 @@ spring.resources.chain.strategy.content.paths=/**
 
 在我们可以使用`url`标签之前，需要将 JSTL 核心标签库导入到我们的 JSP 页面上:
 
-```
+```java
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 ```
 
 然后，我们可以使用`url`标签来导入`foo.js`,如下所示:
 
-```
+```java
 <script type="text/javascript" src="<c:url value="/js/foo.js" />">
 ```
 
 当这个 JSP 页面被呈现时，文件的 URL 被正确地重写以包含其中的版本:
 
-```
+```java
 <script type="text/javascript" src="/js/foo-46944c7e3a9bd20cc30fdc085cae46f2.js">
 ```
 
@@ -171,7 +171,7 @@ spring.resources.chain.strategy.content.paths=/**
 
 CSS 文件可以通过使用`@import` 指令导入其他 CSS 文件。例如，`myCss.css`文件导入`another.css`文件:
 
-```
+```java
 @import "another.css";
 ```
 
@@ -179,7 +179,7 @@ CSS 文件可以通过使用`@import` 指令导入其他 CSS 文件。例如，`
 
 为了解决这个问题并向正确的路径发出请求，我们需要将`CssLinkResourceTransformer`引入资源处理程序配置:
 
-```
+```java
 @Override
 public void addResourceHandlers(ResourceHandlerRegistry registry) {
     registry.addResourceHandler("/resources/**")
@@ -193,7 +193,7 @@ public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
 这将修改`myCss.css`的内容，并将导入语句替换为:
 
-```
+```java
 @import "another-9556ab93ae179f87b178cfad96a6ab72.css";
 ```
 

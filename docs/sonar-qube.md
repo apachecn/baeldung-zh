@@ -18,7 +18,7 @@ Now that we're logged in, we're required to create a token by specifying a name 
 
 让我们在`pom.xml`中定义插件:
 
-```
+```java
 <build>
     <pluginManagement>
         <plugins>
@@ -34,7 +34,7 @@ Now that we're logged in, we're required to create a token by specifying a name 
 
 该插件的最新版本可从[这里](https://web.archive.org/web/20220926153104/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.sonarsource.scanner.maven%22%20AND%20a%3A%22sonar-maven-plugin%22)获得。现在，我们需要从项目目录的根目录执行这个命令来扫描它:
 
-```
+```java
 mvn sonar:sonar -Dsonar.host.url=http://localhost:9000 
   -Dsonar.login=the-generated-token
 ```
@@ -163,7 +163,7 @@ O `perator`列的值将被设置为“`is less than”` ，我们将增加一(1)
 
 最后，我们需要添加一个`.travis.yml` 文件到我们的项目的根目录，内容如下:
 
-```
+```java
 language: java
 sudo: false
 install: true

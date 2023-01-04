@@ -20,7 +20,7 @@
 
 让我们看一个使用路径变量的例子，然后分析不同可能值的结果:
 
-```
+```java
 @RestController
 public class CustomController {
     @GetMapping("/example/{firstValue}/{secondValue}")
@@ -43,7 +43,7 @@ public class CustomController {
 
 解决这种不便的一个方法是通过添加一个正则表达式映射来修改我们的`@PathVariable`定义。因此，任何点，包括最后一个点，都将被视为我们参数的一部分:
 
-```
+```java
 @GetMapping("/example/{firstValue}/{secondValue:.+}")   
 public void example(
   @PathVariable("firstValue") String firstValue,
@@ -54,7 +54,7 @@ public void example(
 
 另一种避免这个问题的方法是在我们的`@PathVariable` 的末尾添加一个斜线。这将包含我们的第二个变量，保护它不受 Spring 默认行为的影响:
 
-```
+```java
 @GetMapping("/example/{firstValue}/{secondValue}/")
 ```
 
@@ -62,7 +62,7 @@ public void example(
 
 **如果我们想在全局 MVC 水平上改变行为，我们需要提供一个定制配置**。为此，我们可以扩展`WebMvcConfigurationSupport`并覆盖它的`getPathMatchConfigurer()`方法来调整一个`PathMatchConfigurer`。
 
-```
+```java
 @Configuration
 public class CustomWebMvcConfigurationSupport extends WebMvcConfigurationSupport {
 

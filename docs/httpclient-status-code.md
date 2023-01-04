@@ -12,13 +12,13 @@
 
 在发送 Http 请求之后——我们得到了一个`org.apache.http.HttpResponse`的实例——它允许我们访问响应的状态行，并隐式地访问状态代码:
 
-```
+```java
 response.getStatusLine().getStatusCode()
 ```
 
 使用这个，我们可以**验证我们从服务器收到的代码确实是正确的**:
 
-```
+```java
 @Test
 public void givenGetRequestExecuted_whenAnalyzingTheResponse_thenCorrectStatusCode() 
   throws ClientProtocolException, IOException {

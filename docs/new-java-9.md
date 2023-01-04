@@ -30,7 +30,7 @@ Java 9 具有丰富的特性集。虽然没有新的语言概念，但新的 API
 
 简单地说，模块将在位于 java 代码层次结构顶层的名为`module-info.java` 的文件中进行描述:
 
-```
+```java
 module com.baeldung.java9.modules.car {
     requires com.baeldung.java9.modules.engines;
     exports com.baeldung.java9.modules.car.handling;
@@ -57,7 +57,7 @@ module com.baeldung.java9.modules.car {
 
 API 使用构建器模式，这使得快速使用变得非常容易:
 
-```
+```java
 HttpRequest request = HttpRequest.newBuilder()
   .uri(new URI("https://postman-echo.com/get"))
   .GET()
@@ -75,7 +75,7 @@ process API 已经过改进，可用于控制和管理操作系统进程。
 
 类别`java.lang.ProcessHandle` 包含大多数新功能:
 
-```
+```java
 ProcessHandle self = ProcessHandle.current();
 long PID = self.getPid();
 ProcessHandle.Info procInfo = self.info();
@@ -92,7 +92,7 @@ Optional<Duration> cpuUsage = procInfo.totalCpuDuration();
 
 现在，让我们使用`destroy()`停止所有正在运行的子进程:
 
-```
+```java
 childProc = ProcessHandle.current().children();
 childProc.forEach(procHandle -> {
     assertTrue("Could not kill process " + procHandle.getPid(), procHandle.destroy());
@@ -107,7 +107,7 @@ childProc.forEach(procHandle -> {
 
 在 Java 9 中，有一个额外的改进:如果资源被 final 或 effectively final 变量引用，try-with-resources 语句可以管理资源，而无需声明新的变量:
 
-```
+```java
 MyAutoCloseable mac = new MyAutoCloseable();
 try (mac) {
     // do some stuff with mac
@@ -122,7 +122,7 @@ try (new MyAutoCloseable() { }.finalWrapper.finalCloseable) {
 
 现在我们可以将菱形运算符与匿名内部类结合使用:
 
-```
+```java
 FooClass<Integer> fc = new FooClass<>(1) { // anonymous inner class
 };
 
@@ -138,7 +138,7 @@ FooClass<?> fc1 = new FooClass<>(1) { // anonymous inner class
 
 即将到来的 JVM 版本中的接口可以有`private`方法，这些方法可以用来拆分冗长的默认方法:
 
-```
+```java
 interface InterfaceWithPrivateMethods {
 
     private static String staticPrivate() {
@@ -167,7 +167,7 @@ interface InterfaceWithPrivateMethods {
 
 `jshell`可执行文件本身可以在`<JAVA_HOME>/bin` 文件夹中找到:
 
-```
+```java
 jdk-9\bin>jshell.exe
 |  Welcome to JShell -- Version 9
 |  For an introduction type: /help intro
@@ -177,7 +177,7 @@ $5 ==> "my long string"
 
 交互式 shell 带有历史和自动完成功能；它还提供保存和加载文件、所有或部分书面陈述等功能:
 
-```
+```java
 jshell> /save c:\develop\JShell_hello_world.txt
 jshell> /open c:\develop\JShell_hello_world.txt
 Hello JShell! 
@@ -191,7 +191,7 @@ Hello JShell!
 
 在下面的例子中，我们可以看到运行 Eclipse Neon 的 JVM 中加载的`java.lang.Socket`的层次结构:
 
-```
+```java
 jdk-9\bin>jcmd 14056 VM.class_hierarchy -i -s java.net.Socket
 14056:
 java.lang.Object/null
@@ -220,7 +220,7 @@ java.lang.Object/null
 
 类`java.awt.image.BaseMultiResolutionImage` 提供了基本的实现:
 
-```
+```java
 BufferedImage[] resolutionVariants = ....
 MultiResolutionImage bmrImage
   = new BaseMultiResolutionImage(baseIndex, resolutionVariants);
@@ -248,13 +248,13 @@ API 位于`java.lang.invoke`下，由`VarHandle`和`MethodHandles`组成。它�
 
 让我们使用“调试”级别将带有“gc”标记的消息记录到一个名为“gc.txt”的无修饰文件中:
 
-```
+```java
 java -Xlog:gc=debug:file=gc.txt:none ...
 ```
 
 `-Xlog:help`将输出可能的选项和例子。运行时可以使用`jcmd`命令修改记录配置。我们将把 GC 日志设置为 info，并将它们重定向到一个文件——GC _ logs:
 
-```
+```java
 jcmd 9615 VM.log output=gc_logs what=gc
 ```
 
@@ -264,7 +264,7 @@ jcmd 9615 VM.log output=gc_logs what=gc
 
 `java.util.Set.of()`–创建给定元素的不可变集合。在 Java 8 中，创建一组元素需要几行代码。现在我们可以简单地做到:
 
-```
+```java
 Set<String> strKeySet = Set.of("key1", "key2", "key3");
 ```
 
@@ -276,7 +276,7 @@ Set<String> strKeySet = Set.of("key1", "key2", "key3");
 
 `java.util.Optional.stream()`为我们提供了一种简单的方法来在可选元素上使用 Streams 的功能:
 
-```
+```java
 List<String> filteredList = listOfOptionals.stream()
   .flatMap(Optional::stream)
   .collect(Collectors.toList()); 

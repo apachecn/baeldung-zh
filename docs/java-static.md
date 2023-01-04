@@ -50,7 +50,7 @@ Learn how to use Java's this keyword to reference the current object.[Read more]
 
 这就是`static`变量发挥作用的地方:
 
-```
+```java
 public class Car {
     private String name;
     private String engine;
@@ -71,7 +71,7 @@ public class Car {
 
 因此，在这种情况下，这些将是真实的:
 
-```
+```java
 @Test
 public void whenNumberOfCarObjectsInitialized_thenStaticCounterIncreases() {
     new Car("Jaguar", "V8");
@@ -108,7 +108,7 @@ public void whenNumberOfCarObjectsInitialized_thenStaticCounterIncreases() {
 
 为了在该类的所有实例之间共享代码，我们用一个`static`方法来编写它:
 
-```
+```java
 static void setNumberOfCars(int numberOfCars) {
     Car.numberOfCars = numberOfCars;
 }
@@ -152,7 +152,7 @@ Java 中的方法在编译时被解析。由于方法覆盖是运行时多态性
 
 使用`static` 模块，这变得很容易:
 
-```
+```java
 public class StaticBlockDemo {
     public static List<String> ranks = new LinkedList<>();
 
@@ -201,7 +201,7 @@ Java 允许我们在类中创建一个类。它提供了一种将元素分组的
 
 创建单例对象最广泛使用的方法是通过一个`static`嵌套类:
 
-```
+```java
 public class Singleton  {
     private Singleton() {}
 
@@ -243,7 +243,7 @@ public class Singleton  {
 
 现在我们知道了错误的原因，让我们用一个例子来说明它:
 
-```
+```java
 public class MyClass { 
     int instanceVariable = 0; 
 

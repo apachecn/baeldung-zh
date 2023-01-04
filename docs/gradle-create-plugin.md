@@ -49,7 +49,7 @@ Gradle 是一个非常流行的构建工具，它通常因高度可定制的构�
 
 我们可以创建的最简单的插件是一个`hello world`应用程序:
 
-```
+```java
 public class GreetingPlugin implements Plugin<Project> {
     @Override
     public void apply(Project project) {
@@ -61,7 +61,7 @@ public class GreetingPlugin implements Plugin<Project> {
 
 我们现在可以通过在构建脚本中添加一行来应用它:
 
-```
+```java
 apply plugin: GreetingPlugin
 ```
 
@@ -73,7 +73,7 @@ apply plugin: GreetingPlugin
 
 我们可以通过使用`extension objects`来做到这一点:
 
-```
+```java
 public class GreetingPluginExtension {
     private String greeter = "Baeldung";
     private String message = "Message from the plugin!"
@@ -83,7 +83,7 @@ public class GreetingPluginExtension {
 
 现在让我们将新的`extension object`添加到我们的插件类中:
 
-```
+```java
 @Override
 public void apply(Project project) {
     GreetingPluginExtension extension = project.getExtensions()
@@ -103,7 +103,7 @@ public void apply(Project project) {
 
 但是既然我们已经创建了扩展，我们可以在构建脚本中使用闭包来完成这项工作:
 
-```
+```java
 greeting {
     greeter = "Stranger"
     message = "Message from the build script" 
@@ -118,7 +118,7 @@ greeting {
 
 首先，我们需要导入 Gradle API 依赖——这非常简单:
 
-```
+```java
 dependencies {
     compile gradleApi()
 }
@@ -126,7 +126,7 @@ dependencies {
 
 注意，在 Maven 中做同样的事情需要`gradle-tooling-api` 依赖——来自 Gradle 存储库:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.gradle</groupId>
@@ -156,7 +156,7 @@ dependencies {
 
 接下来，我们可以定义插件的实现类:
 
-```
+```java
  implementation-class=org.gradle.GreetingPlugin
 ```
 
@@ -192,7 +192,7 @@ Java 包名和 Gradle 插件名的主要区别在于包名通常比插件 ID 更
 
 我们可以通过在构建脚本中添加以下代码块来添加插件:
 
-```
+```java
 plugins {
     id 'java-gradle-plugin'
 }
@@ -204,7 +204,7 @@ plugins {
 
 然后，我们可以检查插件是否被应用，适当的任务是否出现在我们的`Project` 实例中。我们可以使用标准的`JUnit`测试来实现:
 
-```
+```java
 @Test
 public void greetingTest(){
     Project project = ProjectBuilder.builder().build();

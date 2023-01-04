@@ -14,7 +14,7 @@
 
 在 Spring Boot 编写 JSON REST 服务很简单，因为当 [Jackson](/web/20220627171303/https://www.baeldung.com/jackson) 在类路径中时，这是它的默认观点:
 
-```
+```java
 @RestController
 @RequestMapping("/students")
 public class StudentController {
@@ -40,7 +40,7 @@ public class StudentController {
 
 当我们需要控制响应的各个方面而不是主体时，比如状态代码，我们可以返回一个`ResponseEntity`:
 
-```
+```java
 @PostMapping("/")
 public ResponseEntity<Student> create(@RequestBody Student student) 
     throws URISyntaxException {
@@ -65,7 +65,7 @@ public ResponseEntity<Student> create(@RequestBody Student student)
 
 如前所述，如果我们想读取一个单独的`Student`，如果我们找不到学生，返回 404 在语义上更清楚:
 
-```
+```java
 @GetMapping("/{id}")
 public ResponseEntity<Student> read(@PathVariable("id") Long id) {
     Student foundStudent = service.read(id);
@@ -85,7 +85,7 @@ public ResponseEntity<Student> read(@PathVariable("id") Long id) {
 
 更新与创建非常相似，只是它被映射到 PUT 而不是 POST，并且 URI 包含我们正在更新的资源的`id`:
 
-```
+```java
 @PutMapping("/{id}")
 public ResponseEntity<Student> update(@RequestBody Student student, @PathVariable Long id) {
     Student updatedStudent = service.update(id, student);
@@ -101,7 +101,7 @@ public ResponseEntity<Student> update(@RequestBody Student student, @PathVariabl
 
 删除操作映射到 delete 方法。URI 还包含资源的`id`:
 
-```
+```java
 @DeleteMapping("/{id}")
 public ResponseEntity<Object> deleteStudent(@PathVariable Long id) {
     service.delete(id);

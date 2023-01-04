@@ -12,7 +12,7 @@
 
 假设我们有以下的`Observable`:
 
-```
+```java
 private static Observable getObservable() {
     return Observable.create(subscriber -> {
         subscriber.onNext(gettingValue(1));
@@ -29,7 +29,7 @@ private static Observable getObservable() {
 
 在我们的示例中，我们有两个`Subscriber`:
 
-```
+```java
 LOGGER.info("Subscribing");
 
 Subscription s1 = obs.subscribe(i -> LOGGER.info("subscriber#1 is printing " + i));
@@ -43,7 +43,7 @@ s2.unsubscribe();
 
 为了简单起见，我们只返回一个数字:
 
-```
+```java
 private static Integer gettingValue(int i) {
     LOGGER.info("Getting " + i);
     return i;
@@ -52,7 +52,7 @@ private static Integer gettingValue(int i) {
 
 以下是输出:
 
-```
+```java
 Subscribing
 Getting 1
 subscriber#1 is printing 1
@@ -78,7 +78,7 @@ Clear resources
 
 `publish()`方法就是从一个`Observable`创建一个`ConnectableObservable`的东西:
 
-```
+```java
 ConnectableObservable obs = Observable.create(subscriber -> {
     subscriber.onNext(gettingValue(1));
     subscriber.onNext(gettingValue(2));
@@ -96,7 +96,7 @@ ConnectableObservable obs = Observable.create(subscriber -> {
 
 让我们来演示一下:
 
-```
+```java
 LOGGER.info("Subscribing");
 obs.subscribe(i -> LOGGER.info("subscriber #1 is printing " + i));
 obs.subscribe(i -> LOGGER.info("subscriber #2 is printing " + i));
@@ -108,7 +108,7 @@ s.unsubscribe();
 
 我们订阅，然后在连接前等待一秒钟。输出是:
 
-```
+```java
 Subscribing
 Connecting
 Getting 1
@@ -140,7 +140,7 @@ Clear resources
 
 每个元素都将是单击的 x 坐标:
 
-```
+```java
 private static Observable getObservable() {
     return Observable.create(subscriber -> {
         frame.addMouseListener(new MouseAdapter() {
@@ -163,7 +163,7 @@ private static Observable getObservable() {
 
 现在，如果我们以第二个间隔一个接一个地订阅两个`Subscriber`，运行程序并开始单击，我们将看到第一个`Subscriber`将获得更多元素:
 
-```
+```java
 public static void defaultBehaviour() throws InterruptedException {
     Observable obs = getObservable();
 
@@ -183,7 +183,7 @@ public static void defaultBehaviour() throws InterruptedException {
 }
 ```
 
-```
+```java
 subscribing #1
 subscriber#1 is printing x-coordinate 280
 subscriber#1 is printing x-coordinate 242
@@ -200,7 +200,7 @@ clearing resources
 
 为了使两个订阅者得到相同的序列，我们将把这个`Observable`转换成`ConnectableObservable`，并在订阅后调用`connect()`两个`Subscriber`:
 
-```
+```java
 public static void subscribeBeforeConnect() throws InterruptedException {
 
     ConnectableObservable obs = getObservable().publish();
@@ -223,7 +223,7 @@ public static void subscribeBeforeConnect() throws InterruptedException {
 
 现在他们会得到相同的序列:
 
-```
+```java
 subscribing #1
 subscribing #2
 connecting:
@@ -245,7 +245,7 @@ clearing resources
 
 为了证明这一点，让我们纠正我们的例子:
 
-```
+```java
 public static void connectBeforeSubscribe() throws InterruptedException {
     ConnectableObservable obs = getObservable()
       .doOnNext(x -> LOGGER.info("saving " + x)).publish();
@@ -272,7 +272,7 @@ public static void connectBeforeSubscribe() throws InterruptedException {
 
 如果我们启动代码并开始单击，我们将看到元素在`connect()`调用后立即被发出并处理:
 
-```
+```java
 connecting:
 saving 306
 saving 248
@@ -298,13 +298,13 @@ clearing resources
 
 要取消订阅人工`Subscriber`我们执行:
 
-```
+```java
 s.unsubscribe();
 ```
 
 其中:
 
-```
+```java
 Subscription s = obs.connect();
 ```
 
@@ -314,7 +314,7 @@ Subscription s = obs.connect();
 
 使用这个方法，我们不能自己调用`connect()`，因为返回的对象是一个普通的`Observable`，它没有这个方法，但是使用了一个底层的`ConnectableObservable`:
 
-```
+```java
 public static void autoConnectAndSubscribe() throws InterruptedException {
     Observable obs = getObservable()
     .doOnNext(x -> LOGGER.info("saving " + x)).publish().autoConnect();
@@ -342,7 +342,7 @@ public static void autoConnectAndSubscribe() throws InterruptedException {
 
 为了理解这一点，让我们看看在最后一个订户退订之后发生了什么:
 
-```
+```java
 subscribing #1
 saving 296
 subscriber#1 is printing x-coordinate 296
@@ -370,7 +370,7 @@ saving 268
 
 与`autoconnect()`不同，当最后一个`Subscriber`取消订阅时，断开连接也会自动发生:
 
-```
+```java
 public static void refCountAndSubscribe() throws InterruptedException {
     Observable obs = getObservable()
       .doOnNext(x -> LOGGER.info("saving " + x)).publish().refCount();
@@ -394,7 +394,7 @@ public static void refCountAndSubscribe() throws InterruptedException {
 }
 ```
 
-```
+```java
 refcount()
 subscribing #1
 saving 265

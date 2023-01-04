@@ -22,7 +22,7 @@
 
 让我们看看它的代码:
 
-```
+```java
 public static Date getDateWithoutTimeUsingCalendar() {
     Calendar calendar = Calendar.getInstance();
     calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -36,7 +36,7 @@ public static Date getDateWithoutTimeUsingCalendar() {
 
 如果我们调用这个方法，我们会得到这样一个日期:
 
-```
+```java
 Sat Jun 23 00:00:00 CEST 2018
 ```
 
@@ -44,7 +44,7 @@ Sat Jun 23 00:00:00 CEST 2018
 
 同样，为了确保在返回的`Date`中没有设置时间，我们可以创建下面的测试:
 
-```
+```java
 @Test
 public void whenGettingDateWithoutTimeUsingCalendar_thenReturnDateWithoutTime() {
     Date dateWithoutTime = DateWithoutTime.getDateWithoutTimeUsingCalendar();
@@ -69,7 +69,7 @@ public void whenGettingDateWithoutTimeUsingCalendar_thenReturnDateWithoutTime() 
 
 让我们实现它，看看它是如何工作的:
 
-```
+```java
 public static Date getDateWithoutTimeUsingFormat() 
   throws ParseException {
     SimpleDateFormat formatter = new SimpleDateFormat(
@@ -80,7 +80,7 @@ public static Date getDateWithoutTimeUsingFormat()
 
 该实现返回的结果与上一节中显示的方法相同:
 
-```
+```java
 Sat Jun 23 00:00:00 CEST 2018
 ```
 
@@ -94,7 +94,7 @@ Sat Jun 23 00:00:00 CEST 2018
 
 让我们看看这个例子:
 
-```
+```java
 public static LocalDate getLocalDate() {
     return LocalDate.now();
 }
@@ -102,7 +102,7 @@ public static LocalDate getLocalDate() {
 
 这个方法返回一个带有这个日期表示的`LocalDate`对象:
 
-```
+```java
 2018-06-23
 ```
 
@@ -110,7 +110,7 @@ public static LocalDate getLocalDate() {
 
 同样，让我们像以前一样测试它，以确保该方法按预期工作:
 
-```
+```java
 @Test
 public void whenGettingLocalDate_thenReturnDateWithoutTime() {
     LocalDate localDate = DateWithoutTime.getLocalDate();

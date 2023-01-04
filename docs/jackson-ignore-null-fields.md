@@ -22,14 +22,14 @@ How to control which fields get serialized/deserialized by Jackson and which fie
 
 **Jackson 允许我们在班级级别控制这种行为:**
 
-```
+```java
 @JsonInclude(Include.NON_NULL)
 public class MyDto { ... }
 ```
 
 **或者在字段级别具有更大的粒度:**
 
-```
+```java
 public class MyDto {
 
     @JsonInclude(Include.NON_NULL)
@@ -43,7 +43,7 @@ public class MyDto {
 
 现在我们应该能够测试出`null`值确实不是最终 JSON 输出的一部分:
 
-```
+```java
 @Test
 public void givenNullsIgnoredOnClass_whenWritingObjectWithNullField_thenIgnored()
   throws JsonProcessingException {
@@ -61,13 +61,13 @@ public void givenNullsIgnoredOnClass_whenWritingObjectWithNullField_thenIgnored(
 
 Jackson 还允许我们在`ObjectMapper` 上**全局配置此行为:**
 
-```
+```java
 mapper.setSerializationInclusion(Include.NON_NULL);
 ```
 
 现在，通过该映射器序列化的任何类中的任何`null`字段都将被忽略:
 
-```
+```java
 @Test
 public void givenNullsIgnoredGlobally_whenWritingObjectWithNullField_thenIgnored() 
   throws JsonProcessingException {

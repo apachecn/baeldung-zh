@@ -47,7 +47,7 @@ JHipster 只需几个 shell 命令，就能创建一个成熟的 Java web 项目
 
 最后，我们只需要安装 JHipster 本身。这是最简单的部分。因为 JHipster 是一个 [Yeoman 生成器](https://web.archive.org/web/20221129020633/http://yeoman.io/generators/)，而后者又是一个 Javascript 包，所以安装就像运行一个简单的 shell 命令一样简单:
 
-```
+```java
 yarn global add generator-jhipster
 ```
 
@@ -57,7 +57,7 @@ yarn global add generator-jhipster
 
 创建一个 JHipster 项目实质上就是构建一个 Yeoman 项目。一切始于**哟**的命令:
 
-```
+```java
 mkdir baeldung-app && cd baeldung-app
 yo jhipster
 ```
@@ -80,14 +80,14 @@ yo jhipster
 
 JHipster 将创建项目文件，然后开始安装依赖项。输出中将显示以下消息:
 
-```
+```java
 I'm all done. Running npm install for you to install the required 
    dependencies. If this fails, try running the command yourself.
 ```
 
 依赖项安装可能需要一点时间。完成后，它将显示:
 
-```
+```java
 Server application generated successfully.
 
 Run your Spring Boot application:
@@ -101,7 +101,7 @@ npm start
 
 我们的项目现已创建。我们可以在项目根文件夹上运行主要命令:
 
-```
+```java
 ./mvnw #starts Spring Boot, on port 8080
 ./mvnw clean test #runs the application's tests
 yarn test #runs the client tests
@@ -146,7 +146,7 @@ JHipster 生成一个 README 文件，放在我们项目的根文件夹中。该
 
 要启动我们的`Post` 实体的创建过程，请转到我们项目的根文件夹并键入:
 
-```
+```java
 yo jhipster:entity post
 ```
 
@@ -180,7 +180,7 @@ yo jhipster:entity post
 
 请随意运行测试，并仔细检查所有都通过了。现在我们也可以用 Gatling 运行性能测试，使用命令(应用程序必须运行才能通过这些测试):
 
-```
+```java
 mvnw gatling:execute
 ```
 
@@ -196,7 +196,7 @@ mvnw gatling:execute
 
 JHipster 可以为最常用的持续集成工具自动创建配置文件。只需运行以下命令:
 
-```
+```java
 yo jhipster:ci-cd
 ```
 

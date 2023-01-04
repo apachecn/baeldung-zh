@@ -36,7 +36,7 @@ Avro 工具集还能够生成表示这些模式的数据结构的类，这使得
 
 要使用带有 [Spring Cloud Stream](https://web.archive.org/web/20220628152326/https://search.maven.org/search?q=g:org.springframework.cloud%20AND%20a:spring-cloud-dependencies&core=gav) 的模式注册表，我们需要 [Spring Cloud Kafka Binder](https://web.archive.org/web/20220628152326/https://search.maven.org/search?q=a:spring-cloud-stream-binder-kafka) 和[模式注册表](https://web.archive.org/web/20220628152326/https://search.maven.org/search?q=g:org.springframework.cloud%20AND%20a:spring-cloud-stream-schema) Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-stream-binder-kafka</artifactId>
@@ -50,7 +50,7 @@ Avro 工具集还能够生成表示这些模式的数据结构的类，这使得
 
 对于[汇合器的串行器](https://web.archive.org/web/20220628152326/https://docs.confluent.io/1.0/installation.html?highlight=maven#installation-maven)，我们需要:
 
-```
+```java
 <dependency>
     <groupId>io.confluent</groupId>
     <artifactId>kafka-avro-serializer</artifactId>
@@ -60,7 +60,7 @@ Avro 工具集还能够生成表示这些模式的数据结构的类，这使得
 
 汇流的串行器在它们的报告中:
 
-```
+```java
 <repositories>
     <repository>
         <id>confluent</id>
@@ -71,7 +71,7 @@ Avro 工具集还能够生成表示这些模式的数据结构的类，这使得
 
 同样，让我们使用一个 [Maven 插件](https://web.archive.org/web/20220628152326/https://search.maven.org/search?q=g:org.apache.avro%20AND%20a:avro-maven-plugin&core=gav)来生成 Avro 类:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -112,7 +112,7 @@ Avro 工具集还能够生成表示这些模式的数据结构的类，这使得
 
 我们可以将模式文件保存在`src/main/resources:`中
 
-```
+```java
 {
     "type": "record",
     "name": "Employee",
@@ -141,7 +141,7 @@ Avro 工具集还能够生成表示这些模式的数据结构的类，这使得
 
 让我们用它来制作一个向`employee-details` 卡夫卡主题`:`发送`Employee`对象的生成器
 
-```
+```java
 @Autowired
 private Processor processor;
 
@@ -165,7 +165,7 @@ public void produceEmployeeDetails(int empId, String firstName, String lastName)
 
 现在，让我们写给我们的消费者:
 
-```
+```java
 @StreamListener(Processor.INPUT)
 public void consumeEmployeeDetails(Employee employeeDetails) {
     logger.info("Let's process employee details: {}", employeeDetails);
@@ -180,7 +180,7 @@ public void consumeEmployeeDetails(Employee employeeDetails) {
 
 让我们使用`application.yml`来提供 Kafka 绑定:
 
-```
+```java
 spring:
   cloud:
     stream: 
@@ -199,7 +199,7 @@ spring:
 
 现在我们有了生产者和消费者，让我们公开一个 API 来从用户那里获取输入，并将其传递给生产者:
 
-```
+```java
 @Autowired
 private AvroProducer avroProducer;
 
@@ -215,7 +215,7 @@ public String producerAvroMessage(@PathVariable int id, @PathVariable String fir
 
 最后，为了让我们的应用程序同时应用 Kafka 和 schema 注册表绑定，我们需要在我们的一个配置类上添加`@EnableBinding`和`@EnableSchemaRegistryClient`:
 
-```
+```java
 @SpringBootApplication
 @EnableBinding(Processor.class)
 // The @EnableSchemaRegistryClient annotation needs to be uncommented to use the Spring native method.
@@ -231,7 +231,7 @@ public class AvroKafkaApplication {
 
 我们应该提供一个`ConfluentSchemaRegistryClient` bean:
 
-```
+```java
 @Value("${spring.cloud.stream.kafka.binder.producer-properties.schema.registry.url}")
 private String endPoint;
 
@@ -249,13 +249,13 @@ public SchemaRegistryClient schemaRegistryClient() {
 
 让我们用 POST 请求来测试服务:
 
-```
+```java
 curl -X POST localhost:8080/employees/1001/Harry/Potter
 ```
 
 日志告诉我们这是有效的:
 
-```
+```java
 2019-06-11 18:45:45.343  INFO 17036 --- [container-0-C-1] com.baeldung.consumer.AvroConsumer       : Let's process employee details: {"id": 1001, "firstName": "Harry", "lastName": "Potter"}
 ```
 
@@ -282,7 +282,7 @@ Spring Boot 提供了一些开箱即用的消息转换器。**默认情况下，
 
 让我们更新我们的`application.yml`以使用汇流转换器:
 
-```
+```java
 spring:
   cloud:
     stream:
@@ -321,7 +321,7 @@ spring:
 
 让我们更新`application.yml`以添加一个消费者组名称:
 
-```
+```java
 spring:
   cloud:
     stream:
@@ -350,7 +350,7 @@ Kafka 提供了这样的规则:在给定的分区中，消息总是按照它们�
 
 因此，让我们用员工 id 和部门名称来定义分区键:
 
-```
+```java
 {
     "type": "record",
     "name": "EmployeeKey",
@@ -371,7 +371,7 @@ Kafka 提供了这样的规则:在给定的分区中，消息总是按照它们�
 
 让我们更新我们的生成器，使用`EmployeeKey` 作为分区键:
 
-```
+```java
 public void produceEmployeeDetails(int empId, String firstName, String lastName) {
 
     // creating employee details
@@ -401,7 +401,7 @@ public void produceEmployeeDetails(int empId, String firstName, String lastName)
 
 Spring Cloud Stream 允许我们在`application.yml`中为消费者设置并发性:
 
-```
+```java
 spring:
   cloud:
     stream:

@@ -14,7 +14,7 @@
 
 我们的简单应用程序需要以下 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter</artifactId>
@@ -38,7 +38,7 @@
 
 我们将首先编写一个域对象来表示我们网站的用户:
 
-```
+```java
 @Entity
 public class WebsiteUser {
 
@@ -55,7 +55,7 @@ public class WebsiteUser {
 
 每个用户都有一个名字和一个电子邮件，以及一个自动生成的 id。现在我们可以编写一个简单的存储库:
 
-```
+```java
 @RepositoryRestResource(collectionResourceRel = "users", path = "users")
 public interface UserRepository extends PagingAndSortingRepository<WebsiteUser, Long> {
     List<WebsiteUser> findByName(@Param("name") String name);
@@ -68,7 +68,7 @@ public interface UserRepository extends PagingAndSortingRepository<WebsiteUser, 
 
 最后，我们将编写一个标准的 **Spring Boot 主类来初始化应用程序**:
 
-```
+```java
 @SpringBootApplication
 public class SpringDataRestApplication {
     public static void main(String[] args) {
@@ -83,7 +83,7 @@ public class SpringDataRestApplication {
 
 如果我们运行应用程序并在浏览器中转至 [http://localhost:8080/](https://web.archive.org/web/20220617075814/http://localhost:8080/) ，我们将收到以下 JSON:
 
-```
+```java
 {
   "_links" : {
     "users" : {
@@ -103,7 +103,7 @@ public class SpringDataRestApplication {
 
 我们的应用程序中还没有用户，所以转到[http://localhost:8080/users](https://web.archive.org/web/20220617075814/http://localhost:8080/users)只会显示一个空的用户列表。让我们使用 curl 来添加一个用户。
 
-```
+```java
 $ curl -i -X POST -H "Content-Type:application/json" -d '{  "name" : "Test", \ 
 "email" : "[[email protected]](/web/20220617075814/https://www.baeldung.com/cdn-cgi/l/email-protection)" }' http://localhost:8080/users
 {
@@ -122,7 +122,7 @@ $ curl -i -X POST -H "Content-Type:application/json" -d '{  "name" : "Test", \
 
 让我们看看响应头:
 
-```
+```java
 HTTP/1.1 201 Created
 Server: Apache-Coyote/1.1
 Location: http://localhost:8080/users/1
@@ -134,7 +134,7 @@ Transfer-Encoding: chunked
 
 我们现在可以通过[http://localhost:8080/users/1](https://web.archive.org/web/20220617075814/http://localhost:8080/users/1)访问该用户
 
-```
+```java
 {
   "name" : "test",
   "email" : "te[[email protected]](/web/20220617075814/https://www.baeldung.com/cdn-cgi/l/email-protection)",
@@ -153,7 +153,7 @@ Transfer-Encoding: chunked
 
 最后，让我们尝试访问我们之前编写的定制查询，并找到所有名为“test”的用户。这是通过进入[http://localhost:8080/users/search/find by name？名称=测试](https://web.archive.org/web/20220617075814/http://localhost:8080/users/search/findByName?name=test)
 
-```
+```java
 {
   "_embedded" : {
     "users" : [ {

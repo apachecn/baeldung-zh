@@ -20,7 +20,7 @@ Groovy 提供了处理文件的便捷方式。我们将专注于`File`类，它�
 
 例如，让我们逐行读取一个文件，并打印每一行。我们还将返回行数:
 
-```
+```java
 int readFileLineByLine(String filePath) {
     File file = new File(filePath)
     def line, noOfLines = 0;
@@ -36,7 +36,7 @@ int readFileLineByLine(String filePath) {
 
 让我们创建一个包含以下内容的纯文本文件`fileContent.txt`,并将其用于测试:
 
-```
+```java
 Line 1 : Hello World!!!
 Line 2 : This is a file content.
 Line 3 : String content
@@ -44,7 +44,7 @@ Line 3 : String content
 
 让我们测试一下我们的实用方法:
 
-```
+```java
 def 'Should return number of lines in File given filePath' () {
     given:
         def filePath = "src/main/resources/fileContent.txt"
@@ -59,7 +59,7 @@ def 'Should return number of lines in File given filePath' () {
 
 **`withReader`方法也可以和 UTF-8 或 ASCII 这样的字符集参数一起使用来读取编码文件**。让我们看一个例子:
 
-```
+```java
 new File("src/main/resources/utf8Content.html").withReader('UTF-8') { reader ->
 def line
     while ((line = reader.readLine()) != null) { 
@@ -72,7 +72,7 @@ def line
 
 我们也可以使用`eachLine`方法:
 
-```
+```java
 new File("src/main/resources/fileContent.txt").eachLine { line ->
     println line
 } 
@@ -82,7 +82,7 @@ new File("src/main/resources/fileContent.txt").eachLine { line ->
 
 让我们看看如何使用`InputStream`和`eachLine`来读取文件:
 
-```
+```java
 def is = new File("src/main/resources/fileContent.txt").newInputStream()
 is.eachLine { 
     println it
@@ -94,7 +94,7 @@ is.close()
 
 如果我们改为使用`withInputStream`方法，它将为我们处理关闭`InputStream`:
 
-```
+```java
 new File("src/main/resources/fileContent.txt").withInputStream { stream ->
     stream.eachLine { line ->
         println line
@@ -112,7 +112,7 @@ new File("src/main/resources/fileContent.txt").withInputStream { stream ->
 
 让我们快速查看一个读取文件内容并返回一个行列表的示例:
 
-```
+```java
 List<String> readFileInList(String filePath) {
     File file = new File(filePath)
     def lines = file.readLines()
@@ -122,7 +122,7 @@ List<String> readFileInList(String filePath) {
 
 让我们用`fileContent.txt`写一个快速测试:
 
-```
+```java
 def 'Should return File Content in list of lines given filePath' () {
     given:
         def filePath = "src/main/resources/fileContent.txt"
@@ -139,7 +139,7 @@ def 'Should return File Content in list of lines given filePath' () {
 
 我们还可以使用`collect` API 将文件内容读入到`Strings`的`List`中:
 
-```
+```java
 def list = new File("src/main/resources/fileContent.txt").collect {it} 
 ```
 
@@ -147,7 +147,7 @@ def list = new File("src/main/resources/fileContent.txt").collect {it}
 
 我们甚至可以利用`as`操作符将文件的内容读入一个`String`数组:
 
-```
+```java
 def array = new File("src/main/resources/fileContent.txt") as String[]
 ```
 
@@ -159,7 +159,7 @@ def array = new File("src/main/resources/fileContent.txt") as String[]
 
 让我们来看一个例子:
 
-```
+```java
 String readFileString(String filePath) {
     File file = new File(filePath)
     String fileContent = file.text
@@ -169,7 +169,7 @@ String readFileString(String filePath) {
 
 让我们用一个单元测试来验证这一点:
 
-```
+```java
 def 'Should return file content in string given filePath' () {
     given:
         def filePath = "src/main/resources/fileContent.txt"
@@ -188,7 +188,7 @@ Line 3 : String content""")
 
 如果我们使用`getTest(charset)` 方法，我们可以通过提供像 UTF-8 或 ASCII 这样的字符集参数将编码文件的内容读入到`String`中:
 
-```
+```java
 String readFileStringWithCharset(String filePath) {
     File file = new File(filePath)
     String utf8Content = file.getText("UTF-8")
@@ -198,7 +198,7 @@ String readFileStringWithCharset(String filePath) {
 
 让我们为单元测试创建一个包含 UTF-8 内容的 HTML 文件，名为`utf8Content.html`:
 
-```
+```java
 ᚠᛇᚻ᛫ᛒᛦᚦ᛫ᚠᚱᚩᚠᚢᚱ᛫ᚠᛁᚱᚪ᛫ᚷᛖᚻᚹᛦᛚᚳᚢᛗ
 ᛋᚳᛖᚪᛚ᛫ᚦᛖᚪᚻ᛫ᛗᚪᚾᚾᚪ᛫ᚷᛖᚻᚹᛦᛚᚳ᛫ᛗᛁᚳᛚᚢᚾ᛫ᚻᛦᛏ᛫ᛞᚫᛚᚪᚾ
 ᚷᛁᚠ᛫ᚻᛖ᛫ᚹᛁᛚᛖ᛫ᚠᚩᚱ᛫ᛞᚱᛁᚻᛏᚾᛖ᛫ᛞᚩᛗᛖᛋ᛫ᚻᛚᛇᛏᚪᚾ 
@@ -206,7 +206,7 @@ String readFileStringWithCharset(String filePath) {
 
 让我们看看单元测试:
 
-```
+```java
 def 'Should return UTF-8 encoded file content in string given filePath' () {
     given:
         def filePath = "src/main/resources/utf8Content.html"
@@ -222,7 +222,7 @@ def 'Should return UTF-8 encoded file content in string given filePath' () {
 
 Groovy 使得读取非文本或二进制文件变得很容易。**通过使用`bytes`属性，我们可以得到`File`的内容作为`byte`数组**:
 
-```
+```java
 byte[] readBinaryFile(String filePath) {
     File file = new File(filePath)
     byte[] binaryContent = file.bytes
@@ -236,7 +236,7 @@ byte[] readBinaryFile(String filePath) {
 
 让我们看看单元测试:
 
-```
+```java
 def 'Should return binary file content in byte array given filePath' () {
     given:
         def filePath = "src/main/resources/sample.png"

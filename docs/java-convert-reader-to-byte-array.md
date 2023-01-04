@@ -12,7 +12,7 @@
 
 让我们从简单的 Java 解决方案开始——通过一个中间字符串:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenConvertingReaderIntoByteArray_thenCorrect() 
   throws IOException {
@@ -36,7 +36,7 @@ public void givenUsingPlainJava_whenConvertingReaderIntoByteArray_thenCorrect()
 
 接下来，让我们来看看番石榴溶液，同样使用中间字符串:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenConvertingReaderIntoByteArray_thenCorrect() 
   throws IOException {
@@ -54,7 +54,7 @@ public void givenUsingGuava_whenConvertingReaderIntoByteArray_thenCorrect()
 
 最后，这是一个直接的解决方案，它受 Commons IO 的支持:
 
-```
+```java
 @Test
 public void givenUsingCommonsIO_whenConvertingReaderIntoByteArray_thenCorrect() 
   throws IOException {

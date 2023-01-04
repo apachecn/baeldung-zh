@@ -32,7 +32,7 @@ Groovy 是一种动态的、强大的 JVM 语言，它有许多[元编程](/web/
 
 让我们检查一下由`TimeCategory`类提供的一些方便的特性。对于这些例子，我们将首先创建一个`Date`对象，然后使用`TimeCategory`执行一些操作:
 
-```
+```java
 def jan_1_2019 = new Date("01/01/2019")
 use (TimeCategory) {
     assert jan_1_2019 + 10.seconds == new Date("01/01/2019 00:00:10")
@@ -54,7 +54,7 @@ use (TimeCategory) {
 
 让我们看看他们的行动。此外，我们将使用`SimpleDateFormat`来忽略时间的界限，同时比较两个相似的`Date`对象:
 
-```
+```java
 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy")
 use (TimeCategory) {
     assert sdf.format(5.days.from.now) == sdf.format(new Date() + 5.days)
@@ -75,7 +75,7 @@ use (TimeCategory) {
 
 首先，让我们编写一个简单的 XML 文本，并使用`DOMBuilder`类解析它:
 
-```
+```java
 def baeldungArticlesText = """
 <articles>
     <article core-java="true">
@@ -95,7 +95,7 @@ def root = baeldungArticlesDom.documentElement
 
 这里，`root`对象包含 DOM 的所有子节点。让我们使用`DOMCategory` 类遍历这些节点:
 
-```
+```java
 use (DOMCategory) {
     assert root.article.size() == 2
 
@@ -109,7 +109,7 @@ use (DOMCategory) {
 
 现在，让我们使用`DOMCategory`向`root` DOM 对象添加一个新节点:
 
-```
+```java
 use (DOMCategory) {
     def articleNode3 = root.appendNode(new QName("article"), ["core-java": "false"])
     articleNode3.appendNode("title", "Metaprogramming in Groovy")
@@ -136,7 +136,7 @@ category 类必须遵循特定的实践来实现额外的特性。
 
 首先，我们将用一个`static`方法`capitalize`和`String`类型作为第一个参数来编写`BaeldungCategory`类:
 
-```
+```java
 class BaeldungCategory {
     public static String capitalize(String self) {
         String capitalizedStr = self;
@@ -150,7 +150,7 @@ class BaeldungCategory {
 
 接下来，让我们编写一个快速测试来启用`BaeldungCategory`并验证`String`对象上的`capitalize`特性:
 
-```
+```java
 use (BaeldungCategory) {
     assert "norman".capitalize() == "Norman"
 }
@@ -158,7 +158,7 @@ use (BaeldungCategory) {
 
 同样，让我们编写一个特性来计算一个数的另一个数的幂:
 
-```
+```java
 public static double toThePower(Number self, Number exponent) {
     return Math.pow(self, exponent);
 }
@@ -166,7 +166,7 @@ public static double toThePower(Number self, Number exponent) {
 
 最后，让我们测试我们的自定义类别:
 
-```
+```java
 use (BaeldungCategory) {
     assert 50.toThePower(2) == 2500
     assert 2.4.toThePower(4) == 33.1776
@@ -181,7 +181,7 @@ use (BaeldungCategory) {
 
 让我们编写一个`NumberCategory`类，并用`@Category`注释将其声明为一个类别。此外，我们将在新类别中添加一些额外的功能，如`cube`和`divideWithRoundUp`:
 
-```
+```java
 @Category(Number)
 class NumberCategory {
     public Number cube() {
@@ -199,7 +199,7 @@ class NumberCategory {
 
 让我们测试我们的新类别:
 
-```
+```java
 use (NumberCategory) {
     assert 3.cube() == 27
     assert 25.divideWithRoundUp(6, true) == 5

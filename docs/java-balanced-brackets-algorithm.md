@@ -32,7 +32,7 @@
 
 为了进一步说明我们对平衡括号的定义，让我们看一些平衡括号的例子:
 
-```
+```java
 ()
 [()]
 {[()]}
@@ -41,7 +41,7 @@
 
 还有一些不平衡的:
 
-```
+```java
 abc[](){}
 {{[]()}}}}
 {[(])}
@@ -60,7 +60,7 @@ abc[](){}
 
 让我们首先创建一个方法，如果输入平衡，它将返回`true`,如果输入不平衡，它将返回`false`:
 
-```
+```java
 public boolean isBalanced(String str)
 ```
 
@@ -72,7 +72,7 @@ public boolean isBalanced(String str)
 
 给定这些规则，我们可以实现验证:
 
-```
+```java
 if (null == str || ((str.length() % 2) != 0)) {
     return false;
 } else {
@@ -95,7 +95,7 @@ if (null == str || ((str.length() % 2) != 0)) {
 
 让我们看看完整的实现:
 
-```
+```java
 while (str.contains("()") || str.contains("[]") || str.contains("{}")) {
     str = str.replaceAll("\\(\\)", "")
       .replaceAll("\\[\\]", "")
@@ -110,7 +110,7 @@ return (str.length() == 0);
 
 首先，让我们构造我们的`Deque`:
 
-```
+```java
 Deque<Character> deque = new LinkedList<>();
 ```
 
@@ -118,7 +118,7 @@ Deque<Character> deque = new LinkedList<>();
 
 现在我们的`deque`已经构造好了，我们将逐个循环输入字符串的每个字符。如果这个字符是一个左括号，那么我们将把它作为第一个元素添加到`Deque`:
 
-```
+```java
 if (ch == '{' || ch == '[' || ch == '(') { 
     deque.addFirst(ch); 
 }
@@ -130,7 +130,7 @@ if (ch == '{' || ch == '[' || ch == '(') {
 
 然而，如果`LinkedList`不为空，那么我们使用`peekFirst`方法查看它的最后一个字符。如果它可以与右括号配对，那么我们使用`removeFirst`方法从`list`中移除这个最顶端的字符，并继续循环的下一次迭代:
 
-```
+```java
 if (!deque.isEmpty() 
     && ((deque.peekFirst() == '{' && ch == '}') 
     || (deque.peekFirst() == '[' && ch == ']') 
@@ -143,7 +143,7 @@ if (!deque.isEmpty()
 
 在循环结束时，所有的字符都经过了平衡检查，所以我们可以返回`true`。下面是基于`Deque`的方法的完整实现:
 
-```
+```java
 Deque<Character> deque = new LinkedList<>();
 for (char ch: str.toCharArray()) {
     if (ch == '{' || ch == '[' || ch == '(') {

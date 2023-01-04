@@ -32,7 +32,7 @@ Use Jackson to map custom JSON to any java entity graph with full control over t
 
 例如，`ExtendableBean`实体具有`name`属性和一组键/值对形式的可扩展属性:
 
-```
+```java
 public class ExtendableBean {
     public String name;
     private Map<String, String> properties;
@@ -46,7 +46,7 @@ public class ExtendableBean {
 
 当我们序列化这个实体的一个实例时，我们在`Map`中得到所有的键值作为标准的普通属性:
 
-```
+```java
 {
     "name":"My bean",
     "attr2":"val2",
@@ -56,7 +56,7 @@ public class ExtendableBean {
 
 下面是这个实体的序列化在实践中的样子:
 
-```
+```java
 @Test
 public void whenSerializingUsingJsonAnyGetter_thenCorrect()
   throws JsonProcessingException {
@@ -80,7 +80,7 @@ public void whenSerializingUsingJsonAnyGetter_thenCorrect()
 
 在下面的例子中，我们将方法`getTheName()`指定为`MyBean`实体的`name`属性的 getter 方法:
 
-```
+```java
 public class MyBean {
     public int id;
     private String name;
@@ -94,7 +94,7 @@ public class MyBean {
 
 这在实践中是如何工作的:
 
-```
+```java
 @Test
 public void whenSerializingUsingJsonGetter_thenCorrect()
   throws JsonProcessingException {
@@ -114,7 +114,7 @@ public void whenSerializingUsingJsonGetter_thenCorrect()
 
 让我们为一个`MyBean`实体的属性设置一个定制的顺序:
 
-```
+```java
 @JsonPropertyOrder({ "name", "id" })
 public class MyBean {
     public int id;
@@ -124,7 +124,7 @@ public class MyBean {
 
 以下是序列化的结果:
 
-```
+```java
 {
     "name":"My bean",
     "id":1
@@ -133,7 +133,7 @@ public class MyBean {
 
 然后我们可以做一个简单的测试:
 
-```
+```java
 @Test
 public void whenSerializingUsingJsonPropertyOrder_thenCorrect()
   throws JsonProcessingException {
@@ -148,7 +148,7 @@ public void whenSerializingUsingJsonPropertyOrder_thenCorrect()
 
 我们也可以使用`@JsonPropertyOrder(alphabetic=true)`按字母顺序排列属性。在这种情况下，序列化的输出将是:
 
-```
+```java
 {
     "id":1,
     "name":"My bean"
@@ -161,7 +161,7 @@ public void whenSerializingUsingJsonPropertyOrder_thenCorrect()
 
 在下面的例子中，我们使用`@JsonRawValue`来嵌入一些定制的 JSON 作为一个实体的值:
 
-```
+```java
 public class RawBean {
     public String name;
 
@@ -172,7 +172,7 @@ public class RawBean {
 
 序列化实体的输出是:
 
-```
+```java
 {
     "name":"My bean",
     "json":{
@@ -183,7 +183,7 @@ public class RawBean {
 
 接下来是一个简单的测试:
 
-```
+```java
 @Test
 public void whenSerializingUsingJsonRawValue_thenCorrect()
   throws JsonProcessingException {
@@ -204,7 +204,7 @@ public void whenSerializingUsingJsonRawValue_thenCorrect()
 
 例如，在一个枚举中，我们用`@JsonValue` 来注释`getName`，这样任何这样的实体都可以通过它的名字来序列化:
 
-```
+```java
 public enum TypeEnumWithValue {
     TYPE1(1, "Type A"), TYPE2(2, "Type 2");
 
@@ -222,7 +222,7 @@ public enum TypeEnumWithValue {
 
 这是我们的测试:
 
-```
+```java
 @Test
 public void whenSerializingUsingJsonValue_thenCorrect()
   throws JsonParseException, IOException {
@@ -240,7 +240,7 @@ public void whenSerializingUsingJsonValue_thenCorrect()
 
 包装意味着不再将`User`序列化为类似于:
 
-```
+```java
 {
     "id": 1,
     "name": "John"
@@ -249,7 +249,7 @@ public void whenSerializingUsingJsonValue_thenCorrect()
 
 它会被包装成这样:
 
-```
+```java
 {
     "User": {
         "id": 1,
@@ -260,7 +260,7 @@ public void whenSerializingUsingJsonValue_thenCorrect()
 
 让我们来看一个例子。**W**我们将使用`@JsonRootName` 注释来表示这个潜在包装器实体的名称:
 
-```
+```java
 @JsonRootName(value = "user")
 public class UserWithRoot {
     public int id;
@@ -270,7 +270,7 @@ public class UserWithRoot {
 
 默认情况下，包装器的名称是类名–`UserWithRoot`。通过使用注释，我们得到了看起来更干净的`user:`
 
-```
+```java
 @Test
 public void whenSerializingUsingJsonRootName_thenCorrect()
   throws JsonProcessingException {
@@ -288,7 +288,7 @@ public void whenSerializingUsingJsonRootName_thenCorrect()
 
 以下是序列化的结果:
 
-```
+```java
 {
     "user":{
         "id":1,
@@ -299,7 +299,7 @@ public void whenSerializingUsingJsonRootName_thenCorrect()
 
 从 Jackson 2.4 开始，一个新的可选参数`namespace`可用于 XML 等数据格式。如果我们添加它，它将成为完全限定名的一部分:
 
-```
+```java
 @JsonRootName(value = "user", namespace="users")
 public class UserWithRootNamespace {
     public int id;
@@ -311,7 +311,7 @@ public class UserWithRootNamespace {
 
 如果我们用`XmlMapper,`将其序列化，输出将是:
 
-```
+```java
 <user >
     <id xmlns="">1</id>
     <name xmlns="">John</name>
@@ -325,7 +325,7 @@ public class UserWithRootNamespace {
 
 让我们看一个简单的例子。我们将使用`@JsonSerialize`来序列化带有`CustomDateSerializer`的`eventDate`属性:
 
-```
+```java
 public class EventWithSerializer {
     public String name;
 
@@ -336,7 +336,7 @@ public class EventWithSerializer {
 
 下面是简单的定制 Jackson 序列化程序:
 
-```
+```java
 public class CustomDateSerializer extends StdSerializer<Date> {
 
     private static SimpleDateFormat formatter 
@@ -361,7 +361,7 @@ public class CustomDateSerializer extends StdSerializer<Date> {
 
 现在让我们在测试中使用这些:
 
-```
+```java
 @Test
 public void whenSerializingUsingJsonSerialize_thenCorrect()
   throws JsonProcessingException, ParseException {
@@ -390,7 +390,7 @@ public void whenSerializingUsingJsonSerialize_thenCorrect()
 
 让我们看一个例子。假设我们需要反序列化以下 JSON:
 
-```
+```java
 {
     "id":1,
     "theName":"My bean"
@@ -399,7 +399,7 @@ public void whenSerializingUsingJsonSerialize_thenCorrect()
 
 然而，在我们的目标实体中没有`theName`字段，只有一个`name`字段。现在我们不想改变实体本身，我们只需要通过用`@JsonCreator,`注释构造函数和使用`@JsonProperty`注释来对解组过程有更多的控制:
 
-```
+```java
 public class BeanWithCreator {
     public int id;
     public String name;
@@ -416,7 +416,7 @@ public class BeanWithCreator {
 
 让我们来看看实际情况:
 
-```
+```java
 @Test
 public void whenDeserializingUsingJsonCreator_thenCorrect()
   throws IOException {
@@ -436,7 +436,7 @@ public void whenDeserializingUsingJsonCreator_thenCorrect()
 
 在下面的例子中，我们使用`@JacksonInject` 来注入属性`id`:
 
-```
+```java
 public class BeanWithInject {
     @JacksonInject
     public int id;
@@ -447,7 +447,7 @@ public class BeanWithInject {
 
 它是这样工作的:
 
-```
+```java
 @Test
 public void whenDeserializingUsingJsonInject_thenCorrect()
   throws IOException {
@@ -471,7 +471,7 @@ public void whenDeserializingUsingJsonInject_thenCorrect()
 
 首先，我们将使用`@JsonAnySetter` 来反序列化实体`ExtendableBean`:
 
-```
+```java
 public class ExtendableBean {
     public String name;
     private Map<String, String> properties;
@@ -485,7 +485,7 @@ public class ExtendableBean {
 
 这是我们需要反序列化的 JSON:
 
-```
+```java
 {
     "name":"My bean",
     "attr2":"val2",
@@ -495,7 +495,7 @@ public class ExtendableBean {
 
 下面是所有这些联系在一起的方式:
 
-```
+```java
 @Test
 public void whenDeserializingUsingJsonAnySetter_thenCorrect()
   throws IOException {
@@ -519,7 +519,7 @@ public void whenDeserializingUsingJsonAnySetter_thenCorrect()
 
 在下面的例子中，我们将指定方法 s `etTheName()`作为我们的`MyBean`实体中`name`属性的设置者:
 
-```
+```java
 public class MyBean {
     public int id;
     private String name;
@@ -533,7 +533,7 @@ public class MyBean {
 
 现在，当我们需要解组一些 JSON 数据时，这非常好:
 
-```
+```java
 @Test
 public void whenDeserializingUsingJsonSetter_thenCorrect()
   throws IOException {
@@ -553,7 +553,7 @@ public void whenDeserializingUsingJsonSetter_thenCorrect()
 
 首先，我们将使用`@JsonDeserialize`通过`CustomDateDeserializer`反序列化`eventDate`属性:
 
-```
+```java
 public class EventWithSerializer {
     public String name;
 
@@ -564,7 +564,7 @@ public class EventWithSerializer {
 
 下面是自定义的反序列化程序:
 
-```
+```java
 public class CustomDateDeserializer
   extends StdDeserializer<Date> {
 
@@ -596,7 +596,7 @@ public class CustomDateDeserializer
 
 接下来是背靠背测试:
 
-```
+```java
 @Test
 public void whenDeserializingUsingJsonDeserialize_thenCorrect()
   throws IOException {
@@ -621,7 +621,7 @@ public void whenDeserializingUsingJsonDeserialize_thenCorrect()
 
 让我们通过一个简单的例子来看看这个注释是如何工作的:
 
-```
+```java
 public class AliasBean {
     @JsonAlias({ "fName", "f_name" })
     private String firstName;   
@@ -633,7 +633,7 @@ public class AliasBean {
 
 下面是一个测试，确保此注释按预期工作:
 
-```
+```java
 @Test
 public void whenDeserializingUsingJsonAlias_thenCorrect() throws IOException {
     String json = "{\"fName\": \"John\", \"lastName\": \"Green\"}";
@@ -650,7 +650,7 @@ public void whenDeserializingUsingJsonAlias_thenCorrect() throws IOException {
 
 让我们看一个简单的例子，忽略序列化的属性`id`:
 
-```
+```java
 @JsonIgnoreProperties({ "id" })
 public class BeanWithIgnore {
     public int id;
@@ -660,7 +660,7 @@ public class BeanWithIgnore {
 
 下面是确保忽略发生的测试:
 
-```
+```java
 @Test
 public void whenSerializingUsingJsonIgnoreProperties_thenCorrect()
   throws JsonProcessingException {
@@ -683,7 +683,7 @@ public void whenSerializingUsingJsonIgnoreProperties_thenCorrect()
 
 让我们使用`@JsonIgnore`来忽略序列化的属性`id`:
 
-```
+```java
 public class BeanWithIgnore {
     @JsonIgnore
     public int id;
@@ -694,7 +694,7 @@ public class BeanWithIgnore {
 
 然后，我们将测试以确保成功忽略了`id`:
 
-```
+```java
 @Test
 public void whenSerializingUsingJsonIgnore_thenCorrect()
   throws JsonProcessingException {
@@ -715,7 +715,7 @@ public void whenSerializingUsingJsonIgnore_thenCorrect()
 
 我们可以使用注释来标记要忽略的类型为`Name` 的所有属性:
 
-```
+```java
 public class User {
     public int id;
     public Name name;
@@ -730,7 +730,7 @@ public class User {
 
 我们还可以测试以确保忽略正常工作:
 
-```
+```java
 @Test
 public void whenSerializingUsingJsonIgnoreType_thenCorrect()
   throws JsonProcessingException, ParseException {
@@ -753,7 +753,7 @@ public void whenSerializingUsingJsonIgnoreType_thenCorrect()
 
 让我们看一个从序列化中排除空值的例子:
 
-```
+```java
 @JsonInclude(Include.NON_NULL)
 public class MyBean {
     public int id;
@@ -763,7 +763,7 @@ public class MyBean {
 
 下面是完整的测试:
 
-```
+```java
 public void whenSerializingUsingJsonInclude_thenCorrect()
   throws JsonProcessingException {
 
@@ -783,7 +783,7 @@ public void whenSerializingUsingJsonInclude_thenCorrect()
 
 首先，让我们通过一个简单的例子来看看注释是如何非常有帮助的；让我们启用私有属性序列化:
 
-```
+```java
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class PrivateBean {
     private int id;
@@ -793,7 +793,7 @@ public class PrivateBean {
 
 然后是测试:
 
-```
+```java
 @Test
 public void whenSerializingUsingJsonAutoDetect_thenCorrect()
   throws JsonProcessingException {
@@ -818,7 +818,7 @@ public void whenSerializingUsingJsonAutoDetect_thenCorrect()
 
 让我们看一个更复杂的例子，使用所有三个——`@JsonTypeInfo`、`@JsonSubTypes,` 和 `@JsonTypeName –` 来序列化/反序列化实体`Zoo`:
 
-```
+```java
 public class Zoo {
     public Animal animal;
 
@@ -849,7 +849,7 @@ public class Zoo {
 
 当我们进行序列化时:
 
-```
+```java
 @Test
 public void whenSerializingPolymorphic_thenCorrect()
   throws JsonProcessingException {
@@ -866,7 +866,7 @@ public void whenSerializingPolymorphic_thenCorrect()
 
 下面是用`Dog`序列化`Zoo`实例的结果:
 
-```
+```java
 {
     "animal": {
         "type": "dog",
@@ -878,7 +878,7 @@ public void whenSerializingPolymorphic_thenCorrect()
 
 现在来解序列化。让我们从下面的 JSON 输入开始:
 
-```
+```java
 {
     "animal":{
         "name":"lacy",
@@ -889,7 +889,7 @@ public void whenSerializingPolymorphic_thenCorrect()
 
 然后让我们看看如何将它解组到一个`Zoo`实例:
 
-```
+```java
 @Test
 public void whenDeserializingPolymorphic_thenCorrect()
 throws IOException {
@@ -914,7 +914,7 @@ throws IOException {
 
 当我们处理非标准的 getters 和 setters 时，让我们使用`@JsonProperty`来序列化/反序列化属性`name`:
 
-```
+```java
 public class MyBean {
     public int id;
     private String name;
@@ -933,7 +933,7 @@ public class MyBean {
 
 接下来是我们的测试:
 
-```
+```java
 @Test
 public void whenUsingJsonProperty_thenCorrect()
   throws IOException {
@@ -957,7 +957,7 @@ public void whenUsingJsonProperty_thenCorrect()
 
 在下面的例子中，我们使用`@JsonFormat`来控制属性`eventDate`的格式:
 
-```
+```java
 public class EventWithFormat {
     public String name;
 
@@ -970,7 +970,7 @@ public class EventWithFormat {
 
 接下来是测试:
 
-```
+```java
 @Test
 public void whenSerializingUsingJsonFormat_thenCorrect()
   throws JsonProcessingException, ParseException {
@@ -993,7 +993,7 @@ public void whenSerializingUsingJsonFormat_thenCorrect()
 
 让我们看看这到底是如何工作的；我们将使用注释来展开属性`name`:
 
-```
+```java
 public class UnwrappedUser {
     public int id;
 
@@ -1009,7 +1009,7 @@ public class UnwrappedUser {
 
 现在让我们序列化这个类的一个实例:
 
-```
+```java
 @Test
 public void whenSerializingUsingJsonUnwrapped_thenCorrect()
   throws JsonProcessingException, ParseException {
@@ -1025,7 +1025,7 @@ public void whenSerializingUsingJsonUnwrapped_thenCorrect()
 
 最后，下面是输出的样子——静态嵌套类的字段与其他字段一起展开:
 
-```
+```java
 {
     "id":1,
     "firstName":"John",
@@ -1041,7 +1041,7 @@ public void whenSerializingUsingJsonUnwrapped_thenCorrect()
 
 首先，让我们从视图开始:
 
-```
+```java
 public class Views {
     public static class Public {}
     public static class Internal extends Public {}
@@ -1050,7 +1050,7 @@ public class Views {
 
 接下来是使用视图的`Item`实体:
 
-```
+```java
 public class Item {
     @JsonView(Views.Public.class)
     public int id;
@@ -1065,7 +1065,7 @@ public class Item {
 
 最后，全面测试:
 
-```
+```java
 @Test
 public void whenSerializingUsingJsonView_thenCorrect()
   throws JsonProcessingException {
@@ -1087,7 +1087,7 @@ public void whenSerializingUsingJsonView_thenCorrect()
 
 在下面的例子中，我们使用`@JsonManagedReference`和`@JsonBackReference`来序列化我们的`ItemWithRef`实体:
 
-```
+```java
 public class ItemWithRef {
     public int id;
     public String itemName;
@@ -1099,7 +1099,7 @@ public class ItemWithRef {
 
 我们的`UserWithRef`实体:
 
-```
+```java
 public class UserWithRef {
     public int id;
     public String name;
@@ -1111,7 +1111,7 @@ public class UserWithRef {
 
 然后是测试:
 
-```
+```java
 @Test
 public void whenSerializingUsingJacksonReferenceAnnotation_thenCorrect()
   throws JsonProcessingException {
@@ -1133,7 +1133,7 @@ public void whenSerializingUsingJacksonReferenceAnnotation_thenCorrect()
 
 在下面的例子中，我们有一个与`UserWithIdentity`实体有双向关系的`ItemWithIdentity`实体:
 
-```
+```java
 @JsonIdentityInfo(
   generator = ObjectIdGenerators.PropertyGenerator.class,
   property = "id")
@@ -1146,7 +1146,7 @@ public class ItemWithIdentity {
 
 `UserWithIdentity` 实体:
 
-```
+```java
 @JsonIdentityInfo(
   generator = ObjectIdGenerators.PropertyGenerator.class,
   property = "id")
@@ -1159,7 +1159,7 @@ public class UserWithIdentity {
 
 现在**让我们看看无限递归问题是如何处理的**:
 
-```
+```java
 @Test
 public void whenSerializingUsingJsonIdentityInfo_thenCorrect()
   throws JsonProcessingException {
@@ -1177,7 +1177,7 @@ public void whenSerializingUsingJsonIdentityInfo_thenCorrect()
 
 以下是序列化项目和用户的完整输出:
 
-```
+```java
 {
     "id": 2,
     "itemName": "book",
@@ -1197,7 +1197,7 @@ public void whenSerializingUsingJsonIdentityInfo_thenCorrect()
 
 首先，我们定义实体并指向过滤器:
 
-```
+```java
 @JsonFilter("myFilter")
 public class BeanWithFilter {
     public int id;
@@ -1207,7 +1207,7 @@ public class BeanWithFilter {
 
 现在，在完整的测试中，我们定义了过滤器，它从序列化中排除了除`name`之外的所有其他属性:
 
-```
+```java
 @Test
 public void whenSerializingUsingJsonFilter_thenCorrect()
   throws JsonProcessingException {
@@ -1231,7 +1231,7 @@ public void whenSerializingUsingJsonFilter_thenCorrect()
 
 接下来让我们看看如何创建一个定制的 Jackson 注释。**我们可以利用`@JacksonAnnotationsInside`注解:**
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
     @JacksonAnnotationsInside
     @JsonInclude(Include.NON_NULL)
@@ -1241,7 +1241,7 @@ public void whenSerializingUsingJsonFilter_thenCorrect()
 
 现在，如果我们在实体上使用新的注释:
 
-```
+```java
 @CustomAnnotation
 public class BeanWithCustomAnnotation {
     public int id;
@@ -1252,7 +1252,7 @@ public class BeanWithCustomAnnotation {
 
 我们可以看到它是如何将现有的注释合并成一个简单的自定义注释，我们可以用它来简化:
 
-```
+```java
 @Test
 public void whenSerializingUsingCustomAnnotation_thenCorrect()
   throws JsonProcessingException {
@@ -1269,7 +1269,7 @@ public void whenSerializingUsingCustomAnnotation_thenCorrect()
 
 序列化过程的输出:
 
-```
+```java
 {
     "name":"My bean",
     "id":1
@@ -1282,7 +1282,7 @@ public void whenSerializingUsingCustomAnnotation_thenCorrect()
 
 例如，让我们使用 MixIn 注释来忽略类型`User`的属性:
 
-```
+```java
 public class Item {
     public int id;
     public String itemName;
@@ -1290,14 +1290,14 @@ public class Item {
 }
 ```
 
-```
+```java
 @JsonIgnoreType
 public class MyMixInForIgnoreType {}
 ```
 
 那么让我们来看看实际情况:
 
-```
+```java
 @Test
 public void whenSerializingUsingMixInAnnotation_thenCorrect() 
   throws JsonProcessingException {
@@ -1318,7 +1318,7 @@ public void whenSerializingUsingMixInAnnotation_thenCorrect()
 
 最后，让我们看看如何**禁用所有杰克森注释**。我们可以通过禁用`MapperFeature.` USE_ANNOTATIONS 来做到这一点，如下例所示:
 
-```
+```java
 @JsonInclude(Include.NON_NULL)
 @JsonPropertyOrder({ "name", "id" })
 public class MyBean {
@@ -1329,7 +1329,7 @@ public class MyBean {
 
 现在，禁用注释后，这些注释应该没有效果，并且应该应用库的默认值:
 
-```
+```java
 @Test
 public void whenDisablingAllAnnotations_thenAllDisabled()
   throws IOException {
@@ -1346,13 +1346,13 @@ public void whenDisablingAllAnnotations_thenAllDisabled()
 
 禁用批注前序列化的结果:
 
-```
+```java
 {"id":1}
 ```
 
 禁用批注后序列化的结果:
 
-```
+```java
 {
     "id":1,
     "name":null

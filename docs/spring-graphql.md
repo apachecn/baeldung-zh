@@ -20,7 +20,7 @@ GraphQL 为这两个问题提供了解决方案。它允许客户端准确地指
 
 例如，博客可能允许以下查询:
 
-```
+```java
 query {
     recentPosts(count: 10, offset: 0) {
         id
@@ -51,7 +51,7 @@ GraphQL 服务器公开了描述 API 的模式。这个方案由类型定义组�
 
 博客的示例 GraphQL 模式可以包含描述帖子、帖子的作者以及获取博客上最新帖子的根查询的以下定义:
 
-```
+```java
 type Post {
     id: ID!
     title: String!
@@ -92,7 +92,7 @@ GraphQL 服务还使用一组标准字段公开模式本身，允许任何客户
 
 要做到这一点，我们只需要正确的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.graphql-java</groupId>
     <artifactId>graphql-spring-boot-starter</artifactId>
@@ -123,7 +123,7 @@ GraphQL 工具库通过处理 GraphQL 模式文件来构建正确的结构，然
 
 唯一的要求是 beans 实现 *GraphQLQueryResolver，*并且来自 scheme 的根查询中的每个字段在这些类中有一个同名的方法:
 
-```
+```java
 public class Query implements GraphQLQueryResolver {
     private PostDao postDao;
     public List<Post> getRecentPosts(int count, int offset) {
@@ -149,7 +149,7 @@ public class Query implements GraphQLQueryResolver {
 
 **Java bean 中的字段将根据字段名称直接映射到 GraphQL 响应中的字段:**
 
-```
+```java
 public class Post {
     private String id;
     private String title;
@@ -170,7 +170,7 @@ Java bean 上没有映射到 GraphQL 模式的任何字段或方法都将被忽�
 
 如果字段解析器和数据 bean 对于同一个 GraphQL 字段都有方法，则字段解析器优先:
 
-```
+```java
 public class PostResolver implements GraphQLResolver<Post> {
     private AuthorDao authorDao;
 
@@ -204,7 +204,7 @@ GraphQL 模式的概念是，有些类型是可空的，而有些不是。
 
 否则，所有相同的规则都适用于查询。然后，变异字段的返回值将被视为与查询字段完全相同，也允许检索嵌套值:
 
-```
+```java
 public class Mutation implements GraphQLMutationResolver {
     private PostDao postDao;
 
@@ -220,7 +220,7 @@ GraphQL 还有一个配套工具叫做 GraphiQL。这是一个能够与任何 Gr
 
 通过添加 GraphiQL Spring Boot 启动器依赖项，还可以将基于 web 的 GraphiQL 版本自动包含在我们的应用程序中:
 
-```
+```java
 <dependency>
     <groupId>com.graphql-java</groupId>
     <artifactId>graphiql-spring-boot-starter</artifactId>

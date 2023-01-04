@@ -20,7 +20,7 @@ JPA 2.1 引入了数据库模式生成标准。因此，从这个版本开始，
 
 首先，**为了控制我们将生成哪些 DDL 命令**，JPA 引入了脚本`action`配置选项:
 
-```
+```java
 javax.persistence.schema-generation.scripts.action
 ```
 
@@ -35,7 +35,7 @@ javax.persistence.schema-generation.scripts.action
 
 其次，对于每个指定的脚本`action`，我们需要定义相应的`target`配置:
 
-```
+```java
 javax.persistence.schema-generation.scripts.create-target
 javax.persistence.schema-generation.scripts.drop-target
 ```
@@ -46,7 +46,7 @@ javax.persistence.schema-generation.scripts.drop-target
 
 最后，为了从我们的实体模型生成模式 DDL 命令，我们应该包含模式`source`配置，并选择`metadata`选项:
 
-```
+```java
 javax.persistence.schema-generation.create-source=metadata
 javax.persistence.schema-generation.drop-source=metadata
 ```
@@ -59,7 +59,7 @@ javax.persistence.schema-generation.drop-source=metadata
 
 让我们想象我们正在实现一个用户账户系统，它有一个名为`Account`的[实体](/web/20220627081244/https://www.baeldung.com/jpa-entities):
 
-```
+```java
 @Entity
 @Table(name = "accounts")
 public class Account {
@@ -83,7 +83,7 @@ public class Account {
 
 每个帐户可以有多个帐户设置，因此这里我们将有一个[一对多](/web/20220627081244/https://www.baeldung.com/hibernate-one-to-many)映射:
 
-```
+```java
 @Entity
 @Table(name = "account_settings")
 public class AccountSetting {
@@ -110,7 +110,7 @@ public class AccountSetting {
 
 现在，为了生成数据库模式，我们需要将模式生成属性传递给正在使用的持久性提供者。为此，我们将在配置文件中的`spring.jpa.properties`前缀下设置本机 JPA 属性:
 
-```
+```java
 spring.jpa.properties.javax.persistence.schema-generation.scripts.action=create
 spring.jpa.properties.javax.persistence.schema-generation.scripts.create-target=create.sql
 spring.jpa.properties.javax.persistence.schema-generation.scripts.create-source=metadata
@@ -122,7 +122,7 @@ spring.jpa.properties.javax.persistence.schema-generation.scripts.create-source=
 
 因此，在应用程序启动时，上述配置将基于实体映射元数据生成数据库创建命令。此外，DDL 命令被导出到`create.sql`文件中，该文件创建在我们的主项目文件夹中:
 
-```
+```java
 create table account_settings (
     id bigint not null,
     name varchar(255) not null,
@@ -150,7 +150,7 @@ alter table account_settings
 
 有了 Hibernate 的`SchemaExport`，我们可以显式地使用`drop`、`createOnly,`和`create`方法:
 
-```
+```java
 MetadataSources metadataSources = new MetadataSources(serviceRegistry);
 metadataSources.addAnnotatedClass(Account.class);
 metadataSources.addAnnotatedClass(AccountSettings.class);

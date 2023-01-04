@@ -14,7 +14,7 @@
 
 为了利用 Spring 数据 GemFire 支持，我们首先需要在我们的`pom.xml:`中添加以下依赖项
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-gemfire</artifactId>
@@ -32,7 +32,7 @@ GemFire 中的缓存提供基本的数据管理服务，并管理与其他对等
 
 缓存配置(`cache.xml`)描述了数据将如何在不同的节点之间分布:
 
-```
+```java
 <cache>
     <region name="region">
         <region-attributes>
@@ -57,19 +57,19 @@ GemFire 中的缓存提供基本的数据管理服务，并管理与其他对等
 
 *   **复制区域**保存每个节点上的完整数据集。它提供了很高的读取性能。写操作较慢，因为数据更新需要传播到每个节点:
 
-    ```
+    ```java
     <region name="myRegion" refid="REPLICATE"/>
     ```
 
 *   **分区**分发数据，使得每个节点只存储一部分区域内容。数据的副本存储在其他节点之一上。它提供了良好的写入性能。
 
-    ```
+    ```java
     <region name="myRegion" refid="PARTITION"/>
     ```
 
 *   **本地区域**驻留在定义成员节点上。与群集中的其他节点没有连接。
 
-    ```
+    ```java
     <region name="myRegion" refid="LOCAL"/>
     ```
 
@@ -99,13 +99,13 @@ GemFire 的`QueryService`提供了创建查询对象的方法。
 
 连续查询的语法类似于用 OQL 编写的基本查询。例如，提供来自`Stock`地区的最新股票数据的查询可以写成:
 
-```
+```java
 SELECT * from StockRegion s where s.stockStatus='active';
 ```
 
 为了从这个查询中获得状态更新，需要将`CQListener` 的实现与`StockRegion:`联系起来
 
-```
+```java
 <cache>
     <region name="StockRegion>
         <region-attributes refid="REPLICATE">
@@ -125,7 +125,7 @@ SELECT * from StockRegion s where s.stockStatus='active';
 
 为了简化配置，Spring Data GemFire 为配置核心 GemFire 组件提供了各种注释:
 
-```
+```java
 @Configuration
 public class GemfireConfiguration {
 
@@ -165,7 +165,7 @@ public class GemfireConfiguration {
 
 该库提供了对要存储在 GemFire grid 中的地图对象的支持。映射元数据通过在域类中使用注释来定义:
 
-```
+```java
 @Region("employee")
 public class Employee {
 
@@ -193,7 +193,7 @@ public class Employee {
 
 接下来，让我们看看 Spring Data 的一个核心组件——存储库:
 
-```
+```java
 @Configuration
 @EnableGemfireRepositories(basePackages
   = "com.baeldung.spring.data.gemfire.repository")
@@ -210,7 +210,7 @@ public class GemfireConfiguration {
 
 储存库允许定义查询方法，以针对受管实体映射到的区域高效地运行 OQL 查询:
 
-```
+```java
 @Repository
 public interface EmployeeRepository extends   
   CrudRepository<Employee, String> {
@@ -234,7 +234,7 @@ public interface EmployeeRepository extends
 
 让我们看看如何使用 Spring 数据注释将 POJO 公开为 GemFire 函数:
 
-```
+```java
 @Component
 public class FunctionImpl {
 
@@ -249,7 +249,7 @@ public class FunctionImpl {
 
 我们需要显式激活注释处理以使`@GemfireFunction`工作:
 
-```
+```java
 @Configuration
 @EnableGemfireFunctions
 public class GemfireConfiguration {
@@ -259,7 +259,7 @@ public class GemfireConfiguration {
 
 对于函数执行，调用远程函数的进程需要提供调用参数、函数`id`、执行目标(`onServer`、`onRegion`、`onMember`等。):
 
-```
+```java
 @OnRegion(region="employee")
 public interface FunctionExecution {
 
@@ -272,7 +272,7 @@ public interface FunctionExecution {
 
 为了启用函数执行注释处理，我们需要添加使用 Spring 的组件扫描功能来激活它:
 
-```
+```java
 @Configuration
 @EnableGemfireFunctionExecutions(
   basePackages = "com.baeldung.spring.data.gemfire.function")

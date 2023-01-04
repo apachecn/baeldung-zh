@@ -24,7 +24,7 @@ Spring Cloud Bridge 将自动捕获 bean，并将其添加到 Archaius 的复合
 
 使用 JDBC 连接到数据库所需的所有功能都包含在核心库中，因此除了我们在介绍性教程中提到的那些之外，我们不需要任何额外的依赖:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.cloud</groupId>
@@ -59,7 +59,7 @@ Spring Cloud Bridge 将自动捕获 bean，并将其添加到 Archaius 的复合
 
 让我们继续创建这个 bean:
 
-```
+```java
 @Autowired
 DataSource dataSource;
 
@@ -80,7 +80,7 @@ public AbstractConfiguration addApplicationPropertiesSource() {
 
 为此，我们将首先添加必要的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -98,7 +98,7 @@ public AbstractConfiguration addApplicationPropertiesSource() {
 
 接下来，我们将声明包含我们属性的 JPA 实体:
 
-```
+```java
 @Entity
 public class Properties {
     @Id
@@ -109,14 +109,14 @@ public class Properties {
 
 我们将在资源中包含一个 `data.sql`文件，用一些初始值填充内存数据库:
 
-```
+```java
 insert into properties
 values('baeldung.archaius.properties.one', 'one FROM:jdbc_source');
 ```
 
 最后，为了检查任意给定点的属性值，我们可以创建一个端点来检索由 Archaius 管理的值:
 
-```
+```java
 @RestController
 public class ConfigPropertiesController {
 
@@ -145,7 +145,7 @@ public class ConfigPropertiesController {
 
 让我们将以下库添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>aws-java-sdk-dynamodb</artifactId>
@@ -175,7 +175,7 @@ public class ConfigPropertiesController {
 
 这一次，将使用一个`DynamoDbConfigurationSource`对象:来创建
 
-```
+```java
 @Autowired
 AmazonDynamoDB amazonDynamoDb;
 
@@ -203,7 +203,7 @@ public AbstractConfiguration addApplicationPropertiesSource() {
 
 为了用一些初始数据填充数据库，我们将首先创建一个`DynamoDBTable`实体来映射数据:
 
-```
+```java
 @DynamoDBTable(tableName = "archaiusProperties")
 public class ArchaiusProperties {
 
@@ -220,13 +220,13 @@ public class ArchaiusProperties {
 
 接下来，我们将为这个实体创建一个`CrudRepository`:
 
-```
+```java
 public interface ArchaiusPropertiesRepository extends CrudRepository<ArchaiusProperties, String> {}
 ```
 
 最后，我们将使用存储库和`AmazonDynamoDB` 实例来创建表，然后插入数据:
 
-```
+```java
 @Autowired
 private ArchaiusPropertiesRepository repository;
 
@@ -261,7 +261,7 @@ private void initDatabase() {
 
 唯一的区别是，我们只需要 Zookeeper 提供的部分功能，因此我们可以使用`spring-cloud-starter-zookeeper-config`依赖项，而不是官方指南中使用的那个:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-zookeeper-config</artifactId>
@@ -308,7 +308,7 @@ private void initDatabase() {
 
 为了连接到 Zookeeper 服务并创建一些初始数据，我们将使用 [Apache 的馆长客户端](/web/20220626193424/https://www.baeldung.com/apache-curator):
 
-```
+```java
 @Component
 public class ZookeeperConfigsInitializer {
 

@@ -12,7 +12,7 @@
 
 用 Spring Boot 构建 Docker 映像的传统方式是使用 Docker 文件。下面是一个简单的例子:
 
-```
+```java
 FROM openjdk:8-jdk-alpine
 EXPOSE 8080
 ARG JAR_FILE=target/demo-app-1.0.0.jar
@@ -38,13 +38,13 @@ ENTRYPOINT ["java","-jar","/app.jar"]
 
 Spring Boot 包括对构建包的 Maven 和 Gradle 支持。例如，用 Maven 构建，我们将运行命令:
 
-```
+```java
 ./mvnw spring-boot:build-image
 ```
 
 让我们看看一些相关的输出，看看发生了什么:
 
-```
+```java
 [INFO] Building jar: target/demo-0.0.1-SNAPSHOT.jar
 ...
 [INFO] Building image 'docker.io/library/demo:0.0.1-SNAPSHOT'
@@ -73,7 +73,7 @@ Packeto 是云原生构建包的实现。它负责分析我们的项目，并确
 
 buildpacks 的一个重要特性是 Docker 映像是多层的。因此，如果我们只更改我们的应用程序代码，后续的构建会快得多:
 
-```
+```java
 ...
 [INFO]     [creator]     Reusing layer 'paketo-buildpacks/executable-jar:class-path'
 [INFO]     [creator]     Reusing layer 'paketo-buildpacks/spring-boot:web-application-type'
@@ -89,7 +89,7 @@ buildpacks 的一个重要特性是 Docker 映像是多层的。因此，如果�
 
 由于这些原因，Spring Boot 也支持使用分层 jar 构建 Docker 映像。为了理解它是如何工作的，让我们来看一个典型的 Spring Boot 胖罐子布局:
 
-```
+```java
 org/
   springframework/
     boot/
@@ -110,7 +110,7 @@ lib/
 
 对于分层的 jar，结构看起来很相似，但是我们得到了一个新的`layers.idx`文件，它将 fat jar 中的每个目录映射到一个层:
 
-```
+```java
 - "dependencies":
   - "BOOT-INF/lib/"
 - "spring-boot-loader":
@@ -140,7 +140,7 @@ lib/
 
 首先，我们必须设置我们的项目来创建一个分层的 jar。对于 Maven，这意味着向 POM 的 Spring Boot 插件部分添加一个新的配置:
 
-```
+```java
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -160,13 +160,13 @@ lib/
 
 要检查任何分层 jar 的层，我们可以运行命令:
 
-```
+```java
 java -Djarmode=layertools -jar demo-0.0.1.jar list
 ```
 
 然后，为了提取它们，我们将运行:
 
-```
+```java
 java -Djarmode=layertools -jar demo-0.0.1.jar extract
 ```
 
@@ -174,7 +174,7 @@ java -Djarmode=layertools -jar demo-0.0.1.jar extract
 
 将这些层合并到 Docker 映像中的最简单方法是使用 Docker 文件:
 
-```
+```java
 FROM adoptopenjdk:11-jre-hotspot as builder
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} application.jar
@@ -192,7 +192,7 @@ ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
 
 如果我们构建这个 Docker 文件，我们可以看到分层 jar 中的每一层都作为自己的层添加到 Docker 映像中:
 
-```
+```java
 ...
 Step 6/10 : COPY --from=builder dependencies/ ./
  ---> 2c631b8f9993

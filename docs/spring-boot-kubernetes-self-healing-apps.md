@@ -23,7 +23,7 @@
 
 我们在容器级别配置两种探测器类型:
 
-```
+```java
 apiVersion: v1
 kind: Pod
 metadata:
@@ -92,7 +92,7 @@ spec:
 
 考虑到 Spring 有许多可以使用的`HealthIndicator`,反映我们的应用程序对`Kubernetes`探测器的一些依赖关系的状态就像给我们的`pom.xml:`添加 [`Actuator`](/web/20220523133423/https://www.baeldung.com/spring-boot-actuators) 依赖关系一样简单
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-actuator</artifactId>
@@ -105,7 +105,7 @@ spec:
 
  **我们将通过[创建一个`HealthIndicator`](/web/20220523133423/https://www.baeldung.com/spring-boot-actuators) 来模拟一个中断的状态，验证一个`boolean`变量是否为`true`。我们将变量初始化为`true`，然后我们将安排一个任务在 30 秒后将它更改为`false`:
 
-```
+```java
 @Component
 public class CustomHealthIndicator implements HealthIndicator {
 
@@ -128,7 +128,7 @@ public class CustomHealthIndicator implements HealthIndicator {
 
 没有
 
-```
+```java
 FROM openjdk:8-jdk-alpine
 RUN mkdir -p /usr/opt/service
 COPY target/*.jar /usr/opt/service/service.jar
@@ -138,7 +138,7 @@ ENTRYPOINT exec java -jar /usr/opt/service/service.jar
 
 接下来，我们创建我们的`Kubernetes`模板:
 
-```
+```java
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -174,7 +174,7 @@ spec:
 
 我们可以看到我们的`Pod`执行`kubectl` `describe` `pod` `liveness-example`的事件:
 
-```
+```java
 Warning  Unhealthy 3s (x2 over 7s)   kubelet, minikube  Readiness probe failed: HTTP probe failed ...
 Warning  Unhealthy 1s                kubelet, minikube  Liveness probe failed: HTTP probe failed ...
 Normal   Killing   0s                kubelet, minikube  Killing container with id ...
@@ -190,7 +190,7 @@ Normal   Killing   0s                kubelet, minikube  Killing container with i
 
 让我们修改前面例子中的`HealthIndicator`和`Kubernetes`模板，并使它们适应这个用例:
 
-```
+```java
 @Component
 public class CustomHealthIndicator implements HealthIndicator {
 
@@ -215,7 +215,7 @@ public class CustomHealthIndicator implements HealthIndicator {
 
 接下来，我们使用以下模板整理和部署我们的应用程序:
 
-```
+```java
 apiVersion: apps/v1
 kind: Deployment
 metadata:

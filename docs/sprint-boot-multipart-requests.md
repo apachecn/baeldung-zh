@@ -16,7 +16,7 @@
 
 首先，我们将创建一个`Employee`抽象来存储表单数据:
 
-```
+```java
 public class Employee {
     private String name;
     private MultipartFile document;
@@ -25,7 +25,7 @@ public class Employee {
 
 然后我们将使用[百里香叶](/web/20221122060810/https://www.baeldung.com/thymeleaf-in-spring-mvc)生成表单:
 
-```
+```java
 <form action="#" th:action="@{/employee}" th:object="${employee}" method="post" enctype="multipart/form-data">
     <p>name: <input type="text" th:field="*{name}" /></p>
     <p>document:<input type="file" th:field="*{document}" multiple="multiple"/>
@@ -38,7 +38,7 @@ public class Employee {
 
 最后，我们将创建一个接受表单数据的方法，包括多部分文件:
 
-```
+```java
 @RequestMapping(path = "/employee", method = POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 public String saveEmployee(@ModelAttribute Employee employee) {
     employeeService.save(employee);
@@ -57,7 +57,7 @@ public String saveEmployee(@ModelAttribute Employee employee) {
 
 让我们创建一个有两个参数的方法，第一个是类型`Employee`，第二个是`MultipartFile`。此外，我们将用`@RequestPart`来注释这两个论点:
 
-```
+```java
 @RequestMapping(path = "/requestpart/employee", method = POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 public ResponseEntity<Object> saveEmployee(@RequestPart Employee employee, @RequestPart MultipartFile document) {
     employee.setDocument(document);
@@ -68,7 +68,7 @@ public ResponseEntity<Object> saveEmployee(@RequestPart Employee employee, @Requ
 
 现在，为了查看这个注释的运行情况，我们将使用`MockMultipartFile`创建测试:
 
-```
+```java
 @Test
 public void givenEmployeeJsonAndMultipartFile_whenPostWithRequestPart_thenReturnsOK() throws Exception {
     MockMultipartFile employeeJson = new MockMultipartFile("employee", null,
@@ -89,7 +89,7 @@ public void givenEmployeeJsonAndMultipartFile_whenPostWithRequestPart_thenReturn
 
 发送多部分数据的另一种方式是使用`@RequestParam`。这对于简单的数据尤其有用，这些数据作为键/值对与文件一起发送:
 
-```
+```java
 @RequestMapping(path = "/requestparam/employee", method = POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 public ResponseEntity<Object> saveEmployee(@RequestParam String name, @RequestPart MultipartFile document) {
     Employee employee = new Employee(name, document);
@@ -100,7 +100,7 @@ public ResponseEntity<Object> saveEmployee(@RequestParam String name, @RequestPa
 
 让我们为这个方法编写测试来演示:
 
-```
+```java
 @Test
 public void givenRequestPartAndRequestParam_whenPost_thenReturns200OK() throws Exception {
     mockMvc.perform(multipart("/requestparam/employee")

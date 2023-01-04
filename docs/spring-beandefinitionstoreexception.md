@@ -14,7 +14,7 @@
 
 这通常发生在 Spring Web 应用程序中，当在 Spring MVC 的`web.xml`中设置了一个`DispatcherServlet`:
 
-```
+```java
 <servlet>  
    <servlet-name>mvc</servlet-name>  
    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>  
@@ -25,7 +25,7 @@
 
 如果该文件不存在，则会引发以下异常:
 
-```
+```java
 org.springframework.beans.factory.BeanDefinitionStoreException: 
 Ioexception Parsing Xml Document from Servletcontext Resource [/WEB-INF/mvc-servlet.xml]; 
 nested exception is java.io.FileNotFoundException: 
@@ -34,7 +34,7 @@ Could not open ServletContext resource [/WEB-INF/mvc-servlet.xml]
 
 **解决方案**当然是确保`mvc-servlet.xml`文件确实存在于`/WEB-INF`下；如果没有，那么可以创建一个样本:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans 
 
@@ -54,7 +54,7 @@ Could not open ServletContext resource [/WEB-INF/mvc-servlet.xml]
 
 以 Java 配置为例，这可能看起来像:
 
-```
+```java
 @Configuration
 @ImportResource("beans.xml")
 public class SpringConfig {...}
@@ -62,19 +62,19 @@ public class SpringConfig {...}
 
 在 XML 中，这将是:
 
-```
+```java
 <import resource="beans.xml"/>
 ```
 
 或者甚至手动创建一个 Spring XML 上下文:
 
-```
+```java
 ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
 ```
 
 如果文件不存在，所有这些都会导致相同的异常:
 
-```
+```java
 org.springframework.beans.factory.BeanDefinitionStoreException: 
 Ioexception Parsing Xml Document from Servletcontext Resource [/beans.xml]; 
 nested exception is java.io.FileNotFoundException: 
@@ -89,26 +89,26 @@ Could not open ServletContext resource [/beans.xml]
 
 但是首先，属性的用法——可能在 XML 中使用:
 
-```
+```java
 ... value="${some.property}" ...
 ```
 
 该属性也可以用在 Java 代码中:
 
-```
+```java
 @Value("${some.property}")
 private String someProperty;
 ```
 
 首先要检查的是属性的名称实际上与属性定义相匹配；在本例中，我们需要定义以下属性:
 
-```
+```java
 some.property=someValue
 ```
 
 然后，我们需要检查属性文件在 Spring 中的定义位置——这在我的[Spring 属性教程](/web/20220701021129/https://www.baeldung.com/properties-with-spring " Example of Properties with Spring")中有详细描述。一个好的最佳实践是将所有属性文件放在应用程序的`/src/main/resources`目录下，并通过以下方式加载它们:
 
-```
+```java
 "classpath:app.properties"
 ```
 
@@ -120,7 +120,7 @@ some.property=someValue
 
 这种错误有多种形式，其中最常见的是:
 
-```
+```java
 org.springframework.beans.factory.BeanDefinitionStoreException:
 Unexpected exception parsing XML document from ServletContext resource [/WEB-INF/mvc-servlet.xml];
 nested exception is java.lang.NoSuchMethodError:
@@ -134,7 +134,7 @@ Lorg/springframework/beans/MutablePropertyValues;
 
 类似地，例外不仅限于`MutablePropertyValues`bean——同样的问题还有其他几个实例，都是由相同的版本不一致引起的:
 
-```
+```java
 org.springframework.beans.factory.BeanDefinitionStoreException:
 Unexpected exception parsing XML document from class path resource [/WEB-INF/mvc-servlet.xml];
 - nested exception is java.lang.NoSuchMethodError:
@@ -145,7 +145,7 @@ org.springframework.util.ReflectionUtils.makeAccessible(Ljava/lang/reflect/Const
 
 与 Maven 和现有的 Spring 依赖项类似的一个常见问题是:
 
-```
+```java
 org.springframework.beans.factory.BeanDefinitionStoreException:
 Unexpected exception parsing XML document from ServletContext resource [/WEB-INF/mvc-servlet.xml];
 nested exception is java.lang.NoClassDefFoundError: 
@@ -154,7 +154,7 @@ org/springframework/transaction/interceptor/TransactionInterceptor
 
 当在 XML 配置中配置了事务功能时，会出现这种情况:
 
-```
+```java
 <tx:annotation-driven/>
 ```
 
@@ -162,7 +162,7 @@ org/springframework/transaction/interceptor/TransactionInterceptor
 
 解决方案很简单—`spring-tx`需要在 Maven pom 中定义:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-tx</artifactId>
@@ -172,7 +172,7 @@ org/springframework/transaction/interceptor/TransactionInterceptor
 
 当然，这不仅限于事务功能——如果 AOP 丢失，也会抛出类似的错误:
 
-```
+```java
 Exception in thread "main" org.springframework.beans.factory.BeanDefinitionStoreException: 
 Unexpected exception parsing XML document from class path resource [/WEB-INF/mvc-servlet.xml]; 
 nested exception is java.lang.NoClassDefFoundError: 
@@ -181,7 +181,7 @@ org/aopalliance/aop/Advice
 
 现在需要的 jar 是:`spring-aop`(以及隐式的`aopalliance`):
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-aop</artifactId>

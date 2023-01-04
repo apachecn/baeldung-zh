@@ -14,13 +14,13 @@
 
 首先，我们定位服务器的`<TOMCAT_HOME>/conf/server.xml`文件。然后我们找到配置 HTTP 连接器端口的行:
 
-```
+```java
 <Connector connectionTimeout="20000" port="8080" protocol="HTTP/1.1" redirectPort="8443"/>
 ```
 
 我们将端口更改为`80`:
 
-```
+```java
 <Connector connectionTimeout="20000" port="80" protocol="HTTP/1.1" redirectPort="8443"/>
 ```
 
@@ -30,7 +30,7 @@
 
 **如果我们拥有`root`或`sudo`访问**的权限，我们可以使用以下命令作为 root 用户启动 Tomcat 进程:
 
-```
+```java
 sudo startup.sh
 ```
 
@@ -42,13 +42,13 @@ sudo startup.sh
 
 **对于基于 Linux 的系统:**下载并安装`authbind`包:
 
-```
+```java
 sudo apt-get install authbind
 ```
 
 **对于 MacOS 系统:**首先，从[这里](https://web.archive.org/web/20220627171218/https://github.com/Castaglia/MacOSX-authbind)下载 MacOS 的`authbind`，展开包。然后进入扩展目录进行构建和安装:
 
-```
+```java
 $ cd MacOSX-authbind
 $ make
 $ sudo make install
@@ -58,7 +58,7 @@ $ sudo make install
 
 打开`<TOMCAT_HOME>/conf/server.xml`文件取消对以下行的注释:
 
-```
+```java
 AUTHBIND=yes
 ```
 
@@ -68,7 +68,7 @@ AUTHBIND=yes
 
 下面是一个使用 Tomcat 版的示例:
 
-```
+```java
 sudo touch <AUTHBIND_HOME>/byport/80
 sudo chmod 500 <AUTHBIND_HOME>/byport/80
 sudo chown tomcat8 <AUTHBIND_HOME>/byport/80
@@ -82,25 +82,25 @@ sudo chown tomcat8 <AUTHBIND_HOME>/byport/80
 
 **如果我们已经有了一个`<TOMCAT_HOME>/bin/setenv.sh`文件，那么替换:**
 
-```
+```java
 exec "$PRGDIR"/"$EXECUTABLE" start "[[email protected]](/web/20220627171218/https://www.baeldung.com/cdn-cgi/l/email-protection)"
 ```
 
 **用这一行:**
 
-```
+```java
 exec authbind --deep "$PRGDIR"/"$EXECUTABLE" start "[[email protected]](/web/20220627171218/https://www.baeldung.com/cdn-cgi/l/email-protection)"
 ```
 
 **然后添加下面一行:**
 
-```
+```java
 export CATALINA_OPTS="$CATALINA_OPTS -Djava.net.preferIPv4Stack=true"
 ```
 
 **如果我们还没有`<TOMCAT_HOME>/bin/setenv.sh`文件，那么使用**创建一个
 
-```
+```java
 exec authbind --deep "$PRGDIR"/"$EXECUTABLE" start "[[email protected]](/web/20220627171218/https://www.baeldung.com/cdn-cgi/l/email-protection)"
 export CATALINA_OPTS="$CATALINA_OPTS -Djava.net.preferIPv4Stack=true"
 ```

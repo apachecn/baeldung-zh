@@ -36,7 +36,7 @@ Learn how to add c3p0 to a Hibernate application and configure some common prope
 
 首先，让我们构建一个示例应用程序来强调它的用法。HikariCP 支持 JVM 的所有主要版本。每个版本都需要它的依赖关系。对于 Java 8 到 11，我们有:
 
-```
+```java
 <dependency>
     <groupId>com.zaxxer</groupId>
     <artifactId>HikariCP</artifactId>
@@ -54,7 +54,7 @@ HikariCP 还支持较旧的 JDK 版本，如 6 和 7。相应的版本可以分�
 
 我们将使用 HikariCP 的`DataSource`为我们的应用程序创建一个数据源实例:
 
-```
+```java
 public class DataSource {
 
     private static HikariConfig config = new HikariConfig();
@@ -106,14 +106,14 @@ public class DataSource {
 
 我们还可以用放置在`resources`目录中的属性文件初始化`HikariConfig`:
 
-```
+```java
 private static HikariConfig config = new HikariConfig(
     "datasource.properties" );
 ```
 
 属性文件应该如下所示:
 
-```
+```java
 dataSourceClassName= //TBD
 dataSource.user= //TBD
 //other properties name should start with dataSource as shown above
@@ -121,7 +121,7 @@ dataSource.user= //TBD
 
 此外，我们可以使用基于`java.util.Properties-`的配置:
 
-```
+```java
 Properties props = new Properties();
 props.setProperty( "dataSourceClassName" , //TBD );
 props.setProperty( "dataSource.user" , //TBD );
@@ -131,7 +131,7 @@ private static HikariConfig config = new HikariConfig( props );
 
 或者，我们可以直接初始化数据源:
 
-```
+```java
 ds.setJdbcUrl( //TBD  );
 ds.setUsername( //TBD );
 ds.setPassword( //TBD );
@@ -145,7 +145,7 @@ ds.setPassword( //TBD );
 
 下面我们将列出创建示例数据所需的 SQL 语句:
 
-```
+```java
 create table dept(
   deptno numeric,
   dname  varchar(14),
@@ -195,13 +195,13 @@ insert into emp values(
 
 请注意，如果我们使用像 H2 这样的内存数据库，我们需要在运行实际代码获取数据之前自动加载数据库脚本。幸运的是，H2 附带了一个`INIT` 参数，可以在运行时从类路径加载数据库脚本。JDBC 的网址应该是这样的:
 
-```
+```java
 jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;INIT=runscript from 'classpath:/db.sql'
 ```
 
 我们需要创建一个方法来从数据库中获取这些数据:
 
-```
+```java
 public static List<Employee> fetchData() throws SQLException {
     String SQL_QUERY = "select * from emp";
     List<Employee> employees = null;
@@ -229,7 +229,7 @@ public static List<Employee> fetchData() throws SQLException {
 
 然后我们需要创建一个 JUnit 方法来测试它。由于我们知道表`emp`中的行数，我们可以预期返回列表的大小应该等于行数:
 
-```
+```java
 @Test
 public void givenConnection_thenFetchDbData() throws SQLException {
     HikariCPDemo.fetchData();

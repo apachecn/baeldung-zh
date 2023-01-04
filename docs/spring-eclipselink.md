@@ -14,7 +14,7 @@
 
 要在我们的 Spring 应用程序中使用它，我们只需要在我们项目的`pom.xml`中添加 [`org.eclipse.persistence.jpa`](https://web.archive.org/web/20220529012536/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22org.eclipse.persistence.jpa%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.eclipse.persistence</groupId>
     <artifactId>org.eclipse.persistence.jpa</artifactId>
@@ -28,7 +28,7 @@
 
 因此，我们可以通过排除它的依赖项来将其从项目中删除:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -57,7 +57,7 @@ Spring 为 Hibernate 提供了一个名为`HibernateJpaAutoConfiguration`的开�
 
 Spring 为名为`EclipseLinkJpaVendorAdapter` 的`EclipseLink`提供了`AbstractJpaVendorAdapter`的**实现，我们将在我们的方法中使用它:**
 
-```
+```java
 @Configuration 
 public class EclipseLinkJpaConfiguration extends JpaBaseConfiguration { 
 
@@ -74,7 +74,7 @@ public class EclipseLinkJpaConfiguration extends JpaBaseConfiguration {
 
 我们可以通过`getVendorProperties()`方法添加这些:
 
-```
+```java
 @Override
 protected Map<String, Object> getVendorProperties() {
     HashMap<String, Object> map = new HashMap<>();

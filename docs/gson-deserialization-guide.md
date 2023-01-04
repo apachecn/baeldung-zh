@@ -8,7 +8,7 @@
 
 让我们从简单的开始——我们将**把一个简单的 json 解组到一个 Java 对象—`Foo`**:
 
-```
+```java
 public class Foo {
     public int intValue;
     public String stringValue;
@@ -19,7 +19,7 @@ public class Foo {
 
 解决方案是:
 
-```
+```java
 @Test
 public void whenDeserializingToSimpleObject_thenCorrect() {
     String json = "{"intValue":1,"stringValue":"one"}";
@@ -49,7 +49,7 @@ Quick and practical guide to serialization with Jackson and Gson.[Read more](/we
 
 接下来，让我们使用泛型定义一个对象:
 
-```
+```java
 public class GenericFoo<T> {
     public T theValue;
 }
@@ -57,7 +57,7 @@ public class GenericFoo<T> {
 
 并将一些 json 解组到这种类型的对象中:
 
-```
+```java
 @Test
 public void whenDeserializingToGenericObject_thenCorrect() {
     Type typeToken = new TypeToken<GenericFoo<Integer>>() { }.getType();
@@ -73,7 +73,7 @@ public void whenDeserializingToGenericObject_thenCorrect() {
 
 接下来，让我们反序列化一些复杂的 json，它包含额外的**未知字段**:
 
-```
+```java
 @Test
 public void givenJsonHasExtraValues_whenDeserializing_thenCorrect() {
     String json = 
@@ -91,7 +91,7 @@ public void givenJsonHasExtraValues_whenDeserializing_thenCorrect() {
 
 现在，让我们看看 Gson 如何处理包含与我们的`Foo`对象的字段完全不匹配的字段的 json 字符串:
 
-```
+```java
 @Test
 public void givenJsonHasNonMatchingFields_whenDeserializingWithCustomDeserializer_thenCorrect() {
     String json = "{"valueInt":7,"valueString":"seven"}";
@@ -107,7 +107,7 @@ public void givenJsonHasNonMatchingFields_whenDeserializingWithCustomDeserialize
 
 注意，我们注册了一个定制的反序列化器——它能够正确地解析出 json 字符串中的字段，并将它们映射到我们的`Foo`:
 
-```
+```java
 public class FooDeserializerFromJsonWithDifferentFields implements JsonDeserializer<Foo> {
 
     @Override
@@ -126,7 +126,7 @@ public class FooDeserializerFromJsonWithDifferentFields implements JsonDeseriali
 
 接下来，我们将把 json 数组反序列化为对象的 Java 数组 T2:
 
-```
+```java
 @Test
 public void givenJsonArrayOfFoos_whenDeserializingToArray_thenCorrect() {
     String json = "[{"intValue":1,"stringValue":"one"}," +
@@ -143,7 +143,7 @@ public void givenJsonArrayOfFoos_whenDeserializingToArray_thenCorrect() {
 
 接下来，将 json 数组**直接放入 Java 集合**:
 
-```
+```java
 @Test
 public void givenJsonArrayOfFoos_whenDeserializingCollection_thenCorrect() {
     String json = 
@@ -159,7 +159,7 @@ public void givenJsonArrayOfFoos_whenDeserializingCollection_thenCorrect() {
 
 接下来，让我们定义我们的嵌套对象——**`FooWithInner`**:
 
-```
+```java
 public class FooWithInner {
     public int intValue;
     public String stringValue;
@@ -173,7 +173,7 @@ public class FooWithInner {
 
 下面是如何反序列化包含该嵌套对象的输入:
 
-```
+```java
 @Test
 public void whenDeserializingToNestedObjects_thenCorrect() {
     String json = "{\"intValue\":1,\"stringValue\":\"one\",\"innerFoo\":{\"name\":\"inner\"}}";
@@ -190,7 +190,7 @@ public void whenDeserializingToNestedObjects_thenCorrect() {
 
 最后，让我们看看如何在反序列化期间强制使用特定的构造函数，而不是默认的——无参数构造函数——使用 **`InstanceCreator`** :
 
-```
+```java
 public class FooInstanceCreator implements InstanceCreator<Foo> {
 
     @Override
@@ -202,7 +202,7 @@ public class FooInstanceCreator implements InstanceCreator<Foo> {
 
 下面是如何在反序列化中使用我们的`FooInstanceCreator`:
 
-```
+```java
 @Test
 public void whenDeserializingUsingInstanceCreator_thenCorrect() {
     String json = "{\"intValue\":1}";
@@ -218,7 +218,7 @@ public void whenDeserializingUsingInstanceCreator_thenCorrect() {
 
 注意，当我们使用下面的构造函数时，`Foo.stringValue`等于`sample`,而不是 null:
 
-```
+```java
 public Foo(String stringValue) {
     this.stringValue = stringValue;
 }

@@ -18,7 +18,7 @@
 
 现在让我们看一下从表中物理删除记录时将运行的 SQL 命令:
 
-```
+```java
 delete from table_product where id=1
 ```
 
@@ -30,13 +30,13 @@ delete from table_product where id=1
 
 值`1`将指示数据已被删除，而 `0`将指示数据未被删除。我们应该将`0`设置为默认值，对于每个数据删除过程，我们不运行 SQL delete 命令，而是运行下面的 SQL update 命令:
 
-```
+```java
 update from table_product set deleted=1 where id=1
 ```
 
 使用这个 SQL 命令，我们实际上并没有删除该行，只是将它标记为已删除。因此，当我们要执行一个读查询时，我们只需要那些没有被删除的行，我们应该只在我们的 SQL 查询中添加一个过滤器:
 
-```
+```java
 select * from table_product where deleted=0
 ```
 
@@ -54,7 +54,7 @@ select * from table_product where deleted=0
 
 让我们创建一个`Product`实体类:
 
-```
+```java
 @Entity
 @Table(name = "table_product")
 public class Product {
@@ -78,7 +78,7 @@ public class Product {
 
 默认情况下，JPA 存储库中的 delete 命令将运行 SQL delete 查询，所以让我们首先向我们的实体类添加一些注释:
 
-```
+```java
 @Entity
 @Table(name = "table_product")
 @SQLDelete(sql = "UPDATE table_product SET deleted = true WHERE id=?")
@@ -106,7 +106,7 @@ public class Product {
 
 repository 类中没有特殊的变化，我们可以像在 Spring Boot 应用程序中编写普通的 repository 类一样编写它:
 
-```
+```java
 public interface ProductRepository extends CrudRepository<Product, Long>{
 
 }
@@ -118,7 +118,7 @@ public interface ProductRepository extends CrudRepository<Product, Long>{
 
 在这个例子中，让我们调用三个存储库函数来创建一个记录，然后执行一个软删除:
 
-```
+```java
 @Service
 public class ProductService {
 
@@ -145,7 +145,7 @@ public class ProductService {
 
 **为了实现这一点，我们不应该使用`@Where`注释** **，而是使用两种不同的注释， `@FilterDef,`和`@Filter`** 。有了这些注释，我们可以根据需要动态添加条件:
 
-```
+```java
 @Entity
 @Table(name = "tbl_products")
 @SQLDelete(sql = "UPDATE tbl_products SET deleted = true WHERE id=?")
@@ -167,7 +167,7 @@ public class Product {
 
 这里的`@FilterDef`注释定义了@ `Filter`注释将使用的基本要求。此外，我们还需要更改`ProductService`服务类中的`findAll()`函数来处理动态参数或过滤器:
 
-```
+```java
 @Service
 public class ProductService {
 

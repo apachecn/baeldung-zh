@@ -16,7 +16,7 @@ Fluent APIs 是一种基于方法链的软件工程设计技术，用于构建�
 
 在本教程中，我们将使用构建器设计模式来演示一个简单的 fluent API 来构建一个 pizza 对象:
 
-```
+```java
 Pizza pizza = new Pizza
   .PizzaBuilder("Margherita")
   .size(PizzaSize.LARGE)
@@ -31,7 +31,7 @@ Pizza pizza = new Pizza
 
 现在，我们将定义一个使用我们的构建器的简单服务类。这将是我们稍后要测试的类:
 
-```
+```java
 public class PizzaService {
 
     private Pizza.PizzaBuilder builder;
@@ -61,7 +61,7 @@ public class PizzaService {
 
 现在让我们看看如何使用传统的模拟[模拟](/web/20220715043119/https://www.baeldung.com/mockito-mock-methods)编写单元测试来测试我们的服务方法:
 
-```
+```java
 @Test
 public void givenTraditonalMocking_whenServiceInvoked_thenPizzaIsBuilt() {
     PizzaBuilder nameBuilder = Mockito.mock(Pizza.PizzaBuilder.class);
@@ -103,7 +103,7 @@ public void givenTraditonalMocking_whenServiceInvoked_thenPizzaIsBuilt() {
 
 要创建一个深存根，我们只需在创建 mock 时添加`Mockito.RETURNS_DEEP_STUBS`常量作为附加参数:
 
-```
+```java
 @Test
 public void givenDeepMocks_whenServiceInvoked_thenPizzaIsBuilt() {
     PizzaBuilder builder = Mockito.mock(Pizza.PizzaBuilder.class, Mockito.RETURNS_DEEP_STUBS);
@@ -130,7 +130,7 @@ public void givenDeepMocks_whenServiceInvoked_thenPizzaIsBuilt() {
 
 我们也可以通过`@Mock`注释直接使用这种回答模式:
 
-```
+```java
 @Mock(answer = Answers.RETURNS_DEEP_STUBS)
 private PizzaBuilder anotherBuilder;
 ```

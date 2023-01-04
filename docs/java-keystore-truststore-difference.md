@@ -44,7 +44,7 @@ Java 捆绑了一个名为`cacerts,`的信任库，它驻留在`$JAVA_HOME/jre/l
 
 它包含默认的可信证书颁发机构:
 
-```
+```java
 $ keytool -list -keystore cacerts
 Enter keystore password:
 Keystore type: JKS

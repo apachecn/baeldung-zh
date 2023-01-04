@@ -20,7 +20,7 @@
 
 为了在 Maven 项目中包含 Paho 库，我们必须添加以下依赖项:
 
-```
+```java
 <dependency>
   <groupId>org.eclipse.paho</groupId>
   <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
@@ -42,7 +42,7 @@ Paho 自带了该接口的两个实现，一个是异步的(`MqttAsyncClient`)�
 
 下面的代码片段展示了如何创建一个新的`IMqttClient`同步实例:
 
-```
+```java
 String publisherId = UUID.randomUUID().toString();
 IMqttClient publisher = new MqttClient("tcp://iot.eclipse.org:1883",publisherId);
 ```
@@ -65,7 +65,7 @@ Paho 还提供了额外的构造函数，我们可以使用它们来定制用于
 
 用于建立与服务器连接的代码通常如下所示:
 
-```
+```java
 MqttConnectOptions options = new MqttConnectOptions();
 options.setAutomaticReconnect(true);
 options.setCleanSession(true);
@@ -91,7 +91,7 @@ publisher.connect(options);
 
 这个类实现了`Callable`接口，所以我们可以很容易地将它与`java.util.concurrent`包中可用的`ExecutorService`实现之一一起使用:
 
-```
+```java
 public class EngineTemperatureSensor implements Callable<Void> {
 
     // ... private members omitted
@@ -137,7 +137,7 @@ public class EngineTemperatureSensor implements Callable<Void> {
 
 在示例代码中，我们使用了不同的`IMqttClient`实例来接收消息。我们这样做只是为了更清楚地说明哪个客户端做什么，但这不是 Paho 的限制-如果您愿意，您可以使用同一个客户端来发布和接收消息:
 
-```
+```java
 CountDownLatch receivedSignal = new CountDownLatch(10);
 subscriber.subscribe(EngineTemperatureSensor.TOPIC, (topic, msg) -> {
     byte[] payload = msg.getPayload();

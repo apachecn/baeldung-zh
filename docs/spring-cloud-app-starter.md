@@ -41,7 +41,7 @@
 
 接下来，我们来安装 Hadoop！我们可以遵循[官方文档](https://web.archive.org/web/20220626075034/https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html#Installing_Software)或者简单地利用 Docker:
 
-```
+```java
 $ sudo docker run -p 50070:50070 sequenceiq/hadoop-docker:2.4.1
 ```
 
@@ -53,13 +53,13 @@ $ sudo docker run -p 50070:50070 sequenceiq/hadoop-docker:2.4.1
 
 让我们将 Twitter Spring Cloud Stream 应用 Starter ( `org.springframework.cloud.stream.app.twitterstream.source`)添加到我们的项目中:
 
-```
+```java
 git clone https://github.com/spring-cloud-stream-app-starters/twitter.git
 ```
 
 然后，我们运行 Maven:
 
-```
+```java
 ./mvnw clean install -PgenerateApps
 ```
 
@@ -67,14 +67,14 @@ git clone https://github.com/spring-cloud-stream-app-starters/twitter.git
 
 然后我们可以运行编译过的。jar 并传入相关的应用程序属性，如下所示:
 
-```
+```java
 java -jar twitter_stream_source.jar --consumerKey=<CONSUMER_KEY> --consumerSecret=<CONSUMER_SECRET> \
     --accessToken=<ACCESS_TOKEN> --accessTokenSecret=<ACCESS_TOKEN_SECRET>
 ```
 
 我们还可以使用熟悉的 Spring `application.properties:`传递我们的凭证
 
-```
+```java
 twitter.credentials.access-token=...
 twitter.credentials.access-token-secret=...
 twitter.credentials.consumer-key=...
@@ -87,19 +87,19 @@ twitter.credentials.consumer-secret=...
 
 首先，克隆相关的回购协议:
 
-```
+```java
 git clone https://github.com/spring-cloud-stream-app-starters/hdfs.git
 ```
 
 然后，运行 Maven 作业:
 
-```
+```java
 ./mvnw clean install -PgenerateApps
 ```
 
 最终编译的 Starter 应用程序将在本地项目根目录的“/target”中可用。然后我们可以运行编译好的。jar 并传入相关的应用程序属性:
 
-```
+```java
 java -jar hdfs-sink.jar --fsUri=hdfs://127.0.0.1:50010/
 ```
 
@@ -111,7 +111,7 @@ java -jar hdfs-sink.jar --fsUri=hdfs://127.0.0.1:50010/
 
 让我们配置我们的`application.properties` 来使用默认的 Hadoop 端口:
 
-```
+```java
 hdfs.fs-uri=hdfs://127.0.0.1:50010/
 ```
 
@@ -121,7 +121,7 @@ hdfs.fs-uri=hdfs://127.0.0.1:50010/
 
 首先，我们将两个流应用启动器添加到我们的`pom.xml`:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.cloud.stream.app</groupId>
@@ -142,7 +142,7 @@ hdfs.fs-uri=hdfs://127.0.0.1:50010/
 
 我们的`SourceApp`指定了要转换或消耗的`Source`:
 
-```
+```java
 @SpringBootApplication
 @EnableBinding(Source.class)
 @Import(TwitterstreamSourceConfiguration.class)
@@ -158,7 +158,7 @@ public class SourceApp {
 
 接下来，我们设置一个简单的`org.springframework.cloud.stream.messaging.Processor` 绑定`:`
 
-```
+```java
 @SpringBootApplication
 @EnableBinding(Processor.class)
 public class ProcessorApp {
@@ -172,7 +172,7 @@ public class ProcessorApp {
 
 然后，我们创建我们的消费者(`Sink`):
 
-```
+```java
 @SpringBootApplication
 @EnableBinding(Sink.class)
 @Import(HdfsSinkConfiguration.class)
@@ -188,7 +188,7 @@ public class SinkApp {
 
 最后，我们在我们的`AggregateApp`主方法中使用`AggregateApplicationBuilder`来组合我们的`SourceApp`、 `ProcessorApp`和`SinkApp`:
 
-```
+```java
 @SpringBootApplication
 public class AggregateApp {
     public static void main(String[] args) {
@@ -209,7 +209,7 @@ public class AggregateApp {
 
 然后，我们可以使用以下命令行指令编译并运行我们的应用程序:
 
-```
+```java
  $ mvn install
     $ java -jar twitterhdfs.jar
 ```
@@ -218,7 +218,7 @@ public class AggregateApp {
 
 在我们编译并运行我们的应用程序后，我们应该会在我们的控制台中看到如下内容(自然，内容会因 Tweet 而异):
 
-```
+```java
 2018-01-15 04:38:32.255  INFO 28778 --- [itterSource-1-1] 
 c.b.twitterhdfs.processor.ProcessorApp   : Payload received!
 2018-01-15 04:38:32.255  INFO 28778 --- [itterSource-1-1] 

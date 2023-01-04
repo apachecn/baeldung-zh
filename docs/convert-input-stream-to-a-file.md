@@ -26,7 +26,7 @@ How to convert an InputStream to a byte[] using plain Java, Guava or Commons IO.
 
 让我们从 Java 解决方案开始:
 
-```
+```java
 @Test
 public void whenConvertingToFile_thenCorrect() throws IOException {
     Path path = Paths.get("src/test/resources/sample.txt");
@@ -44,7 +44,7 @@ public void whenConvertingToFile_thenCorrect() throws IOException {
 
 如果输入流链接到一个正在进行的数据流，就像来自一个正在进行的连接的 HTTP 响应，那么一次读取整个流是不可行的。在这种情况下，我们需要确保我们**继续阅读，直到我们到达流的结尾**:
 
-```
+```java
 @Test
 public void whenConvertingInProgressToFile_thenCorrect() 
   throws IOException {
@@ -66,7 +66,7 @@ public void whenConvertingInProgressToFile_thenCorrect()
 
 最后，这里有另一个简单的方法，我们可以**使用 Java 8 来做同样的操作:**
 
-```
+```java
 @Test
 public void whenConvertingAnInProgressInputStreamToFile_thenCorrect2() 
   throws IOException {
@@ -88,7 +88,7 @@ public void whenConvertingAnInProgressInputStreamToFile_thenCorrect2()
 
 接下来，让我们看看一个更简单的基于番石榴的解决方案:
 
-```
+```java
 @Test
 public void whenConvertingInputStreamToFile_thenCorrect3() 
   throws IOException {
@@ -107,7 +107,7 @@ public void whenConvertingInputStreamToFile_thenCorrect3()
 
 最后，这里有一个更快的 Apache Commons IO 解决方案:
 
-```
+```java
 @Test
 public void whenConvertingInputStreamToFile_thenCorrect4() 
   throws IOException {

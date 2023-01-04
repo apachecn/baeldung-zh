@@ -24,7 +24,7 @@ Explore different ways to determine whether a String is numeric or not.[Read mo
 
 Java 提供了两种我们可以用来存储十进制数的基本类型:`float`和`double`。`Double`是默认类型:
 
-```
+```java
 double PI = 3.1415;
 ```
 
@@ -34,14 +34,14 @@ double PI = 3.1415;
 
 如果我们只想打印小数点后有`n`位数的十进制数，我们可以简单地格式化输出字符串:
 
-```
+```java
 System.out.printf("Value with 3 digits after decimal point %.3f %n", PI);
 // OUTPUTS: Value with 3 digits after decimal point 3.142
 ```
 
 或者，我们可以用`[DecimalFormat](https://web.archive.org/web/20221206185533/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DecimalFormat.html)` 类格式化这个值:
 
-```
+```java
 DecimalFormat df = new DecimalFormat("###.###");
 System.out.println(df.format(PI));
 ```
@@ -52,7 +52,7 @@ System.out.println(df.format(PI));
 
 为了将`double` s 四舍五入到`n`小数位，我们可以编写一个**助手方法**:
 
-```
+```java
 private static double round(double value, int places) {
     if (places < 0) throw new IllegalArgumentException();
 
@@ -66,7 +66,7 @@ private static double round(double value, int places) {
 
 我们可以通过使用 [Apache Commons Math](https://web.archive.org/web/20221206185533/https://commons.apache.org/proper/commons-math/) 库获得相同的结果:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-math3</artifactId>
@@ -78,7 +78,7 @@ private static double round(double value, int places) {
 
 一旦我们将库添加到项目中，我们就可以使用`Precision.round()`方法，它有两个参数——value 和 scale:
 
-```
+```java
 Precision.round(PI, 3);
 ```
 
@@ -92,7 +92,7 @@ Precision.round(PI, 3);
 
 我们可以通过向`pom.xml`添加依赖关系来获得这个库(最新版本可以在[这里找到](https://web.archive.org/web/20221206185533/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.decimal4j%22%20AND%20a%3A%22decimal4j%22)):
 
-```
+```java
 <dependency>
     <groupId>org.decimal4j</groupId>
     <artifactId>decimal4j</artifactId>
@@ -102,13 +102,13 @@ Precision.round(PI, 3);
 
 现在我们可以简单地使用:
 
-```
+```java
 DoubleRounder.round(PI, 3);
 ```
 
 然而，`DoubleRounder`在一些情况下会失败:
 
-```
+```java
 System.out.println(DoubleRounder.round(256.025d, 2));
 // OUTPUTS: 256.02 instead of expected 256.03
 ```
@@ -119,7 +119,7 @@ System.out.println(DoubleRounder.round(256.025d, 2));
 
 在这种情况下，我们可以通过乘以并除以`10^n`来控制`n`的小数位数:
 
-```
+```java
 public static double roundAvoid(double value, int places) {
     double scale = Math.pow(10, places);
     return Math.round(value * scale) / scale;
@@ -128,7 +128,7 @@ public static double roundAvoid(double value, int places) {
 
 不推荐使用这种方法，因为它会截断值。在许多情况下，值被不正确地舍入:
 
-```
+```java
 System.out.println(roundAvoid(1000.0d, 17));
 // OUTPUTS: 92.23372036854776 !!
 System.out.println(roundAvoid(260.775d, 2));

@@ -12,7 +12,7 @@
 
 要使用百里香叶，我们需要在我们的`pom.xml`中添加[合适的 Spring Boot 发酵剂](https://web.archive.org/web/20220728105348/https://search.maven.org/search?q=a:spring-boot-starter-thymeleaf%20AND%20g:org.springframework.boot):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -28,7 +28,7 @@
 
 让我们创建一个打招呼的模板，并将其放入`src/main/resources/templates-2`:
 
-```
+```java
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -43,7 +43,7 @@
 
 我们还需要一个控制器:
 
-```
+```java
 @GetMapping("/hello")
 public String sayHello() {
     return "hello";
@@ -52,7 +52,7 @@ public String sayHello() {
 
 基本设置完成后，让我们通过覆盖`application.properties`中的一个属性来配置 Spring Boot 使用我们的`templates-2`目录:
 
-```
+```java
 spring.thymeleaf.prefix=classpath:/templates-2/
 ```
 
@@ -64,7 +64,7 @@ spring.thymeleaf.prefix=classpath:/templates-2/
 
 为此，让我们创建一个`ClassLoaderTemplateResolver` bean:
 
-```
+```java
 @Bean
 public ClassLoaderTemplateResolver secondaryTemplateResolver() {
     ClassLoaderTemplateResolver secondaryTemplateResolver = new ClassLoaderTemplateResolver();
@@ -87,7 +87,7 @@ public ClassLoaderTemplateResolver secondaryTemplateResolver() {
 
 当我们使用百里香叶时，我们可能会看到以下错误:
 
-```
+```java
 Error resolving template [hello], template might not exist or might not be accessible
   by any of the configured Template Resolvers
 ```

@@ -28,14 +28,14 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 我们将需要 [Web](https://web.archive.org/web/20220524071045/https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web) 和[安全](https://web.archive.org/web/20220524071045/https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security)依赖来创建这个服务。让我们从向`pom.xml`文件添加以下依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
 </dependency>
 ```
 
-```
+```java
 <dependency> 
     <groupId>org.springframework.boot</groupId> 
     <artifactId>spring-boot-starter-security</artifactId> 
@@ -50,7 +50,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 让我们创建`ProductController`。它包含一个方法`getProducts`，该方法返回产品列表:
 
-```
+```java
 @RestController("/products")
 public class ProductController {
 
@@ -68,7 +68,7 @@ public class ProductController {
 
 同样，我们来定义一下`CustomerController: `
 
-```
+```java
 @RestController("/customers")
 public class CustomerController {
 
@@ -91,7 +91,7 @@ public class CustomerController {
 
 让我们创建`SecurityConfiguration`类:
 
-```
+```java
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -147,7 +147,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 ### 5.1.测试产品 API
 
-```
+```java
 $ curl -i http://localhost:8080/products
 [
   {
@@ -167,7 +167,7 @@ $ curl -i http://localhost:8080/products
 
 ### 5.2.测试客户 API
 
-```
+```java
 $ curl -i http://localhost:8080/customers/1 
 ```
 
@@ -177,7 +177,7 @@ $ curl -i http://localhost:8080/customers/1
 
 现在，让我们在向请求添加身份验证信息后再试一次:
 
-```
+```java
 $ curl -u admin:password -i http://localhost:8080/customers/1 
 {
   "name": "Customer 1",

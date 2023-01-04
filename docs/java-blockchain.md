@@ -63,7 +63,7 @@
 
 首先，我们需要定义一个简单的 POJO 来保存我们的块的数据:
 
-```
+```java
 public class Block {
     private String hash;
     private String previousHash;
@@ -99,7 +99,7 @@ public class Block {
 
 那么，让我们看看如何用 Java 生成我们的块的散列:
 
-```
+```java
 public String calculateBlockHash() {
     String dataToHash = previousHash 
       + Long.toString(timeStamp) 
@@ -136,7 +136,7 @@ public String calculateBlockHash() {
 
 那么，我们到底该怎么做呢？老实说，这个解决方案并不花哨！我们试图用蛮力来实现这个目标。我们在这里使用 nonce:
 
-```
+```java
 public String mineBlock(int prefix) {
     String prefixString = new String(new char[prefix]).replace('\0', '0');
     while (!hash.substring(0, prefix).equals(prefixString)) {
@@ -160,7 +160,7 @@ public String mineBlock(int prefix) {
 
 现在我们已经定义了块及其函数，我们可以用它来创建一个简单的区块链。我们将把它存储在一个`ArrayList`中:
 
-```
+```java
 List<Block> blockchain = new ArrayList<>();
 int prefix = 4;
 String prefixString = new String(new char[prefix]).replace('\0', '0');
@@ -170,7 +170,7 @@ String prefixString = new String(new char[prefix]).replace('\0', '0');
 
 让我们看看如何在这里添加一个块:
 
-```
+```java
 @Test
 public void givenBlockchain_whenNewBlockAdded_thenSuccess() {
     Block newBlock = new Block(
@@ -187,7 +187,7 @@ public void givenBlockchain_whenNewBlockAdded_thenSuccess() {
 
 节点如何验证区块链是否有效？虽然这可能相当复杂，但让我们考虑一个简单的版本:
 
-```
+```java
 @Test
 public void givenBlockchain_whenValidated_thenSuccess() {
     boolean flag = true;

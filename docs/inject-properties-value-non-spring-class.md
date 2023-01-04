@@ -18,7 +18,7 @@
 
 让我们定义实现`loadProperties(String resourceFileName)`方法的`PropertiesLoader`类:
 
-```
+```java
 public class PropertiesLoader {
 
     public static Properties loadProperties(String resourceFileName) throws IOException {
@@ -43,7 +43,7 @@ load 方法实现了对`*.properties`文件的解析，并支持将`“:”`或`
 
 最后，让我们从配置文件中读取已定义配置条目的确切值:
 
-```
+```java
 String property = configuration.getProperty(key);
 ```
 
@@ -53,7 +53,7 @@ String property = configuration.getProperty(key);
 
 让我们定义一个`Initializer`来保存初始化自定义类所需的配置。在`Bean`初始化期间，框架将从`*.properties`配置文件中加载所有标注有`@Value`的字段:
 
-```
+```java
 @Component
 public class Initializer {
 
@@ -79,7 +79,7 @@ public class Initializer {
 
 现在我们将简单地访问我们的`Initializer`实例并在其上运行`initClass()`方法来处理我们的自定义`ClassNotManagedBySpring`的实例化:
 
-```
+```java
 ClassNotManagedBySpring classNotManagedBySpring = initializer.initClass();
 ```
 

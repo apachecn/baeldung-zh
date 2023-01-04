@@ -26,7 +26,7 @@
 
 这种依赖提供了让 web 应用程序与 Spring Boot 一起运行的所有核心需求，以及一个默认的嵌入式 Tomcat Servlet 容器:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -40,7 +40,7 @@
 
 接下来，我们需要包含`[tomcat-embed-jasper](https://web.archive.org/web/20220920151330/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3Aorg.apache.tomcat.embed%20a%3Atomcat-embed-jasper) `依赖项，以允许我们的应用程序编译和呈现 JSP 页面:
 
-```
+```java
 <dependency>
     <groupId>org.apache.tomcat.embed</groupId>
     <artifactId>tomcat-embed-jasper</artifactId>
@@ -54,7 +54,7 @@
 
 最后，我们需要包含`[jstl](https://web.archive.org/web/20220920151330/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3Ajavax.servlet%20a%3Ajstl) `库，它将提供 JSP 页面中所需的 JSTL 标签支持:
 
-```
+```java
 <dependency>
     <groupId>javax.servlet</groupId>
     <artifactId>jstl</artifactId>
@@ -68,7 +68,7 @@
 
 然而，**为了避免我们的应用程序提供的依赖关系与 Tomcat 运行时提供的依赖关系发生冲突，我们需要用`provided `范围**设置两个依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.apache.tomcat.embed</groupId>
     <artifactId>tomcat-embed-jasper</artifactId>
@@ -92,7 +92,7 @@
 
 我们需要通过在`application.properties`文件中配置两个属性，让 Spring 知道这些 JSP 文件的位置:
 
-```
+```java
 spring.mvc.view.prefix: /WEB-INF/jsp/
 spring.mvc.view.suffix: .jsp
 ```
@@ -105,7 +105,7 @@ spring.mvc.view.suffix: .jsp
 
 当作为**独立应用程序运行时，我们的应用程序类将是一个简单的`@SpringBootApplication`带注释的类以及`main`方法**:
 
-```
+```java
 @SpringBootApplication(scanBasePackages = "com.baeldung.boot.jsp")
 public class SpringBootJspApplication {
 
@@ -119,7 +119,7 @@ public class SpringBootJspApplication {
 
 **这将我们的应用程序的`Servlet`、`Filter`和`ServletContextInitializer `绑定到运行时服务器**，这是我们的应用程序运行所必需的:
 
-```
+```java
 @SpringBootApplication(scanBasePackages = "com.baeldung.boot.jsp")
 public class SpringBootJspApplication extends SpringBootServletInitializer {
 
@@ -142,7 +142,7 @@ JSP 页面依赖 JavaServer Pages 标准标记库(JSTL)来提供通用的模板�
 
 假设我们有一个`BookService`帮助我们查找所有的`Book`对象:
 
-```
+```java
 public class Book {
     private String isbn;
     private String name;
@@ -159,7 +159,7 @@ public interface BookService {
 
 我们可以编写一个 Spring MVC 控制器，将它公开为一个网页:
 
-```
+```java
 @Controller
 @RequestMapping("/book")
 public class BookController {
@@ -182,7 +182,7 @@ public class BookController {
 
 我们需要在以下位置创建该文件:
 
-```
+```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
@@ -223,7 +223,7 @@ public class BookController {
 
 我们的`BookController `将需要提供 MVC 端点来服务表单以添加书籍和处理表单提交:
 
-```
+```java
 public class BookController {
 
     //already existing code
@@ -247,7 +247,7 @@ public class BookController {
 
 我们将创建下面的`add-book.jsp`文件(记得把它放在正确的目录中):
 
-```
+```java
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -295,7 +295,7 @@ public class BookController {
 
 假设我们的应用程序定义了一个`DuplicateBookException`:
 
-```
+```java
 public class DuplicateBookException extends RuntimeException {
     private final Book book;
 
@@ -309,7 +309,7 @@ public class DuplicateBookException extends RuntimeException {
 
 同样，假设我们的`BookServiceImpl` 类将抛出上面的`DuplicateBookException `,如果我们试图添加两本具有相同 ISBN 的书:
 
-```
+```java
 @Service
 public class BookServiceImpl implements BookService {
 
@@ -334,7 +334,7 @@ public class BookServiceImpl implements BookService {
 
 然后，我们的`LibraryControllerAdvice`类将定义我们想要处理的错误，以及我们将如何处理每个错误:
 
-```
+```java
 @ControllerAdvice
 public class LibraryControllerAdvice {
 
@@ -360,7 +360,7 @@ public class LibraryControllerAdvice {
 
 无论哪种情况，我们的`pom.xml`都需要将其打包指令设置为`war`:
 
-```
+```java
 <packaging>war</packaging>
 ```
 

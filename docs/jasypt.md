@@ -30,7 +30,7 @@ Jasypt 是一个 Java 库，它允许开发人员以最少的努力向项目添�
 
 要使用非常简单的算法执行加密和解密，我们可以使用来自 Jasypt 库的`[BasicTextEncryptor](https://web.archive.org/web/20220524032115/http://www.jasypt.org/api/jasypt/1.8/org/jasypt/util/text/BasicTextEncryptor.html)` 类:
 
-```
+```java
 BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
 String privateData = "secret-data";
 textEncryptor.setPasswordCharArray("some-random-data".toCharArray());
@@ -38,14 +38,14 @@ textEncryptor.setPasswordCharArray("some-random-data".toCharArray());
 
 然后我们可以使用一个`encrypt()` 方法来加密纯文本:
 
-```
+```java
 String myEncryptedText = textEncryptor.encrypt(privateData);
 assertNotSame(privateData, myEncryptedText);
 ```
 
 如果我们想在数据库中存储给定用户的私有数据，我们可以存储一个`myEncryptedText` 而不违反任何安全限制。如果我们想将数据解密回纯文本，我们可以使用一种`decrypt()` 方法:
 
-```
+```java
 String plainText = textEncryptor.decrypt(myEncryptedText);
 
 assertEquals(plainText, privateData);
@@ -59,7 +59,7 @@ assertEquals(plainText, privateData);
 
 我们可以使用一个`BasicPasswordEncryptor` 类来执行单向加密:
 
-```
+```java
 String password = "secret-pass";
 BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
 String encryptedPassword = passwordEncryptor.encryptPassword(password); 
@@ -67,7 +67,7 @@ String encryptedPassword = passwordEncryptor.encryptPassword(password);
 
 然后，我们可以将已经加密的密码与执行登录过程的用户的密码进行比较，而无需解密已经存储在数据库中的密码:
 
-```
+```java
 boolean result = passwordEncryptor.checkPassword("secret-pass", encryptedPassword);
 
 assertTrue(result);
@@ -79,7 +79,7 @@ assertTrue(result);
 
 在 Jasypt 中，我们可以通过使用一个`StandardPBEStringEncryptor` 类来使用强加密，并使用一个`setAlgorithm()` 方法来定制它:
 
-```
+```java
 StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
 String privateData = "secret-data";
 encryptor.setPassword("some-random-passwprd");
@@ -90,7 +90,7 @@ encryptor.setAlgorithm("PBEWithMD5AndTripleDES");
 
 接下来，加密和解密的过程看起来与前面使用`BasicTextEncryptor` 类的过程相同:
 
-```
+```java
 String encryptedText = encryptor.encrypt(privateData);
 assertNotSame(privateData, encryptedText);
 
@@ -102,7 +102,7 @@ assertEquals(plainText, privateData);
 
 当我们在多核机器上运行时，我们希望并行处理解密。为了获得良好的性能，我们可以使用一个`[PooledPBEStringEncryptor](https://web.archive.org/web/20220524032115/http://www.jasypt.org/api/jasypt/1.9.0/org/jasypt/encryption/pbe/PooledPBEStringEncryptor.html)` 和`setPoolSize()` API 来创建一个摘要池。它们中的每一个都可以被不同的线程并行使用:
 
-```
+```java
 PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
 encryptor.setPoolSize(4);
 encryptor.setPassword("some-random-data");

@@ -22,19 +22,19 @@
 
 要使用`Duration` 类将间隔格式化为 HH:MM:SS，我们需要使用`Duration`类中的工厂方法`ofMillis` 从我们的间隔中初始化`Duration` 对象。这将把间隔转换成我们可以使用的`Duration`对象:
 
-```
+```java
 Duration duration = Duration.ofMillis(38114000);
 ```
 
 为了便于从秒到我们想要的单位的计算，我们需要得到我们的持续时间或间隔中的总秒数:
 
-```
+```java
 long seconds = duration.getSeconds();
 ```
 
 然后，一旦我们有了秒数，我们就为我们想要的格式生成相应的小时、分钟和秒:
 
-```
+```java
 long HH = seconds / 3600;
 long MM = (seconds % 3600) / 60;
 long SS = seconds % 60;
@@ -42,19 +42,19 @@ long SS = seconds % 60;
 
 最后，我们格式化生成的值:
 
-```
+```java
 String timeInHHMMSS = String.format("%02d:%02d:%02d", HH, MM, SS);
 ```
 
 让我们试试这个解决方案:
 
-```
+```java
 assertThat(timeInHHMMSS).isEqualTo("10:35:14");
 ```
 
 **如果我们使用的是 Java 9 或更高版本，我们可以使用一些助手方法直接获得单位，而不必执行任何计算**:
 
-```
+```java
 long HH = duration.toHours();
 long MM = duration.toMinutesPart();
 long SS = duration.toSecondsPart();
@@ -63,7 +63,7 @@ String timeInHHMMSS = String.format("%02d:%02d:%02d", HH, MM, SS);
 
 上面的代码片段将给出与上面测试相同的结果:
 
-```
+```java
 assertThat(timeInHHMMSS).isEqualTo("10:35:14");
 ```
 
@@ -73,7 +73,7 @@ assertThat(timeInHHMMSS).isEqualTo("10:35:14");
 
 要将以毫秒为单位的持续时间格式化为 HH:MM:SS 格式，我们需要做的就是使用`TimeUnit`中相应的助手方法:
 
-```
+```java
 long HH = TimeUnit.MILLISECONDS.toHours(38114000);
 long MM = TimeUnit.MILLISECONDS.toMinutes(38114000) % 60;
 long SS = TimeUnit.MILLISECONDS.toSeconds(38114000) % 60;
@@ -81,7 +81,7 @@ long SS = TimeUnit.MILLISECONDS.toSeconds(38114000) % 60;
 
 然后，根据上面生成的单位格式化持续时间:
 
-```
+```java
 String timeInHHMMSS = String.format("%02d:%02d:%02d", HH, MM, SS);
 assertThat(timeInHHMMSS).isEqualTo("10:35:14");
 ```
@@ -94,7 +94,7 @@ assertThat(timeInHHMMSS).isEqualTo("10:35:14");
 
 为了使用 [Apache Commons](/web/20220926202440/https://www.baeldung.com/java-commons-lang-3) ，我们需要将 [commons-lang3](https://web.archive.org/web/20220926202440/https://search.maven.org/search?q=g:org.apache.commons%20a:commons-lang3) 添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -104,7 +104,7 @@ assertThat(timeInHHMMSS).isEqualTo("10:35:14");
 
 正如所料，这个库在它的`DurationFormatUtils`类中有`formatDuration `和其他单元格式化方法:
 
-```
+```java
 String timeInHHMMSS = DurationFormatUtils.formatDuration(38114000, "HH:MM:SS", true);
 assertThat(timeInHHMMSS).isEqualTo("10:35:14");
 ```
@@ -113,7 +113,7 @@ assertThat(timeInHHMMSS).isEqualTo("10:35:14");
 
 当我们使用 Java 8 之前的 Java 版本时， [Joda Time](/web/20220926202440/https://www.baeldung.com/joda-time) 库就派上了用场，因为它有方便的助手方法来表示和格式化时间单位。为了使用 Joda 时间，让我们将 [joda 时间依赖关系](https://web.archive.org/web/20220926202440/https://search.maven.org/search?q=g:joda-time%20a:joda-time)添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>joda-time</groupId>
     <artifactId>joda-time</artifactId>
@@ -123,19 +123,19 @@ assertThat(timeInHHMMSS).isEqualTo("10:35:14");
 
 Joda Time 有一个`Duration`类来表示时间。首先，我们将以毫秒为单位的时间间隔转换为 Joda Time `Duration`对象的实例:
 
-```
+```java
 Duration duration = new Duration(38114000);
 ```
 
 然后，我们使用`Duration`中的`toPeriod `方法从上面的持续时间中获得周期，该方法将它转换或初始化为 Joda Time 中的`Period`类的实例:
 
-```
+```java
 Period period = duration.toPeriod();
 ```
 
 我们使用相应的助手方法从`Period`获取单位(小时、分钟和秒):
 
-```
+```java
 long HH = period.getHours();
 long MM = period.getMinutes();
 long SS = period.getSeconds();
@@ -143,7 +143,7 @@ long SS = period.getSeconds();
 
 最后，我们可以格式化持续时间并测试结果:
 
-```
+```java
 String timeInHHMMSS = String.format("%02d:%02d:%02d", HH, MM, SS);
 assertThat(timeInHHMMSS).isEqualTo("10:35:14");
 ```

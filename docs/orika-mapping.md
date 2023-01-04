@@ -18,13 +18,13 @@ Orika **使用字节码生成以最小的开销创建快速映射器**，使其�
 
 我们像这样创建一个`MapperFactory`对象:
 
-```
+```java
 MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
 ```
 
 然后假设我们有一个源数据对象`Source.java`，它有两个字段:
 
-```
+```java
 public class Source {
     private String name;
     private int age;
@@ -40,7 +40,7 @@ public class Source {
 
 以及类似的目的地数据对象，`Dest.java`:
 
-```
+```java
 public class Dest {
     private String name;
     private int age;
@@ -56,7 +56,7 @@ public class Dest {
 
 这是使用 Orika 的最基本的 bean 映射:
 
-```
+```java
 @Test
 public void givenSrcAndDest_whenMaps_thenCorrect() {
     mapperFactory.classMap(Source.class, Dest.class);
@@ -71,7 +71,7 @@ public void givenSrcAndDest_whenMaps_thenCorrect() {
 
 正如我们所观察到的，我们简单地通过映射创建了一个与`Source`具有相同字段的`Dest`对象。默认情况下，双向或反向映射也是可能的:
 
-```
+```java
 @Test
 public void givenSrcAndDest_whenMapsReverse_thenCorrect() {
     mapperFactory.classMap(Source.class, Dest.class).byDefault();
@@ -88,7 +88,7 @@ public void givenSrcAndDest_whenMapsReverse_thenCorrect() {
 
 为了在我们的 maven 项目中使用 Orika mapper，我们需要在`pom.xml`中拥有`orika-core`依赖关系:
 
-```
+```java
 <dependency>
     <groupId>ma.glasnost.orika</groupId>
     <artifactId>orika-core</artifactId>
@@ -110,7 +110,7 @@ public void givenSrcAndDest_whenMapsReverse_thenCorrect() {
 
 因此，我们最初的测试将变成:
 
-```
+```java
 @Test
 public void givenSrcAndDest_whenMapsUsingBoundMapper_thenCorrect() {
     BoundMapperFacade<Source, Dest> 
@@ -125,7 +125,7 @@ public void givenSrcAndDest_whenMapsUsingBoundMapper_thenCorrect() {
 
 然而，为了让`BoundMapperFacade`双向映射，我们必须显式地调用`mapReverse`方法，而不是我们在默认`MapperFacade`的情况下看到的 map 方法:
 
-```
+```java
 @Test
 public void givenSrcAndDest_whenMapsUsingBoundMapperInReverse_thenCorrect() {
     BoundMapperFacade<Source, Dest> 
@@ -146,7 +146,7 @@ public void givenSrcAndDest_whenMapsUsingBoundMapperInReverse_thenCorrect() {
 
 考虑一个源对象`Person`，它有三个字段，即`name`、`nickname`和`age`:
 
-```
+```java
 public class Person {
     private String name;
     private String nickname;
@@ -164,7 +164,7 @@ public class Person {
 
 然后应用程序的另一层有一个类似的对象，但由法国程序员编写。假设称之为`Personne`，有字段`nom`、`surnom`和`age`，都对应以上三个:
 
-```
+```java
 public class Personne {
     private String nom;
     private String surnom;
@@ -184,13 +184,13 @@ public class Personne {
 
 我们以前已经使用过它，但是我们还没有利用它的任何强大功能。我们前面每个使用默认`MapperFacade`的测试的第一行是使用`ClassMapBuilder` API 来注册我们想要映射的两个类:
 
-```
+```java
 mapperFactory.classMap(Source.class, Dest.class);
 ```
 
 我们还可以使用默认配置来映射所有字段，以使其更加清晰:
 
-```
+```java
 mapperFactory.classMap(Source.class, Dest.class).byDefault()
 ```
 
@@ -198,7 +198,7 @@ mapperFactory.classMap(Source.class, Dest.class).byDefault()
 
 现在我们希望能够将`Personne`映射到`Person`，所以我们也使用`ClassMapBuilder` API: 将字段映射配置到映射器上
 
-```
+```java
 @Test
 public void givenSrcAndDestWithDifferentFieldNames_whenMaps_thenCorrect() {
     mapperFactory.classMap(Personne.class, Person.class)
@@ -222,7 +222,7 @@ public void givenSrcAndDestWithDifferentFieldNames_whenMaps_thenCorrect() {
 
 不，在我们没有明确定义映射的情况下，当我们告诉映射器使用它的默认映射配置时不会:
 
-```
+```java
 mapperFactory.classMap(Personne.class, Person.class)
   .field("nom", "name").field("surnom", "nickname").byDefault().register();
 ```
@@ -233,7 +233,7 @@ mapperFactory.classMap(Personne.class, Person.class)
 
 假设我们想从映射中排除`Personne`的`nom`字段，这样`Person`对象只接收未被排除的字段的新值:
 
-```
+```java
 @Test
 public void givenSrcAndDest_whenCanExcludeField_thenCorrect() {
     mapperFactory.classMap(Personne.class, Person.class).exclude("nom")
@@ -258,7 +258,7 @@ public void givenSrcAndDest_whenCanExcludeField_thenCorrect() {
 
 考虑一个只有一个字段的源数据对象，一个人名列表:
 
-```
+```java
 public class PersonNameList {
     private List<String> nameList;
 
@@ -270,7 +270,7 @@ public class PersonNameList {
 
 现在考虑我们的目的数据对象，它将`firstName`和`lastName`分成单独的字段:
 
-```
+```java
 public class PersonNameParts {
     private String firstName;
     private String lastName;
@@ -286,7 +286,7 @@ public class PersonNameParts {
 
 Orika 允许我们使用括号符号来访问集合的成员:
 
-```
+```java
 @Test
 public void givenSrcWithListAndDestWithPrimitiveAttributes_whenMaps_thenCorrect() {
     mapperFactory.classMap(PersonNameList.class, PersonNameParts.class)
@@ -310,7 +310,7 @@ public void givenSrcWithListAndDestWithPrimitiveAttributes_whenMaps_thenCorrect(
 
 同样，我们知道在同一个地图中还有另一个键`last`，它的值代表一个人在目的地对象中的`lastName`。
 
-```
+```java
 public class PersonNameMap {
     private Map<String, String> nameMap;
 
@@ -324,7 +324,7 @@ public class PersonNameMap {
 
 Orika 接受两种检索密钥的方法，这两种方法在下面的测试中都有体现:
 
-```
+```java
 @Test
 public void givenSrcWithMapAndDestWithPrimitiveAttributes_whenMaps_thenCorrect() {
     mapperFactory.classMap(PersonNameMap.class, PersonNameParts.class)
@@ -349,7 +349,7 @@ public void givenSrcWithMapAndDestWithPrimitiveAttributes_whenMaps_thenCorrect()
 
 根据前面的集合示例，假设在我们的源数据对象中，有另一个数据传输对象(DTO ),它保存我们想要映射的值。
 
-```
+```java
 public class PersonContainer {
     private Name name;
 
@@ -359,7 +359,7 @@ public class PersonContainer {
 }
 ```
 
-```
+```java
 public class Name {
     private String firstName;
     private String lastName;
@@ -373,7 +373,7 @@ public class Name {
 
 为了能够访问嵌套 DTO 的属性并将它们映射到我们的目标对象，我们使用点符号，如下所示:
 
-```
+```java
 @Test
 public void givenSrcWithNestedFields_whenMaps_thenCorrect() {
     mapperFactory.classMap(PersonContainer.class, PersonNameParts.class)
@@ -392,7 +392,7 @@ public void givenSrcWithNestedFields_whenMaps_thenCorrect() {
 
 在某些情况下，您可能希望控制在遇到空值时是映射还是忽略它们。默认情况下，遇到以下情况时，Orika 将映射空值:
 
-```
+```java
 @Test
 public void givenSrcWithNullField_whenMapsThenCorrect() {
     mapperFactory.classMap(Source.class, Dest.class).byDefault();
@@ -411,14 +411,14 @@ public void givenSrcWithNullField_whenMapsThenCorrect() {
 
 在创建全局`MapperFactory`之前，我们可以配置我们的映射器来映射空值或者在全局级别忽略它们。还记得我们在第一个例子中是如何创建这个对象的吗？这一次，我们在构建过程中添加了一个额外的调用:
 
-```
+```java
 MapperFactory mapperFactory = new DefaultMapperFactory.Builder()
   .mapNulls(false).build();
 ```
 
 我们可以运行一个测试来确认确实没有映射空值:
 
-```
+```java
 @Test
 public void givenSrcWithNullAndGlobalConfigForNoNull_whenFailsToMap_ThenCorrect() {
     mapperFactory.classMap(Source.class, Dest.class);
@@ -444,7 +444,7 @@ public void givenSrcWithNullAndGlobalConfigForNoNull_whenFailsToMap_ThenCorrect(
 
 让我们用一个示例测试来说明这一点:
 
-```
+```java
 @Test
 public void givenSrcWithNullAndLocalConfigForNoNull_whenFailsToMap_ThenCorrect() {
     mapperFactory.classMap(Source.class, Dest.class).field("age", "age")
@@ -463,7 +463,7 @@ public void givenSrcWithNullAndLocalConfigForNoNull_whenFailsToMap_ThenCorrect()
 
 双向映射也接受映射的空值:
 
-```
+```java
 @Test
 public void givenDestWithNullReverseMappedToSource_whenMapsByDefault_thenCorrect() {
     mapperFactory.classMap(Source.class, Dest.class).byDefault();
@@ -479,7 +479,7 @@ public void givenDestWithNullReverseMappedToSource_whenMapsByDefault_thenCorrect
 
 我们也可以通过调用`mapNullsInReverse`并传入`false`来防止这种情况:
 
-```
+```java
 @Test
 public void 
   givenDestWithNullReverseMappedToSourceAndLocalConfigForNoNull_whenFailsToMap_thenCorrect() {
@@ -500,14 +500,14 @@ public void
 
 我们可以使用`fieldMap`在现场级别进行配置，如下所示:
 
-```
+```java
 mapperFactory.classMap(Source.class, Dest.class).field("age", "age")
   .fieldMap("name", "name").mapNulls(false).add().byDefault().register();
 ```
 
 在这种情况下，配置将只影响我们在字段级别称之为的`name`字段:
 
-```
+```java
 @Test
 public void givenSrcWithNullAndFieldLevelConfigForNoNull_whenFailsToMap_ThenCorrect() {
     mapperFactory.classMap(Source.class, Dest.class).field("age", "age")
@@ -530,13 +530,13 @@ public void givenSrcWithNullAndFieldLevelConfigForNoNull_whenFailsToMap_ThenCorr
 
 一个数据对象将该值表示为以下 ISO 格式的`datetime String`:
 
-```
+```java
 2007-06-26T21:22:39Z
 ```
 
 另一个表示与以下 unix 时间戳格式中的`long`类型相同:
 
-```
+```java
 1182882159000
 ```
 
@@ -544,7 +544,7 @@ public void givenSrcWithNullAndFieldLevelConfigForNoNull_whenFailsToMap_ThenCorr
 
 让我们创建第一个数据对象:
 
-```
+```java
 public class Person3 {
     private String name;
     private String dtob;
@@ -558,7 +558,7 @@ public class Person3 {
 
 然后我们的第二个数据对象:
 
-```
+```java
 public class Personne3 {
     private String name;
     private long dtob;
@@ -574,7 +574,7 @@ public class Personne3 {
 
 下面是我们对抽象类`CustomMapper`的具体实现:
 
-```
+```java
 class PersonCustomMapper extends CustomMapper<Personne3, Person3> {
 
     @Override
@@ -603,7 +603,7 @@ class PersonCustomMapper extends CustomMapper<Personne3, Person3> {
 
 让我们运行一个测试来确认我们的自定义映射器是否正常工作:
 
-```
+```java
 @Test
 public void givenSrcAndDest_whenCustomMapperWorks_thenCorrect() {
     mapperFactory.classMap(Personne3.class, Person3.class)
@@ -622,7 +622,7 @@ public void givenSrcAndDest_whenCustomMapperWorks_thenCorrect() {
 
 我们也可以确认双向映射是可行的:
 
-```
+```java
 @Test
 public void givenSrcAndDest_whenCustomMapperWorksBidirectionally_thenCorrect() {
     mapperFactory.classMap(Personne3.class, Person3.class)

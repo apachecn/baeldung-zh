@@ -52,7 +52,7 @@ BookKeeper 通过跨多个服务器实例复制日志条目来实现分类帐弹
 
 虽然手动完成这些步骤是完全可能的，但是这里我们将使用一个使用官方 Apache 映像的`docker-compose`文件来简化这项任务:
 
-```
+```java
 $ cd <path to docker-compose.yml>
 $ docker-compose up
 ```
@@ -61,7 +61,7 @@ $ docker-compose up
 
 让我们使用 bookkeeper 的 shell 命令`listbookies`做一个基本测试，检查它是否按预期工作:
 
-```
+```java
 $ docker exec -it apache-bookkeeper_bookie_1 /opt/bookkeeper/bin/bookkeeper \
   shell listbookies -readwrite
 ReadWrite Bookies :
@@ -78,7 +78,7 @@ ReadWrite Bookies :
 
 使用分类帐 API 需要将 [`bookkeeper-server`](https://web.archive.org/web/20221126220445/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.bookkeeper%22%20AND%20a%3A%22bookkeeper-server%22) 依赖项添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.bookkeeper</groupId>
     <artifactId>bookkeeper-server</artifactId>
@@ -88,7 +88,7 @@ ReadWrite Bookies :
 
 注意:如文档中所述，使用这个依赖关系也将包括对 [protobuf](/web/20221126220445/https://www.baeldung.com/google-protocol-buffer) 和 [guava](/web/20221126220445/https://www.baeldung.com/category/guava/) 库的依赖关系。如果我们的项目也需要这些库，但是版本不同于 BookKeeper 使用的版本，我们可以使用一个[替代依赖来隐藏这些库](https://web.archive.org/web/20221126220445/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.bookkeeper%22%20AND%20a%3A%22bookkeeper-server-shaded%22):
 
-```
+```java
 <dependency>
     <groupId>org.apache.bookkeeper</groupId>
     <artifactId>bookkeeper-server-shaded</artifactId>
@@ -100,7 +100,7 @@ ReadWrite Bookies :
 
 **`BookKeeper` 类是分类帐 API** 的主要入口点，提供了一些连接到我们的簿记员服务的方法。最简单的形式是，我们只需要创建这个类的一个新实例，传递 BookKeeper 使用的一个 ZooKeeper 服务器的地址:
 
-```
+```java
 BookKeeper client = new BookKeeper("zookeeper-host:2131"); 
 ```
 
@@ -108,7 +108,7 @@ BookKeeper client = new BookKeeper("zookeeper-host:2131");
 
 如果我们需要对一些参数进行更多的控制来微调我们的客户端，我们可以使用一个`ClientConfiguration`实例并使用它来创建我们的客户端:
 
-```
+```java
 ClientConfiguration cfg = new ClientConfiguration();
 cfg.setMetadataServiceUri("zk+null://zookeeper-host:2131");
 
@@ -121,7 +121,7 @@ BookKeeper.forConfig(cfg).build();
 
 一旦我们有了一个`BookKeeper`实例，创建一个新的分类帐就很简单了:
 
-```
+```java
 LedgerHandle lh = bk.createLedger(BookKeeper.DigestType.MAC,"password".getBytes());
 ```
 
@@ -129,7 +129,7 @@ LedgerHandle lh = bk.createLedger(BookKeeper.DigestType.MAC,"password".getBytes(
 
 如果我们想要将自定义元数据添加到分类帐中，我们需要使用一个接受所有参数的变量:
 
-```
+```java
 LedgerHandle lh = bk.createLedger(
   3,
   2,
@@ -143,7 +143,7 @@ LedgerHandle lh = bk.createLedger(
 
 在上述两种情况下，`createLedger`都是同步操作。BookKeeper 还提供使用回调的异步分类帐创建:
 
-```
+```java
 bk.asyncCreateLedger(
   3,
   2,
@@ -158,7 +158,7 @@ bk.asyncCreateLedger(
 
 较新版本的 BookKeeper (>= 4.6)也支持流畅风格的 API 和`CompletableFuture`来实现相同的目标:
 
-```
+```java
 CompletableFuture<WriteHandle> cf = bk.newCreateLedgerOp()
   .withDigestType(org.apache.bookkeeper.client.api.DigestType.MAC)
   .withPassword("password".getBytes())
@@ -171,7 +171,7 @@ CompletableFuture<WriteHandle> cf = bk.newCreateLedgerOp()
 
 一旦我们获得了一个`LedgerHandle`或`WriteHandle`，我们就使用一个`append()`方法变量将数据写入相关的分类帐。让我们从同步变体开始:
 
-```
+```java
 for(int i = 0; i < MAX_MESSAGES; i++) {
     byte[] data = new String("message-" + i).getBytes();
     lh.append(data);
@@ -182,7 +182,7 @@ for(int i = 0; i < MAX_MESSAGES; i++) {
 
 对于异步操作，API 会根据我们获得的特定句柄类型有所不同。`WriteHandle`使用`CompletableFuture, `，而`LedgerHandle `也支持基于回调的方法:
 
-```
+```java
 // Available in WriteHandle and LedgerHandle
 CompletableFuture<Long> f = lh.appendAsync(data);
 
@@ -201,7 +201,7 @@ lh.asyncAddEntry(
 
 从簿记员分类账中读取数据的工作方式与书写类似。首先，我们使用我们的`BookKeeper `实例创建一个`LedgerHandle` **:**
 
-```
+```java
 LedgerHandle lh = bk.openLedger(
   ledgerId, 
   BookKeeper.DigestType.MAC,
@@ -212,7 +212,7 @@ LedgerHandle lh = bk.openLedger(
 
 或者，更安全的方法是使用流畅风格的 API:
 
-```
+```java
 ReadHandle rh = bk.newOpenLedgerOp()
   .withLedgerId(ledgerId)
   .withDigestType(DigestType.MAC)
@@ -223,7 +223,7 @@ ReadHandle rh = bk.newOpenLedgerOp()
 
 `ReadHandle`拥有从我们的分类账中读取数据所需的方法:
 
-```
+```java
 long lastId = lh.readLastConfirmed();
 rh.read(0, lastId).forEach((entry) -> {
     // ... do something 
@@ -232,7 +232,7 @@ rh.read(0, lastId).forEach((entry) -> {
 
 在这里，我们只是使用同步`read`变量请求这个分类帐中的所有可用数据。正如所料，还有一个异步变体:
 
-```
+```java
 rh.readAsync(0, lastId).thenAccept((entries) -> {
     entries.forEach((entry) -> {
         // ... process entry
@@ -242,7 +242,7 @@ rh.readAsync(0, lastId).thenAccept((entries) -> {
 
 如果我们选择使用旧的`openLedger()`方法，我们会发现额外的方法支持异步方法的回调风格:
 
-```
+```java
 lh.asyncReadEntries(
   0,
   lastId,
@@ -258,7 +258,7 @@ lh.asyncReadEntries(
 
 我们之前已经看到，我们需要分类帐的`id`来打开和读取它的数据。那么，我们如何得到一个呢？**一种方法是使用`LedgerManager`接口，我们可以从我们的`BookKeeper `实例**中访问它。这个接口主要处理分类帐元数据，但也有`asyncProcessLedgers()`方法。使用这种方法以及一些帮助形成并发原语的方法，我们可以枚举所有可用的分类帐:
 
-```
+```java
 public List listAllLedgers(BookKeeper bk) {
     List ledgers = Collections.synchronizedList(new ArrayList<>());
     CountDownLatch processDone = new CountDownLatch(1);

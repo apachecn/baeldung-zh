@@ -12,7 +12,7 @@ Java 8 提供了创建`Javac`插件的 API。不幸的是，很难找到好的�
 
 首先，我们需要添加 JDK 的`tools.jar`作为我们项目的依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.sun</groupId>
     <artifactId>tools</artifactId>
@@ -26,7 +26,7 @@ Java 8 提供了创建`Javac`插件的 API。不幸的是，很难找到好的�
 
 让我们在示例中创建它:
 
-```
+```java
 public class SampleJavacPlugin implements Plugin {
 
     @Override
@@ -53,7 +53,7 @@ public class SampleJavacPlugin implements Plugin {
 
 之后，我们可以用`-Xplugin:MyPlugin`开关调用`Javac`:
 
-```
+```java
 baeldung/tutorials$ javac -cp ./core-java/target/classes -Xplugin:MyPlugin ./core-java/src/main/java/com/baeldung/javac/TestClass.java
 Hello from MyPlugin
 ```
@@ -75,7 +75,7 @@ Hello from MyPlugin
 
 例如，当我们想要通过添加一些基于源代码信息的检查来增强编译时，在`PARSE finished`事件处理程序中这样做是合理的:
 
-```
+```java
 public void init(JavacTask task, String... args) {
     task.addTaskListener(new TaskListener() {
         public void started(TaskEvent e) {
@@ -101,7 +101,7 @@ public void init(JavacTask task, String... args) {
 
 我们可以使用 *TreeScanner* 来解决这个问题:
 
-```
+```java
 public void finished(TaskEvent e) {
     if (e.getKind() != TaskEvent.Kind.PARSE) {
         return;
@@ -128,7 +128,7 @@ public void finished(TaskEvent e) {
 
 这是一个可以应用于方法参数的简单注释:
 
-```
+```java
 @Documented
 @Retention(RetentionPolicy.CLASS)
 @Target({ElementType.PARAMETER})
@@ -137,13 +137,13 @@ public @interface Positive { }
 
 下面是一个使用注释的示例:
 
-```
+```java
 public void service(@Positive int i) { }
 ```
 
 最后，我们希望字节码看起来像是从这样的源代码编译的:
 
-```
+```java
 public void service(@Positive int i) {
     if (i <= 0) {
         throw new IllegalArgumentException("A non-positive argument ("
@@ -158,7 +158,7 @@ public void service(@Positive int i) {
 
 让我们看看如何定位应该应用仪器的目标位置:
 
-```
+```java
 private static Set<String> TARGET_TYPES = Stream.of(
   byte.class, short.class, char.class, 
   int.class, long.class, float.class, double.class)
@@ -170,7 +170,7 @@ private static Set<String> TARGET_TYPES = Stream.of(
 
 接下来，让我们定义一个`shouldInstrument()`方法来检查参数在 TARGET_TYPES 集合中是否有类型以及`@Positive`注释:
 
-```
+```java
 private boolean shouldInstrument(VariableTree parameter) {
     return TARGET_TYPES.contains(parameter.getType().toString())
       && parameter.getModifiers().getAnnotations().stream()
@@ -181,7 +181,7 @@ private boolean shouldInstrument(VariableTree parameter) {
 
 然后我们将继续我们的`SampleJavacPlugin`类中的`finished()`方法，对满足我们条件的所有参数进行检查:
 
-```
+```java
 public void finished(TaskEvent e) {
     if (e.getKind() != TaskEvent.Kind.PARSE) {
         return;
@@ -213,7 +213,7 @@ public void finished(TaskEvent e) {
 
 首先，我们需要获得一个`Context`实例:
 
-```
+```java
 @Override
 public void init(JavacTask task, String... args) {
     Context context = ((BasicJavacTask) task).getContext();
@@ -225,7 +225,7 @@ public void init(JavacTask task, String... args) {
 
 现在我们可以构建新的 AST 元素，例如，如果通过调用`TreeMaker.If()`可以构建表达式，那么就构建一个*:*
 
-```
+```java
 private static JCTree.JCIf createCheck(VariableTree parameter, Context context) {
     TreeMaker factory = TreeMaker.instance(context);
     Names symbolsTable = Names.instance(context);
@@ -241,7 +241,7 @@ private static JCTree.JCIf createCheck(VariableTree parameter, Context context) 
 
 `createIfCondition()`方法构建了“`parameterId`<0”`if`条件:
 
-```
+```java
 private static JCTree.JCBinary createIfCondition(TreeMaker factory, 
   Names symbolsTable, VariableTree parameter) {
     Name parameterId = symbolsTable.fromString(parameter.getName().toString());
@@ -253,7 +253,7 @@ private static JCTree.JCBinary createIfCondition(TreeMaker factory,
 
 接下来，`createIfBlock()`方法构建一个返回`IllegalArgumentException:`的块
 
-```
+```java
 private static JCTree.JCBlock createIfBlock(TreeMaker factory, 
   Names symbolsTable, VariableTree parameter) {
     String parameterName = parameter.getName().toString();
@@ -279,7 +279,7 @@ private static JCTree.JCBlock createIfBlock(TreeMaker factory,
 
 既然我们能够构建新的 AST 元素，我们需要将它们插入到由解析器准备的 AST 中。我们可以通过将 *public* A *PI* 元素转换为 *private* API 类型来实现这一点:
 
-```
+```java
 private void addCheck(MethodTree method, VariableTree parameter, Context context) {
     JCTree.JCIf check = createCheck(parameter, context);
     JCTree.JCBlock body = (JCTree.JCBlock) method.getBody();
@@ -298,7 +298,7 @@ private void addCheck(MethodTree method, VariableTree parameter, Context context
 
 `SimpleSourceFile`将给定源文件的文本暴露给`Javac`:
 
-```
+```java
 public class SimpleSourceFile extends SimpleJavaFileObject {
     private String content;
 
@@ -318,7 +318,7 @@ public class SimpleSourceFile extends SimpleJavaFileObject {
 
 `SimpleClassFile`将编译结果保存为字节数组:
 
-```
+```java
 public class SimpleClassFile extends SimpleJavaFileObject {
 
     private ByteArrayOutputStream out;
@@ -342,7 +342,7 @@ public class SimpleClassFile extends SimpleJavaFileObject {
 
 确保编译器使用我们的字节码持有者:
 
-```
+```java
 public class SimpleFileManager
   extends ForwardingJavaFileManager<StandardJavaFileManager> {
 
@@ -367,7 +367,7 @@ public class SimpleFileManager
 
 最后，所有这些都与内存编译有关:
 
-```
+```java
 public class TestCompiler {
     public byte[] compile(String qualifiedClassName, String testSource) {
         StringWriter output = new StringWriter();
@@ -392,7 +392,7 @@ public class TestCompiler {
 
 之后，我们只需要运行二进制文件:
 
-```
+```java
 public class TestRunner {
 
     public Object run(byte[] byteCode, String qualifiedClassName, String methodName,
@@ -429,7 +429,7 @@ public class TestRunner {
 
 测试可能是这样的:
 
-```
+```java
 public class SampleJavacPluginTest {
 
     private static final String CLASS_TEMPLATE

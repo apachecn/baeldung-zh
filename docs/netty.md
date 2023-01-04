@@ -55,7 +55,7 @@ Netty 提供了一个巨大的`ChannelHandler.` 实现层次，值得注意的�
 
 首先，我们需要在我们的`pom.xml`中提供 Netty 依赖:
 
-```
+```java
 <dependency>
     <groupId>io.netty</groupId>
     <artifactId>netty-all</artifactId>
@@ -69,7 +69,7 @@ Netty 提供了一个巨大的`ChannelHandler.` 实现层次，值得注意的�
 
 请求数据类将具有以下结构:
 
-```
+```java
 public class RequestData {
     private int intValue;
     private String stringValue;
@@ -80,7 +80,7 @@ public class RequestData {
 
 让我们假设服务器收到请求并返回乘以 2 的`intValue`。响应将只有一个 int 值:
 
-```
+```java
 public class ResponseData {
     private int intValue;
 
@@ -98,7 +98,7 @@ public class ResponseData {
 
 首先，我们可以创建一个临时的`ByteBuf` ,并将所有的入站字节附加到它上面，直到我们得到所需的字节数:
 
-```
+```java
 public class SimpleProcessingHandler 
   extends ChannelInboundHandlerAdapter {
     private ByteBuf tmp;
@@ -142,7 +142,7 @@ public class SimpleProcessingHandler
 
 RequestData 的解码器如下所示:
 
-```
+```java
 public class RequestDecoder extends ReplayingDecoder<RequestData> {
 
     private final Charset charset = Charset.forName("UTF-8");
@@ -171,7 +171,7 @@ public class RequestDecoder extends ReplayingDecoder<RequestData> {
 
 我们可以在我们的主处理程序中向`Channel`写入数据，或者我们可以分离逻辑并创建一个扩展`MessageToByteEncoder`的处理程序，它将捕获写`ResponseData` 操作:
 
-```
+```java
 public class ResponseDataEncoder 
   extends MessageToByteEncoder<ResponseData> {
 
@@ -187,7 +187,7 @@ public class ResponseDataEncoder
 
 因为我们在单独的处理程序中执行解码和编码，所以我们需要更改我们的`ProcessingHandler`:
 
-```
+```java
 public class ProcessingHandler extends ChannelInboundHandlerAdapter {
 
     @Override
@@ -208,7 +208,7 @@ public class ProcessingHandler extends ChannelInboundHandlerAdapter {
 
 现在，让我们把它们放在一起，运行我们的服务器:
 
-```
+```java
 public class NettyServer {
 
     private int port;
@@ -254,7 +254,7 @@ public class NettyServer {
 
 在上面的服务器引导示例中使用的类的细节可以在它们的 Javadoc 中找到。最有趣的部分是这一行:
 
-```
+```java
 ch.pipeline().addLast(
   new RequestDecoder(), 
   new ResponseDataEncoder(), 
@@ -267,7 +267,7 @@ ch.pipeline().addLast(
 
 客户端应该执行反向编码和解码，所以我们需要有一个`RequestDataEncoder` 和`ResponseDataDecoder`:
 
-```
+```java
 public class RequestDataEncoder 
   extends MessageToByteEncoder<RequestData> {
 
@@ -284,7 +284,7 @@ public class RequestDataEncoder
 }
 ```
 
-```
+```java
 public class ResponseDataDecoder 
   extends ReplayingDecoder<ResponseData> {
 
@@ -301,7 +301,7 @@ public class ResponseDataDecoder
 
 此外，我们需要定义一个`ClientHandler` ，它将发送请求并从服务器接收响应:
 
-```
+```java
 public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
@@ -326,7 +326,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
 现在让我们引导客户端:
 
-```
+```java
 public class NettyClient {
     public static void main(String[] args) throws Exception {
 

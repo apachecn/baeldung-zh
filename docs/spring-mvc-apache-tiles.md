@@ -20,7 +20,7 @@ Apache [Tiles](https://web.archive.org/web/20220525130657/https://tiles.apache.o
 
 这里的第一步是在`pom.xml`中添加必要的[依赖关系](https://web.archive.org/web/20220525130657/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.tiles%22%20AND%20a%3A%22tiles-jsp%22):
 
-```
+```java
 <dependency>
     <groupId>org.apache.tiles</groupId>
     <artifactId>tiles-jsp</artifactId>
@@ -32,7 +32,7 @@ Apache [Tiles](https://web.archive.org/web/20220525130657/https://tiles.apache.o
 
 现在我们需要定义模板定义，特别是对于每个页面，我们将覆盖该特定页面的模板定义:
 
-```
+```java
 <tiles-definitions>
     <definition name="template-def" 
            template="/WEB-INF/views/tiles/layouts/defaultLayout.jsp">  
@@ -63,7 +63,7 @@ Apache [Tiles](https://web.archive.org/web/20220525130657/https://tiles.apache.o
 
 让我们看看每个类的运行情况:
 
-```
+```java
 @Controller
 @RequestMapping("/")
 public class TilesController {
@@ -89,7 +89,7 @@ public class TilesController {
 }
 ```
 
-```
+```java
 public class WebInitializer implements WebApplicationInitializer {
  public void onStartup(ServletContext container) throws ServletException {
 
@@ -114,7 +114,7 @@ public class WebInitializer implements WebApplicationInitializer {
 
 最后，在`ApplicationConfiguration`类中，我们使用`TilesConfigurer`和`TilesViewResolver`类来实现集成:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "com.baeldung.spring.controller.tiles")
@@ -151,7 +151,7 @@ public class TilesApplicationConfiguration implements WebMvcConfigurer {
 
 请查找可用作构建特定页面基础的布局片段:
 
-```
+```java
 <html>
     <head>
         <meta 

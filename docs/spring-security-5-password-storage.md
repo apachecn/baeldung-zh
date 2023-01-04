@@ -22,7 +22,7 @@ Spring 安全团队声明`org.springframework.security.authentication.encoding` 
 
 以下是 bcrypt 编码密码的示例:
 
-```
+```java
 {bcrypt}$2b$12$FaLabMRystU4MLAasNOKb.HUElBAabuQdX59RWHq5X.9Ghm692NEi
 ```
 
@@ -50,7 +50,7 @@ Spring 安全团队列出了最新版本的[对应 JavaDoc](https://web.archive.
 
 该设置的配置如下所示:
 
-```
+```java
 @Bean
 public PasswordEncoder delegatingPasswordEncoder() {
     PasswordEncoder defaultEncoder = new StandardPasswordEncoder();
@@ -78,7 +78,7 @@ public PasswordEncoder delegatingPasswordEncoder() {
 
 以下是示例代码:
 
-```
+```java
 @Bean
 public ApplicationListener<AuthenticationSuccessEvent>
   authenticationSuccessListener( PasswordEncoder encoder) {
@@ -111,7 +111,7 @@ public ApplicationListener<AuthenticationSuccessEvent>
 
 此外，我们需要注册我们的编码委托:
 
-```
+```java
 @Configuration
 public class PasswordStorageWebSecurityConfigurer {
 

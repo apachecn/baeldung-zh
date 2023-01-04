@@ -12,7 +12,7 @@
 
 有时，当我们实际上打算覆盖时，我们会意外过载。在 Java 中很容易犯这样的错误:
 
-```
+```java
 public class Machine {
     public boolean equals(Machine obj) {
         return true;
@@ -33,7 +33,7 @@ public class Machine {
 
 在这个例子中，我们可以在`equals`方法之上添加`@Override` 注释:
 
-```
+```java
 @Override
 public boolean equals(Machine obj) {
     return true;
@@ -44,7 +44,7 @@ public boolean equals(Machine obj) {
 
 然后，我们可以纠正我们的错误:
 
-```
+```java
 @Override
 public boolean equals(Object obj) {
     return true;

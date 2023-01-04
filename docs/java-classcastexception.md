@@ -14,13 +14,13 @@
 
 对于我们的下一个实验，让我们考虑下面的类:
 
-```
+```java
 public interface Animal {
     String getName();
 }
 ```
 
-```
+```java
 public class Mammal implements Animal {
     @Override
     public String getName() {
@@ -29,7 +29,7 @@ public class Mammal implements Animal {
 }
 ```
 
-```
+```java
 public class Amphibian implements Animal {
     @Override
     public String getName() {
@@ -38,7 +38,7 @@ public class Amphibian implements Animal {
 }
 ```
 
-```
+```java
 public class Frog extends Amphibian {
     @Override
     public String getName() {
@@ -53,21 +53,21 @@ public class Frog extends Amphibian {
 
 例如，让我们尝试将一个`Frog`转换为一个`Mammal`:
 
-```
+```java
 Frog frog = new Frog();
 Mammal mammal = (Mammal) frog;
 ```
 
 **我们可能期望这里有一个`ClassCastException`，但实际上，我们得到了一个编译错误:“不兼容的类型:青蛙不能被转换成哺乳动物”。**然而，当我们使用普通的超类型时，情况发生了变化:
 
-```
+```java
 Animal animal = new Frog();
 Mammal mammal = (Mammal) animal;
 ```
 
 现在，我们从第二行得到一个`ClassCastException` :
 
-```
+```java
 Exception in thread "main" java.lang.ClassCastException: class Frog cannot be cast to class Mammal (Frog and Mammal are in unnamed module of loader 'app') 
 at Main.main(Main.java:9)
 ```
@@ -76,14 +76,14 @@ at Main.main(Main.java:9)
 
 有趣的是，只有当我们试图强制转换为明确不兼容的类时，才会出现编译错误。对于接口来说就不一样了，因为 Java 支持多接口继承，但是对于类来说只支持单一继承。因此，编译器不能确定引用类型是否实现了特定的接口。让我们举例说明:
 
-```
+```java
 Animal animal = new Frog();
 Serializable serial = (Serializable) animal;
 ```
 
 我们在第二行得到一个`ClassCastException`,而不是一个编译错误:
 
-```
+```java
 Exception in thread "main" java.lang.ClassCastException: class Frog cannot be cast to class java.io.Serializable (Frog is in unnamed module of loader 'app'; java.io.Serializable is in module java.base of loader 'bootstrap') 
 at Main.main(Main.java:11)
 ```
@@ -94,7 +94,7 @@ at Main.main(Main.java:11)
 
 因此，让我们看看当我们尝试以下转换时，原始数组会发生什么:
 
-```
+```java
 Object primitives = new int[1];
 Integer[] integers = (Integer[]) primitives;
 ```
@@ -103,7 +103,7 @@ Integer[] integers = (Integer[]) primitives;
 
 类型提升怎么样？让我们试试下面的方法:
 
-```
+```java
 Object primitives = new int[1];
 long[] longs = (long[]) primitives;
 ```
@@ -116,7 +116,7 @@ long[] longs = (long[]) primitives;
 
 让我们看一个安全强制转换的例子:
 
-```
+```java
 Mammal mammal;
 if (animal instanceof Mammal) {
     mammal = (Mammal) animal;
@@ -131,7 +131,7 @@ if (animal instanceof Mammal) {
 
 对于我们的实验，让我们考虑下面的泛型类:
 
-```
+```java
 public static class Box<T> {
     private T content;
 
@@ -147,7 +147,7 @@ public static class Box<T> {
 
 我们现在将尝试如下污染堆:
 
-```
+```java
 Box<Long> originalBox = new Box<>();
 Box raw = originalBox;
 raw.setContent(2.5);
@@ -163,7 +163,7 @@ Long content = bound.getContent();
 
 让我们考虑下面的通用方法:
 
-```
+```java
 public static <T> T convertInstanceOfObject(Object o) {
     try {
         return (T) o;
@@ -175,7 +175,7 @@ public static <T> T convertInstanceOfObject(Object o) {
 
 现在让我们称之为:
 
-```
+```java
 String shouldBeNull = convertInstanceOfObject(123);
 ```
 

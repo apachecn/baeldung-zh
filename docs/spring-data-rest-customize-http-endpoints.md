@@ -12,7 +12,7 @@ Spring Data REST 可以删除很多 REST 服务中常见的样板文件。
 
 首先，让我们**创建一个扩展`CrudRepository`接口**的空接口，指定我们实体的类型及其主键的类型:
 
-```
+```java
 public interface UserRepository extends CrudRepository<WebsiteUser, Long> {}
 ```
 
@@ -20,7 +20,7 @@ public interface UserRepository extends CrudRepository<WebsiteUser, Long> {}
 
 如果我们不需要`CrudRepository`中定义的所有资源，我们可以扩展基本的`Repository`接口，**只定义我们想要的资源**:
 
-```
+```java
 public interface UserRepository extends Repository<WebsiteUser, Long> {
   void deleteById(Long aLong);
 }
@@ -36,14 +36,14 @@ public interface UserRepository extends Repository<WebsiteUser, Long> {
 
 而且，由于我们使用的是 Spring Data REST，我们从它的扩展中获益良多:
 
-```
+```java
 @RepositoryRestResource(collectionResourceRel = "users", path = "users")
 public interface UserRepository extends CrudRepository<WebsiteUser, Long> {}
 ```
 
 **我们所有的资源都使用默认的 CRUD 模式**公开，因此发出以下命令:
 
-```
+```java
 curl -v -X DELETE http://localhost:8080/users/<existing_user_id>
 ```
 
@@ -55,7 +55,7 @@ curl -v -X DELETE http://localhost:8080/users/<existing_user_id>
 
 然后，我们可以使用注释`@RestResource(exported = false)`，它将**配置 Spring 在触发 HTTP 方法暴露**时跳过这个方法:
 
-```
+```java
 @Override
 @RestResource(exported = false)
 void deleteById(Long aLong);
@@ -74,13 +74,13 @@ void deleteById(Long aLong);
 
 让我们回到我们的`UserRepository`并添加一个简单的`findByEmail`方法:
 
-```
+```java
 WebsiteUser findByEmail(@Param("email") String email);
 ```
 
 通过执行`cUrl`到`http://localhost:8080/users/search/`，我们现在可以看到我们的新方法与其他资源一起列出:
 
-```
+```java
 {
   "_links": {
     "findByEmail": {
@@ -95,14 +95,14 @@ WebsiteUser findByEmail(@Param("email") String email);
 
 **如果我们不喜欢默认路径，我们可以简单地添加`@RestResource`注释**，而不是改变存储库方法:
 
-```
+```java
 @RestResource(path = "byEmail", rel = "customFindMethod")
 WebsiteUser findByEmail(@Param("email") String email);
 ```
 
 如果我们再次进行资源发现，生成的 JSON 将确认我们的更改:
 
-```
+```java
 {
   "_links": {
     "customFindMethod": {
@@ -124,7 +124,7 @@ WebsiteUser findByEmail(@Param("email") String email);
 
 例如，我们可以使用`ExposureConfiguration` 来限制针对`UserRepository`的补丁请求:
 
-```
+```java
 public class RestConfig implements RepositoryRestConfigurer {
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration restConfig,

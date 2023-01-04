@@ -26,7 +26,7 @@
 
 对于`HashMap`这样的对象，不允许执行并发操作。因此，如果我们试图在迭代时更新一个`HashMap`，我们将会收到一个`ConcurrentModificationException`。使用`synchronizedMap()`时也会出现这种情况:
 
-```
+```java
 @Test(expected = ConcurrentModificationException.class)
 public void whenRemoveAndAddOnHashMap_thenConcurrentModificationError() {
     Map<Integer, String> map = new HashMap<>();
@@ -43,7 +43,7 @@ public void whenRemoveAndAddOnHashMap_thenConcurrentModificationError() {
 
 然而，`ConcurrentHashMap`却不是这样:
 
-```
+```java
 Map<Integer, String> map = new ConcurrentHashMap<>();
 map.put(1, "baeldung");
 map.put(2, "HashMap");
@@ -63,7 +63,7 @@ Assert.assertEquals(3, map.size());
 
 `ConcurrentHashMap`不允许`null`出现在键或值中:
 
-```
+```java
 @Test(expected = NullPointerException.class)
 public void allowNullKey_In_ConcurrentHasMap() {
     Map<String, Integer> map = new ConcurrentHashMap<>();
@@ -75,7 +75,7 @@ public void allowNullKey_In_ConcurrentHasMap() {
 
 让我们断言，我们可以使用一个由`HashMap`支持的`Collections.synchronizedMap()`的`null`密钥:
 
-```
+```java
 Map<String, Integer> map = Collections
   .synchronizedMap(new HashMap<String, Integer>());
 map.put(null, 1);
@@ -90,7 +90,7 @@ Assert.assertTrue(map.get(null).equals(1));
 
 我们对这些地图上的随机读写操作进行了比较。让我们快速看一下我们的 JMH 基准代码:
 
-```
+```java
 @Benchmark
 public void randomReadAndWriteSynchronizedMap() {
     Map<String, Integer> map = Collections.synchronizedMap(new HashMap<String, Integer>());
@@ -114,7 +114,7 @@ private void performReadAndWriteTest(final Map<String, Integer> map) {
 
 我们使用 10 个线程对 1，000 个项目进行了 5 次迭代，运行了我们的性能基准。让我们看看基准测试结果:
 
-```
+```java
 Benchmark                                                     Mode  Cnt        Score        Error  Units
 MapPerformanceComparison.randomReadAndWriteConcurrentHashMap  avgt  100  3061555.822 ±  84058.268  ns/op
 MapPerformanceComparison.randomReadAndWriteSynchronizedMap    avgt  100  3234465.857 ±  60884.889  ns/op

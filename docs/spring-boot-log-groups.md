@@ -14,7 +14,7 @@ Spring Boot 提供了许多自动配置来帮助编写企业应用程序。然�
 
 为了使用这个特性，首先，我们应该通过`logging.group`配置属性声明一个组:
 
-```
+```java
 logging.group.rest=com.baeldung.web,org.springframework.web,org.springframework.http
 ```
 
@@ -22,7 +22,7 @@ logging.group.rest=com.baeldung.web,org.springframework.web,org.springframework.
 
 然后，我们可以一次将配置应用于一个组中的所有记录器。例如，这里我们将该组的日志级别更改为`debug:`
 
-```
+```java
 logging.level.rest=DEBUG 
 ```
 

@@ -14,7 +14,7 @@
 
 让我们从一个示例发布者`Mono<String>`开始:
 
-```
+```java
 Mono<String> blockingHelloWorld() {
     return Mono.just("Hello world!");
 }
@@ -27,7 +27,7 @@ assertEquals("Hello world!", result);
 
 为了获得更多的控制，让我们设置一个明确的持续时间:
 
-```
+```java
 String result = blockingHelloWorld().block(Duration.of(1000, ChronoUnit.MILLIS));
 assertEquals(expected, result);
 ```
@@ -36,7 +36,7 @@ assertEquals(expected, result);
 
 另外，`Mono`可以是空的，上面的`block()`方法将返回`null`。相反，我们可以在这种情况下使用`block` `Optional`:
 
-```
+```java
 Optional<String> result = Mono.<String>empty().blockOptional();
 assertEquals(Optional.empty(), result);
 ```
@@ -49,7 +49,7 @@ assertEquals(Optional.empty(), result);
 
 首先要使用`subscribe()`方法以非阻塞的方式订阅。此外，我们将指定最终值的使用者:
 
-```
+```java
 blockingHelloWorld()
   .subscribe(result -> assertEquals(expected, result));
 ```
@@ -58,7 +58,7 @@ blockingHelloWorld()
 
 在某些情况下，我们希望在中间步骤中消费价值。因此，我们可以使用一个操作符来添加行为:
 
-```
+```java
 blockingHelloWorld()
   .doOnNext(result -> assertEquals(expected, result))
   .subscribe();

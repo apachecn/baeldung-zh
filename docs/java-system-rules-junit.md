@@ -12,7 +12,7 @@
 
 首先，让我们将[系统规则依赖关系](https://web.archive.org/web/20221208143839/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22system-rules%22)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.github.stefanbirkner</groupId>
     <artifactId>system-rules</artifactId>
@@ -22,7 +22,7 @@
 
 我们还将添加从 [Maven Central](https://web.archive.org/web/20221208143839/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22system-lambda%22) 获得的[系统λ](https://web.archive.org/web/20221208143839/https://github.com/stefanbirkner/system-lambda)依赖性:
 
-```
+```java
 <dependency>
     <groupId>com.github.stefanbirkner</groupId>
     <artifactId>system-lambda</artifactId>
@@ -36,14 +36,14 @@
 
 简单概括一下，Java 平台使用一个 [`Properties`对象](/web/20221208143839/https://www.baeldung.com/java-properties)来提供关于本地系统和配置的信息。我们可以很容易地打印出属性:
 
-```
+```java
 System.getProperties()
   .forEach((key, value) -> System.out.println(key + ": " + value));
 ```
 
 正如我们所看到的，属性包括诸如当前用户、Java 运行时的当前版本和文件路径名分隔符等信息:
 
-```
+```java
 java.version: 1.8.0_221
 file.separator: /
 user.home: /Users/baeldung
@@ -61,7 +61,7 @@ os.name: Mac OS X
 
 假设我们有一个系统属性`log_dir` ，它包含我们的日志应该被写入的位置，并且我们的应用程序在启动时设置这个位置:
 
-```
+```java
 System.setProperty("log_dir", "/tmp/baeldung/logs");
 ```
 
@@ -69,7 +69,7 @@ System.setProperty("log_dir", "/tmp/baeldung/logs");
 
 现在让我们考虑从我们的单元测试中，我们想要提供一个不同的值。我们可以使用`ProvideSystemProperty`规则来做到这一点:
 
-```
+```java
 public class ProvidesSystemPropertyWithRuleUnitTest {
 
     @Rule
@@ -87,7 +87,7 @@ public class ProvidesSystemPropertyWithRuleUnitTest {
 
 如果我们在测试类完成时打印出`log_dir`属性的值:
 
-```
+```java
 @AfterClass
 public static void tearDownAfterClass() throws Exception {
     System.out.println(System.getProperty("log_dir"));
@@ -96,7 +96,7 @@ public static void tearDownAfterClass() throws Exception {
 
 我们可以看到财产的价值已经恢复到原来的价值:
 
-```
+```java
 /tmp/baeldung/logs
 ```
 
@@ -104,7 +104,7 @@ public static void tearDownAfterClass() throws Exception {
 
 如果我们需要提供多个属性，我们可以使用`and`方法将我们测试所需的尽可能多的属性值链接在一起:
 
-```
+```java
 @Rule
 public final ProvideSystemProperty providesSystemPropertyRule = 
     new ProvideSystemProperty("log_dir", "test/resources").and("another_property", "another_value")
@@ -114,7 +114,7 @@ public final ProvideSystemProperty providesSystemPropertyRule =
 
 同样，我们也可以使用`ProvideSystemProperty`规则从文件或类路径资源中提供属性:
 
-```
+```java
 @Rule
 public final ProvideSystemProperty providesSystemPropertyFromFileRule = 
   ProvideSystemProperty.fromResource("/test.properties");
@@ -128,7 +128,7 @@ public void givenProvideSystemPropertyFromFile_whenGetName_thenNameIsProvidedSuc
 
 在上面的例子中，我们假设在类路径中有一个`test.properties`文件:
 
-```
+```java
 name=baeldung
 version=1.0
 ```
@@ -139,7 +139,7 @@ version=1.0
 
 让我们看看如何使用这个版本的库来实现我们的测试:
 
-```
+```java
 @BeforeAll
 static void setUpBeforeClass() throws Exception {
     System.setProperty("log_dir", "/tmp/baeldung/logs");
@@ -166,7 +166,7 @@ void givenSetSystemProperty_whenGetLogDir_thenLogDirIsProvidedSuccessfully() thr
 
 为此，我们可以使用`ClearSystemProperties`规则:
 
-```
+```java
 @Rule
 public final ClearSystemProperties userNameIsClearedRule = new ClearSystemProperties("user.name");
 
@@ -186,7 +186,7 @@ public void givenClearUsernameProperty_whenGetUserName_thenNull() {
 
 在本节中，我们将使用一个非常简单的示例，它从标准输入中读取名字和姓氏，并将它们连接在一起:
 
-```
+```java
 private String getFullname() {
     try (Scanner scanner = new Scanner(System.in)) {
         String firstName = scanner.next();
@@ -198,7 +198,7 @@ private String getFullname() {
 
 系统规则包含了`TextFromStandardInputStream`规则，我们可以用它来指定调用`System.in`时应该提供的行:
 
-```
+```java
 @Rule
 public final TextFromStandardInputStream systemInMock = emptyStandardInputStream();
 
@@ -215,7 +215,7 @@ public void givenTwoNames_whenSystemInMock_thenNamesJoinedTogether() {
 
 让我们看看如何使用 System Lambda 在 JUnit 5 版本的测试中实现同样的效果:
 
-```
+```java
 @Test
 void givenTwoNames_whenSystemInMock_thenNamesJoinedTogether() throws Exception {
     withTextFromSystemIn("Jonathan", "Cook").execute(() -> {
@@ -234,7 +234,7 @@ void givenTwoNames_whenSystemInMock_thenNamesJoinedTogether() throws Exception {
 
 方便的是，我们可以应用几乎相同的方法来测试与标准错误流交互的代码。这次我们使用`SystemErrRule`:
 
-```
+```java
 @Rule
 public final SystemErrRule systemErrRule = new SystemErrRule().enableLog();
 
@@ -255,7 +255,7 @@ private void printError(String output) {
 
 现在，让我们实现测试的 JUnit5 版本:
 
-```
+```java
 @Test
 void givenTapSystemErr_whenInvokePrintln_thenOutputIsReturnedSuccessfully() throws Exception {
 
@@ -275,7 +275,7 @@ void givenTapSystemErr_whenInvokePrintln_thenOutputIsReturnedSuccessfully() thro
 
 幸运的是，系统规则提供了一个简洁的解决方案，使用`ExpectedSystemExit`规则来处理这个问题:
 
-```
+```java
 @Rule
 public final ExpectedSystemExit exitRule = ExpectedSystemExit.none();
 
@@ -294,7 +294,7 @@ private void exit() {
 
 **我们可以在 JUnit 5 版本中使用`catchSystemExit`方法**实现类似的东西:
 
-```
+```java
 @Test
 void givenCatchSystemExit_whenAppCallsSystemExit_thenStatusIsReturnedSuccessfully() throws Exception {
     int statusCode = catchSystemExit(() -> {

@@ -16,7 +16,7 @@
 
 同样，让我们覆盖`toString`方法，将详细信息打印到控制台:
 
-```
+```java
 class BankAccount {
     String name;
     LocalDateTime opened;
@@ -34,14 +34,14 @@ class BankAccount {
 
 **这意味着如果我们创建一个新对象，字段值不会被初始化:**
 
-```
+```java
 BankAccount account = new BankAccount();
 account.toString(); 
 ```
 
 运行上面的`toString `方法会导致一个异常，因为对象`name`和`opened`仍然是`null`:
 
-```
+```java
 java.lang.NullPointerException
     at com.baeldung.constructors.BankAccount.toString(BankAccount.java:12)
     at com.baeldung.constructors.ConstructorUnitTest
@@ -52,7 +52,7 @@ java.lang.NullPointerException
 
 让我们用一个构造函数来解决这个问题:
 
-```
+```java
 class BankAccount {
     public BankAccount() {
         this.name = "";
@@ -80,7 +80,7 @@ class BankAccount {
 
 为此，**让我们写一个`parameterized constructor`，也就是一个接受一些参数的构造函数**:
 
-```
+```java
 class BankAccount {
     public BankAccount() { ... }
     public BankAccount(String name, LocalDateTime opened, double balance) {
@@ -93,7 +93,7 @@ class BankAccount {
 
 现在我们可以用我们的`BankAccount`类做一些有用的事情:
 
-```
+```java
  LocalDateTime opened = LocalDateTime.of(2018, Month.JUNE, 29, 06, 30, 00);
     BankAccount account = new BankAccount("Tom", opened, 1000.0f); 
     account.toString(); 
@@ -111,7 +111,7 @@ class BankAccount {
 
 新账户应该和旧账户同名，有今天的创建日期，没有资金。**我们可以使用`copy constructor` :** 来实现
 
-```
+```java
 public BankAccount(BankAccount other) {
     this.name = other.name;
     this.opened = LocalDateTime.now();
@@ -121,7 +121,7 @@ public BankAccount(BankAccount other) {
 
 现在我们有以下行为:
 
-```
+```java
 LocalDateTime opened = LocalDateTime.of(2018, Month.JUNE, 29, 06, 30, 00);
 BankAccount account = new BankAccount("Tim", opened, 1000.0f);
 BankAccount newAccount = new BankAccount(account);
@@ -139,7 +139,7 @@ assertThat(newAccount.getBalance()).isEqualTo(0.0f);
 
 因此，让我们创建一个带有`name`参数的构造函数，并为其他参数赋予默认值:
 
-```
+```java
 public BankAccount(String name, LocalDateTime opened, double balance) {
     this.name = name;
     this.opened = opened;
@@ -164,7 +164,7 @@ Java 中构造函数的一个有趣用途是在`Value Objects`的创建中。**�
 
 让我们继续创建一个不可变的类:
 
-```
+```java
 class Transaction {
     final BankAccount bankAccount;
     final LocalDateTime date;

@@ -36,7 +36,7 @@ SirixDB 是一个日志结构的、临时的 [NoSQL](/web/20220706122839/https:/
 
 为了遵循这些例子，我们首先必须包含[`sirix-core`依赖](https://web.archive.org/web/20220706122839/https://search.maven.org/search?q=g:io.sirix%20AND%20a:sirix-core&core=gav)，例如，通过 Maven:
 
-```
+```java
 <dependency>
     <groupId>io.sirix</groupId>
     <artifactId>sirix-core</artifactId>
@@ -46,7 +46,7 @@ SirixDB 是一个日志结构的、临时的 [NoSQL](/web/20220706122839/https:/
 
 或通过 Gradle:
 
-```
+```java
 dependencies {
     compile 'io.sirix:sirix-core:0.9.3'
 } 
@@ -68,7 +68,7 @@ SirixDB 中的一个节点通过`firstChild/leftSibling/rightSibling/parentNodeK
 
 首先，我们想展示如何用单个资源创建数据库。该资源将从一个 JSON 文件导入，并以 SirixDB 的内部二进制格式持久存储:
 
-```
+```java
 var pathToJsonFile = Paths.get("jsonFile");
 var databaseFile = Paths.get("database");
 
@@ -101,7 +101,7 @@ try (var database = Databases.openJsonDatabase(databaseFile)) {
 
 为了在树结构中导航，我们能够在提交后重用读写事务。但是，在下面的代码中，我们将再次打开资源，并在最近的修订版上开始一个只读事务:
 
-```
+```java
 try (var database = Databases.openJsonDatabase(databaseFile);
      var manager = database.openResourceManager("resource");
      var rtx = manager.beginNodeReadOnlyTrx()) {
@@ -145,7 +145,7 @@ SirixDB 为**提供了一系列轴，例如所有 XPath-axes** 来浏览 XML 和
 
 每个方法都返回一个类型为`VisitResult`的值。接口的唯一实现是下面的枚举:
 
-```
+```java
 public enum VisitResultType implements VisitResult {
     SKIPSIBLINGS,
     SKIPSUBTREE,
@@ -163,7 +163,7 @@ public enum VisitResultType implements VisitResult {
 
 `Visitor` 接口中每个方法的默认实现为每个节点类型返回`VisitResultType.CONTINUE` 。因此，我们只需要实现我们感兴趣的节点的方法。如果我们已经实现了一个实现了名为`MyVisitor`的`Visitor` 接口的类，我们可以以如下方式使用`VisitorDescendantAxis`:
 
-```
+```java
 var axis = VisitorDescendantAxis.newBuilder(rtx)
   .includeSelf()
   .visitor(new MyVisitor())
@@ -192,7 +192,7 @@ SirixDB 最与众不同的特性之一是彻底的版本控制。因此，SirixD
 
 我们将为`PastAxis`展示一个简单的例子:
 
-```
+```java
 var axis = new PastAxis(resourceManager, rtx);
 if (axis.hasNext()) {
     var trx = axis.next();
@@ -204,7 +204,7 @@ if (axis.hasNext()) {
 
 SirixDB 提供了几个过滤器，我们可以将它们与`FilterAxis`结合使用。例如，下面的代码遍历一个对象节点的所有子节点，并使用关键字“a”过滤对象关键字节点，如`{“a”:1, “b”: “foo”}`中所示。
 
-```
+```java
 new FilterAxis<JsonNodeReadOnlyTrx>(new ChildAxis(rtx), new JsonNameFilter(rtx, "a"))
 ```
 
@@ -212,7 +212,7 @@ new FilterAxis<JsonNodeReadOnlyTrx>(new ChildAxis(rtx), new JsonNameFilter(rtx, 
 
 对于 JSON 资源，可以按如下方式使用该轴，通过名为“foobar”的对象键名进行过滤:
 
-```
+```java
 var axis = new VisitorDescendantAxis.Builder(rtx).includeSelf().visitor(myVisitor).build();
 var filter = new JsonNameFilter(rtx, "foobar");
 for (var filterAxis = new FilterAxis<JsonNodeReadOnlyTrx>(axis, filter); filterAxis.hasNext();) {
@@ -224,7 +224,7 @@ for (var filterAxis = new FilterAxis<JsonNodeReadOnlyTrx>(axis, filter); filterA
 
 在以下示例中,`rtx`属于类型`NodeReadOnlyTrx`:
 
-```
+```java
 var axis = new PostOrderAxis(rtx);
 var axisStream = StreamSupport.stream(axis.spliterator(), false);
 
@@ -242,7 +242,7 @@ axisStream.filter((unusedNodeKey) -> new JsonNameFilter(rtx, "a"))
 
 导航到要修改的节点后，我们可以根据节点类型更新名称或值:
 
-```
+```java
 if (wtx.isObjectKey()) wtx.setObjectKeyName("foo");
 if (wtx.isStringValue()) wtx.setStringValue("foo");
 ```
@@ -255,7 +255,7 @@ SirixDB 检查一致性，因此，如果在特定的节点类型上不允许方
 
 我们还可以链接更新方法——在这个例子中，`wtx`位于一个对象节点上:
 
-```
+```java
 wtx.insertObjectRecordAsFirstChild("foo", new StringValue("bar"))
    .moveToParent().trx()
    .insertObjectRecordAsRightSibling("baz", new NullValue());
@@ -271,14 +271,14 @@ wtx.insertObjectRecordAsFirstChild("foo", new StringValue("bar"))
 
 要基于字符串插入新的子树，我们可以使用:
 
-```
+```java
 var json = "{\"foo\": \"bar\",\"baz\": [0, \"bla\", true, null]}";
 wtx.insertSubtreeAsFirstChild(JsonShredder.createStringReader(json));
 ```
 
 JSON API 目前不提供复制子树的可能性。但是，XML API 可以。我们能够从 SirixDB 中的另一个 XML 资源复制一个子树:
 
-```
+```java
 wtx.copySubtreeAsRightSibling(rtx);
 ```
 
@@ -296,7 +296,7 @@ wtx.copySubtreeAsRightSibling(rtx);
 
 正如我们已经看到的，我们可以通过调用`commit`方法开始一个读写事务并创建一个新的快照。但是，我们也可以启动自动提交事务游标:
 
-```
+```java
 resourceManager.beginNodeTrx(TimeUnit.SECONDS, 30);
 resourceManager.beginNodeTrx(1000);
 resourceManager.beginNodeTrx(1000, TimeUnit.SECONDS, 30);
@@ -306,13 +306,13 @@ resourceManager.beginNodeTrx(1000, TimeUnit.SECONDS, 30);
 
 我们还能够启动一个读写事务，然后恢复到以前的修订，我们可以将它提交为新的修订:
 
-```
+```java
 resourceManager.beginNodeTrx().revertTo(2).commit();
 ```
 
 中间的所有修订仍然可用。提交多个修订后，我们可以通过指定确切的修订号或时间戳来打开特定的修订:
 
-```
+```java
 var rtxOpenedByRevisionNumber = resourceManager.beginNodeReadOnlyTrx(2);
 
 var dateTime = LocalDateTime.of(2019, Month.JUNE, 15, 13, 39);
@@ -324,7 +324,7 @@ var rtxOpenedByTimestamp = resourceManager.beginNodeReadOnlyTrx(instant);
 
 要计算存储在 SirixDB 中的资源的任意两个修订版之间的差异，我们可以调用 diff 算法:
 
-```
+```java
 DiffFactory.invokeJsonDiff(
   new DiffFactory.Builder(
     resourceManager,
@@ -340,7 +340,7 @@ DiffFactory.invokeJsonDiff(
 
 一组不变的观察者是最后一个论点。观察者必须实现以下接口:
 
-```
+```java
 public interface DiffObserver {
     void diffListener(DiffType diffType, long newNodeKey, long oldNodeKey, DiffDepth depth);
     void diffDone();
@@ -353,7 +353,7 @@ public interface DiffObserver {
 
 在某个时候，我们希望将 SirixDBs 二进制编码的 JSON 资源序列化回 JSON:
 
-```
+```java
 var writer = new StringWriter();
 var serializer = new JsonSerializer.Builder(resourceManager, writer).build();
 serializer.call();
@@ -361,7 +361,7 @@ serializer.call();
 
 要序列化修订版 1 和 2:
 
-```
+```java
 var serializer = new
 JsonSerializer.Builder(resourceManager, writer, 1, 2).build();
 serializer.call();
@@ -369,7 +369,7 @@ serializer.call();
 
 和所有存储的修订:
 
-```
+```java
 var serializer = new
 JsonSerializer.Builder(resourceManager, writer, -1).build();
 serializer.call(); 

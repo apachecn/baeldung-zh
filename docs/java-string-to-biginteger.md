@@ -10,7 +10,7 @@
 
 为了将一个小数`String`转换成`BigInteger`，我们将**使用`BigInteger(String value)`构造函数**:
 
-```
+```java
 String inputString = "878";
 BigInteger result = new BigInteger(inputString);
 assertEquals("878", result.toString());
@@ -20,7 +20,7 @@ assertEquals("878", result.toString());
 
 **当使用默认的 `BigInteger(String value)`构造函数**将一个非十进制的`String`转换成十六进制的 **时，我们可能会得到一个** `**NumberFormatException**`:
 
-```
+```java
 String inputString = "290f98";
 new BigInteger(inputString);
 ```
@@ -29,7 +29,7 @@ new BigInteger(inputString);
 
 一种方法是**使用`BigInteger(String value, int radix)` 构造函数**:
 
-```
+```java
 String inputString = "290f98";
 BigInteger result = new BigInteger(inputString, 16);
 assertEquals("2690968", result.toString());
@@ -39,7 +39,7 @@ assertEquals("2690968", result.toString());
 
 另一种方法是先**将[非十进制 `String`转换成`a byte`数组](/web/20220626112053/https://www.baeldung.com/java-byte-arrays-hex-strings)，然后使用`BigIntenger(byte [] bytes)`构造函数**:
 
-```
+```java
 byte[] inputStringBytes = inputString.getBytes();
 BigInteger result = new BigInteger(inputStringBytes);
 assertEquals("290f98", new String(result.toByteArray()));

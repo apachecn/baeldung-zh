@@ -20,7 +20,7 @@
 
 操作员`(?:X)`创建一个非捕获组。`X`是 : 组的图案
 
-```
+```java
 Pattern.compile("[^:]+://(?:[.a-z]+/?)+")
 ```
 
@@ -28,7 +28,7 @@ Pattern.compile("[^:]+://(?:[.a-z]+/?)+")
 
 模式 `“[^:]:` ”匹配协议—例如，“`http://`”。非捕获组“`(?:[.a-z]+/?)`”匹配带有可选斜线的域名。由于“`+`”操作符匹配这个模式的一个或多个实例，我们也将匹配随后的路径段。让我们在一个 URL 上测试这个模式: 
 
-```
+```java
 Pattern simpleUrlPattern = Pattern.compile("[^:]+://(?:[.a-z]+/?)+");
 Matcher urlMatcher
   = simpleUrlPattern.matcher("http://www.microsoft.com/some/other/url/path");
@@ -38,7 +38,7 @@ Assertions.assertThat(urlMatcher.matches()).isTrue();
 
 让我们看看当我们尝试检索匹配的文本时会发生什么: 
 
-```
+```java
 Pattern simpleUrlPattern = Pattern.compile("[^:]+://(?:[.a-z]+/?)+");
 Matcher urlMatcher = simpleUrlPattern.matcher("http://www.microsoft.com/");
 
@@ -57,7 +57,7 @@ Assertions.assertThatThrownBy(() -> urlMatcher.group(1))
 
 正则表达式区分大小写。如果我们将我们的模式应用于大小写混合的 URL，匹配将会失败:
 
-```
+```java
 Pattern simpleUrlPattern
   = Pattern.compile("[^:]+://(?:[.a-z]+/?)+");
 Matcher urlMatcher
@@ -70,25 +70,25 @@ Assertions.assertThat(urlMatcher.matches()).isFalse();
 
 一种选择是将大写字符范围添加到模式中:
 
-```
+```java
 Pattern.compile("[^:]+://(?:[.a-zA-Z]+/?)+")
 ```
 
 另一种选择是使用修饰符标志。因此，我们可以编译不区分大小写的正则表达式:
 
-```
+```java
 Pattern.compile("[^:]+://(?:[.a-z]+/?)+", Pattern.CASE_INSENSITIVE)
 ```
 
 非捕获组允许第三种选择:**我们可以只改变组的修改标志。**让我们将不区分大小写的修饰符标志(“`i`”)添加到组中:
 
-```
+```java
 Pattern.compile("[^:]+://(?i:[.a-z]+/?)+");
 ```
 
 既然我们已经使组不区分大小写，让我们将此模式应用于大小写混合的 URL:
 
-```
+```java
 Pattern scopedCaseInsensitiveUrlPattern
   = Pattern.compile("[^:]+://(?i:[.a-z]+/?)+");
 Matcher urlMatcher
@@ -99,7 +99,7 @@ Assertions.assertThat(urlMatcher.matches()).isTrue();
 
 当一个模式被编译成不区分大小写时，我们可以通过在修饰符前添加“-”操作符来关闭它。让我们将此模式应用于另一个大小写混合的 URL:
 
-```
+```java
 Pattern scopedCaseSensitiveUrlPattern
   = Pattern.compile("[^:]+://(?-i:[.a-z]+/?)+/ending-path", Pattern.CASE_INSENSITIVE);
 Matcher urlMatcher
@@ -126,7 +126,7 @@ Assertions.assertThat(urlMatcher.matches()).isFalse();
 
 让我们将独立的非捕获组模式应用于 URL:
 
-```
+```java
 Pattern independentUrlPattern
   = Pattern.compile("[^:]+://(?>[.a-z]+/?)+/ending-path");
 Matcher independentMatcher
@@ -145,7 +145,7 @@ NFA 引擎应该尝试回溯。由于组末尾的斜杠是可选的，NFA 引擎
 
 回溯可以发生在独立的非捕获组中。当 NFA 引擎匹配该组时，回溯信息没有被丢弃。回溯信息直到组匹配成功后才被丢弃:
 
-```
+```java
 Pattern independentUrlPatternWithBacktracking
   = Pattern.compile("[^:]+://(?>(?:[.a-z]+/?)+/)ending-path");
 Matcher independentMatcher

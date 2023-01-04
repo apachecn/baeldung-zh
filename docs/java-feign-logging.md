@@ -16,13 +16,13 @@
 
 让我们为一个类设置日志级别属性:
 
-```
+```java
 logging.level.<packageName>.<className> = DEBUG
 ```
 
 或者，如果我们有一个包，其中放有我们所有的虚拟客户端，我们可以为整个包添加它:
 
-```
+```java
 logging.level.<packageName> = DEBUG
 ```
 
@@ -41,7 +41,7 @@ logging.level.<packageName> = DEBUG
 
 我们需要声明一个配置类，姑且称之为`FeignConfig`:
 
-```
+```java
 public class FeignConfig {
 
     @Bean
@@ -53,7 +53,7 @@ public class FeignConfig {
 
 之后，我们将配置类绑定到我们的假客户端类`FooClient`:
 
-```
+```java
 @FeignClient(name = "foo-client", configuration = FeignConfig.class)
 public interface FooClient {
 
@@ -65,13 +65,13 @@ public interface FooClient {
 
 第二种方法是将它设置在我们的 `application.properties.`中，让我们在这里引用我们的虚拟客户端的名称，在我们的例子中是`foo-client`:
 
-```
+```java
 feign.client.config.foo-client.loggerLevel = full
 ```
 
 或者，我们可以覆盖所有假扮客户端的默认配置级别:
 
-```
+```java
 feign.client.config.default.loggerLevel = full
 ```
 
@@ -81,7 +81,7 @@ feign.client.config.default.loggerLevel = full
 
 下面，我们将声明`UserClient`类:
 
-```
+```java
 @FeignClient(name = "user-client", url="https://jsonplaceholder.typicode.com", configuration = FeignConfig.class)
 public interface UserClient {
 
@@ -94,7 +94,7 @@ public interface UserClient {
 
 让我们看看调用`/users`时日志是什么样子的:
 
-```
+```java
 2021-05-31 17:21:54 DEBUG 2992 - [thread-1] com.baeldung.UserClient : [UserClient#getUsers] ---> GET https://jsonplaceholder.typicode.com/users HTTP/1.1
 2021-05-31 17:21:54 DEBUG 2992 - [thread-1] com.baeldung.UserClient : [UserClient#getUsers] ---> END HTTP (0-byte body)
 2021-05-31 17:21:55 DEBUG 2992 - [thread-1] com.baeldung.UserClient : [UserClient#getUsers] <--- HTTP/1.1 200 OK (902ms)

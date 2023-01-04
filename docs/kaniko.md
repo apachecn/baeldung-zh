@@ -28,21 +28,21 @@ Kaniko 使用运行在容器内部的`executor image` : `gcr.io/kaniko-project/e
 
 我们将使用 Minikube 在本地部署 Kubernetes。它可以作为独立的二进制文件下载:
 
-```
+```java
 $ curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 &&
   chmod +x minikube
 ```
 
 然后，我们可以将 Minikube 可执行文件添加到以下路径:
 
-```
+```java
 $ sudo mkdir -p /usr/local/bin/
 $ sudo install minikube /usr/local/bin/
 ```
 
 接下来，让我们确保 Docker 守护进程正在运行:
 
-```
+```java
 $ docker version
 ```
 
@@ -50,20 +50,20 @@ $ docker version
 
 现在，我们可以创建我们的 Kubernetes 集群:
 
-```
+```java
 $ minikube start --driver=docker
 ```
 
 一旦 start 命令成功执行，我们将看到一条消息:
 
-```
+```java
 Done! kubectl is now configured to use "minikube"
 For best results, install kubectl: https://kubernetes.io/docs/tasks/tools/install-kubectl/
 ```
 
 运行`minikube status`命令后，我们应该看到`kubelet`状态为“`Running`”:
 
-```
+```java
 m01
 host: Running
 kubelet: Running
@@ -73,7 +73,7 @@ kubeconfig: Configured
 
 接下来，我们需要设置`kubectl`二进制文件来运行 Kubernetes 命令。让我们下载二进制文件并使其可执行:
 
-```
+```java
 $ curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s \ 
   https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl &&
   chmod +x ./kubectl
@@ -81,13 +81,13 @@ $ curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s \
 
 现在让我们将它移到路径:
 
-```
+```java
 $ sudo mv ./kubectl /usr/local/bin/kubectl
 ```
 
 我们可以使用以下方法验证版本:
 
-```
+```java
 $ kubectl version
 ```
 
@@ -99,21 +99,21 @@ $ kubectl version
 
 为此，我们需要 SSH 到 Kubernetes 集群并创建目录:
 
-```
+```java
 $ minikube ssh
 $ mkdir kaniko && cd kaniko
 ```
 
 接下来，让我们创建一个 Dockerfile，它提取 Ubuntu 图像并回显一个字符串"`hello”`:
 
-```
+```java
 $ echo 'FROM ubuntu' >> dockerfile
 $ echo 'ENTRYPOINT ["/bin/bash", "-c", "echo hello"]' >> dockerfile
 ```
 
 如果我们现在运行`cat dockerfile` ，我们应该会看到:
 
-```
+```java
 FROM ubuntu
 ENTRYPOINT ["/bin/bash", "-c", "echo hello"]
 ```
@@ -122,13 +122,13 @@ ENTRYPOINT ["/bin/bash", "-c", "echo hello"]
 
 其输出应该类似于:
 
-```
+```java
 /home/docker/kaniko
 ```
 
 最后，我们可以中止 SSH 会话:
 
-```
+```java
 $ exit
 ```
 
@@ -148,7 +148,7 @@ $ exit
 
 首先，让我们创建持久卷，它提供了之前在集群中创建的卷挂载路径。让我们把这个文件叫做`volume.yaml`:
 
-```
+```java
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -167,7 +167,7 @@ spec:
 
 接下来，让我们为这个持久卷创建一个持久卷声明。我们将创建一个文件`volume-claim.yaml`,包含:
 
-```
+```java
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -185,7 +185,7 @@ spec:
 
 我们将该文件称为`pom.yaml`:
 
-```
+```java
 apiVersion: v1
 kind: Pod
 metadata:
@@ -211,7 +211,7 @@ spec:
 
 准备好所有必需的配置文件后，让我们应用它们:
 
-```
+```java
 $ kubectl create -f volume.yaml
 $ kubectl create -f volume-claim.yaml
 $ kubectl create -f pod.yaml
@@ -219,14 +219,14 @@ $ kubectl create -f pod.yaml
 
 应用描述符后，我们可以检查 Kaniko pod 是否进入完成状态。我们可以使用`kubectl get po`检查这一点:
 
-```
+```java
 NAME     READY   STATUS      RESTARTS   AGE
 kaniko    0/1   Completed       0        3m
 ```
 
 现在，我们可以使用`kubectl logs kaniko,`来检查此 pod 的日志，以检查映像创建的状态，它应该会显示以下输出:
 
-```
+```java
 INFO[0000] Resolved base name ubuntu to ubuntu          
 INFO[0000] Resolved base name ubuntu to ubuntu          
 INFO[0000] Retrieving image manifest ubuntu             

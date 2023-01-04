@@ -14,7 +14,7 @@
 
 首先，让我们创建一个递归函数:
 
-```
+```java
 public int factorial(int i) {
     if (i == 0) {
         return 1;
@@ -25,7 +25,7 @@ public int factorial(int i) {
 
 然后我们可以使用该函数打印三角形:
 
-```
+```java
 private void printUseRecursion(int n) {
     for (int i = 0; i <= n; i++) {
         for (int j = 0; j <= n - i; j++) {
@@ -43,7 +43,7 @@ private void printUseRecursion(int n) {
 
 n = 5 的结果如下所示:
 
-```
+```java
  1
       1 1
      1 2 1
@@ -58,13 +58,13 @@ n = 5 的结果如下所示:
 
 我们总是在每一行的开始有值 1，那么在第(n)行和第(I)位置的 k 值将被计算为:
 
-```
+```java
 k = ( k * (n - i) / i ) 
 ```
 
 让我们用这个公式创建我们的函数:
 
-```
+```java
 public void printUseBinomialExpansion(int n) {
     for (int line = 1; line <= n; line++) {
         for (int j = 0; j <= n - line; j++) {

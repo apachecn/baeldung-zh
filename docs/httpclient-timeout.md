@@ -30,7 +30,7 @@ HttpClient configurations for advanced use cases.[Read more](/web/20220625174301
 
 配置有 **3 个超时参数:**
 
-```
+```java
 DefaultHttpClient httpClient = new DefaultHttpClient();
 
 int timeout = 5; // seconds
@@ -47,7 +47,7 @@ httpParams.setParameter(
 
 这些参数中更重要的参数(即前两个参数)也可以通过更类型安全的 API 来设置:
 
-```
+```java
 DefaultHttpClient httpClient = new DefaultHttpClient();
 
 int timeout = 5; // seconds
@@ -64,7 +64,7 @@ HttpConnectionParams.setSoTimeout(
 
 4.3 中引入的 fluent builder API 为**提供了在高级别设置超时的正确方法**:
 
-```
+```java
 int timeout = 5;
 RequestConfig config = RequestConfig.custom()
   .setConnectTimeout(timeout * 1000)
@@ -90,7 +90,7 @@ CloseableHttpClient client =
 
 配置完成后，我们现在可以使用客户机来执行 HTTP 请求:
 
-```
+```java
 HttpGet getMethod = new HttpGet("http://host:8080/path");
 HttpResponse response = httpClient.execute(getMethod);
 System.out.println(
@@ -109,7 +109,7 @@ System.out.println(
 
 `HttpClient`没有任何允许我们为请求设置总超时的配置；然而，它确实为请求提供了**中止功能，因此我们可以利用该机制来实现一个简单的超时机制:**
 
-```
+```java
 HttpGet getMethod = new HttpGet(
   "http://localhost:8080/httpclient-simple/api/bars/1");
 
@@ -144,7 +144,7 @@ System.out.println(
 
 这里有一个简单的例子，您可以运行并复制这个问题:
 
-```
+```java
 int timeout = 3;
 RequestConfig config = RequestConfig.custom().
   setConnectTimeout(timeout * 1000).
@@ -159,7 +159,7 @@ response = client.execute(request);
 
 您将注意到带有调试日志级别的重试逻辑:
 
-```
+```java
 DEBUG o.a.h.i.c.HttpClientConnectionOperator - Connecting to www.google.com/173.194.34.212:81
 DEBUG o.a.h.i.c.HttpClientConnectionOperator - 
  Connect to www.google.com/173.194.34.212:81 timed out. Connection will be retried using another IP address

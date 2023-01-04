@@ -16,7 +16,7 @@ JHipster 有两个默认角色——用户和管理员——但有时我们需�
 
 要创建新的经理角色，我们只需在该文件中添加一个新的常量:
 
-```
+```java
 public static final String MANAGER = "ROLE_MANAGER";
 ```
 
@@ -28,7 +28,7 @@ JHipster 支持各种持久数据存储，并创建一个初始设置任务，�
 
 为了在数据库设置中添加一个新角色，**我们必须编辑`InitialSetupMigration.java`文件**。它已经有了一个名为`addAuthorities`的方法，我们只需将我们的新角色添加到现有代码中:
 
-```
+```java
 public void addAuthorities(MongoTemplate mongoTemplate) {
     // Add these lines after the existing, auto-generated code
     Authority managerAuthority = new Authority();
@@ -51,7 +51,7 @@ public void addAuthorities(MongoTemplate mongoTemplate) {
 
 首先，**如果我们想要限制对特定 API 的访问，我们可以修改`SecurityConfiguration`** :
 
-```
+```java
 public void configure(HttpSecurity http) throws Exception {
     http
         .authorizeRequests()
@@ -61,7 +61,7 @@ public void configure(HttpSecurity http) throws Exception {
 
 其次，**我们可以在应用程序**的任何地方使用`SecurityUtils`来检查用户是否处于某个角色中:
 
-```
+```java
 if (SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.MANAGER)) {
     // perform some logic that is applicable to manager role
 }
@@ -73,7 +73,7 @@ JHipster 提供了两种在前端检查角色的方法。注意，这些例子�
 
 首先，**模板中的任何元素都可以使用`*jhiHasAnyAuthority`指令**。它接受单个字符串或字符串数组:
 
-```
+```java
 <div *jhiHasAnyAuthority="'ROLE_MANAGER'">
     <!-- manager related code here -->
 </div>
@@ -81,7 +81,7 @@ JHipster 提供了两种在前端检查角色的方法。注意，这些例子�
 
 其次，**`Principal`类可以检查**用户是否有特定的角色:
 
-```
+```java
 isManager() {
     return this.principal.identity()
       .then(account => this.principal.hasAnyAuthority(['ROLE_MANAGER']));

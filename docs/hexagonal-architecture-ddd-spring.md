@@ -34,7 +34,7 @@
 
 首先，我们应该创建`Order`类:
 
-```
+```java
 public class Order {
     private UUID id;
     private OrderStatus status;
@@ -82,7 +82,7 @@ public class Order {
 
 那么让我们创建`OrderItem` 类:
 
-```
+```java
 public class OrderItem {
     private UUID productId;
     private BigDecimal price;
@@ -100,7 +100,7 @@ public class OrderItem {
 
 接下来，我们将创建一个存储库接口(六角形架构中的一个`port`)。接口的实现将在基础设施层:
 
-```
+```java
 public interface OrderRepository {
     Optional<Order> findById(UUID id);
 
@@ -110,7 +110,7 @@ public interface OrderRepository {
 
 最后，我们应该确保`Order`在每次操作后都会被保存。为此，**我们将定义一个域服务，它通常包含不能成为我们的根**的一部分的逻辑:
 
-```
+```java
 public class DomainOrderService implements OrderService {
 
     private final OrderRepository orderRepository;
@@ -163,7 +163,7 @@ public class DomainOrderService implements OrderService {
 
 **因为领域层与应用程序和基础设施层完全分离**，**我们**，**可以**也**独立测试**:
 
-```
+```java
 class DomainOrderServiceUnitTest {
 
     private OrderRepository orderRepository;
@@ -192,7 +192,7 @@ class DomainOrderServiceUnitTest {
 
 因此，让我们创建`OrderController:`
 
-```
+```java
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -238,7 +238,7 @@ public class OrderController {
 
 因此，我们将从创建配置类开始。首先，让我们实现一个将我们的`OrderService`注册为 Spring bean 的类:
 
-```
+```java
 @Configuration
 public class BeanConfiguration {
 
@@ -251,7 +251,7 @@ public class BeanConfiguration {
 
 接下来，让我们创建负责启用我们将使用的 [Spring 数据](/web/20220921215025/https://www.baeldung.com/spring-data-mongodb-tutorial)存储库的配置:
 
-```
+```java
 @EnableMongoRepositories(basePackageClasses = SpringDataMongoOrderRepository.class)
 public class MongoDBConfiguration {
 }
@@ -261,7 +261,7 @@ public class MongoDBConfiguration {
 
 最后，我们将从领域层实现`OrderRepository`。我们将在实现中使用我们的`SpringDataMongoOrderRepository`:
 
-```
+```java
 @Component
 public class MongoDbOrderRepository implements OrderRepository {
 
@@ -296,7 +296,7 @@ public class MongoDbOrderRepository implements OrderRepository {
 
 事实上，让我们更改基础设施层，使用 [Cassandra](/web/20220921215025/https://www.baeldung.com/spring-data-cassandra-tutorial) 作为数据库:
 
-```
+```java
 @Component
 public class CassandraDbOrderRepository implements OrderRepository {
 
@@ -334,7 +334,7 @@ public class CassandraDbOrderRepository implements OrderRepository {
 
 让我们更进一步，将 RESTful 应用程序转换成命令行应用程序:
 
-```
+```java
 @Component
 public class CliOrderController {
 

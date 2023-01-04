@@ -25,7 +25,7 @@
 
 让我们看一个在`package-info.java`文件中的包文档的例子:
 
-```
+```java
 /**
  * This module is about impact of the final keyword on performance
  * <p>
@@ -55,7 +55,7 @@ package com.baeldung.finalkeyword;
 
 `@NonNullFields`和`@NonNullApi`将字段、参数和返回值标记为非空，除非它们被明确标记为 `@Nullable`:
 
-```
+```java
 @NonNullApi
 @NonNullFields
 package com.baeldung.nullibility;

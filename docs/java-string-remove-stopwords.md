@@ -18,7 +18,7 @@
 
 我们将使用 `Files.readAllLines()`将停用词加载到`String` 的`List`中:
 
-```
+```java
 @BeforeClass
 public static void loadStopwords() throws IOException {
     stopwords = Files.readAllLines(Paths.get("english_stopwords.txt"));
@@ -29,7 +29,7 @@ public static void loadStopwords() throws IOException {
 
 对于我们的第一个解决方案，**我们将通过迭代每个单词并检查它是否是停用词来手动移除停用词**:
 
-```
+```java
 @Test
 public void whenRemoveStopwordsManually_thenSuccess() {
     String original = "The quick brown fox jumps over the lazy dog"; 
@@ -53,7 +53,7 @@ public void whenRemoveStopwordsManually_thenSuccess() {
 
 接下来，我们可以使用`Collection.removeAll()`一次删除所有停用词，而不是迭代`String`、**中的每个词:**
 
-```
+```java
 @Test
 public void whenRemoveStopwordsUsingRemoveAll_thenSuccess() {
     ArrayList<String> allWords = 
@@ -72,7 +72,7 @@ public void whenRemoveStopwordsUsingRemoveAll_thenSuccess() {
 
 最后，**我们可以从我们的`stopwords`列表**中创建一个正则表达式，然后用它替换我们的`String`中的停用词:
 
-```
+```java
 @Test
 public void whenRemoveStopwordsUsingRegex_thenSuccess() {
     String stopwordsRegex = stopwords.stream()
@@ -91,7 +91,7 @@ public void whenRemoveStopwordsUsingRegex_thenSuccess() {
 
 首先，**让我们建立我们的基准**。我们将使用一个相当大的文本文件作为名为`shakespeare-hamlet.txt`的`String` 的源文件:
 
-```
+```java
 @Setup
 public void setup() throws IOException {
     data = new String(Files.readAllBytes(Paths.get("shakespeare-hamlet.txt")));
@@ -103,7 +103,7 @@ public void setup() throws IOException {
 
 然后我们将有我们的基准方法，从`removeManually()`开始:
 
-```
+```java
 @Benchmark
 public String removeManually() {
     String[] allWords = data.split(" ");
@@ -120,7 +120,7 @@ public String removeManually() {
 
 接下来，我们有了`removeAll()`基准测试:
 
-```
+```java
 @Benchmark
 public String removeAll() {
     ArrayList<String> allWords = 
@@ -133,7 +133,7 @@ public String removeAll() {
 
 最后，我们将为`replaceRegex()`添加基准:
 
-```
+```java
 @Benchmark
 public String replaceRegex() {
     return data.replaceAll(stopwordsRegex, "");
@@ -142,7 +142,7 @@ public String replaceRegex() {
 
 这是我们基准测试的结果:
 
-```
+```java
 Benchmark                           Mode  Cnt   Score    Error  Units
 removeAll                           avgt   60   7.782 ±  0.076  ms/op
 removeManually                      avgt   60   8.186 ±  0.348  ms/op

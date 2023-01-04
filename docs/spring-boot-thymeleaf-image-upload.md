@@ -10,7 +10,7 @@
 
 我们只需要两个依赖项— Spring Boot 网和百里香叶:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -25,7 +25,7 @@
 
 我们的第一步是创建一个 Spring Boot web 控制器来处理我们的请求:
 
-```
+```java
 @Controller public class UploadController {
 
     public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/uploads";
@@ -57,7 +57,7 @@
 
 让我们看看我们的`index.html`文件的结构:
 
-```
+```java
 <body>
 <section class="my-5">
     <div class="container">
@@ -83,7 +83,7 @@
 
 如果我们试图上传一个大文件，将会抛出一个`MaxUploadSizeExceededException`异常。然而，**我们可以通过在`application.properties`文件中定义的属性`spring.servlet.multipart.max-file-size`和`spring.servlet.multipart.max-request-size` 来调整文件上传限制:**
 
-```
+```java
 spring.servlet.multipart.max-file-size = 5MB
 spring.servlet.multipart.max-request-size = 5MB
 ```

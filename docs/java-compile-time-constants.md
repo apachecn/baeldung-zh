@@ -12,7 +12,7 @@ Java 语言规范没有定义甚至没有使用编译时常量这个术语。然
 
 当我们在 Java 中使用术语[常量](/web/20220526153741/https://www.baeldung.com/java-constants-good-practices)时，大多数时候，我们指的是`[static](/web/20220526153741/https://www.baeldung.com/java-static)` 和`[final](/web/20220526153741/https://www.baeldung.com/java-final)` 类变量。我们不能在编译后改变类常量的值。因此，**所有原始类型的类常量或`String`也是编译时常量**:
 
-```
+```java
 public static final int MAXIMUM_NUMBER_OF_USERS = 10;
 public static final String DEFAULT_USERNAME = "unknown"; 
 ```
@@ -21,7 +21,7 @@ public static final String DEFAULT_USERNAME = "unknown";
 
 Oracle 已经为类常量定义了命名约定。我们将它们命名为大写字母，单词之间用下划线隔开。然而，并不是所有的`static`和`final`变量都是常量。如果一个物体的状态可以改变，它就不是一个常数:
 
-```
+```java
 public static final Logger log = LoggerFactory.getLogger(ClassConstants.class);
 public static final List<String> contributorGroups = Arrays.asList("contributor", "author");
 ```
@@ -32,7 +32,7 @@ public static final List<String> contributorGroups = Arrays.asList("contributor"
 
 Java 编译器能够在代码编译期间**计算包含常量变量和某些运算符的表达式**:
 
-```
+```java
 public static final int MAXIMUM_NUMBER_OF_GUESTS = MAXIMUM_NUMBER_OF_USERS * 10;
 public String errorMessage = ClassConstants.DEFAULT_USERNAME + " not allowed here.";
 ```
@@ -63,7 +63,7 @@ public String errorMessage = ClassConstants.DEFAULT_USERNAME + " not allowed her
 
 术语编译时常量包括类常量，但也包括使用常量表达式定义的实例和局部变量:
 
-```
+```java
 public final int maximumLoginAttempts = 5;
 
 public static void main(String[] args) {
@@ -84,7 +84,7 @@ public static void main(String[] args) {
 
 当程序运行时，运行时常数值不能改变。然而，**每次当我们运行应用程序时，它可以有一个不同的值**:
 
-```
+```java
 public static void main(String[] args) {
     Console console = System.console();
 
@@ -104,14 +104,14 @@ Java 编译器在编译过程中静态地优化所有编译时常量。因此，
 
 让我们看一个引用另一个类的常量的例子:
 
-```
+```java
 PrintWriter printWriter = System.console().writer();
 printWriter.write(ClassConstants.DEFAULT_USERNAME);
 ```
 
 接下来，我们将编译该类，并观察上面两行代码生成的字节码:
 
-```
+```java
 LINENUMBER 11 L1
 ALOAD 1
 LDC "unknown"
@@ -133,7 +133,7 @@ INVOKEVIRTUAL java/io/PrintWriter.write (Ljava/lang/String;)V
 
 这背后的原因是编译器将 switch 语句编译成字节码`tableswitch` 或`lookupswitch.`，它们要求 case 语句中使用的**值既是编译时常数又是唯一的**:
 
-```
+```java
 private static final String VALUE_ONE = "value-one"
 
 public static void main(String[] args) {
@@ -153,7 +153,7 @@ public static void main(String[] args) {
 
 Java 中的注释处理发生在[编译时间](/web/20220526153741/https://www.baeldung.com/cs/compile-load-execution-time)。实际上，这意味着**注释参数只能使用编译时常量**来定义:
 
-```
+```java
 private final String deprecatedDate = "20-02-14";
 private final String deprecatedTime = "22:00";
 

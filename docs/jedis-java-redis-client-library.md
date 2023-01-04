@@ -22,7 +22,7 @@ Redis 在其官方网站上列出了最著名的客户端库。杰迪斯有多�
 
 让我们从声明我们将在`pom.xml`中需要的唯一依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>redis.clients</groupId>
     <artifactId>jedis</artifactId>
@@ -40,7 +40,7 @@ Redis 在其官方网站上列出了最著名的客户端库。杰迪斯有多�
 
 之后，我们可以直接从 Java 代码中进入并连接到它:
 
-```
+```java
 Jedis jedis = new Jedis();
 ```
 
@@ -54,7 +54,7 @@ Jedis jedis = new Jedis();
 
 字符串是最基本的 Redis 值，在需要持久存储简单的键值数据类型时非常有用:
 
-```
+```java
 jedis.set("events/city/rome", "32,15,223,828");
 String cachedResponse = jedis.get("events/city/rome");
 ```
@@ -65,7 +65,7 @@ String cachedResponse = jedis.get("events/city/rome");
 
 Redis 列表是简单的字符串列表，按插入顺序排序，是实现例如消息队列的理想工具:
 
-```
+```java
 jedis.lpush("queue#tasks", "firstTask");
 jedis.lpush("queue#tasks", "secondTask");
 
@@ -78,7 +78,7 @@ String task = jedis.rpop("queue#tasks");
 
 Redis 集是一个无序的字符串集合，当您想要排除重复的成员时会很方便:
 
-```
+```java
 jedis.sadd("nicknames", "nickname#1");
 jedis.sadd("nicknames", "nickname#2");
 jedis.sadd("nicknames", "nickname#1");
@@ -93,7 +93,7 @@ Java 集合`nicknames`的大小为 2，第二次添加的`nickname#1`被忽略�
 
 Redis 散列在*字符串*字段和*字符串*值之间进行映射:
 
-```
+```java
 jedis.hset("user#1", "name", "Peter");
 jedis.hset("user#1", "job", "politician");
 
@@ -109,7 +109,7 @@ String job = fields.get("job");
 
 已排序集合类似于这样一个集合，其中每个成员都有一个关联的排名，用于对其进行排序:
 
-```
+```java
 Map<String, Double> scores = new HashMap<>();
 
 scores.put("PlayerOne", 3000.0);
@@ -130,7 +130,7 @@ long rank = jedis.zrevrank("ranking", "PlayerOne");
 
 事务保证原子性和线程安全操作，这意味着在 Redis 事务期间，来自其他客户端的请求将永远不会被并发处理:
 
-```
+```java
 String friendsPrefix = "friends#";
 String userOneId = "4352523";
 String userTwoId = "5552321";
@@ -143,7 +143,7 @@ t.exec();
 
 您甚至可以在实例化您的`Transaction`之前通过“观察”特定的键来使事务成功:
 
-```
+```java
 jedis.watch("friends#deleted#" + userOneId);
 ```
 
@@ -153,7 +153,7 @@ jedis.watch("friends#deleted#" + userOneId);
 
 当我们必须发送多个命令时，我们可以将它们打包在一个请求中，并通过使用管道来节省连接开销，这本质上是一种网络优化。只要操作是相互独立的，我们就可以利用这种技术:
 
-```
+```java
 String userOneId = "4352523";
 String userTwoId = "4849888";
 
@@ -179,7 +179,7 @@ Set<String> ranking = pipeRanking.get();
 
 订阅并收听发送到频道的消息:
 
-```
+```java
 Jedis jSubscriber = new Jedis();
 jSubscriber.subscribe(new JedisPubSub() {
     @Override
@@ -195,7 +195,7 @@ Subscribe 是一个阻塞方法，你需要明确地从`JedisPubSub`中取消订
 
 然后简单地从发布者的线程向相同的通道发送消息:
 
-```
+```java
 Jedis jPublisher = new Jedis();
 jPublisher.publish("channel", "test message");
 ```
@@ -208,7 +208,7 @@ jPublisher.publish("channel", "test message");
 
 让我们创建`JedisPool`:
 
-```
+```java
 final JedisPoolConfig poolConfig = buildPoolConfig();
 JedisPool jedisPool = new JedisPool(poolConfig, "localhost");
 
@@ -232,7 +232,7 @@ private JedisPoolConfig buildPoolConfig() {
 
 现在，我们可以在需要时从应用程序的任何地方使用我们的池:
 
-```
+```java
 try (Jedis jedis = jedisPool.getResource()) {
     // do operations with jedis resource
 }
@@ -248,7 +248,7 @@ try (Jedis jedis = jedisPool.getResource()) {
 
 一旦我们准备好了，我们就可以开始在我们的应用程序中使用它:
 
-```
+```java
 try (JedisCluster jedisCluster = new JedisCluster(new HostAndPort("localhost", 6379))) {
     // use the jedisCluster resource as if it was a normal Jedis resource
 } catch (IOException e) {}

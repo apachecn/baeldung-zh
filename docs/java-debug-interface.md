@@ -38,7 +38,7 @@ Java 调试接口 API 是 Java 提供的一组接口，用来实现调试器的�
 
 让我们用几个`String`变量和`println`语句创建一个`JDIExampleDebuggee`类:
 
-```
+```java
 public class JDIExampleDebuggee {
     public static void main(String[] args) {
         String jpda = "Java Platform Debugger Architecture";
@@ -55,7 +55,7 @@ public class JDIExampleDebuggee {
 
 让我们创建一个`JDIExampleDebugger`类，它具有保存调试程序(`debugClass`)和断点行号(`breakPointLines`)的属性:
 
-```
+```java
 public class JDIExampleDebugger {
     private Class debugClass; 
     private int[] breakPointLines;
@@ -74,7 +74,7 @@ public class JDIExampleDebugger {
 
 因此，让我们将`connectAndLaunchVM`方法添加到`JDIDebuggerExample`类中:
 
-```
+```java
 public VirtualMachine connectAndLaunchVM() throws Exception {
 
     LaunchingConnector launchingConnector = Bootstrap.virtualMachineManager()
@@ -87,7 +87,7 @@ public VirtualMachine connectAndLaunchVM() throws Exception {
 
 现在，我们将把`main`方法添加到`JDIDebuggerExample`类中来调试`JDIExampleDebuggee:`
 
-```
+```java
 public static void main(String[] args) throws Exception {
 
     JDIExampleDebugger debuggerInstance = new JDIExampleDebugger();
@@ -106,7 +106,7 @@ public static void main(String[] args) throws Exception {
 
 让我们编译我们的两个类，`JDIExampleDebuggee` (调试对象)和`JDIExampleDebugger` (调试器):
 
-```
+```java
 javac -g -cp "/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/lib/tools.jar" 
 com/baeldung/jdi/*.java
 ```
@@ -121,7 +121,7 @@ com/baeldung/jdi/*.java
 
 就这样，现在我们准备好执行我们的定制调试器 `JDIExampleDebugger:`
 
-```
+```java
 java -cp "/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/lib/tools.jar:." 
 JDIExampleDebugger
 ```
@@ -138,7 +138,7 @@ JDIExampleDebugger
 
 这将过滤`JDIExampleDebuggee`类并启用`ClassPrepareRequest:`
 
-```
+```java
 public void enableClassPrepareRequest(VirtualMachine vm) {
     ClassPrepareRequest classPrepareRequest = vm.eventRequestManager().createClassPrepareRequest();
     classPrepareRequest.addClassFilter(debugClass.getName());
@@ -154,7 +154,7 @@ public void enableClassPrepareRequest(VirtualMachine vm) {
 
 为此，让我们将`setBreakPoints`方法添加到`JDIExampleDebugger`类中:
 
-```
+```java
 public void setBreakPoints(VirtualMachine vm, ClassPrepareEvent event) throws AbsentInformationException {
     ClassType classType = (ClassType) event.referenceType();
     for(int lineNumber: breakPointLines) {
@@ -173,7 +173,7 @@ JDI 提供了 `StackFrame`类，来获取被调试程序的所有可见变量的
 
 因此，让我们将`displayVariables`方法添加到`JDIExampleDebugger`类中:
 
-```
+```java
 public void displayVariables(LocatableEvent event) throws IncompatibleThreadStateException, 
 AbsentInformationException {
     StackFrame stackFrame = event.thread().frame(0);
@@ -194,7 +194,7 @@ AbsentInformationException {
 
 因此，我们将使用已经讨论过的方法，如`enableClassPrepareRequest`、`setBreakPoints`和`displayVariables:` 
 
-```
+```java
 try {
     vm = debuggerInstance.connectAndLaunchVM();
     debuggerInstance.enableClassPrepareRequest(vm);
@@ -221,7 +221,7 @@ try {
 
 最后，我们将执行调试器程序以及所有更改，以查看输出:
 
-```
+```java
 Variables at com.baeldung.jdi.JDIExampleDebuggee:6 > 
 args = instance of java.lang.String[0] (id=93)
 Variables at com.baeldung.jdi.JDIExampleDebuggee:9 > 
@@ -244,7 +244,7 @@ Virtual Machine is disconnected.
 
 为简单起见，我们将从最后一个断点(第 9 行)开始单步执行:
 
-```
+```java
 public void enableStepRequest(VirtualMachine vm, BreakpointEvent event) {
     // enable step request for last break point
     if (event.location().toString().
@@ -258,7 +258,7 @@ public void enableStepRequest(VirtualMachine vm, BreakpointEvent event) {
 
 现在，我们可以更新`JDIExampleDebugger`的`main`方法，当它是一个`BreakPointEvent`时启用步骤请求:
 
-```
+```java
 if (event instanceof BreakpointEvent) {
     debuggerInstance.enableStepRequest(vm, (BreakpointEvent)event);
 }
@@ -270,7 +270,7 @@ if (event instanceof BreakpointEvent) {
 
 让我们相应地更新`main`方法:
 
-```
+```java
 if (event instanceof StepEvent) {
     debuggerInstance.displayVariables((StepEvent) event);
 }
@@ -278,7 +278,7 @@ if (event instanceof StepEvent) {
 
 最后，我们将执行调试器来查看变量的状态，同时单步执行代码:
 
-```
+```java
 Variables at com.baeldung.jdi.JDIExampleDebuggee:6 > 
 args = instance of java.lang.String[0] (id=93)
 Variables at com.baeldung.jdi.JDIExampleDebuggee:9 > 
@@ -311,7 +311,7 @@ As per the JDI documentation, if we launch the VM through `LaunchingConnector,` 
 
 因此，让我们将它添加到我们的`main`方法的`finally`子句中:
 
-```
+```java
 finally {
     InputStreamReader reader = new InputStreamReader(vm.process().getInputStream());
     OutputStreamWriter writer = new OutputStreamWriter(System.out);
@@ -324,7 +324,7 @@ finally {
 
 现在，执行调试器程序还会将来自`JDIExampleDebuggee`类的`println`语句添加到调试输出中:
 
-```
+```java
 Hi Everyone, Welcome to Java Platform Debugger Architecture
 Today, we'll dive into Java Debug Interface
 ```

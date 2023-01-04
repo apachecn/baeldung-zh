@@ -12,7 +12,7 @@ JPA 2.2 版本已经正式引入了对 [Java 8 `Date`和`Time` API](/web/2022120
 
 在开始之前，我们需要将 JPA 2.2 API 包含到项目类路径中。在基于 Maven 的项目中，我们可以简单地将它的依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>javax.persistence</groupId>
     <artifactId>javax.persistence-api</artifactId>
@@ -22,7 +22,7 @@ JPA 2.2 版本已经正式引入了对 [Java 8 `Date`和`Time` API](/web/2022120
 
 此外，要运行这个项目，我们需要一个 JPA 实现和我们将要使用的数据库的 JDBC 驱动程序。在本教程中，我们将使用 EclipseLink 和 PostgreSQL 数据库:
 
-```
+```java
 <dependency>
     <groupId>org.eclipse.persistence</groupId>
     <artifactId>eclipselink</artifactId>
@@ -68,7 +68,7 @@ JPA 2.2 版本已经正式引入了对 [Java 8 `Date`和`Time` API](/web/2022120
 
 首先，让我们看看如何使用`java.sql`类型。这里，我们简单地定义了作为`@Entity`类一部分的`java.sql`类型的属性:
 
-```
+```java
 @Entity
 public class JPA22DateTimeEntity {
 
@@ -84,7 +84,7 @@ public class JPA22DateTimeEntity {
 
 这是通过`@Temporal`注释完成的，注释的`value`属性允许我们使用`TemporalType`枚举指定相应的 JDBC 类型:
 
-```
+```java
 @Temporal(TemporalType.TIME)
 private java.util.Date utilTime;
 
@@ -99,7 +99,7 @@ private java.util.Date utilTimestamp;
 
 类似地，我们可以使用`Calendar`类:
 
-```
+```java
 @Temporal(TemporalType.TIME)
 private Calendar calendarTime;
 
@@ -118,7 +118,7 @@ Java 8 引入了`java.time`包，JDBC 4.2 API 增加了对附加 SQL 类型`TIME
 
 **我们现在可以将 JDBC 类型`TIME, DATE,`和`TIMESTAMP`映射到`java.time`类型**–`LocalTime,``LocalDate`和`LocalDateTime`:
 
-```
+```java
 @Column(name = "local_time", columnDefinition = "TIME")
 private LocalTime localTime;
 
@@ -131,7 +131,7 @@ private LocalDateTime localDateTime;
 
 此外，我们通过`OffsetTime`和`OffsetDateTime`类支持将本地时区偏移到 UTC:
 
-```
+```java
 @Column(name = "offset_time", columnDefinition = "TIME WITH TIME ZONE")
 private OffsetTime offsetTime;
 

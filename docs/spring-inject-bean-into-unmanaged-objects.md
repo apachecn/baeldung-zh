@@ -16,7 +16,7 @@
 
 在介绍`@Configurable`注释之前，让我们设置一个 Spring bean 定义:
 
-```
+```java
 @Service
 public class IdService {
     private static int count;
@@ -31,7 +31,7 @@ public class IdService {
 
 下面是启用该机制的简单配置类:
 
-```
+```java
 @ComponentScan
 public class AspectJConfig {
 }
@@ -41,7 +41,7 @@ public class AspectJConfig {
 
 最简单的形式是，**我们可以使用不带任何元素的`@Configurable`:**
 
-```
+```java
 @Configurable
 public class PersonObject {
     private int id;
@@ -61,7 +61,7 @@ public class PersonObject {
 
 我们可以将`IdService`注入`PersonObject`，就像我们在任何 Spring bean 中做的那样:
 
-```
+```java
 @Configurable
 public class PersonObject {
     @Autowired
@@ -83,7 +83,7 @@ public class PersonObject {
 
 为了启用 AspectJ 编织，我们首先需要 AspectJ Maven 插件:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>aspectj-maven-plugin</artifactId>
@@ -94,7 +94,7 @@ public class PersonObject {
 
 它需要一些额外的配置:
 
-```
+```java
 <configuration>
     <complianceLevel>1.8</complianceLevel>
     <Xlint>ignore</Xlint>
@@ -113,7 +113,7 @@ public class PersonObject {
 
 请注意，这样一个被引用的工件必须作为一个依赖项存在于项目中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-aspects</artifactId>
@@ -127,7 +127,7 @@ public class PersonObject {
 
 为了指示插件编织所有相关的类，我们需要这个`executions`配置:
 
-```
+```java
 <executions>
     <execution>
         <goals>
@@ -143,7 +143,7 @@ public class PersonObject {
 
 启用 AspectJ 编织的最后一步是**将`@EnableSpringConfigured`添加到配置类:**
 
-```
+```java
 @ComponentScan
 @EnableSpringConfigured
 public class AspectJConfig {
@@ -156,7 +156,7 @@ public class AspectJConfig {
 
 现在，让我们验证一下`IdService` bean 已经成功地注入到了`PersonObject`中:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = AspectJConfig.class)
 public class PersonUnitTest {
@@ -180,7 +180,7 @@ public class PersonUnitTest {
 
 让我们从实体类的框架开始:
 
-```
+```java
 @Entity
 @Configurable(preConstruction = true)
 public class PersonEntity {
@@ -201,7 +201,7 @@ public class PersonEntity {
 
 现在我们可以将`IdService`注入`PersonEntity`，类似于我们对`PersonObject`所做的:
 
-```
+```java
 // annotations
 public class PersonEntity {
     @Autowired
@@ -225,7 +225,7 @@ public class PersonEntity {
 
 最后，我们可以更新测试方法，以表明服务可以注入到实体中:
 
-```
+```java
 @Test
 public void givenUnmanagedObjects_whenInjectingIdService_thenIdValueIsCorrectlySet() {
     // existing statements

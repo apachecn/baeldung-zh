@@ -36,7 +36,7 @@ Java 允许应用程序开发人员在编译阶段处理注释；最重要的是
 
 例如，下面是实现单例类的一种方法:
 
-```
+```java
 public class SingletonRegistry {
     private SingletonRegistry() {}
 
@@ -54,14 +54,14 @@ public class SingletonRegistry {
 
 相比之下，如果我们实现它的注释版本，它看起来会是这样的:
 
-```
+```java
 @Singleton
 public class SingletonRegistry {}
 ```
 
 还有，`Singleton`注解:
 
-```
+```java
 @Target(ElementType.TYPE)
 public @interface Singleton {}
 ```
@@ -78,7 +78,7 @@ public @interface Singleton {}
 
 让我们首先提取 [Lombok](https://web.archive.org/web/20220928092136/https://search.maven.org/search?q=g:org.projectlombok%20AND%20a:lombok&core=gav) 所需的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>
@@ -88,7 +88,7 @@ public @interface Singleton {}
 
 此外，我们还需要 Java 附带的`tools.jar` 来访问和修改`javac` AST。但是，它没有 Maven 存储库。将它包含在 Maven 项目中最简单的方法是将其添加到`Profile:`
 
-```
+```java
 <profiles>
     <profile>
         <id>default-tools.jar</id>
@@ -115,7 +115,7 @@ public @interface Singleton {}
 
 为了实现自定义的`javac`处理程序，我们需要扩展 Lombok 的`JavacAnnotationHandler:`
 
-```
+```java
 public class SingletonJavacHandler extends JavacAnnotationHandler<Singleton> {
     public void handle(
       AnnotationValues<Singleton> annotation,
@@ -132,7 +132,7 @@ public class SingletonJavacHandler extends JavacAnnotationHandler<Singleton> {
 
 幸运的是， **Lombok 在`JavacHandlerUtil` 和 `JavacTreeMaker`中提供了许多实用函数，用于生成代码并将其注入 AST。**记住这一点，让我们使用这些函数并为我们的`SingletonRegistry:` 创建代码
 
-```
+```java
 public void handle(
   AnnotationValues<Singleton> annotation,
   JCTree.JCAnnotation ast,
@@ -159,7 +159,7 @@ public void handle(
 
  **现在，让我们看看如何实现其他私有方法来生成代码。首先，我们将生成私有构造函数:
 
-```
+```java
 private void addPrivateConstructor(
   JavacNode singletonClass,
   JavacTreeMaker singletonTM) {
@@ -177,7 +177,7 @@ private void addPrivateConstructor(
 
 接下来，内部的`SingletonHolder` 类:
 
-```
+```java
 private JavacNode addInnerClass(
   JavacNode singletonClass,
   JavacTreeMaker singletonTM) {
@@ -193,7 +193,7 @@ private JavacNode addInnerClass(
 
 现在，我们将在 holder 类中添加一个实例变量:
 
-```
+```java
 private void addInstanceVar(
   JavacNode singletonClass,
   JavacTreeMaker singletonClassTM,
@@ -221,7 +221,7 @@ private void addInstanceVar(
 
 最后，让我们添加一个访问 singleton 对象的工厂方法:
 
-```
+```java
 private void addFactoryMethod(
   JavacNode singletonClass,
   JavacTreeMaker singletonClassTreeMaker,
@@ -248,7 +248,7 @@ private void addFactoryMethod(
 
 显然，工厂方法从 holder 类返回实例变量。让我们也实现它:
 
-```
+```java
 private JCTree.JCBlock addReturnBlock(
   JavacTreeMaker singletonClassTreeMaker,
   JavacNode holderInnerClass) {
@@ -282,7 +282,7 @@ private JCTree.JCBlock addReturnBlock(
 
 出于我们的目的，我们将使用`[metainf-services](https://web.archive.org/web/20220928092136/https://search.maven.org/search?q=g:org.kohsuke.metainf-services%20AND%20a:metainf-services&core=gav)`:
 
-```
+```java
 <dependency>
     <groupId>org.kohsuke.metainf-services</groupId>
     <artifactId>metainf-services</artifactId>
@@ -292,7 +292,7 @@ private JCTree.JCBlock addReturnBlock(
 
 现在，我们可以向 Lombok 注册我们的处理程序:
 
-```
+```java
 @MetaInfServices(JavacAnnotationHandler.class)
 public class SingletonJavacHandler extends JavacAnnotationHandler<Singleton> {}
 ```
@@ -305,7 +305,7 @@ public class SingletonJavacHandler extends JavacAnnotationHandler<Singleton> {}
 
 类似于我们为访问`javac`的 AST 而添加的`tools.jar` ，我们将为 Eclipse IDE 添加`[eclipse jdt](https://web.archive.org/web/20220928092136/https://search.maven.org/search?q=g:org.eclipse.jdt%20AND%20a:core&core=gav)`:
 
-```
+```java
 <dependency>
     <groupId>org.eclipse.jdt</groupId>
     <artifactId>core</artifactId>
@@ -317,7 +317,7 @@ public class SingletonJavacHandler extends JavacAnnotationHandler<Singleton> {}
 
 我们现在将为 Eclipse 处理程序扩展`EclipseAnnotationHandler` :
 
-```
+```java
 @MetaInfServices(EclipseAnnotationHandler.class)
 public class SingletonEclipseHandler
   extends EclipseAnnotationHandler<Singleton> {
@@ -334,7 +334,7 @@ public class SingletonEclipseHandler
 
 在 SPI 中注册了处理程序之后，我们现在可以开始编辑 Eclipse 编译器的 AST 了:
 
-```
+```java
 public void handle(
   AnnotationValues<Singleton> annotation,
   Annotation ast,
@@ -384,7 +384,7 @@ public void handle(
 
 接下来，私有构造函数:
 
-```
+```java
 private ConstructorDeclaration addConstructor(
   EclipseNode singletonClass,
   TypeDeclaration astNode) {
@@ -400,7 +400,7 @@ private ConstructorDeclaration addConstructor(
 
 对于实例变量:
 
-```
+```java
 private FieldDeclaration addInstanceVar(
   ConstructorDeclaration constructor,
   TypeReference typeReference,
@@ -421,7 +421,7 @@ private FieldDeclaration addInstanceVar(
 
 最后，工厂方法:
 
-```
+```java
 private void addFactoryMethod(
   EclipseNode singletonClass,
   TypeDeclaration astNode,
@@ -457,7 +457,7 @@ private void addFactoryMethod(
 
 此外，我们必须将这个处理程序插入 Eclipse 启动类路径。通常，这是通过将以下参数添加到`eclipse.ini:`来完成的
 
-```
+```java
 -Xbootclasspath/a:singleton-1.0-SNAPSHOT.jar
 ```
 

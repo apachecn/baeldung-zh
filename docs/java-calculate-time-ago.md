@@ -20,7 +20,7 @@ Java 7 中有几个与时间相关的类。而且由于 Java 7 日期 API 的缺
 
 我们定义了一个`enum`来保存不同的时间粒度，并将它们转换为毫秒:
 
-```
+```java
 public enum TimeGranularity {
     SECONDS {
         public long toMillis() {
@@ -64,7 +64,7 @@ public enum TimeGranularity {
 
 由于定义了`TimeGranularity` enum，我们可以定义两个方法。第一个函数接受一个`java.util.Date`对象和一个`TimeGranularity`实例，并返回一个“时间之前”的字符串:
 
-```
+```java
 static String calculateTimeAgoByTimeGranularity(Date pastTime, TimeGranularity granularity) {
     long timeDifferenceInMillis = getCurrentTime() - pastTime.getTime();
     return timeDifferenceInMillis / granularity.toMillis() + " " + 
@@ -78,7 +78,7 @@ static String calculateTimeAgoByTimeGranularity(Date pastTime, TimeGranularity g
 
 让我们测试一下这个方法:
 
-```
+```java
 Assert.assertEquals("5 hours ago", 
   TimeAgoCalculator.calculateTimeAgoByTimeGranularity(
     new Date(getCurrentTime() - (5 * 60 * 60 * 1000)), TimeGranularity.HOURS));
@@ -86,7 +86,7 @@ Assert.assertEquals("5 hours ago",
 
 此外，我们还可以编写一个方法，自动检测最大合适的时间粒度，并返回一个更加人性化的输出:
 
-```
+```java
 static String calculateHumanFriendlyTimeAgo(Date pastTime) {
     long timeDifferenceInMillis = getCurrentTime() - pastTime.getTime();
     if (timeDifferenceInMillis / TimeGranularity.DECADES.toMillis() > 0) {
@@ -111,7 +111,7 @@ static String calculateHumanFriendlyTimeAgo(Date pastTime) {
 
 现在，让我们来看一个测试，看看一个使用示例:
 
-```
+```java
 Assert.assertEquals("several hours ago", 
   TimeAgoCalculator.calculateHumanFriendlyTimeAgo(new Date(getCurrentTime() - (5 * 60 * 60 * 1000))));
 ```
@@ -128,7 +128,7 @@ Assert.assertEquals("several hours ago",
 
 我们可以使用这三个类轻松获得现在和过去某个时间之间的准确时间:
 
-```
+```java
 static String calculateExactTimeAgoWithJodaTime(Date pastTime) {
     Period period = new Period(new DateTime(pastTime.getTime()), new DateTime(getCurrentTime()));
     PeriodFormatter formatter = new PeriodFormatterBuilder().appendYears()
@@ -158,14 +158,14 @@ static String calculateExactTimeAgoWithJodaTime(Date pastTime) {
 
 让我们来看一个用法示例:
 
-```
+```java
 Assert.assertEquals("5 hours and 1 minute and 1 second", 
   TimeAgoCalculator.calculateExactTimeAgoWithJodaTime(new Date(getCurrentTime() - (5 * 60 * 60 * 1000 + 1 * 60 * 1000 + 1 * 1000)))); 
 ```
 
 也有可能生成更人性化的输出:
 
-```
+```java
 static String calculateHumanFriendlyTimeAgoWithJodaTime(Date pastTime) {
     Period period = new Period(new DateTime(pastTime.getTime()), new DateTime(getCurrentTime()));
     if (period.getYears() != 0) {
@@ -188,7 +188,7 @@ static String calculateHumanFriendlyTimeAgoWithJodaTime(Date pastTime) {
 
 我们可以运行一个测试，看看这个方法返回一个更友好的“以前的时间”字符串:
 
-```
+```java
 Assert.assertEquals("several hours ago", 
   TimeAgoCalculator.calculateHumanFriendlyTimeAgoWithJodaTime(new Date(getCurrentTime() - (5 * 60 * 60 * 1000)))); 
 ```
@@ -199,7 +199,7 @@ Assert.assertEquals("several hours ago",
 
 使用 Joda-Time 库在计算“时间之前”时添加时区非常简单:
 
-```
+```java
 String calculateZonedTimeAgoWithJodaTime(Date pastTime, TimeZone zone) {
     DateTimeZone dateTimeZone = DateTimeZone.forID(zone.getID());
     Period period = new Period(new DateTime(pastTime.getTime(), dateTimeZone), new DateTime(getCurrentTimeByTimeZone(zone)));
@@ -213,7 +213,7 @@ String calculateZonedTimeAgoWithJodaTime(Date pastTime, TimeZone zone) {
 
 [Java 8 引入了一个新的改进的日期和时间 API](/web/20221128041338/https://www.baeldung.com/java-8-date-time-intro) ，它采用了 Joda-Time 库中的许多想法。**我们可以用原生的`java.time.Duration`和`java.time.Period`类来计算“时间之前”:**
 
-```
+```java
 static String calculateTimeAgoWithPeriodAndDuration(LocalDateTime pastTime, ZoneId zone) {
     Period period = Period.between(pastTime.toLocalDate(), getCurrentTimeByTimeZone(zone).toLocalDate());
     Duration duration = Duration.between(pastTime, getCurrentTimeByTimeZone(zone));
@@ -243,7 +243,7 @@ PrettyTime 是一个功能强大的库，专门提供“以前”的功能，支
 
 首先，让我们将它的[依赖项](https://web.archive.org/web/20221128041338/https://mvnrepository.com/artifact/org.ocpsoft.prettytime/prettytime/3.2.7.Final)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.ocpsoft.prettytime</groupId>
     <artifactId>prettytime</artifactId>
@@ -253,7 +253,7 @@ PrettyTime 是一个功能强大的库，专门提供“以前”的功能，支
 
 现在，以一种人类友好的格式获取“以前的时间”是相当容易的:
 
-```
+```java
 String calculateTimeAgoWithPrettyTime(Date pastTime) {
     PrettyTime prettyTime = new PrettyTime();
     return prettyTime.format(pastTime);
@@ -266,7 +266,7 @@ String calculateTimeAgoWithPrettyTime(Date pastTime) {
 
 让我们添加它的[依赖关系](https://web.archive.org/web/20221128041338/https://mvnrepository.com/artifact/net.time4j):
 
-```
+```java
 <dependency>
     <groupId>net.time4j</groupId>
     <artifactId>time4j-base</artifactId>
@@ -281,7 +281,7 @@ String calculateTimeAgoWithPrettyTime(Date pastTime) {
 
 添加这个依赖项后，计算以前的时间非常简单:
 
-```
+```java
 String calculateTimeAgoWithTime4J(Date pastTime, ZoneId zone, Locale locale) {
     return PrettyTime.of(locale).printRelative(pastTime.toInstant(), zone);
 }

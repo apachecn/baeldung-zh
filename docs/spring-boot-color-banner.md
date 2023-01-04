@@ -14,7 +14,7 @@ Spring Boot 的一个可爱特征是它的创业公司 T2 的横幅 T3。多年�
 
 例如，让我们创建一个`banner.txt`文件，使整个背景为红色:
 
-```
+```java
 ${AnsiBackground.RED}
   ___         _   _      _ 
  / __|  ___  | | (_)  __| |
@@ -29,7 +29,7 @@ ${AnsiBackground.DEFAULT}
 
 例如，我们可以将每一行设置为它自己的背景颜色。我们只需在每一行前面加上想要的颜色:
 
-```
+```java
 ${AnsiBackground.RED}    ____             _             __
 ${AnsiBackground.BLUE}   / __ \  ____ _   (_)   ____    / /_   ____  _      __
 ${AnsiBackground.YELLOW}  / /_/ / / __ `/  / /   / __ \  / __ \ / __ \| | /| / /
@@ -48,7 +48,7 @@ ${AnsiBackground.DEFAULT}
 
 我们只需给每组字符加上所需颜色的前缀:
 
-```
+```java
 ${AnsiColor.RED}.------.${AnsiColor.BLACK}.------.
 ${AnsiColor.RED}|A.--. |${AnsiColor.BLACK}|K.--. |
 ${AnsiColor.RED}| (\/) |${AnsiColor.BLACK}| (\/) |
@@ -68,7 +68,7 @@ Spring Boot 2.2 的新特性之一是支持 [ANSI 8 位颜色](https://web.archi
 
 为了利用新的颜色，`AnsiColor`和`AnsiBackground`属性现在都接受一个数值，而不是颜色名称:
 
-```
+```java
 ${AnsiColor.1}${AnsiBackground.233}  ______  __________ .___ ___________
 ${AnsiBackground.235} /  __  \ \______   \|   |\__    ___/
 ${AnsiBackground.237} >      <  |    |  _/|   |  |    |

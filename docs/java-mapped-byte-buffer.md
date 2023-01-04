@@ -20,13 +20,13 @@
 
 假设我们有一个名为`fileToRead.txt`的文件，其内容如下:
 
-```
+```java
 This is a content of the file
 ```
 
 该文件位于`/resource`目录中，因此我们可以使用以下函数加载它:
 
-```
+```java
 Path getFileURIFromResources(String fileName) throws Exception {
     ClassLoader classLoader = getClass().getClassLoader();
     return Paths.get(classLoader.getResource(fileName).getPath());
@@ -35,7 +35,7 @@ Path getFileURIFromResources(String fileName) throws Exception {
 
 为了从一个文件创建`MappedByteBuffer` ，首先我们需要从它创建一个`FileChannel`。一旦我们创建了通道，我们就可以调用它的`map()` 方法，传入我们想要读取的`MapMode,` a `position` ，以及指定我们想要多少字节的`size` 参数:
 
-```
+```java
 CharBuffer charBuffer = null;
 Path pathToRead = getFileURIFromResources("fileToRead.txt");
 
@@ -55,7 +55,7 @@ try (FileChannel fileChannel (FileChannel) Files.newByteChannel(
 
 我们可以断言，从我们的文件中读取的内容是`fileToRead.txt`文件的实际内容:
 
-```
+```java
 assertNotNull(charBuffer);
 assertEquals(
   charBuffer.toString(), "This is a content of the file");
@@ -69,7 +69,7 @@ assertEquals(
 
 接下来，我们可以使用来自`MappedByteBuffer:`的`put()` 方法将`CharBuffer`的内容保存到文件中
 
-```
+```java
 CharBuffer charBuffer = CharBuffer
   .wrap("This will be written to the file");
 Path pathToWrite = getFileURIFromResources("fileToWriteTo.txt");
@@ -92,7 +92,7 @@ try (FileChannel fileChannel = (FileChannel) Files
 
 我们可以断言`charBuffer` 的实际内容是通过读取它的内容写入文件的:
 
-```
+```java
 List<String> fileContent = Files.readAllLines(pathToWrite);
 assertEquals(fileContent.get(0), "This will be written to the file");
 ```

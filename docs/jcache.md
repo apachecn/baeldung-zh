@@ -10,7 +10,7 @@
 
 要使用 JCache，我们需要向我们的`pom.xml`添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>javax.cache</groupId>
     <artifactId>cache-api</artifactId>
@@ -22,7 +22,7 @@
 
 我们还需要将 API 的实现添加到我们的`pom.xml`中；我们将在这里使用 Hazelcast:
 
-```
+```java
 <dependency>
     <groupId>com.hazelcast</groupId>
     <artifactId>hazelcast</artifactId>
@@ -75,7 +75,7 @@ JCache 由各种缓存解决方案实现:
 
 让我们看看如何创建一个简单的`Cache`:
 
-```
+```java
 CachingProvider cachingProvider = Caching.getCachingProvider();
 CacheManager cacheManager = cachingProvider.getCacheManager();
 MutableConfiguration<String, String> config
@@ -97,7 +97,7 @@ cacheManager.close();
 
 **如果我们在`pom.xml`中没有提供 JCache 的任何实现，将会抛出以下异常:**
 
-```
+```java
 javax.cache.CacheException: No CachingProviders have been configured
 ```
 
@@ -107,7 +107,7 @@ javax.cache.CacheException: No CachingProviders have been configured
 
 `EntryProcessor`允许我们使用原子操作修改`Cache`条目，而不必将它们重新添加到`Cache`。要使用它，我们需要实现`EntryProcessor`接口:
 
-```
+```java
 public class SimpleEntryProcessor
   implements EntryProcessor<String, String, String>, Serializable {
 
@@ -126,7 +126,7 @@ public class SimpleEntryProcessor
 
 现在，让我们使用我们的`EntryProcessor`实现:
 
-```
+```java
 @Test
 public void whenModifyValue_thenCorrect() {
     this.cache.invoke("key", new SimpleEntryProcessor());
@@ -150,7 +150,7 @@ public void whenModifyValue_thenCorrect() {
 
 让我们看一个例子:
 
-```
+```java
 public class SimpleCacheEntryListener implements
   CacheEntryCreatedListener<String, String>,
   CacheEntryUpdatedListener<String, String>,
@@ -177,7 +177,7 @@ public class SimpleCacheEntryListener implements
 
 现在，让我们运行我们的测试:
 
-```
+```java
 @Test
 public void whenRunEvent_thenCorrect() throws InterruptedException {
     this.listenerConfiguration
@@ -206,7 +206,7 @@ public void whenRunEvent_thenCorrect() throws InterruptedException {
 
 让我们看一个例子。首先，我们应该实现`CacheLoader`接口:
 
-```
+```java
 public class SimpleCacheLoader
   implements CacheLoader<Integer, String> {
 
@@ -227,7 +227,7 @@ public class SimpleCacheLoader
 
 现在，让我们使用我们的`CacheLoader`实现:
 
-```
+```java
 public class CacheLoaderIntegrationTest {
 
     private Cache<Integer, String> cache;

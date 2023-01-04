@@ -20,7 +20,7 @@
 
 让我们来看看这个非常简单的客户端页面:
 
-```
+```java
 <html>
 <body>
 <div id="errormsg" style="display:none"></div>
@@ -61,7 +61,7 @@ function savePass(){
 
 现在让我们也实现服务器端操作:
 
-```
+```java
 @PostMapping("/user/updatePassword")
 @PreAuthorize("hasRole('READ_PRIVILEGE')")
 public GenericResponse changeUserPassword(Locale locale, 
@@ -84,7 +84,7 @@ public GenericResponse changeUserPassword(Locale locale,
 
 最后，让我们用一些 API 测试来消费 API，以确保一切都工作正常；我们将从测试的简单配置和数据初始化开始:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(
   classes = { ConfigTest.class, PersistenceJPAConfig.class }, 
@@ -123,7 +123,7 @@ public class ChangePasswordApiTest {
 
 现在，让我们试着**为登录用户**更改密码:
 
-```
+```java
 @Test
 public void givenLoggedInUser_whenChangingPassword_thenCorrect() {
     RequestSpecification request = RestAssured.given().auth()
@@ -142,7 +142,7 @@ public void givenLoggedInUser_whenChangingPassword_thenCorrect() {
 
 接下来——假设旧密码错误，让我们尝试更改密码**:**
 
-```
+```java
 @Test
 public void givenWrongOldPassword_whenChangingPassword_thenBadRequest() {
     RequestSpecification request = RestAssured.given().auth()
@@ -161,7 +161,7 @@ public void givenWrongOldPassword_whenChangingPassword_thenBadRequest() {
 
 最后，让我们尝试在没有身份验证的情况下更改密码**:**
 
-```
+```java
 @Test
 public void givenNotAuthenticatedUser_whenChangingPassword_thenRedirect() {
     Map<String, String> params = new HashMap<String, String>();

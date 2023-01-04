@@ -16,7 +16,7 @@ Elasticsearch 也可以配置为同时将一个字段视为已分析和未分析
 
 例如，在一个`Article`类中，假设我们将标题字段存储为一个标准的分析字段。带有后缀`verbatim`的相同字段将被存储为未分析字段:
 
-```
+```java
 @MultiField(
   mainField = @Field(type = Text, fielddata = true),
   otherFields = {
@@ -36,7 +36,7 @@ private String title;
 
 现在，我们可以使用这些术语的任意组合来匹配文档:
 
-```
+```java
 NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
   .withQuery(matchQuery("title", "elasticsearch data"))
   .build();
@@ -46,7 +46,7 @@ NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
 
 未分析的字段没有标记化，因此在使用匹配或术语查询时只能作为一个整体进行匹配:
 
-```
+```java
 NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
   .withQuery(matchQuery("title.verbatim", "Second Article About Elasticsearch"))
   .build();
@@ -70,7 +70,7 @@ NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
 
 `boolean`是匹配查询的默认类型；您可以指定使用哪个布尔运算符(`or`是默认的):
 
-```
+```java
 NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
   .withQuery(matchQuery("title","Search engines").operator(Operator.AND))
   .build();
@@ -80,7 +80,7 @@ SearchHits<Article> articles = elasticsearchTemplate()
 
 该查询将返回一篇标题为“Search engines”的文章，方法是使用`and`操作符指定标题中的两个术语。但是如果我们使用默认的(`or`)操作符进行搜索，当只有一个词匹配时会发生什么呢？
 
-```
+```java
 NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
   .withQuery(matchQuery("title", "Engines Solutions"))
   .build();
@@ -102,7 +102,7 @@ assertEquals("Search engines", articles.getSearchHit(0).getContent().getTitle())
 
 对于字符串字段，`fuzziness`表示编辑距离:为了使一个字符串与另一个字符串相同，需要对该字符串进行的单字符更改的数量。
 
-```
+```java
 NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
   .withQuery(matchQuery("title", "spring date elasticsearch")
   .operator(Operator.AND)
@@ -119,7 +119,7 @@ NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
 
 换句话说，它表示为了使查询和文档匹配，需要移动术语的次数:
 
-```
+```java
 NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
   .withQuery(matchPhraseQuery("title", "spring elasticsearch").slop(1))
   .build();
@@ -131,7 +131,7 @@ NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
 
 当您想要在多个字段中搜索时，您可以使用`QueryBuilders#multiMatchQuery()`来指定所有要匹配的字段:
 
-```
+```java
 NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
   .withQuery(multiMatchQuery("tutorial")
     .field("title")
@@ -150,7 +150,7 @@ NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
 
 请记住，因为字段未经分析，所以标记不会被标记化:
 
-```
+```java
 TermsAggregationBuilder aggregation = AggregationBuilders.terms("top_tags")
   .field("tags")
   .order(Terms.Order.count(false));

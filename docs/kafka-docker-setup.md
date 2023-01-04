@@ -34,7 +34,7 @@ Learn how Kafka Streams simplify the processing operations when retrieving messa
 
 让我们创建一个简单的带有两个服务的`docker-compose.yml`文件，即`zookeeper`和`kafka`:
 
-```
+```java
 version: '2'
 services:
   zookeeper:
@@ -68,7 +68,7 @@ services:
 
 让我们通过使用 [`docker-compose`](https://web.archive.org/web/20221123060307/https://docs.docker.com/compose/reference/) 命令启动容器来启动 Kafka 服务器:
 
-```
+```java
 $ docker-compose up -d
 Creating network "kafka_default" with the default driver
 Creating kafka_zookeeper_1 ... done
@@ -77,7 +77,7 @@ Creating kafka_kafka_1     ... done
 
 现在让我们使用 **[`nc`](/web/20221123060307/https://www.baeldung.com/linux/netcat-command#scanning-for-open-ports-using-netcat) 命令来验证两台服务器都在监听各自的端口**:
 
-```
+```java
 $ nc -z localhost 22181
 Connection to localhost port 22181 [tcp/*] succeeded!
 $ nc -z localhost 29092
@@ -86,7 +86,7 @@ Connection to localhost port 29092 [tcp/*] succeeded!
 
 此外，我们还可以在容器启动时检查详细日志，并验证 Kafka 服务器是否启动:
 
-```
+```java
 $ docker-compose logs kafka | grep -i started
 kafka_1      | [2021-04-10 22:57:40,413] DEBUG [ReplicaStateMachine controllerId=1] Started replica state machine with initial state -> HashMap() (kafka.controller.ZkReplicaStateMachine)
 kafka_1      | [2021-04-10 22:57:40,418] DEBUG [PartitionStateMachine controllerId=1] Started partition state machine with initial state -> HashMap() (kafka.controller.ZkPartitionStateMachine)
@@ -121,7 +121,7 @@ Apache Kafka 的集群设置需要为 Zookeeper 服务器和 Kafka 服务器提�
 
 因此，让我们为 Zookeeper 和 Kafka 服务各添加一个节点的配置:
 
-```
+```java
 ---
 version: '2'
 services:
@@ -180,7 +180,7 @@ services:
 
 让我们使用`docker-compose`命令启动集群:
 
-```
+```java
 $ docker-compose up -d
 Creating network "kafka_default" with the default driver
 Creating kafka_zookeeper-1_1 ... done

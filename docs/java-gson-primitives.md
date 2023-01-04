@@ -12,7 +12,7 @@
 
 要使用 Gson，我们必须将 [Gson](https://web.archive.org/web/20220523233733/https://search.maven.org/search?q=g:com.google.code.gson%20AND%20a:gson) 依赖项添加到 pom:
 
-```
+```java
 <dependency> 
     <groupId>com.google.code.gson</groupId> 
     <artifactId>gson</artifactId> 
@@ -24,7 +24,7 @@
 
 用 Gson 序列化非常简单。我们将使用以下模型作为示例:
 
-```
+```java
 public class PrimitiveBundle {
     public byte byteValue;
     public short shortValue;
@@ -39,7 +39,7 @@ public class PrimitiveBundle {
 
 首先，让我们用一些测试值初始化一个实例:
 
-```
+```java
 PrimitiveBundle primitiveBundle = new PrimitiveBundle();
 primitiveBundle.byteValue = (byte) 0x00001111;
 primitiveBundle.shortValue = (short) 3;
@@ -53,14 +53,14 @@ primitiveBundle.charValue = 'a';
 
 接下来，我们可以将其序列化:
 
-```
+```java
 Gson gson = new Gson();
 String json = gson.toJson(primitiveBundle);
 ```
 
 最后，我们可以看到序列化的结果:
 
-```
+```java
 {  
    "byteValue":17,
    "shortValue":3,
@@ -83,14 +83,14 @@ String json = gson.toJson(primitiveBundle);
 
 Java 有常数`Float.POSITIVE_INFINITY`和`NEGATIVE_INFINITY`来表示无穷大。Gson 无法序列化这些特殊值:
 
-```
+```java
 public class InfinityValuesExample {
     public float negativeInfinity;
     public float positiveInfinity;
 }
 ```
 
-```
+```java
 InfinityValuesExample model = new InfinityValuesExample();
 model.negativeInfinity = Float.NEGATIVE_INFINITY;
 model.positiveInfinity = Float.POSITIVE_INFINITY;
@@ -111,14 +111,14 @@ gson.toJson(model);
 
 反序列化和序列化一样简单:
 
-```
+```java
 Gson gson = new Gson();
 PrimitiveBundle model = gson.fromJson(json, PrimitiveBundle.class);
 ```
 
 最后，我们可以验证模型是否包含所需的值:
 
-```
+```java
 assertEquals(17, model.byteValue);
 assertEquals(3, model.shortValue);
 assertEquals(3, model.intValue);
@@ -133,7 +133,7 @@ assertEquals('a', model.charValue);
 
 当一个有效的值被放入一个字符串中时，Gson 会对它进行解析并按预期进行处理:
 
-```
+```java
 String json = "{\"byteValue\": \"15\", \"shortValue\": \"15\", "
   + "\"intValue\": \"15\", \"longValue\": \"15\", \"floatValue\": \"15.0\""
   + ", \"doubleValue\": \"15.0\"}";
@@ -142,7 +142,7 @@ Gson gson = new Gson();
 PrimitiveBundleInitialized model = gson.fromJson(json, PrimitiveBundleInitialized.class); 
 ```
 
-```
+```java
 assertEquals(15, model.byteValue);
 assertEquals(15, model.shortValue);
 assertEquals(15, model.intValue);
@@ -157,7 +157,7 @@ assertEquals(15, model.doubleValue, 0.0001);
 
 另一方面，让我们尝试用空字符串反序列化下面的 JSON:
 
-```
+```java
 String json = "{\"byteValue\": \"\", \"shortValue\": \"\", "
   + "\"intValue\": \"\", \"longValue\": \"\", \"floatValue\": \"\""
   + ", \"doubleValue\": \"\"}";
@@ -172,7 +172,7 @@ gson.fromJson(json, PrimitiveBundleInitialized.class);
 
 尝试反序列化值为`null`的字段将导致 Gson 忽略该字段。例如，使用下面的类:
 
-```
+```java
 public class PrimitiveBundleInitialized {
     public byte byteValue = (byte) 1;
     public short shortValue = (short) 1;
@@ -185,7 +185,7 @@ public class PrimitiveBundleInitialized {
 
 Gson 忽略空字段:
 
-```
+```java
 String json = "{\"byteValue\": null, \"shortValue\": null, "
   + "\"intValue\": null, \"longValue\": null, \"floatValue\": null"
   + ", \"doubleValue\": null}";
@@ -205,13 +205,13 @@ assertEquals(1, model.doubleValue, 0.0001);
 
 这是 Gson 意外处理的一个很有意思的案例。正在尝试反序列化:
 
-```
+```java
 {"value": 300}
 ```
 
 使用模型:
 
-```
+```java
 class ByteExample {
     public byte value;
 }
@@ -223,7 +223,7 @@ class ByteExample {
 
 接下来，让我们尝试将下面的 JSON 反序列化为一个`ByteExample`对象:
 
-```
+```java
 {"value": 2.3}
 ```
 
@@ -235,13 +235,13 @@ Gson 在这里做了正确的事情，并引发了一个子类型为`NumberForma
 
 有时，布尔值被编码为 0 或 1，而不是“真”或“假”。Gson 默认不允许这样。例如，如果我们尝试反序列化:
 
-```
+```java
 {"value": 1}
 ```
 
 进入模型:
 
-```
+```java
 class BooleanExample {
     public boolean value;
 }
@@ -255,7 +255,7 @@ Gson 引发一个异常子类型为`IllegalStateException`的`JsonSyntaxExceptio
 
 例如，JSON:
 
-```
+```java
 {"value": "\u00AE"}
 ```
 

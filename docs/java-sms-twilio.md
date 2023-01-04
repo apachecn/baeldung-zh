@@ -28,7 +28,7 @@ TwiML 是一种基于 XML 的专有标记语言。TwiML 消息中的元素反映
 
 以下是发送 SMS 的 TwiML 消息示例:
 
-```
+```java
 <Response>
     <Message>
         <Body>Sample Twilio SMS</Body>
@@ -38,7 +38,7 @@ TwiML 是一种基于 XML 的专有标记语言。TwiML 消息中的元素反映
 
 这是另一个打电话的 TwiML 消息的例子:
 
-```
+```java
 <Response>
     <Dial>
         <Number>415-123-4567</Number>
@@ -56,7 +56,7 @@ Twilio 提供了一个丰富的 Java 客户端，使得与他们的服务交互�
 
 我们可以直接从 [Maven Central](https://web.archive.org/web/20220627090128/https://search.maven.org/classic/#artifactdetails%7Ccom.twilio.sdk%7Ctwilio%7C7.20.0%7Cjar) 下载依赖项，或者将以下条目添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.twilio.sdk</groupId>
     <artifactId>twilio</artifactId>
@@ -68,7 +68,7 @@ Twilio 提供了一个丰富的 Java 客户端，使得与他们的服务交互�
 
 首先，让我们看一些示例代码:
 
-```
+```java
 Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 Message message = Message.creator(
     new PhoneNumber("+12225559999"),
@@ -88,7 +88,7 @@ Message message = Message.creator(
 
 Twilio API 还支持发送彩信。我们可以混合搭配文字和图像，为此，接收手机必须支持媒体信息:
 
-```
+```java
 Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 Message message = Message.creator(
     new PhoneNumber("+12225559999"),
@@ -122,7 +122,7 @@ Twilio Java 客户端提供了同步和异步方法来获取状态。让我们�
 
 一旦我们创建了一个`Message`对象，我们可以调用`Message.getStatus()`来查看它当前的状态:
 
-```
+```java
 Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 ResourceSet messages = Message.reader().read();
 for (Message message : messages) {
@@ -136,7 +136,7 @@ for (Message message : messages) {
 
 因为检索消息状态需要远程 API 调用，所以可能需要很长时间。为了避免阻塞当前线程，Twilio Java 客户端还提供了异步版本的`Message.getStatus().read()`。
 
-```
+```java
 Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 ListenableFuture<ResourceSet<Message>> future = Message.reader().readAsync();
 Futures.addCallback(

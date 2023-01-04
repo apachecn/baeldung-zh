@@ -24,7 +24,7 @@
 
 让我们看一个例子，看看`hasNext()` 是如何使用默认分隔符的。首先，我们将准备一个输入字符串来帮助我们探索 S `canner`的解析结果:
 
-```
+```java
 String INPUT = new StringBuilder()
     .append("magic\tproject\n")
     .append("     database: oracle\n")
@@ -36,7 +36,7 @@ String INPUT = new StringBuilder()
 
 接下来，让我们解析输入并打印结果:
 
-```
+```java
 Scanner scanner = new Scanner(INPUT);
 while (scanner.hasNext()) {
     log.info(scanner.next());
@@ -46,7 +46,7 @@ log.info("--------OUTPUT--END---------")
 
 如果我们运行上面的代码，我们将看到控制台输出:
 
-```
+```java
 [DEMO]magic
 [DEMO]project
 [DEMO]database:
@@ -64,7 +64,7 @@ log.info("--------OUTPUT--END---------")
 
 在扫描器解析匹配字符串“`dependencies:`”的令牌后，我们将把分隔符改为冒号(`: )` ，以便我们可以解析和提取依赖项的每个值:
 
-```
+```java
 while (scanner.hasNext()) {
     String token = scanner.next();
     if ("dependencies:".equals(token)) {
@@ -77,7 +77,7 @@ log.info("--------OUTPUT--END---------");
 
 让我们看看结果输出:
 
-```
+```java
 [DEMO]magic
 [DEMO]project
 [DEMO]database:
@@ -101,13 +101,13 @@ spring
 
 如果我们能让冒号和空格都作为分隔符，那么“依赖”值将被正确解析，我们的问题将得到解决。为了实现这一点，让我们改变`useDelimiter(“:”)`调用:
 
-```
+```java
 scanner.useDelimiter(":|\\s+"); 
 ```
 
 这里的“`:|\\s+`”是匹配单个“:”或一个或多个空白字符的正则表达式。通过此修复，输出变成:
 
-```
+```java
 [DEMO]magic
 [DEMO]project
 [DEMO]database:
@@ -125,7 +125,7 @@ scanner.useDelimiter(":|\\s+");
 
 让我们再来看看同样的输入。这一次，我们将使用`hasNextLine()`和`nextLine()`方法在输入的每一行前面添加行号:
 
-```
+```java
 int i = 0;
 while (scanner.hasNextLine()) {
     log.info(String.format("%d|%s", ++i, scanner.nextLine()));
@@ -135,7 +135,7 @@ log.info("--------OUTPUT--END---------");
 
 现在，让我们看看我们的输出:
 
-```
+```java
 [DEMO]1|magic	project
 [DEMO]2|     database: oracle
 [DEMO]3|dependencies:

@@ -18,7 +18,7 @@
 
 默认情况下，Docker 在前台运行一个容器:
 
-```
+```java
 $ docker run --name test_redis -p 6379:6379 redis
 ```
 
@@ -30,7 +30,7 @@ $ docker run --name test_redis -p 6379:6379 redis
 
 我们还可以使用`-a`选项从 stdin、stdout 和 stderr 中选择特定的流进行连接:
 
-```
+```java
 $ docker run --name test_redis -a STDERR -p 6379:6379 redis
 ```
 
@@ -40,7 +40,7 @@ $ docker run --name test_redis -a STDERR -p 6379:6379 redis
 
 我们在交互模式下用 `-i` 和 `-t` 选项一起初始化一个容器:
 
-```
+```java
 $ docker run -it ubuntu /bin/bash
 ```
 
@@ -50,7 +50,7 @@ $ docker run -it ubuntu /bin/bash
 
 我们使用`-d`选项在分离模式下运行容器:
 
-```
+```java
 $ docker run -d --name test_redis -p 6379:6379 redis
 ```
 
@@ -64,7 +64,7 @@ $ docker run -d --name test_redis -p 6379:6379 redis
 
 **[执行](https://web.archive.org/web/20220812123411/https://docs.docker.com/engine/reference/commandline/exec/)命令让我们在已经运行的容器内执行命令**:
 
-```
+```java
 $ docker exec -it test_redis redis-cli
 ```
 
@@ -72,7 +72,7 @@ $ docker exec -it test_redis redis-cli
 
 但是，我们可能只想获得一个键的值:
 
-```
+```java
 $ docker exec test_redis redis-cli get mykey
 ```
 
@@ -80,7 +80,7 @@ $ docker exec test_redis redis-cli get mykey
 
 也可以在后台执行命令:
 
-```
+```java
 $ docker exec -d test_redis redis-cli set anotherkey 100
 ```
 
@@ -90,7 +90,7 @@ $ docker exec -d test_redis redis-cli set anotherkey 100
 
 **[`attach`](https://web.archive.org/web/20220812123411/https://docs.docker.com/engine/reference/commandline/attach/)命令将我们的终端连接到一个正在运行的容器**:
 
-```
+```java
 $ docker attach test_redis
 ```
 
@@ -98,7 +98,7 @@ $ docker attach test_redis
 
 为了只查看输出和错误消息，我们可以使用`–no-stdin`选项省略`stdin`:
 
-```
+```java
 $ docker attach --no-stdin test_redis
 ```
 
@@ -112,7 +112,7 @@ $ docker attach --no-stdin test_redis
 
 让我们覆盖通过`–sig-proxy=false`的行为:
 
-```
+```java
 $ docker run --name test_redis --sig-proxy=false -p 6379:6379 redis
 ```
 
@@ -126,13 +126,13 @@ $ docker run --name test_redis --sig-proxy=false -p 6379:6379 redis
 
 在这种情况下，我们需要在附加会话时用**覆盖`–sig-proxy`值:**
 
-```
+```java
 $ docker attach --sig-proxy=false test_redis
 ```
 
 我们也可以通过`–detach-keys`选项定义一个单独的键:
 
-```
+```java
 $ docker attach --detach-keys="ctrl-x" test_redis
 ```
 

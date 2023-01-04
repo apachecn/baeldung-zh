@@ -12,7 +12,7 @@
 
 首先，让我们添加 Servlet Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>javax.servlet</groupId>
     <artifactId>javax.servlet-api</artifactId>
@@ -26,7 +26,7 @@
 
 现在让我们直接开始，看看如何做一个简单的前进:
 
-```
+```java
 protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
     RequestDispatcher dispatcher = getServletContext()
       .getRequestDispatcher("/forwarded");
@@ -44,7 +44,7 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
 
 现在我们已经了解了转发的概念，让我们来看看重定向的一个快速片段:
 
-```
+```java
 protected void doGet(HttpServletRequest req, HttpServletResponse resp){
     resp.sendRedirect(req.getContextPath() + "/redirected");
 } 

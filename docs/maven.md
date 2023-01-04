@@ -27,7 +27,7 @@ Maven 项目的配置是通过一个由`pom.xml`文件表示的`Project Object M
 
 `POM`还定义了多模块项目的模块之间的关系。让我们看看典型的`POM`文件的基本结构:
 
-```
+```java
 <project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.baeldung</groupId>
@@ -79,7 +79,7 @@ Maven 使用一组标识符(也称为坐标)来惟一地标识项目，并指定
 
 为了声明对外部库的依赖，您需要提供库的`groupId, artifactId`和`version`。让我们来看一个例子:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-core</artifactId>
@@ -97,7 +97,7 @@ Maven 中的存储库用于保存不同类型的构建工件和依赖项。默�
 
 有些库，如 JBoss 服务器，在中央存储库中不可用，但在备用存储库中可用。对于这些库，您需要在`pom.xml`文件中提供备用存储库的 URL:
 
-```
+```java
 <repositories>
     <repository>
         <id>JBoss repository</id>
@@ -116,7 +116,7 @@ Maven 中的存储库用于保存不同类型的构建工件和依赖项。默�
 
 让我们看一个例子:
 
-```
+```java
 <properties>
     <spring.version>5.3.16</spring.version>
 </properties>
@@ -139,7 +139,7 @@ Maven 中的存储库用于保存不同类型的构建工件和依赖项。默�
 
 属性也经常用于定义构建路径变量:
 
-```
+```java
 <properties>
     <project.build.folder>${project.build.directory}/tmp/</project.build.folder>
 </properties>
@@ -155,7 +155,7 @@ Maven 中的存储库用于保存不同类型的构建工件和依赖项。默�
 
 `build`部分也是 Maven `POM.`的一个非常重要的部分，它提供了关于默认 Maven `goal`、编译项目的目录以及应用程序的最终名称的信息。默认的`build`部分如下所示:
 
-```
+```java
 <build>
     <defaultGoal>install</defaultGoal>
     <directory>${basedir}/target</directory>
@@ -173,7 +173,7 @@ Maven 中的存储库用于保存不同类型的构建工件和依赖项。默�
 
 Maven 的另一个重要特性是它对`profiles.`的支持，一个`profile`基本上是一组配置值。通过使用`profiles`，您可以为不同的环境定制构建，比如生产/测试/开发:
 
-```
+```java
 <profiles>
     <profile>
         <id>production</id>
@@ -203,7 +203,7 @@ Maven 的另一个重要特性是它对`profiles.`的支持，一个`profile`基
 
 正如您在上面的例子中所看到的，默认配置文件被设置为`development`。如果你想运行`production` `profile`，你可以使用下面的 Maven 命令:
 
-```
+```java
 mvn clean install -Pproduction
 ```
 
@@ -234,7 +234,7 @@ Maven 官方支持的丰富插件列表可以在[这里](https://web.archive.org
 
 要经历上述任何一个阶段，我们只需调用一个命令:
 
-```
+```java
 mvn <phase>
 ```
 
@@ -250,7 +250,7 @@ mvn <phase>
 
 为了构建一个简单的 Java 项目，让我们运行以下命令:
 
-```
+```java
 mvn archetype:generate \
   -DgroupId=com.baeldung \
   -DartifactId=baeldung \
@@ -269,7 +269,7 @@ mvn archetype:generate \
 
 我们在`src/test/java`中也有一个示例测试类。这个项目的`pom.xml`看起来类似于这个:
 
-```
+```java
 <project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.baeldung</groupId>
@@ -294,19 +294,19 @@ mvn archetype:generate \
 
 下一步是编译项目:
 
-```
+```java
 mvn compile
 ```
 
 Maven 将运行`compile`阶段构建项目源代码所需的所有`lifecycle`阶段。如果您只想运行`test`阶段，您可以使用:
 
-```
+```java
 mvn test
 ```
 
 现在让我们调用`package`阶段`,` ，它将产生编译后的归档`jar`文件:
 
-```
+```java
 mvn package
 ```
 
@@ -314,7 +314,7 @@ mvn package
 
 最后，我们将使用`exec-maven-plugin`执行我们的 Java 项目。让我们在`pom.xml`中配置必要的插件:
 
-```
+```java
 <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
@@ -342,7 +342,7 @@ mvn package
 
 为了执行应用程序，我们运行以下命令:
 
-```
+```java
 mvn exec:java
 ```
 

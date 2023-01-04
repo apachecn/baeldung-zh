@@ -20,7 +20,7 @@ Ribbon API 基于名为“命名客户端”的概念工作。在应用程序配
 
 通过将下面的依赖项添加到我们的`pom.xml:`中，可以将网飞功能区 API 添加到我们的项目中
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
@@ -45,7 +45,7 @@ Ribbon API 使我们能够配置负载平衡器的以下组件:
 
 让我们为该库编写一个简单的配置:
 
-```
+```java
 public class RibbonConfiguration {
 
     @Autowired
@@ -73,7 +73,7 @@ public class RibbonConfiguration {
 
 下面是我们为这个示例应用程序创建的`application.yml`配置文件:
 
-```
+```java
 spring:
   application:
     name: spring-cloud-ribbon
@@ -102,7 +102,7 @@ ping-server:
 
 现在让我们设置主应用程序组件片段——在这里我们使用`RibbonClient`而不是普通的`RestTemplate`来实现负载平衡:
 
-```
+```java
 @SpringBootApplication
 @RestController
 @RibbonClient(
@@ -127,7 +127,7 @@ public class ServerLocationApp {
 
 这里是`RestTemplate`的配置:
 
-```
+```java
 @Configuration
 public class RestTemplateConfiguration{
     @LoadBalanced

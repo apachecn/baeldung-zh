@@ -25,7 +25,7 @@
 
 让我们使用 [`docker pull`](https://web.archive.org/web/20221024141849/https://docs.docker.com/engine/reference/commandline/pull/) 命令从 Docker Hub 获取官方的 MySQL 镜像:
 
-```
+```java
 $ docker pull mysql:latest
 latest: Pulling from library/mysql
 f003217c5aae: Pull complete
@@ -40,7 +40,7 @@ c2920c795b25: Downloading [=================================================> ] 
 
 通常，**[图像](/web/20221024141849/https://www.baeldung.com/ops/docker-images-vs-containers)是按照清单文件**中描述的有序形式紧密耦合的不同层。我们的`docker pull`命令将**从 blob 存储中获取图像层，并使用清单文件**自动创建图像:
 
-```
+```java
 …
 … output truncated …
 …
@@ -56,14 +56,14 @@ docker.io/library/mysql:latest
 
 最后，`-d`选项帮助我们将容器作为守护进程运行。输出为将来的容器管理抛出了另一个哈希代码:
 
-```
+```java
 $ docker run --name bael-mysql-demo -e MYSQL_ROOT_PASSWORD=baeldung -d mysql:latest
 fedf880ce2b690f9205c7a37f32d75f669fdb1da2505e485e44cadd0b912bd35
 ```
 
 我们可以通过 [`ps`](https://web.archive.org/web/20221024141849/https://docs.docker.com/engine/reference/commandline/ps/) 命令看到一台主机中所有[运行的容器](/web/20221024141849/https://www.baeldung.com/ops/docker-list-containers):
 
-```
+```java
 $ docker ps
 CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS                 NAMES
 fedf880ce2b6   mysql:latest   "docker-entrypoint.s…"   17 seconds ago   Up 16 seconds   3306/tcp, 33060/tcp   bael-mysql-demo
@@ -73,7 +73,7 @@ fedf880ce2b6   mysql:latest   "docker-entrypoint.s…"   17 seconds ago   Up 16 
 
 必须安装一个客户端才能轻松访问 MySQL 服务器。根据我们的需要，我们可以将客户机安装在主机上，也可以安装在与服务器容器具有 IP 可达性的任何其他机器或容器上:
 
-```
+```java
 $ sudo apt install mysql-client -y
 Reading package lists... Done
 Building dependency tree
@@ -86,7 +86,7 @@ mysql-client is already the newest version (5.7.37-0ubuntu0.18.04.1).
 
 现在，让我们提取 MySQL 客户端的安装路径和版本:
 
-```
+```java
 $ which mysql
 /usr/bin/mysql
 $ mysql --version
@@ -97,7 +97,7 @@ mysql  Ver 14.14 Distrib 5.7.37, for Linux (x86_64) using  EditLine wrapper
 
 接下来，让我们使用安装的客户端登录到服务器。传统上，我们使用带有用户名和密码的 MySQL 命令登录服务器。然而，它在基于容器的解决方案中不起作用:
 
-```
+```java
 $ mysql -u root -p
 ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
 ```
@@ -106,14 +106,14 @@ ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run
 
 [`inspect`](https://web.archive.org/web/20221024141849/https://docs.docker.com/engine/reference/commandline/inspect/) 命令帮助分配一个 [IP 地址](/web/20221024141849/https://www.baeldung.com/ops/docker-network-information)给 MySQL 服务器实例:
 
-```
+```java
 $ docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' bael-mysql-demo
 172.17.0.2
 ```
 
 让我们在客户机的主机选项中提供上述 IP 地址，默认端口号和协议类型为 TCP:
 
-```
+```java
 $ mysql -h 172.17.0.2 -P 3306 --protocol=tcp -u root -p
 Enter password:
 Welcome to the MySQL monitor.  Commands end with ; or \g.

@@ -16,7 +16,7 @@
 
 为了在本地运行数据流服务器，我们需要用[和`spring-cloud-starter-dataflow-server-local`依赖项](https://web.archive.org/web/20220625085016/https://search.maven.org/search?q=spring-cloud-starter-dataflow-server-local)创建一个新项目:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-dataflow-server-local</artifactId>
@@ -26,7 +26,7 @@
 
 之后，我们需要用`@EnableDataFlowServer`注释服务器中的主类:
 
-```
+```java
 @EnableDataFlowServer
 @SpringBootApplication
 public class SpringDataFlowServerApplication {
@@ -48,7 +48,7 @@ public class SpringDataFlowServerApplication {
 
 首先，我们将添加[火花相关性](https://web.archive.org/web/20220625085016/https://search.maven.org/artifact/org.apache.spark/spark-core_2.10/2.2.3/jar):
 
-```
+```java
 <dependency>
     <groupId>org.apache.spark</groupId>
     <artifactId>spark-core_2.10</artifactId>
@@ -60,7 +60,7 @@ public class SpringDataFlowServerApplication {
 
 对于我们的工作，让我们近似圆周率:
 
-```
+```java
 public class PiApproximation {
     public static void main(String[] args) {
         SparkConf conf = new SparkConf().setAppName("BaeldungPIApproximation");
@@ -95,7 +95,7 @@ public class PiApproximation {
 
 为了使用数据流外壳,我们需要创建一个允许我们运行它的项目。首先，我们需要[`spring-cloud-dataflow-shell`依赖](https://web.archive.org/web/20220625085016/https://search.maven.org/search?q=spring-cloud-dataflow-shell):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-dataflow-shell</artifactId>
@@ -105,7 +105,7 @@ public class PiApproximation {
 
 添加依赖项后，我们可以创建运行数据流外壳的类:
 
-```
+```java
 @EnableDataFlowShell
 @SpringBootApplication
 public class SpringDataFlowShellApplication {
@@ -124,7 +124,7 @@ public class SpringDataFlowShellApplication {
 
 为此，我们首先需要**使用数据流外壳**注册我们的任务:
 
-```
+```java
 app register --type task --name spark-client --uri maven://org.springframework.cloud.task.app:spark-client-task:1.0.0.BUILD-SNAPSHOT 
 ```
 
@@ -137,7 +137,7 @@ app register --type task --name spark-client --uri maven://org.springframework.c
 
 我们可以使用注册的任务`spark-client`来提交我们的作业，记住要提供所需的参数:
 
-```
+```java
 task create spark1 --definition "spark-client \
   --spark.app-name=my-test-pi --spark.app-class=com.baeldung.spring.cloud.PiApproximation \
   --spark.app-jar=/apache-spark-job-0.0.1-SNAPSHOT.jar --spark.app-args=10"
@@ -147,7 +147,7 @@ task create spark1 --definition "spark-client \
 
 成功创建任务后，我们可以使用以下命令继续运行它:
 
-```
+```java
 task launch spark1
 ```
 

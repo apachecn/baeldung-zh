@@ -16,19 +16,19 @@
 
 例如，我们有一个由*整数*对象组成的数组:
 
-```
+```java
 Integer[] numbers = {5, 22, 10, 0};
 ```
 
 要对数组进行排序，我们可以简单地使用:
 
-```
+```java
 Arrays.sort(numbers);
 ```
 
 现在，numbers 数组的所有元素都按升序排列:
 
-```
+```java
 [0, 5, 10, 22]
 ```
 
@@ -40,19 +40,19 @@ Arrays.sort(numbers);
 
 类似地，我们可以定义一个原语的`int[]`数组:
 
-```
+```java
 int[] primitives = {5, 22, 10, 0};
 ```
 
 并用`Arrays.sort(int[])`的另一个实现进行排序。这一次，接受一个原语数组:
 
-```
+```java
 Arrays.sort(primitives);
 ```
 
 此操作的结果与前面的示例没有什么不同。并且`primitives`数组中的项目将看起来像:
 
-```
+```java
 [0, 5, 10, 22]
 ```
 
@@ -86,7 +86,7 @@ Arrays.sort(primitives);
 
 在我们的基准测试类中，我们将使用配置注释:
 
-```
+```java
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Measurement(batchSize = 100000, iterations = 10)
@@ -101,7 +101,7 @@ public class ArraySortBenchmark {
 
 在运行测试之前，我们需要定义我们想要排序的数据容器:
 
-```
+```java
 @State(Scope.Thread)
 public static class Initialize {
     Integer[] numbers = {-769214442, -1283881723, 1504158300, -1260321086, -1800976432, 1278262737, 
@@ -117,7 +117,7 @@ public static class Initialize {
 
 现在，我们准备为`Arrays.sort(Integer[])`添加第一个微基准:
 
-```
+```java
 @Benchmark
 public Integer[] benchmarkArraysIntegerSort(ArraySortBenchmark.Initialize state) {
     Arrays.sort(state.numbers);
@@ -127,7 +127,7 @@ public Integer[] benchmarkArraysIntegerSort(ArraySortBenchmark.Initialize state)
 
 接下来，对于`Arrays.sort(int[])`:
 
-```
+```java
 @Benchmark
 public int[] benchmarkArraysIntSort(ArraySortBenchmark.Initialize state) {
     Arrays.sort(state.primitives);
@@ -139,7 +139,7 @@ public int[] benchmarkArraysIntSort(ArraySortBenchmark.Initialize state) {
 
 最后，我们运行测试并比较结果:
 
-```
+```java
 Benchmark                   Mode  Cnt  Score   Error  Units
 benchmarkArraysIntSort      avgt   10  1.095 ± 0.022  ms/op
 benchmarkArraysIntegerSort  avgt   10  3.858 ± 0.060  ms/op

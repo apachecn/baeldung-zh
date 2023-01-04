@@ -12,13 +12,13 @@
 
 在示例中，我们将为文件名定义一个常数:
 
-```
+```java
 private final String FILE_NAME = "src/test/resources/fileToCreate.txt";
 ```
 
 我们还将添加一个清理步骤，以确保该文件在每次测试之前不存在，并在每次测试运行之后删除它:
 
-```
+```java
 @AfterEach
 @BeforeEach
 public void cleanUpFiles() {
@@ -31,7 +31,7 @@ public void cleanUpFiles() {
 
 让我们从使用 Java NIO 包中的`Files.createFile()`方法的**开始:**
 
-```
+```java
 @Test
 public void givenUsingNio_whenCreatingFile_thenCorrect() throws IOException {
     Path newFilePath = Paths.get(FILE_NAME);
@@ -43,7 +43,7 @@ public void givenUsingNio_whenCreatingFile_thenCorrect() throws IOException {
 
 这里需要注意的一点是，新的 API 很好地利用了异常。如果文件已经存在，我们不再需要检查返回代码。相反，我们将得到一个`FileAlreadyExistsException`:
 
-```
+```java
 java.nio.file.FileAlreadyExistsException: <code class="language-java">src/test/resources/fileToCreate.txt at sun.n.f.WindowsException.translateToIOException(WindowsException.java:81)
 ```
 
@@ -51,7 +51,7 @@ java.nio.file.FileAlreadyExistsException: <code class="language-java">src/test/r
 
 现在让我们看看如何使用`java.io.File`类来做同样的
 
-```
+```java
 @Test
 public void givenUsingFile_whenCreatingFile_thenCorrect() throws IOException {
     File newFile = new File(FILE_NAME);
@@ -66,7 +66,7 @@ public void givenUsingFile_whenCreatingFile_thenCorrect() throws IOException {
 
 另一种创建新文件的方法是使用`java.io.FileOutputStream`**:**
 
-```
+```java
 @Test
 public void givenUsingFileOutputStream_whenCreatingFile_thenCorrect() throws IOException {
     try(FileOutputStream fileOutputStream = new FileOutputStream(FILE_NAME)){
@@ -82,7 +82,7 @@ public void givenUsingFileOutputStream_whenCreatingFile_thenCorrect() throws IOE
 
 创建新文件的 Guava 解决方案也是一个快速的一行程序:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenCreatingFile_thenCorrect() throws IOException {
     com.google.common.io.Files.touch(new File(FILE_NAME));
@@ -95,7 +95,7 @@ public void givenUsingGuava_whenCreatingFile_thenCorrect() throws IOException {
 
 因此，它会在文件系统中创建一个新的空文件，甚至是一个文件及其完整路径:
 
-```
+```java
 @Test
 public void givenUsingCommonsIo_whenCreatingFile_thenCorrect() throws IOException {
     FileUtils.touch(new File(FILE_NAME));

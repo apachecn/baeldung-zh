@@ -18,7 +18,7 @@
 
 例如，让我们考虑一下`Level`枚举:
 
-```
+```java
 public enum Level {
     LOW, MEDIUM, HIGH
 }
@@ -26,7 +26,7 @@ public enum Level {
 
 接下来，让我们创建一个接受我们的枚举作为参数的[处理程序方法](/web/20221128144746/https://www.baeldung.com/spring-handler-mappings):
 
-```
+```java
 @RestController
 @RequestMapping("enummapping")
 public class EnumMappingController {
@@ -41,7 +41,7 @@ public class EnumMappingController {
 
 让我们使用 [CURL](/web/20221128144746/https://www.baeldung.com/curl-rest) 向`http://localhost:8080/enummapping/get?level=MEDIUM`发送一个请求:
 
-```
+```java
 curl http://localhost:8080/enummapping/get?level=MEDIUM
 ```
 
@@ -49,14 +49,14 @@ handler 方法发回`MEDIUM`，枚举常量`MEDIUM`的名称。
 
 现在，让我们通过`medium`而不是`MEDIUM`，看看会发生什么:
 
-```
+```java
 curl http://localhost:8080/enummapping/get?level=medium
 {"timestamp":"2022-11-18T18:41:11.440+00:00","status":400,"error":"Bad Request","path":"/enummapping/get"}
 ```
 
 正如我们所看到的，请求被认为是无效的，应用程序失败并显示一个错误:
 
-```
+```java
 Failed to convert value of type 'java.lang.String' to required type 'com.baeldung.enummapping.enums.Level'; 
 nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert from type [java.lang.String] to type [@org.springframework.web.bind.annotation.RequestParam com.baeldung.enummapping.enums.Level] for value 'medium'; 
 ...
@@ -78,7 +78,7 @@ Spring 提供了几种方便的方法来解决映射枚举时区分大小写的�
 
 首先，我们需要添加和配置`ApplicationConversionService`:
 
-```
+```java
 @Configuration
 public class EnumMappingConfig implements WebMvcConfigurer {
     @Override
@@ -92,7 +92,7 @@ public class EnumMappingConfig implements WebMvcConfigurer {
 
 现在，让我们使用一个测试用例来确认一切都按预期工作:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @WebMvcTest(EnumMappingController.class)
 public class EnumMappingIntegrationTest {
@@ -118,7 +118,7 @@ public class EnumMappingIntegrationTest {
 
 首先，我们需要添加它的[依赖关系](https://web.archive.org/web/20221128144746/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.commons%22%20AND%20a%3A%22commons-lang3%22):
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -128,7 +128,7 @@ public class EnumMappingIntegrationTest {
 
 **这里的基本思想是创建一个转换器，将一个`Level` 常量的字符串表示转换成一个真实的`Level`常量:**
 
-```
+```java
 public class StringToLevelConverter implements Converter<String, Level> {
 
     @Override
@@ -148,7 +148,7 @@ public class StringToLevelConverter implements Converter<String, Level> {
 
 现在，让我们把最后一块拼图补上。我们需要告诉 Spring 我们新的定制转换器。为此，我们将使用与之前相同的`FormatterRegistry`。**它提供了`addConverter()`方法来注册自定义转换器**:
 
-```
+```java
 @Override
 public void addFormatters(FormatterRegistry registry) {
     registry.addConverter(new StringToLevelConverter());
@@ -159,7 +159,7 @@ public void addFormatters(FormatterRegistry registry) {
 
 现在，我们可以像使用任何其他转换器一样使用它:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = EnumMappingMainApplication.class)
 public class StringToLevelConverterIntegrationTest {
@@ -185,7 +185,7 @@ Spring 使用多个内置的[属性编辑器](/web/20221128144746/https://www.ba
 
 例如，让我们将自定义编辑器命名为`LevelEditor`:
 
-```
+```java
 public class LevelEditor extends PropertyEditorSupport {
 
     @Override
@@ -207,7 +207,7 @@ public class LevelEditor extends PropertyEditorSupport {
 
 我们需要注册我们的`LevelEditor`,因为 Spring 不会自动检测定制属性编辑器。**为此，我们需要在我们的[弹簧控制器](/web/20221128144746/https://www.baeldung.com/spring-controllers)** 中创建一个用`@InitBinder`标注的方法:
 
-```
+```java
 @InitBinder
 public void initBinder(WebDataBinder dataBinder) {
     dataBinder.registerCustomEditor(Level.class, new LevelEditor());
@@ -216,7 +216,7 @@ public void initBinder(WebDataBinder dataBinder) {
 
 现在我们把所有的部分放在一起，让我们使用一个测试用例来确认我们的定制属性编辑器`LevelEditor`工作正常:
 
-```
+```java
 public class LevelEditorIntegrationTest {
 
     @Test
@@ -233,7 +233,7 @@ public class LevelEditorIntegrationTest {
 
 因此，为了避免`NullPointerException`，我们需要稍微改变一下我们的处理方法:
 
-```
+```java
 public String getByLevel(@RequestParam(required = false) Level level) {
     if (level != null) {
         return level.name();
@@ -244,7 +244,7 @@ public String getByLevel(@RequestParam(required = false) Level level) {
 
 现在，让我们添加一个简单的测试用例来对此进行测试:
 
-```
+```java
 @Test
 public void whenPassingUnknownEnumConstant_thenReturnUndefined() throws Exception {
     mockMvc.perform(get("/enummapping/get?level=unknown"))

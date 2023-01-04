@@ -99,7 +99,7 @@ Dijkstra 的方法是进行三路划分的有效方式。为了理解这一点�
 
 首先，让我们编写一个名为`compare()`的实用程序，对两个数字进行三向比较:
 
-```
+```java
 public static int compare(int num1, int num2) {
     if (num1 > num2)
         return 1;
@@ -112,7 +112,7 @@ public static int compare(int num1, int num2) {
 
 接下来，让我们添加一个名为`swap()`的方法来交换同一数组的两个索引处的元素:
 
-```
+```java
 public static void swap(int[] array, int position1, int position2) {
     if (position1 != position2) {
         int temp = array[position1];
@@ -124,7 +124,7 @@ public static void swap(int[] array, int position1, int position2) {
 
 为了惟一地标识数组中的一个分区，我们需要它的左右边界索引。所以，让我们继续创建一个`Partition`类:
 
-```
+```java
 public class Partition {
     private int left;
     private int right;
@@ -133,7 +133,7 @@ public class Partition {
 
 现在，我们准备编写我们的三方`partition()`过程:
 
-```
+```java
 public static Partition partition(int[] input, int begin, int end) {
     int lt = begin, current = begin, gt = end;
     int partitioningValue = input[begin];
@@ -158,7 +158,7 @@ public static Partition partition(int[] input, int begin, int end) {
 
 最后，让我们编写一个 **`quicksort()`方法，该方法利用我们的 3 路分区方案来递归地对左右分区进行排序**:
 
-```
+```java
 public static void quicksort(int[] input, int begin, int end) {
     if (end <= begin)
         return;
@@ -203,7 +203,7 @@ public static void quicksort(int[] input, int begin, int end) {
 
 在三向快速排序的递归实现中，我们需要为具有不同的上下限的子数组调用我们的分区过程。因此，我们的`partition()`方法必须接受三个输入，即数组及其左右边界。
 
-```
+```java
 public static Partition partition(int input[], int begin, int end){
 	// returns partition window
 }
@@ -217,7 +217,7 @@ public static Partition partition(int input[], int begin, int end){
 
 在每次迭代中，我们向两端移动等于`partitioningValue`的元素，并递增适当的计数器:
 
-```
+```java
 while (true) {
     while (input[left] < partitioningValue) left++; 
 
@@ -254,7 +254,7 @@ while (true) {
 
 在下一个阶段，我们需要**从中心**的两端移动所有相等的元素。在我们退出循环后，左指针将位于一个值不小于`partitioningValue`的元素处。利用这个事实，我们开始从两端向中心移动相等的元素:
 
-```
+```java
 right = left - 1;
 for (int k = begin; k < begin + leftEqualKeysCount; k++, right--) { 
     if (right >= begin + leftEqualKeysCount)
@@ -268,7 +268,7 @@ for (int k = end; k > end - rightEqualKeysCount; k--, left++) {
 
 在最后一个阶段，我们可以返回中间分区的边界:
 
-```
+```java
 return new Partition(right + 1, left - 1);
 ```
 

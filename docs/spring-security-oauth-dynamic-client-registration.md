@@ -14,7 +14,7 @@
 
 我们将首先设置以下依赖关系集:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -35,7 +35,7 @@
 
 首先，我们需要配置我们的 OAuth2.0 授权服务器。主要配置在以下类中:
 
-```
+```java
 @Configuration
 @PropertySource({ "classpath:persistence.properties" })
 @EnableAuthorizationServer
@@ -48,7 +48,7 @@ public class OAuth2AuthorizationServerConfig
 
 我们需要配置一些主要的东西；先说`ClientDetailsServiceConfigurer:`
 
-```
+```java
 @Override
 public void configure(final ClientDetailsServiceConfigurer clients) throws Exception {
     clients.jdbc(dataSource())
@@ -61,7 +61,7 @@ public void configure(final ClientDetailsServiceConfigurer clients) throws Excep
 
 当然，让我们建立这个标准数据源:
 
-```
+```java
 @Bean
 public DataSource dataSource() {
     DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -80,7 +80,7 @@ public DataSource dataSource() {
 
 现在让我们定义存储 OAuth 客户端的 SQL 结构:
 
-```
+```java
 create table oauth_client_details (
     client_id VARCHAR(256) PRIMARY KEY,
     resource_ids VARCHAR(256),
@@ -113,7 +113,7 @@ create table oauth_client_details (
 
 我们将使用下面的`data.sql`脚本——Spring Boot 将默认运行该脚本——来初始化数据库:
 
-```
+```java
 INSERT INTO oauth_client_details
 	(client_id, client_secret, scope, authorized_grant_types,
 	web_server_redirect_uri, authorities, access_token_validity,
@@ -135,7 +135,7 @@ VALUES
 
 首先，我们将尝试使用一个已经定义的客户机从 Auth 服务器获取一个访问令牌:
 
-```
+```java
 @Test
 public void givenDBUser_whenRevokeToken_thenAuthorized() {
     String accessToken = obtainAccessToken("fooClientIdPassword", "john", "123");
@@ -146,7 +146,7 @@ public void givenDBUser_whenRevokeToken_thenAuthorized() {
 
 下面是获取访问令牌的逻辑:
 
-```
+```java
 private String obtainAccessToken(String clientId, String username, String password) {
     Map<String, String> params = new HashMap<String, String>();
     params.put("grant_type", "password");

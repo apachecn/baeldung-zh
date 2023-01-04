@@ -26,7 +26,7 @@
 
 现在让我们创建 CA 证书:
 
-```
+```java
 openssl req -x509 -sha256 -days 3650 -newkey rsa:4096 -keyout rootCA.key -out rootCA.crt
 ```
 
@@ -52,7 +52,7 @@ keystore 是一个存储库，我们的 Spring Boot 应用程序将使用它来�
 
 让我们从创建所谓的证书签名请求(CSR)开始:
 
-```
+```java
 openssl req -new -newkey rsa:4096 -keyout localhost.key –out localhost.csr
 ```
 
@@ -60,7 +60,7 @@ openssl req -new -newkey rsa:4096 -keyout localhost.key –out localhost.csr
 
 在我们继续之前，我们需要创建一个配置文件—`localhost.ext`。它将存储签名证书时需要的一些附加参数。
 
-```
+```java
 authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
 subjectAltName = @alt_names
@@ -72,7 +72,7 @@ DNS.1 = localhost
 
 现在，是时候让**用我们的`rootCA.crt`证书和它的私钥**签署请求了:
 
-```
+```java
 openssl x509 -req -CA rootCA.crt -CAkey rootCA.key -in localhost.csr -out localhost.crt -days 365 -CAcreateserial -extfile localhost.ext
 ```
 
@@ -82,7 +82,7 @@ openssl x509 -req -CA rootCA.crt -CAkey rootCA.key -in localhost.csr -out localh
 
 要以人类可读的形式打印证书的详细信息，我们可以使用以下命令:
 
-```
+```java
 openssl x509 -in localhost.crt -text
 ```
 
@@ -94,7 +94,7 @@ openssl x509 -in localhost.crt -text
 
 我们可以使用下面的命令创建一个`.p12`文件:
 
-```
+```java
 openssl pkcs12 -export -out localhost.p12 -name "localhost" -inkey localhost.key -in localhost.crt
 ```
 
@@ -102,7 +102,7 @@ openssl pkcs12 -export -out localhost.p12 -name "localhost" -inkey localhost.key
 
 现在让我们使用 keytool 来**创建一个`keystore.jks`存储库，并使用一个命令**导入`localhost.p12`文件:
 
-```
+```java
 keytool -importkeystore -srckeystore localhost.p12 -srcstoretype PKCS12 -destkeystore keystore.jks -deststoretype JKS
 ```
 
@@ -118,7 +118,7 @@ keytool -importkeystore -srckeystore localhost.p12 -srcstoretype PKCS12 -destkey
 
 首先，我们创建一个新的 Maven 项目，其中包含三个 Spring Boot 入门包:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -139,7 +139,7 @@ keytool -importkeystore -srckeystore localhost.p12 -srcstoretype PKCS12 -destkey
 
 下一步，我们创建主应用程序类和用户控制器:
 
-```
+```java
 @SpringBootApplication
 public class X509AuthenticationServer {
     public static void main(String[] args) {
@@ -164,7 +164,7 @@ public class UserController {
 
 此外，我们配置了一些`user-details`来通过基本认证访问我们的服务器:
 
-```
+```java
 server.ssl.key-store=../store/keystore.jks
 server.ssl.key-store-password=${PASSWORD}
 server.ssl.key-alias=localhost
@@ -177,7 +177,7 @@ spring.security.user.password=admin
 
 这将是 HTML 模板，位于`resources/templates`文件夹:
 
-```
+```java
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -206,7 +206,7 @@ spring.security.user.password=admin
 
 之后，我们将导航到`spring-security-x509-basic-auth`模块并运行:
 
-```
+```java
 mvn spring-boot:run
 ```
 
@@ -243,7 +243,7 @@ mvn spring-boot:run
 
 让我们看看如何创建一个`truststore.jks`文件并使用 keytool 导入`rootCA.crt`:
 
-```
+```java
 keytool -import -trustcacerts -noprompt -alias ca -ext san=dns:localhost,ip:127.0.0.1 -file rootCA.crt -keystore truststore.jks
 ```
 
@@ -263,7 +263,7 @@ keytool -import -trustcacerts -noprompt -alias ca -ext san=dns:localhost,ip:127.
 
 对于后者，我们可以用`@PreAuthorize`和`@PostAuthorize`来注释我们的资源，以实现细粒度的访问控制:
 
-```
+```java
 @SpringBootApplication
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -298,7 +298,7 @@ public class X509AuthenticationServer extends WebSecurityConfigurerAdapter {
 
 如前所述，我们现在可以在控制器中使用`Expression-Based Access Control`。更具体地说，我们的授权注释受到重视，因为我们的`@Configuration` :中有`@EnableGlobalMethodSecurity`注释
 
-```
+```java
 @Controller
 public class UserController {
     @PreAuthorize("hasAuthority('ROLE_USER')")
@@ -315,7 +315,7 @@ public class UserController {
 
 因此，我们将以下内容放入我们的`application.properties`:
 
-```
+```java
 server.ssl.trust-store=store/truststore.jks
 server.ssl.trust-store-password=${PASSWORD}
 server.ssl.client-auth=need
@@ -329,7 +329,7 @@ server.ssl.client-auth=need
 
 首先，我们必须创建一个证书签名请求:
 
-```
+```java
 openssl req -new -newkey rsa:4096 -nodes -keyout clientBob.key -out clientBob.csr
 ```
 
@@ -337,13 +337,13 @@ openssl req -new -newkey rsa:4096 -nodes -keyout clientBob.key -out clientBob.cs
 
 接下来，我们需要向我们的 CA 签署请求:
 
-```
+```java
 openssl x509 -req -CA rootCA.crt -CAkey rootCA.key -in clientBob.csr -out clientBob.crt -days 365 -CAcreateserial
 ```
 
 我们需要采取的最后一步是将签名的证书和私钥打包到 PKCS 文件中:
 
-```
+```java
 openssl pkcs12 -export -out clientBob.p12 -name "clientBob" -inkey clientBob.key -in clientBob.crt
 ```
 
@@ -370,7 +370,7 @@ openssl pkcs12 -export -out clientBob.p12 -name "clientBob" -inkey clientBob.key
 
 将 X.509 客户端认证添加到`XML` 中的 [`http`安全配置也是可能的:](/web/20220822105735/https://www.baeldung.com/spring-security-digest-authentication)
 
-```
+```java
 <http>
     ...
     <x509 subject-principal-regex="CN=(.*?)(?:,|$)" 
@@ -389,7 +389,7 @@ openssl pkcs12 -export -out clientBob.p12 -name "clientBob" -inkey clientBob.key
 
 要配置一个底层的 Tomcat，我们必须将我们的`keystore`和`truststore`放到它的`conf`文件夹中，并编辑`server.xml`:
 
-```
+```java
 <Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true" scheme="https" secure="true"
     clientAuth="true" sslProtocol="TLS"
     keystoreFile="${catalina.home}/conf/keystore.jks"

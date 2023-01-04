@@ -12,7 +12,7 @@
 
 **`StringBuilder`和`StringBuffer`都创建持有可变字符序列的对象。**让我们看看这是如何工作的，以及它如何与不可变的`String`类进行比较:
 
-```
+```java
 String immutable = "abc";
 immutable = immutable + "def";
 ```
@@ -21,7 +21,7 @@ immutable = immutable + "def";
 
 当使用`StringBuffer`或`StringBuilder,`时，我们可以使用`append()`方法:
 
-```
+```java
 StringBuffer sb = new StringBuffer("abc");
 sb.append("def");
 ```
@@ -38,7 +38,7 @@ sb.append("def");
 
 在小的迭代中，性能差异是微不足道的。让我们用 [JMH](/web/20221001102523/https://www.baeldung.com/java-jvm-warmup) 做一个快速的微基准测试:
 
-```
+```java
 @State(Scope.Benchmark)
 public static class MyState {
     int iterations = 1000;
@@ -67,7 +67,7 @@ public StringBuilder benchmarkStringBuilder(MyState state) {
 
 我们使用了默认的`Throughput`模式——即单位时间内的操作数(分数越高越好),它给出了:
 
-```
+```java
 Benchmark                                          Mode  Cnt      Score      Error  Units
 StringBufferStringBuilder.benchmarkStringBuffer   thrpt  200  86169.834 ±  972.477  ops/s
 StringBufferStringBuilder.benchmarkStringBuilder  thrpt  200  91076.952 ± 2818.028  ops/s
@@ -75,7 +75,7 @@ StringBufferStringBuilder.benchmarkStringBuilder  thrpt  200  91076.952 ± 2818.
 
 如果我们将迭代次数从 1k 增加到 1m，那么我们得到:
 
-```
+```java
 Benchmark                                          Mode  Cnt   Score   Error  Units
 StringBufferStringBuilder.benchmarkStringBuffer   thrpt  200  77.178 ± 0.898  ops/s
 StringBufferStringBuilder.benchmarkStringBuilder  thrpt  200  85.769 ± 1.966  ops/s

@@ -24,7 +24,7 @@
 
 让我们来看一个配置示例——第一步是 Servlet 声明:
 
-```
+```java
 <servlet>
     <servlet-name>dispatcher</servlet-name>
     <servlet-class>
@@ -48,7 +48,7 @@
 
 现在我们的 servlet 已经配置好了。第二步是声明一个`servlet-mapping`:
 
-```
+```java
 <servlet-mapping>
     <servlet-name>dispatcher</servlet-name>
     <url-pattern>/</url-pattern>
@@ -63,7 +63,7 @@
 
 我们可以注册一个实现了`WebApplicationInitializer`的 servlet。这相当于上面的`XML`配置:
 
-```
+```java
 public class MyWebAppInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext container) {
@@ -98,32 +98,32 @@ public class MyWebAppInitializer implements WebApplicationInitializer {
 
 这一次我们将使用基于注释的上下文，这样我们可以使用`Java`和注释进行配置，并且不再需要像`dispatcher-config.xml`这样的`XML`文件:
 
-```
+```java
 AnnotationConfigWebApplicationContext context
   = new AnnotationConfigWebApplicationContext();
 ```
 
 然后，可以通过注册配置类来配置这种类型的上下文:
 
-```
+```java
 context.register(AppConfig.class);
 ```
 
 或者设置将被扫描配置类的整个包:
 
-```
+```java
 context.setConfigLocation("com.example.app.config");
 ```
 
 既然我们的应用程序上下文已经创建，我们可以向`ServletContext`添加一个监听器来加载上下文:
 
-```
+```java
 container.addListener(new ContextLoaderListener(context));
 ```
 
 下一步是创建和注册我们的 dispatcher servlet:
 
-```
+```java
 ServletRegistration.Dynamic dispatcher = container
   .addServlet("dispatcher", new DispatcherServlet(context));
 
@@ -133,7 +133,7 @@ dispatcher.addMapping("/");
 
 现在我们的`WebApplicationInitializer`应该是这样的:
 
-```
+```java
 public class MyWebAppInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext container) {

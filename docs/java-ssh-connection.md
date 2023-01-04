@@ -14,7 +14,7 @@ JSch 是 SSH2 的 Java 实现，它允许我们连接到 SSH 服务器并使用�
 
 首先，让我们将 [JSch Maven 依赖项](https://web.archive.org/web/20221102033256/https://search.maven.org/search?q=g:com.jcraft%20AND%20a:jsch)添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.jcraft</groupId>
     <artifactId>jsch</artifactId>
@@ -26,7 +26,7 @@ JSch 是 SSH2 的 Java 实现，它允许我们连接到 SSH 服务器并使用�
 
 **要使用 JSch 建立 SSH 连接，我们需要用户名、密码、主机 URL 和 SSH 端口**。默认的 SSH 端口是 22，但也有可能我们会将服务器配置为使用其他端口进行 SSH 连接:
 
-```
+```java
 public static void listFolderStructure(String username, String password, 
   String host, int port, String command) throws Exception {
 
@@ -80,7 +80,7 @@ Apache MINA SSHD 公司为基于 Java 的应用程序提供 SSH 支持。这个�
 
 让我们添加阿帕奇米娜 SSHD Maven 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.apache.sshd</groupId>
     <artifactId>sshd-core</artifactId>
@@ -92,7 +92,7 @@ Apache MINA SSHD 公司为基于 Java 的应用程序提供 SSH 支持。这个�
 
 让我们看看使用 Apache MINA SSHD 连接到 SSH 服务器的代码示例:
 
-```
+```java
 public static void listFolderStructure(String username, String password, 
   String host, int port, long defaultTimeoutSeconds, String command) throws IOException {
 

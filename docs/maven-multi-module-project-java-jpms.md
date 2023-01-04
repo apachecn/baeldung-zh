@@ -30,7 +30,7 @@ Maven 中的`reactor`机制——负责处理多模块项目——负责按照�
 
 让我们从定义父 Maven 模块开始。为了实现这一点，让我们创建一个名为`multimodulemavenproject`的根项目目录(但也可以是其他目录)，并向其中添加父文件`pom.xml`:
 
-```
+```java
 <groupId>com.baeldung.multimodulemavenproject</groupId>
 <artifactId>multimodulemavenproject</artifactId>
 <version>1.0</version>
@@ -81,7 +81,7 @@ Maven 中的`reactor`机制——负责处理多模块项目——负责按照�
 
 在项目的根目录下，让我们创建`entitymodule/src/main/java/com/baeldung/entity`目录结构并添加一个`User` 类:
 
-```
+```java
 public class User {
 
     private final String name;
@@ -93,7 +93,7 @@ public class User {
 
 接下来，让我们包含模块的`pom.xml`文件:
 
-```
+```java
 <parent>
     <groupId>com.baeldung.multimodulemavenproject</groupId>
     <artifactId>multimodulemavenproject</artifactId>
@@ -111,7 +111,7 @@ public class User {
 
 现在，我们需要**将 Maven 模块封装成 Java 模块**。为此，让我们简单地将下面的模块描述符文件(`module-info.java`)放在`entitymodule/src/main/java`目录下:
 
-```
+```java
 module com.baeldung.entitymodule {
     exports com.baeldung.entitymodule;
 }
@@ -119,7 +119,7 @@ module com.baeldung.entitymodule {
 
 最后，让我们将子 Maven 模块添加到父 POM 中:
 
-```
+```java
 <modules>
     <module>entitymodule</module>
 </modules>
@@ -133,7 +133,7 @@ module com.baeldung.entitymodule {
 
 因此，让我们在项目的根目录下创建`daomodule/src/main/java/com/baeldung/dao`目录结构，并在其中添加`Dao<T>`接口:
 
-```
+```java
 public interface Dao<T> {
 
     Optional<T> findById(int id);
@@ -145,7 +145,7 @@ public interface Dao<T> {
 
 现在，让我们定义模块的`pom.xml`文件:
 
-```
+```java
 <parent>
     // parent coordinates
 </parent>
@@ -159,7 +159,7 @@ public interface Dao<T> {
 
 这个新模块也不需要其他模块或工件，所以我们将把它包装成一个 Java 模块。让我们在`daomodule/src/main/java`目录下创建模块描述符:
 
-```
+```java
 module com.baeldung.daomodule {
     exports com.baeldung.daomodule;
 }
@@ -167,7 +167,7 @@ module com.baeldung.daomodule {
 
 最后，让我们将模块添加到父 POM:
 
-```
+```java
 <modules>
     <module>entitymodule</module>
     <module>daomodule</module>
@@ -180,7 +180,7 @@ module com.baeldung.daomodule {
 
 在项目的根目录下，让我们创建`userdaomodule/src/main/java/com/baeldung/userdao`目录结构，并向其中添加下面的`UserDao`类:
 
-```
+```java
 public class UserDao implements Dao<User> {
 
     private final Map<Integer, User> users;
@@ -205,7 +205,7 @@ public class UserDao implements Dao<User> {
 
 现在，让我们定义 Maven 模块的 POM:
 
-```
+```java
 <parent>
     // parent coordinates
 </parent>
@@ -234,7 +234,7 @@ public class UserDao implements Dao<User> {
 
 我们仍然需要将这个 Maven 模块封装到一个 Java 模块中。因此，让我们在`userdaomodule/src/main/java`目录下添加以下模块描述符:
 
-```
+```java
 module com.baeldung.userdaomodule {
     requires com.baeldung.entitymodule;
     requires com.baeldung.daomodule;
@@ -245,7 +245,7 @@ module com.baeldung.userdaomodule {
 
 最后，我们需要将这个新模块添加到父 POM 中:
 
-```
+```java
 <modules>
     <module>entitymodule</module>
     <module>daomodule</module>
@@ -267,7 +267,7 @@ module com.baeldung.userdaomodule {
 
 正如我们之前所做的，让我们在根目录下创建`mainappmodule/src/main/java/mainapp`目录结构，并向其中添加下面的`Application`类:
 
-```
+```java
 public class Application {
 
     public static void main(String[] args) {
@@ -284,7 +284,7 @@ public class Application {
 
 此外，我们还需要定义模块的`pom.xml`文件:
 
-```
+```java
 <parent>
     // parent coordinates
 </parent>
@@ -316,7 +316,7 @@ public class Application {
 
 模块的依赖关系是不言自明的。因此，我们只需要将模块放在 Java 模块中。因此，在`mainappmodule/src/main/java`目录结构下，让我们包含模块描述符:
 
-```
+```java
 module com.baeldung.mainappmodule {
     requires com.baeldung.entitypmodule;
     requires com.baeldung.userdaopmodule;
@@ -327,7 +327,7 @@ module com.baeldung.mainappmodule {
 
 最后，让我们将这个模块添加到父 POM 中:
 
-```
+```java
 <modules>
     <module>entitymodule</module>
     <module>daomodule</module>
@@ -338,7 +338,7 @@ module com.baeldung.mainappmodule {
 
 所有的子 Maven 模块都已经就位，并且整齐地封装在 Java 模块中，下面是项目的结构:
 
-```
+```java
 multimodulemavenproject (the root directory)
 pom.xml
 |-- entitymodule
@@ -389,7 +389,7 @@ pom.xml
 
 正如我们所料，当应用程序启动时，我们应该看到几个`User`对象被打印到控制台:
 
-```
+```java
 User{name=Julie}
 User{name=David} 
 ```

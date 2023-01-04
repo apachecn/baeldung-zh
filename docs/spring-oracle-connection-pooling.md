@@ -22,7 +22,7 @@ Oracle 是大型生产环境中最受欢迎的数据库之一。因此，作为 
 
 Spring 连接池最简单的方法是使用自动配置。`spring-boot-starter-jdbc`依赖项包括 [HikariCP](/web/20220630003853/https://www.baeldung.com/hikaricp) 作为首选池数据源。因此，如果我们看一下我们的`pom.xml`,我们会看到:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -33,7 +33,7 @@ Spring 连接池最简单的方法是使用自动配置。`spring-boot-starter-j
 
 现在我们只需[将我们的配置](/web/20220630003853/https://www.baeldung.com/spring-boot-hikari)添加到`application.properties`文件中:
 
-```
+```java
 # OracleDB connection settings
 spring.datasource.url=jdbc:oracle:thin:@//localhost:11521/ORCLPDB1
 spring.datasource.username=books
@@ -70,7 +70,7 @@ spring.jpa.hibernate.ddl-auto=create
 
 我们还可以指定要使用的连接池。在这种情况下，我们只需要向我们的`application.properties`文件添加一个新属性:
 
-```
+```java
 spring.datasource.type=org.apache.tomcat.jdbc.pool.DataSource
 ```
 
@@ -92,7 +92,7 @@ spring.datasource.type=org.apache.tomcat.jdbc.pool.DataSource
 
 如果我们想使用 UCP，我们需要添加以下 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.oracle.database.jdbc</groupId>
     <artifactId>ojdbc8</artifactId>
@@ -109,7 +109,7 @@ spring.datasource.type=org.apache.tomcat.jdbc.pool.DataSource
 
 现在我们只需将我们的配置添加到`application.properties`文件中:
 
-```
+```java
 # UCP settings
 spring.datasource.type=oracle.oracleucp.jdbc.UCPDataSource
 spring.datasource.oracleucp.connection-factory-class-name=oracle.jdbc.pool.OracleDataSource 
@@ -134,7 +134,7 @@ spring.datasource.oracleucp.max-pool-size=10
 
 在我们的`OracleDataSource` 实例中，我们通过`setConnectionCachingEnabled`打开连接缓存:
 
-```
+```java
 @Configuration
 @Profile("oracle")
 public class OracleConfiguration {

@@ -23,7 +23,7 @@ Spring 框架提供了一系列被称为`Spring Remoting`的工具，允许我�
 
 当我们使用`Spring Remoting`和`HTTP invoker,`时，我们必须通过一个接口定义我们的远程可调用服务，让 Spring 在客户端和服务器端创建代理，封装远程调用的技术细节。让我们从允许我们预订出租车的服务接口开始:
 
-```
+```java
 public interface CabBookingService {
     Booking bookRide(String pickUpLocation) throws BookingException;
 }
@@ -31,7 +31,7 @@ public interface CabBookingService {
 
 当服务能够分配 cab 时，它返回一个带有预订代码的`Booking`对象。`Booking`必须是可序列化的，因为 Spring 的 HTTP invoker 必须将其实例从服务器传输到客户端:
 
-```
+```java
 public class Booking implements Serializable {
     private String bookingCode;
 
@@ -45,7 +45,7 @@ public class Booking implements Serializable {
 
 如果服务无法预订出租车，就会抛出一个`BookingException`。在这种情况下，没有必要将该类标记为`Serializable`，因为`Exception`已经实现了它:
 
-```
+```java
 public class BookingException extends Exception {
     public BookingException(String message) {
         super(message);
@@ -59,7 +59,7 @@ public class BookingException extends Exception {
 
 因此，让我们将所有代码放在一个专用的 Maven 模块中，称为“API”；对于这个例子，我们将使用下面的 Maven 坐标:
 
-```
+```java
 <groupId>com.baeldung</groupId>
 <artifactId>api</artifactId>
 <version>1.0-SNAPSHOT</version>
@@ -73,7 +73,7 @@ public class BookingException extends Exception {
 
 首先，您需要确保您的项目使用 Spring Boot:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -83,7 +83,7 @@ public class BookingException extends Exception {
 
 你可以在这里找到最新的 Spring Boot 版本。然后我们需要 Web starter 模块:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -92,7 +92,7 @@ public class BookingException extends Exception {
 
 我们需要在上一步中组装的服务定义模块:
 
-```
+```java
 <dependency>
     <groupId>com.baeldung</groupId>
     <artifactId>api</artifactId>
@@ -104,7 +104,7 @@ public class BookingException extends Exception {
 
 我们首先定义一个实现服务接口的类:
 
-```
+```java
 public class CabBookingServiceImpl implements CabBookingService {
 
     @Override public Booking bookPickUp(String pickUpLocation) throws BookingException {
@@ -120,7 +120,7 @@ public class CabBookingServiceImpl implements CabBookingService {
 
 然后我们需要在上下文中定义一个带有类型为`HttpInvokerServiceExporter` 的 bean 的应用程序。它将负责在 web 应用程序中公开一个 HTTP 入口点，供客户端调用:
 
-```
+```java
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
@@ -151,7 +151,7 @@ public class Server {
 
 我们将使用与服务器端相同的服务定义和 Spring Boot 版本。我们仍然需要 web starter 依赖项，但是因为我们不需要自动启动嵌入式容器，所以我们可以从依赖项中排除 Tomcat starter:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -168,7 +168,7 @@ public class Server {
 
 让我们实现客户端:
 
-```
+```java
 @Configuration
 public class Client {
 

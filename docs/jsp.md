@@ -34,7 +34,7 @@ JavaServer Pages (JSP)支持将特定于 Java 的数据传递到或放置在. JS
 1.  后缀`.html`被替换为。jsp(它被认为是. jsp 文件类型)和
 2.  下面的标记被添加到。html 标记元素:
 
-```
+```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 ```
 
@@ -44,13 +44,13 @@ JavaServer Pages (JSP)支持将特定于 Java 的数据传递到或放置在. JS
 
 有两种方法可以将 Java 代码添加到. jsp 中。首先，我们可以使用基本的 Java Scriptlet 语法，这涉及到将 Java 代码块放在两个 Scriptlet 标记中:
 
-```
+```java
 <% Java code here %>
 ```
 
 第二种方法是特定于 XML 的:
 
-```
+```java
 <jsp:scriptlet>
     Java code here
 </jsp:scriptlet>
@@ -58,7 +58,7 @@ JavaServer Pages (JSP)支持将特定于 Java 的数据传递到或放置在. JS
 
 重要的是，通过使用`if`、`then`和`else`子句，然后用这些括号包装相关的标记块，可以在 JSP 中使用条件逻辑客户端。
 
-```
+```java
 <% if (doodad) {%>
     <div>Doodad!</div>
 <% } else { %>
@@ -96,7 +96,7 @@ JSP 技术允许清晰地分离`dynamic`和`static`内容之间的责任。
 
 下面的例子演示了一个非常简单、不完整的 servlet 方法来处理 GET 请求。我省略了大部分细节，这样我们可以专注于如何使用`request`和`response`对象:
 
-```
+```java
 protected void doGet(HttpServletRequest request, 
   HttpServletResponse response) throws ServletException, IOException {
     String message = request.getParameter("message");
@@ -116,7 +116,7 @@ protected void doGet(HttpServletRequest request,
 
 至少有两种方法可以打印到 JSP 页面，这两种方法都值得在这里讨论。`out`是自动创建的，允许您写入内存，然后写入`response`对象:
 
-```
+```java
 out.print(“hello”);
 out.println(“world”);
 ```
@@ -125,7 +125,7 @@ out.println(“world”);
 
 第二种方法性能更好，因为它允许您直接写入`response`对象！这里，我们使用`PrintWriter`:
 
-```
+```java
 PrintWriter out = response.getWriter();
 out.println("Hello World");
 ```
@@ -225,7 +225,7 @@ JSP 提供了现成的指令，可用于指定 JSP 文件的核心功能。JSP �
 
 让我们使用托管在 Tomcat 中的`File/New/Project/Web/Dynamic web project/`类型在 Eclipse 中设置我们的项目！创建项目后，您应该会看到:
 
-```
+```java
 |-project
   |- WebContent
     |- META-INF
@@ -237,7 +237,7 @@ JSP 提供了现成的指令，可用于指定 JSP 文件的核心功能。JSP �
 
 我们将向应用程序结构中添加一些文件，这样我们最终会得到:
 
-```
+```java
 |-project
   |- WebContent
     |- META-INF
@@ -257,7 +257,7 @@ JSP 提供了现成的指令，可用于指定 JSP 文件的核心功能。JSP �
 
 让我们设置`index.jsp`,当我们在 Tomcat 8 中访问 URL 上下文时将显示它:
 
-```
+```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
     <head>
@@ -276,7 +276,7 @@ JSP 提供了现成的指令，可用于指定 JSP 文件的核心功能。JSP �
 
 我们还需要确保我们已经设置好了`web.xml`:
 
-```
+```java
 <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>
@@ -300,7 +300,7 @@ JSP 提供了现成的指令，可用于指定 JSP 文件的核心功能。JSP �
 
 相反，我们将创建我们的标记的字符串表示，然后在 ExampleOne Servlet 收到 GET 请求后，用`PrintWriter`将它写入 GET 响应:
 
-```
+```java
 public class ExampleOne extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, 
@@ -337,7 +337,7 @@ public class ExampleOne extends HttpServlet {
 
 这里我们创建一个名为`ExampleTwo.jsp`的 JSP 文件，带有一个 JSP 标签。如上所述，这允许 Java 直接添加到我们的标记中。这里，我们随机打印一个`String[]`的元素:
 
-```
+```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
     <head>
@@ -362,7 +362,7 @@ public class ExampleOne extends HttpServlet {
 
 现在，我们的最后和最复杂的例子！这里，我们将在 ExampleThree 上使用`@WebServlet`注释，这消除了对`server.xml`中 servlet 映射的需要。
 
-```
+```java
 @WebServlet(
   name = "ExampleThree",
   description = "JSP Servlet With Annotations",
@@ -387,7 +387,7 @@ public class ExampleThree extends HttpServlet {
 
 所有绑定到`request`对象的数据都发送了它的(。jsp 文件的)方式，然后将显示！下面是我们如何处理最后一部分:
 
-```
+```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
     <head>
@@ -406,7 +406,7 @@ public class ExampleThree extends HttpServlet {
 
 现在，我们将把我们的应用程序导出到一个. war 文件中，该文件将在 Tomcat 8 中启动和托管！找到您的`server.xml`，我们会将我们的`Context`更新为:
 
-```
+```java
 <Context path="/spring-mvc-xml" docBase="${catalina.home}/webapps/spring-mvc-xml">
 </Context>
 ```

@@ -48,7 +48,7 @@
 
 让我们使用 Java 8 方法实现我们讨论的示例数组的排序:
 
-```
+```java
 void bubbleSort(Integer[] arr) {
     int n = arr.length;
     IntStream.range(0, n - 1)
@@ -65,7 +65,7 @@ void bubbleSort(Integer[] arr) {
 
 以及对算法的快速 JUnit 测试:
 
-```
+```java
 @Test
 public void whenSortedWithBubbleSort_thenGetSortedArray() {
     Integer[] array = { 2, 1, 4, 6, 3, 5 };
@@ -95,7 +95,7 @@ public void whenSortedWithBubbleSort_thenGetSortedArray() {
 
 现在，让我们实现优化的解决方案。
 
-```
+```java
 public void optimizedBubbleSort(Integer[] arr) {
     int i = 0, n = arr.length;
     boolean swapNeeded = true;
@@ -119,7 +119,7 @@ public void optimizedBubbleSort(Integer[] arr) {
 
 让我们检查优化算法的输出:
 
-```
+```java
 @Test
 public void 
   givenIntegerArray_whenSortedWithOptimizedBubbleSort_thenGetSortedArray() {

@@ -12,7 +12,7 @@
 
 对于 Maven 项目，我们需要添加 [`commons-collections4`](https://web.archive.org/web/20221208143854/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.commons%22%20AND%20a%3A%22commons-collections4%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -26,20 +26,20 @@
 
 让我们首先创建一个`MultiValuedMap`的实例:
 
-```
+```java
 MultiValuedMap<String, String> map = new ArrayListValuedHashMap<>();
 ```
 
 接下来，让我们看看如何使用`put`方法一次添加一个元素:
 
-```
+```java
 map.put("fruits", "apple");
 map.put("fruits", "orange");
 ```
 
 此外，让我们使用`putAll`方法添加一些元素，该方法在一次调用中将一个键映射到多个元素:
 
-```
+```java
 map.putAll("vehicles", Arrays.asList("car", "bike"));
 assertThat((Collection<String>) map.get("vehicles"))
   .containsExactly("car", "bike");
@@ -53,7 +53,7 @@ assertThat((Collection<String>) map.get("vehicles"))
 
 要获得与一个键相关的所有值，我们可以使用 `get`方法，该方法返回一个 [`Collection`](https://web.archive.org/web/20221208143854/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html) :
 
-```
+```java
 assertThat((Collection<String>) map.get("fruits"))
   .containsExactly("apple", "orange");
 ```
@@ -62,7 +62,7 @@ assertThat((Collection<String>) map.get("fruits"))
 
 或者，我们可以使用`entries`方法得到一个 [`Collection`](https://web.archive.org/web/20221208143854/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html) 的映射中包含的所有键值映射:
 
-```
+```java
 Collection<Map.Entry<String, String>> entries = map.entries();
 ```
 
@@ -72,14 +72,14 @@ Collection<Map.Entry<String, String>> entries = map.entries();
 
 让我们用`keys`方法得到一个 [`MultiSet`](https://web.archive.org/web/20221208143854/https://commons.apache.org/proper/commons-collections/apidocs/org/apache/commons/collections4/MultiSet.html) 的按键视图:
 
-```
+```java
 MultiSet<String> keys = map.keys();
 assertThat(keys).contains("fruits", "vehicles");
 ```
 
 或者，我们可以使用`keySet `方法获得键的 [`Set`](https://web.archive.org/web/20221208143854/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html) 视图:
 
-```
+```java
 Set<String> keys = map.keySet();
 assertThat(keys).contains("fruits", "vehicles");
 ```
@@ -88,7 +88,7 @@ assertThat(keys).contains("fruits", "vehicles");
 
 最后，如果我们想获得一个 [`Collection`](https://web.archive.org/web/20221208143854/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html) 视图中包含的所有值的映射，我们可以使用 `values`方法:
 
-```
+```java
 Collection<String> values = map.values();
 assertThat(values).contains("apple", "orange", "car", "bike");
 ```
@@ -101,7 +101,7 @@ assertThat(values).contains("apple", "orange", "car", "bike");
 
 首先，让我们看看如何使用` remove `方法删除与指定键相关的所有值:
 
-```
+```java
 Collection<String> removedValues = map.remove("fruits");
 assertThat(map.containsKey("fruits")).isFalse();
 assertThat(removedValues).contains("apple", "orange");
@@ -113,7 +113,7 @@ assertThat(removedValues).contains("apple", "orange");
 
 现在，假设我们有一个映射到多个值的键，但是我们只想删除其中一个映射值，留下其他的。我们可以使用`removeMapping `方法轻松做到这一点:
 
-```
+```java
 boolean isRemoved = map.removeMapping("fruits","apple");
 assertThat(map.containsMapping("fruits","apple")).isFalse();
 ```
@@ -122,7 +122,7 @@ assertThat(map.containsMapping("fruits","apple")).isFalse();
 
 最后，我们可以使用`clear `方法从映射中删除所有映射:
 
-```
+```java
 map.clear();
 assertThat(map.isEmpty()).isTrue();
 ```
@@ -135,7 +135,7 @@ assertThat(map.isEmpty()).isTrue();
 
 为了找出我们的映射是否包含指定键的映射，我们可以使用`containsKey`方法:
 
-```
+```java
 assertThat(map.containsKey("vehicles")).isTrue();
 ```
 
@@ -143,7 +143,7 @@ assertThat(map.containsKey("vehicles")).isTrue();
 
 接下来，假设我们想要检查映射中是否至少有一个键包含特定值的映射。我们可以使用`containsValue`方法来做到这一点:
 
-```
+```java
 assertThat(map.containsValue("orange")).isTrue();
 ```
 
@@ -151,7 +151,7 @@ assertThat(map.containsValue("orange")).isTrue();
 
 类似地，如果我们想检查一个映射是否包含特定键和值对的映射，我们可以使用 `containsMapping`方法:
 
-```
+```java
 assertThat(map.containsMapping("fruits","orange")).isTrue();
 ```
 
@@ -159,7 +159,7 @@ assertThat(map.containsMapping("fruits","orange")).isTrue();
 
 要检查一个映射是否根本不包含任何键值映射，我们可以使用`isEmpty`方法:
 
-```
+```java
 assertThat(map.isEmpty()).isFalse;
 ```
 
@@ -167,7 +167,7 @@ assertThat(map.isEmpty()).isFalse;
 
 最后，我们可以使用`size`方法来获得地图的总大小。当一个映射包含多个值的键时，映射的总大小是所有键中所有值的计数:
 
-```
+```java
 assertEquals(4, map.size());
 ```
 
@@ -179,7 +179,7 @@ Apache Commons Collections 库也提供了该接口的多种实现。让我们�
 
 一个 [`ArrayListValuedHashMap`](https://web.archive.org/web/20221208143854/https://commons.apache.org/proper/commons-collections/apidocs/org/apache/commons/collections4/multimap/ArrayListValuedHashMap.html) 在内部使用一个`ArrayList`来存储与每个键相关的值，因此**允许重复的键-值对**:
 
-```
+```java
 MultiValuedMap<String, String> map = new ArrayListValuedHashMap<>();
 map.put("fruits", "apple");
 map.put("fruits", "orange");
@@ -196,7 +196,7 @@ assertThat((Collection<String>) map.get("fruits"))
 
 让我们看一个简单的例子，我们添加了两次相同的键值映射:
 
-```
+```java
 MultiValuedMap<String, String> map = new HashSetValuedHashMap<>();
 map.put("fruits", "apple");
 map.put("fruits", "apple");
@@ -212,7 +212,7 @@ assertThat((Collection<String>) map.get("fruits"))
 
 `UnmodifiableMultiValuedMap`是一个装饰类，当我们需要一个 [`MultiValuedMap`](https://web.archive.org/web/20221208143854/https://commons.apache.org/proper/commons-collections/apidocs/index.html?org/apache/commons/collections4/MultiValuedMap.html) 的不可变实例时很有用——也就是说，它不允许进一步的修改:
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public void givenUnmodifiableMultiValuedMap_whenInserting_thenThrowingException() {
     MultiValuedMap<String, String> map = new ArrayListValuedHashMap<>();

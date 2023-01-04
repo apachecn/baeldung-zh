@@ -12,7 +12,7 @@
 
 对于我们的例子，我们将使用一个数组，它包含为每个测试随机生成的`Strings`:
 
-```
+```java
 String[] seedArray(int length) {
     String[] strings = new String[length];
     Random value = new Random();
@@ -25,7 +25,7 @@ String[] seedArray(int length) {
 
 为了在每个基准测试中重用数组，我们将声明一个内部类来保存数组和计数，这样我们就可以声明它在 JMH 中的作用域:
 
-```
+```java
 @State(Scope.Benchmark)
 public static class SearchData {
     static int count = 1000;
@@ -39,7 +39,7 @@ public static class SearchData {
 
 让我们从实现每种算法的三种方法开始:
 
-```
+```java
 boolean searchList(String[] strings, String searchString) {
     return Arrays.asList(SearchData.strings)
       .contains(searchString);
@@ -63,7 +63,7 @@ boolean searchLoop(String[] strings, String searchString) {
 
 我们将使用这些类注释告诉 JMH 以微秒为单位输出平均时间，并运行五次预热迭代，以确保我们的测试是可靠的:
 
-```
+```java
 @BenchmarkMode(Mode.AverageTime)
 @Warmup(iterations = 5)
 @OutputTimeUnit(TimeUnit.MICROSECONDS) 
@@ -71,7 +71,7 @@ boolean searchLoop(String[] strings, String searchString) {
 
 并循环运行每个测试:
 
-```
+```java
 @Benchmark
 public void searchArrayLoop() {
     for (int i = 0; i < SearchData.count; i++) {
@@ -96,7 +96,7 @@ public void searchArrayAllocNewSet() {
 
 当我们对每种方法运行 1000 次搜索时，我们的结果如下所示:
 
-```
+```java
 SearchArrayTest.searchArrayAllocNewList  avgt   20    937.851 ±  14.226  us/op
 SearchArrayTest.searchArrayAllocNewSet   avgt   20  14309.122 ± 193.844  us/op
 SearchArrayTest.searchArrayLoop          avgt   20    758.060 ±   9.433  us/op 
@@ -112,7 +112,7 @@ SearchArrayTest.searchArrayLoop          avgt   20    758.060 ±   9.433  us/op
 
 让我们试一试:
 
-```
+```java
 public void searchArrayReuseList() {
     List asList = Arrays.asList(SearchData.strings);
     for (int i = 0; i < SearchData.count; i++) {
@@ -132,7 +132,7 @@ public void searchArrayReuseSet() {
 
 我们看到非常不同的结果:
 
-```
+```java
 SearchArrayTest.searchArrayLoop          avgt   20    758.060 ±   9.433  us/op
 SearchArrayTest.searchArrayReuseList     avgt   20    837.265 ±  11.283  us/op
 SearchArrayTest.searchArrayReuseSet      avgt   20     14.030 ±   0.197  us/op 
@@ -150,7 +150,7 @@ SearchArrayTest.searchArrayReuseSet      avgt   20     14.030 ±   0.197  us/op
 
 让我们对数组进行排序，并尝试二分搜索法:
 
-```
+```java
 @Benchmark
 public void searchArrayBinarySearch() {
     Arrays.sort(SearchData.strings);
@@ -160,7 +160,7 @@ public void searchArrayBinarySearch() {
 } 
 ```
 
-```
+```java
 SearchArrayTest.searchArrayBinarySearch  avgt   20     26.527 ±   0.376  us/op 
 ```
 

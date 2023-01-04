@@ -24,7 +24,7 @@ A quick discussion of common questions about the Spring Framework that might com
 
 [安全名称空间](https://web.archive.org/web/20220120025304/http://static.springsource.org/spring-security/site/docs/3.1.x/reference/ns-config.html "Spring 3.1 Reference - Security Namespace Configuration")不可用是迄今为止实践中最常遇到的问题:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans  
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -40,7 +40,7 @@ A quick discussion of common questions about the Spring Framework that might com
 
 这导致了以下异常:
 
-```
+```java
 org.springframework.beans.factory.parsing.BeanDefinitionParsingException: 
 Configuration problem: 
 Unable to locate Spring NamespaceHandler for XML schema namespace 
@@ -50,7 +50,7 @@ Offending resource: class path resource [securityConfig.xml]
 
 解决方案很简单——项目的类路径中缺少`spring-security-config`依赖项:
 
-```
+```java
 <dependency> 
    <groupId>org.springframework.security</groupId>
    <artifactId>spring-security-config</artifactId>
@@ -66,7 +66,7 @@ Offending resource: class path resource [securityConfig.xml]
 
 当在类路径中没有必需的 aop spring 库的情况下使用**`aop`名称空间**时，也会出现同样的问题:
 
-```
+```java
 <beans 
 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -82,7 +82,7 @@ Offending resource: class path resource [securityConfig.xml]
 
 确切的例外是:
 
-```
+```java
 org.springframework.beans.factory.parsing.BeanDefinitionParsingException: 
 Configuration problem: 
 Unable to locate Spring NamespaceHandler for XML schema namespace 
@@ -92,7 +92,7 @@ Offending resource: ServletContext resource [/WEB-INF/webConfig.xml]
 
 解决方案是类似的——需要将`spring-aop` jar 添加到项目的类路径中:
 
-```
+```java
 <dependency>
    <groupId>org.springframework</groupId>
    <artifactId>spring-aop</artifactId>
@@ -106,7 +106,7 @@ Offending resource: ServletContext resource [/WEB-INF/webConfig.xml]
 
 使用**事务名称空间**——一个小但非常有用的名称空间，用于配置事务语义:
 
-```
+```java
 <beans 
 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -122,7 +122,7 @@ Offending resource: ServletContext resource [/WEB-INF/webConfig.xml]
 
 如果正确的 jar 不在类路径上，也会导致异常:
 
-```
+```java
 org.springframework.beans.factory.parsing.BeanDefinitionParsingException: 
 Configuration problem: 
 Unable to locate Spring NamespaceHandler for XML schema namespace
@@ -132,7 +132,7 @@ Offending resource: class path resource [daoConfig.xml]
 
 这里缺少的依赖项是`spring-tx`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-tx</artifactId>
@@ -146,7 +146,7 @@ Offending resource: class path resource [daoConfig.xml]
 
 向前移动到**`mvc`命名空间**:
 
-```
+```java
 <beans 
 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -162,7 +162,7 @@ Offending resource: class path resource [daoConfig.xml]
 
 缺少依赖关系将导致以下异常:
 
-```
+```java
 org.springframework.beans.factory.parsing.BeanDefinitionParsingException: 
 Configuration problem: 
 Unable to locate Spring NamespaceHandler for XML schema namespace
@@ -172,7 +172,7 @@ Offending resource: class path resource [webConfig.xml]
 
 在这种情况下，缺少的依赖项是`spring-mvc`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-webmvc</artifactId>

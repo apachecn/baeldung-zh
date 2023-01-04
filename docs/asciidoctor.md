@@ -28,7 +28,7 @@ AsciiDoc 是一种文本文档格式。它可以用于**编写文档、书籍、
 
 要在我们的应用程序中包含 AsciidoctorJ 包，需要下面的`pom.xml`条目:
 
-```
+```java
 <dependency>
     <groupId>org.asciidoctor</groupId>
     <artifactId>asciidoctorj</artifactId>
@@ -58,7 +58,7 @@ AsciidoctorJ 的入口点是`Asciidoctor` Java 接口。
 
 要创建一个`Asciidoctor`实例，您需要从提供的工厂方法中检索实例:
 
-```
+```java
 import static org.asciidoctor.Asciidoctor.Factory.create;
 import org.asciidoctor.Asciidoctor;
 ..
@@ -69,14 +69,14 @@ Asciidoctor asciidoctor = create();
 
 使用检索到的实例，我们可以非常容易地转换 AsciiDoc 文档:
 
-```
+```java
 String output = asciidoctor
   .convert("Hello _Baeldung_!", new HashMap<String, Object>());
 ```
 
 如果我们想从文件系统转换一个文本文档，我们将使用`convertFile`方法:
 
-```
+```java
 String output = asciidoctor
   .convertFile(new File("baeldung.adoc"), new HashMap<String, Object>()); 
 ```
@@ -91,7 +91,7 @@ String output = asciidoctor
 *   `**AsciiDocDirectoryWalker**`–转换给定文件夹及其子文件夹的所有文件。忽略所有以“_”开头的文件
 *   `**GlobDirectoryWalker**`–按照 glob 表达式转换给定文件夹的所有文件
 
-```
+```java
 String[] result = asciidoctor.convertDirectory(
   new AsciiDocDirectoryWalker("src/asciidoc"),
   new HashMap<String, Object>()); 
@@ -99,7 +99,7 @@ String[] result = asciidoctor.convertDirectory(
 
 同样，**我们可以用提供的`java.io.Reader`和`java.io.Writer`接口调用 convert 方法。** `Reader`接口用作源，`Writer`接口用于写入转换后的数据:
 
-```
+```java
 FileReader reader = new FileReader(new File("sample.adoc"));
 StringWriter writer = new StringWriter();
 
@@ -114,7 +114,7 @@ StringBuffer htmlBuffer = writer.getBuffer();
 
 我们将 in_place 选项设置为 true，这样我们的文件就会自动生成并保存到文件系统中:
 
-```
+```java
 Map<String, Object> options = options()
   .inPlace(true)
   .backend("pdf")
@@ -129,7 +129,7 @@ String outfile = asciidoctor.convertFile(new File("baeldung.adoc"), options);
 
 要在构建期间启用 PDF 生成，您需要将这个依赖项添加到您的`pom.xml:`
 
-```
+```java
 <plugin>
     <groupId>org.asciidoctor</groupId>
     <artifactId>asciidoctor-maven-plugin</artifactId>
@@ -150,7 +150,7 @@ Maven 插件依赖的最新版本可以在[这里](https://web.archive.org/web/2
 
 要在构建中使用插件，您必须在`pom.xml:`中定义它
 
-```
+```java
 <plugin>
     <executions>
         <execution>
@@ -176,7 +176,7 @@ Maven 插件依赖的最新版本可以在[这里](https://web.archive.org/web/2
 
 这是一个如何在插件中定义基本选项的例子:
 
-```
+```java
 <plugin>
     <configuration>
         <sourceDirectory>src/main/doc</sourceDirectory>

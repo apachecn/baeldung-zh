@@ -18,7 +18,7 @@
 
 例如，对于一个序列`[1, 2, 3] `，有六种排列:
 
-```
+```java
 [1, 2, 3]
 
 [1, 3, 2]
@@ -56,7 +56,7 @@
 
 用 Java 写的算法很简短:
 
-```
+```java
 private static void permutationsInternal(List<Integer> sequence, List<List<Integer>> results, int index) {
     if (index == sequence.size() - 1) {
         permutations.add(new ArrayList<>(sequence));
@@ -80,7 +80,7 @@ private static void permutationsInternal(List<Integer> sequence, List<List<Integ
 
 将第一个递归调用隐藏在 facade 方法下也是一个好主意:
 
-```
+```java
 public static List<List<Integer>> generatePermutations(List<Integer> sequence) {
     List<List<Integer>> permutations = new ArrayList<>();
     permutationsInternal(sequence, permutations, 0);
@@ -98,7 +98,7 @@ public static List<List<Integer>> generatePermutations(List<Integer> sequence) {
 
 例如，给定一个集合`[a, b, c]`，幂集包含八个子集:
 
-```
+```java
 []
 
 [a]
@@ -128,7 +128,7 @@ public static List<List<Integer>> generatePermutations(List<Integer> sequence) {
 
 我们用 Java 编写的算法非常易读:
 
-```
+```java
 private static void powersetInternal(
   List<Character> set, List<List<Character>> powerset, List<Character> accumulator, int index) {
     if (index == set.size()) {
@@ -157,7 +157,7 @@ private static void powersetInternal(
 
 同样，我们用 facade 方法隐藏实现:
 
-```
+```java
 public static List<List<Character>> generatePowerset(List<Character> sequence) {
     List<List<Character>> powerset = new ArrayList<>();
     powerSetInternal(sequence, powerset, new ArrayList<>(), 0);
@@ -177,7 +177,7 @@ public static List<List<Character>> generatePowerset(List<Character> sequence) {
 
 例如，对于集合`[a, b, c]` ，我们有三个`2`-组合:
 
-```
+```java
 [a, b]
 
 [a, c]
@@ -207,7 +207,7 @@ public static List<List<Character>> generatePowerset(List<Character> sequence) {
 
 让我们来看看该算法的 Java 实现:
 
-```
+```java
 private static void combinationsInternal(
   List<Integer> inputSet, int k, List<List<Integer>> results, ArrayList<Integer> accumulator, int index) {
   int needToAccumulate = k - accumulator.size();
@@ -239,7 +239,7 @@ private static void combinationsInternal(
 
 同样，facade 方法隐藏了实现:
 
-```
+```java
 public static List<List<Integer>> combinations(List<Integer> inputSet, int k) {
     List<List<Integer>> results = new ArrayList<>();
     combinationsInternal(inputSet, k, results, new ArrayList<>(), 0);

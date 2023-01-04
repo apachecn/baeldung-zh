@@ -24,7 +24,7 @@
 
 最好使用一个`ResponseBodyEmitter` 连同它自己专用的异步线程，并用一个`ResponseEntity`包装(我们可以直接将`emitter`注入其中):
 
-```
+```java
 @Controller
 public class ResponseBodyEmitterController {
 
@@ -56,7 +56,7 @@ public class ResponseBodyEmitterController {
 
 对于客户端使用，我们可以使用一个简单的 XHR 方法并调用我们的 API 端点，就像在普通的 AJAX 操作中一样:
 
-```
+```java
 var xhr = function(url) {
     return new Promise(function(resolve, reject) {
         var xmhr = new XMLHttpRequest();
@@ -79,7 +79,7 @@ xhr('http://localhost:8080/javamvcasync/rbe')
 
 因此，让我们快速看一下利用这一强大实体的示例控制器:
 
-```
+```java
 @Controller
 public class SseEmitterController {
     private ExecutorService nonBlockingService = Executors
@@ -112,7 +112,7 @@ public class SseEmitterController {
 
 我们的客户端这次的工作方式略有不同，因为我们可以利用持续连接的 `Server-Sent Event`库:
 
-```
+```java
 var sse = new EventSource('http://localhost:8080/javamvcasync/sse');
 sse.onmessage = function (evt) {
     var el = document.getElementById('sse');
@@ -127,7 +127,7 @@ sse.onmessage = function (evt) {
 
 ### 4.1.服务器端
 
-```
+```java
 @Controller
 public class StreamingResponseBodyController {
 
@@ -146,7 +146,7 @@ public class StreamingResponseBodyController {
 
 就像之前一样，我们将使用常规的 XHR 方法来访问上面的控制器:
 
-```
+```java
 var xhr = function(url) {
     return new Promise(function(resolve, reject) {
         var xmhr = new XMLHttpRequest();

@@ -24,7 +24,7 @@ Docker 提供了各种选项来列出和过滤不同状态的容器，甚至提�
 
 **如果我们使用不带选项的`“` `docker container ls” `命令，它将列出所有正在运行的容器**:
 
-```
+```java
 $ docker container ls
 CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                                NAMES
 1addfea727b3        mysql:5.6            "docker-en.."   2 seconds ago       Up 1 second         0.0.0.0:32801->3306/tcp              dazzling_hellman
@@ -54,7 +54,7 @@ b06cfe3053e5        postgres:11          "docker-…"      29 minutes ago      U
 
 然而，**如果我们通过`-a `或`–all `选项，它将列出所有(停止和运行的)容器**:
 
-```
+```java
 $ docker container ls -a
 CONTAINER ID        IMAGE                STATUS
 1addfea727b3        mysql:5.6            Up 4 hours
@@ -73,7 +73,7 @@ b06cfe3053e5        postgres:11          Up 4 hours
 
 要查看最后的`n` Docker 容器(运行的和停止的)，我们可以使用`-n <number> `或`–last <number> `选项:
 
-```
+```java
 $ docker container ls -n 2
 CONTAINER ID        IMAGE               STATUS
 1addfea727b3        mysql:5.6           Up 4 hours
@@ -82,7 +82,7 @@ CONTAINER ID        IMAGE               STATUS
 
 也可以通过`-l` 或`–latest `选项查看最新的容器:
 
-```
+```java
 $ docker container ls --latest
 CONTAINER ID        IMAGE               STATUS
 1addfea727b3        mysql:5.6           Up 4 hours
@@ -96,7 +96,7 @@ CONTAINER ID        IMAGE               STATUS
 
 尽管这在大多数情况下是一个很好的特性，但我们可以使用`–no-trunc `选项禁用它:
 
-```
+```java
 $ docker container ls --latest --no-trunc
 CONTAINER ID                                                       COMMAND
 1addfea727b38f484a2e0023ed7f47dcb9bbfc6e053f094c349391bb38cb3af7   "docker-entrypoint.sh mysqld"
@@ -110,7 +110,7 @@ CONTAINER ID                                                       COMMAND
 
 为此，我们可以使用`-q `或`–quiet `选项:
 
-```
+```java
 $ docker container ls -q
 1addfea727b3
 09c4105cb356
@@ -121,7 +121,7 @@ b06cfe3053e5
 
 我们可以混合搭配选项，并查看完整的容器标识符:
 
-```
+```java
 $ docker container ls --quiet --no-trunc
 1addfea727b38f484a2e0023ed7f47dcb9bbfc6e053f094c349391bb38cb3af7
 09c4105cb3567ba0070dacf7381b9946165908c819c0841cffaa1855766537c7
@@ -134,7 +134,7 @@ b06cfe3053e521704c67a1902a7302665ae05f66ef592419f32b8c73b2a066fd
 
 这里有一种强制删除所有容器的方法:
 
-```
+```java
 $ docker container rm -f $(docker container ls -aq)
 ```
 
@@ -144,7 +144,7 @@ $ docker container rm -f $(docker container ls -aq)
 
 我们可以通过`-s `或`–size `选项查看容器的大小及其在磁盘上的图像:
 
-```
+```java
 $ docker container ls --latest -s
 CONTAINER ID        IMAGE               SIZE
 1addfea727b3        mysql:5.6           2B (virtual 256MB)
@@ -158,7 +158,7 @@ CONTAINER ID        IMAGE               SIZE
 
 让我们来看看实际情况:
 
-```
+```java
 $ docker container ls --format "{{.ID}} -> Based on {{.Image}}, named {{.Names}}, ({{.Status}})"
 1addfea727b3 -> Based on mysql:5.6, named dazzling_hellman, (Up 3 hours)
 09c4105cb356 -> Based on nats:2.1.0-scratch, named nats-1, (Up 4 hours)
@@ -173,7 +173,7 @@ b06cfe3053e5 -> Based on postgres:11, named pg-2, (Up 4 hours)
 
 我们只需使用`table `前缀:
 
-```
+```java
 $ docker container ls --format "table {{.ID}}\t{{.Image}}\t{{.Names}}"
 CONTAINER ID        IMAGE                NAMES
 1addfea727b3        mysql:5.6            dazzling_hellman
@@ -206,7 +206,7 @@ b06cfe3053e5        postgres:11          pg-2
 
 这里我们将过滤状态为`exited `的容器:
 
-```
+```java
 $ docker container ls --filter "status=exited"
 CONTAINER ID        IMAGE               STATUS
 32928d81a65f        mysql:5.6           Exited (1) 8 hours ago
@@ -220,7 +220,7 @@ CONTAINER ID        IMAGE               STATUS
 
 让我们更进一步，只保留退出状态等于 1 的`exited `容器:
 
-```
+```java
 $ docker container ls --filter "status=exited" --filter "exited=1"
 CONTAINER ID        IMAGE               STATUS
 32928d81a65f        mysql:5.6           Exited (1) 8 hours ago
@@ -230,13 +230,13 @@ CONTAINER ID        IMAGE               STATUS
 
 假设我们暂停一个 Docker 容器:
 
-```
+```java
 $ docker container pause redis-2
 ```
 
 然后，我们可以过滤所有暂停的容器:
 
-```
+```java
 $ docker container ls --filter "status=paused"
 CONTAINER ID        IMAGE               STATUS
 4cf774b9e4a4        redis:5             Up 45 minutes (Paused)
@@ -246,7 +246,7 @@ CONTAINER ID        IMAGE               STATUS
 
 如果我们知道容器名称的某个部分，我们可以搜索它:
 
-```
+```java
 $ docker container ls -a --filter "name=pg"
 CONTAINER ID        IMAGE               STATUS
 b06cfe3053e5        postgres:11         Up 18 minutes
@@ -255,7 +255,7 @@ b06cfe3053e5        postgres:11         Up 18 minutes
 
 我们还可以根据容器的基本图像过滤容器:
 
-```
+```java
 $ docker container ls -a --filter "ancestor=postgres"
 CONTAINER ID        IMAGE               STATUS
 b06cfe3053e5        postgres:11         Up 28 minutes
@@ -268,7 +268,7 @@ b06cfe3053e5        postgres:11         Up 28 minutes
 
 让我们只保留在 Nats 容器之前创建的容器:
 
-```
+```java
 $ docker container ls --filter "before=nats-1"
 CONTAINER ID        IMAGE               STATUS
 443fc0c41710        rabbitmq:3.7        Up 52 minutes
@@ -278,7 +278,7 @@ b06cfe3053e5        postgres:11         Up 52 minutes
 
 另一方面，我们可以使用`since `过滤器列出在 Nats 容器之后创建的所有 Docker 容器:
 
-```
+```java
 $ docker container ls --filter "since=nats-1"
 CONTAINER ID        IMAGE               STATUS
 2fdc65a6effb        mysql:5.6           Exited (137) 4 days ago

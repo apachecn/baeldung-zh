@@ -14,14 +14,14 @@
 
 首先，我们将拉出 [NGINX](https://web.archive.org/web/20221222091408/https://www.nginx.com/) 和 [Redis](https://web.archive.org/web/20221222091408/https://redis.io/) 图像:
 
-```
+```java
 $ docker image pull nginx
 $ docker image pull redis
 ```
 
 让我们验证它们是否拉好:
 
-```
+```java
 $ docker image list 
 REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
 nginx        latest    76c69feac34e   2 weeks ago   142MB
@@ -30,7 +30,7 @@ redis        latest    c2342258f8ca   2 weeks ago   117MB
 
 接下来，我们将创建一个卷并找到它的挂载点:
 
-```
+```java
 $ docker volume create dangling-volume
 
 $ docker volume inspect dangling-volume -f '{{ .Mountpoint }}'
@@ -39,7 +39,7 @@ $ docker volume inspect dangling-volume -f '{{ .Mountpoint }}'
 
 最后，让我们在一个`/var/lib/docker/volumes/dangling-volume/_data`目录中创建一个示例文件:
 
-```
+```java
 $ echo "Dangling volume" | sudo tee /var/lib/docker/volumes/dangling-volume/_data/sample.txt
 
 $ sudo cat /var/lib/docker/volumes/dangling-volume/_data/sample.txt
@@ -52,7 +52,7 @@ Dangling volume
 
 在 Docker 中，**镜像安装目录由`DockerRootDir`属性**表示。我们可以使用`[info](https://web.archive.org/web/20221222091408/https://docs.docker.com/engine/reference/commandline/info/)`子命令找到它的值:
 
-```
+```java
 $ docker info -f '{{ .DockerRootDir }}'
 /var/lib/docker
 ```
@@ -67,14 +67,14 @@ $ docker info -f '{{ .DockerRootDir }}'
 
 因此，让我们创建一个新目录，并通过编辑守护程序配置文件将其配置为根目录:
 
-```
+```java
 $ mkdir -p /tmp/new-docker-root
 $ sudo vi /etc/docker/daemon.json
 ```
 
 然后我们编辑文件，使它有一个指向新创建的目录的`data-root`。当我们保存它时:
 
-```
+```java
 $ sudo cat /etc/docker/daemon.json
 { 
    "data-root": "/tmp/new-docker-root"
@@ -83,7 +83,7 @@ $ sudo cat /etc/docker/daemon.json
 
 最后，我们必须重启 docker 服务，并使用`info`子命令检查更新后的根目录:
 
-```
+```java
 $ sudo systemctl restart docker
 $ docker info -f '{{ .DockerRootDir}}'
 /tmp/new-docker-root
@@ -97,20 +97,20 @@ $ docker info -f '{{ .DockerRootDir}}'
 
 首先，我们通过删除守护程序配置文件和`/tmp/new-docker-root`目录将设置重置为默认值:
 
-```
+```java
 $ sudo rm /etc/docker/daemon.json
 $ sudo rm -rf /tmp/new-docker-root/
 ```
 
 接下来，我们必须重新启动 docker 服务以使更改生效:
 
-```
+```java
 $ sudo systemctl restart docker 
 ```
 
 最后，我们可以验证 Docker 根目录是否设置为其默认位置:
 
-```
+```java
 $ docker info -f '{{ .DockerRootDir}}'
 /var/lib/docker
 ```
@@ -121,14 +121,14 @@ $ docker info -f '{{ .DockerRootDir}}'
 
 首先，我们将创建一个新目录，并从`/lib/systemd/system/docker.service` 文件`:`中更新`ExecStart`属性
 
-```
+```java
 $ mkdir -p /tmp/new-docker-root/
 $ sudo vi /lib/systemd/system/docker.service
 ```
 
 现在，更新后的文件如下所示:
 
-```
+```java
 $ grep ExecStart /lib/systemd/system/docker.service
 ExecStart=/usr/bin/dockerd --data-root /tmp/new-docker-root -H fd:// --containerd=/run/containerd/containerd.sock
 ```
@@ -137,14 +137,14 @@ ExecStart=/usr/bin/dockerd --data-root /tmp/new-docker-root -H fd:// --container
 
 接下来，我们必须重新加载单元文件并重新启动 docker 服务，以使更改生效:
 
-```
+```java
 $ sudo systemctl daemon-reload
 $ sudo systemctl restart docker 
 ```
 
 最后，让我们使用`info`子命令检查更新的数据根目录:
 
-```
+```java
 $ docker info -f '{{ .DockerRootDir}}'
 /tmp/new-docker-root
 ```
@@ -157,7 +157,7 @@ $ docker info -f '{{ .DockerRootDir}}'
 
 为了理解这一点，让我们列出图像和卷:
 
-```
+```java
 $ docker image list
 REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
 
@@ -177,7 +177,7 @@ DRIVER    VOLUME NAME
 
 让我们使用`rsync`命令复制数据并重启 docker 服务:
 
-```
+```java
 $ sudo rsync -aqxP /var/lib/docker/ /tmp/new-docker-root
 $ sudo systemctl restart docker
 ```
@@ -191,7 +191,7 @@ $ sudo systemctl restart docker
 
 现在，让我们列出图像和卷:
 
-```
+```java
 $ docker image list
 REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
 nginx        latest    76c69feac34e   3 weeks ago   142MB
@@ -208,21 +208,21 @@ local     dangling-volume
 
 首先，让我们停止 docker 服务并从`/lib/systemd/system/docker.service`单元文件中删除`–data-root`属性:
 
-```
+```java
 $ sudo systemctl stop docker 
 $ sudo vi /lib/systemd/system/docker.service
 ```
 
 修改后，单元文件如下所示:
 
-```
+```java
 $ grep ExecStart /lib/systemd/system/docker.service
 ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
 ```
 
 现在，我们将重新加载单元文件，重新启动 docker 服务，并检查更新后的数据根目录:
 
-```
+```java
 $ sudo systemctl daemon-reload
 $ sudo systemctl restart docker
 

@@ -30,13 +30,13 @@
 
 ### 可用签名
 
-```
+```java
 public boolean contains(CharSequence s)
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenCallContains_thenCorrect() {
     String s = "abcd";

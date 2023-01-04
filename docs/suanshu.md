@@ -14,7 +14,7 @@
 
 让我们从将 Maven 依赖项添加到`pom.xml`开始:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>com.numericalmethod</groupId>
@@ -46,7 +46,7 @@
 
 使用`add()`方法将两个向量相加非常简单:
 
-```
+```java
 public void addingVectors() throws Exception {
     Vector v1 = new DenseVector(new double[] {1, 2, 3, 4, 5});
     Vector v2 = new DenseVector(new double[] {5, 4, 3, 2, 1});
@@ -57,7 +57,7 @@ public void addingVectors() throws Exception {
 
 我们将看到的输出是:
 
-```
+```java
 [6.000000, 6.000000, 6.000000, 6.000000, 6.000000]
 ```
 
@@ -67,7 +67,7 @@ public void addingVectors() throws Exception {
 
 缩放矢量(即乘以常数)也非常简单:
 
-```
+```java
 public void scaleVector() throws Exception {
     Vector v1 = new DenseVector(new double[]{1, 2, 3, 4, 5});
     Vector v2 = v1.scaled(2.0);
@@ -77,7 +77,7 @@ public void scaleVector() throws Exception {
 
 输出:
 
-```
+```java
 [2.000000, 4.000000, 6.000000, 8.000000, 10.000000]
 ```
 
@@ -85,7 +85,7 @@ public void scaleVector() throws Exception {
 
 计算两个向量的内积需要调用`innerProduct(Vector)`方法:
 
-```
+```java
 public void innerProductVectors() throws Exception {
     Vector v1 = new DenseVector(new double[]{1, 2, 3, 4, 5});
     Vector v2 = new DenseVector(new double[]{5, 4, 3, 2, 1});
@@ -98,7 +98,7 @@ public void innerProductVectors() throws Exception {
 
 该库验证我们正在操作的向量与我们正在执行的操作是否兼容。例如，将大小为 2 的向量添加到大小为 3 的向量应该是不可能的。所以下面的代码应该会导致一个异常:
 
-```
+```java
 public void addingIncorrectVectors() throws Exception {
     Vector v1 = new DenseVector(new double[] {1, 2, 3});
     Vector v2 = new DenseVector(new double[] {5, 4});
@@ -108,7 +108,7 @@ public void addingIncorrectVectors() throws Exception {
 
 的确如此——运行这段代码会导致:
 
-```
+```java
 Exception in thread "main" com.numericalmethod.suanshu.vector.doubles.IsVector$SizeMismatch: vectors do not have the same size: 3 and 2
     at com.numericalmethod.suanshu.vector.doubles.IsVector.throwIfNotEqualSize(IsVector.java:101)
     at com.numericalmethod.suanshu.vector.doubles.dense.DenseVector.add(DenseVector.java:174)
@@ -124,7 +124,7 @@ Exception in thread "main" com.numericalmethod.suanshu.vector.doubles.IsVector$S
 
 添加矩阵就像处理向量一样简单:
 
-```
+```java
 public void addingMatrices() throws Exception {
     Matrix m1 = new DenseMatrix(new double[][]{
         {1, 2, 3},
@@ -145,7 +145,7 @@ public void addingMatrices() throws Exception {
 
 数学库可用于矩阵乘法:
 
-```
+```java
 public void multiplyMatrices() throws Exception {
     Matrix m1 = new DenseMatrix(new double[][]{
         {1, 2, 3},
@@ -167,7 +167,7 @@ public void multiplyMatrices() throws Exception {
 
 为了证明该库对矩阵大小进行了正确的检查，让我们尝试做一个可能会失败的乘法:
 
-```
+```java
 public void multiplyIncorrectMatrices() throws Exception {
     Matrix m1 = new DenseMatrix(new double[][]{
         {1, 2, 3},
@@ -185,7 +185,7 @@ public void multiplyIncorrectMatrices() throws Exception {
 
 执行该命令将产生以下输出。
 
-```
+```java
 Exception in thread "main" com.numericalmethod.suanshu.matrix.MatrixMismatchException:
     matrix with 3 columns and matrix with 2 rows cannot multiply due to mis-matched dimension
     at com.numericalmethod.suanshu.datastructure.DimensionCheck.throwIfIncompatible4Multiplication(DimensionCheck.java:164)
@@ -198,7 +198,7 @@ Exception in thread "main" com.numericalmethod.suanshu.matrix.MatrixMismatchExce
 
 手动计算矩阵的逆矩阵可能是一个漫长的过程，但算术数学库使它变得很容易:
 
-```
+```java
 public void inverseMatrix() {
     Matrix m1 = new DenseMatrix(new double[][]{
         {1, 2},
@@ -212,7 +212,7 @@ public void inverseMatrix() {
 
 我们可以使用算术库来验证这一点，但是将矩阵与其逆矩阵相乘:结果应该是单位矩阵。我们可以通过在上面的方法中添加以下内容来做到这一点:
 
-```
+```java
 log.info("Verifying a matrix inverse: {}", m1.multiply(m2));
 ```
 
@@ -224,7 +224,7 @@ log.info("Verifying a matrix inverse: {}", m1.multiply(m2));
 
 多项式可以通过指定其系数来创建。因此，类似于`3x²-5x+1`的多项式可以用以下公式创建:
 
-```
+```java
 public Polynomial createPolynomial() {
     return new Polynomial(new double[]{3, -5, 1});
 }
@@ -236,7 +236,7 @@ public Polynomial createPolynomial() {
 
 `evaluate()`方法可用于计算多项式。对于实数和复数输入，可以这样做。
 
-```
+```java
 public void evaluatePolynomial(Polynomial p) {
     log.info("Evaluating a polynomial using a real number: {}", p.evaluate(5));
     log.info("Evaluating a polynomial using a complex number: {}", p.evaluate(new Complex(1, 2)));
@@ -245,7 +245,7 @@ public void evaluatePolynomial(Polynomial p) {
 
 我们将看到的输出是:
 
-```
+```java
 51.0
 -13.000000+2.000000i
 ```
@@ -254,7 +254,7 @@ public void evaluatePolynomial(Polynomial p) {
 
 算术数学库使寻找多项式的根变得很容易。它提供了众所周知的算法来确定各种次数的多项式的根，并且基于多项式的最高次数，PolyRoot 类选择最佳方法:
 
-```
+```java
 public void solvePolynomial() {
     Polynomial p = new Polynomial(new double[]{2, 2, -4});
     PolyRootSolver solver = new PolyRoot();
@@ -265,7 +265,7 @@ public void solvePolynomial() {
 
 输出:
 
-```
+```java
 [-2.0, 1.0]
 ```
 

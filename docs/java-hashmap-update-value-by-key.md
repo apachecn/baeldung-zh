@@ -10,7 +10,7 @@
 
 为了展示如何更新`HashMap`中的值，我们必须首先创建并填充一个。因此，我们将创建一个以水果为关键字、以水果价格为值的地图:
 
-```
+```java
 Map<String, Double> priceMap = new HashMap<>();
 priceMap.put("apple", 2.45);
 priceMap.put("grapes", 1.22);
@@ -28,7 +28,7 @@ priceMap.put("grapes", 1.22);
 
 让我们用两个简单的例子来测试这个方法的行为:
 
-```
+```java
 @Test
 public void givenFruitMap_whenPuttingAList_thenHashMapUpdatesAndInsertsValues() {
     Double newValue = 2.11;
@@ -51,7 +51,7 @@ public void givenFruitMap_whenPuttingAList_thenHashMapUpdatesAndInsertsValues() 
 
 在我们的例子中，我们将通过一个简单的测试来检验这种方法:
 
-```
+```java
 @Test
 public void givenFruitMap_whenKeyExists_thenValuesUpdated() {
     double newValue = 2.31;
@@ -73,7 +73,7 @@ public void givenFruitMap_whenKeyExists_thenValuesUpdated() {
 
 从版本 8 开始，`Map`接口中有两个重载的`replace`方法。让我们看看方法签名:
 
-```
+```java
 public V replace(K key, V value);
 public boolean replace(K key, V oldValue, V newValue);
 ```
@@ -82,7 +82,7 @@ public boolean replace(K key, V oldValue, V newValue);
 
 让我们看看这个方法是如何工作的:
 
-```
+```java
 @Test
 public void givenFruitMap_whenReplacingOldValue_thenNewValueSet() {
     double newPrice = 3.22;
@@ -110,7 +110,7 @@ public void givenFruitMap_whenReplacingOldValue_thenNewValueSet() {
 
 因此，让我们实现一些测试来检查第二个`replace`方法:
 
-```
+```java
 @Test
 public void givenFruitMap_whenReplacingWithRealOldValue_thenNewValueSet() {
     double newPrice = 3.22;
@@ -140,7 +140,7 @@ public void givenFruitMap_whenReplacingWithWrongOldValue_thenNewValueNotSet() {
 
 让我们用一个原本不在地图上的键来试试这个组合:
 
-```
+```java
 @Test
 public void givenFruitMap_whenGetOrDefaultUsedWithPut_thenNewEntriesAdded() {
     fruitMap.put("plum", fruitMap.getOrDefault("plum", 2.41));
@@ -162,7 +162,7 @@ public void givenFruitMap_whenGetOrDefaultUsedWithPut_thenNewEntriesAdded() {
 
 让我们实现对`putIfAbsent` 方法的测试。我们将通过两个例子来测试这种行为:
 
-```
+```java
 @Test
 public void givenFruitMap_whenPutIfAbsentUsed_thenNewEntriesAdded() {
     double newValue = 1.78;
@@ -185,7 +185,7 @@ public void givenFruitMap_whenPutIfAbsentUsed_thenNewEntriesAdded() {
 
 让我们通过一个简单的测试来检查这个方法的行为:
 
-```
+```java
 @Test
 public void givenFruitMap_whenComputeUsed_thenValueUpdated() {
     double oldPrice = fruitMap.get("apple");
@@ -209,7 +209,7 @@ public void givenFruitMap_whenComputeUsed_thenValueUpdated() {
 
 让我们测试这个方法的行为:
 
-```
+```java
 @Test
 public void givenFruitMap_whenComputeIfAbsentUsed_thenNewEntriesAdded() {
     fruitMap.computeIfAbsent("lemon", k -> Double.valueOf(k.length()));
@@ -227,7 +227,7 @@ public void givenFruitMap_whenComputeIfAbsentUsed_thenNewEntriesAdded() {
 
 让我们看看如何使用这种方法:
 
-```
+```java
 @Test
 public void givenFruitMap_whenComputeIfPresentUsed_thenValuesUpdated() {
     Double oldAppleValue = fruitMap.get("apple");
@@ -247,7 +247,7 @@ public void givenFruitMap_whenComputeIfPresentUsed_thenValuesUpdated() {
 
 所以，让我们来检查这个方法的行为:
 
-```
+```java
 @Test
 public void givenFruitMap_whenMergeUsed_thenNewEntriesAdded() {
     double defaultValue = 1.25;

@@ -34,7 +34,7 @@
 
 让我们看看类定义中的层次结构:
 
-```
+```java
 public class InputStreamReader extends Reader {}
 
 public class FileReader extends InputStreamReader {}
@@ -56,7 +56,7 @@ public class FileReader extends InputStreamReader {}
 
 让我们来看看这些构造函数:
 
-```
+```java
 public FileReader(String fileName) throws FileNotFoundException {
     super(new FileInputStream(fileName));
 }
@@ -72,7 +72,7 @@ public FileReader(FileDescriptor fd) {
 
 在我们的例子中，我们知道输入文件的文件名。因此，我们可以使用第一个构造函数来初始化读取器:
 
-```
+```java
 FileReader fileReader = new FileReader(path);
 ```
 
@@ -80,7 +80,7 @@ FileReader fileReader = new FileReader(path);
 
 接下来，让我们创建`readAllCharactersOneByOne()`，一种从文件中一次读取一个字符的方法:
 
-```
+```java
 public static String readAllCharactersOneByOne(Reader reader) throws IOException {
     StringBuilder content = new StringBuilder();
     int nextChar;
@@ -95,7 +95,7 @@ public static String readAllCharactersOneByOne(Reader reader) throws IOException
 
  **现在，让我们通过验证从文件中读取的文本与预期的文本相匹配来测试我们的代码:
 
-```
+```java
 @Test
 public void givenFileReader_whenReadAllCharacters_thenReturnsContent() throws IOException {
     String expectedText = "Hello, World!";
@@ -111,7 +111,7 @@ public void givenFileReader_whenReadAllCharacters_thenReturnsContent() throws IO
 
 我们甚至可以使用继承的`read(char cbuf[], int off, int len)`方法一次读取多个字符:
 
-```
+```java
 public static String readMultipleCharacters(Reader reader, int length) throws IOException {
     char[] buffer = new char[length];
     int charactersRead = reader.read(buffer, 0, length);
@@ -127,7 +127,7 @@ public static String readMultipleCharacters(Reader reader, int length) throws IO
 
 接下来，让我们测试代码的正确性:
 
-```
+```java
 @Test
 public void givenFileReader_whenReadMultipleCharacters_thenReturnsContent() throws IOException {
     String expectedText = "Hello";
@@ -147,7 +147,7 @@ public void givenFileReader_whenReadMultipleCharacters_thenReturnsContent() thro
 
 此外，我们都知道 I/O 周期非常昂贵，并且会给我们的应用程序带来延迟。因此，**通过在我们的`FileReader`对象**周围包装一个`[BufferedReader](/web/20221013193920/https://www.baeldung.com/java-buffered-reader)`来最小化 I/O 操作的数量，这是对我们最有利的:
 
-```
+```java
 BufferedReader in = new BufferedReader(fileReader);
 ```
 

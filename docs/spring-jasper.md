@@ -12,7 +12,7 @@ JasperReports 是一个开源的报告库，它使用户能够创建像素级完
 
 首先，我们需要将`jasperreports`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>net.sf.jasperreports</groupId>
     <artifactId>jasperreports</artifactId>
@@ -30,7 +30,7 @@ JasperReports 是一个开源的报告库，它使用户能够创建像素级完
 
 让我们创建一个简单的报告来显示员工信息:
 
-```
+```java
 <jasperReport ... >
     <field name="FIRST_NAME" class="java.lang.String"/>
     <field name="LAST_NAME" class="java.lang.String"/>
@@ -67,7 +67,7 @@ JRXML 文件需要编译，以便报表引擎可以用数据填充它们。
 
 让我们在`JasperCompilerManager`类的帮助下执行这个操作:
 
-```
+```java
 InputStream employeeReportStream
   = getClass().getResourceAsStream("/employeeReport.jrxml");
 JasperReport jasperReport
@@ -76,7 +76,7 @@ JasperReport jasperReport
 
 为了避免每次都编译它，我们可以将它保存到一个文件中:
 
-```
+```java
 JRSaver.saveObject(jasperReport, "employeeReport.jasper");
 ```
 
@@ -86,7 +86,7 @@ JRSaver.saveObject(jasperReport, "employeeReport.jasper");
 
 首先，让我们修改我们的报告，添加一个 SQL 查询:
 
-```
+```java
 <jasperReport ... >
     <queryString>
         <![CDATA[SELECT * FROM EMPLOYEE]]>
@@ -97,7 +97,7 @@ JRSaver.saveObject(jasperReport, "employeeReport.jasper");
 
 现在，让我们创建一个简单的数据源:
 
-```
+```java
 @Bean
 public DataSource dataSource() {
     return new EmbeddedDatabaseBuilder()
@@ -109,7 +109,7 @@ public DataSource dataSource() {
 
 现在，我们可以填写报告:
 
-```
+```java
 JasperPrint jasperPrint = JasperFillManager.fillReport(
   jasperReport, null, dataSource.getConnection());
 ```
@@ -124,7 +124,7 @@ JasperPrint jasperPrint = JasperFillManager.fillReport(
 
 首先，让我们修改报告以接收三个参数:
 
-```
+```java
 <jasperReport ... >
     <parameter name="title" class="java.lang.String" />
     <parameter name="minSalary" class="java.lang.Double" />
@@ -138,7 +138,7 @@ JasperPrint jasperPrint = JasperFillManager.fillReport(
 
 现在，让我们添加一个标题部分来显示`title`参数:
 
-```
+```java
 <jasperreport ... >
     // ...
     <title>
@@ -157,7 +157,7 @@ JasperPrint jasperPrint = JasperFillManager.fillReport(
 
 接下来，让我们修改查询以使用`minSalary`和`condition`参数:
 
-```
+```java
 SELECT * FROM EMPLOYEE
   WHERE SALARY >= $P{minSalary} AND $P!{condition}
 ```
@@ -166,7 +166,7 @@ SELECT * FROM EMPLOYEE
 
 最后，让我们准备参数并填写报告:
 
-```
+```java
 Map<String, Object> parameters = new HashMap<>();
 parameters.put("title", "Employee Report");
 parameters.put("minSalary", 15000.0);
@@ -188,7 +188,7 @@ JasperPrint jasperPrint
 
 ### 5.1。PDF
 
-```
+```java
 JRPdfExporter exporter = new JRPdfExporter();
 
 exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
@@ -214,7 +214,7 @@ exporter.exportReport();
 
 ### 5.2。XLS
 
-```
+```java
 JRXlsxExporter exporter = new JRXlsxExporter();
 
 // Set input and output ...
@@ -228,7 +228,7 @@ exporter.exportReport();
 
 ### 5.3。CSV
 
-```
+```java
 JRCsvExporter exporter = new JRCsvExporter();
 
 // Set input ...
@@ -240,7 +240,7 @@ exporter.exportReport();
 
 ### 5.4。HTML
 
-```
+```java
 HtmlExporter exporter = new HtmlExporter();
 
 // Set input ...
@@ -256,7 +256,7 @@ exporter.exportReport();
 
 首先，让我们创建一个报告来显示员工的电子邮件:
 
-```
+```java
 <jasperReport ... >
     <parameter name="idEmployee" class="java.lang.Integer" />
     <queryString>
@@ -278,7 +278,7 @@ exporter.exportReport();
 
 现在，让我们修改我们的员工报告，使其包含上一份报告:
 
-```
+```java
 <detail>
     <band ... >
         <subreport>
@@ -300,7 +300,7 @@ exporter.exportReport();
 
 接下来，让我们编译这两个报告:
 
-```
+```java
 InputStream employeeReportStream
   = getClass().getResourceAsStream("/employeeReport.jrxml");
 JasperReport jasperReport

@@ -14,7 +14,7 @@ RSS (Rich Site Summary 或 Really Simple Syndication)是一种 web 提要标准�
 
 我们需要将 Rome API 的依赖项添加到我们的项目中:
 
-```
+```java
 <dependency>			
     <groupId>rome</groupId>			
     <artifactId>rome</artifactId>			
@@ -28,7 +28,7 @@ RSS (Rich Site Summary 或 Really Simple Syndication)是一种 web 提要标准�
 
 首先，让我们用罗马 API **创建一个新的 RSS 提要，它使用了`SyndFeed`接口**的默认实现`SyndFeedImpl`。这个接口能够处理所有的 RSS 风格，所以我们可以放心使用它:
 
-```
+```java
 SyndFeed feed = new SyndFeedImpl();
 feed.setFeedType("rss_1.0");
 feed.setTitle("Test title");
@@ -42,7 +42,7 @@ feed.setDescription("Basic description");
 
 由于我们已经创建了 RSS 提要，现在我们可以向它添加一个条目。在下面的例子中，我们**使用`SyndEntry`接口**的默认实现`SyndEntryImpl`来创建一个新条目:
 
-```
+```java
 SyndEntry entry = new SyndEntryImpl();
 entry.setTitle("Entry title");        
 entry.setLink("http://www.somelink.com/entry1");
@@ -54,7 +54,7 @@ feed.setEntries(Arrays.asList(entry));
 
 到目前为止，我们的条目相当空，让我们为它添加一个描述。我们可以通过**使用`SyndContent`接口**的默认实现`SyndContentImpl`来做到这一点:
 
-```
+```java
 SyndContent description = new SyndContentImpl();
 description.setType("text/html");
 description.setValue("First entry");
@@ -68,7 +68,7 @@ entry.setDescription(description);
 
 RSS 条目通常被分类，以简化寻找我们感兴趣的条目的任务。让我们看看如何使用`SyndCategory`接口的默认实现`SyndCategoryImpl`向条目**添加一个类别**
 
-```
+```java
 List<SyndCategory> categories = new ArrayList<>();
 SyndCategory category = new SyndCategoryImpl();
 category.setName("Sophisticated category");
@@ -81,7 +81,7 @@ entry.setCategories(categories);
 
 我们已经有了一个带有条目的 RSS 提要。现在我们想出版它。就本文而言，发布意味着将提要写入流:
 
-```
+```java
 Writer writer = new FileWriter("xyz.txt");
 SyndFeedOutput syndFeedOutput = new SyndFeedOutput();
 syndFeedOutput.output(feed, writer);
@@ -94,7 +94,7 @@ writer.close();
 
 让我们看看如何在给定 URL 的情况下读取/加载提要:
 
-```
+```java
 URL feedSource = new URL("http://rssblog.whatisrss.com/feed/");
 SyndFeedInput input = new SyndFeedInput();
 SyndFeed feed = input.build(new XmlReader(feedSource));

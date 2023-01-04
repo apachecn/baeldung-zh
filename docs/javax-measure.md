@@ -14,7 +14,7 @@
 
 让我们简单地从 Maven 依赖项开始引入库:
 
-```
+```java
 <dependency>
     <groupId>javax.measure</groupId>
     <artifactId>unit-api</artifactId>
@@ -26,7 +26,7 @@
 
 `unit-api`项目包含一组定义如何处理数量和单位的界面。对于示例，我们将使用`JSR-363`的参考实现，即`[unit-ri](https://web.archive.org/web/20220627082830/https://search.maven.org/classic/#search%7Cga%7C1%7Cunit-ri)`:
 
-```
+```java
 <dependency>
     <groupId>tec.units</groupId>
     <artifactId>unit-ri</artifactId>
@@ -40,7 +40,7 @@
 
 遗留实现将如下所示:
 
-```
+```java
 public class WaterTank {
     public void setWaterQuantity(double quantity);
 }
@@ -60,7 +60,7 @@ public class WaterTank {
 
 我们可以定义 *Quantity < Volume >* 对象，在我们的例子中它应该存储水量:
 
-```
+```java
 public class WaterTank {
     public void setCapacityMeasure(Quantity<Volume> capacityMeasure);
 }
@@ -72,7 +72,7 @@ public class WaterTank {
 
 让我们看一个设置水量值的示例:
 
-```
+```java
 @Test
 public void givenQuantity_whenGetUnitAndConvertValue_thenSuccess() {
     WaterTank waterTank = new WaterTank();
@@ -87,7 +87,7 @@ public void givenQuantity_whenGetUnitAndConvertValue_thenSuccess() {
 
 我们也可以将 `LITRE`中的这个`Volume` 快速转换成任何其他单位:
 
-```
+```java
 double volumeInMilliLitre = waterCapacity
   .to(MetricPrefix.MILLI(LITRE)).getValue().doubleValue();
 assertEquals(9200.0, volumeInMilliLitre, 0.0f);
@@ -95,7 +95,7 @@ assertEquals(9200.0, volumeInMilliLitre, 0.0f);
 
 但是，当我们试图将水量转换成另一个单位时——这不是类型`Volume`,我们得到一个编译错误:
 
-```
+```java
 // compilation error
 waterCapacity.to(MetricPrefix.MILLI(KILOGRAM));
 ```
@@ -106,20 +106,20 @@ waterCapacity.to(MetricPrefix.MILLI(KILOGRAM));
 
 类和接口通过它们的数量类型参数化，这使得在编译时检查我们的单元成为可能。编译器将根据它可以识别的内容给出错误或警告:
 
-```
+```java
 Unit<Length> Kilometer = MetricPrefix.KILO(METRE);
 Unit<Length> Centimeter = MetricPrefix.CENTI(LITRE); // compilation error
 ```
 
 总是有可能使用`asType()`方法绕过类型检查:
 
-```
+```java
 Unit<Length> inch = CENTI(METER).times(2.54).asType(Length.class);
 ```
 
 如果不确定数量的类型，我们也可以使用通配符:
 
-```
+```java
 Unit<?> kelvinPerSec = KELVIN.divide(SECOND);
 ```
 
@@ -135,7 +135,7 @@ Unit<?> kelvinPerSec = KELVIN.divide(SECOND);
 
 例如，我们可以将“千米”和“厘米”定义为:
 
-```
+```java
 Unit<Length> Kilometer = MetricPrefix.KILO(METRE);
 Unit<Length> Centimeter = MetricPrefix.CENTI(METRE);
 ```
@@ -151,7 +151,7 @@ Unit<Length> Centimeter = MetricPrefix.CENTI(METRE);
 
 让我们使用这些类创建一些定制单元。`AlternateUnit`为压力的一个例子:
 
-```
+```java
 @Test
 public void givenUnit_whenAlternateUnit_ThenGetAlternateUnit() {
     Unit<Pressure> PASCAL = NEWTON.divide(METRE.pow(2))
@@ -163,7 +163,7 @@ public void givenUnit_whenAlternateUnit_ThenGetAlternateUnit() {
 
 同样，`ProductUnit` 及其转换的例子:
 
-```
+```java
 @Test
 public void givenUnit_whenProduct_ThenGetProductUnit() {
     Unit<Area> squareMetre = METRE.multiply(METRE).asType(Area.class);
@@ -178,7 +178,7 @@ public void givenUnit_whenProduct_ThenGetProductUnit() {
 
 让我们看一个将双精度值的单位从米转换为千米的示例:
 
-```
+```java
 @Test
 public void givenMeters_whenConvertToKilometer_ThenConverted() {
     double distanceInMeters = 50.0;
@@ -192,7 +192,7 @@ public void givenMeters_whenConvertToKilometer_ThenConverted() {
 
 让我们使用`SimpleUnitFormat`实现来检查一些系统单元的标签:
 
-```
+```java
 @Test
 public void givenSymbol_WhenCompareToSystemUnit_ThenSuccess() {
     assertTrue(SimpleUnitFormat.getInstance().parse("kW")
@@ -206,7 +206,7 @@ public void givenSymbol_WhenCompareToSystemUnit_ThenSuccess() {
 
 `Quantity`接口包含最常见的数学运算方法:`add()`、`subtract()`、`multiply()`、`divide()`。使用这些，我们可以在`Quantity`对象之间执行操作:
 
-```
+```java
 @Test
 public void givenUnits_WhenAdd_ThenSuccess() {
     Quantity<Length> total = Quantities.getQuantity(2, METRE)
@@ -217,7 +217,7 @@ public void givenUnits_WhenAdd_ThenSuccess() {
 
 这些方法还验证它们正在操作的对象的`Units`。例如，试图将米乘以升会导致编译错误:
 
-```
+```java
 // compilation error
 Quantity<Length> total = Quantities.getQuantity(2, METRE)
   .add(Quantities.getQuantity(3, LITRE));
@@ -225,7 +225,7 @@ Quantity<Length> total = Quantities.getQuantity(2, METRE)
 
 另一方面，以具有相同尺寸的单位表示的两个对象可以相加:
 
-```
+```java
 Quantity<Length> totalKm = Quantities.getQuantity(2, METRE)
   .add(Quantities.getQuantity(3, MetricPrefix.KILO(METRE)));
 assertEquals(totalKm.getValue().intValue(), 3002);

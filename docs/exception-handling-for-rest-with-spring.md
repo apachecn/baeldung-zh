@@ -34,7 +34,7 @@ Learn how to build a custom validation annotation and use it in Spring MVC.[Read
 
 第一种解决方案在`@Controller`级别有效。我们将定义一个方法来处理异常，并用`@ExceptionHandler`进行注释:
 
-```
+```java
 public class FooController{
 
     //...
@@ -81,7 +81,7 @@ public class FooController{
 
 这种自定义异常可能如下所示:
 
-```
+```java
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
 public class MyResourceNotFoundException extends RuntimeException {
     public MyResourceNotFoundException() {
@@ -109,7 +109,7 @@ public class MyResourceNotFoundException extends RuntimeException {
 
 仅此一点就证明了创建一个新的定制异常解析器的合理性:
 
-```
+```java
 @Component
 public class RestResponseStatusExceptionResolver extends AbstractHandlerExceptionResolver {
 
@@ -159,7 +159,7 @@ Spring 3.2 通过`@ControllerAdvice`注释为**带来了对全局`@ExceptionHand
 
 这使得一种机制脱离了旧的 MVC 模型，并利用了`ResponseEntity`以及`@ExceptionHandler`的类型安全性和灵活性:
 
-```
+```java
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler 
   extends ResponseEntityExceptionHandler {
@@ -189,7 +189,7 @@ public class RestResponseEntityExceptionHandler
 
 然而，当异常在运行时实际抛出时，**异常解决机制将失败，并出现**:
 
-```
+```java
 java.lang.IllegalStateException: No suitable resolver for argument [0] [type=...]
 HandlerMethod details: ...
 ```
@@ -200,7 +200,7 @@ Spring 5 引入了`ResponseStatusException`类。
 
 我们可以创建它的一个实例，提供一个`HttpStatus`和一个可选的`reason`和一个`cause`:
 
-```
+```java
 @GetMapping(value = "/{id}")
 public Foo findById(@PathVariable("id") Long id, HttpServletResponse response) {
     try {
@@ -246,7 +246,7 @@ public Foo findById(@PathVariable("id") Long id, HttpServletResponse response) {
 
 当然，我们将使用我们之前讨论过的全局异常处理机制来处理`AccessDeniedException`:
 
-```
+```java
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler 
   extends ResponseEntityExceptionHandler {
@@ -268,7 +268,7 @@ public class RestResponseEntityExceptionHandler
 
 简而言之，它为浏览器提供了一个回退错误页面(也称为白色标签错误页面)，并为 RESTful、非 HTML 请求提供了一个 JSON 响应:
 
-```
+```java
 {
     "timestamp": "2019-01-17T16:12:45.977+0000",
     "status": 500,
@@ -288,7 +288,7 @@ public class RestResponseEntityExceptionHandler
 
 我们还可以通过在上下文中包含一个`ErrorAttributes ` bean 来定制希望在响应中显示的属性。我们可以扩展 Spring Boot 提供的`DefaultErrorAttributes`类来简化事情:
 
-```
+```java
 @Component
 public class MyCustomErrorAttributes extends DefaultErrorAttributes {
 
@@ -314,7 +314,7 @@ public class MyCustomErrorAttributes extends DefaultErrorAttributes {
 
 例如，假设我们想要定制应用程序如何处理 XML 端点中触发的错误。我们所要做的就是使用`@RequestMapping`定义一个公共方法，并声明它产生`application/xml`媒体类型:
 
-```
+```java
 @Component
 public class MyErrorController extends BasicErrorController {
 

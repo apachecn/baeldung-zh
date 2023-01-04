@@ -24,7 +24,7 @@ GraphQL Schema Publisher & Query Resolver，简称为 **SPQR，是为了减少�
 
 让我们从将 SPQR 和 Spring Boot 的依赖项添加到 POM 开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -45,7 +45,7 @@ GraphQL Schema Publisher & Query Resolver，简称为 **SPQR，是为了减少�
 
 现在我们已经添加了必要的依赖项，让我们创建一个简单的`Book`类:
 
-```
+```java
 public class Book {
     private Integer id;
     private String author;
@@ -59,7 +59,7 @@ public class Book {
 
 为了管理藏书，让我们创建一个`IBookService`界面:
 
-```
+```java
 public interface IBookService {
     Book getBookWithTitle(String title);
 
@@ -75,7 +75,7 @@ public interface IBookService {
 
 然后，我们将提供接口的实现:
 
-```
+```java
 @Service
 public class BookService implements IBookService {
 
@@ -115,7 +115,7 @@ public class BookService implements IBookService {
 
 唯一剩下的事情是创建一个解析器，它将暴露 GraphQL 的变化和查询。**为此，我们将使用两个重要的 SPQR 注释—`@GraphQLMutation`和`@GraphQLQuery` :**
 
-```
+```java
 @Service
 public class BookResolver {
 
@@ -155,7 +155,7 @@ public class BookResolver {
 
 最后，我们将定义一个 Spring `@RestController.` **为了用 SPQR 公开服务，我们将配置`GraphQLSchema`和`GraphQL`对象:**
 
-```
+```java
 @RestController
 public class GraphqlController {
 
@@ -176,7 +176,7 @@ public class GraphqlController {
 
 SPQR 旅程中的最后一项任务是创建一个`/graphql`端点。它将作为与我们服务的单点联系，并将执行请求的查询和变更:
 
-```
+```java
 @PostMapping(value = "/graphql")
     public Map<String, Object> execute(@RequestBody Map<String, String> request, HttpServletRequest raw)
       throws GraphQLException {
@@ -190,7 +190,7 @@ SPQR 旅程中的最后一项任务是创建一个`/graphql`端点。它将作�
 
 我们可以通过检查`/graphql`端点来检查结果。例如，让我们通过执行以下 cURL 命令来检索所有的`Book`记录:
 
-```
+```java
 curl -g \
   -X POST \
   -H "Content-Type: application/json" \
@@ -202,7 +202,7 @@ curl -g \
 
 一旦我们完成了配置，我们就可以测试我们的项目。我们将使用 [`MockMvc`](https://web.archive.org/web/20220707145328/https://spring.io/guides/gs/testing-web/) 来测试我们的新端点并验证响应。让我们定义 JUnit 测试并自动连接所需的服务:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -258,7 +258,7 @@ public class GraphqlControllerIntegrationTest {
 
 我们将从向 POM 添加`spqr-spring-boot-starter`开始:
 
-```
+```java
 <dependency>
     <groupId>io.leangen.graphql</groupId>
     <artifactId>graphql-spqr-spring-boot-starter</artifactId>
@@ -270,7 +270,7 @@ public class GraphqlControllerIntegrationTest {
 
 然后，我们需要给我们的`BookService`添加两个修改。首先，它必须用`@GraphQLApi`标注。此外，我们希望在 API 中公开的每个方法都必须有各自的注释:
 
-```
+```java
 @Service
 @GraphQLApi
 public class BookService implements IBookService {

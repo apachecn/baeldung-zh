@@ -16,7 +16,7 @@
 
 首先，让我们定义一下`Product`类:
 
-```
+```java
 public class Product {
     String code;
     String name;
@@ -27,7 +27,7 @@ public class Product {
 
 然后，我们实现了`ProductService`类:
 
-```
+```java
 @Service
 public class ProductService {
     List<Product> productsList = new ArrayList<>();
@@ -40,7 +40,7 @@ public class ProductService {
 
 最后，我们将有一个`Controller`类来定义 REST APIs:
 
-```
+```java
 @RestController
 public class ProductController {
     final ProductService productService;
@@ -62,7 +62,7 @@ public class ProductController {
 
 现在，让我们使用@ApiResponses 为`getProductList`方法的一系列`Product`对象设置响应内容:
 
-```
+```java
 @ApiResponses(
   value = {
     @ApiResponse(

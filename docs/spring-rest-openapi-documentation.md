@@ -24,7 +24,7 @@ Learn to write and test Consumer-Driven Contracts using Spring Cloud Contract.[R
 
 为了让 [springdoc-openapi](https://web.archive.org/web/20220818091138/https://github.com/springdoc/springdoc-openapi) 自动为我们的 api 生成 OpenAPI 3 规范文档，我们只需将`[springdoc-openapi-ui](https://web.archive.org/web/20220818091138/https://search.maven.org/search?q=g:org.springdoc%20AND%20a:springdoc-openapi-ui&core=gav)`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springdoc</groupId>
     <artifactId>springdoc-openapi-ui</artifactId>
@@ -34,25 +34,25 @@ Learn to write and test Consumer-Driven Contracts using Spring Cloud Contract.[R
 
 然后，当我们运行我们的应用程序时，默认情况下，OpenAPI 描述将在路径`/v3/api-docs`中可用:
 
-```
+```java
 http://localhost:8080/v3/api-docs/
 ```
 
 要使用自定义路径，我们可以在`application.properties`文件中指明:
 
-```
+```java
 springdoc.api-docs.path=/api-docs
 ```
 
 现在，我们可以通过以下网址访问这些文档:
 
-```
+```java
 http://localhost:8080/api-docs/
 ```
 
 缺省情况下，OpenAPI 定义采用 JSON 格式。对于`yaml`格式，我们可以从以下网址获得定义:
 
-```
+```java
 http://localhost:8080/api-docs.yaml
 ```
 
@@ -64,7 +64,7 @@ http://localhost:8080/api-docs.yaml
 
 我们可以从以下网址访问 API 文档:
 
-```
+```java
 http://localhost:8080/swagger-ui.html
 ```
 
@@ -74,7 +74,7 @@ Springdoc-openapi 还支持[属性](https://web.archive.org/web/20220818091138/h
 
 例如，让我们定制 API 文档的路径。我们可以通过修改我们的`application.properties` 来做到这一点:
 
-```
+```java
 springdoc.swagger-ui.path=/swagger-ui-custom.html
 ```
 
@@ -82,7 +82,7 @@ springdoc.swagger-ui.path=/swagger-ui-custom.html
 
 作为另一个例子，为了按照 HTTP 方法的顺序对 API 路径进行排序，我们可以添加:
 
-```
+```java
 springdoc.swagger-ui.operationsSorter=method
 ```
 
@@ -90,7 +90,7 @@ springdoc.swagger-ui.operationsSorter=method
 
 假设我们的应用程序有一个控制器来管理`Book` s:
 
-```
+```java
 @RestController
 @RequestMapping("/api/book")
 public class BookController {
@@ -120,7 +120,7 @@ public class BookController {
 
 然后，当我们运行我们的应用程序时，我们可以在以下位置查看文档:
 
-```
+```java
 http://localhost:8080/swagger-ui-custom.html
 ```
 
@@ -133,7 +133,7 @@ http://localhost:8080/swagger-ui-custom.html
 
 我们可以通过添加 [`springdoc-openapi-webflux-ui`](https://web.archive.org/web/20220818091138/https://search.maven.org/search?q=g:org.springdoc%20AND%20a:springdoc-openapi-webflux-ui&core=gav) 将 springdoc-openapi 和 Swagger UI 集成在一个 Spring WebFlux 项目中:
 
-```
+```java
 <dependency>
     <groupId>org.springdoc</groupId>
     <artifactId>springdoc-openapi-webflux-ui</artifactId>
@@ -143,7 +143,7 @@ http://localhost:8080/swagger-ui-custom.html
 
 和以前一样，这些文档可以在以下位置获得:
 
-```
+```java
 http://localhost:8080/swagger-ui.html
 ```
 
@@ -153,7 +153,7 @@ http://localhost:8080/swagger-ui.html
 
 Spring Data JPA 与 Spring MVC 无缝集成。这种集成的一个例子是`Pageable` 支持:
 
-```
+```java
 @GetMapping("/filter")
 public Page<Book> filterBooks(@ParameterObject Pageable pageable) {
      return repository.getBooks(pageable);
@@ -172,7 +172,7 @@ springdoc-openapi 库提供了一个 Maven 插件 [`springdoc-openapi-maven-plug
 
 让我们看看如何在我们的`pom.xml`中配置插件:
 
-```
+```java
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -209,7 +209,7 @@ springdoc-openapi 库提供了一个 Maven 插件 [`springdoc-openapi-maven-plug
 
 我们还可以配置插件使用自定义值:
 
-```
+```java
 <plugin>
     <executions>
         .........
@@ -234,7 +234,7 @@ springdoc-openapi 库提供了一个 Maven 插件 [`springdoc-openapi-maven-plug
 
 让我们看一个使用我们的`Book` bean 的例子:
 
-```
+```java
 public class Book {
 
     private long id;
@@ -257,7 +257,7 @@ public class Book {
 
 在`@RestControllerAdvice`类中的方法上使用`@ResponseStatus`将会自动生成响应代码的文档。在这个`@RestControllerAdvice`类中，这两个方法被标注为`@ResponseStatus`:
 
-```
+```java
 @RestControllerAdvice
 public class GlobalControllerExceptionHandler {
 
@@ -284,7 +284,7 @@ public class GlobalControllerExceptionHandler {
 
 为了做到这一点，我们将用`@Operation`和`@ApiResponses`来注释控制器的`/api/book/{id}` 端点:
 
-```
+```java
 @Operation(summary = "Get a book by its id")
 @ApiResponses(value = { 
   @ApiResponse(responseCode = "200", description = "Found the book", 
@@ -317,7 +317,7 @@ public Book findById(@Parameter(description = "id of book to be searched")
 
 在[初始设置](/web/20220818091138/https://www.baeldung.com/spring-boot-kotlin#2-setup)之后，我们将添加一个数据类和一个控制器。我们将把它们添加到我们的启动应用程序的一个子包中，这样当它运行时，它会将我们的`FooController`和之前的`BookController`一起捡起来:
 
-```
+```java
 @Entity
 data class Foo(
     @Id
@@ -352,7 +352,7 @@ class FooController() {
 
 为了增强对 Kotlin 类型的支持，我们可以添加这种依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springdoc</groupId>
     <artifactId>springdoc-openapi-kotlin</artifactId

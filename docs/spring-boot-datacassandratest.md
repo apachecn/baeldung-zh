@@ -18,7 +18,7 @@
 
 为了在我们的 Cassandra Spring Boot 应用程序中使用 *@DataCassandraTest* 注释，我们必须添加[*spring-boot-starter-test*](https://web.archive.org/web/20220524033958/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-test)依赖项:
 
-```
+```java
 <dependency> 
     <groupId>org.springframework.boot</groupId> 
     <artifactId>spring-boot-starter-test</artifactId>
@@ -50,7 +50,7 @@ Spring 的[*Spring-boot-test-auto configure*](https://web.archive.org/web/202205
 
 Spring 提供了[*Spring-boot-starter-data-cassandra*](https://web.archive.org/web/20220524033958/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-data-cassandra)模块用于 Cassandra 数据:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-cassandra</artifactId>
@@ -60,7 +60,7 @@ Spring 提供了[*Spring-boot-starter-data-cassandra*](https://web.archive.org/w
 
 我们还需要依赖 Datastax Cassandra 的[*Java-driver-core*](https://web.archive.org/web/20220524033958/https://search.maven.org/artifact/com.datastax.oss/java-driver-core)来启用集群连接和请求执行:
 
-```
+```java
 <dependency> 
     <groupId>com.datastax.oss</groupId> 
     <artifactId>java-driver-core</artifactId> 
@@ -76,7 +76,7 @@ Spring 提供了[*Spring-boot-starter-data-cassandra*](https://web.archive.org/w
 
 此外，我们可以配置密钥空间名称和集群主机:
 
-```
+```java
 @Configuration
 public class CassandraConfig extends AbstractCassandraConfiguration {
 
@@ -101,7 +101,7 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
 
 下面的 [Cassandra 查询语言(*CQL*)](https://web.archive.org/web/20220524033958/https://docs.datastax.com/en/cql-oss/3.x/cql/cql_using/useCreateKeyspace.html)按名称 *创建 Cassandra keyspace 库存* :
 
-```
+```java
 CREATE KEYSPACE inventory
 WITH replication = {
     'class' : 'NetworkTopologyStrategy',
@@ -111,7 +111,7 @@ WITH replication = {
 
 和这个[](https://web.archive.org/web/20220524033958/https://docs.datastax.com/en/cql-oss/3.x/cql/cql_using/useSimplePrimaryKeyConcept.html#useSimplePrimaryKeyConcept)创建一个 Cassandra 表按名称 *车辆* 在 *库存* 键位:
 
-```
+```java
 use inventory;
 
 CREATE TABLE vehicles (
@@ -136,7 +136,7 @@ CREATE TABLE vehicles (
 
 这里是*InventoryServiceIntegrationTest*类与*@ DataCassandraTest*注释和知识库*@ Autowired:*
 
-```
+```java
 @RunWith(SpringRunner.class)
 @DataCassandraTest
 @Import(CassandraConfig.class)
@@ -159,7 +159,7 @@ public class InventoryServiceIntegrationTest {
 
 为了更容易地运行这个测试，我们将使用一个 DockerCompose 测试容器，它建立了一个三节点 Cassandra 集群:
 
-```
+```java
 public class InventoryServiceLiveTest {
 
     // ...
@@ -185,7 +185,7 @@ public class InventoryServiceLiveTest {
 
 示例资源库类*inventory repository*定义了几个自定义 *JPA* 方法:
 
-```
+```java
 @Repository
 public interface InventoryRepository extends CrudRepository<Vehicle, String> {
 
@@ -200,7 +200,7 @@ public interface InventoryRepository extends CrudRepository<Vehicle, String> {
 
 我们还将定义“本地仲裁”的一致性级别，这意味着强一致性，通过将该属性添加到*application . yml*文件:
 
-```
+```java
 spring:
   data:
     cassandra:

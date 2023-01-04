@@ -18,7 +18,7 @@ Spring 5 引入了 [WebFlux](/web/20221129021438/https://www.baeldung.com/spring
 
 所以让我们从导入[的`spring-boot-starter-web`依赖项](https://web.archive.org/web/20221129021438/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-web)开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -33,7 +33,7 @@ Spring 5 引入了 [WebFlux](/web/20221129021438/https://www.baeldung.com/spring
 
 我们将使用返回产品目录中所有产品的服务示例:
 
-```
+```java
 @RestController
 public class ProductController {
 
@@ -46,7 +46,7 @@ public class ProductController {
 
 现在，让我们来看看它的等效功能:
 
-```
+```java
 @Bean
 public RouterFunction<ServerResponse> productListing(ProductService ps) {
     return route().GET("/product", req -> ok().body(ps.findAll()))
@@ -72,7 +72,7 @@ public RouterFunction<ServerResponse> productListing(ProductService ps) {
 
 例如，上例中的路径也可以使用`RequestPredicate`指定为:
 
-```
+```java
 RequestPredicates.path("/product")
 ```
 
@@ -90,7 +90,7 @@ RequestPredicates.path("/product")
 
 接下来，让我们使用`@Bean`注释注册这个路由，将其添加到应用程序上下文中:
 
-```
+```java
 @SpringBootApplication
 public class SpringBootMvcFnApplication {
 
@@ -109,7 +109,7 @@ public class SpringBootMvcFnApplication {
 
 让我们在现有路径`/product`上添加另一个路径，按名称查找产品:
 
-```
+```java
 public RouterFunction<ServerResponse> productSearch(ProductService ps) {
     return route().nest(RequestPredicates.path("/product"), builder -> {
         builder.GET("/name/{name}", req -> ok().body(ps.findByName(req.pathVariable("name"))));
@@ -131,7 +131,7 @@ public RouterFunction<ServerResponse> productSearch(ProductService ps) {
 
 让我们将一个异常处理程序添加到我们之前创建的产品搜索路径中，以处理在没有找到产品时抛出的自定义异常:
 
-```
+```java
 public RouterFunction<ServerResponse> productSearch(ProductService ps) {
     return route()...
       .onError(ProductService.ItemNotFoundException.class,
@@ -152,7 +152,7 @@ public RouterFunction<ServerResponse> productSearch(ProductService ps) {
 
 让我们举一个例子，我们想要一个新的路线，将产品添加到目录中:
 
-```
+```java
 public RouterFunction<ServerResponse> adminFunctions(ProductService ps) {
     return route().POST("/product", req -> ok().body(ps.save(req.body(Product.class))))
       .onError(IllegalArgumentException.class, 
@@ -167,7 +167,7 @@ public RouterFunction<ServerResponse> adminFunctions(ProductService ps) {
 
 **我们可以通过在 route():** 上添加一个`filter()`方法来实现
 
-```
+```java
 public RouterFunction<ServerResponse> adminFunctions(ProductService ps) {
    return route().POST("/product", req -> ok().body(ps.save(req.body(Product.class))))
      .filter((req, next) -> authenticate(req) ? next.handle(req) : 
@@ -184,7 +184,7 @@ public RouterFunction<ServerResponse> adminFunctions(ProductService ps) {
 
 让我们在应用程序每次为传入请求找到匹配时记录一条语句。**我们将在`route()` :** 上使用`before()`方法来实现这一点
 
-```
+```java
 @Bean
 RouterFunction<ServerResponse> allApplicationRoutes(ProductController pc, ProductService ps) {
     return route()...
@@ -199,7 +199,7 @@ RouterFunction<ServerResponse> allApplicationRoutes(ProductController pc, Produc
 
 类似地，**在使用`route()`上的`after()`** 方法处理请求后，我们可以添加一个简单的日志语句:
 
-```
+```java
 @Bean
 RouterFunction<ServerResponse> allApplicationRoutes(ProductController pc, ProductService ps) {
     return route()...

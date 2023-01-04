@@ -28,7 +28,7 @@ DynamoDB 是 AWS 上完全托管的 NoSQL 数据库，类似于 Cassandra 或 Mo
 *   [AWS Java SDK DynamoDB](https://web.archive.org/web/20220703151853/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.amazonaws%22%20AND%20a%3A%22aws-java-sdk-dynamodb%22)
 *   [Spring Data DynamoDB 社区模块](https://web.archive.org/web/20220703151853/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.github.derjust%22%20AND%20a%3A%22spring-data-dynamodb%22)
 
-```
+```java
 <dependencyManagement>
     <dependencies>
     <dependency>
@@ -60,7 +60,7 @@ DynamoDB 是 AWS 上完全托管的 NoSQL 数据库，类似于 Cassandra 或 Mo
 
 接下来，让我们在`application.properties`文件中定义以下属性:
 
-```
+```java
 amazon.dynamodb.endpoint=http://localhost:8000/
 amazon.aws.accesskey=key
 amazon.aws.secretkey=key2 
@@ -70,7 +70,7 @@ amazon.aws.secretkey=key2
 
 这些属性将被动态地从**Spring 配置**中的`application.properties`文件中提取出来:
 
-```
+```java
 @Configuration
 @EnableDynamoDBRepositories
   (basePackages = "com.baeldung.spring.data.dynamodb.repositories")
@@ -123,7 +123,7 @@ public class DynamoDBConfig {
 
 让我们在数据模型文件夹中创建一个名为`ProductInfo.java`的文件:
 
-```
+```java
 @DynamoDBTable(tableName = "ProductInfo")
 public class ProductInfo {
     private String id;
@@ -154,7 +154,7 @@ public class ProductInfo {
 
 接下来，我们需要创建一个`ProductRepository`接口来定义我们想要构建的 CRUD 功能。用于从 DynamoDB 读取和持久存储数据的存储库将实现这个接口:
 
-```
+```java
 @EnableScan
 public interface ProductInfoRepository extends 
   CrudRepository<ProductInfo, String> {
@@ -167,7 +167,7 @@ public interface ProductInfoRepository extends
 
 接下来，让我们创建一个集成测试来确保我们可以成功地连接到 DynamoDB 的本地实例:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = Application.class)
 @WebAppConfiguration

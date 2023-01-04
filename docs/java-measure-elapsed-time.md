@@ -14,7 +14,7 @@
 
 当我们在 Java 中遇到测量运行时间的需求时，我们可以尝试这样做:
 
-```
+```java
 long start = System.currentTimeMillis();
 // ...
 long finish = System.currentTimeMillis();
@@ -33,7 +33,7 @@ long timeElapsed = finish - start;
 
 让我们使用它:
 
-```
+```java
 long start = System.nanoTime();
 // ...
 long finish = System.nanoTime();
@@ -72,7 +72,7 @@ Java 时间刻度将每个日历日精确地分成 86.400 个小部分，称为�
 
 我们还可以使用`Duration`类及其`between()`方法来获得两个 `Instant`对象之间的持续时间。最后，我们需要将`Duration`转换成毫秒:
 
-```
+```java
 Instant start = Instant.now();
 // CODE HERE        
 Instant finish = Instant.now();
@@ -87,7 +87,7 @@ long timeElapsed = Duration.between(start, finish).toMillis();
 
 我们可以通过更新 pom.xml 获得最新版本:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -101,14 +101,14 @@ long timeElapsed = Duration.between(start, finish).toMillis();
 
 首先，我们需要获得该类的一个实例，然后我们可以简单地测量运行时间:
 
-```
+```java
 StopWatch watch = new StopWatch();
 watch.start();
 ```
 
 一旦我们运行了一个观察器，我们就可以执行我们想要进行基准测试的代码，然后在最后，我们简单地调用`stop()`方法。最后，为了得到实际的结果，我们调用`getTime()`:
 
-```
+```java
 watch.stop();
 System.out.println("Time Elapsed: " + watch.getTime()); // Prints: Time Elapsed: 2501
 ```

@@ -14,7 +14,7 @@
 
 我们需要在依赖关系之后添加[:](https://web.archive.org/web/20221128111804/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22net.openhft%22%20AND%20a%3A%22chronicle%22)
 
-```
+```java
 <dependency>
     <groupId>net.openhft</groupId>
     <artifactId>chronicle</artifactId>
@@ -36,7 +36,7 @@
 
 以下是创建实例的示例代码:
 
-```
+```java
 File queueDir = Files.createTempDirectory("chronicle-queue").toFile();
 Chronicle chronicle = ChronicleQueueBuilder.indexed(queueDir).build();
 ```
@@ -51,7 +51,7 @@ Chronicle chronicle = ChronicleQueueBuilder.indexed(queueDir).build();
 
 以下是将消息写入队列的示例代码:
 
-```
+```java
 ExcerptAppender appender = chronicle.createAppender();
 appender.startExcerpt();
 
@@ -81,7 +81,7 @@ appender.finish();
 
 让我们从队列中读取值:
 
-```
+```java
 ExcerptTailer tailer = chronicle.createTailer();
 while (tailer.nextIndex()) {
     tailer.readUTF();

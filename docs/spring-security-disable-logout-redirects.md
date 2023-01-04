@@ -32,7 +32,7 @@ Spring Security 提供了在注销后将用户重定向到特定 URL 的可能�
 
 现在，让我们实现禁用注销重定向所需的必要的 Spring 安全配置:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -67,7 +67,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 **首先，让我们创建一个简单的测试类，并在其中注入`MockMvc`对象:**
 
-```
+```java
 public class LogoutApplicationUnitTest {
 
     @Autowired
@@ -80,7 +80,7 @@ public class LogoutApplicationUnitTest {
 
 现在，**让我们写一个方法来测试我们的`/logout`端点:**
 
-```
+```java
 @Test
 public void whenLogout_thenDisableRedirect() throws Exception {
 

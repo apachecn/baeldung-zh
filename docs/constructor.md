@@ -28,13 +28,13 @@
 
 `String`对象可以通过使用文字创建:
 
-```
+```java
 String s = "a string";
 ```
 
 或者通过调用其中一个构造函数:
 
-```
+```java
 String s = new String("a string");
 ```
 
@@ -46,7 +46,7 @@ String s = new String("a string");
 
 ### 可用签名
 
-```
+```java
 public String()
 public String(byte[] bytes)
 public String(byte[] bytes, Charset charset)
@@ -64,7 +64,7 @@ public String(StringBuilder builder)
 
 ### 例子
 
-```
+```java
 @Test
 public void whenCreateStringUsingByteArray_thenCorrect() {
     byte[] array = new byte[] { 97, 98, 99, 100 };

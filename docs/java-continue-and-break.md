@@ -18,7 +18,7 @@
 
 我们可以使用未标记的语句来终止`for`、`while`或`do-while`循环以及`switch-case`块:
 
-```
+```java
 for (int i = 0; i < 5; i++) {
     if (i == 3) {
         break;
@@ -30,7 +30,7 @@ for (int i = 0; i < 5; i++) {
 
 在嵌套循环的情况下，**一个未标记的`break`语句只终止它在**中的内部循环。外部循环继续执行:
 
-```
+```java
 for (int rowNum = 0; rowNum < 3; rowNum++) {
     for (int colNum = 0; colNum < 4; colNum++) {
         if (colNum == 3) {
@@ -48,7 +48,7 @@ for (int rowNum = 0; rowNum < 3; rowNum++) {
 
 终止时，控制流会在外部循环结束后立即转移到语句:
 
-```
+```java
 compare: 
 for (int rowNum = 0; rowNum < 3; rowNum++) {
     for (int colNum = 0; colNum < 4; colNum++) {
@@ -73,7 +73,7 @@ for (int rowNum = 0; rowNum < 3; rowNum++) {
 
 我们可以使用一个未标记的语句来绕过一个`for`、`while`或`do-while`循环的当前迭代中剩余语句的执行。**它跳到内部循环的末尾，继续循环**:
 
-```
+```java
 int counter = 0;
 for (int rowNum = 0; rowNum < 3; rowNum++) {
     for (int colNum = 0; colNum < 4; colNum++) {
@@ -91,7 +91,7 @@ for (int rowNum = 0; rowNum < 3; rowNum++) {
 
 我们也可以使用**一个带标签的`continue`语句来跳过外部循环。**跳过后，控制流转移到外部循环的末尾，有效地继续外部循环的迭代:
 
-```
+```java
 int counter = 0;
 compare: 
 for (int rowNum = 0; rowNum < 3; rowNum++) {

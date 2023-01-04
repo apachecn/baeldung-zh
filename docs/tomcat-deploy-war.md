@@ -74,7 +74,7 @@ Tomcat Apache 网络服务器是免费软件，可以从他们的网站下载。
 
 让我们在`$CATALINA_HOME\conf\tomcat-users`中进行这些更改:
 
-```
+```java
 <role rolename="manager-gui"/>
 <role rolename="manager-script"/>
 <user username="admin" password="password" roles="manager-gui, manager-script"/>
@@ -98,14 +98,14 @@ Tomcat Apache 网络服务器是免费软件，可以从他们的网站下载。
 
 要更改端口，我们可以编辑服务器配置文件，`server.xml,`默认位于`$CATALINA_HOME\conf\server.xml.`，连接器配置为:
 
-```
+```java
 <Connector port="8080" protocol="HTTP/1.1" 
   connectionTimeout="20000" redirectPort="8443" />
 ```
 
 例如，如果我们想将我们的端口更改为`8081`，那么我们必须更改连接器的端口属性:
 
-```
+```java
 <Connector port="8081" protocol="HTTP/1.1" 
   connectionTimeout="20000" redirectPort="8443" />
 ```
@@ -123,7 +123,7 @@ Tomcat Apache 网络服务器是免费软件，可以从他们的网站下载。
 
 一旦我们找到它，我们将添加 Tomcat:
 
-```
+```java
 <server>
     <id>TomcatServer</id>
     <username>admin</username>
@@ -135,7 +135,7 @@ Tomcat Apache 网络服务器是免费软件，可以从他们的网站下载。
 
 我们将在控制台上运行这个命令来创建一个新的 Java web 应用程序:
 
-```
+```java
 mvn archetype:generate -DgroupId=com.baeldung -DartifactId=tomcat-war-deployment 
   -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
 ```
@@ -144,7 +144,7 @@ mvn archetype:generate -DgroupId=com.baeldung -DartifactId=tomcat-war-deployment
 
 但是在此之前，我们需要做一个更改来启用 Maven 部署。让我们前往 `pom.xml`并添加这个插件:
 
-```
+```java
 <plugin>
     <groupId>org.apache.tomcat.maven</groupId>
     <artifactId>tomcat7-maven-plugin</artifactId>
@@ -167,19 +167,19 @@ mvn archetype:generate -DgroupId=com.baeldung -DartifactId=tomcat-war-deployment
 
 要部署 web 应用程序:
 
-```
+```java
 mvn tomcat7:deploy
 ```
 
 然后取消部署它:
 
-```
+```java
 mvn tomcat7:undeploy
 ```
 
 最后，要在进行更改后重新部署它:
 
-```
+```java
 mvn tomcat7:redeploy
 ```
 
@@ -193,7 +193,7 @@ mvn tomcat7:redeploy
 
 为了更好地理解整个过程，我们将从头开始，从命令行创建一个新的 Java web 应用程序:
 
-```
+```java
 mvn archetype:generate -DgroupId=com.baeldung -DartifactId=cargo-deploy 
   -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
 ```
@@ -204,7 +204,7 @@ mvn archetype:generate -DgroupId=com.baeldung -DartifactId=cargo-deploy
 
 因为我们的 web 应用程序不包含任何 servlets，所以我们的`web.xml`文件将非常简单。我们将导航到新创建项目的`WEB-INF`文件夹，并创建一个包含以下内容的`web.xml`文件:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 
@@ -223,7 +223,7 @@ mvn archetype:generate -DgroupId=com.baeldung -DartifactId=cargo-deploy
 
 作为根元素`<settings></settings>`的直接子元素，我们将添加:
 
-```
+```java
 <pluginGroups>
     <pluginGroup>org.codehaus.cargo</pluginGroup>
 </pluginGroups>
@@ -235,7 +235,7 @@ mvn archetype:generate -DgroupId=com.baeldung -DartifactId=cargo-deploy
 
 我们将添加这个插件:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -272,13 +272,13 @@ mvn archetype:generate -DgroupId=com.baeldung -DartifactId=cargo-deploy
 
 我们现在可以通过执行以下命令来安装我们的应用程序:
 
-```
+```java
 mvn install
 ```
 
 然后我们将部署它:
 
-```
+```java
 mvn cargo:deploy
 ```
 
@@ -290,7 +290,7 @@ mvn cargo:deploy
 
 让我们更改`pom.xml`，使配置部分看起来像这样:
 
-```
+```java
 <configuration>
     <container>
         <containerId>tomcat8x</containerId>
@@ -314,25 +314,25 @@ mvn cargo:deploy
 
 如果我们为`remote`部署编辑同一个项目，我们将首先取消部署现有的 WAR:
 
-```
+```java
 mvn cargo:undeploy
 ```
 
 然后我们将清理项目:
 
-```
+```java
 mvn clean
 ```
 
 接下来，我们将安装它:
 
-```
+```java
 mvn install
 ```
 
 最后，我们将部署它:
 
-```
+```java
 mvn cargo:deploy
 ```
 
@@ -432,7 +432,7 @@ Eclipse 允许我们嵌入服务器，以便在正常工作流中添加 web 项�
 
 之后，我们可以点击`deploy`按钮。页面将重新加载，我们应该会在页面顶部看到以下消息:
 
-```
+```java
 OK - Deployed application at context path /myapp
 ```
 
@@ -444,7 +444,7 @@ OK - Deployed application at context path /myapp
 
 在这两种情况下，如果一切顺利，Tomcat 控制台将通过以下消息通知我们部署已经成功:
 
-```
+```java
 INFO: Deployment of web application archive \path\to\deployed_war has finished in 4,833 ms
 ```
 

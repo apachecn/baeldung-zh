@@ -47,7 +47,7 @@
 
  ****下面是一个可能的例子:
 
-```
+```java
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 
   (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36
 ```
@@ -60,7 +60,7 @@ User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36
 
 现在我们已经介绍了我们需要的信息，让我们修改我们的 [`AuthenticationSuccessHandler`](/web/20220626205221/https://www.baeldung.com/spring_redirect_after_login) 以便在用户登录后执行验证:
 
-```
+```java
 public class MySimpleUrlAuthenticationSuccessHandler 
   implements AuthenticationSuccessHandler {
     //...
@@ -94,7 +94,7 @@ public class MySimpleUrlAuthenticationSuccessHandler
 
 然而，在我们继续讨论我们的`DeviceService`之前，让我们创建我们的`DeviceMetadata`实体来持久化我们的用户数据:
 
-```
+```java
 @Entity
 public class DeviceMetadata {
     @Id
@@ -110,7 +110,7 @@ public class DeviceMetadata {
 
 及其`Repository`:
 
-```
+```java
 public interface DeviceMetadataRepository extends JpaRepository<DeviceMetadata, Long> {
     List<DeviceMetadata> findByUserId(Long userId);
 }
@@ -122,7 +122,7 @@ public interface DeviceMetadataRepository extends JpaRepository<DeviceMetadata, 
 
 在我们估计用户的地理位置之前，我们需要提取他们的 IP 地址:
 
-```
+```java
 private String extractIp(HttpServletRequest request) {
     String clientIp;
     String clientXForwardedForIp = request
@@ -140,7 +140,7 @@ private String extractIp(HttpServletRequest request) {
 
 一旦我们有了他们的 IP 地址，我们就可以在`Maxmind` 的帮助下[估计他们的位置:](/web/20220626205221/https://www.baeldung.com/geolocation-by-ip-with-maxmind)
 
-```
+```java
 private String getIpLocation(String ip) {
     String location = UNKNOWN;
     InetAddress ipAddress = InetAddress.getByName(ip);
@@ -160,7 +160,7 @@ private String getIpLocation(String ip) {
 
 因为`User-Agent`头包含了我们需要的所有信息，所以提取它只是一个问题。正如我们前面提到的，在`User-Agent`解析器的帮助下(本例中是 [`uap-java`](https://web.archive.org/web/20220626205221/https://search.maven.org/search?q=g:com.github.ua-parser%20AND%20a:uap-java) ，获取这些信息变得非常简单:
 
-```
+```java
 private String getDeviceDetails(String userAgent) {
     String deviceDetails = UNKNOWN;
 
@@ -182,7 +182,7 @@ private String getDeviceDetails(String userAgent) {
 
 让我们来看看我们的`DeviceService.` `verify` `Device()`方法:
 
-```
+```java
 public void verifyDevice(User user, HttpServletRequest request) {
 
     String ip = extractIp(request);
@@ -212,7 +212,7 @@ public void verifyDevice(User user, HttpServletRequest request) {
 
 提取信息后，我们将其与现有的`DeviceMetadata`条目进行比较，以检查是否有包含相同信息的条目:
 
-```
+```java
 private DeviceMetadata findExistingDevice(
   Long userId, String deviceDetails, String location) {
     List<DeviceMetadata> knownDevices

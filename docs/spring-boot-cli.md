@@ -16,13 +16,13 @@ Spring Boot CLI 是一个**命令行抽象，它允许我们轻松运行用 Groo
 
 安装 SDKMAN 后，运行以下命令自动安装和配置 Spring Boot CLI:
 
-```
+```java
 $ sdk install springboot
 ```
 
 要验证安装，请运行命令:
 
-```
+```java
 $ spring --version
 ```
 
@@ -34,7 +34,7 @@ Spring Boot CLI 提供了一些现成的有用命令和功能。最有用的特�
 
 为了**启动嵌入式 shell** ，我们运行:
 
-```
+```java
 spring shell
 ```
 
@@ -42,13 +42,13 @@ spring shell
 
 例如，我们可以通过键入以下内容来**显示正在运行的 CLI 的当前版本**:
 
-```
+```java
 version
 ```
 
 **最重要的命令之一是告诉 Spring Boot CLI 运行一个 Groovy 脚本:**
 
-```
+```java
 run [SCRIPT_NAME].groovy
 ```
 
@@ -74,7 +74,7 @@ Groovy 和 Spring 与 Spring Boot CLI 一起**允许在单文件 Groovy 部署�
 
 让我们看看如何使用`@Grab`注释:
 
-```
+```java
 package org.test
 
 @Grab("spring-boot-starter-actuator")
@@ -97,7 +97,7 @@ class ExampleRestController{
 
 例如，我们可以使用熟悉的`@Controller`和`@Service`注释来**快速搭建一个标准的 MVC 控制器和服务**:
 
-```
+```java
 @RestController
 class Example {
 
@@ -126,7 +126,7 @@ Spring Boot CLI 支持 Spring Boot 的所有默认配置。因此，我们可以
 
 下面，我们将使用 `spring-boot-starter-security` 依赖来抽象这个过程的一部分，它利用了幕后的`@EnableWebSecurity`注释:
 
-```
+```java
 package bael.security
 
 @Grab("spring-boot-starter-security")
@@ -147,7 +147,7 @@ class SampleController {
 
 为了**建立一个简单的 JUnit 测试**，我们可以添加`@Grab(‘junit')`或`@Test`注释:
 
-```
+```java
 package bael.test
 
 @Grab('junit')
@@ -162,7 +162,7 @@ class Test {
 
 可以指定持久数据选项，包括`DataSource`或`JdbcTemplate` **，而无需显式使用`@Grab` 注释**:
 
-```
+```java
 package bael.data
 
 @Grab('h2')
@@ -191,7 +191,7 @@ class DataConfig {
 
 Spring Boot 将自动在`/config`目录中搜索`application.yml`或`application.properties`
 
-```
+```java
 ├── app
     ├── app.groovy
     ├── config
@@ -201,7 +201,7 @@ Spring Boot 将自动在`/config`目录中搜索`application.yml`或`application
 
 我们还可以设置:
 
-```
+```java
 ├── app
     ├── example.groovy
     ├── example.yml

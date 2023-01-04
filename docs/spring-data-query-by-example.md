@@ -27,7 +27,7 @@
 
 首先，我们将`Passenger`建模为一个 JPA 实体:
 
-```
+```java
 @Entity
 class Passenger {
 
@@ -58,14 +58,14 @@ class Passenger {
 
 首先，我们来看看`JpaRepository`界面。正如我们所见，它扩展了`[QueryByExampleExecutor](https://web.archive.org/web/20221129002814/https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/query/QueryByExampleExecutor.html)` 接口以支持示例查询:
 
-```
+```java
 public interface JpaRepository<T, ID>
   extends PagingAndSortingRepository<T, ID>, QueryByExampleExecutor<T> {}
 ```
 
 这个接口引入了更多我们从 Spring 数据中熟悉的`find()`方法的变体。但是，每个方法也接受一个 [`Example`](https://web.archive.org/web/20221129002814/https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/domain/Example.html) 的实例:
 
-```
+```java
 public interface QueryByExampleExecutor<T> {
     <S extends T> Optional<S> findOne(Example<S> var1);
     <S extends T> Iterable<S> findAll(Example<S> var1);
@@ -80,7 +80,7 @@ public interface QueryByExampleExecutor<T> {
 
 认识到`probe`是我们的`Entity`的实例是很重要的:
 
-```
+```java
 public interface Example<T> {
 
     static <T> org.springframework.data.domain.Example<T> of(T probe) {
@@ -119,7 +119,7 @@ public interface Example<T> {
 
 让我们从一个简单的例子开始，讨论默认行为:
 
-```
+```java
 @Test
 public void givenPassengers_whenFindByExample_thenExpectedReturned() {
     Example<Passenger> example = Example.of(Passenger.from("Fred", "Bloggs", null));
@@ -143,7 +143,7 @@ public void givenPassengers_whenFindByExample_thenExpectedReturned() {
 
 记住这一点，让我们看看另一个例子，这次使用`withIgnoreCase()`来实现不区分大小写的匹配:
 
-```
+```java
 @Test
 public void givenPassengers_whenFindByExampleCaseInsensitiveMatcher_thenExpectedReturned() {
     ExampleMatcher caseInsensitiveExampleMatcher = ExampleMatcher.matchingAll().withIgnoreCase();
@@ -163,7 +163,7 @@ public void givenPassengers_whenFindByExampleCaseInsensitiveMatcher_thenExpected
 
 我们还可以**基于每个属性**调整匹配器的行为，并使用`ExampleMatcher.matchingAny()`匹配任何属性:
 
-```
+```java
 @Test
 public void givenPassengers_whenFindByExampleCustomMatcher_thenExpectedReturned() {
     Passenger jill = Passenger.from("Jill", "Smith", 50);
@@ -191,7 +191,7 @@ public void givenPassengers_whenFindByExampleCustomMatcher_thenExpectedReturned(
 
 我们通过使用`ExampleMatcher.ignorePaths(String… paths)`忽略一些属性来实现这一点:
 
-```
+```java
 @Test
 public void givenPassengers_whenFindByIgnoringMatcher_thenExpectedReturned() {
     Passenger jill = Passenger.from("Jill", "Smith", 50); 

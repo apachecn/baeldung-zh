@@ -20,7 +20,7 @@
 
 现在，让我们检查一个代码片段以及当出现未处理的错误时它生成的输出:
 
-```
+```java
 public void processFoo(Flux<Foo> flux) {
     flux.map(FooNameHelper::concatFooName)
       .map(FooNameHelper::substringFooName)
@@ -39,7 +39,7 @@ public void processFooInAnotherScenario(Flux<Foo> flux) {
 
 仔细查看其中一个错误，我们会发现类似这样的内容:
 
-```
+```java
 Caused by: java.lang.StringIndexOutOfBoundsException: String index out of range: 15
     at j.l.String.substring(String.java:1963)
     at com.baeldung.debugging.consumer.service.FooNameHelper
@@ -96,7 +96,7 @@ Caused by: java.lang.StringIndexOutOfBoundsException: String index out of range:
 
 有时，**我们可以添加有用的上下文信息，通过提供一个`Consumer`作为`subscribe`方法**的第二个参数:
 
-```
+```java
 public void processFoo(Flux<Foo> flux) {
 
     // ...
@@ -113,7 +113,7 @@ public void processFoo(Flux<Foo> flux) {
 
 **注:值得一提的是，如果我们不需要对`subscribe`方法进行进一步的处理，我们可以在我们的发布者:**上链接`doOnError`函数
 
-```
+```java
 flux.doOnError(error -> {
     logger.error("The following error happened on processFoo method!", error);
 }).subscribe();
@@ -127,13 +127,13 @@ flux.doOnError(error -> {
 
 **通过添加以下语句，我们的应用程序将检测对发布者方法的调用，包装操作符的构造，并捕获堆栈跟踪**:
 
-```
+```java
 Hooks.onOperatorDebug();
 ```
 
 调试模式激活后，我们的异常日志将包含一些有用的信息:
 
-```
+```java
 16:06:35.334 [parallel-1] ERROR c.b.d.consumer.service.FooService
   - The following error happened on processFoo method!
 java.lang.StringIndexOutOfBoundsException: String index out of range: 15
@@ -173,7 +173,7 @@ Error has been observed by the following operator(s):
 
 让我们看看下面的例子:
 
-```
+```java
 public void processFoo(Flux<Foo> flux) {
     flux.publishOn(Schedulers.newSingle("foo-thread"))
        // ...
@@ -200,7 +200,7 @@ public void processFoo(Flux<Foo> flux) {
 
 我们指的是`checkpoint`操作符:
 
-```
+```java
 public void processFoo(Flux<Foo> flux) {
 
     // ...
@@ -212,7 +212,7 @@ public void processFoo(Flux<Foo> flux) {
 
 请注意，通过这种方式，将在检查点阶段记录程序集跟踪:
 
-```
+```java
 Caused by: java.lang.StringIndexOutOfBoundsException: String index out of range: 15
 	...
 Assembly trace from producer [reactor.core.publisher.FluxMap],
@@ -245,7 +245,7 @@ Error has been observed by the following operator(s):
 
 让我们在我们的例子中尝试一下:
 
-```
+```java
 public void processFoo(Flux<Foo> flux) {
     flux.map(FooNameHelper::concatFooName)
       .map(FooNameHelper::substringFooName)
@@ -260,7 +260,7 @@ public void processFoo(Flux<Foo> flux) {
 
 并检查日志:
 
-```
+```java
 INFO  reactor.Flux.OnAssembly.1 - onSubscribe(FluxMap.MapSubscriber)
 INFO  reactor.Flux.OnAssembly.1 - request(unbounded)
 INFO  reactor.Flux.OnAssembly.1 - onNext(Foo(id=0, formattedName=theFo, quantity=8))

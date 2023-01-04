@@ -12,7 +12,7 @@
 
 首先，我们需要将以下依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.poi</groupId>
     <artifactId>poi</artifactId>
@@ -43,7 +43,7 @@
 
 让我们首先创建新的演示文稿:
 
-```
+```java
 XMLSlideShow ppt = new XMLSlideShow();
 ppt.createSlide();
 ```
@@ -52,13 +52,13 @@ ppt.createSlide();
 
 当向演示文稿添加新幻灯片时，我们也可以选择从预定义的布局创建它。为了实现这一点，我们首先必须检索保存布局的`XSLFSlideMaster`(第一个是默认的母版):
 
-```
+```java
 XSLFSlideMaster defaultMaster = ppt.getSlideMasters().get(0);
 ```
 
 现在，我们可以检索`XSLFSlideLayout`并在创建新幻灯片时使用它:
 
-```
+```java
 XSLFSlideLayout layout 
   = defaultMaster.getLayout(SlideLayout.TITLE_AND_CONTENT);
 XSLFSlide slide = ppt.createSlide(layout);
@@ -66,7 +66,7 @@ XSLFSlide slide = ppt.createSlide(layout);
 
 让我们看看如何在模板中填充占位符:
 
-```
+```java
 XSLFTextShape titleShape = slide.getPlaceholder(0);
 XSLFTextShape contentShape = slide.getPlaceholder(1);
 ```
@@ -75,7 +75,7 @@ XSLFTextShape contentShape = slide.getPlaceholder(1);
 
 让我们看看如何快速检索幻灯片中的所有占位符:
 
-```
+```java
 for (XSLFShape shape : slide.getShapes()) {
     if (shape instanceof XSLFAutoShape) {
         // this is a template placeholder
@@ -87,7 +87,7 @@ for (XSLFShape shape : slide.getShapes()) {
 
 一旦我们创建了幻灯片，下一步就是保存它:
 
-```
+```java
 FileOutputStream out = new FileOutputStream("powerpoint.pptx");
 ppt.write(out);
 out.close();
@@ -103,7 +103,7 @@ out.close();
 
 当在演示文稿中处理文本时，如在 MS PowerPoint 中，我们必须在幻灯片中创建文本框，添加一个段落，然后将文本添加到该段落中:
 
-```
+```java
 XSLFTextBox shape = slide.createTextBox();
 XSLFTextParagraph p = shape.addNewTextParagraph();
 XSLFTextRun r = p.addNewTextRun();
@@ -120,7 +120,7 @@ r.setFontSize(24.);
 
 一旦我们创建了`XSLFTextRun`对象，我们现在可以添加一个链接:
 
-```
+```java
 XSLFHyperlink link = r.createHyperlink();
 link.setAddress("http://www.baeldung.com");
 ```
@@ -129,7 +129,7 @@ link.setAddress("http://www.baeldung.com");
 
 我们还可以添加图像:
 
-```
+```java
 byte[] pictureData = IOUtils.toByteArray(
   new FileInputStream("logo-leaf.png"));
 
@@ -140,7 +140,7 @@ XSLFPictureShape picture = slide.createPicture(pd);
 
 但是，**如果没有适当的配置，图像将被放置在幻灯片**的左上角。要正确放置它，我们必须配置它的锚点:
 
-```
+```java
 picture.setAnchor(new Rectangle(320, 230, 100, 92));
 ```
 
@@ -152,7 +152,7 @@ picture.setAnchor(new Rectangle(320, 230, 100, 92));
 
 现在，让我们定义一系列要点:
 
-```
+```java
 XSLFTextShape content = slide.getPlaceholder(1);
 XSLFTextParagraph p1 = content.addNewTextParagraph();
 p1.setIndentLevel(0);
@@ -163,7 +163,7 @@ r1.setText("Bullet");
 
 类似地，我们可以定义一个编号列表:
 
-```
+```java
 XSLFTextParagraph p2 = content.addNewTextParagraph();
 p2.setBulletAutoNumber(AutoNumberingScheme.alphaLcParenRight, 1);
 p2.setIndentLevel(1);
@@ -179,14 +179,14 @@ r2.setText("Numbered List Item - 1");
 
 让我们首先创建一个表:
 
-```
+```java
 XSLFTable tbl = slide.createTable();
 tbl.setAnchor(new Rectangle(50, 50, 450, 300));
 ```
 
 现在，我们可以添加一个标题:
 
-```
+```java
 int numColumns = 3;
 XSLFTableRow headerRow = tbl.addRow();
 headerRow.setHeight(50);
@@ -203,7 +203,7 @@ for (int i = 0; i < numColumns; i++) {
 
 完成标题后，我们可以向表格中添加行和单元格来显示数据:
 
-```
+```java
 for (int rownum = 1; rownum < numRows; rownum++) {
     XSLFTableRow tr = tbl.addRow();
     tr.setHeight(50);
@@ -231,7 +231,7 @@ for (int rownum = 1; rownum < numRows; rownum++) {
 
 阅读演示非常简单，可以使用接受`FileInputStream`的`XMLSlideShow`重载构造函数来完成:
 
-```
+```java
 XMLSlideShow ppt = new XMLSlideShow(
   new FileInputStream("slideshow.pptx"));
 ```
@@ -242,7 +242,7 @@ XMLSlideShow ppt = new XMLSlideShow(
 
 如果没有发生这种情况，可以重新安排幻灯片的顺序。让我们看看如何将第四张幻灯片移动到第二张幻灯片:
 
-```
+```java
 List<XSLFSlide> slides = ppt.getSlides();
 
 XSLFSlide slide = slides.get(3);
@@ -255,7 +255,7 @@ ppt.setSlideOrder(slide, 1);
 
 让我们看看如何删除第四张幻灯片:
 
-```
+```java
 ppt.removeSlide(3);
 ```
 

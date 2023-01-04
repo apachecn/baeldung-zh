@@ -70,7 +70,7 @@ HTTP 通过五类状态代码来实现这一点:
 
 为了演示，假设我们有一个简单的 Spring REST 应用程序,它管理书籍，有一个端点通过 ID 检索书籍:
 
-```
+```java
 curl -X GET -H "Accept: application/json" http://localhost:8082/spring-rest/api/book/1
 ```
 
@@ -78,7 +78,7 @@ curl -X GET -H "Accept: application/json" http://localhost:8082/spring-rest/api/
 
 在这个端点上执行 GET 时，我们看到抛出了这个异常，这是响应体:
 
-```
+```java
 {
     "timestamp":"2019-09-16T22:14:45.624+0000",
     "status":500,
@@ -108,7 +108,7 @@ curl -X GET -H "Accept: application/json" http://localhost:8082/spring-rest/api/
 
 例如，如果一个客户端用不正确的凭证发送一个请求，我们可以用这个主体发送一个 401 响应:
 
-```
+```java
 {
     "error": "auth-0001",
     "message": "Incorrect username and password",
@@ -126,7 +126,7 @@ curl -X GET -H "Accept: application/json" http://localhost:8082/spring-rest/api/
 
 此外，我们还可以提供一个 URL——比如`help`字段——客户可以通过它找到更多信息:
 
-```
+```java
 {
     "error": "auth-0001",
     "message": "Incorrect username and password",
@@ -139,7 +139,7 @@ curl -X GET -H "Accept: application/json" http://localhost:8082/spring-rest/api/
 
 在这种情况下，我们应该返回一个列表中的错误:
 
-```
+```java
 {
     "errors": [
         {
@@ -173,7 +173,7 @@ curl -X GET -H "Accept: application/json" http://localhost:8082/spring-rest/api/
 
 我们可以转换我们的主体，而不是使用我们的自定义错误响应主体:
 
-```
+```java
 {
     "type": "/errors/incorrect-user-pass",
     "title": "Incorrect username or password.",
@@ -197,13 +197,13 @@ curl -X GET -H "Accept: application/json" http://localhost:8082/spring-rest/api/
 
 让我们发送一个 GET 请求，但不提供所需的身份验证数据:
 
-```
+```java
 curl -X GET https://api.twitter.com/1.1/statuses/update.json?include_entities=true
 ```
 
 Twitter API 响应此主体的错误:
 
-```
+```java
 {
     "errors": [
         {
@@ -224,13 +224,13 @@ Twitter API 响应此主体的错误:
 
 让我们执行一个 POST 请求，用脸书图形 API 进行身份验证:
 
-```
+```java
 curl -X GET https://graph.facebook.com/oauth/access_token?client_id=foo&client;_secret=bar&grant;_type=baz
 ```
 
 我们收到以下错误:
 
-```
+```java
 {
     "error": {
         "message": "Missing redirect_uri parameter.",

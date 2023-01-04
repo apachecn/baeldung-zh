@@ -36,7 +36,7 @@
 
 首先，让我们创建一个简单的`CollectionsBenchmark`类:
 
-```
+```java
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Warmup(iterations = 5)
@@ -68,7 +68,7 @@ public class CollectionsBenchmark {
 
 在这里，我们创建并初始化`Employee`对象的`HashSet`和`ArrayList`:
 
-```
+```java
 public class Employee {
 
     private Long id;
@@ -84,7 +84,7 @@ public class Employee {
 
 之后，我们将基准方法添加到`CollectionsBenchmark`类中:
 
-```
+```java
 @Benchmark
 public boolean testArrayList(MyState state) {
     return state.employeeList.contains(state.employee);
@@ -95,7 +95,7 @@ public boolean testArrayList(MyState state) {
 
 同样，我们对`employeeSet`进行了熟悉的测试:
 
-```
+```java
 @Benchmark
 public boolean testHashSet(MyState state) {
     return state.employeeSet.contains(state.employee);
@@ -104,7 +104,7 @@ public boolean testHashSet(MyState state) {
 
 最后，我们可以运行测试:
 
-```
+```java
 public static void main(String[] args) throws Exception {
     Options options = new OptionsBuilder()
       .include(CollectionsBenchmark.class.getSimpleName())
@@ -115,7 +115,7 @@ public static void main(String[] args) throws Exception {
 
 结果如下:
 
-```
+```java
 Benchmark                           Mode  Cnt     Score     Error  Units
 CollectionsBenchmark.testArrayList  avgt   20  4035.646 ± 598.541  ns/op
 CollectionsBenchmark.testHashSet    avgt   20     9.456 ±   0.729  ns/op
@@ -125,7 +125,7 @@ CollectionsBenchmark.testHashSet    avgt   20     9.456 ±   0.729  ns/op
 
 现在，让我们增加测试中的元素数量，并运行迭代次数= 10.000 的测试:
 
-```
+```java
 Benchmark                           Mode  Cnt      Score       Error  Units
 CollectionsBenchmark.testArrayList  avgt   20  57499.620 ± 11388.645  ns/op
 CollectionsBenchmark.testHashSet    avgt   20     11.802 ±     1.164  ns/op

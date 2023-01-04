@@ -24,7 +24,7 @@
 
 最快的开始方式是添加[弹簧启动启动器父母](https://web.archive.org/web/20220707143835/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-parent%22)
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -42,7 +42,7 @@
 
 使用`Spring Boot`构建的每个应用程序都需要定义主入口点。这通常是一个带有`main`方法的 Java 类，用`@SpringBootApplication`进行了注释:
 
-```
+```java
 @SpringBootApplication
 public class Application {
     public static void main(String[] args) {
@@ -65,7 +65,7 @@ public class Application {
 
 我们可能遇到的一个问题是多个配置类相互冲突。为了避免这种情况，我们可以过滤被扫描的类别:
 
-```
+```java
 @SpringBootAppliaction
 @ComponentScan(excludeFilters = { 
   @ComponentScan.Filter(type = FilterType.REGEX, 
@@ -86,7 +86,7 @@ public class Application {
 
 **要显式导入类，您可以在主类上使用`@ComponentScan`或`@Import`注释**:
 
-```
+```java
 @SpringBootApplication
 @ComponentScan(basePackages="com.baeldung.config")
 @Import(UserRepository.class)
@@ -97,7 +97,7 @@ public class Application {
 
 官方文档建议在 XML 配置中使用注释。但是，如果您已经有了不希望转换成 Java 配置的 XML 文件，您仍然可以使用`@ImportResource`导入这些文件:
 
-```
+```java
 @SpringBootApplication
 @ImportResource("applicationContext.xml")
 public class Application {
@@ -116,7 +116,7 @@ public class Application {
 
 为了进行迁移，我们可以将所有的资源文件移动到其中一个位置，或者我们可以通过设置`spring.resources.static-locations`属性来自定义资源位置:
 
-```
+```java
 spring.resources.static-locations=classpatimg/,classpath:/jsp/
 ```
 
@@ -143,7 +143,7 @@ spring.resources.static-locations=classpatimg/,classpath:/jsp/
 
 为 web 应用程序提供了一个起点，它将带来所有必要的依赖。这意味着我们可以从 Spring 框架中移除所有特定于 web 的依赖项，并用 [`spring-boot-starter-web`](https://web.archive.org/web/20220707143835/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-web%22%20AND%20g%3A%22org.springframework.boot%22) 替换它们:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -168,7 +168,7 @@ spring.resources.static-locations=classpatimg/,classpath:/jsp/
 
 至于构建网页，官方文档建议不要使用 JSP 文件，而使用模板引擎。以下模板引擎包含自动配置:`Thymeleaf`、`Groovy`、`FreeMarker`、`Mustache`。要使用其中一个，我们需要做的就是添加特定的启动器:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -179,7 +179,7 @@ spring.resources.static-locations=classpatimg/,classpath:/jsp/
 
 如果我们想继续使用 JSP 文件，我们需要配置应用程序，以便它可以解析 JSP。例如，如果我们的文件在`/webapp/WEB-INF/views`中，那么我们需要设置以下属性:
 
-```
+```java
 spring.mvc.view.prefix=/WEB-INF/views/
 spring.mvc.view.suffix=.jsp
 ```
@@ -188,7 +188,7 @@ spring.mvc.view.suffix=.jsp
 
 此外，我们还可以使用嵌入式 Tomcat 服务器运行我们的应用程序，该服务器将通过添加 [`spring-boot-starter-tomcat`](https://web.archive.org/web/20220707143835/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-tomcat%22%20AND%20g%3A%22org.springframework.boot%22) 依赖项在端口 8080 上自动配置:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -201,7 +201,7 @@ spring.mvc.view.suffix=.jsp
 
 启用春季安全的启动器是 [`spring-boot-starter-security`](https://web.archive.org/web/20220707143835/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-security%22%20AND%20g%3A%22org.springframework.boot%22) :
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -212,7 +212,7 @@ spring.mvc.view.suffix=.jsp
 
 出于这个原因，我们将保留我们现有的用`@EnableWebSecurity`注释的类，它扩展了`WebSecurityConfigurerAdapter`并定义了一个定制配置:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -224,7 +224,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 根据我们使用的`Spring Data`实现，我们将需要添加相应的启动器。例如，对于 JPA，我们可以添加 [`spring-boot-starter-data-jpa`](https://web.archive.org/web/20220707143835/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-data-jpa%22%20AND%20g%3A%22org.springframework.boot%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -235,7 +235,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 例如，要使用一个`H2`内存数据库，我们所需要的就是 [h2](https://web.archive.org/web/20220707143835/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22h2%22%20AND%20g%3A%22com.h2database%22) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -246,7 +246,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 为此，我们可以保留我们的`DataSource` bean 定义，或者利用预定义的属性:
 
-```
+```java
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.datasource.url=jdbc:mysql://localhost:3306/myDb?createDatabaseIfNotExist=true
 spring.datasource.username=user

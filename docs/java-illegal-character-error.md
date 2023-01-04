@@ -24,7 +24,7 @@ UTF-8 使用 8 位可变宽度编码来最大化与 ASCII 的兼容性。当我�
 
 首先，让我们在文本编辑器中编写一个简单的类，比如 Notepad。这个类只是一个代表——我们可以编写任何代码来测试。接下来，我们将我们的文件与要测试的 BOM 一起保存:
 
-```
+```java
 public class TestBOM {
     public static void main(String ...args){
         System.out.println("BOM Test");
@@ -34,13 +34,13 @@ public class TestBOM {
 
 现在，当我们试图使用`javac`命令编译这个文件时:
 
-```
+```java
 $ javac ./TestBOM.java
 ```
 
 因此，我们得到错误消息:
 
-```
+```java
 ∩╗┐public class TestBOM {
  ^
 .\TestBOM.java:1: error: illegal character: '\u00bf'
@@ -63,7 +63,7 @@ $ javac ./TestBOM.java
 
 首先，我们将使用`BufferedReader` 类测试文件:
 
-```
+```java
 @Test
 public void whenInputFileHasBOM_thenUseInputStream() throws IOException {
     String line;
@@ -79,7 +79,7 @@ public void whenInputFileHasBOM_thenUseInputStream() throws IOException {
 
 在这种情况下，当我们试图断言字符串相等时，**我们得到一个错误**:
 
-```
+```java
 org.opentest4j.AssertionFailedError: expected: <Hello world with BOM.> but was: <Hello world with BOM.>
 Expected :Hello world with BOM.
 Actual   :Hello world with BOM.
@@ -89,7 +89,7 @@ Actual   :Hello world with BOM.
 
 此外，**快速解决方案是替换 BOM 字符**:
 
-```
+```java
 @Test
 public void whenInputFileHasBOM_thenUseInputStreamWithReplace() throws IOException {
     String line;
@@ -109,7 +109,7 @@ public void whenInputFileHasBOM_thenUseInputStreamWithReplace() throws IOExcepti
 
 另外， **[Apache Commons IO](/web/20220524061145/https://www.baeldung.com/apache-commons-io) 库提供了`BOMInputStream` 类**。这个类是一个包装器，包含一个编码的`ByteOrderMark`作为它的第一个字节。让我们看看它是如何工作的:
 
-```
+```java
 @Test
 public void whenInputFileHasBOM_thenUseBOMInputStream() throws IOException {
     String line;
@@ -133,7 +133,7 @@ public void whenInputFileHasBOM_thenUseBOMInputStream() throws IOException {
 
 另一方面，**处理 BOM 的另一个有用的库是 Google Data (GData)** 。这是一个较旧的库，但它有助于管理文件中的 BOM。它使用 XML 作为底层格式。让我们来看看它的实际应用:
 
-```
+```java
 @Test
 public void whenInputFileHasBOM_thenUseGoogleGdata() throws IOException {
     char[] actual = new char[21];

@@ -16,7 +16,7 @@
 
 通常，过滤器函数通过调用过滤器链中的下一个函数返回:
 
-```
+```java
 ExchangeFilterFunction filterFunction = (clientRequest, nextFilter) -> {
     LOG.info("WebClient fitler executed");
     return nextFilter.exchange(clientRequest);
@@ -29,7 +29,7 @@ ExchangeFilterFunction filterFunction = (clientRequest, nextFilter) -> {
 
 那么，让我们看看如何创建一个`WebClient`。第一个选项是使用或不使用基本 URL 来调用`WebClient.create()`:
 
-```
+```java
 WebClient webClient = WebClient.create();
 ```
 
@@ -37,7 +37,7 @@ WebClient webClient = WebClient.create();
 
 **通过使用`WebClient.builder()`，我们能够添加过滤器**:
 
-```
+```java
 WebClient webClient = WebClient.builder()
   .filter(filterFunction)
   .build();
@@ -49,7 +49,7 @@ WebClient webClient = WebClient.builder()
 
 过滤器检查请求方法，并在 GET 请求的情况下增加“全局”计数器:
 
-```
+```java
 ExchangeFilterFunction countingFunction = (clientRequest, nextFilter) -> {
     HttpMethod httpMethod = clientRequest.method();
     if (httpMethod == HttpMethod.GET) {
@@ -63,7 +63,7 @@ ExchangeFilterFunction countingFunction = (clientRequest, nextFilter) -> {
 
 随后，我们继续使用新修改的请求对象执行过滤器链:
 
-```
+```java
 ExchangeFilterFunction urlModifyingFilter = (clientRequest, nextFilter) -> {
     String oldUrl = clientRequest.url().toString();
     URI newUrl = URI.create(oldUrl + "/" + version);
@@ -78,7 +78,7 @@ ExchangeFilterFunction urlModifyingFilter = (clientRequest, nextFilter) -> {
 
 然后我们要做的就是打印到一些输出流:
 
-```
+```java
 ExchangeFilterFunction loggingFilter = (clientRequest, nextFilter) -> {
     printStream.print("Sending request " + clientRequest.method() + " " + clientRequest.url());
     return nextFilter.exchange(clientRequest);
@@ -93,7 +93,7 @@ ExchangeFilterFunction loggingFilter = (clientRequest, nextFilter) -> {
 
 因此，我们不需要为它定义过滤器:
 
-```
+```java
 WebClient webClient = WebClient.builder()
   .filter(ExchangeFilterFunctions.basicAuthentication(user, password))
   .build(); 

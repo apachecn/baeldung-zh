@@ -38,7 +38,7 @@ Java 5 中添加了`Future`接口作为异步计算的结果，但是它没有�
 
 当计算完成时，该方法通过向`complete`方法提供结果来完成`Future`:
 
-```
+```java
 public Future<String> calculateAsync() throws InterruptedException {
     CompletableFuture<String> completableFuture = new CompletableFuture<>();
 
@@ -60,7 +60,7 @@ public Future<String> calculateAsync() throws InterruptedException {
 
 还可以观察到，`get`方法抛出了一些检查过的异常，即`ExecutionException`(封装了在计算过程中发生的异常)和`InterruptedException`(表示执行方法的线程被中断的异常):
 
-```
+```java
 Future<String> completableFuture = calculateAsync();
 
 // ... 
@@ -71,7 +71,7 @@ assertEquals("Hello", result);
 
 **如果我们已经知道了一个计算**的结果，我们可以使用静态`completedFuture`方法，带有一个表示这个计算结果的参数。因此，`Future`的`get`方法永远不会阻塞，而是立即返回这个结果:
 
-```
+```java
 Future<String> completableFuture = 
   CompletableFuture.completedFuture("Hello");
 
@@ -97,7 +97,7 @@ assertEquals("Hello", result);
 
 这允许我们**提供一个`Supplier`的实例作为 lambda 表达式，执行计算并返回结果**。这很简单，因为:
 
-```
+```java
 CompletableFuture<String> future
   = CompletableFuture.supplyAsync(() -> "Hello");
 
@@ -110,7 +110,7 @@ assertEquals("Hello", future.get());
 
 处理计算结果的最普通的方法是将它提供给一个函数。`thenApply`方法正是这样做的；它接受一个`Function`实例，用它来处理结果，并返回一个保存函数返回值的`Future`:
 
-```
+```java
 CompletableFuture<String> completableFuture
   = CompletableFuture.supplyAsync(() -> "Hello");
 
@@ -124,7 +124,7 @@ assertEquals("Hello World", future.get());
 
 在`CompletableFuture.` 中有一个用于这个用例的方法。`thenAccept`方法接收一个`Consumer`，并把计算结果传递给它。然后最后一个`future.get()`调用返回一个`Void`类型的实例:
 
-```
+```java
 CompletableFuture<String> completableFuture
   = CompletableFuture.supplyAsync(() -> "Hello");
 
@@ -136,7 +136,7 @@ future.get();
 
 最后，如果我们既不需要计算的值，也不想在链的末端返回某个值，那么我们可以将一个`Runnable` lambda 传递给`thenRun`方法。在下面的例子中，我们只是在调用了`future.get():`之后在控制台中打印了一行
 
-```
+```java
 CompletableFuture<String> completableFuture 
   = CompletableFuture.supplyAsync(() -> "Hello");
 
@@ -156,7 +156,7 @@ future.get();
 
 注意，这个方法采用了一个返回`CompletableFuture`实例的函数。此函数的自变量是上一个计算步骤的结果。这允许我们在下一个`CompletableFuture`的 lambda 中使用这个值:
 
-```
+```java
 CompletableFuture<String> completableFuture 
   = CompletableFuture.supplyAsync(() -> "Hello")
     .thenCompose(s -> CompletableFuture.supplyAsync(() -> s + " World"));
@@ -170,7 +170,7 @@ assertEquals("Hello World", completableFuture.get());
 
 如果我们想执行两个独立的`Futures`并对它们的结果做一些事情，我们可以使用接受带有两个参数的`Future`和`Function`的`thenCombine`方法来处理两个结果:
 
-```
+```java
 CompletableFuture<String> completableFuture 
   = CompletableFuture.supplyAsync(() -> "Hello")
     .thenCombine(CompletableFuture.supplyAsync(
@@ -181,7 +181,7 @@ assertEquals("Hello World", completableFuture.get());
 
 一个更简单的情况是，当我们想要用两个`Futures`结果做一些事情，但是不需要通过`Future`链传递任何结果值。`thenAcceptBoth`方法有助于:
 
-```
+```java
 CompletableFuture future = CompletableFuture.supplyAsync(() -> "Hello")
   .thenAcceptBoth(CompletableFuture.supplyAsync(() -> " World"),
     (s1, s2) -> System.out.println(s1 + s2));
@@ -197,7 +197,7 @@ CompletableFuture future = CompletableFuture.supplyAsync(() -> "Hello")
 
 所以当我们想要转换一个`CompletableFuture `调用的结果时，这个方法是有用的:
 
-```
+```java
 CompletableFuture<Integer> finalResult = compute().thenApply(s-> s + 1);
 ```
 
@@ -205,7 +205,7 @@ CompletableFuture<Integer> finalResult = compute().thenApply(s-> s + 1);
 
 `thenCompose()`方法与`thenApply()`相似，都返回一个新的完成阶段。然而， **`thenCompose()`使用前一阶段作为自变量**。它将展平并直接返回一个`Future`结果，而不是像我们在`thenApply():`中看到的那样嵌套未来
 
-```
+```java
 CompletableFuture<Integer> computeAnother(Integer i){
     return CompletableFuture.supplyAsync(() -> 10 + i);
 }
@@ -222,7 +222,7 @@ CompletableFuture<Integer> finalResult = compute().thenCompose(this::computeAnot
 
 `CompletableFuture.allOf`静态方法允许等待作为 var-arg 提供的所有`Futures`的完成:
 
-```
+```java
 CompletableFuture<String> future1  
   = CompletableFuture.supplyAsync(() -> "Hello");
 CompletableFuture<String> future2  
@@ -244,7 +244,7 @@ assertTrue(future3.isDone());
 
 注意，`CompletableFuture.allOf()`的返回类型是一个`CompletableFuture<Void>`。这种方法的局限性在于，它不会返回所有`Futures`的组合结果。相反，我们必须手动从`Futures`获取结果。幸运的是，`CompletableFuture.join()`方法和 Java 8 Streams API 使它变得简单:
 
-```
+```java
 String combined = Stream.of(future1, future2, future3)
   .map(CompletableFuture::join)
   .collect(Collectors.joining(" "));
@@ -262,7 +262,7 @@ assertEquals("Hello Beautiful World", combined);
 
 在下面的例子中，当由于没有提供名称而导致问候语的异步计算出错时，我们使用`handle`方法来提供默认值:
 
-```
+```java
 String name = null;
 
 // ...
@@ -280,7 +280,7 @@ assertEquals("Hello, Stranger!", completableFuture.get());
 
 作为另一个场景，假设我们想要手动完成带有值的`Future`,就像第一个例子一样，但是也有能力用异常来完成它。`completeExceptionally`方法就是为此而设计的。以下示例中的`completableFuture.get()`方法抛出一个以`RuntimeException`为原因的`ExecutionException`:
 
-```
+```java
 CompletableFuture<String> completableFuture = new CompletableFuture<>();
 
 // ...
@@ -303,7 +303,7 @@ completableFuture.get(); // ExecutionException
 
 下面是一个修改后的例子，用一个`Function`实例处理计算结果。唯一可见的区别是`thenApplyAsync`方法，但是在幕后，函数的应用程序被包装在一个`ForkJoinTask`实例中(关于`fork/join`框架的更多信息，请参见文章[“Java 中的 Fork/Join 框架指南”](/web/20220812013211/https://www.baeldung.com/java-fork-join))。这使我们能够进一步并行化计算，并更高效地利用系统资源:
 
-```
+```java
 CompletableFuture<String> completableFuture  
   = CompletableFuture.supplyAsync(() -> "Hello");
 

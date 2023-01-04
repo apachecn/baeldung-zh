@@ -14,7 +14,7 @@
 
 让我们考虑一个典型的竞争情况，我们计算总和，多个线程执行`calculate()` 方法:
 
-```
+```java
 public class BaeldungSynchronizedMethods {
 
     private int sum = 0;
@@ -29,7 +29,7 @@ public class BaeldungSynchronizedMethods {
 
 那么让我们写一个简单的测试:
 
-```
+```java
 @Test
 public void givenMultiThread_whenNonSyncMethod() {
     ExecutorService service = Executors.newFixedThreadPool(3);
@@ -47,7 +47,7 @@ public void givenMultiThread_whenNonSyncMethod() {
 
 如果我们串行执行，预期的输出将是 1000，但是**我们的多线程执行几乎每次都失败**,因为实际输出不一致:
 
-```
+```java
 java.lang.AssertionError: expected:<1000> but was:<965>
 at org.junit.Assert.fail(Assert.java:88)
 at org.junit.Assert.failNotEquals(Assert.java:834)
@@ -72,7 +72,7 @@ at org.junit.Assert.failNotEquals(Assert.java:834)
 
 我们可以在方法声明中添加`synchronized` 关键字，使方法同步:
 
-```
+```java
 public synchronized void synchronisedCalculate() {
     setSum(getSum() + 1);
 }
@@ -80,7 +80,7 @@ public synchronized void synchronisedCalculate() {
 
 注意，一旦我们同步了方法，测试用例通过，实际输出为 1000:
 
-```
+```java
 @Test
 public void givenMultiThread_whenMethodSync() {
     ExecutorService service = Executors.newFixedThreadPool(3);
@@ -100,7 +100,7 @@ public void givenMultiThread_whenMethodSync() {
 
 静态方法`synchronized` 就像实例方法:
 
-```
+```java
  public static synchronized void syncStaticCalculate() {
      staticSum = staticSum + 1;
  }
@@ -110,7 +110,7 @@ public void givenMultiThread_whenMethodSync() {
 
 让我们来测试一下:
 
-```
+```java
 @Test
 public void givenMultiThread_whenStaticSyncMethod() {
     ExecutorService service = Executors.newCachedThreadPool();
@@ -128,7 +128,7 @@ public void givenMultiThread_whenStaticSyncMethod() {
 
 有时我们不想同步整个方法，只同步其中的一些指令。我们可以通过`applying`同步到一个块来实现这一点:
 
-```
+```java
 public void performSynchronisedTask() {
     synchronized (this) {
         setCount(getCount()+1);
@@ -138,7 +138,7 @@ public void performSynchronisedTask() {
 
 然后我们可以测试变化:
 
-```
+```java
 @Test
 public void givenMultiThread_whenBlockSync() {
     ExecutorService service = Executors.newFixedThreadPool(3);
@@ -157,7 +157,7 @@ public void givenMultiThread_whenBlockSync() {
 
 如果方法是`static`，我们将传递类名来代替对象引用，并且该类将是块同步的监视器:
 
-```
+```java
 public static void performStaticSyncTask(){
     synchronized (SynchronisedBlocks.class) {
         setStaticCount(getStaticCount() + 1);
@@ -167,7 +167,7 @@ public static void performStaticSyncTask(){
 
 让我们测试一下`static` 方法中的代码块:
 
-```
+```java
 @Test
 public void givenMultiThread_whenStaticSyncBlock() {
     ExecutorService service = Executors.newCachedThreadPool();
@@ -185,7 +185,7 @@ public void givenMultiThread_whenStaticSyncBlock() {
 
 **`synchronized`方法和块后面的锁是可重入的。**这意味着当前线程可以在持有锁的同时反复获取同一个`synchronized`锁:
 
-```
+```java
 Object lock = new Object();
 synchronized (lock) {
     System.out.println("First time acquiring it");

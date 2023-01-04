@@ -28,7 +28,7 @@
 
 首先，我们将实现所有 Dao 的基础层——一个使用泛型的抽象类，旨在进行扩展:
 
-```
+```java
 public abstract class AbstractJpaDAO< T extends Serializable > {
 
    private Class< T > clazz;
@@ -72,7 +72,7 @@ public abstract class AbstractJpaDAO< T extends Serializable > {
 
 另外，请注意实体`**Class**`是在构造函数中传递的，将在泛型操作中使用:
 
-```
+```java
 @Repository
 public class FooDAO extends AbstractJPADAO< Foo > implements IFooDAO{
 

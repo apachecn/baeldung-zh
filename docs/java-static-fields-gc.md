@@ -36,7 +36,7 @@ Java 提供了一个非常好的自动内存管理特性。在大多数情况下
 
 首先，让我们创建自己的`CustomClassloader`将从应用程序的资源文件夹中加载一个类。为了让我们的类加载器工作，我们应该覆盖`loadClass(String name)` 方法:
 
-```
+```java
 public class CustomClassloader extends ClassLoader {
 
     public static final String PREFIX = "com.baeldung.classloader";
@@ -60,7 +60,7 @@ public class CustomClassloader extends ClassLoader {
 
 在这个实现中，我们使用了`getClass`方法，它隐藏了从资源中加载类的复杂性:
 
-```
+```java
 private Class<?> getClass(String name) {
     String fileName = name.replace('.', File.separatorChar) + ".class";
     try {
@@ -86,7 +86,7 @@ private Class<?> getClass(String name) {
 
 我们将使用一个自定义类来扮演我们的`static`字段的容器角色。在定义了类加载器的实现之后，我们可以用它来上传我们已经准备好的类。这是一个简单的类:
 
-```
+```java
 public class GarbageCollectedStaticFieldHolder {
 
     private static GarbageCollectedInnerObject garbageCollectedInnerObject =
@@ -102,7 +102,7 @@ public class GarbageCollectedStaticFieldHolder {
 
 `GarbageCollectedInnerObject `将代表一个我们想变成垃圾的物体。为了简单和方便起见，这个类与`GarbageCollectedStaticFieldHolder. `定义在同一个文件中。这个类包含一条消息，并且覆盖了`finalize()`方法。**虽然`[finalize()](/web/20221103190720/https://www.baeldung.com/java-finalize) `方法被弃用并且有很多缺点，但它将允许我们可视化垃圾收集器何时移除对象。我们将仅出于演示目的使用这种方法。下面是我们班的一个`static`字段:**
 
-```
+```java
 class GarbageCollectedInnerObject {
 
     private final String message;
@@ -126,7 +126,7 @@ class GarbageCollectedInnerObject {
 
 现在我们可以上传和实例化我们的类。创建实例后，我们可以确保类已上传，对象已创建，并且静态字段包含所需的信息:
 
-```
+```java
 private static void loadClass() {
     try {
         final String className = "com.baeldung.classloader.GarbageCollectedStaticFieldHolder";
@@ -142,7 +142,7 @@ private static void loadClass() {
 
 这个方法应该创建我们的特殊类的实例，并输出消息:
 
-```
+```java
 Hello from a garbage collected static field
 ```
 
@@ -150,7 +150,7 @@ Hello from a garbage collected static field
 
 现在，让我们启动我们的应用程序，并尝试删除垃圾:
 
-```
+```java
 public static void main(String[] args) throws InterruptedException {
     loadClass();
     System.gc();
@@ -160,7 +160,7 @@ public static void main(String[] args) throws InterruptedException {
 
 调用方法`loadClass(),`后，该方法中的所有变量，即 classloader、我们的类和实例，都将超出范围，并失去与垃圾收集根的连接。也可以将`null`赋给引用，但是使用 scope 的选项更简洁:
 
-```
+```java
 public static void main(String[] args) throws InterruptedException {
     CustomClassloader loader;
     Class<?> clazz;
@@ -184,7 +184,7 @@ public static void main(String[] args) throws InterruptedException {
 
 尽管我们对这段代码有一些问题，但它在大多数情况下都能工作。**主要问题是我们不能在 Java 中强制垃圾收集，并且 [`System.gc()`](/web/20221103190720/https://www.baeldung.com/java-system-gc#systemgc) 的调用不能保证车库收集会发生。**然而，在大多数 JVM 实现中，这将触发[大规模垃圾收集](/web/20221103190720/https://www.baeldung.com/java-choosing-gc-algorithm)。因此，我们应该在输出中看到以下几行:
 
-```
+```java
 Hello from a garbage collected static field 
 The object is garbage now
 ```
@@ -195,7 +195,7 @@ The object is garbage now
 
 我们还可以更自然地触发垃圾收集。这种方式会更稳定。但是，调用垃圾收集器需要更多的周期:
 
-```
+```java
 public static void main(String[] args) {
     while (true) {
         loadClass();

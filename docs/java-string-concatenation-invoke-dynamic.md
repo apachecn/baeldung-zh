@@ -12,7 +12,7 @@
 
 在 Java 9 之前，重要的字符串连接是使用`[StringBuilder](/web/20220815061512/https://www.baeldung.com/java-string-builder-string-buffer)`实现的。例如，让我们考虑下面的方法:
 
-```
+```java
 String concat(String s, int i) {
     return s + i;
 }
@@ -20,7 +20,7 @@ String concat(String s, int i) {
 
 这个简单代码的字节码如下所示(带有`javap -c`):
 
-```
+```java
 java.lang.String concat(java.lang.String, int);
   Code:
      0: new           #2      // class StringBuilder
@@ -73,7 +73,7 @@ java.lang.String concat(java.lang.String, int);
 
 让我们看看 Java 9+编译器如何为相同的方法生成字节码:
 
-```
+```java
 java.lang.String concat(java.lang.String, int);
   Code:
      0: aload_0
@@ -90,7 +90,7 @@ java.lang.String concat(java.lang.String, int);
 
 为了查看运行时逻辑，让我们检查引导方法表(用`javap -c -v`):
 
-```
+```java
 BootstrapMethods:
   0: #25 REF_invokeStatic java/lang/invoke/StringConcatFactory.makeConcatWithConstants:
     (Ljava/lang/invoke/MethodHandles$Lookup;
@@ -115,7 +115,7 @@ BootstrapMethods:
 
 为了更好地理解食谱的作用，让我们考虑一个简单的数据类:
 
-```
+```java
 public class Person {
 
     private String firstName;
@@ -135,7 +135,7 @@ public class Person {
 
 为了生成一个`String`表示，JVM 将`firstName`和`lastName`字段作为参数传递给`invokedynamic`指令:
 
-```
+```java
  0: aload_0
  1: getfield      #7        // Field firstName:LString;
  4: aload_0
@@ -146,7 +146,7 @@ public class Person {
 
 这一次，引导方法表看起来有点不同:
 
-```
+```java
 BootstrapMethods:
   0: #28 REF_invokeStatic StringConcatFactory.makeConcatWithConstants // truncated
     Method arguments:
@@ -170,7 +170,7 @@ BootstrapMethods:
 
 **要使用第二种风格，我们应该将`-XDstringConcat=indy`选项传递给 Java 编译器**。例如，如果我们用这个标志编译同一个`Person`类，那么编译器会生成下面的字节码:
 
-```
+```java
 public java.lang.String toString();
     Code:
        0: ldc           #16      // String Person{firstName=\'

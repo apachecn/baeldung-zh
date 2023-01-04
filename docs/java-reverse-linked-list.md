@@ -20,7 +20,7 @@
 
 让我们首先用一个`ListNode`类来表示一个链表的元素:
 
-```
+```java
 public class ListNode {
 
     private int data;
@@ -42,7 +42,7 @@ public class ListNode {
 
 一个链表可以包含多个`ListNode`对象。例如，我们可以用一个循环来构造上面的样本链表:
 
-```
+```java
 ListNode constructLinkedList() {
     ListNode head = null;
     ListNode tail = null;
@@ -63,7 +63,7 @@ ListNode constructLinkedList() {
 
 让我们用 Java 实现[迭代算法](/web/20221101010756/https://www.baeldung.com/cs/reverse-linked-list#iterative):
 
-```
+```java
 ListNode reverseList(ListNode head) {
     ListNode previous = null;
     ListNode current = head;
@@ -83,7 +83,7 @@ ListNode reverseList(ListNode head) {
 
 我们可以用一个简单的单元测试来验证这个迭代实现:
 
-```
+```java
 @Test
 public void givenLinkedList_whenIterativeReverse_thenOutputCorrectResult() {
     ListNode head = constructLinkedList();
@@ -111,7 +111,7 @@ public void givenLinkedList_whenIterativeReverse_thenOutputCorrectResult() {
 
 现在，让我们用 Java 实现[递归算法](/web/20221101010756/https://www.baeldung.com/cs/reverse-linked-list#recursive):
 
-```
+```java
 ListNode reverseListRecursive(ListNode head) {
     if (head == null) {
         return null;
@@ -130,7 +130,7 @@ ListNode reverseListRecursive(ListNode head) {
 
 类似地，我们可以用一个简单的单元测试来验证这个递归实现:
 
-```
+```java
 @Test
 public void givenLinkedList_whenRecursiveReverse_thenOutputCorrectResult() {
     ListNode head = constructLinkedList();

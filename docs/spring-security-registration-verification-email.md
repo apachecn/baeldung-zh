@@ -21,7 +21,7 @@
 
 首先，我们将使用新的`expireDate`重置现有令牌。然后，我们将向用户发送一封新的电子邮件，其中包含新的链接/令牌:
 
-```
+```java
 @GetMapping("/user/resendRegistrationToken")
 public GenericResponse resendRegistrationToken(
   HttpServletRequest request, @RequestParam("token") String existingToken) {
@@ -43,7 +43,7 @@ public GenericResponse resendRegistrationToken(
 
 以及用于实际构建用户收到的电子邮件消息的实用程序—`constructResendVerificationTokenEmail()`:
 
-```
+```java
 private SimpleMailMessage constructResendVerificationTokenEmail
   (String contextPath, Locale locale, VerificationToken newToken, User user) {
     String confirmationUrl = 
@@ -60,7 +60,7 @@ private SimpleMailMessage constructResendVerificationTokenEmail
 
 我们还需要修改现有的注册功能——在模型**上添加一些关于令牌**到期的新信息:
 
-```
+```java
 @GetMapping("/registrationConfirm")
 public String confirmRegistration(
   Locale locale, Model model, @RequestParam("token") String token) {
@@ -91,7 +91,7 @@ public String confirmRegistration(
 
 在某些情况下，前面的功能是抛出异常；这些异常需要被处理，我们将用定制的异常处理程序来处理这些异常:
 
-```
+```java
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -137,7 +137,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 *   我们使用`@ControllerAdvice`注释来处理整个应用程序中的异常
 *   我们使用一个简单的对象`GenericResponse`来发送响应:
 
-```
+```java
 public class GenericResponse {
     private String message;
     private String error;
@@ -159,7 +159,7 @@ public class GenericResponse {
 
 我们现在将修改`badUser.html`,使用户仅在其令牌过期时才能获得新的`VerificationToken`:
 
-```
+```java
 <html>
 <head>
 <title th:text="#{label.badUser.title}">bad user</title>

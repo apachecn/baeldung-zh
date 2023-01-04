@@ -99,7 +99,7 @@ Spring Security 允许将我们的应用程序配置为 OAuth2 客户端。
 
 正如我们在 OAuth2 登录文章的[中看到的，我们可以通过编程方式配置它，或者通过使用属性定义我们的注册来依赖 Spring Boot 自动配置:](/web/20220617075720/https://www.baeldung.com/spring-security-5-oauth2-login#setup)
 
-```
+```java
 spring.security.oauth2.client.registration.bael.authorization-grant-type=client_credentials
 spring.security.oauth2.client.registration.bael.client-id=bael-client-id
 spring.security.oauth2.client.registration.bael.client-secret=bael-secret
@@ -115,7 +115,7 @@ spring.security.oauth2.client.provider.bael.token-uri=http://localhost:8085/oaut
 
 例如，假设我们有一个`cron`作业试图在我们的应用程序中使用`WebClient`来获得一个安全的资源:
 
-```
+```java
 @Autowired
 private WebClient webClient;
 
@@ -136,7 +136,7 @@ public void logResourceServiceResponse() {
 
 接下来，让我们设置已经在调度任务中自动连接的`webClient`实例:
 
-```
+```java
 @Bean
 WebClient webClient(ReactiveClientRegistrationRepository clientRegistrations) {
     ServerOAuth2AuthorizedClientExchangeFilterFunction oauth =
@@ -156,7 +156,7 @@ WebClient webClient(ReactiveClientRegistrationRepository clientRegistrations) {
 
 否则，我们必须在 cron 作业中定义请求时指定它:
 
-```
+```java
 webClient.get()
   .uri("http://localhost:8084/retrieve-resource")
   .attributes(
@@ -170,7 +170,7 @@ webClient.get()
 
 如果我们在启用了`DEBUG`日志记录级别的情况下运行我们的应用程序，我们将能够看到 Spring Security 正在为我们执行的调用:
 
-```
+```java
 o.s.w.r.f.client.ExchangeFunctions:
   HTTP POST http://localhost:8085/oauth/token
 o.s.http.codec.json.Jackson2JsonDecoder:
@@ -197,7 +197,7 @@ c.b.w.c.service.WebClientChonJob:
 
 为了使用授权代码流执行 OAuth2 流程，我们需要为我们的客户端注册和提供者定义更多的属性:
 
-```
+```java
 spring.security.oauth2.client.registration.bael.client-name=bael
 spring.security.oauth2.client.registration.bael.client-id=bael-client-id
 spring.security.oauth2.client.registration.bael.client-secret=bael-secret
@@ -240,7 +240,7 @@ spring.security.oauth2.client.provider.bael.user-name-attribute=name
 
 如果这是我们的情况，那么**只需在`ServerHttpSecurity `定义中包含`oauth2Login`指令就足以让我们的应用程序也作为 OAuth2 客户端工作:**
 
-```
+```java
 @Bean
 public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
     http.authorizeExchange()
@@ -256,7 +256,7 @@ public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http)
 
 现在是时候放置我们的`WebClient`实例了:
 
-```
+```java
 @Bean
 WebClient webClient(
   ReactiveClientRegistrationRepository clientRegistrations,
@@ -286,7 +286,7 @@ WebClient webClient(
 
 因此，当用户与我们的应用程序交互时，我们使用这种授权类型，通常调用 HTTP 端点:
 
-```
+```java
 @RestController
 public class ClientRestController {
 
@@ -311,7 +311,7 @@ public class ClientRestController {
 
 在我们调用端点之后，应用程序验证我们尚未在应用程序中进行身份验证:
 
-```
+```java
 o.s.w.s.adapter.HttpWebHandlerAdapter: HTTP GET "/auth-code"
 ...
 HTTP/1.1 302 Found
@@ -320,7 +320,7 @@ Location: /oauth2/authorization/bael
 
 应用程序重定向到授权服务的端点，使用提供者的注册中心中存在的凭证进行身份验证(在我们的例子中，我们将使用`bael-user/bael-password`):
 
-```
+```java
 HTTP/1.1 302 Found
 Location: http://localhost:8085/oauth/authorize
   ?response_type=code
@@ -331,32 +331,32 @@ Location: http://localhost:8085/oauth/authorize
 
 通过身份验证后，用户代理被发送回重定向 URI，连同作为查询参数的代码和第一次发送的状态值(以避免 [CSRF 攻击](https://web.archive.org/web/20220617075720/https://spring.io/blog/2011/11/30/cross-site-request-forgery-and-oauth2)):
 
-```
+```java
 o.s.w.s.adapter.HttpWebHandlerAdapter:HTTP GET "/login/oauth2/code/bael?code=...&state;=...
 ```
 
 然后，应用程序使用该代码来获取访问令牌:
 
-```
+```java
 o.s.w.r.f.client.ExchangeFunctions:HTTP POST http://localhost:8085/oauth/token
 ```
 
 它获取用户信息:
 
-```
+```java
 o.s.w.r.f.client.ExchangeFunctions:HTTP GET http://localhost:8084/user
 ```
 
 它将用户代理重定向到原始端点:
 
-```
+```java
 HTTP/1.1 302 Found
 Location: /auth-code
 ```
 
 最后，我们的`WebClient`实例可以成功请求安全资源:
 
-```
+```java
 o.s.w.r.f.client.ExchangeFunctions:HTTP GET http://localhost:8084/retrieve-resource
 o.s.w.r.f.client.ExchangeFunctions:Response 200 OK
 o.s.core.codec.StringDecoder :Decoded "This is the resource!"
@@ -372,7 +372,7 @@ o.s.core.codec.StringDecoder :Decoded "This is the resource!"
 
 **由于我们将`Principal`与授权客户关联起来，我们可以使用`@RegisteredOAuth2AuthorizedClient `注释:**来获得`OAuth2AuthorizedClient `实例
 
-```
+```java
 @GetMapping("/auth-code-annotated")
 Mono<String> useOauthWithAuthCodeAndAnnotation(
   @RegisteredOAuth2AuthorizedClient("bael") OAuth2AuthorizedClient authorizedClient) {
@@ -398,7 +398,7 @@ Mono<String> useOauthWithAuthCodeAndAnnotation(
 
 首先，为了清楚起见，在定义重定向 URI 属性时，我们可以使用`authorize `动作而不是`login `动作:
 
-```
+```java
 spring.security.oauth2.client.registration.bael
   .redirect-uri=http://localhost:8080/login/oauth2/code/bael
 ```
@@ -409,7 +409,7 @@ spring.security.oauth2.client.registration.bael
 
 即使我们不想依赖 OAuth2 登录，我们仍然希望在访问端点之前对用户进行身份验证。出于这个原因，我们还将在这里包含`formLogin`指令:
 
-```
+```java
 @Bean
 public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
     http.authorizeExchange()
@@ -441,7 +441,7 @@ public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http)
 
 简单地说，我们需要链接两个 HTTP 请求:一个从授权服务器获取认证令牌，另一个使用这个令牌获取资源:
 
-```
+```java
 @Autowired
 WebClient client;
 

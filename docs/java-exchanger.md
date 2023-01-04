@@ -14,7 +14,7 @@
 
 让我们看一个例子来理解两个带`Exchanger`的线程之间的消息交换:
 
-```
+```java
 @Test
 public void givenThreads_whenMessageExchanged_thenCorrect() {
     Exchanger<String> exchanger = new Exchanger<>();
@@ -45,7 +45,7 @@ public void givenThreads_whenMessageExchanged_thenCorrect() {
 
 这里，我们让两个线程使用公共交换器在彼此之间交换消息。让我们看一个例子，我们用一个新线程交换主线程中的一个对象:
 
-```
+```java
 @Test
 public void givenThread_WhenExchangedMessage_thenCorrect() throws InterruptedException {
     Exchanger<String> exchanger = new Exchanger<>();
@@ -75,7 +75,7 @@ public void givenThread_WhenExchangedMessage_thenCorrect() throws InterruptedExc
 
 `Exchanger`可用于创建流水线类型的模式，将数据从一个线程传递到另一个线程。在这一节中，我们将创建一个简单的线程堆栈，作为一个管道不断地在彼此之间传递数据。
 
-```
+```java
 @Test
 public void givenData_whenPassedThrough_thenCorrect() throws InterruptedException {
 

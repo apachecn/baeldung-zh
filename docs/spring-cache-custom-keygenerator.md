@@ -20,7 +20,7 @@
 
 一个`KeyGenerator`只需要实现一个方法:
 
-```
+```java
 Object generate(Object object, Method method, Object... params)
 ```
 
@@ -28,7 +28,7 @@ Object generate(Object object, Method method, Object... params)
 
 让我们看一下实现:
 
-```
+```java
 public class CustomKeyGenerator implements KeyGenerator {
 
     public Object generate(Object target, Method method, Object... params) {
@@ -43,7 +43,7 @@ public class CustomKeyGenerator implements KeyGenerator {
 
 需要注意的是，该类必须从`CachingConfigurerSupport`扩展或者实现`CacheConfigurer`:
 
-```
+```java
 @EnableCaching
 @Configuration
 public class ApplicationConfig extends CachingConfigurerSupport {
@@ -65,7 +65,7 @@ public class ApplicationConfig extends CachingConfigurerSupport {
 
 第二种方法是将它用于特定的方法:
 
-```
+```java
 @Component
 public class BookService {
 

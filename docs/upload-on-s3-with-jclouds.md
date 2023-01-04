@@ -6,7 +6,7 @@
 
 为了使用 jclouds——特别是本文中讨论的 API，应该将这个简单的 Maven 依赖项添加到项目的 pom 中:
 
-```
+```java
 <dependency>
    <groupId>org.jclouds</groupId>
    <artifactId>jclouds-allblobstore</artifactId>
@@ -18,7 +18,7 @@
 
 为了访问这些 API，第一步是创建一个`BlobStoreContext`:
 
-```
+```java
 BlobStoreContext context = 
   ContextBuilder.newBuilder("aws-s3").credentials(identity, credentials)
     .buildView(BlobStoreContext.class);
@@ -28,7 +28,7 @@ BlobStoreContext context =
 
 对于更具体的仅 S3 实现，可以类似地创建上下文:
 
-```
+```java
 BlobStoreContext context = 
   ContextBuilder.newBuilder("aws-s3").credentials(identity, credentials)
     .buildView(S3BlobStoreContext.class);
@@ -36,7 +36,7 @@ BlobStoreContext context =
 
 更具体地说:
 
-```
+```java
 BlobStoreContext context = 
   ContextBuilder.newBuilder("aws-s3").credentials(identity, credentials)
     .buildView(AWSS3BlobStoreContext.class);
@@ -52,13 +52,13 @@ jclouds 库提供了四种不同的 API 向 S3 bucket 上传内容，从简单�
 
 使用 jclouds 与 S3 桶进行交互的最简单方法是将该桶表示为一个地图。API 是从上下文中获得的:
 
-```
+```java
 InputStreamMap bucket = context.createInputStreamMap("bucketName");
 ```
 
 然后，上传一个简单的 HTML 文件:
 
-```
+```java
 bucket.putString("index1.html", "<html><body>hello world1</body></html>");
 ```
 
@@ -66,7 +66,7 @@ bucket.putString("index1.html", "<html><body>hello world1</body></html>");
 
 一个简单的集成测试可以作为一个例子:
 
-```
+```java
 @Test
 public void whenFileIsUploadedToS3WithMapApi_thenNoExceptions() {
    BlobStoreContext context = 
@@ -86,13 +86,13 @@ public void whenFileIsUploadedToS3WithMapApi_thenNoExceptions() {
 
 我们要看的下一个 API 是 Blob Map API，它是从上下文中获得的:
 
-```
+```java
 BlobMap bucket = context.createBlobMap("bucketName");
 ```
 
 API 允许客户端访问更多的底层细节，如`Content`—`Length`、`Content-Type`、`Content-Encoding`、`eTag` hash 等；要在桶中上传新内容:
 
-```
+```java
 Blob blob = bucket.blobBuilder().name("index2.html").
    payload("<html><body>hello world2</body></html>").
       contentType("text/html").calculateMD5().build();
@@ -102,7 +102,7 @@ API 还允许在创建请求上设置各种有效负载。
 
 通过 Blob Map API 向 S3 上传一个基本 HTML 文件的简单集成测试:
 
-```
+```java
 @Test
 public void whenFileIsUploadedToS3WithBlobMap_thenNoExceptions() throws IOException {
    BlobStoreContext context = 
@@ -126,13 +126,13 @@ public void whenFileIsUploadedToS3WithBlobMap_thenNoExceptions() throws IOExcept
 
 这是从上下文中获得的:
 
-```
+```java
 BlobStore blobStore = context.getBlobStore();
 ```
 
 要使用多部分支持并将文件上传到 S3:
 
-```
+```java
 Blob blob = blobStore.blobBuilder("index3.html").
    payload("<html><body>hello world3</body></html>").contentType("text/html").build();
 blobStore.putBlob("bucketName", blob, PutOptions.Builder.multipart());
@@ -142,7 +142,7 @@ payload builder 与`BlobMap` API 使用的是同一个构建器，所以在指�
 
 先前的集成测试现在启用了多部分:
 
-```
+```java
 @Test
 public void whenFileIsUploadedToS3WithBlobStore_thenNoExceptions() {
    BlobStoreContext context = 
@@ -162,13 +162,13 @@ public void whenFileIsUploadedToS3WithBlobStore_thenNoExceptions() {
 
 虽然之前的 BlobStore API 是同步的，但是还有一个用于`BlobStore`–`AsyncBlobStore`的**异步 API** 。API 同样从上下文中获得:
 
-```
+```java
 AsyncBlobStore blobStore = context.getAsyncBlobStore();
 ```
 
 两者之间唯一的区别是异步 API 为 **`PUT`异步操作**返回`ListenableFuture`:
 
-```
+```java
 Blob blob = blobStore.blobBuilder("index4.html").
    .payload("<html><body>hello world4</body></html>").build();
 blobStore.putBlob("bucketName", blob)<strong>.get()</strong>;
@@ -176,7 +176,7 @@ blobStore.putBlob("bucketName", blob)<strong>.get()</strong>;
 
 显示此操作的集成测试类似于同步测试:
 
-```
+```java
 @Test
 public void whenFileIsUploadedToS3WithBlobStore_thenNoExceptions() {
    BlobStoreContext context = 

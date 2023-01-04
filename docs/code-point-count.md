@@ -30,13 +30,13 @@
 
 ### 可用签名
 
-```
+```java
 public int codePointCount(int beginIndex, int endIndex)
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenCallCodePointCount_thenCorrect() {
     assertEquals(2, "abcd".codePointCount(0, 2));
@@ -47,7 +47,7 @@ public void whenCallCodePointCount_thenCorrect() {
 
 *   `IndexOutOfBoundsException`–如果第一个索引为负，则第一个索引大于第二个索引，或者第二个索引不小于`String`的长度。
 
-```
+```java
 @Test(expected = IndexOutOfBoundsException.class)
 public void whenSecondIndexEqualToLengthOfString_thenExceptionThrown() {
     char character = "Paul".charAt(4);

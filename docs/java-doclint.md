@@ -14,7 +14,7 @@
 
 假设我们有一个名为`Sample.java`的类文件:
 
-```
+```java
 /**
  * This sample file creates a class that
  * just displays sample string on standard output.
@@ -44,7 +44,7 @@ public class Sample {
 
 正如我们在输出中看到的，它直接提到了 Java 文件第 5 行中的错误:
 
-```
+```java
 Sample.java:5: error: unknown tag: autho
  * @autho  Baeldung
    ^
@@ -58,7 +58,7 @@ Sample.java:5: error: unknown tag: autho
 
 `none`选项禁用`-Xdoclint`选项:
 
-```
+```java
 javadoc -Xdoclint:none Sample.java
 ```
 
@@ -66,7 +66,7 @@ javadoc -Xdoclint:none Sample.java
 
 当我们想要应用与某些组相关的某些检查时，此选项很有用，例如:
 
-```
+```java
 javadoc -Xdoclint:syntax Sample.java
 ```
 
@@ -80,7 +80,7 @@ javadoc -Xdoclint:syntax Sample.java
 
 可以一次应用多个组:
 
-```
+```java
 javadoc -Xdoclint:html,syntax,accessibility Sample.java
 ```
 
@@ -90,7 +90,7 @@ javadoc -Xdoclint:html,syntax,accessibility Sample.java
 
 我们可以使用`-group`语法:
 
-```
+```java
 javadoc -Xdoclint:all,-missing
 ```
 
@@ -104,7 +104,7 @@ javadoc -Xdoclint:all,-missing
 
 对于`maven-javadoc-plugin`，从版本 3.0.0 开始，添加了新的 [doclint](https://web.archive.org/web/20220628122833/https://maven.apache.org/plugins/maven-javadoc-plugin/javadoc-mojo.html#doclint) 配置。让我们看看如何配置它来禁用 DocLint:
 
-```
+```java
 <plugins>
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -129,7 +129,7 @@ javadoc -Xdoclint:all,-missing
 
 使用早期版本(v3.0.0 之前)时，我们需要使用不同的设置:
 
-```
+```java
 <plugins>
   <plugin>
     <groupId>org.apache.maven.plugins</groupId>
@@ -145,7 +145,7 @@ javadoc -Xdoclint:all,-missing
 
 我们可以用一个简单的脚本在 Gradle 项目中停用 DocLint:
 
-```
+```java
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {
         tasks.withType(Javadoc) {

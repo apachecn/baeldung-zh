@@ -16,13 +16,13 @@
 
 在我们的演示中，我们将使用下面的`input`数组来寻找总和等于`6`的所有数字对:
 
-```
+```java
 int[] input = { 2, 4, 3, 3 }; 
 ```
 
 在这种方法中，我们的算法应该返回:
 
-```
+```java
 {2,4}, {4,2}, {3,3}, {3,3}
 ```
 
@@ -30,7 +30,7 @@ int[] input = { 2, 4, 3, 3 };
 
 **我们可能想到的实现解决方案的第一种方法是使用传统的`for`循环:**
 
-```
+```java
 for (int i = 0; i < input.length; i++) {
     for (int j = 0; j < input.length; j++) {
         if (j != i && (input[i] + input[j]) == sum) {
@@ -44,7 +44,7 @@ for (int i = 0; i < input.length; i++) {
 
 这里，我们使用方法`IntStream.range `来生成一个连续的数字流。然后，我们根据我们的条件过滤它们: `number 1 + number 2 = sum`:
 
-```
+```java
 IntStream.range(0,  input.length)
     .forEach(i -> IntStream.range(0,  input.length)
         .filter(j -> i != j && input[i] + input[j] == sum)
@@ -60,13 +60,13 @@ IntStream.range(0,  input.length)
 
 因此，使用与之前相同的`input`数组，以及`6`的目标和，我们的算法应该只返回不同的数字组合:
 
-```
+```java
 {2,4}, {3,3}
 ```
 
 **如果我们使用传统的`for `循环，我们将有:**
 
-```
+```java
 Map<Integer, Integer> pairs = new HashMap();
 for (int i : input) {
     if (pairs.containsKey(i)) {
@@ -84,7 +84,7 @@ for (int i : input) {
 
 现在让我们使用 Java 8 和 Stream API 来解决这个问题:
 
-```
+```java
 Map<Integer, Integer> pairs = new HashMap();
 IntStream.range(0, input.length).forEach(i -> {
     if (pairs.containsKey(input[i])) {

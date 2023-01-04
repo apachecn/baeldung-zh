@@ -20,7 +20,7 @@ Redis 是最流行的内存数据结构存储之一。因此，它可以用作�
 
 首先，让我们使用他们的官方 Docker 映像创建一个 Redis 实例。
 
-```
+```java
 $ docker run -p 16379:6379 -d redis:6.0 redis-server --requirepass "mypass"
 ```
 
@@ -32,7 +32,7 @@ Spring 为我们使用 [Spring Data Redis](/web/20220525011721/https://www.baeld
 
 因此，接下来，让我们确保在我们的`pom.xml`中有 [`spring-boot-starter-data-redis`](https://web.archive.org/web/20220525011721/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-starter-data-redis) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -48,7 +48,7 @@ Spring 为我们使用 [Spring Data Redis](/web/20220525011721/https://www.baeld
 
 无论哪种方式，结果都是一个`RedisTemplate`的实例:
 
-```
+```java
 @Bean
 public RedisTemplate<Long, Book> redisTemplate(RedisConnectionFactory connectionFactory) {
     RedisTemplate<Long, Book> template = new RedisTemplate<>();
@@ -64,7 +64,7 @@ public RedisTemplate<Long, Book> redisTemplate(RedisConnectionFactory connection
 
 那么，我们剩下的就是在我们的`application.properties`文件中指定一些属性:
 
-```
+```java
 spring.redis.database=0
 spring.redis.host=localhost
 spring.redis.port=16379
@@ -86,7 +86,7 @@ spring.redis.timeout=60000
 
 最后，让我们尝试在我们的应用程序中使用它。如果我们想象一个`Book` 类和一个`BookRepository,` 类，我们可以创建和检索`Book`，使用我们的`[RedisTemplate](https://web.archive.org/web/20220525011721/https://docs.spring.io/spring-data/redis/docs/current/api/org/springframework/data/redis/core/RedisTemplate.html)`与 Redis 交互作为我们的后端:
 
-```
+```java
 @Autowired
 private RedisTemplate<Long, Book> redisTemplate;
 

@@ -16,7 +16,7 @@
 
 首先，我们需要声明并初始化`ServerSocket, Socket,`和`DataInputStream`变量:
 
-```
+```java
 ServerSocket server = new ServerSocket(port);
 Socket socket = server.accept();
 DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
@@ -50,14 +50,14 @@ DataInputStream in = new DataInputStream(new BufferedInputStream(socket.getInput
 
 首先，我们需要调用`readChar()`函数来读取数据的类型，然后调用`readInt()`函数来读取数据的长度:
 
-```
+```java
 char dataType = in.readChar();
 int length = in.readInt();
 ```
 
 之后，我们需要读取正在接收的数据。**这里需要注意的重要一点是`read()`函数可能无法在一次调用中读取所有数据。因此，我们需要在 while 循环中调用`read()`:**
 
-```
+```java
 if(dataType == 's') {
     byte[] messageByte = new byte[length];
     boolean end = false;
@@ -85,7 +85,7 @@ if(dataType == 's') {
 
 而**客户端代码呢？**其实很简单:
 
-```
+```java
 char type = 's'; // s for string
 String data = "This is a string of length 29";
 byte[] dataInBytes = data.getBytes(StandardCharsets.UTF_8);

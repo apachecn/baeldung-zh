@@ -62,7 +62,7 @@ LRU 算法非常简单！如果关键字出现在`HashMap,` 中，则是缓存�
 
 首先，我们将定义我们的`Cache`接口:
 
-```
+```java
 public interface Cache<K, V> {
     boolean set(K key, V value);
     Optional<V> get(K key);
@@ -74,7 +74,7 @@ public interface Cache<K, V> {
 
 现在，我们将定义代表我们缓存的`LRUCache`类:
 
-```
+```java
 public class LRUCache<K, V> implements Cache<K, V> {
     private int size;
     private Map<K, LinkedListNode<CacheElement<K,V>>> linkedListNodeMap;
@@ -97,7 +97,7 @@ public class LRUCache<K, V> implements Cache<K, V> {
 
 第一种是`put`方法:
 
-```
+```java
 public boolean put(K key, V value) {
     CacheElement<K, V> item = new CacheElement<K, V>(key, value);
     LinkedListNode<CacheElement<K, V>> newNode;
@@ -122,7 +122,7 @@ public boolean put(K key, V value) {
 
 之后，我们用一个新的引用更新`linkedListNodeMap`,并把它移到列表的前面:
 
-```
+```java
 public LinkedListNode<T> updateAndMoveToFront(LinkedListNode<T> node, T newValue) {
     if (node.isEmpty() || (this != (node.getListReference()))) {
         return dummyNode;
@@ -141,7 +141,7 @@ public LinkedListNode<T> updateAndMoveToFront(LinkedListNode<T> node, T newValue
 
 让我们来看看我们的`get`操作:
 
-```
+```java
 public Optional<V> get(K key) {
    LinkedListNode<CacheElement<K, V>> linkedListNode = this.linkedListNodeMap.get(key);
    if(linkedListNode != null && !linkedListNode.isEmpty()) {
@@ -156,7 +156,7 @@ public Optional<V> get(K key) {
 
 其余的操作与之前相同，只有一个不同之处是关于`moveToFront`方法:
 
-```
+```java
 public LinkedListNode<T> moveToFront(LinkedListNode<T> node) {
     return node.isEmpty() ? dummyNode : updateAndMoveToFront(node, node.getElement());
 }
@@ -164,7 +164,7 @@ public LinkedListNode<T> moveToFront(LinkedListNode<T> node) {
 
 现在，让我们创建一些测试来验证我们的缓存工作正常:
 
-```
+```java
 @Test
 public void addSomeDataToCache_WhenGetData_ThenIsEqualWithCacheElement(){
     LRUCache<String,String> lruCache = new LRUCache<>(3);
@@ -179,7 +179,7 @@ public void addSomeDataToCache_WhenGetData_ThenIsEqualWithCacheElement(){
 
 现在，让我们测试驱逐策略:
 
-```
+```java
 @Test
 public void addDataToCacheToTheNumberOfSize_WhenAddOneMoreData_ThenLeastRecentlyDataWillEvict(){
     LRUCache<String,String> lruCache = new LRUCache<>(3);
@@ -197,7 +197,7 @@ public void addDataToCacheToTheNumberOfSize_WhenAddOneMoreData_ThenLeastRecently
 
 为了使这个容器线程安全，我们需要同步所有的公共方法。让我们在前面的实现中添加一个 [`ReentrantReadWriteLock`](/web/20221110094032/https://www.baeldung.com/java-thread-safety#reentrant-locks) 和 [`ConcurrentHashMap`](/web/20221110094032/https://www.baeldung.com/java-concurrent-map) :
 
-```
+```java
 public class LRUCache<K, V> implements Cache<K, V> {
     private int size;
     private final Map<K, LinkedListNode<CacheElement<K,V>>> linkedListNodeMap;
@@ -219,7 +219,7 @@ public class LRUCache<K, V> implements Cache<K, V> {
 
 现在，让我们在我们的`put`方法中添加对`writeLock`的调用:
 
-```
+```java
 public boolean put(K key, V value) {
   this.lock.writeLock().lock();
    try {
@@ -236,7 +236,7 @@ public boolean put(K key, V value) {
 
 需要`writeLock`的另一个操作是`evictElement`，我们在`put`方法中使用了它:
 
-```
+```java
 private boolean evictElement() {
     this.lock.writeLock().lock();
     try {
@@ -251,7 +251,7 @@ private boolean evictElement() {
 
 现在是时候给`get`方法添加一个`readLock`调用了:
 
-```
+```java
 public Optional<V> get(K key) {
     this.lock.readLock().lock();
     try {
@@ -266,7 +266,7 @@ public Optional<V> get(K key) {
 
 现在，让我们在并发环境中测试我们的缓存:
 
-```
+```java
 @Test
 public void runMultiThreadTask_WhenPutDataInConcurrentToCache_ThenNoDataLost() throws Exception {
     final int size = 50;

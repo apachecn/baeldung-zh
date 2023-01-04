@@ -16,7 +16,7 @@ Vavr 为`Future` API 提供了新的功能替代品。在本文中，我们将�
 
 所以，让我们把它添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>io.vavr</groupId>
     <artifactId>vavr</artifactId>
@@ -41,7 +41,7 @@ Vavr 为`Future` API 提供了新的功能替代品。在本文中，我们将�
 
 现在，让我们看看如何使用 Vavr 开始异步计算:
 
-```
+```java
 String initialValue = "Welcome to ";
 Future<String> resultFuture = Future.of(() -> someComputation());
 ```
@@ -50,7 +50,7 @@ Future<String> resultFuture = Future.of(() -> someComputation());
 
 我们可以通过简单地调用`get()`或`getOrElse()`方法之一从`Future`中提取值:
 
-```
+```java
 String result = resultFuture.getOrElse("Failed to get underlying value.");
 ```
 
@@ -64,7 +64,7 @@ String result = resultFuture.getOrElse("Failed to get underlying value.");
 
 然后，我们可以提取位于`Try`对象内部的计算结果:
 
-```
+```java
 Option<Try<String>> futureOption = resultFuture.getValue();
 Try<String> futureTry = futureOption.get();
 String result = futureTry.get();
@@ -74,7 +74,7 @@ String result = futureTry.get();
 
 我们可以简单地通过使用:
 
-```
+```java
 resultFuture.isEmpty();
 ```
 
@@ -86,7 +86,7 @@ resultFuture.isEmpty();
 
 我们可以通过传递我们选择的实现来使用另一个`ExecutorService`:
 
-```
+```java
 @Test
 public void whenChangeExecutorService_thenCorrect() {
     String result = Future.of(newSingleThreadExecutor(), () -> HELLO)
@@ -105,7 +105,7 @@ API 提供了`onSuccess()`方法，一旦`Future`成功完成，该方法就执�
 
 让我们看一个简单的例子:
 
-```
+```java
 Future<String> resultFuture = Future.of(() -> appendData(initialValue))
   .onSuccess(v -> System.out.println("Successfully Completed - Result: " + v))
   .onFailure(v -> System.out.println("Failed - Result: " + v));
@@ -113,7 +113,7 @@ Future<String> resultFuture = Future.of(() -> appendData(initialValue))
 
 方法`onComplete()`接受一个动作，只要`Future`完成了它的执行，不管`Future`是否成功。方法`andThen()`类似于`onComplete()`——它只是保证回调以特定的顺序执行:
 
-```
+```java
 Future<String> resultFuture = Future.of(() -> appendData(initialValue))
   .andThen(finalResult -> System.out.println("Completed - 1: " + finalResult))
   .andThen(finalResult -> System.out.println("Completed - 2: " + finalResult));
@@ -130,7 +130,7 @@ Future<String> resultFuture = Future.of(() -> appendData(initialValue))
 
 使用这种方法很简单:
 
-```
+```java
 resultFuture.await();
 ```
 
@@ -138,7 +138,7 @@ resultFuture.await();
 
 我们总是可以取消计算:
 
-```
+```java
 resultFuture.cancel();
 ```
 
@@ -146,7 +146,7 @@ resultFuture.cancel();
 
 为了获得被一个`Future`使用的`ExecutorService`，我们可以简单地调用`executorService()`:
 
-```
+```java
 resultFuture.executorService();
 ```
 
@@ -156,7 +156,7 @@ resultFuture.executorService();
 
 我们可以稍后从`Option`对象中提取`Throwable`:
 
-```
+```java
 @Test
 public void whenDivideByZero_thenGetThrowable2() {
     Future<Integer> resultFuture = Future.of(() -> 10 / 0)
@@ -169,7 +169,7 @@ public void whenDivideByZero_thenGetThrowable2() {
 
 此外，我们可以使用`failed()`方法将我们的实例转换为持有`Throwable`实例的`Future`:
 
-```
+```java
 @Test
 public void whenDivideByZero_thenGetThrowable1() {
     Future<Integer> resultFuture = Future.of(() -> 10 / 0);
@@ -185,7 +185,7 @@ public void whenDivideByZero_thenGetThrowable1() {
 
 我们将在前一个示例中使用这些方法:
 
-```
+```java
 @Test
 public void whenDivideByZero_thenCorrect() {
     Future<Integer> resultFuture = Future.of(() -> 10 / 0)
@@ -201,7 +201,7 @@ public void whenDivideByZero_thenCorrect() {
 
 `map()`方法允许我们在未决的`Future:`之上应用计算
 
-```
+```java
 @Test
 public void whenCallMap_thenCorrect() {
     Future<String> futureResult = Future.of(() -> "from Baeldung")
@@ -215,7 +215,7 @@ public void whenCallMap_thenCorrect() {
 
 如果我们向`map()`方法传递一个返回`Future`的函数，我们可以得到一个嵌套的`Future`结构。为了避免这种情况，我们可以利用`flatMap()`方法:
 
-```
+```java
 @Test
 public void whenCallFlatMap_thenCorrect() {
     Future<Object> futureMap = Future.of(() -> 1)
@@ -229,7 +229,7 @@ public void whenCallFlatMap_thenCorrect() {
 
 方法`transformValue()`可用于在`Future`之上应用计算，并将其中的值更改为相同类型或不同类型的另一个值:
 
-```
+```java
 @Test
 public void whenTransform_thenCorrect() {
     Future<Object> future = Future.of(() -> 5)
@@ -243,7 +243,7 @@ public void whenTransform_thenCorrect() {
 
 API 提供了将`Futures`压缩成元组的`zip()`方法——元组是几个元素的集合，这些元素可能彼此相关，也可能不相关。它们也可以是不同的类型。让我们看一个简单的例子:
 
-```
+```java
 @Test
 public void whenCallZip_thenCorrect() {
     Future<String> f1 = Future.of(() -> "hello1");
@@ -262,7 +262,7 @@ API 支持与`java.util.CompletableFuture`的集成。因此，如果我们想�
 
 让我们看看如何做到这一点:
 
-```
+```java
 @Test
 public void whenConvertToCompletableFuture_thenCorrect()
   throws Exception {
@@ -283,7 +283,7 @@ public void whenConvertToCompletableFuture_thenCorrect()
 
 例如，我们可以利用方法`recover()`返回另一个结果，比如一个错误消息:
 
-```
+```java
 @Test
 public void whenFutureFails_thenGetErrorMessage() {
     Future<String> future = Future.of(() -> "Hello".substring(-1))
@@ -296,7 +296,7 @@ public void whenFutureFails_thenGetErrorMessage() {
 
 或者，我们可以使用`recoverWith()`返回另一个`Future`计算的结果:
 
-```
+```java
 @Test
 public void whenFutureFails_thenGetAnotherFuture() {
     Future<String> future = Future.of(() -> "Hello".substring(-1))
@@ -311,7 +311,7 @@ public void whenFutureFails_thenGetAnotherFuture() {
 
 如果第一个`Future`成功，那么它返回它的结果。否则，如果第二个`Future`成功，那么它返回它的结果。如果两个`Futures`都失败，那么`failed()`方法返回一个`Throwable`的`Future`，它保存第一个`Future`的错误:
 
-```
+```java
 @Test
 public void whenBothFuturesFail_thenGetErrorMessage() {
     Future<String> f1 = Future.of(() -> "Hello".substring(-1));

@@ -32,7 +32,7 @@
 
 这里我们将尝试从类`Zoo`中反序列化一个实例，该实例具有属性`animal`和`abstract`类型`Animal`:
 
-```
+```java
 public class Zoo {
     public Animal animal;
 
@@ -54,7 +54,7 @@ class Cat extends Animal {
 
 当我们试图将 JSON `String`反序列化为 Zoo 实例时，它抛出 JsonMappingException:不能构造实例:
 
-```
+```java
 @Test(expected = JsonMappingException.class)
 public void givenAbstractClass_whenDeserializing_thenException() 
   throws IOException {
@@ -67,7 +67,7 @@ public void givenAbstractClass_whenDeserializing_thenException()
 
 这是**完整异常**:
 
-```
+```java
 com.fasterxml.jackson.databind.JsonMappingException: 
 Can not construct instance of org.baeldung.jackson.exception.Animal,
   problem: abstract types either need to be mapped to concrete types, 
@@ -83,7 +83,7 @@ Can not construct instance of org.baeldung.jackson.exception.Animal,
 
 我们可以用一个简单的注释来解决这个问题——抽象类上的`@JsonDeserialize`:
 
-```
+```java
 @JsonDeserialize(as = Cat.class)
 abstract class Animal {...}
 ```
@@ -100,7 +100,7 @@ abstract class Animal {...}
 
 在下面的例子中，类`User`没有默认的构造函数:
 
-```
+```java
 public class User {
     public int id;
     public String name;
@@ -114,7 +114,7 @@ public class User {
 
 当我们试图将一个 JSON 字符串反序列化给用户时，会抛出 JsonMappingException:找不到合适的构造函数:
 
-```
+```java
 @Test(expected = JsonMappingException.class)
 public void givenNoDefaultConstructor_whenDeserializing_thenException() 
   throws IOException {
@@ -127,7 +127,7 @@ public void givenNoDefaultConstructor_whenDeserializing_thenException()
 
 这是**完整异常**:
 
-```
+```java
 com.fasterxml.jackson.databind.JsonMappingException: 
 No suitable constructor found for type 
 [simple type, class org.baeldung.jackson.exception.User]:
@@ -140,7 +140,7 @@ No suitable constructor found for type
 
 为了解决这个问题，我们只需添加一个默认的构造函数:
 
-```
+```java
 public class User {
     public int id;
     public String name;
@@ -158,7 +158,7 @@ public class User {
 
 现在，当我们进行反序列化时，该过程将正常工作:
 
-```
+```java
 @Test
 public void givenDefaultConstructor_whenDeserializing_thenCorrect() 
   throws IOException {
@@ -182,7 +182,7 @@ public void givenDefaultConstructor_whenDeserializing_thenCorrect()
 
 例如，主 JSON 可以包装为:
 
-```
+```java
 @Test(expected = JsonMappingException.class)
 public void givenWrappedJsonString_whenDeserializing_thenException()
   throws IOException {
@@ -197,7 +197,7 @@ public void givenWrappedJsonString_whenDeserializing_thenException()
 
 这是**完整异常**:
 
-```
+```java
 com.fasterxml.jackson.databind.JsonMappingException:
 Root name 'user' does not match expected ('User') for type
  [simple type, class org.baeldung.jackson.dtos.User]
@@ -209,7 +209,7 @@ Root name 'user' does not match expected ('User') for type
 
 我们可以使用注释`@JsonRootName`来解决这个问题:
 
-```
+```java
 @JsonRootName(value = "user")
 public class UserWithRoot {
     public int id;
@@ -219,7 +219,7 @@ public class UserWithRoot {
 
 当我们尝试反序列化包装的 JSON 时，它可以正常工作:
 
-```
+```java
 @Test
 public void 
   givenWrappedJsonStringAndConfigureClass_whenDeserializing_thenCorrect() 
@@ -247,7 +247,7 @@ public void
 
 我们将尝试序列化一个`UserWithPrivateFields`:
 
-```
+```java
 public class UserWithPrivateFields {
     int id;
     String name;
@@ -256,7 +256,7 @@ public class UserWithPrivateFields {
 
 当我们尝试序列化`UserWithPrivateFields`的实例时，抛出 JsonMappingException:找不到类的序列化程序:
 
-```
+```java
 @Test(expected = JsonMappingException.class)
 public void givenClassWithPrivateFields_whenSerializing_thenException() 
   throws IOException {
@@ -269,7 +269,7 @@ public void givenClassWithPrivateFields_whenSerializing_thenException()
 
 这是**完整异常**:
 
-```
+```java
 com.fasterxml.jackson.databind.JsonMappingException: 
 No serializer found for class org.baeldung.jackson.exception.UserWithPrivateFields
  and no properties discovered to create BeanSerializer 
@@ -281,7 +281,7 @@ No serializer found for class org.baeldung.jackson.exception.UserWithPrivateFiel
 
 我们可以通过配置`ObjectMapper`可见性来解决这个问题:
 
-```
+```java
 @Test
 public void givenClassWithPrivateFields_whenConfigureSerializing_thenCorrect() 
   throws IOException {
@@ -298,7 +298,7 @@ public void givenClassWithPrivateFields_whenConfigureSerializing_thenCorrect()
 
 或者我们可以使用注释`@JsonAutoDetect`:
 
-```
+```java
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class UserWithPrivateFields { ... }
 ```
@@ -315,7 +315,7 @@ public class UserWithPrivateFields { ... }
 
 在这个例子中，我们试图反序列化一个`User`的`List`:
 
-```
+```java
 @Test(expected = JsonMappingException.class)
 public void givenJsonOfArray_whenDeserializing_thenException() 
   throws JsonProcessingException, IOException {
@@ -329,7 +329,7 @@ public void givenJsonOfArray_whenDeserializing_thenException()
 
 这里是**完整异常**:
 
-```
+```java
 com.fasterxml.jackson.databind.JsonMappingException:
 Can not deserialize instance of 
   org.baeldung.jackson.dtos.User out of START_ARRAY token
@@ -341,7 +341,7 @@ Can not deserialize instance of
 
 我们可以通过将类型从`User`改为`List<User>`来解决这个问题:
 
-```
+```java
 @Test
 public void givenJsonOfArray_whenDeserializing_thenCorrect() 
   throws JsonProcessingException, IOException {
@@ -368,7 +368,7 @@ public void givenJsonOfArray_whenDeserializing_thenCorrect()
 
 我们将尝试用额外的属性“`checked`”反序列化一个 JSON 字符串:
 
-```
+```java
 @Test(expected = UnrecognizedPropertyException.class)
 public void givenJsonStringWithExtra_whenDeserializing_thenException() 
   throws IOException {
@@ -382,7 +382,7 @@ public void givenJsonStringWithExtra_whenDeserializing_thenException()
 
 这是**完整异常**:
 
-```
+```java
 com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException:
 Unrecognized field "checked" (class org.baeldung.jackson.dtos.User),
  not marked as ignorable (2 known properties: "id", "name"])
@@ -396,7 +396,7 @@ Unrecognized field "checked" (class org.baeldung.jackson.dtos.User),
 
 我们可以通过配置`ObjectMapper`来解决这个问题:
 
-```
+```java
 @Test
 public void givenJsonStringWithExtra_whenConfigureDeserializing_thenCorrect() 
   throws IOException {
@@ -413,7 +413,7 @@ public void givenJsonStringWithExtra_whenConfigureDeserializing_thenCorrect()
 
 或者我们可以使用注释`@JsonIgnoreProperties`:
 
-```
+```java
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {...}
 ```
@@ -428,7 +428,7 @@ public class User {...}
 
 我们将尝试反序列化包含单引号的 JSON 字符串:
 
-```
+```java
 @Test(expected = JsonParseException.class)
 public void givenStringWithSingleQuotes_whenDeserializing_thenException() 
   throws JsonProcessingException, IOException {
@@ -443,7 +443,7 @@ public void givenStringWithSingleQuotes_whenDeserializing_thenException()
 
 下面是**完整异常**:
 
-```
+```java
 com.fasterxml.jackson.core.JsonParseException:
 Unexpected character (''' (code 39)): 
   was expecting double-quote to start field name
@@ -455,7 +455,7 @@ Unexpected character (''' (code 39)):
 
 我们可以通过配置`ObjectMapper`允许单引号来解决这个问题:
 
-```
+```java
 @Test
 public void 
   givenStringWithSingleQuotes_whenConfigureDeserializing_thenCorrect() 
@@ -482,7 +482,7 @@ public void
 
 这是**完整异常**:
 
-```
+```java
 java.lang.NoSuchMethodError:
 com.fasterxml.jackson.core.JsonParser.getValueAsString()Ljava/lang/String;
  at c.f.j.d.deser.std.StringDeserializer.deserialize(StringDeserializer.java:24)

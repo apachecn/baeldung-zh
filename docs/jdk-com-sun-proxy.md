@@ -16,7 +16,7 @@
 
 为了有讨论的基础，我们先定义两个接口:`BasicOperation`和`AdvancedOperation`。`BasicOperation`接口包含了`add`和`subtract`方法:
 
-```
+```java
 public interface BasicOperation {
     int add(int a, int b);
 
@@ -26,7 +26,7 @@ public interface BasicOperation {
 
 并且，`AdvancedOperation`接口有`multiply`和`divide`方法:
 
-```
+```java
 public interface AdvancedOperation {
     int multiply(int a, int b);
 
@@ -36,7 +36,7 @@ public interface AdvancedOperation {
 
 为了获得新生成的代理类——`$Proxy`类——我们可以调用`Proxy::getProxyClass`方法:
 
-```
+```java
 ClassLoader classLoader = ClassLoader.getSystemClassLoader();
 Class<?>[] interfaces = {BasicOperation.class, AdvancedOperation.class};
 Class<?> proxyClass = Proxy.getProxyClass(classLoader, interfaces);
@@ -48,13 +48,13 @@ Class<?> proxyClass = Proxy.getProxyClass(classLoader, interfaces);
 
 为了仔细检查这个`$Proxy`类，我们最好把它转储到磁盘上。使用 Java 8 时，我们可以在命令行上指定“`sun.misc.ProxyGenerator.saveGeneratedFiles`”选项:
 
-```
+```java
 -Dsun.misc.ProxyGenerator.saveGeneratedFiles=true
 ```
 
 或者我们可以通过调用`System::setProperty`方法来设置这个选项:
 
-```
+```java
 System.setProperty("sun.misc.ProxyGenerator.saveGeneratedFiles", "true");
 ```
 
@@ -74,13 +74,13 @@ System.setProperty("sun.misc.ProxyGenerator.saveGeneratedFiles", "true");
 
 让我们首先检查一下类的层次结构。**`$Proxy0`类将`java.lang.reflect.Proxy`作为其超类，这隐含地解释了为什么动态代理只支持接口**。另外，`$Proxy0`类实现了我们之前定义的`BasicOperation`和`AdvancedOperation`接口:
 
-```
+```java
 public final class $Proxy0 extends Proxy implements BasicOperation, AdvancedOperation
 ```
 
 为了可读性，我们将`$Proxy0`类的字段名称改成了更有意义的名称。`hashCodeMethod`、`equalsMethod`和`toStringMethod`字段追溯到`Object`类；`addMethod`和`subtractMethod`字段与`BasicOperation`接口相关；`multiplyMethod`和`divideMethod`字段映射到`AdvanceOperation`接口:
 
-```
+```java
 private static Method hashCodeMethod;
 private static Method equalsMethod;
 private static Method toStringMethod;
@@ -92,7 +92,7 @@ private static Method divideMethod;
 
 最后，`$Proxy0`类中定义的方法遵循相同的逻辑:**它们的所有实现都委托给了`InvocationHandler::invoke`方法**。并且，`$Proxy0`类将从它的构造函数中获得一个`InvocationHandler`实例:
 
-```
+```java
 public $Proxy0(InvocationHandler handler) {
     super(handler);
 }
@@ -154,7 +154,7 @@ public final int hashCode() {
 
 在 Java 中，注释类型是一种特殊的接口类型。但是，我们可能想知道如何创建一个注释实例。事实上，我们不需要。**当我们使用 Java 反射 API 读取注释时，JVM 会动态生成一个`$Proxy`类作为注释类型的实现**:
 
-```
+```java
 FunctionalInterface instance = Consumer.class.getDeclaredAnnotation(FunctionalInterface.class);
 Class<?> clazz = instance.getClass();
 

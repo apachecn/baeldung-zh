@@ -19,7 +19,7 @@
 
 注意，这个内部的`HashMap`在`HashSet`的实例被创建时被初始化:
 
-```
+```java
 public HashSet() {
     map = new HashMap<>();
 }
@@ -37,7 +37,7 @@ public HashSet() {
 
 我们可以给`HashSet`添加一个元素，比如:
 
-```
+```java
 @Test
 public void whenAddingElement_shouldAddElement() {
     Set<String> hashset = new HashSet<>();
@@ -48,7 +48,7 @@ public void whenAddingElement_shouldAddElement() {
 
 从实现的角度来看，`add` 方法是一个非常重要的方法。实现细节说明了`HashSet`如何在内部工作并利用`HashMap's`和`put`方法:
 
-```
+```java
 public boolean add(E e) {
     return map.put(e, PRESENT) == null;
 }
@@ -56,7 +56,7 @@ public boolean add(E e) {
 
 `map` 变量是对内部变量的引用，支持`HashMap:`
 
-```
+```java
 private transient HashMap<E, Object> map;
 ```
 
@@ -75,7 +75,7 @@ private transient HashMap<E, Object> map;
 
 我们可以在`HashSet`中检查一个元素:
 
-```
+```java
 @Test
 public void whenCheckingForElement_shouldSearchForElement() {
     Set<String> hashsetContains = new HashSet<>();
@@ -93,7 +93,7 @@ public void whenCheckingForElement_shouldSearchForElement() {
 
 让我们看一个工作示例:
 
-```
+```java
 @Test
 public void whenRemovingElement_shouldRemoveElement() {
     Set<String> removeFromHashSet = new HashSet<>();
@@ -109,7 +109,7 @@ public void whenRemovingElement_shouldRemoveElement() {
 
 让我们看看实际情况:
 
-```
+```java
 @Test
 public void whenClearingHashSet_shouldClearHashSet() {
     Set<String> clearHashSet = new HashSet<>();
@@ -126,7 +126,7 @@ public void whenClearingHashSet_shouldClearHashSet() {
 
 让我们看看实际情况:
 
-```
+```java
 @Test
 public void whenCheckingTheSizeOfHashSet_shouldReturnThesize() {
     Set<String> hashSetSize = new HashSet<>();
@@ -140,7 +140,7 @@ public void whenCheckingTheSizeOfHashSet_shouldReturnThesize() {
 
 我们可以用这个方法来判断一个给定的`HashSet`实例是否为空。如果集合不包含元素，该方法返回`true`:
 
-```
+```java
 @Test
 public void whenCheckingForEmptyHashSet_shouldCheckForEmpty() {
     Set<String> emptyHashSet = new HashSet<>();
@@ -155,7 +155,7 @@ public void whenCheckingForEmptyHashSet_shouldCheckForEmpty() {
 
 我们可以在这里观察随机迭代顺序:
 
-```
+```java
 @Test
 public void whenIteratingHashSet_shouldIterateHashSet() {
     Set<String> hashset = new HashSet<>();
@@ -173,7 +173,7 @@ public void whenIteratingHashSet_shouldIterateHashSet() {
 
 让我们看看实际情况:
 
-```
+```java
 @Test(expected = ConcurrentModificationException.class)
 public void whenModifyingHashSetWhileIterating_shouldThrowException() {
 
@@ -191,7 +191,7 @@ public void whenModifyingHashSetWhileIterating_shouldThrowException() {
 
 或者，如果我们使用迭代器的 remove 方法，我们就不会遇到异常:
 
-```
+```java
 @Test
 public void whenRemovingElementUsingIterator_shouldRemoveElement() {
 
@@ -234,7 +234,7 @@ public void whenRemovingElementUsingIterator_shouldRemoveElement() {
 
 我们还可以为`initial capacity`和`load factor`创建一个带有自定义值的`HashSet`:
 
-```
+```java
 Set<String> hashset = new HashSet<>();
 Set<String> hashset = new HashSet<>(20);
 Set<String> hashset = new HashSet<>(20, 0.5f); 

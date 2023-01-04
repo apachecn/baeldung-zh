@@ -16,7 +16,7 @@
 
 在我们的第一个解决方案中，我们将使用原始的`String`创建一个 **`StringBuilder`，并从开头或结尾删除不必要的字符**:
 
-```
+```java
 String removeLeadingZeroes(String s) {
     StringBuilder sb = new StringBuilder(s);
     while (sb.length() > 0 && sb.charAt(0) == '0') {
@@ -40,7 +40,7 @@ String removeTrailingZeroes(String s) {
 
 因此，我们改变循环条件:
 
-```
+```java
 String removeLeadingZeroes(String s) {
     StringBuilder sb = new StringBuilder(s);
     while (sb.length() > 1 && sb.charAt(0) == '0') {
@@ -64,7 +64,7 @@ String removeTrailingZeroes(String s) {
 
 之后，我们只需调用`substring()`，返回剩余部分:
 
-```
+```java
 String removeLeadingZeroes(String s) {
     int index;
     for (index = 0; index < s.length(); index++) {
@@ -92,7 +92,7 @@ String removeTrailingZeroes(String s) {
 
 如果我们**不想返回一个空的`String`** ，我们必须做和之前一样的事情:**改变循环条件**:
 
-```
+```java
 String removeLeadingZeroes(String s) {
     int index;
     for (index = 0; index < s.length() - 1; index++) {
@@ -122,7 +122,7 @@ Apache Commons 有很多有用的类，包括`org.apache.commons.lang.StringUtil
 
 我们可以通过将这个依赖关系插入到我们的`pom.xml`文件中来使用 [Apache Commons Lang3](https://web.archive.org/web/20220826110932/https://search.maven.org/search?q=a:commons-lang3) :
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -136,7 +136,7 @@ Apache Commons 有很多有用的类，包括`org.apache.commons.lang.StringUtil
 
 因为这正是我们所需要的，所以我们的解决方案非常简单:
 
-```
+```java
 String removeLeadingZeroes(String s) {
     return StringUtils.stripStart(s, "0");
 }
@@ -150,7 +150,7 @@ String removeTrailingZeroes(String s) {
 
 如果输入不为空，但是被剥离的`String`为空，那么我们必须返回一个零:
 
-```
+```java
 String removeLeadingZeroes(String s) {
     String stripped = StringUtils.stripStart(s, "0");
     if (stripped.isEmpty() && !s.isEmpty()) {
@@ -180,7 +180,7 @@ String removeTrailingZeroes(String s) {
 
 要使用番石榴，我们应该将下面的[依赖项](https://web.archive.org/web/20220826110932/https://search.maven.org/search?q=a:guava)添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -196,7 +196,7 @@ String removeTrailingZeroes(String s) {
 
 顾名思义，它们分别从与`CharMatcher`匹配的`String`中移除任何前导或尾随字符:
 
-```
+```java
 String removeLeadingZeroes(String s) {
     return CharMatcher.is('0').trimLeadingFrom(s);
 }
@@ -210,7 +210,7 @@ String removeTrailingZeroes(String s) {
 
 因此，如果我们不想删除所有的零，我们可以使用相同的技巧:
 
-```
+```java
 String removeLeadingZeroes(String s) {
     String stripped = CharMatcher.is('0').trimLeadingFrom(s);
     if (stripped.isEmpty() && !s.isEmpty()) {
@@ -238,7 +238,7 @@ String removeTrailingZeroes(String s) {
 
 我们可以通过`String.replaceAll()`方法做到这一点:
 
-```
+```java
 String removeLeadingZeroes(String s) {
     return s.replaceAll("^0+", "");
 }
@@ -252,7 +252,7 @@ String removeTrailingZeroes(String s) {
 
 这样，如果输入只包含零，regexp 引擎将从匹配中只保留一个。我们可以通过以下模式做到这一点:
 
-```
+```java
 String removeLeadingZeroes(String s) {
     return s.replaceAll("^0+(?!$)", "");
 }

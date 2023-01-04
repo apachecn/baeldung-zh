@@ -71,7 +71,7 @@
 
 让我们从一个标准的 JVM 应用程序开始，我们假设一个简单的`java.util.HashMap`保存了我们想要使用的大部分信息:
 
-```
+```java
 public class MyApp {
     public static void main(String args[]) {
         Map map = new HashMap();
@@ -100,7 +100,7 @@ public class MyApp {
 
 现在，让我们将浏览器指向`http://localhost:5050/.`现在，只需输入以下命令，就可以在浏览器中以`args[1]` 的形式访问地图:
 
-```
+```java
 args[1];
 ```
 
@@ -110,14 +110,14 @@ args[1];
 
 要获得 `Map`中所有可用 `tools` 的列表，您应该编写:
 
-```
+```java
 map = args[1];
 map.get("tools");
 ```
 
 为了给`Map`添加一个新的`tool`，您应该写:
 
-```
+```java
 map = args[1];
 map.get("tools").add("axe");
 ```

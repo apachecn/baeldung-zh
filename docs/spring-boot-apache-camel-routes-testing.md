@@ -16,7 +16,7 @@ Apache Camel 是一个强大的开源集成框架，实现了许多已知的 T2 
 
 然后，我们需要将`[camel-test-spring-junit5](https://web.archive.org/web/20220707143856/https://search.maven.org/search?q=g:org.apache.camel%20a:camel-test-spring-junit5)`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.camel</groupId>
     <artifactId>camel-test-spring-junit5</artifactId>
@@ -33,7 +33,7 @@ Apache Camel 是一个强大的开源集成框架，实现了许多已知的 T2 
 
 因此，让我们从定义应用程序入口点开始:
 
-```
+```java
 @SpringBootApplication
 public class GreetingsFileSpringApplication {
 
@@ -49,7 +49,7 @@ public class GreetingsFileSpringApplication {
 
 接下来，我们将定义一条相当简单的路线:
 
-```
+```java
 @Component
 public class GreetingsFileRouter extends RouteBuilder {
 
@@ -76,7 +76,7 @@ public class GreetingsFileRouter extends RouteBuilder {
 
 最后，如果我们运行我们的应用程序并向我们的直接消费者端点发送一条消息，我们应该在输出目录的一个文件中看到我们的问候文本。如果我们不指定文件名，Camel 会为我们创建一个:
 
-```
+```java
 $ cat output/D97099B6B2958D2-0000000000000000 
 Hello Baeldung Readers!
 ```
@@ -93,7 +93,7 @@ Hello Baeldung Readers!
 
 记住最后一节，让我们继续编写我们的第一个单元测试:
 
-```
+```java
 @SpringBootTest
 @CamelSpringBootTest
 @MockEndpoints("file:output")

@@ -12,7 +12,7 @@
 
 首先，我们可以像往常一样，使用 Java `DateFormat`将字符串解析成日期:
 
-```
+```java
 def pattern = "yyyy-MM-dd"
 def input = "2019-02-28"
 
@@ -21,7 +21,7 @@ def date = new SimpleDateFormat(pattern).parse(input)
 
 然而，Groovy 允许我们更容易地执行这个操作。**它在便利静态方法** `[Date.parse(String format, String input)](https://web.archive.org/web/20220628121310/http://docs.groovy-lang.org/2.5.6/html/api/org/apache/groovy/dateutil/extensions/DateUtilStaticExtensions.html#parse(java.util.Date,java.lang.String,java.lang.String))`里面封装了相同的行为:
 
-```
+```java
 def date = Date.parse(pattern, input) 
 ```
 
@@ -37,7 +37,7 @@ def date = Date.parse(pattern, input)
 
 所以，今后，它们需要作为一个单独的模块被包含进来，命名为 [`groovy-dateutil`](https://web.archive.org/web/20220628121310/https://search.maven.org/search?q=a:groovy-dateutil) :
 
-```
+```java
 <dependency>
     <groupId>org.codehaus.groovy</groupId>
     <artifactId>groovy-dateutil</artifactId>
@@ -55,7 +55,7 @@ def date = Date.parse(pattern, input)
 
 让我们看看如何利用 Groovy 的`java.time.LocalDate`解析功能:
 
-```
+```java
 def date = LocalDate.parse(input, pattern) 
 ```
 

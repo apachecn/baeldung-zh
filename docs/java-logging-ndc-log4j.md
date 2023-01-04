@@ -22,7 +22,7 @@
 
 作为输入所需的信息在`Investment`类中表示:
 
-```
+```java
 public class Investment {
     private String transactionId;
     private String owner;
@@ -52,7 +52,7 @@ Log4j 提供了一个名为`NDC`的类，它提供静态方法来管理 NDC 堆�
 
 在示例应用程序中，让我们使用 NDC 在代码的相关位置添加/删除上下文数据:
 
-```
+```java
 import org.apache.log4j.NDC;
 
 @RestController
@@ -85,14 +85,14 @@ public class Log4JController {
 
 通过使用`log4j.properties`中添加器使用的`ConversionPattern`中的`%x`选项，可以在日志消息中显示 NDC 的内容:
 
-```
+```java
 log4j.appender.consoleAppender.layout.ConversionPattern 
   = %-4r [%t] %5p %c{1} - %m - [%x]%n
 ```
 
 让我们将 REST API 部署到 tomcat。样品申请:
 
-```
+```java
 POST /logging-service/ndc/log4j
 {
   "transactionId": "4",
@@ -103,7 +103,7 @@ POST /logging-service/ndc/log4j
 
 我们可以在日志输出中看到诊断上下文信息:
 
-```
+```java
 48569 [http-nio-8080-exec-3]  INFO Log4JInvestmentService 
   - Preparing to transfer 2000$. 
   - [tx.id=4 tx.owner=Marc]
@@ -123,7 +123,7 @@ POST /logging-service/ndc/log4j
 
 Log4j 2 中的 NDC 被称为线程上下文堆栈:
 
-```
+```java
 import org.apache.logging.log4j.ThreadContext;
 
 @RestController
@@ -156,7 +156,7 @@ public class Log4J2Controller {
 
 正如 Log4j 一样，让我们使用 Log4j 2 配置文件`log4j2.xml`中的`%x`选项:
 
-```
+```java
 <Configuration status="INFO">
     <Appenders>
         <Console name="stdout" target="SYSTEM_OUT">
@@ -175,7 +175,7 @@ public class Log4J2Controller {
 
 日志输出:
 
-```
+```java
 204724 [http-nio-8080-exec-1]  INFO Log4J2InvestmentService 
   - Preparing to transfer 1500$. 
   - [tx.id=6, tx.owner=Samantha]
@@ -201,7 +201,7 @@ JBoss LogManager 作为日志提供者通常用在 WildFly 应用服务器内部
 
 让我们从在`pom.xml`中添加所需的依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.jboss.logging</groupId>
     <artifactId>jboss-logging</artifactId>
@@ -213,7 +213,7 @@ JBoss LogManager 作为日志提供者通常用在 WildFly 应用服务器内部
 
 让我们向 NDC 堆栈添加上下文信息:
 
-```
+```java
 import org.jboss.logging.NDC;
 
 @RestController
@@ -246,7 +246,7 @@ public class JBossLoggingController {
 
 日志输出:
 
-```
+```java
 17045 [http-nio-8080-exec-1]  INFO JBossLoggingInvestmentService 
   - Preparing to transfer 1,500$. 
   - [tx.id=6, tx.owner=Samantha]

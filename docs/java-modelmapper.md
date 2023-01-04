@@ -16,7 +16,7 @@
 
 为了开始使用模型映射器[库](https://web.archive.org/web/20221208143832/https://search.maven.org/artifact/org.modelmapper/modelmapper)，我们将把依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.modelmapper</groupId>
     <artifactId>modelmapper</artifactId>
@@ -30,7 +30,7 @@
 
 让我们分别看看我们的域对象和对应的数据传输对象`Game` 和 `GameDTO`:
 
-```
+```java
 public class Game {
 
     private Long id;
@@ -58,7 +58,7 @@ public class GameDTO {
 
 在这种情况下，模型映射器无需额外配置即可处理转换:
 
-```
+```java
 @BeforeEach
 public void setup() {
     this.mapper = new ModelMapper();
@@ -84,7 +84,7 @@ public void whenMapGameWithExactMatch_thenConvertsToDTO() {
 
 让我们通过添加一个新字段`creationTime`来定制我们的`GameDTO`:
 
-```
+```java
 public class GameDTO {
 
     private Long id;
@@ -101,7 +101,7 @@ public class GameDTO {
 
 因此，让我们创建一个`TypeMap`对象，并通过它的 *addMapping* 方法添加一个属性映射:
 
-```
+```java
 @Test
 public void whenMapGameWithBasicPropertyMapping_thenConvertsToDTO() {
     // setup
@@ -128,7 +128,7 @@ public void whenMapGameWithBasicPropertyMapping_thenConvertsToDTO() {
 
 然而，`Game`域上的源`creator`字段不是一个简单的类型，而是一个对象——`Player`:
 
-```
+```java
 public class Player {
 
     private Long id;
@@ -158,7 +158,7 @@ public class GameDTO {
 
 **为了定义深度映射，我们使用了`TypeMap`的`addMappings`方法，并增加了一个`ExpressionMap`** :
 
-```
+```java
 @Test
 public void whenMapGameWithDeepMapping_thenConvertsToDTO() {
     // setup
@@ -186,7 +186,7 @@ public void whenMapGameWithDeepMapping_thenConvertsToDTO() {
 
 让我们借助于`skip`方法将`id`字段排除在传输之外:
 
-```
+```java
 @Test
 public void whenMapGameWithSkipIdProperty_thenConvertsToDTO() {
     // setup
@@ -213,7 +213,7 @@ ModelMapper 的另一个条款是`Converter`。**我们可以定制特定源到�
 
 作为第一步，我们在`GameDTO`中定义一个整数字段`totalPlayers`:
 
-```
+```java
 public class GameDTO {
     // ...
 
@@ -225,13 +225,13 @@ public class GameDTO {
 
 我们分别创建了`collectionToSize` `Converter`:
 
-```
+```java
 Converter<Collection, Integer> collectionToSize = c -> c.getSource().size();
 ```
 
 最后，当我们添加我们的`ExpressionMap`时，我们通过`using`方法注册我们的`Converter`:
 
-```
+```java
 propertyMapper.addMappings(
   mapper -> mapper.using(collectionToSize).map(Game::getPlayers, GameDTO::setTotalPlayers)
 );
@@ -239,7 +239,7 @@ propertyMapper.addMappings(
 
 因此，我们将`Game`的`getPlayers().size()`映射到`GameDTO`的`totalPlayers` 字段:
 
-```
+```java
 @Test
 public void whenMapGameWithCustomConverter_thenConvertsToDTO() {
     // setup
@@ -272,7 +272,7 @@ public void whenMapGameWithCustomConverter_thenConvertsToDTO() {
 
 之后，我们通过合并另一个`Game`对象来更新`Game`实例:
 
-```
+```java
 @Test
 public void whenUsingProvider_thenMergesGameInstances() {
     // setup
@@ -299,7 +299,7 @@ public void whenUsingProvider_thenMergesGameInstances() {
 
 让我们跳过`id`字段，以防它是我们的源`Game`对象中的`null`:
 
-```
+```java
 @Test
 public void whenUsingConditionalIsNull_thenMergesGameInstancesWithoutOverridingId() {
     // setup
@@ -323,13 +323,13 @@ public void whenUsingConditionalIsNull_thenMergesGameInstancesWithoutOverridingI
 
 让我们定义一个条件来检查`Game`的`timestamp`字段是否有值:
 
-```
+```java
 Condition<Long, Long> hasTimestamp = ctx -> ctx.getSource() != null && ctx.getSource() > 0;
 ```
 
 接下来，我们用`when`方法在属性映射器中使用它:
 
-```
+```java
 TypeMap<Game, GameDTO> propertyMapper = this.mapper.createTypeMap(Game.class, GameDTO.class);
 Condition<Long, Long> hasTimestamp = ctx -> ctx.getSource() != null && ctx.getSource() > 0;
 propertyMapper.addMappings(
@@ -339,7 +339,7 @@ propertyMapper.addMappings(
 
 最后，如果`timestamp`的值大于零，模型映射器仅更新`GameDTO`的`creationTime`字段:
 
-```
+```java
 @Test
 public void whenUsingCustomConditional_thenConvertsDTOSkipsZeroTimestamp() {
     // setup
@@ -380,7 +380,7 @@ public void whenUsingCustomConditional_thenConvertsDTOSkipsZeroTimestamp() {
 
 为了展示松散匹配的好处，让我们在`GameDTO`中再添加两个属性:
 
-```
+```java
 public class GameDTO {
     //...
 
@@ -393,7 +393,7 @@ public class GameDTO {
 
 注意，`mode`和`maxPlayers`对应于`GameSettings`的属性，它是我们的`Game`源类中的一个内部对象:
 
-```
+```java
 public class GameSettings {
 
     private GameMode mode;
@@ -405,7 +405,7 @@ public class GameSettings {
 
 这样，**我们可以执行双向映射**，从`Game`到`GameDTO`以及从**到`Game`的反向映射，而无需定义任何`TypeMap`** :
 
-```
+```java
 @Test
 public void whenUsingLooseMappingStrategy_thenConvertsToDomainAndDTO() {
     // setup
@@ -438,7 +438,7 @@ public void whenUsingLooseMappingStrategy_thenConvertsToDomainAndDTO() {
 
 因此，**如果源属性是`null`，我们可以自动跳过它们，而不用编写任何[条件映射](#5-conditional-mapping)** :
 
-```
+```java
 @Test
 public void whenConfigurationSkipNullEnabled_thenConvertsToDTO() {
     // setup
@@ -462,7 +462,7 @@ public void whenConfigurationSkipNullEnabled_thenConvertsToDTO() {
 
 通常，这会导致循环依赖，并导致著名的`StackOverflowError`:
 
-```
+```java
 org.modelmapper.MappingException: ModelMapper mapping errors:
 
 1) Error mapping com.bealdung.domain.Game to com.bealdung.dto.GameDTO
@@ -475,7 +475,7 @@ Caused by: java.lang.StackOverflowError
 
 因此，在这种情况下，另一个配置`setPreferNestedProperties`将帮助我们:
 
-```
+```java
 @Test
 public void whenConfigurationPreferNestedPropertiesDisabled_thenConvertsCircularReferencedToDTO() {
     // setup

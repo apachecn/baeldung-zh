@@ -34,13 +34,13 @@ In this article, we explore new Stream collectors that were introduced in JDK 9[
 
 所有预定义的实现都可以在`Collectors`类中找到。通常的做法是对它们使用以下静态导入来提高可读性:
 
-```
+```java
 import static java.util.stream.Collectors.*;
 ```
 
 我们也可以使用我们选择的单一导入收集器:
 
-```
+```java
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
@@ -48,7 +48,7 @@ import static java.util.stream.Collectors.toSet;
 
 在下面的例子中，我们将重用下面的列表:
 
-```
+```java
 List<String> givenList = Arrays.asList("a", "bb", "ccc", "dd");
 ```
 
@@ -58,7 +58,7 @@ List<String> givenList = Arrays.asList("a", "bb", "ccc", "dd");
 
 让我们创建一个代表元素序列的`Stream`实例，然后将它们收集到一个`List`实例中:
 
-```
+```java
 List<String> result = givenList.stream()
   .collect(toList());
 ```
@@ -67,14 +67,14 @@ List<String> result = givenList.stream()
 
 Java 10 引入了一种便捷的方式将`Stream`元素累积到一个[不可修改的`List`T3 中:](https://web.archive.org/web/20220629010735/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html#unmodifiable)
 
-```
+```java
 List<String> result = givenList.stream()
   .collect(toUnmodifiableList());
 ```
 
 现在如果我们试图修改`result` `List`，我们会得到一个`UnsupportedOperationException`:
 
-```
+```java
 assertThatThrownBy(() -> result.add("foo"))
   .isInstanceOf(UnsupportedOperationException.class);
 ```
@@ -85,14 +85,14 @@ assertThatThrownBy(() -> result.add("foo"))
 
 让我们创建一个代表元素序列的`Stream`实例，然后将它们收集到一个`Set`实例中:
 
-```
+```java
 Set<String> result = givenList.stream()
   .collect(toSet());
 ```
 
 一个`Set`不包含重复元素。如果我们的集合包含彼此相等的元素，它们在结果`Set`中只出现一次:
 
-```
+```java
 List<String> listWithDuplicates = Arrays.asList("a", "bb", "c", "d", "bb");
 Set<String> result = listWithDuplicates.stream().collect(toSet());
 assertThat(result).hasSize(4);
@@ -102,14 +102,14 @@ assertThat(result).hasSize(4);
 
 从 Java 10 开始，我们可以使用`toUnmodifiableSet()`收集器轻松创建一个[不可修改的`Set`T3:](https://web.archive.org/web/20220629010735/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html#unmodifiable)
 
-```
+```java
 Set<String> result = givenList.stream()
   .collect(toUnmodifiableSet());
 ```
 
 任何修改`result Set`的尝试都将以`UnsupportedOperationException`结束:
 
-```
+```java
 assertThatThrownBy(() -> result.add("foo"))
   .isInstanceOf(UnsupportedOperationException.class);
 ```
@@ -120,7 +120,7 @@ assertThatThrownBy(() -> result.add("foo"))
 
 让我们创建一个代表元素序列的`Stream`实例，然后将它们收集到一个`LinkedList`实例中:
 
-```
+```java
 List<String> result = givenList.stream()
   .collect(toCollection(LinkedList::new))
 ```
@@ -138,7 +138,7 @@ List<String> result = givenList.stream()
 
 让我们将这些元素收集到一个`Map`中，它将字符串存储为键，将它们的长度存储为值:
 
-```
+```java
 Map<String, Integer> result = givenList.stream()
   .collect(toMap(Function.identity(), String::length))
 ```
@@ -147,7 +147,7 @@ Map<String, Integer> result = givenList.stream()
 
 那么如果我们的集合包含重复的元素会发生什么呢？与`toSet`相反，`toMap`不静默地过滤重复项，这是可以理解的，因为它如何计算出为这个键选择哪个值呢？
 
-```
+```java
 List<String> listWithDuplicates = Arrays.asList("a", "bb", "c", "d", "bb");
 assertThatThrownBy(() -> {
     listWithDuplicates.stream().collect(toMap(Function.identity(), String::length));
@@ -158,7 +158,7 @@ assertThatThrownBy(() -> {
 
 在这种密钥冲突的情况下，我们应该将`toMap`与另一个签名一起使用:
 
-```
+```java
 Map<String, Integer> result = givenList.stream()
   .collect(toMap(Function.identity(), String::length, (item, identicalItem) -> item));
 ```
@@ -169,14 +169,14 @@ Map<String, Integer> result = givenList.stream()
 
 与`List` s 和`Set` s 类似，Java 10 引入了一种简单的方法将`Stream`元素收集到一个[不可修改的`Map`T5:](https://web.archive.org/web/20220629010735/https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/util/Map.html#unmodifiable)
 
-```
+```java
 Map<String, Integer> result = givenList.stream()
   .collect(toMap(Function.identity(), String::length))
 ```
 
 正如我们所看到的，如果我们试图在一个`result Map`中放入一个新的条目，我们将得到一个`UnsupportedOperationException`:
 
-```
+```java
 assertThatThrownBy(() -> result.put("foo", 3))
   .isInstanceOf(UnsupportedOperationException.class);
 ```
@@ -187,7 +187,7 @@ assertThatThrownBy(() -> result.put("foo", 3))
 
 让我们将`Stream`元素收集到一个`List`实例中，然后将结果转换成一个`ImmutableList`实例:
 
-```
+```java
 List<String> result = givenList.stream()
   .collect(collectingAndThen(toList(), ImmutableList::copyOf))
 ```
@@ -198,39 +198,39 @@ List<String> result = givenList.stream()
 
 我们可以通过以下方式将它们结合在一起:
 
-```
+```java
 String result = givenList.stream() .collect(joining()); 
 ```
 
 这将导致:
 
-```
+```java
 "abbcccdd"
 ```
 
 我们还可以指定自定义分隔符、前缀、后缀:
 
-```
+```java
 String result = givenList.stream()
   .collect(joining(" "));
 ```
 
 这将导致:
 
-```
+```java
 "a bb ccc dd"
 ```
 
 我们也可以写:
 
-```
+```java
 String result = givenList.stream()
   .collect(joining(" ", "PRE-", "-POST"));
 ```
 
 这将导致:
 
-```
+```java
 "PRE-a bb ccc dd-POST"
 ```
 
@@ -240,7 +240,7 @@ String result = givenList.stream()
 
 现在我们可以写:
 
-```
+```java
 Long result = givenList.stream()
   .collect(counting());
 ```
@@ -251,14 +251,14 @@ Long result = givenList.stream()
 
 我们可以通过以下方式获得字符串长度的信息:
 
-```
+```java
 DoubleSummaryStatistics result = givenList.stream()
   .collect(summarizingDouble(String::length));
 ```
 
 在这种情况下，以下情况成立:
 
-```
+```java
 assertThat(result.getAverage()).isEqualTo(2);
 assertThat(result.getCount()).isEqualTo(4);
 assertThat(result.getMax()).isEqualTo(3);
@@ -272,7 +272,7 @@ assertThat(result.getSum()).isEqualTo(8);
 
 我们可以通过以下方式获得平均字符串长度:
 
-```
+```java
 Double result = givenList.stream()
   .collect(averagingDouble(String::length));
 ```
@@ -283,7 +283,7 @@ Double result = givenList.stream()
 
 我们可以通过以下方式获得所有字符串长度的总和:
 
-```
+```java
 Double result = givenList.stream()
   .collect(summingDouble(String::length));
 ```
@@ -294,7 +294,7 @@ Double result = givenList.stream()
 
 我们可以通过以下方式选择最大的元素:
 
-```
+```java
 Optional<String> result = givenList.stream()
   .collect(maxBy(Comparator.naturalOrder()));
 ```
@@ -307,14 +307,14 @@ Optional<String> result = givenList.stream()
 
 我们可以根据字符串长度对它们进行分组，并将分组结果存储在`Set`实例中:
 
-```
+```java
 Map<Integer, Set<String>> result = givenList.stream()
   .collect(groupingBy(String::length, toSet()));
 ```
 
 这将导致以下情况成立:
 
-```
+```java
 assertThat(result)
   .containsEntry(1, newHashSet("a"))
   .containsEntry(2, newHashSet("bb", "dd"))
@@ -329,14 +329,14 @@ assertThat(result)
 
 我们可以写:
 
-```
+```java
 Map<Boolean, List<String>> result = givenList.stream()
   .collect(partitioningBy(s -> s.length() > 2))
 ```
 
 这将生成包含以下内容的地图:
 
-```
+```java
 {false=["a", "bb", "dd"], true=["ccc"]} 
 ```
 
@@ -344,7 +344,7 @@ Map<Boolean, List<String>> result = givenList.stream()
 
 让我们使用到目前为止所学的收集器，从给定的`Stream`中找出最大和最小的数字:
 
-```
+```java
 List<Integer> numbers = Arrays.asList(42, 4, 2, 24);
 Optional<Integer> min = numbers.stream().collect(minBy(Integer::compareTo));
 Optional<Integer> max = numbers.stream().collect(maxBy(Integer::compareTo));
@@ -357,7 +357,7 @@ Optional<Integer> max = numbers.stream().collect(maxBy(Integer::compareTo));
 
 **由于这种新的收集器[将](https://web.archive.org/web/20220629010735/https://en.wikipedia.org/wiki/Tee_(command))给定的水流转向两个不同的方向，故称之为`teeing:`**
 
-```
+```java
 numbers.stream().collect(teeing(
   minBy(Integer::compareTo), // The first collector
   maxBy(Integer::compareTo), // The second collector
@@ -371,7 +371,7 @@ numbers.stream().collect(teeing(
 
 如果我们想编写自己的收集器实现，我们需要实现收集器接口，并指定它的三个通用参数:
 
-```
+```java
 public interface Collector<T, A, R> {...}
 ```
 
@@ -381,7 +381,7 @@ public interface Collector<T, A, R> {...}
 
 让我们编写一个示例收集器，将元素收集到一个`ImmutableSet`实例中。我们从指定正确的类型开始:
 
-```
+```java
 private class ImmutableSetCollector<T>
   implements Collector<T, ImmutableSet.Builder<T>, ImmutableSet<T>> {...}
 ```
@@ -396,7 +396,7 @@ private class ImmutableSetCollector<T>
 
 **`The supplier()`** 方法返回生成空累加器实例的`Supplier`实例。所以在这种情况下，我们可以简单地写:
 
-```
+```java
 @Override
 public Supplier<ImmutableSet.Builder<T>> supplier() {
     return ImmutableSet::builder;
@@ -405,7 +405,7 @@ public Supplier<ImmutableSet.Builder<T>> supplier() {
 
 **`The accumulator()`** 方法返回一个函数，用于向现有的`accumulator`对象添加新元素。所以让我们使用`Builder`的`add`方法:
 
-```
+```java
 @Override
 public BiConsumer<ImmutableSet.Builder<T>, T> accumulator() {
     return ImmutableSet.Builder::add;
@@ -414,7 +414,7 @@ public BiConsumer<ImmutableSet.Builder<T>, T> accumulator() {
 
 `**The combiner()**` 方法返回一个用于合并两个累加器的函数:
 
-```
+```java
 @Override
 public BinaryOperator<ImmutableSet.Builder<T>> combiner() {
     return (left, right) -> left.addAll(right.build());
@@ -423,7 +423,7 @@ public BinaryOperator<ImmutableSet.Builder<T>> combiner() {
 
 `**The finisher()**`方法返回一个函数，用于将累加器转换为最终结果类型。所以在这种情况下，我们将只使用`Builder`的`build`方法:
 
-```
+```java
 @Override
 public Function<ImmutableSet.Builder<T>, ImmutableSet<T>> finisher() {
     return ImmutableSet.Builder::build;
@@ -432,7 +432,7 @@ public Function<ImmutableSet.Builder<T>, ImmutableSet<T>> finisher() {
 
 `**The characteristics()**`方法用于为流提供一些附加信息，这些信息将用于内部优化。在这种情况下，我们不注意元素在`Set`中的顺序，因为我们将使用`Characteristics.UNORDERED`。要获得关于这个主题的更多信息，请查看`Characteristics` ' JavaDoc:
 
-```
+```java
 @Override public Set<Characteristics> characteristics() {
     return Sets.immutableEnumSet(Characteristics.UNORDERED);
 }
@@ -440,7 +440,7 @@ public Function<ImmutableSet.Builder<T>, ImmutableSet<T>> finisher() {
 
 下面是完整的实现和用法:
 
-```
+```java
 public class ImmutableSetCollector<T>
   implements Collector<T, ImmutableSet.Builder<T>, ImmutableSet<T>> {
 
@@ -476,7 +476,7 @@ public static <T> ImmutableSetCollector<T> toImmutableSet() {
 
 最后，实际上:
 
-```
+```java
 List<String> givenList = Arrays.asList("a", "bb", "ccc", "dddd");
 
 ImmutableSet<String> result = givenList.stream()

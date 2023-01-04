@@ -52,7 +52,7 @@ Gradient 是坡度的另一种说法，descent 是向下的意思。顾名思义
 
 让我们定义`precision`和`stepCoefficient`并给它们初始值:
 
-```
+```java
 double precision = 0.000001;
 double stepCoefficient = 0.1;
 ```
@@ -61,7 +61,7 @@ double stepCoefficient = 0.1;
 
 现在让我们执行第一步:
 
-```
+```java
 double previousX = initialX;
 double previousY = f.apply(previousX);
 currentX += stepCoefficient * previousY;
@@ -71,7 +71,7 @@ currentX += stepCoefficient * previousY;
 
 另一个要考虑的要点是梯度下降并不保证收敛。为了避免陷入循环，我们来限制迭代次数:
 
-```
+```java
 int iter = 100;
 ```
 
@@ -79,7 +79,7 @@ int iter = 100;
 
 现在我们有了一个`previousX`，我们可以设置我们的循环:
 
-```
+```java
 while (previousStep > precision && iter > 0) {
     iter--;
     double currentY = f.apply(currentX);
@@ -97,7 +97,7 @@ while (previousStep > precision && iter > 0) {
 
 循环继续，直到我们的步长小于期望的`precision`。最后，我们可以返回`currentX`作为局部最小值:
 
-```
+```java
 return currentX;
 ```
 

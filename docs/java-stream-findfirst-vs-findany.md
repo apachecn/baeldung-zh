@@ -28,7 +28,7 @@ The article explains how to convert an Iterable to Stream and why the Iterable i
 
 该方法返回一个`Optional`实例，如果`Stream`为空，则该实例为空:
 
-```
+```java
 @Test
 public void createStream_whenFindAnyResultIsPresent_thenCorrect() {
     List<String> list = Arrays.asList("A","B","C","D");
@@ -44,7 +44,7 @@ public void createStream_whenFindAnyResultIsPresent_thenCorrect() {
 
 为了在处理并行操作时获得最佳性能，无法可靠地确定结果:
 
-```
+```java
 @Test
 public void createParallelStream_whenFindAnyResultIsPresent_thenCorrect()() {
     List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
@@ -65,7 +65,7 @@ public void createParallelStream_whenFindAnyResultIsPresent_thenCorrect()() {
 
 返回类型也是一个`Optional`实例，如果`Stream`也是空的，那么它也是空的:
 
-```
+```java
 @Test
 public void createStream_whenFindFirstResultIsPresent_thenCorrect() {
 

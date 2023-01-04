@@ -14,7 +14,7 @@ Groovy 是一种基于 JVM 的语言，它与 Java 无缝集成。在互操作�
 
 在我们开始之前，让我们添加我们的 [Maven 依赖项](https://web.archive.org/web/20221218041156/https://search.maven.org/classic/#search%7Cga%7C1%7C%20(g%3A%22org.spockframework%22%20AND%20a%3A%22spock-core%22)%20OR%20(g%3A%22org.codehaus.groovy%22%20AND%20a%3A%22groovy-all%22)):
 
-```
+```java
 <dependency>
     <groupId>org.spockframework</groupId>
     <artifactId>spock-core</artifactId>
@@ -31,7 +31,7 @@ Groovy 是一种基于 JVM 的语言，它与 Java 无缝集成。在互操作�
 
 我们添加了 Spock 和 Groovy，就像添加任何标准库一样。然而，由于 Groovy 是一种新的 JVM 语言，为了能够编译和运行它，我们需要包含`gmavenplus` 插件:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.gmavenplus</groupId>
     <artifactId>gmavenplus-plugin</artifactId>
@@ -55,7 +55,7 @@ Groovy 是一种基于 JVM 的语言，它与 Java 无缝集成。在互操作�
 
 当我们用 Groovy 编写测试时，我们需要将它们添加到`src/test/groovy` 目录中，而不是`src/test/java.` 。让我们在这个目录中创建我们的第一个测试，命名为`Specification.groovy:`
 
-```
+```java
 class FirstSpecification extends Specification {
 
 }
@@ -63,7 +63,7 @@ class FirstSpecification extends Specification {
 
 注意，我们正在扩展`Specification`接口。每个 Spock 类都必须扩展这一点，以使框架对它可用。这样做可以让我们实现我们的第一个`feature:`
 
-```
+```java
 def "one plus one should equal two"() {
   expect:
   1 + 1 == 2
@@ -84,7 +84,7 @@ def "one plus one should equal two"() {
 
 有时，当编写 JUnit 测试时，我们可能会注意到没有一种表达方式来将它分成几个部分。例如，如果我们遵循行为驱动开发，我们可能最终使用注释来表示`given when then` 部分:
 
-```
+```java
 @Test
 public void givenTwoAndTwo_whenAdding_thenResultIsFour() {
    // Given
@@ -109,7 +109,7 @@ public void givenTwoAndTwo_whenAdding_thenResultIsFour() {
 
 让我们再次尝试实现我们的测试，这次充分利用块:
 
-```
+```java
 def "two plus two should equal four"() {
     given:
         int left = 2
@@ -131,7 +131,7 @@ def "two plus two should equal four"() {
 
 大多数情况下，每个语句都会被求值，如果不是`true`，那么就会失败。当把它与各种 Groovy 特性结合起来时，它很好地消除了对断言库的需求。让我们试着用一个 [`list`](https://web.archive.org/web/20221218041156/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html) 的断言来论证这一点:
 
-```
+```java
 def "Should be able to remove from list"() {
     given:
         def list = [1, 2, 3, 4]
@@ -154,7 +154,7 @@ def "Should be able to remove from list"() {
 
 同样值得演示的是当我们的测试失败时会发生什么。让我们中断它，然后查看控制台的输出:
 
-```
+```java
 Condition not satisfied:
 
 list == [1, 3, 4]
@@ -172,7 +172,7 @@ at FirstSpecification.Should be able to remove from list(FirstSpecification.groo
 
 Spock 还为我们提供了一种检查异常的表达方式。在 JUnit 中，我们的一些选择可能是使用一个`try-catch` 块，在测试的顶部声明`expected` ，或者使用第三方库。Spock 的本地断言提供了一种开箱即用的异常处理方式:
 
-```
+```java
 def "Should get an index out of bounds when removing a non-existent item"() {
     given:
         def list = [1, 2, 3, 4]
@@ -198,7 +198,7 @@ def "Should get an index out of bounds when removing a non-existent item"() {
 
 对于某些上下文，使用 JUnit 实现参数化测试是值得的:
 
-```
+```java
 @RunWith(Parameterized.class)
 public class FibonacciTest {
     @Parameters
@@ -230,7 +230,7 @@ public class FibonacciTest {
 
 与 JUnit 相比，Spock 的一个优势是它干净利落地实现了参数化测试。同样，在 Spock 中，这被称为**数据驱动测试。**现在，让我们再次实现相同的测试，只是这次我们将使用带有**数据表**的 Spock，这提供了一种更方便的方式来执行参数化测试:
 
-```
+```java
 def "numbers to the power of two"(int a, int b, int c) {
   expect:
       Math.pow(a, b) == c
@@ -251,7 +251,7 @@ def "numbers to the power of two"(int a, int b, int c) {
 
 同样值得一提的是，当我们的测试失败时会发生什么:
 
-```
+```java
 Condition not satisfied:
 
 Math.pow(a, b) == c
@@ -278,19 +278,19 @@ Actual   :4.0
 
 Spock 有自己的模仿框架，利用 Groovy 带给 JVM 的有趣概念。首先，让我们实例化一个`Mock:`
 
-```
+```java
 PaymentGateway paymentGateway = Mock()
 ```
 
 在这种情况下，我们的模拟类型是由变量 type 推断出来的。由于 Groovy 是一种动态语言，我们还可以提供一个类型参数，这样我们就不必将模拟赋给任何特定的类型:
 
-```
+```java
 def paymentGateway = Mock(PaymentGateway)
 ```
 
 现在，每当我们调用我们的`PaymentGateway` mock `,` 上的方法时，都会给出一个默认响应，而不需要调用一个真实的实例:
 
-```
+```java
 when:
     def result = paymentGateway.makePayment(12.99)
 
@@ -304,7 +304,7 @@ then:
 
 我们还可以配置 mock 上调用的方法，以某种方式响应不同的参数。当我们支付`20:`时，让我们的`PaymentGateway` 模拟返回`true`
 
-```
+```java
 given:
     paymentGateway.makePayment(20) >> true
 
@@ -321,13 +321,13 @@ then:
 
 如果我们不再关心我们的方法参数，而总是想返回`true,` ,我们可以只使用下划线:
 
-```
+```java
 paymentGateway.makePayment(_) >> true
 ```
 
 如果我们希望在不同的响应之间进行切换，我们可以提供一个列表，其中的每个元素将按顺序返回:
 
-```
+```java
 paymentGateway.makePayment(_) >>> [true, true, false, true]
 ```
 
@@ -341,7 +341,7 @@ paymentGateway.makePayment(_) >>> [true, true, false, true]
 
 让我们尝试验证是否调用了具有 void 返回类型的方法:
 
-```
+```java
 def "Should verify notify was called"() {
     given:
         def notifier = Mock(Notifier)
@@ -358,13 +358,13 @@ Spock 再次利用了 Groovy 操作符重载。通过将我们的 mocks 方法�
 
 如果我们的方法根本没有被调用，或者调用的次数没有达到我们指定的次数，那么我们的测试就不会给出一个信息丰富的 Spock 错误消息。让我们通过期望它被调用两次来证明这一点:
 
-```
+```java
 2 * notifier.notify('foo')
 ```
 
 接下来，让我们看看错误消息是什么样子的。我们会像往常一样；它的信息量很大:
 
-```
+```java
 Too few invocations for:
 
 2 * notifier.notify('foo')   (1 invocation)
@@ -372,13 +372,13 @@ Too few invocations for:
 
 就像 stubbing 一样，我们也可以进行更宽松的验证匹配。如果我们不关心我们的方法参数是什么，我们可以使用下划线:
 
-```
+```java
 2 * notifier.notify(_)
 ```
 
 或者，如果我们想确保它不是用特定的参数调用的，我们可以使用 not 运算符:
 
-```
+```java
 2 * notifier.notify(!'foo')
 ```
 

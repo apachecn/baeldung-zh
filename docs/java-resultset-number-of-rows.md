@@ -20,7 +20,7 @@
 
 让我们为数据库连接创建一个带有单个参数的`StandardRowCounter`类:
 
-```
+```java
 class StandardRowCounter {
     Connection conn;
 
@@ -34,7 +34,7 @@ class StandardRowCounter {
 
 让我们将我们的计数器方法命名为`getQueryRowCount`:
 
-```
+```java
 int getQueryRowCount(String query) throws SQLException {
     try (Statement statement = conn.createStatement();
         ResultSet standardRS = statement.executeQuery(query)) {
@@ -53,7 +53,7 @@ int getQueryRowCount(String query) throws SQLException {
 
 有了这些，让我们用一个简单的`main`方法创建一个`RowCounterApp`:
 
-```
+```java
 class RowCounterApp {
 
     public static void main(String[] args) throws SQLException {
@@ -80,7 +80,7 @@ class RowCounterApp {
 
 让我们创建一个`ScrollableRowCounter`类:
 
-```
+```java
 class ScrollableRowCounter {
     Connection conn;
 
@@ -94,7 +94,7 @@ class ScrollableRowCounter {
 
 同样，我们将使用一个`getQueryRowCount`方法:
 
-```
+```java
 int getQueryRowCount(String query) throws SQLException {
     try (Statement statement = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         ResultSet scrollableRS = statement.executeQuery(query)) {
@@ -108,7 +108,7 @@ int getQueryRowCount(String query) throws SQLException {
 
 让我们用`RowCountApp`测试我们的新实现:
 
-```
+```java
 ScrollableRowCounter scrollableCounter = new ScrollableRowCounter(conn);
 assert scrollableCounter.getQueryRowCount(selectQuery) == 3;
 ```

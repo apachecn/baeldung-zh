@@ -12,7 +12,7 @@ Java 9、Guava 和 Apache Commons IO 提供的实用程序方法不会刷新或�
 
 首先，我们将开始创建一个简单的方法，使用普通的 Java 将内容从`InputStream`复制到`OutputStream`:
 
-```
+```java
 void copy(InputStream source, OutputStream target) throws IOException {
     byte[] buf = new byte[8192];
     int length;
@@ -30,7 +30,7 @@ void copy(InputStream source, OutputStream target) throws IOException {
 
 让我们看看如何使用`transferTo()`方法:
 
-```
+```java
 @Test
 public void givenUsingJavaNine_whenCopyingInputStreamToOutputStream_thenCorrect() throws IOException {
     String initialString = "Hello World!";
@@ -52,7 +52,7 @@ public void givenUsingJavaNine_whenCopyingInputStreamToOutputStream_thenCorrect(
 
 我们需要在我们的`pom.xml`中包含[番石榴属地](https://web.archive.org/web/20221208041644/https://search.maven.org/classic/#search|gav|1|g%3A%22com.google.guava%22%20AND%20a%3A%22guava%22):
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -62,7 +62,7 @@ public void givenUsingJavaNine_whenCopyingInputStreamToOutputStream_thenCorrect(
 
 让我们创建一个简单的测试用例来展示我们如何使用`ByteStreams`来复制数据:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenCopyingInputStreamToOutputStream_thenCorrect() throws IOException {
     String initialString = "Hello World!";
@@ -82,7 +82,7 @@ public void givenUsingGuava_whenCopyingInputStreamToOutputStream_thenCorrect() t
 
 当然，我们需要将 [commons-io](https://web.archive.org/web/20221208041644/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22commons-io%22%20AND%20a%3A%22commons-io%22) 依赖项添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>commons-io</groupId>
     <artifactId>commons-io</artifactId>
@@ -92,7 +92,7 @@ public void givenUsingGuava_whenCopyingInputStreamToOutputStream_thenCorrect() t
 
 让我们使用`IOUtils`创建一个简单的测试用例，将数据从输入流复制到输出流:
 
-```
+```java
 @Test
 public void givenUsingCommonsIO_whenCopyingInputStreamToOutputStream_thenCorrect() throws IOException {
     String initialString = "Hello World!";

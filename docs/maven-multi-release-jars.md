@@ -20,7 +20,7 @@ Java 9 带给我们的一个新特性是构建[多版本 jar(MRJAR)](/web/202208
 
 首先，我们将定义一个打印当前使用的 Java 版本的类；在 Java 9 之前，我们可以使用的方法之一是`System.getProperty`方法:
 
-```
+```java
 public class DefaultVersion {
     public String version() {
         return System.getProperty("java.version");
@@ -30,7 +30,7 @@ public class DefaultVersion {
 
 现在，从 Java 9 开始，我们可以使用来自`Runtime`类的新的`version`方法:
 
-```
+```java
 public class DefaultVersion {
     public String version() {
         return Runtime.version().toString();
@@ -42,7 +42,7 @@ public class DefaultVersion {
 
 另外，让我们添加一个`App`类来记录版本:
 
-```
+```java
 public class App {
 
     private static final Logger logger = LoggerFactory.getLogger(App.class);
@@ -56,7 +56,7 @@ public class App {
 
 最后，让我们将每个版本的`DefaultVersion` 放到它自己的`src/main`目录结构中:
 
-```
+```java
 ├── pom.xml
 ├── src
 │   ├── main
@@ -83,7 +83,7 @@ public class App {
 
 在这种情况下，我们添加两个:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -126,7 +126,7 @@ public class App {
 
 但是，从[3 . 7 . 1](https://web.archive.org/web/20220823150607/https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html#multiReleaseOutput)开始，我们不需要手动设置输出目录。**相反，我们所要做的就是启用`multiReleaseOutput `属性**:
 
-```
+```java
 <configuration> 
     <release>9</release> 
     <compileSourceRoots> 
@@ -144,7 +144,7 @@ public class App {
 
 让我们添加[`maven-jar-plugin` 配置](https://web.archive.org/web/20220823150607/https://search.maven.org/search?q=g:org.apache.maven.plugins%20AND%20a:maven-jar-plugin):
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-jar-plugin</artifactId>
@@ -165,13 +165,13 @@ public class App {
 
 当我们使用 Java 8 执行时，我们将看到以下输出:
 
-```
+```java
 [main] INFO com.baeldung.multireleaseapp.App - Running on 1.8.0_252
 ```
 
 但是如果我们用 Java 14 执行，我们会看到:
 
-```
+```java
 [main] INFO com.baeldung.multireleaseapp.App - Running on 14.0.1+7
 ```
 

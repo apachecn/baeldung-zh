@@ -39,7 +39,7 @@ Grails(更准确地说是它的最新主要版本)是一个构建在 Spring Boot
 
 在本章中，我们将创建一个简单的 web 应用程序来管理学生。让我们首先调用 CLI 命令来创建应用程序框架:
 
-```
+```java
 grails create-app
 ```
 
@@ -49,13 +49,13 @@ grails create-app
 
 因为我们正在实现一个处理学生的 web 应用程序，所以让我们从生成一个名为`Student`的域类开始:
 
-```
+```java
 grails create-domain-class com.baeldung.grails.Student
 ```
 
 最后，让我们给它添加`firstName`和`lastName`属性:
 
-```
+```java
 class Student {
     String firstName
     String lastName
@@ -76,13 +76,13 @@ Grails 应用它的惯例，将为位于 `grails-app/domain`目录中的所有�
 
 让我们实现这些用例。我们将从生成一个服务类开始:
 
-```
+```java
 grails create-service com.baeldung.grails.Student
 ```
 
 让我们转到`grails-app/services`目录，在适当的包中找到我们新创建的服务，并添加所有必要的方法:
 
-```
+```java
 @Transactional
 class StudentService {
 
@@ -110,7 +110,7 @@ class StudentService {
 
 为了使业务逻辑对 UI 可用，让我们通过调用以下命令来创建一个`StudentController` :
 
-```
+```java
 grails create-controller com.baeldung.grails.Student
 ```
 
@@ -118,7 +118,7 @@ grails create-controller com.baeldung.grails.Student
 
 我们现在可以定义读取、创建和删除学生的操作。
 
-```
+```java
 class StudentController {
 
     def studentService
@@ -159,7 +159,7 @@ class StudentController {
 
 按照惯例，当我们响应一个对象列表时， **Grails 会在模型名**后面加上“列表”后缀，这样我们就可以用变量`studentList`访问学生对象列表:
 
-```
+```java
 <!DOCTYPE html>
 <html>
     <head>
@@ -181,7 +181,7 @@ class StudentController {
 
 我们现在将进入视图`/grails-app/` `views/` `student/create.gsp,` ，它允许用户创建新的学生。我们将使用内置的`<f:all/>`标记，它显示给定 bean 的所有属性的表单:
 
-```
+```java
 <!DOCTYPE html>
 <html>
     <head>
@@ -206,7 +206,7 @@ class StudentController {
 
 在其他标签中，我们将利用`<f:display/>`，它将一个 bean 作为参数，并显示它的所有字段:
 
-```
+```java
 <!DOCTYPE html>
 <html>
     <head>
@@ -238,7 +238,7 @@ Grails 主要利用 [Spock](https://web.archive.org/web/20220926184557/http://sp
 
 我们将模拟来自`StudentService` 的`list()`方法，并测试`index()`是否返回预期的模型:
 
-```
+```java
 void "Test the index action returns the correct model"() {
     given:
     controller.studentService = Mock(StudentService) {
@@ -257,7 +257,7 @@ void "Test the index action returns the correct model"() {
 
 现在，让我们测试一下`delete()` 动作。我们将验证是否从`StudentService`调用了`delete()` ，并验证到索引页面的重定向:
 
-```
+```java
 void "Test the delete action with an instance"() {
     given:
     controller.studentService = Mock(StudentService) {
@@ -282,7 +282,7 @@ void "Test the delete action with an instance"() {
 
 首先，让我们从定义一个帮助器方法开始，该方法用于创建数据来填充数据库:
 
-```
+```java
 private Long setupData() {
     new Student(firstName: 'John',lastName: 'Doe')
       .save(flush: true, failOnError: true)
@@ -298,7 +298,7 @@ private Long setupData() {
 
 看看我们是如何为我们的`list()`方法实现集成测试的:
 
-```
+```java
 void "test list"() {
     setupData()
 
@@ -315,7 +315,7 @@ void "test list"() {
 
 同样，让我们测试一下`delete()`方法，验证学生总数是否减少了 1:
 
-```
+```java
 void "test delete"() {
     Long id = setupData()
 
@@ -337,7 +337,7 @@ void "test delete"() {
 
 要运行应用程序，请使用:
 
-```
+```java
 grails run-app
 ```
 
@@ -349,7 +349,7 @@ grails run-app
 
 如果要将应用程序部署到 servlet 容器，请使用:
 
-```
+```java
 grails war
 ```
 

@@ -40,7 +40,7 @@ In this tutorial we'll have a look at the one-to-many mapping using JPA annotati
 
 首先，让我们创建`User `类并对其进行适当的注释:
 
-```
+```java
 @Entity
 @Table(name = "users")
 public class User {
@@ -67,7 +67,7 @@ public class User {
 
 `Address `实体变得更加简单:
 
-```
+```java
 @Entity
 @Table(name = "address")
 public class Address {
@@ -101,7 +101,7 @@ public class Address {
 
 请注意，我们的定义仅略有变化:
 
-```
+```java
 @Entity
 @Table(name = "users")
 public class User {
@@ -121,7 +121,7 @@ public class User {
 }
 ```
 
-```
+```java
 @Entity
 @Table(name = "address")
 public class Address {
@@ -165,7 +165,7 @@ public class Address {
 
 我们的第一个例子使用了`@JoinColumn`。这一次，我们将使用`@JoinTable`:
 
-```
+```java
 @Entity
 @Table(name = "employee")
 public class Employee {
@@ -188,7 +188,7 @@ public class Employee {
 }
 ```
 
-```
+```java
 @Entity
 @Table(name = "workstation")
 public class WorkStation {

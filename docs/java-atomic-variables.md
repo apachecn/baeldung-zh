@@ -12,7 +12,7 @@
 
 让我们来看看这个班级:
 
-```
+```java
 public class Counter {
     int counter; 
 
@@ -30,7 +30,7 @@ public class Counter {
 
 管理对象访问的方法之一是使用锁。这可以通过在`increment`方法签名中使用`synchronized`关键字来实现。`synchronized`关键字确保一次只有一个线程可以进入该方法(要了解更多关于锁定和同步的信息，请参考–[Java 同步关键字指南](/web/20221120182145/https://www.baeldung.com/java-synchronized)):
 
-```
+```java
 public class SafeCounterWithLock {
     private volatile int counter;
 
@@ -80,7 +80,7 @@ Java 中最常用的原子变量类有 [AtomicInteger](https://web.archive.org/w
 
 用`AtomicInteger`实现的线程安全计数器如下例所示:
 
-```
+```java
 public class SafeCounterWithoutLock {
     private final AtomicInteger counter = new AtomicInteger(0);
 

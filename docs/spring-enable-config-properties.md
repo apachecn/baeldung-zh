@@ -26,7 +26,7 @@
 
 首先，我们需要定义我们的示例配置类:
 
-```
+```java
 @ConfigurationProperties(prefix = "additional")
 public class AdditionalProperties {
 
@@ -41,7 +41,7 @@ public class AdditionalProperties {
 
 最后，让我们使用@ `EnableConfigurationProperties`注册我们的配置 bean:
 
-```
+```java
 @Configuration
 @EnableConfigurationProperties(AdditionalProperties.class)
 public class AdditionalConfiguration {

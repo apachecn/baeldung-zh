@@ -25,7 +25,7 @@ Thrift 使用一种特殊的接口描述语言(IDL)来定义数据类型和服�
 
 要在您的项目中使用 Apache Thrift，请添加这个 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.thrift</groupId>
     <artifactId>libthrift</artifactId>
@@ -100,7 +100,7 @@ Thrift `structs`相当于 OOP 语言中的类，但是没有继承。一个`stru
 
 只需下载[的最新版本](https://web.archive.org/web/20220625173214/https://thrift.apache.org/download)，如有必要，编译并安装它，并使用以下语法:
 
-```
+```java
 cd path/to/thrift
 thrift -r --gen [LANGUAGE] [FILENAME]
 ```
@@ -113,7 +113,7 @@ thrift -r --gen [LANGUAGE] [FILENAME]
 
 将插件添加到您的`pom.xml`文件中:
 
-```
+```java
 <plugin>
    <groupId>org.apache.thrift.tools</groupId>
    <artifactId>maven-thrift-plugin</artifactId>
@@ -135,7 +135,7 @@ thrift -r --gen [LANGUAGE] [FILENAME]
 
 之后，只需执行以下命令:
 
-```
+```java
 mvn clean install
 ```
 
@@ -147,7 +147,7 @@ mvn clean install
 
 让我们编写一些带有异常和结构的简单服务:
 
-```
+```java
 namespace cpp com.baeldung.thrift.impl
 namespace java com.baeldung.thrift.impl
 
@@ -182,7 +182,7 @@ service CrossPlatformService {
 
 现在是运行编译器的时候了，它会为我们生成代码:
 
-```
+```java
 thrift -r -out generated --gen java /path/to/service.thrift
 ```
 
@@ -194,7 +194,7 @@ thrift -r -out generated --gen java /path/to/service.thrift
 
 让我们通过运行以下命令来生成服务的 C++版本:
 
-```
+```java
 thrift -r -out generated --gen cpp /path/to/service.thrift
 ```
 
@@ -204,7 +204,7 @@ thrift -r -out generated --gen cpp /path/to/service.thrift
 
 尽管 Thrift 已经为我们做了大部分工作，我们仍然需要编写自己的`CrossPlatformService`实现。为了做到这一点，我们只需要实现一个`CrossPlatformService.Iface`接口:
 
-```
+```java
 public class CrossPlatformServiceImpl implements CrossPlatformService.Iface {
 
     @Override
@@ -236,7 +236,7 @@ public class CrossPlatformServiceImpl implements CrossPlatformService.Iface {
 
 正如我们所说的，我们想要构建一个跨平台的客户机-服务器应用程序，所以我们需要一个服务器。Apache Thrift 的伟大之处在于它有自己的客户机-服务器通信框架，这使得通信变得轻而易举:
 
-```
+```java
 public class CrossPlatformServiceServer {
     public void start() throws TTransportException {
         TServerTransport serverTransport = new TServerSocket(9090);
@@ -274,7 +274,7 @@ public class CrossPlatformServiceServer {
 
 这是客户端的实现:
 
-```
+```java
 TTransport transport = new TSocket("localhost", 9090);
 transport.open();
 

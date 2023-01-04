@@ -14,7 +14,7 @@
 
 让我们在服务层中添加启用分页的操作:
 
-```
+```java
 public List<User> getUsersList(int page, int size, String sortDir, String sort) {
     PageRequest pageReq = new PageRequest(page, size, Sort.Direction.fromString(sortDir), sort);
     return userRepository.findAll(pageReq).getContent();
@@ -30,7 +30,7 @@ public PagingInfo generatePagingInfo(int page, int size) {
 
 我们将需要一个用户 DTO，因为到目前为止，API 将实际的`User`实体返回给客户端:
 
-```
+```java
 public class UserDto {
     private Long id;
 
@@ -46,7 +46,7 @@ public class UserDto {
 
 现在，让我们也在控制器层实现这个简单的操作:
 
-```
+```java
 public List<UserDto> getUsersList(
   @RequestParam(value = "page", required = false, defaultValue = "0") int page, 
   @RequestParam(value = "size", required = false, defaultValue = "10") int size,
@@ -63,7 +63,7 @@ public List<UserDto> getUsersList(
 
 这是 DTO 转换逻辑:
 
-```
+```java
 private UserDto convertUserEntityToDto(User user) {
     UserDto dto = modelMapper.map(user, UserDto.class);
     dto.setScheduledPostsCount(scheduledPostService.countScheduledPostsByUser(user));
@@ -75,7 +75,7 @@ private UserDto convertUserEntityToDto(User user) {
 
 最后，在客户端，让我们使用这个新操作并重新实现我们的管理员用户页面:
 
-```
+```java
 <table><thead><tr>
 <th>Username</th><th>Scheduled Posts Count</th><th>Roles</th><th>Actions</th>
 </tr></thead></table>
@@ -123,13 +123,13 @@ $(function(){
 
 我们首先需要的是`User`实体中的`enabled`字段:
 
-```
+```java
 private boolean enabled;
 ```
 
 然后，我们可以在我们的`UserPrincipal`实现中使用它来确定主体是否被启用:
 
-```
+```java
 public boolean isEnabled() {
     return user.isEnabled();
 }
@@ -137,7 +137,7 @@ public boolean isEnabled() {
 
 这里是处理禁用/启用用户的 API 操作:
 
-```
+```java
 @PreAuthorize("hasRole('USER_WRITE_PRIVILEGE')")
 @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT)
 @ResponseStatus(HttpStatus.OK)
@@ -149,7 +149,7 @@ public void setUserEnabled(@PathVariable("id") Long id,
 
 下面是简单的服务层实现:
 
-```
+```java
 public void setUserEnabled(Long userId, boolean enabled) {
     User user = userRepository.findOne(userId);
     user.setEnabled(enabled);
@@ -161,7 +161,7 @@ public void setUserEnabled(Long userId, boolean enabled) {
 
 接下来，让我们配置应用程序**来处理会话超时**——我们将向我们的上下文[添加一个简单的`SessionListener`来控制会话超时](/web/20220813071757/https://www.baeldung.com/servlet-session-timeout):
 
-```
+```java
 public class SessionListener implements HttpSessionListener {
 
     @Override
@@ -173,7 +173,7 @@ public class SessionListener implements HttpSessionListener {
 
 下面是 Spring 安全配置:
 
-```
+```java
 protected void configure(HttpSecurity http) throws Exception {
     http 
     ...
@@ -200,7 +200,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 我们现在让用户在系统中激活之前先确认他们的电子邮件地址:
 
-```
+```java
 public void register(HttpServletRequest request, 
   @RequestParam("username") String username, 
   @RequestParam("email") String email, 
@@ -214,7 +214,7 @@ public void register(HttpServletRequest request,
 
 服务层也需要做一些工作，基本上是确保用户最初是禁用的:
 
-```
+```java
 @Override
 public void registerNewUser(String username, String email, String password, String appUrl) {
     ...
@@ -226,7 +226,7 @@ public void registerNewUser(String username, String email, String password, Stri
 
 现在确认一下:
 
-```
+```java
 @RequestMapping(value = "/user/regitrationConfirm", method = RequestMethod.GET)
 public String confirmRegistration(Model model, @RequestParam("token") String token) {
     String result = userService.confirmRegistration(token);
@@ -238,7 +238,7 @@ public String confirmRegistration(Model model, @RequestParam("token") String tok
 }
 ```
 
-```
+```java
 public String confirmRegistration(String token) {
     VerificationToken verificationToken = tokenRepository.findByToken(token);
     if (verificationToken == null) {
@@ -261,7 +261,7 @@ public String confirmRegistration(String token) {
 
 现在，让我们看看如何允许用户在忘记密码的情况下重置自己的密码:
 
-```
+```java
 @RequestMapping(value = "/users/passwordReset", method = RequestMethod.POST)
 @ResponseStatus(HttpStatus.OK)
 public void passwordReset(HttpServletRequest request, @RequestParam("email") String email) {
@@ -273,7 +273,7 @@ public void passwordReset(HttpServletRequest request, @RequestParam("email") Str
 
 现在，服务层只需向用户发送一封电子邮件，其中包含用户可以重置密码的链接:
 
-```
+```java
 public void resetPassword(String userEmail, String appUrl) {
     Preference preference = preferenceRepository.findByEmail(userEmail);
     User user = userRepository.findByPreference(preference);
@@ -293,7 +293,7 @@ public void resetPassword(String userEmail, String appUrl) {
 
 一旦用户点击邮件中的链接，他们实际上可以**执行重置密码操作**:
 
-```
+```java
 @RequestMapping(value = "/users/resetPassword", method = RequestMethod.GET)
 public String resetPassword(
   Model model, 
@@ -310,7 +310,7 @@ public String resetPassword(
 
 服务层:
 
-```
+```java
 public String checkPasswordResetToken(long userId, String token) {
     PasswordResetToken passToken = passwordResetTokenRepository.findByToken(token);
     if ((passToken == null) || (passToken.getUser().getId() != userId)) {
@@ -332,7 +332,7 @@ public String checkPasswordResetToken(long userId, String token) {
 
 最后，下面是更新密码的实现:
 
-```
+```java
 @RequestMapping(value = "/users/updatePassword", method = RequestMethod.POST)
 @ResponseStatus(HttpStatus.OK)
 public void changeUserPassword(@RequestParam("password") String password) {
@@ -344,7 +344,7 @@ public void changeUserPassword(@RequestParam("password") String password) {
 
 接下来，我们将实现类似的功能—在内部更改您的密码:
 
-```
+```java
 @RequestMapping(value = "/users/changePassword", method = RequestMethod.POST)
 @ResponseStatus(HttpStatus.OK)
 public void changeUserPassword(@RequestParam("password") String password, 
@@ -357,7 +357,7 @@ public void changeUserPassword(@RequestParam("password") String password,
 }
 ```
 
-```
+```java
 public void changeUserPassword(User user, String password) {
     user.setPassword(passwordEncoder.encode(password));
     userRepository.save(user);
@@ -368,7 +368,7 @@ public void changeUserPassword(User user, String password) {
 
 接下来，让我们将项目转换/升级到 Spring Boot；首先，我们将修改`pom.xml`:
 
-```
+```java
 ...
 <parent>
     <groupId>org.springframework.boot</groupId>
@@ -391,7 +391,7 @@ public void changeUserPassword(User user, String password) {
 
 并且还为**提供了一个简单的启动应用程序用于启动**:
 
-```
+```java
 @SpringBootApplication
 public class Application {
 
@@ -417,7 +417,7 @@ public class Application {
 
 现在我们已经启动了，我们可以使用`@ConfigurationProperties`来具体化我们的 Reddit 属性:
 
-```
+```java
 @ConfigurationProperties(prefix = "reddit")
 @Component
 public class RedditProperties {
@@ -438,7 +438,7 @@ public class RedditProperties {
 
 我们现在可以以类型安全的方式干净地使用这些属性:
 
-```
+```java
 @Autowired
 private RedditProperties redditProperties;
 

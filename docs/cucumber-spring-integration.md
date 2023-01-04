@@ -14,7 +14,7 @@ Cucumber 是用 Ruby 编程语言编写的一个非常强大的测试框架，�
 
 让我们通过定义 Maven 依赖关系开始使用 Cucumber-Spring 集成——从 Cucumber-JVM 依赖关系开始:
 
-```
+```java
 <dependency>
     <groupId>io.cucumber</groupId>
     <artifactId>cucumber-java</artifactId>
@@ -27,7 +27,7 @@ Cucumber 是用 Ruby 编程语言编写的一个非常强大的测试框架，�
 
 接下来，我们将添加 JUnit 和 Cucumber 测试依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.cucumber</groupId>
     <artifactId>cucumber-junit</artifactId>
@@ -40,7 +40,7 @@ Cucumber 是用 Ruby 编程语言编写的一个非常强大的测试框架，�
 
 最后，春天和黄瓜的依赖:
 
-```
+```java
 <dependency>
     <groupId>io.cucumber</groupId>
     <artifactId>cucumber-spring</artifactId>
@@ -61,7 +61,7 @@ Cucumber 是用 Ruby 编程语言编写的一个非常强大的测试框架，�
 
 首先，让我们创建一个简单的控制器:
 
-```
+```java
 @RestController
 public class VersionController {
     @GetMapping("/version")
@@ -75,7 +75,7 @@ public class VersionController {
 
 我们用 JUnit 运行 Cucumber 测试所需要的就是创建一个带有注释`@RunWith(Cucumber.class)`的空类:
 
-```
+```java
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "src/test/resources")
 public class CucumberIntegrationTest {
@@ -86,7 +86,7 @@ public class CucumberIntegrationTest {
 
 现在，让我们创建一个黄瓜特征文件:
 
-```
+```java
 Feature: the version can be retrieved
   Scenario: client makes call to GET /version
     When the client calls /version
@@ -100,7 +100,7 @@ Feature: the version can be retrieved
 
 这里我们必须选择——我们可以在注释中使用[黄瓜表达式](https://web.archive.org/web/20220731203335/https://cucumber.io/docs/cucumber/cucumber-expressions/)或者正则表达式。在我们的例子中，我们将坚持使用正则表达式:
 
-```
+```java
 @When("^the client calls /version$")
 public void the_client_issues_GET_version() throws Throwable{
     executeGet("http://localhost:8080/version");
@@ -121,7 +121,7 @@ public void the_client_receives_server_version_body(String version) throws Throw
 
 所以现在让我们将 Cucumber 测试与 Spring 应用程序上下文集成起来。为此，我们将创建一个新类，并用`@SpringBootTest`和`@CucumberContextConfiguration`对其进行注释:
 
-```
+```java
 @CucumberContextConfiguration
 @SpringBootTest
 public class SpringIntegrationTest {
@@ -131,7 +131,7 @@ public class SpringIntegrationTest {
 
 现在所有的黄瓜定义都可以放入一个单独的 Java 类中，该类扩展了`SpringIntegrationTest`:
 
-```
+```java
 public class StepDefs extends SpringIntegrationTest {
 
     @When("^the client calls /version$")
@@ -145,7 +145,7 @@ public class StepDefs extends SpringIntegrationTest {
 
 最后，我们可以通过命令行快速运行，只需运行 **mvn 全新安装-Pintegration-lite-first**–Maven 将执行集成测试并在控制台中显示结果。
 
-```
+```java
 3 Scenarios ([32m3 passed[0m)
 9 Steps ([32m9 passed[0m)
 0m1.054s

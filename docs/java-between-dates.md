@@ -16,7 +16,7 @@ Java 8 中引入的新时间 API 使得不使用外部库处理日期和时间�
 
 下面是演示它的代码——使用`Calendar`实例:
 
-```
+```java
 public static List getDatesBetweenUsingJava7(Date startDate, Date endDate) {
   List datesInRange = new ArrayList<>();
   Calendar calendar = getCalendarWithoutTime(startDate);
@@ -47,7 +47,7 @@ private static Calendar getCalendarWithoutTime(Date date) {
 
 在 Java 8 中，我们现在可以创建一个连续无限的`Stream`日期，并且只提取相关的部分。不幸的是，**当一个谓词匹配到**时，没有办法终止一个无限的`Stream` ——这就是为什么我们需要计算这两天之间的天数，然后简单地计算`limit()`和`Stream:`
 
-```
+```java
 public static List<LocalDate> getDatesBetweenUsingJava8(
   LocalDate startDate, LocalDate endDate) { 
 
@@ -69,7 +69,7 @@ public static List<LocalDate> getDatesBetweenUsingJava8(
 
 最后，Java 9 提供了专门的计算方法:
 
-```
+```java
 public static List<LocalDate> getDatesBetweenUsingJava9(
   LocalDate startDate, LocalDate endDate) {
 

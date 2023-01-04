@@ -85,7 +85,7 @@ Dijkstra 算法的核心思想是不断消除起始节点和所有可能目的�
 
 在这个简单的实现中，我们将图表示为一组节点:
 
-```
+```java
 public class Graph {
 
     private Set<Node> nodes = new HashSet<>();
@@ -100,7 +100,7 @@ public class Graph {
 
 一个节点可以用一个`name`、一个参照`shortestPath`的`LinkedList`、一个来自源的`distance` 和一个名为`adjacentNodes`的邻接表来描述:
 
-```
+```java
 public class Node {
 
     private String name;
@@ -131,7 +131,7 @@ public class Node {
 
 现在，让我们实现 Dijkstra 算法:
 
-```
+```java
 public static Graph calculateShortestPathFromSource(Graph graph, Node source) {
     source.setDistance(0);
 
@@ -160,7 +160,7 @@ public static Graph calculateShortestPathFromSource(Graph graph, Node source) {
 
 `getLowestDistanceNode()`方法从未解决的节点集合中返回距离最小的节点，而`calculateMinimumDistance()`方法在遵循新探索的路径时将实际距离与新计算的距离进行比较:
 
-```
+```java
 private static Node getLowestDistanceNode(Set < Node > unsettledNodes) {
     Node lowestDistanceNode = null;
     int lowestDistance = Integer.MAX_VALUE;
@@ -175,7 +175,7 @@ private static Node getLowestDistanceNode(Set < Node > unsettledNodes) {
 }
 ```
 
-```
+```java
 private static void CalculateMinimumDistance(Node evaluationNode,
   Integer edgeWeigh, Node sourceNode) {
     Integer sourceDistance = sourceNode.getDistance();
@@ -190,7 +190,7 @@ private static void CalculateMinimumDistance(Node evaluationNode,
 
 现在，所有必要的部分都已就绪，让我们将 Dijkstra 算法应用于作为本文主题的示例图:
 
-```
+```java
 Node nodeA = new Node("A");
 Node nodeB = new Node("B");
 Node nodeC = new Node("C");

@@ -23,7 +23,7 @@ Spring Data 的`CrudRespository#save` 无疑很简单，但是有一个特性可
 
 首先，我们来构建一个 `Customer ` 实体:
 
-```
+```java
 @Entity 
 public class Customer {
     @Id 
@@ -36,7 +36,7 @@ public class Customer {
 
 然后我们定义一个简单的 CRUD 库:
 
-```
+```java
 @Repository 
 public interface CustomerRepository extends CrudRepository<Customer, Long> {
     Customer findById(long id);
@@ -45,7 +45,7 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
 
 最后，我们准备一个`CustomerService`:
 
-```
+```java
 @Service 
 public class CustomerService {
     @Autowired 
@@ -65,7 +65,7 @@ public class CustomerService {
 
 让我们在服务中添加一个方法来更新客户的联系数据。
 
-```
+```java
 public void updateCustomerContacts(long id, String phone) {
     Customer myCustomer = repo.findById(id);
     myCustomer.phone = phone;
@@ -89,7 +89,7 @@ public void updateCustomerContacts(long id, String phone) {
 
 让我们创建一个`CustomerDto`:
 
-```
+```java
 public class CustomerDto {
     private long id;
     public String name;
@@ -101,7 +101,7 @@ public class CustomerDto {
 
 我们还将创建一个`CustomerMapper`:
 
-```
+```java
 @Mapper(componentModel = "spring")
 public interface CustomerMapper {
     void updateCustomerFromDto(CustomerDto dto, @MappingTarget Customer entity);
@@ -114,7 +114,7 @@ public interface CustomerMapper {
 
 让我们将它添加到我们的`updateCustomerFromDto`方法接口中:
 
-```
+```java
 @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 ```
 
@@ -122,7 +122,7 @@ public interface CustomerMapper {
 
 因此，让我们为我们的服务添加一个方法，该方法将调用我们的映射器:
 
-```
+```java
 public void updateCustomer(CustomerDto dto) {
     Customer myCustomer = repo.findById(dto.id);
     mapper.updateCustomerFromDto(dto, myCustomer);
@@ -142,7 +142,7 @@ public void updateCustomer(CustomerDto dto) {
 
 我们将对其进行一点结构化，将所有的`phone`字段提取到`ContactPhone` 实体，并使其处于[一对多](/web/20220719012440/https://www.baeldung.com/hibernate-one-to-many)关系下:
 
-```
+```java
 @Entity public class CustomerStructured {
     @Id 
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -169,7 +169,7 @@ public void updateCustomer(CustomerDto dto) {
 
 让我们在存储库中添加我们的自定义更新方法:
 
-```
+```java
 @Modifying
 @Query("update Customer u set u.phone = :phone where u.id = :id")
 void updatePhone(@Param(value = "id") long id, @Param(value = "phone") String phone); 
@@ -177,7 +177,7 @@ void updatePhone(@Param(value = "id") long id, @Param(value = "phone") String ph
 
 现在我们可以重写我们的更新方法:
 
-```
+```java
 public void updateCustomerContacts(long id, String phone) {
     repo.updatePhone(id, phone);
 } 

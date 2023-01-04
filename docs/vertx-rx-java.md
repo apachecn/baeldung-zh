@@ -18,7 +18,7 @@
 
 先来导入`vertx-rx-java2`:
 
-```
+```java
 <dependency>
     <groupId>io.vertx</groupId>
     <artifactId>vertx-rx-java2</artifactId>
@@ -36,7 +36,7 @@
 
 和每个使用`Vert.x,`的应用程序一样，我们将开始创建`vertx`对象，这是所有`Vert.x`特性的主要入口点:
 
-```
+```java
 Vertx vertx = io.vertx.reactivex.core.Vertx.vertx();
 ```
 
@@ -44,7 +44,7 @@ Vertx vertx = io.vertx.reactivex.core.Vertx.vertx();
 
 我们继续定义稍后会用到的对象:
 
-```
+```java
 FileSystem fileSystem = vertx.fileSystem();
 HttpClient httpClient = vertx.createHttpClient();
 ```
@@ -57,7 +57,7 @@ HttpClient httpClient = vertx.createHttpClient();
 
 让我们为我们的例子这样做:
 
-```
+```java
 fileSystem
   .rxReadFile("cities.txt").toFlowable()
   .flatMap(buffer -> Flowable.fromArray(buffer.toString().split("\\r?\\n")))
@@ -77,7 +77,7 @@ fileSystem
 
 第一步是读取包含城市名称列表的文件，每行一个名称:
 
-```
+```java
 fileSystem
  .rxReadFile("cities.txt").toFlowable()
  .flatMap(buffer -> Flowable.fromArray(buffer.toString().split("\\r?\\n"))) 
@@ -93,7 +93,7 @@ fileSystem
 
 让我们继续调用链:
 
-```
+```java
 .flatMap(city -> searchByCityName(httpClient, city))
 .flatMap(HttpClientResponse::toFlowable) 
 ```
@@ -102,7 +102,7 @@ fileSystem
 
 让我们完成这一步，编写`searchByCityName()`的主体:
 
-```
+```java
 Flowable<HttpClientResponse> searchByCityName(HttpClient httpClient, String cityName) {
     HttpClientRequest req = httpClient.get(
         new RequestOptions()
@@ -126,13 +126,13 @@ Flowable<HttpClientResponse> searchByCityName(HttpClient httpClient, String city
 
 我们现在只需要获取返回的`JSON`对象的`woeid`属性的值，该值通过一个自定义方法唯一地标识了城市:
 
-```
+```java
 .map(extractingWoeid())
 ```
 
 `extractingWoeid()`方法返回一个函数，该函数从包含在`REST`服务响应中的`JSON`中提取城市标识符:
 
-```
+```java
 private static Function<Buffer, Long> extractingWoeid() {
     return cityBuffer -> cityBuffer
       .toJsonArray()
@@ -147,14 +147,14 @@ private static Function<Buffer, Long> extractingWoeid() {
 
 让我们继续反应链，从`REST API`中检索我们需要的细节:
 
-```
+```java
 .flatMap(cityId -> getDataByPlaceId(httpClient, cityId))
 .flatMap(toBufferFlowable())
 ```
 
 让我们详细介绍一下`getDataByPlaceId()`方法:
 
-```
+```java
 static Flowable<HttpClientResponse> getDataByPlaceId(
   HttpClient httpClient, long placeId) {
 
@@ -168,7 +168,7 @@ static Flowable<HttpClientResponse> getDataByPlaceId(
 
 使用`toBufferFlowable()`方法，我们将响应块缩减为单个块，以访问完整的 JSON 对象:
 
-```
+```java
 static Function<HttpClientResponse, Publisher<? extends Buffer>>
   toBufferFlowable() {
     return response -> response
@@ -183,13 +183,13 @@ static Function<HttpClientResponse, Publisher<? extends Buffer>>
 
 让我们继续添加到反应链中，从`JSON`对象中检索我们感兴趣的信息:
 
-```
+```java
 .map(toCityAndDayLength())
 ```
 
 让我们来编写`toCityAndDayLength()`方法:
 
-```
+```java
 static Function<JsonObject, CityAndDayLength> toCityAndDayLength() {
     return json -> {
         ZonedDateTime sunRise = ZonedDateTime.parse(json.getString("sun_rise"));
@@ -207,7 +207,7 @@ static Function<JsonObject, CityAndDayLength> toCityAndDayLength() {
 
 反应链完成。我们现在可以使用一个处理程序来订阅结果`Flowable`，该处理程序打印出发出的`CityAndDayLength`的实例，或者错误情况下的堆栈跟踪:
 
-```
+```java
 .subscribe(
   System.out::println, 
   Throwable::printStackTrace)
@@ -215,7 +215,7 @@ static Function<JsonObject, CityAndDayLength> toCityAndDayLength() {
 
 当我们运行应用程序时，我们可以看到这样的结果，这取决于列表中包含的城市和应用程序运行的日期:
 
-```
+```java
 In Chicago there are 13.3 hours of light.
 In Milan there are 13.5 hours of light.
 In Cairo there are 12.9 hours of light.

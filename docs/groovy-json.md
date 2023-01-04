@@ -8,7 +8,7 @@
 
 首先，要启动并运行本文的示例，我们需要设置我们的`pom.xml`:
 
-```
+```java
 <build>
     <plugins>
         // ...
@@ -35,7 +35,7 @@
 
 在 Groovy 中将对象转换成 JSON 非常简单，假设我们有一个`Account`类:
 
-```
+```java
 class Account {
     String id
     BigDecimal value
@@ -45,7 +45,7 @@ class Account {
 
 为了将该类的实例转换成 JSON `String,` ，我们需要使用`JsonOutput` 类并调用静态方法`toJson():`
 
-```
+```java
 Account account = new Account(
     id: '123', 
     value: 15.6,
@@ -56,7 +56,7 @@ println JsonOutput.toJson(account)
 
 结果，我们将得到解析后的 JSON `String:`
 
-```
+```java
 {"value":15.6,"createdAt":"2018-01-01T02:00:00+0000","id":"123"}
 ```
 
@@ -66,7 +66,7 @@ println JsonOutput.toJson(account)
 
 使用`JsonGenerator`类，我们可以定义 JSON 输出的选项:
 
-```
+```java
 JsonGenerator generator = new JsonGenerator.Options()
   .dateFormat('MM/dd/yyyy')
   .excludeFieldsByName('value')
@@ -77,7 +77,7 @@ println generator.toJson(account)
 
 因此，我们将得到格式化的 JSON，它没有我们排除的值字段，但带有格式化的日期:
 
-```
+```java
 {"createdAt":"01/01/2018","id":"123"}
 ```
 
@@ -87,14 +87,14 @@ println generator.toJson(account)
 
 然而，我们可以使用`prettyPrint`方法格式化我们的输出:
 
-```
+```java
 String json = generator.toJson(account)
 println JsonOutput.prettyPrint(json)
 ```
 
 我们得到如下格式化的 JSON:
 
-```
+```java
 {
     "value": 15.6,
     "createdAt": "01/01/2018",
@@ -110,7 +110,7 @@ println JsonOutput.prettyPrint(json)
 
 我们将使用`parseText` 将`String`解析为`Account class:`
 
-```
+```java
 def jsonSlurper = new JsonSlurper()
 
 def account = jsonSlurper.parseText('{"id":"123", "value":15.6 }') as Account
@@ -126,7 +126,7 @@ def account = jsonSlurper.parseText('{"id":"123", "value":15.6 }') as Account
 
 让我们看一个这样的例子:给定一个带有日期属性的 JSON`String`,`JsonSlurper`不会正确地创建对象，因为它会试图将日期解析为`String:`
 
-```
+```java
 def jsonSlurper = new JsonSlurper()
 def account 
   = jsonSlurper.parseText('{"id":"123","createdAt":"2018-01-01T02:00:00+0000"}') as Account
@@ -138,7 +138,7 @@ def account
 
 因此，它会尽可能避免创建`String`或 char 数组:
 
-```
+```java
 def jsonSlurper = new JsonSlurper(type: JsonParserType.INDEX_OVERLAY)
 def account 
   = jsonSlurper.parseText('{"id":"123","createdAt":"2018-01-01T02:00:00+0000"}') as Account

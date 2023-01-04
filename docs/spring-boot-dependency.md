@@ -18,7 +18,7 @@ Spring Boot Maven 和 Gradle 插件都将我们的应用程序打包成可执行
 
 让我们用分类器配置插件:
 
-```
+```java
 ...
 <build>
     ...
@@ -37,7 +37,7 @@ Spring Boot Maven 和 Gradle 插件都将我们的应用程序打包成可执行
 
 不过，Spring Boot 1.x 的配置会有一点不同:
 
-```
+```java
 ...
 <plugin>
     <groupId>org.springframework.boot</groupId>
@@ -61,7 +61,7 @@ Spring Boot Maven 和 Gradle 插件都将我们的应用程序打包成可执行
 
 我们也可以使用`[maven-assembly-plugin](https://web.archive.org/web/20221129213345/https://search.maven.org/search?q=a:maven-assembly-plugin)`来创建依赖 jar:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-assembly-plugin</artifactId>

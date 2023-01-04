@@ -19,7 +19,7 @@
 
 首先，让我们提出我们将用于过滤/搜索 API 的简单实体——一个基本的`User`:
 
-```
+```java
 @Entity
 public class User {
     @Id
@@ -42,7 +42,7 @@ public class User {
 
 让我们看看它是如何工作的:
 
-```
+```java
 @Repository
 public class UserDAO implements IUserDAO {
 
@@ -76,7 +76,7 @@ public class UserDAO implements IUserDAO {
 
 让我们来看看`UserSearchQueryCriteriaConsumer`类:
 
-```
+```java
 public class UserSearchQueryCriteriaConsumer implements Consumer<SearchCriteria>{
 
     private Predicate predicate;
@@ -110,7 +110,7 @@ public class UserSearchQueryCriteriaConsumer implements Consumer<SearchCriteria>
 
 约束类也很简单:
 
-```
+```java
 public class SearchCriteria {
     private String key;
     private String operation;
@@ -130,7 +130,7 @@ public class SearchCriteria {
 
 首先，让我们通过添加两个用户来初始化数据库以进行测试，如下例所示:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { PersistenceConfig.class })
 @Transactional
@@ -165,7 +165,7 @@ public class JPACriteriaQueryTest {
 
 现在，让我们用特定的`firstName`和`lastName`来得到一个`User`，如下例所示:
 
-```
+```java
 @Test
 public void givenFirstAndLastName_whenGettingListOfUsers_thenCorrect() {
     List<SearchCriteria> params = new ArrayList<SearchCriteria>();
@@ -181,7 +181,7 @@ public void givenFirstAndLastName_whenGettingListOfUsers_thenCorrect() {
 
 接下来，让我们用相同的`lastName`得到`User`的`List`:
 
-```
+```java
 @Test
 public void givenLast_whenGettingListOfUsers_thenCorrect() {
     List<SearchCriteria> params = new ArrayList<SearchCriteria>();
@@ -195,7 +195,7 @@ public void givenLast_whenGettingListOfUsers_thenCorrect() {
 
 接下来，让我们获取`age` **大于或等于 25** 的用户:
 
-```
+```java
 @Test
 public void givenLastAndAge_whenGettingListOfUsers_thenCorrect() {
     List<SearchCriteria> params = new ArrayList<SearchCriteria>();
@@ -211,7 +211,7 @@ public void givenLastAndAge_whenGettingListOfUsers_thenCorrect() {
 
 接下来，让我们搜索**实际上不存在的用户**:
 
-```
+```java
 @Test
 public void givenWrongFirstAndLast_whenGettingListOfUsers_thenCorrect() {
     List<SearchCriteria> params = new ArrayList<SearchCriteria>();
@@ -226,7 +226,7 @@ public void givenWrongFirstAndLast_whenGettingListOfUsers_thenCorrect() {
 
 最后，让我们搜索只给定了**部分**的用户`firstName`:
 
-```
+```java
 @Test
 public void givenPartialFirst_whenGettingListOfUsers_thenCorrect() {
     List<SearchCriteria> params = new ArrayList<SearchCriteria>();
@@ -245,7 +245,7 @@ public void givenPartialFirst_whenGettingListOfUsers_thenCorrect() {
 
 我们将设置一个简单的`UserController`——带有一个`findAll()` **,使用“`search`”来传递整个搜索/过滤表达式**:
 
-```
+```java
 @Controller
 public class UserController {
 
@@ -273,13 +273,13 @@ public class UserController {
 
 我们现在可以开始使用 API，并确保一切正常工作:
 
-```
+```java
 http://localhost:8080/users?search=lastName:doe,age>25
 ```
 
 以下是它的回应:
 
-```
+```java
 [{
     "id":2,
     "firstName":"tom",

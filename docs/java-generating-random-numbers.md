@@ -14,7 +14,7 @@ Java API 为我们提供了几种方法来实现我们的目的。让我们看�
 
 **`Math`类的`random`方法将返回一个范围从 0.0(含)到 1.0(不含)的`double`值。**让我们看看如何使用它来获得一个由`min`和`max`定义的给定范围内的随机数:
 
-```
+```java
 int randomWithMathRandom = (int) ((Math.random() * (max - min)) + min);
 ```
 
@@ -22,14 +22,14 @@ int randomWithMathRandom = (int) ((Math.random() * (max - min)) + min);
 
 **在 Java 1.7 之前，最流行的生成随机数的方式是使用`nextInt`。**该方法有两种使用方式，带参数和不带参数。无参数调用以近似相等的概率返回任何一个`int`值。所以，很有可能我们会得到负数:
 
-```
+```java
 Random random = new Random();
 int randomWithNextInt = random.nextInt();
 ```
 
 如果我们使用带有`bound`参数的`netxInt`调用，我们将得到一个范围内的数字:
 
-```
+```java
 int randomWintNextIntWithinARange = random.nextInt(max - min) + min;
 ```
 
@@ -39,19 +39,19 @@ int randomWintNextIntWithinARange = random.nextInt(max - min) + min;
 
 不带参数的`ints`方法返回一个无限制的`int`值流:
 
-```
+```java
 IntStream unlimitedIntStream = random.ints();
 ```
 
 我们还可以传入一个参数来限制流的大小:
 
-```
+```java
 IntStream limitedIntStream = random.ints(streamSize);
 ```
 
 当然，我们可以设置生成范围的最大值和最小值:
 
-```
+```java
 IntStream limitedIntStreamWithinARange = random.ints(streamSize, min, max);
 ```
 
@@ -65,20 +65,20 @@ Java 1.7 版本给我们带来了一种新的更有效的方法，通过`ThreadL
 
 现在，让我们看看它是如何工作的:
 
-```
+```java
 int randomWithThreadLocalRandomInARange = ThreadLocalRandom.current().nextInt(min, max);
 ```
 
 有了 Java 8 或以上，我们有了新的可能。首先，`nextInt`方法有两种变体:
 
-```
+```java
 int randomWithThreadLocalRandom = ThreadLocalRandom.current().nextInt();
 int randomWithThreadLocalRandomFromZero = ThreadLocalRandom.current().nextInt(max);
 ```
 
 其次，也是更重要的，我们可以使用`ints`方法:
 
-```
+```java
 IntStream streamWithThreadLocalRandom = ThreadLocalRandom.current().ints();
 ```
 
@@ -90,7 +90,7 @@ Java 8 还为我们带来了一个真正快速的生成器——[`SplittableRand
 
 我们有`nextInt`和`ints`两种方法。通过`nextInt`,我们可以使用两个参数调用直接设置上限和下限范围:
 
-```
+```java
 SplittableRandom splittableRandom = new SplittableRandom();
 int randomWithSplittableRandom = splittableRandom.nextInt(min, max);
 ```
@@ -99,7 +99,7 @@ int randomWithSplittableRandom = splittableRandom.nextInt(min, max);
 
 我们也可以使用`ints`方法。这意味着我们可以很容易地得到一串`int`值。为了澄清，我们可以选择有一个有限的或无限的流。对于有限的流，我们可以设置数字生成范围的上限和下限:
 
-```
+```java
 IntStream limitedIntStreamWithinARangeWithSplittableRandom = splittableRandom.ints(streamSize, min, max);
 ```
 
@@ -112,14 +112,14 @@ IntStream limitedIntStreamWithinARangeWithSplittableRandom = splittableRandom.in
 
 这个类继承自`java.util.Random`。因此，我们可以使用上面看到的所有方法。例如，如果我们需要获得任何一个`int`值，那么我们将不带参数地调用`nextInt`:
 
-```
+```java
 SecureRandom secureRandom = new SecureRandom();
 int randomWithSecureRandom = secureRandom.nextInt();
 ```
 
 另一方面，如果我们需要设置范围，我们可以用`bound`参数调用它:
 
-```
+```java
 int randomWithSecureRandomWithinARange = secureRandom.nextInt(max - min) + min;
 ```
 
@@ -137,7 +137,7 @@ Apache commons 项目的 Commons 数学库中有很多生成器。最简单的�
 
 让我们看看如何使用它。首先，我们必须添加依赖性:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-math3</artifactId>
@@ -149,7 +149,7 @@ Apache commons 项目的 Commons 数学库中有很多生成器。最简单的�
 
 然后我们可以开始使用它:
 
-```
+```java
 RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
 int randomWithRandomDataGenerator = randomDataGenerator.nextInt(min, max);
 ```
@@ -160,7 +160,7 @@ int randomWithRandomDataGenerator = randomDataGenerator.nextInt(min, max);
 
 该库也可以在 Maven Central 仓库中获得。因此，让我们添加依赖关系:
 
-```
+```java
 <dependency>
     <groupId>it.unimi.dsi</groupId>
     <artifactId>dsiutils</artifactId>
@@ -172,7 +172,7 @@ int randomWithRandomDataGenerator = randomDataGenerator.nextInt(min, max);
 
 例如，如果我们想得到一个范围内的随机数，我们可以写:
 
-```
+```java
 XoRoShiRo128PlusRandom xoroRandom = new XoRoShiRo128PlusRandom();
 int randomWithXoRoShiRo128PlusRandom = xoroRandom.nextInt(max - min) + min;
 ```

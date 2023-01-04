@@ -14,7 +14,7 @@
 
 让我们从 [MongoDB](/web/20221211143532/https://www.baeldung.com/spring-data-mongodb-tutorial) 的例子开始。我们将看看需要排除的类:
 
-```
+```java
 @SpringBootApplication(exclude = {
     MongoAutoConfiguration.class, 
     MongoDataAutoConfiguration.class
@@ -23,7 +23,7 @@
 
 类似地，我们将研究禁用 [Redis](/web/20221211143532/https://www.baeldung.com/spring-data-redis-tutorial) 的自动配置:
 
-```
+```java
 @SpringBootApplication(exclude = {
     RedisAutoConfiguration.class, 
     RedisRepositoryAutoConfiguration.class
@@ -32,7 +32,7 @@
 
 最后，我们来看看如何禁用 [Spring 数据 JPA](/web/20221211143532/https://www.baeldung.com/the-persistence-layer-with-spring-data-jpa) 的自动配置:
 
-```
+```java
 @SpringBootApplication(exclude = {
     DataSourceAutoConfiguration.class, 
     DataSourceTransactionManagerAutoConfiguration.class, 
@@ -46,7 +46,7 @@
 
 我们将首先用 MongoDB 来探索它:
 
-```
+```java
 spring.autoconfigure.exclude= \
   org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration, \
   org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
@@ -54,7 +54,7 @@ spring.autoconfigure.exclude= \
 
 现在我们将为 Redis 禁用它:
 
-```
+```java
 spring.autoconfigure.exclude= \
   org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration, \
   org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
@@ -62,7 +62,7 @@ spring.autoconfigure.exclude= \
 
 最后，我们将对 Spring Data JPA 禁用它:
 
-```
+```java
 spring.autoconfigure.exclude= \ 
   org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, \
   org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration, \
@@ -75,7 +75,7 @@ spring.autoconfigure.exclude= \
 
 我们将从 MongoDB 的测试开始。我们将验证`MongoTemplate` bean 是否不存在:
 
-```
+```java
 @Test(expected = NoSuchBeanDefinitionException.class)
 public void givenAutoConfigDisabled_whenStarting_thenNoAutoconfiguredBeansInContext() { 
     context.getBean(MongoTemplate.class); 
@@ -84,7 +84,7 @@ public void givenAutoConfigDisabled_whenStarting_thenNoAutoconfiguredBeansInCont
 
 现在我们将检查 JPA。对于 JPA，将缺少`DataSource` bean:
 
-```
+```java
 @Test(expected = NoSuchBeanDefinitionException.class)
 public void givenAutoConfigDisabled_whenStarting_thenNoAutoconfiguredBeansInContext() {
     context.getBean(DataSource.class);
@@ -93,7 +93,7 @@ public void givenAutoConfigDisabled_whenStarting_thenNoAutoconfiguredBeansInCont
 
 最后，对于 Redis，我们将检查应用程序上下文中的`RedisTemplate` bean:
 
-```
+```java
 @Test(expected = NoSuchBeanDefinitionException.class)
 public void givenAutoConfigDisabled_whenStarting_thenNoAutoconfiguredBeansInContext() {
     context.getBean(RedisTemplate.class);

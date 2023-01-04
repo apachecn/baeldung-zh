@@ -14,13 +14,13 @@
 
 工厂方法模式是我们将实例的构造与我们正在构造的类分开的一种方式。这样，我们就可以抽象出确切的类型，允许我们的客户端代码以接口或抽象类的形式工作:
 
-```
+```java
 class SomeImplementation implements SomeInterface {
     // ...
 } 
 ```
 
-```
+```java
 public class SomeInterfaceFactory {
     public SomeInterface newInstance() {
         return new SomeImplementation();
@@ -44,19 +44,19 @@ public class SomeInterfaceFactory {
 
 首先，我们有一个接口和一些我们实际想要使用的功能的具体实现:
 
-```
+```java
 interface FileSystem {
     // ...
 } 
 ```
 
-```
+```java
 class LocalFileSystem implements FileSystem {
     // ...
 } 
 ```
 
-```
+```java
 class NetworkFileSystem implements FileSystem {
     // ...
 } 
@@ -64,19 +64,19 @@ class NetworkFileSystem implements FileSystem {
 
 接下来，我们有一个接口和一些具体的实现供工厂获取上述内容:
 
-```
+```java
 interface FileSystemFactory {
     FileSystem newInstance();
 } 
 ```
 
-```
+```java
 class LocalFileSystemFactory implements FileSystemFactory {
     // ...
 } 
 ```
 
-```
+```java
 class NetworkFileSystemFactory implements FileSystemFactory {
     // ...
 } 
@@ -84,7 +84,7 @@ class NetworkFileSystemFactory implements FileSystemFactory {
 
 然后我们有另一个工厂方法来获得抽象工厂，通过它我们可以获得实际的实例:
 
-```
+```java
 class Example {
     static FileSystemFactory getFactory(String fs) {
         FileSystemFactory factory;
@@ -116,7 +116,7 @@ class Example {
 
 当我们想要以更灵活的方式构造一个复杂的对象时，构建器模式是很有用的。它的工作原理是有一个单独的类，我们用它来构建复杂的对象，并允许客户端用一个更简单的接口来创建这个对象:
 
-```
+```java
 class CarBuilder {
     private String make = "Ford";
     private String model = "Fiesta";
@@ -135,7 +135,7 @@ class CarBuilder {
 
 JVM 中有一些这种模式的非常重要的例子。**`StringBuilder`和`StringBuffer`类是构建器，允许我们通过提供许多小部件**来构建一个长的`String`。最近的`Stream.Builder`类允许我们做完全相同的事情来建造一个`Stream`:
 
-```
+```java
 Stream.Builder<Integer> builder = Stream.builder<Integer>();
 builder.add(1);
 builder.add(2);
@@ -155,7 +155,7 @@ Stream<Integer> stream = builder.build();
 
 通常，这是通过让一个对象作为我们需要的数据的惰性包装器，并在通过 getter 方法访问时计算数据来实现的:
 
-```
+```java
 class LazyPi {
     private Supplier<Double> calculator;
     private Double value;
@@ -177,7 +177,7 @@ JVM 中这种例子相对较少。然而，Java 8 中引入的 [Streams API](/we
 
 然而，**流本身的实际生成也可以是懒惰的**。`Stream.generate()`需要下一个值时调用函数，并且只在需要时调用。我们可以用它来加载昂贵的值——例如，通过 HTTP API 调用——并且我们只在实际需要新元素时才支付成本:
 
-```
+```java
 Stream.generate(new BaeldungArticlesLoader())
   .filter(article -> article.getTags().contains("java-streams"))
   .map(article -> article.getTitle())
@@ -196,7 +196,7 @@ Stream.generate(new BaeldungArticlesLoader())
 
 JVM 中这种模式的主要例子是线程池的使用。一个 [`ExecutorService`](/web/20221208143921/https://www.baeldung.com/java-executor-service-tutorial) 将管理一组线程，并允许我们在一个线程上执行任务时使用它们。使用这种方法意味着，每当我们需要生成一个异步任务时，我们不需要创建新的线程，而这又会带来所有的开销:
 
-```
+```java
 ExecutorService pool = Executors.newFixedThreadPool(10);
 
 pool.execute(new SomeTask()); // Runs on a thread from the pool
@@ -213,7 +213,7 @@ pool.execute(new AnotherTask()); // Runs on a thread from the pool
 
 这样做更便宜，但缺点是我们的对象中任何构造了自己的字段都将是同一个实例。这意味着这些字段的更改也会在所有实例中发生。但是，如果有必要，我们总是可以自己覆盖它:
 
-```
+```java
 public class Prototype implements Cloneable {
     private Map<String, String> contents = new HashMap<>();
 
@@ -243,7 +243,7 @@ JVM 有几个这样的例子。我们可以通过实现`Cloneable`接口的类�
 
 当我们有一个应该只有一个实例的类，并且这个实例应该可以从整个应用程序中访问时，通常使用 Singleton 模式。通常，我们通过静态方法访问一个静态实例来管理它:
 
-```
+```java
 public class Singleton {
     private static Singleton instance = null;
 

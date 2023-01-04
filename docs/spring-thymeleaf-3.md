@@ -14,7 +14,7 @@
 
 首先，让我们看看将百里香叶与 Spring 集成所需的配置；`thymeleaf-spring`我们的依赖项中需要库:
 
-```
+```java
 <dependency>
     <groupId>org.thymeleaf</groupId>
     <artifactId>thymeleaf</artifactId>
@@ -35,7 +35,7 @@
 
 为了做到这一点，我们需要更新 Java config 类，这里创建了[和](/web/20220810180959/https://www.baeldung.com/thymeleaf-in-spring-mvc)。除了新类型的解析器，我们的模板还实现了 Spring 接口`ApplicationContextAware`:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 @ComponentScan({ "com.baeldung.thymeleaf" })
@@ -83,7 +83,7 @@ public class WebMVCConfig implements WebMvcConfigurer, ApplicationContextAware {
 
 在本课程的下一部分，我们需要配置模板引擎:
 
-```
+```java
 private ISpringTemplateEngine templateEngine(ITemplateResolver templateResolver) {
     SpringTemplateEngine engine = new SpringTemplateEngine();
     engine.setTemplateResolver(templateResolver);
@@ -93,7 +93,7 @@ private ISpringTemplateEngine templateEngine(ITemplateResolver templateResolver)
 
 最后，我们需要创建三个独立的模板解析器:
 
-```
+```java
 private ITemplateResolver htmlTemplateResolver() {
     SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
     resolver.setApplicationContext(applicationContext);
@@ -130,7 +130,7 @@ Javascript 模板会存放在`/WEB-INF/js/`文件夹，纯文本文件存放在`
 
 为了测试我们的新配置，我们创建了以下 Spring 控制器:
 
-```
+```java
 @Controller
 public class InliningController {
 
@@ -169,7 +169,7 @@ public class InliningController {
 
 本教程的最后一部分是创建三种不同类型的文件，并测试新的百里香叶功能的用法。让我们从 HTML 文件开始:
 
-```
+```java
 <!DOCTYPE html>
 <html  xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -185,7 +185,7 @@ public class InliningController {
 
 在这个文件中，我们使用了两种不同的方法。为了显示标题，我们使用转义语法，这将删除所有 HTML 标签，导致只显示文本。在描述的情况下，我们使用非转义语法来保存 HTML 标签。最终结果将如下所示:
 
-```
+```java
 <p>Title of tutorial: Baeldung</p>
 <p>Description: <strong>Thymeleaf</strong> tutorial</p>
 ```
@@ -194,14 +194,14 @@ public class InliningController {
 
 接下来，我们继续测试 js 模板的特性:
 
-```
+```java
 var count = [[${students.size()}]];
 alert("Number of students in group: " + count); 
 ```
 
 模板模式下的属性将被 JavaScript 取消转义。这将导致创建 js 警报。我们通过使用 jQuery AJAX 在 listStudents.html 文件中加载此警报:
 
-```
+```java
 <script>
     $(document).ready(function() {
         $.ajax({
@@ -213,7 +213,7 @@ alert("Number of students in group: " + count);
 
 最后，但不是最不重要的功能，我们想测试的是纯文本文件生成。我们创建了包含以下内容的 studentsList.txt 文件:
 
-```
+```java
 Dear [(${username})],
 
 This is the list of our students:
@@ -232,7 +232,7 @@ The Baeldung University
 
 `Spring Boot`通过添加 [`spring-boot-starter-thymeleaf`](https://web.archive.org/web/20220810180959/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-thymeleaf%22) 依赖关系为`Thymeleaf`提供自动配置:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>

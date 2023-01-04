@@ -20,7 +20,7 @@
 
 强引用是我们在日常编程中最常用的`Reference`类型:
 
-```
+```java
 Integer prime = 1;
 ```
 
@@ -32,7 +32,7 @@ Integer prime = 1;
 
 让我们看看如何用 Java 创建一个`SoftReference`:
 
-```
+```java
 Integer prime = 1;  
 SoftReference<Integer> soft = new SoftReference<Integer>(prime); 
 prime = null;
@@ -48,7 +48,7 @@ prime = null;
 
 我们可以用下面的方法在 Java 中创建一个`WeakReference`:
 
-```
+```java
 Integer prime = 1;  
 WeakReference<Integer> soft = new WeakReference<Integer>(prime); 
 prime = null;
@@ -68,7 +68,7 @@ prime = null;
 
 幸运的是，`WeakHashMap` 恰恰具有这些特征。让我们测试一下我们的`WeakHashMap` ,看看它的表现如何:
 
-```
+```java
 WeakHashMap<UniqueImageName, BigImage> map = new WeakHashMap<>();
 BigImage bigImage = new BigImage("image_id");
 UniqueImageName imageName = new UniqueImageName("name_of_big_image");
@@ -88,7 +88,7 @@ await().atMost(10, TimeUnit.SECONDS).until(map::isEmpty);
 
 我们调用一个`System.gc()` 来强制 JVM 触发一个 GC 进程。在 GC 循环之后，我们的`WeakHashMap` 将是空的:
 
-```
+```java
 WeakHashMap<UniqueImageName, BigImage> map = new WeakHashMap<>();
 BigImage bigImageFirst = new BigImage("foo");
 UniqueImageName imageNameFirst = new UniqueImageName("name_of_big_image");

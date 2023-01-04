@@ -29,19 +29,19 @@
 
 让我们启动本地单节点 Kubernetes 集群:
 
-```
+```java
 minikube start --vm-driver=virtualbox
 ```
 
 此命令使用 VirtualBox 驱动程序创建运行 Minikube 集群的虚拟机。`kubectl`中的默认上下文现在将是`minikube`。然而，为了能够在上下文之间切换，我们使用:
 
-```
+```java
 kubectl config use-context minikube
 ```
 
 启动 Minikube 后，我们可以**连接到 Kubernetes 仪表板**以轻松访问日志和监控我们的服务、pod、配置图和机密:
 
-```
+```java
 minikube dashboard 
 ```
 
@@ -51,7 +51,7 @@ minikube dashboard
 
 此时，我们可以从父文件夹中运行“deployment-travel-client.sh”脚本，或者逐个执行每个指令，以便很好地掌握该过程:
 
-```
+```java
 ### build the repository
 mvn clean install
 
@@ -97,7 +97,7 @@ Spring Cloud Kubernetes Ribbon 利用这一特性在服务的不同端点之间�
 
 我们可以通过在客户端应用程序上添加[spring-cloud-starter-kubernetes](https://web.archive.org/web/20220627182516/https://search.maven.org/search?q=g:org.springframework.cloud%20a:spring-cloud-starter-kubernetes)依赖项来轻松使用服务发现:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-kubernetes</artifactId>
@@ -106,7 +106,7 @@ Spring Cloud Kubernetes Ribbon 利用这一特性在服务的不同端点之间�
 
 同样，我们应该添加`@EnableDiscoveryClient`，并通过在我们的类中使用`@Autowired`将`DiscoveryClient`注入到`ClientController`中:
 
-```
+```java
 @SpringBootApplication
 @EnableDiscoveryClient
 public class Application {
@@ -116,7 +116,7 @@ public class Application {
 }
 ```
 
-```
+```java
 @RestController
 public class ClientController {
     @Autowired
@@ -132,7 +132,7 @@ public class ClientController {
 
 在我们的例子中，我们在`client-service` Spring Boot 应用程序上使用配置映射。让我们创建一个`client-config.` yaml 文件来定义`client-service`的配置图:
 
-```
+```java
 apiVersion: v1 by d
 kind: ConfigMap
 metadata:
@@ -144,13 +144,13 @@ data:
 
 **配置图的名称必须与我们的“application.properties”文件中指定的应用程序名称**相匹配，这一点很重要。这种情况下是 `client-service`。接下来，我们应该在 Kubernetes 上为`client-service`创建配置图:
 
-```
+```java
 kubectl create -f client-config.yaml
 ```
 
 现在，让我们用`@Configuration`和`@ConfigurationProperties`创建一个配置类`ClientConfig`，并注入到`ClientController`中:
 
-```
+```java
 @Configuration
 @ConfigurationProperties(prefix = "bean")
 public class ClientConfig {
@@ -161,7 +161,7 @@ public class ClientConfig {
 }
 ```
 
-```
+```java
 @RestController
 public class ClientController {
 
@@ -179,7 +179,7 @@ public class ClientController {
 
 此外，每次我们决定更新配置映射时，页面上的消息都会相应地改变:
 
-```
+```java
 kubectl edit configmap client-service
 ```
 
@@ -191,7 +191,7 @@ kubectl edit configmap client-service
 
 第一步是创建一个`secret.yaml`文件，将`username`和`password`编码为`Base 64`:
 
-```
+```java
 apiVersion: v1
 kind: Secret
 metadata:
@@ -203,7 +203,7 @@ data:
 
 让我们在 Kubernetes 集群上应用这个秘密配置:
 
-```
+```java
 kubectl apply -f secret.yaml
 ```
 
@@ -211,7 +211,7 @@ kubectl apply -f secret.yaml
 
 我们现在应该创建 MongoDB 服务和部署文件`travel-agency-deployment.yaml`。特别是，在部署部分，我们将使用我们之前定义的秘密`username`和`password`:
 
-```
+```java
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -249,7 +249,7 @@ spec:
 
 更新应用程序属性以添加数据库相关信息非常重要。虽然我们可以自由地指定数据库名称`admin`，但是这里我们隐藏了最敏感的信息，比如`username`和`password`:
 
-```
+```java
 spring.cloud.kubernetes.reload.enabled=true
 spring.cloud.kubernetes.secrets.name=db-secret
 spring.data.mongodb.host=mongodb-service
@@ -263,7 +263,7 @@ spring.data.mongodb.password=${MONGO_PASSWORD}
 
 下面是文件的相关部分，其中一部分与 MongoDB 连接相关:
 
-```
+```java
 env:
   - name: MONGO_USERNAME
     valueFrom:
@@ -283,7 +283,7 @@ env:
 
 让我们从将`[spring-cloud-starter-kubernetes-ribbon](https://web.archive.org/web/20220627182516/https://search.maven.org/search?q=g:org.springframework.cloud%20a:spring-cloud-starter-kubernetes-ribbon)`依赖项添加到我们的`client-service` pom.xml 文件开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-kubernetes-ribbon</artifactId>
@@ -292,7 +292,7 @@ env:
 
 下一步是将注释`@RibbonClient`添加到我们的`client-service`应用程序中:
 
-```
+```java
 @RibbonClient(name = "travel-agency-service")
 ```
 
@@ -300,7 +300,7 @@ env:
 
 我们还需要在应用程序属性中启用功能区客户端:
 
-```
+```java
 ribbon.http.client.enabled=true
 ```
 
@@ -314,7 +314,7 @@ ribbon.http.client.enabled=true
 
 此外，我们通过用`@HystrixCommand()`注释方法`TravelAgencyService.getDeals()`来使用回退功能。这意味着在回退的情况下，将调用`getFallBackName()`并返回“回退”消息:
 
-```
+```java
 @HystrixCommand(fallbackMethod = "getFallbackName", commandProperties = { 
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000") })
 public String getDeals() {

@@ -30,7 +30,7 @@ Web 应用程序通常依赖用户输入来满足它们的一些用例。因此�
 
 让我们看看`[RedirectAttributes](https://web.archive.org/web/20220524021952/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/mvc/support/RedirectAttributes.html)`接口中的方法，它们可以帮助我们在项目中使用 flash 属性:
 
-```
+```java
 RedirectAttributes addFlashAttribute(String attributeName, @Nullable Object attributeValue);
 
 RedirectAttributes addFlashAttribute(Object attributeValue);
@@ -46,7 +46,7 @@ Spring 提供了一个名为 [`FlashMap`](https://web.archive.org/web/2022052402
 
 让我们来看看`FlashMap`类的定义:
 
-```
+```java
 public final class FlashMap extends HashMap<String, Object> implements Comparable<FlashMap> {
 
     @Nullable
@@ -72,7 +72,7 @@ public final class FlashMap extends HashMap<String, Object> implements Comparabl
 
 首先，让我们来看看这个策略界面的定义:
 
-```
+```java
 public interface FlashMapManager {
 
     @Nullable
@@ -88,7 +88,7 @@ public interface FlashMapManager {
 
 为了将我们的焦点保持在本教程的范围内，我们将把我们的覆盖范围限制在与 flash 属性相关的方法上:
 
-```
+```java
 public static Map<String, ?> getInputFlashMap(HttpServletRequest request);
 
 public static FlashMap getOutputFlashMap(HttpServletRequest request);
@@ -113,7 +113,7 @@ public static void saveOutputFlashMap(String location,
 
 首先，我们需要将`[spring-boot-starter-thymeleaf](https://web.archive.org/web/20220524021952/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-thymeleaf)`依赖项添加到项目的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -123,7 +123,7 @@ public static void saveOutputFlashMap(String location,
 
 接下来，我们可以在位于`src/main/resources`目录下的`pplication.properties`文件中定义一些百里香叶特有的属性:
 
-```
+```java
 spring.thymeleaf.cache=false
 spring.thymeleaf.enabled=true 
 spring.thymeleaf.prefix=classpath:/templates/
@@ -136,7 +136,7 @@ spring.thymeleaf.suffix=.html
 
 接下来，让我们**在`Poem`类中定义我们的域模型**:
 
-```
+```java
 public class Poem {
     private String title;
     private String author;
@@ -146,7 +146,7 @@ public class Poem {
 
 此外，我们可以在我们的`Poem`类中添加`isValidPoem()`静态方法来帮助我们验证字段不允许空字符串:
 
-```
+```java
 public static boolean isValidPoem(Poem poem) {
     return poem != null && Strings.isNotBlank(poem.getAuthor()) 
       && Strings.isNotBlank(poem.getBody())
@@ -158,7 +158,7 @@ public static boolean isValidPoem(Poem poem) {
 
 现在，我们准备创建我们的提交表单。为此，**我们需要一个端点`/poem/submit`，它将服务一个 GET 请求，向用户显示表单**:
 
-```
+```java
 @GetMapping("/poem/submit")
 public String submitGet(Model model) {
     model.addAttribute("poem", new Poem());
@@ -170,7 +170,7 @@ public String submitGet(Model model) {
 
 此外，我们希望将 POST 表单与模型属性`poem`绑定在一起:
 
-```
+```java
 <form action="#" method="post" th:action="@{/poem/submit}" th:object="${poem}">
     <!-- form fields for poem title, body, and author -->
 </form> 
@@ -180,7 +180,7 @@ public String submitGet(Model model) {
 
 现在，让我们为表单启用 POST 操作。为此，我们将在`PoemSubmission`控制器中创建 **`/poem/submit`端点来服务 POST 请求**:
 
-```
+```java
 @PostMapping("/poem/submit")
 public RedirectView submitPost(
     HttpServletRequest request, 
@@ -199,7 +199,7 @@ public RedirectView submitPost(
 
 现在，我们需要向用户显示一个确认页面，所以让我们实现服务于 GET 请求的`/poem/success`端点的功能:
 
-```
+```java
 @GetMapping("/poem/success")
 public String getSuccess(HttpServletRequest request) {
     Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
@@ -216,7 +216,7 @@ public String getSuccess(HttpServletRequest request) {
 
 最后，让我们使用成功页面中的 flash 属性`poem `来显示用户提交的诗歌的标题:
 
-```
+```java
 <h1 th:if="${poem}">
     <p th:text="${'You have successfully submitted poem titled - '+ poem?.title}"/>
     Click <a th:href="@{/poem/submit}"> here</a> to submit more.

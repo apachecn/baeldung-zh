@@ -12,7 +12,7 @@
 
 让我们假设我们只是通过运行`gradle init –type java-application`来创建一个新的 Java 项目。这将给我们留下一个新项目，其目录和文件结构如下:
 
-```
+```java
 build.gradle
 gradle    
     wrapper
@@ -32,7 +32,7 @@ src
 
 我们可以将`build.gradle`文件视为项目的心脏或大脑。我们示例的结果文件如下所示:
 
-```
+```java
 plugins {
     id 'java'
     id 'application'
@@ -59,7 +59,7 @@ Gradle 的基本构件是项目和任务。在这种情况下，由于应用了`
 
 如果我们需要额外的特殊任务，比如构建 Docker 映像，它也会进入到`build.gradle`文件中。最简单的任务定义如下:
 
-```
+```java
 task hello {
     doLast {
         println 'Hello Baeldung!'
@@ -69,7 +69,7 @@ task hello {
 
 我们可以通过将任务指定为 Gradle CLI 的参数来运行任务，如下所示:
 
-```
+```java
 $ gradle -q hello
 Hello Baeldung!
 ```
@@ -86,7 +86,7 @@ Hello Baeldung!
 
 Gradle 还生成一个`settings.gradle`文件:
 
-```
+```java
 rootProject.name = 'gradle-example'
 ```
 
@@ -100,7 +100,7 @@ rootProject.name = 'gradle-example'
 
 在创建了构建的 [`Settings`](https://web.archive.org/web/20220831003306/https://docs.gradle.org/current/dsl/org.gradle.api.initialization.Settings.html) 实例之后，通过对其执行文件并由此对其进行配置来使用该文件。这意味着我们在`settings.gradle`文件中定义子项目，如下所示:
 
-```
+```java
 include 'foo', 'bar'
 ```
 
@@ -123,7 +123,7 @@ include 'foo', 'bar'
 
 另一个用例是像这样指定 JVM 参数:
 
-```
+```java
 org.gradle.jvmargs=-Xmx2g -XX:MaxPermSize=256m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8
 ```
 

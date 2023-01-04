@@ -29,7 +29,7 @@
 
 现在，我们可以使用绝对路径检索资源:
 
-```
+```java
 void givenAbsoluteResourcePath_whenGetResource_thenReturnResource() {
     URL resourceAbsolutePath = ClassGetResourceExample.class
         .getResource("/com/baeldung/resource/example.txt");
@@ -41,7 +41,7 @@ void givenAbsoluteResourcePath_whenGetResource_thenReturnResource() {
 
 此外，由于我们的资源和我们的类在同一个包中，我们也可以使用相对路径来检索它:
 
-```
+```java
 void givenRelativeResourcePath_whenGetResource_thenReturnResource() {
     URL resourceRelativePath = ClassGetResourceExample.class.getResource("example.txt");
     Assertions.assertNotNull(resourceRelativePath);
@@ -66,7 +66,7 @@ void givenRelativeResourcePath_whenGetResource_thenReturnResource() {
 
 让我们使用绝对路径和`ClassLoader`实例来获取资源:
 
-```
+```java
 void givenAbsoluteResourcePath_whenGetResource_thenReturnResource() {
     URL resourceAbsolutePath = ClassLoaderGetResourceExample.class.getClassLoader()
         .getResource("com/baeldung/resource/example.txt");
@@ -78,7 +78,7 @@ void givenAbsoluteResourcePath_whenGetResource_thenReturnResource() {
 
 使用`ClassLoader`实例，**我们无法使用相对路径**获得资源:
 
-```
+```java
 void givenRelativeResourcePath_whenGetResource_thenReturnNull() {
     URL resourceRelativePath = ClassLoaderGetResourceExample.class.getClassLoader()
         .getResource("example.txt");

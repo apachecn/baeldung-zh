@@ -16,7 +16,7 @@
 
 例如，假设我们想让一个测试只在 Windows 和 macOS 上运行:
 
-```
+```java
 @Test
 @EnabledOnOs({OS.WINDOWS, OS.MAC})
 public void shouldRunBothWindowsAndMac() {
@@ -26,7 +26,7 @@ public void shouldRunBothWindowsAndMac() {
 
 现在，与`@EnabledOnOs`相反的是`@DisabledOnOs`。顾名思义，它根据 OS 类型参数禁用测试:
 
-```
+```java
 @Test
 @DisabledOnOs(OS.LINUX)
 public void shouldNotRunAtLinux() {
@@ -38,7 +38,7 @@ public void shouldNotRunAtLinux() {
 
 我们还可以使用`@EnableOnJre`和`@DisableOnJre`注释，在特定的 [JRE](/web/20221222081152/https://www.baeldung.com/jvm-vs-jre-vs-jdk#jre) 版本上运行我们的测试。这些注释还接受一个数组来启用或禁用多个 Java 版本:
 
-```
+```java
 @Test
 @EnabledOnJre({JRE.JAVA_10, JRE.JAVA_11})
 public void shouldOnlyRunOnJava10And11() {
@@ -48,7 +48,7 @@ public void shouldOnlyRunOnJava10And11() {
 
 从 JUnit 5.6 开始，我们可以使用`@EnabledForJreRange `对特定范围的 Java 版本进行测试:
 
-```
+```java
 @Test
 @EnabledForJreRange(min = JRE.JAVA_8, max = JRE.JAVA_13)
 public void shouldOnlyRunOnJava8UntilJava13() {
@@ -58,7 +58,7 @@ public void shouldOnlyRunOnJava8UntilJava13() {
 
 默认情况下，最小值是`JAVA_8 `，最大值是最大可能的 JRE 版本。还有一个`@DisabledForJreRange `来禁用特定范围 Java 版本的测试:
 
-```
+```java
 @Test
 @DisabledForJreRange(min = JRE.JAVA_14, max = JRE.JAVA_15)
 public void shouldNotBeRunOnJava14AndJava15() {
@@ -68,7 +68,7 @@ public void shouldNotBeRunOnJava14AndJava15() {
 
 此外，如果我们想要禁止我们的测试在除了 8、9、10 和 11 之外的 Java 版本上运行，我们可以使用`JRE.OTHER` `enum`属性:
 
-```
+```java
 @Test
 @DisabledOnJre(JRE.OTHER)
 public void thisTestOnlyRunsWithUpToDateJREs() {
@@ -84,7 +84,7 @@ public void thisTestOnlyRunsWithUpToDateJREs() {
 
 例如，假设我们希望仅在虚拟机供应商名称以“Oracle”开头时运行测试:
 
-```
+```java
 @Test
 @EnabledIfSystemProperty(named = "java.vm.vendor", matches = "Oracle.*")
 public void onlyIfVendorNameStartsWithOracle() {
@@ -94,7 +94,7 @@ public void onlyIfVendorNameStartsWithOracle() {
 
 同样，我们有`@DisabledIfSystemProperty` 来禁用基于 JVM 系统属性的测试。为了演示这种注释，让我们看一个例子:
 
-```
+```java
 @Test
 @DisabledIfSystemProperty(named = "file.separator", matches = "[/]")
 public void disabledIfFileSeperatorIsSlash() {
@@ -108,7 +108,7 @@ public void disabledIfFileSeperatorIsSlash() {
 
 而且，就像对[系统属性条件](#system-property-condition)的注释一样，这些注释采用两个参数——`named`和`matches —`来指定环境变量名和正则表达式，以匹配环境变量值:
 
-```
+```java
 @Test
 @EnabledIfEnvironmentVariable(named = "GDMSESSION", matches = "ubuntu")
 public void onlyRunOnUbuntuServer() {
@@ -142,7 +142,7 @@ public void shouldNotRunWhenTimeIsNotUTF8() {
 
 因此，让我们来看一个简单的例子，在这个例子中，我们只指定了一行脚本，注释中没有附加的参数:
 
-```
+```java
 @Test
 @EnabledIf("'FR' == systemProperty.get('user.country')")
 public void onlyFrenchPeopleWillRunThisMethod() {
@@ -152,7 +152,7 @@ public void onlyFrenchPeopleWillRunThisMethod() {
 
 还有，`@DisabledIf`的用法也完全一样:
 
-```
+```java
 @Test
 @DisabledIf("java.lang.System.getProperty('os.name').toLowerCase().contains('mac')")
 public void shouldNotRunOnMacOS() {
@@ -172,7 +172,7 @@ public void shouldNotRunOnMacOS() {
 
 对于这个实例，我们将在`value`参数中有一个多行脚本，并为`engine`和`reason`赋值:
 
-```
+```java
 @Test
 @EnabledIf(value = {
     "load('nashorn:mozilla_compat.js')",
@@ -200,7 +200,7 @@ public void onlyRunsInFebruary() {
 
 最后，让我们看另一个例子，看看如何使用带有绑定的脚本:
 
-```
+```java
 @Test
 @DisabledIf("systemEnvironment.get('XPC_SERVICE_NAME') != null" +
         "&& systemEnvironment.get('XPC_SERVICE_NAME').contains('intellij')")
@@ -217,7 +217,7 @@ JUnit 5 附带的一个非常强大的特性是创建定制注释的能力。我
 
 例如，假设我们想要定义所有的测试来运行特定的操作系统类型和特定的 JRE 版本。我们可以为此编写一个自定义注释:
 
-```
+```java
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Test
@@ -234,7 +234,7 @@ public void someSuperTestMethodHere() {
 
 此外，我们可以**使用基于脚本的注释来创建自定义注释**:
 
-```
+```java
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @DisabledIf("Math.random() >= 0.5")

@@ -12,7 +12,7 @@
 
 首先，让我们添加[的`guava` 依赖](https://web.archive.org/web/20220524122138/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.google.guava%22%20AND%20a%3A%22guava%22):
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -26,7 +26,7 @@
 
 **让我们从添加书名的**副本开始。`Multiset`应该返回标题存在，并向我们提供正确的计数`:`
 
-```
+```java
 Multiset<String> bookStore = HashMultiset.create();
 bookStore.add("Potter");
 bookStore.add("Potter");
@@ -38,7 +38,7 @@ assertThat(bookStore.count("Potter")).isEqualTo(3);
 
 现在让我们删除一个副本。我们希望相应地更新计数:
 
-```
+```java
 bookStore.remove("Potter");
 assertThat(bookStore.contains("Potter")).isTrue();
 assertThat(bookStore.count("Potter")).isEqualTo(2);
@@ -46,14 +46,14 @@ assertThat(bookStore.count("Potter")).isEqualTo(2);
 
 实际上，**我们可以只设置计数**而不是执行各种加法运算:
 
-```
+```java
 bookStore.setCount("Potter", 50); 
 assertThat(bookStore.count("Potter")).isEqualTo(50);
 ```
 
 `Multiset`验证`count`值。如果我们把它设为负数，就会抛出一个`IllegalArgumentException`:
 
-```
+```java
 assertThatThrownBy(() -> bookStore.setCount("Potter", -1))
   .isInstanceOf(IllegalArgumentException.class);
 ```
@@ -62,7 +62,7 @@ assertThatThrownBy(() -> bookStore.setCount("Potter", -1))
 
 没有对`Multiset`的访问，我们可以通过使用`java.util.Map:`实现我们自己的逻辑来实现上面所有的操作
 
-```
+```java
 Map<String, Integer> bookStore = new HashMap<>();
 // adding 3 copies
 bookStore.put("Potter", 3);
@@ -77,7 +77,7 @@ assertThat(bookStore.get("Potter")).isEqualTo(2);
 
 当我们想要使用`Map`添加或删除副本时，我们需要记住当前的计数并相应地进行调整。我们还需要每次在调用代码中实现这个逻辑，或者为此构建我们自己的库。我们的代码还需要控制`value`参数。如果我们不小心，我们很容易将值设置为`null`或负值，即使这两个值都是无效的:
 
-```
+```java
 bookStore.put("Potter", null);
 assertThat(bookStore.containsKey("Potter")).isTrue();
 
@@ -97,7 +97,7 @@ assertThat(bookStore.containsKey("Potter")).isTrue();
 
 然而，还有另一种风格的 `setCount` 方法，它只在当前值与传递的参数匹配时更新计数。如果操作成功，该方法返回 true，这是一种乐观锁定:
 
-```
+```java
 Multiset<String> bookStore = HashMultiset.create();
 // updates the count to 2 if current count is 0
 assertThat(bookStore.setCount("Potter", 0, 2)).isTrue();

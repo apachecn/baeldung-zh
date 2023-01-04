@@ -14,7 +14,7 @@ JDK 8 `Stream`类有一些有用的静态实用方法。让我们仔细看看`co
 
 组合 2 个`Stream`的最简单方法是使用静态`Stream.concat()`方法:
 
-```
+```java
 @Test
 public void whenMergingStreams_thenResultStreamContainsElementsFromBoth() {
     Stream<Integer> stream1 = Stream.of(1, 3, 5);
@@ -34,7 +34,7 @@ public void whenMergingStreams_thenResultStreamContainsElementsFromBoth() {
 
 下一段代码展示了这一点:
 
-```
+```java
 @Test
 public void given3Streams_whenMerged_thenResultStreamContainsAllElements() {
     Stream<Integer> stream1 = Stream.of(1, 3, 5);
@@ -52,7 +52,7 @@ public void given3Streams_whenMerged_thenResultStreamContainsAllElements() {
 
 正如我们所看到的，这种方法对于更多的流变得不可行。当然，我们可以创建中间变量或辅助方法来使它更具可读性，但这里有一个更好的选择:
 
-```
+```java
 @Test
 public void given4Streams_whenMerged_thenResultStreamContainsAllElements() {
     Stream<Integer> stream1 = Stream.of(1, 3, 5);
@@ -83,7 +83,7 @@ public void given4Streams_whenMerged_thenResultStreamContainsAllElements() {
 
 StreamEx 库允许我们使用`append()`实例方法合并流:
 
-```
+```java
 @Test
 public void given4Streams_whenMerged_thenResultStreamContainsAllElements() {
     Stream<Integer> stream1 = Stream.of(1, 3, 5);
@@ -110,7 +110,7 @@ public void given4Streams_whenMerged_thenResultStreamContainsAllElements() {
 
 StreamEx 还包含一个在元素之前添加元素的方法，称为`prepend()`:
 
-```
+```java
 @Test
 public void given3Streams_whenPrepended_thenResultStreamContainsAllElements() {
     Stream<String> stream1 = Stream.of("foo", "bar");
@@ -135,7 +135,7 @@ public void given3Streams_whenPrepended_thenResultStreamContainsAllElements() {
 
 就像 StreamEx 库一样，jOOλ有一个`append()`方法:
 
-```
+```java
 @Test
 public void given2Streams_whenMerged_thenResultStreamContainsAllElements() {
     Stream<Integer> seq1 = Stream.of(1, 3, 5);
@@ -156,7 +156,7 @@ public void given2Streams_whenMerged_thenResultStreamContainsAllElements() {
 
 正如所料，由于存在一个`append()`方法，jOOλ中也有一个`prepend()`方法:
 
-```
+```java
 @Test
 public void given3Streams_whenPrepending_thenResultStreamContainsAllElements() {
     Stream<String> seq = Stream.of("foo", "bar");

@@ -12,7 +12,7 @@
 
 缺少花括号可能会导致“表达式的非法开始”错误。我们先来看一个例子:
 
-```
+```java
 package com.baeldung;
 
 public class MissingCurlyBraces {
@@ -27,7 +27,7 @@ public class MissingCurlyBraces {
 
 如果我们编译上面的类:
 
-```
+```java
 $ javac MissingCurlyBraces.java
 MissingCurlyBraces.java:7: error: illegal start of expression
         public int calcSum(int x, int y) {
@@ -41,7 +41,7 @@ MissingCurlyBraces.java:7: error: ';' expected
 
 解决这个问题很简单——给`printSum()`方法添加右花括号:
 
-```
+```java
 package com.baeldung;
 
 public class MissingCurlyBraces {
@@ -66,7 +66,7 @@ public class MissingCurlyBraces {
 
 让我们来看看实际情况:
 
-```
+```java
 package com.baeldung;
 
 public class AccessModifierInMethod {
@@ -79,7 +79,7 @@ public class AccessModifierInMethod {
 
 如果我们尝试编译上面的代码，我们会看到编译错误:
 
-```
+```java
 $ javac AccessModifierInMethod.java 
 AccessModifierInMethod.java:5: error: illegal start of expression
         private int sum = x + y;
@@ -89,7 +89,7 @@ AccessModifierInMethod.java:5: error: illegal start of expression
 
 移除`private`访问修饰符很容易解决这个问题:
 
-```
+```java
 package com.baeldung;
 
 public class AccessModifierInMethod {
@@ -106,7 +106,7 @@ public class AccessModifierInMethod {
 
 如果我们创建嵌套方法，我们将面临“表达式的非法开始”编译器错误:
 
-```
+```java
 package com.baeldung;
 
 public class NestedMethod {
@@ -121,7 +121,7 @@ public class NestedMethod {
 
 让我们编译上面的源文件，看看 Java 编译器报告了什么:
 
-```
+```java
 $ javac NestedMethod.java
 NestedMethod.java:6: error: illegal start of expression
         public int calcSum ( int x, int y) {
@@ -147,7 +147,7 @@ Java 编译器报告了五个编译错误。在某些情况下，一个错误可
 
 我们可以通过将`calcSum() `方法移出`printSum()`方法来快速解决问题:
 
-```
+```java
 package com.baeldung;
 
 public class NestedMethod {
@@ -172,7 +172,7 @@ public class NestedMethod {
 
 让我们通过一个例子来看一下:
 
-```
+```java
 package com.baeldung;
 
 public class ForgetQuoting {
@@ -189,7 +189,7 @@ public class ForgetQuoting {
 
 现在，让我们试着编译它:
 
-```
+```java
 $ javac ForgetQuoting.java 
 ForgetQuoting.java:5: error: illegal start of expression
         if (operation.equals(+)) {
@@ -199,7 +199,7 @@ ForgetQuoting.java:5: error: illegal start of expression
 
 这个问题的解决方案很简单——用双引号将`String`文字括起来:
 
-```
+```java
 package com.baeldung;
 
 public class ForgetQuoting {

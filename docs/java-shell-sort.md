@@ -46,13 +46,13 @@ Shell sort 基于[插入排序算法](/web/20221208143830/https://www.baeldung.c
 
 现在让我们看一下实现。对于间隔增量，我们将使用 Shell 的原始序列:
 
-```
+```java
 N/2, N/4, …, 1 (continuously dividing by 2)
 ```
 
 实现本身并不复杂:
 
-```
+```java
 public void sort(int arrayToSort[]) {
     int n = arrayToSort.length;
 
@@ -74,7 +74,7 @@ public void sort(int arrayToSort[]) {
 
 现在，我们可以很容易地测试我们的方法:
 
-```
+```java
 @Test
 public void givenUnsortedArray_whenShellSort_thenSortedAsc() {
     int[] input = {41, 15, 82, 5, 65, 19, 32, 43, 8};

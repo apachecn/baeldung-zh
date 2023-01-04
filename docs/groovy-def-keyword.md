@@ -12,7 +12,7 @@
 
 当我们不确定变量或字段的类型时，我们可以利用`def`让 Groovy 在运行时根据赋值决定类型:
 
-```
+```java
 def firstName = "Samwell"  
 def listOfCountries = ['USA', 'UK', 'FRANCE', 'INDIA'] 
 ```
@@ -21,7 +21,7 @@ def listOfCountries = ['USA', 'UK', 'FRANCE', 'INDIA']
 
 我们还可以使用`def`关键字来定义方法的返回类型:
 
-```
+```java
 def multiply(x, y) {
     return x*y
 }
@@ -35,7 +35,7 @@ def multiply(x, y) {
 
 当我们使用`def`声明一个变量时，Groovy 将其声明为一个 [`NullObject`](https://web.archive.org/web/20220701012345/http://docs.groovy-lang.org/docs/groovy-2.3.2/html/api/org/codehaus/groovy/runtime/NullObject.html) ，并为其赋一个`null`值:
 
-```
+```java
 def list
 assert list.getClass() == org.codehaus.groovy.runtime.NullObject
 assert list.is(null) 
@@ -43,14 +43,14 @@ assert list.is(null)
 
 当我们给`list`赋值时，Groovy 根据赋值定义它的类型:
 
-```
+```java
 list = [1,2,4]
 assert list instanceof ArrayList 
 ```
 
 假设我们希望我们的变量类型是动态的，并随着赋值而变化:
 
-```
+```java
 int rate = 20
 rate = [12] // GroovyCastException
 rate = "nill" // GroovyCastException
@@ -60,7 +60,7 @@ rate = "nill" // GroovyCastException
 
 因此，为了克服这个问题并调用 Groovy 的动态特性，我们将使用`def`关键字:
 
-```
+```java
 def rate
 assert rate == null
 assert rate.getClass() == org.codehaus.groovy.runtime.NullObject
@@ -79,7 +79,7 @@ assert rate instanceof List
 
 `def`关键字进一步用于定义方法的动态返回类型。当一个方法可以有不同类型的返回值时，这是很方便的:
 
-```
+```java
 def divide(int x, int y) {
     if (y == 0) {
         return "Should not divide by 0"
@@ -94,7 +94,7 @@ assert divide(1, 0) instanceof String
 
 我们还可以使用`def`来定义一个没有显式返回的方法:
 
-```
+```java
 def greetMsg() {
     println "Hello! I am Groovy"
 }
@@ -106,7 +106,7 @@ def greetMsg() {
 
 虽然我们在声明变量时可能同时使用了`def`和 type:
 
-```
+```java
 def int count
 assert count instanceof Integer
 ```
@@ -117,13 +117,13 @@ assert count instanceof Integer
 
 因此，代替:
 
-```
+```java
 void multiply(def x, def y)
 ```
 
 我们应该更喜欢:
 
-```
+```java
 void multiply(x, y)
 ```
 
@@ -133,13 +133,13 @@ void multiply(x, y)
 
 由于我们已经通过例子看到了`def`关键字的大部分特性及其用法，我们可能想知道它是否类似于在 Java 中使用`Object`类来声明一些东西。是的， **`def`可以认为类似于** `**Object**`:
 
-```
+```java
 def fullName = "Norman Lewis"
 ```
 
 同样，我们可以在 Java 中使用`Object`:
 
-```
+```java
 Object fullName = "Norman Lewis";
 ```
 
@@ -149,7 +149,7 @@ Object fullName = "Norman Lewis";
 
 例如，我们可以对一个类使用`@TypeChecked`来对它的所有方法和属性进行类型检查:
 
-```
+```java
 @TypeChecked
 class DefUnitTest extends GroovyTestCase {
 
@@ -165,14 +165,14 @@ class DefUnitTest extends GroovyTestCase {
 
 这里，`DefUnitTest`类将被进行类型检查，**编译将会失败，因为`multiply`方法未被类型化**。Groovy 编译器将显示一个错误:
 
-```
+```java
 [Static type checking] - Cannot find matching method java.lang.Object#multiply(java.lang.Object).
 Please check if the declared type is correct and if the method exists.
 ```
 
 所以，**要忽略一个方法，我们可以用`TypeCheckingMode.SKIP` :**
 
-```
+```java
 @TypeChecked(TypeCheckingMode.SKIP)
 def multiply(x, y)
 ```

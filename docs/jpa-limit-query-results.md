@@ -29,7 +29,7 @@
 
 使用 SQL，我们可能会编写一个如下所示的查询:
 
-```
+```java
 SELECT firstName, lastName, seatNumber FROM passengers ORDER BY seatNumber LIMIT 1;
 ```
 
@@ -37,7 +37,7 @@ SELECT firstName, lastName, seatNumber FROM passengers ORDER BY seatNumber LIMIT
 
 对于 JPA，我们首先需要一个实体来映射我们的表:
 
-```
+```java
 @Entity
 class Passenger {
 
@@ -64,7 +64,7 @@ class Passenger {
 
 接下来，我们需要一个封装查询代码的方法，在这里实现为`PassengerRepositoryImpl#findOrderedBySeatNumberLimitedTo(int limit)`:
 
-```
+```java
 @Repository
 class PassengerRepositoryImpl {
 
@@ -83,7 +83,7 @@ class PassengerRepositoryImpl {
 
 这个对 [`Query#setMaxResults`](https://web.archive.org/web/20221012184424/https://docs.oracle.com/javaee/7/api/javax/persistence/Query.html#setMaxResults-int-) 的调用最终会将 limit 语句附加到生成的 SQL 语句中:
 
-```
+```java
 select
   passenger0_.id as id1_15_,
   passenger0_.fist_name as fist_nam2_15_,
@@ -104,14 +104,14 @@ from passenger passenger0_ order by passenger0_.seat_number limit ?
 
 因为我们想知道哪个座位是第一个被占用的，谁在占用它，所以我们可以通过以下两种方式省略号码:
 
-```
+```java
 Passenger findFirstByOrderBySeatNumberAsc();
 Passenger findTopByOrderBySeatNumberAsc();
 ```
 
 如果我们限制到一个实例结果，如上所述，那么我们也可以使用`Optional`包装结果:
 
-```
+```java
 Optional<Passenger> findFirstByOrderBySeatNumberAsc();
 Optional<Passenger> findTopByOrderBySeatNumberAsc();
 ```
@@ -120,14 +120,14 @@ Optional<Passenger> findTopByOrderBySeatNumberAsc();
 
 或者，我们可以使用一个 [`Pageable`](https://web.archive.org/web/20221012184424/https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/domain/Pageable.html) 对象:
 
-```
+```java
 Page<Passenger> page = repository.findAll(
   PageRequest.of(0, 1, Sort.by(Sort.Direction.ASC, "seatNumber")));
 ```
 
 如果我们看一下`[SimpleJpaRepository](https://web.archive.org/web/20221012184424/https://docs.spring.io/spring-data/jpa/docs/current/api/org/springframework/data/jpa/repository/support/SimpleJpaRepository.html), `的默认实现`[JpaRepository,](https://web.archive.org/web/20221012184424/https://docs.spring.io/spring-data/jpa/docs/current/api/org/springframework/data/jpa/repository/JpaRepository.html)`，我们可以看到它也调用了`[Query#setMaxResults](https://web.archive.org/web/20221012184424/https://docs.oracle.com/javaee/7/api/javax/persistence/Query.html#setMaxResults-int-)`:
 
-```
+```java
 protected <S extends T > Page < S > readPage(TypedQuery < S > query, 
   Class < S > domainClass, Pageable pageable,
   @Nullable Specification < S > spec) {
@@ -146,7 +146,7 @@ protected <S extends T > Page < S > readPage(TypedQuery < S > query,
 
 这两种选择都会产生我们想要的 SQL，其中`first `和`top`倾向于约定，`Pageable`倾向于配置:
 
-```
+```java
 select
   passenger0_.id as id1_15_,
   passenger0_.fist_name as fist_nam2_15_,

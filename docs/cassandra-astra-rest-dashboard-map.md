@@ -32,7 +32,7 @@
 
 完成后，我们需要将生成的客户端 ID 和客户端密码添加到我们的`application.properties`:
 
-```
+```java
 ASTRA_DB_CLIENT_ID=clientIdHere
 ASTRA_DB_CLIENT_SECRET=clientSecretHere
 ```
@@ -55,7 +55,7 @@ ASTRA_DB_CLIENT_SECRET=clientSecretHere
 
 我们现在需要将这个键添加到我们的`application.properties` 文件中:
 
-```
+```java
 GOOGLE_CLIENT_ID=someRandomClientId
 ```
 
@@ -63,7 +63,7 @@ GOOGLE_CLIENT_ID=someRandomClientId
 
 为了通过 CQL 与数据库通信，我们需要编写我们的客户端层。这将是一个名为 CqlClient 的类，它封装了 data tax CQL API，抽象出连接细节:
 
-```
+```java
 @Repository
 public class CqlClient {
   @Value("${ASTRA_DB_CLIENT_ID}")
@@ -103,7 +103,7 @@ public class CqlClient {
 
 首先，我们需要一个 Java 记录来表示我们从数据库中获取的每一行:
 
-```
+```java
 public record Location(String avenger, 
   Instant timestamp, 
   BigDecimal latitude, 
@@ -113,7 +113,7 @@ public record Location(String avenger,
 
 然后我们需要我们的服务层来检索数据:
 
-```
+```java
 @Service
 public class MapService {
   @Autowired
@@ -129,7 +129,7 @@ public class MapService {
 
 我们的第一个功能是获取所有复仇者的列表，我们可以显示其详细信息:
 
-```
+```java
 public List<String> listAvengers() {
   var rows = cqlClient.query("select distinct avenger from avengers.events");
 
@@ -146,7 +146,7 @@ public List<String> listAvengers() {
 
 我们的另一个功能是获取我们希望在地图上显示的所有位置细节的列表。**这是一个复仇者的列表，一个开始和结束时间，并返回他们所有的事件，这些事件被适当地分组:**
 
-```
+```java
 public Map<String, List<Location>> getPaths(List<String> avengers, Instant start, Instant end) {
   var rows = cqlClient.query("select avenger, timestamp, latitude, longitude, status from avengers.events where avenger in ? and timestamp >= ? and timestamp <= ?", 
     avengers, start, end);
@@ -176,7 +176,7 @@ CQL 绑定自动扩展出 IN 子句，以正确处理多个复仇者，并且我
 
 ### 5.1。地图控制器
 
-```
+```java
 @Controller
 public class MapController {
   @Autowired
@@ -219,7 +219,7 @@ public class MapController {
 
 一旦我们编写了控制器，我们需要一个模板来实际呈现 HTML。这将像在以前的文章中一样使用百里香叶来编写:
 
-```
+```java
 <!doctype html>
 <html lang="en">
 

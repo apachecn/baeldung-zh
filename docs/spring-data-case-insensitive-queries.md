@@ -12,7 +12,7 @@
 
 首先，让我们确保我们的`pom.xml`中有 [Spring 数据](/web/20220627173802/https://www.baeldung.com/the-persistence-layer-with-spring-data-jpa)和 [H2](/web/20220627173802/https://www.baeldung.com/java-in-memory-databases) 数据库依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -32,7 +32,7 @@
 
 假设我们有一个带有`id, firstName`和`lastName`属性的`Passenger`实体:
 
-```
+```java
 @Entity
 class Passenger {
 
@@ -55,7 +55,7 @@ class Passenger {
 
 同样，让我们通过用一些样本数据填充数据库来准备我们的测试类:
 
-```
+```java
 @DataJpaTest
 @RunWith(SpringRunner.class)
 public class PassengerRepositoryIntegrationTest {
@@ -84,7 +84,7 @@ public class PassengerRepositoryIntegrationTest {
 
 为此，我们将我们的`PassengerRepository` 定义为:
 
-```
+```java
 @Repository
 public interface PassengerRepository extends JpaRepository<Passenger, Long> {
     List<Passenger> findByFirstNameIgnoreCase(String firstName);
@@ -95,7 +95,7 @@ public interface PassengerRepository extends JpaRepository<Passenger, Long> {
 
 我们还可以借助 JUnit 测试来验证这一点:
 
-```
+```java
 @Test
 public void givenPassengers_whenMatchingIgnoreCase_thenExpectedReturned() {
     Passenger jill = Passenger.from("Jill", "Smith");

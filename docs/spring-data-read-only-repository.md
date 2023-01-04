@@ -14,7 +14,7 @@
 
 让我们从一个包含 [`spring-boot-starter-data-jpa`依赖项](https://web.archive.org/web/20221006111820/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-starter-data-jpa)的 Spring Boot 项目开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -28,7 +28,7 @@
 
 让我们创建一个扩展了`Repository`的新接口:
 
-```
+```java
 @NoRepositoryBean
 public interface ReadOnlyRepository<T, ID> extends Repository<T, ID> {
     Optional<T> findById(ID id);
@@ -46,7 +46,7 @@ public interface ReadOnlyRepository<T, ID> extends Repository<T, ID> {
 
 假设我们有一个想要访问的简单的`Book`实体:
 
-```
+```java
 @Entity
 public class Book {
     @Id
@@ -61,7 +61,7 @@ public class Book {
 
 现在我们有了一个持久化的实体，我们可以创建一个从我们的`ReadOnlyRepository`继承的存储库接口:
 
-```
+```java
 public interface BookReadOnlyRepository extends ReadOnlyRepository<Book, Long> {
     List<Book> findByAuthor(String author);
     List<Book> findByTitle(String title);
@@ -72,7 +72,7 @@ public interface BookReadOnlyRepository extends ReadOnlyRepository<Book, Long> {
 
 最后，让我们编写一个测试来确保我们的`BookReadOnlyRepository`的功能:
 
-```
+```java
 @Test
 public void givenBooks_whenUsingReadOnlyRepository_thenGetThem() {
     Book aChristmasCarolCharlesDickens = new Book();
@@ -107,7 +107,7 @@ public void givenBooks_whenUsingReadOnlyRepository_thenGetThem() {
 
 为了在读回之前将书籍保存到数据库中，我们创建了一个在测试范围内扩展了`CrudRepository`的`BookRepository`。这个存储库在主项目范围内是不需要的，但是在这个测试中是必须的。
 
-```
+```java
 public interface BookRepository
   extends BookReadOnlyRepository, CrudRepository<Book, Long> {}
 ```

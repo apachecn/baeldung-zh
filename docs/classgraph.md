@@ -16,7 +16,7 @@ Classgraph 帮助我们在 Java 类路径中找到目标资源，构建关于找
 
 首先，让我们将[类图](https://web.archive.org/web/20221205135656/https://search.maven.org/search?q=g:io.github.classgraph%20AND%20a:classgraph)库添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>io.github.classgraph</groupId>
     <artifactId>classgraph</artifactId>
@@ -36,7 +36,7 @@ Classgraph 帮助我们在 Java 类路径中找到目标资源，构建关于找
 
 让我们为示例设置创建以下域:
 
-```
+```java
 @Target({TYPE, METHOD, FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TestAnnotation {
@@ -45,7 +45,7 @@ public @interface TestAnnotation {
 }
 ```
 
-```
+```java
 @TestAnnotation
 public class ClassWithAnnotation {
 }
@@ -53,7 +53,7 @@ public class ClassWithAnnotation {
 
 现在让我们看看上面用`@TestAnnotation`查找类的例子的 3 个步骤:
 
-```
+```java
 try (ScanResult result = new ClassGraph().enableClassInfo().enableAnnotationInfo()
   .whitelistPackages(getClass().getPackage().getName()).scan()) {
 
@@ -75,7 +75,7 @@ try (ScanResult result = new ClassGraph().enableClassInfo().enableAnnotationInfo
 
 让我们把例子扩展到方法注释:
 
-```
+```java
 public class MethodWithAnnotation {
 
     @TestAnnotation
@@ -86,7 +86,7 @@ public class MethodWithAnnotation {
 
 **我们可以使用类似的方法找到所有包含由目标注释标记的方法的类— `getClassesWithMethodAnnotations()` :**
 
-```
+```java
 try (ScanResult result = new ClassGraph().enableAllInfo()
   .whitelistPackages(getClass().getPackage().getName()).scan()) {
 
@@ -104,7 +104,7 @@ try (ScanResult result = new ClassGraph().enableAllInfo()
 
 首先，让我们定义包含带有两个不同参数值的`@TestAnnotation,`的方法的类:
 
-```
+```java
 public class MethodWithAnnotationParameterDao {
 
     @TestAnnotation("dao")
@@ -113,7 +113,7 @@ public class MethodWithAnnotationParameterDao {
 }
 ```
 
-```
+```java
 public class MethodWithAnnotationParameterWeb {
 
     @TestAnnotation("web")
@@ -124,7 +124,7 @@ public class MethodWithAnnotationParameterWeb {
 
 现在，让我们遍历`ClassInfoList`结果，并验证每个方法的注释:
 
-```
+```java
 try (ScanResult result = new ClassGraph().enableAllInfo()
   .whitelistPackages(getClass().getPackage().getName()).scan()) {
 
@@ -150,7 +150,7 @@ try (ScanResult result = new ClassGraph().enableAllInfo()
 
 我们还可以使用`getClassesWithFieldAnnotation()`方法根据字段注释过滤`ClassInfoList`结果:
 
-```
+```java
 public class FieldWithAnnotation {
 
     @TestAnnotation
@@ -158,7 +158,7 @@ public class FieldWithAnnotation {
 }
 ```
 
-```
+```java
 try (ScanResult result = new ClassGraph().enableAllInfo()
   .whitelistPackages(getClass().getPackage().getName()).scan()) {
 
@@ -174,13 +174,13 @@ try (ScanResult result = new ClassGraph().enableAllInfo()
 
 让我们在`classgraph`类路径根目录中创建一个资源文件——例如，`src/test/resources/classgraph/my.config`——并赋予它一些内容:
 
-```
+```java
 my data
 ```
 
 我们现在可以找到资源并获取其内容:
 
-```
+```java
 try (ScanResult result = new ClassGraph().whitelistPaths("classgraph").scan()) {
     ResourceList resources = result.getResourcesWithExtension("config");
     assertThat(resources).extracting(Resource::getPath).containsOnly("classgraph/my.config");

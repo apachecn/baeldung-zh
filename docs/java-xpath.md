@@ -12,7 +12,7 @@ XPath 是 W3C 推荐的标准语法，它是一组导航 XML 文档的表达式�
 
 ## 2。一个简单的 XPath 解析器
 
-```
+```java
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -36,7 +36,7 @@ public class DefaultParser {
 
 现在让我们仔细看看您将在`DefaultParser`中找到的元素:
 
-```
+```java
 FileInputStream fileIS = new FileInputStream(this.getFile());
 DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 DocumentBuilder builder = builderFactory.newDocumentBuilder();
@@ -48,31 +48,31 @@ nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConst
 
 让我们来分解一下:
 
-```
+```java
 DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 ```
 
 我们将使用这个对象从 xml 文档中生成一个 DOM 对象树:
 
-```
+```java
 DocumentBuilder builder = builderFactory.newDocumentBuilder();
 ```
 
 有了这个类的实例，我们可以解析来自许多不同输入源的 XML 文档，比如`InputStream`、`File`、`URL`和`SAX`:
 
-```
+```java
 Document xmlDocument = builder.parse(fileIS);
 ```
 
 一个`Document` ( `org.w3c.dom.Document`)代表了整个 XML 文档，是文档树的根，提供了我们对数据的第一次访问:
 
-```
+```java
 XPath xPath = XPathFactory.newInstance().newXPath();
 ```
 
 从 XPath 对象中，我们将访问表达式并在我们的文档中执行它们，以从中提取我们需要的内容:
 
-```
+```java
 xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET);
 ```
 
@@ -82,7 +82,7 @@ xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET);
 
 现在，我们已经了解了我们将使用的基本组件，让我们从使用一些简单的 XML 进行测试的代码开始:
 
-```
+```java
 <?xml version="1.0"?>
 <Tutorials>
     <Tutorial tutId="01" type="java">
@@ -104,7 +104,7 @@ xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET);
 
 第一种方法是简单地使用 XPath 表达式从 XML 中检索节点列表:
 
-```
+```java
 FileInputStream fileIS = new FileInputStream(this.getFile());
 DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 DocumentBuilder builder = builderFactory.newDocumentBuilder();
@@ -122,7 +122,7 @@ nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConst
 
 我们可以根据任何给定的 id 查找元素，只需通过过滤:
 
-```
+```java
 DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 DocumentBuilder builder = builderFactory.newDocumentBuilder();
 Document xmlDocument = builder.parse(this.getFile());
@@ -145,7 +145,7 @@ node = (Node) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NOD
 
 现在我们将进一步引入轴，让我们通过在 XPath 表达式中使用轴来看看它是如何工作的:
 
-```
+```java
 Document xmlDocument = builder.parse(this.getFile());
 this.clean(xmlDocument);
 XPath xPath = XPathFactory.newInstance().newXPath();
@@ -163,7 +163,7 @@ Axes 提供了一种非常灵活的方式来导航 XML 文档，你可以在官�
 
 如果需要，XPath 还允许我们在表达式中操作数据。
 
-```
+```java
 XPath xPath = XPathFactory.newInstance().newXPath();
 String expression = "//Tutorial[number(translate(date, '/', '')) > " + date + "]";
 nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET); 
@@ -175,7 +175,7 @@ nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConst
 
 如果我们的 xml 文档定义了一个名称空间，如这里使用的 example_namespace.xml，那么检索我们需要的数据的规则将会改变，因为我们的 xml 是这样开始的:
 
-```
+```java
 <?xml version="1.0"?>
 <Tutorials >
 
@@ -188,7 +188,7 @@ nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConst
 
 首先，我们需要设置名称空间上下文，以便 XPath 能够知道我们在哪里寻找数据:
 
-```
+```java
 xPath.setNamespaceContext(new NamespaceContext() {
     @Override
     public Iterator getPrefixes(String arg0) {
@@ -210,7 +210,7 @@ xPath.setNamespaceContext(new NamespaceContext() {
 
 在上面的方法中，我们将"`bdn`"定义为名称空间"`/full_archive`"的名称，从现在开始，我们需要将"`bdn`"添加到用于定位元素的 XPath 表达式中:
 
-```
+```java
 String expression = "/bdn:Tutorials/bdn:Tutorial";
 nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET); 
 ```
@@ -227,7 +227,7 @@ nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConst
 
 要解决这个问题，我们可以浏览我们的文档并删除那些空节点，如下所示:
 
-```
+```java
 NodeList childs = node.getChildNodes();
 for (int n = childs.getLength() - 1; n >= 0; n--) {
     Node child = childs.item(n);

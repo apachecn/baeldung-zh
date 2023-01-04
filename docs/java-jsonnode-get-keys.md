@@ -28,7 +28,7 @@
 
 我们在本文中使用以下 JSON 作为输入:
 
-```
+```java
 {
    "Name":"Craig",
    "Age":10,
@@ -67,7 +67,7 @@
 
 让我们用一个简单的例子来尝试一下:
 
-```
+```java
 public List<String> getKeysInJsonUsingJsonNodeFieldNames(String json, ObjectMapper mapper) throws JsonMappingException, JsonProcessingException {
 
     List<String> keys = new ArrayList<>();
@@ -80,13 +80,13 @@ public List<String> getKeysInJsonUsingJsonNodeFieldNames(String json, ObjectMapp
 
 我们得到以下密钥:
 
-```
+```java
 [Name, Age, BookInterests, FoodInterests]
 ```
 
 为了得到所有的内部嵌套节点，**我们需要在每一层的节点上调用`fieldNames()`方法**:
 
-```
+```java
 public List<String> getAllKeysInJsonUsingJsonNodeFieldNames(String json, ObjectMapper mapper) throws JsonMappingException, JsonProcessingException {
 
     List<String> keys = new ArrayList<>();
@@ -96,7 +96,7 @@ public List<String> getAllKeysInJsonUsingJsonNodeFieldNames(String json, ObjectM
 } 
 ```
 
-```
+```java
 private void getAllKeysUsingJsonNodeFields(JsonNode jsonNode, List<String> keys) {
 
     if (jsonNode.isObject()) {
@@ -116,14 +116,14 @@ private void getAllKeysUsingJsonNodeFields(JsonNode jsonNode, List<String> keys)
 
 首先，我们检查 JSON 值是对象还是数组。如果是，我们也遍历值对象来获取内部节点。结果，我们得到了 JSON 中出现的所有键名:
 
-```
+```java
 [Name, Age, BookInterests, Book, Author,
   Book, Author, FoodInterests, Breakfast, Bread, Beverage, Sandwich, Beverage]
 ```
 
 在上面的例子中，我们还可以使用`JsonNode `类的`fields()`方法来获取字段对象，而不仅仅是字段名:
 
-```
+```java
 public List<String> getAllKeysInJsonUsingJsonNodeFields(String json, ObjectMapper mapper) throws JsonMappingException, JsonProcessingException {
 
     List<String> keys = new ArrayList<>();
@@ -168,7 +168,7 @@ private void getAllKeysUsingJsonNodeFields(JsonNode jsonNode, List<String> keys)
 
 当使用`JsonParser`进行迭代时，我们可以检查令牌类型并执行所需的操作。让我们获取示例 JSON 字符串的所有字段名:
 
-```
+```java
 public List<String> getKeysInJsonUsingJsonParser(String json, ObjectMapper mapper) throws IOException {
 
     List<String> keys = new ArrayList<>();
@@ -185,7 +185,7 @@ public List<String> getKeysInJsonUsingJsonParser(String json, ObjectMapper mappe
 
 这里，我们使用了`JsonNode`类的`traverse()`方法来获取`JsonParser`对象。类似地，我们也可以使用`JsonFactory` 创建一个`JsonParser`对象:
 
-```
+```java
 public List<String> getKeysInJsonUsingJsonParser(String json) throws JsonParseException, IOException {
 
     List<String> keys = new ArrayList<>();
@@ -202,7 +202,7 @@ public List<String> getKeysInJsonUsingJsonParser(String json) throws JsonParseEx
 
 结果，我们得到了从示例 JSON 内容中提取的所有键名:
 
-```
+```java
 [Name, Age, BookInterests, Book, Author,
   Book, Author, FoodInterests, Breakfast, Bread, Beverage, Sandwich, Beverage]
 ```
@@ -213,7 +213,7 @@ public List<String> getKeysInJsonUsingJsonParser(String json) throws JsonParseEx
 
 我们可以**使用`ObjectMapper `类的`readValue()`方法将 JSON 内容反序列化到一个`Map`T5。因此，我们可以在迭代 `Map` 对象时提取 JSON 元素。让我们尝试使用这种方法从示例 JSON 中获取所有键:**
 
-```
+```java
 public List<String> getKeysInJsonUsingMaps(String json, ObjectMapper mapper) throws JsonMappingException, JsonProcessingException {
     List<String> keys = new ArrayList<>();
     Map<String, Object> jsonElements = mapper.readValue(json, new TypeReference<Map<String, Object>>() {

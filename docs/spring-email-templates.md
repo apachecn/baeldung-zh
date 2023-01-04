@@ -16,7 +16,7 @@
 
 首先，我们将向`EmailServiceImpl`类添加一个方法来发送带有 HTML 正文的电子邮件:
 
-```
+```java
 private void sendHtmlMessage(String to, String subject, String htmlBody) throws MessagingException {
     MimeMessage message = emailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -43,7 +43,7 @@ private void sendHtmlMessage(String to, String subject, String htmlBody) throws 
 
 为了从 JAR 中定位模板，我们使用了`ClassLoaderTemplateResolver`。我们的模板在`main/resources/mail-templates`目录中，所以我们设置了相对于`resource`目录的`Prefix`属性:
 
-```
+```java
 @Bean
 public ITemplateResolver thymeleafTemplateResolver() {
     ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
@@ -61,14 +61,14 @@ public ITemplateResolver thymeleafTemplateResolver() {
 
 在`application.properties`中配置这个路径可能是有用的，这样我们可以为每个部署修改它。可以使用`@Value`注释来访问该属性:
 
-```
+```java
 @Value("${spring.mail.templates.path}")
 private String mailTemplatesPath;
 ```
 
 然后我们将这个值传递给一个`FileTemplateResolver`，代替我们的`thymeleafTemplateResolver`方法中的`ClassLoaderTemplateResolver` :
 
-```
+```java
 FileTemplateResolver templateResolver = new FileTemplateResolver();
 templateResolver.setPrefix(mailTemplatesPath);
 ```
@@ -77,7 +77,7 @@ templateResolver.setPrefix(mailTemplatesPath);
 
 最后一步是为百里香引擎创建工厂方法。我们需要告诉引擎我们选择了哪个`TemplateResolver`,我们可以通过 bean factory 方法的一个参数注入它:
 
-```
+```java
 @Bean
 public SpringTemplateEngine thymeleafTemplateEngine(ITemplateResolver templateResolver) {
     SpringTemplateEngine templateEngine = new SpringTemplateEngine();
@@ -98,7 +98,7 @@ public SpringTemplateEngine thymeleafTemplateEngine(ITemplateResolver templateRe
 
 在这里，我们有与百里香相同的选择。让我们将模板配置为类路径资源:
 
-```
+```java
 @Bean 
 public FreeMarkerConfigurer freemarkerClassLoaderConfig() {
     Configuration configuration = new Configuration(Configuration.VERSION_2_3_27);
@@ -114,7 +114,7 @@ public FreeMarkerConfigurer freemarkerClassLoaderConfig() {
 
 要从文件系统中的另一个路径配置模板，我们需要替换`TemplateLoader`实例:
 
-```
+```java
 TemplateLoader templateLoader = new FileTemplateLoader(new File(mailTemplatesPath));
 ```
 
@@ -122,7 +122,7 @@ TemplateLoader templateLoader = new FileTemplateLoader(new File(mailTemplatesPat
 
 为了用百里香叶管理翻译，我们可以**为引擎**指定一个`MessageSource`实例:
 
-```
+```java
 @Bean
 public ResourceBundleMessageSource emailMessageSource() {
     ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
@@ -131,7 +131,7 @@ public ResourceBundleMessageSource emailMessageSource() {
 }
 ```
 
-```
+```java
 @Bean
 public SpringTemplateEngine thymeleafTemplateEngine() {
    ...
@@ -142,7 +142,7 @@ public SpringTemplateEngine thymeleafTemplateEngine() {
 
 然后，我们将为我们支持的每个语言环境创建资源包:
 
-```
+```java
 src/main/resources/mailMessages_xx_YY.properties
 ```
 
@@ -152,7 +152,7 @@ src/main/resources/mailMessages_xx_YY.properties
 
 接下来，我们来看看`template-thymeleaf.html`文件:
 
-```
+```java
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
@@ -175,7 +175,7 @@ src/main/resources/mailMessages_xx_YY.properties
 
 然后，我们将把它和模板名一起传递给`process`方法:
 
-```
+```java
 @Autowired
 private SpringTemplateEngine thymeleafTemplateEngine;
 
@@ -198,7 +198,7 @@ public void sendMessageUsingThymeleafTemplate(
 
 可以看出，FreeMarker 的语法更简单，但是它也不管理本地化的字符串。所以，这是英文版:
 
-```
+```java
 <!DOCTYPE html>
 <html>
     <head>
@@ -217,7 +217,7 @@ public void sendMessageUsingThymeleafTemplate(
 
 然后，我们应该使用 **`FreeMarkerConfigurer`类来获取模板文件，最后，`FreeMarkerTemplateUtils`从我们的`Map`** 中注入数据:
 
-```
+```java
 @Autowired
 private FreeMarkerConfigurer freemarkerConfigurer;
 
@@ -242,13 +242,13 @@ public void sendMessageUsingFreemarkerTemplate(
 
 第一个变化与`sendHtmlMessage`方法有关。**我们必须将`MimeMessageHelper`设置为多部分**，方法是将`true`传递给构造函数的第二个参数:
 
-```
+```java
 MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 ```
 
 然后，我们必须获取图像文件作为资源。我们可以为此使用`@Value`注释:
 
-```
+```java
 @Value("classpath:/mail-logo.png")
 Resource resourceFile;
 ```
@@ -257,13 +257,13 @@ Resource resourceFile;
 
 回到`sendHtmlMessage`方法，我们将**添加`resourceFile`作为内嵌附件**，以便能够用 CID 引用它:
 
-```
+```java
 helper.addInline("attachment.png", resourceFile);
 ```
 
 最后，必须使用 CID 符号从百里香和 FreeMarker 电子邮件中引用**图像:**
 
-```
+```java
 <img src="cid:attachment.png" />
 ```
 

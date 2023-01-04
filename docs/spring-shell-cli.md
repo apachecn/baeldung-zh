@@ -12,7 +12,7 @@
 
 首先，我们需要将`spring-shell`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.shell</groupId>
     <artifactId>spring-shell</artifactId>
@@ -28,7 +28,7 @@
 
 第一个是在应用程序的入口点引导 shell，让用户输入命令:
 
-```
+```java
 public static void main(String[] args) throws IOException {
     Bootstrap.main(args);
 }
@@ -36,7 +36,7 @@ public static void main(String[] args) throws IOException {
 
 第二个是获得一个`JLineShellComponent`并以编程方式执行命令:
 
-```
+```java
 Bootstrap bootstrap = new Bootstrap();
 JLineShellComponent shell = bootstrap.getJLineShellComponent();
 shell.executeCommand("help");
@@ -56,7 +56,7 @@ shell 中已经有几个内置的命令，比如`clear`、`help`、`exit`等。�
 
 首先，我们需要让 shell 知道我们的命令在哪里。为此，它要求文件`META-INF/spring/spring-shell-plugin.xml`存在于我们的项目中，在那里，我们可以使用 Spring 的组件扫描功能:
 
-```
+```java
 <beans ... >
     <context:component-scan base-package="org.baeldung.shell.simple" />
 </beans>
@@ -66,7 +66,7 @@ shell 中已经有几个内置的命令，比如`clear`、`help`、`exit`等。�
 
 让我们创建两个简单的命令，一个获取并显示 URL 的内容，另一个将这些内容保存到一个文件中:
 
-```
+```java
 @Component
 public class SimpleCLI implements CommandMarker {
 
@@ -93,7 +93,7 @@ public class SimpleCLI implements CommandMarker {
 
 现在，让我们检查一下是否一切都按预期运行:
 
-```
+```java
 spring-shell>web-get --url https://www.google.com
 <!doctype html ... 
 spring-shell>web-save --url https://www.google.com --out contents.txt
@@ -106,7 +106,7 @@ Done.
 
 首先，让我们创建一个方法来修改`web-save`命令的可用性:
 
-```
+```java
 private boolean adminEnableExecuted = false;
 
 @CliAvailabilityIndicator(value = "web-save")
@@ -117,7 +117,7 @@ public boolean isAdminEnabled() {
 
 现在，让我们创建一个命令来更改`adminEnableExecuted`变量:
 
-```
+```java
 @CliCommand(value = "admin-enable")
 public String adminEnable() {
     adminEnableExecuted = true;
@@ -127,7 +127,7 @@ public String adminEnable() {
 
 最后，我们来验证一下:
 
-```
+```java
 spring-shell>web-save --url https://www.google.com --out contents.txt
 Command 'web-save --url https://www.google.com --out contents.txt'
   was found but is not currently available
@@ -142,13 +142,13 @@ Done.
 
 默认情况下，所有命令参数都是可选的。然而，我们可以通过`@CliOption`注释的`mandatory`属性使它们成为必需的:
 
-```
+```java
 @CliOption(key = { "out", "file" }, mandatory = true)
 ```
 
 现在，我们可以测试如果不引入它，会导致错误:
 
-```
+```java
 spring-shell>web-save --url https://www.google.com
 You should specify option (--out) for this command
 ```
@@ -157,13 +157,13 @@ You should specify option (--out) for this command
 
 一个空的`@CliOption`值使该参数成为默认值。在那里，我们将接收 shell 中引入的不属于任何命名参数的值:
 
-```
+```java
 @CliOption(key = { "", "url" })
 ```
 
 现在，让我们检查它是否如预期的那样工作:
 
-```
+```java
 spring-shell>web-get https://www.google.com
 <!doctype html ...
 ```
@@ -174,7 +174,7 @@ spring-shell>web-get https://www.google.com
 
 让我们修改我们的`web-get`来添加自定义帮助消息:
 
-```
+```java
 @CliCommand(
   // ...
   help = "Displays the contents of an URL")
@@ -189,7 +189,7 @@ public String webGet(
 
 现在，用户可以确切地知道我们的命令做了什么:
 
-```
+```java
 spring-shell>help web-get
 Keyword:                    web-get
 Keyword:                    wg
@@ -213,7 +213,7 @@ Description:                Displays the contents of a URL.
 
 让我们创建一个新横幅，开始我们的定制:
 
-```
+```java
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class SimpleBannerProvider extends DefaultBannerProvider {
@@ -249,7 +249,7 @@ public class SimpleBannerProvider extends DefaultBannerProvider {
 
 现在，让我们更改提示:
 
-```
+```java
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class SimplePromptProvider extends DefaultPromptProvider {
@@ -266,7 +266,7 @@ public class SimplePromptProvider extends DefaultPromptProvider {
 
 最后，让我们修改历史文件的名称:
 
-```
+```java
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class SimpleHistoryFileNameProvider
@@ -287,7 +287,7 @@ public class SimpleHistoryFileNameProvider
 
 一切就绪后，我们可以调用我们的 shell 并查看它的运行情况:
 
-```
+```java
 =======================================
 *          Baeldung Shell             *
 =======================================
@@ -304,7 +304,7 @@ baeldung-shell>
 
 让我们创建一个可以将`String`转换成`URL`的转换器:
 
-```
+```java
 @Component
 public class SimpleURLConverter implements Converter<URL> {
 
@@ -330,7 +330,7 @@ public class SimpleURLConverter implements Converter<URL> {
 
 最后，让我们修改我们的`web-get`和`web-save`命令:
 
-```
+```java
 public String webSave(... URL url) {
     // ...
 }

@@ -20,7 +20,7 @@ Spring Boot 喜欢基于 Java 的配置。因此，`@SpringBootConfiguration`注
 
 首先，我们创建一个包含我们的配置的应用程序类:
 
-```
+```java
 @SpringBootConfiguration
 public class Application {
 

@@ -24,13 +24,13 @@
 
 与 Docker 交互的最简单方法是使用专用的 Docker CLI，它执行带有配置标志的各种命令。正如我们所知，要创建一个单独的容器，我们可以对所需的图像使用`docker run`命令:
 
-```
+```java
 docker run alpine:latest
 ```
 
 [根据官方参考](https://web.archive.org/web/20220909090223/https://docs.docker.com/engine/reference/commandline/run/),`run`命令支持许多允许预配置容器的附加选项。让我们浏览一下可用选项列表:
 
-```
+```java
 --mount		        Attach a filesystem mount to the container
 --volume , -v		Bind mount a volume
 ```
@@ -43,13 +43,13 @@ docker run alpine:latest
 
 首先，让我们在工作目录中创建一个虚拟文件:
 
-```
+```java
 $ echo 'Hi Baeldung! >> file.txt
 ```
 
 要将单个本地文件挂载到容器，我们可以扩展前面的`run`命令:
 
-```
+```java
 $ docker run -d -it \
    --mount type=bind,source="$(pwd)"/file.txt,target=/file.txt,readonly \
    alpine:latest
@@ -67,14 +67,14 @@ $ docker run -d -it \
 
 最后，让我们验证安装结果:
 
-```
+```java
 $ docker exec ... cat /file.txt
 Hi Baeldung!
 ```
 
 我们还可以检查容器细节，使用`docker inspect`命令检查所有装载:
 
-```
+```java
 "Mounts": [
     {
         "Type": "bind",
@@ -89,7 +89,7 @@ Hi Baeldung!
 
 现在，我们可以看看与路径相关的常见错误。**如果我们提供非绝对路径，Docker CLI 将返回一个错误**，终止命令执行:
 
-```
+```java
 docker: Error response from daemon: invalid mount config for type "bind": invalid mount path: 'file.txt+' mount path must be absolute.
 ```
 
@@ -103,7 +103,7 @@ docker: Error response from daemon: invalid mount config for type "bind": invali
 
 让我们通过使用`–v`选项来转换前面的例子:
 
-```
+```java
 $ docker run -d -it
     -v "$(pwd)"/file.txt:/file.txt:ro \
     alpine:latest
@@ -135,7 +135,7 @@ $ docker run -d -it
 
 **长语法允许我们分别配置每个键**来指定卷挂载。对于同一个示例，让我们准备一个 docker-compose 条目:
 
-```
+```java
 services:
   alpine:
     image: alpine:latest
@@ -153,7 +153,7 @@ services:
 
 **短语法使用由冒号分隔的单个字符串值** **来指定卷挂载**:
 
-```
+```java
 services:
   alpine:
     image: alpine:latest

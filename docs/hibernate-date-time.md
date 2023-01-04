@@ -10,7 +10,7 @@
 
 为了演示时态类型的映射，我们需要 H2 数据库和最新版本的`hibernate-core`库:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>
@@ -31,7 +31,7 @@
 
 对于我们的示例，我们将在每个会话的基础上设置它:
 
-```
+```java
 session = HibernateUtil.getSessionFactory().withOptions()
   .jdbcTimeZone(TimeZone.getTimeZone("UTC"))
   .openSession();
@@ -49,7 +49,7 @@ session = HibernateUtil.getSessionFactory().withOptions()
 
 因为这些类型与 SQL 一致，所以它们的映射相对简单。我们可以使用`@Basic`或`@Column`注释:
 
-```
+```java
 @Entity
 public class TemporalValues {
 
@@ -67,7 +67,7 @@ public class TemporalValues {
 
 我们可以这样设置相应的值:
 
-```
+```java
 temporalValues.setSqlDate(java.sql.Date.valueOf("2017-11-15"));
 temporalValues.setSqlTime(java.sql.Time.valueOf("15:30:14"));
 temporalValues.setSqlTimestamp(
@@ -82,7 +82,7 @@ temporalValues.setSqlTimestamp(
 
 这就是为什么我们需要另一个注释来指定所需的 SQL 类型:
 
-```
+```java
 @Basic
 @Temporal(TemporalType.DATE)
 private java.util.Date utilDate;
@@ -100,7 +100,7 @@ private java.util.Date utilTimestamp;
 
 我们可以这样设置相应的字段:
 
-```
+```java
 temporalValues.setUtilDate(
   new SimpleDateFormat("yyyy-MM-dd").parse("2017-11-15"));
 temporalValues.setUtilTime(
@@ -114,7 +114,7 @@ temporalValues.setUtilTimestamp(
 
 因此，当我们从数据库中检索实体时，我们会毫不意外地在该字段中找到一个`java.sql.Timestamp`实例，即使我们最初持久化了一个`java.util.Date`:
 
-```
+```java
 temporalValues = session.get(TemporalValues.class, 
   temporalValues.getId());
 assertThat(temporalValues.getUtilTimestamp())
@@ -129,7 +129,7 @@ assertThat(temporalValues.getUtilTimestamp())
 
 唯一的区别是 Hibernate 不支持从`Calendar`到 `TIME`的映射:
 
-```
+```java
 @Basic
 @Temporal(TemporalType.DATE)
 private java.util.Calendar calendarDate;
@@ -141,7 +141,7 @@ private java.util.Calendar calendarTimestamp;
 
 下面是我们如何设置该字段的值:
 
-```
+```java
 Calendar calendarDate = Calendar.getInstance(
   TimeZone.getTimeZone("UTC"));
 calendarDate.set(Calendar.YEAR, 2017);
@@ -162,7 +162,7 @@ temporalValues.setCalendarDate(calendarDate);
 
 这意味着我们只能用`@Basic`(或`@Column`)注释来标记这些字段，就像这样:
 
-```
+```java
 @Basic
 private java.time.LocalDate localDate;
 
@@ -187,7 +187,7 @@ private java.time.ZonedDateTime zonedDateTime;
 
 `java.time`包中的每个时态类都有一个静态的`parse()`方法来使用适当的格式解析提供的`String`值。下面是我们如何设置实体字段的值:
 
-```
+```java
 temporalValues.setLocalDate(LocalDate.parse("2017-11-15"));
 
 temporalValues.setLocalTime(LocalTime.parse("15:30:18"));

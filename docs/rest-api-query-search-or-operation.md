@@ -23,13 +23,13 @@
 
 例如，下面是测试“**名或姓”的 API 的 URL:**
 
-```
+```java
 http://localhost:8080/users?search=firstName:john,'lastName:doe
 ```
 
 请注意，我们用单引号标记了标准`lastName`,以示区别。我们将在我们的标准值对象–`SpecSearchCriteria:`中捕获 or 操作符的谓词
 
-```
+```java
 public SpecSearchCriteria(
   String orPredicate, String key, SearchOperation operation, Object value) {
     super();
@@ -48,7 +48,7 @@ public SpecSearchCriteria(
 
 现在，让我们修改我们的规范构建器`UserSpecificationBuilder,` ，以便在构建`Specification<User>`时考虑 OR 限定标准:
 
-```
+```java
 public Specification<User> build() {
     if (params.size() == 0) {
         return null;
@@ -68,7 +68,7 @@ public Specification<User> build() {
 
 最后，让我们在控制器中设置一个新的 REST 端点，通过 OR 操作符使用这个搜索功能。改进的解析逻辑提取特殊标志，该标志有助于用 OR 运算符标识标准:
 
-```
+```java
 @GetMapping("/users/espec")
 @ResponseBody
 public List<User> findAllByOrPredicate(@RequestParam String search) {
@@ -98,7 +98,7 @@ protected Specification<User> resolveSpecification(String searchParameters) {
 
 在这个现场测试示例中，使用新的 API 端点，我们将通过名字“john”或姓氏“doe”来搜索用户。注意，参数`lastName`有一个单引号，将其限定为“或”谓词:
 
-```
+```java
 private String EURL_PREFIX
   = "http://localhost:8082/spring-rest-full/auth/users/espec?search=";
 
@@ -116,7 +116,7 @@ public void givenFirstOrLastName_whenGettingListOfUsers_thenCorrect() {
 
 现在，让我们对名为“john”或姓为“doe”的用户**在持久性级别执行与上面相同的测试:**
 
-```
+```java
 @Test
 public void givenFirstOrLastName_whenGettingListOfUsers_thenCorrect() {
     UserSpecificationsBuilder builder = new UserSpecificationsBuilder();
@@ -141,7 +141,7 @@ public void givenFirstOrLastName_whenGettingListOfUsers_thenCorrect() {
 
 例如，下面是通过`firstName`和`age:`进行更复杂搜索的 URL
 
-```
+```java
 http://localhost:8080/users?search=( firstName:john OR firstName:tom ) AND age>22
 ```
 
@@ -149,7 +149,7 @@ http://localhost:8080/users?search=( firstName:john OR firstName:tom ) AND age>2
 
 让我们用一个`CriteriaParser`来解析中缀表达式。我们的`CriteriaParser` 将给定的中缀表达式分割成记号(标准、括号和&或操作符),并为其创建一个后缀表达式:
 
-```
+```java
 public Deque<?> parse(String searchParam) {
 
     Deque<Object> output = new LinkedList<>();
@@ -194,7 +194,7 @@ public Deque<?> parse(String searchParam) {
 
 让我们在我们的规范构建器中添加一个新方法，`GenericSpecificationBuilder,`来从后缀表达式中构造搜索`Specification` :
 
-```
+```java
  public Specification<U> build(Deque<?> postFixedExprStack, 
         Function<SpecSearchCriteria, Specification<U>> converter) {
 
@@ -223,7 +223,7 @@ public Deque<?> parse(String searchParam) {
 
 最后，让我们在我们的`UserController`中添加另一个 REST 端点，用新的`CriteriaParser`解析复杂表达式:
 
-```
+```java
 @GetMapping("/users/spec/adv")
 @ResponseBody
 public List<User> findAllByAdvPredicate(@RequestParam String search) {

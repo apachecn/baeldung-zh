@@ -34,7 +34,7 @@ Learn how to map entity identifiers with Hibernate.[Read more](/web/202211290059
 
 让我们以反映数据库中关系的方式将`Cart`类映射到`Item`对象的集合:
 
-```
+```java
 public class Cart {
 
     //...     
@@ -76,7 +76,7 @@ public class Cart {
 
 接下来，让我们为数据库交互创建 Hibernate `SessionFactory`:
 
-```
+```java
 public static SessionFactory getSessionFactory() {
 
     ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
@@ -100,7 +100,7 @@ private static Map<String, String> dbSettings() {
 
 与映射相关的配置将使用模型类中的 JPA 注释来完成:
 
-```
+```java
 @Entity
 @Table(name="CART")
 public class Cart {
@@ -116,7 +116,7 @@ public class Cart {
 
 请注意，`@OneToMany`注释用于定义`Item`类中的属性，该属性将用于映射`mappedBy`变量。这就是为什么我们在`Item`类中有一个名为`cart`的属性:
 
-```
+```java
 @Entity
 @Table(name="ITEMS")
 public class Item {
@@ -138,7 +138,7 @@ public class Item {
 
 在测试程序中，我们使用`main`()方法创建一个类来获取 Hibernate 会话，并将模型对象保存到数据库中，实现`one-to-many`关联:
 
-```
+```java
 sessionFactory = HibernateAnnotationUtil.getSessionFactory();
 session = sessionFactory.getCurrentSession();
 System.out.println("Session created");
@@ -159,7 +159,7 @@ System.out.println("item2 ID=" + item2.getId()
 
 这是我们测试程序的输出:
 
-```
+```java
 Session created
 Hibernate: insert into CART values ()
 Hibernate: insert into ITEMS (cart_id)
@@ -186,7 +186,7 @@ Closing SessionFactory
 
 让我们想象这样一种情况，一个开发者想给`cart1`实例添加一个`item1`，给`cart2 instance`实例添加一个`item2`，但是犯了一个错误，使得`cart2`和`item2`之间的引用变得不一致:
 
-```
+```java
 Cart cart1 = new Cart();
 Cart cart2 = new Cart();
 
@@ -220,7 +220,7 @@ cart1.setItems(itemsSet); // wrong!
 
 让我们来看看结果:
 
-```
+```java
 item1 ID=1, Foreign Key Cart ID=1
 item2 ID=2, Foreign Key Cart ID=2
 ```
@@ -235,7 +235,7 @@ item2 ID=2, Foreign Key Cart ID=2
 
 下面的代码片段显示了作为拥有方的`one-to-many`方的实现:
 
-```
+```java
 public class ItemOIO {
 
     //  ...
@@ -259,7 +259,7 @@ public class CartOIO {
 
 如果我们运行相同的代码，结果将是相反的:
 
-```
+```java
 item1 ID=1, Foreign Key Cart ID=1
 item2 ID=2, Foreign Key Cart ID=1
 ```

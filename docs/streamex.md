@@ -21,7 +21,7 @@ Java 8 最令人兴奋的特性之一是 [`Stream` API](/web/20221129013614/http
 
 要使用`StreamEx`，我们需要向`pom.xml`添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>one.util</groupId>
     <artifactId>streamex</artifactId>
@@ -33,7 +33,7 @@ Java 8 最令人兴奋的特性之一是 [`Stream` API](/web/20221129013614/http
 
 在本教程中，我们将使用一个简单的`User`类:
 
-```
+```java
 public class User {
     int id;
     String name;
@@ -45,7 +45,7 @@ public class User {
 
 和一个简单的`Role`类:
 
-```
+```java
 public class Role {
 }
 ```
@@ -56,7 +56,7 @@ public class Role {
 
 问题是对于简单的场景，代码会变得不必要地冗长:
 
-```
+```java
 users.stream()
   .map(User::getName)
   .collect(Collectors.toList());
@@ -66,7 +66,7 @@ users.stream()
 
 现在，有了 StreamEx，我们不需要提供一个`Collector`来指定我们需要一个`List`、 `Set, Map, InmutableList,` 等等。：
 
-```
+```java
 List<String> userNames = StreamEx.of(users)
   .map(User::getName)
   .toList();
@@ -78,7 +78,7 @@ List<String> userNames = StreamEx.of(users)
 
 另一个简写是`groupingBy`:
 
-```
+```java
 Map<Role, List<User>> role2users = StreamEx.of(users)
   .groupingBy(User::getRole);
 ```
@@ -87,14 +87,14 @@ Map<Role, List<User>> role2users = StreamEx.of(users)
 
 使用普通的`Stream` API，我们需要编写:
 
-```
+```java
 Map<Role, List<User>> role2users = users.stream()
   .collect(Collectors.groupingBy(User::getRole));
 ```
 
 类似的简写形式可以在`Collectors.joining():`中找到
 
-```
+```java
 StreamEx.of(1, 2, 3)
   .joining("; "); // "1; 2; 3"
 ```
@@ -105,7 +105,7 @@ StreamEx.of(1, 2, 3)
 
 在某些场景中，**我们得到了一个不同类型的对象列表，我们需要根据类型对它们进行过滤:**
 
-```
+```java
 List usersAndRoles = Arrays.asList(new User(), new Role());
 List<Role> roles = StreamEx.of(usersAndRoles)
   .select(Role.class)
@@ -114,7 +114,7 @@ List<Role> roles = StreamEx.of(usersAndRoles)
 
 **我们可以用这个简便的操作将元素添加到我们的** `**Stream**,`的开头或结尾:
 
-```
+```java
 List<String> appendedUsers = StreamEx.of(users)
   .map(User::getName)
   .prepend("(none)")
@@ -124,7 +124,7 @@ List<String> appendedUsers = StreamEx.of(users)
 
 **我们可以使用`nonNull()`** 删除不需要的空元素，并将`Stream`用作`Iterable`:
 
-```
+```java
 for (String line : StreamEx.of(users).map(User::getName).nonNull()) {
     System.out.println(line);
 }
@@ -134,7 +134,7 @@ for (String line : StreamEx.of(users).map(User::getName).nonNull()) {
 
 `StreamEx`增加了对基本类型的支持，正如我们在这个不言自明的例子中看到的:
 
-```
+```java
 short[] src = {1,2,3};
 char[] output = IntStreamEx.of(src)
   .map(x -> x * 5)
@@ -145,7 +145,7 @@ char[] output = IntStreamEx.of(src)
 
 我们可以使用`pairMap`方法来执行这个操作:
 
-```
+```java
 public double[] getDiffBetweenPairs(double... numbers) {
     return DoubleStreamEx.of(numbers)
       .pairMap((a, b) -> b - a)
@@ -161,7 +161,7 @@ public double[] getDiffBetweenPairs(double... numbers) {
 
 在这种情况下，我们采用所有非空值:
 
-```
+```java
 Map<String, Role> nameToRole = new HashMap<>();
 nameToRole.put("first", new Role());
 nameToRole.put("second", null);
@@ -173,7 +173,7 @@ Set<String> nonNullRoles = StreamEx.ofKeys(nameToRole, Objects::nonNull)
 
 我们还可以通过创建一个`EntryStream`实例来操作键值对:
 
-```
+```java
 public Map<User, List<Role>> transformMap( 
     Map<Role, List<User>> role2users) {
     Map<User, List<Role>> users2roles = EntryStream.of(role2users)
@@ -194,7 +194,7 @@ public Map<User, List<Role>> transformMap(
 
 我们还可以独立地映射键和值:
 
-```
+```java
 Map<String, String> mapToString = EntryStream.of(users2roles)
   .mapKeys(String::valueOf)
   .mapValues(String::valueOf)
@@ -207,7 +207,7 @@ Map<String, String> mapToString = EntryStream.of(users2roles)
 
 使用`StreamEx`，我们可以高效地读取文件，也就是说，不需要一次加载全部文件。处理大文件时非常方便:
 
-```
+```java
 StreamEx.ofLines(reader)
   .remove(String::isEmpty)
   .forEach(System.out::println);

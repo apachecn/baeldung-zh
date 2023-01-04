@@ -19,7 +19,7 @@ Apache Commons Collections 库提供了有用的类来补充 Java 集合框架�
 
 我们需要做的第一件事是在我们的`pom.xml`中添加 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -44,7 +44,7 @@ Apache Commons Collections 库提供了有用的类来补充 Java 集合框架�
 
 首先，让我们设置跑步者和年龄的数组，我们将使用这些数组来加载地图并验证值的顺序:
 
-```
+```java
 public class OrderMapUnitTest {
     private String[] names = {"Emily", "Mathew", "Rose", "John", "Anna"};
     private Integer[] ages = {37, 28, 40, 36, 21};
@@ -56,7 +56,7 @@ public class OrderMapUnitTest {
 
 现在，让我们初始化我们的地图:
 
-```
+```java
 @Before
 public void createRunners() {
     this.runnersLinkedMap = new LinkedMap<>();
@@ -71,7 +71,7 @@ public void createRunners() {
 
 让我们看看正向迭代器是如何使用的:
 
-```
+```java
 @Test
 public void givenALinkedMap_whenIteratedForwards_thenPreservesOrder() {
     String name = this.runnersLinkedMap.firstKey();
@@ -90,7 +90,7 @@ public void givenALinkedMap_whenIteratedForwards_thenPreservesOrder() {
 
 现在让我们从头开始，从最后一个键开始:
 
-```
+```java
 @Test
 public void givenALinkedMap_whenIteratedBackwards_thenPreservesOrder() {
     String name = this.runnersLinkedMap.lastKey();
@@ -109,7 +109,7 @@ public void givenALinkedMap_whenIteratedBackwards_thenPreservesOrder() {
 
 现在让**使用`mapIterator()`方法获得一个`MapIterator`** ，因为我们展示了它如何保持数组`names`和`ages`中定义的跑步者的顺序:
 
-```
+```java
 @Test
 public void givenALinkedMap_whenIteratedWithMapIterator_thenPreservesOrder() {
     OrderedMapIterator<String, Integer> runnersIterator 
@@ -130,7 +130,7 @@ public void givenALinkedMap_whenIteratedWithMapIterator_thenPreservesOrder() {
 
 最后，让我们看看如何通过索引或对象移除**元素:**
 
-```
+```java
 @Test
 public void givenALinkedMap_whenElementRemoved_thenSizeDecrease() {
     LinkedMap<String, Integer> lmap 
@@ -164,7 +164,7 @@ public void givenALinkedMap_whenElementRemoved_thenSizeDecrease() {
 
 我们可以将`OrderedMap`转换成`LinkedMap`来使用`asList()`方法:
 
-```
+```java
 @Test
 public void givenALinkedMap_whenConvertedToList_thenMatchesKeySet() {
     LinkedMap<String, Integer> lmap 
@@ -180,7 +180,7 @@ public void givenALinkedMap_whenConvertedToList_thenMatchesKeySet() {
 
 然后我们可以检查`LinkedMap`实现中方法`indexOf(Object o)`和`get(int index)`的功能:
 
-```
+```java
 @Test
 public void givenALinkedMap_whenSearchByIndexIsUsed_thenMatchesConstantArray() {
     LinkedMap<String, Integer> lmap 

@@ -12,7 +12,7 @@ Spring Security 5 引入了一个新的`OAuth2LoginConfigurer`类，我们可以
 
 **在一个 Spring Boot 项目中，我们只需要添加启动器 [`spring-boot-starter-oauth2-client`](https://web.archive.org/web/20220921221550/https://search.maven.org/search?q=a:spring-boot-starter-oauth2-client)** :
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-oauth2-client</artifactId>
@@ -22,7 +22,7 @@ Spring Security 5 引入了一个新的`OAuth2LoginConfigurer`类，我们可以
 
 在一个非引导项目中，除了标准的 Spring 和 Spring 安全依赖项，我们还需要显式地添加 [`spring-security-oauth2-client`](https://web.archive.org/web/20220921221550/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-security-oauth2-client%22%20AND%20g%3A%22org.springframework.security%22) 和 [`spring-security-oauth2-jose`](https://web.archive.org/web/20220921221550/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-security-oauth2-jose%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-oauth2-client</artifactId>
@@ -53,13 +53,13 @@ Spring Security 5 引入了一个新的`OAuth2LoginConfigurer`类，我们可以
 
 因此，对于谷歌，我们将添加这个 URI:
 
-```
+```java
 http://localhost:8081/login/oauth2/code/google
 ```
 
 为了获得通过脸书认证的客户端凭证，我们需要在[开发者脸书](https://web.archive.org/web/20220921221550/https://developers.facebook.com/docs/facebook-login)网站上注册一个应用程序，并将相应的 URI 设置为“有效的 OAuth 重定向 URI”:
 
-```
+```java
 http://localhost:8081/login/oauth2/code/facebook
 ```
 
@@ -69,7 +69,7 @@ http://localhost:8081/login/oauth2/code/facebook
 
 **Spring 安全属性的前缀是`spring.security.oauth2.client.registration`，后面是客户端名称，然后是客户端属性的名称**:
 
-```
+```java
 spring.security.oauth2.client.registration.google.client-id=<your client id>
 spring.security.oauth2.client.registration.google.client-secret=<your client secret>
 
@@ -81,7 +81,7 @@ spring.security.oauth2.client.registration.facebook.client-secret=<your client s
 
 **自动 web 安全配置相当于定义一个简单的`oauth2Login()`元素**:
 
-```
+```java
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -113,7 +113,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 **如果我们没有使用 Spring Boot 应用程序，我们将需要定义一个`ClientRegistrationRepository` bean** ，它包含授权服务器拥有的客户端信息的内部表示:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 @PropertySource("classpath:application.properties")
@@ -138,7 +138,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 让我们看看构建这些对象的`getRegistration()`方法:
 
-```
+```java
 private static String CLIENT_PROPERTY_KEY 
   = "spring.security.oauth2.client.registration.";
 
@@ -176,7 +176,7 @@ private ClientRegistration getRegistration(String client) {
 
 最后，我们必须基于`ClientRegistrationRepository` bean 创建一个`OAuth2AuthorizedClientService` bean，并用`oauth2Login()`元素注册两者:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests().anyRequest().authenticated()
@@ -214,7 +214,7 @@ OAuth 2 流程使用了几个元素，我们可以用`oauth2Login()`方法定制
 
 **让我们从使用** **`loginPage()`方法**为`oauth2Login()`元素配置一个新的登录 URL 开始:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests()
@@ -232,7 +232,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 接下来，让我们用映射到这个 URL 的方法定义一个`LoginController`:
 
-```
+```java
 @Controller
 public class LoginController {
 
@@ -255,7 +255,7 @@ public class LoginController {
 
 **这个方法必须向视图**发送一个可用客户端及其授权端点的映射，我们将从`ClientRegistrationRepository` bean 中获得这个映射:
 
-```
+```java
 public String getLoginPage(Model model) {
     Iterable<ClientRegistration> clientRegistrations = null;
     ResolvableType type = ResolvableType.forInstance(clientRegistrationRepository)
@@ -276,7 +276,7 @@ public String getLoginPage(Model model) {
 
 最后，我们需要定义我们的`oauth_login.html`页面:
 
-```
+```java
 <h3>Login with:</h3>
 <p th:each="url : ${urls}">
     <a th:text="${url.key}" th:href="${url.value}">Client</a>
@@ -298,7 +298,7 @@ public String getLoginPage(Model model) {
 
 让我们看看如何设置自定义 URL 来将用户重定向到:
 
-```
+```java
 .oauth2Login()
   .defaultSuccessUrl("/loginSuccess")
   .failureUrl("/loginFailure");
@@ -316,7 +316,7 @@ public String getLoginPage(Model model) {
 
 首先，**让我们为授权端点**设置新的属性:
 
-```
+```java
 .oauth2Login() 
   .authorizationEndpoint()
   .baseUri("/oauth2/authorize-client")
@@ -327,7 +327,7 @@ public String getLoginPage(Model model) {
 
 我们还显式地设置了一个我们必须定义的`authorizationRequestRepository()` bean:
 
-```
+```java
 @Bean
 public AuthorizationRequestRepository<OAuth2AuthorizationRequest> 
   authorizationRequestRepository() {
@@ -344,7 +344,7 @@ public AuthorizationRequestRepository<OAuth2AuthorizationRequest>
 
 **让我们用默认的响应客户端实现显式配置`tokenEndpoint()`** :
 
-```
+```java
 .oauth2Login()
   .tokenEndpoint()
   .accessTokenResponseClient(accessTokenResponseClient());
@@ -352,7 +352,7 @@ public AuthorizationRequestRepository<OAuth2AuthorizationRequest>
 
 下面是响应客户端 bean:
 
-```
+```java
 @Bean
 public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> 
   accessTokenResponseClient() {
@@ -371,7 +371,7 @@ public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest>
 
 **让我们看看如何更改重定向端点**的`baseUri`:
 
-```
+```java
 .oauth2Login()
   .redirectionEndpoint()
   .baseUri("/oauth2/redirect")
@@ -393,7 +393,7 @@ public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest>
 
 首先，我们必须获得对应于当前用户令牌的客户机:
 
-```
+```java
 @Autowired
 private OAuth2AuthorizedClientService authorizedClientService;
 
@@ -410,7 +410,7 @@ public String getLoginInfo(Model model, OAuth2AuthenticationToken authentication
 
 接下来，我们将向客户机的用户信息端点发送一个请求，并检索`userAttributes Map`:
 
-```
+```java
 String userInfoEndpointUri = client.getClientRegistration()
   .getProviderDetails().getUserInfoEndpoint().getUri();
 

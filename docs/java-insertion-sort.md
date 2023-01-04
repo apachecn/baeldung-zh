@@ -18,7 +18,7 @@
 
 该过程完成后，输入数组 A 包含输入序列的排列，但按排序顺序排列:
 
-```
+```java
 INSERTION-SORT(A)
 
 for i=2 to A.length
@@ -46,7 +46,7 @@ for i=2 to A.length
 
 这里需要注意的一点是，在找到插入新项目的正确位置后，**我们将项目向右移动(而不是交换)**以释放空间。
 
-```
+```java
 public static void insertionSortImperative(int[] input) {
     for (int i = 1; i < input.length; i++) { 
         int key = input[i]; 
@@ -62,7 +62,7 @@ public static void insertionSortImperative(int[] input) {
 
 接下来，让我们为上面的方法创建一个测试:
 
-```
+```java
 @Test
 public void givenUnsortedArray_whenInsertionSortImperative_thenSortedAsc() {
     int[] input = {6, 2, 3, 4, 5, 1};
@@ -82,7 +82,7 @@ public void givenUnsortedArray_whenInsertionSortImperative_thenSortedAsc() {
 
 因为我们想对整个数组进行排序，所以我们将传递一些与其长度相等的项:
 
-```
+```java
 public static void insertionSortRecursive(int[] input) {
     insertionSortRecursive(input, input.length);
 }
@@ -92,7 +92,7 @@ public static void insertionSortRecursive(int[] input) {
 
 所有后续的递归调用都对输入数组的预定义部分进行排序——从第二项开始，直到到达数组的末尾:
 
-```
+```java
 private static void insertionSortRecursive(int[] input, int i) {
     if (i <= 1) {
         return;
@@ -110,7 +110,7 @@ private static void insertionSortRecursive(int[] input, int i) {
 
 这是一个包含 6 项的输入数组的调用堆栈的样子:
 
-```
+```java
 insertionSortRecursive(input, 6)
 insertionSortRecursive(input, 5) and insert the 6th item into the sorted array
 insertionSortRecursive(input, 4) and insert the 5th item into the sorted array
@@ -121,7 +121,7 @@ insertionSortRecursive(input, 1) and insert the 2nd item into the sorted array
 
 让我们也来看看对它的测试:
 
-```
+```java
 @Test
 public void givenUnsortedArray_whenInsertionSortRecursively_thenSortedAsc() {
     int[] input = {6, 4, 5, 2, 3, 1};

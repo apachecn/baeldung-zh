@@ -16,7 +16,7 @@
 
 首先，我们将创建一个 Spring Boot web 项目，并将`spring-cloud-starter-openfeign`依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-openfeign</artifactId>
@@ -25,7 +25,7 @@
 
 此外，我们需要添加 `spring-cloud-dependencies`:
 
-```
+```java
  <dependencyManagement>
      <dependencies>
          <dependency>
@@ -45,7 +45,7 @@
 
 接下来，我们需要将`@EnableFeignClients` 添加到我们的主类中:
 
-```
+```java
 @SpringBootApplication
 @EnableFeignClients
 public class ExampleApplication {
@@ -60,7 +60,7 @@ public class ExampleApplication {
 
 然后**我们使用`@FeignClient` 注释**声明一个虚拟客户端:
 
-```
+```java
 @FeignClient(value = "jplaceholder", url = "https://jsonplaceholder.typicode.com/")
 public interface JSONPlaceHolderClient {
 
@@ -97,13 +97,13 @@ Spring Cloud 使用`FeignClientsConfiguration`类按需为每个命名的客户�
 
 **如果我们想要定制这些 beans 中的一个或多个**，我们可以使用一个`@Configuration`类覆盖它们，然后将它添加到`FeignClient`注释中:
 
-```
+```java
 @FeignClient(value = "jplaceholder",
   url = "https://jsonplaceholder.typicode.com/",
   configuration = MyClientConfiguration.class)
 ```
 
-```
+```java
 @Configuration
 public class MyClientConfiguration {
 
@@ -120,7 +120,7 @@ Feign 支持针对不同用例的多个客户端，包括`ApacheHttpClient`，�
 
 为了使用这些客户端，我们不要忘记将所需的依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>io.github.openfeign</groupId>
     <artifactId>feign-okhttp</artifactId>
@@ -138,7 +138,7 @@ Feign 支持针对不同用例的多个客户端，包括`ApacheHttpClient`，�
 
 不使用`@Configuration`、**类，我们可以使用应用程序属性来配置假装客户端**，如这个`application.yaml`示例所示:
 
-```
+```java
 feign:
   client:
     config:
@@ -152,7 +152,7 @@ feign:
 
 最后，我们可以用`default`作为客户机名来创建配置，以配置所有的`@FeignClient`对象，或者我们可以为配置声明一个假的客户机名:
 
-```
+```java
 feign:
   client:
     config:
@@ -173,7 +173,7 @@ feign:
 
 让我们实现我们的定制请求拦截器:
 
-```
+```java
 @Bean
 public RequestInterceptor requestInterceptor() {
   return requestTemplate -> {
@@ -186,7 +186,7 @@ public RequestInterceptor requestInterceptor() {
 
 此外，要将拦截器添加到请求链中，我们只需要将这个 bean 添加到我们的`@Configuration`类中，或者，正如我们之前看到的，在属性文件中声明它:
 
-```
+```java
 feign:
   client:
     config:
@@ -199,7 +199,7 @@ feign:
 
 或者，我们可以使用 Spring Cloud OpenFeign 提供的`BasicAuthRequestInterceptor`类:
 
-```
+```java
 @Bean
 public BasicAuthRequestInterceptor basicAuthRequestInterceptor() {
     return new BasicAuthRequestInterceptor("username", "password");
@@ -218,7 +218,7 @@ Feign 支持 [Hystrix](/web/20220815030846/https://www.baeldung.com/spring-cloud
 
 这允许我们实现当服务失败时调用的回退方法:
 
-```
+```java
 @Component
 public class JSONPlaceHolderFallback implements JSONPlaceHolderClient {
 
@@ -236,7 +236,7 @@ public class JSONPlaceHolderFallback implements JSONPlaceHolderClient {
 
 为了让 Feign 知道已经提供了回退方法，我们还需要在`@FeignClient`注释中设置回退类:
 
-```
+```java
 @FeignClient(value = "jplaceholder",
   url = "https://jsonplaceholder.typicode.com/",
   fallback = JSONPlaceHolderFallback.class)
@@ -251,13 +251,13 @@ public interface JSONPlaceHolderClient {
 
 要启用日志记录，我们应该使用客户端接口的包名在`application.propertie` s 文件中声明它:
 
-```
+```java
 logging.level.com.baeldung.cloud.openfeign.client: DEBUG
 ```
 
 或者，如果我们希望只为包中的一个特定客户端启用日志记录，我们可以使用完整的类名:
 
-```
+```java
 logging.level.com.baeldung.cloud.openfeign.client.JSONPlaceHolderClient: DEBUG
 ```
 
@@ -265,7 +265,7 @@ logging.level.com.baeldung.cloud.openfeign.client.JSONPlaceHolderClient: DEBUG
 
 我们可以为每个客户端配置的 `Logger.Level`表示要记录多少内容:
 
-```
+```java
 @Configuration
 public class ClientConfiguration {
 
@@ -289,7 +289,7 @@ Feign 的默认错误处理程序`ErrorDecoder.default`，总是抛出一个`Fei
 
 这种行为并不总是最有用的。所以，**要自定义抛出的异常，我们可以使用`CustomErrorDecoder`** :
 
-```
+```java
 public class CustomErrorDecoder implements ErrorDecoder {
     @Override
     public Exception decode(String methodKey, Response response) {
@@ -308,7 +308,7 @@ public class CustomErrorDecoder implements ErrorDecoder {
 
 然后，正如我们之前所做的，我们必须通过向`@Configuration`类添加一个 bean 来替换默认的`ErrorDecoder`:
 
-```
+```java
 @Configuration
 public class ClientConfiguration {
 

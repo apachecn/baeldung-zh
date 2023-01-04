@@ -25,7 +25,7 @@
 
 首先，让我们在单线程中使用我们的队列，而不是在多个线程中使用它。通过这样做，可以很容易地证明单元测试中的元素是如何排序的:
 
-```
+```java
 PriorityBlockingQueue<Integer> queue = new PriorityBlockingQueue<>();
 ArrayList<Integer> polledElements = new ArrayList<>();
 
@@ -50,7 +50,7 @@ assertThat(polledElements).containsExactly(1, 2, 3, 4, 5);
 
 `PriorityBlockingQueue`实现了`BlockingQueue` 接口，它给了我们一些额外的方法，允许我们在从空队列中移除时**阻塞。让我们尝试使用`take()` 方法，它应该可以做到这一点:**
 
-```
+```java
 PriorityBlockingQueue<Integer> queue = new PriorityBlockingQueue<>();
 
 new Thread(() -> {
@@ -71,7 +71,7 @@ queue.add(1);
 
 虽然使用`sleep()`是一种有点脆弱的演示方式，但是当我们运行这段代码时，我们会看到:
 
-```
+```java
 Polling...
 Adding to queue
 Polled: 1 
@@ -91,7 +91,7 @@ Polled: 1
 
 既然我们已经解释了 a `PriorityBlockingQueue,` 的两个关键概念，让我们一起使用它们。我们可以简单地扩展上一个例子，但是这次向队列中添加更多的元素:
 
-```
+```java
 Thread thread = new Thread(() -> {
     System.out.println("Polling...");
     while (true) {
@@ -116,7 +116,7 @@ Thread.sleep(TimeUnit.SECONDS.toMillis(1));
 
 同样，虽然由于使用了`sleep(),` 这有点脆弱，但它仍然向我们展示了一个有效的用例。我们现在有一个阻塞的队列，等待添加元素。然后我们一次添加许多元素，然后显示它们将按优先级顺序处理。输出将如下所示:
 
-```
+```java
 Polling...
 Adding to queue
 Polled: 1

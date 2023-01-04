@@ -12,7 +12,7 @@
 
 **同样，我们将定义我们的`TriFunction`接口，并赋予它`andThen()`方法:**
 
-```
+```java
 @FunctionalInterface
 public interface TriFunction<T, U, V, R> {
 
@@ -27,7 +27,7 @@ public interface TriFunction<T, U, V, R> {
 
 让我们看看如何使用这个接口。我们将定义一个采用三个`Integers`的函数，将前两个操作数相乘，然后将最后一个操作数相加:
 
-```
+```java
 static TriFunction<Integer, Integer, Integer, Integer> multiplyThenAdd = (x, y, z) -> x * y + z;
 ```
 
@@ -38,13 +38,13 @@ static TriFunction<Integer, Integer, Integer, Integer> multiplyThenAdd = (x, y, 
 *   首先，将`multiplyThenAdd()`应用于参数
 *   然后，将一个`Function`应用于上一步的结果，该值计算一个`Integer`除以 10 的欧几里德除法的商
 
-```
+```java
 static TriFunction<Integer, Integer, Integer, Integer> multiplyThenAddThenDivideByTen = multiplyThenAdd.andThen(x -> x / 10);
 ```
 
 我们现在可以编写一些快速测试来检查我们的`TriFunction`的行为是否符合预期:
 
-```
+```java
 @Test
 void whenMultiplyThenAdd_ThenReturnsCorrectResult() {
     assertEquals(25, multiplyThenAdd.apply(2, 10, 5));
@@ -58,7 +58,7 @@ void whenMultiplyThenAddThenDivideByTen_ThenReturnsCorrectResult() {
 
 最后要注意的是，`TriFunction`的操作数可以是各种类型。例如，我们可以定义一个`TriFunction`，它将一个`Integer`转换成一个`String`，或者根据一个`Boolean`条件返回另一个给定的`String`:
 
-```
+```java
 static TriFunction<Integer, String, Boolean, String> convertIntegerOrReturnStringDependingOnCondition = (myInt, myStr, myBool) -> {
     if (Boolean.TRUE.equals(myBool)) {
         return myInt != null ? myInt.toString() : "";
@@ -72,7 +72,7 @@ static TriFunction<Integer, String, Boolean, String> convertIntegerOrReturnStrin
 
 **Vavr 库已经定义了一个`Function3`接口，它具有我们想要的行为。**首先，让我们将 Vavr [依赖项](https://web.archive.org/web/20221116161839/https://search.maven.org/search?q=io.vavr)添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>io.vavr</groupId>
     <artifactId>vavr</artifactId>
@@ -82,7 +82,7 @@ static TriFunction<Integer, String, Boolean, String> convertIntegerOrReturnStrin
 
 我们现在可以用它重新定义`multiplyThenAdd()`和`multiplyThenAddThenDivideByTen()` 方法:
 
-```
+```java
 static Function3<Integer, Integer, Integer, Integer> multiplyThenAdd = (x, y, z) -> x * y + z;
 
 static Function3<Integer, Integer, Integer, Integer> multiplyThenAddThenDivideByTen = multiplyThenAdd.andThen(x -> x / 10);

@@ -32,7 +32,7 @@ Log4j 2 允许我们使用一种通用的机制来实现上述所有类别的定
 
 在 Log4j 2 `.`中，像附加器、布局和过滤器这样的关键元素被称为核心插件。虽然这类插件有很多种，但在某些情况下，我们可能需要实现一个定制的核心插件。例如，考虑一个只将日志记录写入内存中的`List`的`[ListAppender](/web/20220728144649/https://www.baeldung.com/log4j2-custom-appender)`:
 
-```
+```java
 @Plugin(name = "ListAppender", 
   category = Core.CATEGORY_NAME, 
   elementType = Appender.ELEMENT_TYPE)
@@ -64,7 +64,7 @@ public class ListAppender extends AbstractAppender {
 
 **我们用`@Plugin `注释了这个类，允许我们将插件命名为**。同样，参数用`@PluginAttribute. `标注。像过滤器或布局这样的嵌套元素作为`@PluginElement.`传递。现在我们可以在配置中使用相同的名称引用这个插件:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration xmlns:xi="http://www.w3.org/2001/XInclude"
     packages="com.baeldung" status="WARN">
@@ -88,7 +88,7 @@ public class ListAppender extends AbstractAppender {
 
 例如，考虑一个将日志写入`Kafka:`的 appender
 
-```
+```java
 <Kafka2 name="KafkaLogger" ip ="127.0.0.1" port="9010" topic="log" partition="p-1">
     <PatternLayout pattern="%pid%style{%message}{red}%n" />
 </Kafka2>
@@ -96,7 +96,7 @@ public class ListAppender extends AbstractAppender {
 
 **为了实现这样的附加器，Log4j 2 提供了一个基于 [`Builder`模式](/web/20220728144649/https://www.baeldung.com/creational-design-patterns)** 的插件生成器实现:
 
-```
+```java
 @Plugin(name = "Kafka2", category = Core.CATEGORY_NAME)
 public class KafkaAppender extends AbstractAppender {
 
@@ -141,7 +141,7 @@ public class KafkaAppender extends AbstractAppender {
 
 我们也可以在 Log4j 2 `.` 中扩展一个现有的核心插件，我们可以通过给我们的插件起一个与现有插件相同的名字来实现。例如，如果我们扩展了`RollingFileAppender:`
 
-```
+```java
 @Plugin(name = "RollingFile", category = Core.CATEGORY_NAME, elementType = Appender.ELEMENT_TYPE)
 public class RollingFileAppender extends AbstractAppender {
 
@@ -164,7 +164,7 @@ public class RollingFileAppender extends AbstractAppender {
 
 另一个这样的插件是`[PatternLayout](/web/20220728144649/https://www.baeldung.com/java-logging-intro). `。在某些情况下，应用程序希望发布像线程 id、线程名称或每个日志语句的时间戳这样的信息。`PatternLayout `插件允许我们通过一个转换模式字符串在配置中嵌入[这样的细节](https://web.archive.org/web/20220728144649/https://logging.apache.org/log4j/2.x/manual/layouts.html#PatternLayout):
 
-```
+```java
 <Configuration status="debug" name="baeldung" packages="">
     <Appenders>
         <Console name="stdout" target="SYSTEM_OUT">
@@ -178,7 +178,7 @@ public class RollingFileAppender extends AbstractAppender {
 
 现在假设一个运行在 Docker 容器中的应用程序想要打印每个日志语句的容器名。为此，我们将实现一个`DockerPatterConverter `并更改上面的配置以包含转换字符串:
 
-```
+```java
 @Plugin(name = "DockerPatternConverter", category = PatternConverter.CATEGORY)
 @ConverterKeys({"docker", "container"})
 public class DockerPatternConverter extends LogEventPatternConverter {
@@ -208,7 +208,7 @@ public class DockerPatternConverter extends LogEventPatternConverter {
 
 因此，这个插件将把`%docker `或`%container`模式字符串转换成应用程序正在其中运行的容器名:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration xmlns:xi="http://www.w3.org/2001/XInclude" packages="com.baeldung" status="WARN">
     <Appenders>
@@ -231,7 +231,7 @@ public class DockerPatternConverter extends LogEventPatternConverter {
 
 **一个这样的插件是`DateLookupPlugin`，它允许用应用程序**的当前系统日期替换日期模式:
 
-```
+```java
 <RollingFile name="Rolling-File" fileName="${filename}" 
   filePattern="target/rolling1/test1-${date:MM-dd-yyyy}.%i.log.gz">
     <PatternLayout>
@@ -245,7 +245,7 @@ public class DockerPatternConverter extends LogEventPatternConverter {
 
 与其他插件类似，Log4j 2 为[查找](https://web.archive.org/web/20220728144649/https://logging.apache.org/log4j/2.x/manual/lookups.html)提供了很多来源。此外，如果需要一个新的数据源，它可以很容易地实现自定义查找:
 
-```
+```java
 @Plugin(name = "kafka", category = StrLookup.CATEGORY)
 public class KafkaLookup implements StrLookup {
 
@@ -267,7 +267,7 @@ public class KafkaLookup implements StrLookup {
 
 所以`KafkaLookup`会通过查询一个 Kafka 主题来解析值。我们现在将从配置中传递主题名称:
 
-```
+```java
 <RollingFile name="Rolling-File" fileName="${filename}" 
   filePattern="target/rolling1/test1-${kafka:topic-1}.%i.log.gz">
     <PatternLayout>

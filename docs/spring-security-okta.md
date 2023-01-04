@@ -60,7 +60,7 @@ Okta 为 web、移动或 API 服务提供认证、授权和社交登录等功能
 
 首先，让我们将最新的`[okta-spring-boot-starter](https://web.archive.org/web/20220628161334/https://search.maven.org/search?q=g:com.okta.spring%20AND%20a:okta-spring-boot-starter)` Maven 依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.okta.spring</groupId>
     <artifactId>okta-spring-boot-starter</artifactId>
@@ -72,7 +72,7 @@ Okta 为 web、移动或 API 服务提供认证、授权和社交登录等功能
 
 类似地，当使用 Gradle 时，我们可以在`build.gradle`中添加`okta-spring-boot-starter` 依赖项:
 
-```
+```java
 compile 'com.okta.spring:okta-spring-boot-starter:1.4.0'
 ```
 
@@ -80,7 +80,7 @@ compile 'com.okta.spring:okta-spring-boot-starter:1.4.0'
 
 然后，我们将在`application.properties`中配置 Okta oauth2 属性:
 
-```
+```java
 okta.oauth2.issuer=https://dev-example123.okta.com/oauth2/default
 okta.oauth2.client-id=1230oaa4yncmaxaQ90ccJwl4x6
 okta.oauth2.client-secret=hjiyblEzgT0ItY91Ywcdzwa78oNhtrYqNklQ5vLzvruT123
@@ -101,7 +101,7 @@ okta.oauth2.redirect-uri=/authorization-code/callback
 
 之后，让我们创建`HomeController`类:
 
-```
+```java
 @RestController
 public class HomeController {
     @GetMapping("/")
@@ -117,7 +117,7 @@ public class HomeController {
 
 就是这样！我们的 Spring Boot 应用程序已经准备好了 Okta 安全支持。让我们使用 Maven 命令运行我们的应用程序:
 
-```
+```java
 mvn spring-boot:run
 ```
 
@@ -165,7 +165,7 @@ mvn spring-boot:run
 
 然后，让我们将最新的 [`okta-spring-sdk`](https://web.archive.org/web/20220628161334/https://search.maven.org/search?q=g:com.okta.spring%20a:okta-spring-sdk) Maven 依赖添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.okta.spring</groupId>
     <artifactId>okta-spring-sdk</artifactId>
@@ -177,7 +177,7 @@ mvn spring-boot:run
 
 接下来，我们将添加一些基本的 Okta 客户端属性:
 
-```
+```java
 okta.client.orgUrl=https://dev-example123.okta.com
 okta.client.token=00TVXDNx1e2FgvxP4jLlONbPMzrBDLwESSf9hZSvMI123
 ```
@@ -188,7 +188,7 @@ okta.client.token=00TVXDNx1e2FgvxP4jLlONbPMzrBDLwESSf9hZSvMI123
 
 最后，让我们创建`AdminController`，注入 [`Client`](https://web.archive.org/web/20220628161334/https://developer.okta.com/okta-sdk-java/apidocs/index.html?com/okta/sdk/client/Client.html) 实例:
 
-```
+```java
 @RestController
 public class AdminController {
     @Autowired
@@ -202,7 +202,7 @@ public class AdminController {
 
 让我们创建`getUsers`方法来获取我们组织中所有用户的列表，使用`listUsers`方法返回一个 [`UserList`](https://web.archive.org/web/20220628161334/https://developer.okta.com/okta-sdk-java/apidocs/com/okta/sdk/resource/user/UserList.html) 对象:
 
-```
+```java
 public class AdminController {
     // ...
 
@@ -215,7 +215,7 @@ public class AdminController {
 
 之后，我们可以访问 [`localhost:8080/users`](https://web.archive.org/web/20220628161334/http://localhost:8080/users) 来接收包含所有用户的 JSON 响应:
 
-```
+```java
 {
     "dirty":false,
     "propertyDescriptors":{
@@ -258,7 +258,7 @@ public class AdminController {
 
 类似地，我们可以使用`firstName`、`lastName`或`email`作为查询参数，通过**来过滤用户:**
 
-```
+```java
 @GetMapping("/user")
 public UserList searchUserByEmail(@RequestParam String query) {
     return client.listUsers(query, null, null, null, null);
@@ -267,7 +267,7 @@ public UserList searchUserByEmail(@RequestParam String query) {
 
 让我们使用`[localhost:8080/[email protected]](https://web.archive.org/web/20220628161334/http://localhost:8080/user?query=ansh@bans.com)`通过`email`来搜索用户:
 
-```
+```java
 {
     "dirty":false,
     "propertyDescriptors":{
@@ -299,7 +299,7 @@ public UserList searchUserByEmail(@RequestParam String query) {
 
 同样，我们可以使用 [`UserBuilder`](https://web.archive.org/web/20220628161334/https://developer.okta.com/okta-sdk-java/apidocs/com/okta/sdk/resource/user/UserBuilder.html) 界面的`instance`方法创建一个新用户:
 
-```
+```java
 @GetMapping("/createUser")
 public User createUser() {
     char[] tempPassword = {'P','a','
@@ -333,7 +333,7 @@ public User createUser() {
         // ...
     }
 }
-```
+```java
 
 类似地，我们可以执行**一系列操作，比如列出所有应用程序、创建应用程序、列出所有组以及创建组**。
 

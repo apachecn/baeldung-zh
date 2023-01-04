@@ -12,7 +12,7 @@ Jersey 是一个用于创建 RESTful web 服务的流行 Java 框架。
 
 使用 Maven 原型，我们将能够为我们的文章生成一个工作项目:
 
-```
+```java
 mvn archetype:generate -DarchetypeArtifactId=jersey-quickstart-grizzly2
   -DarchetypeGroupId=org.glassfish.jersey.archetypes -DinteractiveMode=false
   -DgroupId=com.example -DartifactId=simple-service -Dpackage=com.example
@@ -25,7 +25,7 @@ mvn archetype:generate -DarchetypeArtifactId=jersey-quickstart-grizzly2
 
 让我们添加一个`items`资源，我们将在实验中使用它:
 
-```
+```java
 @Path("items")
 public class ItemsController {
     // our endpoints are defined here
@@ -49,7 +49,7 @@ public class ItemsController {
 
 我们可以使用`@CookieParam`注释在 Jersey 方法中解析 [cookie 值](/web/20221026123345/https://www.baeldung.com/cookies-java):
 
-```
+```java
 @GET
 public String jsessionid(@CookieParam("JSESSIONId") String jsessionId) {
     return "Cookie parameter value is [" + jsessionId+ "]";
@@ -58,7 +58,7 @@ public String jsessionid(@CookieParam("JSESSIONId") String jsessionId) {
 
 If we start up our container, we can [cURL](/web/20221026123345/https://www.baeldung.com/curl-rest) this endpoint to see the response:
 
-```
+```java
 > curl --cookie "JSESSIONID=5BDA743FEBD1BAEFED12ECE124330923" http://localhost:8080/myapp/items
 Cookie parameter value is [5BDA743FEBD1BAEFED12ECE124330923]
 ```
@@ -67,7 +67,7 @@ Cookie parameter value is [5BDA743FEBD1BAEFED12ECE124330923]
 
 或者，我们可以用的`@HeaderParam`注释来解析[的 HTTP 头](https://web.archive.org/web/20221026123345/https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers):
 
-```
+```java
 @GET
 public String contentType(@HeaderParam("Content-Type") String contentType) {
     return "Header parameter value is [" + contentType+ "]";
@@ -76,7 +76,7 @@ public String contentType(@HeaderParam("Content-Type") String contentType) {
 
 让我们再测试一次:
 
-```
+```java
 > curl --header "Content-Type: text/html" http://localhost:8080/myapp/items
 Header parameter value is [text/html]
 ```
@@ -87,7 +87,7 @@ Header parameter value is [text/html]
 
 我们可以用`@PathParam`提取路径元素:
 
-```
+```java
 @GET
 @Path("/{id}")
 public String itemId(@PathParam("id") Integer id) {
@@ -97,7 +97,7 @@ public String itemId(@PathParam("id") Integer id) {
 
 让我们发送另一个值为`3`的`curl`命令:
 
-```
+```java
 > curl http://localhost:8080/myapp/items/3
 Path parameter value is [3]
 ```
@@ -108,7 +108,7 @@ Path parameter value is [3]
 
 要读取这些值，我们可以使用`@QueryParam`注释:
 
-```
+```java
 @GET
 public String itemName(@QueryParam("name") String name) {
     return "Query parameter value is [" + name + "]";
@@ -117,7 +117,7 @@ public String itemName(@QueryParam("name") String name) {
 
 所以，现在我们可以用`curl`进行测试，就像以前一样:
 
-```
+```java
 > curl http://localhost:8080/myapp/items?name=Toaster
 Query parameter value if [Toaster]
 ```
@@ -126,7 +126,7 @@ Query parameter value if [Toaster]
 
 For reading parameters from a form submission, we’ll use the `@FormParam` annotation:
 
-```
+```java
 @POST
 public String itemShipment(@FormParam("deliveryAddress") String deliveryAddress, 
   @FormParam("quantity") Long quantity) {
@@ -136,7 +136,7 @@ public String itemShipment(@FormParam("deliveryAddress") String deliveryAddress,
 
 我们还需要设置适当的`Content-Type`来模仿表单提交动作。让我们使用`-d`标志:来设置表单参数
 
-```
+```java
 > curl -X POST -H 'Content-Type:application/x-www-form-urlencoded' \
   -d 'deliveryAddress=Washington nr 4&quantity;=5' \
   http://localhost:8080/myapp/items
@@ -151,7 +151,7 @@ Form parameters are [deliveryAddress=Washington nr 4, quantity=5]
 
 为了读取这些值，我们可以使用可用的`@MatrixParam`注释:
 
-```
+```java
 @GET
 public String itemColors(@MatrixParam("colors") List<String> colors) {
     return "Matrix parameter values are " + Arrays.toString(colors.toArray());
@@ -160,7 +160,7 @@ public String itemColors(@MatrixParam("colors") List<String> colors) {
 
 现在我们将再次测试我们的端点:
 
-```
+```java
 > curl http://localhost:8080/myapp/items;colors=blue,red
 Matrix parameter values are [blue,red]
 ```
@@ -171,7 +171,7 @@ Matrix parameter values are [blue,red]
 
 我们将在这里使用一个头参数、一个路径和一个表单:
 
-```
+```java
 public class ItemOrder {
     @HeaderParam("coupon")
     private String coupon;
@@ -193,7 +193,7 @@ public class ItemOrder {
 
 此外，为了获得这样的参数组合，我们将使用`@BeanParam`注释:
 
-```
+```java
 @POST
 @Path("/{itemId}")
 public String itemOrder(@BeanParam ItemOrder itemOrder) {
@@ -203,7 +203,7 @@ public String itemOrder(@BeanParam ItemOrder itemOrder) {
 
 在`curl`命令中，我们添加了这三种类型的参数，最终我们将得到一个`ItemOrder` 对象:
 
-```
+```java
 > curl -X POST -H 'Content-Type:application/x-www-form-urlencoded' \
   --header 'coupon:FREE10p' \
   -d total=70 \

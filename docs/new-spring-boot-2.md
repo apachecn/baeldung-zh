@@ -49,7 +49,7 @@ Gradle 插件经历了重大的改进和一些突破性的改变。
 
 如果我们想要 Spring Boot 依赖管理，我们应该添加:
 
-```
+```java
 apply plugin: 'io.spring.dependency-management'
 ```
 
@@ -67,7 +67,7 @@ apply plugin: 'io.spring.dependency-management'
 
 让我们来看一个混合了执行器和应用程序规则的简单安全片段:
 
-```
+```java
 http.authorizeRequests()
   .requestMatchers(EndpointRequest.to("health"))
     .permitAll() // Actuator rules per endpoint
@@ -108,7 +108,7 @@ Actuator 包含各种工具，用于简化监控、跟踪和一般应用程序�
 
 让我们看看如何为执行器创建一个`Fruits` 端点:
 
-```
+```java
 @Endpoint(id = "fruits")
 public class FruitsEndpoint {
 

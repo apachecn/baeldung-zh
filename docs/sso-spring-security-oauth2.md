@@ -64,7 +64,7 @@ A quick look at implementing a Facebook driven authentication next to a standard
 
 首先，在我们的`pom.xml`中，我们需要以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -97,7 +97,7 @@ A quick look at implementing a Facebook driven authentication next to a standard
 
 接下来，最重要的部分，我们的第一个客户端应用程序的安全配置:
 
-```
+```java
 @EnableWebSecurity
 public class UiSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -131,7 +131,7 @@ public class UiSecurityConfig extends WebSecurityConfigurerAdapter {
 
 这里是`application.yml`:
 
-```
+```java
 spring:
   security:
     oauth2:
@@ -173,7 +173,7 @@ resourceserver:
 
 现在让我们在客户端应用程序中实现我们的控制器，向我们的资源服务器请求`Foo`:
 
-```
+```java
 @Controller
 public class FooClientController {
 
@@ -205,14 +205,14 @@ public class FooClientController {
 
 我们的客户端应用程序有一个非常简单的前端；下面是`index.html`:
 
-```
+```java
 <a class="navbar-brand" th:href="@{/foos/}">Spring OAuth Client Thymeleaf - 1</a>
 <label>Welcome !</label> <br /> <a th:href="@{/foos/}">Login</a>
 ```
 
 而`foos.html`:
 
-```
+```java
 <a class="navbar-brand" th:href="@{/foos/}">Spring OAuth Client Thymeleaf -1</a>
 Hi, <span sec:authentication="name">preferred_username</span>   
 
@@ -246,7 +246,7 @@ Hi, <span sec:authentication="name">preferred_username</span>  
 
 **`application.yml`将有所不同，在其`spring.security.oauth2.client.registration:`** 中包含不同的`client_id`、`client_secret`和`redirect_uri`
 
-```
+```java
 spring:
   security:
     oauth2:
@@ -262,7 +262,7 @@ spring:
 
 当然，我们还需要一个不同的服务器端口，以便我们可以并行运行它们:
 
-```
+```java
 server: 
   port: 8084
   servlet: 

@@ -22,7 +22,7 @@
 
 对于客户端应用程序来说，这种依赖性就足够了:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-web</artifactId>
@@ -45,7 +45,7 @@
 
 元数据包括文件名、文件大小和文件内容类型(例如`text/plain`):
 
-```
+```java
 HttpHeaders headers = new HttpHeaders();
 headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 ```
@@ -54,7 +54,7 @@ headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
 在我们的示例中，`getTestFile( )`方法动态生成一个虚拟文件，并返回一个 [`FileSystemResource`](https://web.archive.org/web/20220707143824/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/io/FileSystemResource.html) :
 
-```
+```java
 MultiValueMap<String, Object> body
   = new LinkedMultiValueMap<>();
 body.add("file", getTestFile());
@@ -66,7 +66,7 @@ body.add("file", getTestFile());
 
 最后，调用 [`restTemplate.postForEntity( )`](/web/20220707143824/https://www.baeldung.com/rest-template) 完成连接到给定 URL 并将文件发送到服务器的工作:
 
-```
+```java
 HttpEntity<MultiValueMap<String, Object>> requestEntity
  = new HttpEntity<>(body, headers);
 
@@ -85,7 +85,7 @@ ResponseEntity<String> response = restTemplate
 
 显然，请求 URL 应该指向多个文件上传的端点:
 
-```
+```java
 MultiValueMap<String, Object> body
   = new LinkedMultiValueMap<>();
 body.add("files", getTestFile());

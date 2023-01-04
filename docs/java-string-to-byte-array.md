@@ -40,7 +40,7 @@ How to convert a byte[] to an InputStream using plain Java or Guava.[Read more](
 
 首先，**让我们使用平台的默认字符集编码一个字符串:**
 
-```
+```java
 String inputString = "Hello World!";
 byte[] byteArrray = inputString.getBytes();
 ```
@@ -49,7 +49,7 @@ byte[] byteArrray = inputString.getBytes();
 
 然后**让我们用一个命名的字符集编码一个字符串:**
 
-```
+```java
 @Test
 public void whenGetBytesWithNamedCharset_thenOK() 
   throws UnsupportedEncodingException {
@@ -71,7 +71,7 @@ public void whenGetBytesWithNamedCharset_thenOK()
 
 接下来，**让我们调用第三个版本的`the getBytes()`方法，并传递一个`Charset:`的实例**
 
-```
+```java
 @Test
 public void whenGetBytesWithCharset_thenOK() {
     String inputString = "Hello ਸੰਸਾਰ!";
@@ -92,7 +92,7 @@ public void whenGetBytesWithCharset_thenOK() {
 
 最后，**让我们使用标准字符集之一进行编码:**
 
-```
+```java
 @Test
 public void whenGetBytesWithStandardCharset_thenOK() {
     String inputString = "Hello World!";
@@ -115,7 +115,7 @@ public void whenGetBytesWithStandardCharset_thenOK() {
 
 **让我们用`encode`方法将一个`String`转换成一个`byte`数组:**
 
-```
+```java
 @Test
 public void whenEncodeWithCharset_thenOK() {
     String inputString = "Hello ਸੰਸਾਰ!";
@@ -139,7 +139,7 @@ public void whenEncodeWithCharset_thenOK() {
 
 让我们使用这个类将一个`String`转换成一个`byte`数组:
 
-```
+```java
 @Test
 public void whenUsingCharsetEncoder_thenOK()
   throws CharacterCodingException {
@@ -184,7 +184,7 @@ public void whenUsingCharsetEncoder_thenOK()
 
 所以**让我们使用平台的默认字符集**将一个字节数组转换成`String`
 
-```
+```java
 @Test
 public void whenStringConstructorWithDefaultCharset_thenOK() {
     byte[] byteArrray = { 72, 101, 108, 108, 111, 32, 87, 111, 114,
@@ -202,7 +202,7 @@ public void whenStringConstructorWithDefaultCharset_thenOK() {
 
 然后**让我们用一个命名的字符集来解码:**
 
-```
+```java
 @Test
 public void whenStringConstructorWithNamedCharset_thenOK()
     throws UnsupportedEncodingException {
@@ -220,7 +220,7 @@ public void whenStringConstructorWithNamedCharset_thenOK()
 
 接下来，**我们用一个`Charset`对象来做解码:**
 
-```
+```java
 @Test
 public void whenStringConstructorWithCharSet_thenOK() {
     Charset charset = Charset.forName("UTF-8");
@@ -235,7 +235,7 @@ public void whenStringConstructorWithCharSet_thenOK() {
 
 最后，**让我们用一个标准的`Charset`来表示同样的:**
 
-```
+```java
 @Test
 public void whenStringConstructorWithStandardCharSet_thenOK() {
     Charset charset = StandardCharsets.UTF_16;
@@ -255,7 +255,7 @@ public void whenStringConstructorWithStandardCharSet_thenOK() {
 
 `Charset`类提供了将`ByteBuffer`转换为`String`的`decode()`方法:
 
-```
+```java
 @Test
 public void whenDecodeWithCharset_thenOK() {
     byte[] byteArrray = { 72, 101, 108, 108, 111, 32, -10, 111,
@@ -274,7 +274,7 @@ public void whenDecodeWithCharset_thenOK() {
 
 注意，之前所有的内部解码方法都使用了 [`CharsetDecoder`](https://web.archive.org/web/20220831112445/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/charset/CharsetDecoder.html) 类。**我们可以直接使用这个类对解码过程进行细粒度控制**:
 
-```
+```java
 @Test
 public void whenUsingCharsetDecoder_thenOK()
   throws CharacterCodingException {
@@ -297,7 +297,7 @@ public void whenUsingCharsetDecoder_thenOK()
 
 如果我们希望在输入无效时得到通知，我们可以更改`decoder`:
 
-```
+```java
 decoder.onMalformedInput(CodingErrorAction.REPORT)
   .onUnmappableCharacter(CodingErrorAction.REPORT)
 ```

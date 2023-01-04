@@ -10,7 +10,7 @@
 
 我们可以使用`Double.` `parseDouble`方法将`String`转换为`double`:
 
-```
+```java
 assertEquals(1.23, Double.parseDouble("1.23"), 0.000001);
 ```
 
@@ -18,7 +18,7 @@ assertEquals(1.23, Double.parseDouble("1.23"), 0.000001);
 
 同样，我们可以使用`Double.valueOf`方法将`String`转换成[装箱的`Double`](/web/20221206083201/https://www.baeldung.com/java-generics#generics-primitive-data-types) :
 
-```
+```java
 assertEquals(1.23, Double.valueOf("1.23"), 0.000001);
 ```
 
@@ -32,7 +32,7 @@ assertEquals(1.23, Double.valueOf("1.23"), 0.000001);
 
 例如，我们可以在不删除非数字符号的情况下转换基于十进制的货币值:
 
-```
+```java
 DecimalFormat format = new DecimalFormat("\u00A4#,##0.00");
 format.setParseBigDecimal(true);
 
@@ -61,7 +61,7 @@ Java 为处理无效的数字`String`提供了统一的接口。
 
 在 Java 9 之前，我们可以通过实例化一个`Double`从一个`String`创建一个装箱的 *Double* :
 
-```
+```java
 new Double("1.23");
 ```
 

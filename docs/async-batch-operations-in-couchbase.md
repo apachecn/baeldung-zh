@@ -10,7 +10,7 @@
 
 首先，我们扩充了通用的`CrudService`接口，以包含批处理操作:
 
-```
+```java
 public interface CrudService<T> {
     ...
 
@@ -30,7 +30,7 @@ public interface CrudService<T> {
 
 我们为想要持久化的实体定义了一个接口:
 
-```
+```java
 public interface CouchbaseEntity {
 
     String getId();
@@ -44,7 +44,7 @@ public interface CouchbaseEntity {
 
 然后我们将在一个通用的抽象类中实现这些方法。这个类是从我们在之前的教程的[中使用的`PersonCrudService`类派生而来的，开始如下:](/web/20220926200754/https://www.baeldung.com/couchbase-sdk-spring)
 
-```
+```java
 public abstract class AbstractCrudService<T extends CouchbaseEntity> implements CrudService<T> {
     private BucketService bucketService;
     private Bucket bucket;
@@ -67,7 +67,7 @@ public abstract class AbstractCrudService<T extends CouchbaseEntity> implements 
 
 Couchbase SDK 提供了用于执行异步操作的`AsyncBucket`接口。给定一个`Bucket`实例，您可以通过`async()`方法获得它的异步版本:
 
-```
+```java
 AsyncBucket asyncBucket = bucket.async();
 ```
 
@@ -79,7 +79,7 @@ AsyncBucket asyncBucket = bucket.async();
 
 这里我们实现了`readBulk`方法。首先，我们使用 RxJava 中的`AsyncBucket`和`flatMap`机制将文档异步检索到`Observable<JsonDocument>`中，然后我们使用`RxJava`中的`toBlocking`机制将这些文档转换成实体列表:
 
-```
+```java
 @Override
 public List<T> readBulk(Iterable<String> ids) {
     AsyncBucket asyncBucket = bucket.async();
@@ -114,7 +114,7 @@ public List<T> readBulk(Iterable<String> ids) {
 
 由于批量突变请求产生的速度比它们的响应产生的速度快，有时会导致过载情况，因此每当遇到`BackpressureException`时，我们都会以指数延迟进行重试:
 
-```
+```java
 @Override
 public void createBulk(Iterable<T> items) {
     AsyncBucket asyncBucket = bucket.async();
@@ -146,7 +146,7 @@ public void createBulk(Iterable<T> items) {
 
 我们在`updateBulk`方法中使用类似的机制:
 
-```
+```java
 @Override
 public void updateBulk(Iterable<T> items) {
     AsyncBucket asyncBucket = bucket.async();
@@ -175,7 +175,7 @@ public void updateBulk(Iterable<T> items) {
 
 我们将`deleteBulk`方法编写如下:
 
-```
+```java
 @Override
 public void deleteBulk(Iterable<String> ids) {
     AsyncBucket asyncBucket = bucket.async();
@@ -205,7 +205,7 @@ public void deleteBulk(Iterable<String> ids) {
 
 因为所有的 Couchbase 交互都是在抽象类中实现的，所以实体类的实现是琐碎的，因为我们只需要确保注入所有的依赖项并加载我们的 bucket:
 
-```
+```java
 @Service
 public class PersonCrudService extends AbstractCrudService<Person> {
 

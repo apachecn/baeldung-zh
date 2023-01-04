@@ -10,7 +10,7 @@
 
 让我们先来看看一个简单的分数，以及一个通过造型来执行分离的简单方法:
 
-```
+```java
 double doubleNumber = 24.04;
 int intPart = (int) doubleNumber;
 System.out.println("Double Number: " + doubleNumber);
@@ -20,7 +20,7 @@ System.out.println("Decimal Part: " + (doubleNumber - intPart));
 
 当我们尝试运行上面的代码时，我们会得到以下结果:
 
-```
+```java
 Double Number: 24.04
 Integer Part: 24
 Decimal Part: 0.03999999999999915
@@ -34,7 +34,7 @@ Decimal Part: 0.03999999999999915
 
 让我们用一个例子来理解这一点:
 
-```
+```java
 double doubleNumber = 24.04;
 String doubleAsString = String.valueOf(doubleNumber);
 int indexOfDecimal = doubleAsString.indexOf(".");
@@ -45,7 +45,7 @@ System.out.println("Decimal Part: " + doubleAsString.substring(indexOfDecimal));
 
 上面代码的输出是:
 
-```
+```java
 Double Number: 24.04
 Integer Part: 24
 Decimal Part: .04
@@ -59,7 +59,7 @@ Java 中的 [`BigDecimal`](https://web.archive.org/web/20220626083717/https://do
 
 让我们使用`BigDecimal`来获得浮点数的整数和小数部分:
 
-```
+```java
 double doubleNumber = 24.04;
 BigDecimal bigDecimal = new BigDecimal(String.valueOf(doubleNumber));
 int intValue = bigDecimal.intValue();
@@ -71,7 +71,7 @@ System.out.println("Decimal Part: " + bigDecimal.subtract(
 
 输出将是:
 
-```
+```java
 Double Number: 24.04
 Integer Part: 24
 Decimal Part: 0.04

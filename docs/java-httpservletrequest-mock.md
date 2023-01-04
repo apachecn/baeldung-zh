@@ -14,7 +14,7 @@
 
 让我们看看我们想要测试的目标`UserServlet`类:
 
-```
+```java
 public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String firstName = request.getParameter("firstName");
@@ -35,7 +35,7 @@ public class UserServlet extends HttpServlet {
 
 让我们将这个[依赖关系](https://web.archive.org/web/20220813180250/https://search.maven.org/search?q=a:spring-test%20AND%20g:org.springframework)添加到 pom.xml:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-test</artifactId>
@@ -46,7 +46,7 @@ public class UserServlet extends HttpServlet {
 
 现在，让我们看看如何使用这个类来测试`UserServlet`:
 
-```
+```java
 @Test
 void givenHttpServletRequest_whenUsingMockHttpServletRequest_thenReturnsParameterValues() throws IOException {
     MockHttpServletRequest request = new MockHttpServletRequest();
@@ -74,7 +74,7 @@ void givenHttpServletRequest_whenUsingMockHttpServletRequest_thenReturnsParamete
 
 让我们从将 mockito-core [依赖项](https://web.archive.org/web/20220813180250/https://search.maven.org/search?q=mockito-core)添加到我们的`pom.xml`开始:
 
-```
+```java
 <dependency>
     <groupId>org.mockito</groupId>
     <artifactId>mockito-core</artifactId>
@@ -85,7 +85,7 @@ void givenHttpServletRequest_whenUsingMockHttpServletRequest_thenReturnsParamete
 
 接下来，让我们看看如何从`HttpServletRequest`对象模拟`getParameter()`方法:
 
-```
+```java
 @Test
 void givenHttpServletRequest_whenMockedWithMockito_thenReturnsParameterValues() throws IOException {
     // mock HttpServletRequest & HttpServletResponse
@@ -109,7 +109,7 @@ void givenHttpServletRequest_whenMockedWithMockito_thenReturnsParameterValues() 
 
 首先，我们将把`jmockit` [依赖项](https://web.archive.org/web/20220813180250/https://search.maven.org/search?q=a:jmockit%20AND%20g:org.jmockit)添加到我们的项目中:
 
-```
+```java
 <dependency> 
     <groupId>org.jmockit</groupId> 
     <artifactId>jmockit</artifactId> 
@@ -120,7 +120,7 @@ void givenHttpServletRequest_whenMockedWithMockito_thenReturnsParameterValues() 
 
 接下来，让我们继续测试类中的模拟实现:
 
-```
+```java
 @Mocked
 HttpServletRequest mockRequest;
 @Mocked
@@ -152,7 +152,7 @@ void givenHttpServletRequest_whenMockedWithJMockit_thenReturnsParameterValues() 
 
 现在，让我们创建一个实现`HttpServletRequest` 接口的匿名子类，并用它来测试`doGet()`方法:
 
-```
+```java
 public static HttpServletRequest getRequest(Map<String, String[]> params) {
     return new HttpServletRequest() {
         public Map<String, String[]> getParameterMap() {
@@ -174,7 +174,7 @@ public static HttpServletRequest getRequest(Map<String, String[]> params) {
 
 接下来，让我们将这个请求传递给被测试的类:
 
-```
+```java
 @Test
 void givenHttpServletRequest_whenUsingAnonymousClass_thenReturnsParameterValues() throws IOException {
     final Map<String, String[]> params = new HashMap<>();

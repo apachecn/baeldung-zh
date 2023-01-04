@@ -19,7 +19,7 @@
 
 让我们看看如果我们注释一个接口会是什么样子:
 
-```
+```java
 @Service
 public interface AuthenticationService {
 
@@ -33,7 +33,7 @@ public interface AuthenticationService {
 
 接下来，为了测试新服务 beans 的自动检测，让我们创建一个`AuthenticationService`的实现:
 
-```
+```java
 public class InMemoryAuthenticationService implements AuthenticationService {
 
     @Override
@@ -47,7 +47,7 @@ public class InMemoryAuthenticationService implements AuthenticationService {
 
 因此，让我们借助一个基本的 Spring Boot 设置来运行我们的 Spring 上下文:
 
-```
+```java
 @SpringBootApplication
 public class AuthApplication {
 
@@ -62,7 +62,7 @@ public class AuthApplication {
 
 当我们运行我们的应用程序时，**我们得到了臭名昭著的`NoSuchBeanDefinitionException,`** 并且 Spring 上下文无法启动:
 
-```
+```java
 org.springframework.beans.factory.NoSuchBeanDefinitionException: 
 No qualifying bean of type 'com.baeldung.annotations.service.interfaces.AuthenticationService' available: 
 expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: 
@@ -79,7 +79,7 @@ expected at least 1 bean which qualifies as autowire candidate. Dependency annot
 
 我们将从头开始定义一个抽象类，并在上面加上`@Service`注释:
 
-```
+```java
 @Service
 public abstract class AbstractAuthenticationService {
 
@@ -91,7 +91,7 @@ public abstract class AbstractAuthenticationService {
 
 接下来，我们将`AbstractAuthenticationService`扩展到**创建一个具体的实现，而不注释它**:
 
-```
+```java
 public class LdapAuthenticationService extends AbstractAuthenticationService {
 
     @Override
@@ -103,7 +103,7 @@ public class LdapAuthenticationService extends AbstractAuthenticationService {
 
 相应地，我们也更新我们的`AuthApplication`，给**注入新的服务类**:
 
-```
+```java
 @SpringBootApplication
 public class AuthApplication {
 
@@ -120,7 +120,7 @@ public class AuthApplication {
 
 所以，我们再次运行我们的`AuthApplication`:
 
-```
+```java
 org.springframework.beans.factory.NoSuchBeanDefinitionException: 
 No qualifying bean of type 'com.baeldung.annotations.service.abstracts.AbstractAuthenticationService' available: 
 expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: 
@@ -141,7 +141,7 @@ expected at least 1 bean which qualifies as autowire candidate. Dependency annot
 
 所以，这一次让我们把`@Service`放在我们的具体服务类上。我们将有一个类实现我们的接口，第二个类扩展我们之前定义的抽象类:
 
-```
+```java
 @Service
 public class InMemoryAuthenticationService implements AuthenticationService {
 
@@ -165,7 +165,7 @@ public class LdapAuthenticationService extends AbstractAuthenticationService {
 
 最后，我们将两个服务类都添加到`AuthApplication`中，并尝试一下:
 
-```
+```java
 @SpringBootApplication
 public class AuthApplication {
 

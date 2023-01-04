@@ -32,7 +32,7 @@
 
 ### 3.1。迭代实现
 
-```
+```java
 public int runBinarySearchIteratively(
   int[] sortedArray, int key, int low, int high) {
     int index = Integer.MAX_VALUE;
@@ -62,7 +62,7 @@ public int runBinarySearchIteratively(
 
 现在，让我们看看一个简单的递归实现:
 
-```
+```java
 public int runBinarySearchRecursively(
   int[] sortedArray, int key, int low, int high) {
     int middle = low  + ((high - low) / 2);
@@ -87,7 +87,7 @@ public int runBinarySearchRecursively(
 
 ### 3.3。使用`Arrays.` `binarySearch()`
 
-```
+```java
 int index = Arrays.binarySearch(sortedArray, key); 
 ```
 
@@ -95,7 +95,7 @@ int index = Arrays.binarySearch(sortedArray, key);
 
 ### 3.4。使用`Collections.` `binarySearch()`
 
-```
+```java
 int index = Collections.binarySearch(sortedList, key); 
 ```
 

@@ -24,7 +24,7 @@ Learn how to invalidate caches with Spring Boot.[Read more](/web/20220707143815/
 
 要开始，让我们添加 [`spring-boot-starter-cache`](https://web.archive.org/web/20220707143815/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-cache) 和 [`spring-boot-starter-data-redis`](https://web.archive.org/web/20220707143815/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-cache) 神器:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-cache</artifactId>
@@ -45,7 +45,7 @@ Learn how to invalidate caches with Spring Boot.[Read more](/web/20220707143815/
 
 首先，让我们创建一个`RedisCacheConfiguration` bean:
 
-```
+```java
 @Bean
 public RedisCacheConfiguration cacheConfiguration() {
     return RedisCacheConfiguration.defaultCacheConfig()
@@ -59,7 +59,7 @@ public RedisCacheConfiguration cacheConfiguration() {
 
 为了完全控制缓存设置，让我们注册自己的`RedisCacheManagerBuilderCustomizer` bean:
 
-```
+```java
 @Bean
 public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
     return (builder) -> builder
@@ -80,7 +80,7 @@ public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
 
 首先，让我们使用一个[嵌入式 Redis](/web/20220707143815/https://www.baeldung.com/spring-embedded-redis) 服务器为这个组件创建集成测试:
 
-```
+```java
 @Import({ CacheConfig.class, ItemService.class})
 @ExtendWith(SpringExtension.class)
 @EnableCaching
@@ -121,7 +121,7 @@ class ItemServiceCachingIntegrationTest {
 
 最后，让我们使用 Spring 的`@Cacheable`注释来启用缓存行为:
 
-```
+```java
 @Cacheable(value = "itemCache")
 public Item getItemForId(String id) {
     return itemRepository.findById(id)

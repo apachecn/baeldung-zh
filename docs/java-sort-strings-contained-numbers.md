@@ -27,7 +27,7 @@
 
 我们首先需要的是正则表达式。我们希望保留输入`String`中的所有整数和小数点。我们可以通过以下方式实现我们的目标:
 
-```
+```java
 String DIGIT_AND_DECIMAL_REGEX = "[^\\d.]"
 
 String digitsOnly = input.replaceAll(DIGIT_AND_DECIMAL_REGEX, "");
@@ -43,7 +43,7 @@ String digitsOnly = input.replaceAll(DIGIT_AND_DECIMAL_REGEX, "");
 
 接下来，我们需要添加一些条件来保证空的和无效的`Strings`返回 0，而有效的`Strings`返回一个有效的`Double`:
 
-```
+```java
 if("".equals(digitsOnly)) return 0;
 
 try {
@@ -57,7 +57,7 @@ try {
 
 让我们创建一个有效的方法来从任何我们想要的地方返回我们的比较器:
 
-```
+```java
 public static Comparator<String> createNaturalOrderRegexComparator() {
     return Comparator.comparingDouble(NaturalOrderComparators::parseStringToNumber);
 }
@@ -67,7 +67,7 @@ public static Comparator<String> createNaturalOrderRegexComparator() {
 
 没有测试来验证其功能的代码有什么用？让我们建立一个快速的单元测试，以确保一切按计划进行:
 
-```
+```java
 List<String> testStrings = 
   Arrays.asList("a1", "d2.2", "b3", "d2.3.3d", "c4", "d2.f4",); // 1, 2.2, 3, 0, 4, 2.4
 

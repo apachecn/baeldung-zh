@@ -18,7 +18,7 @@
 
 默认情况下，Docker 引擎使用安装在主机操作系统上的`/var/run/docker.sock`下的 Unix 套接字:
 
-```
+```java
 $ ss -xan | grep var
 
 u_str LISTEN 0      4096              /var/run/docker/libnetwork/dd677ae5f81a.sock 56352            * 0           
@@ -33,7 +33,7 @@ u_str LISTEN 0      4096                                      /var/run/docker.so
 
 让我们启动`alpine` Docker 容器，**使用`-v` 标志**挂载这个路径:
 
-```
+```java
 $ docker run -it -v /var/run/docker.sock:/var/run/docker.sock alpine
 
 (alpine) $
@@ -41,7 +41,7 @@ $ docker run -it -v /var/run/docker.sock:/var/run/docker.sock alpine
 
 接下来，让我们在容器中安装一些实用程序:
 
-```
+```java
 (alpine) $ apk add curl && apk add jq
 
 fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86_64/APKINDEX.tar.gz
@@ -52,7 +52,7 @@ fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86_64/APKINDEX.tar.g
 
 现在让**使用带有`–unix-socket` 标志的`curl`** 和 [`Jq`](/web/20220727020703/https://www.baeldung.com/linux/jq-command-json) 来获取和过滤一些容器数据:
 
-```
+```java
 (alpine) $ curl -s --unix-socket /var/run/docker.sock http://dummy/containers/json | jq '.'
 
 [
@@ -85,7 +85,7 @@ fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86_64/APKINDEX.tar.g
 
 因为我们希望只允许容器访问引擎 API，所以让我们首先确定它们的网络:
 
-```
+```java
 $ docker network ls
 
 a3b64ea758e1        bridge              bridge              local
@@ -95,7 +95,7 @@ dfad5fbfc671        host                host                local
 
 让我们来看看它的细节:
 
-```
+```java
 $ docker network inspect a3b64ea758e1
 
 [
@@ -120,7 +120,7 @@ $ docker network inspect a3b64ea758e1
 
 接下来，让我们看看 Docker 服务单元位于何处:
 
-```
+```java
 $ systemctl status docker.service
 
 docker.service - Docker Application Container Engine
@@ -133,7 +133,7 @@ docker.service - Docker Application Container Engine
 
 现在让我们来看看服务单元的定义:
 
-```
+```java
 $ cat /usr/lib/systemd/system/docker.service
 
 [Unit]
@@ -154,7 +154,7 @@ ExecReload=/bin/kill -s HUP $MAINPID
 
 我们可以直接修改这个服务单元(不推荐)，但是让我们使用`$DOCKER_OPTS` 变量(在`EnvironmentFile=/etc/sysconfig/docker`中定义):
 
-```
+```java
 $ cat /etc/sysconfig/docker 
 
 ## Path           : System/Management
@@ -168,7 +168,7 @@ DOCKER_OPTS="-H unix:///var/run/docker.sock -H tcp://172.17.0.1:2375"
 
 这里，**我们使用桥接网络的网关地址作为绑定地址**。**这对应于主机**上的`docker0`界面:
 
-```
+```java
 $ ip address show dev docker0
 
 3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
@@ -183,7 +183,7 @@ $ ip address show dev docker0
 
 我们还需要做一步。让我们**允许我们的容器包到达主机**:
 
-```
+```java
 $ iptables -I INPUT -i docker0 -j ACCEPT
 ```
 
@@ -191,7 +191,7 @@ $ iptables -I INPUT -i docker0 -j ACCEPT
 
 现在，让我们重新启动 Docker 服务:
 
-```
+```java
 $ systemctl restart docker.service
 $ systemctl status docker.service
  docker.service - Docker Application Container Engine
@@ -204,7 +204,7 @@ $ systemctl status docker.service
 
 让我们再次运行我们的`alpine` 容器:
 
-```
+```java
 (alpine) $ curl -s http://172.17.0.1:2375/containers/json | jq '.'
 
 [
@@ -233,7 +233,7 @@ $ systemctl status docker.service
 
 让我们**获取一些关于我们的容器**的信息:
 
-```
+```java
 (alpine) $ curl -s http://172.17.0.1:2375/containers/"$(hostname)"/json | jq '.'
 
 {
@@ -252,13 +252,13 @@ $ systemctl status docker.service
 
 接下来，让我们**监听 Docker 守护进程**上的事件:
 
-```
+```java
 (alpine) $ curl -s http://172.17.0.1:2375/events | jq '.'
 ```
 
 现在，在另一个终端中，让我们启动`hello-world` 容器:
 
-```
+```java
 $ docker run hello-world
 
 Hello from Docker!
@@ -268,7 +268,7 @@ This message shows that your installation appears to be working correctly.
 
 回到我们的`alpine` 容器，我们得到一系列事件:
 
-```
+```java
 {
   "status": "create",
   "id": "abf881cbecfc0b022a3c1a6908559bb27406d0338a917fc91a77200d52a2553c",
@@ -290,7 +290,7 @@ This message shows that your installation appears to be working correctly.
 
 让我们创建并启动一个容器。首先，我们定义它的清单:
 
-```
+```java
 (alpine) $ cat > create.json << EOF
 {
   "Image": "hello-world",
@@ -301,7 +301,7 @@ EOF
 
 现在让**使用清单**调用`/containers/create`端点:
 
-```
+```java
 (alpine) $ curl -X POST -H "Content-Type: application/json" -d @create.json http://172.17.0.1:2375/containers/create
 
 {"Id":"f96a6360ad8e36271cc75a3cff05348761569cf2f089bbb30d826bd1e2d52f59","Warnings":[]}
@@ -309,13 +309,13 @@ EOF
 
 然后，我们使用 id 来启动容器:
 
-```
+```java
 (alpine) $ curl -X POST http://172.17.0.1:2375/containers/f96a6360ad8e36271cc75a3cff05348761569cf2f089bbb30d826bd1e2d52f59/start
 ```
 
 最后，我们可以浏览日志:
 
-```
+```java
 (alpine) $ curl http://172.17.0.1:2375/containers/f96a6360ad8e36271cc75a3cff05348761569cf2f089bbb30d826bd1e2d52f59/logs?stdout=true --output -
 
 Hello from Docker!
@@ -332,7 +332,7 @@ KThis message shows that your installation appears to be working correctly.
 
 我们可以通过在创建容器时启用`TTY`选项来避免这种情况:
 
-```
+```java
 (alpine) $ cat create.json
 
 {

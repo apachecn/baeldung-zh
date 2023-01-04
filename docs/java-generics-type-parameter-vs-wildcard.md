@@ -18,7 +18,7 @@
 
 举个例子，我们来看看 [`java.lang.Comparable`](/web/20221212194241/https://www.baeldung.com/java-comparator-comparable#comparable) 界面:
 
-```
+```java
 public interface Comparable<T> {
     public int compareTo(T o);
 }
@@ -36,7 +36,7 @@ type 参数定义了正式类型，通常用一个大写字母命名(如`T`、`E
 
 要编写具有泛型类型参数的方法，我们应该使用类型参数。所以让我们创建一个打印给定的`item`的方法:
 
-```
+```java
 public static <T> void print(T item){
     System.out.println(item);
 }
@@ -46,7 +46,7 @@ public static <T> void print(T item){
 
 通常情况下，我们可以使用通配符或类型参数来声明泛型方法。例如，下面是一个`swap()`方法的两个可能的声明:
 
-```
+```java
 public static <E> void swap(List<E> list, int src, int des);
 public static void swap(List<?> list, int src, int des);
 ```
@@ -61,7 +61,7 @@ public static void swap(List<?> list, int src, int des);
 
 现在，让我们看一个返回通配符类型的`merge()`方法:
 
-```
+```java
 public static <E> List<? extends E> mergeWildcard(List<? extends E> listOne, List<? extends E> listTwo) {
     return Stream.concat(listOne.stream(), listTwo.stream())
             .collect(Collectors.toList());
@@ -70,7 +70,7 @@ public static <E> List<? extends E> mergeWildcard(List<? extends E> listOne, Lis
 
 假设我们有两个想要合并的列表:
 
-```
+```java
 List<Number> numbers1 = new ArrayList<>();
 numbers1.add(5);
 numbers1.add(10L);
@@ -82,7 +82,7 @@ numbers2.add(20.0);
 
 因为我们传递了两个`Number`列表，所以我们期望收到相同类型的`List`返回。如果我们使用通配符类型作为返回类型，就不会出现这种情况。以下代码无法编译:
 
-```
+```java
 List<Number> numbersMerged = CollectionUtils.mergeWildcard(numbers1, numbers2);
 ```
 
@@ -90,7 +90,7 @@ List<Number> numbersMerged = CollectionUtils.mergeWildcard(numbers1, numbers2);
 
 **当泛型方法返回泛型类型时，我们应该使用类型参数而不是通配符:**
 
-```
+```java
 public static <E> List<E> mergeTypeParameter(List<? extends E> listOne, List<? extends E> listTwo) {
     return Stream.concat(listOne.stream(), listTwo.stream())
             .collect(Collectors.toList());
@@ -124,7 +124,7 @@ public static <E> List<E> mergeTypeParameter(List<? extends E> listOne, List<? e
 
 假设我们想要总结一个`Number`类的任何子类型。如果没有泛型，我们的实现可能如下所示:
 
-```
+```java
 public static long sum(List<Number> numbers) {
     return numbers.stream().mapToLong(Number::longValue).sum();
 }
@@ -132,7 +132,7 @@ public static long sum(List<Number> numbers) {
 
 现在，让我们创建一个`Number`元素的列表并调用方法:
 
-```
+```java
 List<Number> numbers = new ArrayList<>();
 numbers.add(5);
 numbers.add(10L);
@@ -149,7 +149,7 @@ CollectionUtils.sum(numbers);
 
 首先，让我们使用通配符来修改这个方法:
 
-```
+```java
 public static long sumWildcard(List<? extends Number> numbers) {
     return numbers.stream().mapToLong(Number::longValue).sum();
 }
@@ -157,7 +157,7 @@ public static long sumWildcard(List<? extends Number> numbers) {
 
 接下来，我们可以使用包含`Number`类的子类型的列表来调用该方法:
 
-```
+```java
 List<Integer> integers = new ArrayList<>();
 integers.add(5);
 integers.add(10);
@@ -168,7 +168,7 @@ CollectionUtils.sumWildcard(integers);
 
 同样，我们可以使用类型参数实现相同的功能:
 
-```
+```java
 public static <T extends Number> long sumTypeParameter(List<T> numbers) {
     return numbers.stream().mapToLong(Number::longValue).sum();
 } 
@@ -182,7 +182,7 @@ public static <T extends Number> long sumTypeParameter(List<T> numbers) {
 
 假设我们想编写一个泛型方法，将数字添加到列表中。说我们不想支持十进制数而只支持`Integer`。为了最大化灵活性，我们希望允许用户使用列表`Integer`及其所有超类型(`Number`或`Object`)来调用我们的方法。换句话说，任何可以持有`Integer`价值观的东西。我们应该使用下界通配符:
 
-```
+```java
 public static void addNumber(List<? super Integer> list, Integer number) {
     list.add(number);
 }
@@ -204,7 +204,7 @@ public static void addNumber(List<? super Integer> list, Integer number) {
 
 让我们考虑一下前面提到的`swap()`方法的实现。该方法的简单实现不会编译:
 
-```
+```java
 public static void swap(List<?> list, int srcIndex, int destIndex) {
     list.set(srcIndex, list.set(destIndex, list.get(srcIndex)));
 }
@@ -216,7 +216,7 @@ public static void swap(List<?> list, int srcIndex, int destIndex) {
 
 我们可以通过编写一个通用的助手方法来捕获通配符类型来解决这个问题:
 
-```
+```java
 private static <E> void swapHelper(List<E> list, int src, int des) {
     list.set(src, list.set(des, list.get(src)));
 }
@@ -230,7 +230,7 @@ private static <E> void swapHelper(List<E> list, int src, int des) {
 
 首先，让我们创建一个简单的层次结构。让我们定义一个`Animal`类:
 
-```
+```java
 abstract class Animal {
 
     protected final String type;
@@ -247,7 +247,7 @@ abstract class Animal {
 
 其次，让我们创建两个具体的类:
 
-```
+```java
 class Dog extends Animal {
 
     public Dog(String type, String name) {
@@ -264,7 +264,7 @@ class Dog extends Animal {
 
 此外，第二个具体类也实现了一个`Comparable`接口:
 
-```
+```java
 class Cat extends Animal implements Comparable<Cat> {
     public Cat(String type, String name) {
         super(type, name);
@@ -284,7 +284,7 @@ class Cat extends Animal implements Comparable<Cat> {
 
 最后，让我们定义一个方法，对给定列表中的元素进行排序，并要求值具有可比性:
 
-```
+```java
 public static <T extends Animal & Comparable<T>> void order(List<T> list) {
     list.sort(Comparable::compareTo);
 }

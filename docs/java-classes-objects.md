@@ -16,7 +16,7 @@
 
 让我们看一个使用简单 Java 类表示`Car`的例子:
 
-```
+```java
 class Car {
 
     // fields
@@ -46,7 +46,7 @@ class Car {
 
 默认情况下，每个 Java 类都有一个空的构造函数。如果我们不像上面那样提供特定的实现，我们就使用它。下面是默认构造函数如何寻找我们的`Car`类:
 
-```
+```java
 Car(){} 
 ```
 
@@ -54,7 +54,7 @@ Car(){}
 
 现在，我们的类有一个特定的构造函数，因为我们希望我们的对象在创建时就定义了它们的字段:
 
-```
+```java
 Car(String type, String model) {
     // ...
 } 
@@ -68,7 +68,7 @@ Car(String type, String model) {
 
 一个类的对象被称为实例，我们用构造函数创建并初始化它们:
 
-```
+```java
 Car focus = new Car("Ford", "Focus", "red");
 Car auris = new Car("Toyota", "Auris", "blue");
 Car golf = new Car("Volkswagen", "Golf", "green"); 
@@ -78,7 +78,7 @@ Car golf = new Car("Volkswagen", "Golf", "green");
 
 到目前为止，我们有三个`Car`物体，它们都停着，因为它们的速度为零。我们可以通过调用我们的`increaseSpeed`方法来改变这一点:
 
-```
+```java
 focus.increaseSpeed(10);
 auris.increaseSpeed(20);
 golf.increaseSpeed(30); 
@@ -94,7 +94,7 @@ golf.increaseSpeed(30);
 
 通常，我们会对构造函数使用一个`public`修饰符来允许来自所有其他对象的访问:
 
-```
+```java
 public Car(String type, String model, String color) {
     // ...
 } 
@@ -106,7 +106,7 @@ public Car(String type, String model, String color) {
 
 让我们看一下我们的具有完全指定的访问控制的类:
 
-```
+```java
 public class Car {
     private String type;
     // ...

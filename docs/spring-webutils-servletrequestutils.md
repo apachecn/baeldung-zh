@@ -12,7 +12,7 @@
 
 为此，我们必须创建一些非常繁忙的代码段，如:
 
-```
+```java
 HttpSession session = request.getSession(false);
 if (session != null) {
     String foo = session.getAttribute("parameter");
@@ -34,7 +34,7 @@ if (name == null) {
 
 让我们创建一个具有简单表单的页面:
 
-```
+```java
 <form action="setParam" method="POST">
     <h3>Set Parameter:  </h3>
     <p th:text="${parameter}" class="param"/>
@@ -51,7 +51,7 @@ if (name == null) {
 
 让我们创建第二个页面:
 
-```
+```java
 Parameter set by you: <p th:text="${parameter}" class="param"/>
 ```
 
@@ -59,7 +59,7 @@ Parameter set by you: <p th:text="${parameter}" class="param"/>
 
 现在我们已经完成了视图的构建，让我们创建控制器并使用`ServletRequestUtils`获取请求参数:
 
-```
+```java
 @PostMapping("/setParam")
 public String post(HttpServletRequest request, Model model) {
     String param 
@@ -81,7 +81,7 @@ public String post(HttpServletRequest request, Model model) {
 
 同样，让我们创建另一个处理程序，它将显示以下会话属性:
 
-```
+```java
 @GetMapping("/other")
 public String other(HttpServletRequest request, Model model) {
 
@@ -100,13 +100,13 @@ public String other(HttpServletRequest request, Model model) {
 
 下面是我们如何将请求参数转换为`Long`:
 
-```
+```java
 Long param = ServletRequestUtils.getLongParameter(request, "param", 1L);
 ```
 
 类似地，我们可以将请求参数转换为其他类型:
 
-```
+```java
 boolean param = ServletRequestUtils.getBooleanParameter(
   request, "param", true);
 
@@ -124,7 +124,7 @@ int param = ServletRequestUtils.getIntParameter(
 
 下面是一个示例代码片段:
 
-```
+```java
 try {
     ServletRequestUtils.getRequiredStringParameter(request, "param");
 } catch (ServletRequestBindingException e) {
@@ -134,7 +134,7 @@ try {
 
 我们还可以创建一个简单的 JUnit 测试用例来测试应用程序:
 
-```
+```java
 @Test
 public void givenParameter_setRequestParam_andSetSessionAttribute() 
   throws Exception {

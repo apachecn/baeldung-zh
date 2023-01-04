@@ -12,7 +12,7 @@
 
 因为**是一个函数接口——我们必须有一个抽象方法**,并且`FilenameFilter`遵循这个定义:
 
-```
+```java
 boolean accept(File dir, String name);
 ```
 
@@ -24,7 +24,7 @@ boolean accept(File dir, String name);
 
 下面的测试用例过滤一个目录中的所有`json`文件:
 
-```
+```java
 @Test
 public void whenFilteringFilesEndingWithJson_thenEqualExpectedFiles() {
     FilenameFilter filter = (dir, name) -> name.endsWith(".json");
@@ -45,7 +45,7 @@ Oracle 在 Java 8 中增加了 40 多个功能接口，与传统接口不同，�
 
 [`BiPredicate<T, U>`](https://web.archive.org/web/20220526040357/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/BiPredicate.html) 就是这样一个界面。它的‘单一抽象方法’有这样的定义:
 
-```
+```java
 boolean test(T t, U u);
 ```
 

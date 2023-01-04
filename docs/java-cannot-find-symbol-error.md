@@ -48,7 +48,7 @@
 
 例如，假设我们有一个调用`generateId `方法的`Article`类:
 
-```
+```java
 public class Article {
     private int length;
     private long id;
@@ -62,7 +62,7 @@ public class Article {
 
 但是我们在一个单独的类中声明了`generateId` 方法:
 
-```
+```java
 public class IdGenerator {
     public long generateId() {
         Random random = new Random();
@@ -75,7 +75,7 @@ public class IdGenerator {
 
 像在所有成熟的语言中一样，解决这个问题的方法不止一种，但一种方法是在`Article` 类中构造`IdGenerator`，然后调用该方法:
 
-```
+```java
 public class Article {
     private int length;
     private long id;
@@ -91,7 +91,7 @@ public class Article {
 
 有时我们会忘记声明变量。正如我们从下面的代码片段中看到的，我们试图操作我们还没有声明的变量，在本例中是`text`:
 
-```
+```java
 public class Article {
     private int length;
 
@@ -105,7 +105,7 @@ public class Article {
 
 我们通过声明类型为`String`的变量`text`来解决这个问题:
 
-```
+```java
 public class Article {
     private int length;
     private String text;
@@ -123,7 +123,7 @@ public class Article {
 
 循环内部的变量在循环外部是不可访问的:
 
-```
+```java
 public boolean findLetterB(String text) {
     for (int i=0; i < text.length(); i++) {
         Character character = text.charAt(i);
@@ -141,7 +141,7 @@ public boolean findLetterB(String text) {
 
 如果我们需要更多地检查字符，那么`if`语句应该放在`for loop`中:
 
-```
+```java
 public boolean findLetterB(String text) {
     for (int i = 0; i < text.length(); i++) {
         Character character = text.charAt(i);
@@ -159,7 +159,7 @@ public boolean findLetterB(String text) {
 
 如果我们将字段用作方法，也会出现“`cannot find symbol`”错误，反之亦然:
 
-```
+```java
 public class Article {
     private int length;
     private long id;
@@ -174,7 +174,7 @@ public class Article {
 
 如果我们试图引用文章的`texts`字段，就好像它是一个方法一样:
 
-```
+```java
 Article article = new Article(300);
 List<String> texts = article.texts();
 ```
@@ -185,14 +185,14 @@ List<String> texts = article.texts();
 
 实际上，我们可以用一种`getter`方法来代替:
 
-```
+```java
 Article article = new Article(300);
 List<String> texts = article.getTexts();
 ```
 
 错误地操作数组而不是数组元素也是一个问题:
 
-```
+```java
 for (String text : texts) {
     String firstLetter = texts.charAt(0); // it should be text.charAt(0)
 }
@@ -200,7 +200,7 @@ for (String text : texts) {
 
 忘记关键字`new` 也是如此:
 
-```
+```java
 String s = String(); // should be 'new String()'
 ```
 
@@ -208,7 +208,7 @@ String s = String(); // should be 'new String()'
 
 **另一个问题是忘记导入类或包，**，就像使用一个`List`对象而不导入`java.util.List`:
 
-```
+```java
 // missing import statement: 
 // import java.util.List
 
@@ -230,7 +230,7 @@ public class Article {
 
 想象一个场景，我们想在 Java 中使用日期。很多时候，我们可能会导入一个错误的`Date`类，它不提供我们可能需要的与其他日期类相同的方法和功能:
 
-```
+```java
 Date date = new Date();
 int year, month, day;
 ```
@@ -239,7 +239,7 @@ int year, month, day;
 
 简单地从 `java.util.Date`调用`getDate()`是行不通的:
 
-```
+```java
 ...
 date.getDay();
 date.getMonth();
@@ -248,7 +248,7 @@ date.getYear();
 
 相反，我们使用`Calendar`对象:
 
-```
+```java
 ...
 Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
 cal.setTime(date);
@@ -259,7 +259,7 @@ day = cal.get(Calendar.DAY_OF_MONTH);
 
 然而，如果我们已经导入了`LocalDate`类，我们将不需要额外的代码来提供我们需要的信息:
 
-```
+```java
 ...
 LocalDate localDate=date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 year = localDate.getYear();

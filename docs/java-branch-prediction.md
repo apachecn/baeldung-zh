@@ -20,7 +20,7 @@
 
 例如，我们可以有一个简单的程序:
 
-```
+```java
 int a = 0;
 a += 1;
 a += 2;
@@ -41,7 +41,7 @@ a += 3;
 
 让我们改变我们的简单程序，引入一个分支:
 
-```
+```java
 int a = 0;
 a += 1;
 if (a < 10) {
@@ -70,7 +70,7 @@ a += 3;
 
 让我们改变一下条件，现在是`false`:
 
-```
+```java
 int a = 0;
 a += 1;
 if (a > 10) {
@@ -95,7 +95,7 @@ a += 3;
 
 让我们试着计算列表中的条目。我们将生成一个数字列表，然后计算其中有多少小于某个临界值。这与上面的例子非常相似，但我们是在一个循环中进行的，而不是作为一条指令:
 
-```
+```java
 List<Long> numbers = LongStream.range(0, top)
     .boxed()
     .collect(Collectors.toList());
@@ -134,7 +134,7 @@ LOG.info("Counted {}/{} {} numbers in {}ms",
 
 综上所述，**一条`if/else`语句中的分支顺序应该是重要的**，这似乎是合理的。也就是说，与重新排序分支相比，我们可以预期以下内容的性能会更好:
 
-```
+```java
 if (mostLikely) {
   // Do something
 } else if (lessLikely) {
@@ -146,7 +146,7 @@ if (mostLikely) {
 
 然而，**现代计算机可以通过使用分支预测缓存**来避免这个问题。事实上，我们也可以测试这个:
 
-```
+```java
 List<Long> numbers = LongStream.range(0, top)
   .boxed()
   .collect(Collectors.toList());
@@ -183,7 +183,7 @@ LOG.info("Counted {}/{} numbers in {}ms", low, high, end - start);
 
 让我们考虑一个例子:
 
-```
+```java
 long[] first = LongStream.range(0, TOP)
   .map(n -> Math.random() < FRACTION ? 0 : n)
   .toArray();

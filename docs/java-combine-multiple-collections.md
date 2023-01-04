@@ -10,7 +10,7 @@
 
 在下面的示例中，让我们考虑以下集合:
 
-```
+```java
 Collection<String> collectionA = Arrays.asList("S", "T");
 Collection<String> collectionB = Arrays.asList("U", "V");
 ```
@@ -27,7 +27,7 @@ Java API 中的`Stream`接口提供了有用的方法，使得处理集合变得
 
 在下面的例子中，让我们使用`concat()` 方法组合`collectionA`和`collectionB`:
 
-```
+```java
 Stream<String> combinedStream = Stream.concat(
   collectionA.stream(),
   collectionB.stream());
@@ -35,7 +35,7 @@ Stream<String> combinedStream = Stream.concat(
 
 如果需要组合两个以上的`Streams`，可以从最初的调用中再次调用`concat()`方法:
 
-```
+```java
 Stream<String> combinedStream = Stream.concat(
   Stream.concat(collectionA.stream(), collectionB.stream()), 
   collectionC.stream());
@@ -49,7 +49,7 @@ Stream<String> combinedStream = Stream.concat(
 
 下面的例子演示了使用`flatMap()`方法合并集合。最初，您得到一个`Stream`,它的元素是两个集合，然后您在将`Stream`收集到一个合并的列表之前将其展平:
 
-```
+```java
 Stream<String> combinedStream = Stream.of(collectionA, collectionB)
   .flatMap(Collection::stream);
 Collection<String> collectionCombined = 
@@ -64,14 +64,14 @@ Google 的 Guava 库提供了几种操作集合的方便方法，可以用于 Ja
 
 `Iterables.concat()`方法是用于合并集合的番石榴便利方法之一:
 
-```
+```java
 Iterable<String> combinedIterables = Iterables.unmodifiableIterable(
   Iterables.concat(collectionA, collectionA));
 ```
 
 返回的`Iterable`可以转换成集合:
 
-```
+```java
 Collection<String> collectionCombined = Lists.newArrayList(combinedIterables);
 ```
 
@@ -79,7 +79,7 @@ Collection<String> collectionCombined = Lists.newArrayList(combinedIterables);
 
 将以下依赖项添加到 Maven `pom.xml`文件中，以便在项目中包含 Guava 库:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -97,7 +97,7 @@ Apache Commons Collections 是另一个帮助使用各种集合的实用程序�
 
 `IterableUtils`类为`Iterable`实例提供了实用方法和装饰器。它提供了`chainedIterable()`方法，可用于将多个`Iterable`组合成一个。
 
-```
+```java
 Iterable<String> combinedIterables = IterableUtils.chainedIterable(
   collectionA, collectionB);
 ```
@@ -106,7 +106,7 @@ Iterable<String> combinedIterables = IterableUtils.chainedIterable(
 
 `Collection`实例的实用方法和装饰器由`CollectionUtils`类提供。这个类的`union()`方法返回一个包含给定的`Iterable` 实例的并集的`Collection`。
 
-```
+```java
 Iterable<String> combinedIterables = CollectionUtils.union(
   collectionA, collectionB);
 ```
@@ -117,7 +117,7 @@ Iterable<String> combinedIterables = CollectionUtils.union(
 
 将以下依赖项添加到您的 Maven `pom.xml`文件中，以便将 Apache Commons Collections 库包含在您的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -135,7 +135,7 @@ Iterable<String> combinedIterables = CollectionUtils.union(
 
 当然，组合集合的最简单的解决方案是使用`addAll()`方法，如下面的`List`示例所示，但是值得注意的是，该方法创建了一个新的集合，其中附加了对前两个集合中相同对象的引用:
 
-```
+```java
 List<String> listC = new ArrayList<>();
 listC.addAll(listA);
 listC.addAll(listB);
@@ -145,7 +145,7 @@ listC.addAll(listB);
 
 下面的例子定义了一个接受两个`Iterables`并返回一个合并的`Iterable`对象的`concat()`方法:
 
-```
+```java
 public static <E> Iterable<E> concat(
   Iterable<? extends E> i1,
   Iterable<? extends E> i2) {
@@ -194,14 +194,14 @@ public static <E> Iterable<E> concat(
 
 通过将两个集合作为参数传递，可以调用`concat()`方法:
 
-```
+```java
 Iterable<String> combinedIterables = concat(collectionA, collectionB);
 Collection<String> collectionCombined = makeListFromIterable(combinedIterables);
 ```
 
 如果您需要`Iterable`作为`List`可用，您也可以使用`makeListFromIterable()`方法，该方法使用`Iterable`的成员创建一个`List`:
 
-```
+```java
 public static <E> List<E> makeListFromIterable(Iterable<E> iter) {
     List<E> list = new ArrayList<E>();
     for (E item : iter) {

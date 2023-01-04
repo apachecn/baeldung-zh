@@ -22,7 +22,7 @@ OkHttp 是一个用于 Java 和 Android 的 Http 客户端，具有透明处理 
 
 首先，让我们将 [okhttp](https://web.archive.org/web/20220628125656/https://search.maven.org/search?q=g:com.squareup.okhttp3%20a:okhttp) 添加到 pom.xml 文件中:
 
-```
+```java
 <dependency>
     <groupId>com.squareup.okhttp3</groupId>
     <artifactId>okhttp</artifactId> 
@@ -32,7 +32,7 @@ OkHttp 是一个用于 Java 和 Android 的 Http 客户端，具有透明处理 
 
 然后，我们模拟`SimpleEntity`来测试我们的解码器:
 
-```
+```java
 public class SimpleEntity {
     protected String name;
 
@@ -46,7 +46,7 @@ public class SimpleEntity {
 
 现在，我们将开始我们的测试:
 
-```
+```java
 SimpleEntity sampleResponse = new SimpleEntity("Baeldung");
 
 OkHttpClient client = // build an instance;
@@ -60,7 +60,7 @@ Jackson 是最流行的 JSON-Object 绑定库之一。
 
 让我们将 [jackson-databind](https://web.archive.org/web/20220628125656/https://search.maven.org/search?q=g:com.fasterxml.jackson.core%20a:jackson-databind) 添加到 pom.xml 中:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -70,7 +70,7 @@ Jackson 是最流行的 JSON-Object 绑定库之一。
 
 Jackson 的`ObjectMapper` 让我们将 JSON 转换成一个对象。因此，我们可以使用`ObjectMapper.readValue()`对响应进行解码:
 
-```
+```java
 ObjectMapper objectMapper = new ObjectMapper(); 
 ResponseBody responseBody = client.newCall(request).execute().body(); 
 SimpleEntity entity = objectMapper.readValue(responseBody.string(), SimpleEntity.class);
@@ -85,7 +85,7 @@ Gson 是另一个有用的库，用于将 JSON 映射到对象，反之亦然。
 
 让我们将 [gson](https://web.archive.org/web/20220628125656/https://search.maven.org/search?q=g:com.google.code.gson%20a:gson) 添加到 pom.xml 文件中:
 
-```
+```java
 <dependency>
     <groupId>com.google.code.gson</groupId>
     <artifactId>gson</artifactId>
@@ -95,7 +95,7 @@ Gson 是另一个有用的库，用于将 JSON 映射到对象，反之亦然。
 
 让我们看看如何使用`Gson.fromJson()` 来解码响应体:
 
-```
+```java
 Gson gson = new Gson(); 
 ResponseBody responseBody = client.newCall(request).execute().body();
 SimpleEntity entity = gson.fromJson(responseBody.string(), SimpleEntity.class);

@@ -12,7 +12,7 @@
 
 现在，让我们创建一个名为“Google Apps 负载测试”的新集合，方法是导入几个以 Postman 的集合格式 v2.1 提供的示例 HTTP 请求:
 
-```
+```java
 {
   "info": {
     "_postman_id": "ddbb5536-b6ad-4247-a715-52a5d518b648",
@@ -148,7 +148,7 @@
 
 我们首先在 Tests 部分为“Get Google”请求添加一个简单的条件语句:
 
-```
+```java
 if (pm.response.code == 200) {
     postman.setNextRequest("Get Google Translate");
 }
@@ -159,19 +159,19 @@ else {
 
 接下来，我们将“Get Youtube”设置为在“Get Google Translate”之后执行的后续请求:
 
-```
+```java
 postman.setNextRequest("Get Youtube");
 ```
 
 此外，我们知道“Get Youtube”是流程中的最后一个请求，所以我们将它后面的下一个请求设置为`null`:
 
-```
+```java
 postman.setNextRequest(null);
 ```
 
 最后，让我们看看测试脚本的完整集合:
 
-```
+```java
 {
   "info": {
     "_postman_id": "ddbb5536-b6ad-4247-a715-52a5d518b648",
@@ -286,7 +286,7 @@ postman.setNextRequest(null);
 
 让我们使用它为现有的集合运行两次定制流程迭代:
 
-```
+```java
 newman run -n2 "Custom Flow Google Apps - Load Testing.postman_collection.json"
 ```
 
@@ -303,13 +303,13 @@ Postman 是制定请求收集和执行流程的最简单的方法。然而，当
 
 首先，我们需要将现有的 Postman 集合转换成 k6 兼容格式。我们可以为这个里程碑使用`[postman-to-k6](https://web.archive.org/web/20220627150323/https://github.com/apideck-libraries/postman-to-k6)`库:
 
-```
+```java
 postman-to-k6 "Google Apps - Load Testing.json" -o k6-script.js
 ```
 
 接下来，让我们对两个虚拟用户进行三秒钟的实时运行:
 
-```
+```java
 k6 run --duration 3s --vus 2 k6-script.js
 ```
 

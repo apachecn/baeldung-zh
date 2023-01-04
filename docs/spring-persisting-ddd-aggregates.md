@@ -20,7 +20,7 @@
 
 因此，让我们假设我们想要对采购订单进行建模:
 
-```
+```java
 class Order {
     private Collection<OrderLine> orderLines;
     private Money totalCost;
@@ -28,7 +28,7 @@ class Order {
 }
 ```
 
-```
+```java
 class OrderLine {
     private Product product;
     private int quantity;
@@ -36,7 +36,7 @@ class OrderLine {
 }
 ```
 
-```
+```java
 class Product {
     private Money price;
     // ...
@@ -55,7 +55,7 @@ class Product {
 
 没有任何东西禁止我们执行下面的代码:
 
-```
+```java
 Order order = new Order();
 order.setOrderLines(Arrays.asList(orderLine0, orderLine1));
 order.setTotalCost(Money.zero(CurrencyUnit.USD)); // this doesn't look good...
@@ -73,7 +73,7 @@ An `aggregate root`是一个类，它是我们聚合的入口点。**所有的�
 
 在我们的例子中，`Order`类是聚合根的合适候选。我们只需要做一些修改，以确保聚合始终一致:
 
-```
+```java
 class Order {
     private final List<OrderLine> orderLines;
     private Money totalCost;
@@ -120,7 +120,7 @@ class Order {
 
 在本节中，让我们尝试使用 JPA 和 Hibernate 来持久化我们的`Order`聚合。我们将使用 Spring Boot 和 [JPA](https://web.archive.org/web/20220525132033/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-starter-data-jpa) 启动器:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -131,7 +131,7 @@ class Order {
 
 **使用 ORM 框架时最大的问题可能是模型设计的简化**。它有时也被称为[对象关系阻抗不匹配](https://web.archive.org/web/20220525132033/https://en.wikipedia.org/wiki/Object-relational_impedance_mismatch)。让我们想一想，如果我们想要持久化我们的`Order`聚合，会发生什么:
 
-```
+```java
 @DisplayName("given order with two line items, when persist, then order is saved")
 @Test
 public void test() throws Exception {
@@ -217,7 +217,7 @@ public void test() throws Exception {
 
 在我们继续之前，让我们添加 Spring Boot [MongoDB](https://web.archive.org/web/20220525132033/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-starter-data-mongodb) 启动器:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -226,7 +226,7 @@ public void test() throws Exception {
 
 现在我们可以运行一个类似于 JPA 示例中的测试用例，但是这次使用 MongoDB:
 
-```
+```java
 @DisplayName("given order with two line items, when persist using mongo repository, then order is saved")
 @Test
 void test() throws Exception {
@@ -251,7 +251,7 @@ void test() throws Exception {
 
 下面是我们的`Order`汇总在商店中显示的内容:
 
-```
+```java
 {
   "_id": ObjectId("5bd8535c81c04529f54acd14"),
   "orderLines": [

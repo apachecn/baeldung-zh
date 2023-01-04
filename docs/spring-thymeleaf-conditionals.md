@@ -12,7 +12,7 @@
 
 让我们从使用百里香叶和 Spring 所需的 Maven 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.thymeleaf</groupId>
     <artifactId>thymeleaf</artifactId>
@@ -35,7 +35,7 @@
 
 让我们定义我们将在本文中使用的`Teacher `模型类:
 
-```
+```java
 public class Teacher implements Serializable {
     private String gender;
     private boolean isActive;
@@ -49,7 +49,7 @@ Elvis 操作符`?: `允许我们根据变量的当前状态在 HTML 元素中�
 
 如果变量是`null`，我们可以使用默认表达式来提供默认文本:
 
-```
+```java
 <td th:text="${teacher.additionalSkills} ?: 'UNKNOWN'" />
 ```
 
@@ -57,7 +57,7 @@ Elvis 操作符`?: `允许我们根据变量的当前状态在 HTML 元素中�
 
 还可以根据布尔表达式显示任意文本:
 
-```
+```java
 <td th:text="${teacher.active} ? 'ACTIVE' : 'RETIRED'" />
 ```
 
@@ -69,7 +69,7 @@ Elvis 操作符`?: `允许我们根据变量的当前状态在 HTML 元素中�
 
 `th:if` 和`th:unless`属性允许我们根据提供的条件呈现 HTML 元素:
 
-```
+```java
 <td>
     <span th:if="${teacher.gender == 'F'}">Female</span>
     <span th:unless="${teacher.gender == 'F'}">Male</span>
@@ -84,7 +84,7 @@ Elvis 操作符`?: `允许我们根据变量的当前状态在 HTML 元素中�
 
 如果一个表达式有两个以上的可能结果，我们可以使用`th:switch `和`th:case `属性对 HTML 元素进行有条件的呈现:
 
-```
+```java
 <td th:switch="${#lists.size(teacher.courses)}">
     <span th:case="'0'">NO COURSES YET!</span>
     <span th:case="'1'" th:text="${teacher.courses[0]}"></span>

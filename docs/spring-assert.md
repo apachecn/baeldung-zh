@@ -26,7 +26,7 @@ Spring `Assert`类帮助我们验证参数。**通过使用`Assert`类的方法�
 
 让我们用公共方法`drive()`定义一个`Car`类:
 
-```
+```java
 public class Car {
     private String state = "stop";
 
@@ -40,7 +40,7 @@ public class Car {
 
 我们可以看到速度为什么一定是正数。上面的行是检查条件并在条件失败时抛出异常的一种快捷方式:
 
-```
+```java
 if (!(speed > 0)) {
     throw new IllegalArgumentException("speed must be positive");
 }
@@ -50,7 +50,7 @@ if (!(speed > 0)) {
 
 如果我们试图用一个负参数调用`drive()`方法，将会抛出一个`IllegalArgumentException`异常:
 
-```
+```java
 Exception in thread "main" java.lang.IllegalArgumentException: speed must be positive
 ```
 
@@ -68,7 +68,7 @@ Exception in thread "main" java.lang.IllegalArgumentException: speed must be pos
 
 想象一下，如果汽车在运行，我们不能调用`fuel()`方法。让我们在这种情况下使用`state()`断言:
 
-```
+```java
 public void fuel() {
     Assert.state(this.state.equals("stop"), "car must be stopped");
     // ...
@@ -83,7 +83,7 @@ public void fuel() {
 
 我们可以通过使用`notNull()`方法假设一个对象不是`null`:
 
-```
+```java
 public void сhangeOil(String oil) {
     Assert.notNull(oil, "oil mustn't be null");
     // ...
@@ -94,7 +94,7 @@ public void сhangeOil(String oil) {
 
 另一方面，我们可以使用`isNull()`方法检查对象是否为`null`:
 
-```
+```java
 public void replaceBattery(CarBattery carBattery) {
     Assert.isNull(
       carBattery.getCharge(), 
@@ -107,7 +107,7 @@ public void replaceBattery(CarBattery carBattery) {
 
 要检查一个对象是否是另一个特定类型对象的实例，我们可以使用`isInstanceOf()`方法:
 
-```
+```java
 public void сhangeEngine(Engine engine) {
     Assert.isInstanceOf(ToyotaEngine.class, engine);
     // ...
@@ -120,7 +120,7 @@ public void сhangeEngine(Engine engine) {
 
 要检查类型，我们可以使用 `Assert.isAssignable()`:
 
-```
+```java
 public void repairEngine(Engine engine) {
     Assert.isAssignable(Engine.class, ToyotaEngine.class);
     // ...
@@ -137,7 +137,7 @@ public void repairEngine(Engine engine) {
 
 我们可以使用`hasLength()`方法检查`String`是否为空，这意味着它至少包含一个空格:
 
-```
+```java
 public void startWithHasLength(String key) {
     Assert.hasLength(key, "key must not be null and must not the empty");
     // ...
@@ -148,7 +148,7 @@ public void startWithHasLength(String key) {
 
 我们可以通过使用`hasText()`方法来强化条件并检查`String`是否包含至少一个非空白字符:
 
-```
+```java
 public void startWithHasText(String key) {
     Assert.hasText(
       key, 
@@ -161,7 +161,7 @@ public void startWithHasText(String key) {
 
 我们可以通过使用`doesNotContain()`方法来确定`String`参数是否不包含特定的子串:
 
-```
+```java
 public void startWithNotContain(String key) {
     Assert.doesNotContain(key, "123", "key mustn't contain 123");
     // ...
@@ -174,7 +174,7 @@ public void startWithNotContain(String key) {
 
 顾名思义，`notEmpty()`方法断言集合不是空的，这意味着它不是`null`并且包含至少一个元素:
 
-```
+```java
 public void repair(Collection<String> repairParts) {
     Assert.notEmpty(
       repairParts, 
@@ -187,7 +187,7 @@ public void repair(Collection<String> repairParts) {
 
 相同的方法被重载用于映射，我们可以检查映射是否不为空并且包含至少一个条目:
 
-```
+```java
 public void repair(Map<String, String> repairParts) {
     Assert.notEmpty(
       repairParts, 
@@ -202,7 +202,7 @@ public void repair(Map<String, String> repairParts) {
 
 最后，我们可以通过使用`notEmpty()`方法来检查数组是否不为空并且包含至少一个元素:
 
-```
+```java
 public void repair(String[] repairParts) {
     Assert.notEmpty(
       repairParts, 
@@ -215,7 +215,7 @@ public void repair(String[] repairParts) {
 
 我们可以通过使用`noNullElements()` 方法来验证数组不包含`null`元素:
 
-```
+```java
 public void repairWithNoNull(String[] repairParts) {
     Assert.noNullElements(
       repairParts, 

@@ -14,7 +14,7 @@ Lucene 分析器用于在索引和搜索文档时分析文本。
 
 首先，我们需要将这些依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.apache.lucene</groupId>
     <artifactId>lucene-core</artifactId>
@@ -42,7 +42,7 @@ Lucene 分析器将文本分割成标记。
 
 为了展示常用分析仪之间的差异，我们将使用以下方法:
 
-```
+```java
 public List<String> analyze(String text, Analyzer analyzer) throws IOException{
     List<String> result = new ArrayList<String>();
     TokenStream tokenStream = analyzer.tokenStream(FIELD_NAME, text);
@@ -65,7 +65,7 @@ public List<String> analyze(String text, Analyzer analyzer) throws IOException{
 
 我们从最常用的分析器`StandardAnalyzer` 开始:
 
-```
+```java
 private static final String SAMPLE_TEXT
   = "This is baeldung.com Lucene Analyzers test";
 
@@ -86,7 +86,7 @@ public void whenUseStandardAnalyzer_thenAnalyzed() throws IOException {
 
 `StopAnalyzer`由`LetterTokenizer, LowerCaseFilter`和 `StopFilter:`组成
 
-```
+```java
 @Test
 public void whenUseStopAnalyzer_thenAnalyzed() throws IOException {
     List<String> result = analyze(SAMPLE_TEXT, new StopAnalyzer());
@@ -104,7 +104,7 @@ public void whenUseStopAnalyzer_thenAnalyzed() throws IOException {
 
 `SimpleAnalyzer`由`LetterTokenizer`和一个`LowerCaseFilter`组成:
 
-```
+```java
 @Test
 public void whenUseSimpleAnalyzer_thenAnalyzed() throws IOException {
     List<String> result = analyze(SAMPLE_TEXT, new SimpleAnalyzer());
@@ -120,7 +120,7 @@ public void whenUseSimpleAnalyzer_thenAnalyzed() throws IOException {
 
 `WhitespaceAnalyzer`只使用了一个`WhitespaceTokenizer`,它通过空白字符分割文本:
 
-```
+```java
 @Test
 public void whenUseWhiteSpaceAnalyzer_thenAnalyzed() throws IOException {
     List<String> result = analyze(SAMPLE_TEXT, new WhitespaceAnalyzer());
@@ -134,7 +134,7 @@ public void whenUseWhiteSpaceAnalyzer_thenAnalyzed() throws IOException {
 
 `KeywordAnalyzer`将输入标记为一个单独的标记:
 
-```
+```java
 @Test
 public void whenUseKeywordAnalyzer_thenAnalyzed() throws IOException {
     List<String> result = analyze(SAMPLE_TEXT, new KeywordAnalyzer());
@@ -149,7 +149,7 @@ public void whenUseKeywordAnalyzer_thenAnalyzed() throws IOException {
 
 还有针对不同语言的特殊分析器，如`EnglishAnalyzer`、`FrenchAnalyzer`和`SpanishAnalyzer`:
 
-```
+```java
 @Test
 public void whenUseEnglishAnalyzer_thenAnalyzed() throws IOException {
     List<String> result = analyze(SAMPLE_TEXT, new EnglishAnalyzer());
@@ -166,7 +166,7 @@ public void whenUseEnglishAnalyzer_thenAnalyzed() throws IOException {
 
 在第一个例子中，**我们将使用`CustomAnalyzer`构建器从预定义的记号赋予器和过滤器**构建我们的分析器:
 
-```
+```java
 @Test
 public void whenUseCustomAnalyzerBuilder_thenAnalyzed() throws IOException {
     Analyzer analyzer = CustomAnalyzer.builder()
@@ -186,7 +186,7 @@ public void whenUseCustomAnalyzerBuilder_thenAnalyzed() throws IOException {
 
 在第二个例子中，**我们将通过扩展`Analyzer`抽象类并覆盖`createComponents()`方法**来构建相同的分析器:
 
-```
+```java
 public class MyCustomAnalyzer extends Analyzer {
 
     @Override
@@ -206,7 +206,7 @@ public class MyCustomAnalyzer extends Analyzer {
 
 现在，让我们看看我们的自定义分析器的运行情况——在本例中，我们将使用 [`InMemoryLuceneIndex`](/web/20220928005740/https://www.baeldung.com/lucene) :
 
-```
+```java
 @Test
 public void givenTermQuery_whenUseCustomAnalyzer_thenCorrect() {
     InMemoryLuceneIndex luceneIndex = new InMemoryLuceneIndex(
@@ -226,7 +226,7 @@ public void givenTermQuery_whenUseCustomAnalyzer_thenCorrect() {
 
 首先，我们需要定义我们的`analyzerMap`来将每个分析器映射到一个特定的字段:
 
-```
+```java
 Map<String,Analyzer> analyzerMap = new HashMap<>();
 analyzerMap.put("title", new MyCustomAnalyzer());
 analyzerMap.put("body", new EnglishAnalyzer());
@@ -236,14 +236,14 @@ analyzerMap.put("body", new EnglishAnalyzer());
 
 接下来，让我们通过提供`analyzerMap`和一个默认的`Analyzer`来创建我们的`PerFieldAnalyzerWrapper`:
 
-```
+```java
 PerFieldAnalyzerWrapper wrapper = new PerFieldAnalyzerWrapper(
   new StandardAnalyzer(), analyzerMap);
 ```
 
 现在，让我们来测试一下:
 
-```
+```java
 @Test
 public void givenTermQuery_whenUsePerFieldAnalyzerWrapper_thenCorrect() {
     InMemoryLuceneIndex luceneIndex = new InMemoryLuceneIndex(new RAMDirectory(), wrapper);

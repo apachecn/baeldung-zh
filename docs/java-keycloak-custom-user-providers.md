@@ -39,7 +39,7 @@ Keycloak 的主要文档列出了以下 SPI:
 
 正如我们在本文的介绍中提到的，我们的提供者示例将允许我们使用带有只读自定义用户存储库的 Keycloak。例如，在我们的例子中，这个用户存储库只是一个带有几个属性的常规 SQL 表:
 
-```
+```java
 create table if not exists users(
     username varchar(64) not null primary key,
     password varchar(64) not null,
@@ -60,7 +60,7 @@ create table if not exists users(
 
 **我们已经介绍过[如何在 SpringBoot 应用](/web/20220702084456/https://www.baeldung.com/keycloak-embedded-in-spring-boot-app)中嵌入 Keycloack，所以我们在这里就不再赘述了**。通过采用这种技术，我们将获得更快的启动时间和热重新加载能力，提供更流畅的开发人员体验。这里，我们将重用示例 SpringBoot 应用程序直接从我们的自定义提供程序运行我们的测试，因此我们将把它作为测试依赖项添加进来:
 
-```
+```java
 <dependency>
     <groupId>org.keycloak</groupId>
     <artifactId>keycloak-core</artifactId>
@@ -98,7 +98,7 @@ create table if not exists users(
 
 也就是说，实现相当简单:
 
-```
+```java
 public class CustomUserStorageProviderFactory
   implements UserStorageProviderFactory<CustomUserStorageProvider> {
     @Override
@@ -121,7 +121,7 @@ public class CustomUserStorageProviderFactory
 
 该文件的内容只是 SPI 实现的全限定名称:
 
-```
+```java
 # SPI class implementation
 com.baeldung.auth.provider.user.CustomUserStorageProviderFactory
 ```
@@ -136,7 +136,7 @@ com.baeldung.auth.provider.user.CustomUserStorageProviderFactory
 
 因此，考虑到这些需求，我们的实现应该是这样的:
 
-```
+```java
 public class CustomUserStorageProvider implements UserStorageProvider, 
   UserLookupProvider,
   CredentialInputValidator, 
@@ -165,7 +165,7 @@ Keycloak 使用这个接口中的方法来恢复一个给定了`id`、用户名�
 
 让我们继续实现这个接口的方法，从`getUserByUsername()`开始:
 
-```
+```java
 @Override
 public UserModel getUserByUsername(String username, RealmModel realm) {
     try ( Connection c = DbUtil.getConnection(this.model)) {
@@ -196,7 +196,7 @@ public UserModel getUserByUsername(String username, RealmModel realm) {
 
 **至于`mapUser()`，它的工作是将包含用户数据的数据库记录映射到一个`UserModel`实例。**一个`UserModel`代表一个用户实体，如 Keycloak 所见，并且有方法读取其属性。我们在这里实现了这个接口，它扩展了 Keycloak 提供的`AbstractUserAdapter` 类。我们还在实现中添加了一个`Builder`内部类，因此`mapUser()` 可以轻松创建`UserModel` 实例:
 
-```
+```java
 private UserModel mapUser(RealmModel realm, ResultSet rs) throws SQLException {
     CustomUser user = new CustomUser.Builder(ksession, realm, model, rs.getString("username"))
       .email(rs.getString("email"))
@@ -214,7 +214,7 @@ private UserModel mapUser(RealmModel realm, ResultSet rs) throws SQLException {
 
 现在，让我们来看看`DbUtil.getConnection()`方法:
 
-```
+```java
 public class DbUtil {
 
     public static Connection getConnection(ComponentModel config) throws SQLException{
@@ -240,7 +240,7 @@ public class DbUtil {
 
 **`CustomUserStorageProviderFactory`，`UserStorageProviderFactory`的基本契约包含允许 Keycloak 查询配置属性元数据的方法，同样重要的是，验证赋值**。在我们的例子中，我们将定义一些建立 JDBC 连接所需的配置参数。因为这个元数据是静态的，我们将在构造函数中创建它，`getConfigProperties() `将简单地返回它。
 
-```
+```java
 public class CustomUserStorageProviderFactory
   implements UserStorageProviderFactory<CustomUserStorageProvider> {
     protected final List<ProviderConfigProperty> configMetadata;
@@ -287,7 +287,7 @@ public class CustomUserStorageProviderFactory
 
 在我们的例子中，我们只支持密码，因为它们不需要任何额外的配置，我们可以将后一种方法委托给前一种方法:
 
-```
+```java
 @Override
 public boolean supportsCredentialType(String credentialType) {
     return PasswordCredentialModel.TYPE.endsWith(credentialType);
@@ -301,7 +301,7 @@ public boolean isConfiguredFor(RealmModel realm, UserModel user, String credenti
 
 实际的密码验证发生在`isValid() `方法中:
 
-```
+```java
 @Override
 public boolean isValid(RealmModel realm, UserModel user, CredentialInput credentialInput) {
     if(!this.supportsCredentialType(credentialInput.getType())) {
@@ -343,7 +343,7 @@ public boolean isValid(RealmModel realm, UserModel user, CredentialInput credent
 
 由于这些方法的实现非常相似，让我们只看其中的一种，`searchForUser()`:
 
-```
+```java
 @Override
 public List<UserModel> searchForUser(String search, RealmModel realm, int firstResult, int maxResults) {
     try (Connection c = DbUtil.getConnection(this.model)) {

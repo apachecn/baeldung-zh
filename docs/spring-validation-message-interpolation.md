@@ -14,7 +14,7 @@
 
 在进入代码片段之前，让我们考虑一个带有默认`@NotNull`约束违反消息的 HTTP 400 响应的例子:
 
-```
+```java
 {
     ....
     "status": 400,
@@ -35,7 +35,7 @@
 
 作为一个例子，我们将使用 POST 方法创建一个简单的 REST 控制器:
 
-```
+```java
 @RestController
 public class RestExample {
 
@@ -48,7 +48,7 @@ public class RestExample {
 
 请求体将被映射到`NotNullRequest`对象，该对象只有一个用`@NotNull`注释的`String`文件:
 
-```
+```java
 public class NotNullRequest {
 
     @NotNull(message = "stringValue has to be present")
@@ -60,7 +60,7 @@ public class NotNullRequest {
 
 现在，当我们发送一个没有通过验证检查的 POST 请求时，我们将看到我们的自定义错误消息:
 
-```
+```java
 {
     ...
     "errors": [
@@ -84,7 +84,7 @@ public class NotNullRequest {
 
 在每个约束注释中，我们可以访问被验证的字段的实际值:
 
-```
+```java
 @Size(
   min = 5,
   max = 14,
@@ -95,7 +95,7 @@ private String authorEmail;
 
 我们的错误消息将包含属性的实际值和`@Size`注释的`min`和`max`参数:
 
-```
+```java
 "defaultMessage": "The author email '[[email protected]](/web/20220627181353/https://www.baeldung.com/cdn-cgi/l/email-protection)' must be between 5 and 14 characters long"
 ```
 
@@ -103,7 +103,7 @@ private String authorEmail;
 
 使用三元运算符也是可能的:
 
-```
+```java
 @Min(
   value = 1,
   message = "There must be at least {value} test{value > 1 ? 's' : ''} in the test case"
@@ -113,13 +113,13 @@ private int testCount;
 
 Spring 会将三元运算符转换为错误消息中的单个值:
 
-```
+```java
 "defaultMessage": "There must be at least 2 tests in the test case"
 ```
 
 我们也可以对外部变量调用方法:
 
-```
+```java
 @DecimalMin(
   value = "50",
   message = "The code coverage ${formatter.format('%1$.2f', validatedValue)} must be higher than {value}%"
@@ -129,7 +129,7 @@ private double codeCoverage;
 
 无效输入将产生一条带有格式化值的错误消息:
 
-```
+```java
 "defaultMessage": "The code coverage 44.44 must be higher than 50%"
 ```
 
@@ -139,7 +139,7 @@ private double codeCoverage;
 
 在某些情况下，我们希望**实现一个定制的消息插值引擎**。为此，我们必须首先实现`javax.validation.MessageInterpolation`接口:
 
-```
+```java
 public class MyMessageInterpolator implements MessageInterpolator {
     private final MessageInterpolator defaultInterpolator;
 
@@ -163,13 +163,13 @@ public class MyMessageInterpolator implements MessageInterpolator {
 
 在这个简单的实现中，我们只是将错误消息改为大写。通过这样做，我们的错误消息将类似于:
 
-```
+```java
 "defaultMessage": "THE CODE COVERAGE 44.44 MUST BE HIGHER THAN 50%"
 ```
 
 我们还需要**在`javax.validation.Validation`工厂中注册我们的插补器**:
 
-```
+```java
 Validation.byDefaultProvider().configure().messageInterpolator(
   new MyMessageInterpolator(
     Validation.byDefaultProvider().configure().getDefaultMessageInterpolator())

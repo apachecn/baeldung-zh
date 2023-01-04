@@ -19,7 +19,7 @@
 *   小写骆驼，其中第一个单词的第一个字符是小写的
 *   大写 camel case，也称为 title case，其中第一个单词的第一个字符是大写的:
 
-```
+```java
 thisIsLowerCamelCase
 ThisIsLowerCamelCase
 ```
@@ -30,7 +30,7 @@ ThisIsLowerCamelCase
 
 我们可以使用[正则表达式](/web/20220726144623/https://www.baeldung.com/regular-expressions-java)将包含单词的字符串拆分成一个数组:
 
-```
+```java
 String[] words = text.split("[\\W_]+");
 ```
 
@@ -38,7 +38,7 @@ String[] words = text.split("[\\W_]+");
 
 当我们有单独的单词时，我们可以修改它们的大小写，然后将它们重组为骆驼大小写:
 
-```
+```java
 StringBuilder builder = new StringBuilder();
 for (int i = 0; i < words.length; i++) {
     String word = words[i];
@@ -56,7 +56,7 @@ return builder.toString();
 
 让我们使用空白作为非单词字符来测试这个方法:
 
-```
+```java
 assertThat(toCamelCaseByRegex("THIS STRING SHOULD BE IN CAMEL CASE"))
   .isEqualTo("thisStringShouldBeInCamelCase");
 ```
@@ -69,13 +69,13 @@ assertThat(toCamelCaseByRegex("THIS STRING SHOULD BE IN CAMEL CASE"))
 
 首先，我们需要跟踪转换的状态:
 
-```
+```java
 boolean shouldConvertNextCharToLower = true;
 ```
 
 然后我们遍历源文本，跳过或适当地大写每个字符:
 
-```
+```java
 for (int i = 0; i < text.length(); i++) {
     char currentChar = text.charAt(i);
     if (currentChar == delimiter) {
@@ -94,14 +94,14 @@ return builder.toString();
 
 让我们尝试使用空格作为分隔符的解决方案:
 
-```
+```java
 assertThat(toCamelCaseByIteration("THIS STRING SHOULD BE IN CAMEL CASE", ' '))
   .isEqualTo("thisStringShouldBeInCamelCase");
 ```
 
 我们还可以尝试使用下划线分隔符:
 
-```
+```java
 assertThat(toCamelCaseByIteration("THIS_STRING_SHOULD_BE_IN_CAMEL_CASE", '_'))
   .isEqualTo("thisStringShouldBeInCamelCase");
 ```
@@ -114,7 +114,7 @@ assertThat(toCamelCaseByIteration("THIS_STRING_SHOULD_BE_IN_CAMEL_CASE", '_'))
 
 为了使用 [Apache Commons 文本](/web/20220726144623/https://www.baeldung.com/java-apache-commons-text)，我们需要将它添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-text</artifactId>
@@ -124,26 +124,26 @@ assertThat(toCamelCaseByIteration("THIS_STRING_SHOULD_BE_IN_CAMEL_CASE", '_'))
 
 这个库在`CaseUtils`中提供了一个`toCamelCase`方法:
 
-```
+```java
 String camelCase = CaseUtils.toCamelCase(text, false, delimiter);
 ```
 
 让我们试一试:
 
-```
+```java
 assertThat(CaseUtils.toCamelCase("THIS STRING SHOULD BE IN CAMEL CASE", false, ' '))
   .isEqualTo("thisStringShouldBeInCamelCase");
 ```
 
 为了将字符串转换成标题大小写，我们需要将`true `传递给`toCamelCase `方法:
 
-```
+```java
 String camelCase = CaseUtils.toCamelCase(text, true, delimiter);
 ```
 
 让我们试一试:
 
-```
+```java
 assertThat(CaseUtils.toCamelCase("THIS STRING SHOULD BE IN CAMEL CASE", true, ' '))
   .isEqualTo("ThisStringShouldBeInCamelCase");
 ```
@@ -154,7 +154,7 @@ assertThat(CaseUtils.toCamelCase("THIS STRING SHOULD BE IN CAMEL CASE", true, ' 
 
 要使用 Guava，让我们将它的[依赖项](https://web.archive.org/web/20220726144623/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.google.guava%22%20AND%20a%3A%22guava%22)添加到我们的项目中:
 
-```
+```java
 <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
@@ -164,20 +164,20 @@ assertThat(CaseUtils.toCamelCase("THIS STRING SHOULD BE IN CAMEL CASE", true, ' 
 
 Guava 有一个实用程序类`CaseFormat`，用于格式转换:
 
-```
+```java
 String camelCase = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, "THIS_STRING_SHOULD_BE_IN_CAMEL_CASE");
 ```
 
 这将给定的由下划线分隔的大写字符串转换成小写字母。让我们看看:
 
-```
+```java
 assertThat(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, "THIS_STRING_SHOULD_BE_IN_CAMEL_CASE"))
   .isEqualTo("thisStringShouldBeInCamelCase");
 ```
 
 如果我们的字符串已经是这种格式，这没问题。但是，如果我们希望使用不同的分隔符并处理混合的大小写，我们需要预处理我们的输入:
 
-```
+```java
 String toUpperUnderscore = "This string should Be in camel Case"
   .toUpperCase()
   .replaceAll(' ', "_");
@@ -185,7 +185,7 @@ String toUpperUnderscore = "This string should Be in camel Case"
 
 首先，我们将给定的字符串转换成大写。然后，我们用下划线替换所有的分隔符。生成的格式相当于番石榴的`CaseFormat.UPPER_UNDERSCORE. `现在，我们可以使用番石榴制作驼色表壳版本:
 
-```
+```java
 assertThat(toCamelCaseUsingGuava("THIS STRING SHOULD BE IN CAMEL CASE", " "))
   .isEqualTo("thisStringShouldBeInCamelCase");
 ```

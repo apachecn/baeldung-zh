@@ -16,14 +16,14 @@
 
 在本教程中，我们将测试一种以`InputStream`的形式处理文本消息并返回已处理字节数的方法。然后，我们将断言读取了正确的字节数:
 
-```
+```java
 int bytesCount = processInputStream(someInputStream);
 assertThat(bytesCount).isEqualTo(expectedNumberOfBytes);
 ```
 
 `processInputStream()`方法在内部做什么在这里不太相关，所以我们只是使用一个非常简单的实现:
 
-```
+```java
 public class MockingInputStreamUnitTest { 
     int processInputStream(InputStream inputStream) throws IOException {
         int count = 0;
@@ -41,7 +41,7 @@ public class MockingInputStreamUnitTest {
 
 在此之前，我们还需要检查我们是否已经从消息中读取了所有的字节。如果是这样，我们需要返回-1:
 
-```
+```java
 public class MockingInputStreamUnitTest {
 
 @Test
@@ -65,7 +65,7 @@ public void givenSimpleImplementation_shouldProcessInputStream() throws IOExcept
 
 **如果我们绝对确定整个数据有效载荷将适合内存，最简单的选择是`ByteArrayInputStream`。**我们向构造函数提供一个字节数组，然后流逐个字节地遍历它，与上一节的例子类似:
 
-```
+```java
 String msg = "Hello World";
 int bytesCount = processInputStream(new ByteArrayInputStream(msg.getBytes()));
 assertThat(bytesCount).isEqualTo(11);
@@ -75,7 +75,7 @@ assertThat(bytesCount).isEqualTo(11);
 
 如果我们可以将我们的数据保存为一个文件，我们也可以以`FileInputStream`的形式加载它。**这种方法的优点是数据不会作为一个整体加载到内存中，而是在需要时从磁盘中读取。**如果我们将文件放在 resources 文件夹中，我们可以使用一个方便的`getResourceAsStream `方法直接在一行代码中从一个路径创建`InputStream`:
 
-```
+```java
 InputStream inputStream = MockingInputStreamUnitTest.class.getResourceAsStream("/mockinginputstreams/msg.txt");
 int bytesCount = processInputStream(inputStream);
 assertThat(bytesCount).isEqualTo(11);
@@ -89,7 +89,7 @@ assertThat(bytesCount).isEqualTo(11);
 
 为了实现这一点，我们需要实现我们的`InputStream`。让我们从定义字段和构造函数开始:
 
-```
+```java
 public class GeneratingInputStream extends InputStream {
     private final int desiredSize;
     private final byte[] seed;
@@ -106,7 +106,7 @@ public class GeneratingInputStream extends InputStream {
 
 使用我们定义的变量，我们可以实现`read`方法:
 
-```
+```java
 @Override
 public int read() {
     if (actualSize >= desiredSize) {

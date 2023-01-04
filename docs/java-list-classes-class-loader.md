@@ -24,7 +24,7 @@
 
 要创建一个 Java 代理，我们需要**定义** **`premain`** **方法，在代理加载**时`Instrumentation`实例将被传递给该方法。现在让我们创建`ListLoadedClassesAgent`类:
 
-```
+```java
 public class ListLoadedClassesAgent {
 
     private static Instrumentation instrumentation;
@@ -43,7 +43,7 @@ public class ListLoadedClassesAgent {
 
 让我们看看实际运行的代码:
 
-```
+```java
 public static Class<?>[] listLoadedClasses(String classLoaderType) {
     return instrumentation.getInitiatedClasses(
       getClassLoader(classLoaderType));
@@ -69,7 +69,7 @@ private static ClassLoader getClassLoader(String classLoaderType) {
 
 注意，如果我们使用 Java 9 或更高版本，我们可以使用`getPlatformClassLoader` 方法。这将列出由平台类加载器加载的类。在这种情况下，开关盒还将包含:
 
-```
+```java
 case "PLATFORM":
     classLoader = ClassLoader.getPlatformClassLoader();
     break;
@@ -79,7 +79,7 @@ case "PLATFORM":
 
 现在，让我们创建一个清单文件`MANIFEST.MF`，它具有合适的属性供代理运行，包括:
 
-```
+```java
 Premain-Class: com.baeldung.loadedclasslisting.ListLoadedClassesAgent
 ```
 
@@ -89,7 +89,7 @@ Premain-Class: com.baeldung.loadedclasslisting.ListLoadedClassesAgent
 
 现在让我们加载代理并运行应用程序。首先，我们需要代理 JAR 文件和包含`Premain-Class`信息的清单文件。此外，我们需要应用程序 JAR 文件和包含`Main-Class` 信息的清单文件。包含`main`方法的`Launcher class`将启动我们的应用程序。然后我们将能够打印由不同类型的类装入器装入的类:
 
-```
+```java
 public class Launcher {
 
     public static void main(String[] args) {
@@ -109,13 +109,13 @@ public class Launcher {
 
 接下来，让我们静态地[加载 Java 代理](/web/20220706104710/https://www.baeldung.com/java-instrumentation#loading-a-java-agent)并启动我们的应用程序:
 
-```
+```java
 java -javaagent:agent.jar -jar app.jar
 ```
 
 运行以上命令后，我们将看到输出:
 
-```
+```java
 BOOTSTRAP ClassLoader :
 java.lang.ClassValue.Entry[]
 java.util.concurrent.ConcurrentHashMap.Segment

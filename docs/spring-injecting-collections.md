@@ -12,7 +12,7 @@
 
 让我们创建一个示例 bean:
 
-```
+```java
 public class CollectionsBean {
 
     @Autowired
@@ -32,7 +32,7 @@ public class CollectionsBean {
 
 之后，我们在配置设置类中注册`CollectionsBean `:
 
-```
+```java
 @Configuration
 public class CollectionConfig {
 
@@ -52,7 +52,7 @@ public class CollectionConfig {
 
 现在，我们可以测试结果:
 
-```
+```java
 ApplicationContext context = new AnnotationConfigApplicationContext(CollectionConfig.class);
 CollectionsBean collectionsBean = context.getBean(
   CollectionsBean.class);
@@ -61,7 +61,7 @@ collectionsBean.printNameList();
 
 printNameList()方法的输出:
 
-```
+```java
 [John, Adam, Harry]
 ```
 
@@ -69,7 +69,7 @@ printNameList()方法的输出:
 
 要用`Set`集合设置相同的示例，让我们修改`CollectionsBean `类:
 
-```
+```java
 public class CollectionsBean {
 
     private Set<String> nameSet;
@@ -86,7 +86,7 @@ public class CollectionsBean {
 
 **这次我们想使用构造函数注入来初始化`nameSet`属性**。这也需要改变配置类别:
 
-```
+```java
 @Bean
 public CollectionsBean getCollectionsBean() {
     return new CollectionsBean(new HashSet<>(Arrays.asList("John", "Adam", "Harry")));
@@ -97,7 +97,7 @@ public CollectionsBean getCollectionsBean() {
 
 按照同样的逻辑，让我们添加` nameMap`字段来演示 map 注入:
 
-```
+```java
 public class CollectionsBean {
 
     private Map<Integer, String> nameMap;
@@ -115,7 +115,7 @@ public class CollectionsBean {
 
 这次**我们有一个 setter 方法，以便使用 setter 依赖注入**。我们还需要在配置类中添加`Map`初始化代码:
 
-```
+```java
 @Bean
 public Map<Integer, String> nameMap(){
     Map<Integer, String>  nameMap = new HashMap<>();
@@ -128,7 +128,7 @@ public Map<Integer, String> nameMap(){
 
 调用`printNameMap()`方法后的结果:
 
-```
+```java
 {1=John, 2=Adam, 3=Harry}
 ```
 
@@ -138,7 +138,7 @@ public Map<Integer, String> nameMap(){
 
 首先，让我们创建 bean:
 
-```
+```java
 public class BaeldungBean {
 
     private String name;
@@ -149,7 +149,7 @@ public class BaeldungBean {
 
 并将`BaeldungBean`的一个`List`作为属性添加到`CollectionsBean `类:
 
-```
+```java
 public class CollectionsBean {
 
     @Autowired(required = false)
@@ -163,7 +163,7 @@ public class CollectionsBean {
 
 接下来，我们为每个`BaeldungBean`元素添加 Java 配置工厂方法:
 
-```
+```java
 @Configuration
 public class CollectionConfig {
 
@@ -190,7 +190,7 @@ public class CollectionConfig {
 
 为了测试这一点，我们调用了`collectionsBean.printBeanList()`方法。输出将 bean 名称显示为列表元素:
 
-```
+```java
 [John, Harry, Adam]
 ```
 
@@ -200,7 +200,7 @@ public class CollectionConfig {
 
 如果我们需要一个空列表来代替`null,`，我们可以用一个新的`ArrayList:`来初始化`beanList`
 
-```
+```java
 @Autowired(required = false)
 private List<BaeldungBean> beanList = new ArrayList<>();
 ```
@@ -211,7 +211,7 @@ private List<BaeldungBean> beanList = new ArrayList<>();
 
 为此，我们使用`@Order`注释并指定索引:
 
-```
+```java
 @Configuration
 public class CollectionConfig {
 
@@ -239,7 +239,7 @@ public class CollectionConfig {
 
 然后，它将注入`“John”,`，最后是`“Adam”` bean:
 
-```
+```java
 [Harry, John, Adam]
 ```
 
@@ -251,7 +251,7 @@ public class CollectionConfig {
 
 下面是我们如何将它用于注入点:
 
-```
+```java
 @Autowired
 @Qualifier("CollectionsBean")
 private List<BaeldungBean> beanList;
@@ -259,7 +259,7 @@ private List<BaeldungBean> beanList;
 
 然后，我们用相同的`@Qualifier`标记我们想要注入到`List`中的 beans:
 
-```
+```java
 @Configuration
 public class CollectionConfig {
 
@@ -285,7 +285,7 @@ public class CollectionConfig {
 
 在这个例子中，我们指定名为*“约翰”*的 bean 将被注入到名为`“CollectionsBean”`的`List`中。我们在这里测试的结果是:
 
-```
+```java
 ApplicationContext context = new AnnotationConfigApplicationContext(CollectionConfig.class);
 CollectionsBean collectionsBean = context.getBean(CollectionsBean.class);
 collectionsBean.printBeanList();
@@ -293,7 +293,7 @@ collectionsBean.printBeanList();
 
 从输出中，我们看到我们的集合只有一个元素:
 
-```
+```java
 [John]
 ```
 
@@ -301,7 +301,7 @@ collectionsBean.printBeanList();
 
 我们可以通过使用`Collections.emptyList()`静态方法将注入列表属性的默认值设置为空列表:
 
-```
+```java
 public class CollectionsBean {
 
     @Value("${names.list:}#{T(java.util.Collections).emptyList()}")
@@ -315,13 +315,13 @@ public class CollectionsBean {
 
 如果我们使用未通过属性文件初始化的“names.list”键运行此命令:
 
-```
+```java
 collectionsBean.printNameListWithDefaults();
 ```
 
 我们将得到一个空列表作为输出:
 
-```
+```java
 [ ]
 ```
 

@@ -24,7 +24,7 @@ Spring 被设计成高度模块化——使用 Spring 的一部分不应该也�
 
 让我们从一个基本的 **Maven 设置**开始，它将只使用**和`spring-context`依赖关系**:
 
-```
+```java
 <properties>
     <org.springframework.version>5.2.8.RELEASE</org.springframework.version>
 </properties>
@@ -46,7 +46,7 @@ Spring 被设计成高度模块化——使用 Spring 的一部分不应该也�
 
 现在让我们来看看**持久化的 Spring 依赖关系**——主要是`spring-orm`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-orm</artifactId>
@@ -62,7 +62,7 @@ JDBC 数据访问库定义了 [Spring JDBC 支持](https://web.archive.org/web/2
 
 为了使用 Spring Web 和 Servlet 支持，除了上面的核心依赖项之外，还需要在`pom`中包含两个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-web</artifactId>
@@ -81,7 +81,7 @@ JDBC 数据访问库定义了 [Spring JDBC 支持](https://web.archive.org/web/2
 
 从 Spring 5.0 开始，为了支持反应式堆栈 web 框架，我们可以添加对 [Spring WebFlux](https://web.archive.org/web/20221122114820/https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/web-reactive.html#spring-webflux) 的依赖:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-webflux</artifactId>
@@ -97,7 +97,7 @@ JDBC 数据访问库定义了 [Spring JDBC 支持](https://web.archive.org/web/2
 
 Spring 测试框架可以通过以下依赖项包含在项目中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-test</artifactId>
@@ -112,7 +112,7 @@ Spring 测试框架可以通过以下依赖项包含在项目中:
 
 Spring 的发布版本托管在 Maven Central 上。然而，如果一个项目需要使用里程碑版本，那么需要向 pom 添加一个定制的 Spring 存储库:
 
-```
+```java
 <repositories>
     <repository>
         <id>repository.springframework.maven.milestone</id>
@@ -124,7 +124,7 @@ Spring 的发布版本托管在 Maven Central 上。然而，如果一个项目�
 
 一旦定义了这个存储库，项目就可以定义依赖项，例如:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-core</artifactId>
@@ -136,7 +136,7 @@ Spring 的发布版本托管在 Maven Central 上。然而，如果一个项目�
 
 与里程碑类似，快照托管在自定义存储库中:
 
-```
+```java
 <repositories>
     <repository>
         <id>repository.springframework.maven.snapshot</id>
@@ -148,7 +148,7 @@ Spring 的发布版本托管在 Maven Central 上。然而，如果一个项目�
 
 一旦在 pom.xml 中启用了快照存储库，就可以引用以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-core</artifactId>
@@ -158,7 +158,7 @@ Spring 的发布版本托管在 Maven Central 上。然而，如果一个项目�
 
 以及–对于 5.x:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-core</artifactId>

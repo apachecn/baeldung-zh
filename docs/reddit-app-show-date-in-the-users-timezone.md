@@ -12,7 +12,7 @@
 
 首先，我们将在现有的首选项中添加一个新字段–`timezone`:
 
-```
+```java
 @Entity
 public class Preference {
     ...
@@ -22,7 +22,7 @@ public class Preference {
 
 然后我们简单地**在用户首选项页面**中配置时区——利用一个简单但非常有用的 JQuery [插件](https://web.archive.org/web/20210918113153/http://www.jqueryscript.net/time-clock/Easy-Timezone-Picker-with-jQuery-Moment-js-Timezones.html):
 
-```
+```java
 <select id="timezone" name="timezone"></select>
 <script>
     $(function() {
@@ -37,7 +37,7 @@ public class Preference {
 
 现在，有趣的是。我们需要将日期从**用户的时区**转换为**服务器的时区**:
 
-```
+```java
 @Controller
 @RequestMapping(value = "/api/scheduledPosts")
 public class ScheduledPostRestController {
@@ -86,7 +86,7 @@ public class ScheduledPostRestController {
 
 我们需要使用用户的时区显示文章的`submissionDate` :
 
-```
+```java
 <table><thead><tr>
 <th>Post title</th>
 <th>Submission Date 
@@ -96,7 +96,7 @@ public class ScheduledPostRestController {
 
 这是我们的函数:
 
-```
+```java
 function loadPage(page){
     ...
     $('.table').append('<tr><td>'+post.title+'</td><td>'+
@@ -118,7 +118,7 @@ function convertDate(date){
 
 我们还需要修改我们的`schedulePostForm.html`:
 
-```
+```java
 Submission Date (<span sec:authentication="principal.preference.timezone">UTC</span>)
 <input id="date" name="date" />
 
@@ -144,7 +144,7 @@ function schedulePost(){
 
 最后，我们还需要修改我们的`editPostForm.html`来本地化旧的`submissonDate`值:
 
-```
+```java
 $(function() {
     var serverTimezone = [[${#dates.format(#calendars.createToday(), 'z')}]];
     var serverDate = moment.tz($("#date").val(), serverTimezone);

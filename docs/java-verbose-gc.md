@@ -22,7 +22,7 @@
 
 我们将使用一个简单的 Java 程序来演示如何启用和解释我们的 GC 日志:
 
-```
+```java
 public class Application {
 
     private static Map<String, String> stringContainer = new HashMap<>();
@@ -63,7 +63,7 @@ public class Application {
 
 让我们首先运行我们的程序，并通过 JVM 启动参数启用详细 GC:
 
-```
+```java
 -XX:+UseSerialGC -Xms1024m -Xmx1024m -verbose:gc
 ```
 
@@ -77,7 +77,7 @@ public class Application {
 
 现在让我们来看看这个简单程序的输出:
 
-```
+```java
 Start of program!
 [GC (Allocation Failure)  279616K->146232K(1013632K), 0.3318607 secs]
 [GC (Allocation Failure)  425848K->295442K(1013632K), 0.4266943 secs]
@@ -127,13 +127,13 @@ End of program!
 
 让我们再次运行我们的示例程序:
 
-```
+```java
 -XX:+UseSerialGC -Xms1024m -Xmx1024m -verbose:gc -XX:+PrintGCDetails
 ```
 
 这一次输出更加详细:
 
-```
+```java
 Start of program!
 [GC (Allocation Failure) [DefNew: 279616K->34944K(314560K), 0.3626923 secs] 279616K->146232K(1013632K), 0.3627492 secs] [Times: user=0.33 sys=0.03, real=0.36 secs] 
 [GC (Allocation Failure) [DefNew: 314560K->34943K(314560K), 0.4589079 secs] 425848K->295442K(1013632K), 0.4589526 secs] [Times: user=0.41 sys=0.05, real=0.46 secs] 
@@ -185,7 +185,7 @@ Heap
 
 我们看到的最后一条附加信息是按照与`Metaspace`相同的模式细分的:
 
-```
+```java
 [Metaspace: 2624K->2624K(1056768K)], 0.5580738 secs]
 ```
 
@@ -207,19 +207,19 @@ Heap
 
 当我们运行应用程序来获取出现在日志中的日期和时间信息时，我们可以添加以下两个参数:
 
-```
+```java
 -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps
 ```
 
 现在，每一行都以写入时的绝对日期和时间开始，后跟一个时间戳，反映自 JVM 启动以来经过的实际时间(秒):
 
-```
+```java
 2018-12-11T02:55:23.518+0100: 2.601: [GC (Allocation ...
 ```
 
 请注意，Java 9 中已经删除了这些调优标志。新的选择是:
 
-```
+```java
 -Xlog:gc*::time
 ```
 
@@ -229,13 +229,13 @@ Heap
 
 **我们可以通过使用参数`-Xloggc:<file>`来做到这一点，其中`file`是输出文件**的绝对路径
 
-```
+```java
 -Xloggc:/path/to/file/gc.log
 ```
 
 与其他调优标志类似，Java 9 弃用了-Xloggc 标志，转而支持新的统一日志记录。更具体地说，现在记录到文件的替代方法是:
 
-```
+```java
 -Xlog:gc:/path/to/file/gc.log
 ```
 
@@ -245,25 +245,25 @@ Heap
 
 例如，从 Java 9 开始，新的统一日志系统中的`-verbose:gc`标志的等价形式是:
 
-```
+```java
 -Xlog:gc
 ```
 
 这将把所有信息级别的 GC 日志记录到标准输出中。也可以使用`-Xlog:gc=<level>`语法来改变日志级别。例如，要查看所有调试级别日志:
 
-```
+```java
 -Xlog:gc=debug
 ```
 
 正如我们前面看到的，我们可以通过`-Xlog:gc=<level>:<output>`语法改变输出目的地。默认情况下，`output`是`stdout`，但是我们可以把它改成`stderr`甚至是一个文件:
 
-```
+```java
 -Xlog:gc=debug:file=gc.txt
 ```
 
 此外，还可以使用 decorators 向输出添加一些字段。例如:
 
-```
+```java
 -Xlog:gc=debug::pid,time,uptime
 ```
 

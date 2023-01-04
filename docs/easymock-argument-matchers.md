@@ -14,7 +14,7 @@
 
 下面是我们简单的`IUserService`界面:
 
-```
+```java
 public interface IUserService {
     public boolean addUser(User user);
     public List<User> findByEmail(String email);
@@ -24,7 +24,7 @@ public interface IUserService {
 
 以及相关的`User`型号:
 
-```
+```java
 public class User {
     private long id;
     private String firstName;
@@ -38,7 +38,7 @@ public class User {
 
 因此，我们将从简单地模仿我们的`IUserService`开始，在我们的例子中使用它:
 
-```
+```java
 private IUserService userService = mock(IUserService.class);
 ```
 
@@ -48,7 +48,7 @@ private IUserService userService = mock(IUserService.class);
 
 首先，我们将使用`eq()`匹配器来匹配新添加的`User`:
 
-```
+```java
 @Test
 public void givenUserService_whenAddNewUser_thenOK() {        
     expect(userService.addUser(eq(new User()))).andReturn(true);
@@ -64,7 +64,7 @@ public void givenUserService_whenAddNewUser_thenOK() {
 
 类似地，我们可以使用`same()`匹配器来匹配特定的`User`:
 
-```
+```java
 @Test
 public void givenUserService_whenAddSpecificUser_thenOK() {
     User user = new User();
@@ -90,7 +90,7 @@ public void givenUserService_whenAddSpecificUser_thenOK() {
 
 让我们看一个使用`anyString()`来匹配期望的`email`为任何`String`值的例子:
 
-```
+```java
 @Test
 public void givenUserService_whenSearchForUserByEmail_thenFound() {
     expect(userService.findByEmail(anyString()))
@@ -105,7 +105,7 @@ public void givenUserService_whenSearchForUserByEmail_thenFound() {
 
 我们还可以使用`isA()`将一个参数匹配为一个特定类的实例:
 
-```
+```java
 @Test
 public void givenUserService_whenAddUser_thenOK() {
     expect(userService.addUser(isA(User.class))).andReturn(true);
@@ -125,7 +125,7 @@ public void givenUserService_whenAddUser_thenOK() {
 
 在下面的例子中，如果添加的`User`值为空，我们将使用`isNull()`匹配器进行匹配:
 
-```
+```java
 @Test
 public void givenUserService_whenAddNull_thenFail() {
     expect(userService.addUser(isNull())).andReturn(false);
@@ -139,7 +139,7 @@ public void givenUserService_whenAddNull_thenFail() {
 
 我们还可以用类似的方式`notNull()`来匹配添加的用户值是否不为空:
 
-```
+```java
 @Test
 public void givenUserService_whenAddNotNull_thenOK() {
     expect(userService.addUser(notNull())).andReturn(true);
@@ -157,7 +157,7 @@ public void givenUserService_whenAddNotNull_thenOK() {
 
 首先，我们将使用`startsWith()`匹配器来匹配用户的电子邮件前缀:
 
-```
+```java
 @Test
 public void whenSearchForUserByEmailStartsWith_thenFound() {        
     expect(userService.findByEmail(startsWith("test")))
@@ -172,7 +172,7 @@ public void whenSearchForUserByEmailStartsWith_thenFound() {
 
 类似地，我们将使用`endsWith()`匹配器作为电子邮件后缀:
 
-```
+```java
 @Test
 public void givenUserService_whenSearchForUserByEmailEndsWith_thenFound() {        
     expect(userService.findByEmail(endsWith(".com")))
@@ -187,7 +187,7 @@ public void givenUserService_whenSearchForUserByEmailEndsWith_thenFound() {
 
 更一般地，我们可以使用`contains()`将电子邮件与给定的子字符串进行匹配:
 
-```
+```java
 @Test
 public void givenUserService_whenSearchForUserByEmailContains_thenFound() {        
     expect(userService.findByEmail(contains("@")))
@@ -202,7 +202,7 @@ public void givenUserService_whenSearchForUserByEmailContains_thenFound() {
 
 或者甚至使用`matches()`将我们的电子邮件匹配到特定的正则表达式:
 
-```
+```java
 @Test
 public void givenUserService_whenSearchForUserByEmailMatches_thenFound() {        
     expect(userService.findByEmail(matches(".+\\@.+\\..+")))
@@ -221,7 +221,7 @@ public void givenUserService_whenSearchForUserByEmailMatches_thenFound() {
 
 让我们看一个使用`lt()`匹配器来匹配小于 100 的年龄参数的例子:
 
-```
+```java
 @Test
 public void givenUserService_whenSearchForUserByAgeLessThan_thenFound() {    
     expect(userService.findByAge(lt(100.0)))
@@ -236,7 +236,7 @@ public void givenUserService_whenSearchForUserByAgeLessThan_thenFound() {
 
 类似地，我们也使用`geq()`来匹配年龄参数，使其大于或等于 10:
 
-```
+```java
 @Test
 public void givenUserService_whenSearchForUserByAgeGreaterThan_thenFound() {    
     expect(userService.findByAge(geq(10.0)))
@@ -262,7 +262,7 @@ public void givenUserService_whenSearchForUserByAgeGreaterThan_thenFound() {
 
 让我们看看如何组合两个匹配器来验证年龄值既大于 10 又小于 100:
 
-```
+```java
 @Test
 public void givenUserService_whenSearchForUserByAgeRange_thenFound() {
     expect(userService.findByAge(and(gt(10.0),lt(100.0))))
@@ -277,7 +277,7 @@ public void givenUserService_whenSearchForUserByAgeRange_thenFound() {
 
 我们可以看的另一个例子是将`not()`和`endsWith()`结合起来匹配不以“.”结尾的电子邮件。com”:
 
-```
+```java
 @Test
 public void givenUserService_whenSearchForUserByEmailNotEndsWith_thenFound() {
     expect(userService.findByEmail(not(endsWith(".com"))))
@@ -296,7 +296,7 @@ public void givenUserService_whenSearchForUserByEmailNotEndsWith_thenFound() {
 
 目标是创建一个简单的`minCharCount()`匹配器来匹配长度大于或等于给定值的字符串:
 
-```
+```java
 @Test
 public void givenUserService_whenSearchForUserByEmailCharCount_thenFound() {        
     expect(userService.findByEmail(minCharCount(5)))
@@ -316,7 +316,7 @@ public void givenUserService_whenSearchForUserByEmailCharCount_thenFound() {
 
 让我们看看在我们的`minCharCount()`方法中声明匿名类的两个步骤:
 
-```
+```java
 public static String minCharCount(int value){
     EasyMock.reportMatcher(new IArgumentMatcher() {
         @Override

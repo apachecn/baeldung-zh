@@ -90,7 +90,7 @@ arena 是 JVM 自己实现的[基于 Arena 的内存管理](https://web.archive.
 
 从 NMT 开始，我们必须为我们的应用程序启用它:
 
-```
+```java
 java -XX:NativeMemoryTracking=summary -jar app.jar
 ```
 
@@ -98,14 +98,14 @@ java -XX:NativeMemoryTracking=summary -jar app.jar
 
 然后我们可以使用不带参数的 `[jps](https://web.archive.org/web/20221107202825/https://docs.oracle.com/javase/7/docs/technotes/tools/share/jps.html)`或`jcmd`来查找我们的应用程序的进程 id (pid ):
 
-```
+```java
 jcmd
 <pid> <our.app.main.Class>
 ```
 
 找到我们的应用程序 pid 后，我们可以继续使用 `jcmd`，它提供了一长串要监控的选项。让我们向`jcmd`寻求帮助，看看有哪些可用的选项:
 
-```
+```java
 jcmd <pid> help
 ```
 
@@ -115,11 +115,11 @@ jcmd <pid> help
 
 最顺手的是`VM.native_memory`。我们可以使用它来查看应用程序的虚拟机内部本机内存使用情况的摘要:
 
-```
+```java
 jcmd <pid> VM.native_memory summary
 ```
 
-```
+```java
 <pid>:
 
 Native Memory Tracking:
@@ -171,13 +171,13 @@ Total: reserved=1779287KB, committed=503683KB
 
 让我们试试 Metaspace:
 
-```
+```java
 jcmd <pid> VM.metaspace
 ```
 
 我们的输出看起来像:
 
-```
+```java
 <pid>:
 Total Usage - 1072 loaders, 9474 classes (1176 shared):
 ...
@@ -203,13 +203,13 @@ InitialBootClassLoaderMetaspaceSize: 4.00 MB
 
 现在，让我们看看应用程序的字符串表:
 
-```
+```java
 jcmd <pid> VM.stringtable 
 ```
 
 让我们看看输出:
 
-```
+```java
 <pid>:
 StringTable statistics:
 Number of buckets : 65536 = 524288 bytes, each 8
@@ -230,13 +230,13 @@ Maximum bucket size : 4
 
 **`jcmd`提供了一个`VM.flag`选项来查看我们的 Java 进程已经有了哪些标志，包括默认值，因此我们可以使用它作为工具来检查默认配置，并了解 JVM 是如何配置的:**
 
-```
+```java
 jcmd <pid> VM.flags
 ```
 
 在这里，我们看到使用的标志及其值:
 
-```
+```java
 <pid>:
 -XX:CICompilerCount=4 
 -XX:ConcGCThreads=2 

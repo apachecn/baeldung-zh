@@ -10,7 +10,7 @@
 
 让我们从简单的 Java 示例开始，通过中间字符串进行转换:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenConvertingByteArrayIntoReader_thenCorrect() 
   throws IOException {
@@ -22,7 +22,7 @@ public void givenUsingPlainJava_whenConvertingByteArrayIntoReader_thenCorrect()
 
 另一种方法是使用一个`InputStreamReader`和一个`ByteArrayInputStream`:
 
-```
+```java
 @Test
 public void givenUsingPlainJava2_whenConvertingByteArrayIntoReader_thenCorrect() 
   throws IOException {
@@ -36,7 +36,7 @@ public void givenUsingPlainJava2_whenConvertingByteArrayIntoReader_thenCorrect()
 
 接下来，让我们来看看番石榴溶液，同样使用中间字符串:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenConvertingByteArrayIntoReader_thenCorrect() 
   throws IOException {
@@ -53,7 +53,7 @@ public void givenUsingGuava_whenConvertingByteArrayIntoReader_thenCorrect()
 
 类似地——Commons IO 也使用中间字符串表示将`byte[]`转换为读取器:
 
-```
+```java
 @Test
 public void givenUsingCommonsIO_whenConvertingByteArrayIntoReader_thenCorrect() 
   throws IOException {

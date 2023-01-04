@@ -14,7 +14,7 @@ JUnit 是 Java 中最流行的单元测试框架之一。此外，Spring Boot �
 
 [**JUnit 4 允许我们通过应用额外的功能来实现定制的`Runner`类**](/web/20221115052649/https://www.baeldung.com/junit-4-custom-runners) 。为了调用一个定制的运行器，我们使用一个`@RunWith`注释来注释一个测试类:
 
-```
+```java
 @RunWith(CustomRunner.class)
 class JUnit4Test {
     // ...
@@ -23,7 +23,7 @@ class JUnit4Test {
 
 正如我们所知，JUnit 4 现在处于遗留状态，由 JUnit 5 接替。新版本带给我们[一个全新的引擎，带有重写的 API](/web/20221115052649/https://www.baeldung.com/junit-5-migration) 。它还改变了扩展模型的概念。我们现在可以使用带有`@ExtendWith`注释 的`Extension` API，而不是实现定制的`Runner`或`Rule`[**类:**](/web/20221115052649/https://www.baeldung.com/junit-5-extensions)
 
-```
+```java
 @ExtendWith(CustomExtensionOne.class)
 @ExtendWith(CustomExtensionTwo.class)
 class JUnit5Test {
@@ -39,7 +39,7 @@ class JUnit5Test {
 
 让我们从数据提供者的实现开始:
 
-```
+```java
 @Component
 public class DataProvider {
 
@@ -55,7 +55,7 @@ public class DataProvider {
 
 其次，让我们实现一个转变我们价值观的服务类:
 
-```
+```java
 @Service
 public class StringConverter {
 
@@ -82,7 +82,7 @@ public class StringConverter {
 
 现在让我们为`StringConverter`创建第一个测试:
 
-```
+```java
 public class StringConverterTest {
     @Mock
     private DataProvider dataProvider;
@@ -103,13 +103,13 @@ public class StringConverterTest {
 
 我们刚刚模仿我们的`DataProvider`返回了两个字符串。但是如果我们运行它，测试就会失败:
 
-```
+```java
 java.lang.NullPointerException: Cannot invoke "DataProvider.getValues()" because "this.dataProvider" is null
 ```
 
 这是因为我们的模拟没有正确初始化。`@Mock`和`@InjectMocks`注释目前什么都不做。我们可以通过实现`init()`方法来解决这个问题:
 
-```
+```java
 @Before
 public void init() {
     MockitoAnnotations.openMocks(this);
@@ -118,7 +118,7 @@ public void init() {
 
 如果我们不想使用注释，我们也可以以编程方式创建和注入模拟:
 
-```
+```java
 @Before
 public void init() {
     dataProvider = Mockito.mock(DataProvider.class);
@@ -130,7 +130,7 @@ public void init() {
 
 接下来，让我们回到我们的第一个版本，删除`init()`方法，并使用`MockitoJUnitRunner`注释该类:
 
-```
+```java
 @RunWith(MockitoJUnitRunner.class)
 public class StringConverterTest {
     // ...
@@ -143,7 +143,7 @@ public class StringConverterTest {
 
 我们应该记住，所有的运行程序最初都是为 JUnit 4 设计的。如果我们想在 JUnit 5 中支持 Mockito 注释，我们可以使用`MockitoExtension`:
 
-```
+```java
 @ExtendWith(MockitoExtension.class)
 public class StringConverterTest {
     // ...
@@ -158,7 +158,7 @@ public class StringConverterTest {
 
 首先，让我们用 [`SpringRunner`](https://web.archive.org/web/20221115052649/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/context/junit4/SpringRunner.html) 类代替`MockitoJUnitRunner`，并检查结果:
 
-```
+```java
 @RunWith(SpringRunner.class)
 public class StringConverterTest {
     // ...
@@ -171,7 +171,7 @@ public class StringConverterTest {
 
 让我们重写我们的测试:
 
-```
+```java
 @ContextConfiguration(classes = StringConverter.class)
 @RunWith(SpringRunner.class)
 public class StringConverterTest {
@@ -191,7 +191,7 @@ public class StringConverterTest {
 
 如果我们要为`SpringRunner`寻找一个对应的扩展，我们应该使用`SpringExtension`:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 public class StringConverterTest {
     // ...

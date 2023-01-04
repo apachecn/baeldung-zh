@@ -16,7 +16,7 @@ PowerMock 与 EasyMock 和 Mockito 等模仿框架集成，旨在为这些框架
 
 首先，让我们将使用 PowerMock 和 Mockito 以及 JUnit 所需的依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-junit4</artifactId>
@@ -37,7 +37,7 @@ PowerMock 与 EasyMock 和 Mockito 等模仿框架集成，旨在为这些框架
 
 让我们从一个`LuckyNumberGenerator.` 的例子开始。这个类有一个生成幸运数字的公共方法:
 
-```
+```java
 public int getLuckyNumber(String name) {
     saveIntoDatabase(name);
     if (name == null) {
@@ -55,7 +55,7 @@ public int getLuckyNumber(String name) {
 
 作为一个简单的例子，让我们模拟一个没有参数的私有方法的行为，并强制它返回所需的值:
 
-```
+```java
 LuckyNumberGenerator mock = spy(new LuckyNumberGenerator());
 
 when(mock, "getDefaultLuckyNumber").thenReturn(300); 
@@ -67,7 +67,7 @@ when(mock, "getDefaultLuckyNumber").thenReturn(300);
 
 接下来，让我们用一个参数模拟一个私有方法的行为，并强制它返回所需的值:
 
-```
+```java
 LuckyNumberGenerator mock = spy(new LuckyNumberGenerator());
 
 doReturn(1).when(mock, "getComputedLuckyNumber", ArgumentMatchers.anyInt()); 
@@ -81,7 +81,7 @@ doReturn(1).when(mock, "getComputedLuckyNumber", ArgumentMatchers.anyInt());
 
 我们最后的策略是使用 PowerMock 来验证私有方法的调用:
 
-```
+```java
 LuckyNumberGenerator mock = spy(new LuckyNumberGenerator());
 int result = mock.getLuckyNumber("Tyranosorous");
 

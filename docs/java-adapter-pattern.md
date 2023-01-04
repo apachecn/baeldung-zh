@@ -22,7 +22,7 @@
 
 首先，我们将创建原始接口`Movable`,它应该返回一些豪华车的速度，单位是英里/小时:
 
-```
+```java
 public interface Movable {
     // returns speed in MPH 
     double getSpeed();
@@ -31,7 +31,7 @@ public interface Movable {
 
 我们现在将创建该接口的一个具体实现:
 
-```
+```java
 public class BugattiVeyron implements Movable {
 
     @Override
@@ -43,7 +43,7 @@ public class BugattiVeyron implements Movable {
 
 现在我们将创建一个适配器接口`MovableAdapter`，它将基于同一个 `Movable`类。它可能会稍加修改，以在不同的情况下产生不同的结果:
 
-```
+```java
 public interface MovableAdapter {
     // returns speed in KM/H 
     double getSpeed();
@@ -52,7 +52,7 @@ public interface MovableAdapter {
 
 该接口的实现将由用于转换的私有方法`convertMPHtoKMPH()` 组成:
 
-```
+```java
 public class MovableAdapterImpl implements MovableAdapter {
     private Movable luxuryCars;
 
@@ -71,7 +71,7 @@ public class MovableAdapterImpl implements MovableAdapter {
 
 现在我们将只使用我们的适配器中定义的方法，我们将得到转换后的速度。在这种情况下，以下断言将为真:
 
-```
+```java
 @Test
 public void whenConvertingMPHToKMPH_thenSuccessfullyConverted() {
     Movable bugattiVeyron = new BugattiVeyron();

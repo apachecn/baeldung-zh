@@ -16,7 +16,7 @@ Java 8 包含了一个更好的日期和时间 API 来解决旧库的缺点。
 
 以下依赖关系应包含在`pom.xml`文件中:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>joda-time</groupId>
@@ -39,7 +39,7 @@ Java 8 包含了一个更好的日期和时间 API 来解决旧库的缺点。
 
 `LocalDate `有许多处理日期的方法，让我们看看如何用它来完成同样的任务:
 
-```
+```java
 public static String addOneDay(String date) {
     return LocalDate
       .parse(date)
@@ -52,7 +52,7 @@ public static String addOneDay(String date) {
 
 现在，让我们验证这个方法是否如预期的那样工作:
 
-```
+```java
 @Test
 public void givenDate_whenUsingJava8_thenAddOneDay() 
   throws Exception {
@@ -68,7 +68,7 @@ public void givenDate_whenUsingJava8_thenAddOneDay()
 
 我们将它与`java.text.SimpleDateFormat `一起用于日期格式化:
 
-```
+```java
 public static String addOneDayCalendar(String date) 
   throws ParseException {
 
@@ -84,7 +84,7 @@ public static String addOneDayCalendar(String date)
 
 同样，让我们确保这种方法按预期工作:
 
-```
+```java
 @Test
 public void givenDate_whenUsingCalendar_thenAddOneDay() 
   throws Exception {
@@ -100,7 +100,7 @@ public void givenDate_whenUsingCalendar_thenAddOneDay()
 
 让我们看看如何使用它将日期增加一天:
 
-```
+```java
 public static String addOneDayJodaTime(String date) {
     DateTime dateTime = new DateTime(date);
     return dateTime
@@ -113,7 +113,7 @@ public static String addOneDayJodaTime(String date) {
 
 我们可以验证上面的代码与下面的单元测试一起工作:
 
-```
+```java
 @Test
 public void givenDate_whenUsingJodaTime_thenAddOneDay() throws Exception {
     String incrementedDate = addOneDayJodaTime("2018-07-03");
@@ -127,7 +127,7 @@ public void givenDate_whenUsingJodaTime_thenAddOneDay() throws Exception {
 
 对于我们的任务，我们可以使用`org.apache.commons.lang3.time.DateUtils `类及其`addDays() `方法(注意`SimpleDateFormat`再次用于日期格式化):
 
-```
+```java
 public static String addOneDayApacheCommons(String date) 
   throws ParseException {
 
@@ -141,7 +141,7 @@ public static String addOneDayApacheCommons(String date)
 
 像往常一样，我们将通过单元测试来验证结果:
 
-```
+```java
 @Test
 public void givenDate_whenUsingApacheCommons_thenAddOneDay()
   throws Exception {

@@ -83,7 +83,7 @@ Lombok 通过 [APT](https://web.archive.org/web/20220726143610/https://docs.orac
 
 剩下的最后一部分是确保 Lombok 二进制文件在编译器类路径上。使用 Maven，我们可以将依赖关系添加到`pom.xml`:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.projectlombok</groupId>
@@ -98,7 +98,7 @@ Lombok 通过 [APT](https://web.archive.org/web/20220726143610/https://docs.orac
 
 现在一切应该都好了。源代码应该在 IDE 中正确编译和执行，没有错误:
 
-```
+```java
 public class UserIntegrationTest {
 
     @Test

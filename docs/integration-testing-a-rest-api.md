@@ -36,7 +36,7 @@ Explore the basics of REST-assured - a library that simplifies the testing and v
 
 ## 2。测试状态代码
 
-```
+```java
 @Test
 public void givenUserDoesNotExists_whenUserInfoIsRetrieved_then404IsReceived()
   throws ClientProtocolException, IOException {
@@ -61,7 +61,7 @@ public void givenUserDoesNotExists_whenUserInfoIsRetrieved_then404IsReceived()
 
 ## 3。测试媒体类型
 
-```
+```java
 @Test
 public void 
 givenRequestWithNoAcceptHeader_whenRequestIsExecuted_thenDefaultResponseContentTypeIsJson()
@@ -86,7 +86,7 @@ givenRequestWithNoAcceptHeader_whenRequestIsExecuted_thenDefaultResponseContentT
 
 ## 4。测试 JSON 负载
 
-```
+```java
 @Test
 public void 
   givenUserExists_whenUserInformationIsRetrieved_thenRetrievedResourceIsCorrect()
@@ -111,7 +111,7 @@ public void
 
 我们将使用 Jackson 2 将原始 JSON 字符串解组成一个类型安全的 Java 实体:
 
-```
+```java
 public class GitHubUser {
 
     private String login;
@@ -122,7 +122,7 @@ public class GitHubUser {
 
 我们只使用一个简单的实用程序来保持测试的整洁、易读和高抽象水平:
 
-```
+```java
 public static <T> T retrieveResourceFromResponse(HttpResponse response, Class<T> clazz) 
   throws IOException {
 

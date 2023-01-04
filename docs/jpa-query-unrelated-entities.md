@@ -12,7 +12,7 @@
 
 首先，我们需要为 [Java 持久性 API](https://web.archive.org/web/20221128035216/https://search.maven.org/artifact/javax.persistence/javax.persistence-api) 添加一个依赖项:
 
-```
+```java
 <dependency>
    <groupId>javax.persistence</groupId>
    <artifactId>javax.persistence-api</artifactId>
@@ -22,7 +22,7 @@
 
 然后，我们为实现 Java 持久性 API 的 [Hibernate ORM](https://web.archive.org/web/20221128035216/https://search.maven.org/artifact/org.hibernate/hibernate-core) 添加一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>
@@ -32,7 +32,7 @@
 
 最后，我们添加一些 [QueryDSL](/web/20221128035216/https://www.baeldung.com/querydsl-with-jpa-tutorial) 依赖项；即，`[querydsl-apt](https://web.archive.org/web/20221128035216/https://search.maven.org/artifact/com.querydsl/querydsl-apt)`[`querydsl-jpa`](https://web.archive.org/web/20221128035216/https://search.maven.org/artifact/com.querydsl/querydsl-jpa):
 
-```
+```java
 <dependency>
     <groupId>com.querydsl</groupId>
     <artifactId>querydsl-apt</artifactId>
@@ -63,7 +63,7 @@
 
 我们可以很容易地创建两个 JPA 实体来表示我们的表:
 
-```
+```java
 @Entity
 @Table(name = "menu")
 public class Cocktail {
@@ -78,7 +78,7 @@ public class Cocktail {
 } 
 ```
 
-```
+```java
 @Entity
 @Table(name="recipes")
 public class Recipe {
@@ -97,7 +97,7 @@ public class Recipe {
 
 为了在我们的`Cocktail`实体中表示这种关系，我们添加了用各种注释标注的`recipe`字段:
 
-```
+```java
 @Entity
 @Table(name = "menu")
 public class Cocktail {
@@ -130,13 +130,13 @@ public class Cocktail {
 
 我们可以构造查询的一种方法是使用 [JPQL](https://web.archive.org/web/20221128035216/https://docs.oracle.com/html/E13946_04/ejb3_langref.html) :
 
-```
+```java
 entityManager.createQuery("select c from Cocktail c join c.recipe")
 ```
 
 或者使用 QueryDSL 框架:
 
-```
+```java
 new JPAQuery<Cocktail>(entityManager)
   .from(QCocktail.cocktail)
   .join(QCocktail.cocktail.recipe)
@@ -146,13 +146,13 @@ new JPAQuery<Cocktail>(entityManager)
 
 我们可以使用 JPQL 做到这一点:
 
-```
+```java
 entityManager.createQuery("select c from Cocktail c join Recipe r on c.name = r.cocktail")
 ```
 
 或者使用 QueryDSL 框架:
 
-```
+```java
 new JPAQuery(entityManager)
   .from(QCocktail.cocktail)
   .join(QRecipe.recipe)
@@ -163,7 +163,7 @@ new JPAQuery(entityManager)
 
 让我们开始创建一个单元测试来测试上面的查询。在我们的测试用例运行之前，我们必须插入一些数据到我们的数据库表中。
 
-```
+```java
 public class UnrelatedEntitiesUnitTest {
     // ...
 
@@ -195,7 +195,7 @@ public class UnrelatedEntitiesUnitTest {
 
 现在，我们可以测试前一部分的查询结果。我们知道只有`mojito` 鸡尾酒有关联的`Recipe` 实体，所以我们希望各种查询只返回`mojito` 鸡尾酒:
 
-```
+```java
 public class UnrelatedEntitiesUnitTest {
     // ...
 
@@ -243,7 +243,7 @@ public class UnrelatedEntitiesUnitTest {
 [![one to many](img/09c7f89895901f2481c61e7d90913365.png)](/web/20221128035216/https://www.baeldung.com/wp-content/uploads/2020/04/one-to-many.png) 
 我们用`multiple_recipes`表代替了`recipes`表，在这里我们可以为同一个`cocktail`存储任意多的`recipes`。
 
-```
+```java
 @Entity
 @Table(name = "multiple_recipes")
 public class MultipleRecipe {
@@ -263,7 +263,7 @@ public class MultipleRecipe {
 
 现在，**`Cocktail`实体通过一对多的底层关系**与`MultipleRecipe`实体相关联:
 
-```
+```java
 @Entity
 @Table(name = "cocktails")
 public class Cocktail {    
@@ -288,20 +288,20 @@ public class Cocktail {
 
 我们可以使用 JPQL 做到这一点:
 
-```
+```java
 entityManager.createQuery("select c from Cocktail c join c.recipeList");
 ```
 
 或者使用 QueryDSL 框架:
 
-```
+```java
 new JPAQuery(entityManager).from(QCocktail.cocktail)
   .join(QCocktail.cocktail.recipeList);
 ```
 
 还有一个选项是不使用定义了`Cocktail`和`MultipleRecipe` 实体`.` 之间一对多关系的`recipeList` 字段，相反，我们可以为这两个实体编写一个连接查询，并通过使用 JPQL“on”子句来确定它们的底层关系:
 
-```
+```java
 entityManager.createQuery("select c "
   + "from Cocktail c join MultipleRecipe mr "
   + "on mr.cocktail = c.name");
@@ -309,7 +309,7 @@ entityManager.createQuery("select c "
 
 最后，我们可以通过使用 QueryDSL 框架来构建相同的查询:
 
-```
+```java
 new JPAQuery(entityManager).from(QCocktail.cocktail)
   .join(QMultipleRecipe.multipleRecipe)
   .on(QCocktail.cocktail.name.eq(QMultipleRecipe.multipleRecipe.cocktail)); 
@@ -319,7 +319,7 @@ new JPAQuery(entityManager).from(QCocktail.cocktail)
 
 这里，我们将添加一个新的测试用例来测试前面的查询。在这样做之前，我们必须在我们的`setup` 方法中持久化一些`MultipleRecipe` 实例:
 
-```
+```java
 public class UnrelatedEntitiesUnitTest {    
     // ...
 
@@ -347,7 +347,7 @@ public class UnrelatedEntitiesUnitTest {
 
 然后我们可以开发一个测试用例，在这里我们验证当我们在上一节中展示的查询被执行时，它们返回与至少一个`MultipleRecipe`实例相关联的`Cocktail `实体:
 
-```
+```java
 public class UnrelatedEntitiesUnitTest {
     // ...
 
@@ -389,7 +389,7 @@ public class UnrelatedEntitiesUnitTest {
 
 为了在我们的领域中描述上述内容，我们将`category`字段添加到`Cocktail` 实体中:
 
-```
+```java
 @Entity
 @Table(name = "menu")
 public class Cocktail {
@@ -404,7 +404,7 @@ public class Cocktail {
 
 此外，我们可以将`base_ingredient`列添加到`multiple_recipes`表中，以便能够搜索基于特定饮料的食谱。
 
-```
+```java
 @Entity
 @Table(name = "multiple_recipes")
 public class MultipleRecipe {
@@ -425,7 +425,7 @@ public class MultipleRecipe {
 
 为了找到并获得`MultipleRecipe`实体，它们的`baseIngredient `作为一个类别存在于`Cocktail `实体中，我们可以使用 JPQL 连接这两个实体:
 
-```
+```java
 entityManager.createQuery("select distinct r " 
   + "from MultipleRecipe r " 
   + "join Cocktail c " 
@@ -434,7 +434,7 @@ entityManager.createQuery("select distinct r "
 
 或者使用 QueryDSL:
 
-```
+```java
 QCocktail cocktail = QCocktail.cocktail; 
 QMultipleRecipe multipleRecipe = QMultipleRecipe.multipleRecipe; 
 new JPAQuery(entityManager).from(multipleRecipe)
@@ -447,7 +447,7 @@ new JPAQuery(entityManager).from(multipleRecipe)
 
 在继续我们的测试用例之前，我们必须设置我们的`Cocktail`实体的`category`和我们的`MultipleRecipe`实体的`baseIngredient`:
 
-```
+```java
 public class UnrelatedEntitiesUnitTest {
     // ...
 
@@ -469,7 +469,7 @@ public class UnrelatedEntitiesUnitTest {
 
 然后，我们可以验证当我们之前显示的查询被执行时，它们返回预期的结果:
 
-```
+```java
 public class UnrelatedEntitiesUnitTest {
     // ...
 

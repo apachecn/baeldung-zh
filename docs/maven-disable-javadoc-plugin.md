@@ -12,7 +12,7 @@ Apache Maven Javadoc 插件允许我们在 Maven 构建期间为指定的项目�
 
 我们可以在我们的`pom.xml`中配置 Maven Javadoc 插件来生成 Javadoc 并将它们附加到构建的`jar`文件中，例如:
 
-```
+```java
 ...
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
@@ -39,7 +39,7 @@ Maven Javadoc 插件提供了一个 [`maven.javadoc.skip`](https://web.archive.o
 
 如果我们在构建项目时使用值`true`传递这个选项，我们的 Maven 构建将不会生成 Javadocs:
 
-```
+```java
 mvn clean install -Dmaven.javadoc.skip=true
 ```
 
@@ -55,13 +55,13 @@ Maven 发布插件广泛用于自动发布管理。
 
 第一种方法是，当我们开始一个发布构建时，向`mvn`命令行传递一个参数:
 
-```
+```java
 mvn release:perform -Darguments="-Dmaven.javadoc.skip=true"
 ```
 
 或者，我们可以在 Maven 发布插件配置中添加`maven.javadoc.skip=true`参数:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-release-plugin</artifactId>

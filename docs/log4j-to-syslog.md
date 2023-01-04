@@ -18,7 +18,7 @@ Log4j2 是 Log4j 的最新版本。这是高性能日志记录的常见选择，
 
 让我们从将 [`spring-boot-starter-log4j2`](https://web.archive.org/web/20221007193344/https://search.maven.org/search?q=a:spring-boot-starter-log4j2) 依赖项添加到我们的`pom.xml`开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-log4j2</artifactId>
@@ -28,7 +28,7 @@ Log4j2 是 Log4j 的最新版本。这是高性能日志记录的常见选择，
 
 为了在 Spring Boot 应用程序中配置 Log4j2，我们需要从`pom.xml`中的任何启动器库中排除默认的`Logback`日志框架。在我们的项目中，只有`spring-boot-starter-web`启动器依赖项。让我们将默认日志排除在外:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -45,7 +45,7 @@ Log4j2 是 Log4j 的最新版本。这是高性能日志记录的常见选择，
 
 现在，我们将创建 Log4j2 配置文件。Spring Boot 项目在类路径中搜索`log4j2-spring.xml`或`log4j2.xml` 文件。让我们在`resource`目录中配置一个简单的`log4j2-spring.xml`:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
     <Appenders>
@@ -68,7 +68,7 @@ Log4j2 是 Log4j 的最新版本。这是高性能日志记录的常见选择，
 
 Appenders 是日志框架中的主要组件，它将日志数据传递到目的地。Log4j2 支持许多附加器，比如 Syslog 附加器。让我们更新我们的`log4j2-spring.xml`文件，添加 Syslog appender，用于将日志记录数据发送到 Syslog 服务器:
 
-```
+```java
 <Syslog name="Syslog" format="RFC5424" host="localhost" port="514"
     protocol="UDP" appName="baeldung" facility="LOCAL0" />
 ```
@@ -91,7 +91,7 @@ Syslog appender 有许多属性:
 
 **我们的`rsyslog`配置应该匹配 Log4j2 设置。**`rsyslog`配置在`/etc/rsyslog.conf`文件中定义。在 Log4j2 配置中，我们分别为`protocol`和`port`使用 UDP 和端口 514。因此，我们将在`rsyslog.conf`文件中添加或取消注释以下行:
 
-```
+```java
 # provides UDP syslog reception
 module(load="imudp")
 input(type="imudp" port="514") 
@@ -99,7 +99,7 @@ input(type="imudp" port="514")
 
 在这种情况下，我们设置`module(load=”imudp”)`来加载`imudp`模块，以便通过 UDP 接收 Syslog 消息。然后，我们使用 `input`配置将`port`设置为 514。`input`将端口分配给模块。之后，我们应该重启`rsyslog`服务器:
 
-```
+```java
 sudo service rsyslog restart
 ```
 
@@ -109,7 +109,7 @@ sudo service rsyslog restart
 
 让我们创建一个简单的记录几条消息的 Spring Boot 应用程序:
 
-```
+```java
 @SpringBootApplication
 public class SpringBootSyslogApplication {
 
@@ -130,13 +130,13 @@ public class SpringBootSyslogApplication {
 
 记录信息存储在`/var/log/`目录中。让我们检查一下`syslog`文件:
 
-```
+```java
 tail -f /var/log/syslog
 ```
 
 当我们运行我们的 Spring Boot 应用程序时，我们将看到我们的日志消息:
 
-```
+```java
 Jun 30 19:49:35 baeldung[16841] Info log message
 Jun 30 19:49:35 baeldung[16841] Error log message
 Jun 30 19:49:35 baeldung[16841] Warn log message

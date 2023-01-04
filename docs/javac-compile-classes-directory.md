@@ -18,7 +18,7 @@
 
 然后，让我们用`javac`将`MyClass.java`文件编译到`out`目录中:
 
-```
+```java
 $ javac -d ./out/ ./src/com/baeldung/MyClass.java
 ```
 
@@ -30,7 +30,7 @@ $ javac -d ./out/ ./src/com/baeldung/MyClass.java
 
 要编译上述所有四个 Java 文件，我们可以在命令行中列出它们:
 
-```
+```java
 $ javac -d ./out/ \
 ./src/com/baeldung/MyClass.java \
 ./src/com/baeldung/YourClass.java \
@@ -42,7 +42,7 @@ $ javac -d ./out/ \
 
 在这种情况下，我们只需要编译`Main.java`文件:
 
-```
+```java
 $ javac -sourcepath ./src/ -d ./out/ ./src/com/baeldung/Main.java
 ```
 
@@ -50,7 +50,7 @@ $ javac -sourcepath ./src/ -d ./out/ ./src/com/baeldung/Main.java
 
 `-sourcepath`选项告诉 Java 编译器在哪里可以找到输入源文件。如果没有指定`-sourcepath`选项，`javac`将利用用户类路径来搜索类文件和源文件。因此，我们可以用`-classpath`或`-cp`选项替换`-sourcepath`选项:
 
-```
+```java
 $ javac -cp ./src/ -d ./out/ ./src/com/baeldung/Main.java
 ```
 
@@ -66,7 +66,7 @@ $ javac -cp ./src/ -d ./out/ ./src/com/baeldung/Main.java
 
 例如，我们可以使用通配符来编译上面的源文件:
 
-```
+```java
 $ javac -d ./out/ ./src/com/baeldung/*.java
 ```
 
@@ -76,7 +76,7 @@ $ javac -d ./out/ ./src/com/baeldung/*.java
 
 现在，在命令行中，我们可以用通配符列出每个包来编译它们:
 
-```
+```java
 $ javac -d ./out/ \
 ./src/com/baeldung/*.java \
 ./src/com/baeldung/spring/*.java \
@@ -93,13 +93,13 @@ $ javac -d ./out/ \
 
 要使用一个参数文件，我们需要在参数文件名前面加上 at 符号(`@`)前导字符:
 
-```
+```java
 $ javac -d ./out/ @sources.txt
 ```
 
 但是怎样才能生成这样一个`@sources.txt`文件呢？这取决于我们使用的操作系统。在 Linux 或 macOS 中，我们可以使用`find`命令:
 
-```
+```java
 $ find ./src/ -type f -name "*.java" > sources.txt
 ```
 
@@ -107,7 +107,7 @@ $ find ./src/ -type f -name "*.java" > sources.txt
 
 但是，在 Windows 中，我们可以使用`dir`命令:
 
-```
+```java
 > dir src /b /s *.java > sources.txt
 ```
 
@@ -127,26 +127,26 @@ Bash 版本增加了一个新的名为`globstar`的 globbing 选项，它以不�
 
 目前，我们只关心`globstar`选项:
 
-```
+```java
 $ shopt globstar
 globstar       	off
 ```
 
 为了启用它，我们使用带有`-s`选项的`shopt`命令:
 
-```
+```java
 $ shopt -s globstar
 ```
 
 要禁用它，我们调用带有 `-u`选项的`shopt`命令:
 
-```
+```java
 $ shopt -u globstar
 ```
 
 启用该选项后，我们可以用双通配符调用**:**
 
-```
+```java
 $ javac -d ./out/ ./src/**/*.java
 ```
 
@@ -156,13 +156,13 @@ $ javac -d ./out/ ./src/**/*.java
 
 为了编译我们的 Java 源文件，我们可以组合使用`find`、`xargs`和`javac`命令:
 
-```
+```java
 $ find ./src/ -type f -name "*.java" | xargs javac -cp ./src/ -d ./out/
 ```
 
 另外，`find`命令支持`-exec`动作:
 
-```
+```java
 $ find ./src/ -type f -name "*.java" -exec javac -cp ./src/ -d ./out/ '{}' ';'
 ```
 
@@ -170,7 +170,7 @@ $ find ./src/ -type f -name "*.java" -exec javac -cp ./src/ -d ./out/ '{}' ';'
 
 **要快一点，我们可以把分号(`;`)改成加号(`+` )** 。然后，`javac`命令将收集所有匹配的文件，并且只执行一次:
 
-```
+```java
 $ find ./src/ -type f -name "*.java" -exec javac -cp ./src/ -d ./out/ '{}' +
 ```
 

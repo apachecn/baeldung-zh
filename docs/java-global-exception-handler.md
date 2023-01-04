@@ -30,7 +30,7 @@ Java 是一种健壮的编程语言。使其健壮的核心特性之一是异常
 
 `catch`块捕获`try`块中的代码引发的`Exception`对象:
 
-```
+```java
 String string = "01, , 2010";
 DateFormat format = new SimpleDateFormat("MM, dd, yyyy");
 Date date;
@@ -47,7 +47,7 @@ try {
 
 通常，调用方法在以下情况下处理异常:
 
-```
+```java
 public class ExceptionHandler {
 
     public static void main(String[] args) {
@@ -92,7 +92,7 @@ class DateParser {
 
 这个类实现了方法`uncaughtException()`，并定义了处理其中未捕获异常的逻辑:
 
-```
+```java
 public class GlobalExceptionHandler {
 
     public static void main(String[] args) {
@@ -121,7 +121,7 @@ class Handler implements Thread.UncaughtExceptionHandler {
 
 这同样适用于未处理的已检查异常。让我们看一个简单的例子:
 
-```
+```java
 public static void main(String[] args) throws Exception {
     Handler globalExceptionHandler = new Handler();
     Thread.setDefaultUncaughtExceptionHandler(globalExceptionHandler);

@@ -22,7 +22,7 @@
 
 因此，请遵守以下示例中的`x-constraints`规范。这足以让 Swagger 知道我们需要生成另一种不同于已知类型的注释:
 
-```
+```java
 openapi: 3.0.1
 info:
   version: "1.0"
@@ -53,7 +53,7 @@ components:
 
 如上所述，我们将描述一个端点，以同样的方式按名称查找所有宠物。为了演示我们的目的，让我们假设我们的系统是区分大小写的，因此我们将为输入参数`name` 再次添加相同的`x-constraints` 验证:
 
-```
+```java
 /pets:
     # post defined here
     get: 
@@ -89,7 +89,7 @@ components:
 
 首先，我们制作注释接口—`@Capitalized`:
 
-```
+```java
 @Documented
 @Constraint(validatedBy = {Capitalized.class})
 @Target({ElementType.PARAMETER, ElementType.FIELD, ElementType.METHOD})
@@ -105,7 +105,7 @@ public @interface Capitalized{
 
 接下来，我们添加上面的`@Constraint` 注释中提到的`CapitalizedValidator`:
 
-```
+```java
 public class CapitalizedValidator implements ConstraintValidator<Capitalized, String> {
 
     @Override
@@ -123,7 +123,7 @@ public class CapitalizedValidator implements ConstraintValidator<Capitalized, St
 
 因此，在 OpenAPI 生成器插件中，在`<configuration>[..]</configuration` 标签内，我们需要添加一个模板目录:
 
-```
+```java
 <plugin>  
   //... 
   <executions>
@@ -147,19 +147,19 @@ public class CapitalizedValidator implements ConstraintValidator<Capitalized, St
 
 首先，`swagger-codegen `模块的`[beanValidationCore.mustache](https://web.archive.org/web/20221030081812/https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/modules/swagger-codegen/src/main/resources/Java/beanValidationCore.mustache)`需要修改，增加一个厂商扩展规范:
 
-```
+```java
 {{{ vendorExtensions.x-constraints }}}
 ```
 
 其次，如果我们有一个带有类似于`@Capitalized(required = “true”)`的内部属性的注释，那么需要在`[beanValidationCore.mustache](https://web.archive.org/web/20221030081812/https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/modules/swagger-codegen/src/main/resources/Java/beanValidationCore.mustache)`文件的第二行指定一个特定的模式:
 
-```
+```java
 {{#required}}@Capitalized(required="{{{pattern}}}") {{/required}}
 ```
 
 第三，我们需要修改`[model.mustache](https://web.archive.org/web/20221030081812/https://github.com/swagger-api/swagger-codegen/blob/master/modules/swagger-codegen/src/main/resources/Java/model.mustache)`规范来包含必要的导入。例如，我们将导入 `@Capitalized`注释和`Capitalized` `.` ，这些导入应该被插入到 [`model.mustache` :](https://web.archive.org/web/20221030081812/https://github.com/swagger-api/swagger-codegen/blob/master/modules/swagger-codegen/src/main/resources/Java/model.mustache) 的`package`标签之后
 
-```
+```java
 {{#imports}}import {{import}}; {{/imports}} import 
 com.baeldung.openapi.petstore.validator.CapitalizedValidator; 
 import com.baeldung.openapi.petstore.validator.Capitalized;
@@ -167,7 +167,7 @@ import com.baeldung.openapi.petstore.validator.Capitalized;
 
 最后，为了在 API 中生成注释，我们需要为`[api.mustache](https://web.archive.org/web/20221030081812/https://github.com/swagger-api/swagger-codegen/blob/master/modules/swagger-codegen/src/main/resources/Java/api.mustache)`文件中的`@Capitalized` 注释添加导入。
 
-```
+```java
 {{#imports}}import {{import}}; {{/imports}} import 
 com.baeldung.openapi.petstore.validator.Capitalized;
 ```
@@ -178,7 +178,7 @@ com.baeldung.openapi.petstore.validator.Capitalized;
 
 最后，我们可以使用生成的代码。我们至少需要运行。这将生成模型:
 
-```
+```java
 public class Pet {
     @JsonProperty("id")
     private Long id = null;
@@ -192,7 +192,7 @@ public class Pet {
 
 它还会生成一个 API:
 
-```
+```java
 default ResponseEntity<List<Pet>> findPetsByTags(
     @Capitalized(required = true)
     @ApiParam(value = "Tags to filter by") 
@@ -213,7 +213,7 @@ default ResponseEntity<List<Pet>> findPetsByTags(
 
 这个`Pet`型号有个小写的`name`。因此，应用程序应该返回 400 错误请求:
 
-```
+```java
 curl -X 'POST' \
   'http://localhost:8080/pet' \
   -H 'accept: application/json' \
@@ -228,7 +228,7 @@ curl -X 'POST' \
 
 与上面的方式相同，因为`name `是小写的，所以应用程序也应该返回一个 400 错误请求:
 
-```
+```java
 curl -I http://localhost:8080/pets/name="rockie"
 ```
 

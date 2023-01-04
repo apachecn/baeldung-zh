@@ -17,7 +17,7 @@
 
 让我们从一个简单的 Java 项目的`build.gradle`文件开始，它有两个依赖项:
 
-```
+```java
 apply plugin: 'java'
 
 repositories {
@@ -41,7 +41,7 @@ dependencies {
 
 让我们给 Gradle 任务添加一些修改:
 
-```
+```java
 jar {
     manifest {
         attributes "Main-Class": "com.baeldung.fatjar.Application"
@@ -59,7 +59,7 @@ jar {
 
 下面的代码将添加一个名为`customFatJar:`的新任务
 
-```
+```java
 task customFatJar(type: Jar) {
     manifest {
         attributes 'Main-Class': 'com.baeldung.fatjar.Application'
@@ -77,7 +77,7 @@ task customFatJar(type: Jar) {
 
 在这个例子中，我们将使用 [Shadow](https://web.archive.org/web/20220910153856/https://github.com/johnrengelman/shadow) 插件:
 
-```
+```java
 buildscript {
     repositories {
         mavenCentral()

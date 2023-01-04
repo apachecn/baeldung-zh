@@ -52,37 +52,37 @@ Java 8 附带了几个新特性，但最重要的特性如下:
 
 方法引用是一个 Java 8 构造，可以用来引用一个方法而不用调用它。它用于将方法视为 Lambda 表达式。它们只是作为句法糖来减少一些 lambdas 的冗长。这种方式下的代码:
 
-```
+```java
 (o) -> o.toString();
 ```
 
 可以变成:
 
-```
+```java
 Object::toString();
 ```
 
 方法引用可以由分隔类名或对象名以及方法名的双冒号来标识。它有不同的变体，例如构造函数引用:
 
-```
+```java
 String::new;
 ```
 
 静态方法引用:
 
-```
+```java
 String::valueOf;
 ```
 
 绑定实例方法引用:
 
-```
+```java
 str::toString;
 ```
 
 未绑定的实例方法引用:
 
-```
+```java
 String::toString;
 ```
 
@@ -108,7 +108,7 @@ String::toString;
 
 但是，它返回一个`Optional`值，可能是`Optional.empty()`(第二种情况)。这使我们能够轻松处理这样的情况:
 
-```
+```java
 int min1 = Arrays.stream(new int[]{1, 2, 3, 4, 5})
   .min()
   .orElse(0);
@@ -148,7 +148,7 @@ assertEquals(0, min2);
 
 例如，`Runnable`接口是一个函数接口，所以不用:
 
-```
+```java
 Thread thread = new Thread(new Runnable() {
     public void run() {
         System.out.println("Hello World!");
@@ -158,7 +158,7 @@ Thread thread = new Thread(new Runnable() {
 
 我们可以简单地做:
 
-```
+```java
 Thread thread = new Thread(() -> System.out.println("Hello World!"));
 ```
 
@@ -172,7 +172,7 @@ Thread thread = new Thread(() -> System.out.println("Hello World!"));
 
 我们可以使用默认方法向接口添加新功能，同时保持与已经实现该接口的类的向后兼容性:
 
-```
+```java
 public interface Vehicle {
     public void move();
     default void hoot() {
@@ -189,7 +189,7 @@ Java 8 引入了默认方法，这样,`Collection`接口可以有一个默认的
 
 ### Q2。下面的代码会编译吗？
 
-```
+```java
 @FunctionalInterface
 public interface Function2<T, U, V> {
     public V apply(T t, U u);
@@ -216,7 +216,7 @@ public interface Function2<T, U, V> {
 
 lambda 表达式由两部分组成，参数部分和表达式部分由向前箭头分隔:
 
-```
+```java
 params -> expressions
 ```
 
@@ -251,7 +251,7 @@ params -> expressions
 
 此外，`Stream` API 是流畅的，允许流水线操作:
 
-```
+```java
 int sum = Arrays.stream(new int[]{1, 2, 3})
   .filter(i -> i >= 2)
   .map(i -> i * 3)
@@ -272,7 +272,7 @@ int sum = Arrays.stream(new int[]{1, 2, 3})
 
 为了说明这一点，让我们看一个有副作用的例子:
 
-```
+```java
 public static void main(String[] args) {
     System.out.println("Stream without terminal operation");
 
@@ -291,7 +291,7 @@ public static void main(String[] args) {
 
 输出如下所示:
 
-```
+```java
 Stream without terminal operation
 Stream with terminal operation
 doubling 1
@@ -315,7 +315,7 @@ doubling 3
 
 这里有一个例子，我们获取了一个用户姓名和电话列表的地图，并将其“扁平化”为所有使用`flatMap`的用户的电话列表:
 
-```
+```java
 Map<String, List<String>> people = new HashMap<>();
 people.put("John", Arrays.asList("555-1123", "555-3389"));
 people.put("Mary", Arrays.asList("555-2243", "555-5264"));

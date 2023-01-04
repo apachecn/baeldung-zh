@@ -20,19 +20,19 @@ JBang 让学生、教育工作者和专业开发人员**以前所未有的轻松
 
 在带有 bash 兼容 shell 的 Linux、Mac 或 Windows 上，我们可以使用 curl:
 
-```
+```java
 curl -Ls https://sh.jbang.dev | bash -s - app setup
 ```
 
 或者在使用 PowerShell 的 Windows 上，我们可以使用 iex:
 
-```
+```java
 iex "& { $(iwr https://ps.jbang.dev) } app setup"
 ```
 
 在这两种情况下，当在新系统上运行时，会打印出如下内容:
 
-```
+```java
 $ curl -Ls https://sh.jbang.dev | bash -s - app setup
 Downloading JBang...
 Installing JBang...
@@ -47,7 +47,7 @@ Please start a new Shell for changes to take effect
 
 要检查 JBang 安装是否正确，启动一个新的 shell 并运行 `jbang version.` JBang 将打印出版本信息(注意:JBang 经常发布，所以版本可能已经更高了):
 
-```
+```java
 $ jbang version
 0.83.1
 ```
@@ -58,7 +58,7 @@ $ jbang version
 
 为了**创建我们的第一个 Java 文件，我们可以使用 `jbang init`** :
 
-```
+```java
 $ jbang init hello.java
 [jbang] File initialized. You can now run it with 'jbang hello.java' or edit it using 'jbang edit --open=[editor] hello.java' where [editor] is your editor or IDE, e.g. 'netbeans'
 
@@ -66,7 +66,7 @@ $ jbang init hello.java
 
 如果我们的 shell 允许，我们现在可以用`jbang hello.java`或`./hello.java`来运行它。让我们试着运行两次:
 
-```
+```java
 ./hello.java
 [jbang] Building jar...
 Hello World
@@ -80,13 +80,13 @@ JBang 第二次重用已经构建好的 jar 时，源代码没有改变。
 
 让我们使它更令人兴奋，并创建一个使用外部依赖的 java 文件。我们可以使用模板来实现:
 
-```
+```java
 jbang init -t cli hellocli.java
 ```
 
 `cli`是可用的默认模板之一。通过运行 `jbang template list`，我们可以看到可供使用的列表:
 
-```
+```java
 $ jbang template list
 agent = Agent template
 cli = CLI template
@@ -99,7 +99,7 @@ qrest = Quarkus REST template
 
 当我们运行我们创建的 hellocli.java 时，我们应该看到它获取 Picocli 依赖项并使用我们传入的参数:
 
-```
+```java
 $ jbang hellocli.java Baeldung
 [jbang] Resolving dependencies...
 [jbang]     Resolving info.picocli:picocli:4.5.0...Done
@@ -114,7 +114,7 @@ Hello Baeldung
 
 现在，如果我们看看 hello.java 或 hellocli.java，我们会看到它只是一个普通的 java 类:
 
-```
+```java
 ///usr/bin/env jbang "$0" "[[email protected]](/web/20221208073738/https://www.baeldung.com/cdn-cgi/l/email-protection)" ; exit $?
 //DEPS info.picocli:picocli:4.5.0
 
@@ -178,7 +178,7 @@ JBang 文档中有更多的例子。
 
 对于资源，语法是`//FILES <mountpoint>[=<sourcefile>]`。
 
-```
+```java
 //FILES resource.properties
 //FILES META-INF/resources/index.html=index.html
 ```
@@ -189,7 +189,7 @@ All locations are relative to the script location.
 
 下面是一个包含多个文件的最小但完整的工作示例:
 
-```
+```java
 ///usr/bin/env jbang "$0" "[[email protected]](/web/20221208073738/https://www.baeldung.com/cdn-cgi/l/email-protection)" ; exit $?
 // Update the Quarkus version to what you want here or run jbang with
 // `-Dquarkus.version=<version>` to override it.

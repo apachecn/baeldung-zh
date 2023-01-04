@@ -18,7 +18,7 @@
 
 让我们添加 [JUnit](https://web.archive.org/web/20221107202800/https://search.maven.org/search?q=g:org.junit.jupiter%20AND%20a:junit-jupiter-api) 和 [Mockito](https://web.archive.org/web/20221107202800/https://search.maven.org/search?q=g:org.mockito%20AND%20a:mockito-core) 依赖项:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.junit.jupiter</groupId>
@@ -39,7 +39,7 @@
 
 我们将从添加名为`Task` : 的实体类开始
 
-```
+```java
 public class Task {
     private String name;
 
@@ -49,7 +49,7 @@ public class Task {
 
 接下来，让我们创建一个负责与数据库交互的[DAO](/web/20221107202800/https://www.baeldung.com/java-dao-pattern):
 
-```
+```java
 public class TaskDAO {
     public void save(Task task) throws Exception {
         // save the task
@@ -61,7 +61,7 @@ public class TaskDAO {
 
 接下来，让我们创建一个调用 DAO 的`TaskService`:
 
-```
+```java
 public class TaskService {
 
     private final TaskDAO taskDAO = new TaskDAO();
@@ -82,7 +82,7 @@ public class TaskService {
 
 让我们试着为上面的`saveTask()`方法写一个单元测试:
 
-```
+```java
 @Test
 void givenDAOThrowsException_whenSaveTaskIsCalled_thenSystemExitIsCalled() throws Exception {
     Task task = new Task("test");
@@ -109,7 +109,7 @@ void givenDAOThrowsException_whenSaveTaskIsCalled_thenSystemExitIsCalled() throw
 
 让我们看看安全管理器的实现:
 
-```
+```java
 class NoExitSecurityManager extends SecurityManager {
     @Override
     public void checkPermission(Permission perm) {
@@ -133,7 +133,7 @@ class NoExitSecurityManager extends SecurityManager {
 
 下一步是修改测试以使用`SecurityManager`实现。我们将**添加`setUp()`和`tearDown()`方法来设置和移除测试运行时的安全管理器** : 
 
-```
+```java
 @BeforeEach
 void setUp() {
     System.setSecurityManager(new NoExitSecurityManager());
@@ -142,7 +142,7 @@ void setUp() {
 
 最后，让**改变测试用例来捕捉`System.exit()`被调用**时会抛出的`RuntimeException`:
 
-```
+```java
 @Test
 void givenDAOThrowsException_whenSaveTaskIsCalled_thenSystemExitIsCalled() throws Exception {
     Task task = new Task("test");
@@ -167,7 +167,7 @@ void givenDAOThrowsException_whenSaveTaskIsCalled_thenSystemExitIsCalled() throw
 
 让我们从添加 [`system-lambda`](https://web.archive.org/web/20221107202800/https://search.maven.org/search?q=g:com.github.stefanbirkner%20AND%20a:system-lambda) 依赖关系开始:
 
-```
+```java
 <dependency>
     <groupId>com.github.stefanbirkner</groupId>
     <artifactId>system-lambda</artifactId>
@@ -180,7 +180,7 @@ void givenDAOThrowsException_whenSaveTaskIsCalled_thenSystemExitIsCalled() throw
 
 接下来，让我们修改测试用例。我们将**用库的`catchSystemExit()`方法包装我们的原始测试代码。这个方法将阻止系统退出，而是返回退出代码**。然后我们将断言退出代码:
 
-```
+```java
 @Test
 void givenDAOThrowsException_whenSaveTaskIsCalled_thenSystemExitIsCalled() throws Exception {
     int statusCode = catchSystemExit(() -> {
@@ -202,7 +202,7 @@ void givenDAOThrowsException_whenSaveTaskIsCalled_thenSystemExitIsCalled() throw
 
 让我们添加 [JMockit](https://web.archive.org/web/20221107202800/https://mvnrepository.com/artifact/org.jmockit/jmockit/1.49) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.jmockit</groupId>
     <artifactId>jmockit</artifactId>
@@ -213,7 +213,7 @@ void givenDAOThrowsException_whenSaveTaskIsCalled_thenSystemExitIsCalled() throw
 
 除此之外，我们还需要为 JMockit 添加`-javaagent` JVM 初始化参数。为此我们可以使用 [Maven Surefire](/web/20221107202800/https://www.baeldung.com/maven-surefire-plugin) 插件:
 
-```
+```java
 <plugins>
     <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -233,7 +233,7 @@ void givenDAOThrowsException_whenSaveTaskIsCalled_thenSystemExitIsCalled() throw
 
 让我们修改测试来模拟`System.exit()` : 
 
-```
+```java
 @Test
 public void givenDAOThrowsException_whenSaveTaskIsCalled_thenSystemExitIsCalled() throws Exception {
     new MockUp<System>() {

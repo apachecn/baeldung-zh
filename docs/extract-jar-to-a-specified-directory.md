@@ -14,7 +14,7 @@
 
 Java 提供了`jar`命令来创建、更新、查看和提取 JAR 文件。接下来，让我们使用`jar`命令提取 Guava 的 JAR 文件:
 
-```
+```java
 $ tree /tmp/test/jarTest
 /tmp/test/jarTest
 └── guava-31.1-jre.jar
@@ -55,7 +55,7 @@ $ tree /tmp/test/jarTest
 
 首先，让我们创建一个新目录`/tmp/test/newTarget`:
 
-```
+```java
 $ mkdir /tmp/test/newTarget
 
 $ tree /tmp/test/newTarget
@@ -65,7 +65,7 @@ $ tree /tmp/test/newTarget
 
 接下来，让我们进入目标目录，然后提取 Guava 的 JAR 文件:
 
-```
+```java
 $ cd /tmp/test/newTarget && jar xf /tmp/test/jarTest/guava-31.1-jre.jar 
 $ tree /tmp/test/newTarget
 /tmp/test/newTarget
@@ -91,7 +91,7 @@ $ tree /tmp/test/newTarget
 
 我们可以创建一个 shell 函数来自动创建目录并修改 JAR 文件的路径。让我们先来看看这个函数，然后了解它是如何工作的:
 
-```
+```java
 #!/bin/bash
 
 xJarTo() {
@@ -130,7 +130,7 @@ xJarTo() {
 
 首先，让我们测试这样一个场景，目标目录是新的，JAR 文件是一个绝对路径:
 
-```
+```java
 $ pwd
 /tmp/test
 
@@ -153,7 +153,7 @@ $ pwd
 
 接下来，让我们测试相对 JAR 路径场景:
 
-```
+```java
 $ pwd
 /tmp/test/jarTest
 
@@ -183,7 +183,7 @@ JAR 文件使用 ZIP 压缩。所以，**所有的解压工具都可以解压 JA
 
 那么接下来，让我们以 [`unzip`](https://web.archive.org/web/20221231082751/https://linux.die.net/man/1/unzip) 为例，展示一下流行的 [`yum`和`apt`](/web/20221231082751/https://www.baeldung.com/linux/yum-and-apt) 包管理器的安装命令:
 
-```
+```java
 # apt
 sudo apt install unzip
 
@@ -193,7 +193,7 @@ sudo yum install unzip
 
 **`unzip`命令支持`-d`选项，将 ZIP 存档解压到不同的目录**:
 
-```
+```java
 $ unzip guava-31.1-jre.jar -d /tmp/unzip_new_dir
 $ tree /tmp/unzip_new_dir
 /tmp/unzip_new_dir

@@ -34,7 +34,7 @@ GraphQL 是一种查询语言，由脸书创建，目的是基于直观和灵活
 
 让我们用 IDL 来演示一个例子:
 
-```
+```java
 type User {
     firstName: String
 }
@@ -42,7 +42,7 @@ type User {
 
 现在，一个使用 Java 代码的模式定义的例子:
 
-```
+```java
 GraphQLObjectType userType = newObject()
   .name("User")  
   .field(newFieldDefinition()
@@ -57,7 +57,7 @@ GraphQLObjectType userType = newObject()
 
 例如，让我们为用户/电子邮件创建一个 GraphQL 模式，可以这样指定:
 
-```
+```java
 schema {
     query: QueryType
 }
@@ -97,7 +97,7 @@ GraphQL 还使得使用 [Java 注释](https://web.archive.org/web/20221128111009
 
 为了创建我们的示例，让我们首先开始导入依赖于 [Graphql-java-annotations](https://web.archive.org/web/20221128111009/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.graphql-java%22%20AND%20a%3A%22graphql-java-annotations%22) 模块的所需依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.graphql-java</groupId>
     <artifactId>graphql-java-annotations</artifactId>
@@ -109,7 +109,7 @@ GraphQL 还使得使用 [Java 注释](https://web.archive.org/web/20221128111009
 
 让我们也导入 Ratpack 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>io.ratpack</groupId>
     <artifactId>ratpack-core</artifactId>
@@ -121,7 +121,7 @@ GraphQL 还使得使用 [Java 注释](https://web.archive.org/web/20221128111009
 
 让我们创建一个例子:一个简单的 API，为用户提供一个“CRUDL”(创建、检索、更新、删除和列表)。首先，让我们创建我们的`User` POJO:
 
-```
+```java
 @GraphQLName("user")
 public class User {
 
@@ -142,7 +142,7 @@ public class User {
 
 接下来，我们将创建`UserHandler`类。这个类从选择的 HTTP 连接器库(在我们的例子中，Ratpack)继承了一个处理程序方法，它将管理和调用 GraphQL 的`Resolver` 特性。因此，将请求(JSON 有效负载)重定向到适当的查询或变异操作:
 
-```
+```java
 @Override
 public void handle(Context context) throws Exception {
     context.parse(Map.class)
@@ -166,7 +166,7 @@ public void handle(Context context) throws Exception {
 
 现在，将支持查询操作的类，即`UserQuery.` 如前所述，所有从服务器向客户端检索数据的方法都由该类管理:
 
-```
+```java
 @GraphQLName("query")
 public class UserQuery {
 
@@ -186,7 +186,7 @@ public class UserQuery {
 
 类似于`UserQuery,`,现在我们创建`UserMutation,` ,它将管理所有旨在改变存储在服务器端的某些给定数据的操作:
 
-```
+```java
 @GraphQLName("mutation")
 public class UserMutation {
 
@@ -206,7 +206,7 @@ public class UserMutation {
 
 *   **对于创建操作:**
 
-```
+```java
 {
     "query": "mutation($name: String! $email: String!){
        createUser (name: $name email: $email) { id name email age } }",
@@ -219,7 +219,7 @@ public class UserMutation {
 
 作为服务器对此操作的响应:
 
-```
+```java
 {
     "data": {
         "createUser": {
@@ -233,7 +233,7 @@ public class UserMutation {
 
 *   **对于检索操作:**
 
-```
+```java
 {
     "query": "query($id: String!){ retrieveUser (id: $id) {name email} }",
     "parameters": {
@@ -244,7 +244,7 @@ public class UserMutation {
 
 作为服务器对此操作的响应:
 
-```
+```java
 {
     "data": {
         "retrieveUser": {
@@ -257,7 +257,7 @@ public class UserMutation {
 
 GraphQL 提供了客户端可以定制响应的特性。因此，在作为示例的最后一个检索操作中，我们可以只返回电子邮件，而不是返回姓名和电子邮件:
 
-```
+```java
 {
     "query": "query($id: String!){ retrieveUser (id: $id) {email} }",
     "parameters": {
@@ -268,7 +268,7 @@ GraphQL 提供了客户端可以定制响应的特性。因此，在作为示例
 
 因此，从 GraphQL 服务器返回的信息将只返回请求的数据:
 
-```
+```java
 {
     "data": {
         "retrieveUser": {

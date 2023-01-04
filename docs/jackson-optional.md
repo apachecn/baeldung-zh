@@ -16,7 +16,7 @@
 
 要使用 Jackson，让我们确保使用的是最新版本的:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-core</artifactId>
@@ -28,7 +28,7 @@
 
 然后，让我们创建一个包含一个普通字段和一个字段的类`Book,` :
 
-```
+```java
 public class Book {
    String title;
    Optional<String> subTitle;
@@ -43,7 +43,7 @@ public class Book {
 
 现在，让我们实例化一个`Book`:
 
-```
+```java
 Book book = new Book();
 book.setTitle("Oliver Twist");
 book.setSubTitle(Optional.of("The Parish Boy's Progress"));
@@ -51,13 +51,13 @@ book.setSubTitle(Optional.of("The Parish Boy's Progress"));
 
 最后，让我们尝试使用杰克逊 [`ObjectMapper`](https://web.archive.org/web/20230102111125/https://github.com/FasterXML/jackson-databind/blob/master/docs/javadoc/2.2/com/fasterxml/jackson/databind/ObjectMapper.html) 来序列化它:
 
-```
+```java
 String result = mapper.writeValueAsString(book);
 ```
 
 我们将看到,`Optional`字段的输出不包含它的值，而是一个嵌套的 JSON 对象，它有一个名为`present`的字段:
 
-```
+```java
 {"title":"Oliver Twist","subTitle":{"present":true}}
 ```
 
@@ -71,7 +71,7 @@ String result = mapper.writeValueAsString(book);
 
 现在，让我们颠倒一下之前的例子，这次尝试将一个对象反序列化为一个`Optional.` ,我们会看到现在我们得到了一个`[JsonMappingException](https://web.archive.org/web/20230102111125/https://github.com/FasterXML/jackson-databind/blob/master/docs/javadoc/2.0/com/fasterxml/jackson/databind/JsonMappingException.html):`
 
-```
+```java
 @Test(expected = JsonMappingException.class)
 public void givenFieldWithValue_whenDeserializing_thenThrowException
     String bookJson = "{ \"title\": \"Oliver Twist\", \"subTitle\": \"foo\" }";
@@ -81,7 +81,7 @@ public void givenFieldWithValue_whenDeserializing_thenThrowException
 
 让我们来查看堆栈跟踪:
 
-```
+```java
 com.fasterxml.jackson.databind.JsonMappingException:
   Can not construct instance of java.util.Optional:
   no String-argument constructor/factory method to deserialize from String value ('The Parish Boy's Progress')
@@ -99,7 +99,7 @@ com.fasterxml.jackson.databind.JsonMappingException:
 
 首先，让我们添加最新版本作为 Maven 依赖项:
 
-```
+```java
 <dependency>
    <groupId>com.fasterxml.jackson.datatype</groupId>
    <artifactId>jackson-datatype-jdk8</artifactId>
@@ -109,7 +109,7 @@ com.fasterxml.jackson.databind.JsonMappingException:
 
 现在，我们需要做的就是用我们的`ObjectMapper`注册模块:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 mapper.registerModule(new Jdk8Module());
 ```
@@ -118,7 +118,7 @@ mapper.registerModule(new Jdk8Module());
 
 现在，让我们来测试一下。如果我们再次尝试序列化我们的`Book` 对象，我们会看到现在有一个`subtitle,` 而不是嵌套的 JSON:
 
-```
+```java
 Book book = new Book();
 book.setTitle("Oliver Twist");
 book.setSubTitle(Optional.of("The Parish Boy's Progress"));
@@ -130,7 +130,7 @@ assertThat(from(serializedBook).getString("subTitle"))
 
 如果我们尝试序列化一本空书，它将被存储为`null`:
 
-```
+```java
 book.setSubTitle(Optional.empty());
 String serializedBook = mapper.writeValueAsString(book);
 
@@ -141,7 +141,7 @@ assertThat(from(serializedBook).getString("subTitle")).isNull();
 
 现在，让我们重复我们的反序列化测试。如果我们重读我们的书，我们会发现我们不再得到一个`JsonMappingException:`
 
-```
+```java
 Book newBook = mapper.readValue(result, Book.class);
 
 assertThat(newBook.getSubTitle()).isEqualTo(Optional.of("The Parish Boy's Progress"));
@@ -149,7 +149,7 @@ assertThat(newBook.getSubTitle()).isEqualTo(Optional.of("The Parish Boy's Progre
 
 最后，让我们再次重复测试，这次用`null.` 我们将再次看到我们没有得到`JsonMappingException,` ，事实上，有一个空的`Optional:`
 
-```
+```java
 assertThat(newBook.getSubTitle()).isEqualTo(Optional.empty());
 ```
 

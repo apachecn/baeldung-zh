@@ -10,7 +10,7 @@
 
 Lombok 是一个帮助我们消除 Java 应用程序中几乎所有标准样板文件的库。我们将测试许多属性和配置。第一件事是添加[龙目岛](https://web.archive.org/web/20220627165851/https://search.maven.org/search?q=a:lombok%20AND%20g:%20org.projectlombok)属地:
 
-```
+```java
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>
@@ -29,7 +29,7 @@ Lombok 的配置系统为我们提供了许多有价值的设置，这些设置�
 
 首先要提到的一件事是，要讨论的特性属性太多了。出于这个原因，我们将只看到最常见的。要检查可用选项，让我们转到 [Lombok 的页面](https://web.archive.org/web/20220627165851/https://projectlombok.org/download)，下载 jar，并在终端中运行以下命令:
 
-```
+```java
 java -jar lombok.jar config -g --verbose 
 ```
 
@@ -37,7 +37,7 @@ java -jar lombok.jar config -g --verbose
 
 现在，让我们来看一个典型的`lombok.config`文件:
 
-```
+```java
 config.stopBubbling = true
 lombok.anyconstructor.addconstructorproperties = false
 lombok.addLombokGeneratedAnnotation = true
@@ -58,7 +58,7 @@ lombok.experimental.flagUsage = WARNING
 
 我们要讨论的第一个关键是 `lombok.anyConstructor.addConstructorProperties.`，它将`@java.beans.ConstructorProperties`注释添加到所有带参数的构造函数中。通常，在构造函数上使用反射的框架需要这个注释来映射属性，并知道构造函数中参数的正确顺序。下面是 Lombok 版本的代码:
 
-```
+```java
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -71,7 +71,7 @@ public class Account {
 
 下面是生成的代码:
 
-```
+```java
 public class Account {
     private double balance;
     private String accountHolder;
@@ -102,7 +102,7 @@ public class Account {
 
 作为第一个特性特定的键 `lombok.accessors.chain,`，如果`true`，改变 setter 方法的行为。这些方法将返回`this`，而不是`void` 返回`,`。允许链接呼叫，如下所示:
 
-```
+```java
 @Test
 void should_initialize_account() {
     Account myAccount = new Account()
@@ -118,14 +118,14 @@ void should_initialize_account() {
 
 用户配置时，`lombok.log.fieldName`键改变生成日志字段的名称。默认情况下，`lombok.log.fieldName`键使用`log`来命名字段，但是在我们的例子中，我们将其改为`domainLog`:
 
-```
+```java
 #Log name customization
 lombok.log.fieldName = domainLog
 ```
 
 然后我们可以看到它的运行:
 
-```
+```java
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -149,7 +149,7 @@ public class Account {
 
 接下来是`lombok.(featureName).flagUsage.` 这组属性有`warning`、`error,`和`allow` 作为可能的值。我们可以使用它们来控制在我们的项目中允许哪些 Lombok 特性。例如，如果使用了任何实验特征，可以使用单词`experimental`和值`warning`在日志中输出一条消息:
 
-```
+```java
 /home/dev/repository/git/tutorials/lombok/src/main/java/com/baeldung/lombok/configexamples/TransactionLog.java:9:
  warning: Use of any lombok.experimental feature is flagged according to lombok configuration.
 @Accessors(prefix = {"op"})
@@ -161,7 +161,7 @@ public class Account {
 
 要给列表添加注释，用户必须使用下面的表达式:`lombok.copyableAnnotations` `+= com.test.MyAnnotation`。本库使用这种机制来传播前面提到的可空注释:
 
-```
+```java
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -180,7 +180,7 @@ public class Account {
 
 现在，由 Lombok 生成的代码:
 
-```
+```java
 public class Account {
 
     @Generated
@@ -222,7 +222,7 @@ public class Account {
 
 最后，我们有一个`clear lombok.(anyConfigKey)` 指令。将任何配置密钥恢复为默认值。如果有人更改了任何父配置文件中给定键的值，它现在将被忽略。我们可以使用指令`clear,`，后跟任何 Lombok 配置键:
 
-```
+```java
 clear lombok.addNullAnnotations
 ```
 
@@ -232,7 +232,7 @@ clear lombok.addNullAnnotations
 
 **将一个配置文件导入另一个文件时，指令必须放在文件的顶部，路径可以是相对的，也可以是绝对的**:
 
-```
+```java
 ##     relative or absolute path  
 import lombok_feature.config
 
@@ -244,7 +244,7 @@ lombok.addSuppressWarnings = false
 
 为了便于说明，导入的文件:
 
-```
+```java
 # lombok_feature.config file
 
 lombok.experimental.flagUsage = warning

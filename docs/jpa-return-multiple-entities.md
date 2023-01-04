@@ -16,7 +16,7 @@
 
 首先，让我们看一下`Channel`实体:
 
-```
+```java
 @Entity
 public class Channel {
     @Id
@@ -37,7 +37,7 @@ public class Channel {
 
 现在，让我们看看`Subscription`实体:
 
-```
+```java
 @Entity
 public class Subscription {
     @Id
@@ -54,7 +54,7 @@ public class Subscription {
 
 让我们再来看看`User`实体:
 
-```
+```java
 @Entity
 public class User {
     @Id
@@ -83,7 +83,7 @@ public class User {
 
 让我们看看我们的例子。假设我们想获取用户用给定的电子邮件`.`购买的分配给`Subscriptions `的所有【The JPA 查询看起来是这样的:
 
-```
+```java
 SELECT c, s, u
   FROM Channel c, Subscription s, User u
   WHERE c.subscriptionId = s.id AND s.id = u.subscriptionId AND u.email=:email
@@ -95,7 +95,7 @@ SELECT c, s, u
 
 让我们看看实际情况。我们创建了一个专用的存储库类，用于创建查询和获取结果:
 
-```
+```java
 public class ReportRepository {
     private final EntityManagerFactory emf;
 
@@ -119,7 +119,7 @@ public class ReportRepository {
 
 让我们看看如何从获取的列表中提取单个实体:
 
-```
+```java
 List<Object[]> reportDetails = reportRepository.find("[[email protected]](/web/20220926191644/https://www.baeldung.com/cdn-cgi/l/email-protection)");
 
 for (Object[] reportDetail : reportDetails) {

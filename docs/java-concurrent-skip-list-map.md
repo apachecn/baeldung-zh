@@ -16,7 +16,7 @@
 
 首先，让我们定义事件数据的结构:
 
-```
+```java
 public class Event {
     private ZonedDateTime eventTime;
     private String content;
@@ -27,7 +27,7 @@ public class Event {
 
 我们希望使用`eventTime` 字段对事件进行排序。为了使用`ConcurrentSkipListMap,`实现这一点，我们需要向其构造函数传递一个`Comparator`，同时创建它的一个实例:
 
-```
+```java
 ConcurrentSkipListMap<ZonedDateTime, String> events
  = new ConcurrentSkipListMap<>(
  Comparator.comparingLong(v -> v.toInstant().toEpochMilli()));
@@ -37,7 +37,7 @@ ConcurrentSkipListMap<ZonedDateTime, String> events
 
 当我们的事件到达时，我们只需要使用`put()` 方法将它们添加到地图中。请注意，此方法不需要任何显式同步:
 
-```
+```java
 public void acceptEvent(Event event) {
     events.put(event.getEventTime(), event.getContent());
 }
@@ -47,7 +47,7 @@ public void acceptEvent(Event event) {
 
 `ConcurrentSkipListMap` 最显著的优点是能够以无锁的方式制作其数据的不可变快照的方法。要获取在过去一分钟内到达的所有事件，我们可以使用`tailMap()` 方法并传递我们想要获取元素的时间:
 
-```
+```java
 public ConcurrentNavigableMap<ZonedDateTime, String> getEventsFromLastMinute() {
     return events.tailMap(ZonedDateTime.now().minusMinutes(1));
 } 
@@ -57,7 +57,7 @@ public ConcurrentNavigableMap<ZonedDateTime, String> getEventsFromLastMinute() {
 
 我们现在可以获得从现在起一分钟后到达的所有事件——通过使用`headMap()` 方法:
 
-```
+```java
 public ConcurrentNavigableMap<ZonedDateTime, String> getEventsOlderThatOneMinute() {
     return events.headMap(ZonedDateTime.now().minusMinutes(1));
 }
@@ -69,7 +69,7 @@ public ConcurrentNavigableMap<ZonedDateTime, String> getEventsOlderThatOneMinute
 
 一旦我们使用`ConcurrentSkipListMap,` 实现了我们的排序逻辑，我们现在可以通过创建两个写线程来测试它，这两个写线程将分别发送一百个事件:
 
-```
+```java
 ExecutorService executorService = Executors.newFixedThreadPool(3);
 EventWindowSort eventWindowSort = new EventWindowSort();
 int numberOfThreads = 2;
@@ -89,14 +89,14 @@ for (int i = 0; i < numberOfThreads; i++) {
 
 同时，我们可以调用`getEventsFromLastMinute()` 方法，该方法将返回一分钟窗口内的事件快照:
 
-```
+```java
 ConcurrentNavigableMap<ZonedDateTime, String> eventsFromLastMinute 
   = eventWindowSort.getEventsFromLastMinute();
 ```
 
 根据生产者线程将事件发送到`EventWindowSort.` 的速度，`eventsFromLastMinute` 中的事件数量将在每次测试运行中变化。我们可以断言，返回的快照中没有一个事件超过一分钟:
 
-```
+```java
 long eventsOlderThanOneMinute = eventsFromLastMinute
   .entrySet()
   .stream()
@@ -108,7 +108,7 @@ assertEquals(eventsOlderThanOneMinute, 0);
 
 并且快照中在一分钟窗口内的事件多于零个:
 
-```
+```java
 long eventYoungerThanOneMinute = eventsFromLastMinute
   .entrySet()
   .stream()
@@ -122,14 +122,14 @@ assertTrue(eventYoungerThanOneMinute > 0);
 
 现在让我们测试使用来自`ConcurrentSkipListMap:`的`headMap()` 方法的`getEventsOlderThatOneMinute()`
 
-```
+```java
 ConcurrentNavigableMap<ZonedDateTime, String> eventsFromLastMinute 
   = eventWindowSort.getEventsOlderThatOneMinute();
 ```
 
 这一次，我们获得了一分钟之前的事件的快照。我们可以断言，这样的事件不仅仅是零:
 
-```
+```java
 long eventsOlderThanOneMinute = eventsFromLastMinute
   .entrySet()
   .stream()
@@ -141,7 +141,7 @@ assertTrue(eventsOlderThanOneMinute > 0);
 
 其次，没有一个事件是在最后一分钟发生的:
 
-```
+```java
 long eventYoungerThanOneMinute = eventsFromLastMinute
   .entrySet()
   .stream()

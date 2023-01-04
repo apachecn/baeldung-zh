@@ -14,7 +14,7 @@
 
 让我们从介绍一个简单的实体开始，我们将在整个教程中使用它:
 
-```
+```java
 public class User {
     private int id;
     private String name;
@@ -44,7 +44,7 @@ Java 本地序列化的优点是:
 
 首先，我们的类需要**实现`[Serializable](https://web.archive.org/web/20221027185710/https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/io/Serializable.html)`接口**:
 
-```
+```java
 public class User implements Serializable {
     //fields and methods
 }
@@ -52,13 +52,13 @@ public class User implements Serializable {
 
 接下来，我们需要给**添加 [`serialVersionU` `ID`属性](/web/20221027185710/https://www.baeldung.com/java-serial-version-uid)** :
 
-```
+```java
 private static final long serialVersionUID = 1L;
 ```
 
 现在，让我们创建一个`User`对象:
 
-```
+```java
 User user = new User();
 user.setId(1);
 user.setName("Mark");
@@ -66,13 +66,13 @@ user.setName("Mark");
 
 我们需要提供一个文件路径来保存数据:
 
-```
+```java
 String filePath = "src/test/resources/protocols/user.txt"; 
 ```
 
 现在，是时候将我们的`User`对象序列化为一个文件了:
 
-```
+```java
 FileOutputStream fileOutputStream = new FileOutputStream(filePath);
 ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 objectOutputStream.writeObject(user);
@@ -82,7 +82,7 @@ objectOutputStream.writeObject(user);
 
 另一方面，我们可以从同一个文件中读取`User`对象并反序列化它:
 
-```
+```java
 FileInputStream fileInputStream = new FileInputStream(filePath);
 ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 User deserializedUser = (User) objectInputStream.readObject();
@@ -90,7 +90,7 @@ User deserializedUser = (User) objectInputStream.readObject();
 
 最后，我们可以测试加载对象的状态:
 
-```
+```java
 assertEquals(1, deserializedUser.getId());
 assertEquals("Mark", deserializedUser.getName());
 ```
@@ -101,7 +101,7 @@ assertEquals("Mark", deserializedUser.getName());
 
 当尝试序列化具有某些不可序列化属性的对象时，自定义序列化可能特别有用。这可以通过实现`[Externalizable](https://web.archive.org/web/20221027185710/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/Externalizable.html)` 接口来实现，该接口有两个方法:
 
-```
+```java
 public void writeExternal(ObjectOutput out) throws IOException;
 
 public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException;
@@ -128,7 +128,7 @@ Gson 是一个托管在 [GitHub](https://web.archive.org/web/20221027185710/http
 
 让我们添加对 [Gson 库](https://web.archive.org/web/20221027185710/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.google.code.gson%22%20AND%20a%3A%22gson%22)的依赖:
 
-```
+```java
 <dependency>
     <groupId>com.google.code.gson</groupId>
     <artifactId>gson</artifactId>
@@ -140,7 +140,7 @@ Gson 是一个托管在 [GitHub](https://web.archive.org/web/20221027185710/http
 
 首先，让我们创建一个`User`对象:
 
-```
+```java
 User user = new User();
 user.setId(1);
 user.setName("Mark"); 
@@ -148,13 +148,13 @@ user.setName("Mark");
 
 接下来，我们需要提供一个文件路径来保存 JSON 数据:
 
-```
+```java
 String filePath = "src/test/resources/protocols/gson_user.json";
 ```
 
 现在，让我们使用来自`Gson`类的`toJson()`方法将`User`对象序列化到“`gson_user.json”`文件中:
 
-```
+```java
 Writer writer = new FileWriter(filePath);
 Gson gson = new GsonBuilder().setPrettyPrinting().create();
 gson.toJson(user, writer); 
@@ -166,14 +166,14 @@ gson.toJson(user, writer);
 
 让我们读取 JSON 文件并将数据反序列化到一个`User`对象中:
 
-```
+```java
 Gson gson = new GsonBuilder().setPrettyPrinting().create();
 User deserializedUser = gson.fromJson(new FileReader(filePath), User.class);
 ```
 
 最后，我们可以测试反序列化的数据:
 
-```
+```java
 assertEquals(1, deserializedUser.getId());
 assertEquals("Mark", deserializedUser.getName()); 
 ```
@@ -201,7 +201,7 @@ Gson 具有许多重要特性，包括:
 
 让我们为 [添加依赖杰克逊库](https://web.archive.org/web/20221027185710/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.fasterxml.jackson.core%22) :
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-core</artifactId>
@@ -225,7 +225,7 @@ Gson 具有许多重要特性，包括:
 
 让我们从创建一个`User`对象开始:
 
-```
+```java
 User user = new User();
 user.setId(1);
 user.setName("Mark Jonson"); 
@@ -233,13 +233,13 @@ user.setName("Mark Jonson");
 
 之后，让我们提供一个文件路径来存储我们的 JSON 数据:
 
-```
+```java
 String filePath = "src/test/resources/protocols/jackson_user.json";
 ```
 
 现在，我们可以使用`ObjectMapper`类将`User`对象存储到 JSON 文件中:
 
-```
+```java
 File file = new File(filePath);
 ObjectMapper mapper = new ObjectMapper();
 mapper.writeValue(file, user); 
@@ -253,13 +253,13 @@ mapper.writeValue(file, user);
 
 让我们从 JSON 文件中读取`User`对象:
 
-```
+```java
 User deserializedUser = mapper.readValue(new File(filePath), User.class);
 ```
 
 我们总是可以测试加载的数据:
 
-```
+```java
 assertEquals(1, deserializedUser.getId());
 assertEquals("Mark Jonson", deserializedUser.getName()); 
 ```
@@ -290,7 +290,7 @@ assertEquals("Mark Jonson", deserializedUser.getName());
 
 首先，让我们为[YAML bean](https://web.archive.org/web/20221027185710/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.esotericsoftware.yamlbeans%22%20AND%20a%3A%22yamlbeans%22)添加依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.esotericsoftware.yamlbeans</groupId>
     <artifactId>yamlbeans</artifactId>
@@ -300,7 +300,7 @@ assertEquals("Mark Jonson", deserializedUser.getName());
 
 现在。让我们创建一个`User`对象的地图:
 
-```
+```java
 private Map<String, User> populateUserMap() {
     User user1 = new User();
     user1.setId(1);
@@ -317,13 +317,13 @@ private Map<String, User> populateUserMap() {
 
 之后，我们需要提供一个文件路径来存储我们的数据:
 
-```
+```java
 String filePath = "src/test/resources/protocols/yamlbeans_users.yaml";
 ```
 
 现在，我们可以使用`YamlWriter`类将地图序列化为 YAML 文件:
 
-```
+```java
 YamlWriter writer = new YamlWriter(new FileWriter(filePath));
 writer.write(populateUserMap());
 writer.close(); 
@@ -331,7 +331,7 @@ writer.close();
 
 另一方面，我们可以使用`YamlReader`类来反序列化地图:
 
-```
+```java
 YamlReader reader = new YamlReader(new FileReader(filePath));
 Object object = reader.read();
 assertTrue(object instanceof Map); 
@@ -339,7 +339,7 @@ assertTrue(object instanceof Map);
 
 最后，我们可以测试加载的地图:
 
-```
+```java
 Map<String, User> deserializedUsers = (Map<String, User>) object;
 assertEquals(4, deserializedUsers.size());
 assertEquals("Mark Jonson", (deserializedUsers.get("User1").getName()));
@@ -382,7 +382,7 @@ Thrift 还支持容器类型的序列化——列表、集合和映射。
 
 为了在我们的应用程序中使用 Apache Thrift 框架，让我们添加 [Thrift 库](https://web.archive.org/web/20221027185710/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.thrift%22%20AND%20a%3A%22libthrift%22):
 
-```
+```java
 <dependency>
     <groupId>org.apache.thrift</groupId>
     <artifactId>libthrift</artifactId>
@@ -398,7 +398,7 @@ Apache Thrift 协议和传输被设计为作为一个分层堆栈一起工作。
 
 首先，我们需要一个`User`对象:
 
-```
+```java
 User user = new User();
 user.setId(2);
 user.setName("Greg");
@@ -406,14 +406,14 @@ user.setName("Greg");
 
 下一步是创建二进制协议:
 
-```
+```java
 TMemoryBuffer trans = new TMemoryBuffer(4096);
 TProtocol proto = new TBinaryProtocol(trans);
 ```
 
 现在，让我们序列化我们的数据`.` 我们可以使用`write`API 来完成:
 
-```
+```java
 proto.writeI32(user.getId());
 proto.writeString(user.getName());
 ```
@@ -422,14 +422,14 @@ proto.writeString(user.getName());
 
 让我们使用`read`API 来反序列化数据:
 
-```
+```java
 int userId = proto.readI32();
 String userName = proto.readString();
 ```
 
 最后，我们可以测试加载的数据:
 
-```
+```java
 assertEquals(2, userId);
 assertEquals("Greg", userName);
 ```
@@ -452,7 +452,7 @@ assertEquals("Greg", userName);
 
 让我们从添加对 [Google 协议缓冲库](https://web.archive.org/web/20221027185710/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.google.protobuf%22%20AND%20a%3A%22protobuf-java%22)的依赖开始:
 
-```
+```java
 <dependency>
     <groupId>com.google.protobuf</groupId>
     <artifactId>protobuf-java</artifactId>
@@ -464,7 +464,7 @@ assertEquals("Greg", userName);
 
 解决了依赖关系后，我们现在可以定义消息格式了:
 
-```
+```java
 syntax = "proto3";
 package protobuf;
 option java_package = "com.baeldung.serialization.protocols";
@@ -481,7 +481,7 @@ message User {
 
 一旦我们有了 protobuf 文件，我们就可以使用`protoc`编译器从它生成代码:
 
-```
+```java
 protoc -I=. --java_out=. user.proto
 ```
 
@@ -489,7 +489,7 @@ protoc -I=. --java_out=. user.proto
 
 之后，我们可以创建一个`UserProtos` 类的实例:
 
-```
+```java
 UserProtos.User user = UserProtos.User.newBuilder().setId(1234).setName("John Doe").build();
 ```
 
@@ -497,13 +497,13 @@ UserProtos.User user = UserProtos.User.newBuilder().setId(1234).setName("John Do
 
 首先，我们需要提供一个文件路径来存储数据:
 
-```
+```java
 String filePath = "src/test/resources/protocols/usersproto";
 ```
 
 现在，让我们将数据保存到一个文件中。我们可以使用来自`UserProtos`类的`writeTo()`方法，这个类是我们从 protobuf 文件中生成的:
 
-```
+```java
 FileOutputStream fos = new FileOutputStream(filePath);
 user.writeTo(fos);
 ```
@@ -512,13 +512,13 @@ user.writeTo(fos);
 
 相反，我们可以使用`mergeFrom() `方法从文件中加载数据，并将其反序列化回一个`User` 对象:
 
-```
+```java
 UserProtos.User deserializedUser = UserProtos.User.newBuilder().mergeFrom(new FileInputStream(filePath)).build(); 
 ```
 
 最后，我们可以测试加载的数据:
 
-```
+```java
 assertEquals(1234, deserializedUser.getId());
 assertEquals("John Doe", deserializedUser.getName());
 ```

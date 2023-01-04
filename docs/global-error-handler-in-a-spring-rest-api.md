@@ -22,7 +22,7 @@ Exception Handling for a REST API - illustrate the new Spring 3.2 recommended ap
 
 让我们从实现一个通过网络发送错误的简单结构开始——`ApiError`:
 
-```
+```java
 public class ApiError {
 
     private HttpStatus status;
@@ -53,7 +53,7 @@ public class ApiError {
 
 当然，对于 Spring 中实际的异常处理逻辑，[我们将使用](/web/20220720100342/https://www.baeldung.com/exception-handling-for-rest-with-spring)的`@ControllerAdvice`注释:
 
-```
+```java
 @ControllerAdvice
 public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     ...
@@ -69,7 +69,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 *   `BindException`–当出现致命的绑定错误时，抛出该异常。
 *   `MethodArgumentNotValidException`–当用`@Valid`注释的参数验证失败时，抛出该异常:
 
-```
+```java
 @Override
 protected ResponseEntity<Object> handleMethodArgumentNotValid(
   MethodArgumentNotValidException ex, 
@@ -101,7 +101,7 @@ protected ResponseEntity<Object> handleMethodArgumentNotValid(
 
 *   `MissingServletRequestParameterException`–当请求缺少参数时，抛出该异常:
 
-```
+```java
 @Override
 protected ResponseEntity<Object> handleMissingServletRequestParameter(
   MissingServletRequestParameterException ex, HttpHeaders headers, 
@@ -117,7 +117,7 @@ protected ResponseEntity<Object> handleMissingServletRequestParameter(
 
 *   `ConstraintViolationException`–此异常报告违反约束的结果:
 
-```
+```java
 @ExceptionHandler({ ConstraintViolationException.class })
 public ResponseEntity<Object> handleConstraintViolation(
   ConstraintViolationException ex, WebRequest request) {
@@ -138,7 +138,7 @@ public ResponseEntity<Object> handleConstraintViolation(
 
 *   `MethodArgumentTypeMismatchException`–当方法参数不是预期的类型时，抛出此异常:
 
-```
+```java
 @ExceptionHandler({ MethodArgumentTypeMismatchException.class })
 public ResponseEntity<Object> handleMethodArgumentTypeMismatch(
   MethodArgumentTypeMismatchException ex, WebRequest request) {
@@ -158,7 +158,7 @@ public ResponseEntity<Object> handleMethodArgumentTypeMismatch(
 
 我们将**发送一个请求，将`id`作为`String`而不是`long`** :
 
-```
+```java
 @Test
 public void whenMethodArgumentMismatch_thenBadRequest() {
     Response response = givenAuth().get(URL_PREFIX + "/api/foos/ccc");
@@ -172,14 +172,14 @@ public void whenMethodArgumentMismatch_thenBadRequest() {
 
 最后，考虑同样的请求:
 
-```
+```java
 Request method:	GET
 Request path:	http://localhost:8080/spring-security-rest/api/foos/ccc 
 ```
 
 **下面是这种 JSON 错误响应的样子**:
 
-```
+```java
 {
     "status": "BAD_REQUEST",
     "message": 
@@ -196,7 +196,7 @@ Request path:	http://localhost:8080/spring-security-rest/api/foos/ccc
 
 接下来，我们可以定制 servlet 来抛出这个异常，而不是发送 404 响应:
 
-```
+```java
 <servlet>
     <servlet-name>api</servlet-name>
     <servlet-class>
@@ -210,7 +210,7 @@ Request path:	http://localhost:8080/spring-security-rest/api/foos/ccc
 
 然后，一旦发生这种情况，我们可以像处理任何其他异常一样简单地处理它:
 
-```
+```java
 @Override
 protected ResponseEntity<Object> handleNoHandlerFoundException(
   NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -223,7 +223,7 @@ protected ResponseEntity<Object> handleNoHandlerFoundException(
 
 这里有一个简单的测试:
 
-```
+```java
 @Test
 public void whenNoHandlerForHttpRequest_thenNotFound() {
     Response response = givenAuth().delete(URL_PREFIX + "/api/xx");
@@ -237,14 +237,14 @@ public void whenNoHandlerForHttpRequest_thenNotFound() {
 
 让我们看看完整的请求:
 
-```
+```java
 Request method:	DELETE
 Request path:	http://localhost:8080/spring-security-rest/api/xx
 ```
 
 以及**错误 JSON 响应**:
 
-```
+```java
 {
     "status":"NOT_FOUND",
     "message":"No handler found for DELETE /spring-security-rest/api/xx",
@@ -260,7 +260,7 @@ Request path:	http://localhost:8080/spring-security-rest/api/xx
 
 当我们用不支持的 HTTP 方法发送请求时，会发生`HttpRequestMethodNotSupportedException`:
 
-```
+```java
 @Override
 protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
   HttpRequestMethodNotSupportedException ex, 
@@ -282,7 +282,7 @@ protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
 
 下面是重现该异常的简单测试:
 
-```
+```java
 @Test
 public void whenHttpRequestMethodNotSupported_thenMethodNotAllowed() {
     Response response = givenAuth().delete(URL_PREFIX + "/api/foos/1");
@@ -296,14 +296,14 @@ public void whenHttpRequestMethodNotSupported_thenMethodNotAllowed() {
 
 这是完整的请求:
 
-```
+```java
 Request method:	DELETE
 Request path:	http://localhost:8080/spring-security-rest/api/foos/1
 ```
 
 以及**错误 JSON 响应**:
 
-```
+```java
 {
     "status":"METHOD_NOT_ALLOWED",
     "message":"Request method 'DELETE' not supported",
@@ -317,7 +317,7 @@ Request path:	http://localhost:8080/spring-security-rest/api/foos/1
 
 现在让我们来处理`HttpMediaTypeNotSupportedException`，它发生在客户端发送一个带有不支持的媒体类型的请求时:
 
-```
+```java
 @Override
 protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(
   HttpMediaTypeNotSupportedException ex, 
@@ -338,7 +338,7 @@ protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(
 
 下面是一个关于这个问题的简单测试:
 
-```
+```java
 @Test
 public void whenSendInvalidHttpMediaType_thenUnsupportedMediaType() {
     Response response = givenAuth().body("").post(URL_PREFIX + "/api/foos");
@@ -352,7 +352,7 @@ public void whenSendInvalidHttpMediaType_thenUnsupportedMediaType() {
 
 最后，这里有一个请求示例:
 
-```
+```java
 Request method:	POST
 Request path:	http://localhost:8080/spring-security-
 Headers:	Content-Type=text/plain; charset=ISO-8859-1
@@ -360,7 +360,7 @@ Headers:	Content-Type=text/plain; charset=ISO-8859-1
 
 和**错误 JSON 响应:**
 
-```
+```java
 {
     "status":"UNSUPPORTED_MEDIA_TYPE",
     "message":"Content type 'text/plain;charset=ISO-8859-1' not supported",
@@ -378,7 +378,7 @@ Headers:	Content-Type=text/plain; charset=ISO-8859-1
 
 最后，我们将实现一个回退处理程序—一种无所不包的逻辑类型，用于处理所有其他没有特定处理程序的异常:
 
-```
+```java
 @ExceptionHandler({ Exception.class })
 public ResponseEntity<Object> handleAll(Exception ex, WebRequest request) {
     ApiError apiError = new ApiError(

@@ -22,7 +22,7 @@
 
 `List`允许添加重复项目。然而，它不是为一个`Set`:
 
-```
+```java
 @Test
 public void givenList_whenDuplicates_thenAllowed(){
     List<Integer> integerList = new ArrayList<>();
@@ -34,7 +34,7 @@ public void givenList_whenDuplicates_thenAllowed(){
 } 
 ```
 
-```
+```java
 @Test
 public void givenSet_whenDuplicates_thenNotAllowed(){
     Set<Integer> integerSet = new HashSet<>();
@@ -50,7 +50,7 @@ public void givenSet_whenDuplicates_thenNotAllowed(){
 
 一个`Set`根据实现来维持秩序。例如，`HashSet`不能保证维持秩序，但是`LinkedHashSet`可以。让我们看一个用`LinkedHashSet`订购的例子:
 
-```
+```java
 @Test
 public void givenSet_whenOrdering_thenMayBeAllowed(){
     Set<Integer> set1 = new LinkedHashSet<>();

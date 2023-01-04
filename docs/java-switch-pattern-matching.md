@@ -16,7 +16,7 @@ Java SE 17 版本引入了针对`switch`表达式和语句的模式匹配( [JEP 
 
 在 Java 的早期版本中，**选择器表达式必须是数字、字符串或常量**。此外，案例标签只能包含常量:
 
-```
+```java
 final String b = "B";
 switch (args[0]) {
     case "A" -> System.out.println("Parameter is A");
@@ -35,7 +35,7 @@ switch (args[0]) {
 
 **将类型模式应用于`[instanceof](/web/20220910004922/https://www.baeldung.com/java-instanceof#:~:text=instanceof%20is%20a%20binary%20operator,check%20should%20always%20be%20used.)` 操作符简化了类型检查和类型转换**。此外，它使我们能够将两者结合成一个单一的表达式:
 
-```
+```java
 if (o instanceof String s) {
     System.out.printf("Object is a string %s", s);
 } else if (o instanceof Number n) {
@@ -53,7 +53,7 @@ if (o instanceof String s) {
 
 然而，它仍然是一个[预览功能](/web/20220910004922/https://www.baeldung.com/java-preview-features)，所以我们需要启用预览来使用它:
 
-```
+```java
 java --enable-preview --source 17 PatternMatching.java
 ```
 
@@ -63,7 +63,7 @@ java --enable-preview --source 17 PatternMatching.java
 
 例如，我们将创建一个使用`if-else`语句将不同类型转换为`double` 的方法。如果不支持该类型，我们的方法将简单地返回零:
 
-```
+```java
 static double getDoubleUsingIf(Object o) {
     double result;
     if (o instanceof Integer) {
@@ -81,7 +81,7 @@ static double getDoubleUsingIf(Object o) {
 
 我们可以使用`switch`中的类型模式用更少的代码解决同样的问题:
 
-```
+```java
 static double getDoubleUsingSwitch(Object o) {
     return switch (o) {
         case Integer i -> i.doubleValue();
@@ -100,7 +100,7 @@ static double getDoubleUsingSwitch(Object o) {
 
 例如，我们可以使用一个`if`语句来检查一个`String`的长度:
 
-```
+```java
 static double getDoubleValueUsingIf(Object o) {
     return switch (o) {
         case String s -> {
@@ -117,7 +117,7 @@ static double getDoubleValueUsingIf(Object o) {
 
 我们可以使用保护模式来解决同样的问题。他们使用模式和布尔表达式的组合:
 
-```
+```java
 static double getDoubleValueUsingGuardedPatterns(Object o) {
     return switch (o) {
         case String s && s.length() > 0 -> Double.parseDouble(s);
@@ -134,7 +134,7 @@ static double getDoubleValueUsingGuardedPatterns(Object o) {
 
 在执行附加检查时，我们可以在布尔表达式中简单地使用括号:
 
-```
+```java
 static double getDoubleValueUsingParenthesizedPatterns(Object o) {
     return switch (o) {
         case String s && s.length() > 0 && !(s.contains("#") || s.contains("@")) -> Double.parseDouble(s);
@@ -155,7 +155,7 @@ static double getDoubleValueUsingParenthesizedPatterns(Object o) {
 
 让我们考虑一个示例`switch`条件，它接受任何对象，但仅涵盖`String`情况:
 
-```
+```java
 static double getDoubleUsingSwitch(Object o) {
     return switch (o) {
         case String s -> Double.parseDouble(s);
@@ -165,7 +165,7 @@ static double getDoubleUsingSwitch(Object o) {
 
 我们的示例将导致以下编译错误:
 
-```
+```java
 [ERROR] Failed to execute goal ... on project core-java-17: Compilation failure
 [ERROR] /D:/Projects/.../HandlingNullValuesUnitTest.java:[10,16] the switch expression does not cover all possible input values
 ```
@@ -180,7 +180,7 @@ static double getDoubleUsingSwitch(Object o) {
 
 让我们考虑一个例子，其中`String`案例在`CharSequence`案例之后。
 
-```
+```java
 static double getDoubleUsingSwitch(Object o) {
     return switch (o) {
         case CharSequence c -> Double.parseDouble(c.toString());
@@ -192,7 +192,7 @@ static double getDoubleUsingSwitch(Object o) {
 
 由于`String`是`CharSequence,` 的子类，我们的例子将导致以下编译错误:
 
-```
+```java
 [ERROR] Failed to execute goal ... on project core-java-17: Compilation failure
 [ERROR] /D:/Projects/.../HandlingNullValuesUnitTest.java:[12,18] this case label is dominated by a preceding case label
 ```
@@ -205,7 +205,7 @@ static double getDoubleUsingSwitch(Object o) {
 
 然而，使用类型模式，现在可以将空检查作为单独的 case 标签应用于**:**
 
-```
+```java
 static double getDoubleUsingSwitch(Object o) {
     return switch (o) {
         case String s -> Double.parseDouble(s);
@@ -217,7 +217,7 @@ static double getDoubleUsingSwitch(Object o) {
 
 如果没有特定于空值的案例标签，总类型的**模式标签将**匹配空值:
 
-```
+```java
 static double getDoubleUsingSwitchTotalType(Object o) {
     return switch (o) {
         case String s -> Double.parseDouble(s);
@@ -230,7 +230,7 @@ static double getDoubleUsingSwitchTotalType(Object o) {
 
 这样的`switch`语句将导致如下编译错误:
 
-```
+```java
 [ERROR] Failed to execute goal ... on project core-java-17: Compilation failure
 [ERROR] /D:/Projects/.../HandlingNullValuesUnitTest.java:[14,13] switch has both a total pattern and a default label
 ```

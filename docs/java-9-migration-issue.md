@@ -16,7 +16,7 @@ Java 平台曾经有一个单一的架构，将所有的包捆绑成一个单元
 
 第一个方法**获取应用程序中引用的 JCE 提供者**的名称:
 
-```
+```java
 private static void getCrytpographyProviderName() {
     LOGGER.info("1\. JCE Provider Name: {}\n", new SunJCE().getName());
 }
@@ -24,7 +24,7 @@ private static void getCrytpographyProviderName() {
 
 第二种方法在堆栈跟踪中列出类的**名:**
 
-```
+```java
 private static void getCallStackClassNames() {
     StringBuffer sbStack = new StringBuffer();
     int i = 0;
@@ -40,7 +40,7 @@ private static void getCallStackClassNames() {
 
 第三种方法**将 Java 对象转换成 XML** :
 
-```
+```java
 private static void getXmlFromObject(Book book) throws JAXBException {
     Marshaller marshallerObj = JAXBContext.newInstance(Book.class).createMarshaller();
     marshallerObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -53,7 +53,7 @@ private static void getXmlFromObject(Book book) throws JAXBException {
 
 最后一个方法**使用`sun.misc.BASE64Encoder`将一个字符串编码为 64 进制，来自 JDK 内部库**:
 
-```
+```java
 private static void getBase64EncodedString(String inputString) {
     String encodedString = new BASE64Encoder().encode(inputString.getBytes());
     LOGGER.info("4\. Base Encoded String: {}", encodedString);
@@ -62,7 +62,7 @@ private static void getBase64EncodedString(String inputString) {
 
 让我们调用 main 方法中的所有方法:
 
-```
+```java
 public static void main(String[] args) throws Exception {
     getCrytpographyProviderName();
     getCallStackClassNames();
@@ -73,7 +73,7 @@ public static void main(String[] args) throws Exception {
 
 当我们在 Java 8 中运行这个应用程序时，我们得到如下结果:
 
-```
+```java
 > java -jar target\pre-jpms.jar
 [INFO] 1\. JCE Provider Name: SunJCE
 
@@ -97,7 +97,7 @@ public static void main(String[] args) throws Exception {
 
 现在，让我们用 Java 9 运行这个应用程序:
 
-```
+```java
 >java -jar target\pre-jpms.jar
 [INFO] 1\. JCE Provider Name: SunJCE
 
@@ -112,7 +112,7 @@ public static void main(String[] args) throws Exception {
 
 我们可以看到，前两种方法运行良好，而后两种方法失败了。**让我们通过分析我们的应用**的依赖性来调查失败的原因。我们将使用 Java 9 附带的`jdeps`工具:
 
-```
+```java
 >jdeps target\pre-jpms.jar
    com.baeldung.prejpms            -> com.sun.crypto.provider               JDK internal API (java.base)
    com.baeldung.prejpms            -> java.io                               java.base
@@ -140,7 +140,7 @@ public static void main(String[] args) throws Exception {
 
 然而， **Java 通过使用`–add-modules`选项提供了按需加载模块**的方法。所以，让我们来试试吧:
 
-```
+```java
 >java --add-modules java.xml.bind -jar target\pre-jpms.jar
 ...
 INFO 3\. Xml for Book object:
@@ -155,7 +155,7 @@ INFO 3\. Xml for Book object:
 
 作为长期解决方案，我们应该使用 Maven 添加[依赖项](https://web.archive.org/web/20221205121243/https://search.maven.org/search?q=g:javax.xml.bind%20AND%20a:jaxb-api&core=gav)作为第三方库:
 
-```
+```java
 <dependency>
     <groupId>javax.xml.bind</groupId>
     <artifactId>jaxb-api</artifactId>
@@ -173,7 +173,7 @@ INFO 3\. Xml for Book object:
 
 在我们的示例中，**内部 API 似乎已经从 JDK** `.`中移除。让我们通过使用`–jdk-internals`选项来检查替代 API 是什么:
 
-```
+```java
 >jdeps --jdk-internals target\pre-jpms.jar
 ...
 JDK Internal API                         Suggested Replacement

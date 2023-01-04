@@ -20,7 +20,7 @@
 
 让我们来看看如何检查加密强度。我们可以通过检查允许的最大密钥长度来做到这一点:
 
-```
+```java
 int maxKeySize = javax.crypto.Cipher.getMaxAllowedKeyLength("AES");
 ```
 
@@ -48,7 +48,7 @@ int maxKeySize = javax.crypto.Cipher.getMaxAllowedKeyLength("AES");
 
 在 Java 版本 8u151 和更高版本中，默认情况下，JCE 框架使用无限强度策略文件。此外，如果我们想定义使用哪个版本，有一个安全属性`crypto.policy:`
 
-```
+```java
 Security.setProperty("crypto.policy", "unlimited");
 ```
 

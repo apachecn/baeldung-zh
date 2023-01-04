@@ -20,7 +20,7 @@
 
 创建项目最简单的方法是通过命令行:
 
-```
+```java
 mvn archetype:generate \
   -DinteractiveMode=false \
   -DarchetypeGroupId=org.openjdk.jmh \
@@ -32,7 +32,7 @@ mvn archetype:generate \
 
 之后，我们可以使用我们最喜欢的 IDE 打开项目并编辑`pom.xml`来添加[Eclipse 集合依赖项](https://web.archive.org/web/20221206030803/https://search.maven.org/search?q=a:eclipse-collections):
 
-```
+```java
 <dependency>
     <groupId>org.eclipse.collections</groupId>
     <artifactId>eclipse-collections</artifactId>
@@ -51,7 +51,7 @@ mvn archetype:generate \
 
 我们将以串行和并行方式测试六种不同的组合:
 
-```
+```java
 private List<Integer> jdkIntList;
 private MutableList<Integer> ecMutableList;
 private ExecutorService executor;
@@ -100,7 +100,7 @@ public long ecPrimitiveParallel() {
 
 要运行我们的第一个基准测试，我们需要执行:
 
-```
+```java
 mvn clean install
 java -jar target/benchmarks.jar IntegerListSum -rf json
 ```
@@ -109,7 +109,7 @@ java -jar target/benchmarks.jar IntegerListSum -rf json
 
 **我们将在测试中测量吞吐量或每秒操作数，因此越高越好:**
 
-```
+```java
 Benchmark                              Mode  Cnt     Score       Error  Units
 IntegerListSum.ecMutableList          thrpt   10   573.016 ±    35.865  ops/s
 IntegerListSum.ecMutableListParallel  thrpt   10  1251.353 ±   705.196  ops/s
@@ -131,7 +131,7 @@ IntegerListSum.jdkListParallel        thrpt   10   918.512 ±    27.487  ops/s
 
 接下来，我们将修改我们的列表以获取所有 5 的倍数的元素。我们将重用之前的大部分基准和过滤函数:
 
-```
+```java
 private List<Integer> jdkIntList;
 private MutableList<Integer> ecMutableList;
 private IntList ecIntList;
@@ -182,14 +182,14 @@ public IntList ecPrimitiveParallel() {
 
 我们将像之前一样执行测试:
 
-```
+```java
 mvn clean install
 java -jar target/benchmarks.jar IntegerListFilter -rf json
 ```
 
 结果是:
 
-```
+```java
 Benchmark                                 Mode  Cnt     Score    Error  Units
 IntegerListFilter.ecMutableList          thrpt   10   145.733 ±  7.000  ops/s
 IntegerListFilter.ecMutableListParallel  thrpt   10   603.191 ± 24.799  ops/s

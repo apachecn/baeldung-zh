@@ -22,7 +22,7 @@ Spring Cloud Consul 项目为 Spring Boot 应用程序提供了与 consult 的�
 
 首先，我们需要将[spring-cloud-starter-consul-all](https://web.archive.org/web/20220820044630/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-cloud-starter-consul-all%22)依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-consul-all</artifactId>
@@ -34,7 +34,7 @@ Spring Cloud Consul 项目为 Spring Boot 应用程序提供了与 consult 的�
 
 让我们编写第一个 Spring Boot 应用程序，并连接正在运行的 Consul 代理:
 
-```
+```java
 @SpringBootApplication
 public class ServiceDiscoveryApplication {
 
@@ -47,7 +47,7 @@ public class ServiceDiscoveryApplication {
 
 **默认情况下，Spring Boot 会在`localhost:8500`尝试连接领事代理。**要使用其他设置，我们需要更新`application.yml`文件:
 
-```
+```java
 spring:
   cloud:
     consul:
@@ -59,7 +59,7 @@ spring:
 
 为了定制这个标识符，我们需要用另一个表达式更新属性`spring.cloud.discovery.instanceId`:
 
-```
+```java
 spring:
   application:
     name: myApp
@@ -79,7 +79,7 @@ spring:
 
 **Spring 为这个**提供了一个`DiscoveryClient API`，我们可以用`@EnableDiscoveryClient`注释来启用它:
 
-```
+```java
 @SpringBootApplication
 @EnableDiscoveryClient
 public class DiscoveryClientApplication {
@@ -89,7 +89,7 @@ public class DiscoveryClientApplication {
 
 然后，我们可以将`DiscoveryClient` bean 注入到我们的控制器中，并访问实例:
 
-```
+```java
 @RestController
 public class DiscoveryClientController {
 
@@ -107,7 +107,7 @@ public class DiscoveryClientController {
 
 最后，我们将定义应用程序端点:
 
-```
+```java
 @GetMapping("/discoveryClient")
 public String discoveryPing() throws RestClientException, 
   ServiceUnavailableException {
@@ -132,7 +132,7 @@ Consul 定期检查服务端点的健康状况。
 
 默认情况下， **Spring 实现健康端点返回`200 OK`，如果 app 启动**。如果我们想要定制端点，我们必须更新`application.yml:`
 
-```
+```java
 spring:
   cloud:
     consul:
@@ -145,7 +145,7 @@ spring:
 
 让我们定义我们的自定义健康检查服务来返回一个`FORBIDDEN`状态:
 
-```
+```java
 @GetMapping("/my-health-check")
 public ResponseEntity<String> myCustomCheck() {
     String message = "Testing my healh check function";
@@ -161,7 +161,7 @@ public ResponseEntity<String> myCustomCheck() {
 
 首先，我们需要将[spring-cloud-starter-consul-config](https://web.archive.org/web/20220820044630/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-cloud-starter-consul-config%22)依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-consul-config</artifactId>
@@ -173,7 +173,7 @@ public ResponseEntity<String> myCustomCheck() {
 
 然后，我们需要启用 Spring Cloud Consul 配置:
 
-```
+```java
 spring:
   application:
     name: myApp
@@ -193,7 +193,7 @@ Spring Cloud Consul Config 将在`“/config/myApp”`查找 Consul 中的属性
 
 现在，让我们看看注入了属性的控制器是什么样子的:
 
-```
+```java
 @RestController
 public class DistributedPropertiesController {
 
@@ -217,7 +217,7 @@ public class DistributedPropertiesController {
 
 和`MyProperties` 类:
 
-```
+```java
 @RefreshScope
 @Configuration
 @ConfigurationProperties("my")

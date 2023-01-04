@@ -21,7 +21,7 @@
 
 为此，我们将使用模式`“\\d\\d\\d\\d”` :
 
-```
+```java
 @Test
 public void whenFindFourDigitWorks_thenCorrect() {
     Pattern stringPattern = Pattern.compile("\\d\\d\\d\\d");
@@ -53,7 +53,7 @@ public void whenFindFourDigitWorks_thenCorrect() {
 
 让我们看看如何在前面的例子中使用这个方法:
 
-```
+```java
 @Test
 public void givenStartIndex_whenFindFourDigitWorks_thenCorrect() {
     Pattern stringPattern = Pattern.compile("\\d\\d\\d\\d");
@@ -74,7 +74,7 @@ public void givenStartIndex_whenFindFourDigitWorks_thenCorrect() {
 
  **同样的例子，`matches()`将返回`false`:
 
-```
+```java
 @Test
 public void whenMatchFourDigitWorks_thenFail() {
     Pattern stringPattern = Pattern.compile("\\d\\d\\d\\d");
@@ -88,7 +88,7 @@ public void whenMatchFourDigitWorks_thenFail() {
 
 如果我们将字符串改为四位数的数字`“2019”`，那么`matches()`将返回 `true`:
 
-```
+```java
 @Test
 public void whenMatchFourDigitWorks_thenCorrect() {
     Pattern stringPattern = Pattern.compile("\\d\\d\\d\\d");
@@ -112,7 +112,7 @@ public void whenMatchFourDigitWorks_thenCorrect() {
 
 让我们创建测试用例来突出区别:
 
-```
+```java
 @Test
 public void whenUsingMatcher_thenReturnTrue() {
     Pattern pattern = Pattern.compile(REGEX);
@@ -128,7 +128,7 @@ public void whenUsingMatcher_thenReturnTrue() {
 
 让我们来看看它的实际应用:
 
-```
+```java
 @Test
 public void whenUsingMatches_thenReturnFalse() {
     assertFalse(Pattern.matches(REGEX, STRING_INPUT));

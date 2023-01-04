@@ -18,7 +18,7 @@
 
 让我们从必要的依赖项开始——我们正在使用 JSON 和 XML 表示，因此对于本文，我们将使用 Jackson for JSON:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-core</artifactId>
@@ -45,7 +45,7 @@
 
 默认情况下，此策略是禁用的，我们需要通过在 application.properties 中设置`spring.mvc.pathmatch.use-suffix-pattern`为 true 来启用它:
 
-```
+```java
 spring.mvc.pathmatch.use-suffix-pattern=true
 spring.mvc.pathmatch.matching-strategy=ant-path-matcher
 ```
@@ -54,7 +54,7 @@ spring.mvc.pathmatch.matching-strategy=ant-path-matcher
 
 在进入配置之前，让我们快速看一个例子。在典型的 Spring 控制器中，我们有以下简单的 API 方法实现:
 
-```
+```java
 @RequestMapping(
   value = "/employee/{id}", 
   produces = { "application/json", "application/xml" }, 
@@ -66,13 +66,13 @@ public @ResponseBody Employee getEmployeeById(@PathVariable long id) {
 
 让我们通过使用 JSON 扩展来指定资源的媒体类型来调用它:
 
-```
+```java
 curl http://localhost:8080/spring-mvc-basics/employee/10.json
 ```
 
 如果使用 JSON 扩展，我们可能会得到以下结果:
 
-```
+```java
 {
     "id": 10,
     "name": "Test Employee",
@@ -82,13 +82,13 @@ curl http://localhost:8080/spring-mvc-basics/employee/10.json
 
 下面是 XML 的请求-响应的样子:
 
-```
+```java
 curl http://localhost:8080/spring-mvc-basics/employee/10.xml
 ```
 
 响应正文:
 
-```
+```java
 <employee>
     <contactNumber>999-999-9999</contactNumber>
     <id>10</id>
@@ -98,7 +98,7 @@ curl http://localhost:8080/spring-mvc-basics/employee/10.xml
 
 现在，**如果我们不使用任何扩展**或使用未配置的扩展，将返回默认内容类型:
 
-```
+```java
 curl http://localhost:8080/spring-mvc-basics/employee/10
 ```
 
@@ -106,7 +106,7 @@ curl http://localhost:8080/spring-mvc-basics/employee/10
 
 ### 3.1。Java 配置
 
-```
+```java
 public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
     configurer.favorPathExtension(true).
     favorParameter(false).
@@ -130,7 +130,7 @@ public void configureContentNegotiation(ContentNegotiationConfigurer configurer)
 
 让我们快速看一下完全相同的配置，只使用 XML:
 
-```
+```java
 <bean id="contentNegotiationManager" 
   class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
     <property name="favorPathExtension" value="true" />
@@ -149,13 +149,13 @@ public void configureContentNegotiation(ContentNegotiationConfigurer configurer)
 
 让我们快速看一下前面的例子是如何工作的:
 
-```
+```java
 curl http://localhost:8080/spring-mvc-basics/employee/10?mediaType=json
 ```
 
 下面是 JSON 响应体的内容:
 
-```
+```java
 {
     "id": 10,
     "name": "Test Employee",
@@ -165,13 +165,13 @@ curl http://localhost:8080/spring-mvc-basics/employee/10?mediaType=json
 
 如果我们使用 XML 参数，输出将是 XML 格式:
 
-```
+```java
 curl http://localhost:8080/spring-mvc-basics/employee/10?mediaType=xml
 ```
 
 响应正文:
 
-```
+```java
 <employee>
     <contactNumber>999-999-9999</contactNumber>
     <id>10</id>
@@ -183,7 +183,7 @@ curl http://localhost:8080/spring-mvc-basics/employee/10?mediaType=xml
 
 ### 4.1。Java 配置
 
-```
+```java
 public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
     configurer.favorPathExtension(false).
     favorParameter(true).
@@ -204,7 +204,7 @@ public void configureContentNegotiation(ContentNegotiationConfigurer configurer)
 
 ### 4.2。XML 配置
 
-```
+```java
 <bean id="contentNegotiationManager" 
   class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
     <property name="favorPathExtension" value="false" />
@@ -225,7 +225,7 @@ public void configureContentNegotiation(ContentNegotiationConfigurer configurer)
 
 此外，我们可以让**两种策略(扩展和参数)同时启用**:
 
-```
+```java
 public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
     configurer.favorPathExtension(true).
     favorParameter(true).
@@ -248,7 +248,7 @@ public void configureContentNegotiation(ContentNegotiationConfigurer configurer)
 
 ### 5.1。Java 配置
 
-```
+```java
 public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
     configurer.favorPathExtension(true).
     favorParameter(false).
@@ -263,7 +263,7 @@ public void configureContentNegotiation(ContentNegotiationConfigurer configurer)
 
 ### 5.2。XML 配置
 
-```
+```java
 <bean id="contentNegotiationManager" 
   class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
     <property name="favorPathExtension" value="true" />
@@ -284,7 +284,7 @@ public void configureContentNegotiation(ContentNegotiationConfigurer configurer)
 
 最后，我们需要通过将内容协商管理器插入到整体配置中来打开它:
 
-```
+```java
 <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" /> 
 ```
 

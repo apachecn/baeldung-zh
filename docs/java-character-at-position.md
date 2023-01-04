@@ -12,7 +12,7 @@
 
 让我们看看来自`String`类的方法签名:
 
-```
+```java
 public char charAt(int index) {...}
 ```
 
@@ -20,7 +20,7 @@ public char charAt(int index) {...}
 
 现在，让我们看一个例子:
 
-```
+```java
 String sample = "abcdefg";
 Assert.assertEquals('d', sample.charAt(3)); 
 ```
@@ -31,7 +31,7 @@ Assert.assertEquals('d', sample.charAt(3));
 
 **如果参数`index`为负或者等于或大于字符串**的长度，则抛出运行时异常`IndexOutOfBoundsException`
 
-```
+```java
 String sample = "abcdefg";
 assertThrows(IndexOutOfBoundsException.class, () -> sample.charAt(-1));
 assertThrows(IndexOutOfBoundsException.class, () -> sample.charAt(sample.length())); 
@@ -43,7 +43,7 @@ assertThrows(IndexOutOfBoundsException.class, () -> sample.charAt(sample.length(
 
 有不同的方法将结果转换成一个`String`。让我们假设下面的`String`文字适用于所有的例子:
 
-```
+```java
 String sample = "abcdefg";
 ```
 
@@ -51,7 +51,7 @@ String sample = "abcdefg";
 
 我们可以用`Character.toString()` 方法包装`charAt()`的结果:
 
-```
+```java
 assertEquals("a", Character.toString(sample.charAt(0))); 
 ```
 
@@ -59,7 +59,7 @@ assertEquals("a", Character.toString(sample.charAt(0)));
 
 最后，我们可以使用静态方法`String`。`valueOf()`:
 
-```
+```java
 assertEquals("a", String.valueOf(sample.charAt(0))); 
 ```
 

@@ -20,7 +20,7 @@
 
 让我们首先创建`CreditCard`模型类定义字段`rawCardNumber,`银行识别号(前 6 位)、账号(7 到 15 位)和校验码(最后一位):
 
-```
+```java
 public class CreditCard {
 
     private String rawCardNumber;
@@ -36,7 +36,7 @@ public class CreditCard {
 
 **属性编辑器类应该扩展`PropertyEditorSupport`并实现`getAsText()`和`setAsText()`方法:**
 
-```
+```java
 public class CreditCardEditor extends PropertyEditorSupport {
 
     @Override
@@ -81,7 +81,7 @@ public class CreditCardEditor extends PropertyEditorSupport {
 
 我们现在可以将它作为 REST API 中的资源公开；该操作将信用卡号作为请求路径变量，Spring 将该文本值绑定为一个`CrediCard`对象，并将其作为方法参数传递:
 
-```
+```java
 @GetMapping(value = "/credit-card/{card-no}", 
   produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public CreditCard parseCreditCardNumber(
@@ -92,7 +92,7 @@ public CreditCard parseCreditCardNumber(
 
 例如，对于一个示例请求 URL `/property-editor/credit-card/1234-1234-1111-0019,`,我们将得到响应:
 
-```
+```java
 {
     "rawCardNumber": "1234-1234-1111-0011",
     "bankIdNo": 123412,
@@ -109,7 +109,7 @@ public CreditCard parseCreditCardNumber(
 
 和第 2 节一样，让我们首先创建一个模型类`ExoticType:`
 
-```
+```java
 public class ExoticType {
     private String name;
 
@@ -119,7 +119,7 @@ public class ExoticType {
 
 而我们的自定义属性编辑器类`CustomExoticTypeEditor`又扩展了`PropertyEditorSupport` `:`
 
-```
+```java
 public class CustomExoticTypeEditor extends PropertyEditorSupport {
 
     @Override
@@ -140,7 +140,7 @@ public class CustomExoticTypeEditor extends PropertyEditorSupport {
 
 由于 Spring 不能检测属性编辑器，**我们将需要一个在我们的`Controller`类中用`@InitBinder`注释的方法来注册编辑器:**
 
-```
+```java
 @InitBinder
 public void initBinder(WebDataBinder binder) {
     binder.registerCustomEditor(ExoticType.class, 
@@ -150,7 +150,7 @@ public void initBinder(WebDataBinder binder) {
 
 然后我们可以将用户输入绑定到`ExoticType`对象:
 
-```
+```java
 @GetMapping(
   value = "/exotic-type/{value}", 
   produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -162,7 +162,7 @@ public ExoticType parseExoticType(
 
 对于示例请求 URL `/property-editor/exotic-type/passion-fruit, `,我们将获得示例响应:
 
-```
+```java
 {
     "name": "PASSION-FRUIT"
 }

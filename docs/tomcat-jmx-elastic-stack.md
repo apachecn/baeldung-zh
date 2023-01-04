@@ -18,13 +18,13 @@
 
 首先，我们将转到 Logstash 安装目录，该目录因操作系统而异(在我们的例子中是 Ubuntu):
 
-```
+```java
 cd /opt/logstash
 ```
 
 我们可以从命令行设置一个简单的 Logstash 配置:
 
-```
+```java
 bin/logstash -e 'input { stdin { } } output { elasticsearch { hosts => ["localhost:9200"] } }'
 ```
 
@@ -34,13 +34,13 @@ bin/logstash -e 'input { stdin { } } output { elasticsearch { hosts => ["localho
 
 添加样本数据后，Elasticsearch 上应该有一个 Logstash 索引，我们可以按如下方式进行检查:
 
-```
+```java
 curl -X GET 'http://localhost:9200/_cat/indices'
 ```
 
 样本输出:
 
-```
+```java
 yellow open logstash-2017.11.10 5 1 3531 0 506.3kb 506.3kb 
 yellow open .kibana             1 1    3 0   9.5kb   9.5kb 
 yellow open logstash-2017.11.11 5 1 8671 0   1.4mb   1.4mb
@@ -50,7 +50,7 @@ yellow open logstash-2017.11.11 5 1 8671 0   1.4mb   1.4mb
 
 默认情况下，Kibana 在端口 5601 上运行，我们可以访问主页:
 
-```
+```java
 http://localhost:5601/app/kibana
 ```
 
@@ -60,7 +60,7 @@ http://localhost:5601/app/kibana
 
 接下来，我们需要通过向`CATALINA_OPTS`添加以下内容来启用 JMX:
 
-```
+```java
 -Dcom.sun.management.jmxremote
   -Dcom.sun.management.jmxremote.port=9000
   -Dcom.sun.management.jmxremote.ssl=false
@@ -82,7 +82,7 @@ http://localhost:5601/app/kibana
 
 这是我们的`jmx_config.json`:
 
-```
+```java
 {
   "host" : "localhost",
   "port" : 9000,
@@ -111,13 +111,13 @@ http://localhost:5601/app/kibana
 
 接下来，让我们通过在 Logstash 安装目录中运行以下命令来安装 JMX 输入插件:
 
-```
+```java
 bin/logstash-plugin install logstash-input-jmx
 ```
 
 然后，我们需要创建一个 Logstash 配置文件(`jmx.conf`)，其中输入是 JMX 指标，输出指向 Elasticsearch:
 
-```
+```java
 input {
   jmx {
     path => "/monitor/jmx"
@@ -136,7 +136,7 @@ output {
 
 最后，我们需要运行 Logstash 并指定我们的配置文件:
 
-```
+```java
 bin/logstash -f jmx.conf
 ```
 
@@ -153,7 +153,7 @@ bin/logstash -f jmx.conf
 *   点击搜索栏中的“新搜索”图标
 *   键入以下查询
 
-    ```
+    ```java
     metric_path:reddit.jmx.elasticsearch.Memory.HeapMemoryUsage.used
     ```
 
@@ -190,7 +190,7 @@ bin/logstash -f jmx.conf
 *   格式:字节
 *   对于脚本，我们将简单地使用'`metric_value_number`'的值:
 
-    ```
+    ```java
     doc['metric_value_number'].value
     ```
 

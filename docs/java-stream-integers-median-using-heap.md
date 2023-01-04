@@ -26,7 +26,7 @@
 
 例如:
 
-```
+```java
 add 5         // sorted-set = { 5 }, size = 1
 get median -> 5
 
@@ -45,7 +45,7 @@ get median -> (7 + 8) / 2 = 7.5
 
 我们可以将我们的任务表示为代码中的以下操作:
 
-```
+```java
 void add(int num);
 
 double getMedian(); 
@@ -65,7 +65,7 @@ double getMedian();
 
 我们可以将`list`分成两个排序后的`lists`–**，较小的一半整数按降序排序，较大的一半整数按升序排序**。我们可以在适当的一半中添加一个新的整数，使得`lists`的大小最多相差 1:
 
-```
+```java
 if element is smaller than min. element of larger half:
     insert into smaller half at appropriate index
     if smaller half is much bigger than larger half:
@@ -80,7 +80,7 @@ else
 
 现在，我们可以计算中位数:
 
-```
+```java
 if lists contain equal number of elements:
     median = (max. element of smaller half + min. element of larger half) / 2
 else if smaller half contains more elements:
@@ -132,7 +132,7 @@ else if larger half contains more elements:
 
 现在，我们可以通过将传入的整数与最小堆的根进行比较，将它添加到相关的一半。接下来，如果在插入之后，一个堆的大小与另一个堆的大小相差超过 1，我们可以重新平衡这些堆，从而将大小差保持在最多 1:
 
-```
+```java
 if size(minHeap) > size(maxHeap) + 1:
     remove root element of minHeap, insert into maxHeap
 if size(maxHeap) > size(minHeap) + 1:
@@ -143,7 +143,7 @@ if size(maxHeap) > size(minHeap) + 1:
 
 我们将使用`PriorityQueue`类来表示堆。`PriorityQueue`的默认堆属性是最小堆。我们可以通过使用与自然顺序相反的`Comparator.reverserOrder`来创建 max-heap:
 
-```
+```java
 class MedianOfIntegerStream {
 
     private Queue<Integer> minHeap, maxHeap;
@@ -183,7 +183,7 @@ class MedianOfIntegerStream {
 
 在我们分析代码的运行时间之前，让我们看看我们使用的堆操作的时间复杂性:
 
-```
+```java
 find-min/find-max        O(1)    
 
 delete-min/delete-max    O(log n)
@@ -203,7 +203,7 @@ insert                   O(log n)
 
 当我们添加一个新的整数时，我们有两种情况:
 
-```
+```java
 1\. Total no. of existing elements is even
    size(min-heap) == size(max-heap) == (n / 2)
 
@@ -220,7 +220,7 @@ insert                   O(log n)
 
 让我们用 Java 实现我们的解决方案，使用`PriorityQueues`:
 
-```
+```java
 class MedianOfIntegerStream {
 
     private Queue<Integer> minHeap, maxHeap;

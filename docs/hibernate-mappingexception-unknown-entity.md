@@ -24,7 +24,7 @@ Discover when "No Hibernate Session Bound to Thread" exception gets thrown and h
 
 映射异常最常见的原因是实体类**缺少`@Entity`注释**:
 
-```
+```java
 public class Foo implements Serializable {
 
     @Id
@@ -46,7 +46,7 @@ public class Foo implements Serializable {
 
 另一种可能是，它可能有**错误类型的`@Entity`注解**:
 
-```
+```java
 import org.hibernate.annotations.Entity;
 
 @Entity
@@ -56,7 +56,7 @@ public class Foo implements Serializable {
 
 不赞成使用的`org.hibernate.annotations.Entity`是错误的实体类型——我们需要的**是`javax.persistence.Entity`** :
 
-```
+```java
 import javax.persistence.Entity;
 
 @Entity
@@ -68,7 +68,7 @@ public class Foo implements Serializable {
 
 Spring 中 Hibernate 的[配置包括通过`LocalSessionFactoryBean`从注释扫描中引导`SessionFactory`:](/web/20221012100323/https://www.baeldung.com/hibernate-4-spring "Hibernate 4 with Spring")
 
-```
+```java
 @Bean
 public LocalSessionFactoryBean sessionFactory() {
     LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
@@ -80,7 +80,7 @@ public LocalSessionFactoryBean sessionFactory() {
 
 会话工厂 Bean 的这个简单配置缺少一个关键要素，尝试使用`SessionFactory`的测试将会失败:
 
-```
+```java
 ...
 @Autowired
 private SessionFactory sessionFactory;
@@ -94,7 +94,7 @@ public void givenEntityIsPersisted_thenException() {
 
 不出所料，例外是`MappingException: Unknown entity`:
 
-```
+```java
 org.hibernate.MappingException: Unknown entity: 
 com.baeldung.ex.mappingexception.persistence.model.Foo
     at o.h.i.SessionFactoryImpl.getEntityPersister(SessionFactoryImpl.java:1141)
@@ -104,14 +104,14 @@ com.baeldung.ex.mappingexception.persistence.model.Foo
 
 我们可以指定在类路径中搜索实体类的**包:**
 
-```
+```java
 sessionFactory.setPackagesToScan(
   new String[] { "com.baeldung.ex.mappingexception.persistence.model" });
 ```
 
 或者我们可以简单地**将实体类直接**注册到会话工厂:
 
-```
+```java
 sessionFactory.setAnnotatedClasses(new Class[] { Foo.class });
 ```
 
@@ -121,7 +121,7 @@ sessionFactory.setAnnotatedClasses(new Class[] { Foo.class });
 
 现在让我们看看仅使用 Hibernate 时的错误:
 
-```
+```java
 public class Cause4MappingExceptionIntegrationTest {
 
     @Test
@@ -154,7 +154,7 @@ public class Cause4MappingExceptionIntegrationTest {
 
 `hibernate-mysql.properties`文件包含**休眠配置属性**:
 
-```
+```java
 hibernate.connection.username=tutorialuser
 hibernate.connection.password=tutorialmy5ql
 hibernate.connection.driver_class=com.mysql.jdbc.Driver
@@ -166,7 +166,7 @@ hibernate.hbm2ddl.auto=create
 
 运行该测试将导致相同的映射异常:
 
-```
+```java
 org.hibernate.MappingException: 
   Unknown entity: com.baeldung.ex.mappingexception.persistence.model.Foo
     at o.h.i.SessionFactoryImpl.getEntityPersister(SessionFactoryImpl.java:1141)
@@ -174,7 +174,7 @@ org.hibernate.MappingException:
 
 从上面的例子中可能已经很清楚了，配置中缺少的是**向配置**中添加实体类`Foo`的元数据:
 
-```
+```java
 configuration.addAnnotatedClass(Foo.class);
 ```
 

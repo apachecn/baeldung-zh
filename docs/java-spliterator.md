@@ -18,7 +18,7 @@ Java 8 中引入的`Spliterator` 接口可以被**用于遍历和划分序列**�
 
 首先，让我们假设我们有一个包含 35000 篇文章的`ArrayList` ，并且`Article`类被定义为:
 
-```
+```java
 public class Article {
     private List<Author> listOfAuthors;
     private int id;
@@ -30,7 +30,7 @@ public class Article {
 
 现在，让我们实现一个任务，该任务处理文章列表并为每个文章名称添加一个后缀“`– published by Baeldung”`:
 
-```
+```java
 public String call() {
     int current = 0;
     while (spliterator.tryAdvance(a -> a.setName(article.getName()
@@ -54,7 +54,7 @@ public String call() {
 
 让我们首先生成我们的列表:
 
-```
+```java
 public static List<Article> generateElements() {
     return Stream.generate(() -> new Article("Java"))
       .limit(35000)
@@ -64,7 +64,7 @@ public static List<Article> generateElements() {
 
 接下来，我们使用`spliterator()`方法获得我们的`Spliterator`实例。然后我们应用我们的`trySplit()`方法:
 
-```
+```java
 @Test
 public void givenSpliterator_whenAppliedToAListOfArticle_thenSplittedInHalf() {
     Spliterator<Article> split1 = Executor.generateElements().spliterator(); 
@@ -83,13 +83,13 @@ public void givenSpliterator_whenAppliedToAListOfArticle_thenSplittedInHalf() {
 
 `estimatedSize`方法给出了元素的估计数量:
 
-```
+```java
 LOG.info("Size: " + split1.estimateSize());
 ```
 
 这将输出:
 
-```
+```java
 Size: 17500
 ```
 
@@ -97,11 +97,11 @@ Size: 17500
 
 这个 API 检查给定的特征是否匹配`Spliterator.` 的属性，如果我们调用上面的方法，输出将是这些特征的`int` 表示:
 
-```
+```java
 LOG.info("Characteristics: " + split1.characteristics());
 ```
 
-```
+```java
 Characteristics: 16464
 ```
 
@@ -128,7 +128,7 @@ Characteristics: 16464
 
 我们的`Author`类将看起来像这样:
 
-```
+```java
 public class Author {
     private String name;
     private int relatedArticleId;
@@ -141,7 +141,7 @@ public class Author {
 
 让我们来看看这个类的实现:
 
-```
+```java
 public class RelatedAuthorCounter {
     private int counter;
     private boolean isRelated;
@@ -170,13 +170,13 @@ public class RelatedAuthorCounter {
 
 现在，为了测试我们到目前为止所做的。让我们将文章的作者列表转换为作者流:
 
-```
+```java
 Stream<Author> stream = article.getListOfAuthors().stream();
 ```
 
 并实现一个 **`countAuthor()`方法，使用`RelatedAuthorCounter`** 对流进行约简:
 
-```
+```java
 private int countAutors(Stream<Author> stream) {
     RelatedAuthorCounter wordCounter = stream.reduce(
       new RelatedAuthorCounter(0, true), 
@@ -190,7 +190,7 @@ private int countAutors(Stream<Author> stream) {
 
 让我们来看看下面的测试用例:
 
-```
+```java
 @Test
 void 
   givenAStreamOfAuthors_whenProcessedInParallel_countProducesWrongOutput() {
@@ -204,7 +204,7 @@ void
 
 为了解决这个问题，我们需要**实现一个`Spliterator`，只有当相关的`id`和`articleId`匹配**时，它才会拆分作者。下面是我们的自定义`Spliterator`的实现:
 
-```
+```java
 public class RelatedAuthorSpliterator implements Spliterator<Author> {
     private final List<Author> list;
     AtomicInteger current = new AtomicInteger();
@@ -249,7 +249,7 @@ public class RelatedAuthorSpliterator implements Spliterator<Author> {
 
 现在应用`countAuthors()`方法将给出正确的输出。下面的代码演示了:
 
-```
+```java
 @Test
 public void
   givenAStreamOfAuthors_whenProcessedInParallel_countProducesRightOutput() {

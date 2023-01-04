@@ -23,7 +23,7 @@ Smack 被组织成几个模块以提供更多的灵活性，所以我们可以�
 
 然而，在本教程中，我们将只使用`tcp`、`im`、`extensions`和`java7`模块:
 
-```
+```java
 <dependency>
     <groupId>org.igniterealtime.smack</groupId>
     <artifactId>smack-tcp</artifactId>
@@ -50,7 +50,7 @@ Smack 被组织成几个模块以提供更多的灵活性，所以我们可以�
 
 之后，我们可以使用`XMPPTCPConnectionConfiguration `类配置 Smack，该类提供了一个构建器来设置连接的参数:
 
-```
+```java
 XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
   .setUsernameAndPassword("baeldung","baeldung")
   .setXmppDomain("jabb3r.org")
@@ -64,7 +64,7 @@ XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
 
 使用`XMPPTCPConnection`类可以简单地实现连接:
 
-```
+```java
 AbstractXMPPConnection connection = new XMPPTCPConnection(config);
 connection.connect(); //Establishes a connection to the server
 connection.login(); //Logs in 
@@ -84,7 +84,7 @@ connection.login(); //Logs in
 
 使用`Chat`类可以在两个用户之间创建新的消息线程:
 
-```
+```java
 ChatManager chatManager = ChatManager.getInstanceFor(connection);
 EntityBareJid jid = JidCreate.entityBareFrom("[[email protected]](/web/20220523233813/https://www.baeldung.com/cdn-cgi/l/email-protection)");
 Chat chat = chatManager.chatWith(jid);
@@ -94,13 +94,13 @@ Chat chat = chatManager.chatWith(jid);
 
 之后，我们可以使用`send()`方法发送消息:
 
-```
+```java
 chat.send("Hello!");
 ```
 
 并通过设置侦听器来接收消息:
 
-```
+```java
 chatManager.addIncomingListener(new IncomingChatMessageListener() {
   @Override
   public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
@@ -119,7 +119,7 @@ chatManager.addIncomingListener(new IncomingChatMessageListener() {
 
 让我们来看看如何使用`MultiUserChatManager`创建一个即时房间:
 
-```
+```java
 MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
 MultiUserChat muc = manager.getMultiUserChat(jid);
 Resourcepart room = Resourcepart.from("baeldung_room");
@@ -128,7 +128,7 @@ muc.create(room).makeInstant();
 
 以类似的方式，我们可以创建一个预订房间:
 
-```
+```java
 Set<Jid> owners = JidUtil.jidSetFrom(
   new String[] { "[[email protected]](/web/20220523233813/https://www.baeldung.com/cdn-cgi/l/email-protection)", "[[email protected]](/web/20220523233813/https://www.baeldung.com/cdn-cgi/l/email-protection)" });
 
@@ -144,7 +144,7 @@ Smack 提供的另一个功能是跟踪其他用户的存在。
 
 使用`Roster.getInstanceFor(), `我们可以获得一个`Roster`实例:
 
-```
+```java
 Roster roster = Roster.getInstanceFor(connection);
 ```
 
@@ -152,7 +152,7 @@ Roster roster = Roster.getInstanceFor(connection);
 
 我们可以使用`getEntries()`方法打印`Roster`中的所有条目:
 
-```
+```java
 Collection<RosterEntry> entries = roster.getEntries();
 for (RosterEntry entry : entries) {
     System.out.println(entry);
@@ -161,7 +161,7 @@ for (RosterEntry entry : entries) {
 
 此外，它允许我们通过`RosterListener:`监听其条目和存在数据的变化
 
-```
+```java
 roster.addRosterListener(new RosterListener() {
     public void entriesAdded(Collection<String> addresses) { // handle new entries }
     public void entriesDeleted(Collection<String> addresses) { // handle deleted entries }
@@ -188,7 +188,7 @@ roster.addRosterListener(new RosterListener() {
 
 我们可以使用`send()`方法通过`Connection `传输`Stanza`:
 
-```
+```java
 Stanza presence = new Presence(Presence.Type.subscribe);
 connection.sendStanza(presence);
 ```
@@ -202,7 +202,7 @@ connection.sendStanza(presence);
 
 特别是 **`StanzaCollector `让我们同步等待新的一节**:
 
-```
+```java
 StanzaCollector collector
   = connection.createStanzaCollector(StanzaTypeFilter.MESSAGE);
 Stanza stanza = collector.nextResult();
@@ -210,7 +210,7 @@ Stanza stanza = collector.nextResult();
 
 而 **`StanzaListener`是一个异步通知我们即将到来的段落**的接口:
 
-```
+```java
 connection.addAsyncStanzaListener(new StanzaListener() {
     public void processStanza(Stanza stanza) 
       throws SmackException.NotConnectedException,InterruptedException, 
@@ -226,14 +226,14 @@ connection.addAsyncStanzaListener(new StanzaListener() {
 
 我们可以使用`StanzaTypeFilter`通过类型或者使用`StanzaIdFilter:`通过 ID 来过滤节
 
-```
+```java
 StanzaFilter messageFilter = StanzaTypeFilter.MESSAGE;
 StanzaFilter idFilter = new StanzaIdFilter("123456");
 ```
 
 或者，通过特定地址识别:
 
-```
+```java
 StanzaFilter fromFilter
   = FromMatchesFilter.create(JidCreate.from("[[email protected]](/web/20220523233813/https://www.baeldung.com/cdn-cgi/l/email-protection)"));
 StanzaFilter toFilter
@@ -242,7 +242,7 @@ StanzaFilter toFilter
 
 我们可以使用逻辑过滤运算符(`AndFilter`、`OrFilter`、`NotFilter`)来创建复杂的过滤器:
 
-```
+```java
 StanzaFilter filter
   = new AndFilter(StanzaTypeFilter.Message, FromMatchesFilter.create("[[email protected]](/web/20220523233813/https://www.baeldung.com/cdn-cgi/l/email-protection)"));
 ```

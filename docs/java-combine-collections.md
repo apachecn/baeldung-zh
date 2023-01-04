@@ -12,7 +12,7 @@
 
 除了本地方法，我们还将使用外部库。请在`pom.xml`中添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -40,7 +40,7 @@
 
 我们可以按以下方式使用它:
 
-```
+```java
 Object[] combined = new Object[first.length + second.length];
 System.arraycopy(first, 0, combined, 0, first.length);
 System.arraycopy(second, 0, combined, first.length, second.length);
@@ -56,7 +56,7 @@ System.arraycopy(second, 0, combined, first.length, second.length);
 
 要使用`Stream`组合数组，我们可以使用以下代码:
 
-```
+```java
 Object[] combined = Stream.concat(Arrays.stream(first), Arrays.stream(second)).toArray();
 ```
 
@@ -70,7 +70,7 @@ Object[] combined = Stream.concat(Arrays.stream(first), Arrays.stream(second)).t
 
 Apache commons 库为我们提供了来自 [`ArrayUtils`](https://web.archive.org/web/20221109224619/https://commons.apache.org/proper/commons-lang/javadocs/api-release/org/apache/commons/lang3/ArrayUtils.html) 包的 [`addAll()`](https://web.archive.org/web/20221109224619/https://commons.apache.org/proper/commons-lang/javadocs/api-release/org/apache/commons/lang3/ArrayUtils.html#addAll-T:A-T...-) 方法。我们可以提供目标和源数组作为参数，这个方法将返回一个组合数组:
 
-```
+```java
 Object[] combined = ArrayUtils.addAll(first, second);
 ```
 
@@ -80,7 +80,7 @@ Object[] combined = ArrayUtils.addAll(first, second);
 
 出于同样的目的，番石榴为我们提供了`[concat()](https://web.archive.org/web/20221109224619/https://google.github.io/guava/releases/19.0/api/docs/com/google/common/collect/ObjectArrays.html#concat(T[],%20T[],%20java.lang.Class))`方法:
 
-```
+```java
 Object [] combined = ObjectArrays.concat(first, second, Object.class);
 ```
 
@@ -92,7 +92,7 @@ Object [] combined = ObjectArrays.concat(first, second, Object.class);
 
 [`Collection`](https://web.archive.org/web/20221109224619/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html) 接口本身为我们提供了 [`addAll()`](https://web.archive.org/web/20221109224619/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html#addAll(java.util.Collection)) 方法，将指定集合中的所有元素添加到调用者对象中。这也在[这篇 Baeldung 文章中详细讨论:](/web/20221109224619/https://www.baeldung.com/java-combine-multiple-collections)
 
-```
+```java
 List<Object> combined = new ArrayList<>();
 combined.addAll(first);
 combined.addAll(second);
@@ -104,7 +104,7 @@ combined.addAll(second);
 
 我们可以按照以下方式使用`Stream`和`Collectors`来组合`Lists`:
 
-```
+```java
 List<Object> combined = Stream.concat(first.stream(), second.stream()).collect(Collectors.toList());
 ```
 
@@ -112,7 +112,7 @@ List<Object> combined = Stream.concat(first.stream(), second.stream()).collect(C
 
 我们也可以这样使用`flatMaps` :
 
-```
+```java
 List<Object> combined = Stream.of(first, second).flatMap(Collection::stream).collect(Collectors.toList());
 ```
 
@@ -124,7 +124,7 @@ List<Object> combined = Stream.of(first, second).flatMap(Collection::stream).col
 
 `CollectionUtils.union `执行两个集合的并集并返回一个包含所有元素的集合:
 
-```
+```java
 List<Object> combined = ListUtils.union(first, second);
 ```
 
@@ -134,7 +134,7 @@ List<Object> combined = ListUtils.union(first, second);
 
 **要使用番石榴合并一个`List`，我们将使用由`concat()`方法组成的`Iterable`。**连接所有集合后，我们可以快速获得组合的`List`对象，如下例所示:
 
-```
+```java
 Iterable<Object> combinedIterables = Iterables
   .unmodifiableIterable(Iterables.concat(first, second));
 List<Object> combined = Lists.newArrayList(combinedIterables);
@@ -146,7 +146,7 @@ List<Object> combined = Lists.newArrayList(combinedIterables);
 
 正如我们在 4.1 节已经讨论过的。，[集合](https://web.archive.org/web/20221109224619/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html)接口自带 [`addAll()`](https://web.archive.org/web/20221109224619/https://commons.apache.org/proper/commons-lang/javadocs/api-release/org/apache/commons/lang3/ArrayUtils.html#addAll-T:A-T...-) 方法，也可用于复制`Lists`和`Sets`:
 
-```
+```java
 Set<Object> combined = new HashSet<>();
 combined.addAll(first);
 combined.addAll(second);
@@ -156,7 +156,7 @@ combined.addAll(second);
 
 我们用于`List `对象的相同函数可以应用于此:
 
-```
+```java
 Set<Object> combined = Stream
   .concat(first.stream(), second.stream())
   .collect(Collectors.toSet());
@@ -166,7 +166,7 @@ Set<Object> combined = Stream
 
 与`Lists`类似，当在`Sets`上使用`flatMaps `时，它看起来像:
 
-```
+```java
 Set<Object> combined = Stream.of(first, second)
   .flatMap(Collection::stream)
   .collect(Collectors.toSet());
@@ -176,7 +176,7 @@ Set<Object> combined = Stream.of(first, second)
 
 类似于`ListUtils`，我们也可以使用`SetUtils`来完成`Set`元素的联合:
 
-```
+```java
 Set<Object> combined = SetUtils.union(first, second);
 ```
 
@@ -184,7 +184,7 @@ Set<Object> combined = SetUtils.union(first, second);
 
 番石榴库为我们提供了简单明了的`Sets.union()`方法来组合 Java 中的`Sets`:
 
-```
+```java
 Set<Object> combined = Sets.union(first, second);
 ```
 
@@ -194,7 +194,7 @@ Set<Object> combined = Sets.union(first, second);
 
 我们可以利用`Map`接口，该接口本身为我们提供了`putAll()`方法，该方法将所有映射从`Map`对象的参数复制到调用者`Map`对象:
 
-```
+```java
 Map<Object, Object> combined = new HashMap<>();
 combined.putAll(first);
 combined.putAll(second);
@@ -204,7 +204,7 @@ combined.putAll(second);
 
 **从 Java 8 开始，`Map`类由接受一个键、值和一个双函数的`merge()` 方法组成。**我们可以使用 Java 8 [forEach](/web/20221109224619/https://www.baeldung.com/foreach-java) 语句来实现合并功能:
 
-```
+```java
 second.forEach((key, value) -> first.merge(key, value, String::concat));
 ```
 
@@ -212,7 +212,7 @@ second.forEach((key, value) -> first.merge(key, value, String::concat));
 
 我们也可以这样使用`flatMap`:
 
-```
+```java
 Map<String, String> combined = Stream.of(first, second)
   .map(Map::entrySet)
   .flatMap(Collection::stream)
@@ -223,7 +223,7 @@ Map<String, String> combined = Stream.of(first, second)
 
 [Apache Commons Exec](https://web.archive.org/web/20221109224619/https://commons.apache.org/proper/commons-exec/) 为我们提供了一个直截了当的 [`merge(Map<K,V> first, Map<K,V> second)`](https://web.archive.org/web/20221109224619/https://commons.apache.org/proper/commons-exec/apidocs/org/apache/commons/exec/util/MapUtils.html#merge(java.util.Map,%20java.util.Map)) 方法:
 
-```
+```java
 Map<String, String> combined = MapUtils.merge(first, second);
 ```
 
@@ -231,7 +231,7 @@ Map<String, String> combined = MapUtils.merge(first, second);
 
 我们可以使用 Google 的番石榴库提供的`[ImmutableMap](https://web.archive.org/web/20221109224619/https://google.github.io/guava/releases/21.0/api/docs/com/google/common/collect/ImmutableMap.html) `。它的`[putAll()](https://web.archive.org/web/20221109224619/https://google.github.io/guava/releases/21.0/api/docs/com/google/common/collect/ImmutableMap.Builder.html#putAll-java.util.Map-)`方法将所有给定映射的键和值关联到构建的映射中:
 
-```
+```java
 Map<String, String> combined = ImmutableMap.<String, String>builder()
   .putAll(first)
   .putAll(second)

@@ -22,7 +22,7 @@ A Spring Login Example - How to Set Up a simple Login Form, a Basic Security XML
 
 为了给我们的 Spring Boot 应用程序增加安全性，我们需要添加`security starter dependency`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -37,14 +37,14 @@ A Spring Login Example - How to Set Up a simple Login Form, a Basic Security XML
 
 有一些预定义的属性:
 
-```
+```java
 spring.security.user.name
 spring.security.user.password
 ```
 
 如果我们不使用预定义属性`spring.security.user.password` 配置密码并启动应用程序，默认密码会随机生成并打印在控制台日志中:
 
-```
+```java
 Using default security password: c8be15de-4488-4490-9dc6-fab3f91435c6
 ```
 
@@ -56,7 +56,7 @@ Using default security password: c8be15de-4488-4490-9dc6-fab3f91435c6
 
 我们可以通过简单的排除来做到这一点:
 
-```
+```java
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 public class SpringBootSecurityApplication {
 
@@ -68,7 +68,7 @@ public class SpringBootSecurityApplication {
 
 或者我们可以在`application.properties`文件中添加一些配置:
 
-```
+```java
 spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration
 ```
 
@@ -99,13 +99,13 @@ spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.security.Sec
 
 例如，我们可以通过添加自己的密码来覆盖默认密码:
 
-```
+```java
 spring.security.user.password=password
 ```
 
 如果我们想要一个更灵活的配置，比如多个用户和角色，我们需要利用一个完整的`@Configuration`类:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class BasicConfiguration extends WebSecurityConfigurerAdapter {
@@ -145,7 +145,7 @@ public class BasicConfiguration extends WebSecurityConfigurerAdapter {
 
 现在，我们应该通过几个快速现场测试来验证我们的安全配置是否正确应用:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class BasicConfigurationIntegrationTest {
@@ -194,7 +194,7 @@ Spring Boot 1.x 附带的 [Spring Security OAuth](https://web.archive.org/web/20
 
 对于遗留堆栈(使用 Spring Security OAuth)，我们首先需要添加一个 Maven 依赖项来开始设置我们的应用程序:
 
-```
+```java
 <dependency>
    <groupId>org.springframework.security.oauth</groupId>
    <artifactId>spring-security-oauth2</artifactId>
@@ -211,7 +211,7 @@ Spring Boot 1.x 附带的 [Spring Security OAuth](https://web.archive.org/web/20
 
 启动时，我们会在日志中注意到，自动配置类将为我们的授权服务器生成一个客户端 id 和一个客户端密码，当然还有一个用于基本身份验证的随机密码:
 
-```
+```java
 Using default security password: a81cb256-f243-40c0-a585-81ce1b952a98
 security.oauth2.client.client-id = 39d2835b-1f87-4a77-9798-e2975f36972e
 security.oauth2.client.client-secret = f1463f8b-0791-46fe-9269-521b86c55b71
@@ -219,7 +219,7 @@ security.oauth2.client.client-secret = f1463f8b-0791-46fe-9269-521b86c55b71
 
 这些凭证可用于获取访问令牌:
 
-```
+```java
 curl -X POST -u 39d2835b-1f87-4a77-9798-e2975f36972e:f1463f8b-0791-46fe-9269-521b86c55b71 \
  -d grant_type=client_credentials 
  -d username=user 
@@ -256,7 +256,7 @@ Spring Boot OAuth2 还介绍了其他一些使用案例:
 
 要包含对资源服务器的支持，我们需要添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>    
@@ -267,7 +267,7 @@ Spring Boot OAuth2 还介绍了其他一些使用案例:
 
 另外，在我们的安全配置中，我们需要包括 [`oauth2ResourceServer()`](https://web.archive.org/web/20220701015845/https://docs.spring.io/spring-security-oauth2-boot/docs/2.2.x-SNAPSHOT/reference/html/boot-features-security-oauth2-resource-server.html) DSL:
 
-```
+```java
 @Configuration
 public class JWTSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -289,7 +289,7 @@ public class JWTSecurityConfig extends WebSecurityConfigurerAdapter {
 
 以下是 OAuth2 客户端支持的具体依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-oauth2-client</artifactId>
@@ -314,7 +314,7 @@ Spring Boot 2 也使用了大多数 Spring Security 的默认设置。因此，*
 
 为了简化与安全相关的配置， **Spring Boot 新协议删除了 Spring Boot 1 协议的以下属性**:
 
-```
+```java
 security.basic.authorize-mode
 security.basic.enabled
 security.basic.path

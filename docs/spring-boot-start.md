@@ -26,7 +26,7 @@ A quick overview of the most common Spring Boot Starters, along with examples on
 
 生成的项目依赖于引导父项目:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -37,7 +37,7 @@ A quick overview of the most common Spring Boot Starters, along with examples on
 
 最初的依赖非常简单:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -56,7 +56,7 @@ A quick overview of the most common Spring Boot Starters, along with examples on
 
 接下来，我们将为我们的应用程序配置一个简单的`main`类:
 
-```
+```java
 @SpringBootApplication
 public class Application {
     public static void main(String[] args) {
@@ -69,7 +69,7 @@ public class Application {
 
 最后，我们将定义一个简单的`application.properties` 文件，它现在只有一个属性:
 
-```
+```java
 server.port=8081 
 ```
 
@@ -81,7 +81,7 @@ server.port=8081
 
 首先，我们需要将`spring-boot-starter-thymeleaf`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency> 
     <groupId>org.springframework.boot</groupId> 
     <artifactId>spring-boot-starter-thymeleaf</artifactId> 
@@ -92,7 +92,7 @@ server.port=8081
 
 我们现在可以在我们的`application.properties`中配置它:
 
-```
+```java
 spring.thymeleaf.cache=false
 spring.thymeleaf.enabled=true 
 spring.thymeleaf.prefix=classpath:/templates/
@@ -103,7 +103,7 @@ spring.application.name=Bootstrap Spring Boot
 
 接下来，我们将定义一个简单的[控制器](/web/20220923104110/https://www.baeldung.com/spring-controllers)和一个带有欢迎消息的基本主页:
 
-```
+```java
 @Controller
 public class SimpleController {
     @Value("${spring.application.name}")
@@ -119,7 +119,7 @@ public class SimpleController {
 
 最后，这里是我们的`home.html`:
 
-```
+```java
 <html>
 <head><title>Home Page</title></head>
 <body>
@@ -135,7 +135,7 @@ public class SimpleController {
 
 接下来，让我们通过首先包含安全启动程序来增加应用程序的安全性:
 
-```
+```java
 <dependency> 
     <groupId>org.springframework.boot</groupId> 
     <artifactId>spring-boot-starter-security</artifactId> 
@@ -148,7 +148,7 @@ public class SimpleController {
 
 这就是为什么，如果我们在类路径上有 starter，我们通常应该定义我们自己的定制安全配置:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -174,7 +174,7 @@ public class SecurityConfig {
 
 让我们首先定义我们的数据模型，一个简单的`Book`实体:
 
-```
+```java
 @Entity
 public class Book {
 
@@ -192,7 +192,7 @@ public class Book {
 
 和它的存储库，在这里很好地利用了 Spring 数据:
 
-```
+```java
 public interface BookRepository extends CrudRepository<Book, Long> {
     List<Book> findByTitle(String title);
 }
@@ -200,7 +200,7 @@ public interface BookRepository extends CrudRepository<Book, Long> {
 
 最后，我们当然需要配置新的持久层:
 
-```
+```java
 @EnableJpaRepositories("com.baeldung.persistence.repo") 
 @EntityScan("com.baeldung.persistence.model")
 @SpringBootApplication 
@@ -218,7 +218,7 @@ public class Application {
 
 一旦我们包含了 H2 依赖， **Spring Boot 会自动检测它并设置我们的持久性**,除了数据源属性之外，不需要额外的配置:
 
-```
+```java
 spring.datasource.driver-class-name=org.h2.Driver
 spring.datasource.url=jdbc:h2:mem:bootapp;DB_CLOSE_DELAY=-1
 spring.datasource.username=sa
@@ -233,7 +233,7 @@ spring.datasource.password=
 
 我们将实现基本的 CRUD 操作，通过一些简单的验证来公开`Book`资源:
 
-```
+```java
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
@@ -290,7 +290,7 @@ public class BookController {
 
 既然核心应用程序已经准备就绪，让我们关注一下**一个简单的集中式错误处理机制**使用`@ControllerAdvice`:
 
-```
+```java
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -314,7 +314,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
 除了我们在这里处理的标准异常，我们还使用了一个自定义异常，`BookNotFoundException`:
 
-```
+```java
 public class BookNotFoundException extends RuntimeException {
 
     public BookNotFoundException(String message, Throwable cause) {
@@ -328,7 +328,7 @@ public class BookNotFoundException extends RuntimeException {
 
 注意，默认情况下，Spring Boot 还提供了一个`/error`映射。我们可以通过创建一个简单的`error.html`来自定义它的视图:
 
-```
+```java
 <html lang="en">
 <head><title>Error Occurred</title></head>
 <body>
@@ -343,7 +343,7 @@ public class BookNotFoundException extends RuntimeException {
 
 像 Boot 中的大多数其他方面一样，我们可以用一个简单的属性来控制它:
 
-```
+```java
 server.error.path=/error2
 ```
 
@@ -353,7 +353,7 @@ server.error.path=/error2
 
 我们可以利用 [`@SpringBootTest`](/web/20220923104110/https://www.baeldung.com/spring-boot-testing) 加载应用上下文，并验证运行应用时没有错误:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class SpringContextTest {
@@ -368,7 +368,7 @@ public class SpringContextTest {
 
 首先，我们将添加 [`rest-assured`](https://web.archive.org/web/20220923104110/https://search.maven.org/artifact/io.rest-assured/rest-assured) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.rest-assured</groupId>
     <artifactId>rest-assured</artifactId>
@@ -378,7 +378,7 @@ public class SpringContextTest {
 
 现在我们可以添加测试:
 
-```
+```java
 public class SpringBootBootstrapLiveTest {
 
     private static final String API_ROOT
@@ -403,7 +403,7 @@ public class SpringBootBootstrapLiveTest {
 
 首先，我们可以尝试使用不同的方法来查找书籍:
 
-```
+```java
 @Test
 public void whenGetAllBooks_thenOK() {
     Response response = RestAssured.get(API_ROOT);
@@ -443,7 +443,7 @@ public void whenGetNotExistBookById_thenNotFound() {
 
 接下来，我们将测试创建一本新书:
 
-```
+```java
 @Test
 public void whenCreateNewBook_thenCreated() {
     Book book = createRandomBook();
@@ -470,7 +470,7 @@ public void whenInvalidBook_thenError() {
 
 然后，我们将更新现有的图书:
 
-```
+```java
 @Test
 public void whenUpdateCreatedBook_thenUpdated() {
     Book book = createRandomBook();
@@ -494,7 +494,7 @@ public void whenUpdateCreatedBook_thenUpdated() {
 
 我们可以删除一本书:
 
-```
+```java
 @Test
 public void whenDeleteCreatedBook_thenOk() {
     Book book = createRandomBook();

@@ -24,7 +24,7 @@ Swagger 的默认示例值有点不透明，我们可以在[中看到 Swagger �
 
 为了更好地记录 API 并指导用户，我们可以使用如何插入值的`example`标签:
 
-```
+```java
 parameters:
   - in: body
     description: ""
@@ -47,7 +47,7 @@ parameters:
 
 我们需要使用数据模型中的`dataType`和`example`以及`@ApiModel` 和`@ApiModelProperty` 注释:
 
-```
+```java
 @ApiModel
 public class Foo {
     private long id;
@@ -59,7 +59,7 @@ public class Foo {
 
 所以，让我们用`@ApiImplicitParams` 来表示:
 
-```
+```java
 @RequestMapping(method = RequestMethod.POST, value = "/foos")
 @ResponseStatus(HttpStatus.CREATED)
 @ResponseBody

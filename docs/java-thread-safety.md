@@ -18,7 +18,7 @@ Java 支持现成的多线程。这意味着通过在独立的工作线程中并
 
 为了更好地理解这种方法，让我们考虑一个简单的实用程序类，它有一个计算数字阶乘的静态方法:
 
-```
+```java
 public class MathUtils {
 
     public static BigInteger factorial(int number) {
@@ -49,7 +49,7 @@ public class MathUtils {
 
 在 Java 中创建不可变类最简单的方法是声明所有字段`private`和`final`，并且不提供 setters:
 
-```
+```java
 public class MessageService {
 
     private final String message;
@@ -79,7 +79,7 @@ public class MessageService {
 
 例如，我们可以定义一个存储`integers`的`array`的`Thread`类:
 
-```
+```java
 public class ThreadA extends Thread {
 
     private final List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
@@ -93,7 +93,7 @@ public class ThreadA extends Thread {
 
 同时，另一个可能持有`strings`的`array`:
 
-```
+```java
 public class ThreadB extends Thread {
 
     private final List<String> letters = Arrays.asList("a", "b", "c", "d", "e", "f");
@@ -111,7 +111,7 @@ public class ThreadB extends Thread {
 
 让我们考虑下面的`StateHolder`类:
 
-```
+```java
 public class StateHolder {
 
     private final String state;
@@ -122,7 +122,7 @@ public class StateHolder {
 
 我们可以很容易地使它成为一个线程局部变量:
 
-```
+```java
 public class ThreadState {
 
     public static final ThreadLocal<StateHolder> statePerThread = new ThreadLocal<StateHolder>() {
@@ -147,7 +147,7 @@ public class ThreadState {
 
 例如，我们可以使用这些[同步包装器](/web/20220929100635/https://www.baeldung.com/java-synchronized-collections)中的一个来创建线程安全集合:
 
-```
+```java
 Collection<Integer> syncCollection = Collections.synchronizedCollection(new ArrayList<>());
 Thread thread1 = new Thread(() -> syncCollection.addAll(Arrays.asList(1, 2, 3, 4, 5, 6)));
 Thread thread2 = new Thread(() -> syncCollection.addAll(Arrays.asList(7, 8, 9, 10, 11, 12)));
@@ -167,7 +167,7 @@ thread2.start();
 
 Java 提供了`[java.util.concurrent](https://web.archive.org/web/20220929100635/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/package-summary.html)`包，其中包含几个并发集合，比如`[ConcurrentHashMap](https://web.archive.org/web/20220929100635/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/ConcurrentHashMap.html)`:
 
-```
+```java
 Map<String,String> concurrentMap = new ConcurrentHashMap<>();
 concurrentMap.put("1", "one");
 concurrentMap.put("2", "two");
@@ -188,7 +188,7 @@ concurrentMap.put("3", "three");
 
 为了理解这解决的问题，让我们看下面的`Counter`类:
 
-```
+```java
 public class Counter {
 
     private int counter = 0;
@@ -209,7 +209,7 @@ public class Counter {
 
 让我们通过使用一个`AtomicInteger`对象来创建一个`Counter`类的线程安全实现:
 
-```
+```java
 public class AtomicCounter {
 
     private final AtomicInteger counter = new AtomicInteger();
@@ -236,7 +236,7 @@ public class AtomicCounter {
 
 我们可以用另一种方式创建一个线程安全版本的`incrementCounter()` ,使它成为一个同步方法:
 
-```
+```java
 public synchronized void incrementCounter() {
     counter += 1;
 }
@@ -260,7 +260,7 @@ public synchronized void incrementCounter() {
 
 为了举例说明这个用例，让我们重构一下`incrementCounter()`方法:
 
-```
+```java
 public void incrementCounter() {
     // additional unsynced operations
     synchronized(this) {
@@ -281,7 +281,7 @@ public void incrementCounter() {
 
 这不仅提供了对多线程环境中的共享资源**的协调访问，而且还使用外部实体来强制对资源**的独占访问:
 
-```
+```java
 public class ObjectLockCounter {
 
     private int counter = 0;
@@ -307,7 +307,7 @@ public class ObjectLockCounter {
 
 即使我们可以使用任何 Java 对象作为内部锁，我们也应该避免使用`Strings`进行锁定:
 
-```
+```java
 public class Class1 {
     private static final String LOCK  = "Lock";
 
@@ -333,7 +333,7 @@ public class Class2 {
 
 为了防止这种情况，我们可以使用 [`volatile`](/web/20220929100635/https://www.baeldung.com/java-volatile) 类字段:
 
-```
+```java
 public class Counter {
 
     private volatile int counter;
@@ -349,7 +349,7 @@ public class Counter {
 
 让我们考虑下面的例子:
 
-```
+```java
 public class User {
 
     private String name;
@@ -376,7 +376,7 @@ Java 提供了一组改进的`[Lock](/web/20220929100635/https://www.baeldung.co
 
 `[ReentrantLock](https://web.archive.org/web/20220929100635/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/locks/ReentrantLock.html)`实例允许我们这样做，**防止排队线程遭受某种类型的[资源匮乏](https://web.archive.org/web/20220929100635/https://en.wikipedia.org/wiki/Starvation_(computer_science))** :
 
-```
+```java
 public class ReentrantLockCounter {
 
     private int counter;
@@ -408,7 +408,7 @@ public class ReentrantLockCounter {
 
 下面是我们如何使用`ReadWriteLock`锁:
 
-```
+```java
 public class ReentrantReadWriteLockCounter {
 
     private int counter;

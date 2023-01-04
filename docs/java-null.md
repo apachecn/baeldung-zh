@@ -14,7 +14,7 @@
 
 假设我们想要声明一个`boolean`变量:
 
-```
+```java
 boolean valid;
 ```
 
@@ -28,14 +28,14 @@ boolean valid;
 
 这解释了为什么我们可以将完全相同的`null`引用赋给完全不同引用类型的变量:
 
-```
+```java
 Integer age = null;
 List<String> names = null;
 ```
 
 这也解释了为什么我们不能将`null`的值赋给像`boolean`这样的原始类型的变量:
 
-```
+```java
 Boolean validReference = null // this works fine
 boolean validPrimitive = null // this does not
 ```
@@ -46,7 +46,7 @@ boolean validPrimitive = null // this does not
 
 让我们来看看两个简单的方法，它们都接受一个参数，但类型不同:
 
-```
+```java
 void printMe(Integer number) {
   System.out.println(number);
 }
@@ -58,14 +58,14 @@ void printMe(String string) {
 
 由于 Java 中的多态性，我们可以这样调用这些方法:
 
-```
+```java
 printMe(6);
 printMe("Hello");
 ```
 
 编译器会理解我们引用的是什么方法。但是下面的语句会导致编译器错误:
 
-```
+```java
 printMe(null); // does not compile
 ```
 
@@ -75,7 +75,7 @@ printMe(null); // does not compile
 
 正如我们已经看到的，我们可以将`null`引用分配给一个引用类型的变量，即使`null`在技术上是一个不同的、独立的类型。**如果我们试图使用那个变量的某些属性，就好像它不是`null,`一样，我们将得到一个运行时异常—`NullPointerException`。**发生这种情况是因为`null`引用不是我们所引用的类型，也没有我们期望的属性:
 
-```
+```java
 String name = null;
 name.toLowerCase(); // will cause exception at runtime
 ```

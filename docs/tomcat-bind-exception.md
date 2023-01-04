@@ -28,13 +28,13 @@
 
 **在 Windows 上，**输出的最后一列将给出当前在 8080 上运行的服务的进程 id:
 
-```
+```java
 netstat -ano | find "8080"
 ```
 
 输出:
 
-```
+```java
 TCP 0.0.0.0:8080 0.0.0.0:0 LISTENING 21376 
 ```
 
@@ -42,13 +42,13 @@ TCP 0.0.0.0:8080 0.0.0.0:0 LISTENING 21376
 
 **在 Unix/Linux 环境下**:
 
-```
+```java
 netstat -pant | grep "8080"
 ```
 
 输出:
 
-```
+```java
 TCP 0.0.0.0:8080 0.0.0.0:0 LISTENING 21376 
 ```
 
@@ -56,13 +56,13 @@ TCP 0.0.0.0:8080 0.0.0.0:0 LISTENING 21376
 
 **在 Mac OS X 上:**
 
-```
+```java
 lsof -t -i :8080
 ```
 
 输出:
 
-```
+```java
 21376
 ```
 
@@ -81,7 +81,7 @@ lsof -t -i :8080
 
 `server.xml`文件如下所示:
 
-```
+```java
 <Connector port="8080" protocol="HTTP/1.1" 
   connectionTimeout="20000" redirectPort="8443" />
 ```
@@ -96,19 +96,19 @@ lsof -t -i :8080
 
 **在 Windows 环境下:**
 
-```
+```java
 taskkill /F /PID 21376
 ```
 
 **在 Unix/Linux 环境下:**
 
-```
+```java
 kill - 21376
 ```
 
 **Mac OS X 环境:**
 
-```
+```java
 kill -9 21376
 ```
 

@@ -24,7 +24,7 @@
 
 假设客户服务向订单服务发送请求数据，如下所示:
 
-```
+```java
 "order": {
     "customerId": 1,
     "itemId": "A152"
@@ -33,7 +33,7 @@
 
 **客户和订单服务使用** **合同** `**.**` 相互通信。合同，也就是服务请求，以 JSON 格式显示。作为一个 Java 模型，`OrderDTO`类表示客户服务和订单服务之间的契约:
 
-```
+```java
 public class OrderDTO {
     private int customerId;
     private String itemId;
@@ -46,7 +46,7 @@ public class OrderDTO {
 
 微服务需要来自其他服务的某些信息来处理任何请求。假设有第三个微服务接收订单支付请求。与订单服务不同，此服务需要不同的客户信息:
 
-```
+```java
 public class CustomerDTO {
     private String firstName;
     private String lastName;
@@ -58,7 +58,7 @@ public class CustomerDTO {
 
 如果我们还添加了送货服务，客户信息将会:
 
-```
+```java
 public class CustomerDTO {
     private String firstName;
     private String lastName;
@@ -73,7 +73,7 @@ public class CustomerDTO {
 
 **在每个微服务模块中，让我们创建一个客户端模块(库)** **，并在其旁边创建一个服务器模块**:
 
-```
+```java
 order-service
 |__ order-client
 |__ order-server
@@ -81,7 +81,7 @@ order-service
 
 `order-client`模块包含一个与客户服务共享的 DTO。因此，`order-client`模块的结构如下:
 
-```
+```java
 order-service
 └──order-client
      OrderClient.java
@@ -91,7 +91,7 @@ order-service
 
 `OrderClient`是定义用于处理订单请求的`order`方法的接口:
 
-```
+```java
 public interface OrderClient {
     OrderResponse order(OrderDTO orderDTO);
 }
@@ -99,7 +99,7 @@ public interface OrderClient {
 
 为了实现`order`方法，我们使用`RestTemplate`对象向订单服务发送 POST 请求:
 
-```
+```java
 String serviceUrl = "http://localhost:8002/order-service";
 OrderResponse orderResponse = restTemplate.postForObject(serviceUrl + "/create", 
   request, OrderResponse.class);
@@ -107,7 +107,7 @@ OrderResponse orderResponse = restTemplate.postForObject(serviceUrl + "/create",
 
 此外，`order-client`模块已经可以使用了。它现在成为了`customer-service`模块的依赖库:
 
-```
+```java
 [INFO] --- maven-dependency-plugin:3.1.2:list (default-cli) @ customer-service ---
 [INFO] The following files have been resolved:
 [INFO]    com.baeldung.orderservice:order-client:jar:1.0-SNAPSHOT:compile
@@ -115,7 +115,7 @@ OrderResponse orderResponse = restTemplate.postForObject(serviceUrl + "/create",
 
 当然，如果没有`order-server`模块向订单客户端公开“/create”服务端点，这是没有意义的:
 
-```
+```java
 @PostMapping("/create")
 public OrderResponse createOrder(@RequestBody OrderDTO request)
 ```

@@ -18,7 +18,7 @@
 
 简而言之，这样的机器声明状态和从一个状态到另一个状态的方式。如果让一个流通过它，可以用下面的算法(伪代码)验证它的格式:
 
-```
+```java
 for (char c in input) {
     if (automaton.accepts(c)) {
         automaton.switchState(c);
@@ -50,7 +50,7 @@ if (automaton.canStop() && input.isEmpty()) {
 
 实现一个有限的[状态机](/web/20220525005723/https://www.baeldung.com/cs/state-machines)非常简单。我们有以下内容:
 
-```
+```java
 public interface FiniteStateMachine {
     FiniteStateMachine switchState(CharSequence c);
     boolean canStop();
@@ -74,7 +74,7 @@ interface Transition {
 *   一个`State`有一个可以遵循的转换列表(向外的箭头)
 *   一个`Transition`告诉我们字符是否被接受，并给我们下一个`State`
 
-```
+```java
 publi class RtFiniteStateMachine implements FiniteStateMachine {
 
     private State current;
@@ -97,7 +97,7 @@ publi class RtFiniteStateMachine implements FiniteStateMachine {
 
 接下来，我们有了实现`RtState`。为了流畅起见，`with(Transition)`方法在添加过渡后返回实例。一个`State`也告诉我们它是否是最终的(双圆圈)。
 
-```
+```java
 public class RtState implements State {
 
     private List<Transition> transitions;
@@ -135,7 +135,7 @@ public class RtState implements State {
 
 最后，`RtTransition`检查转换规则并给出下一个`State`:
 
-```
+```java
 public class RtTransition implements Transition {
 
     private String rule;
@@ -154,7 +154,7 @@ public class RtTransition implements Transition {
 
 上面的代码是[这里的](https://web.archive.org/web/20220525005723/https://github.com/eugenp/tutorials/tree/master/algorithms-miscellaneous-1/src/main/java/com/baeldung/algorithms/automata)。有了这个实现，您应该能够构建任何状态机。开头描述的算法非常简单:
 
-```
+```java
 String json = "{\"key\":\"value\"}";
 FiniteStateMachine machine = this.buildJsonStateMachine();
 for (int i = 0; i < json.length(); i++) {

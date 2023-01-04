@@ -30,13 +30,13 @@
 
 ### 可用签名
 
-```
+```java
 public String concat(String str)
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenCallConcat_thenCorrect() {
     assertEquals("elephant", "elep".concat("hant"));

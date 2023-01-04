@@ -12,7 +12,7 @@
 
 让我们首先考虑一个由 JSON 文档表示的示例 HTTP `Customer`资源:
 
-```
+```java
 { 
     "id":"1",
     "telephone":"001-555-1234",
@@ -37,7 +37,7 @@ HTTP PATCH 方法提供了一种对资源应用部分更新的好方法。因此
 
 让我们看一个 HTTP 补丁请求的简单例子:
 
-```
+```java
 PATCH /customers/1234 HTTP/1.1
 Host: www.example.com
 Content-Type: application/example
@@ -59,7 +59,7 @@ JSON 补丁操作由单个`op`对象表示。
 
 例如，这里我们定义了一个 JSON 补丁操作来更新客户的电话号码:
 
-```
+```java
 {
     "op":"replace",
     "path":"/telephone",
@@ -77,7 +77,7 @@ JSON 补丁操作由单个`op`对象表示。
 
 例如，让我们将“面包”添加到客户的`favorites` 列表中，索引为 0:
 
-```
+```java
 {
     "op":"add",
     "path":"/favorites/0",
@@ -87,7 +87,7 @@ JSON 补丁操作由单个`op`对象表示。
 
 在`add`操作之后，修改后的客户详细信息将是:
 
-```
+```java
 {
     "id":"1",
     "telephone":"001-555-1234",
@@ -102,7 +102,7 @@ JSON 补丁操作由单个`op`对象表示。
 
 例如，让我们为我们的客户删除`communcationPreferences`:
 
-```
+```java
 {
     "op":"remove",
     "path":"/communicationPreferences"
@@ -111,7 +111,7 @@ JSON 补丁操作由单个`op`对象表示。
 
 在`remove`操作之后，修改后的客户详细信息将是:
 
-```
+```java
 {
     "id":"1",
     "telephone":"001-555-1234",
@@ -126,7 +126,7 @@ JSON 补丁操作由单个`op`对象表示。
 
 例如，让我们更新客户的电话号码:
 
-```
+```java
 {
     "op":"replace",
     "path":"/telephone",
@@ -136,7 +136,7 @@ JSON 补丁操作由单个`op`对象表示。
 
 在`replace`操作之后，修改后的客户详细信息将是:
 
-```
+```java
 { 
     "id":"1", 
     "telephone":"001-555-5678", 
@@ -151,7 +151,7 @@ JSON 补丁操作由单个`op`对象表示。
 
 例如，让我们将“面包”从客户的`favorites`列表顶部移到列表底部:
 
-```
+```java
 {
     "op":"move",
     "from":"/favorites/0",
@@ -161,7 +161,7 @@ JSON 补丁操作由单个`op`对象表示。
 
 在`move`操作之后，修改后的客户详细信息将是:
 
-```
+```java
 { 
     "id":"1", 
     "telephone":"001-555-5678", 
@@ -178,7 +178,7 @@ JSON 补丁操作由单个`op`对象表示。
 
 例如，让我们在`favorites`列表中复制“牛奶”:
 
-```
+```java
 {
     "op":"copy",
     "from":"/favorites/0",
@@ -188,7 +188,7 @@ JSON 补丁操作由单个`op`对象表示。
 
 在`copy`操作之后，修改后的客户详细信息将是:
 
-```
+```java
 { 
     "id":"1", 
     "telephone":"001-555-5678", 
@@ -203,7 +203,7 @@ JSON 补丁操作由单个`op`对象表示。
 
 例如，让我们测试对客户的`telephone`字段的更新是否成功:
 
-```
+```java
 {
     "op":"test", 
     "path":"/telephone",
@@ -219,7 +219,7 @@ JSON 补丁操作由单个`op`对象表示。
 
 下面是使用 JSON 补丁格式对客户的`telephone`和`favorites` 列表执行部分更新的 HTTP 补丁请求:
 
-```
+```java
 curl -i -X PATCH http://localhost:8080/customers/1 -H "Content-Type: application/json-patch+json" -d '[
     {"op":"replace","path":"/telephone","value":"+1-555-56"},
     {"op":"add","path":"/favorites/0","value":"Bread"}
@@ -228,7 +228,7 @@ curl -i -X PATCH http://localhost:8080/customers/1 -H "Content-Type: application
 
 **最重要的是，JSON 补丁请求的`Content-Type`是`application/json-patch+json`。同样，请求体是一个 JSON 补丁操作对象的数组:**
 
-```
+```java
 [
     {"op":"replace","path":"/telephone","value":"+1-555-56"},
     {"op":"add","path":"/favorites/0","value":"Bread"}
@@ -255,7 +255,7 @@ json 补丁的最新版本可以在 Maven 中央存储库中找到。
 
 首先，让我们将依赖项添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.github.java-json-tools</groupId>
     <artifactId>json-patch</artifactId>
@@ -265,7 +265,7 @@ json 补丁的最新版本可以在 Maven 中央存储库中找到。
 
 现在，让我们定义一个模式类来表示`Customer` JSON 文档:
 
-```
+```java
 public class Customer {
     private String id;
     private String telephone;
@@ -282,7 +282,7 @@ public class Customer {
 
 然后，我们可以为我们的客户用例实现 HTTP 补丁:
 
-```
+```java
 @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
 public ResponseEntity<Customer> updateCustomer(@PathVariable String id, @RequestBody JsonPatch patch) {
     try {
@@ -312,7 +312,7 @@ public ResponseEntity<Customer> updateCustomer(@PathVariable String id, @Request
 
 最重要的是，真正的魔法发生在`applyPatchToCustomer(patch, customer)`方法中:
 
-```
+```java
 private Customer applyPatchToCustomer(
   JsonPatch patch, Customer targetCustomer) throws JsonPatchException, JsonProcessingException {
     JsonNode patched = patch.apply(objectMapper.convertValue(targetCustomer, JsonNode.class));
@@ -331,14 +331,14 @@ private Customer applyPatchToCustomer(
 
 首先，让我们使用对 API 的 POST 请求来创建一个客户:
 
-```
+```java
 curl -i -X POST http://localhost:8080/customers -H "Content-Type: application/json" 
   -d '{"telephone":"+1-555-12","favorites":["Milk","Eggs"],"communicationPreferences":{"post":true,"email":true}}' 
 ```
 
 我们收到一个`201 Created` 响应:
 
-```
+```java
 HTTP/1.1 201
 Location: http://localhost:8080/customers/1 
 ```
@@ -347,7 +347,7 @@ Location: http://localhost:8080/customers/1
 
 接下来，让我们使用补丁请求向该客户请求部分更新:
 
-```
+```java
 curl -i -X PATCH http://localhost:8080/customers/1 -H "Content-Type: application/json-patch+json" -d '[
     {"op":"replace","path":"/telephone","value":"+1-555-56"}, 
     {"op":"add","path":"/favorites/0","value": "Bread"}
@@ -356,7 +356,7 @@ curl -i -X PATCH http://localhost:8080/customers/1 -H "Content-Type: application
 
 我们收到一个`200` `OK`响应，其中包含修补后的客户详细信息:
 
-```
+```java
 HTTP/1.1 200
 Content-Type: application/json
 Transfer-Encoding: chunked

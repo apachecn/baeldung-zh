@@ -14,7 +14,7 @@
 
 在我们开始之前，让我们添加我们的 [Maven 依赖项](https://web.archive.org/web/20220628054520/https://search.maven.org/classic/#search%7Cga%7C1%7C%20(g%3A%22org.spockframework%22%20AND%20a%3A%22spock-core%22)%20OR%20(g%3A%22org.codehaus.groovy%22%20AND%20a%3A%22groovy-all%22)):
 
-```
+```java
 <dependency>
     <groupId>org.spockframework</groupId>
     <artifactId>spock-core</artifactId>
@@ -55,7 +55,7 @@ Java 已经有许多不同的、成熟的库来模仿类和接口。虽然这些
 
 让我们创建一个名为`Item`的模型类:
 
-```
+```java
 public class Item {
     private final String id;
     private final String name;
@@ -66,13 +66,13 @@ public class Item {
 
 我们需要覆盖`equals(Object other)` 方法来使我们的断言工作。**当我们使用双等号(==):** 时，Spock 将在断言期间使用`equals`
 
-```
+```java
 new Item('1', 'name') == new Item('1', 'name')
 ```
 
 现在，让我们用一个方法创建一个接口`ItemProvider`:
 
-```
+```java
 public interface ItemProvider {
     List<Item> getItems(List<String> itemIds);
 }
@@ -80,7 +80,7 @@ public interface ItemProvider {
 
 我们还需要一个将被测试的类。我们将在`ItemService:`中添加一个`ItemProvider `作为依赖项
 
-```
+```java
 public class ItemService {
     private final ItemProvider itemProvider;
 
@@ -106,7 +106,7 @@ public class ItemService {
 
 让我们使用`ItemProvider`依赖项的`Stub`来初始化`setup()`方法中的`ItemService`对象:
 
-```
+```java
 ItemProvider itemProvider
 ItemService itemService
 
@@ -118,7 +118,7 @@ def setup() {
 
 现在，**让`itemProvider` 用特定的参数**在每次调用时返回一个条目列表:
 
-```
+```java
 itemProvider.getItems(['offer-id', 'offer-id-2']) >> 
   [new Item('offer-id-2', 'Zname'), new Item('offer-id', 'Aname')]
 ```
@@ -127,7 +127,7 @@ itemProvider.getItems(['offer-id', 'offer-id-2']) >>
 
 下面是整个测试方法:
 
-```
+```java
 def 'should return items sorted by name'() {
     given:
     def ids = ['offer-id', 'offer-id-2']
@@ -157,7 +157,7 @@ def 'should return items sorted by name'() {
 
 示例消息代理是 RabbitMQ 或 Kafka `, `所以一般来说，我们将只描述我们的契约:
 
-```
+```java
 public interface EventPublisher {
     void publish(String addedOfferId);
 }
@@ -165,7 +165,7 @@ public interface EventPublisher {
 
 我们的测试方法将在数据库中保存非空项，然后发布事件。在我们的例子中，在数据库中保存条目是不相关的，所以我们只放一个注释:
 
-```
+```java
 void saveItems(List<String> itemIds) {
     List<String> notEmptyOfferIds = itemIds.stream()
       .filter(itemId -> !itemId.isEmpty())
@@ -183,7 +183,7 @@ void saveItems(List<String> itemIds) {
 
 首先，**我们需要在我们的`setup() `方法**中模仿`EventPublisher `。所以基本上，我们创建一个新的实例字段，并使用`Mock(Class)`函数模拟它:
 
-```
+```java
 class ItemServiceTest extends Specification {
 
     ItemProvider itemProvider
@@ -199,7 +199,7 @@ class ItemServiceTest extends Specification {
 
 现在，我们可以编写我们的测试方法了。我们将传递 3 个字符串: "、' a '、' b '，我们希望我们的`eventPublisher` 将发布 2 个带有' a '和' b '字符串的事件:
 
-```
+```java
 def 'should publish events about new non-empty saved offers'() {
     given:
     def offerIds = ['', 'a', 'b']
@@ -215,7 +215,7 @@ def 'should publish events about new non-empty saved offers'() {
 
 让我们仔细看看我们在最后`then` 部分的断言:
 
-```
+```java
 1 * eventPublisher.publish('a')
 ```
 
@@ -223,7 +223,7 @@ def 'should publish events about new non-empty saved offers'() {
 
 在 stubbing 中，我们讨论了参数约束。同样的规则也适用于模拟。**我们可以验证 `eventPublisher.publish(String)` 被调用了两次，并且使用了任何非空的参数:**
 
-```
+```java
 2 * eventPublisher.publish({ it != null && !it.isEmpty() })
 ```
 
@@ -233,7 +233,7 @@ def 'should publish events about new non-empty saved offers'() {
 
 让我们用`Mock(Class) `覆盖一个`ItemProvider` ，并创建一个新的`ItemService`:
 
-```
+```java
 given:
 itemProvider = Mock(ItemProvider)
 itemProvider.getItems(['item-id']) >> [new Item('item-id', 'name')]
@@ -248,7 +248,7 @@ items == [new Item('item-id', 'name')]
 
 我们可以从`given` 部分重写存根:
 
-```
+```java
 1 * itemProvider.getItems(['item-id']) >> [new Item('item-id', 'name')]
 ```
 
@@ -266,7 +266,7 @@ items == [new Item('item-id', 'name')]
 
 让我们为`EventPublisher. LoggingEventPublisher `创建一个简单的实现，它将在控制台中打印每个添加项目的 id。下面是接口方法的实现:
 
-```
+```java
 @Override
 public void publish(String addedOfferId) {
     System.out.println("I've published: " + addedOfferId);
@@ -277,13 +277,13 @@ public void publish(String addedOfferId) {
 
 **我们用`Spy(Class)`的方法创造了类似于模仿和树桩的间谍。** `LoggingEventPublisher`没有任何其他的类依赖，所以我们不必传递构造函数参数:
 
-```
+```java
 eventPublisher = Spy(LoggingEventPublisher)
 ```
 
 现在，让我们测试一下我们的间谍。我们需要一个新的`ItemService `实例，它包含我们的被监视对象:
 
-```
+```java
 given:
 eventPublisher = Spy(LoggingEventPublisher)
 itemService = new ItemService(itemProvider, eventPublisher)
@@ -297,7 +297,7 @@ then:
 
 我们验证了`eventPublisher.publish `方法只被调用了一次。**另外，方法调用被传递给了真实对象，所以我们将在控制台中看到`println` 的输出:**
 
-```
+```java
 I've published: item-id
 ```
 

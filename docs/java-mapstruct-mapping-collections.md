@@ -20,7 +20,7 @@
 
 首先，对于我们的示例，让我们考虑一个简单的 POJO 作为映射器的映射源:
 
-```
+```java
 public class Employee {
     private String firstName;
     private String lastName;
@@ -31,7 +31,7 @@ public class Employee {
 
 目标将是一个简单的 DTO:
 
-```
+```java
 public class EmployeeDTO {
 
     private String firstName;
@@ -43,7 +43,7 @@ public class EmployeeDTO {
 
 接下来，让我们定义我们的映射器:
 
-```
+```java
 @Mapper
 public interface EmployeeMapper {
     List<EmployeeDTO> map(List<Employee> employees);
@@ -52,7 +52,7 @@ public interface EmployeeMapper {
 
 最后，让我们看看从我们的`EmployeeMapper` 接口生成的代码 MapStruct:
 
-```
+```java
 public class EmployeeMapperImpl implements EmployeeMapper {
 
     @Override
@@ -88,7 +88,7 @@ public class EmployeeMapperImpl implements EmployeeMapper {
 
 有些情况下这是不可能的。例如，假设我们想要将我们的`Employee`模型映射到下面的模型:
 
-```
+```java
 public class EmployeeFullNameDTO {
 
     private String fullName;
@@ -99,7 +99,7 @@ public class EmployeeFullNameDTO {
 
 在这种情况下，如果我们只声明从`Employee`的`List`到`EmployeeFullNameDTO` 的`List`的映射方法，我们将会收到一个编译时错误或警告，如下所示:
 
-```
+```java
 Warning:(11, 31) java: Unmapped target property: "fullName". 
   Mapping from Collection element "com.baeldung.mapstruct.mappingCollections.model.Employee employee" to 
   "com.baeldung.mapstruct.mappingCollections.dto.EmployeeFullNameDTO employeeFullNameDTO".
@@ -109,7 +109,7 @@ Warning:(11, 31) java: Unmapped target property: "fullName".
 
 鉴于这几点，让我们手动定义它:
 
-```
+```java
 @Mapper
 public interface EmployeeFullNameMapper {
 
@@ -134,7 +134,7 @@ public interface EmployeeFullNameMapper {
 
 和以前一样，我们需要一个映射器:
 
-```
+```java
 @Mapper
 public interface EmployeeMapper {
 
@@ -144,7 +144,7 @@ public interface EmployeeMapper {
 
 MapStruct 将生成适当的代码:
 
-```
+```java
 public class EmployeeMapperImpl implements EmployeeMapper {
 
     @Override
@@ -181,7 +181,7 @@ public class EmployeeMapperImpl implements EmployeeMapper {
 
 然后，我们可以遵循与之前相同的步骤:
 
-```
+```java
 @Mapper
 public interface EmployeeMapper {
 
@@ -191,7 +191,7 @@ public interface EmployeeMapper {
 
 MapStruct 完成了它的工作:
 
-```
+```java
 public class EmployeeMapperImpl implements EmployeeMapper {
 
     @Override
@@ -242,7 +242,7 @@ public class EmployeeMapperImpl implements EmployeeMapper {
 
 对于我们的例子，让我们创建一个`Company`类作为我们的映射源:
 
-```
+```java
 public class Company {
 
     private List<Employee> employees;
@@ -253,7 +253,7 @@ public class Company {
 
 我们映射的目标将是一个简单的 DTO:
 
-```
+```java
 public class CompanyDTO {
 
     private List<EmployeeDTO> employees;
@@ -280,7 +280,7 @@ public class CompanyDTO {
 
 现在，假设我们想要将一个`Company`映射到一个`CompanyDTO.` ，和之前一样，我们需要一个映射器:
 
-```
+```java
 @Mapper(uses = EmployeeMapper.class)
 public interface CompanyMapper {
     CompanyDTO map(Company company);
@@ -291,7 +291,7 @@ public interface CompanyMapper {
 
 现在，让我们看看 MapStruct 生成的代码:
 
-```
+```java
 public class CompanyMapperImpl implements CompanyMapper {
 
     private final EmployeeMapper employeeMapper = Mappers.getMapper(EmployeeMapper.class);
@@ -319,7 +319,7 @@ public class CompanyMapperImpl implements CompanyMapper {
 
 相比之下，让我们考虑使用`ADDER_PREFERRED` 作为`collectionMappingStrategy`:
 
-```
+```java
 @Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED,
         uses = EmployeeMapper.class)
 public interface CompanyMapperAdderPreferred {
@@ -329,7 +329,7 @@ public interface CompanyMapperAdderPreferred {
 
 同样，我们希望重用`EmployeeMapper`。然而，**我们需要显式地添加一个方法，该方法可以将单个`Employee`转换为第一个`EmployeeDTO`**:
 
-```
+```java
 @Mapper
 public interface EmployeeMapper {
     EmployeeDTO map(Employee employee);
@@ -341,7 +341,7 @@ public interface EmployeeMapper {
 
 这是因为 MapStruct 会使用加法器将 **`EmployeeDTO`实例逐个添加到目标`CompanyDTO`实例中**:
 
-```
+```java
 public class CompanyMapperAdderPreferredImpl implements CompanyMapperAdderPreferred {
 
     private final EmployeeMapper employeeMapper = Mappers.getMapper( EmployeeMapper.class );

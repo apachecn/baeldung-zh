@@ -67,7 +67,7 @@ Lightrun 使用两个集成在一起的不同组件:
 
 一旦我们完成了这些，我们就可以启动安装了代理的应用程序了。确保`tasks-service`已经构建，然后我们可以运行它:
 
-```
+```java
 $ java -jar -agentpath:../agent/lightrun_agent.so target/tasks-service-0.0.1-SNAPSHOT.jar
 ```
 

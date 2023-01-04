@@ -22,7 +22,7 @@ Java 虚拟机(JVM)是使计算机能够运行 Java 程序的虚拟机。在本�
 
 我们知道每个进程都有一个相关的进程 id，称为`PID`。因此，要为我们的应用程序获取关联的`PID`，我们可以使用`jcmd`，它将列出所有适用的 Java 进程，如下所示:
 
-```
+```java
 [[email protected]](/web/20220628054830/https://www.baeldung.com/cdn-cgi/l/email-protection):/# jcmd
 65 jdk.jcmd/sun.tools.jcmd.JCmd
 18 /home/pgm/demo-0.0.1-SNAPSHOT.jar
@@ -35,7 +35,7 @@ Java 虚拟机(JVM)是使计算机能够运行 Java 程序的虚拟机。在本�
 
 让我们从`jcmd` `PID` `help`命令开始，找出可用的选项:
 
-```
+```java
 [[email protected]](/web/20220628054830/https://www.baeldung.com/cdn-cgi/l/email-protection):/# jcmd 18 help
 18:
 The following commands are available:
@@ -97,7 +97,7 @@ help
 
 这是为了获得 JVM 的基本细节，如下所示:
 
-```
+```java
 [[email protected]](/web/20220628054830/https://www.baeldung.com/cdn-cgi/l/email-protection):/# jcmd 18 VM.version
 18:
 OpenJDK 64-Bit Server VM version 11.0.11+9-Ubuntu-0ubuntu2.20.04
@@ -111,7 +111,7 @@ JDK 11.0.11
 
 这将打印为我们的虚拟机设置的所有系统属性。可能会显示数百行信息:
 
-```
+```java
 [[email protected]](/web/20220628054830/https://www.baeldung.com/cdn-cgi/l/email-protection):/# jcmd 18 VM.system_properties
 18:
 #Thu Jul 22 10:56:13 IST 2021
@@ -133,7 +133,7 @@ java.vm.specification.version=11
 
 对于我们的示例应用程序，这将打印所有使用的 VM 参数，或者是我们给出的，或者是 JVM 默认使用的。在这里，我们可以注意到各种默认虚拟机参数，如下所示:
 
-```
+```java
 [[email protected]](/web/20220628054830/https://www.baeldung.com/cdn-cgi/l/email-protection):/# jcmd 18 VM.flags            
 18:
 -XX:CICompilerCount=3 -XX:CompressedClassSpaceSize=260046848 -XX:ConcGCThreads=1 -XX:G1ConcRefinementThreads=4 -XX:G1HeapRegionSize=1048576 -XX:GCDrainStackTargetSize=64 -XX:InitialHeapSize=536870912 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=536870912 -XX:MaxMetaspaceSize=268435456 -XX:MaxNewSize=321912832 -XX:MinHeapDeltaBytes=1048576 -XX:NonNMethodCodeHeapSize=5830732 -XX:NonProfiledCodeHeapSize=122913754 -XX:ProfiledCodeHeapSize=122913754 -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:ThreadStackSize=256 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseG1GC 
@@ -148,7 +148,7 @@ java.vm.specification.version=11
 
 该命令用于获取即时线程转储。因此，它将打印所有正在运行的线程的堆栈跟踪。下面是它的使用方法，根据使用的线程数量，它可能会给出很长的输出:
 
-```
+```java
 [[email protected]](/web/20220628054830/https://www.baeldung.com/cdn-cgi/l/email-protection):/# jcmd 18 Thread.print
 18:
 2021-07-22 10:58:08
@@ -190,7 +190,7 @@ _java_thread_list=0x00007f21cc0028d0, length=25, elements={
 
 让我们使用另一个`jcmd `命令，它将提供关于堆使用的重要信息。此外，这将列出具有许多实例的所有类(外部的或特定于应用程序的)。同样，根据使用的类的数量，该列表可能有数百行:
 
-```
+```java
 [[email protected]](/web/20220628054830/https://www.baeldung.com/cdn-cgi/l/email-protection):/# jcmd 18 GC.class_histogram
 18:
  num     #instances         #bytes  class name (module)
@@ -214,7 +214,7 @@ _java_thread_list=0x00007f21cc0028d0, length=25, elements={
 
 这个命令将给出一个即时的 JVM 堆转储。因此，我们可以将堆转储提取到一个文件中，以便稍后进行分析，如下所示:
 
-```
+```java
 [[email protected]](/web/20220628054830/https://www.baeldung.com/cdn-cgi/l/email-protection):/# jcmd 18 GC.heap_dump ./demo_heap_dump
 18:
 Heap dump file created
@@ -233,7 +233,7 @@ Heap dump file created
 
 然而，我们在文章中使用了`OpenJDK`。因此`JFR`为我们启用。现在让我们使用下面的`jcmd`命令生成一个`JFR`文件:
 
-```
+```java
 [[email protected]](/web/20220628054830/https://www.baeldung.com/cdn-cgi/l/email-protection):/# jcmd 18 JFR.start name=demo_recording settings=profile delay=10s duration=20s filename=./demorecording.jfr
 18:
 Recording 1 scheduled to start in 10 s. The result will be written to:
@@ -262,7 +262,7 @@ Recording 1: name=demo_recording duration=20s (stopped)
 
 这将为我们提供一个新的 PID 来进行诊断:
 
-```
+```java
 [[email protected]](/web/20220628054830/https://www.baeldung.com/cdn-cgi/l/email-protection):/# jcmd 19 VM.native_memory
 19:
 
@@ -353,7 +353,7 @@ Total: reserved=1159598KB, committed=657786KB
 
 让我们首先`baseline`一下 JVM 的内存使用情况如下:
 
-```
+```java
 [[email protected]](/web/20220628054830/https://www.baeldung.com/cdn-cgi/l/email-protection):/# jcmd 19 VM.native_memory baseline
 19:
 Baseline succeeded 
@@ -361,7 +361,7 @@ Baseline succeeded
 
 现在，使用该应用程序正常或大量使用一段时间。最后，只需使用`diff `来标识自`baseline `以来的变化，如下所示:
 
-```
+```java
 [[email protected]](/web/20220628054830/https://www.baeldung.com/cdn-cgi/l/email-protection):/# jcmd 19 VM.native_memory summary.diff
 19:
 

@@ -50,7 +50,7 @@ A quick and practical overview of JPA/Hibernate Cascade Types.[Read more](/web/2
 
 另外，我们应该配置关系类型。所以，**我们用`@ManyToMany`** 标注来标注收藏:
 
-```
+```java
 @Entity
 class Student {
 
@@ -84,7 +84,7 @@ class Course {
 
 **我们可以用`Student`类中的`@JoinTable`注释来做这件事。**我们提供连接表的名称(`course_like`)以及带有`@JoinColumn`注释的外键。`joinColumn`属性将连接到关系的所有者一方，而`inverseJoinColumn`将连接到另一方:
 
-```
+```java
 @ManyToMany
 @JoinTable(
   name = "course_like", 
@@ -99,7 +99,7 @@ Set<Course> likedCourses;
 
 因此，我们在`Course`类中设置了`@ManyToMany`注释的`mappedBy`属性:
 
-```
+```java
 @ManyToMany(mappedBy = "likedCourses")
 Set<Student> likes;
 ```
@@ -134,7 +134,7 @@ Set<Student> likes;
 
 当然，每个 JPA 实体都需要一个主键。因为我们的主键是一个组合键，我们必须创建一个新的类来保存键的不同部分:
 
-```
+```java
 @Embeddable
 class CourseRatingKey implements Serializable {
 
@@ -160,7 +160,7 @@ class CourseRatingKey implements Serializable {
 
 使用这个组合键类，我们可以创建实体类，它对连接表进行建模:
 
-```
+```java
 @Entity
 class CourseRating {
 
@@ -192,7 +192,7 @@ class CourseRating {
 
 之后，我们可以像以前一样在`Student`和`Course`实体中配置反向引用:
 
-```
+```java
 class Student {
 
     // ...
@@ -256,7 +256,7 @@ class Course {
 
 由于`course_registration`变成了一个常规表，我们可以创建一个普通的旧 JPA 实体来对它建模:
 
-```
+```java
 @Entity
 class CourseRegistration {
 
@@ -282,7 +282,7 @@ class CourseRegistration {
 
 我们还需要配置`Student`和`Course`类中的关系:
 
-```
+```java
 class Student {
 
     // ...

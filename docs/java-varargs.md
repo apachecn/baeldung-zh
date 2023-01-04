@@ -12,7 +12,7 @@
 
 在 Java 5 之前，每当我们想要传递任意数量的参数时，我们必须传递一个数组中的所有参数或者实现 N 个方法(每个附加参数一个方法):
 
-```
+```java
 public String format() { ... }
 
 public String format(String value) { ... }
@@ -26,7 +26,7 @@ public String format(String val1, String val2) { ... }
 
 我们可以使用标准的类型声明来定义它们，后面跟一个省略号:
 
-```
+```java
 public String formatWithVarArgs(String... values) {
     // ...
 }
@@ -34,7 +34,7 @@ public String formatWithVarArgs(String... values) {
 
 现在，我们可以用任意数量的参数调用我们的方法，比如:
 
-```
+```java
 formatWithVarArgs();
 
 formatWithVarArgs("a", "b", "c", "d");
@@ -53,7 +53,7 @@ formatWithVarArgs("a", "b", "c", "d");
 
 **使用 `varargs`会导致所谓的[堆污染](https://web.archive.org/web/20221108113401/https://en.wikipedia.org/wiki/Heap_pollution)。**为了更好地理解堆污染，考虑这种`varargs`方法:
 
-```
+```java
 static String firstOfFirst(List<String>... strings) {
     List<Integer> ints = Collections.singletonList(42);
     Object[] objects = strings;
@@ -65,7 +65,7 @@ static String firstOfFirst(List<String>... strings) {
 
 如果我们在测试中调用这个奇怪的方法:
 
-```
+```java
 String one = firstOfFirst(Arrays.asList("one", "two"), Collections.emptyList());
 
 assertEquals("one", one);
@@ -73,7 +73,7 @@ assertEquals("one", one);
 
 **我们会得到一个`ClassCastException `，即使我们在这里没有使用任何显式类型转换:**
 
-```
+```java
 java.lang.ClassCastException: class java.lang.Integer cannot be cast to class java.lang.String
 ```
 
@@ -83,7 +83,7 @@ java.lang.ClassCastException: class java.lang.Integer cannot be cast to class ja
 
 当我们对泛型类型使用`varargs`时，由于存在致命运行时异常的潜在风险，Java 编译器警告我们可能存在不安全的`varargs`用法:
 
-```
+```java
 warning: [varargs] Possible heap pollution from parameterized vararg type T
 ```
 
@@ -100,7 +100,7 @@ warning: [varargs] Possible heap pollution from parameterized vararg type T
 
 让我们考虑`varargs`的另一种不安全用法:
 
-```
+```java
 static <T> T[] toArray(T... arguments) {
     return arguments;
 }
@@ -110,7 +110,7 @@ static <T> T[] toArray(T... arguments) {
 
 为了了解这种方法有多危险，让我们在另一种方法中使用它:
 
-```
+```java
 static <T> T[] returnAsIs(T a, T b) {
     return toArray(a, b);
 }
@@ -118,7 +118,7 @@ static <T> T[] returnAsIs(T a, T b) {
 
 如果我们调用这个方法:
 
-```
+```java
 String[] args = returnAsIs("One", "Two");
 ```
 

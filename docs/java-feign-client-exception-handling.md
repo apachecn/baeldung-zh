@@ -10,7 +10,7 @@
 
 首先，让我们通过包含 [`spring-cloud-starter-openfeign`](https://web.archive.org/web/20220906000326/https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-openfeign) 来创建一个 [Spring Boot](/web/20220906000326/https://www.baeldung.com/spring-boot) 项目。 **`spring-cloud-starter-openfeign`内包含`feign-core`依赖**:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-openfeign</artifactId>
@@ -20,7 +20,7 @@
 
 或者我们可以将 [`feign-core`](https://web.archive.org/web/20220906000326/https://search.maven.org/artifact/io.github.openfeign/feign-core) 依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>io.github.openfeign</groupId>
     <artifactId>feign-core</artifactId>
@@ -32,7 +32,7 @@
 
 我们可以通过配置`ErrorDecoder,` 来**处理异常，这也允许我们在需要时定制消息。当错误发生时，Feign 客户端会隐藏原始消息。为了检索它，我们可以编写一个自定义的`ErrorDecoder`。让我们覆盖默认的`ErrorDecoder` 实现:**
 
-```
+```java
 public class RetreiveMessageErrorDecoder implements ErrorDecoder {
     private final ErrorDecoder errorDecoder = new Default();
     @Override
@@ -62,7 +62,7 @@ public class RetreiveMessageErrorDecoder implements ErrorDecoder {
 
 我们还可以通过配置`fallback`来处理异常。让我们首先创建一个客户端并配置`fallback`:
 
-```
+```java
 @FeignClient(name = "file", url = "http://localhost:8081", 
   configuration = FeignSupportConfig.class, fallback = FileUploadClientWithFallbackImpl.class)
 public interface FileUploadClientWithFallBack {
@@ -73,7 +73,7 @@ public interface FileUploadClientWithFallBack {
 
 现在，让我们创建`FileUploadClientWithFallbackImpl`来根据我们的需求处理异常:
 
-```
+```java
 @Component
 public class FileUploadClientWithFallbackImpl implements FileUploadClientWithFallBack {
     @Override
@@ -98,7 +98,7 @@ public class FileUploadClientWithFallbackImpl implements FileUploadClientWithFal
 
 现在让我们创建一个简单的测试来验证`fallback`选项:
 
-```
+```java
 @Test(expected = NotFoundException.class)
 public void whenFileUploadClientFallback_thenFileUploadError() throws IOException {
     ClassLoader classloader = Thread.currentThread().getContextClassLoader();
@@ -115,7 +115,7 @@ public void whenFileUploadClientFallback_thenFileUploadError() throws IOExceptio
 
 我们还可以通过配置`FallbackFactory`来处理异常。让我们首先创建一个客户端并配置`FallbackFactory`:
 
-```
+```java
 @FeignClient(name = "file", url = "http://localhost:8081", 
   configuration = FeignSupportConfig.class, fallbackFactory = FileUploadClientFallbackFactory.class)
 public interface FileUploadClient {
@@ -126,7 +126,7 @@ public interface FileUploadClient {
 
 现在，让我们创建`FileUploadClientFallbackFactory`来根据我们的需求处理异常:
 
-```
+```java
 @Component
 public class FileUploadClientFallbackFactory implements FallbackFactory<FileUploadClient> {
     @Override
@@ -152,7 +152,7 @@ public class FileUploadClientFallbackFactory implements FallbackFactory<FileUplo
 
 现在让我们创建一个简单的测试来验证`FallbackFactory`选项:
 
-```
+```java
 @Test(expected = NotFoundException.class)
 public void whenFileUploadClientFallbackFactory_thenFileUploadError() throws IOException {
     ClassLoader classloader = Thread.currentThread().getContextClassLoader();

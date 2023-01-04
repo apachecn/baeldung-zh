@@ -22,7 +22,7 @@ Gradle 中的一个项目可以组装一个`jar`、`war,`甚至是一个`zip`文
 
 一个简单的任务可以定义为:
 
-```
+```java
 task hello {
     doLast {
         println 'Baeldung'
@@ -36,7 +36,7 @@ task hello {
 
 Gradle 的构建脚本非常棒:
 
-```
+```java
 task toLower {
     doLast {
         String someString = 'HELLO FROM BAELDUNG'
@@ -48,7 +48,7 @@ task toLower {
 
 我们可以定义依赖于其他任务的任务。可以通过在任务定义中传递`dependsOn: taskName` 参数来定义任务依赖性:
 
-```
+```java
 task helloGradle {
     doLast {
         println 'Hello Gradle!'
@@ -66,7 +66,7 @@ task fromBaeldung(dependsOn: helloGradle) {
 
 我们可以定义一个任务，并用一些额外的行为来增强它:
 
-```
+```java
 task helloBaeldung {
     doLast {
         println 'I will be executed second'
@@ -94,7 +94,7 @@ helloBaeldung {
 
 我们还可以定义属性:
 
-```
+```java
 task ourTask {
     ext.theProperty = "theValue"
 } 
@@ -116,7 +116,7 @@ Gradle 中有两种类型的插件—`script,`和`binary.`
 
 在`aplugin.gradle,` 中我们可以定义一个任务:
 
-```
+```java
 task fromPlugin {
     doLast {
         println "I'm from plugin"
@@ -126,7 +126,7 @@ task fromPlugin {
 
 如果我们想将这个插件应用到我们的项目`build.gradle` 文件中，我们需要做的就是将这一行添加到我们的`build.gradle`中:
 
-```
+```java
 apply from: 'aplugin.gradle' 
 ```
 
@@ -136,7 +136,7 @@ apply from: 'aplugin.gradle'
 
 在添加核心二进制插件的情况下，我们可以添加短名称或插件 id:
 
-```
+```java
 plugins {
     id 'application'
 }
@@ -144,7 +144,7 @@ plugins {
 
 现在来自`application` 插件的`run`任务应该可以在项目中执行任何`runnable` jar。要应用一个社区插件，我们必须提到一个完全合格的插件 id:
 
-```
+```java
 plugins {
     id "org.shipkit.bintray" version "2.3.5"
 }
@@ -164,7 +164,7 @@ plugins {
 
 我们也可以使用`“apply plugin”`来应用插件:
 
-```
+```java
 apply plugin: 'war'
 ```
 
@@ -172,7 +172,7 @@ apply plugin: 'war'
 
 然后，**我们可以在构建脚本中应用插件，但是** **只能在任何现有的`plugins{}` 块**之后:
 
-```
+```java
 buildscript {
     repositories {
         maven {
@@ -202,7 +202,7 @@ Gradle 中依赖关系管理的最佳实践是版本控制、动态版本控制�
 
 让我们看一个使用几种不同方式添加一些依赖项(Spring 和 Hibernate)的例子:
 
-```
+```java
 dependencies {
     implementation group: 
       'org.springframework', name: 'spring-core', version: '4.3.5.RELEASE'
@@ -225,7 +225,7 @@ dependencies {
 
 有时我们需要有多个工件的依赖。在这种情况下，我们可以添加一个只有工件的符号`@extensionName` (或者扩展形式的`ext`)来下载想要的工件:
 
-```
+```java
 runtimeOnly "org.codehaus.groovy:groovy-all:[[email protected]](/web/20220627191442/https://www.baeldung.com/cdn-cgi/l/email-protection)"
 runtimeOnly group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.11', ext: 'jar'
 ```
@@ -234,14 +234,14 @@ runtimeOnly group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.11',
 
 要向任何本地文件添加依赖项，我们可以使用类似这样的方法:
 
-```
+```java
 implementation files('libs/joda-time-2.2.jar', 'libs/junit-4.12.jar')
 implementation fileTree(dir: 'libs', include: '*.jar')
 ```
 
 **当我们想要避免传递性依赖时，** **我们可以在配置级或者依赖级上做**:
 
-```
+```java
 configurations {
     testImplementation.exclude module: 'junit'
 }
@@ -267,13 +267,13 @@ testImplementation("org.springframework.batch:spring-batch-test:3.0.7.RELEASE"){
 
 在`settings.gradle`中:
 
-```
+```java
 println 'At initialization phase.'
 ```
 
 在`build.gradle` 中:
 
-```
+```java
 println 'At configuration phase.'
 
 task configured { println 'Also at the configuration phase.' }
@@ -293,7 +293,7 @@ task execSecondTest {
 
 所有常见的配置都将保存在根构建脚本中:
 
-```
+```java
 allprojects {
     repositories {
         mavenCentral() 
@@ -307,7 +307,7 @@ subprojects {
 
 设置文件需要包括根项目名称和子项目名称:
 
-```
+```java
 rootProject.name = 'multi-project-builds'
 include 'greeting-library','greeter'
 ```
@@ -316,7 +316,7 @@ include 'greeting-library','greeter'
 
 如果我们希望我们的`greeter` 项目依赖于`greeting-library`，我们需要在`greeter`的构建脚本中包含这种依赖:
 
-```
+```java
 dependencies {
     implementation project(':greeting-library') 
 }
@@ -330,13 +330,13 @@ dependencies {
 
 如果我们想将 Gradle 包装器添加到我们的项目中:
 
-```
+```java
 gradle wrapper --gradle-version 7.2
 ```
 
 该命令需要从项目的根目录执行。这将创建所有必要的文件和文件夹，以便将 Gradle wrapper 绑定到项目。另一种方法是将包装任务添加到构建脚本中:
 
-```
+```java
 wrapper {
     gradleVersion = '7.2'
 }

@@ -12,7 +12,7 @@
 
 让我们考虑一个非常简单的例子，即一个计算器类，它有一个方法将两个`double`值相除:
 
-```
+```java
 public static double divideNumbers(double dividend, double divisor) {  
     if (divisor == 0) { 
         throw new ArithmeticException("Division by zero!"); 
@@ -29,7 +29,7 @@ public static double divideNumbers(double dividend, double divisor) {
 
 在下面的示例中，断言将失败，因为除法的结果是 2 而不是 15。我们的断言和实际结果根本不相符:
 
-```
+```java
 @Test
 void whenDivideNumbers_thenExpectWrongResult() {
     double result = SimpleCalculator.divideNumbers(6, 3);
@@ -43,7 +43,7 @@ void whenDivideNumbers_thenExpectWrongResult() {
 
 让我们看一个例子，测试将因错误而中止，因为我们试图除以零，我们通过在计算器代码中抛出一个异常来明确防止这种情况:
 
-```
+```java
 @Test
 void whenDivideByZero_thenThrowsException(){
     SimpleCalculator.divideNumbers(10, 0);
@@ -52,7 +52,7 @@ void whenDivideByZero_thenThrowsException(){
 
 现在，我们可以通过简单地将异常作为我们的[断言](/web/20221205143713/https://www.baeldung.com/junit-assert-exception)之一来修复这个测试。
 
-```
+```java
 @Test
 void whenDivideByZero_thenAssertException(){
     assertThrows(ArithmeticException.class, () -> SimpleCalculator.divideNumbers(10, 0));

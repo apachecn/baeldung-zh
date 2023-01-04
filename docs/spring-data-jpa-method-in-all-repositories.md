@@ -26,7 +26,7 @@ Spring Data 仅仅通过定义存储库接口，就使得处理实体的过程�
 
 首先，我们必须创建一个新的接口来声明我们的自定义方法:
 
-```
+```java
 @NoRepositoryBean
 public interface ExtendedRepository<T, ID extends Serializable> 
   extends JpaRepository<T, ID> {
@@ -45,7 +45,7 @@ public interface ExtendedRepository<T, ID extends Serializable>
 
 接下来，我们将提供我们对`ExtendedRepository`接口的实现:
 
-```
+```java
 public class ExtendedRepositoryImpl<T, ID extends Serializable>
   extends SimpleJpaRepository<T, ID> implements ExtendedRepository<T, ID> {
 
@@ -69,7 +69,7 @@ public class ExtendedRepositoryImpl<T, ID extends Serializable>
 
 此外，我们必须实现从`ExtendedRepository`接口继承的自定义方法:
 
-```
+```java
 @Transactional
 public List<T> findByAttributeContainsText(String attributeName, String text) {
     CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -90,7 +90,7 @@ public List<T> findByAttributeContainsText(String attributeName, String text) {
 
 为了告诉 Spring 使用我们的定制类而不是默认类来构建存储库实现，**我们可以使用`repositoryBaseClass`属性**:
 
-```
+```java
 @Configuration
 @EnableJpaRepositories(basePackages = "org.baeldung.persistence.dao", 
   repositoryBaseClass = ExtendedRepositoryImpl.class)
@@ -105,7 +105,7 @@ public class StudentJPAH2Config {
 
 首先，让我们添加一个简单的`Student`实体:
 
-```
+```java
 @Entity
 public class Student {
 
@@ -119,7 +119,7 @@ public class Student {
 
 然后，我们可以为扩展了`ExtendedRepository`接口的`Student`实体创建一个 DAO:
 
-```
+```java
 public interface ExtendedStudentRepository extends ExtendedRepository<Student, Long> {
 }
 ```
@@ -132,7 +132,7 @@ public interface ExtendedStudentRepository extends ExtendedRepository<Student, L
 
 让我们创建一个`JUnit`测试来展示这个定制方法的作用:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { StudentJPAH2Config.class })
 public class ExtendedStudentRepositoryIntegrationTest {

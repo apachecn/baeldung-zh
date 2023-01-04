@@ -12,7 +12,7 @@
 
 现在让我们来看看`Paths.get()`的代码:
 
-```
+```java
 public final class Paths {
     public static Path get(URI uri) {
         return Path.of(uri);

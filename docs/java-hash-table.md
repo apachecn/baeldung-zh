@@ -18,7 +18,7 @@
 
 让我们继续字典的例子。我们将`Word`建模为一个键:
 
-```
+```java
 public class Word {
     private String name;
 
@@ -32,26 +32,26 @@ public class Word {
 
 假设值为`Strings`。现在我们可以创建一个`Hashtable`:
 
-```
+```java
 Hashtable<Word, String> table = new Hashtable<>();
 ```
 
 首先，让我们添加一个条目:
 
-```
+```java
 Word word = new Word("cat");
 table.put(word, "an animal");
 ```
 
 此外，要获取条目:
 
-```
+```java
 String definition = table.get(word);
 ```
 
 最后，让我们删除一个条目:
 
-```
+```java
 definition = table.remove(word);
 ```
 
@@ -73,7 +73,7 @@ definition = table.remove(word);
 
 这种映射最简单的例子是直接地址表。这里，键被用作索引:
 
-```
+```java
 index(k)=k,
 where k is a key
 ```
@@ -103,7 +103,7 @@ where k is a key
 
 该公式计算键的索引:
 
-```
+```java
 int index = (hash & 0x7FFFFFFF) % tab.length;
 ```
 
@@ -129,7 +129,7 @@ int index = (hash & 0x7FFFFFFF) % tab.length;
 
 当我们将一个条目放入`Hashtable`并从中取出时，我们期望不仅可以用相同的键实例获得值，还可以用相同的键获得值:
 
-```
+```java
 Word word = new Word("cat");
 table.put(word, "an animal");
 String extracted = table.get(new Word("cat"));
@@ -137,7 +137,7 @@ String extracted = table.get(new Word("cat"));
 
 **为了设置相等的规则，我们覆盖了键的`equals()`方法:**
 
-```
+```java
 public boolean equals(Object o) {
     if (o == this)
         return true;
@@ -159,7 +159,7 @@ public boolean equals(Object o) {
 
 **相等的键必须返回相等的散列码，这就是为什么我们覆盖了`hashCode()`方法:**
 
-```
+```java
 public int hashCode() {
     return name.hashCode();
 }
@@ -179,7 +179,7 @@ public int hashCode() {
 
 首先，我们将创建一个`Hashtable`并向其中添加条目:
 
-```
+```java
 Hashtable<Word, String> table = new Hashtable<Word, String>();
 table.put(new Word("cat"), "an animal");
 table.put(new Word("dog"), "another animal");
@@ -187,25 +187,25 @@ table.put(new Word("dog"), "another animal");
 
 其次，我们将创建一个`Iterator`:
 
-```
+```java
 Iterator<Word> it = table.keySet().iterator();
 ```
 
 第三，我们将修改表格:
 
-```
+```java
 table.remove(new Word("dog"));
 ```
 
 现在，如果我们尝试遍历这个表，我们将得到一个`ConcurrentModificationException`:
 
-```
+```java
 while (it.hasNext()) {
     Word key = it.next();
 }
 ```
 
-```
+```java
 java.util.ConcurrentModificationException
 	at java.util.Hashtable$Enumerator.next(Hashtable.java:1378)
 ```
@@ -218,7 +218,7 @@ java.util.ConcurrentModificationException
 
 首先，让我们创建一个`Hashtable`并向其中添加条目:
 
-```
+```java
 Hashtable<Word, String> table = new Hashtable<Word, String>();
 table.put(new Word("1"), "one");
 table.put(new Word("2"), "two");
@@ -226,19 +226,19 @@ table.put(new Word("2"), "two");
 
 其次，让我们创建一个`Enumeration`:
 
-```
+```java
 Enumeration<Word> enumKey = table.keys();
 ```
 
 第三，让我们修改表格:
 
-```
+```java
 table.remove(new Word("1"));
 ```
 
 现在，如果我们遍历该表，它不会抛出异常:
 
-```
+```java
 while (enumKey.hasMoreElements()) {
     Word key = enumKey.nextElement();
 }
@@ -252,7 +252,7 @@ while (enumKey.hasMoreElements()) {
 
 因此，让我们添加一些条目并检查输出:
 
-```
+```java
 Hashtable<Word, String> table = new Hashtable<Word, String>();
     table.put(new Word("1"), "one");
     table.put(new Word("2"), "two");
@@ -267,7 +267,7 @@ Hashtable<Word, String> table = new Hashtable<Word, String>();
 }
 ```
 
-```
+```java
 five
 four
 three
@@ -302,7 +302,7 @@ Java 8 引入了新的方法，帮助我们的代码更加简洁。特别是我�
 
 Java 8 之前:
 
-```
+```java
 Word key = new Word("dog");
 String definition;
 
@@ -315,7 +315,7 @@ if (table.containsKey(key)) {
 
 Java 8 之后:
 
-```
+```java
 definition = table.getOrDefault(key, "not found");
 ```
 
@@ -325,7 +325,7 @@ definition = table.getOrDefault(key, "not found");
 
 Java 8 之前:
 
-```
+```java
 if (!table.containsKey(new Word("cat"))) {
     table.put(new Word("cat"), definition);
 }
@@ -333,7 +333,7 @@ if (!table.containsKey(new Word("cat"))) {
 
 Java 8 之后:
 
-```
+```java
 table.putIfAbsent(new Word("cat"), definition);
 ```
 
@@ -343,7 +343,7 @@ table.putIfAbsent(new Word("cat"), definition);
 
 Java 8 之前:
 
-```
+```java
 if (table.get(new Word("cat")).equals("an animal")) {
     table.remove(new Word("cat"));
 }
@@ -351,7 +351,7 @@ if (table.get(new Word("cat")).equals("an animal")) {
 
 Java 8 之后:
 
-```
+```java
 boolean result = table.remove(new Word("cat"), "an animal");
 ```
 
@@ -363,7 +363,7 @@ boolean result = table.remove(new Word("cat"), "an animal");
 
 Java 8 之前:
 
-```
+```java
 if (table.containsKey(new Word("cat")) 
     && table.get(new Word("cat")).equals("a small domesticated carnivorous mammal")) {
     table.put(new Word("cat"), definition);
@@ -372,7 +372,7 @@ if (table.containsKey(new Word("cat"))
 
 Java 8 之后:
 
-```
+```java
 table.replace(new Word("cat"), "a small domesticated carnivorous mammal", definition);
 ```
 
@@ -380,13 +380,13 @@ table.replace(new Word("cat"), "a small domesticated carnivorous mammal", defini
 
 这个方法类似于 `putIfabsent()`。但是`putIfabsent()`直接取值，`computeIfAbsent()`取映射函数。它只在检查完密钥后才计算值，这样效率更高，尤其是在很难获得值的情况下。
 
-```
+```java
 table.computeIfAbsent(new Word("cat"), key -> "an animal");
 ```
 
 因此，上面的行相当于:
 
-```
+```java
 if (!table.containsKey(cat)) {
     String definition = "an animal"; // note that calculations take place inside if block
     table.put(new Word("cat"), definition);
@@ -399,13 +399,13 @@ if (!table.containsKey(cat)) {
 
 假设我们需要改变定义:
 
-```
+```java
 table.computeIfPresent(cat, (key, value) -> key.getName() + " - " + value);
 ```
 
 因此，上面的行相当于:
 
-```
+```java
 if (table.containsKey(cat)) {
     String concatination=cat.getName() + " - " + table.get(cat);
     table.put(cat, concatination);
@@ -416,7 +416,7 @@ if (table.containsKey(cat)) {
 
 现在我们将解决另一个任务。假设我们有一个数组`String`，其中的元素不是唯一的。同样，让我们计算一个字符串在数组中出现多少次。这是数组:
 
-```
+```java
 String[] animals = { "cat", "dog", "dog", "cat", "bird", "mouse", "mouse" };
 ```
 
@@ -424,7 +424,7 @@ String[] animals = { "cat", "dog", "dog", "cat", "bird", "mouse", "mouse" };
 
 这里有一个解决方案:
 
-```
+```java
 Hashtable<String, Integer> table = new Hashtable<String, Integer>();
 
 for (String animal : animals) {
@@ -435,7 +435,7 @@ for (String animal : animals) {
 
 最后，让我们确定一下，这个表包含两只猫、两只狗、一只鸟和两只老鼠:
 
-```
+```java
 assertThat(table.values(), hasItems(2, 2, 2, 1));
 ```
 
@@ -443,7 +443,7 @@ assertThat(table.values(), hasItems(2, 2, 2, 1));
 
 还有另一种方法来解决上述任务:
 
-```
+```java
 for (String animal : animals) {
     table.merge(animal, 1, (oldValue, value) -> (oldValue + value));
 }
@@ -455,7 +455,7 @@ for (String animal : animals) {
 
 这是一种遍历条目的新方法。让我们打印所有条目:
 
-```
+```java
 table.forEach((k, v) -> System.out.println(k.getName() + " - " + v)
 ```
 
@@ -463,7 +463,7 @@ table.forEach((k, v) -> System.out.println(k.getName() + " - " + v)
 
 此外，我们可以替换所有值，而无需迭代:
 
-```
+```java
 table.replaceAll((k, v) -> k.getName() + " - " + v);
 ```
 

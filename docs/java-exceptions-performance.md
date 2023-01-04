@@ -24,7 +24,7 @@
 
 要获得 JMH 工件，将这两个依赖项添加到 POM 中:
 
-```
+```java
 <dependency>
     <groupId>org.openjdk.jmh</groupId>
     <artifactId>jmh-core</artifactId>
@@ -43,7 +43,7 @@
 
 我们需要一个类来保存基准:
 
-```
+```java
 @Fork(1)
 @Warmup(iterations = 2)
 @Measurement(iterations = 10)
@@ -69,7 +69,7 @@ public class ExceptionBenchmark {
 
 为了执行基准测试，我们需要一个`main`方法:
 
-```
+```java
 public class MappingFrameworksPerformance {
     public static void main(String[] args) throws Exception {
         org.openjdk.jmh.Main.main(args);
@@ -81,7 +81,7 @@ public class MappingFrameworksPerformance {
 
 为了方便起见，我们可以将`maven-jar-plugin`添加到 POM 中。这个插件允许我们在 ide 中执行`main`方法:
 
-```
+```java
 <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-jar-plugin</artifactId>
     <version>3.2.0</version>
@@ -105,7 +105,7 @@ public class MappingFrameworksPerformance {
 
 让我们从一个正常返回的方法开始；也就是说，一个不抛出异常的方法:
 
-```
+```java
 @Benchmark
 public void doNotThrowException(Blackhole blackhole) {
     for (int i = 0; i < LIMIT; i++) {
@@ -120,7 +120,7 @@ public void doNotThrowException(Blackhole blackhole) {
 
 执行`main`方法会给我们一个报告:
 
-```
+```java
 Benchmark                               Mode  Cnt  Score   Error  Units
 ExceptionBenchmark.doNotThrowException  avgt   10  0.049 ± 0.006  ms/op
 ```
@@ -131,7 +131,7 @@ ExceptionBenchmark.doNotThrowException  avgt   10  0.049 ± 0.006  ms/op
 
 下面是另一个抛出和捕捉异常的基准:
 
-```
+```java
 @Benchmark
 public void throwAndCatchException(Blackhole blackhole) {
     for (int i = 0; i < LIMIT; i++) {
@@ -146,7 +146,7 @@ public void throwAndCatchException(Blackhole blackhole) {
 
 让我们来看看输出:
 
-```
+```java
 Benchmark                                  Mode  Cnt   Score   Error  Units
 ExceptionBenchmark.doNotThrowException     avgt   10   0.048 ± 0.003  ms/op
 ExceptionBenchmark.throwAndCatchException  avgt   10  17.942 ± 0.846  ms/op
@@ -160,7 +160,7 @@ ExceptionBenchmark.throwAndCatchException  avgt   10  17.942 ± 0.846  ms/op
 
 我们不创建、抛出和捕获异常，而是创建它:
 
-```
+```java
 @Benchmark
 public void createExceptionWithoutThrowingIt(Blackhole blackhole) {
     for (int i = 0; i < LIMIT; i++) {
@@ -171,7 +171,7 @@ public void createExceptionWithoutThrowingIt(Blackhole blackhole) {
 
 现在，让我们执行我们已经宣布的三个基准:
 
-```
+```java
 Benchmark                                            Mode  Cnt   Score   Error  Units
 ExceptionBenchmark.createExceptionWithoutThrowingIt  avgt   10  17.601 ± 3.152  ms/op
 ExceptionBenchmark.doNotThrowException               avgt   10   0.054 ± 0.014  ms/op
@@ -186,7 +186,7 @@ ExceptionBenchmark.throwAndCatchException            avgt   10  17.174 ± 0.474 
 
 让我们弄清楚为什么构造一个异常比处理一个普通对象要昂贵得多:
 
-```
+```java
 @Benchmark
 @Fork(value = 1, jvmArgs = "-XX:-StackTraceInThrowable")
 public void throwExceptionWithoutAddingStackTrace(Blackhole blackhole) {
@@ -204,7 +204,7 @@ public void throwExceptionWithoutAddingStackTrace(Blackhole blackhole) {
 
 让我们再次运行基准测试:
 
-```
+```java
 Benchmark                                                 Mode  Cnt   Score   Error  Units
 ExceptionBenchmark.createExceptionWithoutThrowingIt       avgt   10  17.874 ± 3.199  ms/op
 ExceptionBenchmark.doNotThrowException                    avgt   10   0.046 ± 0.003  ms/op
@@ -218,7 +218,7 @@ ExceptionBenchmark.throwExceptionWithoutAddingStackTrace  avgt   10   1.174 ± 0
 
 最后，让我们看看如果我们抛出一个异常并在捕获它时展开堆栈跟踪会发生什么:
 
-```
+```java
 @Benchmark
 public void throwExceptionAndUnwindStackTrace(Blackhole blackhole) {
     for (int i = 0; i < LIMIT; i++) {
@@ -233,7 +233,7 @@ public void throwExceptionAndUnwindStackTrace(Blackhole blackhole) {
 
 结果是这样的:
 
-```
+```java
 Benchmark                                                 Mode  Cnt    Score   Error  Units
 ExceptionBenchmark.createExceptionWithoutThrowingIt       avgt   10   16.605 ± 0.988  ms/op
 ExceptionBenchmark.doNotThrowException                    avgt   10    0.047 ± 0.006  ms/op

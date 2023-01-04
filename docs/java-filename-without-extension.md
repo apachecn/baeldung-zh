@@ -42,7 +42,7 @@
 
 要使用实用程序方法，我们需要将 Guava 库添加到我们的类路径中。例如，如果我们使用 Maven 作为构建工具，我们可以将[番石榴依赖项](https://web.archive.org/web/20220707143820/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.google.guava%22%20AND%20a%3A%22guava%22)添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -52,7 +52,7 @@
 
 首先，让我们看看这个方法的实现:
 
-```
+```java
 public static String getNameWithoutExtension(String file) {
    ...
    int dotIndex = fileName.lastIndexOf('.');
@@ -64,7 +64,7 @@ public static String getNameWithoutExtension(String file) {
 
 因此， **Guava 的`getNameWithoutExtension() `方法对没有扩展名的 dotfiles 不起作用。**让我们写一个测试来证明:
 
-```
+```java
 @Test
 public void givenDotFileWithoutExt_whenCallGuavaMethod_thenCannotGetDesiredResult() {
     //negative assertion
@@ -74,7 +74,7 @@ public void givenDotFileWithoutExt_whenCallGuavaMethod_thenCannotGetDesiredResul
 
 当我们处理一个有多个扩展名的文件名时，**这个方法不提供从文件名中删除所有扩展名的选项:**
 
-```
+```java
 @Test
 public void givenFileWithoutMultipleExt_whenCallGuavaMethod_thenCannotRemoveAllExtensions() {
     //negative assertion
@@ -88,7 +88,7 @@ public void givenFileWithoutMultipleExt_whenCallGuavaMethod_thenCannotRemoveAllE
 
 在我们看这个方法之前，让我们将 [Apache Commons IO 依赖关系](https://web.archive.org/web/20220707143820/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22commons-io%22%20AND%20a%3A%22commons-io%22)添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>commons-io</groupId>
     <artifactId>commons-io</artifactId>
@@ -98,7 +98,7 @@ public void givenFileWithoutMultipleExt_whenCallGuavaMethod_thenCannotRemoveAllE
 
 实现类似于 Guava 的`getNameWithoutExtension()`方法:
 
-```
+```java
 public static String removeExtension(final String filename) {
     ...
     final int index = indexOfExtension(filename); //used the String.lastIndexOf() method
@@ -112,7 +112,7 @@ public static String removeExtension(final String filename) {
 
 因此，**Apache Commons IO 的方法也不能用于点文件**:
 
-```
+```java
 @Test
 public void givenDotFileWithoutExt_whenCallApacheCommonsMethod_thenCannotGetDesiredResult() {
     //negative assertion
@@ -122,7 +122,7 @@ public void givenDotFileWithoutExt_whenCallApacheCommonsMethod_thenCannotGetDesi
 
 **如果一个文件名有多个扩展名，`removeExtension()`方法不能删除所有扩展名:**
 
-```
+```java
 @Test
 public void givenFileWithoutMultipleExt_whenCallApacheCommonsMethod_thenCannotRemoveAllExtensions() {
     //negative assertion
@@ -141,7 +141,7 @@ public void givenFileWithoutMultipleExt_whenCallApacheCommonsMethod_thenCannotRe
 
 接下来，让我们构建一个涵盖所有情况的方法:
 
-```
+```java
 public static String removeFileExtension(String filename, boolean removeAllExtensions) {
     if (filename == null || filename.isEmpty()) {
         return filename;
@@ -162,7 +162,7 @@ public static String removeFileExtension(String filename, boolean removeAllExten
 
 最后，让我们编写一些测试方法来验证我们的方法是否适用于所有不同的情况:
 
-```
+```java
 @Test
 public void givenFilenameNoExt_whenCallFilenameUtilMethod_thenGetExpectedFilename() {
     assertEquals("baeldung", MyFilenameUtil.removeFileExtension("baeldung", true));

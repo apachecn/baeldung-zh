@@ -46,7 +46,7 @@ Hibernate 实体生命周期状态解释了实体是如何与`persistence contex
 
 我们的示例应用程序定义了一个实体，即`FootballPlayer`类。在启动时，我们将用一些示例数据初始化数据存储:
 
-```
+```java
 +-------------------+-------+
 | Name              |  ID   |
 +-------------------+-------+
@@ -60,7 +60,7 @@ Hibernate 实体生命周期状态解释了实体是如何与`persistence contex
 
 首先，我们需要通过获得一个`Session:`来开始我们的工作单元
 
-```
+```java
 Session session = sessionFactory.openSession();
 ```
 
@@ -68,7 +68,7 @@ Session session = sessionFactory.openSession();
 
 接下来，我们将指示我们的`Session`从持久存储中加载数据:
 
-```
+```java
 assertThat(getManagedEntities(session)).isEmpty();
 
 List<FootballPlayer> players = s.createQuery("from FootballPlayer").getResultList();
@@ -84,7 +84,7 @@ assertThat(getManagedEntities(session)).size().isEqualTo(3);
 
 现在让我们改变琪琪的名字:
 
-```
+```java
 Transaction transaction = session.getTransaction();
 transaction.begin();
 
@@ -118,7 +118,7 @@ assertThat(getDirtyEntities().get(0).getName()).isEqualTo("Gianluigi Buffon");
 
 让我们在代码中看到它:
 
-```
+```java
 FootballPlayer cr7 = session.get(FootballPlayer.class, 1L);
 
 assertThat(getManagedEntities(session)).size().isEqualTo(1);
@@ -131,7 +131,7 @@ assertThat(getManagedEntities(session)).size().isEqualTo(0);
 
 我们的持久性上下文不会跟踪分离实体中的变化:
 
-```
+```java
 cr7.setName("CR7");
 transaction.commit();
 
@@ -140,7 +140,7 @@ assertThat(getDirtyEntities()).isEmpty();
 
 `Session.merge(entity)/Session.update(entity) can `(重新)附加一个会话`:`
 
-```
+```java
 FootballPlayer messi = session.get(FootballPlayer.class, 2L);
 
 session.evict(messi);
@@ -163,7 +163,7 @@ assertThat(getDirtyEntities().get(0).getName()).isEqualTo("Leo Messi");
 
 我们来看看下面的逻辑:
 
-```
+```java
 FootballPlayer gigi = new FootballPlayer();
 gigi.setId(3);
 gigi.setName("Gigi the Legend");
@@ -188,7 +188,7 @@ session.update(gigi);
 
 要制作一个瞬态实体`persistent`，我们需要调用`Session.save(entity) `或`Session.saveOrUpdate(entity):`
 
-```
+```java
 FootballPlayer neymar = new FootballPlayer();
 neymar.setName("Neymar");
 session.save(neymar);
@@ -214,7 +214,7 @@ assertThat(count).isEqualTo(1);
 
 让我们看看下面的代码:
 
-```
+```java
 session.delete(neymar);
 
 assertThat(getManagedEntities(session).get(0).getStatus()).isEqualTo(Status.DELETED);

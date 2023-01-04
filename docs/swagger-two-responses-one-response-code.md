@@ -12,7 +12,7 @@
 
 使用 OpenAPI，这些定义对应于以下描述:
 
-```
+```java
 Car:
   type: object
   properties:
@@ -31,7 +31,7 @@ Bike:
 
 **我们想要描述一个端点`/vehicle`，它将接受 GET 请求并能够返回一个`Car`或一个`Bike`。**也就是说，我们要完成下面的描述符:
 
-```
+```java
 paths:
   /vehicle:
     get:
@@ -50,7 +50,7 @@ OpenAPI 版引入了`oneOf`，这正是我们所需要的。
 
 **在 OpenAPI 3 规范中，`oneOf`需要一个对象数组，并表示所提供的值应该与给定对象之一完全匹配:**
 
-```
+```java
 schema:
   oneOf:
     - $ref: '#/components/schemas/Car'
@@ -59,7 +59,7 @@ schema:
 
 此外，OpenAPI 3 引入了展示各种响应示例的可能性。为了清楚起见，我们肯定希望至少提供一个带有`Car`的示例响应和另一个带有`Bike`的示例响应:
 
-```
+```java
 examples:
   car:
     summary: an example of car
@@ -75,7 +75,7 @@ examples:
 
 最后，让我们看看整个描述符文件:
 
-```
+```java
 openapi: 3.0.0
 info:
   title: Demo api
@@ -128,7 +128,7 @@ components:
 
 我们将对 swagger-codegen 插件使用以下配置:
 
-```
+```java
 <plugin>
     <groupId>io.swagger.codegen.v3</groupId>
     <artifactId>swagger-codegen-maven-plugin</artifactId>
@@ -155,7 +155,7 @@ components:
 
 现在让我们执行插件:
 
-```
+```java
 mvn clean compile
 ```
 
@@ -170,7 +170,7 @@ mvn clean compile
 
 为了从我们的 YAML 描述符文件生成 Swagger UI 文档，我们将使用 [`springdoc-openapi`](/web/20220911070011/https://www.baeldung.com/spring-rest-openapi-documentation) 。让我们将对`springdoc-openapi-ui`的依赖添加到 pom.xml 中:
 
-```
+```java
 <dependency>
     <groupId>org.springdoc</groupId>
     <artifactId>springdoc-openapi-ui</artifactId>
@@ -182,7 +182,7 @@ mvn clean compile
 
 为了从 YAML 文件生成 Swagger UI 文档，我们需要声明一个`[SpringBootApplication](/web/20220911070011/https://www.baeldung.com/spring-boot-start)`并添加以下三个[bean](/web/20220911070011/https://www.baeldung.com/spring-bean):
 
-```
+```java
 @Bean
 SpringDocConfiguration springDocConfiguration() {
     return new SpringDocConfiguration();
@@ -201,14 +201,14 @@ ObjectMapperProvider objectMapperProvider(SpringDocConfigProperties springDocCon
 
 最后但同样重要的是，我们需要确保我们的 YAML 描述符在`resources/static`目录中，并更新`application.properties`以指定我们不想从`[Controllers](/web/20220911070011/https://www.baeldung.com/spring-controllers)`而是从 YAML 文件中生成 Swagger UI:
 
-```
+```java
 springdoc.api-docs.enabled=false
 springdoc.swagger-ui.url=/api.yaml
 ```
 
 我们现在可以开始我们的应用程序了:
 
-```
+```java
 mvn spring-boot:run
 ```
 
@@ -230,7 +230,7 @@ Swagger UI 可以通过`http://localhost:8080/swagger-ui/index.html`访问。
 
 **我们能做的最好的事情就是定义一个包装对象，它将具有`Car`和`Bike`的所有属性。**公共属性将是必需的，仅属于其中一个属性的属性将保持可选:
 
-```
+```java
 CarOrBike:
   description: a car will have an owner and a plate, whereas a bike has an owner and a speed
   type: object
@@ -249,7 +249,7 @@ CarOrBike:
 
 让我们来看看结果`api.yaml`:
 
-```
+```java
 swagger: 2.0.0
 info:
   title: Demo api
@@ -301,7 +301,7 @@ definitions:
 
 让我们修改我们的 swagger-codegen 插件配置来解析 OpenAPI 2 文件。**为此，我们需要使用 2.x 版本的插件。**它也位于另一个包中:
 
-```
+```java
 <plugin>
     <groupId>io.swagger</groupId>
     <artifactId>swagger-codegen-maven-plugin</artifactId>

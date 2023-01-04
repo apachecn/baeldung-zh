@@ -14,7 +14,7 @@ Activiti 和 Spring 框架都提供了自己的身份管理。然而，在集成
 
 要在 Spring Boot 项目中设置 Activiti，请查看我们之前的文章。除了`activiti-spring-boot-starter-basic,`我们还需要[activiti-spring-boot-starter-security](https://web.archive.org/web/20220627084230/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22activiti-spring-boot-starter-security%22)依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.activiti</groupId>
     <artifactId>activiti-spring-boot-starter-security</artifactId>
@@ -38,7 +38,7 @@ Activiti 和 Spring 框架都提供了自己的身份管理。然而，在集成
 
 首先，让我们使用`IdentityService:`在主`@SpringBootApplication`类中定义的`InitializingBean`中创建一个用户
 
-```
+```java
 @Bean
 InitializingBean usersAndGroupsInitializer(IdentityService identityService) {
     return new InitializingBean() {
@@ -63,7 +63,7 @@ InitializingBean usersAndGroupsInitializer(IdentityService identityService) {
 
 如果我们想使用不同的安全配置来代替 HTTP 基本身份验证，首先我们必须排除自动配置:
 
-```
+```java
 @SpringBootApplication(
   exclude = org.activiti.spring.boot.SecurityAutoConfiguration.class)
 public class ActivitiSpringSecurityApplication {
@@ -73,7 +73,7 @@ public class ActivitiSpringSecurityApplication {
 
 然后，我们可以提供自己的 Spring 安全配置类，它使用`IdentityServiceUserDetailsService` 从 Activiti 数据源中检索用户:
 
-```
+```java
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -109,7 +109,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 让我们创建自己的类来扩展`UserEntityManagerImpl`类:
 
-```
+```java
 public class SpringSecurityUserManager extends UserEntityManagerImpl {
 
     private JdbcUserDetailsManager userManager;
@@ -133,7 +133,7 @@ public class SpringSecurityUserManager extends UserEntityManagerImpl {
 
 `findById()`方法使用`JdbcUserDetailsManager`找到一个`UserDetails`对象并将其转换成一个`User`对象:
 
-```
+```java
 @Override
 public UserEntity findById(String userId) {
     UserDetails userDetails = userManager.loadUserByUsername(userId);
@@ -148,7 +148,7 @@ public UserEntity findById(String userId) {
 
 接下来，`findGroupsByUser()`方法找到一个用户的所有 Spring 安全权限，并返回一个`Group`对象的`List`:
 
-```
+```java
 public List<Group> findGroupsByUser(String userId) {
     UserDetails userDetails = userManager.loadUserByUsername(userId);
     if (userDetails != null) {
@@ -166,7 +166,7 @@ public List<Group> findGroupsByUser(String userId) {
 
 `findUserByQueryCriteria()`方法基于一个具有多个属性的`UserQueryImpl`对象，我们将从中提取组 id 和用户 id，因为它们在 Spring Security 中有对应关系:
 
-```
+```java
 @Override
 public List<User> findUserByQueryCriteria(
   UserQueryImpl query, Page page) {
@@ -178,7 +178,7 @@ public List<User> findUserByQueryCriteria(
 
 类似地，我们得到了`findUserCountByQueryCriteria()`方法:
 
-```
+```java
 public long findUserCountByQueryCriteria(
   UserQueryImpl query) {
 
@@ -188,7 +188,7 @@ public long findUserCountByQueryCriteria(
 
 由于密码验证不是由 Activiti:
 
-```
+```java
 @Override
 public Boolean checkPassword(String userId, String password) {
     return true;
@@ -197,7 +197,7 @@ public Boolean checkPassword(String userId, String password) {
 
 对于其他方法，比如处理更新用户的方法，我们将抛出一个异常，因为这是由 Spring Security 处理的:
 
-```
+```java
 public User createNewUser(String userId) {
     throw new UnsupportedOperationException("This operation is not supported!");
 }
@@ -207,7 +207,7 @@ public User createNewUser(String userId) {
 
 `SpringSecurityGroupManager`类似于用户管理器类，除了它处理用户组:
 
-```
+```java
 public class SpringSecurityGroupManager extends GroupEntityManagerImpl {
 
     private JdbcUserDetailsManager userManager;
@@ -223,7 +223,7 @@ public class SpringSecurityGroupManager extends GroupEntityManagerImpl {
 
 这里**覆盖的主要方法是`findGroupsByUser()`方法:**
 
-```
+```java
 @Override
 public List<Group> findGroupsByUser(String userId) {
     UserDetails userDetails = userManager.loadUserByUsername(userId);
@@ -244,7 +244,7 @@ public List<Group> findGroupsByUser(String userId) {
 
 基于此，我们也可以重写`findGroupByQueryCriteria()`和`findGroupByQueryCriteriaCount()`方法:
 
-```
+```java
 @Override
 public List<Group> findGroupByQueryCriteria(GroupQueryImpl query, Page page) {
     if (query.getUserId() != null) {
@@ -261,7 +261,7 @@ public long findGroupCountByQueryCriteria(GroupQueryImpl query) {
 
 可以重写更新组的其他方法以引发异常:
 
-```
+```java
 public Group createNewGroup(String groupId) {
     throw new UnsupportedOperationException("This operation is not supported!");
 }
@@ -273,7 +273,7 @@ public Group createNewGroup(String groupId) {
 
 弹簧启动器为我们自动配置了一个`SpringProcessEngineConfiguration`。为了修改这一点，我们可以使用一个`InitializingBean:`
 
-```
+```java
 @Autowired
 private SpringProcessEngineConfiguration processEngineConfiguration;
 
@@ -299,7 +299,7 @@ InitializingBean processEngineInitializer() {
 
 如果我们想在 Activiti 中设置当前用户，我们可以使用方法:
 
-```
+```java
 identityService.setAuthenticatedUserId(userId);
 ```
 

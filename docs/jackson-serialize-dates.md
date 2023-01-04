@@ -12,7 +12,7 @@
 
 在下面的例子中，我们将序列化一个“`Event,`”的实例，它有一个`Date`字段“`eventDate`”:
 
-```
+```java
 @Test
 public void whenSerializingDateWithJackson_thenSerializedToTimestamp()
   throws JsonProcessingException, ParseException {
@@ -32,7 +32,7 @@ public void whenSerializingDateWithJackson_thenSerializedToTimestamp()
 
 “`event`”序列化的实际输出是:
 
-```
+```java
 {
    "name":"party",
    "eventDate":3600000
@@ -43,7 +43,7 @@ public void whenSerializingDateWithJackson_thenSerializedToTimestamp()
 
 序列化为这种简洁的时间戳格式并不是最佳选择。相反，让我们将`Date`序列化为`ISO-8601`格式:
 
-```
+```java
 @Test
 public void whenSerializingDateToISO8601_thenSerializedToText()
   throws JsonProcessingException, ParseException {
@@ -72,7 +72,7 @@ public void whenSerializingDateToISO8601_thenSerializedToText()
 
 相反，让我们来看一个配置，它允许我们**设置表示日期**的格式:
 
-```
+```java
 @Test
 public void whenSettingObjectMapperDateFormat_thenCorrect()
   throws JsonProcessingException, ParseException {
@@ -97,7 +97,7 @@ public void whenSettingObjectMapperDateFormat_thenCorrect()
 
 接下来让我们来看看对整个应用程序来说，**控制单个类的日期格式的`@JsonFormat`注释，**而不是全局的:
 
-```
+```java
 public class Event {
     public String name;
 
@@ -109,7 +109,7 @@ public class Event {
 
 现在我们来测试一下:
 
-```
+```java
 @Test
 public void whenUsingJsonFormatAnnotationToFormatDate_thenCorrect()
   throws JsonProcessingException, ParseException {
@@ -131,7 +131,7 @@ public void whenUsingJsonFormatAnnotationToFormatDate_thenCorrect()
 
 接下来，为了获得对输出的完全控制，我们将利用一个定制的日期序列化器:
 
-```
+```java
 public class CustomDateSerializer extends StdSerializer<Date> {
 
     private SimpleDateFormat formatter 
@@ -155,7 +155,7 @@ public class CustomDateSerializer extends StdSerializer<Date> {
 
 现在我们将使用它作为我们的“`eventDate`”字段的序列化器:
 
-```
+```java
 public class Event {
     public String name;
 
@@ -166,7 +166,7 @@ public class Event {
 
 最后，我们将测试它:
 
-```
+```java
 @Test
 public void whenUsingCustomDateSerializer_thenCorrect()
   throws JsonProcessingException, ParseException {
@@ -205,7 +205,7 @@ Use Jackson to map custom JSON to any java entity graph with full control over t
 
 我们将利用 [`jackson-datatype-joda`](https://web.archive.org/web/20220911051535/https://search.maven.org/artifact/com.fasterxml.jackson.datatype/jackson-datatype-joda) 模块来获得现成的 Joda-Time 支持:
 
-```
+```java
 <dependency>
   <groupId>com.fasterxml.jackson.datatype</groupId>
   <artifactId>jackson-datatype-joda</artifactId>
@@ -215,7 +215,7 @@ Use Jackson to map custom JSON to any java entity graph with full control over t
 
 然后我们可以简单地注册`JodaModule`并完成:
 
-```
+```java
 @Test
 public void whenSerializingJodaTime_thenCorrect() 
   throws JsonProcessingException {
@@ -235,7 +235,7 @@ public void whenSerializingJodaTime_thenCorrect()
 
 如果我们不想要额外的 Joda-Time Jackson 依赖项，我们也可以利用定制序列化器(类似于前面的例子)来干净地序列化`DateTime`实例:
 
-```
+```java
 public class CustomDateTimeSerializer extends StdSerializer<DateTime> {
 
     private static DateTimeFormatter formatter = 
@@ -260,7 +260,7 @@ public class CustomDateTimeSerializer extends StdSerializer<DateTime> {
 
 然后我们可以把它作为我们的属性"`eventDate`"序列化器:
 
-```
+```java
 public class Event {
     public String name;
 
@@ -271,7 +271,7 @@ public class Event {
 
 最后，我们可以将所有东西放在一起进行测试:
 
-```
+```java
 @Test
 public void whenSerializingJodaTimeWithJackson_thenCorrect() 
   throws JsonProcessingException {
@@ -289,7 +289,7 @@ public void whenSerializingJodaTimeWithJackson_thenCorrect()
 
 现在让我们看看如何使用杰克森序列化本例中的 Java 8`DateTime,` **`LocalDateTime,` 。我们可以利用 [`jackson-datatype-jsr310`](https://web.archive.org/web/20220911051535/https://search.maven.org/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310) 模块:**
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.datatype</groupId>
     <artifactId>jackson-datatype-jsr310</artifactId>
@@ -299,7 +299,7 @@ public void whenSerializingJodaTimeWithJackson_thenCorrect()
 
 然后我们需要做的就是注册`JavaTimeModule` ( `JSR310Module`已被否决)，杰克逊会处理剩下的事情:
 
-```
+```java
 @Test
 public void whenSerializingJava8Date_thenCorrect()
   throws JsonProcessingException {
@@ -318,7 +318,7 @@ public void whenSerializingJava8Date_thenCorrect()
 
 如果我们不想要额外的依赖，我们总是可以使用定制的序列化器**将 Java 8 `DateTime`写出到 JSON** :
 
-```
+```java
 public class CustomLocalDateTimeSerializer 
   extends StdSerializer<LocalDateTime> {
 
@@ -347,7 +347,7 @@ public class CustomLocalDateTimeSerializer
 
 然后，我们将为我们的“`eventDate`”字段使用序列化程序:
 
-```
+```java
 public class Event {
     public String name;
 
@@ -358,7 +358,7 @@ public class Event {
 
 最后，我们将测试它:
 
-```
+```java
 @Test
 public void whenSerializingJava8DateWithCustomSerializer_thenCorrect()
   throws JsonProcessingException {
@@ -376,7 +376,7 @@ public void whenSerializingJava8DateWithCustomSerializer_thenCorrect()
 
 现在让我们看看如何用**杰克森**反序列化一个`Date`。在下面的例子中，我们将反序列化一个包含日期的“`Event`”实例:
 
-```
+```java
 @Test
 public void whenDeserializingDateWithJackson_thenCorrect()
   throws JsonProcessingException, IOException {
@@ -396,7 +396,7 @@ public void whenDeserializingDateWithJackson_thenCorrect()
 
 在其默认配置中，Jackson 将 Joda `ZonedDateTime`的时区调整为本地上下文的时区。因为本地上下文的时区不是默认设置的，必须手动配置，所以 Jackson 将时区调整为 GMT:
 
-```
+```java
 @Test
 public void whenDeserialisingZonedDateTimeWithDefaults_thenNotCorrect()
   throws IOException {
@@ -415,7 +415,7 @@ public void whenDeserialisingZonedDateTimeWithDefaults_thenNotCorrect()
 
 测试用例将失败，并输出:
 
-```
+```java
 serialized: 2017-08-14T13:52:22.071+02:00[Europe/Berlin]
 restored: 2017-08-14T11:52:22.071Z[UTC]
 ```
@@ -424,7 +424,7 @@ restored: 2017-08-14T11:52:22.071Z[UTC]
 
 这可以通过将下面一行代码添加到上面的测试用例中来实现:
 
-```
+```java
 objectMapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
 ```
 
@@ -434,7 +434,7 @@ objectMapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
 
 我们也可以使用定制的`Date`反串行化器**。**我们将为属性“`eventDate`”编写一个定制的反序列化器:
 
-```
+```java
 public class CustomDateDeserializer extends StdDeserializer<Date> {
 
     private SimpleDateFormat formatter = 
@@ -463,7 +463,7 @@ public class CustomDateDeserializer extends StdDeserializer<Date> {
 
 接下来，我们将把它用作“`eventDate`”反序列化器:
 
-```
+```java
 public class Event {
     public String name;
 
@@ -474,7 +474,7 @@ public class Event {
 
 最后，我们将测试它:
 
-```
+```java
 @Test
 public void whenDeserializingDateUsingCustomDeserializer_thenCorrect()
   throws JsonProcessingException, IOException {
@@ -493,7 +493,7 @@ public void whenDeserializingDateUsingCustomDeserializer_thenCorrect()
 
 当创建一个`LocalDate`实例时，我们可能会遇到一个异常:
 
-```
+```java
 com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Cannot construct instance
 of `java.time.LocalDate`(no Creators, like default construct, exist): no String-argument
 constructor/factory method to deserialize from String value ('2014-12-20') at [Source:
@@ -510,7 +510,7 @@ constructor/factory method to deserialize from String value ('2014-12-20') at [S
 
 杰克逊允许我们用几种方法来解决这个问题。首先，我们必须确保 [`jsr310`依赖项](https://web.archive.org/web/20220911051535/https://search.maven.org/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310)在我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.datatype</groupId>
     <artifactId>jackson-datatype-jsr310</artifactId>
@@ -524,7 +524,7 @@ constructor/factory method to deserialize from String value ('2014-12-20') at [S
 
 我们还需要禁用`ObjectMapper`中的特性`WRITE_DATES_AS_TIMESTAMPS `,以防止 Jackson 向 JSON 输出中添加时间数字:
 
-```
+```java
 @Test
 public void whenSerializingJava8DateAndReadingValue_thenCorrect() throws IOException {
     String stringDate = "\"2014-12-20\"";
@@ -544,7 +544,7 @@ public void whenSerializingJava8DateAndReadingValue_thenCorrect() throws IOExcep
 
 处理这个问题的另一种方法是在实体级别使用`LocalDateDeserializer`和`JsonFormat`注释:
 
-```
+```java
 public class EventWithLocalDate {
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
@@ -558,7 +558,7 @@ public class EventWithLocalDate {
 
 此外，注释`@JsonFormat`允许我们指定序列化日期值的格式。因此，这个 POJO 可以用来读写 JSON:
 
-```
+```java
 @Test
 public void whenSerializingJava8DateAndReadingFromEntity_thenCorrect() throws IOException {
     String json = "{\"name\":\"party\",\"eventDate\":\"20-12-2014\"}";

@@ -31,7 +31,7 @@
 
 [`while`](/web/20221128042630/https://www.baeldung.com/java-while-loop) 循环是列表中的第一个，因为它是翻译上述数学运算的最清晰的方式:
 
-```
+```java
 int reversedNumber = 0;
 int numberToReverse = Math.abs(number);
 
@@ -48,7 +48,7 @@ return number < 0 ? reversedNumber * -1 : reversedNumber;
 
 使用 [`for`](/web/20221128042630/https://www.baeldung.com/java-for-loop) 循环，其逻辑与前面相同。我们跳过`for`循环的初始化语句，使用在终止条件下反转的数字:
 
-```
+```java
 int reversedNumber = 0;
 int numberToReverse = Math.abs(number);
 
@@ -64,7 +64,7 @@ return number < 0 ? reversedNumber * -1 : reversedNumber;
 
 对于[递归](/web/20221128042630/https://www.baeldung.com/java-recursion)，我们可以使用一个包装器方法，该方法调用返回反转数的递归方法:
 
-```
+```java
 int reverseNumberRecWrapper(int number) {
     int output = reverseNumberRec(Math.abs(number), 0);
     return number < 0 ? output * -1 : output;
@@ -73,7 +73,7 @@ int reverseNumberRecWrapper(int number) {
 
 递归方法以与前面示例相同的方式实现数学运算:
 
-```
+```java
 int reverseNumberRec(int numberToReverse, int recursiveReversedNumber) {
 
     if (numberToReverse > 0) {

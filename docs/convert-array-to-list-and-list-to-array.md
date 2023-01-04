@@ -28,7 +28,7 @@ Learn about different ways of converting a List to a Map in Java, using core fun
 
 让我们从使用普通 Java 从`List`到数组**的转换开始:**
 
-```
+```java
 @Test
 public void givenUsingCoreJava_whenListConvertedToArray_thenCorrect() {
     List<Integer> sourceList = Arrays.asList(0, 1, 2, 3, 4, 5);
@@ -42,7 +42,7 @@ public void givenUsingCoreJava_whenListConvertedToArray_thenCorrect() {
 
 现在让我们使用**番石榴 API** 进行相同的转换:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenListConvertedToArray_thenCorrect() {
     List<Integer> sourceList = Lists.newArrayList(0, 1, 2, 3, 4, 5);
@@ -56,7 +56,7 @@ public void givenUsingGuava_whenListConvertedToArray_thenCorrect() {
 
 让我们从将数组转换成`List`的普通 Java 解决方案开始:
 
-```
+```java
 @Test
 public void givenUsingCoreJava_whenArrayConvertedToList_thenCorrect() {
     Integer[] sourceArray = { 0, 1, 2, 3, 4, 5 };
@@ -66,7 +66,7 @@ public void givenUsingCoreJava_whenArrayConvertedToList_thenCorrect() {
 
 请注意，这是一个固定大小的列表，仍将由数组支持。如果我们想要一个标准的`ArrayList,`,我们可以简单地实例化一个:
 
-```
+```java
 List<Integer> targetList = new ArrayList<Integer>(Arrays.asList(sourceArray));
 ```
 
@@ -74,7 +74,7 @@ List<Integer> targetList = new ArrayList<Integer>(Arrays.asList(sourceArray));
 
 现在让我们使用**番石榴 API** 进行相同的转换:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenArrayConvertedToList_thenCorrect() {
     Integer[] sourceArray = { 0, 1, 2, 3, 4, 5 };
@@ -86,7 +86,7 @@ public void givenUsingGuava_whenArrayConvertedToList_thenCorrect() {
 
 最后，让我们使用[Apache Commons Collections](https://web.archive.org/web/20220819110153/https://commons.apache.org/proper/commons-collections/javadocs/)`CollectionUtils.addAll` API 来填充空列表中的数组元素:
 
-```
+```java
 @Test 
 public void givenUsingCommonsCollections_whenArrayConvertedToList_thenCorrect() { 
     Integer[] sourceArray = { 0, 1, 2, 3, 4, 5 }; 

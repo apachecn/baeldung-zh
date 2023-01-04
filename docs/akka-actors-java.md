@@ -37,7 +37,7 @@ Akka actor 模型的另一个优点是错误处理。通过将参与者组织成
 
 为了利用 Akka actors，我们需要从 [Maven Central](https://web.archive.org/web/20221023123703/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22akka-actor_2.12%22) 添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.typesafe.akka</groupId>
     <artifactId>akka-actor_2.12</artifactId>
@@ -51,7 +51,7 @@ Akka actor 模型的另一个优点是错误处理。通过将参与者组织成
 
 现在，我们将简单地用默认配置和自定义名称定义一个`ActorSystem`:
 
-```
+```java
 ActorSystem system = ActorSystem.create("test-system"); 
 ```
 
@@ -63,7 +63,7 @@ ActorSystem system = ActorSystem.create("test-system");
 
 任何 Akka 参与者都将扩展`AbstractActor`抽象类并实现`createReceive()`方法来处理来自其他参与者的传入消息:
 
-```
+```java
 public class MyActor extends AbstractActor {
     public Receive createReceive() {
         return receiveBuilder().build();
@@ -75,7 +75,7 @@ public class MyActor extends AbstractActor {
 
 既然我们已经创建了第一个演员，我们应该将它包含在`ActorSystem`中:
 
-```
+```java
 ActorRef readingActorRef 
   = system.actorOf(Props.create(MyActor.class), "my-actor");
 ```
@@ -88,7 +88,7 @@ ActorRef readingActorRef
 
 举例来说，让我们定义一个执行一些文本处理的 actor。actor 将接收一个`String`对象，并对其进行处理:
 
-```
+```java
 public class ReadingActor extends AbstractActor {
     private String text;
 
@@ -101,7 +101,7 @@ public class ReadingActor extends AbstractActor {
 
 现在，要创建这种类型的 actor 的实例，我们只需使用`props()`工厂方法将`String`参数传递给构造函数:
 
-```
+```java
 ActorRef readingActorRef = system.actorOf(
   ReadingActor.props(TEXT), "readingActor");
 ```
@@ -124,7 +124,7 @@ ActorRef readingActorRef = system.actorOf(
 
 **当我们想发送一条消息，并且不期望得到响应时，我们可以使用`tell()`方法。**从性能角度来看，这是最有效的方法:
 
-```
+```java
 readingActorRef.tell(new ReadingActor.ReadLines(), ActorRef.noSender()); 
 ```
 
@@ -134,7 +134,7 @@ readingActorRef.tell(new ReadingActor.ReadLines(), ActorRef.noSender());
 
 通常，我们可以将第二个参数设置为`null`或`ActorRef.noSender()`，因为我们不期待回复。**当我们需要演员的回应时，我们可以使用`ask()`方法:**
 
-```
+```java
 CompletableFuture<Object> future = ask(wordCounterActorRef, 
   new WordCounterActor.CountWords(line), 1000).toCompletableFuture();
 ```
@@ -145,7 +145,7 @@ CompletableFuture<Object> future = ask(wordCounterActorRef,
 
 当参与者在处理消息时抛出异常，并且`ask()`调用将超时，并且在日志中将看不到对异常的引用时，这不会自动完成:
 
-```
+```java
 @Override
 public Receive createReceive() {
     return receiveBuilder()
@@ -164,7 +164,7 @@ public Receive createReceive() {
 
 我们还有类似于`tell()`的`forward()`方法。不同的是，发送消息时保留了消息的原始发送者，所以转发消息的行动者只充当中间行动者:
 
-```
+```java
 printerActorRef.forward(
   new PrinterActor.PrintFinalResult(totalNumberOfWords), getContext());
 ```
@@ -173,7 +173,7 @@ printerActorRef.forward(
 
 **每个参与者将实现`createReceive()`方法**，该方法处理所有传入的消息。`receiveBuilder()`的作用类似于 switch 语句，试图将接收到的消息与定义的消息类型相匹配:
 
-```
+```java
 public Receive createReceive() {
     return receiveBuilder().matchEquals("printit", p -> {
         System.out.println("The address of this actor is: " + getSelf());
@@ -187,7 +187,7 @@ public Receive createReceive() {
 
 当我们使用完一个演员**时，我们可以通过从`ActorRefFactory`接口调用`stop()`方法**来停止它:
 
-```
+```java
 system.stop(myActorRef);
 ```
 
@@ -197,7 +197,7 @@ system.stop(myActorRef);
 
 当我们不再需要 actor 系统时，我们可以终止它以释放所有资源并防止任何内存泄漏:
 
-```
+```java
 Future<Terminated> terminateResponse = system.terminate();
 ```
 
@@ -205,7 +205,7 @@ Future<Terminated> terminateResponse = system.terminate();
 
 **我们还可以向任何我们想杀死的演员发送`PoisonPill`消息**:
 
-```
+```java
 myActorRef.tell(PoisonPill.getInstance(), ActorRef.noSender());
 ```
 
@@ -213,7 +213,7 @@ myActorRef.tell(PoisonPill.getInstance(), ActorRef.noSender());
 
 另一个用于杀死演员的特殊消息是`Kill`消息。与`PoisonPill,`不同，actor 在处理这个消息时会抛出一个`ActorKilledException` :
 
-```
+```java
 myActorRef.tell(Kill.getInstance(), ActorRef.noSender());
 ```
 

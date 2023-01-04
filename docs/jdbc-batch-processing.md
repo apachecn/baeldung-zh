@@ -20,7 +20,7 @@ Java 数据库连接(JDBC)是一个用于与数据库交互的 Java API。批处
 
 让我们看一个发送到数据库的顺序查询的例子:
 
-```
+```java
 statement.execute("INSERT INTO EMPLOYEE(ID, NAME, DESIGNATION) "
  + "VALUES ('1','EmployeeName1','Designation1')"); 
 statement.execute("INSERT INTO EMPLOYEE(ID, NAME, DESIGNATION) "
@@ -39,7 +39,7 @@ statement.execute("INSERT INTO EMPLOYEE(ID, NAME, DESIGNATION) "
 
 让我们看一个向多个表添加数据的示例:
 
-```
+```java
 statement.execute("INSERT INTO EMPLOYEE(ID, NAME, DESIGNATION) "
  + "VALUES ('1','EmployeeName1','Designation1')"); 
 statement.execute("INSERT INTO EMP_ADDRESS(ID, EMP_ID, ADDRESS) "
@@ -64,7 +64,7 @@ JDBC 提供了两个类，`Statement`和`PreparedStatement`来执行数据库查
 
 让我们看一个使用语句创建和执行批处理的例子:
 
-```
+```java
 Statement statement = connection.createStatement();
 statement.addBatch("INSERT INTO EMPLOYEE(ID, NAME, DESIGNATION) "
  + "VALUES ('1','EmployeeName','Designation')");
@@ -81,7 +81,7 @@ statement.executeBatch();
 
 让我们看一个使用`PreparedStatement.` 的例子。首先，我们使用一个编码为`String:`的 SQL 查询来设置语句
 
-```
+```java
 String[] EMPLOYEES = new String[]{"Zuck","Mike","Larry","Musk","Steve"};
 String[] DESIGNATIONS = new String[]{"CFO","CSO","CTO","CEO","CMO"};
 
@@ -94,7 +94,7 @@ PreparedStatement employeeStmt = connection.prepareStatement(insertEmployeeSQL);
 
 一旦循环完成，我们就执行批处理:
 
-```
+```java
 for(int i = 0; i < EMPLOYEES.length; i++){
     String employeeId = UUID.randomUUID().toString();
     employeeStmt.setString(1,employeeId);

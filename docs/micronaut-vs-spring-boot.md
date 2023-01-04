@@ -80,7 +80,7 @@ Micronaut 是为云微服务而生的。Micronaut 将为我们处理的云概念
 
 首先，让我们在我们的 Spring Boot 应用程序中定义一个名为`ArithmeticService`的类:
 
-```
+```java
 @Service
 public class ArithmeticService {
     public float add(float number1, float number2) {
@@ -106,7 +106,7 @@ public class ArithmeticService {
 
 接下来，让我们创建 REST 控制器:
 
-```
+```java
 @RestController
 @RequestMapping("/math")
 public class ArithmeticController {
@@ -141,7 +141,7 @@ public class ArithmeticController {
 
 现在，让我们创建 Micronaut 应用程序的服务层:
 
-```
+```java
 @Singleton 
 public class ArithmeticService {
     // implementation identical to the Spring Boot service layer
@@ -150,7 +150,7 @@ public class ArithmeticService {
 
 接下来，我们将使用与 Spring Boot 应用程序相同的四个端点来编写 REST 控制器:
 
-```
+```java
 @Controller("/math")
 public class ArithmeticController {
     @Inject
@@ -186,13 +186,13 @@ Micronaut 宣传快速启动时间，所以让我们比较一下我们的两个�
 
 首先，让我们启动 Spring Boot 应用程序，看看需要多长时间:
 
-```
+```java
 [main] INFO  c.b.m.v.s.CompareApplication - Started CompareApplication in 3.179 seconds (JVM running for 4.164)
 ```
 
 接下来，让我们看看 Micronaut 应用程序启动的速度:
 
-```
+```java
 21:22:49.267 [main] INFO  io.micronaut.runtime.Micronaut - Startup completed in 1278ms. Server Running: http://localhost:57535 
 ```
 
@@ -202,7 +202,7 @@ Micronaut 宣传快速启动时间，所以让我们比较一下我们的两个�
 
 我们将从 Spring Boot 应用程序开始。首先，让我们调用四个算术端点，然后调用内存端点:
 
-```
+```java
 Initial: 0.25 GB 
 Used: 0.02 GB 
 Max: 4.00 GB 
@@ -211,7 +211,7 @@ Committed: 0.06 GB
 
 接下来，让我们对 Micronaut 应用程序进行同样的练习:
 
-```
+```java
 Initial: 0.25 GB 
 Used: 0.01 GB 
 Max: 4.00 GB 

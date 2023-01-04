@@ -12,7 +12,7 @@ Spring Data MongoDB 附带了`MongoTemplate`，它有许多重载版本的`inser
 
 **我们将使用`MongoTemplate `和一个简单的可重用地图来实现我们的用例。**让我们从创建地图参考和注入`MongoTemplate`开始:
 
-```
+```java
 class MongoDbHashMapIntegrationTest {
     private static final Map<String, Object> MAP = new HashMap<>();
 
@@ -23,7 +23,7 @@ class MongoDbHashMapIntegrationTest {
 
 然后，我们将用几个条目初始化我们的映射，每个条目都是不同的类型:
 
-```
+```java
 @BeforeAll
 static void init() {
     MAP.put("name", "Document A");
@@ -38,7 +38,7 @@ static void init() {
 
 首先，我们调用`mongo.insert()`并选择一个要放入的集合:
 
-```
+```java
 @Test
 void whenUsingMap_thenInsertSucceeds() {
     Map<String, Object> saved = mongo.insert(MAP, "map-collection");
@@ -55,7 +55,7 @@ void whenUsingMap_thenInsertSucceeds() {
 
 **让我们将之前创建的地图和一张新地图添加到我们的地图集中:**
 
-```
+```java
 @Test
 void whenMapSet_thenInsertSucceeds() {
     Set<Map<String, Object>> set = new HashSet<>();
@@ -79,7 +79,7 @@ void whenMapSet_thenInsertSucceeds() {
 
 **`Document`类是[推荐的用 Java 处理 MongoDB 文档的](https://web.archive.org/web/20221107202807/https://www.mongodb.com/docs/drivers/java/sync/v4.3/fundamentals/data-formats/documents/#overview)方式。**实现了`Map`和`Bson`，方便工作。让我们使用接受映射的构造函数:
 
-```
+```java
 @Test
 void givenMap_whenDocumentConstructed_thenInsertSucceeds() {
     Document document = new Document(MAP);
@@ -96,7 +96,7 @@ void givenMap_whenDocumentConstructed_thenInsertSucceeds() {
 
 虽然首选的是`Document`类，但是我们也可以从地图中构造一个`BasicDBObject`:
 
-```
+```java
 @Test
 void givenMap_whenBasicDbObjectConstructed_thenInsertSucceeds() {
     BasicDBObject dbObject = new BasicDBObject(MAP);
@@ -115,7 +115,7 @@ void givenMap_whenBasicDbObjectConstructed_thenInsertSucceeds() {
 
 让我们从构建我们的`input`地图开始:
 
-```
+```java
 Map<String, List<Object>> input = new HashMap<>();
 List<Object> listOne = new ArrayList<>();
 listOne.add("Doc A");
@@ -131,7 +131,7 @@ input.put("b", listTwo);
 
 正如我们所看到的，没有属性名，只有值。所以，让我们[流](/web/20221107202807/https://www.baeldung.com/java-streams)我们的`input`的 [`entrySet()`](/web/20221107202807/https://www.baeldung.com/java-map-entries-methods) 并从中构建我们的`result`。为此，我们将把`input`中的每个条目收集到一个`HashSet`中。**然后，我们将在累加器函数中构建一个*文档*，将输入键作为`_id`属性。之后，我们将遍历条目值，将它们放在适当的属性名下。**最后，我们将把每个`Document`添加到我们的`result`中:
 
-```
+```java
 Set<Document> result = input.entrySet()
   .stream()
   .collect(HashSet<Document>::new, 
@@ -154,7 +154,7 @@ Set<Document> result = input.entrySet()
 
 **最后，我们可以将`result`插入到 MongoDB:**
 
-```
+```java
 mongo.insert(result, "custom-set");
 ```
 

@@ -12,7 +12,7 @@
 
 让我们从将 Apache POI 依赖项添加到`pom.xml`开始:
 
-```
+```java
 <dependency>
     <groupId>org.apache.poi</groupId>
     <artifactId>poi-ooxml</artifactId>
@@ -35,7 +35,7 @@
 
 首先，我们打开我们想要读取的文件，并将其转换成一个`FileInputStream`以供进一步处理。`FileInputStream`构造函数抛出了一个`java.io.FileNotFoundException`,所以我们需要将它放在一个 try-catch 块周围，并在最后关闭流:
 
-```
+```java
 public static void readExcel(String filePath) {
     File file = new File(filePath);
     try {
@@ -56,7 +56,7 @@ public static void readExcel(String filePath) {
 
 出于本教程的考虑，我们将只把数据打印到控制台:
 
-```
+```java
 FileInputStream inputStream = new FileInputStream(file);
 Workbook baeuldungWorkBook = new XSSFWorkbook(inputStream);
 for (Sheet sheet : baeuldungWorkBook) {
@@ -66,7 +66,7 @@ for (Sheet sheet : baeuldungWorkBook) {
 
 然后，为了遍历工作表中的行，我们需要找到从 sheet 对象获得的第一行和最后一行的索引:
 
-```
+```java
 int firstRow = sheet.getFirstRowNum();
 int lastRow = sheet.getLastRowNum();
 for (int index = firstRow + 1; index <= lastRow; index++) {
@@ -82,7 +82,7 @@ for (int index = firstRow + 1; index <= lastRow; index++) {
 
 单元迭代的代码如下:
 
-```
+```java
 for (int cellIndex = row.getFirstCellNum(); cellIndex < row.getLastCellNum(); cellIndex++) {
     Cell cell = row.getCell(cellIndex, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
     ...
@@ -107,7 +107,7 @@ for (int cellIndex = row.getFirstCellNum(); cellIndex < row.getLastCellNum(); ce
 
 有两件重要的事情值得注意。首先，`Date`值存储为`Numeric`值，同样如果单元格的值类型为`FORMULA`，我们需要使用`getCachedFormulaResultType()`而不是`getCellType()` 方法[来检查公式计算的结果](/web/20220627183230/https://www.baeldung.com/apache-poi-read-cell-value-formula):
 
-```
+```java
 public static void printCellValue(Cell cell) {
     CellType cellType = cell.getCellType().equals(CellType.FORMULA)
       ? cell.getCachedFormulaResultType() : cell.getCellType();
@@ -129,7 +129,7 @@ public static void printCellValue(Cell cell) {
 
 现在，我们需要做的就是在单元循环中调用`printCellValue`方法，我们就完成了。以下是完整代码的一部分:
 
-```
+```java
 ...
 for (int cellIndex = row.getFirstCellNum(); cellIndex < row.getLastCellNum(); cellIndex++) {
     Cell cell = row.getCell(cellIndex, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);

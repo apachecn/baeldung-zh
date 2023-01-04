@@ -14,7 +14,7 @@
 
 在我们开始探索新的引导过程之前，我们需要将`hibernate-core` jar 文件添加到项目类路径中。在基于 Maven 的项目中，我们只需要在`pom.xml`文件中声明这个依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>
@@ -26,7 +26,7 @@
 
 我们还需要正在使用的数据库的 JDBC 驱动程序。在本例中，我们将使用嵌入式 H2 数据库:
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -48,7 +48,7 @@
 
 在我们深入探讨`ServiceRegistry`的概念之前，我们首先需要了解什么是`Service` 在 Hibernate 5.0 中`.`，一个`Service`是一种由同名接口表示的功能类型:
 
-```
+```java
 org.hibernate.service.Service
 ```
 
@@ -70,7 +70,7 @@ org.hibernate.service.Service
 
 **为了构建一个`BootstrapServiceRegistry`实现，我们使用了`BootstrapServiceRegistryBuilder `工厂类**，它允许以类型安全的方式定制这三个服务:
 
-```
+```java
 BootstrapServiceRegistry bootstrapServiceRegistry = new BootstrapServiceRegistryBuilder()
   .applyClassLoader()
   .applyIntegrator()
@@ -82,14 +82,14 @@ BootstrapServiceRegistry bootstrapServiceRegistry = new BootstrapServiceRegistry
 
 像前面的注册表一样，我们使用`StandardServiceRegistryBuilder `来创建`StandardServiceRegistry:`的一个实例
 
-```
+```java
 StandardServiceRegistryBuilder standardServiceRegistry =
   new StandardServiceRegistryBuilder();
 ```
 
 在幕后，`StandardServiceRegistryBuilder`创建并使用`BootstrapServiceRegistry.`的一个实例，我们也可以使用一个重载的构造函数来传递一个已经创建的实例:
 
-```
+```java
 BootstrapServiceRegistry bootstrapServiceRegistry = 
   new BootstrapServiceRegistryBuilder().build();
 StandardServiceRegistryBuilder standardServiceRegistryBuilder = 
@@ -98,7 +98,7 @@ StandardServiceRegistryBuilder standardServiceRegistryBuilder =
 
 我们使用这个构建器从一个资源文件中加载一个配置，比如默认的`hibernate.cfg.xml`，最后，我们调用`build()`方法来获得`StandardServiceRegistry.`的一个实例
 
-```
+```java
 StandardServiceRegistry standardServiceRegistry = standardServiceRegistryBuilder
   .configure()
   .build();
@@ -110,7 +110,7 @@ StandardServiceRegistry standardServiceRegistry = standardServiceRegistryBuilder
 
 `MetadataSources`类对此负责:
 
-```
+```java
 MetadataSources metadataSources = new MetadataSources(standardServiceRegistry);
 metadataSources.addAnnotatedClass();
 metadataSources.addResource()
@@ -118,7 +118,7 @@ metadataSources.addResource()
 
 接下来，我们得到一个`Metadata`的实例，我们将在最后一步中使用它:
 
-```
+```java
 Metadata metadata = metadataSources.buildMetadata();
 ```
 
@@ -126,13 +126,13 @@ Metadata metadata = metadataSources.buildMetadata();
 
 最后一步是从先前创建的`Metadata:`创建`SessionFactory`
 
-```
+```java
 SessionFactory sessionFactory = metadata.buildSessionFactory();
 ```
 
 我们现在可以打开一个`Session`并开始保存和读取实体:
 
-```
+```java
 Session session = sessionFactory.openSession();
 Movie movie = new Movie(100L);
 session.persist(movie);

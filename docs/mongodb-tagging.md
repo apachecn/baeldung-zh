@@ -21,7 +21,7 @@
 
 为了查询数据库，我们必须在我们的`pom.xml`中包含 MongoDB 驱动程序依赖性:
 
-```
+```java
 <dependency>
     <groupId>org.mongodb</groupId>
     <artifactId>mongo-java-driver</artifactId>
@@ -39,7 +39,7 @@
 
 我们将标签存储在一个数组中，因为一篇文章可能不止一个:
 
-```
+```java
 {
     "_id" : "Java 8 and MongoDB",
     "author" : "Donato Rimenti",
@@ -49,7 +49,7 @@
 
 我们还将创建相应的 Java 模型类:
 
-```
+```java
 public class Post {
     private String title;
     private String author;
@@ -65,7 +65,7 @@ public class Post {
 
 我们的存储库类将包含两个方法，通过使用标题来查找标签来处理标签的添加和删除。我们还将返回一个布尔值来表明查询是否更新了一个元素:
 
-```
+```java
 public boolean addTags(String title, List<String> tags) {
     UpdateResult result = collection.updateOne(
       new BasicDBObject(DBCollection.ID_FIELD_NAME, title), 
@@ -87,7 +87,7 @@ public boolean removeTags(String title, List<String> tags) {
 
 **我们执行更新的另一种方式是通过 Mongo shell。**例如，让我们更新帖子`JUnit5 with Java.`，特别是，我们要添加标签`Java`和 J `Unit5`，删除标签`Spring`和`REST`:
 
-```
+```java
 db.posts.updateOne(
     { _id : "JUnit 5 with Java" }, 
     { $addToSet : 
@@ -114,7 +114,7 @@ db.posts.updateOne(
 
 **我们将定义三种方法来查询与作为参数**传递的标签集合相关的帖子。它们将返回与至少一个标签匹配的帖子，所有标签匹配的帖子，没有标签匹配的帖子。我们还将使用 Java 8 的流 API 创建一个映射方法来处理文档和模型之间的转换:
 
-```
+```java
 public List<Post> postsWithAtLeastOneTag(String... tags) {
     FindIterable<Document> results = collection
       .find(Filters.in(TAGS_FIELD, tags));
@@ -150,7 +150,7 @@ private static Post documentToPost(Document document) {
 
 同样，**让我们也来看看 shell 等价查询**。我们将获取三个不同的 post 集合，分别标记为`MongoDB`或`Stream` API，标记为`Java 8`和`JUnit 5`，没有标记为`Groovy`或`Scala`:
 
-```
+```java
 db.posts.find({
     "tags" : { $in : ["MongoDB", "Stream API" ] } 
 });

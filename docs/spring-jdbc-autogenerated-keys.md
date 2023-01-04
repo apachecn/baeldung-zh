@@ -10,7 +10,7 @@
 
 首先，我们需要在我们的`pom.xml`中定义`spring-boot-starter-jdbc `和`H2`依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-jdbc</artifactId>
@@ -30,7 +30,7 @@
 
 让我们定义一个`sys_message`表，它有两列:`id`(自动生成的键)和`message`:
 
-```
+```java
 CREATE TABLE IF NOT EXISTS sys_message (
     id bigint(20) NOT NULL AUTO_INCREMENT,
     message varchar(100) NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS sys_message (
 
 由于`PrepareStatementCreator` 接口是一个`FunctionalInterface `，其中它的方法接受一个`java.sql.Connection`实例并返回一个`java.sql.PreparedStatement` 对象，为了简单起见，我们可以使用一个 lambda 表达式:
 
-```
+```java
 String INSERT_MESSAGE_SQL 
   = "insert into sys_message (message) values(?) ";
 
@@ -71,7 +71,7 @@ public long insertMessage(String message) {
 
 此外，我们可以验证方法:
 
-```
+```java
 @Test
 public void 
   insertJDBC_whenLoadMessageByKey_thenGetTheSameMessage() {
@@ -89,7 +89,7 @@ public void
 
 因此，我们需要初始化`SimpleJdbcInsert`的一个实例:
 
-```
+```java
 @Repository
 public class MessageRepositorySimpleJDBCInsert {
 
@@ -107,7 +107,7 @@ public class MessageRepositorySimpleJDBCInsert {
 
 因此，**我们可以调用`SimpleJdbcInsert`的`executeAndReturnKey`方法向`sys_message`表中插入一条新记录，并取回自动生成的关键字**:
 
-```
+```java
 public long insert(String message) {
     Map<String, Object> parameters = new HashMap<>(1);
     parameters.put("message", message);
@@ -118,7 +118,7 @@ public long insert(String message) {
 
 此外，我们可以非常简单地验证该方法:
 
-```
+```java
 @Test
 public void 
   insertSimpleInsert_whenLoadMessageKey_thenGetTheSameMessage() {

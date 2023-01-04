@@ -24,7 +24,7 @@
 
 假设我们已经创建了一个抽象类`CircleClass`，它包含一个`String`、`color`，来表示`CircleClass`对象的状态:
 
-```
+```java
 public abstract class CircleClass {
 
     private String color;
@@ -46,14 +46,14 @@ public abstract class CircleClass {
 
 让我们创建一个简单的`CircleClass` `:`实现类
 
-```
+```java
 public class ChildCircleClass extends CircleClass {
 }
 ```
 
 现在，让我们创建一个实例并验证颜色:
 
-```
+```java
 CircleClass redCircle = new ChildCircleClass();
 redCircle.setColor("RED");
 assertTrue(redCircle.isValid());
@@ -63,7 +63,7 @@ assertTrue(redCircle.isValid());
 
 让我们尝试使用一个带有`default`方法的接口来做类似的事情:
 
-```
+```java
 public interface CircleInterface {
     List<String> allowedColors = Arrays.asList("RED", "GREEN", "BLUE");
 
@@ -83,7 +83,7 @@ public interface CircleInterface {
 
 这里，我们定义了`getColor()`方法来提供状态信息。子类将覆盖`getColor()`方法来提供运行时实例的状态:
 
-```
+```java
 public class ChidlCircleInterfaceImpl implements CircleInterface {
     private String color;
 
@@ -100,7 +100,7 @@ public class ChidlCircleInterfaceImpl implements CircleInterface {
 
 让我们创建一个实例并验证颜色:
 
-```
+```java
 ChidlCircleInterfaceImpl redCircleWithoutState = new ChidlCircleInterfaceImpl();
 redCircleWithoutState.setColor("RED");
 assertTrue(redCircleWithoutState.isValid());

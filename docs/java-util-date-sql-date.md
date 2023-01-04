@@ -16,7 +16,7 @@
 
 通过调用构造函数:
 
-```
+```java
 Date date = new Date();
 ```
 
@@ -24,7 +24,7 @@ Date date = new Date();
 
 或者通过从该时期开始经过若干毫秒:
 
-```
+```java
 long timestamp = 1532516399000; // 25 July 2018 10:59:59 UTC
 Date date = new Date(timestamp);
 ```
@@ -35,7 +35,7 @@ Date date = new Date(timestamp);
 
 它是可变的。一旦我们初始化了它，我们就可以改变它的内部值。例如，我们可以调用`setTime`方法:
 
-```
+```java
 date.setTime(0); // 01 January 1970 00:00:00
 ```
 

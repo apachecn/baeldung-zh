@@ -20,7 +20,7 @@ CC 值可以通过测量程序的独立执行路径的数量来计算。
 
 例如，下面的方法将产生圈复杂度 3:
 
-```
+```java
 public void callInsurance(Vehicle vehicle) {
     if (vehicle.isValid()) {
         if (vehicle instanceof Car) {
@@ -57,7 +57,7 @@ CC 考虑了条件语句和多部分布尔表达式的嵌套。
 
 从数学角度来说，CC 可以通过以下简单公式计算:
 
-```
+```java
 CC = E - N + 2P
 ```
 
@@ -87,7 +87,7 @@ PMD 和 FindBugs 都提供了一些关于异常的规则。下面是我们在处
 
 一个典型的容易出错的例程是在`finally{}`块中抛出一个异常:
 
-```
+```java
 String content = null;
 try {
     String lowerCaseString = content.toLowerCase();
@@ -104,7 +104,7 @@ try {
 
 例如，以下代码运行时没有任何错误:
 
-```
+```java
 String content = null;
 try {
     String lowerCaseString = content.toLowerCase();
@@ -121,7 +121,7 @@ try {
 
 以下代码试图关闭`finally`块中的两个流:
 
-```
+```java
 OutputStream outStream = null;
 OutputStream outStream2 = null;
 try {
@@ -145,7 +145,7 @@ try {
 
 一个快速的解决方法是使用一个单独的 try/catch 块来关闭第二个流:
 
-```
+```java
 finally {
     try {
         outStream.close();
@@ -168,7 +168,7 @@ finally {
 
 每当您实现`compareTo()` 方法时，不要忘记对`equals()`方法做同样的事情，否则，这段代码返回的结果可能会令人困惑:
 
-```
+```java
 Car car = new Car();
 Car car2 = new Car();
 if(car.equals(car2)) {
@@ -185,14 +185,14 @@ if(car.compareTo(car2) == 0) {
 
 结果:
 
-```
+```java
 They're not equal
 They're equal
 ```
 
 为了消除混淆，建议确保在实现 *Comparable，*时不要调用`Object.equals()`，相反，您应该尝试用如下代码覆盖它:
 
-```
+```java
 boolean equals(Object o) { 
     return compareTo(o) == 0; 
 }
@@ -204,14 +204,14 @@ boolean equals(Object o) {
 
 下面是投掷 NPE 的最基本的例子:
 
-```
+```java
 Car car = null;
 car.doSomething();
 ```
 
 避免 npe 的最简单方法是执行空检查:
 
-```
+```java
 Car car = null;
 if (car != null) {
     car.doSomething();

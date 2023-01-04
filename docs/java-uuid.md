@@ -6,7 +6,7 @@
 
 UUID (全球唯一标识符)，也称为 GUID(全球唯一标识符)，表示**一个 128 位长的值，在所有实际用途中都是唯一的。**UUID 的标准表示法使用十六进制数字(八进制):
 
-```
+```java
 123e4567-e89b-12d3-a456-556642440000
 ```
 
@@ -34,7 +34,7 @@ Learn how the JVM optimizes the amount of memory allocated to String storage in 
 
 UUID 类只有一个构造函数:
 
-```
+```java
 UUID uuid = new UUID(long mostSignificant64Bits, long leastSignificant64Bits);
 ```
 
@@ -44,19 +44,19 @@ UUID uuid = new UUID(long mostSignificant64Bits, long leastSignificant64Bits);
 
 第一种方法从给定的字节数组创建第 3 版 UUID:
 
-```
+```java
 UUID uuid = UUID.nameUUIDFromBytes(byte[] bytes); 
 ```
 
 **其次，`randomUUID()`方法创建了版本 4 的 UUID。这是创造 UUID** 最便捷的方式:
 
-```
+```java
 UUID uuid = UUID.randomUUID(); 
 ```
 
 第三个静态方法返回给定 UUID 的字符串表示形式的 UUID 对象:
 
-```
+```java
 UUID uuid = UUID.fromString(String uuidHexDigitString); 
 ```
 
@@ -66,7 +66,7 @@ UUID uuid = UUID.fromString(String uuidHexDigitString);
 
 让我们以 UUID 为例:
 
-```
+```java
 123e4567-e89b-42d3-a456-556642440000
 xxxxxxxx-xxxx-Bxxx-Axxx-xxxxxxxxxxxx
 ```
@@ -75,7 +75,7 @@ xxxxxxxx-xxxx-Bxxx-Axxx-xxxxxxxxxxxx
 
 `**A**`代表决定 UUID 布局的变量。UUID 中的所有其他位取决于变量字段中的位的设置。变量由 A 的三个最高有效位决定:
 
-```
+```java
  MSB1    MSB2    MSB3
    0       X       X     reserved (0)
    1       0       X     current variant (2)
@@ -91,7 +91,7 @@ xxxxxxxx-xxxx-Bxxx-Axxx-xxxxxxxxxxxx
 
 Java 提供了获取 UUID 变体和版本的方法:
 
-```
+```java
 UUID uuid = UUID.randomUUID();
 int variant = uuid.variant();
 int version = uuid.version();
@@ -101,7 +101,7 @@ int version = uuid.version();
 
 Java 提供了 v3 和 v4 的实现，但也提供了用于生成任何类型的 UUID 的`constructor`:
 
-```
+```java
 UUID uuid = new UUID(long mostSigBits, long leastSigBits);
 ```
 
@@ -115,7 +115,7 @@ UUID 版本 1 基于当前时间戳，从 1582 年 10 月 15 日开始以 100 �
 
 首先，我们将生成 64 个最低和最高有效位作为长值:
 
-```
+```java
 private static long get64LeastSignificantBitsForVersion1() {
     Random random = new Random();
     long random63BitLong = random.nextLong() & 0x3FFFFFFFFFFFFFFFL;
@@ -138,7 +138,7 @@ private static long get64MostSignificantBitsForVersion1() {
 
 然后，我们可以将这两个值传递给 UUID 的构造函数:
 
-```
+```java
 public static UUID generateType1UUID() {
 
     long most64SigBits = get64MostSignificantBitsForVersion1();
@@ -156,7 +156,7 @@ public static UUID generateType1UUID() {
 
 UUIDs 是使用名称空间和名称的散列生成的。名称空间标识符是 UUIDs，如域名系统(DNS)、对象标识符(oid)、URL 等。
 
-```
+```java
 UUID = hash(NAMESPACE_IDENTIFIER + NAME)
 ```
 
@@ -166,7 +166,7 @@ UUIDv3 和 UUIDv5 之间的唯一区别是哈希算法— v3 使用 MD5 (128 位
 
 让我们生成第三类 UUID:
 
-```
+```java
 byte[] nameSpaceBytes = bytesFromUUID(namespace);
 byte[] nameBytes = name.getBytes("UTF-8");
 byte[] result = joinBytes(nameSpaceBytes, nameBytes);
@@ -184,13 +184,13 @@ UUIDv4 实现使用随机数作为来源。Java 实现是`SecureRandom`，用一
 
 让我们生成版本 4 UUID:
 
-```
+```java
 UUID uuid = UUID.randomUUID();
 ```
 
 让我们使用“SHA-256”和一个随机 UUID 生成一个唯一的密钥:
 
-```
+```java
 MessageDigest salt = MessageDigest.getInstance("SHA-256");
 salt.update(UUID.randomUUID().toString().getBytes("UTF-8"));
 String digest = bytesToHex(salt.digest());

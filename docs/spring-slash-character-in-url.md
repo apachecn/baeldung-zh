@@ -16,7 +16,7 @@
 
 假设我们可以通过`/mypaths`下的任何路径接收请求:
 
-```
+```java
 http://localhost:8080/mypaths/any/custom/path
 ```
 
@@ -24,7 +24,7 @@ http://localhost:8080/mypaths/any/custom/path
 
 我们想到的第一个解决方案可能是将路径的动态部分捕获到一个`PathVariable`:
 
-```
+```java
 @GetMapping("mypaths/{anything}")
 public String pathVariable(@PathVariable("anything") String anything) {
     return anything;
@@ -35,7 +35,7 @@ public String pathVariable(@PathVariable("anything") String anything) {
 
 我们可以通过使用`**`通配符为特定路径下的所有请求创建一个回退来轻松解决这个问题:
 
-```
+```java
 @GetMapping("all/**")
 public String allDirectories(HttpServletRequest request) {
     return request.getRequestURI()
@@ -53,7 +53,7 @@ public String allDirectories(HttpServletRequest request) {
 
 让我们想象一下，在前面的例子中，我们用包含连续斜线的路径参数发出**请求:**
 
-```
+```java
 http://localhost:8080/all/http://myurl.com
 ```
 
@@ -63,7 +63,7 @@ Spring 也规范了 URL 中的其他序列，比如路径遍历。它采取这�
 
 在这些情况下，强烈建议使用查询参数:
 
-```
+```java
 @GetMapping("all")
 public String queryParameter(@RequestParam("param") String param) {
     return param;

@@ -40,7 +40,7 @@
 
 用`@Before`标注的方法将在每个场景之前**执行。在我们的示例中，我们将在每个场景之前启动浏览器:**
 
-```
+```java
 @Before
 public void initialization() {
     startBrowser();
@@ -49,7 +49,7 @@ public void initialization() {
 
 **如果我们用`@Before`标注几个方法，就可以明确定义步骤执行的顺序:**
 
-```
+```java
 @Before(order=2)
 public void beforeScenario() {
     takeScreenshot();
@@ -58,7 +58,7 @@ public void beforeScenario() {
 
 上面的方法第二次执行，因为我们将`2`作为参数`order`的值传递给注释。我们还可以将`1`作为我们初始化方法的顺序参数的值传递:
 
-```
+```java
 @Before(order=1)
 public void initialization()
 ```
@@ -69,7 +69,7 @@ public void initialization()
 
 用`@BeforeStep` **标注的方法在每一步**之前执行。让我们在每一步之前使用注释来截图:
 
-```
+```java
 @BeforeStep
 public void beforeStep() {
     takeScreenshot();
@@ -80,7 +80,7 @@ public void beforeStep() {
 
 用`@AfterStep` **标注的方法在每一步**后执行:
 
-```
+```java
 @AfterStep
 public void afterStep() {
     takeScreenshot();
@@ -93,7 +93,7 @@ public void afterStep() {
 
 用`@After` **标注的方法在每个场景**之后执行:
 
-```
+```java
 @After
 public void afterScenario() {
     takeScreenshot();
@@ -107,7 +107,7 @@ public void afterScenario() {
 
 用钩子注释标注的方法可以接受类型为`Scenario`的参数:
 
-```
+```java
 @After
 public void beforeScenario(Scenario scenario) { 
     // some code
@@ -122,7 +122,7 @@ public void beforeScenario(Scenario scenario) {
 
 现在让我们来看看当我们用所有四种类型的钩子运行一个黄瓜场景时会发生什么:
 
-```
+```java
 Feature: Book Store With Hooks
   Background: The Book Store
     Given The following books are available in the store
@@ -165,7 +165,7 @@ Feature: Book Store With Hooks
 
 钩子是全局定义的，影响所有场景和步骤。然而，在 Cucumber 标签的帮助下，我们可以精确地定义应该为哪些场景执行钩子:
 
-```
+```java
 @Before(order=2, value="@Screenshots")
 public void beforeScenario() {
     takeScreenshot();
@@ -174,7 +174,7 @@ public void beforeScenario() {
 
 该挂钩将仅在标记有`@Screenshots`的场景中执行:
 
-```
+```java
 @Screenshots
 Scenario: 1 - Find books by author 
 When I ask for a book by the author Erik Larson 
@@ -187,7 +187,7 @@ Then The salesperson says that there are 2 books
 
 回想一下上面例子中的初始化钩子:
 
-```
+```java
 @Before(order=2)
 public void initialization() {
     startBrowser();
@@ -196,7 +196,7 @@ public void initialization() {
 
 用 lambda 表达式重写后，我们得到:
 
-```
+```java
 public BookStoreWithHooksRunSteps() {
     Before(2, () -> startBrowser());
 }

@@ -24,7 +24,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 每当 Java 应用程序打开与远程方的 SSL 连接时，它需要通过验证其[证书](/web/20220525133009/https://www.baeldung.com/java-security-overview#public_key_infrastructure)来检查服务器是否可信。**如果根证书没有包含在证书存储文件中，那么将会有一个安全异常:**
 
-```
+```java
 Untrusted: Exception in thread "main" javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
 ```
 
@@ -56,13 +56,13 @@ Untrusted: Exception in thread "main" javax.net.ssl.SSLHandshakeException: sun.s
 
 要获得 JVM 证书库中注册的所有证书的列表，我们需要发出以下命令:
 
-```
+```java
 keytool -list -keystore $JAVA_HOME/lib/security/cacerts
 ```
 
 这将返回一个包含所有条目的列表，比如:
 
-```
+```java
 Your keystore contains 227 entries
 
 Alias name: accvraiz1
@@ -78,13 +78,13 @@ Issuer: C=ES, O=ACCV, OU=PKIACCV, CN=ACCVRAIZ1
 
 要手动将证书添加到该列表中，以便在我们发出 SSL 请求时对其进行验证，我们需要执行以下命令:
 
-```
+```java
 keytool -import -trustcacerts -file [certificate-file] -alias [alias] -keystore $JAVA_HOME/lib/security/cacerts
 ```
 
 例如:
 
-```
+```java
 keytool -import -alias ss-badssl.com -keystore $JAVA_HOME/lib/security/cacerts -file ss-badssl.pem 
 ```
 
@@ -92,13 +92,13 @@ keytool -import -alias ss-badssl.com -keystore $JAVA_HOME/lib/security/cacerts -
 
 如果以上都不起作用，可能是我们的 Java 应用程序使用了不同的证书库。为了确保这一点，我们可以指定在运行 Java 应用程序时使用的证书存储:
 
-```
+```java
 java -Djavax.net.ssl.trustStore=CustomTrustStorePath ...
 ```
 
 这样，我们可以确保它使用我们之前编辑的证书存储。如果这没有帮助，我们还可以通过应用 VM 选项来调试 SSL 连接:
 
-```
+```java
 -Djavax.net.debug=all
 ```
 
@@ -106,7 +106,7 @@ java -Djavax.net.ssl.trustStore=CustomTrustStorePath ...
 
 最后，我们可以创建一个简单但方便的脚本来自动化整个过程:
 
-```
+```java
 #!/bin/sh
 # cacerts.sh
 /usr/bin/openssl s_client -showcerts -connect $1:443 </dev/null 2>/dev/null | /usr/bin/openssl x509 -outform PEM > /tmp/$1.pem
@@ -120,19 +120,19 @@ rm /tmp/$1.pem
 
 例如，我们可以尝试为 https://self-signed.badssl.com 添加证书:
 
-```
+```java
 cacerts.sh self-signed.badssl.com
 ```
 
 运行之后，我们可以检查 cacerts 文件，它现在包含证书:
 
-```
+```java
 keytool -list -keystore $JAVA_HOME/lib/security/cacerts
 ```
 
 最后，我们会看到新证书在那里:
 
-```
+```java
 #5: ObjectId: 2.5.29.32 Criticality=false
 CertificatePolicies [
 [CertificatePolicyId: [2.5.29.32.0]
@@ -163,7 +163,7 @@ Certificate fingerprints:
 
 最后，我们使用 keytool 导入它:
 
-```
+```java
 $JAVA_HOME/bin/keytool -import -trustcacerts -file CERTIFICATEFILE -alias ALIAS -keystore $JAVA_HOME/lib/security/cacerts
 ```
 

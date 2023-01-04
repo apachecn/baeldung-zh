@@ -14,7 +14,7 @@
 
 代码为**0 的退出表示正常退出:**
 
-```
+```java
 System.exit(0);
 ```
 
@@ -24,7 +24,7 @@ System.exit(0);
 
 这意味着`System.exit`之后的**代码实际上是不可到达的** **，然而编译器并不知道。**
 
-```
+```java
 System.exit(0);
 System.out.println("This line is unreachable");
 ```
@@ -49,7 +49,7 @@ System.out.println("This line is unreachable");
 
 在这个例子中，我们试图读取一个文件，如果它存在，我们打印其中的一行。如果文件不存在，我们用 catch 块中的`System.exit`退出程序。
 
-```
+```java
 try {
     BufferedReader br = new BufferedReader(new FileReader("file.txt"));
     System.out.println(br.readLine());
@@ -73,7 +73,7 @@ try {
 
 在下面的例子中，当我们试图执行`SystemExitExample.class,`时，如果它通过调用带有非零状态码的`System.exit` 退出 JVM，那么下面的 echo 就不会被打印出来。
 
-```
+```java
 java SystemExitExample && echo "I will not be printed"
 ```
 

@@ -16,7 +16,7 @@
 
 让我们转到控制台，导航到我们选择的位置并运行以下命令:
 
-```
+```java
 mvn archetype:generate -DgroupId=com.baeldung -DartifactId=jetty-app 
   -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
 ```
@@ -25,13 +25,13 @@ mvn archetype:generate -DgroupId=com.baeldung -DartifactId=jetty-app
 
 因为我们将处理 WAR 文件，所以让我们导航到项目根目录并构建它:
 
-```
+```java
 cd jetty-app
 ```
 
 使用 Maven 构建:
 
-```
+```java
 mvn package
 ```
 
@@ -51,7 +51,7 @@ mvn package
 
 复制后，我们可以通过导航到`$JETTY_HOME`并运行命令来启动服务器:
 
-```
+```java
 java -jar start.jar
 ```
 
@@ -67,7 +67,7 @@ Jetty web server 为我们提供了一种方法，通过创建一个上下文文
 
 让我们通过从`webapps`中删除刚刚部署的`jetty-app.war`来取消部署它。然后，我们将使用以下代码创建`jetty-app.xml`，并将其放在`webapps`中:
 
-```
+```java
 <?xml version="1.0"  encoding="ISO-8859-1"?>
 <!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" 
   "http://www.eclipse.org/jetty/configure.dtd">
@@ -87,7 +87,7 @@ Jetty web server 为我们提供了一种方法，通过创建一个上下文文
 
 jetty Maven 插件帮助我们在构建 Java web 应用程序时进行快速测试和迭代。为了能够用它部署和运行应用程序，我们只需要在`pom.xml`中添加插件:
 
-```
+```java
 <plugin>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-maven-plugin</artifactId>
@@ -101,7 +101,7 @@ jetty Maven 插件帮助我们在构建 Java web 应用程序时进行快速测�
 
 为了在添加插件后部署我们的应用程序，我们导航到`pom.xml`所在的根目录并运行以下命令:
 
-```
+```java
 mvn jetty:run
 ```
 
@@ -115,7 +115,7 @@ jetty Maven 插件持续扫描 web 项目的任何变化，并不断重新部署
 
 我们将插件声明更改为以下 XML:
 
-```
+```java
 <plugin>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-maven-plugin</artifactId>
@@ -138,7 +138,7 @@ jetty Maven 插件持续扫描 web 项目的任何变化，并不断重新部署
 
 在这种情况下，我们必须在不同的端口上运行我们的测试服务器。让我们将插件配置更改为以下 XML:
 
-```
+```java
 <configuration>
     <webApp>
         <contextPath>/jetty</contextPath>
@@ -171,7 +171,7 @@ jetty Maven 插件持续扫描 web 项目的任何变化，并不断重新部署
 
 让我们使用 jetty-runner 部署我们的战争:
 
-```
+```java
 java -jar jetty-runner-9.4.0.M1.jar jetty-app/target/jetty-app.war
 ```
 
@@ -183,7 +183,7 @@ java -jar jetty-runner-9.4.0.M1.jar jetty-app/target/jetty-app.war
 
 如前所述在`/jetty`环境下部署:
 
-```
+```java
 java -jar jetty-runner-9.4.0.M1.jar --path /jetty jetty-app/target/jetty-app.war
 ```
 
@@ -193,7 +193,7 @@ java -jar jetty-runner-9.4.0.M1.jar --path /jetty jetty-app/target/jetty-app.war
 
 要在给定的端口号上部署:
 
-```
+```java
 java -jar jetty-runner-9.4.0.M1.jar --port 9090 jetty-app/target/jetty-app.war
 ```
 
@@ -203,7 +203,7 @@ java -jar jetty-runner-9.4.0.M1.jar --port 9090 jetty-app/target/jetty-app.war
 
 为了用同一个命令部署几个 war，我们使用`–path`参数使每个 war 都是唯一的:
 
-```
+```java
 java -jar jetty-runner --path /one one.war --path /two two.war
 ```
 
@@ -219,7 +219,7 @@ Cargo 是一个多功能的库，它允许我们以标准的方式操作各种�
 
 为了牢牢把握整个过程，我们将从头开始，从命令行创建一个新的 Java web 应用程序:
 
-```
+```java
 mvn archetype:generate -DgroupId=com.baeldung -DartifactId=cargo-deploy 
   -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
 ```
@@ -228,7 +228,7 @@ mvn archetype:generate -DgroupId=com.baeldung -DartifactId=cargo-deploy
 
 因为我们的 web 应用程序不包含任何 servlets，所以我们的`web.xml`文件将非常简单。因此，导航到我们新创建的项目的`WEB-INF`文件夹，并创建一个`web.xml`(如果它还没有自动创建的话),其内容如下:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 
@@ -246,7 +246,7 @@ mvn archetype:generate -DgroupId=com.baeldung -DartifactId=cargo-deploy
 
 作为根元素`<settings></settings>`的直接子元素，添加以下内容:
 
-```
+```java
 <pluginGroups>
     <pluginGroup>org.codehaus.cargo</pluginGroup>
 </pluginGroups>
@@ -258,7 +258,7 @@ mvn archetype:generate -DgroupId=com.baeldung -DartifactId=cargo-deploy
 
 如下所示添加插件:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -295,13 +295,13 @@ mvn archetype:generate -DgroupId=com.baeldung -DartifactId=cargo-deploy
 
 我们现在可以通过执行以下命令来安装我们的应用程序:
 
-```
+```java
 mvn install
 ```
 
 并通过运行以下命令来部署它:
 
-```
+```java
 mvn cargo:deploy
 ```
 
@@ -323,7 +323,7 @@ mvn cargo:deploy
 
 为了认证的目的，我们必须在 jetty 中设置一个**安全域**才能工作。在远程 jetty 服务器的`$JETTY_HOME/etc`目录下创建一个名为`realm.properties`的文件。文件内容是:
 
-```
+```java
 admin:password,manager
 ```
 
@@ -333,7 +333,7 @@ admin:password,manager
 
 解包后，转到`WEB-INF/web.xml`，用`Uncomment in order to activate security`注释取消 XML 代码的注释。或者将下面的代码放在那里:
 
-```
+```java
 <security-constraint>
     <web-resource-collection>
         <web-resource-name>Jetty Remote Deployer</web-resource-name>
@@ -358,7 +358,7 @@ admin:password,manager
 
 现在，让我们在远程 jetty 实例的`$JETTY_HOME/webapps`中创建一个上下文文件，记住命名上下文文件的规则。让它和战争同名:
 
-```
+```java
 <?xml version="1.0"  encoding="ISO-8859-1"?>
 <!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" 
   "http://www.eclipse.org/jetty/configure.dtd">
@@ -379,7 +379,7 @@ admin:password,manager
 
 启动远程 jetty 服务器，如果一切顺利，我们应该可以加载`http://localhost:8080/cargo-jetty-deployer.` 了，然后我们应该可以看到如下内容:
 
-```
+```java
 HTTP ERROR 400
 
 Problem accessing /cargo-jetty-deployer/. Reason:
@@ -393,7 +393,7 @@ Problem accessing /cargo-jetty-deployer/. Reason:
 
 因此，让我们更改`pom.xml`，使配置部分看起来像这样:
 
-```
+```java
 <configuration>
     <container>
         <containerId>jetty9x</containerId>
@@ -415,19 +415,19 @@ Problem accessing /cargo-jetty-deployer/. Reason:
 
 清理项目:
 
-```
+```java
 mvn clean
 ```
 
 安装它:
 
-```
+```java
 mvn install
 ```
 
 最后，部署它:
 
-```
+```java
 mvn cargo:deploy
 ```
 

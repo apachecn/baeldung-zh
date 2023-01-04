@@ -26,7 +26,7 @@
 
 让我们开始第一个容器:
 
-```
+```java
 docker run --name baeldung_nginx -p 80:80 -d nginxdemos/hello:plain-text
 ```
 
@@ -34,7 +34,7 @@ docker run --name baeldung_nginx -p 80:80 -d nginxdemos/hello:plain-text
 
 现在，如果我们在浏览器中打开`http://localhost`，我们应该会看到类似这样的内容:
 
-```
+```java
 Server address: 123.45.6.7:80
 Server name: e378ad49d49d
 Date: 08/Apr/2022:22:08:44 +0000
@@ -48,7 +48,7 @@ Request ID: 7bda7e3234cb6d1e51900fccc89320d5
 
 可惜这不管用。我们得到一个错误:
 
-```
+```java
 docker: Error response from daemon: Conflict. The container name "/baeldung_nginx" is already in use by container "76da8f6d3accc9b6d41c8a98fd492d4b8622804220ee628a438264b8cf4ae3d4". 
 You have to remove (or rename) that container to be able to reuse that name.
 See 'docker run --help'.
@@ -78,13 +78,13 @@ See 'docker run --help'.
 
 当我们确定希望新容器接管该名称，并且已经停止了任何其他同名容器时，我们只需删除以前的同名容器:
 
-```
+```java
 docker rm baeldung_nginx
 ```
 
 不幸的是，这个命令并不总是有效。例如，其他容器可能需要我们的容器才能正常工作。如果是这种情况，我们仍然想删除我们的容器，我们可以在 remove 命令中使用`force`标志:
 
-```
+```java
 docker rm -f baeldung_nginx
 ```
 
@@ -94,23 +94,23 @@ docker rm -f baeldung_nginx
 
 如果我们想运行同一个图像的两个实例，该怎么办？这种情况的解决方案很简单。我们所要做的就是使用两个不同的名称和端口:
 
-```
+```java
 docker run --name baeldung_nginx_1 -p 80:80 -d nginxdemos/hello:plain-text
 ```
 
-```
+```java
 docker run --name baeldung_nginx_2 -p 81:80 -d nginxdemos/hello:plain-text
 ```
 
 现在，让我们使用下面的 Docker 命令来列出正在运行的容器:
 
-```
+```java
 docker ps
 ```
 
 我们应该会看到类似这样的内容:
 
-```
+```java
 CONTAINER ID   IMAGE                         COMMAND                  CREATED          STATUS          PORTS                NAMES
 f341bb9fe165   nginxdemos/hello:plain-text   "/docker-entrypoint.…"   2 seconds ago    Up 2 seconds    0.0.0.0:81->80/tcp   baeldung_nginx_2
 33883c2b31a7   nginxdemos/hello:plain-text   "/docker-entrypoint.…"   12 seconds ago   Up 11 seconds   0.0.0.0:80->80/tcp   baeldung_nginx_1

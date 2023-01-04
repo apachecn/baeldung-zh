@@ -18,7 +18,7 @@
 
 在这一节中，首先，我们 ' ll 创建一个示例 Dockerfile 来重现错误然后 使用 不同的 方法 到 解决 it 。 让s 创建一个新的 Dockerfile，命名为docker file，内容如下:
 
-```
+```java
 FROM        centos:7
 RUN         yum -y install wget \
             && yum -y install unzip \
@@ -36,7 +36,7 @@ CMD  ["google.com"]
 
 重现问题“Docker 构建需要 1 个参数”的命令是:
 
-```
+```java
 $ docker build
 "docker build" requires exactly 1 argument.
 See 'docker build --help'.
@@ -48,7 +48,7 @@ Build an image from a Dockerfile
 
 让我们探索其中一个选项:
 
-```
+```java
 $ docker build -t test_image/centos
 "docker build" requires exactly 1 argument.
 See 'docker build --help'.
@@ -64,7 +64,7 @@ Build an image from a Dockerfile
 
 Docker 构建由 Docker 守护进程运行。首先，Docker build 将整个上下文发送给守护进程。**理想的情况是从一个空目录开始，只添加构建 Docker 映像所需的文件，使用 Dockerfile:**
 
-```
+```java
 $ docker build .
 Sending build context to Docker daemon  2.048kB
 Step 1/4 : FROM        centos:7
@@ -76,31 +76,31 @@ Step 1/4 : FROM        centos:7
 
 我们还可以使用`-f`标志通过从特定位置指向 Dockerfile 文件来构建图像:
 
-```
+```java
 $ docker build -f /root/dockerImage/Dockerfile .
 ```
 
 为了给图像加标签，我们可以在 Docker build 命令中使用`-t`选项:
 
-```
+```java
 $ docker build -t test_image/centos .
 ```
 
 我们还可以用 Docker build 命令传递构建参数:
 
-```
+```java
 $ docker build -t test_image/centos --build-arg JAVA_ENV=1.8  .
 ```
 
 要清理图像的构建，我们可以在命令中使用`–no-cache`选项:
 
-```
+```java
 $ docker build -t test_image/centos --build-arg JAVA_ENV=1.8  --no-cache .
 ```
 
 在 Docker 的旧版本中，我们需要通过`–no-cache=true`，但在新版本中却不是这样。我们还可以创建一个 Dockerfile，而不用 Dockerfile `:`作为文件名
 
-```
+```java
 $ docker build -f /root/dockerImage/DockerFile_JAVA .
 ```
 
@@ -112,19 +112,19 @@ $ docker build -f /root/dockerImage/DockerFile_JAVA .
 
 默认情况下，我们提供了点(。)在指定 Docker 守护进程使用 shell 的当前工作目录作为构建上下文的命令中:
 
-```
+```java
 $ docker build .
 ```
 
 圆点(。)基本上告诉 Docker 必须从当前目录使用 Dockerfile。我们还可以使用以下命令更改 Docker 构建上下文:
 
-```
+```java
 $ docker build /root/test
 ```
 
 我们可能面临的另一个与 Docker 构建相关的问题是:
 
-```
+```java
 $ docker build -f /root/test/Dockerfile2 .
 unable to prepare context: unable to evaluate symlinks in Dockerfile path:
   lstat /root/test/Dockerfile2: no such file or directory
@@ -132,7 +132,7 @@ unable to prepare context: unable to evaluate symlinks in Dockerfile path:
 
 在上面的命令中，我们试图使用文件名“Dockerfile2”构建一个 Docker 映像，如果这个文件不在当前目录中，我们将得到以下错误:
 
-```
+```java
 unable to prepare context: unable to evaluate symlinks in Dockerfile path:
   lstat /root/test/Dockerfile2: no such file or directory
 ```

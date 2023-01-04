@@ -25,7 +25,7 @@
 
 要使用`Undertow`，我们需要将以下依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>io.undertow</groupId>
     <artifactId>undertow-servlet</artifactId>
@@ -35,7 +35,7 @@
 
 为了构建可运行的 jar，我们还需要添加 [maven-shade-plugin](https://web.archive.org/web/20220630010348/https://maven.apache.org/plugins/maven-shade-plugin/) 。这就是为什么我们还需要添加以下配置:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-shade-plugin</artifactId>
@@ -56,7 +56,7 @@
 
 通过下面的代码片段，我们可以使用 Undertow 的 [`Builder`](https://web.archive.org/web/20220630010348/http://undertow.io/javadoc/1.4.x/io/undertow/Undertow.Builder.html) API 创建一个简单的 web 服务器:
 
-```
+```java
 public class SimpleServer {
     public static void main(String[] args) {
         Undertow server = Undertow.builder().addHttpListener(8080, 
@@ -74,7 +74,7 @@ public class SimpleServer {
 
 我们也可以使用下面的代码片段来做同样的事情，而不使用 lambda 表达式:
 
-```
+```java
 Undertow server = Undertow.builder().addHttpListener(8080, "localhost")
   .setHandler(new HttpHandler() {
       @Override
@@ -93,7 +93,7 @@ Undertow server = Undertow.builder().addHttpListener(8080, "localhost")
 
 类似地，如果我们想在每个响应中返回一些默认文本，我们可以使用下面的代码片段:
 
-```
+```java
 exchange.getResponseSender()
   .send("Hello Baeldung");
 ```
@@ -106,7 +106,7 @@ exchange.getResponseSender()
 
 为此，我们可以使用 Undertow 的`[**IdentityManager**](https://web.archive.org/web/20220630010348/http://undertow.io/javadoc/1.4.x/io/undertow/security/idm/IdentityManager.html)`:
 
-```
+```java
 public class CustomIdentityManager implements IdentityManager {
     private Map<String, char[]> users;
 
@@ -135,7 +135,7 @@ public class CustomIdentityManager implements IdentityManager {
 
 创建 identity manager 后，我们需要创建一个保存用户凭据的领域:
 
-```
+```java
 private static HttpHandler addSecurity(
   HttpHandler toWrap, 
   IdentityManager identityManager) {
@@ -158,7 +158,7 @@ private static HttpHandler addSecurity(
 
 现在，我们只需要在服务器启动之前将该领域和 identity manager 映射到服务器:
 
-```
+```java
 public static void main(String[] args) {
     Map<String, char[]> users = new HashMap<>(2);
     users.put("root", "password".toCharArray());
@@ -188,7 +188,7 @@ private static void setExchange(HttpServerExchange exchange) {
 
 例如，我们可以用下面的代码片段在路径`baeldungApp`上打开一个套接字通信通道:
 
-```
+```java
 public static void main(String[] args) {
     Undertow server = Undertow.builder().addHttpListener(8080, "localhost")
       .setHandler(path().addPrefixPath("/baeldungApp", websocket(
@@ -223,7 +223,7 @@ private static AbstractReceiveListener getListener() {
 
 使用`Undertow`，我们还可以创建一个文件服务器，它可以显示目录内容并直接从目录中提供文件:
 
-```
+```java
 public static void main( String[] args ) {
     Undertow server = Undertow.builder().addHttpListener(8080, "localhost")
         .setHandler(resource(new PathResourceManager(
@@ -240,7 +240,7 @@ public static void main( String[] args ) {
 
 除了[`Tomcat`](https://web.archive.org/web/20220630010348/https://tomcat.apache.org/)`[Jetty](https://web.archive.org/web/20220630010348/https://www.eclipse.org/jetty/),``Spring Boot`支持`UnderTow`作为嵌入式 servlet 容器。要使用`Undertow`，我们需要在`pom.xml:`中添加以下依赖项
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-undertow</artifactId>

@@ -14,20 +14,20 @@
 
 我们必须遍历每个分区，检查它们的最新偏移量。为此，我们将介绍一个消费者:
 
-```
+```java
 KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
 ```
 
 第二步是**从这个消费者**那里获得所有分区:
 
-```
+```java
 List<TopicPartition> partitions = consumer.partitionsFor(topic).stream().map(p -> new TopicPartition(topic, p.partition()))
     .collect(Collectors.toList());
 ```
 
 第三步是**在每个分区的末尾偏移消费者，并将结果记录在一个分区表**中:
 
-```
+```java
 consumer.assign(partitions);
 consumer.seekToEnd(Collections.emptySet());
 Map<TopicPartition, Long> endPartitions = partitions.stream().collect(Collectors.toMap(Function.identity(), consumer::position));
@@ -35,7 +35,7 @@ Map<TopicPartition, Long> endPartitions = partitions.stream().collect(Collectors
 
 最后一步是**取每个分区的最后一个位置，对结果求和，得到主题中的消息数:**
 
-```
+```java
 numberOfMessages = partitions.stream().mapToLong(p -> endPartitions.get(p)).sum();
 ```
 
@@ -47,7 +47,7 @@ numberOfMessages = partitions.stream().mapToLong(p -> endPartitions.get(p)).sum(
 
 在执行本机命令之前，我们必须导航到机器上 Kafka 的根文件夹。以下命令返回主题`baeldung`上发布的消息数量:
 
-```
+```java
 $ bin/kafka-run-class.sh kafka.tools.GetOffsetShell   --broker-list localhost:9092   
 --topic baeldung   | awk -F  ":" '{sum += $3} END {print "Result: "sum}'
 Result: 3
@@ -57,7 +57,7 @@ Result: 3
 
 如前所述，在执行任何命令之前，我们将导航到 Kafka 的根文件夹。以下命令返回主题`baeldung`上发布的消息数量:
 
-```
+```java
 $ bin/kafka-console-consumer.sh  --from-beginning  --bootstrap-server localhost:9092 
 --property print.key=true --property print.value=false --property print.partition 
 --topic baeldung --timeout-ms 5000 | tail -n 10|grep "Processed a total of"

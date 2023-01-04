@@ -17,7 +17,7 @@
 
 在我们的例子中，如果在[过滤](/web/20220913124916/https://www.baeldung.com/java-stream-filter-lambda)之后有两个或更多的元素，我们只需要丢弃结果:
 
-```
+```java
 public static <T> Optional<T> findUniqueElementMatchingPredicate_WithReduction(Stream<T> elements, Predicate<T> predicate) {
     return elements.filter(predicate)
       .collect(Collectors.reducing((a, b) -> null));
@@ -31,7 +31,7 @@ public static <T> Optional<T> findUniqueElementMatchingPredicate_WithReduction(S
 
 此外，在这种情况下，**我们可以直接对** [`**Stream**`](/web/20220913124916/https://www.baeldung.com/java-8-streams) **:** 应用[减](/web/20220913124916/https://www.baeldung.com/java-stream-reduce)操作
 
-```
+```java
 public static <T> T getUniqueElementMatchingPredicate_WithReduction(Stream<T> elements, Predicate<T> predicate) {
     return elements.filter(predicate)
       .reduce((a, b) -> {
@@ -52,7 +52,7 @@ public static <T> T getUniqueElementMatchingPredicate_WithReduction(Stream<T> el
 
 以下是该操作的代码:
 
-```
+```java
 private static <T> T findUniqueElement(List<T> elements) {
     if (elements.size() == 1) {
         return elements.get(0);
@@ -63,7 +63,7 @@ private static <T> T findUniqueElement(List<T> elements) {
 
 因此，find 方法读取:
 
-```
+```java
 public static <T> Optional<T> findUniqueElementMatchingPredicate_WithCollectingAndThen(Stream<T> elements, Predicate<T> predicate) {
     return elements.filter(predicate)
       .collect(Collectors.collectingAndThen(Collectors.toList(), list -> Optional.ofNullable(findUniqueElement(list))));
@@ -72,7 +72,7 @@ public static <T> Optional<T> findUniqueElementMatchingPredicate_WithCollectingA
 
 为了使我们的私有方法适用于 get 情况，如果检索到的元素数量不正好是 1，我们需要抛出。让我们精确地区分没有结果和有太多结果的情况，就像我们对 reduction 所做的那样:
 
-```
+```java
 private static <T> T getUniqueElement(List<T> elements) {
     if (elements.size() > 1) {
         throw new IllegalStateException("Too many elements match the predicate");
@@ -85,7 +85,7 @@ private static <T> T getUniqueElement(List<T> elements) {
 
 最后，假设我们将类命名为`FilterUtils`，我们可以编写 get 方法:
 
-```
+```java
 public static <T> T getUniqueElementMatchingPredicate_WithCollectingAndThen(Stream<T> elements, Predicate<T> predicate) {
     return elements.filter(predicate)
       .collect(Collectors.collectingAndThen(Collectors.toList(), FilterUtils::getUniqueElement));
@@ -103,7 +103,7 @@ public static <T> T getUniqueElementMatchingPredicate_WithCollectingAndThen(Stre
 
 在这种情况下，将针对`Stream`的一个唯一元素来验证`Predicate`。让我们来看看`Benchmark`的定义:
 
-```
+```java
 @State(Scope.Benchmark)
 public static class MyState {
     final Stream<Integer> getIntegers() { 
@@ -144,7 +144,7 @@ public void evaluateGetUniqueElementMatchingPredicate_WithCollectingAndThen(Blac
 
 让我们运行它。我们正在测量每秒的运算次数。越高越好:
 
-```
+```java
 Benchmark                                                                          Mode  Cnt    Score    Error  Units
 BenchmarkRunner.evaluateFindUniqueElementMatchingPredicate_WithCollectingAndThen  thrpt   25  140.581 ± 28.793  ops/s
 BenchmarkRunner.evaluateFindUniqueElementMatchingPredicate_WithReduction          thrpt   25  100.171 ± 36.796  ops/s
@@ -156,7 +156,7 @@ BenchmarkRunner.evaluateGetUniqueElementMatchingPredicate_WithReduction         
 
 让我们改变我们的`Predicate` 来检查`Stream`的一个元素是否等于 0。这个条件对于`List`的所有元素都是假的。我们现在可以再次运行基准测试:
 
-```
+```java
 Benchmark                                                                          Mode  Cnt    Score    Error  Units
 BenchmarkRunner.evaluateFindUniqueElementMatchingPredicate_WithCollectingAndThen  thrpt   25  165.751 ± 19.816  ops/s
 BenchmarkRunner.evaluateFindUniqueElementMatchingPredicate_WithReduction          thrpt   25  174.667 ± 20.909  ops/s
@@ -168,7 +168,7 @@ BenchmarkRunner.evaluateGetUniqueElementMatchingPredicate_WithReduction         
 
 最后，让我们看看如果我们使用一个对大于 751879 的值返回 true 的`Predicate`会发生什么:有大量的`List`元素匹配这个`Predicate`。这导致了以下基准:
 
-```
+```java
 Benchmark                                                                          Mode  Cnt    Score    Error  Units
 BenchmarkRunner.evaluateFindUniqueElementMatchingPredicate_WithCollectingAndThen  thrpt   25   70.879 ±  6.205  ops/s
 BenchmarkRunner.evaluateFindUniqueElementMatchingPredicate_WithReduction          thrpt   25  210.142 ± 23.680  ops/s

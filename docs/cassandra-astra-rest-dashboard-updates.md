@@ -22,7 +22,7 @@
 
 该模式将如下所示:
 
-```
+```java
 CREATE TABLE events (
     avenger text,
     timestamp timestamp,
@@ -59,7 +59,7 @@ CREATE TABLE events (
 
 首先，我们的 REST 客户端。**我们将使用它来插入新的完整记录**，因此只需要一个方法来插入数据:
 
-```
+```java
 @Repository
 public class RestClient {
   @Value("https://${ASTRA_DB_ID}-${ASTRA_DB_REGION}.apps.astra.datastax.com/api/rest/v2/keyspaces/${ASTRA_DB_KEYSPACE}")
@@ -92,7 +92,7 @@ public class RestClient {
 
 然后，我们的 GraphQL 客户端。**这一次我们进行了一次完整的 GraphQL 查询，并返回它获取的数据**:
 
-```
+```java
 @Repository
 public class GraphqlClient {
   @Value("https://${ASTRA_DB_ID}-${ASTRA_DB_REGION}.apps.astra.datastax.com/api/graphql/${ASTRA_DB_KEYSPACE}")
@@ -131,7 +131,7 @@ public class GraphqlClient {
 
 我们首先需要的是这个表中数据的表示。这将表示为一个 Java 记录:
 
-```
+```java
 public record Event(String avenger, 
   String timestamp,
   Double latitude,
@@ -143,7 +143,7 @@ public record Event(String avenger,
 
 接下来，我们需要我们的服务层实际记录这些。这将从外部获取适当的细节，用时间戳增加它们，并调用我们的 REST 客户机来创建新记录:
 
-```
+```java
 @Service
 public class EventsService {
   @Autowired
@@ -161,7 +161,7 @@ public class EventsService {
 
 最后，我们需要一个控制器来接收事件。**这是对我们在上一篇文章中写的`UpdateController`的扩展，以连接新的`EventsService`，然后从我们的`update`方法**中调用它。
 
-```
+```java
 @RestController
 public class UpdateController {
   ......
@@ -191,7 +191,7 @@ public class UpdateController {
 
 我们首先需要的是我们正在检索的数据的表示。这是表中存储的实际数据的子集。因此，我们需要一个不同的类来表示它:
 
-```
+```java
 public record EventSummary(String timestamp,
   Double latitude,
   Double longitude,
@@ -200,13 +200,13 @@ public record EventSummary(String timestamp,
 
 我们还需要一个类来表示这些列表的 GraphQL 响应。这将包括事件摘要列表和用于光标到下一页的页面状态:
 
-```
+```java
 public record Events(List<EventSummary> values, String pageState) {}
 ```
 
 我们现在可以在事件服务中创建一个新方法来实际执行搜索。
 
-```
+```java
 public class EventsService {
   ......
   @Autowired
@@ -245,7 +245,7 @@ public class EventsService {
 
 首先，我们将更新我们在上一篇文章中编写的`StatusesController`,以支持获取事件的 UI 端点:
 
-```
+```java
 public class StatusesController {
   ......
 
@@ -266,7 +266,7 @@ public class StatusesController {
 
 然后我们需要更新模板来呈现事件表。我们将向`dashboard.html`文件添加一个新表，只有在从控制器接收到的模型中存在`events`对象时，才会呈现该表:
 
-```
+```java
 ......
     <div th:if="${events}">
       <div class="row">
@@ -307,7 +307,7 @@ public class StatusesController {
 
 最后，我们需要更新状态卡，以允许我们链接到这个条目的 events 表。这只是每张卡片标题周围的一个超链接，呈现在`status.html:`中
 
-```
+```java
 ......
   <a th:href="@{/avenger/{id}(id = ${data.avenger})}">
     <h5 class="card-title" th:text="${data.name}"></h5>

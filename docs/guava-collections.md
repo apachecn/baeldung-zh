@@ -14,7 +14,7 @@
 
 –**注意**:这是 Java中非协变泛型集合的变通方法
 
-```
+```java
 class CastFunction<F, T extends F> implements Function<F, T> {
     @Override
     public final T apply(final F from) {
@@ -28,14 +28,14 @@ List<TypeChild> theList = Lists.transform(originalList,
 
 **不含番石榴的更简单替代方案——包括两次铸造操作**
 
-```
+```java
 List<Number> originalList = Lists.newArrayList();
 List<Integer> theList = (List<Integer>) (List<? extends Number>) originalList;
 ```
 
 **向集合添加可迭代对象**
 
-```
+```java
 Iterable<String> iter = Lists.newArrayList();
 Collection<String> collector = Lists.newArrayList();
 Iterables.addAll(collector, iter);
@@ -43,7 +43,7 @@ Iterables.addAll(collector, iter);
 
 **根据自定义匹配规则检查集合是否包含元素** 
 
-```
+```java
 Iterable<String> theCollection = Lists.newArrayList("a", "bc", "def");
     boolean contains = Iterables.any(theCollection, new Predicate<String>() {
     @Override
@@ -56,7 +56,7 @@ assertTrue(contains);
 
 **使用搜索的替代解决方案**
 
-```
+```java
 Iterable<String> theCollection = Sets.newHashSet("a", "bc", "def");
 boolean contains = Iterables.find(theCollection, new Predicate<String>() {
     @Override
@@ -69,7 +69,7 @@ assertTrue(contains);
 
 **替代解决方案仅适用于器械包**
 
-```
+```java
 Set<String> theCollection = Sets.newHashSet("a", "bc", "def");
 boolean contains = !Sets.filter(theCollection, new Predicate<String>() {
     @Override
@@ -82,7 +82,7 @@ assertTrue(contains);
 
 **`NoSuchElementException`上`Iterables.find`下**
 
-```
+```java
 Iterable<String> theCollection = Sets.newHashSet("abcd", "efgh", "ijkl");
 Predicate<String> inputOfLengthOne = new Predicate<String>() {
     @Override
@@ -95,7 +95,7 @@ String found = Iterables.find(theCollection, inputOfLengthOne);
 
 –这将抛出**异常`NoSuchElementException`**:
 
-```
+```java
 java.util.NoSuchElementException
 	at com.google.common.collect.AbstractIterator.next(AbstractIterator.java:154)
 	at com.google.common.collect.Iterators.find(Iterators.java:712)
@@ -104,20 +104,20 @@ java.util.NoSuchElementException
 
 –**解决方案**:有一个**重载的`find` 方法**，它将默认返回值作为一个参数，可以用`null`调用它以获得想要的行为:
 
-```
+```java
 String found = Iterables.find(theCollection, inputOfLengthOne, null);
 ```
 
 **从集合中删除所有空值**
 
-```
+```java
 List<String> values = Lists.newArrayList("a", null, "b", "c");
 Iterable<String> withoutNulls = Iterables.filter(values, Predicates.notNull());
 ```
 
 **直接创建不可变列表/集合/映射**
 
-```
+```java
 ImmutableList<String> immutableList = ImmutableList.of("a", "b", "c");
 ImmutableSet<String> immutableSet = ImmutableSet.of("a", "b", "c");
 ImmutableMap<String, String> imuttableMap = 
@@ -126,7 +126,7 @@ ImmutableMap<String, String> imuttableMap =
 
 **从标准集合中创建不可变列表/集合/映射**
 
-```
+```java
 List<String> muttableList = Lists.newArrayList();
 ImmutableList<String> immutableList = ImmutableList.copyOf(muttableList);
 
@@ -139,7 +139,7 @@ ImmutableMap<String, String> imuttableMap = ImmutableMap.copyOf(muttableMap);
 
 **使用建筑商的替代解决方案**
 
-```
+```java
 List<String> muttableList = Lists.newArrayList();
 ImmutableList<String> immutableList = 
     ImmutableList.<String> builder().addAll(muttableList).build();

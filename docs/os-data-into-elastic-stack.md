@@ -14,21 +14,21 @@
 
 首先，我们需要在我们的 Ubuntu 机器上下载并安装标准的 [Metricbeat](https://web.archive.org/web/20220524124513/https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-installation.html) 代理:
 
-```
+```java
 curl -L -O https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-6.0.1-amd64.deb
 sudo dpkg -i metricbeat-6.0.1-amd64.deb
 ```
 
 安装后，我们需要配置 Metricbeat 向 Elasticsearch 发送数据，方法是修改位于`/etc/metricbeat/`(在 Ubuntu 上)的`metricbeat.yml`:
 
-```
+```java
 output.elasticsearch:
   hosts: ["localhost:9200"]
 ```
 
 然后，我们可以通过修改`/etc/metricbeat/modules.d/system.yml`来定制我们想要跟踪的指标:
 
-```
+```java
 - module: system
   period: 10s
   metricsets:
@@ -42,7 +42,7 @@ output.elasticsearch:
 
 最后，我们将启动 Metricbeat 服务:
 
-```
+```java
 sudo service metricbeat start
 ```
 
@@ -50,13 +50,13 @@ sudo service metricbeat start
 
 为了确保 Metricbeat 正在向 Elasticsearch 发送数据，请快速检查索引:
 
-```
+```java
 curl -X GET 'http://localhost:9200/_cat/indices'
 ```
 
 以下是您应该获得的内容:
 
-```
+```java
 yellow open metricbeat-6.0.1-2017.12.11 1 1  2185 0   1.7mb   1.7mb
 ```
 
@@ -68,7 +68,7 @@ yellow open metricbeat-6.0.1-2017.12.11 1 1  2185 0   1.7mb   1.7mb
 
 首先，我们将使用以下名为“System Memory”的查询在“`metricbeat-*`”索引上创建一个新的搜索，以分离我们的内存指标:
 
-```
+```java
 metricset.name:memory
 ```
 

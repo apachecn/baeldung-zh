@@ -18,14 +18,14 @@
 
 迭代集合的最基本和最接近金属的方法是调用由每个`Set`公开的`iterator`方法:
 
-```
+```java
 Set<String> names = Sets.newHashSet("Tom", "Jane", "Karen");
 Iterator<String> namesIterator = names.iterator();
 ```
 
 **然后我们可以用得到的`iterator`来得到那个`Set`的元素，一个一个的**。最具标志性的方法是检查`iterator`在`while`循环中是否有下一个元素:
 
-```
+```java
 while(namesIterator.hasNext()) {
    System.out.println(namesIterator.next());
 }
@@ -33,13 +33,13 @@ while(namesIterator.hasNext()) {
 
 我们也可以使用 Java 8 中添加的`forEachRemaining`方法:
 
-```
+```java
 namesIterator.forEachRemaining(System.out::println);
 ```
 
 我们还可以混合这些解决方案:
 
-```
+```java
 String firstName = namesIterator.next(); // save first name to variable
 namesIterator.forEachRemaining(System.out::println); // print rest of the names 
 ```
@@ -50,13 +50,13 @@ namesIterator.forEachRemaining(System.out::println); // print rest of the names
 
 每个`Set`都公开了`spliterator()`方法。正因为如此，一个 **`Set`很容易被改造成一个`Stream`** :
 
-```
+```java
 names.stream().forEach(System.out::println);
 ```
 
 我们还可以利用丰富的 [`Streams` API](/web/20221128114851/https://www.baeldung.com/java-8-streams) 来创建更复杂的管道。例如，让我们映射、记录，然后将集合中的元素缩减为单个字符串:
 
-```
+```java
 String namesJoined = names.stream()
     .map(String::toUpperCase)
     .peek(System.out::println)
@@ -67,7 +67,7 @@ String namesJoined = names.stream()
 
 虽然我们不能使用简单的索引`for`循环来迭代`Set`，但是我们可以使用 Java 5:
 
-```
+```java
 for (String name : names) {
     System.out.println(name);
 }
@@ -79,7 +79,7 @@ for (String name : names) {
 
 没有索引，但是我们可以人工添加一个索引。一个可能的解决方案是简单地通过**将`Set`转换成某种更容易理解的数据结构，比如数组**:
 
-```
+```java
 Object[] namesArray = names.toArray();
 for (int i = 0; i < namesArray.length; i++) {
     System.out.println(i + ": " + namesArray[i]);
@@ -94,7 +94,7 @@ for (int i = 0; i < namesArray.length; i++) {
 
 例如，我们可以使用 Vavr 的流:
 
-```
+```java
 Stream.ofAll(names)
   .zipWithIndex()
   .forEach(t -> System.out.println(t._2() + ": " + t._1()));

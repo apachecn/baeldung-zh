@@ -14,7 +14,7 @@ web 应用程序的一个共同特征是能够下载文件。
 
 如果使用 Jakarta EE，那么我们就不需要添加任何依赖项。然而，如果我们使用 Java SE，我们将需要 javax.servlet-api 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>javax.servlet</groupId>
     <artifactId>javax.servlet-api</artifactId>
@@ -29,7 +29,7 @@ web 应用程序的一个共同特征是能够下载文件。
 
 让我们先看一下代码，然后看看发生了什么:
 
-```
+```java
 @WebServlet("/download")
 public class DownloadServlet extends HttpServlet {
     private final int ARBITARY_SIZE = 1048;

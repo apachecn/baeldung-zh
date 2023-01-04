@@ -24,7 +24,7 @@ A guide to creating a new, custom security expression with Spring Security, and 
 
 首先，要使用 Spring 方法安全性，我们需要添加`spring-security-config`依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-config</artifactId>
@@ -35,7 +35,7 @@ A guide to creating a new, custom security expression with Spring Security, and 
 
 如果我们想使用 Spring Boot，我们可以使用`spring-boot-starter-security`依赖项，它包括`spring-security-config`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -46,7 +46,7 @@ A guide to creating a new, custom security expression with Spring Security, and 
 
 **接下来，我们需要启用全局方法安全性**:
 
-```
+```java
 @Configuration
 @EnableGlobalMethodSecurity(
   prePostEnabled = true, 
@@ -71,7 +71,7 @@ public class MethodSecurityConfig
 
 让我们定义一个`getUsername`方法:
 
-```
+```java
 @Secured("ROLE_VIEWER")
 public String getUsername() {
     SecurityContext securityContext = SecurityContextHolder.getContext();
@@ -83,7 +83,7 @@ public String getUsername() {
 
 此外，我们可以在一个`@Secured`注释中定义一个角色列表:
 
-```
+```java
 @Secured({ "ROLE_VIEWER", "ROLE_EDITOR" })
 public boolean isValidUsername(String username) {
     return userRoleRepository.isValidUsername(username);
@@ -102,7 +102,7 @@ public boolean isValidUsername(String username) {
 
 这样，我们可以重新定义`getUsername`和`isValidUsername`方法:
 
-```
+```java
 @RolesAllowed("ROLE_VIEWER")
 public String getUsername2() {
     //...
@@ -126,7 +126,7 @@ public boolean isValidUsername2(String username) {
 
 现在让我们声明一个`getUsernameInUpperCase`方法如下:
 
-```
+```java
 @PreAuthorize("hasRole('ROLE_VIEWER')")
 public String getUsernameInUpperCase() {
     return getUsername().toUpperCase();
@@ -137,7 +137,7 @@ public String getUsernameInUpperCase() {
 
 因此，注释`@Secured({“ROLE_VIEWER”,”ROLE_EDITOR”})` 可以替换为`@PreAuthorize(“hasRole(‘ROLE_VIEWER')`或`hasRole(‘ROLE_EDITOR')”)`:
 
-```
+```java
 @PreAuthorize("hasRole('ROLE_VIEWER') or hasRole('ROLE_EDITOR')")
 public boolean isValidUsername3(String username) {
     //...
@@ -146,7 +146,7 @@ public boolean isValidUsername3(String username) {
 
 此外，**我们实际上可以使用方法参数作为表达式**的一部分:
 
-```
+```java
 @PreAuthorize("#username == authentication.principal.username")
 public String getMyRoles(String username) {
     //...
@@ -159,7 +159,7 @@ public String getMyRoles(String username) {
 
 让我们重写一下`getMyRoles`:
 
-```
+```java
 @PostAuthorize("#username == authentication.principal.username")
 public String getMyRoles2(String username) {
     //...
@@ -170,7 +170,7 @@ public String getMyRoles2(String username) {
 
 另外，**`@PostAuthorize`注释提供了访问方法结果**的能力:
 
-```
+```java
 @PostAuthorize
   ("returnObject.username == authentication.principal.nickName")
 public CustomUser loadUserDetail(String username) {
@@ -186,7 +186,7 @@ public CustomUser loadUserDetail(String username) {
 
 **Spring Security 提供了`@PreFilter`注释，在执行**方法之前过滤集合参数:
 
-```
+```java
 @PreFilter("filterObject != authentication.principal.username")
 public String joinUsernames(List<String> usernames) {
     return usernames.stream().collect(Collectors.joining(";"));
@@ -199,7 +199,7 @@ public String joinUsernames(List<String> usernames) {
 
 然而，如果该方法有多个集合类型的参数，我们需要使用`filterTarget`属性来指定我们想要过滤的参数:
 
-```
+```java
 @PreFilter
   (value = "filterObject != authentication.principal.username",
   filterTarget = "usernames")
@@ -213,7 +213,7 @@ public String joinUsernamesAndRoles(
 
 另外，**我们还可以通过使用`@PostFilter`注释**来过滤一个方法返回的集合:
 
-```
+```java
 @PostFilter("filterObject != authentication.principal.username")
 public List<String> getAllUsernamesExceptCurrent() {
     return userRoleRepository.getAllUsernames();
@@ -232,7 +232,7 @@ public List<String> getAllUsernamesExceptCurrent() {
 
 在这种情况下，我们可以定义一个安全元注释:
 
-```
+```java
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @PreAuthorize("hasRole('VIEWER')")
@@ -242,7 +242,7 @@ public @interface IsViewer {
 
 接下来，我们可以直接使用@IsViewer 注释来保护我们的方法:
 
-```
+```java
 @IsViewer
 public String getUsername4() {
     //...
@@ -255,7 +255,7 @@ public String getUsername4() {
 
 如果我们发现自己对一个类中的每个方法使用相同的安全注释，我们可以考虑将该注释放在类级别:
 
-```
+```java
 @Service
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class SystemService {
@@ -276,7 +276,7 @@ public class SystemService {
 
 我们还可以在一个方法上使用多个安全注释:
 
-```
+```java
 @PreAuthorize("#username == authentication.principal.username")
 @PostAuthorize("returnObject.username == authentication.principal.nickName")
 public CustomUser securedLoadUserDetail(String username) {
@@ -299,7 +299,7 @@ public CustomUser securedLoadUserDetail(String username) {
 
 **为了测试 JUnit 的 Spring 安全性，我们需要`spring-security-test`依赖项**:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-test</artifactId>
@@ -310,7 +310,7 @@ public CustomUser securedLoadUserDetail(String username) {
 
 接下来，让我们通过指定转轮和`ApplicationContext` 配置来配置一个简单的弹簧集成测试:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @ContextConfiguration
 public class MethodSecurityIntegrationTest {
@@ -322,7 +322,7 @@ public class MethodSecurityIntegrationTest {
 
 现在我们的配置已经准备好了，让我们试着测试我们用`@Secured(“ROLE_VIEWER”)` 注释保护的`getUsername` 方法:
 
-```
+```java
 @Secured("ROLE_VIEWER")
 public String getUsername() {
     SecurityContext securityContext = SecurityContextHolder.getContext();
@@ -336,7 +336,7 @@ public String getUsername() {
 
 **为了实现这一点，我们用`@WithMockUser` 修饰测试方法，并提供一个用户和角色**:
 
-```
+```java
 @Test
 @WithMockUser(username = "john", roles = { "VIEWER" })
 public void givenRoleViewer_whenCallGetUsername_thenReturnUsername() {
@@ -354,7 +354,7 @@ public void givenRoleViewer_whenCallGetUsername_thenReturnUsername() {
 
 例如，让我们声明一个`getUsernameInLowerCase`方法:
 
-```
+```java
 @PreAuthorize("hasAuthority('SYS_ADMIN')")
 public String getUsernameLC(){
     return getUsername().toLowerCase();
@@ -363,7 +363,7 @@ public String getUsernameLC(){
 
 我们可以利用权威来测试:
 
-```
+```java
 @Test
 @WithMockUser(username = "JOHN", authorities = { "SYS_ADMIN" })
 public void givenAuthoritySysAdmin_whenCallGetUsernameLC_thenReturnUsername() {
@@ -375,7 +375,7 @@ public void givenAuthoritySysAdmin_whenCallGetUsernameLC_thenReturnUsername() {
 
 为了方便起见，**如果我们想要为许多测试用例使用同一个用户，我们可以在测试类**中声明`@WithMockUser`注释:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @ContextConfiguration
 @WithMockUser(username = "john", roles = { "VIEWER" })
@@ -386,7 +386,7 @@ public class MockUserAtClassLevelIntegrationTest {
 
 **如果我们想以匿名用户的身份运行我们的测试，我们可以使用`@WithAnonymousUser`注释**:
 
-```
+```java
 @Test(expected = AccessDeniedException.class)
 @WithAnonymousUser
 public void givenAnomynousUser_whenCallGetUsername_thenAccessDenied() {
@@ -402,7 +402,7 @@ public void givenAnomynousUser_whenCallGetUsername_thenAccessDenied() {
 
 在本文中，我们声明了一个`CustomUser`类，它扩展了`UserDetails`的现有实现，即`org.springframework.security.core.userdetails.` `User`:
 
-```
+```java
 public class CustomUser extends User {
     private String nickName;
     // getter and setter
@@ -411,7 +411,7 @@ public class CustomUser extends User {
 
 让我们回头看看第 3 节中带有`@PostAuthorize`注释的例子:
 
-```
+```java
 @PostAuthorize("returnObject.username == authentication.principal.nickName")
 public CustomUser loadUserDetail(String username) {
     return userRoleRepository.loadUserByUserName(username);
@@ -422,7 +422,7 @@ public CustomUser loadUserDetail(String username) {
 
 如果我们想测试这个方法，**，我们可以提供一个`UserDetailsService`的实现，它可以根据用户名**加载我们的`CustomUser`:
 
-```
+```java
 @Test
 @WithUserDetails(
   value = "john", 
@@ -449,7 +449,7 @@ public void whenJohn_callLoadUserDetail_thenOK() {
 
 再看前面的例子`@WithMockUser(username=”john”, roles={“VIEWER”})`，我们可以声明一个元注释:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @WithMockUser(value = "john", roles = "VIEWER")
 public @interface WithMockJohnViewer { }
@@ -457,7 +457,7 @@ public @interface WithMockJohnViewer { }
 
 那么我们可以在测试中简单地使用`@WithMockJohnViewer`:
 
-```
+```java
 @Test
 @WithMockJohnViewer
 public void givenMockedJohnViewer_whenCallGetUsername_thenReturnUsername() {

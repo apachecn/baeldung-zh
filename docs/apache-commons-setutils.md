@@ -17,7 +17,7 @@
 
 为了在我们的项目中使用`SetUtils`库，我们需要向项目的`pom.xml`文件添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -27,7 +27,7 @@
 
 或者，如果我们的项目是基于 Gradle 的，我们应该将依赖关系添加到项目的`build.gradle`文件中。此外，我们需要将`mavenCentral()`添加到`build.gradle`文件的存储库部分:
 
-```
+```java
 compile 'org.apache.commons:commons-collections4:4.1'
 ```
 
@@ -39,7 +39,7 @@ compile 'org.apache.commons:commons-collections4:4.1'
 
 如果任何元素的验证失败，将抛出一个`IllegalArgumentException`。**下面的代码片段防止将不是以‘L’**开头的 **字符串添加到`sourceSet`或返回的`validatingSet`中:**
 
-```
+```java
 Set<String> validatingSet
   = SetUtils.predicatedSet(sourceSet, s -> s.startsWith("L"));
 ```
@@ -52,7 +52,7 @@ Set<String> validatingSet
 
 `difference()` 方法接受两个 `Set`对象并返回一个不可变的`SetUtils.` `SetView`对象。返回的`SetUtils.`T5 包含集合`a`中的元素，但不包含集合`b`中的元素:
 
-```
+```java
 Set<Integer> a = new HashSet<>(Arrays.asList(1, 2, 5));
 Set<Integer> b = new HashSet<>(Arrays.asList(1, 2));
 SetUtils.SetView<Integer> result = SetUtils.difference(a, b);
@@ -64,13 +64,13 @@ assertTrue(result.size() == 1 && result.contains(5));
 
 要修改返回的结果，我们需要调用返回的`SetUtils.` `SetView` 的`toSet()`方法，获得一个可写的`Set`对象:
 
-```
+```java
 Set<Integer> mutableSet = result.toSet();
 ```
 
 `SetUtils`库的`union`方法确实如其名——它返回集合`a`和`b`的所有元素。`union`方法也返回一个不可变的`SetUtil.SetView`对象:
 
-```
+```java
 Set<Integer> expected = new HashSet<>(Arrays.asList(1, 2, 5));
 SetUtils.SetView<Integer> union = SetUtils.union(a, b);
 
@@ -81,7 +81,7 @@ assertTrue(SetUtils.isEqualSet(expected, union));
 
 为了得到一个集合的交集，即同时出现在集合`a`和集合`b`中的元素，我们将使用`SetUtils.` `intersection()`方法。这个方法也返回一个`SetUtil.SetView`对象:
 
-```
+```java
 Set<Integer> expected = new HashSet<>(Arrays.asList(1, 2));
 SetUtils.SetView<Integer> intersect = SetUtils.intersection(a, b);
 
@@ -94,7 +94,7 @@ assertTrue(SetUtils.isEqualSet(expected, intersect));
 
 转换逻辑在`Transformer`接口的`transform()`方法中定义，应用于添加到集合中的每个元素。下面的代码片段将添加到集合中的每个元素乘以 2:
 
-```
+```java
 Set<Integer> a = SetUtils.transformedSet(new HashSet<>(), e -> e * 2  );
 a.add(2);
 
@@ -109,7 +109,7 @@ assertEquals(a.toArray()[0], 4);
 
 如果我们想要转换预先存在的元素(以及后来添加的元素)，我们需要使用`org.apache.commons.collections4.set.TransformedSet`的`transformedSet()`方法:
 
-```
+```java
 Set<Integer> source = new HashSet<>(Arrays.asList(1));
 Set<Integer> newSet = TransformedSet.transformedSet(source, e -> e * 2);
 
@@ -125,7 +125,7 @@ assertEquals(source.toArray()[0], 2);
 
 让我们看看如何使用`SetUtils`库的`disjunction()`方法:
 
-```
+```java
 Set<Integer> a = new HashSet<>(Arrays.asList(1, 2, 5));
 Set<Integer> b = new HashSet<>(Arrays.asList(1, 2, 3));
 SetUtils.SetView<Integer> result = SetUtils.disjunction(a, b);

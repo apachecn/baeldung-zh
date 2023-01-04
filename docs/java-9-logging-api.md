@@ -22,7 +22,7 @@
 
 让我们看看我们的实现是什么样子的:
 
-```
+```java
 public class ConsoleLogger implements System.Logger {
 
     @Override
@@ -56,7 +56,7 @@ public class ConsoleLogger implements System.Logger {
 
 为此，我们必须扩展抽象类`System.LoggerFinder`并实现`getLogger()`方法:
 
-```
+```java
 public class CustomLoggerFinder extends System.LoggerFinder {
 
     @Override
@@ -74,7 +74,7 @@ JDK 用来加载实现的机制是`ServiceLoader`。你可以在[本教程](/web
 
 由于我们使用的是 Java 9，我们将把我们的类打包到一个模块中，并在`module-info.java` 文件中注册我们的服务:
 
-```
+```java
 module com.baeldung.logging {
     provides java.lang.System.LoggerFinder
       with com.baeldung.logging.CustomLoggerFinder;
@@ -90,7 +90,7 @@ module com.baeldung.logging {
 
 这个类将通过调用`System.getLogger()`方法获得我们的`ConsoleLogger`的一个实例:
 
-```
+```java
 public class MainApp {
 
     private static System.Logger LOGGER = System.getLogger("MainApp");
@@ -106,14 +106,14 @@ public class MainApp {
 
 之后，让我们为这个模块创建`module-info`文件:
 
-```
+```java
 module com.baeldung.logging.app {
 }
 ```
 
 此时，我们的项目结构将如下所示:
 
-```
+```java
 ├── src
 │   ├── modules
 │   │   ├── com.baeldung.logging
@@ -135,7 +135,7 @@ module com.baeldung.logging.app {
 
 最后，我们将编译我们的两个模块，并将它们放在一个`mods`目录中:
 
-```
+```java
 javac --module-path mods -d mods/com.baeldung.logging \
   src/modules/com.baeldung.logging/module-info.java \
   src/modules/com.baeldung.logging/com/baeldung/logging/*.java
@@ -147,14 +147,14 @@ javac --module-path mods -d mods/com.baeldung.logging.app \
 
 最后，让我们运行`app`模块的`Main`类:
 
-```
+```java
 java --module-path mods \
   -m com.baeldung.logging.app/com.baeldung.logging.app.MainApp
 ```
 
 如果我们看一下控制台输出，我们可以看到我们的日志是使用我们的`ConsoleLogger`打印的:
 
-```
+```java
 ConsoleLogger [ERROR]: error test
 ConsoleLogger [INFO]: info test
 ```
@@ -171,7 +171,7 @@ ConsoleLogger [INFO]: info test
 
 首先，我们将实现另一个`Logger` ，它将为每个实例创建一个新的 SLF4J 记录器:
 
-```
+```java
 public class Slf4jLogger implements System.Logger {
 
     private final String name;
@@ -195,7 +195,7 @@ public class Slf4jLogger implements System.Logger {
 
 对于其余的方法，**我们将依赖于 SLF4J 记录器实例**上的实现。因此，如果 SLF4J 记录器被启用，我们的`Logger`将被启用:
 
-```
+```java
 @Override
 public boolean isLoggable(Level level) {
     switch (level) {
@@ -220,7 +220,7 @@ public boolean isLoggable(Level level) {
 
 并且日志方法将根据所使用的日志级别调用适当的 SLF4J 记录器方法:
 
-```
+```java
 @Override
 public void log(Level level, ResourceBundle bundle, String msg, Throwable thrown) {
     if (!isLoggable(level)) {
@@ -268,7 +268,7 @@ public void log(Level level, ResourceBundle bundle, String format, Object... par
 
 最后，让我们创建一个新的使用我们的`Slf4jLogger`的`LoggerFinder`:
 
-```
+```java
 public class Slf4jLoggerFinder extends System.LoggerFinder {
     @Override
     public System.Logger getLogger(String name, Module module) {
@@ -281,7 +281,7 @@ public class Slf4jLoggerFinder extends System.LoggerFinder {
 
 一旦我们实现了所有的类，让我们在模块中注册我们的服务，并添加 SLF4J 模块的依赖项:
 
-```
+```java
 module com.baeldung.logging.slf4j {
     requires org.slf4j;
     provides java.lang.System.LoggerFinder
@@ -292,7 +292,7 @@ module com.baeldung.logging.slf4j {
 
 该模块将具有以下结构:
 
-```
+```java
 ├── src
 │   ├── modules
 │   │   ├── com.baeldung.logging.slf4j
@@ -318,7 +318,7 @@ module com.baeldung.logging.slf4j {
 
 最后，让我们创建一个回退配置文件，并将其放在我们的`mods`目录中:
 
-```
+```java
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -341,7 +341,7 @@ module com.baeldung.logging.slf4j {
 
 在这种情况下，**我们还需要指定我们的回退配置文件**:
 
-```
+```java
 java --module-path mods \
   -Dlogback.configurationFile=mods/logback.xml \
   -m com.baeldung.logging.app/com.baeldung.logging.app.MainApp
@@ -349,7 +349,7 @@ java --module-path mods \
 
 最后，如果我们检查输出，我们可以看到我们的日志是使用我们的日志回溯配置打印的:
 
-```
+```java
 2018-08-25 14:02:40 [main] ERROR MainApp -- error test
 2018-08-25 14:02:40 [main] INFO  MainApp -- info test
 ```

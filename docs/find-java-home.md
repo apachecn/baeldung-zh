@@ -12,7 +12,7 @@
 
 如果我们使用 Windows 作为操作系统，首先我们需要打开命令行(`cmd`)并键入:
 
-```
+```java
 echo %JAVA_HOME%
 ```
 
@@ -20,7 +20,7 @@ echo %JAVA_HOME%
 
 或者为了显示`java `可执行文件的位置，我们可以尝试:
 
-```
+```java
 where java
 ```
 
@@ -28,7 +28,7 @@ where java
 
 如果我们使用的是 macOS 或 Linux，我们可以打开终端并键入:
 
-```
+```java
 echo $JAVA_HOME
 ```
 
@@ -36,7 +36,7 @@ echo $JAVA_HOME
 
 或者我们可以试试:
 
-```
+```java
 which java
 ```
 
@@ -44,13 +44,13 @@ which java
 
 对于 Linux:
 
-```
+```java
 dirname $(dirname $(readlink -f $(which javac)))
 ```
 
 对于 macOS:
 
-```
+```java
 $(dirname $(readlink $(which javac)))/java_home
 ```
 
@@ -60,7 +60,7 @@ $(dirname $(readlink $(which javac)))/java_home
 
 如果我们能够自己运行`java`，那么**我们也有一个几乎独立于平台的方法:**
 
-```
+```java
 java -XshowSettings:properties -version
 ```
 
@@ -70,13 +70,13 @@ java -XshowSettings:properties -version
 
 对于 Linux 和 macOS `,`，我们将使用`grep`:
 
-```
+```java
 java -XshowSettings:properties -version 2>&1 > /dev/null | grep 'java.home' 
 ```
 
 对于 Windows，我们将使用`findstr`:
 
-```
+```java
 java -XshowSettings:properties -version 2>&1 | findstr "java.home"
 ```
 

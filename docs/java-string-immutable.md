@@ -32,7 +32,7 @@ Java 的创始人詹姆斯·高斯林曾经在一次采访中被问到什么时�
 
 Java 字符串池**是 JVM** 存储`Strings`的特殊内存区域。由于`Strings`在 Java 中是不可变的，JVM 通过在池中只存储每个文字`String`的一个副本来优化分配给它们的内存量。这个过程叫做实习:
 
-```
+```java
 String s1 = "Hello World";
 String s2 = "Hello World";
 
@@ -51,7 +51,7 @@ assertThat(s1 == s2).isTrue();
 
 因此，一般来说，保护`String`类对于整个应用程序的安全性至关重要。例如，考虑这个简单的代码片段:
 
-```
+```java
 void criticalMethod(String userName) {
     // perform security checks
     if (!isAlphaNumeric(userName)) {

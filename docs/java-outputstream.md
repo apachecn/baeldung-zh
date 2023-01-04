@@ -58,7 +58,7 @@ Java IO 提供了**流的概念，它基本上代表了连续的数据流**。�
 
 我们可以用这种方法将**中的一个特定字节写入`OutputStream`** 。因为参数“int”由四个字节组成，所以作为 par 契约，只写入第一个低位字节，其余三个高位字节被忽略:
 
-```
+```java
 public static void fileOutputStreamByteSingle(String file, String data) throws IOException {
     byte[] bytes = data.getBytes();
     try (OutputStream out = new FileOutputStream(file)) {
@@ -69,7 +69,7 @@ public static void fileOutputStreamByteSingle(String file, String data) throws I
 
 如果我们用数据调用这个方法为“Hello World！”，我们得到的结果是一个包含以下文本的文件:
 
-```
+```java
 W
 ```
 
@@ -81,7 +81,7 @@ W
 
 它可以从字节数组中写入“长度”数量的字节，如参数所指定，从“off”确定的偏移量开始写入`OutputStream:`
 
-```
+```java
 public static void fileOutputStreamByteSubSequence(
   String file, String data) throws IOException {
     byte[] bytes = data.getBytes();
@@ -93,7 +93,7 @@ public static void fileOutputStreamByteSubSequence(
 
 如果我们现在使用与以前相同的数据调用此方法，我们会在输出文件中得到以下文本:
 
-```
+```java
 World
 ```
 
@@ -105,7 +105,7 @@ World
 
 这与调用`write(b, 0, b.lengh)`具有相同的效果:
 
-```
+```java
 public static void fileOutputStreamByteSequence(String file, String data) throws IOException {
     byte[] bytes = data.getBytes();
     try (OutputStream out = new FileOutputStream(file)) {
@@ -116,7 +116,7 @@ public static void fileOutputStreamByteSequence(String file, String data) throws
 
 当我们现在用相同的数据调用这个方法时，我们在输出文件中有完整的`String`:
 
-```
+```java
 Hello World!
 ```
 
@@ -168,7 +168,7 @@ OutputStream 主要将字节流写入目标，但它也可以在这样做之前�
 
 `BufferedOutputStream`扩展了前面讨论的`FilterOutputStream`,并包装了现有的`OutputStream `,以写入目的地:
 
-```
+```java
 public static void bufferedOutputStream(
   String file, String ...data) throws IOException {
 
@@ -187,7 +187,7 @@ public static void bufferedOutputStream(
 
 这会产生一个包含以下文本的输出文件:
 
-```
+```java
 Hello World!
 ```
 
@@ -195,7 +195,7 @@ Hello World!
 
 如前所述，字节流代表可能是一串文本字符的原始数据。现在我们可以自己获取字符数组并执行到字节数组的转换:
 
-```
+```java
 byte[] bytes = data.getBytes();
 ```
 
@@ -203,7 +203,7 @@ Java 提供了方便的类来弥合这一差距。对于`OutputStream`的情况�
 
 我们也可以选择为`OutputStreamWriter `提供一个字符集来进行编码:
 
-```
+```java
 public static void outputStreamWriter(String file, String data) throws IOException {
     try (OutputStream out = new FileOutputStream(file); 
         Writer writer = new OutputStreamWriter(out,"UTF-8")) {
@@ -216,7 +216,7 @@ public static void outputStreamWriter(String file, String data) throws IOExcepti
 
 当我们用类似“Hello World！”的数据调用上述方法时，这并不奇怪，这将生成一个文本如下的文件:
 
-```
+```java
 Hello World!
 ```
 

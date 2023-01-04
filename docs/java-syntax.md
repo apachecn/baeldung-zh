@@ -22,7 +22,7 @@ Java 中有两大类数据类型:[原始类型和对象/引用类型](/web/20221
 
 要在 Java 中声明一个变量，我们必须**指定它的名称(也称为标识符)并键入**。让我们看一个简单的例子:
 
-```
+```java
 int a;
 int b;
 double c;
@@ -32,7 +32,7 @@ double c;
 
 或者，**我们可以在声明期间使用赋值操作符(=)来初始化变量:**
 
-```
+```java
 int a = 10;
 ```
 
@@ -46,7 +46,7 @@ int a = 10;
 
 让我们扩展上面的代码片段，加入一个简单的算术运算:
 
-```
+```java
 int a = 10;
 int b = 5;
 double c = a + b;
@@ -55,13 +55,13 @@ System.out.println( a + " + " + b + " = " + c);
 
 我们可以将上面代码片段的前三行读作**“将值 10 赋给`a,`将值 5 赋给`b, `将`a `和`b`的值求和并将结果赋给** **c"** 。在最后一行，我们将操作的结果输出到控制台:
 
-```
+```java
 10 + 5 = 15.0
 ```
 
 其他类型变量的声明和初始化遵循我们上面展示的相同语法。例如，让我们声明`String`、`char`和`boolean`变量:
 
-```
+```java
 String name = "Baeldung Blog";
 char toggler = 'Y';
 boolean isVerified = true;
@@ -79,13 +79,13 @@ boolean isVerified = true;
 
 例如，让我们看看如何声明一个最多可以容纳 100 个整数的数组:
 
-```
+```java
 int[] numbers = new int[100];
 ```
 
 为了引用数组中的特定元素，或者给元素赋值，我们使用变量名及其索引:
 
-```
+```java
 numbers[0] = 1;
 numbers[1] = 2;
 numbers[2] = 3;
@@ -96,7 +96,7 @@ int thirdElement = numbers[2];
 
 另外，我们可以通过调用`numbers.length`来获得数组的长度:
 
-```
+```java
 int lengthOfNumbersArray = numbers.length;
 ```
 
@@ -124,7 +124,7 @@ Java 支持以下[算术运算符](https://web.archive.org/web/20221001005349/ht
 
 加号(+)的另一个用途是连接字符串以形成一个全新的字符串:
 
-```
+```java
 String output =  a + " + " + b + " = " + c;
 ```
 
@@ -138,7 +138,7 @@ String output =  a + " + " + b + " = " + c;
 
 让我们考虑下面的代码片段，它演示了逻辑 AND 和 OR 操作符。第一个示例显示了当`number`变量可被 2 和 3 整除时执行的打印语句:
 
-```
+```java
 int number = 6;
 
 if (number % 2 == 0 && number % 3 == 0) {
@@ -148,7 +148,7 @@ if (number % 2 == 0 && number % 3 == 0) {
 
 而当`number`被 2 或 5 整除时执行第二个:
 
-```
+```java
 if (number % 2 == 0 || number % 5 == 0) {
     System.out.println(number + " is divisible by 2 OR 5");
 }
@@ -167,7 +167,7 @@ if (number % 2 == 0 || number % 5 == 0) {
 
 例如，我们可以使用比较运算符来确定投票人的资格:
 
-```
+```java
 public boolean canVote(int age) {
     if(age < 18) {
         return false;
@@ -186,7 +186,7 @@ public boolean canVote(int age) {
 
 让我们编写一个简单的、可执行的`Class`来练习我们之前考虑过的一个代码片段:
 
-```
+```java
 public class SimpleAddition {
 
     public static void main(String[] args) {
@@ -208,19 +208,19 @@ Java 程序的源代码存储在扩展名为`.java`的文件中。
 
 让我们将上面示例中的源代码保存到一个名为`SimpleAddition.java`的文件中，并从保存该文件的目录中运行该命令:
 
-```
+```java
 javac SimpleAddition.java
 ```
 
 要执行程序，我们只需运行:
 
-```
+```java
 java SimpleAddition
 ```
 
 这将向控制台产生与上面所示相同的输出:
 
-```
+```java
 10 + 5 = 15.0
 ```
 

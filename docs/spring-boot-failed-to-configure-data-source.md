@@ -29,7 +29,7 @@ Learn how to configure and how to use the H2 database with Spring Boot.[Read mor
 
 假设我们有一个 Spring Boot 项目，我们已经添加了`[spring-data-starter-jpa](https://web.archive.org/web/20220906052622/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-data-jpa%22%20g%3A%22org.springframework.boot%22)` [依赖](https://web.archive.org/web/20220906052622/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-data-jpa%22%20g%3A%22org.springframework.boot%22)和 [MySQL JDBC 驱动](https://web.archive.org/web/20220906052622/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22mysql-connector-java%22%20g%3A%22mysql%22)到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -43,7 +43,7 @@ Learn how to configure and how to use the H2 database with Spring Boot.[Read mor
 
 但是当我们运行该应用程序时，它失败了，并显示以下错误:
 
-```
+```java
 Description:
 
 Failed to configure a DataSource: 'url' attribute is not specified and no embedded 
@@ -70,7 +70,7 @@ Reason: Failed to determine a suitable driver class
 
 首先，让我们用 [**在我们项目的`application.properties`文件**](/web/20220906052622/https://www.baeldung.com/spring-testing-separate-data-source) 中定义数据源属性:
 
-```
+```java
 spring.datasource.url=jdbc:mysql://localhost:3306/myDb
 spring.datasource.username=user1
 spring.datasource.password=pass
@@ -79,7 +79,7 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
 或者我们可以在`application.yml` 中**提供数据源属性:**
 
-```
+```java
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
@@ -94,7 +94,7 @@ spring:
 
 我们需要提供数据库 URL、用户名、密码和 SQL 驱动程序信息来创建我们的数据源:
 
-```
+```java
 @Configuration
 public class DatasourceConfig {
     @Bean
@@ -123,13 +123,13 @@ public class DatasourceConfig {
 
 首先，我们可以使用我们的`application.properties`文件中的`spring.autoconfigure.exclude` **属性****来禁用自动配置:**
 
-```
+```java
 spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 ```
 
 我们可以使用我们的`application.yml`文件做同样的事情:
 
-```
+```java
 spring:
   autoconfigure:
     exclude:
@@ -138,7 +138,7 @@ spring:
 
 或者我们可以**在我们的`@SpringBootApplication`或`@EnableAutoConfiguration`注释**上使用`exclude`属性:
 
-```
+```java
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
 ```
 

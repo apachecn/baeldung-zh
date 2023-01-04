@@ -28,7 +28,7 @@ JTA 为业务代码提供了对事务控制(开始、提交和回滚)的抽象�
 
 首先，我们的示例项目使用 Spring Boot 来简化配置:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -43,7 +43,7 @@ JTA 为业务代码提供了对事务控制(开始、提交和回滚)的抽象�
 
 最后，在每个测试方法之前，我们用空数据初始化`AUDIT_LOG`,用 2 行数据初始化数据库`ACCOUNT`:
 
-```
+```java
 +-----------+----------------+
 | ID        |  BALANCE       |
 +-----------+----------------+
@@ -58,7 +58,7 @@ JTA 为业务代码提供了对事务控制(开始、提交和回滚)的抽象�
 
 让我们用`@Transactional. `来注释门面服务方法`executeTranser()`，这指示`transaction manager`开始一个事务`:`
 
-```
+```java
 @Transactional
 public void executeTransfer(String fromAccontId, String toAccountId, BigDecimal amount) {
     bankAccountService.transfer(fromAccontId, toAccountId, amount);
@@ -71,7 +71,7 @@ public void executeTransfer(String fromAccontId, String toAccountId, BigDecimal 
 
 当`executeTransfer()`返回时，**`transaction manager`认识到这是事务的结束，并将提交给两个数据库**:
 
-```
+```java
 tellerService.executeTransfer("a0000001", "a0000002", BigDecimal.valueOf(500));
 assertThat(accountService.balanceOf("a0000001"))
   .isEqualByComparingTo(BigDecimal.valueOf(500));        
@@ -94,7 +94,7 @@ assertThat(lastTransferLog.getAmount())
 
 在该方法结束时，`executeTransfer()`检查账户余额，如果源资金不足，则抛出`RuntimeException`:
 
-```
+```java
 @Transactional
 public void executeTransfer(String fromAccontId, String toAccountId, BigDecimal amount) {
     bankAccountService.transfer(fromAccontId, toAccountId, amount);
@@ -108,7 +108,7 @@ public void executeTransfer(String fromAccontId, String toAccountId, BigDecimal 
 
 超过第一个`@Transactional`的未处理的**`RuntimeException`将把事务** **回滚到两个数据库**。实际上，执行金额大于余额的转账将导致回滚 **:**
 
-```
+```java
 assertThatThrownBy(() -> {
     tellerService.executeTransfer("a0000002", "a0000001", BigDecimal.valueOf(10000));
 }).hasMessage("Insufficient fund.");
@@ -124,7 +124,7 @@ assertThat(auditServie.lastTransferLog()).isNull();
 
 现在让我们修改`executeTransfer()`来手动处理事务:
 
-```
+```java
 userTransaction.begin();
 
 bankAccountService.transfer(fromAccontId, toAccountId, amount);

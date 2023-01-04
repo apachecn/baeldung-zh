@@ -16,7 +16,7 @@
 
 让我们来看一个这种行为的例子:
 
-```
+```java
 String string1 = "using comparison operator";
 String string2 = "using comparison operator";
 String string3 = new String("using comparison operator");
@@ -35,7 +35,7 @@ assertThat(string1 == string3).isFalse();
 
 如果它们长度相同，字符顺序相同，则认为它们相等:
 
-```
+```java
 String string1 = "using equals method";
 String string2 = "using equals method";
 
@@ -59,7 +59,7 @@ assertThat(string1.equals(string3)).isFalse();
 
 `equalsIgnoreCase()`方法返回一个布尔值。顾名思义，这种方法**在比较`Strings`** `:`时忽略字符的大小写
 
-```
+```java
 String string1 = "using equals ignore case";
 String string2 = "USING EQUALS IGNORE CASE";
 
@@ -74,7 +74,7 @@ assertThat(string1.equalsIgnoreCase(string2)).isTrue();
 
 让我们看一个例子:
 
-```
+```java
 String author = "author";
 String book = "book";
 String duplicateBook = "book";
@@ -91,7 +91,7 @@ assertThat(duplicateBook.compareTo(book))
 
 `compareToIgnoreCase()`类似于前面的方法，除了它忽略了大小写:
 
-```
+```java
 String author = "Author";
 String book = "book";
 String duplicateBook = "BOOK";
@@ -114,7 +114,7 @@ assertThat(duplicateBook.compareToIgnoreCase(book))
 
 让我们来测试一下:
 
-```
+```java
 String string1 = "using objects equals";
 String string2 = "using objects equals";
 String string3 = new String("using objects equals");
@@ -134,7 +134,7 @@ assertThat(Objects.equals(null, string1)).isFalse();
 
 `StringUtils`类的`equals()`方法是`String`类方法`equals(),`的增强版本，它也处理空值:
 
-```
+```java
 assertThat(StringUtils.equals(null, null))
   .isTrue();
 assertThat(StringUtils.equals(null, "equals method"))
@@ -147,7 +147,7 @@ assertThat(StringUtils.equals("equals method", "EQUALS METHOD"))
 
 `StringUtils`的`equalsIgnoreCase()`方法返回一个`boolean`值。这与`equals(),` 类似，只是它忽略了`Strings:`中字符的大小写
 
-```
+```java
 assertThat(StringUtils.equalsIgnoreCase("equals method", "equals method"))
   .isTrue();
 assertThat(StringUtils.equalsIgnoreCase("equals method", "EQUALS METHOD"))
@@ -160,7 +160,7 @@ assertThat(StringUtils.equalsIgnoreCase("equals method", "EQUALS METHOD"))
 
 否则，将返回 false:
 
-```
+```java
 assertThat(StringUtils.equalsAny(null, null, null))
   .isTrue();
 assertThat(StringUtils.equalsAny("equals any", "equals any", "any"))
@@ -175,7 +175,7 @@ assertThat(StringUtils.equalsAny("equals any", "EQUALS ANY", "ANY"))
 
 `equalsAnyIgnoreCase()`方法的工作方式类似于`equalsAny()`方法，但也忽略了大小写:
 
-```
+```java
 assertThat(StringUtils.equalsAnyIgnoreCase("ignore case", "IGNORE CASE", "any")).isTrue();
 ```
 
@@ -185,7 +185,7 @@ assertThat(StringUtils.equalsAnyIgnoreCase("ignore case", "IGNORE CASE", "any"))
 
 此外，该方法可用于对带有`null`条目的`Strings`列表进行排序:
 
-```
+```java
 assertThat(StringUtils.compare(null, null))
   .isEqualTo(0);
 assertThat(StringUtils.compare(null, "abc"))
@@ -198,7 +198,7 @@ assertThat(StringUtils.compare("bbc", "abc"))
 
 `compareIgnoreCase()`方法的行为类似，只是它忽略了大小写:
 
-```
+```java
 assertThat(StringUtils.compareIgnoreCase("Abc", "bbc"))
   .isEqualTo(-1);
 assertThat(StringUtils.compareIgnoreCase("bbc", "ABC"))
@@ -213,7 +213,7 @@ assertThat(StringUtils.compareIgnoreCase("abc", "ABC"))
 
 让我们试一试:
 
-```
+```java
 assertThat(StringUtils.compare(null, "abc", true))
   .isEqualTo(-1);
 assertThat(StringUtils.compare(null, "abc", false))

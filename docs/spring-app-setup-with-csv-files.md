@@ -12,7 +12,7 @@
 
 让我们首先介绍一个简单的用于 CSV 的库——[Jackson CSV 扩展](https://web.archive.org/web/20220627093349/https://github.com/FasterXML/jackson):
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.dataformat</groupId>
     <artifactId>jackson-dataformat-csv</artifactId>       
@@ -32,7 +32,7 @@
 
 下面是包含用户的简单 CSV 文件:
 
-```
+```java
 id,username,password,accessToken
 1,john,123,token
 2,tom,456,test
@@ -48,7 +48,7 @@ id,username,password,accessToken
 
 我们将实现`loadObjectList()`功能，从文件中加载特定`Object`的完全参数化列表:
 
-```
+```java
 public <T> List<T> loadObjectList(Class<T> type, String fileName) {
     try {
         CsvSchema bootstrapSchema = CsvSchema.emptySchema().withHeader();
@@ -76,7 +76,7 @@ Jackson CSV 不太支持嵌套对象——我们需要使用间接方式加载�
 
 我们将把这些**表示为类似于简单的连接表**——因此自然地，我们将从磁盘加载数组列表:
 
-```
+```java
 public List<String[]> loadManyToManyRelationship(String fileName) {
     try {
         CsvMapper mapper = new CsvMapper();
@@ -96,7 +96,7 @@ public List<String[]> loadManyToManyRelationship(String fileName) {
 
 下面是如何在一个简单的 CSV 文件中表示这些关系之一—`Roles <-> Privileges`:
 
-```
+```java
 role,privilege
 ROLE_ADMIN,ADMIN_READ_PRIVILEGE
 ROLE_ADMIN,ADMIN_WRITE_PRIVILEGE
@@ -110,7 +110,7 @@ ROLE_USER,POST_LIMITED_PRIVILEGE
 
 现在，我们将使用一个简单的`Setup` bean 来完成从 CSV 文件设置权限、角色和用户的所有工作:
 
-```
+```java
 @Component
 public class Setup {
     ...
@@ -129,7 +129,7 @@ public class Setup {
 
 首先，让我们将**角色和权限**从磁盘加载到工作内存中，然后将它们作为设置过程的一部分保存下来:
 
-```
+```java
 public List<Privilege> getPrivileges() {
     return csvDataLoader.loadObjectList(Privilege.class, PRIVILEGES_FILE);
 }
@@ -165,7 +165,7 @@ private Privilege findPrivilegeByName(List<Privilege> allPrivileges, String priv
 
 然后我们将在这里做持久化工作:
 
-```
+```java
 private void setupRolesAndPrivileges() {
     List<Privilege> privileges = setupData.getPrivileges();
     for (Privilege privilege : privileges) {
@@ -181,7 +181,7 @@ private void setupRolesAndPrivileges() {
 
 这是我们的`SetupService`:
 
-```
+```java
 public void setupPrivilege(Privilege privilege) {
     if (privilegeRepository.findByName(privilege.getName()) == null) {
         privilegeRepository.save(privilege);
@@ -206,7 +206,7 @@ public void setupRole(Role role) {
 
 接下来——让我们将**个用户**加载到内存中，并保存他们:
 
-```
+```java
 public List<User> getUsers() {
     List<Role> allRoles = getRoles();
     List<User> users = csvDataLoader.loadObjectList(User.class, SetupData.USERS_FILE);
@@ -233,7 +233,7 @@ private User findByUserByUsername(List<User> users, String username) {
 
 接下来，让我们关注持久化用户:
 
-```
+```java
 private void setupUsers() {
     List<User> users = setupData.getUsers();
     for (User user : users) {
@@ -244,7 +244,7 @@ private void setupUsers() {
 
 这是我们的`SetupService`:
 
-```
+```java
 @Transactional
 public void setupUser(User user) {
     try {
@@ -271,7 +271,7 @@ private void setupUserInternal(User user) {
 
 这里是`createSimplePreference()`方法:
 
-```
+```java
 private Preference createSimplePreference(User user) {
     Preference pref = new Preference();
     pref.setId(user.getId());
@@ -289,7 +289,7 @@ private Preference createSimplePreference(User user) {
 
 我们将测试用户、角色和权限列表的加载:
 
-```
+```java
 @Test
 public void whenLoadingUsersFromCsvFile_thenLoaded() {
     List<User> users = csvDataLoader.
@@ -314,7 +314,7 @@ public void whenLoadingPrivilegesFromCsvFile_thenLoaded() {
 
 接下来，让我们通过数据加载器测试加载一些多对多关系:
 
-```
+```java
 @Test
 public void whenLoadingUsersRolesRelationFromCsvFile_thenLoaded() {
     List<String[]> usersRoles = csvDataLoader.
@@ -334,7 +334,7 @@ public void whenLoadingRolesPrivilegesRelationFromCsvFile_thenLoaded() {
 
 最后，让我们对 bean `SetupData`执行一个简单的单元测试:
 
-```
+```java
 @Test
 public void whenGettingUsersFromCsvFile_thenCorrect() {
     List<User> users = setupData.getUsers();

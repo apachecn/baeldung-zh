@@ -12,7 +12,7 @@
 
 让我们在 Spring 中定义下面的 bean。`UserManagementDAO` bean 将用户名添加到内存存储中，它由以下接口定义:
 
-```
+```java
 public interface UserManagementDAO {
     boolean createUser(String newUserData);
 }
@@ -20,7 +20,7 @@ public interface UserManagementDAO {
 
 使用以下 Java 配置来配置 bean 的实现:
 
-```
+```java
 public class SpringCoreConfig {
     @Bean
     public UserManagementDAO userManagementDAO() {
@@ -31,7 +31,7 @@ public class SpringCoreConfig {
 
 或者使用以下 XML 配置:
 
-```
+```java
 <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor" />
 <bean class="com.baeldung.dao.UserManagementDAOImpl" id="userManagementDAO"/>
 ```
@@ -46,7 +46,7 @@ public class SpringCoreConfig {
 
 通过实现`WebApplicationInitializer`,我们能够编程配置`ServletContext.` 。下面是`MainWebAppInitializer`类中的`onStartup()`实现:
 
-```
+```java
 public void onStartup(ServletContext sc) throws ServletException {
     AnnotationConfigWebApplicationContext root = new AnnotationConfigWebApplicationContext();
     root.register(SpringCoreConfig.class);
@@ -58,7 +58,7 @@ public void onStartup(ServletContext sc) throws ServletException {
 
 类似地，在 Mojarra 实现中有一个配置`FacesServlet.` 的`FacesInitializer`类，使用这个配置就足以扩展`FacesInitializer.` 。`MainWebAppInitializer,` 的完整实现如下:
 
-```
+```java
 public class MainWebAppInitializer extends FacesInitializer implements WebApplicationInitializer {
     public void onStartup(ServletContext sc) throws ServletException {
         AnnotationConfigWebApplicationContext root = new AnnotationConfigWebApplicationContext();
@@ -72,7 +72,7 @@ public class MainWebAppInitializer extends FacesInitializer implements WebApplic
 
 我们将从配置应用程序的`web.xml`文件中的`ContextLoaderListener`开始:
 
-```
+```java
 <listener>
     <listener-class>
         org.springframework.web.context.ContextLoaderListener
@@ -86,7 +86,7 @@ public class MainWebAppInitializer extends FacesInitializer implements WebApplic
 
 我们现在在`face-config.xml`文件中配置`SpringBeanFacesELResolver`:
 
-```
+```java
 <el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
 ```
 
@@ -100,7 +100,7 @@ EL 解析器是 JSF 框架支持的可插拔组件，允许我们在评估表达
 
 现在可以从 JSF 支持 bean 中访问 Spring bean。根据您运行的 JSF 版本，有两种可能的方法。在 JSF 2.0 中，您可以在 JSF 管理的 bean 上使用`@ManagedProperty`注释。
 
-```
+```java
 @ManagedBean(name = "registration")
 @RequestScoped
 public class RegistrationBean implements Serializable {
@@ -110,7 +110,7 @@ public class RegistrationBean implements Serializable {
     private String userName;
 ```
 
-```
+```java
  // getters and setters
 }
 ```
@@ -118,7 +118,7 @@ public class RegistrationBean implements Serializable {
 请注意，现在使用`@ManagedProperty.`
 时，getter 和 setter 是强制的——为了从受管 bean 断言 Spring bean 的可访问性，我们将添加`createNewUser()`方法:
 
-```
+```java
 public void createNewUser() {
     FacesContext context = FacesContext.getCurrentInstance();
     boolean operationStatus = userDao.createUser(userName);
@@ -137,7 +137,7 @@ public void createNewUser() {
 
 事实上，使用 CDI 注释，这是注入 bean 的唯一有效方法:
 
-```
+```java
 @Named( "registration")
 @RequestScoped
 public class RegistrationBean implements Serializable {
@@ -152,7 +152,7 @@ public class RegistrationBean implements Serializable {
 
 从下面的 JSF 页面将触发`createNewUser()`方法:
 
-```
+```java
 <h:form>
     <h:panelGrid id="theGrid" columns="3">
         <h:outputText value="Username"/>
@@ -168,13 +168,13 @@ public class RegistrationBean implements Serializable {
 
 要呈现页面，请启动服务器并导航到:
 
-```
+```java
 http://localhost:8080/jsf/index.jsf
 ```
 
 我们还可以在 JSF 视图中使用 EL 来访问 Spring bean。要测试它，只需将前面介绍的 JSF 页面中的第 7 行改为:
 
-```
+```java
 <h:commandButton value="Save"
   action="#{registration.userDao.createUser(userName.value)}"/>
 ```

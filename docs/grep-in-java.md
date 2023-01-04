@@ -24,7 +24,7 @@ Unix 有一个强大的命令叫做`grep`——代表“ `global regular express
 
 在您的`pom.xml`或`build.gradle`上添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.unix4j</groupId>
     <artifactId>unix4j-command</artifactId>
@@ -36,13 +36,13 @@ Unix 有一个强大的命令叫做`grep`——代表“ `global regular express
 
 Unix 中的 grep 示例:
 
-```
+```java
 grep "NINETEEN" dictionary.txt 
 ```
 
 Java 中的对等用法是:
 
-```
+```java
 @Test 
 public void whenGrepWithSimpleString_thenCorrect() {
     int expectedLineCount = 4;
@@ -55,13 +55,13 @@ public void whenGrepWithSimpleString_thenCorrect() {
 
 另一个例子是我们可以在文件中使用逆向文本搜索。下面是相同的 Unix 版本:
 
-```
+```java
 grep -v "NINETEEN" dictionary.txt 
 ```
 
 以下是上述命令的 Java 版本:
 
-```
+```java
 @Test
 public void whenInverseGrepWithSimpleString_thenCorrect() {
     int expectedLineCount = 178687;
@@ -75,13 +75,13 @@ public void whenInverseGrepWithSimpleString_thenCorrect() {
 
 让我们看看，如何使用正则表达式在文件中搜索模式。下面是计算整个文件中所有正则表达式模式的 Unix 版本:
 
-```
+```java
 grep -c ".*?NINE.*?" dictionary.txt 
 ```
 
 以下是上述命令的 Java 版本:
 
-```
+```java
 @Test
 public void whenGrepWithRegex_thenCorrect() {
     int expectedLineCount = 151;
@@ -103,7 +103,7 @@ public void whenGrepWithRegex_thenCorrect() {
 
 在您的`pom.xml`或`build.gradle`上添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.googlecode.grep4j</groupId>
     <artifactId>grep4j</artifactId>
@@ -115,13 +115,13 @@ public void whenGrepWithRegex_thenCorrect() {
 
 Java 中的 grep 示例，相当于:
 
-```
+```java
 grep "NINETEEN" dictionary.txt 
 ```
 
 下面是 Java 版本的命令:
 
-```
+```java
 @Test 
 public void givenLocalFile_whenGrepWithSimpleString_thenCorrect() {
     int expectedLineCount = 4;
@@ -137,13 +137,13 @@ public void givenLocalFile_whenGrepWithSimpleString_thenCorrect() {
 
 另一个例子是我们可以在文件中使用逆向文本搜索。下面是相同的 Unix 版本:
 
-```
+```java
 grep -v "NINETEEN" dictionary.txt 
 ```
 
 这是 Java 版本:
 
-```
+```java
 @Test
 public void givenRemoteFile_whenInverseGrepWithSimpleString_thenCorrect() {
     int expectedLineCount = 178687;
@@ -161,13 +161,13 @@ public void givenRemoteFile_whenInverseGrepWithSimpleString_thenCorrect() {
 
 让我们看看，如何使用正则表达式在文件中搜索模式。下面是计算整个文件中所有正则表达式模式的 Unix 版本:
 
-```
+```java
 grep -c ".*?NINE.*?" dictionary.txt 
 ```
 
 下面是 Java 版本:
 
-```
+```java
 @Test
 public void givenLocalFile_whenGrepWithRegex_thenCorrect() {
     int expectedLineCount = 151;

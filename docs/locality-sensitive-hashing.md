@@ -12,7 +12,7 @@
 
 首先，我们需要将 Maven 依赖项添加到 [`java-lsh`](https://web.archive.org/web/20220524032250/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22info.debatty%22%20AND%20a%3A%22java-lsh%22) 库中:
 
-```
+```java
 <dependency>
     <groupId>info.debatty</groupId>
     <artifactId>java-lsh</artifactId>
@@ -38,7 +38,7 @@ LSH 有许多可能的应用，但我们将考虑一个特殊的例子。
 
 然而，假设我们有三个输入向量，它们是从一组三个文档转换而来的，以可用作 LSH 算法的输入的形式呈现:
 
-```
+```java
 boolean[] vector1 = new boolean[] {true, true, true, true, true};
 boolean[] vector2 = new boolean[] {false, false, false, true, false};
 boolean[] vector3 = new boolean[] {false, false, true, true, false}; 
@@ -50,7 +50,7 @@ boolean[] vector3 = new boolean[] {false, false, true, true, false};
 
 让我们创建一个`LSHMinHash`类的实例。我们需要将输入向量的大小传递给它——所有输入向量的大小应该相等。我们还需要指定我们想要多少个哈希桶，以及 LSH 应该执行多少阶段的计算(迭代):
 
-```
+```java
 int sizeOfVectors = 5;
 int numberOfBuckets = 10;
 int stages = 4;
@@ -62,7 +62,7 @@ LSHMinHash lsh = new LSHMinHash(stages, numberOfBuckets, sizeOfVectors);
 
 为了计算每个向量的散列，我们将向量传递给`hash()`方法:
 
-```
+```java
 int[] firstHash = lsh.hash(vector1);
 int[] secondHash = lsh.hash(vector2);
 int[] thirdHash = lsh.hash(vector3);
@@ -74,7 +74,7 @@ System.out.println(Arrays.toString(thirdHash));
 
 运行该代码将产生类似于以下内容的输出:
 
-```
+```java
 [0, 0, 1, 0]
 [9, 3, 9, 8]
 [1, 7, 8, 8] 

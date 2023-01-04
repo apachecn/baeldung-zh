@@ -39,7 +39,7 @@
 
 正如我们已经讨论过的，让我们首先把给定的整数转换成一个数字列表:
 
-```
+```java
 static List<Integer> digitsInList(int n) {
     List<Integer> list = new ArrayList<>();
     while (n > 0) {
@@ -56,7 +56,7 @@ static List<Integer> digitsInList(int n) {
 
 现在我们已经创建了检查方法，我们可以转到步骤 2: `pow()`计算和求和:
 
-```
+```java
 static boolean isArmstrong(int n) {
     if (n < 0) {
         return false;
@@ -76,14 +76,14 @@ static boolean isArmstrong(int n) {
 
 值得一提的是**我们也可以将`mapToInt()` 和`sum()`方法调用合并成一个 [`reduce()`](/web/20221018120236/https://www.baeldung.com/java-stream-reduce) 调用**:
 
-```
+```java
 int sum = digits.stream()
   .reduce(0, (subtotal, digit) -> subtotal + (int) Math.pow(digit, len));
 ```
 
 接下来，让我们创建一个方法来生成 OEIS 序列 A005188，直到一个极限:
 
-```
+```java
 static List<Integer> getA005188Sequence(int limit) {
     if (limit < 0) {
         throw new IllegalArgumentException("The limit cannot be a negative number.");
@@ -101,7 +101,7 @@ static List<Integer> getA005188Sequence(int limit) {
 
 现在，让我们创建一些测试来验证我们的方法是否如预期的那样工作。首先，让我们从一些测试数据开始:
 
-```
+```java
 static final Map<Integer, Boolean> ARMSTRONG_MAP = ImmutableMap.of(
   0, true,
   1, true,
@@ -116,7 +116,7 @@ static final Map<Integer, Boolean> ARMSTRONG_MAP = ImmutableMap.of(
 
 现在，让我们将上面的`Map`中的每个数字传递给我们的检查方法，看看是否返回预期的结果:
 
-```
+```java
 ARMSTRONG_MAP.forEach((number, result) -> assertEquals(result, ArmstrongNumberUtil.isArmstrong(number))); 
 ```
 
@@ -124,7 +124,7 @@ ARMSTRONG_MAP.forEach((number, result) -> assertEquals(result, ArmstrongNumberUt
 
 接下来，让我们准备两个预期的序列，并测试`getA005188Sequence()`是否也像预期的那样工作:
 
-```
+```java
 List<Integer> A005188_SEQ_1K = ImmutableList.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 153, 370, 371, 407);
 List<Integer> A005188_SEQ_10K = ImmutableList.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 153, 370, 371, 407, 1634, 8208, 9474);
 

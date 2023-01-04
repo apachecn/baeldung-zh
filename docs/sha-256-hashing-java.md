@@ -36,7 +36,7 @@ A quick but comprehensive introduction to HashSet in Java.[Read more](/web/20220
 
 Java 为 SHA-256 哈希提供了内置的`MessageDigest`类:
 
-```
+```java
 MessageDigest digest = MessageDigest.getInstance("SHA-256");
 byte[] encodedhash = digest.digest(
   originalString.getBytes(StandardCharsets.UTF_8));
@@ -44,7 +44,7 @@ byte[] encodedhash = digest.digest(
 
 但是，这里我们必须使用一个自定义的字节到十六进制的转换器来获得十六进制的哈希值:
 
-```
+```java
 private static String bytesToHex(byte[] hash) {
     StringBuilder hexString = new StringBuilder(2 * hash.length);
     for (int i = 0; i < hash.length; i++) {
@@ -66,7 +66,7 @@ Google Guava 库还提供了一个用于散列的实用程序类。
 
 首先，让我们定义依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -76,7 +76,7 @@ Google Guava 库还提供了一个用于散列的实用程序类。
 
 接下来，我们可以使用番石榴散列字符串:
 
-```
+```java
 String sha256hex = Hashing.sha256()
   .hashString(originalString, StandardCharsets.UTF_8)
   .toString();
@@ -86,7 +86,7 @@ String sha256hex = Hashing.sha256()
 
 同样，我们也可以使用 Apache Commons 编解码器:
 
-```
+```java
 <dependency>
     <groupId>commons-codec</groupId>
     <artifactId>commons-codec</artifactId>
@@ -96,7 +96,7 @@ String sha256hex = Hashing.sha256()
 
 下面是支持 SHA-256 散列的实用程序类，名为`DigestUtils`:
 
-```
+```java
 String sha256hex = DigestUtils.sha256Hex(originalString);
 ```
 
@@ -104,7 +104,7 @@ String sha256hex = DigestUtils.sha256Hex(originalString);
 
 ### 5.1。Maven 依赖关系
 
-```
+```java
 <dependency>
     <groupId>org.bouncycastle</groupId>
     <artifactId>bcprov-jdk15on</artifactId>
@@ -118,7 +118,7 @@ Bouncy Castle API 提供了一个实用程序类，用于将十六进制数据�
 
 然而，我们需要首先使用内置的 Java API 来填充一个摘要:
 
-```
+```java
 MessageDigest digest = MessageDigest.getInstance("SHA-256");
 byte[] hash = digest.digest(
   originalString.getBytes(StandardCharsets.UTF_8));
@@ -133,7 +133,7 @@ String sha256hex = new String(Hex.encode(hash));
 
 [从 JDK 9](https://web.archive.org/web/20220730222905/https://docs.oracle.com/javase/9/security/oracleproviders.htm#JSSEC-GUID-3A80CC46-91E1-4E47-AC51-CB7B782CEA7D) 开始，我们可以简单使用内置的 SHA3-256 算法:
 
-```
+```java
 final MessageDigest digest = MessageDigest.getInstance("SHA3-256");
 final byte[] hashbytes = digest.digest(
   originalString.getBytes(StandardCharsets.UTF_8));
@@ -146,7 +146,7 @@ Apache Commons 编解码器为`MessageDigest`类提供了一个方便的`DigestU
 
 这个库从版本 [1.11](https://web.archive.org/web/20220730222905/https://search.maven.org/artifact/commons-codec/commons-codec/1.11/jar) 开始支持 SHA3-256，它[也需要 JDK 9+](https://web.archive.org/web/20220730222905/https://commons.apache.org/proper/commons-codec/apidocs/org/apache/commons/codec/digest/MessageDigestAlgorithms.html#SHA3_256) :
 
-```
+```java
 String sha3Hex = new DigestUtils("SHA3-256").digestAsHex(originalString);
 ```
 
@@ -156,7 +156,7 @@ Keccak-256 是另一种流行的 SHA3-256 哈希算法。目前，它是标准 S
 
 同样，我们需要导入 Bouncy Castle 库来使用 Keccak-256 哈希:
 
-```
+```java
 Security.addProvider(new BouncyCastleProvider());
 final MessageDigest digest = MessageDigest.getInstance("Keccak-256");
 final byte[] encodedhash = digest.digest(
@@ -166,7 +166,7 @@ String sha3Hex = bytesToHex(encodedhash);
 
 我们还可以利用 Bouncy Castle API 来进行哈希运算:
 
-```
+```java
 Keccak.Digest256 digest256 = new Keccak.Digest256();
 byte[] hashbytes = digest256.digest(
   originalString.getBytes(StandardCharsets.UTF_8));

@@ -40,7 +40,7 @@
 
 代码如下所示:
 
-```
+```java
 public Character firstNonRepeatingCharBruteForceNaive(String inputString) {
     if (null == inputString || inputString.isEmpty()) {
         return null;
@@ -67,7 +67,7 @@ public Character firstNonRepeatingCharBruteForceNaive(String inputString) {
 
 其时间复杂度也是 O(n)。应该注意的是，`lastIndexOf`方法在另一个 O(n)时间内运行，除了已经在运行的外循环，我们每次获取一个字符，因此这是一个 O(n)的解决方案，类似于前一个。
 
-```
+```java
 public Character firstNonRepeatingCharBruteForce(String inputString) {
     if (null == inputString || inputString.isEmpty()) {
         return null;
@@ -95,7 +95,7 @@ public Character firstNonRepeatingCharBruteForce(String inputString) {
 
 代码如下所示:
 
-```
+```java
 public Character firstNonRepeatingCharWithMap(String inputString) {
     if (null == inputString || inputString.isEmpty()) {
         return null;
@@ -124,7 +124,7 @@ public Character firstNonRepeatingCharWithMap(String inputString) {
 
 例如，如果输入仅限于小写英文字符，我们可以使用大小为 26 的数组，其中数组中的每个索引指的是一个字母表，值可以表示字符串中字符的频率。最后，字符串中值为 1 的第一个字符就是答案。下面是它的代码:
 
-```
+```java
 public Character firstNonRepeatingCharWithArray(String inputString) {
     if (null == inputString || inputString.isEmpty()) {
         return null;

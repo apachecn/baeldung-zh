@@ -46,7 +46,7 @@ Slack 并没有提供官方的 SDK 来用 Java 编写插件。但是，有一个
 
 在使用它之前，我们首先需要将 [Slack SDK 依赖项](https://web.archive.org/web/20221205180928/https://search.maven.org/search?q=g:com.hubspot.slack)添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.hubspot.slack</groupId>
     <artifactId>slack-base</artifactId>
@@ -63,7 +63,7 @@ Slack 并没有提供官方的 SDK 来用 Java 编写插件。但是，有一个
 
 我们应用程序的核心是检查系统错误的能力。我们将用错误检查器的概念来表示这一点。这是一个具有单一方法的简单接口，用于检查错误并报告错误:
 
-```
+```java
 public interface ErrorChecker {
     void check();
 }
@@ -71,7 +71,7 @@ public interface ErrorChecker {
 
 我们还希望能够报告发现的任何错误。这是另一个简单的接口，它将接受问题陈述并适当地报告它:
 
-```
+```java
 public interface ErrorReporter {
     void reportProblem(String problem);
 }
@@ -89,7 +89,7 @@ public interface ErrorReporter {
 
 现在，让我们看看我们的错误检查器:
 
-```
+```java
 public class DiskSpaceErrorChecker implements ErrorChecker {
     private static final Logger LOG = LoggerFactory.getLogger(DiskSpaceErrorChecker.class);
 
@@ -131,7 +131,7 @@ public class DiskSpaceErrorChecker implements ErrorChecker {
 
 这使用了 Slack SDK 中的一个`SlackClient`，以及向其发送消息的通道的名称。它还实现了我们的`ErrorReporter`接口，这样我们就可以轻松地将它插入到任何一个错误检查器想要使用的接口中:
 
-```
+```java
 public class SlackChannelErrorReporter implements ErrorReporter {
     private SlackClient slackClient;
 
@@ -160,7 +160,7 @@ public class SlackChannelErrorReporter implements ErrorReporter {
 
 现在，它将有一个单独的`DiskSpaceErrorChecker`来报告我们的“通用”通道中可用率低于 10%的所有磁盘，并且每 5 分钟运行一次:
 
-```
+```java
 public class MainClass {
     public static final long MINUTES = 1000 * 60;
 
@@ -197,7 +197,7 @@ public class MainClass {
 
 我们这里的错误报告器更复杂，因为它需要与单个目标用户进行交互:
 
-```
+```java
 public class SlackUserErrorReporter implements ErrorReporter {
     private SlackClient slackClient;
 
@@ -237,7 +237,7 @@ public class SlackUserErrorReporter implements ErrorReporter {
 
 这可以在`main`方法中连接起来，我们将直接警告单个用户:
 
-```
+```java
 ErrorReporter slackUserErrorReporter = new SlackUserErrorReporter(slackClient, "[[email protected]](/web/20221205180928/https://www.baeldung.com/cdn-cgi/l/email-protection)");
 
 ErrorChecker diskSpaceErrorChecker2pct = new DiskSpaceErrorChecker(slackUserErrorReporter, 0.02);

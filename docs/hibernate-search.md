@@ -24,7 +24,7 @@ Hibernate Search 还提供了一个 Elasticsearch 集成；然而，由于它仍
 
 在开始之前，我们首先需要将必要的[依赖项](https://web.archive.org/web/20220526043218/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.hibernate%22%20AND%20a%3A%22hibernate-search-orm%22)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-search-orm</artifactId>
@@ -34,7 +34,7 @@ Hibernate Search 还提供了一个 Elasticsearch 集成；然而，由于它仍
 
 为了简单起见，我们将使用 [H2](https://web.archive.org/web/20220526043218/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.h2database%22%20AND%20a%3A%22h2%22) 作为数据库:
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId> 
     <artifactId>h2</artifactId>
@@ -52,7 +52,7 @@ Hibernate Search 还提供了一个 Elasticsearch 集成；然而，由于它仍
 
 我们还必须定义一个存储索引的默认基本目录:
 
-```
+```java
 hibernate.search.default.directory_provider = filesystem
 hibernate.search.default.indexBase = /data/index/default
 ```
@@ -65,7 +65,7 @@ hibernate.search.default.indexBase = /data/index/default
 
 **之后，我们必须通过添加一个`@Field`注释**将所需的属性定义为可搜索的:
 
-```
+```java
 @Entity
 @Indexed
 @Table(name = "product")
@@ -93,7 +93,7 @@ public class Product {
 
 在开始实际的查询之前，**我们必须首先触发 Lucene 构建索引**:
 
-```
+```java
 FullTextEntityManager fullTextEntityManager 
   = Search.getFullTextEntityManager(entityManager);
 fullTextEntityManager.createIndexer().startAndWait();
@@ -117,7 +117,7 @@ fullTextEntityManager.createIndexer().startAndWait();
 
 在步骤 1 中，我们必须获得一个 JPA `FullTextEntityManager`并从中获得一个`QueryBuilder`:
 
-```
+```java
 FullTextEntityManager fullTextEntityManager 
   = Search.getFullTextEntityManager(entityManager);
 
@@ -129,7 +129,7 @@ QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory()
 
 在第 2 步中，我们将通过 Hibernate query DSL 创建一个 Lucene 查询:
 
-```
+```java
 org.apache.lucene.search.Query query = queryBuilder
   .keyword()
   .onField("productName")
@@ -139,14 +139,14 @@ org.apache.lucene.search.Query query = queryBuilder
 
 在第 3 步中，我们将把 Lucene 查询包装成 Hibernate 查询:
 
-```
+```java
 org.hibernate.search.jpa.FullTextQuery jpaQuery
   = fullTextEntityManager.createFullTextQuery(query, Product.class);
 ```
 
 最后，在步骤 4 中，我们将执行查询:
 
-```
+```java
 List<Product> results = jpaQuery.getResultList();
 ```
 
@@ -162,7 +162,7 @@ List<Product> results = jpaQuery.getResultList();
 
 这就是我们在上一节中实际已经做的事情:
 
-```
+```java
 Query keywordQuery = queryBuilder
   .keyword()
   .onField("productName")
@@ -180,7 +180,7 @@ Query keywordQuery = queryBuilder
 
 通过`withPrefixLength()`，我们可以定义被模糊性忽略的前缀的长度:
 
-```
+```java
 Query fuzzyQuery = queryBuilder
   .keyword()
   .fuzzy()
@@ -197,7 +197,7 @@ Hibernate Search 还使我们能够执行通配符查询，即部分单词未知
 
 为此，我们可以使用“`?”`表示单个字符，使用“`*”`表示任何字符序列:
 
-```
+```java
 Query wildcardQuery = queryBuilder
   .keyword()
   .wildcard()
@@ -210,7 +210,7 @@ Query wildcardQuery = queryBuilder
 
 如果我们想要搜索一个以上的单词，我们可以使用短语查询。如果有必要的话，我们可以使用`phrase()`和`withSlop()`在**中寻找精确或近似的句子**。斜率定义了句子中允许的其他单词的数量:
 
-```
+```java
 Query phraseQuery = queryBuilder
   .phrase()
   .withSlop(1)
@@ -236,7 +236,7 @@ Query phraseQuery = queryBuilder
 
 以下示例将结合模糊、短语和布尔查询:
 
-```
+```java
 Query simpleQueryStringQuery = queryBuilder
   .simpleQueryString()
   .onFields("productName", "description")
@@ -248,7 +248,7 @@ Query simpleQueryStringQuery = queryBuilder
 
 **范围查询搜索给定边界**之间的 **值。这可以应用于数字、日期、时间戳和字符串:**
 
-```
+```java
 Query rangeQuery = queryBuilder
   .range()
   .onField("memory")
@@ -264,7 +264,7 @@ Query rangeQuery = queryBuilder
 
 基于此，将在查询执行时计算相似性:
 
-```
+```java
 Query moreLikeThisQuery = queryBuilder
   .moreLikeThis()
   .comparingField("productName").boostedTo(10f)
@@ -283,7 +283,7 @@ List<Object[]> results = (List<Object[]>) fullTextEntityManager
 
 根据用例的不同，**我们还可以搜索两个或更多属性**:
 
-```
+```java
 Query luceneQuery = queryBuilder
   .keyword()
   .onFields("productName", "description")
@@ -293,7 +293,7 @@ Query luceneQuery = queryBuilder
 
 此外，**我们可以分别指定要搜索的每个属性**，例如，如果我们想要为一个属性定义一个提升:
 
-```
+```java
 Query moreLikeThisQuery = queryBuilder
   .moreLikeThis()
   .comparingField("productName").boostedTo(10f)
@@ -316,7 +316,7 @@ Query moreLikeThisQuery = queryBuilder
 
 但是，如果两个查询都匹配，则与只有一个查询匹配相比，匹配将具有更高的相关性:
 
-```
+```java
 Query combinedQuery = queryBuilder
   .bool()
   .must(queryBuilder.keyword()

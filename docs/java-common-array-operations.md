@@ -18,7 +18,7 @@
 
 为了在我们的项目中包含后者，我们必须添加 [Apache Commons](https://web.archive.org/web/20220630132756/https://commons.apache.org/) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -34,13 +34,13 @@
 
 让我们从声明和初始化一个`int`数组开始，这个数组将在我们所有的例子中使用(除非我们另外指定):
 
-```
+```java
 int[] array = new int[] { 3, 5, 2, 5, 14, 4 };
 ```
 
 知道数组的第一项与索引值 0 相关联，并且它有一个我们可以使用的`length`属性，那么就很容易弄清楚我们如何获得这两个元素:
 
-```
+```java
 int firstItem = array[0];
 int lastItem = array[array.length - 1];
 ```
@@ -49,7 +49,7 @@ int lastItem = array[array.length - 1];
 
 通过使用`java.util.Random`对象，我们可以很容易地从数组中获得任何值:
 
-```
+```java
 int anyValue = array[new Random().nextInt(array.length)];
 ```
 
@@ -61,14 +61,14 @@ int anyValue = array[new Random().nextInt(array.length)];
 
 幸运的是，`Arrays`类提供了一种简便的方法来将数组的值复制到一个新的不同大小的结构中:
 
-```
+```java
 int[] newArray = Arrays.copyOf(array, array.length + 1);
 newArray[newArray.length - 1] = newItem;
 ```
 
 **可选地，如果`ArrayUtils`类在我们的项目中是可访问的，我们可以使用它的`add method `(或者它的`addAll`替代)来在一行语句中完成我们的目标:**
 
-```
+```java
 int[] newArray = ArrayUtils.add(array, newItem);
 ```
 
@@ -80,7 +80,7 @@ int[] newArray = ArrayUtils.add(array, newItem);
 
 Apache 认为这是一个典型的场景，并在其`ArrayUtils`类中实现了一个方法来简化解决方案:
 
-```
+```java
 int[] largerArray = ArrayUtils.insert(2, array, 77);
 ```
 
@@ -94,7 +94,7 @@ int[] largerArray = ArrayUtils.insert(2, array, 77);
 
 无论如何，我们可以调用`java.util.Arrays` ' `equals`方法来检查两个数组对象是否包含相同的值:
 
-```
+```java
 boolean areEqual = Arrays.equals(array1, array2);
 ```
 
@@ -104,19 +104,19 @@ boolean areEqual = Arrays.equals(array1, array2);
 
 考虑到我们可以使用数组的`length`属性，这是一个简单的赋值:
 
-```
+```java
 boolean isEmpty = array == null || array.length == 0;
 ```
 
 此外，我们还可以在`ArrayUtils` helper 类中使用一个空安全的方法:
 
-```
+```java
 boolean isEmpty = ArrayUtils.isEmpty(array);
 ```
 
 **这个函数仍然依赖于数据结构的长度，数据结构也将空值和空子数组视为有效值，所以我们必须关注这些边缘情况:**
 
-```
+```java
 // These are empty arrays
 Integer[] array1 = {};
 Integer[] array2 = null;
@@ -132,7 +132,7 @@ Integer[] array5 = new Integer[3];
 
 为了打乱数组中的项目，我们可以使用`ArrayUtil`的特性:
 
-```
+```java
 ArrayUtils.shuffle(array);
 ```
 
@@ -144,13 +144,13 @@ ArrayUtils.shuffle(array);
 
 再次，`ArrayUtils` helper 类可以方便地获得原始数组的装箱版本:
 
-```
+```java
 Integer[] list = ArrayUtils.toObject(array);
 ```
 
 相反的操作也是可能的:
 
-```
+```java
 Integer[] objectArray = { 3, 5, 2, 5, 14, 4 };
 int[] array = ArrayUtils.toPrimitive(objectArray);
 ```
@@ -163,7 +163,7 @@ int[] array = ArrayUtils.toPrimitive(objectArray);
 
 出于这个原因，如果我们不像在我们的例子中那样处理基于对象的数组，我们将首先需要装箱我们的值:
 
-```
+```java
 // Box
 Integer[] list = ArrayUtils.toObject(array);
 // Remove duplicates
@@ -191,7 +191,7 @@ Java Util 的类提供了两个我们可以使用的静态方法:
 
 另一方面， **Apache 的实现提供了一个在任何情况下都能正确工作的`toString`方法:**
 
-```
+```java
 String arrayAsString = ArrayUtils.toString(array);
 ```
 
@@ -201,7 +201,7 @@ String arrayAsString = ArrayUtils.toString(array);
 
 考虑到这个目标，**我们将尝试使用泛型创建一个灵活的助手方法:**
 
-```
+```java
 public static <T, U> U[] mapObjectArray(
   T[] array, Function<T, U> function,
   Class<U> targetClazz) {
@@ -217,7 +217,7 @@ public static <T, U> U[] mapObjectArray(
 
 我们现在可以为不同的操作重用我们的泛型方法。让我们创建两个测试用例来说明这一点:
 
-```
+```java
 @Test
 public void whenMapArrayMultiplyingValues_thenReturnMultipliedArray() {
     Integer[] multipliedExpectedArray = new Integer[] { 6, 10, 4, 10, 28, 8 };
@@ -245,7 +245,7 @@ public void whenMapDividingObjectArray_thenReturnMultipliedArray() {
 
 例如，如果我们想要将我们的`int`值映射到一个自定义的`String`表示，我们将实现这个:
 
-```
+```java
 String[] stringArray = Arrays.stream(array)
   .mapToObj(value -> String.format("Value: %s", value))
   .toArray(String[]::new);
@@ -259,7 +259,7 @@ String[] stringArray = Arrays.stream(array)
 
 假设我们想从数组中删除所有奇数:
 
-```
+```java
 int[] evenArray = Arrays.stream(array)
   .filter(value -> value % 2 == 0)
   .toArray();

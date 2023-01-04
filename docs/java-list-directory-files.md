@@ -10,7 +10,7 @@
 
 我们可以在指向一个目录的 [`java.io.File`](https://web.archive.org/web/20221007081810/https://docs.oracle.com/javase/8/docs/api/java/io/File.html) 对象上用 [`listFiles()`](https://web.archive.org/web/20221007081810/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html#listFiles()) 的方法列出一个目录中的所有文件:
 
-```
+```java
 public Set<String> listFilesUsingJavaIO(String dir) {
     return Stream.of(new File(dir).listFiles())
       .filter(file -> !file.isDirectory())
@@ -27,7 +27,7 @@ public Set<String> listFilesUsingJavaIO(String dir) {
 
 **在新实例化的`File`上使用`listFiles()`方法需要小心，**因为它可能是空的。当提供的目录无效时会发生这种情况。结果，它马上抛出一个`NullPointerException`:
 
-```
+```java
 assertThrows(NullPointerException.class,
         () -> listFiles.listFilesUsingJavaIO(INVALID_DIRECTORY));
 ```
@@ -42,7 +42,7 @@ Java 7 引入了一种替代`listFiles`的方法，叫做 [`DirectoryStream`](ht
 
 让我们用它来列出目录中的文件:
 
-```
+```java
 public Set<String> listFilesUsingDirectoryStream(String dir) throws IOException {
     Set<String> fileSet = new HashSet<>();
     try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(dir))) {
@@ -71,7 +71,7 @@ Java 8 在`[java.nio.file.Files](https://web.archive.org/web/20221007081810/http
 
 让我们看一个简单的例子:
 
-```
+```java
 public Set<String> listFilesUsingFilesList(String dir) throws IOException {
     try (Stream<Path> stream = Files.list(Paths.get(dir))) {
         return stream
@@ -97,7 +97,7 @@ public Set<String> listFilesUsingFilesList(String dir) throws IOException {
 
 除了列出文件之外，我们可能希望遍历目录到比它的直接文件条目更深的一层或多层。既然如此，我们可以用 [`walk()`](https://web.archive.org/web/20221007081810/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Files.html#walk(java.nio.file.Path,int,java.nio.file.FileVisitOption...)) :
 
-```
+```java
 public Set<String> listFilesUsingFileWalk(String dir, int depth) throws IOException {
     try (Stream<Path> stream = Files.walk(Paths.get(dir), depth)) {
         return stream
@@ -113,7 +113,7 @@ public Set<String> listFilesUsingFileWalk(String dir, int depth) throws IOExcept
 
 此外，我们可能希望在迭代每个文件时采取一些措施。在这种情况下，我们可以使用 [`walkFileTree()`](https://web.archive.org/web/20221007081810/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Files.html#walkFileTree(java.nio.file.Path,java.nio.file.FileVisitor)) 方法，提供一个[访问者](/web/20221007081810/https://www.baeldung.com/java-visitor-pattern)来描述我们想要采取的动作:
 
-```
+```java
 public Set<String> listFilesUsingFileWalkAndVisitor(String dir) throws IOException {
     Set<String> fileList = new HashSet<>();
     Files.walkFileTree(Paths.get(dir), new SimpleFileVisitor<Path>() {
@@ -133,7 +133,7 @@ public Set<String> listFilesUsingFileWalkAndVisitor(String dir) throws IOExcepti
 
 如果我们试图传入一个有效的文件而不是一个目录，`walk()`和`walkFileTree()`方法不会抛出一个`NullPointerException`。事实上，`Stream`保证返回至少一个元素，即所提供的文件本身:
 
-```
+```java
 Set<String> expectedFileSet = Collections.singleton("test.xml");
 String filePathString = "src/test/resources/listFilesUnitTestFolder/test.xml";
 assertEquals(expectedFileSet, listFiles.listFilesUsingFileWalk(filePathString, DEPTH));

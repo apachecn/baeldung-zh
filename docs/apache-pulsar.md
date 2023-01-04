@@ -75,7 +75,7 @@ Pulsar 通过使用存储节点中运行的 bookies (Apache BookKeeper 实例)�
 
 Apache Pulsar 以二进制发行版的形式提供。让我们从下载开始:
 
-```
+```java
 wget https://archive.apache.org/dist/incubator/pulsar/pulsar-2.1.1-incubating/apache-pulsar-2.1.1-incubating-bin.tar.gz
 ```
 
@@ -83,7 +83,7 @@ wget https://archive.apache.org/dist/incubator/pulsar/pulsar-2.1.1-incubating/ap
 
 之后，我们需要下载内置的连接器。这些现在作为一个单独的包提供:
 
-```
+```java
 wget https://archive.apache.org/dist/incubator/pulsar/pulsar-2.1.1-incubating/apache-pulsar-io-connectors-2.1.1-incubating-bin.tar.gz
 ```
 
@@ -93,7 +93,7 @@ wget https://archive.apache.org/dist/incubator/pulsar/pulsar-2.1.1-incubating/ap
 
 要启动独立实例，我们可以执行:
 
-```
+```java
 bin/pulsar standalone
 ```
 
@@ -105,7 +105,7 @@ bin/pulsar standalone
 
 我们首先将 [pulsar-client](https://web.archive.org/web/20220626085600/https://search.maven.org/search?q=a:pulsar-client%20AND%20g:org.apache.pulsar) 依赖项添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.pulsar</groupId>
     <artifactId>pulsar-client</artifactId>
@@ -121,12 +121,12 @@ bin/pulsar standalone
 
 现在，我们将创建一个具有特定主题名称的`Producer`:
 
-```
+```java
 private static final String SERVICE_URL = "pulsar://localhost:6650";
 private static final String TOPIC_NAME = "test-topic"; 
 ```
 
-```
+```java
 PulsarClient client = PulsarClient.builder()
   .serviceUrl(SERVICE_URL)
   .build();
@@ -139,7 +139,7 @@ Producer<byte[]> producer = client.newProducer()
 
 生产者将发送 5 条消息:
 
-```
+```java
 IntStream.range(1, 5).forEach(i -> {
     String content = String.format("hi-pulsar-%d", i);
 
@@ -154,7 +154,7 @@ IntStream.range(1, 5).forEach(i -> {
 
 接下来，我们将创建消费者来获取生产者创建的消息。消费者也需要相同的`PulsarClient`来连接我们的服务器:
 
-```
+```java
 Consumer<byte[]> consumer = client.newConsumer()
   .topic(TOPIC_NAME)
   .subscriptionType(SubscriptionType.Shared)

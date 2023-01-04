@@ -12,21 +12,21 @@
 
 首先，让我们定义一个接口:
 
-```
+```java
 public interface Shape {
 }
 ```
 
 接下来，让我们定义一个实现`Shape`的类:
 
-```
+```java
 public class Triangle implements Shape {
 }
 ```
 
 现在，我们将创建一个扩展`Triangle`的类:
 
-```
+```java
 public class IsoscelesTriangle extends Triangle {
 }
 ```
@@ -37,7 +37,7 @@ public class IsoscelesTriangle extends Triangle {
 
 让我们使用带有`instanceof`操作符的类:
 
-```
+```java
 Shape shape = new Triangle();
 Triangle triangle = new Triangle();
 IsoscelesTriangle isoscelesTriangle = new IsoscelesTriangle();
@@ -67,7 +67,7 @@ assertFalse(nonspecificShape instanceof IsoscelesTriangle);
 
 让我们看看如何将`isInstance`方法用于我们定义的接口和类:
 
-```
+```java
 Shape shape = new Triangle();
 Triangle triangle = new Triangle();
 IsoscelesTriangle isoscelesTriangle = new IsoscelesTriangle();
@@ -99,7 +99,7 @@ assertTrue(IsoscelesTriangle.class.isInstance(isoscelesTriangle2));
 
 让我们用`isAssignableFrom`方法来使用我们的类:
 
-```
+```java
 Shape shape = new Triangle();
 Triangle triangle = new Triangle();
 IsoscelesTriangle isoscelesTriangle = new IsoscelesTriangle();
@@ -150,7 +150,7 @@ assertTrue(isoscelesTriangle2.getClass().isAssignableFrom(isoscelesTriangle2.get
 
 首先，它们的区别在于一个`null`值:
 
-```
+```java
 assertFalse(null instanceof Shape);
 assertFalse(Shape.class.isInstance(null));
 assertFalse(Shape.class.isAssignableFrom(null)); // NullPointerException
@@ -160,7 +160,7 @@ assertFalse(Shape.class.isAssignableFrom(null)); // NullPointerException
 
 其次，它们与原始类型不同:
 
-```
+```java
 assertFalse(10 instanceof int); // illegal
 assertFalse(int.class.isInstance(10));
 assertTrue(Integer.class.isInstance(10));
@@ -172,7 +172,7 @@ assertFalse(float.class.isAssignableFrom(int.class));
 
 第三，它们与类实例变量不同:
 
-```
+```java
 Shape shape = new Triangle();
 Triangle triangle = new Triangle();
 Class<?> clazz = shape.getClass();
@@ -193,7 +193,7 @@ assertTrue(clazz.isAssignableFrom(triangle.getClass()));
 
 在 [JVM 指令集](https://web.archive.org/web/20220626075718/https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.instanceof)中，`instanceof`操作码的值为 193，它有一个两字节的操作数:
 
-```
+```java
 instanceof
 indexbyte1
 indexbyte2
@@ -207,7 +207,7 @@ indexbyte2
 
 在 [JVM 指令集](https://web.archive.org/web/20220626075718/https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.invokevirtual)中，`invokevirtual`操作码的值为 182，它还有一个双字节操作数:
 
-```
+```java
 invokevirtual
 indexbyte1
 indexbyte2

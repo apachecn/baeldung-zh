@@ -22,7 +22,7 @@ Maven 是一个非常通用的工具，其可用的公共库是首屈一指的�
 
 让我们从将工件安装到我们的本地存储库中所需的完整配置开始:
 
-```
+```java
 <plugin>
    <groupId>org.apache.maven.plugins</groupId>
    <artifactId>maven-install-plugin</artifactId>
@@ -63,13 +63,13 @@ Maven 是一个非常通用的工具，其可用的公共库是首屈一指的�
 
 从标准 Maven [构建生命周期](https://web.archive.org/web/20221128113625/https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html "Introduction to the Build Lifecycle")开始， **`install-file`目标**的执行被绑定到 **`validate`阶段**。因此，在尝试编译之前，您需要显式运行验证阶段:
 
-```
+```java
 mvn validate
 ```
 
 在这一步之后，标准编译将开始工作:
 
-```
+```java
 mvn clean install
 ```
 
@@ -81,13 +81,13 @@ mvn clean install
 
 `install-file`目标中的`generatePom` 选项应该满足这些类型的工件:
 
-```
+```java
 <generatePom>true</generatePom>
 ```
 
 然而，如果工件更复杂，并且确实有重要的**依赖项**，那么，如果这些依赖项还不在类路径中，就必须添加它们。一种方法是在项目的 pom 文件中手工定义这些新的依赖关系。更好的解决方案是提供一个定制的`pom.xml`文件和已安装的工件:
 
-```
+```java
 <generatePom>false</generatePom>
 <pomFile>${basedir}/dependencies/someartifact-1.0.pom</pomFile>
 ```

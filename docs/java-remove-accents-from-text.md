@@ -12,13 +12,13 @@
 
 假设我们正在处理包含要删除的发音符号范围的文本:
 
-```
+```java
 āăąēîïĩíĝġńñšŝśûůŷ
 ```
 
 读完这篇文章后，我们将知道如何去掉音调符号，最后得到:
 
-```
+```java
 aaaeiiiiggnnsssuuy
 ```
 
@@ -72,7 +72,7 @@ Unicode 字符块和类别之间的主要区别在于，字符块包含一系列
 
 在我们执行规范化之前，我们可能想要检查一下`String`是否已经被规范化:
 
-```
+```java
 assertFalse(Normalizer.isNormalized("āăąēîïĩíĝġńñšŝśûůŷ", Normalizer.Form.NFKD));
 ```
 
@@ -80,7 +80,7 @@ assertFalse(Normalizer.isNormalized("āăąēîïĩíĝġńñšŝśûůŷ", Norm
 
 如果我们的`String`没有被规范化，我们继续下一步。为了将 ASCII 字符与变音符号分开，我们将使用兼容性分解来执行 Unicode 文本规范化:
 
-```
+```java
 private static String normalize(String input) {
     return input == null ? null : Normalizer.normalize(input, Normalizer.Form.NFKD);
 }
@@ -92,7 +92,7 @@ private static String normalize(String input) {
 
 一旦我们分解了我们的`String`，我们想要移除不想要的代码点。因此，我们将使用 [Unicode 正则表达式](https://web.archive.org/web/20220524023511/https://www.regular-expressions.info/unicode.html) `\p{M}`:
 
-```
+```java
 static String removeAccents(String input) {
     return normalize(input).replaceAll("\\p{M}", "");
 }
@@ -102,7 +102,7 @@ static String removeAccents(String input) {
 
 让我们看看我们的分解在实践中是如何工作的。首先，让我们挑选具有由 Unicode 定义的规范化形式的字符，并期望删除所有变音符号:
 
-```
+```java
 @Test
 void givenStringWithDecomposableUnicodeCharacters_whenRemoveAccents_thenReturnASCIIString() {
     assertEquals("aaaeiiiiggnnsssuuy", StringNormalizer.removeAccents("āăąēîïĩíĝġńñšŝśûůŷ"));
@@ -111,7 +111,7 @@ void givenStringWithDecomposableUnicodeCharacters_whenRemoveAccents_thenReturnAS
 
 其次，让我们挑选几个没有分解映射的字符:
 
-```
+```java
 @Test
 void givenStringWithNondecomposableUnicodeCharacters_whenRemoveAccents_thenReturnOriginalString() {
     assertEquals("łđħœ", StringNormalizer.removeAccents("łđħœ"));
@@ -122,7 +122,7 @@ void givenStringWithNondecomposableUnicodeCharacters_whenRemoveAccents_thenRetur
 
 此外，我们可以创建一个测试来验证分解字符的十六进制代码:
 
-```
+```java
 @Test
 void givenStringWithDecomposableUnicodeCharacters_whenUnicodeValueOfNormalizedString_thenReturnUnicodeValue() {
     assertEquals("\\u0066 \\u0069", StringNormalizer.unicodeValueOfNormalizedString("ﬁ"));
@@ -145,7 +145,7 @@ void givenStringWithDecomposableUnicodeCharacters_whenUnicodeValueOfNormalizedSt
 
 让我们看一些例子，首先是主要力量:
 
-```
+```java
 Collator collator = Collator.getInstance();
 collator.setDecomposition(2);
 collator.setStrength(0);
@@ -157,7 +157,7 @@ assertEquals(1, collator.compare("b", "a"));
 
 次要强度打开重音敏感性:
 
-```
+```java
 collator.setStrength(1);
 assertEquals(1, collator.compare("ä", "a"));
 assertEquals(1, collator.compare("b", "a"));
@@ -167,7 +167,7 @@ assertEquals(0, collator.compare("a", "a"));
 
 三级强度包括以下情况:
 
-```
+```java
 collator.setStrength(2);
 assertEquals(1, collator.compare("A", "a"));
 assertEquals(1, collator.compare("ä", "a"));
@@ -178,7 +178,7 @@ assertEquals(0, collator.compare(valueOf(toChars(0x0001)), valueOf(toChars(0x000
 
 相同的力量使所有的差异变得重要。倒数第二个例子很有趣，因为我们可以发现 Unicode 控制代码点+U001(“标题开始”的代码)和+U002(“文本开始”)之间的区别:
 
-```
+```java
 collator.setStrength(3);
 assertEquals(1, collator.compare("A", "a"));
 assertEquals(1, collator.compare("ä", "a"));
@@ -189,7 +189,7 @@ assertEquals(0, collator.compare("a", "a")));
 
 最后一个值得一提的例子表明，**如果字符没有定义的分解规则，它将不会被认为等同于另一个具有相同基本字母**的字符。这是因为 **`Collator`不能执行 Unicode 分解**:
 
-```
+```java
 collator.setStrength(0);
 assertEquals(1, collator.compare("ł", "l"));
 assertEquals(1, collator.compare("ø", "o")); 
@@ -199,7 +199,7 @@ assertEquals(1, collator.compare("ø", "o"));
 
 既然我们已经看到了如何使用核心 Java 来消除重音，我们将检查一下 [Apache Commons Text](/web/20220524023511/https://www.baeldung.com/java-apache-commons-text) 提供了什么。我们很快就会知道，**更容易使用，但是我们对分解过程的控制更少。它使用具有`NFD`分解形式和正则表达式的`Normalizer.normalize()`方法:**
 
-```
+```java
 static String removeAccentsWithApacheCommons(String input) {
     return StringUtils.stripAccents(input);
 }
@@ -209,7 +209,7 @@ static String removeAccentsWithApacheCommons(String input) {
 
 让我们在实践中看看这个方法——首先，**只有可分解的 Unicode 字符**:
 
-```
+```java
 @Test
 void givenStringWithDecomposableUnicodeCharacters_whenRemoveAccentsWithApacheCommons_thenReturnASCIIString() {
     assertEquals("aaaeiiiiggnnsssuuy", StringNormalizer.removeAccentsWithApacheCommons("āăąēîïĩíĝġńñšŝśûůŷ"));
@@ -220,7 +220,7 @@ void givenStringWithDecomposableUnicodeCharacters_whenRemoveAccentsWithApacheCom
 
 让我们尝试一个包含连字和带笔画的字母的字符串**:**
 
-```
+```java
 @Test 
 void givenStringWithNondecomposableUnicodeCharacters_whenRemoveAccentsWithApacheCommons_thenReturnModifiedString() {
     assertEquals("lđħœ", StringNormalizer.removeAccentsWithApacheCommons("łđħœ"));

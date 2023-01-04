@@ -39,7 +39,7 @@ REST 上下文中分页设计的下一个问题是**在哪里包含分页信息*
 
 现在来看实现。用于分页的 Spring MVC 控制器很简单:
 
-```
+```java
 @GetMapping(params = { "page", "size" })
 public List<Foo> findPaginated(@RequestParam("page") int page, 
   @RequestParam("size") int size, UriComponentsBuilder uriBuilder,
@@ -75,7 +75,7 @@ public List<Foo> findPaginated(@RequestParam("page") int page,
 
 现在我们一步一步来。从控制器传递的`UriComponentsBuilder`只包含基本 URL(主机、端口和上下文路径)。因此，我们必须添加剩余的部分:
 
-```
+```java
 void addLinkHeaderOnPagedResourceRetrieval(
  UriComponentsBuilder uriBuilder, HttpServletResponse response,
  Class clazz, int page, int totalPages, int size ){
@@ -90,7 +90,7 @@ void addLinkHeaderOnPagedResourceRetrieval(
 
 接下来，我们将使用一个`StringJoiner`来连接每个链接。我们将使用`uriBuilder`来生成 URIs。让我们看看如何链接到`next` 页面:
 
-```
+```java
 StringJoiner linkHeader = new StringJoiner(", ");
 if (hasNextPage(page, totalPages)){
     String uriForNextPage = constructNextPageUri(uriBuilder, page, size);
@@ -100,7 +100,7 @@ if (hasNextPage(page, totalPages)){
 
 让我们来看看`constructNextPageUri`方法的逻辑:
 
-```
+```java
 String constructNextPageUri(UriComponentsBuilder uriBuilder, int page, int size) {
     return uriBuilder.replaceQueryParam(PAGE, page + 1)
       .replaceQueryParam("size", size)
@@ -114,7 +114,7 @@ String constructNextPageUri(UriComponentsBuilder uriBuilder, int page, int size)
 
 最后，我们将输出添加为响应头:
 
-```
+```java
 response.addHeader("Link", linkHeader.toString());
 ```
 
@@ -126,7 +126,7 @@ response.addHeader("Link", linkHeader.toString());
 
 这些是分页集成测试的几个例子；要获得完整的测试套件，请查看 GitHub 项目(本文末尾的链接):
 
-```
+```java
 @Test
 public void whenResourcesAreRetrievedPaged_then200IsReceived(){
     Response response = RestAssured.get(paths.getFooURL() + "?page=0&size;=2");
@@ -155,7 +155,7 @@ public void givenResourcesExist_whenFirstPageIsRetrieved_thenPageContainsResourc
 
 **测试将集中在当前页面在导航中的位置，**以及从每个位置可以发现的不同 URIs:
 
-```
+```java
 @Test
 public void whenFirstPageOfResourcesAreRetrieved_thenSecondPageIsNext(){
    Response response = RestAssured.get(getFooURL()+"?page=0&size;=2");
@@ -215,13 +215,13 @@ public void whenLastPageOfResourcesIsRetrieved_thenNoNextPageIsDiscoverable(){
 
 要使用任何存储库的分页方法，我们需要扩展`PagingAndSortingRepository:`
 
-```
+```java
 public interface SubjectRepository extends PagingAndSortingRepository<Subject, Long>{}
 ```
 
 如果我们调用`http://localhost:8080/subjects,` ，Spring 会自动用 API 添加`page, size, sort`参数建议:
 
-```
+```java
 "_links" : {
   "self" : {
     "href" : "http://localhost:8080/subjects{?page,size,sort}",
@@ -234,14 +234,14 @@ public interface SubjectRepository extends PagingAndSortingRepository<Subject, L
 
 如果我们想将分页实现到我们自己的定制存储库 API 中，我们需要传递一个额外的`Pageable` 参数，并确保 API 返回一个`Page:`
 
-```
+```java
 @RestResource(path = "nameContains")
 public Page<Subject> findByNameContaining(@Param("name") String name, Pageable p);
 ```
 
 每当我们添加一个定制的 API，一个`/search`端点就会被添加到生成的链接中。因此，如果我们调用`http://localhost:8080/subjects/search,` ，我们将看到一个支持分页的端点:
 
-```
+```java
 "findByNameContaining" : {
   "href" : "http://localhost:8080/subjects/search/nameContains{?name,page,size,sort}",
   "templated" : true
@@ -256,26 +256,26 @@ public Page<Subject> findByNameContaining(@Param("name") String name, Pageable p
 
 例如，假设我们有一个来自 [SOAP](/web/20220727020632/https://www.baeldung.com/spring-boot-soap-web-service) 服务的结果列表:
 
-```
+```java
 List<Foo> list = getListOfFooFromSoapService();
 ```
 
 我们需要访问发送给我们的`Pageable`对象指定的特定位置的列表。让我们定义开始索引:
 
-```
+```java
 int start = (int) pageable.getOffset();
 ```
 
 和结束索引:
 
-```
+```java
 int end = (int) ((start + pageable.getPageSize()) > fooList.size() ? fooList.size()
   : (start + pageable.getPageSize()));
 ```
 
 有了这两个元素，我们可以创建一个`Page`来获取它们之间的元素列表:
 
-```
+```java
 Page<Foo> page 
   = new PageImpl<Foo>(fooList.subList(start, end), pageable, fooList.size());
 ```

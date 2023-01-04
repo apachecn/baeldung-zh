@@ -18,7 +18,7 @@
 
 这是我们`petstore.yml`的一个片段:
 
-```
+```java
 openapi: "3.0.0"
 paths:
   /pets:
@@ -76,7 +76,7 @@ components:
 
 接下来，让我们为生成器插件添加 [Maven 依赖关系](https://web.archive.org/web/20221022125227/https://search.maven.org/search?q=a:openapi-generator-maven-plugin%20AND%20g:%20org.openapitools):
 
-```
+```java
 <plugin>
     <groupId>org.openapitools</groupId>
     <artifactId>openapi-generator-maven-plugin</artifactId>
@@ -119,7 +119,7 @@ components:
 
 由于我们将生成一个 Spring 服务器，**我们还需要它的依赖项( [Spring Boot 启动网站](https://web.archive.org/web/20221022125227/https://search.maven.org/search?q=a:spring-boot-starter-web%20AND%20g:org.springframework.boot)和 [Spring 数据 JPA](https://web.archive.org/web/20221022125227/https://search.maven.org/search?q=a:spring-data-jpa%20AND%20g:org.springframework.data) )，这样生成的代码就能按预期编译和运行**:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -136,7 +136,7 @@ components:
 
 除了上面的 Spring 依赖项，我们还需要 [`jackson-databind`](https://web.archive.org/web/20221022125227/https://search.maven.org/search?q=a:jackson-databind-nullable) 和`[swagger2](https://web.archive.org/web/20221022125227/https://search.maven.org/search?q=a:springfox-swagger2)`依赖项，这样我们生成的代码才能成功编译:
 
-```
+```java
 <dependency>
     <groupId>org.openapitools</groupId>
     <artifactId>jackson-databind-nullable</artifactId>
@@ -153,7 +153,7 @@ components:
 
 要生成服务器存根，我们只需运行以下命令:
 
-```
+```java
 mvn clean install
 ```
 
@@ -167,7 +167,7 @@ mvn clean install
 
 以下是片段:
 
-```
+```java
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", 
   date = "2021-03-22T23:26:32.308871+05:30[Asia/Kolkata]")
 @Validated
@@ -200,7 +200,7 @@ public interface PetsApi {
 
 特别是，在这个接口中声明的**方法返回默认情况下没有实现的 HTTP 状态 501**:
 
-```
+```java
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", 
   date = "2021-03-22T23:26:32.308871+05:30[Asia/Kolkata]")
 public interface PetsApiDelegate {
@@ -231,7 +231,7 @@ public interface PetsApiDelegate {
 
 在那之后，我们看到**有一个`PetsApiController`类简单地连接了委托人**:
 
-```
+```java
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", 
   date = "2021-03-22T23:26:32.308871+05:30[Asia/Kolkata]")
 @Controller
@@ -256,7 +256,7 @@ public class PetsApiController implements PetsApi {
 
 让我们来看看其中的一个——`Pet`:
 
-```
+```java
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", 
   date = "2021-03-22T23:26:32.308871+05:30[Asia/Kolkata]")
 public class Pet {
@@ -291,7 +291,7 @@ public class Pet {
 
 此外，在此之前，我们需要一个弹簧:
 
-```
+```java
 @SpringBootApplication
 public class Application {
     public static void main(String[] args) {
@@ -304,13 +304,13 @@ public class Application {
 
 启动应用程序后，我们只需运行命令:
 
-```
+```java
 curl -I http://localhost:8080/pets/
 ```
 
 这是预期的结果:
 
-```
+```java
 HTTP/1.1 501 
 Content-Length: 0
 Date: Fri, 26 Mar 2021 17:29:25 GMT
@@ -321,7 +321,7 @@ Connection: close
 
 或者，我们可以编写一个简单的[集成测试](/web/20221022125227/https://www.baeldung.com/spring-boot-testing#integration-testing-with-springboottest)来实现相同的功能:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc

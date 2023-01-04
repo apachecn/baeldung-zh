@@ -14,7 +14,7 @@
 
 让我们从添加必要的 Maven 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -33,7 +33,7 @@
 
 让我们以一个登录表单 bean 为例:
 
-```
+```java
 public class LoginForm {
 
     @NotEmpty(message = "{email.notempty}")
@@ -59,7 +59,7 @@ public class LoginForm {
 
 `ReloadableResourceBundleMessageSource`是最常见的`MessageSource`实现，它从不同地区的资源包中解析消息:
 
-```
+```java
 @Bean
 public MessageSource messageSource() {
     ReloadableResourceBundleMessageSource messageSource
@@ -77,7 +77,7 @@ public MessageSource messageSource() {
 
 **要在属性文件中使用自定义名称消息，我们需要定义一个`LocalValidatorFactoryBean`并注册`messageSource:`**
 
-```
+```java
 @Bean
 public LocalValidatorFactoryBean getValidator() {
     LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
@@ -100,7 +100,7 @@ public LocalValidatorFactoryBean getValidator() {
 
 **最后一步是在`src/main/resources`目录下创建一个属性文件，其名称在第 4 步的`basename`中提供:**
 
-```
+```java
 # messages.properties
 email.notempty=Please provide valid email id.
 ```
@@ -109,7 +109,7 @@ email.notempty=Please provide valid email id.
 
 在这种情况下，我们必须在相同的位置再添加一个名为`messages_fr.properties`的属性文件(根本不需要修改代码):
 
-```
+```java
 # messages_fr.properties
 email.notempty=Veuillez fournir un identifiant de messagerie valide.
 ```

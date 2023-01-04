@@ -18,7 +18,7 @@ Spring 数据键值 1.x 二进制文件需要 6.0 或更高版本，以及 Sprin
 
 为了使用 Spring 数据键值，我们需要添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-keyvalue</artifactId>
@@ -32,7 +32,7 @@ Spring 数据键值 1.x 二进制文件需要 6.0 或更高版本，以及 Sprin
 
 让我们创建一个`Employee`实体:
 
-```
+```java
 @KeySpace("employees")
 public class Employee {
 
@@ -60,7 +60,7 @@ public class Employee {
 
 默认情况下，存储库将使用基于`ConcurrentHashMap-`的实现:
 
-```
+```java
 @SpringBootApplication
 @EnableMapRepositories
 public class SpringDataKeyValueApplication {
@@ -69,13 +69,13 @@ public class SpringDataKeyValueApplication {
 
 **可以改变默认的`ConcurrentHashMap`实现，使用一些其他的`java.util.Map`实现:**
 
-```
+```java
 @EnableMapRepositories(mapType = WeakHashMap.class) 
 ```
 
 使用 Spring 数据键值创建存储库的工作方式与其他 Spring 数据框架相同:
 
-```
+```java
 @Repository
 public interface EmployeeRepository
   extends CrudRepository<Employee, Integer> {
@@ -94,7 +94,7 @@ public interface EmployeeRepository
 
 让我们使用存储库将新的`Employee`对象保存到数据存储中:
 
-```
+```java
 Employee employee = new Employee(1, "Mike", "IT", "5000");
 employeeRepository.save(employee);
 ```
@@ -103,7 +103,7 @@ employeeRepository.save(employee);
 
 我们可以通过获取雇员来验证上一节中雇员的正确保存:
 
-```
+```java
 Optional<Employee> savedEmployee = employeeRepository.findById(1); 
 ```
 
@@ -113,7 +113,7 @@ Optional<Employee> savedEmployee = employeeRepository.findById(1);
 
 相反，我们可以使用`save()`方法:
 
-```
+```java
 employee.setName("Jack");
 employeeRepository.save(employee);
 ```
@@ -122,7 +122,7 @@ employeeRepository.save(employee);
 
 我们可以使用存储库删除插入的对象:
 
-```
+```java
 employeeRepository.deleteById(1); 
 ```
 
@@ -130,7 +130,7 @@ employeeRepository.deleteById(1);
 
 我们可以获取所有保存的对象:
 
-```
+```java
 Iterable<Employee> employees = employeeRepository.findAll();
 ```
 
@@ -140,7 +140,7 @@ Iterable<Employee> employees = employeeRepository.findAll();
 
 简单来说，`KeyValueTemplate`使用一个`MapAdapter`包装一个`java.util.Map`实现来执行查询和排序:
 
-```
+```java
 @Bean
 public KeyValueOperations keyValueTemplate() {
     return new KeyValueTemplate(keyValueAdapter());
@@ -162,7 +162,7 @@ public KeyValueAdapter keyValueAdapter() {
 
 让我们看看如何使用模板将新的`Employee`对象保存到数据存储中:
 
-```
+```java
 Employee employee = new Employee(1, "Mile", "IT", "5000");
 keyValueTemplate.insert(employee); 
 ```
@@ -171,7 +171,7 @@ keyValueTemplate.insert(employee);
 
 我们可以通过使用模板从结构中获取对象来验证对象的插入:
 
-```
+```java
 Optional<Employee> savedEmployee = keyValueTemplate
   .findById(id, Employee.class); 
 ```
@@ -180,7 +180,7 @@ Optional<Employee> savedEmployee = keyValueTemplate
 
 与`CrudRepository`不同，模板提供了更新对象的专用方法:
 
-```
+```java
 employee.setName("Jacek");
 keyValueTemplate.update(employee);
 ```
@@ -189,7 +189,7 @@ keyValueTemplate.update(employee);
 
 我们可以用模板删除对象:
 
-```
+```java
 keyValueTemplate.delete(id, Employee.class);
 ```
 
@@ -197,7 +197,7 @@ keyValueTemplate.delete(id, Employee.class);
 
 我们可以使用模板获取所有保存的对象:
 
-```
+```java
 Iterable<Employee> employees = keyValueTemplate
   .findAll(Employee.class);
 ```
@@ -208,7 +208,7 @@ Iterable<Employee> employees = keyValueTemplate
 
 例如，我们可以使用一个查询来获得一个基于薪水的排序列表:
 
-```
+```java
 KeyValueQuery<Employee> query = new KeyValueQuery<Employee>();
 query.setSort(new Sort(Sort.Direction.DESC, "salary"));
 Iterable<Employee> employees 

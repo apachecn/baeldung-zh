@@ -22,25 +22,25 @@ Gatling 是一个**负载测试工具**，它提供了对`HTTP`协议的出色�
 
 在命令行中，键入:
 
-```
+```java
 mvn archetype:generate
 ```
 
 然后，出现提示时:
 
-```
+```java
 Choose a number or apply filter (format: [groupId:]artifactId, case sensitive contains):
 ```
 
 类型:
 
-```
+```java
 gatling
 ```
 
 然后，您应该会看到:
 
-```
+```java
 Choose archetype:
 1: remote -> 
   io.gatling.highcharts:gatling-highcharts-maven-archetype (gatling-highcharts-maven-archetype)
@@ -48,7 +48,7 @@ Choose archetype:
 
 类型`:`
 
-```
+```java
 1
 ```
 
@@ -110,7 +110,7 @@ Choose archetype:
 
 要运行我们记录的模拟，我们需要更新我们的`pom.xml`:
 
-```
+```java
 <plugin>
     <groupId>io.gatling</groupId>
     <artifactId>gatling-maven-plugin</artifactId>
@@ -129,7 +129,7 @@ Choose archetype:
 
 这让我们在测试阶段执行模拟。要开始测试，只需运行:
 
-```
+```java
 mvn test
 ```
 

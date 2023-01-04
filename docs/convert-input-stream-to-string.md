@@ -28,7 +28,7 @@ How to convert an InputStream to a Reader using Java, Guava and the Apache Commo
 
 让我们看一个简单的、使用普通 Java 的低级方法，一个`InputStream`和一个简单的`StringBuilder`:
 
-```
+```java
 @Test
 public void givenUsingJava5_whenConvertingAnInputStreamToAString_thenCorrect() 
   throws IOException {
@@ -51,7 +51,7 @@ public void givenUsingJava5_whenConvertingAnInputStreamToAString_thenCorrect()
 
 Java 8 为`BufferedReader` 带来了**新的 [`lines()`](https://web.archive.org/web/20221013193922/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/BufferedReader.html#lines()) 方法。让我们看看如何利用它将一个`InputStream`转换成一个`String:`**
 
-```
+```java
 @Test
 public void givenUsingJava8_whenConvertingAnInputStreamToAString_thenCorrect() {
     String originalString = randomAlphabetic(DEFAULT_SIZE);
@@ -76,7 +76,7 @@ public void givenUsingJava8_whenConvertingAnInputStreamToAString_thenCorrect() {
 
 如果我们在 Java 9 或更高版本上，我们可以利用添加到`InputStream:`中的一个新的`readAllBytes`方法
 
-```
+```java
 @Test
 public void givenUsingJava9_whenConvertingAnInputStreamToAString_thenCorrect() throws IOException {
     String originalString = randomAlphabetic(DEFAULT_SIZE);
@@ -94,7 +94,7 @@ public void givenUsingJava9_whenConvertingAnInputStreamToAString_thenCorrect() t
 
 接下来，让我们看一个使用标准文本`Scanner` : 的普通 Java 例子
 
-```
+```java
 @Test
 public void givenUsingJava7_whenConvertingAnInputStreamToAString_thenCorrect() 
   throws IOException {
@@ -120,7 +120,7 @@ public void givenUsingJava7_whenConvertingAnInputStreamToAString_thenCorrect()
 
 最后，让我们看另一个普通的 Java 例子，这次使用的是`ByteArrayOutputStream`类:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenConvertingAnInputStreamToString_thenCorrect()
   throws IOException {
@@ -148,7 +148,7 @@ public void givenUsingPlainJava_whenConvertingAnInputStreamToString_thenCorrect(
 
 另一种解决方法是将**中的内容`InputStream`复制到一个文件中，然后将其转换为`String:`**
 
-```
+```java
 @Test
 public void givenUsingTempFile_whenConvertingAnInputStreamToAString_thenCorrect() 
   throws IOException {
@@ -170,7 +170,7 @@ public void givenUsingTempFile_whenConvertingAnInputStreamToAString_thenCorrect(
 
 让我们从一个利用`ByteSource`功能的番石榴示例**开始:**
 
-```
+```java
 @Test
 public void givenUsingGuava_whenConvertingAnInputStreamToAString_thenCorrect() 
   throws IOException {
@@ -198,7 +198,7 @@ public void givenUsingGuava_whenConvertingAnInputStreamToAString_thenCorrect()
 
 一种更简单的转换方法是用番石榴树进行转换，但是需要显式地关闭流；幸运的是，我们可以简单地使用 try-with-resources 语法来解决这个问题:
 
-```
+```java
 @Test
 public void givenUsingGuavaAndJava7_whenConvertingAnInputStreamToAString_thenCorrect() 
   throws IOException {
@@ -220,7 +220,7 @@ public void givenUsingGuavaAndJava7_whenConvertingAnInputStreamToAString_thenCor
 
 这里一个重要的警告是，与番石榴相反，这两个例子都不会结束`InputStream:`
 
-```
+```java
 @Test
 public void givenUsingCommonsIo_whenConvertingAnInputStreamToAString_thenCorrect() 
   throws IOException {
@@ -234,7 +234,7 @@ public void givenUsingCommonsIo_whenConvertingAnInputStreamToAString_thenCorrect
 
 我们也可以使用一个`StringWriter`来进行转换:
 
-```
+```java
 @Test
 public void givenUsingCommonsIoWithCopy_whenConvertingAnInputStreamToAString_thenCorrect() 
   throws IOException {

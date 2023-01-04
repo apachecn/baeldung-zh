@@ -18,7 +18,7 @@
 
 下面是`Person`类:
 
-```
+```java
 public class Person {
     private final String name;
 
@@ -28,7 +28,7 @@ public class Person {
 
 这些是子类:
 
-```
+```java
 public class Waitress extends Person {
 
     public String serveStarter(String starter) {
@@ -39,7 +39,7 @@ public class Waitress extends Person {
 } 
 ```
 
-```
+```java
 public class Actress extends Person {
 
     public String readScript(String movie) {
@@ -52,7 +52,7 @@ public class Actress extends Person {
 
 此外，让我们创建一个单元测试来验证`Waitress`和`Actress`类的实例也是`Person`的实例，从而表明在类型级别满足“is-a”条件:
 
-```
+```java
 @Test
 public void givenWaitressInstance_whenCheckedType_thenIsInstanceOfPerson() {
     assertThat(new Waitress("Mary", "[[email protected]](/web/20221205124259/https://www.baeldung.com/cdn-cgi/l/email-protection)", 22))
@@ -88,7 +88,7 @@ public void givenActressInstance_whenCheckedType_thenIsInstanceOfPerson() {
 
 下面是这种模式在领域层的基本实现:
 
-```
+```java
 public class Entity {
 
     protected long id;
@@ -97,7 +97,7 @@ public class Entity {
 } 
 ```
 
-```
+```java
 public class User extends Entity {
 
     // additional fields and methods   
@@ -110,7 +110,7 @@ public class User extends Entity {
 
 在模板方法模式中，我们可以**使用一个基类来定义算法的不变部分，然后在子类中实现变化部分**:
 
-```
+```java
 public abstract class ComputerBuilder {
 
     public final Computer buildComputer() {
@@ -124,7 +124,7 @@ public abstract class ComputerBuilder {
 } 
 ```
 
-```
+```java
 public class StandardComputerBuilder extends ComputerBuilder {
 
     @Override
@@ -153,7 +153,7 @@ public class StandardComputerBuilder extends ComputerBuilder {
 
 下面是一个简单的`Computer`类的实现:
 
-```
+```java
 public class Computer {
 
     private Processor processor;
@@ -170,7 +170,7 @@ public class Computer {
 
 下面的类模拟了微处理器、内存和声卡(为了简洁起见，省略了接口):
 
-```
+```java
 public class StandardProcessor implements Processor {
 
     private String model;
@@ -179,7 +179,7 @@ public class StandardProcessor implements Processor {
 }
 ```
 
-```
+```java
 public class StandardMemory implements Memory {
 
     private String brand;
@@ -189,7 +189,7 @@ public class StandardMemory implements Memory {
 } 
 ```
 
-```
+```java
 public class StandardSoundCard implements SoundCard {
 
     private String brand;
@@ -208,7 +208,7 @@ public class StandardSoundCard implements SoundCard {
 
 或者，我们可以通过硬编码`Computer`类的依赖关系来定义组合关系，而不是在构造函数中声明它们:
 
-```
+```java
 public class Computer {
 
     private StandardProcessor processor

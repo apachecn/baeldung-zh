@@ -14,7 +14,7 @@ JVM 的关机序列首先调用所有注册的关机挂钩，并等待它们完�
 
 这个方法实际上在内部调用了`Runtime.getRuntime().exit()`方法。它以一个整数状态代码作为参数，并有一个`void`返回类型:
 
-```
+```java
 public static void exit(int status)
 ```
 
@@ -30,7 +30,7 @@ public static void exit(int status)
 
 该方法是非静态的，并且具有与`System.exit()`相似的签名:
 
-```
+```java
 public void halt(int status)
 ```
 
@@ -42,7 +42,7 @@ public void halt(int status)
 
 为了简单起见，我们将创建一个 Java 类，并在`static`块中注册一个关闭挂钩。此外，我们将创建两个方法；第一个调用`exit`方法，第二个调用`halt`方法:
 
-```
+```java
 public class JvmExitAndHaltDemo {
 
     private static Logger LOGGER = LoggerFactory.getLogger(JvmExitAndHaltDemo.class);
@@ -75,7 +75,7 @@ public class JvmExitAndHaltDemo {
 
 因此，为了首先测试退出方法，让我们创建一个测试用例:
 
-```
+```java
 @Test
 public void givenProcessComplete_whenExitCalled_thenTriggerShutdownHook() {
     jvmExitAndHaltDemo.processAndExit();
@@ -84,7 +84,7 @@ public void givenProcessComplete_whenExitCalled_thenTriggerShutdownHook() {
 
 现在让我们运行测试用例，看看关闭挂钩被调用了:
 
-```
+```java
 12:48:43.156 [main] INFO com.baeldung.exitvshalt.JvmExitAndHaltDemo - Process started.
 12:48:43.159 [main] INFO com.baeldung.exitvshalt.JvmExitAndHaltDemo - Calling System.exit().
 12:48:43.160 [Thread-0] INFO com.baeldung.exitvshalt.JvmExitAndHaltDemo - Shutdown hook initiated.
@@ -92,7 +92,7 @@ public void givenProcessComplete_whenExitCalled_thenTriggerShutdownHook() {
 
 类似地，我们将为`halt`方法创建一个测试用例:
 
-```
+```java
 @Test
 public void givenProcessComplete_whenHaltCalled_thenDoNotTriggerShutdownHook() {
     jvmExitAndHaltDemo.processAndHalt();
@@ -101,7 +101,7 @@ public void givenProcessComplete_whenHaltCalled_thenDoNotTriggerShutdownHook() {
 
 现在，我们也可以运行这个测试用例，并看到没有调用关闭挂钩:
 
-```
+```java
 12:49:16.839 [main] INFO com.baeldung.exitvshalt.JvmExitAndHaltDemo - Process started.
 12:49:16.842 [main] INFO com.baeldung.exitvshalt.JvmExitAndHaltDemo - Calling Runtime.getRuntime().halt().
 ```

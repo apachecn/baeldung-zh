@@ -30,7 +30,7 @@
 
 另一个区别是`null `处理。`HashMap`允许添加一个以`null`为关键字的`Entry`，以及多个以`null`为值的条目。相比之下， **`Hashtable`根本不允许`null`**。我们来看一个`null`和`HashMap`的例子:
 
-```
+```java
 HashMap<String, String> map = new HashMap<String, String>();
 map.put(null, "value");
 map.put("key1", null);
@@ -39,20 +39,20 @@ map.put("key2", null);
 
 这将导致:
 
-```
+```java
 assertEquals(3, map.size());
 ```
 
 接下来，让我们看看 Hashtable 有什么不同:
 
-```
+```java
 Hashtable<String, String> table = new Hashtable<String, String>();
 table.put("key", null);
 ```
 
 这导致了一个`NullPointerException`。添加一个以`null`为关键字的对象也会导致一个`NullPointerException`:
 
-```
+```java
 table.put(null, "value");
 ```
 
@@ -62,7 +62,7 @@ table.put(null, "value");
 
 `Iterator`是一个[快速失效迭代器](/web/20221129004202/https://www.baeldung.com/java-fail-safe-vs-fail-fast-iterator)。换句话说，当底层集合在迭代过程中被修改时，它抛出一个 [`ConcurrentModificationException`](/web/20221129004202/https://www.baeldung.com/java-concurrentmodificationexception) 。让我们看看快速失效的例子:
 
-```
+```java
 HashMap<String, String> map = new HashMap<String, String>();
 map.put("key1", "value1");
 map.put("key2", "value2");

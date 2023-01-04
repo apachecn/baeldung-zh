@@ -12,7 +12,7 @@
 
 先来看一下`computeIfAbsent`的签名:
 
-```
+```java
 default V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction)
 ```
 
@@ -22,7 +22,7 @@ default V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunctio
 
 首先，它检查`key`是否出现在地图中。如果 `key`存在，并且一个非空值与该键相关，那么它返回该值:
 
-```
+```java
 Map<String, Integer> stringLength = new HashMap<>();
 stringLength.put("John", 5);
 assertEquals((long)stringLength.computeIfAbsent("John", s -> s.length()), 5);
@@ -36,7 +36,7 @@ assertEquals((long)stringLength.computeIfAbsent("John", s -> s.length()), 5);
 
 让我们来看看`computeIfAbsent`方法中 `mappingFunction`的用法:
 
-```
+```java
 Map<String, Integer> stringLength = new HashMap<>();
 assertEquals((long)stringLength.computeIfAbsent("John", s -> s.length()), 4);
 assertEquals((long)stringLength.get("John"), 4);
@@ -48,7 +48,7 @@ assertEquals((long)stringLength.get("John"), 4);
 
 此外，如果`mappingFunction`返回`null`，则地图不记录任何映射:
 
-```
+```java
 Map<String, Integer> stringLength = new HashMap<>();
 assertEquals(stringLength.computeIfAbsent("John", s -> null), null);
 assertNull(stringLength.get("John"));
@@ -58,7 +58,7 @@ assertNull(stringLength.get("John"));
 
 最后，如果`mappingFunction`抛出了一个未检查的异常，那么该异常将被再次抛出，并且 map 没有记录任何映射:
 
-```
+```java
 @Test(expected = RuntimeException.class)
 public void whenMappingFunctionThrowsException_thenExceptionIsRethrown() {
     Map<String, Integer> stringLength = new HashMap<>();

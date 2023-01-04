@@ -16,7 +16,7 @@ Java 在编译时验证检查过的异常。
 
 因此，我们应该使用 [`throws`](/web/20221208143840/https://www.baeldung.com/java-throw-throws) 关键字来声明一个被检查的异常:
 
-```
+```java
 private static void checkedExceptionWithThrows() throws FileNotFoundException {
     File file = new File("not_existing_file.txt");
     FileInputStream stream = new FileInputStream(file);
@@ -25,7 +25,7 @@ private static void checkedExceptionWithThrows() throws FileNotFoundException {
 
 我们还可以使用一个`try-catch`块来处理一个被检查的异常:
 
-```
+```java
 private static void checkedExceptionWithTryCatch() {
     File file = new File("not_existing_file.txt");
     try {
@@ -40,7 +40,7 @@ Java 中常见的一些[检查异常](/web/20221208143840/https://www.baeldung.c
 
 [`Exception`](https://web.archive.org/web/20221208143840/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html) 类是检查异常的超类，所以我们可以通过扩展`Exception`[创建一个定制的检查异常](/web/20221208143840/https://www.baeldung.com/java-new-custom-exception):
 
-```
+```java
 public class IncorrectFileNameException extends Exception {
     public IncorrectFileNameException(String errorMessage) {
         super(errorMessage);
@@ -54,7 +54,7 @@ public class IncorrectFileNameException extends Exception {
 
 例如，如果我们将一个数除以 0，Java 会抛出`ArithmeticException`:
 
-```
+```java
 private static void divideByZero() {
     int numerator = 1;
     int denominator = 0;
@@ -68,7 +68,7 @@ Java 中常见的一些[未检查异常](/web/20221208143840/https://www.baeldun
 
 `[RuntimeException](https://web.archive.org/web/20221208143840/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/RuntimeException.html)` 类是所有未检查异常的超类，所以我们可以通过扩展`RuntimeException`来[创建一个定制的未检查异常](/web/20221208143840/https://www.baeldung.com/java-new-custom-exception):
 
-```
+```java
 public class NullOrEmptyException extends RuntimeException {
     public NullOrEmptyException(String errorMessage) {
         super(errorMessage);
@@ -84,7 +84,7 @@ public class NullOrEmptyException extends RuntimeException {
 
 例如，在我们打开一个文件之前，我们可以首先验证输入文件名。如果用户输入的文件名无效，我们可以抛出一个自定义的检查异常:
 
-```
+```java
 if (!isCorrectFileName(fileName)) {
     throw new IncorrectFileNameException("Incorrect filename : " + fileName );
 } 
@@ -94,7 +94,7 @@ if (!isCorrectFileName(fileName)) {
 
 但是，如果输入文件名是一个空指针或者是一个空字符串，这意味着我们在代码中有一些错误。在这种情况下，我们应该抛出一个未检查的异常:
 
-```
+```java
 if (fileName == null || fileName.isEmpty())  {
     throw new NullOrEmptyException("The filename is null or empty.");
 } 

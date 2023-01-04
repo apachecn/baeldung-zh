@@ -32,7 +32,7 @@
 
 让我们将这个值配置为`20971520`字节:
 
-```
+```java
 public ProducerFactory<String, String> producerFactory() {
     Map<String, Object> configProps = new HashMap<>();
     configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
@@ -52,14 +52,14 @@ public ProducerFactory<String, String> producerFactory() {
 
 让我们在创建主题时使用 CLI 命令手动配置该属性:
 
-```
+```java
 ./kafka-topics.sh --bootstrap-server localhost:9092 --create --topic longMessage --partitions 1 \
 --replication-factor 1 --config max.message.bytes=20971520 
 ```
 
 或者，我们可以通过 Kafka 客户端配置该属性:
 
-```
+```java
 public NewTopic topic() {
     NewTopic newTopic = new NewTopic(longMsgTopicName, 1, (short) 1);
     Map<String, String> configs = new HashMap<>();
@@ -79,7 +79,7 @@ public NewTopic topic() {
 
 让我们将这个属性添加到 Kafka Broker 的"`server.properties”`配置文件中:
 
-```
+```java
 message.max.bytes=20971520
 ```
 
@@ -94,7 +94,7 @@ message.max.bytes=20971520
 
 因此，为了配置我们的消费者，我们需要创建一个`KafkaConsumerFactory`。请记住，我们总是需要使用比`Topic/Broker`配置更高的值:
 
-```
+```java
 public ConsumerFactory<String, String> consumerFactory(String groupId) {
     Map<String, Object> props = new HashMap<>();
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);

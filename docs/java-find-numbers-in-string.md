@@ -18,7 +18,7 @@
 
 在正则表达式中，**`\d``“`匹配“任意个位数”**。让我们用这个表达式来计算字符串中的位数:
 
-```
+```java
 int countDigits(String stringToSearch) {
     Pattern digitRegex = Pattern.compile("\\d");
     Matcher countEmailMatcher = digitRegex.matcher(stringToSearch);
@@ -34,7 +34,7 @@ int countDigits(String stringToSearch) {
 
 一旦我们为正则表达式定义了一个`Matcher`,我们就可以在一个循环中使用它到`find` ,并对所有匹配进行计数。让我们来测试一下:
 
-```
+```java
 int count = countDigits("64x6xxxxx453xxxxx9xx038x68xxxxxx95786xxx7986");
 
 assertThat(count, equalTo(21));
@@ -44,7 +44,7 @@ assertThat(count, equalTo(21));
 
 要使用 [Guava](https://web.archive.org/web/20221208143830/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.google.guava%22%20AND%20a%3A%22guava%22) ，我们首先需要添加 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -54,7 +54,7 @@ assertThat(count, equalTo(21));
 
 番石榴提供了 [`CharMatcher.inRange​`](https://web.archive.org/web/20221208143830/https://guava.dev/releases/30.0-jre/api/docs/com/google/common/base/CharMatcher.html#inRange(char,char) "CharMatcher.inRange​") 计数位数的方法:
 
-```
+```java
 int count = CharMatcher.inRange('0', '9')
   .countIn("64x6xxxxx453xxxxx9xx038x68xxxxxx95786xxx7986");
 
@@ -73,7 +73,7 @@ assertThat(count, equalTo(21));
 
 让我们创建一个示例方法，使用这个正则表达式来查找字符串中的整数:
 
-```
+```java
 List<String> findIntegers(String stringToSearch) {
     Pattern integerPattern = Pattern.compile("-?\\d+");
     Matcher matcher = integerPattern.matcher(stringToSearch);
@@ -91,7 +91,7 @@ List<String> findIntegers(String stringToSearch) {
 
 让我们来测试一下`findIntegers`:
 
-```
+```java
 List<String> integersFound = 
   findIntegers("646xxxx4-53xxx34xxxxxxxxx-35x45x9xx3868xxxxxx-95786xxx79-86");
 
@@ -107,7 +107,7 @@ assertThat(integersFound)
 
 我们可以使用正则表达式`“-?\d+(\.\d+)?`来定义它:
 
-```
+```java
 List<String> findDecimalNums(String stringToSearch) {
     Pattern decimalNumPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
     Matcher matcher = decimalNumPattern.matcher(stringToSearch);
@@ -123,7 +123,7 @@ List<String> findDecimalNums(String stringToSearch) {
 
 现在我们将测试`findDecimalNums`:
 
-```
+```java
 List<String> decimalNumsFound = 
   findDecimalNums("x7854.455xxxxxxxxxxxx-3x-553.00x53xxxxxxxxxxxxx3456xxxxxxxx3567.4xxxxx");
 
@@ -137,7 +137,7 @@ assertThat(decimalNumsFound)
 
 让我们使用 [`Stream`映射](/web/20221208143830/https://www.baeldung.com/java-streams)将整数转换成`Long`:
 
-```
+```java
 LongStream integerValuesFound = findIntegers("x7854x455xxxxxxxxxxxx-3xxxxxx34x56")
   .stream()
   .mapToLong(Long::valueOf);
@@ -148,7 +148,7 @@ assertThat(integerValuesFound)
 
 接下来，我们将以同样的方式将十进制数转换为`Double`:
 
-```
+```java
 DoubleStream decimalNumValuesFound = findDecimalNums("x7854.455xxxxxxxxxxxx-3xxxxxx34.56")
   .stream()
   .mapToDouble(Double::valueOf);
@@ -165,7 +165,7 @@ assertThat(decimalNumValuesFound)
 
 让我们找一些用科学记数法格式化的数字:
 
-```
+```java
 String strToSearch = "xx1.25E-3xxx2e109xxx-70.96E+105xxxx-8.7312E-102xx919.3822e+31xxx";
 
 Matcher matcher = Pattern.compile("-?\\d+(\\.\\d+)?[eE][+-]?\\d+")
@@ -181,7 +181,7 @@ assertThat(sciNotationNums)
 
 现在我们将在字符串中找到十六进制数:
 
-```
+```java
 String strToSearch = "xaF851Bxxx-3f6Cxx-2Ad9eExx70ae19xxx";
 
 Matcher matcher = Pattern.compile("-?[0-9a-fA-F]+")

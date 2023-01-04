@@ -14,7 +14,7 @@ Webflux 的 OAuth 登录配置类似于标准 Web MVC 应用程序的配置。�
 
 首先，我们将创建一个简单的 Spring Boot 应用程序，并将这些依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -35,7 +35,7 @@ Webflux 的 OAuth 登录配置类似于标准 Web MVC 应用程序的配置。�
 
 接下来，我们将添加一个简单的控制器来在主页上显示用户名:
 
-```
+```java
 @RestController
 public class MainController {
 
@@ -60,13 +60,13 @@ public class MainController {
 
 接下来，我们将把它添加到“授权重定向 URIs”:
 
-```
+```java
 http://localhost:8080/login/oauth2/code/google
 ```
 
 然后，**我们需要配置我们的`application.yml`来使用客户端 ID 和秘密**:
 
-```
+```java
 spring:
   security:
     oauth2:
@@ -89,7 +89,7 @@ spring:
 
 这一次，我们需要配置更多属性，而不仅仅是 ClientID 和 Client Secret:
 
-```
+```java
 spring:
   security:
     oauth2:
@@ -121,7 +121,7 @@ spring:
 
 如果我们愿意，我们可以更改这一点，并且**会提供详细的安全配置**:
 
-```
+```java
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
@@ -144,7 +144,7 @@ public class SecurityConfig {
 
 现在，让我们配置我们的`WebClient`:
 
-```
+```java
 @Bean
 public WebClient webClient(ReactiveClientRegistrationRepository clientRegistrationRepo, 
   ServerOAuth2AuthorizedClientRepository authorizedClientRepo) {
@@ -157,7 +157,7 @@ public WebClient webClient(ReactiveClientRegistrationRepository clientRegistrati
 
 然后，我们可以检索一个 OAuth2 安全资源:
 
-```
+```java
 @Autowired
 private WebClient webClient;
 

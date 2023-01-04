@@ -14,7 +14,7 @@ Java 8 引入了 S `treams`的概念，作为对数据执行批量操作的有�
 
 让我们从一个简单的例子开始——在任何一个`Collection`类型上调用`parallelStream`方法——这将返回一个可能并行的`Stream`:
 
-```
+```java
 @Test
 public void givenList_whenCallingParallelStream_shouldBeParallelStream(){
     List<Long> aList = new ArrayList<>();
@@ -32,7 +32,7 @@ public void givenList_whenCallingParallelStream_shouldBeParallelStream(){
 
 以下示例让 parallel `Stream`使用自定义`ThreadPool`来计算从 1 到 1，000，000(包括 1 和 1，000，000)的长值之和:
 
-```
+```java
 @Test
 public void giveRangeOfLongs_whenSummedInParallel_shouldBeEqualToExpectedTotal() 
   throws InterruptedException, ExecutionException {
@@ -75,7 +75,7 @@ public void giveRangeOfLongs_whenSummedInParallel_shouldBeEqualToExpectedTotal()
 
 这个问题的解决非常简单:在我们执行方法之后的`shutdown`对象:
 
-```
+```java
 try {
     long actualTotal = customThreadPool.submit(
       () -> aList.parallelStream().reduce(0L, Long::sum)).get();

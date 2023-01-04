@@ -18,7 +18,7 @@
 
 例如，一些测试将需要一个分离的`Post`。那么，让我们看看如何实现这一点:
 
-```
+```java
 @Before
 public void beforeEach() {
     session = HibernateUtil.getSessionFactory().openSession();
@@ -38,7 +38,7 @@ public void beforeEach() {
 
 让我们尝试持久化一个分离的`Post`实体，并期待这个异常:
 
-```
+```java
 @Test
 public void givenDetachedPost_whenTryingToPersist_thenThrowException() {
     detachedPost.setTitle("Hibernate Tutorial for Absolute Beginners");
@@ -53,7 +53,7 @@ public void givenDetachedPost_whenTryingToPersist_thenThrowException() {
 
 **如果我们使用`merge`方法，Hibernate 会根据@** `**Id**` **字段**将实体重新附加到持久性上下文:
 
-```
+```java
 @Test
 public void givenDetachedPost_whenTryingToMerge_thenNoExceptionIsThrown() {
     detachedPost.setTitle("Hibernate Tutorial for Beginners");
@@ -74,7 +74,7 @@ public void givenDetachedPost_whenTryingToMerge_thenNoExceptionIsThrown() {
 
 对于这个例子，我们将介绍`Comment`实体:
 
-```
+```java
 @Entity
 public class Comment {
 
@@ -97,7 +97,7 @@ public class Comment {
 
 换句话说，如果我们`merge`一个`Comment`实体，Hibernate 将把操作传播给相关的`Post`，两个实体都将在数据库中被更新。然而，如果我们想用这个设置`persist`一个`Comment`，我们必须首先`merge`相关联的`Post`:
 
-```
+```java
 @Test
 public void givenDetachedPost_whenMergeAndPersistComment_thenNoExceptionIsThrown() {
     Comment comment = new Comment("nice article!");

@@ -16,7 +16,7 @@
 
 让我们快速看一个例子:
 
-```
+```java
 $ tree
 .
 ├── Dockerfile
@@ -30,7 +30,7 @@ $ tree
 
 最后，我们将使用`CMD`指令启动`cron`服务:
 
-```
+```java
 $ cat Dockerfile
 
 # Dockerfile to create image with cron services
@@ -58,7 +58,7 @@ CMD cron
 
 一旦`Dockerfile`准备好了，我们就可以使用`docker build`命令构建映像。**圆点(。)指示 Docker 引擎从当前路径获取`Dockerfile`。构建命令为`Dockerfile`上给出的每个指令创建 docker 层，以形成最终的构建映像**。典型的构建输出如下所示:
 
-```
+```java
 $ docker build .
 Sending build context to Docker daemon  3.072kB
 Step 1/8 : FROM ubuntu:latest
@@ -108,7 +108,7 @@ Successfully built 8cee091ca87d
 
 下图显示了使用`cron`在容器中执行`get_date.sh`脚本:
 
-```
+```java
 $ docker run -it 8cee091ca87d /bin/bash
 [[email protected]](/web/20220628125038/https://www.baeldung.com/cdn-cgi/l/email-protection):/#
 [[email protected]](/web/20220628125038/https://www.baeldung.com/cdn-cgi/l/email-protection):/# date
@@ -138,7 +138,7 @@ Mon Nov 15 14:31:01 UTC 2021
 
 因此，我们需要**进入容器的交互外壳，并使用`apt`存储库命令**安装`cron`服务:
 
-```
+```java
 $ docker run -it ubuntu:latest /bin/bash
 Unable to find image 'ubuntu:latest' locally
 latest: Pulling from library/ubuntu
@@ -173,7 +173,7 @@ $ docker cp get_data.sh 77483fc20fc9: /root/get_date.sh
 
 我们可以使用`docker cp`命令将`get_date.sh`从主机复制到容器中。`crontab -e`使用`vi`编辑器编辑`cron`任务。下面的`cron`配置每分钟运行一次脚本。此外，输出指示脚本执行的时间戳:
 
-```
+```java
 [[email protected]](/web/20220628125038/https://www.baeldung.com/cdn-cgi/l/email-protection):/# export EDITOR=vi
 [[email protected]](/web/20220628125038/https://www.baeldung.com/cdn-cgi/l/email-protection):/# crontab -e
 * * * * * bash /root/get_date.sh

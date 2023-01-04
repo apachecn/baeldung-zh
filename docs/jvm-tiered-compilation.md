@@ -124,7 +124,7 @@ JIT 编译中最常见的场景是解释的代码直接从 0 级跳到 3 级。
 
  **为了检查特定 Java 版本上使用的默认阈值，我们可以使用`-XX:+PrintFlagsFinal`标志运行 Java:
 
-```
+```java
 java -XX:+PrintFlagsFinal -version | grep CompileThreshold
 intx CompileThreshold = 10000
 intx Tier2CompileThreshold = 0
@@ -165,7 +165,7 @@ intx Tier4CompileThreshold = 15000
 
 让我们用一个简单的例子来演示方法编译生命周期。首先，我们将创建一个实现 JSON 格式化程序的类:
 
-```
+```java
 public class JsonFormatter implements Formatter {
 
     private static final JsonMapper mapper = new JsonMapper();
@@ -180,7 +180,7 @@ public class JsonFormatter implements Formatter {
 
 接下来，我们将创建一个实现相同接口的类，但是实现一个 XML 格式化程序:
 
-```
+```java
 public class XmlFormatter implements Formatter {
 
     private static final XmlMapper mapper = new XmlMapper();
@@ -195,7 +195,7 @@ public class XmlFormatter implements Formatter {
 
 现在，我们将编写一个使用两种不同格式化程序实现的方法。在循环的前半部分，我们将使用 JSON 实现，然后切换到 XML 实现:
 
-```
+```java
 public class TieredCompilation {
 
     public static void main(String[] args) throws Exception {
@@ -221,51 +221,51 @@ public class TieredCompilation {
 
 前两个日志条目显示 JVM 在第 3 层编译了`main`方法和`format`方法的 JSON 实现。因此，这两种方法都是由 C1 编译器编译的。C1 编译的代码取代了最初解释的版本:
 
-```
+```java
 567  714       3       com.baeldung.tieredcompilation.JsonFormatter::format (8 bytes)
 687  832 %     3       com.baeldung.tieredcompilation.TieredCompilation::main @ 2 (58 bytes)
 ```
 
-```
+```java
 A few hundred milliseconds later, the JVM compiled both methods on level 4\. Hence, the C2 compiled versions replaced the previous versions compiled with C1:
 ```
 
-```
+```java
 659  800       4       com.baeldung.tieredcompilation.JsonFormatter::format (8 bytes)
 807  834 %     4       com.baeldung.tieredcompilation.TieredCompilation::main @ 2 (58 bytes)
 ```
 
 仅仅几毫秒后，我们看到了第一个去优化的例子。这里，JVM 标记了过时的(不进入)C1 编译版本:
 
-```
+```java
 812  714       3       com.baeldung.tieredcompilation.JsonFormatter::format (8 bytes)   made not entrant
 838 832 % 3 com.baeldung.tieredcompilation.TieredCompilation::main @ 2 (58 bytes) made not entrant
 ```
 
 过一会儿，我们会注意到另一个去优化的例子。这个日志条目很有趣，因为 JVM 将完全优化的 C2 编译版本标记为过时(不进入)。这意味着**当 JVM 检测到完全优化的代码不再有效**时，它会回滚该代码:
 
-```
+```java
 1015  834 %     4       com.baeldung.tieredcompilation.TieredCompilation::main @ 2 (58 bytes)   made not entrant
 1018  800       4       com.baeldung.tieredcompilation.JsonFormatter::format (8 bytes)   made not entrant 
 ```
 
 接下来，我们将首次看到`format`方法的 XML 实现。JVM 在第 3 层编译它，连同`main`方法:
 
-```
+```java
 1160 1073       3       com.baeldung.tieredcompilation.XmlFormatter::format (8 bytes)
 1202 1141 %     3       com.baeldung.tieredcompilation.TieredCompilation::main @ 2 (58 bytes)
 ```
 
 几百毫秒后，JVM 在第 4 级编译了这两种方法。然而，这一次，`main`方法使用的是 XML 实现:
 
-```
+```java
 1341 1171       4       com.baeldung.tieredcompilation.XmlFormatter::format (8 bytes)
 1505 1213 %     4       com.baeldung.tieredcompilation.TieredCompilation::main @ 2 (58 bytes
 ```
 
 和之前一样，几毫秒后，JVM 将 C1 编译版本标记为过时(不进入):
 
-```
+```java
 1492 1073       3       com.baeldung.tieredcompilation.XmlFormatter::format (8 bytes)   made not entrant
 1508 1141 %     3       com.baeldung.tieredcompilation.TieredCompilation::main @ 2 (58 bytes)   made not entrant
 ```

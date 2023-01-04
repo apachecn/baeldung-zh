@@ -14,7 +14,7 @@
 
 我们需要一个`DatabaseMetaData`的实例来获取这些信息。因此，让我们看看如何通过代码从一个`Connection`对象中获得它:
 
-```
+```java
 DatabaseMetaData databaseMetaData = connection.getMetaData();
 ```
 
@@ -28,7 +28,7 @@ DatabaseMetaData databaseMetaData = connection.getMetaData();
 
 首先，让我们看看如何提取所有现有用户定义表的名称:
 
-```
+```java
 try(ResultSet resultSet = databaseMetaData.getTables(null, null, null, new String[]{"TABLE"})){ 
   while(resultSet.next()) { 
     String tableName = resultSet.getString("TABLE_NAME"); 
@@ -41,7 +41,7 @@ try(ResultSet resultSet = databaseMetaData.getTables(null, null, null, new Strin
 
 接下来，如果我们想要寻找系统定义的表，我们所要做的就是用“`SYSTEM TABLE`”替换表类型:
 
-```
+```java
 try(ResultSet resultSet = databaseMetaData.getTables(null, null, null, new String[]{"SYSTEM TABLE"})){
  while(resultSet.next()) { 
     String systemTableName = resultSet.getString("TABLE_NAME"); 
@@ -55,7 +55,7 @@ try(ResultSet resultSet = databaseMetaData.getTables(null, null, null, new Strin
 
 我们还可以使用同一个`DatabaseMetaData` 对象`.`来提取特定表格的列，让我们来看看实际情况:
 
-```
+```java
 try(ResultSet columns = databaseMetaData.getColumns(null,null, "CUSTOMER_ADDRESS", null)){
   while(columns.next()) {
     String columnName = columns.getString("COLUMN_NAME");
@@ -71,7 +71,7 @@ try(ResultSet columns = databaseMetaData.getColumns(null,null, "CUSTOMER_ADDRESS
 
 除了常规列之外，我们还可以找出特定表的主键列:
 
-```
+```java
 try(ResultSet primaryKeys = databaseMetaData.getPrimaryKeys(null, null, "CUSTOMER_ADDRESS")){ 
  while(primaryKeys.next()){ 
     String primaryKeyColumnName = primaryKeys.getString("COLUMN_NAME"); 
@@ -82,7 +82,7 @@ try(ResultSet primaryKeys = databaseMetaData.getPrimaryKeys(null, null, "CUSTOME
 
 类似地，我们可以检索外键列的描述以及给定表引用的主键列。让我们看一个例子:
 
-```
+```java
 try(ResultSet foreignKeys = databaseMetaData.getImportedKeys(null, null, "CUSTOMER_ADDRESS")){
  while(foreignKeys.next()){
     String pkTableName = foreignKeys.getString("PKTABLE_NAME");
@@ -101,13 +101,13 @@ try(ResultSet foreignKeys = databaseMetaData.getImportedKeys(null, null, "CUSTOM
 
 我们还可以获得在获取数据库连接时使用了其凭证的用户的名称:
 
-```
+```java
 String userName = databaseMetaData.getUserName();
 ```
 
 类似地，**我们可以使用方法`getSchemas()`来检索数据库中可用模式**的名称:
 
-```
+```java
 try(ResultSet schemas = databaseMetaData.getSchemas()){
  while (schemas.next()){
     String table_schem = schemas.getString("TABLE_SCHEM");
@@ -124,7 +124,7 @@ try(ResultSet schemas = databaseMetaData.getSchemas()){
 
 例如，我们可以获取数据库产品的名称和版本、JDBC 驱动程序的名称、JDBC 驱动程序的版本号等等。现在让我们看看代码片段:
 
-```
+```java
 String productName = databaseMetaData.getDatabaseProductName();
 String productVersion = databaseMetaData.getDatabaseProductVersion();
 String driverName = databaseMetaData.getDriverName();
@@ -141,7 +141,7 @@ String driverVersion = databaseMetaData.getDriverVersion();
 
 那么，我们如何才能知道我们正在使用的数据库是否支持某种特性呢？让我们看一些例子:
 
-```
+```java
 boolean supportsFullOuterJoins = databaseMetaData.supportsFullOuterJoins();
 boolean supportsStoredProcedures = databaseMetaData.supportsStoredProcedures();
 boolean supportsTransactions = databaseMetaData.supportsTransactions();

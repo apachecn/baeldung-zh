@@ -12,19 +12,19 @@
 
 当使用较旧版本的 Http 客户端(4.3 之前)时，设置`User-Agent` 的值是通过低级 API 完成的**:**
 
-```
+```java
 client.getParams().setParameter(CoreProtocolPNames.USER_AGENT, "Mozilla/5.0 Firefox/26.0");
 ```
 
 同样的事情也可以通过**一个更高级别的 API 以及**来完成——无需处理原始的`http.useragent`属性:
 
-```
+```java
 HttpProtocolParams.setUserAgent(client.getParams(), "Mozilla/5.0 Firefox/26.0");
 ```
 
 完整的示例如下所示:
 
-```
+```java
 @Test
 public void whenClientUsesCustomUserAgent_thenCorrect() 
   throws ClientProtocolException, IOException {
@@ -40,7 +40,7 @@ public void whenClientUsesCustomUserAgent_thenCorrect()
 
 在 Apache 客户端的最新版本(4.3 版之后)中，通过新的 fluent APIs 以更简洁的方式实现了同样的功能:
 
-```
+```java
 @Test
 public void whenRequestHasCustomUserAgent_thenCorrect() 
   throws ClientProtocolException, IOException {
@@ -53,7 +53,7 @@ public void whenRequestHasCustomUserAgent_thenCorrect()
 
 定制的`User-Agent` 报头也可以针对单个请求设置，而不是针对整个`HttpClient`:
 
-```
+```java
 @Test
 public void givenDeprecatedApi_whenRequestHasCustomUserAgent_thenCorrect() 
   throws ClientProtocolException, IOException {

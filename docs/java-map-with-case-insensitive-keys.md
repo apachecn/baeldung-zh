@@ -18,7 +18,7 @@
 
 让我们添加下一个条目:
 
-```
+```java
 map.put("ABC", 2);
 ```
 
@@ -40,13 +40,13 @@ map.put("ABC", 2);
 
 幸运的是，`String` 已经提供了这个静态的`Comparator`:
 
-```
+```java
 public static final Comparator <String> CASE_INSENSITIVE_ORDER
 ```
 
 我们可以在构造函数中提供:
 
-```
+```java
 Map<String, Integer> treeMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 treeMap.put("abc", 1);
 treeMap.put("ABC", 2);
@@ -54,20 +54,20 @@ treeMap.put("ABC", 2);
 
 现在，当我们运行测试时，我们可以看到`Map `的大小是 1:
 
-```
+```java
 assertEquals(1, treeMap.size());
 ```
 
 并且该值被更新为 2:
 
-```
+```java
 assertEquals(2, treeMap.get("aBc").intValue());
 assertEquals(2, treeMap.get("ABc").intValue());
 ```
 
 现在让我们删除条目，使用相同的`String`，但是使用另一种情况:
 
-```
+```java
 treeMap.remove("aBC");
 assertEquals(0, treeMap.size());
 ```
@@ -84,7 +84,7 @@ assertEquals(0, treeMap.size());
 
 首先，我们需要添加`[commons-collections4](https://web.archive.org/web/20221208143859/https://search.maven.org/search?q=g:org.apache.commons%20a:commons-collections4)`[依赖](https://web.archive.org/web/20221208143859/https://search.maven.org/search?q=g:org.apache.commons%20a:commons-collections4):
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -94,7 +94,7 @@ assertEquals(0, treeMap.size());
 
 现在，我们可以使用`CaseInsensitiveMap `并添加两个条目:
 
-```
+```java
 Map<String, Integer> commonsHashMap = new CaseInsensitiveMap<>();
 commonsHashMap.put("abc", 1);
 commonsHashMap.put("ABC", 2);
@@ -102,7 +102,7 @@ commonsHashMap.put("ABC", 2);
 
 当我们测试它时，我们期望得到与之前看到的相同的结果:
 
-```
+```java
 assertEquals(1, commonsHashMap.size());
 assertEquals(2, commonsHashMap.get("aBc").intValue());
 assertEquals(2, commonsHashMap.get("ABc").intValue());
@@ -119,7 +119,7 @@ assertEquals(0, commonsHashMap.size());
 
 首先，让我们添加[的`spring-core`依赖](https://web.archive.org/web/20221208143859/https://search.maven.org/search?q=g:org.springframework%20a:spring-core):
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-core</artifactId>
@@ -129,7 +129,7 @@ assertEquals(0, commonsHashMap.size());
 
 现在，我们可以初始化一个新的`LinkedCaseInsensitiveMap`:
 
-```
+```java
 Map<String, Integer> linkedHashMap = new LinkedCaseInsensitiveMap<>();
 linkedHashMap.put("abc", 1);
 linkedHashMap.put("ABC", 2);
@@ -137,7 +137,7 @@ linkedHashMap.put("ABC", 2);
 
 添加测试它:
 
-```
+```java
 assertEquals(1, linkedHashMap.size());
 assertEquals(2, linkedHashMap.get("aBc").intValue());
 assertEquals(2, linkedHashMap.get("ABc").intValue());

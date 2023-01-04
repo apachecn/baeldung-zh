@@ -14,7 +14,7 @@ Quarkus 使得开发健壮和干净的应用程序变得非常容易。但是测
 
 首先，我们将添加[quar kus-reasteasy-Jackson](https://web.archive.org/web/20221205203711/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22io.quarkus%22%20a%3A%22quarkus-resteasy-jackson%22)、[quar kus-hibernate-ORM-panache](https://web.archive.org/web/20221205203711/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22io.quarkus%22%20a%3A%22quarkus-hibernate-orm-panache%22)、 [quarkus-jdbc-h2](https://web.archive.org/web/20221205203711/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22io.quarkus%22%20a%3A%22quarkus-jdbc-h2%22) 、 [quarkus-junit5-mockito](https://web.archive.org/web/20221205203711/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22io.quarkus%22%20a%3A%22quarkus-junit5-mockito%22) 和 [quarkus-test-h2](https://web.archive.org/web/20221205203711/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22io.quarkus%22%20a%3A%22quarkus-test-h2%22) Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.quarkus</groupId>
     <artifactId>quarkus-resteasy-jackson</artifactId>
@@ -39,7 +39,7 @@ Quarkus 使得开发健壮和干净的应用程序变得非常容易。但是测
 
 接下来，让我们创建我们的域实体:
 
-```
+```java
 public class Book extends PanacheEntity {
     private String title;
     private String author;
@@ -48,7 +48,7 @@ public class Book extends PanacheEntity {
 
 我们继续添加一个简单的 Panache 存储库，以及一个搜索书籍的方法:
 
-```
+```java
 public class BookRepository implements PanacheRepository {
 
     public Stream<Book> findBy(String query) {
@@ -59,7 +59,7 @@ public class BookRepository implements PanacheRepository {
 
 现在，让我们编写一个`LibraryService` 来容纳任何业务逻辑:
 
-```
+```java
 public class LibraryService {
 
     public Set<Book> find(String query) {
@@ -73,7 +73,7 @@ public class LibraryService {
 
 最后，让我们通过创建一个`LibraryResource`来通过 HTTP 公开我们的服务功能:
 
-```
+```java
 @Path("/library")
 public class LibraryResource {
 
@@ -89,7 +89,7 @@ public class LibraryResource {
 
 在编写任何测试之前，让我们确保我们的存储库中有一些书。有了 Quarkus，**我们可以使用 CDI `@Alternative`机制为我们的测试**提供一个定制的 bean 实现。让我们创建一个扩展了`BookRepository`的`TestBookRepository`:
 
-```
+```java
 @Priority(1)
 @Alternative
 @ApplicationScoped
@@ -110,7 +110,7 @@ public class TestBookRepository extends BookRepository {
 
 让我们从创建一个简单放心的集成测试开始:
 
-```
+```java
 @QuarkusTest
 class LibraryResourceIntegrationTest {
 
@@ -135,14 +135,14 @@ class LibraryResourceIntegrationTest {
 
 让我们注入资源 URL，而不是硬编码我们的 HTTP 端点的路径:
 
-```
+```java
 @TestHTTPResource("/library/book")
 URL libraryEndpoint;
 ```
 
 然后，让我们在请求中使用它:
 
-```
+```java
 given().param("query", "Dune")
   .when().get(libraryEndpoint)
   .then().statusCode(200);
@@ -150,7 +150,7 @@ given().param("query", "Dune")
 
 或者，不使用放心，让我们简单地打开一个到注入的 URL 的连接并测试响应:
 
-```
+```java
 @Test
 void whenGetBooks_thenBooksShouldBeFound() throws IOException {
     assertTrue(IOUtils.toString(libraryEndpoint.openStream(), defaultCharset()).contains("Asimov"));
@@ -163,7 +163,7 @@ void whenGetBooks_thenBooksShouldBeFound() throws IOException {
 
 让我们更进一步，使用 Quarkus 提供的`@TestHTTPEndpoint`注释来配置我们的端点:
 
-```
+```java
 @TestHTTPEndpoint(LibraryResource.class)
 @TestHTTPResource("book")
 URL libraryEndpoint;
@@ -173,7 +173,7 @@ URL libraryEndpoint;
 
 **`@TestHTTPEndpoint` 也可以应用于类级别，在这种情况下，放心将自动为所有请求加上`LibraryResource`的`Path`** :
 
-```
+```java
 @QuarkusTest
 @TestHTTPEndpoint(LibraryResource.class)
 class LibraryHttpEndpointIntegrationTest {
@@ -191,7 +191,7 @@ class LibraryHttpEndpointIntegrationTest {
 
 谈到依赖注入，在 Quarkus 测试中的**，我们可以用`@Inject`来表示任何需要的依赖**。让我们通过为我们的`LibraryService`创建一个测试来看看这一点:
 
-```
+```java
 @QuarkusTest
 class LibraryServiceIntegrationTest {
 
@@ -207,7 +207,7 @@ class LibraryServiceIntegrationTest {
 
 现在，让我们试着测试一下我们的派头:
 
-```
+```java
 class BookRepositoryIntegrationTest {
 
     @Inject
@@ -222,7 +222,7 @@ class BookRepositoryIntegrationTest {
 
 但是当我们运行测试时，它失败了。这是因为它**需要在一个事务**的上下文中运行，并且没有活动的事务。这可以简单地通过在测试类中添加`@Transactional`来解决。或者，如果我们愿意，我们可以定义我们自己的原型来捆绑`@QuarkusTest`和`@Transactional.` 让我们通过创建`@QuarkusTransactionalTest`注释来实现这一点:
 
-```
+```java
 @QuarkusTest
 @Stereotype
 @Transactional
@@ -234,7 +234,7 @@ public @interface QuarkusTransactionalTest {
 
 现在，让我们将它应用到我们的测试中:
 
-```
+```java
 @QuarkusTransactionalTest
 class BookRepositoryIntegrationTest
 ```
@@ -253,7 +253,7 @@ class BookRepositoryIntegrationTest
 
 如果我们不想要一个全局定义的模拟，而是希望**只在一个测试**的范围内进行模拟，我们可以使用`@QuarkusMock`:
 
-```
+```java
 @QuarkusTest
 class LibraryServiceQuarkusMockUnitTest {
 
@@ -281,7 +281,7 @@ class LibraryServiceQuarkusMockUnitTest {
 
 让我们稍微简化一下，**使用 Quarkus `@InjectMock` 注释代替`@QuarkusMock`** :
 
-```
+```java
 @QuarkusTest
 class LibraryServiceInjectMockUnitTest {
 
@@ -310,7 +310,7 @@ class LibraryServiceInjectMockUnitTest {
 
 如果我们只对监视感兴趣，而不是替换 bean 行为，我们可以使用提供的`@InjectSpy`注释:
 
-```
+```java
 @QuarkusTest
 class LibraryResourceInjectSpyIntegrationTest {
 
@@ -335,7 +335,7 @@ class LibraryResourceInjectSpyIntegrationTest {
 
 为此，我们从实现一个`QuarkusTestProfile`开始:
 
-```
+```java
 public class CustomTestProfile implements QuarkusTestProfile {
 
     @Override
@@ -357,13 +357,13 @@ public class CustomTestProfile implements QuarkusTestProfile {
 
 现在让我们通过添加一个`custom-profile` config 属性来配置我们的`application.properties`，该属性将把我们的 H2 存储从内存更改为文件:
 
-```
+```java
 %custom-profile.quarkus.datasource.jdbc.url = jdbc:h2:file:./testdb
 ```
 
 最后，有了所有的资源和配置，让我们编写测试:
 
-```
+```java
 @QuarkusTest
 @TestProfile(CustomBookRepositoryProfile.class)
 class CustomLibraryResourceManualTest {
@@ -389,7 +389,7 @@ class CustomLibraryResourceManualTest {
 
 Quarkus 提供了测试本地可执行文件的可能性。让我们创建一个本机映像测试:
 
-```
+```java
 @NativeImageTest
 @QuarkusTestResource(H2DatabaseTestResource.class)
 class NativeLibraryResourceIT extends LibraryHttpEndpointIntegrationTest {
@@ -398,7 +398,7 @@ class NativeLibraryResourceIT extends LibraryHttpEndpointIntegrationTest {
 
 现在，通过运行:
 
-```
+```java
 mvn verify -Pnative
 ```
 
@@ -408,7 +408,7 @@ mvn verify -Pnative
 
 @ `QuarkusTestResource`注释也可以用来启动定制服务，比如 Testcontainers。我们所需要做的就是实现`QuarkusTestResourceLifecycleManager`接口，并用以下代码注释我们的测试:
 
-```
+```java
 @QuarkusTestResource(OurCustomResourceImpl.class)
 ```
 

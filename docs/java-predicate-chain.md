@@ -10,7 +10,7 @@
 
 首先，**让我们看看如何使用一个简单的`Predicate`** 来过滤一个`List`的名字:
 
-```
+```java
 @Test
 public void whenFilterList_thenSuccess(){
    List<String> names = Arrays.asList("Adam", "Alexander", "John", "Tom");
@@ -25,7 +25,7 @@ public void whenFilterList_thenSuccess(){
 
 在本例中，我们使用`Predicate`过滤了姓名的`List`，只留下以“A”开头的姓名:
 
-```
+```java
 name -> name.startsWith("A")
 ```
 
@@ -35,7 +35,7 @@ name -> name.startsWith("A")
 
 如果我们想要应用多个`Predicates`，**，一个选择是简单地链接多个过滤器:**
 
-```
+```java
 @Test
 public void whenFilterListWithMultipleFilters_thenSuccess(){
     List<String> result = names.stream()
@@ -56,7 +56,7 @@ public void whenFilterListWithMultipleFilters_thenSuccess(){
 
 现在，我们可以用一个复杂的`Predicate` : 滤波器来代替使用多个滤波器
 
-```
+```java
 @Test
 public void whenFilterListWithComplexPredicate_thenSuccess(){
     List<String> result = names.stream()
@@ -80,7 +80,7 @@ public void whenFilterListWithComplexPredicate_thenSuccess(){
 
 在这个例子中，我们将显式定义我们的`Predicates`，然后我们将使用`Predicate.and():`组合它们
 
-```
+```java
 @Test
 public void whenFilterListWithCombinedPredicatesUsingAnd_thenSuccess(){
     Predicate<String> predicate1 =  str -> str.startsWith("A");
@@ -103,7 +103,7 @@ public void whenFilterListWithCombinedPredicatesUsingAnd_thenSuccess(){
 
 让我们提取以“J”开头的名称，以及长度小于 4 的名称:
 
-```
+```java
 @Test
 public void whenFilterListWithCombinedPredicatesUsingOr_thenSuccess(){
     Predicate<String> predicate1 =  str -> str.startsWith("J");
@@ -122,7 +122,7 @@ public void whenFilterListWithCombinedPredicatesUsingOr_thenSuccess(){
 
 我们也可以在组合`Predicates`时使用`Predicate.negate()`:
 
-```
+```java
 @Test
 public void whenFilterListWithCombinedPredicatesUsingOrAndNegate_thenSuccess(){
     Predicate<String> predicate1 =  str -> str.startsWith("J");
@@ -145,7 +145,7 @@ public void whenFilterListWithCombinedPredicatesUsingOrAndNegate_thenSuccess(){
 
 我们也可以通过将`Predicate`转换成:
 
-```
+```java
 @Test
 public void whenFilterListWithCombinedPredicatesInline_thenSuccess(){
     List<String> result = names.stream()
@@ -164,7 +164,7 @@ public void whenFilterListWithCombinedPredicatesInline_thenSuccess(){
 
 在下面的例子中，我们使用`Predicate.and()`组合了`Predicates`中的`List`:
 
-```
+```java
 @Test
 public void whenFilterListWithCollectionOfPredicatesUsingAnd_thenSuccess(){
     List<Predicate<String>> allPredicates = new ArrayList<Predicate<String>>();
@@ -183,13 +183,13 @@ public void whenFilterListWithCollectionOfPredicatesUsingAnd_thenSuccess(){
 
 请注意，我们使用基本标识作为:
 
-```
+```java
 x->true
 ```
 
 但是如果我们想用`Predicate.or()`将它们结合起来，那就不一样了:
 
-```
+```java
 @Test
 public void whenFilterListWithCollectionOfPredicatesUsingOr_thenSuccess(){
     List<String> result = names.stream()

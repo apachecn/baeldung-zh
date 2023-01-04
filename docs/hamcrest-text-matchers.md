@@ -12,7 +12,7 @@
 
 首先，我们需要向我们的`pom.xml`添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.hamcrest</groupId>
     <artifactId>java-hamcrest</artifactId>
@@ -33,7 +33,7 @@
 
 让我们检查两个`Strings`是否相等——忽略大小写:
 
-```
+```java
 @Test
 public void whenTwoStringsAreEqual_thenCorrect() {
     String first = "hello";
@@ -45,7 +45,7 @@ public void whenTwoStringsAreEqual_thenCorrect() {
 
 我们还可以检查两个`Strings`是否相等——忽略前导和尾随空格:
 
-```
+```java
 @Test
 public void whenTwoStringsAreEqualWithWhiteSpace_thenCorrect() {
     String first = "hello";
@@ -59,7 +59,7 @@ public void whenTwoStringsAreEqualWithWhiteSpace_thenCorrect() {
 
 我们可以通过使用`blankString()`和`blankOrNullString()`匹配器来检查`String`是否为空，这意味着它只包含空白:
 
-```
+```java
 @Test
 public void whenStringIsBlank_thenCorrect() {
     String first = "  ";
@@ -73,7 +73,7 @@ public void whenStringIsBlank_thenCorrect() {
 
 另一方面，如果我们想验证一个`String`是否为空，我们可以使用`emptyString()`匹配器:
 
-```
+```java
 @Test
 public void whenStringIsEmpty_thenCorrect() {
     String first = "";
@@ -89,7 +89,7 @@ public void whenStringIsEmpty_thenCorrect() {
 
 我们还可以使用`matchesPattern()`函数检查给定文本是否匹配正则表达式:
 
-```
+```java
 @Test
 public void whenStringMatchPattern_thenCorrect() {
     String first = "hello";
@@ -102,7 +102,7 @@ public void whenStringMatchPattern_thenCorrect() {
 
 我们可以通过使用`containsString()`函数或`containsStringIgnoringCase():`来确定一个文本是否包含另一个子文本
 
-```
+```java
 @Test
 public void whenVerifyStringContains_thenCorrect() {
     String first = "hello";
@@ -114,7 +114,7 @@ public void whenVerifyStringContains_thenCorrect() {
 
 如果我们希望子字符串按照特定的顺序排列，我们可以调用`stringContainsInOrder()`匹配器:
 
-```
+```java
 @Test
 public void whenVerifyStringContainsInOrder_thenCorrect() {
     String first = "hello";
@@ -125,7 +125,7 @@ public void whenVerifyStringContainsInOrder_thenCorrect() {
 
 接下来，让我们看看如何检查一个`String`以一个给定的`String`开始:
 
-```
+```java
 @Test
 public void whenVerifyStringStartsWith_thenCorrect() {
     String first = "hello";
@@ -137,7 +137,7 @@ public void whenVerifyStringStartsWith_thenCorrect() {
 
 最后，我们可以检查一个`String`是否以指定的`String`结束:
 
-```
+```java
 @Test
 public void whenVerifyStringEndsWith_thenCorrect() {
     String first = "hello";

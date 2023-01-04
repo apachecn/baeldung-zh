@@ -53,11 +53,11 @@
 
 这就是为什么与`HashMap`相比，构造函数提供了额外的`concurrencyLevel`参数来控制估计要使用的线程数量:
 
-```
+```java
 public ConcurrentHashMap(
 ```
 
-```
+```java
 public ConcurrentHashMap(
  int initialCapacity, float loadFactor, int concurrencyLevel)
 ```
@@ -74,7 +74,7 @@ public ConcurrentHashMap(
 
 为了证实，我们来看一个记忆不一致的案例:
 
-```
+```java
 @Test
 public void givenHashMap_whenSumParallel_thenError() throws Exception {
     Map<String, Integer> map = new HashMap<>();
@@ -120,7 +120,7 @@ private List<Integer> parallelSum100(Map<String, Integer> map,
 
 至于`ConcurrentHashMap`，我们可以得到一致正确的结果:
 
-```
+```java
 @Test
 public void givenConcurrentMap_whenSumParallel_thenCorrect() 
   throws Exception {
@@ -144,7 +144,7 @@ public void givenConcurrentMap_whenSumParallel_thenCorrect()
 
 `ConcurrentMap`提供的大多数`API`不允许`null`键或值，例如:
 
-```
+```java
 @Test(expected = NullPointerException.class)
 public void givenConcurrentHashMap_whenPutWithNullKey_thenThrowsNPE() {
     concurrentMap.put(null, new Object());
@@ -158,7 +158,7 @@ public void givenConcurrentHashMap_whenPutNullValue_thenThrowsNPE() {
 
 然而，**对于`compute*`和`merge`动作，计算出的值可以是`null`，这表示键-值映射如果存在则被移除，或者如果先前不存在则保持不存在**。
 
-```
+```java
 @Test
 public void givenKeyPresent_whenComputeRemappingNull_thenMappingRemoved() {
     Object oldValue = new Object();
@@ -183,7 +183,7 @@ public void givenKeyPresent_whenComputeRemappingNull_thenMappingRemoved() {
 
 让我们为`get`和`put`的性能编写一个快速微基准，并将其与`Hashtable`和`Collections.synchronizedMap`进行比较，在 4 个线程中运行两个操作 500，000 次。
 
-```
+```java
 @Test
 public void givenMaps_whenGetPut500KTimes_thenConcurrentMapFaster() 
   throws Exception {
@@ -229,7 +229,7 @@ private long timeElapseForGetPut(Map<String, Object> map)
 
 也就是说，在具有平均开发系统的 OS X 系统上，我们看到了连续运行 100 次的平均样本结果(以纳秒为单位):
 
-```
+```java
 Hashtable: 1142.45
 SynchronizedHashMap: 1273.89
 ConcurrentHashMap: 230.2
@@ -247,7 +247,7 @@ ConcurrentHashMap: 230.2
 
 *   包括`size`、`isEmpty`和`containsValue`在内的聚集状态方法的结果通常仅在地图没有在其他线程中进行并发更新时有用:
 
-```
+```java
 @Test
 public void givenConcurrentMap_whenUpdatingAndGetSize_thenError() 
   throws InterruptedException {
@@ -284,7 +284,7 @@ public void givenConcurrentMap_whenUpdatingAndGetSize_thenError()
 *   迭代器只被设计用于单线程，因为它们提供弱一致性而不是快速失败遍历，并且它们永远不会抛出`ConcurrentModificationException.`
 *   默认的初始表容量是 16，并根据指定的并发级别进行调整:
 
-```
+```java
 public ConcurrentHashMap(
   int initialCapacity, float loadFactor, int concurrencyLevel) {
 
@@ -327,7 +327,7 @@ public ConcurrentHashMap(
 
 除了`TreeMap`的特性，密钥插入、移除、更新和访问操作都有线程安全保证。以下是并发导航时与`TreeMap` 的比较:
 
-```
+```java
 @Test
 public void givenSkipListMap_whenNavConcurrently_thenCountCorrect() 
   throws InterruptedException {

@@ -14,7 +14,7 @@ Logback 的电子邮件通知特性需要使用一个`SMTPAppender.`。`SMTPAppe
 
 让我们在`POM`中添加这些依赖项:
 
-```
+```java
 <dependency>
     <groupId>javax.mail</groupId>
     <artifactId>mail</artifactId>
@@ -38,7 +38,7 @@ Logback 的电子邮件通知特性需要使用一个`SMTPAppender.`。`SMTPAppe
 
 让我们在我们的`logback.xml`中配置一个`SMTPAppender`:
 
-```
+```java
 <appender name="emailAppender" class="ch.qos.logback.classic.net.SMTPAppender">
     <smtpHost>OUR-SMTP-HOST-ADDRESS</smtpHost>
     <!-- one or more recipients are possible -->
@@ -54,7 +54,7 @@ Logback 的电子邮件通知特性需要使用一个`SMTPAppender.`。`SMTPAppe
 
 此外，我们将把这个 appender 添加到我们的 Logback 配置的`root`元素中:
 
-```
+```java
 <root level="INFO">
     <appender-ref ref="emailAppender"/>
 </root>
@@ -71,7 +71,7 @@ Logback 的电子邮件通知特性需要使用一个`SMTPAppender.`。`SMTPAppe
 
 为了触发仅包含最近五个日志事件的电子邮件通知，我们将:
 
-```
+```java
 <appender name="emailAppender" class="ch.qos.logback.classic.net.SMTPAppender">
     <smtpHost>OUR-SMTP-HOST-ADDRESS</smtpHost>
     <to>EMAIL-RECIPIENT</to>
@@ -92,7 +92,7 @@ Logback 的电子邮件通知特性需要使用一个`SMTPAppender.`。`SMTPAppe
 
 现在让我们使用 STARTTLS 为 Gmail 配置我们的 appender:
 
-```
+```java
 <appender name="emailAppender" class="ch.qos.logback.classic.net.SMTPAppender">
     <smtpHost>smtp.gmail.com</smtpHost>
     <smtpPort>587</smtpPort>

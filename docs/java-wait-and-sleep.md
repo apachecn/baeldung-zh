@@ -16,7 +16,7 @@
 
 下面是对这两个核心 API 的简单介绍:
 
-```
+```java
 private static Object LOCK = new Object();
 
 private static void sleepWaitExamples() 
@@ -50,7 +50,7 @@ private static void sleepWaitExamples()
 
 例如，你可以这样做:
 
-```
+```java
 synchronized (b) {
     while (b.sum == 0) {
         System.out.println("Waiting for ThreadB to complete...");
@@ -64,7 +64,7 @@ synchronized (b) {
 
 然后，下面是另一个线程如何通过调用监视器上的`notify()`来**唤醒等待的线程:**
 
-```
+```java
 int sum;
 
 @Override 

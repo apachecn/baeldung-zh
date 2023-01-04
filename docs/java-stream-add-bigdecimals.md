@@ -16,14 +16,14 @@ Stream API 提供了数字流，包括`IntStream, DoubleStream,` 和 `LongStream
 
 让我们通过创建一个数字流来提醒自己这些是如何工作的。然后，我们用`[IntStream#sum](/web/20220628125819/https://www.baeldung.com/java-intstream-convert)`计算它的总数:
 
-```
+```java
 IntStream intNumbers = IntStream.range(0, 3);
 assertEquals(3, intNumbers.sum());
 ```
 
 我们可以从一个`Double`列表开始做类似的事情。通过使用 streams，我们可以使用`mapToDouble`从一个对象流转换成一个`DoubleStream`:
 
-```
+```java
 List<Double> doubleNumbers = Arrays.asList(23.48, 52.26, 13.5);
 double result = doubleNumbers.stream()
     .mapToDouble(Double::doubleValue)
@@ -39,7 +39,7 @@ assertEquals(89.24, result, .1);
 
 不依赖`sum`，我们可以用 *[Stream.reduce](/web/20220628125819/https://www.baeldung.com/java-stream-reduce) :*
 
-```
+```java
 Stream<Integer> intNumbers = Stream.of(5, 1, 100);
 int result = intNumbers.reduce(0, Integer::sum);
 assertEquals(106, result);
@@ -47,7 +47,7 @@ assertEquals(106, result);
 
 **这适用于任何可以逻辑相加的东西**，包括`BigDecimal`:
 
-```
+```java
 Stream<BigDecimal> bigDecimalNumber = 
   Stream.of(BigDecimal.ZERO, BigDecimal.ONE, BigDecimal.TEN);
 BigDecimal result = bigDecimalNumber.reduce(BigDecimal.ZERO, BigDecimal::add);

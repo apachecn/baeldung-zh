@@ -14,7 +14,7 @@
 
 对于组织来说，让代理控制互联网访问是很常见的。如果我们试图**通过代理本地网络访问 Jsoup，我们将得到一个异常**:
 
-```
+```java
 java.net.SocketTimeoutException: connect timed out
 ```
 
@@ -30,7 +30,7 @@ Jsoup 使用代理的另一个常见原因是防止网站阻止 IP 地址。
 
 当使用 Maven 时，我们需要将 Jsoup 依赖关系添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.jsoup</groupId>
     <artifactId>jsoup</artifactId>
@@ -40,7 +40,7 @@ Jsoup 使用代理的另一个常见原因是防止网站阻止 IP 地址。
 
 在 Gradle 中，我们必须在`build.gradle`中声明我们的依赖关系:
 
-```
+```java
 compile 'org.jsoup:jsoup:1.13.1'
 ```
 
@@ -48,7 +48,7 @@ compile 'org.jsoup:jsoup:1.13.1'
 
 向 Jsoup 添加代理支持非常简单。**我们需要做的就是在构建`Connection`对象时调用`[proxy(String, int)](https://web.archive.org/web/20221208143841/https://jsoup.org/apidocs/org/jsoup/Connection.html#proxy(java.lang.String,int))`方法**:
 
-```
+```java
 Jsoup.connect("https://spring.io/blog")
   .proxy("127.0.0.1", 1080)
   .get();
@@ -60,7 +60,7 @@ Jsoup.connect("https://spring.io/blog")
 
 或者，使用`Proxy`类将代理添加到 Jsoup，我们**调用`Connection`对象的`[proxy(java.net.Proxy)](https://web.archive.org/web/20221208143841/https://jsoup.org/apidocs/org/jsoup/Connection.html#proxy(java.net.Proxy))`方法:**
 
-```
+```java
 Proxy proxy = new Proxy(Proxy.Type.HTTP, 
   new InetSocketAddress("127.0.0.1", 1080));
 

@@ -14,7 +14,7 @@ Apache OpenNLP 是一个开源的自然语言处理 Java 库。
 
 首先，我们需要将主依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.apache.opennlp</groupId>
     <artifactId>opennlp-tools</artifactId>
@@ -38,7 +38,7 @@ Apache OpenNLP 是一个开源的自然语言处理 Java 库。
 
 为了实现句子检测，我们加载模型并将其传递到的实例中。然后，我们简单地将一个文本传递到`sentDetect()`方法中，以便在句子边界处分割它:
 
-```
+```java
 @Test
 public void givenEnglishModel_whenDetect_thenSentencesAreDetected() 
   throws Exception {
@@ -77,7 +77,7 @@ OpenNLP 中有三种类型的标记化器。
 
 接下来，我们将使用加载的模型创建一个`TokenizerME`的实例，并使用`tokenize()`方法对任何`String:`执行标记化
 
-```
+```java
 @Test
 public void givenEnglishModel_whenTokenize_thenTokensAreDetected() 
   throws Exception {
@@ -99,7 +99,7 @@ public void givenEnglishModel_whenTokenize_thenTokensAreDetected()
 
 顾名思义，这个记号赋予器只是使用空白字符作为分隔符将句子分割成记号:
 
-```
+```java
 @Test
 public void givenWhitespaceTokenizer_whenTokenize_thenTokensAreDetected() 
   throws Exception {
@@ -118,7 +118,7 @@ public void givenWhitespaceTokenizer_whenTokenize_thenTokensAreDetected()
 
 这个分词器比`WhitespaceTokenizer`稍微复杂一点，它把句子分成单词、数字和标点符号。这是默认行为，不需要任何模型:
 
-```
+```java
 @Test
 public void givenSimpleTokenizer_whenTokenize_thenTokensAreDetected() 
   throws Exception {
@@ -140,7 +140,7 @@ NER 的目标是在给定的文本中找到命名的实体，如人、地点、�
 
 OpenNLP 为人名、日期和时间、位置和组织使用预定义的模型。我们需要使用`TokenNameFinderModel` 和加载模型，并将其传递给`NameFinderME.`的实例，然后我们可以使用`find()`方法在给定文本中查找命名实体:
 
-```
+```java
 @Test
 public void 
   givenEnglishPersonModel_whenNER_thenPersonsAreDetected() 
@@ -185,7 +185,7 @@ public void
 
 类似于 NER 的例子，我们加载适当的模型，然后在一组标记上使用`POSTaggerME`及其方法`tag()`来标记句子:
 
-```
+```java
 @Test
 public void givenPOSModel_whenPOSTagging_thenPOSAreDetected() 
   throws Exception {
@@ -230,7 +230,7 @@ Apache OpenNLP 提供了两种类型的词汇化:
 
 让我们看一个使用字典文件的代码示例:
 
-```
+```java
 @Test
 public void givenEnglishDictionary_whenLemmatize_thenLemmasAreDetected() 
   throws Exception {
@@ -269,7 +269,7 @@ public void givenEnglishDictionary_whenLemmatize_thenLemmasAreDetected()
 
 与之前类似，我们在调用`chunk()`方法:之前，对句子进行标记，并对标记使用词性标注
 
-```
+```java
 @Test
 public void 
   givenChunkerModel_whenChunk_thenChunksAreDetected() 
@@ -319,7 +319,7 @@ public void
 
 我们可以将训练数据文件加载到一个`LanguageDetectorSampleStream,`中定义一些训练数据参数，创建一个模型，然后用这个模型来检测一个文本的语言:
 
-```
+```java
 @Test
 public void 
   givenLanguageDictionary_whenLanguageDetect_thenLanguageIsDetected() 

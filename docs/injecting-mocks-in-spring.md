@@ -14,7 +14,7 @@
 
 对于单元测试和模拟对象，我们需要以下 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter</artifactId>
@@ -41,7 +41,7 @@
 
 首先，让我们创建一个将要测试的简单服务:
 
-```
+```java
 @Service
 public class NameService {
     public String getUserName(String id) {
@@ -52,7 +52,7 @@ public class NameService {
 
 然后我们将它注入到`UserService`类中:
 
-```
+```java
 @Service
 public class UserService {
 
@@ -73,7 +73,7 @@ public class UserService {
 
 我们还需要一个标准的 Spring Boot 主类来扫描 beans 并初始化应用程序:
 
-```
+```java
 @SpringBootApplication
 public class MocksApplication {
     public static void main(String[] args) {
@@ -86,7 +86,7 @@ public class MocksApplication {
 
 现在让我们继续测试逻辑。首先，我们必须为测试配置应用程序上下文:
 
-```
+```java
 @Profile("test")
 @Configuration
 public class NameServiceTestConfiguration {
@@ -102,7 +102,7 @@ public class NameServiceTestConfiguration {
 
 现在我们可以编写单元测试了:
 
-```
+```java
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = MocksApplication.class)

@@ -12,7 +12,7 @@
 
 **我们正在使用 [`spring-boot-starter-batch`](https://web.archive.org/web/20220627185434/https://search.maven.org/classic/#search%7Cga%7C1%7Cspring-boot-starter-batch)** ，所以首先让我们在`pom.xml`中设置所需的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-batch</artifactId>
@@ -44,7 +44,7 @@
 
 两个随后的`Step`从`BookRecord`提取特定信息，然后将这些信息映射到`Book` s(步骤 1)和`BookDetail` s(步骤 2):
 
-```
+```java
 @Bean
 public Step step1(
   ItemReader<BookRecord> csvItemReader, ItemWriter<Book> jsonItemWriter) throws IOException {
@@ -74,7 +74,7 @@ public Step step2(
 
 现在让我们**配置 CSV 文件输入阅读器，使用`FlatFileItemReader`** 将结构化书籍信息反序列化为`BookRecord`对象:
 
-```
+```java
 private static final String[] TOKENS = { 
   "bookname", "bookauthor", "bookformat", "isbn", "publishyear" };
 
@@ -102,7 +102,7 @@ public FlatFileItemReader<BookRecord> csvItemReader(
 
 然后我们类似地定义`JsonFileItemWriter`输出编写器:
 
-```
+```java
 @Bean
 @StepScope
 public JsonFileItemWriter<Book> jsonItemWriter(
@@ -125,7 +125,7 @@ public JsonFileItemWriter<Book> jsonItemWriter(
 
 **当启动`Job` :** 时，我们配置我们自己的`JobLauncher`来传递一个自定义的`JobParameters`实例
 
-```
+```java
 @SpringBootApplication
 public class SpringBatchApplication implements CommandLineRunner {
 
@@ -155,7 +155,7 @@ public class SpringBatchApplication implements CommandLineRunner {
 
 让我们为测试创建一个基本结构:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBatchTest
 @EnableAutoConfiguration
@@ -198,7 +198,7 @@ public class SpringBatchIntegrationTest {
 
 然后，我们可以将结果与预期的测试输出进行比较:
 
-```
+```java
 @Test
 public void givenReferenceOutput_whenJobExecuted_thenSuccess() throws Exception {
     // given
@@ -223,7 +223,7 @@ Spring Batch Test 为使用`AssertFile` 类验证输出提供了一个有用的*
 
 有时端到端测试整个`Job`非常昂贵，因此测试单个`Steps`是有意义的:
 
-```
+```java
 @Test
 public void givenReferenceOutput_whenStep1Executed_thenSuccess() throws Exception {
     // given
@@ -271,7 +271,7 @@ public void whenStep2Executed_thenSuccess() {
 
 现在让我们测试一下`FlatFileItemReader` `.` **，回想一下我们将它公开为`@StepScope` bean，所以我们想使用 Spring Batch 对这个**的专用支持:
 
-```
+```java
 // previously autowired itemReader
 
 @Test
@@ -305,7 +305,7 @@ public void givenMockedStep_whenReaderCalled_thenSuccess() throws Exception {
 
 接下来，让我们测试`JsonFileItemWriter`并验证它的输出:
 
-```
+```java
 @Test
 public void givenMockedStep_whenWriterCalled_thenSuccess() throws Exception {
     // given

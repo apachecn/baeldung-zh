@@ -30,7 +30,7 @@ JWS 是一个运行时环境，它随 Java SE 一起提供给客户机的 web �
 
 让我们从编写一个简单的 Java 应用程序开始:
 
-```
+```java
 public class Hello {
     public static void main(String[] args) {
         JFrame f = new JFrame("main");
@@ -50,7 +50,7 @@ public class Hello {
 
 我们只需要将这个示例 Swing 类和下面的 JNLP 文件一起打包到一个 WAR 文件中:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <jnlp spec="1.0+" 
   codebase="http://localhost:8080/jnlp-example">
@@ -72,13 +72,13 @@ public class Hello {
 
 让我们在本文后面用一个合适的 servlet 来解决这个问题。现在，让我们将下载的 JAR 文件作为`index.html`放在根文件夹中，并将其链接到一个锚元素:
 
-```
+```java
 <a href="hello.jnlp">Launch</a>
 ```
 
 **让我们也在 JAR 清单中设置主类**。这可以通过在`pom.xml`文件中配置 JAR 插件来实现。类似地，我们将 JAR 文件移到了`WEB-INF/lib`之外，因为它只用于下载，即不用于类加载器:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-jar-plugin</artifactId>
@@ -136,7 +136,7 @@ servlet 还使用通配符`$$codebase`、`$$hostname`、`$$name`和`$$site`，�
 
 为了添加 servlet，让我们为 JAR 和 JNLP 模式配置一个普通的 servlet 映射到我们的`web.xml`:
 
-```
+```java
 <servlet>
     <servlet-name>JnlpDownloadServlet</servlet-name>
     <servlet-class>
@@ -157,7 +157,7 @@ servlet 本身包含在一组 jar(`jardiff.jar`和`jnlp-servlet.jar`)中，这�
 
 在 GitHub 示例中，这些文件包含在`java-core-samples-lib`文件夹中，并作为 web 资源由 Maven WAR 插件包含:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-war-plugin</artifactId>

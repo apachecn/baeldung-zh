@@ -12,7 +12,7 @@ Spring Security 为我们处理认证凭证的接收和解析。
 
 我们可以使用一些样板代码来读取安全上下文:
 
-```
+```java
 SecurityContext context = SecurityContextHolder.getContext();
 Authentication authentication = context.getAuthentication();
 ```
@@ -27,7 +27,7 @@ Authentication authentication = context.getAuthentication();
 
 如果我们有一个 Spring Boot 的最新版本，那么我们只需要包含对`[spring-boot-starter-security](https://web.archive.org/web/20221125130800/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-security):`的依赖
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -36,7 +36,7 @@ Authentication authentication = context.getAuthentication();
 
 否则，我们可以将 [spring-security-core](https://web.archive.org/web/20221125130800/https://search.maven.org/search?q=g:org.springframework.security%20a:spring-security-core) 升级到 5.2.1 的最低版本。
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-core</artifactId>
@@ -52,7 +52,7 @@ Authentication authentication = context.getAuthentication();
 
 让我们读取`Authentication`对象，这样我们就可以返回它的详细信息:
 
-```
+```java
 @GetMapping("/authentication")
 public Object getAuthentication(@CurrentSecurityContext(expression = "authentication") 
   Authentication authentication) {
@@ -64,7 +64,7 @@ public Object getAuthentication(@CurrentSecurityContext(expression = "authentica
 
 让我们来测试一下:
 
-```
+```java
 @Test
 public void givenOAuth2Context_whenAccessingAuthentication_ThenRespondTokenDetails() {
     ClientCredentialsResourceDetails resourceDetails = 
@@ -86,7 +86,7 @@ public void givenOAuth2Context_whenAccessingAuthentication_ThenRespondTokenDetai
 
 如果我们只想从我们的认证数据中得到`Principal`，我们可以改变 SpEL 表达式和注入的对象:
 
-```
+```java
 @GetMapping("/principal")
 public String getPrincipal(@CurrentSecurityContext(expression = "authentication.principal") 
   Principal principal) { 
@@ -98,7 +98,7 @@ public String getPrincipal(@CurrentSecurityContext(expression = "authentication.
 
 让我们来测试一下:
 
-```
+```java
 @Test
 public void givenOAuth2Context_whenAccessingPrincipal_ThenRespondBaeldung() {
     ClientCredentialsResourceDetails resourceDetails = 

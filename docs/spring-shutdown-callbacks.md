@@ -23,7 +23,7 @@ Spring 支持组件级和上下文级的关闭回调。我们可以使用以下�
 
 让我们创建一个使用 *@PreDestroy* 的 bean:
 
-```
+```java
 @Component
 public class Bean1 {
 
@@ -41,7 +41,7 @@ public class Bean1 {
 
 我们的第二个 bean 将实现`DisposableBean`接口来注册关闭回调:
 
-```
+```java
 @Component
 public class Bean2 implements DisposableBean {
 
@@ -57,7 +57,7 @@ public class Bean2 implements DisposableBean {
 
 对于这种方法，首先我们将创建一个带有自定义销毁方法的类:
 
-```
+```java
 public class Bean3 {
 
     public void destroy() {
@@ -69,7 +69,7 @@ public class Bean3 {
 
 然后，我们创建初始化 bean 的配置类，并将它的`destroy()`方法标记为我们的关闭回调:
 
-```
+```java
 @Configuration
 public class ShutdownHookConfiguration {
 
@@ -82,7 +82,7 @@ public class ShutdownHookConfiguration {
 
 注册销毁方法的 XML 方式是:
 
-```
+```java
 <bean class="com.baeldung.shutdownhooks.config.Bean3"
   destroy-method="destroy">
 ```
@@ -93,7 +93,7 @@ public class ShutdownHookConfiguration {
 
 为此，让我们创建一个自定义上下文监听器:
 
-```
+```java
 public class ExampleServletContextListener
   implements ServletContextListener {
 
@@ -112,7 +112,7 @@ public class ExampleServletContextListener
 
 我们需要将其注册到配置类中的`ServletListenerRegistrationBean`:
 
-```
+```java
 @Bean
 ServletListenerRegistrationBean<ServletContextListener> servletListener() {
     ServletListenerRegistrationBean<ServletContextListener> srb

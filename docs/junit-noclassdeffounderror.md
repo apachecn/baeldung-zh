@@ -30,7 +30,7 @@ Java 找不到类的定义有几个原因，它们是:
 
 在这两种情况下，打印相同的堆栈跟踪:
 
-```
+```java
 java.lang.NoClassDefFoundError: org/hamcrest/SelfDescribing
 	at java.base/java.lang.ClassLoader.defineClass1(Native Method)
 	at java.base/java.lang.ClassLoader.defineClass(ClassLoader.java:1010)
@@ -54,7 +54,7 @@ java.lang.NoClassDefFoundError: org/hamcrest/SelfDescribing
 
 运行 JUnit 测试时生成的堆栈跟踪是:
 
-```
+```java
 java.lang.NoClassDefFoundError: org/junit/runner/manipulation/Filter
 	at java.base/java.lang.Class.forName0(Native Method)
 	at java.base/java.lang.Class.forName(Class.java:377)
@@ -75,7 +75,7 @@ java.lang.NoClassDefFoundError: org/junit/runner/manipulation/Filter
 
 `pom.xml`中的不正确设置如下:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.junit.jupiter</groupId>
@@ -88,7 +88,7 @@ java.lang.NoClassDefFoundError: org/junit/runner/manipulation/Filter
 
 使用此设置运行一个简单的测试用例会产生以下堆栈跟踪:
 
-```
+```java
 Exception in thread "main" java.lang.NoClassDefFoundError: org/junit/platform/engine/TestDescriptor
 	at java.base/java.lang.Class.forName0(Native Method)
 	at java.base/java.lang.Class.forName(Class.java:375)
@@ -98,7 +98,7 @@ Exception in thread "main" java.lang.NoClassDefFoundError: org/junit/platform/en
 
 在 IntelliJ 中，为了修正依赖关系，我们需要修正`pom.xml`。修正后的`pom.xml`看起来是这样的:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.junit.jupiter</groupId>

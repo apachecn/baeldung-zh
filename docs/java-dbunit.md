@@ -12,7 +12,7 @@
 
 首先，我们可以通过将`dbunit` 依赖项添加到我们的`pom.xml`来将 DBUnit 从 Maven Central 添加到我们的项目中:
 
-```
+```java
 <dependency>
   <groupId>org.dbunit</groupId>
   <artifactId>dbunit</artifactId>
@@ -29,7 +29,7 @@
 
 `schema.sql`:
 
-```
+```java
 CREATE TABLE IF NOT EXISTS CLIENTS
 (
     `id`         int AUTO_INCREMENT NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS ITEMS
 
 `data.xml`:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
     <CLIENTS id='1' first_name='Charles' last_name='Xavier'/>
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS ITEMS
 
 `DataSourceDBUnitTest.java`:
 
-```
+```java
 public class DataSourceDBUnitTest extends DataSourceBasedDBTestCase {
     @Override
     protected DataSource getDataSource() {
@@ -102,7 +102,7 @@ public class DataSourceDBUnitTest extends DataSourceBasedDBTestCase {
 
 通过`get` `SetUpOperation `和`get` `TearDownOperation`有多种方式进行配置:
 
-```
+```java
 @Override
 protected DatabaseOperation getSetUpOperation() {
     return DatabaseOperation.REFRESH;
@@ -120,7 +120,7 @@ protected DatabaseOperation getTearDownOperation() {
 
 现在，让我们检查我们的实际测试用例。对于第一个测试，我们将保持简单——我们将加载预期的数据集，并将其与从数据库连接中检索的数据集进行比较:
 
-```
+```java
 @Test
 public void givenDataSetEmptySchema_whenDataSetCreated_thenTablesAreEqual() throws Exception {
     IDataSet expectedDataSet = getDataSet();
@@ -141,7 +141,7 @@ public void givenDataSetEmptySchema_whenDataSetCreated_thenTablesAreEqual() thro
 
 在本例中，我们将向 CLIENTS 表中插入一条新记录，然后验证新创建的行的内容。我们在单独的 XML 文件中定义了**的预期输出，并通过 SQL 查询提取了实际的行值:**
 
-```
+```java
 @Test
 public void givenDataSet_whenInsert_thenTableHasNewClient() throws Exception {
     try (InputStream is = getClass().getClassLoader().getResourceAsStream("dbunit/expected-user.xml")) {
@@ -170,7 +170,7 @@ public void givenDataSet_whenInsert_thenTableHasNewClient() throws Exception {
 
 **我们可以通过从 SQL 查询的 SELECT 子句中省略列**来做到这一点，但是 DBUnit 提供了一个更方便的实用程序来实现这一点。**使用`DefaultColumnFilter`类的静态方法，我们可以通过排除一些列**从现有实例创建一个新的`ITable`实例，如下所示:
 
-```
+```java
 @Test
 public void givenDataSet_whenInsert_thenGetResultsAreStillEqualIfIgnoringColumnsWithDifferentProduced()
   throws Exception {
@@ -200,7 +200,7 @@ public void givenDataSet_whenInsert_thenGetResultsAreStillEqualIfIgnoringColumns
 
 这个失败处理程序将收集所有的失败，而不是在第一次失败时停止，这意味着如果我们使用 `**DiffCollectingFailureHandler**.` ，那么**`Assertion.assertEquals()`方法将总是成功的。因此，我们将必须以编程方式检查处理程序是否发现任何错误:**
 
-```
+```java
 @Test
 public void givenDataSet_whenInsertUnexpectedData_thenFailOnAllUnexpectedValues() throws Exception {
     try (InputStream is = getClass().getClassLoader()
@@ -240,7 +240,7 @@ private static String formatDifference(Difference diff) {
 
 运行测试后，我们得到一个格式化的报告:
 
-```
+```java
 java.lang.AssertionError: expected value in ITEMS.price row 5:199.99, but was: 1000000.0
 expected value in ITEMS.produced row 5:2019-03-23, but was: null
 expected value in ITEMS.title row 5:Necklace, but was: Battery

@@ -24,7 +24,7 @@ Maven 将一个项目的依赖项下载到我们文件系统上的一个已知�
 
 对该错误的快速修复是**删除整个 Maven 本地存储库并重新构建项目:**
 
-```
+```java
 rm -rf ${LOCAL_REPOSITORY}
 ```
 
@@ -40,7 +40,7 @@ rm -rf ${LOCAL_REPOSITORY}
 
 我们可以通过在 build 命令中添加-X 来启用调试级别的日志记录:
 
-```
+```java
 mvn -X package
 ```
 
@@ -48,7 +48,7 @@ mvn -X package
 
 此外，我们可以使用`zip -T`命令测试归档的完整性:
 
-```
+```java
 find ${LOCAL_REPOSITORY} -name "*.jar" | xargs -L 1 zip -T | grep error
 ```
 
@@ -60,13 +60,13 @@ find ${LOCAL_REPOSITORY} -name "*.jar" | xargs -L 1 zip -T | grep error
 
 有两个选项，如果校验和不匹配，要么`fail`构建:
 
-```
+```java
 -C,--strict-checksums
 ```
 
 或默认选项`warn`:
 
-```
+```java
 -c,--lax-checksums
 ```
 
@@ -74,7 +74,7 @@ find ${LOCAL_REPOSITORY} -name "*.jar" | xargs -L 1 zip -T | grep error
 
 为了更永久的解决方案，我们可以在 Maven 的 [`settings.xml`](https://web.archive.org/web/20221206144407/https://maven.apache.org/ref/current/maven-settings/settings.html) 文件中配置`checksumPolicy`。此属性指定项目校验和验证失败时的行为。为了避免将来出现问题，让我们编辑我们的`settings.xml`文件，以便在校验和失败时使下载失败:
 
-```
+```java
 <profiles>
     <profile>
         <repositories>

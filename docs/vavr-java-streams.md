@@ -48,7 +48,7 @@ Vavr 流的一个相对薄弱的领域是基于 [`**Non-Interference**`的原理
 
 简单地说，Java 流允许我们修改底层数据源，直到调用一个终端操作。只要没有在给定的 Java 流上调用终端操作，该流就可以获得对底层数据源的任何更改:
 
-```
+```java
 List<Integer> intList = new ArrayList<>();
 intList.add(1);
 intList.add(2);
@@ -60,7 +60,7 @@ intStream.forEach(i -> System.out.println("In a Java stream: " + i));
 
 我们会发现最后的添加反映在流的输出中。无论修改是在流管道内部还是外部，这种行为都是一致的:
 
-```
+```java
 in a Java stream: 1
 in a Java stream: 2
 in a Java stream: 3
@@ -69,7 +69,7 @@ in a Java stream: 5
 
 我们发现 Vavr 流不能容忍这一点:
 
-```
+```java
 Stream<Integer> vavrStream = Stream.ofAll(intList);
 intList.add(5)
 vavrStream.forEach(i -> System.out.println("in a Vavr Stream: " + i)); 
@@ -77,7 +77,7 @@ vavrStream.forEach(i -> System.out.println("in a Vavr Stream: " + i));
 
 我们得到了什么:
 
-```
+```java
 Exception in thread "main" java.util.ConcurrentModificationException
   at java.util.ArrayList$Itr.checkForComodification(ArrayList.java:901)
   at java.util.ArrayList$Itr.next(ArrayList.java:851)
@@ -86,7 +86,7 @@ Exception in thread "main" java.util.ConcurrentModificationException
 
 按照 Java 的标准，Vavr 流不是“行为良好”的。Vavr 使用原始支持数据结构表现更好:
 
-```
+```java
 int[] aStream = new int[]{1, 2, 4};
 Stream<Integer> wrapped = Stream.ofAll(aStream);
 
@@ -96,7 +96,7 @@ wrapped.forEach(i -> System.out.println("Vavr looped " + i));
 
 给了我们:
 
-```
+```java
 Vavr looped 1
 Vavr looped 2
 Vavr looped 5 
@@ -110,7 +110,7 @@ Vavr looped 5
 
 一个简单的例子:
 
-```
+```java
 Stream.of(42)
   .flatMap(i -> Stream.generate(() -> { 
       System.out.println("nested call"); 
@@ -125,7 +125,7 @@ Java 10 中提供了对这个错误的修复。
 
 Vavr 的`flatMap `没有相同的问题，并且在 O(1)中完成了功能相似的操作:
 
-```
+```java
 Stream.of(42)
   .flatMap(i -> Stream.continually(() -> { 
       System.out.println("nested call"); 
@@ -152,7 +152,7 @@ Vavr 允许直接操纵流的内容:
 
 *   **插入到现有的 Vavr 流中**
 
-```
+```java
 Stream<String> vavredStream = Stream.of("foo", "bar", "baz");
 vavredStream.forEach(item -> System.out.println("List items: " + item));
 Stream<String> vavredStream2 = vavredStream.insert(2, "buzz");
@@ -161,7 +161,7 @@ vavredStream2.forEach(item -> System.out.println("List items: " + item));
 
 *   **从流中删除一个项目**
 
-```
+```java
 Stream<String> removed = inserted.remove("buzz"); 
 ```
 

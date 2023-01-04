@@ -47,7 +47,7 @@
 
 现在让我们看一下示例实现:
 
-```
+```java
 public class Button {
     private Fan fan;
 
@@ -63,7 +63,7 @@ public class Button {
 }
 ```
 
-```
+```java
 public class Fan {
     private Button button;
     private PowerSupplier powerSupplier;
@@ -83,7 +83,7 @@ public class Fan {
 }
 ```
 
-```
+```java
 public class PowerSupplier {
     public void turnOn() {
         // implementation
@@ -97,7 +97,7 @@ public class PowerSupplier {
 
 接下来，让我们测试功能:
 
-```
+```java
 @Test
 public void givenTurnedOffFan_whenPressingButtonTwice_fanShouldTurnOnAndOff() {
     assertFalse(fan.isOn());
@@ -120,7 +120,7 @@ public void givenTurnedOffFan_whenPressingButtonTwice_fanShouldTurnOnAndOff() {
 
 首先，我们来介绍一下`Mediator`类:
 
-```
+```java
 public class Mediator {
     private Button button;
     private Fan fan;
@@ -148,7 +148,7 @@ public class Mediator {
 
 接下来，让我们修改剩余的类:
 
-```
+```java
 public class Button {
     private Mediator mediator;
 
@@ -160,7 +160,7 @@ public class Button {
 }
 ```
 
-```
+```java
 public class Fan {
     private Mediator mediator;
     private boolean isOn = false;
@@ -181,7 +181,7 @@ public class Fan {
 
 让我们再次测试功能:
 
-```
+```java
 @Test
 public void givenTurnedOffFan_whenPressingButtonTwice_fanShouldTurnOnAndOff() {
     assertFalse(fan.isOn());

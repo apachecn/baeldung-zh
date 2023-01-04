@@ -10,7 +10,7 @@
 
 假设我们有以下地图:
 
-```
+```java
 def map = [
     'FF0000' : 'Red',
     '00FF00' : 'Lime',
@@ -21,19 +21,19 @@ def map = [
 
 我们可以通过给`each`方法提供一个简单的闭包来迭代地图:
 
-```
+```java
 map.each { println "Hex Code: $it.key = Color Name: $it.value" }
 ```
 
 我们还可以通过给入口变量命名来稍微提高可读性:
 
-```
+```java
 map.each { entry -> println "Hex Code: $entry.key = Color Name: $entry.value" }
 ```
 
 或者，如果我们想分别处理键和值，我们可以在闭包中分别列出它们:
 
-```
+```java
 map.each { key, val ->
     println "Hex Code: $key = Color Name $val"
 }
@@ -47,7 +47,7 @@ map.each { key, val ->
 
 例如，假设我们想在地图中每隔一行进行缩进。为了在 Groovy 中做到这一点，我们将使用带有`entry`和`index`变量的`eachWithIndex`方法:
 
-```
+```java
 map.eachWithIndex { entry, index ->
     def indent = ((index == 0 || index % 2 == 0) ? "   " : "")
     println "$index Hex Code: $entry.key = Color Name: $entry.value"
@@ -56,7 +56,7 @@ map.eachWithIndex { entry, index ->
 
 与`each`方法一样，我们可以选择在闭包中使用`key`和`value`变量，而不是`entry`:
 
-```
+```java
 map.eachWithIndex { key, val, index ->
     def indent = ((index == 0 || index % 2 == 0) ? "   " : "")
     println "$index Hex Code: $key = Color Name: $val"
@@ -67,7 +67,7 @@ map.eachWithIndex { key, val, index ->
 
 另一方面，如果我们的用例更适合命令式编程，我们也可以使用`for-in`语句迭代我们的映射:
 
-```
+```java
 for (entry in map) {
     println "Hex Code: $entry.key = Color Name: $entry.value"
 }

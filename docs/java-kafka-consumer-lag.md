@@ -18,7 +18,7 @@ Kafka 消费群体滞后是任何基于 Kafka 的事件驱动系统的一个**�
 
 **为了检查一个消费群体的偏移值**，**我们需要管理 Kafka 客户端**。因此，让我们在`LagAnalyzerService`类中编写一个方法来创建`AdminClient`类的实例:
 
-```
+```java
 private AdminClient getAdminClient(String bootstrapServerConfig) {
     Properties config = new Properties();
     config.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServerConfig);
@@ -34,7 +34,7 @@ private AdminClient getAdminClient(String bootstrapServerConfig) {
 
 接下来，我们主要关注偏移值，因此我们可以调用`partitionsToOffsetAndMetadata()`方法来获得 TopicPartition 与`OffsetAndMetadata` 值的映射:
 
-```
+```java
 private Map<TopicPartition, Long> getConsumerGrpOffsets(String groupId) 
   throws ExecutionException, InterruptedException {
     ListConsumerGroupOffsetsResult info = adminClient.listConsumerGroupOffsets(groupId);
@@ -58,7 +58,7 @@ private Map<TopicPartition, Long> getConsumerGrpOffsets(String groupId)
 
 让我们从在`LagAnalyzerService`类中创建一个`KafkaConsumer `类的实例开始:
 
-```
+```java
 private KafkaConsumer<String, String> getKafkaConsumer(String bootstrapServerConfig) {
     Properties properties = new Properties();
     properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServerConfig);
@@ -70,7 +70,7 @@ private KafkaConsumer<String, String> getKafkaConsumer(String bootstrapServerCon
 
 接下来，让我们从需要计算滞后的使用者组偏移量中聚合所有相关的 TopicPartition 值，以便将它作为参数提供给`endOffsets()`方法:
 
-```
+```java
 private Map<TopicPartition, Long> getProducerOffsets(Map<TopicPartition, Long> consumerGrpOffset) {
     List<TopicPartition> topicPartitions = new LinkedList<>();
     for (Map.Entry<TopicPartition, Long> entry : consumerGrpOffset.entrySet()) {
@@ -83,7 +83,7 @@ private Map<TopicPartition, Long> getProducerOffsets(Map<TopicPartition, Long> c
 
 最后，让我们编写一个方法，使用消费者补偿和生产者的`endoffsets`来生成每个`TopicPartition`的延迟:
 
-```
+```java
 private Map<TopicPartition, Long> computeLags(
   Map<TopicPartition, Long> consumerGrpOffsets,
   Map<TopicPartition, Long> producerOffsets) {
@@ -102,7 +102,7 @@ private Map<TopicPartition, Long> computeLags(
 
 现在，让我们通过在`LagAnalyzerService`类中编写`analyzeLag() `方法来编排滞后分析:
 
-```
+```java
 public void analyzeLag(String groupId) throws ExecutionException, InterruptedException {
     Map<TopicPartition, Long> consumerGrpOffsets = getConsumerGrpOffsets(groupId);
     Map<TopicPartition, Long> producerOffsets = getProducerOffsets(consumerGrpOffsets);
@@ -124,7 +124,7 @@ public void analyzeLag(String groupId) throws ExecutionException, InterruptedExc
 
 实现这一点的一个直接方法是通过**以规则的时间间隔**轮询滞后值。因此，让我们创建一个将调用`LagAnalyzerService:`的`analyzeLag()`方法的`LiveLagAnalyzerService`服务
 
-```
+```java
 @Scheduled(fixedDelay = 5000L)
 public void liveLagAnalysis() throws ExecutionException, InterruptedException {
     lagAnalyzerService.analyzeLag(groupId);
@@ -143,7 +143,7 @@ public void liveLagAnalysis() throws ExecutionException, InterruptedException {
 
 我们可以将它作为一个可配置属性保存在`application.properties`资源文件中:
 
-```
+```java
 monitor.producer.simulate=true
 monitor.consumer.simulate=true
 ```
@@ -152,7 +152,7 @@ monitor.consumer.simulate=true
 
 此外，让我们定义生产者`startTime`、`endTime,`和一个助手方法`time() `来获得监控期间的当前时间:
 
-```
+```java
 public static final Date startTime = new Date();
 public static final Date endTime = new Date(startTime.getTime() + 30 * 1000);
 
@@ -170,7 +170,7 @@ public static String time() {
 
 首先，让我们在`KafkaConsumerConfig`类中定义消费者模拟器的配置:
 
-```
+```java
 public ConsumerFactory<String, String> consumerFactory(String groupId) {
     Map<String, Object> props = new HashMap<>();
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
@@ -199,7 +199,7 @@ public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerCont
 
 接下来，我们可以在`KafkaProducerConfig`类中定义生产者模拟器的配置:
 
-```
+```java
 @Bean
 public ProducerFactory<String, String> producerFactory() {
     Map<String, Object> configProps = new HashMap<>();
@@ -217,7 +217,7 @@ public KafkaTemplate<String, String> kafkaTemplate() {
 
 此外，让我们使用`[@KafkaListener](https://web.archive.org/web/20221208143830/https://docs.spring.io/spring-kafka/api/org/springframework/kafka/annotation/KafkaListener.html) `注释来指定目标监听器，当然，只有当`monitor.consumer.simulate`被设置为`true`时才启用:
 
-```
+```java
 @KafkaListener(
   topics = "${monitor.topic.name}",
   containerFactory = "kafkaListenerContainerFactory",
@@ -231,7 +231,7 @@ public void listen(String message) throws InterruptedException {
 
 最后，让我们写一个 **`sendMessage()`方法来模拟制作人**:
 
-```
+```java
 @Scheduled(fixedDelay = 1L, initialDelay = 5L)
 public void sendMessage() throws ExecutionException, InterruptedException {
     if (enabled) {
@@ -249,7 +249,7 @@ public void sendMessage() throws ExecutionException, InterruptedException {
 
 现在，让我们运行`LagAnalyzerApplication:`中的主方法
 
-```
+```java
 public static void main(String[] args) {
     SpringApplication.run(LagAnalyzerApplication.class, args);
     while (true) ;
@@ -258,7 +258,7 @@ public static void main(String[] args) {
 
 每 30 秒后，我们将看到主题的每个分区的当前延迟:
 
-```
+```java
 Time=2021/06/06 11:07:24 | Lag for topic = baeldungTopic, partition = 0 is 93
 Time=2021/06/06 11:07:29 | Lag for topic = baeldungTopic, partition = 0 is 290
 Time=2021/06/06 11:07:34 | Lag for topic = baeldungTopic, partition = 0 is 776

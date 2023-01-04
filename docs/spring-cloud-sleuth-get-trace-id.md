@@ -14,7 +14,7 @@
 
 **让我们首先创建一个 Spring Boot 项目并添加 [spring-cloud-starter-sleuth 依赖项](https://web.archive.org/web/20220524071029/https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-sleuth/3.1.0) :**
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-sleuth</artifactId>
@@ -26,13 +26,13 @@
 
 然而，我们可以多走一步。**让我们在 application.properties 文件中设置应用程序的名称，这样我们就可以在日志中看到这个名称以及跟踪和跨度 id:**
 
-```
+```java
 spring.application.name=Baeldung Sleuth Tutorial
 ```
 
 现在我们需要一个应用程序的入口点。让我们创建一个具有单一 GET 端点的 REST 控制器:
 
-```
+```java
 @RestController
 public class SleuthTraceIdController {
 
@@ -49,7 +49,7 @@ public class SleuthTraceIdController {
 
 让我们给`getSleuthTraceId`方法添加一个日志语句。首先，我们需要一个`Logger`给我们的类。然后我们可以记录消息:
 
-```
+```java
 private static final Logger logger = LoggerFactory.getLogger(SleuthTraceIdController.class);
 
 @GetMapping("/traceid")
@@ -61,7 +61,7 @@ public String getSleuthTraceId() {
 
 让我们再次调用我们的 API 端点 并检查日志。我们应该会找到类似这样的东西:
 
-```
+```java
 INFO [Baeldung Sleuth Tutorial,e48f140a63bb9fbb,e48f140a63bb9fbb] 9208 --- [nio-8080-exec-1] c.b.s.traceid.SleuthTraceIdController : Hello with Sleuth
 ```
 
@@ -75,7 +75,7 @@ INFO [Baeldung Sleuth Tutorial,e48f140a63bb9fbb,e48f140a63bb9fbb] 9208 --- [nio-
 
 **首先，我们需要获得一个`Tracer`对象的实例。让我们把它注入我们的控制器，得到当前的跨度:**
 
-```
+```java
 @Autowired
 private Tracer tracer;
 
@@ -89,7 +89,7 @@ public String getSleuthTraceId() {
 
 **注意，如果此时没有活动的 span，`currentSpan`方法可以返回 null。**因此我们必须执行一个额外的检查，看看我们是否可以继续使用这个`Span`对象而不获取`NullPointerException`。让我们实现这个检查并记录当前的跟踪和范围 id:
 
-```
+```java
 Span span = tracer.currentSpan();
 if (span != null) {
     logger.info("Trace ID {}", span.context().traceIdString());
@@ -103,7 +103,7 @@ if (span != null) {
 
 还有另一种方法可以用`spanId`方法而不是`spanIdString`来获得 span ID。**两者的区别在于，后者返回值的十六进制表示，而前者返回十进制数。**让我们比较一下它们的运行情况，并记录下十进制值:
 
-```
+```java
 Span span = tracer.currentSpan();
 if (span != null) {
     logger.info("Span ID hex {}", span.context().spanIdString());
@@ -113,21 +113,21 @@ if (span != null) {
 
 这两个值代表相同的数字，输出应该类似于:
 
-```
+```java
 INFO [Baeldung Sleuth Tutorial,0de46b6fcbc8da83,0de46b6fcbc8da83] 8648 --- [nio-8080-exec-3] c.b.s.traceid.SleuthTraceIdController    : Span ID hex 0de46b6fcbc8da83
 INFO [Baeldung Sleuth Tutorial,0de46b6fcbc8da83,0de46b6fcbc8da83] 8648 --- [nio-8080-exec-3] c.b.s.traceid.SleuthTraceIdController    : Span ID decimal 1001043145087572611
 ```
 
 同样，这也适用于跟踪 id。我们可以使用`traceId`方法来代替`traceIdString,` 。`traceIdString`返回十六进制值，而`traceId`返回十进制值:
 
-```
+```java
 logger.info("Trace ID hex {}", span.context().traceIdString());
 logger.info("Trace ID decimal {}", span.context().traceId());
 ```
 
 输出与上一个非常相似。它首先包含十六进制的跟踪 ID，然后包含十进制的跟踪 ID:
 
-```
+```java
 INFO [Baeldung Sleuth Tutorial,34ec0b8ac9d65e91,34ec0b8ac9d65e91] 7384 --- [nio-8080-exec-1] c.b.s.traceid.SleuthTraceIdController    : Trace ID hex 34ec0b8ac9d65e91
 INFO [Baeldung Sleuth Tutorial,34ec0b8ac9d65e91,34ec0b8ac9d65e91] 7384 --- [nio-8080-exec-1] c.b.s.traceid.SleuthTraceIdController    : Trace ID decimal 3813435675195629201
 ```

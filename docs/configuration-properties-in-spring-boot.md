@@ -22,7 +22,7 @@ Tutorial for how to work with properties files and property values in Spring.[Re
 
 本教程使用一个相当标准的设置。我们首先在我们的 *pom.xml* 中添加[*spring-boot-starter-parent*](https://web.archive.org/web/20220529014431/https://search.maven.org/search?q=a:spring-boot-starter-parent%20AND%20g:org.springframework.boot)作为父节点:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -35,7 +35,7 @@ Tutorial for how to work with properties files and property values in Spring.[Re
 
 让我们将它添加到我们的 pom.xml 中:
 
-```
+```java
 <dependency>
    <groupId>org.hibernate</groupId>
    <artifactId>hibernate-validator</artifactId>
@@ -51,7 +51,7 @@ Tutorial for how to work with properties files and property values in Spring.[Re
 
 所以让我们从这样开始:
 
-```
+```java
 @Configuration
 @ConfigurationProperties(prefix = "mail")
 public class ConfigProperties {
@@ -72,7 +72,7 @@ Spring 框架使用标准的 JavaBean setter，所以我们必须为每个属性
 
 注意:如果我们在 POJO 中不使用 *@Configuration* ，那么我们需要在主 Spring 应用程序类中添加`@EnableConfigurationProperties(ConfigProperties.class)`来将属性绑定到 POJO 中:
 
-```
+```java
 @SpringBootApplication
 @EnableConfigurationProperties(ConfigProperties.class)
 public class EnableConfigurationDemoApplication {
@@ -86,7 +86,7 @@ public class EnableConfigurationDemoApplication {
 
 Spring 对绑定属性使用了一些宽松的规则。因此，以下变体都被绑定到属性 *hostName* :
 
-```
+```java
 mail.hostName
 mail.hostname
 mail.host_name
@@ -96,7 +96,7 @@ mail.HOST_NAME
 
 因此，我们可以使用下面的属性文件来设置所有的字段:
 
-```
+```java
 #Simple properties
 [[email protected]](/web/20220529014431/https://www.baeldung.com/cdn-cgi/l/email-protection)
 mail.port=9000
@@ -107,7 +107,7 @@ mail.port=9000
 
 **从 [Spring Boot 2.2](https://web.archive.org/web/20220529014431/https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.2-Release-Notes#configurationproperties-scanning) 开始，Spring 通过类路径扫描**找到并注册`@ConfigurationProperties` 类。因此，**没有必要用`@Component`** `(and other meta-annotations like @Configuration),` **或者甚至用`@EnableConfigurationProperties:`** 来注释这样的类
 
-```
+```java
 @ConfigurationProperties(prefix = "mail") 
 public class ConfigProperties { 
 
@@ -123,7 +123,7 @@ public class ConfigProperties {
 
 此外，我们可以使用**和`[@ConfigurationPropertiesScan](https://web.archive.org/web/20220529014431/https://docs.spring.io/spring-boot/docs/2.2.0.RELEASE/api/org/springframework/boot/context/properties/ConfigurationPropertiesScan.html)` 注释来扫描配置属性类的定制位置:**
 
-```
+```java
 @SpringBootApplication
 @ConfigurationPropertiesScan("com.baeldung.configurationproperties")
 public class EnableConfigurationDemoApplication { 
@@ -142,7 +142,7 @@ public class EnableConfigurationDemoApplication {
 
 让我们为一些嵌套属性创建一个新的`Credentials`类:
 
-```
+```java
 public class Credentials {
     private String authMethod;
     private String username;
@@ -154,7 +154,7 @@ public class Credentials {
 
 我们还需要更新`ConfigProperties`类以使用`List,`和`Map`，并且更新`Credentials`类:
 
-```
+```java
 public class ConfigProperties {
 
     private String host;
@@ -170,7 +170,7 @@ public class ConfigProperties {
 
 以下属性文件将设置所有字段:
 
-```
+```java
 #Simple properties
 [[email protected]](/web/20220529014431/https://www.baeldung.com/cdn-cgi/l/email-protection)
 mail.port=9000
@@ -198,7 +198,7 @@ mail.credentials.authMethod=SHA1
 
 让我们创建一个简单的`Item`类，我们将在下一个例子中使用:
 
-```
+```java
 public class Item {
     private String name;
     private int size;
@@ -209,7 +209,7 @@ public class Item {
 
 现在让我们看看如何在一个`@Bean`方法上使用`@ConfigurationProperties`来将外部化的属性绑定到`Item`实例:
 
-```
+```java
 @Configuration
 public class ConfigProperties {
 
@@ -229,21 +229,21 @@ public class ConfigProperties {
 
 例如，让我们将`hostName`属性设为强制属性:
 
-```
+```java
 @NotBlank
 private String hostName;
 ```
 
 接下来，让我们将`authMethod`属性的长度设为 1 到 4 个字符:
 
-```
+```java
 @Length(max = 4, min = 1)
 private String authMethod;
 ```
 
 然后是从 1025 到 65536 的`port`属性:
 
-```
+```java
 @Min(1025)
 @Max(65536)
 private int port; 
@@ -251,7 +251,7 @@ private int port;
 
 最后，`from`属性必须匹配电子邮件地址格式:
 
-```
+```java
 @Pattern(regexp = "^[a-z0-9._%+-][[email protected]](/web/20220529014431/https://www.baeldung.com/cdn-cgi/l/email-protection)[a-z0-9.-]+\\.[a-z]{2,6}$")
 private String from; 
 ```
@@ -272,7 +272,7 @@ Hibernate 验证框架使用标准的 JavaBean getter 和 setter，因此为每�
 
 这里我们有两个类型为`Duration`的字段:
 
-```
+```java
 @ConfigurationProperties(prefix = "conversion")
 public class PropertyConversion {
 
@@ -284,7 +284,7 @@ public class PropertyConversion {
 
 这是我们的属性文件:
 
-```
+```java
 conversion.timeInDefaultUnit=10
 conversion.timeInNano=9ns
 ```
@@ -297,14 +297,14 @@ conversion.timeInNano=9ns
 
 我们也可以使用`@DurationUnit:`覆盖默认单位
 
-```
+```java
 @DurationUnit(ChronoUnit.DAYS)
 private Duration timeInDays;
 ```
 
 这是相应的属性:
 
-```
+```java
 conversion.timeInDays=2
 ```
 
@@ -314,7 +314,7 @@ conversion.timeInDays=2
 
 让我们添加三个类型为`DataSize`的字段:
 
-```
+```java
 private DataSize sizeInDefaultUnit;
 
 private DataSize sizeInGB;
@@ -325,7 +325,7 @@ private DataSize sizeInTB;
 
 这些是相应的属性:
 
-```
+```java
 conversion.sizeInDefaultUnit=300
 conversion.sizeInGB=2GB
 conversion.sizeInTB=4
@@ -341,7 +341,7 @@ conversion.sizeInTB=4
 
 让我们添加一个简单的类`Employee`:
 
-```
+```java
 public class Employee {
     private String name;
     private double salary;
@@ -350,19 +350,19 @@ public class Employee {
 
 然后，我们将创建一个自定义转换器来转换该属性:
 
-```
+```java
 conversion.employee=john,2000
 ```
 
 我们将把它转换成类型为`Employee`的文件:
 
-```
+```java
 private Employee employee;
 ```
 
 我们将需要实现`Converter`接口，然后**使用`@ConfigurationPropertiesBinding`注释来注册我们的自定义** `**Converter**:`
 
-```
+```java
 @Component
 @ConfigurationPropertiesBinding
 public class EmployeeConverter implements Converter<String, Employee> {
@@ -381,7 +381,7 @@ public class EmployeeConverter implements Converter<String, Employee> {
 
 这实质上意味着`@ConfigurationProperties`注释的类现在可能是[不可变的](/web/20220529014431/https://www.baeldung.com/java-immutable-object)。
 
-```
+```java
 @ConfigurationProperties(prefix = "mail.credentials")
 @ConstructorBinding
 public class ImmutableCredentials {
@@ -420,7 +420,7 @@ public class ImmutableCredentials {
 
 Java 16 引入了`record `类型作为 [JEP 395](https://web.archive.org/web/20220529014431/https://openjdk.java.net/jeps/395) 的一部分。记录是充当不可变数据的透明载体的类。这使他们成为配置持有者和 dto 的完美候选人。事实上，**我们可以在 Spring Boot** 将 Java 记录定义为配置属性。例如，前面的示例可以重写为:
 
-```
+```java
 @ConstructorBinding
 @ConfigurationProperties(prefix = "mail.credentials")
 public record ImmutableCredentials(String authMethod, String username, String password) {

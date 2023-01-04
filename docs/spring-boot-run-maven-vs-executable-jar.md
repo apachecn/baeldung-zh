@@ -26,7 +26,7 @@
 
 我们只需要一个依赖项来让插件知道我们想要使用 Tomcat 来运行我们的代码:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId> 
@@ -37,7 +37,7 @@
 
 **执行`mvn spring-boot:run`命令触发 Apache Tomcat 的下载，并初始化 Tomcat 的启动:**
 
-```
+```java
 $ mvn spring-boot:run
 ...
 ...
@@ -79,7 +79,7 @@ Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/tomcat/
 
 通常，我们只需要配置构建插件:
 
-```
+```java
 <build>
     <plugins>
         ...
@@ -94,7 +94,7 @@ Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/tomcat/
 
 由于我们的示例项目包含不止一个主类，我们必须告诉 Java 运行哪个类，或者通过配置插件:
 
-```
+```java
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -110,7 +110,7 @@ Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/tomcat/
 
 或者设置`start-class`属性:
 
-```
+```java
 <properties>
     <start-class>com.baeldung.webjar.WebjarsdemoApplication</start-class>
 </properties>
@@ -120,7 +120,7 @@ Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/tomcat/
 
 现在，我们可以用两个简单的命令运行示例 war:
 
-```
+```java
 $ mvn clean package spring-boot:repackage
 $ java -jar target/spring-boot-ops.war
 ```
@@ -148,7 +148,7 @@ $ java -jar target/spring-boot-ops.war
 
 产生的`MANIFEST.MF`有一些额外的行:
 
-```
+```java
 Start-Class: com.baeldung.webjar.WebjarsdemoApplication
 Main-Class: org.springframework.boot.loader.WarLauncher
 ```
@@ -172,7 +172,7 @@ Main-Class: org.springframework.boot.loader.WarLauncher
 
 `MANIFEST.` MF 也有所改变，增加了以下几条线:
 
-```
+```java
 Spring-Boot-Classes: BOOT-INF/classes/
 Spring-Boot-Lib: BOOT-INF/lib/
 Spring-Boot-Version: 2.1.3.RELEASE

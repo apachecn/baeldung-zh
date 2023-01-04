@@ -18,7 +18,7 @@
 
 为了让 cucumber 与 Junit 5 一起工作，我们必须在我们的`pom`中声明[`cucumber`–`junit-platform-engine`](https://web.archive.org/web/20220523144727/https://search.maven.org/artifact/io.cucumber/cucumber-junit-platform-engine)作为它的依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.cucumber</groupId>
     <artifactId>cucumber-junit-platform-engine</artifactId>
@@ -34,7 +34,7 @@
 
 首先，让我们用一个标签将我们的`Features`或`Scenarios` 分组在一起。这里我们用一个`@ui` 标签来标记我们的 UI 特性:
 
-```
+```java
 @ui
 Feature: UI - Random Number Generator
 
@@ -49,14 +49,14 @@ Feature: UI - Random Number Generator
 
 然后，基于这些标签，我们可以通过使用条件挂钩来操作我们为这组特性运行的内容。我们用单独的`@Before`和`@After` 方法来实现这一点，这些方法在我们的`ScenarioHooks`中用相关标签进行了注释:
 
-```
+```java
 @Before("@ui")
 public void setupForUI() {
     uiContext.getWebDriver();
 }
 ```
 
-```
+```java
 @After("@ui")
 public void tearDownForUi(Scenario scenario) throws IOException {
     uiContext.getReport().write(scenario);
@@ -69,7 +69,7 @@ public void tearDownForUi(Scenario scenario) throws IOException {
 
 类似于我们的 UI 测试，我们可以用`@api`标签来标记我们的 API 特性:
 
-```
+```java
 @api
 Feature: Health check
 
@@ -81,7 +81,7 @@ Feature: Health check
 
 我们也有带有`@api`标签的`@Before`和`@After`方法:
 
-```
+```java
 @Before("@api")
 public void setupForApi() {
     RestAssuredMockMvc.mockMvc(mvc);

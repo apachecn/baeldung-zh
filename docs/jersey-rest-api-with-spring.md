@@ -12,7 +12,7 @@ Jersey 是一个开发 RESTful Web 服务的开源框架。它是 JAX 遥感系�
 
 让我们从向`pom.xml`添加依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.glassfish.jersey.containers</groupId>
     <artifactId>jersey-container-servlet</artifactId>
@@ -27,7 +27,7 @@ Jersey 是一个开发 RESTful Web 服务的开源框架。它是 JAX 遥感系�
 
 此外，对于 Spring 集成，我们必须添加`jersey-spring4`依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.glassfish.jersey.ext</groupId>
     <artifactId>jersey-spring4</artifactId>
@@ -41,7 +41,7 @@ Jersey 是一个开发 RESTful Web 服务的开源框架。它是 JAX 遥感系�
 
 **接下来，我们需要设置一个 web 项目来做 Servlet 配置。**为此，我们将使用 Spring 的`WebApplicationInitializer`:
 
-```
+```java
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ApplicationInitializer 
   implements WebApplicationInitializer {
@@ -68,7 +68,7 @@ public class ApplicationInitializer
 
 让我们使用一个示例资源表示类:
 
-```
+```java
 @XmlRootElement
 public class Employee {
     private int id;
@@ -84,7 +84,7 @@ public class Employee {
 
 现在让我们看看如何使用 JAX-RS 注释来创建 RESTful web 服务:
 
-```
+```java
 @Path("/employees")
 public class EmployeeResource {
 
@@ -130,7 +130,7 @@ public class EmployeeResource {
 
 `ExceptionMapper`允许我们拦截异常并向客户端返回适当的 HTTP 响应代码。在下面的示例中，如果引发了`EmployeeNotFound`异常，则返回 HTTP 响应代码 404:
 
-```
+```java
 @Provider
 public class NotFoundExceptionHandler 
   implements ExceptionMapper<EmployeeNotFound> {
@@ -145,7 +145,7 @@ public class NotFoundExceptionHandler
 
 最后，**让我们将所有服务实现类和异常映射器连接到一个应用程序路径:**
 
-```
+```java
 @ApplicationPath("/resources")
 public class RestConfig extends Application {
     public Set<Class<?>> getClasses() {
@@ -162,7 +162,7 @@ public class RestConfig extends Application {
 
 现在让我们用一些实时测试来测试 API:
 
-```
+```java
 public class JerseyApiLiveTest {
 
     private static final String SERVICE_URL

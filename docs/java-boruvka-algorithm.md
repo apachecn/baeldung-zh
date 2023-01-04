@@ -42,7 +42,7 @@ Otakar Boruvka 在 1926 年首次提出了一种寻找给定图的 MST 的方法
 
 让我们为此定义一个类`UnionFind`，有两个方法:`union`和`find`:
 
-```
+```java
 public class UnionFind {
     private int[] parents;
     private int[] ranks;
@@ -92,7 +92,7 @@ public class UnionFind {
 
 因为我们将使用 JUnit 来测试我们的算法，所以这一部分放在一个`@Before`方法中:
 
-```
+```java
 @Before
 public void setup() {
     graph = ValueGraphBuilder.undirected().build();
@@ -118,7 +118,7 @@ public void setup() {
 
 我们将在一个名为`BoruvkaMST`的类中做这件事。首先，让我们声明几个实例变量:
 
-```
+```java
 public class BoruvkaMST {
     private static MutableValueGraph<Integer, Integer> mst = ValueGraphBuilder.undirected().build();
     private static int totalWeight;
@@ -131,7 +131,7 @@ public class BoruvkaMST {
 
 它做的第一件事是初始化输入图的顶点。最初，所有顶点都是它们自己的父顶点，每个顶点的等级为 0:
 
-```
+```java
 public BoruvkaMST(MutableValueGraph<Integer, Integer> graph) {
     int size = graph.nodes().size();
     UnionFind uf = new UnionFind(size); 
@@ -139,7 +139,7 @@ public BoruvkaMST(MutableValueGraph<Integer, Integer> graph) {
 
 接下来，我们将创建一个循环，该循环定义创建 MST 所需的迭代次数——最多 log V 次，或者直到我们有 V-1 条边，其中 V 是顶点的数量:
 
-```
+```java
 for (int t = 1; t < size && mst.edges().size() < size - 1; t = t + t) {
     EndpointPair<Integer>[] closestEdgeArray = new EndpointPair[size]; 
 ```
@@ -150,7 +150,7 @@ for (int t = 1; t < size && mst.edges().size() < size - 1; t = t + t) {
 
 如果两个顶点的父顶点相同，那么它就是同一棵树，我们不把它添加到数组中。否则，我们将当前边的权重与其父顶点边的权重进行比较。如果它较小，那么我们把它加到`closestEdgeArray:`
 
-```
+```java
 for (EndpointPair<Integer> edge : graph.edges()) {
     int u = edge.nodeU();
     int v = edge.nodeV();
@@ -186,7 +186,7 @@ for (EndpointPair<Integer> edge : graph.edges()) {
 
 然后，我们将定义第二个内部循环来创建一棵树。我们将把上一步中的边添加到这个树中，而不会两次添加相同的边。此外，我们将对我们的`UnionFind`执行一个`union`来派生和存储新创建的树的顶点的父节点和等级:
 
-```
+```java
 for (int i = 0; i < size; i++) {
     EndpointPair<Integer> edge = closestEdgeArray[i];
     if (edge != null) {
@@ -208,7 +208,7 @@ for (int i = 0; i < size; i++) {
 
 最后，让我们看一个简单的 JUnit 来验证我们的实现:
 
-```
+```java
 @Test
 public void givenInputGraph_whenBoruvkaPerformed_thenMinimumSpanningTree() {
 

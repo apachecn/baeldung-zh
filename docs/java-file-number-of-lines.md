@@ -10,7 +10,7 @@
 
 请注意，在本教程中，我们将使用以下示例值作为输入文件名和总行数:
 
-```
+```java
 static final String INPUT_FILE_NAME = "src/main/resources/input.txt";
 static final int NO_OF_LINES = 45; 
 ```
@@ -19,7 +19,7 @@ Java 7 对现有的 IO 库进行了许多改进，并打包在 [NIO2:](/web/2022
 
 让我们从`Files`开始，看看我们如何使用它的 API 来计算行数:
 
-```
+```java
 @Test
 public void whenUsingNIOFiles_thenReturnTotalNumberOfLines() throws IOException {
     try (Stream<String> fileStream = Files.lines(Paths.get(INPUT_FILE_NAME))) {
@@ -31,7 +31,7 @@ public void whenUsingNIOFiles_thenReturnTotalNumberOfLines() throws IOException 
 
 或者通过简单地使用`Files#readAllLines`方法:
 
-```
+```java
 @Test
 public void whenUsingNIOFilesReadAllLines_thenReturnTotalNumberOfLines() throws IOException {
     List<String> fileStream = Files.readAllLines(Paths.get(INPUT_FILE_NAME));
@@ -44,7 +44,7 @@ public void whenUsingNIOFilesReadAllLines_thenReturnTotalNumberOfLines() throws 
 
 现在让我们检查一下`FileChannel,` 一个高性能的 Java NIO 替代品来读取行数:
 
-```
+```java
 @Test
 public void whenUsingNIOFileChannel_thenReturnTotalNumberOfLines() throws IOException {
     int noOfLines = 1;
@@ -68,7 +68,7 @@ public void whenUsingNIOFileChannel_thenReturnTotalNumberOfLines() throws IOExce
 
 让我们从在我们的`pom.xml`中添加[的`guava` 依赖关系](https://web.archive.org/web/20221129014325/https://search.maven.org/classic/#search|gav|1|g%3A%22com.google.guava%22%20AND%20a%3A%22guava%22)开始:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -78,7 +78,7 @@ public void whenUsingNIOFileChannel_thenReturnTotalNumberOfLines() throws IOExce
 
 然后我们可以使用`readLines `来获得文件行的`List`:
 
-```
+```java
 @Test
 public void whenUsingGoogleGuava_thenReturnTotalNumberOfLines() throws IOException {
     List<String> lineItems = Files.readLines(Paths.get(INPUT_FILE_NAME)
@@ -94,7 +94,7 @@ public void whenUsingGoogleGuava_thenReturnTotalNumberOfLines() throws IOExcepti
 
 要使用这个库，我们必须在`pom.xml`中包含[commons-io 依赖关系](https://web.archive.org/web/20221129014325/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22commons-io%22%20AND%20a%3A%22commons-io%22):
 
-```
+```java
 <dependency>
     <groupId>commons-io</groupId>
     <artifactId>commons-io</artifactId>
@@ -104,7 +104,7 @@ public void whenUsingGoogleGuava_thenReturnTotalNumberOfLines() throws IOExcepti
 
 此时，我们可以使用 Apache Commons IO 的`FileUtils#lineIterator`，它为我们清理了一些文件处理:
 
-```
+```java
 @Test
 public void whenUsingApacheCommonsIO_thenReturnTotalNumberOfLines() throws IOException {
     int noOfLines = 0;
@@ -123,7 +123,7 @@ public void whenUsingApacheCommonsIO_thenReturnTotalNumberOfLines() throws IOExc
 
 那么，老派的方法呢？如果我们不在 JDK 7 上并且我们不能使用第三方库，我们有 [`BufferedReader`](/web/20221129014325/https://www.baeldung.com/java-buffered-reader) :
 
-```
+```java
 @Test
 public void whenUsingBufferedReader_thenReturnTotalNumberOfLines() throws IOException {
     int noOfLines = 0;
@@ -140,7 +140,7 @@ public void whenUsingBufferedReader_thenReturnTotalNumberOfLines() throws IOExce
 
 或者，我们可以使用`[BufferedReader](/web/20221129014325/https://www.baeldung.com/java-buffered-reader)`的直接子类`LineNumberReader,` ,这稍微简单一些:
 
-```
+```java
 @Test
 public void whenUsingLineNumberReader_thenReturnTotalNumberOfLines() throws IOException {
     try (LineNumberReader reader = new LineNumberReader(new FileReader(INPUT_FILE_NAME))) {
@@ -157,7 +157,7 @@ public void whenUsingLineNumberReader_thenReturnTotalNumberOfLines() throws IOEx
 
 最后，如果我们已经在使用`[Scanner](/web/20221129014325/https://www.baeldung.com/java-scanner) `作为一个更大的解决方案的一部分，它也可以为我们解决问题:
 
-```
+```java
 @Test
 public void whenUsingScanner_thenReturnTotalNumberOfLines() throws IOException {
     try (Scanner scanner = new Scanner(new FileReader(INPUT_FILE_NAME))) {

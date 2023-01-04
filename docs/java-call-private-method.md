@@ -14,7 +14,7 @@
 
 对于我们的例子，让我们使用一个在`long`数组上操作的实用程序类`LongArrayUtil`。我们班有两个`indexOf`方法:
 
-```
+```java
 public static int indexOf(long[] array, long target) {
     return indexOf(array, target, 0, array.length);
 }
@@ -37,7 +37,7 @@ private static int indexOf(long[] array, long target, int start, int end) {
 
 虽然编译器阻止我们调用对我们的类不可见的函数，但是我们可以通过反射调用函数。首先，我们需要访问描述我们想要调用的函数的`Method`对象:
 
-```
+```java
 Method indexOfMethod = LongArrayUtil.class.getDeclaredMethod(
   "indexOf", long[].class, long.class, int.class, int.class);
 ```
@@ -50,7 +50,7 @@ Method indexOfMethod = LongArrayUtil.class.getDeclaredMethod(
 
 现在我们需要暂时提升方法的可见性:
 
-```
+```java
 indexOfMethod.setAccessible(true);
 ```
 
@@ -60,7 +60,7 @@ indexOfMethod.setAccessible(true);
 
 最后，我们在`Method` 对象上[调用`invoke`:](/web/20221126233137/https://www.baeldung.com/java-method-reflection)
 
-```
+```java
 int value = (int) indexOfMethod.invoke(
   LongArrayUtil.class, someLongArray, 2L, 0, someLongArray.length);
 ```
@@ -77,7 +77,7 @@ int value = (int) indexOfMethod.invoke(
 
 首先，我们需要在 pom.xml 中添加 [`spring-test`](https://web.archive.org/web/20221126233137/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework%22%20AND%20a%3A%22spring-test%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-test</artifactId>
@@ -88,7 +88,7 @@ int value = (int) indexOfMethod.invoke(
 
 现在我们可以在`ReflectionTestUtils`中使用`invokeMethod`函数，它使用与上面相同的算法，并节省我们编写的代码:
 
-```
+```java
 int value = ReflectionTestUtils.invokeMethod(
   LongArrayUtil.class, "indexOf", someLongArray, 1L, 1, someLongArray.length);
 ```

@@ -21,7 +21,7 @@ Lombok 是一个克服样板代码的非常有用的库。如果你还不熟悉�
 
 然而，由于需要编写一个构造函数，它使用导致一个明显更大的代码库。考虑两个例子`GreetingService` 和`FarewellService:`
 
-```
+```java
 @Component
 public class GreetingService {
 
@@ -34,7 +34,7 @@ public class GreetingService {
 }
 ```
 
-```
+```java
 @Component
 public class FarewellService {
 
@@ -62,7 +62,7 @@ public class FarewellService {
 
 让我们创建第三个组件，类似于前两个组件:
 
-```
+```java
 @Component
 @RequiredArgsConstructor
 public class ThankingService {
@@ -77,7 +77,7 @@ public class ThankingService {
 
 上面的注释将导致`Lombok`为我们生成一个构造函数:
 
-```
+```java
 @Component
 public class ThankingService {
 
@@ -100,7 +100,7 @@ public class ThankingService {
 
 考虑`ApologizeService` 的例子:
 
-```
+```java
 @Component
 @RequiredArgsConstructor
 public class ApologizeService {
@@ -123,13 +123,13 @@ public class ApologizeService {
 
 除非其中一个构造函数用`@Autowired`、`@Inject`或`@Resource`进行了注释，否则 Spring 将抛出一个错误:
 
-```
+```java
 Failed to instantiate [...]: No default constructor found;
 ```
 
 如果我们想要注释`Lombok-`生成的构造函数，我们必须传递带有`@AllArgsConstructor`的`onConstructor`参数的注释:
 
-```
+```java
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ApologizeService {

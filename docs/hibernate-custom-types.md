@@ -24,7 +24,7 @@ Hibernate 使用映射类型将 Java 对象转换成存储数据的 SQL 查询�
 
 为了创建我们的自定义 Hibernate 类型，我们需要 [hibernate-core](https://web.archive.org/web/20221130182151/https://search.maven.org/search?q=g:org.hibernate%20a:hibernate-core) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>
@@ -46,7 +46,7 @@ Hibernate 使得实现定制类型变得相对容易。在 Hibernate 中实现�
 
 所以让我们实现我们的`LocalDateString `类型，它将`LocalDate ` Java 类型存储为 VARCHAR:
 
-```
+```java
 public class LocalDateStringType 
   extends AbstractSingleColumnStandardBasicType<LocalDate> {
 
@@ -67,7 +67,7 @@ public class LocalDateStringType
 
 现在，我们可以用 VARCHAR: 来实现一个用于存储和检索`LocalDate` 的`LocalDateStringJavaDescriptor `
 
-```
+```java
 public class LocalDateStringJavaDescriptor extends AbstractTypeDescriptor<LocalDate> {
 
     public static final LocalDateStringJavaDescriptor INSTANCE = 
@@ -83,7 +83,7 @@ public class LocalDateStringJavaDescriptor extends AbstractTypeDescriptor<LocalD
 
 接下来，我们需要覆盖将 Java 类型转换成 SQL 的`wrap `和`unwrap `方法。让我们从`unwrap:`开始
 
-```
+```java
 @Override
 public <X> X unwrap(LocalDate value, Class<X> type, WrapperOptions options) {
 
@@ -99,7 +99,7 @@ public <X> X unwrap(LocalDate value, Class<X> type, WrapperOptions options) {
 
 接下来，`wrap `方法:
 
-```
+```java
 @Override
 public <X> LocalDate wrap(X value, WrapperOptions options) {
     if (value == null)
@@ -116,7 +116,7 @@ public <X> LocalDate wrap(X value, WrapperOptions options) {
 
 最后，我们可以在实体类中使用自定义类型:
 
-```
+```java
 @Entity
 @Table(name = "OfficeEmployee")
 public class OfficeEmployee {
@@ -137,7 +137,7 @@ public class OfficeEmployee {
 
 所以让我们通过实现`UserType:`来实现一个复杂的`PhoneNumber`对象
 
-```
+```java
 public class PhoneNumberType implements UserType {
     @Override
     public int[] sqlTypes() {
@@ -159,7 +159,7 @@ public class PhoneNumberType implements UserType {
 
 一、`nullSafeGet `法:
 
-```
+```java
 @Override
 public Object nullSafeGet(ResultSet rs, String[] names, 
   SharedSessionContractImplementor session, Object owner) 
@@ -179,7 +179,7 @@ public Object nullSafeGet(ResultSet rs, String[] names,
 
 接下来，`nullSafeSet `方法:
 
-```
+```java
 @Override
 public void nullSafeSet(PreparedStatement st, Object value, 
   int index, SharedSessionContractImplementor session) 
@@ -200,7 +200,7 @@ public void nullSafeSet(PreparedStatement st, Object value,
 
 最后，我们可以在我们的`OfficeEmployee `实体类中声明我们的自定义`PhoneNumberType `:
 
-```
+```java
 @Entity
 @Table(name = "OfficeEmployee")
 public class OfficeEmployee {
@@ -220,7 +220,7 @@ public class OfficeEmployee {
 
 因此，让我们通过为我们之前使用的`OfficeEmployee `实体实现一个`AddressType `来看看这一点:
 
-```
+```java
 public class AddressType implements CompositeUserType {
 
     @Override
@@ -246,7 +246,7 @@ public class AddressType implements CompositeUserType {
 
 此外，我们还需要实现将`PreparedStatement `和`ResultSet `索引映射到类型属性的`getPropertyValue `和`setPropertyValue `方法。作为一个例子，考虑我们的`AddressType:`的`getPropertyValue `
 
-```
+```java
 @Override
 public Object getPropertyValue(Object component, int property) throws HibernateException {
 
@@ -282,7 +282,7 @@ public Object getPropertyValue(Object component, int property) throws HibernateE
 
 因此，让我们实现我们的参数化的`SalaryType `，它接受`currency `作为参数:
 
-```
+```java
 public class SalaryType implements CompositeUserType, DynamicParameterizedType {
 
     private String localCurrency;
@@ -300,7 +300,7 @@ public class SalaryType implements CompositeUserType, DynamicParameterizedType {
 
 我们将在声明`Salary:`时将`currency`作为参数传递
 
-```
+```java
 @Entity
 @Table(name = "OfficeEmployee")
 public class OfficeEmployee {
@@ -320,7 +320,7 @@ Hibernate 维护所有内置基本类型在`BasicTypeRegistry`中的映射。因
 
 此外，Hibernate 允许我们在`BasicTypeRegistry`中注册定制类型，就像基本类型一样。通常，应用程序会在引导`SessionFactory. `时注册自定义类型，让我们通过注册我们之前实现的`LocalDateString `类型来理解这一点:
 
-```
+```java
 private static SessionFactory makeSessionFactory() {
     ServiceRegistry serviceRegistry = StandardServiceRegistryBuilder()
       .applySettings(getProperties()).build();
@@ -342,7 +342,7 @@ private static Properties getProperties() {
 
 因此，**消除了在类型映射中使用完全限定类名的限制:**
 
-```
+```java
 @Entity
 @Table(name = "OfficeEmployee")
 public class OfficeEmployee {
@@ -359,7 +359,7 @@ public class OfficeEmployee {
 
 或者，我们可以通过定义`TypeDefs:`跳过类型注册
 
-```
+```java
 @TypeDef(name = "PhoneNumber", typeClass = PhoneNumberType.class, 
   defaultForType = PhoneNumber.class)
 @Entity

@@ -33,7 +33,7 @@
 
 让我们将 Maven 依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.javatuples</groupId>
     <artifactId>javatuples</artifactId>
@@ -47,19 +47,19 @@
 
 创建一个元组非常简单。我们可以使用相应的构造函数:
 
-```
+```java
 Pair<String, Integer> pair = new Pair<String, Integer>("A pair", 55);
 ```
 
 还有一种不太冗长且语义优雅的创建元组的方法:
 
-```
+```java
 Triplet<String, Integer, Double> triplet = Triplet.with("hello", 23, 1.2);
 ```
 
 我们也可以从一个`Iterable`创建元组:
 
-```
+```java
 List<String> listOfNames = Arrays.asList("john", "doe", "anne", "alex");
 Quartet<String, String, String, String> quartet
   = Quartet.fromCollection(collectionOfNames);
@@ -69,7 +69,7 @@ Quartet<String, String, String, String> quartet
 
 然而，我们可以使用上面的集合，通过在`fromIterable()`方法中指定一个起始索引，创建一个像`Pair`或`Triplet`这样的低阶元组:
 
-```
+```java
 Pair<String, String> pairFromList = Pair.fromIterable(listOfNames, 2);
 ```
 
@@ -77,7 +77,7 @@ Pair<String, String> pairFromList = Pair.fromIterable(listOfNames, 2);
 
 元组也可以方便地从任何数组中创建:
 
-```
+```java
 String[] names = new String[] {"john", "doe", "anne"};
 Triplet<String, String, String> triplet2 = Triplet.fromArray(names);
 ```
@@ -88,7 +88,7 @@ Triplet<String, String, String> triplet2 = Triplet.fromArray(names);
 
 让我们创建一个新的四重奏并获取一些值:
 
-```
+```java
 Quartet<String, Double, Integer, String> quartet 
   = Quartet.with("john", 72.5, 32, "1051 SW");
 
@@ -105,7 +105,7 @@ assertThat(age).isEqualTo(32);
 
 另一种方法是`getValue(int pos)`方法。它获取要获取的元素的从零开始的位置。**这个方法不是类型安全的，需要显式强制转换**:
 
-```
+```java
 Quartet<String, Double, Integer, String> quartet 
   = Quartet.with("john", 72.5, 32, "1051 SW");
 
@@ -122,7 +122,7 @@ assertThat(age).isEqualTo(32);
 
 与`getValueX()`类似，javatuples 中的所有类都有`setAtX()`方法。同样，`X`是我们要设置的元素的从零开始的位置:
 
-```
+```java
 Pair<String, Integer> john = Pair.with("john", 32);
 Pair<String, Integer> alex = john.setAt0("alex");
 
@@ -135,7 +135,7 @@ assertThat(john.toString()).isNotEqualTo(alex.toString());
 
 我们可以方便地向元组添加新元素。然而，这将导致创建一个更高阶的新元组:
 
-```
+```java
 Pair<String, Integer> pair1 = Pair.with("john", 32);
 Triplet<String, Integer, String> triplet1 = pair1.add("1051 SW");
 
@@ -150,7 +150,7 @@ assertThat(triplet1.contains("1051 SW"));
 
 也可以使用`add()`方法将一个元组添加到另一个元组:
 
-```
+```java
 Pair<String, Integer> pair1 = Pair.with("john", 32);
 Pair<String, Integer> pair2 = Pair.with("alex", 45);
 Quartet<String, Integer, String, Integer> quartet2 = pair1.add(pair2);
@@ -163,7 +163,7 @@ assertThat(quartet2.containsAll(pair2));
 
 默认情况下，`add()`方法添加元素作为元组的最后一个元素。然而，可以使用`addAtX()`方法在给定位置添加元素，其中`X`是我们想要添加元素的从零开始的位置:
 
-```
+```java
 Pair<String, Integer> pair1 = Pair.with("john", 32);
 Triplet<String, String, Integer> triplet2 = pair1.addAt1("1051 SW");
 
@@ -176,7 +176,7 @@ assertThat(triplet2.indexOf(32)).isEqualTo(2);
 
 我们还可以使用任何一种`add()`或`addAtX()`方法添加多个元素:
 
-```
+```java
 Pair<String, Integer> pair1 = Pair.with("john", 32);
 Quartet<String, Integer, String, Integer> quartet1 = pair1.add("alex", 45);
 
@@ -185,7 +185,7 @@ assertThat(quartet1.containsAll("alex", "john", 32, 45));
 
 为了从元组中移除一个元素，我们可以使用`removeFromX()`方法。再次，`X`指定要移除的元素的从零开始的位置:
 
-```
+```java
 Pair<String, Integer> pair1 = Pair.with("john", 32);
 Unit<Integer> unit = pair1.removeFrom0();
 
@@ -196,7 +196,7 @@ assertThat(unit.contains(32));
 
 我们已经看到了如何将一个`List`转换成一个元组。现在让我们看看如何将一个元组转换成一个`List`:
 
-```
+```java
 Quartet<String, Double, Integer, String> quartet
   = Quartet.with("john", 72.5, 32, "1051 SW");
 List<Object> list = quartet.toList();
@@ -208,7 +208,7 @@ assertThat(list.size()).isEqualTo(4);
 
 最后，让我们将元组转换为数组:
 
-```
+```java
 Quartet<String, Double, Integer, String> quartet
   = Quartet.with("john", 72.5, 32, "1051 SW");
 Object[] array = quartet.toArray();

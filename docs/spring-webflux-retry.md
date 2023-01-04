@@ -16,7 +16,7 @@ Spring WebFlux 为我们提供了一些重试失败操作的工具。
 
 让我们为连接到这个 REST 服务的组件创建一个简单的测试:
 
-```
+```java
 @Test
 void givenExternalServiceReturnsError_whenGettingData_thenRetryAndReturnResponse() {
 
@@ -45,7 +45,7 @@ void givenExternalServiceReturnsError_whenGettingData_thenRetryAndReturnResponse
 
 首先，让我们使用`retry`方法，它防止应用程序立即返回错误并重新订阅指定的次数:
 
-```
+```java
 public Mono<String> getData(String stockId) {
     return webClient.get()
         .uri(PATH_BY_ID, stockId)
@@ -61,7 +61,7 @@ public Mono<String> getData(String stockId) {
 
 接下来，让我们使用`retryWhen`方法尝试一个可配置的策略:
 
-```
+```java
 public Mono<String> getData(String stockId) {
     return webClient.get()
         .uri(PATH_BY_ID, stockId)
@@ -83,7 +83,7 @@ public Mono<String> getData(String stockId) {
 
 我们可以使用`fixedDelay`策略在每次尝试之间添加延迟:
 
-```
+```java
 public Mono<String> getData(String stockId) {
     return webClient.get()
       .uri(PATH_BY_ID, stockId)
@@ -99,7 +99,7 @@ public Mono<String> getData(String stockId) {
 
 我们可以使用`backoff`策略，而不是以固定的时间间隔重试:
 
-```
+```java
 public Mono<String> getData(String stockId) {
     return webClient.get()
       .uri(PATH_BY_ID, stockId)
@@ -119,7 +119,7 @@ public Mono<String> getData(String stockId) {
 
 让我们使用`jitter`方法来配置一个不同的值 0.75，以表示最多为计算延迟的 75%的抖动:
 
-```
+```java
 public Mono<String> getData(String stockId) {
     return webClient.get()
       .uri(PATH_BY_ID, stockId)
@@ -140,7 +140,7 @@ public Mono<String> getData(String stockId) {
 
 首先，让我们创建一个异常来表示服务器错误:
 
-```
+```java
 public class ServiceException extends RuntimeException {
 
     public ServiceException(String message, int statusCode) {
@@ -152,7 +152,7 @@ public class ServiceException extends RuntimeException {
 
 接下来，我们将为 5xx 错误创建一个错误`Mono`，并使用`filter`方法来配置我们的策略:
 
-```
+```java
 public Mono<String> getData(String stockId) {
     return webClient.get()
       .uri(PATH_BY_ID, stockId)
@@ -173,7 +173,7 @@ public Mono<String> getData(String stockId) {
 
 相反，让我们通过使用`onRetryExhaustedThrow`方法来覆盖这种行为，并为我们的`ServiceException`提供一个生成器:
 
-```
+```java
 public Mono<String> getData(String stockId) {
     return webClient.get()
       .uri(PATH_BY_ID, stockId)

@@ -18,7 +18,7 @@ JavaFX 是一个强大的工具，旨在为不同平台构建应用程序 UI。�
 
 因此，显而易见的方法是覆盖它:
 
-```
+```java
 public class Person {
     String firstName;
     String lastName;
@@ -50,7 +50,7 @@ public class Person {
 
 让我们用一个例子来说明细胞工厂:
 
-```
+```java
 public class PersonCellFactory implements Callback<ListView<Person>, ListCell<Person>> {
     @Override
     public ListCell<Person> call(ListView<Person> param) {
@@ -81,7 +81,7 @@ public class PersonCellFactory implements Callback<ListView<Person>, ListCell<Pe
 
 假设，我们必须将每一行显示为一个`CheckBox`。让我们来看看合适的细胞工厂:
 
-```
+```java
 public class CheckboxCellFactory implements Callback<ListView<Person>, ListCell<Person>> {
     @Override
     public ListCell<Person> call(ListView<Person> param) {

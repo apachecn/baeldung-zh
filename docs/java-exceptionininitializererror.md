@@ -20,7 +20,7 @@
 
 为了有一个失败的静态块初始化器，我们打算故意把一个整数除以零:
 
-```
+```java
 public class StaticBlock {
 
     private static int state;
@@ -33,13 +33,13 @@ public class StaticBlock {
 
 现在，如果我们用类似下面的语句触发类初始化:
 
-```
+```java
 new StaticBlock();
 ```
 
 然后，我们会看到以下异常:
 
-```
+```java
 java.lang.ExceptionInInitializerError
     at com.baeldung...(ExceptionInInitializerErrorUnitTest.java:18)
 Caused by: java.lang.ArithmeticException: / by zero
@@ -49,7 +49,7 @@ Caused by: java.lang.ArithmeticException: / by zero
 
 如前所述，Java 抛出`ExceptionInInitializerError `异常，同时维护对根本原因的引用:
 
-```
+```java
 assertThatThrownBy(StaticBlock::new)
   .isInstanceOf(ExceptionInInitializerError.class)
   .hasCauseInstanceOf(ArithmeticException.class);
@@ -61,7 +61,7 @@ assertThatThrownBy(StaticBlock::new)
 
 如果 Java 无法初始化静态变量，也会发生同样的情况:
 
-```
+```java
 public class StaticVar {
 
     private static int state = initializeState();
@@ -74,13 +74,13 @@ public class StaticVar {
 
 同样，如果我们触发类初始化过程:
 
-```
+```java
 new StaticVar();
 ```
 
 然后出现相同的异常:
 
-```
+```java
 java.lang.ExceptionInInitializerError
     at com.baeldung...(ExceptionInInitializerErrorUnitTest.java:11)
 Caused by: java.lang.RuntimeException
@@ -91,7 +91,7 @@ Caused by: java.lang.RuntimeException
 
 类似于静态初始化程序块，异常的根本原因也被保留:
 
-```
+```java
 assertThatThrownBy(StaticVar::new)
   .isInstanceOf(ExceptionInInitializerError.class)
   .hasCauseInstanceOf(RuntimeException.class);
@@ -101,7 +101,7 @@ assertThatThrownBy(StaticVar::new)
 
 作为 Java 语言规范(JLS-11.2.3) 的一部分，我们不能在静态初始化器块或静态变量初始化器中抛出[检查异常](/web/20220627185046/https://www.baeldung.com/java-exceptions#1checked-exceptions)。例如，如果我们试图这样做:
 
-```
+```java
 public class NoChecked {
     static {
         throw new Exception();
@@ -111,13 +111,13 @@ public class NoChecked {
 
 编译器将失败，并出现以下编译错误:
 
-```
+```java
 java: initializer must be able to complete normally
 ```
 
 **按照惯例，当我们的静态初始化逻辑抛出一个检查过的异常:**时，我们应该将可能的检查过的异常封装在`ExceptionInInitializerError `的一个实例中
 
-```
+```java
 public class CheckedConvention {
 
     private static Constructor<?> constructor;
@@ -138,7 +138,7 @@ public class CheckedConvention {
 
 然而，如果我们抛出任何其他未检查的异常，Java 将抛出另一个`ExceptionInInitializerError`:
 
-```
+```java
 static {
     try {
         constructor = CheckedConvention.class.getConstructor();
@@ -150,7 +150,7 @@ static {
 
 这里，我们将选中的异常包装在未选中的异常中。因为这个未检查的异常不是`ExceptionInInitializerError, `的实例，Java 将再次包装它，导致这个意外的堆栈跟踪:
 
-```
+```java
 java.lang.ExceptionInInitializerError
 	at com.baeldung.exceptionininitializererror...
 Caused by: java.lang.RuntimeException: java.lang.NoSuchMethodException: ...
@@ -165,7 +165,7 @@ Caused by: java.lang.NoSuchMethodException: com.baeldung.CheckedConvention.<init
 
 最近，这种约定甚至被用于 OpenJDK 源代码本身。例如，下面是`[AtomicReference](https://web.archive.org/web/20220627185046/https://github.com/openjdk/jdk/blob/b87302ca99ff30a03e311ab1c0f524684ed37596/src/java.base/share/classes/java/util/concurrent/atomic/AtomicReference.java#L51) `如何使用这种方法:
 
-```
+```java
 public class AtomicReference<V> implements java.io.Serializable {
     private static final VarHandle VALUE;
     static {

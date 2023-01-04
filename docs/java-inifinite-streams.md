@@ -71,7 +71,7 @@
 
 **在执行一个终端操作`collect()` 方法**之前使用一个`limit()` 方法是至关重要的，否则我们的程序将无限期运行:
 
-```
+```java
 // given
 Stream<Integer> infiniteStream = Stream.iterate(0, i -> i + 2);
 
@@ -92,19 +92,19 @@ assertEquals(collect, Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18));
 
 使用`Stream` API 实现这一点的第一步是创建这些随机值的`Supplier`:
 
-```
+```java
 Supplier<UUID> randomUUIDSupplier = UUID::randomUUID;
 ```
 
 当我们定义供应商时，我们可以使用`generate()` 方法创建无限流:
 
-```
+```java
 Stream<UUID> infiniteStreamOfRandomUUID = Stream.generate(randomUUIDSupplier);
 ```
 
 然后我们可以从这条溪流中提取一些元素。如果我们希望程序在有限的时间内完成，我们需要记住使用一个`limit()` 方法:
 
-```
+```java
 List<UUID> randomInts = infiniteStreamOfRandomUUID
   .skip(10)
   .limit(10)
@@ -117,7 +117,7 @@ List<UUID> randomInts = infiniteStreamOfRandomUUID
 
 假设我们有一个简单的 do..在代码中循环时:
 
-```
+```java
 int i = 0;
 while (i < 10) {
     System.out.println(i);
@@ -129,7 +129,7 @@ while (i < 10) {
 
 不幸的是，在流上没有这样的方法，当我们想要实现类似于标准`do-while`循环的功能时，我们需要使用一个`limit()`方法:
 
-```
+```java
 Stream<Integer> integers = Stream
   .iterate(0, i -> i + 1);
 integers

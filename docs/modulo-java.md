@@ -12,7 +12,7 @@
 
 **如果除法运算符两边的操作数都有类型`int`，则运算的结果是另一个`int:`**
 
-```
+```java
 @Test
 public void whenIntegerDivision_thenLosesRemainder() {
     assertThat(11 / 4).isEqualTo(2);
@@ -21,7 +21,7 @@ public void whenIntegerDivision_thenLosesRemainder() {
 
 当至少一个操作数的类型为`float`或`double:`时，相同的除法运算会产生不同的结果
 
-```
+```java
 @Test
 public void whenDoubleDivision_thenKeepsRemainder() {
     assertThat(11 / 4.0).isEqualTo(2.75);
@@ -32,7 +32,7 @@ public void whenDoubleDivision_thenKeepsRemainder() {
 
 模运算符正好给出了这个余数:
 
-```
+```java
 @Test
 public void whenModulo_thenReturnsRemainder() {
     assertThat(11 % 4).isEqualTo(3);
@@ -45,7 +45,7 @@ public void whenModulo_thenReturnsRemainder() {
 
 当我们试图使用零作为右边的操作数时，除法和模运算都会抛出一个`ArithmeticException`:
 
-```
+```java
 @Test(expected = ArithmeticException.class)
 public void whenDivisionByZero_thenArithmeticException() {
     double result = 1 / 0;
@@ -63,7 +63,7 @@ public void whenModuloByZero_thenArithmeticException() {
 
 如果任意数和 2 之间的模运算结果等于 1，则它是奇数:
 
-```
+```java
 @Test
 public void whenDivisorIsOddAndModulusIs2_thenResultIs1() {
     assertThat(3 % 2).isEqualTo(1);
@@ -72,7 +72,7 @@ public void whenDivisorIsOddAndModulusIs2_thenResultIs1() {
 
 另一方面，如果结果为零(即没有余数)，则它是一个偶数:
 
-```
+```java
 @Test
 public void whenDivisorIsEvenAndModulusIs2_thenResultIs0() {
     assertThat(4 % 2).isEqualTo(0);
@@ -85,7 +85,7 @@ public void whenDivisorIsEvenAndModulusIs2_thenResultIs0() {
 
 每当我们想要将一个元素推入循环队列时，我们只需通过计算我们已经插入的项目数加 1 的模和队列容量来计算下一个空闲位置:
 
-```
+```java
 @Test
 public void whenItemsIsAddedToCircularQueue_thenNoArrayIndexOutOfBounds() {
     int QUEUE_CAPACITY= 10;

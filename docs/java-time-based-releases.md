@@ -28,7 +28,7 @@
 
 我们都熟悉旧的一个，编纂在 [JEP 223](https://web.archive.org/web/20221206194521/https://openjdk.java.net/jeps/223) 中。这个方案使版本号递增，并传递额外的信息。
 
-```
+```java
  Actual                    Hypothetical
 Release Type           long               short
 ------------           ------------------------ 
@@ -41,7 +41,7 @@ Minor    2014/05       1.7.0_60-b19       7u60
 
 **如果我们在版本 8 或更高版本的 JVM 上运行`java -version` ，我们会看到类似于**
 
-```
+```java
 >java -version
 java version "1.6.0_27"
 Java(TM) 2 Runtime Environment, Standard Edition (build 1.6.0_27-b07)
@@ -58,7 +58,7 @@ Java HotSpot(TM) Client VM (build 1.6.0_27-b13, mixed mode, sharing)
 
 让我们来看一些:
 
-```
+```java
 9.0.4
 11.0.2
 10.0.1
@@ -68,7 +68,7 @@ Java HotSpot(TM) Client VM (build 1.6.0_27-b13, mixed mode, sharing)
 
 对于语义版本控制，典型的结构是`$MAJOR.$MINOR.$PATCH`，但是 Java 的新版本结构是:
 
-```
+```java
 $FEATURE.$INTERIM.$UPDATE.$PATCH
 ```
 

@@ -44,19 +44,19 @@ Spring Cloud Config 还使得从 Spring Boot 应用程序自动连接到配置�
 
 Spring Cloud Config 支持使用文件系统作为配置源。要启用此功能，我们必须在配置服务器的`application.properties`文件中指定以下值:
 
-```
+```java
 spring.cloud.config.server.native.search-locations=resources/other.properties
 ```
 
 默认情况下，搜索位置采用类路径资源。如果我们想使用任意文件，我们只需包括一个文件资源前缀:
 
-```
+```java
 spring.cloud.config.server.native.search-locations=file:///external/path/other.properties
 ```
 
 除了这个属性之外，配置服务器需要在启用本地配置文件的情况下运行:
 
-```
+```java
 -Dspring.profiles.active=native
 ```
 
@@ -68,7 +68,7 @@ Spring Cloud Config 还可以使用关系数据库来加载配置数据，使用
 
 首先， [`spring-jdbc`](https://web.archive.org/web/20220727020730/https://search.maven.org/artifact/org.springframework/spring-jdbc) 库必须存在于类路径中。如果我们已经在使用 [Spring Data JDBC](https://web.archive.org/web/20220727020730/https://search.maven.org/artifact/org.springframework.data/spring-data-jdbc) 或另一个依赖库，它就已经存在了。否则，我们总是可以手动指定它:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-jdbc</artifactId>
@@ -77,7 +77,7 @@ Spring Cloud Config 还可以使用关系数据库来加载配置数据，使用
 
 其次，我们需要指定如何连接到数据库:
 
-```
+```java
 spring.datasource.url=jdbc:mysql://dbhost:3306/springconfig
 spring.datasource.username=dbuser
 spring.datasource.password=dbpassword
@@ -96,7 +96,7 @@ spring.datasource.driver-class-name=com.mysql.jdbc.Driver
 
 最后，我们需要为配置服务器指定 JDBC 配置文件:
 
-```
+```java
 -Dspring.profiles.active=jdbc
 ```
 
@@ -106,7 +106,7 @@ Spring Cloud Config 还支持将 [Redis](/web/20220727020730/https://www.baeldun
 
 首先，我们需要向 [Spring 数据 Redis](https://web.archive.org/web/20220727020730/https://search.maven.org/artifact/org.springframework.data/spring-data-redis) 添加一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-redis</artifactId>
@@ -115,20 +115,20 @@ Spring Cloud Config 还支持将 [Redis](/web/20220727020730/https://www.baeldun
 
 其次，我们需要为如何连接 Redis 设置一些属性:
 
-```
+```java
 spring.redis.host=localhost
 spring.redis.port=6379
 ```
 
 接下来，我们必须确保我们的属性正确存储在 Redis 中。我们可以使用`HMSET`命令来存储一些样本属性:
 
-```
+```java
 HMSET application sample.property.name1 "somevalue" sample.property.name2 "anothervalue"
 ```
 
 如果我们回显这些属性，我们应该会看到以下数据:
 
-```
+```java
 HGETALL application
 {
     "sample.property.name1": "somevalue",
@@ -138,13 +138,13 @@ HGETALL application
 
 最后，我们必须为 Spring Cloud 配置服务器启用 Redis 配置文件:
 
-```
+```java
 -Dspring.profiles.active=redis
 ```
 
 使用 Redis 作为配置源也支持不同的概要文件。为此，我们只需将配置文件名添加到应用程序的末尾:
 
-```
+```java
 HMSET application-dev sample.property.name1 "somevalue" sample.property.name2 "anothervalue"
 ```
 
@@ -158,7 +158,7 @@ Spring Cloud Config 为许多不同的云秘密提供者提供支持。下面，
 
 这个类依赖于`AWSSecretsManager`类来完成与 AWS 通信的重任。虽然我们可以自己手动创建它，但更直接的解决方案是使用一个[弹簧启动器](https://web.archive.org/web/20220727020730/https://search.maven.org/artifact/org.springframework.cloud/spring-cloud-starter-aws-secrets-manager-config):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-aws-secrets-manager-config</artifactId>
@@ -168,7 +168,7 @@ Spring Cloud Config 为许多不同的云秘密提供者提供支持。下面，
 
 这个模块包括一个自动配置，它将为我们创建一个`AWSSecretsManager `的实例。我们所要做的就是在我们的`bootstrap.yml`文件中指定一组属性:
 
-```
+```java
 aws:
   secretsmanager:
     default-context: application
@@ -189,7 +189,7 @@ aws:
 
 首先，我们需要将 [AWS SDK](https://web.archive.org/web/20220727020730/https://search.maven.org/artifact/com.amazonaws/aws-java-sdk-s3outposts) 添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>aws-java-sdk-s3outposts</artifactId>
@@ -199,14 +199,14 @@ aws:
 
 然后，我们需要提供一些值来配置到包含我们的属性文件的 S3 存储桶的连接:
 
-```
+```java
 amazon.s3.access-key=key
 amazon.s3.secret-key=secret
 ```
 
 而且，我们需要为 AWS S3 配置提供程序提供特定的属性:
 
-```
+```java
 spring:
   cloud:
     config:
@@ -218,7 +218,7 @@ spring:
 
 我们还需要设置一个概要文件，以确保加载了 AWS S3 配置源:
 
-```
+```java
 -Dspring.profiles.active=awss3
 ```
 
@@ -228,7 +228,7 @@ spring:
 
 如果任何提供的配置源不能满足我们的需求，我们总是可以选择实现我们自己的配置源。一般来说，这涉及到创建一个新的类来实现 [`EnvironmentRepository`](https://web.archive.org/web/20220727020730/https://www.javadoc.io/doc/org.springframework.cloud/spring-cloud-config-server/latest/org/springframework/cloud/config/server/environment/EnvironmentRepository.html) 和 [`Ordered`](https://web.archive.org/web/20220727020730/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/Ordered.html) :
 
-```
+```java
 public class CustomConfigurationRepository implements EnvironmentRepository, Ordered {
     @Override
     public Environment findOne(String application, String profile, String label) {
@@ -246,7 +246,7 @@ public class CustomConfigurationRepository implements EnvironmentRepository, Ord
 
 然后，我们简单地将这个类实例化为一个新的 Spring bean:
 
-```
+```java
 @Bean
 public CustomConfigurationRepository customConfigurationRepository() {
     return new CustomConfigurationRepository();
@@ -259,7 +259,7 @@ public CustomConfigurationRepository customConfigurationRepository() {
 
 假设我们希望同时运行 JDBC 和 Redis 作为配置源。我们需要做的第一件事是在我们的`bootstrap.yml`文件中定义每个源的顺序:
 
-```
+```java
 spring:
   cloud:
     config:
@@ -274,7 +274,7 @@ spring:
 
 此外，我们需要为服务器定义两个配置文件:
 
-```
+```java
 -Dspring.profiles.active=jdbc,redis
 ```
 

@@ -41,7 +41,7 @@ XSS 是一种常见的注入式攻击。在 XSS，攻击者试图在 web 应用�
 
 CSP 是一个附加的安全层，有助于缓解 XSS 和数据注入攻击。要启用它，我们需要配置我们的应用程序，通过提供一个`WebSecurityConfigurerAdapter` bean 来返回一个`Content-Security-Policy`头:
 
-```
+```java
 @Configuration
 public class SecurityConf extends WebSecurityConfigurerAdapter {
 

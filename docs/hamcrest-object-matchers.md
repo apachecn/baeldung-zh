@@ -12,7 +12,7 @@ Hamcrest 提供了匹配器，使单元测试断言更简单、更易读。你�
 
 要获得 Hamcrest，我们只需要**将下面的 Maven 依赖项添加到我们的`pom.xml`** 中:
 
-```
+```java
 <dependency>
     <groupId>org.hamcrest</groupId>
     <artifactId>java-hamcrest</artifactId>
@@ -31,13 +31,13 @@ Hamcrest 提供了匹配器，使单元测试断言更简单、更易读。你�
 
 我们的第一个对象叫做`Location`，没有属性:
 
-```
+```java
 public class Location {}
 ```
 
 我们将第二个 bean 命名为`City`,并向其添加以下实现:
 
-```
+```java
 public class City extends Location {
 
     String name;
@@ -69,7 +69,7 @@ public class City extends Location {
 
 顾名思义， **`hasToString`方法验证某个对象有一个返回特定`String`** 的`toString`方法:
 
-```
+```java
 @Test
 public void givenACity_whenHasToString_thenCorrect() {
     City city = new City("San Francisco", "CA");
@@ -80,7 +80,7 @@ public void givenACity_whenHasToString_thenCorrect() {
 
 因此，我们正在创建一个`City` ，并验证它的`toString`方法是否返回我们想要的`String`。我们可以更进一步，不检查相等性，而是检查一些其他条件:
 
-```
+```java
 @Test
 public void givenACity_whenHasToStringEqualToIgnoringCase_thenCorrect() {
     City city = new City("San Francisco", "CA");
@@ -92,7 +92,7 @@ public void givenACity_whenHasToStringEqualToIgnoringCase_thenCorrect() {
 
 正如我们所看到的， **`hasToString` 是重载的，可以接收一个`String` 或者一个文本匹配器作为参数**。所以，我们也可以做这样的事情:
 
-```
+```java
 @Test
 public void givenACity_whenHasToStringEmptyOrNullString_thenCorrect() {
     City city = new City(null, null);
@@ -107,7 +107,7 @@ public void givenACity_whenHasToStringEmptyOrNullString_thenCorrect() {
 
 这个匹配器**代表一个`is-a` 关系**。我们的`Location` 超类开始发挥作用了:
 
-```
+```java
 @Test
 public void givenACity_whenTypeCompatibleWithLocation_thenCorrect() {
     City city = new City("San Francisco", "CA");
@@ -118,7 +118,7 @@ public void givenACity_whenTypeCompatibleWithLocation_thenCorrect() {
 
 这是说`City`是-a `Location,` ，这是真的，这个测试应该通过。同样，如果我们想测试否定的情况:
 
-```
+```java
 @Test
 public void givenACity_whenTypeNotCompatibleWithString_thenCorrect() {
     City city = new City("San Francisco", "CA");
@@ -131,7 +131,7 @@ public void givenACity_whenTypeNotCompatibleWithString_thenCorrect() {
 
 最后，注意所有的 Java 对象都应该通过下面的测试:
 
-```
+```java
 @Test
 public void givenACity_whenTypeCompatibleWithObject_thenCorrect() {
     City city = new City("San Francisco", "CA");

@@ -10,7 +10,7 @@
 
 我们将使用与 Shiro 简介相同的设置—也就是说，我们将只把 [`shiro-core`](https://web.archive.org/web/20220628092334/https://search.maven.org/search?q=g:org.apache.shiro%20AND%20a:shiro-core&core=gav) 模块添加到我们的依赖项中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.shiro</groupId>
     <artifactId>shiro-core</artifactId>
@@ -20,7 +20,7 @@
 
 此外，出于测试目的，我们将使用一个简单的 INI 领域，将下面的`shiro.ini` 文件放在类路径的根目录下:
 
-```
+```java
 [users]
 jane.admin = password, admin
 john.editor = password2, editor
@@ -34,7 +34,7 @@ author = articles:create, articles:edit
 
 然后，我们将使用上述领域初始化 Shiro:
 
-```
+```java
 IniRealm iniRealm = new IniRealm("classpath:shiro.ini");
 SecurityManager securityManager = new DefaultSecurityManager(iniRealm);
 SecurityUtils.setSecurityManager(securityManager);
@@ -50,7 +50,7 @@ SecurityUtils.setSecurityManager(securityManager);
 
 使用 Shiro，我们有几种方法来测试用户是否有特定的角色。最直接的方法是使用`hasRole` 方法:
 
-```
+```java
 Subject subject = SecurityUtils.getSubject();
 if (subject.hasRole("admin")) {       
     logger.info("Welcome Admin");              
@@ -65,7 +65,7 @@ if (subject.hasRole("admin")) {
 
 Shiro 对权限做了很少的假设。在最简单的情况下，权限是简单的字符串:
 
-```
+```java
 Subject subject = SecurityUtils.getSubject();
 if (subject.isPermitted("articles:create")) {
     //Create a new article
@@ -82,7 +82,7 @@ Shiro 有一个将权限与角色或单个用户相关联的灵活模型。然�
 
 例如，我们可以看到，在我们的 INI 文件中，用户`zoe.author` 拥有`author` 角色，这给了他们`articles:create`和`articles:edit`权限:
 
-```
+```java
 [users]
 zoe.author = password3, author
 #Other users...
@@ -100,7 +100,7 @@ author = articles:create, articles:edit
 
 我们在 Shiro 中用字符串表示通配符权限。权限字符串由冒号分隔的一个或多个组件组成，例如:
 
-```
+```java
 articles:edit:1
 ```
 
@@ -114,7 +114,7 @@ resource:action:id 的三层结构是 Shiro 应用程序中的一种常见模式
 
 因此，我们可以重温一下前面的例子来遵循这个方案:
 
-```
+```java
 Subject subject = SecurityUtils.getSubject();
 if (subject.isPermitted("articles:edit:123")) {
     //Edit article with id 123
@@ -135,14 +135,14 @@ if (subject.isPermitted("articles:edit:123")) {
 
 因此，假设我们为`author` 角色分配了以下权限:
 
-```
+```java
 [roles]
 author = articles:*
 ```
 
 然后，具有 `author`角色的每个人将被允许对文章进行所有可能的操作:
 
-```
+```java
 Subject subject = SecurityUtils.getSubject();
 if (subject.isPermitted("articles:create")) {
     //Create a new article
@@ -155,7 +155,7 @@ if (subject.isPermitted("articles:create")) {
 
 当然，出于性能方面的原因，因为这种暗示不是简单的相等比较，**我们应该总是针对最具体的权限**进行测试:
 
-```
+```java
 if (subject.isPermitted("articles:edit:1")) { //Better than "articles:*"
     //Edit article
 }
@@ -178,7 +178,7 @@ if (subject.isPermitted("articles:edit:1")) { //Better than "articles:*"
 
 **`Permission` 实现是一个只有一个方法的类— `implies` :**
 
-```
+```java
 public class PathPermission implements Permission {
 
     private final Path path;
@@ -203,7 +203,7 @@ public class PathPermission implements Permission {
 
 然后，将`Permission `实现集成到 Shiro 中有各种方法，但是最直接的方法是**将一个自定义`PermissionResolver`注入到我们的`Realm` :** 中
 
-```
+```java
 IniRealm realm = new IniRealm();
 Ini ini = Ini.fromResourcePath(Main.class.getResource("/com/.../shiro.ini").getPath());
 realm.setIni(ini);
@@ -215,7 +215,7 @@ SecurityManager securityManager = new DefaultSecurityManager(realm);
 
 **`PermissionResolver` 负责** **负责** **将我们权限的字符串表示转换成实际的`Permission` 对象:**
 
-```
+```java
 public class PathPermissionResolver implements PermissionResolver {
     @Override
     public Permission resolvePermission(String permissionString) {
@@ -226,7 +226,7 @@ public class PathPermissionResolver implements PermissionResolver {
 
 我们必须用基于路径的权限修改之前的`shiro.ini` :
 
-```
+```java
 [roles]
 admin = /
 editor = /articles
@@ -235,7 +235,7 @@ author = /articles/drafts
 
 然后，我们将能够检查路径上的权限:
 
-```
+```java
 if(currentUser.isPermitted("/articles/drafts/new-article")) {
     log.info("You can access articles");
 }
@@ -243,7 +243,7 @@ if(currentUser.isPermitted("/articles/drafts/new-article")) {
 
 请注意，这里我们是以编程方式配置一个简单的领域。在一个典型的应用程序中，我们将使用一个`shiro.ini` 文件或其他方式(如 Spring)来配置 Shiro 和领域。真实世界的`shiro.ini`文件可能包含:
 
-```
+```java
 [main]
 permissionResolver = com.baeldung.shiro.permissions.custom.PathPermissionResolver
 dataSource = org.apache.shiro.jndi.JndiObjectFactory

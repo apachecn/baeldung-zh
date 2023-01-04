@@ -12,7 +12,7 @@
 
 让我们创建并初始化一个`HashMap` ，它的键的类型是`String` ，值的类型是`Integer`:
 
-```
+```java
 Map<String, Integer> map = new HashMap<>();
 map.put("one", 1);
 map.put("two", 2);
@@ -24,19 +24,19 @@ map.put("two", 2);
 
 让我们将方法`keySet()`应用于 `Map` ，并将其存储在一个`Set` 变量`actualValues`中:
 
-```
+```java
 Set<String> actualValues = map.keySet(); 
 ```
 
 现在，让我们确认返回的`Set` 的大小是 2:
 
-```
+```java
 assertEquals(2, actualValues.size());
 ```
 
 此外，我们可以看到返回的`Set`包含了`Map`的键:
 
-```
+```java
 assertTrue(actualValues.contains("one"));
 assertTrue(actualValues.contains("two"));
 ```
@@ -47,7 +47,7 @@ assertTrue(actualValues.contains("two"));
 
 让我们将方法`entrySet()`应用于 `Map:`
 
-```
+```java
 Set<Map.Entry<String, Integer>> actualValues = map.entrySet();
 ```
 
@@ -57,13 +57,13 @@ Set<Map.Entry<String, Integer>> actualValues = map.entrySet();
 
 和以前一样，让我们确认返回的`Set` 的大小是 2:
 
-```
+```java
 assertEquals(2, actualValues.size());
 ```
 
 此外，我们可以看到返回的`Set`包含了`Map`的键值条目:
 
-```
+```java
 assertTrue(actualValues.contains(new SimpleEntry<>("one", 1)));
 assertTrue(actualValues.contains(new SimpleEntry<>("two", 2)));
 ```
@@ -76,19 +76,19 @@ assertTrue(actualValues.contains(new SimpleEntry<>("two", 2)));
 
 让我们将方法`values()`应用于 `Map` ，并将其存储在一个`Collection` 变量`actualValues:`中
 
-```
+```java
 Collection<Integer> actualValues = map.values();
 ```
 
 现在，让我们验证返回的`Collection:`的大小
 
-```
+```java
 assertEquals(2, actualValues.size());
 ```
 
 此外，我们可以看到返回的`Set`包含了`Map`的值:
 
-```
+```java
 assertTrue(actualValues.contains(1));
 assertTrue(actualValues.contains(2));
 ```

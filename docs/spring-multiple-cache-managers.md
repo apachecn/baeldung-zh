@@ -12,7 +12,7 @@ Spring 对方法应用缓存，这样我们的应用程序就不会对相同的�
 
 在一个 Spring 应用 中实现 [缓存非常容易。](/web/20221126213538/https://www.baeldung.com/spring-cache-tutorial)这可以通过在我们的配置类中添加`@EnableCaching`注释来实现:
 
-```
+```java
 @Configuration
 @EnableCaching
 public class MultipleCacheManagerConfig {}
@@ -20,7 +20,7 @@ public class MultipleCacheManagerConfig {}
 
 然后，我们可以通过在方法上添加`@Cacheable `注释来开始缓存方法的输出:
 
-```
+```java
 @Cacheable(cacheNames = "customers")
 public Customer getCustomerDetail(Integer customerId) {
     return customerDetailRepository.getCustomerDetail(customerId);
@@ -47,7 +47,7 @@ public Customer getCustomerDetail(Integer customerId) {
 
 我们可以在配置类中创建两个缓存管理器 beans。然后，我们可以将一个 bean 设为主要 bean:
 
-```
+```java
 @Configuration
 @EnableCaching
 public class MultipleCacheManagerConfig {
@@ -73,7 +73,7 @@ public class MultipleCacheManagerConfig {
 
 现在，Spring Boot 将使用`CaffeineCacheManager`作为所有方法的默认值，直到我们为一个方法明确指定我们的`alternateCacheManager`:
 
-```
+```java
 @Cacheable(cacheNames = "customers")
 public Customer getCustomerDetail(Integer customerId) {
     return customerDetailRepository.getCustomerDetail(customerId);
@@ -91,7 +91,7 @@ public List<Order> getCustomerOrders(Integer customerId) {
 
 另一种方法是扩展`CachingConfigurerSupport`类并覆盖`cacheManager`()方法。该方法返回一个 bean，它将成为我们的应用程序的默认缓存管理器:
 
-```
+```java
 @Configuration
 @EnableCaching
 public class MultipleCacheManagerConfig extends CachingConfigurerSupport {
@@ -120,7 +120,7 @@ public class MultipleCacheManagerConfig extends CachingConfigurerSupport {
 
 我们可以实现`CacheResolver`接口并创建一个自定义的`CacheResolver`:
 
-```
+```java
 public class MultipleCacheResolver implements CacheResolver {
 
     private final CacheManager simpleCacheManager;
@@ -151,7 +151,7 @@ public class MultipleCacheResolver implements CacheResolver {
 
 在我们的例子中，我们根据方法名选择一个缓存管理器。在这之后，我们需要创建一个自定义的 bean`CacheResolver`:
 
-```
+```java
 @Configuration
 @EnableCaching
 public class MultipleCacheManagerConfig extends CachingConfigurerSupport {
@@ -181,7 +181,7 @@ public class MultipleCacheManagerConfig extends CachingConfigurerSupport {
 
 现在我们可以使用自定义的`CacheResolver`为我们的方法解析一个缓存管理器:
 
-```
+```java
 @Component
 public class OrderDetailBO {
 

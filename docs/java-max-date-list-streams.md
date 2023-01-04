@@ -12,7 +12,7 @@
 
 首先，让我们创建一个基本的`Event`对象，它包含一个单独的`Date`属性:
 
-```
+```java
 public class Event {
 
     Date date;
@@ -23,7 +23,7 @@ public class Event {
 
 我们现在可以定义三个`Event`的列表:第一个发生在今天，第二个发生在明天，第三个发生在一周内。**为了给`Date,`添加天数，我们将使用 [Apache Commons 的](/web/20221112223030/https://www.baeldung.com/java-commons-lang-3) `DateUtils`方法`addDays()`** :
 
-```
+```java
 Date TODAY = new Date();
 Event TODAYS_EVENT = new Event(TODAY);
 Date TOMORROW = DateUtils.addDays(TODAY, 1);
@@ -35,7 +35,7 @@ List<Event> events = List.of(TODAYS_EVENT, TOMORROWS_EVENT, NEXT_WEEK_EVENT);
 
 我们现在的目标是编写一个方法，能够确定`NEXT_WEEK_EVENT`是这个`Event`列表中的最大日期。我们也会用`LocalDate`代替`Date`来做同样的事情。我们的`LocalEvent`会是这样的:
 
-```
+```java
 public class LocalEvent {
 
     LocalDate date;
@@ -46,7 +46,7 @@ public class LocalEvent {
 
 构建`Event`列表更加简单，因为`LocalDate`已经有了一个内置的`plusDays()`方法:
 
-```
+```java
 LocalDate TODAY_LOCAL = LocalDate.now();
 LocalEvent TODAY_LOCAL_EVENT = new LocalEvent(TODAY_LOCAL);
 LocalDate TOMORROW_LOCAL = TODAY_LOCAL.plusDays(1);
@@ -69,7 +69,7 @@ List<LocalEvent> localEvents = List.of(TODAY_LOCAL_EVENT, TOMORROW_LOCAL_EVENT, 
 
 该方法最终看起来像这样:
 
-```
+```java
 Date findMaxDateOf(List<Event> events) {
     if (events == null || events.isEmpty()) {
         return null;
@@ -83,7 +83,7 @@ Date findMaxDateOf(List<Event> events) {
 
 或者，使用`naturalOrder(),`,它将显示为:
 
-```
+```java
 Date findMaxDateOf(List<Event> events) {
     if (events == null || events.isEmpty()) {
         return null;
@@ -97,7 +97,7 @@ Date findMaxDateOf(List<Event> events) {
 
 最后，我们现在可以快速测试我们的方法是否为我们的列表返回了正确的结果:
 
-```
+```java
 assertEquals(NEXT_WEEK, findMaxDateOf(List.of(TODAYS_EVENT, TOMORROWS_EVENT, NEXT_WEEK_EVENT);
 ```
 
@@ -105,7 +105,7 @@ assertEquals(NEXT_WEEK, findMaxDateOf(List.of(TODAYS_EVENT, TOMORROWS_EVENT, NEX
 
 因此，该方法可以写成:
 
-```
+```java
 LocalDate findMaxDateOf(List<LocalEvent> events) {
     if (events == null || events.isEmpty()) {
         return null;
@@ -119,7 +119,7 @@ LocalDate findMaxDateOf(List<LocalEvent> events) {
 
 或者，以完全等同的方式:
 
-```
+```java
 LocalDate findMaxDateOf(List<LocalEvent> events) {
     if (events == null || events.isEmpty()) {
         return null;
@@ -133,7 +133,7 @@ LocalDate findMaxDateOf(List<LocalEvent> events) {
 
 我们可以编写下面的测试来确认它的工作:
 
-```
+```java
 assertEquals(NEXT_WEEK_LOCAL, findMaxDateOf(List.of(TODAY_LOCAL_EVENT, TOMORROW_LOCAL_EVENT, NEXT_WEEK_LOCAL_EVENT)));
 ```
 

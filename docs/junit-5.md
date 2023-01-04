@@ -24,7 +24,7 @@ Learn how to simplify test coverage in JUnit 5 with parameterized tests[Read mor
 
 设置 [JUnit 5.x.0](https://web.archive.org/web/20220812054122/https://search.maven.org/search?q=a:junit-jupiter-engine) 非常简单；我们只需要将以下依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-engine</artifactId>
@@ -78,7 +78,7 @@ JUnit Vintage 支持在 JUnit 5 平台上运行基于 JUnit 3 和 JUnit 4 的测
 
 下面是在主要测试用例之前执行的简单代码示例:
 
-```
+```java
 @BeforeAll
 static void setup() {
     log.info("@BeforeAll - executes once before all test methods in this class");
@@ -96,7 +96,7 @@ void init() {
 
 现在让我们转向新的可选测试方法:
 
-```
+```java
 @DisplayName("Single test successful")
 @Test
 void testSingleSuccessTest() {
@@ -115,7 +115,7 @@ void testShowSomething() {
 
 最后，让我们讨论与测试执行后的操作相关的方法:
 
-```
+```java
 @AfterEach
 void tearDown() {
     log.info("@AfterEach - executed after each test method.");
@@ -137,7 +137,7 @@ JUnit 5 试图充分利用 Java 8 的新特性，尤其是 lambda 表达式。
 
 断言被移到了`org.junit.jupiter.api.Assertions,` ，并得到了显著的改进。如前所述，我们现在可以在断言中使用 lambdas:
 
-```
+```java
 @Test
 void lambdaExpressions() {
     List numbers = Arrays.asList(1, 2, 3);
@@ -151,7 +151,7 @@ void lambdaExpressions() {
 
 现在还可以用`assertAll(),` 对断言进行分组，这将报告组内任何失败的断言，用`MultipleFailuresError`:
 
-```
+```java
  @Test
  void groupAssertions() {
      int[] numbers = {0, 1, 2, 3, 4};
@@ -171,7 +171,7 @@ void lambdaExpressions() {
 
 我们可以用`assumeTrue()`、`assumeFalse()`和`assumingThat():`来声明一个假设
 
-```
+```java
 @Test
 void trueAssumption() {
     assumeTrue(5 > 1);
@@ -202,7 +202,7 @@ void assumptionThat() {
 
 JUnit 5 中有两种异常测试方法，这两种方法我们都可以使用`assertThrows()`方法实现:
 
-```
+```java
 @Test
 void shouldThrowException() {
     Throwable exception = assertThrows(UnsupportedOperationException.class, () -> {
@@ -230,7 +230,7 @@ void assertThrowsException() {
 
 让我们看看第一个:
 
-```
+```java
 @Suite
 @SelectPackages("com.baeldung")
 @ExcludePackages("com.baeldung.suites")
@@ -239,7 +239,7 @@ public class AllUnitTest {}
 
 `@SelectPackage`用于指定运行测试套件时要选择的包的名称。在我们的例子中，它将运行所有的测试。第二个注释`@SelectClasses`，用于指定运行测试套件时要选择的类:
 
-```
+```java
 @Suite
 @SelectClasses({AssertionTest.class, AssumptionTest.class, ExceptionTest.class})
 public class AllUnitTest {}
@@ -253,7 +253,7 @@ public class AllUnitTest {}
 
 动态测试可以由标注了`@TestFactory.`的工厂方法生成。让我们来看看代码:
 
-```
+```java
 @TestFactory
 Stream<DynamicTest> translateDynamicTestsFromStream() {
     return in.stream()

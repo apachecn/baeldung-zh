@@ -34,7 +34,7 @@
 
 **Mockito 强烈建议使用上述**中的任何一种。然而，当我们没有利用 Mockito 规则或 runner 时，还有另一种方法可以在我们的测试中实现严格的存根:
 
-```
+```java
 Mockito.mockitoSession()
   .initMocks(this)
   .strictness(Strictness.STRICT_STUBS)
@@ -49,7 +49,7 @@ Mockito.mockitoSession()
 
 让我们看一个简单的例子:
 
-```
+```java
 @Test
 public void givenUnusedStub_whenInvokingGetThenThrowUnnecessaryStubbingException() {
     when(mockList.add("one")).thenReturn(true); // this won't get called
@@ -60,7 +60,7 @@ public void givenUnusedStub_whenInvokingGetThenThrowUnnecessaryStubbingException
 
 当我们运行这个单元测试时，Mockito 将检测未使用的存根并抛出一个`UnnecessaryStubbingException`:
 
-```
+```java
 org.mockito.exceptions.misusing.UnnecessaryStubbingException: 
 Unnecessary stubbings detected.
 Clean & maintainable test code requires zero unnecessary code.
@@ -83,7 +83,7 @@ Please remove unnecessary stubbings or use 'lenient' strictness. More info: java
 
 有时，我们需要将特定的存根配置为宽松的，同时保持所有其他存根和模拟使用严格的存根:
 
-```
+```java
 @Test
 public void givenLenientdStub_whenInvokingGetThenThrowUnnecessaryStubbingException() {
     lenient().when(mockList.add("one")).thenReturn(true);

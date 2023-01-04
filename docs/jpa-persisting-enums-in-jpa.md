@@ -16,7 +16,7 @@
 
 但是让我们首先创建一个简单的`@Entity`，我们将在整个教程中使用它:
 
-```
+```java
 @Entity
 public class Article {
     @Id
@@ -34,7 +34,7 @@ public class Article {
 
 让我们介绍第一个枚举:
 
-```
+```java
 public enum Status {
     OPEN, REVIEW, APPROVED, REJECTED;
 }
@@ -42,7 +42,7 @@ public enum Status {
 
 接下来，让我们将其添加到`Article`类中，并用`@Enumerated(EnumType.ORDINAL)`对其进行注释:
 
-```
+```java
 @Entity
 public class Article {
     @Id
@@ -57,7 +57,7 @@ public class Article {
 
 现在，当持久化一个`Article`实体时:
 
-```
+```java
 Article article = new Article();
 article.setId(1);
 article.setTitle("ordinal title");
@@ -66,7 +66,7 @@ article.setStatus(Status.OPEN);
 
 JPA 将触发以下 SQL 语句:
 
-```
+```java
 insert 
 into
     Article
@@ -88,7 +88,7 @@ binding parameter [3] as [INTEGER] - [1]
 
 让我们创建第二个枚举:
 
-```
+```java
 public enum Type {
     INTERNAL, EXTERNAL;
 }
@@ -96,7 +96,7 @@ public enum Type {
 
 让我们将它添加到我们的`Article`类中，并用`@Enumerated(EnumType.STRING)`对其进行注释:
 
-```
+```java
 @Entity
 public class Article {
     @Id
@@ -114,7 +114,7 @@ public class Article {
 
 现在，当持久化一个`Article`实体时:
 
-```
+```java
 Article article = new Article();
 article.setId(2);
 article.setTitle("string title");
@@ -123,7 +123,7 @@ article.setType(Type.EXTERNAL);
 
 JPA 将执行以下 SQL 语句:
 
-```
+```java
 insert 
 into
     Article
@@ -148,7 +148,7 @@ binding parameter [4] as [INTEGER] - [2]
 
 为了更好地理解这个概念，让我们创建一个新的 enum，并在映射逻辑中使用它的`int`值:
 
-```
+```java
 public enum Priority {
     LOW(100), MEDIUM(200), HIGH(300);
 
@@ -175,7 +175,7 @@ public enum Priority {
 
 现在，为了在我们的`Article`类中使用它，我们需要添加两个属性并实现回调方法:
 
-```
+```java
 @Entity
 public class Article {
 
@@ -214,7 +214,7 @@ public class Article {
 
 现在，当持久化一个`Article`实体时:
 
-```
+```java
 Article article = new Article();
 article.setId(3);
 article.setTitle("callback title");
@@ -223,7 +223,7 @@ article.setPriority(Priority.HIGH);
 
 JPA 将触发以下 SQL 查询:
 
-```
+```java
 insert 
 into
     Article
@@ -247,7 +247,7 @@ binding parameter [5] as [INTEGER] - [3]
 
 首先，我们将创建一个新的枚举:
 
-```
+```java
 public enum Category {
     SPORT("S"), MUSIC("M"), TECHNOLOGY("T");
 
@@ -265,7 +265,7 @@ public enum Category {
 
 我们还需要将它添加到`Article`类中:
 
-```
+```java
 @Entity
 public class Article {
 
@@ -292,7 +292,7 @@ public class Article {
 
 现在让我们创建一个新的`CategoryConverter`:
 
-```
+```java
 @Converter(autoApply = true)
 public class CategoryConverter implements AttributeConverter<Category, String> {
 
@@ -322,7 +322,7 @@ public class CategoryConverter implements AttributeConverter<Category, String> {
 
 现在让我们持久化一个`Article`实体:
 
-```
+```java
 Article article = new Article();
 article.setId(4);
 article.setTitle("converted title");
@@ -331,7 +331,7 @@ article.setCategory(Category.MUSIC);
 
 然后，JPA 将执行以下 SQL 语句:
 
-```
+```java
 insert 
 into
     Article
@@ -357,7 +357,7 @@ binding parameter [6] as [INTEGER] - [4]
 
 为了找到所有类别为`Category.SPORT`的`Article`实体，我们需要执行以下语句:
 
-```
+```java
 String jpql = "select a from Article a where a.category = com.baeldung.jpa.enums.Category.SPORT";
 
 List<Article> articles = em.createQuery(jpql, Article.class).getResultList();
@@ -369,7 +369,7 @@ List<Article> articles = em.createQuery(jpql, Article.class).getResultList();
 
 使用命名参数是完全合法的:
 
-```
+```java
 String jpql = "select a from Article a where a.category = :category";
 
 TypedQuery<Article> query = em.createQuery(jpql, Article.class);

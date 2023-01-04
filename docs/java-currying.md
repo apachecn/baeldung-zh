@@ -16,7 +16,7 @@
 
 我们简化的第一版只需要一个正文和一个称呼:
 
-```
+```java
 class Letter {
     private String salutation;
     private String body;
@@ -32,7 +32,7 @@ class Letter {
 
 这种对象可以通过以下方法轻松创建:
 
-```
+```java
 Letter createLetter(String salutation, String body){
     return new Letter(salutation, body);
 }
@@ -42,7 +42,7 @@ Letter createLetter(String salutation, String body){
 
 上面的方法工作得很好，但是我们可能需要将这种行为提供给以函数风格编写的东西。从 Java 8 开始，我们可以使用`BiFunction`来达到这个目的:
 
-```
+```java
 BiFunction<String, String, Letter> SIMPLE_LETTER_CREATOR 
   = (salutation, body) -> new Letter(salutation, body); 
 ```
@@ -51,7 +51,7 @@ BiFunction<String, String, Letter> SIMPLE_LETTER_CREATOR
 
 我们也可以把它重新表述为一系列函数，每个函数都有一个参数:
 
-```
+```java
 Function<String, Function<String, Letter>> SIMPLE_CURRIED_LETTER_CREATOR 
   = salutation -> body -> new Letter(salutation, body);
 ```
@@ -62,7 +62,7 @@ Function<String, Function<String, Letter>> SIMPLE_CURRIED_LETTER_CREATOR
 
 为了展示 curry 的优势，让我们用更多的参数来扩展我们的`Letter`类构造函数:
 
-```
+```java
 class Letter {
     private String returningAddress;
     private String insideAddress;
@@ -87,7 +87,7 @@ class Letter {
 
 像以前一样，我们可以用一种方法创建对象:
 
-```
+```java
 Letter createLetter(String returnAddress, String insideAddress, LocalDate dateOfLetter, 
   String salutation, String body, String closing) {
     return new Letter(returnAddress, insideAddress, dateOfLetter, salutation, body, closing);
@@ -100,7 +100,7 @@ Arity 是一个函数接受的参数数量的度量。Java 提供了现有的[�
 
 奉承是我们的出路。它将一个任意的 arity 转换成一个一元函数序列。对于我们的例子，我们得到:
 
-```
+```java
 Function<String, Function<String, Function<LocalDate, Function<String,
   Function<String, Function<String, Letter>>>>>> LETTER_CREATOR =
   returnAddress
@@ -116,7 +116,7 @@ Function<String, Function<String, Function<LocalDate, Function<String,
 
 显然，上面的类型不太可读。在这个表单中，我们使用了六次`‘apply'`来创建一个`Letter`:
 
-```
+```java
 LETTER_CREATOR
   .apply(RETURNING_ADDRESS)
   .apply(CLOSING)
@@ -130,7 +130,7 @@ LETTER_CREATOR
 
 有了这个函数链，我们可以创建一个帮助器，它预先填写第一个值，并返回函数以继续完成 letter 对象:
 
-```
+```java
 Function<String, Function<LocalDate, Function<String, Function<String, Function<String, Letter>>>>> 
   LETTER_CREATOR_PREFILLED = returningAddress -> LETTER_CREATOR.apply(returningAddress).apply(CLOSING);
 ```
@@ -141,7 +141,7 @@ Function<String, Function<LocalDate, Function<String, Function<String, Function<
 
 为了克服不友好的类型定义和标准`apply`方法的重复使用，也就是说你不知道输入的正确顺序，我们可以使用[构建器模式](/web/20221208143921/https://www.baeldung.com/creational-design-patterns#builder):
 
-```
+```java
 AddReturnAddress builder(){
     return returnAddress
       -> closing
@@ -155,7 +155,7 @@ AddReturnAddress builder(){
 
 我们使用一系列功能接口，而不是一系列功能。注意上面定义的返回类型是`AddReturnAddress`。在下文中，我们只需定义中间接口:
 
-```
+```java
 interface AddReturnAddress {
     Letter.AddClosing withReturnAddress(String returnAddress);
 }
@@ -183,7 +183,7 @@ interface AddBody {
 
 所以用这个来创建一个`Letter` 是不言自明的:
 
-```
+```java
 Letter.builder()
   .withReturnAddress(RETURNING_ADDRESS)
   .withClosing(CLOSING)
@@ -195,7 +195,7 @@ Letter.builder()
 
 像以前一样，我们可以预先填充字母对象:
 
-```
+```java
 AddDateOfLetter prefilledLetter = Letter.builder().
   withReturnAddress(RETURNING_ADDRESS).withClosing(CLOSING);
 ```

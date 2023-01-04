@@ -34,7 +34,7 @@ This tutorial illustrates various uses of the standard static mock methods of th
 
 现在让我们来做一个简单的例子，我们将窥探一个现有的`ArrayList`对象:
 
-```
+```java
 @Test
 public void whenSpyingOnList_thenCorrect() {
     List<String> list = new ArrayList<String>();
@@ -56,7 +56,7 @@ public void whenSpyingOnList_thenCorrect() {
 
 接下来，让我们看看如何使用`@Spy`注释。我们可以使用`@Spy`注释来代替`spy()`:
 
-```
+```java
 @Spy
 List<String> spyList = new ArrayList<String>();
 
@@ -83,7 +83,7 @@ public void whenUsingTheSpyAnnotation_thenObjectIsSpied() {
 
 这里我们将使用`doReturn()`来覆盖`size()`方法:
 
-```
+```java
 @Test
 public void whenStubASpy_thenStubbed() {
     List<String> list = new ArrayList<String>();
@@ -106,7 +106,7 @@ public void whenStubASpy_thenStubbed() {
 
 这里我们将创建一个`ArrayList`类的`mock`:
 
-```
+```java
 @Test
 public void whenCreateMock_thenCreated() {
     List mockedList = Mockito.mock(ArrayList.class);
@@ -122,7 +122,7 @@ public void whenCreateMock_thenCreated() {
 
 另一方面，间谍的行为会有所不同；它实际上会调用`add`方法的实际实现，并将元素添加到底层列表中:
 
-```
+```java
 @Test
 public void whenCreateSpy_thenCreate() {
     List spyList = Mockito.spy(new ArrayList());
@@ -140,14 +140,14 @@ public void whenCreateSpy_thenCreate() {
 
 让我们先来了解这种异常可能发生的环境:
 
-```
+```java
 List<String> list = new ArrayList<String>();
 Mockito.doReturn(100).when(list).size();
 ```
 
 当我们运行这段代码时，我们会得到以下错误:
 
-```
+```java
 org.mockito.exceptions.misusing.NotAMockException: 
 Argument passed to when() is not a mock!
 Example of correct stubbing:
@@ -158,7 +158,7 @@ Example of correct stubbing:
 
 我们还可以看到，异常消息甚至描述了正确的调用应该是什么样子。现在我们对问题有了更好的理解，让我们按照建议来修复它:
 
-```
+```java
 final List<String> spyList = Mockito.spy(new ArrayList<>());
 assertThatNoException().isThrownBy(() -> Mockito.doReturn(100).when(spyList).size());
 ```

@@ -28,7 +28,7 @@
 
 为了连接到卡夫卡，让我们在 POM 文件中添加 [`spring-kafka`](https://web.archive.org/web/20220625080310/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.kafka%22%20AND%20a%3A%22spring-kafka%22) 依赖:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.kafka</groupId>
     <artifactId>spring-kafka</artifactId>
@@ -38,7 +38,7 @@
 
 我们还将使用一个 [Docker Compose](/web/20220625080310/https://www.baeldung.com/ops/docker-compose) 文件来配置和测试 Kafka 服务器设置。最初，让我们在没有任何 SSL 配置的情况下这样做:
 
-```
+```java
 ---
 version: '2'
 services:
@@ -64,7 +64,7 @@ services:
 
 现在，让我们启动容器:
 
-```
+```java
 docker-compose up
 ```
 
@@ -80,14 +80,14 @@ docker-compose up
 
 首先，我们需要**配置代理在端口 9093 上监听 SSL 连接**，在`server.properties`:
 
-```
+```java
 listeners=PLAINTEXT://kafka1:9092,SSL://kafka1:9093
 advertised.listeners=PLAINTEXT://localhost:9092,SSL://localhost:9093
 ```
 
 接下来，**需要使用证书位置和凭证配置与密钥库和信任库相关的属性**:
 
-```
+```java
 ssl.keystore.location=/certs/kafka.server.keystore.jks
 ssl.keystore.password=password
 ssl.truststore.location=/certs/kafka.server.truststore.jks
@@ -97,7 +97,7 @@ ssl.key.password=password
 
 最后，**代理必须配置为对客户端**进行身份验证，以实现双向身份验证:
 
-```
+```java
 ssl.client.auth=required
 ```
 
@@ -105,7 +105,7 @@ ssl.client.auth=required
 
 因为我们使用 Compose 来管理我们的代理环境，所以让我们将上述所有属性添加到我们的`docker-compose.yml`文件中:
 
-```
+```java
 kafka:
   image: confluentinc/cp-kafka:6.2.0
   depends_on:
@@ -130,7 +130,7 @@ kafka:
 
 现在，使用 Compose 重新启动堆栈会在代理日志中显示相关的 SSL 细节:
 
-```
+```java
 ...
 kafka_1      | uid=1000(appuser) gid=1000(appuser) groups=1000(appuser)
 kafka_1      | ===> Configuring ...
@@ -164,7 +164,7 @@ kafka_1      |  ssl.truststore.type = JKS
 
 首先，让我们使用 [`KafkaTemplate`](https://web.archive.org/web/20220625080310/https://docs.spring.io/spring-kafka/api/org/springframework/kafka/core/KafkaTemplate.html) 向指定主题发送消息:
 
-```
+```java
 public class KafkaProducer {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
@@ -186,7 +186,7 @@ public class KafkaProducer {
 
 接下来，让我们使用 [@KafkaListener](https://web.archive.org/web/20220625080310/https://docs.spring.io/spring-kafka/api/org/springframework/kafka/annotation/KafkaListener.html) 创建一个简单的消费者。这将连接到代理，并使用来自生产者使用的相同主题的消息:
 
-```
+```java
 public class KafkaConsumer {
 
     public static final String TOPIC = "test-topic";
@@ -207,7 +207,7 @@ public class KafkaConsumer {
 
 最后，让我们为我们的`application.yml`添加必要的配置:
 
-```
+```java
 spring:
   kafka:
     security:
@@ -230,7 +230,7 @@ spring:
 
 因为我们正在使用一个组合文件，所以让我们使用 [Testcontainers](/web/20220625080310/https://www.baeldung.com/spring-boot-kafka-testing#testing-kafka-with-testcontainers) 框架，用我们的`Producer`和`Consumer`创建一个端到端的测试:
 
-```
+```java
 @ActiveProfiles("ssl")
 @Testcontainers
 @SpringBootTest(classes = KafkaSslApplication.class)

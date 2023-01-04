@@ -12,7 +12,7 @@
 
 首先，我们需要向我们的`pom.xml`添加以下依赖项:
 
-```
+```java
 <dependency>                             
     <groupId>org.slf4j</groupId>         
     <artifactId>slf4j-api</artifactId>   
@@ -32,7 +32,7 @@
 
 通常，使用 [`Logger`](https://web.archive.org/web/20221026123202/https://static.javadoc.io/org.slf4j/slf4j-api/1.7.25/org/slf4j/Logger.html) 类中可用的`error()`方法记录所有异常。这种方法有相当多的变化。我们将探索:
 
-```
+```java
 void error(String msg);
 void error(String format, Object... arguments);
 void error(String msg, Throwable t);
@@ -40,31 +40,31 @@ void error(String msg, Throwable t);
 
 让我们首先初始化我们将要使用的`Logger`:
 
-```
+```java
 Logger logger = LoggerFactory.getLogger(NameOfTheClass.class);
 ```
 
 如果我们只需要显示错误消息，那么我们可以简单地添加:
 
-```
+```java
 logger.error("An exception occurred!");
 ```
 
 上述代码的输出将是:
 
-```
+```java
 ERROR packageName.NameOfTheClass - An exception occurred!
 ```
 
 这很简单。但是要添加关于异常的更多相关信息(包括堆栈跟踪),我们可以写:
 
-```
+```java
 logger.error("An exception occurred!", new Exception("Custom exception"));
 ```
 
 输出将是:
 
-```
+```java
 ERROR packageName.NameOfTheClass - An exception occurred!
 java.lang.Exception: Custom exception
   at packageName.NameOfTheClass.methodName(NameOfTheClass.java:lineNo)
@@ -72,7 +72,7 @@ java.lang.Exception: Custom exception
 
 在存在多个参数的情况下，如果日志记录语句中的最后一个参数是异常，则 SLF4J 将假定用户希望将最后一个参数视为异常，而不是简单的参数:
 
-```
+```java
 logger.error("{}, {}! An exception occurred!", 
   "Hello", 
   "World", 
@@ -83,7 +83,7 @@ logger.error("{}, {}! An exception occurred!",
 
 在这种情况下，输出将是:
 
-```
+```java
 ERROR packageName.NameOfTheClass - Hello, World! An exception occurred!
 java.lang.Exception: Custom exception 
   at packageName.NameOfTheClass.methodName(NameOfTheClass.java:lineNo)

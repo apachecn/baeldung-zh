@@ -16,7 +16,7 @@ Spring 安全框架为[认证](/web/20220822105735/https://www.baeldung.com/spri
 
 `LogoutHandler`接口有如下定义:
 
-```
+```java
 public interface LogoutHandler {
     void logout(HttpServletRequest request, HttpServletResponse response,Authentication authentication);
 } 
@@ -38,7 +38,7 @@ public interface LogoutHandler {
 
 让我们从`application.properties` 文件开始，它包含我们的示例应用程序的数据库连接属性:
 
-```
+```java
 spring.datasource.url=jdbc:postgresql://localhost:5432/test
 spring.datasource.username=test
 spring.datasource.password=test
@@ -49,7 +49,7 @@ spring.jpa.hibernate.ddl-auto=create
 
 接下来，我们将添加一个简单的`User`实体，用于登录和数据检索。如我们所见，`User`类映射到数据库中的`users`表:
 
-```
+```java
 @Entity
 @Table(name = "users")
 public class User {
@@ -73,7 +73,7 @@ public class User {
 
 出于应用程序缓存的目的，我们将实现一个缓存服务，该服务在内部使用一个`ConcurrentHashMap`来存储用户:
 
-```
+```java
 @Service
 public class UserCache {
     @PersistenceContext
@@ -85,7 +85,7 @@ public class UserCache {
 
 使用此服务，我们可以通过用户名(登录名)从数据库中检索用户，并将其内部存储在我们的地图中:
 
-```
+```java
 public User getByUserName(String userName) {
     return store.computeIfAbsent(userName, k -> 
       entityManager.createQuery("from User where login=:login", User.class)
@@ -96,7 +96,7 @@ public User getByUserName(String userName) {
 
 此外，有可能将用户逐出商店。正如我们将在后面看到的，这将是我们从注销处理程序中调用的主要操作:
 
-```
+```java
 public void evictUser(String userName) {
     store.remove(userName);
 } 
@@ -104,7 +104,7 @@ public void evictUser(String userName) {
 
 为了检索用户数据和语言信息，我们将使用一个标准的 [Spring `Controller`](/web/20220822105735/https://www.baeldung.com/spring-controllers) :
 
-```
+```java
 @Controller
 @RequestMapping(path = "/user")
 public class UserController {
@@ -129,7 +129,7 @@ public class UserController {
 
 我们将在应用程序中关注两个简单的操作——登录和注销。首先，我们需要设置 MVC 配置类，以允许用户使用[基本 HTTP Auth](/web/20220822105735/https://www.baeldung.com/httpclient-4-basic-authentication) 进行身份验证:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class MvcConfiguration extends WebSecurityConfigurerAdapter {
@@ -167,7 +167,7 @@ public class MvcConfiguration extends WebSecurityConfigurerAdapter {
 
 最后，也是最重要的，我们将编写我们的定制注销处理程序来处理必要的用户缓存清理:
 
-```
+```java
 @Service
 public class CustomLogoutHandler implements LogoutHandler {
 
@@ -192,7 +192,7 @@ public class CustomLogoutHandler implements LogoutHandler {
 
 现在让我们测试功能。首先，我们需要验证缓存是否如预期的那样工作— **也就是说，它将授权用户加载到其内部存储中**:
 
-```
+```java
 @Test
 public void whenLogin_thenUseUserCache() {
     assertThat(userCache.size()).isEqualTo(0);
@@ -230,7 +230,7 @@ public void whenLogin_thenUseUserCache() {
 
 在我们的第二个测试中，我们将验证当我们注销时，用户**缓存是否被清理。这是我们的注销处理程序将被调用的时刻:**
 
-```
+```java
 @Test
 public void whenLogout_thenCacheIsEmpty() {
     assertThat(userCache.size()).isEqualTo(0);

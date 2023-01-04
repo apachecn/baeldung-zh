@@ -22,7 +22,7 @@ Java 平台模块系统(JPMS)提供了更强的封装、更高的可靠性和更
 
 让我们从创建名为`demoproject`的项目根目录开始，我们将定义项目的父 POM:
 
-```
+```java
 <packaging>pom</packaging>
 
 <modules>
@@ -63,7 +63,7 @@ Java 平台模块系统(JPMS)提供了更强的封装、更高的可靠性和更
 
 在项目的根目录下，我们将创建`servicemodule/src/main/java`目录。然后，我们需要定义包`com.baeldung.servicemodule`，并在其中放置下面的`TextService`接口:
 
-```
+```java
 public interface TextService {
 
     String processText(String text);
@@ -75,7 +75,7 @@ public interface TextService {
 
 在同一个包中，让我们添加一个`Lowercase` 实现:
 
-```
+```java
 public class LowercaseTextService implements TextService {
 
     @Override
@@ -88,7 +88,7 @@ public class LowercaseTextService implements TextService {
 
 现在，让我们添加一个`Uppercase` 实现:
 
-```
+```java
 public class UppercaseTextService implements TextService {
 
     @Override
@@ -101,7 +101,7 @@ public class UppercaseTextService implements TextService {
 
 最后，在`servicemodule/src/main/java`目录下，让我们包含模块描述符`module-info.java`:
 
-```
+```java
 module com.baeldung.servicemodule {
     exports com.baeldung.servicemodule;
 } 
@@ -113,7 +113,7 @@ module com.baeldung.servicemodule {
 
 让我们添加下面的`com.baeldung.consumermodule.` `Application`类:
 
-```
+```java
 public class Application {
     public static void main(String args[]) {
         TextService textService = new LowercaseTextService();
@@ -124,7 +124,7 @@ public class Application {
 
 现在，让我们将模块描述符`module-info.java,` 包含在源根中，它应该是`consumermodule/src/main/java`:
 
-```
+```java
 module com.baeldung.consumermodule {
     requires com.baeldung.servicemodule;
 } 
@@ -134,7 +134,7 @@ module com.baeldung.consumermodule {
 
 正如我们所料，我们应该会看到以下输出:
 
-```
+```java
 hello from baeldung!
 ```
 
@@ -172,7 +172,7 @@ hello from baeldung!
 
 在`com.baeldung.servicemodule.external`包中，让我们定义下面的`TextServiceFactory`类:
 
-```
+```java
 public class TextServiceFactory {
 
     private TextServiceFactory() {}
@@ -188,7 +188,7 @@ public class TextServiceFactory {
 
 现在，让我们替换我们的`module-info.java`文件，只导出我们的`external `包:
 
-```
+```java
 module com.baeldung.servicemodule {
     exports com.baeldung.servicemodule.external;
 }
@@ -200,7 +200,7 @@ module com.baeldung.servicemodule {
 
 现在，让我们重构*应用程序*类，这样它就可以使用服务提供者工厂类:
 
-```
+```java
 public static void main(String args[]) {
     TextService textService = TextServiceFactory.getTextService("lowercase");
     System.out.println(textService.processText("Hello from Baeldung!"));
@@ -209,7 +209,7 @@ public static void main(String args[]) {
 
 正如预期的那样，如果我们运行应用程序，我们应该看到控制台上打印出相同的文本:
 
-```
+```java
 hello from baeldung!
 ```
 
@@ -242,7 +242,7 @@ JPMS 通过 `provides…with`和`uses`指令为开箱即用的服务和消费者
 
 由于服务接口、服务提供者和消费者现在将生活在不同的模块中，我们首先需要修改父 POM 的`<modules>`部分，以反映这种新的结构:
 
-```
+```java
 <modules>
     <module>servicemodule</module>
     <module>providermodule</module>
@@ -256,7 +256,7 @@ JPMS 通过 `provides…with`和`uses`指令为开箱即用的服务和消费者
 
 我们将相应地更改模块描述符:
 
-```
+```java
 module com.baeldung.servicemodule {
     exports com.baeldung.servicemodule;
 }
@@ -268,7 +268,7 @@ module com.baeldung.servicemodule {
 
 最后，我们来添加一个`module-info.java`文件:
 
-```
+```java
 module com.baeldung.providermodule {
     requires com.baeldung.servicemodule;
     provides com.baeldung.servicemodule.TextService with com.baeldung.providermodule.LowercaseTextService;
@@ -281,7 +281,7 @@ module com.baeldung.providermodule {
 
 接下来，我们将重构`Application`类的`main()`方法，这样它就可以使用 [`ServiceLoader`](https://web.archive.org/web/20221206202751/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html) 类来发现适当的实现:
 
-```
+```java
 public static void main(String[] args) {
     ServiceLoader<TextService> services = ServiceLoader.load(TextService.class);
     for (final TextService service: services) {
@@ -293,7 +293,7 @@ public static void main(String[] args) {
 
 最后，我们将重构`module-info.java`文件:
 
-```
+```java
 module com.baeldung.consumermodule {
     requires com.baeldung.servicemodule;
     uses com.baeldung.servicemodule.TextService;
@@ -302,7 +302,7 @@ module com.baeldung.consumermodule {
 
 现在，让我们运行应用程序。正如所料，我们应该看到控制台输出了以下文本:
 
-```
+```java
 The service LowercaseTextService says: hello from baeldung! 
 ```
 

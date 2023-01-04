@@ -16,7 +16,7 @@
 
 对于给定的`java.util.Date `提取单个字段，如`Year`、`Month`、*、*等。我们需要做的第一步是将它转换成`Calendar`实例:
 
-```
+```java
 Date date = // the date instance
 Calendar calendar = Calendar.getInstance();
 calendar.setTime(date);
@@ -30,7 +30,7 @@ calendar.setTime(date);
 
 为了提取`year,`,我们可以通过将`Calendar.YEAR` 作为参数传递来调用`get `:
 
-```
+```java
 calendar.get(Calendar.YEAR);
 ```
 
@@ -38,7 +38,7 @@ calendar.get(Calendar.YEAR);
 
 类似地，为了提取`month,`,我们可以通过将`Calendar.MONTH `作为参数来调用`get `:
 
-```
+```java
 calendar.get(Calendar.MONTH);
 ```
 
@@ -48,7 +48,7 @@ calendar.get(Calendar.MONTH);
 
 最后，为了提取`day,`,我们通过将`Calendar.DAY_OF_MONTH `作为参数传递来调用`get `:
 
-```
+```java
 calendar.get(Calendar.DAY_OF_MONTH);
 ```
 
@@ -70,7 +70,7 @@ calendar.get(Calendar.DAY_OF_MONTH);
 
 提取`Year, LocalDate`只是提供了`a getYear `的方法:
 
-```
+```java
 localDate.getYear();
 ```
 
@@ -78,7 +78,7 @@ localDate.getYear();
 
 类似地，为了提取`Month, `,我们使用`getMonthValue ` API:
 
-```
+```java
 localDate.getMonthValue();
 ```
 
@@ -88,7 +88,7 @@ localDate.getMonthValue();
 
 最后，为了提取`Day,`,我们有`getDayOfMonth`方法:
 
-```
+```java
 localDate.getDayOfMonth();
 ```
 

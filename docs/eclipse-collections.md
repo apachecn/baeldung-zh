@@ -14,7 +14,7 @@ Eclipse Collections 是另一个改进的 Java 集合框架。
 
 让我们从向我们的`pom.xml`添加以下 Maven 依赖项开始:
 
-```
+```java
 <dependency
     <groupId>org.eclipse.collections</groupId>
     <artifactId>eclipse-collections</artifactId>
@@ -61,21 +61,21 @@ Eclipse 集合中的基本集合类型有:
 
 让我们看看如何实例化一个`FastList`:
 
-```
+```java
 MutableList<String> list = FastList.newListWith(
   "Porsche", "Volkswagen", "Toyota", "Mercedes", "Toyota");
 ```
 
 类似地，我们可以实例化一个`UnifiedSet`，并通过将元素传递给`newSetWith()`静态方法向其添加元素:
 
-```
+```java
 Set<String> comparison = UnifiedSet.newSetWith(
   "Porsche", "Volkswagen", "Toyota", "Mercedes");
 ```
 
 下面是我们如何实例化一个`HashBag`:
 
-```
+```java
 MutableBag<String> bag = HashBag.newBagWith(
   "Porsche", "Volkswagen", "Toyota", "Porsche", "Mercedes");
 ```
@@ -84,7 +84,7 @@ MutableBag<String> bag = HashBag.newBagWith(
 
 我们以`UnifiedMap`为例:
 
-```
+```java
 Pair<Integer, String> pair1 = Tuples.pair(1, "One");
 Pair<Integer, String> pair2 = Tuples.pair(2, "Two");
 Pair<Integer, String> pair3 = Tuples.pair(3, "Three");
@@ -94,7 +94,7 @@ UnifiedMap<Integer, String> map = new UnifiedMap<>(pair1, pair2, pair3);
 
 我们仍然可以使用 Java 集合 API 方法:
 
-```
+```java
 UnifiedMap<Integer, String> map = new UnifiedMap<>();
 
 map.put(1, "one");
@@ -110,26 +110,26 @@ map.put(3, "three");
 
 就像使用标准的`Lists`一样，Eclipse 集合`Lists`的元素可以通过它们的索引来检索:
 
-```
+```java
 list.get(0);
 ```
 
 和 Eclipse 集合映射的值可以使用它们的键来检索:
 
-```
+```java
 map.get(0);
 ```
 
 `getFirst()`和`getLast()`方法可以分别用于检索列表的第一个和最后一个元素。对于其他集合，它们返回迭代器返回的第一个和最后一个元素。
 
-```
+```java
 map.getFirst();
 map.getLast();
 ```
 
 方法`max()`和`min()`可用于根据自然排序获得集合的最大值和最小值。
 
-```
+```java
 map.max();
 map.min();
 ```
@@ -144,7 +144,7 @@ select 模式返回一个新集合，其中包含满足逻辑条件的集合元�
 
 这里有一个例子:
 
-```
+```java
 @Test
 public void givenListwhenSelect_thenCorrect() {
     MutableList<Integer> greaterThanThirty = list
@@ -158,7 +158,7 @@ public void givenListwhenSelect_thenCorrect() {
 
 同样的事情可以用一个简单的 lambda 表达式来完成:
 
-```
+```java
 return list.select(i -> i > 30)
   .sortThis();
 ```
@@ -167,7 +167,7 @@ return list.select(i -> i > 30)
 
 让我们看一个例子:
 
-```
+```java
 @Test
 public void whenReject_thenCorrect() {
     MutableList<Integer> notGreaterThanThirty = list
@@ -187,7 +187,7 @@ public void whenReject_thenCorrect() {
 
 让我们来看看它的实际应用:
 
-```
+```java
 @Test
 public void whenCollect_thenCorrect() {
     Student student1 = new Student("John", "Hopkins");
@@ -212,7 +212,7 @@ public void whenCollect_thenCorrect() {
 
 这里有一个例子:
 
-```
+```java
 @Test
 public void whenFlatCollect_thenCorrect() {
     MutableList<String> addresses = students
@@ -229,7 +229,7 @@ public void whenFlatCollect_thenCorrect() {
 
 让我们看一个简单的例子:
 
-```
+```java
 @Test
 public void whenDetect_thenCorrect() {
     Integer result = list.detect(Predicates.greaterThan(30));
@@ -243,7 +243,7 @@ public void whenDetect_thenCorrect() {
 
 这里有一个例子:
 
-```
+```java
 @Test
 public void whenAnySatisfiesCondition_thenCorrect() {
     boolean result = list.anySatisfy(Predicates.greaterThan(30));
@@ -256,7 +256,7 @@ public void whenAnySatisfiesCondition_thenCorrect() {
 
 让我们看一个简单的例子:
 
-```
+```java
 @Test
 public void whenAnySatisfiesCondition_thenCorrect() {
     boolean result = list.allSatisfy(Predicates.greaterThan(0));
@@ -271,7 +271,7 @@ public void whenAnySatisfiesCondition_thenCorrect() {
 
 让我们看一个例子:
 
-```
+```java
 @Test
 public void whenAnySatisfiesCondition_thenCorrect() {
     MutableList<Integer> numbers = list;
@@ -296,7 +296,7 @@ public void whenAnySatisfiesCondition_thenCorrect() {
 
 惰性迭代是一种优化模式，在这种模式下，迭代方法被调用，但它的实际执行被推迟，直到另一个后续方法需要它的操作或返回值。
 
-```
+```java
 @Test
 public void whenLazyIteration_thenCorrect() {
     Student student1 = new Student("John", "Hopkins");
@@ -322,7 +322,7 @@ public void whenLazyIteration_thenCorrect() {
 
 让我们看看如何使用它:
 
-```
+```java
 @Test
 public void whenZip_thenCorrect() {
     MutableList<String> numbers = Lists.mutable
@@ -338,7 +338,7 @@ public void whenZip_thenCorrect() {
 
 我们还可以使用`zipWithIndex()`方法将集合的元素与其索引配对:
 
-```
+```java
 @Test
 public void whenZip_thenCorrect() {
     MutableList<String> cars = FastList
@@ -356,7 +356,7 @@ Eclipse 集合提供了将一种容器类型转换成另一种容器类型的简
 
 让我们看看如何使用它们:
 
-```
+```java
 public static List convertToList() {
     UnifiedSet<String> cars = new UnifiedSet<>();
 
@@ -370,7 +370,7 @@ public static List convertToList() {
 
 让我们运行我们的测试:
 
-```
+```java
 @Test
 public void whenConvertContainerToAnother_thenCorrect() {
     MutableList<String> cars = (MutableList) ConvertContainerToAnother 

@@ -24,7 +24,7 @@
 
 让我们将下面的 JSON 示例添加到`~/.docker/config.json`文件中，并完成我们的代理设置。支持使用*字符作为主机的通配符，以及使用 CIDR 表示法作为 IP 地址:
 
-```
+```java
 { 
   "proxies":
     { 
@@ -53,37 +53,37 @@
 
 **在 Docker 17.07 和更早的版本中，我们必须用`–env`标志**来设置我们的代理设置:
 
-```
+```java
 docker run [docker_image] --env FTP_PROXY="ftp://<ip-address>:<port>"
 ```
 
-```
+```java
 docker run [docker_image] --env HTTP_PROXY="http://<ip-address>:<port>"
 ```
 
-```
+```java
 docker run [docker_image] --env HTTPS_PROXY="https://<ip-address>:<port>"
 ```
 
-```
+```java
 docker run [docker_image] --env NO_PROXY="*.<domain>,127.0.0.0/8"
 ```
 
 或者，我们必须将它们添加到我们的`Dockerfile`:
 
-```
+```java
 ENV FTP_PROXY="ftp://<ip-address>:<port>"
 ```
 
-```
+```java
 ENV HTTP_PROXY="http://<ip-address>:<port>"
 ```
 
-```
+```java
 ENV HTTPS_PROXY="https://<ip-address>:<port>"
 ```
 
-```
+```java
 ENV NO_PROXY="*.<domain>,127.0.0.0/8"
 ```
 

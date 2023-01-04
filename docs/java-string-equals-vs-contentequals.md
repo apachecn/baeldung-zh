@@ -12,7 +12,7 @@ Java 中的 [`String`类](/web/20221208143814/https://www.baeldung.com/java-stri
 
 [`equals()`](/web/20221208143814/https://www.baeldung.com/java-compare-strings#equals-string) 方法是 Java `String`类的`public`方法。它覆盖了来自`Object`类的最初的`equals()`方法。这种方法的特征是:
 
-```
+```java
 public boolean equals(Object anObject)
 ```
 
@@ -28,7 +28,7 @@ public boolean equals(Object anObject)
 
 这种方法的特征是:
 
-```
+```java
 public boolean contentEquals(StringBuffer sb)
 public boolean contentEquals(CharSequence cs)
 ```
@@ -43,7 +43,7 @@ public boolean contentEquals(CharSequence cs)
 
 首先，我们将选取两个相同的`String`对象并检查它们。在这种情况下，两种方法都将返回一个`true`值:
 
-```
+```java
 String actualString = "baeldung";
 String identicalString = "baeldung";
 
@@ -53,7 +53,7 @@ assertTrue(actualString.contentEquals(identicalString));
 
 接下来，我们采用内容相同的`CharSequence`的两种不同实现。对于第一个实现，我们将用一个`String`实例化`CharSequence`。在这种情况下，两种方法都应该返回`true`，因为内容和类型是相同的:
 
-```
+```java
 CharSequence identicalStringInstance = "baeldung";
 
 assertTrue(actualString.equals(identicalStringInstance));
@@ -62,7 +62,7 @@ assertTrue(actualString.contentEquals(identicalStringInstance));
 
 对于下一个例子，我们将采用一个`StringBuffer`实现。由于`contentEquals()`方法只检查内容，它应该返回`true`。但是，`equals()`方法应该`false`:
 
-```
+```java
 CharSequence identicalStringBufferInstance = new StringBuffer("baeldung");
 
 assertFalse(actualString.equals(identicalStringBufferInstance));

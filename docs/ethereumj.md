@@ -24,7 +24,7 @@
 
 创建外观对象非常简单:
 
-```
+```java
 Ethereum ethereum = EthereumFactory.createEthereum();
 ```
 
@@ -38,7 +38,7 @@ Ethereum ethereum = EthereumFactory.createEthereum();
 
 让我们连接到网络上的一个节点。这可以手动完成:
 
-```
+```java
 String ip = "http://localhost";
 int port = 8345;
 String nodeId = "a4de274d3a159e10c2c9a68c326511236381b84c9ec...";
@@ -48,7 +48,7 @@ ethereum.connect(ip, port, nodeId);
 
 也可以使用 bean 自动连接到网络:
 
-```
+```java
 public class EthBean {
     private Ethereum ethereum;
 
@@ -71,7 +71,7 @@ public class EthBean {
 
 事实上，大多数连接处理都被方便地包装和抽象，只需向我们创建的`org.ethereum.facade.Ethereum`实例添加一个`org.ethereum.listener.EthereumListenerAdapter` 实例，就像我们在上面的 `start()` 方法中所做的那样:
 
-```
+```java
 EthBean eBean = new EthBean();
 Executors.newSingleThreadExecutor().submit(eBean::start); 
 ```
@@ -82,7 +82,7 @@ Executors.newSingleThreadExecutor().submit(eBean::start);
 
 为了完成这一步，我们需要创建我们的子类监听器:
 
-```
+```java
 public class EthListener extends EthereumListenerAdapter {
 
     private void out(String t) {
@@ -129,7 +129,7 @@ public class EthListener extends EthereumListenerAdapter {
 
 现在，我们已经连接到区块链，我们可以提交交易。提交一个`Transaction`相对容易，但是创建一个实际的`Transaction`本身就是一个冗长的话题:
 
-```
+```java
 ethereum.submitTransaction(new Transaction(new byte[]));
 ```
 
@@ -139,7 +139,7 @@ ethereum.submitTransaction(new Transaction(new byte[]));
 
 由于我们在第 4.3 节设置了`EthereumListener` ，我们可以使用上述方法访问区块链:
 
-```
+```java
 ethereum.getBlockchain(); 
 ```
 
@@ -151,19 +151,19 @@ ethereum.getBlockchain();
 
 让我们用新的随机密钥对创建一个新的密钥:
 
-```
+```java
 org.ethereum.crypto.ECKey key = new ECKey(); 
 ```
 
 让我们从给定的私钥创建一个密钥:
 
-```
+```java
 org.ethereum.crypto.ECKey key = ECKey.fromPivate(privKey);
 ```
 
 然后，我们可以使用我们的密钥来初始化一个`Account`。通过调用`.init()`，我们在`Account`对象上设置了一个`ECKey`和相关的`Address`:
 
-```
+```java
 org.ethereum.core.Account account = new Account();
 account.init(key);
 ```

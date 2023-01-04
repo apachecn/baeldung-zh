@@ -16,7 +16,7 @@
 
 为了利用协议缓冲区，我们需要在`.proto`文件中定义消息结构。每个文件都是对可能从一个节点传输到另一个节点或存储在数据源中的数据的描述。这里有一个`.proto`文件的例子，它被命名为`baeldung.proto`，位于`src/main/resources`目录中。本教程稍后将使用该文件:
 
-```
+```java
 syntax = "proto3";
 package baeldung;
 option java_package = "com.baeldung.protobuf";
@@ -56,7 +56,7 @@ message Student {
 
 接下来，将编译器复制到项目的`src/main`目录中，并在命令行中执行以下命令:
 
-```
+```java
 protoc --java_out=java resources/baeldung.proto
 ```
 
@@ -64,7 +64,7 @@ protoc --java_out=java resources/baeldung.proto
 
 除了编译器之外，还需要协议缓冲运行时。这可以通过向 Maven POM 文件添加以下依赖项来实现:
 
-```
+```java
 <dependency>
     <groupId>com.google.protobuf</groupId>
     <artifactId>protobuf-java</artifactId>
@@ -82,7 +82,7 @@ protoc --java_out=java resources/baeldung.proto
 
 让我们从`Course`消息开始。它有两个简单的字段，包括`id`和`course_name`。它们的协议缓冲区类型`int32`和`string`被翻译成 Java `int`和`String`类型。以下是编译后它们相关的 getters(为简洁起见，省略了实现):
 
-```
+```java
 public int getId();
 public java.lang.String getCourseName();
 ```
@@ -91,7 +91,7 @@ public java.lang.String getCourseName();
 
 `Course`消息的最后一个字段`student`是`Student`复杂类型，这将在下面描述。该字段由关键字`repeated`前置，这意味着它可以重复任意次。编译器生成一些与`student`字段相关的方法，如下所示(没有实现):
 
-```
+```java
 public java.util.List<com.baeldung.protobuf.BaeldungTraining.Student> getStudentList();
 public int getStudentCount();
 public com.baeldung.protobuf.BaeldungTraining.Student getStudent(int index);
@@ -99,7 +99,7 @@ public com.baeldung.protobuf.BaeldungTraining.Student getStudent(int index);
 
 现在我们将继续讨论`Student`消息，它被用作`Course`消息的`student`字段的复杂类型。它的简单字段包括`id`、`first_name`、`last_name`和`email`用于创建 Java 访问器方法:
 
-```
+```java
 public int getId();
 public java.lang.String getFirstName();
 public java.lang.String getLastName();
@@ -108,7 +108,7 @@ public java.lang.String.getEmail();
 
 最后一个字段`phone`属于`PhoneNumber`复杂类型。类似于`Course`消息的`student`字段，该字段是重复的，有几个相关的方法:
 
-```
+```java
 public java.util.List<com.baeldung.protobuf.BaeldungTraining.Student.PhoneNumber> getPhoneList();
 public int getPhoneCount();
 public com.baeldung.protobuf.BaeldungTraining.Student.PhoneNumber getPhone(int index);
@@ -116,14 +116,14 @@ public com.baeldung.protobuf.BaeldungTraining.Student.PhoneNumber getPhone(int i
 
 `PhoneNumber`消息被编译成`BaeldungTraining.Student.PhoneNumber`嵌套类型，有两个 getters 对应于消息的字段:
 
-```
+```java
 public java.lang.String getNumber();
 public com.baeldung.protobuf.BaeldungTraining.Student.PhoneType getType();
 ```
 
 `PhoneNumber`消息的*类型*字段的复杂类型`PhoneType`，是一个枚举类型，将被转换成嵌套在`BaeldungTraining.Student`类中的 Java `enum`类型:
 
-```
+```java
 public enum PhoneType implements com.google.protobuf.ProtocolMessageEnum {
     MOBILE(0),
     LANDLINE(1),
@@ -141,7 +141,7 @@ public enum PhoneType implements com.google.protobuf.ProtocolMessageEnum {
 
 让我们从我们主要的`@SpringBootApplication`的定义开始:
 
-```
+```java
 @SpringBootApplication
 public class Application {
     @Bean
@@ -179,7 +179,7 @@ public class Application {
 
 下面是`CourseRepository`的简单实现:
 
-```
+```java
 public class CourseRepository {
     Map<Integer, Course> courses;
 
@@ -197,7 +197,7 @@ public class CourseRepository {
 
 我们可以为测试 URL 定义`@Controller`类，如下所示:
 
-```
+```java
 @RestController
 public class CourseController {
     @Autowired
@@ -222,7 +222,7 @@ public class CourseController {
 
 首先，我们需要设置集成测试的上下文，并指示 Spring Boot 通过如下声明一个测试类来查找`Application`类中的配置信息:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebIntegrationTest
@@ -237,13 +237,13 @@ public class ApplicationTest {
 
 访问 REST 服务的第一步是确定请求 URL:
 
-```
+```java
 private static final String COURSE1_URL = "http://localhost:8080/courses/1";
 ```
 
 这个`COURSE1_URL`将用于从我们之前创建的 REST 服务中获取第一个测试双课程。将 GET 请求发送到上述 URL 后，使用以下断言验证相应的响应:
 
-```
+```java
 private void assertResponse(String response) {
     assertThat(response, containsString("id"));
     assertThat(response, containsString("course_name"));
@@ -267,7 +267,7 @@ private void assertResponse(String response) {
 
 下面是我们如何创建一个客户端，向指定的目的地发送一个 GET 请求，接收协议缓冲区消息形式的响应，并使用`RestTemplate` API 验证它:
 
-```
+```java
 @Autowired
 private RestTemplate restTemplate;
 
@@ -280,7 +280,7 @@ public void whenUsingRestTemplate_thenSucceed() {
 
 为了让这个测试用例工作，我们需要在配置类中注册一个`RestTemplate`类型的 bean:
 
-```
+```java
 @Bean
 RestTemplate restTemplate(ProtobufHttpMessageConverter hmc) {
     return new RestTemplate(Arrays.asList(hmc));
@@ -293,7 +293,7 @@ RestTemplate restTemplate(ProtobufHttpMessageConverter hmc) {
 
 使用`HttpClient` API 并手动转换协议缓冲区消息的第一步是向 Maven POM 文件添加以下两个依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.googlecode.protobuf-java-format</groupId>
     <artifactId>protobuf-java-format</artifactId>
@@ -310,7 +310,7 @@ RestTemplate restTemplate(ProtobufHttpMessageConverter hmc) {
 
 让我们继续创建一个客户机，执行一个 GET 请求，并使用给定的 URL 将相关的响应转换成一个`InputStream`实例:
 
-```
+```java
 private InputStream executeHttpRequest(String url) throws IOException {
     CloseableHttpClient httpClient = HttpClients.createDefault();
     HttpGet request = new HttpGet(url);
@@ -321,7 +321,7 @@ private InputStream executeHttpRequest(String url) throws IOException {
 
 现在，我们将以`InputStream`对象的形式将协议缓冲区消息转换成 JSON 文档:
 
-```
+```java
 private String convertProtobufMessageStreamToJsonString(InputStream protobufStream) throws IOException {
     JsonFormat jsonFormat = new JsonFormat();
     Course course = Course.parseFrom(protobufStream);
@@ -331,7 +331,7 @@ private String convertProtobufMessageStreamToJsonString(InputStream protobufStre
 
 下面是一个测试用例如何使用上面声明的私有 helper 方法并验证响应:
 
-```
+```java
 @Test
 public void whenUsingHttpClient_thenSucceed() throws IOException {
     InputStream responseStream = executeHttpRequest(COURSE1_URL);
@@ -344,7 +344,7 @@ public void whenUsingHttpClient_thenSucceed() throws IOException {
 
 为了清楚起见，这里包括了我们在前面小节中描述的测试中收到的 JSON 形式的响应:
 
-```
+```java
 id: 1
 course_name: "REST with Spring"
 student {

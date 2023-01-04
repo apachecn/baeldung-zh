@@ -16,7 +16,7 @@
 
 首先，让我们看一个**列表的例子，它的元素类型是`Comparable`** 。这里，我们将考虑一个包含类型为`String`的对象的列表:
 
-```
+```java
 public static boolean isSorted(List<String> listOfStrings) {
     if (isEmpty(listOfStrings) || listOfStrings.size() == 1) {
         return true;
@@ -39,7 +39,7 @@ public static boolean isSorted(List<String> listOfStrings) {
 
 现在，让我们考虑一个没有实现`Comparable`的`Employee`类。所以，在这种情况下，我们需要用一个`Comparator`来比较列表中的相邻元素:
 
-```
+```java
 public static boolean isSorted(List<Employee> employees, Comparator<Employee> employeeComparator) {
     if (isEmpty(employees) || employees.size() == 1) {
         return true;
@@ -66,7 +66,7 @@ public static boolean isSorted(List<Employee> employees, Comparator<Employee> em
 
 现在，我们将看到如何使用递归来检查排序列表:
 
-```
+```java
 public static boolean isSorted(List<String> listOfStrings) {
     return isSorted(listOfStrings, listOfStrings.size());
 }
@@ -92,7 +92,7 @@ public static boolean isSorted(List<String> listOfStrings, int index) {
 
 首先，我们将看到一个包含类型为`Comparable`的元素的列表示例:
 
-```
+```java
 public static boolean isSorted(List<String> listOfStrings) {
     return Ordering.<String> natural().isOrdered(listOfStrings);
 }
@@ -100,7 +100,7 @@ public static boolean isSorted(List<String> listOfStrings) {
 
 接下来，我们将看看如何使用一个`Comparator`来检查一列`Employee`对象是否被排序:
 
-```
+```java
 public static boolean isSorted(List<Employee> employees, Comparator<Employee> employeeComparator) {
     return Ordering.from(employeeComparator).isOrdered(employees);
 }
@@ -114,7 +114,7 @@ public static boolean isSorted(List<Employee> employees, Comparator<Employee> em
 
 如果我们使用的是 Java 8 或更高版本，Guava 在`Comparators`类方面提供了一个更好的选择。我们将看到一个**使用这个类的`isInOrder`方法**的例子:
 
-```
+```java
 public static boolean isSorted(List<String> listOfStrings) {
     return Comparators.isInOrder(listOfStrings, Comparator.<String> naturalOrder());
 }

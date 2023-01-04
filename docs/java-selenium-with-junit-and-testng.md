@@ -14,7 +14,7 @@
 
 在`pom.xml`文件中，添加以下依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.seleniumhq.selenium</groupId>
     <artifactId>selenium-java</artifactId>
@@ -28,7 +28,7 @@
 
 首先，创建一个名为`SeleniumConfig`的新 Java 类文件:
 
-```
+```java
 public class SeleniumConfig {
 
     private WebDriver driver;
@@ -42,7 +42,7 @@ public class SeleniumConfig {
 
 现在让我们初始化构造函数中的`WebDriver`，我们还将设置 5 秒钟作为`WebDriver`等待页面上元素出现的超时时间:
 
-```
+```java
 public SeleniumConfig() {
     Capabilities capabilities = DesiredCapabilities.firefox();
     driver = new FirefoxDriver(capabilities);
@@ -67,7 +67,7 @@ static private String findFile(String filename) {
 
 接下来，我们需要实现一个`SeleniumExample`类:
 
-```
+```java
 public class SeleniumExample {
 
     private SeleniumConfig config;
@@ -84,7 +84,7 @@ public class SeleniumExample {
 
 在这里，我们将初始化`SeleniumConfig`并设置想要导航到的 URL。类似地，我们将实现一个简单的 API 来关闭浏览器并获取页面标题:
 
-```
+```java
 public void closeWindow() {
     this.config.getDriver().close();
 }
@@ -96,7 +96,7 @@ public String getTitle() {
 
 为了导航到 baeldung.com 的 About 部分，我们需要创建一个`closeOverlay()`方法来检查和关闭主页加载时的覆盖。此后，我们使用`getAboutBaeldungPage()`方法导航到 About Baeldung 页面:
 
-```
+```java
 public void getAboutBaeldungPage() {
     closeOverlay();
     clickAboutLink();
@@ -132,7 +132,7 @@ private void clickAboutUsLink() {
 
 我们可以检查显示的页面上是否有所需的信息:
 
-```
+```java
 public boolean isAuthorInformationAvailable() {
     return this.config.getDriver()
         .getPageSource()
@@ -146,7 +146,7 @@ public boolean isAuthorInformationAvailable() {
 
 让我们创建一个新的测试类`SeleniumWithJUnitLiveTest:`
 
-```
+```java
 public class SeleniumWithJUnitLiveTest {
 
     private static SeleniumExample seleniumExample;
@@ -159,7 +159,7 @@ public class SeleniumWithJUnitLiveTest {
 
 我们将使用来自`org.junit.BeforeClass`的`**@**BeforeClass`注释来进行初始设置。在这个`setUp()`方法中，我们将初始化`SeleniumExample`对象:
 
-```
+```java
 @BeforeClass
 public static void setUp() {
     seleniumExample = new SeleniumExample();
@@ -168,7 +168,7 @@ public static void setUp() {
 
 同样，当我们的测试用例完成时，我们应该关闭新打开的浏览器。我们将用`@AfterClass`注释来做这件事——当测试用例执行完成时，清理设置:
 
-```
+```java
 @AfterClass
 public static void tearDown() {
     seleniumExample.closeWindow();
@@ -179,7 +179,7 @@ public static void tearDown() {
 
 最后，我们可以创建完整的测试:
 
-```
+```java
 @Test
 public void whenAboutBaeldungIsLoaded_thenAboutEugenIsMentionedOnPage() {
     seleniumExample.getAboutBaeldungPage();
@@ -203,7 +203,7 @@ public void whenAboutBaeldungIsLoaded_thenAboutEugenIsMentionedOnPage() {
 
 首先，让我们创建一个新的测试类:
 
-```
+```java
 public class SeleniumWithTestNGLiveTest {
 
     private SeleniumExample seleniumExample;
@@ -216,7 +216,7 @@ public class SeleniumWithTestNGLiveTest {
 
 我们将使用来自`org.testng.annotations.BeforeSuite`的`@BeforeSuite`注释来实例化我们的`SeleniumExample class`。`setUp()`方法将在测试套件被激活之前启动:
 
-```
+```java
 @BeforeSuite
 public void setUp() {
     seleniumExample = new SeleniumExample();
@@ -225,7 +225,7 @@ public void setUp() {
 
 类似地，一旦测试套件完成，我们将使用来自`org.testng.annotations.AfterSuite`的`@AfterSuite`注释来关闭我们打开的浏览器:
 
-```
+```java
 @AfterSuite
 public void tearDown() {
     seleniumExample.closeWindow();
@@ -234,7 +234,7 @@ public void tearDown() {
 
 最后，让我们实现我们的测试:
 
-```
+```java
 @Test
 public void whenAboutBaeldungIsLoaded_thenAboutEugenIsMentionedOnPage() {
     seleniumExample.getAboutBaeldungPage();

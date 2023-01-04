@@ -26,7 +26,7 @@ Groovy 中所有可用的模板框架引擎都扩展了`TemplateEngine`并实现
 
 例如:
 
-```
+```java
 def smsTemplate = 'Dear <% print user %>, Thanks for reading our Article. ${signature}'
 def bindMap = [user: "Norman", signature: "Baeldung"]
 def smsText = new SimpleTemplateEngine().createTemplate(smsTemplate).make(bindMap)
@@ -44,7 +44,7 @@ assert smsText.toString() == "Dear Norman, Thanks for reading our Article. Baeld
 
 首先，我们将创建一个静态的`articleEmail`模板:
 
-```
+```java
 Dear <% out << (user) %>,
 Please read the requested article below.
 <% out << (articleText) %>
@@ -56,7 +56,7 @@ From,
 
 现在，我们将使用`StreamingTemplateEngine`生成电子邮件的内容:
 
-```
+```java
 def articleEmailTemplate = new File('src/main/resources/articleEmail.template')
 def bindMap = [user: "Norman", signature: "Baeldung"]
 
@@ -79,7 +79,7 @@ Baeldung"""
 
 首先，让我们使用`GString`编写一个简单的`email`模板:
 
-```
+```java
 Dear $user,
 Thanks for subscribing our services.
 ${signature}
@@ -87,7 +87,7 @@ ${signature}
 
 现在，我们将使用`GStringTemplateEngine`来创建动态内容:
 
-```
+```java
 def emailTemplate = new File('src/main/resources/email.template')
 def emailText = new GStringTemplateEngine().createTemplate(emailTemplate).make(bindMap) 
 ```
@@ -98,7 +98,7 @@ def emailText = new GStringTemplateEngine().createTemplate(emailTemplate).make(b
 
 例如，让我们将已经讨论过的`email`模板转换成 XML:
 
-```
+```java
 def emailXmlTemplate = '''
 <xs xmlns:gsp='groovy-server-pages'>
     <gsp:scriptlet>def emailContent = "Thanks for subscribing our services."</gsp:scriptlet>
@@ -114,7 +114,7 @@ def emailXml = new XmlTemplateEngine().createTemplate(emailXmlTemplate).make(bin
 
 因此，`emailXml`将呈现 XML，内容将是:
 
-```
+```java
 <xs>
   <email>
     <greet>
@@ -142,7 +142,7 @@ def emailXml = new XmlTemplateEngine().createTemplate(emailXmlTemplate).make(bin
 
 让我们写一个简单的例子来为已经讨论过的`email`模板呈现 HTML:
 
-```
+```java
 def emailHtmlTemplate = """
 html {
     head {
@@ -159,7 +159,7 @@ def emailHtml = new MarkupTemplateEngine().createTemplate(emailHtmlTemplate).mak
 
 因此，`emailHtml`的内容将是:
 
-```
+```java
 <html><head><title>Service Subscription Email</title></head>
 <body><p>Dear Norman</p><p>Thanks for subscribing our services.</p><p>Baeldung</p></body></html>
 ```
@@ -168,7 +168,7 @@ def emailHtml = new MarkupTemplateEngine().createTemplate(emailHtmlTemplate).mak
 
 同样，我们可以呈现 XML:
 
-```
+```java
 def emailXmlTemplate = """
 xmlDeclaration()  
     xs{
@@ -183,7 +183,7 @@ def emailXml = new MarkupTemplateEngine().createTemplate(emailXmlTemplate).make(
 
 因此，`emailXml`的内容将是:
 
-```
+```java
 <?xml version='1.0'?>
 <xs><email><greet>Dear Norman</greet><content>Thanks for subscribing our services.</content>
 <signature>Baeldung</signature></email></xs>
@@ -195,7 +195,7 @@ def emailXml = new MarkupTemplateEngine().createTemplate(emailXmlTemplate).make(
 
 对于这样的配置，我们将使用`TemplateConfiguration` 类:
 
-```
+```java
 TemplateConfiguration config = new TemplateConfiguration()
 config.autoIndent = true
 config.autoEscape = true
@@ -214,7 +214,7 @@ def templateEngine = new MarkupTemplateEngine(config)
 
 最后，我们需要做的就是在`TemplateConfiguration`对象中设置`locale`:
 
-```
+```java
 config.locale = Locale.JAPAN
 ```
 

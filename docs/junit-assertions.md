@@ -32,7 +32,7 @@
 
 `assertEquals`断言验证预期值和实际值是否相等:
 
-```
+```java
 @Test
 public void whenAssertingEquality_thenEqual() {
     String expected = "Baeldung";
@@ -44,7 +44,7 @@ public void whenAssertingEquality_thenEqual() {
 
 还可以指定在断言失败时显示的消息:
 
-```
+```java
 assertEquals("failure - strings are not equal", expected, actual);
 ```
 
@@ -52,7 +52,7 @@ assertEquals("failure - strings are not equal", expected, actual);
 
 如果我们想断言两个数组相等，我们可以使用`assertArrayEquals:`
 
-```
+```java
 @Test
 public void whenAssertingArraysEquality_thenEqual() {
     char[] expected = {'J','u','n','i','t'};
@@ -64,7 +64,7 @@ public void whenAssertingArraysEquality_thenEqual() {
 
 如果两个数组都是`null`，断言将认为它们相等:
 
-```
+```java
 @Test
 public void givenNullArrays_whenAssertingArraysEquality_thenEqual() {
     int[] expected = null;
@@ -78,7 +78,7 @@ public void givenNullArrays_whenAssertingArraysEquality_thenEqual() {
 
 当我们想测试一个对象是否为`null`时，我们可以使用`assertNull`断言:
 
-```
+```java
 @Test
 public void whenAssertingNull_thenTrue() {
     Object car = null;
@@ -93,7 +93,7 @@ public void whenAssertingNull_thenTrue() {
 
 使用`assertNotSame`，可以验证两个变量是否引用同一个对象:
 
-```
+```java
 @Test
 public void whenAssertingNotSameObject_thenDifferent() {
     Object cat = new Object();
@@ -109,7 +109,7 @@ public void whenAssertingNotSameObject_thenDifferent() {
 
 如果我们想验证某个条件是`true`或`false`，我们可以分别使用`assertTrue`断言或`assertFalse`断言:
 
-```
+```java
 @Test
 public void whenAssertingConditions_thenVerified() {
     assertTrue("5 is greater then 4", 5 > 4);
@@ -123,7 +123,7 @@ public void whenAssertingConditions_thenVerified() {
 
 让我们看看如何在第一个场景中使用它:
 
-```
+```java
 @Test
 public void whenCheckingExceptionMessage_thenEqual() {
     try {
@@ -143,7 +143,7 @@ public void whenCheckingExceptionMessage_thenEqual() {
 
 让我们看看如何使用这个断言来检查数组是否包含特定的值:
 
-```
+```java
 @Test
 public void testAssertThatHasItems() {
     assertThat(
@@ -168,7 +168,7 @@ JUnit 5 保留了 JUnit 4 的许多断言方法，同时添加了一些利用 Ja
 
 `assertArrayEquals`断言验证预期数组和实际数组是否相等:
 
-```
+```java
 @Test
 public void whenAssertingArraysEquality_thenEqual() {
     char[] expected = { 'J', 'u', 'p', 'i', 't', 'e', 'r' };
@@ -184,7 +184,7 @@ public void whenAssertingArraysEquality_thenEqual() {
 
 如果我们想要断言两个`floats`相等，我们可以使用简单的`assertEquals`断言:
 
-```
+```java
 @Test
 void whenAssertingEquality_thenEqual() {
     float square = 2 * 2;
@@ -196,7 +196,7 @@ void whenAssertingEquality_thenEqual() {
 
 然而，如果我们想要断言实际值与期望值相差一个预定义的差值，我们仍然可以使用`assertEquals`，但是我们必须将差值作为第三个参数传递:
 
-```
+```java
 @Test
 void whenAssertingEqualityWithDelta_thenEqual() {
     float square = 2 * 2;
@@ -211,7 +211,7 @@ void whenAssertingEqualityWithDelta_thenEqual() {
 
 使用`assertTrue`断言，可以验证所提供的条件是否为`true`:
 
-```
+```java
 @Test
 void whenAssertingConditions_thenVerified() {
     assertTrue(5 > 4, "5 is greater the 4");
@@ -223,7 +223,7 @@ void whenAssertingConditions_thenVerified() {
 
 让我们看看如何使用`assertFalse`断言来断言`BooleanSupplier`的正确性:
 
-```
+```java
 @Test
 public void givenBooleanSupplier_whenAssertingCondition_thenVerified() {
     BooleanSupplier condition = () -> 5 > 6;
@@ -236,7 +236,7 @@ public void givenBooleanSupplier_whenAssertingCondition_thenVerified() {
 
 当我们想要断言一个对象不是`null`时，我们可以使用`assertNotNull`断言:
 
-```
+```java
 @Test
 void whenAssertingNotNull_thenTrue() {
     Object dog = new Object();
@@ -247,7 +247,7 @@ void whenAssertingNotNull_thenTrue() {
 
 相反，我们可以使用`assertNull`断言来检查实际值是否为`null`:
 
-```
+```java
 @Test
 public void whenAssertingNull_thenTrue() {
     Object cat = null;
@@ -262,7 +262,7 @@ public void whenAssertingNull_thenTrue() {
 
 当我们想断言预期和实际指的是同一个`Object`时，我们必须使用`assertSame`断言:
 
-```
+```java
 @Test
 void whenAssertingSameObject_thenSuccessfull() {
     String language = "Java";
@@ -278,7 +278,7 @@ void whenAssertingSameObject_thenSuccessfull() {
 
 `fail`断言未能通过测试，提供了失败消息以及潜在原因。这有助于在测试开发未完成时对其进行标记:
 
-```
+```java
 @Test
 public void whenFailingATest_thenFailed() {
     // Test not completed
@@ -294,7 +294,7 @@ JUnit 5 中引入的新断言之一是`assertAll`。
 
 让我们定义一个分组断言:
 
-```
+```java
 @Test
 void givenMultipleAssertion_whenAssertingAll_thenOK() {
     Object obj = null;
@@ -317,7 +317,7 @@ void givenMultipleAssertion_whenAssertingAll_thenOK() {
 
 考虑到这一点，让我们看看如何断言两个不同类型的列表(例如`LinkedList`和`ArrayList` )是相等的:
 
-```
+```java
 @Test
 void givenTwoLists_whenAssertingIterables_thenEquals() {
     Iterable<String> al = new ArrayList<>(asList("Java", "Junit", "Test"));
@@ -341,7 +341,7 @@ void givenTwoLists_whenAssertingIterables_thenEquals() {
 
 让我们看看如何使用这个断言来断言两个列表`String`有匹配的行:
 
-```
+```java
 @Test
 void whenAssertingEqualityListOfStrings_thenEqual() {
     List<String> expected = asList("Java", "\\d+", "JUnit");
@@ -355,7 +355,7 @@ void whenAssertingEqualityListOfStrings_thenEqual() {
 
 作为对`assertEquals`的补充，`assertNotEquals`断言断言期望值和实际值不相等:
 
-```
+```java
 @Test
 void whenAssertingEquality_thenNotEqual() {
     Integer value = 5; // result of an algorithm
@@ -372,7 +372,7 @@ void whenAssertingEquality_thenNotEqual() {
 
 让我们看看如何断言抛出的异常:
 
-```
+```java
 @Test
 void whenAssertingException_thenThrown() {
     Throwable exception = assertThrows(
@@ -391,7 +391,7 @@ void whenAssertingException_thenThrown() {
 
 如果我们想要断言所提供的`Executable`的执行在给定的`Timeout`之前结束，我们可以使用`assertTimeout`断言:
 
-```
+```java
 @Test
 void whenAssertingTimeout_thenNotExceeded() {
     assertTimeout(

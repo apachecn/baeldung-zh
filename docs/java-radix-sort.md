@@ -66,7 +66,7 @@
 
 现在让我们看看实现。
 
-```
+```java
 void sort(int[] numbers) {
     int maximumNumber = findMaximumNumberIn(numbers);
     int numberOfDigits = calculateNumberOfDigitsIn(maximumNumber);
@@ -84,7 +84,7 @@ void sort(int[] numbers) {
 
 因此，我们对每个位置的数字迭代并应用子例程三次:
 
-```
+```java
 void applyCountingSortOn(int[] numbers, int placeValue) {
 
     int range = 10 // decimal system, numbers from 0-9
@@ -116,7 +116,7 @@ void applyCountingSortOn(int[] numbers, int placeValue) {
 
 现在让我们测试我们的方法:
 
-```
+```java
 @Test
 public void givenUnsortedArray_whenRadixSort_thenArraySorted() {
     int[] numbers = {387, 468, 134, 123, 68, 221, 769, 37, 7};

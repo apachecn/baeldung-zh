@@ -14,7 +14,7 @@
 
 让我们创建一个多模块 Maven 项目:
 
-```
+```java
 bazel (root)
     pom.xml
     WORKSPACE (bazel workspace)
@@ -50,7 +50,7 @@ bazel (root)
 
 是时候配置我们的第一个构建规则来构建 Java 二进制文件了。让我们在属于`bazelapp`模块的`BUILD`文件中配置一个:
 
-```
+```java
 java_binary (
     name = "BazelApp",
     srcs = glob(["src/main/java/com/baeldung/*.java"]),
@@ -69,7 +69,7 @@ java_binary (
 
 我们现在可以构建应用程序了。从包含`WORKSPACE` 文件`,` 的目录中，让我们在 shell 中执行`bazel build`命令来构建我们的目标:
 
-```
+```java
 $ bazel build //bazelapp:BazelApp
 ```
 
@@ -81,7 +81,7 @@ $ bazel build //bazelapp:BazelApp
 
 我们现在应该注意到上一步中的两个二进制输出文件:
 
-```
+```java
 bazel-bin/bazelapp/BazelApp.jar
 bazel-bin/bazelapp/BazelApp
 ```
@@ -96,7 +96,7 @@ bazel-bin/bazelapp/BazelApp
 
 然而，我们也可以制作一个包含所有依赖项的胖罐子:
 
-```
+```java
 $ bazel build //bazelapp:BazelApp_deploy.jar
 ```
 
@@ -114,7 +114,7 @@ $ bazel build //bazelapp:BazelApp_deploy.jar
 
 让我们创建另一个名为`bazelgreeting`的 Maven 模块，并用`java_library`规则为新模块配置`BUILD`文件。我们将这个目标命名为“`greeter”`:
 
-```
+```java
 java_library (
     name = "greeter",
     srcs = glob(["src/main/java/com/baeldung/*.java"])
@@ -123,7 +123,7 @@ java_library (
 
 这里，我们使用了`java_library`规则来创建库。构建这个目标后，我们将得到`libgreetings.jar`文件:
 
-```
+```java
 INFO: Found 1 target...
 Target //bazelgreeting:greetings up-to-date:
   bazel-bin/bazelgreeting/libgreetings.jar
@@ -133,7 +133,7 @@ Target //bazelgreeting:greetings up-to-date:
 
 为了在`bazelapp`中使用`greeter`，我们需要一些额外的配置。首先，我们需要让包对`bazelapp`可见。我们可以通过在`greeter`包的`java_library`规则中添加`visibility`属性来实现这一点:
 
-```
+```java
 java_library (
     name = "greeter",
     srcs = glob(["src/main/java/com/baeldung/*.java"]),
@@ -145,7 +145,7 @@ java_library (
 
 现在在`bazelapp`包中，我们必须配置对`greeter`包的依赖。让我们用`deps`属性来做这件事:
 
-```
+```java
 java_binary (
     name = "BazelApp",
     srcs = glob(["src/main/java/com/baeldung/*.java"]),
@@ -169,7 +169,7 @@ java_binary (
 
 对于我们的例子，让我们将 [Apache Commons Lang](https://web.archive.org/web/20221101160606/https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.9/commons-lang3-3.9.jar) 导入到我们的应用程序中。因为我们必须从 HTTP 位置导入这个 jar，所以我们将使用 [`http_jar`](https://web.archive.org/web/20221101160606/https://docs.bazel.build/versions/master/repo/http.html#http_jar) 规则。我们将首先从 Bazel HTTP 构建定义中加载规则，并使用 Apache Commons 的位置在`WORKSPACE`文件中配置它:
 
-```
+```java
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_jar")
 
 http_jar (
@@ -180,7 +180,7 @@ http_jar (
 
 我们必须进一步在"`bazelapp”`包的`BUILD`文件中添加依赖项:
 
-```
+```java
 deps = ["//bazelgreeting:greeter", "@apache-commons-lang//jar"]
 ```
 
@@ -192,7 +192,7 @@ deps = ["//bazelgreeting:greeter", "@apache-commons-lang//jar"]
 
 首先，我们必须使用`WORKSPACE`文件中的`http_archive`规则从远程位置导入`rules_jvm_external`规则:
 
-```
+```java
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 RULES_JVM_EXTERNAL_TAG = "2.0.1"
@@ -208,7 +208,7 @@ http_archive(
 
 接下来，我们将使用`maven_install`规则并配置 Maven 存储库 URL 和所需的工件:
 
-```
+```java
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 
 maven_install(
@@ -221,7 +221,7 @@ maven_install(
 
 最后，我们将在`BUILD`文件中添加依赖关系:
 
-```
+```java
 deps = ["//bazelgreeting:greeter", "@maven//:org_apache_commons_commons_lang3"]
 ```
 

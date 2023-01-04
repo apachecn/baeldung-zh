@@ -38,7 +38,7 @@
 
 让我们看看当使用右`TimeZone:`时，如何自动处理从`GMT+1`到`GMT+2`的转换(发生在意大利，2018 年 3 月 25 日，凌晨 02:00)
 
-```
+```java
 TimeZone tz = TimeZone.getTimeZone("Europe/Rome");
 TimeZone.setDefault(tz);
 Calendar cal = Calendar.getInstance(tz, Locale.ITALIAN);
@@ -54,13 +54,13 @@ assertThat(cal.get(Calendar.DST_OFFSET)).isEqualTo(0);
 
 让我们给`Calendar`增加十分钟:
 
-```
+```java
 cal.add(Calendar.MINUTE, 10); 
 ```
 
 现在`DST_OFFSET`也变成了 60 分钟，这个国家已经把当地时间从`CET`(中欧时间)过渡到`CEST`(中欧夏令时)，也就是`GMT+2`:
 
-```
+```java
 Date dateAfterDST = cal.getTime();
 
 assertThat(cal.get(Calendar.DST_OFFSET))
@@ -71,14 +71,14 @@ assertThat(dateAfterDST)
 
 如果我们在控制台中显示这两个日期，我们也会看到时区的变化:
 
-```
+```java
 Before DST (00:55 UTC - 01:55 GMT+1) = Sun Mar 25 01:55:00 CET 2018
 After DST (01:05 UTC - 03:05 GMT+2) = Sun Mar 25 03:05:00 CEST 2018
 ```
 
 作为最后的测试，我们可以测量两个`Date`之间的距离，1:55 和 3:05:
 
-```
+```java
 Long deltaBetweenDatesInMillis = dateAfterDST.getTime() - dateBeforeDST.getTime();
 Long tenMinutesInMillis = (1000L * 60 * 10);
 
@@ -98,7 +98,7 @@ assertThat(deltaBetweenDatesInMillis)
 
 让我们仔细看看这个新的类，从`java.util.Date`、`java.time.LocalDateTime`的继承者开始:
 
-```
+```java
 LocalDateTime localDateTimeBeforeDST = LocalDateTime
   .of(2018, 3, 25, 1, 55);
 
@@ -110,7 +110,7 @@ assertThat(localDateTimeBeforeDST.toString())
 
 它完全不知道`Zones`和`Offsets`，但是，这就是为什么我们需要把它转换成**一个完全 DST 感知的`java.time.ZonedDateTime`** :
 
-```
+```java
 ZoneId italianZoneId = ZoneId.of("Europe/Rome");
 ZonedDateTime zonedDateTimeBeforeDST = localDateTimeBeforeDST
   .atZone(italianZoneId);
@@ -123,7 +123,7 @@ assertThat(zonedDateTimeBeforeDST.toString())
 
 像前面的例子一样，让我们通过增加十分钟来触发 DST:
 
-```
+```java
 ZonedDateTime zonedDateTimeAfterDST = zonedDateTimeBeforeDST
   .plus(10, ChronoUnit.MINUTES);
 
@@ -133,7 +133,7 @@ assertThat(zonedDateTimeAfterDST.toString())
 
 我们再次看到时间和时区偏移是如何向前移动的，并且仍然保持相同的距离:
 
-```
+```java
 Long deltaBetweenDatesInMinutes = ChronoUnit.MINUTES
   .between(zonedDateTimeBeforeDST,zonedDateTimeAfterDST);
 assertThat(deltaBetweenDatesInMinutes)

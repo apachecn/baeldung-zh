@@ -16,7 +16,7 @@
 
 让我们从将[注释处理器依赖关系](https://web.archive.org/web/20221206025029/https://search.maven.org/artifact/org.hibernate.validator/hibernate-validator-annotation-processor)添加到 pom.xml 开始:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-compiler-plugin</artifactId>
@@ -42,7 +42,7 @@
 
 我们需要注意的是**版本 7 的这个工具只兼容 [`jakarta.validation`](https://web.archive.org/web/20221206025029/https://search.maven.org/search?q=g:jakarta.validation%20AND%20a:jakarta.validation-api) 约束**:
 
-```
+```java
 <dependency>
     <groupId>jakarta.validation</groupId>
     <artifactId>jakarta.validation-api</artifactId>
@@ -56,7 +56,7 @@
 
 让我们设置处理器编译器选项:
 
-```
+```java
 <compilerArgs>
     <arg>-Averbose=true</arg>
     <arg>-AmethodConstraintsSupported=true</arg>
@@ -74,7 +74,7 @@
 
 **注释处理器带有一组预定义的错误来检查**。让我们以一个简单的`Message`类为例，仔细看看其中的三个:
 
-```
+```java
 public class Message {
     // constructor omitted
 }
@@ -86,7 +86,7 @@ public class Message {
 
 让我们给我们的`Message`类添加三个带注释的方法:
 
-```
+```java
 @Min(3)
 public boolean broadcast() {
     return true;
@@ -104,7 +104,7 @@ public boolean delete() {
 
 接下来，我们在配置中将`methodConstraintsSupported`选项设置为`false`:
 
-```
+```java
 <compilerArgs>
     <arg>AmethodConstraintsSupported=false</arg>
 </compilerArgs>
@@ -112,7 +112,7 @@ public boolean delete() {
 
 最后，这三种方法将使处理器检测到我们的问题:
 
-```
+```java
 [ERROR] COMPILATION ERROR :
 [INFO] -------------------------------------------------------------
 [ERROR] ${home}\baeldung\tutorials\javaxval\src\main\java\com\baeldung\javaxval\methodvalidation\model\ReservationManagement.java:[25,4] error: Constraint annotations must not be specified at methods, which are no valid JavaBeans getter methods.
@@ -142,7 +142,7 @@ public boolean delete() {
 
 这个问题表明我们不应该用约束验证来修饰`void`方法。我们可以通过在我们的`Message`类中注释一个`archive`方法来看到它的作用:
 
-```
+```java
 @NotNull
 public void archive() {
 } 
@@ -150,7 +150,7 @@ public void archive() {
 
 它会导致处理器产生一个错误:
 
-```
+```java
 [ERROR] COMPILATION ERROR :
 [INFO] -------------------------------------------------------------
 [ERROR] ${home}\baeldung\tutorials\javaxval\src\main\java\com\baeldung\javaxval\hibernate\validator\ap\Message.java:[45,4] error: Void methods may not be annotated with constraint annotations.
@@ -170,14 +170,14 @@ public void archive() {
 
 最后一个问题是最常见的。当批注目标数据类型与目标属性不匹配时，会出现这种情况。为了在我们的`Message`类中看到它的运行，让我们给我们的`Message`类添加一个错误注释的`String`属性:
 
-```
+```java
 @Past 
 private String createdAt; 
 ```
 
 由于`@Past`注释，将会出现错误。事实上，只有日期类型可以使用此约束:
 
-```
+```java
 [ERROR] COMPILATION ERROR :
 [INFO] -------------------------------------------------------------
 [ERROR] ${home}\baeldung\tutorials\javaxval\hibernate\validator\ap\Message.java:[20,5] error: The annotation @Past is disallowed for this data type.
@@ -195,7 +195,7 @@ private String createdAt;
 
 如果我们将错误的注释应用于具有不支持的返回类型的方法，我们会得到类似的错误:
 
-```
+```java
 @Min(3)
 public boolean broadcast() { 
     return true;
@@ -204,7 +204,7 @@ public boolean broadcast() {
 
 处理器错误信息与上一条相同:
 
-```
+```java
 [ERROR] COMPILATION ERROR :
 [INFO] -------------------------------------------------------------
 [ERROR] ${home}\baeldung\tutorials\javaxval\src\main\java\com\baeldung\javaxval\hibernate\validator\ap\Message.java:[37,5] error: The annotation @Min is disallowed for the return type of this method.

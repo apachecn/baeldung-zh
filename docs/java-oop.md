@@ -12,7 +12,7 @@
 
 我们将使用构造函数来创建该类的对象:
 
-```
+```java
 public class Car {
 
     // member fields
@@ -44,7 +44,7 @@ public class Car {
 
 对象是从类创建的，称为类的实例。我们使用类的构造函数从类中创建对象:
 
-```
+```java
 Car veyron = new Car("Bugatti", "Veyron", "crimson");
 Car corvette = new Car("Chevrolet", "Corvette", "black"); 
 ```
@@ -67,7 +67,7 @@ Car corvette = new Car("Chevrolet", "Corvette", "black");
 
 例如，一个类中的成员字段对其他类是隐藏的，可以使用成员方法来访问它们。一种方法是使所有数据字段`private`只能通过使用`public`成员方法来访问:
 
-```
+```java
 public class Car {
 
     // ...
@@ -92,7 +92,7 @@ public class Car {
 
 在 Java 中，我们通过扩展父类来实现这一点。因此，子类从父类获得所有属性:
 
-```
+```java
 public class Car extends Vehicle { 
     //...
 }
@@ -104,7 +104,7 @@ public class Car extends Vehicle {
 
 为了简化工作，我们可以将所有车辆类型的公共特性和属性捆绑到一个模块中(对于 Java 来说是一个类)。我们可以让单个类型继承并重用这些属性:
 
-```
+```java
 public class Vehicle {
     private int wheels;
     private String model;
@@ -125,7 +125,7 @@ public class Vehicle {
 
 车辆类型`Car` 现在将从父类`Vehicle`继承:
 
-```
+```java
 public class Car extends Vehicle {
     private int numberOfGears;
 
@@ -137,7 +137,7 @@ public class Car extends Vehicle {
 
 Java 支持单一继承和多级继承。这意味着一个类不能直接从多个类扩展，但是它可以使用层次结构:
 
-```
+```java
 public class ArmoredCar extends Car {
     private boolean bulletProofWindows;
 
@@ -153,7 +153,7 @@ public class ArmoredCar extends Car {
 
 在我们上面的`Vehicle`类的例子中，有一个`honk()`方法。扩展了`Vehicle `类的`Car `类可以覆盖这个方法，并以它想要的方式实现鸣声:
 
-```
+```java
 public class Car extends Vehicle {  
     //...
 
@@ -170,7 +170,7 @@ public class Car extends Vehicle {
 
 [多态性](/web/20221126233949/https://www.baeldung.com/cs/polymorphism)是一种 OOP 语言根据其输入类型以不同方式处理数据的能力。在 Java 中，这可以是具有不同方法签名和执行不同功能的相同方法名:
 
-```
+```java
 public class TextFile extends GenericFile {
     //...
 
@@ -197,7 +197,7 @@ public class TextFile extends GenericFile {
 
 还有运行时或**动态多态性，其中子类覆盖父类的方法**:
 
-```
+```java
 public class GenericFile {
     private String name;
 
@@ -211,7 +211,7 @@ public class GenericFile {
 
 子类可以扩展`GenericFile `类并覆盖`getFileInfo() `方法:
 
-```
+```java
 public class ImageFile extends GenericFile {
     private int height;
     private int width;

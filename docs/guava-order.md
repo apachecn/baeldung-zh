@@ -12,7 +12,7 @@
 
 **空值优先**
 
-```
+```java
 List<Integer> toSort = Arrays.asList(3, 5, 4, null, 1, 2);
 Collections.sort(toSort, Ordering.natural().nullsFirst());
 assertThat(toSort.get(0), nullValue());
@@ -20,7 +20,7 @@ assertThat(toSort.get(0), nullValue());
 
 **空值最后一个**
 
-```
+```java
 List<Integer> toSort = Arrays.asList(3, 5, 4, null, 1, 2);
 Collections.sort(toSort, Ordering.natural().nullsLast());
 assertThat(toSort.get(toSort.size() - 1), nullValue());
@@ -28,7 +28,7 @@ assertThat(toSort.get(toSort.size() - 1), nullValue());
 
 **自然排序**
 
-```
+```java
 List<Integer> toSort = Arrays.asList(3, 5, 4, 1, 2);
 Collections.sort(toSort, Ordering.natural());
 
@@ -37,14 +37,14 @@ assertTrue(Ordering.natural().isOrdered(toSort));
 
 **链接 2 个订单**
 
-```
+```java
 List<Integer> toSort = Arrays.asList(3, 5, 4, 1, 2);
 Collections.sort(toSort, Ordering.natural().reverse());
 ```
 
 **反向排序**
 
-```
+```java
 List<Integer> toSort = Arrays.asList(3, 5, 4, null, 1, 2);
 Collections.sort(toSort, Ordering.natural().nullsLast().reverse());
 assertThat(toSort.get(0), nullValue());
@@ -52,7 +52,7 @@ assertThat(toSort.get(0), nullValue());
 
 **自定义顺序——字符串按长度**
 
-```
+```java
 private class OrderingByLenght extends Ordering<String> {
     @Override
     public int compare(String s1, String s2) {
@@ -69,7 +69,7 @@ assertTrue(expectedOrder.isOrdered(toSort))
 
 **检查显式顺序**
 
-```
+```java
 List<String> toSort = Arrays.asList("zz", "aa", "b", "ccc");
 Ordering<String> byLength = new OrderingByLenght();
 Collections.sort(toSort, byLength);
@@ -80,7 +80,7 @@ assertTrue(expectedOrder.isOrdered(toSort));
 
 **检查字符串排序**
 
-```
+```java
 List<Integer> toSort = Arrays.asList(3, 5, 4, 2, 1, 2);
 Collections.sort(toSort, Ordering.natural());
 
@@ -89,7 +89,7 @@ assertFalse(Ordering.natural().isStrictlyOrdered(toSort));
 
 **二次订购**
 
-```
+```java
 List<String> toSort = Arrays.asList("zz", "aa", "b", "ccc");
 Ordering<String> byLength = new OrderingByLenght();
 Collections.sort(toSort, byLength.compound(Ordering.natural()));
@@ -100,7 +100,7 @@ assertTrue(expectedOrder.isOrdered(toSort));
 
 **复杂定制订购示例——带链接** 
 
-```
+```java
 List<String> toSort = Arrays.asList("zz", "aa", null, "b", "ccc");
 Collections.sort(toSort, 
     new OrderingByLenght().reverse().compound(Ordering.natural()).nullsLast());
@@ -109,7 +109,7 @@ System.out.println(toSort);
 
 **使用`toString`表示法** 排序
 
-```
+```java
 List<Integer> toSort = Arrays.asList(1, 2, 11);
 Collections.sort(toSort, Ordering.usingToString());
 
@@ -119,7 +119,7 @@ assertTrue(expectedOrder.isOrdered(toSort));
 
 **排序，然后找到【二分搜索法】**
 
-```
+```java
 List<Integer> toSort = Arrays.asList(1, 2, 11);
 Collections.sort(toSort, Ordering.usingToString());
 int found = Ordering.usingToString().binarySearch(toSort, 2);
@@ -128,7 +128,7 @@ System.out.println(found);
 
 **不用排序就找到最小值/最大值(更快)**
 
-```
+```java
 List<Integer> toSort = Arrays.asList(2, 1, 11, 100, 8, 14);
 int found = Ordering.usingToString().min(toSort);
 assertThat(found, equalTo(1));
@@ -136,7 +136,7 @@ assertThat(found, equalTo(1));
 
 **根据排序创建列表的排序副本**
 
-```
+```java
 List<String> toSort = Arrays.asList("aa", "b", "ccc");
 List<String> sortedCopy = new OrderingByLenght().sortedCopy(toSort);
 
@@ -147,7 +147,7 @@ assertTrue(expectedOrder.isOrdered(sortedCopy));
 
 **创建排序后的部分副本——最少元素**
 
-```
+```java
 List<Integer> toSort = Arrays.asList(2, 1, 11, 100, 8, 14);
 List<Integer> leastOf = Ordering.natural().leastOf(toSort, 3);
 List<Integer> expected = Lists.newArrayList(1, 2, 8);
@@ -156,7 +156,7 @@ assertThat(expected, equalTo(leastOf));
 
 **通过中介功能订购**
 
-```
+```java
 List<Integer> toSort = Arrays.asList(2, 1, 11, 100, 8, 14);
 Ordering<Object> ordering = Ordering.natural().onResultOf(Functions.toStringFunction());
 List<Integer> sortedCopy = ordering.sortedCopy(toSort);

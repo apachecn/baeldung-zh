@@ -12,7 +12,7 @@ LDAP 目录服务器是读取优化的分层数据存储。通常，它们用于
 
 让我们从添加所需的 Maven 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.ldap</groupId>
     <artifactId>spring-ldap-core</artifactId>
@@ -26,7 +26,7 @@ LDAP 目录服务器是读取优化的分层数据存储。通常，它们用于
 
 出于本文的目的，让我们首先创建以下 LDAP 条目:
 
-```
+```java
 ou=users,dc=example,dc=com (objectClass=organizationalUnit)
 ```
 
@@ -38,7 +38,7 @@ ou=users,dc=example,dc=com (objectClass=organizationalUnit)
 
 `ContextSource`用于创建`LdapTemplate`。在下一节中，我们将看到在用户认证过程中使用`ContextSource`:
 
-```
+```java
 @Bean
 public LdapContextSource contextSource() {
     LdapContextSource contextSource = new LdapContextSource();
@@ -57,7 +57,7 @@ public LdapContextSource contextSource() {
 
 `LdapTemplate`用于创建和修改 LDAP 条目:
 
-```
+```java
 @Bean
 public LdapTemplate ldapTemplate() {
     return new LdapTemplate(contextSource());
@@ -70,7 +70,7 @@ public LdapTemplate ldapTemplate() {
 
 要启用自动配置，我们需要确保在 pom.xml 中将`spring-boot-starter-data-ldap` Starter 或`spring-ldap-core`定义为依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-ldap</artifactId>
@@ -79,7 +79,7 @@ public LdapTemplate ldapTemplate() {
 
 要连接到 LDAP，我们需要在应用程序中提供连接设置。属性:
 
-```
+```java
 spring.ldap.url=ldap://localhost:18889
 spring.ldap.base=dc=example,dc=com
 spring.ldap.username=uid=admin,ou=system
@@ -88,7 +88,7 @@ spring.ldap.password=secret
 
 然后我们就可以将自动配置的`LdapTemplate`注入到所需的服务类中了。
 
-```
+```java
 @Autowired
 private LdapTemplate ldapTemplate;
 ```
@@ -97,7 +97,7 @@ private LdapTemplate ldapTemplate;
 
 现在让我们实现一个简单的逻辑来验证现有用户:
 
-```
+```java
 public void authenticate(String username, String password) {
     contextSource
       .getContext(
@@ -114,7 +114,7 @@ public void authenticate(String username, String password) {
 
 在身份验证时，LDAP 服务器会生成所提供密码的 SHA 哈希，并将其与存储的密码进行比较:
 
-```
+```java
 public void create(String username, String password) {
     Name dn = LdapNameBuilder
       .newInstance()
@@ -147,7 +147,7 @@ public void create(String username, String password) {
 
 我们可以使用以下方法修改现有用户或条目:
 
-```
+```java
 public void modify(String username, String password) {
     Name dn = LdapNameBuilder.newInstance()
       .add("ou", "users")
@@ -178,7 +178,7 @@ public void modify(String username, String password) {
 
 我们可以使用搜索过滤器搜索现有用户:
 
-```
+```java
 public List<String> search(String username) {
     return ldapTemplate
       .search(
@@ -194,7 +194,7 @@ public List<String> search(String username) {
 
 `spring-ldap-test`提供基于 ApacheDS 1.5.5 的嵌入式 LDAP 服务器。为了设置嵌入式 LDAP 服务器进行测试，我们需要配置以下 Spring bean:
 
-```
+```java
 @Bean
 public TestContextSourceFactoryBean testContextSource() {
     TestContextSourceFactoryBean contextSource 
@@ -220,7 +220,7 @@ public TestContextSourceFactoryBean testContextSource() {
 
 让我们用 JUnit 测试我们的用户搜索方法:
 
-```
+```java
 @Test
 public void 
   givenLdapClient_whenCorrectSearchFilter_thenEntriesReturned() {

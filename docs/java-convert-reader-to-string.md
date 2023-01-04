@@ -10,7 +10,7 @@
 
 让我们从一个简单的 Java 解决方案开始，**从`Reader`** 开始顺序读取字符:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenConvertingReaderIntoStringV1_thenCorrect() 
   throws IOException {
@@ -26,7 +26,7 @@ public void givenUsingPlainJava_whenConvertingReaderIntoStringV1_thenCorrect()
 
 如果要读取大量内容，批量读取解决方案会更好:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenConvertingReaderIntoStringV2_thenCorrect() 
   throws IOException {
@@ -46,7 +46,7 @@ public void givenUsingPlainJava_whenConvertingReaderIntoStringV2_thenCorrect()
 
 Guava 提供了一个实用程序，可以直接进行转换:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenConvertingReaderIntoString_thenCorrect() 
   throws IOException {
@@ -60,7 +60,7 @@ public void givenUsingGuava_whenConvertingReaderIntoString_thenCorrect()
 
 Apache Commons IO 也是如此–有一个 IO 实用程序能够执行**直接转换**:
 
-```
+```java
 @Test
 public void givenUsingCommonsIO_whenConvertingReaderIntoString_thenCorrect() 
   throws IOException {

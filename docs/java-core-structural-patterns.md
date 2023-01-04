@@ -16,7 +16,7 @@
 
 JDK 的集合框架提供了许多适配器模式的例子:
 
-```
+```java
 List<String> musketeers = Arrays.asList("Athos", "Aramis", "Porthos");
 ```
 
@@ -24,7 +24,7 @@ List<String> musketeers = Arrays.asList("Athos", "Aramis", "Porthos");
 
 I/O 框架也大量使用了这种模式。作为一个例子，让我们考虑这个片段，它将一个 [`InputStream`映射到一个`Reader`](/web/20220524131130/https://www.baeldung.com/java-convert-inputstream-to-reader) 对象:
 
-```
+```java
 InputStreamReader input = new InputStreamReader(new FileInputStream("input.txt"));
 ```
 
@@ -38,7 +38,7 @@ JDBC API 是一组标准接口，例如`Driver`、`Connection`和`ResultSet,`等
 
 例如，要创建到数据库的连接，我们可以说:
 
-```
+```java
 Connection connection = DriverManager.getConnection(url);
 ```
 
@@ -46,13 +46,13 @@ Connection connection = DriverManager.getConnection(url);
 
 例如，对于 PostgreSQL，我们可能有:
 
-```
+```java
 String url = "jdbc:postgresql://localhost/demo";
 ```
 
 对于 MySQL:
 
-```
+```java
 String url = "jdbc:mysql://localhost/demo";
 ```
 
@@ -64,7 +64,7 @@ AWT/Swing 中的嵌套容器是在核心 Java 中使用复合模式的很好的�
 
 考虑以下代码片段:
 
-```
+```java
 JTabbedPane pane = new JTabbedPane();
 pane.addTab("1", new Container());
 pane.addTab("2", new JButton());
@@ -79,7 +79,7 @@ pane.addTab("3", new JCheckBox());
 
 这种模式最普遍的用法之一可以在 [`java.io`](/web/20220524131130/https://www.baeldung.com/java-download-file#using-java-io) 包中找到:
 
-```
+```java
 BufferedInputStream bis = new BufferedInputStream(new FileInputStream(new File("test.txt")));
 while (bis.available() > 0) {
     char c = (char) bis.read();
@@ -99,7 +99,7 @@ Faces API 的`ExternalContext`是 facade 模式的一个很好的例子。它在
 
 让我们看看 [`**Primefaces**`](https://web.archive.org/web/20220524131130/https://www.primefaces.org/docs/api/5.3/org/primefaces/component/export/PDFExporter.html#writePDFToResponse(javax.faces.context.ExternalContext,%20java.io.ByteArrayOutputStream,%20java.lang.String)) **如何用它来写一个`HttpResponse`，而实际上并不知道它**:
 
-```
+```java
 protected void writePDFToResponse(ExternalContext externalContext, ByteArrayOutputStream baos, String fileName)
   throws IOException, DocumentException {
     externalContext.setResponseContentType("application/pdf");
@@ -126,7 +126,7 @@ protected void writePDFToResponse(ExternalContext externalContext, ByteArrayOutp
 
 例如， [`Integer`](https://web.archive.org/web/20220524131130/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html) 有一个静态类，`IntegerCache,`帮助它的 [`valueOf`](/web/20220524131130/https://www.baeldung.com/java-convert-string-to-int-or-integer#integervalueof) 方法总是缓存-128 到 127 范围内的值:
 
-```
+```java
 public static Integer valueOf(int i) {
     if (i >= IntegerCache.low && i <= IntegerCache.high) {
         return IntegerCache.cache[i + (-IntegerCache.low)];
@@ -143,7 +143,7 @@ public static Integer valueOf(int i) {
 
 JDK 为代理实现提供了一个现成的 [`java.lang.reflect.Proxy`](/web/20220524131130/https://www.baeldung.com/java-dynamic-proxies) 类:
 
-```
+```java
 Foo proxyFoo = (Foo) Proxy.newProxyInstance(Foo.class.getClassLoader(),
   new Class<?>[] { Foo.class }, handler);
 ```

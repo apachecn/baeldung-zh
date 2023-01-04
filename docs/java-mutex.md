@@ -20,7 +20,7 @@
 
 首先，让我们以一个`SequenceGeneraror`类为例，它通过每次将`currentValue`递增 1 来生成下一个序列:
 
-```
+```java
 public class SequenceGenerator {
 
     private int currentValue = 0;
@@ -35,7 +35,7 @@ public class SequenceGenerator {
 
 现在，让我们创建一个测试用例，看看当多个线程试图同时访问该方法时，该方法的行为如何:
 
-```
+```java
 @Test
 public void givenUnsafeSequenceGenerator_whenRaceCondition_thenUnexpectedBehavior() throws Exception {
     int count = 1000;
@@ -65,7 +65,7 @@ private Set<Integer> getUniqueSequences(SequenceGenerator generator, int count) 
 
 一旦我们执行了这个测试用例，我们可以看到它大部分时间都失败了，原因类似于:
 
-```
+```java
 java.lang.AssertionError: expected:<1000> but was:<989>
   at org.junit.Assert.fail(Assert.java:88)
   at org.junit.Assert.failNotEquals(Assert.java:834)
@@ -88,7 +88,7 @@ Java 中的每个对象都有一个关联的固有锁。****`synchronized` 方�
 
 让我们简单地通过添加关键字`synchronized` 将`getNextSequence`改为互斥:
 
-```
+```java
 public class SequenceGeneratorUsingSynchronizedMethod extends SequenceGenerator {
 
     @Override
@@ -103,7 +103,7 @@ public class SequenceGeneratorUsingSynchronizedMethod extends SequenceGenerator 
 
 所以，现在让我们看看如何使用**块来同步定制互斥对象**:
 
-```
+```java
 public class SequenceGeneratorUsingSynchronizedBlock extends SequenceGenerator {
 
     private Object mutex = new Object();
@@ -124,7 +124,7 @@ Java 1.5 中引入了`[ReentrantLock](/web/20221206143356/https://www.baeldung.c
 
 让我们看看如何使用`ReentrantLock`来实现互斥:
 
-```
+```java
 public class SequenceGeneratorUsingReentrantLock extends SequenceGenerator {
 
     private ReentrantLock mutex = new ReentrantLock();
@@ -149,7 +149,7 @@ public class SequenceGeneratorUsingReentrantLock extends SequenceGenerator {
 
 现在让我们使用`Semaphore`创建另一个线程安全版本的`SequenceGenerator`:
 
-```
+```java
 public class SequenceGeneratorUsingSemaphore extends SequenceGenerator {
 
     private Semaphore mutex = new Semaphore(1);
@@ -176,7 +176,7 @@ public class SequenceGeneratorUsingSemaphore extends SequenceGenerator {
 
 首先，我们将为[番石榴](https://web.archive.org/web/20221206143356/https://search.maven.org/search?q=g:com.google.guava%20AND%20a:guava)添加 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -186,7 +186,7 @@ public class SequenceGeneratorUsingSemaphore extends SequenceGenerator {
 
 现在，我们将使用`Monitor`类编写`SequenceGenerator`的另一个子类:
 
-```
+```java
 public class SequenceGeneratorUsingMonitor extends SequenceGenerator {
 
     private Monitor mutex = new Monitor();

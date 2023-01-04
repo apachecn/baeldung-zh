@@ -24,7 +24,7 @@ Apache Derby 有两个基本的部署选项:一个简单的嵌入式选项和一
 
 首先，我们可以从[这里](https://web.archive.org/web/20220524032452/https://db.apache.org/derby/derby_downloads.html)下载最新版本的 Apache Derby。之后，我们提取下载的文件。提取的安装包含几个子目录:
 
-```
+```java
 $ ls 
 bin  demo  docs  index.html  javadoc  KEYS  lib  LICENSE  NOTICE  RELEASE-NOTES.html  test 
 ```
@@ -42,13 +42,13 @@ bin  demo  docs  index.html  javadoc  KEYS  lib  LICENSE  NOTICE  RELEASE-NOTES.
 
 首先，我们将把`DERBY_HOME`环境变量设置为我们提取 Apache Derby `bin.` 的位置。例如，如果 Apache Derby 安装在`/opt/derby-db`目录中，我们可以使用下面的命令:
 
-```
+```java
 export DERBY_HOME=/opt/derby-db 
 ```
 
 然后，我们将`DERBY_HOME/bin`目录添加到 PATH 环境变量中，这样我们就可以从任何目录运行 Derby 脚本:
 
-```
+```java
 export PATH="$DERBY_HOME/bin:$PATH"
 ```
 
@@ -56,7 +56,7 @@ export PATH="$DERBY_HOME/bin:$PATH"
 
 在`lib`目录中有 Apache Derby 提供的各种库:
 
-```
+```java
 $ ls
 derbyclient.jar     derbynet.jar            derbyshared.jar
 derby.jar           derbyoptionaltools.jar  derbytools.jar
@@ -83,7 +83,7 @@ IJ 是一个基于 JDBC 的 Java 命令行应用程序。它的主要目的是�
 
 首先，让我们运行 IJ 工具:
 
-```
+```java
 $ $DERBY_HOME/bin/ij
 ij version 10.13
 ij> 
@@ -91,7 +91,7 @@ ij>
 
 我们也可以使用下面的命令来执行它:
 
-```
+```java
 $ java -jar $DERBY_HOME/lib/derbyrun.jar ij
 ij version 10.13
 ij> 
@@ -110,7 +110,7 @@ ij>
 
 我们可以创建一个属性文件，添加所有需要的属性，然后运行以下命令:
 
-```
+```java
 $ java -jar derbyrun.jar ij -p file-name.properties
 ```
 
@@ -118,7 +118,7 @@ $ java -jar derbyrun.jar ij -p file-name.properties
 
 例如，假设我们想要创建一个到具有特定名称的特定数据库的连接。我们可以用`ij.database`属性来实现:
 
-```
+```java
 $ java -jar -Dij.protocol=jdbc:derby: -Dij.database=baeldung derbyrun.jar ij
 ij version 10.13
 CONNECTION0* - 	jdbc:derby:baeldung
@@ -129,7 +129,7 @@ CONNECTION0* - 	jdbc:derby:baeldung
 
 `dblook`工具提供了数据库的 DDL(数据定义语言)。例如，我们可以将`baeldung`数据库的 DDL 写入控制台:
 
-```
+```java
 $ $DERBY_HOME/bin/dblook -d jdbc:derby:baeldung
 -- Timestamp: 2021-08-23 01:29:48.529
 -- Source database is: baeldung
@@ -160,13 +160,13 @@ ALTER TABLE "APP"."authors" ADD CONSTRAINT "SQL0000000000-582f8014-017b-6e26-ada
 
 我们可以使用`-o`将 DDL 写到类似`baeldung.sql`的文件中:
 
-```
+```java
 $ sudo $DERBY_HOME/bin/dblook -d jdbc:derby:baeldung -o baeldung.sql 
 ```
 
 我们也可以用`-z`指定模式，用`-t:`指定表
 
-```
+```java
 $ sudo $DERBY_HOME/bin/dblook -d jdbc:derby:baeldung -o baeldung.sql -z SCHEMA_NAME -t "TABLE_NAME"
 ```
 
@@ -174,7 +174,7 @@ $ sudo $DERBY_HOME/bin/dblook -d jdbc:derby:baeldung -o baeldung.sql -z SCHEMA_N
 
 Apache Derby `sysinfo`工具显示关于我们的 Java 环境和 Derby 版本的信息。此外，`sysinfo`工具在控制台上显示系统信息:
 
-```
+```java
 $ java -jar $DERBY_HOME/lib/derbyrun.jar sysinfo
 
 ------------------ Java Information ------------------
@@ -208,7 +208,7 @@ java.runtime.version: 11.0.11+9-Ubuntu-0ubuntu2.20.04
 
 我们可以用连接字符串中的`connect`命令和`create=true`属性创建一个新的数据库:
 
-```
+```java
 ij> connect 'jdbc:derby:databaseName;create=true';
 ```
 
@@ -216,7 +216,7 @@ ij> connect 'jdbc:derby:databaseName;create=true';
 
 当我们与 Derby 数据库交互时，IJ 会根据 URL 语法自动加载适当的驱动程序:
 
-```
+```java
 ij> connect 'jdbc:derby:baeldung' user 'user1' password 'pass123';
 ```
 
@@ -224,7 +224,7 @@ ij> connect 'jdbc:derby:baeldung' user 'user1' password 'pass123';
 
 `CREATE SCHEMA`语句定义了一个模式，这是一种为一组对象标识特定名称空间的方法:
 
-```
+```java
 CREATE SCHEMA schema_name AUTHORIZATION userName;
 ```
 
@@ -232,13 +232,13 @@ CREATE SCHEMA schema_name AUTHORIZATION userName;
 
 下面是一个名为`baeldung_authors`的模式示例:
 
-```
+```java
 ij> CREATE SCHEMA baeldung_authors;
 ```
 
 除了 ，我们可以为`baeldung_authors`创建一个模式，只有 ID 为`arash`的 特定用户可以访问:
 
-```
+```java
 ij> CREATE SCHEMA baeldung_authors AUTHORIZATION arash;
 ```
 
@@ -246,7 +246,7 @@ ij> CREATE SCHEMA baeldung_authors AUTHORIZATION arash;
 
 我们可以使用`DROP SCHEMA`语句通过 删除 一个 模式，同样，目标模式必须为空， `DROP SCHEMA`才能成功。我们不能删除`APP`模式(默认用户模式)或`SYS`模式:
 
-```
+```java
 DROP SCHEMA schema_name RESTRICT;
 ```
 
@@ -254,7 +254,7 @@ DROP SCHEMA schema_name RESTRICT;
 
 让我们看一个删除模式的示例:
 
-```
+```java
 ij> DROP SCHEMA baeldung_authors RESTRICT;
 ```
 
@@ -262,7 +262,7 @@ ij> DROP SCHEMA baeldung_authors RESTRICT;
 
 我们可以用`CREATE TABLE`语句给 创建一个表，其中 包含 列和
 
-```
+```java
 CREATE TABLE table_name (
    column_name1 column_data_type1 constraint (optional),
    column_name2 column_data_type2 constraint (optional),
@@ -271,7 +271,7 @@ CREATE TABLE table_name (
 
 让我们看一个例子:
 
-```
+```java
 ij> CREATE TABLE posts(post_id INT NOT NULL, publish_date DATE NOT NULL,
     view_number INT DEFAULT 0, PRIMARY KEY (post_id));
 ```
@@ -290,7 +290,7 @@ ij> CREATE TABLE posts(post_id INT NOT NULL, publish_date DATE NOT NULL,
 
 让我们为 [`derby`](https://web.archive.org/web/20220524032452/https://mvnrepository.com/artifact/org.apache.derby/derby) 添加一个 Maven 依赖:
 
-```
+```java
 <dependency>
     <groupId>org.apache.derby</groupId>
     <artifactId>derby</artifactId>
@@ -300,7 +300,7 @@ ij> CREATE TABLE posts(post_id INT NOT NULL, publish_date DATE NOT NULL,
 
 同样，我们为 [`derbyclient`](https://web.archive.org/web/20220524032452/https://mvnrepository.com/artifact/org.apache.derby/derbyclient) 添加 Maven 依赖:
 
-```
+```java
 <dependency>
     <groupId>org.apache.derby</groupId>
     <artifactId>derbyclient</artifactId>
@@ -314,19 +314,19 @@ ij> CREATE TABLE posts(post_id INT NOT NULL, publish_date DATE NOT NULL,
 
 在下面的语法中，我们可以将其用于嵌入式模式:
 
-```
+```java
 jdbc:derby:[subsubprotocol:][databaseName][;attribute=value]
 ```
 
 此外，我们可以将下面的语法用于客户端/服务器模式:
 
-```
+```java
 jdbc:derby://server[:port]/databaseName[;attribute=value]
 ```
 
 在嵌入式模式下，数据库 URL 不包含主机名和端口号。例如:
 
-```
+```java
 String urlConnection = "jdbc:derby:baeldung;create=true";
 ```
 
@@ -334,7 +334,7 @@ String urlConnection = "jdbc:derby:baeldung;create=true";
 
 让我们以嵌入式模式连接到一个 Apache Derby 数据库，如果它不存在，就在当前目录中创建它，创建一个表，并使用 SQL 语句将行插入到表中:
 
-```
+```java
 String urlConnection = "jdbc:derby:baeldung;create=true";
 Connection con = DriverManager.getConnection(urlConnection);
 Statement statement = con.createStatement();
@@ -348,7 +348,7 @@ statement.execute(sql);
 
 首先，我们运行下面的命令以客户机/服务器模式启动 Apache Derby:
 
-```
+```java
 $ java -jar $DERBY_HOME/lib/derbyrun.jar server start 
 Sat Aug 28 20:47:58 IRDT 2021 : Security manager installed using the Basic server security policy.
 Sat Aug 28 20:47:58 IRDT 2021 : Apache Derby Network Server - 10.13.1.1 -
@@ -357,7 +357,7 @@ Sat Aug 28 20:47:58 IRDT 2021 : Apache Derby Network Server - 10.13.1.1 -
 
 我们使用 JDBC API 连接到本地主机上的 Apache Derby 服务器，并从数据库`baeldung`的`authors`表中选择所有条目:
 
-```
+```java
 String urlConnection = "jdbc:derby://localhost:1527/baeldung";
    try (Connection con = DriverManager.getConnection(urlConnection)) {
        Statement statement = con.createStatement();
@@ -379,7 +379,7 @@ String urlConnection = "jdbc:derby://localhost:1527/baeldung";
 
 我们只需将来自 Spring Boot 的 [Spring 数据](/web/20220524032452/https://www.baeldung.com/spring-data)和 Apache Derby 依赖项添加到项目中，以将 Apache Derby 整合到其中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -395,7 +395,7 @@ String urlConnection = "jdbc:derby://localhost:1527/baeldung";
 
 通过添加这些应用程序属性，我们可以将 Derby 用作我们的持久数据库:
 
-```
+```java
 spring.datasource.url=jdbc:derby://localhost:1527/baeldung 
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.DerbyTenSevenDialect 
 spring.jpa.hibernate.ddl-auto=update

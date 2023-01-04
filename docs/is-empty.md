@@ -30,13 +30,13 @@
 
 ### 可用签名
 
-```
+```java
 public boolean isEmpty()
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenCallIsEmpty_thenCorrect() {
     String s1 = "";

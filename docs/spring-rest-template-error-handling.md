@@ -33,7 +33,7 @@
 
 所以让我们先实现我们的`RestTemplateResponseErrorHandler:`
 
-```
+```java
 @Component
 public class RestTemplateResponseErrorHandler 
   implements ResponseErrorHandler {
@@ -67,7 +67,7 @@ public class RestTemplateResponseErrorHandler
 
 然后我们可以构建`RestTemplate`实例，使用`RestTemplateBuilder` 来引入我们的 `RestTemplateResponseErrorHandler`
 
-```
+```java
 @Service
 public class BarConsumerService {
 
@@ -91,7 +91,7 @@ public class BarConsumerService {
 
 最后，我们将通过模拟服务器并返回一个`NOT_FOUND`状态来测试这个处理程序:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { NotFoundException.class, Bar.class })
 @RestClientTest

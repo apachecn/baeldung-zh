@@ -28,7 +28,7 @@
 
 为了更好地理解这个算法，我们举一个简单的例子。
 
-```
+```java
 Arr[] = {5, 9, 4, 6, 5, 3}
 ```
 
@@ -52,7 +52,7 @@ Arr[] = {5, 9, 4, 6, 5, 3}
 
 我们获取排序后的 pivot 的索引，并使用它递归地调用与`quickSort()`方法具有相同参数但具有不同索引的`partition()`方法:
 
-```
+```java
 public void quickSort(int arr[], int begin, int end) {
     if (begin < end) {
         int partitionIndex = partition(arr, begin, end);
@@ -67,7 +67,7 @@ public void quickSort(int arr[], int begin, int end) {
 
 在划分结束时，所有小于枢轴的元素都在它的左边，所有大于枢轴的元素都在它的右边。透视位于其最终排序位置，函数返回该位置:
 
-```
+```java
 private int partition(int arr[], int begin, int end) {
     int pivot = arr[end];
     int i = (begin-1);

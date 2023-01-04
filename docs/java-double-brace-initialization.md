@@ -12,7 +12,7 @@
 
 通常，我们初始化并填充一组国家，如下所示:
 
-```
+```java
 @Test
 public void whenInitializeSetWithoutDoubleBraces_containsElements() {
     Set<String> countries = new HashSet<String>();                
@@ -34,7 +34,7 @@ public void whenInitializeSetWithoutDoubleBraces_containsElements() {
 
 然而，我们实际上可以将创建和初始化合并在一个语句中；这就是我们使用双括号的地方:
 
-```
+```java
 @Test
 public void whenInitializeSetWithDoubleBraces_containsElements() {
     Set<String> countries = new HashSet<String>() {
@@ -81,7 +81,7 @@ public void whenInitializeSetWithDoubleBraces_containsElements() {
 
 相反，我们可以很好地利用新的 Java 8 Stream API 来初始化我们的`Set`:
 
-```
+```java
 @Test
 public void whenInitializeUnmodifiableSetWithDoubleBrace_containsElements() {
     Set<String> countries = Stream.of("India", "USSR", "USA")
@@ -95,7 +95,7 @@ public void whenInitializeUnmodifiableSetWithDoubleBrace_containsElements() {
 
 此外，Java 9 将带来一组有用的工厂方法，使以下事情成为可能:
 
-```
+```java
 List<String> list = List.of("India", "USSR", "USA");
 Set<String> set = Set.of("India", "USSR", "USA"); 
 ```

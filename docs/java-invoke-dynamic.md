@@ -12,7 +12,7 @@ Invoke Dynamic(也称为 Indy)是 JSR 292 T2 的一部分，旨在增强 JVM 对
 
 让我们从一个简单的[流 API](/web/20220524114233/https://www.baeldung.com/java-streams) 调用链开始:
 
-```
+```java
 public class Main { 
 
     public static void main(String[] args) {
@@ -28,7 +28,7 @@ public class Main {
 
 为了验证这个假设，我们可以看一下生成的字节码:
 
-```
+```java
 javap -c -p Main
 // truncated
 // class names are simplified for the sake of brevity 
@@ -53,7 +53,7 @@ javap -c -p Main
 
 此外，Java 编译器还生成了以下有趣的静态方法:
 
-```
+```java
 private static boolean lambda$main$0(java.lang.String);
     Code:
        0: aload_0
@@ -74,7 +74,7 @@ private static boolean lambda$main$0(java.lang.String);
 
 有趣的是，这实际上相当于我们传递给`filter `方法的 lambda:
 
-```
+```java
 c -> c.length() > 3
 ```
 
@@ -117,7 +117,7 @@ bootstrap 方法是我们编写的一段普通的 Java 代码，用来设置调�
 
 让我们再来看看生成的`invokedynamic `字节码:
 
-```
+```java
 14: invokedynamic #23,  0  // InvokeDynamic #0:test:()Ljava/util/function/Predicate;
 ```
 
@@ -128,7 +128,7 @@ bootstrap 方法是我们编写的一段普通的 Java 代码，用来设置调�
 
 为了查看 lambda 示例的引导方法表，我们应该将`-v `选项传递给`javap:`
 
-```
+```java
 javap -c -p -v Main
 // truncated
 // added new lines for brevity
@@ -194,7 +194,7 @@ Lambda 表达式不是唯一的特性，Java 也不是唯一使用`invokedynamic
 
 下面是一个简单的记录示例:
 
-```
+```java
 public record Color(String name, int code) {}
 ```
 
@@ -202,7 +202,7 @@ public record Color(String name, int code) {}
 
 **为了实现`toString, equals, `或`hashcode, `，Java 正在使用** `**invokedynamic**. `举例，`equals `的字节码如下:
 
-```
+```java
 public final boolean equals(java.lang.Object);
     Code:
        0: aload_0
@@ -217,7 +217,7 @@ public final boolean equals(java.lang.Object);
 
 仔细观察字节码可以发现，自举方法是 [`ObjectMethods#bootstrap`](https://web.archive.org/web/20220524114233/https://github.com/openjdk/jdk/blob/827e5e32264666639d36990edd5e7d0b7e7c78a9/src/java.base/share/classes/java/lang/runtime/ObjectMethods.java#L338) :
 
-```
+```java
 BootstrapMethods:
   0: #42 REF_invokeStatic java/lang/runtime/ObjectMethods.bootstrap:
     (Ljava/lang/invoke/MethodHandles$Lookup;
@@ -237,13 +237,13 @@ BootstrapMethods:
 
 在 Java 9 之前，使用`StringBuilder. `作为 JEP [280](https://web.archive.org/web/20220524114233/https://openjdk.java.net/jeps/280) 的一部分来实现重要的字符串连接，现在字符串连接使用`invokedynamic. `例如，让我们将一个常量字符串与一个随机变量连接起来:
 
-```
+```java
 "random-" + ThreadLocalRandom.current().nextInt();
 ```
 
 下面是这个例子中字节码的样子:
 
-```
+```java
 0: invokestatic  #7          // Method ThreadLocalRandom.current:()LThreadLocalRandom;
 3: invokevirtual #13         // Method ThreadLocalRandom.nextInt:()I
 6: invokedynamic #17,  0     // InvokeDynamic #0:makeConcatWithConstants:(I)LString;
@@ -251,7 +251,7 @@ BootstrapMethods:
 
 此外，字符串连接的引导方法位于 [`StringConcatFactory`](https://web.archive.org/web/20220524114233/https://github.com/openjdk/jdk/blob/827e5e32264666639d36990edd5e7d0b7e7c78a9/src/java.base/share/classes/java/lang/invoke/StringConcatFactory.java#L593) 类中:
 
-```
+```java
 BootstrapMethods:
   0: #30 REF_invokeStatic java/lang/invoke/StringConcatFactory.makeConcatWithConstants:
     (Ljava/lang/invoke/MethodHandles$Lookup;

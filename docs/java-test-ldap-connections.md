@@ -12,7 +12,7 @@
 
 让我们从创建我们唯一的类`LdapConnectionTool`开始。我们将从`main`方法开始。为了简单起见，我们所有的逻辑都放在这里:
 
-```
+```java
 public class LdapConnectionTool {
     public static void main(String[] args) {
         // ...
@@ -22,7 +22,7 @@ public class LdapConnectionTool {
 
 首先，我们将把我们的参数作为[系统属性](/web/20221206230431/https://www.baeldung.com/java-system-get-property-vs-system-getenv)来传递。我们将对`factory` ( `LdapCtxFactory)` )和`authType` ( `simple`)变量使用默认值。`LdapCtxFactory`是核心 Java 类，负责连接服务器和填充用户属性的整个过程。`simple`认证类型意味着我们的密码将以明文形式发送。类似地，我们将把我们的`query`变量默认为`user,` ，这样我们可以指定一个或两个。我们稍后会看到使用细节:
 
-```
+```java
 String factory = System.getProperty("factory", "com.sun.jndi.ldap.LdapCtxFactory");
 String authType = System.getProperty("authType", "simple");
 String url = System.getProperty("url");
@@ -33,7 +33,7 @@ String query = System.getProperty("query", user);
 
 接下来，我们将创建我们的环境地图，它包含使用`InitialDirContext`进行连接所需的所有属性:
 
-```
+```java
 Hashtable<String, String> env = new Hashtable<String, String>();
 env.put(Context.INITIAL_CONTEXT_FACTORY, factory);
 env.put(Context.SECURITY_AUTHENTICATION, authType);
@@ -42,7 +42,7 @@ env.put(Context.PROVIDER_URL, url);
 
 **我们不想要求用户和密码，因为有些服务器允许匿名访问**:
 
-```
+```java
 if (user != null) {
     env.put(Context.SECURITY_PRINCIPAL, user);
     env.put(Context.SECURITY_CREDENTIALS, password);
@@ -51,14 +51,14 @@ if (user != null) {
 
 在测试连接时，我们通常会传入一个不正确的 URL，或者服务器没有响应。**由于默认客户端行为无限期阻塞，直到收到响应，我们将定义超时参数**。等待时间以毫秒为单位定义:
 
-```
+```java
 env.put("com.sun.jndi.ldap.read.timeout", "5000");
 env.put("com.sun.jndi.ldap.connect.timeout", "5000");
 ```
 
 之后，我们尝试建立与新实例`InitialDirContext`的连接，以及基本的异常处理。这很重要，因为我们将使用它来诊断常见问题。同样，由于我们正在开发一个 CLI 应用程序，我们将消息打印到标准输出中:
 
-```
+```java
 DirContext context = null;
 try {
     context = new InitialDirContext(env);
@@ -73,7 +73,7 @@ try {
 
 **最后，我们使用我们的`context`变量来查询由可选的`query`** 产生的所有属性:
 
-```
+```java
 if (query != null) {
     Attributes attributes = context.getAttributes(query);
     NamingEnumeration<? extends Attribute> all = attributes.getAll();
@@ -101,7 +101,7 @@ if (query != null) {
 
 使用用户和密码连接:
 
-```
+```java
 java -cp ldap-connection-tool.jar \
 -Durl=ldap://localhost:389 \
 -Duser=uid=gauss,dc=baeldung,dc=com \
@@ -111,7 +111,7 @@ com.baeldung.jndi.ldap.connectionTool.LdapConnectionTool
 
 仅为快速连接测试指定服务器 URL:
 
-```
+```java
 java -cp ldap-connection-tool.jar \
 -Durl=ldap://localhost:389 \
 com.baeldung.jndi.ldap.connectionTool.LdapConnectionTool

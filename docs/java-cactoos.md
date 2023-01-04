@@ -33,7 +33,7 @@ Cactoos 库配备了一些类，这些类提供了与 Apache Commons 库的静�
 
 让我们从添加所需的 Maven 依赖项开始。该库的最新版本可以在 [Maven Central](https://web.archive.org/web/20221206195206/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%20%22org.cactoos%22%20AND%20a%3A%20%22cactoos%22) 上找到:
 
-```
+```java
 <dependency>
     <groupId>org.cactoos</groupId>
     <artifactId>cactoos</artifactId>
@@ -49,7 +49,7 @@ Cactoos 有很多用于操作`String`对象的类。
 
 让我们看看如何使用`TextOf`类创建一个`String`对象:
 
-```
+```java
 String testString = new TextOf("Test String").asString();
 ```
 
@@ -57,13 +57,13 @@ String testString = new TextOf("Test String").asString();
 
 如果需要创建格式化的`String`，我们可以使用`FormattedText`类:
 
-```
+```java
 String formattedString = new FormattedText("Hello %s", stringToFormat).asString();
 ```
 
 让我们验证这个方法实际上返回了格式化的`String`:
 
-```
+```java
 StringMethods obj = new StringMethods();
 
 String formattedString = obj.createdFormattedString("John");
@@ -74,19 +74,19 @@ assertEquals("Hello John", formattedString);
 
 *降低的*类使用其`TextOf`对象将`String`转换成小写:
 
-```
+```java
 String lowerCaseString = new Lowered(new TextOf(testString)).asString();
 ```
 
 类似地，给定的`String`可以使用`Upper`类转换成大写字母:
 
-```
+```java
 String upperCaseString = new Upper(new TextOf(testString)).asString();
 ```
 
 让我们使用一个测试字符串来验证这些方法的输出:
 
-```
+```java
 StringMethods obj = new StringMethods();
 
 String lowerCaseString = obj.toLowerCase("TeSt StrIng");
@@ -100,7 +100,7 @@ assertEquals("TEST STRING", upperCaseString);
 
 如前所述，Cactoos 库提供了一个`IsBlank`类来检查`null`或空的`String`:
 
-```
+```java
 new IsBlank(new TextOf(testString)) != null;
 ```
 
@@ -112,7 +112,7 @@ new IsBlank(new TextOf(testString)) != null;
 
 我们可以使用实用程序类`And`迭代字符串列表:
 
-```
+```java
 new And((String input) -> LOGGER.info(new FormattedText("%s\n", input).asString()), strings).value();
 ```
 
@@ -122,14 +122,14 @@ new And((String input) -> LOGGER.info(new FormattedText("%s\n", input).asString(
 
 `Filtered`类可用于根据特定标准过滤集合:
 
-```
+```java
 Collection<String> filteredStrings 
   = new ListOf<>(new Filtered<>(string -> string.length() == 5, new IterableOf<>(strings)));
 ```
 
 让我们通过传入几个参数来测试这个方法，其中只有 3 个参数满足标准:
 
-```
+```java
 CollectionUtils obj = new CollectionUtils(); 
 
 List<String> strings = new ArrayList<String>() {

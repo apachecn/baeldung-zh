@@ -30,7 +30,7 @@ Postman 适用于 Linux、Mac 和 Windows。该工具可以从[邮差网站](htt
 
 要验证服务器是否正在运行，我们可以在浏览器中点击以下 URL:
 
-```
+```java
 http://localhost:8082/spring-boot-rest/auth/foos
 ```
 
@@ -76,7 +76,7 @@ Postman 中的集合是一系列 HTTP 请求。Postman 保存请求的每个方�
 
 其次，我们需要一个 URL。方法下拉列表的右侧是请求 URL 的文本框。那么，让我们现在输入:
 
-```
+```java
 http://localhost:8082/spring-boot-rest/auth/foos
 ```
 
@@ -88,7 +88,7 @@ http://localhost:8082/spring-boot-rest/auth/foos
 
 一旦设置了编码和内容类型，我们就将 JSON 内容添加到文本区域:
 
-```
+```java
 {
     "name": "Transformers"
 }
@@ -142,7 +142,7 @@ collection runner 提供了影响测试运行的选项，但是在这个练习�
 
 让我们继续向我们的请求添加三个测试:
 
-```
+```java
 pm.test("success status", () => pm.response.to.be.success );
 pm.test("name is correct", () => 
   pm.expect(pm.response.json().name).to.equal("Transformers"));
@@ -188,7 +188,7 @@ pm.test("id was assigned", () =>
 
 为了获取这个 id，我们将在 POST 请求的测试脚本的末尾再添加一行:
 
-```
+```java
 pm.variables.set("id", pm.response.json().id);
 ```
 
@@ -202,7 +202,7 @@ pm.variables.set("id", pm.response.json().id);
 
 GET 请求的 URL 是:
 
-```
+```java
 http://localhost:8082/spring-boot-rest/auth/foos/{{id}}
 ```
 
@@ -216,7 +216,7 @@ http://localhost:8082/spring-boot-rest/auth/foos/{{id}}
 
 其次，我们知道这次要期待哪个 id，所以让我们验证那个 id。我们可以使用`id`变量来做到这一点:
 
-```
+```java
 pm.test("success status", () => pm.response.to.be.success );
 pm.test("name is correct", () => 
   pm.expect(pm.response.json().name).to.equal("Transformers"));
@@ -236,13 +236,13 @@ pm.test("id is correct", () =>
 
 删除的 URL 与获取的 URL 相同:
 
-```
+```java
 http://localhost:8082/spring-boot-rest/auth/foos/{{id}}
 ```
 
 **响应没有要测试的主体，但是我们可以测试响应代码**。因此，删除请求将只有一个测试:
 
-```
+```java
 pm.test("success status", () => pm.response.to.be.success );
 ```
 
@@ -270,7 +270,7 @@ pm.test("success status", () => pm.response.to.be.success );
 
 此外，通过查看`Postman Console`中的失败响应，我们了解到该响应包含一个`cause`属性。此外，`cause`属性包含字符串“`No value present`”。我们也可以测试一下:
 
-```
+```java
 pm.test("status is 500", () => pm.response.to.have.status(500) );
 pm.test("no value present", () => 
   pm.expect(pm.response.json().cause).to.equal("No value present"));

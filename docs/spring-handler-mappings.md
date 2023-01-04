@@ -22,7 +22,7 @@
 
 让我们在这里配置这个例子，并注册一个 bean 控制器来处理对`“/beanNameUrl”`的请求:
 
-```
+```java
 @Configuration
 public class BeanNameUrlHandlerMappingConfig {
     @Bean
@@ -39,7 +39,7 @@ public class BeanNameUrlHandlerMappingConfig {
 
 这是上述基于 Java 的配置的 XML 等效形式:
 
-```
+```java
 <bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping" />
 <bean name="/beanNameUrl" class="com.baeldung.WelcomeController" /> 
 ```
@@ -50,7 +50,7 @@ public class BeanNameUrlHandlerMappingConfig {
 
 以下代码测试此配置，并确保返回正确的视图名称:
 
-```
+```java
 public class BeanNameMappingConfigTest {
     // ...
 
@@ -69,7 +69,7 @@ public class BeanNameMappingConfigTest {
 
 让我们将请求`“/simpleUrlWelcome”`和`“/*/simpleUrlWelcome”`映射到`“welcome”` bean:
 
-```
+```java
 @Configuration
 public class SimpleUrlHandlerMappingConfig {
 
@@ -94,7 +94,7 @@ public class SimpleUrlHandlerMappingConfig {
 
 或者，下面是等效的 XML 配置:
 
-```
+```java
 <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
     <property name="mappings">
         <value>
@@ -112,7 +112,7 @@ URL 通常应该以斜杠开头，但是，如果路径不是以斜杠开头，S
 
 在 XML 中配置上述示例的另一种方式是使用`“props”`属性，而不是`“value”`。`Props`有一列`“prop”`标签，每个标签定义一个映射，其中`“key”`引用映射的 URL，标签的值是 bean 的名称。
 
-```
+```java
 <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
     <property name="mappings">
         <props>
@@ -125,7 +125,7 @@ URL 通常应该以斜杠开头，但是，如果路径不是以斜杠开头，S
 
 下面的测试用例确保对“/ `simpleUrlWelcome`”的请求由“`WelcomeController”` 处理，它返回一个名为 `“welcome”` 的视图名:
 
-```
+```java
 public class SimpleUrlMappingConfigTest {
     // ...
 
@@ -148,7 +148,7 @@ public class SimpleUrlMappingConfigTest {
 
 我们来配置一下`ControllerClassNameHandlerMapping`:
 
-```
+```java
 @Configuration
 public class ControllerClassNameHandlerMappingConfig {
 
@@ -172,7 +172,7 @@ public class ControllerClassNameHandlerMappingConfig {
 
 下面是等效的 XML 配置:
 
-```
+```java
 <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping" />
 <bean class="com.baeldung.WelcomeController" /> 
 ```
@@ -181,7 +181,7 @@ public class ControllerClassNameHandlerMappingConfig {
 
 以下代码将确保对“/ `welcome` *”的请求(如“/ `welcometest`”)由“WelcomeController”处理，它返回一个名为“`welcome`”的视图名称:
 
-```
+```java
 public class ControllerClassNameHandlerMappingTest {
     // ...
 
@@ -200,7 +200,7 @@ Spring MVC 框架允许同时实现多个`HandlerMapping`接口。
 
 让我们创建一个配置并注册两个控制器，都映射到 URL“/welcome”，只是使用不同的映射并返回不同的视图名称:
 
-```
+```java
 @Configuration
 public class HandlerMappingDefaultConfig {
 
@@ -218,7 +218,7 @@ public class HandlerMappingDefaultConfig {
 
 如果没有注册显式的处理程序映射器，将使用默认的`BeanNameHandlerMapping`。让我们通过测试来证明这种行为:
 
-```
+```java
 @Test
 public void whenConfiguringPriorities_thenMappedOK() {
     mockMvc.perform(get("/welcome"))
@@ -229,7 +229,7 @@ public void whenConfiguringPriorities_thenMappedOK() {
 
 如果我们显式注册一个不同的处理程序映射器，默认映射器将被覆盖。然而，有趣的是，当两个映射器被显式注册时会发生什么:
 
-```
+```java
 @Configuration
 public class HandlerMappingPrioritiesConfig {
 
@@ -266,7 +266,7 @@ public class HandlerMappingPrioritiesConfig {
 
 在 XML 配置中，您可以使用名为`“order”`的属性来配置优先级:
 
-```
+```java
 <bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping">
     <property name="order" value="2" />
 </bean> 
@@ -274,7 +274,7 @@ public class HandlerMappingPrioritiesConfig {
 
 让我们通过跟随`beanNameUrlHandlerMapping.setOrder(1)` 和`simpleUrlHandlerMapping.setOrder(0).` 将`order`属性添加到处理程序映射 beans 中，`order` 属性的较低值反映了较高的优先级。让我们通过测试来证明新的行为:
 
-```
+```java
 @Test
 public void whenConfiguringPriorities_thenMappedOK() {
     mockMvc.perform(get("/welcome"))

@@ -10,13 +10,13 @@
 
 **到[从`LocalDate`](/web/20220630131815/https://www.baeldung.com/java-date-to-localdate-and-localdatetime) 转换到`java.sql.Date`，我们可以简单地使用** `**java.sql.Date**.`中可用的`valueOf()`方法。同样，要转换当前日期，我们可以使用:
 
-```
+```java
 Date date = Date.valueOf(LocalDate.now());
 ```
 
 或者，任何其他特定日期:
 
-```
+```java
 Date date = Date.valueOf(LocalDate.of(2019, 01, 10));
 ```
 
@@ -24,7 +24,7 @@ Date date = Date.valueOf(LocalDate.of(2019, 01, 10));
 
 现在，让我们从`java.sql.Date `转换到`LocalDate`。为此，我们可以使用`toLocalDate()`方法:
 
-```
+```java
 LocalDate localDate = Date.valueOf("2019-01-10").toLocalDate();
 ```
 
@@ -42,7 +42,7 @@ Java 8 有很多有用的特性，包括[日期/时间 API](/web/20220630131815/
 
 让我们通过创建一个 [`AttributeConverter`](/web/20220630131815/https://www.baeldung.com/jpa-attribute-converters) 类来应用一个简单的解决方案:
 
-```
+```java
 @Converter(autoApply = true)
 public class LocalDateConverter implements AttributeConverter<LocalDate, Date> {
 

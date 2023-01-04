@@ -14,7 +14,7 @@
 
 首先，我们需要将目标模块添加到我们的`pom.xml` (例如，这里我们添加了断路器)`:`
 
-```
+```java
 <dependency>
     <groupId>io.github.resilience4j</groupId>
     <artifactId>resilience4j-circuitbreaker</artifactId>
@@ -38,14 +38,14 @@
 
 首先，我们需要定义要使用的设置。最简单的方法是使用默认设置:
 
-```
+```java
 CircuitBreakerRegistry circuitBreakerRegistry
   = CircuitBreakerRegistry.ofDefaults();
 ```
 
 也可以使用自定义参数:
 
-```
+```java
 CircuitBreakerConfig config = CircuitBreakerConfig.custom()
   .failureRateThreshold(20)
   .ringBufferSizeInClosedState(5)
@@ -56,7 +56,7 @@ CircuitBreakerConfig config = CircuitBreakerConfig.custom()
 
 然后，我们创建一个`CircuitBreaker`对象，并通过它调用远程服务:
 
-```
+```java
 interface RemoteService {
     int process(int i);
 }
@@ -71,7 +71,7 @@ Function<Integer, Integer> decorated = CircuitBreaker
 
 我们将尝试呼叫服务 10 次。我们应该能够验证呼叫至少尝试了 5 次，然后在 20%的呼叫失败后立即停止:
 
-```
+```java
 when(service.process(any(Integer.class))).thenThrow(new RuntimeException());
 
 for (int i = 0; i < 10; i++) {
@@ -107,7 +107,7 @@ verify(service, times(5)).process(any(Integer.class));
 
 下面是一个例子:
 
-```
+```java
 RateLimiterConfig config = RateLimiterConfig.custom().limitForPeriod(2).build();
 RateLimiterRegistry registry = RateLimiterRegistry.of(config);
 RateLimiter rateLimiter = registry.rateLimiter("my");
@@ -131,7 +131,7 @@ Function<Integer, Integer> decorated
 
 让我们看一个使用隔板 API 来配置一个并发调用的最大数量的例子:
 
-```
+```java
 BulkheadConfig config = BulkheadConfig.custom().maxConcurrentCalls(1).build();
 BulkheadRegistry registry = BulkheadRegistry.of(config);
 Bulkhead bulkhead = registry.bulkhead("my");
@@ -143,7 +143,7 @@ Function<Integer, Integer> decorated
 
 然后，我们确保`Bulkhead`不允许任何其他调用:
 
-```
+```java
 CountDownLatch latch = new CountDownLatch(1);
 when(service.process(anyInt())).thenAnswer(invocation -> {
     latch.countDown();
@@ -173,7 +173,7 @@ assertThat(bulkhead.isCallPermitted()).isFalse();
 
 我们可以使用重试 API 自动重试失败的调用:
 
-```
+```java
 RetryConfig config = RetryConfig.custom().maxAttempts(2).build();
 RetryRegistry registry = RetryRegistry.of(config);
 Retry retry = registry.retry("my");
@@ -186,7 +186,7 @@ Function<Integer, Void> decorated
 
 现在让我们模拟一种情况，在远程服务调用期间抛出异常，并确保库自动重试失败的调用:
 
-```
+```java
 when(service.process(anyInt())).thenThrow(new RuntimeException());
 try {
     decorated.apply(1);
@@ -209,7 +209,7 @@ try {
 
 初始化看起来与其他模块略有不同:
 
-```
+```java
 javax.cache.Cache cache = ...; // Use appropriate cache here
 Cache<Integer, Integer> cacheContext = Cache.of(cache);
 Function<Integer, Integer> decorated
@@ -228,7 +228,7 @@ Function<Integer, Integer> decorated
 
 为了演示，让我们设置一个配置了 1 毫秒超时的`TimeLimiter`:
 
-```
+```java
 long ttl = 1;
 TimeLimiterConfig config
   = TimeLimiterConfig.custom().timeoutDuration(Duration.ofMillis(ttl)).build();
@@ -237,7 +237,7 @@ TimeLimiter timeLimiter = TimeLimiter.of(config);
 
 接下来，让我们验证 Resilience4j 调用`Future.get()`的预期超时:
 
-```
+```java
 Future futureMock = mock(Future.class);
 Callable restrictedCall
   = TimeLimiter.decorateFutureSupplier(timeLimiter, () -> futureMock);
@@ -248,7 +248,7 @@ verify(futureMock).get(ttl, TimeUnit.MILLISECONDS);
 
 我们也可以把它和`CircuitBreaker`结合起来:
 
-```
+```java
 Callable chainedCallable
   = CircuitBreaker.decorateCallable(circuitBreaker, restrictedCall);
 ```

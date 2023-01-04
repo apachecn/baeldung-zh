@@ -12,7 +12,7 @@ Spring Data JPA 允许我们定义从数据库中读取、更新或删除记录�
 
 首先，让我们建立我们的例子。我们将定义一个`Fruit`实体来保存水果店中商品的名称和颜色:
 
-```
+```java
 @Entity
 public class Fruit {
     @Id
@@ -29,7 +29,7 @@ public class Fruit {
 
 让我们来推导一个方法，通过`name`删除`Fruit`:
 
-```
+```java
 @Repository
 public interface FruitRepository extends JpaRepository<Fruit, Long> {
     Long deleteByName(String name);
@@ -40,7 +40,7 @@ public interface FruitRepository extends JpaRepository<Fruit, Long> {
 
 类似地，我们也可以导出一个形式的`delete`方法:
 
-```
+```java
 List<Fruit> deleteByColor(String color);
 ```
 
@@ -48,7 +48,7 @@ List<Fruit> deleteByColor(String color);
 
 **让我们测试派生的删除方法。**首先，我们将通过定义`test-fruit-data.sql:`中的数据，在`Fruit`表中插入一些记录
 
-```
+```java
 insert into fruit(id,name,color) values (1,'apple','red');
 insert into fruit(id,name,color) values (2,'custard apple','green');
 insert into fruit(id,name,color) values (3,'mango','yellow');
@@ -57,7 +57,7 @@ insert into fruit(id,name,color) values (4,'guava','green');
 
 然后，我们将删除所有“绿色”水果:
 
-```
+```java
 @Transactional
 @Test
 @Sql(scripts = { "/test-fruit-data.sql" })
@@ -73,7 +73,7 @@ public void givenFruits_WhenDeletedByColor_ThenDeletedFruitsShouldReturn() {
 
 接下来，让我们为第二个`deleteBy`方法添加一个类似的测试用例:
 
-```
+```java
 @Transactional
 @Test
 @Sql(scripts = { "/test-fruit-data.sql" })
@@ -89,7 +89,7 @@ public void givenFruits_WhenDeletedByName_ThenDeletedFruitCountShouldReturn() {
 
 **我们也可以使用`removeBy`动词来派生删除方法:**
 
-```
+```java
 Long removeByName(String name);
 List<Fruit> removeByColor(String color);
 ```
@@ -98,7 +98,7 @@ List<Fruit> removeByColor(String color);
 
 最终的`interface`将会是这样的:
 
-```
+```java
 @Repository
 public interface FruitRepository extends JpaRepository<Fruit, Long> {
 
@@ -114,7 +114,7 @@ public interface FruitRepository extends JpaRepository<Fruit, Long> {
 
 让我们为`removeBy`方法添加类似的单元测试:
 
-```
+```java
 @Transactional
 @Test
 @Sql(scripts = { "/test-fruit-data.sql" })
@@ -125,7 +125,7 @@ public void givenFruits_WhenRemovedByColor_ThenDeletedFruitsShouldReturn() {
 }
 ```
 
-```
+```java
 @Transactional
 @Test
 @Sql(scripts = { "/test-fruit-data.sql" })
@@ -144,7 +144,7 @@ public void givenFruits_WhenRemovedByName_ThenDeletedFruitCountShouldReturn() {
 
 让我们使用一个定制查询来看看我们派生的删除方法的等价代码:
 
-```
+```java
 @Modifying
 @Query("delete from Fruit f where f.name=:name or f.color=:color")
 List<int> deleteFruits(@Param("name") String name, @Param("color") String color);

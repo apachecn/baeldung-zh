@@ -22,7 +22,7 @@
 
 假设我们想要实现 REST API 来更新带有多个字段的`HeavyResource` :
 
-```
+```java
 public class HeavyResource {
     private Integer id;
     private String name;
@@ -32,7 +32,7 @@ public class HeavyResource {
 
 首先，我们需要使用 PUT 创建处理资源完全更新的端点:
 
-```
+```java
 @PutMapping("/heavyresource/{id}")
 public ResponseEntity<?> saveResource(@RequestBody HeavyResource heavyResource,
   @PathVariable("id") String id) {
@@ -47,7 +47,7 @@ public ResponseEntity<?> saveResource(@RequestBody HeavyResource heavyResource,
 
 我们可以创建一个`HeavyResourceAddressOnly` DTO 来表示地址字段的部分更新:
 
-```
+```java
 public class HeavyResourceAddressOnly {
     private Integer id;
     private String address;
@@ -58,7 +58,7 @@ public class HeavyResourceAddressOnly {
 
 接下来，我们可以利用修补方法发送部分更新:
 
-```
+```java
 @PatchMapping("/heavyresource/{id}")
 public ResponseEntity<?> partialUpdateName(
   @RequestBody HeavyResourceAddressOnly partialUpdate, @PathVariable("id") String id) {
@@ -72,7 +72,7 @@ public ResponseEntity<?> partialUpdateName(
 
 如果我们有大量这样的部分更新操作，我们也可以跳过为每个 out 创建自定义 DTO，而只使用地图:
 
-```
+```java
 @RequestMapping(value = "/heavyresource/{id}", method = RequestMethod.PATCH, consumes = MediaType.APPLICATION_JSON_VALUE)
 public ResponseEntity<?> partialUpdateGeneric(
   @RequestBody Map<String, Object> updates,
@@ -91,7 +91,7 @@ public ResponseEntity<?> partialUpdateGeneric(
 
 首先，我们想通过 PUT 方法测试完整资源的更新:
 
-```
+```java
 mockMvc.perform(put("/heavyresource/1")
   .contentType(MediaType.APPLICATION_JSON_VALUE)
   .content(objectMapper.writeValueAsString(
@@ -101,7 +101,7 @@ mockMvc.perform(put("/heavyresource/1")
 
 部分更新的执行是通过使用修补方法实现的:
 
-```
+```java
 mockMvc.perform(patch("/heavyrecource/1")
   .contentType(MediaType.APPLICATION_JSON_VALUE)
   .content(objectMapper.writeValueAsString(
@@ -111,7 +111,7 @@ mockMvc.perform(patch("/heavyrecource/1")
 
 我们还可以为更通用的方法编写一个测试:
 
-```
+```java
 HashMap<String, Object> updates = new HashMap<>();
 updates.put("address", "5th avenue");
 
@@ -127,7 +127,7 @@ mockMvc.perform(patch("/heavyresource/1")
 
 假设客户端发送以下请求:
 
-```
+```java
 {
    "id" : 1,
    "address" : null

@@ -24,19 +24,19 @@
 
 让我们在名为`vagrant-start`的目录中创建我们的流浪者项目。**我们可以使用 [`init`命令](https://web.archive.org/web/20221129083849/https://developer.hashicorp.com/vagrant/docs/cli/init)** 在这个目录中创建一个初始的`Vagrantfile`:
 
-```
+```java
 $ vagrant init hashicorp/bionic64
 ```
 
 它产生以下输出，我们可以在目录中找到生成的`Vagrantfile`:
 
-```
+```java
 A `Vagrantfile` has been placed in this directory. You are now ready to `vagrant up` your first virtual environment! Please read the comments in the Vagrantfile as well as documentation on `vagrantup.com` for more information on using Vagrant. 
 ```
 
 让我们看一下生成的文件，了解每个部分的作用。为了清楚起见，我们从文件中删除了一些注释:
 
-```
+```java
 Vagrant.configure("2") do |config|
   config.vm.box = "hashicorp/bionic64"
 end
@@ -48,13 +48,13 @@ end
 
 **让我们用 [`validate`命令](https://web.archive.org/web/20221129083849/https://developer.hashicorp.com/vagrant/docs/cli/validate)** 来验证我们的`Vagrantfile`:
 
-```
+```java
 $ vagrant validate
 ```
 
 输出应该如下所示:
 
-```
+```java
 Vagrantfile validated successfully.
 ```
 
@@ -74,13 +74,13 @@ Vagrantfile validated successfully.
 
 让我们使用之前定义的`Vagrantfile.` **来启动一个虚拟机。流浪者中的 [`up`命令](https://web.archive.org/web/20221129083849/https://developer.hashicorp.com/vagrant/docs/cli/up)创建并配置我们的环境**:
 
-```
+```java
 $ vagrant up
 ```
 
 **该命令下载指定的盒子并启动虚拟机:**
 
-```
+```java
 Bringing machine 'default' up with 'virtualbox' provider...
 ==> default: Box 'hashicorp/bionic64' could not be found. Attempting to find and install...
     default: Box Provider: virtualbox
@@ -96,7 +96,7 @@ Bringing machine 'default' up with 'virtualbox' provider...
 
 **我们可以用 [`vagrant box`命令](https://web.archive.org/web/20221129083849/https://developer.hashicorp.com/vagrant/docs/cli/box)直接管理箱子。**让我们列出下载的盒子:
 
-```
+```java
 $ vagrant box list hashicorp/bionic64 (virtualbox, 1.0.282)
 ```
 
@@ -104,7 +104,7 @@ $ vagrant box list hashicorp/bionic64 (virtualbox, 1.0.282)
 
 让我们使用 [`vagrant destroy`命令](https://web.archive.org/web/20221129083849/https://developer.hashicorp.com/vagrant/docs/cli/destroy)停止虚拟机:
 
-```
+```java
 $ vagrant destroy
 ```
 
@@ -118,13 +118,13 @@ $ vagrant destroy
 
 让我们列出可用的框，并检查该命令的输出:
 
-```
+```java
 $ vagrant box list
 ```
 
 输出由两个重要部分组成:
 
-```
+```java
 hashicorp/bionic64 (virtualbox, 1.0.282)
 ```
 
@@ -138,7 +138,7 @@ hashicorp/bionic64 (virtualbox, 1.0.282)
 
 我们可以有[多个供应商](https://web.archive.org/web/20221129083849/https://developer.hashicorp.com/vagrant/docs/provisioning/basic_usage#multiple-provisioners)每个项目。除此之外，还有不同类型的置备程序。例如，我们可以[运行 shell 脚本](https://web.archive.org/web/20221129083849/https://developer.hashicorp.com/vagrant/docs/provisioning/shell)或[将文件](https://web.archive.org/web/20221129083849/https://developer.hashicorp.com/vagrant/docs/provisioning/file)复制到虚拟机。让我们在`Vagrantfile:`中定义一个简单的 shell provisioner
 
-```
+```java
 Vagrant.configure("2") do |config|
   config.vm.box = "hashicorp/bionic64"
 
@@ -149,7 +149,7 @@ end
 
 这将在供应运行时打印“`Hello from provisioner`”消息:
 
-```
+```java
 $ vagrant up ==> default: Running provisioner: shell...
     default: Running: inline script
     default: Hello from provisioner
@@ -163,7 +163,7 @@ $ vagrant up ==> default: Running provisioner: shell...
 
 让我们创建一个新的开发环境并进行配置。首先，对于我们的示例，我们需要创建一个名为“`provision.sh`”的新配置脚本，它在我们创建环境时安装 Nginx:
 
-```
+```java
 #!/usr/bin/env bash
 
 apt-get -y update
@@ -173,7 +173,7 @@ service nginx start
 
 在此之后，让我们创建一个使用此脚本进行配置的`Vagrantfile`:
 
-```
+```java
 Vagrant.configure("2") do |config|
   config.vm.box = "hashicorp/bionic64"
 

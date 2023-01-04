@@ -12,7 +12,7 @@
 
 为了使用这个库，让我们在`pom.xml`中包含以下 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>commons-io</groupId>
     <artifactId>commons-io</artifactId>
@@ -32,7 +32,7 @@
 
 让我们看看**如何使用`FileUtils`读取或复制文件**:
 
-```
+```java
 File file = FileUtils.getFile(getClass().getClassLoader()
   .getResource("fileTest.txt")
   .getPath());
@@ -47,7 +47,7 @@ String data = FileUtils.readFileToString(newTempFile,
 
 这个实用程序提供了一种**操作系统不可知的方式来执行文件名**上的公共函数。让我们看看我们可以利用的一些不同方法:
 
-```
+```java
 String fullPath = FilenameUtils.getFullPath(path);
 String extension = FilenameUtils.getExtension(path);
 String baseName = FilenameUtils.getBaseName(path);
@@ -57,7 +57,7 @@ String baseName = FilenameUtils.getBaseName(path);
 
 我们可以使用`FileSystemUtils`到**检查给定卷或驱动器上的可用空间**:
 
-```
+```java
 long freeSpace = FileSystemUtils.freeSpaceKb("/");
 ```
 
@@ -69,7 +69,7 @@ long freeSpace = FileSystemUtils.freeSpaceKb("/");
 
 让我们看一个例子，演示我们如何将一个输入流写入两个不同的输出流:
 
-```
+```java
 String str = "Hello World.";
 ByteArrayInputStream inputStream = new ByteArrayInputStream(str.getBytes());
 ByteArrayOutputStream outputStream1 = new ByteArrayOutputStream();
@@ -92,7 +92,7 @@ Commons IO 包括一系列有用的文件过滤器。当开发人员想要从一
 
 让我们来看一个例子，它使用`WildcardFileFilter`和`SuffixFileFilter` 来检索名称中带有“`ple`”并带有“`txt`”后缀的文件。注意，我们使用`ANDFileFilter`来包装上面的过滤器:
 
-```
+```java
 @Test
 public void whenGetFilewith_ANDFileFilter_thenFind_sample_txt()
   throws IOException {
@@ -117,7 +117,7 @@ public void whenGetFilewith_ANDFileFilter_thenFind_sample_txt()
 
 `PathFileComparator`类可用于按照路径对文件列表或数组进行排序，可以区分大小写，也可以不区分大小写，或者根据系统区分大小写。让我们看看如何使用这个实用程序对资源目录中的文件路径进行排序:
 
-```
+```java
 @Test
 public void whenSortDirWithPathFileComparator_thenFirstFile_aaatxt() 
   throws IOException {
@@ -147,7 +147,7 @@ public void whenSortDirWithPathFileComparator_thenFirstFile_aaatxt()
 
 让我们编写一个单元测试来演示文件大小的比较:
 
-```
+```java
 @Test
 public void whenSizeFileComparator_thenLargerFile_large()
   throws IOException {
@@ -172,7 +172,7 @@ Commons IO monitor 包提供了**跟踪文件或目录**变化的能力。让我
 
 当`FileAlterationMonitor` 启动时，我们将开始接收正在被监控的目录上的文件更改通知 *:*
 
-```
+```java
 FileAlterationObserver observer = new FileAlterationObserver(folder);
 FileAlterationMonitor monitor = new FileAlterationMonitor(5000);
 

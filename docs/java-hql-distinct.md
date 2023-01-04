@@ -14,14 +14,14 @@
 
 让我们首先尝试下面的 HQL 查询:
 
-```
+```java
 String hql = "SELECT p FROM Post p LEFT JOIN FETCH p.comments";
 List<Post> posts = session.createQuery(hql, Post.class).getResultList();
 ```
 
 这将生成以下 SQL 查询:
 
-```
+```java
 select
     post0_.id as id1_3_0_,
     comment2_.id as id1_0_1_,
@@ -45,14 +45,14 @@ left outer join
 
 我们需要在 HQL 查询中使用关键字`distinct` 来消除重复:
 
-```
+```java
 String hql = "SELECT DISTINCT p FROM Post p LEFT JOIN FETCH p.comments";
 List<Post> posts = session.createQuery(hql, Post.class).getResultList();
 ```
 
 现在，我们得到了正确的结果:不再有重复的`Post`对象。让我们来看看 Hibernate 生成的 SQL 语句:
 
-```
+```java
 select
     distinct post0_.id as id1_3_0_,
     comment2_.id as id1_0_1_,
@@ -78,7 +78,7 @@ left outer join
 
 要禁用`pass-distinct-through`，我们需要在查询中添加值为`false`的提示`QueryHint.PASS_DISTINCT_THROUGH,` :
 
-```
+```java
 String hql = "SELECT DISTINCT p FROM Post p LEFT JOIN FETCH p.comments";
 List<Post> posts = session.createQuery(hql, Post.class)
   .setHint(QueryHints.PASS_DISTINCT_THROUGH, false)
@@ -87,7 +87,7 @@ List<Post> posts = session.createQuery(hql, Post.class)
 
 如果我们检查结果，我们将看到没有重复的实体。此外，SQL 语句中没有使用`distinct`子句:
 
-```
+```java
 select
     post0_.id as id1_3_0_,
     comment2_.id as id1_0_1_,

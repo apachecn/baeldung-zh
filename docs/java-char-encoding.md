@@ -14,7 +14,7 @@
 
 为了更好地理解这一点，让我们定义一个用 Java 解码文本的方法:
 
-```
+```java
 String decodeText(String input, String encoding) throws IOException {
     return 
       new BufferedReader(
@@ -29,7 +29,7 @@ String decodeText(String input, String encoding) throws IOException {
 
 **如果我们用`input`作为“外观模式是一个软件设计模式”来运行这个方法`encoding`为“US-ASCII”**，它将输出:
 
-```
+```java
 The fa��ade pattern is a software design pattern.
 ```
 
@@ -77,7 +77,7 @@ ASCII 的 128 个字符集包括小写和大写的英文字母、数字以及一
 
 让我们在 Java 中定义一个简单的方法来显示特定编码方案下字符的二进制表示:
 
-```
+```java
 String convertToBinary(String input, String encoding) 
       throws UnsupportedEncodingException {
     byte[] encoded_input = Charset.forName(encoding)
@@ -95,7 +95,7 @@ String convertToBinary(String input, String encoding)
 
 如果我们使用我们的效用方法，我们可以看到它的二进制表示:
 
-```
+```java
 assertEquals(convertToBinary("T", "US-ASCII"), "01010100");
 ```
 
@@ -121,7 +121,7 @@ BIG5 和 SHIFT-JIS 是**多字节字符编码方案的例子，它开始使用�
 
 现在让我们用`input`作为'来调用方法`convertToBinary`語，汉字，与`encoding`同为“Big5”:
 
-```
+```java
 assertEquals(convertToBinary("語", "Big5"), "10111011 01111001");
 ```
 
@@ -151,7 +151,7 @@ UTF-32 是 Unicode 的一种编码方案，它使用四个字节来表示 Unicod
 
 让我们看看像' T '这样的简单字符是如何用 UTF-32 表示的。我们将使用之前介绍的方法`convertToBinary`:
 
-```
+```java
 assertEquals(convertToBinary("T", "UTF-32"), "00000000 00000000 00000000 01010100");
 ```
 
@@ -163,7 +163,7 @@ UTF-8 是另一种 Unicode 编码方案，它采用可变长度的字节来编�
 
 让我们再次调用方法`convertToBinary`，输入为‘T ’,编码为‘UTF-8’:
 
-```
+```java
 assertEquals(convertToBinary("T", "UTF-8"), "01010100");
 ```
 
@@ -171,7 +171,7 @@ assertEquals(convertToBinary("T", "UTF-8"), "01010100");
 
 让我们再次调用输入为'的方法`convertToBinary`語编码为“UTF-8”:
 
-```
+```java
 assertEquals(convertToBinary("語", "UTF-8"), "11101000 10101010 10011110");
 ```
 
@@ -195,13 +195,13 @@ Java 平台很大程度上依赖于一个名为`the default charset`的属性。
 
 让我们看看如何确定默认字符集:
 
-```
+```java
 Charset.defaultCharset().displayName();
 ```
 
 如果我们在 Windows 机器上运行这个代码片段，我们得到的输出是:
 
-```
+```java
 windows-1252
 ```
 
@@ -218,7 +218,7 @@ windows-1252
 
 因此，这意味着如果我们在没有指定字符集的情况下运行我们的示例:
 
-```
+```java
 new BufferedReader(new InputStreamReader(new ByteArrayInputStream(input.getBytes()))).readLine();
 ```
 
@@ -234,7 +234,7 @@ new BufferedReader(new InputStreamReader(new ByteArrayInputStream(input.getBytes
 
 例如，如果我们跑
 
-```
+```java
 new BufferedReader(new InputStreamReader(new ByteArrayInputStream(input.getBytes()))).readLine();
 ```
 
@@ -255,7 +255,7 @@ Java 中默认字符集的确定导致了两个系统属性:
 
 现在，通过命令行参数覆盖这些系统属性是很直观的:
 
-```
+```java
 -Dfile.encoding="UTF-8"
 -Dsun.jnu.encoding="UTF-8"
 ```
@@ -282,7 +282,7 @@ Java 中默认字符集的确定导致了两个系统属性:
 
 让我们尝试一下，我们现在将运行方法 *decodeText* ，输入相同，但编码为“UTF-8”:
 
-```
+```java
 The façade pattern is a software-design pattern.
 ```
 
@@ -306,7 +306,7 @@ The façade pattern is a software-design pattern.
 
 让我们定义一个解码函数，它接收一个指定的`Charset`、一个`CodingErrorAction` 类型和一个要解码的字符串:
 
-```
+```java
 String decodeText(String input, Charset charset, 
   CodingErrorAction codingErrorAction) throws IOException {
     CharsetDecoder charsetDecoder = charset.newDecoder();
@@ -319,7 +319,7 @@ String decodeText(String input, Charset charset,
 
 因此，如果我们解码“外观模式是一种软件设计模式。”使用`US_ASCII`，每个策略的输出将会不同。首先，我们使用跳过非法字符的`CodingErrorAction.IGNORE`:
 
-```
+```java
 Assertions.assertEquals(
   "The faade pattern is a software design pattern.",
   CharacterEncodingExamples.decodeText(
@@ -330,7 +330,7 @@ Assertions.assertEquals(
 
 对于第二个测试，我们使用`CodingErrorAction.REPLACE`来代替非法字符:
 
-```
+```java
 Assertions.assertEquals(
   "The fa��ade pattern is a software design pattern.",
   CharacterEncodingExamples.decodeText(
@@ -341,7 +341,7 @@ Assertions.assertEquals(
 
 对于第三个测试，我们使用`CodingErrorAction.REPORT`导致抛出`MalformedInputException:`
 
-```
+```java
 Assertions.assertThrows(
   MalformedInputException.class,
     () -> CharacterEncodingExamples.decodeText(

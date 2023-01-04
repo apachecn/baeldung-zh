@@ -18,7 +18,7 @@
 
 首先，让我们看一个使用`for`循环的基本例子。我们将从最后一个元素到第一个元素迭代`String`输入，并将每个字符连接成一个新的`String`:
 
-```
+```java
 public String reverse(String input) {
 
     if (input == null) {
@@ -39,7 +39,7 @@ public String reverse(String input) {
 
 为了更好地理解这个例子，我们可以构建一个单元测试:
 
-```
+```java
 @Test
 public void whenReverseIsCalled_ThenCorrectStringIsReturned() {
     String reversed = ReverseStringExamples.reverse("cat");
@@ -58,7 +58,7 @@ Java 也提供了一些类似于 **`StringBuilder`和`StringBuffer`的机制来�
 
 这里，我们需要从`String`输入创建一个`StringBuilder`，然后调用`reverse()`方法:
 
-```
+```java
 public String reverseUsingStringBuilder(String input) {
     if (input == null) {
         return null;
@@ -75,7 +75,7 @@ Apache Commons 是一个流行的 Java 库，有很多实用类，包括字符�
 
 像往常一样，要开始使用 Apache Commons，我们首先需要添加 [Maven 依赖项](https://web.archive.org/web/20220627175635/https://search.maven.org/search?q=g:org.apache.commons%20AND%20a:commons-lang3&core=gav):
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -89,7 +89,7 @@ Apache Commons 是一个流行的 Java 库，有很多实用类，包括字符�
 
 让我们创建一个方法来实现我们的目的，并使用`StringUtils`类:
 
-```
+```java
 public String reverseUsingApacheCommons(String input) {
     return StringUtils.reverse(input);
 }
@@ -105,7 +105,7 @@ public String reverseUsingApacheCommons(String input) {
 
 首先，我们将展示一个经典的方法。为了完成问题的第一部分，我们将使用 S `tring.split()` 方法。接下来，我们将通过结果数组向后迭代，并使用`StringBuilder`连接单词。当然，我们还需要在这些词之间加一个空格:
 
-```
+```java
 public String reverseTheOrderOfWords(String sentence) {
     if (sentence == null) {
         return null;
@@ -125,7 +125,7 @@ public String reverseTheOrderOfWords(String sentence) {
 
 其次，我们将考虑使用 Apache Commons 库。**再一次，它帮助我们实现一个可读性更好、更少出错的代码。**我们只需要调用`StringUtils.reverseDelimited()`方法，将输入的句子和分隔符作为参数:
 
-```
+```java
 public String reverseTheOrderOfWordsUsingApacheCommons(String sentence) {
     return StringUtils.reverseDelimited(sentence, ' ');
 }

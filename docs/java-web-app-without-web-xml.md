@@ -12,7 +12,7 @@
 
 为了使用这些新注释，我们需要包含`[javax.servlet-api](https://web.archive.org/web/20221004093651/https://search.maven.org/search?q=g:javax.servlet%20a:javax.servlet-api)`依赖项:
 
-```
+```java
 <dependency>
     <groupId>javax.servlet</groupId>
     <artifactId>javax.servlet-api</artifactId>
@@ -24,7 +24,7 @@
 
 在 Servlet 3.0 之前，我们在一个`web.xml`文件中配置一个 Java web 应用程序:
 
-```
+```java
 <web-app 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
@@ -62,7 +62,7 @@ JEE 6 附带了 Servlet 3.0，它使我们能够为 Servlet 定义使用注释�
 
 让我们为 URL 模式`/uppercase`定义一个 servlet。它将把 `input`请求参数的值转换成大写:
 
-```
+```java
 @WebServlet(urlPatterns = "/uppercase", name = "uppercaseServlet")
 public class UppercaseServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -87,7 +87,7 @@ public class UppercaseServlet extends HttpServlet {
 
 让我们创建一个过滤器来检查`input`请求参数是否存在:
 
-```
+```java
 @WebFilter(urlPatterns = "/uppercase")
 public class EmptyParamFilter implements Filter {
     @Override
@@ -116,7 +116,7 @@ public class EmptyParamFilter implements Filter {
 
 让我们创建一个侦听器，它在每次执行对服务器的请求时进行计数。我们将实现`ServletRequestListener`，监听`ServletRequestEvent` s:
 
-```
+```java
 @WebListener
 public class RequestListener implements ServletRequestListener {
     @Override
@@ -148,7 +148,7 @@ public class RequestListener implements ServletRequestListener {
 
 让我们试试我们的`/uppercase` 端点:
 
-```
+```java
 curl http://localhost:8080/spring-mvc-java/uppercase?input=texttouppercase
 
 TEXTTOUPPERCASE
@@ -156,7 +156,7 @@ TEXTTOUPPERCASE
 
 我们还应该看看我们的错误处理看起来如何:
 
-```
+```java
 curl http://localhost:8080/spring-mvc-java/uppercase
 
 Missing input parameter
@@ -164,7 +164,7 @@ Missing input parameter
 
 最后，快速测试一下我们的听众:
 
-```
+```java
 curl http://localhost:8080/spring-mvc-java/counter
 
 Request counter: 2

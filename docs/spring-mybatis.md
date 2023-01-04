@@ -14,7 +14,7 @@ MyBatis 是在 Java 应用程序中实现 SQL 数据库访问最常用的开源�
 
 让我们从定义贯穿本文的简单 POJO 开始:
 
-```
+```java
 public class Article {
     private Long id;
     private String title;
@@ -26,7 +26,7 @@ public class Article {
 
 和一个等效的 SQL `schema.sql`文件:
 
-```
+```java
 CREATE TABLE IF NOT EXISTS `ARTICLES`(
     `id`          INTEGER PRIMARY KEY,
     `title`       VARCHAR(100) NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `ARTICLES`(
 
 接下来，让我们创建一个`data.sql`文件，它只是将一条记录插入到我们的`articles`表中:
 
-```
+```java
 INSERT INTO ARTICLES
 VALUES (1, 'Working with MyBatis in Spring', 'Baeldung');
 ```
@@ -47,7 +47,7 @@ VALUES (1, 'Working with MyBatis in Spring', 'Baeldung');
 
 要开始使用 MyBatis，我们必须包括两个主要的依赖项— [MyBatis](https://web.archive.org/web/20220530025634/https://search.maven.org/search?q=g:org.mybatis%20a:mybatis) 和 [MyBatis-Spring](https://web.archive.org/web/20220530025634/https://search.maven.org/search?q=g:org.mybatis%20a:%20mybatis-spring) :
 
-```
+```java
 <dependency>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis</artifactId>
@@ -63,7 +63,7 @@ VALUES (1, 'Working with MyBatis in Spring', 'Baeldung');
 
 除此之外，我们还需要基本的 [Spring 依赖关系](https://web.archive.org/web/20220530025634/https://search.maven.org/search?q=g:org.springframework):
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context</artifactId>
@@ -79,7 +79,7 @@ VALUES (1, 'Working with MyBatis in Spring', 'Baeldung');
 
 在我们的示例中，我们将使用[的 H2 嵌入式数据库](https://web.archive.org/web/20220530025634/https://search.maven.org/search?q=g:com.h2database%20a:h2)来简化设置，并使用 [`spring-jdbc`](https://web.archive.org/web/20220530025634/https://search.maven.org/search?q=g:org.springframework%20a:spring-jdbc) 模块中的`EmbeddedDatabaseBuilder `类进行配置:
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -99,7 +99,7 @@ Spring 简化了 MyBatis 的配置。**唯一需要的元素是`javax.sql.Dataso
 
 首先，让我们创建一个配置类:
 
-```
+```java
 @Configuration
 @MapperScan("com.baeldung.mybatis")
 public class PersistenceConfig {
@@ -128,7 +128,7 @@ public class PersistenceConfig {
 
 我们现在可以创建一个简单的`ArticleMapper`界面:
 
-```
+```java
 public interface ArticleMapper {
     @Select("SELECT * FROM ARTICLES WHERE id = #{id}")
     Article getArticle(@Param("id") Long id);
@@ -137,7 +137,7 @@ public interface ArticleMapper {
 
 最后，测试我们的设置:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = PersistenceConfig.class)
 public class ArticleMapperIntegrationTest {
@@ -165,7 +165,7 @@ public class ArticleMapperIntegrationTest {
 
 让我们在`beans.xml`配置文件中创建所需的 bean 定义:
 
-```
+```java
 <jdbc:embedded-database id="dataSource" type="H2">
     <jdbc:script location="schema.sql"/>
     <jdbc:script location="data.sql"/>
@@ -185,7 +185,7 @@ public class ArticleMapperIntegrationTest {
 
 为了测试这个配置，我们可以重用之前实现的测试类。但是，我们必须调整上下文配置，这可以通过应用注释来实现:
 
-```
+```java
 @ContextConfiguration(locations = "classpath:/beans.xml")
 ```
 
@@ -195,7 +195,7 @@ Spring Boot 提供的机制进一步简化了 MyBatis 与 Spring 的配置。
 
 首先，让我们将`[mybatis-spring-boot-starter](https://web.archive.org/web/20220530025634/https://search.maven.org/search?q=g:org.mybatis.spring.boot%20a:mybatis-spring-boot-starter)`[依赖](https://web.archive.org/web/20220530025634/https://search.maven.org/search?q=g:org.mybatis.spring.boot%20a:mybatis-spring-boot-starter)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.mybatis.spring.boot</groupId>
     <artifactId>mybatis-spring-boot-starter</artifactId>
@@ -211,7 +211,7 @@ Spring Boot 提供的机制进一步简化了 MyBatis 与 Spring 的配置。
 
 之后，我们可以通过应用来自`[spring-boot-starter-test](/web/20220530025634/https://www.baeldung.com/spring-boot-testing)`的注释，使用之前定义的测试类来测试我们的配置:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 ```

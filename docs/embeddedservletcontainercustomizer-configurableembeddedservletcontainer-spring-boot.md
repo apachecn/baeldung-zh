@@ -14,7 +14,7 @@
 
 首先，让我们看一下使用旧类和接口的配置，我们需要替换它:
 
-```
+```java
 @Component
 public class CustomContainer implements EmbeddedServletContainerCustomizer {
 
@@ -30,7 +30,7 @@ public class CustomContainer implements EmbeddedServletContainerCustomizer {
 
 实现这一点的另一种可能性是对 Tomcat 这样的容器类型使用更具体的子类`ConfigurableEmbeddedServletContainer,`:
 
-```
+```java
 @Component
 public class CustomContainer implements EmbeddedServletContainerCustomizer {
 
@@ -52,7 +52,7 @@ public class CustomContainer implements EmbeddedServletContainerCustomizer {
 
 让我们为 Spring Boot 新协议项目改写前面的例子:
 
-```
+```java
 public class CustomContainer implements 
   WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
 
@@ -65,7 +65,7 @@ public class CustomContainer implements
 
 第二个例子现在将使用一个`TomcatServletWebServerFactory:`
 
-```
+```java
 @Component
 public class CustomContainer implements 
   WebServerFactoryCustomizer<TomcatServletWebServerFactory> {

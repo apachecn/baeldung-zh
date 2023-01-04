@@ -20,7 +20,7 @@ Spring Boot 非常支持外部化配置。此外，可以使用不同的方式�
 
 这比听起来容易多了！让我们来看看如何做到这一点:
 
-```
+```java
 public class YamlPropertySourceFactory implements PropertySourceFactory {
 
     @Override
@@ -48,7 +48,7 @@ public class YamlPropertySourceFactory implements PropertySourceFactory {
 
 首先，让我们创建一个简单的 YAML 文件—`foo.yml`:
 
-```
+```java
 yaml:
   name: foo
   aliases:
@@ -58,7 +58,7 @@ yaml:
 
 接下来，让我们用`@ConfigurationProperties`创建一个属性类，并使用我们的自定义`YamlPropertySourceFactory:`
 
-```
+```java
 @Configuration
 @ConfigurationProperties(prefix = "yaml")
 @PropertySource(value = "classpath:foo.yml", factory = YamlPropertySourceFactory.class)
@@ -74,7 +74,7 @@ public class YamlFooProperties {
 
 最后，**让我们验证属性是否被正确注入**:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class YamlFooPropertiesIntegrationTest {

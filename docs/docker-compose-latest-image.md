@@ -12,7 +12,7 @@
 
 让我们举一个 docker-compose 文件的简单例子:
 
-```
+```java
 version: '2.4'
 services:
   db:
@@ -25,7 +25,7 @@ services:
 
 这里，我们使用了两个服务——一个是 PostgreSQL 数据库，另一个是测试应用程序。我们使用下面的[命令](https://web.archive.org/web/20221010234555/https://docs.docker.com/compose/reference/up/)来部署我们的应用程序:
 
-```
+```java
 $ docker-compose up -d
 ```
 
@@ -33,7 +33,7 @@ $ docker-compose up -d
 
 当我们用相同的命令重新部署应用程序时，问题就出现了。由于图像已经存在于本地存储库中，所以它不会检查远程存储库中的这些图像是否有任何更改。**所以，我们的选择是将`docker-compose`文件中的`[pull](https://web.archive.org/web/20221010234555/https://docs.docker.com/compose/reference/pull/)`所有图像预先:**
 
-```
+```java
 $ docker-compose pull
 Pulling db     ... done
 Pulling my_app ... done
@@ -43,14 +43,14 @@ Pulling my_app ... done
 
 然而，我们可能并不总是更喜欢`Postgres`的形象。如果我们使用一个稳定版本的数据库，映像中不会有任何变化。因此，为每个部署下载它是没有意义的。有时，现有的数据文件与新版本不兼容。这可能会破坏部署。在这种情况下，**我们可以在`pull`命令中只使用特定服务的名称:**
 
-```
+```java
 $ docker-compose pull my_app
 Pulling my_app ... done
 ```
 
 **现在，如果我们执行`up`命令，肯定会用最新的图像**重新创建容器:
 
-```
+```java
 $ docker-compose up -d
 Starting docker-test_db_1     ... done
 Starting docker-test_my_app_1 ... done
@@ -58,7 +58,7 @@ Starting docker-test_my_app_1 ... done
 
 当然，我们可以将这两个命令组合起来创建一个单行命令:
 
-```
+```java
 $ docker-compose pull && docker-compose up -d
 ```
 
@@ -66,7 +66,7 @@ $ docker-compose pull && docker-compose up -d
 
 让我们再次考虑同一个例子。我们已经知道，主要问题是本地图像的存在。**因此，我们这里的第二个选项是停止所有容器，并从本地存储库中删除它们的映像**:
 
-```
+```java
 $ docker-compose down --rmi all
 Stopping docker-test_my_app_1 ... done
 Removing docker-test_db_1     ... done
@@ -80,7 +80,7 @@ Removing image eugen/test-app:latest
 
 **现在，我们用`up`命令:**再次启动我们的容器
 
-```
+```java
 $ docker-compose up -d
 Creating network "docker-test_default" with the default driver
 Pulling db (postgres:)...
@@ -105,7 +105,7 @@ Creating docker-test_my_app_1 ... done
 
 这种方法的缺点是无法选择要删除的特定图像。因此，它总是删除`postgres`图像，并再次下载相同的图像，这是不必要的。为了解决这个问题，我们可以使用`docker rmi`来删除特定的图像:
 
-```
+```java
 $ docker rmi -f eugen/test-app:latest
 Untagged: eugen/test-app:latest
 Untagged: eugen/[[email protected]](/web/20221010234555/https://www.baeldung.com/cdn-cgi/l/email-protection):31c05c8245192b32b8b359fc58b5e45d8397674ccf41f5f17a7d3109772ab5c1
@@ -116,7 +116,7 @@ Deleted: sha256:7bc07b4eb1c23f7a91afeb7133f107e0a8318fb77655d7d5f2f395a035a13eb7
 
 让我们看看具有不同风格的 docker-compose 文件的相同示例:
 
-```
+```java
 version: '2.4'
 services:
   db:
@@ -129,7 +129,7 @@ services:
 
 这里，我们在 Postgres 中使用了相同的`db`服务。但是，对于服务`my_app`，我们给出了一个构建部分，而不是使用现成的映像。这个部分包含了`test-app`的构建上下文。驻留在`test-app`目录中的 docker 文件是这样的:
 
-```
+```java
 FROM openjdk:11
 COPY target/test-app-0.0.1-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
@@ -137,7 +137,7 @@ ENTRYPOINT ["java","-jar","/app.jar"]
 
 在这个场景中，当我们使用`up`命令重新部署时，`docker-compose`再次重用本地映像(如果它存在的话)。因此，**我们需要确保`docker-compose`在每次触发部署时重建映像。** **我们可以使用选项`–build` :** 来完成
 
-```
+```java
 $ docker-compose up -d --build
 Building my_app
 [+] Building 2.5s (8/8) FINISHED                                                                                            
@@ -162,7 +162,7 @@ Starting docker-test_db_1 ... done
 
 **另一种方法是在运行`up`命令之前使用`[build](https://web.archive.org/web/20221010234555/https://docs.docker.com/compose/reference/build/)`命令:**
 
-```
+```java
 $ docker-compose build --pull --no-cache
 db uses an image, skipping
 Building my_app
@@ -174,7 +174,7 @@ Building my_app
 
 **现在，如果我们重新启动我们的组合配置，容器将使用最新的图像:**
 
-```
+```java
 $ docker-compose up -d
 Starting docker-test_db_1       ... done
 Recreating docker-test_my_app_1 ... done

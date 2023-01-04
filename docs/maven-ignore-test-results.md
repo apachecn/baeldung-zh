@@ -12,7 +12,7 @@
 
 让我们创建一个简单的项目，其中包括一个小的测试用例:
 
-```
+```java
 public class TestFail {
     @Test
     public void whenMessageAssigned_thenItIsNotNull() {
@@ -24,7 +24,7 @@ public class TestFail {
 
 让我们通过执行以下 Maven 命令来构建一个 jar 文件:
 
-```
+```java
 mvn package
 ```
 
@@ -32,7 +32,7 @@ mvn package
 
 现在，让我们稍微改变一下测试，这样测试开始失败。
 
-```
+```java
 @Test
 public void whenMessageAssigned_thenItIsNotNull() {
     String message = null;
@@ -56,7 +56,7 @@ Maven 有自己的观点来处理这个问题:
 
 让我们运行`mvn ` `package -Dmaven.test.skip=true`命令，看看结果:
 
-```
+```java
 [INFO] Tests are skipped.
 [INFO] BUILD SUCCESS
 ```
@@ -65,7 +65,7 @@ Maven 有自己的观点来处理这个问题:
 
 现在让我们运行`mvn ` `package -Dmaven.test.failure.ignore=true `命令:
 
-```
+```java
 [INFO] Running testfail.TestFail
 [ERROR] whenMessageAssigned_thenItIsNotNull java.lang.AssertionError
 [INFO] BUILD SUCCESS
@@ -85,7 +85,7 @@ Maven 有自己的观点来处理这个问题:
 
 **要忽略测试失败，我们可以简单地将`testFailureIgnore`属性设置为`true`** :
 
-```
+```java
 <plugin>
     <artifactId>maven-surefire-plugin</artifactId>
     <version>${maven.surefire.version}</version>
@@ -100,7 +100,7 @@ Maven 有自己的观点来处理这个问题:
 
 现在，让我们看看`package`命令的输出:
 
-```
+```java
 [INFO]  T E S T S
 [INFO] Running testfail.TestFail
 [ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, <<< FAILURE! - in testfail.TestFail
@@ -110,7 +110,7 @@ Maven 有自己的观点来处理这个问题:
 
 根据我们的需要，我们可以根本不运行测试。为此，我们可以将`testFailureIgnore`行替换为:
 
-```
+```java
 <skipTests>true</skipTests>
 ```
 

@@ -12,7 +12,7 @@
 
 因此，我们的应用程序有一个简单的类`HelloWorld.java`，带有一个`main`方法:
 
-```
+```java
 public class HelloWorld {
     public static void main(String[] args){
         System.out.println("Welcome to our application");
@@ -22,7 +22,7 @@ public class HelloWorld {
 
 我们使用`maven-jar-plugin`来生成一个可运行的 jar:
 
-```
+```java
 <plugin>
    <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-jar-plugin</artifactId>
@@ -41,7 +41,7 @@ public class HelloWorld {
 
 让我们在`Dockerfile`中编写 Dockerize 我们的可运行 jar 的步骤。`Dockerfile`驻留在`build context`的根目录下:
 
-```
+```java
 FROM openjdk:11
 MAINTAINER baeldung.com
 COPY target/docker-java-jar-0.0.1-SNAPSHOT.jar app.jar
@@ -60,13 +60,13 @@ ENTRYPOINT ["java","-jar","/app.jar"]
 
 现在我们有了`Dockerfile`，让我们使用 Maven 来构建和打包我们的可运行 jar:
 
-```
+```java
 mvn package
 ```
 
 之后，让我们建立我们的 Docker 形象:
 
-```
+```java
 docker image build -t docker-java-jar:latest .
 ```
 
@@ -76,7 +76,7 @@ docker image build -t docker-java-jar:latest .
 
 最后，让我们从命令行运行 Docker 映像:
 
-```
+```java
 docker run docker-java-jar:latest
 ```
 

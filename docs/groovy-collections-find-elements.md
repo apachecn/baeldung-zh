@@ -23,7 +23,7 @@ Java 本身提供了几种用`java.util.List` 对列表中的项目进行**检�
 
 让我们来看一个例子:
 
-```
+```java
 @Test
 void whenListContainsElement_thenCheckReturnsTrue() {
     def list = ['a', 'b', 'c']
@@ -35,13 +35,13 @@ void whenListContainsElement_thenCheckReturnsTrue() {
 
 除此之外， **Groovy 引入了成员操作符:**
 
-```
+```java
 element in list
 ```
 
 这是 Groovy 提供的许多语法糖操作符之一。在它的帮助下，我们可以简化我们的代码:
 
-```
+```java
 @Test
 void whenListContainsElement_thenCheckWithMembershipOperatorReturnsTrue() {
     def list = ['a', 'b', 'c']
@@ -54,7 +54,7 @@ void whenListContainsElement_thenCheckWithMembershipOperatorReturnsTrue() {
 
 和前面的例子一样，我们可以使用`java.util.Set#contains` 方法和`in`操作符:
 
-```
+```java
 @Test
 void whenSetContainsElement_thenCheckReturnsTrue() {
     def set = ['a', 'b', 'c'] as Set
@@ -68,7 +68,7 @@ void whenSetContainsElement_thenCheckReturnsTrue() {
 
 在`Map`的情况下，我们可以直接检查键或值:
 
-```
+```java
 @Test
 void whenMapContainsKeyElement_thenCheckReturnsTrue() {
     def map = [a: 'd', b: 'e', c: 'f']
@@ -81,7 +81,7 @@ void whenMapContainsKeyElement_thenCheckReturnsTrue() {
 
 或者使用成员运算符来查找匹配的键:
 
-```
+```java
 @Test
 void whenMapContainsKeyElement_thenCheckByMembershipReturnsTrue() {
     def map = [a: 'd', b: 'e', c: 'f']
@@ -93,7 +93,7 @@ void whenMapContainsKeyElement_thenCheckByMembershipReturnsTrue() {
 
 当和地图一起使用时，我们应该小心使用成员运算符，因为这个运算符和布尔值一起使用有点混乱。底层机制从映射中检索相应的值，并由**将其转换为布尔值:**，而不是测试键是否存在
 
-```
+```java
 @Test
 void whenMapContainsFalseBooleanValues_thenCheckReturnsFalse() {
     def map = [a: true, b: false, c: null]
@@ -113,7 +113,7 @@ void whenMapContainsFalseBooleanValues_thenCheckReturnsFalse() {
 
 让我们从定义一个简单的类开始，我们将在整个例子中使用它:
 
-```
+```java
 class Person {
     private String firstname
     private String lastname
@@ -127,7 +127,7 @@ class Person {
 
 这次，我们将使用一个简单的`Person`对象列表:
 
-```
+```java
 private final personList = [
   new Person("Regina", "Fitzpatrick", 25),
   new Person("Abagail", "Ballard", 26),
@@ -137,7 +137,7 @@ private final personList = [
 
 正如我们之前提到的， **Groovy 是一种兼容 Java 的语言**，所以我们先用 Java 8 引入的 [`Stream` API](/web/20220707143817/https://www.baeldung.com/java-8-streams-introduction) 创建一个例子:
 
-```
+```java
 @Test
 void givenListOfPerson_whenUsingStreamMatching_thenShouldEvaluateList() {
     assertTrue(personList.stream().anyMatch {it.age > 20})
@@ -147,7 +147,7 @@ void givenListOfPerson_whenUsingStreamMatching_thenShouldEvaluateList() {
 
 我们还可以使用 Groovy 方法`DefaultGroovyMethods#any `和`DefaultGroovyMethods#every `直接在集合上执行检查:
 
-```
+```java
 @Test
 void givenListOfPerson_whenUsingCollectionMatching_thenShouldEvaluateList() {
     assertTrue(personList.any {it.age > 20})
@@ -159,7 +159,7 @@ void givenListOfPerson_whenUsingCollectionMatching_thenShouldEvaluateList() {
 
 让我们从定义一个由`Person#firstname`映射的`Person `对象的`Map`开始:
 
-```
+```java
 private final personMap = [
   Regina : new Person("Regina", "Fitzpatrick", 25),
   Abagail: new Person("Abagail", "Ballard", 26),
@@ -169,7 +169,7 @@ private final personMap = [
 
 我们可以通过它的键、值或整个条目来评估它。同样，让我们首先使用`Stream` API:
 
-```
+```java
 @Test
 void givenMapOfPerson_whenUsingStreamMatching_thenShouldEvaluateMap() {
     assertTrue(personMap.keySet().stream().anyMatch {it == "Regina"})
@@ -182,7 +182,7 @@ void givenMapOfPerson_whenUsingStreamMatching_thenShouldEvaluateMap() {
 
 **然后，Groovy 集合 API:**
 
-```
+```java
 @Test
 void givenMapOfPerson_whenUsingCollectionMatching_thenShouldEvaluateMap() {
     assertTrue(personMap.keySet().any {it == "Regina"})
@@ -200,7 +200,7 @@ void givenMapOfPerson_whenUsingCollectionMatching_thenShouldEvaluateMap() {
 
 我们还可以使用谓词提取元素。让我们从熟悉的`Stream` API 方法开始:
 
-```
+```java
 @Test
 void givenListOfPerson_whenUsingStreamFind_thenShouldReturnMatchingElements() {
     assertTrue(personList.stream().filter {it.age > 20}.findAny().isPresent())
@@ -214,7 +214,7 @@ void givenListOfPerson_whenUsingStreamFind_thenShouldReturnMatchingElements() {
 
 另一方面，Groovy 提供了更紧凑的语法:
 
-```
+```java
 @Test
 void givenListOfPerson_whenUsingCollectionFind_thenShouldReturnMatchingElements() {
     assertNotNull(personList.find {it.age > 20})
@@ -232,7 +232,7 @@ void givenListOfPerson_whenUsingCollectionFind_thenShouldReturnMatchingElements(
 
 让我们重新使用之前的`personMap`:
 
-```
+```java
 @Test
 void givenMapOfPerson_whenUsingStreamFind_thenShouldReturnElements() {
     assertTrue(
@@ -248,7 +248,7 @@ void givenMapOfPerson_whenUsingStreamFind_thenShouldReturnElements() {
 
 同样，简化的 Groovy 解决方案:
 
-```
+```java
 @Test
 void givenMapOfPerson_whenUsingCollectionFind_thenShouldReturnElements() {
     assertNotNull(personMap.find {it.key == "Abagail" && it.value.lastname == "Ballard"})

@@ -28,13 +28,13 @@ A quick and practical guide to creating Hibernate interceptors.[Read more](/web/
 
 将查询转储到标准输出的最简单方法是将以下内容添加到`application.properties`:
 
-```
+```java
 spring.jpa.show-sql=true
 ```
 
 为了美化或漂亮地打印 SQL，我们可以添加:
 
-```
+```java
 spring.jpa.properties.hibernate.format_sql=true
 ```
 
@@ -46,7 +46,7 @@ spring.jpa.properties.hibernate.format_sql=true
 
 现在让我们看看如何通过在属性文件中配置记录器来记录 SQL 语句:
 
-```
+```java
 logging.level.org.hibernate.SQL=DEBUG
 logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
 ```
@@ -61,7 +61,7 @@ pretty print 属性也可以在这种配置下工作。
 
 要在使用`JdbcTemplate`时配置语句日志记录，我们需要以下属性:
 
-```
+```java
 logging.level.org.springframework.jdbc.core.JdbcTemplate=DEBUG
 logging.level.org.springframework.jdbc.core.StatementCreatorUtils=TRACE
 ```

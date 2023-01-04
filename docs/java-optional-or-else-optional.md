@@ -16,7 +16,7 @@
 
 因此，我们可以实现我们自己的自定义方法:
 
-```
+```java
 public static <T> Optional<T> or(Optional<T> optional, Optional<T> fallback) {
     return optional.isPresent() ? optional : fallback;
 }
@@ -24,7 +24,7 @@ public static <T> Optional<T> or(Optional<T> optional, Optional<T> fallback) {
 
 实际上:
 
-```
+```java
 @Test
 public void givenOptional_whenValue_thenOptionalGeneralMethod() {
     String name = "Filan Fisteku";
@@ -56,7 +56,7 @@ public void givenEmptyOptional_whenValue_thenOptionalGeneralMethod() {
 
 让我们创建一个简单的`ItemsProvider`类:
 
-```
+```java
 public class ItemsProvider {
     public Optional<String> getNail(){
         System.out.println("Returning a nail");
@@ -72,7 +72,7 @@ public class ItemsProvider {
 
 下面是我们如何**链接这些方法并利用惰性评估**:
 
-```
+```java
 @Test
 public void givenTwoOptionalMethods_whenFirstNonEmpty_thenSecondNotEvaluated() {
     ItemsProvider itemsProvider = new ItemsProvider();
@@ -93,7 +93,7 @@ public void givenTwoOptionalMethods_whenFirstNonEmpty_thenSecondNotEvaluated() {
 
 让我们通过一个简单的例子来看看这一点:
 
-```
+```java
 public static Optional<String> getName(Optional<String> name) {
     return name.or(() -> getCustomMessage());
 }
@@ -101,7 +101,7 @@ public static Optional<String> getName(Optional<String> name) {
 
 我们使用了一个辅助方法来帮助我们的例子:
 
-```
+```java
 private static Optional<String> getCustomMessage() {
     return Optional.of("Name not provided");
 }
@@ -109,7 +109,7 @@ private static Optional<String> getCustomMessage() {
 
 我们可以测试它，并进一步了解它是如何工作的。以下测试案例演示了`Optional` 有值时的情况:
 
-```
+```java
 @Test
 public void givenOptional_whenValue_thenOptional() {
     String name = "Filan Fisteku";
@@ -122,7 +122,7 @@ public void givenOptional_whenValue_thenOptional() {
 
 另一种方法是使用 guava 的`Optional` 类的*或()*方法。首先，我们需要在我们的项目中添加`guava` (最新版本可以在[这里找到](https://web.archive.org/web/20221206135926/https://mvnrepository.com/artifact/com.google.guava/guava/19.0)):
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -132,14 +132,14 @@ public void givenOptional_whenValue_thenOptional() {
 
 现在，我们可以继续前面的例子:
 
-```
+```java
 public static com.google.common.base.Optional<String> 
   getOptionalGuavaName(com.google.common.base.Optional<String> name) {
     return name.or(getCustomMessageGuava());
 }
 ```
 
-```
+```java
 private static com.google.common.base.Optional<String> getCustomMessageGuava() {
     return com.google.common.base.Optional.of("Name not provided");
 }
@@ -149,7 +149,7 @@ private static com.google.common.base.Optional<String> getCustomMessageGuava() {
 
 我们现在可以测试它，类似于上面的例子:
 
-```
+```java
 @Test
 public void givenGuavaOptional_whenInvoke_thenOptional() {
     String name = "Filan Fisteku";
@@ -159,7 +159,7 @@ public void givenGuavaOptional_whenInvoke_thenOptional() {
 }
 ```
 
-```
+```java
 @Test
 public void givenGuavaOptional_whenNull_thenDefaultText() {
     assertEquals(

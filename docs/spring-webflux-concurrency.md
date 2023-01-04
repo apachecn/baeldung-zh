@@ -88,7 +88,7 @@
 
 **虽然 Netty 是 WebFlux 应用程序中的默认服务器，但只需声明正确的依赖关系即可切换到任何其他支持的服务器**:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-webflux</artifactId>
@@ -107,7 +107,7 @@
 
 虽然可以用多种方式观察 Java 虚拟机中创建的线程，但是从`Thread`类本身中提取它们是非常容易的:
 
-```
+```java
 Thread.getAllStackTraces()
   .keySet()
   .stream()
@@ -170,7 +170,7 @@ Tomcat 5 以后在其连接器组件中支持 NIO，它主要负责接收请求�
 
 让我们创建一个简单的 REST 端点，它返回一个 [`Mono`](/web/20220617075720/https://www.baeldung.com/java-string-from-mono) :
 
-```
+```java
 @GetMapping("/index")
 public Mono<String> getIndex() {
     return Mono.just("Hello World!");
@@ -179,7 +179,7 @@ public Mono<String> getIndex() {
 
 然后，我们将使用`WebClient`来调用这个 REST 端点，并被动地使用数据:
 
-```
+```java
 WebClient.create("http://localhost:8080/index").get()
   .retrieve()
   .bodyToMono(String.class)
@@ -224,7 +224,7 @@ WebClient.create("http://localhost:8080/index").get()
 
 在 Spring Boot 应用程序中设置对 MongoDB 反应式存储库的支持就像添加一个依赖项一样简单:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
@@ -233,7 +233,7 @@ WebClient.create("http://localhost:8080/index").get()
 
 这将允许我们创建一个存储库，并使用它以非阻塞的方式在 MongoDB 上执行一些基本操作:
 
-```
+```java
 public interface PersonRepository extends ReactiveMongoRepository<Person, ObjectId> {
 }
 .....
@@ -252,7 +252,7 @@ Spring 仍在为反应式 Kafka 构建成熟的支持。然而，除了春天，
 
 首先，我们需要在应用程序中添加所需的依赖项，以便开始使用 Reactor Kafka:
 
-```
+```java
 <dependency>
     <groupId>io.projectreactor.kafka</groupId>
     <artifactId>reactor-kafka</artifactId>
@@ -262,7 +262,7 @@ Spring 仍在为反应式 Kafka 构建成熟的支持。然而，除了春天，
 
 这应该使我们能够以非阻塞的方式向卡夫卡传达信息:
 
-```
+```java
 // producerProps: Map of Standard Kafka Producer Configurations
 SenderOptions<Integer, String> senderOptions = SenderOptions.create(producerProps);
 KafkaSender<Integer, String> sender =  KafkaSender.create(senderOptions);
@@ -274,7 +274,7 @@ sender.send(outboundFlux).subscribe();
 
 类似地，我们也应该能够以一种非阻塞的方式消费来自卡夫卡的信息:
 
-```
+```java
 // consumerProps: Map of Standard Kafka Consumer Configurations
 ReceiverOptions<Integer, String> receiverOptions = ReceiverOptions.create(consumerProps);
 receiverOptions.subscription(Collections.singleton("reactive-test"));
@@ -327,7 +327,7 @@ Spring WebFlux **提供了一种将处理切换到数据流链**之间的不同�
 
 让我们看看如何在 Reactor 中实现这一点，Reactor 是 WebFlux 中的默认反应库:
 
-```
+```java
 Scheduler scheduler = Schedulers.newBoundedElastic(5, 10, "MyThreadGroup");
 
 WebClient.create("http://localhost:8080/index").get()
@@ -363,7 +363,7 @@ RxJava 还**提供了一个类`[Schedulers](https://web.archive.org/web/20220617
 
 我们需要显式地添加依赖关系:
 
-```
+```java
 <dependency>
     <groupId>io.reactivex.rxjava2</groupId>
     <artifactId>rxjava</artifactId>
@@ -373,7 +373,7 @@ RxJava 还**提供了一个类`[Schedulers](https://web.archive.org/web/20220617
 
 然后，我们可以开始在应用程序中使用 RxJava 类型，如`Observable` 以及 RxJava 特有的`Schedulers`:
 
-```
+```java
 io.reactivex.Observable
   .fromIterable(Arrays.asList("Tom", "Sawyer"))
   .map(s -> s.toUpperCase())

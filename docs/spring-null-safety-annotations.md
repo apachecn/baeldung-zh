@@ -14,7 +14,7 @@
 
 假设我们有一个名为`Person`的类:
 
-```
+```java
 public class Person {
     private String fullName;
 
@@ -45,14 +45,14 @@ public class Person {
 
 为了让`@NonNullFields`注释生效，我们需要在包的根目录下创建一个名为`package-info.java`的文件，并用`@NonNullFields`对包进行注释:
 
-```
+```java
 @NonNullFields
 package org.baeldung.nullibility;
 ```
 
 让我们在`Person`类中声明另一个名为`nickName`的属性:
 
-```
+```java
 package org.baeldung.nullibility;
 
 // import statements
@@ -83,7 +83,7 @@ public class Person {
 
 让我们回到中的`nickName`字段，并用`@Nullable`注释对其进行修饰:
 
-```
+```java
 @Nullable
 private String nickName;
 ```
@@ -100,14 +100,14 @@ private String nickName;
 
 与`@NonNullFields`一样，我们必须在`package-info.java`文件中指定`@NonNullApi`注释:
 
-```
+```java
 @NonNullApi
 package org.baeldung.nullibility;
 ```
 
 让我们为`nickName`字段定义一个 getter:
 
-```
+```java
 package org.baeldung.nullibility;
 
 // import statements

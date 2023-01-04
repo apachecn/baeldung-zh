@@ -22,7 +22,7 @@
 
 为了实现这些示例，我们只需将 [Lombok](https://web.archive.org/web/20220524021036/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.projectlombok%22) 依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>
@@ -37,13 +37,13 @@
 
 首先，我们将从 Lombok 导入`val`类型:
 
-```
+```java
 import lombok.val;
 ```
 
 其次，我们将使用`val`声明不同的局部变量。例如，我们可以从一个简单的`String`开始:
 
-```
+```java
 public Class name() {
     val name = "name";
     System.out.println("Name: " + name);
@@ -53,13 +53,13 @@ public Class name() {
 
 Lombok 自动生成以下标准 Java:
 
-```
+```java
 final java.lang.String name = "name";
 ```
 
 然后，让我们创建一个`Integer`:
 
-```
+```java
 public Class age() {
     val age = Integer.valueOf(30);
     System.out.println("Age: " + age);
@@ -69,13 +69,13 @@ public Class age() {
 
 正如我们所看到的，Lombok 生成了正确的类型:
 
-```
+```java
 final java.lang.Integer age = Integer.valueOf(30);
 ```
 
 我们还可以声明一个`List`:
 
-```
+```java
 public Class listOf() {
     val agenda = new ArrayList<String>();
     agenda.add("Day 1");
@@ -86,13 +86,13 @@ public Class listOf() {
 
 Lombok 不仅推断出了`List`，还推断出了其中的类型:
 
-```
+```java
 final java.util.ArrayList<java.lang.String> agenda = new ArrayList<String>();
 ```
 
 现在，让我们创建一个`Map`:
 
-```
+```java
 public Class mapOf() {
     val books = new HashMap<Integer, String>();
     books.put(1, "Book 1");
@@ -107,7 +107,7 @@ public Class mapOf() {
 
 同样，推断出正确的类型:
 
-```
+```java
 final java.util.HashMap<java.lang.Integer, java.lang.String> books = new HashMap<Integer, String>();
 // ...
 for (final java.util.Map.Entry<java.lang.Integer, java.lang.String> entry : books.entrySet()) {
@@ -117,7 +117,7 @@ for (final java.util.Map.Entry<java.lang.Integer, java.lang.String> entry : book
 
 **我们可以看到 Lombok 将正确的类型声明为`final`** 。因此，如果我们试图修改名称，构建将会由于`val`的最终性质而失败:
 
-```
+```java
 name = "newName";
 
 [12,9] cannot assign a value to final variable name
@@ -125,7 +125,7 @@ name = "newName";
 
 接下来，我们将运行一些测试来验证 Lombok 生成了正确的类型:
 
-```
+```java
 ValExample val = new ValExample();
 assertThat(val.name()).isEqualTo(String.class);
 assertThat(val.age()).isEqualTo(Integer.class);
@@ -135,7 +135,7 @@ assertThat(val.mapOf()).isEqualTo(HashMap.class);
 
 最后，我们可以在控制台输出中看到特定类型的对象:
 
-```
+```java
 Name: name
 Age: 30
 Agenda: [Day 1]
@@ -148,7 +148,7 @@ Books:
 
 `var`声明与`val`非常相似，区别在于变量不是`final`:
 
-```
+```java
 import lombok.var;
 
 var name = "name";
@@ -171,7 +171,7 @@ books.put(4, "Book 4");
 
 让我们看看生成的普通 Java:
 
-```
+```java
 var name = "name";
 
 var age = Integer.valueOf(30);
@@ -187,7 +187,7 @@ var books = new HashMap<Integer, String>();
 
 如果我们试图分配一个不同的类型，我们将在编译期间得到一个错误:
 
-```
+```java
 books = new ArrayList<String>();
 
 [37,17] incompatible types: java.util.ArrayList<java.lang.String> cannot be converted to java.util.HashMap<java.lang.Integer,java.lang.String>
@@ -195,7 +195,7 @@ books = new ArrayList<String>();
 
 让我们稍微改变一下测试，检查一下新的作业:
 
-```
+```java
 VarExample varExample = new VarExample();
 assertThat(varExample.name()).isEqualTo("newName");
 assertThat(varExample.age()).isEqualTo(35);
@@ -205,7 +205,7 @@ assertThat(varExample.mapOf()).containsValue("Book 3");
 
 最后，控制台输出也不同于上一节:
 
-```
+```java
 Name: newName
 Age: 35
 Agenda: [Day 2]
@@ -218,7 +218,7 @@ Books:
 
 有些情况下，我们需要使用复合类型作为初始化表达式:
 
-```
+```java
 val compound = isArray ? new ArrayList<String>() : new HashSet<String>();
 ```
 
@@ -226,7 +226,7 @@ val compound = isArray ? new ArrayList<String>() : new HashSet<String>();
 
 Lombok 将`AbstractCollection`指定为普通代码所示的类型:
 
-```
+```java
 final java.util.AbstractCollection<java.lang.String> compound = isArray ? new ArrayList<String>() : new HashSet<String>();
 ```
 
@@ -240,20 +240,20 @@ Lombok 允许[在整个项目中配置](https://web.archive.org/web/202205240210
 
 对于这些情况，**我们可以通过在`lombok.config`文件**中包含以下内容，将`var`或`val`的任何用法标记为警告或错误:
 
-```
+```java
 lombok.var.flagUsage = error
 lombok.val.flagUsage = warning
 ```
 
 我们将收到一个关于在整个项目中非法使用`var`的错误:
 
-```
+```java
 [12,13] Use of var is flagged according to lombok configuration.
 ```
 
 同样，我们会收到一条关于使用`val`的警告消息:
 
-```
+```java
 ValExample.java:18: warning: Use of val is flagged according to lombok configuration.
 val age = Integer.valueOf(30); 
 ```

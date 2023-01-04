@@ -18,7 +18,7 @@ Java 中的字符串连接是最常见的操作之一。在本教程中，我们
 
 让我们看一个代码示例:
 
-```
+```java
 @Test
 void whenUsingPlusOperatorANull_thenAssertEquals() {
     String stringOne = "Hello ";
@@ -37,7 +37,7 @@ void whenUsingPlusOperatorANull_thenAssertEquals() {
 
 让我们测试一下这个行为:
 
-```
+```java
 @Test
 void whenUsingConcat_thenAssertEquals() {
     String stringOne = "Hello";
@@ -48,7 +48,7 @@ void whenUsingConcat_thenAssertEquals() {
 
 在前面的例子中，`stringOne`变量是基本字符串。对于`concat()`方法，`stringTwo` 被附加在`stringOne`的末尾。**`concat()`操作是不可变的**，所以我们需要一个显式的赋值。下一个例子说明了这种情况:
 
-```
+```java
 @Test
 void whenUsingConcatWithOutAssignment_thenAssertNotEquals() {
     String stringOne = "Hello";
@@ -60,14 +60,14 @@ void whenUsingConcatWithOutAssignment_thenAssertNotEquals() {
 
 此外，在这种情况下，为了获得最终的连接字符串，我们需要将`concat()`结果赋给一个变量:
 
-```
+```java
 stringOne = stringOne.concat(stringTwo);
 assertEquals("Hello World", stringOne);
 ```
 
 `concat()`的另一个有用的特性是当我们需要连接多个`String`对象时。这个方法允许它。此外，我们还可以添加空格和特殊字符:
 
-```
+```java
 @Test
 void whenUsingConcatToMultipleStringConcatenation_thenAssertEquals() {
     String stringOne = "Hello";
@@ -80,7 +80,7 @@ void whenUsingConcatToMultipleStringConcatenation_thenAssertEquals() {
 
 nulls 呢？当前字符串和要追加的字符串都不能为空值。否则， **`concat()` 法** **投** **一** **`NullPointerException`** :
 
-```
+```java
 @Test
 void whenUsingConcatAppendANull_thenAssertEquals() {
     String stringOne = "Hello";
@@ -93,7 +93,7 @@ void whenUsingConcatAppendANull_thenAssertEquals() {
 
 首先，我们有 [`StringBuilder`](/web/20221118160122/https://www.baeldung.com/java-string-builder-string-buffer) 类。这个类提供了执行连接操作的`append()`方法。下一个例子向我们展示了它是如何工作的:
 
-```
+```java
 @Test
 void whenUsingStringBuilder_thenAssertEquals() {
     StringBuilder builderOne = new StringBuilder("Hello");
@@ -109,7 +109,7 @@ void whenUsingStringBuilder_thenAssertEquals() {
 
 执行字符串连接的另一种方式是在 string 类中使用`format()`方法。使用像`%s,`这样的格式说明符，我们可以通过字符串值或对象连接多个字符串:
 
-```
+```java
 @Test
 void whenUsingStringFormat_thenAssertEquals() {
     String stringOne = "Hello";
@@ -122,7 +122,7 @@ void whenUsingStringFormat_thenAssertEquals() {
 
 对于 Java 8 及更高版本，`String` 类中的方法`join()`可以执行字符串连接。在这种情况下，该方法将在要连接的字符串之间使用的分隔符作为第一个参数:
 
-```
+```java
 @Test
 void whenUsingStringJoin_thenAssertEquals() {
     String stringOne = "Hello";
@@ -133,7 +133,7 @@ void whenUsingStringJoin_thenAssertEquals() {
 
 从 Java 8 开始， [`StringJoiner`](/web/20221118160122/https://www.baeldung.com/java-string-joiner) 类被加入。这个类使用分隔符、前缀和后缀来连接`String`。以下代码片段是其用法的示例:
 
-```
+```java
 @Test
 void whenUsingStringJoiner_thenAssertEquals() {
     StringJoiner joiner = new StringJoiner(", ");
@@ -145,7 +145,7 @@ void whenUsingStringJoiner_thenAssertEquals() {
 
 此外，在 Java 8 中，添加了[流 API](/web/20221118160122/https://www.baeldung.com/java-8-streams) ，我们可以找到[收集器](/web/20221118160122/https://www.baeldung.com/java-8-collectors)。`Collectors`类有`joining()`方法。这个方法类似于`String`类中的`join()`方法。它是用来收藏的。以下示例代码片段向我们展示了它是如何工作的:
 
-```
+```java
 @Test
 void whenUsingCollectors_thenAssertEquals() {
     List<String> words = Arrays.asList("Hello", "World");

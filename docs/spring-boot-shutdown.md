@@ -16,7 +16,7 @@
 
 下面是设置这些的 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-actuator</artifactId>
@@ -25,7 +25,7 @@
 
 如果我们还想建立安全支持，我们需要:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -34,7 +34,7 @@
 
 最后，我们在`application.properties`文件中启用关闭端点:
 
-```
+```java
 management.endpoints.web.exposure.include=*
 management.endpoint.shutdown.enabled=true
 endpoints.shutdown.enabled=true
@@ -44,7 +44,7 @@ endpoints.shutdown.enabled=true
 
 **要关闭 Spring Boot 应用程序，我们只需像这样调用 POST 方法**:
 
-```
+```java
 curl -X POST localhost:port/actuator/shutdown
 ```
 
@@ -56,7 +56,7 @@ curl -X POST localhost:port/actuator/shutdown
 
 让我们从创建上下文并关闭它的示例开始:
 
-```
+```java
 ConfigurableApplicationContext ctx = new 
   SpringApplicationBuilder(Application.class).web(WebApplicationType.NONE).run();
 System.out.println("Spring Boot application started");
@@ -66,7 +66,7 @@ ctx.close();
 
 这销毁了所有的豆子，释放了锁，然后关闭了豆子工厂。为了验证应用程序的关闭，我们使用 Spring 的标准生命周期回调和`@PreDestroy`注释:
 
-```
+```java
 public class TerminateBean {
 
     @PreDestroy
@@ -78,7 +78,7 @@ public class TerminateBean {
 
 我们还必须添加这种类型的 bean:
 
-```
+```java
 @Configuration
 public class ShutdownConfig {
 
@@ -91,7 +91,7 @@ public class ShutdownConfig {
 
 以下是运行该示例后的输出:
 
-```
+```java
 Spring Boot application started
 Closing [[email protected]](/web/20220905213101/https://www.baeldung.com/cdn-cgi/l/email-protection)
 DefaultLifecycleProcessor - Stopping beans in phase 0
@@ -109,7 +109,7 @@ Spring Container is destroyed!
 
 但是，我们也可以创建自己的自定义端点:
 
-```
+```java
 @RestController
 public class ShutdownController implements ApplicationContextAware {
 
@@ -132,7 +132,7 @@ public class ShutdownController implements ApplicationContextAware {
 
 然后，我们可以调用新端点来关闭当前上下文:
 
-```
+```java
 curl -X POST localhost:port/shutdownContext
 ```
 
@@ -144,7 +144,7 @@ curl -X POST localhost:port/shutdownContext
 
 Beans 可以实现`ExitCodeGenerator`接口来返回特定的错误代码:
 
-```
+```java
 ConfigurableApplicationContext ctx = new SpringApplicationBuilder(Application.class)
   .web(WebApplicationType.NONE).run();
 
@@ -161,13 +161,13 @@ System.exit(exitCode);
 
 Java 8 lambdas 应用程序的相同代码:
 
-```
+```java
 SpringApplication.exit(ctx, () -> 0);
 ```
 
 **调用`System.exit(exitCode)`后，程序以 0 返回码**终止:
 
-```
+```java
 Process finished with exit code 0
 ```
 
@@ -175,7 +175,7 @@ Process finished with exit code 0
 
 最后，我们还可以使用 bash 脚本从应用程序外部关闭 Spring Boot 应用程序。该选项的第一步是让应用程序上下文将其 PID 写入文件:
 
-```
+```java
 SpringApplicationBuilder app = new SpringApplicationBuilder(Application.class)
   .web(WebApplicationType.NONE);
 app.build().addListeners(new ApplicationPidFileWriter("./bin/shutdown.pid"));
@@ -184,7 +184,7 @@ app.run();
 
 接下来，创建一个包含以下内容的`shutdown.bat`文件:
 
-```
+```java
 kill $(cat ./bin/shutdown.pid)
 ```
 

@@ -10,7 +10,7 @@
 
 **Hibernate 使用代理对象来允许[延迟加载](/web/20220525124241/https://www.baeldung.com/hibernate-lazy-eager-loading)。**为了更好地形象化这个场景，让我们看看*支付收据*和*支付*实体:
 
-```
+```java
 @Entity
 public class PaymentReceipt {
     ...
@@ -20,7 +20,7 @@ public class PaymentReceipt {
 }
 ```
 
-```
+```java
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Payment {
@@ -35,7 +35,7 @@ public abstract class Payment {
 
 为了演示，让我们创建并运行一个集成测试:
 
-```
+```java
 @Test
 public void givenPaymentReceipt_whenAccessingPayment_thenVerifyType() {
     PaymentReceipt paymentReceipt = entityManager.find(PaymentReceipt.class, 3L);
@@ -51,7 +51,7 @@ public void givenPaymentReceipt_whenAccessingPayment_thenVerifyType() {
 
 为了验证这一点，我们可以在集成测试的断言语句行上添加一个断点，并在调试模式下运行它。现在，让我们看看调试器显示了什么:
 
-```
+```java
 paymentReceipt = {[[email protected]](/web/20220525124241/https://www.baeldung.com/cdn-cgi/l/email-protection)} 
  payment = {[[email protected]](/web/20220525124241/https://www.baeldung.com/cdn-cgi/l/email-protection)} "[[email protected]](/web/20220525124241/https://www.baeldung.com/cdn-cgi/l/email-protection)"
   $_hibernate_interceptor = {[[email protected]](/web/20220525124241/https://www.baeldung.com/cdn-cgi/l/email-protection)} 
@@ -65,7 +65,7 @@ paymentReceipt = {[[email protected]](/web/20220525124241/https://www.baeldung.
 
 我们之前已经了解了一些。为了让它更有意义，让我们试着从 *PaymentReceipt* 和 *Payment* 实体中移除惰性加载机制:
 
-```
+```java
 public class PaymentReceipt {
     ...
     @OneToOne
@@ -74,7 +74,7 @@ public class PaymentReceipt {
 }
 ```
 
-```
+```java
 public abstract class Payment {
     ...
     @ManyToOne
@@ -85,7 +85,7 @@ public abstract class Payment {
 
 现在，让我们快速检索一个 *PaymentReceipt* 并从日志中检查生成的 SQL:
 
-```
+```java
 select
     paymentrec0_.id as id1_2_0_,
     paymentrec0_.payment_id as payment_3_2_0_,
@@ -122,7 +122,7 @@ where
 
 现在，让我们通过适当的延迟加载来运行它:
 
-```
+```java
 select
     paymentrec0_.id as id1_2_0_,
     paymentrec0_.payment_id as payment_3_2_0_,
@@ -141,7 +141,7 @@ where
 
 让我们使用代理创建一个测试:
 
-```
+```java
 @Test
 public void givenWebUserProxy_whenCreatingPayment_thenExecuteSingleStatement() {
     entityManager.getTransaction().begin();
@@ -159,7 +159,7 @@ public void givenWebUserProxy_whenCreatingPayment_thenExecuteSingleStatement() {
 
 接下来，让我们运行测试并检查日志:
 
-```
+```java
 insert 
 into
     CreditCardPayment
@@ -178,7 +178,7 @@ values
 
 现在，我们来看看 `CreditCardPayment` 实体:
 
-```
+```java
 @Entity
 public class CreditCardPayment extends Payment {
 
@@ -189,7 +189,7 @@ public class CreditCardPayment extends Payment {
 
 事实上，如果不解除 `payment` 对象的绑定，就不可能从 `CreditCardPayment` 类中检索到`c` `ardNumber` 字段。不管怎样，让我们试着将 `payment` 对象转换成 `CreditCardPayment` ，看看会发生什么:
 
-```
+```java
 @Test
 public void givenPaymentReceipt_whenCastingPaymentToConcreteClass_thenThrowClassCastException() {
     PaymentReceipt paymentReceipt = entityManager.find(PaymentReceipt.class, 3L);
@@ -205,13 +205,13 @@ public void givenPaymentReceipt_whenCastingPaymentToConcreteClass_thenThrowClass
 
 从 Hibernate 5.2.10 开始，我们可以使用内置的静态方法来释放 Hibernate 实体:
 
-```
+```java
 Hibernate.unproxy(paymentReceipt.getPayment());
 ```
 
 让我们使用这种方法创建一个最终的集成测试:  
 
-```
+```java
 @Test
 public void givenPaymentReceipt_whenPaymentIsUnproxied_thenReturnRealEntityObject() {
     PaymentReceipt paymentReceipt = entityManager.find(PaymentReceipt.class, 3L);
@@ -223,7 +223,7 @@ public void givenPaymentReceipt_whenPaymentIsUnproxied_thenReturnRealEntityObjec
 
 另一方面，Hibernate 5.2.10 之前有一个解决方案:
 
-```
+```java
 HibernateProxy hibernateProxy = (HibernateProxy) paymentReceipt.getPayment();
 LazyInitializer initializer = hibernateProxy.getHibernateLazyInitializer();
 CreditCardPayment unproxiedEntity = (CreditCardPayment) initializer.getImplementation();

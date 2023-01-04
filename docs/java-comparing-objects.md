@@ -16,13 +16,13 @@
 
 **对于原始类型，相同意味着具有相等的值:**
 
-```
+```java
 assertThat(1 == 1).isTrue();
 ```
 
 多亏了自动拆箱，**当比较一个原始值和它的包装器类型对应物**时，这也是有效的:
 
-```
+```java
 Integer a = new Integer(1);
 assertThat(1 == a).isTrue();
 ```
@@ -33,7 +33,7 @@ assertThat(1 == a).isTrue();
 
 假设我们想要比较两个具有相同值的`Integer`包装器类型:
 
-```
+```java
 Integer a = new Integer(1);
 Integer b = new Integer(1);
 
@@ -42,7 +42,7 @@ assertThat(a == b).isFalse();
 
 通过比较两个对象，**这些对象的值不是 1。相反，它们在堆栈** 中的[内存地址是不同的，因为这两个对象都是使用`new`操作符创建的。如果我们将`a`分配给`b`，那么我们会得到不同的结果:](/web/20220628145611/https://www.baeldung.com/java-stack-heap)
 
-```
+```java
 Integer a = new Integer(1);
 Integer b = a;
 
@@ -51,7 +51,7 @@ assertThat(a == b).isTrue();
 
 现在让我们看看使用`Integer#valueOf` 工厂方法时会发生什么:
 
-```
+```java
 Integer a = Integer.valueOf(1);
 Integer b = Integer.valueOf(1);
 
@@ -62,7 +62,7 @@ assertThat(a == b).isTrue();
 
 Java 也为`String`这样做:
 
-```
+```java
 assertThat("Hello!" == "Hello!").isTrue();
 ```
 
@@ -70,7 +70,7 @@ assertThat("Hello!" == "Hello!").isTrue();
 
 最后，**两个`null`引用被认为是相同的，而任何非`null`对象被认为与`null`** 不同:
 
-```
+```java
 assertThat(null == null).isTrue();
 
 assertThat("Hello!" == null).isFalse();
@@ -86,7 +86,7 @@ assertThat("Hello!" == null).isFalse();
 
 首先，让我们看看它对现有对象如`Integer`的表现:
 
-```
+```java
 Integer a = new Integer(1);
 Integer b = new Integer(1);
 
@@ -99,7 +99,7 @@ assertThat(a.equals(b)).isTrue();
 
 我们也可以对自己的对象使用`equals()`方法。假设我们有一个`Person`类:
 
-```
+```java
 public class Person {
     private String firstName;
     private String lastName;
@@ -113,7 +113,7 @@ public class Person {
 
 我们可以覆盖这个类的`equals()`方法，这样我们就可以根据两个`Person`的内部细节来比较它们:
 
-```
+```java
 @Override
 public boolean equals(Object o) {
     if (this == o) return true;
@@ -134,7 +134,7 @@ public boolean equals(Object o) {
 
 让我们再来比较一下`Person`物体:
 
-```
+```java
 Person joe = new Person("Joe", "Portman");
 Person joeAgain = new Person("Joe", "Portman");
 Person natalie = new Person("Natalie", "Portman");
@@ -147,7 +147,7 @@ assertThat(Objects.equals(joe, natalie)).isFalse();
 
 这真的很方便。假设我们想在我们的`Person`类中添加一个可选的出生日期:
 
-```
+```java
 public Person(String firstName, String lastName, LocalDate birthDate) {
     this(firstName, lastName);
     this.birthDate = birthDate;
@@ -156,13 +156,13 @@ public Person(String firstName, String lastName, LocalDate birthDate) {
 
 然后我们必须更新我们的`equals()`方法，但是使用`null`处理。我们可以通过将条件添加到我们的`equals()`方法中来做到这一点:
 
-```
+```java
 birthDate == null ? that.birthDate == null : birthDate.equals(that.birthDate);
 ```
 
 然而，如果我们在类中添加了太多的可空字段，就会变得非常混乱。在我们的`equals()`实现中使用`Objects#equals`方法要干净得多，并且提高了可读性:
 
-```
+```java
 Objects.equals(birthDate, that.birthDate);
 ```
 
@@ -174,7 +174,7 @@ Objects.equals(birthDate, that.birthDate);
 
 比方说，在我们的`Person`类中，我们希望通过对象的姓氏来比较`Person`对象:
 
-```
+```java
 public class Person implements Comparable<Person> {
     //...
 
@@ -199,13 +199,13 @@ public class Person implements Comparable<Person> {
 
 让我们创建一个`Person` `Comparator`来仅通过他们的名字来比较他们:
 
-```
+```java
 Comparator<Person> compareByFirstNames = Comparator.comparing(Person::getFirstName);
 ```
 
 现在让我们对使用`Comparator`的`List`人进行排序:
 
-```
+```java
 Person joe = new Person("Joe", "Portman");
 Person allan = new Person("Allan", "Dale");
 
@@ -220,7 +220,7 @@ assertThat(people).containsExactly(allan, joe);
 
 在我们的`compareTo()` 实现中，还可以使用`Comparator`接口上的其他方法:
 
-```
+```java
 @Override
 public int compareTo(Person o) {
     return Comparator.comparing(Person::getLastName)
@@ -236,7 +236,7 @@ public int compareTo(Person o) {
 
 让我们来看看 [Apache Commons 库](/web/20220628145611/https://www.baeldung.com/java-commons-lang-3)。首先，我们来导入 [Maven 依赖](https://web.archive.org/web/20220628145611/https://search.maven.org/search?q=g:org.apache.commons%20AND%20a:commons-lang3):
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -250,7 +250,7 @@ public int compareTo(Person o) {
 
 让我们重复使用我们的`String`例子:
 
-```
+```java
 String a = new String("Hello!");
 String b = new String("Hello World!");
 
@@ -265,7 +265,7 @@ assertThat(ObjectUtils.notEqual(a, b)).isTrue();
 
 让我们再次使用`Strings`来看看:
 
-```
+```java
 String first = new String("Hello!");
 String second = new String("How are you?");
 
@@ -278,7 +278,7 @@ assertThat(ObjectUtils.compare(first, second)).isNegative();
 
 我们来看看[番石榴](https://web.archive.org/web/20220628145611/https://guava.dev/)。首先，我们来导入[的依赖关系](https://web.archive.org/web/20220628145611/https://search.maven.org/search?q=g:com.google.guava%20AND%20a:guava):
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -290,7 +290,7 @@ assertThat(ObjectUtils.compare(first, second)).isNegative();
 
 **类似于 Apache Commons 库，Google 为我们提供了一种判断两个对象是否相等的方法，`Objects#equal`。尽管它们有不同的实现，但它们返回相同的结果:**
 
-```
+```java
 String a = new String("Hello!");
 String b = new String("Hello!");
 
@@ -303,7 +303,7 @@ assertThat(Objects.equal(a, b)).isTrue();
 
 Guava 库没有提供比较两个对象的方法(我们将在下一节中看到如何实现这一点)，但是**提供了比较原始值的方法**。让我们看看`Ints`助手类，看看它的`compare()`方法是如何工作的:
 
-```
+```java
 assertThat(Ints.compare(1, 2)).isNegative();
 ```
 
@@ -313,7 +313,7 @@ assertThat(Ints.compare(1, 2)).isNegative();
 
 最后，Guava 库提供了`ComparisonChain`类，允许我们通过一系列比较来比较两个对象。我们可以很容易地通过名字和姓氏来比较两个`Person`对象:
 
-```
+```java
 Person natalie = new Person("Natalie", "Portman");
 Person joe = new Person("Joe", "Portman");
 

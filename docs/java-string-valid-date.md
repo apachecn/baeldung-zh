@@ -24,7 +24,7 @@
 
 首先，让我们为日期验证编写一个接口:
 
-```
+```java
 public interface DateValidator {
    boolean isValid(String dateStr);
 }
@@ -38,7 +38,7 @@ Java 从一开始就提供了格式化和解析日期的工具。该功能在 [`
 
 让我们使用`DateFormat`类的`parse`方法来实现日期验证:
 
-```
+```java
 public class DateValidatorUsingDateFormat implements DateValidator {
     private String dateFormat;
 
@@ -64,7 +64,7 @@ public class DateValidatorUsingDateFormat implements DateValidator {
 
 接下来，让我们为这个类编写单元测试:
 
-```
+```java
 DateValidator validator = new DateValidatorUsingDateFormat("MM/dd/yyyy");
 
 assertTrue(validator.isValid("02/28/2019"));        
@@ -79,7 +79,7 @@ Java 8 引入了一个改进的日期和时间 API 。它增加了 **[`LocalDate
 
 `LocalDate`提供了两个静态方法来解析日期，并且都使用一个 [`DateTimeFormatter`](/web/20221206093158/https://www.baeldung.com/java-datetimeformatter) 来做实际的解析:
 
-```
+```java
 public static LocalDate parse​(CharSequence text)
 // parses dates using using DateTimeFormatter.ISO_LOCAL_DATE
 
@@ -89,7 +89,7 @@ public static LocalDate parse​(CharSequence text, DateTimeFormatter formatter)
 
 让我们使用`parse`方法来实现日期验证:
 
-```
+```java
 public class DateValidatorUsingLocalDate implements DateValidator {
     private DateTimeFormatter dateFormatter;
 
@@ -113,7 +113,7 @@ public class DateValidatorUsingLocalDate implements DateValidator {
 
 让我们也为这个实现添加一个单元测试:
 
-```
+```java
 DateTimeFormatter dateFormatter = DateTimeFormatter.BASIC_ISO_DATE;
 DateValidator validator = new DateValidatorUsingLocalDate(dateFormatter);
 
@@ -135,7 +135,7 @@ assertFalse(validator.isValid("20190230"));
 
 现在让我们直接使用`DateTimeFormatter`编写日期验证:
 
-```
+```java
 public class DateValidatorUsingDateTimeFormatter implements DateValidator {
     private DateTimeFormatter dateFormatter;
 
@@ -157,7 +157,7 @@ public class DateValidatorUsingDateTimeFormatter implements DateValidator {
 
 接下来，让我们为这个类添加单元测试:
 
-```
+```java
 DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd", Locale.US)
     .withResolverStyle(ResolverStyle.STRICT);
 DateValidator validator = new DateValidatorUsingDateTimeFormatter(dateFormatter);
@@ -174,7 +174,7 @@ Apache Commons 项目提供了一个验证框架。**这包含验证例程，如
 
 对于本文，让我们看看 [`GenericValidator`](https://web.archive.org/web/20221206093158/https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/GenericValidator.html) 类，它提供了两种方法来检查`String`是否包含有效日期:
 
-```
+```java
 public static boolean isDate(String value, Locale locale)
 
 public static boolean isDate(String value,String datePattern, boolean strict)
@@ -182,7 +182,7 @@ public static boolean isDate(String value,String datePattern, boolean strict)
 
 要使用这个库，让我们将 [`commons-validator`](https://web.archive.org/web/20221206093158/https://search.maven.org/search?q=g:commons-validator%20AND%20a:commons-validator) Maven 依赖项添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>commons-validator</groupId>
     <artifactId>commons-validator</artifactId>
@@ -192,7 +192,7 @@ public static boolean isDate(String value,String datePattern, boolean strict)
 
 接下来，让我们使用`GenericValidator`类来验证日期:
 
-```
+```java
 assertTrue(GenericValidator.isDate("2019-02-28", "yyyy-MM-dd", true));
 assertFalse(GenericValidator.isDate("2019-02-29", "yyyy-MM-dd", true));
 ```

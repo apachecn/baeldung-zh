@@ -12,20 +12,20 @@ Kafka 集群由注册到 Zookeeper 集群的多个 Kafka 代理组成。为了�
 
 首先，让我们下载一个 3 节点 Kafka 集群的`docker-compose.yml `:
 
-```
+```java
 $ BASE_URL="https://raw.githubusercontent.com/confluentinc/cp-docker-images/5.3.3-post/examples/kafka-cluster"
 $ curl -Os "$BASE_URL"/docker-compose.yml
 ```
 
 接下来，让我们旋转动物园管理员和卡夫卡经纪人节点:
 
-```
+```java
 $ docker-compose up -d
 ```
 
 最后，我们可以验证所有的卡夫卡经纪人都起来了:
 
-```
+```java
 $ docker-compose logs kafka-1 kafka-2 kafka-3 | grep started
 kafka-1_1      | [2020-12-27 10:15:03,783] INFO [KafkaServer id=1] started (kafka.server.KafkaServer)
 kafka-2_1      | [2020-12-27 10:15:04,134] INFO [KafkaServer id=2] started (kafka.server.KafkaServer)
@@ -72,7 +72,7 @@ Apache Kafka 是一个流处理系统，它将事件捕获为消息流。在我�
 
 在我们的棋盘示例中，一个主题可以用来将所有的走法分组到`chess-moves`主题下:
 
-```
+```java
 $ docker run \
   --net=host --rm confluentinc/cp-kafka:5.0.0 \
   kafka-topics --create --topic chess-moves \
@@ -88,7 +88,7 @@ Created topic "chess-moves".
 
 让我们[旋转一个名为`kafka-producer `的容器](https://web.archive.org/web/20220630003934/https://docs.docker.com/engine/reference/commandline/run/)，我们将在其中调用生产者实用程序:
 
-```
+```java
 $ docker run \
 --net=host \
 --name=kafka-producer \
@@ -101,7 +101,7 @@ confluentinc/cp-kafka:5.0.0 /bin/bash
 
 同时，我们可以启动一个名为`kafka-consumer`的容器，在其中我们将调用消费者实用程序:
 
-```
+```java
 $ docker run \
 --net=host \
 --name=kafka-consumer \
@@ -114,13 +114,13 @@ confluentinc/cp-kafka:5.0.0 /bin/bash
 
 现在，让我们通过制作人记录一些游戏动作:
 
-```
+```java
 >{Player1 : Rook, a1->a5}
 ```
 
 由于消费者是活跃的，它将通过关键字`Player1`获得该消息:
 
-```
+```java
 {Player1 : Rook, a1->a5}
 ```
 
@@ -134,7 +134,7 @@ confluentinc/cp-kafka:5.0.0 /bin/bash
 
 **默认情况下，在主题创建期间支持`–bootstrap-server`选项的 Kafka 版本将创建主题**的单个分区，除非在主题创建时明确指定。但是，对于一个预先存在的主题，我们可以增加分区的数量。让我们将`chess-moves`主题的分区号设置为`3`:
 
-```
+```java
 $ docker run \
 --net=host \
 --rm confluentinc/cp-kafka:5.0.0 \
@@ -151,7 +151,7 @@ Adding partitions succeeded!
 
 让我们用`kafka-console-producer`实用程序创建新的事件消息，但这次我们将记录两个玩家的移动:
 
-```
+```java
 # kafka-console-producer --broker-list localhost:19092,localhost:29092,localhost:39092 \
 --topic chess-moves \
 --property parse.key=true --property key.separator=:
@@ -163,7 +163,7 @@ Adding partitions succeeded!
 
 现在，我们可以有两个消费者，一个从分区 1 读取数据，另一个从分区 2 读取数据:
 
-```
+```java
 # kafka-console-consumer --bootstrap-server localhost:19092,localhost:29092,localhost:39092 \
 --topic chess-moves --from-beginning \
 --property print.key=true --property print.value=true \

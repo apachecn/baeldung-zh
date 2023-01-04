@@ -26,7 +26,7 @@
 
 首先，让我们创建我们的`Image`实体:
 
-```
+```java
 @Entity
 class Image {
 
@@ -52,7 +52,7 @@ class Image {
 
 我们就用春天 [`JpaRepository`](/web/20221129124459/https://www.baeldung.com/the-persistence-layer-with-spring-data-jpa) :
 
-```
+```java
 @Repository
 interface ImageDbRepository extends JpaRepository<Image, Long> {}
 ```
@@ -67,7 +67,7 @@ interface ImageDbRepository extends JpaRepository<Image, Long> {}
 
 让我们从创建支持上传的`ImageController` 开始:
 
-```
+```java
 @RestController
 class ImageController {
 
@@ -94,7 +94,7 @@ class ImageController {
 
 现在，让我们添加一个下载路径`:`
 
-```
+```java
 @GetMapping(value = "/image/{imageId}", produces = MediaType.IMAGE_JPEG_VALUE)
 Resource downloadImage(@PathVariable Long imageId) {
     byte[] image = imageRepository.findById(imageId)
@@ -113,13 +113,13 @@ Resource downloadImage(@PathVariable Long imageId) {
 
 首先，让我们构建我们的应用程序:
 
-```
+```java
 mvn package
 ```
 
 其次，让我们开始吧:
 
-```
+```java
 java -jar target/image-archive-0.0.1-SNAPSHOT.jar
 ```
 
@@ -127,14 +127,14 @@ java -jar target/image-archive-0.0.1-SNAPSHOT.jar
 
 在我们的应用程序运行之后，我们将**使用 [`curl`命令行工具](/web/20221129124459/https://www.baeldung.com/curl-rest)上传我们的图像**:
 
-```
+```java
 curl -H "Content-Type: multipart/form-data" \
   -F "[[email protected]](/web/20221129124459/https://www.baeldung.com/cdn-cgi/l/email-protection)" http://localhost:8080/image
 ```
 
 由于上传服务**的响应是`imageId`** `,`，这是我们的第一个请求，输出将是:
 
-```
+```java
 1
 ```
 
@@ -142,13 +142,13 @@ curl -H "Content-Type: multipart/form-data" \
 
 然后我们可以下载我们的图像:
 
-```
+```java
 curl -v http://localhost:8080/image/1 -o image.jpeg
 ```
 
 `-o image.jpeg`选项将创建一个名为`image.jpeg`的文件，并将响应内容存储在其中:
 
-```
+```java
 % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying ::1...
@@ -177,7 +177,7 @@ curl -v http://localhost:8080/image/1 -o image.jpeg
 
 为此，我们需要向我们的`Image`实体添加一个新字段:
 
-```
+```java
 String location;
 ```
 
@@ -195,7 +195,7 @@ String location;
 
 首先，我们需要将图像保存到文件系统:
 
-```
+```java
 @Repository
 class FileSystemRepository {
 
@@ -218,7 +218,7 @@ class FileSystemRepository {
 
 同样的规则也适用于任何云存储，我们应该创建唯一的键。在本例中，我们将以毫秒为单位将当前日期添加到图像名称中:
 
-```
+```java
 /workspace/archive-achive/target/classes/1602949218879-baeldung.jpeg
 ```
 
@@ -226,7 +226,7 @@ class FileSystemRepository {
 
 现在让我们实现代码来从文件系统中获取我们的映像:
 
-```
+```java
 FileSystemResource findInFileSystem(String location) {
     try {
         return new FileSystemResource(Paths.get(location));
@@ -257,7 +257,7 @@ FileSystemResource findInFileSystem(String location) {
 
 让我们创建一个`FileLocationService`，从我们的保存流开始:
 
-```
+```java
 @Service
 class FileLocationService {
 
@@ -281,7 +281,7 @@ class FileLocationService {
 
 现在，让我们创建一个方法来使用它的`id`找到我们的图像:
 
-```
+```java
 FileSystemResource find(Long imageId) {
     Image image = imageDbRepository.findById(imageId)
       .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -298,7 +298,7 @@ FileSystemResource find(Long imageId) {
 
 最后，让我们创建`FileSystemImageController:`
 
-```
+```java
 @RestController
 @RequestMapping("file-system")
 class FileSystemImageController {
@@ -328,7 +328,7 @@ class FileSystemImageController {
 
 现在，我们可以像测试数据库版本一样测试我们的文件系统版本，尽管路径现在以“`file-system`”开头:
 
-```
+```java
 curl -H "Content-Type: multipart/form-data" \
   -F "[[email protected]](/web/20221129124459/https://www.baeldung.com/cdn-cgi/l/email-protection)" http://localhost:8080/file-system/image
 
@@ -337,7 +337,7 @@ curl -H "Content-Type: multipart/form-data" \
 
 然后我们下载:
 
-```
+```java
 curl -v http://localhost:8080/file-system/image/1 -o image.jpeg
 ```
 

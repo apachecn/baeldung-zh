@@ -26,7 +26,7 @@ OpenAPI 文档以 JSON 或 YAML 格式表示。然而，在使用 YAML 时，格
 
 例如，要将一个单词或一个句子标记为标题，我们使用下面的 YAML 片段:
 
-```
+```java
  description: |
     # This is a heading in *italics*
     This is in the next line
@@ -38,7 +38,7 @@ OpenAPI 文档以 JSON 或 YAML 格式表示。然而，在使用 YAML 时，格
 
 现在，让我们在 JSON 中定义同样的东西:
 
-```
+```java
 {
     "description": "# This is a heading in *italics*\nThis is in the next line\n\nThis is in **bold**
 }
@@ -58,7 +58,7 @@ OpenAPI 文档以 JSON 或 YAML 格式表示。然而，在使用 YAML 时，格
 
 例如，以 YAML 为例:
 
-```
+```java
 openapi: 3.0.1
 info:
   title: Petstore
@@ -81,7 +81,7 @@ Swagger 将文本呈现为:
 
 **将文本放置在`**`和`**`之间或者`__`和`__`之间，文本会变为粗体**。类似地，将文本放在*和*或 _ 和 _ 中会使文本变成斜体。例如，对于 YAML:
 
-```
+```java
 openapi: 3.0.1
 info:
   title: Petstore
@@ -104,7 +104,7 @@ info:
 
 例如，让我们添加一个表来定义 POST API 的 HTTP 状态代码:
 
-```
+```java
 paths:
   /pet:
     post:
@@ -133,21 +133,21 @@ Swagger 生成:
 
 **描述文本项应以一个数字开头，后面跟着一个`. (period)`** 。然而，项目的编号顺序并不重要。也就是说，这些片段:
 
-```
+```java
 description: |
   1\. Available
   3\. Pending
   1\. Sold
 ```
 
-```
+```java
 description: |
   1\. Available
   200\. Pending
   30\. Sold
 ```
 
-```
+```java
 description: |
   1\. Available
   100\. Pending
@@ -156,7 +156,7 @@ description: |
 
 生成相同的输出:
 
-```
+```java
 1\. Available
 2\. Pending
 3\. Sold
@@ -164,7 +164,7 @@ description: |
 
 **项目的编号取决于起始项目**。例如，如果我们以`10`开始项目编号，下面的项目将被编号为`11`、`12`、`13`等。下面是 YAML:
 
-```
+```java
 description: |
   10\. Available
   120\. Pending
@@ -173,7 +173,7 @@ description: |
 
 生成:
 
-```
+```java
 10\. Available
 11\. Pending
 12\. Sold
@@ -181,7 +181,7 @@ description: |
 
 类似地，同样的规则也适用于有序子列表。将子列表缩进到其父项。以 YAML 为例:
 
-```
+```java
 description: |
   1\. Available
   2\. Pending
@@ -192,7 +192,7 @@ description: |
 
 这会产生:
 
-```
+```java
 1\. Available
 2\. Pending
     1\. Pending in Store
@@ -204,7 +204,7 @@ description: |
 
 **使用`* (asterisks)` 或`+ (plus)`或`– (hyphen)` 创建一个无序列表**。也就是说，列表中的每个项目都应该以这些符号中的一个开始。例如:
 
-```
+```java
 description: |
   * Available
   * Pending
@@ -225,7 +225,7 @@ description: |
 
 类似地，**要生成无序的子列表，用父条目缩进条目，并以`* (asterisks)` 或`+ (plus)`或`– (hyphen)`** `.` 开始，例如，YAML:
 
-```
+```java
 - Available
 - Pending
    * Pending in Store
@@ -237,7 +237,7 @@ description: |
 
 最后，让我们把所有这些放在一个 YAML 里:
 
-```
+```java
 /pet/findByStatus:
    get:
      summary: Finds Pets by status
@@ -269,7 +269,7 @@ description: |
 
 **Next, to insert a linebreak, type two spaces and the return key**. Note that just providing a return key does not align the text to the following line. **Similarly, to insert a paragraph, insert an empty line.**Now, let's add a few line breaks and paragraphs to our `description`:
 
-```
+```java
 description: |
   Returns a single pet.  
   *Note: The API may throw a HTTP 404 if there are no pets found with a given id.*
@@ -285,13 +285,13 @@ description: |
 
 Next, let's add a bit of code to our OpenAPI document. **Code blocks start and end with `“``**`.` **For example, consider the YAML**:
 
-```
+```java
 description: |
   The API returns user details for a given username. 
   The API can be invoked using *curl* like below:
   ```
   curl --header accept: application/json -u username:password http://localhost:8080/api/v2/user/jhondoe
-  ```
+  ```java
   **Sample Output**
   ```
   {
@@ -299,7 +299,7 @@ description: |
     "username": "jhondoe"
     "email": "[[email protected]](/web/20221006204308/https://www.baeldung.com/cdn-cgi/l/email-protection)"
   }
-  ```
+  ```java
 ```
 
 The above YAML generates:[![](img/ccb79ed1996fc7896802dcc98008e4d5.png)](/web/20221006204308/https://www.baeldung.com/wp-content/uploads/2021/10/code-1-1024x274-1.jpg)
@@ -308,7 +308,7 @@ The above YAML generates:[![](img/ccb79ed1996fc7896802dcc98008e4d5.png)](/web/20
 
 Finally, **to add an image to the document, the image has to be added to description text in the format:****`![Alt Text](<path to image>)`**Swagger uses the `Alt Text` when the images fail to load or when we hover over the image. Also, the path to the image could be absolute or relative. Consider the YAML:
 
-```
+```java
 description: |
    # Pet Store APIs
    ![Baeldung](https://www.baeldung.com/wp-content/uploads/2017/06/homepage-weekly_reviews.jpg)

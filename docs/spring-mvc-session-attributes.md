@@ -21,7 +21,7 @@
 
 我们还将包括 spring test starter，以便在我们的单元测试中提供一些额外的实用工具:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -56,7 +56,7 @@
 
 我们的两个模型类被实现为简单的 POJOs:
 
-```
+```java
 public class TodoItem {
 
     private String description;
@@ -66,7 +66,7 @@ public class TodoItem {
 }
 ```
 
-```
+```java
 public class TodoList extends ArrayDeque<TodoItem>{
 
 }
@@ -92,7 +92,7 @@ public class TodoList extends ArrayDeque<TodoItem>{
 
 首先，我们在一个`@Configuration`类中定义 bean:
 
-```
+```java
 @Bean
 @Scope(
   value = WebApplicationContext.SCOPE_SESSION, 
@@ -104,7 +104,7 @@ public TodoList todos() {
 
 接下来，我们将 bean 声明为对`@Controller`的依赖，并像对任何其他依赖一样注入它:
 
-```
+```java
 @Controller
 @RequestMapping("/scopedproxy")
 public class TodoControllerWithScopedProxy {
@@ -117,7 +117,7 @@ public class TodoControllerWithScopedProxy {
 
 最后，在请求中使用 bean 只需要调用它的方法:
 
-```
+```java
 @GetMapping("/form")
 public String showForm(Model model) {
     if (!todos.isEmpty()) {
@@ -135,7 +135,7 @@ public String showForm(Model model) {
 
 首先，我们定义一个`TestConfig`和一个`CustomScopeConfigurer`:
 
-```
+```java
 @Configuration
 public class TestConfig {
 
@@ -150,7 +150,7 @@ public class TestConfig {
 
 现在我们可以开始测试表单的初始请求是否包含未初始化的`TodoItem:`
 
-```
+```java
 @RunWith(SpringRunner.class) 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -175,7 +175,7 @@ public class TodoControllerWithScopedProxyIntegrationTest {
 
 我们还可以确认我们的提交发出了一个重定向，并且后续的表单请求已经预先填充了新添加的`TodoItem`:
 
-```
+```java
 @Test
 public void whenSubmit_thenSubsequentFormRequestContainsMostRecentTodo() throws Exception {
     mockMvc.perform(post("/scopedproxy/form")
@@ -219,7 +219,7 @@ public void whenSubmit_thenSubsequentFormRequestContainsMostRecentTodo() throws 
 
 首先，我们通过在控制器上提供一个方法来声明我们的 bean，并用`@ModelAttribute`注释这个方法:
 
-```
+```java
 @ModelAttribute("todos")
 public TodoList todos() {
     return new TodoList();
@@ -228,7 +228,7 @@ public TodoList todos() {
 
 接下来，我们通过使用`@SessionAttributes`通知控制器将我们的`TodoList` 视为会话范围的:
 
-```
+```java
 @Controller
 @RequestMapping("/sessionattributes")
 @SessionAttributes("todos")
@@ -239,7 +239,7 @@ public class TodoControllerWithSessionAttributes {
 
 最后，为了在请求中使用 bean，我们在`@RequestMapping`的方法签名中提供了对它的引用:
 
-```
+```java
 @GetMapping("/form")
 public String showForm(
   Model model,
@@ -256,7 +256,7 @@ public String showForm(
 
 在`@PostMapping`方法中，我们在返回我们的`RedirectView`之前注入`RedirectAttributes`并调用`addFlashAttribute`。与我们的第一个示例相比，这是实现中的一个重要区别:
 
-```
+```java
 @PostMapping("/form")
 public RedirectView create(
   @ModelAttribute TodoItem todo, 
@@ -277,7 +277,7 @@ Spring 为重定向场景使用了一个专门的`Model`的`RedirectAttributes` 
 
 窗体视图控制器方法的单元测试与我们在第一个例子中看到的测试是相同的。然而，`@PostMapping`的测试略有不同，因为我们需要访问闪存属性来验证行为:
 
-```
+```java
 @Test
 public void whenTodoExists_thenSubsequentFormRequestContainsesMostRecentTodo() throws Exception {
     FlashMap flashMap = mockMvc.perform(post("/sessionattributes/form")

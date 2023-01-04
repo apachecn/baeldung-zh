@@ -14,7 +14,7 @@
 
 实现这一点最简单的方法是建立一个映射，其中键类型是与所有键最接近的超类型。在某些情况下，这可能很容易——例如，如果我们的键是`Long`和`Double`,那么最接近的超类型是`Number`:
 
-```
+```java
 Map<Number, User> users = new HashMap<>();
 
 users.get(longId);
@@ -23,7 +23,7 @@ users.get(doubleId);
 
 但是，在其他情况下，最接近的超类型是`Object`。这有一个缺点，它完全从我们的映射中移除了类型安全:
 
-```
+```java
 Map<Object, User> users = new HashMap<>();
 
 users.get(longId); /// Works.
@@ -39,7 +39,7 @@ users.get(Instant.now()); // Also works.
 
 如果类型安全很重要，并且我们将把我们的映射封装在另一个类中，另一个简单的选择是拥有多个映射。在这种情况下，我们对每个支持的键都有不同的映射:
 
-```
+```java
 Map<Long, User> usersByLong = new HashMap<>();
 Map<String, User> usersByString = new HashMap<>();
 ```
@@ -58,7 +58,7 @@ Map<String, User> usersByString = new HashMap<>();
 
 我们的一个选择是编写一个类，它可以包装任何可能的键类型。这将有一个用于实际键值的单独字段，正确的`equals`和`hashCode`方法，以及一个用于每个可能类型的构造函数:
 
-```
+```java
 class MultiKeyWrapper {
     private final Object key;
 
@@ -80,7 +80,7 @@ class MultiKeyWrapper {
 
 这保证是类型安全的，因为它只能用`Long`或`String`来构造。我们可以在地图中将它作为一个单独的类型，因为它本身就是一个单独的类:
 
-```
+```java
 Map<MultiKeyWrapper, User> users = new HashMap<>();
 users.get(new MultiKeyWrapper(longId)); // Works
 users.get(new MultiKeyWrapper(stringId)); // Works
@@ -95,7 +95,7 @@ users.get(new MultiKeyWrapper(Instant.now())); // Compilation error
 
 另一种方法是编写一个接口来表示我们的密钥包装器，然后为我们想要支持的每种类型编写该接口的实现:
 
-```
+```java
 interface MultiKeyWrapper {}
 
 record LongMultiKeyWrapper(Long value) implements MultiKeyWrapper {}
@@ -106,7 +106,7 @@ record StringMultiKeyWrapper(String value) implements MultiKeyWrapper {}
 
 像以前一样，我们可以使用我们的`MultiKeyWrapper`作为地图的单键类型。然后，我们对想要使用的键类型使用适当的实现:
 
-```
+```java
 Map<MultiKeyWrapper, User> users = new HashMap<>();
 users.get(new LongMultiKeyWrapper(longId)); // Works
 users.get(new StringMultiKeyWrapper(stringId)); // Works 

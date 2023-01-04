@@ -22,7 +22,7 @@
 
 首先， [maven-surefire-plugin](https://web.archive.org/web/20220812060855/https://maven.apache.org/plugins/maven-surefire-plugin/ "Maven surefire plugin") 被配置为从标准构建生命周期中排除**集成测试**:
 
-```
+```java
 <plugin>
    <groupId>org.apache.maven.plugins</groupId>
    <artifactId>maven-surefire-plugin</artifactId>
@@ -41,7 +41,7 @@
 
 接下来，使用 [`cargo-maven3-plugin`](https://web.archive.org/web/20220812060855/https://codehaus-cargo.github.io/cargo/Maven+3+Plugin.html "The cargo-maven2-plugin") ，因为 [Cargo](https://web.archive.org/web/20220812060855/https://codehaus-cargo.github.io/ "Cargo homepage") 自带对嵌入式 web 服务器的顶级开箱即用支持。当然，如果服务器环境需要特定的配置，cargo 也知道如何从归档的包中构建服务器，并部署到外部服务器。
 
-```
+```java
 <plugin>
    <groupId>org.codehaus.cargo</groupId>
    <artifactId>cargo-maven3-plugin</artifactId>
@@ -66,7 +66,7 @@
 
 接下来，一个新的`integration` **Maven 概要文件**被创建，以便当这个概要文件是活动的时候，只运行集成测试**，而不是作为标准构建生命周期的一部分。**
 
-```
+```java
 <profiles>
    <profile>
       <id>integration</id>
@@ -85,7 +85,7 @@
 
 现在，Jetty 服务器被配置为在`pre-integration-test`阶段**启动**，在`post-integration-test`阶段**停止**。
 
-```
+```java
 <plugin>
    <groupId>org.codehaus.cargo</groupId>
    <artifactId>cargo-maven3-plugin</artifactId>
@@ -114,7 +114,7 @@
 
 接下来，需要在`integration`概要文件中覆盖`maven-surefire-plugin`配置，这样，在默认生命周期中被排除的集成测试现在将被**包含在**中并运行:
 
-```
+```java
 <plugins>
    <plugin>
       <groupId>org.apache.maven.plugins</groupId>

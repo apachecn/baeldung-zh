@@ -10,7 +10,7 @@
 
 在`pom.xml`中拥有重复依赖项的风险是，目标库的最新版本可能不会应用到我们项目的构建路径中。例如，让我们考虑下面的`pom.xml`:
 
-```
+```java
 <project>
   [...]
   <dependencies>
@@ -37,7 +37,7 @@
 
 让我们从终端运行命令`[mvn dependency:tree](https://web.archive.org/web/20220630140426/https://maven.apache.org/plugins/maven-dependency-plugin/tree-mojo.html) `并查看输出。
 
-```
+```java
 $ mvn dependency:tree
 [INFO] Scanning for projects...
 [WARNING]
@@ -73,7 +73,7 @@ $ mvn dependency:tree
 
 现在让我们运行命令 [`mvn dependency:analyze-duplicate`](https://web.archive.org/web/20220630140426/https://maven.apache.org/plugins/maven-dependency-plugin/analyze-duplicate-mojo.html) 并检查输出。
 
-```
+```java
 $ mvn dependency:analyze-duplicate
 [INFO] Scanning for projects...
 [WARNING]
@@ -113,7 +113,7 @@ $ mvn dependency:analyze-duplicate
 
 为此，我们需要将这个 Maven 插件添加到我们的`pom.xml `中，并添加规则 `banDuplicatePomDependencyVersions` :
 
-```
+```java
 <project>
   [...]
   <build>
@@ -144,7 +144,7 @@ $ mvn dependency:analyze-duplicate
 
 现在，规则绑定了我们的 Maven 构建:
 
-```
+```java
 $ mvn verify
 [INFO] Scanning for projects...
 [WARNING]

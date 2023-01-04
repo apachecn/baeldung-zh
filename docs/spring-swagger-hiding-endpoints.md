@@ -12,7 +12,7 @@
 
 **`@ApiIgnore`注释允许我们隐藏一个端点**。让我们为控制器中的一个端点添加这个注释:
 
-```
+```java
 @ApiIgnore
 @ApiOperation(value = "This method is used to get the author name.")
 @GetMapping("/getAuthor")
@@ -25,7 +25,7 @@ public String getAuthor() {
 
 或者，我们可以使用 **`@ApiOperation`来隐藏单个端点**:
 
-```
+```java
 @ApiOperation(value = "This method is used to get the current date.", hidden = true)
 @GetMapping("/getDate")
 public LocalDate getDate() {
@@ -39,7 +39,7 @@ public LocalDate getDate() {
 
 尽管如此，有时我们需要**隐藏控制器类**的所有端点。我们可以通过用`@ApiIgnore`注释控制器类来实现这一点:
 
-```
+```java
 @ApiIgnore
 @RestController
 public class RegularRestController {
@@ -53,7 +53,7 @@ public class RegularRestController {
 
 如果我们使用的是 [OpenAPI v3](/web/20221129002555/https://www.baeldung.com/spring-rest-openapi-documentation) ，我们可以使用`@Hidden`注释隐藏一个端点:
 
-```
+```java
 @Hidden
 @GetMapping("/getAuthor")
 public String getAuthor() {
@@ -65,7 +65,7 @@ public String getAuthor() {
 
 类似地，我们可以用`@Hidden`注释控制器来隐藏所有的端点:
 
-```
+```java
 @Hidden
 @RestController
 public class RegularRestController {

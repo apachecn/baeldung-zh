@@ -20,7 +20,7 @@
 
 让我们创建一个`LongAdder` 类的实例，并从多线程中更新它:
 
-```
+```java
 LongAdder counter = new LongAdder();
 ExecutorService executorService = Executors.newFixedThreadPool(8);
 
@@ -38,13 +38,13 @@ for (int i = 0; i < numberOfThreads; i++) {
 
 在我们调用`sum()` 方法之前，`LongAdder` 中计数器的结果是不可用的。该方法将迭代底层数组的所有值，并对这些值求和，返回正确的值。但是我们需要小心，因为调用`sum()` 方法的代价可能非常高:
 
-```
+```java
 assertEquals(counter.sum(), numberOfIncrements * numberOfThreads);
 ```
 
 有时，在我们调用了`sum()`之后，我们想要清除与`LongAdder` 的实例相关的所有状态，并从头开始计数。我们可以使用`sumThenReset()` 方法来实现:
 
-```
+```java
 assertEquals(counter.sumThenReset(), numberOfIncrements * numberOfThreads);
 assertEquals(counter.sum(), 0);
 ```
@@ -59,7 +59,7 @@ assertEquals(counter.sum(), 0);
 
 可以通过向构造函数提供`LongBinaryOperator` 和初始值来创建`LongAccumulator` 的实例。重要的是要记住，如果我们给 **`LongAccumulator`提供一个累加顺序无关紧要的交换函数，它就会正确工作。**
 
-```
+```java
 LongAccumulator accumulator = new LongAccumulator(Long::sum, 0L);
 ```
 
@@ -67,7 +67,7 @@ LongAccumulator accumulator = new LongAccumulator(Long::sum, 0L);
 
 让我们从多个线程调用`accumulate()` 方法:
 
-```
+```java
 int numberOfThreads = 4;
 int numberOfIncrements = 100;
 
@@ -88,7 +88,7 @@ for (int i = 0; i < numberOfThreads; i++) {
 
 我们现在可以断言所有迭代的所有值的总和是`20200`:
 
-```
+```java
 assertEquals(accumulator.get(), 20200);
 ```
 

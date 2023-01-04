@@ -38,7 +38,7 @@
 
 例如，假设我们有一个`Article`实体，它有发布日期、发布时间以及创建日期和时间:
 
-```
+```java
 @Entity
 public class Article {
 
@@ -65,7 +65,7 @@ public class Article {
 
 我们将使用几个 Spring Data JPA 特性创建三个方法:
 
-```
+```java
 public interface ArticleRepository 
   extends JpaRepository<Article, Integer> {
 
@@ -100,7 +100,7 @@ public interface ArticleRepository
 
 我们将首先将数据导入到我们的数据库中，然后我们将创建测试类来检查存储库的每个方法:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class ArticleRepositoryIntegrationTest {

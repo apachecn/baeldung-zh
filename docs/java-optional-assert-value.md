@@ -16,13 +16,13 @@
 
 如果一个`Optional`有一个值，我们可以在`Optional.isPresent`上断言:
 
-```
+```java
 assertTrue(optional.isPresent());
 ```
 
 然而，AssertJ 库提供了一种更流畅的表达方式:
 
-```
+```java
 assertThat(optional).isNotEmpty();
 ```
 
@@ -30,19 +30,19 @@ assertThat(optional).isNotEmpty();
 
 使用 JUnit 时，我们可以颠倒一下逻辑:
 
-```
+```java
 assertFalse(optional.isPresent());
 ```
 
 同样，在 Java 11 以后，我们可以使用`Optional.isEmpty`:
 
-```
+```java
 assertTrue(optional.isEmpty());
 ```
 
 然而，AssertJ 也为我们提供了一个简洁的选择:
 
-```
+```java
 assertThat(optional).isEmpty();
 ```
 
@@ -54,21 +54,21 @@ assertThat(optional).isEmpty();
 
 我们可以使用`Optional.get`来提供值，然后在那个`:`上写一个断言
 
-```
+```java
 Optional<String> optional = Optional.of("SOMEVALUE");
 assertEquals("SOMEVALUE", optional.get());
 ```
 
 然而，使用 `get` 可能会导致异常，这使得理解测试失败变得更加困难。所以，我们可能更喜欢先断言值是否存在:
 
-```
+```java
 assertTrue(optional.isPresent());
 assertEquals("SOMEVALUE", optional.get());
 ```
 
 然而， **`Optional`支持 equals 方法**，所以我们可以使用带有正确值的`Optional`作为一般等式断言的一部分:
 
-```
+```java
 Optional<String> expected = Optional.of("SOMEVALUE");
 Optional<String> actual = Optional.of("SOMEVALUE");
 assertEquals(expected, actual);
@@ -78,7 +78,7 @@ assertEquals(expected, actual);
 
 对于 AssertJ `,` **我们可以使用`hasValue`流畅的断言**:
 
-```
+```java
 assertThat(Optional.of("SOMEVALUE")).hasValue("SOMEVALUE"); 
 ```
 

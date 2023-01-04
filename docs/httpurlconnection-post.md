@@ -26,7 +26,7 @@ Learn how to connect to proxy servers in Java using system properties or the mor
 
 让我们创建一个带有目标 URI 字符串的`URL`对象，它通过 HTTP POST 方法接受 JSON 数据:
 
-```
+```java
 URL url = new URL ("https://reqres.in/api/users");
 ```
 
@@ -36,7 +36,7 @@ URL url = new URL ("https://reqres.in/api/users");
 
 我们不能直接实例化`HttpURLConnection`，因为它是一个抽象类:
 
-```
+```java
 HttpURLConnection con = (HttpURLConnection)url.openConnection();
 ```
 
@@ -44,7 +44,7 @@ HttpURLConnection con = (HttpURLConnection)url.openConnection();
 
 要发送 POST 请求，我们必须将请求方法属性设置为 POST:
 
-```
+```java
 con.setRequestMethod("POST");
 ```
 
@@ -54,7 +54,7 @@ con.setRequestMethod("POST");
 
 否则，服务器将返回 HTTP 状态代码“400-错误请求”:
 
-```
+```java
 con.setRequestProperty("Content-Type", "application/json");
 ```
 
@@ -62,7 +62,7 @@ con.setRequestProperty("Content-Type", "application/json");
 
 **将`“Accept”`请求头设置为`“application/json”` ，以期望的格式读取响应:**
 
-```
+```java
 con.setRequestProperty("Accept", "application/json");
 ```
 
@@ -72,7 +72,7 @@ con.setRequestProperty("Accept", "application/json");
 
 否则，我们将无法将内容写入连接输出流:
 
-```
+```java
 con.setDoOutput(true);
 ```
 
@@ -80,13 +80,13 @@ con.setDoOutput(true);
 
 创建自定义 JSON 字符串后:
 
-```
+```java
 String jsonInputString = "{"name": "Upendra", "job": "Programmer"}";
 ```
 
 我们需要这样写:
 
-```
+```java
 try(OutputStream os = con.getOutputStream()) {
     byte[] input = jsonInputString.getBytes("utf-8");
     os.write(input, 0, input.length);			
@@ -99,7 +99,7 @@ try(OutputStream os = con.getOutputStream()) {
 
 通读整个响应内容，并打印最终的响应字符串:
 
-```
+```java
 try(BufferedReader br = new BufferedReader(
   new InputStreamReader(con.getInputStream(), "utf-8"))) {
     StringBuilder response = new StringBuilder();

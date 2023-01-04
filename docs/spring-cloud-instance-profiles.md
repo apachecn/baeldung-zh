@@ -24,7 +24,7 @@
 
 接下来，我们应该确保我们的 EC2 实例可以检索实例配置文件凭证。用实际的实例配置文件角色名替换`<InstanceProfileRoleName>`:
 
-```
+```java
 curl http://169.254.169.254/latest/meta-data/iam/security-credentials/<InstanceProfileRoleName>
 ```
 
@@ -34,7 +34,7 @@ curl http://169.254.169.254/latest/meta-data/iam/security-credentials/<InstanceP
 
 现在，对于我们的示例应用程序。我们需要将 Spring Boot 配置为使用实例配置文件，这可以在我们的 Spring Boot 配置文件中完成:
 
-```
+```java
 cloud.aws.credentials.instanceProfile=true
 ```
 
@@ -46,7 +46,7 @@ cloud.aws.credentials.instanceProfile=true
 
 我们可以用一个`InstanceProfileCredentialsProvider` 来配置它，并将其发布为一个 bean:
 
-```
+```java
 @Bean
 public AmazonS3 amazonS3() {
     InstanceProfileCredentialsProvider provider
@@ -63,7 +63,7 @@ public AmazonS3 amazonS3() {
 
 现在，我们可以像往常一样使用 Spring Cloud 连接到我们的 S3 服务器，但不需要配置永久凭据:
 
-```
+```java
 @Component
 public class SpringCloudS3Service {
 

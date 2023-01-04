@@ -29,7 +29,7 @@
 
 正如我们前面提到的，`skip`方法有两种重载形式。首先，让我们看看如何使用`skip`方法和`Pattern`:
 
-```
+```java
 String str = "Java scanner skip tutorial"; 
 Scanner sc = new Scanner(str); 
 sc.skip(Pattern.compile(".ava"));
@@ -39,7 +39,7 @@ sc.skip(Pattern.compile(".ava"));
 
 同样地，`skip(String)` 方法将跳过符合从给定的`String`构造的给定模式的文本。在我们的例子中，我们跳过字符串“Java”:
 
-```
+```java
 String str = "Java scanner skip tutorial";
 Scanner sc = new Scanner(str); 
 sc.skip("Java");

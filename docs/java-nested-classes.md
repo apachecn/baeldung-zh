@@ -28,7 +28,7 @@
 
 让我们看看如何声明一个静态嵌套类:
 
-```
+```java
 public class Enclosing {
 
     private static int x = 1;
@@ -60,7 +60,7 @@ public class Enclosing {
 
 下面是我们如何声明一个内部类:
 
-```
+```java
 public class Outer {
 
     public class Inner {
@@ -75,7 +75,7 @@ public class Outer {
 
 让我们看看如何做到这一点:
 
-```
+```java
 Outer outer = new Outer();
 Outer.Inner inner = outer.new Inner();
 ```
@@ -94,7 +94,7 @@ Outer.Inner inner = outer.new Inner();
 
 这里有一个简单的例子:
 
-```
+```java
 public class NewEnclosing {
 
     void run() {
@@ -129,7 +129,7 @@ public class NewEnclosing {
 
 要定义一个匿名类，让我们首先定义一个简单的抽象类:
 
-```
+```java
 abstract class SimpleAbstractClass {
     abstract void run();
 }
@@ -137,7 +137,7 @@ abstract class SimpleAbstractClass {
 
 现在让我们看看如何定义一个匿名类:
 
-```
+```java
 public class AnonymousInnerUnitTest {
 
     @Test
@@ -162,7 +162,7 @@ public class AnonymousInnerUnitTest {
 
 让我们看一个简单的例子:
 
-```
+```java
 public class NewOuter {
 
     int a = 1;

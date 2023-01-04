@@ -12,7 +12,7 @@
 
 首先，让我们创建一个名为`Item`的模型，它具有多个特征:
 
-```
+```java
 @Entity
 public class Item {
 
@@ -29,7 +29,7 @@ public class Item {
 
 现在让我们定义 C `haracteristic`实体:
 
-```
+```java
 @Entity
 public class Characteristic {
 
@@ -57,7 +57,7 @@ public class Characteristic {
 
 首先，我们可以在我们的`Item` 实体上直接使用 JPA 的`@NamedEntityGraph`注释:
 
-```
+```java
 @Entity
 @NamedEntityGraph(name = "Item.characteristics",
     attributeNodes = @NamedAttributeNode("characteristics")
@@ -69,7 +69,7 @@ public class Item {
 
 然后，我们可以将`@EntityGraph`注释附加到我们的一个存储库方法上:
 
-```
+```java
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @EntityGraph(value = "Item.characteristics")
@@ -91,7 +91,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
 让我们添加一个特别的实体图到我们的`CharacteristicsRepository` 中，它急切地加载它的`Item`父节点:
 
-```
+```java
 public interface CharacteristicsRepository 
   extends JpaRepository<Characteristic, Long> {
 
@@ -108,7 +108,7 @@ public interface CharacteristicsRepository
 
 现在我们已经定义了我们的实体图，让我们创建一个测试用例来验证它:
 
-```
+```java
 @DataJpaTest
 @RunWith(SpringRunner.class)
 @Sql(scripts = "/entitygraph-data.sql")
@@ -138,7 +138,7 @@ public class EntityGraphIntegrationTest {
 
 让我们看看 Hibernate 生成的 SQL:
 
-```
+```java
 select 
     item0_.id as id1_10_0_,
     characteri1_.id as id1_4_1_,
@@ -159,7 +159,7 @@ where
 
 为了比较，让我们从存储库中删除`@EntityGraph`注释并检查查询:
 
-```
+```java
 select 
     item0_.id as id1_10_,
     item0_.name as name2_10_ 
@@ -173,7 +173,7 @@ where
 
 最后，让我们比较一下第二个测试的 Hibernate 查询和`@EntityGraph`注释:
 
-```
+```java
 select 
     characteri0_.id as id1_4_0_,
     item1_.id as id1_10_1_,
@@ -192,7 +192,7 @@ where
 
 没有`@EntityGraph`注释的查询:
 
-```
+```java
 select 
     characteri0_.id as id1_4_,
     characteri0_.item_id as item_id3_4_,

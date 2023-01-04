@@ -22,13 +22,13 @@ Docker 容器是隔离的环境。然而，容器有时需要持久化和共享�
 
 首先，让我们[创建](https://web.archive.org/web/20221106163118/https://docs.docker.com/engine/reference/commandline/volume_create/)我们的卷:
 
-```
+```java
 docker volume create --name volume-data
 ```
 
 然后，让我们运行我们的容器:
 
-```
+```java
 docker run -d -v volume-data:/data --name nginx-test nginx:latest
 ```
 
@@ -42,7 +42,7 @@ docker run -d -v volume-data:/data --name nginx-test nginx:latest
 
 例如，让我们开始我们的 web 应用程序:
 
-```
+```java
 docker run -d -v volume-data:/usr/src/app/public --name our-web-app web-app:latest
 ```
 
@@ -56,7 +56,7 @@ Docker 默认创建一个`local`卷。然而，我们可以使用一个[卷驱�
 
 让我们创建一个`docker-compose.yml`来运行共享同一个卷的 Nginx 容器和我们的 web 应用程序:
 
-```
+```java
 services:
   nginx:
     container_name: nginx
@@ -78,7 +78,7 @@ volumes:
 
 同样，在 Docker Compose 中，默认的`driver`将是`local`。我们还可以指定用于该卷的驱动程序:
 
-```
+```java
 volumes:
   db:
     driver: some-driver
@@ -86,7 +86,7 @@ volumes:
 
 我们可能还需要使用 Docker Compose 外部的卷:
 
-```
+```java
 volumes:
   data:
     external: true

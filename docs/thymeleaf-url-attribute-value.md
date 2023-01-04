@@ -12,7 +12,7 @@
 
 出于演示的目的，让我们考虑一个保存一个参数的 URL，`query`:
 
-```
+```java
 https://baeldung.com/search?query=Baeldung
 ```
 
@@ -20,7 +20,7 @@ https://baeldung.com/search?query=Baeldung
 
 首先，让我们看看如何使用`param`对象来访问 URL 属性“query”:
 
-```
+```java
 <div th:if="${param.query != null}">
     <p th:text="${param.query }"></p>
 </div>
@@ -28,13 +28,13 @@ https://baeldung.com/search?query=Baeldung
 
 在上面的例子中，如果参数“query”不为空，将显示“query”的值。另外，**我们应该注意 URL 属性可以是多值的**。让我们看一个具有多值属性的示例 URL:
 
-```
+```java
 https://baeldung.com/search?query=Bealdung&query;=Thymleaf
 ```
 
 在这种情况下，我们可以使用括号语法分别访问这些值:
 
-```
+```java
 <div th:if="${param.query != null}">
     <p th:text="${param.query[0] + ' ' + param.query[1]}" th:unless="${param.query == null}"></p>
 </div>
@@ -46,7 +46,7 @@ https://baeldung.com/search?query=Bealdung&query;=Thymleaf
 
 让我们看看如何在胸腺视图中使用`#request`对象:
 
-```
+```java
 <div th:if="${#request.getParameter('query') != null}">
     <p th:text="${#request.getParameter('query')}" th:unless="${#request.getParameter('query') == null}"></p>
 </div>

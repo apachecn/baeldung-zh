@@ -42,7 +42,7 @@ Sentinel 控制随机传入请求的速度，以避免微服务过载。这确�
 
 在我们的 Maven 项目中，我们需要在`pom.xml`中添加 [`sentinel-core`](https://web.archive.org/web/20221208143828/https://mvnrepository.com/artifact/com.alibaba.csp/sentinel-core) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.alibaba.csp</groupId>
     <artifactId>sentinel-core</artifactId>
@@ -54,7 +54,7 @@ Sentinel 控制随机传入请求的速度，以避免微服务过载。这确�
 
 让我们使用 Sentinel API 在`try-catch `块中用相应的业务逻辑定义我们的资源:
 
-```
+```java
 try (Entry entry = SphU.entry("HelloWorld")) {
     // Our business logic here.
     System.out.println("hello world");
@@ -69,7 +69,7 @@ try (Entry entry = SphU.entry("HelloWorld")) {
 
 这些规则控制流向我们资源的流量，如阈值计数或控制行为—例如，直接拒绝或减慢启动。让我们使用`FlowRuleManager.loadRules()`来配置流规则:
 
-```
+```java
 List<FlowRule> flowRules = new ArrayList<>();
 FlowRule flowRule = new FlowRule();
 flowRule.setResource(RESOURCE_NAME);
@@ -86,7 +86,7 @@ FlowRuleManager.loadRules(flowRules);
 使用降级规则，我们可以配置断路器的阈值请求计数、恢复超时和其他设置。
 让我们使用`DegradeRuleManager.loadRules()`配置降级规则:
 
-```
+```java
 List<DegradeRule> rules = new ArrayList<DegradeRule>();
 DegradeRule rule = new DegradeRule();
 rule.setResource(RESOURCE_NAME);
@@ -102,7 +102,7 @@ DegradeRuleManager.loadRules(rules);
 
 使用系统保护规则，我们可以配置和确保自适应系统保护(阈值`load1`，平均响应时间，并发线程数)。让我们使用`SystemRuleManager.loadRules()`方法配置系统规则:
 
-```
+```java
 List<SystemRule> rules = new ArrayList<>();
 SystemRule rule = new SystemRule();
 rule.setHighestSystemLoad(10);
@@ -118,7 +118,7 @@ SystemRuleManager.loadRules(rules);
 
 首先，我们将为 [`sentinel-annotation-aspectj`](https://web.archive.org/web/20221208143828/https://search.maven.org/search?q=g:com.alibaba.csp%20a:sentinel-annotation-aspectj) 添加 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.alibaba.csp</groupId>
     <artifactId>sentinel-annotation-aspectj</artifactId>
@@ -128,7 +128,7 @@ SystemRuleManager.loadRules(rules);
 
 然后，我们将`@Configuration`添加到配置类中，将 sentinel 方面注册为 Spring bean:
 
-```
+```java
 @Configuration
 public class SentinelAspectConfiguration {
 
@@ -141,7 +141,7 @@ public class SentinelAspectConfiguration {
 
 `@SentinelResource `表示资源定义。它有类似于`value`的属性，定义了资源名称。属性`fallback`是回退方法的名称。当电路中断时，这个回退方法定义了我们程序的备用流程。让我们使用`@SentinelResource `注释来定义资源:
 
-```
+```java
 @SentinelResource(value = "resource_name", fallback = "doFallback")
 public String doSomething(long i) {
     return "Hello " + i;
@@ -163,7 +163,7 @@ Sentinel 还提供了一个监控仪表板。这样，我们可以监控客户�
 
 首先，我们需要下载 [Sentinel 仪表盘 jar](https://web.archive.org/web/20221208143828/https://github.com/alibaba/Sentinel/releases) 。然后，我们可以使用以下命令启动控制面板:
 
-```
+```java
 java -Dserver.port=8080 -Dcsp.sentinel.dashboard.server=localhost:8080 -Dproject.name=sentinel-dashboard -jar sentinel-dashboard.jar
 ```
 
@@ -173,7 +173,7 @@ java -Dserver.port=8080 -Dcsp.sentinel.dashboard.server=localhost:8080 -Dproject
 
 让我们将 [`sentinel-transport-simple-http`](https://web.archive.org/web/20221208143828/https://search.maven.org/search?q=g:com.alibaba.csp%20a:sentinel-transport-simple-http) 依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.alibaba.csp</groupId>
     <artifactId>sentinel-transport-simple-http</artifactId>
@@ -185,7 +185,7 @@ java -Dserver.port=8080 -Dcsp.sentinel.dashboard.server=localhost:8080 -Dproject
 
 启动应用程序时，我们需要添加仪表板 IP 地址:
 
-```
+```java
 -Dcsp.sentinel.dashboard.server=consoleIp:port
 ```
 

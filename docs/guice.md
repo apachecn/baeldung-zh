@@ -14,7 +14,7 @@
 
 为了在我们的 Maven 项目中使用 Google Guice，我们需要向我们的`pom.xml`添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.inject</groupId>
     <artifactId>guice</artifactId>
@@ -32,7 +32,7 @@
 
 首先，让我们考虑这个类:
 
-```
+```java
 public class Communication {
 
     @Inject 
@@ -58,7 +58,7 @@ public class Communication {
 
 果汁的基本切入点是`Injector:`
 
-```
+```java
 public static void main(String[] args){
     Injector injector = Guice.createInjector(new BasicModule());
     Communication comms = injector.getInstance(Communication.class);
@@ -77,7 +77,7 @@ public static void main(String[] args){
 
 在 `com.google.inject.AbstractModule`的实现中定义了绑定:
 
-```
+```java
 public class BasicModule extends AbstractModule {
 
     @Override
@@ -93,14 +93,14 @@ public class BasicModule extends AbstractModule {
 
 **这种机制的另一个化身是`named binding`** 。考虑以下变量声明:
 
-```
+```java
 @Inject @Named("DefaultCommunicator")
 Communicator communicator; 
 ```
 
 为此，我们将有以下绑定定义:
 
-```
+```java
 @Override
 protected void configure() {
     bind(Communicator.class)
@@ -119,7 +119,7 @@ protected void configure() {
 
 **我们还可以使用`constructor binding`** 注入一个没有默认无参数构造函数的依赖项:
 
-```
+```java
 public class BasicModule extends AbstractModule {
 
     @Override
@@ -136,7 +136,7 @@ public class BasicModule extends AbstractModule {
 
 **另一种特定于构造函数的绑定方法是`instance binding`** ，我们在绑定中直接提供一个实例:
 
-```
+```java
 public class BasicModule extends AbstractModule {
 
     @Override
@@ -157,7 +157,7 @@ Guice 还支持我们在 DI 模式中所期望的标准类型的注入。在`Com
 
 ### 4.1。现场注射
 
-```
+```java
 @Inject @Named("SMSComms")
 CommunicationMode smsComms;
 ```
@@ -168,7 +168,7 @@ CommunicationMode smsComms;
 
 这里我们将使用一个 setter 方法来实现注入:
 
-```
+```java
 @Inject
 public void setEmailCommunicator(@Named("EmailComms") CommunicationMode emailComms) {
     this.emailComms = emailComms;
@@ -179,7 +179,7 @@ public void setEmailCommunicator(@Named("EmailComms") CommunicationMode emailCom
 
 我们还可以使用构造函数注入依赖关系:
 
-```
+```java
 @Inject
 public Communication(@Named("IMComms") CommunicationMode imComms) {
     this.imComms= imComms;
@@ -198,7 +198,7 @@ Guice 支持我们在其他 DI 框架中已经习惯的作用域和作用域机�
 
 让我们在应用程序中注入一个 singleton:
 
-```
+```java
 bind(Communicator.class).annotatedWith(Names.named("AnotherCommunicator"))
   .to(Communicator.class).in(Scopes.SINGLETON); 
 ```
@@ -209,7 +209,7 @@ bind(Communicator.class).annotatedWith(Names.named("AnotherCommunicator"))
 
 然后我们将注入一个热切的单例:
 
-```
+```java
 bind(Communicator.class).annotatedWith(Names.named("AnotherCommunicator"))
   .to(Communicator.class)
   .asEagerSingleton(); 
@@ -225,7 +225,7 @@ Guice 符合 AOPAlliance 的面向方面编程规范。我们可以实现典型�
 
 **第一步——实现 AOPAlliance 的** `**[MethodInterceptor](https://web.archive.org/web/20220930092237/http://aopalliance.sourceforge.net/doc/org/aopalliance/intercept/MethodInterceptor.html)**`:
 
-```
+```java
 public class MessageLogger implements MethodInterceptor {
 
     @Inject
@@ -244,7 +244,7 @@ public class MessageLogger implements MethodInterceptor {
 
 **步骤 2–定义一个普通的 Java 注释**:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface MessageSentLoggable {
@@ -255,7 +255,7 @@ public @interface MessageSentLoggable {
 
 `Matcher` 是一个 Guice 类，我们将使用它来指定我们的 AOP 注释将应用到的组件。在这种情况下，我们希望注释应用于`CommunicationMode:`的实现
 
-```
+```java
 public class AOPModule extends AbstractModule {
 
     @Override
@@ -273,7 +273,7 @@ public class AOPModule extends AbstractModule {
 
 **步骤 4–将我们的注释应用到我们的通信模式，并加载我们的模块**
 
-```
+```java
 @Override
 @MessageSentLoggable
 public boolean sendMessage(String message) {

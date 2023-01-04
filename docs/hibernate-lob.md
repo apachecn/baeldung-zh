@@ -17,7 +17,7 @@ LOB 或大型对象是指用于存储大型对象的可变长度数据类型。
 
 例如，我们将使用 Hibernate 5 和 H2 数据库。因此，我们必须在我们的`pom.xml:`中将它们声明为依赖项
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>
@@ -38,7 +38,7 @@ LOB 或大型对象是指用于存储大型对象的可变长度数据类型。
 
 我们的模型`“User”`有 id、name 和 photo 作为属性。我们将在`User`的 photo 属性中存储一个图像，并将它映射到一个 BLOB:
 
-```
+```java
 @Entity
 @Table(name="user")
 public class User {
@@ -65,7 +65,7 @@ public class User {
 
 ### 4.1.启动休眠会话
 
-```
+```java
 session = HibernateSessionUtil
   .getSessionFactory("hibernate.properties")
   .openSession();
@@ -77,7 +77,7 @@ session = HibernateSessionUtil
 
 让我们假设用户将照片上传为图像文件:
 
-```
+```java
 User user = new User();
 
 InputStream inputStream = this.getClass()
@@ -98,7 +98,7 @@ user.setPhoto(IOUtils.toByteArray(inputStream));
 
 通过使用`Session`存储`User`,`Hibernate`将把对象转换成数据库记录:
 
-```
+```java
 session.persist(user); 
 ```
 
@@ -110,13 +110,13 @@ session.persist(user);
 
 由于我们知道插入的`User` ' `s id`，我们将使用它从数据库中检索数据:
 
-```
+```java
 User result = session.find(User.class, "1"); 
 ```
 
 让我们将查询结果与输入`User`的数据进行比较:
 
-```
+```java
 assertNotNull(
   "Query result is null", 
   result);

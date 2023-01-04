@@ -26,7 +26,7 @@ JPA provides a standard for generating DDL from our entity model. Here we explor
 
 让我们假设我们正在使用 JPA，并在我们的项目中定义一个简单的`Country`实体:
 
-```
+```java
 @Entity
 public class Country {
 
@@ -45,7 +45,7 @@ public class Country {
 
 一个简单的方法是创建一个名为`data.sql`的文件:
 
-```
+```java
 INSERT INTO country (name) VALUES ('India');
 INSERT INTO country (name) VALUES ('Brazil');
 INSERT INTO country (name) VALUES ('USA');
@@ -60,7 +60,7 @@ INSERT INTO country (name) VALUES ('Italy');
 
 在这种情况下，我们可以创建一个自定义的`schema.sql`文件:
 
-```
+```java
 CREATE TABLE country (
     id   INTEGER      NOT NULL AUTO_INCREMENT,
     name VARCHAR(128) NOT NULL,
@@ -80,7 +80,7 @@ Spring 将获取这个文件，并使用它来创建一个模式。
 
 如果我们仍然希望 Hibernate 自动模式生成与基于脚本的模式创建和数据填充相结合，我们必须使用:
 
-```
+```java
 spring.jpa.defer-datasource-initialization=true
 ```
 
@@ -88,7 +88,7 @@ spring.jpa.defer-datasource-initialization=true
 
 此外，默认情况下，只有嵌入式数据库才会执行基于脚本的初始化，要始终使用脚本初始化数据库，我们必须使用:
 
-```
+```java
 spring.sql.init.mode=always
 ```
 
@@ -130,7 +130,7 @@ Spring 还提供了`@Sql`注释——一种初始化和填充测试模式的声�
 
 让我们看看如何使用`@Sql`注释来创建一个新表，并为我们的集成测试加载初始数据:
 
-```
+```java
 @Sql({"/employees_schema.sql", "/import_employees.sql"})
 public class SpringBootInitialLoadIntegrationTest {
 
@@ -155,7 +155,7 @@ public class SpringBootInitialLoadIntegrationTest {
 
 我们将通过注释该方法来加载特定测试用例所需的额外数据:
 
-```
+```java
 @Test
 @Sql({"/import_senior_employees.sql"})
 public void testLoadDataForTestCase() {
@@ -171,7 +171,7 @@ public void testLoadDataForTestCase() {
 
 让我们看一个例子，其中我们指定了 SQL 脚本的编码以及执行脚本的事务模式:
 
-```
+```java
 @Test
 @Sql(scripts = {"/import_senior_employees.sql"}, 
   config = @SqlConfig(encoding = "utf-8", transactionMode = TransactionMode.ISOLATED))
@@ -198,7 +198,7 @@ Java 8 和更高版本允许使用重复的注释。我们也可以将这个特�
 
 **使用`@SqlGroup`注释，我们将声明多个`@Sql`注释**:
 
-```
+```java
 @SqlGroup({
   @Sql(scripts = "/employees_schema.sql", 
     config = @SqlConfig(transactionMode = TransactionMode.ISOLATED)),

@@ -40,7 +40,7 @@ Java EE 6+规范试图弱化部署描述符，因为它们可以被注释所取�
 
 让我们声明我们的`pom.xml`和**中的`maven-war-plugin`显式设置属性`failOnMissingWebXml`为`false`** :
 
-```
+```java
 <plugin>
     <artifactId>maven-war-plugin</artifactId>
     <version>2.4</version>
@@ -54,7 +54,7 @@ Java EE 6+规范试图弱化部署描述符，因为它们可以被注释所取�
 
 我们也可以通过升级`maven-war-plugin`的版本来避免显式设置属性。对于 3.1.0 及更高版本的`maven-war-plugin`，属性`failOnMissingWebXml`的默认值为`false`:
 
-```
+```java
 <plugin>
     <artifactId>maven-war-plugin</artifactId>
     <version>3.1.0</version>

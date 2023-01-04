@@ -16,7 +16,7 @@
 
 首先，我们需要向我们的 Spring Boot 应用程序添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -43,7 +43,7 @@
 
 接下来，让我们配置我们的 OAuth2 客户端，如下所示:
 
-```
+```java
 @Configuration
 @EnableOAuth2Client
 public class GoogleOpenIdConnectConfig {
@@ -84,7 +84,7 @@ public class GoogleOpenIdConnectConfig {
 
 这里是`application.properties`:
 
-```
+```java
 google.clientId=<your app clientId>
 google.clientSecret=<your app clientSecret>
 google.accessTokenUri=https://www.googleapis.com/oauth2/v3/token
@@ -103,7 +103,7 @@ google.redirectUri=http://localhost:8081/google-login
 
 现在，我们需要创建我们自己的自定义`OpenIdConnectFilter`来从`id_token`中提取身份验证，如下所示:
 
-```
+```java
 public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter {
 
     public OpenIdConnectFilter(String defaultFilterProcessesUrl) {
@@ -138,7 +138,7 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
 
 这里是我们简单的`OpenIdConnectUserDetails`:
 
-```
+```java
 public class OpenIdConnectUserDetails implements UserDetails {
     private String userId;
     private String username;
@@ -166,7 +166,7 @@ public class OpenIdConnectUserDetails implements UserDetails {
 
 这些大约每天变化一次，所以我们将使用一个名为 [jwks-rsa](https://web.archive.org/web/20220701021819/https://search.maven.org/classic/#search%7Cga%7C1%7Cjwks) 的实用程序库来读取它们:
 
-```
+```java
 <dependency>
     <groupId>com.auth0</groupId>
     <artifactId>jwks-rsa</artifactId>
@@ -176,13 +176,13 @@ public class OpenIdConnectUserDetails implements UserDetails {
 
 让我们将包含证书的 URL 添加到`application.properties`文件中:
 
-```
+```java
 google.jwkUrl=https://www.googleapis.com/oauth2/v2/certs
 ```
 
 现在我们可以读取这个属性并构建`RSAVerifier`对象:
 
-```
+```java
 @Value("${google.jwkUrl}")
 private String jwkUrl;    
 
@@ -195,7 +195,7 @@ private RsaVerifier verifier(String kid) throws Exception {
 
 最后，我们还将验证解码后的 id 令牌中的声明:
 
-```
+```java
 public void verifyClaims(Map claims) {
     int exp = (int) claims.get("exp");
     Date expireDate = new Date(exp * 1000L);
@@ -215,7 +215,7 @@ public void verifyClaims(Map claims) {
 
 接下来，让我们讨论一下我们的安全配置:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -254,7 +254,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 接下来，这里有一个简单的控制器来测试我们的应用程序:
 
-```
+```java
 @Controller
 public class HomeController {
     @RequestMapping("/")
@@ -268,7 +268,7 @@ public class HomeController {
 
 示例响应(重定向至 Google 以批准应用授权后) :
 
-```
+```java
 Welcome, [[email protected]](/web/20220701021819/https://www.baeldung.com/cdn-cgi/l/email-protection)
 ```
 
@@ -278,7 +278,7 @@ Welcome, [[email protected]](/web/20220701021819/https://www.baeldung.com/cdn-c
 
 首先，我们将发送一个**认证请求**:
 
-```
+```java
 https://accounts.google.com/o/oauth2/auth?
     client_id=sampleClientID
     response_type=code&
@@ -289,13 +289,13 @@ https://accounts.google.com/o/oauth2/auth?
 
 响应(**在用户批准**之后)是重定向到:
 
-```
+```java
 http://localhost:8081/google-login?state=abc&code;=xyz
 ```
 
 接下来，我们将把`code`换成访问令牌和`id_token`:
 
-```
+```java
 POST https://www.googleapis.com/oauth2/v3/token 
     code=xyz&
     client_id= sampleClientID&
@@ -306,7 +306,7 @@ POST https://www.googleapis.com/oauth2/v3/token
 
 下面是一个回答示例:
 
-```
+```java
 {
     "access_token": "SampleAccessToken",
     "id_token": "SampleIdToken",
@@ -318,7 +318,7 @@ POST https://www.googleapis.com/oauth2/v3/token
 
 最后，下面是实际的`id_token` 的信息:
 
-```
+```java
 {
     "iss":"accounts.google.com",
     "at_hash":"AccessTokenHash",

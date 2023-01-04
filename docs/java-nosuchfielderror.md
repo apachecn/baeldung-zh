@@ -14,7 +14,7 @@
 
 让我们借助一个例子来看看这个错误是如何发生的。作为第一步，让我们创建一个`Dependency` 类:
 
-```
+```java
 public class Dependency {
     public static String message = "Hello Baeldung!!";
 }
@@ -22,7 +22,7 @@ public class Dependency {
 
 然后我们将创建一个引用我们的`Dependency`类的字段的`FieldErrorExample`类:
 
-```
+```java
 public class FieldErrorExample {
     public static String getDependentMessage() {
         return Dependency.message;
@@ -32,7 +32,7 @@ public class FieldErrorExample {
 
 让我们也添加代码来检查我们是否从`Dependency`类获得了一个`message`:
 
-```
+```java
 public static void fetchAndPrint() {
     System.out.println(getDependentMessage());
 } 
@@ -44,7 +44,7 @@ public static void fetchAndPrint() {
 
 例如，让我们更改我们的`Dependency`类中的属性名:
 
-```
+```java
 public class Dependency {
     public static String msg = "Hello Baeldung!!";
 }
@@ -52,7 +52,7 @@ public class Dependency {
 
 现在，如果我们只重新编译我们的`Dependency`类`,`，然后再次执行`FieldErrorExample`，我们会遇到`NoSuchFieldError`:
 
-```
+```java
 Exception in thread "main" java.lang.NoSuchFieldError: message
 ```
 

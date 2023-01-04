@@ -17,7 +17,7 @@ Jsoup 是一个开源的 Java 库，主要用于从 HTML 中提取数据。它�
 
 为了在您的项目中使用 jsoup 库，将依赖项添加到您的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.jsoup</groupId>
     <artifactId>jsoup</artifactId>
@@ -33,7 +33,7 @@ Jsoup 加载页面 HTML 并构建相应的 DOM 树。该树的工作方式与浏
 
 如果您熟悉客户端选择器和 DOM 遍历/操作，您会发现 jsoup 非常熟悉。检查打印页面段落的难易程度:
 
-```
+```java
 Document doc = Jsoup.connect("http://example.com").get();
 doc.select("p").forEach(System.out::println);
 ```
@@ -46,7 +46,7 @@ doc.select("p").forEach(System.out::println);
 
 让我们从 Spring 博客的 URL 加载一个`Document`:
 
-```
+```java
 String blogUrl = "https://spring.io/blog";
 Document doc = Jsoup.connect(blogUrl).get();
 ```
@@ -55,7 +55,7 @@ Document doc = Jsoup.connect(blogUrl).get();
 
 如果需要检测异常状态代码(如 404)，应该捕捉`HttpStatusException`异常:
 
-```
+```java
 try {
    Document doc404 = Jsoup.connect("https://spring.io/will-not-be-found").get();
 } catch (HttpStatusException ex) {
@@ -65,7 +65,7 @@ try {
 
 有时，连接需要更加个性化。`Jsoup.connect(…)`返回一个`Connection`,允许您设置用户代理、推荐人、连接超时、cookies、发布数据和标题等:
 
-```
+```java
 Connection connection = Jsoup.connect(blogUrl);
 connection.userAgent("Mozilla");
 connection.timeout(5000);
@@ -78,7 +78,7 @@ Document docCustomConn = connection.get();
 
 由于连接遵循流畅的接口，因此您可以在调用所需的 HTTP 方法之前链接这些方法:
 
-```
+```java
 Document docCustomConn = Jsoup.connect(blogUrl)
   .userAgent("Mozilla")
   .timeout(5000)
@@ -101,7 +101,7 @@ Document docCustomConn = Jsoup.connect(blogUrl)
 
 让我们来看看使用`select`方法的一些选择:
 
-```
+```java
 Elements links = doc.select("a");
 Elements sections = doc.select("section");
 Elements logo = doc.select(".spring-logo--container");
@@ -112,7 +112,7 @@ Elements divsDirect = doc.select("header > div");
 
 您还可以使用受浏览器 DOM 启发的更明确的方法，而不是通用的`select`:
 
-```
+```java
 Element pag = doc.getElementById("pagination_control");
 Elements desktopOnly = doc.getElementsByClass("desktopOnly");
 ```
@@ -125,7 +125,7 @@ Elements desktopOnly = doc.getElementsByClass("desktopOnly");
 
 此外，您可以跳转到一组`Elements`中的第一个、最后一个和第 n 个`Element`(使用基于 0 的索引):
 
-```
+```java
 Element firstSection = sections.first();
 Element lastSection = sections.last();
 Element secondSection = sections.get(2);
@@ -137,13 +137,13 @@ Elements siblings = firstSection.siblingElements();
 
 您还可以迭代选择。事实上，`Elements`类型的任何东西都可以被迭代:
 
-```
+```java
 sections.forEach(el -> System.out.println("section: " + el));
 ```
 
 您可以将选择限制为前一个选择(子选择):
 
-```
+```java
 Elements sectionParagraphs = firstSection.select(".paragraph");
 ```
 
@@ -153,7 +153,7 @@ Elements sectionParagraphs = firstSection.select(".paragraph");
 
 看一下这个例子，它从博客中选择第一篇文章，并获取它的日期、它的第一部分文本，最后是它的内部和外部 HTML:
 
-```
+```java
 Element firstArticle = doc.select("article").first();
 Element timeElement = firstArticle.select("time").first();
 String dateTimeOfFirstArticle = timeElement.attr("datetime");
@@ -184,7 +184,7 @@ String outerHtml = firstArticle.outerHtml();
 
 让我们来看看这些方法的一个简单例子:
 
-```
+```java
 timeElement.attr("datetime", "2016-12-16 15:19:54.3");
 sectionDiv.text("foo bar");
 firstArticle.select("h2").html("<div><span></span></div>"); 
@@ -194,7 +194,7 @@ firstArticle.select("h2").html("<div><span></span></div>");
 
 要添加新元素，首先需要通过实例化`Element`来构建它。一旦`Element`被构建，您可以使用`appendChild`方法将它附加到另一个`Element`。新创建并追加的`Element`将被插入到调用`appendChild`的元素的末尾:
 
-```
+```java
 Element link = new Element(Tag.valueOf("a"), "")
   .text("Checkout this amazing website!")
   .attr("href", "http://baeldung.com")
@@ -208,7 +208,7 @@ firstArticle.appendChild(link);
 
 例如，让我们从`Document,`中删除所有包含`navbar-link”`类的`<li>`标签，并删除第一篇文章中的所有图像:
 
-```
+```java
 doc.select("li.navbar-link").remove();
 firstArticle.select("img").remove();
 ```
@@ -219,7 +219,7 @@ firstArticle.select("img").remove();
 
 要做到这一点，我们可以通过使用给出的方法选择、遍历和提取来探索`Document` DOM 树，或者我们可以使用`html()`方法简单地将它的 HTML 提取为一个`String`:
 
-```
+```java
 String docHtml = doc.html();
 ```
 

@@ -16,7 +16,7 @@ Spring AOP 允许在应用程序中定义横切关注点，这意味着代码拦
 
 让我们创建一个简单的`Person`类和一个`PersonService`类，其中包含我们将监控的两个方法:
 
-```
+```java
 public class Person {
     private String lastName;
     private String firstName;
@@ -26,7 +26,7 @@ public class Person {
 }
 ```
 
-```
+```java
 public class PersonService {
 
     public String getFullName(Person person){
@@ -42,7 +42,7 @@ public class PersonService {
 
 为了利用 Spring monitoring 拦截器，我们需要定义一个切入点和顾问:
 
-```
+```java
 @Configuration
 @EnableAspectJAutoProxy
 @Aspect
@@ -87,13 +87,13 @@ public class AopConfiguration {
 
 比如使用 Jog4j，我们可以通过`log4j.properties`文件来实现这一点:
 
-```
+```java
 log4j.logger.org.springframework.aop.interceptor.PerformanceMonitorInterceptor=TRACE, stdout
 ```
 
 对于`getAge()`方法的每次执行，我们将在控制台日志中看到`TRACE`消息:
 
-```
+```java
 2017-01-08 19:19:25 TRACE 
   PersonService:66 - StopWatch 
   'com.baeldung.performancemonitor.PersonService.getFullName': 
@@ -106,7 +106,7 @@ log4j.logger.org.springframework.aop.interceptor.PerformanceMonitorInterceptor=T
 
 为此，让我们扩展`AbstractMonitoringInterceptor`类并覆盖 `invokeUnderTrace()`方法来记录方法的开始、结束和持续时间，以及如果方法执行持续时间超过 10 ms 时的警告:
 
-```
+```java
 public class MyPerformanceMonitorInterceptor extends AbstractMonitoringInterceptor {
 
     public MyPerformanceMonitorInterceptor() {
@@ -143,7 +143,7 @@ public class MyPerformanceMonitorInterceptor extends AbstractMonitoringIntercept
 
 让我们为`PersonService`的 `getAge()`方法定义一个切入点，并将它与我们创建的拦截器关联起来:
 
-```
+```java
 @Pointcut("execution(public int com.baeldung.performancemonitor.PersonService.getAge(..))")
 public void myMonitor() { }
 
@@ -162,13 +162,13 @@ public Advisor myPerformanceMonitorAdvisor() {
 
 让我们将定制拦截器的日志级别设置为`INFO`:
 
-```
+```java
 log4j.logger.com.baeldung.performancemonitor.MyPerformanceMonitorInterceptor=INFO, stdout
 ```
 
 g `etAge()`方法的执行产生了以下输出:
 
-```
+```java
 2017-01-08 19:19:25 INFO PersonService:26 - 
   Method com.baeldung.performancemonitor.PersonService.getAge 
   execution started at:Sun Jan 08 19:19:25 EET 2017

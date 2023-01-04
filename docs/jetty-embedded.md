@@ -10,7 +10,7 @@
 
 首先，我们将把 Maven 依赖项添加到 [jetty-server](https://web.archive.org/web/20221219072217/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.eclipse.jetty%22%20AND%20a%3A%22jetty-server%22) 和 [jetty-servlet](https://web.archive.org/web/20221219072217/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.eclipse.jetty%22%20AND%20a%3A%22jetty-servlet%22) 库中:
 
-```
+```java
 <dependency>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-server</artifactId>
@@ -27,7 +27,7 @@
 
 启动 Jetty 嵌入式容器很简单。我们需要实例化一个新的`Server` 对象，并将其设置为在给定的端口上启动:
 
-```
+```java
 public class JettyServer {
     private Server server;
 
@@ -43,7 +43,7 @@ public class JettyServer {
 
 我们将创建一个扩展`HttpServlet` 类的类来处理这样的请求；该类将是单线程的，并且在完成之前是阻塞的:
 
-```
+```java
 public class BlockingServlet extends HttpServlet {
 
     protected void doGet(
@@ -60,14 +60,14 @@ public class BlockingServlet extends HttpServlet {
 
 接下来，我们需要使用`addServletWithMapping()`方法在`ServletHandler` 对象中注册`BlockingServlet` 类，并启动服务器:
 
-```
+```java
 servletHandler.addServletWithMapping(BlockingServlet.class, "/status");
 server.start();
 ```
 
 如果我们希望测试我们的 Servlet 逻辑，我们需要使用之前创建的 `JettyServer` 类来启动我们的服务器，该类是测试设置中实际 Jetty 服务器实例的包装器:
 
-```
+```java
 @Before
 public void setup() throws Exception {
     jettyServer = new JettyServer();
@@ -77,7 +77,7 @@ public void setup() throws Exception {
 
 一旦开始，我们将向`/status` 端点发送一个测试 HTTP 请求:
 
-```
+```java
 String url = "http://localhost:8090/status";
 HttpClient client = HttpClientBuilder.create().build();
 HttpGet request = new HttpGet(url);
@@ -95,7 +95,7 @@ Jetty 对异步请求处理有很好的支持。
 
 为了用 Jetty 提供这样的逻辑，我们可以通过调用`HttpServletRequest.` 上的`startAsync()` 方法来创建一个使用`[AsyncContext](https://web.archive.org/web/20221219072217/https://docs.oracle.com/javaee/6/api/javax/servlet/AsyncContext.html)` 类的 servlet。这段代码不会阻塞正在执行的线程，但会在单独的线程中执行 I/O 操作，并在准备就绪时使用`AsyncContext.complete()` 方法返回结果:
 
-```
+```java
 public class AsyncServlet extends HttpServlet {
     private static String HEAVY_RESOURCE 
       = "This is some heavy resource that will be served in an async way";
@@ -136,14 +136,14 @@ public class AsyncServlet extends HttpServlet {
 
 接下来，我们需要添加`AsyncServlet` 作为 Jetty servlet 映射:
 
-```
+```java
 servletHandler.addServletWithMapping(
   AsyncServlet.class, "/heavy/async");
 ```
 
 我们现在可以向`/heavy/async` 端点发送一个请求——该请求将由 Jetty 以异步方式处理:
 
-```
+```java
 String url = "http://localhost:8090/heavy/async";
 HttpClient client = HttpClientBuilder.create().build();
 HttpGet request = new HttpGet(url);
@@ -171,7 +171,7 @@ assertThat(responseContent).isEqualTo(
 
 有了这些，我们可以通过将配置的线程池传递给`Server` 构造函数，以编程方式配置嵌入式`Jetty`服务器:
 
-```
+```java
 int maxThreads = 100;
 int minThreads = 10;
 int idleTimeout = 120;

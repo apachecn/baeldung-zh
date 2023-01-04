@@ -20,7 +20,7 @@
 
 首先，我们将 Auth0 Java JWT 库的 [Maven 依赖项](https://web.archive.org/web/20221221184144/https://search.maven.org/search?q=g:com.auth0%20AND%20a:java-jwt)添加到我们项目的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.auth0</groupId>
     <artifactId>java-jwt</artifactId>
@@ -40,7 +40,7 @@
 
 让我们来看看解码 JWT 的代码:
 
-```
+```java
 try {
     DecodedJWT decodedJWT = JWT.decode(jwtString);
     return decodedJWT;
@@ -53,7 +53,7 @@ try {
 
 例如，为了获得令牌到期时间，我们使用了`DecodedJWT.getExpiresAt()`方法。该方法返回一个包含令牌到期时间的`java.util.Date`的实例:
 
-```
+```java
 Date expiresAt = decodedJWT.getExpiresAt();
 ```
 
@@ -67,7 +67,7 @@ Date expiresAt = decodedJWT.getExpiresAt();
 
 让我们检查代码来验证一个 JWT:
 
-```
+```java
 try {
     DecodedJWT decodedJWT = verifier.verify(jwtString);
 } catch (JWTVerificationException e) {
@@ -81,7 +81,7 @@ try {
 
 为了简单地读取 JWT 中包含的数据，我们可以解码 JWT 并解析数据。让我们看一下 Java 代码，检查 JWT 是否已经过期:
 
-```
+```java
 boolean isJWTExpired(DecodedJWT decodedJWT) {
     Date expiresAt = decodedJWT.getExpiresAt();
     return expiresAt.before(new Date());

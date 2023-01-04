@@ -12,7 +12,7 @@
 
 让我们从默认的测试类生命周期开始，这是 JUnit 4 和 5 共有的:
 
-```
+```java
 class AdditionTest {
 
     private int sum = 1;
@@ -43,7 +43,7 @@ class AdditionTest {
 
 JUnit 4 通过其`@BeforeClass`注释解决了这个问题:
 
-```
+```java
 private static String largeContent;
 
 @BeforeClass
@@ -66,7 +66,7 @@ JUnit 5 提供了一种不同的方法。它提供了用在静态函数上的`@B
 
 让我们用`@TestInstance`注释来注释我们的测试类，并使用`LifeCycle.PER_CLASS`模式:
 
-```
+```java
 @TestInstance(LifeCycle.PER_CLASS)
 class TweetSerializerUnitTest {
 
@@ -98,7 +98,7 @@ class TweetSerializerUnitTest {
 
 当共享状态时，为了按顺序执行所有的测试，JUnit 5 为我们提供了类型级的`[@TestMethodOrder](/web/20220626073541/https://www.baeldung.com/junit-5-test-order)`注释。然后我们可以在测试方法上使用`[@Order](/web/20220626073541/https://www.baeldung.com/junit-5-test-order)`注释，按照我们选择的顺序执行它们。
 
-```
+```java
 @TestMethodOrder(OrderAnnotation.class)
 class OrderUnitTest {
 

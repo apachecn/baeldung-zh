@@ -45,13 +45,13 @@ Java 8 引入了[函数接口](/web/20220625080345/https://www.baeldung.com/java
 
 让我们考虑一个使用接口的例子:
 
-```
+```java
 public interface Sender {
     void send(File fileToBeSent);
 }
 ```
 
-```
+```java
 public class ImageSender implements Sender {
     @Override
     public void send(File fileToBeSent) {
@@ -64,7 +64,7 @@ public class ImageSender implements Sender {
 
 考虑一个使用上述接口及其实现类的单元测试案例:
 
-```
+```java
 @Test
 void givenImageUploaded_whenButtonClicked_thenSendImage() { 
 
@@ -88,7 +88,7 @@ void givenImageUploaded_whenButtonClicked_thenSendImage() {
 
 让我们看一个使用抽象类的例子:
 
-```
+```java
 public abstract class Vehicle {
 
     protected abstract void start();
@@ -101,7 +101,7 @@ public abstract class Vehicle {
 } 
 ```
 
-```
+```java
 public class Car extends Vehicle {
 
     @Override
@@ -137,7 +137,7 @@ public class Car extends Vehicle {
 
 现在，让我们考虑一个使用上述代码的简单单元测试:
 
-```
+```java
 @Test
 void givenVehicle_whenNeedToDrive_thenStart() {
 

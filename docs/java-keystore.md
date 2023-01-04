@@ -22,7 +22,7 @@
 
 我们可以使用 [keytool](https://web.archive.org/web/20220625174447/https://docs.oracle.com/en/java/javase/11/tools/keytool.html) 轻松地创建一个密钥库，或者我们可以使用`KeyStore` API 以编程方式完成:
 
-```
+```java
 KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
 ```
 
@@ -30,13 +30,13 @@ KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
 
 我们可以使用一个`-Dkeystore.type`参数覆盖默认的“JKS”(Oracle 专有的密钥库协议)类型:
 
-```
+```java
 -Dkeystore.type=pkcs12
 ```
 
 或者，我们当然可以在 `getInstance`中列出支持的格式之一:
 
-```
+```java
 KeyStore ks = KeyStore.getInstance("pkcs12"); 
 ```
 
@@ -44,7 +44,7 @@ KeyStore ks = KeyStore.getInstance("pkcs12");
 
 最初，我们需要`load`密钥库:
 
-```
+```java
 char[] pwdArray = "password".toCharArray();
 ks.load(null, pwdArray); 
 ```
@@ -59,7 +59,7 @@ ks.load(null, pwdArray);
 
 最后，我们将新的密钥库保存到文件系统:
 
-```
+```java
 try (FileOutputStream fos = new FileOutputStream("newKeyStoreFileName.jks")) {
     ks.store(fos, pwdArray);
 } 
@@ -73,20 +73,20 @@ try (FileOutputStream fos = new FileOutputStream("newKeyStoreFileName.jks")) {
 
 不过，这一次，让我们指定格式，因为我们正在加载一个现有的格式:
 
-```
+```java
 KeyStore ks = KeyStore.getInstance("JKS");
 ks.load(new FileInputStream("newKeyStoreFileName.jks"), pwdArray);
 ```
 
 如果我们的 JVM 不支持我们传递的 keystore 类型，或者如果它与我们正在打开的文件系统上的 keystore 类型不匹配，我们将得到一个`KeyStoreException`:
 
-```
+```java
 java.security.KeyStoreException: KEYSTORE_TYPE not found
 ```
 
 同样，如果密码是错误的，我们将得到一个`UnrecoverableKeyException:`
 
-```
+```java
 java.security.UnrecoverableKeyException: Password verification failed
 ```
 
@@ -110,7 +110,7 @@ java.security.UnrecoverableKeyException: Password verification failed
 2.  **一把钥匙**——被包裹在`KeyStore.SecretKeyEntry`里。
 3.  **一个密码**——它被包在一个叫做`ProtectionParam`的东西里。
 
-```
+```java
 KeyStore.SecretKeyEntry secret
  = new KeyStore.SecretKeyEntry(secretKey);
 KeyStore.ProtectionParameter password
@@ -120,7 +120,7 @@ ks.setEntry("db-encryption-secret", secret, password);
 
 **请记住，密码不能是`null, `然而，它可以是空的** `**String.** `如果我们将密码`null `留给一个条目，我们将得到一个`KeyStoreException:`
 
-```
+```java
 java.security.KeyStoreException: non-null password required to create SecretKeyEntry
 ```
 
@@ -145,7 +145,7 @@ java.security.KeyStoreException: non-null password required to create SecretKeyE
 3.  用于访问条目的密码。这一次，密码是强制性的
 4.  **认证相应公钥的证书链**
 
-```
+```java
 X509Certificate[] certificateChain = new X509Certificate[2];
 chain[0] = clientCert;
 chain[1] = caCert;
@@ -154,13 +154,13 @@ ks.setKeyEntry("sso-signing-key", privateKey, pwdArray, certificateChain);
 
 当然，这里很多地方会出错，比如说`pwdArray`是`null`:
 
-```
+```java
 java.security.KeyStoreException: password can't be null
 ```
 
 但是，有一个非常奇怪的例外需要注意，那就是如果`pwdArray` 是一个空数组:
 
-```
+```java
 java.security.UnrecoverableKeyException: Given final block not properly padded
 ```
 
@@ -172,7 +172,7 @@ java.security.UnrecoverableKeyException: Given final block not properly padded
 
 **存储可信证书非常简单。** **它只需要别名和证书本身**，证书类型为`Certificate`:
 
-```
+```java
 ks.setCertificateEntry("google.com", trustedCertificate);
 ```
 
@@ -190,14 +190,14 @@ ks.setCertificateEntry("google.com", trustedCertificate);
 
 首先，我们可以通过别名提取密钥和证书:
 
-```
+```java
 Key ssoSigningKey = ks.getKey("sso-signing-key", pwdArray);
 Certificate google = ks.getCertificate("google.com");
 ```
 
 如果没有那个名称的条目或者它是不同的类型，那么`getKey `简单地返回`null`:
 
-```
+```java
 public void whenEntryIsMissingOrOfIncorrectType_thenReturnsNull() {
     // ... initialize keystore
     // ... add an entry called "widget-api-secret"
@@ -210,7 +210,7 @@ public void whenEntryIsMissingOrOfIncorrectType_thenReturnsNull() {
 
 但是，如果密匙的密码是错误的，**我们将会得到我们之前讨论过的那个奇怪的错误:**
 
-```
+```java
 java.security.UnrecoverableKeyException: Given final block not properly padded
 ```
 
@@ -218,13 +218,13 @@ java.security.UnrecoverableKeyException: Given final block not properly padded
 
 因为`KeyStore`只是使用一个`Map`来存储条目，所以它公开了检查条目是否存在的能力，而无需检索条目:
 
-```
+```java
 public void whenAddingAlias_thenCanQueryWithoutSaving() {
     // ... initialize keystore
     // ... add an entry called "widget-api-secret"
 ```
 
-```
+```java
  assertTrue(ks.containsAlias("widget-api-secret"));
     assertFalse(ks.containsAlias("some-other-api-secret"));
 }
@@ -236,13 +236,13 @@ public void whenAddingAlias_thenCanQueryWithoutSaving() {
 
 类似于`containsAlias`，除了它还检查条目类型:
 
-```
+```java
 public void whenAddingAlias_thenCanQueryByType() {
     // ... initialize keystore
     // ... add a secret entry called "widget-api-secret"
 ```
 
-```
+```java
  assertTrue(ks.containsAlias("widget-api-secret"));
     assertFalse(ks.entryInstanceOf(
       "widget-api-secret",
@@ -254,22 +254,22 @@ public void whenAddingAlias_thenCanQueryByType() {
 
 `KeyStore`当然，支持删除我们已经添加的条目:
 
-```
+```java
 public void whenDeletingAnAlias_thenIdempotent() {
     // ... initialize a keystore
     // ... add an entry called "widget-api-secret"
 ```
 
-```
+```java
  assertEquals(ks.size(), 1);
 ```
 
-```
+```java
  ks.deleteEntry("widget-api-secret");
     ks.deleteEntry("some-other-api-secret");
 ```
 
-```
+```java
  assertFalse(ks.size(), 0);
 }
 ```
@@ -280,13 +280,13 @@ public void whenDeletingAnAlias_thenIdempotent() {
 
 如果我们想删除我们的密钥库，API 对我们没有帮助，但是我们仍然可以使用 Java 来完成:
 
-```
+```java
 Files.delete(Paths.get(keystorePath));
 ```
 
 或者，作为替代，我们可以保留密钥库，只删除条目:
 
-```
+```java
 Enumeration<String> aliases = keyStore.aliases();
 while (aliases.hasMoreElements()) {
     String alias = aliases.nextElement();

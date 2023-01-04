@@ -14,7 +14,7 @@
 
 作为一个我们可以 dockerize 的应用程序的例子，我们将创建一个简单的 Spring Boot 应用程序，`docker-message-server,`,它公开一个端点并返回一个静态消息:
 
-```
+```java
 @RestController
 public class DockerMessageController {
     @GetMapping("/messages")
@@ -26,13 +26,13 @@ public class DockerMessageController {
 
 有了正确配置的 Maven 文件，我们就可以创建一个可执行的 jar 文件:
 
-```
+```java
 $> mvn clean package
 ```
 
 接下来，我们将启动 Spring Boot 应用程序:
 
-```
+```java
 $> java -jar target/docker-message-server-1.0.0.jar
 ```
 
@@ -40,7 +40,7 @@ $> java -jar target/docker-message-server-1.0.0.jar
 
 为了将应用程序归档，我们首先创建一个名为`Dockerfile`的文件，其内容如下:
 
-```
+```java
 FROM openjdk:8-jdk-alpine
 MAINTAINER baeldung.com
 COPY target/docker-message-server-1.0.0.jar message-server-1.0.0.jar
@@ -56,13 +56,13 @@ ENTRYPOINT ["java","-jar","/message-server-1.0.0.jar"]
 
 为了从我们的`Dockerfile`创建一个图像，我们必须像前面一样运行`‘docker build'`:
 
-```
+```java
 $> docker build --tag=message-server:latest .
 ```
 
 最后，我们能够从我们的映像运行容器:
 
-```
+```java
 $> docker run -p8887:8888 message-server:latest
 ```
 
@@ -72,7 +72,7 @@ $> docker run -p8887:8888 message-server:latest
 
 如果我们以分离模式运行容器，我们可以使用以下命令检查它的详细信息、停止它并删除它:
 
-```
+```java
 $> docker inspect message-server
 $> docker stop message-server
 $> docker rm message-server
@@ -82,7 +82,7 @@ $> docker rm message-server
 
 为了使用不同的 Java 版本，我们可以很容易地改变基本映像。例如，如果我们想使用亚马逊的 Corretto 发行版，我们可以简单地更改`Dockerfile`:
 
-```
+```java
 FROM amazoncorretto:11-alpine-jdk
 MAINTAINER baeldung.com
 COPY target/docker-message-server-1.0.0.jar message-server-1.0.0.jar
@@ -101,7 +101,7 @@ ENTRYPOINT ["java","-jar","/message-server-1.0.0.jar"]
 
 让我们构建一个在不同 Docker 容器中运行的两个应用程序的例子。它们将相互通信，并作为“单一单元”呈现给主机系统。举个简单的例子，我们将创建第二个 Spring Boot 应用程序`docker-product-server`:
 
-```
+```java
 @RestController
 public class DockerProductController {
     @GetMapping("/products")
@@ -117,7 +117,7 @@ public class DockerProductController {
 
 我们可以将两种服务的配置合并到一个名为`docker-compose.yml`的文件中:
 
-```
+```java
 version: '2'
 services:
     message-server:
@@ -156,13 +156,13 @@ networks:
 
 在继续之前，我们将检查构建文件中的语法错误:
 
-```
+```java
 $> docker-compose config
 ```
 
 然后，我们可以构建我们的映像，创建已定义的容器，并在一个命令中启动它:
 
-```
+```java
 $> docker-compose up --build
 ```
 
@@ -170,7 +170,7 @@ $> docker-compose up --build
 
 要停止容器，从`Docker`上取下容器，并从容器上取下连接的`networks`。为此，我们可以使用相反的命令:
 
-```
+```java
 $> docker-compose down
 ```
 
@@ -184,14 +184,14 @@ $> docker-compose down
 
 对于端口，我们可以告诉 Docker 将主机上的一系列端口映射到 Docker 内部的一个特定端口:
 
-```
+```java
 ports:
     - 18800-18888:8888
 ```
 
 之后，我们能够像这样扩展我们的服务(注意，我们使用的是修改过的`yml-file`):
 
-```
+```java
 $> docker-compose --file docker-compose-scale.yml up -d --build --scale message-server=1 product-server=1
 ```
 
@@ -199,7 +199,7 @@ $> docker-compose --file docker-compose-scale.yml up -d --build --scale message-
 
 为了扩展我们的服务，我们可以运行以下命令:
 
-```
+```java
 $> docker-compose --file docker-compose-scale.yml up -d --build --scale message-server=3 product-server=2
 ```
 
@@ -211,7 +211,7 @@ $> docker-compose --file docker-compose-scale.yml up -d --build --scale message-
 
 为此，我们可以使用带有 Alpine 的`Dockerfile`作为基础映像，并安装我们选择的 JDK:
 
-```
+```java
 FROM alpine:edge
 MAINTAINER baeldung.com
 RUN apk add --no-cache openjdk8
@@ -223,7 +223,7 @@ RUN apk add --no-cache openjdk8
 
 为了最终构建映像并将其存储在本地库中，我们必须运行:
 
-```
+```java
 docker build --tag=alpine-java:base --rm=true .
 ```
 
@@ -235,13 +235,13 @@ docker build --tag=alpine-java:base --rm=true .
 
 **Spring Boot 2.3 增加了对** [**buildpacks**](https://web.archive.org/web/20221001124930/https://buildpacks.io/) 的支持。简而言之，我们不用创建自己的 Dockerfile 并使用类似于`docker build`的东西来构建它，我们所要做的就是发出以下命令:
 
-```
+```java
 $ mvn spring-boot:build-image
 ```
 
 同样，在《格雷尔:
 
-```
+```java
 $ ./gradlew bootBuildImage
 ```
 
@@ -257,13 +257,13 @@ buildpacks 背后的主要动机是创建一些知名云服务(如 Heroku 或 Cl
 
 当我们列出可用的 docker 图像时:
 
-```
+```java
 docker image ls -a
 ```
 
 我们看到我们刚刚创建的图像有一条线:
 
-```
+```java
 docker-message-server 1.0.0 b535b0cc0079
 ```
 
@@ -271,7 +271,7 @@ docker-message-server 1.0.0 b535b0cc0079
 
 然后，要启动我们的容器，我们只需运行:
 
-```
+```java
 docker run -it -p9099:8888 docker-message-server:1.0.0
 ```
 

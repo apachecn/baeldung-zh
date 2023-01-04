@@ -14,21 +14,21 @@
 
 让我们来看看两个整数:
 
-```
+```java
 int six = 6;
 int five = 5;
 ```
 
 接下来，让我们对这些数字应用按位 AND 运算符:
 
-```
+```java
 int resultShouldBeFour = six & five;
 assertEquals(4, resultShouldBeFour);
 ```
 
 为了理解这个操作，让我们来看看每个数字的二进制表示:
 
-```
+```java
 Binary of decimal 4: 0100
 Binary of decimal 5: 0101
 Binary of decimal 6: 0110
@@ -36,7 +36,7 @@ Binary of decimal 6: 0110
 
 &运算符对每个位执行逻辑 AND 运算，并返回一个新的二进制数:
 
-```
+```java
 0110
 0101
 -----
@@ -47,7 +47,7 @@ Binary of decimal 6: 0110
 
 让我们看看测试 Java 代码:
 
-```
+```java
 int six = 6;
 int five = 5;
 int resultShouldBeFour = six & five;
@@ -60,7 +60,7 @@ assertEquals(4, resultShouldBeFour);
 
 让我们来看三个`boolean`变量:
 
-```
+```java
 boolean trueBool = true;
 boolean anotherTrueBool = true;
 boolean falseBool = false;
@@ -68,7 +68,7 @@ boolean falseBool = false;
 
 接下来，让我们对变量`trueBool`和`anotherTrueBool`应用按位 AND 运算符:
 
-```
+```java
 boolean trueANDtrue = trueBool & anotherTrueBool;
 ```
 
@@ -76,7 +76,7 @@ boolean trueANDtrue = trueBool & anotherTrueBool;
 
 接下来，让我们对`trueBool`和`falseBool`应用按位 AND 运算符:
 
-```
+```java
 boolean trueANDFalse = trueBool & falseBool;
 ```
 
@@ -84,7 +84,7 @@ boolean trueANDFalse = trueBool & falseBool;
 
 让我们看看测试 Java 代码:
 
-```
+```java
 boolean trueBool = true;
 boolean anotherTrueBool = true;
 boolean falseBool = false;
@@ -102,7 +102,7 @@ assertFalse(trueANDFalse);
 
 让我们来看三个`boolean`变量:
 
-```
+```java
 boolean trueBool = true;
 boolean anotherTrueBool = true;
 boolean falseBool = false;
@@ -110,7 +110,7 @@ boolean falseBool = false;
 
 接下来，让我们对变量`trueBool`和`anotherTrueBool`应用逻辑 AND 运算符:
 
-```
+```java
 boolean trueANDtrue = trueBool && anotherTrueBool;
 ```
 
@@ -118,7 +118,7 @@ boolean trueANDtrue = trueBool && anotherTrueBool;
 
 接下来，让我们对`trueBool`和`falseBool`应用逻辑 AND 运算符:
 
-```
+```java
 boolean trueANDFalse = trueBool && falseBool;
 ```
 
@@ -126,7 +126,7 @@ boolean trueANDFalse = trueBool && falseBool;
 
 让我们看看测试 Java 代码:
 
-```
+```java
 boolean trueBool = true;
 boolean anotherTrueBool = true;
 boolean falseBool = false;
@@ -147,14 +147,14 @@ assertFalse(falseANDFalse);
 
 让我们假设两个表达式的值为假:
 
-```
+```java
 First Expression: 2<1
 Second Expression: 4<5 
 ```
 
 当我们对表达式`2<1` 和 `4<5,` 应用逻辑 AND 运算符时，它只计算第一个表达式`2<1`并返回 `false.`
 
-```
+```java
 boolean shortCircuitResult = (2<1) && (4<5);
 assertFalse(shortCircuitResult);
 ```
@@ -163,7 +163,7 @@ assertFalse(shortCircuitResult);
 
 我们可以对布尔或数字类型使用&运算符，但&&只能用于布尔操作数。对整数操作数使用它会导致编译错误:
 
-```
+```java
 int five = 2;
 int six = 4;
 int result = five && six;

@@ -16,7 +16,7 @@
 
 **在这个场景中，我们将遵循最初的四人组设计和命名约定。**首先，我们将创建一个`ChristmasTree` 接口及其实现:
 
-```
+```java
 public interface ChristmasTree {
     String decorate();
 }
@@ -24,7 +24,7 @@ public interface ChristmasTree {
 
 这个接口的实现看起来像这样:
 
-```
+```java
 public class ChristmasTreeImpl implements ChristmasTree {
 
     @Override
@@ -36,7 +36,7 @@ public class ChristmasTreeImpl implements ChristmasTree {
 
 我们现在将为这个树创建一个抽象的`TreeDecorator`类。这个装饰器将实现`ChristmasTree` 接口并持有相同的对象。从同一个接口实现的方法将简单地从我们的接口调用`decorate()` 方法:
 
-```
+```java
 public abstract class TreeDecorator implements ChristmasTree {
     private ChristmasTree tree;
 
@@ -50,7 +50,7 @@ public abstract class TreeDecorator implements ChristmasTree {
 
 我们现在将创建一些装饰元素。这些装饰者将扩展我们的抽象`TreeDecorator`类，并将根据我们的需求修改它的`decorate()` 方法:
 
-```
+```java
 public class BubbleLights extends TreeDecorator {
 
     public BubbleLights(ChristmasTree tree) {
@@ -69,7 +69,7 @@ public class BubbleLights extends TreeDecorator {
 
 对于这种情况，以下情况成立:
 
-```
+```java
 @Test
 public void whenDecoratorsInjectedAtRuntime_thenConfigSuccess() {
     ChristmasTree tree1 = new Garland(new ChristmasTreeImpl());

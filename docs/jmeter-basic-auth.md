@@ -12,7 +12,7 @@
 
 基本身份验证是我们可以用来保护 web 资源的最简单的访问控制方法。它由客户端发送的 HTTP 报头组成:
 
-```
+```java
 Authorization: Basic <credentials>
 ```
 
@@ -52,7 +52,7 @@ Authorization: Basic <credentials>
 
 有了这个组件，我们可以在运行时执行脚本。我们需要提供一个脚本来检索凭证并对它们进行编码。让我们使用 Java:
 
-```
+```java
 import org.apache.commons.codec.binary.Base64;
 
 String username = vars.get("username");

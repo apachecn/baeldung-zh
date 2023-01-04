@@ -30,7 +30,7 @@ Spring 概要文件帮助 Spring 应用程序为不同的环境定义不同的�
 
 `application.yml`文件的相对路径是`/myApplication/src/main/resources/application.yml:`
 
-```
+```java
 spring:
     config:
         activate:
@@ -61,7 +61,7 @@ servers:
 
 为了从属性文件中加载一组相关的属性，我们将创建一个 bean 类:
 
-```
+```java
 @Configuration
 @EnableConfigurationProperties
 @ConfigurationProperties
@@ -91,13 +91,13 @@ public class YAMLConfig {
 
 属性文件的相对路径是`/myApplication/src/main/resources/application.properties:`
 
-```
+```java
 spring.profiles.active=prod
 ```
 
 在这个例子中，我们将使用`CommandLineRunner:`来显示属性
 
-```
+```java
 @SpringBootApplication
 public class MyApplication implements CommandLineRunner {
 
@@ -120,7 +120,7 @@ public class MyApplication implements CommandLineRunner {
 
 命令行上的输出:
 
-```
+```java
 using environment: production
 name: prod-YAML
 enabled: true

@@ -12,7 +12,7 @@
 
 为了使用致动器，我们需要在我们的 Maven 配置中包括`[spring-boot-starter-actuator](https://web.archive.org/web/20220628065013/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-actuator)`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-actuator</artifactId>
@@ -22,7 +22,7 @@
 
 此外，从 Spring Boot 2.0 开始，**如果我们想通过 HTTP** 公开我们的端点，我们需要包含 [web starter](https://web.archive.org/web/20220628065013/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-web) :
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -38,7 +38,7 @@
 
 让我们转到`http://localhost:8080/actuator`并查看可用端点列表，因为致动器端点已启用 HATEOS。我们应该看到`/health`和`/info`。
 
-```
+```java
 {"_links":{"self":{"href":"http://localhost:8080/actuator","templated":false},
 "health":{"href":"http://localhost:8080/actuator/health","templated":false},
 "info":{"href":"http://localhost:8080/actuator/info","templated":false}}}
@@ -48,13 +48,13 @@
 
 现在，让我们通过修改我们的`application.properties`文件来公开除了`/shutdown`之外的所有端点:
 
-```
+```java
 management.endpoints.web.exposure.include=*
 ```
 
 一旦我们重启了服务器并再次访问了`/actuator`端点，我们应该会看到除了`/shutdown:`之外的其他可用端点
 
-```
+```java
 {"_links":{"self":{"href":"http://localhost:8080/actuator","templated":false},
 "beans":{"href":"http://localhost:8080/actuator/beans","templated":false},
 "caches":{"href":"http://localhost:8080/actuator/caches","templated":false},
@@ -77,13 +77,13 @@ management.endpoints.web.exposure.include=*
 
 `management.endpoints.web.exposure.include`属性也可以接受逗号分隔的端点列表。所以，我们只曝光`/beans`和`/loggers`:
 
-```
+```java
 management.endpoints.web.exposure.include=beans, loggers
 ```
 
 除了用属性包含某些端点之外，我们还可以排除端点。让我们公开除了`/threaddump`之外的所有端点:
 
-```
+```java
 management.endpoints.web.exposure.include=*
 management.endpoints.web.exposure.exclude=threaddump
 ```
@@ -96,13 +96,13 @@ management.endpoints.web.exposure.exclude=threaddump
 
 首先，我们需要关闭启用所有端点的默认设置:
 
-```
+```java
 management.endpoints.enabled-by-default=false
 ```
 
 接下来，让我们只启用和公开`/health`端点:
 
-```
+```java
 management.endpoint.health.enabled=true
 management.endpoints.web.exposure.include=health
 ```
@@ -115,13 +115,13 @@ management.endpoints.web.exposure.include=health
 
 让我们现在通过在我们的`application.properties`文件中添加一行来启用它:
 
-```
+```java
 management.endpoint.shutdown.enabled=true
 ```
 
 现在，当我们查询`/actuator`端点时，我们应该看到它被列出。**`/shutdown`端点只接受`POST`请求**，所以让我们优雅地关闭我们的应用程序:
 
-```
+```java
 curl -X POST http://localhost:8080/actuator/shutdown
 ```
 
@@ -131,7 +131,7 @@ curl -X POST http://localhost:8080/actuator/shutdown
 
 首先，让我们通过添加[安全启动器 Maven 依赖项](https://web.archive.org/web/20220628065013/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-starter-security)来增加应用程序的安全性:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -145,7 +145,7 @@ curl -X POST http://localhost:8080/actuator/shutdown
 
 让我们从排除默认安全配置开始:
 
-```
+```java
 @SpringBootApplication(exclude = { 
     SecurityAutoConfiguration.class, 
     ManagementWebSecurityAutoConfiguration.class 
@@ -156,7 +156,7 @@ curl -X POST http://localhost:8080/actuator/shutdown
 
 在我们的配置类中，让我们配置几个用户和角色，这样我们就有一个`ADMIN`角色可以使用:
 
-```
+```java
 @Override
 protected void configure(AuthenticationManagerBuilder auth) throws Exception {
     PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -176,7 +176,7 @@ SpringBoot 为我们提供了一个方便的请求匹配器，用于我们的执
 
 让我们用它将我们的`/actuator`锁定在`ADMIN`角色上:
 
-```
+```java
 http.requestMatcher(EndpointRequest.toAnyEndpoint())
   .authorizeRequests((requests) -> requests.anyRequest().hasRole("ADMIN"));
 ```

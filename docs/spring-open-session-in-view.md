@@ -24,7 +24,7 @@
 
 **默认情况下，OSIV 在 Spring Boot 申请中是活跃的**。尽管如此，从 Spring Boot 2.0 开始，它警告我们，如果我们没有明确配置它，它会在应用程序启动时启用:
 
-```
+```java
 spring.jpa.open-in-view is enabled by default. Therefore, database 
 queries may be performed during view rendering.Explicitly configure 
 spring.jpa.open-in-view to disable this warning
@@ -32,7 +32,7 @@ spring.jpa.open-in-view to disable this warning
 
 无论如何，我们可以通过使用`spring.jpa.open-in-view`配置属性来禁用 OSIV:
 
-```
+```java
 spring.jpa.open-in-view=false
 ```
 
@@ -48,7 +48,7 @@ spring.jpa.open-in-view=false
 
 为了更好地理解这一点，让我们假设我们正在对我们的用户及其安全权限进行建模:
 
-```
+```java
 @Entity
 @Table(name = "users")
 public class User {
@@ -70,7 +70,7 @@ public class User {
 
 然后，在我们的服务层实现中，让我们使用`@Transactional`明确划分我们的事务边界:
 
-```
+```java
 @Service
 public class SimpleUserService implements UserService {
 
@@ -102,7 +102,7 @@ public class SimpleUserService implements UserService {
 
 让我们编写一个简单的 REST 控制器，看看我们是否可以使用`permissions` 属性:
 
-```
+```java
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -126,7 +126,7 @@ public class UserController {
 
 这里，我们在实体到 DTO 的转换过程中迭代`permissions `。因为我们预计转换会因`LazyInitializationException,`而失败，所以下面的测试应该不会通过:
 
-```
+```java
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -167,7 +167,7 @@ class UserControllerIntegrationTest {
 
 **如果没有启用 OSIV，我们将不得不在事务上下文中手动初始化所有必要的惰性关联**。最基本的(通常也是错误的)方法是使用`Hibernate.initialize() `方法:
 
-```
+```java
 @Override
 @Transactional(readOnly = true)
 public Optional<User> findOne(String username) {
@@ -184,7 +184,7 @@ public Optional<User> findOne(String username) {
 
 假设我们必须扩展我们的简单用户服务，以便在从数据库获取用户后**调用另一个远程服务:**
 
-```
+```java
 @Override
 public Optional<User> findOne(String username) {
     Optional<User> user = userRepository.findByUsername(username);
@@ -218,7 +218,7 @@ public Optional<User> findOne(String username) {
 
 因此，在 OSIV 面前，我们看似无辜且最近优化的服务实现是一个灾难的处方:
 
-```
+```java
 @Override
 public Optional<User> findOne(String username) {
     Optional<User> user = userRepository.findByUsername(username);
@@ -268,7 +268,7 @@ OSIV 是一种模式还是一种反模式并不重要。这里最重要的是我
 
 在 Spring Data JPA 中定义查询方法时，我们可以用`@EntityGraph `到[来注释一个查询方法，急切地获取实体](/web/20221013182823/https://www.baeldung.com/spring-data-jpa-named-entity-graphs)的某个部分:
 
-```
+```java
 public interface UserRepository extends JpaRepository<User, Long> {
 
     @EntityGraph(attributePaths = "permissions")
@@ -280,7 +280,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 如果我们需要从同一个查询返回多个投影，那么我们应该用不同的实体图配置定义多个查询:
 
-```
+```java
 public interface UserRepository extends JpaRepository<User, Long> {
     @EntityGraph(attributePaths = "permissions")
     Optional<User> findDetailedByUsername(String username);
@@ -293,7 +293,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 有人可能会说，不使用实体图，我们可以使用臭名昭著的`Hibernate.initialize() `来获取我们需要的懒惰关联:
 
-```
+```java
 @Override
 @Transactional(readOnly = true)
 public Optional<User> findOne(String username) {
@@ -306,7 +306,7 @@ public Optional<User> findOne(String username) {
 
 他们可能很聪明，还建议调用`getPermissions() `方法来触发获取过程:
 
-```
+```java
 Optional<User> user = userRepository.findByUsername(username);
 user.ifPresent(u -> {
     Set<String> permissions = u.getPermissions();
@@ -316,7 +316,7 @@ user.ifPresent(u -> {
 
 这两种方法都不推荐，因为**除了最初的查询之外，它们(至少)会导致一个额外的查询**来获取惰性关联。也就是说，Hibernate 生成以下查询来获取用户及其权限:
 
-```
+```java
 > select u.id, u.username from users u where u.username=?
 > select p.user_id, p.permissions from user_permissions p where p.user_id=? 
 ```
@@ -325,7 +325,7 @@ user.ifPresent(u -> {
 
 另一方面，如果我们使用实体图或者甚至是[获取连接](/web/20221013182823/https://www.baeldung.com/jpa-join-types)，Hibernate 将通过一个查询获取所有必要的数据:
 
-```
+```java
 > select u.id, u.username, p.user_id, p.permissions from users u 
   left outer join user_permissions p on u.id=p.user_id where u.username=?
 ```

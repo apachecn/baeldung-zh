@@ -25,7 +25,7 @@ Getters 和 Setters 在检索和更新封装类之外的变量值时起着重要
 
 第三，我们不能为变量的变化提供任何条件逻辑。让我们假设我们有一个带有字段`retirementAge`的类`Employee`:
 
-```
+```java
 public class Employee {
     public String name;
     public int retirementAge;
@@ -36,7 +36,7 @@ public class Employee {
 
 注意，这里我们已经将字段设置为 public，以允许从类`Employee`外部访问。现在，我们需要更改员工的`retirementAge`:
 
-```
+```java
 public class RetirementAgeModifier {
 
     private Employee employee = new Employee("John", 58);
@@ -72,7 +72,7 @@ public class RetirementAgeModifier {
 
 公共变量可以在类外使用点(.)运算符。对公共变量使用 getters 和 setters 是没有意义的:
 
-```
+```java
 public class Employee {
     public String name;
     public int retirementAge;
@@ -95,7 +95,7 @@ public class Employee {
 
 当我们在 setter 方法中直接分配对象引用时，这两个引用都指向内存中的一个对象。因此，使用任何引用变量进行的更改实际上都是在同一个对象上进行的:
 
-```
+```java
 public void setEmployee(Employee employee) {
     this.employee = employee;
 }
@@ -103,7 +103,7 @@ public void setEmployee(Employee employee) {
 
 然而，我们可以使用[深度复制](/web/20221128100505/https://www.baeldung.com/java-deep-copy)将所有元素从一个对象复制到另一个对象。因此，`this`对象的状态变得独立于现有的(传递的)employee 对象:
 
-```
+```java
 public void setEmployee(Employee employee) {
     this.employee.setName(employee.getName());
     this.employee.setRetirementAge(employee.getRetirementAge());
@@ -114,7 +114,7 @@ public void setEmployee(Employee employee) {
 
 类似地，如果 getter 方法直接返回对象的引用，任何人都可以从外部代码使用该引用来更改对象的状态:
 
-```
+```java
 public Employee getEmployee() {
     return this.employee;
 }
@@ -122,7 +122,7 @@ public Employee getEmployee() {
 
 让我们使用这个 `getEmployee()`方法并改变`retirementAge:`
 
-```
+```java
 private void modifyAge() {
     Employee employeeTwo = getEmployee();
     employeeTwo.setRetirementAge(65);
@@ -133,7 +133,7 @@ private void modifyAge() {
 
 因此，我们应该返回对象的副本，而不是从 getter 方法返回引用。其中一种方法如下:
 
-```
+```java
 public Employee getEmployee() {
     return new Employee(this.employee.getName(), this.employee.getRetirementAge());
 }
@@ -147,7 +147,7 @@ public Employee getEmployee() {
 
 通过 getters 和 setters，我们可以控制成员变量的访问和赋值。但是，在许多地方，事实证明这是不必要的。此外，它使代码变得冗长:
 
-```
+```java
 private String name;
 
 public String getName() {

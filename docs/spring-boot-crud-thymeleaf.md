@@ -26,7 +26,7 @@ Learn about Thymeleaf template locations.[Read more](/web/20220712173816/https:/
 
 因此，我们不需要在我们的`pom.xml`文件中指定项目依赖项的版本，除非覆盖 Java 版本:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -58,7 +58,7 @@ Learn about Thymeleaf template locations.[Read more](/web/20220712173816/https:/
 
 为了简单起见，这一层将包括一个负责建模`User`实体的类:
 
-```
+```java
 @Entity
 public class User {
 
@@ -92,7 +92,7 @@ Spring Data JPA **允许我们毫不费力地实现基于 JPA 的存储库(DAO �
 
 为了给我们的应用程序提供关于`User`对象的基本 CRUD 功能，我们只需要扩展`CrudRepository`接口:
 
-```
+```java
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {}
 ```
@@ -115,7 +115,7 @@ public interface UserRepository extends CrudRepository<User, Long> {}
 
 否则，一旦保存了实体，持久化实体的列表将在相应的视图中更新:
 
-```
+```java
 @Controller
 public class UserController {
 
@@ -140,7 +140,7 @@ public class UserController {
 
 我们还需要一个针对`/index` URL 的映射:
 
-```
+```java
 @GetMapping("/index")
 public String showUserList(Model model) {
     model.addAttribute("users", userRepository.findAll());
@@ -154,7 +154,7 @@ public String showUserList(Model model) {
 
 因此，可以用`name`和`email`字段的值填充表单:
 
-```
+```java
 @GetMapping("/edit/{id}")
 public String showUpdateForm(@PathVariable("id") long id, Model model) {
     User user = userRepository.findById(id)
@@ -171,7 +171,7 @@ public String showUpdateForm(@PathVariable("id") long id, Model model) {
 
 在任一情况下，持久化实体的列表将相应地更新:
 
-```
+```java
 @PostMapping("/update/{id}")
 public String updateUser(@PathVariable("id") long id, @Valid User user, 
   BindingResult result, Model model) {
@@ -203,7 +203,7 @@ public String deleteUser(@PathVariable("id") long id, Model model) {
 
 下面是`add-user.html`文件的相关部分:
 
-```
+```java
 <form action="#" th:action="@{/adduser}" th:object="${user}" method="post">
     <label for="name">Name</label>
     <input type="text" th:field="*{name}" id="name" placeholder="Name">
@@ -219,7 +219,7 @@ public String deleteUser(@PathVariable("id") long id, Model model) {
 
 类似于`add-user.html`，这里是`update-user.html`模板的样子:
 
-```
+```java
 <form action="#" 
   th:action="@{/update/{id}(id=${user.id})}" 
   th:object="${user}" 
@@ -236,7 +236,7 @@ public String deleteUser(@PathVariable("id") long id, Model model) {
 
 最后，我们有一个`index.html`文件，它显示了持久化实体的列表，以及用于编辑和删除现有实体的链接:
 
-```
+```java
 <div th:switch="${users}">
     <h2 th:case="null">No users yet!</h2>
         <div th:case="*">
@@ -274,7 +274,7 @@ public String deleteUser(@PathVariable("id") long id, Model model) {
 
 像大多数 Spring Boot 应用程序一样，我们可以用一个简单的老方法来实现:
 
-```
+```java
 @SpringBootApplication
 public class Application {
 

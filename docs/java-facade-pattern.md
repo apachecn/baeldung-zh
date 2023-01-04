@@ -28,7 +28,7 @@
 
 如您所见，**这可能相当复杂，需要一些努力才能正确启动发动机**:
 
-```
+```java
 airFlowController.takeAir()
 fuelInjector.on()
 fuelInjector.inject()
@@ -40,7 +40,7 @@ catalyticConverter.on()
 
 同样，停止发动机也需要几个步骤:
 
-```
+```java
 fuelInjector.off()
 catalyticConverter.off()
 coolingController.cool(MAX_ALLOWED_TEMP)
@@ -52,7 +52,7 @@ airFlowController.off()
 
 让我们看看如何实现它:
 
-```
+```java
 public class CarEngineFacade {
     private static int DEFAULT_COOLING_TEMP = 90;
     private static int MAX_ALLOWED_TEMP = 50;
@@ -84,7 +84,7 @@ public class CarEngineFacade {
 
 现在，**要启动和停止一辆汽车，我们只需要 2 行代码，而不是 13 行:**
 
-```
+```java
 facade.startEngine();
 // ...
 facade.stopEngine();

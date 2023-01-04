@@ -14,7 +14,7 @@
 
 我们将为此使用原子标记:
 
-```
+```java
 public class ControlSubThread implements Runnable {
 
     private Thread worker;
@@ -62,7 +62,7 @@ public class ControlSubThread implements Runnable {
 
 我们可以为这些情况创建`interrupt()`，让我们给这个类添加一些方法和一个新的标志:
 
-```
+```java
 public class ControlSubThread implements Runnable {
 
     private Thread worker;

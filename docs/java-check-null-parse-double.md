@@ -14,13 +14,13 @@
 
 首先，让我们了解一下**如果我们在解析一个 S `tring`** 时不检查`null`值会发生什么。让我们从路过一个空的`String`开始:
 
-```
+```java
 double emptyString = Double.parseDouble("");
 ```
 
 当我们运行这段代码时，它会抛出一个`java.lang.NumberFormatException`:
 
-```
+```java
 Exception in thread "main" java.lang.NumberFormatException: empty String
 	at sun.misc.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:1842)
 	at sun.misc.FloatingDecimal.parseDouble(FloatingDecimal.java:110)
@@ -30,13 +30,13 @@ Exception in thread "main" java.lang.NumberFormatException: empty String
 
 现在让我们考虑传递一个`null`引用:
 
-```
+```java
 double nullString = Double.parseDouble(null);
 ```
 
 不出所料，这次会抛出一个`java.lang.NullPointerException`:
 
-```
+```java
 Exception in thread "main" java.lang.NullPointerException
 	at sun.misc.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:1838)
 	at sun.misc.FloatingDecimal.parseDouble(FloatingDecimal.java:110)
@@ -54,7 +54,7 @@ Exception in thread "main" java.lang.NullPointerException
 
 让我们从定义一个简单的方法开始，该方法将检查我们传递的值是`null`还是空的`String`:
 
-```
+```java
 private static double parseStringToDouble(String value) {
     return value == null || value.isEmpty() ? Double.NaN : Double.parseDouble(value);
 }
@@ -64,7 +64,7 @@ private static double parseStringToDouble(String value) {
 
 **我们可以更进一步，提供预定义默认值**的可能性:
 
-```
+```java
 private static double parseStringToDouble(String value, double defaultValue) {
     return value == null || value.isEmpty() ? defaultValue : Double.parseDouble(value);
 }
@@ -72,7 +72,7 @@ private static double parseStringToDouble(String value, double defaultValue) {
 
 当我们调用这个方法时，如果提供的值为`null`或空，我们提供一个适当的默认值来返回:
 
-```
+```java
 assertThat(parseStringToDouble("1", 2.0d)).isEqualTo(1.0d);
 assertThat(parseStringToDouble(null, 1.0d)).isEqualTo(1.0d);
 assertThat(parseStringToDouble("", 1.0d)).isEqualTo(1.0d);
@@ -82,7 +82,7 @@ assertThat(parseStringToDouble("", 1.0d)).isEqualTo(1.0d);
 
 现在让我们来看看 [`Optional`](/web/20221208143926/https://www.baeldung.com/java-optional) 的**用法的不同解决方案:**
 
-```
+```java
 private static Optional parseStringToOptionalDouble(String value) {
     return value == null || value.isEmpty() ? Optional.empty() : Optional.of(Double.valueOf(value));
 }
@@ -90,13 +90,13 @@ private static Optional parseStringToOptionalDouble(String value) {
 
 这一次，我们使用`Optional`作为[返回类型](/web/20221208143926/https://www.baeldung.com/java-optional-return)。因此，当我们调用这个方法时，我们就有可能调用标准方法，比如`isPresent()`和`isEmpty()`，来确定一个值是否存在:
 
-```
+```java
 parseStringToOptionalDouble("2").isPresent()
 ```
 
 我们也可以使用`Optional`的`orElse`方法返回一个默认值:
 
-```
+```java
 parseStringToOptionalDouble("1.0").orElse(2.0d) 
 parseStringToOptionalDouble(null).orElse(2.0d) 
 parseStringToOptionalDouble("").orElse(2.0d)
@@ -110,7 +110,7 @@ parseStringToOptionalDouble("").orElse(2.0d)
 
 我们要看的第一个外部解决方案是[谷歌番石榴](/web/20221208143926/https://www.baeldung.com/whats-new-in-guava-19)，它可以在 [Maven Central](https://web.archive.org/web/20221208143926/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.google.guava%22%20AND%20a%3A%22guava%22) 上获得:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -120,7 +120,7 @@ parseStringToOptionalDouble("").orElse(2.0d)
 
 我们可以简单地使用`Doubles.tryParse`方法:
 
-```
+```java
 Doubles.tryParse(MoreObjects.firstNonNull("1.0", "2.0"))
 Doubles.tryParse(MoreObjects.firstNonNull(null, "2.0"))
 ```
@@ -129,7 +129,7 @@ Doubles.tryParse(MoreObjects.firstNonNull(null, "2.0"))
 
 这段代码在大多数情况下都能正常工作，但是让我们想象一个不同的例子:
 
-```
+```java
 Doubles.tryParse(MoreObjects.firstNonNull("", "2.0"))
 ```
 
@@ -141,7 +141,7 @@ Doubles.tryParse(MoreObjects.firstNonNull("", "2.0"))
 
 从 [Maven Central](https://web.archive.org/web/20221208143926/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.commons%22%20AND%20a%3A%22commons-lang3%22) 可以获得 [Apache Commons Lang](https://web.archive.org/web/20221208143926/https://commons.apache.org/proper/commons-lang/) 工件:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -151,7 +151,7 @@ Doubles.tryParse(MoreObjects.firstNonNull("", "2.0"))
 
 那么我们可以简单地使用来自`NumberUtils`的方法`toDouble`:
 
-```
+```java
 NumberUtils.toDouble("1.0")
 NumberUtils.toDouble("1.0", 1.0d) 
 ```
@@ -163,7 +163,7 @@ NumberUtils.toDouble("1.0", 1.0d)
 
 如果我们传递一个空值或`null`值，默认情况下会返回`0.0d`:
 
-```
+```java
 assertThat(NumberUtils.toDouble("")).isEqualTo(0.0d);
 assertThat(NumberUtils.toDouble(null)).isEqualTo(0.0d);
 ```
@@ -176,7 +176,7 @@ assertThat(NumberUtils.toDouble(null)).isEqualTo(0.0d);
 
 和往常一样，这个神器可以在 [Maven Central](https://web.archive.org/web/20221208143926/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22io.vavr%22%20AND%20a%3A%22vavr%22) 上找到:
 
-```
+```java
 <dependency>
     <groupId>io.vavr</groupId>
     <artifactId>vavr</artifactId>
@@ -186,7 +186,7 @@ assertThat(NumberUtils.toDouble(null)).isEqualTo(0.0d);
 
 同样，我们将定义一个使用 vavr [`Try`](/web/20221208143926/https://www.baeldung.com/vavr-try) 类的简单方法:
 
-```
+```java
 public static double tryStringToDouble(String value, double defaultValue) {
     return Try.of(() -> Double.parseDouble(value)).getOrElse(defaultValue);
 } 
@@ -194,7 +194,7 @@ public static double tryStringToDouble(String value, double defaultValue) {
 
 我们将以与其他示例完全相同的方式调用该方法:
 
-```
+```java
 assertThat(tryStringToDouble("1", 2.0d)).isEqualTo(1.0d);
 assertThat(tryStringToDouble(null, 2.0d)).isEqualTo(2.0d);
 assertThat(tryStringToDouble("", 2.0d)).isEqualTo(2.0d);

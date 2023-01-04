@@ -12,7 +12,7 @@
 
 假设我们想要一个与特定线程绑定的`Integer`值:
 
-```
+```java
 ThreadLocal<Integer> threadLocalValue = new ThreadLocal<>();
 ```
 
@@ -20,20 +20,20 @@ ThreadLocal<Integer> threadLocalValue = new ThreadLocal<>();
 
 因此，当我们在`threadLocalValue`上调用`get()`方法时，我们将获得请求线程的`Integer`值:
 
-```
+```java
 threadLocalValue.set(1);
 Integer result = threadLocalValue.get();
 ```
 
 我们可以通过使用`withInitial()`静态方法并向其传递一个供应商来构造`ThreadLocal`的实例:
 
-```
+```java
 ThreadLocal<Integer> threadLocal = ThreadLocal.withInitial(() -> 1);
 ```
 
 要从`ThreadLocal`中删除值，我们可以调用`remove()`方法:
 
-```
+```java
 threadLocal.remove();
 ```
 
@@ -43,7 +43,7 @@ threadLocal.remove();
 
 让我们考虑一个程序，它需要为每个给定的用户 id 存储特定于用户的`Context`数据:
 
-```
+```java
 public class Context {
     private String userName;
 
@@ -57,7 +57,7 @@ public class Context {
 
 接下来，我们将上下文存储在由`userId`键控的`ConcurentHashMap`中:
 
-```
+```java
 public class SharedMapWithUserContext implements Runnable {
 
     public static Map<Integer, Context> userContextPerUserId
@@ -77,7 +77,7 @@ public class SharedMapWithUserContext implements Runnable {
 
 通过为两个不同的`userIds,`创建并启动两个线程，并断言我们在`userContextPerUserId`映射中有两个条目，我们可以很容易地测试我们的代码:
 
-```
+```java
 SharedMapWithUserContext firstUser = new SharedMapWithUserContext(1);
 SharedMapWithUserContext secondUser = new SharedMapWithUserContext(2);
 new Thread(firstUser).start();
@@ -94,7 +94,7 @@ assertEquals(SharedMapWithUserContext.userContextPerUserId.size(), 2);
 
 `run()`方法将获取用户上下文，并使用`set()`方法将其存储到`ThreadLocal`变量中:
 
-```
+```java
 public class ThreadLocalWithUserContext implements Runnable {
 
     private static ThreadLocal<Context> userContext 
@@ -116,7 +116,7 @@ public class ThreadLocalWithUserContext implements Runnable {
 
 我们可以通过启动两个线程来测试它，这两个线程将针对给定的`userId`执行动作:
 
-```
+```java
 ThreadLocalWithUserContext firstUser 
   = new ThreadLocalWithUserContext(1);
 ThreadLocalWithUserContext secondUser 
@@ -127,7 +127,7 @@ new Thread(secondUser).start();
 
 运行这段代码后，我们将在标准输出中看到 `ThreadLocal`是为每个给定线程设置的:
 
-```
+```java
 thread context for given userId: 1 is: Context{userNameSecret='18a78f8e-24d2-4abf-91d6-79eaa198123f'}
 thread context for given userId: 2 is: Context{userNameSecret='e19f6a0a-253e-423e-8b2b-bca1f471ae5c'}
 ```
@@ -156,7 +156,7 @@ thread context for given userId: 2 is: Context{userNameSecret='e19f6a0a-253e-423
 
 因此，我们可以扩展`ThreadPoolExecutor`类并删除`afterExecute()`方法中的`ThreadLocal`数据:
 
-```
+```java
 public class ThreadLocalAwareThreadPool extends ThreadPoolExecutor {
 
     @Override

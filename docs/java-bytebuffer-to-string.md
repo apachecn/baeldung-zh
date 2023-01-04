@@ -28,7 +28,7 @@
 
 然后，我们可以调用`String`构造函数，它接受一个字节数组和字符编码来创建新的`String`:
 
-```
+```java
 @Test
 public void convertUsingNewStringFromBufferArray_thenOK() {
     String content = "baeldung";
@@ -48,7 +48,7 @@ public void convertUsingNewStringFromBufferArray_thenOK() {
 
 对于字符数据，我们可以使用`UTF_8 charset` 将一个`byte[]`转换成一个`String`。然而，当`byte[]`保存非文本二进制数据时，最佳实践是将`byte[]`转换为 [Base64 编码的](/web/20220930184110/https://www.baeldung.com/java-base64-encode-and-decode) `String`:
 
-```
+```java
 @Test
 public void convertUsingNewStringFromByteBufferGetBytes_thenOK() {
     String content = "baeldung";
@@ -66,7 +66,7 @@ public void convertUsingNewStringFromByteBufferGetBytes_thenOK() {
 
 这是将`ByteBuffer`转换成`String`的最简单的方法，没有任何问题:
 
-```
+```java
 @Test
 public void convertUsingCharsetDecode_thenOK() {
     String content = "baeldung";

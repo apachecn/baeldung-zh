@@ -30,7 +30,7 @@ Java 15 将于 2020 年 9 月全面上市，是 JDK 平台的下一个短期版�
 
 在记录之前，我们将创建一个不可变的数据传输对象(DTO ),如下所示:
 
-```
+```java
 public class Person {
     private final String name;
     private final int age;
@@ -58,7 +58,7 @@ public class Person {
 
 使用新的`record`类，我们可以用更简洁的方式定义相同的不可变数据对象:
 
-```
+```java
 public record Person(String name, int age) {
 }
 ```
@@ -71,7 +71,7 @@ public record Person(String name, int age) {
 
 虽然`record` s 消除了许多样板代码，**它们确实允许我们覆盖一些默认行为**。例如，我们可以定义一个进行验证的规范构造函数:
 
-```
+```java
 public record Person(String name, int age) {
     public Person {
         if(age < 0) {
@@ -91,7 +91,7 @@ public record Person(String name, int age) {
 
 密封类包含两个新关键字— `sealed`和`permits`:
 
-```
+```java
 public abstract sealed class Person
     permits Employee, Manager {
 
@@ -101,7 +101,7 @@ public abstract sealed class Person
 
 在这个例子中，我们声明了一个名为`Person.` 的`abstract`类，我们还指定了唯一可以扩展它的类是`Employee`和`Manager`。使用关键字`extends`扩展`sealed`类就像今天在 Java 中一样:
 
-```
+```java
 public final class Employee extends Person {
 }
 
@@ -113,7 +113,7 @@ public non-sealed class Manager extends Person {
 
 **这种有限且详尽的层次结构是使用`sealed`类**的最大好处之一。让我们来看一个实际例子:
 
-```
+```java
 if (person instanceof Employee) {
     return ((Employee) person).getEmployeeId();
 } 
@@ -138,7 +138,7 @@ Java 15 中引入的一个新特性叫做[隐藏类](https://web.archive.org/web
 
 回顾一下，这个特性的目标是删除大量通常带有`instanceof`操作符的样板代码:
 
-```
+```java
 if (person instanceof Employee) {
     Employee employee = (Employee) person;
     Date hireDate = employee.getHireDate();
@@ -150,7 +150,7 @@ if (person instanceof Employee) {
 
 模式匹配特性通过引入新的`binding variable`简化了这一过程:
 
-```
+```java
 if (person instanceof Employee employee) {
     Date hireDate = employee.getHireDate();
     //...
@@ -161,7 +161,7 @@ if (person instanceof Employee employee) {
 
 我们还可以将新的绑定变量与条件语句结合起来:
 
-```
+```java
 if (person instanceof Employee employee && employee.getYearsOfService() > 5) {
     //...
 }

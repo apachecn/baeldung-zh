@@ -26,7 +26,7 @@ Web 应用程序是 Java 最流行的用例之一。Web 服务器和 Servlet 容
 
 首先，让我们将`web.xml `添加到我们项目的`/src/main/webapp/WEB-INF `文件夹中:
 
-```
+```java
 <web-app 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee/webapp_4_0.xsd"
@@ -41,7 +41,7 @@ Web 应用程序是 Java 最流行的用例之一。Web 服务器和 Servlet 容
 
 让我们添加一个简单的静态文件。在我们的例子中，`helloworld.html `看起来像这样:
 
-```
+```java
 <!DOCTYPE html>
 <html>
    <head>
@@ -56,7 +56,7 @@ Web 应用程序是 Java 最流行的用例之一。Web 服务器和 Servlet 容
 
 相反，我们将为我们的 Servlet 使用 Servlet 3 注释:
 
-```
+```java
 @WebServlet("/helloworld")
 public class HelloWorldServlet extends HttpServlet
 ```

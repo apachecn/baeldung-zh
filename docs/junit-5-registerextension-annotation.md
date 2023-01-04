@@ -24,7 +24,7 @@ JUnit 将在适当的阶段调用扩展方法。
 
 例如，下面的扩展包含了一个`beforeAll`和一个`beforeEach` 实现:
 
-```
+```java
 public class LoggingExtension implements 
   BeforeAllCallback, BeforeEachCallback {
 
@@ -51,7 +51,7 @@ public class LoggingExtension implements
 
 让我们将这个扩展应用到测试的静态字段:
 
-```
+```java
 public class RegisterExtensionTest {
 
     @RegisterExtension
@@ -66,7 +66,7 @@ public class RegisterExtensionTest {
 
 输出显示了来自`beforeAll`和`beforeEach`方法的消息:
 
-```
+```java
 Type static version In beforeAll : RegisterExtensionTest
 Type static version In beforeEach : demoTest()
 ```
@@ -79,14 +79,14 @@ Type static version In beforeEach : demoTest()
 
 在上面的例子中，让我们从`LoggingExtension`中移除`static`修饰符:
 
-```
+```java
 @RegisterExtension
 LoggingExtension instanceLevelExtension = new LoggingExtension("instance version");
 ```
 
 现在 JUnit 将只调用`beforeEach`方法，如输出所示:
 
-```
+```java
 Type instance version In beforeEach : demoTest()
 ```
 

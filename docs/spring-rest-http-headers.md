@@ -30,7 +30,7 @@ Learn how to manipulate the HTTP response using the ResponseEntity class.[Read m
 
 如果我们需要访问特定的标题，**,我们可以用标题名**配置`@RequestHeader`:
 
-```
+```java
 @GetMapping("/greeting")
 public ResponseEntity<String> greeting(@RequestHeader(HttpHeaders.ACCEPT_LANGUAGE) String language) {
     // code that uses the language variable
@@ -42,7 +42,7 @@ public ResponseEntity<String> greeting(@RequestHeader(HttpHeaders.ACCEPT_LANGUAG
 
 我们的头不一定是字符串。如果我们知道我们的头是一个数字，我们可以将变量声明为数字类型:
 
-```
+```java
 @GetMapping("/double")
 public ResponseEntity<String> doubleNumber(@RequestHeader("my-number") int myNumber) {
     return new ResponseEntity<String>(String.format("%d * 2 = %d", 
@@ -58,7 +58,7 @@ public ResponseEntity<String> doubleNumber(@RequestHeader("my-number") int myNum
 
 首先，让我们将请求头作为一个`Map`:
 
-```
+```java
 @GetMapping("/listHeaders")
 public ResponseEntity<String> listAllHeaders(
   @RequestHeader Map<String, String> headers) {
@@ -75,7 +75,7 @@ public ResponseEntity<String> listAllHeaders(
 
 **如果我们的头可能有多个值，我们可以把它们作为`MultiValueMap`** :
 
-```
+```java
 @GetMapping("/multiValue")
 public ResponseEntity<String> multiValue(
   @RequestHeader MultiValueMap<String, String> headers) {
@@ -91,7 +91,7 @@ public ResponseEntity<String> multiValue(
 
 我们也可以将我们的标题**作为一个`HttpHeaders`对象**:
 
-```
+```java
 @GetMapping("/getBaseUrl")
 public ResponseEntity<String> getBaseUrl(@RequestHeader HttpHeaders headers) {
     InetSocketAddress host = headers.getHost();
@@ -110,20 +110,20 @@ public ResponseEntity<String> getBaseUrl(@RequestHeader HttpHeaders headers) {
 
 当我们专门命名我们的头时，我们已经隐式地使用了`name`或`value`属性:
 
-```
+```java
 public ResponseEntity<String> greeting(@RequestHeader(HttpHeaders.ACCEPT_LANGUAGE) String language) {}
 ```
 
 我们可以通过使用`name` 属性来完成同样的事情:
 
-```
+```java
 public ResponseEntity<String> greeting(
   @RequestHeader(name = HttpHeaders.ACCEPT_LANGUAGE) String language) {}
 ```
 
 接下来，让我们以完全相同的方式使用`value`属性:
 
-```
+```java
 public ResponseEntity<String> greeting(
   @RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE) String language) {}
 ```
@@ -132,7 +132,7 @@ public ResponseEntity<String> greeting(
 
 让我们使用`required`属性来表明我们的头不是必需的:
 
-```
+```java
 @GetMapping("/nonRequiredHeader")
 public ResponseEntity<String> evaluateNonRequiredHeader(
   @RequestHeader(value = "optional-header", required = false) String optionalHeader) {
@@ -146,7 +146,7 @@ public ResponseEntity<String> evaluateNonRequiredHeader(
 
 让我们使用`defaultValue`属性为我们的头提供一个默认值:
 
-```
+```java
 @GetMapping("/default")
 public ResponseEntity<String> evaluateDefaultHeaderValue(
   @RequestHeader(value = "optional-header", defaultValue = "3600") int optionalHeader) {

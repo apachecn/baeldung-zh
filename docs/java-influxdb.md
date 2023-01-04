@@ -12,7 +12,7 @@
 
 为了连接到数据库，我们需要向我们的`pom.xml`文件添加一个条目:
 
-```
+```java
 <dependency>
     <groupId>org.influxdb</groupId>
     <artifactId>influxdb-java</artifactId>
@@ -30,7 +30,7 @@
 
 创建数据库连接需要将 URL `String`和用户凭证传递给连接工厂:
 
-```
+```java
 InfluxDB influxDB = InfluxDBFactory.connect(databaseURL, userName, password);
 ```
 
@@ -42,7 +42,7 @@ API 提供了一个专用的“ping”服务来确认连接是否正常。如果
 
 因此，在创建连接之后，我们可以通过执行以下操作来验证它:
 
-```
+```java
 Pong response = this.influxDB.ping();
 if (response.getVersion().equalsIgnoreCase("unknown")) {
     log.error("Error pinging server.");
@@ -62,7 +62,7 @@ if (response.getVersion().equalsIgnoreCase("unknown")) {
 
 创建数据库后，我们将添加一个名为`defaultPolicy.`的策略，它将简单地将数据保留 30 天:
 
-```
+```java
 influxDB.createDatabase("baeldung");
 influxDB.createRetentionPolicy(
   "defaultPolicy", "baeldung", "30d", 1, true);
@@ -76,13 +76,13 @@ influxDB.createRetentionPolicy(
 
 因此，我们可以使用以下命令设置日志记录级别:
 
-```
+```java
 influxDB.setLogLevel(InfluxDB.LogLevel.BASIC); 
 ```
 
 现在，当我们打开一个连接并 ping 它时，我们可以看到消息:
 
-```
+```java
 Dec 20, 2017 5:38:10 PM okhttp3.internal.platform.Platform log
 INFO: --> GET http://127.0.0.1:8086/ping
 ```
@@ -99,7 +99,7 @@ InfluxDB 中的基本信息单元是一个`Point,`，它本质上是一个时间
 
 让我们看一下保存内存利用率数据的点:
 
-```
+```java
 Point point = Point.measurement("memory")
   .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
   .addField("name", "server1")
@@ -119,7 +119,7 @@ Point point = Point.measurement("memory")
 
 InfluxDB API 提供了一个`BatchPoint` 对象:
 
-```
+```java
 BatchPoints batchPoints = BatchPoints
   .database(dbName)
   .retentionPolicy("defaultPolicy")
@@ -156,7 +156,7 @@ influxDB.write(batchPoints);
 
 让我们通过对 InfluxDB 连接的一个调用来启用批处理模式:
 
-```
+```java
 influxDB.enableBatch(100, 200, TimeUnit.MILLISECONDS); 
 ```
 
@@ -164,14 +164,14 @@ influxDB.enableBatch(100, 200, TimeUnit.MILLISECONDS);
 
 启用批处理模式后，我们仍然可以一次写一个。但是，需要一些额外的设置:
 
-```
+```java
 influxDB.setRetentionPolicy("defaultPolicy");
 influxDB.setDatabase(dbName); 
 ```
 
 此外，现在我们可以编写个人积分，它们正被一个后台线程批量收集:
 
-```
+```java
 influxDB.write(point); 
 ```
 
@@ -179,13 +179,13 @@ influxDB.write(point);
 
 **批处理模式利用一个单独的线程池。因此，当不再需要它时，最好禁用它:**
 
-```
+```java
 influxDB.disableBatch(); 
 ```
 
 关闭连接也将关闭线程池:
 
-```
+```java
 influxDB.close();
 ```
 
@@ -195,7 +195,7 @@ influxDB.close();
 
 在我们查看查询语法之前，让我们创建一个类来保存内存统计信息:
 
-```
+```java
 @Measurement(name = "memory")
 public class MemoryPoint {
 
@@ -226,7 +226,7 @@ public class MemoryPoint {
 
 因此，让我们将 POJO 与我们在两点批处理中添加到数据库的点一起使用:
 
-```
+```java
 QueryResult queryResult = connection
   .performQuery("Select * from memory", "baeldung");
 
@@ -246,7 +246,7 @@ assertTrue(4743696L == memoryPointList.get(0).getFree());
 
 让我们改变这一点:
 
-```
+```java
 queryResult = connection.performQuery(
   "Select * from memory order by time desc", "baeldung");
 memoryPointList = resultMapper

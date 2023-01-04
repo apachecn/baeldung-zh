@@ -14,7 +14,7 @@ Spring Boot 希望工件的`Main-Class`元数据属性被设置为`org.springfra
 
 清单示例如下所示:
 
-```
+```java
 Manifest-Version: 1.0
 Start-Class: com.baeldung.DemoApplication
 Main-Class: org.springframework.boot.loader.JarLauncher
@@ -28,7 +28,7 @@ Main-Class: org.springframework.boot.loader.JarLauncher
 
 主类可以被定义为`pom.xml`的属性部分中的`a start-class`元素:
 
-```
+```java
 <properties>
       <!-- The main class to start by executing "java -jar" -->
       <start-class>com.baeldung.DemoApplication</start-class>
@@ -39,7 +39,7 @@ Main-Class: org.springframework.boot.loader.JarLauncher
 
 或者，**主类可以被定义为我们的`pom.xml`的插件部分中的`spring-boot-maven-plugin`** 的`mainClass`元素:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -61,7 +61,7 @@ Main-Class: org.springframework.boot.loader.JarLauncher
 
 在项目的 Gradle 文件中，`mainClassName`可以在`springBoot`配置块中定义**。这里做的这个改动被`bootRun` 和 `bootJar`任务拾取:**
 
-```
+```java
 springBoot {
     mainClassName = 'cpm.baeldung.DemoApplication'
 }
@@ -69,7 +69,7 @@ springBoot {
 
 **或者，主类可以定义为`bootJar` Gradle task:** 的`mainClassName`属性
 
-```
+```java
 bootJar {
     mainClassName = 'cpm.baeldung.DemoApplication'
 }
@@ -77,7 +77,7 @@ bootJar {
 
 **或者作为`bootJar`任务的一个显式属性:**
 
-```
+```java
 bootJar {
     manifest {
 	attributes 'Start-Class': 'com.baeldung.DemoApplication'
@@ -89,7 +89,7 @@ bootJar {
 
 另外，如果将 **Gradle 应用插件**应用到项目中， **`mainClassName`可以被定义为一个全局属性:**
 
-```
+```java
 mainClassName = 'com.baeldung.DemoApplication' 
 ```
 
@@ -101,7 +101,7 @@ mainClassName = 'com.baeldung.DemoApplication'
 
 Spring Boot 的`org.springframework.boot.loader.PropertiesLauncher`带有一个 JVM 参数，让你覆盖名为`loader.main`的逻辑主类:
 
-```
+```java
 java -cp bootApp.jar -Dloader.main=com.baeldung.DemoApplication org.springframework.boot.loader.PropertiesLauncher
 ```
 

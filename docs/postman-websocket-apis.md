@@ -42,7 +42,7 @@ WebSocket 协议是让我们的应用程序处理实时消息的方法之一。�
 
 **在相同的配置中，我们还将为 WebSocket 端点注册实现的 WebSocket 处理程序:**
 
-```
+```java
 @Configuration
 @EnableWebSocket
 public class ServerWebSocketConfig implements WebSocketConfigurer {
@@ -63,7 +63,7 @@ public class ServerWebSocketConfig implements WebSocketConfigurer {
 
 WebSocket 处理程序类扩展了`TextWebSocketHandler`。**这个处理程序使用`handleTextMessage`回调方法从客户端**接收消息。`sendMessage`方法将消息发送回客户端:
 
-```
+```java
 @Override
 public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
     String request = message.getPayload();
@@ -77,7 +77,7 @@ public void handleTextMessage(WebSocketSession session, TextMessage message) thr
 
 `@Scheduled`方法使用相同的`sendMessage`方法向活动客户端广播定期消息:
 
-```
+```java
 @Scheduled(fixedRate = 10000)
 void sendPeriodicMessages() throws IOException {
     for (WebSocketSession session : sessions) {
@@ -92,7 +92,7 @@ void sendPeriodicMessages() throws IOException {
 
 我们的测试终点将是:
 
-```
+```java
 ws://localhost:8080/websocket
 ```
 

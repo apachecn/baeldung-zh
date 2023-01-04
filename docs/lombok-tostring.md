@@ -14,7 +14,7 @@ Project Lombok 可以帮助我们生成一致的字符串表示，而无需样�
 
 让我们首先在我们的示例项目中包含[项目 Lombok](https://web.archive.org/web/20220925203315/https://search.maven.org/artifact/org.projectlombok/lombok) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>
@@ -31,7 +31,7 @@ Project Lombok 可以帮助我们生成一致的字符串表示，而无需样�
 
 让我们将这个注释应用到简单的 POJO:
 
-```
+```java
 @ToString
 public class Account {
 
@@ -47,7 +47,7 @@ public class Account {
 
 现在，对该类的一个实例调用`toString()`方法会生成以下输出:
 
-```
+```java
 Account(id=12345, name=An account) 
 ```
 
@@ -61,7 +61,7 @@ Account(id=12345, name=An account)
 
 默认情况下，输出不包含来自`toString()`方法的超类实现的数据。然而，**我们可以通过将`callSuper`属性值设置为** `**true**:`来修改它
 
-```
+```java
 @ToString(callSuper = true)
 public class SavingAccount extends Account {
 
@@ -73,7 +73,7 @@ public class SavingAccount extends Account {
 
 这将产生以下输出，超类信息后跟子类字段和值:
 
-```
+```java
 SavingAccount(super=Account(id=12345, name=An account), savingAccountId=6789)
 ```
 
@@ -83,7 +83,7 @@ SavingAccount(super=Account(id=12345, name=An account), savingAccountId=6789)
 
 正如我们前面看到的，默认输出包含字段名称，后跟值。然而，**我们可以通过在`@ToString`注释**中将`includeFieldNames`属性设置为`false`来从输出中省略字段名称:
 
-```
+```java
 @ToString(includeFieldNames = false)
 public class Account {
 
@@ -97,7 +97,7 @@ public class Account {
 
 因此，输出现在显示了所有字段值的逗号分隔列表，但没有字段名:
 
-```
+```java
 Account(12345, An account)
 ```
 
@@ -107,7 +107,7 @@ Account(12345, An account)
 
 然而，**我们可以通过将`doNotUseGetters`属性设置为`true`** 来配置 Lombok 总是使用直接字段值而不是 getters:
 
-```
+```java
 @ToString(doNotUseGetters = true)
 public class Account {
 
@@ -126,13 +126,13 @@ public class Account {
 
 如果没有这个属性，我们将通过调用 getters 得到输出:
 
-```
+```java
 Account(id=this is the id:12345, name=An account)
 ```
 
 相反，**具有`doNotUseGetters`属性，输出实际上显示了`id`字段的值，而没有调用 getter** :
 
-```
+```java
 Account(id=12345, name=An account)
 ```
 
@@ -142,7 +142,7 @@ Account(id=12345, name=An account)
 
 让我们从表示中排除`name`字段:
 
-```
+```java
 @ToString
 public class Account {
 
@@ -157,7 +157,7 @@ public class Account {
 
 **或者，我们可以只指定输出**中需要的字段。让我们通过在类级别使用`@ToString(onlyExplicitlyIncluded = true)`来实现这一点，然后用`@ToString.Include`注释每个必填字段:
 
-```
+```java
 @ToString(onlyExplicitlyIncluded = true)
 public class Account {
 
@@ -172,7 +172,7 @@ public class Account {
 
 上述两种方法仅使用`id`字段产生以下输出:
 
-```
+```java
 Account(id=12345)
 ```
 
@@ -184,7 +184,7 @@ Account(id=12345)
 
 让我们修改我们的`Account`类，使`id`字段呈现在任何其他字段之前，而不管声明在类定义中的位置。我们可以通过向`id`字段添加`@ToString.Include(rank = 1)`注释来实现这一点:
 
-```
+```java
 @ToString
 public class Account {
 
@@ -199,7 +199,7 @@ public class Account {
 
 现在，`id`字段在输出中首先呈现，尽管它在`name`字段之后声明:
 
-```
+```java
 Account(id=12345, name=An account)
 ```
 
@@ -209,7 +209,7 @@ Account(id=12345, name=An account)
 
 除了字段之外，还可以包含不带参数的实例方法的输出。**我们可以通过用`@ToString.Include`** 标记无参数实例方法来做到这一点:
 
-```
+```java
 @ToString
 public class Account {
 
@@ -228,7 +228,7 @@ public class Account {
 
 这将把`description`作为键，并将其输出作为值添加到`Account`表示中:
 
-```
+```java
 Account(id=12345, name=An account, description=Account description)
 ```
 
@@ -238,7 +238,7 @@ Account(id=12345, name=An account, description=Account description)
 
 我们可以通过在`@ToString.Include`注释的`name`属性中指定不同的值来更改任何字段名:
 
-```
+```java
 @ToString
 public class Account {
 
@@ -253,7 +253,7 @@ public class Account {
 
 现在，输出包含来自注释属性的替代字段名称，而不是实际的字段名称:
 
-```
+```java
 Account(identification=12345, name=An account)
 ```
 
@@ -265,7 +265,7 @@ Account(identification=12345, name=An account)
 
 让我们通过向我们的`Account`类添加一个`Object`数组字段来看看这一点:
 
-```
+```java
 @ToString
 public class Account {
 
@@ -279,7 +279,7 @@ public class Account {
 
 `relatedAccounts`数组现在包含在输出中:
 
-```
+```java
 Account(id=12345, relatedAccounts=[54321, [...]])
 ```
 

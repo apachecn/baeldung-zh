@@ -19,7 +19,7 @@ RSQL 是提要条目查询语言( [FIQL](https://web.archive.org/web/20220701014
 
 首先，让我们向库中添加一个 Maven [依赖项](https://web.archive.org/web/20220701014319/https://search.maven.org/artifact/cz.jirutka.rsql/rsql-parser):
 
-```
+```java
 <dependency>
     <groupId>cz.jirutka.rsql</groupId>
     <artifactId>rsql-parser</artifactId>
@@ -29,7 +29,7 @@ RSQL 是提要条目查询语言( [FIQL](https://web.archive.org/web/20220701014
 
 并且**定义我们将在整个示例中使用的主要实体**—`User`:
 
-```
+```java
 @Entity
 public class User {
     @Id
@@ -50,7 +50,7 @@ RSQL 表达式在内部以节点的形式表示，visitor 模式用于解析输�
 
 记住这一点，我们将实现 [`RSQLVisitor`接口](https://web.archive.org/web/20220701014319/https://github.com/jirutka/rsql-parser/blob/master/src/main/java/cz/jirutka/rsql/parser/ast/RSQLVisitor.java)并创建我们自己的访问者实现—`CustomRsqlVisitor`:
 
-```
+```java
 public class CustomRsqlVisitor<T> implements RSQLVisitor<Specification<T>, Void> {
 
     private GenericRsqlSpecBuilder<T> builder;
@@ -80,7 +80,7 @@ public class CustomRsqlVisitor<T> implements RSQLVisitor<Specification<T>, Void>
 
 我们将使用在之前使用的 Spring Data JPA 规范[——我们将实现一个`Specification`构建器来**构建我们访问**的每个节点的规范:](/web/20220701014319/https://www.baeldung.com/rest-api-search-language-spring-data-specifications)
 
-```
+```java
 public class GenericRsqlSpecBuilder<T> {
 
     public Specification<T> createSpecification(Node node) {
@@ -142,7 +142,7 @@ public class GenericRsqlSpecBuilder<T> {
 
 当构建查询时，我们使用了一个`Specification:`
 
-```
+```java
 public class GenericRsqlSpecification<T> implements Specification<T> {
 
     private String property;
@@ -219,7 +219,7 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 
 接下来——这是我们的**枚举“`RsqlSearchOperation`”**,它包含默认的 rsql 解析器操作符:
 
-```
+```java
 public enum RsqlSearchOperation {
     EQUAL(RSQLOperators.EQUAL), 
     NOT_EQUAL(RSQLOperators.NOT_EQUAL), 
@@ -253,7 +253,7 @@ public enum RsqlSearchOperation {
 
 首先，让我们初始化数据:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { PersistenceConfig.class })
 @Transactional
@@ -292,7 +292,7 @@ public class RsqlTest {
 
 在下面的例子中，我们将通过用户的`first`和`last name`来搜索用户:
 
-```
+```java
 @Test
 public void givenFirstAndLastName_whenGettingListOfUsers_thenCorrect() {
     Node rootNode = new RSQLParser().parse("firstName==john;lastName==doe");
@@ -308,7 +308,7 @@ public void givenFirstAndLastName_whenGettingListOfUsers_thenCorrect() {
 
 接下来，让我们通过他们的`first name`搜索不是“john”的用户:
 
-```
+```java
 @Test
 public void givenFirstNameInverse_whenGettingListOfUsers_thenCorrect() {
     Node rootNode = new RSQLParser().parse("firstName!=john");
@@ -324,7 +324,7 @@ public void givenFirstNameInverse_whenGettingListOfUsers_thenCorrect() {
 
 接下来，我们将搜索`age`大于`25`的用户:
 
-```
+```java
 @Test
 public void givenMinAge_whenGettingListOfUsers_thenCorrect() {
     Node rootNode = new RSQLParser().parse("age>25");
@@ -340,7 +340,7 @@ public void givenMinAge_whenGettingListOfUsers_thenCorrect() {
 
 接下来，我们将搜索其`first name`以`jo`开头的用户:
 
-```
+```java
 @Test
 public void givenFirstNamePrefix_whenGettingListOfUsers_thenCorrect() {
     Node rootNode = new RSQLParser().parse("firstName==jo*");
@@ -356,7 +356,7 @@ public void givenFirstNamePrefix_whenGettingListOfUsers_thenCorrect() {
 
 接下来，我们将搜索其`first name`为“`john`”或“`jack`”的用户:
 
-```
+```java
 @Test
 public void givenListOfFirstName_whenGettingListOfUsers_thenCorrect() {
     Node rootNode = new RSQLParser().parse("firstName=in=(john,jack)");
@@ -372,7 +372,7 @@ public void givenListOfFirstName_whenGettingListOfUsers_thenCorrect() {
 
 最后，让我们将这一切与控制器联系起来:
 
-```
+```java
 @RequestMapping(method = RequestMethod.GET, value = "/users")
 @ResponseBody
 public List<User> findAllByRsql(@RequestParam(value = "search") String search) {
@@ -384,13 +384,13 @@ public List<User> findAllByRsql(@RequestParam(value = "search") String search) {
 
 以下是一个示例 URL:
 
-```
+```java
 http://localhost:8080/users?search=firstName==jo*;age<25
 ```
 
 回应是:
 
-```
+```java
 [{
     "id":1,
     "firstName":"john",

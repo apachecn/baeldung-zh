@@ -12,7 +12,7 @@
 
 假设我们已经创建了前一篇文章中描述的`AWSCredentials,`的实例，我们可以继续创建我们的 EC2 客户端:
 
-```
+```java
 AmazonEC2 ec2Client = AmazonEC2ClientBuilder
   .standard()
   .withCredentials(new AWSStaticCredentialsProvider(credentials))
@@ -30,7 +30,7 @@ AmazonEC2 ec2Client = AmazonEC2ClientBuilder
 
 让我们创建一个安全组:
 
-```
+```java
 CreateSecurityGroupRequest createSecurityGroupRequest = new CreateSecurityGroupRequest()
   .withGroupName("BaeldungSecurityGroup")
   .withDescription("Baeldung Security Group");
@@ -42,7 +42,7 @@ CreateSecurityGroupResult createSecurityGroupResult = ec2Client.createSecurityGr
 
 让我们允许来自任何 IP 地址的 HTTP 流量:
 
-```
+```java
 IpRange ipRange = new IpRange().withCidrIp("0.0.0.0/0");
 IpPermission ipPermission = new IpPermission()
   .withIpv4Ranges(Arrays.asList(new IpRange[] { ipRange }))
@@ -53,7 +53,7 @@ IpPermission ipPermission = new IpPermission()
 
 最后，我们必须**将 `ipRange` 实例附加到`AuthorizeSecurityGroupIngressRequest`** 上，并使用我们的 EC2 客户端发出请求:
 
-```
+```java
 AuthorizeSecurityGroupIngressRequest authorizeSecurityGroupIngressRequest 
   = new AuthorizeSecurityGroupIngressRequest()
   .withGroupName("BaeldungSecurityGroup")
@@ -65,7 +65,7 @@ ec2Client.authorizeSecurityGroupIngress(authorizeSecurityGroupIngressRequest);
 
 当启动 EC2 实例时，我们需要指定一个[密钥对。](https://web.archive.org/web/20220703143257/https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) **我们可以使用 SDK 创建一个密钥对:**
 
-```
+```java
 CreateKeyPairRequest createKeyPairRequest = new CreateKeyPairRequest()
   .withKeyName("baeldung-key-pair");
 CreateKeyPairResult createKeyPairResult = ec2Client.createKeyPair(createKeyPairRequest);
@@ -73,7 +73,7 @@ CreateKeyPairResult createKeyPairResult = ec2Client.createKeyPair(createKeyPairR
 
 让我们得到私钥:
 
-```
+```java
 createKeyPairResult.getKeyPair().getKeyMaterial(); 
 ```
 
@@ -83,7 +83,7 @@ createKeyPairResult.getKeyPair().getKeyMaterial();
 
 为了创建 EC2，我们将使用一个`RunInstancesRequest:`
 
-```
+```java
 RunInstancesRequest runInstancesRequest = new RunInstancesRequest()
   .withImageId("ami-97785bed")
   .withInstanceType("t2.micro") 
@@ -105,7 +105,7 @@ RunInstancesRequest runInstancesRequest = new RunInstancesRequest()
 
 现在，我们可以使用 runInstances()方法执行请求，并检索创建的实例的 id:
 
-```
+```java
 String yourInstanceId = ec2Client.runInstances(runInstancesRequest)
   .getReservation().getInstances().get(0).getInstanceId();
 ```
@@ -120,7 +120,7 @@ String yourInstanceId = ec2Client.runInstances(runInstancesRequest)
 
 启动实例:
 
-```
+```java
 StartInstancesRequest startInstancesRequest = new StartInstancesRequest()
   .withInstanceIds(yourInstanceId);
 
@@ -129,7 +129,7 @@ ec2Client.startInstances(request);
 
 停止实例: 
 
-```
+```java
 StopInstancesRequest stopInstancesRequest = new StopInstancesRequest()
   .withInstanceIds(yourInstanceId);
 
@@ -138,7 +138,7 @@ ec2Client.stopInstances(request);
 
 重新启动实例:
 
-```
+```java
 RebootInstancesRequest request = new RebootInstancesRequest()
   .withInstanceIds(yourInstanceId);
 
@@ -147,7 +147,7 @@ RebootInstancesResult rebootInstancesRequest = ec2Client.rebootInstances(request
 
 从每个请求中，**可以询问实例的先前状态:**
 
-```
+```java
 ec2Client.stopInstances(stopInstancesRequest)
   .getStoppingInstances()
   .get(0)
@@ -159,7 +159,7 @@ ec2Client.stopInstances(stopInstancesRequest)
 
 让我们看看如何**开始和停止监控我们的 EC2 实例:**
 
-```
+```java
 MonitorInstancesRequest monitorInstancesRequest = new MonitorInstancesRequest()
   .withInstanceIds(yourInstanceId);
 
@@ -175,7 +175,7 @@ ec2Client.unmonitorInstances(unmonitorInstancesRequest);
 
 最后，我们可以**描述我们的 EC2 实例:**
 
-```
+```java
 DescribeInstancesRequest describeInstancesRequest
  = new DescribeInstancesRequest();
 DescribeInstancesResult response = ec2Client
@@ -184,19 +184,19 @@ DescribeInstancesResult response = ec2Client
 
 EC2 实例被分组到**预订**中。预订是用来创建一个或多个 EC2 实例的`StartInstancesRequest`调用:
 
-```
+```java
 response.getReservations()
 ```
 
 从这里我们可以得到实际的实例。让我们来看看第一个预订中的第一个实例:
 
-```
+```java
 response.getReservations().get(0).getInstances().get(0)
 ```
 
 现在，我们可以描述我们的实例:
 
-```
+```java
 // ...
 .getImageId()
 .getSubnetId()

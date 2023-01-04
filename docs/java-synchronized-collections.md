@@ -20,7 +20,7 @@
 
 现在，为了更清楚地理解如何使用这个方法，让我们创建一个基本的单元测试:
 
-```
+```java
 Collection<Integer> syncCollection = Collections.synchronizedCollection(new ArrayList<>());
     Runnable listOperations = () -> {
         syncCollection.addAll(Arrays.asList(1, 2, 3, 4, 5, 6));
@@ -51,7 +51,7 @@ Collection<Integer> syncCollection = Collections.synchronizedCollection(new Arra
 
 正如我们所料，**方法返回指定的`List` :** 的线程安全视图
 
-```
+```java
 List<Integer> syncList = Collections.synchronizedList(new ArrayList<>());
 ```
 
@@ -61,7 +61,7 @@ List<Integer> syncList = Collections.synchronizedList(new ArrayList<>());
 
 此外，如果我们想要迭代一个同步的集合并防止意外的结果，我们应该显式地提供我们自己的线程安全的循环实现。因此，我们可以使用一个`synchronized`块来实现:
 
-```
+```java
 List<String> syncCollection = Collections.synchronizedList(Arrays.asList("a", "b", "c"));
 List<String> uppercasedCollection = new ArrayList<>();
 
@@ -84,7 +84,7 @@ Runnable listOperations = () -> {
 
 **该方法返回所提供的`Map`实现**的线程安全视图:
 
-```
+```java
 Map<Integer, String> syncMap = Collections.synchronizedMap(new HashMap<>()); 
 ```
 
@@ -92,7 +92,7 @@ Map<Integer, String> syncMap = Collections.synchronizedMap(new HashMap<>());
 
 还有一个对应的`synchronizedMap()`方法的实现。它叫做`synchronizedSortedMap()`，我们可以用它来创建一个同步的`[SortedMap](https://web.archive.org/web/20221121030850/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/SortedMap.html)`实例:
 
-```
+```java
 Map<Integer, String> syncSortedMap = Collections.synchronizedSortedMap(new TreeMap<>()); 
 ```
 
@@ -102,7 +102,7 @@ Map<Integer, String> syncSortedMap = Collections.synchronizedSortedMap(new TreeM
 
 **包装器返回由指定的`Set`** 支持的线程安全集合:
 
-```
+```java
 Set<Integer> syncSet = Collections.synchronizedSet(new HashSet<>()); 
 ```
 
@@ -112,7 +112,7 @@ Set<Integer> syncSet = Collections.synchronizedSet(new HashSet<>());
 
 类似于我们到目前为止已经讨论过的其他包装器实现，**方法返回给定的`[SortedSet](https://web.archive.org/web/20221121030850/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/SortedSet.html)`** 的线程安全版本:
 
-```
+```java
 SortedSet<Integer> syncSortedSet = Collections.synchronizedSortedSet(new TreeSet<>()); 
 ```
 

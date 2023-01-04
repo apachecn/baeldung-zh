@@ -12,7 +12,7 @@
 
 首先，我们需要将 [`multiverse-core`](https://web.archive.org/web/20221126224013/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.multiverse%22%20AND%20a%3A%22multiverse-core%22) 库添加到我们的 pom 中:
 
-```
+```java
 <dependency>
     <groupId>org.multiverse</groupId>
     <artifactId>multiverse-core</artifactId>
@@ -42,7 +42,7 @@
 
 `TxnLong` 和`TxnInteger` 是来自`Multiverse`的类。它们必须在一个事务中执行。否则，将引发异常。我们需要使用`StmUtils` 来创建事务对象的新实例:
 
-```
+```java
 public class Account {
     private TxnLong lastUpdate;
     private TxnInteger balance;
@@ -58,7 +58,7 @@ public class Account {
 
 如果其中引发了任何异常，事务将结束而不提交任何更改:
 
-```
+```java
 public void adjustBy(int amount) {
     adjustBy(amount, System.currentTimeMillis());
 }
@@ -77,7 +77,7 @@ public void adjustBy(int amount, long date) {
 
 如果我们想要获得给定帐户的当前余额，我们需要从 balance 字段中获得值，但是也需要使用原子语义来调用它:
 
-```
+```java
 public Integer getBalance() {
     return balance.atomicGet();
 }
@@ -87,7 +87,7 @@ public Integer getBalance() {
 
 让我们来测试一下我们的`Account`逻辑。首先，我们想简单地从账户中减去给定的余额:
 
-```
+```java
 @Test
 public void givenAccount_whenDecrement_thenShouldReturnProperValue() {
     Account a = new Account(10);
@@ -99,7 +99,7 @@ public void givenAccount_whenDecrement_thenShouldReturnProperValue() {
 
 接下来，假设我们从账户中提款，使得余额为负。该操作应该抛出一个异常，并保持帐户不变，因为该操作是在事务中执行的，并未提交:
 
-```
+```java
 @Test(expected = IllegalArgumentException.class)
 public void givenAccount_whenDecrementTooMuch_thenShouldThrow() {
     // given
@@ -116,7 +116,7 @@ public void givenAccount_whenDecrementTooMuch_thenShouldThrow() {
 
 我们将向`ExecutorService`提交两个线程，并使用`CountDownLatch` 同时启动它们:
 
-```
+```java
 ExecutorService ex = Executors.newFixedThreadPool(2);
 Account a = new Account(10);
 CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -151,7 +151,7 @@ ex.submit(() -> {
 
 同时启动两个动作后，其中一个会抛出异常:
 
-```
+```java
 countDownLatch.countDown();
 ex.awaitTermination(1, TimeUnit.SECONDS);
 ex.shutdown();
@@ -163,7 +163,7 @@ assertTrue(exceptionThrown.get());
 
 假设我们想把钱从一个账户转到另一个账户。我们可以在`Account` 类上实现`transferTo()` 方法，方法是传递另一个`Account` ,我们想把给定金额的钱转移到这个【】:
 
-```
+```java
 public void transferTo(Account other, int amount) {
     StmUtils.atomic(() -> {
         long date = System.currentTimeMillis();
@@ -177,7 +177,7 @@ public void transferTo(Account other, int amount) {
 
 让我们测试传输逻辑:
 
-```
+```java
 Account a = new Account(10);
 Account b = new Account(10);
 
@@ -189,7 +189,7 @@ assertThat(b.getBalance()).isEqualTo(15);
 
 我们只需创建两个账户，把钱从一个账户转到另一个账户，一切都按预期进行。接下来，假设我们想转移比账户上可用资金更多的资金。`transferTo()` 调用将抛出`IllegalArgumentException,` ，并且不会提交更改:
 
-```
+```java
 try {
     a.transferTo(b, 20);
 } catch (IllegalArgumentException e) {
@@ -214,7 +214,7 @@ assertThat(b.getBalance()).isEqualTo(15);
 
 假设我们有两个线程。第一个线程想从账户`a`转移一些钱到账户`b`，第二个线程想从账户`b`转移一些钱到账户`a`。我们需要创建两个帐户并启动两个线程，这两个线程将同时执行`transferTo()` 方法:
 
-```
+```java
 ExecutorService ex = Executors.newFixedThreadPool(2);
 Account a = new Account(10);
 Account b = new Account(10);
@@ -241,7 +241,7 @@ ex.submit(() -> {
 
 开始处理后，两个帐户都将有正确的余额字段:
 
-```
+```java
 countDownLatch.countDown();
 ex.awaitTermination(1, TimeUnit.SECONDS);
 ex.shutdown();

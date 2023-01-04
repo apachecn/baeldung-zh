@@ -10,7 +10,7 @@
 
 首先，让我们添加一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -24,7 +24,7 @@
 
 在 Guava `Multimap,` 的情况下，如果我们为同一个键添加两个值，第二个值不会覆盖第一个值。相反，我们将在结果`map`中有两个值。让我们看一个测试案例:
 
-```
+```java
 String key = "a-key";
 Multimap<String, String> map = ArrayListMultimap.create();
 
@@ -36,19 +36,19 @@ assertEquals(2, map.size());
 
 打印`map`的内容将输出:
 
-```
+```java
 {a-key=[firstValue, secondValue]}
 ```
 
 当我们通过键“a-key”获取值时，我们将得到包含“firstValue”和“secondValue”的`Collection<String>` ,结果是:
 
-```
+```java
 Collection<String> values = map.get(key);
 ```
 
 打印值将输出:
 
-```
+```java
 [firstValue, secondValue]
 ```
 
@@ -56,7 +56,7 @@ Collection<String> values = map.get(key);
 
 来自`java.util`包的标准映射没有给我们为同一个键分配多个值的能力。让我们考虑一个简单的例子，当我们使用同一个键将两个值`put()` 转换成一个`Map` 时:
 
-```
+```java
 String key = "a-key";
 Map<String, String> map = new LinkedHashMap<>();
 
@@ -68,7 +68,7 @@ assertEquals(1, map.size());
 
 结果`map`只有一个元素(`“secondValue”),`，因为第二个`put()` 操作覆盖了第一个值。如果我们想要实现与 Guava 的`Multimap` `,` 相同的行为，我们需要创建一个`Map`，它有一个`List<String>` 作为值类型:
 
-```
+```java
 String key = "a-key";
 Map<String, List<String>> map = new LinkedHashMap<>();
 

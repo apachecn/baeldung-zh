@@ -14,7 +14,7 @@
 
 在本文中，我们将使用一个具有以下依赖项的 Maven 项目:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-math3</artifactId>
@@ -37,7 +37,7 @@
 
 让我们用一个`List `集合来表示数据集，并用它来填充`Frequency `类的一个实例:
 
-```
+```java
 List<Integer> datasetList = Arrays.asList(
   36, 25, 38, 46, 55, 68, 
   72, 55, 36, 38, 67, 45, 22, 
@@ -48,7 +48,7 @@ datasetList.forEach(d -> frequency.addValue(Double.parseDouble(d.toString())));
 
 **现在我们已经填充了`Frequency `类的实例，我们将获得 bin 中每个年龄的计数，并对其求和，这样我们就可以获得特定年龄组中年龄的总频率**:
 
-```
+```java
 datasetList.stream()
   .map(d -> Double.parseDouble(d.toString()))
   .distinct()
@@ -80,7 +80,7 @@ datasetList.stream()
 
 既然我们已经将原始数据集处理成年龄组及其各自频率的地图，我们可以使用`xchart`库在直方图中显示数据:
 
-```
+```java
 CategoryChart chart = new CategoryChartBuilder().width(800).height(600)
   .title("Age Distribution")
   .xAxisTitle("Age Group")

@@ -26,7 +26,7 @@
 
 首先，让我们来看一个使用前递增一元运算符的代码片段:
 
-```
+```java
 int operand = 1;
 ++operand; // operand = 2
 int number = ++operand; // operand = 3, number = 3
@@ -34,7 +34,7 @@ int number = ++operand; // operand = 3, number = 3
 
 接下来，让我们看看使用预减量的代码片段:
 
-```
+```java
 int operand = 2;
 --operand; // operand = 1
 int number = --operand; // operand = 0, number = 0
@@ -50,7 +50,7 @@ int number = --operand; // operand = 0, number = 0
 
 让我们来看一个使用后递增运算符的示例代码片段:
 
-```
+```java
 int operand = 1;
 operand++; // operand = 2
 int number = operand++; // operand = 3, number = 2
@@ -58,7 +58,7 @@ int number = operand++; // operand = 3, number = 2
 
 另外，我们来看看后减量的那个:
 
-```
+```java
 int operand = 2;
 operand--; //operand = 1
 int number = operand--; // operand = 0, number 1

@@ -16,7 +16,7 @@
 
 例如，假设我们想要提供一个标准`RestController`的 API 文档:
 
-```
+```java
 @RestController
 @RequestMapping("good-path")
 public class RegularRestController {
@@ -33,7 +33,7 @@ public class RegularRestController {
 
 同样，让我们假设我们的代码包含一个扩展了`BasicErrorController`的类:
 
-```
+```java
 @Component
 @RequestMapping("my-error-controller")
 public class MyErrorController extends BasicErrorController {
@@ -55,7 +55,7 @@ public class MyErrorController extends BasicErrorController {
 
 只有当误差控制器包不同于标准控制器包时，这种方法才有效。有了 Spring Boot，如果我们提供一个 [`Docket`](https://web.archive.org/web/20220707143857/https://springfox.github.io/springfox/javadoc/2.7.0/index.html?springfox/documentation/spring/web/plugins/Docket.html) 就够了比恩:
 
-```
+```java
 @Configuration
 public class SwaggerConfiguration {
 
@@ -77,7 +77,7 @@ public class SwaggerConfiguration {
 
 在本例中，我们将它设置为`RestController.class:`
 
-```
+```java
 @Bean
 public Docket api() {
    return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo())
@@ -93,7 +93,7 @@ public Docket api() {
 
 另一种方法是**在自定义路径上指定一个正则表达式。**在这种情况下，只记录映射到“/ `good-path” `前缀的资源:
 
-```
+```java
 @Bean
 public Docket api() {
    return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo())
@@ -107,7 +107,7 @@ public Docket api() {
 
 **最后，我们可以使用注释 `[@ApiIgnore](https://web.archive.org/web/20220707143857/https://springfox.github.io/springfox/javadoc/2.9.2/index.html?springfox/documentation/annotations/ApiIgnore.html):`** 从 Swagger 中排除一个特定的类
 
-```
+```java
 @Component
 @RequestMapping("my-error-controller")
 @ApiIgnore 

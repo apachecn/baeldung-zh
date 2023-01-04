@@ -84,7 +84,7 @@ GraphX 是用于图形和图形并行计算的组件。在高层次上，GraphX 
 
 让我们用`pom.xml`文件中的 [Spark 相关依赖项](https://web.archive.org/web/20220926185023/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.spark%22%20AND%20a%3A%22spark-core_2.10%22)建立一个 Java Maven 项目:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.apache.spark</groupId>
@@ -98,7 +98,7 @@ GraphX 是用于图形和图形并行计算的组件。在高层次上，GraphX 
 
 现在让我们编写 Spark job 来处理包含句子的文件，并输出文件中不同的单词及其计数:
 
-```
+```java
 public static void main(String[] args) throws Exception {
     if (args.length < 1) {
         System.err.println("Usage: JavaWordCount <file>");
@@ -141,7 +141,7 @@ public static void main(String[] args) throws Exception {
 
 接下来，我们需要将这个字数统计作业提交给 Spark:
 
-```
+```java
 ${spark-install-dir}/bin/spark-submit --class com.baeldung.WordCount 
   --master local ${WordCount-MavenProject}/target/apache-spark-1.0-SNAPSHOT.jar
   ${WordCount-MavenProject}/src/main/resources/spark_example.txt
@@ -159,7 +159,7 @@ ${spark-install-dir}/bin/spark-submit --class com.baeldung.WordCount
 
 最后，spark 作业的结果被返回给驱动程序，我们将看到文件中的字数作为输出:
 
-```
+```java
 Hello 1
 from 2
 Baledung 2

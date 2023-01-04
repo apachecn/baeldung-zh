@@ -12,7 +12,7 @@
 
 首先，我们需要将`truth`和`truth-java8-extension`添加到我们的`pom.xml:`中
 
-```
+```java
 <dependency>
     <groupId>com.google.truth</groupId>
     <artifactId>truth</artifactId>
@@ -47,14 +47,14 @@
 
 为了开始编写断言，让我们首先导入`Truth`的入口点:
 
-```
+```java
 import static com.google.common.truth.Truth.*;
 import static com.google.common.truth.Truth8.*;
 ```
 
 现在，让我们编写一个简单的类，我们将在下面的几个示例中使用它:
 
-```
+```java
 public class User {
     private String name = "John Doe";
     private List<String> emails
@@ -83,7 +83,7 @@ public class User {
 
 `Truth`提供了用于在对象上执行断言的`Subject`包装器。`Subject`也是库中所有其他包装器的父类，它声明了确定`Object`(在我们的例子中是`User`)是否等于另一个对象的方法:
 
-```
+```java
 @Test
 public void whenComparingUsers_thenEqual() {
     User aUser = new User("John Doe");
@@ -95,7 +95,7 @@ public void whenComparingUsers_thenEqual() {
 
 或者如果它等于列表中的给定对象:
 
-```
+```java
 @Test
 public void whenComparingUser_thenInList() {
     User aUser = new User();
@@ -106,7 +106,7 @@ public void whenComparingUser_thenInList() {
 
 或者如果不是:
 
-```
+```java
 @Test
 public void whenComparingUser_thenNotInList() {
     // ...
@@ -117,7 +117,7 @@ public void whenComparingUser_thenNotInList() {
 
 如果为空或不为空:
 
-```
+```java
 @Test
 public void whenComparingUser_thenIsNull() {
     User aUser = null;
@@ -135,7 +135,7 @@ public void whenComparingUser_thenNotNull() {
 
 或者如果它是特定类的实例:
 
-```
+```java
 @Test
 public void whenComparingUser_thenInstanceOf() {
     // ...
@@ -152,7 +152,7 @@ public void whenComparingUser_thenInstanceOf() {
 
 可以比较`Integer`、`Float,`和`Double`实例的相等性:
 
-```
+```java
 @Test
 public void whenComparingInteger_thenEqual() {
     int anInt = 10;
@@ -163,7 +163,7 @@ public void whenComparingInteger_thenEqual() {
 
 如果它们更大:
 
-```
+```java
 @Test
 public void whenComparingFloat_thenIsBigger() {
     float aFloat = 10.0f;
@@ -174,7 +174,7 @@ public void whenComparingFloat_thenIsBigger() {
 
 或更小:
 
-```
+```java
 @Test
 public void whenComparingDouble_thenIsSmaller() {
     double aDouble = 10.0f;
@@ -185,7 +185,7 @@ public void whenComparingDouble_thenIsSmaller() {
 
 此外，还可以检查`, Float`和`Double`实例，看它们是否在预期精度内:
 
-```
+```java
 @Test
 public void whenComparingDouble_thenWithinPrecision() {
     double aDouble = 22.18;
@@ -205,7 +205,7 @@ public void whenComparingFloat_thenNotWithinPrecision() {
 
 除了常见的断言，这种类型可以忽略其规模进行比较:
 
-```
+```java
 @Test
 public void whenComparingBigDecimal_thenEqualIgnoringScale() {
     BigDecimal aBigDecimal = BigDecimal.valueOf(1000, 3);
@@ -218,7 +218,7 @@ public void whenComparingBigDecimal_thenEqualIgnoringScale() {
 
 只提供了两种相关的方法，`isTrue()`和`isFalse()`:
 
-```
+```java
 @Test
 public void whenCheckingBoolean_thenTrue() {
     boolean aBoolean = true;
@@ -231,7 +231,7 @@ public void whenCheckingBoolean_thenTrue() {
 
 我们可以测试`String`是否以特定的文本开始:
 
-```
+```java
 @Test
 public void whenCheckingString_thenStartsWith() {
     String aString = "This is a string";
@@ -246,7 +246,7 @@ public void whenCheckingString_thenStartsWith() {
 
 我们可以检查`Array` s，看看它们是否等于其他数组:
 
-```
+```java
 @Test
 public void whenComparingArrays_thenEqual() {
     String[] firstArrayOfStrings = { "one", "two", "three" };
@@ -258,7 +258,7 @@ public void whenComparingArrays_thenEqual() {
 
 或者如果它们是空的:
 
-```
+```java
 @Test
 public void whenCheckingArray_thenEmpty() {
     Object[] anArray = {};
@@ -271,7 +271,7 @@ public void whenCheckingArray_thenEmpty() {
 
 除了测试一个 `Comparable`是否大于或小于另一个实例，我们还可以检查它们是否至少是一个给定值:
 
-```
+```java
 @Test
 public void whenCheckingComparable_thenAtLeast() {
     Comparable<Integer> aComparable = 5;
@@ -282,7 +282,7 @@ public void whenCheckingComparable_thenAtLeast() {
 
 此外，我们可以测试它们是否在特定范围内:
 
-```
+```java
 @Test
 public void whenCheckingComparable_thenInRange() {
     // ...
@@ -293,7 +293,7 @@ public void whenCheckingComparable_thenInRange() {
 
 或者在特定列表中:
 
-```
+```java
 @Test
 public void whenCheckingComparable_thenInList() {
     // ...
@@ -306,7 +306,7 @@ public void whenCheckingComparable_thenInList() {
 
 首先，让我们修改我们的`User`类来实现`Comparable`接口:
 
-```
+```java
 public class User implements Comparable<User> {
     // ...
 
@@ -318,7 +318,7 @@ public class User implements Comparable<User> {
 
 现在，让我们断言两个同名的用户是等价的:
 
-```
+```java
 @Test
 public void whenComparingUsers_thenEquivalent() {
     User aUser = new User();
@@ -335,7 +335,7 @@ public void whenComparingUsers_thenEquivalent() {
 
 除了断言一个`Iterable`实例的大小，不管它是空的还是没有重复的，大多数关于`Iterable`的典型断言是它包含一些元素:
 
-```
+```java
 @Test
 public void whenCheckingIterable_thenContains() {
     List<Integer> aList = Arrays.asList(4, 5, 6);
@@ -346,7 +346,7 @@ public void whenCheckingIterable_thenContains() {
 
 它包含另一个`Iterable`的任何元素:
 
-```
+```java
 @Test
 public void whenCheckingIterable_thenContainsAnyInList() {
     List<Integer> aList = Arrays.asList(1, 2, 3);
@@ -357,7 +357,7 @@ public void whenCheckingIterable_thenContainsAnyInList() {
 
 主体具有相同的元素，以相同的顺序，像另一个:
 
-```
+```java
 @Test
 public void whenCheckingIterable_thenContainsExactElements() {
     List<String> aList = Arrays.asList("10", "20", "30");
@@ -371,7 +371,7 @@ public void whenCheckingIterable_thenContainsExactElements() {
 
 如果使用定制比较器订购:
 
-```
+```java
 @Test
 public void givenComparator_whenCheckingIterable_thenOrdered() {
     Comparator<String> aComparator
@@ -387,7 +387,7 @@ public void givenComparator_whenCheckingIterable_thenOrdered() {
 
 除了断言一个`Map`实例是否为空，或者具有特定的大小；我们可以检查它是否有特定的条目:
 
-```
+```java
 @Test
 public void whenCheckingMap_thenContainsEntry() {
     Map<String, Object> aMap = new HashMap<>();
@@ -399,7 +399,7 @@ public void whenCheckingMap_thenContainsEntry() {
 
 如果它有特定的键:
 
-```
+```java
 @Test
 public void whenCheckingMap_thenContainsKey() {
     // ...
@@ -410,7 +410,7 @@ public void whenCheckingMap_thenContainsKey() {
 
 或者如果它与另一个`Map`具有相同的条目:
 
-```
+```java
 @Test
 public void whenCheckingMap_thenContainsEntries() {
     Map<String, Object> aMap = new HashMap<>();
@@ -430,7 +430,7 @@ public void whenCheckingMap_thenContainsEntries() {
 
 我们可以编写针对异常原因的断言:
 
-```
+```java
 @Test
 public void whenCheckingException_thenInstanceOf() {
     Exception anException
@@ -444,7 +444,7 @@ public void whenCheckingException_thenInstanceOf() {
 
 或者它的信息:
 
-```
+```java
 @Test
 public void whenCheckingException_thenCauseMessageIsKnown() {
     Exception anException
@@ -460,7 +460,7 @@ public void whenCheckingException_thenCauseMessageIsKnown() {
 
 对于`Class`断言，只有一个重要的方法可以用来测试一个类是否可以分配给另一个类:
 
-```
+```java
 @Test
 public void whenCheckingClass_thenIsAssignable() {
     Class<Double> aClass = Double.class;
@@ -479,7 +479,7 @@ public void whenCheckingClass_thenIsAssignable() {
 
 我们可以测试它是否有特定的值:
 
-```
+```java
 @Test
 public void whenCheckingJavaOptional_thenHasValue() {
     Optional<Integer> anOptional = Optional.of(1);
@@ -490,7 +490,7 @@ public void whenCheckingJavaOptional_thenHasValue() {
 
 如果该值存在:
 
-```
+```java
 @Test
 public void whenCheckingJavaOptional_thenPresent() {
     Optional<String> anOptional = Optional.of("Baeldung");
@@ -501,7 +501,7 @@ public void whenCheckingJavaOptional_thenPresent() {
 
 或者，如果该值不存在:
 
-```
+```java
 @Test
 public void whenCheckingJavaOptional_thenEmpty() {
     Optional anOptional = Optional.empty();
@@ -516,7 +516,7 @@ public void whenCheckingJavaOptional_thenEmpty() {
 
 例如，我们可以测试一个特定的`Stream`是否以相同的顺序包含了一个`Iterable`的所有对象:
 
-```
+```java
 @Test
 public void whenCheckingStream_thenContainsInOrder() {
     Stream<Integer> anStream = Stream.of(1, 2, 3);
@@ -539,7 +539,7 @@ public void whenCheckingStream_thenContainsInOrder() {
 
 但是我们不用`isEmpty()`来断言`Optional`不存在，而是使用`isAbsent()`:
 
-```
+```java
 @Test
 public void whenCheckingGuavaOptional_thenIsAbsent() {
     Optional anOptional = Optional.absent();
@@ -556,7 +556,7 @@ public void whenCheckingGuavaOptional_thenIsAbsent() {
 
 下面是一个测试“one”键的值的大小是否为 2 的示例:
 
-```
+```java
 @Test
 public void whenCheckingGuavaMultimap_thenExpectedSize() {
     Multimap<String, Object> aMultimap = ArrayListMultimap.create();
@@ -575,7 +575,7 @@ public void whenCheckingGuavaMultimap_thenExpectedSize() {
 
 `Multiset`对象的断言包括`Iterable`的断言和一个额外的方法，用于验证一个键是否有特定的出现次数:
 
-```
+```java
 @Test
 public void whenCheckingGuavaMultiset_thenExpectedCount() {
     TreeMultiset<String> aMultiset = TreeMultiset.create();
@@ -589,7 +589,7 @@ public void whenCheckingGuavaMultiset_thenExpectedCount() {
 
 除了检查它的大小或它在哪里是空的，我们还可以检查一个`Table`来验证它是否包含给定行和列的特定映射:
 
-```
+```java
 @Test
 public void whenCheckingGuavaTable_thenContains() {
     Table<String, String, String> aTable = TreeBasedTable.create();
@@ -601,7 +601,7 @@ public void whenCheckingGuavaTable_thenContains() {
 
 或者如果它包含特定的单元格:
 
-```
+```java
 @Test
 public void whenCheckingGuavaTable_thenContainsCell() {
     Table<String, String, String> aTable = getDummyGuavaTable();
@@ -618,7 +618,7 @@ public void whenCheckingGuavaTable_thenContainsCell() {
 
 `Truth`允许我们定制那些故障消息:
 
-```
+```java
 @Test
 public void whenFailingAssertion_thenCustomMessage() {
     assertWithMessage("TEST-985: Secret user subject was NOT null!")
@@ -629,14 +629,14 @@ public void whenFailingAssertion_thenCustomMessage() {
 
 运行测试后，我们得到以下输出:
 
-```
+```java
 TEST-985: Secret user subject was NOT null!:
   Not true that <[[email protected]](/web/20221128115819/https://www.baeldung.com/cdn-cgi/l/email-protection)> is null
 ```
 
 此外，我们可以添加一个自定义标签，在错误消息中显示在我们的主题之前。当对象没有有用的字符串表示时，这可能会很方便:
 
-```
+```java
 @Test
 public void whenFailingAssertion_thenMessagePrefix() {
     User aUser = new User();
@@ -649,7 +649,7 @@ public void whenFailingAssertion_thenMessagePrefix() {
 
 如果我们运行测试，我们可以看到以下输出:
 
-```
+```java
 Not true that User [John Doe]
   (<[[email protected]](/web/20221128115819/https://www.baeldung.com/cdn-cgi/l/email-protection)>) is null
 ```
@@ -666,7 +666,7 @@ Not true that User [John Doe]
 
 现在我们知道了如何扩展`Truth`，让我们创建一个添加对类型`User`对象支持的类:
 
-```
+```java
 public class UserSubject
   extends ComparableSubject<UserSubject, User> {
 
@@ -709,7 +709,7 @@ public class UserSubject
 
 现在，我们可以静态导入自定义主题的`assertThat()`方法，并编写一些测试:
 
-```
+```java
 @Test
 public void whenCheckingUser_thenHasName() {
     User aUser = new User();

@@ -28,7 +28,7 @@ A quick and practical guide to combining multiple collections in Java[Read more]
 
 我们可以在`javafx.util`包中找到`Pair`类。这个类的构造函数有两个参数，一个键和它对应的值:
 
-```
+```java
 Pair<Integer, String> pair = new Pair<>(1, "One");
 Integer key = pair.getKey();
 String value = pair.getValue(); 
@@ -42,7 +42,7 @@ String value = pair.getValue();
 
 `SimpleEntry`被定义为`AbstractMap`类中的嵌套类。要创建这种类型的对象，我们可以向构造函数提供一个键和值:
 
-```
+```java
 AbstractMap.SimpleEntry<Integer, String> entry 
   = new AbstractMap.SimpleEntry<>(1, "one");
 Integer key = entry.getKey();
@@ -53,7 +53,7 @@ String value = entry.getValue();
 
 此外，`AbstractMap`类还包含一个表示不可变对的嵌套类，即`SimpleImmutableEntry`类:
 
-```
+```java
 AbstractMap.SimpleImmutableEntry<Integer, String> entry
   = new AbstractMap.SimpleImmutableEntry<>(1, "one");
 ```
@@ -68,7 +68,7 @@ AbstractMap.SimpleImmutableEntry<Integer, String> entry
 
 这两种实现都可以访问键/值 getter/setter 方法:
 
-```
+```java
 ImmutablePair<Integer, String> pair = new ImmutablePair<>(2, "Two");
 Integer key = pair.getKey();
 String value = pair.getValue();
@@ -78,7 +78,7 @@ String value = pair.getValue();
 
 但是，该操作对可变实现完全有效:
 
-```
+```java
 Pair<Integer, String> pair = new MutablePair<>(3, "Three");
 pair.setValue("New Three"); 
 ```
@@ -87,7 +87,7 @@ pair.setValue("New Three");
 
 在 Vavr 库中，pair 功能由不可变的`Tuple2`类提供:
 
-```
+```java
 Tuple2<Integer, String> pair = new Tuple2<>(4, "Four");
 Integer key = pair._1();
 String value = pair._2(); 
@@ -95,7 +95,7 @@ String value = pair._2();
 
 在这个实现中，我们不能在创建后修改对象，所以变异方法返回一个新的实例，该实例包含所提供的更改:
 
-```
+```java
 tuplePair = pair.update2("New Four"); 
 ```
 
@@ -105,7 +105,7 @@ tuplePair = pair.update2("New Four");
 
 这里最大的优点是能够提供我们的名字，这有助于避免用同一个类表示不同的域对象:
 
-```
+```java
 public class CustomPair {
     private String key;
     private String value;
@@ -118,7 +118,7 @@ public class CustomPair {
 
 另一种常见的解决方法是使用具有两个元素的简单数组来实现类似的结果:
 
-```
+```java
 private Object[] getPair() {
     // ...
     return new Object[] {key, value};

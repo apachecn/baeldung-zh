@@ -14,7 +14,7 @@ Spring Data JPA 提供了许多在应用程序中使用 JPA 的特性。在这�
 
 假设我们有一个`Person `实体:
 
-```
+```java
 @Entity
 public class Person {
     @Id
@@ -26,13 +26,13 @@ public class Person {
 
 我们这里有几个名字必须映射到数据库。嗯， **Spring 默认使用小写字母**，这意味着它只使用小写字母并用下划线分隔单词。因此，`Person` 实体的表创建查询应该是:
 
-```
+```java
 create table person (id bigint not null, first_name varchar(255), last_name varchar(255), primary key (id));
 ```
 
 返回所有名字的选择查询将是:
 
-```
+```java
 select first_name from person;
 ```
 
@@ -46,13 +46,13 @@ select first_name from person;
 
 在第一种情况下，**RDMS 将严格匹配具有相同大小写**的标识符。因此，在我们的示例中，以下查询将有效:
 
-```
+```java
 select first_name from person;
 ```
 
 而这个会抛出一个错误，甚至不返回结果:
 
-```
+```java
 select FIRST_NAME from PERSON;
 ```
 
@@ -62,13 +62,13 @@ select FIRST_NAME from PERSON;
 
 通过在我们的标识符周围使用引号，我们告诉数据库在将这些标识符与表和列名进行比较时，它也应该匹配大小写。因此，仍然使用我们的示例，下面的查询可以工作:
 
-```
+```java
 select "first_name" from "person";
 ```
 
 而这个不会:
 
-```
+```java
 select "first_name" from "PERSON";
 ```
 
@@ -82,7 +82,7 @@ select "first_name" from "PERSON";
 
 由于我们将继续使用 snake case，最快的选择是从`SpringPhysicalNamingStrategy`继承并将标识符转换为大写:
 
-```
+```java
 public class UpperCaseNamingStrategy extends SpringPhysicalNamingStrategy {
     @Override
     protected Identifier getIdentifier(String name, boolean quoted, JdbcEnvironment jdbcEnvironment) {
@@ -95,13 +95,13 @@ public class UpperCaseNamingStrategy extends SpringPhysicalNamingStrategy {
 
 一旦我们编写了实现，我们必须注册它，以便 Hibernate 知道如何使用它。使用 Spring，这是通过**在我们的`application.properties`中设置`spring.jpa.hibernate.naming.physical-strategy`属性**来完成的:
 
-```
+```java
 spring.jpa.hibernate.naming.physical-strategy=com.baeldung.namingstrategy.UpperCaseNamingStrategy
 ```
 
 现在，我们的查询使用大写标识符:
 
-```
+```java
 create table PERSON (ID bigint not null, FIRST_NAME varchar(255), LAST_NAME varchar(255), primary key (ID));
 
 select FIRST_NAME from PERSON;
@@ -109,7 +109,7 @@ select FIRST_NAME from PERSON;
 
 假设我们想使用带引号的标识符，这样 RDMS 就必须匹配大小写。然后我们不得不**使用`true`作为`Identifier` `()`构造函数**的`quoted` 参数:
 
-```
+```java
 @Override
 protected Identifier getIdentifier(String name, boolean quoted, JdbcEnvironment jdbcEnvironment) {
     return new Identifier(name.toUpperCase(), true);
@@ -118,7 +118,7 @@ protected Identifier getIdentifier(String name, boolean quoted, JdbcEnvironment 
 
 在我们的查询将呈现带引号的标识符之后:
 
-```
+```java
 create table "PERSON" ("ID" bigint not null, "FIRST_NAME" varchar(255), "LAST_NAME" varchar(255), primary key ("ID"));
 
 select "FIRST_NAME" from "PERSON";

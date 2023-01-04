@@ -14,7 +14,7 @@
 
 首先，我们将创建两个新的`Maven`项目。服务器项目依赖于`[spring-cloud-config-server](https://web.archive.org/web/20221108190012/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.cloud%22%20AND%20a%3A%22spring-cloud-config-server%22)`模块，以及`[spring-boot-starter-security](https://web.archive.org/web/20221108190012/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-security%22)`和`[spring-boot-starter-web](https://web.archive.org/web/20221108190012/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-web%22)`启动包:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-config-server</artifactId>
@@ -31,7 +31,7 @@
 
 然而，对于客户端项目，我们只需要`[spring-cloud-starter-config](https://web.archive.org/web/20221108190012/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.cloud%22%20AND%20a%3A%22spring-cloud-starter-config%22)`和`[spring-boot-starter-web modules](https://web.archive.org/web/20221108190012/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-web%22)`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-config</artifactId>
@@ -46,7 +46,7 @@
 
 应用程序的主要部分是一个配置类，更确切地说是一个 [`@SpringBootApplication`](/web/20221108190012/https://www.baeldung.com/spring-boot-application-configuration) ，它通过`auto-configure`注释`@EnableConfigServer:`获取所有需要的设置
 
-```
+```java
 @SpringBootApplication
 @EnableConfigServer
 public class ConfigServer {
@@ -65,7 +65,7 @@ public class ConfigServer {
 
 我们还需要为我们的`application.properties`中的`Basic-Authentication`设置用户名和密码，以避免每次应用程序重启时自动生成密码:
 
-```
+```java
 server.port=8888
 spring.cloud.config.server.git.uri=ssh://localhost/config-repo
 spring.cloud.config.server.git.clone-on-start=true
@@ -79,7 +79,7 @@ spring.security.user.password=s3cr3t
 
 配置文件的名称就像普通的 Spring `application.properties`一样，但是使用了一个配置名称，比如客户端的属性`‘spring.application.name',`的值，后面跟一个破折号和活动概要文件，而不是单词“application”。例如:
 
-```
+```java
 $> git init
 $> echo 'user.role=Developer' > config-client-development.properties
 $> echo 'user.role=User'      > config-client-production.properties
@@ -93,7 +93,7 @@ $> git commit -m 'Initial config-client properties'
 
 现在我们可以启动我们的服务器了。我们的服务器提供的`Git`支持的配置 API 可以使用以下路径进行查询:
 
-```
+```java
 /{application}/{profile}[/{label}]
 /{application}-{profile}.yml
 /{label}/{application}-{profile}.yml
@@ -105,7 +105,7 @@ $> git commit -m 'Initial config-client properties'
 
 因此，我们可以通过以下方式检索在分支`master`中的开发概要文件下运行的计划配置客户机的配置:
 
-```
+```java
 $> curl http://root:[[email protected]](/web/20221108190012/https://www.baeldung.com/cdn-cgi/l/email-protection):8888/config-client/development/master
 ```
 
@@ -115,7 +115,7 @@ $> curl http://root:[[email protected]](/web/20221108190012/https://www.baeldun
 
 要获取我们的服务器，配置必须放在`application.properties`文件中。Spring Boot 2.4 引入了一种使用`**spring.config.import**`属性加载配置数据的新方法，这是现在绑定到配置服务器的默认方式:
 
-```
+```java
 @SpringBootApplication
 @RestController
 public class ConfigClient {
@@ -139,7 +139,7 @@ public class ConfigClient {
 
 除了应用程序名之外，我们还将活动概要文件和连接详细信息放入我们的`application.properties`:
 
-```
+```java
 spring.application.name=config-client
 spring.profiles.active=development
 spring.config.import=optional:configserver:http://root:[[email protected]](/web/20221108190012/https://www.baeldung.com/cdn-cgi/l/email-protection):8888
@@ -151,13 +151,13 @@ spring.config.import=optional:configserver:http://root:[[email protected]](/web
 
 为了测试是否从我们的服务器正确接收到配置，以及是否在我们的控制器方法中注入了`role value`,我们只需在启动客户端后将其卷曲:
 
-```
+```java
 $> curl http://localhost:8080/whoami/Mr_Pink
 ```
 
 如果响应如下，我们的`Spring Cloud Config Server`和它的客户端目前工作正常:
 
-```
+```java
 Hello! You're Mr_Pink and you'll become a(n) Developer...
 ```
 
@@ -181,7 +181,7 @@ Hello! You're Mr_Pink and you'll become a(n) Developer...
 
 因此，为了能够使用`/encrypt`和`/decrypt`端点，让我们禁用它们的 CSRF:
 
-```
+```java
 @Configuration
 public class SecurityConfiguration {
 
@@ -206,7 +206,7 @@ public class SecurityConfiguration {
 
 由于我们的演示服务器需要一个高度安全的环境，我们将选择后一个选项，同时生成一个新的密钥库，包括一个`RSA`密钥对，首先是 Java `keytool` :
 
-```
+```java
 $> keytool -genkeypair -alias config-server-key \
        -keyalg RSA -keysize 4096 -sigalg SHA512withRSA \
        -dname 'CN=Config Server,OU=Spring Cloud,O=Baeldung' \
@@ -216,7 +216,7 @@ $> keytool -genkeypair -alias config-server-key \
 
 然后，我们将创建的密钥库添加到服务器的应用程序`.properties`中，并重新运行它:
 
-```
+```java
 encrypt.keyStore.location=classpath:/config-server.jks
 encrypt.keyStore.password=my-s70r3-s3cr3t
 encrypt.keyStore.alias=config-server-key
@@ -225,7 +225,7 @@ encrypt.keyStore.secret=my-k34-s3cr3t
 
 接下来，我们将查询加密端点，并将响应作为一个值添加到存储库中的配置中:
 
-```
+```java
 $> export PASSWORD=$(curl -X POST --data-urlencode d3v3L \
        http://root:[[email protected]](/web/20221108190012/https://www.baeldung.com/cdn-cgi/l/email-protection):8888/encrypt)
 $> echo "user.password={cipher}$PASSWORD" >> config-client-development.properties
@@ -235,7 +235,7 @@ $> curl -X POST http://root:[[email protected]](/web/20221108190012/https://www
 
 为了测试我们的设置是否正常工作，我们将修改`ConfigClient`类并重启我们的客户端:
 
-```
+```java
 @SpringBootApplication
 @RestController
 public class ConfigClient {
@@ -257,7 +257,7 @@ public class ConfigClient {
 
 最后，对我们的客户端的查询将显示我们的配置值是否被正确解密:
 
-```
+```java
 $> curl http://localhost:8080/whoami/Mr_Pink
 Hello! You're Mr_Pink and you'll become a(n) Developer, \
   but only if your password is 'd3v3L'!
@@ -269,7 +269,7 @@ Hello! You're Mr_Pink and you'll become a(n) Developer, \
 
 配置服务器几乎开箱即可理解前缀`{secret:my-crypto-secret}`或`{key:my-key-alias}`。后一个选项需要在我们的`application.properties`中配置一个密钥库。在这个密钥库中搜索匹配的密钥别名。比如:
 
-```
+```java
 user.password={cipher}{secret:my-499-s3cr3t}AgAMirj1DkQC0WjRv...
 user.password={cipher}{key:config-client-key}AgAMirj1DkQC0WjRv...
 ```
@@ -280,7 +280,7 @@ user.password={cipher}{key:config-client-key}AgAMirj1DkQC0WjRv...
 
 如果我们想禁用服务器端加密并在本地处理属性值的解密，我们可以在服务器的`application.properties`中放入以下内容:
 
-```
+```java
 spring.cloud.config.server.encrypt.enabled=false
 ```
 

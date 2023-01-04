@@ -16,7 +16,7 @@ Guava 的`Table`是一个集合，表示一个类似表格的结构，包含行�
 
 让我们从在`pom.xml`中添加 Google 的番石榴库依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -40,21 +40,21 @@ Guava 的`Table`是一个集合，表示一个类似表格的结构，包含行�
 
 *   从内部使用`LinkedHashMap`的类`HashBasedTable`中使用`create`方法:
 
-    ```
+    ```java
     Table<String, String, Integer> universityCourseSeatTable 
       = HashBasedTable.create();
     ```
 
 *   如果我们需要一个`Table`，它的行键和列键需要按照它们的自然顺序或者通过提供比较器来排序，那么您可以从一个名为`TreeBasedTable`的类中使用`create`方法创建一个`Table`的实例，该类在内部使用【T4:
 
-    ```
+    ```java
     Table<String, String, Integer> universityCourseSeatTable
       = TreeBasedTable.create(); 
     ```
 
 *   如果我们预先知道行键和列键，并且表的大小是固定的，那么使用来自类`ArrayTable` :
 
-    ```
+    ```java
     List<String> universityRowTable 
       = Lists.newArrayList("Mumbai", "Harvard");
     List<String> courseColumnTables 
@@ -66,7 +66,7 @@ Guava 的`Table`是一个集合，表示一个类似表格的结构，包含行�
     的`create`方法
 *   如果我们打算创建一个内部数据永远不会改变的`Table`的不可变实例，使用`ImmutableTable`类(按照构建器模式创建):
 
-    ```
+    ```java
     Table<String, String, Integer> universityCourseSeatTable
       = ImmutableTable.<String, String, Integer> builder()
       .put("Mumbai", "Chemical", 120).build(); 
@@ -80,7 +80,7 @@ Guava 的`Table`是一个集合，表示一个类似表格的结构，包含行�
 
 如果我们知道行键和列键，那么我们可以得到与行键和列键相关的值:
 
-```
+```java
 @Test
 public void givenTable_whenGet_returnsSuccessfully() {
     Table<String, String, Integer> universityCourseSeatTable 
@@ -111,7 +111,7 @@ public void givenTable_whenGet_returnsSuccessfully() {
 
 让我们看看如何检查条目的存在:
 
-```
+```java
 @Test
 public void givenTable_whenContains_returnsSuccessfully() {
     Table<String, String, Integer> universityCourseSeatTable 
@@ -141,7 +141,7 @@ public void givenTable_whenContains_returnsSuccessfully() {
 
 我们可以通过提供行键和列键从`Table`中删除一个条目:
 
-```
+```java
 @Test
 public void givenTable_whenRemove_returnsSuccessfully() {
     Table<String, String, Integer> universityCourseSeatTable
@@ -162,7 +162,7 @@ public void givenTable_whenRemove_returnsSuccessfully() {
 
 通过提供列键，我们可以得到一个键为行、值为 T1 的`Map`表示:
 
-```
+```java
 @Test
 public void givenTable_whenColumn_returnsSuccessfully() {
     Table<String, String, Integer> universityCourseSeatTable 
@@ -185,7 +185,7 @@ public void givenTable_whenColumn_returnsSuccessfully() {
 
 我们可以通过使用`columnMap`方法得到一个`Map<UniversityName, Map<CoursesOffered, SeatAvailable>>`表示:
 
-```
+```java
 @Test
 public void givenTable_whenColumnMap_returnsSuccessfully() {
     Table<String, String, Integer> universityCourseSeatTable 
@@ -209,7 +209,7 @@ public void givenTable_whenColumnMap_returnsSuccessfully() {
 
 通过提供行键，我们可以得到一个键为列、值为 T1 的`Map`表示:
 
-```
+```java
 @Test
 public void givenTable_whenRow_returnsSuccessfully() {
     Table<String, String, Integer> universityCourseSeatTable 
@@ -232,7 +232,7 @@ public void givenTable_whenRow_returnsSuccessfully() {
 
 我们可以使用`rowKeySet`方法从一个表中获取所有的行键:
 
-```
+```java
 @Test
 public void givenTable_whenRowKeySet_returnsSuccessfully() {
     Table<String, String, Integer> universityCourseSeatTable
@@ -252,7 +252,7 @@ public void givenTable_whenRowKeySet_returnsSuccessfully() {
 
 我们可以使用`columnKeySet`方法从一个表中获取所有的列键:
 
-```
+```java
 @Test
 public void givenTable_whenColKeySet_returnsSuccessfully() {
     Table<String, String, Integer> universityCourseSeatTable

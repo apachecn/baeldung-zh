@@ -12,7 +12,7 @@
 
 首先，让我们将`javers-core` Maven 依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.javers</groupId>
     <artifactId>javers-core</artifactId>
@@ -26,7 +26,7 @@
 
 让我们从一个简单的`Person`类开始:
 
-```
+```java
 public class Person {
     private Integer id;
     private String name;
@@ -39,7 +39,7 @@ public class Person {
 
 我们可以使用来自`JaVers`类的`compare()` 方法来比较这两个对象:
 
-```
+```java
 @Test
 public void givenPersonObject_whenApplyModificationOnIt_thenShouldDetectChange() {
     // given
@@ -69,7 +69,7 @@ public void givenPersonObject_whenApplyModificationOnIt_thenShouldDetectChange()
 
 出于某种原因，这种更改可能是不可取的，我们希望审核该列表中发生的更改。JaVers 允许我们使用一种`compareCollections()`方法:
 
-```
+```java
 @Test
 public void givenListOfPersons_whenCompare_ThenShouldDetectChanges() {
     // given
@@ -109,7 +109,7 @@ public void givenListOfPersons_whenCompare_ThenShouldDetectChanges() {
 
 我们可以很容易地找到已经发生的变化类型:
 
-```
+```java
 @Test
 public void givenListOfPerson_whenPersonHasNewAddress_thenDetectThatChange() {
     // given
@@ -134,7 +134,7 @@ public void givenListOfPerson_whenPersonHasNewAddress_thenDetectThatChange() {
 
 同样，删除地址也会被检测到:
 
-```
+```java
 @Test
 public void givenListOfPerson_whenPersonRemovedAddress_thenDetectThatChange() {
     // given

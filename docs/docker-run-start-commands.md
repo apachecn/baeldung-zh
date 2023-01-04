@@ -10,20 +10,20 @@
 
 **Docker 的`[run](https://web.archive.org/web/20220722073354/https://docs.docker.com/engine/reference/commandline/run/)`命令是其`create`和`start`命令的组合。它在其特定的图像上创建一个容器，然后启动它**。例如，让我们运行一个 [Postgres](https://web.archive.org/web/20220722073354/https://hub.docker.com/_/postgres) 容器:
 
-```
+```java
 docker run --name postgres_example -p 5432:5432 -v /volume:/var/lib/postgresql/data -e POSTGRES_PASSWORD=my_password -d postgres 
 ```
 
 让我们用 [`docker ps`](https://web.archive.org/web/20220722073354/https://docs.docker.com/engine/reference/commandline/ps/) 来看看我们正在运行的容器:
 
-```
+```java
 CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS         PORTS                                       NAMES
 52b7c79bfaa8   postgres  "docker-entrypoint.s…"   22 seconds ago   Up 20 seconds  0.0.0.0:5432->5432/tcp, :::5432->5432/tcp   postgres_example 
 ```
 
 如果我们使用`[docker logs](https://web.archive.org/web/20220722073354/https://docs.docker.com/engine/reference/commandline/logs/)`，我们还可以检查关于一个已启动的容器的更多信息，例如:
 
-```
+```java
 starting PostgreSQL 13.2
 listening on IPv4 address "0.0.0.0", port 5432
 listening on IPv6 address "::", port 5432
@@ -37,20 +37,20 @@ database system is ready to accept connections
 
 为了演示这一点，让我们手动停止我们之前创建的容器:
 
-```
+```java
 docker stop 52b7c79bfaa8
 ```
 
 在这种情况下，我们的容器的运行列表将显示一个退出的容器:
 
-```
+```java
 CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS                    PORTS                                       NAMES
 52b7c79bfaa8   postgres  "docker-entrypoint.s…"   2 minutes ago    Exited (0) 2 seconds ago  0.0.0.0:5432->5432/tcp, :::5432->5432/tcp   postgres_example 
 ```
 
 让我们看看日志:
 
-```
+```java
 received fast shutdown request
 aborting any active transactions
 shutting down
@@ -59,7 +59,7 @@ database system is shut down
 
 如果容器关闭，我们可能希望使用`docker start`再次启动它:
 
-```
+```java
 docker start 52b7c79bfaa8
 ```
 

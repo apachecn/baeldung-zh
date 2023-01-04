@@ -10,7 +10,7 @@
 
 在我们开始之前，我们需要**将 [`org.json`](https://web.archive.org/web/20220630134032/https://search.maven.org/search?q=g:org.json%20AND%20a:json&core=gav) 依赖**添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.json</groupId>
     <artifactId>json</artifactId>
@@ -24,7 +24,7 @@
 
 所以，让我们用下面的方法把一个`BufferedReader`转换成一个`JSONObject`:
 
-```
+```java
 @Test
 public void givenValidJson_whenUsingBufferedReader_thenJSONTokenerConverts() {
     byte[] b = "{ \"name\" : \"John\", \"age\" : 18 }".getBytes(StandardCharsets.UTF_8);
@@ -45,7 +45,7 @@ public void givenValidJson_whenUsingBufferedReader_thenJSONTokenerConverts() {
 
 在旧版本的`org.json`中工作时可以使用这种方法:
 
-```
+```java
 @Test
 public void givenValidJson_whenUsingString_thenJSONObjectConverts()
   throws IOException {

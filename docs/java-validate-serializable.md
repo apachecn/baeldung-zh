@@ -22,7 +22,7 @@
 
 假设我们有一个没有实现`Serializable`接口的`Address`对象:
 
-```
+```java
 public class Address {
     private int houseNumber;
 
@@ -32,7 +32,7 @@ public class Address {
 
 尝试序列化一个`Address`对象时，可能会出现一个`NotSerializableException`:
 
-```
+```java
 @Test(expected = NotSerializableException.class)
 public void whenSerializing_ThenThrowsError() throws IOException {
     Address address = new Address();
@@ -46,7 +46,7 @@ public void whenSerializing_ThenThrowsError() throws IOException {
 
 现在，假设我们有一个实现了`Serializable`接口的`Person`对象:
 
-```
+```java
 public class Person implements Serializable {
     private static final long serialVersionUID = 1L;
     private int age;
@@ -58,7 +58,7 @@ public class Person implements Serializable {
 
 在这种情况下，我们将能够序列化和反序列化以重新创建对象:
 
-```
+```java
 Person p = new Person();
 p.setAge(20);
 p.setName("Joe");
@@ -81,7 +81,7 @@ try ( ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStrea
 
 如果我们试图通过显式类型转换来编译代码，从而序列化不可序列化的`Address`对象，会怎么样？在`runtime`，我们会遇到一个`ClassCastException`:
 
-```
+```java
 Address address = new Address();
 address.setHouseNumber(10);
 SerializationUtils.serialize((Serializable) address);
@@ -89,7 +89,7 @@ SerializationUtils.serialize((Serializable) address);
 
 让我们使用上面的方法来验证可序列化的`Person` 对象:
 
-```
+```java
 Person p = new Person();
 p.setAge(20);
 p.setName("Joe");
@@ -105,7 +105,7 @@ assertEquals(p2.getName(), p.getName());
 
 这样的代码将在运行时抛出一个`ClassCastException` :
 
-```
+```java
 Address address = new Address();
 address.setHouseNumber(10);
 org.springframework.util.SerializationUtils.serialize((Serializable) address);
@@ -113,7 +113,7 @@ org.springframework.util.SerializationUtils.serialize((Serializable) address);
 
 让我们尝试使用可序列化的`Person`对象:
 
-```
+```java
 Person p = new Person();
 p.setAge(20);
 p.setName("Joe");
@@ -129,7 +129,7 @@ assertEquals(p2.getName(), p.getName());
 
 第一个是序列化过程的对象验证示例:
 
-```
+```java
 public static  byte[] serialize(T obj) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -141,7 +141,7 @@ public static  byte[] serialize(T obj) throws IOException {
 
 我们还将编写一个方法来执行反序列化过程:
 
-```
+```java
 public static  T deserialize(byte[] b, Class cl) throws IOException, ClassNotFoundException {
     ByteArrayInputStream bais = new ByteArrayInputStream(b);
     ObjectInputStream ois = new ObjectInputStream(bais);
@@ -154,7 +154,7 @@ public static  T deserialize(byte[] b, Class cl) throws IOException, ClassNotFou
 
 让我们实现这个方法:
 
-```
+```java
 public static boolean isSerializable(Class<?> it) {
     boolean serializable = it.isPrimitive() || it.isInterface() || Serializable.class.isAssignableFrom(it);
     if (!serializable) {
@@ -177,7 +177,7 @@ public static boolean isSerializable(Class<?> it) {
 
 现在让我们验证我们的实用方法:
 
-```
+```java
 assertFalse(MySerializationUtils.isSerializable(Address.class));
 assertTrue(MySerializationUtils.isSerializable(Person.class));
 assertTrue(MySerializationUtils.isSerializable(Integer.class));

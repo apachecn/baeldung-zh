@@ -12,7 +12,7 @@
 
 首先，让我们看看我们将用来检索数据的实体:
 
-```
+```java
 @Entity
 public class DeptEmployee {
 
@@ -62,7 +62,7 @@ public class Department {
 
 通常，我们会使用如下查询检索这些数据:
 
-```
+```java
 Query<DeptEmployee> query = session.createQuery("from com.baeldung.hibernate.entities.DeptEmployee");
 List<DeptEmployee> deptEmployees = query.list();
 ```
@@ -75,7 +75,7 @@ List<DeptEmployee> deptEmployees = query.list();
 
 但是，当我们这样做时，Hibernate 返回一个数组列表，而不是一个`Objects:`列表
 
-```
+```java
 Query query = session.createQuery("select m.name, m.department.name from com.baeldung.hibernate.entities.DeptEmployee m");
 List managers = query.list();
 Object[] manager = (Object[]) managers.get(0);
@@ -87,7 +87,7 @@ assertEquals("Sales", manager[1]);
 
 让我们看一下`Result`类，我们将使用它将检索到的数据填充到:
 
-```
+```java
 public class Result {
     private String employeeName;
 
@@ -113,7 +113,7 @@ public class Result {
 
 现在，让我们看看使用这个类的 HQL:
 
-```
+```java
 Query<Result> query = session.createQuery("select new com.baeldung.hibernate.pojo.Result(m.name, m.department.name)" 
   + " from com.baeldung.hibernate.entities.DeptEmployee m");
 List<Result> results = query.list();
@@ -132,7 +132,7 @@ assertEquals("Sales", result.getDepartmentName());
 
 在 HQL 查询中使用构造函数的另一种方法是使用`ResultTransformer:`
 
-```
+```java
 Query query = session.createQuery("select m.name as employeeName, m.department.name as departmentName" 
   + " from com.baeldung.hibernate.entities.DeptEmployee m");
 query.setResultTransformer(Transformers.aliasToBean(Result.class));

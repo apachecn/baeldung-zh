@@ -14,13 +14,13 @@
 
 `instanceof`运算符的基本语法是:
 
-```
+```java
 (object) instanceof (type)
 ```
 
 现在让我们看一个`instanceof `操作符的基本例子。首先，我们将创建一个类`Round`:
 
-```
+```java
 public class Round {
     // implementation details
 }
@@ -28,7 +28,7 @@ public class Round {
 
 接下来，我们将创建一个扩展了`Round`的类`Ring`:
 
-```
+```java
 public class Ring extends Round {
     // implementation details
 }
@@ -36,7 +36,7 @@ public class Ring extends Round {
 
 我们可以使用`instanceof`来检查`Ring`的实例是否属于`Round`类型:
 
-```
+```java
 @Test
 public void givenWhenInstanceIsCorrect_thenReturnTrue() {
     Ring ring = new Ring();
@@ -50,7 +50,7 @@ public void givenWhenInstanceIsCorrect_thenReturnTrue() {
 
 为了演示这一点，我们将创建一个`Shape`接口:
 
-```
+```java
 public interface Shape {
     // implementation details
 }
@@ -58,7 +58,7 @@ public interface Shape {
 
 我们还将创建一个类`Circle,`，它实现了`Shape`接口并扩展了`Round`类:
 
-```
+```java
 public class Circle extends Round implements Shape {
     // implementation details
 }
@@ -66,7 +66,7 @@ public class Circle extends Round implements Shape {
 
 **如果对象是类型:**的实例，`instanceof`结果将是`true`
 
-```
+```java
 @Test
 public void givenWhenObjectIsInstanceOfType_thenReturnTrue() {
     Circle circle = new Circle();
@@ -76,7 +76,7 @@ public void givenWhenObjectIsInstanceOfType_thenReturnTrue() {
 
 **如果对象是**类型的子类的实例，它也将是`true`
 
-```
+```java
 @Test
 public void giveWhenInstanceIsOfSubtype_thenReturnTrue() {
     Circle circle = new Circle();
@@ -86,7 +86,7 @@ public void giveWhenInstanceIsOfSubtype_thenReturnTrue() {
 
 **如果类型是接口，则返回`true`如果对象实现接口:**
 
-```
+```java
 @Test
 public void givenWhenTypeIsInterface_thenReturnTrue() {
     Circle circle = new Circle();
@@ -98,7 +98,7 @@ public void givenWhenTypeIsInterface_thenReturnTrue() {
 
 我们将创建一个新的类，`Triangle,` ，它实现了`Shape,` ，但是与`Circle`没有关系:
 
-```
+```java
 public class Triangle implements Shape {
     // implementation details
 }
@@ -106,7 +106,7 @@ public class Triangle implements Shape {
 
 现在，如果我们使用`instanceof`来检查`Circle`是否是`Triangle`的实例:
 
-```
+```java
 @Test
 public void givenWhenComparingClassInDiffHierarchy_thenCompilationError() {
     Circle circle = new Circle();
@@ -116,7 +116,7 @@ public void givenWhenComparingClassInDiffHierarchy_thenCompilationError() {
 
 我们将得到一个编译错误，因为`Circle`和`Triangle`类之间没有关系:
 
-```
+```java
 java.lang.Error: Unresolved compilation problem:
   Incompatible conditional operand types Circle and Triangle
 ```
@@ -125,7 +125,7 @@ java.lang.Error: Unresolved compilation problem:
 
 在 Java 中，每个类都隐式继承自`Object`类。因此，使用带有`Object`类型的`instanceof`操作符将始终计算为`true`:
 
-```
+```java
 @Test
 public void givenWhenTypeIsOfObjectType_thenReturnTrue() {
     Thread thread = new Thread();
@@ -137,7 +137,7 @@ public void givenWhenTypeIsOfObjectType_thenReturnTrue() {
 
 如果我们对任何一个`null`对象使用` instanceof`操作符，它将返回`false`。当使用`instanceof`操作符时，我们也不需要空检查。
 
-```
+```java
 @Test
 public void givenWhenInstanceValueIsNull_thenReturnFalse() {
     Circle circle = null;
@@ -151,7 +151,7 @@ public void givenWhenInstanceValueIsNull_thenReturnFalse() {
 
 例如，如果我们试图编译下面的代码片段:
 
-```
+```java
 public static <T> void sort(List<T> collection) {
     if (collection instanceof List<String>) {
         // sort strings differently
@@ -163,7 +163,7 @@ public static <T> void sort(List<T> collection) {
 
 然后我们得到这个编译错误:
 
-```
+```java
 error: illegal generic type for instanceof
         if (collection instanceof List<String>) {
                                       ^
@@ -181,7 +181,7 @@ Java 中的具体化类型如下:
 
 因为泛型类型参数没有具体化，所以我们也不能使用它们:
 
-```
+```java
 public static <T> boolean isOfType(Object input) {
     return input instanceof T; // won't compile
 }
@@ -189,7 +189,7 @@ public static <T> boolean isOfType(Object input) {
 
 然而，可以针对类似`List<?>`的东西进行测试:
 
-```
+```java
 if (collection instanceof List<?>) {
     // do something
 }

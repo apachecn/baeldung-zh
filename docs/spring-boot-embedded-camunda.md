@@ -22,7 +22,7 @@ Camunda 工作流引擎是 [Activiti](/web/20221207215846/https://www.baeldung.c
 
 生成的项目是一个**常规的 Spring Boot 应用程序，带有额外的 Camunda 依赖项和配置**。目录结构如下图所示:[![](img/622cdce4bd55bb5aa2499c58a494f89b.png)](/web/20221207215846/https://www.baeldung.com/wp-content/uploads/2022/12/camunda_proyect.png)`resources`目录下有一个简单的工作流程图`process.bpmn`。它使用 start 节点开始执行流程。之后，它将继续执行`Say hello to demo`任务。该任务完成后，执行会在遇到最后一个节点时停止。Camunda 属性存在于`application.yaml`中。让我们来看看`application.yaml`中生成的默认 Camunda 属性:
 
-```
+```java
 camunda.bpm.admin-user:
   id: demo
   password: demo
@@ -38,7 +38,7 @@ camunda.bpm.admin-user:
 
 让我们首先在我们的`pom.xml`中声明 [`camunda-bpm-spring-boot-starter-webapp`](https://web.archive.org/web/20221207215846/https://search.maven.org/search?q=g:org.camunda.bpm.springboot%20AND%20a:camunda-bpm-spring-boot-starter-webapp) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.camunda.bpm.springboot</groupId>
     <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
@@ -48,7 +48,7 @@ camunda.bpm.admin-user:
 
 我们需要一个数据库来存储过程定义、过程实例、历史信息等。在本教程中，我们使用基于文件的`H2`数据库。因此，我们需要添加 [`h2`](https://web.archive.org/web/20221207215846/https://search.maven.org/search?q=g:com.h2database%20a:h2) 和 [`spring-boot-starter-jdbc`](https://web.archive.org/web/20221207215846/https://search.maven.org/search?q=a:spring-boot-starter-jdbc%20g:org.springframework.boot) 的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -63,7 +63,7 @@ camunda.bpm.admin-user:
 
 我们使用 Camunda Modeler 来定义一个简单的贷款请求工作流程图`loanProcess.bpmn`。下面是`loanProcess` `.bpmn`模型执行顺序的图形化流程图，以帮助我们理解: [![](img/c13b35cc471b5f6bd0ff67812b97f160.png)](/web/20221207215846/https://www.baeldung.com/wp-content/uploads/2022/12/loanProcess.png) 我们使用开始节点开始执行流程。之后，执行`Calculate Interest`任务。接下来，我们将继续进行`Approve Loan`任务。该任务完成后，执行会在遇到最后一个节点时停止。`Calculate Interest`任务是一个服务任务，调用`CalculateInterestService` bean:
 
-```
+```java
 @Component
 public class CalculateInterestService implements JavaDelegate {
 
@@ -95,7 +95,7 @@ public class CalculateInterestService implements JavaDelegate {
 
 **cam unda task list 应用程序用于管理用户与其任务的交互**。我们可以通过单击 Start process 菜单项来启动我们的示例流程: [![](img/7d0b74d085b88b1d0221db2249a81955.png)](/web/20221207215846/https://www.baeldung.com/wp-content/uploads/2022/12/camunda_tasklist.png) 启动流程后，执行`Calculate Interest`任务。它会登录到控制台:
 
-```
+```java
 2022-11-27 09:34:05.848  INFO 2748 --- [nio-8080-exec-3] c.e.c.task.CalculateInterestService      : calculating interest of the loan
 ```
 

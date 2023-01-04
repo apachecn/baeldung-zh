@@ -32,14 +32,14 @@
 
 更具体地说，我们可以使用 [Java Object Layout (JOL)](https://web.archive.org/web/20220625224428/https://search.maven.org/artifact/org.openjdk.jol/jol-core) 来检查一个有 10，000 个元素的`boolean[] `的内存布局:
 
-```
+```java
 boolean[] ba = new boolean[10_000];
 System.out.println(ClassLayout.parseInstance(ba).toPrintable());
 ```
 
 这将打印内存布局:
 
-```
+```java
 [Z object internals:
  OFFSET  SIZE      TYPE DESCRIPTION               VALUE
       0     4           (object header)           01 00 00 00 (1)
@@ -54,14 +54,14 @@ Instance size: 10016 bytes
 
 另一方面， **`BitSet `使用原始数据类型(特别是`long`)和[位操作](/web/20220625224428/https://www.baeldung.com/java-bitwise-operators)的组合来实现每个标志占用一位**。因此，与同样大小的`boolean[] `相比，10，000 位的`BitSet `将消耗更少的内存:
 
-```
+```java
 BitSet bitSet = new BitSet(10_000);
 System.out.println(GraphLayout.parseInstance(bitSet).toPrintable());
 ```
 
 类似地，这将打印出`BitSet`的内存布局:
 
-```
+```java
 [[email protected]](/web/20220625224428/https://www.baeldung.com/cdn-cgi/l/email-protection) object externals:
           ADDRESS       SIZE TYPE             PATH      
         76beb8190         24 java.util.BitSet           
@@ -72,7 +72,7 @@ System.out.println(GraphLayout.parseInstance(bitSet).toPrintable());
 
 我们还可以比较不同位数的内存占用:
 
-```
+```java
 Path path = Paths.get("footprint.csv");
 try (BufferedWriter stream = Files.newBufferedWriter(path, StandardOpenOption.CREATE)) {
     stream.write("bits,bool,bitset\n");
@@ -113,7 +113,7 @@ try (BufferedWriter stream = Files.newBufferedWriter(path, StandardOpenOption.CR
 
 这是我们用来比较不同长度的位向量吞吐量的常用设置:
 
-```
+```java
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.Throughput)
 public class VectorOfBitsBenchmark {
@@ -150,7 +150,7 @@ public class VectorOfBitsBenchmark {
 
 让我们看看哪一个赢了！以下是 [JMH](/web/20220625224428/https://www.baeldung.com/java-microbenchmark-harness) 每次使用不同的`size `状态值运行的基准:
 
-```
+```java
 @Benchmark
 public boolean getBoolArray() {
     return array[ThreadLocalRandom.current().nextInt(size)];
@@ -166,7 +166,7 @@ public boolean getBitSet() {
 
 我们将使用以下命令运行基准测试:
 
-```
+```java
 $ java -jar jmh-1.0-SNAPSHOT.jar -f2 -t4 -prof perfnorm -rff get.csv getBitSet getBoolArray
 ```
 
@@ -174,7 +174,7 @@ $ java -jar jmh-1.0-SNAPSHOT.jar -f2 -t4 -prof perfnorm -rff get.csv getBitSet g
 
 由于命令结果非常冗长，我们将只在这里绘制它们。在此之前，让我们看看每个基准测试结果的基本结构:
 
-```
+```java
 "Benchmark","Mode","Threads","Samples","Score","Score Error (99.9%)","Unit","Param: size"
 "getBitSet","thrpt",4,40,184790139.562014,2667066.521846,"ops/s",100
 "getBitSet:L1-dcache-load-misses","thrpt",4,2,0.002467,NaN,"#/op",100
@@ -220,7 +220,7 @@ $ java -jar jmh-1.0-SNAPSHOT.jar -f2 -t4 -prof perfnorm -rff get.csv getBitSet g
 
 为了比较 set 操作的吞吐量，我们将使用以下基准:
 
-```
+```java
 @Benchmark
 public void setBoolArray() {
     int index = ThreadLocalRandom.current().nextInt(size);
@@ -236,7 +236,7 @@ public void setBitSet() {
 
 基本上，我们选择一个随机的位索引，并将其设置为`true`。类似地，我们可以使用以下命令运行这些基准:
 
-```
+```java
 $ java -jar jmh-1.0-SNAPSHOT.jar -f2 -t4 -prof perfnorm -rff set.csv setBitSet setBoolArray
 ```
 
@@ -260,7 +260,7 @@ $ java -jar jmh-1.0-SNAPSHOT.jar -f2 -t4 -prof perfnorm -rff set.csv setBitSet s
 
 这种位向量中的另一个常见操作是计算置位位数。这次我们将运行这些基准测试:
 
-```
+```java
 @Benchmark
 public int cardinalityBoolArray() {
     int sum = 0;
@@ -279,7 +279,7 @@ public int cardinalityBitSet() {
 
 同样，我们可以使用以下命令运行这些基准:
 
-```
+```java
 $ java -jar jmh-1.0-SNAPSHOT.jar -f2 -t4 -prof perfnorm -rff cardinal.csv cardinalityBitSet cardinalityBoolArray
 ```
 
@@ -291,7 +291,7 @@ $ java -jar jmh-1.0-SNAPSHOT.jar -f2 -t4 -prof perfnorm -rff cardinal.csv cardin
 
 此外，由于我们的位向量中设置位的这条线和随机分布:
 
-```
+```java
 if (b) {
     sum++;
 }

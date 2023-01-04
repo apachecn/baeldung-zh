@@ -18,7 +18,7 @@
 
 让我们创建一个 Spring Boot 应用程序来演示这个特性。**首先，让我们给应用程序添加一个前缀**。我们称之为“ `prefix”` 简单点说:
 
-```
+```java
 @SpringBootApplication
 public class PrefixApplication {
 
@@ -34,7 +34,7 @@ public class PrefixApplication {
 
 我们还想创建一个端点来检查我们的应用程序正在监听哪个端口:
 
-```
+```java
 @Controller
 public class PrefixController {
 
@@ -51,7 +51,7 @@ public class PrefixController {
 
 在这种情况下，我们使用[百里香叶](/web/20220707143855/https://www.baeldung.com/thymeleaf-in-spring-mvc)来解析我们的模板，同时设置我们的服务器端口，有一个简单的主体，如下所示:
 
-```
+```java
 <html>
     // ...
 <body>
@@ -74,7 +74,7 @@ It is working as we expected. Your server is running at port : <b th:text="${ser
 
 如果我们用浏览器加载 URL `http://localhost:8085/prefix`，我们可以看到服务器正在运行，并且在端口处，我们之前添加了前缀:
 
-```
+```java
 It is working as we expected. Your server is running at port : 8085
 ```
 

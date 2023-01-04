@@ -14,7 +14,7 @@
 
 让我们看一个例子:
 
-```
+```java
 public void printStringToConsoleWithDate(String str) {
     System.out.println(LocalDateTime.now().toString() + " " + str);
 }
@@ -36,7 +36,7 @@ public void printStringToConsoleWithDate(String str) {
 
 我们可以**禁用一行代码，方法是在**的末尾加上// `NOSONAR`:
 
-```
+```java
 System.out.println(
   LocalDateTime.now()
     .toString() + " " + str); //NOSONAR lightweight logging
@@ -56,7 +56,7 @@ System.out.println(
 
 我们可以对该函数进行注释:
 
-```
+```java
 @SuppressWarnings("java:S106")
 public void printStringToConsoleWithDate(String str) {
     System.out.println(LocalDateTime.now().toString() + " " + str);
@@ -81,7 +81,7 @@ public void printStringToConsoleWithDate(String str) {
 
 让我们定义并添加`sonar-project.properties`文件到我们的资源目录:
 
-```
+```java
 sonar.issue.ignore.multicriteria=e1
 
 sonar.issue.ignore.multicriteria.e1.ruleKey=java:S106
@@ -92,7 +92,7 @@ sonar.issue.ignore.multicriteria.e1.resourceKey=**/SonarExclude.java
 
 使用这种方法，我们可以构建一个复杂的配置，在多个文件中排除特定的规则:
 
-```
+```java
 sonar.issue.ignore.multicriteria=e1,e2
 
 # Console usage - ignore a single class
@@ -113,7 +113,7 @@ sonar.issue.ignore.multicriteria.e2.resourceKey=com/baeldung/sonar/*.java
 
 回到例子，让我们修改我们的`pom.xml`:
 
-```
+```java
 <properties>
     <sonar.issue.ignore.multicriteria>e1</sonar.issue.ignore.multicriteria>
     <sonar.issue.ignore.multicriteria.e1.ruleKey>java:S106</sonar.issue.ignore.multicriteria.e1.ruleKey>
@@ -131,7 +131,7 @@ sonar.issue.ignore.multicriteria.e2.resourceKey=com/baeldung/sonar/*.java
 
 让我们通过在我们的`pom.xml`中定义`sonar.exclusions`来排除我们的类:
 
-```
+```java
 <properties>
     <sonar.exclusions>**/SonarExclude.java</sonar.exclusions>
 </properties>
@@ -141,7 +141,7 @@ sonar.issue.ignore.multicriteria.e2.resourceKey=com/baeldung/sonar/*.java
 
 我们也可以使用文件匹配模式。让我们通过定义来排除整个包:
 
-```
+```java
 <properties>
     <sonar.exclusions>com/baeldung/sonar/*.java</sonar.exclusions>
 </properties>
@@ -149,7 +149,7 @@ sonar.issue.ignore.multicriteria.e2.resourceKey=com/baeldung/sonar/*.java
 
 另一方面，通过使用`sonar.inclusions`属性，我们可以要求 SonarQube 只分析项目文件的特定子集:
 
-```
+```java
 <properties>
     <sonar.inclusions>com/baeldung/sonar/*.java</sonar.inclusions>
 </properties>
@@ -159,7 +159,7 @@ sonar.issue.ignore.multicriteria.e2.resourceKey=com/baeldung/sonar/*.java
 
 最后，我们还可以定义`sonar.skip`值:
 
-```
+```java
 <properties>
     <sonar.skip>true</sonar.skip>
 </properties>

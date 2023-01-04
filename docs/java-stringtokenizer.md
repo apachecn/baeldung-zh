@@ -20,7 +20,7 @@
 
 在这个简单的例子中，我们将分割参数字符串并将标记添加到一个列表中`:`
 
-```
+```java
 public List<String> getTokens(String str) {
     List<String> tokens = new ArrayList<>();
     StringTokenizer tokenizer = new StringTokenizer(str, ",");
@@ -41,7 +41,7 @@ public List<String> getTokens(String str) {
 
 如果我们考虑前面的例子，我们可以使用`Collections.list()`方法和`Stream` API 检索相同的令牌集:
 
-```
+```java
 public List<String> getTokensWithCollection(String str) {
     return Collections.list(new StringTokenizer(str, ",")).stream()
       .map(token -> (String) token)
@@ -67,13 +67,13 @@ public List<String> getTokensWithCollection(String str) {
 
 例如，如果我们可以在`nextToken()`方法中传递“`e`”，根据分隔符“`e`”进一步拆分字符串:
 
-```
+```java
 tokens.add(tokenizer.nextToken("e"));
 ```
 
 因此，对于给定的'`Hello,baeldung.com`'字符串，我们将产生以下令牌:
 
-```
+```java
 H
 llo
 ba
@@ -84,7 +84,7 @@ ldung.com
 
 为了计算可用令牌的数量，我们可以使用`StringTokenizer`的`countTokens` 方法:
 
-```
+```java
 int tokenLength = tokens.countTokens();
 ```
 
@@ -96,7 +96,7 @@ int tokenLength = tokens.countTokens();
 
 使用`StringTokenizer`，我们可以轻松到达那里:
 
-```
+```java
 public List<String> getTokensFromFile( String path , String delim ) {
     List<String> tokens = new ArrayList<>();
     String currLine = "";
@@ -123,7 +123,7 @@ public List<String> getTokensFromFile( String path , String delim ) {
 
 例如，我们在 CSV 中放入了以下内容:
 
-```
+```java
 1|IND|India
 2|MY|Malaysia
 3|AU|Australia
@@ -131,7 +131,7 @@ public List<String> getTokensFromFile( String path , String delim ) {
 
 因此，应该生成以下令牌:
 
-```
+```java
 1
 IND
 India
@@ -147,7 +147,7 @@ Australia
 
 现在，让我们创建一个快速测试用例:
 
-```
+```java
 public class TokenizerTest {
 
     private MyTokenizer myTokenizer = new MyTokenizer();

@@ -40,7 +40,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 为了使用 Web3j 提供的全套特性，我们必须比平常做更多的设置。首先，Web3j 在几个独立的模块中提供，每个模块都可以有选择地添加到核心`pom.xml`依赖关系中:
 
-```
+```java
 <dependency>
     <groupId>org.web3j</groupId>
     <artifactId>core</artifactId>
@@ -65,14 +65,14 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 要设置 Truffle:
 
-```
+```java
 $ npm install truffle -g
 $ truffle version
 ```
 
 我们将分别使用四个关键命令来初始化我们的项目，编译我们的应用程序，将我们的应用程序部署到区块链，并分别进行测试:
 
-```
+```java
 $ truffle init
 $ truffle compile
 $ truffle migrate
@@ -81,7 +81,7 @@ $ truffle test
 
 现在，让我们看一个简单的例子:
 
-```
+```java
 pragma solidity ^0.4.17;
 
 contract Example {
@@ -93,7 +93,7 @@ contract Example {
 
 编译时应该会产生以下 ABI JSON:
 
-```
+```java
 {
   "contractName": "Example",
   "abi": [
@@ -130,7 +130,7 @@ Web3 提供了与以太坊区块链和以太坊服务器节点轻松交互的门
 
 我们可以通过传入一个提供者(例如第三方或本地以太坊节点的端点)来初始化 Web3j，以便在我们的应用程序中使用:
 
-```
+```java
 Web3j web3a = Web3j.build(new HttpService());
 Web3j web3b = Web3j.build(new HttpService("YOUR_PROVIDER_HERE"));
 Web3j myEtherWallet = Web3j.build(
@@ -149,7 +149,7 @@ Web3j myEtherWallet = Web3j.build(
 
 我们可以，例如，**返回当前块号**:
 
-```
+```java
 public EthBlockNumber getBlockNumber() {
     EthBlockNumber result = new EthBlockNumber();
     result = this.web3j.ethBlockNumber()
@@ -163,7 +163,7 @@ public EthBlockNumber getBlockNumber() {
 
 获取指定地址的**账号:**
 
-```
+```java
 public EthAccounts getEthAccounts() {
     EthAccounts result = new EthAccounts();
     result = this.web3j.ethAccounts()
@@ -177,7 +177,7 @@ public EthAccounts getEthAccounts() {
 
 要获得给定地址的**笔交易:**
 
-```
+```java
 public EthGetTransactionCount getTransactionCount() {
     EthGetTransactionCount result = new EthGetTransactionCount();
     result = this.web3j.ethGetTransactionCount(DEFAULT_ADDRESS, 
@@ -192,7 +192,7 @@ public EthGetTransactionCount getTransactionCount() {
 
 最后，获取地址或钱包的当前余额:
 
-```
+```java
 public EthGetBalance getEthBalance() {
     EthGetBalance result = new EthGetBalance();
     this.web3j.ethGetBalance(DEFAULT_ADDRESS, 
@@ -211,7 +211,7 @@ public EthGetBalance getEthBalance() {
 
 然后，我们可以使用以下命令自动生成 Java 智能契约包装器(本质上是一个公开智能契约 ABI 的 POJO ):
 
-```
+```java
 $ web3j truffle generate [--javaTypes|--solidityTypes] 
   /path/to/<truffle-smart-contract-output>.json 
   -o /path/to/src/main/java -p com.your.organisation.name
@@ -219,14 +219,14 @@ $ web3j truffle generate [--javaTypes|--solidityTypes]
 
 在项目的根目录下运行以下命令:
 
-```
+```java
 web3j truffle generate dev_truffle/build/contracts/Example.json 
   -o src/main/java/com/baeldung/web3/contract -p com.baeldung
 ```
 
 生成了我们的`Example `类:
 
-```
+```java
 public class Example extends Contract {
     private static final String BINARY = "0x60606040523415600e576...";
     //...
@@ -237,11 +237,11 @@ public class Example extends Contract {
 
 现在我们有了智能契约包装器，**我们可以通过编程创建一个钱包，然后将我们的契约部署到地址**:
 
-```
+```java
 WalletUtils.generateNewWalletFile("PASSWORD", new File("/path/to/destination"), true);
 ```
 
-```
+```java
 Credentials credentials = WalletUtils.loadCredentials("PASSWORD", "/path/to/walletfile");
 ```
 
@@ -249,7 +249,7 @@ Credentials credentials = WalletUtils.loadCredentials("PASSWORD", "/path/to/wall
 
 我们可以像这样部署我们的合同:
 
-```
+```java
 Example contract = Example.deploy(this.web3j,
   credentials,
   ManagedTransaction.GAS_PRICE,
@@ -258,7 +258,7 @@ Example contract = Example.deploy(this.web3j,
 
 然后得到地址:
 
-```
+```java
 contractAddress = contract.getContractAddress();
 ```
 
@@ -266,7 +266,7 @@ contractAddress = contract.getContractAddress();
 
 要使用我们的`Contract`的`Functions`发送一个`Transaction`，我们可以用输入值的`List`和输出参数的`List`初始化一个 Web3j `Function`:
 
-```
+```java
 List inputParams = new ArrayList();
 List outputParams = new ArrayList();
 Function function = new Function("fuctionName", inputParams, outputParams);
@@ -275,7 +275,7 @@ String encodedFunction = FunctionEncoder.encode(function);
 
 然后，我们可以用必要的`gas`(用于执行`Transaction`)和 nonce 参数初始化我们的`Transaction`:
 
-```
+```java
 BigInteger nonce = BigInteger.valueOf(100);
 BigInteger gasprice = BigInteger.valueOf(100);
 BigInteger gaslimit = BigInteger.valueOf(100);

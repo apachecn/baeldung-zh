@@ -20,7 +20,7 @@ Boot 也被广泛用于开发微服务。这有时会与“fat JAR”方法相�
 
 在用 Maven 构建的引导项目中，我们应该在项目的`pom.xml` 文件、其父文件或其祖先文件中配置 Spring Boot Maven 插件:
 
-```
+```java
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>    
@@ -29,7 +29,7 @@ Boot 也被广泛用于开发微服务。这有时会与“fat JAR”方法相�
 
 Spring Boot 依赖项的版本通常通过使用 BOM 或从父 POM 继承来决定，如我们的参考项目:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -42,7 +42,7 @@ Spring Boot 依赖项的版本通常通过使用 BOM 或从父 POM 继承来决�
 
 在用 Gradle 构建的引导项目中，我们将拥有引导 Gradle 插件:
 
-```
+```java
 buildscript {
     ext {
         springBootPlugin = 'org.springframework.boot:spring-boot-gradle-plugin'
@@ -86,7 +86,7 @@ Spring Boot 瘦启动程序是一个小的库，它从打包在存档中的文�
 
 在一个 Maven 项目中，我们必须修改引导插件的声明(参见 2.1 节)以包含对定制“瘦”布局的依赖:
 
-```
+```java
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -113,7 +113,7 @@ Spring Boot 瘦启动程序是一个小的库，它从打包在存档中的文�
 
 这样做的 mojo(插件)是`spring-boot-thin-maven-plugin:properties,` ，默认情况下，它在`src/main/resources/META-INF`中输出`thin.properties` 文件，但是我们可以用`thin.output` 属性指定它的位置:
 
-```
+```java
 $ mvn org.springframework.boot.experimental:spring-boot-thin-maven-plugin:properties -Dthin.output=.
 ```
 
@@ -123,7 +123,7 @@ $ mvn org.springframework.boot.experimental:spring-boot-thin-maven-plugin:proper
 
 相反，在 Gradle 项目中，我们添加了一个专用插件:
 
-```
+```java
 buildscript {
     ext {
         //...
@@ -145,7 +145,7 @@ apply plugin: 'org.springframework.boot.experimental.thin-launcher'
 
 为了获得瘦构建，我们将告诉 Gradle 执行`thinJar` 任务:
 
-```
+```java
 ~/projects/baeldung/spring-boot-gradle $ ./gradlew thinJar
 ```
 
@@ -157,7 +157,7 @@ apply plugin: 'org.springframework.boot.experimental.thin-launcher'
 
 **我们可以用专门的任务定制生成的`pom.xml` 文件。**在这里，我们将自动复制瘦插件已经做的事情:
 
-```
+```java
 task createPom {
     def basePath = 'build/resources/main/META-INF/maven'
     doLast {
@@ -170,7 +170,7 @@ task createPom {
 
 为了使用我们的定制`pom.xml`文件，我们将上述任务添加到 jar 任务的依赖项中:
 
-```
+```java
 bootJar.dependsOn = [createPom]
 ```
 
@@ -180,7 +180,7 @@ bootJar.dependsOn = [createPom]
 
 生成`thin.properties` 文件的任务称为`thinProperties,` ，默认情况下不使用它。我们可以将其添加为 jar 任务的依赖项:
 
-```
+```java
 bootJar.dependsOn = [thinProperties]
 ```
 
@@ -204,7 +204,7 @@ bootJar.dependsOn = [thinProperties]
 
 由于运行一个应用程序可能会有不必要的副作用，**我们也可以执行一个“模拟运行”，只解析和下载依赖项，而不运行任何用户代码:**
 
-```
+```java
 $ java -Dthin.dryrun=true -jar my-app-1.0.jar
 ```
 
@@ -218,7 +218,7 @@ $ java -Dthin.dryrun=true -jar my-app-1.0.jar
 
 用于 Maven 和 Gradle 的瘦插件在构建期间打包依赖项的格式与 Maven 本地存储库相同:
 
-```
+```java
 root/
     repository/
         com/
@@ -229,7 +229,7 @@ root/
 
 事实上，我们可以在运行时用`thin.root` 属性将使用瘦启动器的应用程序指向任何这样的目录(包括本地 Maven 存储库):
 
-```
+```java
 $ java -jar my-app-1.0.jar --thin.root=my-app/deps
 ```
 
@@ -239,7 +239,7 @@ $ java -jar my-app-1.0.jar --thin.root=my-app/deps
 
 为了让 Maven 为我们打包依赖项，我们使用了`spring-boot-thin-maven-plugin.` 的`resolve` 目标，我们可以在我们的`pom.xml:`中手动或自动调用它
 
-```
+```java
 <plugin>
     <groupId>org.springframework.boot.experimental</groupId>
     <artifactId>spring-boot-thin-maven-plugin</artifactId>
@@ -263,7 +263,7 @@ $ java -jar my-app-1.0.jar --thin.root=my-app/deps
 
 如果我们使用 Gradle 和`thin-launcher`插件，我们有一个`thinResolve` 任务可用。该任务将应用程序及其依赖项保存在`build/thin/root/` 目录中，类似于上一节的 Maven 插件:
 
-```
+```java
 $ gradlew thinResolve
 ```
 

@@ -18,7 +18,7 @@
 
 当实现`ApplicationListener`时，我们必须定义`onApplicationEvent()`方法:
 
-```
+```java
 @Override
 public void onApplicationEvent(ContextRefreshedEvent event) {
     ApplicationContext applicationContext = event.getApplicationContext();
@@ -36,7 +36,7 @@ public void onApplicationEvent(ContextRefreshedEvent event) {
 
 映射端点的另一种方法是使用`@EventListener`注释。我们在处理`ContextRefreshedEvent`的方法上直接使用这个注释:
 
-```
+```java
 @EventListener
 public void handleContextRefresh(ContextRefreshedEvent event) {
     ApplicationContext applicationContext = event.getApplicationContext();
@@ -56,7 +56,7 @@ public void handleContextRefresh(ContextRefreshedEvent event) {
 
 为了启用这个特性，我们将把`[spring-boot-actuator](https://web.archive.org/web/20220628051659/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-actuator%22)` Maven 依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-actuator</artifactId>
@@ -67,13 +67,13 @@ public void handleContextRefresh(ContextRefreshedEvent event) {
 
 当我们添加`spring-boot-actuator`依赖项时，默认情况下只有`/health`和`/info`端点可用。为了启用所有的致动器[端点](https://web.archive.org/web/20220628051659/https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-endpoints)，我们可以通过向我们的`application.properties`文件添加一个属性来公开它们:
 
-```
+```java
 management.endpoints.web.exposure.include=*
 ```
 
 或者，我们可以简单地通过**公开端点来检索`mappings`** :
 
-```
+```java
 management.endpoints.web.exposure.include=mappings
 ```
 
@@ -87,7 +87,7 @@ management.endpoints.web.exposure.include=mappings
 
 要将它添加到我们的项目中，我们需要在`pom.xml`文件中有一个 [`springfox-boot-starter`](https://web.archive.org/web/20220628051659/https://search.maven.org/classic/#search%7Cga%7C1%7C%22springfox-boot-starter%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.springfox</groupId>
     <artifactId>springfox-boot-starter</artifactId>
@@ -99,7 +99,7 @@ management.endpoints.web.exposure.include=mappings
 
 让我们通过定义 [`Docket`](/web/20220628051659/https://www.baeldung.com/swagger-2-documentation-for-spring-rest-api#1-java-configuration) bean 来创建配置类:
 
-```
+```java
 @Bean
 public Docket api() {
     return new Docket(DocumentationType.SWAGGER_2)
@@ -112,7 +112,7 @@ public Docket api() {
 
 `Docket`是一个构建器类，用于配置 Swagger 文档的生成。要访问 REST API 端点，我们可以在浏览器中访问以下 URL:
 
-```
+```java
 http://host/v2/api-docs
 ```
 

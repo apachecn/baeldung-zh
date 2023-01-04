@@ -34,7 +34,7 @@ Spring Boot 2.6 用`@WebServiceServerTest`注解扩展了 web 服务测试支持
 
 由于我们已经详细介绍了一个 [Spring Boot web 服务项目](/web/20221128035531/https://www.baeldung.com/spring-boot-soap-web-service)，这里我们将只包括我们项目所需的额外的测试范围 [spring-ws-test](https://web.archive.org/web/20221128035531/https://search.maven.org/search?q=g:org.springframework.ws%20a:spring-ws-test) 依赖:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws-test</artifactId>
@@ -47,7 +47,7 @@ Spring Boot 2.6 用`@WebServiceServerTest`注解扩展了 web 服务测试支持
 
 接下来，让我们创建一个简单的服务，为指定的产品 id 返回一些产品数据:
 
-```
+```java
 @Endpoint
 public class ProductEndpoint {
 
@@ -71,7 +71,7 @@ public class ProductEndpoint {
 
 最后，我们可以创建一个测试片，并在 web 服务层验证 XML 消息的正确处理:
 
-```
+```java
 @WebServiceServerTest
 class ProductEndpointIntegrationTest {
 

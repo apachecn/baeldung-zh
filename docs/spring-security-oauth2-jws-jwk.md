@@ -58,7 +58,7 @@
 
 我们需要将 OAuth2 自动配置依赖项添加到 Spring 应用程序的 pom 文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security.oauth.boot</groupId>
     <artifactId>spring-security-oauth2-autoconfigure</artifactId>
@@ -76,7 +76,7 @@
 
 接下来，我们必须用`@EnableResourceServer`注释来启用应用程序中的资源服务器特性:
 
-```
+```java
 @SpringBootApplication
 @EnableResourceServer
 public class ResourceServerApplication {
@@ -97,7 +97,7 @@ OAuth2 引导提供了不同的策略来验证令牌。
 
 让我们在`application.properties`中添加以下内容:
 
-```
+```java
 security.oauth2.resource.jwk.key-set-uri=
   http://localhost:8081/sso-auth-server/.well-known/jwks.json
 ```
@@ -106,7 +106,7 @@ security.oauth2.resource.jwk.key-set-uri=
 
 **注意**:新的 Spring Security 5.1 资源服务器只支持 JWK 签名的 jwt 作为授权，Spring Boot 也提供了非常相似的属性来配置 JWK Set 端点:
 
-```
+```java
 spring.security.oauth2.resourceserver.jwk-set-uri=
   http://localhost:8081/sso-auth-server/.well-known/jwks.json
 ```
@@ -134,7 +134,7 @@ spring.security.oauth2.resourceserver.jwk-set-uri=
 
 首先，我们将使用`@EnableAuthorizationServer `注释来配置 OAuth2 授权服务器机制:
 
-```
+```java
 @Configuration
 @EnableAuthorizationServer
 public class JwkAuthorizationServerConfiguration {
@@ -146,14 +146,14 @@ public class JwkAuthorizationServerConfiguration {
 
 我们将使用属性注册一个 OAuth 2.0 客户端:
 
-```
+```java
 security.oauth2.client.client-id=bael-client
 security.oauth2.client.client-secret=bael-secret
 ```
 
 这样，我们的应用程序将在收到相应凭证请求时检索随机令牌:
 
-```
+```java
 curl bael-client:bael-secret\
   @localhost:8081/sso-auth-server/oauth/token \
   -d grant_type=client_credentials \
@@ -162,7 +162,7 @@ curl bael-client:bael-secret\
 
 正如我们所看到的，Spring Security OAuth **默认情况下检索一个随机的字符串值，而不是 JWT 编码的:**
 
-```
+```java
 "access_token": "af611028-643f-4477-9319-b5aa8dc9408f"
 ```
 
@@ -170,7 +170,7 @@ curl bael-client:bael-secret\
 
 我们可以通过在上下文中创建一个`JwtAccessTokenConverter` bean 来轻松地改变这一点:
 
-```
+```java
 @Bean
 public JwtAccessTokenConverter accessTokenConverter() {
     return new JwtAccessTokenConverter();
@@ -179,7 +179,7 @@ public JwtAccessTokenConverter accessTokenConverter() {
 
 并在一个`JwtTokenStore`实例中使用它:
 
-```
+```java
 @Bean
 public TokenStore tokenStore() {
     return new JwtTokenStore(accessTokenConverter());
@@ -190,7 +190,7 @@ public TokenStore tokenStore() {
 
 我们可以很容易地识别 JWSs 它们的结构由三个字段(报头、有效载荷和签名)组成，用点分隔:
 
-```
+```java
 "access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
   .
   eyJzY29wZSI6WyJhbnkiXSwiZXhwIjoxNTYxOTcy...
@@ -214,13 +214,13 @@ MAC 哈希使用相同的密钥对消息进行签名并验证其完整性；这�
 
 仅出于学术原因，我们将公开 Spring Security OAuth `/oauth/token_key` 端点:
 
-```
+```java
 security.oauth2.authorization.token-key-access=permitAll()
 ```
 
 我们将在配置`JwtAccessTokenConverter ` bean 时定制签名密钥值:
 
-```
+```java
 converter.setSigningKey("bael");
 ```
 
@@ -242,14 +242,14 @@ Spring Security OAuth 库还配置了一个`/oauth/check_token`端点，用于�
 
 资源服务器希望授权服务器有安全的端点，所以首先，我们需要提供客户端凭证，以及我们在授权服务器中使用的相同属性:
 
-```
+```java
 security.oauth2.client.client-id=bael-client
 security.oauth2.client.client-secret=bael-secret
 ```
 
 然后我们可以选择使用`/oauth/check_token`端点(也称为自省端点)或者从`/oauth/token_key`获得一个单独的密钥:
 
-```
+```java
 ## Single key URI:
 security.oauth2.resource.jwt.key-uri=
   http://localhost:8081/sso-auth-server/oauth/token_key
@@ -260,7 +260,7 @@ security.oauth2.resource.token-info-uri=
 
 或者，我们可以只配置将用于验证资源服务中令牌的密钥:
 
-```
+```java
 ## Verifier Key
 security.oauth2.resource.jwt.key-value=bael
 ```
@@ -281,13 +281,13 @@ security.oauth2.resource.jwt.key-value=bael
 
 1.  在您手边的任何 JDK 或 JRE 的`/bin`目录中打开命令行:
 
-```
+```java
 cd $JAVA_HOME/bin
 ```
 
 2.  使用相应的参数运行`keytool`命令:
 
-```
+```java
 ./keytool -genkeypair \
   -alias bael-oauth-jwt \
   -keyalg RSA \
@@ -308,7 +308,7 @@ cd $JAVA_HOME/bin
 
 如果我们使用 Maven，一个替代方法是将文本文件放在一个单独的文件夹中，并相应地配置`pom.xml`:
 
-```
+```java
 <build>
     <resources>
         <resource>
@@ -329,7 +329,7 @@ cd $JAVA_HOME/bin
 
 我们将使用类路径中的密钥库文件创建一个`KeyPair `实例，以及创建`.jks` 文件时使用的参数:
 
-```
+```java
 ClassPathResource ksFile =
   new ClassPathResource("bael-jwt.jks");
 KeyStoreKeyFactory ksFactory =
@@ -339,7 +339,7 @@ KeyPair keyPair = ksFactory.getKeyPair("bael-oauth-jwt");
 
 我们将在我们的`JwtAccessTokenConverter` bean 中配置它，删除任何其他配置:
 
-```
+```java
 converter.setKeyPair(keyPair);
 ```
 
@@ -355,7 +355,7 @@ converter.setKeyPair(keyPair);
 
 因此，我们需要向我们的项目添加另一个依赖项，`nimbus-jose-jwt`,它提供了一些基本的 JWK 实现:
 
-```
+```java
 <dependency>
     <groupId>com.nimbusds</groupId>
     <artifactId>nimbus-jose-jwt</artifactId>
@@ -369,7 +369,7 @@ converter.setKeyPair(keyPair);
 
 让我们从使用之前配置的`KeyPair`实例创建一个`JWKSet` bean 开始:
 
-```
+```java
 @Bean
 public JWKSet jwkSet() {
     RSAKey.Builder builder = new RSAKey.Builder((RSAPublicKey) keyPair().getPublic())
@@ -382,7 +382,7 @@ public JWKSet jwkSet() {
 
 现在创建端点非常简单:
 
-```
+```java
 @RestController
 public class JwkSetRestController {
 
@@ -408,7 +408,7 @@ public class JwkSetRestController {
 
 我们将创建一个新的`class` ,扩展我们一直在使用的`JwtAccessTokenConverter `,并允许向 jwt 添加头条目:
 
-```
+```java
 public class JwtCustomHeadersAccessTokenConverter
   extends JwtAccessTokenConverter {
 
@@ -425,7 +425,7 @@ public class JwtCustomHeadersAccessTokenConverter
 
 让我们在此基础上配置构造函数:
 
-```
+```java
 private Map<String, String> customHeaders = new HashMap<>();
 final RsaSigner signer;
 
@@ -441,7 +441,7 @@ public JwtCustomHeadersAccessTokenConverter(
 
 现在我们将覆盖`encode `方法。我们的实现将与父实现相同，唯一的区别是我们在创建`String`令牌时也将传递自定义头:
 
-```
+```java
 private JsonParser objectMapper = JsonParserFactory.create();
 
 @Override
@@ -466,7 +466,7 @@ protected String encode(OAuth2AccessToken accessToken,
 
 现在让我们在创建`JwtAccessTokenConverter` bean 时使用这个类:
 
-```
+```java
 @Bean
 public JwtAccessTokenConverter accessTokenConverter() {
     Map<String, String> customHeaders =

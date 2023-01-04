@@ -10,7 +10,7 @@
 
 在开始之前，让我们设置一个测试应用程序。我们将使用 Spring Boot 版本 2.5.4，依赖于 Spring Web、Spring Actuator 和 Spring Security。在`pom.xml,` 中，我们将添加带有配置的`spring-boot-maven-plugin` ,以将我们的应用程序打包到一个 jar 文件中:
 
-```
+```java
 <plugin> 
     <groupId>org.springframework.boot</groupId> 
     <artifactId>spring-boot-maven-plugin</artifactId> 
@@ -31,7 +31,7 @@
 
 我们用标准的`java -jar` 命令运行 jar 文件，并监控应用程序的启动时间:
 
-```
+```java
 c.b.springStart.SpringStartApplication   : Started SpringStartApplication in 3.403 seconds (JVM running for 3.961) 
 ```
 
@@ -41,13 +41,13 @@ c.b.springStart.SpringStartApplication   : Started SpringStartApplication in 3.4
 
 Spring 框架支持惰性初始化。 **[惰性初始化](/web/20220707143855/https://www.baeldung.com/spring-boot-lazy-initialization)意味着 Spring 不会在启动时创建所有的 beans。此外，Spring 不会注入任何依赖项，直到需要这个 bean。**从 Spring Boot 版本 2.2 开始。可以使用`application.properties`启用延迟初始化:
 
-```
+```java
 spring.main.lazy-initialization=true
 ```
 
 在构建一个新的 jar 文件并像前面的例子一样启动它之后，新的启动时间稍微好一点:
 
-```
+```java
  c.b.springStart.SpringStartApplication   : Started SpringStartApplication in 2.95 seconds (JVM running for 3.497) 
 ```
 
@@ -61,13 +61,13 @@ spring.main.lazy-initialization=true
 
 Spring Boot 总是偏爱传统而不是结构。 **Spring 可能会初始化我们的应用程序不需要的 beans。**我们可以使用启动日志检查所有自动配置的 beans。将`application.properties`中的 `org.springframework.boot.autoconfigure` 的记录级别设置为调试:
 
-```
+```java
 logging.level.org.springframework.boot.autoconfigure=DEBUG
 ```
 
 在日志中，我们将看到专门用于自动配置的新行，从以下内容开始:
 
-```
+```java
 ============================
 CONDITIONS EVALUATION REPORT
 ============================ 
@@ -75,14 +75,14 @@ CONDITIONS EVALUATION REPORT
 
 使用此报告，我们可以排除应用程序的部分配置。为了排除部分配置，我们使用`@EnableAutoConfiguration` 注释:
 
-```
+```java
 @EnableAutoConfiguration(exclude = {JacksonAutoConfiguration.class, JvmMetricsAutoConfiguration.class, 
   LogbackMetricsAutoConfiguration.class, MetricsAutoConfiguration.class})
 ```
 
 如果我们排除了 Jackson JSON 库和一些我们不使用的指标配置，我们可以节省一些启动时间:
 
-```
+```java
 c.b.springStart.SpringStartApplication   : Started SpringStartApplication in 3.183 seconds (JVM running for 3.732) 
 ```
 
@@ -90,7 +90,7 @@ c.b.springStart.SpringStartApplication   : Started SpringStartApplication in 3.1
 
 Spring Boot 附带了一个嵌入式 servlet 容器。默认情况下，我们得到 Tomcat。虽然 Tomcat 在大多数情况下已经足够好了，但是其他 servlet 容器的性能可能会更好。[在](/web/20220707143855/https://www.baeldung.com/spring-boot-servlet-containers)的测试中，JBoss 的 Undertow 比 Tomcat 或 Jetty 表现更好。它需要的内存更少，平均响应时间更短。要切换到回流，我们需要改变`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -109,7 +109,7 @@ Spring Boot 附带了一个嵌入式 servlet 容器。默认情况下，我们�
 
 在类路径扫描中可以进行以下小的改进。Spring 类路径扫描是快速动作。当我们有一个大的代码库时，我们可以通过创建一个静态索引来改善启动时间。**我们需要给`spring-context-indexer to generate the index.`** Spring 添加一个依赖项，它不需要任何额外的配置。在编译期间，Spring 将在`META-INF\spring.components`中创建一个额外的文件。Spring 会在启动时自动使用它:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context-indexer</artifactId>
@@ -122,13 +122,13 @@ Spring Boot 附带了一个嵌入式 servlet 容器。默认情况下，我们�
 
 **接下来，`application.properties`(或者说。yml)文件**。最常见的是在类路径根或 jar 文件所在的文件夹中。我们可以通过使用`spring.config.location` 参数设置显式路径来避免搜索多个位置，并节省几毫秒的搜索时间:
 
-```
+```java
 java -jar .\target\springStartupApp.jar --spring.config.location=classpath:/application.properties
 ```
 
 最后，Spring Boot 提供了一些 MBeans 来使用 JMX 监控我们的应用程序。**完全关闭 JMX，避免创建这些 beans 的成本:**
 
-```
+```java
 spring.jmx.enabled=false
 ```
 
@@ -146,13 +146,13 @@ spring.jmx.enabled=false
 
 我们可以在启动时传递这个标志:
 
-```
+```java
 java -jar -noverify .\target\springStartupApp.jar 
 ```
 
 我们将收到来自 JVM 的警告，该选项已被否决。此外，启动时间也会减少:
 
-```
+```java
  c.b.springStart.SpringStartApplication   : Started SpringStartApplication in 3.193 seconds (JVM running for 3.686) 
 ```
 
@@ -168,13 +168,13 @@ Java 7 引入了[分层编译](/web/20220707143855/https://www.baeldung.com/jvm-
 
 仅 TieredCompilation 标志就带来了坚实的改进:
 
-```
+```java
  c.b.springStart.SpringStartApplication   : Started SpringStartApplication in 2.754 seconds (JVM running for 3.172) 
 ```
 
 另外，同时运行本节中的两个标志可以进一步减少启动时间:
 
-```
+```java
  java -jar -XX:TieredStopAtLevel=1 -noverify .\target\springStartupApp.jar
 c.b.springStart.SpringStartApplication : Started SpringStartApplication in 2.537 seconds (JVM running for 2.912) 
 ```

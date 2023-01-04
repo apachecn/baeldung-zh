@@ -43,7 +43,7 @@ Apache Kafka 提供了定制序列化器的能力。不仅可以为消息值，�
 
 为了实现这些示例，我们只需将 [Kafka 消费者 API](https://web.archive.org/web/20221129004247/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.kafka%22%20AND%20a%3A%22kafka-clients%22) 依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.apache.kafka</groupId>
     <artifactId>kafka-clients</artifactId>
@@ -55,7 +55,7 @@ Apache Kafka 提供了定制序列化器的能力。不仅可以为消息值，�
 
 首先，我们将使用 [Lombok](/web/20221129004247/https://www.baeldung.com/intro-to-project-lombok) 来指定要通过 Kafka 发送的自定义对象:
 
-```
+```java
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -68,7 +68,7 @@ public class MessageDto {
 
 接下来，我们将实现 Kafka 为生产者提供的用于发送消息的`[Serializer](https://web.archive.org/web/20221129004247/https://kafka.apache.org/24/javadoc/org/apache/kafka/common/serialization/Serializer.html)`接口:
 
-```
+```java
 public class CustomSerializer implements Serializer<MessageDto> {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -102,7 +102,7 @@ public class CustomSerializer implements Serializer<MessageDto> {
 
 同样，我们将为消费者实现 [`Deserializer`](https://web.archive.org/web/20221129004247/https://kafka.apache.org/24/javadoc/org/apache/kafka/common/serialization/Deserializer.html) 接口:
 
-```
+```java
 @Slf4j
 public class CustomDeserializer implements Deserializer<MessageDto> {
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -139,7 +139,7 @@ public class CustomDeserializer implements Deserializer<MessageDto> {
 
 首先，我们将创建并配置 Kafka 生成器:
 
-```
+```java
 private static KafkaProducer<String, MessageDto> createKafkaProducer() {
     Properties props = new Properties();
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
@@ -155,7 +155,7 @@ private static KafkaProducer<String, MessageDto> createKafkaProducer() {
 
 其次，我们将创建卡夫卡式的消费者:
 
-```
+```java
 private static KafkaConsumer<String, MessageDto> createKafkaConsumer() {
     Properties props = new Properties();
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
@@ -173,7 +173,7 @@ private static KafkaConsumer<String, MessageDto> createKafkaConsumer() {
 
 一旦我们创建了生产者和消费者客户端，就该发送示例消息了:
 
-```
+```java
 MessageDto msgProd = MessageDto.builder().message("test").version("1.0").build();
 
 KafkaProducer<String, MessageDto> producer = createKafkaProducer();
@@ -184,7 +184,7 @@ producer.close();
 
 我们可以通过订阅主题与消费者一起接收消息:
 
-```
+```java
 AtomicReference<MessageDto> msgCons = new AtomicReference<>();
 
 KafkaConsumer<String, MessageDto> consumer = createKafkaConsumer();
@@ -201,7 +201,7 @@ consumer.close();
 
 控制台中的结果是:
 
-```
+```java
 Serializing...
 Message sent MessageDto(message=test, version=1.0)
 Deserializing...

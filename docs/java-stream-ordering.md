@@ -24,7 +24,7 @@
 
 然后我们将每个`Stream`的输出收集到一个`Array`中来比较结果。
 
-```
+```java
 @Test
 public void givenTwoCollections_whenStreamedSequentially_thenCheckOutputDifferent() {
     List<String> list = Arrays.asList("B", "A", "C", "D", "F");
@@ -44,7 +44,7 @@ public void givenTwoCollections_whenStreamedSequentially_thenCheckOutputDifferen
 
 当我们使用并行流重复我们的测试时，我们得到相同的结果:
 
-```
+```java
 @Test
 public void givenTwoCollections_whenStreamedInParallel_thenCheckOutputDifferent() {
     List<String> list = Arrays.asList("B", "A", "C", "D", "F");
@@ -64,32 +64,32 @@ public void givenTwoCollections_whenStreamedInParallel_thenCheckOutputDifferent(
 
 例如，让我们声明一个`TreeSet`:
 
-```
+```java
 Set<Integer> set = new TreeSet<>(
   Arrays.asList(-9, -5, -4, -2, 1, 2, 4, 5, 7, 9, 12, 13, 16, 29, 23, 34, 57, 102, 230));
 ```
 
 如果我们流而不调用`unordered`:
 
-```
+```java
 set.stream().parallel().limit(5).toArray();
 ```
 
 然后`TreeSet`的自然顺序被保留下来:
 
-```
+```java
 [-9, -5, -4, -2, 1]
 ```
 
 但是，如果我们明确删除排序:
 
-```
+```java
 set.stream().unordered().parallel().limit(5).toArray();
 ```
 
 那么输出是不同的:
 
-```
+```java
 [1, 4, 7, 9, 23]
 ```
 
@@ -103,7 +103,7 @@ set.stream().unordered().parallel().limit(5).toArray();
 
 例如，我们可以通过排序来影响流的排序:
 
-```
+```java
 @Test
 public void givenUnsortedStreamInput_whenStreamSorted_thenCheckOrderChanged() {
     List<Integer> list = Arrays.asList(-3, 10, -4, 1, 3);
@@ -128,19 +128,19 @@ public void givenUnsortedStreamInput_whenStreamSorted_thenCheckOrderChanged() {
 
 如果我们声明一个列表:
 
-```
+```java
 List<String> list = Arrays.asList("B", "A", "C", "D", "F");
 ```
 
 并在并行化后使用`forEachOrdered`:
 
-```
+```java
 list.stream().parallel().forEachOrdered(e -> logger.log(Level.INFO, e));
 ```
 
 那么输出是有序的:
 
-```
+```java
 INFO: B
 INFO: A
 INFO: C
@@ -150,13 +150,13 @@ INFO: F
 
 但是，如果我们使用`forEach:`
 
-```
+```java
 list.stream().parallel().forEach(e -> logger.log(Level.INFO, e));
 ```
 
 那么输出是**无序的**:
 
-```
+```java
 INFO: C
 INFO: F
 INFO: B
@@ -172,7 +172,7 @@ INFO: A
 
 例如，**天生无序`Collections`如`TreeSet`不会服从`Stream`** 输出的顺序:
 
-```
+```java
 @Test
 public void givenSameCollection_whenStreamCollected_checkOutput() {
     List<String> list = Arrays.asList("B", "A", "C", "D", "F");
@@ -194,7 +194,7 @@ public void givenSameCollection_whenStreamCollected_checkOutput() {
 
 首先，我们将初始化我们的列表，以及通常的`toMap`方法的[双参数版本](https://web.archive.org/web/20221005184735/https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function)):
 
-```
+```java
 @Test
 public void givenList_whenStreamCollectedToHashMap_thenCheckOrderChanged() {
   List<String> list = Arrays.asList("A", "BB", "CCC");
@@ -212,7 +212,7 @@ public void givenList_whenStreamCollectedToHashMap_thenCheckOrderChanged() {
 
 对于我们的第二个`Stream`，我们将使用`toMap `方法的 [4 参数版本](https://web.archive.org/web/20221005184735/https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function,java.util.function.BinaryOperator,java.util.function.Supplier))来告诉我们的`supplier `提供一个新的`LinkedHashMap`:
 
-```
+```java
 @Test
 public void givenList_whenCollectedtoLinkedHashMap_thenCheckOrderMaintained(){
     List<String> list = Arrays.asList("A", "BB", "CCC");
@@ -248,7 +248,7 @@ public void givenList_whenCollectedtoLinkedHashMap_thenCheckOrderMaintained(){
 
 让我们使用`[distinct](https://web.archive.org/web/20221005184735/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/IntStream.html#distinct()) `函数对有序流和无序流进行测试。
 
-```
+```java
 @Benchmark 
 public void givenOrderedStreamInput_whenStreamDistinct_thenShowOpsPerMS() { 
     IntStream.range(1, 1_000_000).parallel().distinct().toArray(); 
@@ -262,7 +262,7 @@ public void givenUnorderedStreamInput_whenStreamDistinct_thenShowOpsPerMS() {
 
 当我们点击 run 时，我们可以看到每次操作所用时间的差异:
 
-```
+```java
 Benchmark                        Mode  Cnt       Score   Error  Units
 TestBenchmark.givenOrdered...    avgt    2  222252.283          us/op
 TestBenchmark.givenUnordered...  avgt    2   78221.357          us/op 
@@ -272,7 +272,7 @@ TestBenchmark.givenUnordered...  avgt    2   78221.357          us/op
 
 接下来，我们将使用一个并行的`Stream`和一个简单的`[filter](https://web.archive.org/web/20221005184735/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/IntStream.html#filter(java.util.function.IntPredicate)) `方法来返回每第 10 个整数`:`
 
-```
+```java
 @Benchmark
 public void givenOrderedStreamInput_whenStreamFiltered_thenShowOpsPerMS() {
     IntStream.range(1, 100_000_000).parallel().filter(i -> i % 10 == 0).toArray();
@@ -286,7 +286,7 @@ public void givenUnorderedStreamInput_whenStreamFiltered_thenShowOpsPerMS(){
 
 有趣的是，我们的两个流之间的差异比使用`distinct `方法时要小得多。
 
-```
+```java
 Benchmark                        Mode  Cnt       Score   Error  Units
 TestBenchmark.givenOrdered...    avgt    2  116333.431          us/op
 TestBenchmark.givenUnordered...  avgt    2  111471.676          us/op

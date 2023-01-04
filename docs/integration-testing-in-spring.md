@@ -12,7 +12,7 @@
 
 我们需要几个 Maven 依赖项来运行我们将在本文中使用的集成测试。首先，我们需要最新的 [junit-jupiter-engine](https://web.archive.org/web/20221212193357/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.junit.jupiter%22%20AND%20a%3A%22junit-jupiter-engine%22) 、 [junit-jupiter-api](https://web.archive.org/web/20221212193357/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.junit.jupiter%22%20AND%20a%3A%22junit-jupiter-api%22) 和 [Spring test](https://web.archive.org/web/20221212193357/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework%22%20AND%20a%3A%22spring-test%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-engine</artifactId>
@@ -35,7 +35,7 @@
 
 为了有效地断言结果，我们还将使用 [Hamcrest](https://web.archive.org/web/20221212193357/https://search.maven.org/classic/#search|gav|1|g%3A%22org.hamcrest%22%20AND%20a%3A%22hamcrest-library%22) 和 [JSON 路径](https://web.archive.org/web/20221212193357/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.jayway.jsonpath%22%20AND%20a%3A%22json-path%22):
 
-```
+```java
 <dependency>
     <groupId>org.hamcrest</groupId>
     <artifactId>hamcrest-library</artifactId>
@@ -64,7 +64,7 @@ JUnit 5 定义了一个扩展接口，通过该接口，类可以与 JUnit 测�
 
 让我们来看看:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { ApplicationConfig.class })
 @WebAppConfiguration
@@ -77,7 +77,7 @@ public class GreetControllerIntegrationTest {
 
 我们将在这里使用一个 Java 配置类来指定上下文配置。类似地，我们可以使用基于 XML 的配置:
 
-```
+```java
 @ContextConfiguration(locations={""})
 ```
 
@@ -85,7 +85,7 @@ public class GreetControllerIntegrationTest {
 
 默认情况下，它在路径`src/main/webapp.`中查找根 web 应用程序。我们可以通过简单地传递`value`属性来覆盖这个位置:
 
-```
+```java
 @WebAppConfiguration(value = "")
 ```
 
@@ -95,7 +95,7 @@ public class GreetControllerIntegrationTest {
 
 现在，我们将能够将 web 应用程序上下文连接到测试中:
 
-```
+```java
 @Autowired
 private WebApplicationContext webApplicationContext;
 ```
@@ -106,7 +106,7 @@ private WebApplicationContext webApplicationContext;
 
 让我们看看如何使用它:
 
-```
+```java
 private MockMvc mockMvc;
 @BeforeEach
 public void setup() throws Exception {
@@ -120,7 +120,7 @@ public void setup() throws Exception {
 
 让我们验证一下我们是否正确加载了`WebApplicationContext`对象(`webApplicationContext`)。我们还将检查是否连接了正确的`servletContext`:
 
-```
+```java
 @Test
 public void givenWac_whenServletContext_thenItProvidesGreetController() {
     ServletContext servletContext = webApplicationContext.getServletContext();
@@ -145,19 +145,19 @@ public void givenWac_whenServletContext_thenItProvidesGreetController() {
 
 我们可以调用测试中的`/homePage`端点作为`:`
 
-```
+```java
 http://localhost:8080/spring-mvc-test/
 ```
 
 或者
 
-```
+```java
 http://localhost:8080/spring-mvc-test/homePage
 ```
 
 首先，让我们看看测试代码:
 
-```
+```java
 @Test
 public void givenHomePageURI_whenMockMVC_thenReturnsIndexJSPViewName() {
     this.mockMvc.perform(get("/homePage")).andDo(print())
@@ -175,13 +175,13 @@ public void givenHomePageURI_whenMockMVC_thenReturnsIndexJSPViewName() {
 
 我们将调用测试中的`/greet`端点，如下所示:
 
-```
+```java
 http://localhost:8080/spring-mvc-test/greet
 ```
 
 预期产出将是:
 
-```
+```java
 {
     "id": 1,
     "message": "Hello World!!!"
@@ -190,7 +190,7 @@ http://localhost:8080/spring-mvc-test/greet
 
 让我们看看测试代码:
 
-```
+```java
 @Test
 public void givenGreetURI_whenMockMVC_thenVerifyResponse() {
     MvcResult mvcResult = this.mockMvc.perform(get("/greet"))
@@ -213,13 +213,13 @@ public void givenGreetURI_whenMockMVC_thenVerifyResponse() {
 
 我们将调用测试中的`/greetWithPathVariable/{name}`端点，如下所示:
 
-```
+```java
 http://localhost:8080/spring-mvc-test/greetWithPathVariable/John
 ```
 
 预期产出将是:
 
-```
+```java
 {
     "id": 1,
     "message": "Hello World John!!!"
@@ -228,7 +228,7 @@ http://localhost:8080/spring-mvc-test/greetWithPathVariable/John
 
 让我们看看测试代码:
 
-```
+```java
 @Test
 public void givenGreetURIWithPathVariable_whenMockMVC_thenResponseOK() {
     this.mockMvc
@@ -248,13 +248,13 @@ public void givenGreetURIWithPathVariable_whenMockMVC_thenResponseOK() {
 
 我们将调用测试中的`/greetWithQueryVariable?name={name}`端点，如下所示:
 
-```
+```java
 http://localhost:8080/spring-mvc-test/greetWithQueryVariable?name=John%20Doe
 ```
 
 在这种情况下，预期输出将是:
 
-```
+```java
 {
     "id": 1,
     "message": "Hello World John Doe!!!"
@@ -263,7 +263,7 @@ http://localhost:8080/spring-mvc-test/greetWithQueryVariable?name=John%20Doe
 
 现在，让我们看看测试代码:
 
-```
+```java
 @Test
 public void givenGreetURIWithQueryParameter_whenMockMVC_thenResponseOK() {
     this.mockMvc.perform(get("/greetWithQueryVariable")
@@ -277,7 +277,7 @@ public void givenGreetURIWithQueryParameter_whenMockMVC_thenResponseOK() {
 
 查询参数也可以使用 URI 模板样式来实现:
 
-```
+```java
 this.mockMvc.perform(
   get("/greetWithQueryVariable?name={name}", "John Doe"));
 ```
@@ -286,13 +286,13 @@ this.mockMvc.perform(
 
 我们将调用测试中的`/greetWithPost`端点，如下所示:
 
-```
+```java
 http://localhost:8080/spring-mvc-test/greetWithPost
 ```
 
 我们应该获得输出:
 
-```
+```java
 {
     "id": 1,
     "message": "Hello World!!!"
@@ -301,7 +301,7 @@ http://localhost:8080/spring-mvc-test/greetWithPost
 
 我们的测试代码是:
 
-```
+```java
 @Test
 public void givenGreetURIWithPost_whenMockMVC_thenVerifyResponse() {
     this.mockMvc.perform(post("/greetWithPost")).andDo(print())
@@ -313,19 +313,19 @@ public void givenGreetURIWithPost_whenMockMVC_thenVerifyResponse() {
 
 `**MockMvcRequestBuilders.post(“/greetWithPost”)**` **会发帖子请求**。我们可以像以前一样设置路径变量和查询参数，而表单数据只能通过`param()`方法设置，类似于查询参数:
 
-```
+```java
 http://localhost:8080/spring-mvc-test/greetWithPostAndFormData
 ```
 
 那么数据将是:
 
-```
+```java
 id=1;name=John%20Doe
 ```
 
 所以我们应该得到:
 
-```
+```java
 {
     "id": 1,
     "message": "Hello World John Doe!!!"
@@ -334,7 +334,7 @@ id=1;name=John%20Doe
 
 让我们看看我们的测试:
 
-```
+```java
 @Test
 public void givenGreetURI_whenMockMVC_thenVerifyResponse() throws Exception {
     MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/greet"))
@@ -365,7 +365,7 @@ public void givenGreetURI_whenMockMVC_thenVerifyResponse() throws Exception {
 
 例如，使用 Spring Boot 很容易做到:
 
-```
+```java
 @SpringBootTest(webEnvironment = DEFINED_PORT)
 public class GreetControllerRealIntegrationTest {
 

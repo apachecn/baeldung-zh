@@ -18,7 +18,7 @@ Java 中的`System`类提供了对外部定义的属性和环境变量的访问�
 
 我们可以使用“`sun.arch.data.model`”系统属性来标识 JVM 位:
 
-```
+```java
 System.getProperty("sun.arch.data.model"); 
 ```
 
@@ -26,7 +26,7 @@ System.getProperty("sun.arch.data.model");
 
 让我们看看代码:
 
-```
+```java
 public class JVMBitVersion {
     public String getUsingSystemClass() {
         return System.getProperty("sun.arch.data.model") + "-bit";
@@ -38,7 +38,7 @@ public class JVMBitVersion {
 
 让我们通过单元测试来检查这种方法:
 
-```
+```java
 @Test
 public void whenUsingSystemClass_thenOutputIsAsExpected() {
     if ("64".equals(System.getProperty("sun.arch.data.model"))) {
@@ -61,7 +61,7 @@ JNA ( [Java Native Access](https://web.archive.org/web/20221208143832/https://gi
 
 值 4 表示 32 位本机指针，而值 8 表示 64 位本机指针:
 
-```
+```java
 if (com.sun.jna.Native.POINTER_SIZE == 4) {
     // 32-bit
 } else if (com.sun.jna.Native.POINTER_SIZE == 8) {
@@ -77,7 +77,7 @@ if (com.sun.jna.Native.POINTER_SIZE == 4) {
 
 让我们看看它是如何识别比特的:
 
-```
+```java
 public static final boolean is64Bit() {
     String model = System.getProperty("sun.arch.data.model",
                                       System.getProperty("com.ibm.vm.bitmode"));
@@ -99,7 +99,7 @@ public static final boolean is64Bit() {
 
 在这里，`ARCH`常量是通过`System`类从属性`os.arch`中派生出来的。它用于获取操作系统架构:
 
-```
+```java
 ARCH = getCanonicalArchitecture(System.getProperty("os.arch"), osType);
 ```
 

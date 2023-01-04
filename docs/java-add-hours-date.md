@@ -18,7 +18,7 @@
 
 让我们看看如何将`n`小时添加到给定的`Date`对象:
 
-```
+```java
 public Date addHoursToJavaUtilDate(Date date, int hours) {
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(date);
@@ -41,7 +41,7 @@ public Date addHoursToJavaUtilDate(Date date, int hours) {
 
 让我们快速看一下这种方法:
 
-```
+```java
 @Test
 public void givenJavaUtilDate_whenUsingToInstant_thenAddHours() {
     Date actualDate = new GregorianCalendar(2018, Calendar.JUNE, 25, 5, 0)
@@ -60,7 +60,7 @@ public void givenJavaUtilDate_whenUsingToInstant_thenAddHours() {
 
 在 Java 8 或更高版本中，向任一个`[java.time.LocalDateTime](https://web.archive.org/web/20220524003447/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/LocalDateTime.html) or [java.time.ZonedDateTime](https://web.archive.org/web/20220524003447/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/ZonedDateTime.html)`实例添加时间非常简单，并且使用了`plusHours()`方法:
 
-```
+```java
 @Test
 public void givenLocalDateTime_whenUsingPlusHours_thenAddHours() {
     LocalDateTime actualDateTime = LocalDateTime
@@ -76,7 +76,7 @@ public void givenLocalDateTime_whenUsingPlusHours_thenAddHours() {
 
 将负的小时值传递给`plusHours()`方法就可以了。但是，建议使用`minusHours()`方法:
 
-```
+```java
 @Test
 public void givenLocalDateTime_whenUsingMinusHours_thenSubtractHours() {
     LocalDateTime actualDateTime = LocalDateTime
@@ -97,7 +97,7 @@ public void givenLocalDateTime_whenUsingMinusHours_thenSubtractHours() {
 
 **要给一个`Instant`对象添加一些小时，我们可以使用它的 `plus()`方法和一个 [`java.time.temporal.TemporalAmount`](https://web.archive.org/web/20220524003447/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/temporal/TemporalAmount.html) :**
 
-```
+```java
 @Test
 public void givenInstant_whenUsingAddHoursToInstant_thenAddHours() {
     Instant actualValue = Instant.parse("2018-06-25T05:12:35Z");
@@ -114,7 +114,7 @@ public void givenInstant_whenUsingAddHoursToInstant_thenAddHours() {
 
 来自 Apache Commons Lang 库的 [`DateUtils`](https://web.archive.org/web/20220524003447/https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/time/DateUtils.html#addHours-java.util.Date-int-) 类公开了一个`static` `addHours()`方法:
 
-```
+```java
 public static Date addHours(Date date, int amount)
 ```
 
@@ -122,7 +122,7 @@ public static Date addHours(Date date, int amount)
 
 一个新的 `java.util.Date`对象作为结果返回:
 
-```
+```java
 @Test
 public void givenJavaUtilDate_whenUsingApacheCommons_thenAddHours() {
     Date actualDate = new GregorianCalendar(2018, Calendar.JUNE, 25, 5, 0)
@@ -144,7 +144,7 @@ public void givenJavaUtilDate_whenUsingApacheCommons_thenAddHours() {
 
 让我们看一个例子:
 
-```
+```java
 @Test
 public void givenJodaDateTime_whenUsingPlusHoursToDateTime_thenAddHours() {
     DateTime actualDateTime = new DateTime(2018, 5, 25, 5, 0);

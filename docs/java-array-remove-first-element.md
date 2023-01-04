@@ -18,7 +18,7 @@
 
 幸运的是，JDK 提供了一个我们可以使用的方便的静态帮助函数，叫做`Arrays.copyOfRange()`:
 
-```
+```java
 String[] stringArray = {"foo", "bar", "baz"};
 String[] modifiedArray = Arrays.copyOfRange(stringArray, 1, stringArray.length);
 ```
@@ -35,7 +35,7 @@ String[] modifiedArray = Arrays.copyOfRange(stringArray, 1, stringArray.length);
 
 假设我们有以下`List` s:
 
-```
+```java
 List<String> arrayList = new ArrayList<>();
 // populate the ArrayList
 
@@ -45,7 +45,7 @@ List<String> linkedList = new LinkedList<>();
 
 由于两个类实现了相同的接口，因此移除第一个元素的示例代码看起来是相同的:
 
-```
+```java
 arrayList.remove(0);
 linkedList.remove(0);
 ```

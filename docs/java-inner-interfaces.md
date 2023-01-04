@@ -18,7 +18,7 @@
 
 当在另一个接口中声明时(类似于顶级接口中的字段声明)，它们以及它们的字段都是隐式公共和静态的，并且它们可以在任何地方实现:
 
-```
+```java
 public interface Customer {
     // ...
     interface List {
@@ -29,7 +29,7 @@ public interface Customer {
 
 在另一个类中声明的内部接口也是静态的，但是它们可以有访问说明符来约束它们在哪里实现:
 
-```
+```java
 public class Customer {
     public interface List {
         void add(Customer customer);
@@ -49,7 +49,7 @@ public class Customer {
 
 最后，我们可以继续实现它:
 
-```
+```java
 public class CommaSeparatedCustomers implements Customer.List {
     // ...
 }

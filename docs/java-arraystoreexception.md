@@ -14,14 +14,14 @@
 
 假设我们实例化了一个类型为`String`的数组，然后试图在其中存储`Integer`。在这种情况下，在运行时，`ArrayStoreException`被抛出:
 
-```
+```java
 Object array[] = new String[5];
 array[0] = 2;
 ```
 
 当我们试图在数组中存储不正确的值类型时，将在第二行代码中引发异常:
 
-```
+```java
 Exception in thread "main" java.lang.ArrayStoreException: java.lang.Integer
     at com.baeldung.array.arraystoreexception.ArrayStoreExceptionExample.main(ArrayStoreExceptionExample.java:9)
 ```
@@ -32,7 +32,7 @@ Exception in thread "main" java.lang.ArrayStoreException: java.lang.Integer
 
 这个异常的处理非常简单。如任何其他异常，也需要用[试抓块](/web/20220523232733/https://www.baeldung.com/java-exceptions) 包围**进行处理:**
 
-```
+```java
 try{
     Object array[] = new String[5];
     array[0] = 2;
@@ -48,14 +48,14 @@ catch (ArrayStoreException e) {
 
 但是**用基类声明数组，然后存储不同类的对象，会导致编译错误**。让我们看一个简单的例子:
 
-```
+```java
 String array[] = new String[5];
 array[0] = 2;
 ```
 
 在上面的例子中，我们将数组类型声明为`String `，并尝试在其中存储一个`Integer `。这将导致编译错误:
 
-```
+```java
 Exception in thread "main" java.lang.Error: Unresolved compilation problem: 
   Type mismatch: cannot convert from int to String
     at com.baeldung.arraystoreexception.ArrayStoreExampleCE.main(ArrayStoreExampleCE.java:8)

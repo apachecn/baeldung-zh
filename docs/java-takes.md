@@ -20,7 +20,7 @@ Java 生态系统中有许多 web 框架，如 [Spring](/web/20221205131306/http
 
 首先，我们将最新的`[takes](https://web.archive.org/web/20221205131306/https://search.maven.org/search?q=g:org.takes%20a:takes)` Maven 依赖项添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.takes</groupId>
     <artifactId>takes</artifactId>
@@ -30,7 +30,7 @@ Java 生态系统中有许多 web 框架，如 [Spring](/web/20221205131306/http
 
 然后，让我们创建实现 [`Take`](https://web.archive.org/web/20221205131306/https://www.javadoc.io/doc/org.takes/takes/latest/org/takes/Take.html) 接口的`TakesHelloWorld`类:
 
-```
+```java
 public class TakesHelloWorld implements Take {
     @Override
     public Response act(Request req) {
@@ -45,7 +45,7 @@ public class TakesHelloWorld implements Take {
 
 接下来，我们将创建`TakesApp`类来启动 web 应用程序:
 
-```
+```java
 public class TakesApp {
     public static void main(String... args) {
         new FtBasic(new TakesHelloWorld()).start(Exit.NEVER);
@@ -57,7 +57,7 @@ public class TakesApp {
 
 Takes 通过使用 [`ServerSocket`](/web/20221205131306/https://www.baeldung.com/a-guide-to-java-sockets) 类实现自己的无状态 web 服务器。默认情况下，它在端口 80 上启动服务器。但是，我们可以在代码中定义端口:
 
-```
+```java
 new FtBasic(new TakesHelloWorld(), 6060).start(Exit.NEVER);
 ```
 
@@ -65,7 +65,7 @@ new FtBasic(new TakesHelloWorld(), 6060).start(Exit.NEVER);
 
 然后，让我们使用 Maven 命令编译这些类:
 
-```
+```java
 mvn clean package
 ```
 
@@ -79,13 +79,13 @@ mvn clean package
 
 首先，让我们编译我们的类:
 
-```
+```java
 javac -cp "takes.jar:." com.baeldung.takes.*
 ```
 
 然后，我们可以使用 Java 命令行运行应用程序:
 
-```
+```java
 java -cp "takes.jar:." com.baeldung.takes.TakesApp --port=6060
 ```
 
@@ -93,7 +93,7 @@ java -cp "takes.jar:." com.baeldung.takes.TakesApp --port=6060
 
 或者，我们可以使用**[`exec-maven-plugin`](https://web.archive.org/web/20221205131306/https://search.maven.org/search?q=g:org.codehaus.mojo%20a:exec-maven-plugin)插件通过 Maven** 来运行它:
 
-```
+```java
 <profiles>
     <profile>
         <id>reload</id>
@@ -128,7 +128,7 @@ java -cp "takes.jar:." com.baeldung.takes.TakesApp --port=6060
 
 现在，我们可以使用 Maven 命令运行我们的应用程序:
 
-```
+```java
 mvn clean integration-test -Preload -Dport=6060
 ```
 
@@ -138,7 +138,7 @@ mvn clean integration-test -Preload -Dport=6060
 
 例如，让我们在应用程序中添加几条路线:
 
-```
+```java
 public static void main(String... args) {
     new FtBasic(
         new TkFork(
@@ -157,7 +157,7 @@ public static void main(String... args) {
 
 例如，我们可以使用 [`RqMethod`](https://web.archive.org/web/20221205131306/https://www.javadoc.io/doc/org.takes/takes/latest/org/takes/rq/RqMethod.html) 接口来提取 HTTP 方法:
 
-```
+```java
 public class TakesHelloWorld implements Take { 
     @Override
     public Response act(Request req) throws IOException {
@@ -169,19 +169,19 @@ public class TakesHelloWorld implements Take {
 
 类似地， [`RqHeaders`](https://web.archive.org/web/20221205131306/https://www.javadoc.io/doc/org.takes/takes/latest/org/takes/rq/RqHeaders.html) 接口可用于获取请求头:
 
-```
+```java
 Iterable<String> requestHeaders = new RqHeaders.Base(req).head();
 ```
 
 我们可以使用 [`RqPrint`](https://web.archive.org/web/20221205131306/https://www.javadoc.io/doc/org.takes/takes/latest/org/takes/rq/RqPrint.html) 类来获得请求的体:
 
-```
+```java
 String body = new RqPrint(req).printBody();
 ```
 
 同样，我们可以使用 [`RqFormSmart`](https://web.archive.org/web/20221205131306/https://www.javadoc.io/doc/org.takes/takes/latest/org/takes/rq/form/RqFormSmart.html) 类来访问表单参数:
 
-```
+```java
 String username = new RqFormSmart(req).single("username");
 ```
 
@@ -193,19 +193,19 @@ Takes 还提供了许多有用的装饰器来处理`org.takes.rs`包中的 HTTP 
 
 例如， [`RsWithStatus`](https://web.archive.org/web/20221205131306/https://www.javadoc.io/doc/org.takes/takes/latest/org/takes/rs/RsWithStatus.html) 类使用状态代码呈现响应:
 
-```
+```java
 Response resp = new RsWithStatus(200);
 ```
 
 可以使用`head`方法验证响应的输出:
 
-```
+```java
 assertEquals("[HTTP/1.1 200 OK], ", resp.head().toString());
 ```
 
 类似地， [`RsWithType`](https://web.archive.org/web/20221205131306/https://www.javadoc.io/doc/org.takes/takes/latest/org/takes/rs/RsWithType.html) 类使用内容类型呈现响应:
 
-```
+```java
 Response resp = new RsWithType(new RsEmpty(), "text/html");
 ```
 
@@ -215,7 +215,7 @@ Response resp = new RsWithType(new RsEmpty(), "text/html");
 
 因此，让我们创建`TakesContact`类并使用讨论过的装饰器来呈现响应:
 
-```
+```java
 public class TakesContact implements Take {
     @Override
     public Response act(Request req) throws IOException {
@@ -229,7 +229,7 @@ public class TakesContact implements Take {
 
 同样，我们可以使用 [`RsJson`](https://web.archive.org/web/20221205131306/https://www.javadoc.io/doc/org.takes/takes/latest/org/takes/rs/RsJson.html) 类来呈现 JSON 响应:
 
-```
+```java
 @Override 
 public Response act(Request req) { 
     JsonStructure json = Json.createObjectBuilder() 
@@ -246,7 +246,7 @@ public Response act(Request req) {
 
 例如，让我们使用 [`TkFallback`](https://web.archive.org/web/20221205131306/https://www.javadoc.io/doc/org.takes/takes/latest/org/takes/facets/fallback/TkFallback.html) 类来处理 HTTP 404 并向用户显示一条消息:
 
-```
+```java
 public static void main(String... args) throws IOException, SQLException {
     new FtBasic(
         new TkFallback(
@@ -263,7 +263,7 @@ public static void main(String... args) throws IOException, SQLException {
 
 类似地，我们可以使用 [`FbChain`](https://web.archive.org/web/20221205131306/https://www.javadoc.io/doc/org.takes/takes/latest/org/takes/facets/fallback/FbChain.html) 类来定义一个组合后援:
 
-```
+```java
 new TkFallback(
     new TkFork(
       // ...
@@ -278,7 +278,7 @@ new TkFallback(
 
 此外，我们可以实现`Fallback`接口来处理异常:
 
-```
+```java
 new FbChain(
     new FbStatus(404, new RsText("Page Not Found")),
     new FbStatus(405, new RsText("Method Not Allowed")),
@@ -297,7 +297,7 @@ new FbChain(
 
 首先，我们将添加 [`velocity-engine-core`](https://web.archive.org/web/20221205131306/https://search.maven.org/search?q=g:org.apache.velocity%20a:velocity-engine-core) Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.velocity</groupId>
     <artifactId>velocity-engine-core</artifactId>
@@ -307,7 +307,7 @@ new FbChain(
 
 然后，我们将使用`[RsVelocity](https://web.archive.org/web/20221205131306/https://www.javadoc.io/doc/org.takes/takes/latest/org/takes/rs/RsVelocity.html)`类来定义模板字符串和`act`方法中的绑定参数:
 
-```
+```java
 public class TakesIndex implements Take {
     @Override
     public Response act(Request req) throws IOException {
@@ -322,7 +322,7 @@ public class TakesIndex implements Take {
 
 此外，我们可以使用带有`RsVelocity`类的速度模板:
 
-```
+```java
 new RsVelocity(this.getClass().getResource("/templates/index.vm"), 
     new RsVelocity.Pair("username", username))
 );
@@ -334,7 +334,7 @@ new RsVelocity(this.getClass().getResource("/templates/index.vm"),
 
 例如，让我们使用 [JUnit](/web/20221205131306/https://www.baeldung.com/junit-5) 为我们的`TakesContact`类编写一个单元测试:
 
-```
+```java
 String resp = new RsPrint(new TakesContact().act(new RqFake())).printBody();
 assertEquals("Contact us at https://www.baeldung.com", resp); 
 ```
@@ -347,7 +347,7 @@ assertEquals("Contact us at https://www.baeldung.com", resp);
 
 例如，让我们编写一个集成测试并验证`TakesContact`类的响应:
 
-```
+```java
 new FtRemote(new TakesContact()).exec(
     new FtRemote.Script() {
         @Override

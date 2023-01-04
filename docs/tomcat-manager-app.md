@@ -34,7 +34,7 @@
 
 让我们通过编辑`conf/tomcat-users`文件来添加这样的用户:
 
-```
+```java
 <tomcat-users>
   <role rolename="manager-gui"/>
   <role rolename="manager-script"/>
@@ -66,13 +66,13 @@
 
 或者，我们可以使用文本 web 服务列出所有已部署的应用程序。这一次，我们使用`tomcattext`用户发出一个`curl`请求来进行身份验证:
 
-```
+```java
 curl -u tomcattext:baeldung http://localhost:8080/manager/text/list
 ```
 
 就像网页一样，响应显示了所有已部署的应用程序及其当前状态和活动会话的数量。例如，我们可以看到`manager`应用程序正在运行，并且有一个活动会话:
 
-```
+```java
 OK - Listed applications for virtual host [localhost]
 /:running:0:ROOT
 /examples:running:0:examples
@@ -93,12 +93,12 @@ Tomcat 管理器应用程序允许我们做的一个关键功能是停止、启�
 
 同样，我们可以使用文本服务来停止和启动应用程序。让我们停止然后使用一个`curl`请求启动`examples`应用程序:
 
-```
+```java
 curl -u tomcattext:baeldung http://localhost:8080/manager/text/stop?path=/examples
 OK - Stopped application at context path [/examples]
 ```
 
-```
+```java
 curl -u tomcattext:baeldung http://localhost:8080/manager/text/start?path=/examples
 OK - Started application at context path [/examples]
 ```
@@ -109,7 +109,7 @@ OK - Started application at context path [/examples]
 
 下面是一个我们如何使用文本服务重新加载`docs`应用程序的例子:
 
-```
+```java
 curl -u tomcattext:baeldung http://localhost:8080/manager/text/reload?path=/docs
 OK - Reloaded application at context path [/docs]
 ```
@@ -138,7 +138,7 @@ OK - Reloaded application at context path [/docs]
 
 为了查看当前用户会话的细节，我们使用我们感兴趣的应用程序的上下文路径调用`session`端点。在本例中，我们可以看到当前有两个用于`manager`应用程序的会话:
 
-```
+```java
 curl -u tomcattext:baeldung "http://localhost:8080/manager/text/sessions?path=/manager"
 OK - Session information for application at context path [/manager]
 Default maximum session inactive interval is [30] minutes
@@ -148,7 +148,7 @@ Inactive for [13 - <14] minutes: [1] sessions
 
 如果我们想要销毁不活动的用户会话，那么我们使用`expire`端点。在本例中，我们终止了`manager`应用程序的非活动时间超过 10 分钟的会话:
 
-```
+```java
 curl -u tomcattext:baeldung "http://localhost:8080/manager/text/expire?path=/manager&idle;=10"
 OK - Session information for application at context path [/manager]
 Default maximum session inactive interval is [30] minutes
@@ -183,7 +183,7 @@ Inactive for [>10] minutes: [1] sessions were expired
 
 注意**部署描述符中指定的任何路径都被忽略**。上下文路径取自部署描述符的文件名。看一看[的共同属性](https://web.archive.org/web/20220922142729/https://tomcat.apache.org/tomcat-9.0-doc/config/context.html#Common_Attributes)来理解为什么，以及所有其他可能属性的描述:
 
-```
+```java
 <Context docBase="/tmp/sample.war" reloadable="true" />
 ```
 
@@ -195,21 +195,21 @@ Inactive for [>10] minutes: [1] sessions were expired
 
 首先，让我们**取消部署我们的示例应用程序**:
 
-```
+```java
 curl -u tomcattext:baeldung "http://localhost:8080/manager/text/undeploy?path=/sample"
 OK - Undeployed application at context path [/sample]
 ```
 
 为了**再次部署它**，我们指定示例 WAR 文件的上下文路径和位置 URI:
 
-```
+```java
 curl -u tomcattext:baeldung "http://localhost:8080/manager/text/deploy?path=/sample&war;=file:/tmp/sample.war"
 OK - Deployed application at context path [/sample]
 ```
 
 此外，我们还可以使用 XML 部署描述符来部署应用程序:
 
-```
+```java
 curl -u tomcattext:baeldung "http://localhost:8080/manager/text/deploy?config=file:/tmp/sample.xml"
 OK - Deployed application at context path [/sample]
 ```
@@ -218,13 +218,13 @@ OK - Deployed application at context path [/sample]
 
 在我们可以看到任何 SSL 配置之前，我们需要在 Tomcat 中**启用 SSL。首先，让我们在 Tomcat 的`conf`目录中创建一个新的带有自签名证书的证书密钥库:**
 
-```
+```java
 keytool -genkey -alias tomcat -keyalg RSA -keystore conf/localhost-rsa.jks 
 ```
 
 接下来，我们更改`conf/tomcat-server.xml`文件以在 Tomcat 中启用 SSL 连接器:
 
-```
+```java
 <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
            maxThreads="150" SSLEnabled="true">
     <SSLHostConfig>
@@ -257,25 +257,25 @@ keytool -genkey -alias tomcat -keyalg RSA -keystore conf/localhost-rsa.jks
 
 *   使用`sslConnectorCiphers`资源的 SSL 密码:
 
-```
+```java
 curl -ku tomcattext:baeldung "https://localhost:8443/manager/text/sslConnectorCiphers"
 ```
 
 *   使用`sslConnectorCerts`资源的证书:
 
-```
+```java
 curl -ku tomcattext:baeldung "https://localhost:8443/manager/text/sslConnectorCerts"
 ```
 
 *   使用`sslConnectorTrustedCerts`资源的可信证书:
 
-```
+```java
 curl -ku tomcattext:baeldung "https://localhost:8443/manager/text/sslConnectorTrustedCerts"
 ```
 
 SSL **配置可以通过以下方式重新加载**:
 
-```
+```java
 curl -ku tomcattext:baeldung "https://localhost:8443/manager/text/sslReload"
 OK - Reloaded TLS configuration for all TLS virtual hosts 
 ```
@@ -300,13 +300,13 @@ Tomcat Manager 应用程序还向我们显示了服务器的**状态和部署的
 
 然而，在我们这样做之前，我们需要添加一个新的侦听器。编辑`conf/server.xml`并将以下内容添加到现有监听器列表的末尾:
 
-```
+```java
 <Listener className="org.apache.catalina.storeconfig.StoreConfigLifecycleListener" />
 ```
 
 重新启动 Tomcat 后，我们可以使用以下命令保存我们的配置:
 
-```
+```java
 curl -u tomcattext:baeldung "http://localhost:8080/manager/text/save"
 OK - Server configuration saved
 ```
@@ -319,7 +319,7 @@ OK - Server configuration saved
 
 我们可以使用文本服务来获取正在运行的 Tomcat 服务器的**线程转储:**
 
-```
+```java
 curl -u tomcattext:baeldung "http://localhost:8080/manager/text/threaddump"
 OK - JVM thread dump
 2019-10-06 23:19:10.066
@@ -337,7 +337,7 @@ Tomcat 通常在防止内存泄漏方面做得很好。但是当我们怀疑内�
 
 类似地，文本服务可以运行内存泄漏检测:
 
-```
+```java
 curl -u  tomcattext:baeldung "http://localhost:8080/manager/text/findleaks?statusLine=true"
 OK - No memory leaks found
 ```
@@ -346,7 +346,7 @@ OK - No memory leaks found
 
 文本服务提供了可用资源的列表。在本例中，我们看到有一个可用的内存数据库:
 
-```
+```java
 curl -u tomcattext:baeldung "http://localhost:8080/manager/text/resources"
 OK - Listed global resources of all types
 UserDatabase:org.apache.catalina.users.MemoryUserDatabase

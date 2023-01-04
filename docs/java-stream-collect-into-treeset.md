@@ -22,7 +22,7 @@ Java 8 中一个重要的新特性是[流 API](/web/20221017060640/https://www.b
 
 既然`String `实现了`Comparable`接口，我们先以`String`为例，看看如何在一个`TreeSet`中收集它们:
 
-```
+```java
 String kotlin = "Kotlin";
 String java = "Java";
 String python = "Python";
@@ -41,7 +41,7 @@ assertThat(myTreeSet).containsExactly(java, kotlin, python, ruby);
 
 首先，让我们看看我们的`Player`类:
 
-```
+```java
 public class Player implements Comparable<Player> {
     private String name;
     private int age;
@@ -68,7 +68,7 @@ public class Player implements Comparable<Player> {
 
 接下来，让我们创建几个`Player`实例:
 
-```
+```java
 /*                          name  |  age  | num of played | num of wins
                            --------------------------------------------- */
 Player kai = new Player(   "Kai",     26,       28,            7);
@@ -81,7 +81,7 @@ Player kevin = new Player( "Kevin",   24,       50,           49);
 
 现在，让我们按照它们的自然顺序将它们收集到一个`TreeSet`中，并验证我们是否得到了预期的结果:
 
-```
+```java
 TreeSet<Player> myTreeSet = Stream.of(saajan, eric, kai, kevin).collect(Collectors.toCollection(TreeSet::new));
 assertThat(myTreeSet).containsExactly(kevin, kai, eric, saajan);
 ```
@@ -96,7 +96,7 @@ assertThat(myTreeSet).containsExactly(kevin, kai, eric, saajan);
 
 我们已经看到,`Collectors.toCollection(TreeSet::new)`允许我们按照自然顺序收集`Stream`到`TreeSet`中的元素。`TreeSet`提供了另一个接受`Comparator`对象作为参数的构造函数:
 
-```
+```java
 public TreeSet(Comparator<? super E> comparator) { ... }
 ```
 
@@ -104,7 +104,7 @@ public TreeSet(Comparator<? super E> comparator) { ... }
 
 接下来，让我们根据这些玩家的获胜次数而不是他们的年龄来收集他们:
 
-```
+```java
 TreeSet<Player> myTreeSet = Stream.of(saajan, eric, kai, kevin)
   .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparingInt(Player::getNumberOfWins))
 ));
@@ -121,7 +121,7 @@ assertThat(myTreeSet).containsExactly(kai, eric, kevin, saajan);
 
 所以最后，让我们再把这些玩家收集到一个`TreeSet`里。但这一次，我们希望它们按胜率(胜率/出牌次数)排序:
 
-```
+```java
 TreeSet<Player> myTreeSet = Stream.of(saajan, eric, kai, kevin)
   .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(player -> BigDecimal.valueOf(player.getNumberOfWins())
     .divide(BigDecimal.valueOf(player.getNumberOfPlayed()), 2, RoundingMode.HALF_UP)))));

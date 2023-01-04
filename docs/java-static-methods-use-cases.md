@@ -18,7 +18,7 @@
 
 Java 中的静态方法是类定义的一部分。我们可以通过给一个方法添加 [`static`](/web/20220810182131/https://www.baeldung.com/java-static) 关键字来定义一个静态方法:
 
-```
+```java
 private static int counter = 0;
 
 public static int incrementCounter() {
@@ -32,7 +32,7 @@ public static int getCounterValue() {
 
 为了访问静态方法，我们**使用类名后跟一个点和方法名**:
 
-```
+```java
 int oldValue = StaticCounter.getCounterValue();
 int newValue = StaticCounter.incrementCounter();
 assertThat(newValue).isEqualTo(oldValue + 1);
@@ -63,14 +63,14 @@ assertThat(newValue).isEqualTo(oldValue + 1);
 
 Apache `StringUtils` 的`String`操作就是一个很好的例子:
 
-```
+```java
 String str = StringUtils.capitalize("baeldung");
 assertThat(str).isEqualTo("Baeldung"); 
 ```
 
 另一个很好的例子是`Collections` 类，因为它包含操作不同集合的公共方法:
 
-```
+```java
 List<String> list = Arrays.asList("1", "2", "3");
 Collections.reverse(list);
 assertThat(list).containsExactly("3", "2", "1");
@@ -108,7 +108,7 @@ assertThat(list).containsExactly("3", "2", "1");
 
 Java 中的实用程序类是一个无状态类，我们不应该实例化它。因此，建议将它声明为 [`final`](/web/20220810182131/https://www.baeldung.com/java-final) ，这样它就不能被子类化了(这样不会增加值)。此外，为了防止任何人试图实例化它，我们可以添加一个[私有构造函数](/web/20220810182131/https://www.baeldung.com/java-sonar-hide-implicit-constructor):
 
-```
+```java
 public final class CustomStringUtils {
 
     private CustomStringUtils() {
@@ -132,7 +132,7 @@ public final class CustomStringUtils {
 
 我们的被测单元将根据它的输入参数计算结果。因此，我们可以**对结果进行断言，并测试不同的输入输出组合**:
 
-```
+```java
 @Test
 void givenNonEmptyString_whenIsEmptyMethodIsCalled_thenFalseIsReturned() {
     boolean empty = CustomStringUtils.isEmpty("baeldung");
@@ -146,7 +146,7 @@ void givenNonEmptyString_whenIsEmptyMethodIsCalled_thenFalseIsReturned() {
 
 如果必须的话，我们可以使用 [Mockito](/web/20220810182131/https://www.baeldung.com/mockito-mock-static-methods) 来模仿静态函数。但是，我们需要向 pom.xml 添加一个额外的 [`mockito-inline`](https://web.archive.org/web/20220810182131/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3Aorg.mockito%20a%3Amockito-inline) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.mockito</groupId>
     <artifactId>mockito-inline</artifactId>
@@ -157,7 +157,7 @@ void givenNonEmptyString_whenIsEmptyMethodIsCalled_thenFalseIsReturned() {
 
 现在，我们可以使用`Mockito.mockStatic ` 方法来模拟对静态方法调用的调用:
 
-```
+```java
 try (MockedStatic<StringUtils> utilities = Mockito.mockStatic(StringUtils.class)) {
     utilities.when(() -> StringUtils.capitalize("karoq")).thenReturn("Karoq");
 

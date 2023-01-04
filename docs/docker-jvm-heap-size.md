@@ -24,13 +24,13 @@ JVM 非常擅长确定合适的默认内存设置。
 
 让我们看看堆大小:
 
-```
+```java
 $ java -XX:+PrintFlagsFinal -version | grep -Ei "maxheapsize|maxram"
 ```
 
 这将输出:
 
-```
+```java
 openjdk version "15" 2020-09-15
 OpenJDK Runtime Environment AdoptOpenJDK (build 15+36)
 OpenJDK 64-Bit Server VM AdoptOpenJDK (build 15+36, mixed mode, sharing)
@@ -45,7 +45,7 @@ OpenJDK 64-Bit Server VM AdoptOpenJDK (build 15+36, mixed mode, sharing)
 
 出于测试的目的，让我们创建一个以兆字节为单位打印堆大小的程序:
 
-```
+```java
 public static void main(String[] args) {
   int mb = 1024 * 1024;
   MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
@@ -60,14 +60,14 @@ public static void main(String[] args) {
 
 我们可以在我们的主机上测试它，假设我们已经安装了 JDK。在 Linux 系统中，我们可以编译我们的程序，并从在该目录下打开的终端运行它:
 
-```
+```java
 $ javac ./PrintXmxXms.java
 $ java -cp . PrintXmxXms
 ```
 
 在具有 16Gb RAM 的系统上，输出为:
 
-```
+```java
 INFO: Initial Memory (xms) : 254mb
 INFO: Max Memory (xmx) : 4,056mb
 ```
@@ -78,7 +78,7 @@ INFO: Max Memory (xmx) : 4,056mb
 
 让我们将下面的`Dockerfile` 添加到包含 Java 程序的文件夹中:
 
-```
+```java
 FROM openjdk:8u92-jdk-alpine
 COPY *.java /src/
 RUN mkdir /app \
@@ -91,7 +91,7 @@ CMD ["sh", "-c", \
 
 这里我们使用的容器使用的是 Java 8 的旧版本，比最新版本中可用的容器支持还早。让我们建立它的形象:
 
-```
+```java
 $ docker build -t oldjava .
 ```
 
@@ -99,7 +99,7 @@ $ docker build -t oldjava .
 
 让我们运行这个容器:
 
-```
+```java
 $ docker run --rm -ti oldjava
 openjdk version "1.8.0_92-internal"
 OpenJDK Runtime Environment (build 1.8.0_92-...)
@@ -110,7 +110,7 @@ Max Memory (xmx) : 2814mb
 
 现在让我们将容器内存限制为 1GB。
 
-```
+```java
 $ docker run --rm -ti --memory=1g oldjava
 openjdk version "1.8.0_92-internal"
 OpenJDK Runtime Environment (build 1.8.0_92-...)
@@ -125,13 +125,13 @@ Max Memory (xmx) : 2814mb
 
 对于相同的测试程序，让我们通过更改`Dockerfile`的第一行来使用一个更新的 JVM 8:
 
-```
+```java
 FROM openjdk:8-jdk-alpine
 ```
 
 我们可以再测试一次:
 
-```
+```java
 $ docker build -t newjava .
 $ docker run --rm -ti newjava
 openjdk version "1.8.0_212"
@@ -143,7 +143,7 @@ Max Memory (xmx) : 2814mb
 
 这里，它再次使用整个 docker 主机内存来计算 JVM 堆大小。但是，如果我们为容器分配 1GB 的 RAM:
 
-```
+```java
 $ docker run --rm -ti --memory=1g newjava
 openjdk version "1.8.0_212"
 OpenJDK Runtime Environment (IcedTea 3.12.0) (Alpine 8.212.04-r0)
@@ -162,7 +162,7 @@ Max Memory (xmx) : 247mb
 
 与其直接在容器的命令中硬编码 JVM 标志，不如使用一个环境变量，比如`JAVA_OPTS`。我们在`Dockerfile`中使用这个变量，但是它可以在容器启动时被修改:
 
-```
+```java
 FROM openjdk:8u92-jdk-alpine
 COPY src/ /src/
 RUN mkdir /app \
@@ -176,13 +176,13 @@ CMD java $JAVA_OPTS -cp /app \
 
 现在让我们构建图像:
 
-```
+```java
 $ docker build -t openjdk-java .
 ```
 
 我们可以通过指定`JAVA_OPTS`环境变量来选择运行时的内存设置:
 
-```
+```java
 $ docker run --rm -ti -e JAVA_OPTS="-Xms50M -Xmx50M" openjdk-java
 INFO: Initial Memory (xms) : 50mb
 INFO: Max Memory (xmx) : 48mb 
@@ -200,7 +200,7 @@ Tomcat 9 容器有自己的启动脚本，所以要设置 JVM 参数，我们需
 
 然后，我们将使用一个简单的`Dockerfile`将其容器化，在这里我们声明了`CATALINA_OPTS`环境变量:
 
-```
+```java
 FROM tomcat:9.0
 COPY ./target/*.war /usr/local/tomcat/webapps/ROOT.war
 ENV CATALINA_OPTS="-Xms1G -Xmx1G"
@@ -208,7 +208,7 @@ ENV CATALINA_OPTS="-Xms1G -Xmx1G"
 
 然后我们构建容器映像并运行它:
 
-```
+```java
 $ docker build -t tomcat .
 $ docker run --name tomcat -d -p 8080:8080 \
   -e CATALINA_OPTS="-Xms512M -Xmx512M" tomcat
@@ -218,7 +218,7 @@ $ docker run --name tomcat -d -p 8080:8080 \
 
 我们可以检查应用的运行时参数，并验证我们的选项`-Xmx`和`-Xms`是否存在:
 
-```
+```java
 $ docker exec -ti tomcat jps -lv
 1 org.apache.catalina.startup.Bootstrap <other options...> -Xms512M -Xmx512M
 ```
@@ -235,7 +235,7 @@ Maven 和 Gradle 提供了插件，允许我们在没有`Dockerfile`的情况下
 
 对于 Maven，我们将它们添加到 spring-boot-maven-plugin 中的<`configuration>`块:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <project  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -265,7 +265,7 @@ Maven 和 Gradle 提供了插件，允许我们在没有`Dockerfile`的情况下
 
 要构建项目，请运行:
 
-```
+```java
 $ ./mvnw clean spring-boot:build-image
 ```
 
@@ -273,7 +273,7 @@ $ ./mvnw clean spring-boot:build-image
 
 **该插件对 JVM 的内存设置进行硬编码。**然而，我们仍然可以通过设置环境变量`JAVA_OPTS `或`JAVA_TOOL_OPTIONS:`来覆盖它们
 
-```
+```java
 $ docker run --rm -ti -p 8080:8080 \
   -e JAVA_TOOL_OPTIONS="-Xms20M -Xmx20M" \
   --memory=1024M heapsizing-demo:0.0.1-SNAPSHOT
@@ -281,7 +281,7 @@ $ docker run --rm -ti -p 8080:8080 \
 
 输出如下所示:
 
-```
+```java
 Setting Active Processor Count to 8
 Calculated JVM Memory Configuration: [...]
 [...]
@@ -295,7 +295,7 @@ Picked up JAVA_TOOL_OPTIONS: -Xms20M -Xmx20M
 
 我们可以在任何能够生成可执行 jar 文件的 Java 框架中使用 Google JIB Maven 插件。例如，可以在 Spring Boot 应用程序中使用它来代替`spring-boot-maven`插件来生成容器图像:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <project  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -322,13 +322,13 @@ Picked up JAVA_TOOL_OPTIONS: -Xms20M -Xmx20M
 
 该映像是使用 maven `jib:DockerBuild`目标构建的:
 
-```
+```java
 $ mvn clean install && mvn jib:dockerBuild 
 ```
 
 我们现在可以像往常一样运行它:
 
-```
+```java
 $ docker run --rm -ti -p 8080:8080 \
 -e JAVA_TOOL_OPTIONS="-Xms50M -Xmx50M" heapsizing-demo-jib
 Picked up JAVA_TOOL_OPTIONS: -Xms50M -Xmx50M

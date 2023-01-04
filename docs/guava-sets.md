@@ -8,7 +8,7 @@
 
 让我们从非常简单的开始，**创建一个没有新操作符的`HashSet`** ，使用番石榴:
 
-```
+```java
 Set<String> aNewSet = Sets.newHashSet();
 ```
 
@@ -16,7 +16,7 @@ Set<String> aNewSet = Sets.newHashSet();
 
 首先，让我们看看如何使用简单的 API 对集合进行联合运算:
 
-```
+```java
 @Test
 public void whenCalculatingUnionOfSets_thenCorrect() {
     Set<Character> first = ImmutableSet.of('a', 'b', 'c');
@@ -31,7 +31,7 @@ public void whenCalculatingUnionOfSets_thenCorrect() {
 
 我们还可以使用`Sets.cartesianProduct()`得到两个集合的乘积**，如下例所示:**
 
-```
+```java
 @Test
 public void whenCalculatingCartesianProductOfSets_thenCorrect() {
     Set<Character> first = ImmutableSet.of('a', 'b');
@@ -56,7 +56,7 @@ public void whenCalculatingCartesianProductOfSets_thenCorrect() {
 
 接下来，让我们看看如何使用`Sets.intersection()` API 得到两个集合的交集**:**
 
-```
+```java
 @Test
 public void whenCalculatingSetIntersection_thenCorrect() {
     Set<Character> first = ImmutableSet.of('a', 'b', 'c');
@@ -71,7 +71,7 @@ public void whenCalculatingSetIntersection_thenCorrect() {
 
 现在，让我们来看看两个集合的对称差异——包含在集合 1 或集合 2 中但不同时包含在两个集合中的所有元素:
 
-```
+```java
 @Test
 public void whenCalculatingSetSymmetricDifference_thenCorrect() {
     Set<Character> first = ImmutableSet.of('a', 'b', 'c');
@@ -88,7 +88,7 @@ public void whenCalculatingSetSymmetricDifference_thenCorrect() {
 
 在下面的例子中，我们使用`Sets.powerSet()`来计算给定字符集的幂集:
 
-```
+```java
 @Test
 public void whenCalculatingPowerSet_thenCorrect() {
     Set<Character> chars = ImmutableSet.of('a', 'b');
@@ -110,7 +110,7 @@ public void whenCalculatingPowerSet_thenCorrect() {
 
 在下面的例子中，我们将一组整数[10，11，…，30]放入一个`ContiguousSet`:
 
-```
+```java
 @Test
 public void whenCreatingRangeOfIntegersSet_thenCreated() {
     int start = 10;
@@ -132,7 +132,7 @@ public void whenCreatingRangeOfIntegersSet_thenCreated() {
 
 在以下示例中，当从两个不相连的范围开始，然后我们将它们连接成一个大范围时:
 
-```
+```java
 @Test
 public void whenUsingRangeSet_thenCorrect() {
     RangeSet<Integer> rangeSet = TreeRangeSet.create();
@@ -159,7 +159,7 @@ public void whenUsingRangeSet_thenCorrect() {
 
 在下面的例子中，我们通过一些简单的多集逻辑:
 
-```
+```java
 @Test
 public void whenInsertDuplicatesInMultiSet_thenInserted() {
     Multiset<String> names = HashMultiset.create();
@@ -183,7 +183,7 @@ public void whenInsertDuplicatesInMultiSet_thenInserted() {
 
 在下面的例子中，我们使用`Multisets.copyHighCountFirst()`对`Multiset`中的元素进行排序:
 
-```
+```java
 @Test
 public void whenGetTopOcurringElementsWithMultiSet_thenCorrect() {
     Multiset<String> names = HashMultiset.create();

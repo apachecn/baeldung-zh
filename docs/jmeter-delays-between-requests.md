@@ -61,7 +61,7 @@
 
 让我们看看第二个请求的`Sampler result`输出。在这里，`Sample Start`是`2021-05-17 15:00:40`，与第一个请求的时间相同。这意味着默认情况下，我们在请求之间没有任何延迟。
 
-```
+```java
 Thread Name:Thread Group 1-1
 Sample Start:2021-05-17 15:00:40 SAMT
 ```
@@ -80,14 +80,14 @@ Sample Start:2021-05-17 15:00:40 SAMT
 
 现在，让我们重新运行我们的测试计划，并检查`View Results Tree.`,我们应该看到请求在我们在 timer 元素中设置的延迟下运行。
 
-```
+```java
 Thread Name:Thread Group 1-1
 Sample Start:2021-05-17 15:18:17 SAMT
 ```
 
 我们可以看到，下一个 HTTP 请求是在第一个请求之后三秒钟运行的。
 
-```
+```java
 Thread Name:Thread Group 1-1
 Sample Start:2021-05-17 15:18:20 SAMT
 ```
@@ -110,7 +110,7 @@ Sample Start:2021-05-17 15:18:20 SAMT
 
 如果我们仔细观察一下样本起始点，我们会发现随机延迟是根据定义的定时器参数添加的。
 
-```
+```java
 Thread Name:Thread Group 1-1
 Sample Start:2021-07-15 09:43:45 SAMT
 

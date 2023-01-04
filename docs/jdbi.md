@@ -16,7 +16,7 @@ Jdbi 由一个核心模块和几个可选模块组成。
 
 要开始，我们只需在依赖项中包含核心模块:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.jdbi</groupId>
@@ -28,7 +28,7 @@ Jdbi 由一个核心模块和几个可选模块组成。
 
 在本文中，我们将展示使用 HSQL 数据库的例子:
 
-```
+```java
 <dependency>
     <groupId>org.hsqldb</groupId>
     <artifactId>hsqldb</artifactId>
@@ -45,7 +45,7 @@ Jdbi 由一个核心模块和几个可选模块组成。
 
 起点是`Jdbi` 类:
 
-```
+```java
 Jdbi jdbi = Jdbi.create("jdbc:hsqldb:mem:testDB", "sa", "");
 ```
 
@@ -55,7 +55,7 @@ Jdbi jdbi = Jdbi.create("jdbc:hsqldb:mem:testDB", "sa", "");
 
 如果我们需要提供其他参数，我们使用一个接受`Properties` 对象的重载方法:
 
-```
+```java
 Properties properties = new Properties();
 properties.setProperty("username", "sa");
 properties.setProperty("password", "");
@@ -70,7 +70,7 @@ Jdbi jdbi = Jdbi.create("jdbc:hsqldb:mem:testDB", properties);
 
 如果我们使用`DataSource`连接到数据库，通常情况下，我们可以使用适当的`create` 重载:
 
-```
+```java
 Jdbi jdbi = Jdbi.create(datasource);
 ```
 
@@ -80,7 +80,7 @@ Jdbi jdbi = Jdbi.create(datasource);
 
 使用句柄并让它们自动关闭的最简单方法是使用 lambda 表达式:
 
-```
+```java
 jdbi.useHandle(handle -> {
     doStuffWith(handle);
 });
@@ -90,7 +90,7 @@ jdbi.useHandle(handle -> {
 
 否则，我们使用`withHandle`:
 
-```
+```java
 jdbi.withHandle(handle -> {
     return computeValue(handle);
 });
@@ -98,7 +98,7 @@ jdbi.withHandle(handle -> {
 
 也可以手动打开连接句柄，尽管不推荐这样做；在这种情况下，我们必须在完成后关闭它:
 
-```
+```java
 Jdbi jdbi = Jdbi.create("jdbc:hsqldb:mem:testDB", "sa", "");
 try (Handle handle = jdbi.open()) {
     doStuffWith(handle);
@@ -115,7 +115,7 @@ try (Handle handle = jdbi.open()) {
 
 为了向数据库发送像`create table`这样的语句，我们使用了`execute` 方法:
 
-```
+```java
 handle.execute(
   "create table project "
   + "(id integer identity, name varchar(50), url varchar(100))");
@@ -123,7 +123,7 @@ handle.execute(
 
 `execute` 返回受语句影响的行数:
 
-```
+```java
 int updateCount = handle.execute(
   "insert into project values "
   + "(1, 'tutorials', 'github.com/eugenp/tutorials')");
@@ -153,7 +153,7 @@ assertEquals(1, updateCount);
 
 我们可以从句柄中获得一个:
 
-```
+```java
 Query query = handle.createQuery("select * from project");
 ```
 
@@ -165,7 +165,7 @@ Jdbi 从 JDBC `ResultSet`中抽象出来，后者有一个相当麻烦的 API。
 
 我们可以将每一行表示为一张地图:
 
-```
+```java
 query.mapToMap();
 ```
 
@@ -173,7 +173,7 @@ query.mapToMap();
 
 或者，当查询返回单个列时，我们可以将其映射到所需的 Java 类型:
 
-```
+```java
 handle.createQuery("select name from project").mapTo(String.class);
 ```
 
@@ -193,19 +193,19 @@ Jdbi 内置了许多常见类的映射器。那些特定于某个图书馆或数
 
 我们只能将结果累积在一个列表中:
 
-```
+```java
 List<Map<String, Object>> results = query.mapToMap().list();
 ```
 
 或者改成另一种`Collection` 类型:
 
-```
+```java
 List<String> results = query.mapTo(String.class).collect(Collectors.toSet());
 ```
 
 或者我们可以将结果作为一个流进行迭代:
 
-```
+```java
 query.mapTo(String.class).useStream((Stream<String> stream) -> {
     doStuffWith(stream)
 });
@@ -219,7 +219,7 @@ query.mapTo(String.class).useStream((Stream<String> stream) -> {
 
 如果我们想要**最多一个结果**，我们可以使用`findFirst`:
 
-```
+```java
 Optional<Map<String, Object>> first = query.mapToMap().findFirst();
 ```
 
@@ -229,7 +229,7 @@ Optional<Map<String, Object>> first = query.mapToMap().findFirst();
 
 相反，如果我们想要**且只有一个结果**，我们使用`findOnly`:
 
-```
+```java
 Date onlyResult = query.mapTo(Date.class).findOnly();
 ```
 
@@ -247,21 +247,21 @@ Jdbi 支持位置参数和命名参数。
 
 我们在查询或语句中插入位置参数作为问号:
 
-```
+```java
 Query positionalParamsQuery =
   handle.createQuery("select * from project where name = ?");
 ```
 
 相反，命名参数以冒号开头:
 
-```
+```java
 Query namedParamsQuery =
   handle.createQuery("select * from project where url like :pattern");
 ```
 
 在这两种情况下，为了设置参数值，我们使用了`bind`方法的一个变体:
 
-```
+```java
 positionalParamsQuery.bind(0, "tutorials");
 namedParamsQuery.bind("pattern", "%github.com/eugenp/%");
 ```
@@ -274,7 +274,7 @@ namedParamsQuery.bind("pattern", "%github.com/eugenp/%");
 
 假设我们有这样一个简单的查询:
 
-```
+```java
 Query query = handle.createQuery(
   "select id from project where name = :name and url = :url");
 Map<String, String> params = new HashMap<>();
@@ -284,13 +284,13 @@ params.put("url", "github.com/eugenp/REST-With-Spring");
 
 例如，我们可以使用地图:
 
-```
+```java
 query.bindMap(params);
 ```
 
 或者我们可以用不同的方式使用一个物体。例如，在这里，我们绑定一个遵循 JavaBean 约定的对象:
 
-```
+```java
 query.bindBean(paramsBean);
 ```
 
@@ -306,7 +306,7 @@ query.bindBean(paramsBean);
 
 我们可以通过调用句柄上的方法`createUpdate`来获得一个:
 
-```
+```java
 Update update = handle.createUpdate(
   "INSERT INTO PROJECT (NAME, URL) VALUES (:name, :url)");
 ```
@@ -315,7 +315,7 @@ Update update = handle.createUpdate(
 
 语句被执行时，我们调用，惊喜，`execute`:
 
-```
+```java
 int rows = update.execute();
 ```
 
@@ -327,7 +327,7 @@ int rows = update.execute();
 
 然后，我们不叫`execute`，叫`executeAndReturnGeneratedKeys`:
 
-```
+```java
 Update update = handle.createUpdate(
   "INSERT INTO PROJECT (NAME, URL) "
   + "VALUES ('tutorials', 'github.com/eugenp/tutorials')");
@@ -336,7 +336,7 @@ ResultBearing generatedKeys = update.executeAndReturnGeneratedKeys();
 
 **`ResultBearing` 与我们之前看到的`Query` 类**实现的接口相同，所以我们已经知道如何使用它:
 
-```
+```java
 generatedKeys.mapToMap()
   .findOnly().get("id");
 ```
@@ -347,7 +347,7 @@ generatedKeys.mapToMap()
 
 与连接句柄一样，我们通过调用带有闭包的方法来引入事务:
 
-```
+```java
 handle.useTransaction((Handle h) -> {
     haveFunWith(h);
 });
@@ -357,7 +357,7 @@ handle.useTransaction((Handle h) -> {
 
 **然而，我们必须在返回之前提交或回滚事务**:
 
-```
+```java
 handle.useTransaction((Handle h) -> {
     h.execute("...");
     h.commit();
@@ -368,7 +368,7 @@ handle.useTransaction((Handle h) -> {
 
 和句柄一样，如果我们想从闭包返回一些东西，我们有一个专用的方法`inTransaction`:
 
-```
+```java
 handle.inTransaction((Handle h) -> {
     h.execute("...");
     h.commit();
@@ -380,7 +380,7 @@ handle.inTransaction((Handle h) -> {
 
 虽然在一般情况下不建议这样做，但我们也可以手动`begin` 和`close` 一个事务:
 
-```
+```java
 handle.begin();
 // ...
 handle.commit();

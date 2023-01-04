@@ -18,7 +18,7 @@
 
 首先，我们将创建一个简单的模型:
 
-```
+```java
 public class Book {
 
     private Long bookId;
@@ -33,7 +33,7 @@ public class Book {
 
 此外，我们需要一个用于图书检索的存储库类:
 
-```
+```java
 public class BookRepository {
     public Book getByBookId(Long bookId) {
         return new Book(bookId, "To Kill a Mocking Bird", "Harper Lee", 256);
@@ -56,7 +56,7 @@ public class BookRepository {
 
 相应地，我们有一个调用我们的存储库方法的服务类:
 
-```
+```java
 public class BookService {
     private final BookRepository bookRepository;
 
@@ -84,7 +84,7 @@ public class BookService {
 
 对于我们的测试类，我们需要通过**用`MockitoJUnitRunner`** 注释 JUnit 测试类来启用对 Mockito 测试的注释。此外，我们需要**模仿我们的服务和存储库类**:
 
-```
+```java
 @RunWith(MockitoJUnitRunner.class)
 public class BookServiceUnitTest {
     @InjectMocks
@@ -100,7 +100,7 @@ public class BookServiceUnitTest {
 
 首先，让我们创建一个返回第一个参数的测试:
 
-```
+```java
 @Test
 public void givenSaveMethodMocked_whenSaveInvoked_ThenReturnFirstArgument_UnitTest() {
     Book book = new Book("To Kill a Mocking Bird", "Harper Lee", 256);
@@ -120,7 +120,7 @@ public void givenSaveMethodMocked_whenSaveInvoked_ThenReturnFirstArgument_UnitTe
 
 其次，我们使用`AdditionalAnswers.returnsSecondArg()`创建一个测试:
 
-```
+```java
 @Test
 public void givenCheckifEqualsMethodMocked_whenCheckifEqualsInvoked_ThenReturnSecondArgument_UnitTest() {
     Book book1 = new Book(1L, "The Stranger", "Albert Camus", 456);
@@ -142,7 +142,7 @@ public void givenCheckifEqualsMethodMocked_whenCheckifEqualsInvoked_ThenReturnSe
 
 类似地，我们可以使用`AdditionalAnswers.returnsLastArg()`来获取传递给我们的方法的最后一个参数:
 
-```
+```java
 @Test
 public void givenCheckifEqualsMethodMocked_whenCheckifEqualsInvoked_ThenReturnLastArgument_UnitTest() {
     Book book1 = new Book(1L, "The Stranger", "Albert Camus", 456);
@@ -163,7 +163,7 @@ public void givenCheckifEqualsMethodMocked_whenCheckifEqualsInvoked_ThenReturnLa
 
 最后，让我们编写一个测试，使用方法**使我们能够返回给定索引**–`AdditionalAnswers.returnsArgAt(int index)`处的参数:
 
-```
+```java
 @Test
 public void givenCheckifEqualsMethodMocked_whenCheckifEqualsInvoked_ThenReturnArgumentAtIndex_UnitTest() {
     Book book1 = new Book(1L, "The Stranger", "Albert Camus", 456);
@@ -197,7 +197,7 @@ public void givenCheckifEqualsMethodMocked_whenCheckifEqualsInvoked_ThenReturnAr
 
 现在，让我们演示如何使用`AdditionalAnswers.answer()` 来创建一个返回`Book`对象的答案:
 
-```
+```java
 @Test
 public void givenMockedMethod_whenMethodInvoked_thenReturnBook() {
     Long id = 1L;
@@ -220,7 +220,7 @@ private static Book buildBook(Long bookId) {
 
 接下来，让我们用一个测试用例来举例说明`AdditionalAnswers.answerVoid()` 方法的使用:
 
-```
+```java
 @Test
 public void givenMockedMethod_whenMethodInvoked_thenReturnVoid() {
     Long id = 2L;

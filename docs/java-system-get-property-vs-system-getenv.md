@@ -18,25 +18,25 @@ Java 平台使用一个`Properties`对象来提供**关于本地系统和配置�
 
 在下面的代码中，我们使用`System.getProperty(“log_dir”)` 来读取属性`log_dir`的值。我们还使用默认值参数，所以如果属性不存在，`getProperty`返回`/` tmp `/log`:
 
-```
+```java
 String log_dir = System.getProperty("log_dir","/tmp/log"); 
 ```
 
 为了在运行时更新系统属性，我们使用了`System.setProperty`方法:
 
-```
+```java
 System.setProperty("log_dir", "/tmp/log");
 ```
 
 我们可以使用`propertyName`命令行参数将我们自己的属性或配置值传递给应用程序:
 
-```
+```java
 java -jar jarName -DpropertyName=value
 ```
 
 我们在 app.jar 中将 foo 的属性设置为 bar 值:
 
-```
+```java
 java -jar app -Dfoo="bar"
 ```
 
@@ -52,7 +52,7 @@ java -jar app -Dfoo="bar"
 
 以下代码片段说明了如何使用 lambda 表达式打印所有环境变量:
 
-```
+```java
 System.getenv().forEach((k, v) -> {
     System.out.println(k + ":" + v);
 }); 
@@ -62,7 +62,7 @@ System.getenv().forEach((k, v) -> {
 
 要获得单个变量，我们可以用变量名调用`getenv`:
 
-```
+```java
 String log_dir = System.getenv("log_dir");
 ```
 
@@ -70,7 +70,7 @@ String log_dir = System.getenv("log_dir");
 
 要在 Java 中创建新流程，我们可以使用`ProcessBuilder`类，它有一个名为`environment`的方法。这个方法返回一个`Map,`，但是这次地图不是只读的，这意味着我们可以向它添加元素:
 
-```
+```java
 ProcessBuilder pb = new ProcessBuilder(args);
 Map<String, String> env = pb.environment();
 env.put("log_dir", "/tmp/log");

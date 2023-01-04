@@ -18,7 +18,7 @@
 
 任何从`final`类继承的尝试都会导致编译器错误。为了演示这一点，让我们创建`final`类`Cat`:
 
-```
+```java
 public final class Cat {
 
     private int weight;
@@ -29,20 +29,20 @@ public final class Cat {
 
 让我们试着扩展它:
 
-```
+```java
 public class BlackCat extends Cat {
 }
 ```
 
 我们将看到编译器错误:
 
-```
+```java
 The type BlackCat cannot subclass the final class Cat
 ```
 
 注意**类声明中的`final`关键字并不意味着这个类的对象是不可变的**。我们可以自由改变`Cat`对象的字段:
 
-```
+```java
 Cat cat = new Cat();
 cat.setWeight(1);
 
@@ -67,7 +67,7 @@ assertEquals(1, cat.getWeight());
 
 让我们创建一个`Dog`类，并使它的`sound()`方法`final`:
 
-```
+```java
 public class Dog {
     public final void sound() {
         // ...
@@ -77,7 +77,7 @@ public class Dog {
 
 现在让我们扩展`Dog`类并尝试覆盖它的`sound()`方法:
 
-```
+```java
 public class BlackDog extends Dog {
     public void sound() {
     }
@@ -86,7 +86,7 @@ public class BlackDog extends Dog {
 
 我们将看到编译器错误:
 
-```
+```java
 - overrides
 com.baeldung.finalkeyword.Dog.sound
 - Cannot override the final method from Dog
@@ -111,7 +111,7 @@ sound() method is final and can’t be overridden
 
 让我们试着给它赋值 2:
 
-```
+```java
 public void whenFinalVariableAssign_thenOnlyOnce() {
     final int i = 1;
     //...
@@ -121,7 +121,7 @@ public void whenFinalVariableAssign_thenOnlyOnce() {
 
 编译器说:
 
-```
+```java
 The final local variable i may already have been assigned
 ```
 
@@ -131,19 +131,19 @@ The final local variable i may already have been assigned
 
 为了演示这一点，让我们声明`final`引用变量`cat`并初始化它:
 
-```
+```java
 final Cat cat = new Cat();
 ```
 
 如果我们尝试重新分配它，我们会看到一个编译器错误:
 
-```
+```java
 The final local variable cat cannot be assigned. It must be blank and not using a compound assignment
 ```
 
 但是我们可以改变`Cat`实例的属性:
 
-```
+```java
 cat.setWeight(5);
 
 assertEquals(5, cat.getWeight());
@@ -155,7 +155,7 @@ assertEquals(5, cat.getWeight());
 
 请注意，根据命名约定，类常量应该是大写的，由下划线(“_”)字符分隔各个部分:
 
-```
+```java
 static final int MAX_WIDTH = 999;
 ```
 
@@ -178,7 +178,7 @@ static final int MAX_WIDTH = 999;
 
 `final`关键字放在方法参数之前也是合法的。**一个`final`参数不能在一个**方法中被改变:
 
-```
+```java
 public void methodWithFinalArguments(final int x) {
     x=1;
 }
@@ -186,7 +186,7 @@ public void methodWithFinalArguments(final int x) {
 
 上述赋值导致编译器错误:
 
-```
+```java
 The final local variable x cannot be assigned. It must be blank and not using a compound assignment
 ```
 

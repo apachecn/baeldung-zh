@@ -10,7 +10,7 @@
 
 我们将使用一个简单的测试类来展示这些注释是如何工作的:
 
-```
+```java
 @SpringJUnitConfig(Spring5EnabledAnnotationIntegrationTest.Config.class)
 public class Spring5EnabledAnnotationIntegrationTest {
 
@@ -23,7 +23,7 @@ public class Spring5EnabledAnnotationIntegrationTest {
 
 让我们用文本文字`“true”`向我们的类添加这个简单的测试:
 
-```
+```java
 @EnabledIf("true")
 @Test
 void givenEnabledIfLiteral_WhenTrue_ThenTestExecuted() {
@@ -43,7 +43,7 @@ void givenEnabledIfLiteral_WhenTrue_ThenTestExecuted() {
 
 使用`@EnabledIf`的一个更实际的方法是使用一个属性占位符:
 
-```
+```java
 @Test
 @EnabledIf(
   expression = "${tests.enabled}", 
@@ -63,7 +63,7 @@ void givenEnabledIfExpression_WhenTrue_ThenTestExecuted() {
 
 例如，我们只能在运行 JDK 1.8 时启用测试
 
-```
+```java
 @Test
 @EnabledIf("#{systemProperties['java.version'].startsWith('1.8')}")
 void givenEnabledIfSpel_WhenTrue_ThenTestExecuted() {
@@ -77,7 +77,7 @@ void givenEnabledIfSpel_WhenTrue_ThenTestExecuted() {
 
 例如，我们可以在 Java 1.7 上运行时禁用测试:
 
-```
+```java
 @Test
 @DisabledIf("#{systemProperties['java.version'].startsWith('1.7')}")
 void givenDisabledIf_WhenTrue_ThenTestNotExecuted() {

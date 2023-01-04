@@ -20,7 +20,7 @@ Apache POI 的`setCellValue`方法只接受`double`作为输入，或者可以�
 
 让我们使用像 0.00 或#这样的模式来格式化一个`double`值。##.首先，我们将创建一个简单的实用方法来格式化单元格值:
 
-```
+```java
 public static void applyNumericFormat(Workbook outWorkbook, Row row, Cell cell, Double value, String styleFormat) {
     CellStyle style = outWorkbook.createCellStyle();
     DataFormat format = outWorkbook.createDataFormat();
@@ -32,7 +32,7 @@ public static void applyNumericFormat(Workbook outWorkbook, Row row, Cell cell, 
 
 让我们验证一个简单的代码来验证上述方法:
 
-```
+```java
 File file = new File("number_test.xlsx");
 try (Workbook outWorkbook = new XSSFWorkbook()) {
     Sheet sheet = outWorkbook.createSheet("Numeric Sheet");
@@ -53,7 +53,7 @@ try (Workbook outWorkbook = new XSSFWorkbook()) {
 
 让我们验证实际值:
 
-```
+```java
 try (Workbook inWorkbook = new XSSFWorkbook("number_test.xlsx")) {
     Sheet sheet = inWorkbook.cloneSheet(0);
     Row row = sheet.getRow(0);
@@ -65,7 +65,7 @@ try (Workbook inWorkbook = new XSSFWorkbook("number_test.xlsx")) {
 
 让我们使用以下模式格式化显示值和实际值:
 
-```
+```java
 File file = new File("number_test.xlsx");
 try (Workbook outWorkbook = new HSSFWorkbook()) {
     Sheet sheet = outWorkbook.createSheet("Numeric Sheet");
@@ -85,7 +85,7 @@ try (Workbook outWorkbook = new HSSFWorkbook()) {
 
 让我们断言上述情况中的实际值:
 
-```
+```java
 try (Workbook inWorkbook = new XSSFWorkbook("number_test.xlsx")) {
     Sheet sheet = inWorkbook.cloneSheet(0);
     Row row = sheet.getRow(0);

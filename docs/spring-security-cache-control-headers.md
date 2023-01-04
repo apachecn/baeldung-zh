@@ -16,7 +16,7 @@
 
 首先，让我们为我们的应用程序设置 Spring 安全性:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity
@@ -31,7 +31,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 接下来，让我们实现一个简单的 REST 端点:
 
-```
+```java
 @GetMapping("/default/users/{name}")
 public ResponseEntity<UserDto> getUserWithDefaultCaching(@PathVariable String name) {
     return ResponseEntity.ok(new UserDto(name));
@@ -40,13 +40,13 @@ public ResponseEntity<UserDto> getUserWithDefaultCaching(@PathVariable String na
 
 产生的`cache-control` 标题将如下所示:
 
-```
+```java
 [cache-control: no-cache, no-store, max-age=0, must-revalidate]
 ```
 
 最后，让我们实现一个命中端点的测试，并断言在响应中发送了什么报头:
 
-```
+```java
 given()
   .when()
   .get(getBaseUrl() + "/default/users/Michael")
@@ -65,7 +65,7 @@ given()
 
 为此，让我们通过使用`[CacheControl](https://web.archive.org/web/20220815040909/https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/http/CacheControl.html)`缓存，尝试在单个处理程序方法中覆盖缓存控制头。`CacheControl`类是一个流畅的构建器，这使得我们可以很容易地创建不同类型的缓存:
 
-```
+```java
 @GetMapping("/users/{name}")
 public ResponseEntity<UserDto> getUser(@PathVariable String name) { 
     return ResponseEntity.ok()
@@ -76,7 +76,7 @@ public ResponseEntity<UserDto> getUser(@PathVariable String name) {
 
 让我们在测试中达到这个端点，并断言我们已经更改了头:
 
-```
+```java
 given()
   .when()
   .get(getBaseUrl() + "/users/Michael")
@@ -90,7 +90,7 @@ given()
 
 我们也可以完全关闭 Spring Security 的默认缓存控制头。这是一件非常冒险的事情，不建议这样做。但是，如果我们真的想这么做，我们可以通过覆盖`WebSecurityConfigurerAdapter:`的`configure` 方法来尝试
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http.headers().disable();
@@ -99,7 +99,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 现在，让我们再次向我们的端点发出请求，看看我们得到什么响应:
 
-```
+```java
 given()
   .when()
   .get(getBaseUrl() + "/default/users/Michael")

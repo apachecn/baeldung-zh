@@ -12,14 +12,14 @@
 
 首先，我们需要建立一个新的数据库`baeldung`和一个新的集合`travel`:
 
-```
+```java
 use baeldung;
 db.createCollection(travel);
 ```
 
 现在让我们使用 MongoDB 的`insertMany`方法向集合中添加一些虚拟数据:
 
-```
+```java
 db.travel.insertMany([
 { 
     "passengerId":145,
@@ -62,7 +62,7 @@ db.travel.insertMany([
 
 上面的`insertMany`查询将返回以下 JSON:
 
-```
+```java
 {
     "acknowledged" : true,
     "insertedIds" : [
@@ -84,13 +84,13 @@ db.travel.insertMany([
 
 为了进行演示，让我们研究一下 shell 查询来投射一个关键字段:
 
-```
+```java
 db.travel.find({},{"passengerId":1}).pretty();
 ```
 
 对上述查询的响应将是:
 
-```
+```java
 { "_id" : ObjectId("623d7f079d55d4e137e47825"), "passengerId" : 145 }
 { "_id" : ObjectId("623d7f079d55d4e137e47826"), "passengerId" : 148 }
 { "_id" : ObjectId("623d7f079d55d4e137e47827"), "passengerId" : 154 }
@@ -99,13 +99,13 @@ db.travel.find({},{"passengerId":1}).pretty();
 
 这里，在这个查询中，我们简单地投影了`passengerId.` ，现在让我们看看排除了`_id`的关键字段:
 
-```
+```java
 db.travel.find({},{"passengerId":1,"_id":0}).pretty();
 ```
 
 上述查询将有以下响应:
 
-```
+```java
 { "passengerId" : 145 }
 { "passengerId" : 148 }
 { "passengerId" : 154 }
@@ -114,7 +114,7 @@ db.travel.find({},{"passengerId":1,"_id":0}).pretty();
 
 这里，在这个查询中，我们从响应预测中排除了`_id`字段。让我们看看上面查询的 Java 驱动程序代码:
 
-```
+```java
 MongoClient mongoClient = new MongoClient("localhost", 27017);
 DB database = mongoClient.getDB("baeldung");
 DBCollection collection = database.getCollection("travel");
@@ -138,7 +138,7 @@ MongoDB 中的`aggregation`操作处理数据记录和文档，并返回计算�
 
 让我们研究一下聚合查询，通过键名检索值:
 
-```
+```java
 db.travel.aggregate([
 {
     "$project":{
@@ -150,7 +150,7 @@ db.travel.aggregate([
 
 对上述聚合查询的响应将是:
 
-```
+```java
 { "_id" : ObjectId("623d7f079d55d4e137e47825"), "passengerId" : 145 }
 { "_id" : ObjectId("623d7f079d55d4e137e47826"), "passengerId" : 148 }
 { "_id" : ObjectId("623d7f079d55d4e137e47827"), "passengerId" : 154 }
@@ -161,7 +161,7 @@ db.travel.aggregate([
 
 让我们看看上面查询的 Java 驱动程序代码:
 
-```
+```java
 ArrayList<Document> response = new ArrayList<>();
 ArrayList<Document> pipeline = new ArrayList<>(Arrays.asList(new Document("$project", new Document("passengerId", 1L))));
 database = mongoClient.getDatabase("baeldung");
@@ -171,7 +171,7 @@ System.out.println("response:- " + response);
 
 我们还可以按照以下方式编写聚合管道:
 
-```
+```java
 ArrayList<Document> response = new ArrayList<>();
 ArrayList<Bson> pipeline = new ArrayList<>(Arrays.asList(
   project(fields(Projections.exclude("_id"), Projections.include("passengerId")))));

@@ -14,7 +14,7 @@
 
 为了开始使用 Checker 框架，我们需要首先将它添加到我们的`pom.xml:`
 
-```
+```java
 <dependency>
     <groupId>org.checkerframework</groupId>
     <artifactId>checker-qual</artifactId>
@@ -38,7 +38,7 @@
 
 然后我们必须适当地调整`maven-compiler-plugin`来使用`The Checker Framework`作为可插拔的`Type System`:
 
-```
+```java
 <plugin>
     <artifactId>maven-compiler-plugin</artifactId>
     <version>3.6.1</version>
@@ -77,7 +77,7 @@
 
 `The Checker Framework`可以帮助我们的第一个场景是识别`NullPoinerException`可能源自的那段代码:
 
-```
+```java
 private static int countArgs(@NonNull String[] args) {
     return args.length;
 }
@@ -93,7 +93,7 @@ public static void main(@Nullable String[] args) {
 
 当我们编译代码时，`The Checker Framework`适时地警告我们代码中可能有错误:
 
-```
+```java
 [WARNING] /checker-plugin/.../NonNullExample.java:[12,38] [argument.type.incompatible]
  incompatible types in argument.
   found   : null
@@ -106,7 +106,7 @@ public static void main(@Nullable String[] args) {
 
 假设我们需要一系列的国家和星球。然后，我们可以用`@Fenum`注释对这些项进行注释，将属于同一个“假”枚举的所有常量分组:
 
-```
+```java
 static final @Fenum("country") String ITALY = "IT";
 static final @Fenum("country") String US = "US";
 static final @Fenum("country") String UNITED_KINGDOM = "UK";
@@ -118,7 +118,7 @@ static final @Fenum("planet") String VENUS = "Venus";
 
 在此之后，当我们编写一个应该接受一个“planet”字符串的方法时，我们可以适当地注释这个参数:
 
-```
+```java
 void greetPlanet(@Fenum("planet") String planet){
     System.out.println("Hello " + planet);
 }
@@ -126,7 +126,7 @@ void greetPlanet(@Fenum("planet") String planet){
 
 错误的是，我们可以用一个没有被定义为行星的可能值的字符串调用`greetPlanet()`,比如:
 
-```
+```java
 public static void main(String[] args) {
     obj.greetPlanets(US);
 }
@@ -134,7 +134,7 @@ public static void main(String[] args) {
 
 `The Checker Framework`能发现错误:
 
-```
+```java
 [WARNING] /checker-plugin/.../FakeNumExample.java:[29,26] [argument.type.incompatible]
  incompatible types in argument.
   found   : @Fenum("country") String
@@ -147,7 +147,7 @@ public static void main(String[] args) {
 
 我们可以利用`the Checker Framework`并声明这样的变量:
 
-```
+```java
 @Regex(1) private static String FIND_NUMBERS = "\\d*";
 ```
 
@@ -155,7 +155,7 @@ public static void main(String[] args) {
 
 的确，`the Checker Framework`会在编译时努力通知我们我们的错误:
 
-```
+```java
 [WARNING] /checker-plugin/.../RegexExample.java:[7,51] [assignment.type.incompatible]
 incompatible types in assignment.
   found   : @Regex String

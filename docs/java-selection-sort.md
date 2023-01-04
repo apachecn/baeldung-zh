@@ -62,7 +62,7 @@
 
 让我们使用几个`for`循环来实现选择排序:
 
-```
+```java
 public static void sortAscending(final int[] arr) {
     for (int i = 0; i < arr.length - 1; i++) {
         int minElementIndex = i;
@@ -83,7 +83,7 @@ public static void sortAscending(final int[] arr) {
 
 当然，要逆转它，我们可以做一些非常类似的事情:
 
-```
+```java
 public static void sortDescending(final int[] arr) {
     for (int i = 0; i < arr.length - 1; i++) {
         int maxElementIndex = i;

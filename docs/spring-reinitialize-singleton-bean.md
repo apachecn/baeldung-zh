@@ -16,7 +16,7 @@
 
 让我们从创建`ConfigManager`类开始:
 
-```
+```java
 @Service("ConfigManager")
 public class ConfigManager {
 
@@ -60,7 +60,7 @@ public class ConfigManager {
 
 配置文件位于路径`src/main/resources/config.properties`中，包含一个属性:
 
-```
+```java
 property1=value1 
 ```
 
@@ -68,7 +68,7 @@ property1=value1
 
 为了测试`ConfigManager`，让我们创建一个控制器:
 
-```
+```java
 @RestController
 @RequestMapping("/config")
 public class ConfigController {
@@ -91,7 +91,7 @@ public class ConfigController {
 
 **如果我们想重新加载属性，而不是重新创建对象本身，我们可以简单地创建一个公共方法，再次初始化地图。**在我们的`ConfigManager`中，让我们添加一个调用方法`initConfigs()`的方法:
 
-```
+```java
 public void reinitializeConfig() {
     initConfigs();
 } 
@@ -99,7 +99,7 @@ public void reinitializeConfig() {
 
 当我们想要重新加载属性时，我们可以调用这个方法。让我们公开控制器类中调用`reinitializeConfig()`方法的另一个方法:
 
-```
+```java
 @GetMapping("/reinitializeConfig")
 public void reinitializeConfig() {
     configManager.reinitializeConfig();
@@ -121,7 +121,7 @@ public void reinitializeConfig() {
 
 我们可以从上下文中删除 bean，并用一个新的`ConfigManager`实例替换它。让我们在控制器中定义另一个方法来实现这一点:
 
-```
+```java
 @GetMapping("/reinitializeBean")
 public void reinitializeBean() {
     DefaultSingletonBeanRegistry registry = (DefaultSingletonBeanRegistry) applicationContext.getAutowireCapableBeanFactory();
@@ -146,7 +146,7 @@ public void reinitializeBean() {
 
 为了演示这一点，让我们创建一个新的控制器方法，它销毁 bean，但不会再次创建它:
 
-```
+```java
 @GetMapping("/destroyBean")
 public void destroyBean() {
     DefaultSingletonBeanRegistry registry = (DefaultSingletonBeanRegistry) applicationContext.getAutowireCapableBeanFactory();
@@ -158,7 +158,7 @@ public void destroyBean() {
 
 让我们创建一个新的控制器来读取配置。该控制器将依赖于上下文中最新的`ConfigManager`bean:
 
-```
+```java
 @GetMapping("/context/{key}")
 public Object getFromContext(@PathVariable String key) {
     ConfigManager dynamicConfigManager = applicationContext.getBean(ConfigManager.class);

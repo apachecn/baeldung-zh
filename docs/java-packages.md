@@ -28,7 +28,7 @@
 
 让我们在名为`com.baeldung.packages`的包中放置一个类型:
 
-```
+```java
 package com.baeldung.packages;
 ```
 
@@ -54,7 +54,7 @@ package com.baeldung.packages;
 
 比如用`www.baeldung.com`做一个包，我们反过来说:
 
-```
+```java
 com.baeldung
 ```
 
@@ -72,7 +72,7 @@ Java 中的包对应于一个目录结构。
 
 让我们首先在名为`domain`的子包中定义一个类`TodoItem`:
 
-```
+```java
 package com.baeldung.packages.domain;
 
 public class TodoItem {
@@ -91,13 +91,13 @@ public class TodoItem {
 
 让我们导入整个`domain`子包:
 
-```
+```java
 import com.baeldung.packages.domain.*;
 ```
 
 现在，让我们只导入`TodoItem`类:
 
-```
+```java
 import com.baeldung.packages.domain.TodoItem;
 ```
 
@@ -105,13 +105,13 @@ JDK 和其他 Java 库也有自己的包。我们可以用同样的方式导入�
 
 例如，让我们导入 Java 核心`List`接口和`ArrayList`类:
 
-```
+```java
 import java.util.ArrayList;import java.util.List;
 ```
 
 然后，我们可以在应用程序中使用这些类型，只需使用它们的名称:
 
-```
+```java
 public class TodoList {
     private List<TodoItem> todoItems;
 
@@ -132,7 +132,7 @@ public class TodoList {
 
 让我们使用带有完全限定名的`TodoItem`:
 
-```
+```java
 public class TodoList {
     private List<com.baeldung.packages.domain.TodoItem> todoItems;
 
@@ -156,7 +156,7 @@ public class TodoList {
 
 现在，让我们编译我们的`com.baeldung.packages.domain.TodoItem`类:
 
-```
+```java
 > javac com/baeldung/packages/domain/TodoItem.java
 ```
 
@@ -166,7 +166,7 @@ public class TodoList {
 
 现在我们的`TodoItem`类已经编译好了，我们可以编译我们的`TodoList` 和 `TodoApp`类了:
 
-```
+```java
 >javac -classpath . com/baeldung/packages/*.java
 ```
 
@@ -174,7 +174,7 @@ public class TodoList {
 
 让我们使用我们的`TodoApp`类的完全限定名来运行我们的应用程序:
 
-```
+```java
 >java com.baeldung.packages.TodoApp
 ```
 

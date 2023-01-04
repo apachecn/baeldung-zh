@@ -12,7 +12,7 @@
 
 当我们创建一个 commit 时，Git 存储了存储库中所有文件的状态记录。标题是另一种重要的参考类型。**HEAD 的目的是跟踪 Git repo 中的当前点**。换句话说，HEAD 回答了这个问题，“我现在在哪里？”：
 
-```
+```java
 $git log --oneline
 a795255 (HEAD -> master) create 2nd file
 5282c7c appending more info
@@ -33,7 +33,7 @@ b0e1887 creating first file
 
 正如我们所看到的，HEAD 指向 master 分支，master 分支指向最后一次提交。一切看起来都很完美。但是，在运行以下命令后，repo 位于一个分离的头中:
 
-```
+```java
 $ git checkout 5282c7c
 Note: switching to '5282c7c'.
 
@@ -67,7 +67,7 @@ HEAD is now at 5282c7c appending more info
 
 如果我们不仅能回顾过去，还能改变它，那会怎么样？这就是分离的头允许我们做的。让我们回顾一下如何使用下面的命令来完成这项工作:
 
-```
+```java
 echo "understanding git detached head scenarios" > sample-file.txt
 git add .
 git commit -m "Create new sample file"
@@ -77,7 +77,7 @@ git commit -a -m "Add a new line to the file"
 
 从第二次提交开始，我们现在有了两次额外的提交。让我们运行`git log –oneline`看看结果:
 
-```
+```java
 $ git log --oneline
 7a367ef (HEAD) Add a new line to the file
 d423c8c create new sample file
@@ -97,11 +97,11 @@ b0e1887 creating first file
 
 如果我们意外地达到了分离的 HEAD 状态——也就是说，我们并不想签出一个提交——那么返回就很容易了。在使用以下命令之前，只需检查我们所在的分支:
 
-```
+```java
 git switch <branch-name> 
 ```
 
-```
+```java
 git checkout <branch-name>
 ```
 
@@ -113,14 +113,14 @@ git checkout <branch-name>
 
 如果我们想保留用分离的头所做的更改，我们只需创建一个新的分支并切换到它。**我们可以在到达一个分离的头部之后或者在创建一个或多个提交之后立即创建它**。结果是一样的。唯一的限制是，我们应该在返回正常分支之前完成它。让我们在创建一个或多个提交后，使用以下命令在我们的演示报告中完成它:
 
-```
+```java
 git branch experimental
 git checkout experimental
 ```
 
 **我们可以注意到`git log –oneline`的结果与之前完全相同，唯一的区别是最后一次提交中指出的分支名称:**
 
-```
+```java
 $ git log --oneline
 7a367ef (HEAD -> experimental) Add a new line to the file
 d423c8c create new sample file

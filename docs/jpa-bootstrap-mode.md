@@ -26,7 +26,7 @@ In addition, instrumenting Lightrun Metrics at runtime allows you to track down 
 
 让我们从添加`spring-data-jpa`依赖项开始。正如我们使用 Spring Boot 一样，我们将使用相应的 [`spring-boot-starter-data-jpa`](https://web.archive.org/web/20220524054113/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-data-jpa) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -35,13 +35,13 @@ In addition, instrumenting Lightrun Metrics at runtime allows you to track down 
 
 我们可以通过一个配置属性告诉 Spring 使用默认的存储库引导行为:
 
-```
+```java
 spring.data.jpa.repositories.bootstrap-mode=default
 ```
 
 我们可以通过使用基于注释的配置来做到这一点:
 
-```
+```java
 @SpringBootApplication
 @EnableJpaRepositories(bootstrapMode = BootstrapMode.DEFAULT)
 public class Application {
@@ -51,7 +51,7 @@ public class Application {
 
 第三种方法是使用`@DataJpaTest`注释，仅限于单个测试类:
 
-```
+```java
 @DataJpaTest(bootstrapMode = BootstrapMode.LAZY)
 class BootstrapmodeLazyIntegrationTest {
     // ...
@@ -66,7 +66,7 @@ class BootstrapmodeLazyIntegrationTest {
 
 让我们创建一个`Todo`实体:
 
-```
+```java
 @Entity
 public class Todo {
     @Id
@@ -79,14 +79,14 @@ public class Todo {
 
 接下来，我们需要它的关联存储库。让我们创建一个扩展`CrudRepository`的:
 
-```
+```java
 public interface TodoRepository extends CrudRepository<Todo, Long> {
 }
 ```
 
 最后，让我们添加一个使用我们的存储库的测试:
 
-```
+```java
 @DataJpaTest
 class BootstrapmodeDefaultIntegrationTest {
 
@@ -104,7 +104,7 @@ class BootstrapmodeDefaultIntegrationTest {
 
 在开始我们的测试之后，让我们检查日志，在那里我们将发现 Spring 是如何引导我们的`TodoRepository`:
 
-```
+```java
 [2022-03-22 14:46:47,597]-[main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
 [2022-03-22 14:46:47,737]-[main] TRACE org.springframework.data.repository.config.RepositoryConfigurationDelegate - Spring Data JPA - Registering repository: todoRepository - Interface: com.baeldung.boot.bootstrapmode.repository.TodoRepository - Factory: org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean
 [2022-03-22 14:46:49,718]-[main] DEBUG org.springframework.data.repository.core.support.RepositoryFactorySupport - Initializing repository instance for com.baeldung.boot.bootstrapmode.repository.TodoRepository…
@@ -120,13 +120,13 @@ class BootstrapmodeDefaultIntegrationTest {
 
 让我们修改我们的测试，将惰性选项应用到`bootstrapMode`:
 
-```
+```java
 @DataJpaTest(bootstrapMode = BootstrapMode.LAZY)
 ```
 
 然后，让我们用新的配置启动测试，并检查相应的日志:
 
-```
+```java
 [2022-03-22 15:09:01,360]-[main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in LAZY mode.
 [2022-03-22 15:09:01,398]-[main] TRACE org.springframework.data.repository.config.RepositoryConfigurationDelegate - Spring Data JPA - Registering repository: todoRepository - Interface: com.baeldung.boot.bootstrapmode.repository.TodoRepository - Factory: org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean
 [2022-03-22 15:09:01,971]-[main] INFO  com.baeldung.boot.bootstrapmode.BootstrapmodeLazyIntegrationTest - Started BootstrapmodeLazyIntegrationTest in 1.299 seconds (JVM running for 2.148)
@@ -147,7 +147,7 @@ class BootstrapmodeDefaultIntegrationTest {
 
 让我们通过使用`ThreadPoolTaskExecutor`——它的 Spring 实现之一——在配置类中声明一个`AsyncTaskExecutor`,并覆盖`submit`方法，该方法返回一个 [`Future`](/web/20220524054113/https://www.baeldung.com/java-future) :
 
-```
+```java
 @Bean
 AsyncTaskExecutor delayedTaskExecutor() {
     return new ThreadPoolTaskExecutor() {
@@ -164,7 +164,7 @@ AsyncTaskExecutor delayedTaskExecutor() {
 
 接下来，让我们将一个`EntityManagerFactory` bean 添加到我们的配置中，如[我们的 Spring JPA 指南](/web/20220524054113/https://www.baeldung.com/the-persistence-layer-with-spring-and-jpa)所示，并指出我们想要使用我们的异步执行器进行后台引导:
 
-```
+```java
 @Bean
 LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, AsyncTaskExecutor delayedTaskExecutor) {
     LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
@@ -182,13 +182,13 @@ LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSourc
 
 最后，让我们修改我们的测试来启用延迟引导模式:
 
-```
+```java
 @DataJpaTest(bootstrapMode = BootstrapMode.DEFERRED)
 ```
 
 让我们再次启动测试并检查日志:
 
-```
+```java
 [2022-03-23 10:31:16,513]-[main] INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFERRED mode.
 [2022-03-23 10:31:16,543]-[main] TRACE org.springframework.data.repository.config.RepositoryConfigurationDelegate - Spring Data JPA - Registering repository: todoRepository - Interface: com.baeldung.boot.bootstrapmode.repository.TodoRepository - Factory: org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean
 [2022-03-23 10:31:16,545]-[main] DEBUG org.springframework.data.repository.config.RepositoryConfigurationDelegate - Registering deferred repository initialization listener.

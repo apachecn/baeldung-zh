@@ -16,7 +16,7 @@ Maven 原型是一种项目的抽象，可以实例化为具体的定制 Maven �
 
 它被用来描述原型的元数据:
 
-```
+```java
 <archetype-descriptor
   ...
   name="custom-archetype">
@@ -68,7 +68,7 @@ Maven 原型是一种项目的抽象，可以实例化为具体的定制 Maven �
 
 为了生成原型，我们可以使用:
 
-```
+```java
 mvn archetype:generate -B -DarchetypeArtifactId=maven-archetype-archetype \
   -DarchetypeGroupId=maven-archetype \
   -DgroupId=com.baeldung \
@@ -77,7 +77,7 @@ mvn archetype:generate -B -DarchetypeArtifactId=maven-archetype-archetype \
 
 我们还可以从现有的 Maven 项目中创建原型:
 
-```
+```java
 mvn archetype:create-from-project
 ```
 
@@ -85,7 +85,7 @@ mvn archetype:create-from-project
 
 无论我们如何创建原型，我们都将以下面的结构结束:
 
-```
+```java
 archetype-root/
 ├── pom.xml
 └── src
@@ -112,13 +112,13 @@ archetype-root/
 
 让我们从修改位于`the maven-archetype directory`下的原型项目的`pom.xml `开始:
 
-```
+```java
 <packaging>maven-archetype</packaging>
 ```
 
 得益于`archetype-packaging`扩展，这种类型的包装是可用的:
 
-```
+```java
 <build>
     <extensions>
         <extension>
@@ -135,7 +135,7 @@ archetype-root/
 
 现在让我们在`archetype-resources`目录下创建一个`pom.xml`文件:
 
-```
+```java
 <project ...>
 
     <groupId>${groupId}</groupId>
@@ -165,7 +165,7 @@ archetype-root/
 
 用于配置 JAX 遥感应用程序的类:
 
-```
+```java
 package ${package};
 // import
 @ApplicationPath("${app-path}")
@@ -175,7 +175,7 @@ public class AppConfig extends Application {
 
 和 ping 资源的类:
 
-```
+```java
 @Path("ping")
 public class PingResource{
     //...
@@ -190,7 +190,7 @@ public class PingResource{
 
 我们可以告诉我们的原型，我们希望复制所有的 Java 源文件:
 
-```
+```java
 <archetype-descriptor
   name="maven-archetype">
 
@@ -219,7 +219,7 @@ public class PingResource{
 
 既然我们已经完成了所有这些，我们可以通过调用以下命令来安装原型:
 
-```
+```java
 mvn install
 ```
 
@@ -231,7 +231,7 @@ mvn install
 
 这个命令使用这个插件从我们的原型生成一个 Maven 项目:
 
-```
+```java
 mvn archetype:generate -DarchetypeGroupId=com.baeldung.archetypes
                        -DarchetypeArtifactId=maven-archetype
                        -DarchetypeVersion=1.0-SNAPSHOT
@@ -244,13 +244,13 @@ mvn archetype:generate -DarchetypeGroupId=com.baeldung.archetypes
 
 因此，具体的`cool-jaxrs-sample`生成的项目已经准备好运行，无需任何更改。因此，我们可以通过调用以下命令来运行它:
 
-```
+```java
 mvn package liberty:run
 ```
 
 然后我们可以访问这个 URL:
 
-```
+```java
 http://localhost:9080/cool-jaxrs-sample/<app-path>/ping
 ```
 

@@ -18,7 +18,7 @@
 
 为了更好地理解`HttpServletRequest`方法，假设我们有一个 [servlet](/web/20220626195427/https://www.baeldung.com/intro-to-servlets) ，可以通过这个 URL 访问:
 
-```
+```java
 http://localhost:8080/deploy-folder/servlet-mapping
 ```
 
@@ -26,7 +26,7 @@ http://localhost:8080/deploy-folder/servlet-mapping
 
 让我们创建一个简单的`doGet()` servlet 方法:
 
-```
+```java
 public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     PrintWriter writer = response.getWriter();
     if ("getPathInfo".equals(request.getParameter("function")) {
@@ -40,21 +40,21 @@ public void doGet(HttpServletRequest request, HttpServletResponse response) thro
 
 首先，让我们看一下 servlet 对由 [curl](/web/20220626195427/https://www.baeldung.com/curl-rest) 命令获取的`getRequestURI`请求的输出:
 
-```
+```java
 curl http://localhost:8080/deploy-folder/servlet-mapping/request-path?function=getRequestURI
 ```
 
-```
+```java
 /deploy-folder/servlet-mapping/request-path 
 ```
 
 同样，让我们来看看`getPathInfo`的 servlet 的输出:
 
-```
+```java
 curl http://localhost:8080/deploy-folder/servlet-mapping/request-path?function=getPathInfo
 ```
 
-```
+```java
 /request-path
 ```
 

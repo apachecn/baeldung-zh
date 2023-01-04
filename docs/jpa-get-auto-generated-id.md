@@ -25,7 +25,7 @@ JPA 为 id 生成定义了四种策略。我们可以将这四种策略分为两
 
 让我们从创建一个域实体并将其映射到一个数据库表开始。对于这个例子，我们将创建一个具有一些基本属性的`User`实体:
 
-```
+```java
 @Entity
 public class User {
     @Id
@@ -40,7 +40,7 @@ public class User {
 
 在 domain 类之后，我们将创建`a UserService` 类。这个简单的服务将有一个对`EntityManager`的引用和一个将`User`对象保存到数据库的方法:
 
-```
+```java
 public class UserService {
     EntityManager entityManager;
 
@@ -58,7 +58,7 @@ public class UserService {
 
 这种设置是我们之前提到过的常见缺陷。我们可以通过测试证明`saveUser`方法的返回值是零:
 
-```
+```java
 @Test
 public void whenNewUserIsPersisted_thenEntityHasNoId() {
     User user = new User();
@@ -79,7 +79,7 @@ public void whenNewUserIsPersisted_thenEntityHasNoId() {
 
 一个可能的解决方案是**手动调用`EntityManager`上的`flush`方法**。另一方面，我们可以**手动控制事务**并保证我们的方法正确返回 id。我们可以用`EntityManager`做到这一点:
 
-```
+```java
 @Test
 public void whenTransactionIsControlled_thenEntityHasId() {
     User user = new User();
@@ -100,7 +100,7 @@ public void whenTransactionIsControlled_thenEntityHasId() {
 
 为了改变策略，我们编辑我们的域实体类:
 
-```
+```java
 @Entity
 public class User {
     @Id

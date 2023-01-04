@@ -12,7 +12,7 @@
 
 我们可以很容易地使用`java.security`包中的`MessageDigest`类来生成文件的 MD5 校验和:
 
-```
+```java
 byte[] data = Files.readAllBytes(Paths.get(filePath));
 byte[] hash = MessageDigest.getInstance("MD5").digest(data);
 String checksum = new BigInteger(1, hash).toString(16);
@@ -24,7 +24,7 @@ String checksum = new BigInteger(1, hash).toString(16);
 
 让我们给我们的`pom.xml`文件添加一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>commons-codec</groupId>
     <artifactId>commons-codec</artifactId>
@@ -34,7 +34,7 @@ String checksum = new BigInteger(1, hash).toString(16);
 
 现在，我们简单地使用`md5Hex()`方法来获得文件的 MD5 校验和:
 
-```
+```java
 try (InputStream is = Files.newInputStream(Paths.get(filePath))) {
     String checksum = DigestUtils.md5Hex(is);
     // ....
@@ -47,7 +47,7 @@ try (InputStream is = Files.newInputStream(Paths.get(filePath))) {
 
 最后，我们可以使用[番石榴](/web/20221102190719/https://www.baeldung.com/guava-guide)的`ByteSource`对象的`hash()`方法:
 
-```
+```java
 File file = new File(filePath);
 ByteSource byteSource = com.google.common.io.Files.asByteSource(file);
 HashCode hc = byteSource.hash(Hashing.md5());

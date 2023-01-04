@@ -25,7 +25,7 @@
 
 使用`delete`方法删除目录和文件**。所有这些方法都返回一个`boolean`值，当操作成功时为`true`，否则为`false`:**
 
-```
+```java
 @Test
 public void givenDir_whenMkdir_thenDirIsDeleted() {
     File directory = new File("dir");
@@ -53,7 +53,7 @@ public void givenFile_whenCreateNewFile_thenFileIsDeleted() {
 
 `File `类有许多返回关于`File `实例的元数据的方法。让我们看看如何使用 **`getName, getParentFile,` 和`getPath`方法**:
 
-```
+```java
 @Test
 public void givenFile_whenCreateNewFile_thenMetadataIsCorrect() {
 
@@ -82,7 +82,7 @@ public void givenFile_whenCreateNewFile_thenMetadataIsCorrect() {
 
 `File `类有允许你设置文件或目录权限的方法。在这里，我们先来看看 **`setWritable`和`setReadable` 的方法**:
 
-```
+```java
 @Test
 public void givenReadOnlyFile_whenCreateNewFile_thenCantModFile() {
     File parentDir = makeDir("readDir");
@@ -111,7 +111,7 @@ public void givenReadOnlyFile_whenCreateNewFile_thenCantModFile() {
 
 接下来，在对文件设置了阻止任何读取的权限后，我们尝试读取文件。**使用`setReadable`方法阻止读取:**
 
-```
+```java
 @Test
 public void givenWriteOnlyFile_whenCreateNewFile_thenCantReadFile() {
     File parentDir = makeDir("writeDir");
@@ -141,7 +141,7 @@ public void givenWriteOnlyFile_whenCreateNewFile_thenCantReadFile() {
 
 `File `类的方法允许我们列出目录中包含的文件。同样，也可以列出目录。这里我们先来看看 **`list`和`list(FilenameFilter)`的方法**:
 
-```
+```java
 @Test
 public void givenFilesInDir_whenCreateNewFile_thenCanListFiles() {
     File parentDir = makeDir("filtersDir");
@@ -172,7 +172,7 @@ public void givenFilesInDir_whenCreateNewFile_thenCanListFiles() {
 
 `File`类具有使用`renameTo`方法重命名文件和目录**的功能:**
 
-```
+```java
 @Test
 public void givenDir_whenMkdir_thenCanRenameDir() {
 
@@ -195,7 +195,7 @@ public void givenDir_whenMkdir_thenCanRenameDir() {
 
 `File `类还允许我们获取磁盘空间信息。让我们来看一下`getFreeSpace`方法的**演示:**
 
-```
+```java
 @Test
 public void givenDataWritten_whenWrite_thenFreeSpaceReduces() {
 

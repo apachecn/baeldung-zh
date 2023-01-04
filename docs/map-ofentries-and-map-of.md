@@ -14,7 +14,7 @@ Java 8 引入了`Map.of()`方法，该方法使得创建不可变地图变得更
 
 作为重载的`static`工厂方法实现，第一个方法让我们创建一个空地图:
 
-```
+```java
 static <K, V> Map<K, V> of() {
     return (Map<K,V>) ImmutableCollections.EMPTY_MAP;
 }
@@ -22,13 +22,13 @@ static <K, V> Map<K, V> of() {
 
 让我们来看看用法:
 
-```
+```java
 Map<Long, String> map = Map.of();
 ```
 
 在`Map<K, V>`的接口中还定义了一个方法，它接受一个键和值:
 
-```
+```java
 static <K, V> Map<K, V> of(K k1, V v1) {
     return new ImmutableCollections.Map1<>(k1, v1);
 }
@@ -36,13 +36,13 @@ static <K, V> Map<K, V> of(K k1, V v1) {
 
 姑且称之为:
 
-```
+```java
 Map<Long, String> map = Map.of(1L, "value1"); 
 ```
 
 那些工厂**方法被重载 9 次以上，接受多达 10 个键和 10 个值**，我们可以在 [OpenJDK 17](https://web.archive.org/web/20221208143859/https://openjdk.org/projects/jdk/17/) 中找到:
 
-```
+```java
 static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9, K k10, V v10) {
     return new ImmutableCollections.MapN<>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10);
 }
@@ -56,7 +56,7 @@ static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5,
 
 我们来看看根据 [OpenJDK 17](https://web.archive.org/web/20221208143859/https://openjdk.org/projects/jdk/17/) 的静态工厂方法实现:
 
-```
+```java
 static <K, V> Map<K, V> ofEntries(Entry<? extends K, ? extends V>... entries) {
     if (entries.length == 0) { // implicit null check of entries array
         var map = (Map<K,V>) ImmutableCollections.EMPTY_MAP;
@@ -81,13 +81,13 @@ static <K, V> Map<K, V> ofEntries(Entry<? extends K, ? extends V>... entries) {
 
 例如，我们可以创建一个空地图:
 
-```
+```java
 Map<Long, String> map = Map.ofEntries();
 ```
 
 或者我们可以创建并填充一个地图:
 
-```
+```java
 Map<Long, String> longUserMap = Map.ofEntries(Map.entry(1L, "User A"), Map.entry(2L, "User B"));
 ```
 

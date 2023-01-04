@@ -27,7 +27,7 @@
 
 让我们首先创建一个`PasswordResetToken`实体，用它来重置用户的密码:
 
-```
+```java
 @Entity
 public class PasswordResetToken {
 
@@ -57,7 +57,7 @@ public class PasswordResetToken {
 
 因此，让我们设计一个简单的`forgotPassword.html`询问用户的电子邮件地址:
 
-```
+```java
 <html>
 <body>
     <h1 th:text="#{message.resetPassword}">reset</h1>
@@ -102,7 +102,7 @@ function resetPass(){
 
 我们现在需要从登录页面链接到这个新的“`reset password`”页面:
 
-```
+```java
 <a th:href="@{/forgetPassword.html}" 
   th:text="#{message.resetPassword}">reset</a>
 ```
@@ -111,7 +111,7 @@ function resetPass(){
 
 让我们从创建新的`PasswordResetToken`开始，并通过电子邮件发送给用户:
 
-```
+```java
 @PostMapping("/user/resetPassword")
 public GenericResponse resetPassword(HttpServletRequest request, 
   @RequestParam("email") String userEmail) {
@@ -131,7 +131,7 @@ public GenericResponse resetPassword(HttpServletRequest request,
 
 这里是`createPasswordResetTokenForUser()`方法:
 
-```
+```java
 public void createPasswordResetTokenForUser(User user, String token) {
     PasswordResetToken myToken = new PasswordResetToken(token, user);
     passwordTokenRepository.save(myToken);
@@ -140,7 +140,7 @@ public void createPasswordResetTokenForUser(User user, String token) {
 
 下面是方法`constructResetTokenEmail()`–用于发送带有重置令牌的电子邮件:
 
-```
+```java
 private SimpleMailMessage constructResetTokenEmail(
   String contextPath, Locale locale, String token, User user) {
     String url = contextPath + "/user/changePassword?token=" + token;
@@ -162,7 +162,7 @@ private SimpleMailMessage constructEmail(String subject, String body,
 
 请注意我们如何使用一个简单的对象`GenericResponse`来表示我们对客户端的响应:
 
-```
+```java
 public class GenericResponse {
     private String message;
     private String error;
@@ -192,7 +192,7 @@ public class GenericResponse {
 
 用户收到带有重置密码的唯一链接的电子邮件，然后单击该链接:
 
-```
+```java
 @GetMapping("/user/changePassword")
 public String showChangePasswordPage(Locale locale, Model model, 
   @RequestParam("token") String token) {
@@ -210,7 +210,7 @@ public String showChangePasswordPage(Locale locale, Model model,
 
 这里是`validatePasswordResetToken()`方法:
 
-```
+```java
 public String validatePasswordResetToken(String token) {
     final PasswordResetToken passToken = passwordTokenRepository.findByToken(token);
 
@@ -235,7 +235,7 @@ private boolean isTokenExpired(PasswordResetToken passToken) {
 
 ### 7.1。`updatePassword.html`
 
-```
+```java
 <html>
 <body>
 <div sec:authorize="hasAuthority('CHANGE_PASSWORD_PRIVILEGE')">
@@ -310,7 +310,7 @@ function savePass(event){
 
 最后，当提交上一个 post 请求时，新的用户密码被保存:
 
-```
+```java
 @PostMapping("/user/savePassword")
 public GenericResponse savePassword(final Locale locale, @Valid PasswordDto passwordDto) {
 
@@ -335,7 +335,7 @@ public GenericResponse savePassword(final Locale locale, @Valid PasswordDto pass
 
 这里是`changeUserPassword()`方法:
 
-```
+```java
 public void changeUserPassword(User user, String password) {
     user.setPassword(passwordEncoder.encode(password));
     repository.save(user);
@@ -344,7 +344,7 @@ public void changeUserPassword(User user, String password) {
 
 而`PasswordDto`:
 
-```
+```java
 public class PasswordDto {
 
     private String oldPassword;

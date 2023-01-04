@@ -20,7 +20,7 @@ XML 模式标准为用 XML 格式指定日期定义了明确的规则。为了�
 
 因此，让我们创建一个`LocalDate`的实例，并将其转换为`XMLGregorianCalendar`:
 
-```
+```java
 LocalDate localDate = LocalDate.of(2019, 4, 25);
 
 XMLGregorianCalendar xmlGregorianCalendar = 
@@ -44,7 +44,7 @@ assertThat(xmlGregorianCalendar.getTimezone()).isEqualTo(DatatypeConstants.FIELD
 
 让我们创建一个`XMLGregorianCalendar`的实例并执行转换:
 
-```
+```java
 XMLGregorianCalendar xmlGregorianCalendar = 
   DatatypeFactory.newInstance().newXMLGregorianCalendar("2019-04-25");
 

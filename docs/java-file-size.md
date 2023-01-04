@@ -12,7 +12,7 @@
 
 让我们从一个简单的计算文件大小的例子开始——使用 `[File.length()](https://web.archive.org/web/20220617075808/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html#length() "API usage")`方法:
 
-```
+```java
 private long getFileSize(File file) {
     long length = file.length();
     return length;
@@ -21,7 +21,7 @@ private long getFileSize(File file) {
 
 我们可以相对简单地测试我们的实现:
 
-```
+```java
 @Test
 public void whenGetFileSize_thenCorrect() {
     long expectedSize = 12607;
@@ -41,7 +41,7 @@ public void whenGetFileSize_thenCorrect() {
 
 在下面的例子中，我们将使用`[FileChannel.size()](https://web.archive.org/web/20220617075808/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/channels/FileChannel.html#size() "API usage")` API 来获取文件的字节大小:
 
-```
+```java
 @Test
 public void whenGetFileSizeUsingNioApi_thenCorrect() throws IOException {
     long expectedSize = 12607;
@@ -58,7 +58,7 @@ public void whenGetFileSizeUsingNioApi_thenCorrect() throws IOException {
 
 接下来，让我们看看如何使用 **Apache Commons IO** 获得文件大小。在下面的例子中，我们简单地使用`[FileUtils.sizeOf()](https://web.archive.org/web/20220617075808/https://commons.apache.org/proper/commons-io/javadocs/api-2.5/org/apache/commons/io/FileUtils.html#sizeOf(java.io.File) "API usage")`来获得文件大小:
 
-```
+```java
 @Test
 public void whenGetFileSizeUsingApacheCommonsIO_thenCorrect() {
     long expectedSize = 12607;
@@ -76,7 +76,7 @@ public void whenGetFileSizeUsingApacheCommonsIO_thenCorrect() {
 
 最后，让我们看看如何使用 **Apache Commons IO** 获得用户更容易理解的文件大小表示，而不仅仅是以字节为单位的大小:
 
-```
+```java
 @Test
 public void whenGetReadableFileSize_thenCorrect() {
     File imageFile = new File("src/test/resources/image.jpg");

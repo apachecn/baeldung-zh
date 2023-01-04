@@ -12,7 +12,7 @@
 
 考虑一下这个类:
 
-```
+```java
 public class MyClass {
     private int id;
     private String name;
@@ -28,7 +28,7 @@ public class MyClass {
 
 下面是我们如何连载`List<MyClass>`:
 
-```
+```java
 @Test
 public void givenListOfMyClass_whenSerializing_thenCorrect() {
     List<MyClass> list = Arrays.asList(new MyClass(1, "name1"), new MyClass(2, "name2"));
@@ -45,7 +45,7 @@ public void givenListOfMyClass_whenSerializing_thenCorrect() {
 
 然而，反序列化是棘手的。这是一种不正确的做法:
 
-```
+```java
 @Test(expected = ClassCastException.class)
 public void givenJsonString_whenIncorrectDeserializing_thenThrowClassCastException() {
     String inputString = "[{\"id\":1,\"name\":\"name1\"},{\"id\":2,\"name\":\"name2\"}]";
@@ -63,7 +63,7 @@ public void givenJsonString_whenIncorrectDeserializing_thenThrowClassCastExcepti
 
 反序列化`List`的正确方式应该是:
 
-```
+```java
 @Test
 public void givenJsonString_whenDeserializing_thenReturnListOfMyClass() {
     String inputString = "[{\"id\":1,\"name\":\"name1\"},{\"id\":2,\"name\":\"name2\"}]";
@@ -86,7 +86,7 @@ public void givenJsonString_whenDeserializing_thenReturnListOfMyClass() {
 
 考虑一个动物等级的例子:
 
-```
+```java
 public abstract class Animal {
     // ...
 }
@@ -110,13 +110,13 @@ public class Cow extends Animal {
 
 让我们看一下我们的示例类:
 
-```
+```java
 public abstract class Animal {
     public String type = "Animal";
 }
 ```
 
-```
+```java
 public class Dog extends Animal {
     private String petName;
 
@@ -129,7 +129,7 @@ public class Dog extends Animal {
 }
 ```
 
-```
+```java
 public class Cow extends Animal {
     private String breed;
 
@@ -144,7 +144,7 @@ public class Cow extends Animal {
 
 序列化将像以前一样继续工作，没有任何问题:
 
-```
+```java
 @Test 
 public void givenPolymorphicList_whenSerializeWithTypeAdapter_thenCorrect() {
     String expectedString
@@ -162,7 +162,7 @@ public void givenPolymorphicList_whenSerializeWithTypeAdapter_thenCorrect() {
 
 为了反序列化列表，我们必须提供一个定制的反序列化器:
 
-```
+```java
 public class AnimalDeserializer implements JsonDeserializer<Animal> {
     private String animalTypeElementName;
     private Gson gson;
@@ -194,7 +194,7 @@ public class AnimalDeserializer implements JsonDeserializer<Animal> {
 
 让我们看看如何使用我们的自定义反序列化器:
 
-```
+```java
 @Test
 public void givenPolymorphicList_whenDeserializeWithTypeAdapter_thenCorrect() {
     String inputString
@@ -221,7 +221,7 @@ public void givenPolymorphicList_whenDeserializeWithTypeAdapter_thenCorrect() {
 
 完成后，我们可以用它来反序列化我们的列表:
 
-```
+```java
 @Test
 public void givenPolymorphicList_whenDeserializeWithRuntimeTypeAdapter_thenCorrect() {
     String inputString

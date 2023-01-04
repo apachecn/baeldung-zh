@@ -10,7 +10,7 @@
 
 **在 Java 中计算字符串中的单词数**的一个简单方法是使用`StringTokenizer` 类:
 
-```
+```java
 assertEquals(3, new StringTokenizer("three blind mice").countTokens());
 assertEquals(4, new StringTokenizer("see\thow\tthey\trun").countTokens());
 ```
@@ -19,7 +19,7 @@ assertEquals(4, new StringTokenizer("see\thow\tthey\trun").countTokens());
 
 但是，在某些地方可能会出错，比如连字符:
 
-```
+```java
 assertEquals(7, new StringTokenizer("the farmer's wife--she was from Albuquerque").countTokens());
 ```
 
@@ -27,13 +27,13 @@ assertEquals(7, new StringTokenizer("the farmer's wife--she was from Albuquerque
 
 幸运的是，`StringTokenizer `与另一个建造者一起运送。**我们可以在构造函数中传递一个分隔符**来完成上面的工作:
 
-```
+```java
 assertEquals(7, new StringTokenizer("the farmer's wife--she was from Albuquerque", " -").countTokens());
 ```
 
 这在试图计算来自**的字符串中的单词时很方便，比如 CSV 文件:**
 
-```
+```java
 assertEquals(10, new StringTokenizer("did,you,ever,see,such,a,sight,in,your,life", ",").countTokens());
 ```
 
@@ -47,13 +47,13 @@ assertEquals(10, new StringTokenizer("did,you,ever,see,such,a,sight,in,your,life
 
 考虑到这一点，给定一个字符串，我们要做的是在我们遇到空格和标点符号的每一点上拆分该字符串，然后计算得到的单词数。
 
-```
+```java
 assertEquals(7, countWordsUsingRegex("the farmer's wife--she was from Albuquerque"));
 ```
 
 让我们稍微夸张一下，看看 regex 的威力:
 
-```
+```java
 assertEquals(9, countWordsUsingRegex("no&one;#should%ever-write-like,this;but:well"));
 ```
 
@@ -61,7 +61,7 @@ assertEquals(9, countWordsUsingRegex("no&one;#should%ever-write-like,this;but:we
 
 事实证明我们真的不需要做太多，**传递 regex** `[\pP\s&&[^']]+` **到** `split` **方法的** `String` **类就可以搞定**:
 
-```
+```java
 public static int countWordsUsingRegex(String arg) {
     if (arg == null) {
         return 0;
@@ -83,13 +83,13 @@ public static int countWordsUsingRegex(String arg) {
 
 这种方法给出了与正则表达式相同的结果:
 
-```
+```java
 assertEquals(9, countWordsManually("no&one;#should%ever-write-like,this but   well")); 
 ```
 
 我们必须小心标点符号不是真正的单词分隔符的特殊情况，例如:
 
-```
+```java
 assertEquals(6, countWordsManually("the farmer's wife--she was from Albuquerque"));
 ```
 
@@ -97,7 +97,7 @@ assertEquals(6, countWordsManually("the farmer's wife--she was from Albuquerque"
 
 在正则表达式版本中，我们可以使用正则表达式灵活地定义什么不符合字符的条件。但是现在我们正在编写自己的实现，**我们必须在一个单独的方法**中定义这个排除:
 
-```
+```java
 private static boolean isAllowedInWord(char charAt) {
     return charAt == '\'' || Character.isLetter(charAt);
 } 
@@ -107,7 +107,7 @@ private static boolean isAllowedInWord(char charAt) {
 
 我们现在可以在实现中使用这种方法:
 
-```
+```java
 public static int countWordsManually(String arg) {
     if (arg == null) {
         return 0;

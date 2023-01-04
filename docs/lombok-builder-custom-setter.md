@@ -12,7 +12,7 @@ Project Lombok 是一个流行的 Java 库，可以帮助减少开发人员需�
 
 让我们从将依赖关系添加到我们的`pom.xml`开始:
 
-```
+```java
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>
@@ -26,7 +26,7 @@ Project Lombok 是一个流行的 Java 库，可以帮助减少开发人员需�
 
 **[`@Builder`注释](/web/20220625222624/https://www.baeldung.com/lombok-builder)可以用来为我们的类**自动生成一个构建器。对于我们的例子，我们将使用一个消息传递系统，其中一个用户可以向另一个用户发送消息。该消息要么是一个简单的文本字符串，要么是一个`File`。使用 Lombok，我们可以如下定义我们的`Message`类:
 
-```
+```java
 @Builder
 @Data
 public class Message {
@@ -41,7 +41,7 @@ public class Message {
 
 使用生成的构建器，我们现在可以生成我们的`Message`类的实例:
 
-```
+```java
 Message message = Message.builder()
   .sender("[[email protected]](/web/20220625222624/https://www.baeldung.com/cdn-cgi/l/email-protection)")
   .recipient("[[email protected]](/web/20220625222624/https://www.baeldung.com/cdn-cgi/l/email-protection)")
@@ -59,7 +59,7 @@ Message message = Message.builder()
 
 定制 Lombok 构建器简单明了:**我们编写构建器中我们想要定制的部分，Lombok `@Builder`注释将不会生成这些部分**。因此，在我们的示例中，这将是:
 
-```
+```java
 public static class MessageBuilder {
     private String text;
     private File file;
@@ -88,7 +88,7 @@ public static class MessageBuilder {
 
 如果我们试图用以下代码生成一个既有文本又有文件的`Message`实例:
 
-```
+```java
 Message message = Message.builder()
   .sender("[[email protected]](/web/20220625222624/https://www.baeldung.com/cdn-cgi/l/email-protection)")
   .recipient("[[email protected]](/web/20220625222624/https://www.baeldung.com/cdn-cgi/l/email-protection)")
@@ -99,7 +99,7 @@ Message message = Message.builder()
 
 这将导致以下异常:
 
-```
+```java
 Exception in thread "main" java.lang.IllegalStateException: Cannot send 'text' and 'file'.
 ```
 

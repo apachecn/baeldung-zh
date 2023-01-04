@@ -24,7 +24,7 @@
 
 例如，我们可以通过在一个无限循环中添加键值对来实现这一点:
 
-```
+```java
 public class OutOfMemoryGCLimitExceed {
     public static void addRandomDataToMap() {
         Map<Integer, String> dataMap = new HashMap<>();
@@ -40,7 +40,7 @@ public class OutOfMemoryGCLimitExceed {
 
 通过从[项目](https://web.archive.org/web/20220921234532/https://github.com/eugenp/tutorials/tree/master/core-java-modules)的根目录运行以下命令，我们将很快得到一个`java.lang.OutOfMemoryError: GC Overhead Limit Exceeded` 错误:
 
-```
+```java
 mvn exec:exec
 ```
 
@@ -61,7 +61,7 @@ mvn exec:exec
 
 例如，这为 Java 应用程序提供了 1 GB 的堆空间:
 
-```
+```java
 java -Xmx1024m com.xyz.TheClassName
 ```
 

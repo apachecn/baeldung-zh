@@ -19,7 +19,7 @@
 
 我们可以借助 Java 的 [`Math`](/web/20221208143845/https://www.baeldung.com/java-lang-math) 类轻松计算标准差:
 
-```
+```java
 public static double calculateStandardDeviation(double[] array) {
 
     // get the sum of array
@@ -44,7 +44,7 @@ public static double calculateStandardDeviation(double[] array) {
 
 让我们测试一下我们的方法:
 
-```
+```java
 double[] array = {25, 5, 45, 68, 61, 46, 24, 95};
 System.out.println("List of elements: " + Arrays.toString(array));
 
@@ -54,7 +54,7 @@ System.out.format("Standard Deviation = %.6f", standardDeviation);
 
 结果将如下所示:
 
-```
+```java
 List of elements: [25.0, 5.0, 45.0, 68.0, 61.0, 46.0, 24.0, 95.0]
 Standard Deviation = 26.732179
 ```

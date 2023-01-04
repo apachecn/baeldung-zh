@@ -14,7 +14,7 @@
 
 事不宜迟，让我们看看典型的 YAML 文件是什么样子的:
 
-```
+```java
 server:
   port: 8090
   application:
@@ -36,7 +36,7 @@ Spring Boot 通过提供一个名为`@ConfigurationProperties.` 的便捷注释�
 
 首先，让我们在`application.yml`中定义一些键值属性:
 
-```
+```java
 server:
   application:
     name: InjectMapFromYAML
@@ -65,7 +65,7 @@ server:
 
 其次，让我们创建一个 bean 类—`ServerProperties –` 来封装将我们的配置属性绑定到`Map` s:
 
-```
+```java
 @Component
 @ConfigurationProperties(prefix = "server")
 public class ServerProperties {
@@ -93,7 +93,7 @@ public class ServerProperties {
 
 最后，让我们测试一下我们的 YAML 属性是否被正确地注入为`Map` s:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 class MapFromYamlIntegrationTest {

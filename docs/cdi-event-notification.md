@@ -14,7 +14,7 @@
 
 **我们需要一个符合 CDI 2.0 的容器，CDI 的参考实现 [Weld](https://web.archive.org/web/20220524004826/http://weld.cdi-spec.org/) 是一个很好的选择:**
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>javax.enterprise</groupId>
@@ -43,7 +43,7 @@
 
 让我们从创建一个简单的`TextService`类开始:
 
-```
+```java
 public class TextService {
 
     public String parseText(String text) {
@@ -56,7 +56,7 @@ public class TextService {
 
 接下来，让我们定义一个示例事件类，它在其构造函数中接受一个`String`参数:
 
-```
+```java
 public class ExampleEvent {
 
     private final String eventMessage;
@@ -73,7 +73,7 @@ public class ExampleEvent {
 
 现在我们已经定义了我们的服务和事件类，让我们使用`@Observes`注释为我们的`ExampleEvent`类创建一个 observer 方法:
 
-```
+```java
 public class ExampleEventObserver {
 
     public String onEvent(@Observes ExampleEvent event, TextService textService) {
@@ -94,7 +94,7 @@ public class ExampleEventObserver {
 
 这是事件通知模型最充分展示其功能的地方。我们只需初始化新的 [`SeContainer`](https://web.archive.org/web/20220524004826/https://docs.jboss.org/cdi/api/2.0/javax/enterprise/inject/se/SeContainer.html) 实现，并通过`fireEvent()`方法触发一个或多个事件:
 
-```
+```java
 SeContainerInitializer containerInitializer = SeContainerInitializer.newInstance(); 
 try (SeContainer container = containerInitializer.initialize()) {
     container.getBeanManager().fireEvent(new ExampleEvent("Welcome to Baeldung!")); 
@@ -121,7 +121,7 @@ try (SeContainer container = containerInitializer.initialize()) {
 
 让我们看看如何使用`ContainerInitialized`事件将控制权转移给`ExampleEventObserver`类:
 
-```
+```java
 public class ExampleEventObserver {
     public String onEvent(@Observes ContainerInitialized event, TextService textService) {
         return textService.parseText(event.getEventMessage());
@@ -137,7 +137,7 @@ public class ExampleEventObserver {
 
 同样，我们可以通过将`notifyObserver=IF_EXISTS`指定为`@Observes`注释的参数来**定义一个条件观察器方法**:
 
-```
+```java
 public String onEvent(@Observes(notifyObserver=IF_EXISTS) ExampleEvent event, TextService textService) { 
     return textService.parseText(event.getEventMessage());
 } 
@@ -158,7 +158,7 @@ public String onEvent(@Observes(notifyObserver=IF_EXISTS) ExampleEvent event, Te
 
 如果我们在一个事务中触发`ExampleEvent`事件，我们需要相应地重构`onEvent()`方法，以便在所需的阶段处理该事件:
 
-```
+```java
 public String onEvent(@Observes(during=AFTER_COMPLETION) ExampleEvent event, TextService textService) { 
     return textService.parseText(event.getEventMessage());
 }
@@ -174,7 +174,7 @@ CDI 2.0 的事件通知模型中包含的另一个很好的改进是能够为调
 
 为了理解这个特性是如何工作的，除了`ExampleEventObserver`实现的方法之外，让我们定义另一个 observer 方法:
 
-```
+```java
 public class AnotherExampleEventObserver {
 
     public String onEvent(@Observes ExampleEvent event) {
@@ -187,13 +187,13 @@ public class AnotherExampleEventObserver {
 
 我们可以通过`@Priority`注释为每个方法分配一个调用优先级来轻松解决这个问题:
 
-```
+```java
 public String onEvent(@Observes @Priority(1) ExampleEvent event, TextService textService) {
     // ... implementation
 } 
 ```
 
-```
+```java
 public String onEvent(@Observes @Priority(2) ExampleEvent event) {
     // ... implementation
 }
@@ -209,7 +209,7 @@ public String onEvent(@Observes @Priority(2) ExampleEvent event) {
 
 我们可以用`fireAsync()`方法异步触发一个事件:
 
-```
+```java
 public class ExampleEventSource {
 
     @Inject
@@ -225,7 +225,7 @@ public class ExampleEventSource {
 
 为了处理我们的异步事件，我们需要用 [`@ObservesAsync`](https://web.archive.org/web/20220524004826/https://docs.jboss.org/cdi/api/2.0.EDR2/javax/enterprise/event/ObservesAsync.html) 注释定义一个或多个异步观察器方法:
 
-```
+```java
 public class AsynchronousExampleEventObserver {
 
     public void onEvent(@ObservesAsync ExampleEvent event) {

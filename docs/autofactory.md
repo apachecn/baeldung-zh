@@ -12,7 +12,7 @@
 
 在我们开始之前，让我们将下面的依赖项添加到`pom.xml:`
 
-```
+```java
 <dependency>
     <groupId>com.google.auto.factory</groupId>
     <artifactId>auto-factory</artifactId>
@@ -28,7 +28,7 @@
 
 因此，当我们用`@AutoFactory`注释`Phone`类，用`@Provided`注释其构造函数参数时，我们得到:
 
-```
+```java
 @AutoFactory
 public class Phone {
 
@@ -50,7 +50,7 @@ public class Phone {
 
 在上面的代码片段中，我们期望`Camera`由任何相机制造商提供，而`AutoFactory`将帮助生成以下代码:
 
-```
+```java
 @Generated("com.google.auto.factory.processor.AutoFactoryProcessor")
 public final class PhoneFactory {
 
@@ -74,7 +74,7 @@ public final class PhoneFactory {
 
 现在我们有了一个由`AutoFactory`在编译时自动生成的`PhoneFactory`，我们可以用它来生成 phone 实例:
 
-```
+```java
 PhoneFactory phoneFactory = new PhoneFactory(
   () -> new Camera("Unknown", "XXX"));
 Phone simplePhone = phoneFactory.create("other parts");
@@ -82,7 +82,7 @@ Phone simplePhone = phoneFactory.create("other parts");
 
 `@AutoFactory`注释也可以应用于构造函数:
 
-```
+```java
 public class ClassicPhone {
 
     private final String dialpad;
@@ -109,7 +109,7 @@ public class ClassicPhone {
 
 在上面的代码片段中，我们对两个构造函数都应用了`@AutoFactory`。`AutoFactory`将简单地为我们相应地生成两种创建方法:
 
-```
+```java
 @Generated(value = "com.google.auto.factory.processor.AutoFactoryProcessor")
 public final class ClassicPhoneFactory {
     private final Provider<String> java_lang_StringProvider;
@@ -139,7 +139,7 @@ public final class ClassicPhoneFactory {
 
 例如，如果我们希望`cameraProvider`是“Sony ”,我们可以将`Phone`类改为:
 
-```
+```java
 @AutoFactory
 public class Phone {
 
@@ -156,7 +156,7 @@ public class Phone {
 
 AutoFactory 将保留 [`@Named`](https://web.archive.org/web/20220628151134/https://docs.oracle.com/javaee/6/api/javax/inject/Named.html) `[@Qualifier](https://web.archive.org/web/20220628151134/https://docs.oracle.com/javaee/6/api/javax/inject/Qualifier.html)`以便我们可以利用它，例如，在使用依赖注入框架时:
 
-```
+```java
 @Generated("com.google.auto.factory.processor.AutoFactoryProcessor")
 public final class PhoneFactory {
 
@@ -180,7 +180,7 @@ public final class PhoneFactory {
 
 生成的工厂类的名称可以用 [`className`](https://web.archive.org/web/20220628151134/https://github.com/google/auto/blob/master/factory/src/main/java/com/google/auto/factory/AutoFactory.java#L48) 设置:
 
-```
+```java
 @AutoFactory(className = "SamsungFactory")
 public class SmartPhone {
 
@@ -191,7 +191,7 @@ public class SmartPhone {
 
 有了上面的配置，我们将创建一个名为`SamsungFactory`的类:
 
-```
+```java
 @Generated("com.google.auto.factory.processor.AutoFactoryProcessor")
 public final class SamsungFactory {
 
@@ -204,7 +204,7 @@ public final class SamsungFactory {
 
 注意，默认情况下，生成的工厂类被标记为 final，因此我们可以通过将 [`allowSubclasses`](https://web.archive.org/web/20220628151134/https://github.com/google/auto/blob/master/factory/src/main/java/com/google/auto/factory/AutoFactory.java#L64) 属性设置为`false:`来改变这种行为
 
-```
+```java
 @AutoFactory(
   className = "SamsungFactory", 
   allowSubclasses = true)
@@ -217,7 +217,7 @@ public class SmartPhone {
 
 现在我们有:
 
-```
+```java
 @Generated("com.google.auto.factory.processor.AutoFactoryProcessor")
 public class SamsungFactory {
 
@@ -232,7 +232,7 @@ public class SamsungFactory {
 
 这里我们需要 *SamsungFactory* 来生产具有可定制存储的智能手机:
 
-```
+```java
 public interface CustomStorage {
     SmartPhone customROMInGB(int romSize);
 }
@@ -242,7 +242,7 @@ public interface CustomStorage {
 
 **然后，`AutoFactory`需要基类**中的相关构造函数来生成实现了上述接口的工厂类:
 
-```
+```java
 @AutoFactory(
   className = "SamsungFactory",
   allowSubclasses = true,
@@ -260,7 +260,7 @@ public class SmartPhone {
 
 因此，`AutoFactory`将生成以下代码:
 
-```
+```java
 @Generated("com.google.auto.factory.processor.AutoFactoryProcessor")
 public class SamsungFactory implements CustomStorage {
 
@@ -281,7 +281,7 @@ public class SamsungFactory implements CustomStorage {
 
 由于`AutoFactory`可以生成接口实现，自然期望它也能够扩展类，这确实是可能的:
 
-```
+```java
 public abstract class AbstractFactory {
     abstract CustomPhone newInstance(String brand);
 }
@@ -301,7 +301,7 @@ public class CustomPhone {
 
 最后，我们可以看到以下生成的代码:
 
-```
+```java
 @Generated("com.google.auto.factory.processor.AutoFactoryProcessor")
 public final class CustomPhoneFactory extends AbstractFactory {
 
@@ -331,7 +331,7 @@ public final class CustomPhoneFactory extends AbstractFactory {
 
 首先，我们把 [`Guice`](https://web.archive.org/web/20220628151134/https://github.com/google/guice) 加到`pom.xml`上:
 
-```
+```java
 <dependency>
     <groupId>com.google.inject</groupId>
     <artifactId>guice</artifactId>
@@ -345,7 +345,7 @@ public final class CustomPhoneFactory extends AbstractFactory {
 
 因为我们期望“Sony”成为摄像机提供者，所以我们需要给`PhoneFactory`的构造函数注入一个`SonyCameraProvider`:
 
-```
+```java
 @Generated("com.google.auto.factory.processor.AutoFactoryProcessor")
 public final class PhoneFactory {
 
@@ -363,7 +363,7 @@ public final class PhoneFactory {
 
 最后，我们将在一个`Guice`模块中进行绑定:
 
-```
+```java
 public class SonyCameraModule extends AbstractModule {
 
     private static int SONY_CAMERA_SERIAL = 1;
@@ -382,7 +382,7 @@ public class SonyCameraModule extends AbstractModule {
 
 现在我们可以看到`Guice`正在为我们生成的工厂管理依赖注入:
 
-```
+```java
 Injector injector = Guice.createInjector(new SonyCameraModule());
 PhoneFactory injectedFactory = injector.getInstance(PhoneFactory.class);
 Phone xperia = injectedFactory.create("Xperia");

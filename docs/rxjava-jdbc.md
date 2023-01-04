@@ -26,7 +26,7 @@ Learn how to use various RxJava utility operators.[Read more](/web/2022112901575
 
 让我们从需要添加到我们的`pom.xml`中的 Maven 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>com.github.davidmoten</groupId>
     <artifactId>rxjava-jdbc</artifactId>
@@ -40,7 +40,7 @@ Learn how to use various RxJava utility operators.[Read more](/web/2022112901575
 
 **`Database`类是运行所有常见类型的数据库交互的主要入口点。**为了创建一个`Database`对象，我们可以将一个`ConnectionProvider`接口实现的实例传递给`from()`静态方法:
 
-```
+```java
 public static ConnectionProvider connectionProvider
   = new ConnectionProviderFromUrl(
   DB_CONNECTION, DB_USER, DB_PASSWORD);
@@ -58,7 +58,7 @@ Database db = Database.from(connectionProvider);
 
 在下一个快速示例中，我们将展示如何完成所有基本的数据库操作:
 
-```
+```java
 public class BasicQueryTypesTest {
 
     Observable<Integer> create,
@@ -127,7 +127,7 @@ automap 特性允许我们将选定的数据库记录映射到对象。
 
 我们可以使用带注释的接口将数据库记录转换成对象。为此，我们可以创建一个带注释的接口:
 
-```
+```java
 public interface Employee {
 
     @Column("id")
@@ -140,7 +140,7 @@ public interface Employee {
 
 然后，我们可以运行我们的测试:
 
-```
+```java
 @Test
 public void whenSelectFromTableAndAutomap_thenCorrect() {
     List<Employee> employees = db.select("select id, name from EMPLOYEE")
@@ -167,7 +167,7 @@ public void whenSelectFromTableAndAutomap_thenCorrect() {
 
 我们还可以使用具体的类将数据库记录自动映射到对象。让我们看看这个类是什么样子的:
 
-```
+```java
 public class Manager {
 
     private int id;
@@ -179,7 +179,7 @@ public class Manager {
 
 现在，我们可以运行我们的测试:
 
-```
+```java
 @Test
 public void whenSelectManagersAndAutomap_thenCorrect() {
     List<Manager> managers = db.select("select id, name from MANAGER")
@@ -218,7 +218,7 @@ public void whenSelectManagersAndAutomap_thenCorrect() {
 
 让我们看看如何插入和选择 CLOB:
 
-```
+```java
 @Before
 public void setup() throws IOException {
     create = db.update(
@@ -264,7 +264,7 @@ public void whenSelectCLOB_thenCorrect() throws IOException {
 
 我们可以这样做:
 
-```
+```java
 @Before
 public void setup() throws IOException {
     create = db.update(
@@ -299,7 +299,7 @@ public void setup() throws IOException {
 
 让我们看一个简单的例子:
 
-```
+```java
 @Test
 public void whenCommitTransaction_thenRecordUpdated() {
     Observable<Boolean> begin = db.beginTransaction();
@@ -336,7 +336,7 @@ public void whenCommitTransaction_thenRecordUpdated() {
 
 让我们看一个简单的例子:
 
-```
+```java
 @Test
 public void whenInsertAndReturnGeneratedKey_thenCorrect() {
     Integer key = db.update("INSERT INTO EMPLOYEE(name) VALUES('John')")

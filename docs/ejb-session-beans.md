@@ -15,7 +15,7 @@
 
 要使用企业 bean 3.2**，**请确保将最新版本添加到`pom.xml` 文件的`dependencies`部分:
 
-```
+```java
 <dependency>
     <groupId>javax</groupId>
     <artifactId>javaee-api</artifactId>
@@ -36,7 +36,7 @@ The latest dependency can be found in the [Maven Repository](https://web.archive
 
 首先，让我们创建`StatelessEJB` bean。我们使用`@Stateless`注释将 bean 标记为无状态:
 
-```
+```java
 @Stateless
 public class StatelessEJB {
 
@@ -47,7 +47,7 @@ public class StatelessEJB {
 
 然后我们创建上述无状态 bean 的第一个客户机，名为`EJBClient1`:
 
-```
+```java
 public class EJBClient1 {
 
     @EJB
@@ -58,7 +58,7 @@ public class EJBClient1 {
 
 然后，我们声明另一个名为`EJBClient2,`的客户机，它访问同一个无状态 bean:
 
-```
+```java
 public class EJBClient2 {
 
     @EJB
@@ -71,7 +71,7 @@ public class EJBClient2 {
 
 为了测试 EJB 的无状态性，我们可以通过以下方式使用我们在上面声明的两个客户端:
 
-```
+```java
 @RunWith(Arquillian.class)
 public class StatelessEJBTest {
 
@@ -118,7 +118,7 @@ public class StatelessEJBTest {
 
 有状态会话 bean 标有`@Stateful`注释。有状态 bean 的代码如下:
 
-```
+```java
 @Stateful
 public class StatefulEJB {
 
@@ -129,7 +129,7 @@ public class StatefulEJB {
 
 我们的有状态 bean 的第一个本地客户机编写如下:
 
-```
+```java
 public class EJBClient1 {
 
     @EJB
@@ -140,7 +140,7 @@ public class EJBClient1 {
 
 名为`EJBClient2`的第二个客户端也像`EJBClient1`一样被创建:
 
-```
+```java
 public class EJBClient2 {
 
     @EJB
@@ -153,7 +153,7 @@ public class EJBClient2 {
 
 有状态 bean 的功能在`EJBStatefulBeanTest`单元测试中以如下方式进行测试:
 
-```
+```java
 @RunWith(Arquillian.class)
 public class StatefulEJBTest {
 

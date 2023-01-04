@@ -12,7 +12,7 @@
 
 首先，我们需要构建几个`String`样本，我们可以使用它们作为按空白分割的输入。所以，让我们从**将一些空白字符定义为`String`常量**开始，这样我们可以方便地重用它们:
 
-```
+```java
 String SPACE = " ";
 String TAB = "	";
 String NEW_LINE = "\n";
@@ -20,7 +20,7 @@ String NEW_LINE = "\n";
 
 接下来，让我们使用这些作为分隔符来定义包含不同水果名称的`String`样本:
 
-```
+```java
 String FRUITS_TAB_SEPARATED = "Apple" + TAB + "Banana" + TAB + "Mango" + TAB + "Orange";
 String FRUITS_SPACE_SEPARATED = "Apple" + SPACE + "Banana" + SPACE + "Mango" + SPACE + "Orange";
 String FRUITS_NEWLINE_SEPARATED = "Apple" + NEW_LINE + "Banana" + NEW_LINE + "Mango" + NEW_LINE + "Orange";
@@ -28,7 +28,7 @@ String FRUITS_NEWLINE_SEPARATED = "Apple" + NEW_LINE + "Banana" + NEW_LINE + "Ma
 
 最后，让我们也**编写`verifySplit()`方法，我们将重用它来验证通过空白字符**分割这些字符串的预期结果:
 
-```
+```java
 private void verifySplit(String[] fruitArray) {
     assertEquals(4, fruitArray.length);
     assertEquals("Apple", fruitArray[0]);
@@ -44,13 +44,13 @@ private void verifySplit(String[] fruitArray) {
 
 `String`类的 **`split()`方法是拆分字符串**的事实上的标准。它接受一个定界符 regex，并生成一个由`String`组成的数组:
 
-```
+```java
 String[] split(String regex);
 ```
 
 首先，让我们用一个空格字符分割`FRUITS_SPACE_SEPARATED` `String`:
 
-```
+```java
 @Test
 public void givenSpaceSeparatedString_whenSplitUsingSpace_shouldGetExpectedResult() {
     String fruits = FRUITS_SPACE_SEPARATED;
@@ -63,7 +63,7 @@ public void givenSpaceSeparatedString_whenSplitUsingSpace_shouldGetExpectedResul
 
 接下来，让我们尝试对空格、制表符和换行符使用更通用的正则表达式，并用相同的正则表达式分割所有的字符串样本:
 
-```
+```java
 @Test
 public void givenWhiteSpaceSeparatedString_whenSplitUsingWhiteSpaceRegex_shouldGetExpectedResult() {
     String whitespaceRegex = SPACE + "|" + TAB + "|" + NEW_LINE;
@@ -79,7 +79,7 @@ public void givenWhiteSpaceSeparatedString_whenSplitUsingWhiteSpaceRegex_shouldG
 
 最后，让我们通过使用空白元字符(`\s` ) 来简化我们的方法，空白元字符本身代表所有类型的空白字符:
 
-```
+```java
 @Test
 public void givenNewlineSeparatedString_whenSplitUsingWhiteSpaceMetaChar_shouldGetExpectedResult() {
     String whitespaceMetaChar = "\\s";
@@ -97,7 +97,7 @@ public void givenNewlineSeparatedString_whenSplitUsingWhiteSpaceMetaChar_shouldG
 
 用空格分割字符串是一个非常常见的用例，许多 Java 库都公开了一个接口来实现这一点，而没有明确指定分隔符。在本节中，让我们学习如何使用`StringTokenizer`来解决这个用例:
 
-```
+```java
 @Test
 public void givenSpaceSeparatedString_whenSplitUsingStringTokenizer_shouldGetExpectedResult() {
     String fruits = FRUITS_SPACE_SEPARATED;
@@ -119,13 +119,13 @@ public void givenSpaceSeparatedString_whenSplitUsingStringTokenizer_shouldGetExp
 
 `org.apache.commons.lang3`包的 **`StringUtils`类提供了一个`split()`实用方法来拆分一个`String`** 。像`StringTokenizer`类一样，它使用空白作为分割字符串的默认分隔符:
 
-```
+```java
 public static String[] split(String str);
 ```
 
 让我们从在项目的`pom.xml`文件中添加 [`commons-lang3`](https://web.archive.org/web/20221220042827/https://search.maven.org/search?q=g:%20org.apache.commons%20AND%20a:commons-lang3) 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -134,7 +134,7 @@ public static String[] split(String str);
 
 接下来，让我们通过分割`String`样本来看看这一过程:
 
-```
+```java
 @Test
 public void givenWhiteSpaceSeparatedString_whenSplitUsingStringUtils_shouldGetExpectedResult() {
     String[] allSamples = new String[] { FRUITS_SPACE_SEPARATED, FRUITS_TAB_SEPARATED, FRUITS_NEWLINE_SEPARATED };
@@ -147,7 +147,7 @@ public void givenWhiteSpaceSeparatedString_whenSplitUsingStringUtils_shouldGetEx
 
 **使用`StringUtils`类的`split()`实用方法的一个优点是调用者不必显式地执行空检查**。这是因为`split()`方法很好地处理了这个问题。让我们继续来看看它的实际应用:
 
-```
+```java
 @Test
 public void givenNullString_whenSplitUsingStringUtils_shouldReturnNull() {
     String fruits = null;

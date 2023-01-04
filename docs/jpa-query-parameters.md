@@ -14,19 +14,19 @@
 
 查询参数是构建和执行参数化查询的一种方式。因此，与其说:
 
-```
+```java
 SELECT * FROM employees e WHERE e.emp_number = '123';
 ```
 
 我们会做:
 
-```
+```java
 SELECT * FROM employees e WHERE e.emp_number = ?;
 ```
 
 通过使用 JDBC 预处理语句，我们需要在执行查询之前设置参数:
 
-```
+```java
 pStatement.setString(1, 123);
 ```
 
@@ -36,7 +36,7 @@ pStatement.setString(1, 123);
 
 让我们重写前面的查询，使用 JPA API 通过`emp_number`获取雇员，但是我们将使用文字而不是参数，这样我们可以清楚地说明这种情况:
 
-```
+```java
 String empNumber = "A123";
 TypedQuery<Employee> query = em.createQuery(
   "SELECT e FROM Employee e WHERE e.empNumber = '" + empNumber + "'", Employee.class);
@@ -63,7 +63,7 @@ Employee employee = query.getSingleResult();
 
 让我们看看如何在位置参数的帮助下编写这样的查询:
 
-```
+```java
 TypedQuery<Employee> query = em.createQuery(
   "SELECT e FROM Employee e WHERE e.empNumber = ?1", Employee.class);
 String empNumber = "A123";
@@ -82,7 +82,7 @@ Employee employee = query.setParameter(1, empNumber).getSingleResult();
 
 如前所述，我们也可以使用集值参数:
 
-```
+```java
 TypedQuery<Employee> query = entityManager.createQuery(
   "SELECT e FROM Employee e WHERE e.empNumber IN (?1)" , Employee.class);
 List<String> empNumbers = Arrays.asList("A123", "A124");
@@ -93,7 +93,7 @@ List<Employee> employees = query.setParameter(1, empNumbers).getResultList();
 
 命名参数与位置参数非常相似；但是，通过使用它们，我们使参数更加明确，查询变得更加易读:
 
-```
+```java
 TypedQuery<Employee> query = em.createQuery(
   "SELECT e FROM Employee e WHERE e.empNumber = :number" , Employee.class);
 String empNumber = "A123";
@@ -108,7 +108,7 @@ Employee employee = query.setParameter("number", empNumber).getSingleResult();
 
 让我们继续使用两个命名参数来创建前面查询的变体，以说明方法链接:
 
-```
+```java
 TypedQuery<Employee> query = em.createQuery(
   "SELECT e FROM Employee e WHERE e.name = :name AND e.age = :empAge" , Employee.class);
 String empName = "John Doe";
@@ -129,7 +129,7 @@ List<Employee> employees = query
 
 为了清楚起见，让我们也演示一下这是如何与集合值参数一起工作的:
 
-```
+```java
 TypedQuery<Employee> query = entityManager.createQuery(
   "SELECT e FROM Employee e WHERE e.empNumber IN (:numbers)" , Employee.class);
 List<String> empNumbers = Arrays.asList("A123", "A124");
@@ -146,7 +146,7 @@ JPA 查询可以通过使用[JPA Criteria API](/web/20221206104402/https://www.b
 
 让我们再次构建相同的查询，但是这次使用 Criteria API 来演示在处理`CriteriaQuery`时如何处理查询参数:
 
-```
+```java
 CriteriaBuilder cb = em.getCriteriaBuilder();
 
 CriteriaQuery<Employee> cQuery = cb.createQuery(Employee.class);

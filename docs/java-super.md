@@ -16,7 +16,7 @@
 
 在我们的例子中，我们将`super(message) `与`String`参数一起使用:
 
-```
+```java
 public class SuperSub extends SuperBase {
 
     public SuperSub(String message) {
@@ -27,7 +27,7 @@ public class SuperSub extends SuperBase {
 
 让我们创建一个子类实例，看看后面发生了什么:
 
-```
+```java
 SuperSub child = new SuperSub("message from the child class");
 ```
 
@@ -37,7 +37,7 @@ SuperSub child = new SuperSub("message from the child class");
 
 让我们用`message`实例变量创建一个父类:
 
-```
+```java
 public class SuperBase {
     String message = "super class";
 
@@ -51,7 +51,7 @@ public class SuperBase {
 
 现在，我们用同名变量创建一个子类:
 
-```
+```java
 public class SuperSub extends SuperBase {
 
     String message = "child class";
@@ -70,7 +70,7 @@ public class SuperSub extends SuperBase {
 
 让我们向父类添加一个实例方法:
 
-```
+```java
 public class SuperBase {
 
     String message = "super class";
@@ -83,7 +83,7 @@ public class SuperBase {
 
 并在我们的子类中覆盖`printMessage()`方法:
 
-```
+```java
 public class SuperSub extends SuperBase {
 
     String message = "child class";

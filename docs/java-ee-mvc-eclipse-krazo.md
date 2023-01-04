@@ -26,7 +26,7 @@ JSR 371 或 Jakarta MVC 规范了我们如何用 Java 开发 web 应用程序。
 
 例如，让我们定义一个控制器:
 
-```
+```java
 @Path("user")
 public class UserController {
     @GET
@@ -51,7 +51,7 @@ public class UserController {
 
 例如，让我们用`@View`定义一个控制器:
 
-```
+```java
 @Controller
 @Path("user")
 @View("defaultModal.jsp")
@@ -81,7 +81,7 @@ Jakarta RESTful Webservices 拒绝有绑定和验证错误的请求。类似的�
 
 控制器注入一个 [`BindingResult`](https://web.archive.org/web/20221221020726/https://jakarta.ee/specifications/mvc/2.0/apidocs/jakarta/mvc/binding/bindingresult) 来向用户呈现可读的验证和绑定错误消息。例如，让我们定义一个带有`@MvcBinding`的控制器:
 
-```
+```java
 @Controller
 @Path("user")
 public class UserController {
@@ -113,7 +113,7 @@ public class UserController {
 
 例如，假设 bean `User` 有注释`@RedirectScoped`:
 
-```
+```java
 @RedirectScoped
 public class User
 {
@@ -125,7 +125,7 @@ public class User
 
 接下来，将这个 bean 注入控制器:
 
-```
+```java
 @Controller
 @Path("user")
 public class UserController {
@@ -151,13 +151,13 @@ public class UserController {
 
 假设有一个带有`href`的用户表单:
 
-```
+```java
 <a href="/app/user">Clich Here</a>
 ```
 
 点击`Click Here`调用映射到`GET /app/user`的控制器。
 
-```
+```java
 @GET
 @UriRef("user-details")
 public String getUserDetails(String userId) {
@@ -167,7 +167,7 @@ public String getUserDetails(String userId) {
 
 在这里，我们用`user-details`来命名我们的控制器。现在，我们可以在视图中引用这个名称，而不是 URI:
 
-```
+```java
 <a href="${mvc.uri('user-details')}">Click Here</a>
 ```
 
@@ -177,7 +177,7 @@ public String getUserDetails(String userId) {
 
 考虑一个控制器:
 
-```
+```java
 @POST
 @Path("user")
 @CsrfProtected
@@ -196,7 +196,7 @@ public String saveUser(User user) {
 
 首先，让我们使用 Maven `archetype:generate`来生成 Jakarta MVC 2.0 项目:
 
-```
+```java
 mvn archetype:generate 
   -DarchetypeGroupId=org.eclipse.krazo
   -DarchetypeArtifactId=krazo-jakartaee9-archetype
@@ -210,7 +210,7 @@ mvn archetype:generate
 
 同样，生成的`pom.xml` 包含了`[jakarta.platform](https://web.archive.org/web/20221221020726/https://search.maven.org/search?q=jakarta.jakartaee-web-api), [jakarta.mvc](https://web.archive.org/web/20221221020726/https://search.maven.org/search?q=jakarta.mvc)` 和 [`org.eclipse.krazo`](https://web.archive.org/web/20221221020726/https://search.maven.org/search?q=a:krazo-jersey) 的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>jakarta.platform</groupId>
     <artifactId>jakarta.jakartaee-web-api</artifactId>
@@ -233,7 +233,7 @@ mvn archetype:generate
 
 接下来，让我们定义用于显示表单、保存用户详细信息的控制器，以及用于获取用户详细信息的 API。但是，首先，让我们定义我们的应用程序路径:
 
-```
+```java
 @ApplicationPath("/app")
 public class UserApplication extends Application {
 }
@@ -241,7 +241,7 @@ public class UserApplication extends Application {
 
 应用路径定义为`/app`。接下来，让我们定义将用户转发到用户详细信息表单的控制器:
 
-```
+```java
 @Path("users")
 public class UserController {
     @GET
@@ -254,7 +254,7 @@ public class UserController {
 
 接下来，在`WEB-INF/views,` 下，我们可以创建一个视图`user.jsp,` 并构建和部署应用程序:
 
-```
+```java
 mvn clean install glassfish:deploy
 ```
 
@@ -266,7 +266,7 @@ mvn clean install glassfish:deploy
 
 接下来，让我们定义一个处理表单提交动作的 HTTP POST:
 
-```
+```java
 @POST
 @Controller
 public String saveUser(@Valid @BeanParam User user) {   
@@ -280,7 +280,7 @@ public String saveUser(@Valid @BeanParam User user) {
 
 让我们利用 Jakarta 验证、CDI 和`@MvcBinding` 来提供表单验证:
 
-```
+```java
 @Named("user")
 public class User implements Serializable {
 
@@ -299,7 +299,7 @@ public class User implements Serializable {
 
 一旦我们有了表单验证，让我们检查绑定错误。如果有任何绑定错误，我们必须向用户显示验证消息。为此，让我们注入`BindingResult` 来处理无效的表单参数。让我们更新一下我们的`saveUser`方法:
 
-```
+```java
 @Inject
 private BindingResult bindingResult;
 
@@ -318,7 +318,7 @@ public String saveUser(@Valid @BeanParam User user) {
 
 接下来，让我们使用`@CsrfProtected`来保护我们的 POST 方法免受 CSRF 攻击。将`@CsrfProtected` 添加到`saveUser`方法中:
 
-```
+```java
 @POST
 @Controller
 @CsrfProtected
@@ -332,13 +332,13 @@ public String saveUser(@Valid @BeanParam User user) {
 
 当控制器被保护免受 CSRF 攻击时，客户端应该总是传递 CSRF 令牌。因此，让我们在`user.jsp` 中添加一个隐藏字段，在每个请求中添加一个 CSRF 令牌:
 
-```
+```java
 <input type="hidden" name="${mvc.csrf.name}" value="${mvc.csrf.token}"/>
 ```
 
 类似地，现在让我们开发一个 [REST API](/web/20221221020726/https://www.baeldung.com/jax-rs-spec-and-implementations) :
 
-```
+```java
 @GET
 @Produces(MediaType.APPLICATION_JSON)
 public List<User> getUsers() {

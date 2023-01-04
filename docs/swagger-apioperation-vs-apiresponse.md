@@ -18,7 +18,7 @@ Swagger 规范是记录 REST APIs 的标准。使用 Swagger 规范，我们可�
 
 Swagger 提供了各种注释，可以帮助我们记录 REST API。此外，**为我们的 REST API** 提供了`@ApiOperation`和`@ApiResponse`注释来记录响应。在本教程的剩余部分，我们将使用下面的控制器类，看看如何使用这些注释:
 
-```
+```java
 @RestController
 @RequestMapping("/customers")
 class CustomerController {
@@ -44,7 +44,7 @@ class CustomerController {
 
 让我们给我们的方法添加注释:
 
-```
+```java
 @ApiOperation(value = "Gets customer by ID", 
         response = CustomerResponse.class, 
         notes = "Customer must exist")
@@ -62,7 +62,7 @@ public ResponseEntity<CustomerResponse> getCustomer(@PathVariable("id") Long id)
 
 下面是我们如何在`@ApiOperation`注释中定义 value 属性:
 
-```
+```java
 @ApiOperation(value = "Gets customer by ID")
 ```
 
@@ -70,7 +70,7 @@ public ResponseEntity<CustomerResponse> getCustomer(@PathVariable("id") Long id)
 
 使用`notes`，我们可以提供关于操作的更多细节。例如，我们可以放置描述端点限制的文本:
 
-```
+```java
 @ApiOperation(value = "Gets customer by ID", notes = "Customer must exist")
 ```
 
@@ -80,7 +80,7 @@ public ResponseEntity<CustomerResponse> getCustomer(@PathVariable("id") Long id)
 
 让我们创建一个类来表示我们的方法返回的成功响应:
 
-```
+```java
 class CustomerResponse {
 
    private Long id;
@@ -93,7 +93,7 @@ class CustomerResponse {
 
 接下来，让我们将`response`属性添加到注释中:
 
-```
+```java
 @ApiOperation(value = "Gets customer by ID",
         response = CustomerResponse.class,
         notes = "Customer must exist")
@@ -119,7 +119,7 @@ code 属性表示响应代码的 HTTP 状态。 [HTTP 状态码](https://web.arc
 
 让我们在方法上定义`@ApiResponses`和`@ApiResponse`注释:
 
-```
+```java
 @ApiResponses(value = {
         @ApiResponse(code = 400, message = "Invalid ID supplied"),
         @ApiResponse(code = 404, message = "Customer not found")})
@@ -131,7 +131,7 @@ public ResponseEntity<CustomerResponse> getCustomer(@PathVariable("id") Long id)
 
 我们也可以使用注释来指定成功响应:
 
-```
+```java
 @ApiOperation(value = "Gets customer by ID", notes = "Customer must exist")
 @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK", response = CustomerResponse.class),
@@ -156,7 +156,7 @@ public ResponseEntity<CustomerResponse> getCustomer(@PathVariable("id") Long id)
 
 消息属性通常包含伴随响应的可读消息:
 
-```
+```java
 @ApiResponse(code = 400, message = "Invalid ID supplied")
 ```
 
@@ -166,7 +166,7 @@ public ResponseEntity<CustomerResponse> getCustomer(@PathVariable("id") Long id)
 
 首先，让我们定义一个在内部服务器出错时返回的类:
 
-```
+```java
 class ErrorResponse {
 
     private String error;
@@ -178,7 +178,7 @@ class ErrorResponse {
 
 其次，让我们为内部服务器错误添加一个新的`@ApiResponse`:
 
-```
+```java
 @ApiResponses(value = {
         @ApiResponse(code = 400, message = "Invalid ID supplied"),
         @ApiResponse(code = 404, message = "Customer not found"),

@@ -16,7 +16,7 @@ Base64 是一种文本编码方案，为应用程序和平台之间的二进制�
 
 我们将使用 [Apache IOUtils](https://web.archive.org/web/20220810181340/https://mvnrepository.com/artifact/commons-io/commons-io/2.11.0) 库，通过将它的依赖项添加到我们的`pom.xml`来方便地访问测试数据文件:
 
-```
+```java
 <dependency>
     <groupId>commons-io</groupId>
     <artifactId>commons-io</artifactId>
@@ -38,7 +38,7 @@ Base64 是一种文本编码方案，为应用程序和平台之间的二进制�
 
 首先，我们将编写一个简单的方法来生成“穷人的”校验和:
 
-```
+```java
 int calculateChecksum(byte[] bytes) {
     int checksum = 0; 
     for (int index = 0; index < bytes.length; index++) {
@@ -52,7 +52,7 @@ int calculateChecksum(byte[] bytes) {
 
 接下来的几行打开文件，将其转换成一个字节数组，然后 Base64 编码成一个`String`:
 
-```
+```java
 InputStream sourceStream  = getClass().getClassLoader().getResourceAsStream("logo.png");
 byte[] sourceBytes = IOUtils.toByteArray(sourceStream);
 
@@ -62,7 +62,7 @@ assertNotNull(encodedString);
 
 该字符串看起来像一组随机字符。事实上，它不是随机的，正如我们在验证步骤中看到的:
 
-```
+```java
 byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
 assertNotNull(decodedBytes);
 assertTrue(decodedBytes.length == sourceBytes.length);

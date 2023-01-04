@@ -26,7 +26,7 @@ Spring 提供了一些从其`Controller`类返回自定义状态代码的主要�
 
 在标准的 Spring MVC 控制器中，我们将定义一个简单的映射:
 
-```
+```java
 @RequestMapping(value = "/controller", method = RequestMethod.GET)
 @ResponseBody
 public ResponseEntity sendViaResponseEntity() {
@@ -40,7 +40,7 @@ public ResponseEntity sendViaResponseEntity() {
 
 我们将向控制器添加第二个方法来演示如何使用`Exception`返回状态代码:
 
-```
+```java
 @RequestMapping(value = "/exception", method = RequestMethod.GET)
 @ResponseBody
 public ResponseEntity sendViaException() {
@@ -50,7 +50,7 @@ public ResponseEntity sendViaException() {
 
 在收到对`/exception`的 GET 请求时，Spring 会抛出一个`ForbiddenException`。这是一个自定义异常，我们将在单独的类中定义它:
 
-```
+```java
 @ResponseStatus(HttpStatus.FORBIDDEN)
 public class ForbiddenException extends RuntimeException {}
 ```
@@ -61,7 +61,7 @@ public class ForbiddenException extends RuntimeException {}
 
 在这种情况下，该类如下所示:
 
-```
+```java
 @ResponseStatus(value = HttpStatus.FORBIDDEN, reason="To show an example of a custom message")
 public class ForbiddenException extends RuntimeException {}
 ```

@@ -30,7 +30,7 @@ Axon Framework 帮助我们构建事件驱动的微服务系统。在[Axon 框�
 
 Axon 使用强类型类来表示查询类型并封装查询参数。在本例中，由于我们正在查询所有订单，因此不需要任何查询参数。因此，我们可以用一个空类来表示我们的查询:
 
-```
+```java
 public class FindAllOrderedProductsQuery {}
 ```
 
@@ -40,7 +40,7 @@ public class FindAllOrderedProductsQuery {}
 
 让我们为查询处理程序创建一个类，并添加一个可以支持`FindAllOrderedProductsQuery`查询的处理程序:
 
-```
+```java
 @Service
 public class InMemoryOrdersEventHandler implements OrdersEventHandler {
     private final Map<String, Order> orders = new HashMap<>();
@@ -63,7 +63,7 @@ public class InMemoryOrdersEventHandler implements OrdersEventHandler {
 
 现在我们已经定义了一个查询类型和一个查询处理程序，我们准备向 Axon 发送一个`FindAllOrderedProductsQuery`。让我们用发出点对点`FindAllOrderedProductsQuery`的方法创建一个服务类:
 
-```
+```java
 @Service
 public class OrderQueryService {
     private final QueryGateway queryGateway;
@@ -90,7 +90,7 @@ public class OrderQueryService {
 
 我们将使用 [`@SpringBootTest`](/web/20220909152418/https://www.baeldung.com/spring-boot-testing#integration-testing-with-springboottest) 来测试我们使用 Axon 集成的查询。让我们从将[弹簧测试](https://web.archive.org/web/20220909152418/https://search.maven.org/search?q=g:org.springframework%20a:spring-test)依赖项添加到我们的`pom.xml`文件开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-test</artifactId>
@@ -100,7 +100,7 @@ public class OrderQueryService {
 
 接下来，让我们添加一个调用我们的服务方法来检索`Order`的测试:
 
-```
+```java
 @SpringBootTest(classes = OrderApplication.class)
 class OrderQueryServiceIntegrationTest {
 
@@ -146,7 +146,7 @@ class OrderQueryServiceIntegrationTest {
 
 与我们的点对点查询不同，这次我们需要提供一个参数:产品 ID。**我们将使用我们的产品 ID 参数**创建一个 [POJO](/web/20220909152418/https://www.baeldung.com/java-pojo-class) ，而不是一个空类
 
-```
+```java
 public class TotalProductsShippedQuery {
     private final String productId;
 
@@ -162,7 +162,7 @@ public class TotalProductsShippedQuery {
 
 首先，我们将查询基于事件的系统，我们会记得，该系统使用内存中的数据存储。让我们向现有的`InMemoryOrdersEventHandler` 添加一个查询处理程序，以获得发货产品的总数:
 
-```
+```java
 @QueryHandler
 public Integer handle(TotalProductsShippedQuery query) {
     return orders.values().stream()
@@ -176,7 +176,7 @@ public Integer handle(TotalProductsShippedQuery query) {
 
 因为我们希望将这些结果与我们假设的遗留系统中的数字结合起来，所以让我们用一个单独的类和查询处理程序来模拟遗留数据:
 
-```
+```java
 @Service
 public class LegacyQueryHandler {
     @QueryHandler
@@ -199,7 +199,7 @@ public class LegacyQueryHandler {
 
 让我们为我们的`OrderQueryService`添加一个新方法来分派一个分散-聚集查询:
 
-```
+```java
 public Integer totalShipped(String productId) {
     return queryGateway.scatterGather(new TotalProductsShippedQuery(productId),
         ResponseTypes.instanceOf(Integer.class), 10L, TimeUnit.SECONDS)
@@ -213,7 +213,7 @@ public Integer totalShipped(String productId) {
 
 让我们为我们的`OrderQueryServiceIntegrationTest`添加一个测试:
 
-```
+```java
 void givenThreeDeluxeChairsShipped_whenCallingAllShippedChairs_then234PlusTreeIsReturned() {
     Order order = new Order(orderId);
     order.getProducts().put("Deluxe Chair", 3);
@@ -234,7 +234,7 @@ void givenThreeDeluxeChairsShipped_whenCallingAllShippedChairs_then234PlusTreeIs
 
 因为我们想要检索一个特定的订单，所以让我们创建一个查询类，其中包含一个订单 ID 作为它的唯一参数:
 
-```
+```java
 public class OrderUpdatesQuery {
     private final String orderId;
 
@@ -250,7 +250,7 @@ public class OrderUpdatesQuery {
 
 从内存映射中检索`Order`的查询处理程序非常简单。让我们将它添加到我们的`InMemoryOrdersEventHandler`类中:
 
-```
+```java
 @QueryHandler
 public Order handle(OrderUpdatesQuery query) {
     return orders.get(query.getOrderId());
@@ -261,7 +261,7 @@ public Order handle(OrderUpdatesQuery query) {
 
 订阅查询只有在有更新时才有意义。 **Axon Framework 提供了一个`QueryUpdateEmitter`类，我们可以用它来通知 Axon 应该如何以及何时更新订阅。**让我们将发射器注入到我们的`InMemoryOrdersEventHandler`类中，并以一种方便的方法使用它:
 
-```
+```java
 @Service
 public class InMemoryOrdersEventHandler implements OrdersEventHandler {
 
@@ -284,7 +284,7 @@ public class InMemoryOrdersEventHandler implements OrdersEventHandler {
 
 我们现在可以在任何修改订单的事件处理程序中使用我们的`emitUpdate()`方法。例如，如果订单已发货，则应该通知该订单的任何活动更新订阅。让我们为[前一篇文章](/web/20220909152418/https://www.baeldung.com/axon-cqrs-event-sourcing)中涉及的`OrderShippedEvent`创建一个事件处理程序，并让它发出对已发货订单的更新:
 
-```
+```java
 @Service
 public class InMemoryOrdersEventHandler implements OrdersEventHandler {
     @EventHandler
@@ -308,7 +308,7 @@ public class InMemoryOrdersEventHandler implements OrdersEventHandler {
 
 让我们将[依赖项](https://web.archive.org/web/20220909152418/https://search.maven.org/search?q=g:io.projectreactor%20a:reactor-core)添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>io.projectreactor</groupId>
     <artifactId>reactor-core</artifactId>
@@ -317,7 +317,7 @@ public class InMemoryOrdersEventHandler implements OrdersEventHandler {
 
 现在，让我们将我们的服务方法实现添加到`OrderQueryService`:
 
-```
+```java
 public class OrderQueryService {
     public Flux<OrderResponse> orderUpdates(String orderId) {
         return subscriptionQuery(new OrderUpdatesQuery(orderId), ResponseTypes.instanceOf(Order.class))
@@ -352,7 +352,7 @@ public class OrderQueryService {
 
 为了帮助我们测试返回`Flux`的服务方法，我们将使用从 [reactor-test](https://web.archive.org/web/20220909152418/https://search.maven.org/search?q=g:io.projectreactor%20a:reactor-test) 依赖关系中获得的`StepVerifier` 类:
 
-```
+```java
 <dependency>
     <groupId>io.projectreactor</groupId>
     <artifactId>reactor-test</artifactId>
@@ -362,7 +362,7 @@ public class OrderQueryService {
 
 让我们添加我们的测试:
 
-```
+```java
 class OrderQueryServiceIntegrationTest {
     @Test
     void givenOrdersAreUpdated_whenCallingOrderUpdates_thenUpdatesReturned() {

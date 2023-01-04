@@ -26,7 +26,7 @@ Learn how to configure your Spring Boot application's main class in Maven and Gr
 
 让我们看一个现实生活中的例子:
 
-```
+```java
 @Component
 public class InvalidInitExampleBean {
 
@@ -49,7 +49,7 @@ public class InvalidInitExampleBean {
 
 下面是`@PostConstruct`的行动:
 
-```
+```java
 @Component
 public class PostConstructExampleBean {
 
@@ -74,7 +74,7 @@ public class PostConstructExampleBean {
 
 这里我们使用`InitializingBean`接口实现了前面的例子:
 
-```
+```java
 @Component
 public class InitializingBeanExampleBean implements InitializingBean {
 
@@ -97,7 +97,7 @@ public class InitializingBeanExampleBean implements InitializingBean {
 
 为此，我们需要创建一个实现`ApplicationListener<ContextRefreshedEvent>`接口的 bean:
 
-```
+```java
 @Component
 public class StartupApplicationListenerExample implements 
   ApplicationListener<ContextRefreshedEvent> {
@@ -116,7 +116,7 @@ public class StartupApplicationListenerExample implements
 
 我们可以通过使用新引入的`@EventListener`注释得到相同的结果:
 
-```
+```java
 @Component
 public class EventListenerExampleBean {
 
@@ -141,7 +141,7 @@ public class EventListenerExampleBean {
 
 这是一颗豆子的样子:
 
-```
+```java
 public class InitMethodExampleBean {
 
     private static final Logger LOG = Logger.getLogger(InitMethodExampleBean.class);
@@ -159,7 +159,7 @@ public class InitMethodExampleBean {
 
 然后我们可以使用`@Bean`注释来定义 bean:
 
-```
+```java
 @Bean(initMethod="init")
 public InitMethodExampleBean initMethodExampleBean() {
     return new InitMethodExampleBean();
@@ -168,7 +168,7 @@ public InitMethodExampleBean initMethodExampleBean() {
 
 XML 配置中的 bean 定义是这样的:
 
-```
+```java
 <bean id="initMethodExampleBean"
   class="com.baeldung.startup.InitMethodExampleBean"
   init-method="init">
@@ -179,7 +179,7 @@ XML 配置中的 bean 定义是这样的:
 
 如果我们使用构造函数注入来注入字段，我们可以简单地在构造函数中包含我们的逻辑:
 
-```
+```java
 @Component 
 public class LogicInConstructorExampleBean {
 
@@ -202,7 +202,7 @@ Spring Boot 提供了一个带有回调`run()`方法的`CommandLineRunner`接口
 
 让我们看一个例子:
 
-```
+```java
 @Component
 public class CommandLineAppStartupRunner implements CommandLineRunner {
     private static final Logger LOG =
@@ -228,7 +228,7 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
 
 让我们看一个例子:
 
-```
+```java
 @Component
 public class AppStartupRunner implements ApplicationRunner {
     private static final Logger LOG =
@@ -259,7 +259,7 @@ public class AppStartupRunner implements ApplicationRunner {
 
 让我们创建一个结合了所有机制的 Spring bean:
 
-```
+```java
 @Component
 @Scope(value = "prototype")
 public class AllStrategiesExampleBean implements InitializingBean {
@@ -289,7 +289,7 @@ public class AllStrategiesExampleBean implements InitializingBean {
 
 如果我们尝试实例化这个 bean，我们可以看到与上面指定的顺序相匹配的日志:
 
-```
+```java
 [main] INFO o.b.startup.AllStrategiesExampleBean - Constructor
 [main] INFO o.b.startup.AllStrategiesExampleBean - PostConstruct
 [main] INFO o.b.startup.AllStrategiesExampleBean - InitializingBean

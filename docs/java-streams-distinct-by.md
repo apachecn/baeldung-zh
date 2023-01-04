@@ -18,7 +18,7 @@ Stream API 提供了基于`Object`类的`equals()`方法返回列表中不同元
 
 一个可能的解决方案是实现一个有状态的`Predicate:`
 
-```
+```java
 public static <T> Predicate<T> distinctByKey(
     Function<? super T, ?> keyExtractor) {
 
@@ -29,7 +29,7 @@ public static <T> Predicate<T> distinctByKey(
 
 为了测试它，我们将使用下面的`Person`类，它具有属性`age`、`email`和`name:`
 
-```
+```java
 public class Person { 
     private int age; 
     private String name; 
@@ -40,7 +40,7 @@ public class Person {
 
 为了通过`name`获得新的过滤集合，我们可以使用:
 
-```
+```java
 List<Person> personListFiltered = personList.stream() 
   .filter(distinctByKey(p -> p.getName())) 
   .collect(Collectors.toList());
@@ -56,14 +56,14 @@ List<Person> personListFiltered = personList.stream()
 
 如果我们想按`Person's`名称过滤:
 
-```
+```java
 List<Person> personListFiltered = ListIterate
   .distinct(personList, HashingStrategies.fromFunction(Person::getName));
 ```
 
 或者，如果我们要使用的属性是 primitive (int，long，double)，我们可以使用这样一个专门的函数:
 
-```
+```java
 List<Person> personListFiltered = ListIterate.distinct(
   personList, HashingStrategies.fromIntFunction(Person::getAge));
 ```
@@ -72,7 +72,7 @@ List<Person> personListFiltered = ListIterate.distinct(
 
 我们需要将以下依赖项添加到我们的`pom.xml`中，以便在我们的项目中使用 Eclipse 集合:
 
-```
+```java
 <dependency> 
     <groupId>org.eclipse.collections</groupId> 
     <artifactId>eclipse-collections</artifactId> 
@@ -92,7 +92,7 @@ List<Person> personListFiltered = ListIterate.distinct(
 
 为了过滤列表，这个类提供了自己的 List 类，它有一个`distinctBy()`方法，允许我们根据它包含的对象的属性进行过滤:
 
-```
+```java
 List<Person> personListFiltered = List.ofAll(personList)
   .distinctBy(Person::getName)
   .toJavaList();
@@ -102,7 +102,7 @@ List<Person> personListFiltered = List.ofAll(personList)
 
 我们将把下面的依赖项添加到我们的`pom.xml`中，以便在我们的项目中使用 Vavr。
 
-```
+```java
 <dependency> 
     <groupId>io.vavr</groupId> 
     <artifactId>vavr</artifactId> 
@@ -122,7 +122,7 @@ List<Person> personListFiltered = List.ofAll(personList)
 
 在提供的类中有`StreamEx`，它有`distinct`方法，我们可以向它发送一个对我们想要区分的属性的引用:
 
-```
+```java
 List<Person> personListFiltered = StreamEx.of(personList)
   .distinct(Person::getName)
   .toList();
@@ -132,7 +132,7 @@ List<Person> personListFiltered = StreamEx.of(personList)
 
 我们将把下面的依赖项添加到我们的`pom.xml`中，以便在我们的项目中使用 StreamEx。
 
-```
+```java
 <dependency> 
     <groupId>one.util</groupId> 
     <artifactId>streamex</artifactId> 

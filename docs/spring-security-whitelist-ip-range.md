@@ -16,7 +16,7 @@
 
 下面是一个使用`hasIpAddress()`的简单安全配置:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 如果我们希望拥有“11 . 11 . 11 . 11”IP 的用户首先登录，我们可以在以下形式的表达式中使用该方法:
 
-```
+```java
 //...
 .antMatchers("/foos/**")
 .access("isAuthenticated() and hasIpAddress('11.11.11.11')")
@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 我们在这里也将使用`hasIpAddress()`:
 
-```
+```java
 <security:http>
     <security:form-login/>
     <security:intercept-url pattern="/login" access="permitAll()" />
@@ -72,7 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 首先，我们将确保任何用户登录后都可以访问主页:
 
-```
+```java
 @Test
 public void givenUser_whenGetHomePage_thenOK() {
     Response response = RestAssured.given().auth().form("john", "123")
@@ -85,7 +85,7 @@ public void givenUser_whenGetHomePage_thenOK() {
 
 接下来，我们将确保即使经过身份验证的用户也无法访问“/foos”资源，除非他们的 IP 被列入白名单:
 
-```
+```java
 @Test
 public void givenUserWithWrongIP_whenGetFooById_thenForbidden() {
     Response response = RestAssured.given().auth().form("john", "123")
@@ -106,7 +106,7 @@ public void givenUserWithWrongIP_whenGetFooById_thenForbidden() {
 
 在以下示例中，我们将多个 IP 地址列入白名单，只有来自这些 IP 地址的用户才能登录我们的系统:
 
-```
+```java
 @Component
 public class CustomIpAuthenticationProvider implements AuthenticationProvider {
 
@@ -130,7 +130,7 @@ public class CustomIpAuthenticationProvider implements AuthenticationProvider {
 
 现在，我们将在安全配置中使用我们的`CustomIpAuthenticationProvider`:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {

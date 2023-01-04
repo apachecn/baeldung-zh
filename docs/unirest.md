@@ -12,7 +12,7 @@ Unirest 是 Mashape 的一个轻量级 HTTP 客户端库。除了 Java，Node.js
 
 首先，让我们添加必要的依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.mashape.unirest</groupId>
     <artifactId>unirest-java</artifactId>
@@ -26,7 +26,7 @@ Unirest 是 Mashape 的一个轻量级 HTTP 客户端库。除了 Java，Node.js
 
 让我们发送一个简单的 HTTP 请求，以理解框架的语义:
 
-```
+```java
 @Test
 public void shouldReturnStatusOkay() {
     HttpResponse<JsonNode> jsonResponse 
@@ -47,7 +47,7 @@ public void shouldReturnStatusOkay() {
 
 为了传递多个标题或字段，我们可以创建一个映射，并将它们分别传递给`.headers(Map<String, Object> headers)`和`.fields(Map<String, String> fields)`:
 
-```
+```java
 @Test
 public void shouldReturnStatusAccepted() {
     Map<String, String> headers = new HashMap<>();
@@ -72,7 +72,7 @@ public void shouldReturnStatusAccepted() {
 
 为了将数据作为查询`String,`传递，我们将使用`queryString()` 方法:
 
-```
+```java
 HttpResponse<JsonNode> jsonResponse 
   = Unirest.get("http://www.mocky.io/v2/5a9ce37b3100004f00ab5154")
   .queryString("apiKey", "123")
@@ -82,7 +82,7 @@ HttpResponse<JsonNode> jsonResponse
 
 对于传递任何 URL 参数，我们可以使用`routeParam()`方法:
 
-```
+```java
 HttpResponse<JsonNode> jsonResponse 
   = Unirest.get("http://www.mocky.io/v2/5a9ce37b3100004f00ab5154/{userId}")
   .routeParam("userId", "123")
@@ -94,7 +94,7 @@ HttpResponse<JsonNode> jsonResponse
 
 如果我们的请求需要一个 string/JSON 主体，我们使用`body()`方法传递它:
 
-```
+```java
 @Test
 public void givenRequestBodyWhenCreatedThenCorrect() {
 
@@ -113,7 +113,7 @@ public void givenRequestBodyWhenCreatedThenCorrect() {
 
 让我们首先将以下依赖项添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -125,7 +125,7 @@ public void givenRequestBodyWhenCreatedThenCorrect() {
 
 现在让我们配置我们的映射器:
 
-```
+```java
 Unirest.setObjectMapper(new ObjectMapper() {
     com.fasterxml.jackson.databind.ObjectMapper mapper 
       = new com.fasterxml.jackson.databind.ObjectMapper();
@@ -144,7 +144,7 @@ Unirest.setObjectMapper(new ObjectMapper() {
 
 现在让我们使用一个定制的`Article`对象来测试新功能:
 
-```
+```java
 @Test
 public void givenArticleWhenCreatedThenCorrect() {
     Article article 
@@ -164,37 +164,37 @@ public void givenArticleWhenCreatedThenCorrect() {
 
 帖子:
 
-```
+```java
 Unirest.post("http://www.mocky.io/v2/5a9ce7663100006800ab515d")
 ```
 
 放:
 
-```
+```java
 Unirest.put("http://www.mocky.io/v2/5a9ce7663100006800ab515d")
 ```
 
 获取:
 
-```
+```java
 Unirest.get("http://www.mocky.io/v2/5a9ce7663100006800ab515d")
 ```
 
 删除:
 
-```
+```java
 Unirest.delete("http://www.mocky.io/v2/5a9ce7663100006800ab515d")
 ```
 
 补丁:
 
-```
+```java
 Unirest.patch("http://www.mocky.io/v2/5a9ce7663100006800ab515d")
 ```
 
 选项:
 
-```
+```java
 Unirest.options("http://www.mocky.io/v2/5a9ce7663100006800ab515d")
 ```
 
@@ -202,7 +202,7 @@ Unirest.options("http://www.mocky.io/v2/5a9ce7663100006800ab515d")
 
 一旦我们得到响应，让我们检查状态代码和状态消息:
 
-```
+```java
 //...
 jsonResponse.getStatus()
 
@@ -211,7 +211,7 @@ jsonResponse.getStatus()
 
 提取邮件头:
 
-```
+```java
 //...
 jsonResponse.getHeaders();
 //...
@@ -219,7 +219,7 @@ jsonResponse.getHeaders();
 
 获取响应正文:
 
-```
+```java
 //...
 jsonResponse.getBody();
 jsonResponse.getRawBody();
@@ -232,7 +232,7 @@ jsonResponse.getRawBody();
 
 Unirest 还能够处理异步请求——使用`java.util.concurrent.Future` 和回调方法:
 
-```
+```java
 @Test
 public void whenAysncRequestShouldReturnOk() {
     Future<HttpResponse<JsonNode>> future = Unirest.post(
@@ -265,7 +265,7 @@ public void whenAysncRequestShouldReturnOk() {
 
 要上传或发送文件作为请求的一部分，将一个`java.io.File` 对象作为一个名为 file:
 
-```
+```java
 @Test
 public void givenFileWhenUploadedThenCorrect() {
 
@@ -280,7 +280,7 @@ public void givenFileWhenUploadedThenCorrect() {
 
 我们也可以使用`ByteStream:`
 
-```
+```java
 @Test
 public void givenByteStreamWhenUploadedThenCorrect() {
     try (InputStream inputStream = new FileInputStream(
@@ -299,7 +299,7 @@ public void givenByteStreamWhenUploadedThenCorrect() {
 
 或者直接使用输入流，在`fields()` 方法中添加`ContentType.APPLICATION_OCTET_STREAM` 作为第二个参数:
 
-```
+```java
 @Test
 public void givenInputStreamWhenUploadedThenCorrect() {
     try (InputStream inputStream = new FileInputStream(
@@ -320,13 +320,13 @@ public void givenInputStreamWhenUploadedThenCorrect() {
 
 让我们设置每条路由的连接数和最大连接数:
 
-```
+```java
 Unirest.setConcurrency(20, 5);
 ```
 
 配置连接和套接字超时:
 
-```
+```java
 Unirest.setTimeouts(20000, 15000);
 ```
 
@@ -334,26 +334,26 @@ Unirest.setTimeouts(20000, 15000);
 
 现在让我们为所有请求设置 HTTP 头:
 
-```
+```java
 Unirest.setDefaultHeader("X-app-name", "baeldung-unirest");
 Unirest.setDefaultHeader("X-request-id", "100004f00ab5");
 ```
 
 我们可以随时清除全局标题:
 
-```
+```java
 Unirest.clearDefaultHeaders();
 ```
 
 在某些时候，我们可能需要通过代理服务器发出请求:
 
-```
+```java
 Unirest.setProxy(new HttpHost("localhost", 8080));
 ```
 
 需要注意的一个重要方面是优雅地关闭或退出应用程序。Unirest 产生一个后台事件循环来处理操作，我们需要在退出应用程序之前关闭该循环:
 
-```
+```java
 Unirest.shutdown();
 ```
 

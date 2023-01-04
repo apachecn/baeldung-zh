@@ -22,7 +22,7 @@ Spring 安全核心异常如`AuthenticationException`和`AccessDeniedException`�
 
 让我们实现`AuthenticationEntryPoint`并覆盖`commence()`方法:
 
-```
+```java
 @Component("customAuthenticationEntryPoint")
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
@@ -47,7 +47,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
 接下来，让我们配置`SecurityConfig`来截取认证路径。这里我们将配置'`/login`'作为上述实现的路径。此外，我们将为“管理员”用户配置“管理员”角色:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class CustomSecurityConfig {
@@ -89,7 +89,7 @@ public class CustomSecurityConfig {
 
 现在，让我们编写一个监听这个端点'/login '的 rest 控制器:
 
-```
+```java
 @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
 public ResponseEntity<RestResponse> login() {
     return ResponseEntity.ok(new RestResponse("Success"));
@@ -102,7 +102,7 @@ public ResponseEntity<RestResponse> login() {
 
 首先，让我们编写一个成功认证的测试用例:
 
-```
+```java
 @Test
 @WithMockUser(username = "admin", roles = { "ADMIN" })
 public void whenUserAccessLogin_shouldSucceed() throws Exception {
@@ -115,7 +115,7 @@ public void whenUserAccessLogin_shouldSucceed() throws Exception {
 
 接下来，我们来看一个身份验证失败的场景:
 
-```
+```java
 @Test
 public void whenUserAccessWithWrongCredentialsWithDelegatedEntryPoint_shouldFail() throws Exception {
     RestError re = new RestError(HttpStatus.UNAUTHORIZED.toString(), "Authentication failed");
@@ -137,7 +137,7 @@ public void whenUserAccessWithWrongCredentialsWithDelegatedEntryPoint_shouldFail
 
 类似于上面的方法，我们将实现`AuthenticationEntryPoint`，然后将异常处理程序委托给`HandlerExceptionResolver`:
 
-```
+```java
 @Component("delegatedAuthenticationEntryPoint")
 public class DelegatedAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
@@ -159,7 +159,7 @@ public class DelegatedAuthenticationEntryPoint implements AuthenticationEntryPoi
 
 现在，对于[异常处理程序](/web/20221128045922/https://www.baeldung.com/exception-handling-for-rest-with-spring)的主配置，我们将扩展`ResponseEntityExceptionHandler`并用`@ControllerAdvice`注释这个类:
 
-```
+```java
 @ControllerAdvice
 public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -178,7 +178,7 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
 
 现在，让我们为这个委托身份验证入口点编写一个安全配置:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class DelegatedSecurityConfig {
@@ -220,7 +220,7 @@ public class DelegatedSecurityConfig {
 
 让我们为'`/login-handler`'端点配置 rest 控制器:
 
-```
+```java
 @PostMapping(value = "/login-handler", produces = MediaType.APPLICATION_JSON_VALUE)
 public ResponseEntity<RestResponse> loginWithExceptionHandler() {
     return ResponseEntity.ok(new RestResponse("Success"));
@@ -231,7 +231,7 @@ public ResponseEntity<RestResponse> loginWithExceptionHandler() {
 
 现在让我们测试这个端点:
 
-```
+```java
 @Test
 @WithMockUser(username = "admin", roles = { "ADMIN" })
 public void whenUserAccessLogin_shouldSucceed() throws Exception {

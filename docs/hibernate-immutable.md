@@ -12,7 +12,7 @@
 
 为了启动并运行我们的项目，我们首先需要将必要的依赖项添加到我们的`pom.xml`中。当我们使用 Hibernate 时，我们将添加相应的[依赖关系](https://web.archive.org/web/20220524113602/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.hibernate%22%20AND%20a%3A%22hibernate-core%22):
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>
@@ -22,7 +22,7 @@
 
 而且，因为我们使用的是 [HSQLDB](https://web.archive.org/web/20220524113602/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.hsqldb%22%20AND%20a%3A%22hsqldb%22) ，我们还需要:
 
-```
+```java
 <dependency>
     <groupId>org.hsqldb</groupId>
     <artifactId>hsqldb</artifactId>
@@ -34,7 +34,7 @@
 
 首先，让我们定义一个简单的实体类:
 
-```
+```java
 @Entity
 @Immutable
 @Table(name = "events_generated")
@@ -57,7 +57,7 @@ public class EventGeneratedId {
 
 正如你已经注意到的，我们已经向我们的实体添加了`@Immutable`注释，所以如果我们试图保存一个`Event`:
 
-```
+```java
 @Test
 public void addEvent() {
     Event event = new Event();
@@ -71,7 +71,7 @@ public void addEvent() {
 
 那么我们应该得到输出:
 
-```
+```java
 Hibernate: insert into events (title, event_id) values (?, ?)
 ```
 
@@ -83,7 +83,7 @@ Hibernate: insert into events (title, event_id) values (?, ?)
 
 现在，保存实体没有问题，让我们尝试更新它:
 
-```
+```java
 @Test
 public void updateEvent() {
     Event event = (Event) session.createQuery(
@@ -96,7 +96,7 @@ public void updateEvent() {
 
 Hibernate 将简单地忽略`update` 操作，而不会抛出异常。然而，如果我们移除`@Immutable`注释，我们会得到不同的结果:
 
-```
+```java
 Hibernate: select ... from events where title='My Event'
 Hibernate: update events set title=? where event_id=?
 ```
@@ -107,7 +107,7 @@ Hibernate: update events set title=? where event_id=?
 
 在删除实体时:
 
-```
+```java
 @Test
 public void deleteEvent() {
     Event event = (Event) session.createQuery(
@@ -119,7 +119,7 @@ public void deleteEvent() {
 
 我们将能够执行删除，不管它是否可变:
 
-```
+```java
 Hibernate: select ... from events where title='My Event'
 Hibernate: delete from events where event_id=?
 ```
@@ -130,7 +130,7 @@ Hibernate: delete from events where event_id=?
 
 首先，让我们向我们的`Event`类添加一个集合:
 
-```
+```java
 @Immutable
 public Set<String> getGuestList() {
     return guestList;
@@ -139,7 +139,7 @@ public Set<String> getGuestList() {
 
 和以前一样，我们已经预先添加了注释，所以如果我们继续尝试向我们的集合添加一个元素:
 
-```
+```java
 org.hibernate.HibernateException: 
   changed an immutable collection instance: [com.baeldung.entities.Event.guestList#1]
 ```
@@ -152,7 +152,7 @@ org.hibernate.HibernateException:
 
 因此，每当`@Immutable`出现并且我们试图删除:
 
-```
+```java
 @Test
 public void deleteCascade() {
     Event event = (Event) session.createQuery(
@@ -166,7 +166,7 @@ public void deleteCascade() {
 
 输出:
 
-```
+```java
 org.hibernate.HibernateException: 
   changed an immutable collection instance:
   [com.baeldung.entities.Event.guestList#1]
@@ -176,7 +176,7 @@ org.hibernate.HibernateException:
 
 最后，还可以使用 XML 通过`mutable=false`属性来完成配置:
 
-```
+```java
 <hibernate-mapping>
     <class name="com.baeldung.entities.Event" mutable="false">
         <id name="id" column="event_id">

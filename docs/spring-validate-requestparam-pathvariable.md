@@ -14,7 +14,7 @@
 
 要使用 Java 验证 API，我们必须添加一个 JSR 303 实现，如`[hibernate-validator](https://web.archive.org/web/20220628065527/https://search.maven.org/search?q=a:hibernate-validator%20AND%20g:org.hibernate.validator)`:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate.validator</groupId>
     <artifactId>hibernate-validator</artifactId>
@@ -24,7 +24,7 @@
 
 另外，**我们必须通过添加`@Validated` 注释**来启用控制器中请求参数和路径变量的验证:
 
-```
+```java
 @RestController
 @RequestMapping("/")
 @Validated
@@ -37,7 +37,7 @@ public class Controller {
 
 否则，在标准的 Spring 应用程序中，我们必须显式地添加这个 bean:
 
-```
+```java
 @EnableWebMvc
 @Configuration
 @ComponentScan("com.baeldung.spring")
@@ -56,7 +56,7 @@ public class ClientWebConfigJava implements WebMvcConfigurer {
 
 让我们考虑一个例子，其中我们将一个数字工作日作为请求参数传递给控制器方法:
 
-```
+```java
 @GetMapping("/name-for-day")
 public String getNameOfDayByNumber(@RequestParam Integer dayOfWeek) {
     // ...
@@ -65,7 +65,7 @@ public String getNameOfDayByNumber(@RequestParam Integer dayOfWeek) {
 
 我们的目标是确保`dayOfWeek`的值在 1 到 7 之间。为此，我们将使用`@Min`和`@Max`注释:
 
-```
+```java
 @GetMapping("/name-for-day")
 public String getNameOfDayByNumber(@RequestParam @Min(1) @Max(7) Integer dayOfWeek) {
     // ...
@@ -76,13 +76,13 @@ public String getNameOfDayByNumber(@RequestParam @Min(1) @Max(7) Integer dayOfWe
 
 例如，如果我们调用 [http:// `localhost:8080/name-for-day?dayOfWeek=24`](https://web.archive.org/web/20220628065527/http://localhost:8080/name-for-day?dayOfWeek=24) ，响应消息将是:
 
-```
+```java
 getNameOfDayByNumber.dayOfWeek: must be less than or equal to 7
 ```
 
 我们可以通过添加自定义消息来更改默认消息:
 
-```
+```java
 @Max(value = 1, message = “day number has to be less than or equal to 7”)
 ```
 
@@ -92,7 +92,7 @@ getNameOfDayByNumber.dayOfWeek: must be less than or equal to 7
 
 让我们考虑一个例子，其中我们验证一个字符串参数不为空，并且长度小于或等于 10:
 
-```
+```java
 @GetMapping("/valid-name/{name}")
 public void createUsername(@PathVariable("name") @NotBlank @Size(max = 10) String username) {
     // ...
@@ -101,7 +101,7 @@ public void createUsername(@PathVariable("name") @NotBlank @Size(max = 10) Strin
 
 例如，任何带有超过 10 个字符的`name`参数的请求都会导致 HTTP 400 错误，并显示一条消息:
 
-```
+```java
 createUser.name:size must be between 0 and 10
 ```
 

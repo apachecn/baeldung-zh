@@ -26,7 +26,7 @@
 
 在面向对象编程中， [singleton](/web/20221128144643/https://www.baeldung.com/java-singleton) 类是一个一次只能有一个实例的类。在第一次实例化之后，如果我们试图再次实例化单例类，它会给我们第一次创建的同一个实例。下面是一个实现了`Serializable`接口的单例类:
 
-```
+```java
 public class Singleton implements Serializable {
 
     private static Singleton INSTANCE;
@@ -58,7 +58,7 @@ public class Singleton implements Serializable {
 
 问题是，在实例化实现`Serializable`的 singleton 类，然后序列化和反序列化实例之后，我们将得到 singleton 类的两个实例，这违反了 singleton 特性:
 
-```
+```java
 @Test
 public void givenSingleton_whenSerializedAndDeserialized_thenStatePreserved() {
     Singleton s1 = Singleton.getInstance();
@@ -92,7 +92,7 @@ public void givenSingleton_whenSerializedAndDeserialized_thenStatePreserved() {
 
 要创建一个可序列化的单例类，我们应该使用枚举单例模式:
 
-```
+```java
 public enum EnumSingleton {
 
     INSTANCE("State Zero");
@@ -119,7 +119,7 @@ public enum EnumSingleton {
 
 现在让我们看看如果我们序列化和反序列化它会发生什么:
 
-```
+```java
 @Test
 public void givenEnumSingleton_whenSerializedAndDeserialized_thenStatePreserved() {
     EnumSingleton es1 = EnumSingleton.getInstance();

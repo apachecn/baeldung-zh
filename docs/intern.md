@@ -32,13 +32,13 @@
 
 ### 可用签名
 
-```
+```java
 public String intern()
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenIntern_thenCorrect() {
     String s1 = "abc";

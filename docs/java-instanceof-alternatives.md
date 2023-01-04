@@ -14,14 +14,14 @@
 
 首先，让我们创建父类:
 
-```
+```java
 public class Dinosaur {
 }
 ```
 
 接下来，让我们创建第一个子类:
 
-```
+```java
 public class Anatotitan extends Dinosaur {
     String run() {
         return "running";
@@ -31,7 +31,7 @@ public class Anatotitan extends Dinosaur {
 
 最后，让我们创建第二个子类:
 
-```
+```java
 public class Euraptor extends Dinosaur {	
     String flies() {
         return "flying";
@@ -43,7 +43,7 @@ public class Euraptor extends Dinosaur {
 
 接下来，让我们编写一个方法来创建对象的新实例并调用它们的移动。在返回结果之前，我们将使用`instanceof`来检查新的实例类型:
 
-```
+```java
 public static void moveDinosaur(Dinosaur dinosaur) {
     if (dinosaur instanceof Anatotitan) {
         Anatotitan anatotitan = (Anatotitan) dinosaur;
@@ -64,7 +64,7 @@ public static void moveDinosaur(Dinosaur dinosaur) {
 
 在我们的示例设置中，让我们保持父类和子类的结构。然后，让我们为这种方法编写一个测试方法。 我们用 `getClass()` 代替 `instanceof` :
 
-```
+```java
 public static String moveDinosaurUsingGetClass(Dinosaur dinosaur) {
     if (dinosaur.getClass().equals(Anatotitan.class)) {
         Anatotitan anatotitan = (Anatotitan) dinosaur;
@@ -79,7 +79,7 @@ public static String moveDinosaurUsingGetClass(Dinosaur dinosaur) {
 
 让我们为这种方法编写一个单元测试:
 
-```
+```java
 @Test
 public void givenADinosaurSpecie_whenUsingGetClass_thenGetMovementOfEuraptor() {
     assertEquals("flying", moveDinosaurUsingGetClass(new Euraptor()));
@@ -94,7 +94,7 @@ public void givenADinosaurSpecie_whenUsingGetClass_thenGetMovementOfEuraptor() {
 
 因为我们知道所有恐龙移动，我们可以通过在我们的父类中引入一个`move()`方法来改变我们的设计:
 
-```
+```java
 public class Dinosaur {	
     String move() {
         return "walking";
@@ -104,7 +104,7 @@ public class Dinosaur {
 
 接下来，让我们通过覆盖`move()`方法来修改我们的子类:
 
-```
+```java
 public class Anatotitan extends Dinosaur {
     @Override
     String move() {
@@ -122,7 +122,7 @@ public class Euraptor extends Dinosaur {
 
 现在我们可以引用子类而不用使用`instanceof`方法。让我们写一个接受父类作为参数的方法。我们将根据恐龙种类返回我们的恐龙运动:
 
-```
+```java
 public static String moveDinosaurUsingPolymorphism(Dinosaur dinosaur) { 
     return dinosaur.move(); 
 }
@@ -130,7 +130,7 @@ public static String moveDinosaurUsingPolymorphism(Dinosaur dinosaur) {
 
 让我们为这种方法编写一个单元测试:
 
-```
+```java
 @Test 
 public void givenADinosaurSpecie_whenUsingPolymorphism_thenGetMovementOfAnatotitan() { 
     assertEquals("running", moveDinosaurUsingPolymorphism(new Anatotitan()));
@@ -145,7 +145,7 @@ public void givenADinosaurSpecie_whenUsingPolymorphism_thenGetMovementOfAnatotit
 
 首先，让我们用包含方法的常量创建一个`enum`。常量的方法覆盖了`enum`中的`abstract`方法:
 
-```
+```java
 public enum DinosaurEnum {
     Anatotitan {
         @Override
@@ -167,7 +167,7 @@ public enum DinosaurEnum {
 
 接下来，让我们修改我们的`moveDinosaur()`方法，使用`e`类型:
 
-```
+```java
 public static String moveDinosaurUsingEnum(DinosaurEnum dinosaurEnum) {
     return dinosaurEnum.move();
 }
@@ -175,7 +175,7 @@ public static String moveDinosaurUsingEnum(DinosaurEnum dinosaurEnum) {
 
 最后，让我们为这种方法编写一个单元测试:
 
-```
+```java
 @Test
 public void givenADinosaurSpecie_whenUsingEnum_thenGetMovementOfEuraptor() {
     assertEquals("flying", moveDinosaurUsingEnum(DinosaurEnum.Euraptor));
@@ -190,7 +190,7 @@ public void givenADinosaurSpecie_whenUsingEnum_thenGetMovementOfEuraptor() {
 
 让我们将这种方法应用到我们的示例设置中。首先，让我们用一个方法创建一个接口，并传递一个`Visitor`作为参数。这将有助于检索我们的对象的类型:
 
-```
+```java
 public interface Dinosaur {
     String move(Visitor visitor);
 }
@@ -198,7 +198,7 @@ public interface Dinosaur {
 
 接下来，让我们用两个方法创建一个`Visitor`接口。这些方法接受我们的子类作为参数:
 
-```
+```java
 public interface Visitor {
     String visit(Anatotitan anatotitan);
     String visit(Euraptor euraptor);
@@ -207,7 +207,7 @@ public interface Visitor {
 
 接下来，让我们让我们的子类实现`Dinosaur`接口并覆盖它的方法。该方法使用`Visitor`作为参数来检索我们的对象类型。这种方法取代了`instanceof`的使用:
 
-```
+```java
 public class Anatotitan implements Dinosaur {
     public String run() {
         return "running";
@@ -221,7 +221,7 @@ public class Anatotitan implements Dinosaur {
 
 接下来，让我们创建一个类来实现我们的`Visitor`接口并覆盖这些方法:
 
-```
+```java
 public class DinoVisitorImpl implements Visitor {
     @Override
     public String visit(Anatotitan anatotitan) {
@@ -236,7 +236,7 @@ public class DinoVisitorImpl implements Visitor {
 
 最后，让我们为这种方法编写一个测试方法:
 
-```
+```java
 public static String moveDinosaurUsingVisitorPattern(Dinosaur dinosaur) {
     Visitor visitor = new DinoVisitorImpl();
     return dinosaur.move(visitor);
@@ -245,7 +245,7 @@ public static String moveDinosaurUsingVisitorPattern(Dinosaur dinosaur) {
 
 让我们为这种方法编写一个单元测试:
 
-```
+```java
 @Test
 public void givenADinosaurSpecie_whenUsingVisitorPattern_thenGetMovementOfAnatotitan() {
     assertEquals("running", moveDinosaurUsingVisitorPattern(new Anatotitan()));

@@ -22,7 +22,7 @@ Maven surefire 插件很容易使用。它只有一个目标:`test`。
 
 为了以更简单的方式显示测试结果，让我们创建几个简单的测试类:
 
-```
+```java
 class TheFirstUnitTest {
 
     // declaring logger ... 
@@ -65,7 +65,7 @@ class TheSecondUnitTest {
 
 现在，如果我们运行`mvn test`，所有的测试都将被执行:
 
-```
+```java
 $ mvn test
 ...
 [INFO] Scanning for projects...
@@ -100,7 +100,7 @@ Maven surefire 插件提供了一个`test`参数，我们可以用它来指定�
 
 例如，我们可以将`-Dtest=”TheFirstUnitTest”`传递给`mvn`命令，只执行`TheFirstUnitTest`类:
 
-```
+```java
 $ mvn test -Dtest="TheFirstUnitTest"
 ...
 [INFO] Scanning for projects...
@@ -129,7 +129,7 @@ $ mvn test -Dtest="TheFirstUnitTest"
 
 现在让我们执行`TheSecondUnitTest`类中的`whenTestCase2_thenPrintTest2_1()`方法:
 
-```
+```java
 $ mvn test -Dtest="TheSecondUnitTest#whenTestCase2_thenPrintTest2_1"    
 ...
 [INFO] Scanning for projects...
@@ -171,7 +171,7 @@ $ mvn test -Dtest="TheSecondUnitTest#whenTestCase2_thenPrintTest2_1"
 
 因此，按照我们上面讨论的模式，我们希望`-Dtest=”TheSecondUnitTest#whenTestCase1*”`将完成这项工作:
 
-```
+```java
 $ mvn test -Dtest="TheSecondUnitTest#whenTestCase1*"
 ...
 [INFO] Scanning for projects...

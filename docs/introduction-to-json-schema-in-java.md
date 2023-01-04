@@ -18,7 +18,7 @@
 
 下面是一个简单的代表产品目录的`JSON Object`:
 
-```
+```java
 {
     "id": 1,
     "name": "Lampshade",
@@ -28,7 +28,7 @@
 
 我们可以将其 `JSON Schema`定义如下:
 
-```
+```java
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Product",
@@ -75,7 +75,7 @@
 
 首先，我们需要向我们的`pom.xml`添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.networknt</groupId>
     <artifactId>json-schema-validator</artifactId>
@@ -85,7 +85,7 @@
 
 最后，我们可以编写几个简单的测试用例来验证我们的`JSON Object:`
 
-```
+```java
 @Test
 public void givenInvalidInput_whenValidating_thenInvalid() throws IOException {
     JsonSchemaFactory factory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V4);
@@ -102,7 +102,7 @@ public void givenInvalidInput_whenValidating_thenInvalid() throws IOException {
 
 第二个测试如下所示:
 
-```
+```java
 @Test 
 public void givenValidInput_whenValidating_thenValid() throws ValidationException { 
     JsonSchemaFactory factory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V4); 

@@ -28,7 +28,7 @@ Java 提供了两种类型的线程:用户线程和守护线程。
 
 要将一个线程设置为守护线程，我们需要做的就是调用`Thread.setDaemon().` 在这个例子中，我们将使用`NewThread`类，它扩展了`Thread`类:
 
-```
+```java
 NewThread daemonThread = new NewThread();
 daemonThread.setDaemon(true);
 daemonThread.start();
@@ -38,7 +38,7 @@ daemonThread.start();
 
 方法`setDaemon()`只能在`Thread`对象已经创建并且线程尚未启动之后调用。在线程运行时试图调用`setDaemon()`会抛出一个`IllegalThreadStateException`:
 
-```
+```java
 @Test(expected = IllegalThreadStateException.class)
 public void whenSetDaemonWhileRunning_thenIllegalThreadStateException() {
     NewThread daemonThread = new NewThread();
@@ -51,7 +51,7 @@ public void whenSetDaemonWhileRunning_thenIllegalThreadStateException() {
 
 最后，为了检查一个线程是否是守护线程，我们可以简单地调用方法`isDaemon()`:
 
-```
+```java
 @Test
 public void whenCallIsDaemon_thenCorrect() {
     NewThread daemonThread = new NewThread();

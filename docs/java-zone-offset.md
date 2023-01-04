@@ -26,7 +26,7 @@
 
 让我们为德国柏林创造一个`ZoneId` :
 
-```
+```java
 ZoneId zone = ZoneId.of("Europe/Berlin");
 ```
 
@@ -36,7 +36,7 @@ ZoneId zone = ZoneId.of("Europe/Berlin");
 
 这意味着这个数字代表固定的小时和分钟，代表当前时区和 GMT/UTC 之间的时差:
 
-```
+```java
 LocalDateTime now = LocalDateTime.now();
 ZoneId zone = ZoneId.of("Europe/Berlin");
 ZoneOffset zoneOffSet = zone.getRules().getOffset(now);
@@ -56,14 +56,14 @@ ZoneOffset zoneOffSet = zone.getRules().getOffset(now);
 
 让我们获取前一个区域的当前`ZonedDateTime` :
 
-```
+```java
 ZoneId zone = ZoneId.of("Europe/Berlin");
 ZonedDateTime date = ZonedDateTime.now(zone);
 ```
 
 `ZonedDateTime also `提供内置函数，将给定日期从一个时区转换到另一个时区:
 
-```
+```java
 ZonedDateTime destDate = sourceDate.withZoneSameInstant(destZoneId);
 ```
 
@@ -75,7 +75,7 @@ ZonedDateTime destDate = sourceDate.withZoneSameInstant(destZoneId);
 
 让我们从 GMT/UTC 得到当前的`OffsetDateTime `,偏移 2 小时:
 
-```
+```java
 ZoneOffset zoneOffSet= ZoneOffset.of("+02:00");
 OffsetDateTime date = OffsetDateTime.now(zoneOffSet);
 ```
@@ -88,7 +88,7 @@ OffsetDateTime date = OffsetDateTime.now(zoneOffSet);
 
 让我们用 2 小时的偏移得到当前的`OffsetTime` :
 
-```
+```java
 ZoneOffset zoneOffSet = ZoneOffset.of("+02:00");
 OffsetTime time = OffsetTime.now(zoneOffSet);
 ```

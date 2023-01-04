@@ -38,7 +38,7 @@ Spring Boot 是一个基于 Spring 的应用框架，它去掉了许多与开发
 
 这是一个非常简单和标准的微服务，具有数据存储和 REST 端点。我们需要定义一个同样映射到持久性的模型:
 
-```
+```java
 @Entity
 public class Movie {
     @Id
@@ -52,7 +52,7 @@ public class Movie {
 
 我们已经定义了一个带有 id 和一些其他属性的 JPA 实体。现在让我们看看 REST 控制器是什么样子的:
 
-```
+```java
 @RestController
 public class MovieController {
 
@@ -83,20 +83,20 @@ public class MovieController {
 
 Spring Boot 提供了许多方便的方法来引导应用程序，包括命令行工具和 web 界面。一旦我们生成了引导应用程序，我们就可以将它转换成 git 存储库:
 
-```
+```java
 git init
 ```
 
 该命令应该从应用程序的根目录运行。这个阶段的应用程序已经包含了一个. gitignore 文件，它有效地限制了生成文件的版本控制。因此，我们可以直接创建一个初始提交:
 
-```
+```java
 git add .
 git commit -m "Adding the bootstrap of the application."
 ```
 
 最后，如果我们愿意，我们可以添加一个远程，并将我们的提交推送到远程(这不是一个严格的要求):
 
-```
+```java
 git remote add origin https://github.com/<username>/12-factor-app.git
 git push -u origin master
 ```
@@ -109,7 +109,7 @@ git push -u origin master
 
 Maven 要求我们在一个 XML 文件中描述项目的依赖关系，通常称为[项目对象模型](https://web.archive.org/web/20221206013430/https://maven.apache.org/guides/introduction/introduction-to-the-pom.html) (POM):
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -135,7 +135,7 @@ Maven 要求我们在一个 XML 文件中描述项目的依赖关系，通常称
 
 Spring 提供了一个配置文件，我们可以在其中声明这样的配置并将其附加到环境变量:
 
-```
+```java
 spring.datasource.url=jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/movies
 spring.datasource.username=${MYSQL_USER}
 spring.datasource.password=${MYSQL_PASSWORD}
@@ -145,7 +145,7 @@ spring.datasource.password=${MYSQL_PASSWORD}
 
 在 Windows 上，我们可以在启动应用程序之前设置环境变量:
 
-```
+```java
 set MYSQL_HOST=localhost
 set MYSQL_PORT=3306
 set MYSQL_USER=movies
@@ -162,7 +162,7 @@ set MYSQL_PASSWORD=password
 
 Spring JPA 使得代码对于实际的数据库提供者来说是不可知的。我们只需要定义一个提供所有标准操作的存储库:
 
-```
+```java
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 }
@@ -178,19 +178,19 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
 *   构建阶段:这是我们获取代码库、执行静态和动态检查，然后生成可执行包(如 JAR)的阶段。使用像 [Maven](https://web.archive.org/web/20221206013430/https://maven.apache.org/) 这样的工具，这相当简单:
 
-```
+```java
  mvn clean compile test package
 ```
 
 *   发布阶段:这是我们获取可执行包并将其与正确的配置相结合的阶段。在这里，我们可以使用 [Packer](https://web.archive.org/web/20221206013430/https://www.packer.io/) 和像 [Ansible](https://web.archive.org/web/20221206013430/https://www.ansible.com/) 这样的 provisioner 来创建 Docker 映像:
 
-```
+```java
  packer build application.json
 ```
 
 *   运行阶段:最后，这是我们在目标执行环境中运行应用程序的阶段。如果我们使用 [Docker](https://web.archive.org/web/20221206013430/https://www.docker.com/) 作为容器来发布我们的应用程序，那么运行应用程序会非常简单:
 
-```
+```java
  docker run --name <container_id> -it <image_id>
 ```
 
@@ -210,7 +210,7 @@ Java 中的传统 web 应用程序是作为 WAR 或 web 档案开发的。这通
 
 在我们的例子中，我们使用 Spring Boot 开发了一个应用程序。除了许多其他好处，Spring Boot 为我们提供了一个默认的嵌入式应用服务器。因此，我们之前使用 Maven 生成的 JAR 完全能够在任何环境中执行，只需要有一个兼容的 Java 运行时:
 
-```
+```java
 java -jar application.jar
 ```
 

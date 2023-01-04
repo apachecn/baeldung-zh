@@ -36,7 +36,7 @@
 
 这是代码看起来的样子，考虑到堆栈是类型`Integer`:
 
-```
+```java
 public Stack reverseIntegerStack(Stack<Integer> inputStack) {
     Queue<Integer> queue = new LinkedList<>();
     while (!inputStack.isEmpty()) {
@@ -62,7 +62,7 @@ public Stack reverseIntegerStack(Stack<Integer> inputStack) {
 
 让我们看看代码中的两步递归算法:
 
-```
+```java
 private void reverseStack(Stack<Integer> stack) {
     if (stack.isEmpty()) {
         return;
@@ -75,7 +75,7 @@ private void reverseStack(Stack<Integer> stack) {
 
 `reverseStack() `方法递归地从堆栈中弹出顶部元素。一旦输入堆栈为空，我们将当前在调用堆栈中的元素插入到堆栈的底部:
 
-```
+```java
 private void insertBottom(Stack<Integer> stack, int value) {
     if (stack.isEmpty()) {
         stack.add(value);

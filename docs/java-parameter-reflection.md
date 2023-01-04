@@ -16,7 +16,7 @@ Java 8 中增加了方法参数反射支持。简单地说，它提供了在运�
 
 对于一个 Maven 项目，我们可以在`pom.xml`中声明这个选项:
 
-```
+```java
 <plugin>
   <groupId>org.apache.maven.plugins</groupId>
   <artifactId>maven-compiler-plugin</artifactId>
@@ -33,7 +33,7 @@ Java 8 中增加了方法参数反射支持。简单地说，它提供了在运�
 
 我们将使用一个虚构的具有名为`fullName`的属性的`Person`类来演示:
 
-```
+```java
 public class Person {
 
     private String fullName;
@@ -56,7 +56,7 @@ public class Person {
 
 要访问参数的名称，我们可以简单地调用`getName()` `:`
 
-```
+```java
 @Test
 public void whenGetConstructorParams_thenOk() 
   throws NoSuchMethodException, SecurityException {

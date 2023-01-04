@@ -27,7 +27,7 @@
 
 开始在项目中使用 Spring REST 文档的理想方式是使用依赖管理系统。这里，我们使用 Maven 作为构建工具，所以下面的依赖项可以复制并粘贴到您的 POM 中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.restdocs</groupId>
     <artifactId>spring-restdocs-mockmvc</artifactId>
@@ -53,14 +53,14 @@
 
 `JUnitRestDocumentation`规则配置有输出目录，生成的代码片段应该保存在该目录中。例如，该目录可以是 Maven 的构建目录:
 
-```
+```java
 @Rule
 public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("target/generated-snippets");
 ```
 
 接下来，我们设置`MockMvc`上下文，这样它将被配置为生成文档:
 
-```
+```java
 @Autowired
 private WebApplicationContext context;
 
@@ -80,7 +80,7 @@ public void setUp(){
 
 **为了使用 JUnit 5 测试，我们必须使用`RestDocumentationExtension`类来扩展测试:**
 
-```
+```java
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest
 public class ApiDocumentationJUnit5IntegrationTest { //... }
@@ -90,7 +90,7 @@ public class ApiDocumentationJUnit5IntegrationTest { //... }
 
 接下来，我们必须在一个`@BeforeEach`方法中设置`MockMvc`实例:
 
-```
+```java
 @BeforeEach
 public void setUp(WebApplicationContext webApplicationContext,
   RestDocumentationContextProvider restDocumentation) {
@@ -105,7 +105,7 @@ public void setUp(WebApplicationContext webApplicationContext,
 
 让我们创建一个可以记录的 CRUD RESTful 服务:
 
-```
+```java
 @RestController
 @RequestMapping("/crud")
 public class CRUDController {
@@ -135,7 +135,7 @@ public class CRUDController {
 
 然后，让我们添加一个`IndexController`，它返回一个包含到`CRUDController`基本端点的链接的页面:
 
-```
+```java
 @RestController
 @RequestMapping("/")
 public class IndexController {
@@ -159,7 +159,7 @@ public class IndexController {
 
 首先，**为了确保每个`MockMvc`调用都被自动记录下来，而不需要任何进一步的配置，我们可以使用`alwaysDo()`方法**:
 
-```
+```java
 this.mockMvc = MockMvcBuilders
   //...
   .alwaysDo(document("{method-name}", 
@@ -173,7 +173,7 @@ this.mockMvc = MockMvcBuilders
 
 **为了记录包含链接的索引页面，我们可以使用静态的`links()`方法:**
 
-```
+```java
 @Test
 public void indexExample() throws Exception {
     this.mockMvc.perform(get("/")).andExpect(status().isOk())
@@ -194,7 +194,7 @@ public void indexExample() throws Exception {
 
 类似于响应负载，**我们也可以使用`requestPayload():`** 来记录请求负载
 
-```
+```java
 @Test
 public void crudCreateExample() throws Exception {
     Map<String, Object> crud = new HashMap<>();
@@ -216,7 +216,7 @@ public void crudCreateExample() throws Exception {
 
 **为了记录请求和路径参数，我们可以使用`requestParameters()`和`pathParameters()`方法。**两种方法都使用一种`parameterWithName()`方法来描述每个参数:
 
-```
+```java
 @Test
 public void crudDeleteExample() throws Exception {
     this.mockMvc.perform(delete("/crud/{id}", 10)).andExpect(status().isOk())
@@ -241,7 +241,7 @@ Spring REST Docs 项目包含了更加强大的文档功能，比如可以在[�
 
 **卷曲命令**
 
-```
+```java
 ----
 $ curl 'http://localhost:8080/' -i
 ----
@@ -249,7 +249,7 @@ $ curl 'http://localhost:8080/' -i
 
 **HTTP–REST 响应**
 
-```
+```java
 [source,http,options="nowrap"]
 ----
 HTTP/1.1 200 OK
@@ -274,7 +274,7 @@ Content-Length: 93
 
 在那个文档中，如果我们希望引用 links 片段，我们可以使用占位符`{snippets}` 来包含它，当 Maven 处理文档时，它将替换这个占位符:
 
-```
+```java
 ==== Links
 
 include::{snippets}/index-example/links.adoc[]
@@ -295,7 +295,7 @@ include::{snippets}/index-example/links.adoc[]
 
 将代码片段目录作为属性添加到`pom.xml`中，这样 Asciidoctor 插件就可以使用这个路径在这个文件夹下生成代码片段:
 
-```
+```java
 <properties>
     <snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
 </properties>
@@ -303,7 +303,7 @@ include::{snippets}/index-example/links.adoc[]
 
 用于从构建中生成 Asciidoc 片段的`pom.xml`中的 Maven 插件配置如下:
 
-```
+```java
 <plugin> 
     <groupId>org.asciidoctor</groupId>
     <artifactId>asciidoctor-maven-plugin</artifactId>

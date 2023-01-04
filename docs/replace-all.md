@@ -32,13 +32,13 @@
 
 ### 可用签名
 
-```
+```java
 public String replaceAll(String regex, String replacement)
 ```
 
 ### 例子
 
-```
+```java
 @Test
 void whenReplaceAll_thenCorrect() {
     String s = "my url with spaces";
@@ -52,7 +52,7 @@ void whenReplaceAll_thenCorrect() {
 
 *   `PatternSyntaxException`–如果正则表达式无效
 
-```
+```java
 @Test(expected = PatternSyntaxException.class)
 void whenInvalidRegex_thenPatternSyntaxExceptionThrown() {
     String s = "my url with spaces";

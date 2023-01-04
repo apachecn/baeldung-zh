@@ -18,7 +18,7 @@
 
 为了理解终结器是如何工作的，让我们看一下类声明:
 
-```
+```java
 public class Finalizable {
     private BufferedReader reader;
 
@@ -44,7 +44,7 @@ public class Finalizable {
 
 我们可以使用终结器来实现:
 
-```
+```java
 @Override
 public void finalize() {
     try {
@@ -70,7 +70,7 @@ public void finalize() {
 
 下面是演示终结器操作的测试案例:
 
-```
+```java
 @Test
 public void whenGC_thenFinalizerExecuted() throws IOException {
     String firstLine = new Finalizable().readFirstLine();
@@ -113,7 +113,7 @@ public void whenGC_thenFinalizerExecuted() throws IOException {
 
 让我们定义一个具有非空终结器的新类:
 
-```
+```java
 public class CrashedFinalizable {
     public static void main(String[] args) throws ReflectiveOperationException {
         for (int i = 0; ; i++) {
@@ -135,7 +135,7 @@ public class CrashedFinalizable {
 
 让我们在标有`// other code`的那一行添加一些语句，看看运行时内存中有多少对象:
 
-```
+```java
 if ((i % 1_000_000) == 0) {
     Class<?> finalizerClass = Class.forName("java.lang.ref.Finalizer");
     Field queueStaticField = finalizerClass.getDeclaredField("queue");
@@ -153,7 +153,7 @@ if ((i % 1_000_000) == 0) {
 
 让我们通过执行`main`方法来启动程序。**我们可能期望它无限期运行，但事实并非如此。**几分钟后，我们应该会看到系统崩溃，并显示如下错误:
 
-```
+```java
 ...
 There are 21914844 references in the queue
 There are 22858923 references in the queue
@@ -199,7 +199,7 @@ Process finished with exit code 1
 
 这是我们新类的声明:
 
-```
+```java
 public class CloseableResource implements AutoCloseable {
     private BufferedReader reader;
 
@@ -233,7 +233,7 @@ public class CloseableResource implements AutoCloseable {
 
 下面是一个测试方法，它读取一个输入文件，并在完成任务后释放资源:
 
-```
+```java
 @Test
 public void whenTryWResourcesExits_thenResourceClosed() throws IOException {
     try (CloseableResource resource = new CloseableResource()) {

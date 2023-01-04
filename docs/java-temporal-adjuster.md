@@ -52,7 +52,7 @@ Java 8 引入了一个新的处理日期和时间的库——`java.time` 和`Tem
 
 但是，对于本教程，我们将使用一个固定的日期，这样当预期的结果改变时，测试就不会失败。让我们看看如何使用`TemporalAdjusters`类来获取 2017-07-08 之后的星期天的日期:
 
-```
+```java
 @Test
 public void whenAdjust_thenNextSunday() {
     LocalDate localDate = LocalDate.of(2017, 07, 8);
@@ -66,7 +66,7 @@ public void whenAdjust_thenNextSunday() {
 
 下面是我们获取当月最后一天的方法:
 
-```
+```java
 LocalDate lastDayOfMonth = localDate.with(TemporalAdjusters.lastDayOfMonth());
 ```
 
@@ -78,7 +78,7 @@ LocalDate lastDayOfMonth = localDate.with(TemporalAdjusters.lastDayOfMonth());
 
 让我们看看如何使用`Temporal.with()`方法获得 2017-07-08 之后 14 天的日期:
 
-```
+```java
 @Test
 public void whenAdjust_thenFourteenDaysAfterDate() {
     LocalDate localDate = LocalDate.of(2017, 07, 8);
@@ -95,7 +95,7 @@ public void whenAdjust_thenFourteenDaysAfterDate() {
 
 让我们看看如何通过使用 lambda 表达式定义我们自己的`TemporalAdjuster`实现来获得 2017-07-08 之后的工作日的日期。但是，这一次，通过使用`ofDateAdjuster()`静态工厂方法:
 
-```
+```java
 static TemporalAdjuster NEXT_WORKING_DAY = TemporalAdjusters.ofDateAdjuster(date -> {
     DayOfWeek dayOfWeek = date.getDayOfWeek();
     int daysToAdd;
@@ -111,7 +111,7 @@ static TemporalAdjuster NEXT_WORKING_DAY = TemporalAdjusters.ofDateAdjuster(date
 
 测试我们的代码:
 
-```
+```java
 @Test
 public void whenAdjust_thenNextWorkingDay() {
     LocalDate localDate = LocalDate.of(2017, 07, 8);
@@ -126,7 +126,7 @@ public void whenAdjust_thenNextWorkingDay() {
 
 让我们看看如何通过实现`TemporalAdjuster`接口来编写一个自定义`TemporalAdjuster`来获取 2017-07-08 之后的工作日:
 
-```
+```java
 public class CustomTemporalAdjuster implements TemporalAdjuster {
 
     @Override
@@ -148,7 +148,7 @@ public class CustomTemporalAdjuster implements TemporalAdjuster {
 
 现在，让我们运行我们的测试:
 
-```
+```java
 @Test
 public void whenAdjustAndImplementInterface_thenNextWorkingDay() {
     LocalDate localDate = LocalDate.of(2017, 07, 8);

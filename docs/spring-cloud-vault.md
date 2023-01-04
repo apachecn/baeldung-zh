@@ -24,7 +24,7 @@ Spring Cloud Vault 是 Spring Cloud 栈的一个相对较新的成员，它允�
 
 除了主`starter,` 之外，我们还将包括`spring-vault-config-databases`，它增加了对动态数据库凭证的支持:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-vault-config</artifactId>
@@ -43,7 +43,7 @@ Spring Cloud Vault 是 Spring Cloud 栈的一个相对较新的成员，它允�
 
 我们通过在`application.yml`或`application.properties`中提供必要的信息来做到这一点:
 
-```
+```java
 spring:
   cloud:
     vault:
@@ -67,7 +67,7 @@ Spring Vault 还需要为我们希望在应用程序中使用的每种类型的�
 
 假设在我们的`classpath`中已经有了`spring-cloud-starter-vault-config`依赖项，我们所要做的就是向`application.yml`文件添加一些属性:
 
-```
+```java
 spring:
   cloud:
     vault:
@@ -81,7 +81,7 @@ spring:
 
 我们现在可以将存储在`secret/fakebank` 的所有键/值对作为任何其他`Environment`属性`.` 使用。下面的代码片段显示了我们如何读取存储在该路径下的`foo`键的值:
 
-```
+```java
 @Autowired Environment env;
 public String getFoo() {
     return env.getProperty("foo");
@@ -117,7 +117,7 @@ public String getFoo() {
 
 我们还需要通过向我们的`application.yml:`添加一些属性来支持它在我们的应用程序中的使用
 
-```
+```java
 spring:
   cloud:
     vault:
@@ -135,7 +135,7 @@ spring:
 
 现在，让我们看看这种集成的实际效果。下面的代码片段从 Spring 管理的`DataSource`获取一个新的数据库连接:
 
-```
+```java
 Connection c = datasource.getConnection(); 
 ```
 

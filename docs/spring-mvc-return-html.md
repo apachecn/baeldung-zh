@@ -12,7 +12,7 @@
 
 首先，我们必须为我们的 MVC 控制器添加 [`spring-boot-starter-web`](https://web.archive.org/web/20221128035829/https://search.maven.org/artifact/cn.org.faster/spring-boot-starter-web) Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -24,7 +24,7 @@
 
 接下来，让我们创建控制器:
 
-```
+```java
 @Controller
 public class HtmlController {
     @GetMapping(value = "/welcome", produces = MediaType.TEXT_HTML_VALUE)
@@ -46,13 +46,13 @@ public class HtmlController {
 
 有了控制器，我们就可以进行测试了:
 
-```
+```java
 curl -v localhost:8081/welcome
 ```
 
 输出将类似于:
 
-```
+```java
 > ... request ...
 >
 < HTTP/1.1 200

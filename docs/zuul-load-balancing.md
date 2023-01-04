@@ -20,7 +20,7 @@
 
 首先，我们将把`Zuul Server`和`Eureka dependency`添加到我们的`pom.xml:`中
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
@@ -35,7 +35,7 @@
 
 其次，我们将在 Zuul 的`application.properties` 文件中添加必要的属性:
 
-```
+```java
 server.port=8762
 spring.application.name=zuul-server
 eureka.instance.preferIpAddress=true
@@ -48,7 +48,7 @@ eureka.client.serviceUrl.defaultZone=${EUREKA_URI:http://localhost:8761/eureka}
 
 接下来，我们将实现`main class`，用 `@EnableZuulProxy and @EnableDiscoveryClient. @EnableZuulProxy`表示这是 Zuul 服务器，`@EnableDiscoveryClient` 表示这是 Eureka 客户端:
 
-```
+```java
 @SpringBootApplication
 @EnableZuulProxy
 @EnableDiscoveryClient
@@ -61,13 +61,13 @@ public class ZuulConfig {
 
 我们将浏览器指向 [`http://localhost:8762/routes`](https://web.archive.org/web/20220626090606/http://localhost:8762/routes) 。这应该会显示由`Eureka:`发现的`all the routes available for Zuul`
 
-```
+```java
 {"/spring-cloud-eureka-client/**":"spring-cloud-eureka-client"}
 ```
 
 现在，我们将使用获得的 Zuul 代理路由与 Eureka 客户端通信。将我们的浏览器指向 [`http://localhost:8762/spring-cloud-eureka-client/greeting`](https://web.archive.org/web/20220626090606/http://localhost:8762/spring-cloud-eureka-client/greeting) 应该会产生类似这样的响应:
 
-```
+```java
 Hello from 'SPRING-CLOUD-EUREKA-CLIENT with Port Number 8081'!
 ```
 
@@ -89,7 +89,7 @@ Hello from 'SPRING-CLOUD-EUREKA-CLIENT with Port Number 8081'!
 
 一旦所有实例都启动了，我们可以在日志中观察到实例的物理位置被注册在`DynamicServerListLoadBalancer`中，并且路由被映射到`Zuul Controller`，后者负责将请求转发到实际的实例:
 
-```
+```java
 Mapped URL path [/spring-cloud-eureka-client/**] onto handler of type [class org.springframework.cloud.netflix.zuul.web.ZuulController]
 Client:spring-cloud-eureka-client instantiated a LoadBalancer:
   DynamicServerListLoadBalancer:{NFLoadBalancer:name=spring-cloud-eureka-client,
@@ -114,15 +114,15 @@ DynamicServerListLoadBalancer for client spring-cloud-eureka-client initialized:
 
 每一次，我们都会看到稍微不同的结果:
 
-```
+```java
 Hello from 'SPRING-CLOUD-EUREKA-CLIENT with Port Number 8081'!
 ```
 
-```
+```java
 Hello from 'SPRING-CLOUD-EUREKA-CLIENT with Port Number 8082'!
 ```
 
-```
+```java
 Hello from 'SPRING-CLOUD-EUREKA-CLIENT with Port Number 8081'!
 ```
 
@@ -130,7 +130,7 @@ Zuul 收到的每个请求都以循环方式转发给不同的实例。
 
 如果我们启动另一个实例并在 Eureka 中注册它，Zuul 将自动注册它并开始向它转发请求:
 
-```
+```java
 Hello from 'SPRING-CLOUD-EUREKA-CLIENT with Port Number 8083'!
 ```
 

@@ -34,13 +34,13 @@ IntelliJ 可以从其[官网](https://web.archive.org/web/20220823130659/https:/
 
 以下是运行 Java 8 Docker 映像的命令:
 
-```
+```java
 docker run -d -p 8080:8080  -p 5005:5005 -e JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n" docker-java-jar:latest
 ```
 
 如果我们使用的是 Java 11，我们将使用以下命令:
 
-```
+```java
 docker run -d -p 8080:8080  -p 5005:5005 -e JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,address=*:5005,server=y,suspend=n" docker-java-jar:latest
 ```
 

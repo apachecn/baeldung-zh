@@ -14,7 +14,7 @@
 
 首先，让我们看看我们的`UserLocation`模型——它保存了关于用户登录位置的信息；每个用户至少有一个与其帐户相关联的位置:
 
-```
+```java
 @Entity
 public class UserLocation {
     @Id
@@ -46,7 +46,7 @@ public class UserLocation {
 
 我们将向我们的存储库添加一个简单的检索操作:
 
-```
+```java
 public interface UserLocationRepository extends JpaRepository<UserLocation, Long> {
     UserLocation findByCountryAndUser(String country, User user);
 }
@@ -61,7 +61,7 @@ public interface UserLocationRepository extends JpaRepository<UserLocation, Long
 
 现在，让我们讨论如何修改注册过程以添加默认用户位置:
 
-```
+```java
 @PostMapping("/user/registration")
 public GenericResponse registerUserAccount(@Valid UserDto accountDto, 
   HttpServletRequest request) {
@@ -74,7 +74,7 @@ public GenericResponse registerUserAccount(@Valid UserDto accountDto,
 
 在服务实现中，我们将通过用户的 IP 地址获取国家:
 
-```
+```java
 public void addUserLocation(User user, String ip) {
     InetAddress ipAddress = InetAddress.getByName(ip);
     String country 
@@ -87,7 +87,7 @@ public void addUserLocation(User user, String ip) {
 
 注意，我们使用 [GeoLite2](https://web.archive.org/web/20220822105732/https://dev.maxmind.com/geoip/geoip2/geolite2/) 数据库从 IP 地址获取国家。为了使用 [GeoLite2](https://web.archive.org/web/20220822105732/https://dev.maxmind.com/geoip/geoip2/geolite2/) ，我们需要 maven 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.maxmind.geoip2</groupId>
     <artifactId>geoip2</artifactId>
@@ -97,7 +97,7 @@ public void addUserLocation(User user, String ip) {
 
 我们还需要定义一个简单的 bean:
 
-```
+```java
 @Bean
 public DatabaseReader databaseReader() throws IOException, GeoIp2Exception {
     File resource = new File("src/main/resources/GeoLite2-Country.mmdb");
@@ -111,7 +111,7 @@ public DatabaseReader databaseReader() throws IOException, GeoIp2Exception {
 
 现在我们已经有了用户的默认国家，我们将在身份验证后添加一个简单的位置检查器:
 
-```
+```java
 @Autowired
 private DifferentLocationChecker differentLocationChecker;
 
@@ -127,7 +127,7 @@ public DaoAuthenticationProvider authProvider() {
 
 这是我们的`DifferentLocationChecker`:
 
-```
+```java
 @Component
 public class DifferentLocationChecker implements UserDetailsChecker {
 
@@ -174,7 +174,7 @@ public class DifferentLocationChecker implements UserDetailsChecker {
 
 我们还需要修改我们的`AuthenticationFailureHandler`来定制错误消息:
 
-```
+```java
 @Override
 public void onAuthenticationFailure(...) {
     ...
@@ -186,7 +186,7 @@ public void onAuthenticationFailure(...) {
 
 现在，让我们深入了解一下`isNewLoginLocation()` 的实现:
 
-```
+```java
 @Override
 public NewLocationToken isNewLoginLocation(String username, String ip) {
     try {
@@ -210,7 +210,7 @@ public NewLocationToken isNewLoginLocation(String username, String ip) {
 
 如果没有，我们创建一个`NewLocationToken`和一个禁用的`UserLocation`，允许用户启用这个新位置。在接下来的章节中会有更多的介绍。
 
-```
+```java
 private NewLocationToken createNewLocationToken(String country, User user) {
     UserLocation loc = new UserLocation(country, user);
     loc = userLocationRepo.save(loc);
@@ -221,7 +221,7 @@ private NewLocationToken createNewLocationToken(String country, User user) {
 
 最后，下面是简单的`NewLocationToken`实现——允许用户将新位置与他们的帐户关联起来:
 
-```
+```java
 @Entity
 public class NewLocationToken {
     @Id
@@ -242,7 +242,7 @@ public class NewLocationToken {
 
 当用户从不同的位置登录时，我们创建了一个`NewLocationToken` 并使用它来触发一个`OnDifferentLocationLoginEvent`:
 
-```
+```java
 public class OnDifferentLocationLoginEvent extends ApplicationEvent {
     private Locale locale;
     private String username;
@@ -254,7 +254,7 @@ public class OnDifferentLocationLoginEvent extends ApplicationEvent {
 
 `DifferentLocationLoginListener`如下处理我们的事件:
 
-```
+```java
 @Component
 public class DifferentLocationLoginListener 
   implements ApplicationListener<OnDifferentLocationLoginEvent> {
@@ -299,7 +299,7 @@ public class DifferentLocationLoginListener
 
 最后，既然用户已经得到了可疑活动的通知，让我们看看**应用程序将如何处理启用新位置**:
 
-```
+```java
 @RequestMapping(value = "/user/enableNewLoc", method = RequestMethod.GET)
 public String enableNewLoc(Locale locale, Model model, @RequestParam("token") String token) {
     String loc = userService.isValidNewLocationToken(token);
@@ -320,7 +320,7 @@ public String enableNewLoc(Locale locale, Model model, @RequestParam("token") St
 
 而我们的`isValidNewLocationToken()`方法:
 
-```
+```java
 @Override
 public String isValidNewLocationToken(String token) {
     NewLocationToken locToken = newLocationTokenRepository.findByToken(token);
@@ -341,7 +341,7 @@ public String isValidNewLocationToken(String token) {
 
 为了结束这篇文章，我们需要提到上述实现的一个限制。我们用来确定客户端 IP 的方法是:
 
-```
+```java
 private final String getClientIP(HttpServletRequest request) 
 ```
 

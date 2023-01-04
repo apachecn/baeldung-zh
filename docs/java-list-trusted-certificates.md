@@ -12,7 +12,7 @@ Java 将可信证书存储在一个名为`cacerts`的特殊文件中，该文件
 
 让我们从读取这个文件并将其加载到 [`KeyStore`](/web/20221206113225/https://www.baeldung.com/java-keystore#what-is-a-keystore) 开始:
 
-```
+```java
 private KeyStore loadKeyStore() {
     String relativeCacertsPath = "/lib/security/cacerts".replace("/", File.separator);
     String filename = System.getProperty("java.home") + relativeCacertsPath;
@@ -34,7 +34,7 @@ private KeyStore loadKeyStore() {
 
 我们将使用`[PKIXParameters](https://web.archive.org/web/20221206113225/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/security/cert/PKIXParameters.html)`类，它接受一个`KeyStore`作为构造函数参数:
 
-```
+```java
 @Test
 public void whenLoadingCacertsKeyStore_thenCertificatesArePresent() {
     KeyStore keyStore = loadKeyStore();
@@ -61,7 +61,7 @@ public void whenLoadingCacertsKeyStore_thenCertificatesArePresent() {
 
 如果我们没有明确提供一个`KeyStore`,默认情况下将使用前一章中的同一个:
 
-```
+```java
 @Test
 public void whenLoadingDefaultKeyStore_thenCertificatesArePresent() {
     TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
@@ -89,13 +89,13 @@ public void whenLoadingDefaultKeyStore_thenCertificatesArePresent() {
 
 **在 Java 导入的默认证书中，还有一个由公共互联网域名注册商 GoDaddy 发布的著名证书，我们将在测试中使用它:**
 
-```
+```java
 String GODADDY_CA_ALIAS = "godaddyrootg2ca [jdk]";
 ```
 
 让我们看看如何读取`KeyStore`中的所有证书别名:
 
-```
+```java
 @Test
 public void whenLoadingKeyStore_thenGoDaddyCALabelIsPresent() {
     KeyStore keyStore = loadKeyStore();
@@ -108,7 +108,7 @@ public void whenLoadingKeyStore_thenGoDaddyCALabelIsPresent() {
 
 在下一个示例中，我们将了解如何通过别名检索证书:
 
-```
+```java
 @Test
 public void whenLoadingKeyStore_thenGoDaddyCertificateIsPresent() {
     KeyStore keyStore = loadKeyStore();

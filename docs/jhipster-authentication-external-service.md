@@ -24,7 +24,7 @@ JHipster 中默认的`AuthenticationManager`只是根据本地数据存储检查
 
 下面的例子展示了如何创建一个自定义的`AuthenticationManager`。它只有一个方法可以实现:
 
-```
+```java
 public class CustomAuthenticationManager implements AuthenticationManager {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -80,7 +80,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
 以 Angular 为例，默认的登录提示包括密码重置和注册的链接。我们应该将它们从`app/shared/login/login.component.html`中移除:
 
-```
+```java
 <div class="alert alert-warning">
   <a class="alert-link" (click)="requestResetPassword()">Did you forget your password?</a>
 </div>
@@ -92,7 +92,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
 我们还必须从`app/layouts/navbar/navbar.component.html`中删除不需要的导航菜单项:
 
-```
+```java
 <li *ngSwitchCase="true">
   <a class="dropdown-item" routerLink="password" routerLinkActive="active" (click)="collapseNavbar()">
     <fa-icon icon="clock" fixedWidth="true"></fa-icon>
@@ -103,7 +103,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
 和
 
-```
+```java
 <li *ngSwitchCase="false">
   <a class="dropdown-item" routerLink="register" routerLinkActive="active" (click)="collapseNavbar()">
     <fa-icon icon="user-plus" fixedWidth="true"></fa-icon>
@@ -116,7 +116,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
 完成此操作后，应该只保留设置路线:
 
-```
+```java
 import { settingsRoute } from './';
 const ACCOUNT_ROUTES = [settingsRoute];
 ```
@@ -127,7 +127,7 @@ const ACCOUNT_ROUTES = [settingsRoute];
 
 最快的方法是更新`SecurityConfiguration`类来拒绝所有对相关 URL 的请求:
 
-```
+```java
 .antMatchers("/api/register").denyAll()
 .antMatchers("/api/activate").denyAll()
 .antMatchers("/api/account/reset-password/init").denyAll()

@@ -14,7 +14,7 @@
 
 我们设置了一个`Transfer`类来表示一些基本信息——唯一的转账 id 和发送者的姓名:
 
-```
+```java
 public class Transfer {
     private String transactionId;
     private String sender;
@@ -42,7 +42,7 @@ public class Transfer {
 
 为了执行传输，我们需要使用一个由简单 API 支持的服务:
 
-```
+```java
 public abstract class TransferService {
 
     public boolean transfer(long amount) {
@@ -61,7 +61,7 @@ public abstract class TransferService {
 
 让我们创建服务实现:
 
-```
+```java
 import org.apache.log4j.Logger;
 import com.baeldung.mdc.TransferService;
 
@@ -85,7 +85,7 @@ public class Log4JTransferService extends TransferService {
 
 让我们设置通常的`log4j.properties`文件来登录控制台:
 
-```
+```java
 log4j.appender.consoleAppender=org.apache.log4j.ConsoleAppender
 log4j.appender.consoleAppender.layout=org.apache.log4j.PatternLayout
 log4j.appender.consoleAppender.layout.ConversionPattern=%-4r [%t] %5p %c %x - %m%n
@@ -94,7 +94,7 @@ log4j.rootLogger = TRACE, consoleAppender
 
 最后，我们将建立一个小应用程序，它能够通过一个`ExecutorService`同时运行多个传输:
 
-```
+```java
 public class TransferDemo {
 
     public static void main(String[] args) {
@@ -112,7 +112,7 @@ public class TransferDemo {
 
 注意，为了使用`ExecutorService`，我们需要将`Log4JTransferService` 的执行封装在一个适配器中，因为`executor.submit()`需要一个`Runnable`:
 
-```
+```java
 public class Log4JRunnable implements Runnable {
     private Transfer tx;
 
@@ -132,7 +132,7 @@ public class Log4JRunnable implements Runnable {
 
 此外，不可能区分由同一线程运行的相同数量的两个不同事务，因为相关的日志行看起来基本相同:
 
-```
+```java
 ...
 519  [pool-1-thread-3]  INFO Log4JBusinessService 
   - Preparing to transfer 1393$.
@@ -177,7 +177,7 @@ MDC 结构以与`ThreadLocal`变量相同的方式在内部附加到执行线程
 
 因此，让我们根据这些准则来更改代码:
 
-```
+```java
 import org.apache.log4j.MDC;
 
 public class Log4JRunnable implements Runnable {
@@ -203,14 +203,14 @@ public class Log4JRunnable implements Runnable {
 
 改变转换模式就足够了，对 MDC 中包含的每个条目使用`%X{}`占位符，我们希望记录:
 
-```
+```java
 log4j.appender.consoleAppender.layout.ConversionPattern=
   %-4r [%t] %5p %c{1} %x - %m - tx.id=%X{transaction.id} tx.owner=%X{transaction.owner}%n
 ```
 
 现在，如果我们运行该应用程序，我们会注意到每一行还包含有关正在处理的事务的信息，这使我们更容易跟踪应用程序的执行:
 
-```
+```java
 638  [pool-1-thread-2]  INFO Log4JBusinessService 
   - Has transfer of 1104$ completed successfully ? true. - tx.id=2 tx.owner=Marc
 638  [pool-1-thread-2]  INFO Log4JBusinessService 
@@ -235,7 +235,7 @@ Log4j2 中也有完全相同的特性，所以让我们看看如何使用它。
 
 我们将首先设置一个使用 Log4j2 记录日志的 *TransferService* 子类:
 
-```
+```java
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -256,7 +256,7 @@ public class Log4J2TransferService extends TransferService {
 
 接下来让我们更改使用 MDC 的代码，在 Log4j2 中实际上它被称为`ThreadContext`:
 
-```
+```java
 import org.apache.log4j.MDC;
 
 public class Log4J2Runnable implements Runnable {
@@ -282,7 +282,7 @@ public class Log4J2Runnable implements Runnable {
 
 我们可以注意到，指定应该记录哪些 MDC 条目的语法与 Log4j 中使用的语法相同:
 
-```
+```java
 <Configuration status="INFO">
     <Appenders>
         <Console name="stdout" target="SYSTEM_OUT">
@@ -301,7 +301,7 @@ public class Log4J2Runnable implements Runnable {
 
 同样，让我们运行应用程序，我们将看到 MDC 信息被打印在日志中:
 
-```
+```java
 1119 [pool-1-thread-3]  INFO Log4J2BusinessService 
   - Has transfer of 1198$ completed successfully ? true. - tx.id=3 tx.owner=Samantha
 1120 [pool-1-thread-3]  INFO Log4J2BusinessService 
@@ -322,7 +322,7 @@ public class Log4J2Runnable implements Runnable {
 
 让我们准备通常的`TransferService`子类，这次使用 Java 的简单日志门面:
 
-```
+```java
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -345,7 +345,7 @@ final class Slf4TransferService extends TransferService {
 
 在这种情况下，语法和语义与 log4j 中的相同:
 
-```
+```java
 import org.slf4j.MDC;
 
 public class Slf4jRunnable implements Runnable {
@@ -366,7 +366,7 @@ public class Slf4jRunnable implements Runnable {
 
 我们必须提供回退配置文件，`logback.xml`:
 
-```
+```java
 <configuration>
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -381,7 +381,7 @@ public class Slf4jRunnable implements Runnable {
 
 同样，我们将看到 MDC 中的信息被正确地添加到记录的消息中，尽管该信息没有在`log.info()`方法中明确提供:
 
-```
+```java
 1020 [pool-1-thread-3]  INFO c.b.m.s.Slf4jBusinessService 
   - Has transfer of 1869$ completed successfully ? true. - tx.id=3 tx.owner=John
 1021 [pool-1-thread-3]  INFO c.b.m.s.Slf4jBusinessService 
@@ -421,7 +421,7 @@ public class Slf4jRunnable implements Runnable {
 
 为此，我们可以扩展`ThreadPoolExecutor`类并覆盖`afterExecute()`钩子:
 
-```
+```java
 public class MdcAwareThreadPoolExecutor extends ThreadPoolExecutor {
 
     public MdcAwareThreadPoolExecutor(int corePoolSize, 
@@ -448,7 +448,7 @@ public class MdcAwareThreadPoolExecutor extends ThreadPoolExecutor {
 
 因此，不需要手动操作:
 
-```
+```java
 @Override
 public void run() {
     MDC.put("transaction.id", tx.getTransactionId());
@@ -460,7 +460,7 @@ public void run() {
 
 现在，我们可以用新的 executor 实现重写相同的演示:
 
-```
+```java
 ExecutorService executor = new MdcAwareThreadPoolExecutor(3, 3, 0, MINUTES, 
   new LinkedBlockingQueue<>(), Thread::new, new AbortPolicy());
 

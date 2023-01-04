@@ -38,7 +38,7 @@ Spring 允许我们创建和发布默认同步的定制事件。这有几个好�
 
 在这种情况下，事件类保存一条字符串消息:
 
-```
+```java
 public class CustomSpringEvent extends ApplicationEvent {
     private String message;
 
@@ -58,7 +58,7 @@ public class CustomSpringEvent extends ApplicationEvent {
 
 为了发布事件，发布者可以简单地注入`ApplicationEventPublisher` 并使用`publishEvent()` API:
 
-```
+```java
 @Component
 public class CustomSpringEventPublisher {
     @Autowired
@@ -82,7 +82,7 @@ public class CustomSpringEventPublisher {
 
 对监听器的唯一要求是成为一个 bean 并实现`ApplicationListener`接口:
 
-```
+```java
 @Component
 public class CustomSpringEventListener implements ApplicationListener<CustomSpringEvent> {
     @Override
@@ -104,7 +104,7 @@ public class CustomSpringEventListener implements ApplicationListener<CustomSpri
 
 对于我们这里的目的，`SimpleAsyncTaskExecutor` 工作得很好:
 
-```
+```java
 @Configuration
 public class AsynchronousSpringEventsConfig {
     @Bean(name = "applicationEventMulticaster")
@@ -128,7 +128,7 @@ Spring 本身发布各种现成的事件。例如，`ApplicationContext` 将触�
 
 下面是一个监听器监听上下文刷新的快速示例:
 
-```
+```java
 public class ContextRefreshedListener 
   implements ApplicationListener<ContextRefreshedEvent> {
     @Override
@@ -144,7 +144,7 @@ public class ContextRefreshedListener
 
 从 Spring 4.2 开始，事件侦听器不需要成为实现`ApplicationListener`接口的 bean——它可以通过`@EventListener`注释注册到受管 bean 的任何`public`方法上:
 
-```
+```java
 @Component
 public class AnnotationDrivenEventListener {
     @EventListener
@@ -168,7 +168,7 @@ public class AnnotationDrivenEventListener {
 
 在我们的示例中，事件类保存任何内容和一个`success`状态指示器:
 
-```
+```java
 public class GenericSpringEvent<T> {
     private T what;
     protected boolean success;
@@ -189,7 +189,7 @@ public class GenericSpringEvent<T> {
 
 我们可以像以前一样通过实现 `ApplicationListener`接口来定义监听器:
 
-```
+```java
 @Component
 public class GenericSpringEventListener 
   implements ApplicationListener<GenericSpringEvent<String>> {
@@ -206,7 +206,7 @@ public class GenericSpringEventListener
 
 在这种情况下，只有在`String`的`GenericSpringEvent`成功时，才会调用事件处理程序:
 
-```
+```java
 @Component
 public class AnnotationDrivenEventListener {
     @EventListener(condition = "#event.success")
@@ -239,7 +239,7 @@ Spring Expression Language(SpEL)是一种强大的表达式语言，在另一个
 
 下面是一个事务性事件侦听器的简单示例:
 
-```
+```java
 @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
 public void handleCustom(CustomSpringEvent event) {
     System.out.println("Handling event inside a transaction BEFORE COMMIT.");

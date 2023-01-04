@@ -35,7 +35,7 @@ Java 包含了 [`System.gc()`](/web/20221104133453/https://www.baeldung.com/java
 
 让我们创建一个包含`BufferedReader`实例变量的类:
 
-```
+```java
 class Resource {
 
     final BufferedReader reader;
@@ -52,7 +52,7 @@ class Resource {
 
 In our example, we didn't close our resources. We can close them inside the `finalize()` method:
 
-```
+```java
 @Override
 protected void finalize() {
     try {
@@ -75,7 +75,7 @@ protected void finalize() {
 
 让我们修改我们的示例类来实现`AutoCloseable`接口:
 
-```
+```java
 class Resource implements AutoCloseable {
 
     final BufferedReader reader;
@@ -103,13 +103,13 @@ class Resource implements AutoCloseable {
 
 现在，让我们看看如何使用`Cleaner`类。首先，我们来定义一下`Cleaner`:
 
-```
+```java
 Cleaner cleaner = Cleaner.create();
 ```
 
 接下来，我们将创建一个包含更干净的引用的类:
 
-```
+```java
 class Order implements AutoCloseable {
 
     private final Cleaner cleaner;
@@ -122,7 +122,7 @@ class Order implements AutoCloseable {
 
 其次，我们将定义一个在`Order`类中实现`Runnable`的静态内部类:
 
-```
+```java
 static class CleaningAction implements Runnable {
 
     private final int id;
@@ -144,7 +144,7 @@ static class CleaningAction implements Runnable {
 
 让我们在`Order`类中添加`Cleanable`实例变量:
 
-```
+```java
 private Cleaner.Cleanable cleanable;
 ```
 
@@ -152,7 +152,7 @@ private Cleaner.Cleanable cleanable;
 
 接下来，让我们创建一个注册清理操作的方法:
 
-```
+```java
 public void register(Product product, int id) {
     this.cleanable = cleaner.register(product, new CleaningAction(id));
 }
@@ -160,7 +160,7 @@ public void register(Product product, int id) {
 
 最后，让我们实现`close()`方法:
 
-```
+```java
 public void close() {
     cleanable.clean();
 }
@@ -170,7 +170,7 @@ public void close() {
 
 当我们在一个`try-with-resources`块中使用我们的`CleaningExample`实例时，`close()`方法调用清理动作:
 
-```
+```java
 final Cleaner cleaner = Cleaner.create();
 try (Order order = new Order(cleaner)) {
     for (int i = 0; i < 10; i++) {

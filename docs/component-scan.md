@@ -24,20 +24,20 @@
 
 首先，让我们创建一个具有依赖字段的类:
 
-```
+```java
 public class UserService {
     @Autowired
     private AccountService accountService;
 }
 ```
 
-```
+```java
 public class AccountService {}
 ```
 
 现在，让我们定义我们的 beans。
 
-```
+```java
 <bean id="accountService" class="AccountService"></bean>
 
 <bean id="userService" class="UserService"></bean>
@@ -49,7 +49,7 @@ public class AccountService {}
 
 如果我们不使用`@Autowired`，那么我们需要手动设置`accountService`依赖关系:
 
-```
+```java
 <bean id="userService" class="UserService">
     <property name="accountService" ref="accountService"></property>
 </bean>
@@ -57,7 +57,7 @@ public class AccountService {}
 
 现在，我们可以在单元测试中引用我们的 beans 和依赖项:
 
-```
+```java
 @Test
 public void givenContextAnnotationConfig_whenDependenciesAnnotated_thenNoXMLNeeded() {
     ApplicationContext context
@@ -74,7 +74,7 @@ public void givenContextAnnotationConfig_whenDependenciesAnnotated_thenNoXMLNeed
 
 嗯，这里有点不对劲。看起来 Spring 没有连接`accountService`，尽管我们用`@Autowired`对它进行了注释。看样子`@Autowired `并不活跃。为了解决这个问题，我们只需在 XML 文件的顶部添加以下代码行:
 
-```
+```java
 <context:annotation-config/>
 ```
 
@@ -88,7 +88,7 @@ public void givenContextAnnotationConfig_whenDependenciesAnnotated_thenNoXMLNeed
 
 现在，让我们看看如何简化前面的示例:
 
-```
+```java
 @Component
 public class UserService {
     @Autowired
@@ -96,14 +96,14 @@ public class UserService {
 } 
 ```
 
-```
+```java
 @Component
 public class AccountService {}
 ```
 
 这里， **`@Component`注释将我们的类标记为 bean**。现在，我们可以从 XML 文件中清除所有的 bean 定义。当然，我们需要保持`<context:component-scan>`在它上面:
 
-```
+```java
 <context:component-scan
   base-package="com.baeldung.annotationconfigvscomponentscan.components" />
 ```

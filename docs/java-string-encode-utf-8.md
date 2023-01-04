@@ -28,7 +28,7 @@ How to do Base64 encoding and decoding in Java, using the new APIs introduced in
 
 为了展示 Java 编码，我们将使用德语`String`“Entwickeln Sie MIT vergnügen”:
 
-```
+```java
 String germanString = "Entwickeln Sie mit Vergnügen";
 byte[] germanBytes = germanString.getBytes();
 
@@ -41,7 +41,7 @@ assertNotEquals(asciiEncodedString, germanString);
 
 但是当我们将一个使用所有英文字符的 ASCII 编码的`String`转换为 UTF-8 时，我们会得到相同的字符串:
 
-```
+```java
 String englishString = "Develop with pleasure";
 byte[] englishBytes = englishString.getBytes();
 
@@ -60,7 +60,7 @@ assertEquals(asciiEncondedEnglishString, englishString);
 
 首先，我们获取`String`字节，然后使用检索到的字节和所需的字符集创建一个新的字节:
 
-```
+```java
 String rawString = "Entwickeln Sie mit Vergnügen";
 byte[] bytes = rawString.getBytes(StandardCharsets.UTF_8);
 
@@ -75,7 +75,7 @@ assertEquals(rawString, utf8EncodedString);
 
 首先，我们将把`String`解码成字节，其次，我们将把`String`编码成 UTF-8:
 
-```
+```java
 String rawString = "Entwickeln Sie mit Vergnügen";
 ByteBuffer buffer = StandardCharsets.UTF_8.encode(rawString); 
 
@@ -94,7 +94,7 @@ Apache Commons Codec 是一个方便的包，包含各种格式的简单编码�
 
 使用 Maven 时，我们必须将[的`commons-codec`依赖项](https://web.archive.org/web/20221109093624/https://search.maven.org/search?q=g:commons-codec%20AND%20a:commons-codec)添加到我们的 *pom.xml* 中:
 
-```
+```java
 <dependency>
     <groupId>commons-codec</groupId>
     <artifactId>commons-codec</artifactId>
@@ -106,7 +106,7 @@ Apache Commons Codec 是一个方便的包，包含各种格式的简单编码�
 
 使用这个类，获得 UTF-8 编码的`String`非常简单:
 
-```
+```java
 String rawString = "Entwickeln Sie mit Vergnügen"; 
 byte[] bytes = StringUtils.getBytesUtf8(rawString);
 

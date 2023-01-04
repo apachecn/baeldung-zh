@@ -16,7 +16,7 @@
 
 为了使用 AssertJ，您需要在您的`pom.xml`文件中包含以下部分:
 
-```
+```java
 <dependency>
     <groupId>org.assertj</groupId>
     <artifactId>assertj-core</artifactId>
@@ -46,7 +46,7 @@ AssertJ 提供了一组类和实用方法，允许我们轻松地为以下内容
 
 让我们从 AssertJ 文档中的几个例子开始:
 
-```
+```java
 assertThat(frodo)
   .isNotEqualTo(sauron)
   .isIn(fellowshipOfTheRing);
@@ -72,7 +72,7 @@ assertThat(fellowshipOfTheRing)
 
 有了类路径上的 jar 库，启用断言就像向测试类添加一个静态导入一样简单:
 
-```
+```java
 import static org.assertj.core.api.Assertions.*;
 ```
 
@@ -82,7 +82,7 @@ import static org.assertj.core.api.Assertions.*;
 
 重要的是要记住，与其他一些库不同，下面的代码实际上并没有断言任何东西，并且**永远不会**测试失败:
 
-```
+```java
 assertThat(anyRefenceOrValue);
 ```
 
@@ -100,7 +100,7 @@ IDE 的代码完成功能
 
 让我们来看两种比较两个对象相等性的方法。给定下面两个`Dog` 对象`fido` 和`fidosClone`:
 
-```
+```java
 public class Dog { 
     private String name; 
     private Float weight;
@@ -115,13 +115,13 @@ Dog fidosClone = new Dog("Fido", 5.25);
 
 我们可以用下面的断言来比较等式:
 
-```
+```java
 assertThat(fido).isEqualTo(fidosClone);
 ```
 
 当`isEqualTo()`比较对象引用时，这将失败。如果我们想比较它们的内容，我们可以像这样使用`isEqualToComparingFieldByFieldRecursively()`:
 
-```
+```java
 assertThat(fido).isEqualToComparingFieldByFieldRecursively(fidosClone);
 ```
 
@@ -138,7 +138,7 @@ assertThat(fido).isEqualToComparingFieldByFieldRecursively(fidosClone);
 
 让我们看看他们的行动:
 
-```
+```java
 assertThat("".isEmpty()).isTrue();
 ```
 
@@ -146,7 +146,7 @@ assertThat("".isEmpty()).isTrue();
 
 对于一个`Iterable`或一个`Array`来说，有多种方法可以断言它们的内容存在。最常见的断言之一是检查`Iterable`或 `Array`是否包含给定的元素:
 
-```
+```java
 List<String> list = Arrays.asList("1", "2", "3");
 
 assertThat(list).contains("1");
@@ -154,13 +154,13 @@ assertThat(list).contains("1");
 
 或者如果`List`不为空:
 
-```
+```java
 assertThat(list).isNotEmpty();
 ```
 
 或者一个`List`是否以一个给定的字符开始。例如“1”:
 
-```
+```java
 assertThat(list).startsWith("1");
 ```
 
@@ -168,7 +168,7 @@ assertThat(list).startsWith("1");
 
 下面是一个断言示例，它检查提供的列表是否不为空，是否包含“1”元素，是否不包含任何空值，以及是否包含元素“2”、“3”的序列:
 
-```
+```java
 assertThat(list)
   .isNotEmpty()
   .contains("1")
@@ -184,7 +184,7 @@ assertThat(list)
 
 下面是一个断言示例，它检查提供的字符是否不是“a”，是否在 Unicode 表中，是否大于“b”并且是小写的:
 
-```
+```java
 assertThat(someCharacter)
   .isNotEqualTo('a')
   .inUnicode()
@@ -200,13 +200,13 @@ assertThat(someCharacter)
 
 如果你想断言类`Runnable`是一个接口，你只需要简单地写:
 
-```
+```java
 assertThat(Runnable.class).isInterface();
 ```
 
 或者，如果您想检查一个类是否可以从另一个类进行赋值:
 
-```
+```java
 assertThat(Exception.class).isAssignableFrom(NoSuchElementException.class);
 ```
 
@@ -218,7 +218,7 @@ assertThat(Exception.class).isAssignableFrom(NoSuchElementException.class);
 
 在这里，您可以看到一个断言示例，它检查给定的文件是否存在，是否是文件而不是目录，是否可读写:
 
-```
+```java
  assertThat(someFile)
    .exists()
    .isFile()
@@ -234,7 +234,7 @@ assertThat(Exception.class).isAssignableFrom(NoSuchElementException.class);
 
 数值断言是关于在给定偏移量内或不在给定偏移量内比较数值。例如，如果您想根据给定的精度检查两个值是否相等，我们可以执行以下操作:
 
-```
+```java
 assertThat(5.1).isEqualTo(5, withPrecision(1d));
 ```
 
@@ -250,7 +250,7 @@ assertThat(5.1).isEqualTo(5, withPrecision(1d));
 
 实际上:
 
-```
+```java
 assertThat(given).hasSameContentAs(expected);
 ```
 
@@ -260,7 +260,7 @@ assertThat(given).hasSameContentAs(expected);
 
 在这里，您可以看到一个断言示例，它检查给定的映射是否不为空，是否包含数字键“2”，是否包含数字键“10”，以及是否包含条目:`key: 2, value: “a”`:
 
-```
+```java
 assertThat(map)
   .isNotEmpty()
   .containsKey(2)
@@ -276,7 +276,7 @@ assertThat(map)
 
 让我们来看一个断言的例子，它检查一个给定的异常是否被抛出并有一条以“c”结尾的消息:
 
-```
+```java
 assertThat(ex).hasNoCause().hasMessageEndingWith("c");
 ```
 
@@ -288,7 +288,7 @@ assertThat(ex).hasNoCause().hasMessageEndingWith("c");
 
 如果您这样定义您的断言:
 
-```
+```java
 assertThat(person.getAge())
   .as("%s's age should be equal to 100", person.getName())
   .isEqualTo(100);
@@ -296,7 +296,7 @@ assertThat(person.getAge())
 
 这是运行测试时您将得到的结果:
 
-```
+```java
 [Alex's age should be equal to 100] expected:<100> but was:<34>
 ```
 
@@ -304,7 +304,7 @@ assertThat(person.getAge())
 
 AssertJ 充分利用了 Java 8 的函数式编程特性。让我们深入一个例子，看看它是如何工作的。首先让我们看看在 Java 7 中是如何做到的:
 
-```
+```java
 assertThat(fellowshipOfTheRing)
   .filteredOn("race", HOBBIT)
   .containsOnly(sam, frodo, pippin, merry);
@@ -312,7 +312,7 @@ assertThat(fellowshipOfTheRing)
 
 这里，我们正在过滤一个关于霍比特人的集合，在 Java 8 中，我们可以这样做:
 
-```
+```java
 assertThat(fellowshipOfTheRing)
   .filteredOn(character -> character.getRace().equals(HOBBIT))
   .containsOnly(sam, frodo, pippin, merry);

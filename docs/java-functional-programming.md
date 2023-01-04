@@ -70,7 +70,7 @@ Lambda 演算对编程语言理论的发展产生了巨大的影响，尤其是�
 
 假设我们必须为`Collections.sort`方法提供一个定制的比较器:
 
-```
+```java
 Collections.sort(numbers, new Comparator<Integer>() {
     @Override
     public int compare(Integer n1, Integer n2) {
@@ -85,7 +85,7 @@ Collections.sort(numbers, new Comparator<Integer>() {
 
 让我们看看 lambda 表达式如何帮助我们完成同样的任务:
 
-```
+```java
 Collections.sort(numbers, (n1, n2) -> n1.compareTo(n2));
 ```
 
@@ -109,7 +109,7 @@ Collections.sort(numbers, (n1, n2) -> n1.compareTo(n2));
 
 假设我们想求出我们刚刚排序的所有数字的总和:
 
-```
+```java
 Integer sum(List<Integer> numbers) {
     return numbers.stream().collect(Collectors.summingInt(Integer::intValue));
 }
@@ -135,7 +135,7 @@ Integer sum(List<Integer> numbers) {
 
 **对`final`关键词**的使用就是其中之一，但它并不止于此:
 
-```
+```java
 public class ImmutableData {
     private final String someData;
     private final AnotherImmutableData anotherImmutableData;
@@ -183,7 +183,7 @@ public class AnotherImmutableData {
 
 为了更好地理解这一点，让我们举个例子:
 
-```
+```java
 public class SimpleData {
     private Logger logger = Logger.getGlobal();
     private String data;
@@ -203,7 +203,7 @@ public class SimpleData {
 
 让我们观察以下陈述:
 
-```
+```java
 String data = new SimpleData().setData("Baeldung").getData();
 logger.log(Level.INFO, new SimpleData().setData("Baeldung").getData());
 logger.log(Level.INFO, data);
@@ -242,7 +242,7 @@ logger.log(Level.INFO, "Baeldung");
 
 它还提供了两个默认方法，`compose`和`andThen`，这将有助于我们进行函数组合:
 
-```
+```java
 Function<Double, Double> log = (value) -> Math.log(value);
 Function<Double, Double> sqrt = (value) -> Math.sqrt(value);
 Function<Double, Double> logThenSqrt = sqrt.compose(log);
@@ -269,7 +269,7 @@ logger.log(Level.INFO, String.valueOf(sqrtThenLog.apply(3.14)));
 
 在 Java 中，有一些我们经常使用的单子，比如`Optional`和`Stream`:
 
-```
+```java
 Optional.of(2).flatMap(f -> Optional.of(3).flatMap(s -> Optional.of(f + s)))
 ```
 
@@ -295,7 +295,7 @@ Optional.of(2).flatMap(f -> Optional.of(3).flatMap(s -> Optional.of(f + s)))
 
 然而，在 Java 中，这并不简单:
 
-```
+```java
 Function<Double, Function<Double, Double>> weight = mass -> gravity -> mass * gravity;
 
 Function<Double, Double> weightOnEarth = weight.apply(9.81);
@@ -315,7 +315,7 @@ Currying **依赖语言提供两个基本特性:lambda 表达式和闭包。** L
 
 让我们看一个例子:
 
-```
+```java
 private static Function<Double, Double> weightOnEarth() {	
     final double gravity = 9.81;	
     return mass -> mass * gravity;
@@ -332,7 +332,7 @@ private static Function<Double, Double> weightOnEarth() {
 
 让我们看看如何使用递归计算一个数的阶乘:
 
-```
+```java
 Integer factorial(Integer number) {
     return (number == 1) ? 1 : number * factorial(number - 1);
 }
@@ -348,7 +348,7 @@ Integer factorial(Integer number) {
 
 让我们看看如何重写上面的函数来使用尾部递归:
 
-```
+```java
 Integer factorial(Integer number, Integer result) {
     return (number == 1) ? result : factorial(number - 1, result * number);
 }

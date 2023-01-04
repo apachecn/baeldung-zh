@@ -18,7 +18,7 @@ Javadoc 是一个为 Java 类生成文档的工具。它**处理 Java 源文件�
 
 让我们尝试添加一个 Java 代码片段作为我们注释的一部分:
 
-```
+```java
 /**
 * This is an example to show default behavior of code snippet formatting in Javadocs
 * 
@@ -41,7 +41,7 @@ Javadoc 是一个为 Java 类生成文档的工具。它**处理 Java 源文件�
 
 HTML 提供了`<pre>`标签来表示预先格式化的文本。**它保留了包含文本的空格和换行符**，从而保留了代码片段所需的缩进:
 
-```
+```java
 /**
 * This is an example to show usage of HTML pre tag while code snippet formatting in Javadocs
 * 
@@ -70,7 +70,7 @@ HTML 提供了`<pre>`标签来表示预先格式化的文本。**它保留了包
 
 比如我们可以用&lt；表示'`<`'字符:
 
-```
+```java
 /**
 * This is an example to show usage of HTML character entities while code snippet formatting in Javadocs
 * 
@@ -91,7 +91,7 @@ HTML 提供了`<pre>`标签来表示预先格式化的文本。**它保留了包
 
 J avadoc 提供了一个`@code`标签，该标签**将括号内嵌入的注释视为源代码，而不是 HTML 字符**。这使我们能够直接使用 HTML 保留字符，而不用使用`Character`实体:来转义它们
 
-```
+```java
 /**
 * This is an example to show usage of javadoc code tag while code snippet formatting in Javadocs
 * 
@@ -115,7 +115,7 @@ J avadoc 提供了一个`@code`标签，该标签**将括号内嵌入的注释�
 
 让我们看一个例子:
 
-```
+```java
 /**
 * This is an example to show issue faced while using annotations in Javadocs
 * 
@@ -136,7 +136,7 @@ J avadoc 提供了一个`@code`标签，该标签**将括号内嵌入的注释�
 
 正如我们所看到的，Javadoc 将`@Getter`作为一个标签处理，并且注释没有被正确呈现。我们可以**在 Javadoc:** 提供的`@code`标签中嵌入注释(或使用`@`字符的代码)
 
-```
+```java
 /**
 * This is an example to show usage of javadoc code tag for handling '@' character
 * 
@@ -159,7 +159,7 @@ J avadoc 提供了一个`@code`标签，该标签**将括号内嵌入的注释�
 
 我们也可以通过使用`@literal`标签来实现**类似的行为。`@code`标签和`@literal`标签之间的唯一区别是 **`@code`标签将包含的文本格式化为代码字体** :**
 
-```
+```java
 /**
 * This is an example to show difference in javadoc literal and code tag
 * 
@@ -187,7 +187,7 @@ J avadoc 提供了一个`@code`标签，该标签**将括号内嵌入的注释�
 
 让我们包含一个简单的 jQuery 代码片段作为文档注释:
 
-```
+```java
 /**
 * This is an example to illustrate a basic jQuery code snippet embedded in documentation comments
 * <pre>
@@ -212,7 +212,7 @@ J avadoc 提供了一个`@code`标签，该标签**将括号内嵌入的注释�
 
 让我们插入一个 HTML 代码片段作为我们文档注释的一部分，看看它的表现如何:
 
-```
+```java
 /**
 * This is an example to illustrate an HTML code snippet embedded in documentation comments
 * <pre>
@@ -232,7 +232,7 @@ J avadoc 提供了一个`@code`标签，该标签**将括号内嵌入的注释�
 
 在这里，我们可以看到嵌入在注释中的代码片段已经被**解析成一个带有 HTML 标记的 HTML 页面**。我们可以**使用上面讨论的`@code`标签**来修复这个问题:
 
-```
+```java
 /**
 * This is an example to illustrate an HTML code snippet embedded in documentation comments
 * <pre>{@code

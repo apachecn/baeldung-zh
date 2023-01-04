@@ -12,7 +12,7 @@
 
 提醒一下，要并行运行`JUnit`测试，我们需要配置 [`maven-surefire-plugin`](https://web.archive.org/web/20220908005809/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.maven.plugins%22%20AND%20a%3A%22maven-surefire-plugin%22) 来启用这个特性:
 
-```
+```java
 <build>
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -34,7 +34,7 @@
 
 不过在`Spring 5`会运行的很流畅:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = Spring5JUnit4ConcurrentTest.SimpleConfiguration.class)
 public class Spring5JUnit4ConcurrentTest implements ApplicationContextAware, InitializingBean {
@@ -85,7 +85,7 @@ public class Spring5JUnit4ConcurrentTest implements ApplicationContextAware, Ini
 
 在`Spring 5`中， [`TestContextManager`](https://web.archive.org/web/20220908005809/https://docs.spring.io/spring/docs/5.0.0.M5/javadoc-api/org/springframework/test/context/TestContextManager.html) 使用一个线程 local——[`TestContext`](https://web.archive.org/web/20220908005809/https://docs.spring.io/spring/docs/5.0.0.M5/javadoc-api/org/springframework/test/context/TestContext.html)——来保证每个线程中`TestContexts`上的操作不会互相干扰。因此，对于大多数方法级和类级并发测试来说，线程安全是有保证的:
 
-```
+```java
 public class TestContextManager {
 
     // ...

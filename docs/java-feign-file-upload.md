@@ -10,13 +10,13 @@
 
 让我们**假设一个 RESTful web 服务被暴露**用于文件上传，下面给出细节:
 
-```
+```java
 POST http://localhost:8081/upload-file
 ```
 
 因此，为了解释通过`Feign`客户端上传文件，我们将调用公开的 web 服务 API，如下所示:
 
-```
+```java
 @PostMapping(value = "/upload-file")
 public String handleFileUpload(@RequestPart(value = "file") MultipartFile file) {
     // File upload logic
@@ -29,7 +29,7 @@ public String handleFileUpload(@RequestPart(value = "file") MultipartFile file) 
 
 因此，我们将向 Maven 添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.github.openfeign</groupId>
     <artifactId>feign-core</artifactId>
@@ -49,7 +49,7 @@ public String handleFileUpload(@RequestPart(value = "file") MultipartFile file) 
 
 我们也可以使用内部有`feign-core`的`[spring-cloud-starter-openfeign](https://web.archive.org/web/20220626075944/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22io.github.openfeign%22%20AND%20a%3A%22feign-core%22)`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-openfeign</artifactId>
@@ -61,7 +61,7 @@ public String handleFileUpload(@RequestPart(value = "file") MultipartFile file) 
 
 让我们将`@EnableFeignClients` 添加到我们的主类中。更多详情可以访问`[spring cloud open feign](/web/20220626075944/https://www.baeldung.com/spring-cloud-openfeign)` 教程:
 
-```
+```java
 @SpringBootApplication
 @EnableFeignClients
 public class ExampleApplication {
@@ -79,7 +79,7 @@ public class ExampleApplication {
 
 让我们为带注释的`@FeignClient`类创建所需的编码器:
 
-```
+```java
 public class FeignSupportConfig {
     @Bean
     public Encoder multipartFormEncoder() {
@@ -97,7 +97,7 @@ public class FeignSupportConfig {
 
 现在，让我们创建一个接口并用`@FeignClient`对其进行注释。我们还将添加 **`name`和`configuration`属性**及其相应的值:
 
-```
+```java
 @FeignClient(name = "file", url = "http://localhost:8081", configuration = FeignSupportConfig.class)
 public interface UploadClient {
     @PostMapping(value = "/upload-file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -111,13 +111,13 @@ public interface UploadClient {
 
 现在我们的@FeignClient 看起来像这样:
 
-```
+```java
 @FeignClient(name = "file", url = "http://localhost:8081", fallback = UploadFallback.class, configuration = FeignSupportConfig.class)
 ```
 
 最后，我们可以直接从服务层调用`UploadClient`:
 
-```
+```java
 public String uploadFile(MultipartFile file) {
     return client.fileUpload(file);
 }
@@ -129,7 +129,7 @@ public String uploadFile(MultipartFile file) {
 
 让我们构建一个代理接口，它包含一个针对 REST API 的文件上传方法，用于文件上传:
 
-```
+```java
 public interface UploadResource {
     @RequestLine("POST /upload-file")
     @Headers("Content-Type: multipart/form-data")
@@ -141,7 +141,7 @@ public interface UploadResource {
 
 现在，让我们在代理接口中调用指定的方法。我们将在我们的服务类中实现这一点:
 
-```
+```java
 public boolean uploadFileWithManualClient(MultipartFile file) {
     UploadResource fileUploadResource = Feign.builder().encoder(new SpringFormEncoder())
       .target(UploadResource.class, HTTP_FILE_UPLOAD_URL);
@@ -156,7 +156,7 @@ public boolean uploadFileWithManualClient(MultipartFile file) {
 
 让我们创建一个测试来验证带注释的客户端的文件上传:
 
-```
+```java
 @SpringBootTest
 public class OpenFeignFileUploadLiveTest {
 
@@ -182,7 +182,7 @@ public class OpenFeignFileUploadLiveTest {
 
 现在，让我们创建另一个测试来验证使用`Feign.Builder()`上传的文件:
 
-```
+```java
 @Test
 public void whenFeignBuilder_thenFileUploadSuccess() throws IOException {
     // same as above

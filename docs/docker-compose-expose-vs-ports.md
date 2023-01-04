@@ -16,7 +16,7 @@
 
 我们可以通过在`services`部分指定端口号来公开端口:
 
-```
+```java
 services:
   myapp1:
     ...
@@ -33,7 +33,7 @@ services:
 
 现在让我们检查暴露的端口:
 
-```
+```java
 > docker ps
 CONTAINER ID   IMAGE    COMMAND     CREATED     STATUS      PORTS               NAMES
 8673c14f18d1   ...      ...         ...         ...         3000/tcp, 8000/tcp  bael_myapp1
@@ -44,7 +44,7 @@ bc044e180131   ...      ...         ...         ...         5000/tcp            
 
 最后，让我们验证容器之间的通信:
 
-```
+```java
 > docker exec -it bc044e180131 /bin/bash
 
 bash-5.1$ nc -vz myapp1 3000
@@ -65,7 +65,7 @@ myapp1 (172.18.0.1:8000) open
 
 先从分析短的开始。**短语法是一个冒号分隔的字符串，用于设置主机 IP 地址、主机端口和容器端口**:
 
-```
+```java
 [HOST:]CONTAINER[/PROTOCOL]
 ```
 
@@ -77,7 +77,7 @@ C `ONTAINER`定义一个容器端口号或端口号范围。
 
 现在我们知道了语法，让我们在 Docker 编写文件中定义端口:
 
-```
+```java
 services:
   myapp1:
     ...
@@ -94,7 +94,7 @@ services:
 
 像以前一样，让我们用`docker ps`命令检查暴露的端口:
 
-```
+```java
 > docker ps -a
 CONTAINER ID   ... PORTS                                                                        NAMES
 e8c65b9eec91   ... 0.0.0.0:51060->3000/tcp, 0.0.0.0:51063->3001/tcp, 0.0.0.0:51064->3002/tcp,   bael_myapp1
@@ -109,7 +109,7 @@ e8c65b9eec91   ... 0.0.0.0:51060->3000/tcp, 0.0.0.0:51063->3001/tcp, 0.0.0.0:510
 
 使用长语法，我们可以用同样的方式配置端口。然而，我们没有使用冒号分隔的字符串，而是单独定义每个属性:
 
-```
+```java
 services: 
   myapp1:
   ...

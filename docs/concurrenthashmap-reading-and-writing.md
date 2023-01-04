@@ -35,7 +35,7 @@
 
 为了说明`ConcurrentHashMap`如何在多线程环境中工作，我们将使用一个 Java 测试来检索和更新给定数字的频率。让我们首先定义测试的基本结构:
 
-```
+```java
 public class ConcurrentHashMapUnitTest {
 
     private Map<Integer, Integer> frequencyMap;
@@ -71,7 +71,7 @@ public class ConcurrentHashMapUnitTest {
 
 让我们来看一个例子，一个线程写入一个键，第二个线程在写入完成前读取，第三个线程在写入完成后读取:
 
-```
+```java
 @Test
 public void givenOneThreadIsWriting_whenAnotherThreadReads_thenGetCorrectValue() throws Exception {
     ExecutorService threadExecutor = Executors.newFixedThreadPool(3);
@@ -113,7 +113,7 @@ public void givenOneThreadIsWriting_whenAnotherThreadReads_thenGetCorrectValue()
 
 如前所述，`ConcurrentHashMap`实现了写操作的部分并发，这阻止了相同映射键上的其他写操作，并允许对不同键的写操作。**这对于在多线程环境中实现高吞吐量和一致的写入至关重要。**为了说明一致性，让我们定义一个测试，让两个线程在相同的资源上写，并检查 map 如何处理:
 
-```
+```java
 @Test
 public void givenOneThreadIsWriting_whenAnotherThreadWritesAtSameKey_thenWaitAndGetCorrectValue() throws Exception {
     ExecutorService threadExecutor = Executors.newFixedThreadPool(2);
@@ -145,7 +145,7 @@ public void givenOneThreadIsWriting_whenAnotherThreadWritesAtSameKey_thenWaitAnd
 
 `ConcurrentHashMap `的另一个用例是在不同的映射键中实现高吞吐量的写入。让我们用另一个使用两个写线程来更新映射中不同键的单元测试来说明这一点:
 
-```
+```java
 @Test
 public void givenOneThreadIsWriting_whenAnotherThreadWritesAtDifferentKey_thenNotWaitAndGetCorrectValue() throws Exception {
     ExecutorService threadExecutor = Executors.newFixedThreadPool(2);

@@ -16,7 +16,7 @@ Java 应用程序可以使用`apache-poi`动态地读取、写入和修改 Excel
 
 首先，让我们将`[poi](https://web.archive.org/web/20220627184359/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.poi%22%20AND%20a%3A%22poi-ooxml%22)`依赖项添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.poi</groupId>
     <artifactId>poi</artifactId>
@@ -28,7 +28,7 @@ Java 应用程序可以使用`apache-poi`动态地读取、写入和修改 Excel
 
 First, let's create a workbook and sheet to write in. We can choose either `XSSFWorkbook`, which works with `.xlsx` files, or `HSSFWorkbook`, which works with `.xls` files. Let's use `XSSFWorkbook`:
 
-```
+```java
 Workbook workbook = new XSSFWorkbook();
 Sheet sheet = workbook.createSheet("Avengers");
 Row row1 = sheet.createRow(0);
@@ -48,7 +48,7 @@ row2.createCell(0).setCellValue("SPIDER-MAN");
 *   `/src/main/resources/ironman.png`
 *   `/src/main/resources/spiderman.png`
 
-```
+```java
 InputStream inputStream1 = TestClass.class.getClassLoader()
     .getResourceAsStream("ironman.png");
 InputStream inputStream2 = TestClass.class.getClassLoader()
@@ -59,7 +59,7 @@ InputStream inputStream2 = TestClass.class.getClassLoader()
 
 接下来，让我们将图像转换成字节数组。这里，我们将使用来自`apache-poi`的`IOUtils`:
 
-```
+```java
 byte[] inputImageBytes1 = IOUtils.toByteArray(inputStream1);
 byte[] inputImageBytes2 = IOUtils.toByteArray(inputStream2); 
 ```
@@ -68,7 +68,7 @@ byte[] inputImageBytes2 = IOUtils.toByteArray(inputStream2);
 
 现在，我们将使用字节数组向我们的`workbook.`添加一张图片。[支持的图片类型](https://web.archive.org/web/20220627184359/https://poi.apache.org/components/spreadsheet/quick-guide.html#Images)是 PNG、JPG 和 DIB。我们在这里使用 PNG:
 
-```
+```java
 int inputImagePictureID1 = workbook.addPicture(inputImageBytes1, Workbook.PICTURE_TYPE_PNG);
 int inputImagePictureID2 = workbook.addPicture(inputImageBytes2, Workbook.PICTURE_TYPE_PNG); 
 ```
@@ -81,7 +81,7 @@ int inputImagePictureID2 = workbook.addPicture(inputImageBytes2, Workbook.PICTUR
 
 让我们创建绘图家长:
 
-```
+```java
 XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
 ```
 
@@ -95,7 +95,7 @@ XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
 
 我们将创建两个锚点对象，每个图像一个:
 
-```
+```java
 XSSFClientAnchor ironManAnchor = new XSSFClientAnchor();
 XSSFClientAnchor spiderManAnchor = new XSSFClientAnchor();
 ```
@@ -104,7 +104,7 @@ XSSFClientAnchor spiderManAnchor = new XSSFClientAnchor();
 
 让我们将第一张图片放入单元格`B1`:
 
-```
+```java
 ironManAnchor.setCol1(1); // Sets the column (0 based) of the first cell.
 ironManAnchor.setCol2(2); // Sets the column (0 based) of the Second cell.
 ironManAnchor.setRow1(0); // Sets the row (0 based) of the first cell.
@@ -113,7 +113,7 @@ ironManAnchor.setRow2(1); // Sets the row (0 based) of the Second cell.
 
 同样，我们将第二幅图像放在单元格`B2`中:
 
-```
+```java
 spiderManAnchor.setCol1(1);
 spiderManAnchor.setCol2(2);
 spiderManAnchor.setRow1(1);
@@ -124,7 +124,7 @@ spiderManAnchor.setRow2(2);
 
 Now, let's call `createPicture` on the drawing patriarch to add an image. **We'll use the previously created anchor object and picture index of our images:**
 
-```
+```java
 drawing.createPicture(ironManAnchor, inputImagePictureID1);
 drawing.createPicture(spiderManAnchor, inputImagePictureID2);
 ```
@@ -133,7 +133,7 @@ drawing.createPicture(spiderManAnchor, inputImagePictureID2);
 
 在我们保存之前，让我们确保单元格足够宽，可以容纳我们使用`autoSizeColumn`添加的图片:
 
-```
+```java
 for (int i = 0; i < 3; i++) {
     sheet.autoSizeColumn(i);
 }
@@ -141,7 +141,7 @@ for (int i = 0; i < 3; i++) {
 
 最后，让我们保存工作簿:
 
-```
+```java
 try (FileOutputStream saveExcel = new FileOutputStream("target/baeldung-apachepoi.xlsx")) {
     workbook.write(saveExcel);
 }

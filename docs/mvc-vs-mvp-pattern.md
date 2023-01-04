@@ -80,7 +80,7 @@ MVP 模式是一种基于 MVC 模式概念的 UI 表示模式。然而，它没�
 
 我们有一个简单的视图类来输出产品细节。MVP 和 MVC 视图类是相似的:
 
-```
+```java
 public class ProductView {
     public void printProductDetails(String name, String description, Double price) {
         log.info("Product details:");
@@ -95,7 +95,7 @@ public class ProductView {
 
 现在让我们为 MVP 定义一个只负责业务逻辑的`Product`类:
 
-```
+```java
 public class Product {
     private String name;
     private String description;
@@ -107,7 +107,7 @@ public class Product {
 
 MVP 中的 presenter 类从模型中获取数据，并将其传递给视图:
 
-```
+```java
 public class ProductPresenter {
     private final Product product;
     private final ProductView view;
@@ -126,7 +126,7 @@ public class ProductPresenter {
 
 我们可以为 MVC 定义一个模型类:
 
-```
+```java
 public class Product {
     private String name;
     private String description;

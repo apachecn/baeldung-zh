@@ -23,7 +23,7 @@ JDO 支持以下查询语言:
 
 要创建一个查询，我们需要指定语言和查询`String:`
 
-```
+```java
 Query query = pm.newQuery(
   "javax.jdo.query.SQL",
   "select * from product_item where price < 10");
@@ -31,7 +31,7 @@ Query query = pm.newQuery(
 
 如果我们不指定语言，它默认为 JDOQL:
 
-```
+```java
 Query query = pm.newQuery(
   "SELECT FROM com.baeldung.jdo.query.ProductItem WHERE price < 10");
 ```
@@ -42,7 +42,7 @@ Query query = pm.newQuery(
 
 为此，我们首先创建一个`ProductItem`类:
 
-```
+```java
 @PersistenceCapable
 public class ProductItem {
 
@@ -60,7 +60,7 @@ public class ProductItem {
 
 接下来，我们向`META-INF/package.jdo` 文件添加一个类配置来定义一个查询，并将其命名为:
 
-```
+```java
 <jdo>
     <package name="com.baeldung.jdo.query">
         <class name="ProductItem" detachable="true" table="product_item">
@@ -76,7 +76,7 @@ public class ProductItem {
 
 我们可以在代码中使用它:
 
-```
+```java
 Query<ProductItem> query = pm.newNamedQuery(
   ProductItem.class, "PriceBelow10");
 List<ProductItem> items = query.executeList();
@@ -86,13 +86,13 @@ List<ProductItem> items = query.executeList();
 
 为了节省资源，我们可以关闭查询:
 
-```
+```java
 query.close();
 ```
 
 同样，我们可以通过将特定的结果集作为参数传递给`close()`方法来关闭它:
 
-```
+```java
 query.close(ResultSet);
 ```
 
@@ -100,7 +100,7 @@ query.close(ResultSet);
 
 如果我们想验证一个查询，我们可以调用`compile()`方法:
 
-```
+```java
 query.compile();
 ```
 
@@ -118,7 +118,7 @@ JDOQL 查询可以用`single-String`的形式定义。
 
 JDOQL 中的候选类必须是一个持久的类。在 SQL 语言中，我们使用完整的类名而不是表名:
 
-```
+```java
 Query query = pm.newQuery("SELECT FROM com.baeldung.jdo.query.ProductItem");
 List<ProductItem> r = query.executeList();
 ```
@@ -129,7 +129,7 @@ List<ProductItem> r = query.executeList();
 
 过滤器可以用 Java 编写，但必须计算为布尔值:
 
-```
+```java
 Query query = pm.newQuery("SELECT FROM com.baeldung.jdo.query.ProductItem");
 query.setFilter("status == 'SoldOut'");
 List<ProductItem> result = query.executeList();
@@ -139,7 +139,7 @@ List<ProductItem> result = query.executeList();
 
 JDOQL 并不支持所有的 Java 方法，但是它支持各种我们可以从查询中调用的方法，并且可以在广泛的范围内使用:
 
-```
+```java
 query.setFilter("this.name.startsWith('supported')");
 ```
 
@@ -151,7 +151,7 @@ query.setFilter("this.name.startsWith('supported')");
 
 要显式定义参数:
 
-```
+```java
 Query query = pm.newQuery(
   "SELECT FROM com.baeldung.jdo.query.ProductItem "
   + "WHERE price < threshold PARAMETERS double threshold");
@@ -160,7 +160,7 @@ List<ProductItem> result = (List<ProductItem>) query.execute(10);
 
 这也可以通过使用`setParameters`方法来实现:
 
-```
+```java
 Query query = pm.newQuery(
   "SELECT FROM com.baeldung.jdo.query.ProductItem "
   + "WHERE price < :threshold");
@@ -170,7 +170,7 @@ List<ProductItem> result = (List<ProductItem>) query.execute(10);
 
 我们可以通过不定义参数类型来隐式实现:
 
-```
+```java
 Query query = pm.newQuery(
   "SELECT FROM com.baeldung.jdo.query.ProductItem "
   + "WHERE price < :threshold");
@@ -183,7 +183,7 @@ List<ProductItem> result = (List<ProductItem>) query.execute(10);
 
 ### 5.1。Maven 设置
 
-```
+```java
 <dependency>
     <groupId>org.datanucleus</groupId>
     <artifactId>datanucleus-jdo-query</artifactId>
@@ -217,7 +217,7 @@ List<ProductItem> result = (List<ProductItem>) query.execute(10);
 
 ### 5.3。创建 JDOQL 类型化查询:
 
-```
+```java
 JDOQLTypedQuery<ProductItem> tq = pm.newJDOQLTypedQuery(ProductItem.class);
 QProductItem cand = QProductItem.candidate();
 tq = tq.filter(cand.price.lt(10).and(cand.name.startsWith("pro")));
@@ -232,7 +232,7 @@ JDO 支持 SQL 语言，以防我们使用 RDBMS。
 
 让我们创建 SQL 查询:
 
-```
+```java
 Query query = pm.newQuery("javax.jdo.query.SQL","select * from "
   + "product_item where price < ? and status = ?");
 query.setClass(ProductItem.class);
@@ -248,7 +248,7 @@ JDO DataNucleus 提供 JPQL 语言。
 
 让我们使用 JPQL 创建一个查询:
 
-```
+```java
 Query query = pm.newQuery("JPQL","select i from "
   + "com.baeldung.jdo.query.ProductItem i where i.price < 10"
   + " and i.status = 'InStock'");

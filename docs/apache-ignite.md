@@ -14,7 +14,7 @@ Apache Ignite 是一个开源的以内存为中心的分布式平台。我们可
 
 我们将要构建的应用程序的 Maven 依赖性:
 
-```
+```java
 <dependency>
     <groupId>org.apache.ignite</groupId>
     <artifactId>ignite-core</artifactId>
@@ -31,7 +31,7 @@ Apache Ignite 是一个开源的以内存为中心的分布式平台。我们可
 
 最后一步，我们启动 Ignite 节点:
 
-```
+```java
 Ignite node started OK (id=53c77dea)
 Topology snapshot [ver=1, servers=1, clients=0, CPUs=4, offheap=1.2GB, heap=1.0GB]
 Data Regions Configured:
@@ -82,19 +82,19 @@ SQL 和缓存索引存储在称为 B+树的结构中。缓存键按其键值排�
 
 要启动默认 Ignite 节点，请执行以下操作:
 
-```
+```java
 Ignite ignite = Ignition.start();
 ```
 
 或者来自配置文件:
 
-```
+```java
 Ignite ignite = Ignition.start("config/example-cache.xml");
 ```
 
 如果我们需要对初始化过程进行更多的控制，有另一种方法可以借助`LifecycleBean`接口:
 
-```
+```java
 public class CustomLifecycleBean implements LifecycleBean {
 
     @Override
@@ -112,7 +112,7 @@ public class CustomLifecycleBean implements LifecycleBean {
 
 为此，我们将带有`CustomLifecycleBean`的配置实例传递给启动方法:
 
-```
+```java
 IgniteConfiguration configuration = new IgniteConfiguration();
 configuration.setLifecycleBeans(new CustomLifecycleBean());
 Ignite ignite = Ignition.start(configuration);
@@ -130,7 +130,7 @@ Ignite ignite = Ignition.start(configuration);
 
 例如，让我们使用模板配置创建一个缓存:
 
-```
+```java
 IgniteCache<Employee, Integer> cache = ignite.getOrCreateCache(
   "baeldingCache");
 ```
@@ -143,7 +143,7 @@ IgniteCache<Employee, Integer> cache = ignite.getOrCreateCache(
 
 接下来，让我们添加一些`Employee`对象:
 
-```
+```java
 cache.put(1, new Employee(1, "John", true));
 cache.put(2, new Employee(2, "Anna", false));
 cache.put(3, new Employee(3, "George", true));
@@ -157,7 +157,7 @@ cache.put(3, new Employee(3, "George", true));
 
 要从缓存中读取雇员，我们只需使用键值:
 
-```
+```java
 Employee employee = cache.get(1);
 ```
 
@@ -167,14 +167,14 @@ Employee employee = cache.get(1);
 
 我们可以修改我们的示例，并从文件中传输数据。首先，我们定义一个数据流:
 
-```
+```java
 IgniteDataStreamer<Integer, Employee> streamer = ignite
   .dataStreamer(cache.getName());
 ```
 
 接下来，我们可以注册一个流转换器，将接收到的雇员标记为已雇用:
 
-```
+```java
 streamer.receiver(StreamTransformer.from((e, arg) -> {
     Employee employee = e.getValue();
     employee.setEmployed(true);
@@ -185,7 +185,7 @@ streamer.receiver(StreamTransformer.from((e, arg) -> {
 
 最后一步，我们遍历`employees.txt`文件行，并将它们转换成 Java 对象:
 
-```
+```java
 Path path = Paths.get(IgniteStream.class.getResource("employees.txt")
   .toURI());
 Gson gson = new Gson();
@@ -209,14 +209,14 @@ Files.lines(path)
 
 为此，**我们注册了一个 JDBC 驱动程序，并在下一步打开了一个连接**:
 
-```
+```java
 Class.forName("org.apache.ignite.IgniteJdbcThinDriver");
 Connection conn = DriverManager.getConnection("jdbc:ignite:thin://127.0.0.1/");
 ```
 
 在标准 DDL 命令的帮助下，我们填充了`Employee`表:
 
-```
+```java
 sql.executeUpdate("CREATE TABLE Employee (" +
   " id LONG PRIMARY KEY, name VARCHAR, isEmployed tinyint(1)) " +
   " WITH \"template=replicated\"");
@@ -226,7 +226,7 @@ sql.executeUpdate("CREATE TABLE Employee (" +
 
 然后，让我们使用 INSERT DML 语句添加一些数据:
 
-```
+```java
 PreparedStatement sql = conn.prepareStatement(
   "INSERT INTO Employee (id, name, isEmployed) VALUES (?, ?, ?)");
 
@@ -240,7 +240,7 @@ sql.executeUpdate();
 
 之后，我们选择记录:
 
-```
+```java
 ResultSet rs 
   = sql.executeQuery("SELECT e.name, e.isEmployed " 
     + " FROM Employee e " 
@@ -251,7 +251,7 @@ ResultSet rs
 
 **还可以对存储在缓存中的 Java 对象执行查询**。Ignite 将 Java 对象视为单独的 SQL 记录:
 
-```
+```java
 IgniteCache<Integer, Employee> cache = ignite.cache("baeldungCache");
 
 SqlFieldsQuery sql = new SqlFieldsQuery(

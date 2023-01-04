@@ -50,7 +50,7 @@ Actuator 主要用于**公开关于正在运行的应用程序**的操作信息�
 
 在 Maven 中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-actuator</artifactId>
@@ -93,7 +93,7 @@ Actuator 主要用于**公开关于正在运行的应用程序**的操作信息�
 
 因此，为了调整致动器安全规则，我们可以只为`/actuator/**`添加一个条目:
 
-```
+```java
 @Bean
 public SecurityWebFilterChain securityWebFilterChain(
   ServerHttpSecurity http) {
@@ -143,7 +143,7 @@ Spring Boot 添加了一个发现端点，它返回所有可用执行器端点�
 
 因此，如果我们向这个 URL 发送一个`GET `请求，它将返回各个端点的执行器链接:
 
-```
+```java
 {
   "_links": {
     "self": {
@@ -184,7 +184,7 @@ Spring Boot 添加了一个发现端点，它返回所有可用执行器端点�
 
 让我们来看一个简单的自定义反应性运行状况检查:
 
-```
+```java
 @Component
 public class DownstreamServiceHealthIndicator implements ReactiveHealthIndicator {
 
@@ -214,7 +214,7 @@ public class DownstreamServiceHealthIndicator implements ReactiveHealthIndicator
 
 例如，我们可以创建一个名为`custom `的健康组，将其添加到我们的`application.properties`中:
 
-```
+```java
 management.endpoint.health.group.custom.include=diskSpace,ping
 ```
 
@@ -222,7 +222,7 @@ management.endpoint.health.group.custom.include=diskSpace,ping
 
 现在，如果我们调用`/actuator/health `端点，它会在 JSON 响应中告诉我们新的健康组:
 
-```
+```java
 {"status":"UP","groups":["custom"]}
 ```
 
@@ -230,20 +230,20 @@ management.endpoint.health.group.custom.include=diskSpace,ping
 
 在这种情况下，如果我们向`/actuator/health/custom`发送一个请求，那么:
 
-```
+```java
 {"status":"UP"}
 ```
 
 我们可以通过`application.properties`配置群组以显示更多细节:
 
-```
+```java
 management.endpoint.health.group.custom.show-components=always
 management.endpoint.health.group.custom.show-details=always
 ```
 
 现在，如果我们向`/actuator/health/custom, `发送同样的请求，我们会看到更多的细节:
 
-```
+```java
 {
   "status": "UP",
   "components": {
@@ -264,7 +264,7 @@ management.endpoint.health.group.custom.show-details=always
 
 也可以只向授权用户显示这些详细信息:
 
-```
+```java
 management.endpoint.health.group.custom.show-components=when_authorized
 management.endpoint.health.group.custom.show-details=when_authorized
 ```
@@ -273,7 +273,7 @@ management.endpoint.health.group.custom.show-details=when_authorized
 
 例如，它可以返回 207 状态代码，而不是 HTTP 200 OK 响应:
 
-```
+```java
 management.endpoint.health.group.custom.status.http-mapping.up=207
 ```
 
@@ -289,7 +289,7 @@ management.endpoint.health.group.custom.status.http-mapping.up=207
 
 此外，我们将从`/metrics` 端点获得一个全新的响应:
 
-```
+```java
 {
   "names": [
     "jvm.gc.pause",
@@ -305,7 +305,7 @@ management.endpoint.health.group.custom.status.http-mapping.up=207
 
 要获得特定指标的实际值，我们现在可以导航到所需的指标，例如`/actuator/metrics/jvm.gc.pause`，并获得详细的响应:
 
-```
+```java
 {
   "name": "jvm.gc.pause",
   "measurements": [
@@ -347,7 +347,7 @@ management.endpoint.health.group.custom.status.http-mapping.up=207
 
 `/info` 终点保持不变。**和以前一样，我们可以使用各自的 Maven 或 Gradle 依赖关系**来添加 git 细节:
 
-```
+```java
 <dependency>
     <groupId>pl.project13.maven</groupId>
     <artifactId>git-commit-id-plugin</artifactId>
@@ -356,7 +356,7 @@ management.endpoint.health.group.custom.status.http-mapping.up=207
 
 同样，**我们也可以使用 Maven 或 Gradle 插件**来包含构建信息，包括名称、组和版本:
 
-```
+```java
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -376,7 +376,7 @@ management.endpoint.health.group.custom.status.http-mapping.up=207
 
 **让我们在应用程序中创建一个执行器端点来查询、启用和禁用特性标志**:
 
-```
+```java
 @Component
 @Endpoint(id = "features")
 public class FeaturesEndpoint {
@@ -426,7 +426,7 @@ public class FeaturesEndpoint {
 
 验证这一点的快速方法是检查日志:
 
-```
+```java
 [...].WebFluxEndpointHandlerMapping: Mapped "{[/actuator/features/{name}],
   methods=[GET],
   produces=[application/vnd.spring-boot.actuator.v2+json || application/json]}"
@@ -457,7 +457,7 @@ public class FeaturesEndpoint {
 
 **我们可以使用`@EndpointExtension`注释**，或其更具体的专门化`@EndpointWebExtension` 或`@EndpointJmxExtension`，轻松扩展预定义端点的行为:
 
-```
+```java
 @Component
 @EndpointWebExtension(endpoint = InfoEndpoint.class)
 public class InfoWebEndpointExtension {
@@ -488,19 +488,19 @@ public class InfoWebEndpointExtension {
 
 我们需要添加以下配置来公开所有端点:
 
-```
+```java
 management.endpoints.web.exposure.include=*
 ```
 
 要显式启用特定端点(例如，`/shutdown), `,我们使用:
 
-```
+```java
 management.endpoint.shutdown.enabled=true
 ```
 
 为了显示除一个端点(例如`/loggers`)之外的所有已启用端点，我们使用:
 
-```
+```java
 management.endpoints.web.exposure.include=*
 management.endpoints.web.exposure.exclude=loggers
 ```
@@ -540,7 +540,7 @@ management.endpoints.web.exposure.exclude=loggers
 
 例如，添加以下属性将定制/ `beans`端点`:` 
 
-```
+```java
 endpoints.beans.id=springbeans
 endpoints.beans.sensitive=false
 endpoints.beans.enabled=true
@@ -554,7 +554,7 @@ endpoints.beans.enabled=true
 
 默认情况下，未经授权的用户只能在通过 HTTP 访问时看到状态信息:
 
-```
+```java
 {
     "status" : "UP"
 } 
@@ -568,7 +568,7 @@ endpoints.beans.enabled=true
 
 我们还可以**实现我们自己的定制健康指示器**，它可以收集特定于应用程序的任何类型的定制健康数据，并通过`/health`端点自动公开这些数据:
 
-```
+```java
 @Component("myHealthCheck")
 public class HealthCheck implements HealthIndicator {
 
@@ -591,7 +591,7 @@ public class HealthCheck implements HealthIndicator {
 
 下面是输出的样子:
 
-```
+```java
 {
     "status" : "DOWN",
     "myHealthCheck" : {
@@ -610,7 +610,7 @@ public class HealthCheck implements HealthIndicator {
 
 我们还可以定制由`/info`端点显示的数据:
 
-```
+```java
 info.app.name=Spring Sample Application
 info.app.description=This is my first spring boot application
 info.app.version=1.0.0
@@ -618,7 +618,7 @@ info.app.version=1.0.0
 
 和示例输出:
 
-```
+```java
 {
     "app" : {
         "version" : "1.0.0",
@@ -634,7 +634,7 @@ info.app.version=1.0.0
 
 这是该端点开箱后的输出:
 
-```
+```java
 {
     "mem" : 193024,
     "mem.free" : 87693,
@@ -669,7 +669,7 @@ info.app.version=1.0.0
 
 我们将定制登录流来记录成功和失败的登录尝试:
 
-```
+```java
 @Service
 public class LoginServiceImpl {
 
@@ -696,7 +696,7 @@ public class LoginServiceImpl {
 
 输出可能是这样的:
 
-```
+```java
 {
     ...
     "counter.login.success" : 105,
@@ -713,7 +713,7 @@ public class LoginServiceImpl {
 
 首先，我们需要让新端点实现`Endpoint<T>`接口:
 
-```
+```java
 @Component
 public class CustomEndpoint implements Endpoint<List<String>> {
 
@@ -747,7 +747,7 @@ public class CustomEndpoint implements Endpoint<List<String>> {
 
 输出:
 
-```
+```java
 [ "This is message 1", "This is message 2" ]
 ```
 
@@ -759,7 +759,7 @@ public class CustomEndpoint implements Endpoint<List<String>> {
 
 因此，我们可以更改`management.address`属性来限制可以通过网络访问端点的位置:
 
-```
+```java
 #port used to expose actuator
 management.port=8081 
 
@@ -774,7 +774,7 @@ management.security.enabled=false
 
 如果应用程序使用 Spring Security，我们可以通过在`application.properties`文件中定义默认的安全属性(用户名、密码和角色)来保护这些端点:
 
-```
+```java
 security.user.name=admin
 security.user.password=secret
 management.security.role=SUPERUSER

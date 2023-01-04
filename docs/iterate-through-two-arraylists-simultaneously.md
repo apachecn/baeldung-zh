@@ -18,7 +18,7 @@
 
 让我们首先创建两个用于处理的`List`对象:
 
-```
+```java
 List<String> countryName = List.of("USA", "UK", "Germany", "India");
 List<String> countryCode = List.of("+1", "+44", "+49", "+91");
 ```
@@ -27,7 +27,7 @@ List<String> countryCode = List.of("+1", "+44", "+49", "+91");
 
 我们希望处理这两个列表，并获得每个国家的正确代码。我们将测试每个解决方案的预期输出:
 
-```
+```java
 assertThat(processedList)
   .containsExactly("USA: +1", "UK: +44", "Germany: +49", "India: +91");
 ```
@@ -36,7 +36,7 @@ assertThat(processedList)
 
 让我们从使用一个`for`循环迭代两个列表的最简单的方法开始:
 
-```
+```java
 for (int i = 0; i < countryName.size(); i++) {
     String processedData = String.format("%s: %s", countryName.get(i), countryCode.get(i));
     processedList.add(processedData);
@@ -49,14 +49,14 @@ for (int i = 0; i < countryName.size(); i++) {
 
 我们也可以使用 [`Collection`](/web/20221116222735/https://www.baeldung.com/java-collections) 接口的`iterator()`方法得到一个`[Iterator](/web/20221116222735/https://www.baeldung.com/java-iterator)`实例。我们将首先获得两个列表的`Iterator`实例:
 
-```
+```java
 Iterator<String> nameIterator = countryName.iterator();
 Iterator<String> codeIterator = countryCode.iterator();
 ```
 
 我们将使用一个`while`循环来管理两个迭代器:
 
-```
+```java
 while (nameIterator.hasNext() && codeIterator.hasNext()) {
     String processedData = String.format("%s: %s", nameIterator.next(), codeIterator.next());
     processedList.add(processedData);
@@ -75,7 +75,7 @@ while (nameIterator.hasNext() && codeIterator.hasNext()) {
 
 首先，我们应该在`pom.xml`文件中添加 [Spring 数据依赖关系](https://web.archive.org/web/20221116222735/https://search.maven.org/artifact/org.springframework.data/spring-data-commons):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-commons</artifactId>
@@ -87,7 +87,7 @@ while (nameIterator.hasNext() && codeIterator.hasNext()) {
 
 我们将把列表流和一个 lambda 函数传递给`zip()`方法。lambda 将拥有处理逻辑，我们将使用`collect()`方法在一个列表中获取所有处理过的数据。
 
-```
+```java
 List<String> processedList = StreamUtils.zip(
   countryName.stream(), 
   countryCode.stream(),

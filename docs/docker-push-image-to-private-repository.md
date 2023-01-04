@@ -22,7 +22,7 @@
 
 首先，我们从一个简单的 Spring Boot 应用程序创建一个 Docker 图像，该应用程序由一个向用户返回友好消息的`RestController `组成:
 
-```
+```java
 @RestController
 public class HelloWorldController {
     @GetMapping("/helloworld")
@@ -34,7 +34,7 @@ public class HelloWorldController {
 
 我们使用以下 Dockerfile 文件:
 
-```
+```java
 FROM openjdk:11
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
@@ -43,25 +43,25 @@ ENTRYPOINT ["java","-jar","/app.jar"]
 
 最后，我们运行构建图像的命令。看起来是这样的:
 
-```
+```java
 docker build [OPTIONS] PATH | URL | -
 ```
 
 在我们的例子中，我们使用-t 选项，它告诉我们想要标记图像。我们还提供了点“.”作为 jar 文件的`PATH`。选择由你的用户名和库名组成的正确名称是很重要的**。**版本标签是可选的。如果避免，图像将被标记为`latest`:
 
-```
+```java
 docker build -t username/fancy-repository:v1.0.0 .
 ```
 
 现在，我们可以使用以下命令列出现有的图像:
 
-```
+```java
 docker images
 ```
 
 因此，我们将看到新创建的图像:
 
-```
+```java
 REPOSITORY                  TAG       IMAGE ID        CREATED              SIZE
 username/fancy-repository   v1.0.0    e20b5a89a0f2   About a minute ago   665MB
 ```
@@ -70,32 +70,32 @@ username/fancy-repository   v1.0.0    e20b5a89a0f2   About a minute ago   665MB
 
 在某些情况下，我们不想从头创建一个映像，而是推送一个现有的映像。这需要一些准备步骤，我们将在本节中探讨。假设我们的机器上有以下图像:
 
-```
+```java
 REPOSITORY       TAG         IMAGE ID       CREATED        SIZE
 existing-image   some-tag    e20b5a89a0f2   2 weeks ago   665MB
 ```
 
 为了将它推送到我们的`fancy-repository`，我们首先需要使用以下命令用正确的名称/别名标记图像:
 
-```
+```java
 docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
 ```
 
 在我们的例子中，`SOURCE_IMAGE[:TAG]`是现有图像的名称和标签。`TARGET_IMAGE[:TAG]` **是由我们的用户名和我们想要将图像推送到**的存储库的名称组成的别名。在我们的示例中，该命令如下所示:
 
-```
+```java
 docker tag existing-image:some-tag username/fancy-repository:v1.0.0
 ```
 
 我们可以使用以下命令检查结果:
 
-```
+```java
 docker images
 ```
 
 现在我们可以看到一个额外的条目，它显示了存储库的名称和新应用的版本标签。图像 id、时间戳和大小是相同的，因为它仍然是相同的图像，只是具有另一个别名:
 
-```
+```java
 REPOSITORY                      TAG         IMAGE ID        CREATED               SIZE
 existing-image                  some-tag    e20b5a89a0f2    2 weeks ago          665MB
 username/fancy-repository       v1.0.0      e20b5a89a0f2    2 weeks ago          665MB
@@ -107,31 +107,31 @@ username/fancy-repository       v1.0.0      e20b5a89a0f2    2 weeks ago         
 
 既然我们已经准备好了 Docker 映像，我们可以将它推送到我们的私有存储库中。第一步是使用以下命令登录 DockerHub 注册表:
 
-```
+```java
 docker login
 ```
 
 最后一步是使用以下命令推送映像:
 
-```
+```java
 docker push [OPTIONS] NAME[:TAG]
 ```
 
 在我们的例子中，我们不需要指定任何选项，只需要提供图像名称和标签。该命令将如下所示:
 
-```
+```java
 docker push username/fancy-repository:v1.0.0
 ```
 
 这样，图像将被上传到 DockerHub 上我们的私有 Docker 库。我们可以通过运行以下命令来验证映像是否在 DockerHub 上:
 
-```
+```java
 docker search username/fancy-repository
 ```
 
 因此，我们将获得以下输出，显示我们的图像细节，并证明它实际上在 DockerHub 上可用:
 
-```
+```java
 NAME                        DESCRIPTION   STARS     OFFICIAL   AUTOMATED
 username/fancy-repository                 0 
 ```

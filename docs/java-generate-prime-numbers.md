@@ -20,7 +20,7 @@
 
 ### 3.1。Java 7 及之前版本——暴力破解
 
-```
+```java
 public static List<Integer> primeNumbersBruteForce(int n) {
     List<Integer> primeNumbers = new LinkedList<>();
     for (int i = 2; i <= n; i++) {
@@ -60,7 +60,7 @@ public static boolean isPrimeBruteForce(int number) {
 
 记住上面的想法，让我们改进算法:
 
-```
+```java
 public static List<Integer> primeNumbersBruteForce(int n) {
     List<Integer> primeNumbers = new LinkedList<>();
     if (n >= 2) {
@@ -87,7 +87,7 @@ private static boolean isPrimeBruteForce(int number) {
 
 让我们看看如何使用 Java 8 的习惯用法重写前面的解决方案:
 
-```
+```java
 public static List<Integer> primeNumbersTill(int n) {
     return IntStream.rangeClosed(2, n)
       .filter(x -> isPrime(x)).boxed()
@@ -114,7 +114,7 @@ private static boolean isPrime(int number) {
 
 代码如下所示:
 
-```
+```java
 public static List<Integer> sieveOfEratosthenes(int n) {
     boolean prime[] = new boolean[n + 1];
     Arrays.fill(prime, true);

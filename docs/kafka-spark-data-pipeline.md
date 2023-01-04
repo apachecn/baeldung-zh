@@ -40,7 +40,7 @@ Apache Cassandra 是一个**分布式宽列 NoSQL 数据存储**。[关于卡珊
 
 一旦我们按照官方指南在本地启动了 Zookeeper 和 Kafka，我们就可以开始创建我们的主题，名为“messages”:
 
-```
+```java
  $KAFKA_HOME$\bin\windows\kafka-topics.bat --create \
   --zookeeper localhost:2181 \
   --replication-factor 1 --partitions 1 \
@@ -61,7 +61,7 @@ DataStax 为包括 Windows 在内的不同平台提供了 Cassandra 社区版。
 
 一旦我们成功地在本地机器上安装并启动了 Cassandra，我们就可以继续创建我们的键空间和表了。这可以通过使用我们设备附带的 CQL 外壳来实现:
 
-```
+```java
 CREATE KEYSPACE vocabulary
     WITH REPLICATION = {
         'class' : 'SimpleStrategy',
@@ -86,7 +86,7 @@ CREATE TABLE words (word text PRIMARY KEY, count int);
 
 我们可以相应地将它们添加到 pom 中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.spark</groupId>
     <artifactId>spark-core_2.11</artifactId>
@@ -152,7 +152,7 @@ CREATE TABLE words (word text PRIMARY KEY, count int);
 
 首先，我们将从初始化 **`JavaStreamingContext`开始，这是所有 Spark 流应用**的入口点:
 
-```
+```java
 SparkConf sparkConf = new SparkConf();
 sparkConf.setAppName("WordCountingApp");
 sparkConf.set("spark.cassandra.connection.host", "127.0.0.1");
@@ -165,7 +165,7 @@ JavaStreamingContext streamingContext = new JavaStreamingContext(
 
 现在，我们可以从`JavaStreamingContext`开始连接到卡夫卡的话题:
 
-```
+```java
 Map<String, Object> kafkaParams = new HashMap<>();
 kafkaParams.put("bootstrap.servers", "localhost:9092");
 kafkaParams.put("key.deserializer", StringDeserializer.class);
@@ -190,7 +190,7 @@ JavaInputDStream<ConsumerRecord<String, String>> messages =
 
 我们现在将对`JavaInputDStream`执行一系列操作，以获得消息中的词频:
 
-```
+```java
 JavaPairDStream<String, String> results = messages
   .mapToPair( 
       record -> new Tuple2<>(record.key(), record.value())
@@ -215,7 +215,7 @@ JavaPairDStream<String, Integer> wordCounts = words
 
 最后，我们可以迭代经过处理的`JavaPairDStream`,将它们插入到 Cassandra 表中:
 
-```
+```java
 wordCounts.foreachRDD(
     javaRdd -> {
       Map<String, Integer> wordCountMap = javaRdd.collectAsMap();
@@ -233,7 +233,7 @@ wordCounts.foreachRDD(
 
 由于这是一个流处理应用程序，我们希望让它继续运行:
 
-```
+```java
 streamingContext.start();
 streamingContext.awaitTermination();
 ```
@@ -252,7 +252,7 @@ streamingContext.awaitTermination();
 
 为了利用检查点，我们必须在应用程序中进行一些更改。这包括向`JavaStreamingContext`提供检查点位置:
 
-```
+```java
 streamingContext.checkpoint("./.checkpoint");
 ```
 
@@ -260,7 +260,7 @@ streamingContext.checkpoint("./.checkpoint");
 
 接下来，我们必须获取检查点，并在使用映射函数处理每个分区时创建累计字数:
 
-```
+```java
 JavaMapWithStateDStream<String, Integer, Integer, Tuple2<String, Integer>> cumulativeWordCounts = wordCounts
   .mapWithState(
     StateSpec.function( 
@@ -282,7 +282,7 @@ JavaMapWithStateDStream<String, Integer, Integer, Tuple2<String, Integer>> cumul
 
 如果我们回忆一下我们之前设定的一些卡夫卡参数:
 
-```
+```java
 kafkaParams.put("auto.offset.reset", "latest");
 kafkaParams.put("enable.auto.commit", false);
 ```
@@ -297,7 +297,7 @@ kafkaParams.put("enable.auto.commit", false);
 
 我们可以**使用 Spark 安装预打包的 Spark 提交脚本**部署我们的应用程序:
 
-```
+```java
 $SPARK_HOME$\bin\spark-submit \
   --class com.baeldung.data.pipeline.WordCountingAppWithCheckpoint \
   --master local[2] 

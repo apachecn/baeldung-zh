@@ -12,7 +12,7 @@
 
 从第一个版本开始，Java 就发布了自己的`java.io`包，其中包含了我们可能需要执行输入和输出操作的几乎所有类。[`File`类](/web/20220627102551/https://www.baeldung.com/java-io-file)是**文件和目录路径名**的抽象表示:
 
-```
+```java
 File file = new File("baeldung/tutorial.txt");
 ```
 
@@ -24,7 +24,7 @@ File file = new File("baeldung/tutorial.txt");
 
 同样，它**可以执行所有可以用`File`类完成的操作**:
 
-```
+```java
 Path path = Paths.get("baeldung/tutorial.txt");
 ```
 
@@ -42,7 +42,7 @@ Path path = Paths.get("baeldung/tutorial.txt");
 
 假设我们有一个删除文件的简单程序:
 
-```
+```java
 File file = new File("baeldung/tutorial.txt");
 boolean result = file.delete();
 ```
@@ -51,7 +51,7 @@ boolean result = file.delete();
 
 我们现在可以使用较新的 NIO2 API 重写相同的功能:
 
-```
+```java
 Path path = Paths.get("baeldung/tutorial.txt");
 Files.delete(path);
 ```
@@ -82,27 +82,27 @@ NIO2 包提供了所有遗留功能，包括对上述缺点的改进。由于大
 
 当然，主要的区别是包和类名:
 
-```
+```java
 java.io.File file = new java.io.File("baeldung/tutorial.txt");
 java.nio.file.Path path = java.nio.file.Paths.get("baeldung/tutorial.txt");
 ```
 
 在这里，我们通过构造函数构建一个`File`对象，同时通过使用静态方法获得一个`Path`。我们还可以使用多个参数来解析复杂的路径:
 
-```
+```java
 File file = new File("baeldung", "tutorial.txt");
 Path path = Paths.get("baeldung", "tutorial.txt"); 
 ```
 
 并且，我们可以通过链接`resolve()`方法获得相同的结果:
 
-```
+```java
 Path path2 = Paths.get("baeldung").resolve("tutorial.txt");
 ```
 
 此外，我们可以使用 [`toPath()`](https://web.archive.org/web/20220627102551/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html#toPath()) 和 [`toFile()`](https://web.archive.org/web/20220627102551/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html#toFile()) 方法在 API 之间转换对象:
 
-```
+```java
 Path pathFromFile = file.toPath();
 File fileFromPath = path.toFile();
 ```
@@ -113,35 +113,35 @@ File fileFromPath = path.toFile();
 
 **创建文件**，我们可以使用`createNewFile()`和`Files.createFile()`方法:
 
-```
+```java
 boolean result = file.createNewFile();
 Path newPath = Files.createFile(path);
 ```
 
 **要创建一个目录**，我们需要使用`mkdir()`或`Files.createDirectory()`:
 
-```
+```java
 boolean result = file.mkdir();
 File newPath = Files.createDirectory(path);
 ```
 
 这些方法**还有其他的变体，通过`mkdirs()`和`Files.createDirectories()`方法来包含所有不存在的子目录**:
 
-```
+```java
 boolean result = file.mkdirs();
 File newPath = Files.createDirectories(path);
 ```
 
 当我们希望**重命名或移动一个文件**时，我们需要创建另一个实例对象并使用`renameTo()`或`Files.move()`:
 
-```
+```java
 boolean result = file.renameTo(new File("baeldung/tutorial2.txt"));
 Path newPath = Files.move(path, Paths.get("baeldung/tutorial2.txt"));
 ```
 
 **为了执行删除操作**，我们使用`delete()`或`Files.delete()`:
 
-```
+```java
 boolean result = file.delete();
 Files.delete(Paths.get(path));
 ```
@@ -152,7 +152,7 @@ Files.delete(Paths.get(path));
 
 我们还可以获得一些关于文件的基本信息，比如权限或类型。和以前一样，我们需要一个实例对象:
 
-```
+```java
 // java.io API
 boolean fileExists = file.exists();
 boolean fileIsFile = file.isFile();
@@ -178,7 +178,7 @@ boolean pathHidden = Files.isHidden(path);
 
 **要获得绝对或规范路径**，我们可以使用:
 
-```
+```java
 // java.io API
 String absolutePathStr = file.getAbsolutePath();
 String canonicalPathStr = file.getCanonicalPath();
@@ -192,14 +192,14 @@ Path canonicalPath = path.toRealPath().normalize();
 
 **到`URI`** 的转换可以通过使用`toUri()`方法来完成:
 
-```
+```java
 URI fileUri = file.toURI();
 URI pathUri = path.toUri();
 ```
 
 同样，我们可以**列出目录内容**:
 
-```
+```java
 // java.io API
 String[] list = file.list();
 File[] files = file.listFiles();

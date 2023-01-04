@@ -26,7 +26,7 @@
 
 假设我们希望[在控制台中打印](/web/20221208143854/https://www.baeldung.com/java-iterate-map)`[HashMap](/web/20221208143854/https://www.baeldung.com/java-hashmap) `的键和值:
 
-```
+```java
 public class HashMapPrinter {
 
     public void printMap(final HashMap<?, ?> map) {
@@ -39,7 +39,7 @@ public class HashMapPrinter {
 
 这是一个完成这项工作的小班。然而，它包含一个问题。它将只能与`[HashMap](/web/20221208143854/https://www.baeldung.com/java-hashmap).`一起工作，因此任何传入由`Map `引用的方法 [`TreeMap `甚至`HashMap`](/web/20221208143854/https://www.baeldung.com/java-treemap-vs-hashmap) 的尝试都将导致编译错误:
 
-```
+```java
 public class Main {
     public static void main(String[] args) {
         Map<String, String> map = new HashMap<>();
@@ -66,7 +66,7 @@ public class Main {
 
 初学者经常会对“面向接口编程”或“面向接口编码”这种表达方式的含义感到困惑。让我们考虑下面的例子，这将使它更清楚一点。我们将把参数的类型改成最通用的类型，也就是`Map:`
 
-```
+```java
 public class MapPrinter {
 
     public void printMap(final Map<?, ?> map) {
@@ -81,7 +81,7 @@ public class MapPrinter {
 
 结果，这个微小的变化产生了巨大的差异。现在，这个类可以与任何`Map`实现一起工作:
 
-```
+```java
 public class Main {
     public static void main(String[] args) {
         Map<String, String> map = new HashMap<>();
@@ -102,7 +102,7 @@ public class Main {
 
 总的来说，参数应该是尽可能通用的类型。在前面的例子中，我们看到了一个简单的方法签名的改变是如何改进我们的代码的。我们应该使用相同方法的另一个地方是构造函数:
 
-```
+```java
 public class MapReporter {
 
     private final Map<?, ?> map;

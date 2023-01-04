@@ -23,7 +23,7 @@
 
 正如我们所看到的，解决方案很简单，但是需要对整个数组进行排序。因此，时间复杂度将为`O(n*logn)`:
 
-```
+```java
 public int findKthLargestBySorting(Integer[] arr, int k) {
     Arrays.sort(arr);
     int targetIndex = arr.length - k;
@@ -33,7 +33,7 @@ public int findKthLargestBySorting(Integer[] arr, int k) {
 
 另一种方法是按降序对数组进行排序，并简单地返回第`(k-1)`个索引上的元素:
 
-```
+```java
 public int findKthLargestBySortingDesc(Integer[] arr, int k) {
     Arrays.sort(arr, Collections.reverseOrder());
     return arr[k-1];
@@ -62,7 +62,7 @@ public int findKthLargestBySortingDesc(Integer[] arr, int k) {
 
 让我们实现这个解决方案:
 
-```
+```java
 public int 
   findKthElementByQuickSelect(Integer[] arr, int left, int right, int k) {
     if (k >= 0 && k <= right - left + 1) {
@@ -84,7 +84,7 @@ public int
 
 同样，索引较高的元素将大于 pivot 元素:
 
-```
+```java
 public int partition(Integer[] arr, int left, int right) {
     int pivot = arr[right];
     Integer[] leftArr;
@@ -114,7 +114,7 @@ public int partition(Integer[] arr, int left, int right) {
 
 有一种更简单的迭代方法来实现分区:
 
-```
+```java
 public int partitionIterative(Integer[] arr, int left, int right) {
     int pivot = arr[right], i = left;
     for (int j = left; j <= right - 1; j++) {
@@ -146,7 +146,7 @@ public void swap(Integer[] arr, int n1, int n2) {
 
 让我们实现`randomPartition`方法:
 
-```
+```java
 public int randomPartition(Integer arr[], int left, int right) {
     int n = right - left + 1;
     int pivot = (int) (Math.random()) * n;

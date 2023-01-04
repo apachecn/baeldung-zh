@@ -14,7 +14,7 @@
 
 首先，让我们创建将百里香和 Spring 集成到我们的`pom.xml`中的配置:
 
-```
+```java
 <dependency>
     <groupId>org.thymeleaf</groupId>
     <artifactId>thymeleaf</artifactId>
@@ -31,7 +31,7 @@
 
 此外，为了使用新的 Java 8 `Date` 类，我们需要向我们的`pom.xml`添加另一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.thymeleaf.extras</groupId>
     <artifactId>thymeleaf-extras-java8time</artifactId>
@@ -47,7 +47,7 @@
 
 为了使用新的`Time`包，我们需要配置我们的模板引擎来使用新的`Java8TimeDialect`:
 
-```
+```java
 private ISpringTemplateEngine templateEngine(ITemplateResolver templateResolver) {
     SpringTemplateEngine engine = new SpringTemplateEngine();
     engine.addDialect(new Java8TimeDialect());
@@ -60,7 +60,7 @@ private ISpringTemplateEngine templateEngine(ITemplateResolver templateResolver)
 
 为了测试新旧类的处理，我们将创建以下变量，并将它们作为模型对象添加到控制器类中:
 
-```
+```java
 model.addAttribute("standardDate", new Date());
 model.addAttribute("localDateTime", LocalDateTime.now());
 model.addAttribute("localDate", LocalDate.now());
@@ -73,7 +73,7 @@ model.addAttribute("timestamp", Instant.now());
 
 我们要介绍的第一个功能是格式化一个`Date`对象(它被添加到弹簧模型参数中)。我们将使用`ISO8601`格式:
 
-```
+```java
 <h1>Format ISO</h1>
 <p th:text="${#dates.formatISO(standardDate)}"></p>
 <p th:text="${#temporals.formatISO(localDateTime)}"></p>
@@ -85,7 +85,7 @@ model.addAttribute("timestamp", Instant.now());
 
 此外，如果我们想要手动设置格式，我们可以使用:
 
-```
+```java
 <h1>Format manually</h1>
 <p th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></p>
 <p th:text="${#temporals.format(localDateTime, 'dd-MM-yyyy HH:mm')}"></p>
@@ -102,7 +102,7 @@ model.addAttribute("timestamp", Instant.now());
 
 为了获得`java.util.Date`类的特定字段，我们应该使用以下实用程序对象:
 
-```
+```java
 ${#dates.day(date)}
 ${#dates.month(date)}
 ${#dates.monthName(date)}
@@ -119,7 +119,7 @@ ${#dates.millisecond(date)}
 
 对于新的`java.time`包，我们应该坚持使用# `temporals`实用程序:
 
-```
+```java
 ${#temporals.day(date)}
 ${#temporals.month(date)}
 ${#temporals.monthName(date)}
@@ -136,7 +136,7 @@ ${#temporals.millisecond(date)}
 
 我们来看几个例子。首先，让我们显示今天是星期几:
 
-```
+```java
 <h1>Show only which day of a week</h1>
 <p th:text="${#dates.day(standardDate)}"></p>
 <p th:text="${#temporals.day(localDateTime)}"></p>
@@ -145,7 +145,7 @@ ${#temporals.millisecond(date)}
 
 接下来，让我们显示工作日的名称:
 
-```
+```java
 <h1>Show the name of the week day</h1>
 <p th:text="${#dates.dayOfWeekName(standardDate)}"></p>
 <p th:text="${#temporals.dayOfWeekName(localDateTime)}"></p>
@@ -154,7 +154,7 @@ ${#temporals.millisecond(date)}
 
 最后，让我们显示一天中的当前秒:
 
-```
+```java
 <h1>Show the second of the day</h1>
 <p th:text="${#dates.second(standardDate)}"></p>
 <p th:text="${#temporals.second(localDateTime)}"></p>
@@ -168,7 +168,7 @@ ${#temporals.millisecond(date)}
 
 首先，让我们创建一个具有`Date`属性的`Student`类:
 
-```
+```java
 public class Student implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthDate;
@@ -179,7 +179,7 @@ public class Student implements Serializable {
 
 接下来，我们将创建一个百里香表单来提交一个`Date`输入:
 
-```
+```java
 <form th:action="@{/saveStudent}" method="post" th:object="${student}">
     <div>
         <label for="student-birth-date">Date of birth:</label>
@@ -195,7 +195,7 @@ public class Student implements Serializable {
 
 现在，让我们创建一个控制器来拦截`POST`请求:
 
-```
+```java
 @RequestMapping(value = "/saveStudent", method = RequestMethod.POST)
 public String saveStudent(Model model, @ModelAttribute("student") Student student) {
     model.addAttribute("student", student);
@@ -205,7 +205,7 @@ public String saveStudent(Model model, @ModelAttribute("student") Student studen
 
 提交表单后，我们将在另一个页面上用模式`dd/MM/yyyy`显示`birthDate`值:
 
-```
+```java
 <h1>Student birth date</h1>
 <p th:text="${#dates.format(student.birthDate, 'dd/MM/yyyy')}"></p>
 ```

@@ -16,7 +16,7 @@
 
 让我们来看一个`Enumeration`的例子:
 
-```
+```java
 Vector<Person> people = new Vector<>(getPersons());
 Enumeration<Person> enumeration = people.elements();
 while (enumeration.hasMoreElements()) {
@@ -32,7 +32,7 @@ while (enumeration.hasMoreElements()) {
 
 接下来，让我们使用`Iterator`打印一个`Person` 的`firstName`。`iterator()` 提供了对`Iterator`的引用，通过它我们可以逐个访问元素:
 
-```
+```java
 List<Person> persons = getPersons();
 Iterator<Person> iterator = persons.iterator();
 while (iterator.hasNext()) {

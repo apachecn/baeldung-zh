@@ -12,7 +12,7 @@
 
 让我们首先将我们的示例所需的所有必需依赖项的最新版本添加到我们的 `pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context</artifactId>
@@ -35,7 +35,7 @@
 
 让我们从创建它开始:
 
-```
+```java
 public class Employee {
     private Integer id;
     private String name;
@@ -48,7 +48,7 @@ public class Employee {
 
 然后我们可以使用`ReflectionTestUtils.setField`方法给私有成员`id`赋值:
 
-```
+```java
 @Test
 public void whenNonPublicField_thenReflectionTestUtilsSetField() {
     Employee employee = new Employee();
@@ -62,7 +62,7 @@ public void whenNonPublicField_thenReflectionTestUtilsSetField() {
 
 现在让我们假设在`Employee`类中有一个私有方法`employeeToString`:
 
-```
+```java
 private String employeeToString(){
     return "id: " + getId() + "; name: " + getName();
 }
@@ -70,7 +70,7 @@ private String employeeToString(){
 
 我们可以为下面的`employeeToString`方法编写一个单元测试，即使它没有任何来自`Employee`类外部的访问:
 
-```
+```java
 @Test
 public void whenNonPublicMethod_thenReflectionTestUtilsInvokeMethod() {
     Employee employee = new Employee();
@@ -86,7 +86,7 @@ public void whenNonPublicMethod_thenReflectionTestUtilsInvokeMethod() {
 
 假设想要为下面的 Spring 组件编写一个单元测试，该组件有一个带有`@Autowired`注释的私有字段:
 
-```
+```java
 @Component
 public class EmployeeService {
 
@@ -101,7 +101,7 @@ public class EmployeeService {
 
 我们现在可以如下实现`HRService`组件:
 
-```
+```java
 @Component
 public class HRService {
 
@@ -113,21 +113,21 @@ public class HRService {
 
 此外，让我们通过使用 [Mockito](/web/20220713215745/https://www.baeldung.com/mockito-annotations) 为`HRService`类创建一个模拟实现。我们将把这个模拟注入到`EmployeeService`实例中，并在我们的单元测试中使用它:
 
-```
+```java
 HRService hrService = mock(HRService.class);
 when(hrService.getEmployeeStatus(employee.getId())).thenReturn("Active");
 ```
 
 因为`hrService`是一个没有公共 setter 的私有字段，我们将使用`ReflectionTestUtils.setField`方法将上面创建的 mock 注入这个私有字段。
 
-```
+```java
 EmployeeService employeeService = new EmployeeService();
 ReflectionTestUtils.setField(employeeService, "hrService", hrService);
 ```
 
 最后，我们的单元测试看起来类似于这样:
 
-```
+```java
 @Test
 public void whenInjectingMockOfDependency_thenReflectionTestUtilsSetField() {
     Employee employee = new Employee();

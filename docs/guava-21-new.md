@@ -22,7 +22,7 @@ Guava 21 在`common.collect`包中引入了一些新的有用的功能；让我�
 
 不过，不推荐使用`Collection`创建流，因为它是由 Java 8 提供的:
 
-```
+```java
 List<Integer> numbers = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
 Stream<Integer> streamFromCollection = Streams.stream(numbers);
 Stream<Integer> streamFromIterator = Streams.stream(numbers.iterator());
@@ -32,7 +32,7 @@ Stream<Integer> streamFromOptional = Streams.stream(Optional.of(1));
 
 `Streams`类还提供了`OptionalDouble`、`OptionalLong`和`OptionalInt`口味。这些方法返回只包含该元素的流，否则为空流:
 
-```
+```java
 LongStream streamFromOptionalLong = Streams.stream(OptionalLong.of(1));
 IntStream streamFromOptionalInt = Streams.stream(OptionalInt.of(1));
 DoubleStream streamFromOptionalDouble = Streams.stream(OptionalDouble.of(1.0));
@@ -42,7 +42,7 @@ DoubleStream streamFromOptionalDouble = Streams.stream(OptionalDouble.of(1.0));
 
 这个类提供了连接多个同类流的方法。
 
-```
+```java
 Stream<Integer> concatenatedStreams = Streams.concat(streamFromCollection, streamFromIterable,streamFromIterator);
 ```
 
@@ -54,7 +54,7 @@ Stream<Integer> concatenatedStreams = Streams.concat(streamFromCollection, strea
 
 该方法或者返回最后一个元素，或者如果流中没有元素，则返回`Optional.empty()`:
 
-```
+```java
 List<Integer> integers = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
 Optional<Integer> lastItem = Streams.findLast(integers.stream());
 ```
@@ -65,7 +65,7 @@ Optional<Integer> lastItem = Streams.findLast(integers.stream());
 
 通过使用`mapWithIndex()` 方法，流的每个元素携带关于它们各自位置(索引)的信息:
 
-```
+```java
 mapWithIndex( Stream.of("a", "b", "c"), (str, index) -> str + ":" + index)
 ```
 
@@ -77,7 +77,7 @@ mapWithIndex( Stream.of("a", "b", "c"), (str, index) -> str + ":" + index)
 
 为了使用一些函数映射两个流的对应元素，只需使用`Streams:`的 zip 方法
 
-```
+```java
 Streams.zip(
   Stream.of("candy", "chocolate", "bar"),
   Stream.of("$1", "$2","$3"),
@@ -101,7 +101,7 @@ Guava 引入了`Comparators`来提供`Ordering`的额外特性，Java 8 标准�
 
 如果 Iterable 中的每个元素都大于或等于前一个元素，该方法返回 true，如`Comparator`所指定的:
 
-```
+```java
 List<Integer> integers = Arrays.asList(1,2,3,4,4,6,7,8,9,10);
 boolean isInAscendingOrder = Comparators.isInOrder(
   integers, new AscedingOrderComparator());
@@ -125,7 +125,7 @@ boolean isInAscendingOrder = Comparators.isInOrder(
 
 这里，`Collector`将包含零个或一个元素的流转换为`Optional`:
 
-```
+```java
 List<Integer> numbers = Arrays.asList(1);
 Optional<Integer> number = numbers.stream()
   .map(e -> e * 2)
@@ -142,7 +142,7 @@ Optional<Integer> number = numbers.stream()
 
 这是 Guava 库中已经存在的`Interners`的内部构建器类。它提供了一些方便的方法来定义您喜欢的`Interner`的并发级别和类型(弱或强):
 
-```
+```java
 Interners interners = Interners.newBuilder()
   .concurrencyLevel(2)
   .weak()

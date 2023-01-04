@@ -14,7 +14,7 @@
 
 例如，我们在文件管理器应用程序中的`TextFile`类可以有三个与`read()`方法签名相同的方法:
 
-```
+```java
 public class TextFile extends GenericFile {
     //...
 
@@ -45,7 +45,7 @@ public class TextFile extends GenericFile {
 
 在一个假设的文件管理器应用程序中，让我们为所有文件定义一个名为`GenericFile`的父类:
 
-```
+```java
 public class GenericFile {
     private String name;
 
@@ -59,7 +59,7 @@ public class GenericFile {
 
 我们还可以实现一个`ImageFile` 类，它扩展了`GenericFile`，但是覆盖了`getFileInfo()`方法并附加了更多信息:
 
-```
+```java
 public class ImageFile extends GenericFile {
     private int height;
     private int width;
@@ -76,7 +76,7 @@ public class ImageFile extends GenericFile {
 
 **上面的构造类似于方法覆盖。**我们可以通过以下方式调用`getFileInfo()`方法来确认这一点:
 
-```
+```java
 public static void main(String[] args) {
     GenericFile genericFile = new ImageFile("SampleImageFile", 200, 100, 
       new BufferedImage(100, 200, BufferedImage.TYPE_INT_RGB)
@@ -88,7 +88,7 @@ public static void main(String[] args) {
 
 正如所料，`genericFile.getFileInfo()`触发了`ImageFile`类的`getFileInfo()`方法，如下图所示:
 
-```
+```java
 File Info: 
 Image File Impl
 ```
@@ -101,7 +101,7 @@ Image File Impl
 
 多态强制处理由编译器完成的隐式类型转换，以防止类型错误。整数和字符串串联就是一个典型的例子:
 
-```
+```java
 String str = “string” + 2;
 ```
 
@@ -111,7 +111,7 @@ String str = “string” + 2;
 
 例如，加号(+)可用于数学加法以及`String`连接。在任一情况下，只有上下文(即参数类型)决定符号的解释:
 
-```
+```java
 String str = "2" + 2;
 int sum = 2 + 2;
 System.out.printf(" str = %s\n sum = %d\n", str, sum);
@@ -119,7 +119,7 @@ System.out.printf(" str = %s\n sum = %d\n", str, sum);
 
 输出:
 
-```
+```java
 str = 22
 sum = 4
 ```
@@ -128,7 +128,7 @@ sum = 4
 
 参数多态性允许类中的参数或方法的名称与不同的类型相关联。下面是一个典型的例子，我们将`content`定义为`String`，然后定义为`Integer`:
 
-```
+```java
 public class TextFile extends GenericFile {
     private String content;
 
@@ -149,7 +149,7 @@ public class TextFile extends GenericFile {
 
 例如，如果我们有一个`GenericFile`的集合，并且我们对它们中的每一个调用`getInfo()`方法，我们可以预期输出是不同的，这取决于集合中的每一项是从哪个子类型派生的:
 
-```
+```java
 GenericFile [] files = {new ImageFile("SampleImageFile", 200, 100, 
   new BufferedImage(100, 200, BufferedImage.TYPE_INT_RGB).toString() 
   .getBytes(), "v1.0.0"), new TextFile("SampleTextFile", 
@@ -162,7 +162,7 @@ for (int i = 0; i < files.length; i++) {
 
 **子类型多态性通过组合** **向上转换和后期绑定**成为可能。向上转换包括将继承层次结构从超类型转换为子类型:
 
-```
+```java
 ImageFile imageFile = new ImageFile();
 GenericFile file = imageFile;
 ```
@@ -171,7 +171,7 @@ GenericFile file = imageFile;
 
 为了解决在向上造型为超类型时不能调用特定于子类型的方法的问题，我们可以将继承从超类型向下造型为子类型。这通过以下方式实现:
 
-```
+```java
 ImageFile imageFile = (ImageFile) file;
 ```
 
@@ -187,7 +187,7 @@ ImageFile imageFile = (ImageFile) file;
 
 例如，如果我们执行向上转换和随后的向下转换:
 
-```
+```java
 GenericFile file = new GenericFile();
 ImageFile imageFile = (ImageFile) file;
 System.out.println(imageFile.getHeight());
@@ -197,14 +197,14 @@ System.out.println(imageFile.getHeight());
 
 因此，如果我们试图调用`imageFile`类上的`getHeight()`方法，我们会得到一个`ClassCastException`,因为`GenericFile`没有定义`getHeight()`方法:
 
-```
+```java
 Exception in thread "main" java.lang.ClassCastException:
 GenericFile cannot be cast to ImageFile
 ```
 
 为了解决这个问题，JVM 执行运行时类型信息(RTTI)检查。我们也可以尝试使用关键字`instanceof`进行显式类型识别，就像这样:
 
-```
+```java
 ImageFile imageFile;
 if (file instanceof ImageFile) {
     imageFile = file;
@@ -221,7 +221,7 @@ if (file instanceof ImageFile) {
 
 让我们考虑一个名为`GenericFile`的超类及其子类`TextFile`的声明:
 
-```
+```java
 public class GenericFile {
     private String content;
 
@@ -234,7 +234,7 @@ public class GenericFile {
 }
 ```
 
-```
+```java
 public class TextFile extends GenericFile {
     @Override
     void writeContent(String content) {
@@ -245,7 +245,7 @@ public class TextFile extends GenericFile {
 
 当我们修改`GenericFile`类时:
 
-```
+```java
 public class GenericFile {
     //...
 

@@ -14,7 +14,7 @@ Docker 图像是通过连接许多只读层创建的，这些只读层堆叠在�
 
 举个例子，让我们从注册表中取出一个 MySQL 图像，快速浏览一下:
 
-```
+```java
 # docker pull mysql
 Using default tag: latest
 latest: Pulling from library/mysql
@@ -39,7 +39,7 @@ Status: Downloaded newer image for mysql:latest
 
 让我们通过一个`Dockerfile`来建立一个形象。我们可以从这个[链接](/web/20220911170553/https://www.baeldung.com/ops/docker-cron-job)中引用`Dockerfile`。我们使用`docker build`命令通过`Dockerfile`创建图像:
 
-```
+```java
 # docker build -t layer-demo/latest .
 Sending build context to Docker daemon  3.072kB
 Step 1/8 : FROM ubuntu:latest
@@ -91,7 +91,7 @@ Successfully built 5fc87be0f286
 
 在下面的例子中，大小为 0B 的层代表一个中间层，而`RUN`、`COPY`和`ADD`指令对图像大小有影响:
 
-```
+```java
 # docker history layer-demo/latest
 IMAGE          CREATED       CREATED BY                                      SIZE      COMMENT
 5fc87be0f286   8 hours ago   /bin/sh -c #(nop)  CMD ["/bin/sh" "-c" "cron…   0B      
@@ -116,7 +116,7 @@ df5de72bdb3b   4 weeks ago   /bin/sh -c #(nop)  CMD ["bash"]                 0B
 
 将上述所有数字加在一起得到 114.787 MB，可以进一步四舍五入到 115 MB。如我们所见，计算出的总和与来自`docker image`命令的`layer-demo:latest`图像大小完全匹配:
 
-```
+```java
 # docker images 
 REPOSITORY            TAG       IMAGE ID       CREATED       SIZE
 layer-demo/latest     latest    5fc87be0f286   8 hours ago   115MB
@@ -129,13 +129,13 @@ ubuntu                latest    df5de72bdb3b   4 weeks ago   77.8MB
 
 要列出所有悬挂图像，我们可以使用`docker image`命令，在搜索过滤器中将悬挂属性设置为 true:
 
-```
+```java
 # docker images --filter "dangling=true"
 ```
 
 下面的命令显示悬挂的图像，然后删除它们:
 
-```
+```java
 # docker images --quiet --filter=dangling=true | xargs --no-run-if-empty docker rmi
 ```
 

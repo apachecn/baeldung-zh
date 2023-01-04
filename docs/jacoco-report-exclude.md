@@ -32,7 +32,7 @@
 
 让我们更新 Maven 插件，添加几个被排除的模式:
 
-```
+```java
 <plugin> 
     <groupId>org.jacoco</groupId>
     <artifactId>jacoco-maven-plugin</artifactId>
@@ -59,7 +59,7 @@
 
 首先，我们将更新`build.gradle`中的 JaCoCo 配置，并指定一个排除列表，使用与前面相同的模式:
 
-```
+```java
 jacocoTestReport {
     dependsOn test // tests are required to run before generating the report
 
@@ -88,7 +88,7 @@ jacocoTestReport {
 
 首先，我们将创建我们的注释:
 
-```
+```java
 @Documented
 @Retention(RUNTIME)
 @Target({TYPE, METHOD})
@@ -100,7 +100,7 @@ public @interface Generated {
 
 让我们首先在类级别使用这个注释:
 
-```
+```java
 @Generated
 public class Customer {
     // everything in this class will be excluded from jacoco report because of @Generated
@@ -109,7 +109,7 @@ public class Customer {
 
 类似地，我们可以将这个自定义注释应用于类中的特定方法:
 
-```
+```java
 public class CustomerService {
 
     @Generated
@@ -129,7 +129,7 @@ Project Lombok 是一个流行的库，用于大大减少 Java 项目中的样�
 
 让我们看看如何通过向项目根目录中的文件添加一个属性来**排除所有由 Lombok 生成的字节码:**
 
-```
+```java
 lombok.addLombokGeneratedAnnotation = true
 ```
 

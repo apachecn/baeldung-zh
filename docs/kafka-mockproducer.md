@@ -14,7 +14,7 @@ Kafka 是一个围绕分布式消息队列构建的消息处理系统。它提�
 
 在我们实现生产者应用程序之前，我们将为 [`kafka-clients`](https://web.archive.org/web/20220628150856/https://search.maven.org/artifact/org.apache.kafka/kafka-clients) 添加一个 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.kafka</groupId>
     <artifactId>kafka-clients</artifactId>
@@ -26,7 +26,7 @@ Kafka 是一个围绕分布式消息队列构建的消息处理系统。它提�
 
 `kafka-clients `库包含一个 Java 库，用于在 Kafka 中发布和使用消息。生产者应用程序可以使用这些 API 向 Kafka 主题发送键值记录:
 
-```
+```java
 public class KafkaProducer {
 
     private final Producer<String, String> producer;
@@ -46,7 +46,7 @@ public class KafkaProducer {
 
 此外，Kafka 提供了一个`MockProducer `，它实现了相同的`Producer `接口，并模仿了在`KafkaProducer`中实现的所有 I/O 操作:
 
-```
+```java
 @Test
 void givenKeyValue_whenSend_thenVerifyHistory() {
 
@@ -64,7 +64,7 @@ void givenKeyValue_whenSend_thenVerifyHistory() {
 
 此外，我们还可以验证元数据，如主题名、分区、记录键或值:
 
-```
+```java
 assertTrue(mockProducer.history().get(0).key().equalsIgnoreCase("data"));
 assertTrue(recordMetadataFuture.get().partition() == 0);
 ```
@@ -75,7 +75,7 @@ assertTrue(recordMetadataFuture.get().partition() == 0);
 
 这允许生产者将数据写入多个分区。这通常是通过基于键对记录进行分区并将特定的键映射到特定分区来实现的:
 
-```
+```java
 public class EvenOddPartitioner extends DefaultPartitioner {
 
     @Override
@@ -93,7 +93,7 @@ public class EvenOddPartitioner extends DefaultPartitioner {
 
 **`MockProducer `使我们能够通过模拟具有多个分区的 Kafka 集群来验证这样的分区分配算法:**
 
-```
+```java
 @Test
 void givenKeyValue_whenSendWithPartitioning_thenVerifyPartitionNumber() 
   throws ExecutionException, InterruptedException {
@@ -125,7 +125,7 @@ void givenKeyValue_whenSendWithPartitioning_thenVerifyPartitionNumber()
 
 `MockProducer` 允许我们在`send()`期间模拟异常，以便我们可以验证异常处理代码:
 
-```
+```java
 @Test
 void givenKeyValue_whenSend_thenReturnException() {
     MockProducer<String, String> mockProducer = new MockProducer<>(false, 
@@ -157,7 +157,7 @@ Kafka 0.11 引入了 Kafka 经纪人、生产者和消费者之间的交易。�
 
 `MockProducer `还支持事务性写入，并允许我们验证这种行为:
 
-```
+```java
 @Test
 void givenKeyValue_whenSendWithTxn_thenSendOnlyOnTxnCommit() {
     MockProducer<String, String> mockProducer = new MockProducer<>(true, 

@@ -14,7 +14,7 @@
 
 让我们从定义两个列表开始，我们将用它们来测试我们的例子:
 
-```
+```java
 public class FindDifferencesBetweenListsUnitTest {
 
     private static final List listOne = Arrays.asList("Jack", "Tom", "Sam", "John", "James", "Jack");
@@ -27,7 +27,7 @@ public class FindDifferencesBetweenListsUnitTest {
 
 我们可以创建一个列表的**副本，然后使用`List`方法`removeAll()`删除与另一个**相同的所有元素:
 
-```
+```java
 List<String> differences = new ArrayList<>(listOne);
 differences.removeAll(listTwo);
 assertEquals(2, differences.size());
@@ -36,7 +36,7 @@ assertThat(differences).containsExactly("Tom", "John");
 
 让我们颠倒一下，以另一种方式找出不同之处:
 
-```
+```java
 List<String> differences = new ArrayList<>(listTwo);
 differences.removeAll(listOne);
 assertEquals(3, differences.size());
@@ -49,7 +49,7 @@ assertThat(differences).containsExactly("Daniel", "Alan", "George");
 
 Java [`Stream`](/web/20220706105054/https://www.baeldung.com/java-streams) 可以用来对集合中的数据进行顺序操作，包括**过滤列表之间的差异**:
 
-```
+```java
 List<String> differences = listOne.stream()
             .filter(element -> !listTwo.contains(element))
             .collect(Collectors.toList());
@@ -59,7 +59,7 @@ assertThat(differences).containsExactly("Tom", "John");
 
 与第一个例子一样，我们可以切换列表的顺序，从第二个列表中找到不同的元素:
 
-```
+```java
 List<String> differences = listTwo.stream()
             .filter(element -> !listOne.contains(element))
             .collect(Collectors.toList());
@@ -75,7 +75,7 @@ assertThat(differences).containsExactly("Daniel", "Alan", "George");
 
 **`Guava`包含了得心应手的`Sets`。`difference`方法**，但是要使用它我们需要首先将我们的`List`转换成一个`Set`:
 
-```
+```java
 List<String> differences = new ArrayList<>(Sets.difference(Sets.newHashSet(listOne), Sets.newHashSet(listTwo)));
 assertEquals(2, differences.size());
 assertThat(differences).containsExactlyInAnyOrder("Tom", "John");
@@ -89,7 +89,7 @@ assertThat(differences).containsExactlyInAnyOrder("Tom", "John");
 
 这个方法做的**和`List`一样。`removeAll`，同时也为结果**创建一个新的集合:
 
-```
+```java
 List<String> differences = new ArrayList<>((CollectionUtils.removeAll(listOne, listTwo)));
 assertEquals(2, differences.size());
 assertThat(differences).containsExactly("Tom", "John");
@@ -103,7 +103,7 @@ assertThat(differences).containsExactly("Tom", "John");
 
 在我们的例子中，值`“Jack”`在第一个列表中出现了两次，在第二个列表中只出现了一次:
 
-```
+```java
 List<String> differences = new ArrayList<>(listOne);
 listTwo.forEach(differences::remove);
 assertThat(differences).containsExactly("Tom", "John", "Jack");
@@ -111,7 +111,7 @@ assertThat(differences).containsExactly("Tom", "John", "Jack");
 
 我们也可以使用 `Apache Commons Collections`中的`subtract`方法来实现这一点:
 
-```
+```java
 List<String> differences = new ArrayList<>(CollectionUtils.subtract(listOne, listTwo));
 assertEquals(3, differences.size());
 assertThat(differences).containsExactly("Tom", "John", "Jack");

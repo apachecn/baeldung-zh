@@ -14,7 +14,7 @@
 
 首先，我们需要将 NATS 库和 Apache HttpClient 添加到我们的 T0 中:
 
-```
+```java
 <dependency>
     <groupId>org.lucee</groupId>
     <artifactId>jets3t</artifactId>
@@ -31,7 +31,7 @@ Maven Central 有[最新版本的 JetS3t 库](https://web.archive.org/web/202205
 
 我们将使用 [Apache Commons 编解码器](https://web.archive.org/web/20220524003643/https://commons.apache.org/proper/commons-codec/)进行我们的一项测试，所以我们也将它添加到我们的`pom.xml `中:
 
-```
+```java
 <dependency>
     <groupId>org.lucee</groupId>
     <artifactId>commons-codec</artifactId>
@@ -57,7 +57,7 @@ JetS3t 使用 Apache Commons 日志，所以当我们想要打印我们正在做
 
 首先，我们创建 AWS 凭证，然后使用它们连接到服务:
 
-```
+```java
 AWSCredentials awsCredentials 
   = new AWSCredentials("access key", "secret key");
 s3Service = new RestS3Service(awsCredentials); 
@@ -69,7 +69,7 @@ s3Service = new RestS3Service(awsCredentials);
 
 我们可以通过列出存储桶来验证我们已经成功连接到服务:
 
-```
+```java
 S3Bucket[] myBuckets = s3Service.listAllBuckets(); 
 ```
 
@@ -85,13 +85,13 @@ S3Bucket[] myBuckets = s3Service.listAllBuckets();
 
 让我们试着创建一个名为"`mybucket`"的桶:
 
-```
+```java
 S3Bucket bucket = s3Service.createBucket("mybucket"); 
 ```
 
 这将失败，并出现异常:
 
-```
+```java
 org.jets3t.service.S3ServiceException: Service Error Message.
   -- ResponseCode: 409, ResponseStatus: Conflict, XML Error Message:
   <!--?xml version="1.0" encoding="UTF-8"?-->
@@ -106,14 +106,14 @@ at org.jets3t.service.S3Service.createBucket(S3Service.java:1586)
 
 让我们用不同的名称再试一次:
 
-```
+```java
 S3Bucket bucket = s3Service.createBucket("myuniquename");
 log.info(bucket); 
 ```
 
 使用一个惟一的名称，调用成功，我们会看到关于我们的存储桶的信息:
 
-```
+```java
 [INFO] JetS3tClient - S3Bucket
 [name=myuniquename,location=US,creationDate=Sat Mar 31 16:47:47 EDT 2018,owner=null] 
 ```
@@ -122,7 +122,7 @@ log.info(bucket);
 
 删除一个 bucket 和创建它一样简单，除了一点；桶必须是空的才能被移走！
 
-```
+```java
 s3Service.deleteBucket("myuniquename"); 
 ```
 
@@ -134,7 +134,7 @@ s3Service.deleteBucket("myuniquename");
 
 我们可以通过指定不同的区域来覆盖它:
 
-```
+```java
 S3Bucket euBucket 
   = s3Service.createBucket("eu-bucket", S3Bucket.LOCATION_EUROPE);
 S3Bucket usWestBucket = s3Service
@@ -155,7 +155,7 @@ JetS3t 有一个被定义为常量的区域列表。
 
 先来看看`Strings`:
 
-```
+```java
 S3Object stringObject = new S3Object("object name", "string object");
 s3Service.putObject("myuniquebucket", stringObject); 
 ```
@@ -168,7 +168,7 @@ s3Service.putObject("myuniquebucket", stringObject);
 
 让我们向 S3 查询有关我们对象的信息，并查看内容类型:
 
-```
+```java
 StorageObject objectDetailsOnly 
   = s3Service.getObjectDetails("myuniquebucket", "my string");
 log.info("Content type: " + objectDetailsOnly.getContentType() + " length: " 
@@ -177,7 +177,7 @@ log.info("Content type: " + objectDetailsOnly.getContentType() + " length: "
 
 `ObjectDetailsOnly()`检索对象元数据，而不下载它。当我们记录内容类型时，我们看到:
 
-```
+```java
 [INFO] JetS3tClient - Content type: text/plain; charset=utf-8 length: 9 
 ```
 
@@ -185,7 +185,7 @@ JetS3t 将数据识别为文本，并为我们设置了长度。
 
 让我们下载数据，并将其与我们上传的数据进行比较:
 
-```
+```java
 S3Object downloadObject = 
   s3Service.getObject("myuniquebucket, "string object");
 String downloadString = new BufferedReader(new InputStreamReader(
@@ -200,7 +200,7 @@ assertTrue("string object".equals(downloadString));
 
 上传文件的过程类似于`Strings`:
 
-```
+```java
 File file = new File("src/test/resources/test.jpg");
 S3Object fileObject = new S3Object(file);
 s3Service.putObject("myuniquebucket", fileObject); 
@@ -208,7 +208,7 @@ s3Service.putObject("myuniquebucket", fileObject);
 
 当`S3Objects`被传递一个`File` 时，它们的名字来源于它们包含的文件的基本名:
 
-```
+```java
 [INFO] JetS3tClient - File object name is test.jpg
 ```
 
@@ -216,13 +216,13 @@ s3Service.putObject("myuniquebucket", fileObject);
 
 如果我们检索文件上传的对象信息并获得我们看到的内容类型:
 
-```
+```java
 [INFO] JetS3tClient - Content type:application/octet-stream
 ```
 
 让我们将我们的文件下载到一个新文件中，并比较其中的内容:
 
-```
+```java
 String getFileMD5(String filename) throws IOException {
     try (FileInputStream fis = new FileInputStream(new File(filename))) {
         return DigestUtils.md5Hex(fis);
@@ -244,7 +244,7 @@ assertTrue(origMD5.equals(newMD5));
 
 **当我们上传除了`Strings`或`Files,`之外的对象时，我们有更多的工作要做:**
 
-```
+```java
 ArrayList<Integer> numbers = new ArrayList<>();
 // adding elements to the ArrayList
 
@@ -266,7 +266,7 @@ s3Service.putObject(BucketName, streamObject);
 
 检索该流意味着颠倒该过程:
 
-```
+```java
 S3Object newStreamObject = s3Service.getObject(BucketName, "stream");
 
 ObjectInputStream objectInputStream = new ObjectInputStream(
@@ -290,7 +290,7 @@ assertEquals(7, (int) newNumbers.get(3));
 
 让我们复制 5.2 节中的测试文件，并验证结果:
 
-```
+```java
 S3Object targetObject = new S3Object("testcopy.jpg");
 s3Service.copyObject(
   BucketName, "test.jpg", 
@@ -315,7 +315,7 @@ assertTrue(origMD5.equals(newMD5));
 
 如果我们想修改元数据，我们可以将标志设置为 true:
 
-```
+```java
 targetObject = new S3Object("testcopy.jpg");
 targetObject.addMetadata("My_Custom_Field", "Hello, World!");
 s3Service.copyObject(
@@ -331,7 +331,7 @@ s3Service.copyObject(
 
 移动对象看起来类似于复制它:
 
-```
+```java
 s3Service.moveObject(
   "myuniquebucket",
   "test.jpg",
@@ -344,7 +344,7 @@ s3Service.moveObject(
 
 **JetS3t 有一个方便的重命名对象的方法。**要改变一个对象的名字，我们只需用一个新的`S3Object`来调用它:
 
-```
+```java
 s3Service.renameObject(
   "myuniquebucket", "test.jpg", new S3Object("spidey.jpg")); 
 ```

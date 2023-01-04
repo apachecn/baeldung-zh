@@ -28,13 +28,13 @@ CSRF 袭击有多种形式。我们来讨论一些最常见的。
 
 让我们考虑登录用户使用的以下`GET`请求，将钱转移到特定的银行账户`1234`:
 
-```
+```java
 GET http://bank.com/transfer?accountNo=1234&amount;=100
 ```
 
 如果攻击者想把钱从受害者的账户转到他自己的账户，他需要让受害者触发请求:
 
-```
+```java
 GET http://bank.com/transfer?accountNo=5678&amount;=1000
 ```
 
@@ -42,7 +42,7 @@ GET http://bank.com/transfer?accountNo=5678&amount;=1000
 
 *   **链接**–攻击者可以说服受害者点击该链接，例如，执行转账:
 
-```
+```java
 <a href="http://bank.com/transfer?accountNo=5678&amount;=1000">
 Show Kittens Pictures
 </a>
@@ -50,7 +50,7 @@ Show Kittens Pictures
 
 *   **图片**–攻击者可能使用一个带有目标 URL 的`<img/>`标签作为图片来源。换句话说，点击是不必要的。该请求将在页面加载时自动执行:
 
-```
+```java
 <img src="http://bank.com/transfer?accountNo=5678&amount;=1000"/>
 ```
 
@@ -58,14 +58,14 @@ Show Kittens Pictures
 
 假设主请求需要是 POST 请求:
 
-```
+```java
 POST http://bank.com/transfer
 accountNo=1234&amount;=100
 ```
 
 在这种情况下，攻击者需要让受害者运行类似的请求:
 
-```
+```java
 POST http://bank.com/transfer
 accountNo=5678&amount;=1000
 ```
@@ -74,7 +74,7 @@ accountNo=5678&amount;=1000
 
 攻击者需要一个`<form>`:
 
-```
+```java
 <form action="http://bank.com/transfer" method="POST">
     <input type="hidden" name="accountNo" value="5678"/>
     <input type="hidden" name="amount" value="1000"/>
@@ -84,7 +84,7 @@ accountNo=5678&amount;=1000
 
 但是，可以使用 JavaScript 自动提交表单:
 
-```
+```java
 <body onload="document.forms[0].submit()">
 <form>
 ...
@@ -96,7 +96,7 @@ accountNo=5678&amount;=1000
 
 我们将从一个简单的控制器实现开始，即`BankController`:
 
-```
+```java
 @Controller
 public class BankController {
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -121,7 +121,7 @@ public class BankController {
 
 我们还有一个触发银行转帐操作的基本 HTML 页面:
 
-```
+```java
 <html>
 <body>
     <h1>CSRF test on Origin</h1>
@@ -146,7 +146,7 @@ public class BankController {
 
 现在让我们看看攻击者页面会是什么样子:
 
-```
+```java
 <html>
 <body>
     <a href="http://localhost:8080/transfer?accountNo=5678&amount;=1000">Show Kittens Pictures</a>
@@ -170,7 +170,7 @@ public class BankController {
 
 让我们首先访问原始应用程序页面:
 
-```
+```java
 http://localhost:8081/spring-rest-full/csrfHome.html
 ```
 
@@ -178,7 +178,7 @@ http://localhost:8081/spring-rest-full/csrfHome.html
 
 然后，让我们访问攻击者页面:
 
-```
+```java
 http://localhost:8081/spring-security-rest/api/csrfAttacker.html
 ```
 
@@ -194,7 +194,7 @@ http://localhost:8081/spring-security-rest/api/csrfAttacker.html
 
 在较旧的 XML 配置(pre-Spring Security 4)中，CSRF 保护在默认情况下是禁用的，我们可以根据需要启用它:
 
-```
+```java
 <http>
     ...
     <csrf />
@@ -207,7 +207,7 @@ http://localhost:8081/spring-security-rest/api/csrfAttacker.html
 
 如果需要，我们可以禁用此配置:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http
@@ -227,7 +227,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 如果我们的视图使用 HTML 表单，我们将使用`parameterName`和`token`值来添加一个隐藏输入:
 
-```
+```java
 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 ```
 
@@ -235,21 +235,21 @@ protected void configure(HttpSecurity http) throws Exception {
 
 我们首先需要在 meta 标记中包含令牌值和头名称:
 
-```
+```java
 <meta name="_csrf" content="${_csrf.token}"/>
 <meta name="_csrf_header" content="${_csrf.headerName}"/>
 ```
 
 然后让我们用 JQuery 检索元标记值:
 
-```
+```java
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content"); 
 ```
 
 最后，让我们使用这些值来设置我们的 XHR 头:
 
-```
+```java
 $(document).ajaxSend(function(e, xhr, options) {
     xhr.setRequestHeader(header, token);
 });
@@ -271,7 +271,7 @@ $(document).ajaxSend(function(e, xhr, options) {
 
 在这种情况下，我们可以使用`CookieCsrfTokenRepository`发送 cookie 中的 CSRF 令牌:
 
-```
+```java
 @Configuration
 public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
@@ -291,7 +291,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 因为这个列表是以字符串的形式存储的，所以我们可以使用这个正则表达式来检索它:
 
-```
+```java
 const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
 ```
 
@@ -301,7 +301,7 @@ const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;
 
 我们可以简单地用 JavaScript `Fetch` API 设置它:
 
-```
+```java
 fetch(url, {
   method: 'POST',
   body: /* data to send */,
@@ -315,7 +315,7 @@ fetch(url, {
 
 让我们首先尝试在 CSRF 被禁用时提交一个简单的 POST 请求:
 
-```
+```java
 @ContextConfiguration(classes = { SecurityWithoutCsrfConfig.class, ...})
 public class CsrfDisabledIntegrationTest extends CsrfAbstractIntegrationTest {
 
@@ -340,7 +340,7 @@ public class CsrfDisabledIntegrationTest extends CsrfAbstractIntegrationTest {
 
 这里我们使用一个基类来保存公共测试助手逻辑——`CsrfAbstractIntegrationTest`:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 public class CsrfAbstractIntegrationTest {
@@ -377,7 +377,7 @@ public class CsrfAbstractIntegrationTest {
 
 现在，让我们启用 CSRF 保护，看看不同之处:
 
-```
+```java
 @ContextConfiguration(classes = { SecurityWithCsrfConfig.class, ...})
 public class CsrfEnabledIntegrationTest extends CsrfAbstractIntegrationTest {
 

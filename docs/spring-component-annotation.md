@@ -44,7 +44,7 @@ Spring 提供了一些专门的原型注释:`@Controller`、`@Service`和`@Repos
 
 让我们假设在我们的 Spring Boot 项目中有这些情况的例子:
 
-```
+```java
 @Controller
 public class ControllerExample {
 }
@@ -74,7 +74,7 @@ public class CustomComponentExample {
 
 我们可以编写一个测试，证明 Spring 自动检测到每一个，并将其添加到`ApplicationContext`:
 
-```
+```java
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 public class ComponentUnitTest {
@@ -105,7 +105,7 @@ public class ComponentUnitTest {
 
 让我们定义一个超出范围的`@Component` bean:
 
-```
+```java
 package com.baeldung.component.scannedscope;
 
 @Component
@@ -115,7 +115,7 @@ public class ScannedScopeExample {
 
 接下来，我们可以通过对我们的`@ComponentScan`注释的显式指令来包含它:
 
-```
+```java
 package com.baeldung.component.inscope;
 
 @SpringBootApplication
@@ -127,7 +127,7 @@ public class ComponentApplication {
 
 最后，我们可以测试它是否存在:
 
-```
+```java
 @Test
 public void givenScannedScopeComponent_whenSearchingInApplicationContext_thenFindIt() {
     assertNotNull(applicationContext.getBean(ScannedScopeExample.class));
@@ -142,7 +142,7 @@ public void givenScannedScopeComponent_whenSearchingInApplicationContext_thenFin
 
 让我们在项目外部的包中定义一个用`@Component`注释的对象:
 
-```
+```java
 package com.baeldung.component.outsidescope;
 
 @Component
@@ -152,7 +152,7 @@ public class OutsideScopeExample {
 
 这里有一个测试证明`ApplicationContext`不包括外部组件:
 
-```
+```java
 @Test
 public void givenOutsideScopeComponent_whenSearchingInApplicationContext_thenFail() {
     assertThrows(NoSuchBeanDefinitionException.class, () -> applicationContext.getBean(OutsideScopeExample.class));
@@ -167,14 +167,14 @@ public void givenOutsideScopeComponent_whenSearchingInApplicationContext_thenFai
 
 我们将首先创建一个没有注释的 POJO:
 
-```
+```java
 public class BeanExample {
 }
 ```
 
 在我们用`@Configuration`注释的类内部，我们可以创建一个 bean 生成方法:
 
-```
+```java
 @Bean
 public BeanExample beanExample() {
     return new BeanExample();
@@ -185,7 +185,7 @@ public BeanExample beanExample() {
 
 然后，我们可以编写一个测试来验证 Spring 确实拾取了 bean:
 
-```
+```java
 @Test
 public void givenBeanComponent_whenSearchingInApplicationContext_thenFindIt() {
     assertNotNull(applicationContext.getBean(BeanExample.class));

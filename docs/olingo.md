@@ -34,7 +34,7 @@ Olingo 是 Java 环境中可用的“特色”OData 实现之一，另一个是 
 
 除了标准的 Spring Boot 依赖项，我们还需要添加几个 Olingo 的 jar:
 
-```
+```java
 <dependency>
     <groupId>org.apache.olingo</groupId>
     <artifactId>olingo-odata2-core</artifactId>
@@ -76,7 +76,7 @@ Olingo 是 Java 环境中可用的“特色”OData 实现之一，另一个是 
 
 用 Olingo 实现基于 JPA 的 OData 服务的第一步是创建我们的域实体。在这个简单的例子中，我们将只创建两个类—`CarMaker`和`CarModel`——具有一对多关系:
 
-```
+```java
 @Entity
 @Table(name="car_maker")
 public class CarMaker {    
@@ -115,7 +115,7 @@ public class CarModel {
 
 **为了提供来自 JPA 域的数据，我们需要提供给 Olingo 的关键组件是一个名为`ODataJPAServiceFactory.`** 的抽象类的具体实现。这个类应该扩展`ODataServiceFactory`并作为 JPA 和 OData 之间的适配器。我们将这家工厂命名为`CarsODataJPAServiceFactory`，以我们领域的主题命名:
 
-```
+```java
 @Component
 public class CarsODataJPAServiceFactory extends ODataJPAServiceFactory {
     // other methods omitted...
@@ -151,7 +151,7 @@ public class CarsODataJPAServiceFactory extends ODataJPAServiceFactory {
 
 下一步是向 Olingo 的运行时注册我们的`ServiceFactory`,向 JAX-RS 运行时注册 Olingo 的入口点。我们将在一个`ResourceConfig`派生类中完成，在这里我们还将服务的 OData 路径定义为`/odata`:
 
-```
+```java
 @Component
 @ApplicationPath("/odata")
 public class JerseyConfig extends ResourceConfig {
@@ -179,7 +179,7 @@ public class JerseyConfig extends ResourceConfig {
 
 这个定位器是一个非常简单的 JAX-RS 资源，它扩展了 Olingo 的库存`ODataRootLocator`，并在需要时返回我们的 Spring 管理的`ServiceFactory `:
 
-```
+```java
 @Path("/")
 public class CarsRootLocator extends ODataRootLocator {
     private CarsODataJPAServiceFactory serviceFactory;
@@ -198,7 +198,7 @@ public class CarsRootLocator extends ODataRootLocator {
 
 我们的 OData 服务的最后一部分`EntityManagerFilter` **`.` 这个过滤器在当前请求中注入了一个`EntityManager`，因此它对`ServiceFactory`** 可用。这是一个简单的 JAX-RS `@Provider`类，实现了`ContainerRequestFilter `和`ContainerResponseFilter`接口，因此它可以正确地处理事务:
 
-```
+```java
 @Provider
 public static class EntityManagerFilter implements ContainerRequestFilter, 
   ContainerResponseFilter {
@@ -247,13 +247,13 @@ public static class EntityManagerFilter implements ContainerRequestFilter,
 
 让我们使用简单的`curl`命令来测试我们的实现。我们可以做的第一件事是获取服务`$metadata` 文档:
 
-```
+```java
 curl http://localhost:8080/odata/$metadata
 ```
 
 正如所料，该文档包含两种类型——`CarMaker`和`CarModel`——以及一个关联`.`。现在，让我们对我们的服务做更多的尝试，检索顶级集合和实体:
 
-```
+```java
 curl http://localhost:8080/odata/CarMakers
 curl http://localhost:8080/odata/CarModels
 curl http://localhost:8080/odata/CarMakers(1)
@@ -263,7 +263,7 @@ curl http://localhost:8080/odata/CarModels(1)/CarMakerDetails
 
 现在，让我们测试一个简单的查询，返回所有名称以“B”开头的`CarMakers`:
 
-```
+```java
 curl http://localhost:8080/odata/CarMakers?$filter=startswith(Name,'B') 
 ```
 

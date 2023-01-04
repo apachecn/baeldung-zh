@@ -52,7 +52,7 @@ X.509 是最常用的证书格式，它以二进制格式(DER)或文本格式(PE
 
 让我们使用`genkeypair`命令生成一个密钥对:
 
-```
+```java
 keytool -genkeypair -alias senderKeyPair -keyalg RSA -keysize 2048 \
   -dname "CN=Baeldung" -validity 365 -storetype PKCS12 \
   -keystore sender_keystore.p12 -storepass changeit
@@ -68,7 +68,7 @@ keytool -genkeypair -alias senderKeyPair -keyalg RSA -keysize 2048 \
 
 使用`KeyStore` API 和之前的密钥库文件`sender_keystore.p12,`，我们可以得到一个`PrivateKey`对象:
 
-```
+```java
 KeyStore keyStore = KeyStore.getInstance("PKCS12");
 keyStore.load(new FileInputStream("sender_keystore.p12"), "changeit");
 PrivateKey privateKey = 
@@ -81,7 +81,7 @@ PrivateKey privateKey =
 
 **当使用自签名证书时，我们只需要从密钥库文件中导出它。**我们可以用`exportcert`命令来完成:
 
-```
+```java
 keytool -exportcert -alias senderKeyPair -storetype PKCS12 \
   -keystore sender_keystore.p12 -file \
   sender_certificate.cer -rfc -storepass changeit
@@ -89,7 +89,7 @@ keytool -exportcert -alias senderKeyPair -storetype PKCS12 \
 
 否则，**如果我们要使用 CA 签名的证书，那么我们需要创建一个证书签名请求(CSR)** 。我们用`certreq`命令来做这件事:
 
-```
+```java
 keytool -certreq -alias senderKeyPair -storetype PKCS12 \
   -keystore sender_keystore.p12 -file -rfc \
   -storepass changeit > sender_certificate.csr
@@ -103,7 +103,7 @@ CSR 文件`sender_certificate.csr,`随后被发送到认证机构以进行签名
 
 有了对公钥的访问权，接收者可以使用`importcert`命令将其加载到他们的密钥库中:
 
-```
+```java
 keytool -importcert -alias receiverKeyPair -storetype PKCS12 \
   -keystore receiver_keystore.p12 -file \
   sender_certificate.cer -rfc -storepass changeit
@@ -111,7 +111,7 @@ keytool -importcert -alias receiverKeyPair -storetype PKCS12 \
 
 像以前一样使用`KeyStore` API，我们可以得到一个`PublicKey`实例:
 
-```
+```java
 KeyStore keyStore = KeyStore.getInstance("PKCS12");
 keyStore.load(new FileInputStream("receiver_keytore.p12"), "changeit");
 Certificate certificate = keyStore.getCertificate("receiverKeyPair");
@@ -132,13 +132,13 @@ PublicKey publicKey = certificate.getPublicKey();
 
 消息可以是字符串、文件或任何其他数据。让我们来看一个简单文件的内容:
 
-```
+```java
 byte[] messageBytes = Files.readAllBytes(Paths.get("message.txt"));
 ```
 
 现在，使用`MessageDigest,`让我们使用`digest`方法生成一个散列:
 
-```
+```java
 MessageDigest md = MessageDigest.getInstance("SHA-256");
 byte[] messageHash = md.digest(messageBytes);
 ```
@@ -151,7 +151,7 @@ byte[] messageHash = md.digest(messageBytes);
 
 让我们创建一个`Cipher`实例，并初始化它以进行加密。然后我们将调用`doFinal()`方法来加密之前散列的消息:
 
-```
+```java
 Cipher cipher = Cipher.getInstance("RSA");
 cipher.init(Cipher.ENCRYPT_MODE, privateKey);
 byte[] digitalSignature = cipher.doFinal(messageHash);
@@ -159,7 +159,7 @@ byte[] digitalSignature = cipher.doFinal(messageHash);
 
 签名可以保存到文件中，以便以后发送:
 
-```
+```java
 Files.write(Paths.get("digital_signature_1"), digitalSignature);
 ```
 
@@ -171,14 +171,14 @@ Files.write(Paths.get("digital_signature_1"), digitalSignature);
 
 让我们阅读收到的数字签名:
 
-```
+```java
 byte[] encryptedMessageHash = 
   Files.readAllBytes(Paths.get("digital_signature_1"));
 ```
 
 为了解密，我们创建了一个`Cipher`实例。然后我们调用`doFinal`方法:
 
-```
+```java
 Cipher cipher = Cipher.getInstance("RSA");
 cipher.init(Cipher.DECRYPT_MODE, publicKey);
 byte[] decryptedMessageHash = cipher.doFinal(encryptedMessageHash);
@@ -186,7 +186,7 @@ byte[] decryptedMessageHash = cipher.doFinal(encryptedMessageHash);
 
 接下来，我们从收到的消息中生成一个新的消息哈希:
 
-```
+```java
 byte[] messageBytes = Files.readAllBytes(Paths.get("message.txt"));
 
 MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -195,7 +195,7 @@ byte[] newMessageHash = md.digest(messageBytes);
 
 最后，我们检查新生成的消息哈希是否与解密的消息哈希匹配:
 
-```
+```java
 boolean isCorrect = Arrays.equals(decryptedMessageHash, newMessageHash);
 ```
 
@@ -211,7 +211,7 @@ boolean isCorrect = Arrays.equals(decryptedMessageHash, newMessageHash);
 
 为了开始签名过程，我们首先创建一个`Signature`类的实例。为此，我们需要一个签名算法。然后我们用我们的私钥初始化`Signature`:
 
-```
+```java
 Signature signature = Signature.getInstance("SHA256withRSA");
 signature.initSign(privateKey);
 ```
@@ -220,7 +220,7 @@ signature.initSign(privateKey);
 
 接下来，我们对消息的字节数组进行签名:
 
-```
+```java
 byte[] messageBytes = Files.readAllBytes(Paths.get("message.txt"));
 
 signature.update(messageBytes);
@@ -229,7 +229,7 @@ byte[] digitalSignature = signature.sign();
 
 我们可以将签名保存到文件中，以便以后传输:
 
-```
+```java
 Files.write(Paths.get("digital_signature_2"), digitalSignature);
 ```
 
@@ -237,19 +237,19 @@ Files.write(Paths.get("digital_signature_2"), digitalSignature);
 
 为了验证收到的签名，我们再次创建一个`Signature`实例:
 
-```
+```java
 Signature signature = Signature.getInstance("SHA256withRSA");
 ```
 
 接下来，我们通过调用`initVerify`方法初始化用于验证的`Signature`对象，该方法采用一个公钥:
 
-```
+```java
 signature.initVerify(publicKey);
 ```
 
 然后，我们需要通过调用`update`方法将接收到的消息字节添加到签名对象中:
 
-```
+```java
 byte[] messageBytes = Files.readAllBytes(Paths.get("message.txt"));
 
 signature.update(messageBytes);
@@ -257,7 +257,7 @@ signature.update(messageBytes);
 
 最后，我们可以通过调用`verify`方法来检查签名:
 
-```
+```java
 boolean isCorrect = signature.verify(receivedSignature);
 ```
 

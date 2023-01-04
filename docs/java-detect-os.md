@@ -22,7 +22,7 @@
 
 让我们来看看:
 
-```
+```java
 public String getOperatingSystem() {
     String os = System.getProperty("os.name");
     // System.out.println("Using System Property: " + os);
@@ -36,7 +36,7 @@ public String getOperatingSystem() {
 
 让我们用`SystemUtils:`找出操作系统
 
-```
+```java
 public String getOperatingSystemSystemUtils() {
     String os = SystemUtils.OS_NAME;
     // System.out.println("Using SystemUtils: " + os);
@@ -48,7 +48,7 @@ public String getOperatingSystemSystemUtils() {
 
 在我们的环境中执行代码会得到相同的结果:
 
-```
+```java
 Using SystemUtils: Windows 10
 Using System Property: Windows 10
 ```

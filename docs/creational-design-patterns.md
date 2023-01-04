@@ -39,7 +39,7 @@ Singleton 设计模式旨在通过**确保整个 Java 虚拟机中只有一个�
 
 所以在这里，我们将遵循一个更优化的方法，利用一个静态内部类:
 
-```
+```java
 public class Singleton  {    
     private Singleton() {}
 
@@ -86,7 +86,7 @@ public class Singleton  {
 
 让我们首先创建`Polygon` 接口:
 
-```
+```java
 public interface Polygon {
     String getType();
 }
@@ -96,7 +96,7 @@ public interface Polygon {
 
 现在，我们可以创建一个工厂，它将边数作为参数，并返回该接口的适当实现:
 
-```
+```java
 public class PolygonFactory {
     public Polygon getPolygon(int numberOfSides) {
         if(numberOfSides == 3) {
@@ -151,7 +151,7 @@ Joshua Bloch 在他的书《有效的 Java》中介绍了一个改进版本的 b
 
 这个例子只有一个类`BankAccount`，它包含一个构建器作为`static` 内部类:
 
-```
+```java
 public class BankAccount {
 
     private String name;
@@ -173,7 +173,7 @@ public class BankAccount {
 
 我们已经在一个`static`内部类中定义了`BankAccountBuilder`:
 
-```
+```java
 public static class BankAccountBuilder {
 
     private String name;
@@ -210,7 +210,7 @@ public static class BankAccountBuilder {
 
 让我们来看一个实际使用的构建器模式的快速示例:
 
-```
+```java
 BankAccount newAccount = new BankAccount
   .BankAccountBuilder("Jon", "22738022275")
   .withEmail("[[email protected]](/web/20221103034412/https://www.baeldung.com/cdn-cgi/l/email-protection)")

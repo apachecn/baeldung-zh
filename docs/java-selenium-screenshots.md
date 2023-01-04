@@ -12,7 +12,7 @@
 
 让我们从添加 Selenium 依赖项到我们的`pom.xml`开始:
 
-```
+```java
 <dependency>
     <groupId>org.seleniumhq.selenium</groupId>
     <artifactId>selenium-java</artifactId>
@@ -24,7 +24,7 @@
 
 现在让我们配置我们的驱动程序来使用单元测试中的 Chrome:
 
-```
+```java
 private static ChromeDriver driver;
 
 @BeforeClass
@@ -51,7 +51,7 @@ public static void setUp() {
 
 让我们使用这个界面创建一个简单的截图方法:
 
-```
+```java
 public void takeScreenshot(String pathname) throws IOException {
     File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
     FileUtils.copyFile(src, new File(pathname));
@@ -64,7 +64,7 @@ public void takeScreenshot(String pathname) throws IOException {
 
 现在让我们看看如何在单元测试中使用这个方法:
 
-```
+```java
 @Test
 public void whenGoogleIsLoaded_thenCaptureScreenshot() throws IOException {
     takeScreenshot(resolveTestResourcePath("google-home.png"));
@@ -81,7 +81,7 @@ public void whenGoogleIsLoaded_thenCaptureScreenshot() throws IOException {
 
 由于 aShot 可以从 [Maven Central](https://web.archive.org/web/20221129014726/https://search.maven.org/classic/#search%7Cga%7C1%7Cashot) 获得，我们可以将它包含在我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>ru.yandex.qatools.ashot</groupId>
     <artifactId>ashot</artifactId>
@@ -93,7 +93,7 @@ aShot 库提供了一个 [Fluent API](https://web.archive.org/web/20221129014726
 
 现在，让我们看看如何从我们的一个单元测试中从 Google 主页捕获徽标:
 
-```
+```java
 @Test
 public void whenGoogleIsLoaded_thenCaptureLogo() throws IOException {
     WebElement logo = driver.findElement(By.id("hplogo"));

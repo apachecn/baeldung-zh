@@ -20,7 +20,7 @@
 
 让我们看一个验证列表元素的例子:
 
-```
+```java
 public class Customer {    
      List<@NotBlank(message="Address must not be blank") String> addresses;
 
@@ -34,7 +34,7 @@ public class Customer {
 
 让我们验证一下，如果我们试图将一个空的`String`添加到`addresses`列表中，验证框架将返回一个`ConstraintViolation`:
 
-```
+```java
 @Test
 public void whenEmptyAddress_thenValidationFails() {
     Customer customer = new Customer();
@@ -52,7 +52,7 @@ public void whenEmptyAddress_thenValidationFails() {
 
 接下来，让我们看看如何验证类型为`Map`的集合的元素:
 
-```
+```java
 public class CustomerMap {
 
     private Map<@Email String, @NotNull Customer> customers;
@@ -65,7 +65,7 @@ public class CustomerMap {
 
 让我们验证添加一个带有无效电子邮件的条目是否会导致验证错误:
 
-```
+```java
 @Test
 public void whenInvalidEmail_thenValidationFails() {
     CustomerMap map = new CustomerMap();
@@ -84,7 +84,7 @@ public void whenInvalidEmail_thenValidationFails() {
 
 验证约束也可以应用于`Optional`值:
 
-```
+```java
 private Integer age;
 
 public Optional<@Min(18) Integer> getAge() {
@@ -94,7 +94,7 @@ public Optional<@Min(18) Integer> getAge() {
 
 让我们创建一个年龄太低的`Customer`,并验证这是否会导致验证错误:
 
-```
+```java
 @Test
 public void whenAgeTooLow_thenValidationFails() {
     Customer customer = new Customer();
@@ -109,7 +109,7 @@ public void whenAgeTooLow_thenValidationFails() {
 
 另一方面，如果`age`为空，则`Optional`值不被验证:
 
-```
+```java
 @Test
 public void whenAgeNull_thenValidationSucceeds() {
     Customer customer = new Customer();
@@ -129,7 +129,7 @@ public void whenAgeNull_thenValidationSucceeds() {
 
 **参考实现包含`OptionalInt`、`OptionalLong`和`OptionalDouble`、**的取值器:
 
-```
+```java
 @Min(1)
 private OptionalInt numberOfOrders;
 ```
@@ -144,7 +144,7 @@ private OptionalInt numberOfOrders;
 
 让我们添加一个包含`companyName`属性的新的`Profile`类:
 
-```
+```java
 public class Profile {
     private String companyName;
 
@@ -154,7 +154,7 @@ public class Profile {
 
 接下来，我们想在`Customer`类中添加一个带有`@NotBlank`注释的`Profile`属性——它验证了`companyName`不是一个空的`String`:
 
-```
+```java
 @NotBlank
 private Profile profile;
 ```
@@ -163,7 +163,7 @@ private Profile profile;
 
 让我们添加一个实现了`ValueExtractor`接口并覆盖了`extractValue()`方法的`ProfileValueExtractor`类:
 
-```
+```java
 @UnwrapByDefault
 public class ProfileValueExtractor 
   implements ValueExtractor<@ExtractedValue(type = String.class) Profile> {
@@ -182,13 +182,13 @@ public class ProfileValueExtractor
 
 最后，我们需要通过向`META-INF/services`目录添加一个名为`javax.validation.valueextraction.ValueExtractor`的文件来注册该类，该文件包含我们的`ProfileValueExtractor`类的全名:
 
-```
+```java
 org.baeldung.javaxval.container.validation.valueextractors.ProfileValueExtractor
 ```
 
 现在，当我们用一个空的`companyName`来验证一个带有*配置文件*属性的`Customer`对象时，我们会看到一个验证错误:
 
-```
+```java
 @Test
 public void whenProfileCompanyNameBlank_thenValidationFails() {
     Customer customer = new Customer();

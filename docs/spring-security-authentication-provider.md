@@ -16,7 +16,7 @@ Spring Security 为执行身份验证提供了多种选项。这些选项遵循�
 
 对于这些更高级的场景，我们需要**定义一个定制的身份验证提供者**:
 
-```
+```java
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
@@ -51,7 +51,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 既然我们已经定义了身份验证提供者，我们需要使用可用的名称空间支持在 XML 安全配置中指定它:
 
-```
+```java
 <http use-expressions="true">
     <intercept-url pattern="/**" access="isAuthenticated()"/>
     <http-basic/>
@@ -67,7 +67,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 接下来，我们来看看相应的 Java 配置:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 @ComponentScan("com.baeldung.security")
@@ -95,7 +95,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 我们将使用一个简单的`curl`命令来发送一个经过验证的请求:
 
-```
+```java
 curl --header "Accept:application/json" -i --user user1:user1Pass 
     http://localhost:8080/spring-security-custom/api/foo/1
 ```
@@ -104,7 +104,7 @@ curl --header "Accept:application/json" -i --user user1:user1Pass
 
 我们从服务器获得预期的 200 OK:
 
-```
+```java
 HTTP/1.1 200 OK
 Server: Apache-Coyote/1.1
 Set-Cookie: JSESSIONID=B8F0EFA81B78DE968088EBB9AFD85A60; Path=/spring-security-custom/; HttpOnly

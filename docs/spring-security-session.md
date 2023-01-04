@@ -31,13 +31,13 @@ Spring Logout Example - how to configure the logout url, the logout-succcess-url
 *   `**never**` –框架永远不会自己创建会话，但是如果它已经存在，它会使用它。
 *   `**stateless**` –Spring Security 不会创建或使用任何会话。
 
-```
+```java
 <http create-session="ifRequired">...</http>
 ```
 
 以下是 Java 配置:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http.sessionManagement()
@@ -73,7 +73,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 启用并发`session-control`支持的第一步是在`web.xml`中添加以下监听器:
 
-```
+```java
 <listener>
     <listener-class>
       org.springframework.security.web.session.HttpSessionEventPublisher
@@ -83,7 +83,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 或者我们可以把它定义为一个 Bean:
 
-```
+```java
 @Bean
 public HttpSessionEventPublisher httpSessionEventPublisher() {
     return new HttpSessionEventPublisher();
@@ -94,7 +94,7 @@ public HttpSessionEventPublisher httpSessionEventPublisher() {
 
 为了允许同一个用户有多个并发会话，应该在 XML 配置中使用`<session-management>`元素:
 
-```
+```java
 <http ...>
     <session-management>
         <concurrency-control max-sessions="2" />
@@ -104,7 +104,7 @@ public HttpSessionEventPublisher httpSessionEventPublisher() {
 
 或者我们可以通过 Java 配置来实现:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http.sessionManagement().maximumSessions(2)
@@ -117,7 +117,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 会话超时后，如果用户发送一个带有**过期会话 id** 的请求，他们将被重定向到一个可通过名称空间配置的 URL:
 
-```
+```java
 <session-management>
     <concurrency-control expired-url="/sessionExpired.html" ... />
 </session-management>
@@ -125,7 +125,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 类似地，如果用户发送一个会话 id 未过期但完全无效的请求，他们也会被重定向到一个可配置的 URL:
 
-```
+```java
 <session-management invalid-session-url="/invalidSession.html">
     ...
 </session-management>
@@ -133,7 +133,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 下面是相应的 Java 配置:
 
-```
+```java
 http.sessionManagement()
   .expiredUrl("/sessionExpired.html")
   .invalidSessionUrl("/invalidSession.html");
@@ -143,7 +143,7 @@ http.sessionManagement()
 
 我们可以使用属性轻松配置嵌入式服务器的会话超时值:
 
-```
+```java
 server.servlet.session.timeout=15m
 ```
 
@@ -163,7 +163,7 @@ server.servlet.session.timeout=15m
 
 或者，从 Servlet 3.0 开始，会话跟踪机制也可以在`web.xml`中配置:
 
-```
+```java
 <session-config>
      <tracking-mode>COOKIE</tracking-mode>
 </session-config>
@@ -171,7 +171,7 @@ server.servlet.session.timeout=15m
 
 从程序上来说:
 
-```
+```java
 servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
 ```
 
@@ -181,13 +181,13 @@ servletContext.setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
 
 该框架通过配置当用户尝试再次进行身份验证时现有会话会发生什么来提供针对典型会话固定攻击的保护:
 
-```
+```java
 <session-management session-fixation-protection="migrateSession"> ...
 ```
 
 下面是相应的 Java 配置:
 
-```
+```java
 http.sessionManagement()
   .sessionFixation().migrateSession()
 ```
@@ -210,7 +210,7 @@ http.sessionManagement()
 
 我们可以在`web.xml`中为我们的会话 cookie 设置这些标志:
 
-```
+```java
 <session-config>
     <session-timeout>1</session-timeout>
     <cookie-config>
@@ -224,7 +224,7 @@ http.sessionManagement()
 
 让我们也来看看相应的 Java 配置:
 
-```
+```java
 public class MainWebAppInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext sc) throws ServletException {
@@ -237,14 +237,14 @@ public class MainWebAppInitializer implements WebApplicationInitializer {
 
 **如果我们使用 Spring Boot，我们可以在我们的`application.properties`** 中设置这些标志:
 
-```
+```java
 server.servlet.session.cookie.http-only=true
 server.servlet.session.cookie.secure=true
 ```
 
 最后，我们也可以通过使用`Filter`手动实现这一点:
 
-```
+```java
 public class SessionFilter implements Filter {
     @Override
     public void doFilter(
@@ -275,7 +275,7 @@ public class SessionFilter implements Filter {
 
 只需在 web 上下文中声明的 bean 上使用@Scope 注释，就可以用`session`范围定义 bean:
 
-```
+```java
 @Component
 @Scope("session")
 public class Foo { .. }
@@ -283,13 +283,13 @@ public class Foo { .. }
 
 或者使用 XML:
 
-```
+```java
 <bean id="foo" scope="session"/>
 ```
 
 然后可以将该 bean 注入到另一个 bean 中:
 
-```
+```java
 @Autowired
 private Foo theFoo;
 ```
@@ -300,7 +300,7 @@ Spring 会将新的 bean 绑定到 HTTP 会话的生命周期中。
 
 原始 HTTP 会话也可以直接注入到`Controller`方法中:
 
-```
+```java
 @RequestMapping(..)
 public void fooMethod(HttpSession session) {
     session.setAttribute(Constants.FOO, new Foo());
@@ -313,7 +313,7 @@ public void fooMethod(HttpSession session) {
 
 当前的 HTTP 会话也可以通过**原始 Servlet API** 以编程方式获得:
 
-```
+```java
 ServletRequestAttributes attr = (ServletRequestAttributes) 
     RequestContextHolder.currentRequestAttributes();
 HttpSession session= attr.getRequest().getSession(true); // true == allow create

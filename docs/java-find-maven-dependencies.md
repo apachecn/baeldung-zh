@@ -24,7 +24,7 @@ POM 文件使用 XML 语法，所有内容都在标记之间。
 
 默认情况下，POM 文件只包含我们的项目信息。为了添加我们的项目将使用的依赖项，我们需要添加`dependencies`部分:
 
-```
+```java
 <project 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -73,7 +73,7 @@ Eclipse IDE 使用与 IntelliJ 相似的方法来添加新的依赖项。
 
 在我们的 POM 文件中，在 dependency 部分，简单地粘贴找到的依赖细节。
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-jdbc</artifactId>

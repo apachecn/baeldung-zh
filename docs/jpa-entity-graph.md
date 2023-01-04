@@ -24,7 +24,7 @@ JPA 实体图的主要目标是在加载实体的相关关联和基本字段时�
 
 所以，首先我们会有一个`User`实体:
 
-```
+```java
 @Entity
 public class User {
     @Id
@@ -39,7 +39,7 @@ public class User {
 
 用户可以共享各种帖子，所以我们还需要一个`Post`实体:
 
-```
+```java
 @Entity
 public class Post {
 
@@ -60,7 +60,7 @@ public class Post {
 
 用户还可以对共享的帖子发表评论，所以，最后，我们将添加一个`Comment`实体:
 
-```
+```java
 @Entity
 public class Comment {
 
@@ -86,7 +86,7 @@ public class Comment {
 
 目标是使用各种方式加载下图:
 
-```
+```java
 Post  ->  user:User
       ->  comments:List<Comment>
             comments[0]:Comment -> user:User
@@ -102,14 +102,14 @@ Post  ->  user:User
 
 例如，当我们加载一个`Post`实体时，相关的`Comment`实体不会作为默认的`FetchType`被加载，因为`@OneToMany`是`LAZY.`，我们可以通过将`FetchType`改为`EAGER:`来覆盖这个行为
 
-```
+```java
 @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
 private List<Comment> comments = new ArrayList<>();
 ```
 
 相比之下，当我们加载一个`Comment`实体时，他的`Post`父实体被加载为`@ManyToOne, `的默认模式，也就是`EAGER.`，我们也可以通过将此注释改为`LAZY:`来选择不加载`Post`实体
 
-```
+```java
 @ManyToOne(fetch = FetchType.LAZY) 
 @JoinColumn(name = "post_id") 
 private Post post;
@@ -131,7 +131,7 @@ private Post post;
 
 所以让我们首先定义一个实体图，它加载了`Post` 和他的相关实体`User` 和`Comment` s:
 
-```
+```java
 @NamedEntityGraph(
   name = "post-entity-graph",
   attributeNodes = {
@@ -156,7 +156,7 @@ public class Post {
 
 为此，我们将使用`@NamedAttributeNode `子图属性。**这允许引用通过`@NamedSubgraph`注释:**定义的命名子图
 
-```
+```java
 @NamedEntityGraph(
   name = "post-entity-graph-with-comment-users",
   attributeNodes = {
@@ -188,7 +188,7 @@ public class Post {
 
 最后，请注意，我们也可以使用`orm.xml`部署描述符添加实体图的定义:
 
-```
+```java
 <entity-mappings>
   <entity class="com.baeldung.jpa.entitygraph.Post" name="Post">
     ...
@@ -204,20 +204,20 @@ public class Post {
 
 我们也可以通过调用`createEntityGraph()`方法，通过`EntityManager` API 定义实体图:
 
-```
+```java
 EntityGraph<Post> entityGraph = entityManager.createEntityGraph(Post.class);
 ```
 
 为了指定根实体的属性，我们使用了`addAttributeNodes()`方法。
 
-```
+```java
 entityGraph.addAttributeNodes("subject");
 entityGraph.addAttributeNodes("user");
 ```
 
 类似地，为了包含相关实体的属性，我们使用`addSubgraph()`来构建一个嵌入的实体图，然后像上面一样使用`addAttributeNodes() `。
 
-```
+```java
 entityGraph.addSubgraph("comments")
   .addAttributeNodes("user");
 ```
@@ -243,13 +243,13 @@ JPA 定义了两个属性或提示，持久性提供者可以通过它们进行�
 
 因此，让我们调用`find()`方法并检查日志:
 
-```
+```java
 Post post = entityManager.find(Post.class, 1L);
 ```
 
 下面是 Hibernate 实现提供的日志:
 
-```
+```java
 select
     post0_.id as id1_1_0_,
     post0_.subject as subject2_1_0_,
@@ -264,7 +264,7 @@ where
 
 我们可以通过调用重载的`find()`方法来覆盖这个默认行为，该方法将提示作为`Map.`接受，然后**可以提供我们想要加载的图形类型:**
 
-```
+```java
 EntityGraph entityGraph = entityManager.getEntityGraph("post-entity-graph");
 Map<String, Object> properties = new HashMap<>();
 properties.put("javax.persistence.fetchgraph", entityGraph);
@@ -273,7 +273,7 @@ Post post = entityManager.find(Post.class, id, properties);
 
 如果我们再次查看日志，我们可以看到这些实体现在已经加载，并且只在一个 select 查询中加载:
 
-```
+```java
 select
     post0_.id as id1_1_0_,
     post0_.subject as subject2_1_0_,
@@ -301,7 +301,7 @@ where
 
 **让我们看看如何使用 JPQL 实现同样的事情:**
 
-```
+```java
 EntityGraph entityGraph = entityManager.getEntityGraph("post-entity-graph-with-comment-users");
 Post post = entityManager.createQuery("select p from Post p where p.id = :id", Post.class)
   .setParameter("id", id)
@@ -311,7 +311,7 @@ Post post = entityManager.createQuery("select p from Post p where p.id = :id", P
 
 **最后，我们来看一个`Criteria` API 的例子:**
 
-```
+```java
 EntityGraph entityGraph = entityManager.getEntityGraph("post-entity-graph-with-comment-users");
 CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 CriteriaQuery<Post> criteriaQuery = criteriaBuilder.createQuery(Post.class);

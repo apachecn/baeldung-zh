@@ -16,7 +16,7 @@
 
 首先，我们有[“+”操作符](/web/20221130213649/https://www.baeldung.com/java-strings-concatenation)。我们可以使用“+”操作符连接变量和字符串值。变量被它的值替换，所以我们实现了字符串的插值或连接。让我们来看一个代码示例:
 
-```
+```java
 @Test
 public void givenTwoString_thenInterpolateWithPlusSign() {
     String EXPECTED_STRING = "String Interpolation in Java with some Java examples.";
@@ -33,7 +33,7 @@ public void givenTwoString_thenInterpolateWithPlusSign() {
 
 另一种方法是使用来自`String`类的`[format()](/web/20221130213649/https://www.baeldung.com/string/format) `方法。与“+”运算符相反，在这种情况下，我们需要使用占位符在`String`插值中获得预期的结果。下面  代码 片段 演示如何操作 :
 
-```
+```java
 @Test
 public void givenTwoString_thenInterpolateWithFormat() {
     String EXPECTED_STRING = "String Interpolation in Java with some Java examples.";
@@ -46,7 +46,7 @@ public void givenTwoString_thenInterpolateWithFormat() {
 
 此外，如果我们想避免在我们的`format`调用中变量的重复，我们可以引用一个特定的参数。让我们来看看这个行为:
 
-```
+```java
 @Test
 public void givenTwoString_thenInterpolateWithFormatStringReference() {
     String EXPECTED_STRING = "String Interpolation in Java with some Java examples.";
@@ -63,7 +63,7 @@ public void givenTwoString_thenInterpolateWithFormatStringReference() {
 
 我们下面的做法是 [`StringBuilder`](/web/20221130213649/https://www.baeldung.com/java-string-builder-string-buffer) 类。我们实例化一个`StringBuilder`对象，然后调用`append() `函数来构建`String`。在这个过程中，我们的变量被添加到结果`String`中:
 
-```
+```java
 @Test
 public void givenTwoString_thenInterpolateWithStringBuilder() {
     String EXPECTED_STRING = "String Interpolation in Java with some Java examples.";
@@ -90,7 +90,7 @@ public void givenTwoString_thenInterpolateWithStringBuilder() {
 
 `MessageFormat`的`format`方法与`String`的`format`方法几乎相同，除了占位符是如何写的。像{0}、{1}、{2}等索引。，表示该函数中的占位符:
 
-```
+```java
 @Test
 public void givenTwoString_thenInterpolateWithMessageFormat() {
     String EXPECTED_STRING = "String Interpolation in Java with some Java examples.";
@@ -107,7 +107,7 @@ public void givenTwoString_thenInterpolateWithMessageFormat() {
 
 最后，我们有来自[阿帕奇社区](/web/20221130213649/https://www.baeldung.com/java-apache-commons-text)的`StringSubstitutor `。在这个类的上下文中，值代替了包含在字符串中的变量。这个类获取一段文本并替换所有变量。变量的默认定义是`${variableName}`。构造函数和 set 方法可以用来改变前缀和后缀。**变量值的解析通常涉及到地图的使用**。但是，我们可以通过利用系统属性或提供专门的变量解析器来解决它们:
 
-```
+```java
 @Test
 public void givenTwoString_thenInterpolateWithStringSubstitutor() {
     String EXPECTED_STRING = "String Interpolation in Java with some Java examples.";

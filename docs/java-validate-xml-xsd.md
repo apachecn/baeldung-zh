@@ -10,7 +10,7 @@
 
 让我们考虑下面的 XML 文件`baeldung.xml`，它包含一个名称和一个地址，地址本身由邮政编码和城市组成:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8" ?>
 <individual>
     <name>Baeldung</name>
@@ -23,7 +23,7 @@
 
 `baeldung.xml`的内容与`person.xsd` 文件的描述完全匹配:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:element name="individual">
@@ -46,7 +46,7 @@
 
 然而，我们的 XML 对于下面的 XSD 文件`full-person.xsd`是无效的:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:element name="individual">
@@ -90,7 +90,7 @@
 
 最后，我们将从`Schema`中检索`Validator`。`Validator`是根据`Schema`检查 XML 文档的处理器:
 
-```
+```java
 private Validator initValidator(String xsdPath) throws SAXException {
     SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
     Source schemaFile = new StreamSource(getFile(xsdPath));
@@ -101,7 +101,7 @@ private Validator initValidator(String xsdPath) throws SAXException {
 
 在这段代码中，`getFile`方法允许我们[将 XSD](/web/20220830095532/https://www.baeldung.com/reading-file-in-java) 读成一个 [`File`](/web/20220830095532/https://www.baeldung.com/java-io-file) 。在我们的示例中，我们将文件放在 resources 目录下，因此该方法读作:
 
-```
+```java
 private File getFile(String location) {
     return new File(getClass().getClassLoader().getResource(location).getFile());
 }
@@ -111,7 +111,7 @@ private File getFile(String location) {
 
 **我们现在可以使用`Validator`来验证 XML 文件是否匹配 XSD 描述。**`validate`方法要求我们将`File`转化为`StreamSource`:
 
-```
+```java
 public boolean isValid(String xsdPath, String xmlPath) throws IOException, SAXException {
     Validator validator = initValidator(xsdPath);
     try {
@@ -129,7 +129,7 @@ public boolean isValid(String xsdPath, String xmlPath) throws IOException, SAXEx
 
 我们现在可以将代码包装在一个`XmlValidator`类中，并检查`baeldung.xml` 是否匹配`person.xsd`描述，而不是`full-person.xsd`:
 
-```
+```java
 @Test
 public void givenValidXML_WhenIsValid_ThenTrue() throws IOException, SAXException {
     assertTrue(new XmlValidator().isValid("person.xsd", "baeldung.xml"));
@@ -147,7 +147,7 @@ public void givenInvalidXML_WhenIsValid_ThenFalse() throws IOException, SAXExcep
 
 既然我们想要收集所有的验证错误，我们需要改变这种行为。为此，**我们要定义自己的`ErrorHandler` :**
 
-```
+```java
 public class XmlErrorHandler implements ErrorHandler {
 
     private List<SAXParseException> exceptions;
@@ -179,7 +179,7 @@ public class XmlErrorHandler implements ErrorHandler {
 
 我们现在可以告诉`Validator`使用这个特定的`ErrorHandler`:
 
-```
+```java
 public List<SAXParseException> listParsingExceptions(String xsdPath, String xmlPath) throws IOException, SAXException {
     XmlErrorHandler xsdErrorHandler = new XmlErrorHandler();
     Validator validator = initValidator(xsdPath);
@@ -197,7 +197,7 @@ public List<SAXParseException> listParsingExceptions(String xsdPath, String xmlP
 
 由于`baeldung.xml`满足`person.xsd`的要求，在这种情况下没有列出错误。但是，用`full-person.xsd`调用，我们会打印以下错误信息:
 
-```
+```java
 XmlValidator - cvc-maxLength-valid: Value 'Baeldung' with length = '8' is not facet-valid with respect to maxLength '5' for type '#AnonType_nameindividual'.
 XmlValidator - cvc-type.3.1.3: The value 'Baeldung' of element 'name' is not valid.
 XmlValidator - cvc-complex-type.2.4.b: The content of element 'address' is not complete. One of '{street}' is expected.

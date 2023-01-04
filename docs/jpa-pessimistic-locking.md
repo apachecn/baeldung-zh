@@ -66,7 +66,7 @@ JPA 规范定义了我们将要讨论的三种悲观锁模式:
 
 这可能是最直接的方法。将一个`LockModeType` 对象作为参数传递给`find`方法就足够了:
 
-```
+```java
 entityManager.find(Student.class, studentId, LockModeType.PESSIMISTIC_READ);
 ```
 
@@ -74,7 +74,7 @@ entityManager.find(Student.class, studentId, LockModeType.PESSIMISTIC_READ);
 
 此外，我们还可以使用一个`Query`对象，并调用带有锁模式的`setLockMode` setter 作为参数:
 
-```
+```java
 Query query = entityManager.createQuery("from Student where studentId = :studentId");
 query.setParameter("studentId", studentId);
 query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
@@ -85,7 +85,7 @@ query.getResultList()
 
 也可以手动锁定 find 方法检索的结果:
 
-```
+```java
 Student resultStudent = entityManager.find(Student.class, studentId);
 entityManager.lock(resultStudent, LockModeType.PESSIMISTIC_WRITE);
 ```
@@ -94,7 +94,7 @@ entityManager.lock(resultStudent, LockModeType.PESSIMISTIC_WRITE);
 
 如果我们想通过`refresh `方法覆盖实体的状态，我们也可以设置一个锁:
 
-```
+```java
 Student resultStudent = entityManager.find(Student.class, studentId);
 entityManager.refresh(resultStudent, LockModeType.PESSIMISTIC_FORCE_INCREMENT);
 ```
@@ -103,7 +103,7 @@ entityManager.refresh(resultStudent, LockModeType.PESSIMISTIC_FORCE_INCREMENT);
 
 `@NamedQuery`注释也允许我们设置锁定模式:
 
-```
+```java
 @NamedQuery(name="lockStudent",
   query="SELECT s FROM Student s WHERE s.id LIKE :studentId",
   lockMode = PESSIMISTIC_READ)
@@ -117,7 +117,7 @@ entityManager.refresh(resultStudent, LockModeType.PESSIMISTIC_FORCE_INCREMENT);
 
 我们可以通过将带有`PessimisticLockScope`值的参数“`javax.persistance.lock.scope`”作为参数传递给`EntityManager`、`Query`、`TypedQuery`或`NamedQuery`的适当方法来设置范围:
 
-```
+```java
 Map<String, Object> properties = new HashMap<>();
 map.put("javax.persistence.lock.scope", PessimisticLockScope.EXTENDED);
 
@@ -131,7 +131,7 @@ entityManager.find(
 
 让我们看看包含两个实体的示例代码:
 
-```
+```java
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Person {
@@ -155,7 +155,7 @@ public class Employee extends Person {
 
 当我们想要获得对`Employee`的锁定时，我们可以观察跨越这两个实体的`SQL`查询:
 
-```
+```java
 SELECT t0.ID, t0.DTYPE, t0.LASTNAME, t0.NAME, t1.ID, t1.SALARY 
 FROM PERSON t0, EMPLOYEE t1 
 WHERE ((t0.ID = ?) AND ((t1.ID = t0.ID) AND (t0.DTYPE = ?))) FOR UPDATE
@@ -169,7 +169,7 @@ WHERE ((t0.ID = ?) AND ((t1.ID = t0.ID) AND (t0.DTYPE = ?))) FOR UPDATE
 
 让我们看看带有`@ElementCollection`注释的示例代码:
 
-```
+```java
 @Entity
 public class Customer {
 
@@ -196,7 +196,7 @@ public class Address {
 
 让我们分析搜索`Customer`实体时的一些查询:
 
-```
+```java
 SELECT CUSTOMERID, LASTNAME, NAME 
 FROM CUSTOMER WHERE (CUSTOMERID = ?) FOR UPDATE
 
@@ -217,7 +217,7 @@ WHERE (Customer_CUSTOMERID = ?) FOR UPDATE
 
 还可以通过将超时值更改为零来指定“无等待”锁定。然而，我们应该记住，有些数据库驱动程序**不支持以这种方式设置超时值。**
 
-```
+```java
 Map<String, Object> properties = new HashMap<>(); 
 map.put("javax.persistence.lock.timeout", 1000L); 
 

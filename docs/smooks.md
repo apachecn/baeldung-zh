@@ -34,7 +34,7 @@ Smooks 是一个数据处理应用程序框架，用于处理 XML 或 CSV 等结
 
 让我们从需要添加到我们的`pom.xml`中的 Maven 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.milyn</groupId>
     <artifactId>milyn-smooks-all</artifactId>
@@ -52,7 +52,7 @@ Smooks 是一个数据处理应用程序框架，用于处理 XML 或 CSV 等结
 
 我们从一个简单的例子开始。考虑下面的 XML:
 
-```
+```java
 <order creation-date="2018-01-14">
     <order-number>771</order-number>
     <order-status>IN_PROGRESS</order-status>
@@ -63,7 +63,7 @@ Smooks 是一个数据处理应用程序框架，用于处理 XML 或 CSV 等结
 
 让我们看看我们的模型是什么样的:
 
-```
+```java
 public class Order {
 
     private Date creationDate;
@@ -73,7 +73,7 @@ public class Order {
 } 
 ```
 
-```
+```java
 public enum Status {
     NEW, IN_PROGRESS, FINISHED
 }
@@ -89,7 +89,7 @@ public enum Status {
 
 让我们看看我们将在这里的例子中使用的映射:
 
-```
+```java
 <?xml version="1.0"?>
 <smooks-resource-list 
 
@@ -111,7 +111,7 @@ public enum Status {
 
 首先，我们需要构造一个 Smooks 对象，并将输入 XML 作为一个流传递:
 
-```
+```java
 public Order converOrderXMLToOrderObject(String path) 
   throws IOException, SAXException {
 
@@ -130,7 +130,7 @@ public Order converOrderXMLToOrderObject(String path)
 
 最后，判断配置是否正确:
 
-```
+```java
 @Test
 public void givenOrderXML_whenConvert_thenPOJOsConstructedCorrectly() throws Exception {
     XMLToJavaConverter xmlToJavaOrderConverter = new XMLToJavaConverter();
@@ -149,7 +149,7 @@ public void givenOrderXML_whenConvert_thenPOJOsConstructedCorrectly() throws Exc
 
 让我们用`supplier` 和`order-items`标签来扩展我们之前的例子:
 
-```
+```java
 <order creation-date="2018-01-14">
     <order-number>771</order-number>
     <order-status>IN_PROGRESS</order-status>
@@ -174,7 +174,7 @@ public void givenOrderXML_whenConvert_thenPOJOsConstructedCorrectly() throws Exc
 
 现在让我们更新我们的模型:
 
-```
+```java
 public class Order {
     // ..
     private Supplier supplier;
@@ -183,7 +183,7 @@ public class Order {
 }
 ```
 
-```
+```java
 public class Item {
 
     private String code;
@@ -193,7 +193,7 @@ public class Item {
 } 
 ```
 
-```
+```java
 public class Supplier {
 
     private String name;
@@ -210,7 +210,7 @@ public class Supplier {
 
 看看在这种情况下映射会是什么样子:
 
-```
+```java
 <?xml version="1.0"?>
 <smooks-resource-list 
 
@@ -250,7 +250,7 @@ public class Supplier {
 
 最后，我们将在之前的测试中添加一些断言:
 
-```
+```java
 assertThat(
   order.getSupplier(), 
   is(new Supplier("Company X", "1234567")));
@@ -283,7 +283,7 @@ Smooks 自带了两个提供者:`RegexProvider`和`MVELProvider`。
 
 为了满足我们的要求，我们将使用以下设置:
 
-```
+```java
 supplierName=[A-Za-z0-9]*
 supplierPhone=^[0-9\\-\\+]{9,15}$
 ```
@@ -294,7 +294,7 @@ supplierPhone=^[0-9\\-\\+]{9,15}$
 
 为了检查价格是否正确，我们需要以下条目:
 
-```
+```java
 "max_total","orderItem.quantity * orderItem.price < 200.00"
 ```
 
@@ -310,7 +310,7 @@ supplierPhone=^[0-9\\-\\+]{9,15}$
 
 让我们将验证规则应用到我们的 Smooks 配置文件，并检查它看起来是什么样子(**注意，如果我们想使用`MVELProvider`，我们被迫使用 Java 绑定，所以这就是为什么我们已经导入了以前的 Smooks 配置):**
 
-```
+```java
 <?xml version="1.0"?>
 <smooks-resource-list 
 
@@ -347,7 +347,7 @@ supplierPhone=^[0-9\\-\\+]{9,15}$
 
 同样，我们必须构造`Smooks`对象并将输入 XML 作为流传递:
 
-```
+```java
 public ValidationResult validate(String path) 
   throws IOException, SAXException {
     Smooks smooks = new Smooks(OrderValidator.class
@@ -367,7 +367,7 @@ public ValidationResult validate(String path)
 
 最后，如果发生验证错误，则断言:
 
-```
+```java
 @Test
 public void givenIncorrectOrderXML_whenValidate_thenExpectValidationErrors() throws Exception {
     OrderValidator orderValidator = new OrderValidator();
@@ -395,7 +395,7 @@ public void givenIncorrectOrderXML_whenValidate_thenExpectValidationErrors() thr
 
 让我们看看如何为 EDIFACT 准备模板:
 
-```
+```java
 UNA:+.? '
 UNH+${order.number}+${order.status}+${order.creationDate?date}'
 CTA+${supplier.name}+${supplier.phoneNumber}'
@@ -406,7 +406,7 @@ LIN+${item.quantity}+${item.code}+${item.price}'
 
 对于电子邮件:
 
-```
+```java
 Hi,
 Order number #${order.number} created on ${order.creationDate?date} is currently in ${order.status} status.
 Consider contacting the supplier "${supplier.name}" with phone number: "${supplier.phoneNumber}".
@@ -418,7 +418,7 @@ ${item.quantity} X ${item.code} (total price ${item.price * item.quantity})
 
 这次的 Smooks 配置非常基础(只要记得导入之前的配置以便导入 Java 绑定设置即可):
 
-```
+```java
 <?xml version="1.0"?>
 <smooks-resource-list 
 
@@ -435,7 +435,7 @@ ${item.quantity} X ${item.code} (total price ${item.price * item.quantity})
 
 这一次我们只需要向 Smooks 引擎传递一个`StringResult`:
 
-```
+```java
 Smooks smooks = new Smooks(config);
 StringResult stringResult = new StringResult();
 smooks.filterSource(new StreamSource(OrderConverter.class
@@ -445,7 +445,7 @@ return stringResult.toString();
 
 当然，我们可以测试它:
 
-```
+```java
 @Test
 public void givenOrderXML_whenApplyEDITemplate_thenConvertedToEDIFACT()
   throws Exception {

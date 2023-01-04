@@ -14,7 +14,7 @@
 
 我们将使用 Spring JPA 和 testing 创建一个 Spring Boot 应用程序，因此我们需要以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -43,7 +43,7 @@ Spring Boot 在运行应用程序时自动选择的标准属性文件叫做`appl
 
 例如，让我们配置一个`H2`内存数据库作为测试的数据源:
 
-```
+```java
 spring.datasource.driver-class-name=org.h2.Driver
 spring.datasource.url=jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
 spring.datasource.username=sa
@@ -54,7 +54,7 @@ Spring Boot 将使用这些属性来自动配置一个`DataSource` bean。
 
 让我们使用 Spring JPA 定义一个非常简单的`GenericEntity`和存储库:
 
-```
+```java
 @Entity
 public class GenericEntity {
     @Id
@@ -66,14 +66,14 @@ public class GenericEntity {
 }
 ```
 
-```
+```java
 public interface GenericEntityRepository
   extends JpaRepository<GenericEntity, Long> { }
 ```
 
 接下来，让我们为存储库编写一个`JUnit`测试。为了让 Spring Boot 应用程序中的测试获得我们定义的标准数据源属性，我们必须用`@SpringBootTest`对其进行注释:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 public class SpringBootJPAIntegrationTest {
@@ -102,7 +102,7 @@ public class SpringBootJPAIntegrationTest {
 
 让我们创建一个名为`persistence-generic-entity.properties`的文件，它使用一个`H2` 内存数据库进行测试，并将它放在 `src/test/resources`文件夹中:
 
-```
+```java
 jdbc.driverClassName=org.h2.Driver
 jdbc.url=jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
 jdbc.username=sa
@@ -111,7 +111,7 @@ jdbc.password=sa
 
 接下来，我们可以在一个将我们的`persistence-generic-entity.properties`作为属性源加载的`@Configuration`类中基于这些属性定义`DataSource` bean:
 
-```
+```java
 @Configuration
 @EnableJpaRepositories(basePackages = "org.baeldung.repository")
 @PropertySource("persistence-generic-entity.properties")
@@ -125,7 +125,7 @@ public class H2JpaConfig {
 
 然后我们可以创建一个类似于前一个的`JUnit`测试，除了它将加载我们的配置类:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Application.class, H2JpaConfig.class})
 public class SpringBootH2IntegrationTest {
@@ -141,7 +141,7 @@ public class SpringBootH2IntegrationTest {
 
 让我们为`@Configuration`类中的`test`概要文件定义一个`DataSource` bean，它将被我们的测试加载:
 
-```
+```java
 @Configuration
 @EnableJpaRepositories(basePackages = {
   "org.baeldung.repository",
@@ -170,7 +170,7 @@ public class H2TestProfileJPAConfig {
 
 然后，在`JUnit`测试类中，我们需要通过添加`@ActiveProfiles`注释来指定我们想要使用`test`概要文件:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
   Application.class, 

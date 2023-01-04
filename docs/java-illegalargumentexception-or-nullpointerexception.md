@@ -16,7 +16,7 @@
 
 让我们创建一个简单的方法，当传递一个`null`时抛出一个`IllegalArgumentException`:
 
-```
+```java
 public void processSomethingNotNull(Object myParameter) {
     if (myParameter == null) {
         throw new IllegalArgumentException("Parameter 'myParameter' cannot be null");
@@ -46,7 +46,7 @@ public void processSomethingNotNull(Object myParameter) {
 
 让我们创建一个抛出`NullPointerException`的例子:
 
-```
+```java
 public void processSomethingElseNotNull(Object myParameter) {
     if (myParameter == null) {
         throw new NullPointerException("Parameter 'myParameter' cannot be null");

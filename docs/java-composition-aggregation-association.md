@@ -40,7 +40,7 @@
 
 在 Java 中，我们可以用一个非静态内部类对此建模:
 
-```
+```java
 class Building {
     class Room {}   
 }
@@ -48,7 +48,7 @@ class Building {
 
 或者，我们也可以在方法体中声明该类。不管是命名类、匿名类还是 lambda:
 
-```
+```java
 class Building {
     Room createAnonymousRoom() {
         return new Room() {
@@ -79,7 +79,7 @@ class Building {
 
 通常，包含对象想要访问它的成员。因此，我们应该存储它们的引用:
 
-```
+```java
 class Building {
     List<Room> rooms;
     class Room {}   
@@ -88,7 +88,7 @@ class Building {
 
 请注意，所有内部类对象都存储了对其包含对象的隐式引用。因此，我们不需要手动存储它来访问它:
 
-```
+```java
 class Building {
     String address;
 
@@ -126,7 +126,7 @@ class Building {
 
 在 Java 中，我们可以用一个简单的老参考来建模聚合:
 
-```
+```java
 class Wheel {}
 
 class Car {
@@ -138,7 +138,7 @@ class Car {
 
 在上面的代码片段中，两个类都有各自的源文件。但是，我们也可以使用静态内部类:
 
-```
+```java
 class Car {
     List<Wheel> wheels;
     static class Wheel {}
@@ -147,7 +147,7 @@ class Car {
 
 注意，Java 只会在非静态内部类中创建隐式引用。因此，我们必须在需要时手动维护关系:
 
-```
+```java
 class Wheel {
     Car car;
 }
@@ -181,7 +181,7 @@ class Car {
 
 在 Java 中，我们可以用与聚合相同的方式对关联进行建模:
 
-```
+```java
 class Child {}
 
 class Mother {
@@ -195,7 +195,7 @@ class Mother {
 
 此外，我们必须在两端手动维护引用，就像我们对聚合所做的那样:
 
-```
+```java
 class Child {
     Mother mother;
 }
@@ -235,7 +235,7 @@ class Mother {
 
 Java 代码看起来像这样:
 
-```
+```java
 class University {
     List<Department> department;   
 }

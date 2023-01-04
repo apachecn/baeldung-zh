@@ -14,7 +14,7 @@
 
 假设我们有一个简单的接口，带有一个方法`call()` ，该方法返回一个`Response` 或者抛出一个`ClientException`，这是一个在失败的情况下被检查的异常:
 
-```
+```java
 public interface HttpClient {
     Response call() throws ClientException;
 } 
@@ -22,7 +22,7 @@ public interface HttpClient {
 
 `Response` 是一个简单的类，只有一个`id`字段:
 
-```
+```java
 public class Response {
     public final String id;
 
@@ -34,7 +34,7 @@ public class Response {
 
 假设我们有一个调用`HttpClient,` 的服务，那么我们需要在一个标准的`try-catch`块中处理这个被检查的异常:
 
-```
+```java
 public Response getResponse() {
     try {
         return httpClient.call();
@@ -56,7 +56,7 @@ Vavr 库为我们提供了一个特殊的容器**，它代表一个可能导致�
 
 让我们看看使用`Try:`的方法`getResponse()`会是什么样子
 
-```
+```java
 public class VavrTry {
     private HttpClient httpClient;
 
@@ -74,7 +74,7 @@ public class VavrTry {
 
 让我们编写一个测试用例，在`httpClient`返回成功结果的情况下使用我们的`Vavr`类。方法`getResponse()` 返回`Try<Resposne>` 对象。因此，我们可以对其调用`map()` 方法，该方法只有在`Try` 为`Success`类型时才会对`Response` 执行动作:
 
-```
+```java
 @Test
 public void givenHttpClient_whenMakeACall_shouldReturnSuccess() {
     // given
@@ -101,7 +101,7 @@ public void givenHttpClient_whenMakeACall_shouldReturnSuccess() {
 
 函数`actionThatTakesResponse()` 只是将`Response` 作为一个参数，并返回一个`id field:`的`hashCode`
 
-```
+```java
 public int actionThatTakesResponse(Response response) {
     return response.id.hashCode();
 }
@@ -115,7 +115,7 @@ public int actionThatTakesResponse(Response response) {
 
 如果我们想在`Try` 类型上执行一个动作，我们可以使用以`Try` 作为参数的`transform()` 方法，并且在不打开封闭值`:`的情况下对其执行一个动作
 
-```
+```java
 public int actionThatTakesTryResponse(Try<Response> response, int defaultTransformation){
     return response.transform(responses -> response.map(it -> it.id.hashCode())
       .getOrElse(defaultTransformation));
@@ -128,7 +128,7 @@ public int actionThatTakesTryResponse(Try<Response> response, int defaultTransfo
 
 与前面的例子相比，我们的`getOrElse` 方法将返回`defaultChainedResult` ,因为`Try`将属于`Failure`类型:
 
-```
+```java
 @Test
 public void givenHttpClientFailure_whenMakeACall_shouldReturnFailure() {
     // given
@@ -162,7 +162,7 @@ public void givenHttpClientFailure_whenMakeACall_shouldReturnFailure() {
 
 当我们的`httpClient`返回一个`Exception`时，我们可以对那个`Exception.`的类型进行模式匹配，然后根据`recover() a` 方法中的那个`Exception`的类型，我们可以决定我们是否想要从那个异常中恢复并将我们的`Failure` 转换为`Success`，或者我们是否想要将我们的计算结果保留为`Failure:`
 
-```
+```java
 @Test
 public void givenHttpClientThatFailure_whenMakeACall_shouldReturnFailureAndNotRecover() {
     // given
@@ -185,7 +185,7 @@ public void givenHttpClientThatFailure_whenMakeACall_shouldReturnFailureAndNotRe
 
 如果我们想从`recovered` 对象获得结果，但在关键故障的情况下会再次抛出该异常，我们可以使用`getOrElseThrow()`方法来实现:
 
-```
+```java
 recovered.getOrElseThrow(throwable -> {
     throw new RuntimeException(throwable);
 });
@@ -195,7 +195,7 @@ recovered.getOrElseThrow(throwable -> {
 
 当我们的客户抛出一个非关键异常时，我们在一个`recover()` 方法中的模式匹配将把我们的`Failure`变成`Success.`，我们正在从两种类型的异常`ClientException` 和`IllegalArgumentException`中恢复:
 
-```
+```java
 @Test
 public void givenHttpClientThatFailure_whenMakeACall_shouldReturnFailureAndRecover() {
     // given

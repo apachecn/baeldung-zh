@@ -16,7 +16,7 @@ Spring Data JPA 提供了一种简单的方法来创建数据库查询，并使�
 
 为了在我们的测试中使用 PostgreSQL 数据库，**我们必须添加具有`test`范围**的 [Testcontainers 依赖关系](https://web.archive.org/web/20220926190100/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.testcontainers%22%20AND%20a%3A%22postgresql%22):
 
-```
+```java
 <dependency>
     <groupId>org.testcontainers</groupId>
     <artifactId>postgresql</artifactId>
@@ -27,7 +27,7 @@ Spring Data JPA 提供了一种简单的方法来创建数据库查询，并使�
 
 让我们在测试资源目录下创建一个`application.properties`文件，在这个文件中，我们指示 Spring 使用正确的驱动程序类，并在每次测试运行时创建方案:
 
-```
+```java
 spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDriver
 spring.jpa.hibernate.ddl-auto=create
 ```
@@ -36,7 +36,7 @@ spring.jpa.hibernate.ddl-auto=create
 
 要开始在单个测试类中使用 PostgreSQL 实例，我们必须首先创建一个容器定义，然后使用它的参数来建立连接:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(initializers = {UserRepositoryTCIntegrationTest.Initializer.class})
@@ -67,7 +67,7 @@ public class UserRepositoryTCIntegrationTest extends UserRepositoryCommonIntegra
 
 现在让我们使用前一篇文章中的两个更新查询:
 
-```
+```java
 @Modifying
 @Query("update User u set u.status = :status where u.name = :name")
 int updateUserSetStatusForName(@Param("status") Integer status, 
@@ -81,7 +81,7 @@ int updateUserSetStatusForNameNative(Integer status, String name);
 
 并在配置好的环境中测试它们:
 
-```
+```java
 @Test
 @Transactional
 public void givenUsersInDB_WhenUpdateStatusForNameModifyingQueryAnnotationJPQL_ThenModifyMatchingUsers(){
@@ -109,13 +109,13 @@ private void insertUsers() {
 
 在上面的场景中，第一个测试以成功结束，但是第二个测试抛出了消息`InvalidDataAccessResourceUsageException`:
 
-```
+```java
 Caused by: org.postgresql.util.PSQLException: ERROR: column "u" of relation "users" does not exist
 ```
 
 如果我们使用 H2 嵌入式数据库运行相同的测试，两个测试都会成功完成，但是 PostgreSQL 不接受 SET 子句中的别名。我们可以通过删除有问题的别名来快速修复查询:
 
-```
+```java
 @Modifying
 @Query(value = "UPDATE Users u SET status = ? WHERE u.name = ?", 
   nativeQuery = true)
@@ -134,13 +134,13 @@ int updateUserSetStatusForNameNative(Integer status, String name);
 
 例如，为了重写上面的例子，我们所要做的就是将它添加到我们的`application.properties`:
 
-```
+```java
 spring.datasource.url=jdbc:tc:postgresql:11.1:///integration-tests-db
 ```
 
 `“tc:”` 将使 Testcontainers 实例化数据库实例，而无需任何代码更改。因此，我们的测试类将会非常简单:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 public class UserRepositoryTCJdbcLiveTest extends UserRepositoryCommon {
@@ -161,7 +161,7 @@ public class UserRepositoryTCJdbcLiveTest extends UserRepositoryCommon {
 
 现在让我们通过扩展`PostgreSQLContainer`并覆盖`start()`和`stop()`方法来创建一个用于数据库容器创建的公共类:
 
-```
+```java
 public class BaeldungPostgresqlContainer extends PostgreSQLContainer<BaeldungPostgresqlContainer> {
     private static final String IMAGE_VERSION = "postgres:11.1";
     private static BaeldungPostgresqlContainer container;
@@ -196,7 +196,7 @@ public class BaeldungPostgresqlContainer extends PostgreSQLContainer<BaeldungPos
 
 我们现在可以将它们放在我们的`application.properties` 文件中:
 
-```
+```java
 spring.datasource.url=${DB_URL}
 spring.datasource.username=${DB_USERNAME}
 spring.datasource.password=${DB_PASSWORD}
@@ -204,7 +204,7 @@ spring.datasource.password=${DB_PASSWORD}
 
 现在让我们在测试定义中使用我们的实用程序类:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class UserRepositoryTCAutoIntegrationTest {

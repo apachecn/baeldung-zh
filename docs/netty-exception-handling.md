@@ -26,7 +26,7 @@
 
 因此，让我们创建一个通道处理程序`ChannelHandlerA`，并用我们的实现覆盖它的`exceptionCaught()` :
 
-```
+```java
 public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) 
   throws Exception {
 
@@ -50,7 +50,7 @@ public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
 
 让我们修改`ChannelHandlerA`中的代码片段，通过调用`ctx.fireExceptionCaught()`来传播事件:
 
-```
+```java
 public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) 
   throws Exception {
 
@@ -61,7 +61,7 @@ public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
 
 此外，让我们创建另一个通道处理程序`ChannelHandlerB`，并用这个实现覆盖它的`exceptionCaught()` :
 
-```
+```java
 @Override
 public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) 
   throws Exception {
@@ -75,7 +75,7 @@ public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
 
 在`Server`类中，通道按以下顺序添加到管道中:
 
-```
+```java
 ch.pipeline().addLast(new ChannelHandlerA(), new ChannelHandlerB());
 ```
 

@@ -22,7 +22,7 @@ Docker 利用 Linux 内核的 T2 特性，比如 CGroups 和 namespaces，来提
 
 创建 docker 映像非常简单，我们只需要一个 docker 文件:
 
-```
+```java
 FROM openjdk:8-jdk-alpine
 VOLUME /tmp
 COPY target/hello-world-0.0.1-SNAPSHOT.jar app.jar
@@ -32,7 +32,7 @@ EXPOSE 9001
 
 因此，这几行代码足以使用 Docker CLI 创建 Spring Boot 应用程序的 Docker 映像:
 
-```
+```java
 docker build -t hello_world .
 ```
 
@@ -78,7 +78,7 @@ Marathon **将长期运行的服务视为应用程序**，将应用程序实例�
 
 一旦我们用 Marathon 启动并运行了 Mesos 集群，我们就可以将我们的容器部署为一个长期运行的应用程序服务。我们只需要一个小的 JSON 应用程序定义:
 
-```
+```java
 #hello-marathon.json
 {
   "id": "marathon-demo-application",
@@ -113,7 +113,7 @@ Marathon **将长期运行的服务视为应用程序**，将应用程序实例�
 
 我们可以使用 Marathon 提供的 REST APIs 来启动这个应用程序:
 
-```
+```java
 curl -X POST \
   http://localhost:8080/v2/apps \
   -d @hello-marathon.json \
@@ -159,7 +159,7 @@ Kubernetes 架构由 Kubernetes 主节点和 Kubernetes 节点组成:
 
 在我们安装了 kubectl 和 Minikube 之后，我们可以在 Minikube 内的单节点 Kubernetes 集群上部署我们的容器。我们需要在 YAML 文件中定义基本的 Kubernetes 对象:
 
-```
+```java
 # hello-kubernetes.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -201,7 +201,7 @@ spec:
 
 最后，我们可以部署容器并通过 kubectl 创建所有已定义的 Kubernetes 对象:
 
-```
+```java
 kubectl apply -f yaml/hello-kubernetes.yaml
 ```
 

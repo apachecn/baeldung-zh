@@ -16,7 +16,7 @@ Spring Boot 起动机就是为了解决这个问题而制造的。Starter POMs �
 
 Spring Boot 启动器只需添加一个依赖项，就可以帮助减少手动添加依赖项的数量。因此，无需手动指定依赖项，只需添加一个启动器，如下例所示:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -25,7 +25,7 @@ Spring Boot 启动器只需添加一个依赖项，就可以帮助减少手动�
 
 现在我们可以创建一个休息控制器。为了简单起见，我们不使用数据库，而是专注于 REST 控制器:
 
-```
+```java
 @RestController
 public class GenericEntityController {
     private List<GenericEntity> entityList = new ArrayList<>();
@@ -60,7 +60,7 @@ public class GenericEntityController {
 
 为了测试，我们通常使用下面的库:Spring Test、JUnit、Hamcrest 和 Mockito。我们可以手动包含所有这些库，但是可以使用 Spring Boot 启动程序以下列方式自动包含这些库:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-test</artifactId>
@@ -79,7 +79,7 @@ public class GenericEntityController {
 
 在这个例子中，我们将使用一个模拟环境:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
@@ -108,7 +108,7 @@ public class SpringBootApplicationIntegrationTest {
 
 上面的测试调用了`/entity/all`端点，并验证 JSON 响应包含 4 个元素。为了通过这个测试，我们还必须在控制器类中初始化我们的列表:
 
-```
+```java
 public class GenericEntityController {
     private List<GenericEntity> entityList = new ArrayList<>();
 
@@ -130,7 +130,7 @@ public class GenericEntityController {
 
 与其手动定义所有相关的依赖项，不如让我们从入门开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -146,13 +146,13 @@ public class GenericEntityController {
 
 现在让我们为我们的实体创建存储库:
 
-```
+```java
 public interface GenericEntityRepository extends JpaRepository<GenericEntity, Long> {}
 ```
 
 测试代码的时间到了。下面是 JUnit 测试:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public class SpringBootJPATest {
@@ -181,7 +181,7 @@ public class SpringBootJPATest {
 
 Spring Boot 启动器隐藏了这种复杂性——邮件依赖关系可以通过以下方式指定:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-mail</artifactId>
@@ -192,7 +192,7 @@ Spring Boot 启动器隐藏了这种复杂性——邮件依赖关系可以通�
 
 出于测试目的，我们需要一个简单的 SMTP 服务器。在这个例子中，我们将使用 Wiser。这就是我们将它纳入 POM 的方式:
 
-```
+```java
 <dependency>
     <groupId>org.subethamail</groupId>
     <artifactId>subethasmtp</artifactId>
@@ -205,7 +205,7 @@ Wiser 的最新版本可以在 [Maven central repository](https://web.archive.or
 
 下面是测试的源代码:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 public class SpringBootMailTest {
@@ -272,7 +272,7 @@ public class SpringBootMailTest {
 
 就像 Boot 中的任何其他默认设置一样， *JavaMailSender* 的电子邮件设置可以在*应用程序中定制。*
 
-```
+```java
 spring.mail.host=localhost
 spring.mail.port=25
 spring.mail.properties.mail.smtp.auth=false

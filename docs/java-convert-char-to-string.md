@@ -10,7 +10,7 @@
 
 `String`类有一个静态方法`valueOf()`，它是为这个特殊的用例设计的。在这里你可以看到它的作用:
 
-```
+```java
 @Test
 public void givenChar_whenCallingStringValueOf_shouldConvertToString() {
     char givenChar = 'x';
@@ -25,7 +25,7 @@ public void givenChar_whenCallingStringValueOf_shouldConvertToString() {
 
 `Character`类有一个专用的静态`toString()`方法。在这里你可以看到它的作用:
 
-```
+```java
 @Test
 public void givenChar_whenCallingToStringOnCharacter_shouldConvertToString() {
     char givenChar = 'x';
@@ -40,7 +40,7 @@ public void givenChar_whenCallingToStringOnCharacter_shouldConvertToString() {
 
 您还可以实例化`Character`对象并使用标准的`toString()`方法:
 
-```
+```java
 @Test
 public void givenChar_whenCallingCharacterConstructor_shouldConvertToString() {
     char givenChar = 'x';
@@ -55,7 +55,7 @@ public void givenChar_whenCallingCharacterConstructor_shouldConvertToString() {
 
 另一种方法是通过类型转换来扩大转换范围:
 
-```
+```java
 @Test
 public void givenChar_whenConcatenated_shouldConvertToString() {
     char givenChar = 'x';
@@ -70,7 +70,7 @@ public void givenChar_whenConcatenated_shouldConvertToString() {
 
 最后，您可以使用`String.format()`方法:
 
-```
+```java
 @Test
 public void givenChar_whenFormated_shouldConvertToString() {
     char givenChar = 'x';

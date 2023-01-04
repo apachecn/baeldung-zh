@@ -14,7 +14,7 @@
 
 我们将用一些定制字段创建我们的`UserDetails`接口的实现，作为存储我们的已验证用户详细信息的模型。但是，为了处理更少的字段和方法，我们将扩展默认的框架实现，即`User`类:
 
-```
+```java
 public class CustomUserDetails extends User {
 
     private final String firstName;
@@ -38,7 +38,7 @@ public class CustomUserDetails extends User {
 
 因此，为了能够加载我们的`CustomUserDetails,`，我们需要实现`UserDetailsService `接口。对于我们的例子，我们将把用户详细信息硬编码并存储在一个`Map`中，把用户名作为键:
 
-```
+```java
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -82,7 +82,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 首先，我们需要在 Spring Security 的配置中添加`UserDetailsService`，它将被连接到`CustomUserDetailsService`实现。进一步，我们将通过相应的方法在`HttpSecurity`实例上设置它。剩下的只是最低限度的安全配置，要求对用户进行身份验证，并配置`/login`、`/logout,`和`/index`端点:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -117,7 +117,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 通过`Authentication`对象上的`principal`字段可以访问`CustomUserDetails`对象。例如，我们可以使用` sec:authentication=”principal.firstName”`来访问`firstName`字段:
 
-```
+```java
 <!DOCTYPE html>
 <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
@@ -145,7 +145,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 或者，编写不带`sec:authentication`属性的安全方言表达式的等效语法是使用 Spring 表达式语言。因此，我们可以使用 Spring 表达式语言格式显示`firstName`字段，如果我们对它更熟悉的话:
 
-```
+```java
 <div th:text="${#authentication.principal.firstName}"></div>
 ```
 

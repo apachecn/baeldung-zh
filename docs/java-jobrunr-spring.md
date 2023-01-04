@@ -26,7 +26,7 @@ JobRunr 是一个我们可以嵌入到应用程序中的库，它允许我们使
 
 让我们直接跳到 Java 代码。但是在此之前，我们需要在我们的`pom.xml`文件中声明下面的 [Maven 依赖关系](https://web.archive.org/web/20220628132518/https://search.maven.org/search?q=g:org.jobrunr%20AND%20a:jobrunr-spring-boot-starter):
 
-```
+```java
 <dependency>
     <groupId>org.jobrunr</groupId>
     <artifactId>jobrunr-spring-boot-starter</artifactId>
@@ -38,7 +38,7 @@ JobRunr 是一个我们可以嵌入到应用程序中的库，它允许我们使
 
 在我们直接跳到如何创建后台作业之前，我们需要初始化 JobRunr。由于我们使用了`jobrunr-spring-boot-starter`依赖关系，这很容易。我们只需要给`application.properties`添加一些属性:
 
-```
+```java
 org.jobrunr.background-job-server.enabled=true
 org.jobrunr.dashboard.enabled=true
 ```
@@ -49,7 +49,7 @@ org.jobrunr.dashboard.enabled=true
 
 然而，由于我们将使用内存中的数据存储，我们需要提供一个`StorageProvider` bean:
 
-```
+```java
 @Bean
 public StorageProvider storageProvider(JobMapper jobMapper) {
     InMemoryStorageProvider storageProvider = new InMemoryStorageProvider();
@@ -66,7 +66,7 @@ public StorageProvider storageProvider(JobMapper jobMapper) {
 
 当我们想要创建工作时，我们需要注入 [`JobScheduler`](https://web.archive.org/web/20220628132518/https://www.javadoc.io/doc/org.jobrunr/jobrunr/latest/org/jobrunr/scheduling/JobScheduler.html) 和我们现有的包含我们想要创建工作的方法的 Spring 服务，在本例中是`SampleJobService`:
 
-```
+```java
 @Inject
 private JobScheduler jobScheduler;
 
@@ -82,13 +82,13 @@ JobRunr 的`JobScheduler`类允许我们对新的后台作业进行排队或调�
 
 现在我们有了依赖项，我们可以使用`enqueue`方法创建一次性工作:
 
-```
+```java
 jobScheduler.enqueue(() -> sampleJobService.executeSampleJob());
 ```
 
 作业可以有参数，就像任何其他 lambda 一样:
 
-```
+```java
 jobScheduler.enqueue(() -> sampleJobService.executeSampleJob("some string"));
 ```
 
@@ -100,7 +100,7 @@ jobScheduler.enqueue(() -> sampleJobService.executeSampleJob("some string"));
 
 我们还可以使用`schedule`方法安排未来的作业:
 
-```
+```java
 jobScheduler.schedule(LocalDateTime.now().plusHours(5), () -> sampleJobService.executeSampleJob());
 ```
 
@@ -108,7 +108,7 @@ jobScheduler.schedule(LocalDateTime.now().plusHours(5), () -> sampleJobService.e
 
 如果我们想要有循环作业，我们需要使用`scheduleRecurrently`方法:
 
-```
+```java
 jobScheduler.scheduleRecurrently(Cron.hourly(), () -> sampleJobService.executeSampleJob());
 ```
 
@@ -116,7 +116,7 @@ jobScheduler.scheduleRecurrently(Cron.hourly(), () -> sampleJobService.executeSa
 
 为了控制作业的所有方面，我们可以用`@Job`注释来注释我们的服务方法。这允许在仪表板中设置显示名称，并配置作业失败时的重试次数。
 
-```
+```java
 @Job(name = "The sample job with variable %0", retries = 2)
 public void executeSampleJob(String variable) {
     ...

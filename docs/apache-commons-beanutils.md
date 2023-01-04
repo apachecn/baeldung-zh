@@ -14,7 +14,7 @@ Java 提供反射和自省功能来识别 getter-setter 方法并动态调用它
 
 下面是在使用它之前需要包含在 POM 文件中的 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>commons-beanutils</groupId>
     <artifactId>commons-beanutils</artifactId>
@@ -28,7 +28,7 @@ Java 提供反射和自省功能来识别 getter-setter 方法并动态调用它
 
 让我们用典型的 getter 和 setter 方法创建两个 bean 类`Course`和`Student`。
 
-```
+```java
 public class Course {
     private String name;
     private List<String> codes;
@@ -38,7 +38,7 @@ public class Course {
 } 
 ```
 
-```
+```java
 public class Student {
     private String name;
 
@@ -60,7 +60,7 @@ Bean 属性可以分为三类。
 
 下面是设置属性的示例代码:
 
-```
+```java
 Course course = new Course();
 String name = "Computer Science";
 List<String> codes = Arrays.asList("CS", "CS01");
@@ -77,7 +77,7 @@ PropertyUtils.setSimpleProperty(course, "codes", codes);
 
 下面是修改索引属性的示例代码:
 
-```
+```java
 PropertyUtils.setIndexedProperty(course, "codes[1]", "CS02");
 ```
 
@@ -87,7 +87,7 @@ PropertyUtils.setIndexedProperty(course, "codes[1]", "CS02");
 
 以下是修改映射属性中的值的示例代码:
 
-```
+```java
 Student student = new Student();
 String studentName = "Joe";
 student.setName(studentName);
@@ -101,13 +101,13 @@ PropertyUtils.setMappedProperty(course, "enrolledStudent(ST-1)", student);
 
 假设我们想通过`Course`对象访问`Student`类的 name 属性。我们可能会写:
 
-```
+```java
 String name = course.getEnrolledStudent("ST-1").getName();
 ```
 
 我们可以使用`getNestedProperty`访问嵌套的属性值，并使用`PropertyUtils`中的`setNestedProperty`方法修改嵌套的属性。代码如下:
 
-```
+```java
 Student student = new Student();
 String studentName = "Joe";
 student.setName(studentName);
@@ -123,7 +123,7 @@ String nameValue
 
 让我们创建另一个 bean 类，就像上面创建的`Course` 一样，具有相同的属性，只是它没有`enrolledStudent`属性，而是属性名为`students`。让我们把这个类命名为`CourseEntity`。该类看起来像这样:
 
-```
+```java
 public class CourseEntity {
     private String name;
     private List<String> codes;
@@ -135,7 +135,7 @@ public class CourseEntity {
 
 现在我们将把*课程*对象的属性复制到*课程实体*对象:
 
-```
+```java
 Course course = new Course();
 course.setName("Computer Science");
 course.setCodes(Arrays.asList("CS"));

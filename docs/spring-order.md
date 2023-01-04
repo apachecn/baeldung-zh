@@ -26,7 +26,7 @@
 
 让我们创建决定产品评级的`Rating`界面:
 
-```
+```java
 public interface Rating {
     int getRating();
 }
@@ -36,7 +36,7 @@ public interface Rating {
 
 最后，让我们创建三个组件来定义一些产品的评级:
 
-```
+```java
 @Component
 @Order(1)
 public class Excellent implements Rating {
@@ -74,7 +74,7 @@ public class Average implements Rating {
 
 到目前为止，我们已经创建了测试`@Order`注释所需的所有组件和接口。现在，让我们测试一下，以确认它是否如预期的那样工作:
 
-```
+```java
 public class RatingRetrieverUnitTest { 
 
     @Autowired

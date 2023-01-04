@@ -14,7 +14,7 @@
 
 **这个想法是迭代这个条目集并返回其值与所提供的值相匹配的键:**
 
-```
+```java
 public <K, V> K getKey(Map<K, V> map, V value) {
     for (Entry<K, V> entry : map.entrySet()) {
         if (entry.getValue().equals(value)) {
@@ -29,7 +29,7 @@ public <K, V> K getKey(Map<K, V> map, V value) {
 
 在这种情况下，如果找到了匹配的值，我们将这个键添加到一个`Set`中，并继续循环。最后，我们返回包含所有想要的键的`Set`:
 
-```
+```java
 public <K, V> Set<K> getKeys(Map<K, V> map, V value) {
     Set<K> keys = new HashSet<>();
     for (Entry<K, V> entry : map.entrySet()) {
@@ -49,7 +49,7 @@ public <K, V> Set<K> getKeys(Map<K, V> map, V value) {
 
 然后，我们使用 map 方法从过滤后的条目中返回一个`Stream`键:
 
-```
+```java
 public <K, V> Stream<K> keys(Map<K, V> map, V value) {
     return map
       .entrySet()
@@ -63,7 +63,7 @@ public <K, V> Stream<K> keys(Map<K, V> map, V value) {
 
 此外，客户端可以使用适当的收集器将流转换为任何集合:
 
-```
+```java
 Stream<String> keyStream1 = keys(capitalCountryMap, "South Africa");
 String capital = keyStream1.findFirst().get();
 
@@ -79,7 +79,7 @@ Set<String> capitals = keyStream2.collect(Collectors.toSet());
 
 由`Apache`提供的`Commons Collections`库提供了这样一个双向`Map`称为 [`BidiMap`](https://web.archive.org/web/20220914035401/https://commons.apache.org/proper/commons-collections/apidocs/org/apache/commons/collections4/BidiMap.html) 。它有一个名为`getKey()`的方法，用于检索给定值的键:
 
-```
+```java
 BidiMap<String, String> capitalCountryMap = new DualHashBidiMap<>();
 capitalCountryMap.put("Berlin", "Germany");
 capitalCountryMap.put("Cape Town", "South Africa");
@@ -96,7 +96,7 @@ String capitalOfGermany = capitalCountryMap.getKey("Germany");
 
 **我们可能会使用谷歌开发的另一种双向`Map`称为`[BiMap](https://web.archive.org/web/20220914035401/https://google.github.io/guava/releases/19.0/api/docs/com/google/common/collect/BiMap.html)`。**这个类提供了一个名为`inverse()`的方法来获取值键`Map`或相反的`Map`来获取基于给定值的键:
 
-```
+```java
 HashBiMap<String, String> capitalCountryMap = HashBiMap.create();
 capitalCountryMap.put("Berlin", "Germany");
 capitalCountryMap.put("Cape Town", "South Africa");

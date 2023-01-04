@@ -12,7 +12,7 @@
 
 我们需要比平常更多的 Maven 配置来构建基于 MSF4J 的微服务。这个框架的简单和强大是有代价的:**基本上，我们需要定义一个父工件**，以及主类:
 
-```
+```java
 <parent>
     <groupId>org.wso2.msf4j</groupId>
     <artifactId>msf4j-service</artifactId>
@@ -40,7 +40,7 @@
 
 返回的内容类型只是纯文本:
 
-```
+```java
 @Path("/")
 public class SimpleService {
 
@@ -63,7 +63,7 @@ public class SimpleService {
 
 **我们可以使用这个主类**启动微服务，在这里我们设置、部署和运行之前定义的服务:
 
-```
+```java
 public class Application {
     public static void main(String[] args) {
         new MicroservicesRunner()
@@ -75,7 +75,7 @@ public class Application {
 
 如果我们愿意，我们可以在这里链接`deploy`调用来同时运行几个服务:
 
-```
+```java
 new MicroservicesRunner()
   .deploy(new SimpleService())
   .deploy(new ComplexService())
@@ -97,7 +97,7 @@ new MicroservicesRunner()
 
 例如，我们可以为请求添加任何类型的拦截器:
 
-```
+```java
 new MicroservicesRunner()
   .addInterceptor(new MetricsInterceptor())
   .deploy(new SimpleService())
@@ -106,7 +106,7 @@ new MicroservicesRunner()
 
 或者，我们可以添加一个全局拦截器，比如用于身份验证的拦截器:
 
-```
+```java
 new MicroservicesRunner()
   .addGlobalRequestInterceptor(newUsernamePasswordSecurityInterceptor())
   .deploy(new SimpleService())
@@ -115,7 +115,7 @@ new MicroservicesRunner()
 
 或者，如果我们需要会话管理，我们可以设置一个会话管理器:
 
-```
+```java
 new MicroservicesRunner()
   .deploy(new SimpleService())
   .setSessionManager(new PersistentSessionManager()) 
@@ -134,7 +134,7 @@ new MicroservicesRunner()
 
 这个模型只是一个简单的 POJO，代表一顿饭:
 
-```
+```java
 public class Meal {
     private String name;
     private Float price;
@@ -154,7 +154,7 @@ public class Meal {
 
 因此，让我们为每个标准 CRUD 操作创建一个方法:
 
-```
+```java
 @Path("/menu")
 public class MenuService {
 
@@ -197,7 +197,7 @@ public class MenuService {
 
 **MSF4J 提供对不同数据转换库**的支持，比如 GSON(默认提供)和 Jackson(通过 [msf4j-feature](https://web.archive.org/web/20220525131127/https://search.maven.org/classic/#search%7Cga%7C1%7Cmsf4j-feature) 依赖)。例如，我们可以显式地使用 GSON:
 
-```
+```java
 @GET
 @Path("/{id}")
 @Produces({ "application/json" })
@@ -223,7 +223,7 @@ public String meal(@PathParam("id") int id) {
 
 我们必须将适当的依赖项添加到先前的 Maven 配置中，以添加 Spring 和 Mustache 支持:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.wso2.msf4j</groupId>
@@ -244,7 +244,7 @@ public String meal(@PathParam("id") int id) {
 
 这个 API 只是一个简单的服务，使用了一个模拟餐存储库。**注意我们如何使用 Spring 注释进行自动连接**并将这个类设置为 Spring 服务组件。
 
-```
+```java
 @Service
 public class MealService {
 
@@ -269,7 +269,7 @@ public class MealService {
 
 我们将控制器声明为一个组件，Spring 通过自动连接提供服务。第一个方法展示了如何提供 Mustache 模板，第二个方法展示了 JSON 资源:
 
-```
+```java
 @Component
 @Path("/meal")
 public class MealResource {
@@ -305,7 +305,7 @@ public class MealResource {
 
 在 Spring 场景中，我们是这样启动微服务的:
 
-```
+```java
 public class Application {
 
     public static void main(String[] args) {
@@ -322,7 +322,7 @@ public class Application {
 
 例如，这将更改微服务的默认端口:
 
-```
+```java
 @Configuration
 public class PortConfiguration {
 

@@ -34,7 +34,7 @@
 
 让我们来看一个使用这一原则的示例 Terraform 项目目录布局:
 
-```
+```java
 $ tree .
 ├── main.tf
 ├── modules
@@ -71,7 +71,7 @@ Terraform 中的大多数[提供者](/web/20220625223652/https://www.baeldung.co
 
 在这种方法中，我们为每个必需的提供者参数定义一个项目变量:
 
-```
+```java
 variable "aws_region" {
   type = string
 }
@@ -85,7 +85,7 @@ variable "aws_secret_key" {
 
 现在，我们在我们的`provider`声明中使用它们:
 
-```
+```java
 provider "aws" {
   region = var.aws_region
   access_key = var.aws_access_key
@@ -95,7 +95,7 @@ provider "aws" {
 
 最后，我们使用一个`.tfvar`文件提供实际值:
 
-```
+```java
 aws_access_key="xxxxx"
 aws_secret_key="yyyyy"
 aws_region="us-east-1"
@@ -103,7 +103,7 @@ aws_region="us-east-1"
 
 我们还可以在运行 Terraform 命令(如`plan `或`apply`)时将`.tfvar`文件和环境变量结合起来:
 
-```
+```java
 $ export TF_VAR_aws_region="us-east-1"
 $ terraform plan -var="access_key=xxxx" -var-file=./aws.tfvars
 ```
@@ -123,7 +123,7 @@ $ terraform plan -var="access_key=xxxx" -var-file=./aws.tfvars
 
 从默认状态后端(本地文件)转移到远程是一项简单的任务。我们只需在我们项目的一个文件中添加一个`backend`定义:
 
-```
+```java
 terraform {
   backend "pg" {}
 }

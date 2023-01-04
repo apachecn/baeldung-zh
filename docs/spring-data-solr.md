@@ -20,7 +20,7 @@ Apache Solr 是一个开源的、随时可以部署的企业全文搜索引擎�
 
 让我们从将 Spring 数据 Solr 依赖项添加到我们的`pom.xml`开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-solr</artifactId>
@@ -34,7 +34,7 @@ Apache Solr 是一个开源的、随时可以部署的企业全文搜索引擎�
 
 让我们定义一个名为`Product`的文档:
 
-```
+```java
 @SolrDocument(solrCoreName = "product")
 public class Product {
 
@@ -54,7 +54,7 @@ public class Product {
 
 接下来，我们需要通过扩展 Spring Data Solr 提供的存储库来创建一个存储库接口。我们将自然地用`Product`和`String`作为我们的实体 id 对此进行参数化:
 
-```
+```java
 public interface ProductRepository extends SolrCrudRepository<Product, String> {
 
     public List<Product> findByName(String name);
@@ -72,7 +72,7 @@ public interface ProductRepository extends SolrCrudRepository<Product, String> {
 
 还要注意，`Product.findByNamedQuery`属性是在类路径文件夹中的 Solr 命名查询文件`solr-named-queries.properties`中定义的:
 
-```
+```java
 Product.findByNamedQuery=id:*?0* OR name:*?0*
 ```
 
@@ -80,7 +80,7 @@ Product.findByNamedQuery=id:*?0* OR name:*?0*
 
 现在我们将探索 Solr 持久层的 Spring 配置:
 
-```
+```java
 @Configuration
 @EnableSolrRepositories(
   basePackages = "com.baeldung.spring.data.solr.repository",
@@ -110,7 +110,7 @@ public class SolrConfig {
 
 让我们从将 Spring Boot 启动器数据 Solr 依赖项添加到我们的`pom.xml`开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-solr</artifactId>
@@ -122,7 +122,7 @@ public class SolrConfig {
 
 我们还必须**用 Solr URL 的值定义`application.properties`文件中的属性`spring.data.solr.host`** :
 
-```
+```java
 spring.data.solr.host=http://localhost:8983/solr 
 ```
 
@@ -136,7 +136,7 @@ spring.data.solr.host=http://localhost:8983/solr 
 
 下面的例子通过使用`SolrCrudRepository's` save 方法简单地索引 Solr 存储库中的产品文档:
 
-```
+```java
 Product phone = new Product();
 phone.setId("P0001");
 phone.setName("Phone");
@@ -145,7 +145,7 @@ productRepository.save(phone);
 
 现在让我们检索和更新一个文档:
 
-```
+```java
 Product retrievedProduct = productRepository.findById("P0001").get();
 retrievedProduct.setName("Smart Phone");
 productRepository.save(retrievedProduct);
@@ -153,7 +153,7 @@ productRepository.save(retrievedProduct);
 
 只需调用 delete 方法就可以删除文档:
 
-```
+```java
 productRepository.delete(retrievedProduct);
 ```
 
@@ -165,13 +165,13 @@ productRepository.delete(retrievedProduct);
 
 基于方法名的查询是通过解析方法名以生成要执行的预期查询来生成的:
 
-```
+```java
 public List<Product> findByName(String name);
 ```
 
 在我们的存储库接口中，我们有基于方法名生成查询的`findByName`方法:
 
-```
+```java
 List<Product> retrievedProducts = productRepository.findByName("Phone");
 ```
 
@@ -179,14 +179,14 @@ List<Product> retrievedProducts = productRepository.findByName("Phone");
 
 Solr 搜索查询可以通过将查询放在方法的`@Query`注释中来创建。在我们的例子中,`findByCustomQuery`是用`@Query`标注的:
 
-```
+```java
 @Query("id:*?0* OR name:*?0*")
 public Page<Product> findByCustomQuery(String searchTerm, Pageable pageable);
 ```
 
 让我们用这种方法来检索文档:
 
-```
+```java
 Page<Product> result 
   = productRepository.findByCustomQuery("Phone", PageRequest.of(0, 10));
 ```
@@ -197,7 +197,7 @@ Page<Product> result
 
 命名查询类似于带有`@Query`注释的查询，只是这些查询是在单独的属性文件中声明的:
 
-```
+```java
 @Query(name = "Product.findByNamedQuery")
 public Page<Product> findByNamedQuery(String searchTerm, Pageable pageable);
 ```
@@ -206,7 +206,7 @@ public Page<Product> findByNamedQuery(String searchTerm, Pageable pageable);
 
 让我们使用命名查询方法检索一些文档:
 
-```
+```java
 Page<Product> result 
   = productRepository.findByNamedQuery("one", PageRequest.of(0, 10));
 ```

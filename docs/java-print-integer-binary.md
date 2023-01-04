@@ -27,7 +27,7 @@
 
 接下来，让我们实现上面的算法:
 
-```
+```java
 public static String convertIntegerToBinary(int n) {
     if (n == 0) {
         return "0";
@@ -49,13 +49,13 @@ Java 的 [`Integer`](https://web.archive.org/web/20220924213613/https://docs.ora
 
 我们来看看`Integer` # `toBinaryString`方法的签名:
 
-```
+```java
 public static String toBinaryString(int i)
 ```
 
 它接受一个整数参数，并返回该整数的二进制字符串表示形式:
 
-```
+```java
 int n = 7;
 String binaryString = Integer.toBinaryString(n);
 assertEquals("111", binaryString);
@@ -65,7 +65,7 @@ assertEquals("111", binaryString);
 
 现在，让我们来看看`[Integer](https://web.archive.org/web/20220924213613/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html#toString(int,int))` [#](https://web.archive.org/web/20220924213613/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html#toString(int,int)) `[toString](https://web.archive.org/web/20220924213613/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html#toString(int,int))`的签名方法:
 
-```
+```java
 public static String toString(int i, int radix)
 ```
 
@@ -75,7 +75,7 @@ public static String toString(int i, int radix)
 
 让我们使用这个方法将一个整数转换成二进制格式，使用基数值 2:
 
-```
+```java
 int n = 7;
 String binaryString = Integer.toString(n, 2);
 assertEquals("111", binaryString);

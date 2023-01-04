@@ -22,7 +22,7 @@ Learn about the differences between @Controller and @RestController annotations 
 
 假设我们有一个端点`/api/foos`，它接受一个名为`id`的查询参数:
 
-```
+```java
 @GetMapping("/api/foos")
 @ResponseBody
 public String getFoos(@RequestParam String id) {
@@ -34,7 +34,7 @@ public String getFoos(@RequestParam String id) {
 
 一个简单的 GET 请求将调用`getFoos`:
 
-```
+```java
 http://localhost:8080/spring-mvc-basics/api/foos?id=abc
 ----
 ID: abc
@@ -50,7 +50,7 @@ ID: abc
 
 幸运的是，**我们可以使用`name`属性**来配置`@RequestParam`名称:
 
-```
+```java
 @PostMapping("/api/foos")
 @ResponseBody
 public String addFoo(@RequestParam(name = "id") String fooId, @RequestParam String name) { 
@@ -66,7 +66,7 @@ public String addFoo(@RequestParam(name = "id") String fooId, @RequestParam Stri
 
 这意味着如果参数不在请求中，我们将得到一个错误:
 
-```
+```java
 GET /api/foos HTTP/1.1
 -----
 400 Bad Request
@@ -75,7 +75,7 @@ Required String parameter 'id' is not present
 
 **我们可以用`required `属性:**将`@RequestParam`配置为可选的
 
-```
+```java
 @GetMapping("/api/foos")
 @ResponseBody
 public String getFoos(@RequestParam(required = false) String id) { 
@@ -85,7 +85,7 @@ public String getFoos(@RequestParam(required = false) String id) {
 
 在这种情况下，两者都:
 
-```
+```java
 http://localhost:8080/spring-mvc-basics/api/foos?id=abc
 ----
 ID: abc
@@ -93,7 +93,7 @@ ID: abc
 
 和
 
-```
+```java
 http://localhost:8080/spring-mvc-basics/api/foos
 ----
 ID: null
@@ -107,7 +107,7 @@ ID: null
 
 或者，我们可以将参数包装在`[Optional](/web/20220706134547/https://www.baeldung.com/java-optional)`中:
 
-```
+```java
 @GetMapping("/api/foos")
 @ResponseBody
 public String getFoos(@RequestParam Optional<String> id){
@@ -119,7 +119,7 @@ public String getFoos(@RequestParam Optional<String> id){
 
 如果没有提供请求参数，将使用默认值:
 
-```
+```java
 http://localhost:8080/spring-mvc-basics/api/foos 
 ---- 
 ID: not provided
@@ -129,7 +129,7 @@ ID: not provided
 
 我们还可以通过使用`defaultValue`属性为`@RequestParam`设置一个默认值:
 
-```
+```java
 @GetMapping("/api/foos")
 @ResponseBody
 public String getFoos(@RequestParam(defaultValue = "test") String id) {
@@ -139,7 +139,7 @@ public String getFoos(@RequestParam(defaultValue = "test") String id) {
 
 **这与`required=false, `相似，用户不再需要提供参数**:
 
-```
+```java
 http://localhost:8080/spring-mvc-basics/api/foos
 ----
 ID: test
@@ -147,7 +147,7 @@ ID: test
 
 尽管如此，我们仍然可以提供:
 
-```
+```java
 http://localhost:8080/spring-mvc-basics/api/foos?id=abc
 ----
 ID: abc
@@ -159,7 +159,7 @@ ID: abc
 
 **我们也可以有多个参数，而不用定义它们的名字**，或者只使用一个`Map`来计数:
 
-```
+```java
 @PostMapping("/api/foos")
 @ResponseBody
 public String updateFoos(@RequestParam Map<String,String> allParams) {
@@ -169,7 +169,7 @@ public String updateFoos(@RequestParam Map<String,String> allParams) {
 
 这将反映出发送的任何参数:
 
-```
+```java
 curl -X POST -F 'name=abc' -F 'id=123' http://localhost:8080/spring-mvc-basics/api/foos
 -----
 Parameters are {[name=abc], [id=123]}
@@ -179,7 +179,7 @@ Parameters are {[name=abc], [id=123]}
 
 一个`@RequestParam`可以有多个值:
 
-```
+```java
 @GetMapping("/api/foos")
 @ResponseBody
 public String getFoos(@RequestParam List<String> id) {
@@ -189,7 +189,7 @@ public String getFoos(@RequestParam List<String> id) {
 
 **和 Spring MVC 会映射一个逗号分隔的`id `参数**:
 
-```
+```java
 http://localhost:8080/spring-mvc-basics/api/foos?id=1,2,3
 ----
 IDs are [1,2,3]
@@ -197,7 +197,7 @@ IDs are [1,2,3]
 
 **或单独的`id` 参数列表**:
 
-```
+```java
 http://localhost:8080/spring-mvc-basics/api/foos?id=1&id;=2
 ----
 IDs are [1,2]

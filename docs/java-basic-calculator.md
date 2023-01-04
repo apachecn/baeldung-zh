@@ -12,7 +12,7 @@
 
 首先，让我们展示一些关于计算器的信息:
 
-```
+```java
 System.out.println("---------------------------------- \n" +
   "Welcome to Basic Calculator \n" +
   "----------------------------------");
@@ -25,7 +25,7 @@ System.out.println("Following operations are supported : \n" +
 
 现在，让我们用 [`java.util.Scanner`](/web/20220627180756/https://www.baeldung.com/java-scanner) 来取用户输入:
 
-```
+```java
 Scanner scanner = new Scanner(System.in);
 
 System.out.println("Enter an operator: (+ OR - OR * OR /) ");
@@ -44,7 +44,7 @@ double num2 = scanner.nextDouble();
 
 首先，让我们集中讨论操作员无效时的情况:
 
-```
+```java
 if (!(operation == '+' || operation == '-' || operation == '*' || operation == '/')) {
     System.err.println("Invalid Operator. Please use only + or - or * or /");
 }
@@ -52,7 +52,7 @@ if (!(operation == '+' || operation == '-' || operation == '*' || operation == '
 
 然后我们可以显示无效操作的错误:
 
-```
+```java
 if (operation == '/' && num2 == 0.0) {
     System.err.println("The second number cannot be zero for division operation.");
 }
@@ -60,7 +60,7 @@ if (operation == '/' && num2 == 0.0) {
 
 首先验证用户输入。之后，计算结果将显示为:
 
-```
+```java
 <number1><operation><number2>=
 ```
 
@@ -68,7 +68,7 @@ if (operation == '/' && num2 == 0.0) {
 
 首先，我们可以使用一个`[if-else](/web/20220627180756/https://www.baeldung.com/java-if-else)`构造来处理计算
 
-```
+```java
 if (operation == '+') {
     System.out.println(num1 + " + " + num2 + " = " + (num1 + num2));
 } else if (operation == '-') {
@@ -84,7 +84,7 @@ if (operation == '+') {
 
 同样，我们可以用一个 Java [`switch`](/web/20220627180756/https://www.baeldung.com/java-switch) 语句:
 
-```
+```java
 switch (operation) {
     case '+':
         System.out.println(num1 + " + " + num2 + " = " + (num1 + num2));

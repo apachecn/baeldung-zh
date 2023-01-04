@@ -16,7 +16,7 @@
 
 为了保持元素的顺序，链接散列表通过添加指向下一个和上一个条目的指针来修改`HashMap`的`Map.Entry`类:
 
-```
+```java
 static class Entry<K,V> extends HashMap.Node<K,V> {
     Entry<K,V> before, after;
     Entry(int hash, K key, V value, Node<K,V> next) {
@@ -33,7 +33,7 @@ static class Entry<K,V> extends HashMap.Node<K,V> {
 
 让我们来看一个链接散列映射实例，它根据条目插入映射的方式对条目进行排序。它还保证在地图的整个生命周期中保持这种顺序:
 
-```
+```java
 @Test
 public void givenLinkedHashMap_whenGetsOrderedKeyset_thenCorrect() {
     LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
@@ -64,7 +64,7 @@ public void givenLinkedHashMap_whenGetsOrderedKeyset_thenCorrect() {
 
 `LinkedHashMap`提供了一个特殊的构造函数，使我们能够在自定义负载系数(LF)和初始容量中指定一个不同的排序机制/策略，称为访问顺序:
 
-```
+```java
 LinkedHashMap<Integer, String> map = new LinkedHashMap<>(16, .75f, true);
 ```
 
@@ -74,7 +74,7 @@ LinkedHashMap<Integer, String> map = new LinkedHashMap<>(16, .75f, true);
 
 因此，使用这种地图构建最近最少使用的(LRU)缓存非常简单实用。成功的`put`或`get`操作导致对条目的访问:
 
-```
+```java
 @Test
 public void givenLinkedHashMap_whenAccessOrderWorks_thenCorrect() {
     LinkedHashMap<Integer, String> map 
@@ -113,7 +113,7 @@ public void givenLinkedHashMap_whenAccessOrderWorks_thenCorrect() {
 
 为了在实践中看到这一点，让我们创建我们自己的链接散列映射类，唯一的目的是通过扩展`LinkedHashMap`:
 
-```
+```java
 public class MyLinkedHashMap<K, V> extends LinkedHashMap<K, V> {
 
     private static final int MAX_ENTRIES = 5;
@@ -133,7 +133,7 @@ public class MyLinkedHashMap<K, V> extends LinkedHashMap<K, V> {
 
 我们上面的覆盖将允许地图增长到 5 个条目的最大大小。当大小超过该值时，将插入每个新条目，代价是丢失映射中最老的条目，即最后访问时间在所有其他条目之前的条目:
 
-```
+```java
 @Test
 public void givenLinkedHashMap_whenRemovesEldestEntry_thenCorrect() {
     LinkedHashMap<Integer, String> map
@@ -177,7 +177,7 @@ public void givenLinkedHashMap_whenRemovesEldestEntry_thenCorrect() {
 
 最好在创建时这样做:
 
-```
+```java
 Map m = Collections.synchronizedMap(new LinkedHashMap());
 ```
 

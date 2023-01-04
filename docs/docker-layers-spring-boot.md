@@ -37,19 +37,19 @@ Spring Boot 版本 2.3.0 引入了**两个新特性来改进 Docker 图像生成
 
 最初，我们将在 Maven 中设置[分层 jar。当打包工件时，我们将生成层。让我们检查一下 jar 文件:](/web/20220727020706/https://www.baeldung.com/spring-boot-docker-images#1-creating-layered-jars)
 
-```
+```java
 jar tf target/spring-boot-docker-0.0.1-SNAPSHOT.jar
 ```
 
 我们可以看到，新的图层 [`.idx`](/web/20220727020706/https://www.baeldung.com/spring-boot-docker-images#layered-jars) 文件在 fat jar 里面的 BOOT-INF 文件夹中被创建。当然，它将依赖关系、资源和应用程序源代码映射到独立的层:
 
-```
+```java
 BOOT-INF/layers.idx
 ```
 
 同样，该文件的内容会分解存储的不同层:
 
-```
+```java
 - "dependencies":
   - "BOOT-INF/lib/"
 - "spring-boot-loader":
@@ -66,13 +66,13 @@ BOOT-INF/layers.idx
 
 让我们列出工件内部的层:
 
-```
+```java
 java -Djarmode=layertools -jar target/docker-spring-boot-0.0.1.jar list 
 ```
 
 结果提供了对`layers.idx`文件内容的简单视图:
 
-```
+```java
 dependencies
 spring-boot-loader
 snapshot-dependencies
@@ -81,13 +81,13 @@ application
 
 我们还可以将图层提取到文件夹中:
 
-```
+```java
 java -Djarmode=layertools -jar target/docker-spring-boot-0.0.1.jar extract 
 ```
 
 然后，我们可以重用 docker 文件中的文件夹，我们将在下一节中看到:
 
-```
+```java
 $ ls
 application/
 snapshot-dependencies/
@@ -101,7 +101,7 @@ spring-boot-loader/
 
 首先，让我们将 fat jar 文件添加到基本映像中:
 
-```
+```java
 FROM adoptopenjdk:11-jre-hotspot as builder
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} application.jar 
@@ -109,13 +109,13 @@ COPY ${JAR_FILE} application.jar
 
 其次，让我们提取工件的层:
 
-```
+```java
 RUN java -Djarmode=layertools -jar application.jar extract 
 ```
 
 最后，让我们复制提取的文件夹，以添加相应的 Docker 层:
 
-```
+```java
 FROM adoptopenjdk:11-jre-hotspot
 COPY --from=builder dependencies/ ./
 COPY --from=builder snapshot-dependencies/ ./
@@ -134,7 +134,7 @@ ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
 
 在 Spring Boot，可以通过单独的配置文件调整[自定义层](https://web.archive.org/web/20220727020706/https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/html/#repackage-layers-configuration):
 
-```
+```java
 <layers 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/boot/layers
@@ -164,7 +164,7 @@ ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
 
 让我们将我们的文件命名为`layers.xml`。然后，在 Maven 中，我们可以配置这个文件来定制层:
 
-```
+```java
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -183,7 +183,7 @@ ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
 
 让我们创建一个添加应用程序类的内部依赖关系:
 
-```
+```java
 <into layer="internal-dependencies">
     <include>com.baeldung.docker:*:*</include>
 </into>
@@ -191,7 +191,7 @@ ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
 
 此外，我们将订购新图层:
 
-```
+```java
 <layerOrder>
     <layer>internal-dependencies</layer>
 </layerOrder>
@@ -199,7 +199,7 @@ ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
 
 因此，如果我们列出 fat jar 中的层，就会出现新的内部依赖关系:
 
-```
+```java
 dependencies
 spring-boot-loader
 internal-dependencies
@@ -211,13 +211,13 @@ application
 
 提取完成后，我们可以将新的内层添加到 Docker 图像中:
 
-```
+```java
 COPY --from=builder internal-dependencies/ ./
 ```
 
 因此，如果我们生成图像，我们将看到 Docker 如何构建内部依赖关系作为一个新层:
 
-```
+```java
 $ mvn package
 $ docker build -f src/main/docker/Dockerfile . --tag spring-docker-demo
 ....
@@ -228,7 +228,7 @@ Step 8/11 : COPY --from=builder internal-dependencies/ ./
 
 之后，我们可以在历史记录中检查 Docker 图像中图层的组成:
 
-```
+```java
 $ docker history --format "{{.ID}} {{.CreatedBy}} {{.Size}}" spring-docker-demo
 c0d77f6af917 /bin/sh -c #(nop)  ENTRYPOINT ["java" "org.s… 0B
 762598a32eb7 /bin/sh -c #(nop) COPY dir:a87b8823d5125bcc4… 7.42kB

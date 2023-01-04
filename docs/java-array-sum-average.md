@@ -14,7 +14,7 @@
 
 这非常简单，从 0 的`sum`开始，并随着我们的进行添加数组中的每一项:
 
-```
+```java
 public static int findSumWithoutUsingStream(int[] array) {
     int sum = 0;
     for (int value : array) {
@@ -28,7 +28,7 @@ public static int findSumWithoutUsingStream(int[] array) {
 
 **我们可以使用流 API 来实现相同的结果:**
 
-```
+```java
 public static int findSumUsingStream(int[] array) {
     return Arrays.stream(array).sum();
 }
@@ -40,7 +40,7 @@ public static int findSumUsingStream(int[] array) {
 
 之后，我们可以将`sum()` 方法应用于我们新转换的`IntStream`:
 
-```
+```java
 public static int findSumUsingStream(Integer[] array) {
     return Arrays.stream(array)
       .mapToInt(Integer::intValue)
@@ -56,7 +56,7 @@ public static int findSumUsingStream(Integer[] array) {
 
 一旦我们知道如何计算数组元素的总和，求平均值就相当容易了——正如`Average = Sum of Elements / Number of Elements`:
 
-```
+```java
 public static double findAverageWithoutUsingStream(int[] array) {
     int sum = findSumWithoutUsingStream(array);
     return (double) sum / array.length;
@@ -70,7 +70,7 @@ public static double findAverageWithoutUsingStream(int[] array) {
 
 ### 3.2。使用 Java 流 API 进行平均
 
-```
+```java
 public static double findAverageUsingStream(int[] array) {
     return Arrays.stream(array).average().orElse(Double.NaN);
 }

@@ -16,13 +16,13 @@ Javadoc 是一种从 Java 源代码生成 HTML 格式文档的方法。
 
 `@version`标签的格式很简单:
 
-```
+```java
 @version  version-text
 ```
 
 例如，我们可以用它来表示 JDK 1.7:
 
-```
+```java
 /**
  * @version JDK 1.7
  */
@@ -45,7 +45,7 @@ SCCS 也被称为源代码控制系统。如果我们想了解更多关于 SCCS 
 
 让我们以甲骨文 JDK 8 为例。如果我们查看`src.zip`文件中的源代码，我们可能会发现只有`java.awt.Color`类有一个`@version`标签:
 
-```
+```java
 /**
  * @version     10 Feb 1997
  */
@@ -57,13 +57,13 @@ SCCS 也被称为源代码控制系统。如果我们想了解更多关于 SCCS 
 
 `@since`标签的格式非常简单:
 
-```
+```java
 @since  since-text
 ```
 
 例如，我们可以用它来标记 JDK 1.7 中引入的一个功能:
 
-```
+```java
 /**
  * @since JDK 1.7
  */
@@ -80,7 +80,7 @@ SCCS 也被称为源代码控制系统。如果我们想了解更多关于 SCCS 
 
 如果我们再看一下`src.zip`文件，我们可能会发现很多`@since`标签的用法。让我们以`java.lang.FunctionalInterface`班为例:
 
-```
+```java
 /**
  * @since 1.8
  */
@@ -107,7 +107,7 @@ public @interface FunctionalInterface {}
 
 块标签的形式为`@tag`。并且它应该出现在行首，忽略前导星号、空格和分隔符(`/**`)。例如，我们可以在标签部分使用`@version`和`@since`:
 
-```
+```java
 /**
  * Some description here.
  * 
@@ -118,7 +118,7 @@ public @interface FunctionalInterface {}
 
 然而，内联标签的形式是`{@tag}`。它可以存在于描述或注释中的任何地方。例如，如果我们有一个`{@link}`标签，我们可以在描述中使用它:
 
-```
+```java
 /**
  * We can use a {@link java.lang.StringBuilder} class here.
  */
@@ -130,7 +130,7 @@ public @interface FunctionalInterface {}
 
 例如，如果我们在 ADK 和 JDK 的不同版本中使用相同的类或接口，我们可以提供不同的`@version`和`@since`消息:
 
-```
+```java
 /**
  * Some description here.
  *
@@ -143,13 +143,13 @@ public @interface FunctionalInterface {}
 
 在生成的 HTML 页面中，Javadoc 工具将在名称之间插入逗号(，)和空格。因此，版本文本如下所示:
 
-```
+```java
 ADK 1.6, JDK 1.7
 ```
 
 并且，自文本看起来像:
 
-```
+```java
 ADK 1.3, JDK 1.4
 ```
 
@@ -179,13 +179,13 @@ ADK 1.3, JDK 1.4
 
 如果我们希望**在生成的文档中包含“版本文本”，我们可以使用`-version`选项**:
 
-```
+```java
 javadoc -version -d docs/ src/*.java
 ```
 
 同样，如果我们想在生成的文档中省略“自文本”,我们可以使用`-nosince`选项:
 
-```
+```java
 javadoc -nosince -d docs/ src/*.java
 ```
 

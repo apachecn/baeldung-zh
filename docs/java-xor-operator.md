@@ -26,7 +26,7 @@
 
 让我们使用`&&`和`||`操作符来检查这一点:
 
-```
+```java
 Car car = Car.dieselAndManualCar();
 boolean dieselXorManual = (car.isDiesel() && !car.isManual()) || (!car.isDiesel() && car.isManual());
 ```
@@ -35,7 +35,7 @@ boolean dieselXorManual = (car.isDiesel() && !car.isManual()) || (!car.isDiesel(
 
 因此，我们可以直接使用`^`操作符，而不是繁琐的`XOR`实现:
 
-```
+```java
 Car car = Car.dieselAndManualCar();
 boolean dieselXorManual = car.isDiesel() ^ car.isManual();
 ```
@@ -44,7 +44,7 @@ boolean dieselXorManual = car.isDiesel() ^ car.isManual();
 
 **最后，值得一提的是,`XOR `操作符和其他位操作符一样，适用于所有基本类型。**例如，让我们考虑两个整数 1 和 3，它们的二进制表示分别是 000000001 和 00000011。在它们之间使用`XOR`运算符将得到整数 2:
 
-```
+```java
 assertThat(1 ^ 3).isEqualTo(2);
 ```
 

@@ -14,14 +14,14 @@ MongoDB 是一个面向文档的 NoSQL 数据库，是公开可用的。我们�
 
 在开始之前，让我们首先创建一个新的数据库`baeldung`和一个样本集合`employee`。我们将在所有示例中使用该集合:
 
-```
+```java
 use baeldung;
 db.createCollection(employee);
 ```
 
 现在让我们使用`insertMany`查询将一些文档添加到这个集合中:
 
-```
+```java
 db.employee.insertMany([
     {
         "employee_id": 794875,
@@ -44,7 +44,7 @@ db.employee.insertMany([
 
 因此，我们将为这两个文档获得一个带有 ObjectId 的 JSON，如下所示:
 
-```
+```java
 {
     "acknowledged": true,
     "insertedIds": [
@@ -62,7 +62,7 @@ db.employee.insertMany([
 
 让我们首先来看看使用`$set`操作符更新雇员集合的两个字段的 MongoDB 查询:
 
-```
+```java
 db.employee.updateOne(
     {
         "employee_id": 794875,
@@ -81,7 +81,7 @@ db.employee.updateOne(
 
 我们还可以在一个更新查询中同时使用`$set`和`$inc`操作符:
 
-```
+```java
 db.employee.updateOne(
     {
         "employee_id": 794875
@@ -103,7 +103,7 @@ db.employee.updateOne(
 
 此外，我们还可以在 MongoDB 中更新多个文档的多个字段。我们只需要包含选项`multi:true`来修改所有符合过滤查询标准的文档:
 
-```
+```java
 db.employee.update(
     {
         "job": "Sales Representative"
@@ -124,7 +124,7 @@ db.employee.update(
 
 或者，我们将使用`updateMany`查询得到相同的结果:
 
-```
+```java
 db.employee.updateMany(
     {
         "job": "Sales Representative"
@@ -148,7 +148,7 @@ db.employee.updateMany(
 
 现在，如果我们在一个查询中对不同的字段多次使用一个操作符， **MongoDB 将只更新更新查询**的最后一条语句，而忽略其余的:
 
-```
+```java
 db.employee.updateMany(
     {
         "employee_id": 794875
@@ -166,7 +166,7 @@ db.employee.updateMany(
 
 上述查询将返回与此类似的输出:
 
-```
+```java
 {
     "acknowledged":true,
     "matchedCount":1,
@@ -182,7 +182,7 @@ db.employee.updateMany(
 
 在我们继续之前，让我们首先连接到`baeldung` DB 中的`employee`集合:
 
-```
+```java
 MongoClient mongoClient = new MongoClient(new MongoClientURI("localhost", 27017);
 MongoDatabase database = mongoClient.getDatabase("baeldung");
 MongoCollection<Document> collection = database.getCollection("employee");
@@ -198,7 +198,7 @@ MongoCollection<Document> collection = database.getCollection("employee");
 
 现在让我们使用`com.mongodb.BasicDBObject`对多个字段执行更新操作:
 
-```
+```java
 BasicDBObject searchQuery = new BasicDBObject("employee_id", 794875);
 BasicDBObject updateFields = new BasicDBObject();
 updateFields.append("department_id", 3);
@@ -214,7 +214,7 @@ UpdateResult updateResult = collection.updateMany(searchQuery, setQuery);
 
 我们可以使用 [`bson`](https://web.archive.org/web/20220524063523/https://baeldung-cn.com/mongodb-bson) 文档执行所有的 MongoDB 操作。为此，首先，我们需要集合对象，然后使用带有`filter`和`set`函数的`updateMany`方法执行更新操作。
 
-```
+```java
 UpdateResult updateQueryResult = collection.updateMany(Filters.eq("employee_id", 794875),
 Updates.combine(Updates.set("department_id", 3), Updates.set("job", "Sales Manager")));
 ```
@@ -227,7 +227,7 @@ Updates.combine(Updates.set("department_id", 3), Updates.set("job", "Sales Manag
 
 例如，如果我们希望用`employee_id` 794875 替换一个文档，我们可以执行下面的查询:
 
-```
+```java
 db.employee.replaceOne(
     {
         "employee_id": 794875
@@ -245,7 +245,7 @@ db.employee.replaceOne(
 
 上面的命令将在输出中打印一个确认 JSON:
 
-```
+```java
 {
     "acknowledged":true,
     "matchedCount":1,

@@ -20,7 +20,7 @@ JCommander 由 Cédric Beust 创建，是一个基于**注释的库，用于** *
 
 让我们首先在我们的`pom.xml`中添加 [`jcommander`](https://web.archive.org/web/20221208143830/https://search.maven.org/search?q=g:com.beust%20AND%20a:%20jcommander) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.beust</groupId>
     <artifactId>jcommander</artifactId>
@@ -34,7 +34,7 @@ JCommander 由 Cédric Beust 创建，是一个基于**注释的库，用于** *
 
 由于 **JCommander 将命令行参数绑定到 Java 类**中的字段，我们将首先定义一个带有字段`name`的`HelloWorldArgs`类，字段`name`用`@Parameter`注释:
 
-```
+```java
 class HelloWorldArgs {
 
     @Parameter(
@@ -48,7 +48,7 @@ class HelloWorldArgs {
 
 现在，让我们使用`JCommander`类来解析命令行参数，并在我们的`HelloWorldArgs`对象中分配字段:
 
-```
+```java
 HelloWorldArgs jArgs = new HelloWorldArgs();
 JCommander helloCmd = JCommander.newBuilder()
   .addObject(jArgs)
@@ -59,7 +59,7 @@ System.out.println("Hello " + jArgs.getName());
 
 最后，让我们从控制台用相同的参数调用主类:
 
-```
+```java
 $ java HelloWorldApp --name JavaWorld
 Hello JavaWorld
 ```
@@ -92,7 +92,7 @@ Hello JavaWorld
 
 让我们在计量计费场景中配置一个参数`customerId`:
 
-```
+```java
 @Parameter(
   names = { "--customer", "-C" },
   description = "Id of the Customer who's using the services",
@@ -104,14 +104,14 @@ String customerId;
 
 现在，让我们使用新的“–customer”参数来执行命令:
 
-```
+```java
 $ java App --customer cust0000001A
 Read CustomerId: cust0000001A. 
 ```
 
 同样，我们可以使用更短的"-C "参数来达到同样的效果:
 
-```
+```java
 $ java App -C cust0000001A
 Read CustomerId: cust0000001A. 
 ```
@@ -120,7 +120,7 @@ Read CustomerId: cust0000001A.
 
 在参数是强制的情况下，如果用户没有指定参数，应用程序会抛出一个`ParameterException` :
 
-```
+```java
 $ java App
 Exception in thread "main" com.beust.jcommander.ParameterException:
   The following option is required: [--customer | -C]
@@ -146,7 +146,7 @@ Arity 与选项消耗的附加参数的数量有关。JCommander 的**内置参�
 
 让我们看一个例子。也许我们想获取客户的费用，按订阅逐项列出。我们可以添加一个`boolean`字段`itemized`，默认为`false`:
 
-```
+```java
 @Parameter(
   names = { "--itemized" }
 )
@@ -155,7 +155,7 @@ private boolean itemized;
 
 我们的应用程序将返回将`itemized`设置为`false`的总费用。当我们使用`itemized`参数调用命令行时，我们将该字段设置为`true`:
 
-```
+```java
 $ java App --itemized
 Read flag itemized: true. 
 ```
@@ -164,7 +164,7 @@ Read flag itemized: true.
 
 让我们通过使用字段的默认值`true`并将其`arity`设置为 1 来介绍这种行为:
 
-```
+```java
 @Parameter(
   names = { "--itemized" },
   arity = 1
@@ -174,7 +174,7 @@ private boolean itemized = true;
 
 现在，当我们指定选项时，该值将被设置为`false`:
 
-```
+```java
 $ java App --itemized false
 Read flag itemized: false. 
 ```
@@ -187,7 +187,7 @@ JCommander 提供了几种将参数绑定到`List `字段的方法。
 
 假设我们只想获取客户订阅的一个子集的费用:
 
-```
+```java
 @Parameter(
   names = { "--subscription", "-S" }
 )
@@ -196,7 +196,7 @@ private List<String> subscriptionIds;
 
 该字段不是必需的，如果没有提供参数，应用程序将获取所有订阅的费用。然而，我们可以通过多次使用参数名来指定多个订阅**:**
 
-```
+```java
 $ java App -S subscriptionA001 -S subscriptionA002 -S subscriptionA003
 Read Subscriptions: [subscriptionA001, subscriptionA002, subscriptionA003]. 
 ```
@@ -205,7 +205,7 @@ Read Subscriptions: [subscriptionA001, subscriptionA002, subscriptionA003].
 
 让我们尝试通过传递一个逗号分隔的`String`来绑定列表，而不是多次指定选项:
 
-```
+```java
 $ java App -S subscriptionA001,subscriptionA002,subscriptionA003
 Read Subscriptions: [subscriptionA001, subscriptionA002, subscriptionA003]. 
 ```
@@ -216,7 +216,7 @@ Read Subscriptions: [subscriptionA001, subscriptionA002, subscriptionA003].
 
 我们可以通过实现`IParameterSplitter`接口来覆盖默认的拆分器:
 
-```
+```java
 class ColonParameterSplitter implements IParameterSplitter {
 
     @Override
@@ -228,7 +228,7 @@ class ColonParameterSplitter implements IParameterSplitter {
 
 然后将实现映射到`@Parameter`中的`splitter`属性:
 
-```
+```java
 @Parameter(
   names = { "--subscription", "-S" },
   splitter = ColonParameterSplitter.class
@@ -238,7 +238,7 @@ private List<String> subscriptionIds;
 
 让我们试一试:
 
-```
+```java
 $ java App -S "subscriptionA001:subscriptionA002:subscriptionA003"
 Read Subscriptions: [subscriptionA001, subscriptionA002, subscriptionA003]. 
 ```
@@ -249,7 +249,7 @@ Read Subscriptions: [subscriptionA001, subscriptionA002, subscriptionA003].
 
 让我们尝试这样来解析订阅:
 
-```
+```java
 @Parameter(
   names = { "--subscription", "-S" },
   variableArity = true
@@ -259,7 +259,7 @@ private List<String> subscriptionIds;
 
 当我们运行命令时:
 
-```
+```java
 $ java App -S subscriptionA001 subscriptionA002 subscriptionA003 --itemized
 Read Subscriptions: [subscriptionA001, subscriptionA002, subscriptionA003]. 
 ```
@@ -270,7 +270,7 @@ JCommander 将选项“-S”后面的所有输入参数绑定到列表字段，�
 
 到目前为止，我们已经看到了无界列表，我们可以传递任意多的列表项。有时，我们可能希望限制传递给`List`字段的项目数量。为此，我们可以**为`List`字段指定一个整数 arity 值，使其有界**:
 
-```
+```java
 @Parameter(
   names = { "--subscription", "-S" },
   arity = 2
@@ -280,7 +280,7 @@ private List<String> subscriptionIds;
 
 固定 arity 强制检查传递给`List`选项的参数数量，并在违反时抛出`ParameterException`:
 
-```
+```java
 $ java App -S subscriptionA001 subscriptionA002 subscriptionA003
 Was passed main parameter 'subscriptionA003' but no main parameter was defined in your arg class 
 ```
@@ -293,7 +293,7 @@ Was passed main parameter 'subscriptionA003' but no main parameter was defined i
 
 让我们编写一个转换器来解析一个 [ISO8601 时间戳](https://web.archive.org/web/20221208143830/https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations):
 
-```
+```java
 class ISO8601TimestampConverter implements IStringConverter<Instant> {
 
     private static final DateTimeFormatter TS_FORMATTER = 
@@ -315,7 +315,7 @@ class ISO8601TimestampConverter implements IStringConverter<Instant> {
 
 这段代码将解析输入`String`并返回一个`Instant`，如果有转换错误就抛出一个`ParameterException`。我们可以通过使用`@Parameter`中的`converter`属性将该转换器绑定到类型为 [`Instant`](https://web.archive.org/web/20221208143830/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/Instant.html) 的字段来使用它:
 
-```
+```java
 @Parameter(
   names = { "--timestamp" },
   converter = ISO8601TimestampConverter.class
@@ -325,7 +325,7 @@ private Instant timestamp;
 
 让我们来看看它的实际应用:
 
-```
+```java
 $ java App --timestamp 2019-10-03T10:58:00
 Read timestamp: 2019-10-03T10:58:00Z.
 ```
@@ -342,7 +342,7 @@ JCommander 提供了一些默认验证:
 
 我们可以为客户字段编写一个验证器，实现接口 [`IParameterValidator`](https://web.archive.org/web/20221208143830/https://jcommander.org/#_parameter_validation) :
 
-```
+```java
 class UUIDValidator implements IParameterValidator {
 
     private static final String UUID_REGEX = 
@@ -366,7 +366,7 @@ class UUIDValidator implements IParameterValidator {
 
 然后，我们可以将它与参数的`validateWith`属性联系起来:
 
-```
+```java
 @Parameter(
   names = { "--customer", "-C" },
   validateWith = UUIDValidator.class
@@ -376,7 +376,7 @@ private String customerId;
 
 如果我们使用非 UUID 客户 ID 调用该命令，应用程序将退出，并显示一条验证失败消息:
 
-```
+```java
 $ java App --C customer001
 String parameter customer001 is not a valid UUID. 
 ```
@@ -393,7 +393,7 @@ String parameter customer001 is not a valid UUID.
 
 让我们将`submit`和`fetch`建模为子命令:
 
-```
+```java
 @Parameters(
   commandNames = { "submit" },
   commandDescription = "Submit usage for a given customer and subscription, " +
@@ -422,7 +422,7 @@ JCommander 使用`@Parameters`中的属性来配置子命令，例如:
 
 我们用`addCommand`方法将子命令添加到`JCommander` :
 
-```
+```java
 SubmitUsageCommand submitUsageCmd = new SubmitUsageCommand();
 FetchCurrentChargesCommand fetchChargesCmd = new FetchCurrentChargesCommand();
 
@@ -438,19 +438,19 @@ JCommander jc = JCommander.newBuilder()
 
 要访问用户选择的命令，我们必须首先解析参数:
 
-```
+```java
 jc.parse(args); 
 ```
 
 接下来，我们可以用`getParsedCommand`提取子命令:
 
-```
+```java
 String parsedCmdStr = jc.getParsedCommand(); 
 ```
 
 除了识别命令之外，JCommander 还将其余的命令行参数绑定到子命令中的字段。现在，我们只需调用我们想要使用的命令:
 
-```
+```java
 switch (parsedCmdStr) {
     case "submit":
         submitUsageCmd.submit();
@@ -475,14 +475,14 @@ switch (parsedCmdStr) {
 
 我们可以在命令中绑定一个帮助选项，使用一个`boolean`参数以及设置为`true`的属性`help`:
 
-```
+```java
 @Parameter(names = "--help", help = true)
 private boolean help; 
 ```
 
 然后，我们可以检测参数中是否传递了“–help”，并调用`usage`:
 
-```
+```java
 if (cmd.help) {
   jc.usage();
 } 
@@ -490,7 +490,7 @@ if (cmd.help) {
 
 让我们看看“提交”子命令的帮助输出:
 
-```
+```java
 $ java App submit --help
 Usage: submit [options]
   Options:
@@ -512,7 +512,7 @@ Usage: submit [options]
 
 我们可以捕捉`ParameterException`并调用`usage` 来帮助用户理解为什么他们的输入不正确。`ParameterException`包含显示帮助的`JCommander`实例:
 
-```
+```java
 try {
   jc.parse(args);
 

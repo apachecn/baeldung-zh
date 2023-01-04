@@ -18,7 +18,7 @@ Spring Data JPA 框架抛出了一个运行时异常`NonUniqueResultException`,�
 
 让我们使用从我们的文章中了解到的这个`Entity`,[用 Spring Data JPA](/web/20221231132733/https://www.baeldung.com/spring-data-jpa-query-by-date) 按日期和时间查询实体:
 
-```
+```java
 @Entity
 public class Article {
 
@@ -40,7 +40,7 @@ public class Article {
 
 现在，让我们创建我们的` ArticleRepository`并添加两个方法:
 
-```
+```java
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
     List<Article> findAllByPublicationTimeBetween(Date publicationTimeStart, Date publicationTimeEnd);

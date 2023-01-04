@@ -24,7 +24,7 @@ jmap 是一个打印正在运行的 JVM 中的内存统计数据的工具。我�
 
 **为了使用 jmap 捕获堆转储，我们需要使用`dump`选项:**
 
-```
+```java
 jmap -dump:[live],format=b,file=<file-path> <pid>
 ```
 
@@ -37,7 +37,7 @@ jmap -dump:[live],format=b,file=<file-path> <pid>
 
 一个例子是这样的:
 
-```
+```java
 jmap -dump:live,format=b,file=/tmp/dump.hprof 12587
 ```
 
@@ -51,13 +51,13 @@ jcmd 是一个非常完整的工具，它通过向 JVM 发送命令请求来工�
 
 **它的众多命令之一是` GC.heap_dump`** 。我们可以使用它来获得堆转储，只需指定进程的`pid`和输出文件路径:
 
-```
+```java
 jcmd <pid> GC.heap_dump <file-path>
 ```
 
 我们可以使用之前使用的相同参数来执行它:
 
-```
+```java
 jcmd 12587 GC.heap_dump /tmp/dump.hprof
 ```
 
@@ -81,19 +81,19 @@ JVisualVM 是一个带有图形用户界面的工具，它让我们能够监控�
 
 对于这些情况， **Java 提供了`HeapDumpOnOutOfMemoryError`命令行选项，它在抛出`java.lang.OutOfMemoryError`时生成堆转储:**
 
-```
+```java
 java -XX:+HeapDumpOnOutOfMemoryError
 ```
 
 **默认情况下，它将转储存储在我们运行应用程序的目录下的一个`java_pid<pid>.hprof`文件中。如果我们想指定另一个文件或目录，我们可以在`HeapDumpPath`选项中设置:**
 
-```
+```java
 java -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=<file-or-dir-path>
 ```
 
 当我们的应用程序使用该选项耗尽内存时，我们将能够在日志中找到包含堆转储的已创建文件:
 
-```
+```java
 java.lang.OutOfMemoryError: Requested array size exceeds VM limit
 Dumping heap to java_pid12587.hprof ...
 Exception in thread "main" Heap dump file created [4744371 bytes in 0.029 secs]
@@ -138,7 +138,7 @@ java.lang.OutOfMemoryError: Requested array size exceeds VM limit
 
 让我们看看它的代码:
 
-```
+```java
 public static void dumpHeap(String filePath, boolean live) throws IOException {
     MBeanServer server = ManagementFactory.getPlatformMBeanServer();
     HotSpotDiagnosticMXBean mxBean = ManagementFactory.newPlatformMXBeanProxy(
@@ -149,7 +149,7 @@ public static void dumpHeap(String filePath, boolean live) throws IOException {
 
 **注意，hprof 文件不能被覆盖。因此，在创建打印堆转储的应用程序时，我们应该考虑到这一点。如果我们没有这样做，我们将得到一个异常:**
 
-```
+```java
 Exception in thread "main" java.io.IOException: File exists
 	at sun.management.HotSpotDiagnostic.dumpHeap0(Native Method)
 	at sun.management.HotSpotDiagnostic.dumpHeap(HotSpotDiagnostic.java:60)

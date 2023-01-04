@@ -16,7 +16,7 @@ Maven 中有两种类型的依赖:直接依赖和传递依赖。
 
 这些可以使用`<dependency>`标签来包含:
 
-```
+```java
 <dependency>
     <groupId>junit</groupId>
     <artifactId>junit</artifactId>
@@ -42,7 +42,7 @@ Maven 中有两种类型的依赖:直接依赖和传递依赖。
 
 更重要的是，这些依赖关系也是可传递的:
 
-```
+```java
 <dependency>
     <groupId>commons-lang</groupId>
     <artifactId>commons-lang</artifactId>
@@ -58,7 +58,7 @@ Maven 中有两种类型的依赖:直接依赖和传递依赖。
 
 在我们的项目中，我们可以用`provided`范围定义这些依赖关系:
 
-```
+```java
 <dependency>
     <groupId>javax.servlet</groupId>
     <artifactId>javax.servlet-api</artifactId>
@@ -75,7 +75,7 @@ Maven 中有两种类型的依赖:直接依赖和传递依赖。
 
 JDBC 驱动程序是应该使用运行时范围的依赖关系的一个很好的例子:
 
-```
+```java
 <dependency>
     <groupId>mysql</groupId>
     <artifactId>mysql-connector-java</artifactId>
@@ -92,7 +92,7 @@ JDBC 驱动程序是应该使用运行时范围的依赖关系的一个很好的
 
 此范围的标准用例是向我们的应用程序添加一个测试库，如 JUnit:
 
-```
+```java
 <dependency>
     <groupId>junit</groupId>
     <artifactId>junit</artifactId>
@@ -109,7 +109,7 @@ JDBC 驱动程序是应该使用运行时范围的依赖关系的一个很好的
 
 需要记住的重要一点是，如果依赖项不存在或者位于不同于`systemPath`所指向的位置，那么在不同的机器上构建具有`system`范围依赖项的项目可能会失败:
 
-```
+```java
 <dependency>
     <groupId>com.baeldung</groupId>
     <artifactId>custom-dependency</artifactId>
@@ -127,7 +127,7 @@ JDBC 驱动程序是应该使用运行时范围的依赖关系的一个很好的
 
 这里，下面的`custom-project`依赖项将被替换为自定义项目的`pom.xml` `<dependencyManagement>`部分中声明的所有依赖项。
 
-```
+```java
 <dependency>
     <groupId>com.baeldung</groupId>
     <artifactId>custom-project</artifactId>

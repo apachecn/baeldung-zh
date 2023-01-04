@@ -20,7 +20,7 @@ Spring 的 [AOP 框架](https://web.archive.org/web/20220902075953/https://docs.
 
 让我们从在`pom.xml`中添加 Spring 的 AOP 库依赖开始:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -47,7 +47,7 @@ Spring 的 [AOP 框架](https://web.archive.org/web/20220902075953/https://docs.
 
 业务对象是一个具有普通业务逻辑的普通类。让我们来看一个简单的业务对象示例，其中我们只添加了两个数字:
 
-```
+```java
 public class SampleAdder {
     public int add(int a, int b) {
         return a + b;
@@ -63,7 +63,7 @@ public class SampleAdder {
 
 让我们看看如何定义一个简单的方面:
 
-```
+```java
 public class AdderAfterReturnAspect {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     public void afterReturn(Object returnValue) throws Throwable {
@@ -100,7 +100,7 @@ public class AdderAfterReturnAspect {
 
 下面是我们放在标准 Spring 配置的`“<beans>”`标签中的配置摘录:
 
-```
+```java
 <bean id="sampleAdder" class="org.baeldung.logger.SampleAdder" />
 <bean id="doAfterReturningAspect" 
   class="org.baeldung.logger.AdderAfterReturnAspect" />

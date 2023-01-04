@@ -19,14 +19,14 @@
 
 在最简单的情况下，`annotation type name`是指定它所需要的，在这种情况下，`annotation type value`被隐式定义为一个字符串:
 
-```
+```java
 annotationTypes:
   simpleImplicitStringValueType:
 ```
 
 这相当于这里显示的更明确的`annotation type`定义:
 
-```
+```java
 annotationTypes:
   simpleExplicitStringValueType:
     type: string
@@ -38,7 +38,7 @@ annotationTypes:
 
 下面是一个简单的例子，它声明了一个包含附加属性的`annotation type`:
 
-```
+```java
 annotationTypes:
   complexValueType:
     allowMultiple: true
@@ -60,7 +60,7 @@ annotationTypes:
 
 当将`annotation type`限制为单一目标位置类型时，您可以为`allowedTargets`属性分配一个表示该目标位置类型的字符串值:
 
-```
+```java
 annotationTypes:
   supportsOnlyOneTargetLocationType:
     allowedTargets: TypeDeclaration
@@ -68,7 +68,7 @@ annotationTypes:
 
 为了允许一个`annotation type`有多个目标位置类型，您可以为`allowedTargets`属性分配一个表示这些目标位置类型的字符串值数组:
 
-```
+```java
 annotationTypes:
   supportsMultipleTargetLocationTypes:
     allowedTargets: [ Library, Overlay, Extension ]
@@ -88,7 +88,7 @@ annotationTypes:
 
 这里有一个例子，展示了我们如何将上面代码片段中列出的一些`annotation types`应用到我们 API 的各种`resources`和`methods`:
 
-```
+```java
 /foos:
   type: myResourceTypes.collection
   (simpleImplicitStringValueType): alpha
@@ -110,7 +110,7 @@ annotationTypes:
 
 假设我们想要开发一个 RAML 处理工具，它可以基于`annotations`针对我们的 API 生成一系列测试。我们可以定义下面的`annotation type`:
 
-```
+```java
 annotationTypes:
   testCase:
     allowedTargets: [ Method ]
@@ -128,7 +128,7 @@ annotationTypes:
 
 然后，我们可以通过应用`annotations`为我们的 `/foos`资源配置一系列测试用例，如下所示:
 
-```
+```java
 /foos:
   type: myResourceTypes.collection
   get:

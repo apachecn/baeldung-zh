@@ -10,7 +10,7 @@
 
 为了在我们的项目中使用 SnakeYAML，我们将添加以下 Maven 依赖项(最新版本可以在这里找到):
 
-```
+```java
 <dependency>
     <groupId>org.yaml</groupId>
     <artifactId>snakeyaml</artifactId>
@@ -22,7 +22,7 @@
 
 `Yaml`类是 API 的入口点:
 
-```
+```java
 Yaml yaml = new Yaml();
 ```
 
@@ -34,7 +34,7 @@ Yaml yaml = new Yaml();
 
 让我们首先定义一个简单的 YAML 文档，并将该文件命名为`customer.yaml`:
 
-```
+```java
 firstName: "John"
 lastName: "Doe"
 age: 20
@@ -44,7 +44,7 @@ age: 20
 
 现在我们将使用`Yaml` 类解析上面的 YAML 文档:
 
-```
+```java
 Yaml yaml = new Yaml();
 InputStream inputStream = this.getClass()
   .getClassLoader()
@@ -55,7 +55,7 @@ System.out.println(obj);
 
 上述代码生成以下输出:
 
-```
+```java
 {firstName=John, lastName=Doe, age=20}
 ```
 
@@ -67,7 +67,7 @@ System.out.println(obj);
 
 让我们定义一个`Customer`类，并尝试再次加载文档:
 
-```
+```java
 public class Customer {
 
     private String firstName;
@@ -82,7 +82,7 @@ public class Customer {
 
 让我们更新文档并将其存储在一个新文件`customer_with_type.yaml:`
 
-```
+```java
 !!com.baeldung.snakeyaml.Customer
 firstName: "John"
 lastName: "Doe"
@@ -93,7 +93,7 @@ age: 20
 
 现在我们将更新上面使用的代码，并传递新的文件名作为输入:
 
-```
+```java
 Yaml yaml = new Yaml();
 InputStream inputStream = this.getClass()
  .getClassLoader()
@@ -109,7 +109,7 @@ Customer customer = yaml.load(inputStream);
 
 现在加载`customer.yaml, `时，我们将得到`Customer`对象:
 
-```
+```java
 Yaml yaml = new Yaml(new Constructor(Customer.class));
 ```
 
@@ -119,7 +119,7 @@ Yaml yaml = new Yaml(new Constructor(Customer.class));
 
 例如:
 
-```
+```java
 1.0 -> Float
 42 -> Integer
 2009-03-30 -> Date
@@ -127,7 +127,7 @@ Yaml yaml = new Yaml(new Constructor(Customer.class));
 
 让我们使用一个测试用例来测试这个隐式类型转换:
 
-```
+```java
 @Test
 public void whenLoadYAML_thenLoadCorrectImplicitTypes() {
    Yaml yaml = new Yaml();
@@ -147,7 +147,7 @@ public void whenLoadYAML_thenLoadCorrectImplicitTypes() {
 
 现在我们将解析新的 YAML 文档:
 
-```
+```java
 firstName: "John"
 lastName: "Doe"
 age: 31
@@ -165,7 +165,7 @@ homeAddress:
 
 `Customer`类也应该反映这些变化。下面是更新后的类:
 
-```
+```java
 public class Customer {
     private String firstName;
     private String lastName;
@@ -178,7 +178,7 @@ public class Customer {
 
 让我们看看`Contact`和`Address`类是什么样子的:
 
-```
+```java
 public class Contact {
     private String type;
     private int number;
@@ -186,7 +186,7 @@ public class Contact {
 }
 ```
 
-```
+```java
 public class Address {
     private String line;
     private String city;
@@ -198,7 +198,7 @@ public class Address {
 
 现在我们将使用给定的测试用例来测试`Yaml` # `load()` :
 
-```
+```java
 @Test
 public void 
   whenLoadYAMLDocumentWithTopLevelClass_thenLoadCorrectJavaObjectWithNestedObjects() {
@@ -240,7 +240,7 @@ public void
 
 让我们取一个有不止一个`Contact`的`Customer`，并尝试加载它:
 
-```
+```java
 firstName: "John"
 lastName: "Doe"
 age: 31
@@ -251,7 +251,7 @@ contactDetails:
 
 为了加载这个文档，**我们可以为顶层类**上的给定属性指定`TypeDescription `:
 
-```
+```java
 Constructor constructor = new Constructor(Customer.class);
 TypeDescription customTypeDescription = new TypeDescription(Customer.class);
 customTypeDescription.addPropertyParameters("contactDetails", Contact.class);
@@ -267,7 +267,7 @@ Yaml yaml = new Yaml(constructor);
 
 考虑单个文件中的以下文档:
 
-```
+```java
 ---
 firstName: "John"
 lastName: "Doe"
@@ -280,7 +280,7 @@ age: 25
 
 我们可以使用下面的代码示例所示的`loadAll()`方法解析上面的代码:
 
-```
+```java
 @Test
 public void whenLoadMultipleYAMLDocuments_thenLoadCorrectJavaObjects() {
     Yaml yaml = new Yaml(new Constructor(Customer.class));
@@ -305,7 +305,7 @@ public void whenLoadMultipleYAMLDocuments_thenLoadCorrectJavaObjects() {
 
 我们从一个简单的例子开始，将 `Map<String, Object>`的实例转储到 YAML 文档(`String`):
 
-```
+```java
 @Test
 public void whenDumpMap_thenGenerateCorrectYAML() {
     Map<String, Object> data = new LinkedHashMap<String, Object>();
@@ -323,7 +323,7 @@ public void whenDumpMap_thenGenerateCorrectYAML() {
 
 上面的代码产生了下面的输出(注意，使用一个`LinkedHashMap`的实例保留了输出数据的顺序):
 
-```
+```java
 name: Silenthand Olleander
 race: Human
 traits: [ONE_HAND, ONE_EYE]
@@ -333,7 +333,7 @@ traits: [ONE_HAND, ONE_EYE]
 
 我们也可以选择**将定制的 Java 类型转储到输出流**。但是，这会将全局显式`tag`添加到输出文档中:
 
-```
+```java
 @Test
 public void whenDumpACustomType_thenGenerateCorrectYAML() {
     Customer customer = new Customer();
@@ -355,7 +355,7 @@ public void whenDumpACustomType_thenGenerateCorrectYAML() {
 
 因此，在上面的代码中，我们可以调整以下内容来删除标签:
 
-```
+```java
 yaml.dumpAs(customer, Tag.MAP, null);
 ```
 

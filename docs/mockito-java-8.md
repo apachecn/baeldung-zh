@@ -16,7 +16,7 @@ Mockito 版本 1 没有为这种变化做好准备。基本上，因为它不允
 
 假设我们有一个包含两个方法声明的接口:第一个是我们都习惯的老式方法签名，另一个是全新的`default`方法:
 
-```
+```java
 public interface JobService {
 
     Optional<JobPosition> findCurrentJobPosition(Person person);
@@ -37,7 +37,7 @@ public interface JobService {
 
 现在，假设我们想要测试我们的 *assignJobPosition()* 的实现，而不编写`findCurrentJobPosition()`的实际实现。我们可以简单地创建一个`JobService,` 的模拟版本，然后告诉 Mockito 从对我们未实现的方法的调用中返回一个已知值，并在调用`assignJobPosition()`时调用真正的方法:
 
-```
+```java
 public class JobServiceUnitTest {
 
     @Mock
@@ -65,7 +65,7 @@ public class JobServiceUnitTest {
 
 然而，Mockito version 1 的内部工作方式并不适合这种结构。如果我们在 Mockito pre 版本 2 上运行这段代码，我们会得到这个被很好描述的错误:
 
-```
+```java
 org.mockito.exceptions.base.MockitoException:
 Cannot call a real method on java interface. The interface does not have any implementation!
 Calling real methods is only possible when mocking concrete classes.
@@ -75,7 +75,7 @@ Mockito 正在做它的工作，告诉我们它不能在接口上调用真正的
 
 好消息是，只要改变我们正在使用的 Mockito 版本，我们就可以消除这个错误。例如，使用 Maven，我们可以使用版本 2.7.5(最新的 Mockito 版本可以在这里找到):
 
-```
+```java
 <dependency>
     <groupId>org.mockito</groupId>
     <artifactId>mockito-core</artifactId>
@@ -94,7 +94,7 @@ Mockito 正在做它的工作，告诉我们它不能在接口上调用真正的
 
 考虑一个注入前一节中描述的`JobService`的服务，它有一个调用`JobService#findCurrentJobPosition()`的方法:
 
-```
+```java
 public class UnemploymentServiceImpl implements UnemploymentService {
 
     private JobService jobService;
@@ -116,7 +116,7 @@ public class UnemploymentServiceImpl implements UnemploymentService {
 
 在这种情况下，我们将强制`findCurrentJobPosition()` 返回一个空的`Optional`。**在 Mockito 版本 2** 之前，我们需要模拟对该方法的调用:
 
-```
+```java
 public class UnemploymentServiceImplUnitTest {
 
     @Mock
@@ -143,7 +143,7 @@ public class UnemploymentServiceImplUnitTest {
 
 因此，**当使用 Mockito version 2** 时，我们可以去掉第 13 行，我们的测试仍然会成功:
 
-```
+```java
 public class UnemploymentServiceImplUnitTest {
 
     @Test
@@ -161,7 +161,7 @@ public class UnemploymentServiceImplUnitTest {
 
 让我们向我们的`JobService`接口添加一个新方法，该方法返回一个代表一个人曾经工作过的所有职位的流:
 
-```
+```java
 public interface JobService {
     Stream<JobPosition> listJobs(Person person);
 }
@@ -169,7 +169,7 @@ public interface JobService {
 
 此方法用于另一个新方法，该方法将查询一个人是否曾经从事过与给定搜索字符串相匹配的工作:
 
-```
+```java
 public class UnemploymentServiceImpl implements UnemploymentService {
 
     @Override
@@ -185,7 +185,7 @@ public class UnemploymentServiceImpl implements UnemploymentService {
 
 **在 Mockito 版本 2 之前，我们需要模拟调用`listJobs()`** 来编写这样的测试:
 
-```
+```java
 public class UnemploymentServiceImplUnitTest {
 
     @Test
@@ -200,7 +200,7 @@ public class UnemploymentServiceImplUnitTest {
 
 **如果我们升级到版本 2** ，我们可以丢弃`when(…).thenReturn(…)`调用，因为现在 **Mockito 将在默认情况下返回一个空的`Stream`给被模仿的方法**:
 
-```
+```java
 public class UnemploymentServiceImplUnitTest {
 
     @Test
@@ -222,7 +222,7 @@ public class UnemploymentServiceImplUnitTest {
 
 在 Java 8 中，我们可以用一个简单的 lambda 表达式替换内部类:
 
-```
+```java
 public class ArgumentMatcherWithLambdaUnitTest {
 
     @Test
@@ -250,7 +250,7 @@ public class ArgumentMatcherWithLambdaUnitTest {
 
 同样，lambda 表达式的使用，允许我们以内联方式编写所有模拟行为:
 
-```
+```java
 public class CustomAnswerWithLambdaUnitTest {
 
     @Before

@@ -103,7 +103,7 @@ Hans Peter Luhn 在 20 世纪 50 年代后期开发了 Luhn 算法。
 
 因为我们从右边开始，我们需要通过卡号向后循环，识别每第二个数字:
 
-```
+```java
 for (int i = cardNumber.length() - 1; i >= 0; i--) {
     int digit = Integer.parseInt(cardNumber.substring(i, i + 1));
 
@@ -130,7 +130,7 @@ for (int i = cardNumber.length() - 1; i >= 0; i--) {
 
 **这一步与减去 9** 相同，所以我们可以在代码中实现为:
 
-```
+```java
 private static int doubleAndSumDigits(int digit) {
     int ret = digit * 2;
 
@@ -148,7 +148,7 @@ private static int doubleAndSumDigits(int digit) {
 
 我们将把这个作为我们检查的结果退回:
 
-```
+```java
 return sum % 10 == 0;
 ```
 

@@ -14,7 +14,7 @@
 
  **让我们从从Excel 文件中获取一行开始。在我们继续之前，我们需要从文件中获取 *工作表*
 
-```
+```java
 Workbook workbook = new XSSFWorkbook(fileLocation);
 Sheet sheet = workbook.getSheetAt(0);
 ```
@@ -23,7 +23,7 @@ Sheet sheet = workbook.getSheetAt(0);
 
 当我们在 Java 中打开工作表时，我们可以访问它包含的数据，即行数据。要获取单个行，我们可以使用[*【getRow(int)*](https://web.archive.org/web/20221208143832/https://poi.apache.org/apidocs/dev/org/apache/poi/ss/usermodel/Sheet.html#getRow-int-)方法:
 
-```
+```java
 Row row = sheet.getRow(2);
 ```
 
@@ -41,7 +41,7 @@ Apache POI 提供了两种帮助计算行数的方法:`getLastRowNum()`和`getPh
 
 根据文档， [`getLastRowNum()`](https://web.archive.org/web/20221208143832/https://poi.apache.org/apidocs/dev/org/apache/poi/ss/usermodel/Sheet.html#getLastRowNum--) 方法返回工作表上最后一个初始化的行的编号(从 0 开始)，如果不存在行，则返回-1:
 
-```
+```java
 int lastRowNum = sheet.getLastRowNum();
 ```
 
@@ -71,7 +71,7 @@ int lastRowNum = sheet.getLastRowNum();
 
 让我们检查计数方法的结果:
 
-```
+```java
 assertEquals(7, sheet.getLastRowNum());
 assertEquals(6, sheet.getPhysicalNumberOfRows());
 ```
@@ -80,7 +80,7 @@ assertEquals(6, sheet.getPhysicalNumberOfRows());
 
 现在，让我们根据索引获取行:
 
-```
+```java
 assertNotNull(sheet.getRow(0)); // data
 assertNotNull(sheet.getRow(1)); // formula
 assertNotNull(sheet.getRow(2)); // green
@@ -97,7 +97,7 @@ assertNull(sheet.getRow(8));
 
 因此，我们可以获取工作表中的最后一行:
 
-```
+```java
 Row lastRow = null;
 int lastRowNum = sheet.getLastRowNum();
 if (lastRowNum >= 0) {

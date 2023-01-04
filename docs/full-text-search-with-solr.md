@@ -14,7 +14,7 @@ Apache Solr 是一个开源框架，旨在处理数百万份文档。我们将�
 
 为了与服务器通信，我们将为 SolrJ 客户机定义 Maven 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.apache.solr</groupId>
     <artifactId>solr-solrj</artifactId>
@@ -36,7 +36,7 @@ Apache Solr 是一个开源框架，旨在处理数百万份文档。我们将�
 
 我们可以通过创建`SolrInputDocument`将数据索引到`core`中。首先，我们需要用我们的数据填充文档，然后只调用 SolrJ 的 API 来索引文档:
 
-```
+```java
 SolrInputDocument doc = new SolrInputDocument();
 doc.addField("id", id);
 doc.addField("description", description);
@@ -52,7 +52,7 @@ solrClient.commit();
 
 SolrJ 提供了用于索引 Java beans 的 API。为了索引一个 bean，我们需要用`@Field` 注释对它进行注释:
 
-```
+```java
 public class Item {
 
     @Field
@@ -71,7 +71,7 @@ public class Item {
 
 一旦我们有了 bean，索引就简单了:
 
-```
+```java
 solrClient.addBean(item); 
 solrClient.commit();
 ```
@@ -86,7 +86,7 @@ solrClient.commit();
 
 让我们做一个简单的搜索:
 
-```
+```java
 SolrQuery query = new SolrQuery();
 query.setQuery("brand1");
 query.setStart(0);
@@ -102,13 +102,13 @@ SolrJ 将在给服务器的请求中内部使用主查询参数`q` 。当没有�
 
 **我们来看另一个例子。**我们想要搜索任何包含`“rand”`的单词，以任意数量的字符开始，以一个字符结束。我们可以在查询中使用通配符`*` 和`?` :
 
-```
+```java
 query.setQuery("*rand?");
 ```
 
 Solr 查询也支持类似 SQL 中的布尔运算符:
 
-```
+```java
 query.setQuery("brand1 AND (Washing OR Refrigerator)");
 ```
 
@@ -116,7 +116,7 @@ query.setQuery("brand1 AND (Washing OR Refrigerator)");
 
 此外，如果我们想要搜索特定字段而不是所有索引字段，我们可以在查询中指定这些字段:
 
-```
+```java
 query.setQuery("description:Brand* AND category:*Washing*");
 ```
 
@@ -124,19 +124,19 @@ query.setQuery("description:Brand* AND category:*Washing*");
 
 到目前为止，我们的代码在索引字段中寻找关键字。我们还可以对索引字段进行短语搜索:
 
-```
+```java
 query.setQuery("Washing Machine");
 ```
 
 当我们有一个类似于“`Washing Machine`”的短语时，Solr 的标准查询解析器会将其解析为“`Washing OR Machine`”。要搜索整个短语，我们只能在双引号内添加表达式:
 
-```
+```java
 query.setQuery("\"Washing Machine\"");
 ```
 
 我们可以使用邻近搜索来查找特定距离内的单词。如果我们想找到至少相隔两个单词的单词，我们可以使用下面的查询:
 
-```
+```java
 query.setQuery("\"Washing equipment\"~2");
 ```
 
@@ -146,13 +146,13 @@ query.setQuery("\"Washing equipment\"~2");
 
 假设我们想要查找价格范围在 100 到 300 之间的商品:
 
-```
+```java
 query.setQuery("price:[100 TO 300]");
 ```
 
 上面的查询将查找价格在 100 到 300 之间的所有元素。我们可以使用“`}`”和“`{`”来排除端点:
 
-```
+```java
 query.setQuery("price:{100 TO 300]");
 ```
 
@@ -160,7 +160,7 @@ query.setQuery("price:{100 TO 300]");
 
 筛选查询可用于限制可返回的结果超集。过滤查询不影响分数:
 
-```
+```java
 SolrQuery query = new SolrQuery();
 query.setQuery("price:[100 TO 300]");
 query.addFilterQuery("description:Brand1","category:Home Appliances");
@@ -176,7 +176,7 @@ query.addFilterQuery("description:Brand1","category:Home Appliances");
 
 例如，我们希望获得搜索结果中类别的总数。我们可以在查询中添加`category` 字段:
 
-```
+```java
 query.addFacetField("category");
 
 QueryResponse response = solrClient.query(query);
@@ -189,7 +189,7 @@ List<Count> facetResults = response.getFacetField("category").getValues();
 
 当我们想要返回子查询的计数时，查询分面非常有用:
 
-```
+```java
 query.addFacetQuery("Washing OR Refrigerator");
 query.addFacetQuery("Brand2");
 
@@ -203,7 +203,7 @@ Map<String,Integer> facetQueryMap = response.getFacetQuery();
 
 范围分面用于获取搜索结果中的范围计数。以下查询将返回介于 100 和 251 之间的价格范围的计数，间隔为 25:
 
-```
+```java
 query.addNumericRangeFacet("price", 100, 275, 25);
 
 QueryResponse response = solrClient.query(query);
@@ -216,7 +216,7 @@ List<RangeFacet> rangeFacets =  response.getFacetRanges().get(0).getCounts();
 
 我们可能希望搜索查询中的关键字在结果中突出显示。这将非常有助于更好地了解结果。让我们索引一些文档并定义要突出显示的关键字:
 
-```
+```java
 itemSearchService.index("hm0001", "Brand1 Washing Machine", "Home Appliances", 100f);
 itemSearchService.index("hm0002", "Brand1 Refrigerator", "Home Appliances", 300f);
 itemSearchService.index("hm0003", "Brand2 Ceiling Fan", "Home Appliances", 200f);
@@ -236,7 +236,7 @@ String highLightedText = highlightedList.get(0);
 
 我们将把`highLightedText`作为`Home <em>Appliances</em>`。请注意，搜索关键字`Appliances` 带有`<em>`标记。Solr 使用的默认高亮标签是`<em>`，但是我们可以通过设置`pre` 和`post` 标签来改变它:
 
-```
+```java
 query.setHighlightSimplePre("<strong>");
 query.setHighlightSimplePost("</strong>");
 ```
@@ -251,7 +251,7 @@ Solr 支持的一个重要特性是建议。如果查询中的关键字包含拼
 
 让我们搜索一个有拼写错误的关键词:
 
-```
+```java
 query.setQuery("hme");
 query.set("spellcheck", "on");
 QueryResponse response = solrClient.query(query);
@@ -270,7 +270,7 @@ String alternative = alternatives.get(0);
 
 我们已经配置了一个名为`/suggest` 的请求处理器来处理建议。让我们为关键词`“Hom”`获得建议:
 
-```
+```java
 SolrQuery query = new SolrQuery();
 query.setRequestHandler("/suggest");
 query.set("suggest", "true");

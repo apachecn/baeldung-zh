@@ -79,7 +79,7 @@ Vault 还支持其他身份验证机制，如 LDAP、JWT、TLS 证书等。所�
 
 **策略准确定义了客户端可以访问哪些机密以及可以对其执行哪些操作**。让我们看看一个简单的策略是什么样子的:
 
-```
+```java
 path "secret/accounting" {
     capabilities = [ "read" ]
 }
@@ -176,7 +176,7 @@ Vault 支持一个`development`模式，这对于一些快速测试和习惯它�
 
 Vault 使用 HCL 或 JSON 格式的配置文件。以下文件定义了使用文件存储和自签名证书启动服务器所需的所有配置:
 
-```
+```java
 storage "file" {
   path = "./vault-data"
 }
@@ -189,7 +189,7 @@ listener "tcp" {
 
 现在，让我们跑跳马。打开命令 shell，转到包含我们的配置文件的目录并运行以下命令:
 
-```
+```java
 $ vault server -config ./vault-test.hcl
 ```
 
@@ -201,7 +201,7 @@ Vault 将启动并显示一些初始化消息。它们将包括它的版本、�
 
 让我们打开一个新的 shell 并执行以下命令来实现这一点:
 
-```
+```java
 $ export VAULT_ADDR=https://localhost:8200
 $ export VAULT_CACERT=./src/test/vault-config/localhost.cert
 $ vault operator init
@@ -216,7 +216,7 @@ $ vault operator init
 
 发出上述命令后，我们应该会看到类似这样的消息:
 
-```
+```java
 Unseal Key 1: <key share 1 value>
 Unseal Key 2: <key share 2 value>
 Unseal Key 3: <key share 3 value>
@@ -232,13 +232,13 @@ Initial Root Token: <root token value>
 
 另外，请注意`root token`，因为我们稍后会用到它。与解封密钥不同，**根令牌很容易在稍后生成**，所以一旦所有配置任务完成，销毁它是安全的。因为我们稍后将发出需要身份验证令牌的命令，所以现在让我们将根令牌保存在一个环境变量中:
 
-```
+```java
 $ export VAULT_TOKEN=<root token value> (Unix/Linux)
 ```
 
 让我们看看我们的服务器状态，现在我们已经初始化了它，使用以下命令:
 
-```
+```java
 $ vault status
 Key                Value
 ---                -----
@@ -258,7 +258,7 @@ HA Enabled         false
 
 我们现在解封金库，这样我们就可以开始使用它的秘密服务。为了完成解封过程，我们需要提供五个密钥部分中的任意三个:
 
-```
+```java
 $ vault operator unseal <key share 1 value>
 $ vault operator unseal <key share 2 value>
 $ vault operator unseal <key share 3 value>
@@ -266,7 +266,7 @@ $ vault operator unseal <key share 3 value>
 
 发出每个命令后，vault 将打印解封进度，包括需要多少份额。在发送最后一个密钥共享时，我们会看到如下消息:
 
-```
+```java
 Key             Value
 ---             -----
 Seal Type       shamir
@@ -284,13 +284,13 @@ Sealed          false
 
 首先，让我们存储秘密的键-值对并读回它们。假设用于初始化 Vault 的命令 shell 仍然打开，我们使用以下命令将这些对存储在`secret/fakebank`路径下:
 
-```
+```java
 $ vault kv put secret/fakebank api_key=abc1234 api_secret=1a2b3c4d
 ```
 
 现在，我们可以随时使用以下命令恢复这些对:
 
-```
+```java
 $ vault kv get secret/fakebank
 ======= Data =======
 Key           Value
@@ -307,7 +307,7 @@ api_secret    1a2b3c4d
 
 让我们创建一个新令牌，我们可以像使用根令牌一样使用它，但它会在一分钟后过期:
 
-```
+```java
 $ vault token create -ttl 1m
 Key                  Value
 ---                  -----
@@ -322,7 +322,7 @@ policies             ["root"]
 
 让我们测试这个令牌，用它来读取我们之前创建的键/值对:
 
-```
+```java
 $ export VAULT_TOKEN=<token value>
 $ vault kv get secret/fakebank
 ======= Data =======
@@ -334,7 +334,7 @@ api_secret    1a2b3c4d
 
 如果我们等待一分钟并尝试重新发出该命令，我们会得到一条错误消息:
 
-```
+```java
 $ vault kv get secret/fakebank
 Error making API request.
 
@@ -352,7 +352,7 @@ Code: 403\. Errors:
 
 例如，让我们定义一个策略，只允许对我们之前使用的`secret/fakebank`路径进行读访问:
 
-```
+```java
 $ cat > sample-policy.hcl <<EOF
 path "secret/fakebank" {
     capabilities = ["read"]
@@ -365,7 +365,7 @@ Success! Uploaded policy: fakebank-ro
 
 现在，我们使用以下命令创建一个包含此策略的令牌:
 
-```
+```java
 $ export VAULT_TOKEN=<root token>
 $ vault token create -policy=fakebank-ro
 Key                  Value
@@ -381,7 +381,7 @@ policies             ["default" "fakebank-ro"]
 
 正如我们之前所做的，让我们使用这个令牌来读取我们的秘密值:
 
-```
+```java
 $ export VAULT_TOKEN=<token value>
 $ vault kv get secret/fakebank
 ======= Data =======
@@ -393,7 +393,7 @@ api_secret    1a2b3c4d
 
 到目前为止，一切顺利。我们可以读取数据，正如所料。让我们看看当我们尝试更新这个秘密时会发生什么:
 
-```
+```java
 $ vault kv put secret/fakebank api_key=foo api_secret=bar
 Error writing data to secret/fakebank: Error making API request.
 
@@ -413,14 +413,14 @@ Code: 403\. Errors:
 
 现在，让我们配置 Vault 以使用该数据库。默认情况下，数据库密码引擎是不启用的，因此我们必须先解决这个问题，然后才能继续:
 
-```
+```java
 $ vault secrets enable database
 Success! Enabled the database secrets engine at: database/
 ```
 
 我们现在创建一个数据库配置资源:
 
-```
+```java
 $ vault write database/config/mysql-fakebank \
   plugin_name=mysql-legacy-database-plugin \
   connection_url="{{username}}:{{password}}@tcp(127.0.0.1:3306)/fakebank" \
@@ -442,7 +442,7 @@ $ vault write database/config/mysql-fakebank \
 
 在这里，我们创建一个角色，授予对`fakebank`模式的所有表的只读访问权限:
 
-```
+```java
 $ vault write database/roles/fakebank-accounts-ro \
     db_name=mysql-fakebank \
     creation_statements="CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}';GRANT SELECT ON fakebank.* TO '{{name}}'@'%';" 
@@ -457,7 +457,7 @@ $ vault write database/roles/fakebank-accounts-ro \
 
 一旦我们准备好了数据库角色及其相应的配置，我们就可以使用以下命令生成新的动态凭证:
 
-```
+```java
 $ vault read database/creds/fakebank-accounts-ro
 Key                Value
 ---                -----
@@ -472,7 +472,7 @@ username           <username>
 
 我们可以通过使用提供的凭据连接到数据库，然后执行一些 SQL 命令来验证这一点:
 
-```
+```java
 $ mysql -h 127.0.0.1 -u <username> -p fakebank
 Enter password:
 MySQL [fakebank]> select * from account;

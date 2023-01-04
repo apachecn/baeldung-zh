@@ -16,7 +16,7 @@
 *   JPA API 实现——在这个例子中，我们将使用`**Hibernate**`,但是 **EclipseLink** 也是一个不错的选择
 *   一个 MySQL 数据库
 
-```
+```java
 <properties>
     <jee.version>7.0</jee.version>
     <mysql.version>11.2.0.4</mysql.version>
@@ -46,7 +46,7 @@
 
 第二步是创建`src/main/resources/META-INF/persistence.xml`文件——它包含持久性单元定义:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -77,7 +77,7 @@
 
 如果引用 JNDI 数据源(JEE 环境)，则不需要定义所有 Hibernate 属性:
 
-```
+```java
 <jta-data-source>java:jboss/datasources/JpaStoredProcedure</jta-data-source>
 ```
 
@@ -85,7 +85,7 @@
 
 现在让我们创建一个`Table ( CAR )`——有三个属性:`ID, MODEL` 和 `YEAR` :
 
-```
+```java
 CREATE TABLE `car` (
   `ID` int(10) NOT NULL AUTO_INCREMENT,
   `MODEL` varchar(50) NOT NULL,
@@ -100,7 +100,7 @@ CREATE TABLE `car` (
 
 跳转到 java 代码之前的最后一步是在 MySQL 数据库中创建存储过程:
 
-```
+```java
 DELIMITER $
 CREATE DEFINER=`root`@`localhost` PROCEDURE `FIND_CAR_BY_YEAR`(in p_year int)
 begin
@@ -124,7 +124,7 @@ DELIMITER ;
 
 注意，我们还通过使用 **`@NamedStoredProcedureQueries`** 注释直接在实体上定义了存储过程:
 
-```
+```java
 @Entity
 @Table(name = "CAR")
 @NamedStoredProcedureQueries({
@@ -179,7 +179,7 @@ public class Car {
 
 我们将检索给定`year` :中的所有`Cars`
 
-```
+```java
 public class StoredProcedureTest {
 
     private static EntityManagerFactory factory = null;

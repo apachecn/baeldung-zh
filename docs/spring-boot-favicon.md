@@ -14,7 +14,7 @@ favicon 是浏览器中显示的一个小网站图标，通常位于地址旁边
 
 覆盖 Spring Boot 应用程序的默认图标的最简单的方法是**将新的图标放在`resources`目录**中:
 
-```
+```java
 src/main/resources/favicon.ico 
 ```
 
@@ -22,7 +22,7 @@ favicon 文件应该具有“`favicon.ico”` 名称。
 
 我们也可以将该文件放在项目资源目录中的`static`目录中:
 
-```
+```java
 src/main/resources/static/favicon.ico
 ```
 
@@ -34,7 +34,7 @@ Spring Boot 在启动时，扫描根资源位置中的`favicon.ico `文件，�
 
 我们可以通过禁用我们的`application.properties `文件中的默认 favicon 来做到这一点:
 
-```
+```java
 spring.mvc.favicon.enabled=false
 ```
 
@@ -42,7 +42,7 @@ spring.mvc.favicon.enabled=false
 
 然后实现我们的处理程序:
 
-```
+```java
 @Configuration
 public class FaviconConfiguration {
 
@@ -78,7 +78,7 @@ public class FaviconConfiguration {
 
 我们可以使用定制的 favicon 控制器**来避免这种情况，它返回一个空响应**:
 
-```
+```java
 //...
 
 @Controller

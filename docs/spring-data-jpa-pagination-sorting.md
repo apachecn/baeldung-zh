@@ -24,7 +24,7 @@ Explore the query derivation mechanism in Spring Data JPA.[Read more](/web/20221
 
 首先，假设我们有一个`Product`实体作为我们的域类:
 
-```
+```java
 @Entity 
 public class Product {
 
@@ -44,7 +44,7 @@ public class Product {
 
 要访问我们的`Product`，我们需要一个`ProductRepository`:
 
-```
+```java
 public interface ProductRepository extends PagingAndSortingRepository<Product, Integer> {
 
     List<Product> findAllByPrice(double price, Pageable pageable);
@@ -70,7 +70,7 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, I
 
 这里**页面计数从零开始:**
 
-```
+```java
 Pageable firstPageWithTwoElements = PageRequest.of(0, 2);
 
 Pageable secondPageWithFiveElements = PageRequest.of(1, 5);
@@ -80,7 +80,7 @@ Pageable secondPageWithFiveElements = PageRequest.of(1, 5);
 
 一旦我们有了我们的`PageRequest`对象，我们就可以在调用我们的存储库的方法时传递它:
 
-```
+```java
 Page<Product> allProducts = productRepository.findAll(firstPageWithTwoElements);
 
 List<Product> allTenDollarProducts = 
@@ -99,7 +99,7 @@ A `Slice`只知道下一个切片是否可用。
 
 类似地，为了对查询结果进行排序，我们可以简单地通过[将`Sort`](/web/20221129015157/https://www.baeldung.com/spring-data-sorting) 的实例传递给方法:
 
-```
+```java
 Page<Product> allProductsSortedByName = productRepository.findAll(Sort.by("name"));
 ```
 
@@ -107,7 +107,7 @@ Page<Product> allProductsSortedByName = productRepository.findAll(Sort.by("name"
 
 我们可以通过将排序细节传递给我们的`PageRequest`对象本身来做到这一点:
 
-```
+```java
 Pageable sortedByName = 
   PageRequest.of(0, 3, Sort.by("name"));
 

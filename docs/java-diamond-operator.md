@@ -10,7 +10,7 @@
 
 **在 Java 1.5 之前，集合 API 仅支持原始类型**——在构造集合时，类型参数无法参数化:
 
-```
+```java
 List cars = new ArrayList();
 cars.add(new Object());
 cars.add("car");
@@ -23,27 +23,27 @@ cars.add(new Integer(1));
 
 在 Java 1.5 中，引入了泛型——**，它允许我们在声明和构造对象时对类**的类型参数进行参数化，包括集合 API 中的类型参数:
 
-```
+```java
 List<String> cars = new ArrayList<String>();
 ```
 
 此时，我们必须**在构造函数**中指定参数化类型，这可能有些难以理解:
 
-```
+```java
 Map<String, List<Map<String, Map<String, Integer>>>> cars 
  = new HashMap<String, List<Map<String, Map<String, Integer>>>>();
 ```
 
 这种方法的原因是为了向后兼容，原始类型仍然存在，所以编译器需要区分这些原始类型和泛型:
 
-```
+```java
 List<String> generics = new ArrayList<String>();
 List<String> raws = new ArrayList();
 ```
 
 尽管编译器仍然允许我们在构造函数中使用原始类型，但它会提示我们一条警告消息:
 
-```
+```java
 ArrayList is a raw type. References to generic type ArrayList<E> should be parameterized
 ```
 
@@ -51,7 +51,7 @@ ArrayList is a raw type. References to generic type ArrayList<E> should be param
 
 Java 1.7 中引入的 diamond 操作符增加了类型推断，减少了赋值的冗长性——当使用泛型时:
 
-```
+```java
 List<String> cars = new ArrayList<>();
 ```
 
@@ -59,7 +59,7 @@ Java 1.7 编译器的类型推断特性**决定了与调用**匹配的最合适�
 
 考虑以下用于车辆和引擎的接口和类层次结构:
 
-```
+```java
 public interface Engine { }
 public class Diesel implements Engine { }
 public interface Vehicle<T extends Engine> { }
@@ -68,7 +68,7 @@ public class Car<T extends Engine> implements Vehicle<T> { }
 
 让我们使用菱形操作符创建一个`Car`的新实例:
 
-```
+```java
 Car<Diesel> myCar = new Car<>();
 ```
 

@@ -22,7 +22,7 @@
 
 首先，让我们创建名为`Person`的 POJO 类。这个类将有四个字段。`Id`作为我们数据库的主键，`name,`和`lastName,` 是字符串，`age`表示为`Integer`。 **`Age`不是必填字段，可以是`null` :**
 
-```
+```java
 public class Person {
     private Integer id;
     private String name;
@@ -34,7 +34,7 @@ public class Person {
 
 为了创建反映这个 Java 类的数据库表，我们将使用下面的 SQL 查询:
 
-```
+```java
 CREATE TABLE Person (id INTEGER not null, name VARCHAR(50), lastName VARCHAR(50), age INTEGER, PRIMARY KEY (id));
 ```
 
@@ -48,7 +48,7 @@ CREATE TABLE Person (id INTEGER not null, name VARCHAR(50), lastName VARCHAR(50)
 
 该方法仅适用于`null`值。对于任何其他的，我们必须使用适当的方法对`PreparedStatement`实例进行说明:
 
-```
+```java
 @Test
 public void givenNewPerson_whenSetNullIsUsed_thenNewRecordIsCreated() throws SQLException {
     Person person = new Person(1, "John", "Doe", null);
@@ -80,7 +80,7 @@ public void givenNewPerson_whenSetNullIsUsed_thenNewRecordIsCreated() throws SQL
 
 为了安全起见，最好将一个 SQL 类型传递给`setObject`方法:
 
-```
+```java
 @Test
 public void givenNewPerson_whenSetObjectIsUsed_thenNewRecordIsCreated() throws SQLException {
     Person person = new Person(2, "John", "Doe", null);

@@ -18,7 +18,7 @@ Spring 允许我们用可插入的`MultipartResolver`对象来启用这种多部
 
 要使用`CommonsMultipartResolver`来处理文件上传，我们需要添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>commons-fileupload</groupId>
     <artifactId>commons-fileupload</artifactId>
@@ -30,7 +30,7 @@ Spring 允许我们用可插入的`MultipartResolver`对象来启用这种多部
 
 这个`MultipartResolver`带有一系列`set`方法来定义属性，比如上传的最大大小:
 
-```
+```java
 @Bean(name = "multipartResolver")
 public CommonsMultipartResolver multipartResolver() {
     CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
@@ -47,7 +47,7 @@ public CommonsMultipartResolver multipartResolver() {
 
 **首先，我们需要在我们的`DispatcherServlet` `registration`** 中设置一个`MultipartConfigElement`:
 
-```
+```java
 public class MainWebAppInitializer implements WebApplicationInitializer {
 
     private String TMP_FOLDER = "/tmp"; 
@@ -75,7 +75,7 @@ public class MainWebAppInitializer implements WebApplicationInitializer {
 
 完成后，**我们可以将`StandardServletMultipartResolver`添加到我们的弹簧配置**:
 
-```
+```java
 @Bean
 public StandardServletMultipartResolver multipartResolver() {
     return new StandardServletMultipartResolver();
@@ -90,7 +90,7 @@ public StandardServletMultipartResolver multipartResolver() {
 
 这让浏览器知道如何对表单进行编码:
 
-```
+```java
 <form:form method="POST" action="/spring-mvc-xml/uploadFile" enctype="multipart/form-data">
     <table>
         <tr>
@@ -108,7 +108,7 @@ public StandardServletMultipartResolver multipartResolver() {
 
 我们可以从控制器方法内部的请求参数中检索这个变量:
 
-```
+```java
 @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
 public String submit(@RequestParam("file") MultipartFile file, ModelMap modelMap) {
     modelMap.addAttribute("file", file);
@@ -120,7 +120,7 @@ public String submit(@RequestParam("file") MultipartFile file, ModelMap modelMap
 
 我们可以使用一个简单的 HTML 页面来显示这些信息:
 
-```
+```java
 <h2>Submitted File</h2>
 <table>
     <tr>
@@ -138,7 +138,7 @@ public String submit(@RequestParam("file") MultipartFile file, ModelMap modelMap
 
 要在单个请求中上传多个文件，我们只需在表单中放置多个输入文件字段:
 
-```
+```java
 <form:form method="POST" action="/spring-mvc-java/uploadMultiFile" enctype="multipart/form-data">
     <table>
         <tr>
@@ -162,7 +162,7 @@ public String submit(@RequestParam("file") MultipartFile file, ModelMap modelMap
 
 我们需要注意每个输入字段都有相同的名称，这样它就可以作为一个数组`MultipartFile`来访问:
 
-```
+```java
 @RequestMapping(value = "/uploadMultiFile", method = RequestMethod.POST)
 public String submit(@RequestParam("files") MultipartFile[] files, ModelMap modelMap) {
     modelMap.addAttribute("files", files);
@@ -172,7 +172,7 @@ public String submit(@RequestParam("files") MultipartFile[] files, ModelMap mode
 
 现在，我们可以简单地遍历该数组来显示文件信息:
 
-```
+```java
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
     <head>
@@ -202,7 +202,7 @@ public String submit(@RequestParam("files") MultipartFile[] files, ModelMap mode
 
 我们只需在表单中包含必填字段:
 
-```
+```java
 <form:form method="POST" 
   action="/spring-mvc-java/uploadFileWithAddtionalData"
   enctype="multipart/form-data">
@@ -228,7 +228,7 @@ public String submit(@RequestParam("files") MultipartFile[] files, ModelMap mode
 
 在控制器中，我们可以使用`@RequestParam`注释获得所有表单数据:
 
-```
+```java
 @PostMapping("/uploadFileWithAddtionalData")
 public String submit(
   @RequestParam MultipartFile file, @RequestParam String name,
@@ -247,7 +247,7 @@ public String submit(
 
 让我们看看代码:
 
-```
+```java
 public class FormDataWithFile {
 
     private String name;
@@ -258,7 +258,7 @@ public class FormDataWithFile {
 }
 ```
 
-```
+```java
 @PostMapping("/uploadFileModelAttribute")
 public String submit(@ModelAttribute FormDataWithFile formDataWithFile, ModelMap modelMap) {
 
@@ -275,7 +275,7 @@ public String submit(@ModelAttribute FormDataWithFile formDataWithFile, ModelMap
 
 特别是，**不需要配置任何 servlet** ，因为 Boot 会为我们注册和配置它，只要我们在依赖关系中包含 web 模块:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -287,14 +287,14 @@ public String submit(@ModelAttribute FormDataWithFile formDataWithFile, ModelMap
 
 **如果我们想控制最大文件上传大小，我们可以编辑我们的`application.properties`** :
 
-```
+```java
 spring.servlet.multipart.max-file-size=128KB
 spring.servlet.multipart.max-request-size=128KB
 ```
 
 我们还可以控制是否启用文件上传以及文件上传的位置:
 
-```
+```java
 spring.servlet.multipart.enabled=true
 spring.servlet.multipart.location=${java.io.tmpdir}
 ```

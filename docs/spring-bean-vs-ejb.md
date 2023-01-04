@@ -62,7 +62,7 @@
 
 我们首先需要一个接口来指定我们的 EJB 具有远程处理的能力:
 
-```
+```java
 @Remote
 public interface CounterEJBRemote {    
     int count();
@@ -73,7 +73,7 @@ public interface CounterEJBRemote {
 
 下一步是用注释`javax.ejb.Singleton` 和 viola 定义一个实现类。我们的独生子准备好了:
 
-```
+```java
 @Singleton
 public class CounterEJB implements CounterEJBRemote {
     private int count = 1;
@@ -89,7 +89,7 @@ public class CounterEJB implements CounterEJBRemote {
 
 但是在我们测试 singleton(或任何其他 EJB 代码样本)之前，我们需要初始化`ejbContainer`并获取`context`:
 
-```
+```java
 @BeforeClass
 public void initializeContext() throws NamingException {
     ejbContainer = EJBContainer.createEJBContainer();
@@ -100,7 +100,7 @@ public void initializeContext() throws NamingException {
 
 现在让我们来看看测试:
 
-```
+```java
 @Test
 public void givenSingletonBean_whenCounterInvoked_thenCountIsIncremented() throws NamingException {
 
@@ -141,7 +141,7 @@ public void givenSingletonBean_whenCounterInvoked_thenCountIsIncremented() throw
 
 这里我们不需要实现任何接口。相反，我们将添加`@Component`注释:
 
-```
+```java
 @Component
 public class CounterBean {
     // same content as in the EJB
@@ -152,7 +152,7 @@ public class CounterBean {
 
 我们还需要[配置 Spring 来扫描组件](/web/20220926183020/https://www.baeldung.com/spring-component-scanning#1-using-componentscan-in-aspring-application):
 
-```
+```java
 @Configuration
 @ComponentScan(basePackages = "com.baeldung.ejbspringcomparison.spring")
 public class ApplicationConfig {} 
@@ -160,7 +160,7 @@ public class ApplicationConfig {}
 
 类似于我们初始化 EJB 上下文的方式，我们现在将设置 Spring 上下文:
 
-```
+```java
 @BeforeClass
 public static void init() {
     context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
@@ -169,7 +169,7 @@ public static void init() {
 
 现在让我们来看看我们的`Component`在运行:
 
-```
+```java
 @Test
 public void whenCounterInvoked_thenCountIsIncremented() throws NamingException {    
     CounterBean firstCounter = context.getBean(CounterBean.class);
@@ -205,7 +205,7 @@ public void whenCounterInvoked_thenCountIsIncremented() throws NamingException {
 
 与我们的单例 EJB 示例类似，我们需要一个`javax.ejb.Remote`接口及其实现。只是这一次，它用`javax.ejb.Stateful`标注:
 
-```
+```java
 @Stateful
 public class ShoppingCartEJB implements ShoppingCartEJBRemote {
     private String name;
@@ -220,7 +220,7 @@ public class ShoppingCartEJB implements ShoppingCartEJBRemote {
 
 让我们编写一个简单的测试来设置一个`name`并将项目添加到一个`bathingCart`中。我们将检查它的大小并验证名称:
 
-```
+```java
 @Test
 public void givenStatefulBean_whenBathingCartWithThreeItemsAdded_thenItemsSizeIsThree()
   throws NamingException {
@@ -239,7 +239,7 @@ public void givenStatefulBean_whenBathingCartWithThreeItemsAdded_thenItemsSizeIs
 
 现在，为了证明 bean 确实跨实例维护状态，让我们向该测试添加另一个 shoppingCartEJB:
 
-```
+```java
 ShoppingCartEJBRemote fruitCart = 
   (ShoppingCartEJBRemote) context.lookup("java:global/ejb-beans/ShoppingCartEJB");
 
@@ -256,7 +256,7 @@ assertNull(fruitCart.getName());
 
 为了用 Spring 得到同样的效果，我们需要一个带有[原型作用域](/web/20220926183020/https://www.baeldung.com/spring-bean-scopes#prototype)的`Component`:
 
-```
+```java
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ShoppingCartBean {
@@ -268,7 +268,7 @@ public class ShoppingCartBean {
 
 为了测试我们的有状态 bean，我们可以使用与 EJB 相同的测试。唯一的区别还是我们如何从容器中获取 bean:
 
-```
+```java
 ShoppingCartBean bathingCart = context.getBean(ShoppingCartBean.class); 
 ```
 
@@ -282,7 +282,7 @@ ShoppingCartBean bathingCart = context.getBean(ShoppingCartBean.class);
 
 我们定义它的方式与其他 EJB 类型相同，使用远程接口，并使用`javax.ejb.Stateless`注释实现:
 
-```
+```java
 @Stateless
 public class FinderEJB implements FinderEJBRemote {
 
@@ -302,7 +302,7 @@ public class FinderEJB implements FinderEJBRemote {
 
 让我们添加另一个简单的测试来看看实际情况:
 
-```
+```java
 @Test
 public void givenStatelessBean_whenSearchForA_thenApple() throws NamingException {
     assertEquals("Apple", alphabetFinder.search("A"));        
@@ -311,7 +311,7 @@ public void givenStatelessBean_whenSearchForA_thenApple() throws NamingException
 
 在上面的例子中，使用注释`javax.ejb.EJB`,`alphabetFinder`作为字段被注入到测试类中:
 
-```
+```java
 @EJB
 private FinderEJBRemote alphabetFinder; 
 ```
@@ -328,7 +328,7 @@ private FinderEJBRemote alphabetFinder;
 
 为了创建消息驱动的企业 Java Bean，我们需要实现定义其`onMessage`方法的`javax.jms.MessageListener`接口，并将该类注释为`javax.ejb.MessageDriven`:
 
-```
+```java
 @MessageDriven(activationConfig = { 
   @ActivationConfigProperty(propertyName = "destination", propertyValue = "myQueue"), 
   @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue") 
@@ -362,7 +362,7 @@ public class RecieverMDB implements MessageListener {
 
 现在让我们通过一个测试来看看这一点:
 
-```
+```java
 @Test
 public void givenMDB_whenMessageSent_thenAcknowledgementReceived()
   throws InterruptedException, JMSException, NamingException {
@@ -385,7 +385,7 @@ public void givenMDB_whenMessageSent_thenAcknowledgementReceived()
 
 首先，我们需要为此添加一些配置。我们需要用`@EnableJms`注释之前的`ApplicationConfig` 类，并添加一些 beans 来设置`JmsListenerContainerFactory`和`JmsTemplate`:
 
-```
+```java
 @EnableJms
 public class ApplicationConfig {
 
@@ -412,7 +412,7 @@ public class ApplicationConfig {
 
 接下来，我们需要一个`Producer`——一个简单的弹簧`Component`——它将向`myQueue`发送消息，并从`ackQueue`接收确认:
 
-```
+```java
 @Component
 public class Producer {
     @Autowired
@@ -430,7 +430,7 @@ public class Producer {
 
 然后，我们有一个带有注释为`@JmsListener`的方法的`Receiver` `Component`来异步接收来自`myQueue`的消息:
 
-```
+```java
 @Component
 public class Receiver {
     @Autowired
@@ -451,7 +451,7 @@ public class Receiver {
 
 按照我们的惯例，让我们通过一个测试来验证这一点:
 
-```
+```java
 @Test
 public void givenJMSBean_whenMessageSent_thenAcknowledgementReceived() throws NamingException {
     Producer producer = context.getBean(Producer.class);

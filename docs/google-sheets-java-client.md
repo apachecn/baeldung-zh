@@ -14,7 +14,7 @@ Google Sheets 提供了一种便捷的方式来存储和操作电子表格，并
 
 为了连接到 API 并操作文档，我们需要添加 [google-api-client](https://web.archive.org/web/20221222154652/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22google-api-client%22%20AND%20g%3A%22com.google.api-client%22) 、[Google-oauth-client-jetty](https://web.archive.org/web/20221222154652/https://search.maven.org/classic/#search%7Cga%7C1%7Cgoogle%20oauth%20client%20jetty)和[Google-API-services-sheets](https://web.archive.org/web/20221222154652/https://search.maven.org/classic/#search%7Cga%7C1%7Cgoogle%20api%20services%20sheets)依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.api-client</groupId>
     <artifactId>google-api-client</artifactId>
@@ -46,7 +46,7 @@ Google Sheets API 需要 OAuth 2.0 授权才能通过应用程序访问它。
 
 该文件的内容应该类似于以下内容:
 
-```
+```java
 {
   "installed":
     {
@@ -69,7 +69,7 @@ Google Sheets API 需要 OAuth 2.0 授权才能通过应用程序访问它。
 
 然后，我们将创建一个`GoogleAuthorizationCodeFlow`并发送授权请求:
 
-```
+```java
 public class GoogleAuthorizeUtil {
     public static Credential authorize() throws IOException, GeneralSecurityException {
 
@@ -94,7 +94,7 @@ public class GoogleAuthorizeUtil {
 
 让我们创建一个`SheetsServiceUtil`类，它使用上面的`Credential`对象来获得`Sheets:`的一个实例
 
-```
+```java
 public class SheetsServiceUtil {
     private static final String APPLICATION_NAME = "Google Sheets Example";
 
@@ -127,7 +127,7 @@ public class SheetsServiceUtil {
 
 让我们创建一个测试类，在其中初始化我们的`Sheets`服务对象和一个电子表格 ID 常量:
 
-```
+```java
 public class GoogleSheetsLiveTest {
     private static Sheets sheetsService;
     private static String SPREADSHEET_ID = // ...
@@ -149,7 +149,7 @@ public class GoogleSheetsLiveTest {
 
 要将值写入工作表上的单个范围，我们将使用`spreadsheets().values().update()`方法:
 
-```
+```java
 @Test
 public void whenWriteSheet_thenReadSheetOk() throws IOException {
     ValueRange body = new ValueRange()
@@ -193,7 +193,7 @@ public void whenWriteSheet_thenReadSheetOk() throws IOException {
 
 如果我们想更新工作表中的多个范围，我们可以使用`BatchUpdateValuesRequest`来获得更好的性能:
 
-```
+```java
 List<ValueRange> data = new ArrayList<>();
 data.add(new ValueRange()
   .setRange("D1")
@@ -225,7 +225,7 @@ BatchUpdateValuesResponse batchResult = sheetsService.spreadsheets().values()
 
 为此，我们可以使用`append()`方法:
 
-```
+```java
 ValueRange appendBody = new ValueRange()
   .setValues(Arrays.asList(
     Arrays.asList("Total", "=E1+E4")));
@@ -258,7 +258,7 @@ assertThat(total.getValues().get(0).get(1)).isEqualTo("65");
 
 **我们可以通过使用`spreadsheets().values().get()`方法来读取单个范围或者使用`batchUpdate()`方法来读取多个范围:**
 
-```
+```java
 List<String> ranges = Arrays.asList("E1","E4");
 BatchGetValuesResponse readResult = sheetsService.spreadsheets().values()
   .batchGet(SPREADSHEET_ID)
@@ -282,7 +282,7 @@ assertThat(febTotal.getValues().get(0).get(0))
 
 让我们看一个创建新电子表格的示例:
 
-```
+```java
 @Test
 public void test() throws IOException {
     Spreadsheet spreadSheet = new Spreadsheet().setProperties(
@@ -305,7 +305,7 @@ public void test() throws IOException {
 
 让我们看看如何发送两个请求来更改电子表格的标题，并将一组单元格从一个工作表复制粘贴到另一个工作表:
 
-```
+```java
 @Test
 public void whenUpdateSpreadSheetTitle_thenOk() throws IOException {
     UpdateSpreadsheetPropertiesRequest updateSpreadSheetRequest 

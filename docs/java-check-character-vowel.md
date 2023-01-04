@@ -14,13 +14,13 @@
 
 由于我们知道所有的元音，我们可以将它们添加到`String`:
 
-```
+```java
 String VOWELS = "aeiouAEIOU";
 ```
 
 **我们可以使用`String`类中的 [`indexOf`方法来查看角色是否出现](https://web.archive.org/web/20220810231115/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#indexOf(int))**:
 
-```
+```java
 boolean isInVowelsString(char c) {
     return VOWELS.indexOf(c) != -1;
 }
@@ -28,14 +28,14 @@ boolean isInVowelsString(char c) {
 
 如果字符存在，索引将不是`-1`。如果是`-1`，那么这个字符不在元音集中。让我们来测试一下:
 
-```
+```java
 assertThat(isInVowelsString('e')).isTrue();
 assertThat(isInVowelsString('z')).isFalse();
 ```
 
 这里，我们在 Java 中使用了一个`char`。如果我们的角色是一个单字符`String`对象，我们可以使用不同的实现:
 
-```
+```java
 boolean isInVowelsString(String c) {
     return VOWELS.contains(c);
 }
@@ -43,7 +43,7 @@ boolean isInVowelsString(String c) {
 
 它会通过同样的测试:
 
-```
+```java
 assertThat(isInVowelsString("e")).isTrue();
 assertThat(isInVowelsString("z")).isFalse();
 ```
@@ -54,7 +54,7 @@ assertThat(isInVowelsString("z")).isFalse();
 
 相反，**可以使用`switch`语句，其中每个元音都是单独的`case`** :
 
-```
+```java
 boolean isVowelBySwitch(char c) {
     switch (c) {
         case 'a':            
@@ -76,7 +76,7 @@ boolean isVowelBySwitch(char c) {
 
 我们也可以测试这个:
 
-```
+```java
 assertThat(isVowelBySwitch('e')).isTrue();
 assertThat(isVowelBySwitch('z')).isFalse();
 ```
@@ -89,7 +89,7 @@ assertThat(isVowelBySwitch('z')).isFalse();
 
 让我们构建一个正则表达式来识别元音:
 
-```
+```java
 Pattern VOWELS_PATTERN = Pattern.compile("[aeiou]", Pattern.CASE_INSENSITIVE);
 ```
 
@@ -97,7 +97,7 @@ Pattern VOWELS_PATTERN = Pattern.compile("[aeiou]", Pattern.CASE_INSENSITIVE);
 
 让我们实现我们的匹配算法，用单个字符匹配`String`对象，如下所示:
 
-```
+```java
 boolean isVowelByRegex(String c) {
     return VOWELS_PATTERN.matcher(c).matches();
 }
@@ -105,7 +105,7 @@ boolean isVowelByRegex(String c) {
 
 让我们来测试一下:
 
-```
+```java
 assertThat(isVowelByRegex("e")).isTrue();
 assertThat(isVowelByRegex("E")).isTrue();
 ```
@@ -114,7 +114,7 @@ assertThat(isVowelByRegex("E")).isTrue();
 
 我们应该注意，这要求输入是一个`String,`而不是一个字符。虽然**我们可以借助`Character`类的`toString`方法**将一个角色转换为`String`:
 
-```
+```java
 assertThat(isVowelByRegex(Character.toString('e'))).isTrue();
 ```
 

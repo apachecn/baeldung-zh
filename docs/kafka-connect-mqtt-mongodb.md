@@ -26,7 +26,7 @@
 
 我们将我们的设置描述为一个简单的 Docker 合成文件，它由六个容器组成:
 
-```
+```java
 version: '3.3'
 
 services:
@@ -133,7 +133,7 @@ services:
 
 我们可以使用以下命令启动堆栈:
 
-```
+```java
 docker-compose up
 ```
 
@@ -145,13 +145,13 @@ docker-compose up
 
 让我们使用 REST API 配置源连接器:
 
-```
+```java
 curl -d @<path-to-config-file>/connect-mqtt-source.json -H "Content-Type: application/json" -X POST http://localhost:8083/connectors
 ```
 
 我们的`connect-mqtt-source.json`文件看起来像这样:
 
-```
+```java
 {
     "name": "mqtt-source",
     "config": {
@@ -180,7 +180,7 @@ curl -d @<path-to-config-file>/connect-mqtt-source.json -H "Content-Type: appli
 
 让我们通过向 MQTT 代理发布一条短消息来运行一个快速测试:
 
-```
+```java
 docker run \
 -it --rm --name mqtt-publisher --network 04_custom_default \
 efrecon/mqtt-client \
@@ -189,7 +189,7 @@ pub -h mosquitto  -t "baeldung" -m "{\"id\":1234,\"message\":\"This is a test\"
 
 而如果我们听题目，`connect-custom`:
 
-```
+```java
 docker run \
 --rm \
 confluentinc/cp-kafka:5.1.0 \
@@ -202,13 +202,13 @@ kafka-console-consumer --network 04_custom_default --bootstrap-server kafka:9092
 
 接下来，我们需要我们的接收器连接器。让我们再次使用 REST API:
 
-```
+```java
 curl -d @<path-to-config file>/connect-mongodb-sink.json -H "Content-Type: application/json" -X POST http://localhost:8083/connectors
 ```
 
 我们的`connect-mongodb-sink.json`文件看起来像这样:
 
-```
+```java
 {
     "name": "mongodb-sink",
     "config": {
@@ -242,7 +242,7 @@ curl -d @<path-to-config file>/connect-mongodb-sink.json -H "Content-Type: appl
 
 现在，我们可以使用 MQTT 客户机发送任何 JSON 结构:
 
-```
+```java
 {
     "firstName": "John",
     "lastName": "Smith",
@@ -274,7 +274,7 @@ MongoDB 支持无模式的 JSON 文档，当我们为转换器禁用模式时，
 
 一旦我们完成，我们可以清理我们的实验，并删除两个连接器:
 
-```
+```java
 curl -X DELETE http://localhost:8083/connectors/mqtt-source
 curl -X DELETE http://localhost:8083/connectors/mongodb-sink
 ```

@@ -12,13 +12,13 @@
 
 假设我们需要分割以下逗号分隔的输入:
 
-```
+```java
 String input = "baeldung,tutorial,splitting,text,\"ignoring this comma,\"";
 ```
 
 在分割这个输入并打印结果之后，我们期望得到以下输出:
 
-```
+```java
 baeldung
 tutorial
 splitting
@@ -32,7 +32,7 @@ text
 
 让我们创建一个简单的解析算法:
 
-```
+```java
 List<String> tokens = new ArrayList<String>();
 int startPosition = 0;
 boolean isInQuotes = false;
@@ -68,7 +68,7 @@ if (lastToken.equals(",")) {
 
 **现在，让我们测试解析代码:**
 
-```
+```java
 String input = "baeldung,tutorial,splitting,text,\"ignoring this comma,\"";
 var matcher = contains("baeldung", "tutorial", "splitting", "text", "\"ignoring this comma,\"");
 assertThat(splitWithParser(input), matcher);
@@ -88,7 +88,7 @@ assertThat(splitWithParser(input), matcher);
 
 在第一个正则表达式选项中，我们将使用来自`String`类的[方法`split()`。**该方法在给定正则表达式:**的匹配周围拆分`String`](/web/20220525132445/https://www.baeldung.com/java-split-string)
 
-```
+```java
 String[] tokens = input.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 ```
 
@@ -102,7 +102,7 @@ String[] tokens = input.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
 另一种基于正则表达式的方法是使用 Guava 库中的`Splitter`类:
 
-```
+```java
 Pattern pattern = Pattern.compile(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
 Splitter splitter = Splitter.on(pattern);
 List<String> tokens = splitter.splitToList(input);
@@ -120,7 +120,7 @@ List<String> tokens = splitter.splitToList(input);
 
 要使用 OpenCSV，我们需要将它作为一个依赖项包含进来。在一个 Maven 项目中，我们包含了 [opencsv 依赖关系](https://web.archive.org/web/20220525132445/https://search.maven.org/artifact/com.opencsv/opencsv):
 
-```
+```java
 <dependency>
     <groupId>com.opencsv</groupId>
     <artifactId>opencsv</artifactId>
@@ -130,7 +130,7 @@ List<String> tokens = splitter.splitToList(input);
 
 然后，我们可以如下使用 OpenCSV:
 
-```
+```java
 CSVParser parser = new CSVParserBuilder()
   .withSeparator(',')
   .build();

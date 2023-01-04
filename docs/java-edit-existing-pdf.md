@@ -12,7 +12,7 @@
 
 首先，让我们将这些依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.itextpdf</groupId>
     <artifactId>itext7-core</artifactId>
@@ -37,7 +37,7 @@
 
 让我们写一个 [`main()`](/web/20221018043203/https://www.baeldung.com/java-main-method) 方法来运行我们的整个处理。为了简单起见，我们只重新抛出任何可能发生的 [`Exception`](/web/20221018043203/https://www.baeldung.com/java-exceptions) :
 
-```
+```java
 public static void main(String[] args) throws IOException {
     PdfReader reader = new PdfReader("src/main/resources/baeldung.pdf");
     PdfWriter writer = new PdfWriter("src/main/resources/baeldung-modified.pdf");
@@ -59,7 +59,7 @@ public static void main(String[] args) throws IOException {
 
 此外，我们需要告诉 iText 在哪里放置字段。这种情况下，我们就放在下面这个点:`(35,400)`。坐标`(0,0)`指的是文档的左下方。最后，我们将设置字段的维度为`100×30`:
 
-```
+```java
 PdfFormField personal = PdfFormField.createEmptyField(pdfDocument);
 personal.setFieldName("information");
 PdfTextFormField name = PdfFormField.createText(pdfDocument, new Rectangle(35, 400, 100, 30), "name", "");
@@ -76,7 +76,7 @@ PdfAcroForm.getAcroForm(pdfDocument, true)
 
 如果我们想要指定的话，这个方法可以接受添加页面的索引。例如，我们可以在文档的开头添加一个新页面:
 
-```
+```java
 pdfDocument.addNewPage(1);
 ```
 
@@ -86,7 +86,7 @@ pdfDocument.addNewPage(1);
 
 我们将把它添加到现在位于文档第二页的表单之上。因此，我们将把它放在坐标`(40,435)`上。此外，我们将给它一个简单的名称和内容。这些仅在悬停在注释上时才会显示:
 
-```
+```java
 PdfAnnotation ann = new PdfTextAnnotation(new Rectangle(40, 435, 0, 0)).setTitle(new PdfString("name"))
     .setContents("Your name");
 pdfDocument.getPage(2)
@@ -101,7 +101,7 @@ pdfDocument.getPage(2)
 
 从现在开始，我们将向页面添加布局元素。为了做到这一点，我们将不能再直接操纵`PdfDocument`。我们宁愿从它创建一个`Document`并使用它。此外，我们最终需要关闭`Document`。**关闭`Document`会自动关闭底座`PdfDocument.`** ，这样我们就可以移除之前关闭`PdfDocument`的部分:
 
-```
+```java
 Document document = new Document(pdfDocument);
 // add layout elements
 document.close();
@@ -113,7 +113,7 @@ document.close();
 
 下一步是在文件中设置图像的属性。我们将它的大小设置为`550×100`。我们将把它放在 PDF 的第一页上，在`(10,50)`坐标处。让我们看看添加图像的代码:
 
-```
+```java
 Image image = new Image(imageData).scaleAbsolute(550,100)
     .setFixedPosition(1, 10, 50);
 document.add(image);
@@ -129,7 +129,7 @@ document.add(image);
 
 例如，让我们在第一页的顶部添加下面的句子:`This is a demo from Baeldung tutorials`。我们将把这个句子开头的字体大小设置为`16`，把`Paragraph`的全局字体大小设置为`8`:
 
-```
+```java
 Text title = new Text("This is a demo").setFontSize(16);
 Text author = new Text("Baeldung tutorials.");
 Paragraph p = new Paragraph().setFontSize(8)
@@ -143,7 +143,7 @@ document.add(p);
 
 **最后但同样重要的是，我们还可以向文件中添加一个表格。**例如，我们将定义一个双条目表格，上面有两个单元格和两个标题。我们不会指定任何位置。因此，它会自然地添加到文档的顶部，就在我们刚刚添加的`Paragraph`之后:
 
-```
+```java
 Table table = new Table(UnitValue.createPercentArray(2));
 table.addHeaderCell("#");
 table.addHeaderCell("company");
@@ -166,7 +166,7 @@ document.add(table);
 
 **要从文件中删除给定的文本，我们需要定义一个清理策略。**在这个例子中，策略就是找到所有匹配`Baeldung`的文本。最后一步是调用`PdfCleaner`的`autoSweepCleanUp()` [静态](/web/20221018043203/https://www.baeldung.com/java-static-methods-use-cases)方法。该方法将创建一个自定义的`PdfCleanUpTool`，如果在文件处理过程中出现任何错误，它将抛出一个`IOException`:
 
-```
+```java
 CompositeCleanupStrategy strategy = new CompositeCleanupStrategy();
 strategy.add(new RegexBasedCleanupStrategy("Baeldung"));
 PdfCleaner.autoSweepCleanUp(pdfDocument, strategy);
@@ -182,7 +182,7 @@ PdfCleaner.autoSweepCleanUp(pdfDocument, strategy);
 
 例如，我们将删除第二页上位于`(35,400)`的大小为`100×35`的矩形的内容。这意味着我们将删除表单的所有内容和注释。此外，我们将删除位于第一页`(10,50)`的`90×70`大小的矩形。这基本上从 Baeldung 的标志中去掉了`B`。使用`PdfCleanUpTool`类，下面是完成所有这些的代码:
 
-```
+```java
 List<PdfCleanUpLocation> cleanUpLocations = Arrays.asList(new PdfCleanUpLocation(1, new Rectangle(10, 50, 90,70)), new PdfCleanUpLocation(2, new Rectangle(35, 400, 100, 35)));
 PdfCleanUpTool cleaner = new PdfCleanUpTool(pdfDocument, cleanUpLocations, new CleanUpProperties());
 cleaner.cleanUp();
@@ -200,7 +200,7 @@ cleaner.cleanUp();
 
 **然而，在调用`autoSweepCleanUp()`之后，我们将查询策略以获得被删除代码的位置。**然后我们将实例化一个包含替换文本`HIDDEN`的`PdfCanvas`。此外，我们将删除顶部空白，使其更好地与原始文本对齐。默认对齐确实不太好。让我们看看结果代码:
 
-```
+```java
 CompositeCleanupStrategy strategy = new CompositeCleanupStrategy();
 strategy.add(new RegexBasedCleanupStrategy("Baeldung").setRedactionColor(ColorConstants.WHITE));
 PdfCleaner.autoSweepCleanUp(pdfDocument, strategy);

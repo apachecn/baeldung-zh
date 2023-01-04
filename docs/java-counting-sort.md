@@ -68,7 +68,7 @@
 
 首先，给定元素的输入数组和`k, `，我们应该计算数组`C:`
 
-```
+```java
 int[] countElements(int[] input, int k) {
     int[] c = new int[k + 1];
     Arrays.fill(c, 0);
@@ -99,7 +99,7 @@ int[] countElements(int[] input, int k) {
 
 此外，我们可以验证`countElements `方法是否如预期的那样工作:
 
-```
+```java
 @Test
 void countElements_GivenAnArray_ShouldCalculateTheFrequencyArrayAsExpected() {
     int k = 5;
@@ -115,7 +115,7 @@ void countElements_GivenAnArray_ShouldCalculateTheFrequencyArrayAsExpected() {
 
 既然我们可以计算频率数组，我们应该能够对任何给定的数字集合进行排序:
 
-```
+```java
 int[] sort(int[] input, int k) {
     int[] c = countElements(input, k);
 
@@ -138,7 +138,7 @@ int[] sort(int[] input, int k) {
 
 类似地，我们可以验证`sort `方法是否如预期的那样工作:
 
-```
+```java
 @Test
 void sort_GivenAnArray_ShouldSortTheInputAsExpected() {
     int k = 5;
@@ -167,7 +167,7 @@ void sort_GivenAnArray_ShouldSortTheInputAsExpected() {
 
 总的来说，计数排序需要`O(n+k) `时间来运行:
 
-```
+```java
 O(n + k) + O(n) = O(2n + k) = O(n + k)
 ```
 

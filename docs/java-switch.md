@@ -18,7 +18,7 @@
 
 假设我们有以下嵌套的 `if-else`语句:
 
-```
+```java
 public String exampleOfIF(String animal) {
     String result;
     if (animal.equals("DOG") || animal.equals("CAT")) {
@@ -36,7 +36,7 @@ public String exampleOfIF(String animal) {
 
 为了提高可读性，我们可以使用一个`switch`语句:
 
-```
+```java
 public String exampleOfSwitch(String animal) {
     String result;
     switch (animal) {
@@ -69,7 +69,7 @@ public String exampleOfSwitch(String animal) {
 
 为了演示这一点，让我们省略`break`语句，并将每个块的输出添加到控制台:
 
-```
+```java
 public String forgetBreakInSwitch(String animal) {
     switch (animal) {
     case "DOG":
@@ -82,7 +82,7 @@ public String forgetBreakInSwitch(String animal) {
 
 让我们执行代码`forgetBreakInSwitch` ( `“DOG”)`)并检查输出，以证明所有的块都被执行了:
 
-```
+```java
 domestic animal
 unknown animal
 ```
@@ -95,7 +95,7 @@ unknown animal
 
 让我们将前两种情况组合在一起，重写上一节中的示例:
 
-```
+```java
 public String exampleOfSwitch(String animal) {
     String result;
     switch (animal) {
@@ -143,7 +143,7 @@ public String exampleOfSwitch(String animal) {
 
 如果我们这样做，程序将抛出`NullPointerException`，使用我们的第一个`switch `例子:
 
-```
+```java
 @Test(expected=NullPointerException.class)
 public void whenSwitchAgumentIsNull_thenNullPointerException() {
     String animal = null;
@@ -157,7 +157,7 @@ public void whenSwitchAgumentIsNull_thenNullPointerException() {
 
 如果我们试图用变量 dog 替换`DOG`的 case 值，代码将不会编译，直到我们将`dog`变量标记为`final`:
 
-```
+```java
 final String dog="DOG";
 String cat="CAT";
 
@@ -177,7 +177,7 @@ case cat: //does not compile
 
 让我们来演示一下:
 
-```
+```java
 @Test
 public void whenCompareStrings_thenByEqual() {
     String animal = new String("DOG");
@@ -195,7 +195,7 @@ public void whenCompareStrings_thenByEqual() {
 
 让我们看看新的`switch`表达式在月份之间切换时是什么样子的:
 
-```
+```java
 var result = switch(month) {
     case JANUARY, JUNE, JULY -> 3;
     case FEBRUARY, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER -> 1;
@@ -216,7 +216,7 @@ var result = switch(month) {
 
 在这种情况下，我们需要使用关键字`yield`:
 
-```
+```java
 var result = switch (month) {
     case JANUARY, JUNE, JULY -> 3;
     case FEBRUARY, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER -> 1;
@@ -236,7 +236,7 @@ var result = switch (month) {
 
 以下示例完全有效，并且可以编译:
 
-```
+```java
 switch (month) {
     case JANUARY, JUNE, JULY -> { return 3; }
     default -> { return 0; }
@@ -245,7 +245,7 @@ switch (month) {
 
 但是，下面的代码将无法编译，因为我们试图在封闭的 switch 表达式之外执行`return`:
 
-```
+```java
 var result = switch (month) {
     case JANUARY, JUNE, JULY -> { return 3; }
     default -> { return 0; }
@@ -258,7 +258,7 @@ var result = switch (month) {
 
 例如，下面的代码完全有效，并且可以编译:
 
-```
+```java
 switch (month) { 
     case JANUARY, JUNE, JULY -> 3; 
     case FEBRUARY, SEPTEMBER -> 1;
@@ -269,7 +269,7 @@ switch (month) {
 
 以下代码片段无法编译，因为没有默认情况，也没有涵盖所有可能的情况:
 
-```
+```java
 var result = switch (month) {
     case JANUARY, JUNE, JULY -> 3;
     case FEBRUARY, SEPTEMBER -> 1;
@@ -278,7 +278,7 @@ var result = switch (month) {
 
 然而，当所有可能的情况都包括在内时,`switch`表达式将有效:
 
-```
+```java
 var result = switch (month) {
     case JANUARY, JUNE, JULY -> 3;
     case FEBRUARY, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER -> 1;

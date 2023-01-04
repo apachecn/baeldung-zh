@@ -12,7 +12,7 @@
 
 我们来看看 Java 在调用 [`Executors.newCachedThreadPool()`](https://web.archive.org/web/20221127171007/https://github.com/openjdk/jdk/blob/6bab0f539fba8fb441697846347597b4a0ade428/src/java.base/share/classes/java/util/concurrent/Executors.java#L217) 时是如何创建缓存线程池的:
 
-```
+```java
 public static ExecutorService newCachedThreadPool() {
     return new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, 
       new SynchronousQueue<Runnable>());
@@ -33,7 +33,7 @@ public static ExecutorService newCachedThreadPool() {
 
 这里的关键是“合理”和“短暂”。为了澄清这一点，让我们评估一个场景，其中缓存池不是一个很好的选择。这里我们将提交 100 万个任务，每个任务需要 100 微秒来完成:
 
-```
+```java
 Callable<String> task = () -> {
     long oneHundredMicroSeconds = 100_000;
     long startedAt = System.nanoTime();
@@ -55,7 +55,7 @@ var result = cachedPool.invokeAll(tasks);
 
 让我们看看[固定线程](https://web.archive.org/web/20221127171007/https://github.com/openjdk/jdk/blob/6bab0f539fba8fb441697846347597b4a0ade428/src/java.base/share/classes/java/util/concurrent/Executors.java#L91)池是如何工作的:
 
-```
+```java
 public static ExecutorService newFixedThreadPool(int nThreads) {
     return new ThreadPoolExecutor(nThreads, nThreads, 0L, TimeUnit.MILLISECONDS, 
       new LinkedBlockingQueue<Runnable>());
@@ -80,7 +80,7 @@ public static ExecutorService newFixedThreadPool(int nThreads) {
 
 无论如何，为了让**更好地控制资源消耗，强烈建议创建一个自定义的** `**[ThreadPoolExecutor](https://web.archive.org/web/20221127171007/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.html)**`:
 
-```
+```java
 var boundedQueue = new ArrayBlockingQueue<Runnable>(1000);
 new ThreadPoolExecutor(10, 20, 60, SECONDS, boundedQueue, new AbortPolicy()); 
 ```

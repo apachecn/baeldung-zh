@@ -10,7 +10,7 @@
 
 首先，我们需要在项目中包含以下 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.itextpdf</groupId>
     <artifactId>itextpdf</artifactId>
@@ -29,7 +29,7 @@
 
 我们还需要添加一个额外的依赖项，以防我们需要加密我们的文件。Bouncy Castle 提供程序包包含加密算法的实现，两个库都需要它:
 
-```
+```java
 <dependency>
     <groupId>org.bouncycastle</groupId>
     <artifactId>bcprov-jdk15on</artifactId>
@@ -49,7 +49,7 @@ iText 和 PdfBox 都是 Java 库，我们用它们来创建和操作 pdf 文件�
 
 让我们看看如何将带有“Hello World”文本的新文件插入 pdf 文件:
 
-```
+```java
 Document document = new Document();
 PdfWriter.getInstance(document, new FileOutputStream("iTextHelloWorld.pdf"));
 
@@ -71,7 +71,7 @@ document.close();
 
 **iText 库提供了一种向文档添加图像的简单方法。**我们只需要创建一个`Image`实例，并将其添加到`Document:`中
 
-```
+```java
 Path path = Paths.get(ClassLoader.getSystemResource("Java_logo.png").toURI());
 
 Document document = new Document();
@@ -93,7 +93,7 @@ document.close();
 
 让我们看看这个例子:
 
-```
+```java
 Document document = new Document();
 PdfWriter.getInstance(document, new FileOutputStream("iTextTable.pdf"));
 
@@ -110,7 +110,7 @@ document.close();
 
 现在我们将创建一个三列三行的新表格。我们将第一行视为一个背景颜色和边框宽度发生变化的表头:
 
-```
+```java
 private void addTableHeader(PdfPTable table) {
     Stream.of("column header 1", "column header 2", "column header 3")
       .forEach(columnTitle -> {
@@ -125,7 +125,7 @@ private void addTableHeader(PdfPTable table) {
 
 第二行将由三个单元格组成，只有文本，没有额外的格式:
 
-```
+```java
 private void addRows(PdfPTable table) {
     table.addCell("row 1, col 1");
     table.addCell("row 1, col 2");
@@ -137,7 +137,7 @@ private void addRows(PdfPTable table) {
 
 在本例中，我们应用水平和垂直对齐调整:
 
-```
+```java
 private void addCustomRows(PdfPTable table) 
   throws URISyntaxException, BadElementException, IOException {
     Path path = Paths.get(ClassLoader.getSystemResource("Java_logo.png").toURI());
@@ -163,7 +163,7 @@ private void addCustomRows(PdfPTable table)
 
 一旦我们使用`PdfReader`加载了文件，我们需要创建一个`PdfStamper,`，我们将使用它向文件应用额外的内容，比如元数据、加密等。：
 
-```
+```java
 PdfReader pdfReader = new PdfReader("HelloWorld.pdf");
 PdfStamper pdfStamper 
   = new PdfStamper(pdfReader, new FileOutputStream("encryptedPdf.pdf"));
@@ -182,13 +182,13 @@ pdfStamper.close();
 
 如果我们希望允许用户打印 pdf，那么我们可以传递:
 
-```
+```java
 PdfWriter.ALLOW_PRINTING
 ```
 
 当然，我们也可以混合不同的权限，比如:
 
-```
+```java
 PdfWriter.ALLOW_PRINTING | PdfWriter.ALLOW_COPY
 ```
 
@@ -202,7 +202,7 @@ PdfWriter.ALLOW_PRINTING | PdfWriter.ALLOW_COPY
 
 让我们看一下代码示例:
 
-```
+```java
 PDDocument document = new PDDocument();
 PDPage page = new PDPage();
 document.addPage(page);
@@ -225,7 +225,7 @@ document.close();
 
 我们需要加载一个文件并创建一个`PDImageXObject`，随后在文档上绘制它(需要提供精确的 x，y 坐标):
 
-```
+```java
 PDDocument document = new PDDocument();
 PDPage page = new PDPage();
 document.addPage(page);
@@ -251,7 +251,7 @@ document.close();
 
 随后，我们创建一个`StandardProtectionPolicy`对象，为文档添加基于密码的保护。我们可以指定两种类型的密码。用户密码允许用户使用应用的访问权限打开文件，所有者密码对文件没有限制:
 
-```
+```java
 PDDocument document = new PDDocument();
 PDPage page = new PDPage();
 document.addPage(page);

@@ -37,7 +37,7 @@
 
 例如，下面的`pom.xml`配置文件显示了一个 Maven 坐标的例子:
 
-```
+```java
 <project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.baeldung</groupId>
@@ -130,7 +130,7 @@
 
 使用 Maven，**的依赖关系管理是通过`pom.xml`** 来完成的。例如，Maven 项目中的依赖声明如下所示:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.apache.maven</groupId>
@@ -154,7 +154,7 @@ Maven 使用存储库来存储构建项目所需的依赖项和插件等元素�
 
 例如，让我们考虑一下这个 POM 配置。
 
-```
+```java
 <project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.baeldung</groupId>

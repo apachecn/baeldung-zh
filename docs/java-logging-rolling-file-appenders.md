@@ -16,7 +16,7 @@
 
 让我们从记录一些消息的示例应用程序开始。这段代码是基于 Log4j 的，但是我们可以很容易地修改它，使其适用于 Log4j2 或 Slf4j:
 
-```
+```java
 import org.apache.log4j.Logger;
 
 public class Log4jRollingExample {
@@ -42,7 +42,7 @@ public class Log4jRollingExample {
 
 首先，为了在我们的应用程序中使用 Log4j，我们将把这个依赖项添加到项目的 *pom.xml* 文件中:
 
-```
+```java
 <dependency>
     <groupId>log4j</groupId>
     <artifactId>log4j</artifactId>
@@ -52,7 +52,7 @@ public class Log4jRollingExample {
 
 对于我们将在接下来的例子中使用的由`apache-log-extras`提供的附加 appenders，我们将添加以下依赖项，确保使用我们为 Log4j 声明的相同版本，以确保完全兼容:
 
-```
+```java
 <dependency>
     <groupId>log4j</groupId>
     <artifactId>apache-log4j-extras</artifactId>
@@ -66,7 +66,7 @@ public class Log4jRollingExample {
 
 在 Log4j 中，和在其他日志库中一样，文件滚动被委托给 appender。让我们看看 Log4j 中基于文件大小滚动的滚动文件附加器的配置:
 
-```
+```java
 <appender name="roll-by-size" class="org.apache.log4j.RollingFileAppender">
     <param name="file" value="target/log4j/roll-by-size/app.log" />
     <param name="MaxFileSize" value="5KB" />
@@ -81,7 +81,7 @@ public class Log4jRollingExample {
 
 当我们运行示例应用程序时，我们获得以下文件:
 
-```
+```java
 27/11/2016  10:28    138 app.log
 27/11/2016  10:28  5.281 app.log.1
 27/11/2016  10:28  5.281 app.log.2 
@@ -97,7 +97,7 @@ public class Log4jRollingExample {
 
 当我们检查`app.log.2`的第一行时，它包含与第 700 次迭代相关的消息，这意味着所有以前的日志消息都丢失了:
 
-```
+```java
 2016-11-27 10:28:34 INFO  This is the 700 time I say 'Hello World'. 
 ```
 
@@ -111,7 +111,7 @@ public class Log4jRollingExample {
 
 让我们回到 Log4j 示例，通过添加自动压缩滚动文件以节省空间来改进我们的设置:
 
-```
+```java
 <appender name="roll-by-size" class="org.apache.log4j.rolling.RollingFileAppender">
     <rollingPolicy class="org.apache.log4j.rolling.FixedWindowRollingPolicy">
         <param name="ActiveFileName" value="target/log4j/roll-by-size/app.log" />
@@ -136,7 +136,7 @@ public class Log4jRollingExample {
 
 现在，当我们运行应用程序时，我们获得了一组不同的日志文件:
 
-```
+```java
 03/12/2016 19:24 88 app.1.log.gz
 ...
 03/12/2016 19:26 88 app.2.log.gz
@@ -152,7 +152,7 @@ public class Log4jRollingExample {
 
 为此，我们可以使用`TimeBasedRollingPolicy`。使用此策略，必须为包含时间相关占位符的日志文件路径指定一个模板。每次发出日志消息时，appender 都会验证生成的日志路径。如果它不同于最后使用的路径，那么将发生滚动。这里有一个配置这种 appender 的简单例子:
 
-```
+```java
 <appender name="roll-by-time"
     class="org.apache.log4j.rolling.RollingFileAppender">
     <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
@@ -168,7 +168,7 @@ public class Log4jRollingExample {
 
 结合`SizeBasedTriggeringPolicy`和`TimeBasedRollingPolicy,`我们可以获得一个基于日期/时间滚动的 appender，当文件的大小达到设定的限制时，它也基于大小滚动:
 
-```
+```java
 <appender name="roll-by-time-and-size" class="org.apache.log4j.rolling.RollingFileAppender">
     <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
         <param name="ActiveFileName" value="log4j/roll-by-time-and-size/app.log" />
@@ -186,7 +186,7 @@ public class Log4jRollingExample {
 
 当我们用这个设置运行我们的应用程序时，我们获得以下日志文件:
 
-```
+```java
 03/12/2016 19:25 234 app.19-25.1481393432120.log.gz
 03/12/2016 19:25 234 app.19-25.1481393438939.log.gz
 03/12/2016 19:26 244 app.19-26.1481393441940.log.gz
@@ -202,7 +202,7 @@ public class Log4jRollingExample {
 
 要使用 Log4j2 作为我们首选的日志库，我们需要用以下依赖项更新我们项目的 POM:
 
-```
+```java
 <dependency>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-core</artifactId>
@@ -216,7 +216,7 @@ public class Log4jRollingExample {
 
 让我们将示例应用程序改为使用 Log4j2 日志库。我们将根据`log4j2.xml`配置文件中日志文件的大小设置文件滚动:
 
-```
+```java
 <RollingFile 
   name="roll-by-size" 
   fileName="target/log4j2/roll-by-size/app.log"
@@ -238,7 +238,7 @@ public class Log4jRollingExample {
 
 使用 Log4j2 提供的策略，我们将设置一个 appender 来根据时间滚动和压缩日志文件:
 
-```
+```java
 <RollingFile name="roll-by-time" 
   fileName="target/log4j2/roll-by-time/app.log"
   filePattern="target/log4j2/roll-by-time/app.%d{MM-dd-yyyy-HH-mm}.log.gz"
@@ -256,7 +256,7 @@ public class Log4jRollingExample {
 
 如前所述，更有说服力的方案是基于时间和大小来滚动和压缩日志文件。下面是我们如何为这个任务设置 Log4j2 的一个例子:
 
-```
+```java
 <RollingFile name="roll-by-time-and-size" 
   fileName="target/log4j2/roll-by-time-and-size/app.log"
   filePattern="target/log4j2/roll-by-time-and-size/app.%d{MM-dd-yyyy-HH-mm}.%i.log.gz" 
@@ -286,7 +286,7 @@ public class Log4jRollingExample {
 
 要使用 Log4j2 作为我们首选的日志库，我们需要用以下依赖项更新我们项目的 POM:
 
-```
+```java
 <dependency>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-core</artifactId>
@@ -302,7 +302,7 @@ public class Log4jRollingExample {
 
 当我们想要使用 Slf4j2 和 Logback 后端作为我们的日志库时，我们将把这个依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>ch.qos.logback</groupId>
     <artifactId>logback-classic</artifactId>
@@ -316,7 +316,7 @@ public class Log4jRollingExample {
 
 现在让我们看看如何使用 Slf4j 的默认后端`Logback`。我们将在配置文件`logback.xml`中设置文件滚动，该文件位于应用程序的类路径中:
 
-```
+```java
 <appender name="roll-by-size" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>target/slf4j/roll-by-size/app.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
@@ -342,7 +342,7 @@ public class Log4jRollingExample {
 
 在 Slf4j 中，我们可以使用提供的`TimeBasedRollingPolicy`基于时间滚动日志文件。此策略允许我们使用与时间和日期相关的占位符来指定滚动文件的模板名称:
 
-```
+```java
 <appender name="roll-by-time" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>target/slf4j/roll-by-time/app.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -363,7 +363,7 @@ public class Log4jRollingExample {
 
 每当特定时间间隔内日志文件的大小超过配置的大小限制时，就会创建另一个日志文件，该日志文件具有与时间相关的占位符相同的值，但具有递增的索引:
 
-```
+```java
 <appender name="roll-by-time-and-size"
     class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>target/slf4j/roll-by-time-and-size/app.log</file>

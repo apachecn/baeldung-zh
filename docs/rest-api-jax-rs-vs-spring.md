@@ -12,7 +12,7 @@
 
 现在，让我们通过实现一个简单的控制器来熟悉一下 Jersey:
 
-```
+```java
 @Path("/hello")
 public class HelloController {
 
@@ -34,7 +34,7 @@ Spring MVC 是 Spring 框架的一个模块，用于创建 web 应用程序。�
 
 让我们使用 Spring MVC 来制作与上面相同的`GET`请求示例:
 
-```
+```java
 @RestController
 @RequestMapping("/hello")
 public class HelloController {

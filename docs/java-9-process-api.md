@@ -21,7 +21,7 @@ Java 9 增加了一种获取当前进程和任何衍生进程信息的新方法�
 
 我们可以这样做:
 
-```
+```java
 private static void infoOfCurrentProcess() {
     ProcessHandle processHandle = ProcessHandle.current();
     ProcessHandle.Info processInfo = processHandle.info();
@@ -39,7 +39,7 @@ private static void infoOfCurrentProcess() {
 
 输出取决于操作系统和 Java 版本。以下是输出结果的一个示例:
 
-```
+```java
 16:31:24.784 [main] INFO  c.b.j.process.ProcessAPIEnhancements - PID: 22640
 16:31:24.790 [main] INFO  c.b.j.process.ProcessAPIEnhancements - Arguments: Optional[[Ljava.lang.String;@2a17b7b6]
 16:31:24.791 [main] INFO  c.b.j.process.ProcessAPIEnhancements - Command: Optional[/Library/Java/JavaVirtualMachines/jdk-13.0.1.jdk/Contents/Home/bin/java]
@@ -54,7 +54,7 @@ private static void infoOfCurrentProcess() {
 
 其余细节与上一节相同:
 
-```
+```java
 String javaCmd = ProcessUtils.getJavaCmd().getAbsolutePath();
 ProcessBuilder processBuilder = new ProcessBuilder(javaCmd, "-version");
 Process process = processBuilder.inheritIO().start();
@@ -67,7 +67,7 @@ ProcessHandle processHandle = process.toHandle();
 
 为此，我们可以使用在`java.lang.ProcessHandle`接口中可用的静态方法`allProcesses()`，它返回给我们一个`ProcessHandle:`的`Stream`
 
-```
+```java
 private static void infoOfLiveProcesses() {
     Stream<ProcessHandle> liveProcesses = ProcessHandle.allProcesses();
     liveProcesses.filter(ProcessHandle::isAlive)
@@ -88,7 +88,7 @@ private static void infoOfLiveProcesses() {
 
 前者通过使用方法`children()`实现，后者通过使用方法`descendants()`实现:
 
-```
+```java
 private static void infoOfChildProcess() throws IOException {
     int childProcessCount = 5;
     for (int i = 0; i < childProcessCount; i++) {
@@ -118,7 +118,7 @@ private static void infoOfChildProcess() throws IOException {
 
 这里，`CompletableFuture`表示进程已经完成，但是进程是否成功完成并不重要。我们调用`CompletableFuture`上的`get()`方法，等待其完成:
 
-```
+```java
 private static void infoOfExitCallback() throws IOException, InterruptedException, ExecutionException {
     String javaCmd = ProcessUtils.getJavaCmd()
       .getAbsolutePath();

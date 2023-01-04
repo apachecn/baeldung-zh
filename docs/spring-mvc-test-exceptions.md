@@ -12,7 +12,7 @@
 
 我们可以把从控制器公开的服务想象成普通的 Java 函数:
 
-```
+```java
 @GetMapping("/exception/throw")
 public void getException() throws Exception {
     throw new Exception("error");
@@ -23,7 +23,7 @@ public void getException() throws Exception {
 
 其次，我们会收到这样的响应正文:
 
-```
+```java
 {
     "timestamp": 1592074599854,
     "status": 500,
@@ -43,7 +43,7 @@ public void getException() throws Exception {
 
 为了实现这一点，我们将创建自定义异常并使用 Spring 提供的`ResponseStatus`注释。让我们创建这些自定义异常:
 
-```
+```java
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class BadArgumentsException extends RuntimeException {
 
@@ -53,7 +53,7 @@ public class BadArgumentsException extends RuntimeException {
 }
 ```
 
-```
+```java
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class InternalException extends RuntimeException {
 
@@ -63,7 +63,7 @@ public class InternalException extends RuntimeException {
 }
 ```
 
-```
+```java
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class ResourceNotFoundException extends RuntimeException {
 
@@ -75,7 +75,7 @@ public class ResourceNotFoundException extends RuntimeException {
 
 第二步也是最后一步是在控制器中创建一个简单的服务来抛出这些异常:
 
-```
+```java
 @GetMapping("/exception/{exception_id}")
 public void getSpecificException(@PathVariable("exception_id") String pException) {
     if("not_found".equals(pException)) {
@@ -104,14 +104,14 @@ public void getSpecificException(@PathVariable("exception_id") String pException
 
 第一步是创建一个测试类，并创建一个`MockMvc`的实例:
 
-```
+```java
 @Autowired
 private MockMvc mvc; 
 ```
 
 接下来，让我们为我们的服务可以接收的每个值创建测试用例:
 
-```
+```java
 @Test
 public void givenNotFound_whenGetSpecificException_thenNotFoundCode() throws Exception {
     String exceptionParam = "not_found";

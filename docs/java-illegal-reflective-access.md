@@ -43,7 +43,7 @@ Java 模块系统的目标之一是强封装。**强封装主要由可读性和�
 
 然而，当使用反射从一个未命名的模块访问平台模块时，我们会得到一个`IllegalAccessException`或一个警告。警告信息有助于我们找到问题发生的位置，并采取进一步的补救措施:
 
-```
+```java
 WARNING: Illegal reflective access by $PERPETRATOR to $VICTIM
 ```
 
@@ -64,7 +64,7 @@ WARNING: Illegal reflective access by $PERPETRATOR to $VICTIM
 
 在 Java 9 中，`–illegal-access=permit`是默认模式。要使用其他模式，我们可以在命令行上指定该选项:
 
-```
+```java
 java --illegal-access=deny com.baeldung.module.unnamed.Main
 ```
 
@@ -78,7 +78,7 @@ java --illegal-access=deny com.baeldung.module.unnamed.Main
 
 如果我们是代码作者，我们可以在`module-info.java`中打开包:
 
-```
+```java
 module baeldung.reflected {
     opens com.baeldung.reflected.opened;
 }
@@ -86,7 +86,7 @@ module baeldung.reflected {
 
 为了更加谨慎，我们可以使用限定的`opens`:
 
-```
+```java
 module baeldung.reflected {
     opens com.baeldung.reflected.internal to baeldung.intermedium;
 }
@@ -94,7 +94,7 @@ module baeldung.reflected {
 
 当把我们现有的代码移植到模块化系统时，为了方便起见，我们可以打开整个模块:
 
-```
+```java
 open module baeldung.reflected {
     // don't use opens directive
 }
@@ -106,13 +106,13 @@ open module baeldung.reflected {
 
 如果我们不是代码作者，我们可以在命令行上使用`–add-opens`选项:
 
-```
+```java
 --add-opens java.base/java.lang=baeldung.reflecting.named
 ```
 
 并且，要添加对所有未命名模块的打开，我们可以使用`ALL-UNNAMED`:
 
-```
+```java
 java --add-opens java.base/java.lang=ALL-UNNAMED
 ```
 
@@ -120,7 +120,7 @@ java --add-opens java.base/java.lang=ALL-UNNAMED
 
 要在运行时添加 opens，我们可以使用`Module.addOpens`方法:
 
-```
+```java
 srcModule.addOpens("com.baeldung.reflected.internal", targetModule);
 ```
 
@@ -130,7 +130,7 @@ srcModule.addOpens("com.baeldung.reflected.internal", targetModule);
 
 向目标模块添加 opens 的另一种方法是使用 [Java 代理](/web/20220922235942/https://www.baeldung.com/java-instrumentation)。在`java.instrument`模块中，从 Java 9 开始，`Instrumentation`类增加了一个新的`redefineModule`方法。此方法可用于添加额外的读取、导出、打开、使用和提供:
 
-```
+```java
 void redefineModule(Instrumentation inst, Module src, Module target) {
     // prepare extra reads
     Set<Module> extraReads = Collections.singleton(target);

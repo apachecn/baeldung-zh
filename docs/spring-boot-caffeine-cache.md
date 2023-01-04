@@ -10,7 +10,7 @@
 
 为了开始了解咖啡因和 Spring Boot，我们首先添加了 `[spring-boot-starter-cache](https://web.archive.org/web/20220727020730/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-cache)` 和 [`caffeine`](https://web.archive.org/web/20220727020730/https://search.maven.org/artifact/com.github.ben-manes.caffeine/caffeine) 依赖关系:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -31,7 +31,7 @@
 
 首先，我们创建一个`Caffeine` bean。**这是控制缓存行为的主要配置，如过期、缓存大小限制等**:
 
-```
+```java
 @Bean
 public Caffeine caffeineConfig() {
     return Caffeine.newBuilder().expireAfterWrite(60, TimeUnit.MINUTES);
@@ -40,7 +40,7 @@ public Caffeine caffeineConfig() {
 
 接下来，我们需要使用 Spring `CacheManager`接口创建另一个 bean。Caffeine 提供了这个接口的实现，它需要我们上面创建的`Caffeine`对象:
 
-```
+```java
 @Bean
 public CacheManager cacheManager(Caffeine caffeine) {
     CaffeineCacheManager caffeineCacheManager = new CaffeineCacheManager();
@@ -59,7 +59,7 @@ public CacheManager cacheManager(Caffeine caffeine) {
 
 典型的用法是在服务类内部:
 
-```
+```java
 @Service
 public class AddressService {
     @Cacheable
@@ -73,7 +73,7 @@ public class AddressService {
 
 我们可以通过向注释添加一些参数来覆盖这两种行为:
 
-```
+```java
 @Service
 public class AddressService {
     @Cacheable(value = "address_cache", key = "customerId")
@@ -87,7 +87,7 @@ public class AddressService {
 
 最后，因为缓存管理器本身是一个 Spring bean，**我们还可以将它自动连接到任何其他 bean 中，并直接使用它**:
 
-```
+```java
 @Service
 public class AddressService {
 

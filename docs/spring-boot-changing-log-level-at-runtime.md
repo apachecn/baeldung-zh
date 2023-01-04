@@ -20,7 +20,7 @@
 
 首先，我们需要将 [Spring Boot 致动器 Maven 依赖关系](https://web.archive.org/web/20221118232022/https://search.maven.org/search?q=spring-boot-starter-actuator)添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-actuator</artifactId>
@@ -30,14 +30,14 @@
 
 **从 Spring Boot 2.x 开始，默认情况下大多数端点都是禁用的**，所以我们还需要在我们的`application.properties`文件中启用/ `loggers`端点:
 
-```
+```java
 management.endpoints.web.exposure.include=loggers
 management.endpoint.loggers.enabled=true
 ```
 
 最后，让我们用一系列日志语句创建一个控制器，这样我们就可以看到实验的效果:
 
-```
+```java
 @RestController
 @RequestMapping("/log")
 public class LoggingController {
@@ -59,13 +59,13 @@ public class LoggingController {
 
 让我们启动应用程序并访问我们的日志 API:
 
-```
+```java
 curl http://localhost:8080/log
 ```
 
 然后，让我们检查日志，在那里我们应该找到三个日志记录语句:
 
-```
+```java
 2019-09-02 09:51:53.498  INFO 12208 --- [nio-8080-exec-1] c.b.s.b.m.logging.LoggingController      : This is an INFO level message
 2019-09-02 09:51:53.498  WARN 12208 --- [nio-8080-exec-1] c.b.s.b.m.logging.LoggingController      : This is a WARN level message
 2019-09-02 09:51:53.498 ERROR 12208 --- [nio-8080-exec-1] c.b.s.b.m.logging.LoggingController      : This is an ERROR level message
@@ -73,14 +73,14 @@ curl http://localhost:8080/log
 
 现在，让我们调用/ `loggers`执行器端点来检查我们的`com.baeldung.spring.boot.management.logging`包的日志记录级别:
 
-```
+```java
 curl http://localhost:8080/actuator/loggers/com.baeldung.spring.boot.management.logging
   {"configuredLevel":null,"effectiveLevel":"INFO"}
 ```
 
 要更改日志记录级别，我们可以向/ `loggers`端点发出一个`POST`请求:
 
-```
+```java
 curl -i -X POST -H 'Content-Type: application/json' -d '{"configuredLevel": "TRACE"}'
   http://localhost:8080/actuator/loggers/com.baeldung.spring.boot.management.logging
   HTTP/1.1 204
@@ -89,20 +89,20 @@ curl -i -X POST -H 'Content-Type: application/json' -d '{"configuredLevel": "TRA
 
 如果我们再次检查日志级别，我们应该看到它被设置为`TRACE`:
 
-```
+```java
 curl http://localhost:8080/actuator/loggers/com.baeldung.spring.boot.management.logging
   {"configuredLevel":"TRACE","effectiveLevel":"TRACE"}
 ```
 
 最后，我们可以重新运行我们的日志 API，并查看我们的实际变化:
 
-```
+```java
 curl http://localhost:8080/log
 ```
 
 现在，让我们再次检查日志:
 
-```
+```java
 2019-09-02 09:59:20.283 TRACE 12208 --- [io-8080-exec-10] c.b.s.b.m.logging.LoggingController      : This is a TRACE level message
 2019-09-02 09:59:20.283 DEBUG 12208 --- [io-8080-exec-10] c.b.s.b.m.logging.LoggingController      : This is a DEBUG level message
 2019-09-02 09:59:20.283  INFO 12208 --- [io-8080-exec-10] c.b.s.b.m.logging.LoggingController      : This is an INFO level message
@@ -116,7 +116,7 @@ curl http://localhost:8080/log
 
 首先，让我们通过在我们的`src/main/resources`目录下放置一个名为`logback.xml`的文件来添加一些日志回溯配置:
 
-```
+```java
 <configuration scan="true" scanPeriod="15 seconds">
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -138,13 +138,13 @@ curl http://localhost:8080/log
 
 让我们通过启动应用程序并再次调用我们的日志 API 来尝试一下:
 
-```
+```java
 curl http://localhost:8080/log
 ```
 
 我们的输出应该反映我们包的`INFO`日志记录级别:
 
-```
+```java
 10:21:13.167 [http-nio-8080-exec-1] INFO  c.b.s.b.m.logging.LoggingController - This is an INFO level message
 10:21:13.167 [http-nio-8080-exec-1] WARN  c.b.s.b.m.logging.LoggingController - This is a WARN level message
 10:21:13.168 [http-nio-8080-exec-1] ERROR c.b.s.b.m.logging.LoggingController - This is an ERROR level message
@@ -152,13 +152,13 @@ curl http://localhost:8080/log
 
 现在，让我们将`logback.xml`中的`com.baeldung.spring.boot.management.logging`记录器修改为`TRACE`:
 
-```
+```java
 <logger name="com.baeldung.spring.boot.management.logging" level="TRACE" />
 ```
 
 15 秒后，让我们在 [`http://localhost:8080/log`](https://web.archive.org/web/20221118232022/http://localhost:8080/log) 重新运行日志 API，并检查我们的日志输出:
 
-```
+```java
 10:24:18.429 [http-nio-8080-exec-2] TRACE c.b.s.b.m.logging.LoggingController - This is a TRACE level message
 10:24:18.430 [http-nio-8080-exec-2] DEBUG c.b.s.b.m.logging.LoggingController - This is a DEBUG level message
 10:24:18.430 [http-nio-8080-exec-2] INFO  c.b.s.b.m.logging.LoggingController - This is an INFO level message
@@ -176,7 +176,7 @@ curl http://localhost:8080/log
 
 让我们将最新的 [`spring-boot-admin-starter-server`](https://web.archive.org/web/20221118232022/https://search.maven.org/search?q=spring-boot-admin-starter-server) 添加到我们的 pom.xml 中:
 
-```
+```java
 <dependency>
     <groupId>de.codecentric</groupId>
     <artifactId>spring-boot-admin-starter-server</artifactId>
@@ -192,7 +192,7 @@ curl http://localhost:8080/log
 
 首先，让我们为`[spring-boot-admin-starter-client](https://web.archive.org/web/20221118232022/https://search.maven.org/search?q=spring-boot-admin-starter-client)`添加一个 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>de.codecentric</groupId>
     <artifactId>spring-boot-admin-starter-client</artifactId>
@@ -202,7 +202,7 @@ curl http://localhost:8080/log
 
 我们还需要管理服务器和客户端之间的安全性，所以让我们使用 [Spring Boot 安全启动器](https://web.archive.org/web/20221118232022/https://search.maven.org/search?q=spring-boot-starter-security):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -214,14 +214,14 @@ curl http://localhost:8080/log
 
 管理服务器在端口 8080 上运行，所以让我们首先更改我们的端口，并为应用程序命名:
 
-```
+```java
 spring.application.name=spring-boot-management
 server.port=8081
 ```
 
 现在，让我们添加访问服务器所需的配置:
 
-```
+```java
 spring.security.user.name=client
 spring.security.user.password=client
 
@@ -237,13 +237,13 @@ spring.boot.admin.client.instance.metadata.user.password=${spring.security.user.
 
 最后，我们需要为管理服务器启用/ `health, /info` 和 `/metrics`执行器端点，以便能够确定客户机的状态:
 
-```
+```java
 management.endpoints.web.exposure.include=httptrace,loggers,health,info,metrics
 ```
 
 因为更改记录器级别是一项后期操作，所以我们还需要添加一些安全配置来忽略对执行器端点的 CSRF 保护:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http.csrf().ignoringAntMatchers("/actuator/**");
@@ -258,7 +258,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 我们的日志输出应该显示反映我们的信息日志级别的日志消息:
 
-```
+```java
 09:13:23.416 [http-nio-8081-exec-10] INFO  c.b.s.b.m.logging.LoggingController - This is an INFO level message
 09:13:23.416 [http-nio-8081-exec-10] WARN  c.b.s.b.m.logging.LoggingController - This is a WARN level message
 09:13:23.416 [http-nio-8081-exec-10] ERROR c.b.s.b.m.logging.LoggingController - This is an ERROR level message
@@ -278,7 +278,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 我们的日志输出现在应该反映新的日志记录级别:
 
-```
+```java
 10:13:56.376 [http-nio-8081-exec-4] TRACE c.b.s.b.m.logging.LoggingController - This is a TRACE level message
 10:13:56.376 [http-nio-8081-exec-4] DEBUG c.b.s.b.m.logging.LoggingController - This is a DEBUG level message
 10:13:56.376 [http-nio-8081-exec-4] INFO  c.b.s.b.m.logging.LoggingController - This is an INFO level message

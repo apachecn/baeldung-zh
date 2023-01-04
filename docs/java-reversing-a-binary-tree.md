@@ -16,7 +16,7 @@
 
 说到这里，让我们创建一个表示节点的对象:
 
-```
+```java
 public class TreeNode {
 
     private int value;
@@ -30,7 +30,7 @@ public class TreeNode {
 
 然后，让我们创建将在示例中使用的树:
 
-```
+```java
  TreeNode leaf1 = new TreeNode(1);
     TreeNode leaf2 = new TreeNode(3);
     TreeNode leaf3 = new TreeNode(6);
@@ -58,7 +58,7 @@ public class TreeNode {
 
 首先，**我们将使用树根调用我们的方法，然后我们将分别在左边和右边的子节点上应用它**，直到我们到达树叶:
 
-```
+```java
 public void reverseRecursive(TreeNode treeNode) {
     if(treeNode == null) {
         return;
@@ -81,7 +81,7 @@ public void reverseRecursive(TreeNode treeNode) {
 
 我们不断从`LinkedList`开始添加和删除，直到到达树叶:
 
-```
+```java
 public void reverseIterative(TreeNode treeNode) {
     List<TreeNode> queue = new LinkedList<>();
 

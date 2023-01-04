@@ -24,7 +24,7 @@ rat pack Groovy API 是用 Java 构建的，因此它们可以很容易地与 Ja
 
 实际上，结合 Groovy 的脚本能力和 Grape 依赖管理，我们可以用几行代码快速创建一个支持 Ratpack 的 web 应用程序:
 
-```
+```java
 @Grab('io.ratpack:ratpack-groovy:1.6.1')
 import static ratpack.groovy.Groovy.ratpack
 
@@ -41,14 +41,14 @@ ratpack {
 
 现在让我们将它作为 Groovy 脚本来运行，以启动应用程序。默认情况下，应用程序将在`[http://localhost:5050](https://web.archive.org/web/20220701022822/http://localhost:5050/)`可用:
 
-```
+```java
 $ curl -s localhost:5050
 Hello World from Ratpack with Groovy!!
 ```
 
 我们还可以使用`ServerConfig`来配置端口:
 
-```
+```java
 ratpack {
     serverConfig {
         port(5056)
@@ -68,7 +68,7 @@ ratpack {
 
 这就像给我们的`Ratpack.groovy`脚本添加注释一样简单:
 
-```
+```java
 @Grab('io.ratpack:ratpack-groovy:1.6.1')
 import static ratpack.groovy.Groovy.ratpack
 ```
@@ -77,7 +77,7 @@ import static ratpack.groovy.Groovy.ratpack
 
 对于在 Maven 中的构建，我们所需要的就是添加对[和`ratpack-groovy`库](https://web.archive.org/web/20220701022822/https://mvnrepository.com/artifact/io.ratpack/ratpack-groovy)的依赖:
 
-```
+```java
 <dependency>
     <groupId>io.ratpack</groupId>
     <artifactId>ratpack-groovy</artifactId>
@@ -89,7 +89,7 @@ import static ratpack.groovy.Groovy.ratpack
 
 我们可以通过在`build.gradle`中添加 Ratpack 的 Groovy Gradle 插件来启用`ratpack-groovy`集成:
 
-```
+```java
 plugins { 
   id 'io.ratpack.ratpack-groovy' version '1.6.1' 
 }
@@ -101,7 +101,7 @@ plugins {
 
 我们可以使用 HTTP 方法处理 web 请求，比如 GET 和 POST `:`
 
-```
+```java
 handlers { 
     get("greet/:name") { ctx ->
         render "Hello " + ctx.getPathTokens().get("name") + " !!!"
@@ -111,7 +111,7 @@ handlers {
 
 我们可以通过`[http://localhost:5050/greet/<name>](https://web.archive.org/web/20220701022822/http://localhost:5050/greet/Norman)`测试这个 web 请求:
 
-```
+```java
 $ curl -s localhost:5050/greet/Norman
 Hello Norman!!!
 ```
@@ -122,13 +122,13 @@ Hello Norman!!!
 
 让我们返回从 Groovy 映射转换而来的 JSON:
 
-```
+```java
 get("data") {
     render Jackson.json([title: "Mr", name: "Norman", country: "USA"])
 } 
 ```
 
-```
+```java
 $ curl -s localhost:5050/data
 {"title":"Mr","name":"Norman","country":"USA"}
 ```
@@ -141,7 +141,7 @@ $ curl -s localhost:5050/data
 
 承诺类似于 JavaScript 中使用的承诺，有点像 Java [`Future`](/web/20220701022822/https://www.baeldung.com/java-future) 。我们可以把一个`Promise`看作是一个将来可用的值的表示:
 
-```
+```java
 post("user") {
     Promise<User> user = parse(Jackson.fromJson(User)) 
     user.then { u -> render u.name } 
@@ -154,7 +154,7 @@ post("user") {
 
 承诺异步运行。最终执行`then`操作时，返回响应:
 
-```
+```java
 curl -X POST -H 'Content-type: application/json' --data \
 '{"id":3,"title":"Mrs","name":"Jiney Weiber","country":"UK"}' \
 http://localhost:5050/employee
@@ -174,7 +174,7 @@ Jiney Weiber
 
 要添加 HikariCP 支持，让我们首先在我们的`pom.xml`中添加以下[光](https://web.archive.org/web/20220701022822/https://search.maven.org/search?q=g:io.ratpack%20AND%20a:ratpack-hikari&core=gav)和 [H2](https://web.archive.org/web/20220701022822/https://search.maven.org/search?q=g:com.h2database%20AND%20a:h2&core=gav) maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.ratpack</groupId>
     <artifactId>ratpack-hikari</artifactId>
@@ -189,7 +189,7 @@ Jiney Weiber
 
 或者，我们可以将以下依赖项添加到我们的`build.gradle`中:
 
-```
+```java
 dependencies {
   compile ratpack.dependency('hikari')
   compile "com.h2database:h2:$h2.version"
@@ -198,7 +198,7 @@ dependencies {
 
 现在，我们将在连接池的`bindings`闭包下声明`HikariModule`:
 
-```
+```java
 import ratpack.hikari.HikariModule
 
 ratpack {
@@ -214,7 +214,7 @@ ratpack {
 
 最后，我们准备使用 Java 的`Connection`和`PreparedStatement`来使用它进行简单的数据库操作:
 
-```
+```java
 get('fetchUserName/:id') { Context ctx ->
     Connection connection = ctx.get(DataSource.class).getConnection()
     PreparedStatement queryStatement = 
@@ -228,7 +228,7 @@ get('fetchUserName/:id') { Context ctx ->
 
 让我们检查处理程序是否按预期工作:
 
-```
+```java
 $ curl -s localhost:5050/fetchUserName/1
 Norman Potter
 ```
@@ -237,7 +237,7 @@ Norman Potter
 
 我们可以使用 Groovy `Sql`进行快速数据库操作，通过像`rows`和`executeInsert`这样的方法:
 
-```
+```java
 get('fetchUsers') {
     def db = [url:'jdbc:h2:mem:devDB']
     def sql = Sql.newInstance(db.url, db.user, db.password)
@@ -246,7 +246,7 @@ get('fetchUsers') {
 } 
 ```
 
-```
+```java
 $ curl -s localhost:5050/fetchUsers
 [{"ID":1,"TITLE":"Mr","NAME":"Norman Potter","COUNTRY":"USA"},
 {"ID":2,"TITLE":"Miss","NAME":"Ketty Smith","COUNTRY":"FRANCE"}]
@@ -254,7 +254,7 @@ $ curl -s localhost:5050/fetchUsers
 
 让我们用`Sql`写一个 HTTP POST 例子:
 
-```
+```java
 post('addUser') {
     parse(Jackson.fromJson(User))
         .then { u ->
@@ -267,7 +267,7 @@ post('addUser') {
 }
 ```
 
-```
+```java
 $ curl -X POST -H 'Content-type: application/json' --data \
 '{"id":3,"title":"Mrs","name":"Jiney Weiber","country":"UK"}' \
 http://localhost:5050/addUser
@@ -283,7 +283,7 @@ User Jiney Weiber inserted
 
 要使用它，我们可以将它作为 Maven 依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>io.ratpack</groupId>
     <artifactId>ratpack-groovy-test</artifactId>
@@ -293,13 +293,13 @@ User Jiney Weiber inserted
 
 或者，我们可以在我们的`build.gradle`中添加 Gradle 依赖关系:
 
-```
+```java
 testCompile ratpack.dependency('groovy-test')
 ```
 
 然后我们需要创建一个 Groovy 主类`RatpackGroovyApp.groovy`来测试`Ratpack.groovy`脚本。
 
-```
+```java
 public class RatpackGroovyApp {
     public static void main(String[] args) {
         File file = new File("src/main/groovy/com/baeldung/Ratpack.groovy");
@@ -313,7 +313,7 @@ public class RatpackGroovyApp {
 
 现在，让我们编写 Groovy 测试类`RatpackGroovySpec.groovy`以及通过`RatpackGroovyApp`启动 Ratpack 服务器的代码:
 
-```
+```java
 class RatpackGroovySpec {
     ServerBackedApplicationUnderTest ratpackGroovyApp = 
       new MainClassApplicationUnderTest(RatpackGroovyApp.class)
@@ -328,7 +328,7 @@ Ratpack 提供了`MainClassApplicationUnderTest` 来模拟启动服务器的应�
 
 让我们编写测试，从一个非常基本的测试开始，检查应用程序是否可以启动:
 
-```
+```java
 @Test
 void "test if app is started"() {
     when:
@@ -343,7 +343,7 @@ void "test if app is started"() {
 
 现在让我们编写另一个测试来验证`fetchUsers` get 处理程序的响应:
 
-```
+```java
 @Test
 void "test fetchUsers"() {
     when:

@@ -41,7 +41,7 @@
 
 `Message`类保存产生的数据:
 
-```
+```java
 public class Message {
     private int id;
     private double data;
@@ -56,7 +56,7 @@ public class Message {
 
 共享队列和相关对象被包装到`DataQueue`类中:
 
-```
+```java
 public class DataQueue {
     private final Queue<Message> queue = new LinkedList<>();
     private final int maxSize;
@@ -81,7 +81,7 @@ public class DataQueue {
 
 生产者进程调用`waitOnFull`方法:
 
-```
+```java
 public void waitOnFull() throws InterruptedException {
     synchronized (FULL_QUEUE) {
         FULL_QUEUE.wait();
@@ -91,7 +91,7 @@ public void waitOnFull() throws InterruptedException {
 
 消费者流程通过`notifyAllForFull`方法通知生产者:
 
-```
+```java
 public void notifyAllForFull() {
     synchronized (FULL_QUEUE) {
         FULL_QUEUE.notifyAll();
@@ -103,7 +103,7 @@ public void notifyAllForFull() {
 
 消费者进程使用`waitOnEmpty`方法等待:
 
-```
+```java
 public void waitOnEmpty() throws InterruptedException {
     synchronized (EMPTY_QUEUE) {
         EMPTY_QUEUE.wait();
@@ -113,7 +113,7 @@ public void waitOnEmpty() throws InterruptedException {
 
 生产者使用`notifyAllForEmpty`方法通知消费者:
 
-```
+```java
 public void notifyAllForEmpty() {
     synchronized (EMPTY_QUEUE) {
         EMPTY_QUEUE.notify();
@@ -123,7 +123,7 @@ public void notifyAllForEmpty() {
 
 生产者使用`add()`方法将消息添加到队列中:
 
-```
+```java
 public void add(Message message) {
     synchronized (queue) {
         queue.add(message);
@@ -133,7 +133,7 @@ public void add(Message message) {
 
 消费者调用`remove`方法从队列中检索消息:
 
-```
+```java
 public Message remove() {
     synchronized (queue) {
         return queue.poll();
@@ -145,7 +145,7 @@ public Message remove() {
 
 `Producer`类实现了`Runnable`接口来启用线程创建:
 
-```
+```java
 public class Producer implements Runnable {
     private final DataQueue dataQueue;
     private volatile boolean runFlag;
@@ -168,7 +168,7 @@ public class Producer implements Runnable {
 
 线程开始调用`produce()`方法:
 
-```
+```java
 public void produce() {
     while (runFlag) {
         Message message = generateMessage();
@@ -196,7 +196,7 @@ public void produce() {
 
 `stop`()方法优雅地终止进程:
 
-```
+```java
 public void stop() {
     runFlag = false;
     dataQueue.notifyAllForFull();
@@ -209,7 +209,7 @@ public void stop() {
 
 `Consumer`类实现`Runnable`来启用线程创建:
 
-```
+```java
 public class Consumer implements Runnable {
     private final DataQueue dataQueue;
     private volatile boolean runFlag;
@@ -232,7 +232,7 @@ public class Consumer implements Runnable {
 
 **线程启动时，运行`consume`方法**:
 
-```
+```java
 public void consume() {
     while (runFlag) {
         Message message;
@@ -261,7 +261,7 @@ public void consume() {
 
 为了优雅地停止进程，它使用了`stop()`方法:
 
-```
+```java
 public void stop() {
     runFlag = false;
     dataQueue.notifyAllForEmpty();
@@ -274,34 +274,34 @@ public void stop() {
 
 让我们创建一个具有最大所需容量的`dataQueue`对象:
 
-```
+```java
 DataQueue dataQueue = new DataQueue(MAX_QUEUE_CAPACITY); 
 ```
 
 现在，让我们创建`producer`对象和一个线程:
 
-```
+```java
 Producer producer = new Producer(dataQueue);
 Thread producerThread = new Thread(producer);
 ```
 
 然后，我们将初始化一个`consumer`对象和一个线程:
 
-```
+```java
 Consumer consumer = new Consumer(dataQueue);
 Thread consumerThread = new Thread(consumer);
 ```
 
 最后，我们启动线程来启动进程:
 
-```
+```java
 producerThread.start();
 consumerThread.start();
 ```
 
 它会持续运行，直到我们想要停止那些线程。阻止他们很简单:
 
-```
+```java
 producer.stop();
 consumer.stop(); 
 ```
@@ -312,7 +312,7 @@ consumer.stop();
 
 让我们创建多个生成器和线程并启动它们:
 
-```
+```java
 Producer producer = new Producer(dataQueue);
 for(int i = 0; i < producerCount; i++) {
     Thread producerThread = new Thread(producer);
@@ -322,7 +322,7 @@ for(int i = 0; i < producerCount; i++) {
 
 接下来，让我们创建所需数量的消费者对象和线程:
 
-```
+```java
 Consumer consumer = new Consumer(dataQueue);
 for(int i = 0; i < consumerCount; i++) {
     Thread consumerThread = new Thread(consumer);
@@ -332,7 +332,7 @@ for(int i = 0; i < consumerCount; i++) {
 
 我们可以通过在生产者和消费者对象上调用`stop()`方法来优雅地停止这个过程:
 
-```
+```java
 producer.stop();
 consumer.stop();
 ```
@@ -347,7 +347,7 @@ Java 提供了一个线程安全的`BlockingQueue`接口。换句话说，**多�
 
 我们可以使用构造函数中的容量值创建一个有界的`BlockingQueue`:
 
-```
+```java
 BlockingQueue<Double> blockingQueue = new LinkedBlockingDeque<>(5);
 ```
 
@@ -355,7 +355,7 @@ BlockingQueue<Double> blockingQueue = new LinkedBlockingDeque<>(5);
 
 在`produce()`方法中，我们可以避免队列的显式同步:
 
-```
+```java
 private void produce() {
     while (true) {
         double value = generateValue();
@@ -374,7 +374,7 @@ private void produce() {
 
 `consume()`方法没有明确使用同步:
 
-```
+```java
 private void consume() {
     while (true) {
         Double value;
@@ -394,7 +394,7 @@ private void consume() {
 
 我们可以根据需要创建任意多的生产者和消费者线程:
 
-```
+```java
 for (int i = 0; i < 2; i++) {
     Thread producerThread = new Thread(this::produce);
     producerThread.start();

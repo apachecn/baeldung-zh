@@ -12,7 +12,7 @@
 
 首先，让我们创建两个主要实体——`User`和`Post`。`User`将跟踪用户名和一些额外的 Oauth 信息:
 
-```
+```java
 @Entity
 public class User {
     @Id
@@ -34,7 +34,7 @@ public class User {
 
 下一个——`Post`实体——保存向 Reddit 提交链接所需的信息:`title`、`URL`、`subreddit`、…等等。
 
-```
+```java
 @Entity
 public class Post {
     @Id
@@ -57,7 +57,7 @@ public class Post {
     private User user;
 ```
 
-```
+```java
  // standard setters and getters
 }
 ```
@@ -68,7 +68,7 @@ public class Post {
 
 *   `**UserRepository:**`
 
-```
+```java
 public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByUsername(String username);
@@ -79,7 +79,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 *   **T2`PostRepository:`**
 
-```
+```java
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findBySubmissionDateBeforeAndIsSent(Date date, boolean isSent);
@@ -94,7 +94,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 我们正在定义一个每分钟都要运行的任务；这将简单地查找将要提交给 Reddit 的帖子:
 
-```
+```java
 public class ScheduledTasks {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -163,7 +163,7 @@ public class ScheduledTasks {
 
 有了新的用户实体，保存了一些特定于安全性的信息，我们需要**修改我们简单的登录过程来存储这些信息**:
 
-```
+```java
 @RequestMapping("/login")
 public String redditLogin() {
     JsonNode node = redditRestTemplate.getForObject(
@@ -175,7 +175,7 @@ public String redditLogin() {
 
 和`loadAuthentication()`:
 
-```
+```java
 private void loadAuthentication(String name, OAuth2AccessToken token) {
     User user = userReopsitory.findByUsername(name);
     if (user == null) {
@@ -207,7 +207,7 @@ private void loadAuthentication(String name, OAuth2AccessToken token) {
 
 接下来，让我们看看允许安排新帖子的页面:
 
-```
+```java
 @RequestMapping("/postSchedule")
 public String showSchedulePostForm(Model model) {
     boolean isCaptchaNeeded = getCurrentUser().isCaptchaNeeded();
@@ -219,7 +219,7 @@ public String showSchedulePostForm(Model model) {
 }
 ```
 
-```
+```java
 private User getCurrentUser() {
     return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 }
@@ -227,7 +227,7 @@ private User getCurrentUser() {
 
 **:**
 
-```
+```java
 <form>
     <input name="title" />
     <input name="url" />
@@ -261,7 +261,7 @@ function schedulePost(){
 
 当提交时间表时，**帖子信息被简单地验证并持久化**,以便稍后由调度程序获取:
 
-```
+```java
 @RequestMapping(value = "/api/scheduledPosts", method = RequestMethod.POST)
 @ResponseBody
 public Post schedule(@RequestBody Post post) {
@@ -279,7 +279,7 @@ public Post schedule(@RequestBody Post post) {
 
 现在让我们实现一个简单的 REST API 来检索我们已有的预定帖子:
 
-```
+```java
 @RequestMapping(value = "/api/scheduledPosts")
 @ResponseBody
 public List<Post> getScheduledPosts() {
@@ -290,7 +290,7 @@ public List<Post> getScheduledPosts() {
 
 一种简单、快捷的方式来**在前端**显示这些预定的帖子:
 
-```
+```java
 <table>
     <thead><tr><th>Post title</th><th>Submission Date</th></tr></thead>
 </table>
@@ -313,7 +313,7 @@ $(function(){
 
 我们将从前端开始，首先是非常简单的 MVC 操作:
 
-```
+```java
 @RequestMapping(value = "/editPost/{id}", method = RequestMethod.GET)
 public String showEditPostForm() {
     return "editPostForm";
@@ -322,7 +322,7 @@ public String showEditPostForm() {
 
 在简单的 API 之后，这里是前端消费它:
 
-```
+```java
 <form>
     <input type="hidden" name="id" />
     <input name="title" />
@@ -367,7 +367,7 @@ function editPost(){
 
 现在，让我们看看 **REST API** :
 
-```
+```java
 @RequestMapping(value = "/api/scheduledPosts/{id}", method = RequestMethod.GET) 
 @ResponseBody 
 public Post getPost(@PathVariable("id") Long id) { 
@@ -389,7 +389,7 @@ public void updatePost(@RequestBody Post post, @PathVariable Long id) {
 
 我们还将为任何预定的帖子提供一个简单的删除操作:
 
-```
+```java
 @RequestMapping(value = "/api/scheduledPosts/{id}", method = RequestMethod.DELETE)
 @ResponseStatus(HttpStatus.OK)
 public void deletePost(@PathVariable("id") Long id) {
@@ -399,7 +399,7 @@ public void deletePost(@PathVariable("id") Long id) {
 
 从客户端来看，我们是这样称呼它的:
 
-```
+```java
 <a href="#" onclick="confirmDelete(${post.getId()})">Delete</a>
 
 <script>

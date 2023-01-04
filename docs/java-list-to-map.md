@@ -26,7 +26,7 @@ How to Convert between a List and a Set using plain Java, Guava or Apache Common
 
 首先，我们将对元素进行建模:
 
-```
+```java
 public class Animal {
     private int id;
     private String name;
@@ -43,7 +43,7 @@ public class Animal {
 
 显然，我们可以使用核心 Java 方法将`List`转换成`Map `:
 
-```
+```java
 public Map<Integer, Animal> convertListBeforeJava8(List<Animal> list) {
     Map<Integer, Animal> map = new HashMap<>();
     for (Animal animal : list) {
@@ -55,7 +55,7 @@ public Map<Integer, Animal> convertListBeforeJava8(List<Animal> list) {
 
 现在我们测试转换:
 
-```
+```java
 @Test
 public void whenConvertBeforeJava8_thenReturnMapWithTheSameElements() {
     Map<Integer, Animal> map = convertListService
@@ -71,7 +71,7 @@ public void whenConvertBeforeJava8_thenReturnMapWithTheSameElements() {
 
 从 Java 8 开始，我们可以使用流和`Collectors`将`List`转换成`Map`:
 
-```
+```java
  public Map<Integer, Animal> convertListAfterJava8(List<Animal> list) {
     Map<Integer, Animal> map = list.stream()
       .collect(Collectors.toMap(Animal::getId, Function.identity()));
@@ -81,7 +81,7 @@ public void whenConvertBeforeJava8_thenReturnMapWithTheSameElements() {
 
 同样，让我们确保转换正确完成:
 
-```
+```java
 @Test
 public void whenConvertAfterJava8_thenReturnMapWithTheSameElements() {
     Map<Integer, Animal> map = convertListService.convertListAfterJava8(list);
@@ -100,7 +100,7 @@ public void whenConvertAfterJava8_thenReturnMapWithTheSameElements() {
 
 首先，我们需要向我们的`pom.xml`添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -114,7 +114,7 @@ public void whenConvertAfterJava8_thenReturnMapWithTheSameElements() {
 
 其次，让我们使用`Maps.uniqueIndex()`方法将一个`List`转换成一个`Map`:
 
-```
+```java
 public Map<Integer, Animal> convertListWithGuava(List<Animal> list) {
     Map<Integer, Animal> map = Maps
       .uniqueIndex(list, Animal::getId);
@@ -124,7 +124,7 @@ public Map<Integer, Animal> convertListWithGuava(List<Animal> list) {
 
 最后，我们测试转换:
 
-```
+```java
 @Test
 public void whenConvertWithGuava_thenReturnMapWithTheSameElements() {
     Map<Integer, Animal> map = convertListService
@@ -144,7 +144,7 @@ public void whenConvertWithGuava_thenReturnMapWithTheSameElements() {
 
 首先，让我们包括 Maven 依赖性:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -158,7 +158,7 @@ public void whenConvertWithGuava_thenReturnMapWithTheSameElements() {
 
 其次，我们将使用`MapUtils.populateMap()`进行转换:
 
-```
+```java
 public Map<Integer, Animal> convertListWithApacheCommons2(List<Animal> list) {
     Map<Integer, Animal> map = new HashMap<>();
     MapUtils.populateMap(map, list, Animal::getId);
@@ -168,7 +168,7 @@ public Map<Integer, Animal> convertListWithApacheCommons2(List<Animal> list) {
 
 最后，我们可以确保它按预期工作:
 
-```
+```java
 @Test
 public void whenConvertWithApacheCommons2_thenReturnMapWithTheSameElements() {
     Map<Integer, Animal> map = convertListService
@@ -188,7 +188,7 @@ public void whenConvertWithApacheCommons2_thenReturnMapWithTheSameElements() {
 
 首先，我们用非唯一的`id`创建一个`Animal`的`List`:
 
-```
+```java
 @Before
 public void init() {
 
@@ -215,7 +215,7 @@ public void init() {
 
 因此，传统转换和 Apache Commons `MapUtils.populateMap()`的行为方式相同:
 
-```
+```java
 @Test
 public void whenConvertBeforeJava8_thenReturnMapWithRewrittenElement() {
 
@@ -241,7 +241,7 @@ public void whenConvertWithApacheCommons_thenReturnMapWithRewrittenElement() {
 
 然而，**和`MapUtils.populateMap()`分别抛出`IllegalStateException`和`IllegalArgumentException`**:
 
-```
+```java
 @Test(expected = IllegalStateException.class)
 public void givenADupIdList_whenConvertAfterJava8_thenException() {
 

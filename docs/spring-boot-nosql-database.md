@@ -12,7 +12,7 @@
 
 让我们从将依赖项添加到我们的`pom.xml`开始。当然，我们将需要`[spring-boot-starter-data-cassandra](https://web.archive.org/web/20220707143855/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-starter-data-cassandra)`依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-cassandra</artifactId>
@@ -22,7 +22,7 @@
 
 接下来，我们将添加 [`spring-boot-starter-web`](https://web.archive.org/web/20220707143855/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-starter-web) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -32,7 +32,7 @@
 
 最后，我们将使用数据税务 [`astra-spring-boot-starter`](https://web.archive.org/web/20220707143855/https://search.maven.org/search?q=g:com.datastax.astra%20AND%20a:astra-spring-boot-starter) :
 
-```
+```java
 <dependency>
     <groupId>com.datastax.astra</groupId>
     <artifactId>astra-spring-boot-starter</artifactId>
@@ -54,7 +54,7 @@
 
 接下来，我们将为我们的应用程序配置一个简单的`main`类:
 
-```
+```java
 @SpringBootApplication
 public class AstraDbSpringApplication {
 
@@ -66,7 +66,7 @@ public class AstraDbSpringApplication {
 
 正如我们所见，这是一个普通的 [Spring Boot 应用](/web/20220707143855/https://www.baeldung.com/spring-boot-start)。现在让我们开始填充我们的`application.properties`文件:
 
-```
+```java
 astra.api.application-token=<token>
 astra.api.database-id=<your_db_id>
 astra.api.database-region=europe-west1
@@ -76,14 +76,14 @@ astra.api.database-region=europe-west1
 
 为了通过标准的`CqlSession`使用 [CQL](/web/20220707143855/https://www.baeldung.com/cassandra-data-types) ，我们将添加另外几个属性，包括我们下载的安全连接包的位置:
 
-```
+```java
 astra.cql.enabled=true
 astra.cql.downloadScb.path=~/.astra/secure-connect-shopping-list.zip 
 ```
 
 最后，我们将添加几个标准的 Spring 数据属性来使用 [Cassandra](/web/20220707143855/https://www.baeldung.com/spring-data-cassandra-tutorial) :
 
-```
+```java
 spring.data.cassandra.keyspace=shopping_list
 spring.data.cassandra.schema-action=CREATE_IF_NOT_EXISTS
 ```
@@ -94,7 +94,7 @@ spring.data.cassandra.schema-action=CREATE_IF_NOT_EXISTS
 
 现在我们已经准备好了测试数据库连接的所有部分。所以让我们继续定义一个简单的 [REST 控制器](/web/20220707143855/https://www.baeldung.com/spring-controller-vs-restcontroller):
 
-```
+```java
 @RestController
 public class AstraDbApiController {
 
@@ -114,13 +114,13 @@ public class AstraDbApiController {
 
 最重要的是，这只是一个简单的测试，以确保我们可以建立连接。所以让我们继续使用 Maven 运行我们的应用程序:
 
-```
+```java
 mvn clean install spring-boot:run
 ```
 
 我们应该在控制台上看到与 Astra 数据库建立的连接:
 
-```
+```java
 ...
 13:08:00.656 [main] INFO  c.d.stargate.sdk.StargateClient - + CqlSession   :[ENABLED]
 13:08:00.656 [main] INFO  c.d.stargate.sdk.StargateClient - + API Cql      :[ENABLED]
@@ -135,7 +135,7 @@ mvn clean install spring-boot:run
 
 同样，如果我们在浏览器中找到我们的端点或者使用`curl,`点击它，我们应该得到一个有效的响应:
 
-```
+```java
 $ curl http://localhost:8080/ping; echo
 d23bf54d-1bc2-4ab7-9bd9-2c628aa54e85
 ```
@@ -150,7 +150,7 @@ Spring Data 的存储库抽象的主要目标是显著减少实现我们的数�
 
 对于我们的数据模型，**我们将定义一个代表简单购物清单的实体**:
 
-```
+```java
 @Table
 public class ShoppingList {
 
@@ -172,7 +172,7 @@ public class ShoppingList {
 
 现在让我们创建要在应用程序中使用的`ShoppingListRepository`:
 
-```
+```java
 @Repository
 public interface ShoppingListRepository extends CassandraRepository<ShoppingList, String> {
 
@@ -189,7 +189,7 @@ public interface ShoppingListRepository extends CassandraRepository<ShoppingList
 
 现在我们已经有了数据访问存储库，让我们定义一个简单的服务和控制器:
 
-```
+```java
 @Service
 public class ShoppingListService {
 
@@ -224,7 +224,7 @@ public class ShoppingListService {
 
 对于谜题的最后一部分，我们将添加一个简单的控制器，其一个端点用于检索我们的购物清单:
 
-```
+```java
 @RestController
 @RequestMapping(value = "/shopping")
 public class ShoppingListController {
@@ -241,7 +241,7 @@ public class ShoppingListController {
 
 现在，当我们运行应用程序并访问 http://localhost:8080/shopping/list 时，我们将看到一个包含不同购物列表对象的 JSON 响应:
 
-```
+```java
 [
   {
     "uid": "363dba2e-17f3-4d01-a44f-a805f74fc43d",
@@ -272,7 +272,7 @@ public class ShoppingListController {
 
 简而言之，我们可以很容易地扩展我们的`AstraDbApiController`来检索我们的数据中心:
 
-```
+```java
 @Autowired
 private CassandraTemplate cassandraTemplate;
 

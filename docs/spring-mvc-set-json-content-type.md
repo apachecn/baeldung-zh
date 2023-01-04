@@ -18,7 +18,7 @@
 
 使用`consumes` 属性，我们指定控制器将从客户机接受的媒体类型。我们也可以提供媒体类型列表。让我们定义一个简单的端点:
 
-```
+```java
 @RequestMapping(value = "/greetings", method = RequestMethod.POST, consumes="application/json")
 public void addGreeting(@RequestBody ContentType type, Model model) {
     // code here
@@ -35,7 +35,7 @@ public void addGreeting(@RequestBody ContentType type, Model model) {
 
 这是我们的终点:
 
-```
+```java
 @RequestMapping(
   value = "/greetings-with-response-body", 
   method = RequestMethod.GET, 
@@ -49,13 +49,13 @@ public String getGreetingWhileReturnTypeIsString() {
 
 让我们用 CURL 来测试一下:
 
-```
+```java
 curl http://localhost:8080/greetings-with-response-body
 ```
 
 上面的命令会产生响应:
 
-```
+```java
 { "test": "Hello using @ResponseBody" } 
 ```
 
@@ -73,7 +73,7 @@ curl http://localhost:8080/greetings-with-response-body
 
 为了将[杰克森](https://web.archive.org/web/20220626120933/https://search.maven.org/search?q=g:com.fasterxml.jackson.core%20AND%20a:jackson-databind)包含在类路径中，我们需要在`pom.xml`中添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -83,7 +83,7 @@ curl http://localhost:8080/greetings-with-response-body
 
 让我们添加一个单元测试来验证响应:
 
-```
+```java
 @Test
 public void givenReturnTypeIsString_whenJacksonOnClasspath_thenDefaultContentTypeIsJSON() 
   throws Exception {
@@ -105,7 +105,7 @@ public void givenReturnTypeIsString_whenJacksonOnClasspath_thenDefaultContentTyp
 
 让我们定义一个新的端点:
 
-```
+```java
 @RequestMapping(
   value = "/greetings-with-response-entity",
   method = RequestMethod.GET, 
@@ -120,13 +120,13 @@ public ResponseEntity<String> getGreetingWithResponseEntity() {
 
 在我们浏览器的开发人员控制台中，我们可以看到以下响应:
 
-```
+```java
 {"test": "Hello with ResponseEntity"}
 ```
 
 使用`ResponseEntity`，我们应该在 [dispatcher servlet](/web/20220626120933/https://www.baeldung.com/spring-dispatcherservlet) 中有注释驱动的标签:
 
-```
+```java
 <mvc:annotation-driven />
 ```
 
@@ -134,7 +134,7 @@ public ResponseEntity<String> getGreetingWithResponseEntity() {
 
 让我们用一个测试用例来验证响应的内容类型:
 
-```
+```java
 @Test
 public void givenReturnTypeIsResponseEntity_thenDefaultContentTypeIsJSON() throws Exception {
 
@@ -155,7 +155,7 @@ public void givenReturnTypeIsResponseEntity_thenDefaultContentTypeIsJSON() throw
 
 这是我们的新端点:
 
-```
+```java
 @RequestMapping(
   value = "/greetings-with-map-return-type", 
   method = RequestMethod.GET, 
@@ -171,13 +171,13 @@ public Map<String, Object> getGreetingWhileReturnTypeIsMap() {
 
 让我们来看看实际情况:
 
-```
+```java
 curl http://localhost:8080/greetings-with-map-return-type
 ```
 
 curl 命令返回一个 JSON 响应:
 
-```
+```java
 { "test": "Hello from map" }
 ```
 

@@ -52,7 +52,7 @@ Java 10 是我们可以在没有许可的情况下进行商业使用的最后一
 
 让我们看看如何利用新的方法从多行字符串中提取非空白的剥离行:
 
-```
+```java
 String multilineString = "Baeldung helps \n \n developers \n explore Java.";
 List<String> lines = multilineString.lines()
   .filter(line -> !line.isBlank())
@@ -71,7 +71,7 @@ assertThat(lines).containsExactly("Baeldung helps", "developers", "explore Java.
 
 **我们可以使用来自*文件*类:**的新的`readString`和`writeString`静态方法
 
-```
+```java
 Path filePath = Files.writeString(Files.createTempFile(tempDir, "demo", ".txt"), "Sample text");
 String fileContent = Files.readString(filePath);
 assertThat(fileContent).isEqualTo("Sample text");
@@ -83,7 +83,7 @@ assertThat(fileContent).isEqualTo("Sample text");
 
 这使得从集合中创建正确类型的数组更加容易:
 
-```
+```java
 List sampleList = Arrays.asList("Java", "Kotlin");
 String[] sampleArray = sampleList.toArray(String[]::new);
 assertThat(sampleArray).containsExactly("Java", "Kotlin");
@@ -93,7 +93,7 @@ assertThat(sampleArray).containsExactly("Java", "Kotlin");
 
 一个静态的 [`not`方法](/web/20220625225150/https://www.baeldung.com/java-negate-predicate-method-reference)被添加到了`Predicate` 接口中。我们可以用它来否定一个现有的谓词，很像`negate` 方法:
 
-```
+```java
 List<String> sampleList = Arrays.asList("Java", "\n \n", "Kotlin", " ");
 List withoutBlanks = sampleList.stream()
   .filter(Predicate.not(String::isBlank))
@@ -109,7 +109,7 @@ Java 11 中增加了对在 lambda 参数中使用[局部变量语法](/web/20220
 
 我们可以利用这个特性将修饰符应用于局部变量，比如定义一个类型注释:
 
-```
+```java
 List<String> sampleList = Arrays.asList("Java", "Kotlin");
 String resultString = sampleList.stream()
   .map((@Nonnull var x) -> x.toUpperCase())
@@ -123,7 +123,7 @@ assertThat(resultString).isEqualTo("JAVA, KOTLIN");
 
 **新的 HTTP API 提高了整体性能，并支持 HTTP/1.1 和 HTTP/2:**
 
-```
+```java
 HttpClient httpClient = HttpClient.newBuilder()
   .version(HttpClient.Version.HTTP_2)
   .connectTimeout(Duration.ofSeconds(20))
@@ -142,13 +142,13 @@ Java 11 在 JVM 中引入了[嵌套](/web/20220625225150/https://www.baeldung.co
 
 Java 中的类嵌套意味着外部/主类及其所有嵌套类:
 
-```
+```java
 assertThat(MainClass.class.isNestmateOf(MainClass.NestedClass.class)).isTrue();
 ```
 
 嵌套类链接到`NestMembers`属性，而外层类链接到`NestHost`属性:
 
-```
+```java
 assertThat(MainClass.NestedClass.class.getNestHost()).isEqualTo(MainClass.class);
 ```
 
@@ -156,7 +156,7 @@ JVM 访问规则允许嵌套成员之间访问私有成员；然而，在以前�
 
 Java 11 解决了这个问题，并提供了使用反射 API 查询新类文件属性的方法:
 
-```
+```java
 Set<String> nestedMembers = Arrays.stream(MainClass.NestedClass.class.getNestMembers())
   .map(Class::getName)
   .collect(Collectors.toSet());
@@ -167,7 +167,7 @@ assertThat(nestedMembers).contains(MainClass.class.getName(), MainClass.NestedCl
 
 这个版本的一个主要变化是**我们不再需要显式地用`javac` 编译 Java 源文件`:`**
 
-```
+```java
 $ javac HelloWorld.java
 $ java HelloWorld 
 Hello Java 8!
@@ -175,7 +175,7 @@ Hello Java 8!
 
 相反，我们可以使用`java `命令直接运行文件:
 
-```
+```java
 $ java HelloWorld.java
 Hello Java 11!
 ```
@@ -219,7 +219,7 @@ Java 11 中有一个名为 Epsilon 的新垃圾收集器可以作为实验特性
 
 要开始 120 秒的 JFR 记录，我们可以使用以下参数:
 
-```
+```java
 -XX:StartFlightRecording=duration=120s,settings=profile,filename=java-demo-app.jfr
 ```
 

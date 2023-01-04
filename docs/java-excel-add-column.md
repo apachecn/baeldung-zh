@@ -10,7 +10,7 @@
 
 首先，我们首先需要将 [poi-ooxml](https://web.archive.org/web/20220625234314/https://search.maven.org/search?q=g:org.apache.poi%20a:poi) 依赖项添加到我们项目的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.poi</groupId>
     <artifactId>poi-ooxml</artifactId>
@@ -24,7 +24,7 @@ Apache POI 使用 [`Workbook`](https://web.archive.org/web/20220625234314/https:
 
 在 Excel 中，我们有时希望在现有行上添加一个新列。**为此，我们可以遍历每一行，并在行尾创建一个新的单元格**:
 
-```
+```java
 void addColumn(Sheet sheet, CellType cellType) {
     for (Row currentRow : sheet) {
         currentRow.createCell(currentRow.getLastCellNum(), cellType);

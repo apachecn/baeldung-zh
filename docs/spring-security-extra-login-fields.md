@@ -20,7 +20,7 @@
 
 我们将使用的设置需要一个父声明、web starter 和 security starter。我们还将包括百里香叶:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -68,7 +68,7 @@
 
 **令牌随后被传递给`AuthenticationProvider`** 进行认证 *:*
 
-```
+```java
 public class SimpleAuthenticationFilter
   extends UsernamePasswordAuthenticationFilter {
 
@@ -111,7 +111,7 @@ public class SimpleAuthenticationFilter
 
 `UserDetailsService`契约定义了一个名为`loadUserByUsername.` **的方法，我们的实现提取了`username`和`domain.`** ，然后将值传递给我们的 U `serRepository`以获得`User`:
 
-```
+```java
 public class SimpleUserDetailsService implements UserDetailsService {
 
     // ...
@@ -138,7 +138,7 @@ public class SimpleUserDetailsService implements UserDetailsService {
 
 我们的设置不同于标准的 Spring 安全配置，因为**我们通过调用`addFilterBefore`将`SimpleAuthenticationFilter`插入到默认**之前的过滤器链中:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
 
@@ -158,7 +158,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 我们能够使用提供的`DaoAuthenticationProvider`，因为我们用我们的`SimpleUserDetailsService`配置了它。回想一下**我们的`SimpleUserDetailsService`知道如何解析出我们的`username`和`domain`字段**并返回适当的`User`以在认证时使用:
 
-```
+```java
 public AuthenticationProvider authProvider() {
     DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
     provider.setUserDetailsService(userDetailsService);
@@ -169,7 +169,7 @@ public AuthenticationProvider authProvider() {
 
 由于我们使用的是`SimpleAuthenticationFilter`，我们配置了自己的`AuthenticationFailureHandler`来确保失败的登录尝试得到适当的处理:
 
-```
+```java
 public SimpleAuthenticationFilter authenticationFilter() throws Exception {
     SimpleAuthenticationFilter filter = new SimpleAuthenticationFilter();
     filter.setAuthenticationManager(authenticationManagerBean());
@@ -182,7 +182,7 @@ public SimpleAuthenticationFilter authenticationFilter() throws Exception {
 
 我们使用的登录页面收集由我们的`SimpleAuthenticationFilter:`提取的额外的`domain`字段
 
-```
+```java
 <form class="form-signin" th:action="@{/login}" method="post">
  <h2 class="form-signin-heading">Please sign in</h2>
  <p>Example: user / domain / password</p>
@@ -236,7 +236,7 @@ public SimpleAuthenticationFilter authenticationFilter() throws Exception {
 
 在我们的`CustomAuthenticationFilter`中，我们**从请求**中提取用户名、密码和域字段。这些值用于创建我们的自定义`AuthenticationToken`的实例，该实例被传递给`AuthenticationProvider`进行身份验证:
 
-```
+```java
 public class CustomAuthenticationFilter 
   extends UsernamePasswordAuthenticationFilter {
 
@@ -272,7 +272,7 @@ public class CustomAuthenticationFilter
 
 我们创建的`CustomUserDetailsServiceImpl`类简单地实现了契约，并委托给我们的`CustomUserRepository`来获得`User`:
 
-```
+```java
  public UserDetails loadUserByUsernameAndDomain(String username, String domain) 
      throws UsernameNotFoundException {
      if (StringUtils.isAnyBlank(username, domain)) {
@@ -294,7 +294,7 @@ public class CustomAuthenticationFilter
 
 请注意，我们必须将身份验证令牌转换为我们的`CustomAuthenticationToken` ,以便访问我们的自定义字段:
 
-```
+```java
 @Override
 protected UserDetails retrieveUser(String username, 
   UsernamePasswordAuthenticationToken authentication) 

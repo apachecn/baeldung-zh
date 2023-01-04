@@ -18,13 +18,13 @@
 
 让我们来看看它的签名:
 
-```
+```java
 public static int parseInt(String s) throws NumberFormatException
 ```
 
 现在，我们将看到几个例子，其中我们将有符号/无符号的数字字符串作为参数传递给它，以了解从字符串到整数的解析是如何发生的:
 
-```
+```java
 @Test
 public void whenValidNumericStringIsPassed_thenShouldConvertToPrimitiveInt() {
     assertEquals(11, Integer.parseInt("11")); 
@@ -37,7 +37,7 @@ public void whenValidNumericStringIsPassed_thenShouldConvertToPrimitiveInt() {
 
 **`parseInt() `方法的第二个变体接受一个`String` 和一个`int` 作为参数，并返回原始数据类型`int.`** 就像我们看到的第一个变体**，**一样，当它无法将`String`转换为整数时，它也会抛出 *NumberFormatException* :
 
-```
+```java
 public static int parseInt(String s, int radix) throws NumberFormatException
 ```
 
@@ -45,7 +45,7 @@ public static int parseInt(String s, int radix) throws NumberFormatException
 
 为了更好地理解这一点，让我们看几个例子，在这些例子中，我们将一个字符串连同`radix` 参数一起传递给`parseInt()`:
 
-```
+```java
 @Test
 public void whenValidNumericStringWithRadixIsPassed_thenShouldConvertToPrimitiveInt() {
     assertEquals(17, Integer.parseInt("11", 16));
@@ -62,13 +62,13 @@ public void whenValidNumericStringWithRadixIsPassed_thenShouldConvertToPrimitive
 
 最后，`parseInt() `方法的第三个变体**接受一个`CharSequence,` 子串的两个整数`beginIndex`和`endIndex`，以及另一个整数 `radix` 作为参数。**如果传递了无效字符串，它抛出 `NumberFormatException:`
 
-```
+```java
 public static int parseInt(CharSequence s, int beginIndex, int endIndex, int radix) throws NumberFormatException
 ```
 
 JDK 9 在`Integer`类中引入了这个`static`方法。现在，让我们来看看它的运行情况:
 
-```
+```java
 @Test
 public void whenValidNumericStringWithRadixAndSubstringIsPassed_thenShouldConvertToPrimitiveInt() {
     assertEquals(5, Integer.parseInt("100101", 3, 6, 2));
@@ -80,7 +80,7 @@ public void whenValidNumericStringWithRadixAndSubstringIsPassed_thenShouldConver
 
 此外，我们可以看到当传递任何无效字符串时，`Integer.parseInt()` 抛出`NumberFormatException` :
 
-```
+```java
 @Test(expected = NumberFormatException.class)
 public void whenInValidNumericStringIsPassed_thenShouldThrowNumberFormatException(){
     int number = Integer.parseInt("abcd");
@@ -95,7 +95,7 @@ public void whenInValidNumericStringIsPassed_thenShouldThrowNumberFormatExceptio
 
 **`valueOf()` 方法的第一个变体接受一个`String` 作为参数并返回包装类`Integer.`** 如果传递了任何非数字字符串，它抛出 `NumberFormatException`:
 
-```
+```java
 public static Integer valueOf(String s) throws NumberFormatException
 ```
 
@@ -103,7 +103,7 @@ public static Integer valueOf(String s) throws NumberFormatException
 
 接下来，让我们看几个从有符号/无符号数字字符串到整数转换的例子:
 
-```
+```java
 @Test
 public void whenValidNumericStringIsPassed_thenShouldConvertToInteger() {
     Integer expectedNumber = 11;
@@ -121,7 +121,7 @@ public void whenValidNumericStringIsPassed_thenShouldConvertToInteger() {
 
 这是它的签名:
 
-```
+```java
 public static Integer valueOf(int i)
 ```
 
@@ -129,7 +129,7 @@ public static Integer valueOf(int i)
 
 为了进一步理解这一点，让我们看几个例子:
 
-```
+```java
 @Test
 public void whenNumberIsPassed_thenShouldConvertToInteger() {
     Integer expectedNumber = 11;
@@ -147,7 +147,7 @@ public void whenNumberIsPassed_thenShouldConvertToInteger() {
 
 **`valueOf()` 的第三个变体接受一个`String` 和一个 `int` 作为参数，并返回包装类** `**Integer.**` 同样，像我们见过的所有其他变体一样，当它不能将给定的字符串转换为`Integer`类型时，它也会抛出`*NumberFormatException*`:
 
-```
+```java
 public static Integer valueOf(String s, int radix) throws NumberFormatException
 ```
 
@@ -157,7 +157,7 @@ public static Integer valueOf(String s, int radix) throws NumberFormatException
 
 让我们解析几个`String` 对象:
 
-```
+```java
 @Test
 public void whenValidNumericStringWithRadixIsPassed_thenShouldConvertToInetger() {
     Integer expectedNumber1 = 17;

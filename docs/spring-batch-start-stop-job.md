@@ -14,7 +14,7 @@
 
 此外，为了以最直观的方式触发预定的 Spring 批处理作业，让我们添加一个条件标志，仅当该标志设置为 true 时才触发作业:
 
-```
+```java
 private AtomicBoolean enabled = new AtomicBoolean(true);
 
 private AtomicInteger batchRunCounter = new AtomicInteger(0);
@@ -50,7 +50,7 @@ public void launchJob() throws Exception {
 
 我们可以显式调用`postProcessBeforeDestruction()`来销毁给定的调度 bean:
 
-```
+```java
 @Test
 public void stopJobSchedulerWhenSchedulerDestroyed() throws Exception {
     ScheduledAnnotationBeanPostProcessor bean = context
@@ -78,7 +78,7 @@ public void stopJobSchedulerWhenSchedulerDestroyed() throws Exception {
 
 这里有一个用于捕获`Future`地图的自定义任务调度程序:
 
-```
+```java
 @Bean
 public TaskScheduler poolScheduler() {
     return new CustomTaskScheduler();
@@ -105,7 +105,7 @@ private class CustomTaskScheduler
 
 然后，我们迭代`Future`图，并取消批处理作业调度器的`Future`:
 
-```
+```java
 public void cancelFutureSchedulerTasks() {
     scheduledTasks.forEach((k, v) -> {
         if (k instanceof SpringBatchScheduler) {

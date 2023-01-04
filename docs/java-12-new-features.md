@@ -28,7 +28,7 @@ Java 12 在[和`String`类](/web/20220824083948/https://www.baeldung.com/java-st
 
 现在，让我们看一个基本的例子。首先，我们将文本缩进四个空格，然后我们将删除整个缩进:
 
-```
+```java
 String text = "Hello Baeldung!\nThis is Java 12 article.";
 
 text = text.indent(4);
@@ -40,7 +40,7 @@ System.out.println(text);
 
 输出如下所示:
 
-```
+```java
  Hello Baeldung!
     This is Java 12 article.
 
@@ -54,7 +54,7 @@ This is Java 12 article.
 
 例如，让我们使用 transform 方法来恢复字符串:
 
-```
+```java
 @Test
 public void givenString_thenRevertValue() {
     String text = "Baeldung";
@@ -70,7 +70,7 @@ public void givenString_thenRevertValue() {
 
 Java 12 在[的`nio.file.Files`实用程序类](/web/20220824083948/https://www.baeldung.com/java-nio-2-file-api)中引入了一个新的`mismatch`方法:
 
-```
+```java
 public static long mismatch(Path path, Path path2) throws IOException
 ```
 
@@ -80,7 +80,7 @@ public static long mismatch(Path path, Path path2) throws IOException
 
 现在我们来看两个例子。在第一个示例中，我们将创建两个相同的文件，并尝试找出不匹配的地方。返回值应该是-1L:
 
-```
+```java
 @Test
 public void givenIdenticalFiles_thenShouldNotFindMismatch() {
     Path filePath1 = Files.createTempFile("file1", ".txt");
@@ -95,7 +95,7 @@ public void givenIdenticalFiles_thenShouldNotFindMismatch() {
 
 在第二个例子中，我们将创建两个包含“Java 12 文章”和“Java 12 教程”内容的文件。不匹配方法应该返回 8L，因为它是第一个不同的字节:
 
-```
+```java
 @Test
 public void givenDifferentFiles_thenShouldFindMismatch() {
     Path filePath3 = Files.createTempFile("file3", ".txt");
@@ -112,7 +112,7 @@ public void givenDifferentFiles_thenShouldFindMismatch() {
 
 Java 12 中引入了一个新的`teeing`收集器，作为对`Collectors`类的补充[:](/web/20220824083948/https://www.baeldung.com/java-8-collectors)
 
-```
+```java
 Collector<T, ?, R> teeing(Collector<? super T, ?, R1> downstream1,
   Collector<? super T, ?, R2> downstream2, BiFunction<? super R1, ? super R2, R> merger)
 ```
@@ -121,7 +121,7 @@ Collector<T, ?, R> teeing(Collector<? super T, ?, R1> downstream1,
 
 tee collector 的示例用法是计算一组数字的平均值。第一个收集器参数将对这些值求和，第二个参数将给出所有数字的计数。合并函数将获取这些结果并计算平均值:
 
-```
+```java
 @Test
 public void givenSetOfNumbers_thenCalculateAverage() {
     double mean = Stream.of(1, 2, 3, 4, 5)
@@ -137,7 +137,7 @@ Java 12 附带了一个新的[数字格式化程序](/web/20220824083948/https:/
 
 我们可以通过`NumberFormat`类中的`getCompactNumberInstance`方法获得它的实例:
 
-```
+```java
 public static NumberFormat getCompactNumberInstance(Locale locale, NumberFormat.Style formatStyle)
 ```
 
@@ -145,7 +145,7 @@ public static NumberFormat getCompactNumberInstance(Locale locale, NumberFormat.
 
 现在让我们来看一个例子，这个例子将这篇文章下的赞数压缩成两种不同的风格:
 
-```
+```java
 @Test
 public void givenNumber_thenCompactValues() {
     NumberFormat likesShort = 
@@ -164,7 +164,7 @@ public void givenNumber_thenCompactValues() {
 
 一些新功能仅作为预览版提供。要启用它们，我们需要在 IDE 中切换适当的设置，或者明确地告诉编译器使用预览功能:
 
-```
+```java
 javac -Xlint:preview --enable-preview -source 12 src/main/java/File.java
 ```
 
@@ -176,7 +176,7 @@ Java 12 中引入的最流行的特性是[开关表达式](/web/20220824083948/h
 
 首先，让我们看看旧的语法:
 
-```
+```java
 DayOfWeek dayOfWeek = LocalDate.now().getDayOfWeek();
 String typeOfDay = "";
 switch (dayOfWeek) {
@@ -195,7 +195,7 @@ switch (dayOfWeek) {
 
 现在，让我们看看相同的逻辑开关表达式:
 
-```
+```java
 typeOfDay = switch (dayOfWeek) {
     case MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY -> "Working Day";
     case SATURDAY, SUNDAY -> "Day Off";
@@ -208,7 +208,7 @@ typeOfDay = switch (dayOfWeek) {
 
 也可以在 switch 表达式中执行代码，而不返回任何值:
 
-```
+```java
 switch (dayOfWeek) {
     case MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY -> System.out.println("Working Day");
     case SATURDAY, SUNDAY -> System.out.println("Day Off");
@@ -217,7 +217,7 @@ switch (dayOfWeek) {
 
 更复杂的逻辑应该用花括号括起来:
 
-```
+```java
 case MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY -> {
     // more logic
     System.out.println("Working Day")
@@ -232,7 +232,7 @@ Java 12 中引入的另一个预览特性是针对`instanceof`的[模式匹配�
 
 在以前的 Java 版本中，当使用 if 语句和`[instanceof](/web/20220824083948/https://www.baeldung.com/java-instanceof),`时，我们必须显式地对对象进行类型转换才能访问它的特性:
 
-```
+```java
 Object obj = "Hello World!";
 if (obj instanceof String) {
     String s = (String) obj;
@@ -242,7 +242,7 @@ if (obj instanceof String) {
 
 使用 Java 12，我们可以直接在语句中声明新的类型转换变量:
 
-```
+```java
 if (obj instanceof String s) {
     int length = s.length();
 }
@@ -274,7 +274,7 @@ Java 12 为 JDK 源代码引入了一套大约 100 个微基准测试。
 
 Java 12 带来的变化是默认情况下启用 CDS 归档。要在 CD 关闭的情况下运行程序，我们需要将 Xshare 标志设置为 off:
 
-```
+```java
 java -Xshare:off HelloWorld.java
 ```
 

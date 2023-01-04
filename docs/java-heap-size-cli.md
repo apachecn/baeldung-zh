@@ -10,13 +10,13 @@
 
 **要找到正在运行的 Java 应用程序的堆和元空间相关信息，我们可以使用`[jcmd](https://web.archive.org/web/20220626205628/https://docs.oracle.com/en/java/javase/11/tools/jcmd.html) `命令行实用程序**:
 
-```
+```java
 jcmd  GC.heap_info
 ```
 
 首先，让我们使用`[jps](https://web.archive.org/web/20220626205628/https://docs.oracle.com/en/java/javase/11/tools/jps.html) `命令找到特定 Java 应用程序的进程 id:
 
-```
+```java
 $ jps -l
 73170 org.jetbrains.idea.maven.server.RemoteMavenServer36
 4309  quarkus.jar
@@ -25,7 +25,7 @@ $ jps -l
 
 如上所示，我们的 [Quarkus](/web/20220626205628/https://www.baeldung.com/quarkus-io) 应用程序的进程 id 是 4309。现在我们有了进程 id，让我们看看堆信息:
 
-```
+```java
 $ jcmd 4309 GC.heap_info
 4309:
  garbage-first heap   total 206848K, used 43061K
@@ -43,14 +43,14 @@ $ jcmd 4309 GC.heap_info
 
 **该输出可能会根据 GC 算法**而变化。例如，如果我们通过`“-XX:+UnlockExperimentalVMOptions -XX:+UseZGC”`与 [ZGC](/web/20220626205628/https://www.baeldung.com/jvm-zgc-garbage-collector) 运行相同的 Quarkus 应用程序:
 
-```
+```java
 ZHeap           used 28M, capacity 200M, max capacity 1024M
 Metaspace       used 21031K, capacity 21241K, committed 21504K, reserved 22528K
 ```
 
 如上所示，我们使用了 28 MB 的堆和大约 20 MB 的元空间。在撰写本文时，Intellij IDEA 仍在使用 CMS GC 和以下堆信息:
 
-```
+```java
 par new generation   total 613440K, used 114299K
   eden space 545344K,  18% used
   from space 68096K,  16% used
@@ -66,7 +66,7 @@ par new generation   total 613440K, used 114299K
 
 除了 [`jcmd`](/web/20220626205628/https://www.baeldung.com/java-heap-dump-capture#2-jcmd) 之外，我们还可以使用`[jstat](https://web.archive.org/web/20220626205628/https://docs.oracle.com/en/java/javase/11/tools/jstat.html) `从运行的应用程序中找出相同的信息。例如，我们可以使用`jstat -gc` 来查看堆统计数据:
 
-```
+```java
 $ jstat -gc 4309
 S0C    S1C    S0U    S1U      EC       EU        OC         OU       MC     
 0.0    0.0    0.0    0.0   129024.0  5120.0   75776.0    10134.6   20864.0
@@ -108,7 +108,7 @@ MU      CCSC   CCSU     YGC     YGCT    FGC    FGCT     CGC    CGCT     GCTGCT
 
 例如，下面是`jps `如何报告这些值:
 
-```
+```java
 $ jps -lv
 4309 quarkus.jar -Xms200m -Xmx1g
 ```
@@ -117,7 +117,7 @@ $ jps -lv
 
 除了`jps`，其他一些工具也会报告同样的事情。例如，`“jcmd <pid> VM.command_line” `也会报告这些细节:
 
-```
+```java
 $ jcmd 4309 VM.command_line
 4309:
 VM Arguments:
@@ -129,14 +129,14 @@ Launcher Type: SUN_STANDARD
 
 同样，在大多数基于 Unix 的系统上，我们可以使用`procps `包中的`[ps](/web/20220626205628/https://www.baeldung.com/linux/ps-command) `:
 
-```
+```java
 $ ps -ef | grep quarkus
 ... java -Xms200m -Xmx1g -jar quarkus.jar
 ```
 
 最后，在 Linux 上，我们可以使用`/proc `虚拟文件系统及其 pid 文件:
 
-```
+```java
 $ cat /proc/4309/cmdline
 java -Xms200m -Xmx1g -jar quarkus.jar
 ```

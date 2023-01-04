@@ -24,7 +24,7 @@
 
 让我们快速看一下引入 JPA 的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -35,7 +35,7 @@
 
 最后，对于这个例子，我们将使用`H2`作为一个非常轻量级的数据库:
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -45,7 +45,7 @@
 
 我们可以使用 H2 控制台来检查数据库是否启动并运行，还可以使用用户友好的 GUI 来输入数据。我们将在`application.properites`中启用它:
 
-```
+```java
 spring.h2.console.enabled=true
 ```
 
@@ -65,7 +65,7 @@ spring.h2.console.enabled=true
 
 为了检查我们的 H2 是否正常工作，我们将首先在一个新的`models`文件夹中创建一个 JPA 实体:
 
-```
+```java
 @Entity
 public class Book {
 
@@ -86,7 +86,7 @@ public class Book {
 
 以下是我们的示例数据:
 
-```
+```java
 insert into book values(1, 'The Tartar Steppe');
 insert into book values(2, 'Poem Strip');
 insert into book values(3, 'Restless Nights: Selected Stories of Dino Buzzati');
@@ -98,7 +98,7 @@ insert into book values(3, 'Restless Nights: Selected Stories of Dino Buzzati');
 
 为了测试我们的应用程序，我们将继续创建基本组件。首先，我们将 JPA 存储库添加到一个新的`repositories`文件夹中:
 
-```
+```java
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
 }
@@ -108,7 +108,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
 接下来，我们将把`BookService`添加到新的`services`文件夹中:
 
-```
+```java
 @Service
 public class BookService {
 
@@ -125,7 +125,7 @@ public class BookService {
 
 我们将编写下面的`SpringBootTest`:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class BookServiceUnitTest {
@@ -150,7 +150,7 @@ public class BookServiceUnitTest {
 
 我们可以尝试显式设置表名:
 
-```
+```java
 @Entity(name="BOOK")
 public class Book {
     // members, standard getters and setters
@@ -159,7 +159,7 @@ public class Book {
 
 然而，那是不行的。我们需要在`application.properties`中设置这个属性:
 
-```
+```java
 spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 ```
 

@@ -22,7 +22,7 @@
 
 现在我们已经定义了搜索的参数，让我们编写一个简单的解决方案:
 
-```
+```java
 public class WordIndexer {
 
     public List<Integer> findWord(String textString, String word) {
@@ -47,7 +47,7 @@ public class WordIndexer {
 
 为了测试我们的算法，我们将使用莎士比亚的《哈姆雷特》中的一段著名的话，并搜索出现了五次的单词“or ”:
 
-```
+```java
 @Test
 public void givenWord_whenSearching_thenFindAllIndexedLocations() {
     String theString;
@@ -73,7 +73,7 @@ public void givenWord_whenSearching_thenFindAllIndexedLocations() {
 
 当我们运行测试时，我们得到了预期的结果。**搜索“或”会产生以不同方式嵌入文本字符串的五个实例:**
 
-```
+```java
 index of 7, in "or"
 index of 122, in "fortune"
 index of 130, in "Or
@@ -93,7 +93,7 @@ index of 438, in "For"
 
 让我们来看看早期的`findWord( )`方法的增强版本。
 
-```
+```java
 public List<Integer> findWordUpgrade(String textString, String word) {
     List<Integer> indexes = new ArrayList<Integer>();
     StringBuilder output = new StringBuilder();

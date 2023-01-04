@@ -135,13 +135,13 @@ Java 为我们提供了引用对象来控制我们创建的对象和垃圾收集
 
 默认情况下，我们在 Java 程序中创建的每个对象都被一个变量强引用:
 
-```
+```java
 StringBuilder sb = new StringBuilder();
 ```
 
 在上面的代码片段中，`new`关键字创建了一个新的`StringBuilder`对象，并将其存储在堆中。然后变量`sb`存储一个**到这个对象的强引用**。对于垃圾收集器来说，这意味着特定的`StringBuilder`对象根本不符合收集条件，因为`sb`持有对它的强引用。只有当我们像这样取消`sb`时，故事才会改变:
 
-```
+```java
 sb = null;
 ```
 
@@ -151,7 +151,7 @@ sb = null;
 
 可以为上述对象创建一个**软引用**，如下所示:
 
-```
+```java
 StringBuilder sb = new StringBuilder();
 SoftReference<StringBuilder> sbRef = new SoftReference<>(sb);
 sb = null;

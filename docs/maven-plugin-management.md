@@ -21,7 +21,7 @@ Maven 插件提供了执行和管理项目构建所需的所有有用的功能�
 
 例如，我们可以在 POM 中声明 [Jar](https://web.archive.org/web/20220628065049/https://maven.apache.org/plugins/maven-jar-plugin/) 插件:
 
-```
+```java
 <build>
     ....
     <plugins>
@@ -54,7 +54,7 @@ Maven 插件提供了执行和管理项目构建所需的所有有用的功能�
 
 首先，我们将插件添加到父 POM 的`pluginManagement`部分:
 
-```
+```java
 <pluginManagement>
     <plugins>
         <plugin>
@@ -87,7 +87,7 @@ Maven 插件提供了执行和管理项目构建所需的所有有用的功能�
 
 接下来，让我们运行 maven 命令来确保配置有效并且构建成功:
 
-```
+```java
 $ mvn clean test
 ```
 
@@ -97,7 +97,7 @@ $ mvn clean test
 
 现在，让我们参考子 POM 中的这个插件:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -112,7 +112,7 @@ $ mvn clean test
 
 最后，让我们再次运行构建并查看输出:
 
-```
+```java
 ....
 [INFO] --- build-helper-maven-plugin:3.3.0:add-resource (add-resource) @ submodule-1 ---
 [INFO]
@@ -137,7 +137,7 @@ $ mvn clean test
 
 让我们通过将`compiler`插件添加到熟悉的`pluginManagement`部分来尝试一下:
 
-```
+```java
 <pluginManagement>
     ....
     <plugin>

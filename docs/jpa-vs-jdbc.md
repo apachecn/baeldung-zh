@@ -24,7 +24,7 @@ JDBC 允许我们编写 SQL 命令来从关系数据库中读取数据和更新�
 
 让我们看看如何将一个`Employee`类映射到一个`employee`数据库表:
 
-```
+```java
 @Entity
 @Table(name = "employee")
 public class Employee implements Serializable {
@@ -41,7 +41,7 @@ public class Employee implements Serializable {
 
 假设我们的`employee`表与`communication`表有一对多的关系:
 
-```
+```java
 @Entity
 @Table(name = "employee")
 public class Employee implements Serializable {

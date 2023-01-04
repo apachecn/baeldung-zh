@@ -16,7 +16,7 @@
 
 我们可以开始在我们的项目中使用它，方法是将它作为父项添加到我们项目的`pom.xml`:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -32,7 +32,7 @@
 
 例如，如果我们正在构建一个 web 项目，我们可以直接添加`spring-boot-starter-web`，而不需要指定版本:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -45,7 +45,7 @@
 
 为了管理 starter parent 提供的依赖项的不同版本，我们可以在`dependencyManagement`部分显式声明依赖项及其版本:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -65,7 +65,7 @@
 
 如果我们想要改变任何我们想要从起始父节点获取的依赖项的版本，我们可以在依赖项标记中添加依赖项，并直接配置它的属性:
 
-```
+```java
 <properties>
     <junit.version>4.11</junit.version>
 </properties>
@@ -77,7 +77,7 @@
 
 例如，要更改 Java 版本，我们可以在`java.version` 属性中指明:
 
-```
+```java
 <properties>
     <java.version>1.8</java.version>
 </properties>
@@ -91,7 +91,7 @@
 
 让我们用一个简单的例子来说明这一点，在这个例子中，我们希望使用不同于起始父级的另一个父级:
 
-```
+```java
 <parent>
     <groupId>com.baeldung</groupId>
     <artifactId>spring-boot-parent</artifactId>
@@ -103,7 +103,7 @@
 
 现在，在这种情况下，我们仍然可以通过将依赖关系管理添加到`import`范围和`pom`类型中来获得同样的好处:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>

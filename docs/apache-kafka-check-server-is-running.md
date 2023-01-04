@@ -14,7 +14,7 @@
 
  **让我们继续使用 [`nc`](/web/20221008180708/https://www.baeldung.com/linux/netcat-command) 命令，通过正在监听 2181 端口的 Zookeeper 服务器发送转储命令:
 
-```
+```java
 $ echo dump | nc localhost 2181 | grep -i broker | xargs
 /brokers/ids/0
 ```
@@ -23,7 +23,7 @@ $ echo dump | nc localhost 2181 | grep -i broker | xargs
 
 此外，需要注意的是，`dump`命令需要在通常位于`zookeeper.properties`或`zoo.cfg`配置文件中的配置中被明确允许:
 
-```
+```java
 lw.commands.whitelist=dump
 ```
 
@@ -35,7 +35,7 @@ lw.commands.whitelist=dump
 
 让我们定义`KafkaAdminClient`类来包装`AdminClient`类的实例，这样我们可以快速测试我们的代码:
 
-```
+```java
 public class KafkaAdminClient {
     private final AdminClient client;
 
@@ -52,7 +52,7 @@ public class KafkaAdminClient {
 
 接下来，让我们在`KafkaAdminClient`类中定义`verifyConnection()`方法，以验证客户端是否可以连接正在运行的代理服务器:
 
-```
+```java
 public boolean verifyConnection() throws ExecutionException, InterruptedException {
     Collection<Node> nodes = this.client.describeCluster()
       .nodes()
@@ -63,7 +63,7 @@ public boolean verifyConnection() throws ExecutionException, InterruptedExceptio
 
 最后，让我们通过连接到一个正在运行的 Kafka 集群来测试我们的代码:
 
-```
+```java
 @Test
 void givenKafkaIsRunning_whenCheckedForConnection_thenConnectionIsVerified() throws Exception {
     boolean alive = kafkaAdminClient.verifyConnection();
@@ -75,7 +75,7 @@ void givenKafkaIsRunning_whenCheckedForConnection_thenConnectionIsVerified() thr
 
 我们可以使用 [`kcat`](https://web.archive.org/web/20221008180708/https://manpages.ubuntu.com/manpages/focal/man1/kafkacat.1.html) (以前的`kafkacat`)命令来查找是否有正在运行的 Kafka broker 节点。为此，让我们**使用`-L`选项来显示现有主题的元数据**:
 
-```
+```java
 $ kcat -b localhost:9092 -t demo-topic -L
 Metadata for demo-topic (from broker -1: localhost:9092/bootstrap):
  1 brokers:
@@ -87,7 +87,7 @@ Metadata for demo-topic (from broker -1: localhost:9092/bootstrap):
 
 接下来，让我们在代理节点关闭时执行相同的命令:
 
-```
+```java
 $ kcat -b localhost:9092 -t demo-topic -L -m 1
 %3|1660579562.937|FAIL|rdkafka#producer-1| [thrd:localhost:9092/bootstrap]: localhost:9092/bootstrap: Connect to ipv4#127.0.0.1:9092 failed: Connection refused (after 1ms in state CONNECT)
 % ERROR: Failed to acquire metadata: Local: Broker transport failure (Are the brokers reachable? Also try increasing the metadata timeout with -m <timeout>?)

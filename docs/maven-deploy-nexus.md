@@ -16,7 +16,7 @@ Nexus 很快成为托管第三方工件以及跨开发流重用内部工件的�
 
 为了让 Maven 能够部署它在构建的`package`阶段创建的工件，它需要通过`distributionManagement`元素 **:** 定义打包的工件将被部署到的存储库信息
 
-```
+```java
 <distributionManagement>
    <snapshotRepository>
       <id>nexus-snapshots</id>
@@ -31,7 +31,7 @@ Nexus 上有一个托管的、公共的`Snapshots`存储库，因此不需要进
 
 默认情况下，Maven 通过`maven-deploy-plugin`处理部署机制——这映射到默认 Maven 生命周期的`deployment`阶段:
 
-```
+```java
 <plugin>
    <artifactId>maven-deploy-plugin</artifactId>
    <version>2.8.1</version>
@@ -55,7 +55,7 @@ Nexus 上有一个托管的、公共的`Snapshots`存储库，因此不需要进
 
 因此，在部署阶段使用另一个部署插件的第一步是禁用现有的默认映射:
 
-```
+```java
 <plugin>
    <groupId>org.apache.maven.plugins</groupId>
    <artifactId>maven-deploy-plugin</artifactId>
@@ -68,7 +68,7 @@ Nexus 上有一个托管的、公共的`Snapshots`存储库，因此不需要进
 
 现在，我们可以定义:
 
-```
+```java
 <plugin>
    <groupId>org.sonatype.plugins</groupId>
    <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -104,7 +104,7 @@ Nexus 上有一个托管的、公共的`Snapshots`存储库，因此不需要进
 
 服务器的凭证必须在全局 Maven `setting.xml`中定义:
 
-```
+```java
 <servers>
    <server>
       <id>nexus-snapshots</id>
@@ -120,7 +120,7 @@ Nexus 上有一个托管的、公共的`Snapshots`存储库，因此不需要进
 
 执行部署过程非常简单:
 
-```
+```java
 mvn clean deploy -Dmaven.test.skip=true
 ```
 
@@ -130,7 +130,7 @@ mvn clean deploy -Dmaven.test.skip=true
 
 如果运行单个命令，那么测试可以在`deployment`阶段执行之前保持活动运行:
 
-```
+```java
 mvn clean deploy
 ```
 

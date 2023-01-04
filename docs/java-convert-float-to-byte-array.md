@@ -18,7 +18,7 @@
 
 首先让我们看一下使用 Float 类函数的代码:
 
-```
+```java
 public static byte[] floatToByteArray(float value) {
     int intBits =  Float.floatToIntBits(value);
     return new byte[] {
@@ -28,7 +28,7 @@ public static byte[] floatToByteArray(float value) {
 
 其次是一种简洁的转换方式，使用`ByteBuffer`:
 
-```
+```java
 ByteBuffer.allocate(4).putFloat(value).array();
 ```
 
@@ -38,7 +38,7 @@ ByteBuffer.allocate(4).putFloat(value).array();
 
 然而，我们需要首先使用左移将字节数组转换为 int 位:
 
-```
+```java
 public static float byteArrayToFloat(byte[] bytes) {
     int intBits = 
       bytes[0] << 24 | (bytes[1] & 0xFF) << 16 | (bytes[2] & 0xFF) << 8 | (bytes[3] & 0xFF);
@@ -48,7 +48,7 @@ public static float byteArrayToFloat(byte[] bytes) {
 
 使用`ByteBuffer`将一个字节数组转换成一个浮点数就像这样简单:
 
-```
+```java
 ByteBuffer.wrap(bytes).getFloat(); 
 ```
 
@@ -56,7 +56,7 @@ ByteBuffer.wrap(bytes).getFloat();
 
 让我们来看看简单的单元测试实现案例:
 
-```
+```java
 public void givenAFloat_thenConvertToByteArray() {
     assertArrayEquals(new byte[] { 63, -116, -52, -51}, floatToByteArray(1.1f));
 }

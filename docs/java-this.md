@@ -14,7 +14,7 @@
 
 **关键字有助于从局部参数**中区分实例变量。最常见的原因是当我们的构造函数参数与实例字段同名时:
 
-```
+```java
 public class KeywordTest {
 
     private String name;
@@ -37,7 +37,7 @@ public class KeywordTest {
 
 最常见的用例是从参数化构造函数中调用默认构造函数:
 
-```
+```java
 public KeywordTest(String name, int age) {
     this();
 
@@ -47,7 +47,7 @@ public KeywordTest(String name, int age) {
 
 或者，我们可以从无参数构造函数调用参数化构造函数，并传递一些参数:
 
-```
+```java
 public KeywordTest() {
     this("John", 27);
 }
@@ -59,7 +59,7 @@ public KeywordTest() {
 
 这里我们有`printInstance()`方法，其中定义了`this Keyword`参数:
 
-```
+```java
 public KeywordTest() {
     printInstance(this);
 }
@@ -81,7 +81,7 @@ public void printInstance(KeywordTest thisKeyword) {
 
 我们还使用`this`从内部类中访问外部类实例:
 
-```
+```java
 public class KeywordTest {
 
     private String name;

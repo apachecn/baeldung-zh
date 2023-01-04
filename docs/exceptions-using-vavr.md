@@ -16,7 +16,7 @@ Vavr 提供了`functional Interfaces`，它有抛出检查异常的函数。这�
 
 让我们看一个例子:
 
-```
+```java
 static Integer readFromFile(Integer integer) throws IOException {
     // logic to read from file which throws IOException
 } 
@@ -24,7 +24,7 @@ static Integer readFromFile(Integer integer) throws IOException {
 
 我们可以在 lambda 表达式中使用上述方法，而无需处理`IOException`:
 
-```
+```java
 List<Integer> integers = Arrays.asList(3, 9, 7, 0, 10, 20);
 
 CheckedFunction1<Integer, Integer> readFunction = i -> readFromFile(i);
@@ -40,7 +40,7 @@ integers.stream()
 
 API 类为上一节中的示例提供了一个快捷方法:
 
-```
+```java
 List<Integer> integers = Arrays.asList(3, 9, 7, 0, 10, 20);
 
 integers.stream()
@@ -57,7 +57,7 @@ integers.stream()
 
 让我们重写上一节中的示例:
 
-```
+```java
 List<Integer> integers = Arrays.asList(3, 9, 7, 0, 10, 20);
 
 integers.stream()
@@ -75,11 +75,11 @@ integers.stream()
 
 让我们看看使用`Try`的代码:
 
-```
+```java
 List<Integer> integers = Arrays.asList(3, 9, 7, 0, 10, 20); 
 ```
 
-```
+```java
 integers.stream()
   .map(CheckedFunction1.liftTry(i -> readFromFile(i)))
   .flatMap(Value::toJavaStream)

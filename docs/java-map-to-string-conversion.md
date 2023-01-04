@@ -12,7 +12,7 @@
 
 在所有示例中，我们将使用相同的`Map`实现:
 
-```
+```java
 Map<Integer, String> wordsByKey = new HashMap<>();
 wordsByKey.put(1, "one");
 wordsByKey.put(2, "two");
@@ -26,7 +26,7 @@ wordsByKey.put(4, "four");
 
 出于格式化的目的，我们可以用花括号将结果括起来:
 
-```
+```java
 public String convertWithIteration(Map<Integer, ?> map) {
     StringBuilder mapAsString = new StringBuilder("{");
     for (Integer key : map.keySet()) {
@@ -39,7 +39,7 @@ public String convertWithIteration(Map<Integer, ?> map) {
 
 为了检查我们是否正确地转换了我们的`Map`,让我们运行下面的测试:
 
-```
+```java
 @Test
 public void givenMap_WhenUsingIteration_ThenResultingStringIsCorrect() {
     String mapAsString = MapToString.convertWithIteration(wordsByKey);
@@ -55,7 +55,7 @@ public void givenMap_WhenUsingIteration_ThenResultingStringIsCorrect() {
 
 最后，我们连接这些值，为了方便起见，我们使用`Collectors.joining()`方法添加了一些格式规则:
 
-```
+```java
 public String convertWithStream(Map<Integer, ?> map) {
     String mapAsString = map.keySet().stream()
       .map(key -> key + "=" + map.get(key))
@@ -68,7 +68,7 @@ public String convertWithStream(Map<Integer, ?> map) {
 
 让我们将 [Guava](https://web.archive.org/web/20221101145551/https://search.maven.org/search?q=g:com.google.guava%20AND%20a:guava) 添加到我们的项目中，看看我们如何在一行代码中实现转换:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -78,7 +78,7 @@ public String convertWithStream(Map<Integer, ?> map) {
 
 为了使用 Guava 的`Joiner`类执行转换，我们需要在不同的`Map`条目之间定义一个分隔符，在键和值之间定义一个分隔符:
 
-```
+```java
 public String convertWithGuava(Map<Integer, ?> map) {
     return Joiner.on(",").withKeyValueSeparator("=").join(map);
 }
@@ -88,7 +88,7 @@ public String convertWithGuava(Map<Integer, ?> map) {
 
 要使用 [Apache Commons](https://web.archive.org/web/20221101145551/https://search.maven.org/search?q=a:commons-collections4%20AND%20g:org.apache.commons) ，让我们先添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -98,7 +98,7 @@ public String convertWithGuava(Map<Integer, ?> map) {
 
 连接非常简单——我们只需要调用`StringUtils.join`方法:
 
-```
+```java
 public String convertWithApache(Map map) {
     return StringUtils.join(map);
 }
@@ -108,13 +108,13 @@ public String convertWithApache(Map map) {
 
 当我们打电话时:
 
-```
+```java
 MapUtils.debugPrint(System.out, "Map as String", wordsByKey);
 ```
 
 调试文本将被写入控制台:
 
-```
+```java
 Map as String = 
 {
     1 = one java.lang.String
@@ -128,7 +128,7 @@ Map as String =
 
 要执行从`String`到`Map`的转换，让我们定义在哪里拆分以及如何提取键和值:
 
-```
+```java
 public Map<String, String> convertWithStream(String mapAsString) {
     Map<String, String> map = Arrays.stream(mapAsString.split(","))
       .map(entry -> entry.split("="))
@@ -141,7 +141,7 @@ public Map<String, String> convertWithStream(String mapAsString) {
 
 上面的一个更紧凑的版本是依靠番石榴在一行程序中为我们做分割和转换:
 
-```
+```java
 public Map<String, String> convertWithGuava(String mapAsString) {
     return Splitter.on(',').withKeyValueSeparator('=').split(mapAsString);
 }

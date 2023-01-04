@@ -12,13 +12,13 @@ Java 标准库提供了 [`String.toUpperCase()`](/web/20221208143917/https://www
 
 举个例子可以很快说明这个问题。假设我们有一个输入字符串:
 
-```
+```java
 String INPUT = "hi there, Nice to Meet You!";
 ```
 
 给定这个`INPUT`字符串，这是我们预期的结果:
 
-```
+```java
 String EXPECTED = "Hi there, Nice to Meet You!";
 ```
 
@@ -26,7 +26,7 @@ String EXPECTED = "Hi there, Nice to Meet You!";
 
 当然，如果输入字符串为空，结果也应该是空字符串:
 
-```
+```java
 String EMPTY_INPUT = "";
 String EMPTY_EXPECTED = "";
 ```
@@ -46,14 +46,14 @@ Java 的`String`类的 [`substring()`](/web/20221208143917/https://www.baeldung.
 
 接下来，让我们编写一个测试来看看这个解决方案是否有效:
 
-```
+```java
 String output = INPUT.substring(0, 1).toUpperCase() + INPUT.substring(1);
 assertEquals(EXPECTED, output);
 ```
 
 如果我们进行测试，就会通过。然而，**如果我们的输入是一个空字符串，这种方法会引发`IndexOutOfBoundsException`** 。这是因为当我们调用`INPUT.substring(1)`时，end-index ( `1`)大于空字符串的长度(`0`):
 
-```
+```java
 assertThrows(IndexOutOfBoundsException.class, () -> EMPTY_INPUT.substring(1));
 ```
 
@@ -69,7 +69,7 @@ assertThrows(IndexOutOfBoundsException.class, () -> EMPTY_INPUT.substring(1));
 
 **从 Java 9 开始，`Matcher`的替换方法支持一个`Function`对象作为替换对象。**也就是说，我们可以用一个函数来处理匹配的字符序列并完成替换。当然，要解决我们的问题，我们只需要在匹配的字符上调用`toUpperCase()`方法:
 
-```
+```java
 String output = Pattern.compile("^.").matcher(INPUT).replaceFirst(m -> m.group().toUpperCase());
 assertEquals(EXPECTED, output);
 ```
@@ -78,7 +78,7 @@ assertEquals(EXPECTED, output);
 
 如果正则表达式什么都不匹配，替换就不会发生。因此，**这个解决方案也适用于空输入字符串**:
 
-```
+```java
 String emptyOutput = Pattern.compile("^.").matcher(EMPTY_INPUT).replaceFirst(m -> m.group().toUpperCase());
 assertEquals(EMPTY_EXPECTED, emptyOutput);
 ```
@@ -93,7 +93,7 @@ Apache Commons Lang3 是一个很受欢迎的图书馆。它附带了许多方�
 
 要使用这个库，让我们首先添加 [Maven 依赖项](https://web.archive.org/web/20221208143917/https://search.maven.org/search?q=g:org.apache.commons%20AND%20a:commons-lang3&core=gav):
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -103,7 +103,7 @@ Apache Commons Lang3 是一个很受欢迎的图书馆。它附带了许多方�
 
 然后，像往常一样，让我们创建一个测试来看看它是如何工作的:
 
-```
+```java
 String output = StringUtils.capitalize(INPUT);
 assertEquals(EXPECTED, output);
 ```
@@ -112,7 +112,7 @@ assertEquals(EXPECTED, output);
 
 值得一提的是**`StringUtils.capitalize()`方法是空安全的，也适用于空输入字符串**:
 
-```
+```java
 String emptyOutput = StringUtils.capitalize(EMPTY_INPUT);
 assertEquals(EMPTY_EXPECTED, emptyOutput);
 String nullOutput = StringUtils.capitalize(null);

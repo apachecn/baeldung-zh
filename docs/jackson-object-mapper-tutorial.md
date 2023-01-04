@@ -26,7 +26,7 @@ Control your JSON output with Jackson 2 by using a Custom Serializer.[Read more]
 
 让我们首先向`pom.xml`添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -51,7 +51,7 @@ Control your JSON output with Jackson 2 by using a Custom Serializer.[Read more]
 
 在本文中，我们将使用下面的带有两个字段的`Car`类作为序列化或反序列化的对象:
 
-```
+```java
 public class Car {
 
     private String color;
@@ -65,7 +65,7 @@ public class Car {
 
 让我们看第一个使用`ObjectMapper`类的`writeValue`方法将 Java 对象序列化为 JSON 的例子:
 
-```
+```java
 ObjectMapper objectMapper = new ObjectMapper();
 Car car = new Car("yellow", "renault");
 objectMapper.writeValue(new File("target/car.json"), car); 
@@ -73,13 +73,13 @@ objectMapper.writeValue(new File("target/car.json"), car);
 
 文件中上述内容的输出将是:
 
-```
+```java
 {"color":"yellow","type":"renault"} 
 ```
 
 `ObjectMapper`类的方法`writeValueAsString`和`writeValueAsBytes`从 Java 对象生成 JSON，并将生成的 JSON 作为字符串或字节数组返回:
 
-```
+```java
 String carAsString = objectMapper.writeValueAsString(car); 
 ```
 
@@ -87,20 +87,20 @@ String carAsString = objectMapper.writeValueAsString(car);
 
 下面是一个使用`ObjectMapper` 类将 JSON 字符串转换成 Java 对象的简单例子:
 
-```
+```java
 String json = "{ \"color\" : \"Black\", \"type\" : \"BMW\" }";
 Car car = objectMapper.readValue(json, Car.class); 
 ```
 
 `readValue()`函数也接受其他形式的输入，比如包含 JSON 字符串的文件:
 
-```
+```java
 Car car = objectMapper.readValue(new File("src/test/resources/json_car.json"), Car.class);
 ```
 
 或者一个 URL:
 
-```
+```java
 Car car = 
   objectMapper.readValue(new URL("file:src/test/resources/json_car.json"), Car.class);
 ```
@@ -109,7 +109,7 @@ Car car =
 
 或者，可以将 JSON 解析成一个`JsonNode`对象，并用于从特定节点检索数据:
 
-```
+```java
 String json = "{ \"color\" : \"Black\", \"type\" : \"FIAT\" }";
 JsonNode jsonNode = objectMapper.readTree(json);
 String color = jsonNode.get("color").asText();
@@ -120,7 +120,7 @@ String color = jsonNode.get("color").asText();
 
 我们可以使用`TypeReference`将数组形式的 JSON 解析成 Java 对象列表:
 
-```
+```java
 String jsonCarArray = 
   "[{ \"color\" : \"Black\", \"type\" : \"BMW\" }, { \"color\" : \"Red\", \"type\" : \"FIAT\" }]";
 List<Car> listCar = objectMapper.readValue(jsonCarArray, new TypeReference<List<Car>>(){}); 
@@ -130,7 +130,7 @@ List<Car> listCar = objectMapper.readValue(jsonCarArray, new TypeReference<List<
 
 类似地，我们可以将 JSON 解析成 Java `Map`:
 
-```
+```java
 String json = "{ \"color\" : \"Black\", \"type\" : \"BMW\" }";
 Map<String, Object> map 
   = objectMapper.readValue(json, new TypeReference<Map<String,Object>>(){}); 
@@ -146,7 +146,7 @@ Jackson 库的最大优势之一是高度可定制的序列化和反序列化过
 
 在将 JSON 对象转换为 Java 类时，如果 JSON 字符串有一些新字段，默认过程将导致一个异常:
 
-```
+```java
 String jsonString 
   = "{ \"color\" : \"Black\", \"type\" : \"Fiat\", \"year\" : \"1970\" }"; 
 ```
@@ -155,7 +155,7 @@ String jsonString
 
 **通过`configure`方法，我们可以扩展默认流程来忽略新字段**:
 
-```
+```java
 objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 Car car = objectMapper.readValue(jsonString, Car.class);
 
@@ -166,13 +166,13 @@ String year = jsonNodeYear.asText();
 
 还有一个选项基于`FAIL_ON_NULL_FOR_PRIMITIVES`，它定义了是否允许原始值的`null` 值:
 
-```
+```java
 objectMapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false); 
 ```
 
 类似地，`FAIL_ON_NUMBERS_FOR_ENUM` 控制是否允许将枚举值序列化/反序列化为数字:
 
-```
+```java
 objectMapper.configure(DeserializationFeature.FAIL_ON_NUMBERS_FOR_ENUMS, false);
 ```
 
@@ -186,7 +186,7 @@ objectMapper.configure(DeserializationFeature.FAIL_ON_NUMBERS_FOR_ENUMS, false);
 
 下面是一个定制 JSON 序列化器的例子:
 
-```
+```java
 public class CustomCarSerializer extends StdSerializer<Car> {
 
     public CustomCarSerializer() {
@@ -209,7 +209,7 @@ public class CustomCarSerializer extends StdSerializer<Car> {
 
 可以像这样调用这个自定义序列化程序:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 SimpleModule module = 
   new SimpleModule("CustomCarSerializer", new Version(1, 0, 0, null, null, null));
@@ -221,13 +221,13 @@ String carJson = mapper.writeValueAsString(car);
 
 下面是`Car`在客户端的样子(作为 JSON 输出):
 
-```
+```java
 var carJson = {"car_brand":"renault"} 
 ```
 
 这里有一个定制 JSON 反序列化器的例子:
 
-```
+```java
 public class CustomCarDeserializer extends StdDeserializer<Car> {
 
     public CustomCarDeserializer() {
@@ -255,7 +255,7 @@ public class CustomCarDeserializer extends StdDeserializer<Car> {
 
 可以通过以下方式调用此自定义反序列化程序:
 
-```
+```java
 String json = "{ \"color\" : \"Black\", \"type\" : \"BMW\" }";
 ObjectMapper mapper = new ObjectMapper();
 SimpleModule module =
@@ -271,7 +271,7 @@ Car car = mapper.readValue(json, Car.class);
 
 让我们用`datePurchased`属性包装到目前为止在`Request`类中使用的`Car`实例:
 
-```
+```java
 public class Request 
 {
     private Car car;
@@ -283,7 +283,7 @@ public class Request
 
 要控制日期的字符串格式并将其设置为例如`yyyy-MM-dd HH:mm a z`，请考虑下面的代码片段:
 
-```
+```java
 ObjectMapper objectMapper = new ObjectMapper();
 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm a z");
 objectMapper.setDateFormat(df);
@@ -299,7 +299,7 @@ String carAsString = objectMapper.writeValueAsString(request);
 
 例如，我们可以将结果生成为数组:
 
-```
+```java
 String jsonCarArray = 
   "[{ \"color\" : \"Black\", \"type\" : \"BMW\" }, { \"color\" : \"Red\", \"type\" : \"FIAT\" }]";
 ObjectMapper objectMapper = new ObjectMapper();
@@ -310,7 +310,7 @@ Car[] cars = objectMapper.readValue(jsonCarArray, Car[].class);
 
 或者作为`List`:
 
-```
+```java
 String jsonCarArray = 
   "[{ \"color\" : \"Black\", \"type\" : \"BMW\" }, { \"color\" : \"Red\", \"type\" : \"FIAT\" }]";
 ObjectMapper objectMapper = new ObjectMapper();

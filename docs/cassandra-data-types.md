@@ -26,13 +26,13 @@ Cassandra 查询语言(CQL)是结构化查询语言(SQL)的简单替代。它是
 
 让我们使用 [docker 映像](https://web.archive.org/web/20220625071705/https://github.com/bitnami/bitnami-docker-cassandra)创建一个数据库，并使用`cqlsh`将其连接到数据库。接下来，我们应该创建一个`keyspace:`
 
-```
+```java
 CREATE KEYSPACE baeldung WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 1};
 ```
 
 出于本教程的目的，我们创建了一个只有一个数据副本的`keyspace `。现在，让我们将客户端会话连接到一个`keyspace:`
 
-```
+```java
 USE <code class="language-shell">baeldung;
 ```
 
@@ -48,7 +48,7 @@ CQL 支持丰富的原生数据类型。这些数据类型是预定义的，我�
 
 让我们创建一个包含所有这些数据类型的表:
 
-```
+```java
 CREATE TABLE numeric_types
 (
     type1 int PRIMARY KEY,
@@ -70,7 +70,7 @@ CQL 提供了两种数据类型来表示文本。**我们可以使用 text 或 v
 
 让我们创建一个包含所有这些数据类型的表:
 
-```
+```java
 CREATE TABLE text_types
 (
     primaryKey int PRIMARY KEY,
@@ -92,7 +92,7 @@ CREATE TABLE text_types
 
 让我们来看一个`create table`命令的例子:
 
-```
+```java
 CREATE TABLE date_types
 (
     primaryKey int PRIMARY KEY,
@@ -112,7 +112,7 @@ CREATE TABLE date_types
 
 让我们看一个例子:
 
-```
+```java
 CREATE TABLE counter_type
 (
     primaryKey uuid PRIMARY KEY,
@@ -129,7 +129,7 @@ CREATE TABLE counter_type
 
 同样，让我们用这些类型创建一个表:
 
-```
+```java
 CREATE TABLE other_types
 (
     primaryKey int PRIMARY KEY,
@@ -152,7 +152,7 @@ CREATE TABLE other_types
 
 让我们创建一个集合:
 
-```
+```java
 CREATE TABLE collection_types
 (
     primaryKey int PRIMARY KEY,
@@ -166,7 +166,7 @@ CREATE TABLE collection_types
 
 与集合不同，列表可以存储重复值。让我们在表格中添加一个列表:
 
-```
+```java
 ALTER TABLE collection_types
     ADD scores list<text>;
 ```
@@ -177,7 +177,7 @@ ALTER TABLE collection_types
 
 让我们向表中添加另一列:
 
-```
+```java
 ALTER TABLE collection_types
     ADD address map<uuid, text>;
 ```
@@ -186,7 +186,7 @@ ALTER TABLE collection_types
 
 **元组是一组不同类型的元素**。这些集合具有固定的长度:
 
-```
+```java
 CREATE TABLE tuple_type
 (
     primaryKey int PRIMARY KEY,
@@ -198,7 +198,7 @@ CREATE TABLE tuple_type
 
 Cassandra 提供了创建我们自己的数据类型的可能性。我们可以创建、修改和删除这些数据类型。首先，让我们创建自己的类型:
 
-```
+```java
 CREATE TYPE user_defined_type (
     type1 timestamp,
     type2 text,
@@ -208,7 +208,7 @@ CREATE TYPE user_defined_type (
 
 所以，现在我们可以用我们的类型创建一个表:
 
-```
+```java
 CREATE TABLE user_type
 (
     primaryKey int PRIMARY KEY,

@@ -10,7 +10,7 @@
 
 **从 Java 7 开始，`[Files.newDirectoryStream](https://web.archive.org/web/20221126230413/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Files.html#newDirectoryStream(java.nio.file.Path)) `方法返回一个`[DirectoryStream](https://web.archive.org/web/20221126230413/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/DirectoryStream.html)<Path>` 来迭代目录**中的所有条目。所以我们可以使用这个 API 来检查给定的目录是否为空:
 
-```
+```java
 public boolean isEmpty(Path path) throws IOException {
     if (Files.isDirectory(path)) {
         try (DirectoryStream<Path> directory = Files.newDirectoryStream(path)) {
@@ -24,21 +24,21 @@ public boolean isEmpty(Path path) throws IOException {
 
 对于非目录输入，我们将返回`false `，甚至不尝试加载目录条目:
 
-```
+```java
 Path aFile = Paths.get(getClass().getResource("/notDir.txt").toURI());
 assertThat(isEmpty(aFile)).isFalse();
 ```
 
 另一方面，如果输入是一个目录，我们将尝试打开一个指向该目录的`DirectoryStream `。**那么我们将认为目录为空当且仅当第一个`hasNext() `方法调用返回`false`** 。否则，它不是空的:
 
-```
+```java
 Path currentDir = new File("").toPath().toAbsolutePath();
 assertThat(isEmpty(currentDir)).isFalse();
 ```
 
 `DirectoryStream `是一个`Closeable `资源，所以我们将它包装在一个 [try-with-resources 块](/web/20221126230413/https://www.baeldung.com/java-try-with-resources)中。正如我们所料，`isEmpty `方法返回空目录的`true `:
 
-```
+```java
 Path path = Files.createTempDirectory("baeldung-empty");
 assertThat(isEmpty(path)).isTrue();
 ```
@@ -49,7 +49,7 @@ assertThat(isEmpty(path)).isTrue();
 
 **从 JDK 8 开始，`[Files.list](https://web.archive.org/web/20221126230413/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Files.html#list(java.nio.file.Path)) `方法在内部使用`Files.newDirectoryStream` API 来公开一个`Stream<Path>`T5。每个`Path `是给定父目录中的一个条目。因此，我们也可以将这个 API 用于相同的目的:**
 
-```
+```java
 public boolean isEmpty(Path path) throws IOException {
     if (Files.isDirectory(path)) {
         try (Stream<Path> entries = Files.list(path)) {
@@ -69,7 +69,7 @@ public boolean isEmpty(Path path) throws IOException {
 
 **`Files.list `和`Files.newDirectoryStream `都将缓慢地迭代目录条目。因此，他们将非常有效地处理巨大的目录**。然而，像这样的解决方案在这种情况下并不好用:
 
-```
+```java
 public boolean isEmpty(Path path) {
     return path.toFile().listFiles().length == 0;
 }

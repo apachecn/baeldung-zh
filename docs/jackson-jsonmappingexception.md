@@ -26,7 +26,7 @@ The article is focused on showing how to use the new JSON-P support in Spring 4.
 
 默认情况下，Jackson 2 将只处理公共字段，或者具有公共 getter 方法的字段——**序列化所有字段都是私有的或包私有的实体将会失败**:
 
-```
+```java
 public class MyDtoNoAccessors {
     String stringValue;
     int intValue;
@@ -40,7 +40,7 @@ public class MyDtoNoAccessors {
 }
 ```
 
-```
+```java
 @Test(expected = JsonMappingException.class)
 public void givenObjectHasNoAccessors_whenSerializing_thenException() 
   throws JsonParseException, IOException {
@@ -52,7 +52,7 @@ public void givenObjectHasNoAccessors_whenSerializing_thenException()
 
 **满异常**是:
 
-```
+```java
 com.fasterxml.jackson.databind.JsonMappingException: 
 No serializer found for class dtos.MyDtoNoAccessors 
 and no properties discovered to create BeanSerializer 
@@ -67,13 +67,13 @@ and no properties discovered to create BeanSerializer
 
 这个问题的第一个解决方案是全局配置`ObjectMapper`来检测所有字段，不管它们的可见性如何:
 
-```
+```java
 objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 ```
 
 这将**允许在没有获取器的情况下检测私有和包私有字段**，并且序列化将正确工作:
 
-```
+```java
 @Test
 public void givenObjectHasNoAccessors_whenSerializingWithAllFieldsDetected_thenNoException() 
   throws JsonParseException, IOException {
@@ -91,14 +91,14 @@ public void givenObjectHasNoAccessors_whenSerializingWithAllFieldsDetected_thenN
 
 Jackson 2 提供的另一个选项是——而不是全局配置——**通过`@JsonAutoDetect`注释在类级别**控制字段可见性:
 
-```
+```java
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class MyDtoNoAccessors { ... }
 ```
 
 有了这个注释，序列化现在应该可以正确地处理这个特定的类了:
 
-```
+```java
 @Test
 public void givenObjectHasNoAccessorsButHasVisibleFields_whenSerializing_thenNoException() 
   throws JsonParseException, IOException {

@@ -10,7 +10,7 @@
 
 有几种方法可以让我们用 Gradle 运行 Java `main`方法。让我们使用一个简单的程序来仔细查看它们，该程序将一条消息打印到标准输出中:
 
-```
+```java
 public class MainClass {
     public static void main(String[] args) {
         System.out.println("Goodbye cruel world ...");
@@ -24,7 +24,7 @@ Application plugin 是一个核心 Gradle 插件，它定义了一组现成的�
 
 让我们首先在我们的`build.gradle`文件中插入以下内容:
 
-```
+```java
 plugins {
     id "application"
 }
@@ -40,7 +40,7 @@ application {
 
 插件自动生成一个名为`run`的任务，只需要我们将它指向`main`类。第 9 行的闭包正是这样做的，它允许我们触发任务:
 
-```
+```java
 ~/work/baeldung/tutorials/gradle-java-exec> ./gradlew run
 
 > Task :run
@@ -54,7 +54,7 @@ BUILD SUCCESSFUL in 531ms
 
 接下来，让我们在`JavaExec`任务类型的帮助下实现一个用于运行`main`方法的定制任务:
 
-```
+```java
 task runWithJavaExec(type: JavaExec) {
     group = "Execution"
     description = "Run the main class with JavaExecTask"
@@ -69,7 +69,7 @@ task runWithJavaExec(type: JavaExec) {
 
 让我们使用`JavaExec`来运行我们的例子:
 
-```
+```java
 ~/work/baeldung/tutorials/gradle-java-exec> ./gradlew runWithJavaExec
 
 > Task :runWithJavaExec
@@ -87,7 +87,7 @@ BUILD SUCCESSFUL in 526ms
 
 首先，我们创建一个定制的`Exec`任务，其行为类似于`JavaExec`:
 
-```
+```java
 task runWithExec(type: Exec) {
     dependsOn build
     group = "Execution"
@@ -100,7 +100,7 @@ task runWithExec(type: Exec) {
 
 我们配置了类路径并指向第 5 行的`main`类，我们还在第 2 行添加了对`build`任务的依赖。这是必要的，因为我们只能在编译后运行我们的`main`类:
 
-```
+```java
 ~/work/baeldung/tutorials/gradle-java-exec> ./gradlew runWithExec
 
 > Task :runWithExec
@@ -114,7 +114,7 @@ BUILD SUCCESSFUL in 666ms
 
 第二种方法依赖于我们的小应用程序的 jar 打包:
 
-```
+```java
 task runWithExecJarOnClassPath(type: Exec) {
     dependsOn jar
     group = "Execution"
@@ -125,7 +125,7 @@ task runWithExecJarOnClassPath(type: Exec) {
 
 注意第 2 行中 jar 任务的依赖性和第 5 行中 java 可执行文件的第二个参数。**我们使用一个普通的 jar，所以我们需要用第四个参数指定入口点:**
 
-```
+```java
 ~/work/baeldung/tutorials/gradle-java-exec> ./gradlew runWithExecJarOnClassPath
 
 > Task :runWithExecJarOnClassPath
@@ -139,7 +139,7 @@ BUILD SUCCESSFUL in 555ms
 
 第三种方式也依赖于 jar 打包，但是我们在一个`manifest`属性的帮助下定义入口点:
 
-```
+```java
 jar {
     manifest {
         attributes(
@@ -158,7 +158,7 @@ task runWithExecJarExecutable(type: Exec) {
 
 在这里，**我们不再需要指定类路径**，我们可以简单地运行 jar:
 
-```
+```java
 ~/work/baeldung/tutorials/gradle-java-exec> ./gradlew runWithExecJarExecutable
 
 > Task :runWithExecJarExecutable

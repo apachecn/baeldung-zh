@@ -12,7 +12,7 @@ Serenity BDD 中引入的 screen script 旨在通过让团队编写更健壮和�
 
 首先，让我们将以下依赖项添加到 *pom.xml* 文件中:
 
-```
+```java
 <dependency>
     <groupId>net.serenity-bdd</groupId>
     <artifactId>serenity-junit</artifactId>
@@ -36,7 +36,7 @@ Serenity BDD 中引入的 screen script 旨在通过让团队编写更健壮和�
 
 启用 WebDriver 需要以下插件配置，其中`webdriver.chrome.driver`的值应该是我们 maven 项目中 ChromeDriver 二进制文件的相对路径:
 
-```
+```java
 <plugin>
     <artifactId>maven-failsafe-plugin</artifactId>
     <version>2.20</version>
@@ -54,7 +54,7 @@ Serenity BDD 中引入的 screen script 旨在通过让团队编写更健壮和�
 
 在下面的例子中，我们启动一个 ChromeDriver，打开 Google 搜索‘bael dung’。我们希望 Eugen 的名字出现在搜索结果中:
 
-```
+```java
 @RunWith(SerenityRunner.class)
 public class GoogleSearchLiveTest {
 
@@ -91,7 +91,7 @@ Serenity 页面对象代表一个 WebDriver 页面对象。 [`PageObject`](https
 
 让我们首先通过提取元素定位、搜索和结果验证动作，使用 [`PageObject`](https://web.archive.org/web/20221128111557/http://thucydides.info/docs/apidocs/net/thucydides/core/pages/PageObject.html) 来改进我们之前的测试:
 
-```
+```java
 @DefaultUrl("https://www.google.com/ncr")
 public class GoogleSearchPageObject extends PageObject {
 
@@ -119,7 +119,7 @@ public class GoogleSearchPageObject extends PageObject {
 
 由于 **Serenity 将自动实例化 JUnit 测试**中的任何`PageObject`字段，因此之前的测试可以重写为一个更加简洁的测试:
 
-```
+```java
 @RunWith(SerenityRunner.class)
 public class GoogleSearchPageObjectLiveTest {
 
@@ -147,7 +147,7 @@ public class GoogleSearchPageObjectLiveTest {
 
 让我们通过确保我们想要看到的元素可见来增强`resultMatches`方法:
 
-```
+```java
 public void resultMatches(String expected) {
     waitFor(result).waitUntilVisible();
     assertThat(result.getText(), containsString(expected));
@@ -156,7 +156,7 @@ public void resultMatches(String expected) {
 
 如果我们不希望等待太久，我们可以显式指定等待操作的超时时间:
 
-```
+```java
 public void resultMatches(String expected) {
     withTimeoutOf(5, SECONDS)
       .waitFor(result)
@@ -179,7 +179,7 @@ public void resultMatches(String expected) {
 
 1.  Kitty 会用谷歌:
 
-    ```
+    ```java
     public class StartWith implements Task {
 
         public static StartWith googleSearchPage() {
@@ -199,7 +199,7 @@ public void resultMatches(String expected) {
 
 2.  Kitty 可以在谷歌上搜索:
 
-    ```
+    ```java
     public class SearchForKeyword implements Task {
 
         @Step("{0} searches for '#keyword'")
@@ -226,7 +226,7 @@ public void resultMatches(String expected) {
 
 3.  Kitty 可以看到谷歌搜索结果:
 
-    ```
+    ```java
     public class GoogleSearchResults implements Question<List<String>> {
 
         public static Question<List<String>> displayed() {
@@ -244,7 +244,7 @@ public void resultMatches(String expected) {
 
 此外，我们已经定义了谷歌搜索`PageObject`:
 
-```
+```java
 @DefaultUrl("https://www.google.com/ncr")
 public class GoogleSearchPage extends PageObject {
 
@@ -260,7 +260,7 @@ public class GoogleSearchPage extends PageObject {
 
 现在我们的主要测试类看起来像这样:
 
-```
+```java
 @RunWith(SerenityRunner.class)
 public class GoogleSearchScreenplayLiveTest {
 

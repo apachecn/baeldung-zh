@@ -24,7 +24,7 @@ Spring 提供了两个现成的标准 bean 作用域(`“singleton”`和`“pro
 
 让我们开始定义我们的自定义范围类:
 
-```
+```java
 public class TenantScope implements Scope {
     private Map<String, Object> scopedObjects
       = Collections.synchronizedMap(new HashMap<String, Object>());
@@ -40,7 +40,7 @@ public class TenantScope implements Scope {
 
 在我们的实现中，我们检查命名对象是否在我们的地图中。如果是，我们返回它，如果不是，我们使用`ObjectFactory`创建一个新对象，将它添加到我们的地图中，并返回它:
 
-```
+```java
 @Override
 public Object get(String name, ObjectFactory<?> objectFactory) {
     if(!scopedObjects.containsKey(name)) {
@@ -56,7 +56,7 @@ public Object get(String name, ObjectFactory<?> objectFactory) {
 
 我们还必须实现`registerDestructionCallback`方法。此方法提供了一个回调函数，当命名对象被销毁或者作用域本身被应用程序销毁时，将执行该回调函数:
 
-```
+```java
 @Override
 public void registerDestructionCallback(String name, Runnable callback) {
     destructionCallbacks.put(name, callback);
@@ -67,7 +67,7 @@ public void registerDestructionCallback(String name, Runnable callback) {
 
 接下来，让我们实现`remove`方法，该方法从作用域中移除命名对象，同时移除其注册的销毁回调，返回移除的对象:
 
-```
+```java
 @Override
 public Object remove(String name) {
     destructionCallbacks.remove(name);
@@ -81,7 +81,7 @@ public Object remove(String name) {
 
 现在，让我们实现`getConversationId`方法。如果您的作用域支持对话 ID 的概念，您应该在此处返回它。否则，约定是返回`null`:
 
-```
+```java
 @Override
 public String getConversationId() {
     return "tenant";
@@ -92,7 +92,7 @@ public String getConversationId() {
 
 最后，让我们实现`resolveContextualObject`方法。如果您的范围支持多个上下文对象，那么您应该将每个对象与一个键值相关联，并且您应该返回对应于所提供的`key`参数的对象。否则，惯例是退回`null`:
 
-```
+```java
 @Override
 public Object resolveContextualObject(String key) {
     return null;
@@ -103,7 +103,7 @@ public Object resolveContextualObject(String key) {
 
 为了让 Spring 容器知道您的新范围，您需要通过`ConfigurableBeanFactory`实例上的`registerScope`方法将它注册到**中。让我们来看看这个方法的定义:**
 
-```
+```java
 void registerScope(String scopeName, Scope scope);
 ```
 
@@ -111,7 +111,7 @@ void registerScope(String scopeName, Scope scope);
 
 让我们创建一个定制的`BeanFactoryPostProcessor`并使用一个`ConfigurableListableBeanFactory`注册我们的定制范围:
 
-```
+```java
 public class TenantBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
     @Override
@@ -123,7 +123,7 @@ public class TenantBeanFactoryPostProcessor implements BeanFactoryPostProcessor 
 
 现在，让我们编写一个 Spring 配置类来加载我们的`BeanFactoryPostProcessor`实现:
 
-```
+```java
 @Configuration
 public class TenantScopeConfig {
 
@@ -140,7 +140,7 @@ public class TenantScopeConfig {
 
 让我们创建一个简单的`TenantBean`类——稍后我们将声明这种类型的租户范围的 beans:
 
-```
+```java
 public class TenantBean {
 
     private final String name;
@@ -162,7 +162,7 @@ public class TenantBean {
 
 现在，让我们在配置类中定义一些租户范围的 beans:
 
-```
+```java
 @Configuration
 public class TenantBeansConfig {
 
@@ -184,7 +184,7 @@ public class TenantBeansConfig {
 
 让我们编写一个测试来测试我们的自定义范围配置，方法是加载一个`ApplicationContext`，注册我们的`Configuration`类，并检索我们的租户范围 beans:
 
-```
+```java
 @Test
 public final void whenRegisterScopeAndBeans_thenContextContainsFooAndBar() {
     AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
@@ -218,7 +218,7 @@ public final void whenRegisterScopeAndBeans_thenContextContainsFooAndBar() {
 
 我们测试的结果是:
 
-```
+```java
 Hello from foo of type org.baeldung.customscope.TenantBean
 Hello from bar of type org.baeldung.customscope.TenantBean
 ```

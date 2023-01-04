@@ -20,7 +20,7 @@
 
 **首先，让我们定义一个 Spring `@RestController`，它利用了`DeferredResult`，但是没有把它的工作卸载给另一个工作线程:**
 
-```
+```java
 @RestController
 @RequestMapping("/api")
 public class BakeryController { 
@@ -42,7 +42,7 @@ public class BakeryController {
 
 **现在让我们通过将工作卸载到工作线程来异步设置输出:**
 
-```
+```java
 private ExecutorService bakers = Executors.newFixedThreadPool(5);
 
 @GetMapping("/bake/{bakedGood}")
@@ -66,7 +66,7 @@ public DeferredResult<String> publisher(@PathVariable String bakedGood, @Request
 
 **为了处理我们的工人抛出的检查错误，我们将使用`DeferredResult` :** 提供的`setErrorResult` 方法
 
-```
+```java
 bakers.execute(() -> {
     try {
         Thread.sleep(bakeTime);
@@ -81,13 +81,13 @@ bakers.execute(() -> {
 
 由于长轮询经常被实现来异步和同步地处理来自下游系统的响应，**我们应该添加一个机制来在我们从未收到来自下游系统的响应的情况下强制超时。**`DeferredResult`API 为此提供了一种机制。首先，我们在`DeferredResult`对象的构造函数中传递一个超时参数:
 
-```
+```java
 DeferredResult<String> output = new DeferredResult<>(5000L);
 ```
 
 接下来，让我们实现超时场景。为此，我们将使用`onTimeout:`
 
-```
+```java
 output.onTimeout(() -> output.setErrorResult("the bakery is not responding in allowed time"));
 ```
 
@@ -101,7 +101,7 @@ output.onTimeout(() -> output.setErrorResult("the bakery is not responding in al
 
 首先，让我们从一个使用`RestTemplate.` 的例子开始。让我们使用 `RestTemplateBuilder` 创建一个`RestTemplate` 的实例，这样我们就可以设置超时持续时间:
 
-```
+```java
 public String callBakeWithRestTemplate(RestTemplateBuilder restTemplateBuilder) {
     RestTemplate restTemplate = restTemplateBuilder
       .setConnectTimeout(Duration.ofSeconds(10))
@@ -120,7 +120,7 @@ public String callBakeWithRestTemplate(RestTemplateBuilder restTemplateBuilder) 
 
 接下来，让我们创建一个使用`WebClient`来实现相同结果的例子:
 
-```
+```java
 public String callBakeWithWebClient() {
     WebClient webClient = WebClient.create();
     try {
@@ -142,7 +142,7 @@ public String callBakeWithWebClient() {
 
 现在我们已经启动并运行了我们的应用程序，让我们来讨论如何测试它。**我们可以从使用 [`MockMvc`](https://web.archive.org/web/20220628061207/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/web/servlet/MockMvc.html) 来测试对控制器类**的调用开始
 
-```
+```java
 MvcResult asyncListener = mockMvc
   .perform(MockMvcRequestBuilders.get("/api/bake/cookie?bakeTime=1000"))
   .andExpect(request().asyncStarted())
@@ -153,7 +153,7 @@ MvcResult asyncListener = mockMvc
 
 **接下来，我们想要断言异步调用何时返回，并且它匹配我们所期望的值:**
 
-```
+```java
 String response = mockMvc
   .perform(asyncDispatch(asyncListener))
   .andReturn()
@@ -168,7 +168,7 @@ assertThat(response)
 
 为了测试我们的`DeferredResult`的超时机制，我们需要通过在`asyncListener`和`response`调用之间添加一个超时使能器来稍微修改测试代码:
 
-```
+```java
 ((MockAsyncContext) asyncListener
   .getRequest()
   .getAsyncContext())

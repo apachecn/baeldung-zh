@@ -16,7 +16,7 @@
 
 首先，让我们看看保存我们要发送的消息的`Data`类:
 
-```
+```java
 public class Data {
     private String message;
 
@@ -32,7 +32,7 @@ public class Data {
 
 其次，让我们创建一个 sender 类，它在调用`.` 时抛出一个`IllegalMonitorStateException` 。为此，我们将调用`notifyAll()` 方法，而不将其封装在`synchronized`块中:
 
-```
+```java
 class UnsynchronizedSender implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(UnsychronizedSender.class);
     private final Data data;
@@ -59,7 +59,7 @@ class UnsynchronizedSender implements Runnable {
 
 接收器也将抛出一个`IllegalMonitorStateException.` 。与前面的例子类似，我们将在一个`synchronized`块之外调用`wait()`方法:
 
-```
+```java
 public class UnsynchronizedReceiver implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(UnsynchronizedReceiver.class);
     private final Data data;
@@ -88,7 +88,7 @@ public class UnsynchronizedReceiver implements Runnable {
 
 最后，让我们实例化这两个类，并在它们之间发送消息:
 
-```
+```java
 public void sendData() {
     Data data = new Data();
 
@@ -107,7 +107,7 @@ public void sendData() {
 
 当我们试图运行这段代码时，我们将从`UnsynchronizedReceiver`和`UnsynchronizedSender`类收到一个`IllegalMonitorStateException`:
 
-```
+```java
 [sender-thread] ERROR com.baeldung.exceptions.illegalmonitorstate.UnsynchronizedSender - illegal monitor state exception occurred
 java.lang.IllegalMonitorStateException: null
 	at java.base/java.lang.Object.notifyAll(Native Method)
@@ -126,7 +126,7 @@ java.lang.IllegalMonitorStateException: null
 
 为了摆脱`IllegalMonitorStateException, `，我们需要在一个`synchronized`块中对`wait()`、`notify(),`和`notifyAll()` 方法进行每次调用。记住这一点，让我们看看`Sender`类的正确实现应该是什么样子:
 
-```
+```java
 class SynchronizedSender implements Runnable {
     private final Data data;
 
@@ -149,7 +149,7 @@ class SynchronizedSender implements Runnable {
 
 让我们以同样的方式修复`Receiver`:
 
-```
+```java
 class SynchronizedReceiver implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(SynchronizedReceiver.class);
     private final Data data;

@@ -21,7 +21,7 @@
 
  `### 1.1。服务层
 
-```
+```java
 @Service
 public class FooService implements IFooService{
 
@@ -38,7 +38,7 @@ public class FooService implements IFooService{
 
 ### 1.2。DAL/DAO 层
 
-```
+```java
 @Repository
 public class FooDAO extends HibernateDaoSupport implements IFooDAO{
 
@@ -59,7 +59,7 @@ public class FooDAO extends HibernateDaoSupport implements IFooDAO{
 
 为了避免这种不灵活性，我们可以通过改变单元的定义来扩大单元测试的范围——我们可以将持久化操作视为一个单元，从服务层到 DAO，一直到原始的持久化——无论它是什么。现在，单元测试将使用服务层的 API，并将模拟出原始的持久性——在本例中，是`HibernateTemplate`:
 
-```
+```java
 public class FooServiceUnitTest{
 
    FooService instance;

@@ -12,7 +12,7 @@
 
 首先，让我们创建一个想要跳过的简单测试:
 
-```
+```java
 @Test
 void skippableTest() {
     Assertions.assertTrue(true);
@@ -21,13 +21,13 @@ void skippableTest() {
 
 当我们运行`build`命令时:
 
-```
+```java
 gradle build
 ```
 
 我们将看到正在运行的任务:
 
-```
+```java
 > ...
 > Task :compileTestJava
 > Task :processTestResources NO-SOURCE
@@ -40,13 +40,13 @@ gradle build
 
 要查看它的运行情况，让我们运行带有`-x` 选项的`build`命令:
 
-```
+```java
 gradle build -x test
 ```
 
 我们将看到正在运行的任务:
 
-```
+```java
 > Task :compileJava NO-SOURCE 
 > Task :processResources NO-SOURCE 
 > Task :classes UP-TO-DATE 
@@ -64,19 +64,19 @@ gradle build -x test
 
 让我们跳过基于检查项目属性的测试:
 
-```
+```java
 test.onlyIf { !project.hasProperty('someProperty') }
 ```
 
 现在我们将运行`build`命令，并将`someProperty` 传递给 Gradle:
 
-```
+```java
 gradle build -PsomeProperty
 ```
 
 因此，Gradle 跳过运行测试:
 
-```
+```java
 > ...
 > Task :compileTestJava 
 > Task :processTestResources NO-SOURCE 
@@ -88,7 +88,7 @@ gradle build -PsomeProperty
 
 此外，**我们可以使用我们的`build.gradle`文件中的`exclude`属性来排除基于它们的包或类名**的测试:
 
-```
+```java
 test {
     exclude 'org/boo/**'
     exclude '**/Bar.class'
@@ -97,7 +97,7 @@ test {
 
 **我们也可以跳过基于正则表达式模式的测试。**例如，我们可以跳过所有类名以单词`Integration`结尾的测试:
 
-```
+```java
 test {
     exclude '**/**Integration'
 }

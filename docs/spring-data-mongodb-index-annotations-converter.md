@@ -12,7 +12,7 @@
 
 这个注释**在 MongoDB 中将字段标记为索引**:
 
-```
+```java
 @QueryEntity
 @Document
 public class User {
@@ -25,13 +25,13 @@ public class User {
 
 既然`name`字段已经被索引——让我们看看 MongoDB shell 中的索引:
 
-```
+```java
 db.user.getIndexes();
 ```
 
 以下是我们得到的结果:
 
-```
+```java
 [
     {
         "v" : 1,
@@ -50,7 +50,7 @@ db.user.getIndexes();
 
 然而，我们可以通过在我们的`MongoConfig`中显式覆盖`autoIndexCreation()`方法来改变这种行为:
 
-```
+```java
 public class MongoConfig extends AbstractMongoClientConfiguration {
 
     // rest of the config goes here
@@ -64,7 +64,7 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
 让我们再次检查一下 MongoDB shell 中的索引:
 
-```
+```java
 [
     {
         "v" : 1,
@@ -93,7 +93,7 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
 我们还可以通过编程方式创建索引:
 
-```
+```java
 mongoOps.indexOps(User.class).
   ensureIndex(new Index().on("name", Direction.ASC)); 
 ```
@@ -106,7 +106,7 @@ MongoDB 支持复合索引，其中单个索引结构保存对多个字段的引
 
 让我们看一个使用复合索引的简单例子:
 
-```
+```java
 @QueryEntity
 @Document
 @CompoundIndexes({
@@ -119,7 +119,7 @@ public class User {
 
 我们用`email`和`age`字段创建了一个复合索引。现在让我们来看看实际的索引:
 
-```
+```java
 {
     "v" : 1,
     "key" : {
@@ -139,14 +139,14 @@ public class User {
 
 正如我们所料，这个简单的注释排除了数据库中的持久化字段:
 
-```
+```java
 public class User {
 
     @Transient
     private Integer yearOfBirth;
 ```
 
-```
+```java
  // standard getter and setter
 
 }
@@ -154,7 +154,7 @@ public class User {
 
 让我们用设置字段`yearOfBirth`插入用户:
 
-```
+```java
 User user = new User();
 user.setName("Alex");
 user.setYearOfBirth(1985);
@@ -163,7 +163,7 @@ mongoTemplate.insert(user);
 
 现在，如果我们查看数据库的状态，我们会看到文件`yearOfBirth`没有保存:
 
-```
+```java
 {
     "_id" : ObjectId("55d8b30f758fd3c9f374499b"),
     "name" : "Alex",
@@ -173,7 +173,7 @@ mongoTemplate.insert(user);
 
 因此，如果我们查询并检查:
 
-```
+```java
 mongoTemplate.findOne(Query.query(Criteria.where("name").is("Alex")), User.class).getYearOfBirth()
 ```
 
@@ -183,14 +183,14 @@ mongoTemplate.findOne(Query.query(Criteria.where("name").is("Alex")), User.class
 
 `@Field`表示用于 JSON 文档中字段的键:
 
-```
+```java
 @Field("email")
 private EmailAddress emailAddress; 
 ```
 
 现在使用键`email:`将`emailAddress`保存在数据库中
 
-```
+```java
 User user = new User();
 user.setName("Brendan");
 EmailAddress emailAddress = new EmailAddress();
@@ -201,7 +201,7 @@ mongoTemplate.insert(user);
 
 以及数据库的状态:
 
-```
+```java
 {
     "_id" : ObjectId("55d076d80bad441ed114419d"),
     "name" : "Brendan",
@@ -218,7 +218,7 @@ mongoTemplate.insert(user);
 
 让我们来看看我们的`User`类的这个构造函数:
 
-```
+```java
 @PersistenceConstructor
 public User(String name, @Value("#root.age ?: 0") Integer age, EmailAddress emailAddress) {
     this.name =  name;
@@ -233,7 +233,7 @@ public User(String name, @Value("#root.age ?: 0") Integer age, EmailAddress emai
 
 现在让我们看看它是如何工作的:
 
-```
+```java
 User user = new User();
 user.setName("Alex");
 mongoTemplate.insert(user);
@@ -241,7 +241,7 @@ mongoTemplate.insert(user);
 
 我们的数据库将会是:
 
-```
+```java
 {
     "_id" : ObjectId("55d074ca0bad45f744a71318"),
     "name" : "Alex",
@@ -251,7 +251,7 @@ mongoTemplate.insert(user);
 
 所以`age`字段是`null`，但是当我们查询文档并检索`age`时:
 
-```
+```java
 mongoTemplate.findOne(Query.query(Criteria.where("name").is("Alex")), User.class).getAge();
 ```
 
@@ -271,7 +271,7 @@ mongoTemplate.findOne(Query.query(Criteria.where("name").is("Alex")), User.class
 
 首先，这是自定义转换器的实现:
 
-```
+```java
 @Component
 public class UserWriterConverter implements Converter<User, DBObject> {
     @Override
@@ -294,7 +294,7 @@ public class UserWriterConverter implements Converter<User, DBObject> {
 
 现在我们需要注册自定义转换器:
 
-```
+```java
 private List<Converter<?,?>> converters = new ArrayList<Converter<?,?>>();
 
 @Override
@@ -306,7 +306,7 @@ public MongoCustomConversions customConversions() {
 
 当然，如果我们需要，我们也可以用 XML 配置获得同样的结果:
 
-```
+```java
 <bean id="mongoTemplate" 
   class="org.springframework.data.mongodb.core.MongoTemplate">
     <constructor-arg name="mongo" ref="mongo"/>
@@ -321,7 +321,7 @@ public MongoCustomConversions customConversions() {
 
 现在，当我们保存新用户时:
 
-```
+```java
 User user = new User();
 user.setName("Chris");
 mongoOps.insert(user); 
@@ -329,7 +329,7 @@ mongoOps.insert(user);
 
 数据库中的结果文档不再包含类信息:
 
-```
+```java
 {
     "_id" : ObjectId("55cf09790bad4394db84b853"),
     "name" : "Chris",

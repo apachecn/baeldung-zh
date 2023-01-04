@@ -16,7 +16,7 @@ Checkstyle 是一个开源工具，它根据一组可配置的规则检查代码
 
 要将 Checkstyle 添加到项目中，我们需要在`pom.xml`的报告部分添加插件:
 
-```
+```java
 <reporting>
     <plugins>
         <plugin>
@@ -61,7 +61,7 @@ Checkstyle 报告有三个主要部分:
 
 我们通过在插件定义中添加一个执行目标来做到这一点:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-checkstyle-plugin</artifactId>
@@ -149,7 +149,7 @@ Checkstyle 报告有三个主要部分:
 
 以下是用于上述检查的自定义配置文件:
 
-```
+```java
 <!DOCTYPE module PUBLIC
   "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
   "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">

@@ -21,7 +21,7 @@ PostgreSQL 中的模式允许我们将表和视图组织成组，使它们更易
 
 要访问数据库模式的对象，我们必须在要使用的给定数据库对象的名称之前指定模式的名称。例如，要查询模式 s `tore,` 中的表`product` ，我们需要使用表的限定名:
 
-```
+```java
 SELECT * FROM store.product;
 ```
 
@@ -31,7 +31,7 @@ SELECT * FROM store.product;
 
 搜索路径是定义数据库系统对给定数据库对象的搜索的模式的有序列表。如果对象出现在任何(或多个)模式中，我们得到第一个找到的匹配项。否则，我们会得到一个错误。搜索路径中的第一个模式也称为当前模式。要预览搜索路径上有哪些模式，我们可以使用以下查询:
 
-```
+```java
 SHOW search_path;
 ```
 
@@ -39,7 +39,7 @@ SHOW search_path;
 
 要将商店模式添加到搜索路径中，我们可以执行以下查询:
 
-```
+```java
 SET search_path TO store,public;
 ```
 
@@ -53,7 +53,7 @@ SET search_path TO store,public;
 
 在我们将这个概念付诸实践之前，让我们建立一个测试环境。为此，我们将使用 [testcontainers](/web/20220628113624/https://www.baeldung.com/spring-boot-testcontainers-integration-test) 库并创建以下测试设置:
 
-```
+```java
 @ClassRule
 public static PostgresqlTestContainer container = PostgresqlTestContainer.getInstance();
 
@@ -73,7 +73,7 @@ public static void setup() throws Exception {
 
 现在，当数据库设置好后，让我们使用 JDBC URL 连接到`store`模式:
 
-```
+```java
 @Test
 public void settingUpSchemaUsingJdbcURL() throws Exception {
     Properties properties = new Properties();
@@ -95,7 +95,7 @@ public void settingUpSchemaUsingJdbcURL() throws Exception {
 
 为了连接到数据库，**我们可以使用来自 PostgreSQL 驱动程序库`PGSimpleDataSource`的`javax.sql.DataSource` 实现。**这个具体的实现支持建立一个模式:
 
-```
+```java
 @Test
 public void settingUpSchemaUsingPGSimpleDataSource() throws Exception {
     int port = //extracting port from container.getJdbcUrl()
@@ -121,7 +121,7 @@ public void settingUpSchemaUsingPGSimpleDataSource() throws Exception {
 
 如果我们在项目中使用 JPA，**我们可以使用 [`@Table`](/web/20220628113624/https://www.baeldung.com/jpa-entities) 注释在实体级别上指定模式。**这个注释可以保存模式的值，或者默认为空一个`String.` 让我们将`product` 表映射到`Product`实体:
 
-```
+```java
 @Entity
 @Table(name = "product", schema = "store")
 public class Product {
@@ -136,7 +136,7 @@ public class Product {
 
 为了验证这一行为，我们设置了`[EntityManager](/web/20220628113624/https://www.baeldung.com/hibernate-entitymanager)` 实例来查询`product`表:
 
-```
+```java
 @Test
 public void settingUpSchemaUsingTableAnnotation(){
     Map<String,String> props = new HashMap<>();

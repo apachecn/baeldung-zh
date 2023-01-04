@@ -12,7 +12,7 @@
 
 除了现有的依赖项，我们还必须启用 Spring 数据支持:
 
-```
+```java
 <dependency>
     <groupId>org.apache.ignite</groupId>
     <artifactId>ignite-spring-data</artifactId>
@@ -28,7 +28,7 @@
 
 `EmployeeDTO`的 POJO 将如下所示:
 
-```
+```java
 public class EmployeeDTO implements Serializable {
 
     @QuerySqlField(index = true)
@@ -48,7 +48,7 @@ public class EmployeeDTO implements Serializable {
 
 接下来，我们将创建存储库来保存`Employee`对象:
 
-```
+```java
 @RepositoryConfig(cacheName = "baeldungCache")
 public interface EmployeeRepository 
   extends IgniteRepository<EmployeeDTO, Integer> {
@@ -68,7 +68,7 @@ public interface EmployeeRepository
 
 **我们将使用`@EnableIgniteRepositories`注释来添加对 Ignite 存储库的支持:**
 
-```
+```java
 @Configuration
 @EnableIgniteRepositories
 public class SpringDataConfig {
@@ -94,7 +94,7 @@ public class SpringDataConfig {
 
 为了测试应用程序，让我们在应用程序上下文中注册`SpringDataConfiguration`并从中获取`EmployeeRepository`:
 
-```
+```java
 AnnotationConfigApplicationContext context
  = new AnnotationConfigApplicationContext();
 context.register(SpringDataConfig.class);
@@ -105,7 +105,7 @@ EmployeeRepository repository = context.getBean(EmployeeRepository.class);
 
 然后，我们想要创建`EmployeeDTO`实例并将其保存在缓存中:
 
-```
+```java
 EmployeeDTO employeeDTO = new EmployeeDTO();
 employeeDTO.setId(1);
 employeeDTO.setName("John");
@@ -122,27 +122,27 @@ repository.save(employeeDTO.getId(), employeeDTO);
 
 之后，我们可以使用 Spring Data 的`getEmployeeDTOById()`方法从缓存中获取 employee 对象:
 
-```
+```java
 EmployeeDTO employee = repository.getEmployeeDTOById(employeeDTO.getId());
 System.out.println(employee);
 ```
 
 输出显示我们成功获取了初始对象:
 
-```
+```java
 EmployeeDTO{id=1, name='John', isEmployed=true}
 ```
 
 或者，我们可以使用`IgniteCache` API 检索相同的对象:
 
-```
+```java
 IgniteCache<Integer, EmployeeDTO> cache = ignite.cache("baeldungCache");
 EmployeeDTO employeeDTO = cache.get(employeeId);
 ```
 
 或者使用标准的 SQL:
 
-```
+```java
 SqlFieldsQuery sql = new SqlFieldsQuery(
   "select * from EmployeeDTO where isEmployed = 'true'");
 ```

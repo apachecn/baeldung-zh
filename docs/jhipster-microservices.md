@@ -42,7 +42,7 @@ JHipster 注册中心是微服务架构的重要组成部分。它将所有其�
 
 由于 JHipster 注册表是一个标准的 JHipster，所以我们只需要下载并运行它。没有必要修改它:
 
-```
+```java
 git clone https://github.com/jhipster/jhipster-registry
 cd jhipster-registry && ./mvnw
 ```
@@ -55,7 +55,7 @@ cd jhipster-registry && ./mvnw
 
 这里是我们开始构建项目的实际特性的地方。在本例中，我们将创建一个管理汽车的简单微服务应用程序。因此，首先我们将创建应用程序，然后我们将向它添加一个实体:
 
-```
+```java
 # create a directory for the app and cd to it
 mkdir car-app && cd car-app
 # run the jhipster wizard
@@ -75,7 +75,7 @@ yo jhipster
 
 现在我们将向我们的应用程序添加一个`car`实体:
 
-```
+```java
 # runs entity creation wizard
 yo jhipster:entity car
 ```
@@ -86,7 +86,7 @@ yo jhipster:entity car
 
 最后，让我们运行新创建的组件:
 
-```
+```java
 ./mvnw
 ```
 
@@ -94,7 +94,7 @@ yo jhipster:entity car
 
 如果一切都按计划进行，我们的`car-app`将会启动，并且`jhipster-registry`日志将会告诉我们该应用已经成功注册:
 
-```
+```java
 Registered instance CARAPP/carapp:746e7525dffa737747dcdcee55ab43f8
   with status UP (replication=true)
 ```
@@ -103,7 +103,7 @@ Registered instance CARAPP/carapp:746e7525dffa737747dcdcee55ab43f8
 
 现在是前端部分。我们将创建一个微服务网关，并向它表明我们在现有组件上有一个实体，我们希望为其创建前端代码:
 
-```
+```java
 # Create a directory for our gateway app
 mkdir gateway-app && cd gateway-app
 # Runs the JHipster wizard
@@ -123,7 +123,7 @@ yo jhipster
 
 让我们继续实体创建:
 
-```
+```java
 # Runs entity creation wizard
 yo jhipster:entity car
 ```
@@ -132,13 +132,13 @@ yo jhipster:entity car
 
 JHipster 将找到`Car.json`文件，它是我们之前创建的现有微服务应用程序的一部分，并将使用该文件中包含的元数据为该实体创建所有必要的 UI 代码:
 
-```
+```java
 Found the .jhipster/Car.json configuration file, entity can be automatically generated!
 ```
 
 运行`gateway-app`并测试一切是否正常的时间到了:
 
-```
+```java
 # Starts up the gateway-app component
 ./mvnw
 ```
@@ -153,7 +153,7 @@ Found the .jhipster/Car.json configuration file, entity can be automatically gen
 
 让我们创建一个新目录，导航到该目录并运行`yo jhipster`命令:
 
-```
+```java
 mkdir dealer-app && cd dealer-app
 yo jhipster
 ```
@@ -164,14 +164,14 @@ yo jhipster
 
 让我们给我们的`dealer`实体添加几个字段。例如`name`和`address:`
 
-```
+```java
 # Runs the create entity wizard
 yo jhipster:entity dealer
 ```
 
 我们不应该忘记导航到`gateway-app`并告诉它为`dealer`实体生成前端代码:
 
-```
+```java
 # Navigate to the gateway-app root directory
 cd ../gateway-app
 # Runs the create entity wizard 

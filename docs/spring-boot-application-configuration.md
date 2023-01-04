@@ -24,20 +24,20 @@ Spring Boot 可以做很多事情；在本教程中，我们将讨论一些更�
 
 在主独立应用中，主 HTTP 端口默认为 8080；**我们可以轻松地配置 Boot 来使用不同的端口**:
 
-```
+```java
 server.port=8083
 ```
 
 对于基于 YAML 的配置:
 
-```
+```java
 server:
     port: 8083
 ```
 
 我们还可以通过编程定制服务器端口:
 
-```
+```java
 @Component
 public class CustomizationBean implements
   WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
@@ -53,13 +53,13 @@ public class CustomizationBean implements
 
 默认情况下，上下文路径是“/”。如果这不理想，您需要将其更改为/ `app_name`之类的内容，下面是通过属性进行更改的快速而简单的方法:
 
-```
+```java
 server.servlet.contextPath=/springbootapp
 ```
 
 对于基于 YAML 的配置:
 
-```
+```java
 server:
     servlet:
         contextPath:/springbootapp
@@ -67,7 +67,7 @@ server:
 
 最后，更改也可以通过编程来完成:
 
-```
+```java
 @Component
 public class CustomizationBean
   implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
@@ -85,7 +85,7 @@ public class CustomizationBean
 
 然而，这个默认控制器当然可以配置为:
 
-```
+```java
 public class MyCustomErrorController implements ErrorController {
 
     private static final String PATH = "/error";
@@ -103,7 +103,7 @@ public class MyCustomErrorController implements ErrorController {
 
 如果您想配置更具体的错误页面，可以使用统一的 Java DSL 来定制错误处理:
 
-```
+```java
 @Component
 public class CustomizationBean
   implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
@@ -120,7 +120,7 @@ public class CustomizationBean
 
 一个非常简单的`/errorHaven`实现:
 
-```
+```java
 @GetMapping("/errorHaven")
 String errorHeaven() {
     return "You have reached the haven of errors!!!";
@@ -129,7 +129,7 @@ String errorHeaven() {
 
 输出:
 
-```
+```java
 You have reached the haven of errors!!!
 ```
 
@@ -137,7 +137,7 @@ You have reached the haven of errors!!!
 
 你可以在`SpringApplication.` 的帮助下以编程的方式关闭一个引导应用程序。这有一个静态的`exit()` 方法，它有两个参数:`ApplicationContext` 和`ExitCodeGenerator`:
 
-```
+```java
 @Autowired
 public void shutDown(ExecutorServiceExitCodeGenerator exitCodeGenerator) {
     SpringApplication.exit(applicationContext, exitCodeGenerator);
@@ -150,7 +150,7 @@ public void shutDown(ExecutorServiceExitCodeGenerator exitCodeGenerator) {
 
 您可以轻松地**调整引导应用程序**中的日志记录级别；从版本 1.2.0 开始，您可以在主属性文件中配置日志级别:
 
-```
+```java
 logging.level.org.springframework.web: DEBUG
 logging.level.org.hibernate: ERROR
 ```
@@ -161,7 +161,7 @@ logging.level.org.hibernate: ERROR
 
 如果您在嵌入式服务器的帮助下部署应用程序，您可以在引导应用程序**中注册新的 Servlets，方法是将它们作为 bean**从传统配置中公开:
 
-```
+```java
 @Bean
 public HelloWorldServlet helloWorld() {
     return new HelloWorldServlet();
@@ -170,7 +170,7 @@ public HelloWorldServlet helloWorld() {
 
 或者，您可以使用`ServletRegistrationBean**:**` 
 
-```
+```java
 @Bean
 public SpringHelloServletRegistrationBean servletRegistrationBean() {
 
@@ -188,7 +188,7 @@ Spring Boot 初学者通常使用 **Tomcat 作为默认的嵌入式服务器**�
 
 **配置码头**
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -205,7 +205,7 @@ Spring Boot 初学者通常使用 **Tomcat 作为默认的嵌入式服务器**�
 </dependency>
 ```
 
-```
+```java
 @Bean
 public JettyEmbeddedServletContainerFactory  jettyEmbeddedServletContainerFactory() {
     JettyEmbeddedServletContainerFactory jettyContainer = 
@@ -219,7 +219,7 @@ public JettyEmbeddedServletContainerFactory  jettyEmbeddedServletContainerFactor
 
 **配置逆流**
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -236,7 +236,7 @@ public JettyEmbeddedServletContainerFactory  jettyEmbeddedServletContainerFactor
 </dependency>
 ```
 
-```
+```java
 @Bean
 public UndertowEmbeddedServletContainerFactory embeddedServletContainerFactory() {
     UndertowEmbeddedServletContainerFactory factory = 

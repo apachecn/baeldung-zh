@@ -10,7 +10,7 @@
 
 首先，让我们开始用一个更完整的提交响应列表替换`Post`实体中的旧字符串状态，跟踪更多的信息:
 
-```
+```java
 public class Post {
     ...
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "post")
@@ -20,7 +20,7 @@ public class Post {
 
 接下来，让我们看看我们在这个新的提交响应实体中实际跟踪了什么:
 
-```
+```java
 @Entity
 public class SubmissionResponse implements IEntity {
 
@@ -67,7 +67,7 @@ public class SubmissionResponse implements IEntity {
 
 下面是简单的 Spring 数据 JPA 存储库:
 
-```
+```java
 public interface SubmissionResponseRepository extends JpaRepository<SubmissionResponse, Long> {
 
     SubmissionResponse findOneByPostAndAttemptNumber(Post post, int attemptNumber);
@@ -80,7 +80,7 @@ public interface SubmissionResponseRepository extends JpaRepository<SubmissionRe
 
 我们将首先确保我们有一个格式良好的成功或失败原因，来说明帖子被认为是成功还是失败:
 
-```
+```java
 private final static String SCORE_TEMPLATE = "score %d %s minimum score %d";
 private final static String TOTAL_VOTES_TEMPLATE = "total votes %d %s minimum total votes %d";
 
@@ -124,7 +124,7 @@ protected String getSuccessReason(Post post, PostScores postScores) {
 
 现在，我们将改进旧的逻辑并**跟踪这些额外的历史信息**:
 
-```
+```java
 private void submitPost(...) {
     ...
     if (errorNode == null) {
@@ -181,7 +181,7 @@ private void resetPost(Post post, String failReason) {
 
 接下来，我们将修改 DTO，以确保这些新信息能够公开给客户端:
 
-```
+```java
 public class ScheduledPostDto {
     ...
 
@@ -193,7 +193,7 @@ public class ScheduledPostDto {
 
 这里有一个简单的`SubmissionResponseDto`:
 
-```
+```java
 public class SubmissionResponseDto {
 
     private int attemptNumber;
@@ -208,7 +208,7 @@ public class SubmissionResponseDto {
 
 我们还将在`ScheduledPostRestController`中修改转换方法:
 
-```
+```java
 private ScheduledPostDto convertToDto(Post post) {
     ...
     List<SubmissionResponse> response = post.getSubmissionsResponse();
@@ -240,7 +240,7 @@ private SubmissionResponseDto generateResponseDto(SubmissionResponse responseEnt
 
 接下来，我们将修改我们的前端`scheduledPosts.jsp`来处理我们的新响应:
 
-```
+```java
 <div class="modal">
     <h4 class="modal-title">Detailed Status</h4>
     <table id="res"></table>
@@ -289,7 +289,7 @@ function showDetailedStatus(row){
 
 首先，我们将测试`getSuccessReason()` 的实现:
 
-```
+```java
 @Test
 public void whenHasEnoughScore_thenSucceed() {
     Post post = new Post();
@@ -322,7 +322,7 @@ public void givenKeepPostIfHasComments_whenHasComments_thenSucceed() {
 
 接下来，我们将测试`getFailReason()`的实现:
 
-```
+```java
 @Test
 public void whenNotEnoughScore_thenFail() {
     Post post = new Post();

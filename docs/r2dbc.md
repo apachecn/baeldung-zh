@@ -20,7 +20,7 @@
 
 在项目中使用 R2DBC 要求我们向核心 API 和合适的驱动程序添加依赖项。在我们的示例中，我们将使用 H2，因此这意味着只有两个依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.r2dbc</groupId>
     <artifactId>r2dbc-spi</artifactId>
@@ -35,7 +35,7 @@
 
 Maven Central 现在仍然没有 R2DBC 工件，所以我们还需要向我们的项目添加几个 Spring 的存储库:
 
-```
+```java
 <repositories>
     <repository>
         <id>spring-milestones</id>
@@ -62,7 +62,7 @@ Maven Central 现在仍然没有 R2DBC 工件，所以我们还需要向我们�
 
 这个类有静态方法，接受一个`ConnectionFactoryOptions`对象并返回一个`ConnectionFactory. `,因为我们只需要我们的`ConnectionFactory`的一个实例，让我们创建一个`@Bean`,我们可以在以后需要时通过注入使用它:
 
-```
+```java
 @Bean
 public ConnectionFactory connectionFactory(R2DBCConfigurationProperties properties) {
     ConnectionFactoryOptions baseOptions = ConnectionFactoryOptions.parse(properties.getUrl());
@@ -83,7 +83,7 @@ R2DBC 定义了许多众所周知的选项，比如我们前面用过的`USERNAM
 
 以下是典型 R2DBC 连接 URL 的示例:
 
-```
+```java
 r2dbc:h2:mem://./testdb
 ```
 
@@ -104,7 +104,7 @@ r2dbc:h2:mem://./testdb
 
 在接下来的小节中，我们将看到如何通过为一个简单的`Account`类创建一个反应性的 DAO 类来实现与数据库相关的任务。这个类只包含三个属性，并且在我们的数据库中有一个对应的表:
 
-```
+```java
 public class Account {
     private Long id;
     private String iban;
@@ -121,7 +121,7 @@ public class Account {
 
 让我们看一下`findById()`方法的前几行，看看如何检索并开始使用`Connection`:
 
-```
+```java
 public Mono<Account>> findById(Long id) {         
     return Mono.from(connectionFactory.create())
       .flatMap(c ->
@@ -137,7 +137,7 @@ public Mono<Account>> findById(Long id) {
 
 现在我们有了一个`Connection`，让我们用它来创建一个`Statement`，并为它绑定一个参数:
 
-```
+```java
 .flatMap( c -> 
     Mono.from(c.createStatement("select id,iban,balance from Account where id = $1")
       .bind("$1", id)
@@ -164,7 +164,7 @@ public Mono<Account>> findById(Long id) {
 
 因为我们知道给定的`id`只能有一个实例，所以我们实际上会返回一个`Mono`流。实际的转换发生在传递给接收到的`Result`的`map()`方法的函数内部:
 
-```
+```java
 .map(result -> result.map((row, meta) -> 
     new Account(row.get("id", Long.class),
       row.get("iban", String.class),
@@ -182,7 +182,7 @@ R2DBC 还支持语句批处理的创建和执行，这允许在单个`execute()�
 
 我们的示例项目使用一批语句来创建`Account`表，并将一些测试数据插入其中:
 
-```
+```java
 @Bean
 public CommandLineRunner initDatabase(ConnectionFactory cf) {
     return (args) ->
@@ -218,7 +218,7 @@ public CommandLineRunner initDatabase(ConnectionFactory cf) {
 
 我们的示例项目在实现`createAccount() `方法时使用了一个事务:
 
-```
+```java
 public Mono<Account> createAccount(Account account) {    
     return Mono.from(connectionFactory.create())
       .flatMap(c -> Mono.from(c.beginTransaction())
@@ -249,7 +249,7 @@ public Mono<Account> createAccount(Account account) {
 
 现在我们有了一个反应式 DAO，让我们用它来创建一个简单的 [Spring WebFlux](/web/20221127043958/https://www.baeldung.com/spring-webflux) 应用程序，展示如何在一个典型的应用程序中使用它。由于这个框架已经支持反应式构造，这就变成了一个琐碎的任务。例如，让我们看看`GET`方法的实现:
 
-```
+```java
 @RestController
 public class AccountResource {
     private final ReactiveAccountDao accountDao;

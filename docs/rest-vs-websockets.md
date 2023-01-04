@@ -54,7 +54,7 @@ REST(表述性状态转移)是一种架构风格，它为 HTTP 创建 web 服务
 
 要在 Spring Boot 使用 WebSocket，我们需要[合适的启动工具](https://web.archive.org/web/20220926200620/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-websocket/2.1.4.RELEASE/jar):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-websocket</artifactId>
@@ -63,7 +63,7 @@ REST(表述性状态转移)是一种架构风格，它为 HTTP 创建 web 服务
 
 我们现在将配置 STOMP 端点:
 
-```
+```java
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketMessageBrokerConfig implements WebSocketMessageBrokerConfigurer {
@@ -83,7 +83,7 @@ public class WebSocketMessageBrokerConfig implements WebSocketMessageBrokerConfi
 
 让我们快速定义一个简单的 WebSocket 服务器，它接受一个名称并以一个问候作为响应:
 
-```
+```java
 @Controller
 public class WebSocketController {
 
@@ -97,7 +97,7 @@ public class WebSocketController {
 
 最后，让我们构建客户机来与这个 WebSocket 服务器通信。因为我们强调浏览器到服务器的通信，所以让我们用 JavaScript 创建一个客户端:
 
-```
+```java
 var stompClient = null;
 function connect() {
     stompClient = Stomp.client('ws://localhost:8080/ws');
@@ -125,7 +125,7 @@ function showGreeting(message) {
 
 这次让我们使用 Spring Boot 的网络启动器:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -134,7 +134,7 @@ function showGreeting(message) {
 
 现在，我们将利用 Spring 中强大的注释支持来定义一个 REST 端点:
 
-```
+```java
 @RestController
 @RequestMapping(path = "/rest")
 public class RestAPIController {
@@ -148,7 +148,7 @@ public class RestAPIController {
 
 最后，让我们用 JavaScript 创建一个客户端:
 
-```
+```java
 var request = new XMLHttpRequest()
 function sendName() {
     request.open('GET', 'http://localhost:8080/rest/'+$("#name").val(), true)
@@ -182,13 +182,13 @@ URL **定义了 web 资源的唯一位置和检索它的机制**。在客户端-
 
 我们都熟悉 HTTP URL 方案:
 
-```
+```java
 http://localhost:8080/rest
 ```
 
 WebSocket URL 方案也没有太大不同:
 
-```
+```java
 ws://localhost:8080/ws
 ```
 
@@ -238,7 +238,7 @@ WebSocket 通信的另一个有趣的特性是它是全双工的。虽然这个�
 
 因此，上一小节中的 URL 的安全版本应该如下所示:
 
-```
+```java
 https://localhost:443/rest
 wss://localhost:443/ws
 ```

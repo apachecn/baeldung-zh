@@ -14,7 +14,7 @@
 
 这就是为什么我们将使用 [MockFtpServer](https://web.archive.org/web/20220905150932/http://mockftpserver.sourceforge.net/index.html) 来代替，这是一个用 Java 编写的假/存根 FTP 服务器，它提供了一个扩展的 API 以便在 JUnit 测试中使用:
 
-```
+```java
 <dependency>
     <groupId>commons-net</groupId>
     <artifactId>commons-net</artifactId>
@@ -38,7 +38,7 @@
 
 这种 FTP 支持非常基本，但是利用`java.nio.file.Files,`的便利 API，对于简单的用例就足够了:
 
-```
+```java
 @Test
 public void givenRemoteFile_whenDownloading_thenItIsOnTheLocalFilesystem() throws IOException {
     String ftpUrl = String.format(
@@ -63,7 +63,7 @@ public void givenRemoteFile_whenDownloading_thenItIsOnTheLocalFilesystem() throw
 
 它将作为实际 Apache Commons Net FTP 客户端的抽象 API:
 
-```
+```java
 class FtpClient {
 
     private String server;
@@ -99,7 +99,7 @@ class FtpClient {
 
 由于我们的集成测试会有一些样板代码，比如启动/停止 MockFtpServer 和连接/断开我们的客户端，我们可以在`@Before`和`@After`方法中做这些事情:
 
-```
+```java
 public class FtpClientIntegrationTest {
 
     private FakeFtpServer fakeFtpServer;
@@ -141,7 +141,7 @@ public class FtpClientIntegrationTest {
 
 让我们先从测试开始，TDD 式的:
 
-```
+```java
 @Test
 public void givenRemoteFile_whenListingRemoteFiles_thenItIsContainedInList() throws IOException {
     Collection<String> files = ftpClient.listFiles("");
@@ -151,7 +151,7 @@ public void givenRemoteFile_whenListingRemoteFiles_thenItIsContainedInList() thr
 
 实现本身同样简单明了。为了使返回的数据结构简单一点，我们使用 Java 8 `Streams:`将返回的`FTPFile`数组转换成一个`Strings`列表
 
-```
+```java
 Collection<String> listFiles(String path) throws IOException {
     FTPFile[] files = ftp.listFiles(path);
     return Arrays.stream(files)
@@ -166,7 +166,7 @@ Collection<String> listFiles(String path) throws IOException {
 
 这里我们定义了本地文件系统上的源文件和目标:
 
-```
+```java
 @Test
 public void givenRemoteFile_whenDownloading_thenItIsOnTheLocalFilesystem() throws IOException {
     ftpClient.downloadFile("/buz.txt", "downloaded_buz.txt");
@@ -177,7 +177,7 @@ public void givenRemoteFile_whenDownloading_thenItIsOnTheLocalFilesystem() throw
 
 Apache Net Commons FTP 客户端包含一个方便的 API，它将直接写入一个已定义的`OutputStream.`这意味着我们可以直接使用它:
 
-```
+```java
 void downloadFile(String source, String destination) throws IOException {
     FileOutputStream out = new FileOutputStream(destination);
     ftp.retrieveFile(source, out);
@@ -188,7 +188,7 @@ void downloadFile(String source, String destination) throws IOException {
 
 MockFtpServer 为访问其文件系统的内容提供了一些有用的方法。我们可以使用这个特性为上传功能编写一个简单的集成测试:
 
-```
+```java
 @Test
 public void givenLocalFile_whenUploadingIt_thenItExistsOnRemoteLocation() 
   throws URISyntaxException, IOException {
@@ -201,7 +201,7 @@ public void givenLocalFile_whenUploadingIt_thenItExistsOnRemoteLocation()
 
 上传文件在 API 方面与下载文件非常相似，但是我们不使用`OutputStream`，而是需要提供一个`InputStream`:
 
-```
+```java
 void putFileToPath(File file, String path) throws IOException {
     ftp.storeFile(path, new FileInputStream(file));
 }

@@ -12,7 +12,7 @@
 
 用 Spring 和 Java config 设置 Hibernate 3 很简单:
 
-```
+```java
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
@@ -85,7 +85,7 @@ public class PersistenceConfig {
 
 与下面描述的 XML 配置相比，配置中的一个 bean 访问另一个 bean 的方式略有不同。在 XML 中，**指向一个 bean 或者指向一个能够创建那个 bean** 的 bean 工厂没有区别。由于 Java 配置是类型安全的——直接指向 bean 工厂不再是一种选择——我们需要手动从 bean 工厂中检索 bean:
 
-```
+```java
 txManager.setSessionFactory(sessionFactory().getObject());
 ```
 
@@ -93,7 +93,7 @@ txManager.setSessionFactory(sessionFactory().getObject());
 
 类似地，我们也可以用 XML 配置来设置 **Hibernate 3:**
 
-```
+```java
 <context:property-placeholder location="classpath:persistence-mysql.properties" />
 
 <bean id="sessionFactory" 
@@ -127,7 +127,7 @@ txManager.setSessionFactory(sessionFactory().getObject());
 
 然后，使用一个`@Configuration`类将这个 XML 文件引导到 Spring 上下文中:
 
-```
+```java
 @Configuration
 @EnableTransactionManagement
 @ImportResource({ "classpath:persistenceConfig.xml" })
@@ -138,7 +138,7 @@ public class PersistenceXmlConfig {
 
 对于这两种类型的配置，特定于 JDBC 和 Hibernate 的属性都存储在属性文件中:
 
-```
+```java
 # jdbc.X
 jdbc.driverClassName=com.mysql.jdbc.Driver
 jdbc.url=jdbc:mysql://localhost:3306/spring_hibernate_dev?createDatabaseIfNotExist=true
@@ -177,7 +177,7 @@ Hibernate [支持每一个支持的数据库的 SQL 方言](https://web.archive.
 
 至此，Hibernate 3 已经完全配置了 Spring，我们可以在需要的时候直接**注入原始 Hibernate** `SessionFactory`:
 
-```
+```java
 public abstract class FooHibernateDAO{
 
    @Autowired
@@ -197,7 +197,7 @@ public abstract class FooHibernateDAO{
 
 继续 Hibernate 3，Maven 的依赖性很简单:
 
-```
+```java
 <dependency>
    <groupId>org.hibernate</groupId>
    <artifactId>hibernate-core</artifactId>
@@ -207,7 +207,7 @@ public abstract class FooHibernateDAO{
 
 然后，为了使 Hibernate 能够使用它的代理模型，我们还需要`javassist`:
 
-```
+```java
 <dependency>
    <groupId>org.javassist</groupId>
    <artifactId>javassist</artifactId>
@@ -217,7 +217,7 @@ public abstract class FooHibernateDAO{
 
 在本教程中，我们将使用 MySQL 作为我们的数据库，因此我们还需要:
 
-```
+```java
 <dependency>
    <groupId>mysql</groupId>
    <artifactId>mysql-connector-java</artifactId>
@@ -228,7 +228,7 @@ public abstract class FooHibernateDAO{
 
 最后，我们将不会使用 Spring 数据源实现——`DriverManagerDataSource`；相反，我们将使用一个生产就绪的连接池解决方案—Tomcat JDBC 连接池:
 
-```
+```java
 <dependency>
     <groupId>org.apache.tomcat</groupId>
     <artifactId>tomcat-dbcp</artifactId>

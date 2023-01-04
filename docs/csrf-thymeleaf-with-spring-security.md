@@ -14,7 +14,7 @@ CSRF 是一种攻击，它迫使最终用户在当前已通过身份验证的 we
 
 首先，让我们看看将百里香与 Spring 集成所需的配置。在我们的依赖关系中需要`thymeleaf-spring`库:
 
-```
+```java
 <dependency>
     <groupId>org.thymeleaf</groupId>
     <artifactId>thymeleaf</artifactId>
@@ -31,7 +31,7 @@ CSRF 是一种攻击，它迫使最终用户在当前已通过身份验证的 we
 
 此外，为了使用 Spring 安全性，我们需要添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-web</artifactId>
@@ -50,7 +50,7 @@ CSRF 是一种攻击，它迫使最终用户在当前已通过身份验证的 we
 
 除了此处提到的[百里香配置，我们还需要添加 Spring 安全配置。为了做到这一点，我们需要创建类:](/web/20221208143856/https://www.baeldung.com/thymeleaf-in-spring-mvc)
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
@@ -88,13 +88,13 @@ public class WebMVCSecurity {
 
 【Java 配置默认启用 CSRF 保护。为了禁用这个有用的特性，我们需要在`configure(…)`方法中添加这个:
 
-```
+```java
 .csrf().disable()
 ```
 
 在 XML 配置中，我们需要手动指定 CSRF 保护，否则将不起作用:
 
-```
+```java
 <security:http 
   auto-config="true"
   disable-url-rewriting="true" 
@@ -107,7 +107,7 @@ public class WebMVCSecurity {
 
 还请注意，如果我们使用带有登录表单的登录页面，我们需要在代码中手动将 CSRF 令牌作为隐藏参数包含在登录表单中:
 
-```
+```java
 <input 
   type="hidden" 
   th:name="${_csrf.parameterName}" 
@@ -116,7 +116,7 @@ public class WebMVCSecurity {
 
 对于剩余的表单，CSRF 令牌将自动添加到具有隐藏输入的表单中:
 
-```
+```java
 <input 
   type="hidden" 
   name="_csrf"
@@ -128,7 +128,7 @@ public class WebMVCSecurity {
 
 让我们继续讨论 HTML 文件的主要部分，包括表单操作和测试过程的创建。在第一个视图中，我们尝试向列表中添加新学生:
 
-```
+```java
 <!DOCTYPE html>
 <html 
 	xmlns:th="http://www.thymeleaf.org">
@@ -157,7 +157,7 @@ public class WebMVCSecurity {
 
 现在我们进入第二个 HTML 视图。它的目的是试图做 CSRF 的攻击:
 
-```
+```java
 <!DOCTYPE html>
 <html>
 <head>
@@ -186,7 +186,7 @@ public class WebMVCSecurity {
 
 如果您不想使用浏览器测试 CSRF 攻击，您也可以通过快速集成测试来完成；让我们从那个测试的 Spring 配置开始:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = { 
@@ -200,7 +200,7 @@ public class CsrfEnabledIntegrationTest {
 
 继续进行实际的测试:
 
-```
+```java
 @Test
 public void addStudentWithoutCSRF() throws Exception {
     mockMvc.perform(post("/saveStudent").contentType(MediaType.APPLICATION_JSON)

@@ -58,7 +58,7 @@
 
 在我们的`JavaConfig` 中，我们可以分析我们的组件:
 
-```
+```java
 @Configuration
 public class ProfiledMiningConfig {
 
@@ -84,7 +84,7 @@ public class ProfiledMiningConfig {
 
 我们希望在我们的验收环境(UAT)中启用这两个特性。我们可以在我们的`application.yml`文件中创建以下配置文件组:
 
-```
+```java
 spring:
   profiles:
     group:
@@ -105,7 +105,7 @@ spring:
 
 **让我们利用`@ConditionalOnProperty` 和我们的名称空间**重写我们之前的例子:
 
-```
+```java
 @Configuration
 public class CustomPropsMiningConfig {
 
@@ -130,7 +130,7 @@ public class CustomPropsMiningConfig {
 
 结果与 3.1 中的非常相似，但是现在，我们有了自己的名称空间。拥有我们的名称空间允许我们创建有意义的 YAML/属性文件:
 
-```
+```java
 #[...] Some Spring config
 
 features:
@@ -154,7 +154,7 @@ features:
 
 按照我们正在进行的例子:
 
-```
+```java
 @Component
 @ConfigurationProperties(prefix = "features")
 public class ConfigProperties {
@@ -186,7 +186,7 @@ public class ConfigProperties {
 
 让我们创建一个简单的端点来服务我们的配置，以便我们的 UI 可以在需要时查询后端:
 
-```
+```java
 @RestController
 public class FeaturesConfigController {
 

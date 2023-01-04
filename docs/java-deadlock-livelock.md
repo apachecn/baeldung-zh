@@ -24,7 +24,7 @@
 
 现在，让我们编写`DeadlockExample`类:
 
-```
+```java
 public class DeadlockExample {
 
     private Lock lock1 = new ReentrantLock(true);
@@ -71,7 +71,7 @@ public class DeadlockExample {
 
 现在让我们运行这个死锁示例，并注意输出:
 
-```
+```java
 Thread T1: lock1 acquired, waiting to acquire lock2.
 Thread T2: lock2 acquired, waiting to acquire lock1.
 ```
@@ -102,7 +102,7 @@ Thread T2: lock2 acquired, waiting to acquire lock1.
 
 让我们用一个`LivelockExample`类来演示活锁:
 
-```
+```java
 public class LivelockExample {
 
     private Lock lock1 = new ReentrantLock(true);
@@ -163,7 +163,7 @@ public class LivelockExample {
 
 现在，让我们运行这个例子:
 
-```
+```java
 Thread T1: lock1 acquired, trying to acquire lock2.
 Thread T2: lock2 acquired, trying to acquire lock1.
 Thread T1: cannot acquire lock2, releasing lock1.

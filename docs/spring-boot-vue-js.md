@@ -12,7 +12,7 @@
 
 应用程序`pom.xml`使用 [`spring-boot-starter-thymeleaf`](https://web.archive.org/web/20220701154854/https://search.maven.org/classic/#search%7Cga%7C1%7Cspring-boot-starter-thymeleaf) 依赖项以及常用的`[spring-boot-starter-web](https://web.archive.org/web/20220701154854/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-web%22)`进行模板渲染:
 
-```
+```java
 <dependency> 
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId> 
@@ -29,7 +29,7 @@
 
 最后，我们的 Spring Boot 控制器将在`src/main/java`:
 
-```
+```java
 @Controller
 public class MainController {
     @GetMapping("/")
@@ -44,7 +44,7 @@ public class MainController {
 
 让我们使用以下代码运行应用程序:
 
-```
+```java
 mvn spring-boot:run
 ```
 
@@ -52,7 +52,7 @@ mvn spring-boot:run
 
 我们的目标是让页面打印出类似这样的内容:
 
-```
+```java
 Name of Event: FIFA 2018
 
 Lionel Messi
@@ -68,7 +68,7 @@ Portugal top-ranked player
 
 在模板中，让我们加载 Vue.js 和 Bootstrap(可选)来呈现用户界面:
 
-```
+```java
 // in head tag
 
 <!-- Include Bootstrap -->
@@ -94,13 +94,13 @@ Portugal top-ranked player
 
 接下来，让我们设置一个空的 div 元素，我们将把用户界面附加到这个元素上:
 
-```
+```java
 <div id="contents"></div>
 ```
 
 接下来，我们在页面上设置一个 Vue 应用程序:
 
-```
+```java
 <script type="text/babel">
     var app = new Vue({
         el: '#contents'
@@ -116,7 +116,7 @@ Portugal top-ranked player
 
 接下来，让我们创建一个显示从 Spring controller 传来的'`eventName`'属性的 header，并使用百里香的特性渲染它:
 
-```
+```java
 <div class="lead">
     <strong>Name of Event:</strong>
     <span th:text="${eventName}"></span>
@@ -127,7 +127,7 @@ Portugal top-ranked player
 
 我们的 Vue 应用程序现在看起来像这样:
 
-```
+```java
 <script type="text/babel">
     var app = new Vue({
         el: '#contents',
@@ -153,7 +153,7 @@ Portugal top-ranked player
 
 不然 Vue 找不到:
 
-```
+```java
 Vue.component('player-card', {
     props: ['player'],
     template: `<div class="card">
@@ -173,7 +173,7 @@ Vue.component('player-card', {
 
 最后，让我们遍历 app 对象中的一组玩家，并为每个玩家呈现一个`player-card`组件:
 
-```
+```java
 <ul>
     <li style="list-style-type:none" v-for="player in players">
         <player-card
@@ -192,7 +192,7 @@ Vue.component('player-card', {
 
 现在，如果您重新加载该页面，观察在`devtools`中生成的 HTML 标记，它看起来将类似于:
 
-```
+```java
 <ul>
     <li style="list-style-type: none;">
         <div class="card">

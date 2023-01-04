@@ -20,7 +20,7 @@ Java 7 和 Java 8 对 Java 中的[读取文件有类似的支持。](/web/202205
 
 在处理文本文件时，我们经常需要阅读每一行并对其进行处理。 **Groovy 用 `eachLine`方法**为`java.io.File` 提供了一个方便的扩展:
 
-```
+```java
 def lines = []
 
 new File('src/main/resources/ioInput.txt').eachLine { line ->
@@ -30,7 +30,7 @@ new File('src/main/resources/ioInput.txt').eachLine { line ->
 
 提供给`eachLine`的闭包也有一个有用的可选行号。让我们使用行号从文件中只获取特定的行:
 
-```
+```java
 def lineNoRange = 2..4
 def lines = []
 
@@ -45,7 +45,7 @@ new File('src/main/resources/ioInput.txt').eachLine { line, lineNo ->
 
 让我们从零开始我们的行号:
 
-```
+```java
 new File('src/main/resources/ioInput.txt').eachLine(0, { line, lineNo ->
     if (lineNoRange.contains(lineNo)) {
         lines.add(line)
@@ -59,7 +59,7 @@ new File('src/main/resources/ioInput.txt').eachLine(0, { line, lineNo ->
 
 我们也可以很容易地从一个 Groovy `File`对象中获得一个`BufferedReader`。我们可以使用`withReader`来获取文件对象的`BufferedReader`，并将其传递给闭包:
 
-```
+```java
 def actualCount = 0
 new File('src/main/resources/ioInput.txt').withReader { reader ->
     while(reader.readLine()) {
@@ -72,7 +72,7 @@ new File('src/main/resources/ioInput.txt').withReader { reader ->
 
 有时，我们可能希望让`BufferedReader`对象可用。例如，我们可能计划调用一个将一作为参数的方法。为此，我们可以使用`newReader`方法:
 
-```
+```java
 def outputPath = 'src/main/resources/ioOut.txt'
 def reader = new File('src/main/resources/ioInput.txt').newReader()
 new File(outputPath).append(reader)
@@ -87,7 +87,7 @@ reader.close()
 
 让我们使用`withInputStream`向闭包传递一个`InputStream`并读入字节:
 
-```
+```java
 byte[] data = []
 new File("src/main/resources/binaryExample.jpg").withInputStream { stream ->
     data = stream.getBytes()
@@ -96,7 +96,7 @@ new File("src/main/resources/binaryExample.jpg").withInputStream { stream ->
 
 如果我们需要一个`InputStream`对象，我们可以使用`newInputStream`得到一个:
 
-```
+```java
 def outputPath = 'src/main/resources/binaryOut.jpg'
 def is = new File('src/main/resources/binaryExample.jpg').newInputStream()
 new File(outputPath).append(is)
@@ -111,25 +111,25 @@ is.close()
 
 如果我们希望我们的文件行在一个`List`中，我们可以使用`collect`和一个传递给闭包的迭代器`it`:
 
-```
+```java
 def actualList = new File('src/main/resources/ioInput.txt').collect {it}
 ```
 
 要将文件中的行放入一个数组`Strings`，我们可以使用`as String[]`:
 
-```
+```java
 def actualArray = new File('src/main/resources/ioInput.txt') as String[]
 ```
 
 对于短文件，我们可以使用`text`获得一个`String`中的全部内容:
 
-```
+```java
 def actualString = new File('src/main/resources/ioInput.txt').text
 ```
 
 当处理二进制文件时，有一个`bytes`方法:
 
-```
+```java
 def contents = new File('src/main/resources/binaryExample.jpg').bytes
 ```
 
@@ -137,7 +137,7 @@ def contents = new File('src/main/resources/binaryExample.jpg').bytes
 
 在我们开始[写入文件](/web/20220524024917/https://www.baeldung.com/java-write-to-file)之前，让我们设置一下将要输出的文本:
 
-```
+```java
 def outputLines = [
     'Line one of output example',
     'Line two of output example',
@@ -151,7 +151,7 @@ def outputLines = [
 
 让我们使用`withWriter`来获取一个`BufferedWriter`并将其传递给一个闭包:
 
-```
+```java
 def outputFileName = 'src/main/resources/ioOutput.txt'
 new File(outputFileName).withWriter { writer ->
     outputLines.each { line ->
@@ -164,7 +164,7 @@ new File(outputFileName).withWriter { writer ->
 
 Groovy 还有一个获取`BufferedWriter`对象的方法。让我们用`newWriter`得到一个`BufferedWriter`:
 
-```
+```java
 def outputFileName = 'src/main/resources/ioOutput.txt'
 def writer = new File(outputFileName).newWriter()
 outputLines.forEach {line ->
@@ -182,7 +182,7 @@ writer.close()
 
 让我们使用`withOutputStream`将一些字节写入文件:
 
-```
+```java
 byte[] outBytes = [44, 88, 22]
 new File(outputFileName).withOutputStream { stream ->
     stream.write(outBytes)
@@ -191,7 +191,7 @@ new File(outputFileName).withOutputStream { stream ->
 
 让我们用`newOutputStream`得到一个`OutputStream`对象，并用它来写一些字节:
 
-```
+```java
 byte[] outBytes = [44, 88, 22]
 def os = new File(outputFileName).newOutputStream()
 os.write(outBytes)
@@ -206,7 +206,7 @@ os.close()
 
 让我们使用`<<`操作符来编写一些简单的文本行:
 
-```
+```java
 def ln = System.getProperty('line.separator')
 def outputFileName = 'src/main/resources/ioOutput.txt'
 new File(outputFileName) << "Line one of output example${ln}" + 
@@ -219,7 +219,7 @@ new File(outputFileName) << "Line one of output example${ln}" +
 
 让我们用同样的方式写二进制数据:
 
-```
+```java
 def outputFileName = 'src/main/resources/ioBinaryOutput.bin'
 def outputFile = new File(outputFileName)
 byte[] outBytes = [44, 88, 22]
@@ -234,7 +234,7 @@ Groovy 也为我们提供了使用文件树的简单方法。在本节中，我�
 
 让我们使用`eachFile`列出一个目录中的所有文件和目录:
 
-```
+```java
 new File('src/main/resources').eachFile { file ->
     println file.name
 }
@@ -242,7 +242,7 @@ new File('src/main/resources').eachFile { file ->
 
 处理文件时的另一个常见场景是需要根据文件名过滤文件。我们只列出以“io”开头，以”结尾的文件。txt "使用`eachFileMatch` 和一个正则表达式:
 
-```
+```java
 new File('src/main/resources').eachFileMatch(~/io.*\.txt/) { file ->
     println file.name
 }
@@ -252,7 +252,7 @@ new File('src/main/resources').eachFileMatch(~/io.*\.txt/) { file ->
 
 让我们使用`eachFileRecurse`递归地列出所有文件，并为其提供一个`FILES`的`FileType`:
 
-```
+```java
 new File('src/main').eachFileRecurse(FileType.FILES) { file ->
     println "$file.parent $file.name"
 }
@@ -264,7 +264,7 @@ new File('src/main').eachFileRecurse(FileType.FILES) { file ->
 
 让我们用`eachFileRecurse`递归地列出目录:
 
-```
+```java
 new File('src/main').eachFileRecurse(FileType.DIRECTORIES) { file ->
     println "$file.parent $file.name"
 }
@@ -272,7 +272,7 @@ new File('src/main').eachFileRecurse(FileType.DIRECTORIES) { file ->
 
 现在，让我们对`eachDirRecurse`做同样的事情:
 
-```
+```java
 new File('src/main').eachDirRecurse { dir ->
     println "$dir.parent $dir.name"
 }
@@ -284,7 +284,7 @@ new File('src/main').eachDirRecurse { dir ->
 
 让我们在我们的 *src/main* 目录下使用`traverse`,并跳过处理`groovy`目录下的树:
 
-```
+```java
 new File('src/main').traverse { file ->
    if (file.directory && file.name == 'groovy') {
         FileVisitResult.SKIP_SUBTREE
@@ -302,7 +302,7 @@ new File('src/main').traverse { file ->
 
 让我们建立一些原始数据:
 
-```
+```java
 String message = 'This is a serialized string'
 int length = message.length()
 boolean valid = true
@@ -310,7 +310,7 @@ boolean valid = true
 
 现在，让我们使用`withDataOutputStream`将数据序列化到一个文件中:
 
-```
+```java
 new File('src/main/resources/ioData.txt').withDataOutputStream { out ->
     out.writeUTF(message)
     out.writeInt(length)
@@ -320,7 +320,7 @@ new File('src/main/resources/ioData.txt').withDataOutputStream { out ->
 
 并使用`withDataInputStream`将其读回:
 
-```
+```java
 String loadedMessage = ""
 int loadedLength
 boolean loadedValid
@@ -340,7 +340,7 @@ new File('src/main/resources/ioData.txt').withDataInputStream { is ->
 
 让我们首先定义一个实现`Serializable`的类:
 
-```
+```java
 class Task implements Serializable {
     String description
     Date startDate
@@ -351,13 +351,13 @@ class Task implements Serializable {
 
 现在让我们创建一个可以序列化到文件中的`Task`实例:
 
-```
+```java
 Task task = new Task(description:'Take out the trash', startDate:new Date(), status:0)
 ```
 
 有了我们的`Task`对象，让我们使用`withObjectOutputStream`将它序列化为一个文件:
 
-```
+```java
 new File('src/main/resources/ioSerializedObject.txt').withObjectOutputStream { out ->
     out.writeObject(task)
 }
@@ -365,7 +365,7 @@ new File('src/main/resources/ioSerializedObject.txt').withObjectOutputStream { o
 
 最后，让我们用`withObjectInputStream`来读一下我们的`Task`:
 
-```
+```java
 Task taskRead
 
 new File('src/main/resources/ioSerializedObject.txt').withObjectInputStream { is ->

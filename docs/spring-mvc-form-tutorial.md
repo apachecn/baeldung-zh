@@ -26,7 +26,7 @@ Thymeleaf is a templating language with excellent integration with Spring. This 
 
 首先——让我们定义一个简单的实体**,我们将显示它并将其绑定到表单上:**
 
-```
+```java
 public class Employee {
     private String name;
     private long id;
@@ -42,7 +42,7 @@ public class Employee {
 
 接下来——让我们定义**实际的表单**，当然，还有包含它的 HTML 文件。我们将使用一个创建/注册新员工的页面: 
 
-```
+```java
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <html>
     <head>
@@ -78,7 +78,7 @@ public class Employee {
 
 接下来——`<form:form>`标签在这里扮演着重要的角色；它非常类似于常规的 HTLM `<form>`标记，但是`modelAttribute` 属性是指定支持该表单的模型对象名称的关键:
 
-```
+```java
 <form:form method="POST" 
   action="/SpringMVCFormExample/addEmployee" modelAttribute="employee">
 ```
@@ -95,7 +95,7 @@ public class Employee {
 
 现在，让我们看看**控制器**，它将处理后端:
 
-```
+```java
 @Controller
 public class EmployeeController {
 
@@ -122,7 +122,7 @@ public class EmployeeController {
 
 还要注意，如果没有将名为“employee”的对象添加到模型中，那么当我们试图访问 JSP 时，Spring 会报错，因为 JSP 将被设置为将表单绑定到“employee”模型属性:
 
-```
+```java
 java.lang.IllegalStateException: 
   Neither BindingResult nor plain target object 
     for bean name 'employee' available as request attribute
@@ -137,7 +137,7 @@ java.lang.IllegalStateException:
 
 默认情况下，当请求绑定过程中出现错误时，Spring MVC 会抛出异常。这通常不是我们想要的，相反，我们应该向用户呈现这些错误。我们将使用一个`BindingResult`作为我们的控制器方法的参数: 
 
-```
+```java
 public String submit(
   @Valid @ModelAttribute("employee") Employee employee,
   BindingResult result,
@@ -146,7 +146,7 @@ public String submit(
 
 `BindingResult`参数需要放在表单支持对象之后——这是方法参数的顺序很重要的极少数情况之一。否则，我们会遇到下面的异常:
 
-```
+```java
 java.lang.IllegalStateException: 
   Errors/BindingResult argument declared without preceding model attribute. 
     Check your handler method signature!
@@ -154,7 +154,7 @@ java.lang.IllegalStateException:
 
 现在——不再抛出异常；相反，错误将被记录在传递给`submit`方法的`BindingResult`上。此时，我们可以用多种方式处理这些错误——例如，可以取消操作: 
 
-```
+```java
 @RequestMapping(value = "/addEmployee", method = RequestMethod.POST)
 public String submit(@Valid @ModelAttribute("employee")Employee employee, 
   BindingResult result,  ModelMap model) {
@@ -169,7 +169,7 @@ public String submit(@Valid @ModelAttribute("employee")Employee employee,
 
 请注意，在结果包含错误的情况下，我们如何向用户返回另一个视图，以便正确显示这些错误。让我们来看看那个视图——`error.jsp`:
 
-```
+```java
 <html>
     <head>
     </head>
@@ -190,7 +190,7 @@ public String submit(@Valid @ModelAttribute("employee")Employee employee,
 
 最后，除了创建新员工之外，我们还可以简单地显示一个员工，下面是快速查看代码:
 
-```
+```java
 <body>
     <h2>Submitted Employee Information</h2>
     <table>

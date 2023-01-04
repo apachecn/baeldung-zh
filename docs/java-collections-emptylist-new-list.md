@@ -14,7 +14,7 @@
 
 创建新列表实例时，您可以根据实施情况对其进行修改:
 
-```
+```java
 @Test
 public void givenArrayList_whenAddingElement_addsNewElement() {	 	 
     List<String> mutableList = new ArrayList<>();	 	 
@@ -35,7 +35,7 @@ public void givenCollectionsEmptyList_whenAdding_throwsException() {
 
 **`Collection.emptyList()`只创建一次新的空列表实例**，如源代码所示:
 
-```
+```java
 public static final List EMPTY_LIST = new EmptyList<>();
 
 public static final <T> List<T> emptyList() {

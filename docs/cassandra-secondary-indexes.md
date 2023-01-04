@@ -24,7 +24,7 @@ Cassandra 是一个 NoSQL 分布式数据库，具有完全分散的通信模型
 
 让我们看一个例子:
 
-```
+```java
 CREATE TABLE company (
     company_name text,
     employee_name text,
@@ -58,7 +58,7 @@ Cassandra 自动对数据进行分区，无需人工干预，从而为大数据�
 
 让我们使用之前定义的`company`表，并尝试通过`employee_age`进行搜索:
 
-```
+```java
 SELECT * FROM company WHERE employee_age = 30;
 
 InvalidRequest: Error from server: code=2200 [Invalid query] message="Cannot execute this query as it might involve data filtering and thus may have unpredictable performance. If you want to execute this query despite the performance unpredictability, use ALLOW FILTERING"
@@ -70,7 +70,7 @@ InvalidRequest: Error from server: code=2200 [Invalid query] message="Cannot exe
 
 然而，我们可以使用它的一个可接受的用例是当我们需要在单个分区上进行大量过滤时。在这种情况下，Cassandra 仍然执行表扫描，但是我们可以将其限制到单个节点:
 
-```
+```java
 SELECT * FROM company WHERE company_name = 'company_a' AND employee_age = 30 ALLOW FILTERING;
 ```
 
@@ -90,13 +90,13 @@ Cassandra 中的二级索引解决了查询不属于主键的列的需要。
 
 让我们在`employee_age`列上定义一个二级索引:
 
-```
+```java
 CREATE INDEX IF NOT EXISTS ON company (employee_age);
 ```
 
 准备就绪后，我们现在可以通过`employee_age`运行查询，而不会出现任何错误:
 
-```
+```java
 SELECT * FROM company WHERE employee_age = 30; 
 
 company_name  | employee_email    | employee_age | employee_name 
@@ -106,7 +106,7 @@ company_name  | employee_email    | employee_age | employee_name
 
 当我们建立索引时，Cassandra 会在后台创建一个隐藏表来存储索引数据:
 
-```
+```java
 CREATE TABLE company_by_employee_age_idx ( 
     employee_age int,
     company_name text,
@@ -131,7 +131,7 @@ SASI 引入了将`SSTable`生命周期与指数绑定的新思路。执行内存
 
 让我们看看如何定义 SASI 指数:
 
-```
+```java
 CREATE CUSTOM INDEX IF NOT EXISTS company_by_employee_age ON company (employee_age) USING 'org.apache.cassandra.index.sasi.SASIIndex';
 ```
 
@@ -149,7 +149,7 @@ SAI 为每一列存储单独的索引文件，并包含一个指向`SSTable`中�
 
 让我们使用 SAI 来定义我们的索引:
 
-```
+```java
 CREATE CUSTOM INDEX ON company (employee_age) USING 'StorageAttachedIndex' WITH OPTIONS = {'case_sensitive': false, 'normalize': false};
 ```
 
@@ -159,19 +159,19 @@ normalize 选项将特殊字符转换为其基本字符。例如，我们可以�
 
 首先，当我们在查询中使用二级索引时，建议添加分区键作为条件。**因此，我们可以将读取操作减少到单个节点**(以及取决于一致性级别的副本):
 
-```
+```java
 SELECT * FROM company WHERE employee_age = 30 AND company_name = "company_A";
 ```
 
 **其次，我们可以将查询限制在分区键列表**中，并限制获取结果所涉及的节点数量:
 
-```
+```java
 SELECT * FROM company WHERE employee_age = 30 AND company_name IN ("company_A", "company_B", "company_C");
 ```
 
 **第三，如果我们只需要结果的子集，我们可以给查询**添加一个限制。这也减少了读取路径中涉及的节点数量:
 
-```
+```java
 SELECT * FROM company WHERE employee_age = 30 LIMIT 10;
 ```
 

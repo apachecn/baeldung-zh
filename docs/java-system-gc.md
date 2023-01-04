@@ -23,7 +23,7 @@
 
 方法的调用很简单:
 
-```
+```java
 System.gc()
 ```
 
@@ -49,13 +49,13 @@ System.gc()
 
 还有一些方法可以[减轻由显式调用](https://web.archive.org/web/20220926184331/https://docs.oracle.com/javase/8/docs/technotes/guides/vm/cms-6.html)引起的完全 GC 的影响。我们可以使用其中一个标志:
 
-```
+```java
 -XX:+ExplicitGCInvokesConcurrent
 ```
 
 或者:
 
-```
+```java
 -XX:+ExplicitGCInvokesConcurrentAndUnloadsClasses
 ```
 
@@ -77,7 +77,7 @@ System.gc()
 
 我们将创建一个简单的控制台应用程序来模拟这个场景:
 
-```
+```java
 public class DemoApplication {
 
     private static final Map<String, String> cache = new HashMap<String, String>();
@@ -109,7 +109,7 @@ public class DemoApplication {
 
 让我们用几个附加标志来运行我们的应用程序:
 
-```
+```java
 -XX:+PrintGCDetails -Xloggc:gclog.log -Xms100M -Xmx500M -XX:+UseConcMarkSweepGC
 ```
 
@@ -119,7 +119,7 @@ public class DemoApplication {
 
 我们可以[调查我们的`gclog.log`](/web/20220926184331/https://www.baeldung.com/java-verbose-gc) 文件，看看发生了什么。我们会看到大约 15 个系列。为单个集合记录的行如下所示:
 
-```
+```java
 197.057: [GC (Allocation Failure) 197.057: [ParNew: 67498K->40K(75840K), 0.0016945 secs] 
   168754K->101295K(244192K), 0.0017865 secs] [Times: user=0.01 sys=0.00, real=0.00 secs] secs]
 ```
@@ -128,7 +128,7 @@ public class DemoApplication {
 
 接下来，让我们**通过键入`gc`来强制`System.gc()`** 。我们可以看到内存使用没有显著变化:
 
-```
+```java
 238.810: [Full GC (System.gc()) 238.810: [CMS: 101255K->101231K(168352K); 0.2634318 secs] 
   120693K->101231K(244192K), [Metaspace: 32186K->32186K(1079296K)], 0.2635908 secs] 
   [Times: user=0.27 sys=0.00, real=0.26 secs]
@@ -140,7 +140,7 @@ public class DemoApplication {
 
 我们可以尝试多次填充缓存，但是没有发生 GC。这是一个我们可以智取垃圾收集器的时刻。现在，在强制 GC 之后，我们将看到这样一行:
 
-```
+```java
 262.124: [Full GC (System.gc()) 262.124: [CMS: 101523K->14122K(169324K); 0.0975656 secs] 
   103369K->14122K(245612K), [Metaspace: 32203K->32203K(1079296K)], 0.0977279 secs]
   [Times: user=0.10 sys=0.00, real=0.10 secs]

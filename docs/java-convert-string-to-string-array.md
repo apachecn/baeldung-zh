@@ -21,7 +21,7 @@
 
 在本教程中，我们将把这个字符串作为输入:
 
-```
+```java
 String INPUT = "Hi there, nice to meet you!"; 
 ```
 
@@ -31,7 +31,7 @@ String INPUT = "Hi there, nice to meet you!";
 
 由于输入字符串将是目标数组中的唯一元素，**我们可以简单地用输入字符串初始化数组来解决问题**:
 
-```
+```java
 String[] myArray = new String[] { INPUT };
 assertArrayEquals(new String[] { "Hi there, nice to meet you!" }, myArray);
 ```
@@ -50,7 +50,7 @@ assertArrayEquals(new String[] { "Hi there, nice to meet you!" }, myArray);
 
 首先，假设我们想把输入的句子分成一组子句。为了解决这个问题，我们可以用标点符号分割输入字符串:
 
-```
+```java
 String[] myArray = INPUT.split("[-,.!;?]\\s*" );
 assertArrayEquals(new String[] { "Hi there", "nice to meet you" }, myArray);
 ```
@@ -63,14 +63,14 @@ assertArrayEquals(new String[] { "Hi there", "nice to meet you" }, myArray);
 
 为了得到单词数组，我们可以通过非单词字符(`\W+`)来分割输入:
 
-```
+```java
 String[] myArray = INPUT.split("\\W+");
 assertArrayEquals(new String[] { "Hi", "there", "nice", "to", "meet", "you" }, myArray);
 ```
 
 最后，让我们将输入字符串分解成字符:
 
-```
+```java
 String[] myArray = INPUT.split("");
 assertArrayEquals(new String[] {
     "H", "i", " ", "t", "h", "e", "r", "e", ",", " ",
@@ -90,19 +90,19 @@ assertArrayEquals(new String[] {
 
 有时我们必须遵循特定的规则来拆分输入。举个例子就能很快澄清。假设我们有这个输入字符串:
 
-```
+```java
 String FLIGHT_INPUT = "20221018LH720FRAPEK";
 ```
 
 我们期望得到这个数组的结果:
 
-```
+```java
 { "20221018", "LH720", "FRA", "PEK" }
 ```
 
 嗯，乍一看，这个转换逻辑看起来晦涩难懂。但是，如果我们列出输入字符串的定义，我们就会明白为什么上面的数组是预期的:
 
-```
+```java
 [date][Flight number][Airport from][Airport to]
 - date: YYYY-MM-DD; length:8
 - Flight number; length: variable
@@ -112,7 +112,7 @@ String FLIGHT_INPUT = "20221018LH720FRAPEK";
 
 正如我们所看到的，有时我们需要遵循一个非常特殊的规则来解析输入字符串。在这种情况下，**我们需要分析需求并实现一个解析器**:
 
-```
+```java
 String dateStr = FLIGHT_INPUT.substring(0, 8);
 String flightNo = FLIGHT_INPUT.substring(8, FLIGHT_INPUT.length() - 6);
 int airportStart = dateStr.length() + flightNo.length();

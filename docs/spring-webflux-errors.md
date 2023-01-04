@@ -16,7 +16,7 @@ Maven 的设置与我们的[上一篇文章](/web/20220628153743/https://www.bae
 
 首先，让我们创建一个路由器函数，它将`/hello`请求路由到传入处理程序中名为`handleRequest`的方法:
 
-```
+```java
 @Bean
 public RouterFunction<ServerResponse> routeRequest(Handler handler) {
     return RouterFunctions.route(RequestPredicates.GET("/hello")
@@ -27,7 +27,7 @@ public RouterFunction<ServerResponse> routeRequest(Handler handler) {
 
 接下来，我们将定义调用`sayHello()`方法的`handleRequest()`方法，并找到在`ServerResponse`主体中包含/返回其结果的方法:
 
-```
+```java
 public Mono<ServerResponse> handleRequest(ServerRequest request) {
     return 
       //...
@@ -38,7 +38,7 @@ public Mono<ServerResponse> handleRequest(ServerRequest request) {
 
 最后，`sayHello()`方法是一个简单的实用方法，它连接了“Hello”`String`和用户名:
 
-```
+```java
 private Mono<String> sayHello(ServerRequest request) {
     //...
     return Mono.just("Hello, " + request.queryParam("name").get());
@@ -62,7 +62,7 @@ private Mono<String> sayHello(ServerRequest request) {
 
 **每当出现错误时，我们可以使用`onErrorReturn()`返回静态默认值**:
 
-```
+```java
 public Mono<ServerResponse> handleRequest(ServerRequest request) {
     return sayHello(request)
       .onErrorReturn("Hello Stranger")
@@ -84,7 +84,7 @@ public Mono<ServerResponse> handleRequest(ServerRequest request) {
 
 让我们看看如何计算一个值:
 
-```
+```java
 public Mono<ServerResponse> handleRequest(ServerRequest request) {
     return sayHello(request)
       .flatMap(s -> ServerResponse.ok()
@@ -101,7 +101,7 @@ public Mono<ServerResponse> handleRequest(ServerRequest request) {
 
 接下来，让我们**在错误发生时调用一个回退方法**:
 
-```
+```java
 public Mono<ServerResponse> handleRequest(ServerRequest request) {
     return sayHello(request)
       .flatMap(s -> ServerResponse.ok()
@@ -118,7 +118,7 @@ public Mono<ServerResponse> handleRequest(ServerRequest request) {
 
 使用`onErrorResume()`的最后一个选项是**捕捉、包装并重新抛出一个错误**，例如，作为一个`NameRequiredException`:
 
-```
+```java
 public Mono<ServerResponse> handleRequest(ServerRequest request) {
     return ServerResponse.ok()
       .body(sayHello(request)
@@ -143,7 +143,7 @@ public Mono<ServerResponse> handleRequest(ServerRequest request) {
 
 为了定制这些，我们可以简单地通过**扩展`DefaultErrorAttributes`类**并覆盖它的`getErrorAttributes()`方法:
 
-```
+```java
 public class GlobalErrorAttributes extends DefaultErrorAttributes{
 
     @Override
@@ -165,7 +165,7 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes{
 
 为此，Spring 提供了一个方便的`AbstractErrorWebExceptionHandler`类，让我们在处理全局错误时进行扩展和实现:
 
-```
+```java
 @Component
 @Order(-2)
 public class GlobalErrorWebExceptionHandler extends 

@@ -66,7 +66,7 @@ Java 附带了许多内置的提供者。此外，一个应用程序可以按照
 
 那么，让我们看看如何在 Java 中做到这一点:
 
-```
+```java
 MessageDigest md = MessageDigest.getInstance("SHA-1");
 byte[] hashedPassword = md.digest("password".getBytes());
 ```
@@ -99,7 +99,7 @@ Java 有一些非常方便的工具来促进可信通信:
 
 *   出示证书—我们需要向通信中的另一方出示有效证书。为此，我们需要加载密钥存储文件，其中必须有我们的公钥:
 
-```
+```java
 KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
 char[] keyStorePassword = "changeit".toCharArray();
 try(InputStream keyStoreData = new FileInputStream("keystore.jks")){
@@ -109,14 +109,14 @@ try(InputStream keyStoreData = new FileInputStream("keystore.jks")){
 
 *   验证证书—我们还需要验证通信中另一方提供的证书。为此，我们需要加载信任存储，其中必须有以前来自其他方的可信证书:
 
-```
+```java
 KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
 // Load the trust-store from filesystem as before
 ```
 
 我们很少需要通过编程来实现这一点，通常在运行时将系统参数传递给 Java:
 
-```
+```java
 -Djavax.net.ssl.trustStore=truststore.jks 
 -Djavax.net.ssl.keyStore=keystore.jks
 ```
@@ -141,7 +141,7 @@ Java APIs 利用[可插拔登录模块](https://web.archive.org/web/202211262326
 
 该模块负责从用户处获取用户名和密码，并根据在 JNDI 配置的目录服务对其进行验证:
 
-```
+```java
 LoginContext loginContext = new LoginContext("Sample", new SampleCallbackHandler());
 loginContext.login();
 ```
@@ -150,7 +150,7 @@ loginContext.login();
 
 让我们来看看我们的登录配置:
 
-```
+```java
 Sample {
   com.sun.security.auth.module.JndiLoginModule required;
 };
@@ -174,7 +174,7 @@ Java 提供了[API，通过**加密、消息完整性以及客户端和服务器
 
 现在让我们看看如何使用`SSLSocket` 在 [Java 中打开与其他方的安全连接:](/web/20221126232640/https://www.baeldung.com/java-ssl)
 
-```
+```java
 SocketFactory factory = SSLSocketFactory.getDefault();
 try (Socket connection = factory.createSocket(host, port)) {
     BufferedReader input = new BufferedReader(
@@ -209,7 +209,7 @@ Java 附带了“policytool”，这是一个用于编写策略文件的图形�
 
 让我们看看如何在 Java 中限制对资源(如文件)的访问:
 
-```
+```java
 SecurityManager securityManager = System.getSecurityManager();
 if (securityManager != null) {
     securityManager.checkPermission(
@@ -223,7 +223,7 @@ if (securityManager != null) {
 
 让我们看一个策略文件的示例:
 
-```
+```java
 grant {
   permission 
     java.security.FilePermission
@@ -235,7 +235,7 @@ grant {
 
 值得注意的是，在 Java 中，默认情况下可能不会安装`SecurityManager`。我们可以通过始终使用以下参数启动 Java 来确保这一点:
 
-```
+```java
 -Djava.security.manager -Djava.security.policy=/path/to/sample.policy
 ```
 
@@ -261,7 +261,7 @@ Java API 支持按照推荐的准则生成和验证 XML 签名。Java XML 数字
 
 那么，让我们看看如何在 Java 中实现这一点:
 
-```
+```java
 XMLSignatureFactory xmlSignatureFactory = XMLSignatureFactory.getInstance("DOM");
 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 documentBuilderFactory.setNamespaceAware(true);

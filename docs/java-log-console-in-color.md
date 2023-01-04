@@ -18,14 +18,14 @@ ANSI 代码是特殊的字节序列，一些终端将其解释为命令。
 
 让我们用一个 ANSI 代码注销:
 
-```
+```java
 System.out.println("Here's some text");
 System.out.println("\u001B[31m" + "and now the text is red");
 ```
 
 在输出中，我们看到 ANSI 代码没有打印出来，字体的颜色变成了红色:
 
-```
+```java
 Here's some text
 and now the text is red
 ```
@@ -36,7 +36,7 @@ and now the text is red
 
 reset 命令会将控制台重置为默认颜色。请注意，这不一定是黑色，也可以是白色或控制台配置的任何其他颜色。例如:
 
-```
+```java
 System.out.println("Here's some text");
 System.out.println("\u001B[31m" + "and now the text is red" + "\u001B[0m");
 System.out.println("and now back to the default");
@@ -44,7 +44,7 @@ System.out.println("and now back to the default");
 
 给出输出:
 
-```
+```java
 Here's some text
 and now the text is red
 and now back to the default
@@ -54,7 +54,7 @@ and now back to the default
 
 例如，我们可以快速构建一个日志记录器，为不同的日志级别使用不同的颜色。
 
-```
+```java
 public class ColorLogger {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ColorLogger.class);
@@ -74,14 +74,14 @@ public class ColorLogger {
 
 让我们用它来打印一些颜色到控制台:
 
-```
+```java
 ColorLogger colorLogger = new ColorLogger();
 colorLogger.logDebug("Some debug logging");
 colorLogger.logInfo("Some info logging");
 colorLogger.logError("Some error logging");
 ```
 
-```
+```java
 [main] DEBUG com.baeldung.color.ColorLogger - Some debug logging
 [main] INFO com.baeldung.color.ColorLogger - Some info logging
 [main] ERROR com.baeldung.color.ColorLogger - Some error logging
@@ -97,7 +97,7 @@ colorLogger.logError("Some error logging");
 
 然而，我们可以利用 pom.xml 的一个名为 [JANSI](https://web.archive.org/web/20221208143830/https://github.com/fusesource/jansi) 的已有库，而不是尝试自己实现它:
 
-```
+```java
 <dependency>
     <groupId>org.fusesource.jansi</groupId>
     <artifactId>jansi</artifactId>
@@ -107,7 +107,7 @@ colorLogger.logError("Some error logging");
 
 现在要登录 color，我们只需调用 JANSI 提供的 ANSI API:
 
-```
+```java
 private static void logColorUsingJANSI() {
     AnsiConsole.systemInstall();
 
@@ -124,7 +124,7 @@ private static void logColorUsingJANSI() {
 
 这会产生以下文本:
 
-```
+```java
 Some red text and some blue text
 ```
 

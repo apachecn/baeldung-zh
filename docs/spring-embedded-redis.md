@@ -14,7 +14,7 @@ Spring Data Redis 提供了一种与 [Redis](https://web.archive.org/web/2022120
 
 让我们从添加必要的依赖项开始:
 
-```
+```java
 <dependency>
   <groupId>org.springframework.boot</groupId>
   <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -44,7 +44,7 @@ Spring Data Redis 提供了一种与 [Redis](https://web.archive.org/web/2022120
 
 让我们首先创建一个保存我们属性的类:
 
-```
+```java
 @Configuration
 public class RedisProperties {
     private int redisPort;
@@ -63,7 +63,7 @@ public class RedisProperties {
 
 接下来，我们应该创建一个配置类来定义连接并使用我们的属性:
 
-```
+```java
 @Configuration
 @EnableRedisRepositories
 public class RedisConfiguration {
@@ -95,14 +95,14 @@ public class RedisConfiguration {
 
 首先，让我们在测试资源目录(`src/test/resources):`中创建一个`application.properties` 文件
 
-```
+```java
 spring.redis.host=localhost
 spring.redis.port=6370
 ```
 
 之后，我们将创建一个带`@TestConfiguration`注释的类:
 
-```
+```java
 @TestConfiguration
 public class TestRedisConfiguration {
 
@@ -132,13 +132,13 @@ public class TestRedisConfiguration {
 
 服务器也可以提供我们自己的可执行文件:
 
-```
+```java
 this.redisServer = new RedisServer("/path/redis", redisProperties.getRedisPort());
 ```
 
 此外，可执行文件可以根据操作系统进行定义:
 
-```
+```java
 RedisExecProvider customProvider = RedisExecProvider.defaultProvider()
   .override(OS.UNIX, "/path/unix/redis")
   .override(OS.Windows, Architecture.x86_64, "/path/windows/redis")
@@ -149,7 +149,7 @@ this.redisServer = new RedisServer(customProvider, redisProperties.getRedisPort(
 
 最后，让我们创建一个使用我们的`TestRedisConfiguration`类的测试:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestRedisConfiguration.class)
 public class UserRepositoryIntegrationTest {

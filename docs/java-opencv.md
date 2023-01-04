@@ -10,7 +10,7 @@
 
 为了在我们的项目中使用 OpenCV 库，我们需要将[`opencv`Maven 依赖](https://web.archive.org/web/20221009043517/https://search.maven.org/search?q=g:org.openpnp%20a:opencv)添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.openpnp</groupId>
     <artifactId>opencv</artifactId>
@@ -20,7 +20,7 @@
 
 对于 Gradle 用户，我们需要将依赖关系添加到我们的`build.gradle`文件中:
 
-```
+```java
 compile group: 'org.openpnp', name: 'opencv', version: '3.4.2-0'
 ```
 
@@ -30,7 +30,7 @@ compile group: 'org.openpnp', name: 'opencv', version: '3.4.2-0'
 
 要开始使用 OpenCV，**我们需要初始化库**，这可以在我们的`main` 方法中完成:
 
-```
+```java
 OpenCV.loadShared();
 ```
 
@@ -38,7 +38,7 @@ OpenCV.loadShared();
 
 值得注意的是[文档](https://web.archive.org/web/20221009043517/https://opencv-java-tutorials.readthedocs.io/)做的事情略有不同:
 
-```
+```java
 System.loadLibrary(Core.NATIVE_LIBRARY_NAME)
 ```
 
@@ -52,7 +52,7 @@ System.loadLibrary(Core.NATIVE_LIBRARY_NAME)
 
 首先，**让我们使用 OpenCV** 从磁盘加载样本图像:
 
-```
+```java
 public static Mat loadImage(String imagePath) {
     Imgcodecs imageCodecs = new Imgcodecs();
     return imageCodecs.imread(imagePath);
@@ -63,7 +63,7 @@ public static Mat loadImage(String imagePath) {
 
 为了保存之前加载的图像，我们可以使用`Imgcodecs`类的`imwrite()`方法:
 
-```
+```java
 public static void saveImage(Mat imageMatrix, String targetPath) {
     Imgcodecs imgcodecs = new Imgcodecs();
     imgcodecs.imwrite(targetPath, imageMatrix);
@@ -100,19 +100,19 @@ OpenCV 中的人脸检测由基于 Haar 特征的级联分类器完成。
 
 首先，我们需要从源路径加载`Mat `格式的图像:
 
-```
+```java
 Mat loadedImage = loadImage(sourceImagePath);
 ```
 
 然后，我们将声明一个`MatOfRect `对象来存储我们找到的人脸:
 
-```
+```java
 MatOfRect facesDetected = new MatOfRect();
 ```
 
 接下来，我们需要初始化`CascadeClassifier `来进行识别:
 
-```
+```java
 CascadeClassifier cascadeClassifier = new CascadeClassifier(); 
 int minFaceSize = Math.round(loadedImage.rows() * 0.1f); 
 cascadeClassifier.load("./src/main/resources/haarcascades/haarcascade_frontalface_alt.xml"); 
@@ -130,7 +130,7 @@ cascadeClassifier.detectMultiScale(loadedImage,
 
 最后，我们将遍历这些面并保存结果:
 
-```
+```java
 Rect[] facesArray = facesDetected.toArray(); 
 for(Rect face : facesArray) { 
     Imgproc.rectangle(loadedImage, face.tl(), face.br(), new Scalar(0, 0, 255), 3); 
@@ -150,7 +150,7 @@ saveImage(loadedImage, targetImagePath);
 
 因为我们将使用一个`ImageView` 来显示我们的相机拍摄的照片，我们需要一种方法**将一个 OpenCV `Mat `转换成一个 JavaFX `Image`** :
 
-```
+```java
 public Image mat2Img(Mat mat) {
     MatOfByte bytes = new MatOfByte();
     Imgcodecs.imencode("img", mat, bytes);
@@ -165,13 +165,13 @@ public Image mat2Img(Mat mat) {
 
 现在，让我们使用`loadShared `方法初始化这个库:
 
-```
+```java
 OpenCV.loadShared();
 ```
 
 接下来，我们将**创建带有`VideoCapture `和`ImageView `的舞台**，以显示`Image`:
 
-```
+```java
 VideoCapture capture = new VideoCapture(0); 
 ImageView imageView = new ImageView(); 
 HBox hbox = new HBox(imageView); 
@@ -182,7 +182,7 @@ stage.show();
 
 这里，`0` 是我们要用的相机的 ID。我们还需要**创建一个** `**AnimationTimer** `来处理设置图像:
 
-```
+```java
 new AnimationTimer() { 
     @Override public void handle(long l) { 
         imageView.setImage(getCapture()); 
@@ -192,7 +192,7 @@ new AnimationTimer() {
 
 最后，我们的`getCapture `方法处理**将`Mat `转换为`Image`** :
 
-```
+```java
 public Image getCapture() { 
     Mat mat = new Mat(); 
     capture.read(mat); 
@@ -210,7 +210,7 @@ public Image getCapture() {
 
 **让我们简单地修改一下我们的`getCapture `方法，也执行面部检测:**
 
-```
+```java
 public Image getCaptureWithFaceDetection() {
     Mat mat = new Mat();
     capture.read(mat);

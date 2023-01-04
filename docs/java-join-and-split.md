@@ -10,7 +10,7 @@
 
 让我们从使用`Stream.concat` `:`将两个`Arrays` 连接在一起开始
 
-```
+```java
 @Test
 public void whenJoiningTwoArrays_thenJoined() {
     String[] animals1 = new String[] { "Dog", "Cat" };
@@ -27,7 +27,7 @@ public void whenJoiningTwoArrays_thenJoined() {
 
 让我们用两个`Collections:`做同样的连接
 
-```
+```java
 @Test
 public void whenJoiningTwoCollections_thenJoined() {
     Collection<String> collection1 = Arrays.asList("Dog", "Cat");
@@ -45,7 +45,7 @@ public void whenJoiningTwoCollections_thenJoined() {
 
 现在，让我们将两个`Collections` 数字连接起来，过滤任何大于 10 的数字:
 
-```
+```java
 @Test
 public void whenJoiningTwoCollectionsWithFilter_thenJoined() {
     Collection<String> collection1 = Arrays.asList("Dog", "Cat");
@@ -64,7 +64,7 @@ public void whenJoiningTwoCollectionsWithFilter_thenJoined() {
 
 接下来，让我们使用一个`Collector:`将一个数组加入到一个`String` 中
 
-```
+```java
 @Test
 public void whenConvertArrayToString_thenConverted() {
     String[] animals = new String[] { "Dog", "Cat", "Bird", "Cow" };
@@ -78,7 +78,7 @@ public void whenConvertArrayToString_thenConverted() {
 
 让我们做同样的事情，但是用一个`Collection` `:`
 
-```
+```java
 @Test
 public void whenConvertCollectionToString_thenConverted() {
     Collection<String> animals = Arrays.asList("Dog", "Cat", "Bird", "Cow");
@@ -94,7 +94,7 @@ public void whenConvertCollectionToString_thenConverted() {
 
 这个过程与前面的例子非常相似，但是这里我们有一个额外的步骤来首先连接每个`Map` `Entry`:
 
-```
+```java
 @Test
 public void whenConvertMapToString_thenConverted() {
     Map<Integer, String> animals = new HashMap<>();
@@ -116,7 +116,7 @@ public void whenConvertMapToString_thenConverted() {
 
 在下面的示例中，我们首先在每个嵌套集合内连接，然后连接每个集合的结果:
 
-```
+```java
 @Test
 public void whenConvertNestedCollectionToString_thenConverted() {
     Collection<List<String>> nested = new ArrayList<>();
@@ -136,7 +136,7 @@ public void whenConvertNestedCollectionToString_thenConverted() {
 
 让我们看看如何使用一个`Filter` 来跳过任何`null`值:
 
-```
+```java
 @Test
 public void whenConvertCollectionToStringAndSkipNull_thenConverted() {
     Collection<String> animals = Arrays.asList("Dog", "Cat", null, "Moose");
@@ -152,7 +152,7 @@ public void whenConvertCollectionToStringAndSkipNull_thenConverted() {
 
 让我们把一个`Collection`的数字分成中间的两个`Collections` :
 
-```
+```java
 @Test
 public void whenSplitCollectionHalf_thenConverted() {
     Collection<String> animals = Arrays.asList(
@@ -180,7 +180,7 @@ public void whenSplitCollectionHalf_thenConverted() {
 
 接下来，让我们按照单词的长度来分割数组:
 
-```
+```java
 @Test
 public void whenSplitArrayByWordLength_thenConverted() {
     String[] animals = new String[] { "Dog", "Cat", "Bird", "Cow", "Pig", "Moose"};
@@ -197,7 +197,7 @@ public void whenSplitArrayByWordLength_thenConverted() {
 
 让我们现在做相反的事情，让我们把一个`String` 分裂成一个`Array:`
 
-```
+```java
 @Test
 public void whenConvertStringToArray_thenConverted() {
     String animals = "Dog, Cat, Bird, Cow";
@@ -211,7 +211,7 @@ public void whenConvertStringToArray_thenConverted() {
 
 这个例子与上一个类似，只是多了一个从`Array` 转换为`Collection`的步骤:
 
-```
+```java
 @Test
 public void whenConvertStringToCollection_thenConverted() {
     String animals = "Dog, Cat, Bird, Cow";
@@ -225,7 +225,7 @@ public void whenConvertStringToCollection_thenConverted() {
 
 现在，让我们从一个`String`创建一个`Map` 。我们需要将字符串拆分两次，一次用于每个条目，最后一次用于键和值:
 
-```
+```java
 @Test
 public void whenConvertStringToMap_thenConverted() {
     String animals = "1 = Dog, 2 = Cat, 3 = Bird";
@@ -244,7 +244,7 @@ public void whenConvertStringToMap_thenConverted() {
 
 最后，让我们使用正则表达式拆分一个有多个分隔符的`String` ,我们还将删除任何空结果:
 
-```
+```java
 @Test
 public void whenConvertCollectionToStringMultipleSeparators_thenConverted() {
     String animals = "Dog. , Cat, Bird. Cow";

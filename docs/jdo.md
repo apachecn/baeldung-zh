@@ -14,7 +14,7 @@ Java 数据对象是一个 API，设计用于将面向对象的数据保存到�
 
 让我们将下面的依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.datanucleus</groupId>
     <artifactId>javax.jdo</artifactId>
@@ -50,7 +50,7 @@ Java 数据对象是一个 API，设计用于将面向对象的数据保存到�
 
 为此，我们需要创建一个具有一些属性的类，并用`@PersistentCapable:`对其进行注释
 
-```
+```java
 @PersistenceCapable
 public class Product {
 
@@ -69,7 +69,7 @@ public class Product {
 
 一旦我们创建了对象，我们需要运行增强器来生成 JDO 所需的字节码。使用 Maven，我们可以运行这个命令:
 
-```
+```java
 mvn datanucleus:enhance
 ```
 
@@ -77,7 +77,7 @@ mvn datanucleus:enhance
 
 当然，在 Maven 构建期间可以自动完成这项工作:
 
-```
+```java
 <plugin>
     <groupId>org.datanucleus</groupId>
     <artifactId>datanucleus-maven-plugin</artifactId>
@@ -105,20 +105,20 @@ mvn datanucleus:enhance
 
 我们使用 JDO 工厂访问数据库，该工厂为我们提供了负责执行事务的事务管理器:
 
-```
+```java
 PersistenceManagerFactory pmf = new JDOPersistenceManagerFactory(pumd, null);
 PersistenceManager pm = pmf.getPersistenceManager(); 
 ```
 
 事务用于在出现错误时允许回滚:
 
-```
+```java
 Transaction tx = pm.currentTransaction();
 ```
 
 我们在一个`try/catch` 区块内进行交易:
 
-```
+```java
 Product product = new Product("Tablet", 80.0);
 pm.makePersistent(product);
 ```
@@ -127,7 +127,7 @@ pm.makePersistent(product);
 
 如果由于任何原因，事务无法完成，我们将进行回滚，并且我们还会关闭与数据库的连接，使用`pm.close()`:
 
-```
+```java
 finally {
     if (tx.isActive()) {
         tx.rollback();
@@ -138,7 +138,7 @@ finally {
 
 为了将我们的程序连接到数据库，我们需要在运行时创建一个`persistence-unit` 来指定持久类、数据库类型和连接参数:
 
-```
+```java
 PersistenceUnitMetaData pumd = new PersistenceUnitMetaData(
   "dynamic-unit", "RESOURCE_LOCAL", null);
 pumd.addClassName("com.baeldung.jdo.Product");
@@ -157,7 +157,7 @@ pumd.addProperty("datanucleus.autoCreateSchema", "true");
 
 持久性管理器为我们提供了对查询界面的访问，该界面允许我们与数据库进行交互:
 
-```
+```java
 Query q = pm.newQuery(
   "SELECT FROM " + Product.class.getName() + " WHERE price < 1");
 List<Product> products = (List<Product>) q.execute();
@@ -172,7 +172,7 @@ while (iter.hasNext()) {
 
 要更新数据库中的对象，我们需要使用查询找到想要更新的对象，然后更新查询结果并提交事务:
 
-```
+```java
 Query query = pm.newQuery(Product.class, "name == \"Phone\"");
 Collection result = (Collection) query.execute();
 Product product = (Product) result.iterator().next();
@@ -183,7 +183,7 @@ product.setName("Android Phone");
 
 与更新过程类似，我们首先搜索对象，然后使用持久性管理器删除它。在这些情况下，JDO 更新持久存储:
 
-```
+```java
 Query query = pm.newQuery(Product.class, "name == \"Android Phone\"");
 Collection result = (Collection) query.execute();
 Product product = (Product) result.iterator().next();
@@ -196,13 +196,13 @@ pm.deletePersistent(product);
 
 我们指定我们的`ConnectionURL`,表明这是一个 XML 文件，并指定文件名:
 
-```
+```java
 pumdXML.addProperty("javax.jdo.option.ConnectionURL", "xml:file:myPersistence.xml");
 ```
 
 XML 数据存储不支持自动递增属性，因此我们需要创建另一个类:
 
-```
+```java
 @PersistenceCapable()
 public class ProductXML {
 
@@ -219,14 +219,14 @@ public class ProductXML {
 
 让我们创造并坚持我们的产品:
 
-```
+```java
 ProductXML productXML = new ProductXML(0,"Tablet", 80.0);
 pm.makePersistent(productXML);
 ```
 
 我们得到存储在 XML 文件中的产品:
 
-```
+```java
 <productXML productNumber="0">
     <name>Tablet</name>
     <price>80.0</price>
@@ -237,7 +237,7 @@ pm.makePersistent(productXML);
 
 我们可以使用查询从 XML 文件中恢复我们的对象:
 
-```
+```java
 Query q = pm.newQuery("SELECT FROM " + ProductXML.class.getName());
 List<ProductXML> products = (List<ProductXML>) q.execute();
 ```
@@ -252,7 +252,7 @@ JDOQL 是一种基于对象的查询语言，旨在使用 Java 对象执行查�
 
 使用声明性查询，我们声明参数并使用 Java 设置它们，这确保了类型安全:
 
-```
+```java
 Query qDJDOQL = pm.newQuery(Product.class);
 qDJDOQL.setFilter("name == 'Tablet' && price == price_value");
 qDJDOQL.declareParameters("double price_value");
@@ -263,7 +263,7 @@ List<Product> resultsqDJDOQL = qDJDOQL.setParameters(80.0).executeList();
 
 JDO 提供了一种执行标准 SQL 查询的机制:
 
-```
+```java
 Query query = pm.newQuery("javax.jdo.query.SQL", "SELECT * FROM PRODUCT");
 query.setClass(Product.class);
 List<Product> results = query.executeList();
@@ -275,7 +275,7 @@ List<Product> results = query.executeList();
 
 JDO 也提供了执行 JPA 查询的机制。我们可以使用 JPA 查询语言的完整语法:
 
-```
+```java
 Query q = pm.newQuery("JPQL",
   "SELECT p FROM " + Product.class.getName() + " p WHERE p.name = 'Laptop'");
 List results = (List) q.execute();

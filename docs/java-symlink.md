@@ -22,7 +22,7 @@
 
 首先，我们必须创建一个要链接到的目标文件，所以让我们将一些数据排序到一个文件中:
 
-```
+```java
 public Path createTextFile() throws IOException {		
     byte[] content = IntStream.range(0, 10000)
       .mapToObj(i -> i + System.lineSeparator())
@@ -36,7 +36,7 @@ public Path createTextFile() throws IOException {
 
 让我们创建一个到现有文件的符号链接，确保创建的文件是一个符号链接:
 
-```
+```java
 public void createSymbolicLink() throws IOException {
     Path target = createTextFile();
     Path link = Paths.get(".","symbolic_link.txt");
@@ -49,7 +49,7 @@ public void createSymbolicLink() throws IOException {
 
 接下来，我们来看一个硬链接的创建:
 
-```
+```java
 public void createHardLink() throws IOException {
     Path target = createTextFile();
     Path link = Paths.get(".", "hard_link.txt");
@@ -62,7 +62,7 @@ public void createHardLink() throws IOException {
 
 通过列出文件及其差异，我们可以看到软/符号链接文件很小，而硬链接使用的空间与链接文件相同:
 
-```
+```java
  48K	target_link.txt
  48K	hard_link.txt
 4.0K	symbolic_link.txt 
@@ -79,7 +79,7 @@ public void createHardLink() throws IOException {
 
 现在，如果我们有一个包含现有文件链接的给定文件系统，就可以识别它们并显示它们的目标文件:
 
-```
+```java
 public void printLinkFiles(Path path) throws IOException {
     try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
         for (Path file : stream) {
@@ -96,13 +96,13 @@ public void printLinkFiles(Path path) throws IOException {
 
 如果我们在当前路径中执行它:
 
-```
+```java
 printLinkFiles(Paths.get(".")); 
 ```
 
 我们会得到输出:
 
-```
+```java
 File link 'symbolic_link.txt' with target 'target_link.txt' 
 ```
 

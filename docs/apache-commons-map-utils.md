@@ -19,7 +19,7 @@
 
 让我们从添加依赖关系开始:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -33,7 +33,7 @@
 
 现在，让我们设置将用于创建地图的数组:
 
-```
+```java
 public class MapUtilsTest {
     private String[][] color2DArray = new String[][] {
         {"RED", "#FF0000"},
@@ -53,7 +53,7 @@ public class MapUtilsTest {
 
 让我们看看如何从二维数组创建地图:
 
-```
+```java
 @Test
 public void whenCreateMapFrom2DArray_theMapIsCreated() {
     this.colorMap = MapUtils.putAll(
@@ -71,7 +71,7 @@ public void whenCreateMapFrom2DArray_theMapIsCreated() {
 
 我们也可以使用一维数组。在这种情况下，数组被视为备用索引中的键和值:
 
-```
+```java
 @Test
 public void whenCreateMapFrom1DArray_theMapIsCreated() {
     this.colorMap = MapUtils.putAll(
@@ -91,7 +91,7 @@ public void whenCreateMapFrom1DArray_theMapIsCreated() {
 
 很多时候，在调试或调试日志中，我们希望打印整个地图:
 
-```
+```java
 @Test
 public void whenVerbosePrintMap_thenMustPrintFormattedMap() {
     MapUtils.verbosePrint(System.out, "Optional Label", this.colorMap);
@@ -100,7 +100,7 @@ public void whenVerbosePrintMap_thenMustPrintFormattedMap() {
 
 结果是:
 
-```
+```java
 Optional Label = 
 {
     RED = #FF0000
@@ -117,7 +117,7 @@ Optional Label =
 
 例如，`getString()`从`Map`得到一个`String`。通过`toString()`获得`String`值。如果值为`null`或转换失败，我们可以选择指定要返回的默认值:
 
-```
+```java
 @Test
 public void whenGetKeyNotPresent_thenMustReturnDefaultValue() {
     String defaultColorStr = "COLOR_NOT_FOUND";
@@ -130,7 +130,7 @@ public void whenGetKeyNotPresent_thenMustReturnDefaultValue() {
 
 请注意，这些方法是`null`安全的，即它们可以安全地处理`null` map 参数:
 
-```
+```java
 @Test
 public void whenGetOnNullMap_thenMustReturnDefaultValue() {
     String defaultColorStr = "COLOR_NOT_FOUND";
@@ -146,7 +146,7 @@ public void whenGetOnNullMap_thenMustReturnDefaultValue() {
 
 我们还可以轻松地反转地图:
 
-```
+```java
 @Test
 public void whenInvertMap_thenMustReturnInvertedMap() {
     Map<String, String> invColorMap = MapUtils.invertMap(this.colorMap);
@@ -161,7 +161,7 @@ public void whenInvertMap_thenMustReturnInvertedMap() {
 
 这将把`colorMap`反转为`:`
 
-```
+```java
 {
     #00FF00 = GREEN
     #FF0000 = RED
@@ -187,7 +187,7 @@ public void whenInvertMap_thenMustReturnInvertedMap() {
 
 `fixedSizeMap()`返回由给定地图支持的固定大小的地图。可以更改元素，但不能添加或删除:
 
-```
+```java
 @Test(expected = IllegalArgumentException.class)
 public void whenCreateFixedSizedMapAndAdd_thenMustThrowException() {
     Map<String, String> rgbMap = MapUtils
@@ -201,7 +201,7 @@ public void whenCreateFixedSizedMapAndAdd_thenMustThrowException() {
 
 `predicatedMap()`方法返回一个`Map`,确保所有保存的元素都匹配所提供的谓词:
 
-```
+```java
 @Test(expected = IllegalArgumentException.class)
 public void whenAddDuplicate_thenThrowException() {
     Map<String, String> uniqValuesMap 
@@ -222,7 +222,7 @@ public void whenAddDuplicate_thenThrowException() {
 
 如果传递给此映射的`Map.get(Object)`方法的键在映射中不存在，则`Transformer`实例将用于创建一个新对象，该对象将与所请求的键相关联:
 
-```
+```java
 @Test
 public void whenCreateLazyMap_theMapIsCreated() {
     Map<Integer, String> intStrMap = MapUtils.lazyMap(

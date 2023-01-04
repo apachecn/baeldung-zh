@@ -14,7 +14,7 @@ Java 已经支持 *WeakHashMap* 对键使用[弱引用](/web/20220627075118/http
 
 首先，我们来添加[谷歌番石榴](/web/20220627075118/https://www.baeldung.com/whats-new-in-guava-19)依赖，在 [Maven Central](https://web.archive.org/web/20220627075118/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.google.guava%22%20AND%20a%3A%22guava%22) 上有:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -38,7 +38,7 @@ Java 已经支持 *WeakHashMap* 对键使用[弱引用](/web/20220627075118/http
 
 我们将首先从用户开始:
 
-```
+```java
 public class User {
     private long id;
     private String name;
@@ -60,7 +60,7 @@ public class User {
 
 然后会话:
 
-```
+```java
 public class Session {
     private long id;
 
@@ -76,7 +76,7 @@ public class Session {
 
 最后是简介:
 
-```
+```java
 public class Profile {
     private long id;
     private String type;
@@ -101,7 +101,7 @@ public class Profile {
 
 让我们使用`makeMap`方法为会话缓存创建一个`ConcurrentMap` 实例:
 
-```
+```java
 ConcurrentMap<User, Session> sessionCache = new MapMaker().makeMap();
 ```
 
@@ -109,7 +109,7 @@ ConcurrentMap<User, Session> sessionCache = new MapMaker().makeMap();
 
 现在，让我们为概要文件缓存创建另一个`ConcurrentMap` 实例:
 
-```
+```java
 ConcurrentMap<User, Profile> profileCache = new MapMaker().makeMap();
 ```
 
@@ -117,7 +117,7 @@ ConcurrentMap<User, Profile> profileCache = new MapMaker().makeMap();
 
 如果需要，我们可以使用`initialCapacity `方法修改容量:
 
-```
+```java
 ConcurrentMap<User, Profile> profileCache = new MapMaker().initialCapacity(100).makeMap();
 ```
 
@@ -127,7 +127,7 @@ ConcurrentMap<User, Profile> profileCache = new MapMaker().initialCapacity(100).
 
 在这里，`concurrencyLevel` 构建器方法可以解决这个问题:
 
-```
+```java
 ConcurrentMap<User, Session> sessionCache = new MapMaker().concurrencyLevel(10).makeMap();
 ```
 
@@ -137,13 +137,13 @@ ConcurrentMap<User, Session> sessionCache = new MapMaker().concurrencyLevel(10).
 
 关键字(用户对象)被垃圾收集后，`sessionCache`条目无效。因此，让我们对键使用弱引用:
 
-```
+```java
 ConcurrentMap<User, Session> sessionCache = new MapMaker().weakKeys().makeMap();
 ```
 
 对于`profileCache`，我们可以对值使用弱引用:
 
-```
+```java
 ConcurrentMap<User, Profile> profileCache = new MapMaker().weakValues().makeMap();
 ```
 

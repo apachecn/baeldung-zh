@@ -14,7 +14,7 @@
 
 首先，我们需要设置一个 HttpClient 来发出 HTTP 请求:
 
-```
+```java
 private static HttpClient getHttpClientWithTimeout(int seconds) {
     return HttpClient.newBuilder()
       .connectTimeout(Duration.ofSeconds(seconds))
@@ -26,7 +26,7 @@ private static HttpClient getHttpClientWithTimeout(int seconds) {
 
 之后，我们检查`HttpClient`超时是否配置正确:
 
-```
+```java
 httpClient.connectTimeout().map(Duration::toSeconds)
   .ifPresent(sec -> System.out.println("Timeout in seconds: " + sec));
 ```
@@ -37,7 +37,7 @@ httpClient.connectTimeout().map(Duration::toSeconds)
 
 此外，我们需要创建一个`HttpRequest`对象，我们的客户机将使用它来发出 HTTP 请求:
 
-```
+```java
 HttpRequest httpRequest = HttpRequest.newBuilder()
   .uri(URI.create("http://10.255.255.1")).GET().build();
 ```
@@ -50,7 +50,7 @@ HttpRequest httpRequest = HttpRequest.newBuilder()
 
 例如，要进行同步调用，请使用`send`方法:
 
-```
+```java
 HttpConnectTimeoutException thrown = assertThrows(
   HttpConnectTimeoutException.class,
   () -> httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString()),
@@ -64,7 +64,7 @@ assertTrue(thrown.getMessage().contains("timed out"));
 
 类似地，使用`sendAsync`方法进行异步调用:
 
-```
+```java
 CompletableFuture<String> completableFuture = httpClient.sendAsync(httpRequest, HttpResponse.BodyHandlers.ofString())
   .thenApply(HttpResponse::body)
   .exceptionally(Throwable::getMessage);
@@ -78,7 +78,7 @@ assertTrue(response.contains("timed out"));
 
 上面，我们为`sync`和`async`调用重用了同一个客户端实例。但是，我们可能希望对每个请求的超时进行不同的处理。同样，我们可以为单个请求设置超时:
 
-```
+```java
 HttpRequest httpRequest = HttpRequest.newBuilder()
   .uri(URI.create("http://10.255.255.1"))
   .timeout(Duration.ofSeconds(1))

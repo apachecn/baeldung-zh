@@ -10,13 +10,13 @@
 
 首先，让我们从我们的[上一篇文章](/web/20220727020703/https://www.baeldung.com/spring-boot-docker-images)中建立我们的 Spring Boot 码头工人形象:
 
-```
+```java
 $> mvn spring-boot:build-image
 ```
 
 然后，**当我们运行我们的容器时，我们可以立即在控制台**中看到 STDOUT 日志:
 
-```
+```java
 $> docker run --name=demo-container docker.io/library/spring-boot-docker:0.0.1-SNAPSHOT
 Setting Active Processor Count to 1
 WARNING: Container memory limit unset. Configuring JVM for 1G container.
@@ -26,13 +26,13 @@ WARNING: Container memory limit unset. Configuring JVM for 1G container.
 
 现在，让我们通过在`application.properties`文件中添加一行来配置带有日志文件附加器的 Spring Boot 应用程序:
 
-```
+```java
 logging.file.path=logs
 ```
 
 然后，我们可以通过在运行容器中运行`tail -f`命令来获得相同的结果:
 
-```
+```java
 $> docker exec -it demo-container tail -f /workspace/logs/spring.log > $HOME/spring.log
 Setting Active Processor Count to 1
 WARNING: Container memory limit unset. Configuring JVM for 1G container.
@@ -46,7 +46,7 @@ WARNING: Container memory limit unset. Configuring JVM for 1G container.
 
 为此，我们可以使用以下命令运行我们的应用程序容器:
 
-```
+```java
 $> mvn spring-boot:build-image -v /path-to-host:/workspace/logs
 ```
 
@@ -56,7 +56,7 @@ $> mvn spring-boot:build-image -v /path-to-host:/workspace/logs
 
 如果我们使用 Docker 合成文件，我们应该添加卷配置:
 
-```
+```java
 network-example-service-available-to-host-on-port-1337:
 image: karthequian/helloworld:latest
 container_name: network-example-service-available-to-host-on-port-1337
@@ -66,7 +66,7 @@ volumes:
 
 然后，让我们运行文章`Compose`文件:
 
-```
+```java
 $> docker-compose up
 ```
 
@@ -86,7 +86,7 @@ $> docker-compose up
 
 首先，让我们找到我们的容器 id:
 
-```
+```java
 $> docker ps
 CONTAINER ID        IMAGE                           COMMAND                  
 877bb028a143        karthequian/helloworld:latest   "/runner.sh nginx" 
@@ -94,7 +94,7 @@ CONTAINER ID        IMAGE                           COMMAND
 
 然后，**我们可以用`docker logs -f`命令**显示我们的容器日志。我们可以看到，尽管有了`json-file`驱动程序，输出仍然是纯文本——JSON 只在 Docker 内部使用:
 
-```
+```java
 $> docker logs -f 877bb028a143
 172.27.0.1 - - [22/Oct/2020:11:19:52 +0000] "GET / HTTP/1.1" 200 4369 "
 172.27.0.1 - - [22/Oct/2020:11:19:52 +0000] "GET / HTTP/1.1" 200 4369 " 
@@ -116,7 +116,7 @@ $> docker logs -f 877bb028a143
 
 注意，如果`daemon.json`文件不存在，我们应该创建它:
 
-```
+```java
 { 
     "log-driver": "gelf",
     "log-opts": {
@@ -129,7 +129,7 @@ Graylog 驱动程序被称为`GELF`——我们简单地指定了 Graylog 实例
 
 **我们也可以在运行单个容器时覆盖此配置**:
 
-```
+```java
 $> docker run \
       --log-driver gelf –-log-opt gelf-address=udp://1.2.3.4:12201 \
       alpine echo hello world

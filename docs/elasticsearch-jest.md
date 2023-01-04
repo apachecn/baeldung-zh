@@ -12,7 +12,7 @@
 
 我们需要做的第一件事是将 [Jest 库](https://web.archive.org/web/20220524005021/https://search.maven.org/search?q=g:io.searchbox%20a:jest)导入我们的 POM:
 
-```
+```java
 <dependency>
     <groupId>io.searchbox</groupId>
     <artifactId>jest</artifactId>
@@ -30,7 +30,7 @@ Jest 的版本遵循主要的 Elasticsearch 产品的版本。这有助于确保
 
 要使用 Jest 客户端，我们只需使用 `JestClientFactory`创建一个`JestClient` 对象。**创建这些对象的成本很高，而且是线程安全的**，所以我们将创建一个可以在整个应用程序中共享的单例实例:
 
-```
+```java
 public JestClient jestClient() {
     JestClientFactory factory = new JestClientFactory();
     factory.setHttpClientConfig(
@@ -49,7 +49,7 @@ public JestClient jestClient() {
 
 **所有 Jest 调用的结果都是`JestResult`** 的一个实例。我们可以通过调用`isSucceeded`来检查是否成功。对于不成功的行动，我们可以致电`getErrorMessage`了解更多详情:
 
-```
+```java
 JestResult jestResult = jestClient.execute(new Delete.Builder("1").index("employees").build());
 
 if (jestResult.isSucceeded()) {
@@ -64,19 +64,19 @@ else {
 
 为了检查索引是否存在，我们使用了`IndicesExists`动作:
 
-```
+```java
 JestResult result = jestClient.execute(new IndicesExists.Builder("employees").build()) 
 ```
 
 为了创建一个索引，我们使用了`CreateIndex`动作:
 
-```
+```java
 jestClient.execute(new CreateIndex.Builder("employees").build());
 ```
 
 这将使用默认设置创建一个索引。我们可以在索引创建期间覆盖特定设置:
 
-```
+```java
 Map<String, Object> settings = new HashMap<>();
 settings.put("number_of_shards", 11);
 settings.put("number_of_replicas", 2);
@@ -85,7 +85,7 @@ jestClient.execute(new CreateIndex.Builder("employees").settings(settings).build
 
 使用`ModifyAliases`动作创建或更改别名也很简单:
 
-```
+```java
 jestClient.execute(new ModifyAliases.Builder(
   new AddAliasMapping.Builder("employees", "e").build()).build());
 jestClient.execute(new ModifyAliases.Builder(
@@ -98,7 +98,7 @@ Jest 客户端使用`Index` action 类可以很容易地索引或者创建新文
 
 对于这个例子，让我们使用一个假想的雇员文档:
 
-```
+```java
 {
     "name": "Michael Pratt",
     "title": "Java Developer",
@@ -111,7 +111,7 @@ Jest 客户端使用`Index` action 类可以很容易地索引或者创建新文
 
 因此，使用一个 JSON 库，比如[杰克森](/web/20220524005021/https://www.baeldung.com/jackson-object-mapper-tutorial)来构建我们的 JSON 结构，然后转换成一个`String`:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 JsonNode employeeJsonNode = mapper.createObjectNode()
   .put("name", "Michael Pratt")
@@ -126,7 +126,7 @@ jestClient.execute(new Index.Builder(employeeJsonNode.toString()).index("employe
 
 我们还可以使用 Java `Map`来表示 JSON 数据，并将其传递给`Index`动作:
 
-```
+```java
 Map<String, Object> employeeHashMap = new LinkedHashMap<>();
 employeeHashMap.put("name", "Michael Pratt");
 employeeHashMap.put("title", "Java Developer");
@@ -137,7 +137,7 @@ jestClient.execute(new Index.Builder(employeeHashMap).index("employees").build()
 
 最后，Jest 客户机可以接受任何表示要索引的文档的 POJO。假设我们有一个`Employee`类:
 
-```
+```java
 public class Employee {
     String name;
     String title;
@@ -148,7 +148,7 @@ public class Employee {
 
 我们可以将这个类的一个实例直接传递给`Index`构建器:
 
-```
+```java
 Employee employee = new Employee();
 employee.setName("Michael Pratt");
 employee.setTitle("Java Developer");
@@ -161,13 +161,13 @@ jestClient.execute(new Index.Builder(employee).index("employees").build());
 
 使用 Jest 客户端从 Elasticsearch 访问文档有两种主要方式。首先，如果我们知道文档 ID，我们可以使用`Get`动作直接访问它:
 
-```
+```java
 jestClient.execute(new Get.Builder("employees", "17").build());
 ```
 
 要访问返回的文档，我们必须调用各种`getSource`方法之一。我们可以获得原始 JSON 格式的结果，也可以将其反序列化回 DTO:
 
-```
+```java
 Employee getResult = jestClient.execute(new Get.Builder("employees", "1").build())
     .getSourceAsObject(Employee.class);
 ```
@@ -178,7 +178,7 @@ Employee getResult = jestClient.execute(new Get.Builder("employees", "1").build(
 
 首先，我们可以传递一个表示搜索查询的 JSON 字符串。提醒一下，我们必须注意确保字符串被正确转义并且是有效的 JSON:
 
-```
+```java
 String search = "{" +
   "  \"query\": {" +
   "    \"bool\": {" +
@@ -197,7 +197,7 @@ jestClient.execute(new Search.Builder(search).build());
 
 通过`Search`动作，可以使用`getSource`方法访问匹配的文档。然而， **Jest 也提供了`Hit`类，它包装匹配的文档并提供关于结果的元数据**。使用`Hit`类，我们可以访问每个结果的附加元数据:分数、路由和解释结果，仅举几个例子:
 
-```
+```java
 List<SearchResult.Hit<Employee, Void>> searchResults = 
   jestClient.execute(new Search.Builder(search).build())
     .getHits(Employee.class);
@@ -210,7 +210,7 @@ searchResults.forEach(hit -> {
 
 Jest 提供了一个简单的`Update`动作来更新文档:
 
-```
+```java
 employee.setYearOfService(3);
 jestClient.execute(new Update.Builder(employee).index("employees").id("1").build());
 ```
@@ -221,7 +221,7 @@ jestClient.execute(new Update.Builder(employee).index("employees").id("1").build
 
 使用`Delete`动作从索引中删除文档。它只需要一个索引名和文档 ID:
 
-```
+```java
 jestClient.execute(new Delete.Builder("17")
   .index("employees")
   .build());
@@ -233,7 +233,7 @@ Jest 客户端也支持批量操作。这意味着我们可以通过同时发送
 
 使用`Bulk`动作，我们可以将任意数量的请求组合成一个调用。我们甚至可以将不同类型的请求组合在一起:
 
-```
+```java
 jestClient.execute(new Bulk.Builder()
   .defaultIndex("employees")
   .addAction(new Index.Builder(employeeObject1).build())
@@ -248,7 +248,7 @@ jestClient.execute(new Bulk.Builder()
 
 要异步调用操作，只需使用客户端的`executeAsync`方法:
 
-```
+```java
 jestClient.executeAsync(
   new Index.Builder(employeeObject1).build(),
   new JestResultHandler<JestResult>() {

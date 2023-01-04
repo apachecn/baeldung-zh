@@ -16,7 +16,7 @@ JSpec 是另一个框架，它允许我们以更接近于我们用自然语言�
 
 让我们导入`javalite-common`依赖项，它包含 JSpec:
 
-```
+```java
 <dependency>
     <groupId>org.javalite</groupId>
     <artifactId>javalite-common</artifactId>
@@ -32,19 +32,19 @@ JSpec 是另一个框架，它允许我们以更接近于我们用自然语言�
 
 在 JUnit 中，我们会写:
 
-```
+```java
 assertEquals(1 + 1, 2);
 ```
 
 在 AssertJ 中，我们会写:
 
-```
+```java
 assertThat(1 + 1).isEqualTo(2);
 ```
 
 下面是我们如何在 JSpec 中编写相同的测试:
 
-```
+```java
 $(1 + 1).shouldEqual(2);
 ```
 
@@ -54,7 +54,7 @@ JSpec 使用了与 fluent 断言框架相同的风格，但是省略了前面的
 
 看看这个例子是如何非常接近我们对规范的自然书写:
 
-```
+```java
 String message = "Welcome to JSpec demo";
 the(message).shouldNotBe("empty");
 the(message).shouldContain("JSpec");
@@ -68,7 +68,7 @@ the(message).shouldContain("JSpec");
 
 期望创建者**使用这些静态导入的方法之一生成一个`Expectation`对象**:`a()`、`the()`、`it()`、`$():`
 
-```
+```java
 $(1 + 2).shouldEqual(3);
 a(1 + 2).shouldEqual(3);
 the(1 + 2).shouldEqual(3);
@@ -79,7 +79,7 @@ it(1 + 2).shouldEqual(3);
 
 唯一的区别是**`it()`方法是类型安全的**，只允许比较相同类型的对象:
 
-```
+```java
 it(1 + 2).shouldEqual("3");
 ```
 
@@ -101,19 +101,19 @@ JSpec 提供了几种期望方法。让我们来看看这些，包括一个显�
 
 它们指定两个对象应该/不应该相等，使用`java.lang.Object.equals()`方法检查相等性:
 
-```
+```java
 $(1 + 2).shouldEqual(3);
 ```
 
 **故障场景:**
 
-```
+```java
 $(1 + 2).shouldEqual(4);
 ```
 
 会产生以下消息:
 
-```
+```java
 Test object:java.lang.Integer == <3>
 and expected java.lang.Integer == <4>
 are not equal, but they should be.
@@ -125,7 +125,7 @@ are not equal, but they should be.
 
 我们使用这些方法来指定**对象的一个命名的`boolean`属性是否应该/不应该返回`true` :**
 
-```
+```java
 Cage cage = new Cage();
 cage.put(tomCat, boltDog);
 the(cage).shouldHave("animals");
@@ -133,19 +133,19 @@ the(cage).shouldHave("animals");
 
 这要求`Cage`类包含一个带有签名的方法:
 
-```
+```java
 boolean hasAnimals() {...}
 ```
 
 **故障场景:**
 
-```
+```java
 the(cage).shouldNotHave("animals");
 ```
 
 会产生以下消息:
 
-```
+```java
 Method: hasAnimals should return false, but returned true 
 ```
 
@@ -153,7 +153,7 @@ Method: hasAnimals should return false, but returned true
 
 我们使用这些来指定被测试的对象应该/不应该是:
 
-```
+```java
 the(cage).shouldNotBe("empty");
 ```
 
@@ -161,13 +161,13 @@ the(cage).shouldNotBe("empty");
 
 **故障场景:**
 
-```
+```java
 the(cage).shouldBe("empty");
 ```
 
 会产生以下消息:
 
-```
+```java
 Method: isEmpty should return true, but returned false
 ```
 
@@ -177,7 +177,7 @@ Method: isEmpty should return true, but returned false
 
 我们可以使用这些方法来指定对象应该是特定的类型:
 
-```
+```java
 cage.put(boltDog);
 Animal releasedAnimal = cage.release(boltDog);
 the(releasedAnimal).shouldBeA(Dog.class);
@@ -185,13 +185,13 @@ the(releasedAnimal).shouldBeA(Dog.class);
 
 **故障场景:**
 
-```
+```java
 the(releasedAnimal).shouldBeA(Cat.class);
 ```
 
 会产生以下消息:
 
-```
+```java
 class com.baeldung.jspec.Dog is not class com.baeldung.jspec.Cat
 ```
 
@@ -201,7 +201,7 @@ class com.baeldung.jspec.Dog is not class com.baeldung.jspec.Cat
 
 我们用这些来指定被测对象应该/不应该是`null`:
 
-```
+```java
 cage.put(boltDog);
 Animal releasedAnimal = cage.release(dogY);
 the(releasedAnimal).shouldBeNull();
@@ -209,13 +209,13 @@ the(releasedAnimal).shouldBeNull();
 
 **故障场景:**
 
-```
+```java
 the(releasedAnimal).shouldNotBeNull();
 ```
 
 会产生以下消息:
 
-```
+```java
 Object is null, while it is not expected
 ```
 
@@ -225,7 +225,7 @@ Object is null, while it is not expected
 
 这些方法用于指定对象的引用应该与预期的引用相同:
 
-```
+```java
 Dog firstDog = new Dog("Rex");
 Dog secondDog = new Dog("Rex");
 $(firstDog).shouldEqual(secondDog);
@@ -234,13 +234,13 @@ $(firstDog).shouldNotBeTheSameAs(secondDog);
 
 **故障场景:**
 
-```
+```java
 $(firstDog).shouldBeTheSameAs(secondDog);
 ```
 
 会产生以下消息:
 
-```
+```java
 references are not the same, but they should be
 ```
 
@@ -249,7 +249,7 @@ references are not the same, but they should be
 `**shouldContain(), shouldNotContain()**`
 我们用这些来指定被测试的`Collection`或`Map`应该/不应该包含给定的元素:
 
-```
+```java
 cage.put(tomCat, felixCat);
 the(cage.getAnimals()).shouldContain(tomCat);
 the(cage.getAnimals()).shouldNotContain(boltDog);
@@ -257,25 +257,25 @@ the(cage.getAnimals()).shouldNotContain(boltDog);
 
 **故障场景:**
 
-```
+```java
 the(animals).shouldContain(boltDog);
 ```
 
 会产生以下消息:
 
-```
+```java
 tested value does not contain expected value: Dog [name=Bolt]
 ```
 
 **我们也可以使用这些方法来指定`String`应该/不应该包含给定的子串:**
 
-```
+```java
 $("Welcome to JSpec demo").shouldContain("JSpec");
 ```
 
 虽然这看起来很奇怪，但是我们可以将这种行为扩展到其他对象类型，使用它们的`toString()`方法进行比较:
 
-```
+```java
 cage.put(tomCat, felixCat);
 the(cage).shouldContain(tomCat);
 the(cage).shouldNotContain(boltDog);
@@ -283,13 +283,13 @@ the(cage).shouldNotContain(boltDog);
 
 澄清一下，`Cat`对象`tomCat`的`toString()`方法会产生:
 
-```
+```java
 Cat [name=Tom]
 ```
 
 它是`cage`对象的`toString()`输出的子串:
 
-```
+```java
 Cage [animals=[Cat [name=Tom], Cat[name=Felix]]]
 ```
 
@@ -303,7 +303,7 @@ Cage [animals=[Cat [name=Tom], Cat[name=Felix]]]
 
 在这个简单的例子中，我们确保运算(2 + 3)不会产生结果(4):
 
-```
+```java
 expect(new DifferenceExpectation<Integer>(4) {
     @Override
     public Integer exec() {
@@ -316,7 +316,7 @@ expect(new DifferenceExpectation<Integer>(4) {
 
 例如，当从包含两只动物的`Cage`中释放一只动物时，大小应该不同:
 
-```
+```java
 cage.put(tomCat, boltDog);
 expect(new DifferenceExpectation<Integer>(cage.size()) {
     @Override
@@ -331,13 +331,13 @@ expect(new DifferenceExpectation<Integer>(cage.size()) {
 
 在这里，我们试图释放一种不存在于`Cage`中的动物:
 
-```
+```java
 cage.release(felixCat);
 ```
 
 大小不会改变，我们会得到以下消息:
 
-```
+```java
 Objects: '2' and '2' are equal, but they should not be 
 ```
 
@@ -347,7 +347,7 @@ Objects: '2' and '2' are equal, but they should not be
 
 我们只是将预期的异常类型传递给构造函数，并将其作为泛型类型提供:
 
-```
+```java
 expect(new ExceptionExpectation<ArithmeticException>(ArithmeticException.class) {
     @Override
     public void exec() throws ArithmeticException {
@@ -358,25 +358,25 @@ expect(new ExceptionExpectation<ArithmeticException>(ArithmeticException.class) 
 
 **故障场景#1:**
 
-```
+```java
 System.out.println(1 / 1);
 ```
 
 因为这一行不会导致任何异常，所以执行它会产生以下消息:
 
-```
+```java
 Expected exception: class java.lang.ArithmeticException, but instead got nothing
 ```
 
 **故障场景#2:**
 
-```
+```java
 Integer.parseInt("x");
 ```
 
 这将导致与预期异常不同的异常:
 
-```
+```java
 class java.lang.ArithmeticException,
 but instead got: java.lang.NumberFormatException: For input string: "x"
 ```

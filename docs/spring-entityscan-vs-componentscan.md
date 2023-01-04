@@ -23,7 +23,7 @@
 
 当实体类没有放在主应用程序包或其子包中时，使用注释。在这种情况下，我们将在`@EntityScan`注释中的主配置类中声明包或包列表。这将告诉 Spring 在哪里可以找到我们的应用程序中使用的实体:
 
-```
+```java
 @Configuration
 @EntityScan("com.baeldung.demopackage")
 public class EntityScanDemo {
@@ -43,7 +43,7 @@ public class EntityScanDemo {
 
 让我们看一个@ComponentScan 注释用法的例子:
 
-```
+```java
 @Configuration
 @ComponentScan(
   basePackages = {"com.baeldung.demopackage"}, 

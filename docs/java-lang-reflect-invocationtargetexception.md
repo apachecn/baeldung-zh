@@ -18,7 +18,7 @@
 
 我们将编写一个带有故意抛出异常的方法的类:
 
-```
+```java
 public class InvocationTargetExample {
     public int divideByZeroExample() {
         return 1 / 0;
@@ -28,7 +28,7 @@ public class InvocationTargetExample {
 
 让我们在一个简单的 JUnit 5 测试中使用反射调用上面的方法:
 
-```
+```java
 InvocationTargetExample targetExample = new InvocationTargetExample(); 
 Method method =
   InvocationTargetExample.class.getMethod("divideByZeroExample");
@@ -49,7 +49,7 @@ Exception exception =
 
 让我们看看如何使用 `getCause()`在上面使用的同一个例子中获得实际的异常:
 
-```
+```java
 assertEquals(ArithmeticException.class, exception.getCause().getClass());
 ```
 

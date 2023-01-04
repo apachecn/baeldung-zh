@@ -14,7 +14,7 @@
 
 我们先来看一下`FactoryBean`界面:
 
-```
+```java
 public interface FactoryBean {
     T getObject() throws Exception;
     Class<?> getObjectType();
@@ -30,7 +30,7 @@ public interface FactoryBean {
 
 现在，让我们实现一个例子`FactoryBean`。我们将实现一个产生`Tool`类型对象的`ToolFactory` :
 
-```
+```java
 public class Tool {
 
     private int id;
@@ -41,7 +41,7 @@ public class Tool {
 
 `ToolFactory`本身:
 
-```
+```java
 public class ToolFactory implements FactoryBean<Tool> {
 
     private int factoryId;
@@ -74,7 +74,7 @@ public class ToolFactory implements FactoryBean<Tool> {
 
 我们将开始构建一个基于 XML 配置的工具—`factorybean-spring-ctx.xml`:
 
-```
+```java
 <beans ...>
 
     <bean id="tool" class="com.baeldung.factorybean.ToolFactory">
@@ -86,7 +86,7 @@ public class ToolFactory implements FactoryBean<Tool> {
 
 接下来，我们可以测试`Tool`对象是否被正确注入:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:factorybean-spring-ctx.xml" })
 public class FactoryBeanXmlConfigTest {
@@ -110,7 +110,7 @@ public class FactoryBeanXmlConfigTest {
 
 让我们尝试获取工厂 bean 及其`factoryId`属性:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:factorybean-spring-ctx.xml" })
 public class FactoryBeanXmlConfigTest {
@@ -131,7 +131,7 @@ public class FactoryBeanXmlConfigTest {
 
 让我们将前一小节中的示例转换成一个基于 Java 的配置示例:
 
-```
+```java
 @Configuration
 public class FactoryBeanAppConfig {
 
@@ -152,7 +152,7 @@ public class FactoryBeanAppConfig {
 
 然后，我们测试`Tool`对象是否被正确注入:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = FactoryBeanAppConfig.class)
 public class FactoryBeanJavaConfigTest {
@@ -187,7 +187,7 @@ Spring 提供了`AbstractFactoryBean`作为`FactoryBean`实现的简单模板超
 
 让我们实现一个`SingleToolFactory`和一个`NonSingleToolFactory`来展示如何为单例类型和原型类型使用`AbstractFactoryBean`:
 
-```
+```java
 public class SingleToolFactory extends AbstractFactoryBean<Tool> {
 
     private int factoryId;
@@ -209,7 +209,7 @@ public class SingleToolFactory extends AbstractFactoryBean<Tool> {
 
 现在是非单一实现:
 
-```
+```java
 public class NonSingleToolFactory extends AbstractFactoryBean<Tool> {
 
     private int factoryId;
@@ -235,7 +235,7 @@ public class NonSingleToolFactory extends AbstractFactoryBean<Tool> {
 
 此外，这些工厂 beans 的 XML 配置:
 
-```
+```java
 <beans ...>
 
     <bean id="singleTool" class="com.baeldung.factorybean.SingleToolFactory">
@@ -252,7 +252,7 @@ public class NonSingleToolFactory extends AbstractFactoryBean<Tool> {
 
 现在我们可以测试`Worker`对象的属性是否如我们预期的那样被注入:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:factorybean-abstract-spring-ctx.xml" })
 public class AbstractFactoryBeanTest {

@@ -42,7 +42,7 @@
 
 下面是如何将一个`Double`值转换成一个`short`原始类型:
 
-```
+```java
 @Test
 public void givenDoubleValue_whenShortValueUsed_thenShortValueReturned() {
     Double doubleValue = Double.valueOf(9999.999);
@@ -56,7 +56,7 @@ public void givenDoubleValue_whenShortValueUsed_thenShortValueReturned() {
 
 下面是如何将`Float`值转换成`byte`值:
 
-```
+```java
 @Test
 public void givenFloatValue_whenByteValueUsed_thenByteValueReturned() {
     Float floatValue = Float.valueOf(101.99F);
@@ -76,7 +76,7 @@ public void givenFloatValue_whenByteValueUsed_thenByteValueReturned() {
 
 让我们看看如何将一个`Long`值变成`int`:
 
-```
+```java
 @Test
 public void givenLongValue_whenInitValueUsed_thenInitValueReturned() {
     Long longValue = Long.valueOf(1000L);
@@ -92,7 +92,7 @@ public void givenLongValue_whenInitValueUsed_thenInitValueReturned() {
 
 在这个例子中，我们看到一个`Integer`值是如何通过`Integer`类转换成一个`long`的:
 
-```
+```java
 @Test
 public void givenIntegerValue_whenLongValueUsed_thenLongValueReturned() {
     Integer integerValue = Integer.valueOf(100);
@@ -106,7 +106,7 @@ public void givenIntegerValue_whenLongValueUsed_thenLongValueReturned() {
 
 **我们可以用这个方法将指定的 N `umber`的值返回为`float.`** 让我们来看看一个`Short`的值如何转换为`float`的值:
 
-```
+```java
 @Test
 public void givenShortValue_whenFloatValueUsed_thenFloatValueReturned() {
     Short shortValue = Short.valueOf(127);
@@ -122,7 +122,7 @@ public void givenShortValue_whenFloatValueUsed_thenFloatValueReturned() {
 
 下面是一个使用这种方法将一个`Byte` 转换成`double`的例子:
 
-```
+```java
 @Test
 public void givenByteValue_whenDoubleValueUsed_thenDoubleValueReturned() {
     Byte byteValue = Byte.valueOf(120);

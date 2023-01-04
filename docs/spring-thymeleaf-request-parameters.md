@@ -12,7 +12,7 @@
 
 让我们首先创建一个简单的控制器，它接受四个可选的请求参数:
 
-```
+```java
 @Controller
 public class MainController {
     @RequestMapping("/")
@@ -37,7 +37,7 @@ public class MainController {
 
 首先，让我们创建一个简单的表单，带有一个文本输入字段和一个提交表单的按钮:
 
-```
+```java
 <form th:action="@{/}">
 <input type="text" th:name="participant"/> 
 <input type="submit"/> 
@@ -50,7 +50,7 @@ public class MainController {
 
 同样，对于 HTML select 元素:
 
-```
+```java
 <form th:action="@{/}">
     <input type="text" th:name="participant"/>
     <select th:name="country">
@@ -68,7 +68,7 @@ public class MainController {
 
 我们可以使用`th:name`的另一个元素是按钮元素:
 
-```
+```java
 <form th:action="@{/}">
     <button type="submit" th:name="action" th:value="in">check-in</button>
     <button type="submit" th:name="action" th:value="out">check-out</button>
@@ -81,25 +81,25 @@ public class MainController {
 
 **将请求参数传递给控制器的另一种方式是通过超链接:**
 
-```
+```java
 <a th:href="@{/index}">
 ```
 
 我们可以在括号中添加参数:
 
-```
+```java
 <a th:href="@{/index(param1='value1',param2='value2')}"> 
 ```
 
 百里香叶对上述内容进行了评估:
 
-```
+```java
 <a href="/index?param1=value1&param2;=value2">
 ```
 
 如果我们想要基于变量分配参数值，使用百里香叶表达式生成超链接特别有用。例如，让我们为每个用户 ID 生成一个超链接:
 
-```
+```java
 <th:block th:each="userId: ${userIds}">
     <a th:href="@{/(id=${userId})}"> User [[${userId}]]</a> <br/>
 </th:block>
@@ -107,14 +107,14 @@ public class MainController {
 
 我们可以将用户 id 列表作为属性传递给模板:
 
-```
+```java
 List<Integer> userIds = asList(1,2,3);
 model.addAttribute("userIds", userIds);
 ```
 
 产生的 HTML 将是:
 
-```
+```java
 <a th:href="/?id=1"> User 1</a> <br/>
 <a th:href="/?id=2"> User 2</a> <br/>
 <a th:href="/?id=3"> User 3</a> <br/> 

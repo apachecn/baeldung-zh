@@ -22,7 +22,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 与基本认证类似，一旦在模板中设置了摘要认证，客户端将能够通过必要的安全步骤并获得`Authorization`报头所需的信息:
 
-```
+```java
 Authorization: Digest 
     username="user1",
     realm="Custom Realm Name",
@@ -37,7 +37,7 @@ Authorization: Digest
 
 在 Spring 上下文中需要将`RestTemplate`声明为**一个 bean**——这在 XML 或普通 Java 中都很简单，使用`@Bean`注释:
 
-```
+```java
 import org.apache.http.HttpHost;
 import com.baeldung.client.HttpComponentsClientHttpRequestFactoryDigestAuth;
 import org.springframework.context.annotation.Bean;
@@ -78,7 +78,7 @@ public class ClientConfig {
 
 我们主要是要配置`HttpContext`并为摘要式认证连接我们的定制逻辑:
 
-```
+```java
 import java.net.URI;
 import org.apache.http.HttpHost;
 import org.apache.http.client.AuthCache;
@@ -124,7 +124,7 @@ public class HttpComponentsClientHttpRequestFactoryDigestAuth
 
 现在，`RestTemplate`可以简单地注射并用于测试:
 
-```
+```java
 @Test
 public void whenSecuredRestApiIsConsumed_then200OK() {
     String uri = "http://localhost:8080/spring-security-rest-digest-auth/api/foos/1";
@@ -139,7 +139,7 @@ public void whenSecuredRestApiIsConsumed_then200OK() {
 
 `RestTemplate`和 HttpClient 库所需的 Maven 依赖关系是:
 
-```
+```java
 <dependency>
    <groupId>org.springframework</groupId>
    <artifactId>spring-webmvc</artifactId>

@@ -16,7 +16,7 @@
 
 在这里我们可以看到我们的依赖关系([百里香叶](https://web.archive.org/web/20221129014209/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.thymeleaf%22%20AND%20a%3A%22thymeleaf%22)和[百里香叶弹簧](https://web.archive.org/web/20221129014209/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.thymeleaf%22%20AND%20a%3A%22thymeleaf-spring4%22)):
 
-```
+```java
 <dependency>
     <groupId>org.thymeleaf</groupId>
     <artifactId>thymeleaf</artifactId>
@@ -35,7 +35,7 @@
 
 从模型层的代码片段开始:
 
-```
+```java
 public class Student implements Serializable {
     private Integer id;
     private String name;
@@ -45,7 +45,7 @@ public class Student implements Serializable {
 
 让我们也提供负责加载模型并将其返回到视图层的控制器方法:
 
-```
+```java
 @GetMapping("/listStudents")
 public String listStudent(Model model) {
     model.addAttribute("students", StudentUtils.buildStudents());
@@ -68,7 +68,7 @@ public String listStudent(Model model) {
 
 现在让我们用上面例子中设置的数据调用`th:each attribute `:
 
-```
+```java
 <tr th:each="student: ${students}">
     <td th:text="${student.id}" />
     <td th:text="${student.name}" />
@@ -92,7 +92,7 @@ public String listStudent(Model model) {
 
 让我们看看状态变量在我们的示例中是如何工作的:
 
-```
+```java
 <tr 
   th:each="student, iStat : ${students}" 
   th:style="${iStat.odd}? 'font-weight: bold;'" 

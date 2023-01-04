@@ -50,13 +50,13 @@
 
 `Expression`接口将有解释方法:
 
-```
+```java
 List<String> interpret(Context ctx);
 ```
 
 接下来，我们定义第一个表达式，即`Select`类:
 
-```
+```java
 class Select implements Expression {
 
     private String column;
@@ -80,7 +80,7 @@ class Select implements Expression {
 
 另一个表达式是`From`类:
 
-```
+```java
 class From implements Expression {
 
     private String table;
@@ -105,7 +105,7 @@ class From implements Expression {
 
 `Where `表达式通过设置必要的过滤器再次修改上下文，并通过搜索调用终止解释:
 
-```
+```java
 class Where implements Expression {
 
     private Predicate<String> filter;
@@ -124,7 +124,7 @@ class Where implements Expression {
 
 注意，它有三个关键字段，由`Expression`的每个子类和搜索方法修改:
 
-```
+```java
 class Context {
 
     private static Map<String, List<Row>> tables = new HashMap<>();
@@ -171,7 +171,7 @@ class Context {
 
 出于测试目的，让我们看看`InterpreterDemo `类:
 
-```
+```java
 public class InterpreterDemo {
     public static void main(String[] args) {
 
@@ -197,7 +197,7 @@ public class InterpreterDemo {
 
 通过运行该程序，输出应该如下所示:
 
-```
+```java
 [John, Jan, Dominic]
 [John Doe, Jan Kowalski, Dominic Doom]
 [Dominic]

@@ -12,13 +12,13 @@
 
 和往常一样，我们通过一个例子来理解问题。假设我们有一个字符串数组:
 
-```
+```java
 String[] LANGUAGES = new String[] { "Python", "Java", "Kotlin", "Scala", "Ruby", "Go", "Rust" };
 ```
 
 正如我们所见，`LANGUAGES`数组保存了一些编程语言名称。此外，由于用`“Java”, “Kotlin”,`或`“Scala”`编写的应用程序可以在 Java 虚拟机上运行，假设我们想要一个包含这三个元素的子数组。换句话说，**我们要从`LANGUAGES`数组:**中得到第二到第四个元素(索引`1`、`2`、`3`)
 
-```
+```java
 String[] JVM_LANGUAGES = new String[] { "Java", "Kotlin", "Scala" };
 ```
 
@@ -40,7 +40,7 @@ Java 8 带给我们的一个重要新特性是[流 API](/web/20221105192802/http
 
 接下来，让我们创建一个测试，看看它是否能得到我们想要的子数组:
 
-```
+```java
 String[] result = Arrays.stream(LANGUAGES, 1, 4).toArray(String[]::new);
 assertArrayEquals(JVM_LANGUAGES, result);
 ```
@@ -57,7 +57,7 @@ assertArrayEquals(JVM_LANGUAGES, result);
 
 接下来，让我们创建一个测试，看看`Arrays.copyOfRange()`是否能解决问题:
 
-```
+```java
 String[] result = Arrays.copyOfRange(LANGUAGES, 1, 4);
 assertArrayEquals(JVM_LANGUAGES, result);
 ```
@@ -72,7 +72,7 @@ assertArrayEquals(JVM_LANGUAGES, result);
 
 我们已经看到`Arrays.copyOfRange()`返回结果子数组。然而，**`System.arraycopy()`方法的返回类型是`void`** 。因此，我们必须创建一个新的数组对象，并将其传递给`arraycopy()`方法。方法填充数组中复制的元素:
 
-```
+```java
 String[] result = new String[3];
 System.arraycopy(LANGUAGES, 1, result, 0, 3);
 assertArrayEquals(JVM_LANGUAGES, result);
@@ -90,7 +90,7 @@ assertArrayEquals(JVM_LANGUAGES, result);
 
 值得一提的是**如果结果数组已经包含数据，`arraycopy()`方法可能会覆盖数据**:
 
-```
+```java
 String[] result2 = new String[] { "value one", "value two", "value three", "value four", "value five", "value six", "value seven" };
 System.arraycopy(LANGUAGES, 1, result2, 2, 3);
 assertArrayEquals(new String[] { "value one", "value two", "Java", "Kotlin", "Scala", "value six", "value seven" }, result2);
@@ -108,7 +108,7 @@ Apache Commons Lang3 是一个使用非常广泛的库。它的 [`ArrayUtils`](/
 
 在我们开始使用`ArrayUtils,`之前，让我们将依赖性添加到我们的 Maven 配置中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -120,7 +120,7 @@ Apache Commons Lang3 是一个使用非常广泛的库。它的 [`ArrayUtils`](/
 
 `ArrayUtils`类有`subarray()`方法，它允许我们快速获得子数组:
 
-```
+```java
 String[] result = ArrayUtils.subarray(LANGUAGES, 1, 4);
 assertArrayEquals(JVM_LANGUAGES, result);
 ```

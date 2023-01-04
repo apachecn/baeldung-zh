@@ -16,7 +16,7 @@
 
 我们还将添加一个 info 属性，仅供以后使用。因此，我们的实现将如下所示:
 
-```
+```java
 public final class ClassSingleton {
 
     private static ClassSingleton INSTANCE;
@@ -45,7 +45,7 @@ public final class ClassSingleton {
 
 接下来，我们不讨论另一个有趣的方法，那就是使用枚举:
 
-```
+```java
 public enum EnumSingleton {
 
     INSTANCE("Initial class info"); 
@@ -70,7 +70,7 @@ public enum EnumSingleton {
 
 要使用我们的`ClassSingleton`，我们只需要静态地获取实例:
 
-```
+```java
 ClassSingleton classSingleton1 = ClassSingleton.getInstance();
 
 System.out.println(classSingleton1.getInfo()); //Initial class info
@@ -84,7 +84,7 @@ System.out.println(classSingleton2.getInfo()); //New class info
 
 至于`EnumSingleton`，我们可以像使用任何其他 Java 枚举一样使用它:
 
-```
+```java
 EnumSingleton enumSingleton1 = EnumSingleton.INSTANCE.getInstance();
 
 System.out.println(enumSingleton1.getInfo()); //Initial enum info
@@ -126,7 +126,7 @@ Singleton 是一种看似简单的设计模式，程序员在创建 singleton �
 **同步**
 我们上面介绍的私有构造函数的实现不是线程安全的:它在单线程环境中工作得很好，但是在多线程环境中，我们应该使用同步技术来保证操作的原子性:
 
-```
+```java
 public synchronized static ClassSingleton getInstance() {
     if (INSTANCE == null) {
         INSTANCE = new ClassSingleton();

@@ -14,7 +14,7 @@
 
 对于这个例子，让我们生成前 50 个偶数，并将它们存储在一个数组中，结果是:
 
-```
+```java
 @Test
 public void intStreamToArray() {
   int[] first50EvenNumbers = IntStream.iterate(0, i -> i + 2)
@@ -38,7 +38,7 @@ public void intStreamToArray() {
 
 在这种情况下，为了增加例子的多样性，我们使用方法`range`代替方法`iterate`。该方法将产生一个从`int` 0 到`int` 50 的`IntStream`(因为是开放范围，所以不包括在内):
 
-```
+```java
 @Test
 public void intStreamToList() {
   List<Integer> first50IntegerNumbers = IntStream.range(0, 50)
@@ -60,7 +60,7 @@ public void intStreamToList() {
 
 在这种情况下，我们将只生成前 3 个`int`(0、1 和 2):
 
-```
+```java
 @Test
 public void intStreamToString() {
   String first3numbers = IntStream.of(0, 1, 2)

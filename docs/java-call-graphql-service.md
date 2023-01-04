@@ -24,7 +24,7 @@ GraphQL 服务可以用任何语言编写。然而，GraphQL 模式需要使用�
 
 在我们的示例 GraphQL 模式中，我们将定义两种类型(`Book`和`Author`)和一个获取所有书籍的查询操作(`allBooks`):
 
-```
+```java
 type Book {
     title: String!
     author: Author
@@ -52,7 +52,7 @@ GraphQL 服务是通过**定义类型和字段，以及为不同的字段**提�
 
 最简单的形式是，GraphQL 询问对象上的特定字段。例如，我们可以查询获取所有书名:
 
-```
+```java
 {
     "allBooks" {
         "title"
@@ -64,7 +64,7 @@ GraphQL 服务是通过**定义类型和字段，以及为不同的字段**提�
 
 GraphQL 服务将使用 JSON 格式的响应来响应上述查询，如下所示:
 
-```
+```java
 {
     "data": {
         "allBooks": [
@@ -89,7 +89,7 @@ GraphQL 服务将使用 JSON 格式的响应来响应上述查询，如下所示
 
 我们将从定义 GraphQL 查询开始，并实现我们的示例 GraphQL 模式中指定的`allBooks`方法:
 
-```
+```java
 public class GraphQLQuery implements GraphQLQueryResolver {
 
     private BookRepository repository;
@@ -107,7 +107,7 @@ public class GraphQLQuery implements GraphQLQueryResolver {
 
 接下来，为了公开我们的 GraphQL 端点，我们将创建一个 web servlet:
 
-```
+```java
 @WebServlet(urlPatterns = "/graphql")
 public class GraphQLEndpoint extends HttpServlet {
 
@@ -137,13 +137,13 @@ public class GraphQLEndpoint extends HttpServlet {
 
 我们将使用 [`maven-war-plugin`](https://web.archive.org/web/20220613105332/https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-war-plugin) 来打包我们的应用程序，并使用 [`jetty-maven-plugin`](https://web.archive.org/web/20220613105332/https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin) 来运行它:
 
-```
+```java
 mvn jetty:run
 ```
 
 现在，我们已经准备好运行和测试我们的 GraphQL 服务了，方法是发送一个请求到:
 
-```
+```java
 http://localhost:8080/graphql?query={allBooks{title}}
 ```
 
@@ -155,7 +155,7 @@ http://localhost:8080/graphql?query={allBooks{title}}
 
 让我们试着**发送一个请求到我们在上一节**中创建的 GraphQL 服务:
 
-```
+```java
 public static HttpResponse callGraphQLService(String url, String query) 
   throws URISyntaxException, IOException {
     HttpClient client = HttpClientBuilder.create().build();
@@ -174,7 +174,7 @@ public static HttpResponse callGraphQLService(String url, String query)
 
 接下来，让我们解析来自 GraphQL 服务的响应。 **GraphQL 服务发送 JSON 格式的响应**，与 REST 服务相同:
 
-```
+```java
 HttpResponse httpResponse = callGraphQLService(serviceUrl, "{allBooks{title}}");
 String actualResponse = IOUtils.toString(httpResponse.getEntity().getContent(), StandardCharsets.UTF_8.name());
 Response parsedResponse = objectMapper.readValue(actualResponse, Response.class);
@@ -189,7 +189,7 @@ assertThat(parsedResponse.getData().getAllBooks()).hasSize(2);
 
 我们可以利用 [MockServer](/web/20220613105332/https://www.baeldung.com/mockserver) 库来存根外部 GraphQL HTTP 服务:
 
-```
+```java
 String requestQuery = "{allBooks{title}}";
 String responseJson = "{\"data\":{\"allBooks\":[{\"title\":\"Title 1\"},{\"title\":\"Title 2\"}]}}";
 
@@ -217,7 +217,7 @@ new MockServerClient(SERVER_ADDRESS, serverPort)
 
 `Nodes`是美国运通的 GraphQL 客户端，设计用于**从标准模型定义**构建查询。要开始使用它，我们应该首先添加所需的[依赖项](https://web.archive.org/web/20220613105332/https://jitpack.io/p/americanexpress/nodes):
 
-```
+```java
 <dependency>
     <groupId>com.github.americanexpress.nodes</groupId>
     <artifactId>nodes</artifactId>
@@ -227,7 +227,7 @@ new MockServerClient(SERVER_ADDRESS, serverPort)
 
 该库目前托管在`JitPack`上，我们也应该将它添加到我们的 Maven 安装库:
 
-```
+```java
 <repository>
     <id>jitpack.io</id>
     <url>https://jitpack.io</url>
@@ -236,7 +236,7 @@ new MockServerClient(SERVER_ADDRESS, serverPort)
 
 一旦依赖关系得到解决，我们就可以利用`GraphQLTemplate`来构造一个查询并调用我们的 GraphQL 服务:
 
-```
+```java
 public static GraphQLResponseEntity<Data> callGraphQLService(String url, String query)
   throws IOException {
     GraphQLTemplate graphQLTemplate = new GraphQLTemplate();
@@ -252,7 +252,7 @@ public static GraphQLResponseEntity<Data> callGraphQLService(String url, String 
 
 `Nodes`将使用我们指定的类解析来自 GraphQL 服务的响应:
 
-```
+```java
 GraphQLResponseEntity<Data> responseEntity = callGraphQLService(serviceUrl, "{allBooks{title}}");
 assertThat(responseEntity.getResponse().getAllBooks()).hasSize(2);
 ```
@@ -265,7 +265,7 @@ assertThat(responseEntity.getResponse().getAllBooks()).hasSize(2);
 
 这种方法类似于 SOAP 服务中使用的 WSDL 代码生成器。要开始使用它，我们应该首先添加所需的[依赖关系](https://web.archive.org/web/20220613105332/https://search.maven.org/search?q=com.graphql-java-generator):
 
-```
+```java
 <dependency>
     <groupId>com.graphql-java-generator</groupId>
     <artifactId>graphql-java-runtime</artifactId>
@@ -275,7 +275,7 @@ assertThat(responseEntity.getResponse().getAllBooks()).hasSize(2);
 
 接下来，我们可以配置 `graphql-maven-plugin`来执行一个`generateClientCode`目标:
 
-```
+```java
 <plugin>
     <groupId>com.graphql-java-generator</groupId>
     <artifactId>graphql-maven-plugin</artifactId>
@@ -300,7 +300,7 @@ assertThat(responseEntity.getResponse().getAllBooks()).hasSize(2);
 
 生成的`QueryExecutor`组件将包含调用我们的 GraphQL 服务并解析其响应的方法:
 
-```
+```java
 public List<Book> allBooks(String queryResponseDef, Object... paramsAndValues)
   throws GraphQLRequestExecutionException, GraphQLRequestPreparationException {
     logger.debug("Executing query 'allBooks': {} ", queryResponseDef);

@@ -58,7 +58,7 @@
 
 在 MySQL 中，我们可以在全局级别将这些属性定义为:
 
-```
+```java
 SET GLOBAL TRANSACTION READ WRITE;
 SET autocommit = 0;
 /* transaction */
@@ -67,7 +67,7 @@ commit;
 
 或者，我们可以在会话级别设置属性:
 
-```
+```java
 SET SESSION TRANSACTION READ ONLY;
 SET autocommit = 1;
 /* transaction */ 
@@ -89,7 +89,7 @@ SET autocommit = 1;
 
 让我们看看如何使用 JPA/Hibernate 在应用程序中有效地定义一个只读事务:
 
-```
+```java
 EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("jpa-unit");
 EntityManager entityManager = entityManagerFactory.createEntityManager();
 entityManager.unwrap(Session.class).setDefaultReadOnly(true);
@@ -104,7 +104,7 @@ entityManager.getTransaction().commit();
 
 当使用 Spring 事务管理系统时，它变得更加简单，如下所示:
 
-```
+```java
 @Transactional(readOnly = true)
 public Book getBookById(long id) {
     return entityManagerFactory.createEntityManager().find(Book.class, id);
@@ -117,7 +117,7 @@ Spring JPA 存储库[基类](https://web.archive.org/web/20220811184103/https://
 
 最后，在配置数据源时，还可以定义只读连接并更改`autcommit`属性。正如我们看到的，如果我们只需要读取，这可以进一步提高应用程序的性能。数据源保存这些配置:
 
-```
+```java
 @Bean
 public DataSource readOnlyDataSource() {
     HikariConfig config = new HikariConfig();
@@ -132,7 +132,7 @@ public DataSource readOnlyDataSource() {
 
 然而，这只有在应用程序的主要特征是单一查询资源的情况下才有意义。此外，如果使用 Spring Data JPA，就必须禁用 Spring 创建的默认事务。因此，我们只需要将`enableDefaultTransactions`属性配置为`false`:
 
-```
+```java
 @Configuration
 @EnableJpaRepositories(enableDefaultTransactions = false)
 @EnableTransactionManagement
@@ -149,7 +149,7 @@ public class Config {
 
 有多种方法可以达到这个结果，但是我们将首先创建一个路由器数据源类:
 
-```
+```java
 public class RoutingDS extends AbstractRoutingDataSource {
 
     public RoutingDS(DataSource writer, DataSource reader) {
@@ -169,7 +169,7 @@ public class RoutingDS extends AbstractRoutingDataSource {
 
 关于[路由数据源](//web.archive.org/web/20220811184103/https://www.baeldung.com/spring-abstract-routing-data-source)还有很多需要了解的。然而，总而言之，在我们的例子中，当应用程序请求时，这个类将返回适当的数据源。为此，我们使用了在运行时保存数据源上下文的`ReadOnlyContent`类:
 
-```
+```java
 public class ReadOnlyContext {
 
     private static final ThreadLocal<AtomicInteger> READ_ONLY_LEVEL = ThreadLocal.withInitial(() -> new AtomicInteger(0));
@@ -195,7 +195,7 @@ public class ReadOnlyContext {
 
 接下来，我们需要定义这些数据源，并在 Spring 上下文中注册它们。为此，我们只需要使用之前创建的`RoutingDS`类:
 
-```
+```java
 //annotations mentioned previously
 public Config {
     //other beans...
@@ -224,7 +224,7 @@ public Config {
 
 差不多了——现在，**让我们创建一个注释来告诉 Spring 何时在只读上下文中包装组件**。为此，我们将使用`@ReaderDS`注释:
 
-```
+```java
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ReaderDS {
@@ -233,7 +233,7 @@ public @interface ReaderDS {
 
 最后，我们使用 [AOP](/web/20220811184103/https://www.baeldung.com/spring-aop) 将组件执行包装在上下文中:
 
-```
+```java
 @Aspect
 @Component
 public class ReadOnlyInterception {
@@ -251,7 +251,7 @@ public class ReadOnlyInterception {
 
 通常，我们希望尽可能在最高点添加注释。不过，为了简单起见，我们将添加存储库层，组件中只有一个查询:
 
-```
+```java
 public interface BookRepository extends JpaRepository<BookEntity, Long> {
 
     @ReaderDS

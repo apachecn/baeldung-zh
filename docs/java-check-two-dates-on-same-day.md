@@ -20,7 +20,7 @@
 
 让我们看看如何使用这个类来检查两个`Date` 对象是否是同一天:
 
-```
+```java
 public static boolean isSameDay(Date date1, Date date2) {
     LocalDate localDate1 = date1.toInstant()
       .atZone(ZoneId.systemDefault())
@@ -42,7 +42,7 @@ public static boolean isSameDay(Date date1, Date date2) {
 
 我们可以直接用**将`Instant`对象截成天数单位**，这将时间字段值设置为零，然后我们可以对它们进行比较:
 
-```
+```java
 public static boolean isSameDayUsingInstant(Date date1, Date date2) {
     Instant instant1 = date1.toInstant()
       .truncatedTo(ChronoUnit.DAYS);
@@ -58,7 +58,7 @@ public static boolean isSameDayUsingInstant(Date date1, Date date2) {
 
 使用这个，我们将格式化`Date,`转换成一个`String`对象，然后使用标准的`equals`方法比较它们:
 
-```
+```java
 public static boolean isSameDay(Date date1, Date date2) {
     SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
     return fmt.format(date1).equals(fmt.format(date2));
@@ -71,7 +71,7 @@ public static boolean isSameDay(Date date1, Date date2) {
 
 首先，我们需要创建一个`Calendar`实例，并使用每个提供的日期设置`Calendar`对象的时间。然后我们可以分别查询和**比较**的年-月-日属性，以确定`Date`对象是否有同一天:
 
-```
+```java
 public static boolean isSameDay(Date date1, Date date2) {
     Calendar calendar1 = Calendar.getInstance();
     calendar1.setTime(date1);
@@ -93,7 +93,7 @@ public static boolean isSameDay(Date date1, Date date2) {
 
 从 [Maven Central](https://web.archive.org/web/20220525125755/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.commons%22%20AND%20a%3A%22commons-lang3%22) 可以获得 [Apache Commons Lang](https://web.archive.org/web/20220525125755/https://commons.apache.org/proper/commons-lang/) 工件:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -103,7 +103,7 @@ public static boolean isSameDay(Date date1, Date date2) {
 
 那么我们可以简单地使用来自`DateUtils`的方法`isSameDay`:
 
-```
+```java
 DateUtils.isSameDay(date1, date2);
 ```
 
@@ -113,7 +113,7 @@ DateUtils.isSameDay(date1, date2);
 
 神器可以在 [Maven Central](https://web.archive.org/web/20220525125755/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22joda-time%22%20AND%20a%3A%22joda-time%22) 上找到:
 
-```
+```java
 <dependency>
     <groupId>joda-time</groupId>
     <artifactId>joda-time</artifactId>
@@ -123,7 +123,7 @@ DateUtils.isSameDay(date1, date2);
 
 在本库中， **`org.joda.time.LocalDate`代表没有时间**的日期。因此，我们可以从`java.util.Date`对象构建`LocalDate`对象，然后比较它们:
 
-```
+```java
 public static boolean isSameDay(Date date1, Date date2) {
     org.joda.time.LocalDate localDate1 = new org.joda.time.LocalDate(date1);
     org.joda.time.LocalDate localDate2 = new org.joda.time.LocalDate(date2);
@@ -137,7 +137,7 @@ Date4j 还提供了一个我们可以使用的简单明了的实现。
 
 同样，它也可以从 [Maven Central](https://web.archive.org/web/20220525125755/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.darwinsys%22%20AND%20a%3A%22hirondelle-date4j%22) 获得:
 
-```
+```java
 <dependency>
     <groupId>com.darwinsys</groupId>
     <artifactId>hirondelle-date4j</artifactId>
@@ -147,7 +147,7 @@ Date4j 还提供了一个我们可以使用的简单明了的实现。
 
 使用这个库，我们需要从一个`java.util.Date`对象中**构造`DateTime`对象。然后我们可以简单地**使用`isSameDayAs`方法**:**
 
-```
+```java
 public static boolean isSameDay(Date date1, Date date2) {
     DateTime dateObject1 = DateTime.forInstant(date1.getTime(), TimeZone.getDefault());
     DateTime dateObject2 = DateTime.forInstant(date2.getTime(), TimeZone.getDefault());

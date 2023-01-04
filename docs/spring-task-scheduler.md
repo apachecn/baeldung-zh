@@ -16,7 +16,7 @@
 
 现在让我们在`ThreadPoolTaskSchedulerConfig` :定义`ThreadPoolTaskScheduler` bean
 
-```
+```java
 @Configuration
 @ComponentScan(
   basePackages="com.baeldung.taskscheduler",
@@ -41,7 +41,7 @@ public class ThreadPoolTaskSchedulerConfig {
 
 让我们实现一个可以调度的简单任务:
 
-```
+```java
 class RunnableTask implements Runnable{
     private String message;
 
@@ -59,7 +59,7 @@ class RunnableTask implements Runnable{
 
 我们现在可以简单地安排这个任务由调度程序执行:
 
-```
+```java
 taskScheduler.schedule(
   new Runnabletask("Specific time, 3 Seconds from now"),
   new Date(System.currentTimeMillis + 3000)
@@ -78,7 +78,7 @@ taskScheduler.schedule(
 
 让我们将任务配置为在 1000 毫秒的固定延迟后运行:
 
-```
+```java
 taskScheduler.scheduleWithFixedDelay(
   new RunnableTask("Fixed 1 second Delay"), 1000);
 ```
@@ -89,7 +89,7 @@ taskScheduler.scheduleWithFixedDelay(
 
 让我们将任务配置为在给定开始时间的固定延迟后运行:
 
-```
+```java
 taskScheduler.scheduleWithFixedDelay(
   new RunnableTask("Current Date Fixed 1 second Delay"),
   new Date(),
@@ -106,7 +106,7 @@ taskScheduler.scheduleWithFixedDelay(
 
 让我们安排一个任务以固定的毫秒速率**运行:**
 
-```
+```java
 taskScheduler.scheduleAtFixedRate(
   new RunnableTask("Fixed Rate of 2 seconds") , 2000);
 ```
@@ -115,7 +115,7 @@ taskScheduler.scheduleAtFixedRate(
 
 ### 4.2.从给定日期开始以固定的速率调度`RunnableTask`
 
-```
+```java
 taskScheduler.scheduleAtFixedRate(new RunnableTask(
   "Fixed Rate of 2 seconds"), new Date(), 3000);
 ```
@@ -126,14 +126,14 @@ taskScheduler.scheduleAtFixedRate(new RunnableTask(
 
 `CronTrigger` 用于根据 cron 表达式调度任务:
 
-```
+```java
 CronTrigger cronTrigger 
   = new CronTrigger("10 * * * * ?"); 
 ```
 
 提供的触发器可用于根据特定的节奏或时间表运行任务:
 
-```
+```java
 taskScheduler.schedule(new RunnableTask("Cron Trigger"), cronTrigger);
 ```
 
@@ -143,7 +143,7 @@ taskScheduler.schedule(new RunnableTask("Cron Trigger"), cronTrigger);
 
 让我们使用`PeriodicTrigger`来调度一个具有 2000 毫秒的**固定延迟**的任务:
 
-```
+```java
 PeriodicTrigger periodicTrigger 
   = new PeriodicTrigger(2000, TimeUnit.MICROSECONDS);
 ```
@@ -152,7 +152,7 @@ PeriodicTrigger periodicTrigger
 
 现在让我们用`PeriodicTrigger`来安排`RunnableTask`:
 
-```
+```java
 taskScheduler.schedule(
   new RunnableTask("Periodic Trigger"), periodicTrigger);
 ```
@@ -161,7 +161,7 @@ taskScheduler.schedule(
 
 我们需要做的就是在`periodicTrigger` bean **:** 的 return 语句前添加两行代码
 
-```
+```java
 periodicTrigger.setFixedRate(true);
 periodicTrigger.setInitialDelay(1000);
 ```

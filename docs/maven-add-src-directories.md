@@ -14,7 +14,7 @@
 
 首先，让我们在`src/main/newsrc/`文件夹中创建一个简单的 Java 类文件`DataConnection.java`:
 
-```
+```java
 public class DataConnection {
 
     public static String temp() {
@@ -25,7 +25,7 @@ public class DataConnection {
 
 之后，让我们在`src/main/java`目录中创建另一个类文件，该文件使用我们在另一个文件夹中创建的`DataConnection`类:
 
-```
+```java
 public class MainApp {
     public static void main(String args[]){
         System.out.println(DataConnection.temp());
@@ -39,7 +39,7 @@ public class MainApp {
 
 现在，**如果我们试图编译它，我们会得到一个编译错误**:
 
-```
+```java
 [ERROR] BuilderHelper/src/main/java/com/baeldung/maven/plugin/MainApp.java:[3,29] package com.baeldung.database does not exist
 [ERROR] BuilderHelper/src/main/java/com/baeldung/database/MainApp.java:[9,28] cannot find symbol
 [ERROR] symbol: variable DataConnection
@@ -56,7 +56,7 @@ public class MainApp {
 
 由于在`src/main`文件夹旁边有一个兄弟目录，我们现在将**添加第二个源目录**:
 
-```
+```java
  <build>
         <plugins>
             <plugin>

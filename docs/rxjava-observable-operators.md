@@ -18,7 +18,7 @@
 
 **`doOnCompleted`操作符注册一个动作，如果结果`Observable`正常终止**则调用这个动作，调用`Observer`的`onCompleted` 方法`:`
 
-```
+```java
 Observable.range(1, 10)
   .doOnNext(r -> receivedTotal += r)
   .doOnCompleted(() -> result = "Completed")
@@ -34,7 +34,7 @@ assertTrue(result.equals("Completed"));
 
 还有与`doOnSubscribe:`相反的`doOnUnsubscribe operator`
 
-```
+```java
 Observable.range(1, 10)
   .doOnEach(new Observer<Integer>() {
       @Override
@@ -60,7 +60,7 @@ assertTrue(result.equals("Subscribed"));
 
 注册一个动作，当一个可观察对象成功或出错完成时，该动作将被调用:
 
-```
+```java
 thrown.expect(OnErrorNotImplementedException.class);
 Observable.empty()
   .single()
@@ -79,7 +79,7 @@ assertTrue(result.equals("doOnTerminate_doAfterTerminate"));
 
 `ObserveOn` 操作符指定了一个不同的`Scheduler`，`Observable`将使用它向`Observers:`发送通知
 
-```
+```java
 Observable.range(1, 5)
   .map(i -> i * 100)
   .doOnNext(i -> {
@@ -108,7 +108,7 @@ assertTrue(receivedTotal == 15000);
 
 为了指定`Observable`应该在哪个`Scheduler`上操作，我们可以使用`subscribeOn`操作符:
 
-```
+```java
 Observable.range(1, 5)
   .map(i -> i * 100)
   .doOnNext(i -> {
@@ -137,7 +137,7 @@ assertTrue(receivedTotal == 15000);
 
 **操作符`Single` 返回一个`Observable`，它发出源`Observable:`** 发出的单项
 
-```
+```java
 Observable.range(1, 1)
   .single()
   .subscribe(i -> receivedTotal += i);
@@ -146,7 +146,7 @@ assertTrue(receivedTotal == 1);
 
 如果源`Observable`产生零个或多个元素，将会抛出一个异常:
 
-```
+```java
 Observable.empty()
   .single()
   .onErrorReturn(e -> receivedTotal += 10)
@@ -156,7 +156,7 @@ assertTrue(receivedTotal == 10);
 
 另一方面，操作符`SingleOrDefault`与`Single,` 非常相似，这意味着它也返回一个从源发出单个项目的`Observable`，但是另外，我们可以指定一个默认值:
 
-```
+```java
 Observable.empty()
   .singleOrDefault("Default")
   .subscribe(i -> result +=i);
@@ -165,7 +165,7 @@ assertTrue(result.equals("Default"));
 
 但是如果`Observable`源发出多个项目，它仍然抛出一个`IllegalArgumentExeption:`
 
-```
+```java
 Observable.range(1, 3)
   .singleOrDefault(5)
   .onErrorReturn(e -> receivedTotal += 10)
@@ -182,7 +182,7 @@ assertTrue(receivedTotal == 10);
 
 **`Timestamp` 操作符将时间戳附加到源`Observable`** 发出的每一项上，然后再按顺序重新发出该项。时间戳表示项目发出的时间:
 
-```
+```java
 Observable.range(1, 10)
   .timestamp()
   .map(o -> result = o.getClass().toString() )
@@ -198,7 +198,7 @@ assertTrue(result.equals("class rx.schedulers.Timestamped"));
 
 它使用提供的值偏移整个序列:
 
-```
+```java
 Observable source = Observable.interval(1, TimeUnit.SECONDS)
   .take(5)
   .timestamp();
@@ -228,7 +228,7 @@ Thread.sleep(8000);
 
 因此，不能保证`repeat`将通过相同的事件序列保持循环，但当上游是固定流时，情况恰好如此:
 
-```
+```java
 Observable.range(1, 3)
   .repeat(3)
   .subscribe(i -> receivedTotal += i);
@@ -244,7 +244,7 @@ assertTrue(receivedTotal == 18);
 
 但是，与此同时，它会在内部保留所有通知的副本。当后续订户想要接收推送的通知时，`cache`不再委托给底层`Observable`，而是提供缓存的值:
 
-```
+```java
 Observable<Integer> source =
   Observable.<Integer>create(subscriber -> {
       System.out.println("Create");
@@ -269,7 +269,7 @@ assertTrue(receivedTotal == 8);
 
 当`observer`取消订阅`Observable`时，或者当`Observable`终止时，`using`将调用第三个函数来处理创建的资源:
 
-```
+```java
 Observable<Character> values = Observable.using(
   () -> "resource",
   r -> {

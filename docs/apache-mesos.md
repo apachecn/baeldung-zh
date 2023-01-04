@@ -70,7 +70,7 @@ Mesos 框架由两个子组件组成:
 
 Mesos 允许应用程序用各种编程语言实现他们的定制调度器和执行器 T2。一个 Java 实现的调度器必须**实现**T5`Scheduler `接口:
 
-```
+```java
 public class HelloWorldScheduler implements Scheduler {
 
     @Override
@@ -122,7 +122,7 @@ public class HelloWorldScheduler implements Scheduler {
 
 类似地，执行程序的实现必须实现`Executor `接口:
 
-```
+```java
 public class HelloWorldExecutor implements Executor {
     @Override
     public void registered(ExecutorDriver driver, Protos.ExecutorInfo executorInfo, 
@@ -187,7 +187,7 @@ public class HelloWorldExecutor implements Executor {
 
 例如，我们可以用这些资源启动代理:
 
-```
+```java
 --resources='cpus:24;gpus:2;mem:24576;disk:409600;ports:[21000-24000,30000-34000];bugs(debug_role):{a,b,c}'
 ```
 
@@ -197,7 +197,7 @@ public class HelloWorldExecutor implements Executor {
 
 一个有用的例子是**将代理添加到不同的机架或区域**，然后**在同一机架或区域**上调度各种任务，以实现数据局部性:
 
-```
+```java
 --attributes='rack:abc;zone:west;os:centos5;level:10;keys:[1000-1500]'
 ```
 
@@ -228,7 +228,7 @@ public class HelloWorldExecutor implements Executor {
 
 静态预留类似于我们在前面讨论的代理启动时的资源分配:
 
-```
+```java
  --resources="cpus:4;mem:2048;cpus(baeldung):8;mem(baeldung):4096"
 ```
 
@@ -266,7 +266,7 @@ Mesos 允许我们向资源角色添加配额。配额指定**一个角色保证
 
 我们将首先为 Mesos 添加一个 [Maven 依赖关系](https://web.archive.org/web/20220523231851/https://search.maven.org/search?q=g:org.apache.mesos%20AND%20a:mesos&core=gav):
 
-```
+```java
 <dependency>
     <groupId>org.apache.mesos</groupId>
     <artifactId>mesos</artifactId>
@@ -276,7 +276,7 @@ Mesos 允许我们向资源角色添加配额。配额指定**一个角色保证
 
 接下来，我们将为我们的框架实现`HelloWorldMain `。我们要做的第一件事是在 Mesos 代理上启动 executor 进程:
 
-```
+```java
 public static void main(String[] args) {
 
     String path = System.getProperty("user.dir")
@@ -304,7 +304,7 @@ public static void main(String[] args) {
 
 接下来，我们将初始化我们的框架并启动调度程序:
 
-```
+```java
 FrameworkInfo.Builder frameworkBuilder = FrameworkInfo.newBuilder()
   .setFailoverTimeout(120000)
   .setUser("")
@@ -318,7 +318,7 @@ MesosSchedulerDriver driver = new MesosSchedulerDriver(new HelloWorldScheduler()
 
 最后，**我们将启动向主服务器注册的`MesosSchedulerDriver` 。为了成功注册，我们必须将 Master 的 IP 作为程序参数`args[0]`传递给这个 main 类:**
 
-```
+```java
 int status = driver.run() == Protos.Status.DRIVER_STOPPED ? 0 : 1;
 
 driver.stop();
@@ -338,7 +338,7 @@ System.exit(status);
 
 首先，我们将了解调度程序如何为任务分配资源:
 
-```
+```java
 @Override
 public void resourceOffers(SchedulerDriver schedulerDriver, List<Offer> list) {
 
@@ -364,7 +364,7 @@ public void resourceOffers(SchedulerDriver schedulerDriver, List<Offer> list) {
 
 这里，我们为我们的任务分配了 1 个 CPU 和 128M 内存。接下来，我们将使用`SchedulerDriver `在代理上启动任务:
 
-```
+```java
  TaskInfo printHelloWorld = TaskInfo.newBuilder()
           .setName("printHelloWorld " + taskId.getValue())
           .setTaskId(taskId)
@@ -386,7 +386,7 @@ public void resourceOffers(SchedulerDriver schedulerDriver, List<Offer> list) {
 
 或者，`Scheduler`经常发现需要拒绝资源提议。例如，如果`Scheduler `由于缺乏资源而无法在代理上启动任务，它必须立即拒绝该提议:
 
-```
+```java
 schedulerDriver.declineOffer(offer.getId());
 ```
 
@@ -398,13 +398,13 @@ schedulerDriver.declineOffer(offer.getId());
 
 在前面的部分中，我们讨论了框架如何配置代理来启动 executor 进程:
 
-```
+```java
 java -cp libraries2-1.0.0-SNAPSHOT.jar com.baeldung.mesos.executors.HelloWorldExecutor
 ```
 
 值得注意的是，**这个命令认为`HelloWorldExecutor `是主类。**我们将实现这个`main`方法来**初始化`MesosExecutorDriver `** ，它连接到 Mesos 代理以接收任务并共享其他信息，如任务状态:
 
-```
+```java
 public class HelloWorldExecutor implements Executor {
     public static void main(String[] args) {
         MesosExecutorDriver driver = new MesosExecutorDriver(new HelloWorldExecutor());
@@ -415,7 +415,7 @@ public class HelloWorldExecutor implements Executor {
 
 现在要做的最后一件事是从框架接受任务，并在代理上启动它们。启动任何任务的信息都包含在`HelloWorldExecutor:`中
 
-```
+```java
 public void launchTask(ExecutorDriver driver, TaskInfo task) {
 
     Protos.TaskStatus status = Protos.TaskStatus.newBuilder()
@@ -438,7 +438,7 @@ public void launchTask(ExecutorDriver driver, TaskInfo task) {
 
 在某些情况下，执行器还可以将数据发送回调度程序:
 
-```
+```java
 String myStatus = "Hello Framework";
 driver.sendFrameworkMessage(myStatus.getBytes());
 ```

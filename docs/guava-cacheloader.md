@@ -18,7 +18,7 @@
 
 首先，让我们添加 Maven 依赖项:
 
-```
+```java
 <dependency>
   <groupId>com.google.guava</groupId>
   <artifactId>guava</artifactId>
@@ -32,7 +32,7 @@
 
 现在，让我们看看如何用一个`CacheLoader`实例化一个`LoadingCache` :
 
-```
+```java
 LoadingCache<String, String> loadingCache = CacheBuilder.newBuilder()
   .build(new CacheLoader<String, String>() {
     @Override
@@ -44,7 +44,7 @@ LoadingCache<String, String> loadingCache = CacheBuilder.newBuilder()
 
 本质上，`LoadingCache` 将调用我们的内联`CacheLoader` 来计算一个没有被缓存的值。让我们试着计算一下当我们多次从缓存中检索某个东西时，我们的`slowMethod()` 被调用了多少次:
 
-```
+```java
 String value = loadingCache.get("key");
 value = loadingCache.get("key");
 
@@ -60,7 +60,7 @@ assertThat(value).isEqualTo("expectedValue");
 
 使用`CacheLoader.` 时，求解`how` 很简单。`LoadingCache` 将简单地为每个需要刷新的值调用它。让我们用一个测试来试试这个:
 
-```
+```java
 String value = loadingCache.get("key");
 loadingCache.refresh("key");
 

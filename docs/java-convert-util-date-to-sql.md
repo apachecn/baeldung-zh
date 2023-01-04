@@ -17,7 +17,7 @@
 
 `[java.util.Date](https://web.archive.org/web/20221208143830/https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/util/Date.html)` 代表特定的时间瞬间，精度为毫秒:
 
-```
+```java
 java.util.Date date = new java.util.Date(); 
 System.out.println(date);
 // Wed Mar 27 08:22:02 IST 2015
@@ -25,7 +25,7 @@ System.out.println(date);
 
 `[java.sql.Date](https://web.archive.org/web/20221208143830/https://docs.oracle.com/javase/7/docs/api/java/sql/Date.html)` 是一个以毫秒为单位的包装器，允许 JDBC 驱动程序将其识别为 SQL 日期值。这个类的值只不过是从 [Unix 纪元](/web/20221208143830/https://www.baeldung.com/java-date-unix-timestamp)开始以毫秒计算的特定日期的年、月和日。任何比一天更细的时间信息都将被截断:
 
-```
+```java
 long millis=System.currentTimeMillis(); 
 java.sql.Date date = new java.sql.Date(millis); 
 System.out.println(date);
@@ -38,7 +38,7 @@ System.out.println(date);
 
 显式的[引用转换](/web/20221208143830/https://www.baeldung.com/java-type-casting)也不会工作，因为我们正在处理一个完全不同的类层次:**没有向下转换或向上转换可用。**如果我们试图将其中一个日期转换为另一个日期，我们将收到一个`[ClassCastException](/web/20221208143830/https://www.baeldung.com/java-classcastexception#:~:text=ClassCastException%20is%20an%20unchecked%20exception,how%20we%20can%20avoid%20them.)`:
 
-```
+```java
 java.sql.Date date = (java.sql.Date) new java.util.Date() // not allowed
 ```
 
@@ -50,14 +50,14 @@ java.sql.Date date = (java.sql.Date) new java.util.Date() // not allowed
 
 正如我们在上面看到的，`java.util.Date`包含时间信息，而`java.sql.Date`不包含。因此，我们**通过使用` java.sql.Date`** 的构造器方法实现了有损转换，该方法从 Unix 纪元开始接受以毫秒表示的输入时间:
 
-```
+```java
 java.util.Date utilDate = new java.util.Date();
 java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 ```
 
 事实上，由于时区不同，丢失表示值**的时间部分可能会导致报告不同的日期**:
 
-```
+```java
 SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 isoFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
 
@@ -79,7 +79,7 @@ System.out.println(sqlDate);
 
 要考虑的第一个选择是使用`java.sql.Timestamp`类而不是`java.sql.Date`。这个类还包含关于时间的信息:
 
-```
+```java
 java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
 System.out.println(date); //Mon May 24 07:01:02 CEST 2010
 System.out.println(timestamp); //2010-05-24 07:01:02.0
@@ -95,14 +95,14 @@ System.out.println(timestamp); //2010-05-24 07:01:02.0
 
 如果我们采用这种策略， **`java.util.Date`应该转换成`java.time.Instant`** :
 
-```
+```java
 Date date = new java.util.Date();
 Instant instant = date.toInstant().atZone(ZoneId.of("Rome");
 ```
 
 而 **`java.sql.Date`应该转换成`java.time.LocalDate`** :
 
-```
+```java
 java.sql.Date sqlDate = new java.sql.Date(timeInMillis);
 java.time.LocalDate localDate = sqlDate.toLocalDate();
 ```
@@ -111,7 +111,7 @@ java.time.LocalDate localDate = sqlDate.toLocalDate();
 
 例如，现在让我们用时区信息生成一个`java.util.Date`:
 
-```
+```java
 SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 isoFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
 Date date = isoFormat.parse("2010-05-23T22:01:02"); 
@@ -119,7 +119,7 @@ Date date = isoFormat.parse("2010-05-23T22:01:02");
 
 接下来，让我们从`java.util.Date`生成一个`LocalDate`:
 
-```
+```java
 TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
 java.time.LocalDate localDate = date.toInstant().atZone(ZoneId.of("America/Los_Angeles")).toLocalDate();
 Asserts.assertEqual("2010-05-23", localDate.toString());
@@ -127,7 +127,7 @@ Asserts.assertEqual("2010-05-23", localDate.toString());
 
 如果我们随后尝试切换默认时区，`LocalDate`将保持相同的值:
 
-```
+```java
 TimeZone.setDefault(TimeZone.getTimeZone("Rome"));
 localDate = date.toInstant().atZone(ZoneId.of("America/Los_Angeles")).toLocalDate();
 Asserts.assertEqual("2010-05-23", localDate.toString()) 

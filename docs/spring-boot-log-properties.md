@@ -18,7 +18,7 @@
 
 下一步是向我们的应用程序添加自定义属性。我们将这些属性添加到`src/main/resources`中的一个新的`application.properties`文件中:
 
-```
+```java
 app.name=MyApp
 app.description=${app.name} is a Spring Boot application
 bael.property=stagingValue
@@ -32,7 +32,7 @@ bael.property=stagingValue
 
 让我们从创建 bean 和事件监听器方法开始:
 
-```
+```java
 @Component
 public class AppContextRefreshedEventPropertiesPrinter {
 
@@ -47,13 +47,13 @@ public class AppContextRefreshedEventPropertiesPrinter {
 
 下一步是从触发的事件中获取一个`org.springframework.core.env.ConfigurableEnvironment`接口的实例。**`ConfigurableEnvironment` 接口提供了一个有用的方法`getPropertySources()`，我们将使用它来获取所有属性源**的列表，例如环境、JVM 或属性文件变量:
 
-```
+```java
 ConfigurableEnvironment env = (ConfigurableEnvironment) event.getApplicationContext().getEnvironment();
 ```
 
 现在让我们看看如何使用它来打印所有属性，不仅从`application.properties `文件，还从环境、JVM 变量等等:
 
-```
+```java
 env.getPropertySources()
     .stream()
     .filter(ps -> ps instanceof MapPropertySource)
@@ -74,7 +74,7 @@ env.getPropertySources()
 
 当我们启动应用程序时，我们应该看到一个从各种来源获取的属性的大列表:
 
-```
+```java
 COMMAND_MODE=unix2003
 CONSOLE_LOG_CHARSET=UTF-8
 ...
@@ -90,7 +90,7 @@ ava.runtime.name=OpenJDK Runtime Environment
 
 如果我们只想记录在`application.properties`文件中发现的属性，我们可以重用几乎所有以前的代码。我们只需要改变传递给`filter()`方法的 lambda 函数:
 
-```
+```java
 env.getPropertySources()
     .stream()
     .filter(ps -> ps instanceof MapPropertySource && ps.getName().contains("application.properties"))
@@ -99,7 +99,7 @@ env.getPropertySources()
 
 现在，当我们启动应用程序时，我们应该会看到以下日志:
 
-```
+```java
 bael.property=defaultValue
 app.name=MyApp
 app.description=MyApp is a Spring Boot application
@@ -109,7 +109,7 @@ app.description=MyApp is a Spring Boot application
 
 记录属性的另一种方法是使用 `org.springframework.core.env.Environment`接口:
 
-```
+```java
 @Component
 public class EnvironmentPropertiesPrinter {
     @Autowired
@@ -128,7 +128,7 @@ public class EnvironmentPropertiesPrinter {
 
 当我们启动应用程序时，我们应该会看到与前面相同的输出:
 
-```
+```java
 bael.property=defaultValue 
 app.name=MyApp 
 app.description=MyApp is a Spring Boot application
@@ -140,7 +140,7 @@ app.description=MyApp is a Spring Boot application
 
 首先，让我们将[弹簧执行器库](https://web.archive.org/web/20221028202328/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-actuator/2.7.3/jar)添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-actuator</artifactId>
@@ -150,13 +150,13 @@ app.description=MyApp is a Spring Boot application
 
 接下来，我们需要启用`/env`端点，因为默认情况下它是禁用的。让我们打开`application.properties`并添加以下条目:
 
-```
+```java
 management.endpoints.web.exposure.include=env
 ```
 
 现在，我们所要做的就是启动应用程序并转到`/env`端点。在我们的例子中，地址是`http://localhost:8080/actuator/env. `,我们应该看到一个包含所有环境变量的大型 JSON，包括我们的属性:
 
-```
+```java
 {
   "activeProfiles": [],
   "propertySources": [

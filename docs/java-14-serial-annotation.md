@@ -14,7 +14,7 @@
 
 让我们从用`@Serial`注释七个与序列化相关的方法和字段开始:
 
-```
+```java
 public class MySerialClass implements Serializable {
 
     @Serial
@@ -55,7 +55,7 @@ public class MySerialClass implements Serializable {
 
 之后，我们需要用串行 lint 标志编译我们的类:
 
-```
+```java
 javac -Xlint:serial MySerialClass.java
 ```
 
@@ -65,7 +65,7 @@ javac -Xlint:serial MySerialClass.java
 
 *   当一个类没有实现`Serializable`接口时:
 
-```
+```java
 public class MyNotSerialClass {
     @Serial 
     private static final long serialVersionUID = 1; // Compilation error
@@ -74,7 +74,7 @@ public class MyNotSerialClass {
 
 *   无效的地方——例如枚举`,` [的任何序列化方法，因为这些方法被忽略](https://web.archive.org/web/20221206171024/https://docs.oracle.com/en/java/javase/11/docs/specs/serialization/serial-arch.html#serialization-of-enum-constants):
 
-```
+```java
 public enum MyEnum { 
     @Serial 
     private void readObjectNoData() throws ObjectStreamException {} // Compilation error 
@@ -83,7 +83,7 @@ public enum MyEnum {
 
 *   到 [`Externalizable`](/web/20221206171024/https://www.baeldung.com/java-externalizable) 类中的`writeObject()`、`readObject()`、`readObjectNoData()`和`serialPersistentFields`，因为这些类使用不同的序列化方法:
 
-```
+```java
 public class MyExternalizableClass implements Externalizable {
     @Serial 
     private void writeObject(ObjectOutputStream stream) throws IOException {} // Compilation error 

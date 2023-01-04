@@ -87,14 +87,14 @@ KDC 和相关基础设施的实际设置取决于提供商，应遵循其各自�
 
 我们将创建我们的第一个用户，我们希望通过 web 浏览器对其进行身份验证，使用:
 
-```
+```java
 $ kadmin: addprinc -randkey kchandrakant -pw password
 Principal "[[email protected]](/web/20221025183651/https://www.baeldung.com/cdn-cgi/l/email-protection)" created.
 ```
 
 我们还需要向 KDC 注册我们的 web 应用程序:
 
-```
+```java
 $ kadmin: addprinc -randkey HTTP/[[email protected]](/web/20221025183651/https://www.baeldung.com/cdn-cgi/l/email-protection) -pw password
 Principal "HTTP/[[email protected]](/web/20221025183651/https://www.baeldung.com/cdn-cgi/l/email-protection)" created.
 ```
@@ -103,7 +103,7 @@ Principal "HTTP/[[email protected]](/web/20221025183651/https://www.baeldung.co
 
 我们还需要将其导出为 keytab 文件，以便 web 应用程序可以使用它:
 
-```
+```java
 $ kadmin: ktadd -k baeldung.keytab HTTP/[[email protected]](/web/20221025183651/https://www.baeldung.com/cdn-cgi/l/email-protection)
 ```
 
@@ -119,7 +119,7 @@ $ kadmin: ktadd -k baeldung.keytab HTTP/[[email protected]](/web/20221025183651
 
 可以理解的是，我们可能没有实际的域来测试我们的 web 应用程序。但遗憾的是，我们不能使用 localhost 或 127.0.0.1 或任何其他带有 Kerberos 身份验证的 IP 地址。但是，对此有一个简单的解决方案，它包括在“hosts”文件中设置如下条目:
 
-```
+```java
 demo.kerberos.bealdung.com 127.0.0.1
 ```
 
@@ -133,7 +133,7 @@ demo.kerberos.bealdung.com 127.0.0.1
 
 我们首先要设置的是依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security.kerberos</groupId>
     <artifactId>spring-security-kerberos-web</artifactId>
@@ -152,7 +152,7 @@ demo.kerberos.bealdung.com 127.0.0.1
 
 首先，SPNEGO 作为`HTTPSecurity`中的`Filter`集成到 Spring Security 中:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests()
@@ -169,7 +169,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 接下来，我们需要提供 SPNEGO `Filter`作为`Bean`:
 
-```
+```java
 @Bean
 public SpnegoAuthenticationProcessingFilter spnegoAuthenticationProcessingFilter(
   AuthenticationManager authenticationManager) {
@@ -183,7 +183,7 @@ public SpnegoAuthenticationProcessingFilter spnegoAuthenticationProcessingFilter
 
 此外，我们可以通过在 Spring Security 中添加`AuthenticationProvider`到`AuthenticationManagerBuilder`来配置 Kerberos:
 
-```
+```java
 @Override
 protected void configure(AuthenticationManagerBuilder auth) throws Exception {
     auth
@@ -194,7 +194,7 @@ protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
 我们首先要提供一个`KerberosAuthenticationProvider`作为`Bean`。这是`AuthenticationProvider`的一个实现，这里我们将`SunJaasKerberosClient`设置为`KerberosClient`:
 
-```
+```java
 @Bean
 public KerberosAuthenticationProvider kerberosAuthenticationProvider() {
     KerberosAuthenticationProvider provider = new KerberosAuthenticationProvider();
@@ -207,7 +207,7 @@ public KerberosAuthenticationProvider kerberosAuthenticationProvider() {
 
 接下来，我们还必须提供一个`KerberosServiceAuthenticationProvider`作为一个`Bean`。这是验证 Kerberos 服务票证或 SPNEGO 令牌的类:
 
-```
+```java
 @Bean
 public KerberosServiceAuthenticationProvider kerberosServiceAuthenticationProvider() {
     KerberosServiceAuthenticationProvider provider = new KerberosServiceAuthenticationProvider();
@@ -219,7 +219,7 @@ public KerberosServiceAuthenticationProvider kerberosServiceAuthenticationProvid
 
 最后，我们需要提供一个`SunJaasKerberosTicketValidator`作为一个`Bean`。这是一个`KerberosTicketValidator`的实现，使用的是孙 JAAS 的登录模块:
 
-```
+```java
 @Bean
 public SunJaasKerberosTicketValidator sunJaasKerberosTicketValidator() {
     SunJaasKerberosTicketValidator ticketValidator = new SunJaasKerberosTicketValidator();

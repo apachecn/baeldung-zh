@@ -22,7 +22,7 @@
 
 让我们看看这里:
 
-```
+```java
 @Lazy
 @Configuration
 @ComponentScan(basePackages = "com.baeldung.lazy")
@@ -42,7 +42,7 @@ public class AppConfig {
 
 现在让我们测试功能:
 
-```
+```java
 @Test
 public void givenLazyAnnotation_whenConfigClass_thenLazyAll() {
 
@@ -57,7 +57,7 @@ public void givenLazyAnnotation_whenConfigClass_thenLazyAll() {
 
 正如我们所看到的，所有的 beans 都是在我们第一次请求它们时创建的:
 
-```
+```java
 Bean factory for ...AnnotationConfigApplicationContext: 
 ...DefaultListableBeanFactory: [...];
 // application context started
@@ -69,7 +69,7 @@ Country bean initialized
 
 然后我们将它添加到所需 bean 的配置中:
 
-```
+```java
 @Bean
 @Lazy(true)
 public Region getRegion(){
@@ -85,7 +85,7 @@ public Region getRegion(){
 
 我们希望延迟加载的 bean:
 
-```
+```java
 @Lazy
 @Component
 public class City {
@@ -97,7 +97,7 @@ public class City {
 
 它的参考:
 
-```
+```java
 public class Region {
 
     @Lazy
@@ -118,7 +118,7 @@ public class Region {
 
 用`City`类上的`@Component`注释，同时用`@Autowired:`引用它
 
-```
+```java
 @Test
 public void givenLazyAnnotation_whenAutowire_thenLazyBean() {
     // load up ctx appication context

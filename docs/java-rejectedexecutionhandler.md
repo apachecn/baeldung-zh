@@ -24,7 +24,7 @@ Java 中的 [Executor 框架](/web/20220523135802/https://www.baeldung.com/java-
 
 大多数执行器实现使用众所周知的`[ThreadPoolExecutor](https://web.archive.org/web/20220523135802/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.html)` 作为它们的基本实现。因此，为了更好地理解任务排队是如何工作的，我们应该仔细看看它的构造函数:
 
-```
+```java
 public ThreadPoolExecutor(
   int corePoolSize,
   int maximumPoolSize,
@@ -77,7 +77,7 @@ public ThreadPoolExecutor(
 
 默认策略是[中止策略](https://web.archive.org/web/20220523135802/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.AbortPolicy.html)。**中止策略导致执行者抛出一个** `**RejectedExecutionException**`:
 
-```
+```java
 ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1, 0, MILLISECONDS, 
   new SynchronousQueue<>(), 
   new ThreadPoolExecutor.AbortPolicy());
@@ -94,7 +94,7 @@ assertThatThrownBy(() -> executor.execute(() -> System.out.println("Will be reje
 
 这个策略**让调用者线程执行任务**，而不是在另一个线程中异步运行任务:
 
-```
+```java
 ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1, 0, MILLISECONDS, 
   new SynchronousQueue<>(), 
   new ThreadPoolExecutor.CallerRunsPolicy());
@@ -116,7 +116,7 @@ assertThat(blockedDuration).isGreaterThanOrEqualTo(500);
 
 [丢弃策略](https://web.archive.org/web/20220523135802/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.DiscardPolicy.html) **在新任务未能提交**时静默丢弃该任务；
 
-```
+```java
 ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1, 0, MILLISECONDS,
   new SynchronousQueue<>(), 
   new ThreadPoolExecutor.DiscardPolicy());
@@ -135,7 +135,7 @@ assertThat(queue.poll(200, MILLISECONDS)).isNull();
 
 [丢弃最旧的策略](https://web.archive.org/web/20220523135802/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.DiscardOldestPolicy.html) **首先从队列的头部删除一个任务，然后重新提交新的任务**:
 
-```
+```java
 ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1, 0, MILLISECONDS, 
   new ArrayBlockingQueue<>(2), 
   new ThreadPoolExecutor.DiscardOldestPolicy());
@@ -166,7 +166,7 @@ assertThat(results).containsExactlyInAnyOrder("Second", "Third");
 
 也可以通过实现`[RejectedExecutionHandler](https://web.archive.org/web/20220523135802/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/RejectedExecutionHandler.html)`接口来提供定制的饱和度策略:
 
-```
+```java
 class GrowPolicy implements RejectedExecutionHandler {
 
     private final Lock lock = new ReentrantLock();
@@ -187,7 +187,7 @@ class GrowPolicy implements RejectedExecutionHandler {
 
 在本例中，当执行器饱和时，我们将最大池大小增加 1，然后重新提交相同的任务:
 
-```
+```java
 ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1, 0, MILLISECONDS, 
   new ArrayBlockingQueue<>(2), 
   new GrowPolicy());
@@ -212,7 +212,7 @@ assertThat(results).contains("First", "Second", "Third");
 
 除了过载的执行器，**饱和策略也适用于所有已经关闭的执行器**:
 
-```
+```java
 ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1, 0, MILLISECONDS, new LinkedBlockingQueue<>());
 executor.shutdownNow();
 
@@ -222,7 +222,7 @@ assertThatThrownBy(() -> executor.execute(() -> {}))
 
 **这同样适用于所有处于关闭状态的执行程序:**
 
-```
+```java
 ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1, 0, MILLISECONDS, new LinkedBlockingQueue<>());
 executor.execute(() -> waitFor(100));
 executor.shutdown();

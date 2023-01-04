@@ -26,7 +26,7 @@ SpEL 表达式以符号`#`开始，用大括号括起来:`#{expression}`。
 
 属性占位符不能包含 SpEL 表达式，但表达式可以包含属性引用:
 
-```
+```java
 #{${someProperty} + 2}
 ```
 
@@ -36,7 +36,7 @@ SpEL 表达式以符号`#`开始，用大括号括起来:`#{expression}`。
 
 SpEL 支持所有基本算术运算符:
 
-```
+```java
 @Value("#{19 + 1}") // 20
 private double add; 
 
@@ -74,7 +74,7 @@ private double brackets;
 
 SpEL 还支持所有基本的关系和逻辑操作:
 
-```
+```java
 @Value("#{1 == 1}") // true
 private boolean equal;
 
@@ -118,7 +118,7 @@ private boolean greaterThanOrEqualAlphabetic;
 
 SpEL 还支持所有基本的逻辑操作:
 
-```
+```java
 @Value("#{250 > 200 && 200 < 4000}") // true
 private boolean and; 
 
@@ -144,7 +144,7 @@ private boolean notAlphabetic;
 
 我们使用条件运算符根据某些条件注入不同的值:
 
-```
+```java
 @Value("#{2 > 1 ? 'a' : 'b'}") // "a"
 private String ternary;
 ```
@@ -153,7 +153,7 @@ private String ternary;
 
 三元运算符的另一个常见用途是检查某个变量是否为`null`，然后返回变量值或默认值:
 
-```
+```java
 @Value("#{someBean.someProperty != null ? someBean.someProperty : 'default'}")
 private String ternary;
 ```
@@ -162,7 +162,7 @@ Elvis 操作符是 Groovy 语言中使用的三进制操作符语法的一种简
 
 这段代码相当于上面的代码:
 
-```
+```java
 @Value("#{someBean.someProperty ?: 'default'}") // Will inject provided string if someProperty is null
 private String elvis;
 ```
@@ -171,7 +171,7 @@ private String elvis;
 
 我们可以使用 `matches`操作符来检查一个字符串是否匹配给定的正则表达式:
 
-```
+```java
 @Value("#{'100' matches '\\d+' }") // true
 private boolean validNumericStringResult;
 
@@ -194,7 +194,7 @@ private boolean validNumericValue;
 
 我们将创建新的 bean `workersHolder`，它将在`List`和`Map`中存储一些工人及其工资的信息:
 
-```
+```java
 @Component("workersHolder")
 public class WorkersHolder {
     private List<String> workers = new LinkedList<>();
@@ -218,7 +218,7 @@ public class WorkersHolder {
 
 现在我们可以使用 SpEL 来访问集合的值:
 
-```
+```java
 @Value("#{workersHolder.salaryByWorkers['John']}") // 35000
 private Integer johnSalary;
 
@@ -246,7 +246,7 @@ private Integer numberOfWorkers;
 
 例如，假设我们有以下类:
 
-```
+```java
 public class Engine {
     private int capacity;
     private int horsePower;
@@ -267,7 +267,7 @@ public class Car {
 
 现在，我们创建一个应用程序上下文，其中表达式用于注入值:
 
-```
+```java
 <bean id="engine" class="com.baeldung.spring.spel.Engine">
    <property name="capacity" value="3200"/>
    <property name="horsePower" value="250"/>
@@ -293,7 +293,7 @@ public class Car {
 
 对于基于注释的配置，没有这样的限制:
 
-```
+```java
 public class SpelOperators {
     private boolean equal;
     private boolean notEqual;
@@ -305,7 +305,7 @@ public class SpelOperators {
     // Getters and setters
 ```
 
-```
+```java
  @Override
     public String toString() {
         // toString which include all fields
@@ -314,7 +314,7 @@ public class SpelOperators {
 
 现在我们将向应用程序上下文添加一个`spelOperators` bean:
 
-```
+```java
 <bean id="spelOperators" class="com.baeldung.spring.spel.SpelOperators">
    <property name="equal" value="#{1 == 1}"/>
    <property name="notEqual" value="#{1 lt 1}"/>
@@ -327,14 +327,14 @@ public class SpelOperators {
 
 从上下文中检索该 bean，然后我们可以验证值是否被正确注入:
 
-```
+```java
 ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 SpelOperators spelOperators = (SpelOperators) context.getBean("spelOperators"); 
 ```
 
 这里我们可以看到`spelOperators` bean 的`toString`方法的输出:
 
-```
+```java
 [equal=true, notEqual=false, greaterThanOrEqual=true, and=true, 
 or=true, addString=Some model manufactured by Some make] 
 ```
@@ -351,7 +351,7 @@ or=true, addString=Some model manufactured by Some make]
 
 让我们看一个简单的例子:
 
-```
+```java
 ExpressionParser expressionParser = new SpelExpressionParser();
 Expression expression = expressionParser.parseExpression("'Any string'");
 String result = (String) expression.getValue(); 
@@ -361,27 +361,27 @@ String result = (String) expression.getValue();
 
 如同在配置中使用 SpEL 一样，我们可以用它来调用方法、访问属性或调用构造函数:
 
-```
+```java
 Expression expression = expressionParser.parseExpression("'Any string'.length()");
 Integer result = (Integer) expression.getValue();
 ```
 
 此外，我们可以调用构造函数，而不是直接对文本进行操作:
 
-```
+```java
 Expression expression = expressionParser.parseExpression("new String('Any string').length()");
 ```
 
 我们也可以用同样的方式访问`String`类的`bytes`属性，得到字符串的 byte[]表示:
 
-```
+```java
 Expression expression = expressionParser.parseExpression("'Any string'.bytes");
 byte[] result = (byte[]) expression.getValue();
 ```
 
 我们可以链接方法调用，就像在普通 Java 代码中一样:
 
-```
+```java
 Expression expression = expressionParser.parseExpression("'Any string'.replace(\" \", \"\").length()");
 Integer result = (Integer) expression.getValue();
 ```
@@ -392,13 +392,13 @@ Integer result = (Integer) expression.getValue();
 
 请注意，如果返回值不能强制转换为`desiredResultType`，则会抛出`EvaluationException`:
 
-```
+```java
 Integer result = expression.getValue(Integer.class);
 ```
 
 最常见的用法是提供根据特定对象实例计算的表达式字符串:
 
-```
+```java
 Car car = new Car();
 car.setMake("Good manufacturer");
 car.setModel("Model 3");
@@ -417,7 +417,7 @@ String result = (String) expression.getValue(context);
 
 但是，如果根对象被重复更改，我们可以使用下面示例中所示的机制:
 
-```
+```java
 Expression expression = expressionParser.parseExpression("model");
 String result = (String) expression.getValue(car);
 ```
@@ -426,7 +426,7 @@ String result = (String) expression.getValue(car);
 
 我们也可以使用通用的`getValue`方法，就像之前一样:
 
-```
+```java
 Expression expression = expressionParser.parseExpression("yearOfProduction > 2005");
 boolean result = expression.getValue(car, Boolean.class);
 ```
@@ -437,7 +437,7 @@ boolean result = expression.getValue(car, Boolean.class);
 
 让我们看看我们在实践中是如何做到的:
 
-```
+```java
 Car car = new Car();
 car.setMake("Good manufacturer");
 car.setModel("Model 3");
@@ -458,7 +458,7 @@ expressionParser.parseExpression("cars[0].model").setValue(context, "Other model
 
 在下面的例子中，我们将使用这个类:
 
-```
+```java
 public class CarPark {
     private List<Car> cars = new ArrayList<>();
 
@@ -470,13 +470,13 @@ public class CarPark {
 
 例如，如果我们试图在没有配置解析器的情况下将`car`对象添加到`CarPark`类的`cars`数组中，我们将得到如下错误:
 
-```
+```java
 EL1025E:(pos 4): The collection has '0' elements, index '0' is invalid
 ```
 
 我们可以改变解析器的行为，允许它在指定的索引为空时自动创建元素(`autoGrowNullReferences`，构造函数的第一个参数)，或者自动增长数组或列表以容纳超出其初始大小的元素(`autoGrowCollections`，第二个参数):
 
-```
+```java
 SpelParserConfiguration config = new SpelParserConfiguration(true, true);
 StandardEvaluationContext context = new StandardEvaluationContext(carPark);
 

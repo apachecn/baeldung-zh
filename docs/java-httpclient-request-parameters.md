@@ -14,7 +14,7 @@ Java `HTTPClient` 是 Java 11 的内置功能。因此，我们可以不用像 [
 
 **Java `HttpClient` API 没有提供任何添加查询参数**的方法。虽然我们可以利用第三方库，比如来自 Apache HttpClient 的 [`URIBuilder`](https://web.archive.org/web/20221117045616/https://www.drafts.baeldung.com/apache-httpclient-parameters#add-parameters-to-httpclient-requests-using-uribuilder) 来构建请求 URI 字符串。让我们看看只使用 Java 11 中添加的功能会是什么样子:
 
-```
+```java
 HttpRequest request = HttpRequest.newBuilder()
   .version(HttpClient.Version.HTTP_2)
   .uri(URI.create("https://postman-echo.com/get?param1=value1&param2;=value2"))
@@ -28,7 +28,7 @@ HttpRequest request = HttpRequest.newBuilder()
 
 最后，我们还可以用默认配置以简洁的形式编写相同的请求:
 
-```
+```java
 HttpRequest request = HttpRequest.newBuilder()
   .uri(URI.create("https://postman-echo.com/get?param1=value1&param2;=value2"))
   .build();

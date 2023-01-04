@@ -18,7 +18,7 @@
 
 我们首先需要的是一个 HTTP 客户端，它不会自动跟随重定向:
 
-```
+```java
 CloseableHttpClient client = 
   HttpClientBuilder.create().disableRedirectHandling().build();
 ```
@@ -29,7 +29,7 @@ CloseableHttpClient client =
 
 然后，我们需要**提取`Location`头**指向下一个，在本例中是最后一个 URL:
 
-```
+```java
 public String expandSingleLevel(String url) throws IOException {
     HttpHead request = null;
     try {
@@ -56,7 +56,7 @@ public String expandSingleLevel(String url) throws IOException {
 
 最后，用一个“未缩短”的 URL 进行一个简单的现场测试:
 
-```
+```java
 @Test
 public final void givenShortenedOnce_whenUrlIsExpanded_thenCorrectResult() throws IOException {
     final String expectedResult = "https://www.baeldung.com/rest-versioning";
@@ -71,7 +71,7 @@ public final void givenShortenedOnce_whenUrlIsExpanded_thenCorrectResult() throw
 
 我们将应用之前定义的`expandSingleLevel`原语操作来简单地**遍历所有中间 URL，并到达最终目标**:
 
-```
+```java
 public String expand(String urlArg) throws IOException {
     String originalUrl = urlArg;
     String newUrl = expandSingleLevel(originalUrl);
@@ -85,7 +85,7 @@ public String expand(String urlArg) throws IOException {
 
 现在，有了扩展多级 URL 的新机制，让我们定义一个测试并开始工作:
 
-```
+```java
 @Test
 public final void givenShortenedMultiple_whenUrlIsExpanded_thenCorrectResult() throws IOException {
     final String expectedResult = "https://www.baeldung.com/rest-versioning";
@@ -106,13 +106,13 @@ URL 扩展机制的最后一步是检测重定向循环，并在发生这种循�
 
 由于 java 不支持多个返回值，我们将**将信息包装在`org.apache.commons.lang3.tuple.Pair`对象**中——该方法的新签名现在将是:
 
-```
+```java
 public Pair<Integer, String> expandSingleLevelSafe(String url) throws IOException {
 ```
 
 最后，让我们在主扩展机制中包含重定向循环检测:
 
-```
+```java
 public String expandSafe(String urlArg) throws IOException {
     String originalUrl = urlArg;
     String newUrl = expandSingleLevelSafe(originalUrl).getRight();

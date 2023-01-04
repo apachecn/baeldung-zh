@@ -16,7 +16,7 @@
 
 假设我们有一个简单的`EmployeeService`类，它通过 HTTP:
 
-```
+```java
 @Service
 public class EmployeeService {
 
@@ -34,7 +34,7 @@ public class EmployeeService {
 
 现在让我们为前面的代码实现我们的测试:
 
-```
+```java
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
 
@@ -74,7 +74,7 @@ Spring 测试模块包括一个名为 *MockRestServiceServer 的模拟服务器�
 
 让我们使用 *MockRestServiceServer* 为同一个 *getEmployee()* 示例创建一个简单的测试:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = SpringTestConfig.class)
 public class EmployeeServiceMockRestServiceServerUnitTest {
@@ -112,14 +112,14 @@ public class EmployeeServiceMockRestServiceServerUnitTest {
 
 在前面的代码片段中，我们使用了来自于`MockRestRequestMatchers`和`MockRestResponseCreators`的静态方法，以一种清晰易读的方式定义了对 REST 调用的期望和响应:
 
-```
+```java
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;      
 import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
 ```
 
 我们应该记住，测试类中的 *RestTemplate* 应该是在`EmployeeService`类中使用的同一个实例。为了确保这一点，我们在 spring 配置中定义了一个 RestTemplate bean，并在测试和实现中自动连接了实例:
 
-```
+```java
 @Bean
 public RestTemplate restTemplate() {
     return new RestTemplate();

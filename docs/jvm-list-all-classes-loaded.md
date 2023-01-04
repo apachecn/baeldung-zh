@@ -16,11 +16,11 @@
 
 我们将使用下面的 JVM 参数运行 Java 应用程序:
 
-```
+```java
 java <app_name> --verbose:class 
 ```
 
-```
+```java
 [Opened /Library/Java/JavaVirtualMachines/jdk1.8.0_241.jdk/Contents/Home/jre/lib/rt.jar]
 [Loaded java.lang.Object from /Library/Java/JavaVirtualMachines/jdk1.8.0_241.jdk/Contents/Home/jre/lib/rt.jar] 
 [Loaded java.io.Serializable from /Library/Java/JavaVirtualMachines/jdk1.8.0_241.jdk/Contents/Home/jre/lib/rt.jar] 
@@ -36,7 +36,7 @@ java <app_name> --verbose:class
 
 对于 Java 9，我们将使用`-Xlog` JVM 参数来记录加载到文件中的类:
 
-```
+```java
 java <app_name> -Xlog:class+load=info:classloaded.txt
 ```
 
@@ -44,7 +44,7 @@ java <app_name> -Xlog:class+load=info:classloaded.txt
 
 我们将看到不同的工具如何使用 JVM [堆转储](/web/20220525130342/https://www.baeldung.com/java-heap-dump-capture)来提取类加载的信息。但是，首先，我们将使用下面的命令生成堆转储:
 
-```
+```java
 jmap -dump:format=b,file=/opt/tmp/heapdump.bin <app_pid> 
 ```
 
@@ -90,7 +90,7 @@ Java 提供了[插装 API](/web/20220525130342/https://www.baeldung.com/java-lis
 
 让我们首先将[番石榴依赖项](https://web.archive.org/web/20220525130342/https://search.maven.org/search?q=g:com.google.guava%20AND%20a:guava)添加到我们的 Maven 项目中:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -100,7 +100,7 @@ Java 提供了[插装 API](/web/20220525130342/https://www.baeldung.com/java-lis
 
 我们将用当前的类加载器实例初始化`ClassPath`对象:
 
-```
+```java
 ClassPath classPath = ClassPath.from(ListLoadedClass.class.getClassLoader());
 Set<ClassInfo> classes = classPath.getAllClasses();
 Assertions.assertTrue(4 < classes.size());
@@ -112,7 +112,7 @@ Assertions.assertTrue(4 < classes.size());
 
 让我们从将 [`reflections`依赖项](https://web.archive.org/web/20220525130342/https://search.maven.org/search?q=g:org.reflections%20AND%20a:reflections)添加到我们的 Maven 项目开始:
 
-```
+```java
 <dependency>
     <groupId>org.reflections</groupId>
     <artifactId>reflections</artifactId>
@@ -122,7 +122,7 @@ Assertions.assertTrue(4 < classes.size());
 
 现在，我们来看看示例代码，它返回一个包下的一组类:
 
-```
+```java
 Reflections reflections = new Reflections(packageName, new SubTypesScanner(false));
 Set<Class> classes = reflections.getSubTypesOf(Object.class)
   .stream()

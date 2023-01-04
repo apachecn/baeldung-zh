@@ -28,7 +28,7 @@ Examples of how to get the size of a file in Java.[Read more](/web/2022101319391
 
 在示例中，我们将使用下面的设置，它由源文件名和目标文件名的两个常量以及一个能够多次运行测试的清理步骤组成:
 
-```
+```java
 private final String FILE_TO_MOVE = "src/test/resources/originalFileToMove.txt";
 private final String TARGET_FILE = "src/test/resources/targetFileToMove.txt";
 
@@ -49,7 +49,7 @@ public void cleanUpFiles() {
 
 让我们从使用 Java NIO 包中的`Files.move()`方法的**开始:**
 
-```
+```java
 @Test
 public void givenUsingNio_whenMovingFile_thenCorrect() throws IOException {
     Path fileToMovePath = Paths.get(FILE_TO_MOVE);
@@ -66,7 +66,7 @@ public void givenUsingNio_whenMovingFile_thenCorrect() throws IOException {
 
 现在让我们看看如何使用`File.renameTo()` 方法来做同样的
 
-```
+```java
 @Test
 public void givenUsingFileClass_whenMovingFile_thenCorrect() throws IOException {
     File fileToMove = new File(FILE_TO_MOVE);
@@ -90,7 +90,7 @@ public void givenUsingFileClass_whenMovingFile_thenCorrect() throws IOException 
 
 接下来，让我们来看看番石榴溶液，它提供了一种方便的`Files.move()`方法:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenMovingFile_thenCorrect()
         throws IOException {
@@ -107,7 +107,7 @@ public void givenUsingGuava_whenMovingFile_thenCorrect()
 
 最后，让我们看看 Apache Commons IO 的解决方案——可能是最简单的一个:
 
-```
+```java
 @Test
 public void givenUsingApache_whenMovingFile_thenCorrect() throws IOException {
     FileUtils.moveFile(FileUtils.getFile(FILE_TO_MOVE), FileUtils.getFile(TARGET_FILE));
@@ -118,7 +118,7 @@ public void givenUsingApache_whenMovingFile_thenCorrect() throws IOException {
 
 或者，这里有一个专门用于移动的解决方案，如果目标目录不存在，我们还可以自动创建它:
 
-```
+```java
 @Test
 public void givenUsingApache_whenMovingFileApproach2_thenCorrect() throws IOException {
     FileUtils.moveFileToDirectory(

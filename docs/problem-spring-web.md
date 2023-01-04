@@ -14,7 +14,7 @@
 
 一个`Problem `是我们想要通知的任何错误的抽象。它包含了关于错误的有用信息。让我们看看`Problem`响应的默认表示:
 
-```
+```java
 {
   "title": "Not Found",
   "status": 404
@@ -23,7 +23,7 @@
 
 在这种情况下，状态代码和标题足以描述错误。但是，我们也可以添加一个对它的详细描述:
 
-```
+```java
 {
   "title": "Service Unavailable",
   "status": 503,
@@ -33,7 +33,7 @@
 
 我们还可以创建定制的`Problem`对象来适应我们的需求:
 
-```
+```java
 Problem.builder()
   .withType(URI.create("https://example.org/out-of-stock"))
   .withTitle("Out of Stock")
@@ -49,7 +49,7 @@ Problem.builder()
 
 因为这是一个基于 Maven 的项目，所以让我们将`[problem-spring-web](https://web.archive.org/web/20220816214725/https://search.maven.org/search?q=g:%22org.zalando%22%20AND%20a:%22problem-spring-web%22)`依赖项添加到`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.zalando</groupId>
     <artifactId>problem-spring-web</artifactId>
@@ -73,13 +73,13 @@ Problem.builder()
 
 作为我们的第一步，我们需要禁用白色标签错误页面，以便我们能够看到我们的自定义错误表示:
 
-```
+```java
 @EnableAutoConfiguration(exclude = ErrorMvcAutoConfiguration.class)
 ```
 
 现在，让我们在`ObjectMapper` bean 中注册一些必需的组件:
 
-```
+```java
 @Bean
 public ObjectMapper objectMapper() {
     return new ObjectMapper().registerModules(
@@ -90,7 +90,7 @@ public ObjectMapper objectMapper() {
 
 之后，我们需要将以下属性添加到`application.properties`文件中:
 
-```
+```java
 spring.resources.add-mappings=false
 spring.mvc.throw-exception-if-no-handler-found=true
 spring.http.encoding.force=true
@@ -98,7 +98,7 @@ spring.http.encoding.force=true
 
 最后，我们需要实现`ProblemHandling`接口:
 
-```
+```java
 @ControllerAdvice
 public class ExceptionHandler implements ProblemHandling {}
 ```
@@ -107,7 +107,7 @@ public class ExceptionHandler implements ProblemHandling {}
 
 除了基本配置之外，我们还可以配置我们的项目来处理与安全相关的问题。第一步是创建一个配置类来支持库与 Spring Security 的集成:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 @Import(SecurityProblemSupport.class)
@@ -128,7 +128,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 最后，我们需要为与安全相关的异常创建一个异常处理程序:
 
-```
+```java
 @ControllerAdvice
 public class SecurityExceptionHandler implements SecurityAdviceTrait {}
 ```
@@ -137,7 +137,7 @@ public class SecurityExceptionHandler implements SecurityAdviceTrait {}
 
 配置完应用程序后，我们就可以创建 RESTful 控制器了:
 
-```
+```java
 @RestController
 @RequestMapping("/tasks")
 public class ProblemDemoController {
@@ -188,13 +188,13 @@ public class ProblemDemoController {
 
 常见异常有内置的建议特征。因此，我们可以通过抛出异常来使用它们:
 
-```
+```java
 throw new UnsupportedOperationException();
 ```
 
 结果，我们会得到这样的回应:
 
-```
+```java
 {
     "title": "Not Implemented",
     "status": 501
@@ -203,13 +203,13 @@ throw new UnsupportedOperationException();
 
 因为我们也配置了与 Spring Security 的集成，所以我们能够抛出与安全相关的异常:
 
-```
+```java
 throw new AccessDeniedException("You can't delete this task");
 ```
 
 并得到适当的回应:
 
-```
+```java
 {
     "title": "Forbidden",
     "status": 403,
@@ -221,7 +221,7 @@ throw new AccessDeniedException("You can't delete this task");
 
 可以创建一个`Problem`的定制实现。我们只需要扩展`AbstractThrowableProblem`类:
 
-```
+```java
 public class TaskNotFoundProblem extends AbstractThrowableProblem {
 
     private static final URI TYPE
@@ -240,7 +240,7 @@ public class TaskNotFoundProblem extends AbstractThrowableProblem {
 
 而且我们可以抛出我们的自定义问题如下:
 
-```
+```java
 if (MY_TASKS.containsKey(taskId)) {
     return MY_TASKS.get(taskId);
 } else {
@@ -250,7 +250,7 @@ if (MY_TASKS.containsKey(taskId)) {
 
 抛出`TaskNotFoundProblem`问题的结果是，我们会得到:
 
-```
+```java
 {
     "type": "https://example.org/not-found",
     "title": "Not found",
@@ -263,14 +263,14 @@ if (MY_TASKS.containsKey(taskId)) {
 
 如果我们想在响应中包含堆栈跟踪，我们需要相应地配置我们的`ProblemModule`:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper()
   .registerModule(new ProblemModule().withStackTraces());
 ```
 
 默认情况下，原因的因果链是禁用的，但我们可以通过覆盖以下行为轻松启用它:
 
-```
+```java
 @ControllerAdvice
 class ExceptionHandling implements ProblemHandling {
 
@@ -284,7 +284,7 @@ class ExceptionHandling implements ProblemHandling {
 
 启用这两个特性后，我们将得到与此类似的响应:
 
-```
+```java
 {
   "title": "Internal Server Error",
   "status": 500,

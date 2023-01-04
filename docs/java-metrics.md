@@ -34,7 +34,7 @@
 
 在这个代码示例中，我们将使用 File 类来包含关于分区的关键信息。以下示例将返回 Windows 计算机上 C:驱动器的可用空间、总空间和可用空间:
 
-```
+```java
 File cDrive = new File("C:");
 System.out.println(String.format("Total space: %.2f GB",
   (double)cDrive.getTotalSpace() /1073741824));
@@ -46,7 +46,7 @@ System.out.println(String.format("Usable space: %.2f GB",
 
 类似地，我们可以为 Linux 机器的**根目录返回相同的信息:**
 
-```
+```java
 File root = new File("/");
 System.out.println(String.format("Total space: %.2f GB", 
   (double)root.getTotalSpace() /1073741824));
@@ -64,7 +64,7 @@ System.out.println(String.format("Usable space: %.2f GB",
 
 在这个例子中，我们将主要关注堆内存的查询。值得注意的是，非堆内存也可以使用`MemoryMXBean:`进行查询
 
-```
+```java
 MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
 System.out.println(String.format("Initial memory: %.2f GB", 
   (double)memoryMXBean.getHeapMemoryUsage().getInit() /1073741824));
@@ -87,7 +87,7 @@ System.out.println(String.format("Committed memory: %.2f GB",
 
 接下来，我们将使用 **`ThreadMXBean`来获得`ThreadInfo`** 对象的完整列表，并通过**查询它们来获得关于 JVM 上运行的** **当前线程**的 **有用信息。**
 
-```
+```java
 ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
 
 for(Long threadID : threadMXBean.getAllThreadIds()) {

@@ -20,32 +20,32 @@
 
 如果我们看一下 [Nginx 官方 docker 文件](https://web.archive.org/web/20220727020703/https://github.com/nginxinc/docker-nginx/blob/dcaaf66e4464037b1a887541f39acf8182233ab8/mainline/debian/Dockerfile)，我们会看到端口 80 是用以下命令公开的:
 
-```
+```java
 EXPOSE 80
 ```
 
 这里公开了端口 80，因为它是`http` 协议的默认端口。让我们在本地机器上运行 Nginx 容器，看看能否通过端口 80 访问它:
 
-```
+```java
 $ docker run -d nginx
 ```
 
 上述命令将使用 Nginx 的最新映像并运行容器。我们可以使用以下命令仔细检查 Nginx 容器是否正在运行:
 
-```
+```java
 $ docker container ls
 ```
 
 这个命令将输出一些关于所有正在运行的容器的信息，包括 Nginx:
 
-```
+```java
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
 cbc2f10f787f        nginx               "/docker-entrypoint..."   15 seconds ago      Up 15 seconds       80/tcp              dazzling_mclean 
 ```
 
 这里我们看到 80 在港口部分。由于端口 80 是公开的，我们可能认为访问`localhost:80`(或者仅仅是`localhost`)会显示 Nginx 默认页面，但事实并非如此:
 
-```
+```java
 $ curl http://localhost:8080
 ... no web page appears
 ```
@@ -56,13 +56,13 @@ $ curl http://localhost:8080
 
 在 Docker 中公开端口主要有两种方式。我们可以在`Dockerfile`中用`EXPOSE` 命令来完成:
 
-```
+```java
 EXPOSE 8765
 ```
 
 或者，我们也可以在运行容器`:`时使用`–expose` 选项公开端口
 
-```
+```java
 $ docker run --expose 8765 nginx
 ```
 
@@ -74,19 +74,19 @@ $ docker run --expose 8765 nginx
 
 让我们使用映射端口运行 Nginx:
 
-```
+```java
 $ docker run -d -p 8080:80 nginx
 ```
 
 上述命令将主机的端口 8080 映射到容器的端口 80。该选项的一般语法是:
 
-```
+```java
 -p <hostport>:<container port>
 ```
 
 如果我们去`localhost:8080`，我们应该得到 Nginx 的默认欢迎页面:
 
-```
+```java
 $ curl http://localhost:8080
 StatusCode : 200
 StatusDescription : OK
@@ -99,13 +99,13 @@ Content : <!DOCTYPE html>
 
 让我们列出所有正在运行的容器:
 
-```
+```java
 $ docker container ls
 ```
 
 现在我们应该看到容器有一个端口映射:
 
-```
+```java
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
 38cfed3c61ea        nginx               "/docker-entrypoint..."   31 seconds ago      Up 30 seconds       0.0.0.0:8080->80/tcp   dazzling_kowalevski
 ```
@@ -120,13 +120,13 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 
 让我们将对容器的访问仅限于来自`127.0.0.1`回送地址的流量:
 
-```
+```java
 $ docker run -d -p 127.0.0.1:8081:80 nginx
 ```
 
 在这种情况下，只能从主机本身访问容器。这使用扩展语法进行发布，其中包括地址绑定:
 
-```
+```java
 -p <binding address>:<hostport>:<container port>
 ```
 
@@ -134,7 +134,7 @@ $ docker run -d -p 127.0.0.1:8081:80 nginx
 
 公开的端口元数据对于启动容器很有用，因为 Docker 使我们能够发布所有公开的端口:
 
-```
+```java
 $ docker run -d --publish-all nginx
 ```
 
@@ -142,7 +142,7 @@ $ docker run -d --publish-all nginx
 
 让我们看看这个命令启动的容器:
 
-```
+```java
 $ docker container ls
 
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                   NAMES

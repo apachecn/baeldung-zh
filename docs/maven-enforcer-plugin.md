@@ -12,7 +12,7 @@
 
 为了在我们的项目中使用插件，我们需要向我们的`pom.xml`添加以下依赖项:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-enforcer-plugin</artifactId>
@@ -30,7 +30,7 @@ Maven Enforcer 有两个目标:`enforcer:enforce `和`enforcer:display-info.`
 
 让我们在`executions`标签中定义`enforce`目标。此外，我们将添加保存项目的`rules`定义的`configuration`标签:
 
-```
+```java
 ...
 <executions>
     <execution>
@@ -60,7 +60,7 @@ Maven Enforcer 有两个目标:`enforcer:enforce `和`enforcer:display-info.`
 
 我们需要做的就是将`banDuplicatePomDependencyVersions`标签添加到插件配置的`rules`部分:
 
-```
+```java
 ...
 <rules>
     <banDuplicatePomDependencyVersions/>
@@ -70,7 +70,7 @@ Maven Enforcer 有两个目标:`enforcer:enforce `和`enforcer:display-info.`
 
 为了检查规则的行为，我们可以在`pom.xml`中复制一个依赖项并运行`mvn clean compile. `,这将在控制台上产生以下错误行:
 
-```
+```java
 ...
 [WARNING] Rule 0: org.apache.maven.plugins.enforcer.BanDuplicatePomDependencyVersions failed with message:
 Found 1 duplicate dependency declaration in this project:
@@ -90,7 +90,7 @@ Found 1 duplicate dependency declaration in this project:
 
 让我们更新插件配置的`rules`部分:
 
-```
+```java
 <requireMavenVersion>
     <version>3.0</version>
 </requireMavenVersion>
@@ -103,7 +103,7 @@ Found 1 duplicate dependency declaration in this project:
 
 此外，这两个规则还接受一个用于指定定制消息的`message`参数:
 
-```
+```java
 ...
 <requireMavenVersion>
     <version>3.0</version>
@@ -118,7 +118,7 @@ Found 1 duplicate dependency declaration in this project:
 
 它可以重复，以适应一个以上的所需变量:
 
-```
+```java
 <requireEnvironmentVariable>
     <variableName>ui</variableName>
 </requireEnvironmentVariable>
@@ -133,7 +133,7 @@ Maven 中的概要文件帮助我们配置当我们的应用程序被部署到�
 
 因此，当我们需要确保一个或多个指定的概要文件是活动的时，我们可以使用`requireActiveProfile`规则，从而保证我们的应用程序的成功执行:
 
-```
+```java
 <requireActiveProfile>
     <profiles>local,base</profiles>
     <message>Missing active profiles</message>
@@ -148,7 +148,7 @@ Maven Enforcer 插件有许多其他规则[来促进项目质量和一致性，�
 
 此外，该插件有一个命令来显示一些当前配置的规则的信息:
 
-```
+```java
 mvn enforcer:display-info
 ```
 
@@ -158,7 +158,7 @@ mvn enforcer:display-info
 
 首先，我们需要创建一个包含自定义规则的新 Java 项目。自定义规则是一个类`Object`，它由**实现`EnforceRule `接口并覆盖`execute() `方法**:
 
-```
+```java
 public void execute(EnforcerRuleHelper enforcerRuleHelper) throws EnforcerRuleException {
     try {
         String groupId = (String) enforcerRuleHelper.evaluate("${project.groupId}");
@@ -179,7 +179,7 @@ public void execute(EnforcerRuleHelper enforcerRuleHelper) throws EnforcerRuleEx
 
 **我们可以通过将自定义规则作为依赖项添加到 Maven Enforcer 插件**来使用它:
 
-```
+```java
 ...
 <rules>
     <myCustomRule implementation="com.baeldung.enforcer.MyCustomRule"/>

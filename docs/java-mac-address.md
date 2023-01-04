@@ -18,7 +18,7 @@ MAC 地址是物理网络接口卡的唯一标识符。
 
 首先，让我们获得我们机器的本地主机的 MAC 地址:
 
-```
+```java
 InetAddress localHost = InetAddress.getLocalHost();
 NetworkInterface ni = NetworkInterface.getByInetAddress(localHost);
 byte[] hardwareAddress = ni.getHardwareAddress(); 
@@ -26,7 +26,7 @@ byte[] hardwareAddress = ni.getHardwareAddress();
 
 由于 **`NetworkInterface` # `getHardwareAddress`返回一个字节数组，**我们可以将结果格式化:
 
-```
+```java
 String[] hexadecimal = new String[hardwareAddress.length];
 for (int i = 0; i < hardwareAddress.length; i++) {
     hexadecimal[i] = String.format("%02X", hardwareAddress[i]);
@@ -42,7 +42,7 @@ String macAddress = String.join("-", hexadecimal);
 
 其次，让我们获取给定本地 IP 地址的 MAC 地址:
 
-```
+```java
 InetAddress localIP = InetAddress.getByName("192.168.1.108");
 NetworkInterface ni = NetworkInterface.getByInetAddress(localIP);
 byte[] macAddress = ni.getHardwareAddress();
@@ -54,7 +54,7 @@ byte[] macAddress = ni.getHardwareAddress();
 
 最后，让我们获取机器上所有网络接口的 MAC 地址:
 
-```
+```java
 Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
 while (networkInterfaces.hasMoreElements()) {
     NetworkInterface ni = networkInterfaces.nextElement();

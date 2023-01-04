@@ -12,7 +12,7 @@
 
 对于开发，我们将需要以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -37,7 +37,7 @@
 
 让我们用`id`和`contactInfo`字段创建`Customer`类:
 
-```
+```java
 @Entity
 public class Customer {
 
@@ -53,7 +53,7 @@ public class Customer {
 
 接下来，让我们看看`ContactInfoExpression`类——它将在一个名为`pattern`的属性中保存正则表达式值:
 
-```
+```java
 @Entity
 public class ContactInfoExpression {
 
@@ -69,7 +69,7 @@ public class ContactInfoExpression {
 
 接下来，让我们添加一个基于 Spring 数据的存储库接口来操作`ContactInfoExpression`实体:
 
-```
+```java
 public interface ContactInfoExpressionRepository 
   extends Repository<ContactInfoExpression, String> {
 
@@ -81,7 +81,7 @@ public interface ContactInfoExpressionRepository
 
 为了存储正则表达式，我们将使用一个具有以下持久性配置的`H2`内存数据库:
 
-```
+```java
 @EnableJpaRepositories("com.baeldung.dynamicvalidation.dao")
 @EntityScan("com.baeldung.dynamicvalidation.model")
 @Configuration
@@ -101,7 +101,7 @@ public class PersistenceConfig {
 
 提到的两个脚本用于创建模式并将数据插入到`contact_info_expression`表中:
 
-```
+```java
 CREATE TABLE contact_info_expression(
   expression_type varchar(50) not null,
   pattern varchar(500) not null,
@@ -111,7 +111,7 @@ CREATE TABLE contact_info_expression(
 
 `data-expressions.sql`脚本将添加三条记录来表示类型`email`、`phone,` 和`website`。这些表示用于验证该值是有效电子邮件地址、有效美国电话号码还是有效 URL 的正则表达式:
 
-```
+```java
 insert into contact_info_expression values ('email',
   '[a-z0-9!#$%&*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?')
 insert into contact_info_expression values ('phone',
@@ -155,13 +155,13 @@ public class ContactInfoValidator implements ConstraintValidator<ContactInfo, St
         return false;
     }
 }
-```
+```java
 
 可以在`application.properties`文件中将`contactInfoType`属性设置为`email`、`phone`或`website`中的一个值:
 
 ```
 contactInfoType=email
-```
+```java
 
 ### 3.4。创建自定义约束注释
 
@@ -178,7 +178,7 @@ public @interface ContactInfo {
 
     Class<? extends Payload>[] payload() default {};
 }
-```
+```java
 
 ### 3.5。应用自定义约束
 
@@ -194,7 +194,7 @@ public class Customer {
 
     // ...
 }
-```
+```java
 
 ## 4。弹簧控制器和 HTML 表单
 
@@ -210,7 +210,7 @@ public String validateCustomer(@Valid Customer customer, BindingResult result, M
     }
     return "customer";
 }
-```
+```java
 
 `Customer`对象从 HTML 表单发送到控制器:
 
@@ -220,7 +220,7 @@ Contact Info: <input type="text" name="contactInfo" /> <br />
 <input type="submit" value="Submit" />
 </form>
 <span th:text="${message}"></span>
-```
+```java
 
 总而言之，我们可以将我们的应用程序作为 Spring Boot 应用程序运行:
 
@@ -231,7 +231,7 @@ public class DynamicValidationApp {
         SpringApplication.run(DynamicValidationApp.class, args);
     }
 }
-```
+```java
 
 ## 5。结论
 

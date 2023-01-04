@@ -18,13 +18,13 @@ WildFly 默认带有独立和域模式。我们先来看看单机。
 
 对于 Linux，我们会做:
 
-```
+```java
 ~/bin/add-user.sh
 ```
 
 或者对于 Windows:
 
-```
+```java
 ~\bin\add-user.bat
 ```
 
@@ -32,7 +32,7 @@ WildFly 默认带有独立和域模式。我们先来看看单机。
 
 用户界面将提示我们更新选项(a)中的密码:
 
-```
+```java
 Enter the details of the new user to add.
 Using realm 'ManagementRealm' as discovered from the existing property files.
 Username : admin
@@ -45,7 +45,7 @@ User 'admin' already exists and is enabled, would you like to...
 
 更改密码后，我们需要运行适合操作系统的启动脚本:
 
-```
+```java
 ~\bin\standalone.bat
 ```
 
@@ -53,7 +53,7 @@ User 'admin' already exists and is enabled, would you like to...
 
 我们现在可以按照输出中的提示在 [`http://127.0.0.1:9990`](https://web.archive.org/web/20221126223525/http://127.0.0.1:9990/) 访问管理控制台。如果我们访问服务器 URL，`[http://127.0.0.1:8080/](https://web.archive.org/web/20221126223525/http://127.0.0.1:8080/),`,应该会出现一条消息提示我们服务器正在运行:
 
-```
+```java
 Server is up and running!
 ```
 
@@ -69,13 +69,13 @@ Server is up and running!
 
 例如，我们可以在 [`http://127.0.0.1:8080/`](https://web.archive.org/web/20221126223525/http://127.0.0.1:8080/) 访问第一个服务器的同一个单实例 URL
 
-```
+```java
 Server is up and running!
 ```
 
 同样，我们可以在`[http://127.0.0.1:8230](https://web.archive.org/web/20221126223525/http://127.0.0.1:8230/)`访问服务器二
 
-```
+```java
 Server is up and running!
 ```
 
@@ -89,7 +89,7 @@ Server is up and running!
 
 先来更新一下`pom.xml`建战。我们将更改`packaging `元素并添加 [`maven-war-plugin`](https://web.archive.org/web/20221126223525/https://search.maven.org/search?q=g:org.apache.maven.plugins%20AND%20a:maven-war-plugin) :
 
-```
+```java
 <packaging>war</packaging>
 ...
 <build>
@@ -111,13 +111,13 @@ Server is up and running!
 
 接下来，我们需要将`Application`类改为[扩展`SpringBootServletInitializer`](/web/20221126223525/https://www.baeldung.com/spring-boot-servlet-initializer) :
 
-```
+```java
 public class Application extends SpringBootServletInitializer
 ```
 
 并覆盖`configure`方法:
 
-```
+```java
  @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(Application.class);
@@ -126,7 +126,7 @@ public class Application extends SpringBootServletInitializer
 
 最后，让我们构建项目:
 
-```
+```java
 ./mvnw package
 ```
 
@@ -144,7 +144,7 @@ public class Application extends SpringBootServletInitializer
 
 最后，我们通过同一个 URL-[`http://127.0.0.1:8080/`](https://web.archive.org/web/20221126223525/http://127.0.0.1:8080/)访问应用程序。我们现在看到应用程序输出如下:
 
-```
+```java
 Greetings from Spring Boot!
 ```
 
@@ -166,7 +166,7 @@ Greetings from Spring Boot!
 
 例如，为配置目录和日志目录使用特定的值很有帮助:
 
-```
+```java
 jboss.server.config.dir
 jboss.server.log.dirw
 ```
@@ -183,7 +183,7 @@ jboss.server.log.dirw
 
 还记得服务器在域模式下的两个 URL，`[http://127.0.0.1:8230](https://web.archive.org/web/20221126223525/http://127.0.0.1:8230/)`？奇数端口`8230 `是由于`host-slave.xml`配置文件中的默认偏移值`150`造成的:
 
-```
+```java
 <server name="server-one" group="main-server-group"/>
 <server name="server-two" group="main-server-group" auto-start="true">
   <jvm name="default"/>
@@ -193,7 +193,7 @@ jboss.server.log.dirw
 
 然而，我们可以对`port-offset` 值进行简单的更新:
 
-```
+```java
 <socket-bindings port-offset="10"/>
 ```
 
@@ -207,13 +207,13 @@ WildFly 的命令行界面允许像管理控制台一样查看和更新配置值
 
 要使用 CLI，我们只需执行:
 
-```
+```java
 ~\bin\jboss-cli.bat
 ```
 
 之后，我们键入:
 
-```
+```java
 [disconnected /] connect
 [[[email protected]](/web/20221126223525/https://www.baeldung.com/cdn-cgi/l/email-protection):9990 /]
 ```
@@ -222,7 +222,7 @@ WildFly 的命令行界面允许像管理控制台一样查看和更新配置值
 
 例如，要在连接到服务器实例时以 XML 形式查看所有当前配置，我们可以运行`read-config-as-xml`命令:
 
-```
+```java
 [[[email protected]](/web/20221126223525/https://www.baeldung.com/cdn-cgi/l/email-protection):9990 /] :read-config-as-xml
 ```
 

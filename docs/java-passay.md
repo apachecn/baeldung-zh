@@ -12,7 +12,7 @@
 
 如果我们想在我们的项目中使用 Passay 库，有必要向我们的`pom.xml`添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.passay</groupId>
     <artifactId>passay</artifactId>
@@ -45,13 +45,13 @@
 
 首先，我们应该定义一组密码验证规则。我们必须在创建一个`PasswordValidator`对象时将它们传递给构造函数:
 
-```
+```java
 PasswordValidator passwordValidator = new PasswordValidator(new LengthRule(5));
 ```
 
 有两种方法可以将我们的密码传递给一个`PasswordData`对象。我们将它传递给构造函数或 setter 方法:
 
-```
+```java
 PasswordData passwordData = new PasswordData("1234");
 
 PasswordData passwordData2 = new PasswordData();
@@ -60,7 +60,7 @@ passwordData.setPassword("1234");
 
 我们可以通过调用`PasswordValidator`上的`validate()`方法来验证我们的密码:
 
-```
+```java
 RuleResult validate = passwordValidator.validate(passwordData);
 ```
 
@@ -72,13 +72,13 @@ RuleResult validate = passwordValidator.validate(passwordData);
 
 首先，它可以告诉我们密码是否有效:
 
-```
+```java
 Assert.assertEquals(false, validate.isValid());
 ```
 
 **此外，我们还可以了解密码无效时会返回什么错误。**错误代码和验证描述保存在`RuleResultDetail`:
 
-```
+```java
 RuleResultDetail ruleResultDetail = validate.getDetails().get(0);
 Assert.assertEquals("TOO_SHORT", ruleResultDetail.getErrorCode());
 Assert.assertEquals(5, ruleResultDetail.getParameters().get("minimumLength"));
@@ -87,7 +87,7 @@ Assert.assertEquals(5, ruleResultDetail.getParameters().get("maximumLength"));
 
 最后，我们可以使用`RuleResultMetadata`探索密码验证的元数据:
 
-```
+```java
 Integer lengthCount = validate
   .getMetadata()
   .getCounts()
@@ -101,7 +101,7 @@ Assert.assertEquals(Integer.valueOf(4), lengthCount);
 
 要生成密码，我们需要有一个`PasswordGenerator`对象。一旦我们有了它，我们就调用`generatePassword()`方法和`CharacterRules`的传递列表。下面是一个示例代码:
 
-```
+```java
 CharacterRule digits = new CharacterRule(EnglishCharacterData.Digit);
 
 PasswordGenerator passwordGenerator = new PasswordGenerator();
@@ -121,7 +121,7 @@ Assert.assertTrue(containsOnlyCharactersFromSet(password, "0123456789"));
 
 然而，没有什么能阻止我们定义我们的字符集。这和实现`CharacterData`接口一样简单。让我们来看看我们该怎么做:
 
-```
+```java
 CharacterRule specialCharacterRule = new CharacterRule(new CharacterData() {
     @Override
     public String getErrorCode() {
@@ -163,7 +163,7 @@ Assert.assertTrue(containsOnlyCharactersFromSet(password, "[[email protected]](
 
 下面是讨论规则的一个简短示例:
 
-```
+```java
 PasswordValidator passwordValidator = new PasswordValidator(
   new AllowedCharacterRule(new char[] { 'a', 'b', 'c' }), 
   new CharacterRule(EnglishCharacterData.LowerCase, 5), 
@@ -192,7 +192,7 @@ assertEquals(
 
 `CharcterCharacterisitcsRule`比以前提出的规则更复杂。**要创建一个`CharcterCharacterisitcsRule`对象，我们需要提供一个`CharacterRule`s.``** 的列表，更重要的是，我们还要设置其中有多少个对象的密码必须匹配。我们可以这样做:
 
-```
+```java
 CharacterCharacteristicsRule characterCharacteristicsRule = new CharacterCharacteristicsRule(
   3, 
   new CharacterRule(EnglishCharacterData.LowerCase, 5), 
@@ -210,7 +210,7 @@ Presented `CharacterCharacteristicsRule`要求密码包含四个规则中的三�
 
 让我们来分析这个例子:
 
-```
+```java
 LengthComplexityRule lengthComplexityRule = new LengthComplexityRule();
 lengthComplexityRule.addRules("[1,5]", new CharacterRule(EnglishCharacterData.LowerCase, 5));
 lengthComplexityRule.addRules("[6,10]", 
@@ -243,7 +243,7 @@ lengthComplexityRule.addRules("[6,10]",
 
 首先，我们将看看如何使用简单的规则，如`IllegalCharacterRule`、`IllegalRegexRule`等。这里有一个简短的例子:
 
-```
+```java
 PasswordValidator passwordValidator = new PasswordValidator(
   new IllegalCharacterRule(new char[] { 'a' }), 
   new NumberRangeRule(1, 10), 
@@ -272,7 +272,7 @@ assertEquals(
 
 因此，`Passay`库为我们提供了优秀的工具。让我们来发现`DictionaryRule`和`DictionarySubstringRule`:
 
-```
+```java
 WordListDictionary wordListDictionary = new WordListDictionary(
   new ArrayWordList(new String[] { "bar", "foobar" }));
 
@@ -290,7 +290,7 @@ DictionarySubstringRule dictionarySubstringRule = new DictionarySubstringRule(wo
 
 让我们来看看这个例子:
 
-```
+```java
 SourceRule sourceRule = new SourceRule();
 HistoryRule historyRule = new HistoryRule();
 
@@ -316,7 +316,7 @@ PasswordValidator passwordValidator = new PasswordValidator(
 
 让我们看看它是如何做到的:
 
-```
+```java
 List<PasswordData.Reference> historicalReferences = Arrays.asList(
   new PasswordData.HistoricalReference(
     "SHA256",
@@ -337,7 +337,7 @@ EncodingHashBean encodingHashBean = new EncodingHashBean(
 
 一旦我们有了编码 bean，我们就可以验证我们的摘要密码:
 
-```
+```java
 PasswordData passwordData = new PasswordData("example!");
 passwordData.setPasswordReferences(historicalReferences);
 
@@ -356,7 +356,7 @@ Assert.assertTrue(validate.isValid());
 
 下面是一个示例代码:
 
-```
+```java
 PasswordValidator passwordValidator = new PasswordValidator(new RepeatCharacterRegexRule(3));
 
 RuleResult validate = passwordValidator.validate(new PasswordData("aaabbb"));
@@ -371,7 +371,7 @@ assertEquals("ILLEGAL_MATCH:{match=aaa, pattern=([^\\x00-\\x1F])\\1{2}}", getDet
 
 正如我们之前所学的，我们应该将用户名存储在`PasswordData`中:
 
-```
+```java
 PasswordValidator passwordValidator = new PasswordValidator(new UsernameRule());
 
 PasswordData passwordData = new PasswordData("testuser1234");
@@ -389,7 +389,7 @@ assertEquals("ILLEGAL_USERNAME:{username=testuser, matchBehavior=contains}", get
 
 我们可以把它们放入一个简单的文件中。让我们看看有多简单:
 
-```
+```java
 TOO_LONG=Password must not have more characters than %2$s.
 TOO_SHORT=Password must not contain less characters than %2$s.
 ```
@@ -398,7 +398,7 @@ TOO_SHORT=Password must not contain less characters than %2$s.
 
 下面是一个示例代码:
 
-```
+```java
 URL resource = this.getClass().getClassLoader().getResource("messages.properties");
 Properties props = new Properties();
 props.load(new FileInputStream(resource.getPath()));
@@ -410,7 +410,7 @@ MessageResolver resolver = new PropertiesMessageResolver(props);
 
 让我们看一下如何使用消息解析器的例子:
 
-```
+```java
 PasswordValidator validator = new PasswordValidator(
   resolver, 
   new LengthRule(8, 16), 

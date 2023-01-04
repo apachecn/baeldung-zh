@@ -16,7 +16,7 @@
 
 让我们试试 Java 9 `Stream.takeWhile`方法:
 
-```
+```java
 Stream.of("cat", "dog", "elephant", "fox", "rabbit", "duck")
   .takeWhile(n -> n.length() % 2 != 0)
   .forEach(System.out::println);
@@ -24,14 +24,14 @@ Stream.of("cat", "dog", "elephant", "fox", "rabbit", "duck")
 
 如果我们运行这个，我们得到输出:
 
-```
+```java
 cat
 dog
 ```
 
 让我们使用一个`for`循环和一个`break`语句将它与普通 Java 中的等价代码进行比较，以帮助我们了解它是如何工作的:
 
-```
+```java
 List<String> list = asList("cat", "dog", "elephant", "fox", "rabbit", "duck");
 for (int i = 0; i < list.size(); i++) {
     String item = list.get(i);
@@ -52,7 +52,7 @@ for (int i = 0; i < list.size(); i++) {
 
 首先，我们将从我们的流中获取`Spliterator`，然后用我们的`CustomSpliterator`来修饰它，并提供`Predicate`来控制`break`操作。最后，我们将从`CustomSpliterator:`创建一个新的流
 
-```
+```java
 public static <T> Stream<T> takeWhile(Stream<T> stream, Predicate<T> predicate) {
     CustomSpliterator<T> customSpliterator = new CustomSpliterator<>(stream.spliterator(), predicate);
     return StreamSupport.stream(customSpliterator, false);
@@ -61,7 +61,7 @@ public static <T> Stream<T> takeWhile(Stream<T> stream, Predicate<T> predicate) 
 
 让我们看看如何创建`CustomSpliterator`:
 
-```
+```java
 public class CustomSpliterator<T> extends Spliterators.AbstractSpliterator<T> {
 
     private Spliterator<T> splitr;
@@ -92,7 +92,7 @@ public class CustomSpliterator<T> extends Spliterators.AbstractSpliterator<T> {
 
 让我们测试一下新的助手方法:
 
-```
+```java
 @Test
 public void whenCustomTakeWhileIsCalled_ThenCorrectItemsAreReturned() {
     Stream<String> initialStream = 
@@ -114,7 +114,7 @@ public void whenCustomTakeWhileIsCalled_ThenCorrectItemsAreReturned() {
 
 让我们直接使用 **`Stream.spliterator `** 而不用装饰器:
 
-```
+```java
 public class CustomForEach {
 
     public static class Breaker {
@@ -147,7 +147,7 @@ public class CustomForEach {
 
 让我们在单元测试中尝试一下:
 
-```
+```java
 @Test
 public void whenCustomForEachIsCalled_ThenCorrectItemsAreReturned() {
     Stream<String> initialStream = Stream.of("cat", "dog", "elephant", "fox", "rabbit", "duck");

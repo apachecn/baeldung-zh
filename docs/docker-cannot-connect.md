@@ -28,7 +28,7 @@ Docker 客户端无法连接到 Docker 守护程序可能有多种原因。现�
 
 **该错误最常见的原因是当我们试图访问 Docker 服务，但它没有启动**:
 
-```
+```java
 $ docker ps
 Cannot connect to the Docker daemon at unix:///var/run/docker.sock.
   Is the docker daemon running?
@@ -36,7 +36,7 @@ Cannot connect to the Docker daemon at unix:///var/run/docker.sock.
 
 首先，我们将检查 Docker 服务的状态以及它是否正在运行:
 
-```
+```java
 $ systemctl status docker
  docker.service - Docker Application Container Engine
    Loaded: loaded (/usr/lib/systemd/system/docker.service; disabled; vendor preset: disabled)
@@ -54,13 +54,13 @@ $ systemctl status docker
 
 现在让我们使用`systemctl`服务命令启动 Docker:
 
-```
+```java
 $ systemctl start docker
 ```
 
 我们可以使用以下命令检查 Docker 的状态:
 
-```
+```java
 $ systemctl status docker
  docker.service - Docker Application Container Engine
    Loaded: loaded (/usr/lib/systemd/system/docker.service; disabled; vendor preset: disabled)
@@ -81,7 +81,7 @@ $ systemctl status docker
 
 我们需要做的就是在后台运行`dockerd`命令:
 
-```
+```java
 $ sudo dockerd
 INFO[2022-02-18T05:19:50.048886666Z] Starting up                                  
 INFO[2022-02-18T05:19:50.050883459Z] libcontainerd: started new containerd process  pid=2331
@@ -96,7 +96,7 @@ INFO[2022-02-18T05:19:50.050943756Z] parsed scheme: "unix"                      
 
 如果我们试图从`docker`组之外的用户访问 Docker 服务，我们会得到以下错误:
 
-```
+```java
 $ docker ps
 Got permission denied while trying to connect to the Docker daemon socket
   at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.40/containers/json:
@@ -115,7 +115,7 @@ Got permission denied while trying to connect to the Docker daemon socket
 
 如果我们在机器上找不到默认的`docker`组，我们可以手动创建它:
 
-```
+```java
 $ sudo groupadd docker
 ```
 
@@ -123,7 +123,7 @@ $ sudo groupadd docker
 
 现在我们将当前用户添加到`docker`组中:
 
-```
+```java
 $ sudo usermod -aG docker docker-test
 ```
 
@@ -131,7 +131,7 @@ $ sudo usermod -aG docker docker-test
 
 最后，我们将重新启动 Docker 服务以使更改生效:
 
-```
+```java
 $ sudo service docker restart
 ```
 
@@ -139,7 +139,7 @@ $ sudo service docker restart
 
 我们还可以通过更改` /var/run/docker.sock `文件的所有者来解决这个问题:
 
-```
+```java
 $ sudo chown docker-test /var/run/docker.sock
 ```
 

@@ -38,7 +38,7 @@
 
 为了解决 TSP 问题，我们需要两个模型类，即`City`和`Travel`。在第一个示例中，我们将存储图中节点的坐标:
 
-```
+```java
 @Data
 public class City {
 
@@ -63,7 +63,7 @@ public class City {
 
 下面的代码负责对旅行推销员之旅进行建模。让我们从生成旅行中城市的初始顺序开始:
 
-```
+```java
 public void generateInitialTravel() {
     if (travel.isEmpty()) {
         new Travel(10);
@@ -74,7 +74,7 @@ public void generateInitialTravel() {
 
 除了生成初始顺序之外，我们还需要交换旅行顺序中随机的两个城市的方法。我们将使用它在模拟退火算法中搜索更好的解决方案:
 
-```
+```java
 public void swapCities() {
     int a = generateRandomIndex();
     int b = generateRandomIndex();
@@ -88,7 +88,7 @@ public void swapCities() {
 
 此外，如果我们的算法不接受新的解决方案，我们需要一种方法来恢复上一步中生成的交换:
 
-```
+```java
 public void revertSwap() {
     travel = previousTravel;
 }
@@ -96,7 +96,7 @@ public void revertSwap() {
 
 我们要介绍的最后一种方法是总行程距离的计算，它将用作优化标准:
 
-```
+```java
 public int getDistance() {
     int distance = 0;
     for (int index = 0; index < travel.size(); index++) {
@@ -121,7 +121,7 @@ public int getDistance() {
 
 为了启动流程，我们需要提供三个主要参数，即`startingTemperature`、`numberOfIterations` 和`coolingRate`:
 
-```
+```java
 public double simulateAnnealing(double startingTemperature,
   int numberOfIterations, double coolingRate) {
     double t = startingTemperature;
@@ -137,7 +137,7 @@ public double simulateAnnealing(double startingTemperature,
 
 在下一步中，我们开始一个主要的模拟循环:
 
-```
+```java
 for (int i = 0; i < numberOfIterations; i++) {
     if (t > 0.1) {
         //...
@@ -151,7 +151,7 @@ for (int i = 0; i < numberOfIterations; i++) {
 
 让我们看看模拟退火算法的主要逻辑:
 
-```
+```java
 currentSolution.swapCities();
 double currentDistance = currentSolution.getDistance();
 if (currentDistance < bestDistance) {
@@ -169,7 +169,7 @@ if (currentDistance < bestDistance) {
 
 最后，在模拟的每个步骤中，我们通过提供`coolingRate:`来降低温度
 
-```
+```java
 t *= coolingRate;
 ```
 

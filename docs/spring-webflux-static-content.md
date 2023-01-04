@@ -21,7 +21,7 @@
 
 如果我们想改变 Spring WebFlux 的默认路径，我们需要将这个属性添加到我们的`application.properties`文件中:
 
-```
+```java
 spring.webflux.static-path-pattern=/assets/**
 ```
 
@@ -35,7 +35,7 @@ spring.webflux.static-path-pattern=/assets/**
 
 让我们看一个服务于`index.html`文件的路由定义的例子:
 
-```
+```java
 @Bean
 public RouterFunction<ServerResponse> htmlRouter(
   @Value("classpath:/public/index.html") Resource html) {
@@ -49,7 +49,7 @@ public RouterFunction<ServerResponse> htmlRouter(
 
 让我们看看如何使用`/img/**` 路径提供来自`src/main/resources/img`目录的图像:
 
-```
+```java
 @Bean
 public RouterFunction<ServerResponse> imgRouter() {
     return RouterFunctions
@@ -63,7 +63,7 @@ public RouterFunction<ServerResponse> imgRouter() {
 
 首先，让我们将插件添加到我们的`pom.xml`:
 
-```
+```java
 <plugin>
     <artifactId>maven-resources-plugin</artifactId>
     <version>3.1.0</version>
@@ -90,7 +90,7 @@ public RouterFunction<ServerResponse> imgRouter() {
 
 然后，我们只需设置静态位置属性:
 
-```
+```java
 spring.resources.static-locations=classpath:/assets/
 ```
 

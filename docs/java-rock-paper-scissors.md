@@ -12,7 +12,7 @@
 
 首先，让我们为移动创建一个枚举:
 
-```
+```java
 enum Move {
     ROCK("rock"),
     PAPER("paper"),
@@ -26,7 +26,7 @@ enum Move {
 
 然后，让我们创建一个生成随机整数并返回计算机移动的方法:
 
-```
+```java
 private static String getComputerMove() {
     Random random = new Random();
     int randomNumber = random.nextInt(3);
@@ -38,7 +38,7 @@ private static String getComputerMove() {
 
 以及检查玩家是否获胜的方法:
 
-```
+```java
 private static boolean isPlayerWin(String playerMove, String computerMove) {
     return playerMove.equals(Move.ROCK.value) && computerMove.equals(Move.SCISSORS.value)
             || (playerMove.equals(Move.SCISSORS.value) && computerMove.equals(Move.PAPER.value))
@@ -48,7 +48,7 @@ private static boolean isPlayerWin(String playerMove, String computerMove) {
 
 最后，我们将使用它们来形成一个完整的程序:
 
-```
+```java
 Scanner scanner = new Scanner(System.in);
 int wins = 0;
 int losses = 0;
@@ -89,7 +89,7 @@ while (true) {
 
 让我们玩一会儿，看看输出结果:
 
-```
+```java
 Welcome to Rock-Paper-Scissors! Please enter "rock", "paper", "scissors", or "quit" to exit.
 -------------------------
 Enter your move: rock

@@ -10,7 +10,7 @@
 
 **有时我们需要向方法**传递特定的类型信息。例如，这里我们期望从 Jackson 将 JSON 字节数组转换成一个`String:`
 
-```
+```java
 byte[] data = // fetch json from somewhere
 String json = objectMapper.readValue(data, String.class);
 ```
@@ -19,7 +19,7 @@ String json = objectMapper.readValue(data, String.class);
 
 然而，我们不能轻易地为泛型类型设置相同的期望:
 
-```
+```java
 Map<String, String> json = objectMapper.readValue(data, Map<String, String>.class); // won't compile
 ```
 
@@ -43,7 +43,7 @@ Java 中的具体化类型如下:
 
 事实证明，我们可以利用 Java 中的[匿名内部类](/web/20221208143841/https://www.baeldung.com/java-anonymous-classes)在编译时保存类型信息:
 
-```
+```java
 public abstract class TypeReference<T> {
 
     private final Type type;
@@ -63,7 +63,7 @@ public abstract class TypeReference<T> {
 
 例如，我们可以创建一个匿名的内部:
 
-```
+```java
 TypeReference<Map<String, Integer>> token = new TypeReference<Map<String, String>>() {};
 ```
 
@@ -74,7 +74,7 @@ TypeReference<Map<String, Integer>> token = new TypeReference<Map<String, String
 
 **这种保存泛型类型信息的方法通常被称为** **超类型令牌**:
 
-```
+```java
 TypeReference<Map<String, Integer>> token = new TypeReference<Map<String, Integer>>() {};
 Type type = token.getType();
 
@@ -89,7 +89,7 @@ assertEquals("java.lang.Integer", typeArguments[1].getTypeName());
 
 这种模式非常有名，像 Jackson 这样的库和 Spring 这样的框架都有自己的实现。将一个 JSON 对象解析成一个`Map<String, String>` 可以通过用一个超类型标记定义该类型来完成:
 
-```
+```java
 TypeReference<Map<String, String>> token = new TypeReference<Map<String, String>>() {};
 Map<String, String> json = objectMapper.readValue(data, token);
 ```

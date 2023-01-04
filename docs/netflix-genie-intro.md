@@ -49,7 +49,7 @@ Genie 也不是为调度而生的。主要目的是在单个作业级别上进�
 
 首先，让我们看看运行在名为`genie_demo_app_3.3.9`的容器中的精灵服务器，它将端口 8080 映射到精灵 UI:
 
-```
+```java
 genie:
     image: netflixoss/genie-app:3.3.9
     ports:
@@ -64,7 +64,7 @@ genie:
 
 第二个服务是`genie_demo_apache_3.3.9`，用于下载演示所需的文件:
 
-```
+```java
 genie-apache:
     image: netflixoss/genie-demo-apache:3.3.9
     tty: true
@@ -73,7 +73,7 @@ genie-apache:
 
 接下来是 Genie 客户端，它包含使用 Genie 提交作业的示例脚本。其容器名为`genie_demo_client_3.3.9`:
 
-```
+```java
 genie-client:
     image: netflixoss/genie-demo-client:3.3.9
     depends_on:
@@ -86,7 +86,7 @@ genie-client:
 
 **我们将在这里做一个小调整**，并将命名节点和数据节点分别映射到端口 19070 和 19075:
 
-```
+```java
 genie-hadoop-prod:
     image: sequenceiq/hadoop-docker:2.7.1
     command: /bin/bash -c "/usr/local/hadoop/sbin/mr-jobhistory-daemon.sh start historyserver 
@@ -102,7 +102,7 @@ genie-hadoop-prod:
 
 最后，让我们探索代表测试集群的测试 Hadoop 容器。与生产群集类似，它被分配了端口 8089(资源管理器)、19889(历史服务器)、19071(命名节点)和 19076(数据节点):
 
-```
+```java
 genie-hadoop-test:
     image: sequenceiq/hadoop-docker:2.7.1
     command: /bin/bash -c "/usr/local/hadoop/sbin/mr-jobhistory-daemon.sh start historyserver 
@@ -118,7 +118,7 @@ genie-hadoop-test:
 
 让**通过从`demoDir.` 运行 `docker-compose`** 来启动上述容器。这将在第一次运行时花费更长的时间，因为它必须下载演示映像:
 
-```
+```java
 cd demoDir
 docker-compose up -d
 ```
@@ -133,13 +133,13 @@ docker-compose up -d
 
 现在，在演示容器运行之后，我们可以使用`docker exec` 命令登录到客户机容器:
 
-```
+```java
 docker exec -it genie_demo_client_3.3.9 /bin/bash
 ```
 
 现在，在客户机容器中，我们执行一个 init 脚本来**准备集群接受我们的作业**:
 
-```
+```java
 ./init_demo.py
 ```
 
@@ -149,7 +149,7 @@ docker exec -it genie_demo_client_3.3.9 /bin/bash
 
 再比如，我们提交一个 Spark 作业，计算π的前 10 位小数。我们可以通过将相应的文字作为参数传递给脚本来将作业提交给 test 或 SLA:
 
-```
+```java
 ./run_spark_submit_job.py sla 2.0.1
 ./run_spark_submit_job.py test 2.0.1
 ```
@@ -164,7 +164,7 @@ Hadoop 资源管理器 UI 也显示集群作业。
 
 最后，我们通过运行以下命令退出客户机容器，停止并删除所有演示容器:
 
-```
+```java
 docker-compose down
 ```
 

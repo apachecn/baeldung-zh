@@ -14,7 +14,7 @@ Java 文字是我们在代码中指定为常量的任何值。可以是任何类
 
 在下面的例子中，数字`1` 和字符串`literal_string`是文字。
 
-```
+```java
 int x = 1;
 String s = "literal_string";
 ```
@@ -31,25 +31,25 @@ String s = "literal_string";
 
 首先，我们可以使用**十进制文字(基数为 10)** 。这些是最常用的，因为它们是我们日常使用的数字。
 
-```
+```java
 int x = 1;
 ```
 
 其次，我们可以用**八进制形式(基数 8)** 指定整数文字量。在这种形式下，他们不得不以**开始，以**开始`**0**.`
 
-```
+```java
 int x = 05;
 ```
 
 第三，整数文字可以用在**十六进制形式(基数 16)** 中。他们必须以`0x `或 T1 开始
 
-```
+```java
 int x = 0x12ef;
 ```
 
 最后，我们有**二进制形式(基数 2)** 。这种形式是在 Java 1.7 中引入的，这些文字必须以`0b `或 `**0B**.`开始
 
-```
+```java
 int x = 0b1101;
 ```
 
@@ -67,7 +67,7 @@ int x = 0b1101;
 
 浮点文字只能以十进制形式指定(基数为 10):
 
-```
+```java
 double d = 123.456;
 float f = 123.456;
 float f2 = 123.456d;
@@ -82,7 +82,7 @@ float f3 = 123.456f;
 
 单引号字符很常见，对于特殊字符尤其有用。
 
-```
+```java
 char c = 'a';
 char c2 = '\n';
 ```
@@ -91,7 +91,7 @@ char c2 = '\n';
 
 用于字符的整数值被转换为该字符的 Unicode 值:
 
-```
+```java
 char c = 65;
 ```
 
@@ -99,7 +99,7 @@ char c = 65;
 
 最后，我们可以使用 Unicode 表示法:
 
-```
+```java
 char c= '\u0041';
 ```
 
@@ -109,13 +109,13 @@ char c= '\u0041';
 
 双引号之间的任何文本都是一个`String`文字:
 
-```
+```java
 String s = "string_literal";
 ```
 
 文字只能在一行中。为了有一个多行的`String`，我们可以使用一个将在编译时执行的表达式:
 
-```
+```java
 String multiLineText = "When we want some text that is on more than one line,\n"
 + "then we can use expressions to add text to a new line.\n";
 ```
@@ -126,7 +126,7 @@ String multiLineText = "When we want some text that is on more than one line,\n"
 
 例如，当向方法传递参数时，我们可以传递文字:
 
-```
+```java
 static void literals(int i, long l, double d, float f, char c, String s) {
     // do something
 }
@@ -138,7 +138,7 @@ literals(1, 123L, 1.0D, 1.0F, 'a', "a");
 
 令人惊讶的是，`byte`和`short`类型出现了问题:
 
-```
+```java
 static void shortAndByteLiterals(short s, byte b) {
     // do something
 }
@@ -150,7 +150,7 @@ shortAndByteLiterals(1, 0); // won't compile
 
 第一个解决方案是使用我们之前声明的一些变量:
 
-```
+```java
 short s = 1;
 byte b = 1;
 shortAndByteLiterals(s, b);
@@ -158,7 +158,7 @@ shortAndByteLiterals(s, b);
 
 另一个选择是转换文字值:
 
-```
+```java
 shortAndByteLiterals((short) 1, (byte) 0);
 ```
 

@@ -26,7 +26,7 @@ Learn about best practices for unit testing in Java.[Read more](/web/20220826045
 
 为了启动并运行 JaCoCo，我们需要在我们的`pom.xml`文件中声明这个 [maven 插件](https://web.archive.org/web/20220826045615/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.jacoco%22%20AND%20a%3A%22jacoco-maven-plugin%22):
 
-```
+```java
 <plugin>
     <groupId>org.jacoco</groupId>
     <artifactId>jacoco-maven-plugin</artifactId>
@@ -54,7 +54,7 @@ Learn about best practices for unit testing in Java.[Read more](/web/20220826045
 
 在我们开始研究 JaCoCo 的代码覆盖能力之前，我们需要有一个代码样本。下面是一个简单的 Java 函数，它检查一个字符串是否前后读得一样:
 
-```
+```java
 public boolean isPalindrome(String inputString) {
     if (inputString.length() == 0) {
         return true;
@@ -69,7 +69,7 @@ public boolean isPalindrome(String inputString) {
 
 现在我们只需要一个简单的测试:
 
-```
+```java
 @Test
 public void whenEmptyString_thenAccept() {
     Palindrome palindromeTester = new Palindrome();
@@ -135,7 +135,7 @@ JaCoCo 作为一个 Java 代理运行。它负责**在运行测试时插入字�
 
 为了实现 100%的代码覆盖率，我们需要引入测试来覆盖初始报告中显示的缺失部分:
 
-```
+```java
 @Test
 public void whenPalindrom_thenAccept() {
     Palindrome palindromeTester = new Palindrome();
@@ -163,7 +163,7 @@ JaCoCo 提供了一种简单的方法来声明应该满足的**最低需求**，
 
 我们可以通过在我们的`pom.xml`文件中添加以下`check`目标来做到这一点:
 
-```
+```java
 <execution>
     <id>jacoco-check</id>
     <goals>
@@ -190,7 +190,7 @@ JaCoCo 提供了一种简单的方法来声明应该满足的**最低需求**，
 
 目标`jacoco:check`是将绑定到`verify`的**，因此我们可以运行 Maven 命令`mvn clean verify`来检查规则是否被遵守。日志将显示如下内容:**
 
-```
+```java
 [ERROR] Failed to execute goal org.jacoco:jacoco-maven-plugin:0.7.7.201606060606:check 
   (jacoco-check) on project mutation-testing: Coverage checks have not been met.
 ```

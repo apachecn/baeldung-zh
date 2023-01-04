@@ -14,7 +14,7 @@ Java 8 引入了新的日期时间 API ,用于处理日期和时间，主要基�
 
 在 Java 8 中，我们可以使用`java.time.LocalDate`来表示我们的出生日期和当前日期，然后使用`Period`来计算它们在年份上的差异:
 
-```
+```java
 public int calculateAge(
   LocalDate birthDate,
   LocalDate currentDate) {
@@ -35,7 +35,7 @@ public int calculateAge(
 
 我们需要将 [Joda 时间依赖性](https://web.archive.org/web/20220813055522/https://search.maven.org/classic/#artifactdetails%7Cjoda-time%7Cjoda-time%7C2.10%7Cjar)添加到 pom 中:
 
-```
+```java
 <dependency>
   <groupId>joda-time</groupId>
   <artifactId>joda-time</artifactId>
@@ -45,7 +45,7 @@ public int calculateAge(
 
 然后我们可以编写一个类似的方法来计算年龄，这次使用 [`LocalDate`](https://web.archive.org/web/20220813055522/http://www.joda.org/joda-time/apidocs/index.html) 和[`Years`](https://web.archive.org/web/20220813055522/http://joda-time.sourceforge.net/apidocs/org/joda/time/Years.html)from[Joda-Time](/web/20220813055522/https://www.baeldung.com/joda-time):
 
-```
+```java
 public int calculateAgeWithJodaTime(
   org.joda.time.LocalDate birthDate,
   org.joda.time.LocalDate currentDate) {
@@ -61,7 +61,7 @@ public int calculateAgeWithJodaTime(
 
 举个例子，我们可以使用`[java.util.Date](https://web.archive.org/web/20220813055522/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Date.html)`:
 
-```
+```java
 public int calculateAgeWithJava7(
   Date birthDate, 
   Date currentDate) {            

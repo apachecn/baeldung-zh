@@ -12,7 +12,7 @@ Groovy 提供了大量专门用于遍历和操作 XML 内容的方法。
 
 让我们在资源目录中定义一个 XML 结构，我们将在整个示例中使用它:
 
-```
+```java
 <articles>
     <article>
         <title>First steps in Java</title>
@@ -51,7 +51,7 @@ Groovy 提供了大量专门用于遍历和操作 XML 内容的方法。
 
 并将其读入一个`InputStream`变量:
 
-```
+```java
 def xmlFile = getClass().getResourceAsStream("articles.xml")
 ```
 
@@ -63,7 +63,7 @@ def xmlFile = getClass().getResourceAsStream("articles.xml")
 
 读取和解析 XML 文件可能是开发人员必须做的最常见的 XML 操作。`XmlParser`提供了一个非常简单明了的界面:
 
-```
+```java
 def articles = new XmlParser().parse(xmlFile)
 ```
 
@@ -71,7 +71,7 @@ def articles = new XmlParser().parse(xmlFile)
 
 现在让我们实现一个简单的测试，使用 [Spock](/web/20220628125858/https://www.baeldung.com/groovy-spock) 来检查我们的 *articles* 对象是否正确:
 
-```
+```java
 def "Should read XML file properly"() {
     given: "XML file"
 
@@ -105,7 +105,7 @@ def "Should read XML file properly"() {
 
 现在让我们实施一个测试来证明我们的观点:
 
-```
+```java
 def "Should add node to existing xml using NodeBuilder"() {
     given: "XML object"
     def articles = new XmlParser().parse(xmlFile)
@@ -139,7 +139,7 @@ def "Should add node to existing xml using NodeBuilder"() {
 
 让我们通过编写一个快速测试来检查我们的假设:
 
-```
+```java
 def "Should modify node"() {
     given: "XML object"
     def articles = new XmlParser().parse(xmlFile)
@@ -160,7 +160,7 @@ def "Should modify node"() {
 
 类似于添加新元素，我们将使用`NodeBuilder`作为`Node`定义，然后使用`groovy.util.Node#replaceNode`替换其中的一个现有节点:
 
-```
+```java
 def "Should replace node"() {
     given: "XML object"
     def articles = new XmlParser().parse(xmlFile)
@@ -194,7 +194,7 @@ def "Should replace node"() {
 
 让我们实现一个测试，删除作者 id 不是`3`的所有文章:
 
-```
+```java
 def "Should remove article from xml"() {
     given: "XML object"
     def articles = new XmlParser().parse(xmlFile)
@@ -220,7 +220,7 @@ Groovy 还提供了另一个专门处理 XML 的类。在这一节中，我们�
 
 和前面的例子一样，让我们从解析文件中的 XML 结构开始:
 
-```
+```java
 def "Should read XML file properly"() {
     given: "XML file"
 
@@ -242,7 +242,7 @@ def "Should read XML file properly"() {
 
 添加一个`Node`也非常类似于使用`XmlParser`。然而，在这种情况下，`groovy.util.slurpersupport.` `GPathResult#appendNode`提供了一个方法，该方法将`java.lang.Object `的一个实例作为参数。因此，我们可以按照`Node` `Builder`引入的相同约定来简化新的`Node`定义:
 
-```
+```java
 def "Should add node to existing xml"() {
     given: "XML object"
     def articles = new XmlSlurper().parse(xmlFile)
@@ -273,7 +273,7 @@ def "Should add node to existing xml"() {
 
 正如我们之前提到的，`GPathResult`引入了一种简化的数据操作方法。也就是说，与`XmlSlurper,`相反，我们可以使用节点名或参数名直接修改值:
 
-```
+```java
 def "Should modify node"() {
     given: "XML object"
     def articles = new XmlSlurper().parse(xmlFile)
@@ -292,7 +292,7 @@ def "Should modify node"() {
 
 现在让我们来替换整个节点。再次，`GPathResult `前来救援。我们可以很容易地使用`groovy.util.slurpersupport.NodeChild#replaceNode`替换节点，它扩展了`GPathResult `，并遵循使用`Object`值作为参数的相同约定:
 
-```
+```java
 def "Should replace node"() {
     given: "XML object"
     def articles = new XmlSlurper().parse(xmlFile)
@@ -323,7 +323,7 @@ def "Should replace node"() {
 
 要使用`XmlSlurper,`删除一个节点，我们可以简单地通过提供一个空的`Node`定义来重用`groovy.util.slurpersupport.NodeChild#replaceNode` 方法:
 
-```
+```java
 def "Should remove article from xml"() {
     given: "XML object"
     def articles = new XmlSlurper().parse(xmlFile)
@@ -357,7 +357,7 @@ def "Should remove article from xml"() {
 
 除了读取和操作 XML 树，Groovy 还提供了从头开始创建 XML 文档的工具。现在让我们使用`groovy.xml.MarkupBuilder`创建一个由第一个例子中的前两篇文章组成的文档:
 
-```
+```java
 def "Should create XML properly"() {
     given: "Node structures"
 

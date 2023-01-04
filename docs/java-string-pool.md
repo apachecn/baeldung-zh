@@ -20,7 +20,7 @@
 
 让我们编写一个小测试来验证这一点:
 
-```
+```java
 String constantString1 = "Baeldung";
 String constantString2 = "Baeldung";
 
@@ -36,7 +36,7 @@ assertThat(constantString1)
 
 让我们看看这与前一个案例有何不同:
 
-```
+```java
 String constantString = "Baeldung";
 String newString = new String("Baeldung");
 
@@ -51,7 +51,7 @@ assertThat(constantString).isNotSameAs(newString);
 
 当我们比较使用`String`文字和`new`操作符创建的两个`String`对象时，这将变得更加清楚:
 
-```
+```java
 String first = "Baeldung"; 
 String second = "Baeldung"; 
 System.out.println(first == second); // True
@@ -61,7 +61,7 @@ System.out.println(first == second); // True
 
 接下来，让我们使用`new`创建两个不同的对象，并检查它们是否有不同的引用:
 
-```
+```java
 String third = new String("Baeldung");
 String fourth = new String("Baeldung"); 
 System.out.println(third == fourth); // False
@@ -69,7 +69,7 @@ System.out.println(third == fourth); // False
 
 类似地，当我们使用==操作符比较一个`String`文本和一个使用`new()`操作符创建的`String`对象时，它将返回`false:`
 
-```
+```java
 String fifth = "Baeldung";
 String sixth = new String("Baeldung");
 System.out.println(fifth == sixth); // False
@@ -85,7 +85,7 @@ System.out.println(fifth == sixth); // False
 
 让我们为此创建一个测试用例:
 
-```
+```java
 String constantString = "interned Baeldung";
 String newString = new String("interned Baeldung");
 
@@ -109,23 +109,23 @@ assertThat(constantString)
 
 在 Java 6 中，我们可以执行的唯一优化是在程序调用期间使用`MaxPermSize` JVM 选项增加`PermGen`空间:
 
-```
+```java
 -XX:MaxPermSize=1G
 ```
 
 在 Java 7 中，我们有更详细的选项来检查和扩展/减小池的大小。让我们看一下查看池大小的两个选项:
 
-```
+```java
 -XX:+PrintFlagsFinal
 ```
 
-```
+```java
 -XX:+PrintStringTableStatistics
 ```
 
 如果我们想根据存储桶增加池的大小，我们可以使用`StringTableSize` JVM 选项:
 
-```
+```java
 -XX:StringTableSize=4901
 ```
 

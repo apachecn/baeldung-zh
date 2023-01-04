@@ -45,7 +45,7 @@ Cassandra 是一个可扩展的 NoSQL 数据库，提供无单点故障的连续
 
 我们需要在`pom.xml`中定义以下 Cassandra 依赖，其最新版本可以在[这里](https://web.archive.org/web/20221126114701/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.datastax.cassandra%22)找到:
 
-```
+```java
 <dependency>
     <groupId>com.datastax.cassandra</groupId>
     <artifactId>cassandra-driver-core</artifactId>
@@ -55,7 +55,7 @@ Cassandra 是一个可扩展的 NoSQL 数据库，提供无单点故障的连续
 
 为了用嵌入式数据库服务器测试代码，我们还应该添加`cassandra-unit`依赖项，它的最新版本可以在[这里找到](https://web.archive.org/web/20221126114701/https://search.maven.org/classic/#search%7Cga%7C1%7Ccassandra-unit):
 
-```
+```java
 <dependency>
     <groupId>org.cassandraunit</groupId>
     <artifactId>cassandra-unit</artifactId>
@@ -71,7 +71,7 @@ Cassandra 是一个可扩展的 NoSQL 数据库，提供无单点故障的连续
 
 这些设置允许驱动程序发现集群的当前拓扑。
 
-```
+```java
 public class CassandraConnector {
 
     private Cluster cluster;
@@ -103,7 +103,7 @@ public class CassandraConnector {
 
 让我们创建我们的"`library`"键空间:
 
-```
+```java
 public void createKeyspace(
   String keyspaceName, String replicationStrategy, int replicationFactor) {
   StringBuilder sb = 
@@ -124,7 +124,7 @@ public void createKeyspace(
 
 此时，我们可以测试我们的密钥空间是否已经成功创建:
 
-```
+```java
 private KeyspaceRepository schemaRepository;
 private Session session;
 
@@ -137,7 +137,7 @@ public void connect() {
 }
 ```
 
-```
+```java
 @Test
 public void whenCreatingAKeyspace_thenCreated() {
     String keyspaceName = "library";
@@ -161,7 +161,7 @@ public void whenCreatingAKeyspace_thenCreated() {
 
 现在，我们可以将第一个列族“books”添加到现有的键空间中:
 
-```
+```java
 private static final String TABLE_NAME = "books";
 private Session session;
 
@@ -179,7 +179,7 @@ public void createTable() {
 
 下面提供了测试柱族是否已创建的代码:
 
-```
+```java
 private BookRepository bookRepository;
 private Session session;
 
@@ -192,7 +192,7 @@ public void connect() {
 }
 ```
 
-```
+```java
 @Test
 public void whenCreatingATable_thenCreatedCorrectly() {
     bookRepository.createTable();
@@ -216,7 +216,7 @@ public void whenCreatingATable_thenCreatedCorrectly() {
 
 一本书也有出版商，但是在创建的表中找不到这样的列。我们可以使用下面的代码来改变表格并添加一个新列:
 
-```
+```java
 public void alterTablebooks(String columnName, String columnType) {
     StringBuilder sb = new StringBuilder("ALTER TABLE ")
       .append(TABLE_NAME).append(" ADD ")
@@ -230,7 +230,7 @@ public void alterTablebooks(String columnName, String columnType) {
 
 让我们确保已经添加了新列`publisher`:
 
-```
+```java
 @Test
 public void whenAlteringTable_thenAddedColumnExists() {
     bookRepository.createTable();
@@ -251,7 +251,7 @@ public void whenAlteringTable_thenAddedColumnExists() {
 
 现在已经创建了`books`表，我们准备开始向表中添加数据:
 
-```
+```java
 public void insertbookByTitle(Book book) {
     StringBuilder sb = new StringBuilder("INSERT INTO ")
       .append(TABLE_NAME_BY_TITLE).append("(id, title) ")
@@ -265,7 +265,7 @@ public void insertbookByTitle(Book book) {
 
 “books”表中添加了一个新行，因此我们可以测试该行是否存在:
 
-```
+```java
 @Test
 public void whenAddingANewBook_thenBookExists() {
     bookRepository.createTableBooksByTitle();
@@ -281,7 +281,7 @@ public void whenAddingANewBook_thenBookExists() {
 
 在上面的测试代码中，我们使用了不同的方法来创建一个名为`booksByTitle:`的表
 
-```
+```java
 public void createTableBooksByTitle() {
     StringBuilder sb = new StringBuilder("CREATE TABLE IF NOT EXISTS ")
       .append("booksByTitle").append("(")
@@ -302,7 +302,7 @@ public void createTableBooksByTitle() {
 
 让我们看看当前保存在表中的数据:
 
-```
+```java
 public List<Book> selectAll() {
     StringBuilder sb = 
       new StringBuilder("SELECT * FROM ").append(TABLE_NAME);
@@ -324,7 +324,7 @@ public List<Book> selectAll() {
 
 对返回预期结果的查询的测试:
 
-```
+```java
 @Test
 public void whenSelectingAll_thenReturnAllRecords() {
     bookRepository.createTable();
@@ -355,7 +355,7 @@ public void whenSelectingAll_thenReturnAllRecords() {
 
 提供了此类查询的一个示例:
 
-```
+```java
 public void insertBookBatch(Book book) {
     StringBuilder sb = new StringBuilder("BEGIN BATCH ")
       .append("INSERT INTO ").append(TABLE_NAME)
@@ -376,7 +376,7 @@ public void insertBookBatch(Book book) {
 
 我们再次测试批量查询结果，如下所示:
 
-```
+```java
 @Test
 public void whenAddingANewBookBatch_ThenBookAddedInAllTables() {
     bookRepository.createTable();
@@ -409,7 +409,7 @@ public void whenAddingANewBookBatch_ThenBookAddedInAllTables() {
 
 下面的代码显示了如何删除表:
 
-```
+```java
 public void deleteTable() {
     StringBuilder sb = 
       new StringBuilder("DROP TABLE IF EXISTS ").append(TABLE_NAME);
@@ -421,7 +421,7 @@ public void deleteTable() {
 
 选择一个键空间中不存在的表会导致一个`InvalidQueryException: unconfigured table books`:
 
-```
+```java
 @Test(expected = InvalidQueryException.class)
 public void whenDeletingATable_thenUnconfiguredTable() {
     bookRepository.createTable();
@@ -435,7 +435,7 @@ public void whenDeletingATable_thenUnconfiguredTable() {
 
 最后，让我们删除键空间:
 
-```
+```java
 public void deleteKeyspace(String keyspaceName) {
     StringBuilder sb = 
       new StringBuilder("DROP KEYSPACE ").append(keyspaceName);
@@ -447,7 +447,7 @@ public void deleteKeyspace(String keyspaceName) {
 
 并测试密钥空间是否已被删除:
 
-```
+```java
 @Test
 public void whenDeletingAKeyspace_thenDoesNotExist() {
     String keyspaceName = "library";

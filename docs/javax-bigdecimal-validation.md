@@ -22,7 +22,7 @@
 
 让我们看看我们的`Invoice`类，它有一个类型为`BigDecimal`的字段:
 
-```
+```java
 public class Invoice {
 
     @DecimalMin(value = "0.0", inclusive = false)
@@ -63,7 +63,7 @@ public class Invoice {
 
 首先，我们将添加一个测试，根据我们的验证创建一个价格无效的发票，并检查验证是否会失败:
 
-```
+```java
 public class InvoiceUnitTest {
 
     private static Validator validator;
@@ -87,7 +87,7 @@ public class InvoiceUnitTest {
 
 现在让我们用正确的价格检查验证:
 
-```
+```java
 @Test
 public void whenLessThanThreeIntegerDigits_thenShouldNotGiveConstraintViolations() {
     Invoice invoice = new Invoice(new BigDecimal("10.21"), "Book purchased");
@@ -98,7 +98,7 @@ public void whenLessThanThreeIntegerDigits_thenShouldNotGiveConstraintViolations
 
 同样，让我们看看小数部分的验证是如何工作的:
 
-```
+```java
 @Test
 public void whenTwoFractionDigits_thenShouldNotGiveConstraintViolations() {
     Invoice invoice = new Invoice(new BigDecimal("99.99"), "Book purchased");
@@ -119,7 +119,7 @@ public void whenMoreThanTwoFractionDigits_thenShouldGiveConstraintViolations() {
 
 等于 0.00 的价格应该违反我们的约束:
 
-```
+```java
 @Test
 public void whenPriceIsZero_thenShouldGiveConstraintViolations() {
     Invoice invoice = new Invoice(new BigDecimal("0.00"), "Book purchased");
@@ -133,7 +133,7 @@ public void whenPriceIsZero_thenShouldGiveConstraintViolations() {
 
 最后，让我们看看价格大于零的情况:
 
-```
+```java
 @Test
 public void whenPriceIsGreaterThanZero_thenShouldNotGiveConstraintViolations() {
     Invoice invoice = new Invoice(new BigDecimal("100.50"), "Book purchased");

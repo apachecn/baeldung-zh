@@ -35,7 +35,7 @@
 
 此外，为了直观地看到变化，让我们也创建一个方法来打印`List` s 的`List`的内容:
 
-```
+```java
 private void printListOfLists(List<List<String>> listOfLists) {
     System.out.println("\n           List of Lists          ");
     System.out.println("-------------------------------------");
@@ -52,7 +52,7 @@ private void printListOfLists(List<List<String>> listOfLists) {
 
 我们将把数据从 CSV 文件导入到一个`List<List<T>>`对象中。让我们先来看看 CSV 文件的内容:
 
-```
+```java
 Linux, Microsoft Windows, Mac OS, Delete Me
 Kotlin, Delete Me, Java, Python
 Delete Me, Mercurial, Git, Subversion
@@ -62,7 +62,7 @@ Delete Me, Mercurial, Git, Subversion
 
 接下来，让我们创建一个方法来让[读取文件](/web/20221208143830/https://www.baeldung.com/reading-file-in-java#1-reading-a-small-file)并将数据存储在一个`List<List<T>>`对象中:
 
-```
+```java
 private List<List<String>> getListOfListsFromCsv() throws URISyntaxException, IOException {
     List<String> lines = Files.readAllLines(Paths.get(getClass().getResource("/listoflists/example.csv")
         .toURI()));
@@ -86,7 +86,7 @@ private List<List<String>> getListOfListsFromCsv() throws URISyntaxException, IO
 
 此外，每个元素都是一个内部列表，每个列表都应该包含四个元素。接下来，让我们编写一个单元测试方法来验证这一点。此外，我们将打印列表的初始化列表:
 
-```
+```java
 List<List<String>> listOfLists = getListOfListsFromCsv();
 
 assertThat(listOfLists).hasSize(3);
@@ -100,7 +100,7 @@ printListOfLists(listOfLists);
 
 如果我们执行该方法，测试通过并产生输出:
 
-```
+```java
  List of Lists           
 -------------------------------------
 Linux, Microsoft Windows, Mac OS, Delete Me
@@ -118,7 +118,7 @@ Delete Me, Mercurial, Git, Subversion
 
 接下来，让我们向外部列表添加一个新元素:
 
-```
+```java
 List<List<String>> listOfLists = getListOfListsFromCsv();
 List<String> newList = new ArrayList<>(Arrays.asList("Slack", "Zoom", "Microsoft Teams", "Telegram"));
 listOfLists.add(2, newList);
@@ -133,7 +133,7 @@ printListOfLists(listOfLists);
 
 同样，在断言之后，我们打印出`listOfLists`的内容:
 
-```
+```java
  List of Lists           
 -------------------------------------
 Linux, Microsoft Windows, Mac OS, Delete Me
@@ -148,7 +148,7 @@ Delete Me, Mercurial, Git, Subversion
 
 由于`listOfList`是一个嵌套的`List`结构，我们需要首先导航到我们想要改变的内部列表对象。如果我们确切地知道指数，我们可以简单地使用`get`方法:
 
-```
+```java
 List<String> innerList = listOfLists.get(x);
 // innerList.add(), remove() ....
 ```
@@ -157,7 +157,7 @@ List<String> innerList = listOfLists.get(x);
 
 接下来，让我们看一个从`listOfLists`对象中删除所有“`Delete Me`”条目的例子:
 
-```
+```java
 List<List<String>> listOfLists = getListOfListsFromCsv();
 
 listOfLists.forEach(innerList -> innerList.remove("Delete Me"));
@@ -174,7 +174,7 @@ printListOfLists(listOfLists);
 
 如果我们执行测试，它会通过并产生以下输出:
 
-```
+```java
  List of Lists           
 -------------------------------------
 Linux, Microsoft Windows, Mac OS

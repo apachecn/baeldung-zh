@@ -36,7 +36,7 @@ Have a look at how to refresh a token using the Spring Security 5 OAuth stack an
 
 我们将在一个`application.yml`文件中这样做:
 
-```
+```java
 server: 
   port: 8081
   servlet: 
@@ -63,7 +63,7 @@ jwt 包含了令牌内 的所有信息，因此资源服务器需要 验证令�
 
 现在让我们看看如何使用 Java 配置来配置 JWT 支持:
 
-```
+```java
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -101,7 +101,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 *   给我们的用户`[[email protected]](/web/20221126233349/https://www.baeldung.com/cdn-cgi/l/email-protection)`添加一个属性`organization`:
 
-    ```
+    ```java
     "attributes" : {
       "organization" : "baeldung"
     },
@@ -109,7 +109,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 *   在`jwtClient`配置:
 
-    ```
+    ```java
     "protocolMappers": [{
       "id": "06e5fc8f-3553-4c75-aef4-5a4d7bb6c0d1",
       "name": "organization",
@@ -135,7 +135,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 随着这个新配置的启动和运行，我们将在`[[email protected]](/web/20221126233349/https://www.baeldung.com/cdn-cgi/l/email-protection)`的令牌有效负载中获得一个额外的属性`organization = baeldung`:
 
-```
+```java
 {
   jti: "989ce5b7-50b9-4cc6-bc71-8f04a639461e"
   exp: 1585242462
@@ -160,7 +160,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 我们将在`AppService`中使用`organization`声明，并添加一个函数`getOrganization`:
 
-```
+```java
 getOrganization(){
   var token = Cookie.get("access_token");
   var payload = this.jwtHelper.decodeToken(token);
@@ -171,7 +171,7 @@ getOrganization(){
 
 这个函数利用来自`angular2-jwt`库中的`JwtHelperService`来解码访问令牌并获得我们的自定义声明。现在我们需要做的就是把它显示在我们的`AppComponent`中:
 
-```
+```java
 @Component({
   selector: 'app-root',
   template: `<nav class="navbar navbar-default">
@@ -205,7 +205,7 @@ export class AppComponent implements OnInit {
 
 这真的很简单，我们只需要从`org.springframework.security.oauth2.jwt.Jwt`的的`**AuthenticationPrincipal,** `中提取它，就像我们对`UserInfoController`中的任何其他属性所做的那样:
 
-```
+```java
 @GetMapping("/user/info")
 public Map<String, Object> getUserInfo(@AuthenticationPrincipal Jwt principal) {
     Map<String, String> map = new Hashtable<String, String>();
@@ -223,7 +223,7 @@ public Map<String, Object> getUserInfo(@AuthenticationPrincipal Jwt principal) {
 
 为了实现这一点，我们必须**添加一个实现`Converter`接口并使用`MappedJwtClaimSetConverter` 转换声明**的类:
 
-```
+```java
 public class OrganizationSubClaimAdapter implements 
   Converter<Map<String, Object>, Map<String, Object>> {
 
@@ -244,7 +244,7 @@ public class OrganizationSubClaimAdapter implements
 
 然后，在我们的`SecurityConfig`类中，我们需要**添加我们自己的 *JwtDecoder* 实例**来覆盖 Spring Boot **提供的实例，并将我们的`OrganizationSubClaimAdapter`设置为它的声明转换器**:
 
-```
+```java
 @Bean
 public JwtDecoder jwtDecoder(OAuth2ResourceServerProperties properties) {
     NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withJwkSetUri(
@@ -269,7 +269,7 @@ public JwtDecoder jwtDecoder(OAuth2ResourceServerProperties properties) {
 
 让我们首先使用命令行工具:生成密钥，更具体地说是一个`.jks`文件
 
-```
+```java
 keytool -genkeypair -alias mytest 
                     -keyalg RSA 
                     -keypass mypass 
@@ -285,13 +285,13 @@ keytool -genkeypair -alias mytest
 
 接下来，我们需要从生成的 JKS 中导出我们的公钥。我们可以使用下面的命令来做到这一点:
 
-```
+```java
 keytool -list -rfc --keystore mytest.jks | openssl x509 -inform pem -pubkey
 ```
 
 示例响应如下所示:
 
-```
+```java
 -----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgIK2Wt4x2EtDl41C7vfp
 OsMquZMyOyteO2RsVeMLF/hXIeYvicKr0SQzVkodHEBCMiGXQDz5prijTq3RHPy2
@@ -326,7 +326,7 @@ lLFCUGhA7hxn2xf3x1JW
 
 我们不希望 JKS 文件被 maven 过滤过程拾取，所以我们将确保在`pom.xml`中排除它:
 
-```
+```java
 <build>
     <resources>
         <resource>
@@ -342,7 +342,7 @@ lLFCUGhA7hxn2xf3x1JW
 
 如果我们使用 Spring Boot，我们需要确保我们的 JKS 文件通过 Spring Boot Maven 插件`addResources`被添加到应用程序类路径中:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -360,7 +360,7 @@ lLFCUGhA7hxn2xf3x1JW
 
 现在，我们将配置 Keycloak 来使用来自`mytest.jks`的 Keypair，方法是将它添加到领域定义 JSON 文件的`KeyProvider`部分，如下所示:
 
-```
+```java
 {
   "id": "59412b8d-aad8-4ab8-84ec-e546900fc124",
   "name": "java-keystore",

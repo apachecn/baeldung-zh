@@ -12,7 +12,7 @@ Spring 实际上为此提供了许多解决方案，所以我们在这里有很�
 
 当然，为了使用 Spring 测试，我们需要添加一个测试依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-test</artifactId>
@@ -27,7 +27,7 @@ Spring 实际上为此提供了许多解决方案，所以我们在这里有很�
 
 首先，我们将在应用程序中创建一个使用我们的属性的类:
 
-```
+```java
 @Component
 public class PropertySourceResolver {
 
@@ -46,7 +46,7 @@ public class PropertySourceResolver {
 
 接下来，我们将为它们赋值。我们可以通过在`src/main/resources:`中创建`application.properties`来做到这一点
 
-```
+```java
 example.firstProperty=defaultFirst
 example.secondProperty=defaultSecond
 ```
@@ -57,14 +57,14 @@ example.secondProperty=defaultSecond
 
 此外，它应该**包含默认文件中指定的所有属性键**。因此，我们将把`application.properties` 文件添加到`src/test/resources`中:
 
-```
+```java
 example.firstProperty=file
 example.secondProperty=file
 ```
 
 让我们添加将利用我们的解决方案的测试:
 
-```
+```java
 @SpringBootTest
 public class TestResourcePropertySourceResolverIntegrationTest {
 
@@ -91,13 +91,13 @@ public class TestResourcePropertySourceResolverIntegrationTest {
 
 首先，让我们在`src/test/resources:`中创建一个`application**–**test.properties` 文件
 
-```
+```java
 example.firstProperty=profile
 ```
 
 然后我们将创建一个使用`test`概要文件的测试:
 
-```
+```java
 @SpringBootTest
 @ActiveProfiles("test")
 public class ProfilePropertySourceResolverIntegrationTest {
@@ -123,7 +123,7 @@ public class ProfilePropertySourceResolverIntegrationTest {
 
 覆盖属性值的另一种方法是使用 `@SpringBootTest` 注释:
 
-```
+```java
 @SpringBootTest(properties = { "example.firstProperty=annotation" })
 public class SpringBootPropertySourceResolverIntegrationTest {
 
@@ -150,7 +150,7 @@ public class SpringBootPropertySourceResolverIntegrationTest {
 
 让我们创建一个将在测试中使用的初始化器类:
 
-```
+```java
 public class PropertyOverrideContextInitializer
   implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
@@ -169,13 +169,13 @@ public class PropertyOverrideContextInitializer
 
 接下来，我们将把`context-override-application.properties`文件添加到`src/test/resources:`中
 
-```
+```java
 example.secondProperty=contextFile
 ```
 
 最后，我们应该创建一个将使用我们的初始化器的测试类:
 
-```
+```java
 @SpringBootTest
 @ContextConfiguration(
   initializers = PropertyOverrideContextInitializer.class,

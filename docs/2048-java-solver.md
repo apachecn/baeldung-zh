@@ -20,7 +20,7 @@
 
 为了使一些事情更容易处理，**让我们从一个简单的单元格位置表示开始**。这实际上只是一对坐标的包装:
 
-```
+```java
 public class Cell {
     private final int x;
     private final int y;
@@ -31,7 +31,7 @@ public class Cell {
 
 **我们现在可以写一个类来代表董事会本身**。这将把值存储在一个简单的二维数组中，但是允许我们通过上面的`Cell`类来访问它们:
 
-```
+```java
 public class Board {
     private final int[][] board;
     private final int score;
@@ -89,7 +89,7 @@ public class Board {
 
 首先，**我们想要一个构造函数来获取实际的棋盘状态**，而不是我们之前的那个构造一个空白的棋盘:
 
-```
+```java
 private Board(int[][] board, int score) {
     this.score = score;
     this.board = new int[board.length][];
@@ -104,7 +104,7 @@ private Board(int[][] board, int score) {
 
 接下来，我们将添加一个方法来放置瓷砖。这将返回一个全新的板，除了在给定的单元格中有给定的数字之外，它与当前的板完全相同:
 
-```
+```java
 public Board placeTile(Cell cell, int number) {
     if (!isEmpty(cell)) {
         throw new IllegalArgumentException("That cell is not empty");
@@ -118,7 +118,7 @@ public Board placeTile(Cell cell, int number) {
 
 最后，我们将编写一个新的类来代表一个计算机玩家。这将有一个单一的方法，该方法将获取当前的板并返回新的板:
 
-```
+```java
 public class Computer {
     private final SecureRandom rng = new SecureRandom();
 
@@ -142,7 +142,7 @@ public class Computer {
 
 首先，我们需要定义一系列可能的移动:
 
-```
+```java
 public enum Move {
     UP,
     DOWN,
@@ -155,7 +155,7 @@ public enum Move {
 
 这意味着我们需要一种方法来调换和颠倒棋盘:
 
-```
+```java
 private static int[][] transpose(int[][] input) {
     int[][] result = new int[input.length][];
 
@@ -189,7 +189,7 @@ private static int[][] reverse(int[][] input) {
 
 我们首先制作一份董事会状态的副本，然后我们可以使用它:
 
-```
+```java
 public Board move(Move move) {
     int newScore = 0;
 
@@ -202,7 +202,7 @@ public Board move(Move move) {
 
 接下来，我们操纵我们的副本，以便我们总是将瓷砖向上移动:
 
-```
+```java
 if (move == Move.LEFT || move == Move.RIGHT) {
     tiles = transpose(tiles);
 
@@ -214,7 +214,7 @@ if (move == Move.DOWN || move == Move.RIGHT) {
 
 我们还需要另一个方块数组——这一次我们将把最终结果构建到其中——以及一个跟踪这次移动获得的新分数的跟踪器:
 
-```
+```java
 int[][] result = new int[tiles.length][];
 int newScore = 0;
 ```
@@ -227,7 +227,7 @@ int newScore = 0;
 
 这实现了我们的移动，但还没有合并瓷砖:
 
-```
+```java
 for (int x = 0; x < tiles.length; ++x) {
     LinkedList<Integer> thisRow = new LinkedList<>();
     for (int y = 0; y < tiles[0].length; ++y) {
@@ -241,7 +241,7 @@ for (int x = 0; x < tiles.length; ++x) {
 
 这是通过从上面构建另一个`LinkedList`瓷砖来实现的，但这一次我们进行合并:
 
-```
+```java
 LinkedList<Integer> newRow = new LinkedList<>();
 while (thisRow.size() >= 2) {
     int first = thisRow.pop();
@@ -262,7 +262,7 @@ newRow.addAll(thisRow);
 
 我们现在可以将它构建到结果数组中。一旦我们用完了列表中的图块，剩余的图块将被填充值“0”以表示它们是空白的:
 
-```
+```java
  result[x] = new int[tiles[0].length];
     for (int y = 0; y < tiles[0].length; ++y) {
         if (newRow.isEmpty()) {
@@ -276,7 +276,7 @@ newRow.addAll(thisRow);
 
 一旦我们完成移动瓷砖，我们需要操纵他们再次回到正确的旋转。这与我们之前做的完全相反:
 
-```
+```java
 if (move == Move.DOWN || move == Move.RIGHT) {
     result = reverse(result);
 }
@@ -287,14 +287,14 @@ if (move == Move.LEFT || move == Move.RIGHT) {
 
 最后，我们可以用这组新的牌和新计算的分数构建并返回一个新的板:
 
-```
+```java
  return new Board(result, this.score + newScore);
 }
 ```
 
 我们现在可以写我们随机的“人类”玩家了。这无非是生成一个随机移动并调用上面的方法来进行移动:
 
-```
+```java
 public class Human {
     private SecureRandom rng = new SecureRandom();
 
@@ -313,7 +313,7 @@ public class Human {
 
 对于这个例子，我们只是要打印到控制台，所以`System.out.print`就足够了。对于一个真实的游戏，我们想要做更好的图形:
 
-```
+```java
 private static void printBoard(Board board) {
     StringBuilder topLines = new StringBuilder();
     StringBuilder midLines = new StringBuilder();
@@ -355,7 +355,7 @@ private static void printBoard(Board board) {
 
 这意味着创建棋盘、两个玩家，并让计算机进行两次初始移动，也就是说，在棋盘上放置两个随机数:
 
-```
+```java
 Board board = new Board(4);
 Computer computer = new Computer();
 Human human = new Human();
@@ -366,7 +366,7 @@ for (int i = 0; i < 2; ++i) {
 
 现在我们有了真正的游戏循环。**这将是人类和电脑玩家轮流的重复，只有当没有空单元格时才停止:**
 
-```
+```java
 printBoard(board);
 do {
     System.out.println("Human move");
@@ -397,7 +397,7 @@ System.out.println("Final Score: " + board.getScore());
 
 我们将从重写我们的`Human`类中的`makeMove()`方法开始:
 
-```
+```java
 public Board makeMove(Board input) {
     return Arrays.stream(Move.values())
       .map(input::move)
@@ -410,7 +410,7 @@ public Board makeMove(Board input) {
 
 我们的`generateScore()`方法然后模拟每一个可能的计算机移动——也就是说，将“2”或“4”放入每个空单元格——然后看看接下来会发生什么:
 
-```
+```java
 private int generateScore(Board board, int depth) {
     if (depth >= 3) {
         return calculateFinalScore(board);
@@ -432,7 +432,7 @@ private int generateScore(Board board, int depth) {
 
 这与上面的`makeMove()`方法非常相似，但是我们返回的是正在进行的分数，而不是实际的棋盘:
 
-```
+```java
 private int calculateScore(Board board, int depth) {
     return Arrays.stream(Move.values())
       .map(board::move)
@@ -450,7 +450,7 @@ private int calculateScore(Board board, int depth) {
 
 因此，我们需要生成一个行和列的列表来进行评分:
 
-```
+```java
 List<List<Integer>> rowsToScore = new ArrayList<>();
 for (int i = 0; i < board.getSize(); ++i) {
     List<Integer> row = new ArrayList<>();
@@ -468,7 +468,7 @@ for (int i = 0; i < board.getSize(); ++i) {
 
 然后我们拿出我们建立的列表，给每个列表打分，并将分数相加。这是我们将要填写的占位符:
 
-```
+```java
 return rowsToScore.stream()
     .mapToInt(row -> {
         int score = 0;
@@ -489,7 +489,7 @@ return rowsToScore.stream()
 
 首先，我们需要一个删除了空白单元格的数字列表:
 
-```
+```java
 List<Integer> preMerged = row.stream()
   .filter(value -> value != 0)
   .collect(Collectors.toList());
@@ -497,7 +497,7 @@ List<Integer> preMerged = row.stream()
 
 然后，我们可以根据这个新列表进行一些计数，给出具有相同编号的相邻单元格的数量，严格按照升序编号和降序编号:
 
-```
+```java
 int numMerges = 0;
 int monotonicityLeft = 0;
 int monotonicityRight = 0;
@@ -516,7 +516,7 @@ for (int i = 0; i < preMerged.size() - 1; ++i) {
 
 **现在我们可以计算这一行的分数:**
 
-```
+```java
 int score = 1000;
 score += 250 * row.stream().filter(value -> value == 0).count();
 score += 750 * numMerges;
@@ -543,7 +543,7 @@ return score;
 
 为此，我们需要在我们的`Board`上实现一个 equals 方法，以便我们可以比较它们:
 
-```
+```java
 @Override
 public boolean equals(Object o) {
     if (this == o) {
@@ -559,7 +559,7 @@ public boolean equals(Object o) {
 
 然后，我们可以在流管道中添加一些过滤器，停止处理任何没有改变的东西。
 
-```
+```java
 return Arrays.stream(Move.values())
     .parallel()
     .map(board::move)

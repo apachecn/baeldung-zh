@@ -10,7 +10,7 @@
 
 例如，我们将使用下面的`Customer`实体，它只有两个属性——一个 id 和一组订单:
 
-```
+```java
 @Entity
 public class Customer {
 
@@ -28,7 +28,7 @@ public class Customer {
 
 此外，我们将创建一个由 id、名称和对`Customer`的引用组成的`Order`实体。
 
-```
+```java
 @Entity
 public class Order {
 
@@ -48,7 +48,7 @@ public class Order {
 
 在接下来的每一节中，我们将从数据库中获取客户并获得其所有订单:
 
-```
+```java
 Customer customer = customerRepository.findById(id).get();
 Set<Order> orders = customer.getOrders();
 ```
@@ -57,7 +57,7 @@ Set<Order> orders = customer.getOrders();
 
 在我们的`Customer` 实体上，我们已经用`@Fetch` 注释对`orders` 属性进行了注释:
 
-```
+```java
 @OneToMany
 @Fetch(FetchMode.SELECT)
 private Set<Orders> orders;
@@ -69,13 +69,13 @@ private Set<Orders> orders;
 
 这意味着对于第一行:
 
-```
+```java
 Customer customer = customerRepository.findById(id).get();
 ```
 
 我们不会看到与订单表的连接:
 
-```
+```java
 Hibernate: 
     select ...from customer
     where customer0_.id=? 
@@ -83,13 +83,13 @@ Hibernate:
 
 下一行是:
 
-```
+```java
 Set<Order> orders = customer.getOrders();
 ```
 
 我们将看到对相关订单的后续查询:
 
-```
+```java
 Hibernate: 
     select ...from order
     where order0_.customer_id=? 
@@ -105,7 +105,7 @@ Hibernate:
 
 `FetchMode.SELECT`有一个使用`@BatchSize` 注释的可选配置注释:
 
-```
+```java
 @OneToMany
 @Fetch(FetchMode.SELECT)
 @BatchSize(size=10)
@@ -118,7 +118,7 @@ private Set<Orders> orders;
 
 我们仍将使用相同的查询:
 
-```
+```java
 Hibernate:
     select ...from order
     where order0_.customer_id=?
@@ -130,7 +130,7 @@ Hibernate:
 
 当`FetchMode.SELECT` 懒散地加载关系时，`FetchMode.JOIN`急切地加载它们，比如通过一个连接:
 
-```
+```java
 @OneToMany
 @Fetch(FetchMode.JOIN)
 private Set<Orders> orders;
@@ -138,7 +138,7 @@ private Set<Orders> orders;
 
 这导致只对`Customer`和它们的`Order`进行一次查询:
 
-```
+```java
 Hibernate: 
     select ...
     from
@@ -154,7 +154,7 @@ Hibernate:
 
 因为`orders`属性是一个集合，我们也可以使用`FetchMode.SUBSELECT`:
 
-```
+```java
 @OneToMany
 @Fetch(FetchMode.SUBSELECT)
 private Set<Orders> orders;
@@ -164,7 +164,7 @@ private Set<Orders> orders;
 
 有了这个设置，我们回到对`Customer:`的一个查询
 
-```
+```java
 Hibernate: 
     select ...
     from customer customer0_ 
@@ -172,7 +172,7 @@ Hibernate:
 
 和一个针对`Order`的查询，这次使用子选择:
 
-```
+```java
 Hibernate: 
     select ...
     from

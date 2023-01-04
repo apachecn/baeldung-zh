@@ -10,7 +10,7 @@
 
 我们将从添加基础库 [okhttp](https://web.archive.org/web/20220524121329/https://search.maven.org/artifact/com.squareup.okhttp3/okhttp) 依赖关系开始:
 
-```
+```java
 <dependency>
     <groupId>com.squareup.okhttp3</groupId>
     <artifactId>okhttp</artifactId>
@@ -20,7 +20,7 @@
 
 然后，**如果我们想为用 OkHttp 库实现的模块编写一个集成测试，我们可以使用 [mockwebserver](https://web.archive.org/web/20220524121329/https://search.maven.org/artifact/com.squareup.okhttp3/mockwebserver) 库**。这个库有模仿服务器及其响应的工具:
 
-```
+```java
 <dependency>
     <groupId>com.squareup.okhttp3</groupId>
     <artifactId>mockwebserver</artifactId>
@@ -35,7 +35,7 @@
 
 为了使类可测试，我们将**在构造函数中注入`OkHttpClient`和作者**:
 
-```
+```java
 public class BinaryFileDownloader implements AutoCloseable {
 
     private final OkHttpClient client;
@@ -50,7 +50,7 @@ public class BinaryFileDownloader implements AutoCloseable {
 
 接下来，我们将实现**从 URL** 下载文件的方法:
 
-```
+```java
 public long download(String url) throws IOException {
     Request request = new Request.Builder().url(url).build();
     Response response = client.newCall(request).execute();
@@ -71,7 +71,7 @@ public long download(String url) throws IOException {
 
 `OutputStream`将被注入到构造函数中，以便该类是可测试的:
 
-```
+```java
 public class BinaryFileWriter implements AutoCloseable {
 
     private final OutputStream outputStream;
@@ -86,7 +86,7 @@ public class BinaryFileWriter implements AutoCloseable {
 
 最后，我们将把缓冲的数据`write`到`OutputStream`。只要`InputStream`有数据要读取，我们就这样做:
 
-```
+```java
 public long write(InputStream inputStream) throws IOException {
     try (BufferedInputStream input = new BufferedInputStream(inputStream)) {
         byte[] dataBuffer = new byte[CHUNK_SIZE];
@@ -107,7 +107,7 @@ public long write(InputStream inputStream) throws IOException {
 
 我们首先需要创建一个[功能接口](/web/20220524121329/https://www.baeldung.com/java-8-functional-interfaces):
 
-```
+```java
 public interface ProgressCallback {
     void onProgress(double progress);
 }
@@ -119,7 +119,7 @@ public interface ProgressCallback {
 
 然后，我们将**调用`onProgress`方法，并根据目前编写的`totalBytes`和`length:`计算进度**
 
-```
+```java
 public class BinaryFileWriter implements AutoCloseable {
     private final ProgressCallback progressCallback;
     public long write(InputStream inputStream, double length) {
@@ -131,7 +131,7 @@ public class BinaryFileWriter implements AutoCloseable {
 
 最后，我们将用总响应长度将`BinaryFileDownloader`类更新为**调用`write`方法。我们将从`Content-Length`头中获取响应长度，然后将其传递给`write`方法:**
 
-```
+```java
 public class BinaryFileDownloader {
     public long download(String url) {
         double length = getResponseLength(response);

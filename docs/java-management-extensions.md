@@ -24,7 +24,7 @@ JMX 架构遵循三层方法:
 
 因此，让我们定义我们的 MBean 接口和实现它的类:
 
-```
+```java
 public interface GameMBean {
 
     public void playFootball(String clubName);
@@ -79,7 +79,7 @@ JMX 代理是在本地或远程运行的实体，它们提供对向它们注册�
 
 然后我们将使用创建的`ObjectName:`注册模型 MBean
 
-```
+```java
 try {
     ObjectName objectName = new ObjectName("com.baeldung.tutorial:type=basic,name=game");
     MBeanServer server = ManagementFactory.getPlatformMBeanServer();
@@ -92,7 +92,7 @@ try {
 
 最后，为了能够测试它，我们将添加一个`while`循环来防止应用程序在我们能够通过 JConsole 访问 MBean 之前终止:
 
-```
+```java
 while (true) {
 }
 ```

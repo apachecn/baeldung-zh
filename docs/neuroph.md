@@ -25,7 +25,7 @@
 
 如果为了使用 Neuroph，我们需要添加下面的 Maven 条目:
 
-```
+```java
 <dependency>
     <groupId>org.beykery</groupId>
     <artifactId>neuroph</artifactId>
@@ -52,7 +52,7 @@
 
 这四个主要属性共同决定了行为:
 
-```
+```java
 output = transferFunction(inputFunction(inputConnections));
 ```
 
@@ -64,7 +64,7 @@ output = transferFunction(inputFunction(inputConnections));
 
 `Neurons`可以添加到图层:
 
-```
+```java
 Layer layer = new Layer(); 
 layer.addNeuron(n);
 ```
@@ -81,13 +81,13 @@ layer.addNeuron(n);
 
 如果我们使用的是`NeuralNetwork`(比如`Perceptron`)的子类的构造函数，我们可以使用这个简单的方法传递`Layer`、每个`Layer`的`Neuron`的数量以及它们的索引:
 
-```
+```java
 NeuralNetwork ann = new Perceptron(2, 4, 1);
 ```
 
 有时我们会想要手动地做这件事(并且很好地看到在引擎盖下面发生了什么)。将`Layer`添加到`NeuralNetwork`的基本操作是这样完成的:
 
-```
+```java
 NeuralNetwork ann = new NeuralNetwork();   
 Layer layer = new Layer();
 ann.addLayer(0, layer);
@@ -96,7 +96,7 @@ ann.setInputNeurons(layer.getNeurons());
 
 第一个参数指定了`NeuralNetwork`中`Layer`的索引；第二个参数指定了`Layer`本身。`Layers`手动添加应使用`ConnectionFactory`类连接:
 
-```
+```java
 ann.addLayer(0, inputLayer);    
 ann.addLayer(1, hiddenLayerOne); 
 ConnectionFactory.fullConnect(ann.getLayerAt(0), ann.getLayerAt(1));
@@ -104,7 +104,7 @@ ConnectionFactory.fullConnect(ann.getLayerAt(0), ann.getLayerAt(1));
 
 第一个和最后一个`Layer`也应该连接:
 
-```
+```java
 ConnectionFactory.fullConnect(ann.getLayerAt(0), 
   ann.getLayerAt(ann.getLayersCount() - 1), false);
 ann.setOutputNeurons(ann.getLayerAt(
@@ -123,7 +123,7 @@ ann.setOutputNeurons(ann.getLayerAt(
 
 `DataSet`用于表示和提供要学习的信息或用于训练`NeuralNetwork`的信息。`DataSets` 的特点是他们的 `input size, outputsize,`和成排的 `(DataSetRow).`
 
-```
+```java
 int inputSize = 2; 
 int outputSize = 1; 
 DataSet ds = new DataSet(inputSize, outputSize);
@@ -138,7 +138,7 @@ ds.addRow(rTwo);
 
 `LearningRule`指定`DataSet`被`NeuralNetwork`教导或训练的方式。`LearningRule`的子类包括`BackPropagation` 和`SupervisedLearning`。
 
-```
+```java
 NeuralNetwork ann = new NeuralNetwork();
 //...
 BackPropagation backPropagation = new BackPropagation();
@@ -156,7 +156,7 @@ ann.learn(ds, backPropagation);
 
 让我们首先定义我们的输入层:
 
-```
+```java
 Layer inputLayer = new Layer();
 inputLayer.addNeuron(new Neuron());
 inputLayer.addNeuron(new Neuron());
@@ -164,7 +164,7 @@ inputLayer.addNeuron(new Neuron());
 
 接下来，我们实现隐藏层一:
 
-```
+```java
 Layer hiddenLayerOne = new Layer();
 hiddenLayerOne.addNeuron(new Neuron());
 hiddenLayerOne.addNeuron(new Neuron());
@@ -174,7 +174,7 @@ hiddenLayerOne.addNeuron(new Neuron());
 
 隐藏的第二层:
 
-```
+```java
 Layer hiddenLayerTwo = new Layer(); 
 hiddenLayerTwo.addNeuron(new Neuron()); 
 hiddenLayerTwo.addNeuron(new Neuron()); 
@@ -184,7 +184,7 @@ hiddenLayerTwo.addNeuron(new Neuron());
 
 最后，我们定义输出层:
 
-```
+```java
 Layer outputLayer = new Layer();
 outputLayer.addNeuron(new Neuron()); 
 ```
@@ -193,7 +193,7 @@ outputLayer.addNeuron(new Neuron());
 
 接下来，我们可以把它们组合成一个`NeuralNetwork`:
 
-```
+```java
 NeuralNetwork ann = new NeuralNetwork();
 ann.addLayer(0, inputLayer);
 ann.addLayer(1, hiddenLayerOne);
@@ -212,7 +212,7 @@ ann.setOutputNeurons(outputLayer.getNeurons());
 
 出于训练的目的，让我们通过指定输入和结果输出向量的大小来组合一个`DataSet` :
 
-```
+```java
 int inputSize = 2;
 int outputSize = 1;
 DataSet ds = new DataSet(inputSize, outputSize);
@@ -220,7 +220,7 @@ DataSet ds = new DataSet(inputSize, outputSize);
 
 我们向我们的`DataSet`添加一个基本行，遵守上面定义的输入和输出约束——我们在本例中的目标是教会我们的网络进行基本的 XOR(异或)运算:
 
-```
+```java
 DataSetRow rOne
   = new DataSetRow(new double[] {0, 1}, new double[] {1});
 ds.addRow(rOne);
@@ -237,7 +237,7 @@ ds.addRow(rFour);
 
 接下来，让我们用内置的`BackPropogation LearningRule`来训练我们的`NeuralNetwork`:
 
-```
+```java
 BackPropagation backPropagation = new BackPropagation();
 backPropagation.setMaxIterations(1000);
 ann.learn(ds, backPropagation); 
@@ -247,7 +247,7 @@ ann.learn(ds, backPropagation);
 
 现在我们的`NeuralNetwork`已经训练好了，让我们来测试一下。对于作为`DataSetRow`传递到我们的`DataSet`中的每一对逻辑值，我们运行以下类型的测试:
 
-```
+```java
 ann.setInput(0, 1);
 ann.calculate();
 double[] networkOutputOne = ann.getOutput(); 
@@ -257,7 +257,7 @@ double[] networkOutputOne = ann.getOutput();
 
 在这种情况下，对于逻辑运算来说，0 和 1 非常适合这项工作。输出将是:
 
-```
+```java
 Testing: 1, 0 Expected: 1.0 Result: 1.0
 Testing: 0, 1 Expected: 1.0 Result: 1.0
 Testing: 1, 1 Expected: 0.0 Result: 0.0

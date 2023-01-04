@@ -12,7 +12,7 @@
 
 让我们先来看一个基本的 [URI](https://web.archive.org/web/20220807192129/https://en.wikipedia.org/wiki/Uniform_Resource_Identifier) 语法:
 
-```
+```java
 scheme:[//[user:[[email protected]](/web/20220807192129/https://www.baeldung.com/cdn-cgi/l/email-protection)]host[:port]][/]path[?query][#fragment]
 ```
 
@@ -20,14 +20,14 @@ scheme:[//[user:[[email protected]](/web/20220807192129/https://www.baeldung.co
 
 现在让我们看一个 URI 的例子:
 
-```
+```java
 String testUrl = 
   "http://www.baeldung.com?key1=value+1&key2;=value%40%21%242&key3;=value%253";
 ```
 
 分析 URI 的一种方法是将字符串表示加载到一个`java.net.URI`类中:
 
-```
+```java
 @Test
 public void givenURL_whenAnalyze_thenCorrect() throws Exception {
     URI uri = new URI(testUrl);
@@ -47,7 +47,7 @@ public void givenURL_whenAnalyze_thenCorrect() throws Exception {
 
 让我们使用`URLEncoder`类的`encode(data, encodingScheme)`方法对数据进行编码:
 
-```
+```java
 private String encodeValue(String value) {
     return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
 }
@@ -81,7 +81,7 @@ public void givenRequestParam_whenUTF8Scheme_thenEncode() throws Exception {
 
 现在让我们使用`URLDecoder`的解码方法来解码前面的 URL:
 
-```
+```java
 private String decode(String value) {
     return URLDecoder.decode(value, StandardCharsets.UTF_8.toString());
 }
@@ -121,7 +121,7 @@ public void givenRequestParam_whenUTF8Scheme_thenDecodeRequestParams() {
 
 `UriUtils` 类提供了`encodePath`和`encodePathSegment` 方法，分别对路径和路径段进行编码；
 
-```
+```java
 private String encodePath(String path) {
     try {
         path = UriUtils.encodePath(path, "UTF-8");
@@ -132,7 +132,7 @@ private String encodePath(String path) {
 }
 ```
 
-```
+```java
 @Test
 public void givenPathSegment_thenEncodeDecode() 
   throws UnsupportedEncodingException {
@@ -149,14 +149,14 @@ public void givenPathSegment_thenEncodeDecode()
 
 让我们为测试 URL 添加一个路径变量:
 
-```
+```java
 String testUrl
   = "/path+1?key1=value+1&key2;=value%40%21%242&key3;=value%253";
 ```
 
 为了组装和断言正确编码的 URL，我们将更改第 2 节中的测试:
 
-```
+```java
 String path = "path+1";
 String encodedURL = requestParams.keySet().stream()
   .map(k -> k + "=" + encodeValue(requestParams.get(k)))

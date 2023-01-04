@@ -12,7 +12,7 @@
 
 该库的最新版本可以在 [Maven 资源库](https://web.archive.org/web/20220926195912/https://mvnrepository.com/artifact/org.asynchttpclient/async-http-client)中找到。我们应该小心使用组 id 为`org.asynchttpclient`的依赖项，而不是组 id 为`com.ning:`的依赖项
 
-```
+```java
 <dependency>
     <groupId>org.asynchttpclient</groupId>
     <artifactId>async-http-client</artifactId>
@@ -24,19 +24,19 @@
 
 获取 HTTP 客户端最直接的方法是使用`Dsl`类。静态的`asyncHttpClient()`方法返回一个`AsyncHttpClient`对象:
 
-```
+```java
 AsyncHttpClient client = Dsl.asyncHttpClient();
 ```
 
 如果我们需要 HTTP 客户端的定制配置，我们可以使用构建器`DefaultAsyncHttpClientConfig.Builder`构建`AsyncHttpClient`对象:
 
-```
+```java
 DefaultAsyncHttpClientConfig.Builder clientBuilder = Dsl.config()
 ```
 
 这提供了配置超时、代理服务器、HTTP 证书等的可能性:
 
-```
+```java
 DefaultAsyncHttpClientConfig.Builder clientBuilder = Dsl.config()
   .setConnectTimeout(500)
   .setProxyServer(new ProxyServer(...));
@@ -58,7 +58,7 @@ AsyncHttpClient client = Dsl.asyncHttpClient(clientBuilder);
 
 例如，当创建绑定请求时，从 HTTP 客户端配置中读取`disableUrlEncoding`标志，而对于非绑定请求，默认情况下，该标志设置为 false。这很有用，因为通过使用作为 VM 参数传递的系统属性，无需重新编译整个应用程序就可以更改客户端配置:
 
-```
+```java
 java -jar -Dorg.asynchttpclient.disableUrlEncodingForBoundRequests=true
 ```
 
@@ -70,7 +70,7 @@ java -jar -Dorg.asynchttpclient.disableUrlEncodingForBoundRequests=true
 
 例如，`prepareGet()`方法将创建一个 HTTP GET 请求:
 
-```
+```java
 BoundRequestBuilder getRequest = client.prepareGet("http://www.baeldung.com");
 ```
 
@@ -78,7 +78,7 @@ BoundRequestBuilder getRequest = client.prepareGet("http://www.baeldung.com");
 
 可以使用`RequestBuilder`类创建一个未绑定的请求:
 
-```
+```java
 Request getRequest = new RequestBuilder(HttpConstants.Methods.GET)
   .setUrl("http://www.baeldung.com")
   .build();
@@ -86,7 +86,7 @@ Request getRequest = new RequestBuilder(HttpConstants.Methods.GET)
 
 或者通过使用`Dsl`助手类，它实际上使用`RequestBuilder`来配置请求的 HTTP 方法和 URL:
 
-```
+```java
 Request getRequest = Dsl.get("http://www.baeldung.com").build()
 ```
 
@@ -100,12 +100,12 @@ Request getRequest = Dsl.get("http://www.baeldung.com").build()
 
 该库被设计成异步的，但是当需要时，我们可以通过阻塞`Future`对象来模拟同步调用。`execute()`和`executeRequest()`方法都返回一个`ListenableFuture<Response>`对象。该类扩展了 Java `Future`接口，从而继承了`get()`方法，该方法可用于阻塞当前线程，直到 HTTP 请求完成并返回响应:
 
-```
+```java
 Future<Response> responseFuture = boundGetRequest.execute();
 responseFuture.get();
 ```
 
-```
+```java
 Future<Response> responseFuture = client.executeRequest(unboundRequest);
 responseFuture.get();
 ```
@@ -122,7 +122,7 @@ responseFuture.get();
 
 `AsyncHandler`监听器提供了在 HTTP 调用完成之前控制和处理它的可能性。使用它可以处理一系列与 HTTP 调用相关的事件:
 
-```
+```java
 request.execute(new AsyncHandler<Object>() {
     @Override
     public State onStatusReceived(HttpResponseStatus responseStatus)
@@ -160,7 +160,7 @@ enum 让我们控制 HTTP 请求的处理。通过返回 **`State.ABORT`，我�
 
 `AsyncCompletionHandler`继承了`AsyncHandler`接口的所有方法，并添加了用于处理调用完成的`onCompleted(Response)` 帮助器方法。所有其他监听器方法都被覆盖以返回`State.` CONTINUE，从而使代码更具可读性:
 
-```
+```java
 request.execute(new AsyncCompletionHandler<Object>() {
     @Override
     public Object onCompleted(Response response) throws Exception {
@@ -173,7 +173,7 @@ request.execute(new AsyncCompletionHandler<Object>() {
 
 此外，我们还可以通过使用另一个线程池来执行监听器中的代码:
 
-```
+```java
 ListenableFuture<Response> listenableFuture = client
   .executeRequest(unboundRequest);
 listenableFuture.addListener(() -> {

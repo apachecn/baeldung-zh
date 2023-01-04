@@ -10,7 +10,7 @@
 
 让我们将 RxJava 2 依赖项包含到我们的 Maven 项目中:
 
-```
+```java
 <dependency>
     <groupId>io.reactivex.rxjava2</groupId>
     <artifactId>rxjava</artifactId>
@@ -28,7 +28,7 @@
 
 那么，我们可以通过使用 [`DisposableCompletableObserver`](https://web.archive.org/web/20220627171839/http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/observers/DisposableCompletableObserver.html) 来观察它的状态:
 
-```
+```java
 Completable
   .complete()
   .subscribe(new DisposableCompletableObserver() {
@@ -46,13 +46,13 @@ Completable
 
 **另外，我们可以从`Callable, [Action](https://web.archive.org/web/20220627171839/http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/functions/Action.html), and Runnable`** **:** 构造一个`Completable`实例
 
-```
+```java
 Completable.fromRunnable(() -> {});
 ```
 
 同样，我们可以使用`Completable.from()`或调用[上的`ignoreElement()`从其他类型中获取`Completable`实例，可能是](https://web.archive.org/web/20220627171839/http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Maybe.html#ignoreElement--)、[单个](https://web.archive.org/web/20220627171839/http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Single.html#ignoreElement--)、[可流动](https://web.archive.org/web/20220627171839/http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#ignoreElements--)和[可观察](https://web.archive.org/web/20220627171839/http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Observable.html#ignoreElements--)源本身:
 
-```
+```java
 Flowable<String> flowable = Flowable
   .just("request received", "user logged in");
 Completable flowableCompletable = Completable
@@ -71,7 +71,7 @@ Completable singleCompletable = Single.just(1)
 
 我们将保持例子简单和问题不可知。考虑我们有几个`Completable`实例:
 
-```
+```java
 Completable first = Completable
   .fromSingle(Single.just(1));
 Completable second = Completable
@@ -83,7 +83,7 @@ Completable error = Single.error(throwable)
 
 **要将两个`Completables`合并成一个，我们可以使用`[andThen](https://web.archive.org/web/20220627171839/http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Completable.html#andThen-io.reactivex.CompletableSource-)()`操作符**:
 
-```
+```java
 first
   .andThen(second)
   .test()
@@ -92,7 +92,7 @@ first
 
 我们可以根据需要把许多`Completables`链接起来。同时，**如果至少有一个源未能完成，导致`Completable`不会触发 *onComplete()* 以及**:
 
-```
+```java
 first
   .andThen(second)
   .andThen(error)
@@ -104,7 +104,7 @@ first
 
 好在我们仍然可以测试这个场景:
 
-```
+```java
 ...
   .andThen(Completable.never())
   .test()
@@ -119,7 +119,7 @@ first
 
 一旦所有的源完成，结果实例**也就完成了。此外，当任何来源发出错误时，它以`onError`终止:**
 
-```
+```java
 Completable.mergeArray(first, second)
   .test()
   .assertComplete();
@@ -133,7 +133,7 @@ Completable.mergeArray(first, second, error)
 
 然后，我们需要一个单独的`Completable`来完成上游和所有元素级的动作。在这种情况下， [`flatMapCompletable`](https://web.archive.org/web/20220627171839/http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#flatMapCompletable-io.reactivex.functions.Function-) ()操作员会提供帮助:
 
-```
+```java
 Completable allElementsCompletable = Flowable
   .just("request received", "user logged in")
   .flatMapCompletable(message -> Completable
@@ -152,7 +152,7 @@ allElementsCompletable
 
 前缀`amb`是“ambiguous”的简写，意味着不确定哪个`Completable`确切完成。例如，`[ambArray()](https://web.archive.org/web/20220627171839/http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Completable.html#ambArray-io.reactivex.CompletableSource...-):`
 
-```
+```java
 Completable.ambArray(first, Completable.never(), second)
   .test()
   .assertComplete();
@@ -160,7 +160,7 @@ Completable.ambArray(first, Completable.never(), second)
 
 注意，上面的`Completable `也可以用`onError()`而不是`onComplete()`终止，这取决于哪个源 completable 首先终止:
 
-```
+```java
 Completable.ambArray(error, first, second)
   .test()
   .assertError(throwable);

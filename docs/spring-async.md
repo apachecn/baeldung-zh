@@ -30,7 +30,7 @@ Quick intro to the Spring Security support for async requests in Spring MVC.[Rea
 
 我们将通过向配置类添加`@EnableAsync`来实现这一点:
 
-```
+```java
 @Configuration
 @EnableAsync
 public class SpringAsyncConfig { ... }
@@ -45,7 +45,7 @@ public class SpringAsyncConfig { ... }
 
 我们还可以通过使用`task`名称空间来启用带有 **XML 配置**的异步处理:
 
-```
+```java
 <task:executor id="myexecutor" pool-size="5"  />
 <task:annotation-driven executor="myexecutor"/>
 ```
@@ -63,7 +63,7 @@ public class SpringAsyncConfig { ... }
 
 这是将 void 返回类型的方法配置为异步运行的简单方法:
 
-```
+```java
 @Async
 public void asyncMethodWithVoidReturnType() {
     System.out.println("Execute method asynchronously. " 
@@ -75,7 +75,7 @@ public void asyncMethodWithVoidReturnType() {
 
 我们还可以通过包装将来的实际返回，将`@Async`应用于具有返回类型的方法:
 
-```
+```java
 @Async
 public Future<String> asyncMethodWithReturnType() {
     System.out.println("Execute method asynchronously - " 
@@ -95,7 +95,7 @@ Spring 还提供了一个实现`Future`的`AsyncResult`类。我们可以用它�
 
 现在让我们调用上面的方法，并使用`Future`对象检索异步流程的结果。
 
-```
+```java
 public void testAsyncAnnotationForMethodsWithReturnType()
   throws InterruptedException, ExecutionException {
     System.out.println("Invoking an asynchronous method. " 
@@ -121,7 +121,7 @@ public void testAsyncAnnotationForMethodsWithReturnType()
 
 我们需要在配置类中声明所需的执行器:
 
-```
+```java
 @Configuration
 @EnableAsync
 public class SpringAsyncConfig {
@@ -135,7 +135,7 @@ public class SpringAsyncConfig {
 
 那么我们应该在`@Async`中提供执行者的名字作为属性:
 
-```
+```java
 @Async("threadPoolTaskExecutor")
 public void asyncMethodWithConfiguredExecutor() {
     System.out.println("Execute method with configured executor - "
@@ -147,7 +147,7 @@ public void asyncMethodWithConfiguredExecutor() {
 
 配置类应该实现`AsyncConfigurer`接口。所以，它必须实现`getAsyncExecutor()`方法。这里，我们将返回整个应用程序的执行者。这现在成为运行用`@Async`注释的方法的默认执行器:
 
-```
+```java
 @Configuration
 @EnableAsync
 public class SpringAsyncConfig implements AsyncConfigurer {
@@ -168,7 +168,7 @@ public class SpringAsyncConfig implements AsyncConfigurer {
 
 我们将通过实现`AsyncUncaughtExceptionHandler`接口来创建一个定制的异步异常处理程序。当有任何未捕获的异步异常时，调用`handleUncaughtException()` 方法:
 
-```
+```java
 public class CustomAsyncExceptionHandler
   implements AsyncUncaughtExceptionHandler {
 
@@ -188,7 +188,7 @@ public class CustomAsyncExceptionHandler
 
 在上一节中，我们看了由配置类实现的`AsyncConfigurer`接口。作为其中的一部分，我们还需要覆盖`getAsyncUncaughtExceptionHandler()`方法来返回我们的自定义异步异常处理程序:
 
-```
+```java
 @Override
 public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
     return new CustomAsyncExceptionHandler();

@@ -18,7 +18,7 @@
 
 字符串串联只是两个字符串的组合:
 
-```
+```java
 def first = 'first'
 def second = "second"        
 def concatenation = first + second
@@ -31,7 +31,7 @@ Groovy 在此基础上构建了其他几个字符串类型，我们一会儿就�
 
 现在，Java 通过`printf`提供了一些非常基本的模板，但是 Groovy 更深入，提供了 **`string interpolation, `用变量**模板化字符串的过程:
 
-```
+```java
 def name = "Kacper"
 def result = "Hello ${name}!"
 assertEquals("Hello Kacper!", result.toString())
@@ -49,13 +49,13 @@ assertEquals("Hello Kacper!", result.toString())
 
 简而言之，如果我们做到了:
 
-```
+```java
 assertEquals("Hello Kacper!", result)
 ```
 
 这调用了`assertEquals(Object, Object), `,我们得到:
 
-```
+```java
 java.lang.AssertionError: expected: java.lang.String<Hello Kacper!>
   but was: org.codehaus.groovy.runtime.GStringImpl<Hello Kacper!>
 Expected :java.lang.String<Hello Kacper!> 
@@ -66,7 +66,7 @@ Actual   :org.codehaus.groovy.runtime.GStringImpl<Hello Kacper!>
 
 **Groovy 中最简单的字符串可能是单引号:**
 
-```
+```java
 def example = 'Hello world'
 ```
 
@@ -74,13 +74,13 @@ def example = 'Hello world'
 
 而不是:
 
-```
+```java
 def hardToRead = "Kacper loves \"Lord of the Rings\""
 ```
 
 我们可以很容易地将一个字符串与另一个字符串连接起来:
 
-```
+```java
 def easyToRead = 'Kacper loves "Lord of the Rings"'
 ```
 
@@ -92,7 +92,7 @@ def easyToRead = 'Kacper loves "Lord of the Rings"'
 
 例如，假设我们有一些`JSON`要表示为一个字符串:
 
-```
+```java
 {
     "name": "John",
     "age": 20,
@@ -104,7 +104,7 @@ def easyToRead = 'Kacper loves "Lord of the Rings"'
 
 相反，让我们使用三个单引号字符串:
 
-```
+```java
 def jsonContent = '''
 {
     "name": "John",
@@ -120,7 +120,7 @@ def jsonContent = '''
 
 **通常为了代码的可读性，我们缩进代码:**
 
-```
+```java
 def triple = '''
     firstline
     secondline
@@ -129,7 +129,7 @@ def triple = '''
 
 但是**三个单引号字符串保留空白**。这意味着上面的字符串实际上是:
 
-```
+```java
 (newline)
     firstline(newline)
     secondline(newline)
@@ -147,13 +147,13 @@ def triple = '''
 
 让我们确认一下**我们之前的字符串是以换行符**开始的:
 
-```
+```java
 assertTrue(triple.startsWith("\n"))
 ```
 
 有可能剥掉那个角色。**为了防止这种情况，我们需要放一个反斜杠`\`** 作为第一个和最后一个字符:
 
-```
+```java
 def triple = '''\
     firstline
     secondline
@@ -174,7 +174,7 @@ Groovy String API 来帮忙了！
 
 **要删除字符串中每一行的前导空格，我们可以使用 Groovy 默认方法之一，`String#stripIndent()` :**
 
-```
+```java
 def triple = '''\
     firstline
     secondline'''.stripIndent()
@@ -191,7 +191,7 @@ assertEquals("firstline\nsecondline", triple)
 
 因此，让我们为我们的`triple`变量改变一下缩进:
 
-```
+```java
 class TripleSingleQuotedString {
 
     @Test
@@ -208,7 +208,7 @@ class TripleSingleQuotedString {
 
 印刷术`triple`将向我们展示:
 
-```
+```java
 firstline
     secondline
 ```
@@ -221,7 +221,7 @@ firstline
 
 **为了更好的控制，我们可以使用|和`stripMargin` :** 来告诉 Groovy 从哪里开始这一行
 
-```
+```java
 def triple = '''\
     |firstline
     |secondline'''.stripMargin()
@@ -229,7 +229,7 @@ def triple = '''\
 
 它将显示:
 
-```
+```java
 firstline
 secondline
 ```
@@ -248,13 +248,13 @@ secondline
 
 例如:
 
-```
+```java
 def specialCharacters = '''hello \'John\'. This is backslash - \\ \nSecond line starts here'''
 ```
 
 将导致:
 
-```
+```java
 hello 'John'. This is backslash - \
 Second line starts here
 ```
@@ -279,7 +279,7 @@ Second line starts here
 
 **它的求值是懒惰的**，尽管——它不会被转换成`String`，直到它被传递给一个需要`String`的方法:
 
-```
+```java
 def string = "example"
 def stringWithExpression = "example${2}"
 assertTrue(string instanceof String)
@@ -291,7 +291,7 @@ assertTrue(stringWithExpression.toString() instanceof String)
 
 我们可能想对插值做的第一件事是给它发送一个变量引用:
 
-```
+```java
 def name = "John"
 def helloName = "Hello $name!"
 assertEquals("Hello John!", helloName.toString())
@@ -301,7 +301,7 @@ assertEquals("Hello John!", helloName.toString())
 
 但是，我们也可以给它表达式:
 
-```
+```java
 def result = "result is ${2 * 2}"    
 assertEquals("result is 4", result.toString())
 ```
@@ -312,7 +312,7 @@ assertEquals("result is 4", result.toString())
 
 我们甚至可以在字符串中遍历对象层次结构:
 
-```
+```java
 def person = [name: 'John']
 def myNameIs = "I'm $person.name, and you?"
 assertEquals("I'm John, and you?", myNameIs.toString())
@@ -322,7 +322,7 @@ assertEquals("I'm John, and you?", myNameIs.toString())
 
 **但是如果我们直接调用一个方法，我们就需要使用`${}`** 因为有括号:
 
-```
+```java
 def name = 'John'
 def result = "Uppercase name: ${name.toUpperCase()}".toString()
 assertEquals("Uppercase name: JOHN", result)
@@ -338,7 +338,7 @@ assertEquals("Uppercase name: JOHN", result)
 
 **实际上，即使对于相同的结果字符串，它们也不会有相同的散列码:**
 
-```
+```java
 def string = "2+2 is 4"
 def gstring = "2+2 is ${4}"
 assertTrue(string.hashCode() != gstring.hashCode())
@@ -352,7 +352,7 @@ assertTrue(string.hashCode() != gstring.hashCode())
 
 **让我们结合两者的力量，两全其美——多行字符串插值:**
 
-```
+```java
 def name = "John"
 def multiLine = """
     I'm $name.
@@ -366,7 +366,7 @@ def multiLine = """
 
 现在，让我们说我们正在用正则表达式做一些事情，因此我们在所有地方都避免了反斜杠:
 
-```
+```java
 def pattern = "\\d{1,3}\\s\\w+\\s\\w+\\\\\\w+"
 ```
 
@@ -374,14 +374,14 @@ def pattern = "\\d{1,3}\\s\\w+\\s\\w+\\\\\\w+"
 
 为了帮助解决这个问题， **Groovy 通过斜杠字符串本机支持 regex】**
 
-```
+```java
 def pattern = /\d{3}\s\w+\s\w+\\\w+/
 assertTrue("3 Blind Mice\Men".matches(pattern))
 ```
 
 斜线字符串**可以是插值字符串，也可以是多行字符串**:
 
-```
+```java
 def name = 'John'
 def example = /
     Dear ([A-Z]+),
@@ -391,13 +391,13 @@ def example = /
 
 当然，我们必须避开正斜杠:
 
-```
+```java
 def pattern = /.*foobar.*\/hello.*/ 
 ```
 
 **我们不能用`Slashy String`** 来表示空字符串，因为编译器把`//`理解为注释:
 
-```
+```java
 // if ('' == //) {
 //     println("I can't compile")
 // }
@@ -415,7 +415,7 @@ def pattern = /.*foobar.*\/hello.*/
 
 例如:
 
-```
+```java
 def name = "John"
 
 def dollarSlashy = $/
@@ -432,7 +432,7 @@ def dollarSlashy = $/
 
 将输出:
 
-```
+```java
 Hello John!,
 
 I can show you a $ sign or an escaped dollar sign: $ 
@@ -457,7 +457,7 @@ We have to escape opening and closing delimiter:
 
 让我们来看看它们:
 
-```
+```java
 char a = 'A'
 char b = 'B' as char
 char c = (char) 'C'

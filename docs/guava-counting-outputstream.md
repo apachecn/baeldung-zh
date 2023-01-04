@@ -16,7 +16,7 @@
 
 让我们从将依赖项添加到`pom.xml`开始:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -34,7 +34,7 @@
 
 为了得到计数，我们可以简单地调用`getCount()`来返回当前的字节数:
 
-```
+```java
 /** Returns the number of bytes written. */
 public long getCount() {
     return count;
@@ -49,7 +49,7 @@ public long getCount() {
 
 一旦达到限制，我们希望通过抛出一个异常来中断执行:
 
-```
+```java
 public class GuavaCountingOutputStreamUnitTest {
     static int MAX = 5;
 

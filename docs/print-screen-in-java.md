@@ -14,7 +14,7 @@
 
 Java `**java.awt.Robot**` class 是我们将要使用的主要 API。该调用包含一个名为'`createScreenCapture`'的方法，当一个特定的形状通过时，该方法会截取一个屏幕截图:
 
-```
+```java
 robot.createScreenCapture(rectangle); 
 ```
 
@@ -24,7 +24,7 @@ robot.createScreenCapture(rectangle);
 
 用于图像捕获和保存的 Java 代码如下:
 
-```
+```java
 public void getScreenshot(int timeToWait) throws Exception {
     Rectangle rec = new Rectangle(
       Toolkit.getDefaultToolkit().getScreenSize());

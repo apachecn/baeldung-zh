@@ -10,7 +10,7 @@
 
 首先，让我们使用 Java 的`String`类的`contains`方法，使用一个基本循环来搜索给定搜索字符串中的字符序列:
 
-```
+```java
 public List<String> findUsingLoop(String search, List<String> list) {
     List<String> matches = new ArrayList<String>();
 
@@ -30,7 +30,7 @@ public List<String> findUsingLoop(String search, List<String> list) {
 
 首先，我们将使用`filter()`方法在输入列表中搜索搜索字符串，然后，我们将使用`collect`方法创建并填充包含匹配元素的列表:
 
-```
+```java
 public List<String> findUsingStream(String search, List<String> list) {
     List<String> matchingElements = list.stream()
       .filter(str -> str.trim().contains(search))
@@ -46,7 +46,7 @@ public List<String> findUsingStream(String search, List<String> list) {
 
 要使用它们，我们只需要在 pom.xml 文件中添加[番石榴](https://web.archive.org/web/20221206003224/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.google.guava%22%20a%3A%22guava%22)、[公共集合](https://web.archive.org/web/20221206003224/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22commons-collections4%22%20g%3A%22org.apache.commons%22)，或者两者的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -66,7 +66,7 @@ Commons Collections 为我们提供了一个方法`IterableUtils.filteredIterabl
 
 让我们调用`IterableUtils.filteredIterable()`，定义谓词来只选择那些包含搜索字符串的元素。然后，我们将使用`IteratorUtils.toList()`将`Iterable`转换为`List`:
 
-```
+```java
 public List<String> findUsingCommonsCollection(String search, List<String> list) {
     Iterable<String> result = IterableUtils.filteredIterable(list, new Predicate<String>() {
         public boolean evaluate(String listElement) {
@@ -82,7 +82,7 @@ public List<String> findUsingCommonsCollection(String search, List<String> list)
 
 Google Guava 用`Iterables.filter()` 方法提供了一个类似于 Apache 的`filteredIterable()`的解决方案。让我们用它来过滤列表，只返回与我们的搜索字符串匹配的元素:
 
-```
+```java
 public List<String> findUsingGuava(String search, List<String> list) {         
     Iterable<String> result = Iterables.filter(list, Predicates.containsPattern(search));
 

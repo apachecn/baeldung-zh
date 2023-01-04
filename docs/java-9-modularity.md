@@ -80,7 +80,7 @@ Java 9 在包之上引入了一个新的抽象层次，正式名称是 Java 平�
 
 我们可以通过在命令行中键入以下命令来查看这些模块:
 
-```
+```java
 java --list-modules
 ```
 
@@ -102,7 +102,7 @@ java --list-modules
 
 我们用声明来构造模块，声明的主体要么为空，要么由模块指令组成:
 
-```
+```java
 module myModuleName {
     // all directives are optional
 }
@@ -118,7 +118,7 @@ module myModuleName {
 
 我们的第一个指令是`requires`。这个模块指令允许我们声明模块依赖关系:
 
-```
+```java
 module my.module {
     requires module.name;
 }
@@ -136,7 +136,7 @@ module my.module {
 
 在这些情况下，我们希望使用一个可选的依赖项。通过使用`requires static`指令，我们创建了一个仅编译时依赖关系:
 
-```
+```java
 module my.module {
     requires static module.name;
 }
@@ -150,7 +150,7 @@ module my.module {
 
 幸运的是，我们可以使用`requires transitive`指令来强制任何下游消费者也读取我们所需的依赖项:
 
-```
+```java
 module my.module {
     requires transitive module.name;
 }
@@ -166,7 +166,7 @@ module my.module {
 
 **我们使用`exports`指令来公开命名包的所有公共成员:**
 
-```
+```java
 module my.module {
     exports com.my.package.name;
 }
@@ -184,7 +184,7 @@ module my.module {
 
 类似于`exports`指令，我们将一个包声明为 exported。但是，我们也列出了我们允许哪些模块作为`requires`导入这个包。让我们看看这个是什么样子的:
 
-```
+```java
 module my.module {
     export com.my.package.name to com.specific.package;
 }
@@ -198,7 +198,7 @@ module my.module {
 
 注意**我们`use`的类名是服务的接口或者抽象类，而不是实现类**:
 
-```
+```java
 module my.module {
     uses class.name;
 }
@@ -220,7 +220,7 @@ module my.module {
 
 这是它看起来的样子:
 
-```
+```java
 module my.module {
     provides MyInterface with MyInterfaceImpl;
 }
@@ -236,7 +236,7 @@ module my.module {
 
 如果我们想继续像旧版本的 Java 那样允许完全反射，我们可以简单地将整个模块:
 
-```
+```java
 open module my.module {
 }
 ```
@@ -247,7 +247,7 @@ open module my.module {
 
 但是请记住，这将向整个世界打开这个包，所以请确保这是您想要的:
 
-```
+```java
 module my.module {
   opens com.my.package;
 }
@@ -257,7 +257,7 @@ module my.module {
 
 好吧，有时候反思是很好的，但是我们仍然希望从`encapsulation`中获得尽可能多的安全。**我们可以有选择地向预先批准的模块列表打开我们的包，在这种情况下，使用`opens…to`指令**:
 
-```
+```java
 module my.module {
     opens com.my.package to moduleOne, moduleTwo, etc.;
 }
@@ -306,7 +306,7 @@ module my.module {
 
 首先创建项目文件夹:
 
-```
+```java
 mkdir module-project
 cd module-project
 ```
@@ -317,13 +317,13 @@ cd module-project
 
 接下来，我们创建一个模块目录:
 
-```
+```java
 mkdir simple-modules
 ```
 
 下面是我们的项目结构:
 
-```
+```java
 module-project
 |- // src if we use the default package
 |- // build files also go at this level
@@ -350,13 +350,13 @@ module-project
 
 在我们的新模块下，我们可以创建我们想要的包。在我们的例子中，我们将创建一个包结构:
 
-```
+```java
 com.baeldung.modules.hello
 ```
 
 接下来，在这个包中创建一个名为`HelloModules.java`的新类。我们将保持代码简单:
 
-```
+```java
 package com.baeldung.modules.hello;
 
 public class HelloModules {
@@ -368,7 +368,7 @@ public class HelloModules {
 
 最后，在`hello.modules`根目录中，添加我们的模块描述符；`module-info.java`:
 
-```
+```java
 module hello.modules {
     exports com.baeldung.modules.hello;
 }
@@ -384,7 +384,7 @@ module hello.modules {
 
 在我们的`simple-modules`目录下，创建另一个名为`main.app`的模块目录。这次我们将从模块描述符开始:
 
-```
+```java
 module main.app {
     requires hello.modules;
 }
@@ -398,7 +398,7 @@ module main.app {
 
 现在，创建一个名为`MainApp.java.`的新类文件
 
-```
+```java
 package com.baeldung.modules.main;
 
 import com.baeldung.modules.hello.HelloModules;
@@ -418,7 +418,7 @@ public class MainApp {
 
 创建一个名为`compile-simple-modules.sh`的文件:
 
-```
+```java
 #!/usr/bin/env bash
 javac -d outDir --module-source-path simple-modules $(find simple-modules -name "*.java")
 ```
@@ -437,14 +437,14 @@ javac -d outDir --module-source-path simple-modules $(find simple-modules -name 
 
 在项目的根目录下创建另一个文件:`run-simple-module-app.sh`。
 
-```
+```java
 #!/usr/bin/env bash
 java --module-path outDir -m main.app/com.baeldung.modules.main.MainApp
 ```
 
 要运行一个模块，我们必须至少提供`module-path`和主类。如果一切正常，您应该会看到:
 
-```
+```java
 >$ ./run-simple-module-app.sh 
 Hello, Modules!
 ```
@@ -457,7 +457,7 @@ Hello, Modules!
 
 首先在`hello.modules`模块中定义一个名为`HelloInterface` `.java`的新文件:
 
-```
+```java
 public interface HelloInterface {
     void sayHello();
 }
@@ -465,7 +465,7 @@ public interface HelloInterface {
 
 为了简单起见，我们将使用现有的`HelloModules.java`类来实现这个接口:
 
-```
+```java
 public class HelloModules implements HelloInterface {
     public static void doSomething() {
         System.out.println("Hello, Modules!");
@@ -483,7 +483,7 @@ public class HelloModules implements HelloInterface {
 
 将以下内容添加到我们的`module-info.java`:
 
-```
+```java
 provides com.baeldung.modules.hello.HelloInterface with com.baeldung.modules.hello.HelloModules;
 ```
 
@@ -491,13 +491,13 @@ provides com.baeldung.modules.hello.HelloInterface with com.baeldung.modules.hel
 
 接下来，我们需要消耗这个`service`。在我们的`main.app`模块中，让我们将以下内容添加到我们的`module-info.java`中:
 
-```
+```java
 uses com.baeldung.modules.hello.HelloInterface;
 ```
 
 最后，在我们的 main 方法中，我们可以通过一个 [ServiceLoader](https://web.archive.org/web/20220926202208/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html) 来使用这个服务:
 
-```
+```java
 Iterable<HelloInterface> services = ServiceLoader.load(HelloInterface.class);
 HelloInterface service = services.iterator().next();
 service.sayHello();
@@ -505,7 +505,7 @@ service.sayHello();
 
 编译并运行:
 
-```
+```java
 #> ./run-simple-module-app.sh 
 Hello, Modules!
 Hello!
@@ -531,13 +531,13 @@ Hello!
 
 例如，要提供对所有`java.xml.bind`模块的访问，语法应该是:
 
-```
+```java
 --add-modules java.xml.bind
 ```
 
 为了在 Maven 中使用它，我们可以将其嵌入到`maven-compiler-plugin`:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-compiler-plugin</artifactId>

@@ -20,7 +20,7 @@
 
 我们来补充一下`camel-spring-boot-dependencies`:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -36,7 +36,7 @@
 
 现在，我们将添加`camel-spring-boot-starter`:
 
-```
+```java
 <dependency>
     <groupId>org.apache.camel.springboot</groupId>
     <artifactId>camel-spring-boot-starter</artifactId>
@@ -45,7 +45,7 @@
 
 要查看流经某条路线的消息，我们还需要包含`ActiveMQ`:
 
-```
+```java
 <dependency>
     <groupId>org.apache.camel.springboot</groupId>
     <artifactId>camel-activemq-starter</artifactId>
@@ -56,7 +56,7 @@
 
 让我们创建一个消息对象:
 
-```
+```java
 public class MyPayload implements Serializable {
     private String value;
     ...
@@ -65,7 +65,7 @@ public class MyPayload implements Serializable {
 
 我们将向`direct:source`发送此消息以启动路由:
 
-```
+```java
 try (CamelContext context = new DefaultCamelContext()) {
     ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false");
     connectionFactory.setTrustAllPackages(true);
@@ -90,7 +90,7 @@ try (CamelContext context = new DefaultCamelContext()) {
 
 我们将使用**`wireTap`**的方法来设置点击目的地的端点 URI 。Camel 不等待来自`wireTap`的响应，因为它**将** **消息交换模式设置为`InOnly`** 。丝锥处理器**在** **独立线程**上处理:
 
-```
+```java
 wireTap("direct:tap").delay(1000)
 ```
 
@@ -100,7 +100,7 @@ Camel 的 Wire Tap 节点在分接交换时支持两种方式:
 
 让我们添加一个传统的接线路径:
 
-```
+```java
 RoutesBuilder traditionalWireTapRoute() {
     return new RouteBuilder() {
         public void configure() {
@@ -130,7 +130,7 @@ RoutesBuilder traditionalWireTapRoute() {
 
 让我们在有效载荷 : 中实现深度克隆
 
-```
+```java
 public class MyPayload implements Serializable {
 
     private String value;
@@ -144,7 +144,7 @@ public class MyPayload implements Serializable {
 
 现在，让我们实现 `Processor` 类，使用原始交换的副本作为输入:
 
-```
+```java
 public class MyPayloadClonePrepare implements Processor {
 
     public void process(Exchange exchange) throws Exception {
@@ -157,7 +157,7 @@ public class MyPayloadClonePrepare implements Processor {
 
 我们就在`wireTap` : 之后用 `onPrepare` 来称呼它
 
-```
+```java
 RoutesBuilder newExchangeRoute() throws Exception {
     return new RouteBuilder() {
         public void configure() throws Exception {

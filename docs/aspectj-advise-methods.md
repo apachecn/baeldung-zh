@@ -14,7 +14,7 @@
 
 让我们创建注释:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Trace {
@@ -27,7 +27,7 @@ public @interface Trace {
 
 我们的方面看起来类似于这样:
 
-```
+```java
 public aspect TracingAspect {
     private static final Log LOG = LogFactory.getLog(TracingAspect.class);
 
@@ -55,7 +55,7 @@ public aspect TracingAspect {
 
 **我们将`proceed()`调用包装在`try` / `finally`块中，以确保退出消息被写入。**如果我们想跟踪抛出的异常，我们可以添加`after()`建议，在抛出异常时写一条日志消息:
 
-```
+```java
 after() throwing (Exception e) : traceAnnotatedClasses() {
     LOG.trace("Exception thrown from " + thisJoinPoint.getSignature().toShortString(), e);
 }
@@ -65,7 +65,7 @@ after() throwing (Exception e) : traceAnnotatedClasses() {
 
 现在我们需要启用我们的跟踪。让我们创建一个简单的类，并用我们的自定义注释激活跟踪日志记录:
 
-```
+```java
 @Trace
 @Component
 public class MyTracedService {
@@ -84,7 +84,7 @@ public class MyTracedService {
 
 **运行调用这些方法的代码后，我们的日志输出应该包括类似于**的内容
 
-```
+```java
 22:37:58.867 [main] TRACE c.b.a.c.TracingAspect - Entering MyTracedService.performSomeAdditionalLogic()
 22:37:58.868 [main] INFO  c.b.a.c.MyTracedService - Inside performSomeAdditionalLogic...
 22:37:58.868 [main] TRACE c.b.a.c.TracingAspect - Exiting MyTracedService.performSomeAdditionalLogic()

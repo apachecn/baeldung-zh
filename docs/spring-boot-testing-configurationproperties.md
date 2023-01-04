@@ -12,7 +12,7 @@
 
 在我们的 Maven 项目中，我们将使用 [`spring-boot-starter`](https://web.archive.org/web/20220827110142/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter%22) 和 [`spring-boot-starter-test`](https://web.archive.org/web/20220827110142/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-test%22) 依赖项来启用核心 spring API 和 spring 的测试 API。此外，我们将使用 [`spring-boot-starter-validation`](https://web.archive.org/web/20220827110142/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-validation%22) 作为 bean 验证依赖项:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -39,14 +39,14 @@
 
 首先，让我们假设在一个名为`src/test/resources/server-config-test.properties`的属性文件中有一些服务器配置:
 
-```
+```java
 server.address.ip=192.168.0.1
 server.resources_path.imgs=/root/imgs
 ```
 
 我们将定义一个对应于前面的属性文件的简单配置类:
 
-```
+```java
 @Configuration
 @ConfigurationProperties(prefix = "server")
 public class ServerConfig {
@@ -60,7 +60,7 @@ public class ServerConfig {
 
 还有相应的`Address`类型:
 
-```
+```java
 public class Address {
 
     private String ip;
@@ -71,7 +71,7 @@ public class Address {
 
 最后，我们将把`ServerConfig` POJO 注入到我们的测试类中，并验证它的所有字段都设置正确:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(value = ServerConfig.class)
 @TestPropertySource("classpath:server-config-test.properties")
@@ -103,7 +103,7 @@ public class BindingPropertiesToUserDefinedPOJOUnitTest {
 
 例如，下面的`getDefaultConfigs()`方法创建了一个`ServerConfig`配置 bean:
 
-```
+```java
 @Configuration
 public class ServerConfigFactory {
 
@@ -119,13 +119,13 @@ public class ServerConfigFactory {
 
 接下来，我们将定义一个示例外部属性:
 
-```
+```java
 server.default.address.ip=192.168.0.2
 ```
 
 最后，为了告诉 Spring 在加载`ApplicationContext`时使用`ServerConfigFactory`类(从而创建我们的配置 bean)，我们将向测试类添加`@ContextConfiguration`注释:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(value = ServerConfig.class)
 @ContextConfiguration(classes = ServerConfigFactory.class)
@@ -149,7 +149,7 @@ public class BindingPropertiesToBeanMethodsUnitTest {
 
 为了在 Spring Boot、**启用 [bean 验证](/web/20220827110142/https://www.baeldung.com/javax-validation)，我们必须用`@Validated`** 注释顶级类。然后我们添加所需的`javax.validation`约束:
 
-```
+```java
 @Configuration
 @ConfigurationProperties(prefix = "validate")
 @Validated
@@ -168,7 +168,7 @@ public class MailServer {
 
 类似地，`MailConfig`类也有一些约束:
 
-```
+```java
 public class MailConfig {
 
     @NotBlank
@@ -181,7 +181,7 @@ public class MailConfig {
 
 通过提供有效的数据集:
 
-```
+```java
 validate.propertiesMap.first=prop1
 validate.propertiesMap.second=prop2
 [[email protected]](/web/20220827110142/https://www.baeldung.com/cdn-cgi/l/email-protection)
@@ -189,7 +189,7 @@ validate.propertiesMap.second=prop2
 
 应用程序将正常启动，我们的单元测试将通过:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(value = MailServer.class)
 @TestPropertySource("classpath:property-validation-test.properties")
@@ -217,14 +217,14 @@ public class PropertyValidationUnitTest {
 
 例如，使用以下任何无效配置:
 
-```
+```java
 validate.propertiesMap.second=
 validate.mail_config.address=user1.test
 ```
 
 将导致我们的应用程序失败，并显示以下错误消息:
 
-```
+```java
 Property: validate.propertiesMap[second]
 Value:
 Reason: must not be blank
@@ -246,7 +246,7 @@ Reason: must be a well-formed email address
 
 让我们考虑以下数据大小和持续时间属性:
 
-```
+```java
 # data sizes
 convert.upload_speed=500MB
 convert.download_speed=10
@@ -258,7 +258,7 @@ convert.backup_hour=8
 
 **Spring Boot 会自动将这些属性绑定到在`PropertyConversion`配置类中定义的匹配的`DataSize`和`Duration`字段**:
 
-```
+```java
 @Configuration
 @ConfigurationProperties(prefix = "convert")
 public class PropertyConversion {
@@ -279,7 +279,7 @@ public class PropertyConversion {
 
 我们将检查转换结果:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @EnableConfigurationProperties(value = PropertyConversion.class)
 @ContextConfiguration(classes = CustomCredentialsConverter.class)
@@ -307,13 +307,13 @@ public class SpringPropertiesConversionUnitTest {
 
 现在让我们假设我们想要转换`convert.credentials`属性:
 
-```
+```java
 convert.credentials=user,123
 ```
 
 进入以下`Credential`类:
 
-```
+```java
 public class Credentials {
 
     private String username;
@@ -325,7 +325,7 @@ public class Credentials {
 
 为此，我们可以实现一个自定义转换器:
 
-```
+```java
 @Component
 @ConfigurationPropertiesBinding
 public class CustomCredentialsConverter implements Converter<String, Credentials> {
@@ -340,7 +340,7 @@ public class CustomCredentialsConverter implements Converter<String, Credentials
 
 最后，我们将向`PropertyConversion`类添加一个`Credentials`字段:
 
-```
+```java
 public class PropertyConversion {
     private Credentials credentials;
     // ...
@@ -349,7 +349,7 @@ public class PropertyConversion {
 
 在我们的`SpringPropertiesConversionUnitTest`测试类中，我们还需要添加`@ContextConfiguration`来注册 Spring 上下文中的自定义转换器:
 
-```
+```java
 // other annotations
 @ContextConfiguration(classes=CustomCredentialsConverter.class)
 public class SpringPropertiesConversionUnitTest {
@@ -372,7 +372,7 @@ public class SpringPropertiesConversionUnitTest {
 
 位于`src/test/resources/`下的以下`application.yml`定义了`ServerConfig`级的“测试”配置文件:
 
-```
+```java
 spring:
   config:
     activate:
@@ -388,7 +388,7 @@ server:
 
 因此，以下测试将通过:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(initializers = ConfigDataApplicationContextInitializer.class)
 @EnableConfigurationProperties(value = ServerConfig.class)
@@ -424,13 +424,13 @@ public class BindingYMLPropertiesUnitTest {
 
 假设我们想用另一个值覆盖先前定义的`validate.mail_config.address`属性。我们所要做的就是用`@TestPropertySource,`注释我们的测试类，然后通过`properties`列表给同一个属性赋一个新值:
 
-```
+```java
 @TestPropertySource(properties = {"[[email protected]](/web/20220827110142/https://www.baeldung.com/cdn-cgi/l/email-protection)"})
 ```
 
 因此，Spring 将使用新定义的值:
 
-```
+```java
 assertEquals("[[email protected]](/web/20220827110142/https://www.baeldung.com/cdn-cgi/l/email-protection)", mailServer.getMailConfig().getAddress());
 ```
 

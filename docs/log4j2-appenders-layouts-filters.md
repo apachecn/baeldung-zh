@@ -18,7 +18,7 @@
 
 两个 maven 依赖项是所有示例共有的:
 
-```
+```java
 <dependency>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-core</artifactId>
@@ -39,7 +39,7 @@
 
 `ConsoleAppender`是`Log4J 2`核心包的默认配置。它以一种简单的模式向系统控制台记录消息:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Appenders>
@@ -65,7 +65,7 @@
 
 相应的单元测试也同样简单。我们将获得一个`Logger` 引用并打印两条消息:
 
-```
+```java
 @Test
 public void givenLoggerWithDefaultConfig_whenLogToConsole_thanOK()
   throws Exception {
@@ -83,7 +83,7 @@ public void givenLoggerWithDefaultConfig_whenLogToConsole_thanOK()
 
 让我们在一个单独的 XML 文件中定义一个带有定制颜色模式的新控制台 appender，并将其包含在我们的主配置中:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <Console name="ConsoleAppender" target="SYSTEM_OUT">
     <PatternLayout pattern="%style{%date{DEFAULT}}{yellow}
@@ -104,7 +104,7 @@ public void givenLoggerWithDefaultConfig_whenLogToConsole_thanOK()
 
 现在我们将把定义的控制台 appender 包含到我们的主配置中:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN" xmlns:xi="http://www.w3.org/2001/XInclude">
     <Appenders>
@@ -121,7 +121,7 @@ public void givenLoggerWithDefaultConfig_whenLogToConsole_thanOK()
 
 单元测试:
 
-```
+```java
 @Test
 public void givenLoggerWithConsoleConfig_whenLogToConsoleInColors_thanOK() 
   throws Exception {
@@ -139,7 +139,7 @@ public void givenLoggerWithConsoleConfig_whenLogToConsoleInColors_thanOK()
 
 对于我们的例子，我们正在配置一个异步的`JSON`日志文件。此外，我们将包括一个突发过滤器，它将日志输出限制在指定的速率:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Appenders>
@@ -173,7 +173,7 @@ public void givenLoggerWithConsoleConfig_whenLogToConsoleInColors_thanOK()
 
 我们来看看相应的单元测试。我们在一个循环中填充附加的缓冲区，让它写入磁盘并检查日志文件的行数:
 
-```
+```java
 @Test
 public void givenLoggerWithAsyncConfig_whenLogToJsonFile_thanOK() 
   throws Exception {
@@ -196,7 +196,7 @@ public void givenLoggerWithAsyncConfig_whenLogToJsonFile_thanOK()
 
 这次我们使用的是`XML` 布局:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Appenders>
@@ -229,7 +229,7 @@ public void givenLoggerWithAsyncConfig_whenLogToJsonFile_thanOK()
 
 我们的单元测试类将类似于上一节中的那个:
 
-```
+```java
 @Test
 public void givenLoggerWithRollingFileConfig_whenLogToXMLFile_thanOK()
   throws Exception {
@@ -246,7 +246,7 @@ public void givenLoggerWithRollingFileConfig_whenLogToXMLFile_thanOK()
 
 假设我们需要通过网络将记录的事件发送到远程机器。使用 Log4J2 最简单的方法是使用它的`Syslog Appender:`
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Appenders>
@@ -289,7 +289,7 @@ public void givenLoggerWithRollingFileConfig_whenLogToXMLFile_thanOK()
 
 `FailoverAppender`接受一个主 appender 和一些次 appender。如果主节点失败，它会尝试用辅助节点按顺序处理日志事件，直到一个节点成功或者没有任何辅助节点可供尝试:
 
-```
+```java
 <Failover name="FailoverAppender" primary="Syslog">
     <Failovers>
         <AppenderRef ref="ConsoleAppender" />
@@ -299,7 +299,7 @@ public void givenLoggerWithRollingFileConfig_whenLogToXMLFile_thanOK()
 
 让我们来测试一下:
 
-```
+```java
 @Test
 public void givenLoggerWithFailoverConfig_whenLog_thanOK()
   throws Exception {
@@ -322,7 +322,7 @@ JDBC 附加器使用标准 JDBC 将日志事件发送到 RDBMS。可以使用任
 
 基本配置由`DataSource` 或`ConnectionFactory`、列配置和`tableName:`组成
 
-```
+```java
 <JDBC name="JDBCAppender" tableName="logs">
     <ConnectionFactory 
       class="com.baeldung.logging.log4j2.tests.jdbc.ConnectionFactory" 
@@ -337,7 +337,7 @@ JDBC 附加器使用标准 JDBC 将日志事件发送到 RDBMS。可以使用任
 
 现在让我们试试:
 
-```
+```java
 @Test
 public void givenLoggerWithJdbcConfig_whenLogToDataSource_thanOK()
   throws Exception {

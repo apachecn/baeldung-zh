@@ -24,7 +24,7 @@
 
 让我们看看如何使用`[java.net.URI](https://web.archive.org/web/20220811171329/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/net/URI.html)`类从 URL 中提取域名。`URI`类提供了`getHost()`方法，该方法返回 URL 的主机部分:
 
-```
+```java
 URI uri = new URI("https://www.baeldung.com/domain");
 String host = uri.getHost();
 assertEquals("www.baeldung.com", host);
@@ -34,7 +34,7 @@ assertEquals("www.baeldung.com", host);
 
 此外，要获得域名，我们需要从给定的主机中删除子域:
 
-```
+```java
 String domainName = host.startsWith("www.") ? host.substring(4) : host;
 assertEquals("baeldung.com", domainName);
 ```
@@ -49,7 +49,7 @@ assertEquals("baeldung.com", domainName);
 
 首先，我们需要从给定的 URL 值中提取主机。我们可以使用`URI`类:
 
-```
+```java
 String urlString = "https://www.baeldung.com/java-tutorial";
 URI uri = new URI(urlString);
 String host = uri.getHost();
@@ -57,7 +57,7 @@ String host = uri.getHost();
 
 接下来，让我们使用`InternetDomainName`类及其`topPrivateDomain()`方法获得一个域名:
 
-```
+```java
 InternetDomainName internetDomainName = InternetDomainName.from(host).topPrivateDomain(); 
 String domainName = internetDomainName.toString(); 
 assertEquals("baeldung.com", domainName);
@@ -67,14 +67,14 @@ assertEquals("baeldung.com", domainName);
 
 最后，我们也可以从给定的 URL 中删除顶级域名:
 
-```
+```java
 String publicSuffix = internetDomainName.publicSuffix().toString();
 String name = domainName.substring(0, domainName.lastIndexOf("." + publicSuffix));
 ```
 
 此外，让我们创建一个测试来检查功能:
 
-```
+```java
 assertEquals("baeldung", domainNameClient.getName("jira.baeldung.com"));
 assertEquals("google", domainNameClient.getName("www.google.co.uk"));
 ```
@@ -87,7 +87,7 @@ assertEquals("google", domainNameClient.getName("www.google.co.uk"));
 
 另一方面，如果我们知道子域值，我们可以使用正则表达式将其从 URL 中删除:
 
-```
+```java
 String url = "https://www.baeldung.com/domain";
 String domainName =  url.replaceAll("http(s)?://|www\\.|/.*", "");
 assertEquals("baeldung.com", domainName);

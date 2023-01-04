@@ -18,7 +18,7 @@ Spring 提供了多种调度选项。首先，我们将讨论`[@Scheduled](/web/
 
 让我们从在 Maven 中设置必要的依赖项开始。为了建立这个项目，我们的`pom.xml`应该有:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-websocket</artifactId>
@@ -44,7 +44,7 @@ Spring 提供了多种调度选项。首先，我们将讨论`[@Scheduled](/web/
 
 让我们看看代码:
 
-```
+```java
 Faker faker = new Faker();
 ChuckNorris chuckNorris = faker.chuckNorris();
 String messageFromChuck = chuckNorris.fact();
@@ -56,7 +56,7 @@ Faker 将为各种数据生成器提供工厂方法。我们将使用 [`ChuckNor
 
 聊天应用程序使用一个简单的 POJO 作为消息包装器:
 
-```
+```java
 public class OutputMessage {
 
     private String from;
@@ -69,7 +69,7 @@ public class OutputMessage {
 
 综上所述，以下是我们如何创建聊天信息的示例:
 
-```
+```java
 OutputMessage message = new OutputMessage(
   "Chatbot 1", "Hello there!", new SimpleDateFormat("HH:mm").format(new Date())));
 ```
@@ -80,7 +80,7 @@ OutputMessage message = new OutputMessage(
 
 让我们看看客户是如何订阅主题的:
 
-```
+```java
 <html>
 <head>
     <script src="./js/sockjs-0.3.4.js"></script>
@@ -110,7 +110,7 @@ OutputMessage message = new OutputMessage(
 
 在之前的文章中，我们已经看到了如何在 Spring 中配置 [WebSockets。让我们稍微修改一下配置:](/web/20220630134626/https://www.baeldung.com/websockets-spring)
 
-```
+```java
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
@@ -134,7 +134,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 接下来，我们使用它发布消息到主题`/topic/pushmessages`。我们假设我们的类在名为`simpMessagingTemplate`的变量中注入了 bean:
 
-```
+```java
 simpMessagingTemplate.convertAndSend("/topic/pushmessages", 
   new OutputMessage("Chuck Norris", faker.chuckNorris().fact(), time));
 ```
@@ -149,7 +149,7 @@ simpMessagingTemplate.convertAndSend("/topic/pushmessages",
 
 我们的聊天机器人将使用 JavaFaker 的 Chuck Norris 发电机。我们将把它配置成一个 bean，这样我们就可以在需要的地方注入它。
 
-```
+```java
 @Configuration
 class AppConfig {
 
@@ -168,7 +168,7 @@ class AppConfig {
 
 让我们编写我们的第一个聊天机器人:
 
-```
+```java
 @Service
 public class ScheduledPushMessages {
 
@@ -190,7 +190,7 @@ public class ScheduledPushMessages {
 
 现在，让我们用上一个例子中的 Flux。目标是每五秒钟从`Chuck Norris`发送一次报价。首先，我们需要实现`InitializingBean`接口，以便在[应用程序启动](/web/20220630134626/https://www.baeldung.com/running-setup-logic-on-startup-in-spring)时订阅`Flux`:
 
-```
+```java
 @Service
 public class ReactiveScheduledPushMessages implements InitializingBean {
 

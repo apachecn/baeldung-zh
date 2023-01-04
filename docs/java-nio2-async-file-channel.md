@@ -12,7 +12,7 @@
 
 为了在我们的项目中使用 NIO2 异步文件通道，我们必须导入 `java.nio.channels`包，因为它捆绑了所有必需的类:
 
-```
+```java
 import java.nio.channels.*;
 ```
 
@@ -20,7 +20,7 @@ import java.nio.channels.*;
 
 在这一节中，我们将探索如何使用使我们能够对文件执行异步操作的主类，即`AsynchronousFileChannel`类。为了创建它的实例，我们调用静态的`open`方法:
 
-```
+```java
 Path filePath = Paths.get("/path/to/file");
 
 AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(
@@ -33,7 +33,7 @@ open API 的第一个参数是一个代表文件位置的`Path`对象。要阅�
 
 我们创建的异步文件通道可用于对文件执行所有已知的操作。为了只执行操作的子集，我们将只为这些操作指定选项。例如，只读:
 
-```
+```java
 Path filePath = Paths.get("/path/to/file");
 
 AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(
@@ -50,7 +50,7 @@ AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(
 
 首先，我们将看到如何使用`Future`类异步读取文件:
 
-```
+```java
 @Test
 public void givenFilePath_whenReadsContentWithFuture_thenCorrect() {
     Path path = Paths.get(
@@ -89,7 +89,7 @@ public void givenFilePath_whenReadsContentWithFuture_thenCorrect() {
 
 接下来，我们将看到如何使用`CompletionHandler`实例读取文件内容:
 
-```
+```java
 @Test
 public void 
   givenPath_whenReadsContentWithCompletionHandler_thenCorrect() {
@@ -131,7 +131,7 @@ Java NIO2 还允许我们对文件执行写操作。正如我们对其他操作�
 
 创建一个用于写入文件的`AsynchronousFileChannel`可以像这样完成:
 
-```
+```java
 AsynchronousFileChannel fileChannel
   = AsynchronousFileChannel.open(path, StandardOpenOption.WRITE);
 ```
@@ -142,7 +142,7 @@ AsynchronousFileChannel fileChannel
 
 出于测试目的，我们将使用以下代码行来创建文件通道:
 
-```
+```java
 AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(
   path, WRITE, CREATE, DELETE_ON_CLOSE);
 ```
@@ -151,7 +151,7 @@ AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(
 
 为了运行断言，我们需要在写入之后尽可能地读取文件内容。让我们将读取逻辑隐藏在一个单独的方法中，以避免冗余:
 
-```
+```java
 public static String readContent(Path file) {
     AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(
       file, StandardOpenOption.READ);
@@ -173,7 +173,7 @@ public static String readContent(Path file) {
 
 使用`Future`类异步写入文件:
 
-```
+```java
 @Test
 public void 
   givenPathAndContent_whenWritesToFileWithFuture_thenCorrect() {
@@ -207,7 +207,7 @@ public void
 
 我们还可以使用完成处理程序，这样我们就不必在 while 循环中等待操作完成:
 
-```
+```java
 @Test
 public void 
   givenPathAndContent_whenWritesToFileWithHandler_thenCorrect() {

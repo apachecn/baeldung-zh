@@ -18,7 +18,7 @@
 
 我们将从查看**方法签名**开始:
 
-```
+```java
 public static boolean deepEquals(Object[] a1, Object[] a2)
 ```
 
@@ -54,7 +54,7 @@ public static boolean deepEquals(Object[] a1, Object[] a2)
 
 首先，让我们从一个简单的例子开始，比较两个类型为`Object`的一维数组:
 
-```
+```java
  Object[] anArray = new Object[] { "string1", "string2", "string3" };
     Object[] anotherArray = new Object[] { "string1", "string2", "string3" };
 
@@ -64,7 +64,7 @@ public static boolean deepEquals(Object[] a1, Object[] a2)
 
 我们看到`equals`和`deepEquals`方法都返回了`true`。让我们看看如果数组中的一个元素是`null`会发生什么:
 
-```
+```java
  Object[] anArray = new Object[] { "string1", null, "string3" };
     Object[] anotherArray = new Object[] { "string1", null, "string3" };
 
@@ -76,7 +76,7 @@ public static boolean deepEquals(Object[] a1, Object[] a2)
 
 但是，让我们再尝试一件事，让我们检查嵌套数组的行为:
 
-```
+```java
  Object[] anArray = new Object[] { "string1", null, new String[] {"nestedString1", "nestedString2" }};
     Object[] anotherArray = new Object[] { "string1", null, new String[] {"nestedString1", "nestedString2" } };
 
@@ -90,7 +90,7 @@ public static boolean deepEquals(Object[] a1, Object[] a2)
 
 接下来，让我们使用多维数组来检查行为。在下一个例子中，两个方法有不同的输出，强调了这样一个事实，当我们比较多维数组时，我们应该使用`deepEquals`而不是`equals`方法:
 
-```
+```java
  int[][] anArray = { { 1, 2, 3 }, { 4, 5, 6, 9 }, { 7 } };
     int[][] anotherArray = { { 1, 2, 3 }, { 4, 5, 6, 9 }, { 7 } };
 
@@ -104,7 +104,7 @@ public static boolean deepEquals(Object[] a1, Object[] a2)
 
 让我们从创建一个简单的`Person`类开始:
 
-```
+```java
  class Person {
         private int id;
         private String name;
@@ -134,7 +134,7 @@ public static boolean deepEquals(Object[] a1, Object[] a2)
 
 接下来，我们可以比较`Person`类的两个多维数组:
 
-```
+```java
  Person personArray1[][] = { { new Person(1, "John", 22), new Person(2, "Mike", 23) },
       { new Person(3, "Steve", 27), new Person(4, "Gary", 28) } };
     Person personArray2[][] = { { new Person(1, "John", 22), new Person(2, "Mike", 23) }, 
@@ -148,7 +148,7 @@ public static boolean deepEquals(Object[] a1, Object[] a2)
 
 最后，值得一提的是， **`Objects.deepEquals`方法在用两个`Object`数组调用时，在**内部执行`Arrays.deepEquals`方法:
 
-```
+```java
  assertTrue(Objects.deepEquals(personArray1, personArray2));
 ```
 

@@ -30,7 +30,7 @@ A detailed guide to Spring's @RequestParam annotation[Read more](/web/2022062522
 
 让我们看一个简单的例子来理解这是如何工作的:
 
-```
+```java
 @ModelAttribute
 public void addAttributes(Model model) {
     model.addAttribute("msg", "Welcome to the Netherlands!");
@@ -51,7 +51,7 @@ public void addAttributes(Model model) {
 
 在下面的代码片段中，我们将用提交给`addEmployee`端点的表单中的数据填充`employee`模型属性。Spring MVC 在调用 submit 方法之前在幕后完成这项工作:
 
-```
+```java
 @RequestMapping(value = "/addEmployee", method = RequestMethod.POST)
 public String submit(@ModelAttribute("employee") Employee employee) {
     // Code that uses the employee object
@@ -74,7 +74,7 @@ public String submit(@ModelAttribute("employee") Employee employee) {
 
 让我们首先创建一个带有 id 和 name 字段的简单表单:
 
-```
+```java
 <form:form method="POST" action="/spring-mvc-basics/addEmployee" 
   modelAttribute="employee">
     <form:label path="name">Name</form:label>
@@ -91,7 +91,7 @@ public String submit(@ModelAttribute("employee") Employee employee) {
 
 这里是控制器类，我们将在其中实现上述视图的逻辑:
 
-```
+```java
 @Controller
 @ControllerAdvice
 public class EmployeeController {
@@ -130,7 +130,7 @@ public class EmployeeController {
 
 如前所述，`Model`对象非常简单，包含了所有“前端”属性所需的内容。现在让我们来看一个例子:
 
-```
+```java
 @XmlRootElement
 public class Employee {
 
@@ -156,7 +156,7 @@ public class Employee {
 
 现在让我们打印从表单中收到的内容:
 
-```
+```java
 <h3>${msg}</h3>
 Name : ${name}
 ID : ${id} 

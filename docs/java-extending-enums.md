@@ -20,7 +20,7 @@ Java 5 中引入的 [enum](/web/20221208143917/https://www.baeldung.com/a-guide-
 
 首先，我们来看一个例子，这样我们可以很快理解问题:
 
-```
+```java
 public enum BasicStringOperation {
     TRIM("Removing leading and trailing spaces."),
     TO_UPPER("Changing all characters into upper case."),
@@ -36,7 +36,7 @@ public enum BasicStringOperation {
 
 现在，假设我们想给 enum 添加一些扩展，比如`MD5_ENCODE`和`BASE64_ENCODE`。我们可能会想到这个简单的解决方案:
 
-```
+```java
 public enum ExtendedStringOperation extends BasicStringOperation {
     MD5_ENCODE("Encoding the given string using the MD5 algorithm."),
     BASE64_ENCODE("Encoding the given string using the BASE64 algorithm.");
@@ -49,7 +49,7 @@ public enum ExtendedStringOperation extends BasicStringOperation {
 
 然而，当我们试图编译这个类时，我们会看到编译器错误:
 
-```
+```java
 Cannot inherit from enum BasicStringOperation
 ```
 
@@ -64,7 +64,7 @@ Cannot inherit from enum BasicStringOperation
 
 例如，如果我们使用 [`javap`](/web/20221208143917/https://www.baeldung.com/java-class-view-bytecode#javap) 反汇编我们编译的`BasicStringOperation`枚举，我们会看到它被表示为`java.lang.Enum<BasicStringOperation>`的子类:
 
-```
+```java
 $ javap BasicStringOperation  
 public final class com.baeldung.enums.extendenum.BasicStringOperation 
     extends java.lang.Enum<com.baeldung.enums.extendenum.BasicStringOperation> {
@@ -87,7 +87,7 @@ public final class com.baeldung.enums.extendenum.BasicStringOperation
 
 首先，我们将创建一个接口`,` `StringOperation`:
 
-```
+```java
 public interface StringOperation {
     String getDescription();
 } 
@@ -95,7 +95,7 @@ public interface StringOperation {
 
 接下来，我们将让两个枚举实现上面的接口:
 
-```
+```java
 public enum BasicStringOperation implements StringOperation {
     TRIM("Removing leading and trailing spaces."),
     TO_UPPER("Changing all characters into upper case."),
@@ -119,7 +119,7 @@ public enum ExtendedStringOperation implements StringOperation {
 
 假设我们的应用程序中有一个方法来获取对`BasicStringOperation`枚举的描述:
 
-```
+```java
 public class Application {
     public String getOperationDescription(BasicStringOperation stringOperation) {
         return stringOperation.getDescription();
@@ -129,7 +129,7 @@ public class Application {
 
 现在，我们可以将参数类型`BasicStringOperation,` 更改为接口类型`StringOperation,`，以使该方法接受来自两个枚举的实例:
 
-```
+```java
 public String getOperationDescription(StringOperation stringOperation) {
     return stringOperation.getDescription();
 }
@@ -141,7 +141,7 @@ public String getOperationDescription(StringOperation stringOperation) {
 
 例如，假设我们想要扩展我们的`StringOperation`枚举，这样每个常量实际上都可以对给定的字符串应用操作:
 
-```
+```java
 public class Application {
     public String applyOperation(StringOperation operation, String input) {
         return operation.apply(input);
@@ -152,7 +152,7 @@ public class Application {
 
 为了实现这一点，我们将向接口添加`apply()`方法:
 
-```
+```java
 public interface StringOperation {
     String getDescription();
     String apply(String input);
@@ -161,7 +161,7 @@ public interface StringOperation {
 
 接下来，我们让每个`StringOperation`枚举实现这个方法:
 
-```
+```java
 public enum BasicStringOperation implements StringOperation {
     TRIM("Removing leading and trailing spaces.") {
         @Override
@@ -205,7 +205,7 @@ public enum ExtendedStringOperation implements StringOperation {
 
 一种测试方法证明了这种方法的预期效果:
 
-```
+```java
 @Test
 public void givenAStringAndOperation_whenApplyOperation_thenGetExpectedResult() {
     String input = " hello";
@@ -230,7 +230,7 @@ public void givenAStringAndOperation_whenApplyOperation_thenGetExpectedResult() 
 
 首先，我们来看一个枚举示例:
 
-```
+```java
 public enum ImmutableOperation {
     REMOVE_WHITESPACES, TO_LOWER, INVERT_CASE
 } 
@@ -240,7 +240,7 @@ public enum ImmutableOperation {
 
 现在，在我们的`Application`类中，我们希望有一个方法将给定的操作应用于输入字符串:
 
-```
+```java
 public String applyImmutableOperation(ImmutableOperation operation, String input) {...}
 ```
 
@@ -248,7 +248,7 @@ public String applyImmutableOperation(ImmutableOperation operation, String input
 
 首先，我们将创建一个接口:
 
-```
+```java
 public interface Operator {
     String apply(String input);
 } 
@@ -256,7 +256,7 @@ public interface Operator {
 
 然后我们将使用一个`EnumMap<ImmutableOperation, Operator>`创建枚举常量和`Operator`实现之间的映射:
 
-```
+```java
 public class Application {
     private static final Map<ImmutableOperation, Operator> OPERATION_MAP;
 
@@ -274,7 +274,7 @@ public class Application {
 
 这样，我们的`applyImmutableOperation()`方法可以对给定的输入字符串应用相应的操作:
 
-```
+```java
 @Test
 public void givenAStringAndImmutableOperation_whenApplyOperation_thenGetExpectedResult() {
     String input = " He ll O ";
@@ -293,7 +293,7 @@ public void givenAStringAndImmutableOperation_whenApplyOperation_thenGetExpected
 
 为了避免这种情况，我们可以在初始化之后验证`EnumMap`,检查它是否包含所有的枚举常量:
 
-```
+```java
 static {
     OPERATION_MAP = new EnumMap<>(ImmutableOperation.class);
     OPERATION_MAP.put(ImmutableOperation.TO_LOWER, String::toLowerCase);
@@ -308,7 +308,7 @@ static {
 
 如上面的代码所示，如果来自`ImmutableOperation `的任何常量没有被映射，就会抛出一个`IllegalStateException`。由于我们的验证是在`static`块中，`IllegalStateException`将是`ExceptionInInitializerError`的原因:
 
-```
+```java
 @Test
 public void givenUnmappedImmutableOperationValue_whenAppStarts_thenGetException() {
     Throwable throwable = assertThrows(ExceptionInInitializerError.class, () -> {

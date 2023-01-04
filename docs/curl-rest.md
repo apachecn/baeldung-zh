@@ -28,7 +28,7 @@ Explore the basics of REST-assured - a library that simplifies the testing and v
 
 当我们测试时，最好将详细模式设置为:
 
-```
+```java
 curl -v http://www.example.com/
 ```
 
@@ -38,7 +38,7 @@ curl -v http://www.example.com/
 
 默认情况下，`curl`将响应体输出到标准输出。此外，我们可以提供输出选项来保存到文件:
 
-```
+```java
 curl -o out.json http://www.example.com/index.html
 ```
 
@@ -54,13 +54,13 @@ curl -o out.json http://www.example.com/index.html
 
 当在端口 8082 运行一个服务的本地实例时，我们将使用类似下面的命令进行 GET 调用:
 
-```
+```java
 curl -v http://localhost:8082/spring-rest/foos/9
 ```
 
 因为我们启用了详细模式，所以除了响应体之外，我们还获得了更多的信息:
 
-```
+```java
 *   Trying ::1...
 * TCP_NODELAY set
 * Connected to localhost (::1) port 8082 (#0)
@@ -87,20 +87,20 @@ curl -v http://localhost:8082/spring-rest/foos/9
 
 最简单的方法是在命令中嵌入数据:
 
-```
+```java
 curl -d 'id=9&name;=baeldung' http://localhost:8082/spring-rest/foos/new
 ```
 
 或者，我们可以将包含请求体的文件传递给数据选项，如下所示:
 
-```
+```java
 curl -d @request.json -H "Content-Type: application/json" 
   http://localhost:8082/spring-rest/foos/new
 ```
 
 通过使用上面的命令，我们可能会遇到如下所示的错误消息:
 
-```
+```java
 {
   "timestamp" : "15-07-2018 05:57",
   "status" : 415,
@@ -113,7 +113,7 @@ curl -d @request.json -H "Content-Type: application/json"
 
 这是因为`curl`向所有 POST 请求添加了以下默认标题:
 
-```
+```java
 Content-Type: application/x-www-form-urlencoded
 ```
 
@@ -121,7 +121,7 @@ Content-Type: application/x-www-form-urlencoded
 
 例如，如果我们的服务需要 JSON 内容类型，那么我们可以使用-H 选项来修改我们最初的 POST 请求:
 
-```
+```java
 curl -d '{"id":9,"name":"baeldung"}' -H 'Content-Type: application/json' 
   http://localhost:8082/spring-rest/foos/new
 ```
@@ -130,7 +130,7 @@ Windows 命令提示符不支持单引号，就像类 Unix shell 一样。
 
 因此，我们需要用双引号替换单引号，尽管我们在必要时会尽量避免使用它们:
 
-```
+```java
 curl -d "{\"id\":9,\"name\":\"baeldung\"}" -H "Content-Type: application/json" 
   http://localhost:8082/spring-rest/foos/new
 ```
@@ -143,7 +143,7 @@ curl -d "{\"id\":9,\"name\":\"baeldung\"}" -H "Content-Type: application/json"
 
 在没有提到请求方法类型的情况下，`curl`默认使用 GET 因此，我们在 PUT 的情况下明确提到了方法类型:
 
-```
+```java
 curl -d @request.json -H 'Content-Type: application/json' 
   -X PUT http://localhost:8082/spring-rest/foos/9
 ```
@@ -152,7 +152,7 @@ curl -d @request.json -H 'Content-Type: application/json'
 
 同样，我们通过使用-X 选项来指定我们想要使用 DELETE:
 
-```
+```java
 curl -X DELETE http://localhost:8082/spring-rest/foos/9
 ```
 
@@ -162,19 +162,19 @@ curl -X DELETE http://localhost:8082/spring-rest/foos/9
 
 例如，要更改主机头，我们这样做:
 
-```
+```java
 curl -H "Host: com.baeldung" http://example.com/
 ```
 
 为了关闭用户代理头，我们输入一个空值:
 
-```
+```java
 curl -H "User-Agent:" http://example.com/
 ```
 
 测试时最常见的场景是更改内容类型和接受头。我们只需在每个头前加上-H 选项:
 
-```
+```java
 curl -d @request.json -H "Content-Type: application/json" 
   -H "Accept: application/json" http://localhost:8082/spring-rest/foos/new
 ```
@@ -185,7 +185,7 @@ curl -d @request.json -H "Content-Type: application/json"
 
 对于基本认证，我们可以使用用户选项简单地将用户名和密码组合嵌入到我们的请求中:
 
-```
+```java
 curl --user baeldung:secretPassword http://example.com/
 ```
 
@@ -193,7 +193,7 @@ curl --user baeldung:secretPassword http://example.com/
 
 服务响应将包含`access_token:`
 
-```
+```java
 {
   "access_token": "b1094abc0-54a4-3eab-7213-877142c33fh3",
   "token_type": "bearer",
@@ -204,7 +204,7 @@ curl --user baeldung:secretPassword http://example.com/
 
 现在我们可以在授权头中使用令牌了:
 
-```
+```java
 curl -H "Authorization: Bearer b1094abc0-54a4-3eab-7213-877142c33fh3" http://example.com/
 ```
 

@@ -16,7 +16,7 @@
 
 所以让我们从把`char` s 转换成 `String` s `:`开始
 
-```
+```java
 String toStringWithConcatenation(final char c) {
     return String.valueOf(c);
 }
@@ -26,7 +26,7 @@ String toStringWithConcatenation(final char c) {
 
 另一个经常需要的操作是给字符串附加其他值，比如一个`char`:
 
-```
+```java
 String appendWithConcatenation(final String prefix, final char c) {
     return prefix + c;
 }
@@ -34,7 +34,7 @@ String appendWithConcatenation(final String prefix, final char c) {
 
 我们可以给其他基本类型加上`StringBuilder`和 **:**
 
-```
+```java
 String appendWithStringBuilder(final String prefix, final char c) {
     return new StringBuilder(prefix).append(c).toString();
 }
@@ -44,7 +44,7 @@ String appendWithStringBuilder(final String prefix, final char c) {
 
 如果我们需要从字符串中提取一个字符，API 提供了我们想要的一切:
 
-```
+```java
 char getCharacterByIndex(final String text, final int index) {
     return text.charAt(index);
 }
@@ -56,7 +56,7 @@ char getCharacterByIndex(final String text, final int index) {
 
 通过强制转换，我们可以很容易地在`char`和它的数字表示(ASCII)之间切换:
 
-```
+```java
 int asciiValue(final char character) {
     return (int) character;
 }
@@ -73,7 +73,7 @@ char fromAsciiValue(final int value) {
 
 有时我们需要去掉一些字符，最常见的是空格。一个**的好方法是使用带有[正则表达式](/web/20221129225350/https://www.baeldung.com/regular-expressions-java) :** 的`replaceAll`方法
 
-```
+```java
 String removeWhiteSpace(final String text) {
     return text.replaceAll("\\s+", "");
 }
@@ -83,7 +83,7 @@ String removeWhiteSpace(final String text) {
 
 另一个常见的用例是当我们有某种类型的`Collection`并想用它创建一个字符串时:
 
-```
+```java
 <T> String fromCollection(final Collection<T> collection) { 
    return collection.stream().map(Objects::toString).collect(Collectors.joining(", "));
 }
@@ -95,7 +95,7 @@ String removeWhiteSpace(final String text) {
 
 或者另一方面，我们可以使用`split`方法通过分隔符分割字符串:
 
-```
+```java
 String[] splitByRegExPipe(final String text) {
    return text.split("\\|");
 }
@@ -105,7 +105,7 @@ String[] splitByRegExPipe(final String text) {
 
 另一种可能是使用`Pattern`类:
 
-```
+```java
 String[] splitByPatternPipe(final String text) {
     return text.split(Pattern.quote("|"));
 }
@@ -115,7 +115,7 @@ String[] splitByPatternPipe(final String text) {
 
 在详细处理的情况下，我们可以将一个字符串转换成一个`[IntStream](/web/20221129225350/https://www.baeldung.com/java-string-to-stream)`:
 
-```
+```java
 IntStream getStream(final String text) {
     return text.chars();
 }
@@ -127,7 +127,7 @@ IntStream getStream(final String text) {
 
 因此，我们必须区分引用相等和值相等。引用相等总是意味着值相等，但通常不是相反。首先，我们用' == '操作检查，然后用`equals`方法检查:
 
-```
+```java
 @Test
 public void whenUsingEquals_thenWeCheckForTheSameValue() {
     assertTrue("Values are equal", new String("Test").equals("Test"));
@@ -141,7 +141,7 @@ public void whenUsingEqualsSign_thenWeCheckForReferenceEquality() {
 
 注意文字被[保存在字符串池](/web/20221129225350/https://www.baeldung.com/java-string-pool)中。因此，编译器有时可以将它们优化为相同的引用:
 
-```
+```java
 @Test
 public void whenTheCompileCanBuildUpAString_thenWeGetTheSameReference() {
     assertTrue("Literals are concatenated by the compiler", "Test" == "Te"+"st");
@@ -154,7 +154,7 @@ public void whenTheCompileCanBuildUpAString_thenWeGetTheSameReference() {
 
 如果字符串为`null`或长度为零，则该字符串为空。**而一个字符串如果为空或者只包含空白字符则为空:**
 
-```
+```java
 @Test
 public void whenUsingIsEmpty_thenWeCheckForNullorLengthZero() {
     assertTrue("null is empty", isEmpty(null));

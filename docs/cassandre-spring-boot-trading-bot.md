@@ -31,7 +31,7 @@
 
 让我们从添加必要的依赖项到我们的`pom.xml`开始，首先是[Cassandre spring boot starter](https://web.archive.org/web/20221126233607/https://search.maven.org/artifact/tech.cassandre.trading.bot/cassandre-trading-bot-spring-boot-starter):
 
-```
+```java
 <dependency>
     <groupId>tech.cassandre.trading.bot</groupId>
     <artifactId>cassandre-trading-bot-spring-boot-starter</artifactId>
@@ -41,7 +41,7 @@
 
 Cassandre 依靠 [XChange](https://web.archive.org/web/20221126233607/https://github.com/knowm/XChange) 连接到加密交换。在本教程中，我们将使用 [Kucoin XChange 库](https://web.archive.org/web/20221126233607/https://search.maven.org/artifact/org.knowm.xchange/xchange-kucoin):
 
-```
+```java
 <dependency>
     <groupId>org.knowm.xchange</groupId>
     <artifactId>xchange-kucoin</artifactId>
@@ -51,7 +51,7 @@ Cassandre 依靠 [XChange](https://web.archive.org/web/20221126233607/https://gi
 
 我们也使用`[hsqld](https://web.archive.org/web/20221126233607/https://search.maven.org/artifact/org.hsqldb/hsqldb)`来存储数据:
 
-```
+```java
 <dependency>
     <groupId>org.hsqldb</groupId>
     <artifactId>hsqldb</artifactId>
@@ -61,7 +61,7 @@ Cassandre 依靠 [XChange](https://web.archive.org/web/20221126233607/https://gi
 
 为了根据历史数据测试我们的交易机器人，我们还添加了测试用的[Cassandre spring boot starter](https://web.archive.org/web/20221126233607/https://search.maven.org/artifact/tech.cassandre.trading.bot/cassandre-trading-bot-spring-boot-starter-test):
 
-```
+```java
 <dependency>
     <groupId>tech.cassandre.trading.bot</groupId>
     <artifactId>cassandre-trading-bot-spring-boot-starter-test</artifactId>
@@ -74,7 +74,7 @@ Cassandre 依靠 [XChange](https://web.archive.org/web/20221126233607/https://gi
 
 让我们编辑 create `application.properties`来设置我们的配置:
 
-```
+```java
 # Exchange configuration
 cassandre.trading.bot.exchange.name=kucoin
 [[email protected]](/web/20221126233607/https://www.baeldung.com/cdn-cgi/l/email-protection)ail.com
@@ -113,7 +113,7 @@ cassandre.trading.bot.database.datasource.password=
 
 让我们在 `MyFirstStrategy.java` : 中创建我们的策略类
 
-```
+```java
 @CassandreStrategy
 public class MyFirstStrategy extends BasicCassandreStrategy {
 
@@ -137,13 +137,13 @@ public class MyFirstStrategy extends BasicCassandreStrategy {
 
 为了更清楚起见，我们可以使用下面的`curl`命令手动检索一个 ticker:
 
-```
+```java
 curl -s https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=BTC-USDT
 ```
 
 我们会得到这样的结果:
 
-```
+```java
 {
   "time": 1620227845003,
   "sequence": "1615922903162",
@@ -179,7 +179,7 @@ curl -s https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=BTC-USDT
 
 要使用它，第一步是借助于`PositionRulesDTO`类为职位创建规则，例如:
 
-```
+```java
 PositionRulesDTO rules = PositionRulesDTO.builder()
   .stopGainPercentage(4f)
   .stopLossPercentage(25f)
@@ -188,7 +188,7 @@ PositionRulesDTO rules = PositionRulesDTO.builder()
 
 然后，让我们使用该规则创建职位:
 
-```
+```java
 createLongPosition(new CurrencyPairDTO(BTC, USDT), new BigDecimal("0.01"), rules);
 ```
 
@@ -198,7 +198,7 @@ createLongPosition(new CurrencyPairDTO(BTC, USDT), new BigDecimal("0.01"), rules
 
 这是我们将拥有的代码:
 
-```
+```java
 @Override
 public void onTickerUpdate(TickerDTO ticker) {
     if (new BigDecimal("56000").compareTo(ticker.getLast()) == -1) {
@@ -225,7 +225,7 @@ public void onTickerUpdate(TickerDTO ticker) {
 
 我们将最终实现`onPositionStatusUpdate()`来查看何时开仓/平仓:
 
-```
+```java
 @Override
 public void onPositionStatusUpdate(PositionDTO position) {
     if (position.getStatus() == OPENED) {
@@ -245,7 +245,7 @@ public void onPositionStatusUpdate(PositionDTO position) {
 
 如果我们在 Linux 下，这里有一个简单的脚本来生成它们:
 
-```
+```java
 startDate=`date --date="3 months ago" +"%s"`
 endDate=`date +"%s"`
 curl -s "https://api.kucoin.com/api/v1/market/candles?type=1day&symbol;=BTC-USDT&startAt;=${startDate}&endAt;=${endDate}" \
@@ -261,7 +261,7 @@ curl -s "https://api.kucoin.com/api/v1/market/candles?type=1day&symbol;=BTC-USDT
 
 该文件也必须在`src/test/resources`文件夹中。
 
-```
+```java
 BTC 1
 USDT 10000
 ETH 10
@@ -269,14 +269,14 @@ ETH 10
 
 现在，我们可以添加一个测试:
 
-```
+```java
 @SpringBootTest
 @Import(TickerFluxMock.class)
 @DisplayName("Simple strategy test")
 public class MyFirstStrategyLiveTest { 
 ```
 
-```
+```java
  @Autowired
     private MyFirstStrategy strategy;
 

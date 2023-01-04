@@ -18,7 +18,7 @@
 
 首先，让我们将[航空公司](https://web.archive.org/web/20221128043700/https://search.maven.org/search?q=g:com.github.rvesse%20a:airline)添加到我们的`pom.xm` l:
 
-```
+```java
 <dependency>
     <groupId>com.github.rvesse</groupId>
     <artifactId>airline</artifactId>
@@ -30,7 +30,7 @@
 
 让我们为应用程序创建入口点——`CommandLine`类:
 
-```
+```java
 @Cli(name = "baeldung-cli",
   description = "Baeldung Airline Tutorial",
   defaultCommand = Help.class)
@@ -53,7 +53,7 @@ public class CommandLine {
 
 让我们实现我们的第一个命令，一个简单的`LoggingCommand`类，它将控制我们日志的详细程度。我们将使用`@Command`对该类进行注释，以确保当用户调用`setup-log`时应用了正确的命令:
 
-```
+```java
 @Command(name = "setup-log", description = "Setup our log")
 public class LoggingCommand implements Runnable {
 
@@ -83,7 +83,7 @@ public class LoggingCommand implements Runnable {
 
 到目前为止，一切顺利。现在，我们需要通过修改@ `Cli`注释将新命令添加到主界面:
 
-```
+```java
 @Cli(name = "baeldung-cli",
 description = "Baeldung Airline Tutorial",
 defaultCommand = Help.class,
@@ -109,7 +109,7 @@ public class CommandLine {
 
 首先，我们将请求数据库的类型，通过`@AllowedRawValues`只接受 3 个有效值:
 
-```
+```java
 @AllowedRawValues(allowedValues = { "mysql", "postgresql", "mongodb" })
 @Option(type = OptionType.COMMAND,
   name = {"-d", "--database"},
@@ -120,7 +120,7 @@ protected String rdbmsMode;
 
 毫无疑问，在使用数据库连接时，用户应该提供一个端点和一些凭证来访问它。我们将让 CLI 通过一个(`URL mode)`或多个参数(`host mode`)来处理这个问题。为此，我们将使用`@MutuallyExclusiveWith`注释，用相同的标签标记每个参数:
 
-```
+```java
 @Option(type = OptionType.COMMAND,
   name = {"--rdbms:url", "--url"},
   description = "URL to use for connection to RDBMS.",
@@ -143,7 +143,7 @@ protected String rdbmsHost = "";
 
 最后，如果用户选择了主机模式，我们应该要求他们提供凭据。这样，一个选项依赖于另一个选项。我们可以用`@RequiredOnlyIf`注释实现这种行为:
 
-```
+```java
 @RequiredOnlyIf(names={"--rdbms:host", "--host"})
 @Option(type = OptionType.COMMAND,
   name = {"--rdbms:user", "-u", "--user"},
@@ -161,7 +161,7 @@ protected String rdbmsPassword;
 
 如果我们需要使用一些驱动程序来处理 DB 连接呢？另外，假设我们需要在单个参数中接收多个值。我们可以将选项类型更改为`OptionType.ARGUMENTS`,或者更好的是接受一个值列表:
 
-```
+```java
 @Option(type = OptionType.COMMAND,
   name = {"--driver", "--jars"},
   description = "List of drivers",
@@ -177,7 +177,7 @@ protected List<String> jars = new ArrayList<>();
 
 不出所料，在没有传递任何参数的情况下，`Help`被调用:
 
-```
+```java
 $ baeldung-cli
 
 usage: baeldung-cli <command> [ <args> ]
@@ -192,7 +192,7 @@ See 'baeldung-cli help <command>' for more information on a specific command.
 
 如果我们改为执行`setup-log –help`，我们会得到:
 
-```
+```java
 $ baeldung-cli setup-log --help
 
 NAME

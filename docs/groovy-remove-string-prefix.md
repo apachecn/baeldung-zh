@@ -20,7 +20,7 @@
 
 让我们从一个 [groovy 闭包](/web/20221126233043/https://www.baeldung.com/groovy-closures)开始:
 
-```
+```java
 @Test 
 public void whenCasePrefixIsRemoved_thenReturnTrue(){
     def trimPrefix = {
@@ -34,7 +34,7 @@ public void whenCasePrefixIsRemoved_thenReturnTrue(){
 
 一旦确认存在，那么我们也可以使用`substring()`方法来删除它:
 
-```
+```java
 trimPrefix.substring('Groovy-'.length()) 
 ```
 
@@ -46,7 +46,7 @@ trimPrefix.substring('Groovy-'.length())
 
 让我们看看如何使用这种方法:
 
-```
+```java
 @Test
 public void whenPrefixIsRemovedWithIgnoreCase_thenReturnTrue() {
 
@@ -69,7 +69,7 @@ public void whenPrefixIsRemovedWithIgnoreCase_thenReturnTrue() {
 
 **`startsWithAny()`方法检查`CharSequence`是否以任何指定的前缀开始。**前缀确定后，我们可以根据需要应用逻辑:
 
-```
+```java
 String trimPrefix = "Groovy-Tutorials at Baeldung"
 if (trimPrefix.startsWithAny("Java", "Groovy", "Linux")) {
     // logic to remove prefix
@@ -82,7 +82,7 @@ if (trimPrefix.startsWithAny("Java", "Groovy", "Linux")) {
 
 让我们定义一个简单的正则表达式来删除前缀:
 
-```
+```java
 @Test
 public void whenPrefixIsRemovedUsingRegex_thenReturnTrue() {
 
@@ -97,7 +97,7 @@ public void whenPrefixIsRemovedUsingRegex_thenReturnTrue() {
 
 上述正则表达式的不区分大小写版本:
 
-```
+```java
 def regex = ~"^([Gg])roovy-" 
 ```
 
@@ -109,7 +109,7 @@ def regex = ~"^([Gg])roovy-"
 
 让我们使用`replaceFirst()`方法删除一个前缀:
 
-```
+```java
 @Test
 public void whenPrefixIsRemovedUsingReplaceFirst_thenReturnTrue() {
 
@@ -128,7 +128,7 @@ public void whenPrefixIsRemovedUsingReplaceFirst_thenReturnTrue() {
 
 让我们使用`replaceAll()`仅替换字符串开头的子字符串:
 
-```
+```java
 @Test
 public void whenPrefixIsRemovedUsingReplaceAll_thenReturnTrue() {
 

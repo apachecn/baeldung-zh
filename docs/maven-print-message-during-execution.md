@@ -12,7 +12,7 @@
 
 首先，我们将讨论 [`AntRun`插件](/web/20221127022221/https://www.baeldung.com/maven-ant-task)。它提供了从 Maven 内部运行 Ant 任务的能力。为了在我们的项目中使用这个插件，我们需要将 [`maven-antrun-plugin`](https://web.archive.org/web/20221127022221/https://search.maven.org/search?q=g:org.apache.maven.plugins%20a:maven-antrun-plugin) 添加到我们的`pom.xml`中:
 
-```
+```java
 <plugins>
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -24,7 +24,7 @@
 
 让我们在`execution`标签中定义目标和阶段。此外，我们将添加保存带有`echo`消息的`target` 的`configuration`标签:
 
-```
+```java
 <executions>
     <execution>
         <id>antrun-plugin</id>
@@ -52,7 +52,7 @@
 
 如果我们不想使用基于 Ant `,` 的插件，我们可以将 [`echo-maven-plugin`](https://web.archive.org/web/20221127022221/https://search.maven.org/search?q=g:com.github.ekryd.echo-maven-plugin%20a:echo-maven-plugin) 依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <plugin>
     <groupId>com.github.ekryd.echo-maven-plugin</groupId>
     <artifactId>echo-maven-plugin</artifactId>
@@ -62,7 +62,7 @@
 
 就像我们在前面的插件例子中看到的，我们将在`execution`标签中声明目标和阶段。接下来，我们将填充`configuration`标签:
 
-```
+```java
 <executions>
     <execution>
         <id>echo-maven-plugin-1</id>
@@ -90,7 +90,7 @@
 
 要使用`[groovy-maven-plugin](https://web.archive.org/web/20221127022221/https://search.maven.org/search?q=g:org.codehaus.gmaven%20a:groovy-maven-plugin),`，我们必须将依赖关系放在我们的`pom.xml`中:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.gmaven</groupId>
     <artifactId>groovy-maven-plugin</artifactId>
@@ -100,7 +100,7 @@
 
 此外，让我们在`execution`标签中添加阶段和目标。接下来，我们将把`source`标签放在`configuration`部分。它包含 Groovy 代码:
 
-```
+```java
 <executions>
     <execution>
         <phase>validate</phase>

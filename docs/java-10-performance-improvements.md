@@ -29,7 +29,7 @@ CDS 只允许引导类装入器，限制了系统类的特性。应用程序 CDS
 
 以下命令将把由`HelloWorld `应用程序加载的类转储到`hello.lst`:
 
-```
+```java
 $ java -Xshare:off -XX:+UseAppCDS -XX:DumpLoadedClassList=hello.lst \ 
     -cp hello.jar HelloWorld
 ```
@@ -38,7 +38,7 @@ $ java -Xshare:off -XX:+UseAppCDS -XX:DumpLoadedClassList=hello.lst \
 
 以下命令使用`hello.lst `作为输入创建`hello.js a `:
 
-```
+```java
 $ java -Xshare:dump -XX:+UseAppCDS -XX:SharedClassListFile=hello.lst \
     -XX:SharedArchiveFile=hello.jsa -cp hello.jar
 ```
@@ -47,7 +47,7 @@ $ java -Xshare:dump -XX:+UseAppCDS -XX:SharedClassListFile=hello.lst \
 
 以下命令以`hello.jsa `作为输入启动`HelloWorld `应用程序:
 
-```
+```java
 $ java -Xshare:on -XX:+UseAppCDS -XX:SharedArchiveFile=hello.jsa \
     -cp hello.jar HelloWorld
 ```
@@ -62,7 +62,7 @@ JDK 10 使 Graal 编译器能够在 Linux/x64 平台上作为实验性的 JIT �
 
 要启用 Graal 作为 JIT 编译器，请在 java 命令行上使用以下选项:
 
-```
+```java
 -XX:+UnlockExperimentalVMOptions -XX:+UseJVMCICompiler
 ```
 

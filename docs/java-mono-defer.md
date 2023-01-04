@@ -10,7 +10,7 @@
 
 我们可以使用`Mono`的 [`defer`](https://web.archive.org/web/20220526052247/https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Mono.html#defer-java.util.function.Supplier-) 方法创建一个最多产生一个值的冷发布器。让我们看看方法签名:
 
-```
+```java
 public static <T> Mono<T> defer(Supplier<? extends Mono<? extends T>> supplier)
 ```
 
@@ -24,7 +24,7 @@ public static <T> Mono<T> defer(Supplier<? extends Mono<? extends T>> supplier)
 
 让我们来探索一个具有类型`Mono`的 `Supplier`的样例用例:
 
-```
+```java
 private Mono<String> sampleMsg(String str) {
     log.debug("Call to Retrieve Sample Message!! --> {} at: {}", str, System.currentTimeMillis());
     return Mono.just(str);
@@ -33,7 +33,7 @@ private Mono<String> sampleMsg(String str) {
 
 这里，这个方法返回一个热门的`Mono`发布者。让我们急切地订阅这个:
 
-```
+```java
 public void whenUsingMonoJust_thenEagerEvaluation() throws InterruptedException {
 
     Mono<String> msg = sampleMsg("Eager Publisher");
@@ -54,7 +54,7 @@ public void whenUsingMonoJust_thenEagerEvaluation() throws InterruptedException 
 
 在执行时，我们可以在日志中看到以下内容:
 
-```
+```java
 20:44:30.250 [main] DEBUG com.baeldung.mono.MonoUnitTest - Call to Retrieve Sample Message!! --> Eager Publisher at: 1622819670247
 20:44:30.365 [main] DEBUG reactor.util.Loggers$LoggerFactory - Using Slf4j logging framework
 20:44:30.365 [main] DEBUG com.baeldung.mono.MonoUnitTest - Intermediate Test Message....
@@ -67,7 +67,7 @@ public void whenUsingMonoJust_thenEagerEvaluation() throws InterruptedException 
 
 让我们看看`Mono.defer()`如何将其转化为一个冷酷(懒惰)的发行商:
 
-```
+```java
 public void whenUsingMonoDefer_thenLazyEvaluation() throws InterruptedException {
 
     Mono<String> deferMsg = Mono.defer(() -> sampleMsg("Lazy Publisher"));
@@ -89,7 +89,7 @@ public void whenUsingMonoDefer_thenLazyEvaluation() throws InterruptedException 
 
 在执行此方法时，我们可以在控制台中看到以下日志:
 
-```
+```java
 20:01:05.149 [main] DEBUG com.baeldung.mono.MonoUnitTest - Intermediate Test Message....
 20:01:05.187 [main] DEBUG com.baeldung.mono.MonoUnitTest - Call to Retrieve Sample Message!! --> Lazy Publisher at: 1622817065187
 20:01:10.197 [main] DEBUG com.baeldung.mono.MonoUnitTest - Call to Retrieve Sample Message!! --> Lazy Publisher at: 1622817070197
@@ -114,7 +114,7 @@ public void whenUsingMonoDefer_thenLazyEvaluation() throws InterruptedException 
 
 让我们看一个使用条件`Mono.defer()`方法的例子:
 
-```
+```java
 public void whenEmptyList_thenMonoDeferExecuted() {
 
     Mono<List<String>> emptyList = Mono.defer(() -> monoOfEmptyList());
@@ -134,7 +134,7 @@ public void whenEmptyList_thenMonoDeferExecuted() {
 
 现在，让我们看看非空列表的相同代码:
 
-```
+```java
 public void whenNonEmptyList_thenMonoDeferNotExecuted() {
 
     Mono<List<String>> nonEmptyist = Mono.defer(() -> monoOfList());

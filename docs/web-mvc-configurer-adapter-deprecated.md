@@ -16,7 +16,7 @@
 
 在 Spring 的早期版本中，包括版本 4，如果我们想要配置一个 web 应用程序，我们可以使用`WebMvcConfigurerAdapter`类:
 
-```
+```java
 @Configuration
 public WebConfig extends WebMvcConfigurerAdapter {
 
@@ -36,7 +36,7 @@ public WebConfig extends WebMvcConfigurerAdapter {
 
 让我们看看**我们如何开始直接使用界面，并摆脱警告**:
 
-```
+```java
 @Configuration
 public WebConfig implements WebMvcConfigurer {
     // ...

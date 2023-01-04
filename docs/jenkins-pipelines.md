@@ -71,7 +71,7 @@ Jenkins 2 附带了一个很棒的特性叫做`Pipelines`，当我们需要为�
 
 我们还将在应用程序的`pom.xml:`中配置`Checkstyle`
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-checkstyle-plugin</artifactId>
@@ -95,7 +95,7 @@ Jenkins 2 附带了一个很棒的特性叫做`Pipelines`，当我们需要为�
 
 以下是 Unix 环境的工作脚本:
 
-```
+```java
 node {
     stage 'Clone the project'
     git 'https://github.com/eugenp/tutorials.git'

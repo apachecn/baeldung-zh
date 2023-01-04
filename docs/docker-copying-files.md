@@ -16,7 +16,7 @@
 
 在我们看这个命令的一些例子之前，让我们假设我们有以下 Docker 容器在运行:
 
-```
+```java
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
 1477326feb62        grafana/grafana     "/run.sh"                2 months ago        Up 3 days           0.0.0.0:3000->3000/tcp   grafana
 8c45029d15e8        prom/prometheus     "/bin/prometheus --c…"   2 months ago        Up 3 days           0.0.0.0:9090->9090/tcp   prometheus
@@ -24,25 +24,25 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 
 第一个示例将文件从主机上的 `/tmp`目录复制到`grafana`容器中的 Grafana 安装目录:
 
-```
+```java
 docker cp /tmp/config.ini grafana:/usr/share/grafana/conf/
 ```
 
 我们还可以使用容器 id 来代替它们的名称:
 
-```
+```java
 docker cp /tmp/config.ini 1477326feb62:/usr/share/grafana/conf/
 ```
 
 要将文件从`grafana`容器复制到主机上的`/tmp`目录，我们只需切换参数的顺序:
 
-```
+```java
 docker cp grafana:/usr/share/grafana/conf/defaults.ini /tmp
 ```
 
 我们还可以复制整个目录，而不是单个文件。这个例子将整个`conf`目录从`grafana`容器复制到主机上的`/tmp`目录:
 
-```
+```java
 docker cp grafana:/usr/share/grafana/conf /tmp
 ```
 
@@ -59,7 +59,7 @@ docker cp grafana:/usr/share/grafana/conf /tmp
 
 为了使用卷挂载，**我们必须运行带有`-v`标志的容器:**
 
-```
+```java
 docker run -d --name=grafana -p 3000:3000 grafana/grafana -v /tmp:/transfer
 ```
 
@@ -81,7 +81,7 @@ docker run -d --name=grafana -p 3000:3000 grafana/grafana -v /tmp:/transfer
 
 `COPY`指令的语法类似于我们上面看到的其他复制命令:
 
-```
+```java
 COPY <SRC> <DEST>
 ```
 
@@ -91,13 +91,13 @@ COPY <SRC> <DEST>
 
 这将把当前 Docker 构建上下文中的一个复制到映像中:
 
-```
+```java
 COPY properties.ini /config/
 ```
 
 这将把所有 XML 文件复制到 Docker 映像中:
 
-```
+```java
 COPY *.xml /config/
 ```
 

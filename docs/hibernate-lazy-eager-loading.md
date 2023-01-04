@@ -12,7 +12,7 @@
 
 为了使用 Hibernate，让我们首先定义我们的`pom.xml`中的主要依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>   
@@ -33,7 +33,7 @@ Hibernate 的最新版本可以在[这里](https://web.archive.org/web/202210271
 
 首先，我们来看看`UserLazy`类:
 
-```
+```java
 @Entity
 @Table(name = "USER")
 public class UserLazy implements Serializable {
@@ -54,7 +54,7 @@ public class UserLazy implements Serializable {
 
 接下来，我们将看到`OrderDetail`类:
 
-```
+```java
 @Entity
 @Table (name = "USER_ORDER")
 public class OrderDetail implements Serializable {
@@ -86,13 +86,13 @@ public class OrderDetail implements Serializable {
 
 我们可以通过使用这个注释参数来启用延迟加载:
 
-```
+```java
 fetch = FetchType.LAZY
 ```
 
 对于快速获取，我们使用这个参数:
 
-```
+```java
 fetch = FetchType.EAGER
 ```
 
@@ -106,7 +106,7 @@ fetch = FetchType.EAGER
 
 让我们来看看:
 
-```
+```java
 List<UserLazy> users = sessionLazy.createQuery("From UserLazy").list();
 UserLazy userLazyLoaded = users.get(3);
 return (userLazyLoaded.getOrderDetail());
@@ -114,13 +114,13 @@ return (userLazyLoaded.getOrderDetail());
 
 使用惰性初始化方法，`orderDetailSet`只有在我们使用 getter 或其他方法显式调用它时才会被初始化:
 
-```
+```java
 UserLazy userLazyLoaded = users.get(3);
 ```
 
 但是在`UserEager`中用一个急切的方法，它会在第一行中立即初始化:
 
-```
+```java
 List<UserEager> user = sessionEager.createQuery("From UserEager").list();
 ```
 
@@ -130,13 +130,13 @@ List<UserEager> user = sessionEager.createQuery("From UserEager").list();
 
 我们可以使用以下方法来测试功能:
 
-```
+```java
 Hibernate.isInitialized(orderDetailSet);
 ```
 
 现在让我们看一下在这两种情况下生成的查询:
 
-```
+```java
 <property name="show_sql">true</property>
 ```
 
@@ -144,13 +144,13 @@ Hibernate.isInitialized(orderDetailSet);
 
 对于延迟加载，下面是为加载`User`数据而生成的查询:
 
-```
+```java
 select user0_.USER_ID as USER_ID1_0_,  ... from USER user0_
 ```
 
 然而，在急切加载中，我们看到了用`USER_ORDER`进行的连接:
 
-```
+```java
 select orderdetai0_.USER_ID as USER_ID4_0_0_, orderdetai0_.ORDER_ID as ORDER_ID1_1_0_, orderdetai0_ ...
   from USER_ORDER orderdetai0_ where orderdetai0_.USER_ID=?
 ```

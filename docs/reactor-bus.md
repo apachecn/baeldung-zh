@@ -30,7 +30,7 @@ Project Reactor 基于这种模式，有一个清晰而雄心勃勃的目标:在
 
 让我们开始使用 Project Reactor Bus，将下面的依赖项添加到我们的`pom.xml:`中
 
-```
+```java
 <dependency>
     <groupId>io.projectreactor</groupId>
     <artifactId>reactor-bus</artifactId>
@@ -56,7 +56,7 @@ Project Reactor 基于这种模式，有一个清晰而雄心勃勃的目标:在
 
 首先，让我们创建一个 POJO 类来表示通知数据:
 
-```
+```java
 public class NotificationData {
 
     private long id;
@@ -72,7 +72,7 @@ public class NotificationData {
 
 现在让我们定义一个简单的服务层:
 
-```
+```java
 public interface NotificationService {
 
     void initiateNotification(NotificationData notificationData) 
@@ -83,7 +83,7 @@ public interface NotificationService {
 
 以及模拟长期运行操作的实现:
 
-```
+```java
 @Service
 public class NotificationServiceimpl implements NotificationService {
 
@@ -110,7 +110,7 @@ public class NotificationServiceimpl implements NotificationService {
 
 现在让我们进入应用程序的更具反应性的方面，实现一个消费者——然后我们将它映射到反应器事件总线:
 
-```
+```java
 @Service
 public class NotificationConsumer implements 
   Consumer<Event<NotificationData>> {
@@ -141,7 +141,7 @@ public class NotificationConsumer implements
 
 我们将在一个简单的控制器中实现这一点:
 
-```
+```java
 @Controller
 public class NotificationController {
 
@@ -173,7 +173,7 @@ public class NotificationController {
 
 首先，我们需要配置`EventBus`和`Environment`bean:
 
-```
+```java
 @Configuration
 public class Config {
 
@@ -193,7 +193,7 @@ public class Config {
 
 或者，我们可以使用定制的`Dispatcher` 实例:
 
-```
+```java
 EventBus evBus = EventBus.create(
   env, 
   Environment.newDispatcher(
@@ -203,7 +203,7 @@ EventBus evBus = EventBus.create(
 
 现在，我们准备创建一个主应用程序代码:
 
-```
+```java
 import static reactor.bus.selector.Selectors.$;
 
 @SpringBootApplication
@@ -234,7 +234,7 @@ public class NotificationApplication implements CommandLineRunner {
 
 现在让我们创建一个测试来看看我们的`NotificationApplication` 在运行:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class NotificationApplicationIntegrationTest {
@@ -252,7 +252,7 @@ public class NotificationApplicationIntegrationTest {
 
 正如我们所看到的，一旦请求被执行，所有十个**任务立即被提交，而不会产生任何阻塞**。一旦提交，通知事件将被并行处理。
 
-```
+```java
 Notification 0: notification task submitted successfully
 Notification 1: notification task submitted successfully
 Notification 2: notification task submitted successfully

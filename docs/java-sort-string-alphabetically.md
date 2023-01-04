@@ -12,7 +12,7 @@
 
 在内部，`String`使用一个字符数组来操作。因此，我们可以利用 **`toCharArray() : char[]`方法，对数组进行排序，并根据结果创建一个新的`String`:**
 
-```
+```java
 @Test
 void givenString_whenSort_thenSorted() {
     String abcd = "bdca";
@@ -27,7 +27,7 @@ void givenString_whenSort_thenSorted() {
 
 在 Java 8 中，我们可以利用`Stream` API 为我们排序`String`:
 
-```
+```java
 @Test
 void givenString_whenSortJava8_thenSorted() {
     String sorted = "bdca".chars()
@@ -51,7 +51,7 @@ void givenString_whenSortJava8_thenSorted() {
 
 让我们来看看我们的`AnagramValidator`课:
 
-```
+```java
 public class AnagramValidator {
 
     public static boolean isValid(String text, String anagram) {
@@ -81,7 +81,7 @@ public class AnagramValidator {
 
 现在，我们将利用我们的排序方法，验证变位词是否有效:
 
-```
+```java
 @Test
 void givenValidAnagrams_whenSorted_thenEqual() {
     boolean isValidAnagram = AnagramValidator.isValid("Avida Dollars", "Salvador Dali");

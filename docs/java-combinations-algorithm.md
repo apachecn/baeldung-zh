@@ -46,7 +46,7 @@
 
 现在，让我们来看看这种方法的递归实现:
 
-```
+```java
 private void helper(List<int[]> combinations, int data[], int start, int end, int index) {
     if (index == data.length) {
         int[] combination = data.clone();
@@ -63,7 +63,7 @@ private void helper(List<int[]> combinations, int data[], int start, int end, in
 
 接下来，让我们使用这个`helper`方法编写组合生成器:
 
-```
+```java
 public List<int[]> generate(int n, int r) {
     List<int[]> combinations = new ArrayList<>();
     helper(combinations, new int[r], 0, n-1, 0);
@@ -75,7 +75,7 @@ public List<int[]> generate(int n, int r) {
 
 接下来，让我们调用这个方法来生成组合:
 
-```
+```java
 List<int[]> combinations = generate(N, R);
 for (int[] combination : combinations) {
     System.out.println(Arrays.toString(combination));
@@ -85,7 +85,7 @@ System.out.printf("generated %d combinations of %d items from %d ", combinations
 
 在执行程序时，我们得到以下输出:
 
-```
+```java
 [0, 1]
 [0, 2]
 [0, 3]
@@ -101,7 +101,7 @@ generated 10 combinations of 2 items from 5
 
 最后，让我们编写测试用例:
 
-```
+```java
 @Test
 public void givenSetAndSelectionSize_whenCalculatedUsingSetRecursiveAlgorithm_thenExpectedCount() {
     SetRecursiveCombinationGenerator generator = new SetRecursiveCombinationGenerator();
@@ -128,7 +128,7 @@ public void givenSetAndSelectionSize_whenCalculatedUsingSetRecursiveAlgorithm_th
 
 接下来，**让我们编写递归方法来实现这个方法:**
 
-```
+```java
 private void helper(List<int[]> combinations, int data[], int start, int end, int index) {
     if (index == data.length) {
         int[] combination = data.clone();
@@ -147,7 +147,7 @@ private void helper(List<int[]> combinations, int data[], int start, int end, in
 
 接下来，让我们使用`helper`方法来生成选择:
 
-```
+```java
 public List<int[]> generate(int n, int r) {
     List<int[]> combinations = new ArrayList<>();
     helper(combinations, new int[r], 0, n - 1, 0);
@@ -157,7 +157,7 @@ public List<int[]> generate(int n, int r) {
 
 最后，让我们写一个测试用例:
 
-```
+```java
 @Test
 public void givenSetAndSelectionSize_whenCalculatedUsingSelectionRecursiveAlgorithm_thenExpectedCount() {
     SelectionRecursiveCombinationGenerator generator = new SelectionRecursiveCombinationGenerator();
@@ -180,7 +180,7 @@ public void givenSetAndSelectionSize_whenCalculatedUsingSelectionRecursiveAlgori
 
 让我们按照这种方法编写代码:
 
-```
+```java
 public List<int[]> generate(int n, int r) {
     List<int[]> combinations = new ArrayList<>();
     int[] combination = new int[r];
@@ -210,7 +210,7 @@ public List<int[]> generate(int n, int r) {
 
 接下来，让我们编写测试用例:
 
-```
+```java
 @Test
 public void givenSetAndSelectionSize_whenCalculatedUsingIterativeAlgorithm_thenExpectedCount() {
     IterativeCombinationGenerator generator = new IterativeCombinationGenerator();
@@ -235,7 +235,7 @@ Apache Commons 的`[CombinatoricsUtils](https://web.archive.org/web/202209201712
 
 首先，让我们将 Maven 依赖项`[commons-math3](https://web.archive.org/web/20220920171227/https://search.maven.org/search?q=a:commons-math3)`添加到项目中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-math3</artifactId>
@@ -245,7 +245,7 @@ Apache Commons 的`[CombinatoricsUtils](https://web.archive.org/web/202209201712
 
 接下来，**让我们使用`combinationsIterator`方法打印组合**:
 
-```
+```java
 public static void generate(int n, int r) {
     Iterator<int[]> iterator = CombinatoricsUtils.combinationsIterator(n, r);
     while (iterator.hasNext()) {
@@ -261,7 +261,7 @@ Guava 库中的`[Sets](https://web.archive.org/web/20220920171227/https://google
 
 首先，让我们将[番石榴库](https://web.archive.org/web/20220920171227/https://search.maven.org/search?q=g:com.google.guava%20a:guava)的 maven 依赖项添加到项目中:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -271,7 +271,7 @@ Guava 库中的`[Sets](https://web.archive.org/web/20220920171227/https://google
 
 接下来，**让我们使用`combinations`方法来生成组合**:
 
-```
+```java
 Set<Set<Integer>> combinations = Sets.combinations(ImmutableSet.of(0, 1, 2, 3, 4, 5), 3);
 ```
 
@@ -283,7 +283,7 @@ Set<Set<Integer>> combinations = Sets.combinations(ImmutableSet.of(0, 1, 2, 3, 4
 
 为了在项目中使用它，让我们添加`[combinatoricslib3](https://web.archive.org/web/20220920171227/https://search.maven.org/search?q=g:com.github.dpaukov%20AND%20a:combinatoricslib3)` Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.github.dpaukov</groupId>
     <artifactId>combinatoricslib3</artifactId>
@@ -293,7 +293,7 @@ Set<Set<Integer>> combinations = Sets.combinations(ImmutableSet.of(0, 1, 2, 3, 4
 
 接下来，**让我们使用库来打印组合:**
 
-```
+```java
 Generator.combination(0, 1, 2, 3, 4, 5)
   .simple(3)
   .stream()
@@ -302,7 +302,7 @@ Generator.combination(0, 1, 2, 3, 4, 5)
 
 这将在执行时产生以下输出:
 
-```
+```java
 [0, 1, 2]
 [0, 1, 3]
 [0, 1, 4]

@@ -10,7 +10,7 @@
 
 除了来自我们第一个教程的[的`Person`实体和来自我们第二个教程](/web/20220628144739/https://www.baeldung.com/spring-data-couchbase)的[的`Student`实体，我们为这个教程定义了一个`Campus`实体:](/web/20220628144739/https://www.baeldung.com/entity-validation-locking-and-query-consistency-in-spring-data-couchbase)
 
-```
+```java
 @Document
 public class Campus {
     @Id
@@ -34,7 +34,7 @@ public class Campus {
 
 下面是我们包含在 Maven `pom.xml`文件中的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-couchbase</artifactId>
@@ -50,7 +50,7 @@ public class Campus {
 
 为了使用第二个 bucket，我们首先必须在 Couchbase 配置类中为`Bucket`本身定义一个`@Bean`:
 
-```
+```java
 @Bean
 public Bucket campusBucket() throws Exception {
     return couchbaseCluster().openBucket("baeldung2", "");
@@ -61,7 +61,7 @@ public Bucket campusBucket() throws Exception {
 
 接下来，我们为这个桶使用的`CouchbaseTemplate`定义一个`@Bean`:
 
-```
+```java
 @Bean
 public CouchbaseTemplate campusTemplate() throws Exception {
     CouchbaseTemplate template = new CouchbaseTemplate(
@@ -76,7 +76,7 @@ public CouchbaseTemplate campusTemplate() throws Exception {
 
 最后，我们定义了 Couchbase 存储库操作的定制映射，以便`Campus`实体类将使用新的模板和存储桶，而其他实体类将继续使用默认的模板和存储桶:
 
-```
+```java
 @Override
 public void configureRepositoryOperationsMapping(
   RepositoryOperationsMapping baseMapping) {
@@ -131,7 +131,7 @@ Spring Data Couchbase 存储库查询支持来自`org.springframework.data.geo`�
 
 在我们的`CampusRepository`接口中，我们声明了两个方法——一个使用传统的 Spring 数据关键字，由 MapReduce 视图支持，另一个使用维度 Spring 数据关键字，由空间视图支持:
 
-```
+```java
 public interface CampusRepository extends CrudRepository<Campus, String> {
 
     @View(designDocument="campus", viewName="byName")
@@ -149,7 +149,7 @@ public interface CampusRepository extends CrudRepository<Campus, String> {
 
 对于我们的`Campus`实体，我们将创建一个名为`“campus_spatial”`的设计文档，其中包含一个名为`“byLocation”`的空间视图，其功能如下:
 
-```
+```java
 function (doc) {
   if (doc.location &&
       doc._class == "com.baeldung.spring.data.couchbase.model.Campus") {
@@ -166,7 +166,7 @@ function (doc) {
 
 以下是`“all”`视图的地图功能:
 
-```
+```java
 function (doc, meta) {
   if(doc._class == "com.baeldung.spring.data.couchbase.model.Campus") {    
     emit(meta.id, null);
@@ -176,7 +176,7 @@ function (doc, meta) {
 
 这里是`“byName”`视图的地图功能:
 
-```
+```java
 function (doc, meta) {
   if(doc._class == "com.baeldung.spring.data.couchbase.model.Campus" &&
      doc.name) {    

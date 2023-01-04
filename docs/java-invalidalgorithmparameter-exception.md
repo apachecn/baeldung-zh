@@ -26,7 +26,7 @@ IV 的目标是增强加密过程。在某些 [AES 操作模式](/web/2022062811
 
 为了在密码中使用 IV，我们使用了`IvParameterSpec`类。让我们创建一个生成 IV 的方法:
 
-```
+```java
 public static IvParameterSpec generateIv() {
     byte[] iv = new byte[16];
     new SecureRandom().nextBytes(iv);

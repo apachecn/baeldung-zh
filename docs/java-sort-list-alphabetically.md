@@ -20,13 +20,13 @@
 
 首先，我们将定义输入列表:
 
-```
+```java
 private static List<String> INPUT_NAMES = Arrays.asList("john", "mike", "usmon", "ken", "harry");
 ```
 
 现在我们将首先使用`Collections`类以自然顺序对列表进行排序，也称为[字典顺序](https://web.archive.org/web/20221208143941/https://en.wikipedia.org/wiki/Lexicographic_order):
 
-```
+```java
 @Test
 void givenListOfStrings_whenUsingCollections_thenListIsSorted() {
     Collections.sort(INPUT_NAMES);
@@ -36,7 +36,7 @@ void givenListOfStrings_whenUsingCollections_thenListIsSorted() {
 
 其中`EXPECTED_NATURAL_ORDER`是:
 
-```
+```java
 private static List<String> EXPECTED_NATURAL_ORDER = Arrays.asList("harry", "john", "ken", "mike", "usmon"); 
 ```
 
@@ -53,19 +53,19 @@ private static List<String> EXPECTED_NATURAL_ORDER = Arrays.asList("harry", "joh
 
 让我们再次使用`sort`方法，但是现在提供一个`Comparator`:
 
-```
+```java
 Comparator<String> reverseComparator = (first, second) -> second.compareTo(first);
 ```
 
 或者，我们可以简单地从`Comparator`接口使用这个静态方法:
 
-```
+```java
 Comparator<String> reverseComparator = Comparator.reverseOrder();
 ```
 
 一旦我们有了反向比较器，我们可以简单地将其传递给`sort`:
 
-```
+```java
 @Test
 void givenListOfStrings_whenUsingCollections_thenListIsSortedInReverse() {
     Comparator<String> reverseComparator = Comparator.reverseOrder();
@@ -76,7 +76,7 @@ void givenListOfStrings_whenUsingCollections_thenListIsSortedInReverse() {
 
 其中，预期反转顺序为:
 
-```
+```java
 private static List<String> EXPECTED_REVERSE_ORDER = Arrays.asList("usmon", "mike", "ken", "john", "harry"); 
 ```
 
@@ -96,7 +96,7 @@ private static List<String> EXPECTED_REVERSE_ORDER = Arrays.asList("usmon", "mik
 
 让我们设置并测试这个场景:
 
-```
+```java
 @Test
 void givenListOfStringsWithUpperAndLowerCaseMixed_whenCustomComparator_thenListIsSortedCorrectly() {
     List<String> movieNames = Arrays.asList("amazing SpiderMan", "Godzilla", "Sing", "Minions");
@@ -123,7 +123,7 @@ void givenListOfStringsWithUpperAndLowerCaseMixed_whenCustomComparator_thenListI
 
 我们希望它们排列在列表的末尾，其余的应该按照自然顺序排列:
 
-```
+```java
 @Test
 void givenListOfStringsIncludingSomeWithSpecialCharacter_whenCustomComparator_thenListIsSortedWithSpecialCharacterLast() {
     List<String> listWithSpecialCharacters = Arrays.asList("@laska", "blah", "jo", "@sk", "foo");
@@ -158,7 +158,7 @@ void givenListOfStringsIncludingSomeWithSpecialCharacter_whenCustomComparator_th
 
 我们先按自然顺序排序:
 
-```
+```java
 @Test
 void givenListOfStrings_whenSortWithStreams_thenListIsSortedInNaturalOrder() {
     List<String> sortedList = INPUT_NAMES.stream()
@@ -177,7 +177,7 @@ void givenListOfStrings_whenSortWithStreams_thenListIsSortedInNaturalOrder() {
 
 接下来，让我们传递一个`Comparator`到`sorted`，它定义了反向排序策略:
 
-```
+```java
 @Test
 void givenListOfStrings_whenSortWithStreamsUsingComparator_thenListIsSortedInReverseOrder() {
     List<String> sortedList = INPUT_NAMES.stream()
@@ -191,13 +191,13 @@ void givenListOfStrings_whenSortWithStreamsUsingComparator_thenListIsSortedInRev
 
 或者，我们可以得到相同的`Comparator`:
 
-```
+```java
 Comparator<String> reverseOrderComparator = Comparator.reverseOrder();
 ```
 
 然后我们简单地将这个`reverseOrderComparator`传递给`sorted`:
 
-```
+```java
 List<String> sortedList = INPUT_NAMES.stream()
   .sorted(reverseOrder)
   .collect(Collectors.toList());
@@ -209,7 +209,7 @@ List<String> sortedList = INPUT_NAMES.stream()
 
 我们可以简单地将未排序的列表转换成`TreeSet`，然后作为`List:`收集回来
 
-```
+```java
 @Test
 void givenNames_whenUsingTreeSet_thenListIsSorted() {
     SortedSet<String> sortedSet = new TreeSet<>(INPUT_NAMES);
@@ -224,7 +224,7 @@ void givenNames_whenUsingTreeSet_thenListIsSorted() {
 
 我们还可以使用`List`的`sort`方法对列表进行排序:
 
-```
+```java
 @Test
 void givenListOfStrings_whenSortOnList_thenListIsSorted() {
     INPUT_NAMES.sort(Comparator.reverseOrder());
@@ -240,13 +240,13 @@ void givenListOfStrings_whenSortOnList_thenListIsSorted() {
 
 让我们以`String`的一个`List`为例:
 
-```
+```java
  List<String> accentedStrings = Arrays.asList("único", "árbol", "cosas", "fútbol");
 ```
 
 让我们先按正常方式对它们进行排序:
 
-```
+```java
  Collections.sort(accentedStrings);
 ```
 
@@ -256,7 +256,7 @@ void givenListOfStrings_whenSortOnList_thenListIsSorted() {
 
 **让我们用特定的`locale`** 创建一个`Collator`的实例:
 
-```
+```java
 Collator esCollator = Collator.getInstance(new Locale("es")); 
 ```
 
@@ -264,7 +264,7 @@ Collator esCollator = Collator.getInstance(new Locale("es"));
 
 **然后我们可以将这个排序器作为一个`Comparator`来传递，用于在`list`、`Collection`上进行排序，或者使用`Streams:`、**进行排序
 
-```
+```java
 accentedStrings.sort((s1, s2) -> {
     return esCollator.compare(s1, s2);
 });
@@ -274,7 +274,7 @@ accentedStrings.sort((s1, s2) -> {
 
 最后，让我们一起展示这一切:
 
-```
+```java
 @Test
 void givenListOfStringsWithAccent_whenSortWithTheCollator_thenListIsSorted() {
     List<String> accentedStrings = Arrays.asList("único", "árbol", "cosas", "fútbol");
@@ -308,13 +308,13 @@ void givenListOfStringsWithAccent_whenSortWithTheCollator_thenListIsSorted() {
 
 让我们从重音字符串列表开始:
 
-```
+```java
 List<String> accentedStrings = Arrays.asList("único","árbol", "cosas", "fútbol");
 ```
 
 接下来，让我们用一个`Normalize`函数定义一个`Comparator`，并将其传递给我们的`sort`方法:
 
-```
+```java
 Collections.sort(accentedStrings, (o1, o2) -> {
     o1 = Normalizer.normalize(o1, Normalizer.Form.NFD);
     o2 = Normalizer.normalize(o2, Normalizer.Form.NFD);
@@ -330,7 +330,7 @@ Collections.sort(accentedStrings, (o1, o2) -> {
 
 让我们使用`Comparator`中的`StringUtils stripAccents` 方法，并将其传递给`sort`方法:
 
-```
+```java
 @Test
 void givenListOfStrinsWithAccent_whenComparatorWithNormalizer_thenListIsNormalizedAndSorted() {
     List<String> accentedStrings = Arrays.asList("único", "árbol", "cosas", "fútbol");
@@ -351,7 +351,7 @@ void givenListOfStrinsWithAccent_whenComparatorWithNormalizer_thenListIsNormaliz
 
 这里，让我们定义我们的自定义排序规则，并将其传递给 [`RuleBasedCollator`](https://web.archive.org/web/20221208143941/https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/text/RuleBasedCollator.html) :
 
-```
+```java
 @Test
 void givenListofStrings_whenUsingRuleBasedCollator_then ListIsSortedUsingRuleBasedCollator() throws ParseException {
     List<String> movieNames = Arrays.asList(

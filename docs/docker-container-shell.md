@@ -14,7 +14,7 @@
 
 如果我们想要连接到一个现有的容器，我们应该让任何容器处于运行状态。为此，我们必须用`docker ps`命令检查系统中的容器状态:
 
-```
+```java
 $ docker ps -a
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                  PORTS               NAMES
 4b9d83040f4a        hello-world         "/hello"            8 days ago          Exited (0) 8 days ago                       dazzling_perlman
@@ -22,13 +22,13 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 
 因为我们没有运行的容器，所以让我们以 RabbitMQ 容器为例:
 
-```
+```java
 $ docker run -d rabbitmq:3
 ```
 
 一旦容器被启动，我们将从对`docker ps`的另一个调用中看到它:
 
-```
+```java
 $ docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                NAMES
 b7a9f5eb6b85        rabbitmq:3          "docker-entrypoint.s…"   25 minutes ago      Up 25 minutes       4369/tcp, 5671-5672/tcp, 25672/tcp   trusting_bose
@@ -36,7 +36,7 @@ b7a9f5eb6b85        rabbitmq:3          "docker-entrypoint.s…"   25 minutes ag
 
 现在，连接到这个容器就像执行以下命令一样简单:
 
-```
+```java
 $ docker exec -it b7a9f5eb6b85 sh
 ```
 
@@ -49,7 +49,7 @@ $ docker exec -it b7a9f5eb6b85 sh
 
 让我们探索一下我们新创建的容器的操作系统:
 
-```
+```java
 $ cat /etc/*-release
 DISTRIB_ID=Ubuntu
 DISTRIB_RELEASE=18.04
@@ -79,7 +79,7 @@ UBUNTU_CODENAME=bionic
 
 如果我们尝试启动一个新的操作系统容器，例如 18.04 版的 Ubuntu，我们会发现它无法保持活动状态:
 
-```
+```java
 $ docker run ubuntu:18.04
 $ docker ps -a
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                     PORTS                                NAMES
@@ -91,20 +91,20 @@ RabbitMQ 容器还在运行的时候，Ubuntu one 就停止了。因此，我们
 
 避免这种情况的方法是以交互模式运行该容器:
 
-```
+```java
 $ docker run -it ubuntu:18.04
 ```
 
 现在我们在容器内部，我们可以检查外壳类型:
 
-```
+```java
 $ echo $0
 /bin/bash
 ```
 
 实际上，当我们在交互模式下启动容器时，使用`–rm`参数很方便。它将确保在我们退出时移除容器:
 
-```
+```java
 $ docker run -it --rm ubuntu:18.04
 ```
 
@@ -116,7 +116,7 @@ $ docker run -it --rm ubuntu:18.04
 
 但是，如果我们需要一个快速的解决方法，我们可以在容器中运行`tail`命令:
 
-```
+```java
 $ docker run -d ubuntu:18.04 tail -f /dev/null
 ```
 
@@ -124,7 +124,7 @@ $ docker run -d ubuntu:18.04 tail -f /dev/null
 
 现在我们只需要使用`docker exec`命令以我们之前看到的相同方式进行连接:
 
-```
+```java
 $ docker exec -it CONTAINER_ID sh
 ```
 

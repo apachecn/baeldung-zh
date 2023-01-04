@@ -30,25 +30,25 @@
 
 另一种方法是使用命令行。要使用命令行同步我们的 fork，我们应该首先`clone`它:
 
-```
+```java
 $ git clone https://github.com/[username]/[repository_name]
 ```
 
 在克隆我们的 fork 之后，我们应该向原始存储库添加一个`remote` 。我们可以随便叫它什么。姑且称之为`upstream`:
 
-```
+```java
 $ git remote add upstream https://github.com/[original_username]/[original_repository_name]
 ```
 
 现在，我们应该从`upstream`遥控器上`fetch`下来所有的分支:
 
-```
+```java
 $ git fetch upstream
 ```
 
 之后，我们应该切换到我们想要更新的分支:
 
-```
+```java
 $ git checkout branch3
 Branch 'branch3' set up to track remote branch 'branch3' from 'origin'.
 Switched to a new branch 'branch3'
@@ -56,7 +56,7 @@ Switched to a new branch 'branch3'
 
 现在，**我们应该改变我们分支的基础，以便我们的新提交出现在`upstream`库的`master`分支**的顶部:
 
-```
+```java
 $ git rebase upstream/master
 First, rewinding head to replay your work on top of it...
 Fast-forwarded branch3 to upstream/master.
@@ -64,7 +64,7 @@ Fast-forwarded branch3 to upstream/master.
 
 最后，我们应该`push`对 GitHub 上的`origin`存储库进行更改:
 
-```
+```java
 $ git push -f origin branch3
 ```
 

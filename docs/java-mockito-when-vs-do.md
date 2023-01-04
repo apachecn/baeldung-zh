@@ -14,7 +14,7 @@
 
 让我们考虑下面的`Employee`界面:
 
-```
+```java
 interface Employee {
     String greet();
     void work(DayOfWeek day);
@@ -23,7 +23,7 @@ interface Employee {
 
 在我们的测试中，我们使用了这个接口的模拟。假设我们想要配置 mock 的`greet()`方法来返回字符串`“Hello”`。使用莫克托的`when()`方法很简单:
 
-```
+```java
 @Test
 void givenNonVoidMethod_callingWhen_shouldConfigureBehavior() {
     // given
@@ -41,7 +41,7 @@ void givenNonVoidMethod_callingWhen_shouldConfigureBehavior() {
 
 直到这一点，这是很好的老嘲讽。同样，我们想配置`work()`方法，当我们用 Sunday 参数调用它时抛出一个异常:
 
-```
+```java
 @Test
 void givenVoidMethod_callingWhen_wontCompile() {
     // given
@@ -61,7 +61,7 @@ void givenVoidMethod_callingWhen_wontCompile() {
 
 让我们看看如何用`doThrow()`方法配置异常抛出:
 
-```
+```java
 @Test
 void givenVoidMethod_callingDoThrow_shouldConfigureBehavior() {
     // given
@@ -93,7 +93,7 @@ void givenVoidMethod_callingDoThrow_shouldConfigureBehavior() {
 
 [BDDMockito](/web/20221208143832/https://www.baeldung.com/bdd-mockito) 使用了一种我们之前讨论过的替代语法。这非常简单:在我们的模拟配置中，我们必须将关键字“`when”`替换为“`given`”，将关键字“`do`”替换为“`will`”。除此之外，我们的代码保持不变:
 
-```
+```java
 @Test
 void givenNonVoidMethod_callingGiven_shouldConfigureBehavior() {
     // given

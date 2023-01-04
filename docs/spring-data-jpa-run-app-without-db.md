@@ -16,7 +16,7 @@
 
 让我们将 [Spring Data JPA starter](https://web.archive.org/web/20220728150055/https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa) 和 [MySql Connector](https://web.archive.org/web/20220728150055/https://mvnrepository.com/artifact/mysql/mysql-connector-java) 依赖项添加到`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -33,7 +33,7 @@
 
 除此之外，当应用程序启动时，我们希望任务保持运行。为此，让我们将 [Web 启动器](https://web.archive.org/web/20220728150055/https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web)添加到`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -46,7 +46,7 @@
 
 **在启动应用程序**之前，我们需要在`application.properties`文件中设置一些强制属性:
 
-```
+```java
 spring.datasource.url=jdbc:mysql://localhost:3306/myDb
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect 
@@ -60,7 +60,7 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
 
 **除此之外，我们需要设置连接数据库所需的用户名和密码**:
 
-```
+```java
 spring.datasource.username=root
 spring.datasource.password=root
 ```
@@ -69,7 +69,7 @@ spring.datasource.password=root
 
 如果我们启动应用程序，我们会看到以下错误:
 
-```
+```java
 HHH000342: Could not obtain connection to query metadata
 com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
 The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server. 
@@ -86,13 +86,13 @@ The last packet sent successfully to the server was 0 milliseconds ago. The driv
 
 首先，**让我们** **禁用元数据获取**:
 
-```
+```java
 spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false 
 ```
 
 然后，**我们禁用自动数据库创建**:
 
-```
+```java
 spring.jpa.hibernate.ddl-auto=none 
 ```
 

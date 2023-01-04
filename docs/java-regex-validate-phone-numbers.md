@@ -12,7 +12,7 @@
 
 让我们从一个简单的表达式开始，这个表达式将**检查这个数字是否只有十个数字，而没有其他内容**:
 
-```
+```java
 @Test
 public void whenMatchesTenDigitsNumber_thenCorrect() {
     Pattern pattern = Pattern.compile("^\\d{10}$");
@@ -27,7 +27,7 @@ public void whenMatchesTenDigitsNumber_thenCorrect() {
 
 在第二个例子中，让我们看看如何在数字之间允许可选的空格、点或连字符(-) :
 
-```
+```java
 @Test
 public void whenMatchesTenDigitsNumberWhitespacesDotHyphen_thenCorrect() {
     Pattern pattern = Pattern.compile("^(\\d{3}[- .]?){2}\\d{4}$");
@@ -46,7 +46,7 @@ public void whenMatchesTenDigitsNumberWhitespacesDotHyphen_thenCorrect() {
 
 接下来，让我们添加将电话的第一部分放在括号中的可能性:
 
-```
+```java
 @Test
 public void whenMatchesTenDigitsNumberParenthesis_thenCorrect() {
     Pattern pattern = Pattern.compile"^((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$");
@@ -65,7 +65,7 @@ public void whenMatchesTenDigitsNumberParenthesis_thenCorrect() {
 
 最后，让我们看看如何在电话号码的开头使用国际前缀**:**
 
-```
+```java
 @Test
 public void whenMatchesTenDigitsNumberPrefix_thenCorrect() {
   Pattern pattern = Pattern.compile("^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$");
@@ -98,7 +98,7 @@ public void whenMatchesTenDigitsNumberPrefix_thenCorrect() {
 *   允许像`+111 123 45 67 89:`这样的数字的模式
     *   ^(\\+\\d{1,3}()？)?(\\d{3}[ ]？)(\\d{2}[ ]？){2}\\d{2}$
 
-```
+```java
 @Test
 public void whenMatchesPhoneNumber_thenCorrect() {
     String patterns 

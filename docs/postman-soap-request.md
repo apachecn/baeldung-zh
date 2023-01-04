@@ -42,7 +42,7 @@ Postman 负责为每个请求设置正确的 URL、内容类型和标题。
 
 接下来，让我们定制我们的请求体，在信封头中添加`Spain`作为国家`name`和`baeldung`名称空间:
 
-```
+```java
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
                   xmlns:gs="http://www.baeldung.com/springsoap/gen">
     <soapenv:Header/>
@@ -66,7 +66,7 @@ Postman 负责为每个请求设置正确的 URL、内容类型和标题。
 
 最后，让我们点击`Send`按钮来调用 SOAP 服务。如果我们的呼叫成功，Postman 会在下方选项卡中显示包含西班牙信息的响应:
 
-```
+```java
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
 <SOAP-ENV:Header/>
 <SOAP-ENV:Body>

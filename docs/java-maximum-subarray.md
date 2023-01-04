@@ -34,7 +34,7 @@
 
 现在让我们看看如何用 Java 实现这个解决方案:
 
-```
+```java
 public int maxSubArray(int[] nums) {
 
     int n = nums.length;
@@ -91,7 +91,7 @@ Kadane 的算法是最大子阵列问题的流行解决方案，该解决方案�
 
 在上图中，我们假设最大子数组在最后一个索引位置结束。因此，子阵列的最大和将是:
 
-```
+```java
 maximumSubArraySum = max_so_far + arr[n-1]
 ```
 
@@ -99,19 +99,19 @@ maximumSubArraySum = max_so_far + arr[n-1]
 
 现在，我们可以将这个假设应用于数组中的任何索引。例如，结束于`n-2`的最大子阵列和可以计算为:
 
-```
+```java
 maximumSubArraySum[n-2] = max_so_far[n-3] + arr[n-2]
 ```
 
 因此，我们可以得出结论:
 
-```
+```java
 maximumSubArraySum[i] = maximumSubArraySum[i-1] + arr[i]
 ```
 
 现在，由于数组中的每个元素都是大小为 1 的特殊子数组，我们还需要检查元素是否大于最大和本身:
 
-```
+```java
 maximumSubArraySum[i] = Max(arr[i], maximumSubArraySum[i-1] + arr[i])
 ```
 
@@ -127,7 +127,7 @@ maximumSubArraySum[i] = Max(arr[i], maximumSubArraySum[i-1] + arr[i])
 
 再一次，让我们看看如何按照上面的方法在 Java 中实现 Kadane 算法:
 
-```
+```java
 public int maxSubArraySum(int[] arr) {
 
     int size = arr.length;

@@ -16,7 +16,7 @@
 
 YAML 列表中的元素是使用“-”字符定义的，它们都共享相同的缩进级别:
 
-```
+```java
 yamlconfig:
   list:
     - item1
@@ -27,7 +27,7 @@ yamlconfig:
 
 作为比较，基于属性的等效使用指数:
 
-```
+```java
 yamlconfig.list[0]=item1
 yamlconfig.list[1]=item2
 yamlconfig.list[2]=item3
@@ -48,7 +48,7 @@ Spring Boot 为**提供了`[@ConfigurationProperties](/web/20221126233544/https:
 
 我们首先在`application.yml`中定义一个简单的列表:
 
-```
+```java
 application:
   profiles:
     - dev
@@ -60,7 +60,7 @@ application:
 
 然后我们将创建一个简单的`ApplicationProps` [POJO](/web/20221126233544/https://www.baeldung.com/java-pojo-class) 来保存将我们的 YAML 列表绑定到对象的`List`的逻辑:
 
-```
+```java
 @Component
 @ConfigurationProperties(prefix = "application")
 public class ApplicationProps {
@@ -80,7 +80,7 @@ public class ApplicationProps {
 
 最后，我们将`ApplicationProps` bean 注入到一个测试类中，并验证我们的`profiles` YAML 列表是否被正确地注入为`List<Object>`:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(initializers = ConfigDataApplicationContextInitializer.class)
 @EnableConfigurationProperties(value = ApplicationProps.class)
@@ -104,7 +104,7 @@ class YamlSimpleListUnitTest {
 
 首先，让我们给`application.yml`添加一些嵌套列表:
 
-```
+```java
 application:
   // ...
   props: 
@@ -140,7 +140,7 @@ application:
 
 然而`,` 在`users`的情况下，所有的条目共享相同的关键字**，所以为了简化它的映射，我们可能需要创建一个专用的`User`类来将关键字封装成字段**:
 
-```
+```java
 public class ApplicationProps {
 
     // ...
@@ -164,7 +164,7 @@ public class ApplicationProps {
 
 现在，我们验证嵌套的 YAML 列表是否被正确映射:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(initializers = ConfigDataApplicationContextInitializer.class)
 @EnableConfigurationProperties(value = ApplicationProps.class)

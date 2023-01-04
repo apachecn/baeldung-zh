@@ -34,7 +34,7 @@
 
 让我们定义一个简单的`BinaryTreeModel`类:
 
-```
+```java
 public class BinaryTreeModel {
 
     private Object value;
@@ -54,7 +54,7 @@ public class BinaryTreeModel {
 
 在我们开始实现二叉树打印机之前，我们需要创建一些样本数据来增量测试我们的可视化:
 
-```
+```java
 BinaryTreeModel root = new BinaryTreeModel("root");
 
 BinaryTreeModel node1 = new BinaryTreeModel("node1");
@@ -92,7 +92,7 @@ node7.setRight(new BinaryTreeModel("node9"));
 
 让我们定义一个方法来遍历我们的树:
 
-```
+```java
 public void traversePreOrder(StringBuilder sb, BinaryTreeModel node) {
     if (node != null) {
         sb.append(node.getValue());
@@ -105,7 +105,7 @@ public void traversePreOrder(StringBuilder sb, BinaryTreeModel node) {
 
 接下来，让我们定义我们的打印方法:
 
-```
+```java
 public void print(PrintStream os) {
     StringBuilder sb = new StringBuilder();
     traversePreOrder(sb, this.tree);
@@ -115,13 +115,13 @@ public void print(PrintStream os) {
 
 因此，我们可以简单地打印我们的测试树:
 
-```
+```java
 new BinaryTreePrinter(root).print(System.out); 
 ```
 
 输出将是按遍历顺序排列的树节点列表:
 
-```
+```java
 root
 node1
 node3
@@ -140,7 +140,7 @@ node6
 
 让我们更新我们的`traversePreOrder`方法，添加两个参数作为`padding`和`pointer`，并分别使用字符:
 
-```
+```java
 public void traversePreOrder(StringBuilder sb, String padding, String pointer, BinaryTreeModel node) {
     if (node != null) {
         sb.append(padding);
@@ -163,7 +163,7 @@ public void traversePreOrder(StringBuilder sb, String padding, String pointer, B
 
 同样，我们也更新了`print`方法:
 
-```
+```java
 public void print(PrintStream os) {
     StringBuilder sb = new StringBuilder();
     traversePreOrder(sb, "", "", this.tree);
@@ -193,7 +193,7 @@ public void print(PrintStream os) {
 
 让我们只为根节点定制`traversePreOrder`:
 
-```
+```java
 public String traversePreOrder(BinaryTreeModel root) {
 
     if (root == null) {
@@ -215,7 +215,7 @@ public String traversePreOrder(BinaryTreeModel root) {
 
 接下来，我们将为子节点创建另一个方法，如`traverseNodes. A`另外，我们将添加一个新参数`hasRightSibling`来正确实现前面的代码行:
 
-```
+```java
 public void traverseNodes(StringBuilder sb, String padding, String pointer, BinaryTreeModel node, 
   boolean hasRightSibling) {
     if (node != null) {
@@ -243,7 +243,7 @@ public void traverseNodes(StringBuilder sb, String padding, String pointer, Bina
 
 此外，我们需要对我们的`print`方法做一点小小的改变:
 
-```
+```java
 public void print(PrintStream os) {
     os.print(traversePreOrder(tree));
 } 

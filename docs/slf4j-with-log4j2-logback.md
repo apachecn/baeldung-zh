@@ -30,7 +30,7 @@ This article, using an example rich approach, introduces Log4J 2 Appender, Layou
 
 为了在 Log4j 2 中使用 SLF4J，我们将以下库添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-api</artifactId>
@@ -54,7 +54,7 @@ This article, using an example rich approach, introduces Log4J 2 Appender, Layou
 
 让我们看看如何创建`Logger`实例:
 
-```
+```java
 public class SLF4JExample {
 
     private static Logger logger = LoggerFactory.getLogger(SLF4JExample.class);
@@ -77,7 +77,7 @@ public class SLF4JExample {
 
 因此，我们只需要包含回退库:
 
-```
+```java
 <dependency>
     <groupId>ch.qos.logback</groupId>
     <artifactId>logback-classic</artifactId>
@@ -99,7 +99,7 @@ public class SLF4JExample {
 
 让我们添加必要的依赖项来为 Log4j 创建一个桥:
 
-```
+```java
 <dependency>
     <groupId>org.slf4j</groupId>
     <artifactId>log4j-over-slf4j</artifactId>
@@ -115,7 +115,7 @@ public class SLF4JExample {
 
 让我们添加必要的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.slf4j</groupId>
     <artifactId>slf4j-log4j12</artifactId>
@@ -140,7 +140,7 @@ SLF4J 在编译时解析它的绑定。它被认为是简单而强大的。
 
 幸运的是，两个框架可以在桥接模式下协同工作:
 
-```
+```java
 <dependency>
     <groupId>org.slf4j</groupId>
     <artifactId>jcl-over-slf4j</artifactId>
@@ -158,14 +158,14 @@ SLF4J 提供了额外的特性，可以使日志记录更有效，代码更可�
 
 例如，SLF4J 为处理参数提供了一个非常有用的界面:
 
-```
+```java
 String variable = "Hello John";
 logger.debug("Printing variable value: {}", variable);
 ```
 
 下面是做同样事情的 Log4j 代码:
 
-```
+```java
 String variable = "Hello John";
 logger.debug("Printing variable value: " + variable);
 ```
@@ -174,7 +174,7 @@ logger.debug("Printing variable value: " + variable);
 
 为了对 Log4J 做同样的事情，我们需要添加一个额外的`if`块，它将检查*调试*级别是否启用:
 
-```
+```java
 String variable = "Hello John";
 if (logger.isDebugEnabled()) {
     logger.debug("Printing variable value: " + variable);

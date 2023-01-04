@@ -30,13 +30,13 @@
 
 ### 可用签名
 
-```
+```java
 public int codePointAt(int index)
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenCallCodePointAt_thenDecimalUnicodeReturned() {
     assertEquals(97, "abcd".codePointAt(0));
@@ -47,7 +47,7 @@ public void whenCallCodePointAt_thenDecimalUnicodeReturned() {
 
 *   `StringIndexOutOfBoundsException`–如果向方法传递了不存在的索引。
 
-```
+```java
 @Test(expected = StringIndexOutOfBoundsException.class)
 public void whenPassNonExistingIndex_thenStringIndexOutOfBoundsExceptionThrown() {
     int a = "abcd".codePointAt(4);

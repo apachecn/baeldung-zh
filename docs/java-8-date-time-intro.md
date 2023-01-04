@@ -38,7 +38,7 @@ Have a look at different ways to check if a String is a valid date in Java[Read 
 
 可以从系统时钟创建当前日期的实例:
 
-```
+```java
 LocalDate localDate = LocalDate.now();
 ```
 
@@ -46,7 +46,7 @@ LocalDate localDate = LocalDate.now();
 
 例如，这些代码片段代表 2015 年 2 月 20 日的`LocalDate`:
 
-```
+```java
 LocalDate.of(2015, 02, 20);
 
 LocalDate.parse("2015-02-20");
@@ -56,19 +56,19 @@ LocalDate.parse("2015-02-20");
 
 以下代码片段获取当前本地日期并添加一天:
 
-```
+```java
 LocalDate tomorrow = LocalDate.now().plusDays(1);
 ```
 
 此示例获取当前日期并减去一个月。注意它是如何接受一个`enum`作为时间单位的:
 
-```
+```java
 LocalDate previousMonthSameDay = LocalDate.now().minus(1, ChronoUnit.MONTHS);
 ```
 
 在下面的两个代码示例中，我们解析日期“2016-06-12”并分别获取星期几和月几。注意返回值——第一个是表示`DayOfWeek`的对象，而第二个是表示月份顺序值的`int`:
 
-```
+```java
 DayOfWeek sunday = LocalDate.parse("2016-06-12").getDayOfWeek();
 
 int twelve = LocalDate.parse("2016-06-12").getDayOfMonth();
@@ -76,13 +76,13 @@ int twelve = LocalDate.parse("2016-06-12").getDayOfMonth();
 
 我们可以测试日期是否在闰年，例如当前日期:
 
-```
+```java
 boolean leapYear = LocalDate.now().isLeapYear();
 ```
 
 此外，可以确定一个日期与另一个日期的关系发生在另一个日期之前或之后:
 
-```
+```java
 boolean notBefore = LocalDate.parse("2016-06-12")
   .isBefore(LocalDate.parse("2016-06-11"));
 
@@ -94,7 +94,7 @@ boolean isAfter = LocalDate.parse("2016-06-12")
 
 在下面的两个例子中，我们分别得到代表给定日期一天(2016-06-12T00:00)开始的`LocalDateTime`和代表一个月(2016-06-01)开始的`LocalDate`:
 
-```
+```java
 LocalDateTime beginningOfDay = LocalDate.parse("2016-06-12").atStartOfDay();
 LocalDate firstDayOfMonth = LocalDate.parse("2016-06-12")
   .with(TemporalAdjusters.firstDayOfMonth());
@@ -112,37 +112,37 @@ LocalDate firstDayOfMonth = LocalDate.parse("2016-06-12")
 
 可以从系统时钟中创建电流`LocalTime`的实例:
 
-```
+```java
 LocalTime now = LocalTime.now();
 ```
 
 我们可以通过解析一个字符串表示来创建一个代表上午 6:30 的`LocalTime` :
 
-```
+```java
 LocalTime sixThirty = LocalTime.parse("06:30");
 ```
 
 工厂方法`of`也可以用来创建一个`LocalTime`。这段代码使用工厂方法创建代表早上 6:30 的`LocalTime`:
 
-```
+```java
 LocalTime sixThirty = LocalTime.of(6, 30);
 ```
 
 让我们通过解析一个字符串并使用“plus”API 给它添加一个小时来创建一个`LocalTime`。结果将是代表上午 7:30 的`LocalTime`;
 
-```
+```java
 LocalTime sevenThirty = LocalTime.parse("06:30").plus(1, ChronoUnit.HOURS);
 ```
 
 可以使用各种 getter 方法来获取特定的时间单位，如小时、分钟和秒:
 
-```
+```java
 int six = LocalTime.parse("06:30").getHour();
 ```
 
 我们还可以检查某个特定时间是在另一个特定时间之前还是之后。此代码示例比较两个结果为真的`LocalTime`:
 
-```
+```java
 boolean isbefore = LocalTime.parse("06:30").isBefore(LocalTime.parse("07:30"));
 ```
 
@@ -150,7 +150,7 @@ boolean isbefore = LocalTime.parse("06:30").isBefore(LocalTime.parse("07:30"));
 
 例如，下面的代码表示 23:59:59.99:
 
-```
+```java
 LocalTime maxTime = LocalTime.MAX
 ```
 
@@ -164,17 +164,17 @@ LocalTime maxTime = LocalTime.MAX
 
 类似于`LocalDate`和`LocalTime`，可以从系统时钟中获得`LocalDateTime` 的实例:
 
-```
+```java
 LocalDateTime.now();
 ```
 
 下面的代码示例解释了如何使用工厂的“of”和“parse”方法创建实例。结果将是一个代表 2015 年 2 月 20 日，早上 6:30 的`LocalDateTime`实例；
 
-```
+```java
 LocalDateTime.of(2015, Month.FEBRUARY, 20, 06, 30);
 ```
 
-```
+```java
 LocalDateTime.parse("2015-02-20T06:30:00");
 ```
 
@@ -182,17 +182,17 @@ LocalDateTime.parse("2015-02-20T06:30:00");
 
 下面的代码演示了“加”和“减”的方法。这些 API 的行为与它们在`LocalDate`和`LocalTime`中的对应部分完全一样:
 
-```
+```java
 localDateTime.plusDays(1);
 ```
 
-```
+```java
 localDateTime.minusHours(2);
 ```
 
 Getter 方法也可用于提取类似于 date 和 time 类的特定单位。给定上面的`LocalDateTime`实例，该代码示例将返回月份二月:
 
-```
+```java
 localDateTime.getMonth();
 ```
 
@@ -202,25 +202,25 @@ localDateTime.getMonth();
 
 在这里，我们为巴黎创造了一个`Zone`:
 
-```
+```java
 ZoneId zoneId = ZoneId.of("Europe/Paris"); 
 ```
 
 我们可以获得一组所有区域 id:
 
-```
+```java
 Set<String> allZoneIds = ZoneId.getAvailableZoneIds();
 ```
 
 `LocalDateTime`可以转换为特定的区域:
 
-```
+```java
 ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, zoneId);
 ```
 
 `ZonedDateTime`提供了`parse` 方法来获取特定时区的日期时间:
 
-```
+```java
 ZonedDateTime.parse("2015-05-03T10:15:30+01:00[Europe/Paris]");
 ```
 
@@ -228,13 +228,13 @@ ZonedDateTime.parse("2015-05-03T10:15:30+01:00[Europe/Paris]");
 
 可以使用`ZoneOffset`创建 `OffSetDateTime` 实例。在这里，我们创建一个代表 2015 年 2 月 20 日上午 6:30 的`LocalDateTime`:
 
-```
+```java
 LocalDateTime localDateTime = LocalDateTime.of(2015, Month.FEBRUARY, 20, 06, 30);
 ```
 
 然后我们通过创建一个`ZoneOffset`并为`localDateTime`实例设置来增加两个小时的时间:
 
-```
+```java
 ZoneOffset offset = ZoneOffset.of("+02:00");
 
 OffsetDateTime offSetByTwo = OffsetDateTime
@@ -253,13 +253,13 @@ OffsetDateTime offSetByTwo = OffsetDateTime
 
 `Period`类广泛用于修改给定日期的值或获取两个日期之间的差值:
 
-```
+```java
 LocalDate initialDate = LocalDate.parse("2007-05-10");
 ```
 
 我们可以通过使用`Period`来操纵`Date`:
 
-```
+```java
 LocalDate finalDate = initialDate.plus(Period.ofDays(5));
 ```
 
@@ -267,13 +267,13 @@ LocalDate finalDate = initialDate.plus(Period.ofDays(5));
 
 例如，当我们试图获得天数`:`的差值时，这将返回一个值为 5 的`int`
 
-```
+```java
 int five = Period.between(initialDate, finalDate).getDays();
 ```
 
 我们可以使用`ChronoUnit.between`获得特定单位的两个日期之间的` Period`,例如日、月或年:
 
-```
+```java
 long five = ChronoUnit.DAYS.between(initialDate, finalDate);
 ```
 
@@ -287,7 +287,7 @@ long five = ChronoUnit.DAYS.between(initialDate, finalDate);
 
 让我们创建一个上午 6:30 的`LocalTime`,然后添加一个 30 秒的持续时间来创建一个上午 6:30:30 的`LocalTime`;
 
-```
+```java
 LocalTime initialTime = LocalTime.of(6, 30, 0);
 
 LocalTime finalTime = initialTime.plus(Duration.ofSeconds(30));
@@ -297,13 +297,13 @@ LocalTime finalTime = initialTime.plus(Duration.ofSeconds(30));
 
 首先，我们使用`Duration`类的`between()`方法找到`finalTime`和`initialTime`之间的时差，并返回以秒为单位的时差:
 
-```
+```java
 long thirty = Duration.between(initialTime, finalTime).getSeconds();
 ```
 
 在第二个例子中，我们使用`ChronoUnit`类的`between()`方法来执行相同的操作:
 
-```
+```java
 long thirty = ChronoUnit.SECONDS.between(initialTime, finalTime);
 ```
 
@@ -313,14 +313,14 @@ long thirty = ChronoUnit.SECONDS.between(initialTime, finalTime);
 
 Java 8 增加了`toInstant()`方法，有助于将现有的`Date`和`Calendar`实例转换为新的日期和时间 API:
 
-```
+```java
 LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
 LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault());
 ```
 
 `LocalDateTime`可以从纪元秒构建。以下代码的结果将是一个代表 2016-06-13T11:34:50 的`LocalDateTime`:
 
-```
+```java
 LocalDateTime.ofEpochSecond(1465817690, 0, ZoneOffset.UTC);
 ```
 
@@ -330,13 +330,13 @@ LocalDateTime.ofEpochSecond(1465817690, 0, ZoneOffset.UTC);
 
 Java 8 为`Date`和`Time` :的简单格式化提供了 API
 
-```
+```java
 LocalDateTime localDateTime = LocalDateTime.of(2015, Month.JANUARY, 25, 6, 30);
 ```
 
 此代码传递一个 ISO 日期格式来格式化本地日期，结果为 2015-01-25:
 
-```
+```java
 String localDateString = localDateTime.format(DateTimeFormatter.ISO_DATE);
 ```
 
@@ -344,7 +344,7 @@ String localDateString = localDateTime.format(DateTimeFormatter.ISO_DATE);
 
 自定义模式也可以提供给 format 方法，它在这里返回一个`LocalDate`作为 2015/01/25:
 
-```
+```java
 localDateTime.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
 ```
 
@@ -352,7 +352,7 @@ localDateTime.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
 
 例如，这将给出表示 2015 年 1 月 25 日 06:30:00:
 
-```
+```java
 localDateTime
   .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
   .withLocale(Locale.UK));
@@ -370,7 +370,7 @@ localDateTime
 
 ThreeTen 项目的工件可以在 [Maven 中央存储库](https://web.archive.org/web/20230102142017/https://mvnrepository.com/artifact/org.threeten/threetenbp)中找到:
 
-```
+```java
 <dependency>
     <groupId>org.threeten</groupId>
     <artifactId>threetenbp</artifactId>
@@ -384,7 +384,7 @@ Java 8 `Date`和`Time`库的另一个替代品是 [Joda-Time](https://web.archiv
 
 通过在我们的项目中包含下面的 pom 依赖项，可以在 [Maven Central](https://web.archive.org/web/20230102142017/https://mvnrepository.com/artifact/joda-time/joda-time) 中找到工件:
 
-```
+```java
 <dependency>
     <groupId>joda-time</groupId>
     <artifactId>joda-time</artifactId>

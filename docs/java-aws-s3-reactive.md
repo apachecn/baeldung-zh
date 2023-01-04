@@ -30,7 +30,7 @@ AWS 通过它的许多 API 提供许多服务，我们可以使用他们的官�
 
 除了这些库，我们还需要引入 AWS SDK for Java V2 依赖项:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -70,7 +70,7 @@ AWS SDK [提供了定义所有依赖项所需版本的 BOM](https://web.archive.
 
 因为我们只需要这个类的一个实例，所以让我们用构建它的`@Bean`方法创建一个`@Configuration`类，这样我们就可以在任何需要的地方注入它:
 
-```
+```java
 @Configuration
 @EnableConfigurationProperties(S3ClientConfigurarionProperties.class)
 public class S3ClientConfiguration {
@@ -113,7 +113,7 @@ public class S3ClientConfiguration {
 
 至于凭证，我们提供了一个定制的`AwsCredentialsProvider `，可以从 Spring 属性中恢复凭证。**这开启了通过 Spring 的`Environment`抽象**和所有支持的`PropertySource `实现注入那些值的可能性，比如 Vault 或 Config Server:
 
-```
+```java
 @Bean
 public AwsCredentialsProvider awsCredentialsProvider(S3ClientConfigurarionProperties s3props) {
     if (StringUtils.isBlank(s3props.getAccessKeyId())) {
@@ -136,7 +136,7 @@ public AwsCredentialsProvider awsCredentialsProvider(S3ClientConfigurarionProper
 
 我们需要处理两种不同的场景:简单上传和多部分上传。让我们继续创建一个`@RestController`并添加方法来处理这些场景:
 
-```
+```java
 @RestController
 @RequestMapping("/inbox")
 @Slf4j
@@ -181,7 +181,7 @@ public class UploadResource {
 
 我们只需要用生成的密钥、文件长度、MIME 内容类型构建一个`PutObjectRequest`,并将其传递给我们的 S3 客户端中的`putObject()`方法:
 
-```
+```java
 @PostMapping
 public Mono<ResponseEntity<UploadResult>> uploadHandler(@RequestHeader HttpHeaders headers,
   @RequestBody Flux<ByteBuffer> body) {
@@ -240,7 +240,7 @@ SDK V2 中的异步方法总是返回一个`CompletableFuture`对象。我们用
 
 毫不奇怪，我们的`@Controller`类中的`multipartUploadHandler`负责处理多部分文件上传。在这个上下文中，每个部分可以有任何类型的数据，由它的 MIME-type 标识。反应式 Web 框架将这些部分作为实现`Part`接口的对象的`Flux`交付给我们的处理程序，我们将依次处理这些部分:
 
-```
+```java
 return parts
   .ofType(FilePart.class)
   .flatMap((part)-> saveFile(headers, part))
@@ -258,7 +258,7 @@ return parts
 
 这意味着我们不能只接受收到的数据块，然后马上发送出去。相反，我们需要在本地缓冲它们，直到达到最小大小或数据结尾。因为我们还需要一个地方来跟踪我们已经发送了多少部分以及产生的`CompletedPart`结果，我们将创建一个简单的`UploadState` 内部类来保存这个状态:
 
-```
+```java
 class UploadState {
     String bucket;
     String filekey;
@@ -276,7 +276,7 @@ class UploadState {
 
 考虑到所需的步骤和缓冲，我们最终的实现乍一看可能有点吓人:
 
-```
+```java
 Mono<String> saveFile(HttpHeaders headers,String bucket, FilePart part) {
     String filekey = UUID.randomUUID().toString();
     Map<String, String> metadata = new HashMap<String, String>();
@@ -346,7 +346,7 @@ Mono<String> saveFile(HttpHeaders headers,String bucket, FilePart part) {
 
 文件上传管道调用带有两个参数的`uploadPart()`方法:上传状态和一个`ByteBuffer`。从那里，我们构建一个`UploadPartRequest`实例，并使用我们的`S3AsyncClient`中可用的`uploadPart()`方法发送数据:
 
-```
+```java
 private Mono<CompletedPart> uploadPart(UploadState uploadState, ByteBuffer buffer) {
     final int partNumber = ++uploadState.partCounter;
     CompletableFuture<UploadPartResponse> request = s3client.uploadPart(UploadPartRequest.builder()
@@ -376,7 +376,7 @@ private Mono<CompletedPart> uploadPart(UploadState uploadState, ByteBuffer buffe
 
 最后，但同样重要的是，我们需要通过向 S3 发送一个`completeMultipartUpload()`请求来完成多部分文件的上传。这很容易，因为上传管道将我们需要的所有信息作为参数传递:
 
-```
+```java
 private Mono<CompleteMultipartUploadResponse> completeUpload(UploadState state) {        
     CompletedMultipartUpload multipartUpload = CompletedMultipartUpload.builder()
         .parts(state.completedParts.values())
@@ -403,7 +403,7 @@ SDK 提供了后者的几个实现，使得流适应于`Flux, `成为可能，�
 
 我们的下载控制器是一个标准的 Spring Reactive `@RestController`，用一个单独的`@GetMapping`方法来处理下载请求。我们希望通过一个`@PathVariable`参数得到文件密钥，我们将返回一个包含文件内容的异步`ResponseEntity`:
 
-```
+```java
 @GetMapping(path="/{filekey}")
 Mono<ResponseEntity<Flux<ByteBuffer>>> downloadFile(@PathVariable("filekey") String filekey) {    
     GetObjectRequest request = GetObjectRequest.builder()
@@ -439,7 +439,7 @@ Mono<ResponseEntity<Flux<ByteBuffer>>> downloadFile(@PathVariable("filekey") Str
 
 这个提供者的工作是处理这些事件并创建一个 `FluxResponse`实例，包含提供的`GetObjectResponse`实例和作为流的响应体:
 
-```
+```java
 class FluxResponseProvider implements AsyncResponseTransformer<GetObjectResponse,FluxResponse> {    
     private FluxResponse response;
     @Override
@@ -468,7 +468,7 @@ class FluxResponseProvider implements AsyncResponseTransformer<GetObjectResponse
 
 最后，让我们快速看一下`FluxResponse`类:
 
-```
+```java
 class FluxResponse {
     final CompletableFuture<FluxResponse> cf = new CompletableFuture<>();
     GetObjectResponse sdkResponse;

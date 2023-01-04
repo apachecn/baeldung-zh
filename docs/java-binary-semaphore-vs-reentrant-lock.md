@@ -14,7 +14,7 @@
 
 让我们讨论一个简单的二进制信号量的[实现，使用 Java 中可用的](/web/20220627182628/https://www.baeldung.com/java-semaphore#mutex) [`Semaphore`](https://web.archive.org/web/20220627182628/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Semaphore.html) 类:
 
-```
+```java
 Semaphore binarySemaphore = new Semaphore(1);
 try {
     binarySemaphore.acquire();
@@ -31,7 +31,7 @@ try {
 
 另外，`Semaphore`类提供了`fairness`参数。当设置为`true`时，`fairness`参数确保请求线程获取许可的顺序(基于它们的等待时间):
 
-```
+```java
 Semaphore binarySemaphore = new Semaphore(1, true);
 ```
 
@@ -43,7 +43,7 @@ Semaphore binarySemaphore = new Semaphore(1, true);
 
 例如，让我们看一个使用 Java 中可用的 [`ReentrantLock`](https://web.archive.org/web/20220627182628/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/locks/ReentrantLock.html) 类的简单实现:
 
-```
+```java
 ReentrantLock reentrantLock = new ReentrantLock();
 try {
     reentrantLock.lock();
@@ -60,7 +60,7 @@ try {
 
 当线程重新进入锁时，它必须请求解锁相同的次数来释放资源:
 
-```
+```java
 reentrantLock.lock();
 reentrantLock.lock();
 assertEquals(2, reentrantLock.getHoldCount());
@@ -77,7 +77,7 @@ assertEquals(false, reentrantLock.isLocked());
 
 类似于`Semaphore`类，`ReentrantLock`类也支持`fairness`参数:
 
-```
+```java
 ReentrantLock reentrantLock = new ReentrantLock(true);
 ```
 

@@ -18,7 +18,7 @@
 
 让我们构造一个最大大小为 10 的`EvictingQueue` 实例。接下来，我们将向它添加 10 个元素:
 
-```
+```java
 Queue<Integer> evictingQueue = EvictingQueue.create(10);
 
 IntStream.range(0, 10)
@@ -32,7 +32,7 @@ assertThat(evictingQueue)
 
 对于`EvictingQueue` 实现，情况并非如此。向其添加新元素将导致头部从其中移除，并且新元素将被添加到尾部:
 
-```
+```java
 evictingQueue.add(100);
 
 assertThat(evictingQueue)
@@ -51,7 +51,7 @@ assertThat(evictingQueue)
 
 假设我们有一个`CustomClass` 类，它有一个整数类型的`value` 字段:
 
-```
+```java
 class CustomClass {
     private Integer value;
 
@@ -61,7 +61,7 @@ class CustomClass {
 
 让我们创建一个将在`int`类型上使用比较器的`MinMaxPriorityQueue` 。接下来，我们将向队列添加 10 个`CustomClass` 类型的对象:
 
-```
+```java
 MinMaxPriorityQueue<CustomClass> queue = MinMaxPriorityQueue
   .orderedBy(Comparator.comparing(CustomClass::getValue))
   .maximumSize(10)
@@ -75,7 +75,7 @@ IntStream
 
 由于`MinMaxPriorityQueue` 和传递的`Comparator,` 的特征，队列头部的元素将等于 1，队列尾部的元素将等于 10:
 
-```
+```java
 assertThat(
   queue.peekFirst().getValue()).isEqualTo(1);
 assertThat(
@@ -84,13 +84,13 @@ assertThat(
 
 由于我们的队列容量是 10，并且我们添加了 10 个元素，所以队列已满。向其添加新元素将导致队列中的最后一个元素被移除。让我们添加一个`CustomClass` ，使`value`等于-1:
 
-```
+```java
 queue.add(new CustomClass(-1));
 ```
 
 在该动作之后，队列中的最后一个元素将被删除，并且在其尾部的新项目将等于 9。新的头将是-1，因为根据我们在构造队列时传递的`Comparator`,这是新的最小元素:
 
-```
+```java
 assertThat(
   queue.peekFirst().getValue()).isEqualTo(-1);
 assertThat(
@@ -101,7 +101,7 @@ assertThat(
 
 让我们添加一个 100 的数字，并测试该项目在该操作之后是否在队列中:
 
-```
+```java
 queue.add(new CustomClass(100));
 assertThat(queue.peekFirst().getValue())
   .isEqualTo(-1);

@@ -16,7 +16,7 @@
 
 使用 Java 9，解决方案很简单:
 
-```
+```java
 Stream<String> stream = Stream.iterate("", s -> s + "s")
   .takeWhile(s -> s.length() < 10); 
 ```
@@ -36,7 +36,7 @@ Stream<String> stream = Stream.iterate("", s -> s + "s")
 
 让我们用前面得到的`Stream`扔掉前五个元素:
 
-```
+```java
 stream.dropWhile(s -> !s.contains("sssss"));
 ```
 
@@ -48,14 +48,14 @@ stream.dropWhile(s -> !s.contains("sssss"));
 
 一个新的`iterate`稍微修改了这个方法，添加了一个应用于元素的谓词来确定流必须终止的时间。它的用法非常方便简洁:
 
-```
+```java
 Stream.iterate(0, i -> i < 10, i -> i + 1)
   .forEach(System.out::println);
 ```
 
 它可以与相应的`for`语句相关联:
 
-```
+```java
 for (int i = 0; i < 10; ++i) {
     System.out.println(i);
 }
@@ -67,7 +67,7 @@ for (int i = 0; i < 10; ++i) {
 
 假设`collection`和`map` 变量已经被成功创建和填充，请看下面的例子:
 
-```
+```java
 collection.stream()
   .flatMap(s -> {
       Integer temp = map.get(s);
@@ -78,7 +78,7 @@ collection.stream()
 
 为了避免这样的样板代码，在`Stream`类中添加了 [`ofNullable`](https://web.archive.org/web/20220628093237/https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/util/stream/Stream.html#ofNullable(T)) 方法。使用这种方法，前面的样本可以简单地转换成:
 
-```
+```java
 collection.stream()
   .flatMap(s -> Stream.ofNullable(map.get(s)))
   .collect(Collectors.toList());

@@ -26,7 +26,7 @@ Learn how to access different cell values using Apache POI.[Read more](/web/202
 
 首先，我们需要将以下依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.poi</groupId>
     <artifactId>poi</artifactId>
@@ -59,14 +59,14 @@ poi-ooxml 和 [jxls-jexcel](https://web.archive.org/web/20221128104701/https://s
 
 首先，让我们从给定的位置打开文件:
 
-```
+```java
 FileInputStream file = new FileInputStream(new File(fileLocation));
 Workbook workbook = new XSSFWorkbook(file);
 ```
 
 接下来，让我们检索文件的第一页，并遍历每一行:
 
-```
+```java
 Sheet sheet = workbook.getSheetAt(0);
 
 Map<Integer, List<String>> data = new HashMap<>();
@@ -90,13 +90,13 @@ for (Row row : sheet) {
 
 当单元格类型枚举值为`STRING`时，将使用`Cell`接口的`getRichStringCellValue()`方法读取内容:
 
-```
+```java
 data.get(new Integer(i)).add(cell.getRichStringCellValue().getString());
 ```
 
 内容类型为`NUMERIC`的单元格可以包含日期或数字，读取方式如下:
 
-```
+```java
 if (DateUtil.isCellDateFormatted(cell)) {
     data.get(i).add(cell.getDateCellValue() + "");
 } else {
@@ -106,13 +106,13 @@ if (DateUtil.isCellDateFormatted(cell)) {
 
 对于`BOOLEAN`值，我们有`getBooleanCellValue()`方法:
 
-```
+```java
 data.get(i).add(cell.getBooleanCellValue() + "");
 ```
 
 当单元格类型为`FORMULA`时，我们可以使用`getCellFormula()`方法:
 
-```
+```java
 data.get(i).add(cell.getCellFormula() + "");
 ```
 
@@ -124,7 +124,7 @@ Apache POI 使用上一节中介绍的相同接口来写入 Excel 文件，并�
 
 首先，我们将创建并样式化一个包含`“Name”`和`“Age”`单元格的标题行:
 
-```
+```java
 Workbook workbook = new XSSFWorkbook();
 
 Sheet sheet = workbook.createSheet("Persons");
@@ -154,7 +154,7 @@ headerCell.setCellStyle(headerStyle);
 
 接下来，让我们用不同的风格来书写表格的内容:
 
-```
+```java
 CellStyle style = workbook.createCellStyle();
 style.setWrapText(true);
 
@@ -170,7 +170,7 @@ cell.setCellStyle(style);
 
 最后，让我们将内容写入当前目录中的一个`“temp.xlsx”` 文件并关闭工作簿:
 
-```
+```java
 File currDir = new File(".");
 String path = currDir.getAbsolutePath();
 String fileLocation = path.substring(0, path.length() - 1) + "temp.xlsx";
@@ -182,7 +182,7 @@ workbook.close();
 
 让我们在一个`JUnit`测试中测试上述方法，该测试将内容写入`temp.xlsx`文件，然后读取同一个文件以验证它是否包含我们所写的文本:
 
-```
+```java
 public class ExcelTest {
 
     private ExcelPOIHelper excelPOIHelper;
@@ -225,7 +225,7 @@ JExcel 库是一个轻量级的库，它的优点是比 Apache POI 更容易使�
 
 让我们编写一个方法，从指定的 Excel 文件创建一个工作簿，获取文件的第一个工作表，然后遍历其内容，并将每一行添加到一个`HashMap`:
 
-```
+```java
 public class JExcelHelper {
 
     public Map<Integer, List<String>> readJExcel(String fileLocation) 
@@ -263,7 +263,7 @@ public class JExcelHelper {
 
 首先，让我们创建工作簿:
 
-```
+```java
 File currDir = new File(".");
 String path = currDir.getAbsolutePath();
 String fileLocation = path.substring(0, path.length() - 1) + "temp.xls";
@@ -273,7 +273,7 @@ WritableWorkbook workbook = Workbook.createWorkbook(new File(fileLocation));
 
 接下来，让我们创建第一个工作表并编写 excel 文件的标题，包含`“Name”`和`“Age”`单元格:
 
-```
+```java
 WritableSheet sheet = workbook.createSheet("Sheet 1", 0);
 
 WritableCellFormat headerFormat = new WritableCellFormat();
@@ -294,7 +294,7 @@ sheet.addCell(headerLabel);
 
 使用新的样式，让我们编写我们创建的表格的内容:
 
-```
+```java
 WritableCellFormat cellFormat = new WritableCellFormat();
 cellFormat.setWrap(true);
 
@@ -306,7 +306,7 @@ sheet.addCell(cellNumber);
 
 记住写入文件并在结束时关闭它是非常重要的，这样它就可以被其他进程使用，使用`Workbook`类的`write()`和`close()`方法:
 
-```
+```java
 workbook.write();
 workbook.close();
 ```

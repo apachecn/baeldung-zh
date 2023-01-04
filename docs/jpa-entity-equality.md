@@ -16,7 +16,7 @@ Java 集合将对象组合在一起。分组逻辑使用称为哈希代码的特
 
 如果由`hashCode()`方法返回的值对于所有实体都是相同的，这可能会导致不期望的行为。假设我们的实体对象有一个定义为`id`的主键，但是我们将`hashCode()`方法定义为:
 
-```
+```java
 @Override
 public int hashCode() {
     return 12345;
@@ -25,7 +25,7 @@ public int hashCode() {
 
 集合在比较不同的对象时将无法区分它们，因为它们将共享相同的哈希代码。幸运的是，解决这个问题就像在生成哈希代码时使用惟一的键一样简单。例如，我们可以使用我们的`id`来定义`hashCode()`方法:
 
-```
+```java
 @Override
 public int hashCode() {
     return id * 12345;
@@ -44,7 +44,7 @@ public int hashCode() {
 
 让我们定义一个`equals()`方法，该方法只有在对象属于同一类并且具有相同的`id`时才有效:
 
-```
+```java
 @Override
 public boolean equals(Object o) {
     if (o == null || this.getClass() != o.getClass()) {
@@ -72,7 +72,7 @@ public boolean equals(Object o) {
 
 假设我们知道一个电子邮件地址总是唯一的，即使它不是`@Id`字段。我们可以在`hashCode()`和`equals()`方法中包含电子邮件字段:
 
-```
+```java
 public class EqualByBusinessKey {
 
     private String email;

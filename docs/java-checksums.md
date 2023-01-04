@@ -22,14 +22,14 @@
 
 如果我们从一个`String`开始，我们可以使用`getBytes()` 方法从`String` 中[得到一个字节数组:](/web/20221208143830/https://www.baeldung.com/java-string-to-byte-array)
 
-```
+```java
 String test = "test";
 byte[] bytes = test.getBytes();
 ```
 
 接下来，我们可以使用字节数组计算校验和:
 
-```
+```java
 public static long getCRC32Checksum(byte[] bytes) {
     Checksum crc32 = new CRC32();
     crc32.update(bytes, 0, bytes.length);
@@ -53,7 +53,7 @@ public static long getCRC32Checksum(byte[] bytes) {
 
 校验和值可从`CheckedInputStream`获得:
 
-```
+```java
 public static long getChecksumCRC32(InputStream stream, int bufferSize) 
   throws IOException {
     CheckedInputStream checkedInputStream = new CheckedInputStream(stream, new CRC32());

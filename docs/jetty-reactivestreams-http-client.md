@@ -20,7 +20,7 @@ Jetty 的 [`HttpClient`](https://web.archive.org/web/20221205170624/https://www.
 
 让我们从将[反应流](https://web.archive.org/web/20221205170624/https://search.maven.org/search?q=g:org.reactivestreams%20AND%20a:reactive-streams)、[项目反应器](https://web.archive.org/web/20221205170624/https://search.maven.org/search?q=g:org.springframework%20AND%20a:spring-webflux)、 [RxJava](https://web.archive.org/web/20221205170624/https://search.maven.org/search?q=g:io.reactivex.rxjava2%20AND%20a:rxjava) 、 [Spring WebFlux](https://web.archive.org/web/20221205170624/https://search.maven.org/search?q=g:io.projectreactor%20AND%20a:reactor-core) 和 [Jetty 的反应流`HTTPClient`、](https://web.archive.org/web/20221205170624/https://search.maven.org/search?q=g:org.eclipse.jetty%20AND%20a:jetty-reactive-httpclient)的依赖项添加到我们的`pom.xml. `开始这个示例。除此之外，我们还将添加 [Jetty 服务器](https://web.archive.org/web/20221205170624/https://search.maven.org/search?q=g:org.eclipse.jetty%20AND%20a:jetty-server)的依赖项，以便创建服务器:
 
-```
+```java
 <dependency>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-reactive-httpclient</artifactId>
@@ -57,7 +57,7 @@ Jetty 的 [`HttpClient`](https://web.archive.org/web/20221205170624/https://www.
 
 现在，让我们创建一个服务器并添加一个请求处理程序，该处理程序只是将请求正文写入响应:
 
-```
+```java
 public class RequestHandler extends AbstractHandler {
     @Override
     public void handle(String target, Request jettyRequest, HttpServletRequest request,
@@ -77,14 +77,14 @@ server.start();
 
 然后我们可以写`HttpClient`:
 
-```
+```java
 HttpClient httpClient = new HttpClient();
 httpClient.start();
 ```
 
 现在我们已经创建了客户机和服务器，让我们看看如何将这个阻塞的 HTTP 客户机转换成一个非阻塞的客户机，并创建请求:
 
-```
+```java
 Request request = httpClient.newRequest("http://localhost:8080/"); 
 ReactiveRequest reactiveRequest = ReactiveRequest.newBuilder(request).build();
 Publisher<ReactiveResponse> publisher = reactiveRequest.response();
@@ -98,7 +98,7 @@ Jetty 的`HttpClient` 本身支持[反应流](https://web.archive.org/web/202212
 
 现在， **Reactive Streams 只是一组接口**，因此，对于我们的测试，让我们实现一个简单的阻塞订阅者:
 
-```
+```java
 public class BlockingSubscriber implements Subscriber<ReactiveResponse> {
     BlockingQueue<ReactiveResponse> sink = new LinkedBlockingQueue<>(1);
 
@@ -130,7 +130,7 @@ public class BlockingSubscriber implements Subscriber<ReactiveResponse> {
 
 现在，我们可以快速测试我们的 HTTP 请求:
 
-```
+```java
 BlockingSubscriber subscriber = new BlockingSubscriber();
 publisher.subscribe(subscriber);
 ReactiveResponse response = subscriber.block();
@@ -144,13 +144,13 @@ Assert.assertEquals(response.getStatus(), HttpStatus.OK_200);
 
 在发布者创建之后，让我们使用 Project Reactor 中的`Mono`类来获得反应性响应:
 
-```
+```java
 ReactiveResponse response = Mono.from(publisher).block();
 ```
 
 然后，我们可以测试结果反应:
 
-```
+```java
 Assert.assertNotNull(response);
 Assert.assertEquals(response.getStatus(), HttpStatus.OK_200);
 ```
@@ -161,19 +161,19 @@ Assert.assertEquals(response.getStatus(), HttpStatus.OK_200);
 
 首先，让我们用`JettyClientHttpConnector`将 Jetty 的 HTTP 客户端与`WebClient:`绑定在一起
 
-```
+```java
 ClientHttpConnector clientConnector = new JettyClientHttpConnector(httpClient);
 ```
 
 然后将这个连接器传递给`WebClient` 来执行非阻塞 HTTP 请求:
 
-```
+```java
 WebClient client = WebClient.builder().clientConnector(clientConnector).build();
 ```
 
 接下来，让我们使用刚刚创建的反应式 HTTP 客户端进行实际的 HTTP 调用，并测试结果:
 
-```
+```java
 String responseContent = client.post()
   .uri("http://localhost:8080/").contentType(MediaType.TEXT_PLAIN)
   .body(BodyInserters.fromPublisher(Mono.just("Hello World!"), String.class))
@@ -190,7 +190,7 @@ Assert.assertEquals("Hello World!", responseContent);
 
 现在，让我们稍微改变一下我们的例子，在请求中包含一个主体:
 
-```
+```java
 ReactiveRequest reactiveRequest = ReactiveRequest.newBuilder(request)
   .content(ReactiveRequest.Content
     .fromString("Hello World!", "text/plain", StandardCharsets.UTF_8))
@@ -203,7 +203,7 @@ Publisher<String> publisher = reactiveRequest
 
 现在，我们可以看到，使用 RxJava2 获得响应实际上与 Project Reactor 非常相似。基本上，我们只是用`Single`代替`Mono`:
 
-```
+```java
 String responseContent = Single.fromPublisher(publisher)
   .blockingGet();
 
@@ -216,7 +216,7 @@ Assert.assertEquals("Hello World!", responseContent);
 
 这一次，让我们通过使用 HTTP 客户端而不是请求，使我们的反应式请求略有不同:
 
-```
+```java
 ReactiveRequest request = ReactiveRequest.newBuilder(httpClient, "http://localhost:8080/")
   .content(ReactiveRequest.Content.fromString("Hello World!", "text/plain", UTF_8))
   .build(); 
@@ -224,13 +224,13 @@ ReactiveRequest request = ReactiveRequest.newBuilder(httpClient, "http://localho
 
 现在让我们来看看 HTTP 请求事件的`Publisher`:
 
-```
+```java
 Publisher<ReactiveRequest.Event> requestEvents = request.requestEvents(); 
 ```
 
 现在，让我们再次使用 RxJava。这一次，我们将创建一个包含事件类型的列表，并通过在事件发生时订阅请求事件来填充它:
 
-```
+```java
 List<Type> requestEventTypes = new ArrayList<>();
 
 Flowable.fromPublisher(requestEvents)
@@ -240,7 +240,7 @@ Single<ReactiveResponse> response = Single.fromPublisher(request.response());
 
 然后，由于我们在测试中，我们可以阻止我们的响应并验证:
 
-```
+```java
 int actualStatus = response.blockingGet().getStatus();
 
 Assert.assertEquals(6, requestEventTypes.size());

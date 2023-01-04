@@ -14,7 +14,7 @@ Apache Solr 是一个基于 Lucene 的开源搜索平台。Apache SolrJ 是一�
 
 安装过程很简单——只需下载 zip/tar 包，提取其中的内容，然后从命令行启动服务器。对于本文，我们将创建一个 Solr 服务器，其核心称为“bigboxstore”:
 
-```
+```java
 bin/solr start
 bin/solr create -c 'bigboxstore'
 ```
@@ -25,7 +25,7 @@ bin/solr create -c 'bigboxstore'
 
 现在我们已经启动并运行了 Solr 服务器，让我们直接跳到 SolrJ Java 客户端。要在您的项目中使用 SolrJ，您需要在您的`pom.xml`文件中声明以下 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.solr</groupId>
     <artifactId>solr-solrj</artifactId>
@@ -39,7 +39,7 @@ bin/solr create -c 'bigboxstore'
 
 让我们通过连接到我们的 Solr 服务器来启动 SolrJ 客户机:
 
-```
+```java
 String urlString = "http://localhost:8983/solr/bigboxstore";
 HttpSolrClient solr = new HttpSolrClient.Builder(urlString).build();
 solr.setParser(new XMLResponseParser());
@@ -51,7 +51,7 @@ solr.setParser(new XMLResponseParser());
 
 让我们使用`SolrInputDocument`定义要索引的数据，并使用`add()`方法将其添加到我们的索引中:
 
-```
+```java
 SolrInputDocument document = new SolrInputDocument();
 document.addField("id", "123456");
 document.addField("name", "Kenmore Dishwasher");
@@ -66,7 +66,7 @@ solr.commit();
 
 **您还可以使用 beans** 来索引 Solr 文档。让我们定义一个 ProductBean，其属性用@ `Field`注释:
 
-```
+```java
 public class ProductBean {
 
     String id;
@@ -94,7 +94,7 @@ public class ProductBean {
 
 然后，让我们将 bean 添加到我们的索引中:
 
-```
+```java
 solrClient.addBean( new ProductBean("888", "Apple iPhone 6s", "299.99") );
 solrClient.commit();
 ```
@@ -105,7 +105,7 @@ solrClient.commit();
 
 来自服务器的`QueryResponse` 将包含一个与格式为`field:value`的任何查询匹配的 `SolrDocument` 对象列表。在本例中，我们按价格查询:
 
-```
+```java
 SolrQuery query = new SolrQuery();
 query.set("q", "price:599.99");
 QueryResponse response = solr.query(query);
@@ -121,7 +121,7 @@ for (SolrDocument doc : docList) {
 
 一个更简单的选择是使用`getById()`通过`Id`进行查询。如果找到匹配，它将只返回一个文档:
 
-```
+```java
 SolrDocument doc = solr.getById("123456");
 assertEquals((String) doc.getFieldValue("name"), "Kenmore Dishwasher");
 assertEquals((Double) doc.getFieldValue("price"), (Double) 599.99);
@@ -131,7 +131,7 @@ assertEquals((Double) doc.getFieldValue("price"), (Double) 599.99);
 
 当我们想从索引中删除一个文档时，我们可以使用`deleteById()`并验证它已经被删除:
 
-```
+```java
 solr.deleteById("123456");
 solr.commit();
 SolrQuery query = new SolrQuery();
@@ -143,7 +143,7 @@ assertEquals(docList.getNumFound(), 0);
 
 我们还可以选择`deleteByQuery()`，所以让我们尝试删除任何具有特定名称的文档:
 
-```
+```java
 solr.deleteByQuery("name:Kenmore Dishwasher");
 solr.commit();
 SolrQuery query = new SolrQuery();

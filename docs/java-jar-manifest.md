@@ -22,13 +22,13 @@ Java 档案(JAR)由其清单文件描述。本文探索了它的许多功能，�
 
 例如，如果我们在 OpenJDK 11 中构建一个 JAR:
 
-```
+```java
 jar cf MyJar.jar classes/
 ```
 
 它生成一个非常简单的清单文件:
 
-```
+```java
 Manifest-Version: 1.0
 Created-By: 11.0.3 (AdoptOpenJDK)
 ```
@@ -39,19 +39,19 @@ Created-By: 11.0.3 (AdoptOpenJDK)
 
 例如，假设我们有一个名为`manifest.txt`的定制清单文件:
 
-```
+```java
 Built-By: baeldung
 ```
 
 我们可以包含这个文件，当我们使用`m` 选项时，`jar` 将**将其与默认的清单文件**合并:
 
-```
+```java
 jar cfm MyJar.jar manifest.txt classes/
 ```
 
 然后，生成的清单文件是:
 
-```
+```java
 Manifest-Version: 1.0
 Built-By: baeldung
 Created-By: 11.0.3 (AdoptOpenJDK)
@@ -63,7 +63,7 @@ Created-By: 11.0.3 (AdoptOpenJDK)
 
 例如，Maven 添加了一些额外的头:
 
-```
+```java
 Manifest-Version: 1.0
 Archiver-Version: Plexus Archiver
 Created-By: Apache Maven 3.3.9
@@ -75,7 +75,7 @@ Build-Jdk: 11.0.3
 
 比方说，我们想指出 JAR 是由谁创建的，以及包:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-jar-plugin</artifactId>
@@ -95,7 +95,7 @@ Build-Jdk: 11.0.3
 
 这将生成一个带有定制的`package`和`created-by`头的清单文件:
 
-```
+```java
 Manifest-Version: 1.0
 Build-Jdk-Spec: 11
 Package: com.baeldung.java
@@ -108,7 +108,7 @@ Created-By: baeldung
 
 标题必须遵循特定的格式，并由新行分隔:
 
-```
+```java
 key1: value1
 Key2: value2
 ```
@@ -135,7 +135,7 @@ Key2: value2
 
 例如，如果我们的应用程序入口点在`Application.class`中，并且它使用库和资源，那么我们可以添加所需的头:
 
-```
+```java
 Main-Class: com.baeldung.Application
 Class-Path: core.jar lib/ properties/
 ```
@@ -158,7 +158,7 @@ Class-Path: core.jar lib/ properties/
 
 例如，我们在 MySQL 驱动程序连接器/J [JAR](https://web.archive.org/web/20221018153013/https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.16/mysql-connector-java-8.0.16.jar) 中找到这些清单头。它们描述了 JAR 符合的 JDBC 规范的版本，以及驱动程序本身的版本:
 
-```
+```java
 Specification-Title: JDBC
 Specification-Version: 4.2
 Specification-Vendor: Oracle Corporation
@@ -191,7 +191,7 @@ Implementation-Vendor: Oracle
 
 让我们看一个简单的每个条目部分的例子:
 
-```
+```java
 Implementation-Title: baeldung-examples 
 Implementation-Version: 1.0.1
 Implementation-Vendor: Baeldung

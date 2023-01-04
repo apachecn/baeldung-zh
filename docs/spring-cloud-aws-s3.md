@@ -12,7 +12,7 @@ Content Series:[This article is part of a series:](javascript:void(0);)• Sprin
 
 让我们从轻松访问存储在 S3 上的文件开始:
 
-```
+```java
 @Autowired
 ResourceLoader resourceLoader;
 
@@ -31,7 +31,7 @@ public void downloadS3Object(String s3Url) throws IOException {
 
 我们还可以上传文件:
 
-```
+```java
 public void uploadFileToS3(File file, String s3Url) throws IOException {
     WritableResource resource = (WritableResource) resourceLoader
       .getResource(s3Url);
@@ -46,19 +46,19 @@ public void uploadFileToS3(File file, String s3Url) throws IOException {
 
 使用以下格式表示`s3Url`:
 
-```
+```java
 s3://<bucket>/<object>
 ```
 
 例如，如果文件`bar.zip`在`my-s3-bucket`桶上的文件夹`foo`中，那么 URL 将是:
 
-```
+```java
 s3://my-s3-bucket/foo/bar.zip
 ```
 
 此外，我们还可以使用`ResourcePatternResolver`和 Ant 模式匹配一次下载多个对象:
 
-```
+```java
 private ResourcePatternResolver resourcePatternResolver;
 
 @Autowired

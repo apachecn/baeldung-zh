@@ -22,7 +22,7 @@ REST-assured 旨在简化 REST APIs 的测试和验证，并且深受 Ruby 和 G
 
 在我们开始之前，让我们确保我们的测试有以下静态导入:
 
-```
+```java
 io.restassured.RestAssured.*
 io.restassured.matcher.RestAssuredMatchers.*
 org.hamcrest.Matchers.*
@@ -32,7 +32,7 @@ org.hamcrest.Matchers.*
 
 现在，让我们从一个简单的例子开始——一个公开游戏数据的基本下注系统:
 
-```
+```java
 {
     "id": "390",
     "data": {
@@ -55,7 +55,7 @@ org.hamcrest.Matchers.*
 
 现在让我们使用放心来验证 response JSON 的一些有趣特性:
 
-```
+```java
 @Test
 public void givenUrl_whenSuccessOnGetsResponseAndJsonHasRequiredKV_thenCorrect() {
    get("/events?id=390").then().statusCode(200).assertThat()
@@ -67,7 +67,7 @@ public void givenUrl_whenSuccessOnGetsResponseAndJsonHasRequiredKV_thenCorrect()
 
 让我们看一个更有趣的例子。假设您想要验证`odds`数组中有价格为`1.30`和`5.25`的记录:
 
-```
+```java
 @Test
 public void givenUrl_whenJsonResponseHasArrayWithGivenValuesUnderKey_thenCorrect() {
    get("/events?id=390").then().assertThat()
@@ -79,7 +79,7 @@ public void givenUrl_whenJsonResponseHasArrayWithGivenValuesUnderKey_thenCorrect
 
 如果您最喜欢的依赖工具是 Maven，我们在`pom.xml`文件中添加以下依赖:
 
-```
+```java
 <dependency>
     <groupId>io.rest-assured</groupId>
     <artifactId>rest-assured</artifactId>
@@ -91,7 +91,7 @@ public void givenUrl_whenJsonResponseHasArrayWithGivenValuesUnderKey_thenCorrect
 要获得最新版本，请点击此链接。
 REST-assured 利用 Hamcrest matchers 的能力来执行其断言，因此我们也必须包括该依赖性:
 
-```
+```java
 <dependency>
     <groupId>org.hamcrest</groupId>
     <artifactId>hamcrest-all</artifactId>
@@ -105,7 +105,7 @@ REST-assured 利用 Hamcrest matchers 的能力来执行其断言，因此我们
 
 考虑一个由基元而不是对象组成的数组:
 
-```
+```java
 [1, 2, 3]
 ```
 
@@ -113,13 +113,13 @@ REST-assured 利用 Hamcrest matchers 的能力来执行其断言，因此我们
 
 在这种情况下，我们可以使用``$`` 符号或空字符串( "" )作为路径来运行验证。假设我们通过`http://localhost:8080/json`公开上述服务，那么我们可以放心地像这样验证它:
 
-```
+```java
 when().get("/json").then().body("$", hasItems(1, 2, 3));
 ```
 
 或者像这样:
 
-```
+```java
 when().get("/json").then().body("", hasItems(1, 2, 3));
 ```
 
@@ -131,7 +131,7 @@ when().get("/json").then().body("", hasItems(1, 2, 3));
 
 恰当的例子是这种反应:
 
-```
+```java
 {
     "odd": {
         "price": "1.30",
@@ -143,7 +143,7 @@ when().get("/json").then().body("", hasItems(1, 2, 3));
 
 假设我们正在对`ck`的值运行以下测试:
 
-```
+```java
 get("/odd").then().assertThat().body("odd.ck", equalTo(12.2));
 ```
 
@@ -151,7 +151,7 @@ get("/odd").then().assertThat().body("odd.ck", equalTo(12.2));
 
 为了让它工作，我们必须显式地将`equalTo` matcher 方法的操作数指定为`float`，就像这样:
 
-```
+```java
 get("/odd").then().assertThat().body("odd.ck", equalTo(12.2f));
 ```
 
@@ -161,7 +161,7 @@ get("/odd").then().assertThat().body("odd.ck", equalTo(12.2f));
 
 此外，**我们还可以使用`request()`方法**来指定 HTTP 动词:
 
-```
+```java
 @Test
 public void whenRequestGet_thenOK(){
     when().request("GET", "/users/eugenp").then().statusCode(200);
@@ -172,7 +172,7 @@ public void whenRequestGet_thenOK(){
 
 同样，我们可以发送`HEAD`、`CONNECT`和`OPTIONS`请求:
 
-```
+```java
 @Test
 public void whenRequestHead_thenOK() {
     when().request("HEAD", "/users/eugenp").then().statusCode(200);
@@ -183,7 +183,7 @@ public void whenRequestHead_thenOK() {
 
 因此，通过发送一个`POST `请求来创建一个新的`Odd `:
 
-```
+```java
 @Test
 public void whenRequestedPost_thenCreated() {
     with().body(new Odd(5.25f, 1, 13.1f, "X"))
@@ -200,7 +200,7 @@ public void whenRequestedPost_thenCreated() {
 
 我们可以为测试配置许多默认值:
 
-```
+```java
 @Before
 public void setup() {
     RestAssured.baseURI = "https://api.github.com";
@@ -212,7 +212,7 @@ public void setup() {
 
 注意:我们还可以使用以下命令重置为标准的放心默认值:
 
-```
+```java
 RestAssured.reset();
 ```
 
@@ -220,7 +220,7 @@ RestAssured.reset();
 
 让我们看看如何使用`Response`对象的`time()`和`timeIn()`方法**来测量响应时间:**
 
-```
+```java
 @Test
 public void whenMeasureResponseTime_thenOK() {
     Response response = RestAssured.get("/users/eugenp");
@@ -240,7 +240,7 @@ public void whenMeasureResponseTime_thenOK() {
 
 我们还可以借助简单的`long` `Matcher:`来验证响应时间(毫秒)
 
-```
+```java
 @Test
 public void whenValidateResponseTime_thenSuccess() {
     when().get("/users/eugenp").then().time(lessThan(5000L));
@@ -249,7 +249,7 @@ public void whenValidateResponseTime_thenSuccess() {
 
 如果我们想用不同的时间单位来验证响应时间，那么我们将使用带有第二个`TimeUnit`参数的`time()`匹配器:
 
-```
+```java
 @Test
 public void whenValidateResponseTimeInSeconds_thenSuccess(){
     when().get("/users/eugenp").then().time(lessThan(5L),TimeUnit.SECONDS);
@@ -262,7 +262,7 @@ public void whenValidateResponseTimeInSeconds_thenSuccess(){
 
 假设我们向`http://localhost:8080/employees`发出一个请求，得到如下响应:
 
-```
+```java
 <employees>
     <employee category="skilled">
         <first-name>Jane</first-name>
@@ -274,7 +274,7 @@ public void whenValidateResponseTimeInSeconds_thenSuccess(){
 
 我们可以这样验证`first-name`是`Jane` :
 
-```
+```java
 @Test
 public void givenUrl_whenXmlResponseValueTestsEqual_thenCorrect() {
     post("/employees").then().assertThat()
@@ -284,7 +284,7 @@ public void givenUrl_whenXmlResponseValueTestsEqual_thenCorrect() {
 
 我们还可以通过如下方式将正文匹配器链接在一起，来验证所有值是否与预期值匹配:
 
-```
+```java
 @Test
 public void givenUrl_whenMultipleXmlValuesTestEqual_thenCorrect() {
     post("/employees").then().assertThat()
@@ -296,7 +296,7 @@ public void givenUrl_whenMultipleXmlValuesTestEqual_thenCorrect() {
 
 或者使用带有可变参数的简写版本:
 
-```
+```java
 @Test
 public void givenUrl_whenMultipleXmlValuesTestEqualInShortHand_thenCorrect() {
     post("/employees")
@@ -311,7 +311,7 @@ public void givenUrl_whenMultipleXmlValuesTestEqualInShortHand_thenCorrect() {
 
 **我们还可以使用 XPath 来验证我们的响应。**考虑下面这个在`first-name`上执行匹配器的例子:
 
-```
+```java
 @Test
 public void givenUrl_whenValidatesXmlUsingXpath_thenCorrect() {
     post("/employees").then().assertThat().
@@ -321,7 +321,7 @@ public void givenUrl_whenValidatesXmlUsingXpath_thenCorrect() {
 
 XPath 还接受另一种运行`equalTo`匹配器的方式:
 
-```
+```java
 @Test
 public void givenUrl_whenValidatesXmlUsingXpath2_thenCorrect() {
     post("/employees").then().assertThat()
@@ -335,7 +335,7 @@ public void givenUrl_whenValidatesXmlUsingXpath2_thenCorrect() {
 
 首先，让我们看看如何使用`**log().all()**:`**记录整个请求细节**
 
-```
+```java
 @Test
 public void whenLogRequest_thenOK() {
     given().log().all()
@@ -346,7 +346,7 @@ public void whenLogRequest_thenOK() {
 
 这将记录类似这样的内容:
 
-```
+```java
 Request method:	GET
 Request URI:	https://api.github.com:443/users/eugenp
 Proxy:			<none>
@@ -370,7 +370,7 @@ Body:			<none>
 
 在下面的示例中，我们只记录响应正文:
 
-```
+```java
 @Test
 public void whenLogResponse_thenOK() {
     when().get("/repos/eugenp/tutorials")
@@ -380,7 +380,7 @@ public void whenLogResponse_thenOK() {
 
 样本输出:
 
-```
+```java
 {
     "id": 9754983,
     "name": "tutorials",
@@ -404,7 +404,7 @@ public void whenLogResponse_thenOK() {
 
 我们还可以选择仅在发生错误或状态代码与给定值匹配时记录响应:
 
-```
+```java
 @Test
 public void whenLogResponseIfErrorOccurred_thenSuccess() {
 
@@ -421,7 +421,7 @@ public void whenLogResponseIfErrorOccurred_thenSuccess() {
 
 只有在验证失败时，我们才能记录请求和响应:
 
-```
+```java
 @Test
 public void whenLogOnlyIfValidationFailed_thenSuccess() {
     when().get("/users/eugenp")

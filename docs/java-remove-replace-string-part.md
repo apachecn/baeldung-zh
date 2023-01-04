@@ -16,7 +16,7 @@
 
 `replace()`方法有两个参数——目标和替换文本:
 
-```
+```java
 String master = "Hello World Baeldung!";
 String target = "Baeldung";
 String replacement = "Java";
@@ -27,13 +27,13 @@ assertFalse(processed.contains(target));
 
 上面的代码片段将产生以下输出:
 
-```
+```java
 Hello World Java!
 ```
 
 如果在选择目标时需要正则表达式，那么应该选择`replaceAll()`或`replaceFirst()`方法。顾名思义，`replaceAll() `将替换所有匹配的事件，而`replaceFirst()`将替换第一个匹配的事件:
 
-```
+```java
 String master2 = "Welcome to Baeldung, Hello World Baeldung";
 String regexTarget = "(Baeldung)$";
 String processed2 = master2.replaceAll(regexTarget, replacement);
@@ -42,7 +42,7 @@ assertTrue(processed2.endsWith("Java"));
 
 `processed2`的值将为:
 
-```
+```java
 Welcome to Baeldung, Hello World Java
 ```
 
@@ -54,7 +54,7 @@ Welcome to Baeldung, Hello World Java
 
 我们可以从现有的`String`构造一个`StringBuilder `的实例，然后使用上面提到的方法根据需要执行`String`操作:
 
-```
+```java
 String master = "Hello World Baeldung!";
 String target = "Baeldung";
 String replacement = "Java";
@@ -67,14 +67,14 @@ StringBuilder builder = new StringBuilder(master);
 
 现在我们可以用`delete()`删除`target`:
 
-```
+```java
 builder.delete(startIndex, stopIndex);
 assertFalse(builder.toString().contains(target));
 ```
 
 我们也可以使用`replace()`来更新主文件:
 
-```
+```java
 builder.replace(startIndex, stopIndex, replacement);
 assertTrue(builder.toString().contains(replacement));
 ```
@@ -87,7 +87,7 @@ assertTrue(builder.toString().contains(replacement));
 
 首先，让我们将所需的依赖项添加到项目中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -99,7 +99,7 @@ assertTrue(builder.toString().contains(replacement));
 
 `StringUtils `类有替换`String`子串的方法:
 
-```
+```java
 String master = "Hello World Baeldung!";
 String target = "Baeldung";
 String replacement = "Java";
@@ -110,7 +110,7 @@ assertTrue(processed.contains(replacement));
 
 有一个重载的`replace()`变量，它接受一个整数`max`参数，该参数决定要替换的出现次数。**如果不考虑大小写，我们也可以使用`replaceIgnoreCase()`**:
 
-```
+```java
 String master2 = "Hello World Baeldung!";
 String target2 = "baeldung";
 String processed2 = StringUtils.replaceIgnoreCase(master2, target2, replacement);
@@ -127,7 +127,7 @@ assertFalse(processed2.contains(target));
 
 首先，让我们看看如何将这个正则表达式与字符串 API 一起使用:
 
-```
+```java
 String sentence = "A car is not the same as a carriage, and some planes can carry cars inside them!";
 String regexTarget = "\\bcar\\b";
 String exactWordReplaced = sentence.replaceAll(regexTarget, "truck");
@@ -135,7 +135,7 @@ String exactWordReplaced = sentence.replaceAll(regexTarget, "truck");
 
 `exactWordReplaced`字符串包含:
 
-```
+```java
 "A truck is not the same as a carriage, and some planes can carry cars inside them!"
 ```
 
@@ -143,7 +143,7 @@ String exactWordReplaced = sentence.replaceAll(regexTarget, "truck");
 
 进行这种替换的另一种方法是使用 Apache Commons 库中的`RegExUtils`类，正如我们在上一节中看到的，可以将它作为一个依赖项添加:
 
-```
+```java
 String regexTarget = "\\bcar\\b";
 String exactWordReplaced = RegExUtils.replaceAll(sentence, regexTarget, "truck"); 
 ```

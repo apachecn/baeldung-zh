@@ -12,7 +12,7 @@
 
 首先，让我们为每个必需的字符组定义正则表达式。由于正则表达式是固定的，所以不需要在每次运行时对它们求值，所以我们将在与它们进行比较之前对它们进行编译:
 
-```
+```java
 private static final Pattern[] inputRegexes = new Pattern[4];
 
 static {
@@ -25,7 +25,7 @@ static {
 
 此外，我们应该创建一个简单的方法来测试我们的`String`是否符合条件:
 
-```
+```java
 private static boolean isMatchingRegex(String input) {
     boolean inputMatches = true;
     for (Pattern inputRegex : inputRegexes) {
@@ -45,14 +45,14 @@ private static boolean isMatchingRegex(String input) {
 
 我们需要做的就是声明我们的正则表达式:
 
-```
+```java
 String regex = "^(?=.*?\\p{Lu})(?=.*?\\p{Ll})(?=.*?\\d)" +
     "(?=.*?[`[[email protected]](/web/20220626205753/https://www.baeldung.com/cdn-cgi/l/email-protection)#$%^&*()\\-_=+\\\\|\\[{\\]};:'\",<.>/?]).*$";
 ```
 
 然后编译并比较它:
 
-```
+```java
 @Test
 public void givenSingleRegex_whenMatchingCorrectString_thenMatches() {
     String validInput = "Ab3;";
@@ -70,7 +70,7 @@ public void givenSingleRegex_whenMatchingCorrectString_thenMatches() {
 
 现在让我们看看，如果我们不想使用正则表达式，如何执行同样的检查。我们将利用`Character `和`String`类及其方法来检查所有必需的字符是否都出现在我们的`String`中:
 
-```
+```java
 private static boolean checkString(String input) {
     String specialChars = "~`[[email protected]](/web/20220626205753/https://www.baeldung.com/cdn-cgi/l/email-protection)#$%^&*()-_=+\\|[{]};:'\",<.>/?";
     char currentCharacter;

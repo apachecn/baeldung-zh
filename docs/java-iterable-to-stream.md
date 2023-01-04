@@ -14,14 +14,14 @@
 
 让我们考虑一下我们的`Iterable` 实例:
 
-```
+```java
 Iterable<String> iterable 
   = Arrays.asList("Testing", "Iterable", "conversion", "to", "Stream");
 ```
 
 下面是我们如何将这个`Iterable` 实例转换成一个`Stream:`
 
-```
+```java
 StreamSupport.stream(iterable.spliterator(), false);
 ```
 
@@ -29,7 +29,7 @@ StreamSupport.stream(iterable.spliterator(), false);
 
 现在让我们测试我们的实现:
 
-```
+```java
 @Test
 public void givenIterable_whenConvertedToStream_thenNotNull() {
     Iterable<String> iterable 
@@ -45,7 +45,7 @@ public void givenIterable_whenConvertedToStream_thenNotNull() {
 
 让我们执行一个简单的流操作:
 
-```
+```java
 @Test
 public void whenConvertedToList_thenCorrect() {
     Iterable<String> iterable 

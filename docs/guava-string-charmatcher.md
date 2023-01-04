@@ -10,7 +10,7 @@
 
 在下面的例子中，我们使用`retainFrom()`删除了所有不是数字或字母的字符:
 
-```
+```java
 @Test
 public void whenRemoveSpecialCharacters_thenRemoved(){
     String input = "H*el.lo,}12";
@@ -25,7 +25,7 @@ public void whenRemoveSpecialCharacters_thenRemoved(){
 
 我们也可以使用`CharMatcher`从`String`中删除非 ASCII 字符，如下例所示:
 
-```
+```java
 @Test
 public void whenRemoveNonASCIIChars_thenRemoved() {
     String input = "あhello₤";
@@ -42,7 +42,7 @@ public void whenRemoveNonASCIIChars_thenRemoved() {
 
 现在，让我们看看如何删除不属于给定`Charset`的字符。在以下示例中，我们将删除不属于“CP 437”`Charset`的字符:
 
-```
+```java
 @Test
 public void whenRemoveCharsNotInCharset_thenRemoved() {
     Charset charset = Charset.forName("cp437");
@@ -71,7 +71,7 @@ public void whenRemoveCharsNotInCharset_thenRemoved() {
 
 在下面的例子中，我们检查我们的`String`是否是小写的，是否包含至少一个“`e`”字符并且不包含任何数字:
 
-```
+```java
 @Test
 public void whenValidateString_thenValid(){
     String input = "hello";
@@ -93,7 +93,7 @@ public void whenValidateString_thenValid(){
 
 在下面的例子中，我们使用`trimLeading()`、`trimTrailing`和`trimFrom()`来修剪我们的`String`:
 
-```
+```java
 @Test
 public void whenTrimString_thenTrimmed() {
     String input = "---hello,,,";
@@ -115,7 +115,7 @@ public void whenTrimString_thenTrimmed() {
 
 在下面的例子中，我们使用`collapseFrom()`将连续的空格替换为“`–`”:
 
-```
+```java
 @Test
 public void whenCollapseFromString_thenCollapsed() {
     String input = "       hel    lo      ";
@@ -132,7 +132,7 @@ public void whenCollapseFromString_thenCollapsed() {
 
 我们可以使用`CharMatcher`来替换`String`中的特定字符，如下例所示:
 
-```
+```java
 @Test
 public void whenReplaceFromString_thenReplaced() {
     String input = "apple-banana.";
@@ -151,7 +151,7 @@ public void whenReplaceFromString_thenReplaced() {
 
 在下面的例子中，我们计算'`a`':'【T1]'之间的逗号和字符:
 
-```
+```java
 @Test
 public void whenCountCharInString_thenCorrect() {
     String input = "a, c, z, 1, 2";

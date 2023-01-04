@@ -16,7 +16,7 @@ Oracle 数据库系统广泛应用于企业 Java 应用程序中。在我们查�
 
 例如，如果我们的项目由 Maven 管理，我们需要在我们的`pom.xml`中添加 [`ojdbc8` 依赖关系](https://web.archive.org/web/20221208143917/https://search.maven.org/search?q=g:com.oracle.database.jdbc%20AND%20a:ojdbc8):
 
-```
+```java
 <dependency>
     <groupId>com.oracle.database.jdbc</groupId>
     <artifactId>ojdbc8</artifactId>
@@ -36,13 +36,13 @@ Oracle 数据库系统广泛应用于企业 Java 应用程序中。在我们查�
 
 在一些早期版本的 Oracle 数据库中，数据库被定义为一个 SID。让我们看看连接到 SID 的 JDBC URL 格式:
 
-```
+```java
 jdbc:oracle:thin:[<user>/<password>]@<host>[:<port>]:<SID> 
 ```
 
 例如，假设我们有一个 Oracle 数据库服务器主机“`myoracle.db.server:1521`”，SID 的名称是“`my_sid`”，我们可以按照上面的格式构建连接 URL 并连接到数据库:
 
-```
+```java
 @Test
 public void givenOracleSID_thenCreateConnectionObject() {
     String oracleJdbcUrl = "jdbc:oracle:thin:@myoracle.db.server:1521:my_sid";
@@ -60,13 +60,13 @@ public void givenOracleSID_thenCreateConnectionObject() {
 
 通过服务名连接 Oracle 数据库的 JDBC URL 的格式与我们用来通过 SID 连接的格式非常相似:
 
-```
+```java
 jdbc:oracle:thin:[<user>/<password>]@//<host>[:<port>]/<service>
 ```
 
 我们可以连接到 Oracle 数据库服务器“`myoracle.db.server:1521`”上的服务“`my_servicename`”:
 
-```
+```java
 @Test
 public void givenOracleServiceName_thenCreateConnectionObject() {
     String oracleJdbcUrl = "jdbc:oracle:thin:@//myoracle.db.server:1521/my_servicename";
@@ -83,13 +83,13 @@ public void givenOracleServiceName_thenCreateConnectionObject() {
 
 我们还可以在 JDBC URL 中包含`tnsnames.ora`条目来连接 Oracle 数据库:
 
-```
+```java
 jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=<host>)(PORT=<port>))(CONNECT_DATA=(SERVICE_NAME=<service>)))
 ```
 
 让我们看看如何使用来自`tnsnames.ora`文件的条目连接到我们的"`my_servicename`"服务:
 
-```
+```java
 @Test
 public void givenOracleTnsnames_thenCreateConnectionObject() {
     String oracleJdbcUrl = "jdbc:oracle:thin:@" +
@@ -111,7 +111,7 @@ public void givenOracleTnsnames_thenCreateConnectionObject() {
 
 为了从我们的 Java 应用程序连接到 MySQL 数据库，让我们首先在我们的`pom.xml`中添加 JDBC 驱动程序 [`mysql-connector-java`依赖关系](https://web.archive.org/web/20221208143917/https://search.maven.org/search?q=a:mysql-connector-java%20g:mysql):
 
-```
+```java
 <dependency>
     <groupId>mysql</groupId>
     <artifactId>mysql-connector-java</artifactId>
@@ -121,13 +121,13 @@ public void givenOracleTnsnames_thenCreateConnectionObject() {
 
 接下来，让我们看看 MySQL JDBC 驱动程序支持的连接 URL 的通用格式:
 
-```
+```java
 protocol//[hosts][/database][?properties]
 ```
 
 让我们看一个连接到主机“`mysql.db.server`”上的 MySQL 数据库“`my_database`”的示例:
 
-```
+```java
 @Test
 public void givenMysqlDb_thenCreateConnectionObject() {
     String jdbcUrl = "jdbc:mysql://mysql.db.server:3306/my_database?useSSL=false&serverTimezone;=UTC";    
@@ -183,25 +183,25 @@ public void givenMysqlDb_thenCreateConnectionObject() {
 
 **有效的全局属性将应用于所有主机。属性前面有一个问号“`?`”，并写成由“`&`”****符号**分隔的`key=value`对:
 
-```
+```java
 jdbc:mysql://myhost1:3306/db_name?prop1=value1&prop2;=value2
 ```
 
 **我们也可以将用户凭证放在属性列表**中:
 
-```
+```java
 jdbc:mysql://myhost1:3306/db_name?user=root&password;=mypass
 ```
 
 此外，**我们可以用格式为“`user:[[email protected]](/web/20221208143917/https://www.baeldung.com/cdn-cgi/l/email-protection)`”、**的用户凭证作为每个主机的前缀:
 
-```
+```java
 jdbc:mysql://root:[[email protected]](/web/20221208143917/https://www.baeldung.com/cdn-cgi/l/email-protection):3306/db_name
 ```
 
 此外，**如果我们的 JDBC URL 包含主机列表，并且所有主机都使用相同的用户凭证，我们可以在主机列表前面加上前缀**:
 
-```
+```java
 jdbc:mysql://root:mypass[myhost1:3306,myhost2:3307]/db_name
 ```
 
@@ -213,7 +213,7 @@ jdbc:mysql://root:mypass[myhost1:3306,myhost2:3307]/db_name
 
 Microsoft SQL Server 是另一种流行的数据库系统。要从 Java 应用程序连接 MS SQL Server 数据库，我们需要将 [`mssql-jdbc`依赖关系](https://web.archive.org/web/20221208143917/https://search.maven.org/search?q=g:com.microsoft.sqlserver%20a:mssql-jdbc)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.microsoft.sqlserver</groupId>
     <artifactId>mssql-jdbc</artifactId>
@@ -225,7 +225,7 @@ Microsoft SQL Server 是另一种流行的数据库系统。要从 Java 应用�
 
 用于连接 MS SQL Server 数据库的 JDBC URL 的一般格式为:
 
-```
+```java
 jdbc:sqlserver://[serverName[\instanceName][:portNumber]][;property=value[;property=value]]
 ```
 
@@ -240,7 +240,7 @@ jdbc:sqlserver://[serverName[\instanceName][:portNumber]][;property=value[;prope
 
 让我们尝试获得到该数据库的连接:
 
-```
+```java
 @Test
 public void givenMssqlDb_thenCreateConnectionObject() {
     String jdbcUrl = "jdbc:sqlserver://mssql.db.server\\mssql_instance;databaseName=my_database";
@@ -258,7 +258,7 @@ public void givenMssqlDb_thenCreateConnectionObject() {
 
 PostgreSQL 是一个流行的开源数据库系统。为了使用 PostgreSQL，JDBC 驱动程序 [`postgresql`](https://web.archive.org/web/20221208143917/https://search.maven.org/search?q=g:org.postgresql%20AND%20a:postgresql) 应该作为一个依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.postgresql</groupId>
     <artifactId>postgresql</artifactId>
@@ -268,7 +268,7 @@ PostgreSQL 是一个流行的开源数据库系统。为了使用 PostgreSQL，J
 
 连接到 PostgreSQL 的 JDBC URL 的一般形式是:
 
-```
+```java
 jdbc:postgresql://host:port/database?properties
 ```
 
@@ -286,7 +286,7 @@ jdbc:postgresql://host:port/database?properties
 
 理解了 JDBC URL 格式中的参数后，让我们看一个如何获得到 PostgreSQL 数据库的连接的示例:
 
-```
+```java
 @Test
 public void givenPostgreSqlDb_thenCreateConnectionObject() {
     String jdbcUrl = "jdbc:postgresql://postgresql.db.server:5430/my_database?ssl=true&loglevel;=2";

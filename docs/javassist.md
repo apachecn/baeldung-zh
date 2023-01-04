@@ -12,7 +12,7 @@
 
 要将 Javassist 库添加到我们的项目中，我们需要将`[javassist](https://web.archive.org/web/20220625080632/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22javassist%22%20AND%20a%3A%22javassist%22)`添加到 pom 中:
 
-```
+```java
 <dependency>
     <groupId>org.javassist</groupId>
     <artifactId>javassist</artifactId>
@@ -30,7 +30,7 @@
 
 假设我们有一个`Point` 类:
 
-```
+```java
 public class Point {
     private int x;
     private int y;
@@ -46,13 +46,13 @@ public class Point {
 
 编译后，将创建包含字节码的`Point.class` 文件。我们可以通过执行`javap` 命令来查看该类的字节码:
 
-```
+```java
 javap -c Point.class
 ```
 
 这将打印以下输出:
 
-```
+```java
 public class com.baeldung.javasisst.Point {
   public com.baeldung.javasisst.Point(int, int);
     Code:
@@ -95,7 +95,7 @@ Javassist 库可用于生成新的 Java 类文件。
 
 假设我们想要生成一个实现了一个`java.lang.Cloneable` 接口的`JavassistGeneratedClass` 类。我们希望该类有一个`int`类型`.` 的`id` 字段，`ClassFile` 用于创建一个新的类文件，`FieldInfo`用于向类`:`添加一个新字段
 
-```
+```java
 ClassFile cf = new ClassFile(
   false, "com.baeldung.JavassistGeneratedClass", null);
 cf.setInterfaces(new String[] {"java.lang.Cloneable"});
@@ -107,7 +107,7 @@ cf.addField(f);
 
 在我们创建了一个`JavassistGeneratedClass.class` 之后，我们可以断言它实际上有一个`id` 字段:
 
-```
+```java
 ClassPool classPool = ClassPool.getDefault();
 Field[] fields = classPool.makeClass(cf).toClass().getFields();
 
@@ -120,7 +120,7 @@ assertEquals(fields[0].getName(), "id");
 
 让我们加载`Point`类的`move()` 方法的所有字节码指令:
 
-```
+```java
 ClassPool cp = ClassPool.getDefault();
 ClassFile cf = cp.get("com.baeldung.javasisst.Point")
   .getClassFile();
@@ -152,7 +152,7 @@ assertEquals(operations,
 
 假设我们想在现有类的字节码中添加一个`int`类型的字段。我们可以使用`ClassPoll` 加载该类，并向其中添加一个字段:
 
-```
+```java
 ClassFile cf = ClassPool.getDefault()
   .get("com.baeldung.javasisst.Point").getClassFile();
 
@@ -163,7 +163,7 @@ cf.addField(f);
 
 我们可以使用反射来验证`Point` 类中是否存在`id`字段:
 
-```
+```java
 ClassPool classPool = ClassPool.getDefault();
 Field[] fields = classPool.makeClass(cf).toClass().getFields();
 List<String> fieldsList = Stream.of(fields)
@@ -179,7 +179,7 @@ assertTrue(fieldsList.contains("id"));
 
 我们可以通过调用`java.lang.Object`类中的`<init>` 方法来添加无参数构造函数:
 
-```
+```java
 ClassFile cf = ClassPool.getDefault()
   .get("com.baeldung.javasisst.Point").getClassFile();
 Bytecode code = new Bytecode(cf.getConstPool());
@@ -195,7 +195,7 @@ cf.addMethod(minfo);
 
 我们可以通过迭代字节码来检查新创建的构造函数是否存在:
 
-```
+```java
 CodeIterator ci = code.toCodeAttribute().iterator();
 List<String> operations = new LinkedList<>();
 while (ci.hasNext()) {

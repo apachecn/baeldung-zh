@@ -28,7 +28,7 @@
 
 **在设置我们的算盘之前，让我们先找到矩阵的维数。**列数`m` 等于列表中最大的元素。因此，让我们创建一个方法来查找这个数字:
 
-```
+```java
 static int findMax(int[] A) {
     int max = A[0];
     for (int i = 1; i < A.length; i++) {
@@ -42,14 +42,14 @@ static int findMax(int[] A) {
 
 现在，我们可以将最大的数字分配给`m`:
 
-```
+```java
 int[] A = {1, 3, 4, 2};
 int m = findMax(A);
 ```
 
 **使用`m,` 我们现在能够创建一个算盘的表示。**我们将使用`setupAbacus()`方法来完成这项工作:
 
-```
+```java
 static boolean[][] setupAbacus(int[] A, int m) {
     boolean[][] abacus = new boolean[A.length][m];
     for (int i = 0; i < abacus.length; i++) {
@@ -68,13 +68,13 @@ static boolean[][] setupAbacus(int[] A, int m) {
 
 让我们来创造算盘:
 
-```
+```java
 boolean[][] abacus = setupAbacus(A, m);
 ```
 
 **我们现在准备好让重力将珠子降到最低位置进行分类**:
 
-```
+```java
 static void dropBeads(boolean[][] abacus, int[] A, int m) {
     for (int i = 1; i < A.length; i++) {
         for (int j = m - 1; j >= 0; j--) {
@@ -98,7 +98,7 @@ static void dropBeads(boolean[][] abacus, int[] A, int m) {
 
 **最后，我们需要将算盘的最终状态转换成一个排序数组。**`toSortedList()` 方法接受算盘作为参数，以及原始输入列表，并相应地修改数组:
 
-```
+```java
 static void toSortedList(boolean[][] abacus, int[] A) {
     int index = 0;
     for (int i = abacus.length - 1; i >=0; i--) {
@@ -115,7 +115,7 @@ static void toSortedList(boolean[][] abacus, int[] A) {
 
 **让我们把算法的所有部分放在一个单独的`gravitySort()` 方法中:**
 
-```
+```java
 static void gravitySort(int[] A) {
     int m = findMax(A);
     boolean[][] abacus = setupAbacus(A, m);
@@ -126,7 +126,7 @@ static void gravitySort(int[] A) {
 
 我们可以通过创建一个单元测试来确认算法是否有效:
 
-```
+```java
 @Test
 public void givenIntegerArray_whenSortedWithGravitySort_thenGetSortedArray() {
     int[] actual = {9, 9, 100, 3, 57, 12, 3, 78, 0, 2, 2, 40, 21, 9};

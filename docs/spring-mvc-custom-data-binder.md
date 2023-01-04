@@ -14,7 +14,7 @@
 
 先从简单开始，先绑定一个简单类型；我们必须提供一个自定义的 [`Converter<S, T>`](https://web.archive.org/web/20220629014624/https://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/htmlsingle/spring-framework-reference.html#core-convert-Converter-API) 接口实现，其中`S`是我们要转换的类型，`T`是我们要转换的类型:
 
-```
+```java
 @Component
 public class StringToLocalDateTimeConverter
   implements Converter<String, LocalDateTime> {
@@ -29,7 +29,7 @@ public class StringToLocalDateTimeConverter
 
 现在，我们可以在控制器中使用以下语法:
 
-```
+```java
 @GetMapping("/findbydate/{date}")
 public GenericEntity findByDate(@PathVariable("date") LocalDateTime date) {
     return ...;
@@ -42,7 +42,7 @@ public GenericEntity findByDate(@PathVariable("date") LocalDateTime date) {
 
 在这里，我们有一个简单的`enum` `Modes`:
 
-```
+```java
 public enum Modes {
     ALPHA, BETA;
 }
@@ -50,7 +50,7 @@ public enum Modes {
 
 我们将构建一个`String`到`enum Converter`，如下所示:
 
-```
+```java
 public class StringToEnumConverter implements Converter<String, Modes> {
 
     @Override
@@ -62,7 +62,7 @@ public class StringToEnumConverter implements Converter<String, Modes> {
 
 然后，我们需要注册我们的`Converter`:
 
-```
+```java
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
@@ -75,7 +75,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 现在我们可以用我们的`Enum`作为`RequestParameter`:
 
-```
+```java
 @GetMapping
 public ResponseEntity<Object> getStringToMode(@RequestParam("mode") Modes mode) {
     // ...
@@ -84,7 +84,7 @@ public ResponseEntity<Object> getStringToMode(@RequestParam("mode") Modes mode) 
 
 或者作为`PathVariable`:
 
-```
+```java
 @GetMapping("/entity/findbymode/{mode}")
 public GenericEntity findByEnum(@PathVariable("mode") Modes mode) {
     // ...
@@ -97,7 +97,7 @@ public GenericEntity findByEnum(@PathVariable("mode") Modes mode) {
 
 在这个例子中，我们有`AbstractEntity`我们的基类:
 
-```
+```java
 public abstract class AbstractEntity {
     long id;
     public AbstractEntity(long id){
@@ -108,7 +108,7 @@ public abstract class AbstractEntity {
 
 子类`Foo`和`Bar`:
 
-```
+```java
 public class Foo extends AbstractEntity {
     private String name;
 
@@ -116,7 +116,7 @@ public class Foo extends AbstractEntity {
 }
 ```
 
-```
+```java
 public class Bar extends AbstractEntity {
     private int value;
 
@@ -126,7 +126,7 @@ public class Bar extends AbstractEntity {
 
 在这种情况下，**我们可以实现`ConverterFactory<S, R>`，其中 S 是我们要转换的类型，R 是基本类型**，它定义了我们可以转换的类的范围:
 
-```
+```java
 public class StringToAbstractEntityConverterFactory 
   implements ConverterFactory<String, AbstractEntity>{
 
@@ -164,7 +164,7 @@ public class StringToAbstractEntityConverterFactory
 
 然后，我们需要注册我们的`ConverterFactory`:
 
-```
+```java
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
@@ -177,7 +177,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 最后，我们可以在控制器中随心所欲地使用它:
 
-```
+```java
 @RestController
 @RequestMapping("/string-to-abstract")
 public class AbstractEntityController {
@@ -202,7 +202,7 @@ public class AbstractEntityController {
 
 首先，我们将为这些参数定义一个注释:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 public @interface Version {
@@ -211,7 +211,7 @@ public @interface Version {
 
 然后，我们将实现一个自定义`[HandlerMethodArgumentResolver](https://web.archive.org/web/20220629014624/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/method/support/HandlerMethodArgumentResolver.html):`
 
-```
+```java
 public class HeaderVersionArgumentResolver
   implements HandlerMethodArgumentResolver {
 
@@ -237,7 +237,7 @@ public class HeaderVersionArgumentResolver
 
 最后一件事是让 Spring 知道在哪里搜索它们:
 
-```
+```java
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
@@ -253,7 +253,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 就是这样。现在我们可以在控制器中使用它:
 
-```
+```java
 @GetMapping("/entity/{id}")
 public ResponseEntity findByVersion(
   @PathVariable Long id, @Version String version) {

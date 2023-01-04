@@ -18,13 +18,13 @@
 
 对于 Spring Boot 1.x，我们可以使用`-Drun.arguments`将参数传递给我们的应用程序:
 
-```
+```java
 mvn spring-boot:run -Drun.arguments=--customArgument=custom
 ```
 
 我们还可以向我们的应用程序传递多个参数:
 
-```
+```java
 mvn spring-boot:run -Drun.arguments=--spring.main.banner-mode=off,--customArgument=custom
 ```
 
@@ -38,7 +38,7 @@ mvn spring-boot:run -Drun.arguments=--spring.main.banner-mode=off,--customArgume
 
 对于 Spring Boot 2.x，我们可以使用 `-Dspring-boot.run.arguments` : 来传递参数
 
-```
+```java
 mvn spring-boot:run -Dspring-boot.run.arguments=--spring.main.banner-mode=off,--customArgument=custom
 ```
 
@@ -48,7 +48,7 @@ mvn spring-boot:run -Dspring-boot.run.arguments=--spring.main.banner-mode=off,--
 
 我们需要在`build.gradle`文件中配置我们的`bootRun`任务:
 
-```
+```java
 bootRun {
     if (project.hasProperty('args')) {
         args project.args.split(',')
@@ -58,7 +58,7 @@ bootRun {
 
 现在，我们可以如下传递命令行参数:
 
-```
+```java
 ./gradlew bootRun -Pargs=--spring.main.banner-mode=off,--customArgument=custom
 ```
 
@@ -68,20 +68,20 @@ bootRun {
 
 例如，下面是我们的`application.properties`文件:
 
-```
+```java
 server.port=8081
 spring.application.name=SampleApp
 ```
 
 为了覆盖`server.port`值，我们需要以如下方式传递新值(对于 Spring Boot 1.x):
 
-```
+```java
 mvn spring-boot:run -Drun.arguments=--server.port=8085
 ```
 
 Spring Boot 2.x 也是如此:
 
-```
+```java
 mvn spring-boot:run -Dspring-boot.run.arguments=--server.port=8085
 ```
 
@@ -90,7 +90,7 @@ mvn spring-boot:run -Dspring-boot.run.arguments=--server.port=8085
 *   Spring Boot 将命令行参数转换为属性，并将它们作为环境变量添加
 *   通过在`application.properties` :
 
-    ```
+    ```java
     server.port=${port:8080}
     ```
 
@@ -99,7 +99,7 @@ mvn spring-boot:run -Dspring-boot.run.arguments=--server.port=8085
 
 如果需要，我们可以阻止应用程序将命令行参数转换为属性:
 
-```
+```java
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
     public static void main(String[] args) {
@@ -114,7 +114,7 @@ public class Application extends SpringBootServletInitializer {
 
 让我们看看如何从应用程序的`main()`方法中访问命令行参数:
 
-```
+```java
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
     public static void main(String[] args) {
@@ -132,7 +132,7 @@ public class Application extends SpringBootServletInitializer {
 
 随着 Spring Boot 2.2 的发布，我们获得了在测试期间使用`@SpringBootTest`及其`args`属性注入命令行参数的可能性:
 
-```
+```java
 @SpringBootTest(args = "--spring.main.banner-mode=off")
 public class ApplicationTest {
 

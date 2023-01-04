@@ -20,7 +20,7 @@
 
 让我们考虑一下`Employee`的类结构。它有两个必需的字段:`id`和`name`，因此我们定义了一个**公共全参数构造函数**，它有一组与对象字段集匹配的参数:
 
-```
+```java
 public class Employee {
 
     private final long id;
@@ -37,7 +37,7 @@ public class Employee {
 
 这样，我们将在创建时初始化对象的所有字段。字段声明中的最终修饰符不允许我们在将来更改它们的值。要使这个对象可反序列化，我们只需向这个构造函数添加几个[注释](/web/20221106121625/https://www.baeldung.com/jackson-annotations):
 
-```
+```java
 @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
 public Employee(@JsonProperty("id") long id, @JsonProperty("name") String name) {
     this.id = id;
@@ -57,7 +57,7 @@ public Employee(@JsonProperty("id") long id, @JsonProperty("name") String name) 
 
 让我们来看一个简单的单元测试，它涵盖了一个`Employee`对象的反序列化:
 
-```
+```java
 String json = "{\"name\":\"Frank\",\"id\":5000}";
 Employee employee = new ObjectMapper().readValue(json, Employee.class);
 
@@ -69,7 +69,7 @@ assertEquals(5000, employee.getId());
 
 有时，一个对象有一组可选字段。让我们考虑另一个类结构，`Person`，它有一个可选的`age`字段:
 
-```
+```java
 public class Person {
     private final String name;
     private final Integer age;
@@ -82,7 +82,7 @@ public class Person {
 
 这是一个经典的[构建器模式](/web/20221106121625/https://www.baeldung.com/creational-design-patterns)来拯救的情况。让我们看看如何在反序列化中利用它的力量。首先，让我们声明**一个私有的所有参数构造函数和一个`Builder`类**:
 
-```
+```java
 private Person(String name, Integer age) {
     this.name = name;
     this.age = age;
@@ -112,7 +112,7 @@ static class Builder {
 
 之后，我们需要将构建器类本身注释为`@JsonPOJOBuilder`:
 
-```
+```java
 @JsonDeserialize(builder = Person.Builder.class)
 public class Person {
     //...
@@ -132,7 +132,7 @@ public class Person {
 
 让我们来看一个简单的单元测试，它涵盖了一个`Person`对象的反序列化:
 
-```
+```java
 String json = "{\"name\":\"Frank\",\"age\":50}";
 Person person = new ObjectMapper().readValue(json, Person.class);
 

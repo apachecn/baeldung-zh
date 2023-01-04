@@ -19,7 +19,7 @@
 
 要读取一个文件，我们需要一个`FileInputStream`实例从文件中读取字节:
 
-```
+```java
 @Test
 public void readFromFileUsingFileIO() throws Exception {
     File file = new File("src/test/resources/nio-vs-nio2.txt");
@@ -63,7 +63,7 @@ public void readFromFileUsingFileIO() throws Exception {
 
 使用前面描述的概念，让我们使用`Channel`和`Buffer`类从文件中读取内容:
 
-```
+```java
 @Test
 public void readFromFileUsingFileChannel() throws Exception {
     RandomAccessFile file = new RandomAccessFile("src/test/resources/nio-vs-nio2.txt", "r");
@@ -108,7 +108,7 @@ Java 1.7 引入了新的`java.nio.file`包，也称为 [NIO.2 包](/web/20220528
 
 最后，让我们看看 NIO.2 在读取文件方面与以前的 IO 版本相比如何:
 
-```
+```java
 @Test
 public void readFromFileUsingNIO2() throws Exception {
     List<String> strings = Files.readAllLines(Paths.get("src/test/resources/nio-vs-nio2.txt"));

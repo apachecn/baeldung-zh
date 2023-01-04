@@ -10,7 +10,7 @@
 
 让我们从在`pom.xml`中添加 [Spring Boot AOP Starter](https://web.archive.org/web/20220701023000/https://search.maven.org/classic/#search%7Cga%7C1%7C%20(g%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-parent%22)%20OR%20%20(g%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter%22)%20OR%20%20(g%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-aop%22)) 库依赖开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-aop</artifactId>
@@ -21,7 +21,7 @@
 
 让我们创建一个`AccountOperation`注释。为了澄清，我们将使用它作为我们方面的切入点:
 
-```
+```java
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AccountOperation {
@@ -37,7 +37,7 @@ public @interface AccountOperation {
 
 让我们用`accountNumber`和`balance`属性创建一个`Account` POJO。我们将在服务方法中使用它作为方法参数:
 
-```
+```java
 public class Account {
 
     private String accountNumber;
@@ -53,7 +53,7 @@ public class Account {
 
 另外，注意`getBalance` 方法没有`AccountOperation`注释，所以它不会被方面拦截:
 
-```
+```java
 @Component
 public class BankAccountService {
 
@@ -82,7 +82,7 @@ public class BankAccountService {
 
 让我们创建一个`BankAccountAspect` 来从我们的`BankAccountService:`中调用的相关方法中获取所有必要的信息
 
-```
+```java
 @Aspect
 @Component
 public class BankAccountAspect {
@@ -133,7 +133,7 @@ public class BankAccountAspect {
 
 为了能够获得我们的方法签名信息，我们需要从 [`JoinPoint`](https://web.archive.org/web/20220701023000/https://javadoc.io/doc/org.aspectj/aspectjweaver/latest/org/aspectj/lang/JoinPoint.html) 对象中检索 [`MethodSignature`](https://web.archive.org/web/20220701023000/https://www.javadoc.io/doc/org.aspectj/aspectjrt/latest/org/aspectj/lang/reflect/MethodSignature.html) :
 
-```
+```java
 MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 
 System.out.println("full method description: " + signature.getMethod());
@@ -143,7 +143,7 @@ System.out.println("declaring type: " + signature.getDeclaringType());
 
 现在让我们调用服务的`withdraw()`方法:
 
-```
+```java
 @Test
 void withdraw() {
     bankAccountService.withdraw(account, 500.0);
@@ -153,7 +153,7 @@ void withdraw() {
 
 运行`withdraw()` 测试后，我们现在可以在控制台上看到以下结果:
 
-```
+```java
 full method description: public void com.baeldung.method.info.BankAccountService.withdraw(com.baeldung.method.info.Account,java.lang.Double) throws com.baeldung.method.info.WithdrawLimitException
 method name: withdraw
 declaring type: class com.baeldung.method.info.BankAccountService
@@ -163,7 +163,7 @@ declaring type: class com.baeldung.method.info.BankAccountService
 
 为了检索关于方法参数的信息，我们可以使用`MethodSignature` 对象:
 
-```
+```java
 System.out.println("Method args names:");
 Arrays.stream(signature.getParameterNames()).forEach(s -> System.out.println("arg name: " + s));
 
@@ -176,7 +176,7 @@ Arrays.stream(joinPoint.getArgs()).forEach(o -> System.out.println("arg value: "
 
 让我们通过调用`BankAccountService`中的`deposit`方法来尝试一下:
 
-```
+```java
 @Test
 void deposit() {
     bankAccountService.deposit(account, 500.0);
@@ -186,7 +186,7 @@ void deposit() {
 
 这是我们在控制台上看到的:
 
-```
+```java
 Method args names:
 arg name: account
 arg name: amount
@@ -202,7 +202,7 @@ arg value: 500.0
 
 我们可以通过使用`Method`类的`getAnnotation()`方法来获得关于注释的信息:
 
-```
+```java
 Method method = signature.getMethod();
 AccountOperation accountOperation = method.getAnnotation(AccountOperation.class);
 System.out.println("Account operation annotation: " + accountOperation);
@@ -211,7 +211,7 @@ System.out.println("Account operation value: " + accountOperation.operation());
 
 现在让我们重新运行我们的`withdraw()` 测试，检查我们得到了什么:
 
-```
+```java
 Account operation annotation: @com.baeldung.method.info.AccountOperation(operation=withdraw)
 Account operation value: withdraw
 ```
@@ -220,7 +220,7 @@ Account operation value: withdraw
 
 我们可以获得一些关于我们的方法的附加信息，比如它们的返回类型，它们的修饰符，以及它们抛出了什么异常，如果有的话:
 
-```
+```java
 System.out.println("returning type: " + signature.getReturnType());
 System.out.println("method modifier: " + Modifier.toString(signature.getModifiers()));
 Arrays.stream(signature.getExceptionTypes())
@@ -229,7 +229,7 @@ Arrays.stream(signature.getExceptionTypes())
 
 现在让我们创建一个新的测试`withdrawWhenLimitReached` ,让`withdraw()`方法超过它定义的撤销限制:
 
-```
+```java
 @Test 
 void withdrawWhenLimitReached() 
 { 
@@ -241,7 +241,7 @@ void withdrawWhenLimitReached()
 
 现在让我们检查控制台输出:
 
-```
+```java
 returning type: void
 method modifier: public
 exception type: class com.baeldung.method.info.WithdrawLimitException 
@@ -249,7 +249,7 @@ exception type: class com.baeldung.method.info.WithdrawLimitException
 
 我们最后的测试将有助于演示`getBalance()` 方法。正如我们之前所说的，它不会被方面截获，因为在方法声明中没有`AccountOperation `注释:
 
-```
+```java
 @Test
 void getBalance() {
     bankAccountService.getBalance();

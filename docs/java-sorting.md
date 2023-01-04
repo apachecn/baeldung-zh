@@ -12,7 +12,7 @@
 
 我们将在一个`@Before` jUnit 方法中定义下面的`int`数组:
 
-```
+```java
 @Before
 public void initVariables () {
     toSort = new int[] 
@@ -29,7 +29,7 @@ public void initVariables () {
 
 现在让我们使用简单的`Array.sort()` API:
 
-```
+```java
 @Test
 public void givenIntArray_whenUsingSort_thenSortedArray() {
     Arrays.sort(toSort);
@@ -40,7 +40,7 @@ public void givenIntArray_whenUsingSort_thenSortedArray() {
 
 未排序的数组现在已完全排序:
 
-```
+```java
 [1, 5, 7, 66, 88, 89, 123, 200, 255]
 ```
 
@@ -50,7 +50,7 @@ public void givenIntArray_whenUsingSort_thenSortedArray() {
 
 `Arrays.sort`还有一个`sort`API——我们将在这里讨论:
 
-```
+```java
 Arrays.sort(int[] a, int fromIndex, int toIndex)
 ```
 
@@ -58,7 +58,7 @@ Arrays.sort(int[] a, int fromIndex, int toIndex)
 
 让我们看一个简单的例子:
 
-```
+```java
 @Test
 public void givenIntArray_whenUsingRangeSort_thenRangeSortedArray() {
     Arrays.sort(toSort, 3, 7);
@@ -69,13 +69,13 @@ public void givenIntArray_whenUsingRangeSort_thenRangeSortedArray() {
 
 将仅对以下子数组元素进行排序(`toIndex`除外):
 
-```
+```java
 [255, 7, 88, 200]
 ```
 
 包括主数组在内的排序后的子数组将是:
 
-```
+```java
 [5, 1, 89, 7, 88, 200, 255, 123, 66]
 ```
 
@@ -83,7 +83,7 @@ public void givenIntArray_whenUsingRangeSort_thenRangeSortedArray() {
 
 Java 8 附带了一个新的 API—`parallelSort`,其签名与`Arrays.sort()` API 相似:
 
-```
+```java
 @Test 
 public void givenIntArray_whenUsingParallelSort_thenArraySorted() {
     Arrays.parallelSort(toSort);
@@ -100,7 +100,7 @@ public void givenIntArray_whenUsingParallelSort_thenArraySorted() {
 
 最后，在`Arrays.parallelSort`中也有类似的 API `Arrays.sort`变体:
 
-```
+```java
 Arrays.parallelSort (int [] a, int fromIndex, int toIndex);
 ```
 
@@ -108,7 +108,7 @@ Arrays.parallelSort (int [] a, int fromIndex, int toIndex);
 
 现在让我们使用`[java.utils.Collections](https://web.archive.org/web/20220805115431/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collections.html)` 中的`[Collections.sort()](https://web.archive.org/web/20220805115431/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collections.html#sort(java.util.List))` API 对整数的`List`进行排序:
 
-```
+```java
 @Test
 public void givenList_whenUsingSort_thenSortedList() {
     List<Integer> toSortList = Ints.asList(toSort);
@@ -121,13 +121,13 @@ public void givenList_whenUsingSort_thenSortedList() {
 
 排序前的`List`将包含以下元素:
 
-```
+```java
 [5, 1, 89, 255, 7, 88, 200, 123, 66]
 ```
 
 自然，排序后:
 
-```
+```java
 [1, 5, 7, 66, 88, 89, 123, 200, 255]
 ```
 
@@ -141,7 +141,7 @@ public void givenList_whenUsingSort_thenSortedList() {
 
 注意，为了在`Collections`–**中使用`sort` API，我们首先将集合包装在一个列表**中:
 
-```
+```java
 @Test
 public void givenSet_whenUsingSort_thenSortedSet() {
     Set<Integer> integersSet = new LinkedHashSet<>(Ints.asList(toSort));
@@ -166,7 +166,7 @@ public void givenSet_whenUsingSort_thenSortedSet() {
 
 让我们首先定义要排序的地图:
 
-```
+```java
 @Before
 public void initVariables () {
     ....
@@ -185,7 +185,7 @@ public void initVariables () {
 
 我们现在将从`HashMap`中提取**关键字**和**值**条目，并根据本例中关键字的值对其进行排序:
 
-```
+```java
 @Test
 public void givenMap_whenSortingByKeys_thenSortedMap() {
     Integer[] sortedKeys = new Integer[] { 6, 12, 22, 55, 66, 77 };
@@ -212,7 +212,7 @@ public void givenMap_whenSortingByKeys_thenSortedMap() {
 
 排序前的 `Map`:
 
-```
+```java
 [Key: 66 , Value: Earl] 
 [Key: 22 , Value: Apple] 
 [Key: 6 , Value: Rocky] 
@@ -223,7 +223,7 @@ public void givenMap_whenSortingByKeys_thenSortedMap() {
 
 通过键对**排序后的 `Map`:**
 
-```
+```java
 [Key: 6 , Value: Rocky] 
 [Key: 12 , Value: George] 
 [Key: 22 , Value: Apple] 
@@ -236,7 +236,7 @@ public void givenMap_whenSortingByKeys_thenSortedMap() {
 
 这里我们将比较`HashMap`条目的值，以便根据`HashMap`的值进行排序:
 
-```
+```java
 @Test
 public void givenMap_whenSortingByValues_thenSortedMap() {
     String[] sortedValues = new String[] 
@@ -262,7 +262,7 @@ public void givenMap_whenSortingByValues_thenSortedMap() {
 
 排序前的`Map`:
 
-```
+```java
 [Key: 66 , Value: Earl] 
 [Key: 22 , Value: Apple] 
 [Key: 6 , Value: Rocky] 
@@ -273,7 +273,7 @@ public void givenMap_whenSortingByValues_thenSortedMap() {
 
 按值对**排序后的 `Map`:**
 
-```
+```java
 [Key: 22 , Value: Apple] 
 [Key: 66 , Value: Earl] 
 [Key: 12 , Value: George] 
@@ -286,7 +286,7 @@ public void givenMap_whenSortingByValues_thenSortedMap() {
 
 现在让我们使用一个自定义对象:
 
-```
+```java
 public class Employee implements Comparable {
     private String name;
     private int age;
@@ -302,7 +302,7 @@ public class Employee implements Comparable {
 
 我们将使用下面的`Employee`数组作为下面几节中的排序示例:
 
-```
+```java
 @Before
 public void initVariables () {
     ....    
@@ -336,7 +336,7 @@ public void initVariables () {
 
 在本例中，我们将认为具有相同`name`的员工是平等的:
 
-```
+```java
 @Test
 public void givenEmpArray_SortEmpArray_thenSortedArrayinNaturalOrder() {
     Arrays.sort(employees);
@@ -349,7 +349,7 @@ public void givenEmpArray_SortEmpArray_thenSortedArrayinNaturalOrder() {
 
 为了清楚地理解这一点，让我们看一个实现了`Comparable` 接口的示例`Employee`类:
 
-```
+```java
 public class Employee implements Comparable {
     ...
 
@@ -370,7 +370,7 @@ public class Employee implements Comparable {
 
 现在，当在上面的代码中调用`Arrays.sort(employees);`时，我们现在知道按照年龄对雇员进行排序的逻辑和顺序是什么:
 
-```
+```java
 [("Earl", 43, 10000),("Frank", 33, 70000), ("Jessica", 23, 4000),
  ("John", 23, 5000),("Pearl", 33, 4000), ("Steve", 26, 6000)]
 ```
@@ -381,7 +381,7 @@ public class Employee implements Comparable {
 
 现在，让我们使用一个`Comparator`接口实现对元素进行排序——在这里，我们动态地将匿名内部类传递给`Arrays.sort()` API:
 
-```
+```java
 @Test
 public void givenIntegerArray_whenUsingSort_thenSortedArray() {
     Integer [] integers = ArrayUtils.toObject(toSort);
@@ -398,7 +398,7 @@ public void givenIntegerArray_whenUsingSort_thenSortedArray() {
 
 现在让我们根据`salary` 对雇员进行排序，并传入另一个比较器实现:
 
-```
+```java
 Arrays.sort(employees, new Comparator<Employee>() {
     @Override
     public int compare(Employee o1, Employee o2) {
@@ -409,7 +409,7 @@ Arrays.sort(employees, new Comparator<Employee>() {
 
 基于`salary`排序的雇员数组将是:
 
-```
+```java
 [(Jessica,23,4000.0), (John,23,5000.0), (Pearl,33,6000.0), (Steve,26,6000.0), 
 (Frank,33,7000.0), (Earl,43,10000.0)] 
 ```
@@ -424,7 +424,7 @@ Arrays.sort(employees, new Comparator<Employee>() {
 
 让我们替换旧的比较器:
 
-```
+```java
 Comparator<Integer> c  = new Comparator<>() {
     @Override
     public int compare(Integer a, Integer b) {
@@ -435,13 +435,13 @@ Comparator<Integer> c  = new Comparator<>() {
 
 对于等效的实现，使用 Lambda 表达式:
 
-```
+```java
 Comparator<Integer> c = (a, b) -> Integer.compare(a, b);
 ```
 
 最后，让我们编写测试:
 
-```
+```java
 @Test
 public void givenArray_whenUsingSortWithLambdas_thenSortedArray() {
     Integer [] integersToSort = ArrayUtils.toObject(toSort);
@@ -464,7 +464,7 @@ Java 8 附带了两个用于排序的新 API——`Comparator`接口中的`[comp
 
 让我们考虑这样一个场景，我们可能想用`age`和`name`来比较`Employee` :
 
-```
+```java
 @Test
 public void givenArrayObjects_whenUsingComparing_thenSortedArrayObjects() {
     List<Employee> employeesList = Arrays.asList(employees);
@@ -479,7 +479,7 @@ public void givenArrayObjects_whenUsingComparing_thenSortedArrayObjects() {
 
 以下是排序后的员工数组:
 
-```
+```java
 [(John,23,5000.0), (Jessica,23,4000.0), (Steve,26,6000.0), (Frank,33,7000.0), 
 (Pearl,33,6000.0), (Earl,43,10000.0)]
 ```
@@ -488,7 +488,7 @@ public void givenArrayObjects_whenUsingComparing_thenSortedArrayObjects() {
 
 我们可以看到`John`和`Jessica`年龄相同——这意味着顺序逻辑现在应该考虑他们的名字——这可以通过`thenComparing()`实现:
 
-```
+```java
 ... 
 employees.sort(Comparator.comparing(Employee::getAge)
   .thenComparing(Employee::getName)); 
@@ -497,7 +497,7 @@ employees.sort(Comparator.comparing(Employee::getAge)
 
 使用上面的代码片段排序后，employee 数组中的元素将排序如下:
 
-```
+```java
 [(Jessica,23,4000.0), 
  (John,23,5000.0), 
  (Steve,26,6000.0), 

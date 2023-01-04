@@ -29,7 +29,7 @@
 
 首先，让我们创建一个原型 bean，稍后我们将把它注入到一个单独的 bean 中:
 
-```
+```java
 @Component
 @Scope("prototype")
 public class SchoolNotification {
@@ -39,7 +39,7 @@ public class SchoolNotification {
 
 如果我们创建一个使用`@Lookup`的单例 bean:
 
-```
+```java
 @Component
 public class StudentServices {
 
@@ -56,7 +56,7 @@ public class StudentServices {
 
 使用`@Lookup`，我们可以通过我们的 singleton bean 获得一个`SchoolNotification`的实例:
 
-```
+```java
 @Test
 public void whenLookupMethodCalled_thenNewInstanceReturned() {
     // ... initialize context
@@ -78,7 +78,7 @@ public void whenLookupMethodCalled_thenNewInstanceReturned() {
 
 让我们用一些状态来增强`StudentNotification` :
 
-```
+```java
 @Component
 @Scope("prototype")
 public class SchoolNotification {
@@ -104,7 +104,7 @@ public class SchoolNotification {
 
 然后，我们可以向`StudentServices` 添加一个方法，获取学生数据并持久化它:
 
-```
+```java
 public abstract class StudentServices {
 
     private Map<String, SchoolNotification> notes = new HashMap<>();
@@ -130,7 +130,7 @@ public abstract class StudentServices {
 
 使用`abstract`比 stub 好看一点，但是我们只能在**不** **`component-scan`或者`@Bean`——管理**周围 bean 的时候使用它:
 
-```
+```java
 @Test
 public void whenAbstractGetterMethodInjects_thenNewInstanceReturned() {
     // ... initialize context

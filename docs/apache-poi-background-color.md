@@ -12,7 +12,7 @@
 
 首先，我们需要在我们的`pom.xml`中添加`poi-ooxml`作为依赖项:
 
-```
+```java
 <dependency>
      <groupId>org.apache.poi</groupId>
      <artifactId>poi-ooxml</artifactId>
@@ -36,7 +36,7 @@ Apache POI 提供了三种更改背景颜色的方法。在`CellStyle`类中，�
 
 以下代码片段是更改单元格背景的示例方法，如单元格`A1`所示:
 
-```
+```java
 public void changeCellBackgroundColor(Cell cell) {
     CellStyle cellStyle = cell.getCellStyle();
     if(cellStyle == null) {
@@ -54,7 +54,7 @@ public void changeCellBackgroundColor(Cell cell) {
 
 以下代码片段是更改单元格背景的示例方法，如单元格`B1`所示:
 
-```
+```java
 public void changeCellBackgroundColorWithPattern(Cell cell) {
     CellStyle cellStyle = cell.getCellStyle();
     if(cellStyle == null) {

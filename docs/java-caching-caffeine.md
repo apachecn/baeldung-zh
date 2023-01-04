@@ -16,7 +16,7 @@
 
 我们需要将`caffeine`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.github.ben-manes.caffeine</groupId>
     <artifactId>caffeine</artifactId>
@@ -32,7 +32,7 @@
 
 首先，让我们为将要存储在缓存中的值类型编写一个类:
 
-```
+```java
 class DataObject {
     private final String data;
 
@@ -52,7 +52,7 @@ class DataObject {
 
 让我们初始化缓存:
 
-```
+```java
 Cache<String, DataObject> cache = Caffeine.newBuilder()
   .expireAfterWrite(1, TimeUnit.MINUTES)
   .maximumSize(100)
@@ -61,7 +61,7 @@ Cache<String, DataObject> cache = Caffeine.newBuilder()
 
 现在，**我们可以使用`getIfPresent` 方法**从缓存中获取一些值。如果值不在缓存中，该方法将返回`null` :
 
-```
+```java
 String key = "A";
 DataObject dataObject = cache.getIfPresent(key);
 
@@ -70,7 +70,7 @@ assertNull(dataObject);
 
 我们可以使用`put`方法手动填充缓存:
 
-```
+```java
 cache.put(key, dataObject);
 dataObject = cache.getIfPresent(key);
 
@@ -79,7 +79,7 @@ assertNotNull(dataObject);
 
 **我们也可以使用`get`方法**来获取值，该方法使用一个`Function` 和一个键作为参数。如果缓存中不存在关键字，此函数将用于提供回退值，该值将在计算后插入缓存中:
 
-```
+```java
 dataObject = cache
   .get(key, k -> DataObject.get("Data for A"));
 
@@ -91,7 +91,7 @@ assertEquals("Data for A", dataObject.getData());
 
 有时我们需要手动使一些缓存值无效:
 
-```
+```java
 cache.invalidate(key);
 dataObject = cache.getIfPresent(key);
 
@@ -104,7 +104,7 @@ assertNull(dataObject);
 
 首先，我们需要初始化我们的缓存:
 
-```
+```java
 LoadingCache<String, DataObject> cache = Caffeine.newBuilder()
   .maximumSize(100)
   .expireAfterWrite(1, TimeUnit.MINUTES)
@@ -113,7 +113,7 @@ LoadingCache<String, DataObject> cache = Caffeine.newBuilder()
 
 现在我们可以使用`get` 方法检索这些值:
 
-```
+```java
 DataObject dataObject = cache.get(key);
 
 assertNotNull(dataObject);
@@ -122,7 +122,7 @@ assertEquals("Data for " + key, dataObject.getData());
 
 我们还可以使用`getAll`方法获得一组值:
 
-```
+```java
 Map<String, DataObject> dataObjectMap 
   = cache.getAll(Arrays.asList("A", "B", "C"));
 
@@ -135,7 +135,7 @@ assertEquals(3, dataObjectMap.size());
 
 这个策略**的工作方式与前面的相同，但是异步执行操作，并返回一个保存实际值的`CompletableFuture`** :
 
-```
+```java
 AsyncLoadingCache<String, DataObject> cache = Caffeine.newBuilder()
   .maximumSize(100)
   .expireAfterWrite(1, TimeUnit.MINUTES)
@@ -144,7 +144,7 @@ AsyncLoadingCache<String, DataObject> cache = Caffeine.newBuilder()
 
 我们可以用同样的方式**使用`get`和`getAll`方法**，考虑到它们返回`CompletableFuture`:
 
-```
+```java
 String key = "A";
 
 cache.get(key).thenAccept(dataObject -> {
@@ -168,7 +168,7 @@ cache.getAll(Arrays.asList("A", "B", "C"))
 
 让我们看看如何对缓存中的对象进行计数。初始化缓存时，其大小等于零:
 
-```
+```java
 LoadingCache<String, DataObject> cache = Caffeine.newBuilder()
   .maximumSize(1)
   .build(k -> DataObject.get("Data for " + k));
@@ -178,7 +178,7 @@ assertEquals(0, cache.estimatedSize());
 
 当我们增加一个值时，大小明显增加:
 
-```
+```java
 cache.get("A");
 
 assertEquals(1, cache.estimatedSize());
@@ -186,7 +186,7 @@ assertEquals(1, cache.estimatedSize());
 
 我们可以将第二个值添加到缓存中，这将导致删除第一个值:
 
-```
+```java
 cache.get("B");
 cache.cleanUp();
 
@@ -197,7 +197,7 @@ assertEquals(1, cache.estimatedSize());
 
 我们还可以通过**传递一个`weigher`** `**Function**` 来获得缓存的大小:
 
-```
+```java
 LoadingCache<String, DataObject> cache = Caffeine.newBuilder()
   .maximumWeight(10)
   .weigher((k,v) -> 5)
@@ -214,7 +214,7 @@ assertEquals(2, cache.estimatedSize());
 
 当权重超过 10:
 
-```
+```java
 cache.get("C");
 cache.cleanUp();
 
@@ -231,7 +231,7 @@ assertEquals(2, cache.estimatedSize());
 
 让我们使用`expireAfterAccess`方法配置访问后过期策略:
 
-```
+```java
 LoadingCache<String, DataObject> cache = Caffeine.newBuilder()
   .expireAfterAccess(5, TimeUnit.MINUTES)
   .build(k -> DataObject.get("Data for " + k));
@@ -239,7 +239,7 @@ LoadingCache<String, DataObject> cache = Caffeine.newBuilder()
 
 为了配置写后过期策略，我们使用了`expireAfterWrite`方法:
 
-```
+```java
 cache = Caffeine.newBuilder()
   .expireAfterWrite(10, TimeUnit.SECONDS)
   .weakKeys()
@@ -249,7 +249,7 @@ cache = Caffeine.newBuilder()
 
 为了初始化定制策略，我们需要实现`Expiry` 接口:
 
-```
+```java
 cache = Caffeine.newBuilder().expireAfter(new Expiry<String, DataObject>() {
     @Override
     public long expireAfterCreate(
@@ -277,7 +277,7 @@ cache = Caffeine.newBuilder().expireAfter(new Expiry<String, DataObject>() {
 
 我们应该使用`Caffeine.weakKeys()`、`Caffeine.weakValues(),`和`Caffeine.softValues()` 来启用每个选项:
 
-```
+```java
 LoadingCache<String, DataObject> cache = Caffeine.newBuilder()
   .expireAfterWrite(10, TimeUnit.SECONDS)
   .weakKeys()
@@ -294,7 +294,7 @@ cache = Caffeine.newBuilder()
 
 可以将缓存配置为在定义的时间段后自动刷新条目。让我们看看如何使用`refreshAfterWrite`方法来实现这一点:
 
-```
+```java
 Caffeine.newBuilder()
   .refreshAfterWrite(1, TimeUnit.MINUTES)
   .build(k -> DataObject.get("Data for " + k));
@@ -308,7 +308,7 @@ Caffeine.newBuilder()
 
 咖啡因有一种方法**记录关于缓存使用的统计数据**:
 
-```
+```java
 LoadingCache<String, DataObject> cache = Caffeine.newBuilder()
   .maximumSize(100)
   .recordStats()

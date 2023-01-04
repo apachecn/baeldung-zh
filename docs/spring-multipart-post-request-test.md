@@ -10,7 +10,7 @@
 
 在我们开始之前，让我们在我们的`pom.xml`中添加最新的 [JUnit](https://web.archive.org/web/20220626193709/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22junit%22%20AND%20a%3A%22junit%22) 和 [Spring test](https://web.archive.org/web/20220626193709/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework%22%20AND%20a%3A%22spring-test%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>junit</groupId>
     <artifactId>junit</artifactId>
@@ -29,7 +29,7 @@
 
 让我们在 REST 控制器中创建一个简单的端点:
 
-```
+```java
 @PostMapping(path = "/upload")
 public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
     return file.isEmpty() ?
@@ -43,14 +43,14 @@ public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile fil
 
 首先，让我们自动连接我们的单元测试类中的 [`WebApplicationContext`](/web/20220626193709/https://www.baeldung.com/integration-testing-in-spring#2-the-webapplicationcontext-object) :
 
-```
+```java
 @Autowired
 private WebApplicationContext webApplicationContext;
 ```
 
 现在，让我们编写一个方法来测试上面定义的多部分 POST 请求:
 
-```
+```java
 @Test
 public void whenFileUploaded_thenVerifyStatus() 
   throws Exception {

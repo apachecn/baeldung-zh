@@ -16,7 +16,7 @@
 
 让我们看一个使用`java.util.System`类将一个完整数组复制到另一个数组的例子:
 
-```
+```java
 int[] array = {23, 43, 55};
 int[] copiedArray = new int[3];
 
@@ -27,14 +27,14 @@ System.arraycopy(array, 0, copiedArray, 0, 3);
 
 让我们看一下将子序列从源阵列复制到目标阵列的另一个示例:
 
-```
+```java
 int[] array = {23, 43, 55, 12, 65, 88, 92};
 int[] copiedArray = new int[3];
 
 System.arraycopy(array, 2, copiedArray, 0, 3); 
 ```
 
-```
+```java
 assertTrue(3 == copiedArray.length);
 assertTrue(copiedArray[0] == array[2]);
 assertTrue(copiedArray[1] == array[3]);
@@ -47,7 +47,7 @@ assertTrue(copiedArray[2] == array[4]);
 
 先来看`copyOf` `:`
 
-```
+```java
 int[] array = {23, 43, 55, 12};
 int newLength = array.length;
 
@@ -58,13 +58,13 @@ int[] copiedArray = Arrays.copyOf(array, newLength);
 
 除了源数组参数之外，`Arrays.copyOfRange()`接受两个参数，`from'`和`to',` 。得到的数组包括'`from'`索引，但不包括`‘to'`索引:
 
-```
+```java
 int[] array = {23, 43, 55, 12, 65, 88, 92};
 
 int[] copiedArray = Arrays.copyOfRange(array, 1, 4); 
 ```
 
-```
+```java
 assertTrue(3 == copiedArray.length);
 assertTrue(copiedArray[0] == array[1]);
 assertTrue(copiedArray[1] == array[2]);
@@ -73,7 +73,7 @@ assertTrue(copiedArray[2] == array[3]);
 
 如果应用于非原始对象类型的数组，这两种方法**都会对对象进行浅层复制**:
 
-```
+```java
 Employee[] copiedArray = Arrays.copyOf(employees, employees.length);
 
 employees[0].setName(employees[0].getName() + "_Changed");
@@ -91,7 +91,7 @@ assertArrayEquals(copiedArray, array);
 
 首先，我们将使用 clone 方法复制一组基本类型:
 
-```
+```java
 int[] array = {23, 43, 55, 12};
 
 int[] copiedArray = array.clone(); 
@@ -99,7 +99,7 @@ int[] copiedArray = array.clone();
 
 这就是它有效的证明:
 
-```
+```java
 assertArrayEquals(copiedArray, array);
 array[0] = 9;
 
@@ -114,7 +114,7 @@ assertTrue(copiedArray[0] != array[0]);
 
 让我们来看一个例子:
 
-```
+```java
 public class Address implements Cloneable {
     // ...
 
@@ -131,13 +131,13 @@ public class Address implements Cloneable {
 
 我们可以通过创建一个新的地址数组并调用我们的`clone()`方法来测试我们的实现:
 
-```
+```java
 Address[] addresses = createAddressArray();
 Address[] copiedArray = addresses.clone();
 addresses[0].setCity(addresses[0].getCity() + "_Changed"); 
 ```
 
-```
+```java
 assertArrayEquals(copiedArray, addresses);
 ```
 
@@ -147,7 +147,7 @@ assertArrayEquals(copiedArray, addresses);
 
 事实证明，我们也可以使用流 API 来复制数组:
 
-```
+```java
 String[] strArray = {"orange", "red", "green'"};
 String[] copiedArray = Arrays.stream(strArray).toArray(String[]::new); 
 ```
@@ -158,7 +158,7 @@ String[] copiedArray = Arrays.stream(strArray).toArray(String[]::new);
 
 `Apache Commons 3`提供了一个名为`SerializationUtils,`的实用程序类，它提供了一个`clone(…)`方法。如果我们需要对非原始类型的数组进行深度复制，这将非常有用。这里可以下载[，它的 Maven 依赖关系是:](https://web.archive.org/web/20221012100327/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.commons%22%20AND%20a%3A%22commons-lang3%22)
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -168,7 +168,7 @@ String[] copiedArray = Arrays.stream(strArray).toArray(String[]::new);
 
 让我们来看一个测试案例:
 
-```
+```java
 public class Employee implements Serializable {
     // fields
     // standard getters and setters
@@ -178,7 +178,7 @@ Employee[] employees = createEmployeesArray();
 Employee[] copiedArray = SerializationUtils.clone(employees); 
 ```
 
-```
+```java
 employees[0].setName(employees[0].getName() + "_Changed");
 assertFalse(
   copiedArray[0].getName().equals(employees[0].getName()));

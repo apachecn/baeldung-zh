@@ -16,7 +16,7 @@
 
 首先，让我们创建我们的`AppControllerIntegrationTest`类的框架:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class AppControllerIntegrationTest {
@@ -52,7 +52,7 @@ JSON 是 REST APIs 中交换数据最常用的格式。响应可以由单个 JSO
 
 我们将使用 [Mockito](/web/20220901001343/https://www.baeldung.com/mockito-series) 框架模拟`AppService`调用以返回一些模拟数据:
 
-```
+```java
 @Test
 public void givenMovieId_whenMakingGetRequestToMovieEndpoint_thenReturnMovie() {
 
@@ -80,7 +80,7 @@ public void givenMovieId_whenMakingGetRequestToMovieEndpoint_thenReturnMovie() {
 
 **我们可以提取一个类的 JSON 响应，使用`extract()`方法:**
 
-```
+```java
 Movie result = get(uri + "/movie/" + testMovie.getId()).then()
   .assertThat()
   .statusCode(HttpStatus.OK.value())
@@ -93,7 +93,7 @@ assertThat(result).isEqualTo(testMovie);
 
 **我们还可以使用`extract().asString()` API:** 提取对`String,` 的完整响应
 
-```
+```java
 String responseString = get(uri + "/movie/" + testMovie.getId()).then()
   .assertThat()
   .statusCode(HttpStatus.OK.value())
@@ -106,7 +106,7 @@ assertThat(responseString).isNotEmpty();
 
 让我们来看一个 POST API 的测试，它需要一个`Movie` JSON 主体，如果成功插入，将返回相同的内容:
 
-```
+```java
 @Test
 public void givenMovie_whenMakingPostRequestToMovieEndpoint_thenCorrect() {
     Map<String, String> request = new HashMap<>();
@@ -133,7 +133,7 @@ public void givenMovie_whenMakingPostRequestToMovieEndpoint_thenCorrect() {
 
 如果是 JSON 数组，我们也可以验证响应:
 
-```
+```java
 @Test
 public void whenCallingMoviesEndpoint_thenReturnAllMovies() {
 
@@ -153,7 +153,7 @@ get(uri + "/movies").then()
 
 这也可以通过提取来实现:
 
-```
+```java
 Movie[] movies = get(uri + "/movies").then()
   .statusCode(200)
   .extract()
@@ -165,7 +165,7 @@ assertThat(movies.length).isEqualTo(2);
 
 我们可以使用具有相同名称的方法来验证响应的标头或 cookie:
 
-```
+```java
 @Test
 public void whenCallingWelcomeEndpoint_thenCorrect() {
     get(uri + "/welcome").then()
@@ -177,7 +177,7 @@ public void whenCallingWelcomeEndpoint_thenCorrect() {
 
 我们还可以分别提取标题和 cookies:
 
-```
+```java
 Response response = get(uri + "/welcome");
 
 String headerName = response.getHeader("sessionId");
@@ -190,7 +190,7 @@ assertThat(cookieValue).isNotBlank();
 
 如果我们的 REST API 返回一个文件，我们可以使用`asByteArray()`方法提取响应:
 
-```
+```java
 File file = new ClassPathResource("test.txt").getFile();
 long fileSize = file.length();
 when(appService.getFile(1)).thenReturn(file);

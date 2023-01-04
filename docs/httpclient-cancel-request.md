@@ -14,13 +14,13 @@
 
 要中止正在进行的请求，客户端只需使用:
 
-```
+```java
 request.abort();
 ```
 
 这将确保客户端不必消耗请求的全部内容来释放连接:
 
-```
+```java
 @Test
 public void whenRequestIsCanceled_thenCorrect() 
   throws ClientProtocolException, IOException {

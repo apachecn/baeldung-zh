@@ -14,7 +14,7 @@
 
 让我们从我们将在示例中使用的 XML 文档开始:
 
-```
+```java
 <?xml version="1.0"?>
 <tutorials>
     <tutorial tutId="01" type="java">
@@ -37,7 +37,7 @@
 
 让我们直接开始加载 XML 文件:
 
-```
+```java
 DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 Document doc = builder.parse(new File("src/test/resources/example_jdom.xml"));
 doc.getDocumentElement().normalize();
@@ -53,7 +53,7 @@ doc.getDocumentElement().normalize();
 
 让我们从检索标签为“tutorial”的所有元素开始。我们可以使用`getElementsByTagName()`方法来完成这项工作，该方法将返回一个`NodeList:`
 
-```
+```java
 @Test
 public void whenGetElementByTag_thenSuccess() {
     NodeList nodeList = doc.getElementsByTagName("tutorial");
@@ -69,7 +69,7 @@ public void whenGetElementByTag_thenSuccess() {
 
 接下来，让我们看看如何使用`getAttributes()`获得第一个元素的属性:
 
-```
+```java
 @Test
 public void whenGetFirstElementAttributes_thenSuccess() {
     Node first = doc.getElementsByTagName("tutorial").item(0);
@@ -95,7 +95,7 @@ public void whenGetFirstElementAttributes_thenSuccess() {
 
 在下面的测试中，我们将遍历第一个元素的子节点并打印它们的内容:
 
-```
+```java
 @Test
 public void whenTraverseChildNodes_thenSuccess() {
     Node first = doc.getElementsByTagName("tutorial").item(0);
@@ -116,7 +116,7 @@ public void whenTraverseChildNodes_thenSuccess() {
 
 输出将显示我们文档中第一个“tutorial”元素的内容:
 
-```
+```java
 title: Guava
 description: Introduction to Guava
 date: 04/04/2016
@@ -129,7 +129,7 @@ author: GuavaAuthor
 
 例如，让我们将`type`属性的值从“java”更改为“other”:
 
-```
+```java
 @Test
 public void whenModifyDocument_thenModified() {
     NodeList nodeList = doc.getElementsByTagName("tutorial");
@@ -150,7 +150,7 @@ public void whenModifyDocument_thenModified() {
 
 让我们首先看看我们想要创建的文件:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <users>
     <user id="1">
@@ -165,7 +165,7 @@ public void whenModifyDocument_thenModified() {
 
 然后，我们将调用新对象的`createElement()`方法:
 
-```
+```java
 @Test
 public void whenCreateNewDocument_thenCreated() throws Exception {
     Document newDoc = builder.newDocument();
@@ -193,7 +193,7 @@ public void whenCreateNewDocument_thenCreated() throws Exception {
 
 我们将从创建一个`DOMSource`对象开始，然后使用一个简单的`Transformer`将文档保存到一个文件中:
 
-```
+```java
 private void saveDomToFile(Document document,String fileName) 
   throws Exception {
 
@@ -208,7 +208,7 @@ private void saveDomToFile(Document document,String fileName)
 
 同样，我们可以在控制台中打印我们的文档:
 
-```
+```java
 private void printDom(Document document) throws Exception{
     DOMSource dom = new DOMSource(document);
     Transformer transformer = TransformerFactory.newInstance()

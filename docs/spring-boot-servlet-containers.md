@@ -14,7 +14,7 @@
 
 一般来说，我们希望将父节点指定为`spring-boot-starter-parent`，然后包含我们想要的启动器:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -45,7 +45,7 @@
 
 然后，我们简单地声明对`spring-boot-starter-jetty`的依赖:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -66,7 +66,7 @@
 
 除了我们使用`spring-boot-starter-undertow`作为依赖项之外，设置回流与 Jetty 相同:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -89,7 +89,7 @@
 
 查看[这篇文章](/web/20220626194614/https://www.baeldung.com/spring-boot-actuators)了解致动器的详细信息。我们只需在我们的`pom`中添加一个依赖项，使其可用:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-actuator</artifactId>
@@ -104,7 +104,7 @@ Windows 用户可以从链接[的第三方供应商下载 Apache。如果 Apache
 
 如果您在 Linux 机器上，`ab`可以使用`apt-get`安装:
 
-```
+```java
 $ apt-get install apache2-utils
 ```
 
@@ -116,7 +116,7 @@ $ apt-get install apache2-utils
 
 我们将通过直接使用致动器组件使用的`MeterRegistry`以编程方式提取我们感兴趣的指标:
 
-```
+```java
 @Component
 public class StartupEventHandler {
 
@@ -168,7 +168,7 @@ Actuator 提供了大量现成的指标。我们选择了 3 个指标来帮助�
 
 一旦服务器启动，我们将得到一个命令提示符并执行`ab`:
 
-```
+```java
 ab -n 10000 -c 10 http://localhost:8080/actuator/metrics
 ```
 

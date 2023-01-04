@@ -12,7 +12,7 @@ Dropwizard 是一个开源的 Java 框架，用于快速开发高性能 RESTful 
 
 首先，为了创建我们的服务，我们只需要依赖关系。让我们将它添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>io.dropwizard</groupId>
     <artifactId>dropwizard-core</artifactId>
@@ -26,13 +26,13 @@ Dropwizard 是一个开源的 Java 框架，用于快速开发高性能 RESTful 
 
 Dropwizard 应用程序将属性存储在 YML 文件中。因此，我们将在资源目录中创建`introduction-config.yml` 文件:
 
-```
+```java
 defaultSize: 5
 ```
 
 我们可以通过创建一个扩展`io.dropwizard.Configuration`的类来访问该文件中的值:
 
-```
+```java
 public class BasicConfiguration extends Configuration {
     @NotNull private final int defaultSize;
 
@@ -51,7 +51,7 @@ Dropwizard 使用 [Jackson](/web/20221126223734/https://www.baeldung.com/jackson
 
 接下来，让我们创建主应用程序类，它负责准备我们的服务以供使用:
 
-```
+```java
 public class IntroductionApplication extends Application<BasicConfiguration> {
 
     public static void main(String[] args) throws Exception {
@@ -83,7 +83,7 @@ public class IntroductionApplication extends Application<BasicConfiguration> {
 
 首先，让我们为我们的品牌创建一个域类:
 
-```
+```java
 public class Brand {
     private final Long id;
     private final String name;
@@ -94,7 +94,7 @@ public class Brand {
 
 其次，让我们创建一个负责返回品牌的`BrandRepository`类:
 
-```
+```java
 public class BrandRepository {
     private final List<Brand> brands;
 
@@ -120,7 +120,7 @@ public class BrandRepository {
 
 第三，我们将创建一个`BrandResource` 类。**drop wizard 默认使用 [JAX-RS](/web/20221126223734/https://www.baeldung.com/jax-rs-spec-and-implementations) ，用新泽西作为实现**。因此，我们将利用该规范中的注释来公开我们的 REST API 端点:
 
-```
+```java
 @Path("/brands")
 @Produces(MediaType.APPLICATION_JSON)
 public class BrandResource {
@@ -151,7 +151,7 @@ public class BrandResource {
 
 最后，我们将把`BrandResource`注册到`IntroductionApplicaton`类中。为了做到这一点，让我们实现`run` 方法:
 
-```
+```java
 @Override
 public void run(BasicConfiguration basicConfiguration, Environment environment) {
     int defaultSize = basicConfiguration.getDefaultSize();
@@ -172,7 +172,7 @@ public void run(BasicConfiguration basicConfiguration, Environment environment) 
 
 首先，我们将配置我们的项目来使用`[maven-shade-plugin](https://web.archive.org/web/20221126223734/https://search.maven.org/search?q=g:org.apache.maven.plugins%20AND%20a:maven-shade-plugin)`构建一个 JAR 文件:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-shade-plugin</artifactId>
@@ -213,7 +213,7 @@ public void run(BasicConfiguration basicConfiguration, Environment environment) 
 
 最后，我们将使用 [Maven](/web/20221126223734/https://www.baeldung.com/maven) 构建应用程序。一旦我们有了 JAR 文件，我们就可以运行应用程序了:
 
-```
+```java
 java -jar target/dropwizard-0.0.1-SNAPSHOT.jar
 ```
 
@@ -221,7 +221,7 @@ java -jar target/dropwizard-0.0.1-SNAPSHOT.jar
 
 之后，控制台日志应该以以下内容结束:
 
-```
+```java
 INFO  [2020-01-08 18:55:06,527] org.eclipse.jetty.server.Server: Started @1672ms
 ```
 
@@ -233,7 +233,7 @@ INFO  [2020-01-08 18:55:06,527] org.eclipse.jetty.server.Server: Started @1672ms
 
 让我们从添加一个扩展`com.codahale.metrics.health.HealthCheck`的简单类开始:
 
-```
+```java
 public class ApplicationHealthCheck extends HealthCheck {
     @Override
     protected Result check() throws Exception {
@@ -246,7 +246,7 @@ public class ApplicationHealthCheck extends HealthCheck {
 
 最后，我们需要**在我们`IntroductionApplication`类的`run`方法中注册我们的健康检查**:
 
-```
+```java
 environment
   .healthChecks()
   .register("application", new ApplicationHealthCheck());
@@ -254,7 +254,7 @@ environment
 
 运行应用程序后，我们可以在`http://localhost:8081/healthcheck`下**检查健康检查响应**:
 
-```
+```java
 {
   "application": {
     "healthy": true,

@@ -43,7 +43,7 @@ PEM 文件也是证书容器，它们使用 Base64 编码二进制数据，这�
 
 我们首先用一个 RSA 密钥对创建一个 JKS:
 
-```
+```java
 keytool -genkey -keyalg RSA -v -keystore keystore.jks -alias first-key-pair
 ```
 
@@ -51,7 +51,7 @@ keytool -genkey -keyalg RSA -v -keystore keystore.jks -alias first-key-pair
 
 对于本例，我们还将创建第二个密钥对:
 
-```
+```java
 keytool -genkey -keyalg RSA -v -keystore keystore.jks -alias second-key-pair
 ```
 
@@ -59,7 +59,7 @@ keytool -genkey -keyalg RSA -v -keystore keystore.jks -alias second-key-pair
 
 转换过程的第一步是使用`keytool`将 JKS 转换成 PKCS#12:
 
-```
+```java
 keytool -importkeystore -srckeystore keystore.jks \
    -destkeystore keystore.p12 \
    -srcstoretype jks \
@@ -70,7 +70,7 @@ keytool -importkeystore -srckeystore keystore.jks \
 
 让我们检查运行该命令的输出:
 
-```
+```java
 Entry for alias first-key-pair successfully imported.
 Entry for alias second-key-pair successfully imported.
 Import command completed:  2 entries successfully imported, 0 entries failed or cancelled
@@ -82,7 +82,7 @@ Import command completed:  2 entries successfully imported, 0 entries failed or 
 
 从这里开始，我们将使用`openssl`将`keystore.p12`编码成一个 PEM 文件:
 
-```
+```java
 openssl pkcs12 -in keystore.p12 -out keystore.pem
 ```
 
@@ -90,7 +90,7 @@ openssl pkcs12 -in keystore.p12 -out keystore.pem
 
 如果我们不想加密生成的私钥，我们应该使用:
 
-```
+```java
 openssl pkcs12 -nodes -in keystore.p12 -out keystore.pem
 ```
 
@@ -100,13 +100,13 @@ openssl pkcs12 -nodes -in keystore.p12 -out keystore.pem
 
 **我们可以单独使用`keytool`将单个公钥证书从 JKS 导出到 PEM 格式**:
 
-```
+```java
 keytool -exportcert -alias first-key-pair -keystore keystore.jks -rfc -file first-key-pair-cert.pem
 ```
 
 在提示符下输入 JKS 密码后，我们将看到该命令的输出:
 
-```
+```java
 Certificate stored in file <first-key-pair-cert.pem>
 ```
 

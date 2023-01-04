@@ -24,13 +24,13 @@ Jetty 需要 JDK 8 或更高版本和 [ALPN](https://web.archive.org/web/2022062
 
 接下来，我们可以使用 Java 命令在 Jetty 服务器上启用 HTTP/2 连接器:
 
-```
+```java
 java -jar $JETTY_HOME/start.jar --add-to-start=http2
 ```
 
 该命令为端口`8443`上的 SSL 连接器添加 HTTP/2 协议支持。此外，它还通过 ALPN 模块进行协议协商:
 
-```
+```java
 INFO  : server          transitively enabled, ini template available with --add-to-start=server
 INFO  : alpn-impl/alpn-1.8.0_131 dynamic dependency of alpn-impl/alpn-8
 INFO  : alpn-impl       transitively enabled
@@ -49,13 +49,13 @@ INFO  : Base directory was modified
 
 现在，我们准备启动 Jetty 服务器:
 
-```
+```java
 java -jar $JETTY_HOME/start.jar
 ```
 
 当服务器启动时，日志将显示启用的模块:
 
-```
+```java
 INFO::main: Logging initialized @228ms to org.eclipse.jetty.util.log.StdErrLog
 ...
 INFO:oejs.AbstractConnector:main: Started [[email protected]](/web/20220627075556/https://www.baeldung.com/cdn-cgi/l/email-protection){SSL, (ssl, alpn, h2)}{0.0.0.0:8443}
@@ -66,13 +66,13 @@ INFO:oejs.Server:main: Started @872ms
 
 类似地，我们可以启用其他模块，如`http`和`http2c`:
 
-```
+```java
 java -jar $JETTY_HOME/start.jar --add-to-start=http,http2c
 ```
 
 让我们验证日志:
 
-```
+```java
 INFO:oejs.AbstractConnector:main: Started [[email protected]](/web/20220627075556/https://www.baeldung.com/cdn-cgi/l/email-protection){SSL, (ssl, alpn, h2)}{0.0.0.0:8443}
 INFO:oejs.AbstractConnector:main: Started [[email protected]](/web/20220627075556/https://www.baeldung.com/cdn-cgi/l/email-protection){HTTP/1.1, (http/1.1, h2c)}{0.0.0.0:8080}
 INFO:oejs.Server:main: Started @685ms
@@ -80,13 +80,13 @@ INFO:oejs.Server:main: Started @685ms
 
 此外，我们可以列出 Jetty 提供的所有模块:
 
-```
+```java
 java -jar $JETTY_HOME/start.jar --list-modules
 ```
 
 输出将类似于:
 
-```
+```java
 Available Modules:
 ==================
 tags: [-internal]
@@ -124,13 +124,13 @@ Enabled Modules:
 
 类似于`–list-modules`参数，我们可以使用`–list-config` 列出每个模块的所有 XML 配置文件:
 
-```
+```java
 java -jar $JETTY_HOME/start.jar --list-config
 ```
 
 要为 Jetty 服务器配置像`host`和`port`这样的公共属性，我们可以在`start.ini`文件中进行修改:
 
-```
+```java
 jetty.ssl.host=0.0.0.0
 jetty.ssl.port=8443
 jetty.ssl.idleTimeout=30000
@@ -138,7 +138,7 @@ jetty.ssl.idleTimeout=30000
 
 此外，我们还可以配置一些`http2`属性，如`maxConcurrentStreams`和`maxSettingsKeys`:
 
-```
+```java
 jetty.http2.maxConcurrentStreams=128
 jetty.http2.initialStreamRecvWindow=524288
 jetty.http2.initialSessionRecvWindow=1048576
@@ -154,7 +154,7 @@ jetty.http2.rateControl.maxEventsPerSecond=20
 
 让我们将 [`jetty-maven-plugin`](https://web.archive.org/web/20220627075556/https://search.maven.org/search?q=g:org.eclipse.jetty%20a:jetty-maven-plugin) Maven 插件以及 Maven 依赖项添加到我们的`pom.xml`中，如 [`http2-server`](https://web.archive.org/web/20220627075556/https://search.maven.org/search?q=g:org.eclipse.jetty.http2%20a:http2-server) 、 [`jetty-alpn-openjdk8-server`](https://web.archive.org/web/20220627075556/https://search.maven.org/search?q=g:org.eclipse.jetty%20a:jetty-alpn-openjdk8-server) 和`[jetty-servlets](https://web.archive.org/web/20220627075556/https://search.maven.org/search?q=g:org.eclipse.jetty%20a:jetty-servlets)`:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -185,19 +185,19 @@ jetty.http2.rateControl.maxEventsPerSecond=20
 
 然后，我们将使用 Maven 命令编译这些类:
 
-```
+```java
 mvn clean package
 ```
 
 最后，我们可以将未组装的 Maven 应用程序部署到 Jetty 服务器:
 
-```
+```java
 mvn jetty:run-forked
 ```
 
 默认情况下，服务器使用 HTTP/1.1 协议从端口`8080`启动:
 
-```
+```java
 oejmp.Starter:main: Started Jetty Server
 oejs.AbstractConnector:main: Started [[email protected]](/web/20220627075556/https://www.baeldung.com/cdn-cgi/l/email-protection){HTTP/1.1, (http/1.1)}{0.0.0.0:8080}
 oejs.Server:main: Started @1045ms
@@ -207,7 +207,7 @@ oejs.Server:main: Started @1045ms
 
 接下来，我们将通过添加适当的`Call`元素，在我们的`jetty.xml`文件中用 HTTP/2 协议配置 Jetty 服务器:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_0.dtd">
 <Configure id="Server" class="org.eclipse.jetty.server.Server">
@@ -250,7 +250,7 @@ oejs.Server:main: Started @1045ms
 
 此外，我们可以通过在`jetty.xml`中定义逗号分隔的参数来添加其他模块，如`h2-17`和`h2-16`(`h2`的草案版本):
 
-```
+```java
 <Item> 
     <New class="org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory"> 
         <Arg>h2,h2-17,h2-16</Arg> 
@@ -260,7 +260,7 @@ oejs.Server:main: Started @1045ms
 
 然后，我们将在我们的`pom.xml`中配置 `jetty.xml`的位置:
 
-```
+```java
 <plugin>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-maven-plugin</artifactId>
@@ -285,7 +285,7 @@ oejs.Server:main: Started @1045ms
 
 让我们重新编译我们的类并重新运行应用程序，以验证 HTTP/2 协议是否已启用:
 
-```
+```java
 oejmp.Starter:main: Started Jetty Server
 oejs.AbstractConnector:main: Started [[email protected]](/web/20220627075556/https://www.baeldung.com/cdn-cgi/l/email-protection){SSL, (ssl, http/1.1)}{0.0.0.0:8443}
 oejs.AbstractConnector:main: Started [[email protected]](/web/20220627075556/https://www.baeldung.com/cdn-cgi/l/email-protection){SSL, (ssl, alpn, h2)}{0.0.0.0:8444}
@@ -301,7 +301,7 @@ oejs.AbstractConnector:main: Started [[email protected]](/web/20220627075556/ht
 
 让我们在`web.xml`中配置`PushCacheFilter`:
 
-```
+```java
 <filter>
     <filter-name>push</filter-name>
     <filter-class>org.eclipse.jetty.servlets.PushCacheFilter</filter-class>
@@ -320,7 +320,7 @@ oejs.AbstractConnector:main: Started [[email protected]](/web/20220627075556/ht
 
 然后，我们将创建`Http2JettyServlet`类来访问图像，并将`servlet-mapping`添加到我们的`web.xml`文件中:
 
-```
+```java
 <servlet>
     <servlet-name>http2Jetty</servlet-name>
     <servlet-class>com.baeldung.jetty.http2.Http2JettyServlet</servlet-class>
@@ -335,7 +335,7 @@ oejs.AbstractConnector:main: Started [[email protected]](/web/20220627075556/ht
 
 最后，为了验证 HTTP/2 推送特性和改进的页面加载时间，我们将创建一个`http2.html`文件来加载一些图像(辅助资源):
 
-```
+```java
 <!DOCTYPE html>
 <html>
 <head>

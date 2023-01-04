@@ -20,7 +20,7 @@
 
 此外，我们还需要`spring-integration-security`依赖项，以便能够在 Spring 集成中使用 Spring 安全性:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.integration</groupId>
     <artifactId>spring-integration-security</artifactId>
@@ -30,7 +30,7 @@
 
 我们还使用了 Spring Security，所以我们将把`spring-security-config`添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-config</artifactId>
@@ -44,7 +44,7 @@
 
 我们的例子将使用基本的 Spring 集成组件。因此，我们只需要通过使用`@EnableIntegration`注释在我们的项目中启用 Spring 集成:
 
-```
+```java
 @Configuration
 @EnableIntegration
 public class SecuredDirectChannel {
@@ -56,7 +56,7 @@ public class SecuredDirectChannel {
 
 首先，**我们需要一个`ChannelSecurityInterceptor`的实例，它将拦截一个通道上的所有`send`和`receive`调用，并决定该调用是否可以被执行或拒绝**:
 
-```
+```java
 @Autowired
 @Bean
 public ChannelSecurityInterceptor channelSecurityInterceptor(
@@ -78,7 +78,7 @@ public ChannelSecurityInterceptor channelSecurityInterceptor(
 
 `AuthenticationManager`和`AccessDecisionManager`bean 被定义为:
 
-```
+```java
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends GlobalMethodSecurityConfiguration {
@@ -107,7 +107,7 @@ public class SecurityConfig extends GlobalMethodSecurityConfiguration {
 
 现在，我们可以使用那个`ChannelSecurityInterceptor`来保护我们的频道。我们需要做的是通过`@SecureChannel`注释来装饰通道:
 
-```
+```java
 @Bean(name = "startDirectChannel")
 @SecuredChannel(
   interceptor = "channelSecurityInterceptor", 
@@ -140,7 +140,7 @@ public DirectChannel endDirectChannel() {
 
 值得一提的是，我们也可以通过 Spring 方法安全保护我们的`ServiceActivator`。因此，我们需要启用方法安全性注释:
 
-```
+```java
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends GlobalMethodSecurityConfiguration {
@@ -152,7 +152,7 @@ public class SecurityConfig extends GlobalMethodSecurityConfiguration {
 
 现在我们可以用一个`@PreAuthorization`注释来保护我们的`ServiceActivator`:
 
-```
+```java
 @ServiceActivator(
   inputChannel = "startDirectChannel", 
   outputChannel = "endDirectChannel")
@@ -177,7 +177,7 @@ public Message<?> logMessage(Message<?> message) {
 
 让我们创建另一个消息流，它以一个`PublishSubscribeChannel` 通道开始，两个`ServiceActivator`订阅了该通道:
 
-```
+```java
 @Bean(name = "startPSChannel")
 @SecuredChannel(
   interceptor = "channelSecurityInterceptor", 
@@ -211,7 +211,7 @@ public Message<?> changeMessageToUserName(Message<?> message) {
 
 同时，`startPSChannel` 将在`ThreadPoolTaskExecutor:`的支持下运行
 
-```
+```java
 @Bean
 public ThreadPoolTaskExecutor executor() {
     ThreadPoolTaskExecutor pool = new ThreadPoolTaskExecutor();
@@ -224,7 +224,7 @@ public ThreadPoolTaskExecutor executor() {
 
 因此，两个`ServiceActivator`将在两个不同的线程中运行。**为了将`SecurityContext`传播给那些线程，我们需要向我们的消息通道添加一个`SecurityContextPropagationChannelInterceptor`** :
 
-```
+```java
 @Bean
 @GlobalChannelInterceptor(patterns = { "startPSChannel" })
 public ChannelInterceptor securityContextPropagationInterceptor() {
@@ -244,7 +244,7 @@ public ChannelInterceptor securityContextPropagationInterceptor() {
 
 当然，我们在这一点上需要`spring-security-test`依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-test</artifactId>
@@ -259,7 +259,7 @@ public ChannelInterceptor securityContextPropagationInterceptor() {
 
 首先，我们试图向我们的`startDirectChannel:`发送一条消息
 
-```
+```java
 @Test(expected = AuthenticationCredentialsNotFoundException.class)
 public void 
   givenNoUser_whenSendToDirectChannel_thenCredentialNotFound() {
@@ -273,7 +273,7 @@ public void
 
 接下来，我们提供一个角色为`ROLE_VIEWER,`的用户，并向我们的`startDirectChannel`发送一条消息:
 
-```
+```java
 @Test
 @WithMockUser(roles = { "VIEWER" })
 public void 
@@ -296,7 +296,7 @@ public void
 
 然后再次尝试向`startDirectChannel` 发送消息`:`
 
-```
+```java
 @Test
 @WithMockUser(username = "jane", roles = { "LOGGER", "EDITOR" })
 public void 
@@ -319,7 +319,7 @@ public void
 
 因此，首先我们为用户提供角色`ROLE_VIEWER`,并尝试向我们的渠道发送消息:
 
-```
+```java
 @Test
 @WithMockUser(username = "user", roles = { "VIEWER" })
 public void 
@@ -346,7 +346,7 @@ public void
 
 让我们为用户提供两个角色`ROLE_VIEWER`和`ROLE_LOGGER`:
 
-```
+```java
 @Test
 @WithMockUser(username = "user", roles = { "LOGGER", "VIEWER" })
 public void 

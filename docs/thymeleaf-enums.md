@@ -12,7 +12,7 @@
 
 让我们首先将百里香的 [Spring Boot 发酵剂添加到我们的`pom.xml`文件中:](https://web.archive.org/web/20220728105348/https://search.maven.org/search?q=a:spring-boot-starter-thymeleaf%20AND%20g:org.springframework.boot)
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -22,7 +22,7 @@
 
 我们将使用有几种颜色选择的小部件，所以让我们定义我们的`Color`枚举:
 
-```
+```java
 public enum Color {
     BLACK, BLUE, RED, YELLOW, GREEN, ORANGE, PURPLE, WHITE
 }
@@ -30,7 +30,7 @@ public enum Color {
 
 现在，让我们创建我们的`Widget`类:
 
-```
+```java
 public class Widget {
     private String name;
     private Color color;
@@ -43,7 +43,7 @@ public class Widget {
 
 让我们使用[选择和选项](/web/20220728105348/https://www.baeldung.com/thymeleaf-select-option)来创建一个使用我们的`Color`枚举的下拉列表:
 
-```
+```java
 <select name="color">
     <option th:each="colorOpt : ${T(com.baeldung.thymeleaf.model.Color).values()}" 
         th:value="${colorOpt}" th:text="${colorOpt}"></option>
@@ -66,7 +66,7 @@ public class Widget {
 
 我们将首先修改我们的`Color`枚举来提供一个显示名称:
 
-```
+```java
 public enum Color {
     BLACK("Black"), 
     BLUE("Blue"), 
@@ -91,7 +91,7 @@ public enum Color {
 
 接下来，让我们来看看我们的百里香模板，并更新我们的下拉列表，以使用新的`displayValue`:
 
-```
+```java
 <select name="color">
     <option th:each="colorOpt : ${T(com.baeldung.thymeleaf.model.Color).values()}" 
         th:value="${colorOpt}" th:text="${colorOpt.displayValue}"></option>
@@ -110,7 +110,7 @@ public enum Color {
 
 我们可以使用百里香叶`if`语句和我们的`Color`枚举来有条件地显示文本:
 
-```
+```java
 <div th:if="${widget.color == T(com.baeldung.thymeleaf.model.Color).RED}">
     This color screams danger.
 </div>
@@ -118,7 +118,7 @@ public enum Color {
 
 另一种选择是使用`String`比较:
 
-```
+```java
 <div th:if="${widget.color.name() == 'GREEN'}">
     Green is for go.
 </div>
@@ -130,7 +130,7 @@ public enum Color {
 
 让我们使用一个带有`Color`枚举的`switch-case`语句:
 
-```
+```java
 <div th:switch="${widget.color}">
     <span th:case="${T(com.baeldung.thymeleaf.model.Color).RED}"
       style="color: red;">Alert</span>

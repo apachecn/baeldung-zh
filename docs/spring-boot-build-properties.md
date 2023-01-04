@@ -14,7 +14,7 @@
 
 通常，该信息出现在`pom.xml`中:
 
-```
+```java
 <project 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -32,7 +32,7 @@
 
 现在，要在我们的应用程序中使用上述信息，我们必须首先在我们的一个应用程序属性文件中引用它:
 
-```
+```java
 [[email protected]](/web/20220626073128/https://www.baeldung.com/cdn-cgi/l/email-protection)@
 [[email protected]](/web/20220626073128/https://www.baeldung.com/cdn-cgi/l/email-protection)@
 ```
@@ -55,7 +55,7 @@
 
 首先，我们必须在我们的`pom.xml`中的`<build/>`元素内启用资源过滤:
 
-```
+```java
 <resources>
     <resource>
         <directory>src/main/resources</directory>
@@ -68,7 +68,7 @@
 
 然后，我们可以为`maven-resources-plugin`添加分隔符配置:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-resources-plugin</artifactId>
@@ -89,7 +89,7 @@
 
 但是，我们可以通过**在`maven-resources-plugin`** 中配置不同的分隔符来解决这个问题:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-resources-plugin</artifactId>
@@ -104,7 +104,7 @@
 
 或者，简单地通过**覆盖我们`pom.xml`的属性块**中的`resource.delimiter`属性:
 
-```
+```java
 <properties>
     <resource.delimiter>^</resource.delimiter>
 </properties>
@@ -112,7 +112,7 @@
 
 然后，我们可以在 YAML 文件中使用`^`:
 
-```
+```java
 application-description: ^project.description^
 application-version: ^project.version^
 ```

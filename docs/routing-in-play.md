@@ -28,7 +28,7 @@ Play 的路由器把 HTTP 请求翻译成动作调用。 **HTTP 请求被认为�
 
 为了让路由器完成它的工作，`conf/routes`文件必须定义 HTTP 方法和 URI 模式到适当的控制器动作的映射:
 
-```
+```java
 GET     /     controllers.HomeController.index
 GET     /     assets/*file controllers.Assets.versioned(path="/public", file: Asset)
 ```
@@ -64,7 +64,7 @@ GET     /     assets/*file controllers.Assets.versioned(path="/public", file: As
 
 在`play-routing/app/HomeController.java`中，让我们创建一个新动作:
 
-```
+```java
 public Result greet(String name) {
     return ok("Hello " + name);
 }
@@ -76,7 +76,7 @@ public Result greet(String name) {
 
 因此，让我们打开`play-routing/conf/routes`并为这个新动作创建一个映射:
 
-```
+```java
 GET     /greet/:name     controllers.HomeController.greet(name: String)
 ```
 
@@ -84,7 +84,7 @@ GET     /greet/:name     controllers.HomeController.greet(name: String)
 
 现在，让我们在浏览器中加载`http://locahost:9000/greet/john`，我们会被名字问候:
 
-```
+```java
 Hello john
 ```
 
@@ -94,7 +94,7 @@ Hello john
 
 回到`HomeController`的问候动作，我们将其改为:
 
-```
+```java
 public Result greet(String name, int age) {
     return ok("Hello " + name + ", you are " + age + " years old");
 }
@@ -102,7 +102,7 @@ public Result greet(String name, int age) {
 
 以及通往以下地点的路线:
 
-```
+```java
 GET     /greet/:name/:age               controllers.HomeController.greet(name: String, age: Integer)
 ```
 
@@ -110,7 +110,7 @@ GET     /greet/:name/:age               controllers.HomeController.greet(name: S
 
 让我们载入`http://localhost:9000/greet/john/26`:
 
-```
+```java
 Hello john, you are 26 years old
 ```
 
@@ -118,7 +118,7 @@ Hello john, you are 26 years old
 
 在我们的路由配置文件中，最后一个映射是:
 
-```
+```java
 GET     /assets/*file  controllers.Assets.versioned(path="/public", file: Asset)
 ```
 
@@ -128,7 +128,7 @@ GET     /assets/*file  controllers.Assets.versioned(path="/public", file: Asset)
 
 让我们在`HomeController.java`中创建我们自己的示例动作:
 
-```
+```java
 public Result introduceMe(String data) {
     String[] clientData = data.split(",");
     return ok("Your name is " + clientData[0] + ", you are " + clientData[1] + " years old");
@@ -141,13 +141,13 @@ public Result introduceMe(String data) {
 
 让我们为此操作创建一条路线:
 
-```
+```java
 GET   /*data   controllers.HomeController.introduceMe(data)
 ```
 
 现在加载 URL `http://localhost:9000/john,26`。这将打印:
 
-```
+```java
 Your name is john, you are 26 years old
 ```
 
@@ -155,7 +155,7 @@ Your name is john, you are 26 years old
 
 就像通配符一样，我们可以对动态部分使用正则表达式。让我们添加一个接收数字并返回其平方的操作:
 
-```
+```java
 public Result squareMe(Long num) {
     return ok(num + " Squared is " + (num * num));
 }
@@ -163,7 +163,7 @@ public Result squareMe(Long num) {
 
 现在我们将添加它的路线:
 
-```
+```java
 GET   /square/$num<[0-9]+>   controllers.HomeController.squareMe(num:Long)
 ```
 
@@ -187,7 +187,7 @@ GET   /square/$num<[0-9]+>   controllers.HomeController.squareMe(num:Long)
 
 现在让我们改变路线的声明顺序，使`introduceMe`路线在`squareMe` 之后，然后重新加载:
 
-```
+```java
 2 Squared is 4
 ```
 
@@ -209,7 +209,7 @@ GET   /square/$num<[0-9]+>   controllers.HomeController.squareMe(num:Long)
 
 为了演示这一点，让我们向`HomeController`添加一个`writer()` 动作:
 
-```
+```java
 public Result writer() {
     return ok("Routing in Play by Baeldung");
 }
@@ -217,7 +217,7 @@ public Result writer() {
 
 假设我们不总是希望我们的 API 返回一个`String`:
 
-```
+```java
 Routing in Play by Baeldung
 ```
 
@@ -225,7 +225,7 @@ Routing in Play by Baeldung
 
 因此，让我们通过添加一个参数来进一步更改`writer`动作:
 
-```
+```java
 public Result writer(String author) {
     return ok("REST API with Play by " + author);
 }
@@ -233,7 +233,7 @@ public Result writer(String author) {
 
 让我们看看如何向路线添加固定值参数:
 
-```
+```java
 GET     /writer           controllers.HomeController.writer(author = "Baeldung")
 GET     /writer/:author   controllers.HomeController.writer(author: String)
 ```
@@ -242,13 +242,13 @@ GET     /writer/:author   controllers.HomeController.writer(author: String)
 
 当我们现在从浏览器加载`http://localhost:9000/writer`时，我们得到:
 
-```
+```java
 Routing in Play by Baeldung
 ```
 
 当我们加载`http://localhost:9000/writer/john`时，我们得到:
 
-```
+```java
 Routing in Play by john
 ```
 
@@ -262,13 +262,13 @@ Routing in Play by john
 
 第二个区别是在路由中声明两者的语法。固定值参数使用赋值运算符，如下所示:
 
-```
+```java
 author = "Baeldung"
 ```
 
 默认值使用不同类型的赋值:
 
-```
+```java
 author ?= "Baeldung"
 ```
 
@@ -278,7 +278,7 @@ author ?= "Baeldung"
 
 我们将把`writer`动作改为:
 
-```
+```java
 public Result writer(String author, int id) {
     return ok("Routing in Play by: " + author + " ID: " + id);
 }
@@ -286,32 +286,32 @@ public Result writer(String author, int id) {
 
 和`writer`路线到:
 
-```
+```java
 GET     /writer           controllers.HomeController.writer(author="Baeldung", id: Int ?= 1)
 GET     /writer/:author   controllers.HomeController.writer(author: String, id: Int ?= 1)
 ```
 
 现在加载`http://localhost:9000/writer` 我们看到:
 
-```
+```java
 Routing in Play by: Baeldung ID: 1
 ```
 
 点击`http://localhost:9000/writer?id=10` 给我们:
 
-```
+```java
 Routing in Play by: Baeldung ID: 10
 ```
 
 那`http://localhost:9000/writer/john`呢？
 
-```
+```java
 Routing in Play by: john ID: 1
 ```
 
 最后，`http://localhost:9000/writer/john?id=5 `返回:
 
-```
+```java
 Routing in Play by: john ID: 5
 ```
 

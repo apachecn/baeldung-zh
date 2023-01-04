@@ -20,7 +20,7 @@ Keycloak 是一个 IAM 服务器，它允许在服务提供者实现之外进行
 
 我们可以通过在 HTML 中包含这样一个脚本来直接扩展 Swagger UI:
 
-```
+```java
 <script src="keycloak/keycloak.js"></script>
 <script>
   var keycloak = Keycloak('keycloak.json');
@@ -48,7 +48,7 @@ Keycloak 是一个 IAM 服务器，它允许在服务提供者实现之外进行
 
 描述一个 REST API 的标准是 [OpenAPI](https://web.archive.org/web/20220627175715/https://www.openapis.org/) 。该标准包括定义多个[安全方案](https://web.archive.org/web/20220627175715/https://swagger.io/docs/specification/authentication)，包括 OAuth2 和 OIDC:
 
-```
+```java
 paths:
   /api/v1/products:
     get:
@@ -72,7 +72,7 @@ securitySchemes:
 
 在代码优先的方法中，服务提供商可以基于代码生成 OpenAPI 文档。因此，安全方案也必须以这种方式提供。例如，Spring Boot 包括 SpringFox，我们可以编写这样一个配置类:
 
-```
+```java
 @Configuration
 public class OpenAPISecurityConfig {
 

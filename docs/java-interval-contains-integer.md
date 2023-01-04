@@ -23,7 +23,7 @@
 
 让我们定义一个对所有四种范围进行检查的类:
 
-```
+```java
 public class IntRangeOperators {
 
     public static boolean isInClosedRange(Integer number, Integer lowerBound, Integer upperBound) {
@@ -48,7 +48,7 @@ public class IntRangeOperators {
 
 让我们来测试一下我们的`static` `isInOpenClosedRange()`方法。我们将通过为下限传入 10 和为上限传入 20 来指定左开右闭范围`(10,20]`:
 
-```
+```java
 assertTrue(IntRangeClassic.isInOpenClosedRange(20, 10, 20));
 
 assertFalse(IntRangeClassic.isInOpenClosedRange(10, 10, 20));
@@ -68,7 +68,7 @@ assertFalse(IntRangeClassic.isInOpenClosedRange(10, 10, 20));
 
 不需要导入外部库的 range 类是在 JDK 1.8 中引入的`java.time.temporal.ValueRange`:
 
-```
+```java
 public class IntRangeValueRange {
 
     public boolean isInClosedRange(Integer number, Integer lowerBound, Integer upperBound) {
@@ -101,7 +101,7 @@ public class IntRangeValueRange {
 
 让我们继续讨论一些我们可以从第三方库中使用的范围类。首先，我们将把 [Apache Commons](https://web.archive.org/web/20220921090117/https://search.maven.org/search?q=g:org.apache.commons%20a:commons-lang3) 依赖项添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -111,7 +111,7 @@ public class IntRangeValueRange {
 
 这里，我们实现了和以前一样的行为，但是使用了 Apache Commons `Range`类:
 
-```
+```java
 public class IntRangeApacheCommons {
 
     public boolean isInClosedRange(Integer number, Integer lowerBound, Integer upperBound) {
@@ -146,7 +146,7 @@ public class IntRangeApacheCommons {
 
 最后，让我们将 [Google Guava](https://web.archive.org/web/20220921090117/https://search.maven.org/search?q=g:com.google.guava%20a:guava) 依赖项添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -156,7 +156,7 @@ public class IntRangeApacheCommons {
 
 我们可以使用 Guava 的`Range`类重新实现与之前相同的行为:
 
-```
+```java
 public class IntRangeGoogleGuava {
 
     public boolean isInClosedRange(Integer number, Integer lowerBound, Integer upperBound) {

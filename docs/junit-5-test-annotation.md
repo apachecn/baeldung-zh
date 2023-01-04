@@ -10,7 +10,7 @@
 
 要使用 JUnit 5 的最新版本[，我们需要添加以下 Maven 依赖项:](https://web.archive.org/web/20220628055528/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.junit.jupiter%22%20AND%20a%3A%22junit-jupiter-engine%22)
 
-```
+```java
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-engine</artifactId>
@@ -23,7 +23,7 @@
 
 由于 surefire 插件本身并不完全支持 JUnit 5，**我们还需要[添加一个提供者](https://web.archive.org/web/20220628055528/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.junit.platform%22%20AND%20a%3A%22junit-platform-surefire-provider%22)** ，它告诉 Maven 在哪里可以找到我们的测试:
 
-```
+```java
 <plugin>
     <artifactId>maven-surefire-plugin</artifactId>
     <version>2.19.1</version>
@@ -43,7 +43,7 @@
 
 首先，让我们构建一个简单的方法，我们将在测试场景中使用它来展示`@Test`注释的功能:
 
-```
+```java
 public boolean isNumberEven(Integer number) {
     return number % 2 == 0;
 }
@@ -64,7 +64,7 @@ public boolean isNumberEven(Integer number) {
 
 考虑到这些因素，让我们编写我们的测试方法:
 
-```
+```java
 @Test
 void givenEvenNumber_whenCheckingIsNumberEven_thenTrue() {
     boolean result = bean.isNumberEven(8);
@@ -84,7 +84,7 @@ void givenOddNumber_whenCheckingIsNumberEven_thenFalse() {
 
 如果您来自 JUnit 4，**请注意，在这个版本中，注释不接受任何参数。**为了检查超时或抛出的异常，我们将使用断言:
 
-```
+```java
 @Test
 void givenLowerThanTenNumber_whenCheckingIsNumberEven_thenResultUnderTenMillis() {
     Assertions.assertTimeout(Duration.ofMillis(10), () -> bean.isNumberEven(3));

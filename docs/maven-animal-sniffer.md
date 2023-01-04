@@ -20,7 +20,7 @@
 
 现在让我们来看看`pom.xml:`的 Maven 编译器配置
 
-```
+```java
 <plugins>
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -44,7 +44,7 @@
 
 让我们看看更新后的源代码:
 
-```
+```java
 public static void main(String[] args) {
     System.out.println("Hello World!");
     System.out.println(StandardCharsets.UTF_8.name());
@@ -66,7 +66,7 @@ public static void main(String[] args) {
 
 现在让我们修改`pom.xml`来包含插件:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>animal-sniffer-maven-plugin</artifactId>
@@ -94,7 +94,7 @@ public static void main(String[] args) {
 
 如果我们继续构建 Maven 项目，构建将会失败，插件会像预期的那样报告签名验证错误:
 
-```
+```java
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD FAILURE
 [INFO] ------------------------------------------------------------------------

@@ -22,13 +22,13 @@
 
 为此，`ZoneId`类有一个方便的静态方法:
 
-```
+```java
 Set<String> availableZoneIds = ZoneId.getAvailableZoneIds();
 ```
 
 然后，我们可以使用`Set`来生成一个时区的排序列表及其相应的偏移量:
 
-```
+```java
 public List<String> getTimeZoneList(OffsetBase base) {
 
     LocalDateTime now = LocalDateTime.now();
@@ -44,7 +44,7 @@ public List<String> getTimeZoneList(OffsetBase base) {
 
 上面的方法使用了一个`enum`参数，它代表了我们想要看到的偏移:
 
-```
+```java
 public enum OffsetBase {
     GMT, UTC
 }
@@ -68,7 +68,7 @@ public enum OffsetBase {
 
 因此，为了使零偏移时区的`String`看起来一致，我们将把`Z`替换为`+00:00:`
 
-```
+```java
 private String getOffset(LocalDateTime dateTime, ZoneId id) {
     return dateTime
       .atZone(id)
@@ -84,7 +84,7 @@ private String getOffset(LocalDateTime dateTime, ZoneId id) {
 
 为此，我们将使用一个`ZoneComparator`类:
 
-```
+```java
 private class ZoneComparator implements Comparator<ZoneId> {
 
     @Override
@@ -102,7 +102,7 @@ private class ZoneComparator implements Comparator<ZoneId> {
 
 剩下要做的就是通过为每个`OffsetBase enum`值调用`getTimeZoneList()`方法来将上面的片段放在一起，并显示列表:
 
-```
+```java
 public class TimezoneDisplayApp {
 
     public static void main(String... args) {
@@ -125,7 +125,7 @@ public class TimezoneDisplayApp {
 
 下面是输出的一个片段:
 
-```
+```java
 Time zones in UTC:
 (UTC+14:00) Pacific/Apia
 (UTC+14:00) Pacific/Kiritimati
@@ -139,7 +139,7 @@ Java 8 通过使用`Stream`和`Date and Time`API 使这项任务变得更加容�
 
 然而，如果我们有一个 Java 7 和之前的项目，我们仍然可以通过依赖带有`getAvailableIDs()`方法的`java.util.TimeZone`类来获得相同的结果:
 
-```
+```java
 public List<String> getTimeZoneList(OffsetBase base) {
     String[] availableZoneIds = TimeZone.getAvailableIDs();
     List<String> result = new ArrayList<>(availableZoneIds.length);
@@ -160,7 +160,7 @@ public List<String> getTimeZoneList(OffsetBase base) {
 
 因此，我们需要使用`TimeUnit`类将其转换为小时和分钟:
 
-```
+```java
 private String calculateOffset(int rawOffset) {
     if (rawOffset == 0) {
         return "+00:00";

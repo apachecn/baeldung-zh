@@ -12,13 +12,13 @@ NIO2 中的文件 API 构成了 Java 7 附带的 Java 平台的主要新功能�
 
 设置您的项目以使用文件 API 只是进行导入的问题:
 
-```
+```java
 import java.nio.file.*;
 ```
 
 由于本文中的代码示例可能会在不同的环境中运行，所以让我们来了解一下用户的主目录，这在所有操作系统中都是有效的:
 
-```
+```java
 private static String HOME = System.getProperty("user.home");
 ```
 
@@ -32,7 +32,7 @@ private static String HOME = System.getProperty("user.home");
 
 为了检查文件是否存在，我们使用了`exists` API:
 
-```
+```java
 @Test
 public void givenExistentPath_whenConfirmsFileExists_thenCorrect() {
     Path p = Paths.get(HOME);
@@ -43,7 +43,7 @@ public void givenExistentPath_whenConfirmsFileExists_thenCorrect() {
 
 为了检查文件是否存在，我们使用了`notExists` API:
 
-```
+```java
 @Test
 public void givenNonexistentPath_whenConfirmsFileNotExists_thenCorrect() {
     Path p = Paths.get(HOME + "/inexistent_file.txt");
@@ -54,7 +54,7 @@ public void givenNonexistentPath_whenConfirmsFileNotExists_thenCorrect() {
 
 我们还可以检查一个文件是像`myfile.txt`一样的常规文件还是仅仅是一个目录，我们使用`isRegularFile` API:
 
-```
+```java
 @Test
 public void givenDirPath_whenConfirmsNotRegularFile_thenCorrect() {
     Path p = Paths.get(HOME);
@@ -65,7 +65,7 @@ public void givenDirPath_whenConfirmsNotRegularFile_thenCorrect() {
 
 还有静态方法来检查文件权限。为了检查文件是否可读，我们使用了`isReadable` API:
 
-```
+```java
 @Test
 public void givenExistentDirPath_whenConfirmsReadable_thenCorrect() {
     Path p = Paths.get(HOME);
@@ -76,7 +76,7 @@ public void givenExistentDirPath_whenConfirmsReadable_thenCorrect() {
 
 为了检查它是否可写，我们使用了`isWritable` API:
 
-```
+```java
 @Test
 public void givenExistentDirPath_whenConfirmsWritable_thenCorrect() {
     Path p = Paths.get(HOME);
@@ -87,7 +87,7 @@ public void givenExistentDirPath_whenConfirmsWritable_thenCorrect() {
 
 同样，要检查它是否可执行:
 
-```
+```java
 @Test
 public void givenExistentDirPath_whenConfirmsExecutable_thenCorrect() {
     Path p = Paths.get(HOME);
@@ -97,7 +97,7 @@ public void givenExistentDirPath_whenConfirmsExecutable_thenCorrect() {
 
 当我们有两个路径时，我们可以检查它们是否都指向底层文件系统上的同一个文件:
 
-```
+```java
 @Test
 public void givenSameFilePaths_whenConfirmsIsSame_thenCorrect() {
     Path p1 = Paths.get(HOME);
@@ -113,7 +113,7 @@ public void givenSameFilePaths_whenConfirmsIsSame_thenCorrect() {
 
 路径中的所有名称元素必须存在，除了文件名，否则，我们将得到一个`IOException:`
 
-```
+```java
 @Test
 public void givenFilePath_whenCreatesNewFile_thenCorrect() {
     String fileName = "myfile_" + UUID.randomUUID().toString() + ".txt";
@@ -130,7 +130,7 @@ public void givenFilePath_whenCreatesNewFile_thenCorrect() {
 
 为了创建目录，我们使用了`createDirectory` API:
 
-```
+```java
 @Test
 public void givenDirPath_whenCreatesNewDir_thenCorrect() {
     String dirName = "myDir_" + UUID.randomUUID().toString();
@@ -147,7 +147,7 @@ public void givenDirPath_whenCreatesNewDir_thenCorrect() {
 
 这个操作要求路径中的所有 name 元素都存在，如果不存在，我们还会得到一个`IOException`:
 
-```
+```java
 @Test(expected = NoSuchFileException.class)
 public void givenDirPath_whenFailsToCreateRecursively_thenCorrect() {
     String dirName = "myDir_" + UUID.randomUUID().toString() + "/subdir";
@@ -160,7 +160,7 @@ public void givenDirPath_whenFailsToCreateRecursively_thenCorrect() {
 
 然而，如果我们希望通过一次调用创建一个目录层次结构，我们使用`createDirectories`方法。与前面的操作不同，当它在路径中遇到任何缺少的 name 元素时，它不会抛出一个`IOException`，而是递归地创建它们，直到最后一个元素:
 
-```
+```java
 @Test
 public void givenDirPath_whenCreatesRecursively_thenCorrect() {
     Path dir = Paths.get(
@@ -182,7 +182,7 @@ public void givenDirPath_whenCreatesRecursively_thenCorrect() {
 
 新的文件系统 API 为此提供了特定的操作。`createTempFile` API 执行这个操作。它采用一个路径对象、一个文件前缀和一个文件后缀:
 
-```
+```java
 @Test
 public void givenFilePath_whenCreatesTempFile_thenCorrect() {
     String prefix = "log_";
@@ -201,7 +201,7 @@ public void givenFilePath_whenCreatesTempFile_thenCorrect() {
 
 但是，如果我们不提供前缀和后缀，那么文件名将只包括长数字字符串和默认的`.tmp`扩展名:
 
-```
+```java
 @Test
 public void givenPath_whenCreatesTempFileWithDefaults_thenCorrect() {
     Path p = Paths.get(HOME + "/");
@@ -216,7 +216,7 @@ public void givenPath_whenCreatesTempFileWithDefaults_thenCorrect() {
 
 最后，如果我们既不提供路径，也不提供前缀或后缀，那么操作将始终使用默认值。所创建文件的默认位置将是文件系统提供的临时文件目录:
 
-```
+```java
 @Test
 public void givenNoFilePath_whenCreatesTempFileInTempDir_thenCorrect() {
     Path p = Files.createTempFile(null, null);
@@ -233,7 +233,7 @@ public void givenNoFilePath_whenCreatesTempFileInTempDir_thenCorrect() {
 
 要删除一个文件，我们使用`delete` API。为了清楚起见，下面的测试首先确保该文件不存在，然后创建它并确认它现在存在，最后删除它并确认它不再存在:
 
-```
+```java
 @Test
 public void givenPath_whenDeletes_thenCorrect() {
     Path p = Paths.get(HOME + "/fileToDelete.txt");
@@ -249,7 +249,7 @@ public void givenPath_whenDeletes_thenCorrect() {
 
 但是，如果文件系统中不存在某个文件，删除操作将失败，并显示`IOException`:
 
-```
+```java
 @Test(expected = NoSuchFileException.class)
 public void givenInexistentFile_whenDeleteFails_thenCorrect() {
     Path p = Paths.get(HOME + "/inexistentFile.txt");
@@ -261,7 +261,7 @@ public void givenInexistentFile_whenDeleteFails_thenCorrect() {
 
 我们可以通过使用`deleteIfExists`来避免这种情况，如果文件不存在，它会自动失败。当多个线程正在执行该操作时，这一点很重要，我们不希望仅仅因为一个线程比当前失败的线程更早执行该操作而出现失败消息:
 
-```
+```java
 @Test
 public void givenInexistentFile_whenDeleteIfExistsWorks_thenCorrect() {
     Path p = Paths.get(HOME + "/inexistentFile.txt");
@@ -273,7 +273,7 @@ public void givenInexistentFile_whenDeleteIfExistsWorks_thenCorrect() {
 
 当处理目录而不是常规文件时，我们应该记住删除操作在默认情况下不是递归的。因此，如果一个目录不为空，它将失败并显示一个`IOException`:
 
-```
+```java
 @Test(expected = DirectoryNotEmptyException.class)
 public void givenPath_whenFailsToDeleteNonEmptyDir_thenCorrect() {
     Path dir = Paths.get(
@@ -294,7 +294,7 @@ public void givenPath_whenFailsToDeleteNonEmptyDir_thenCorrect() {
 
 您可以使用`copy` API 复制文件或目录:
 
-```
+```java
 @Test
 public void givenFilePath_whenCopiesToNewLocation_thenCorrect() {
     Path dir1 = Paths.get(
@@ -321,7 +321,7 @@ public void givenFilePath_whenCopiesToNewLocation_thenCorrect() {
 
 如果目标文件存在，除非指定了`REPLACE_EXISTING`选项，否则复制会失败:
 
-```
+```java
 @Test(expected = FileAlreadyExistsException.class)
 public void givenPath_whenCopyFailsDueToExistingFile_thenCorrect() {
     Path dir1 = Paths.get(
@@ -353,7 +353,7 @@ public void givenPath_whenCopyFailsDueToExistingFile_thenCorrect() {
 
 您可以使用`move` API 来移动文件或目录。它在大多数方面类似于`copy`操作。如果复制操作类似于基于 GUI 的系统中的`copy and paste`操作，那么`move`类似于`cut and paste`操作:
 
-```
+```java
 @Test
 public void givenFilePath_whenMovesToNewLocation_thenCorrect() {
     Path dir1 = Paths.get(
@@ -380,7 +380,7 @@ public void givenFilePath_whenMovesToNewLocation_thenCorrect() {
 
 如果目标文件存在，则`move`操作失败，除非指定了`REPLACE_EXISTING`选项，就像我们对`copy`操作所做的那样:
 
-```
+```java
 @Test(expected = FileAlreadyExistsException.class)
 public void givenFilePath_whenMoveFailsDueToExistingFile_thenCorrect() {
     Path dir1 = Paths.get(

@@ -14,7 +14,7 @@
 
 首先，我们需要包括 Hibernate 的依赖性:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>
@@ -24,7 +24,7 @@
 
 根据我们使用的数据库，我们还必须包括驱动程序依赖关系:
 
-```
+```java
 <dependency>
     <groupId>mysql</groupId>
     <artifactId>mysql-connector-java</artifactId>
@@ -44,7 +44,7 @@ Maven Central 上提供了 [hibernate-core](https://web.archive.org/web/20220906
 
 让我们从使用`@Entity`注释创建对应于电影表的实体开始:
 
-```
+```java
 @Entity
 @Table(name = "MOVIE")
 public class Movie {
@@ -68,7 +68,7 @@ public class Movie {
 
 **该文件包含`EntityManager` :** 的配置
 
-```
+```java
 <persistence-unit name="com.baeldung.movie_catalog">
     <description>Hibernate EntityManager Demo</description>
     <class>com.baeldung.hibernate.pojo.Movie</class> 
@@ -100,7 +100,7 @@ public class Movie {
 
 换句话说，容器从`EntityManagerFactory`为我们创建了`EntityManager`:
 
-```
+```java
 @PersistenceContext
 EntityManager entityManager; 
 ```
@@ -117,13 +117,13 @@ EntityManager entityManager;
 
 首先，让我们创建`EntityManagerFactory:`
 
-```
+```java
 EntityManagerFactory emf = Persistence.createEntityManagerFactory("com.baeldung.movie_catalog");
 ```
 
 为了创建一个`EntityManager`，我们必须在`EntityManagerFactory`中显式调用`createEntityManager()`:
 
-```
+```java
 public static EntityManager getEntityManager() {
     return emf.createEntityManager();
 }
@@ -135,7 +135,7 @@ public static EntityManager getEntityManager() {
 
 **`EntityManagerFactory`实例以及 Hibernate 的`[SessionFactory](https://web.archive.org/web/20220906015719/https://github.com/hibernate/hibernate-orm/blob/716a8bac2080fdcce349550e1817b14a100f3b74/hibernate-core/src/main/java/org/hibernate/SessionFactory.java#L32)`实例都是线程安全的**。因此，在并发上下文中编写以下代码是完全安全的:
 
-```
+```java
 EntityManagerFactory emf = // fetched from somewhere
 EntityManager em = emf.createEntityManager();
 ```
@@ -144,7 +144,7 @@ EntityManager em = emf.createEntityManager();
 
 当使用应用程序管理的`EntityManager`时，很容易创建线程限制的实例:
 
-```
+```java
 EntityManagerFactory emf = // fetched from somewhere 
 EntityManager em = emf.createEntityManager();
 // use it in the current thread
@@ -152,7 +152,7 @@ EntityManager em = emf.createEntityManager();
 
 然而，当使用容器管理的`EntityManager` s:
 
-```
+```java
 @Service
 public class MovieService {
 
@@ -177,7 +177,7 @@ public class MovieService {
 
 为了让一个对象与 EntityManager 相关联，我们可以利用`persist()`方法:
 
-```
+```java
 public void saveMovie() {
     EntityManager em = getEntityManager();
 
@@ -202,7 +202,7 @@ public void saveMovie() {
 
 这里，该方法通过主键进行搜索。事实上，该方法需要实体类类型和主键:
 
-```
+```java
 public Movie getMovie(Long movieId) {
     EntityManager em = getEntityManager();
     Movie movie = em.find(Movie.class, new Long(movieId));
@@ -213,7 +213,7 @@ public Movie getMovie(Long movieId) {
 
 **但是，如果我们只需要引用实体，我们可以用`getReference()`** 的方法来代替。实际上，它向实体返回一个代理:
 
-```
+```java
 Movie movieRef = em.getReference(Movie.class, new Long(movieId));
 ```
 
@@ -221,7 +221,7 @@ Movie movieRef = em.getReference(Movie.class, new Long(movieId));
 
 如果我们需要从持久上下文中分离一个实体，**我们可以使用`detach()`方法**。我们将要分离的对象作为参数传递给方法:
 
-```
+```java
 em.detach(movie);
 ```
 
@@ -233,7 +233,7 @@ em.detach(movie);
 
 对于这种情况，我们可以使用`merge()`方法。**合并方法有助于将对分离实体所做的任何修改带入受管实体:**
 
-```
+```java
 public void mergeMovie() {
     EntityManager em = getEntityManager();
     Movie movie = getMovie(1L);
@@ -251,7 +251,7 @@ public void mergeMovie() {
 
 当然，如果查询只返回一个对象，我们可以使用`getSingleResult()`:
 
-```
+```java
 public List<?> queryForMovies() {
     EntityManager em = getEntityManager();
     List<?> movies = em.createQuery("SELECT movie from Movie movie where movie.language = ?1")
@@ -267,7 +267,7 @@ public List<?> queryForMovies() {
 
 在这里，实体的状态从持久变为新:
 
-```
+```java
 public void removeMovie() {
     EntityManager em = HibernateOperations.getEntityManager();
     em.getTransaction().begin();

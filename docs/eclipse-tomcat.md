@@ -72,7 +72,7 @@ web 开发的关键挑战之一是在 web 服务器上运行时能够有效地�
 
 **需要注意的是，eclipse 不会将应用程序发布到服务器的``webapps``文件夹中。**它会将这个 web 应用程序部署到一个临时文件夹中。因此，不修改 Tomcat 安装。如果我们不更改配置，Eclipse 会将应用程序发布到工作区文件夹:
 
-```
+```java
 <workspace>/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps
 ```
 

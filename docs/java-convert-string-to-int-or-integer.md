@@ -12,7 +12,7 @@
 
 一个主要的解决方案是**使用`Integer`的专用静态方法:`parseInt()`，它返回一个原始的`int`值**:
 
-```
+```java
 @Test
 public void givenString_whenParsingInt_shouldConvertToInt() {
     String givenString = "42";
@@ -25,7 +25,7 @@ public void givenString_whenParsingInt_shouldConvertToInt() {
 
 默认情况下，`parseInt() `方法假设给定的`String `是一个基数为 10 的整数。此外，该方法接受另一个参数来更改默认的`radix. ` **例如，我们可以如下解析二进制`String`s:**
 
-```
+```java
 @Test
 public void givenBinaryString_whenParsingInt_shouldConvertToInt() {
     String givenString = "101010";
@@ -42,7 +42,7 @@ public void givenBinaryString_whenParsingInt_shouldConvertToInt() {
 
 另一个选择是**使用静态的`Integer.valueOf()`方法，该方法返回一个`Integer`实例**:
 
-```
+```java
 @Test
 public void givenString_whenCallingIntegerValueOf_shouldConvertToInt() {
     String givenString = "42";
@@ -55,7 +55,7 @@ public void givenString_whenCallingIntegerValueOf_shouldConvertToInt() {
 
 类似地，`valueOf() `方法也接受一个自定义的`radix `作为第二个参数:
 
-```
+```java
 @Test
 public void givenBinaryString_whenCallingIntegerValueOf_shouldConvertToInt() {
     String givenString = "101010";
@@ -72,7 +72,7 @@ public void givenBinaryString_whenCallingIntegerValueOf_shouldConvertToInt() {
 
 然而，这两种方法之间有一个微妙的区别:**`valueOf()`方法在内部使用整数缓存**。这个缓存将**为-128 和 127** 之间的数字返回相同的`Integer`实例:
 
-```
+```java
 @Test
 public void givenString_whenCallingValueOf_shouldCacheSomeValues() {
     for (int i = -128; i <= 127; i++) {
@@ -91,7 +91,7 @@ public void givenString_whenCallingValueOf_shouldCacheSomeValues() {
 
 您也可以使用`Integer`的构造函数:
 
-```
+```java
 @Test
 public void givenString_whenCallingIntegerConstructor_shouldConvertToInt() {
     String givenString = "42";
@@ -108,7 +108,7 @@ public void givenString_whenCallingIntegerConstructor_shouldConvertToInt() {
 
 另外， `Integer.decode()`的工作方式与`Integer.valueOf(),` 类似，但也可以接受不同的[数字表示](https://web.archive.org/web/20220816192910/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html#decode(java.lang.String)):
 
-```
+```java
 @Test
 public void givenString_whenCallingIntegerDecode_shouldConvertToInt() {
     String givenString = "42";
@@ -123,7 +123,7 @@ public void givenString_whenCallingIntegerDecode_shouldConvertToInt() {
 
 上面提到的所有方法在遇到意外的`String`值时都会抛出一个`NumberFormatException,`。这里你可以看到这种情况的一个例子:
 
-```
+```java
 @Test(expected = NumberFormatException.class)
 public void givenInvalidInput_whenParsingInt_shouldThrow() {
     String givenString = "nan";
@@ -135,7 +135,7 @@ public void givenInvalidInput_whenParsingInt_shouldThrow() {
 
 当然，我们不需要坚持核心 Java 本身。这就是如何使用 Guava 的`Ints.tryParse(),` 实现同样的事情，如果它不能解析输入，它将返回一个`null`值:
 
-```
+```java
 @Test
 public void givenString_whenTryParse_shouldConvertToInt() {
     String givenString = "42";

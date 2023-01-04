@@ -20,7 +20,7 @@
 
 首先，**我们使用`java.util.Calendar`提取日期作为数字**:
 
-```
+```java
 public static int getDayNumberOld(Date date) {
     Calendar cal = Calendar.getInstance();
     cal.setTime(date);
@@ -34,7 +34,7 @@ public static int getDayNumberOld(Date date) {
 
 现在我们**将日期提取为文本**。我们传入一个`Locale`来确定语言:
 
-```
+```java
 public static String getDayStringOld(Date date, Locale locale) {
     DateFormat formatter = new SimpleDateFormat("EEEE", locale);
     return formatter.format(date);
@@ -51,7 +51,7 @@ public static String getDayStringOld(Date date, Locale locale) {
 
 **提取日期作为数字是微不足道的**现在:
 
-```
+```java
 public static int getDayNumberNew(LocalDate date) {
     DayOfWeek day = date.getDayOfWeek();
     return day.getValue();
@@ -64,7 +64,7 @@ public static int getDayNumberNew(LocalDate date) {
 
 现在，我们再次将日期提取为文本。我们还传入一个`Locale`:
 
-```
+```java
 public static String getDayStringNew(LocalDate date, Locale locale) {
     DayOfWeek day = date.getDayOfWeek();
     return day.getDisplayName(TextStyle.FULL, locale);

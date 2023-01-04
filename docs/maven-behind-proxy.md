@@ -16,7 +16,7 @@
 
 现在让我们在`<[proxies](https://web.archive.org/web/20220529030000/https://maven.apache.org/settings.html#Proxies)>`部分中创建一个`<proxy>`条目:
 
-```
+```java
 <proxies>
    <proxy>
         <host>proxy.baeldung.com</host>
@@ -27,7 +27,7 @@
 
 因为我们也使用不需要通过代理的本地站点，所以让我们在`<nonProxyHosts>`中使用“|”分隔的列表和我们的本地主机来指定它:
 
-```
+```java
 <nonProxyHosts>internal.baeldung.com|localhost|127.*|[::1]</nonProxyHosts> 
 ```
 
@@ -35,7 +35,7 @@
 
 如果我们的代理不安全，那就是我们所需要的；然而，我们的是，所以**让我们将我们的凭证添加到代理定义**:
 
-```
+```java
 <username>baeldung</username>
 <password>changeme</password> 
 ```
@@ -44,7 +44,7 @@
 
 我们的最低认证配置现在应该是这样的:
 
-```
+```java
 <proxies>
    <proxy>
         <host>proxy.baeldung.com</host>
@@ -62,7 +62,7 @@
 
 让我们给它一个可选的“BaeldungProxy_Authenticated”的`id`,以便在我们需要切换代理时更容易引用:
 
-```
+```java
 <id>BaeldungProxy_Authenticated</id>
 ```
 
@@ -70,19 +70,19 @@
 
 默认情况下，代理定义是活动的，并获得隐式定义:
 
-```
+```java
 <active>true</active>
 ```
 
 如果我们想让另一个代理成为活动代理，那么我们可以通过将`<active>`设置为 false 来取消激活我们的原始条目:
 
-```
+```java
 <active>false</active>
 ```
 
 **Maven 对代理协议的默认值是 HTTP** ，这适合大多数情况。如果我们的代理使用不同的协议，我们应该在这里声明它，并用我们的代理需要的协议替换`http`:
 
-```
+```java
 <protocol>http</protocol>
 ```
 
@@ -90,7 +90,7 @@
 
 这里是我们扩展的代理定义的样子，包括可选元素:
 
-```
+```java
 <proxies>
    <proxy>
         <id>BaeldungProxy_Authenticated</id>
@@ -119,14 +119,14 @@
 
 现在**让我们加密我们的主密码**，在运行时的提示符下输入它:
 
-```
+```java
 mvn --encrypt-master-password
 Master Password: 
 ```
 
 在我们按下 enter 后，我们会看到我们的加密密码被括在花括号中:
 
-```
+```java
 {QFMlh/6WjF8H9po9UDo0Nv18e527jqWb6mUgIB798n4=}
 ```
 
@@ -138,19 +138,19 @@ Master Password:
 
 因此，如果我们使用 bash，就用单引号:
 
-```
+```java
 mvn --encrypt-master-password 'te!st!ma$ter'
 ```
 
 如果使用 Windows 命令提示符，请使用双引号:
 
-```
+```java
 mvn --encrypt-master-password "te!st!ma$ter"
 ```
 
 现在，**有时我们生成的主密码包含花括号**，就像这个例子，在“UD”后面有一个右花括号“}”:
 
-```
+```java
 {QFMlh/6WjF8H9po9UD}0Nv18e527jqWb6mUgIB798n4=}
 ```
 
@@ -163,7 +163,7 @@ mvn --encrypt-master-password "te!st!ma$ter"
 
 现在让我们把加密的密码，加上转义的“\}”，放入**目录**中一个名为`settings-security.xml`的文件中:
 
-```
+```java
 <settingsSecurity>
     <master>{QFMlh/6WjF8H9po9UD\}0Nv18e527jqWb6mUgIB798n4=}</master>
 </settingsSecurity>
@@ -173,7 +173,7 @@ mvn --encrypt-master-password "te!st!ma$ter"
 
 让我们在密码分隔符' { '之前添加一些文本，注意不要在注释中使用{或}，因为 Maven 使用它们来查找我们的密码:
 
-```
+```java
 <master>We escaped the curly brace with '\' {QFMlh/6WjF8H9po9UD\}0Nv18e527jqWb6mUgIB798n4=}</master>
 ```
 
@@ -183,13 +183,13 @@ mvn --encrypt-master-password "te!st!ma$ter"
 
 首先，我们将把我们的`settings-security.xml`文件放在可移动驱动器上的 config 目录中，“R:
 
-```
+```java
 R:\config\settings-security.xml
 ```
 
 现在，我们将更新我们的`.m2`目录中的`settings-security.xml`文件，将 Maven 重定向到我们可移动驱动器上的真正的`settings-security.xml`:
 
-```
+```java
 <settingsSecurity>
     <relocation>R:\config\settings-security.xml</relocation>
 </settingsSecurity>
@@ -203,20 +203,20 @@ R:\config\settings-security.xml
 
 让我们运行以下命令，并在提示符下输入我们的密码"`changeme”,`:
 
-```
+```java
 mvn --encrypt-password
 Password:
 ```
 
 显示我们的加密密码:
 
-```
+```java
 {U2iMf+7aJXQHRquuQq6MX+n7GOeh97zB9/4e7kkEQYs=}
 ```
 
 我们的最后一步是**编辑 settings.xml 文件中的代理部分，并输入加密密码**:
 
-```
+```java
 <proxies>
    <proxy>
         <id>BaeldungProxy_Encrypted</id>
@@ -236,7 +236,7 @@ Password:
 
 如果我们的操作系统已经配置了代理，我们可以设置:
 
-```
+```java
 -Djava.net.useSystemProxies=true
 ```
 
@@ -246,38 +246,38 @@ Password:
 
 即使启用了，我们也可以通过**在`http.proxyHost`系统属性**上设置 HTTP 代理的详细信息来覆盖它:
 
-```
+```java
 -Dhttp.proxyHost=proxy.baeldung.com
 ```
 
 我们的代理监听默认端口 80，但是如果它监听端口 8080，我们将**配置`http.proxyPort`属性**:
 
-```
+```java
 -Dhttp.proxyPort=8080
 ```
 
 并且**对于我们不需要代理**的站点:
 
-```
+```java
 -Dhttp.nonLocalHosts="internal.baeldung.com|localhost|127.*|[::1]"
 ```
 
 因此，如果我们的代理在 10.10.0.100，我们可以使用:
 
-```
+```java
 mvn compile -Dhttp.proxyHost=10.10.0.100 -Dhttp.proxyPort=8080 -Dhttp.nonProxyHosts=localhost|127.0.0.1
 ```
 
 当然，**如果我们的代理需要认证**，**我们也会添加**:
 
-```
+```java
 -Dhttp.proxyUser=baeldung
 -Dhttp.proxyPassword=changeme
 ```
 
 如果我们希望这些设置应用于所有的 Maven 调用，我们可以在 MAVEN_OPTS 环境变量中定义它们:
 
-```
+```java
 set MAVEN_OPTS= -Dhttp.proxyHost=10.10.0.100 -Dhttp.proxyPort=8080
 ```
 

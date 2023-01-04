@@ -14,7 +14,7 @@ Jsoniter 的最新版本可以在 Maven 中央存储库中找到。
 
 让我们从将依赖项添加到`pom.xml`开始:
 
-```
+```java
 <dependency>
     <groupId>com.jsoniter<groupId> 
     <artifactId>jsoniter</artifactId>
@@ -24,7 +24,7 @@ Jsoniter 的最新版本可以在 Maven 中央存储库中找到。
 
 类似地，我们可以将依赖项添加到我们的`build.gradle`文件中:
 
-```
+```java
 compile group: 'com.jsoniter', name: 'jsoniter', version: '0.9.23' 
 ```
 
@@ -44,13 +44,13 @@ bind API 使用传统的方式将 JSON 文档绑定到 Java 类。
 
 让我们考虑带有学生详细信息的 JSON 文档:
 
-```
+```java
 {"id":1,"name":{"firstName":"Joe","surname":"Blogg"}}
 ```
 
 现在让我们定义`Student` 和`Name` 模式类来表示上面的 JSON:
 
-```
+```java
 public class Student {
     private int id;
     private Name name;
@@ -59,7 +59,7 @@ public class Student {
 }
 ```
 
-```
+```java
 public class Name {
     private String firstName;
     private String surname;
@@ -70,7 +70,7 @@ public class Name {
 
 使用 bind API 将 JSON 反序列化为 Java 对象非常简单。我们使用`JsonIterator`的`deserialize`方法:
 
-```
+```java
 @Test
 public void whenParsedUsingBindAPI_thenConvertedToJavaObjectCorrectly() {
     String input = "{\"id\":1,\"name\":{\"firstName\":\"Joe\",\"surname\":\"Blogg\"}}";
@@ -85,7 +85,7 @@ public void whenParsedUsingBindAPI_thenConvertedToJavaObjectCorrectly() {
 
 `Student`模式类声明`id`的数据类型为`int` 数据类型`.` ，但是，如果我们收到的 JSON 包含`id`的`String`值而不是一个数字呢？例如:
 
-```
+```java
 {"id":"1","name":{"firstName":"Joe","surname":"Blogg"}}
 ```
 
@@ -95,7 +95,7 @@ public void whenParsedUsingBindAPI_thenConvertedToJavaObjectCorrectly() {
 
 当 JSON 元素的数据类型模糊时，Jsoniter 的`Maybe`解码器就派上了用场。`student.id`字段的数据类型是模糊的——它可以是`String`或`int`。为了处理这个问题，我们需要使用`MaybeStringIntDecoder`注释我们的模式类中的`id` 字段:
 
-```
+```java
 public class Student {
     @JsonProperty(decoder = MaybeStringIntDecoder.class)
     private int id;
@@ -107,7 +107,7 @@ public class Student {
 
 我们现在甚至可以在`id`值为`String`时解析 JSON:
 
-```
+```java
 @Test
 public void givenTypeInJsonFuzzy_whenFieldIsMaybeDecoded_thenFieldParsedCorrectly() {
     String input = "{\"id\":\"1\",\"name\":{\"firstName\":\"Joe\",\"surname\":\"Blogg\"}}";
@@ -122,7 +122,7 @@ public void givenTypeInJsonFuzzy_whenFieldIsMaybeDecoded_thenFieldParsedCorrectl
 
 现在让我们假设我们期望收到一个带有`Student`细节的 JSON 文档，但是我们收到了下面的文档:
 
-```
+```java
 {"error":404,"description":"Student record not found"} 
 ```
 
@@ -138,7 +138,7 @@ Jsoniter 使用`Any` API 进行解析来解决这个问题。
 
 让我们像以前一样解析`Student` JSON，但是这次使用`Any` API:
 
-```
+```java
 @Test
 public void whenParsedUsingAnyAPI_thenFieldValueCanBeExtractedUsingTheFieldName() {
     String input = "{\"id\":1,\"name\":{\"firstName\":\"Joe\",\"surname\":\"Blogg\"}}";
@@ -159,7 +159,7 @@ public void whenParsedUsingAnyAPI_thenFieldValueCanBeExtractedUsingTheFieldName(
 
 例如:
 
-```
+```java
 @Test
 public void whenParsedUsingAnyAPI_thenFieldValueTypeIsCorrect() {
     String input = "{\"id\":1,\"name\":{\"firstName\":\"Joe\",\"surname\":\"Blogg\"}}";
@@ -176,7 +176,7 @@ public void whenParsedUsingAnyAPI_thenFieldValueTypeIsCorrect() {
 
 回到上一节末尾提到的场景，我们需要检测收到的 JSON 输入是成功响应还是错误响应。我们可以通过检查“error”元素的`valueType`来检查是否收到了错误响应:
 
-```
+```java
 String input = "{\"error\":404,\"description\":\"Student record not found\"}";
 Any response = JsonIterator.deserialize(input);
 
@@ -194,13 +194,13 @@ return "Success!! Student id is " + response.toInt("id");
 
 **如果我们希望手动执行绑定，我们可以使用 Jsoniter 的`Iterator` API。**让我们考虑一下 JSON:
 
-```
+```java
 {"firstName":"Joe","surname":"Blogg"}
 ```
 
 我们将使用前面使用的`Name` schema 类来解析使用`Iterator` API 的 JSON:
 
-```
+```java
 @Test
 public void whenParsedUsingIteratorAPI_thenFieldValuesExtractedCorrectly() throws Exception {
     Name name = new Name();    

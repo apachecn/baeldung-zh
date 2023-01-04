@@ -12,7 +12,7 @@
 
 在下面的例子中——我们将一个包含“`Hello world`”的文件读入令牌:
 
-```
+```java
 @Test
 public void whenReadFileWithScanner_thenCorrect() throws IOException{
     Scanner scanner = new Scanner(new File("test.txt"));
@@ -33,7 +33,7 @@ public void whenReadFileWithScanner_thenCorrect() throws IOException{
 
 接下来，让我们看看如何使用`Scanner`将`InputStream`转换成`String`:
 
-```
+```java
 @Test
 public void whenConvertInputStreamToString_thenConverted()
   throws IOException {
@@ -62,7 +62,7 @@ public void whenConvertInputStreamToString_thenConverted()
 
 在下面的例子中，我们使用`BufferedReader`将文件读入行中:
 
-```
+```java
 @Test
 public void whenReadUsingBufferedReader_thenCorrect() 
   throws IOException {
@@ -83,7 +83,7 @@ public void whenReadUsingBufferedReader_thenCorrect()
 
 现在，让我们使用`Scanner`将同一个文件读入令牌:
 
-```
+```java
 @Test
 public void whenReadUsingScanner_thenCorrect() 
   throws IOException {
@@ -109,7 +109,7 @@ public void whenReadUsingScanner_thenCorrect()
 
 接下来——让我们看看如何使用`Scanner`实例从控制台读取输入:
 
-```
+```java
 @Test
 public void whenReadingInputFromConsole_thenCorrect() {
     String input = "Hello";
@@ -132,7 +132,7 @@ public void whenReadingInputFromConsole_thenCorrect() {
 
 该方法只返回当前行的字符串:
 
-```
+```java
 scanner.nextLine();
 ```
 
@@ -146,7 +146,7 @@ scanner.nextLine();
 
 这个方法扫描输入的下一个标记作为一个`int:`
 
-```
+```java
 scanner.nextInt();
 ```
 
@@ -162,7 +162,7 @@ API 读取下一个可用的整数标记。
 
 现在，让我们看看如何使用`Scanner`来验证输入。在下面的例子中，我们使用`Scanner`方法`hasNextInt()`来检查输入是否是一个整数值:
 
-```
+```java
 @Test
 public void whenValidateInputUsingScanner_thenValidated() 
   throws IOException {
@@ -184,7 +184,7 @@ public void whenValidateInputUsingScanner_thenValidated()
 
 接下来，让我们看看如何使用`Scanner`扫描`String`:
 
-```
+```java
 @Test
 public void whenScanString_thenCorrect() 
   throws IOException {
@@ -208,7 +208,7 @@ public void whenScanString_thenCorrect()
 
 在下面的例子中，我们使用`findInLine()`到**在整个输入中搜索与给定的`Pattern`** 相匹配的标记:
 
-```
+```java
 @Test
 public void whenFindPatternUsingScanner_thenFound() throws IOException {
     String expectedValue = "world";
@@ -224,7 +224,7 @@ public void whenFindPatternUsingScanner_thenFound() throws IOException {
 
 我们还可以使用`findWithinHorizon()`在特定域中搜索`Pattern`，如下例所示:
 
-```
+```java
 @Test
 public void whenFindPatternInHorizon_thenFound() 
   throws IOException {
@@ -250,7 +250,7 @@ public void whenFindPatternInHorizon_thenFound()
 
 在下面的例子中，我们使用`Scanner`方法`skip()`跳过了“`Hello`”标记:
 
-```
+```java
 @Test
 public void whenSkipPatternUsingScanner_thenSkipped() 
   throws IOException {
@@ -269,7 +269,7 @@ public void whenSkipPatternUsingScanner_thenSkipped()
 
 最后，让我们看看如何更改分隔符`Scanner`。在以下示例中，我们将默认的`Scanner`分隔符更改为“`o`”:
 
-```
+```java
 @Test
 public void whenChangeScannerDelimiter_thenChanged() 
   throws IOException {
@@ -290,7 +290,7 @@ public void whenChangeScannerDelimiter_thenChanged()
 
 我们也可以使用多个分隔符。在下面的示例中，我们使用逗号“`,`”和破折号“`–`”作为分隔符来扫描包含“`John,Adam-Tom`”的文件:
 
-```
+```java
 @Test
 public void whenReadWithScannerTwoDelimiters_thenCorrect() 
   throws IOException {

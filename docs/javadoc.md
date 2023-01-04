@@ -20,7 +20,7 @@
 
 **Javadoc 注释结构看起来非常类似于常规的多行注释**，但是关键的区别是在开头多了一个星号:
 
-```
+```java
 // This is a single line comment
 
 /*
@@ -49,7 +49,7 @@ Javadoc 注释可以放在我们想要记录的任何类、方法或字段之上
 
 让我们看看类级别的 Javadoc 注释是什么样子的:
 
-```
+```java
 /**
 * Hero is the main entity we'll be using to . . .
 * 
@@ -76,7 +76,7 @@ public class SuperHero extends Person {
 
 我们也可以在我们的`SuperHero`类中使用没有任何块标签的描述:
 
-```
+```java
 /**
  * The public name of a hero that is common knowledge
  */
@@ -91,7 +91,7 @@ private String heroName;
 
 让我们来看看我们正在使用的一种方法:
 
-```
+```java
 /**
  * <p>This is a simple description of the method. . .
  * <a href="http://www.supermanisthegreatest.com">Superman!</a>
@@ -139,7 +139,7 @@ Javadoc 命令行工具非常强大，但也有一些复杂性。
 
 假设这些类都在项目目录的`src`文件夹中:
 
-```
+```java
 [[email protected]](/web/20220926200436/https://www.baeldung.com/cdn-cgi/l/email-protection):~$ javadoc -d doc src\*
 ```
 
@@ -151,7 +151,7 @@ Javadoc 命令行工具非常强大，但也有一些复杂性。
 
 我们还可以利用 Maven Javadoc 插件:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -172,7 +172,7 @@ Javadoc 命令行工具非常强大，但也有一些复杂性。
 
 在项目的基本目录中，我们运行命令将 Javadocs 生成到 target\site 中的目录:
 
-```
+```java
 [[email protected]](/web/20220926200436/https://www.baeldung.com/cdn-cgi/l/email-protection):~$ mvn javadoc:javadoc
 ```
 
@@ -196,13 +196,13 @@ Maven 插件非常强大，可以无缝地促进复杂文档的生成。
 
 为了创建一个名为`@location` allowed anywhere 的定制标记，它显示在我们生成的文档的“显著位置”标题中，我们需要运行:
 
-```
+```java
 [[email protected]](/web/20220926200436/https://www.baeldung.com/cdn-cgi/l/email-protection):~$ javadoc -tag location:a:"Notable Locations:" -d doc src\*
 ```
 
 为了使用这个标签，我们可以将它添加到 Javadoc 注释的 block 部分:
 
-```
+```java
 /**
  * This is an example...
  * @location New York
@@ -214,7 +214,7 @@ Maven Javadoc 插件足够灵活，允许在我们的`pom.xml`中定义我们的
 
 为了给我们的项目设置相同的标签，我们可以在插件的`<tags>`部分添加以下内容:
 
-```
+```java
 ...
 <tags>
     <tag>

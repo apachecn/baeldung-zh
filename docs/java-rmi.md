@@ -19,7 +19,7 @@
 
 另外，接口中声明的每个方法都会抛出`java.rmi.` `RemoteException`:
 
-```
+```java
 public interface MessengerService extends Remote {
     String sendMessage(String clientMessage) throws RemoteException;
 }
@@ -37,7 +37,7 @@ public interface MessengerService extends Remote {
 
 此外，让我们实现远程接口，也称为`Remote Object`:
 
-```
+```java
 public class MessengerServiceImpl implements MessengerService { 
 
     @Override 
@@ -65,7 +65,7 @@ public class MessengerServiceImpl implements MessengerService {
 
 首先，我们需要创建远程对象的存根:
 
-```
+```java
 MessengerService server = new MessengerServiceImpl();
 MessengerService stub = (MessengerService) UnicastRemoteObject
   .exportObject((MessengerService) server, 0);
@@ -87,7 +87,7 @@ MessengerService stub = (MessengerService) UnicastRemoteObject
 
 为简单起见，我们将创建一个本地服务器:
 
-```
+```java
 Registry registry = LocateRegistry.createRegistry(1099);
 ```
 
@@ -103,7 +103,7 @@ Registry registry = LocateRegistry.createRegistry(1099);
 
 因此，让我们将存根绑定到注册表。RMI 注册表是一个命名工具，像 JNDI 等。我们可以遵循类似的模式，将存根绑定到一个唯一的键:
 
-```
+```java
 registry.rebind("MessengerService", stub); 
 ```
 
@@ -117,7 +117,7 @@ registry.rebind("MessengerService", stub);
 
 最后，我们将调用`sendMessage` 方法:
 
-```
+```java
 Registry registry = LocateRegistry.getRegistry();
 MessengerService server = (MessengerService) registry
   .lookup("MessengerService");

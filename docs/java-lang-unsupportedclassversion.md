@@ -24,7 +24,7 @@ Learn about the cause of java.lang.VerifyError errors and multiple ways to avoid
 
 让我们先来看一个错误示例:
 
-```
+```java
 Exception in thread "main" java.lang.UnsupportedClassVersionError: com/baeldung/MajorMinorApp 
   has been compiled by a more recent version of the Java Runtime (class file version 55.0), 
   this version of the Java Runtime only recognizes class file versions up to 52.0
@@ -66,7 +66,7 @@ Exception in thread "main" java.lang.UnsupportedClassVersionError: com/baeldung/
 
 让我们从检查我们的`[JAVA_HOME](/web/20220907041916/https://www.baeldung.com/find-java-home)`变量是如何设置的开始。当我们从命令行运行`javac`时，这会告诉我们正在使用哪个 JDK:
 
-```
+```java
 echo %JAVA_HOME%
 C:\Apps\Java\jdk8-x64
 ```
@@ -77,7 +77,7 @@ C:\Apps\Java\jdk8-x64
 
 回到我们的例子，让我们看看如何通过在更高版本的 Java 上运行它来解决这个错误。假设我们在`C:\Apps\jdk-11.0.2`中有 Java 11 JRE，我们可以用打包的`java`命令运行我们的代码:
 
-```
+```java
 C:\Apps\jdk-11.0.2\bin\java com.baeldung.MajorMinorApp
 Hello World!
 ```
@@ -90,7 +90,7 @@ Hello World!
 
 让我们从使用旧的 JDK 开始，类似于我们如何使用新的 JRE 来运行我们的代码:
 
-```
+```java
 C:\Apps\Java\jdk1.8.0_31\bin\javac com/baeldung/MajorMinorApp.java
 ```
 
@@ -98,7 +98,7 @@ C:\Apps\Java\jdk1.8.0_31\bin\javac com/baeldung/MajorMinorApp.java
 
 为了确保兼容性，我们可以将`-bootclasspath`指向目标 JRE 的`rt.jar`:
 
-```
+```java
 javac -bootclasspath "C:\Apps\Java\jdk1.8.0_31\jre\lib\rt.jar" \
   -source 1.8 -target 1.8 com/baeldung/MajorMinorApp.java
 ```
@@ -107,7 +107,7 @@ javac -bootclasspath "C:\Apps\Java\jdk1.8.0_31\jre\lib\rt.jar" \
 
 让我们用`–release`来瞄准 Java 8:
 
-```
+```java
 javac --release 8 com/baeldung/MajorMinorApp.java
 ```
 
@@ -185,7 +185,7 @@ javac --release 8 com/baeldung/MajorMinorApp.java
 
 让我们使用编译器插件属性来设置源和目标:
 
-```
+```java
 <properties>
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -194,7 +194,7 @@ javac --release 8 com/baeldung/MajorMinorApp.java
 
 或者，我们可以在编译器插件中设置源和目标:
 
-```
+```java
 <plugins>
     <plugin>    
         <artifactId>maven-compiler-plugin</artifactId>
@@ -210,7 +210,7 @@ javac --release 8 com/baeldung/MajorMinorApp.java
 
 让我们使用一个编译器插件属性来设置`release`:
 
-```
+```java
 <properties>
     <maven.compiler.release>8</maven.compiler.release>
 </properties>
@@ -218,7 +218,7 @@ javac --release 8 com/baeldung/MajorMinorApp.java
 
 或者我们可以直接配置编译器插件:
 
-```
+```java
 <plugins>
     <plugin>    
         <artifactId>maven-compiler-plugin</artifactId>

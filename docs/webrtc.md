@@ -77,7 +77,7 @@ WebRTC 定义了一组 API 和方法来执行这些步骤。
 
 为了在我们的实现中使用 WebSocket，让我们将依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-websocket</artifactId>
@@ -91,7 +91,7 @@ WebRTC 定义了一组 API 和方法来执行这些步骤。
 
 为了在 Spring Boot 做到这一点，让我们编写一个扩展了`WebSocketConfigurer`并覆盖了`registerWebSocketHandlers`方法的`@Configuration`类:
 
-```
+```java
 @Configuration
 @EnableWebSocket
 public class WebSocketConfiguration implements WebSocketConfigurer {
@@ -116,7 +116,7 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
 
 为此，我们可以从 Spring WebSocket 库中**扩展** **`TextWebSocketHandler`，并覆盖`handleTextMessage`和`afterConnectionEstablished`方法:**
 
-```
+```java
 @Component
 public class SocketHandler extends TextWebSocketHandler {
 
@@ -163,13 +163,13 @@ public class SocketHandler extends TextWebSocketHandler {
 
 为了连接到我们的信令服务器，我们创建了一个 WebSocket 连接。假设我们构建的 Spring Boot 信令服务器运行在 [`http://localhost:8080`](https://web.archive.org/web/20220626194418/http://localhost:8080/) 上，我们可以创建连接:
 
-```
+```java
 var conn = new WebSocket('ws://localhost:8080/socket');
 ```
 
 为了向信令服务器发送消息，我们将创建一个`send`方法，用于在接下来的步骤中传递消息:
 
-```
+```java
 function send(message) {
     conn.send(JSON.stringify(message));
 }
@@ -179,7 +179,7 @@ function send(message) {
 
 在`client.js`中设置好客户端后，我们需要为 **`RTCPeerConnection`** 类创建一个对象:
 
-```
+```java
 configuration = null;
 var peerConnection = new RTCPeerConnection(configuration);
 ```
@@ -188,13 +188,13 @@ var peerConnection = new RTCPeerConnection(configuration);
 
 现在，我们可以创建一个`dataChannel`用于消息传递:
 
-```
+```java
 var dataChannel = peerConnection.createDataChannel("dataChannel", { reliable: true });
 ```
 
 随后，我们可以为数据通道上的各种事件创建侦听器:
 
-```
+```java
 dataChannel.onerror = function(error) {
     console.log("Error:", error);
 };
@@ -213,7 +213,7 @@ dataChannel.onclose = function() {
 
 首先，我们创建一个`offer`，并将其设置为`peerConnection`的本地描述。然后我们将`offer`发送给另一个对等体:
 
-```
+```java
 peerConnection.createOffer(function(offer) {
     send({
         event : "offer",
@@ -239,7 +239,7 @@ peerConnection.createOffer(function(offer) {
 
 为此，我们为`onicecandidate`事件创建一个监听器:
 
-```
+```java
 peerConnection.onicecandidate = function(event) {
     if (event.candidate) {
         send({
@@ -262,7 +262,7 @@ peerConnection.onicecandidate = function(event) {
 
 **远程对等体在接收到此`candidate`后，应该将其添加到其候选池:**
 
-```
+```java
 peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
 ```
 
@@ -270,7 +270,7 @@ peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
 
 此后，**当对方收到`offer`时，必须将其设置为远程描述`.`** 此外，还必须生成一个`answer`，发送给发起方:
 
-```
+```java
 peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
 peerConnection.createAnswer(function(answer) {
     peerConnection.setLocalDescription(answer);
@@ -287,7 +287,7 @@ peerConnection.createAnswer(function(answer) {
 
 最后，**发起对等体接收到`answer`并将其设置为** **远程描述**:
 
-```
+```java
 handleAnswer(answer){
     peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
 }
@@ -301,13 +301,13 @@ handleAnswer(answer){
 
 现在我们已经建立了连接，**我们可以使用** `**dataChannel**`的`send`方法在对等体之间发送消息:
 
-```
+```java
 dataChannel.send(“message”);
 ```
 
 同样，为了在另一个对等体上接收消息，让我们为`onmessage`事件创建一个监听器:
 
-```
+```java
 dataChannel.onmessage = function(event) {
     console.log("Message:", event.data);
 };
@@ -315,7 +315,7 @@ dataChannel.onmessage = function(event) {
 
 为了在数据通道上接收消息，我们还必须在`peerConnection`对象上添加一个回调:
 
-```
+```java
 peerConnection.ondatachannel = function (event) {
     dataChannel = event.channel;
 };
@@ -331,7 +331,7 @@ peerConnection.ondatachannel = function (event) {
 
 首先，我们需要从浏览器获取媒体流。WebRTC 为此提供了一个 API:
 
-```
+```java
 const constraints = {
     video: true,audio : true
 };
@@ -344,7 +344,7 @@ navigator.mediaDevices.getUserMedia(constraints).
 
 约束对象还允许指定移动设备中使用的摄像机:
 
-```
+```java
 var constraints = {
     video : {
         frameRate : {
@@ -364,7 +364,7 @@ var constraints = {
 
 其次，我们必须将流添加到 WebRTC 对等连接对象中:
 
-```
+```java
 peerConnection.addStream(stream);
 ```
 
@@ -376,7 +376,7 @@ peerConnection.addStream(stream);
 
 让我们将这个流设置为一个 HTML 视频元素:
 
-```
+```java
 peerConnection.onaddstream = function(event) {
     videoElement.srcObject = event.stream;
 };
@@ -401,7 +401,7 @@ STUN 是解决这个问题的最简单的方法。在向对等方共享网络信
 
 要使用 STUN 服务器，我们可以简单地在配置对象中传递 URL 来创建`RTCPeerConnection`对象:
 
-```
+```java
 var configuration = {
     "iceServers" : [ {
         "url" : "stun:stun2.1.google.com:19302"
@@ -421,7 +421,7 @@ TURN 服务器是公开可用的，即使它们位于防火墙或代理之后，
 
 与 STUN 类似，我们可以在同一个配置对象中提供 TURN 服务器 URL:
 
-```
+```java
 {
   'iceServers': [
     {

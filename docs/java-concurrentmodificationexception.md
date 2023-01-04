@@ -14,7 +14,7 @@
 
 本质上，`ConcurrentModificationException` 用于当我们迭代的东西被修改时**快速失效。**让我们用一个简单的测试来证明这一点:
 
-```
+```java
 @Test(expected = ConcurrentModificationException.class)
 public void whilstRemovingDuringIteration_shouldThrowException() throws InterruptedException {
 
@@ -36,7 +36,7 @@ public void whilstRemovingDuringIteration_shouldThrowException() throws Interrup
 
 一个`for-each`循环在幕后使用一个`Iterator` ,但是不那么冗长。然而，如果我们重构之前的测试，使用一个`Iterator,` ，我们将可以访问额外的方法，比如`remove().` ，让我们尝试使用这个方法来修改我们的列表:
 
-```
+```java
 for (Iterator<Integer> iterator = integers.iterator(); iterator.hasNext();) {
     Integer integer = iterator.next();
     if(integer == 2) {
@@ -51,7 +51,7 @@ for (Iterator<Integer> iterator = integers.iterator(); iterator.hasNext();) {
 
 如果我们想保持我们的`for-each` 循环，那么我们可以。只是我们需要等到迭代之后再移除元素。让我们通过在迭代时将我们想要删除的内容添加到一个`toRemove`列表中来尝试一下:
 
-```
+```java
 List<Integer> integers = newArrayList(1, 2, 3);
 List<Integer> toRemove = newArrayList();
 
@@ -71,7 +71,7 @@ assertThat(integers).containsExactly(1, 3);
 
 Java 8 向`Collection`接口引入了`removeIf()` 方法。这意味着，如果我们正在使用它，我们可以使用函数式编程的思想来再次实现相同的结果:
 
-```
+```java
 List<Integer> integers = newArrayList(1, 2, 3);
 
 integers.removeIf(i -> i == 2);
@@ -85,7 +85,7 @@ assertThat(integers).containsExactly(1, 3);
 
 当深入到函数式/声明式编程的世界时，我们可以忘记改变集合，相反，我们可以专注于应该实际处理的元素:
 
-```
+```java
 Collection<Integer> integers = newArrayList(1, 2, 3);
 
 List<String> collected = integers

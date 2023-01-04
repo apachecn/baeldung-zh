@@ -28,7 +28,7 @@
 
 在我们测试移除 HTML 标签之前，首先让我们创建一个 HTML 示例，比如说`example1.html`:
 
-```
+```java
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -48,7 +48,7 @@
 
 现在，让我们编写一个测试并使用`[String.replaceAll()](/web/20220907235807/https://www.baeldung.com/string/replace-all)`来删除 HTML 标签:
 
-```
+```java
 String html = ... // load example1.html
 String result = html.replaceAll("<[^>]*>", "");
 System.out.println(result); 
@@ -56,7 +56,7 @@ System.out.println(result);
 
 如果我们运行测试方法，我们会看到结果:
 
-```
+```java
  This is the page title
 
         If the application X doesn't start, the possible causes could be:
@@ -79,7 +79,7 @@ System.out.println(result);
 
 现在，让我们看另一个 HTML 例子，比如说`example2.html`:
 
-```
+```java
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -108,7 +108,7 @@ System.out.println(result);
 
 如果我们在`example2.html`上使用相同的方法，我们将得到(空行已被删除):
 
-```
+```java
  This is the page title
     // some interesting script functions    
         If the application X doesn't start, the possible causes could be:
@@ -131,7 +131,7 @@ Jsoup 是一个流行的 HTML 解析器。要从 HTML 文档中提取文本，�
 
 首先，我们需要将 [Jsoup 库](https://web.archive.org/web/20220907235807/https://search.maven.org/search?q=a:jsoup)添加到类路径中。例如，假设我们正在使用 [Maven](/web/20220907235807/https://www.baeldung.com/maven) 来管理项目依赖性:
 
-```
+```java
 <dependency>
     <groupId>org.jsoup</groupId>
     <artifactId>jsoup</artifactId>
@@ -141,14 +141,14 @@ Jsoup 是一个流行的 HTML 解析器。要从 HTML 文档中提取文本，�
 
 现在，让我们用我们的`example2.html`测试一下:
 
-```
+```java
 String html = ... // load example2.html
 System.out.println(Jsoup.parse(html).text()); 
 ```
 
 如果我们运行这个方法，它会打印:
 
-```
+```java
 This is the page title If the application X doesn't start, the possible causes could be: 1\. Maven is not installed. 2\. Not enough (<1G) disk space. 3\. Not enough (<64MB) memory. 
 ```
 
@@ -164,7 +164,7 @@ HTMLCleaner 是另一个 HTML 解析器。它的目标是使来自网络的“�
 
 首先，让我们在我们的`pom.xml`中添加 [HTMLCleaner 依赖项](https://web.archive.org/web/20220907235807/https://search.maven.org/search?q=a:htmlcleaner%20g:net.sourceforge.htmlcleaner):
 
-```
+```java
 <dependency>
     <groupId>net.sourceforge.htmlcleaner</groupId>
     <artifactId>htmlcleaner</artifactId>
@@ -176,7 +176,7 @@ HTMLCleaner 是另一个 HTML 解析器。它的目标是使来自网络的“�
 
 这里，作为一个例子，让我们告诉 HTMLCleaner 在解析`example2.html`时跳过`<script>`元素:
 
-```
+```java
 String html = ... // load example2.html
 CleanerProperties props = new CleanerProperties();
 props.setPruneTags("script");
@@ -186,7 +186,7 @@ System.out.println(result);
 
 如果我们运行测试，HTMLCleaner 将产生以下输出:
 
-```
+```java
  This is the page title
 
         If the application X doesn't start, the possible causes could be:
@@ -209,7 +209,7 @@ System.out.println(result);
 
 像往常一样，我们先在`pom.xml`中添加[杰里科属地](https://web.archive.org/web/20220907235807/https://search.maven.org/search?q=a:jericho):
 
-```
+```java
 <dependency>
     <groupId>net.htmlparser.jericho</groupId>
     <artifactId>jericho-html</artifactId>
@@ -221,7 +221,7 @@ System.out.println(result);
 
 为此，我们可以创建一个`Renderer`对象并使用`includeHyperlinkURLs`选项:
 
-```
+```java
 String html = ... // load example2.html
 Source htmlSource = new Source(html);
 Segment segment = new Segment(htmlSource, 0, htmlSource.length());
@@ -231,7 +231,7 @@ System.out.println(htmlRender);
 
 接下来，让我们执行测试并检查输出:
 
-```
+```java
 If the application X doesn't start, the possible causes could be:
 1\. Maven <http://maven.apache.org/> is not installed.
 2\. Not enough (<1G) disk space.

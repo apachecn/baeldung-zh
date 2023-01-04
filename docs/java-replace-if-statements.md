@@ -16,7 +16,7 @@
 
 我们经常会遇到一个包含很多条件的业务逻辑，每个条件都需要不同的处理。为了便于演示，让我们以一个`Calculator`类为例。我们将有一个方法，它接受两个数字和一个运算符作为输入，并根据运算返回结果:
 
-```
+```java
 public int calculate(int a, int b, String operator) {
     int result = Integer.MIN_VALUE;
 
@@ -35,7 +35,7 @@ public int calculate(int a, int b, String operator) {
 
 我们也可以使用`switch`语句`:`来实现这一点
 
-```
+```java
 public int calculateUsingSwitch(int a, int b, String operator) {
     switch (operator) {
     case "add":
@@ -61,7 +61,7 @@ public int calculateUsingSwitch(int a, int b, String operator) {
 
 对于我们的例子，让我们定义一个具有单个`apply`方法的`Operation`接口:
 
-```
+```java
 public interface Operation {
     int apply(int a, int b);
 }
@@ -69,7 +69,7 @@ public interface Operation {
 
 该方法接受两个数字作为输入，并返回结果。让我们定义一个执行加法的类:
 
-```
+```java
 public class Addition implements Operation {
     @Override
     public int apply(int a, int b) {
@@ -80,7 +80,7 @@ public class Addition implements Operation {
 
 我们现在将实现一个工厂类，它基于给定的操作符返回`Operation` 的实例:
 
-```
+```java
 public class OperatorFactory {
     static Map<String, Operation> operationMap = new HashMap<>();
     static {
@@ -97,7 +97,7 @@ public class OperatorFactory {
 
 现在，在`Calculator`类中，我们可以查询工厂以获得相关的操作并应用于源编号:
 
-```
+```java
 public int calculateUsingFactory(int a, int b, String operator) {
     Operation targetOperation = OperatorFactory
       .getOperation(operator)
@@ -118,7 +118,7 @@ public int calculateUsingFactory(int a, int b, String operator) {
 
 让我们看看如何实现它。首先，我们需要定义我们的`Enum`:
 
-```
+```java
 public enum Operator {
     ADD, MULTIPLY, SUBTRACT, DIVIDE
 }
@@ -128,7 +128,7 @@ public enum Operator {
 
 我们将为每个`Enum`值定义方法并进行计算。例如:
 
-```
+```java
 ADD {
     @Override
     public int apply(int a, int b) {
@@ -142,7 +142,7 @@ public abstract int apply(int a, int b);
 
 然后在`Calculator`类中，我们可以定义一个方法来执行操作:
 
-```
+```java
 public int calculate(int a, int b, Operator operator) {
     return operator.apply(a, b);
 }
@@ -150,7 +150,7 @@ public int calculate(int a, int b, Operator operator) {
 
 现在，我们可以通过使用`Operator#valueOf()`方法将`String` 值转换为`Operator` 来调用方法:
 
-```
+```java
 @Test
 public void whenCalculateUsingEnumOperator_thenReturnCorrectResult() {
     Calculator calculator = new Calculator();
@@ -167,7 +167,7 @@ public void whenCalculateUsingEnumOperator_thenReturnCorrectResult() {
 
 我们将首先定义我们的`Command`接口:
 
-```
+```java
 public interface Command {
     Integer execute();
 }
@@ -175,7 +175,7 @@ public interface Command {
 
 接下来，让我们实现一个`AddCommand:`
 
-```
+```java
 public class AddCommand implements Command {
     // Instance variables
 
@@ -193,7 +193,7 @@ public class AddCommand implements Command {
 
 最后，让我们在`Calculator` 中引入一个新方法，它接受并执行`Command`:
 
-```
+```java
 public int calculate(Command command) {
     return command.execute();
 }
@@ -201,7 +201,7 @@ public int calculate(Command command) {
 
 接下来，我们可以通过实例化一个`AddCommand`来调用计算，并将其发送给`Calculator#calculate`方法:
 
-```
+```java
 @Test
 public void whenCalculateUsingCommand_thenReturnCorrectResult() {
     Calculator calculator = new Calculator();
@@ -216,7 +216,7 @@ public void whenCalculateUsingCommand_thenReturnCorrectResult() {
 
 让我们通过设计一个简单的`RuleEngine`来完成一个例子，这个简单的`RuleEngine`通过一组`Rules` 来处理一个`Expression`，并从选择的`Rule`返回结果。首先，我们将定义一个`Rule`接口:
 
-```
+```java
 public interface Rule {
     boolean evaluate(Expression expression);
     Result getResult();
@@ -225,7 +225,7 @@ public interface Rule {
 
 其次，让我们实现一个`RuleEngine`:
 
-```
+```java
 public class RuleEngine {
     private static List<Rule> rules = new ArrayList<>();
 
@@ -246,7 +246,7 @@ public class RuleEngine {
 
 `RuleEngine` 接受一个`Expression`对象并返回`Result`。现在`,` 让我们将`Expression`类设计成一组两个`Integer`对象，并应用`Operator`:
 
-```
+```java
 public class Expression {
     private Integer x;
     private Integer y;
@@ -256,7 +256,7 @@ public class Expression {
 
 最后，让我们定义一个自定义的`AddRule`类，它仅在指定了`ADD Operation`时才进行计算:
 
-```
+```java
 public class AddRule implements Rule {
     @Override
     public boolean evaluate(Expression expression) {
@@ -272,7 +272,7 @@ public class AddRule implements Rule {
 
 我们现在用一个`Expression`调用`RuleEngine`:
 
-```
+```java
 @Test
 public void whenNumbersGivenToRuleEngine_thenReturnCorrectResult() {
     Expression expression = new Expression(5, 5, Operator.ADD);

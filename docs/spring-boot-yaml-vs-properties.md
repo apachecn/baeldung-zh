@@ -14,7 +14,7 @@
 
 默认情况下，Spring Boot 可以访问在`application.properties`文件中设置的配置，该文件使用键值格式:
 
-```
+```java
 spring.datasource.url=jdbc:h2:dev
 spring.datasource.username=SA
 spring.datasource.password=password
@@ -26,7 +26,7 @@ spring.datasource.password=password
 
 在我们的值中，我们可以使用带有`${}`语法的占位符来引用其他键、系统属性或环境变量的内容:
 
-```
+```java
 app.name=MyApp
 app.description=${app.name} is a Spring Boot application
 ```
@@ -35,7 +35,7 @@ app.description=${app.name} is a Spring Boot application
 
 如果我们有不同值的同类属性，我们可以用数组索引来表示列表结构:
 
-```
+```java
 application.servers[0].ip=127.0.0.1
 application.servers[0].path=/path1
 application.servers[1].ip=127.0.0.2
@@ -50,7 +50,7 @@ application.servers[2].path=/path3
 
 这允许我们为我们需要声明的每个概要文件定义一个文档，所有的都在同一个文件中:
 
-```
+```java
 logging.file.name=myapplication.log
 bael.property=defaultValue
 #---
@@ -85,7 +85,7 @@ bael.property=prodValue
 
 现在，让我们从我们的属性文件中取出相同的示例，并将其转换为 YAML:
 
-```
+```java
 spring:
     datasource:
         password: password
@@ -99,7 +99,7 @@ spring:
 
 YAML 有一个更简洁的格式来表示列表:
 
-```
+```java
 application:
     servers:
     -   ip: '127.0.0.1'
@@ -116,7 +116,7 @@ application:
 
 然而，在这种情况下，规范指示我们必须使用三个破折号来表示新文档的开始:
 
-```
+```java
 logging:
   file:
     name: myapplication.log
@@ -145,7 +145,7 @@ bael:
 
 我们可以使用`@Value`注释注入我们的属性值:
 
-```
+```java
 @Value("${key.something}")
 private String injectedProperty;
 ```
@@ -156,7 +156,7 @@ private String injectedProperty;
 
 我们还可以使用`Environment` API 获得属性的值:
 
-```
+```java
 @Autowired
 private Environment env;
 
@@ -169,7 +169,7 @@ public String getSomeKey(){
 
 最后，我们还可以使用`@ConfigurationProperties`注释将我们的属性绑定到类型安全的结构化对象:
 
-```
+```java
 @ConfigurationProperties(prefix = "mail")
 public class ConfigProperties {
     String name;

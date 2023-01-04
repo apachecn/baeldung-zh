@@ -14,7 +14,7 @@
 
 首先，我们将创建一个`Employee`实体:
 
-```
+```java
 @Entity
 public class Employee {
 
@@ -38,7 +38,7 @@ public class Employee {
 
 每个`Employee` 将只分配给一个`Department`:
 
-```
+```java
 @Entity
 public class Department {
 
@@ -57,7 +57,7 @@ public class Department {
 
 最后，每个`Employee` 将有多个`Phone`:
 
-```
+```java
 @Entity
 public class Phone {
 
@@ -82,7 +82,7 @@ public class Phone {
 
 内部连接可以是`implicit.`顾名思义，**开发者没有指定隐式内部连接**。每当我们导航单值关联时，JPA 会自动创建一个隐式连接:
 
-```
+```java
 @Test
 public void whenPathExpressionIsUsedForSingleValuedAssociation_thenCreatesImplicitInnerJoin() {
     TypedQuery<Department> query
@@ -100,7 +100,7 @@ public void whenPathExpressionIsUsedForSingleValuedAssociation_thenCreatesImplic
 
 接下来我们将看看`explicit`内部连接，其中**我们在 [JPQL 查询](/web/20221107131215/https://www.baeldung.com/jpa-queries) :** 中使用了 JOIN 关键字
 
-```
+```java
 @Test
 public void whenJoinKeywordIsUsed_thenCreatesExplicitInnerJoin() {
     TypedQuery<Department> query
@@ -116,7 +116,7 @@ public void whenJoinKeywordIsUsed_thenCreatesExplicitInnerJoin() {
 
 我们还可以指定一个可选的内部关键字:
 
-```
+```java
 @Test
 public void whenInnerJoinKeywordIsUsed_thenCreatesExplicitInnerJoin() {
     TypedQuery<Department> query
@@ -140,13 +140,13 @@ public void whenInnerJoinKeywordIsUsed_thenCreatesExplicitInnerJoin() {
 
 如果我们看一下我们的数据模型，`Employee` 与`Phone`有一对多的关系。正如前面的例子一样，我们可以尝试编写一个类似的查询:
 
-```
+```java
 SELECT e.phones FROM Employee e
 ```
 
 **然而，这并不完全符合我们的预期**。由于选择的关联，`e.phones,` 是集合值的，**我们将得到一个`Collection`的列表，而不是`Phone` 实体**:
 
-```
+```java
 @Test
 public void whenCollectionValuedAssociationIsSpecifiedInSelect_ThenReturnsCollections() {
     TypedQuery<Collection> query 
@@ -162,7 +162,7 @@ public void whenCollectionValuedAssociationIsSpecifiedInSelect_ThenReturnsCollec
 
 相反，我们应该创建一个显式的内部连接，并为`Phone`实体创建一个别名。然后我们可以在 SELECT 或 WHERE 子句中指定`Phone`实体:
 
-```
+```java
 @Test
 public void whenCollectionValuedAssociationIsJoined_ThenCanSelect() {
     TypedQuery<Phone> query 
@@ -178,7 +178,7 @@ public void whenCollectionValuedAssociationIsJoined_ThenCanSelect() {
 
 当两个或多个实体外连接时，**满足连接条件的记录以及左侧实体中的记录将被收集在结果中:**
 
-```
+```java
 @Test
 public void whenLeftKeywordIsSpecified_thenCreatesOuterJoinAndIncludesNonMatched() {
     TypedQuery<Department> query 
@@ -202,7 +202,7 @@ public void whenLeftKeywordIsSpecified_thenCreatesOuterJoinAndIncludesNonMatched
 
 这很方便，尤其是当数据库级别的外键不存在时:
 
-```
+```java
 @Test
 public void whenEntitiesAreListedInFromAndMatchedInWhere_ThenCreatesJoin() {
     TypedQuery<Department> query 
@@ -220,7 +220,7 @@ public void whenEntitiesAreListedInFromAndMatchedInWhere_ThenCreatesJoin() {
 
 类似地，**我们可以在 FROM 子句中列出两个实体，而不指定任何连接条件**。在这种情况下，**我们会得到一个笛卡尔积返回**。这意味着第一个实体中的每条记录都与第二个实体中的每条记录成对出现:
 
-```
+```java
 @Test
 public void whenEntitiesAreListedInFrom_ThenCreatesCartesianProduct() {
     TypedQuery<Department> query
@@ -238,7 +238,7 @@ public void whenEntitiesAreListedInFrom_ThenCreatesCartesianProduct() {
 
 到目前为止，我们已经使用了两个实体来执行连接，但是这不是一个规则。**我们还可以在单个 JPQL 查询中连接多个实体**:
 
-```
+```java
 @Test
 public void whenMultipleEntitiesAreListedWithJoin_ThenCreatesMultipleJoins() {
     TypedQuery<Phone> query
@@ -261,7 +261,7 @@ public void whenMultipleEntitiesAreListedWithJoin_ThenCreatesMultipleJoins() {
 
 在这里我们将急切地载入`Employee`的联想:
 
-```
+```java
 @Test
 public void whenFetchKeywordIsSpecified_ThenCreatesFetchJoin() {
     TypedQuery<Department> query 
@@ -279,7 +279,7 @@ public void whenFetchKeywordIsSpecified_ThenCreatesFetchJoin() {
 
 我们还可以以类似于外部连接的方式执行外部提取连接，从左侧实体中收集不匹配连接条件的记录。此外，它急切地加载指定的关联:
 
-```
+```java
 @Test
 public void whenLeftAndFetchKeywordsAreSpecified_ThenCreatesOuterFetchJoin() {
     TypedQuery<Department> query 

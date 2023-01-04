@@ -25,20 +25,20 @@ Docker 不会自动移除未使用的对象。相反，它会将它们保留在�
 
 让我们看一个小例子，看看更新一个图像会导致一个悬空的图像。下面是一个简单的 Dockerfile 文件:
 
-```
+```java
 FROM ubuntu:latest
 CMD ["echo", "Hello World"] 
 ```
 
 让我们建立这样的形象:
 
-```
+```java
 docker build -t my-image . 
 ```
 
 我们可以通过运行以下命令来验证映像是否已创建:
 
-```
+```java
 docker images
 REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
 my-image     latest    7ed6e7202eca   32 seconds ago   72.8MB
@@ -47,14 +47,14 @@ ubuntu       latest    825d55fb6340   6 days ago       72.8MB
 
 假设我们对 Dockerfile 文件做了一点修改:
 
-```
+```java
 FROM ubuntu:latest
 CMD ["echo", "Hello, World!"] 
 ```
 
 让我们使用与之前相同的命令重建图像，并再次列出图像:
 
-```
+```java
 docker images
 REPOSITORY   TAG       IMAGE ID       CREATED              SIZE
 my-image     latest    da6e74196f66   4 seconds ago        72.8MB
@@ -87,13 +87,13 @@ ubuntu       latest    825d55fb6340   6 days ago           72.8MB
 
 如果我们知道图像 ID，我们可以使用`docker rmi`命令删除图像。
 
-```
+```java
 docker rmi 7ed6e7202eca 
 ```
 
 该命令将删除 ID 为`7ed6e7202eca`的图像(悬空图像)。让我们重新检查图像:
 
-```
+```java
 docker images
 REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
 my-image     latest    da6e74196f66   18 minutes ago   72.8MB
@@ -102,7 +102,7 @@ ubuntu       latest    825d55fb6340   6 days ago       72.8MB
 
 或者，如果我们想要删除一个特定的未使用的图像，我们可以使用带有图像名称和标签的`docker rmi`命令:
 
-```
+```java
 docker rmi my-image:latest 
 ```
 
@@ -114,7 +114,7 @@ docker rmi my-image:latest
 
 让我们运行下面的命令:
 
-```
+```java
 docker image prune -a
 WARNING! This will remove all images without at least one container associated to them.
 Are you sure you want to continue? [y/N] y 
@@ -139,7 +139,7 @@ Are you sure you want to continue? [y/N] y
 
 让我们来看一个例子:
 
-```
+```java
 docker system prune -a
 WARNING! This will remove:
   - all stopped containers

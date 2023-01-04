@@ -18,7 +18,7 @@
 
 首先，让我们创建将要测试的类:
 
-```
+```java
 public class Greetings {
     public static String sayHello() {
         return "Hello";
@@ -28,7 +28,7 @@ public class Greetings {
 
 然后我们将创建这个普通的 JUnit 5 测试:
 
-```
+```java
 public class GreetingsTest {
     @Test
     void whenCallingSayHello_thenReturnHello() {
@@ -39,7 +39,7 @@ public class GreetingsTest {
 
 最后，让我们添加这个注释，以便能够运行测试:
 
-```
+```java
 @RunWith(JUnitPlatform.class)
 public class GreetingsTest {
     // ...
@@ -58,7 +58,7 @@ public class GreetingsTest {
 
 现在让我们在支持 JUnit 5 的 Eclipse 版本中运行相同的测试。在这种情况下，我们不再需要`@RunWith`注释，我们可以在没有运行器的情况下编写测试:
 
-```
+```java
 public class GreetingsTest {
     @Test
     void whenCallingSayHello_thenReturnHello() {
@@ -77,7 +77,7 @@ public class GreetingsTest {
 
 我们将以弹簧测试为例:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { SpringTestConfiguration.class })
 public class GreetingsSpringTest {
@@ -87,7 +87,7 @@ public class GreetingsSpringTest {
 
 **如果我们想将这个测试迁移到 JUnit 5，我们需要用新的`@ExtendWith` :** 替换`@RunWith`注释
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { SpringTestConfiguration.class })
 public class GreetingsSpringTest {

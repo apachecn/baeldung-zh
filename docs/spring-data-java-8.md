@@ -12,7 +12,7 @@ Spring Data 现在支持核心的 Java 8 特性——比如`Optional`、`Stream`
 
 让我们从 CRUD 存储库方法开始——它现在将结果包装在一个`Optional`中:
 
-```
+```java
 public interface CrudRepository<T, ID> extends Repository<T, ID> {
 
     Optional<T> findById(ID id);
@@ -24,7 +24,7 @@ public interface CrudRepository<T, ID> extends Repository<T, ID> {
 
 我们现在要做的就是将返回类型指定为一个`Optional`:
 
-```
+```java
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findOneByName(String name);
@@ -38,7 +38,7 @@ Spring Data 还支持 Java 8 最重要的特性之一——`Stream`API。
 
 过去，每当我们需要返回多个结果时，我们需要返回一个集合:
 
-```
+```java
 public interface UserRepository extends JpaRepository<User, Integer> {
     // ...
     List<User> findAll();
@@ -52,7 +52,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 我们可以通过利用分页来改进:
 
-```
+```java
 public interface UserRepository extends JpaRepository<User, Integer> {
     // ...
     Page<User> findAll(Pageable pageable);
@@ -64,7 +64,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 感谢 Java 8 `Stream` API 和 JPA 提供者——我们现在可以**定义我们的存储库方法只返回一个`Stream`对象**:
 
-```
+```java
 public interface UserRepository extends JpaRepository<User, Integer> {
     // ...
     Stream<User> findAllByName(String name);
@@ -78,7 +78,7 @@ Spring Data 使用特定于提供者的实现来传输结果(Hibernate 使用`Sc
 
 这可以通过调用`Stream`上的`close()`方法或使用`try-with-resources`来完成:
 
-```
+```java
 try (Stream<User> foundUsersStream 
   = userRepository.findAllByName(USER_NAME_ADAM)) {
 
@@ -93,7 +93,7 @@ assertThat(foundUsersStream.count(), equalTo(3l));
 
 **在 Java 8 的`CompletableFuture`** 和 Spring 异步方法执行机制的支持下，Spring 数据仓库可以异步运行:
 
-```
+```java
 @Async
 CompletableFuture<User> findOneByStatus(Integer status); 
 ```

@@ -12,7 +12,7 @@ Java 的用于 [bean 验证](/web/20221122042745/https://www.baeldung.com/javax-
 
 首先，让我们编写一个方法来验证一个对象的内容是否符合它的验证约束。为了做到这一点，我们将从默认的验证器工厂获取`Validator`。然后，我们将对对象应用`validate()`方法。这个方法返回一个 [`Set`](/web/20221122042745/https://www.baeldung.com/java-set-operations#1-what-is-a-set) 的`ConstraintViolation`。一个`ConstraintViolation`封装了一些关于验证错误的提示。为了简单起见，我们只抛出一个`ConstraintViolationException`，以防出现任何验证问题:
 
-```
+```java
 <T> void validate(T t) {
     Set<ConstraintViolation<T>> violations = validator.validate(t);
     if (!violations.isEmpty()) {
@@ -29,7 +29,7 @@ Java 的用于 [bean 验证](/web/20221122042745/https://www.baeldung.com/javax-
 
 首先，我们需要覆盖默认的`BeanDeserializer`。`BeanDeserializer`是一个可以反序列化对象的类。我们希望调用基本的反序列化方法，然后将 validate()方法应用于创建的实例。我们的 BeanDeserializerWithValidation 如下所示:
 
-```
+```java
 public class BeanDeserializerWithValidation extends BeanDeserializer {
 
     protected BeanDeserializerWithValidation(BeanDeserializerBase src) {
@@ -48,7 +48,7 @@ public class BeanDeserializerWithValidation extends BeanDeserializer {
 
 下一步是实现我们自己的`BeanDeserializerModifier`。这将允许我们用`BeanDeserializerWithValidation`中定义的行为改变反序列化过程:
 
-```
+```java
 public class BeanDeserializerModifierWithValidation extends BeanDeserializerModifier {
 
     @Override
@@ -65,7 +65,7 @@ public class BeanDeserializerModifierWithValidation extends BeanDeserializerModi
 
 最后，我们需要创建一个 [`ObjectMapper`](/web/20221122042745/https://www.baeldung.com/jackson-object-mapper-tutorial) ，并将我们的`BeanDeserializerModifier`注册为一个`Module`。一个`Module`是扩展 Jackson 默认功能的一种方式。让我们用一种方法来包装它:
 
-```
+```java
 ObjectMapper getObjectMapperWithValidation() {
     SimpleModule validationModule = new SimpleModule();
     validationModule.setDeserializerModifier(new BeanDeserializerModifierWithValidation());
@@ -79,7 +79,7 @@ ObjectMapper getObjectMapperWithValidation() {
 
 我们现在将展示一个如何使用我们的自定义`ObjectMapper`的小例子。首先，让我们定义一个`Student`对象。一个`Student`有名字。名称长度必须在 5 到 10 个字符之间:
 
-```
+```java
 public class Student {
 
     @Size(min = 5, max = 10, message = "Student's name must be between 5 and 10 characters")
@@ -94,7 +94,7 @@ public class Student {
 
 现在让我们创建一个包含有效`Student`对象的 [JSON](/web/20221122042745/https://www.baeldung.com/java-json) 表示的`validStudent.json`文件:
 
-```
+```java
 {
   "name": "Daniel"
 }
@@ -102,7 +102,7 @@ public class Student {
 
 我们将在`InputStream`中读取这个文件的内容。首先，让我们定义一个方法，将一个`InputStream`解析为一个`Student`对象，并同时验证它。为此，我们想使用我们的`ObjectMapper`:
 
-```
+```java
 Student readStudent(InputStream inputStream) throws IOException {
     ObjectMapper mapper = getObjectMapperWithValidation();
     return mapper.readValue(inputStream, Student.class);
@@ -117,7 +117,7 @@ Student readStudent(InputStream inputStream) throws IOException {
 
 这个测试看起来像这样:
 
-```
+```java
 @Test
 void givenValidStudent_WhenReadStudent_ThenReturnStudent() throws IOException {
     InputStream inputStream = getClass().getClassLoader().getResourceAsStream(("validStudent.json");
@@ -128,7 +128,7 @@ void givenValidStudent_WhenReadStudent_ThenReturnStudent() throws IOException {
 
 类似地，我们可以创建一个包含名称少于 5 个字符的`Student`的 JSON 表示的`invalid.json`文件:
 
-```
+```java
 {
   "name": "Max"
 }
@@ -136,7 +136,7 @@ void givenValidStudent_WhenReadStudent_ThenReturnStudent() throws IOException {
 
 现在我们需要修改我们的测试来检查 ConstraintViolationException 是否确实被抛出。此外，我们可以检查错误消息是否正确:
 
-```
+```java
 @Test
 void givenStudentWithInvalidName_WhenReadStudent_ThenThrows() {
     InputStream inputStream = getClass().getClassLoader().getResourceAsStream("invalidStudent.json");

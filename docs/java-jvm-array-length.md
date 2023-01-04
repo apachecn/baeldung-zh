@@ -14,7 +14,7 @@
 
 为了检查 JVM 中数组的内存布局，我们将使用 Java 对象布局( [JOL](https://web.archive.org/web/20221208143956/https://openjdk.java.net/projects/code-tools/jol/) )工具。因此，我们需要添加 [`jol-core`](https://web.archive.org/web/20221208143956/https://search.maven.org/artifact/org.openjdk.jol/jol-core) 的依赖关系:
 
-```
+```java
 <dependency> 
     <groupId>org.openjdk.jol</groupId> 
     <artifactId>jol-core</artifactId>    
@@ -34,14 +34,14 @@
 
 让我们通过检查阵列的内存布局来验证这一点:
 
-```
+```java
 int[] ints = new int[42];
 System.out.println(ClassLayout.parseInstance(ints).toPrintable());
 ```
 
 如上所示，我们正在从现有的数组实例解析内存布局。下面是 JVM 如何布置`int[]`:
 
-```
+```java
 [I object internals:
  OFFSET  SIZE   TYPE DESCRIPTION               VALUE
       0     4        (object header)           01 00 00 00 (00000001 00000000 00000000 00000000) (1) # mark

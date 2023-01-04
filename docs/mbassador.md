@@ -12,7 +12,7 @@
 
 在我们可以使用这个库之前，我们需要添加 [mbassador](https://web.archive.org/web/20220629002728/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22mbassador%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>net.engio</groupId>
     <artifactId>mbassador</artifactId>
@@ -26,7 +26,7 @@
 
 我们将从发布消息的简单示例开始:
 
-```
+```java
 private MBassador<Object> dispatcher = new MBassador<>();
 private String messageString;
 
@@ -67,7 +67,7 @@ public void handleString(String message) {
 
 让我们添加另一个消息处理程序并发送不同的消息类型:
 
-```
+```java
 private Integer messageInteger; 
 
 @Test
@@ -91,7 +91,7 @@ public void handleInteger(Integer message) {
 
 那么，如果没有消息的处理程序，消息会去哪里呢？让我们添加一个新的事件处理程序，然后发送第三种消息类型:
 
-```
+```java
 private Object deadEvent; 
 
 @Test
@@ -121,7 +121,7 @@ public void handleDeadEvent(DeadMessage message) {
 
 发送`String`和`Integer`事件受到限制。让我们创建几个消息类:
 
-```
+```java
 public class Message {}
 
 public class AckMessage extends Message {}
@@ -139,7 +139,7 @@ public class RejectMessage extends Message {
 
 我们从`Message`事件开始:
 
-```
+```java
 private MBassador<Message> dispatcher = new MBassador<>();
 
 private Message message;
@@ -183,7 +183,7 @@ public void handleAckMessage(AckMessage message) {
 
 先发个`RejectMessage`:
 
-```
+```java
 @Test
 public void whenRejectDispatched_thenMessageAndRejectHandled() {
     dispatcher.post(new RejectMessage()).now();
@@ -200,7 +200,7 @@ public void whenRejectDispatched_thenMessageAndRejectHandled() {
 
 让我们用一个`AckMessage`来验证这个行为:
 
-```
+```java
 @Test
 public void whenAckDispatched_thenMessageAndAckHandled() {
     dispatcher.post(new AckMessage()).now();
@@ -225,7 +225,7 @@ public void whenAckDispatched_thenMessageAndAckHandled() {
 
 我们可以使用消息过滤器:
 
-```
+```java
 private Message baseMessage;
 private Message subMessage;
 
@@ -274,7 +274,7 @@ public void handleSubMessage(Message message) {
 
 让我们根据消息的长度来过滤一条`String`消息:
 
-```
+```java
 private String testString;
 
 @Test
@@ -292,7 +292,7 @@ public void handleStringMessage(String message) {
 
 “foobar！”消息长度为七个字符，并被过滤。让我们发一个更短的`String`:
 
-```
+```java
  @Test
 public void whenShortStringDispatched_thenStringHandled() {
     dispatcher.post("foobar").now();
@@ -305,7 +305,7 @@ public void whenShortStringDispatched_thenStringHandled() {
 
 我们的`RejectMessage`包含一个带有访问器的字段。让我们为此编写一个过滤器:
 
-```
+```java
 private RejectMessage rejectMessage;
 
 @Test
@@ -335,7 +335,7 @@ public void handleRejectMessage(RejectMessage rejectMessage) {
 
 让我们编写一个测试来说明这一点:
 
-```
+```java
 private String testString;
 private FilteredMessage filteredMessage;
 private DeadMessage deadMessage;
@@ -381,7 +381,7 @@ public void handleDeadMessage(DeadMessage deadMessage) {
 
 让我们在一个示例类中使用异步调度。我们将在这些测试中使用[可用性](/web/20220629002728/https://www.baeldung.com/awaitlity-testing)来简化代码:
 
-```
+```java
 private MBassador<Message> dispatcher = new MBassador<>();
 private String testString;
 private AtomicBoolean ready = new AtomicBoolean(false);
@@ -413,7 +413,7 @@ public void handleStringMessage(String message) {
 
 MBassador 为异步处理程序调用提供了一种机制。为此配置的处理程序在其线程中接收消息:
 
-```
+```java
 private Integer testInteger;
 private String invocationThreadName;
 private AtomicBoolean ready = new AtomicBoolean(false);
@@ -446,7 +446,7 @@ public void handleIntegerMessage(Integer message) {
 
 处理程序不能定义已检查的异常。相反，可以向调度程序提供一个`IPublicationErrorHandler`作为其构造函数的参数:
 
-```
+```java
 public class MBassadorConfigurationTest
   implements IPublicationErrorHandler {
 
@@ -499,7 +499,7 @@ public class MBassadorConfigurationTest
 
 我们可以显式设置处理程序优先级:
 
-```
+```java
 private LinkedList<Integer> list = new LinkedList<>();
 
 @Test

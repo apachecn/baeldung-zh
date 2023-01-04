@@ -14,7 +14,7 @@ Apache Flink 是一个大数据处理框架，允许程序员以非常高效和�
 
 首先，我们需要将 Maven 依赖项添加到 [`flink-java`](https://web.archive.org/web/20221128111931/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.flink%22%20AND%20a%3A%22flink-java%22) 和 [`flink-test-utils`](https://web.archive.org/web/20221128111931/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.flink%22%20AND%20a%3A%22flink-test-utils%22) 库中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.flink</groupId>
     <artifactId>flink-java</artifactId>
@@ -43,7 +43,7 @@ Flink 程序的入口点是 [`ExecutionEnvironment`](https://web.archive.org/web
 
 让我们创建一个`ExecutionEnvironment`来开始我们的处理:
 
-```
+```java
 ExecutionEnvironment env
   = ExecutionEnvironment.getExecutionEnvironment();
 ```
@@ -56,7 +56,7 @@ ExecutionEnvironment env
 
 让我们使用我们的`ExecutionEnvironement`创建一个`DataSet` 类的实例:
 
-```
+```java
 DataSet<Integer> amounts = env.fromElements(1, 29, 40, 50);
 ```
 
@@ -68,7 +68,7 @@ DataSet<Integer> amounts = env.fromElements(1, 29, 40, 50);
 
 假设您想要过滤高于某个阈值的数字，然后对它们求和`.` ，您可以使用`filter()` 和`reduce()`转换来实现这一点:
 
-```
+```java
 int threshold = 30;
 List<Integer> collect = amounts
   .filter(a -> a > threshold)
@@ -84,7 +84,7 @@ assertThat(collect.get(0)).isEqualTo(90);
 
 假设您有一个包含`Person` 个对象的`DataSet`:
 
-```
+```java
 private static class Person {
     private int age;
     private String name;
@@ -95,7 +95,7 @@ private static class Person {
 
 接下来，让我们创建这些对象的`DataSet` :
 
-```
+```java
 DataSet<Person> personDataSource = env.fromCollection(
   Arrays.asList(
     new Person(23, "Tom"),
@@ -104,7 +104,7 @@ DataSet<Person> personDataSource = env.fromCollection(
 
 假设您想从集合的每个对象中只提取`age`字段。您可以使用`map()` 转换来获得`Person` 类的特定字段:
 
-```
+```java
 List<Integer> ages = personDataSource
   .map(p -> p.age)
   .collect();
@@ -119,7 +119,7 @@ assertThat(ages).contains(23, 75);
 
 让我们创建用户的交易和地址集合:
 
-```
+```java
 Tuple3<Integer, String, String> address
   = new Tuple3<>(1, "5th Avenue", "London");
 DataSet<Tuple3<Integer, String, String>> addresses
@@ -135,7 +135,7 @@ DataSet<Tuple2<Integer, String>> transactions
 
 为了执行实际的加入逻辑，我们需要为地址和事务实现一个`[KeySelector](https://web.archive.org/web/20221128111931/https://ci.apache.org/projects/flink/flink-docs-release-1.2/api/java/org/apache/flink/api/java/functions/KeySelector.html)` 接口:
 
-```
+```java
 private static class IdKeySelectorTransaction 
   implements KeySelector<Tuple2<Integer, String>, Integer> {
     @Override
@@ -159,7 +159,7 @@ private static class IdKeySelectorAddress
 
 接下来，让我们使用这些选择器实现合并逻辑:
 
-```
+```java
 List<Tuple2<Tuple2<Integer, String>, Tuple3<Integer, String, String>>>
   joined = transactions.join(addresses)
   .where(new IdKeySelectorTransaction())
@@ -174,7 +174,7 @@ assertThat(joined).contains(new Tuple2<>(firstTransaction, address));
 
 假设你有下面这些`Tuple2:`
 
-```
+```java
 Tuple2<Integer, String> secondPerson = new Tuple2<>(4, "Tom");
 Tuple2<Integer, String> thirdPerson = new Tuple2<>(5, "Scott");
 Tuple2<Integer, String> fourthPerson = new Tuple2<>(200, "Michael");
@@ -185,7 +185,7 @@ DataSet<Tuple2<Integer, String>> transactions = env.fromElements(
 
 如果您想按照元组的第一个字段对这个集合进行排序，您可以使用`sortPartitions()` 转换:
 
-```
+```java
 List<Tuple2<Integer, String>> sorted = transactions
   .sortPartition(new IdKeySelectorTransaction(), Order.ASCENDING)
   .collect();
@@ -202,7 +202,7 @@ assertThat(sorted)
 
 这个类实现了将`String` 作为输入并产生`[Tuple2](https://web.archive.org/web/20221128111931/https://nightlies.apache.org/flink/flink-docs-release-1.3/api/java/org/apache/flink/api/java/tuple/Tuple2.html)<String, Integer>:`的`[FlatMapFunction](https://web.archive.org/web/20221128111931/https://ci.apache.org/projects/flink/flink-docs-release-1.1/api/java/org/apache/flink/api/common/functions/FlatMapFunction.html)` 接口
 
-```
+```java
 public class LineSplitter implements FlatMapFunction<String, Tuple2<String, Integer>> {
 
     @Override
@@ -218,7 +218,7 @@ public class LineSplitter implements FlatMapFunction<String, Tuple2<String, Inte
 
 我们的下一步也是最后一步是按照元组的第一个元素(单词)对元组进行分组，然后对第二个元素执行`sum`聚合，以产生单词出现的计数:
 
-```
+```java
 public static DataSet<Tuple2<String, Integer>> startWordCount(
   ExecutionEnvironment env, List<String> lines) throws Exception {
     DataSet<String> text = env.fromCollection(lines);
@@ -233,7 +233,7 @@ public static DataSet<Tuple2<String, Integer>> startWordCount(
 
 让我们编写一个测试来断言字数统计实现按预期工作:
 
-```
+```java
 List<String> lines = Arrays.asList(
   "This is a first sentence",
   "This is a second sentence with a one word");
@@ -254,14 +254,14 @@ assertThat(collect).containsExactlyInAnyOrder(
 
 Apache Flink 还通过其数据流 API 支持事件流的处理。如果我们想开始消费事件，我们首先需要使用`StreamExecutionEnvironment` 类:
 
-```
+```java
 StreamExecutionEnvironment executionEnvironment
  = StreamExecutionEnvironment.getExecutionEnvironment();
 ```
 
 接下来，我们可以使用来自各种来源的`executionEnvironment`创建一个事件流。它可以是像`Apache Kafka`这样的消息总线，但是在这个例子中，我们将简单地从几个字符串元素中创建一个源:
 
-```
+```java
 DataStream<String> dataStream = executionEnvironment.fromElements(
   "This is a first sentence", 
   "This is a second sentence with a one word");
@@ -269,20 +269,20 @@ DataStream<String> dataStream = executionEnvironment.fromElements(
 
 我们可以像在普通的`DataSet` 类中一样对`DataStream`的每个元素应用转换:
 
-```
+```java
 SingleOutputStreamOperator<String> upperCase = text.map(String::toUpperCase);
 ```
 
 为了触发执行，我们需要调用一个接收操作，比如`print()` ，它将把转换的结果打印到标准输出中，后面是`StreamExecutionEnvironment` 类上的`execute()` 方法:
 
-```
+```java
 upperCase.print();
 env.execute();
 ```
 
 它将产生以下输出:
 
-```
+```java
 1> THIS IS A FIRST SENTENCE
 2> THIS IS A SECOND SENTENCE WITH A ONE WORD
 ```
@@ -295,7 +295,7 @@ env.execute();
 
 对于这个例子，让我们首先创建一个流来模拟相隔几分钟的两个事件，并定义一个时间戳提取器来指定我们的迟到阈值:
 
-```
+```java
 SingleOutputStreamOperator<Tuple2<Integer, Long>> windowed
   = env.fromElements(
   new Tuple2<>(16, ZonedDateTime.now().plusMinutes(25).toInstant().getEpochSecond()),
@@ -313,7 +313,7 @@ SingleOutputStreamOperator<Tuple2<Integer, Long>> windowed
 
 接下来，让我们定义一个窗口操作，将我们的事件分组到五秒钟的窗口中，并对这些事件应用变换:
 
-```
+```java
 SingleOutputStreamOperator<Tuple2<Integer, Long>> reduced = windowed
   .windowAll(TumblingEventTimeWindows.of(Time.seconds(5)))
   .maxBy(0, true);
@@ -322,7 +322,7 @@ reduced.print();
 
 它将获得每五秒钟窗口的最后一个元素，因此它打印出:
 
-```
+```java
 1> (15,1491221519)
 ```
 

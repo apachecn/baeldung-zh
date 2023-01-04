@@ -18,7 +18,7 @@
 
 首先，让我们创建两个`Threads:`
 
-```
+```java
 public class CustomThreadNameTest {
 
     public int currentNumber = 1;
@@ -47,7 +47,7 @@ public class CustomThreadNameTest {
 
 这里，在`printEvenNumber`和`printOddNumber`方法中，我们将检查当前数字是偶数还是奇数，并打印数字和`Thread`的名字:
 
-```
+```java
 public void printEvenNumber() {
     synchronized (this) {
         while (currentNumber < N) {
@@ -85,7 +85,7 @@ public void printOddNumber() {
 
 运行该代码会产生以下输出:
 
-```
+```java
 Thread-0 --> 1
 Thread-1 --> 2
 Thread-0 --> 3
@@ -108,7 +108,7 @@ Thread-0 --> 5
 
 让我们为我们的`Thread`起一个自定义名称:
 
-```
+```java
 Thread oddThread = new Thread(() -> {
     test.printOddNumber();
 }, "ODD");
@@ -120,7 +120,7 @@ Thread evenThread = new Thread(() -> {
 
 现在，当我们运行代码时，会显示自定义名称:
 
-```
+```java
 ODD --> 1
 EVEN --> 2
 ODD --> 3
@@ -134,7 +134,7 @@ ODD --> 5
 
 让我们通过`Thread.currentThread().setName()`呼叫`setName`:
 
-```
+```java
 Thread oddThread = new Thread(() -> {
     Thread.currentThread().setName("ODD");
     test.printOddNumber();
@@ -148,7 +148,7 @@ Thread evenThread = new Thread(() -> {
 
 此外，通过`Thread.setName()`:
 
-```
+```java
 Thread oddThread = new Thread(() -> {
     test.printOddNumber();
 });
@@ -162,7 +162,7 @@ evenThread.setName("EVEN");
 
 再次，运行代码显示我们的`Thread`的自定义名称:
 
-```
+```java
 ODD --> 1
 EVEN --> 2
 ODD --> 3

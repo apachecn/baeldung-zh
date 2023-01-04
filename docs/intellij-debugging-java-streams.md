@@ -26,7 +26,7 @@
 
 让我们从一个简单的代码片段开始，以适应流跟踪对话框:
 
-```
+```java
 int[] listOutputSorted = IntStream.of(-3, 10, -4, 1, 3)
   .sorted()
   .toArray();
@@ -48,7 +48,7 @@ int[] listOutputSorted = IntStream.of(-3, 10, -4, 1, 3)
 
 下一个例子使用了 [`flatMap`](/web/20220630142518/https://www.baeldung.com/java-difference-map-and-flatmap) 。例如，`Stream.flatMap`帮助我们将一个由 [`Optional`](/web/20220630142518/https://www.baeldung.com/java-optional) 组成的列表转换成一个普通列表。在下一个示例中，我们从一组`Optional` `Customer`开始，然后将其映射到一组`Customer`并应用一些过滤:
 
-```
+```java
 List<Optional<Customer>> customers = Arrays.asList(
     Optional.of(new Customer("John P.", 15)),
     Optional.of(new Customer("Sarah M.", 78)),

@@ -28,7 +28,7 @@
 
 我们将使用两个参数“T0”和“T1”进行发布:
 
-```
+```java
 @Test
 public void whenSendPostRequestUsingHttpClient_thenCorrect() 
   throws ClientProtocolException, IOException {
@@ -54,7 +54,7 @@ public void whenSendPostRequestUsingHttpClient_thenCorrect()
 
 在下面的例子中，我们将通过添加一个授权头向一个使用基本身份验证保护的 URL 发送一个 POST 请求:
 
-```
+```java
 @Test
 public void whenSendPostRequestWithAuthorizationUsingHttpClient_thenCorrect()
   throws ClientProtocolException, IOException, AuthenticationException {
@@ -78,7 +78,7 @@ public void whenSendPostRequestWithAuthorizationUsingHttpClient_thenCorrect()
 
 在下面的例子中，我们将把一些`person`信息(`id, name`)作为 JSON 发送:
 
-```
+```java
 @Test
 public void whenPostJsonUsingHttpClient_thenCorrect() 
   throws ClientProtocolException, IOException {
@@ -107,7 +107,7 @@ public void whenPostJsonUsingHttpClient_thenCorrect()
 
 我们将发送一个带有两个参数的请求，“T0”和“T1”:
 
-```
+```java
 @Test
 public void whenPostFormUsingHttpClientFluentAPI_thenCorrect() 
   throws ClientProtocolException, IOException {
@@ -125,7 +125,7 @@ public void whenPostFormUsingHttpClientFluentAPI_thenCorrect()
 
 **我们将使用`MultipartEntityBuilder` :** 发布一个`File`，用户名和密码
 
-```
+```java
 @Test
 public void whenSendMultipartRequestUsingHttpClient_thenCorrect() 
   throws ClientProtocolException, IOException {
@@ -153,7 +153,7 @@ public void whenSendMultipartRequestUsingHttpClient_thenCorrect()
 
 **我们将使用`MultipartEntityBuilder` :** 上传“`test.txt`”文件
 
-```
+```java
 @Test
 public void whenUploadFileUsingHttpClient_thenCorrect() 
   throws ClientProtocolException, IOException {
@@ -180,7 +180,7 @@ public void whenUploadFileUsingHttpClient_thenCorrect()
 
 首先，上传方法如下:
 
-```
+```java
 @Test
 public void whenGetUploadFileProgressUsingHttpClient_thenCorrect()
   throws ClientProtocolException, IOException {
@@ -204,7 +204,7 @@ public void whenGetUploadFileProgressUsingHttpClient_thenCorrect()
 
 **我们还将添加界面`ProgressListener`，使我们能够观察上传进度:**
 
-```
+```java
 public static interface ProgressListener {
     void progress(float percentage);
 }
@@ -212,7 +212,7 @@ public static interface ProgressListener {
 
 下面是我们的`HttpEntityWrapper,` `ProgressEntityWrapper`的加长版:
 
-```
+```java
 public class ProgressEntityWrapper extends HttpEntityWrapper {
     private ProgressListener listener;
 
@@ -230,7 +230,7 @@ public class ProgressEntityWrapper extends HttpEntityWrapper {
 
 而这里是`FilterOutputStream,``CountingOutputStream`的加长版:
 
-```
+```java
 public static class CountingOutputStream extends FilterOutputStream {
     private ProgressListener listener;
     private long transferred;

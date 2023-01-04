@@ -16,7 +16,7 @@
 
 让我们从一个例子开始——一个简单的`nginx`应用程序，它有一个 HTML 文件和一个`Dockerfile`。目录结构是:
 
-```
+```java
 projects
 ├ <some other projects>...
 └── sample-site
@@ -27,14 +27,14 @@ projects
 
 我们还有一个小`Dockerfile`:
 
-```
+```java
 FROM nginx:latest
 COPY html/* /etc/nginx/html/
 ```
 
 现在，要为这个应用程序构建一个映像，让我们运行:
 
-```
+```java
 $ docker build -t sample-site:latest .
 ```
 
@@ -62,7 +62,7 @@ $ docker build -t sample-site:latest .
 
 假设我们想要将`Dockerfile`移动到一个名为`docker`的单独目录中。我们还想用一个定制的配置文件覆盖标准的`nginx`配置，该文件位于项目根目录`sample-site`之外的`config`目录中。新的目录结构是:
 
-```
+```java
 projects
 ├ <some other projects>...
 ├── sample-site
@@ -80,7 +80,7 @@ projects
 
 既然我们的环境已经改变，我们需要改变我们的`Dockerfile`:
 
-```
+```java
 FROM nginx:latest
 COPY sample-site/html/* /etc/nginx/html/
 COPY config/nginx.conf /etc/nginx/nginx.conf
@@ -92,7 +92,7 @@ COPY config/nginx.conf /etc/nginx/nginx.conf
 
 现在，让我们转到`projects`目录并运行命令来构建映像:
 
-```
+```java
 $ cd projects
 $ docker build -f sample-site/docker/Dockerfile -t sample-site:latest .
 ```
@@ -105,7 +105,7 @@ $ docker build -f sample-site/docker/Dockerfile -t sample-site:latest .
 
 另一种方法是**用外部文件创建一个基础映像，然后再**扩展它。我们将重用与上一个示例相同的结构:
 
-```
+```java
 projects
 ├ <some other projects>...
 ├── sample-site
@@ -121,7 +121,7 @@ projects
 
 首先，让我们用配置写一个`Dockerfile`:
 
-```
+```java
 FROM nginx:latest
 COPY nginx.conf /etc/nginx/nginx.conf
 ```
@@ -132,7 +132,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 下一步是运行`projects/config`中的构建命令来创建基础映像:
 
-```
+```java
 $ docker build -t sample-site-base:latest .
 ```
 
@@ -142,7 +142,7 @@ $ docker build -t sample-site-base:latest .
 
 接下来，让我们编写`sample-site`的`Dockerfile`来扩展*样地库*:
 
-```
+```java
 FROM sample-site-base:latest
 COPY html/* /etc/nginx/html/
 ```
@@ -151,7 +151,7 @@ COPY html/* /etc/nginx/html/
 
 最后，让我们运行`projects/sample-site`中的命令来构建我们的应用程序的映像:
 
-```
+```java
 $ docker build -f docker/Dockerfile -t sample-site:latest .
 ```
 
@@ -169,7 +169,7 @@ $ docker build -f docker/Dockerfile -t sample-site:latest .
 
 首先，让我们创建一个临时目录，并复制所有必需的资产:
 
-```
+```java
 $ mkdir tmp-context
 $ cp -R ../html tmp-context/
 $ cp -R ../../config tmp-context/
@@ -181,7 +181,7 @@ $ cp -R ../../config tmp-context/
 
 现在，让我们相对于这个上下文来写`Dockerfile`:
 
-```
+```java
 FROM nginx:latest
 COPY html/* /etc/nginx/html/
 COPY config/nginx.conf /etc/nginx/nginx.conf
@@ -193,7 +193,7 @@ COPY config/nginx.conf /etc/nginx/nginx.conf
 
 让我们运行命令来构建映像:
 
-```
+```java
 $ cd tmp-context
 $ docker build -t sample-site:latest .
 ```
@@ -204,7 +204,7 @@ $ docker build -t sample-site:latest .
 
 最后，让我们清理临时目录:
 
-```
+```java
 $ rm -rf tmp-context
 ```
 

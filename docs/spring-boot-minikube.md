@@ -23,7 +23,7 @@ Minikube 的安装基本上由三个步骤组成:安装一个 Hypervisor(像 Vir
 
 完成安装后，我们可以启动 Minikube，将 VirtualBox 设置为 Hypervisor，并配置`kubectl`与名为`minikube`的集群对话:
 
-```
+```java
 $> minikube start
 $> minikube config set vm-driver virtualbox
 $> kubectl config use-context minikube
@@ -31,13 +31,13 @@ $> kubectl config use-context minikube
 
 之后，我们可以验证`kubectl`是否与我们的集群正确通信:
 
-```
+```java
 $> kubectl cluster-info
 ```
 
 输出应该如下所示:
 
-```
+```java
 Kubernetes master is running at https://192.168.99.100:8443
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
@@ -46,7 +46,7 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 
 最后，我们可以检查集群的状态:
 
-```
+```java
 $> minikube dashboard
 ```
 
@@ -66,7 +66,7 @@ $> minikube dashboard
 
 **我们必须确保在 Minikube 集群**的 Docker 主机上触发构建过程，否则 Minikube 将无法在部署过程中找到映像。此外，我们主机上的工作区必须装载到 Minikube 虚拟机中:
 
-```
+```java
 $> minikube ssh
 $> cd /c/workspace/tutorials/spring-cloud/spring-cloud-kubernetes/demo-backend
 $> docker build --file=Dockerfile \
@@ -83,7 +83,7 @@ $> docker build --file=Dockerfile \
 
 我们将使用`kubectl`，将所有需要的命令作为参数传递:
 
-```
+```java
 $> kubectl run demo-backend --image=demo-backend:latest \
   --port=8080 --image-pull-policy Never
 ```
@@ -98,20 +98,20 @@ $> kubectl run demo-backend --image=demo-backend:latest \
 
 现在，我们可以检查部署是否成功:
 
-```
+```java
 $> kubectl get deployments
 ```
 
 输出如下所示:
 
-```
+```java
 NAME           DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
 demo-backend   1         1         1            1           19s
 ```
 
 如果我们想要查看应用程序日志，我们首先需要 Pod ID:
 
-```
+```java
 $> kubectl get pods
 $> kubectl logs <pod id>
 ```
@@ -120,7 +120,7 @@ $> kubectl logs <pod id>
 
 **为了使我们后端应用程序的 REST 端点可用，我们需要创建一个服务:**
 
-```
+```java
 $> kubectl expose deployment demo-backend --type=NodePort
 ```
 
@@ -130,13 +130,13 @@ $> kubectl expose deployment demo-backend --type=NodePort
 
 我们可以验证服务是否已成功创建:
 
-```
+```java
 $> kubectl get services
 ```
 
 输出如下所示:
 
-```
+```java
 NAME           TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
 demo-backend   NodePort    10.106.11.133   <none>        8080:30117/TCP   11m
 ```
@@ -149,7 +149,7 @@ demo-backend   NodePort    10.106.11.133   <none>        8080:30117/TCP   11m
 
 现在，我们可以第一次调用我们的后端服务:
 
-```
+```java
 $> minikube service demo-backend
 ```
 
@@ -159,7 +159,7 @@ $> minikube service demo-backend
 
 之后，我们可以删除服务和部署:
 
-```
+```java
 $> kubectl delete service demo-backend
 $> kubectl delete deployment demo-backend
 ```
@@ -174,7 +174,7 @@ $> kubectl delete deployment demo-backend
 
 让我们使用一个配置文件为后端重新定义我们的服务:
 
-```
+```java
 kind: Service
 apiVersion: v1
 metadata:
@@ -198,7 +198,7 @@ spec:
 
 接下来，我们可以定义实际的部署:
 
-```
+```java
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -237,32 +237,32 @@ spec:
 
 我们现在可以触发部署:
 
-```
+```java
 $> kubectl create -f backend-deployment.yaml
 ```
 
 让我们验证部署是否成功:
 
-```
+```java
 $> kubectl get deployments
 ```
 
 输出如下所示:
 
-```
+```java
 NAME           DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
 demo-backend   3         3         3            3           25s
 ```
 
 我们还可以检查服务是否可用:
 
-```
+```java
 $> kubectl get services
 ```
 
 输出如下所示:
 
-```
+```java
 NAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
 demo-backend    ClusterIP   10.102.17.114   <none>        8080/TCP         30s
 ```
@@ -273,7 +273,7 @@ demo-backend    ClusterIP   10.102.17.114   <none>        8080/TCP         30s
 
 之后，我们可以为前端定义服务和部署:
 
-```
+```java
 kind: Service
 apiVersion: v1
 metadata:
@@ -319,20 +319,20 @@ spec:
 
 我们现在可以用同样的方式触发此部署:
 
-```
+```java
 $> kubectl create -f frontend-deployment.yaml
 ```
 
 让我们快速验证一下部署是否成功以及服务是否可用:
 
-```
+```java
 $> kubectl get deployments
 $> kubectl get services
 ```
 
 之后，我们终于可以调用前端应用程序的 REST 端点了:
 
-```
+```java
 $> minikube service demo-frontend
 ```
 
@@ -342,7 +342,7 @@ $> minikube service demo-frontend
 
 最后，我们可以通过移除服务和部署来进行清理:
 
-```
+```java
 $> kubectl delete service demo-frontend
 $> kubectl delete deployment demo-frontend
 $> kubectl delete service demo-backend

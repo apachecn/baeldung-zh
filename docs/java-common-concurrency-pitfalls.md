@@ -20,7 +20,7 @@
 
 像任何其他对象一样，集合在内部维护状态。这可能会因多个线程同时更改集合而改变。因此，**我们在多线程环境中安全处理集合的一种方法是[同步它们](/web/20220926183938/https://www.baeldung.com/java-synchronized-collections)** :
 
-```
+```java
 Map<String, String> map = Collections.synchronizedMap(new HashMap<>());
 List<Integer> list = Collections.synchronizedList(new ArrayList<>());
 ```
@@ -33,7 +33,7 @@ List<Integer> list = Collections.synchronizedList(new ArrayList<>());
 
 为此，Java 提供了可以被多线程同时访问的并发集合，如[`CopyOnWriteArrayList`](/web/20220926183938/https://www.baeldung.com/java-copy-on-write-arraylist)[`ConcurrentHashMap`](/web/20220926183938/https://www.baeldung.com/java-concurrent-map):
 
-```
+```java
 CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<>();
 Map<String, String> map = new ConcurrentHashMap<>();
 ```
@@ -64,7 +64,7 @@ Map<String, String> map = new ConcurrentHashMap<>();
 
 让我们考虑下面的代码:
 
-```
+```java
 class Counter {
     private int counter = 0;
 
@@ -101,7 +101,7 @@ class Counter {
 
 我们可以通过同步关键代码来解决这种不一致:
 
-```
+```java
 class SynchronizedCounter {
     private int counter = 0;
 
@@ -121,7 +121,7 @@ class SynchronizedCounter {
 
 我们可以用内置的`AtomicInteger`对象替换上面的代码。这个类提供了增加整数的原子方法，这是比我们自己写代码更好的解决方案。因此，我们可以直接调用它的方法，而不需要同步:
 
-```
+```java
 AtomicInteger atomicInteger = new AtomicInteger(3);
 atomicInteger.incrementAndGet();
 ```
@@ -136,7 +136,7 @@ atomicInteger.incrementAndGet();
 
 让我们检查下面的代码:
 
-```
+```java
 List<String> list = Collections.synchronizedList(new ArrayList<>());
 if(!list.contains("foo")) {
     list.add("foo");
@@ -151,7 +151,7 @@ if(!list.contains("foo")) {
 
 我们可以使用同步保护代码不被多个线程同时访问:
 
-```
+```java
 synchronized (list) {
     if (!list.contains("foo")) {
         list.add("foo");
@@ -169,14 +169,14 @@ synchronized (list) {
 
 `ConcurrentHashMap`为这类问题提供了更好的解决方案。我们可以用它的原子`putIfAbsent`方法:
 
-```
+```java
 Map<String, String> map = new ConcurrentHashMap<>();
 map.putIfAbsent("foo", "bar");
 ```
 
 或者，如果我们想计算值，它的原子`computeIfAbsent`方法`:`
 
-```
+```java
 map.computeIfAbsent("foo", key -> key + "bar");
 ```
 
@@ -192,7 +192,7 @@ map.computeIfAbsent("foo", key -> key + "bar");
 
 让我们回忆一下我们的`Counter`例子:
 
-```
+```java
 class Counter {
     private int counter = 0;
 
@@ -226,7 +226,7 @@ class Counter {
 
 让我们用`volatile`重写我们的`Counter`例子:
 
-```
+```java
 class SyncronizedCounter {
     private volatile int counter = 0;
 
@@ -264,13 +264,13 @@ class SyncronizedCounter {
 
 这些方法是等效的:
 
-```
+```java
 public synchronized void foo() {
     //...
 }
 ```
 
-```
+```java
 public void foo() {
     synchronized(this) {
       //...
@@ -288,7 +288,7 @@ public void foo() {
 
 让我们考虑这个例子:
 
-```
+```java
 public class DeadlockExample {
 
     public static Object lock1 = new Object();

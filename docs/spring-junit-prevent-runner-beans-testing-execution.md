@@ -12,7 +12,7 @@
 
 命令行运行程序调用任务服务的`execute`方法，以便在应用程序启动时执行任务:
 
-```
+```java
 @Component
 public class CommandLineTaskExecutor implements CommandLineRunner {
     private TaskService taskService;
@@ -30,7 +30,7 @@ public class CommandLineTaskExecutor implements CommandLineRunner {
 
 同样，应用程序运行器与任务服务交互以执行另一个任务:
 
-```
+```java
 @Component
 public class ApplicationRunnerTaskExecutor implements ApplicationRunner {
     private TaskService taskService;
@@ -48,7 +48,7 @@ public class ApplicationRunnerTaskExecutor implements ApplicationRunner {
 
 最后，任务服务负责执行其客户端的任务:
 
-```
+```java
 @Service
 public class TaskService {
     private static Logger logger = LoggerFactory.getLogger(TaskService.class);
@@ -61,7 +61,7 @@ public class TaskService {
 
 此外，我们还提供了一个 Spring Boot 应用程序类来实现这一切:
 
-```
+```java
 @SpringBootApplication
 public class ApplicationCommandLineRunnerApp {
     public static void main(String[] args) {
@@ -76,7 +76,7 @@ public class ApplicationCommandLineRunnerApp {
 
 我们可以通过一个简单的测试来验证这一点:
 
-```
+```java
 @SpringBootTest
 class RunApplicationIntegrationTest {
     @SpyBean
@@ -100,7 +100,7 @@ class RunApplicationIntegrationTest {
 
 我们可以防止这两者运行的一种方法是用 `@Profile`对它们进行注释:
 
-```
+```java
 @Profile("!test")
 @Component
 public class CommandLineTaskExecutor implements CommandLineRunner {
@@ -108,7 +108,7 @@ public class CommandLineTaskExecutor implements CommandLineRunner {
 }
 ```
 
-```
+```java
 @Profile("!test")
 @Component
 public class ApplicationRunnerTaskExecutor implements ApplicationRunner {
@@ -118,7 +118,7 @@ public class ApplicationRunnerTaskExecutor implements ApplicationRunner {
 
 完成上述更改后，我们继续进行集成测试:
 
-```
+```java
 @ActiveProfiles("test")
 @SpringBootTest
 class RunApplicationWithTestProfileIntegrationTest {
@@ -144,7 +144,7 @@ class RunApplicationWithTestProfileIntegrationTest {
 
 或者，我们可以按属性配置它们的接线，然后使用 [`ConditionalOnProperty`](/web/20221208143832/https://www.baeldung.com/spring-boot-annotations#condition-property) 标注:
 
-```
+```java
 @ConditionalOnProperty(
   prefix = "application.runner", 
   value = "enabled", 
@@ -156,7 +156,7 @@ public class ApplicationRunnerTaskExecutor implements ApplicationRunner {
 } 
 ```
 
-```
+```java
 @ConditionalOnProperty(
   prefix = "command.line.runner", 
   value = "enabled", 
@@ -175,7 +175,7 @@ public class CommandLineTaskExecutor implements CommandLineRunner {
 
 因此，在我们的测试中，**我们将这些属性设置为`false`，并且`ApplicationRunnerTaskExecutor`和`CommandLineTaskExecutor`bean 都没有加载到应用程序上下文**:
 
-```
+```java
 @SpringBootTest(properties = { 
   "command.line.runner.enabled=false", 
   "application.runner.enabled=false" })
@@ -194,7 +194,7 @@ class RunApplicationWithTestPropertiesIntegrationTest {
 
 在前面的章节中，我们使用了` [@SpringBootTest](/web/20221208143832/https://www.baeldung.com/spring-boot-testing#integration-testing-with-springboottest)`注释，这导致整个容器在我们的集成测试中被引导。`@SpringBootTest` [包括两个与最后一个解决方案相关的元注释](https://web.archive.org/web/20221208143832/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/test/context/SpringBootTest.html):
 
-```
+```java
 @BootstrapWith(SpringBootTestContextBootstrapper.class)
 @ExtendWith(SpringExtension.class) 
 ```
@@ -203,7 +203,7 @@ class RunApplicationWithTestPropertiesIntegrationTest {
 
 相反，**我们可以用`@ContextConfiguration`** 来代替:
 
-```
+```java
 @ContextConfiguration(classes = {ApplicationCommandLineRunnerApp.class},
   initializers = ConfigDataApplicationContextInitializer.class)
 ```
@@ -214,7 +214,7 @@ class RunApplicationWithTestPropertiesIntegrationTest {
 
 作为上述操作的结果，**Spring Boot 应用程序上下文加载应用程序的组件和属性，而不执行`CommandLineTaskExecutor`或`ApplicationRunnerTaskExecutor`bean:**
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { ApplicationCommandLineRunnerApp.class }, 
   initializers = ConfigDataApplicationContextInitializer.class)

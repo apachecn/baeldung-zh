@@ -14,7 +14,7 @@
 
 为了演示一个真实的用例，让我们创建一个控制世界不同地区服务器的应用程序。出于这个原因，我们用两个简单的方法创建了一个接口:
 
-```
+```java
 public interface RegionService {
     boolean isServerActive(int serverId);
 
@@ -24,7 +24,7 @@ public interface RegionService {
 
 和两种实现方式:
 
-```
+```java
 @Service("GBregionService")
 public class GBRegionService implements RegionService {
     @Override
@@ -39,7 +39,7 @@ public class GBRegionService implements RegionService {
 }
 ```
 
-```
+```java
 @Service("USregionService")
 public class USRegionService implements RegionService {
     @Override
@@ -60,7 +60,7 @@ public class USRegionService implements RegionService {
 
 `BeanFactory` 是用于访问 Spring bean 容器的根接口。特别是，它包含了获取特定 beans 的有用方法。由于`BeanFactory`也是一个 Spring bean，我们可以自动连接并直接在我们的类中使用它:
 
-```
+```java
 @Service
 public class BeanFactoryDynamicAutowireService {
     private static final String SERVICE_NAME_SUFFIX = "regionService";
@@ -94,7 +94,7 @@ public class BeanFactoryDynamicAutowireService {
 
 除了标准的单字段自动连接， **Spring **还让我们能够将所有实现特定接口的 beans 收集到一个`Map`**** 中:
 
-```
+```java
 @Service
 public class CustomMapFromListDynamicAutowireService {
     private final Map<String, RegionService> servicesByCountryCode;

@@ -58,7 +58,7 @@
 
 现在，让我们定义组件`SocialConnector` ，我们将在其中实现我们的逻辑。请注意，我们将设置一个计数器来模拟通话限制，但我们会将其降低到 4:
 
-```
+```java
 public class SocialConnector {
     private boolean isCounterEnabled = true;
     private int counter = 4;
@@ -78,7 +78,7 @@ public class SocialConnector {
 
 然后，我们将添加一个方法来检索特定帐户的关注者列表:
 
-```
+```java
 public List getFollowers(String account) {
     if (counter < 0) {
         throw new IllegalStateException ("API limit reached");
@@ -98,7 +98,7 @@ public List getFollowers(String account) {
 
 为了支持我们的流程，我们需要一些类来建模我们的用户实体:
 
-```
+```java
 public class SocialUser {
     @Getter
     private String username;
@@ -130,7 +130,7 @@ public class SocialUser {
 
 最后，是时候实现我们的贪婪策略了，所以让我们添加一个新的组件——`GreedyAlgorithm`——我们将在其中执行递归:
 
-```
+```java
 public class GreedyAlgorithm {
     int currentLevel = 0;
     final int maxLevel = 3;
@@ -143,7 +143,7 @@ public class GreedyAlgorithm {
 
 然后我们需要插入一个方法`findMostFollowersPath`，在这个方法中我们将找到拥有最多追随者的用户，对他们进行计数，然后继续下一步:
 
-```
+```java
 public long findMostFollowersPath(String account) {
     long max = 0;
     SocialUser toFollow = null;
@@ -168,7 +168,7 @@ public long findMostFollowersPath(String account) {
 
 完美！我们已经准备好了，我们可以测试我们的应用程序。在此之前，我们需要记住填充我们的小网络，最后，执行下面的单元测试:
 
-```
+```java
 public void greedyAlgorithmTest() {
     GreedyAlgorithm ga = new GreedyAlgorithm(prepareNetwork());
     assertEquals(ga.findMostFollowersPath("root"), 5);
@@ -179,7 +179,7 @@ public void greedyAlgorithmTest() {
 
 让我们创建一个非贪婪的方法，仅仅用我们的眼睛检查发生了什么。因此，我们需要从构建一个`NonGreedyAlgorithm`类开始:
 
-```
+```java
 public class NonGreedyAlgorithm {
     int currentLevel = 0;
     final int maxLevel = 3; 
@@ -194,7 +194,7 @@ public class NonGreedyAlgorithm {
 
 让我们创建一个等价的方法来检索追随者:
 
-```
+```java
 public long findMostFollowersPath(String account) {		
     List<SocialUser> followers = tc.getFollowers(account);
     long total = currentLevel > 0 ? followers.size() : 0;
@@ -223,7 +223,7 @@ public long findMostFollowersPath(String account) {
 
 当我们的类准备好了，我们可以准备一些单元测试:一个验证调用限制是否超出，另一个检查使用非贪婪策略返回的值:
 
-```
+```java
 public void nongreedyAlgorithmTest() {
     NonGreedyAlgorithm nga = new NonGreedyAlgorithm(prepareNetwork(), 0);
     Assertions.assertThrows(IllegalStateException.class, () -> {

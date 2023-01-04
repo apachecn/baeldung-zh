@@ -43,7 +43,7 @@ A guide to controlling HTTP cache control headers with Spring Security.[Read mor
 
 **例 2.1。**
 
-```
+```java
 <html>
 <body>
 <h1 th:text="#{label.form.title}">form</h1>
@@ -88,7 +88,7 @@ A guide to controlling HTTP cache control headers with Spring Security.[Read mor
 
 我们需要一个数据传输对象将所有注册信息发送到我们的 Spring 后端。 **DTO** 对象应该拥有我们稍后创建和填充`User`对象时需要的所有信息:
 
-```
+```java
 public class UserDto {
     @NotNull
     @NotEmpty
@@ -119,7 +119,7 @@ public class UserDto {
 
 **例 4.1。`showRegistration`法**
 
-```
+```java
 @GetMapping("/user/registration")
 public String showRegistrationForm(WebRequest request, Model model) {
     UserDto userDto = new UserDto();
@@ -145,7 +145,7 @@ public String showRegistrationForm(WebRequest request, Model model) {
 
 然后，为了触发验证过程，我们将简单地用`@Valid`注释来注释控制器层中的对象:
 
-```
+```java
 public ModelAndView registerUserAccount(@ModelAttribute("user") @Valid UserDto userDto,
   HttpServletRequest request, Errors errors) {
     //...
@@ -162,7 +162,7 @@ public ModelAndView registerUserAccount(@ModelAttribute("user") @Valid UserDto u
 
 **例 5.2.1。电子邮件验证的自定义注释**
 
-```
+```java
 @Target({TYPE, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
 @Constraint(validatedBy = EmailValidator.class)
@@ -178,7 +178,7 @@ public @interface ValidEmail {
 
 **例 5.2.2。`EmailValidato`风俗** r:
 
-```
+```java
 public class EmailValidator 
   implements ConstraintValidator<ValidEmail, String> {
 
@@ -204,7 +204,7 @@ public class EmailValidator
 
 然后我们将**在我们的`UserDto`实现中使用新的注释**:
 
-```
+```java
 @ValidEmail
 @NotNull
 @NotEmpty
@@ -217,7 +217,7 @@ private String email;
 
 **例 5.3.1。用于验证密码确认的自定义注释**
 
-```
+```java
 @Target({TYPE,ANNOTATION_TYPE})
 @Retention(RUNTIME)
 @Constraint(validatedBy = PasswordMatchesValidator.class)
@@ -235,7 +235,7 @@ public @interface PasswordMatches {
 
 **例 5.3.2。`PasswordMatchesValidator`自定义验证器**
 
-```
+```java
 public class PasswordMatchesValidator
   implements ConstraintValidator<PasswordMatches, Object> {
 
@@ -252,7 +252,7 @@ public class PasswordMatchesValidator
 
 然后，`@PasswordMatches`注释应该应用于我们的`UserDto`对象:
 
-```
+```java
 @PasswordMatches
 public class UserDto {
     //...
@@ -269,7 +269,7 @@ public class UserDto {
 
 **例 5.4.1。控制器的`registerUserAccount`方法调用`UserService`对象**
 
-```
+```java
 @PostMapping("/user/registration")
 public ModelAndView registerUserAccount(
   @ModelAttribute("user") @Valid UserDto userDto,
@@ -289,7 +289,7 @@ public ModelAndView registerUserAccount(
 
 **例 5.4.2。`User` *服务*检查重复邮件**
 
-```
+```java
 @Service
 @Transactional
 public class UserService implements IUserService {
@@ -321,7 +321,7 @@ UserService 依赖于`UserRepository`类来检查数据库中是否已经存在�
 
  ***例 6.1。控制器**中的`RegisterAccount`方法
 
-```
+```java
 @PostMapping("/user/registration")
 public ModelAndView registerUserAccount(
   @ModelAttribute("user") @Valid UserDto userDto,
@@ -350,7 +350,7 @@ public ModelAndView registerUserAccount(
 
 **例 7.1。`IUserService`界面**
 
-```
+```java
 public interface IUserService {
     User registerNewUserAccount(UserDto userDto);
 }
@@ -358,7 +358,7 @@ public interface IUserService {
 
 **例 7.2。`UserService`班**
 
-```
+```java
 @Service
 @Transactional
 public class UserService implements IUserService {
@@ -396,7 +396,7 @@ public class UserService implements IUserService {
 
 我们将从自定义用户详细信息服务实现开始:
 
-```
+```java
 @Service
 @Transactional
 public class MyUserDetailsService implements UserDetailsService {
@@ -435,7 +435,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
 **例 8.2。认证管理器和`UserDetailsService`**
 
-```
+```java
 <authentication-manager>
     <authentication-provider user-service-ref="userDetailsService" />
 </authentication-manager>
@@ -445,7 +445,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
 另一种选择是通过 Java 配置:
 
-```
+```java
 @Autowired
 private MyUserDetailsService userDetailsService;
 

@@ -10,7 +10,7 @@
 
 首先，让我们假设我们为属性文件设置了一个属性:
 
-```
+```java
 name = Inject a value to a static field
 ```
 
@@ -18,14 +18,14 @@ name = Inject a value to a static field
 
 这个**通常可以通过在实例字段上使用 [@Value](/web/20221207175050/https://www.baeldung.com/spring-value-annotation) 注释**来完成:
 
-```
+```java
 @Value("${name}")
 private String name;
 ```
 
 然而，当我们试图将**应用于静态场时，我们会发现它仍然是`null` :**
 
-```
+```java
 @Value("${name}")
 private static String NAME_NULL;
 ```
@@ -40,7 +40,7 @@ private static String NAME_NULL;
 
 之后，我们将创建一个名为`setNameStatic`的 setter 方法，并用 [`@Value`](/web/20221207175050/https://www.baeldung.com/spring-value-annotation) 注释对其进行注释:
 
-```
+```java
 @RestController
 public class PropertyController {
 

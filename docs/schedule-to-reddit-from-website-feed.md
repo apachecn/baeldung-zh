@@ -12,7 +12,7 @@
 
 首先，让我们创建一个实体来代表站点:
 
-```
+```java
 @Entity
 public class Site {
     @Id
@@ -37,7 +37,7 @@ public class Site {
 
 接下来–让我们创建存储库，以便与新的站点实体一起工作:
 
-```
+```java
 public interface SiteRepository extends JpaRepository<Site, Long> {
     List<Site> findByUser(User user);
 }
@@ -45,7 +45,7 @@ public interface SiteRepository extends JpaRepository<Site, Long> {
 
 以及服务:
 
-```
+```java
 public interface ISiteService {
 
     List<Site> getSitesByUser(User user);
@@ -58,7 +58,7 @@ public interface ISiteService {
 }
 ```
 
-```
+```java
 @Service
 public class SiteService implements ISiteService {
 
@@ -93,7 +93,7 @@ public class SiteService implements ISiteService {
 
 我们首先需要将罗马加入我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.rometools</groupId>
     <artifactId>rome</artifactId>
@@ -103,7 +103,7 @@ public class SiteService implements ISiteService {
 
 然后用它来解析网站的提要:
 
-```
+```java
 public List<SiteArticle> getArticlesFromSite(Long siteId) {
     Site site = repo.findOne(siteId);
     return getArticlesFromSite(site);
@@ -138,7 +138,7 @@ private List<SiteArticle> parseFeed(List<SyndEntry> entries) {
 
 最后，这是我们将在回应中使用的简单 DTO:
 
-```
+```java
 public class SiteArticle {
     private String title;
     private String link;
@@ -152,7 +152,7 @@ public class SiteArticle {
 
 原因很简单—**我们需要控制解析过程**抛出的异常类型——这样我们就可以处理该异常并向 API 的客户端提供适当的响应:
 
-```
+```java
 @ExceptionHandler({ FeedServerException.class })
 public ResponseEntity<Object> handleFeed(RuntimeException ex, WebRequest request) {
     logger.error("500 Status Code", ex);
@@ -168,7 +168,7 @@ public ResponseEntity<Object> handleFeed(RuntimeException ex, WebRequest request
 
 首先，我们将看到如何显示属于登录用户的站点列表:
 
-```
+```java
 @RequestMapping(value = "/sites")
 @ResponseBody
 public List<Site> getSitesList() {
@@ -178,7 +178,7 @@ public List<Site> getSitesList() {
 
 这是非常简单的前端:
 
-```
+```java
 <table>
 <thead>
 <tr><th>Site Name</th><th>Feed URL</th><th>Actions</th></tr>
@@ -207,7 +207,7 @@ function deleteSite(id){
 
 接下来，让我们看看用户如何创建新的收藏夹站点:
 
-```
+```java
 @RequestMapping(value = "/sites", method = RequestMethod.POST)
 @ResponseStatus(HttpStatus.OK)
 public void addSite(Site site) {
@@ -221,7 +221,7 @@ public void addSite(Site site) {
 
 这也是非常简单的客户端:
 
-```
+```java
 <form>
     <input name="name" />
     <input id="url" name="url" />
@@ -243,7 +243,7 @@ function addSite(){
 
 新提要的验证是一个有点昂贵的操作——我们需要实际检索提要并解析它以完全验证它。下面是简单的服务方法:
 
-```
+```java
 public boolean isValidFeedUrl(String feedUrl) {
     try {
         return getFeedEntries(feedUrl).size() > 0;
@@ -257,7 +257,7 @@ public boolean isValidFeedUrl(String feedUrl) {
 
 现在，让我们看看用户如何从他们最喜欢的站点列表中删除一个站点:
 
-```
+```java
 @RequestMapping(value = "/sites/{id}", method = RequestMethod.DELETE)
 @ResponseStatus(HttpStatus.OK)
 public void deleteSite(@PathVariable("id") Long id) {
@@ -267,7 +267,7 @@ public void deleteSite(@PathVariable("id") Long id) {
 
 这里是非常简单的服务级别方法:
 
-```
+```java
 public void deleteSiteById(Long siteId) {
     repo.delete(siteId);
 }
@@ -281,7 +281,7 @@ public void deleteSiteById(Long siteId) {
 
 让我们从客户站点开始，修改现有的`schedulePostForm.html` ——我们将添加:
 
-```
+```java
 <button data-target="#myModal">Load from My Sites</button>
 <div id="myModal">
     <button id="dropdownMenu1">Choose Site</button><ul id="siteList"></ul>
@@ -299,7 +299,7 @@ public void deleteSiteById(Long siteId) {
 
 使用一点 javascript，在弹出窗口中加载站点相对容易:
 
-```
+```java
 $('#myModal').on('shown.bs.modal', function () {
     if($("#siteList").children().length > 0)
         return;
@@ -316,7 +316,7 @@ $('#myModal').on('shown.bs.modal', function () {
 
 当用户从列表中选择一个网站时，我们需要显示该网站的文章——同样使用一些基本的 js:
 
-```
+```java
 function loadArticles(siteID,siteName){
     $("#dropdownMenu1").html(siteName);
     $.get("sites/articles?id="+siteID, function(data){
@@ -336,7 +336,7 @@ function loadArticles(siteID,siteName){
 
 这当然与加载网站文章的简单服务器端操作挂钩:
 
-```
+```java
 @RequestMapping(value = "/sites/articles")
 @ResponseBody
 public List<SiteArticle> getSiteArticles(@RequestParam("id") Long siteId) {
@@ -346,7 +346,7 @@ public List<SiteArticle> getSiteArticles(@RequestParam("id") Long siteId) {
 
 最后，我们获取文章数据，填写表单并安排文章发送到 Reddit:
 
-```
+```java
 var title = "";
 var link = "";
 function chooseArticle(selectedTitle,selectedLink){
@@ -364,7 +364,7 @@ function load(){
 
 最后，让我们在两种不同的提要格式上测试我们的`SiteService`:
 
-```
+```java
 public class SiteIntegrationTest {
 
     private ISiteService service;

@@ -6,7 +6,7 @@
 
 Git 已经成为我们日常工作的重要组成部分。它有许多很棒的功能，并不断增加新的功能。一旦我们使用一段时间后，感觉非常直观。然而，在开始的时候，它可能会让人不知所措，我们可能无法理解错误消息。**我们可能面临的最常见的问题之一是远程存储库的错误**:
 
-```
+```java
 remote: Repository not found.
 fatal: repository 'https://github.com/profile/project.git/' not found
 ```
@@ -17,13 +17,13 @@ fatal: repository 'https://github.com/profile/project.git/' not found
 
 当我们得到这个错误时，**我们应该检查我们是否已经认证了**。有时在匆忙中，我们试图在没有认证自己的情况下从私有存储库中克隆。如果我们经常使用这个存储库，我们可以使用以下命令配置我们的凭证:
 
-```
+```java
 git config
 ```
 
 克隆存储库时，我们还可以在 URL 中提供我们的用户名和密码:
 
-```
+```java
 git clone https://<username>:<password>@github.com/profile/project.git
 ```
 

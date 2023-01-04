@@ -17,7 +17,7 @@
 
 类似地，我们可以使用`ClassName.class`语法来获取类型的`Class`对象。一个例子可以清楚地说明这一点:
 
-```
+```java
 @Test
 public void givenObjectAndType_whenGettingClassObject_thenTwoMethodsHaveTheSameResult() {
     String str = "I am an object of the String class";
@@ -39,7 +39,7 @@ public void givenObjectAndType_whenGettingClassObject_thenTwoMethodsHaveTheSameR
 
 但是，如果阶级继承入党，他们就可以不同了。让我们看两个简单的类:
 
-```
+```java
 public class Animal {
     protected int numberOfEyes;
 }
@@ -51,7 +51,7 @@ public class Monkey extends Animal {
 
 现在让我们实例化一个`Animal`类的对象并做另一个测试:
 
-```
+```java
 @Test
 public void givenClassInheritance_whenGettingRuntimeTypeAndStaticType_thenGetDifferentResult() {
     Animal animal = new Monkey();
@@ -65,7 +65,7 @@ public void givenClassInheritance_whenGettingRuntimeTypeAndStaticType_thenGetDif
 
 如果我们运行上面的测试，我们将得到一个测试失败:
 
-```
+```java
 java.lang.AssertionError: ....
 Expected :class com.baeldung.getclassobject.Animal
 Actual   :class com.baeldung.getclassobject.Monkey
@@ -79,14 +79,14 @@ Actual   :class com.baeldung.getclassobject.Monkey
 
 当我们编写 Java 代码时，我们经常使用原始类型。让我们尝试使用`object.getClass()`方法获得一个原始类型的`Class`对象:
 
-```
+```java
 int number = 7;
 Class numberClass = number.getClass();
 ```
 
 如果我们试图编译上面的代码，我们会得到一个编译错误:
 
-```
+```java
 Error: java: int cannot be dereferenced
 ```
 
@@ -94,7 +94,7 @@ Error: java: int cannot be dereferenced
 
 让我们看看是否可以使用`.class`语法获得原始类型:
 
-```
+```java
 @Test
 public void givenPrimitiveType_whenGettingClassObject_thenOnlyStaticTypeWorks() {
     Class intType = int.class;
@@ -114,7 +114,7 @@ public void givenPrimitiveType_whenGettingClassObject_thenOnlyStaticTypeWorks() 
 
 现在，让我们考虑这样一种情况，我们想要获得一个类型的`Class`对象，但是我们不能获得目标类型的实例，因为它是一个`abstract`类，一个`interface, `或一些类不允许实例化:
 
-```
+```java
 public abstract class SomeAbstractClass {
     // ...
 }
@@ -133,7 +133,7 @@ public class SomeUtils {
 
 在这些情况下，我们不能使用`object.getClass()`方法获得那些类型的`Class`对象，但是**我们仍然可以使用`.class`语法获得它们的`Class`对象**:
 
-```
+```java
 @Test
 public void givenTypeCannotInstantiate_whenGetTypeStatically_thenGetTypesSuccefully() {
     Class interfaceType = SomeInterface.class;

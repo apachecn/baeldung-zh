@@ -28,7 +28,7 @@
 
 首先，我们演示如何广播消息。为此，我们需要调用套接字上的`setBroadcast()`方法，让它知道要广播数据包:
 
-```
+```java
 public class BroadcastingClient {
     private static DatagramSocket socket = null;
 
@@ -53,7 +53,7 @@ public class BroadcastingClient {
 
 下一个片段展示了如何遍历所有的`NetworkInterfaces`来找到它们的广播地址:
 
-```
+```java
 List<InetAddress> listAllBroadcastAddresses() throws SocketException {
     List<InetAddress> broadcastList = new ArrayList<>();
     Enumeration<NetworkInterface> interfaces 
@@ -88,7 +88,7 @@ List<InetAddress> listAllBroadcastAddresses() throws SocketException {
 
 在 Java 中，`MulticastSocket`用于接收发送到组播 IP 的数据包。下面的例子演示了`MulticastSocket`的用法:
 
-```
+```java
 public class MulticastReceiver extends Thread {
     protected MulticastSocket socket = null;
     protected byte[] buf = new byte[256];
@@ -116,7 +116,7 @@ public class MulticastReceiver extends Thread {
 
 以下示例显示了如何发布到多播 IP:
 
-```
+```java
 public class MulticastPublisher {
     private DatagramSocket socket;
     private InetAddress group;

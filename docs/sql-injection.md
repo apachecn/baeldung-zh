@@ -28,7 +28,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 这种说法可能听起来有点抽象，所以让我们用一个教科书示例来看看这在实践中是如何发生的:
 
-```
+```java
 public List<AccountDTO>
   unsafeFindAccountsByCustomerId(String customerId)
   throws SQLException {
@@ -48,20 +48,20 @@ public List<AccountDTO>
 
 让我们假设这个函数在 REST API 实现中用于一个`account `资源。利用这段代码很简单:我们所要做的就是发送一个值，当它与查询的固定部分连接时，会改变它的预期行为:
 
-```
+```java
 curl -X GET \
   'http://localhost:8080/accounts?customerId=abc%27%20or%20%271%27=%271' \
 ```
 
 假设`customerId`参数值在到达我们的函数之前没有被检查，下面是我们将收到的结果:
 
-```
+```java
 abc' or '1' = '1
 ```
 
 当我们将这个值与固定部分连接起来时，我们得到将被执行的最终 SQL 语句:
 
-```
+```java
 select customer_id, acc_number,branch_id, balance
   from Accounts where customerId = 'abc' or '1' = '1'
 ```
@@ -81,7 +81,7 @@ select customer_id, acc_number,branch_id, balance
 
 让我们看看前面例子的 JPA 版本是什么样子的:
 
-```
+```java
 public List<AccountDTO> unsafeJpaFindAccountsByCustomerId(String customerId) {    
     String jql = "from Account where customerId = '" + customerId + "'";        
     TypedQuery<Account> q = em.createQuery(jql, Account.class);        
@@ -106,7 +106,7 @@ public List<AccountDTO> unsafeJpaFindAccountsByCustomerId(String customerId) {
 
 让我们重写示例函数来使用这种技术:
 
-```
+```java
 public List<AccountDTO> safeFindAccountsByCustomerId(String customerId)
   throws Exception {
 
@@ -126,7 +126,7 @@ public List<AccountDTO> safeFindAccountsByCustomerId(String customerId)
 
 对于 JPA，我们有一个类似的特性:
 
-```
+```java
 String jql = "from Account where customerId = :customerId";
 TypedQuery<Account> q = em.createQuery(jql, Account.class)
   .setParameter("customerId", customerId);
@@ -135,7 +135,7 @@ TypedQuery<Account> q = em.createQuery(jql, Account.class)
 
 当在 Spring Boot 下运行这段代码时，我们可以将属性`logging.level.sql`设置为 DEBUG，并查看为了执行该操作实际构建了什么查询:
 
-```
+```java
 // Note: Output formatted to fit screen
 [DEBUG][SQL] select
   account0_.id as id1_0_,
@@ -153,7 +153,7 @@ where account0_.customer_id=?
 
 请注意**这种方法只对用作** **值**的占位符有效。例如，我们不能使用占位符来动态改变表的名称:
 
-```
+```java
 // This WILL NOT WORK !!!
 PreparedStatement p = c.prepareStatement("select count(*) from ?");
 p.setString(1, tableName);
@@ -161,7 +161,7 @@ p.setString(1, tableName);
 
 在这里，JPA 也不会有所帮助:
 
-```
+```java
 // This WILL NOT WORK EITHER !!!
 String jql = "select count(*) from :tableName";
 TypedQuery q = em.createQuery(jql,Long.class)
@@ -181,7 +181,7 @@ return q.getSingleResult();
 
 让我们重写 JPA 查询方法，以使用标准 API:
 
-```
+```java
 CriteriaBuilder cb = em.getCriteriaBuilder();
 CriteriaQuery<Account> cq = cb.createQuery(Account.class);
 Root<Account> root = cq.from(Account.class);
@@ -205,7 +205,7 @@ TypedQuery<Account> q = em.createQuery(cq);
 
 让我们增强我们的`safeFindAccountsByCustomerId `方法，这样现在调用者也可以指定用于对结果集进行排序的列。因为我们知道可能的列的集合，所以我们可以使用一个简单的集合实现一个白名单，并使用它来整理接收到的参数:
 
-```
+```java
 private static final Set<String> VALID_COLUMNS_FOR_ORDER_BY
   = Collections.unmodifiableSet(Stream
       .of("acc_number","branch_id","balance")
@@ -233,7 +233,7 @@ public List<AccountDTO> safeFindAccountsByCustomerId(
 
 我们可以对 JPA 使用相同的方法，同样利用标准 API 和元数据来避免在代码中使用`String`常量:
 
-```
+```java
 // Map of valid JPA columns for sorting
 final Map<String,SingularAttribute<Account,?>> VALID_JPA_COLUMNS_FOR_ORDER_BY = Stream.of(
   new AbstractMap.SimpleEntry<>(Account_.ACC_NUMBER, Account_.accNumber),

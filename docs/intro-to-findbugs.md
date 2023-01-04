@@ -14,7 +14,7 @@ FindBugs 是一个开源工具，用于对 Java 代码执行静态分析。
 
 为了开始生成静态分析报告，我们首先需要在我们的`pom.xml`中添加 FindBugs 插件:
 
-```
+```java
 <reporting>
     <plugins>
         <plugin>
@@ -38,7 +38,7 @@ FindBugs 是一个开源工具，用于对 Java 代码执行静态分析。
 
 FindBugs 插件也可以被配置为在某些情况下失败——通过将执行目标`check` 添加到我们的配置中:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>findbugs-maven-plugin</artifactId>
@@ -62,7 +62,7 @@ FindBugs 插件也可以被配置为在某些情况下失败——通过将执�
 
 您还可以通过向插件声明添加一些基本配置来增强报告生成过程，并对分析进行更多的控制:
 
-```
+```java
 <configuration>
     <onlyAnalyze>org.baeldung.web.controller.*</onlyAnalyze>
     <omitVisitors>FindNullDeref</omitVisitors>
@@ -178,7 +178,7 @@ IDEA 中的 FindBugs 插件首选项页面非常简单明了:
 
 **方法忽略异常返回值:**
 
-```
+```java
 File fileServer = new File(fileName);
 fileServer.createNewFile();
 ```
@@ -187,7 +187,7 @@ fileServer.createNewFile();
 
 **该方法可能无法在异常时关闭流:**这个特殊的缺陷说明了异常处理的一个典型用例，它建议**总是关闭`finally`块**中的流:
 
-```
+```java
 try {
     DateFormat dateFormat 
       = new SimpleDateFormat("yyyy_MM_dd_HH.mm.ss");

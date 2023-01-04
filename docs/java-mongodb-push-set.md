@@ -12,14 +12,14 @@
 
 在我们继续执行[多重更新操作](/web/20221008212435/https://www.baeldung.com/mongodb-update-multiple-fields)之前，我们首先需要设置一个数据库`baeldung`和样本收集`marks`:
 
-```
+```java
 use baeldung;
 db.createCollection(marks);
 ```
 
 让我们使用 MongoDB 的`insertMany`方法将一些文档插入到集合`marks`中:
 
-```
+```java
 db.marks.insertMany([
     {
         "studentId": 1023,
@@ -62,7 +62,7 @@ db.marks.insertMany([
 
 成功插入后，上述查询将返回以下响应:
 
-```
+```java
 {
     "acknowledged" : true,
     "insertedIds" : [
@@ -90,7 +90,7 @@ db.marks.insertMany([
 
 让我们看看同时包含`$push`和`$set`操作符的例子:
 
-```
+```java
 db.marks.updateOne(
     {
         "studentId": 1023
@@ -114,7 +114,7 @@ db.marks.updateOne(
 
 因此，上述查询将返回以下输出:
 
-```
+```java
 {
     "acknowledged":true,
     "matchedCount":1,
@@ -130,7 +130,7 @@ db.marks.updateOne(
 
 在我们继续之前，让我们首先连接到数据库和所需的集合:
 
-```
+```java
 MongoClient mongoClient = new MongoClient(new MongoClientURI("localhost", 27017);
 MongoDatabase database = mongoClient.getDatabase("baeldung");
 MongoCollection<Document> collection = database.getCollection("marks");
@@ -140,7 +140,7 @@ MongoCollection<Document> collection = database.getCollection("marks");
 
 现在让我们来看看 Java 驱动程序代码:
 
-```
+```java
 Document subjectData = new Document()
   .append("subjectId", 126)
   .append("subjectName", "Java Programming")

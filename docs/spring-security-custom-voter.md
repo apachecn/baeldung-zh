@@ -30,7 +30,7 @@ Spring Security 提供了几个`AccessDecisionVoter`实现。在这里，我们�
 
 例如，如果我们使用 Java 配置:
 
-```
+```java
 @Override
 protected void configure(final HttpSecurity http) throws Exception {
     ...
@@ -41,7 +41,7 @@ protected void configure(final HttpSecurity http) throws Exception {
 
 或者使用 XML 配置——我们可以在`intercept-url`标签中使用 SpEL，在`http`标签中:
 
-```
+```java
 <http use-expressions="true">
     <intercept-url pattern="/"
       access="hasAuthority('ROLE_USER')"/>
@@ -53,7 +53,7 @@ protected void configure(final HttpSecurity http) throws Exception {
 
 现在让我们通过实现`AccessDecisionVoter`接口来创建一个自定义投票器:
 
-```
+```java
 public class MinuteBasedVoter implements AccessDecisionVoter {
    ...
 }
@@ -69,7 +69,7 @@ public class MinuteBasedVoter implements AccessDecisionVoter {
 
 现在让我们实现`vote`方法:
 
-```
+```java
 @Override
 public int vote(
   Authentication authentication, Object object, Collection collection) {
@@ -87,7 +87,7 @@ public int vote(
 
 第二个方法返回表决器是否支持特定的配置属性。在我们的例子中，表决器不需要任何定制的配置属性，所以我们返回`true`:
 
-```
+```java
 @Override
 public boolean supports(ConfigAttribute attribute) {
     return true;
@@ -96,7 +96,7 @@ public boolean supports(ConfigAttribute attribute) {
 
 第三个方法返回投票者是否可以投票给安全对象类型。因为我们的表决器不关心受保护的对象类型，所以我们返回`true`:
 
-```
+```java
 @Override
 public boolean supports(Class clazz) {
     return true;
@@ -125,7 +125,7 @@ public boolean supports(Class clazz) {
 
 让我们为 Spring Web Security 创建一个配置类:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -136,7 +136,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 让我们定义一个`AccessDecisionManager` bean，它使用一个`UnanimousBased`管理器和我们定制的投票者列表:
 
-```
+```java
 @Bean
 public AccessDecisionManager accessDecisionManager() {
     List<AccessDecisionVoter<? extends Object>> decisionVoters 
@@ -151,7 +151,7 @@ public AccessDecisionManager accessDecisionManager() {
 
 最后，让我们配置 Spring Security，使用之前定义的 bean 作为默认的`AccessDecisionManager`:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http
@@ -169,7 +169,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 首先，您需要修改`<http>`标签:
 
-```
+```java
 <http access-decision-manager-ref="accessDecisionManager">
   <intercept-url
     pattern="/**"
@@ -180,7 +180,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 接下来，为自定义投票者添加一个 bean:
 
-```
+```java
 <beans:bean
   id="minuteBasedVoter"
   class="org.baeldung.voter.MinuteBasedVoter"/>
@@ -189,7 +189,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 然后为`AccessDecisionManager`添加一个 bean:
 
-```
+```java
 <beans:bean 
   id="accessDecisionManager" 
   class="org.springframework.security.access.vote.UnanimousBased">
@@ -211,7 +211,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 这里有一个支持我们场景的示例`<authentication-manager>`标签:
 
-```
+```java
 <authentication-manager>
     <authentication-provider>
         <user-service>
@@ -224,7 +224,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 如果使用 Java 和 XML 配置的组合，可以将 XML 导入配置类:
 
-```
+```java
 @Configuration
 @ImportResource({"classpath:spring-security.xml"})
 public class XmlSecurityConfig {
@@ -246,7 +246,7 @@ public class XmlSecurityConfig {
 
 当项目在本地运行时，登录页面可在以下位置访问:
 
-```
+```java
 http://localhost:8080/spring-security-custom-permissions/login
 ```
 

@@ -12,7 +12,7 @@
 
 检查一个`String`是否是一个`UUID`的最快方法之一是尝试使用属于`UUID`类的静态方法`fromString`来映射它。让我们试一试:
 
-```
+```java
 @Test
 public void whenValidUUIDStringIsValidated_thenValidationSucceeds() {
     String validUUID = "26929514-237c-11ed-861d-0242ac120002";
@@ -33,14 +33,14 @@ public void whenValidUUIDStringIsValidated_thenValidationSucceeds() {
 
 首先，我们需要定义一个用于匹配字符串的`Pattern`。
 
-```
+```java
 Pattern UUID_REGEX =
   Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
 ```
 
 然后，我们可以使用此模式尝试将其与一个字符串进行匹配，以验证它是否是一个 UUID:
 
-```
+```java
 @Test
 public void whenUUIDIsValidatedUsingRegex_thenValidationSucceeds() {
     Pattern UUID_REGEX =

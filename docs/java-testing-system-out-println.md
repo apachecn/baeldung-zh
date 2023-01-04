@@ -14,7 +14,7 @@
 
 在本教程中，我们测试的重点将是一个简单的方法，该方法写入标准输出流:
 
-```
+```java
 private void print(String output) {
     System.out.println(output);
 } 
@@ -26,7 +26,7 @@ private void print(String output) {
 
 现在让我们看看如何编写一个单元测试来检查我们发送给`println`方法的内容。然而，在我们编写实际的单元测试之前，我们需要在测试中提供一些初始化:
 
-```
+```java
 private final PrintStream standardOut = System.out;
 private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
 
@@ -38,7 +38,7 @@ public void setUp() {
 
 **在`setUp`方法中，我们用`ByteArrayOutputStream`** 将标准输出流重新分配给新的`PrintStream`。正如我们将要看到的，这个输出流就是现在要打印值的地方:
 
-```
+```java
 @Test
 void givenSystemOutRedirection_whenInvokePrintln_thenOutputCaptorSuccess() {
     print("Hello Baeldung Readers!!");
@@ -52,7 +52,7 @@ void givenSystemOutRedirection_whenInvokePrintln_thenOutputCaptorSuccess() {
 
 由于标准输出流是由系统的其他部分使用的共享静态资源，**当我们的测试终止时，我们应该注意将它恢复到原始状态:**
 
-```
+```java
 @AfterEach
 public void tearDown() {
     System.setOut(standardOut);
@@ -67,7 +67,7 @@ public void tearDown() {
 
 让我们从将[依赖项](https://web.archive.org/web/20221120085317/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22system-rules%22)添加到我们的`pom.xml`开始:
 
-```
+```java
 <dependency>
     <groupId>com.github.stefanbirkner</groupId>
     <artifactId>system-rules</artifactId>
@@ -78,7 +78,7 @@ public void tearDown() {
 
 现在，我们可以使用库提供的`SystemOutRule`编写一个测试:
 
-```
+```java
 @Rule
 public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
 
@@ -95,7 +95,7 @@ public void givenSystemOutRule_whenInvokePrintln_thenLogSuccess() {
 
 这条规则还包括一个简便的方法，该方法返回的日志总是以行分隔符为`\n`
 
-```
+```java
 Assert.assertEquals("Hello Baeldung Readers!!\n", systemOutRule.getLogWithNormalizedLineSeparator());
 ```
 
@@ -105,7 +105,7 @@ Assert.assertEquals("Hello Baeldung Readers!!\n", systemOutRule.getLogWithNormal
 
 系统 Lambda 可从 [Maven Central](https://web.archive.org/web/20221120085317/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22system-lambda%22) 获得。因此，我们可以继续将它添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.github.stefanbirkner</groupId>
     <artifactId>system-lambda</artifactId>
@@ -116,7 +116,7 @@ Assert.assertEquals("Hello Baeldung Readers!!\n", systemOutRule.getLogWithNormal
 
 现在让我们使用这个版本的库来实现我们的测试:
 
-```
+```java
 @Test
 void givenTapSystemOut_whenInvokePrintln_thenOutputIsReturnedSuccessfully() throws Exception {
 

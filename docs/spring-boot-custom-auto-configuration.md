@@ -14,7 +14,7 @@
 
 让我们从依赖关系开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -35,7 +35,7 @@
 
 让我们为一个`MySQL`数据源创建一个定制配置:
 
-```
+```java
 @Configuration
 public class MySQLAutoconfiguration {
     //...
@@ -46,7 +46,7 @@ public class MySQLAutoconfiguration {
 
 我们通过在标准文件`resources/META-INF/spring.factories`中的键`org.springframework.boot.autoconfigure.EnableAutoConfiguration`下添加类名来做到这一点:
 
-```
+```java
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.baeldung.autoconfiguration.MySQLAutoconfiguration
 ```
@@ -63,7 +63,7 @@ com.baeldung.autoconfiguration.MySQLAutoconfiguration
 
 让我们指定只有当类`DataSource`存在时，我们的`MySQLConfiguration`才会加载，在这种情况下，我们可以假设应用程序将使用数据库:
 
-```
+```java
 @Configuration
 @ConditionalOnClass(DataSource.class)
 public class MySQLAutoconfiguration {
@@ -79,7 +79,7 @@ public class MySQLAutoconfiguration {
 
 首先，我们将指定，如果名为`dataSource`的 bean 存在，并且名为`entityManagerFactory`的 bean 尚未定义，我们只希望创建这个 bean:
 
-```
+```java
 @Bean
 @ConditionalOnBean(name = "dataSource")
 @ConditionalOnMissingBean
@@ -98,7 +98,7 @@ public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 
 让我们也配置一个`transactionManager` bean，只有当我们还没有定义一个类型为`JpaTransactionManager`的 bean 时，它才会加载:
 
-```
+```java
 @Bean
 @ConditionalOnMissingBean(type = "JpaTransactionManager")
 JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
@@ -114,7 +114,7 @@ JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFacto
 
 首先，让我们为我们的配置添加一个属性源文件，它将决定从哪里读取属性:
 
-```
+```java
 @PropertySource("classpath:mysql.properties")
 public class MySQLAutoconfiguration {
     //...
@@ -127,7 +127,7 @@ public class MySQLAutoconfiguration {
 
 现在让我们用默认值定义`dataSource` bean，如果我们将`usemysql`属性设置为`local`，它将连接到名为`myDb`的本地数据库:
 
-```
+```java
 @Bean
 @ConditionalOnProperty(
   name = "usemysql", 
@@ -147,7 +147,7 @@ public DataSource dataSource() {
 
 如果我们将`usemysql`属性设置为`custom`，我们将使用数据库 URL、用户和密码的自定义属性值来配置`dataSource` bean:
 
-```
+```java
 @Bean(name = "dataSource")
 @ConditionalOnProperty(
   name = "usemysql", 
@@ -169,7 +169,7 @@ public DataSource dataSource2() {
 
 `mysql.properties`文件将包含`usemysql`属性:
 
-```
+```java
 usemysql=local
 ```
 
@@ -181,7 +181,7 @@ usemysql=local
 
 让我们定义一个名为`additionalProperties()`的方法，该方法将返回一个包含特定于 Hibernate 的属性的`Properties`对象，供`entityManagerFactory` bean 使用，前提是资源文件`mysql.properties`存在:
 
-```
+```java
 @ConditionalOnResource(
   resources = "classpath:mysql.properties")
 @Conditional(HibernateCondition.class)
@@ -201,7 +201,7 @@ Properties additionalProperties() {
 
 我们可以将特定于 Hibernate 的属性添加到`mysql.properties`文件中:
 
-```
+```java
 mysql-hibernate.dialect=org.hibernate.dialect.MySQLDialect
 mysql-hibernate.show_sql=true
 mysql-hibernate.hbm2ddl.auto=create-drop
@@ -215,7 +215,7 @@ mysql-hibernate.hbm2ddl.auto=create-drop
 
 让我们为我们的`additionalProperties()`方法创建一个名为`HibernateCondition`的条件，它将验证一个`HibernateEntityManager`类是否存在于类路径中:
 
-```
+```java
 static class HibernateCondition extends SpringBootCondition {
 
     private static String[] CLASS_NAMES
@@ -243,7 +243,7 @@ static class HibernateCondition extends SpringBootCondition {
 
 然后我们可以将条件添加到`additionalProperties()`方法中:
 
-```
+```java
 @Conditional(HibernateCondition.class)
 Properties additionalProperties() {
   //...
@@ -260,7 +260,7 @@ Properties additionalProperties() {
 
 我们将使用 Spring 数据创建一个名为`MyUser`的实体类和一个`MyUserRepository`接口:
 
-```
+```java
 @Entity
 public class MyUser {
     @Id
@@ -270,14 +270,14 @@ public class MyUser {
 }
 ```
 
-```
+```java
 public interface MyUserRepository 
   extends JpaRepository<MyUser, String> { }
 ```
 
 为了启用自动配置，我们可以使用`@SpringBootApplication`或`@EnableAutoConfiguration`注释之一:
 
-```
+```java
 @SpringBootApplication
 public class AutoconfigurationApplication {
     public static void main(String[] args) {
@@ -288,7 +288,7 @@ public class AutoconfigurationApplication {
 
 接下来，让我们编写一个保存一个`MyUser`实体的`JUnit`测试:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(
   classes = AutoconfigurationApplication.class)
@@ -313,7 +313,7 @@ public class AutoconfigurationLiveTest {
 
 我们可以检查应用程序日志，看看我们使用的是`MySQL`数据源:
 
-```
+```java
 web - 2017-04-12 00:01:33,956 [main] INFO  o.s.j.d.DriverManagerDataSource - Loaded JDBC driver: com.mysql.cj.jdbc.Driver
 ```
 
@@ -323,7 +323,7 @@ web - 2017-04-12 00:01:33,956 [main] INFO  o.s.j.d.DriverManagerDataSource - Loa
 
 我们可以将带有`exclude`或`excludeName`属性的`@EnableAutoConfiguration`注释添加到配置类中:
 
-```
+```java
 @Configuration
 @EnableAutoConfiguration(
   exclude={MySQLAutoconfiguration.class})
@@ -334,7 +334,7 @@ public class AutoconfigurationApplication {
 
 我们还可以设置`spring.autoconfigure.exclude`属性:
 
-```
+```java
 spring.autoconfigure.exclude=com.baeldung.autoconfiguration.MySQLAutoconfiguration
 ```
 

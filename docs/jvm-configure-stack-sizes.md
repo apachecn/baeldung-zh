@@ -27,26 +27,26 @@
 
 **要改变堆栈大小，我们可以使用`-Xss `调** **标志。**例如，`-Xss1048576 `将堆栈大小设置为 1 MB:
 
-```
+```java
 java -Xss1048576 // omitted
 ```
 
 如果我们不想以字节计算大小，我们可以使用一些方便的快捷方式来指定不同的单位——字母`k`或`K`表示 KB，`m`或`M`表示 MB，`g`或`G`表示 GB。例如，让我们看看将堆栈大小设置为 1 MB 的几种不同方法:
 
-```
+```java
 -Xss1m 
 -Xss1024k
 ```
 
 与`-Xss`、**类似，我们也可以使用`-XX:ThreadStackSize `调整标志来配置堆栈大小。然而，**和`-XX:ThreadStackSize`的语法有点不同。我们应该用等号分隔大小和旗帜名称:
 
-```
+```java
 java -XX:ThreadStackSize=1024 // omitted
 ```
 
 HotSpot JVM [不允许我们使用小于最小值](https://web.archive.org/web/20220625083844/https://github.com/openjdk/jdk14u/blob/03db2e14dde027eb5dae1435bc9b7f95b1fb48df/src/hotspot/os/posix/os_posix.cpp#L1397)的大小:
 
-```
+```java
 $ java -Xss1K -version
 The Java thread stack size specified is too small. Specify at least 144k
 Error: Could not create the Java Virtual Machine.
@@ -55,7 +55,7 @@ Error: A fatal exception has occurred. Program will exit.
 
 另外，[不允许我们使用超过最大值](https://web.archive.org/web/20220625083844/https://github.com/openjdk/jdk14u/blob/7a3bf58b8ad2c327229a94ae98f58ec96fa39332/src/hotspot/share/runtime/arguments.cpp#L2413)(通常为 1 GB)的大小:
 
-```
+```java
 $ java -Xss2g -version
 Invalid thread stack size: -Xss2g
 The specified size exceeds the maximum representable size.

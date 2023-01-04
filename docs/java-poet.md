@@ -14,7 +14,7 @@ JavaPoet 自动管理依赖类的导入。它还使用 Builder 模式来指定�
 
 为了使用 JavaPoet，我们可以直接下载最新的 [JAR 文件](https://web.archive.org/web/20220703144239/https://search.maven.org/artifact/com.squareup/javapoet/1.11.1/jar)，或者在我们的`pom.xml:`中定义如下依赖关系
 
-```
+```java
 <dependency>
     <groupId>com.squareup</groupId>
     <artifactId>javapoet</artifactId>
@@ -30,7 +30,7 @@ JavaPoet 自动管理依赖类的导入。它还使用 Builder 模式来指定�
 
 这里有一个简单的例子——生成`sumOfTen()`方法来计算从 0 到 10 的数字之和:
 
-```
+```java
 MethodSpec sumOfTen = MethodSpec
   .methodBuilder("sumOfTen")
   .addStatement("int sum = 0")
@@ -42,7 +42,7 @@ MethodSpec sumOfTen = MethodSpec
 
 这将产生以下输出:
 
-```
+```java
 void sumOfTen() {
     int sum = 0;
     for (int i = 0; i <= 10; i++) {
@@ -55,7 +55,7 @@ void sumOfTen() {
 
 我们还可以**将一个或多个控制流和逻辑语句打包到一个代码块**:
 
-```
+```java
 CodeBlock sumOfTenImpl = CodeBlock
   .builder()
   .addStatement("int sum = 0")
@@ -67,7 +67,7 @@ CodeBlock sumOfTenImpl = CodeBlock
 
 这会产生:
 
-```
+```java
 int sum = 0;
 for (int i = 0; i <= 10; i++) {
     sum += i;
@@ -76,7 +76,7 @@ for (int i = 0; i <= 10; i++) {
 
 我们可以通过调用`addCode()`并提供`sumOfTenImpl`对象来简化`MethodSpec`中的早期逻辑:
 
-```
+```java
 MethodSpec sumOfTen = MethodSpec
   .methodBuilder("sumOfTen")
   .addCode(sumOfTenImpl)
@@ -91,7 +91,7 @@ MethodSpec sumOfTen = MethodSpec
 
 为了生成一个字段，我们使用了`FieldSpec` 类的`builder()`方法:
 
-```
+```java
 FieldSpec name = FieldSpec
   .builder(String.class, "name")
   .addModifiers(Modifier.PRIVATE)
@@ -100,13 +100,13 @@ FieldSpec name = FieldSpec
 
 这将生成以下字段:
 
-```
+```java
 private String name;
 ```
 
 我们还可以通过调用`initializer()`方法来初始化字段的默认值:
 
-```
+```java
 FieldSpec defaultName = FieldSpec
   .builder(String.class, "DEFAULT_NAME")
   .addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
@@ -116,7 +116,7 @@ FieldSpec defaultName = FieldSpec
 
 这会产生:
 
-```
+```java
 private static final String DEFAULT_NAME = "Alice";
 ```
 
@@ -128,7 +128,7 @@ private static final String DEFAULT_NAME = "Alice";
 
 对于更复杂的参数类型，我们可以使用`ParameterSpec` builder:
 
-```
+```java
 ParameterSpec strings = ParameterSpec
   .builder(
     ParameterizedTypeName.get(ClassName.get(List.class), TypeName.get(String.class)), 
@@ -138,7 +138,7 @@ ParameterSpec strings = ParameterSpec
 
 我们还可以添加方法的修饰符，比如`public`和/或`static:`
 
-```
+```java
 MethodSpec sumOfTen = MethodSpec
   .methodBuilder("sumOfTen")
   .addParameter(int.class, "number")
@@ -150,7 +150,7 @@ MethodSpec sumOfTen = MethodSpec
 
 下面是生成的 Java 代码的样子:
 
-```
+```java
 public static void sumOfTen(int number, List<String> strings) {
     int sum = 0;
     for (int i = 0; i <= 10; i++) {
@@ -175,7 +175,7 @@ public static void sumOfTen(int number, List<String> strings) {
 
 让我们看看下面的类生成器示例:
 
-```
+```java
 TypeSpec person = TypeSpec
   .classBuilder("Person")
   .addModifiers(Modifier.PUBLIC)
@@ -199,7 +199,7 @@ TypeSpec person = TypeSpec
 
 下面是生成的代码:
 
-```
+```java
 public class Person {
     private String name;
 
@@ -226,7 +226,7 @@ public class Person {
 
 我们还可以通过在`addModifiers()`中指定`DEFAULT`修饰符值来定义一个默认方法:
 
-```
+```java
 TypeSpec person = TypeSpec
   .interfaceBuilder("Person")
   .addModifiers(Modifier.PUBLIC)
@@ -248,7 +248,7 @@ TypeSpec person = TypeSpec
 
 它将生成以下 Java 代码:
 
-```
+```java
 public interface Person {
     private static final String DEFAULT_NAME = "Alice";
 
@@ -264,7 +264,7 @@ public interface Person {
 
 要生成枚举类型，我们可以使用`TypeSpec`的`enumBuilder()`方法。要指定每个枚举值，我们可以调用`addEnumConstant()`方法:
 
-```
+```java
 TypeSpec gender = TypeSpec
   .enumBuilder("Gender")
   .addModifiers(Modifier.PUBLIC)
@@ -276,7 +276,7 @@ TypeSpec gender = TypeSpec
 
 前述`enumBuilder()`逻辑的输出为:
 
-```
+```java
 public enum Gender {
     MALE,
     FEMALE,
@@ -288,7 +288,7 @@ public enum Gender {
 
 要生成匿名内部类，我们可以使用`TypeSpec`类的`anonymousClassBuilder()`方法。注意，**我们必须在`addSuperinterface()`方法**中指定父类。否则，它将使用默认的父类，即`Object`:
 
-```
+```java
 TypeSpec comparator = TypeSpec
   .anonymousClassBuilder("")
   .addSuperinterface(ParameterizedTypeName.get(Comparator.class, String.class))
@@ -305,7 +305,7 @@ TypeSpec comparator = TypeSpec
 
 这将生成以下 Java 代码:
 
-```
+```java
 new Comparator<String>() {
     public int compare(String a, String b) {
         return a.length() - b.length();
@@ -317,7 +317,7 @@ new Comparator<String>() {
 
 为了给生成的代码添加注释，我们可以在`MethodSpec`或`FieldSpec`构建器类中调用`addAnnotation()`方法:
 
-```
+```java
 MethodSpec sumOfTen = MethodSpec
   .methodBuilder("sumOfTen")
   .addAnnotation(Override.class)
@@ -330,7 +330,7 @@ MethodSpec sumOfTen = MethodSpec
 
 这会产生:
 
-```
+```java
 @Override
 public static void sumOfTen(int number, List<String> strings) {
     int sum = 0;
@@ -342,7 +342,7 @@ public static void sumOfTen(int number, List<String> strings) {
 
 如果我们需要指定成员值，我们可以调用`AnnotationSpec`类的`addMember()`方法:
 
-```
+```java
 AnnotationSpec toString = AnnotationSpec
   .builder(ToString.class)
   .addMember("exclude", "\"name\"")
@@ -351,7 +351,7 @@ AnnotationSpec toString = AnnotationSpec
 
 这将生成以下注释:
 
-```
+```java
 @ToString(
     exclude = "name"
 )
@@ -361,7 +361,7 @@ AnnotationSpec toString = AnnotationSpec
 
 可以使用`CodeBlock,`或通过直接指定值来生成 Javadoc:
 
-```
+```java
 MethodSpec sumOfTen = MethodSpec
   .methodBuilder("sumOfTen")
   .addJavadoc(CodeBlock
@@ -378,7 +378,7 @@ MethodSpec sumOfTen = MethodSpec
 
 这将生成以下 Java 代码:
 
-```
+```java
 /**
  * Sum of all integers from 0 to 10
  */
@@ -395,13 +395,13 @@ public static void sumOfTen(int number, List<String> strings) {
 
 让我们重新检查一下[第 5 节](#fieldspec)中的`FieldSpec`初始化器的例子，它包含一个用于转义“Alice”`String`值的转义符:
 
-```
+```java
 initializer("\"Alice\"")
 ```
 
 在[第 8 节](#annotationspec)中也有一个类似的例子，当我们定义一个注释的被排除成员时:
 
-```
+```java
 addMember("exclude", "\"name\"")
 ```
 
@@ -413,7 +413,7 @@ JavaPoet 中的字符串格式化特性使得`beginControlFlow()`、 *addStateme
 
 **JavaPoet 在输出中用文字值替换`$L`。**我们可以在参数中指定任何原始类型和`String`值:
 
-```
+```java
 private MethodSpec generateSumMethod(String name, int from, int to, String operator) {
     return MethodSpec
       .methodBuilder(name)
@@ -429,13 +429,13 @@ private MethodSpec generateSumMethod(String name, int from, int to, String opera
 
 如果我们用下面指定的值调用`generateSumMethod()`:
 
-```
+```java
 generateSumMethod("sumOfOneHundred", 0, 100, "+");
 ```
 
 JavaPoet 将生成以下输出:
 
-```
+```java
 int sumOfOneHundred() {
     int sum = 0;
     for (int i = 0; i <= 100; i++) {
@@ -449,7 +449,7 @@ int sumOfOneHundred() {
 
 `String`格式化生成一个带引号的值，这个值在 Java 中专门指`String`类型。 **JavaPoet 用输出**中的`String`值替换`$S`:
 
-```
+```java
 private static MethodSpec generateStringSupplier(String methodName, String fieldName) {
     return MethodSpec
       .methodBuilder(methodName)
@@ -461,13 +461,13 @@ private static MethodSpec generateStringSupplier(String methodName, String field
 
 如果我们调用`generateGetter()`方法并提供这些值:
 
-```
+```java
 generateStringSupplier("getDefaultName", "Bob");
 ```
 
 我们将获得以下生成的 Java 代码:
 
-```
+```java
 String getDefaultName() {
     return "Bob";
 }
@@ -477,7 +477,7 @@ String getDefaultName() {
 
 **JavaPoet 用生成的 Java 代码**中的类型替换`$T`。JavaPoet 自动处理导入语句中的类型。如果我们以文字的形式提供类型，JavaPoet 将不会处理导入。
 
-```
+```java
 MethodSpec getCurrentDateMethod = MethodSpec
   .methodBuilder("getCurrentDate")
   .returns(Date.class)
@@ -487,7 +487,7 @@ MethodSpec getCurrentDateMethod = MethodSpec
 
 JavaPoet 将生成以下输出:
 
-```
+```java
 Date getCurrentDate() {
     return new Date();
 }
@@ -499,7 +499,7 @@ Date getCurrentDate() {
 
 我们可以将先前的`getCurrentDateMethod()`添加到新的引用方法中:
 
-```
+```java
 MethodSpec dateToString = MethodSpec
   .methodBuilder("getCurrentDateAsString")
   .returns(String.class)
@@ -514,7 +514,7 @@ MethodSpec dateToString = MethodSpec
 
 这会产生:
 
-```
+```java
 String getCurrentDateAsString() {
     DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
     return formatter.format(getCurrentDate());
@@ -525,7 +525,7 @@ String getCurrentDateAsString() {
 
 我们可以利用已经研究过的特性来生成 Lambda 表达式。例如，多次打印`name`字段或变量的代码块:
 
-```
+```java
 CodeBlock printNameMultipleTimes = CodeBlock
   .builder()
   .addStatement("$T<$T> names = new $T<>()", List.class, String.class, ArrayList.class)
@@ -536,7 +536,7 @@ CodeBlock printNameMultipleTimes = CodeBlock
 
 该逻辑生成以下输出:
 
-```
+```java
 List<String> names = new ArrayList<>();
 IntStream.range(0, 10).forEach(i -> names.add(name));
 names.forEach(System.out::println);
@@ -550,7 +550,7 @@ names.forEach(System.out::println);
 
 默认情况下，JavaPoet 使用两个空格进行缩进。为了保持一致性，本教程中的所有示例都使用 4 个空格缩进，这是通过`indent()`方法配置的:
 
-```
+```java
 JavaFile javaFile = JavaFile
   .builder("com.baeldung.javapoet.person", person)
   .indent("    ")
@@ -561,7 +561,7 @@ JavaFile javaFile = JavaFile
 
 如果我们需要添加一个静态导入，我们可以通过调用`addStaticImport()`方法在`JavaFile`中定义类型和具体的方法名:
 
-```
+```java
 JavaFile javaFile = JavaFile
   .builder("com.baeldung.javapoet.person", person)
   .indent("    ")
@@ -572,7 +572,7 @@ JavaFile javaFile = JavaFile
 
 它生成以下静态导入语句:
 
-```
+```java
 import static java.util.Date.UTC;
 import static java.time.ZonedDateTime.*;
 ```
@@ -583,7 +583,7 @@ import static java.time.ZonedDateTime.*;
 
 要将 Java 代码写入标准输出流，我们只需调用`writeTo()`方法，并提供`System.out`作为参数:
 
-```
+```java
 JavaFile javaFile = JavaFile
   .builder("com.baeldung.javapoet.person", person)
   .indent("    ")
@@ -596,7 +596,7 @@ javaFile.writeTo(System.out);
 
 `writeTo()`方法也接受`java.nio.file.Path`和`java.io.File`。我们可以提供相应的`Path`或`File`对象，以便将 Java 源代码文件生成到目标文件夹/路径中:
 
-```
+```java
 Path path = Paths.get(destinationPath);
 javaFile.writeTo(path);
 ```

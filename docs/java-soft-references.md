@@ -26,7 +26,7 @@
 
 例如，要将该值更改为 2.5 秒(2500 毫秒)，我们可以使用:
 
-```
+```java
 -XX:SoftRefLRUPolicyMSPerMB=2500
 ```
 
@@ -50,7 +50,7 @@
 
 第一种方法是只传递一个 referent:
 
-```
+```java
 StringBuilder builder = new StringBuilder();
 SoftReference<StringBuilder> reference1 = new SoftReference<>(builder);
 ```
@@ -59,7 +59,7 @@ SoftReference<StringBuilder> reference1 = new SoftReference<>(builder);
 
 下面是如何用一个 *ReferenceQueue:* 初始化一个*软引用*
 
-```
+```java
 ReferenceQueue<StringBuilder> referenceQueue = new ReferenceQueue<>();
 SoftReference<StringBuilder> reference2
  = new SoftReference<>(builder, referenceQueue);
@@ -67,7 +67,7 @@ SoftReference<StringBuilder> reference2
 
 作为一个 [`java.lang.ref.Reference`](https://web.archive.org/web/20221122092843/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ref/Reference.html) ，它包含了 [`get`](https://web.archive.org/web/20221122092843/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ref/Reference.html#get()) 和 [`clear`](https://web.archive.org/web/20221122092843/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ref/Reference.html#clear()) 分别获取和重置一个引用对象的方法:
 
-```
+```java
 StringBuilder builder1 = reference2.get();
 reference2.clear();
 StringBuilder builder2 = reference2.get(); // null 
@@ -75,7 +75,7 @@ StringBuilder builder2 = reference2.get(); // null
 
 每次我们使用这种类型的引用时，我们需要确保由`get`返回的 referent 存在:
 
-```
+```java
 StringBuilder builder3 = reference2.get();
 if (builder3 != null) {
     // GC hasn't removed the instance yet

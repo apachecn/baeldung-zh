@@ -76,7 +76,7 @@ JFR 是一个实验性的功能，因此它的使用可能会发生变化。事�
 
 一旦编译成功，我们可以使用以下选项启动程序:
 
-```
+```java
 java -XX:+UnlockCommercialFeatures -XX:+FlightRecorder 
   -XX:StartFlightRecording=duration=200s,filename=flight.jfr path-to-class-file
 ```
@@ -89,19 +89,19 @@ java -XX:+UnlockCommercialFeatures -XX:+FlightRecorder
 
 我们也可以通过使用`jcmd`工具开始注册事件。例如:
 
-```
+```java
 jcmd 1234 JFR.start duration=100s filename=flight.jfr
 ```
 
 在 JDK 11 之前，为了能够以这种方式激活 JFR，我们应该使用解锁的商业功能启动应用程序:
 
-```
+```java
 java -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -cp ./out/ com.baeldung.Main
 ```
 
 应用程序运行后，我们使用其进程 id 来执行各种命令，这些命令采用以下格式:
 
-```
+```java
 jcmd <pid|MainClass> <command> [parameters]
 ```
 
@@ -133,7 +133,7 @@ jcmd <pid|MainClass> <command> [parameters]
 
 我们的程序将对象插入到一个列表中，直到一个`OutOfMemoryError`发生。然后程序休眠一秒钟:
 
-```
+```java
 public static void main(String[] args) {
     List<Object> items = new ArrayList<>(1);
     try {
@@ -158,7 +158,7 @@ public static void main(String[] args) {
 
 首先，我们通过从命令行执行以下命令来编译我们的程序:
 
-```
+```java
 javac -d out -sourcepath src/main src/main/com/baeldung/flightrecorder/FlightRecorder.java
 ```
 
@@ -166,7 +166,7 @@ javac -d out -sourcepath src/main src/main/com/baeldung/flightrecorder/FlightRec
 
 现在，我们将使用以下选项启动程序:
 
-```
+```java
 java -XX:+UnlockCommercialFeatures -XX:+FlightRecorder 
   -XX:StartFlightRecording=duration=200s,filename=flight.jfr 
   -cp ./out/ com.baeldung.flightrecorder.FlightRecorder

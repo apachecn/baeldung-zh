@@ -24,7 +24,7 @@ AOT 编译是提高 Java 程序性能的一种方式，特别是 JVM 的启动�
 
 让我们快速看一下我们的示例类:
 
-```
+```java
 public class JaotCompilation {
 
     public static void main(String[] argv) {
@@ -39,13 +39,13 @@ public class JaotCompilation {
 
 在使用 AOT 编译器之前，我们需要用 Java 编译器编译这个类:
 
-```
+```java
 javac JaotCompilation.java 
 ```
 
 然后，我们将结果`JaotCompilation.class`传递给 AOT 编译器，它与标准 Java 编译器位于同一个目录中:
 
-```
+```java
 jaotc --output jaotCompilation.so JaotCompilation.class 
 ```
 
@@ -55,7 +55,7 @@ jaotc --output jaotCompilation.so JaotCompilation.class
 
 然后我们可以执行程序:
 
-```
+```java
 java -XX:AOTLibrary=./jaotCompilation.so JaotCompilation 
 ```
 
@@ -65,25 +65,25 @@ java -XX:AOTLibrary=./jaotCompilation.so JaotCompilation
 
 我们可以看到，通过添加`-XX:+PrintAOT`作为 JVM 参数，库确实被加载了:
 
-```
+```java
 java -XX:+PrintAOT -XX:AOTLibrary=./jaotCompilation.so JaotCompilation 
 ```
 
 输出将类似于:
 
-```
+```java
 77    1     loaded    ./jaotCompilation.so  aot library 
 ```
 
 然而，这只是告诉我们库被加载了，而不是它被实际使用了。通过传递参数`-verbose`，我们可以看到库中的方法确实被调用了:
 
-```
+```java
 java -XX:AOTLibrary=./jaotCompilation.so -verbose -XX:+PrintAOT JaotCompilation 
 ```
 
 输出将包含以下行:
 
-```
+```java
 11    1     loaded    ./jaotCompilation.so  aot library
 116    1     aot[ 1]   jaotc.JaotCompilation.<init>()V
 116    2     aot[ 1]   jaotc.JaotCompilation.message()Ljava/lang/String;
@@ -95,7 +95,7 @@ The JAOT compiler says 'Hello'
 
 让我们更改类`JaotCompilation.java`中的代码以返回不同的消息:
 
-```
+```java
 public static String message() {
     return "The JAOT compiler says 'Good morning'";
 } 
@@ -103,13 +103,13 @@ public static String message() {
 
 如果我们在 AOT 没有编译修改后的类的情况下执行程序:
 
-```
+```java
 java -XX:AOTLibrary=./jaotCompilation.so -verbose -XX:+PrintAOT JaotCompilation 
 ```
 
 那么输出将只包含:
 
-```
+```java
  11 1 loaded ./jaotCompilation.so aot library
 The JAOT compiler says 'Good morning'
 ```
@@ -122,7 +122,7 @@ The JAOT compiler says 'Good morning'
 
 也有可能 AOT 编译一个模块:
 
-```
+```java
 jaotc --output javaBase.so --module java.base 
 ```
 
@@ -134,13 +134,13 @@ jaotc --output javaBase.so --module java.base
 
 为了防止 Java 模块的 AOT 编译库变得太大，我们可以添加编译命令来限制 AOT 编译的范围。这些命令需要在一个文本文件中——在我们的例子中，我们将使用文件`complileCommands.txt`:
 
-```
+```java
 compileOnly java.lang.*
 ```
 
 然后，我们将它添加到编译命令中:
 
-```
+```java
 jaotc --output javaBaseLang.so --module java.base --compile-commands compileCommands.txt 
 ```
 
@@ -150,7 +150,7 @@ jaotc --output javaBaseLang.so --module java.base --compile-commands compileComm
 
 这可以通过添加几个 JVM 参数来实现:
 
-```
+```java
 java -XX:+UnlockDiagnosticVMOptions -XX:+LogTouchedMethods -XX:+PrintTouchedMethodsAtExit JaotCompilation 
 ```
 
@@ -160,7 +160,7 @@ java -XX:+UnlockDiagnosticVMOptions -XX:+LogTouchedMethods -XX:+PrintTouchedMeth
 
 我们可以用参数`–class-name`编译一个类:
 
-```
+```java
 jaotc --output javaBaseString.so --class-name java.lang.String 
 ```
 
@@ -170,7 +170,7 @@ jaotc --output javaBaseString.so --class-name java.lang.String
 
 默认情况下，将始终使用 AOT 编译的代码，并且不会对库中包含的类进行 JIT 编译。**如果我们想在库中包含分析信息，我们可以添加参数`compile-for-tiered` :**
 
-```
+```java
 jaotc --output jaotCompilation.so --compile-for-tiered JaotCompilation.class 
 ```
 
@@ -200,7 +200,7 @@ AOT 编译的代码的一个可能的用例是短暂的 lambda 函数，其中�
 
 首先，我们需要获取`Amazon Linux 2`的 Docker 映像并安装`Amazon Corretto`:
 
-```
+```java
 # download Amazon Linux 
 docker pull amazonlinux 
 
@@ -215,7 +215,7 @@ yum install binutils.x86_64
 
 在 Docker 容器中，我们执行以下命令:
 
-```
+```java
 # create folder aot
 mkdir aot
 cd aot
@@ -225,7 +225,7 @@ cd jaotc
 
 文件夹的名称只是一个例子，当然可以是任何其他名称。
 
-```
+```java
 package jaotc;
 
 public class JaotCompilation {
@@ -237,7 +237,7 @@ public class JaotCompilation {
 
 下一步是编译类和库:
 
-```
+```java
 javac JaotCompilation.java
 cd ..
 jaotc -J-XX:+UseSerialGC --output jaotCompilation.so jaotc/JaotCompilation.class
@@ -245,13 +245,13 @@ jaotc -J-XX:+UseSerialGC --output jaotCompilation.so jaotc/JaotCompilation.class
 
 这里，使用与 AWS 上相同的垃圾收集器很重要。如果我们的库无法在 AWS Lambda 上加载，我们可能需要使用以下命令来检查实际使用了哪个垃圾收集器:
 
-```
+```java
 java -XX:+PrintCommandLineFlags -version
 ```
 
 现在，我们可以创建一个包含我们的库和类文件的 zip 文件:
 
-```
+```java
 zip -r jaot.zip jaotCompilation.so jaotc/
 ```
 
@@ -264,7 +264,7 @@ zip -r jaot.zip jaotCompilation.so jaotc/
 
 此外，我们需要创建一个名为 JAVA_TOOL_OPTIONS 的环境变量，并将其值设置为:
 
-```
+```java
 -XX:+UnlockExperimentalVMOptions -XX:+PrintAOT -XX:AOTLibrary=./jaotCompilation.so
 ```
 
@@ -274,7 +274,7 @@ zip -r jaot.zip jaotCompilation.so jaotc/
 
 最后，我们可以执行我们的 Lambda 函数，并且应该在日志中看到我们的 AOT 编译库被加载了:
 
-```
+```java
 57    1     loaded    ./jaotCompilation.so  aot library
 ```
 

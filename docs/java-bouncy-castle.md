@@ -12,7 +12,7 @@
 
 在我们开始使用这个库之前，我们需要将所需的依赖项添加到我们的`pom.xml` 文件中:
 
-```
+```java
 <dependency>
     <groupId>org.bouncycastle</groupId>
     <artifactId>bcpkix-jdk15on</artifactId>
@@ -37,20 +37,20 @@
 
 注意在 Java 9 中的**，我们不再需要下载策略文件包**，将`crypto.policy`属性设置为`unlimited`就足够了:
 
-```
+```java
 Security.setProperty("crypto.policy", "unlimited");
 ```
 
 完成后，我们需要检查配置是否正常工作:
 
-```
+```java
 int maxKeySize = javax.crypto.Cipher.getMaxAllowedKeyLength("AES");
 System.out.println("Max Key Size for AES : " + maxKeySize);
 ```
 
 因此:
 
-```
+```java
 Max Key Size for AES : 2147483647
 ```
 
@@ -73,7 +73,7 @@ Max Key Size for AES : 2147483647
 
 让我们看看如何在 Java 中加载这些:
 
-```
+```java
 Security.addProvider(new BouncyCastleProvider());
 CertificateFactory certFactory= CertificateFactory
   .getInstance("X.509", "BC");
@@ -93,7 +93,7 @@ PrivateKey key = (PrivateKey) keystore.getKey("baeldung", keyPassword);
 
 这也可以通过编辑`{JAVA_HOME}/jre/lib/security/java.security`文件来静态完成，并添加以下行:
 
-```
+```java
 security.provider.N = org.bouncycastle.jce.provider.BouncyCastleProvider
 ```
 
@@ -126,7 +126,7 @@ security.provider.N = org.bouncycastle.jce.provider.BouncyCastleProvider
 
 让我们看看如何使用加密证书实现一个`encryptData()`函数:
 
-```
+```java
 public static byte[] encryptData(byte[] data,
   X509Certificate encryptionCertificate)
   throws CertificateEncodingException, CMSException, IOException {
@@ -163,7 +163,7 @@ public static byte[] encryptData(byte[] data,
 
 现在，让我们看看`decryptData()`方法的实现是什么样子的:
 
-```
+```java
 public static byte[] decryptData(
   byte[] encryptedData, 
   PrivateKey decryptionKey) 
@@ -196,7 +196,7 @@ public static byte[] decryptData(
 
 让我们编写一个简单的测试来确保一切正常运行:
 
-```
+```java
 String secretMessage = "My password is 123456Seven";
 System.out.println("Original Message : " + secretMessage);
 byte[] stringToEncrypt = secretMessage.getBytes();
@@ -209,7 +209,7 @@ System.out.println("Decrypted Message : " + decryptedMessage);
 
 因此:
 
-```
+```java
 Original Message : My password is 123456Seven
 Encrypted Message : 0�*�H��...
 Decrypted Message : My password is 123456Seven
@@ -221,7 +221,7 @@ Decrypted Message : My password is 123456Seven
 
 让我们看看如何使用数字证书签署秘密消息:
 
-```
+```java
 public static byte[] signData(
   byte[] data, 
   X509Certificate signingCertificate,
@@ -257,7 +257,7 @@ public static byte[] signData(
 
 现在我们已经了解了如何对数据进行签名，让我们来看看如何验证已签名的数据:
 
-```
+```java
 public static boolean verifSignedData(byte[] signedData)
   throws Exception {
 
@@ -291,7 +291,7 @@ public static boolean verifSignedData(byte[] signedData)
 
 这里有一个简单的例子:
 
-```
+```java
 byte[] signedData = signData(rawData, certificate, privateKey);
 Boolean check = verifSignData(signedData);
 System.out.println(check);
@@ -299,7 +299,7 @@ System.out.println(check);
 
 因此:
 
-```
+```java
 true
 ```
 

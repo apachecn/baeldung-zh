@@ -10,7 +10,7 @@
 
 为了使用[杰克森](https://web.archive.org/web/20220923223542/https://search.maven.org/search?q=a:jackson-databind%20AND%20g:com.fasterxml.jackson.core)和 [Gson](https://web.archive.org/web/20220923223542/https://search.maven.org/search?q=a:gson%20AND%20g:com.google.code.gson) 库，我们需要向 POM 添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.code.gson</groupId>
     <artifactId>gson</artifactId>
@@ -29,7 +29,7 @@
 
 假设我们想将不同地点的天气细节放入 Java 应用程序中。我们发现有几个网站将天气数据作为 JSON 文档发布。但是，它们使用的格式略有不同:
 
-```
+```java
 {
     "location": "London",
     "temp": 15,
@@ -39,7 +39,7 @@
 
 并且:
 
-```
+```java
 {
     "place": "Lisbon",
     "temperature": 35,
@@ -49,7 +49,7 @@
 
 我们希望将这两种格式反序列化到同一个 Java 类中，命名为`Weather`:
 
-```
+```java
 public class Weather {
     private String location;
     private int temp;
@@ -67,7 +67,7 @@ public class Weather {
 
 然后我们可以使用`@JsonAlias`注释。因此，Jackson 将知道 JSON 文档中映射到 Java 字段的其他字段的名称。`@JsonAlias`注释中的值仅用于反序列化:
 
-```
+```java
 @JsonProperty("location")
 @JsonAlias("place")
 private String location;
@@ -82,7 +82,7 @@ private String outlook;
 
 现在我们已经添加了注释，让我们使用 Jackson 的`ObjectMapper`通过`Weather`类创建 Java 对象:
 
-```
+```java
 @Test
 public void givenTwoJsonFormats_whenDeserialized_thenWeatherObjectsCreated() throws Exception {
 
@@ -116,7 +116,7 @@ public void givenTwoJsonFormats_whenDeserialized_thenWeatherObjectsCreated() thr
 
 第一个将用作默认值，而第二个将用于指示我们想要映射的 JSON 字段的备用名称:
 
-```
+```java
 @SerializedName(value="location", alternate="place")
 private String location;
 @SerializedName(value="temp", alternate="temperature")
@@ -128,7 +128,7 @@ private String outlook;
 
 现在我们已经添加了注释，让我们测试我们的示例:
 
-```
+```java
 @Test
 public void givenTwoJsonFormats_whenDeserialized_thenWeatherObjectsCreated() throws Exception {
 

@@ -10,7 +10,7 @@
 
 让我们首先创建两个简单的表:
 
-```
+```java
 CREATE TABLE AUTHOR
 (
   ID int NOT NULL PRIMARY KEY,
@@ -29,7 +29,7 @@ CREATE TABLE ARTICLE
 
 并用一些测试数据填充它们:
 
-```
+```java
 INSERT INTO AUTHOR VALUES 
 (1, 'Siena', 'Kerr'),
 (2, 'Daniele', 'Ferguson'),
@@ -48,7 +48,7 @@ INSERT INTO ARTICLE VALUES
 
 让我们还定义一个 POJO，我们将在整个教程中使用它来存储连接操作的结果:
 
-```
+```java
 class ArticleWithAuthor {
 
     private String title;
@@ -67,7 +67,7 @@ class ArticleWithAuthor {
 
 对于我们的 Java 实现，我们需要一个 [PostgreSQL 驱动程序](https://web.archive.org/web/20220629002650/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.postgresql%22%20AND%20a%3A%22postgresql%22):
 
-```
+```java
 <dependency>
     <groupId>org.postgresql</groupId>
     <artifactId>postgresql</artifactId>
@@ -78,7 +78,7 @@ class ArticleWithAuthor {
 
 让我们首先配置一个`java.sql.Connection`来使用我们的数据库:
 
-```
+```java
 Class.forName("org.postgresql.Driver");
 Connection connection = DriverManager.
   getConnection("jdbc:postgresql://localhost:5432/myDb", "user", "pass");
@@ -86,7 +86,7 @@ Connection connection = DriverManager.
 
 接下来，让我们创建一个 DAO 类和一些实用方法:
 
-```
+```java
 class ArticleWithAuthorDAO {
 
     private final Connection connection;
@@ -128,7 +128,7 @@ class ArticleWithAuthorDAO {
 
 记住这一点，语法本身变得非常简单:
 
-```
+```java
 SELECT ARTICLE.TITLE, AUTHOR.LAST_NAME, AUTHOR.FIRST_NAME
   FROM ARTICLE INNER JOIN AUTHOR 
   ON AUTHOR.ID=ARTICLE.AUTHOR_ID
@@ -140,7 +140,7 @@ SELECT ARTICLE.TITLE, AUTHOR.LAST_NAME, AUTHOR.FIRST_NAME
 
 现在让我们在`ArticleWithAuthorDAO`类中实现内部连接的方法:
 
-```
+```java
 List<ArticleWithAuthor> articleInnerJoinAuthor() {
     String query = "SELECT ARTICLE.TITLE, AUTHOR.LAST_NAME, AUTHOR.FIRST_NAME "
       + "FROM ARTICLE INNER JOIN AUTHOR ON AUTHOR.ID=ARTICLE.AUTHOR_ID";
@@ -150,7 +150,7 @@ List<ArticleWithAuthor> articleInnerJoinAuthor() {
 
 并测试它:
 
-```
+```java
 @Test
 public void whenQueryWithInnerJoin_thenShouldReturnProperRows() {
     List<ArticleWithAuthor> articleWithAuthorList = articleWithAuthorDAO.articleInnerJoinAuthor();
@@ -175,7 +175,7 @@ public void whenQueryWithInnerJoin_thenShouldReturnProperRows() {
 
 现在，让我们转到 Java 实现:
 
-```
+```java
 List<ArticleWithAuthor> articleLeftJoinAuthor() {
     String query = "SELECT ARTICLE.TITLE, AUTHOR.LAST_NAME, AUTHOR.FIRST_NAME "
       + "FROM ARTICLE LEFT JOIN AUTHOR ON AUTHOR.ID=ARTICLE.AUTHOR_ID";
@@ -187,7 +187,7 @@ List<ArticleWithAuthor> articleLeftJoinAuthor() {
 
 在测试左连接方法之前，让我们再看一下我们的插入。在这种情况下，我们将从 ARTICLE 表中接收所有记录，并从 AUTHOR 表中接收它们的匹配行。正如我们之前提到的，并不是每篇文章都有作者，所以我们希望用`null`值来代替作者数据:
 
-```
+```java
 @Test
 public void whenQueryWithLeftJoin_thenShouldReturnProperRows() {
     List<ArticleWithAuthor> articleWithAuthorList = articleWithAuthorDAO.articleLeftJoinAuthor();
@@ -207,7 +207,7 @@ public void whenQueryWithLeftJoin_thenShouldReturnProperRows() {
 
 让我们用 Java 实现正确的连接:
 
-```
+```java
 List<ArticleWithAuthor> articleRightJoinAuthor() {
     String query = "SELECT ARTICLE.TITLE, AUTHOR.LAST_NAME, AUTHOR.FIRST_NAME "
       + "FROM ARTICLE RIGHT JOIN AUTHOR ON AUTHOR.ID=ARTICLE.AUTHOR_ID";
@@ -217,7 +217,7 @@ List<ArticleWithAuthor> articleRightJoinAuthor() {
 
 同样，让我们看看我们的测试数据。因为这个连接操作从第二个表中检索所有记录，我们期望检索五行，并且因为不是每个作者都已经写了一篇文章，我们期望 TITLE 列中有一些`null`值:
 
-```
+```java
 @Test
 public void whenQueryWithRightJoin_thenShouldReturnProperRows() {
     List<ArticleWithAuthor> articleWithAuthorList = articleWithAuthorDAO.articleRightJoinAuthor();
@@ -237,7 +237,7 @@ public void whenQueryWithRightJoin_thenShouldReturnProperRows() {
 
 让我们来看看 Java 实现:
 
-```
+```java
 List<ArticleWithAuthor> articleOuterJoinAuthor() {
     String query = "SELECT ARTICLE.TITLE, AUTHOR.LAST_NAME, AUTHOR.FIRST_NAME "
       + "FROM ARTICLE FULL JOIN AUTHOR ON AUTHOR.ID=ARTICLE.AUTHOR_ID";
@@ -247,7 +247,7 @@ List<ArticleWithAuthor> articleOuterJoinAuthor() {
 
 现在，我们可以测试我们的方法:
 
-```
+```java
 @Test
 public void whenQueryWithFullJoin_thenShouldReturnProperRows() {
     List<ArticleWithAuthor> articleWithAuthorList = articleWithAuthorDAO.articleOuterJoinAuthor();

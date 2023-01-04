@@ -20,7 +20,7 @@ JVM 使用线程来执行每个内部和外部操作。众所周知，垃圾收�
 
 一旦应用程序开始运行，就有多种方式[生成 Java 线程转储](/web/20221010235231/https://www.baeldung.com/java-thread-dump)用于诊断。在本教程中，我们将使用 JDK7+安装中包含的两个实用程序。首先，我们将执行 [JVM 进程状态(jps)](https://web.archive.org/web/20221010235231/https://docs.oracle.com/en/java/javase/11/tools/jps.html) 命令来发现我们的应用程序的 PID 进程:
 
-```
+```java
 $ jps 
 80661 NetworkDriver
 33751 Launcher
@@ -31,7 +31,7 @@ $ jps
 
 其次，我们获取应用程序的 PID，在本例中，是紧挨着`NetworkDriver.` 的那个，然后，我们将使用 [jstack](https://web.archive.org/web/20221010235231/https://docs.oracle.com/en/java/javase/11/tools/jstack.html) 来捕获线程转储。最后，我们将结果存储在一个文本文件中:
 
-```
+```java
 $ jstack -l 80661 > sender-receiver-thread-dump.txt
 ```
 
@@ -39,14 +39,14 @@ $ jstack -l 80661 > sender-receiver-thread-dump.txt
 
 让我们看看生成的线程转储。第一行显示时间戳，而第二行通知 JVM:
 
-```
+```java
 2021-01-04 12:59:29
 Full thread dump OpenJDK 64-Bit Server VM (15.0.1+9-18 mixed mode, sharing):
 ```
 
 下一节将展示安全内存回收(SMR)和非 JVM 内部线程:
 
-```
+```java
 Threads class SMR info:
 _java_thread_list=0x00007fd7a7a12cd0, length=13, elements={
 0x00007fd7aa808200, 0x00007fd7a7012c00, 0x00007fd7aa809800, 0x00007fd7a6009200,
@@ -67,7 +67,7 @@ _java_thread_list=0x00007fd7a7a12cd0, length=13, elements={
 
 我们可以从上到下看到不同的线程在拍摄快照时正在做什么。让我们只关注堆栈中等待使用消息的有趣部分:
 
-```
+```java
 "Monitor Ctrl-Break" #12 daemon prio=5 os_prio=31 cpu=17.42ms elapsed=11.42s tid=0x00007fd7a6896200 nid=0x6603 runnable  [0x000070000dcc5000]
    java.lang.Thread.State: RUNNABLE
 	at sun.nio.ch.SocketDispatcher.read0([[email protected]](/web/20221010235231/https://www.baeldung.com/cdn-cgi/l/email-protection)/Native Method)
@@ -96,7 +96,7 @@ _java_thread_list=0x00007fd7a7a12cd0, length=13, elements={
 
 在转储结束时，我们会注意到有几个**附加线程** **执行后台操作，如垃圾收集(GC)或对象** **终止**:
 
-```
+```java
 "VM Thread" os_prio=31 cpu=1.85ms elapsed=11.50s tid=0x00007fd7a7a0c170 nid=0x3603 runnable  
 "GC Thread#0" os_prio=31 cpu=0.21ms elapsed=11.51s tid=0x00007fd7a5d12990 nid=0x4d03 runnable  
 "G1 Main Marker" os_prio=31 cpu=0.06ms elapsed=11.51s tid=0x00007fd7a7a04a90 nid=0x3103 runnable  
@@ -108,7 +108,7 @@ _java_thread_list=0x00007fd7a7a12cd0, length=13, elements={
 
 最后，转储显示 Java 本地接口(JNI)引用。当内存泄漏发生时，我们应该特别注意这一点，因为它们不会被自动垃圾收集:
 
-```
+```java
 JNI global refs: 15, weak refs: 0
 ```
 

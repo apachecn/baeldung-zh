@@ -28,7 +28,7 @@ A short article focused on the common problem of testing if two List instances c
 
 让我们从使用 Java 将 **a `List`转换成`Set`开始:**
 
-```
+```java
 public void givenUsingCoreJava_whenListConvertedToSet_thenCorrect() {
     List<Integer> sourceList = Arrays.asList(0, 1, 2, 3, 4, 5);
     Set<Integer> targetSet = new HashSet<>(sourceList);
@@ -41,7 +41,7 @@ public void givenUsingCoreJava_whenListConvertedToSet_thenCorrect() {
 
 让我们用番石榴做同样的转换:
 
-```
+```java
 public void givenUsingGuava_whenListConvertedToSet_thenCorrect() {
     List<Integer> sourceList = Lists.newArrayList(0, 1, 2, 3, 4, 5);
     Set<Integer> targetSet = Sets.newHashSet(sourceList);
@@ -52,7 +52,7 @@ public void givenUsingGuava_whenListConvertedToSet_thenCorrect() {
 
 接下来让我们使用 Commons Collections API 在一个`List`和一个`Set`之间进行转换:
 
-```
+```java
 public void givenUsingCommonsCollections_whenListConvertedToSet_thenCorrect() {
     List<Integer> sourceList = Lists.newArrayList(0, 1, 2, 3, 4, 5);
     Set<Integer> targetSet = new HashSet<>(6);
@@ -64,7 +64,7 @@ public void givenUsingCommonsCollections_whenListConvertedToSet_thenCorrect() {
 
 一个额外的选择是使用 Java 10 中引入的 [`Set.copyOf`](https://web.archive.org/web/20221211183031/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html#copyOf(java.util.Collection)) 静态工厂方法:
 
-```
+```java
 public void givenUsingJava10_whenListConvertedToSet_thenCorrect() {
     List sourceList = Lists.newArrayList(0, 1, 2, 3, 4, 5);
     Set targetSet = Set.copyOf(sourceList);
@@ -79,7 +79,7 @@ public void givenUsingJava10_whenListConvertedToSet_thenCorrect() {
 
 现在让我们做反向转换，使用 Java 将**从`Set`转换为`List,` :**
 
-```
+```java
 public void givenUsingCoreJava_whenSetConvertedToList_thenCorrect() {
    Set<Integer> sourceSet = Sets.newHashSet(0, 1, 2, 3, 4, 5);
    List<Integer> targetList = new ArrayList<>(sourceSet);
@@ -90,7 +90,7 @@ public void givenUsingCoreJava_whenSetConvertedToList_thenCorrect() {
 
 我们可以用番石榴溶液做同样的事情:
 
-```
+```java
 public void givenUsingGuava_whenSetConvertedToList_thenCorrect() {
     Set<Integer> sourceSet = Sets.newHashSet(0, 1, 2, 3, 4, 5);
     List<Integer> targetList = Lists.newArrayList(sourceSet);
@@ -103,7 +103,7 @@ public void givenUsingGuava_whenSetConvertedToList_thenCorrect() {
 
 现在让我们看看在`Set` 和`List`之间转换的 Commons Collections 解决方案:
 
-```
+```java
 public void givenUsingCommonsCollections_whenSetConvertedToList_thenCorrect() {
     Set<Integer> sourceSet = Sets.newHashSet(0, 1, 2, 3, 4, 5);
     List<Integer> targetList = new ArrayList<>(6);
@@ -115,7 +115,7 @@ public void givenUsingCommonsCollections_whenSetConvertedToList_thenCorrect() {
 
 最后，我们可以使用 Java 10 中引入的 [`List.copyOf`](https://web.archive.org/web/20221211183031/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html#copyOf(java.util.Collection)) :
 
-```
+```java
 public void givenUsingJava10_whenSetConvertedToList_thenCorrect() {
     Set<Integer> sourceSet = Sets.newHashSet(0, 1, 2, 3, 4, 5);
     List<Integer> targetList = List.copyOf(sourceSet);

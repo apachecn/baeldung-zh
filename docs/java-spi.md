@@ -68,7 +68,7 @@ Java 提供了许多 SPI。以下是服务提供者接口及其提供的服务�
 
 然后，我们创建一个表示汇率货币的模型类:
 
-```
+```java
 package com.baeldung.rate.api;
 
 public class Quote {
@@ -80,7 +80,7 @@ public class Quote {
 
 然后我们通过创建接口`QuoteManager:`来定义用于检索报价的`Service`
 
-```
+```java
 package com.baeldung.rate.api
 
 public interface QuoteManager {
@@ -90,7 +90,7 @@ public interface QuoteManager {
 
 接下来，我们为我们的服务创建一个`SPI`:
 
-```
+```java
 package com.baeldung.rate.spi;
 
 public interface ExchangeRateProvider {
@@ -102,25 +102,25 @@ public interface ExchangeRateProvider {
 
 首先，我们调用静态工厂方法`load()` 来获得`ServiceLoader:`的实例
 
-```
+```java
 ServiceLoader<ExchangeRateProvider> loader = ServiceLoader .load(ExchangeRateProvider.class); 
 ```
 
 然后我们调用`iterate()`方法来搜索和检索所有可用的实现。
 
-```
+```java
 Iterator<ExchangeRateProvider> = loader.iterator(); 
 ```
 
 搜索结果被缓存，因此我们可以调用 `ServiceLoader.reload()`方法来发现新安装的实现:
 
-```
+```java
 Iterator<ExchangeRateProvider> = loader.reload(); 
 ```
 
 这是我们的实用程序类:
 
-```
+```java
 public class ExchangeRate {
 
     ServiceLoader<ExchangeRateProvider> loader = ServiceLoader
@@ -143,7 +143,7 @@ public class ExchangeRate {
 
 现在让我们创建一个名为`exchange-rate-impl`的 Maven 项目，并将 API 依赖项添加到`pom.xml:`中
 
-```
+```java
 <dependency>
     <groupId>com.baeldung</groupId>
     <artifactId>exchange-rate-api</artifactId>
@@ -153,7 +153,7 @@ public class ExchangeRate {
 
 然后我们创建一个实现 SPI 的类:
 
-```
+```java
 public class YahooFinanceExchangeRateProvider 
   implements ExchangeRateProvider {
 
@@ -166,7 +166,7 @@ public class YahooFinanceExchangeRateProvider
 
 这里还有`QuoteManager`接口的实现:
 
-```
+```java
 public class YahooQuoteManagerImpl implements QuoteManager {
 
     @Override
@@ -178,13 +178,13 @@ public class YahooQuoteManagerImpl implements QuoteManager {
 
 为了被发现，我们创建一个提供者配置文件:
 
-```
+```java
 META-INF/services/com.baeldung.rate.spi.ExchangeRateProvider 
 ```
 
 该文件的内容是 SPI 实现的全限定类名:
 
-```
+```java
 com.baeldung.rate.impl.YahooFinanceExchangeRateProvider 
 ```
 
@@ -192,7 +192,7 @@ com.baeldung.rate.impl.YahooFinanceExchangeRateProvider
 
 最后，让我们创建一个名为`exchange-rate-app`的客户端项目，并将依赖项 exchange-rate-api 添加到类路径中:
 
-```
+```java
 <dependency>
     <groupId>com.baeldung</groupId>
     <artifactId>exchange-rate-api</artifactId>
@@ -202,7 +202,7 @@ com.baeldung.rate.impl.YahooFinanceExchangeRateProvider
 
 此时，我们可以从我们的应用程序中调用 SPI*:*
 
-```
+```java
 ExchangeRate.providers().forEach(provider -> ... );
 ```
 
@@ -210,19 +210,19 @@ ExchangeRate.providers().forEach(provider -> ... );
 
 现在让我们专注于构建我们的所有模块:
 
-```
+```java
 mvn clean package 
 ```
 
 然后，我们用`Java`命令运行我们的应用程序，而不考虑提供者:
 
-```
+```java
 java -cp ./exchange-rate-api/target/exchange-rate-api-1.0.0-SNAPSHOT.jar:./exchange-rate-app/target/exchange-rate-app-1.0.0-SNAPSHOT.jar com.baeldung.rate.app.MainApp
 ```
 
 现在，我们将在`java.ext.dirs`扩展中包含我们的提供者，并再次运行应用程序:
 
-```
+```java
 java -Djava.ext.dirs=$JAVA_HOME/jre/lib/ext:./exchange-rate-impl/target:./exchange-rate-impl/target/depends -cp ./exchange-rate-api/target/exchange-rate-api-1.0.0-SNAPSHOT.jar:./exchange-rate-app/target/exchange-rate-app-1.0.0-SNAPSHOT.jar com.baeldung.rate.app.MainApp 
 ```
 

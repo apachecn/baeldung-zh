@@ -12,7 +12,7 @@
 
 首先，让我们将`RxJavaString`包括在我们的依赖项中:
 
-```
+```java
 <dependency>
   <groupId>io.reactivex</groupId>
   <artifactId>rxjava-string</artifactId>
@@ -34,7 +34,7 @@
 
 我们可以使用一个`from`操作符从一个`InputStream`直接创建一个`Observable`:
 
-```
+```java
 TestSubscriber testSubscriber = new TestSubscriber();
 ByteArrayInputStream is = new ByteArrayInputStream("Lorem ipsum loream, Lorem ipsum lore".getBytes());
 Observable<byte[]> observableByteStream = StringObservable.from(is);
@@ -51,7 +51,7 @@ observableByteStream.subscribe(testSubscriber);
 
  **解码一个字节数组`Observable`:
 
-```
+```java
 TestSubscriber testSubscriber = new TestSubscriber();
 ByteArrayInputStream is = new ByteArrayInputStream(
   "Lorem ipsum loream, Lorem ipsum lore".getBytes());
@@ -71,7 +71,7 @@ stringObservable.subscribe(testSubscriber);
 
 由[react vex . io](https://web.archive.org/web/20221128050212/http://reactivex.io/)
 
-```
+```java
 TestSubscriber testSubscriber = new TestSubscriber();
 Observable<String> sourceObservable = Observable.just("Lorem ipsum loream,Lorem ipsum ", "lore");
 Observable<String> splittedObservable = StringObservable.split(sourceObservable, ",");
@@ -90,7 +90,7 @@ splittedObservable.subscribe(testSubscriber);
 
 由[react vex . io](https://web.archive.org/web/20221128050212/http://reactivex.io/)
 
-```
+```java
 TestSubscriber testSubscriber = new TestSubscriber();
 Observable<String> sourceObservable = Observable.just("Lorem ipsum loream", "Lorem ipsum lore");
 Observable<String> joinedObservable = StringObservable.join(sourceObservable, ",");

@@ -32,14 +32,14 @@
 
 ### 可用签名
 
-```
+```java
 public String toLowerCase(Locale locale)
 public String toLowerCase()
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenConvertToLowerCase_thenCorrect() {
     String s = "WELCOME to BAELDUNG!";

@@ -25,7 +25,7 @@
 
 首先，我们**需要确定一个散列算法**来决定我们的哪些元素被放入哪个桶:
 
-```
+```java
 private int hash(int i, int max, int numberOfBuckets) {
     return (int) ((double) i / max * (numberOfBuckets - 1));
 }
@@ -33,7 +33,7 @@ private int hash(int i, int max, int numberOfBuckets) {
 
 定义了散列方法后，我们现在可以用输入列表大小的平方根来指定容器的数量:
 
-```
+```java
 final int numberOfBuckets = (int) Math.sqrt(initialList.size());
 List<List<Integer>> buckets = new ArrayList<>(numberOfBuckets);
 for(int i = 0; i < numberOfBuckets; i++) {
@@ -43,7 +43,7 @@ for(int i = 0; i < numberOfBuckets; i++) {
 
 最后，我们需要一个简单的方法来确定输入列表中的最大整数:
 
-```
+```java
 private int findMax(List<Integer> input) {
     int m = Integer.MIN_VALUE;
     for (int i : input) {
@@ -57,7 +57,7 @@ private int findMax(List<Integer> input) {
 
 现在我们已经定义了我们的桶，我们可以使用`hash `方法将输入列表中的每个元素分配到相应的桶中:
 
-```
+```java
 int max = findMax(initialList);
 
 for (int i : initialList) {
@@ -69,7 +69,7 @@ for (int i : initialList) {
 
 定义好桶并装满整数后，**让我们用一个`Comparator` 对它们进行排序**:
 
-```
+```java
 Comparator<Integer> comparator = Comparator.naturalOrder();
 
 for(List<Integer> bucket  : buckets){
@@ -81,7 +81,7 @@ for(List<Integer> bucket  : buckets){
 
 最后，我们需要齐心协力重新创建单一列表。因为我们的存储桶已经排序，所以我们只需要遍历每个存储桶一次，并将元素添加到主列表中:
 
-```
+```java
 List<Integer> sortedArray = new LinkedList<>();
 
 for(List<Integer> bucket : buckets) {
@@ -95,7 +95,7 @@ return sortedArray;
 
 实现完成后，让我们编写一个快速的单元测试来确保它按预期工作:
 
-```
+```java
 BucketSorter sorter = new IntegerBucketSorter();
 
 List<Integer> unsorted = Arrays.asList(80,50,60,30,20,10,70,0,40,500,600,602,200,15);

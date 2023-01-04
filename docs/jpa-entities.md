@@ -14,7 +14,7 @@ JPA 中的实体只不过是表示可以持久存储到数据库中的数据的 
 
 假设我们有一个名为`Student,` 的 POJO，它代表一个学生的数据，我们希望将它存储在数据库中:
 
-```
+```java
 public class Student {
 
     // fields, getters and setters
@@ -26,7 +26,7 @@ public class Student {
 
 所以让我们通过使用`@Entity`注释来定义它。我们必须在类级别指定这个注释。**我们还必须确保实体有一个无参数的构造函数和一个主键:**
 
-```
+```java
 @Entity
 public class Student {
 
@@ -37,7 +37,7 @@ public class Student {
 
 实体名默认为类名。我们可以使用`name`元素更改它的名称:
 
-```
+```java
 @Entity(name="student")
 public class Student {
 
@@ -54,7 +54,7 @@ public class Student {
 
 使用`strategy`元素，我们可以从四种 id 生成策略中进行选择。**该值可以是`AUTO, TABLE, SEQUENCE,` 或 `IDENTITY:`或**
 
-```
+```java
 @Entity
 public class Student {
     @Id
@@ -77,7 +77,7 @@ public class Student {
 
 在这些情况下，我们可以使用`@Table`注释来指定表名:
 
-```
+```java
 @Entity
 @Table(name="STUDENT")
 public class Student {
@@ -89,7 +89,7 @@ public class Student {
 
 我们还可以使用`schema`元素提到模式:
 
-```
+```java
 @Entity
 @Table(name="STUDENT", schema="SCHOOL")
 public class Student {
@@ -109,7 +109,7 @@ public class Student {
 
 `@Column`注释有许多元素，如`name, length, nullable, and unique`:
 
-```
+```java
 @Entity
 @Table(name="STUDENT")
 public class Student {
@@ -136,7 +136,7 @@ public class Student {
 
 所以让我们用`@Transient`注释来注释字段`age`:
 
-```
+```java
 @Entity
 @Table(name="STUDENT")
 public class Student {
@@ -162,7 +162,7 @@ public class Student {
 
 对于这一点，我们有[`@Temporal`注解](/web/20221124000447/http://www.baeldung.com/hibernate-date-time):
 
-```
+```java
 @Entity
 @Table(name="STUDENT")
 public class Student {
@@ -191,14 +191,14 @@ public class Student {
 
 我们可以使用`@Enumerated`注释来指定`enum`应该按名称还是按序号持久化(默认):
 
-```
+```java
 public enum Gender {
     MALE, 
     FEMALE
 } 
 ```
 
-```
+```java
 @Entity
 @Table(name="STUDENT")
 public class Student {

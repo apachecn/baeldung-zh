@@ -38,7 +38,7 @@
 
 让我们以前面提到的例子为例，继续看看如何在不使用`Cloneable`接口的情况下应用原型模式。为了做到这一点，让我们用`abstract`方法`‘copy'`创建一个名为`Tree` 的`abstract`类。
 
-```
+```java
 public abstract class Tree {
 
     // ...
@@ -49,7 +49,7 @@ public abstract class Tree {
 
 现在假设我们有两个不同的`Tree`实现，分别叫做`PlasticTree`和`PineTree`:
 
-```
+```java
 public class PlasticTree extends Tree {
 
     // ...
@@ -64,7 +64,7 @@ public class PlasticTree extends Tree {
 }
 ```
 
-```
+```java
 public class PineTree extends Tree {
     // ...
 
@@ -85,7 +85,7 @@ public class PineTree extends Tree {
 
 现在我们来测试一下:
 
-```
+```java
 public class TreePrototypesUnitTest {
 
     @Test
@@ -107,7 +107,7 @@ public class TreePrototypesUnitTest {
 
 现在让我们克隆一个树的列表:
 
-```
+```java
 @Test
 public void givenA_ListOfTreesWhenClonedThenCreateListOfClones() {
 

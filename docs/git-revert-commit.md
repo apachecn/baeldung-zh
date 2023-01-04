@@ -12,7 +12,7 @@
 
 在这个例子中，我们将重新访问一个具有标识哈希`e0390cd8d75dc0f1115ca9f350ac1a27fddba67d` :的提交
 
-```
+```java
 git checkout e0390cd8d75dc0f1115ca9f350ac1a27fddba67d
 ```
 
@@ -30,7 +30,7 @@ git checkout e0390cd8d75dc0f1115ca9f350ac1a27fddba67d
 
 让我们看一个恢复提交的例子:
 
-```
+```java
 mkdir git_revert_example
 cd git_revert_example/
 git init .
@@ -70,7 +70,7 @@ cat test_file
 
 根据上面的例子，让我们向文件提交更多的内容，并向存储库提交一个全新的文件:
 
-```
+```java
 echo "Text to be committed" >> test_file
 git add test_file
 touch new_test_file
@@ -79,7 +79,7 @@ git add new_test_file git commit -m "More text added to test_file, added new_tes
 
 假设我们决定恢复到存储库中的第一次提交。我们将通过运行以下命令来实现这一点:
 
-```
+```java
 git reset --hard 9d6bedfd771f73373348f8337cf60915372d7954
 ```
 

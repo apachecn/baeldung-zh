@@ -62,13 +62,13 @@ SCDF 流管道由多个步骤组成，**其中** **每个步骤都是使用 Spri
 
 要运行 RabbitMQ，请在此下载最新版本[并使用默认配置启动 RabbitMQ 实例，或者运行以下 Docker 命令:](https://web.archive.org/web/20221126222258/https://www.rabbitmq.com/download.html)
 
-```
+```java
 docker run --name dataflow-rabbit -p 15672:15672 -p 5672:5672 -d rabbitmq:3-management
 ```
 
 作为最后一个设置步骤，在默认端口 5432 上安装并运行 PostgreSQL RDBMS。之后，使用以下脚本创建一个数据库，SCDF 可以在其中存储其流定义:
 
-```
+```java
 CREATE DATABASE dataflow;
 ```
 
@@ -84,7 +84,7 @@ CREATE DATABASE dataflow;
 
 最后，让我们运行 SCDF 本地服务器:
 
-```
+```java
 $java -Dloader.path=lib -jar spring-cloud-dataflow-server-local-1.6.3.RELEASE.jar \
     --spring.datasource.url=jdbc:postgresql://127.0.0.1:5432/dataflow \
     --spring.datasource.username=postgres_username \
@@ -106,7 +106,7 @@ SCDF Shell 是一个**命令行工具，它使得组合和部署我们的应用�
 
 将 jar 的最新版本下载到你的 SCDF 主文件夹中，可以在这里找到。完成后，运行以下命令(根据需要更新版本):
 
-```
+```java
 $ java -jar spring-cloud-dataflow-shell-1.6.3.RELEASE.jar
   ____                              ____ _                __
  / ___| _ __  _ __(_)_ __   __ _   / ___| | ___  _   _  __| |
@@ -125,7 +125,7 @@ dataflow:>
 
 如果在最后一行得到的不是"`dataflow:>”`，而是"`server-unknown:>”` ，那么您没有在本地主机上运行 SCDF 服务器。在这种情况下，运行以下命令连接到另一台主机:
 
-```
+```java
 server-unknown:>dataflow config server http://{host}
 ```
 
@@ -133,13 +133,13 @@ server-unknown:>dataflow config server http://{host}
 
 在 Shell 中，我们需要做的第一件事是导入应用程序启动器。在这里找到 Spring Boot 2.0.x 中 RabbitMQ+Maven 的最新版本[，运行下面的命令(再次更新版本，这里`Darwin-SR1`，根据需要):](https://web.archive.org/web/20221126222258/https://cloud.spring.io/spring-cloud-stream-app-starters/)
 
-```
+```java
 $ dataflow:>app import --uri http://bit.ly/Darwin-SR1-stream-applications-rabbit-maven
 ```
 
 要检查已安装的应用程序，请运行以下 Shell 命令:
 
-```
+```java
 $ dataflow:> app list
 ```
 
@@ -157,11 +157,11 @@ $ dataflow:> app list
 
 让我们创建一个名为`crm`的数据库和一个名为`customer`的表:
 
-```
+```java
 CREATE DATABASE crm;
 ```
 
-```
+```java
 CREATE TABLE customer (
     id bigint NOT NULL,
     imported boolean DEFAULT false,
@@ -174,7 +174,7 @@ CREATE TABLE customer (
 
 现在，让我们插入一些数据:
 
-```
+```java
 INSERT INTO customer(id, customer_name, imported) VALUES (1, 'John Doe', false);
 ```
 
@@ -186,7 +186,7 @@ INSERT INTO customer(id, customer_name, imported) VALUES (1, 'John Doe', false);
 
 完成后，点击“生成项目”按钮下载项目。然后，解压缩该项目并将其导入到您喜欢的 IDE 中，并将以下依赖项添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
@@ -197,7 +197,7 @@ INSERT INTO customer(id, customer_name, imported) VALUES (1, 'John Doe', false);
 
 `@JsonProperty `注释将在从 JSON 到 Java 的反序列化过程中进行转换:
 
-```
+```java
 public class Customer {
 
     private Long id;
@@ -220,7 +220,7 @@ public class Customer {
 
 处理器需要从输入端接收数据，进行转换，并将结果绑定到输出通道。让我们创建一个类来完成这项工作:
 
-```
+```java
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.integration.annotation.Transformer;
@@ -250,7 +250,7 @@ public class CustomerProcessorConfiguration {
 
 现在我们将创建另一个`Customer`类，用于在这一步接收输入:
 
-```
+```java
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="customer")
@@ -265,7 +265,7 @@ public class Customer {
 
 为了接收`Customer`，我们将创建一个监听器类，它将使用`CustomerRepository`保存客户实体:
 
-```
+```java
 @EnableBinding(Sink.class)
 public class CustomerListener {
 
@@ -281,7 +281,7 @@ public class CustomerListener {
 
 在这种情况下，`CustomerRepository`是来自 Spring 数据的`MongoRepository`:
 
-```
+```java
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -297,17 +297,17 @@ public interface CustomerRepository extends MongoRepository<Customer, Long> {
 
 然后，我们使用 Spring Cloud 数据流 Shell 注册它们:
 
-```
+```java
 app register --name customer-transform --type processor --uri maven://com.customer:customer-transform:0.0.1-SNAPSHOT
 ```
 
-```
+```java
 app register --name customer-mongodb-sink --type sink --uri maven://com.customer:customer-mongodb-sink:jar:0.0.1-SNAPSHOT
 ```
 
 最后，让我们检查应用程序是否存储在 SCDF，在 shell 中运行应用程序列表命令:
 
-```
+```java
 app list
 ```
 
@@ -319,7 +319,7 @@ DSL 定义了应用程序之间的配置和数据流。SCDF DSL 很简单。在�
 
 此外，该语法是受 Unix 启发的[管道语法](https://web.archive.org/web/20221126222258/https://en.wikipedia.org/wiki/Pipeline_(Unix))，它使用竖线(也称为“管道”)来连接多个应用程序:
 
-```
+```java
 http --port=8181 | log
 ```
 
@@ -333,7 +333,7 @@ JDBC 源的关键配置是`query`和`update`。 **`query`将选择未读记录�
 
 此外，我们将定义 JDBC 源以 30 秒的固定延迟进行轮询，最多轮询 1000 行。最后，我们将定义连接的配置，如驱动程序、用户名、密码和连接 URL:
 
-```
+```java
 jdbc 
     --query='SELECT id, customer_name FROM public.customer WHERE imported = false'
     --update='UPDATE public.customer SET imported = true WHERE id in (:id)'
@@ -353,7 +353,7 @@ jdbc 
 
 我们的应用完全基于`MongoDataAutoConfiguration.` 你可以在这里查看其他可能的配置[。](https://web.archive.org/web/20221126222258/https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-nosql.html#boot-features-mongodb)基本上，我们将定义`spring.data.mongodb.uri`:
 
-```
+```java
 customer-mongodb-sink --spring.data.mongodb.uri=mongodb://localhost/main
 ```
 
@@ -361,7 +361,7 @@ customer-mongodb-sink --spring.data.mongodb.uri=mongodb://localhost/main
 
 首先，为了创建最终的流定义，返回到 Shell 并执行下面的命令(没有换行符，它们只是为了可读性而插入的):
 
-```
+```java
 stream create --name jdbc-to-mongodb 
   --definition "jdbc 
   --query='SELECT id, customer_name FROM public.customer WHERE imported=false' 
@@ -378,13 +378,13 @@ stream create --name jdbc-to-mongodb
 
 这个流 DSL 定义了一个名为 jdbc `-to-` mongodb 的流。接下来，**我们将按照它的名字**来部署这个流:
 
-```
+```java
 stream deploy --name jdbc-to-mongodb 
 ```
 
 最后，我们应该在日志输出中看到所有可用日志的位置:
 
-```
+```java
 Logs will be in {PATH_TO_LOG}/spring-cloud-deployer/jdbc-to-mongodb/jdbc-to-mongodb.customer-mongodb-sink
 
 Logs will be in {PATH_TO_LOG}/spring-cloud-deployer/jdbc-to-mongodb/jdbc-to-mongodb.customer-transform

@@ -12,7 +12,7 @@
 
 假设我们有一个实体，比如一个`Book`:
 
-```
+```java
 @Entity
 public class Book {
 
@@ -29,7 +29,7 @@ public class Book {
 
 然后我们可以扩展 Spring Data JPA 的`CrudRepository` 来访问`Book`上的 CRUD 操作:
 
-```
+```java
 @Repository
 public interface BookRepository extends CrudRepository<Book, Long> {}
 ```
@@ -40,7 +40,7 @@ public interface BookRepository extends CrudRepository<Book, Long> {}
 
 让我们直接从我们的`BookRepository`开始测试这些方法:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Application.class})
 public class DeleteFromRepositoryUnitTest {
@@ -78,7 +78,7 @@ public class DeleteFromRepositoryUnitTest {
 
 假设我们想通过`title`删除`Book` s。使用命名约定，我们将从`deleteBy` 开始，并将`title`列为我们的标准:
 
-```
+```java
 @Repository
 public interface BookRepository extends CrudRepository<Book, Long> {
     long deleteByTitle(String title);
@@ -89,7 +89,7 @@ public interface BookRepository extends CrudRepository<Book, Long> {
 
 让我们写一个测试并确保它是正确的:
 
-```
+```java
 @Test
 @Transactional
 public void whenDeleteFromDerivedQuery_thenDeletingShouldBeSuccessful() {
@@ -108,7 +108,7 @@ public void whenDeleteFromDerivedQuery_thenDeletingShouldBeSuccessful() {
 
 让我们检查前面派生方法的等价代码:
 
-```
+```java
 @Modifying
 @Query("delete from Book b where b.title=:title")
 void deleteBooks(@Param("title") String title);
@@ -116,7 +116,7 @@ void deleteBooks(@Param("title") String title);
 
 同样，我们可以通过一个简单的测试来验证它的有效性:
 
-```
+```java
 @Test
 @Transactional
 public void whenDeleteFromCustomQuery_thenDeletingShouldBeSuccessful() {
@@ -135,7 +135,7 @@ public void whenDeleteFromCustomQuery_thenDeletingShouldBeSuccessful() {
 
 假设我们有一个与`Book`实体有`OneToMany`关联的`Category`实体:
 
-```
+```java
 @Entity
 public class Category {
 
@@ -155,14 +155,14 @@ public class Category {
 
 `CategoryRepository`可以只是一个扩展`CrudRepository`的空接口:
 
-```
+```java
 @Repository
 public interface CategoryRepository extends CrudRepository<Category, Long> {}
 ```
 
 我们还应该修改`Book`实体来反映这种关联:
 
-```
+```java
 @ManyToOne
 private Category category;
 ```
@@ -171,7 +171,7 @@ private Category category;
 
 **现在，如果我们尝试删除类别，书籍也会被删除**:
 
-```
+```java
 @Test
 public void whenDeletingCategories_thenBooksShouldAlsoBeDeleted() {
     categoryRepository.deleteAll();
@@ -182,7 +182,7 @@ public void whenDeletingCategories_thenBooksShouldAlsoBeDeleted() {
 
 **这不是双向的，尽管**，这意味着如果我们删除书籍，类别仍然存在:
 
-```
+```java
 @Test
 public void whenDeletingBooks_thenCategoriesShouldAlsoBeDeleted() {
     bookRepository.deleteAll();

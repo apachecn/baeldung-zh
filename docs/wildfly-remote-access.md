@@ -21,7 +21,7 @@ web 界面或控制台是一个 GWT 应用程序，它使用 **WildFly 的 HTTP 
 
 用 WildFly 的行话来说，一个接口由一个带有选择标准的网络接口组成。大多数情况下，选择标准是接口的绑定 IP 地址。本地接口声明如下:
 
-```
+```java
 <interface name="management">
     <inet-address value="${jboss.bind.address.management:127.0.0.1}"/>
 </interface>
@@ -30,7 +30,7 @@ web 界面或控制台是一个 GWT 应用程序，它使用 **WildFly 的 HTTP 
 
 因此，这个`management` local 被附加到套接字监听器 **`management-http`** 从端口`9000` : 接收 web 控制台的连接
 
-```
+```java
 <socket-binding-group name="standard-sockets" default-interface="public" 
   port-offset="${jboss.socket.binding.port-offset:0}">
     <socket-binding name="ajp" port="${jboss.ajp.port:8009}"/>
@@ -50,7 +50,7 @@ web 界面或控制台是一个 GWT 应用程序，它使用 **WildFly 的 HTTP 
 
 为了允许从远程机器访问，我们首先需要在适当的配置文件中创建远程 `management interface` 。如果我们正在配置一个独立的服务器，我们将更改 `standalone/configuration/standalone.xml`，对于域管理的，我们将更改`domain/configuration/host.xml` :
 
-```
+```java
 <interface name="remoteManagement">
     <inet-address value="${jboss.bind.address.management:REMOTE_HOST_IP}"/> 
 </interface> 
@@ -59,7 +59,7 @@ web 界面或控制台是一个 GWT 应用程序，它使用 **WildFly 的 HTTP 
 
 我们还必须修改 `management-http` 的套接字绑定，删除之前的本地接口，添加新的:
 
-```
+```java
 <socket-binding-group name="standard-sockets" default-interface="public" 
   port-offset="${jboss.socket.binding.port-offset:0}">
     <!-- same as before -->
@@ -89,7 +89,7 @@ web 界面或控制台是一个 GWT 应用程序，它使用 **WildFly 的 HTTP 
 
 还可以通过使用相同的脚本并将输入指定为参数，以非交互方式添加用户:
 
-```
+```java
 $ ./add-user.sh -u 'adminuser1' -p 'password1!'
 ```
 

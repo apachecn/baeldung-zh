@@ -16,7 +16,7 @@
 
 首先，让我们为我们的类定义框架:
 
-```
+```java
 public class CustomList<E> implements List<E> {
     private Object[] internal = {};
     // empty implementation methods
@@ -45,7 +45,7 @@ public class CustomList<E> implements List<E> {
 
 `isEmpty`方法可能是在`List`接口中定义的最直接的方法。这是我们的初始实现:
 
-```
+```java
 @Override
 public boolean isEmpty() {
     return false;
@@ -58,7 +58,7 @@ public boolean isEmpty() {
 
 让我们编写第一个测试用例，确保当列表不包含任何元素时，`isEmpty`方法返回`true`:
 
-```
+```java
 @Test
 public void givenEmptyList_whenIsEmpty_thenTrueIsReturned() {
     List<Object> list = new CustomList<>();
@@ -69,7 +69,7 @@ public void givenEmptyList_whenIsEmpty_thenTrueIsReturned() {
 
 给定的测试失败，因为`isEmpty`方法总是返回`false`。我们可以通过翻转返回值来使它通过:
 
-```
+```java
 @Override
 public boolean isEmpty() {
     return true;
@@ -80,7 +80,7 @@ public boolean isEmpty() {
 
 为了确认当列表不为空时`isEmpty`方法返回`false`，我们需要添加至少一个元素:
 
-```
+```java
 @Test
 public void givenNonEmptyList_whenIsEmpty_thenFalseIsReturned() {
     List<Object> list = new CustomList<>();
@@ -92,7 +92,7 @@ public void givenNonEmptyList_whenIsEmpty_thenFalseIsReturned() {
 
 现在需要一个`add`方法的实现。下面是我们开始使用的`add`方法:
 
-```
+```java
 @Override
 public boolean add(E element) {
     return false;
@@ -101,7 +101,7 @@ public boolean add(E element) {
 
 这个方法实现不起作用，因为没有对列表的内部数据结构进行任何更改。让我们更新它来存储添加的元素:
 
-```
+```java
 @Override
 public boolean add(E element) {
     internal = new Object[] { element };
@@ -111,7 +111,7 @@ public boolean add(E element) {
 
 我们的测试仍然失败，因为`isEmpty`方法没有得到增强。让我们这样做:
 
-```
+```java
 @Override
 public boolean isEmpty() {
     if (internal.length != 0) {
@@ -130,7 +130,7 @@ public boolean isEmpty() {
 
 让我们重构一下:
 
-```
+```java
 @Override
 public boolean isEmpty() {
     return internal.length == 0;
@@ -143,7 +143,7 @@ public boolean isEmpty() {
 
 这是我们开始实现的`size`方法，使`CustomList`类能够编译:
 
-```
+```java
 @Override
 public int size() {
     return 0;
@@ -154,7 +154,7 @@ public int size() {
 
 使用现有的`add`方法，我们可以为`size`方法创建第一个测试，验证具有单个元素的列表的大小是`1`:
 
-```
+```java
 @Test
 public void givenListWithAnElement_whenSize_thenOneIsReturned() {
     List<Object> list = new CustomList<>();
@@ -166,7 +166,7 @@ public void givenListWithAnElement_whenSize_thenOneIsReturned() {
 
 测试失败，因为`size`方法正在返回`0`。让我们通过一个新的实现:
 
-```
+```java
 @Override
 public int size() {
     if (isEmpty()) {
@@ -181,7 +181,7 @@ public int size() {
 
 我们可以重构`size`方法，使其更加优雅:
 
-```
+```java
 @Override
 public int size() {
     return internal.length;
@@ -194,7 +194,7 @@ public int size() {
 
 下面是`get`的开始实现:
 
-```
+```java
 @Override
 public E get(int index) {
     return null;
@@ -205,7 +205,7 @@ public E get(int index) {
 
 让我们看一下这个方法的第一个测试，它验证了列表中单个元素的值:
 
-```
+```java
 @Test
 public void givenListWithAnElement_whenGet_thenThatElementIsReturned() {
     List<Object> list = new CustomList<>();
@@ -218,7 +218,7 @@ public void givenListWithAnElement_whenGet_thenThatElementIsReturned() {
 
 测试将通过`get`方法的实现:
 
-```
+```java
 @Override
 public E get(int index) {
     return (E) internal[0];
@@ -233,7 +233,7 @@ public E get(int index) {
 
 很容易想象`get`必须使用`index`参数从`internal`数组的指定位置提取一个元素:
 
-```
+```java
 @Override
 public E get(int index) {
     return (E) internal[index];
@@ -244,7 +244,7 @@ public E get(int index) {
 
 这是我们在第 4 节中创建的`add`方法:
 
-```
+```java
 @Override
 public boolean add(E element) {
     internal = new Object[] { element };
@@ -256,7 +256,7 @@ public boolean add(E element) {
 
 下面是一个验证`add`返回值的简单测试:
 
-```
+```java
 @Test
 public void givenEmptyList_whenElementIsAdded_thenGetReturnsThatElement() {
     List<Object> list = new CustomList<>();
@@ -268,7 +268,7 @@ public void givenEmptyList_whenElementIsAdded_thenGetReturnsThatElement() {
 
 我们必须修改`add`方法来返回`true`以通过测试:
 
-```
+```java
 @Override
 public boolean add(E element) {
     internal = new Object[] { element };
@@ -282,7 +282,7 @@ public boolean add(E element) {
 
 下面是另一个测试，增加了列表可以包含多个元素的要求:
 
-```
+```java
 @Test
 public void givenListWithAnElement_whenAnotherIsAdded_thenGetReturnsBoth() {
     List<Object> list = new CustomList<>();
@@ -300,7 +300,7 @@ public void givenListWithAnElement_whenAnotherIsAdded_thenGetReturnsBoth() {
 
 让我们更改实现代码:
 
-```
+```java
 @Override
 public boolean add(E element) {
     Object[] temp = Arrays.copyOf(internal, internal.length + 1);

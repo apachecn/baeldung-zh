@@ -6,7 +6,7 @@
 
 在本教程中，我们将会看到如何使用不同的技术从 Java 的`ArrayList`中移除元素。给定一个体育项目列表，让我们看看如何去掉下面列表中的一些元素:
 
-```
+```java
 List<String> sports = new ArrayList<>();
 sports.add("Football");
 sports.add("Basketball");
@@ -23,7 +23,7 @@ sports.add("Cycling");
 
 使用`remove`传递一个索引作为参数，我们可以**移除列表中指定位置**的元素，并将任何后续元素向左移动，从它们的索引中减去 1。执行后，`remove` 方法将返回被删除的元素:
 
-```
+```java
 sports.remove(1); // since index starts at 0, this will remove "Basketball"
 assertEquals(4, sports.size());
 assertNotEquals(sports.get(1), "Basketball");
@@ -33,7 +33,7 @@ assertNotEquals(sports.get(1), "Basketball");
 
 另一种方法是使用这种方法从列表中删除第一个出现的元素。从形式上讲，如果存在，我们将删除索引最低的元素，如果不存在，列表不变:
 
-```
+```java
 sports.remove("Baseball");
 assertEquals(4, sports.size());
 assertFalse(sports.contains("Baseball"));
@@ -45,7 +45,7 @@ assertFalse(sports.contains("Baseball"));
 
 让我们看看如何在循环中去掉一个元素:
 
-```
+```java
 Iterator<String> iterator = sports.iterator();
 while (iterator.hasNext()) {
     if (iterator.next().equals("Boxing")) {
@@ -58,7 +58,7 @@ while (iterator.hasNext()) {
 
 如果我们使用的是 **JDK 8 或更高的**版本，我们可以利用`ArrayList#``removeIf`**移除满足给定谓词的`ArrayList`的所有元素。**
 
-```
+```java
 sports.removeIf(p -> p.equals("Cycling"));
 assertEquals(4, sports.size());
 assertFalse(sports.contains("Cycling"));

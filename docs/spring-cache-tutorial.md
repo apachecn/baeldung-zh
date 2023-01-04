@@ -22,7 +22,7 @@ Learn how to invalidate caches with Spring Boot.[Read more](/web/20221024020308/
 
 Spring 提供的核心缓存抽象驻留在`[spring-context](https://web.archive.org/web/20221024020308/https://search.maven.org/search?q=g:org.springframework%20a:spring-context) `模块中。所以在使用 Maven 时，我们的`pom.xml`应该包含以下依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context</artifactId>
@@ -32,7 +32,7 @@ Spring 提供的核心缓存抽象驻留在`[spring-context](https://web.archive
 
 有趣的是，还有另一个名为`[spring-context-support](https://web.archive.org/web/20221024020308/https://search.maven.org/search?q=g:org.springframework%20a:spring-context-support),` 的模块，它位于`spring-context `模块之上，提供更多的`CacheManagers `，由类似 [EhCache](/web/20221024020308/https://www.baeldung.com/spring-boot-ehcache) 或[咖啡因](/web/20221024020308/https://www.baeldung.com/java-caching-caffeine)支持。如果我们想将它们用作缓存存储，那么我们需要使用`spring-context-support `模块:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context-support</artifactId>
@@ -46,7 +46,7 @@ Spring 提供的核心缓存抽象驻留在`[spring-context](https://web.archive
 
 如果我们使用 Spring Boot，那么我们可以利用`[spring-boot-starter-cache](https://web.archive.org/web/20221024020308/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-cache) ` starter 包轻松添加缓存依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-cache</artifactId>
@@ -62,7 +62,7 @@ Spring 提供的核心缓存抽象驻留在`[spring-context](https://web.archive
 
 我们可以简单地通过向任何配置类添加`@EnableCaching`注释来启用缓存特性:
 
-```
+```java
 @Configuration
 @EnableCaching
 public class CachingConfig {
@@ -76,7 +76,7 @@ public class CachingConfig {
 
 当然，我们也可以通过 XML 配置来实现缓存管理:
 
-```
+```java
 <beans>
     <cache:annotation-driven />
 
@@ -100,7 +100,7 @@ public class CachingConfig {
 
 此外，我们可以使用一个或多个`CacheManagerCustomizer<T> `bean 定制自动配置的`CacheManager `[:](https://web.archive.org/web/20221024020308/https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/cache/CacheAutoConfiguration.java)
 
-```
+```java
 @Component
 public class SimpleCacheCustomizer 
   implements CacheManagerCustomizer<ConcurrentMapCacheManager> {
@@ -122,7 +122,7 @@ public class SimpleCacheCustomizer
 
 为一个方法启用缓存行为的最简单的方法是用`@Cacheable`来区分它，并用存储结果的缓存的名称来参数化它:
 
-```
+```java
 @Cacheable("addresses")
 public String getAddress(Customer customer) {...} 
 ```
@@ -131,7 +131,7 @@ public String getAddress(Customer customer) {...}
 
 虽然在大多数情况下一个缓存就足够了，但是 Spring 框架也支持将多个缓存作为参数传递:
 
-```
+```java
 @Cacheable({"addresses", "directory"})
 public String getAddress(Customer customer) {...}
 ```
@@ -146,7 +146,7 @@ public String getAddress(Customer customer) {...}
 
 我们可以使用`@CacheEvict`注释来指示删除一个或多个/所有值，以便新值可以再次加载到缓存中:
 
-```
+```java
 @CacheEvict(value="addresses", allEntries=true)
 public String getAddress(Customer customer) {...}
 ```
@@ -161,7 +161,7 @@ public String getAddress(Customer customer) {...}
 
 使用`@CachePut`注释，我们可以在不干扰方法执行的情况下更新缓存的内容。也就是说，将始终执行该方法，并缓存结果:
 
-```
+```java
 @CachePut(value="addresses")
 public String getAddress(Customer customer) {...}
 ```
@@ -172,7 +172,7 @@ public String getAddress(Customer customer) {...}
 
 如果我们想使用同一类型的多个注释来缓存一个方法，该怎么办？让我们看一个不正确的例子:
 
-```
+```java
 @CacheEvict("addresses")
 @CacheEvict(value="directory", key=customer.name)
 public String getAddress(Customer customer) {...}
@@ -182,7 +182,7 @@ public String getAddress(Customer customer) {...}
 
 上述问题的解决方法是:
 
-```
+```java
 @Caching(evict = { 
   @CacheEvict("addresses"), 
   @CacheEvict(value="directory", key="#customer.name") })
@@ -195,7 +195,7 @@ public String getAddress(Customer customer) {...}
 
 有了`@CacheConfig`注释，我们可以**将一些缓存配置精简到类级别的一个地方，**，这样我们就不必多次声明:
 
-```
+```java
 @CacheConfig(cacheNames={"addresses"})
 public class CustomerDataService {
 
@@ -209,7 +209,7 @@ public class CustomerDataService {
 
 重用我们在`@CachePut`注释中的例子，这将执行方法并每次缓存结果:
 
-```
+```java
 @CachePut(value="addresses")
 public String getAddress(Customer customer) {...} 
 ```
@@ -218,7 +218,7 @@ public String getAddress(Customer customer) {...}
 
 如果我们希望对注释何时激活有更多的控制，我们可以用一个条件参数来参数化`@CachePut`,该条件参数采用一个 SpEL 表达式，并确保基于对该表达式的求值来缓存结果:
 
-```
+```java
 @CachePut(value="addresses", condition="#customer.name=='Tom'")
 public String getAddress(Customer customer) {...}
 ```
@@ -227,7 +227,7 @@ public String getAddress(Customer customer) {...}
 
 我们也可以通过`unless`参数基于方法的输出而不是输入来控制缓存**:**
 
-```
+```java
 @CachePut(value="addresses", unless="#result.length()<64")
 public String getAddress(Customer customer) {...}
 ```
@@ -244,7 +244,7 @@ public String getAddress(Customer customer) {...}
 
 下面是我们的 XML 配置:
 
-```
+```java
 <!-- the service that you wish to make cacheable -->
 <bean id="customerDataService" 
   class="com.your.app.namespace.service.CustomerDataService"/>
@@ -280,7 +280,7 @@ public String getAddress(Customer customer) {...}
 
 下面是等效的 Java 配置:
 
-```
+```java
 @Configuration
 @EnableCaching
 public class CachingConfig {
@@ -298,7 +298,7 @@ public class CachingConfig {
 
 这是我们的`CustomerDataService`:
 
-```
+```java
 @Component
 public class CustomerDataService {
 

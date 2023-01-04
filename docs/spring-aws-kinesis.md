@@ -26,7 +26,7 @@ Kinesis 是亚马逊开发的实时收集、处理和分析数据流的工具。
 
 amazon-kinesis-client Maven 依赖将带来我们需要的一切工作示例。我们现在将它添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>amazon-kinesis-client</artifactId>
@@ -38,7 +38,7 @@ amazon-kinesis-client Maven 依赖将带来我们需要的一切工作示例。�
 
 让我们重用与我们的 Kinesis 流交互所需的`AmazonKinesis`对象。我们将在我们的`@SpringBootApplication`类中创建一个`@Bean`:
 
-```
+```java
 @Bean
 public AmazonKinesis buildAmazonKinesis() {
     BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
@@ -51,14 +51,14 @@ public AmazonKinesis buildAmazonKinesis() {
 
 接下来，让我们在`application.properties`中定义本地机器所需的`aws.access.key`和`aws.secret.key`:
 
-```
+```java
 aws.access.key=my-aws-access-key-goes-here
 aws.secret.key=my-aws-secret-key-goes-here
 ```
 
 我们将使用`@Value`注释来读取它们:
 
-```
+```java
 @Value("${aws.access.key}")
 private String accessKey;
 
@@ -72,7 +72,7 @@ private String secretKey;
 
 **AWS SDK Kinesis 消费者使用拉模型**，这意味着我们的代码将从 Kinesis 数据流的碎片中提取记录:
 
-```
+```java
 GetRecordsRequest recordsRequest = new GetRecordsRequest();
 recordsRequest.setShardIterator(shardIterator.getShardIterator());
 recordsRequest.setLimit(25);
@@ -92,7 +92,7 @@ while (!recordsResult.getRecords().isEmpty()) {
 
 我们还可以注意到，对于我们的迭代，我们使用了一个`GetShardIteratorResult`对象。我们在一个`@PostConstruc` t 方法中创建了这个对象，因此我们将立即开始跟踪记录:
 
-```
+```java
 private GetShardIteratorResult shardIterator;
 
 @PostConstruct
@@ -112,7 +112,7 @@ private void buildShardIterator() {
 
 **我们使用一个`PutRecordsRequest`对象**插入数据。对于这个新对象，我们添加了一个包含多个`PutRecordsRequestEntry`对象的列表:
 
-```
+```java
 List<PutRecordsRequestEntry> entries = IntStream.range(1, 200).mapToObj(ipSuffix -> {
     PutRecordsRequestEntry entry = new PutRecordsRequestEntry();
     entry.setData(ByteBuffer.wrap(("192.168.0." + ipSuffix).getBytes()));
@@ -141,7 +141,7 @@ KCL 和 KPL 都有易于使用的主要优势，这样我们就可以专注于�
 
 如果需要，这两个库可以在我们的项目中单独引入。为了在我们的 Maven 项目中包含 [KPL](https://web.archive.org/web/20220627180237/https://search.maven.org/search?q=amazon-kinesis-producer) 和 [KCL](https://web.archive.org/web/20220627180237/https://search.maven.org/search?q=a:amazon-kinesis-client%20g:com.amazonaws) ，我们需要更新我们的 pom.xml 文件:
 
-```
+```java
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>amazon-kinesis-producer</artifactId>
@@ -162,7 +162,7 @@ KCL 和 KPL 都有易于使用的主要优势，这样我们就可以专注于�
 
 首先，我们将**创建一个实现`IRecordProcessor`接口的类，并为如何处理 Kinesis 数据流记录**定义我们的逻辑，即在控制台中打印它们:
 
-```
+```java
 public class IpProcessor implements IRecordProcessor {
     @Override
     public void initialize(InitializationInput initializationInput) { }
@@ -180,7 +180,7 @@ public class IpProcessor implements IRecordProcessor {
 
 下一步是**定义一个实现`IRecordProcessorFactory`接口**的工厂类，并返回先前创建的`IpProcessor`对象:
 
-```
+```java
 public class IpProcessorFactory implements IRecordProcessorFactory {
     @Override
     public IRecordProcessor createProcessor() {
@@ -193,7 +193,7 @@ public class IpProcessorFactory implements IRecordProcessorFactory {
 
 我们将把`KinesisClientLibConfiguration`和我们的`IpProcessorFactory`对象传递给我们的`Worker`，然后在一个单独的线程中启动它。我们通过使用`Worker`类来保持消费记录的逻辑，所以我们现在不断地读取新记录:
 
-```
+```java
 BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
 KinesisClientLibConfiguration consumerConfig = new KinesisClientLibConfiguration(
   APP_NAME, 
@@ -213,7 +213,7 @@ CompletableFuture.runAsync(worker.run());
 
 现在让我们定义`KinesisProducerConfiguration`对象，添加 IAM 凭证和 AWS 区域:
 
-```
+```java
 BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
 KinesisProducerConfiguration producerConfig = new KinesisProducerConfiguration()
   .setCredentialsProvider(new AWSStaticCredentialsProvider(awsCredentials))
@@ -225,7 +225,7 @@ this.kinesisProducer = new KinesisProducer(producerConfig);
 
 我们将在一个`@Scheduled`作业中包含先前创建的`kinesisProducer`对象，并为我们的 Kinesis 数据流连续生成记录:
 
-```
+```java
 IntStream.range(1, 200).mapToObj(ipSuffix -> ByteBuffer.wrap(("192.168.0." + ipSuffix).getBytes()))
   .forEach(entry -> kinesisProducer.addUserRecord(IPS_STREAM, IPS_PARTITION_KEY, entry));
 ```
@@ -238,7 +238,7 @@ IntStream.range(1, 200).mapToObj(ipSuffix -> ByteBuffer.wrap(("192.168.0." + ipS
 
 我们需要在应用程序中为[Spring Cloud Stream Binder Kinesis](https://web.archive.org/web/20220627180237/https://search.maven.org/search?q=a:spring-cloud-stream-binder-kinesis)定义的 Maven 依赖性是:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-stream-binder-kinesis</artifactId>
@@ -250,7 +250,7 @@ IntStream.range(1, 200).mapToObj(ipSuffix -> ByteBuffer.wrap(("192.168.0." + ipS
 
 在 EC2 上运行时，会自动发现所需的 AWS 属性，因此不需要定义它们。因为我们在本地机器上运行我们的示例，所以我们需要为我们的 AWS 帐户定义 IAM 访问密钥、秘密密钥和区域。我们还禁用了应用程序的自动云形成堆栈名称检测:
 
-```
+```java
 cloud.aws.credentials.access-key=my-aws-access-key
 cloud.aws.credentials.secret-key=my-aws-secret-key
 cloud.aws.region.static=eu-central-1
@@ -269,7 +269,7 @@ cloud.aws.stack.auto=false
 
 定义消费者的工作分为两部分。首先，我们将在`application.properties`中定义我们将消费的数据流:
 
-```
+```java
 spring.cloud.stream.bindings.input.destination=live-ips
 spring.cloud.stream.bindings.input.group=live-ips-group
 spring.cloud.stream.bindings.input.content-type=text/plain
@@ -277,7 +277,7 @@ spring.cloud.stream.bindings.input.content-type=text/plain
 
 接下来，让我们定义一个 Spring `@Component`类。注释 **`@EnableBinding(Sink.class)`将允许我们使用用`@StreamListener(Sink.INPUT)`** 注释的方法从 Kinesis 流中读取:
 
-```
+```java
 @EnableBinding(Sink.class)
 public class IpConsumer {
 
@@ -292,14 +292,14 @@ public class IpConsumer {
 
 生产者也可以一分为二。首先，我们必须在`application.properties`中定义我们的流属性:
 
-```
+```java
 spring.cloud.stream.bindings.output.destination=live-ips
 spring.cloud.stream.bindings.output.content-type=text/plain
 ```
 
 然后**我们在弹簧`@Component`上添加`@EnableBinding(Source.class)`并每隔几秒创建新的测试消息**:
 
-```
+```java
 @Component
 @EnableBinding(Source.class)
 public class IpProducer {

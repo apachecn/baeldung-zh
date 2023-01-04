@@ -12,7 +12,7 @@ JDK 7 引入了获取文件创建日期的能力。
 
 获得文件创建日期的一种方法是**使用方法** `**Files.getAttribute**` 和给定的`Path`:
 
-```
+```java
 try {
     FileTime creationTime = (FileTime) Files.getAttribute(path, "creationTime");
 } catch (IOException ex) {
@@ -30,7 +30,7 @@ try {
 
 另一种获取创建日期的方法是使用 **`Files.readAttributes`，对于给定的*路径，*会立即返回文件的所有基本属性**:
 
-```
+```java
 try {
     BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
     FileTime fileTime = attr.creationTime();

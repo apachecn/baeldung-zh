@@ -14,7 +14,7 @@ Hibernate 查询语言(HQL)支持各种聚合函数——`SELECT`语句中的`mi
 
 让我们从定义一个`Student`实体开始:
 
-```
+```java
 @Entity
 public class Student {
 
@@ -32,7 +32,7 @@ public class Student {
 
 用一些学生填充我们的数据库:
 
-```
+```java
 public class AggregateFunctionsIntegrationTest {
 
     private static Session session;
@@ -63,7 +63,7 @@ public class AggregateFunctionsIntegrationTest {
 
 现在，假设我们想找出存储在我们的`Student`表中的所有学生的最小年龄。我们可以通过使用`min()`函数轻松实现:
 
-```
+```java
 @Test
 public void whenMinAge_ThenReturnValue() {
     int minAge = (int) session.createQuery("SELECT min(age) from Student")
@@ -78,7 +78,7 @@ public void whenMinAge_ThenReturnValue() {
 
 类似于`min()`函数，我们有一个`max()`函数:
 
-```
+```java
 @Test
 public void whenMaxAge_ThenReturnValue() {
     int maxAge = (int) session.createQuery("SELECT max(age) from Student")
@@ -95,7 +95,7 @@ public void whenMaxAge_ThenReturnValue() {
 
 我们可以使用`sum()`函数来计算所有年龄的总和:
 
-```
+```java
 @Test
 public void whenSumOfAllAges_ThenReturnValue() {
     Long sumOfAllAges = (Long) session.createQuery("SELECT sum(age) from Student")
@@ -110,7 +110,7 @@ public void whenSumOfAllAges_ThenReturnValue() {
 
 类似地，我们可以使用`avg()`函数找到平均年龄:
 
-```
+```java
 @Test
 public void whenAverageAge_ThenReturnValue() {
     Double avgAge = (Double) session.createQuery("SELECT avg(age) from Student")
@@ -125,7 +125,7 @@ public void whenAverageAge_ThenReturnValue() {
 
 与原生 SQL 一样，HQL 也提供了一个`count()`函数。让我们在`Student`表中找到记录的数量:
 
-```
+```java
 @Test
 public void whenCountAll_ThenReturnValue() {
     Long totalStudents = (Long) session.createQuery("SELECT count(*) from Student")

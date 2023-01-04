@@ -12,7 +12,7 @@
 
 首先，让我们看看我们的 maven 配置——我们需要将以下依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>io.katharsis</groupId>
     <artifactId>katharsis-spring</artifactId>
@@ -24,7 +24,7 @@
 
 接下来，让我们看看我们的用户资源:
 
-```
+```java
 @JsonApiResource(type = "users")
 public class User {
 
@@ -44,7 +44,7 @@ public class User {
 
 简单地说，这个例子的持久性将是一个 Spring 数据仓库:
 
-```
+```java
 public interface UserRepository extends JpaRepository<User, Long> {}
 ```
 
@@ -52,7 +52,7 @@ public interface UserRepository extends JpaRepository<User, Long> {}
 
 接下来，让我们讨论我们的资源库——每个资源都应该有一个`ResourceRepositoryV2`来发布其上可用的 API 操作:
 
-```
+```java
 @Component
 public class UserResourceRepository implements ResourceRepositoryV2<User, Long> {
 
@@ -103,13 +103,13 @@ public class UserResourceRepository implements ResourceRepositoryV2<User, Long> 
 
 因为我们正在使用`katharsis-spring`，所以我们需要做的就是在我们的 Spring Boot 应用程序中导入`KatharsisConfigV3`:
 
-```
+```java
 @Import(KatharsisConfigV3.class)
 ```
 
 并在我们的`application.properties`中配置 Katharsis 参数:
 
-```
+```java
 katharsis.domainName=http://localhost:8080
 katharsis.pathPrefix=/
 ```
@@ -127,7 +127,7 @@ katharsis.pathPrefix=/
 
 首先，让我们介绍一种新资源—`Role`:
 
-```
+```java
 @JsonApiResource(type = "roles")
 public class Role {
 
@@ -143,7 +143,7 @@ public class Role {
 
 然后在`User`和`Role`之间建立多对多关系:
 
-```
+```java
 @JsonApiRelation(serialize=SerializeType.EAGER)
 private Set<Role> roles;
 ```
@@ -152,7 +152,7 @@ private Set<Role> roles;
 
 很快——这是我们的`Role`资源库:
 
-```
+```java
 @Component
 public class RoleResourceRepository implements ResourceRepositoryV2<Role, Long> {
 
@@ -203,7 +203,7 @@ public class RoleResourceRepository implements ResourceRepositoryV2<Role, Long> 
 
 为了处理`User`–`Role`之间的多对多关系，我们需要创建一种新型的存储库:
 
-```
+```java
 @Component
 public class UserToRoleRelationshipRepository implements RelationshipRepositoryV2<User, Long, Role, Long> {
 
@@ -274,7 +274,7 @@ public class UserToRoleRelationshipRepository implements RelationshipRepositoryV
 
 **获取 http://localhost:8080/users/2**
 
-```
+```java
 {
     "data":{
         "type":"users",
@@ -328,7 +328,7 @@ public class UserToRoleRelationshipRepository implements RelationshipRepositoryV
 
 **获取 http://localhost:8080/roles**
 
-```
+```java
 {
     "data":[
         {

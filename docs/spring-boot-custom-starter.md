@@ -18,7 +18,7 @@
 
 当 Spring Boot 启动时，它在类路径中查找名为`spring.factories`的文件。这个文件位于`META-INF`目录中。让我们来看看这个来自 spring-boot-autoconfigure 项目的[文件的一个片段:](https://web.archive.org/web/20220707143835/https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-autoconfigure/src/main/resources/META-INF/spring.factories)
 
-```
+```java
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration,\
@@ -33,7 +33,7 @@ org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
 
 这个条件初始化由`[@ConditionalOnClass](https://web.archive.org/web/20220707143835/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/autoconfigure/condition/ConditionalOnClass.html)`注释启用。让我们看看来自`MongoAutoConfiguration`类的代码片段，看看它的用法:
 
-```
+```java
 @Configuration
 @ConditionalOnClass(MongoClient.class)
 @EnableConfigurationProperties(MongoProperties.class)
@@ -53,7 +53,7 @@ Spring Boot 使用一些预先配置的默认值来初始化 beans。为了覆�
 
 在`MongoAutoConfiguration`、`@EnableConfigurationProperties`的代码片段中，注释是用充当自定义属性容器的[、`MongoProperties`、](https://web.archive.org/web/20220707143835/https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/mongo/MongoProperties.java)类声明的:
 
-```
+```java
 @ConfigurationProperties(prefix = "spring.data.mongodb")
 public class MongoProperties {
 
@@ -65,7 +65,7 @@ public class MongoProperties {
 
 前缀加上字段名构成了`application.properties`文件中属性的名称。因此，要为 MongoDB 设置`host`,我们只需在属性文件中编写以下内容:
 
-```
+```java
 spring.data.mongodb.host = localhost
 ```
 
@@ -86,7 +86,7 @@ spring.data.mongodb.host = localhost
 
 让我们看看这两个类的代码:
 
-```
+```java
 @ConfigurationProperties(prefix = "baeldung.greeter")
 public class GreeterProperties {
 
@@ -101,7 +101,7 @@ public class GreeterProperties {
 }
 ```
 
-```
+```java
 @Configuration
 @ConditionalOnClass(Greeter.class)
 @EnableConfigurationProperties(GreeterProperties.class)
@@ -136,7 +136,7 @@ public class GreeterAutoConfiguration {
 
 我们还需要在`src/main/resources/META-INF`目录中添加一个`spring.factories`文件，内容如下:
 
-```
+```java
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.baeldung.greeter.autoconfigure.GreeterAutoConfiguration
 ```
@@ -151,7 +151,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 
 按照命名约定，所有不由核心 Spring Boot 团队管理的启动器都应该以库名开头，后面加上后缀`-spring-boot-starter`。所以我们称我们的启动器为`greeter-spring-boot-starter:`
 
-```
+```java
 <project ...>
     <modelVersion>4.0.0</modelVersion>
 
@@ -194,7 +194,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 
 让我们创建将使用启动器的`greeter-spring-boot-sample-app`。在`pom.xml`中，我们需要将它添加为一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.baeldung</groupId>
     <artifactId>greeter-spring-boot-starter</artifactId>
@@ -206,14 +206,14 @@ Spring Boot 将自动配置一切，我们将有一个`Greeter` bean 准备好�
 
 让我们通过在带有`baeldung.greeter`前缀的`application.properties`文件中定义它们来改变`GreeterProperties`的一些默认值:
 
-```
+```java
 baeldung.greeter.userName=Baeldung
 baeldung.greeter.afternoonMessage=Woha\ Afternoon
 ```
 
 最后，让我们在应用程序中使用`Greeter` bean:
 
-```
+```java
 @SpringBootApplication
 public class GreeterSampleApplication implements CommandLineRunner {
 

@@ -14,7 +14,7 @@
 
 首先，让我们为 RabbitMQ 客户端添加 [Maven 依赖项:](https://web.archive.org/web/20220930164138/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.rabbitmq%22%20AND%20a%3A%22amqp-client%22)
 
-```
+```java
 <dependency>
     <groupId>com.rabbitmq</groupId>
     <artifactId>amqp-client</artifactId>
@@ -24,7 +24,7 @@
 
 接下来，让我们声明到 RabbitMQ 服务器的连接，并打开一个通信通道:
 
-```
+```java
 ConnectionFactory factory = new ConnectionFactory();
 factory.setHost("localhost");
 Connection connection = factory.newConnection();
@@ -55,7 +55,7 @@ Channel channel = connection.createChannel();
 
 考虑到所有因素，让我们声明交换的可选参数:
 
-```
+```java
 Map<String, Object> exchangeArguments = new HashMap<>();
 exchangeArguments.put("alternate-exchange", "orders-alternate-exchange");
 ```
@@ -64,7 +64,7 @@ exchangeArguments.put("alternate-exchange", "orders-alternate-exchange");
 
 接下来，**让我们声明一个启用了持久性并禁用了自动删除的直接交换**:
 
-```
+```java
 channel.exchangeDeclare("orders-direct-exchange", BuiltinExchangeType.DIRECT, true, false, exchangeArguments);
 ```
 
@@ -84,7 +84,7 @@ channel.exchangeDeclare("orders-direct-exchange", BuiltinExchangeType.DIRECT, tr
 
 让我们添加两个参数，消息 TTL 和优先级的最大数量:
 
-```
+```java
 Map<String, Object> queueArguments = new HashMap<>();
 queueArguments.put("x-message-ttl", 60000);
 queueArguments.put("x-max-priority", 10);
@@ -92,7 +92,7 @@ queueArguments.put("x-max-priority", 10);
 
 现在，让我们**声明一个持久队列，禁用独占和自动删除属性**:
 
-```
+```java
 channel.queueDeclare("orders-queue", true, false, false, queueArguments);
 ```
 
@@ -104,7 +104,7 @@ channel.queueDeclare("orders-queue", true, false, false, queueArguments);
 
 最后，让我们使用路由关键字将我们创建的队列绑定到交换:
 
-```
+```java
 channel.queueBind("orders-queue", "orders-direct-exchange", "orders-routing-key");
 ```
 

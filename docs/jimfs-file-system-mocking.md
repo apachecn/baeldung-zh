@@ -24,7 +24,7 @@
 
 首先，让我们添加我们的示例需要的项目依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.jimfs</groupId>
     <artifactId>jimfs</artifactId>
@@ -38,7 +38,7 @@ jimfs 依赖项包含了我们使用模拟文件系统所需的一切。此外�
 
 我们将从定义一个简单的`FileRepository`类开始，它实现了一些标准的 CRUD 操作:
 
-```
+```java
 public class FileRepository {
 
     void create(Path path, String fileName) {
@@ -83,7 +83,7 @@ public class FileRepository {
 
 在这一节中，我们将编写一个测试来测试我们存储库中的`create`方法:
 
-```
+```java
 @Test
 @DisplayName("Should create a file on a file system")
 void givenUnixSystem_whenCreatingFile_thenCreatedInPath() {
@@ -105,7 +105,7 @@ void givenUnixSystem_whenCreatingFile_thenCreatedInPath() {
 
 接下来，我们将测试读取文件内容的方法:
 
-```
+```java
 @Test
 @DisplayName("Should read the content of the file")
 void givenOSXSystem_whenReadingFile_thenContentIsReturned() throws Exception {
@@ -125,7 +125,7 @@ void givenOSXSystem_whenReadingFile_thenContentIsReturned() throws Exception {
 
 我们还可以使用 Jimfs 来测试更新文件内容的方法:
 
-```
+```java
 @Test
 @DisplayName("Should update the content of the file")
 void givenWindowsSystem_whenUpdatingFile_thenContentHasChanged() throws Exception {
@@ -147,7 +147,7 @@ void givenWindowsSystem_whenUpdatingFile_thenContentHasChanged() throws Exceptio
 
 为了结束对 CRUD 操作的测试，让我们测试删除文件的方法:
 
-```
+```java
 @Test
 @DisplayName("Should delete file")
 void givenCurrentSystem_whenDeletingFile_thenFileHasBeenDeleted() throws Exception {
@@ -169,7 +169,7 @@ void givenCurrentSystem_whenDeletingFile_thenFileHasBeenDeleted() throws Excepti
 
 首先，让我们使用标准的`java.nio.file.File`类来实现`move`方法:
 
-```
+```java
 void move(Path origin, Path destination) {
     try {
         Files.createDirectories(destination);
@@ -182,7 +182,7 @@ void move(Path origin, Path destination) {
 
 我们将使用一个参数化测试来确保这个方法在几个不同的文件系统上工作:
 
-```
+```java
 private static Stream<Arguments> provideFileSystem() {
     return Stream.of(
             Arguments.of(Jimfs.newFileSystem(Configuration.unix())),
@@ -211,7 +211,7 @@ void givenEachSystem_whenMovingFile_thenMovedToNewPath(FileSystem fileSystem) th
 
 为了演示使用 Jimfs 的另一个好处，让我们创建一个`FilePathReader`类。该类负责返回实际的系统路径，当然，这取决于操作系统:
 
-```
+```java
 class FilePathReader {
 
     String getSystemPath(Path path) {
@@ -228,7 +228,7 @@ class FilePathReader {
 
 现在，让我们为这个类添加一个测试:
 
-```
+```java
 class FilePathReaderUnitTest {
 
     private static String DIRECTORY_NAME = "baeldung";

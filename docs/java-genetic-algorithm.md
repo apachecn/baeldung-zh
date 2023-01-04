@@ -26,7 +26,7 @@
 
 在初始化步骤中，我们**生成一个随机数`Population`，作为第一个解**。首先，我们需要决定`Population`有多大，以及我们期望的最终解决方案是什么:
 
-```
+```java
 SimpleGeneticAlgorithm.runAlgorithm(50,
   "1011000100000100010000100000100111001000000100000100000000001111");
 ```
@@ -35,7 +35,7 @@ SimpleGeneticAlgorithm.runAlgorithm(50,
 
 下一步，我们将保存我们想要的解决方案，并创建一个随机的`Population`:
 
-```
+```java
 setSolution(solution);
 Population myPop = new Population(populationSize, true);
 ```
@@ -46,7 +46,7 @@ Population myPop = new Population(populationSize, true);
 
 在程序的主循环中，我们将由**通过适应度函数**对每个`Individual`进行评估(简单来说，`Individual`越好，它得到的适应度函数值越高):
 
-```
+```java
 while (myPop.getFittest().getFitness() < getMaxFitness()) {
     System.out.println(
       "Generation: " + generationCount
@@ -59,7 +59,7 @@ while (myPop.getFittest().getFitness() < getMaxFitness()) {
 
 让我们先来解释一下**我们是如何得到最适合的`Individual`** :
 
-```
+```java
 public int getFitness(Individual individual) {
     int fitness = 0;
     for (int i = 0; i < individual.getDefaultGeneLength()
@@ -78,7 +78,7 @@ public int getFitness(Individual individual) {
 
 在这一步，我们需要创建一个新的`Population`。首先，我们需要**根据适合度从一个`Population,`中选择**两个父`Individual` 对象。请注意，允许最好的`Individual`从这一代延续到下一代是有益的。这种策略被称为**精英主义:**
 
-```
+```java
 if (elitism) {
     newPopulation.getIndividuals().add(0, pop.getFittest());
     elitismOffset = 1;
@@ -89,7 +89,7 @@ if (elitism) {
 
 为了选出两个最好的`Individual`对象，我们将应用 **[比武选择策略](https://web.archive.org/web/20220122050559/https://en.wikipedia.org/wiki/Tournament_selection)** :
 
-```
+```java
 private Individual tournamentSelection(Population pop) {
     Population tournament = new Population(tournamentSize, false);
     for (int i = 0; i < tournamentSize; i++) {
@@ -103,7 +103,7 @@ private Individual tournamentSelection(Population pop) {
 
 每场锦标赛的获胜者(体能最佳者)将进入下一阶段，即**交叉赛**:
 
-```
+```java
 private Individual crossover(Individual indiv1, Individual indiv2) {
     Individual newSol = new Individual();
     for (int i = 0; i < newSol.getDefaultGeneLength(); i++) {
@@ -119,7 +119,7 @@ private Individual crossover(Individual indiv1, Individual indiv2) {
 
 在交叉中，我们在随机选择的点交换来自每个选择的`Individual`的位。整个过程在以下循环中运行:
 
-```
+```java
 for (int i = elitismOffset; i < pop.getIndividuals().size(); i++) {
     Individual indiv1 = tournamentSelection(pop);
     Individual indiv2 = tournamentSelection(pop);
@@ -132,7 +132,7 @@ for (int i = elitismOffset; i < pop.getIndividuals().size(); i++) {
 
 最后，我们可以执行一个**突变**。突变被用来从一代人到下一代人保持遗传多样性。我们使用了**位反转**类型的变异，其中随机位被简单地反转:
 
-```
+```java
 private void mutate(Individual indiv) {
     for (int i = 0; i < indiv.getDefaultGeneLength(); i++) {
         if (Math.random() <= mutationRate) {

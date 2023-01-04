@@ -16,7 +16,7 @@
 
 让我们在根项目构建文件中配置它:
 
-```
+```java
 plugins {
     id "nebula.lint" version "16.9.0"
 }
@@ -44,7 +44,7 @@ allprojects {
 
 接下来，让我们配置模块依赖关系:
 
-```
+```java
 description = "Gradle Unused Dependencies example"
 
 dependencies {
@@ -55,7 +55,7 @@ dependencies {
 
 现在让我们在模块源代码中添加一个简单的主类:
 
-```
+```java
 public class UnusedDependencies {
 
     public static void main(String[] args) {
@@ -80,7 +80,7 @@ public class UnusedDependencies {
 
 让我们**运行`lintGradle`** 任务:
 
-```
+```java
 $ ./gradlew lintGradle
 
 > Task :lintGradle FAILED
@@ -102,7 +102,7 @@ To apply fixes automatically, run fixGradleLint, review, and commit the changes.
 
 然而，让我们对我们的依赖关系使用一些虚拟逻辑:
 
-```
+```java
 public static void main(String[] args) {
     System.out.println("Hello world");
     useGuava();
@@ -116,7 +116,7 @@ private static void useGuava() {
 
 如果我们重新运行它，就不会再出现错误:
 
-```
+```java
 $ ./gradlew lintGradle
 
 BUILD SUCCESSFUL in 559ms
@@ -127,7 +127,7 @@ BUILD SUCCESSFUL in 559ms
 
 现在让我们加入另一个依赖项:
 
-```
+```java
 dependencies {
     implementation('com.google.guava:guava:29.0-jre')
     implementation('org.apache.httpcomponents:httpclient:4.5.12')
@@ -137,7 +137,7 @@ dependencies {
 
 这一次，让我们使用可传递依赖关系中的一些东西:
 
-```
+```java
 public static void main(String[] args) {
     System.out.println("Hello world");
     useGuava();
@@ -153,7 +153,7 @@ private static void useHttpCore() {
 
 让我们看看会发生什么:
 
-```
+```java
 $ ./gradlew lintGradle
 
 > Task :lintGradle FAILED
@@ -178,7 +178,7 @@ implementation('org.apache.httpcomponents:httpclient:4.5.12')
 
 让我们看一下我们的依赖关系树:
 
-```
+```java
 $ ./gradlew unused-dependencies:dependencies --configuration compileClasspath
 
 > Task :unused-dependencies:dependencies
@@ -209,7 +209,7 @@ compileClasspath - Compile classpath for source set 'main'.
 
 让我们稍微增强一下我们的例子:
 
-```
+```java
 public static void main(String[] args) {
     System.out.println("Hello world");
     useGuava();
@@ -232,7 +232,7 @@ private static void useHttpClientWithReflection() {
 
 现在让我们重新运行 Gradle 任务:
 
-```
+```java
 $ ./gradlew lintGradle
 
 > Task :lintGradle FAILED
@@ -262,7 +262,7 @@ implementation('org.apache.httpcomponents:httpclient:4.5.12')
 
 让我们将插件配置为给我们一个报告:
 
-```
+```java
 allprojects {
     apply plugin :"java"
     apply plugin :"nebula.lint"
@@ -276,7 +276,7 @@ allprojects {
 
 让我们**运行`generateGradleLintReport` 任务**并检查我们的构建输出:
 
-```
+```java
 $ ./gradlew generateGradleLintReport
 # task output omitted
 

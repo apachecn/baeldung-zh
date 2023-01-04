@@ -42,7 +42,7 @@ Jenkins 有一个命令行界面，用户和管理员可以使用它从脚本或
 
 为此，我们必须首先从位于 URL `/jnlpJars/jenkins-cli.jar`的 Jenkins 控制器下载`jenkins-cli.jar`，实际上是`JENKINS_URL/jnlpJars/jenkins-cli.jar,`，然后如下运行它:
 
-```
+```java
 java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket help
 ```
 
@@ -60,19 +60,19 @@ java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket help
 
 我们可以使用 Jenkins Rest API 执行重启。这将强制重新启动该过程，而不等待现有作业完成:
 
-```
+```java
 http://(jenkins_url)/restart 
 ```
 
 我们可以使用 Jenkins Rest API 来执行`safeRestart`。这允许我们完成任何现有的任务:
 
-```
+```java
 http://(jenkins_url)/safeRestart
 ```
 
 如果我们将它作为`rpm`或`deb`包安装，下面的命令将起作用:
 
-```
+```java
 service jenkins restart 
 ```
 
@@ -80,7 +80,7 @@ service jenkins restart
 
 我们还可以使用`apt-get/dpkg`来安装以下内容:
 
-```
+```java
 sudo /etc/init.d/jenkins restart
 Usage: /etc/init.d/jenkins {start|stop|status|restart|force-reload} 
 ```
@@ -89,13 +89,13 @@ Usage: /etc/init.d/jenkins {start|stop|status|restart|force-reload}
 
 如果我们希望安全地关闭 Jenkins，我们可以使用 Jenkins Rest API 执行退出:
 
-```
+```java
 http://(jenkins_url)/exit
 ```
 
 我们可以使用 Jenkins Rest API 执行 kill 来终止我们的所有进程:
 
-```
+```java
 http://(jenkins_url)/kill
 ```
 
@@ -111,7 +111,7 @@ http://(jenkins_url)/kill
 
 为管道作业分配节点时，使用标签，例如:
 
-```
+```java
 stage("stage 1"){
     node("SlaveNode"){
         sh "echo \"Hello ${params.NAME}\" "
@@ -143,7 +143,7 @@ stage("stage 1"){
 
 我们可以使用下面的命令(`jinfo`包含在 JDK 中)来查看是否设置了标志:
 
-```
+```java
 jinfo -flag UseCompressedOops <pid>
 ```
 

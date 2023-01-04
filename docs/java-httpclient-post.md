@@ -18,7 +18,7 @@ Java 11 中引入了 [Java `HttpClient`](https://web.archive.org/web/20221117045
 
 使用`newBuilder`方法，可以从其构建器中配置和创建 **`HttpClient` 实例。否则，如果不需要配置，我们可以利用`newHttpClient`实用程序方法创建一个默认客户端:**
 
-```
+```java
 HttpClient client = HttpClient.newHttpClient();
 ```
 
@@ -26,7 +26,7 @@ HttpClient client = HttpClient.newHttpClient();
 
 现在我们准备从它的构建器中创建一个`HttpRequest`的实例。稍后我们将利用客户机实例来发送这个请求。POST 请求的最小参数是服务器 URL、请求方法和主体:
 
-```
+```java
 HttpRequest request = HttpRequest.newBuilder()
   .uri(URI.create(serviceUrl))
   .POST(HttpRequest.BodyPublishers.noBody())
@@ -43,13 +43,13 @@ HttpRequest request = HttpRequest.newBuilder()
 
 我们可以使用这个默认的`send`方法发送准备好的请求。这个方法将**阻塞我们的代码，直到收到响应**:
 
-```
+```java
 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString())
 ```
 
 `BodyHandlers`实用程序实现了各种有用的处理程序，比如将响应体作为`String`来处理，或者将响应体流式传输到一个文件。一旦收到响应，`HttpResponse`对象将包含响应状态、标题和主体:
 
-```
+```java
 assertThat(response.statusCode())
   .isEqualTo(200);
 assertThat(response.body())
@@ -60,13 +60,13 @@ assertThat(response.body())
 
 我们可以使用`sendAsync`方法异步发送前一个例子中的相同请求。这个方法没有阻塞我们的代码，而是将**立即返回一个** [`**CompletableFuture**`](/web/20221117045616/https://www.baeldung.com/java-completablefuture) **实例**:
 
-```
+```java
 CompletableFuture<HttpResponse<String>> futureResponse = client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
 ```
 
 一旦`HttpResponse `可用，则`CompletableFuture`完成:
 
-```
+```java
 HttpResponse<String> response = futureResponse.get();
 assertThat(response.statusCode()).isEqualTo(200);
 assertThat(response.body()).isEqualTo("{\"message\":\"ok\"}");
@@ -76,7 +76,7 @@ assertThat(response.body()).isEqualTo("{\"message\":\"ok\"}");
 
 我们可以将[流](/web/20221117045616/https://www.baeldung.com/java-8-streams)与`CompletableFutures`组合起来，以便**同时发出几个请求，并等待它们的响应**:
 
-```
+```java
 List<CompletableFuture<HttpResponse<String>>> completableFutures = serviceUrls.stream()
   .map(URI::create)
   .map(HttpRequest::newBuilder)
@@ -88,7 +88,7 @@ List<CompletableFuture<HttpResponse<String>>> completableFutures = serviceUrls.s
 
 现在，让我们等待所有请求完成，以便我们可以一次处理它们的响应:
 
-```
+```java
 CompletableFuture<List<HttpResponse<String>>> combinedFutures = CompletableFuture
   .allOf(completableFutures.toArray(new CompletableFuture[0]))
   .thenApply(future ->
@@ -99,7 +99,7 @@ CompletableFuture<List<HttpResponse<String>>> combinedFutures = CompletableFutur
 
 当我们使用`allOf`和`join`方法组合所有响应时，我们得到一个新的`CompletableFuture` 来保存我们的响应:
 
-```
+```java
 List<HttpResponse<String>> responses = combinedFutures.get();
 responses.forEach((response) -> {
   assertThat(response.statusCode()).isEqualTo(200);
@@ -111,7 +111,7 @@ responses.forEach((response) -> {
 
 我们可以在客户端级别设置一个**验证器，用于所有请求的 HTTP 验证**:
 
-```
+```java
 HttpClient client = HttpClient.newBuilder()
   .authenticator(new Authenticator() {
     @Override
@@ -128,7 +128,7 @@ HttpClient client = HttpClient.newBuilder()
 
 要绕过这一点，我们总是可以手动创建和发送基本授权头:
 
-```
+```java
 HttpRequest request = HttpRequest.newBuilder()
   .uri(URI.create(serviceUrl))
   .POST(HttpRequest.BodyPublishers.noBody())
@@ -145,7 +145,7 @@ HttpRequest request = HttpRequest.newBuilder()
 
 `BodyPublishers` 实用程序实现了各种有用的发布器，比如从`String`或文件发布请求体。我们可以**将 JSON 数据发布为`String`** ，使用 UTF-8 字符集进行转换:
 
-```
+```java
 HttpRequest request = HttpRequest.newBuilder()
   .uri(URI.create(serviceUrl))
   .POST(HttpRequest.BodyPublishers.ofString("{\"action\":\"hello\"}"))
@@ -156,7 +156,7 @@ HttpRequest request = HttpRequest.newBuilder()
 
 让我们创建一个[临时文件](/web/20221117045616/https://www.baeldung.com/junit-5-temporary-directory)，我们可以使用它通过`HttpClient`上传:
 
-```
+```java
 Path file = tempDir.resolve("temp.txt");
 List<String> lines = Arrays.asList("1", "2", "3");
 Files.write(file, lines);
@@ -164,7 +164,7 @@ Files.write(file, lines);
 
 **`HttpClient`提供了一个单独的方法`BodyPublishers.ofFile,` ，用于将文件添加到文章正文**中。我们可以简单地添加我们的临时文件作为方法参数，API 会处理剩下的事情:
 
-```
+```java
 HttpRequest request = HttpRequest.newBuilder()
   .uri(URI.create(serviceUrl))
   .POST(HttpRequest.BodyPublishers.ofFile(file))
@@ -175,7 +175,7 @@ HttpRequest request = HttpRequest.newBuilder()
 
 与文件相反，`HttpClient`没有提供一个单独的方法来发布表单数据。因此，我们将再次需要**使用`BodyPublishers.ofString` 方法**:
 
-```
+```java
 Map<String, String> formData = new HashMap<>();
 formData.put("username", "baeldung");
 formData.put("message", "hello");
@@ -188,7 +188,7 @@ HttpRequest request = HttpRequest.newBuilder()
 
 然而，我们需要使用一个定制的实现将表单数据从一个`Map`转换成一个`String`:
 
-```
+```java
 private static String getFormDataAsString(Map<String, String> formData) {
     StringBuilder formBodyBuilder = new StringBuilder();
     for (Map.Entry<String, String> singleEntry : formData.entrySet()) {

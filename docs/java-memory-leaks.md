@@ -45,7 +45,7 @@ Java 的核心优势之一是借助内置的垃圾收集器(或简称为 **GC** 
 
 让我们创建一个简单的 Java 程序来填充一个`static` `List:`
 
-```
+```java
 public class StaticTest {
     public static List<Double> list = new ArrayList<>();
 
@@ -105,7 +105,7 @@ public class StaticTest {
 
 让我们以一个普通的`Person`类为例，将它用作`HashMap`中的一个键:
 
-```
+```java
 public class Person {
     public String name;
 
@@ -119,7 +119,7 @@ public class Person {
 
 记住一个`Map`不能包含重复的键:
 
-```
+```java
 @Test
 public void givenMap_whenEqualsAndHashCodeNotOverridden_thenMemoryLeak() {
     Map<Person, Integer> map = new HashMap<>();
@@ -140,7 +140,7 @@ public void givenMap_whenEqualsAndHashCodeNotOverridden_thenMemoryLeak() {
 
 让我们看看`Person`类的`equals()`和`hashCode()`的正确实现:
 
-```
+```java
 public class Person {
     public String name;
 
@@ -169,7 +169,7 @@ public class Person {
 
 在这种情况下，下列断言将是正确的:
 
-```
+```java
 @Test
 public void givenMap_whenEqualsAndHashCodeNotOverridden_thenMemoryLeak() {
     Map<Person, Integer> map = new HashMap<>();
@@ -254,7 +254,7 @@ public void givenMap_whenEqualsAndHashCodeNotOverridden_thenMemoryLeak() {
 *   解决这个问题的最简单的方法是升级到最新的 Java 版本，因为从 Java 版本 7 开始，String pool 就转移到了 HeapSpace。
 *   如果我们正在处理大的`Strings`，我们可以增加永久空间的大小来避免任何潜在的`OutOfMemoryErrors` :
 
-    ```
+    ```java
     -XX:MaxPermSize=512m
     ```
 
@@ -284,7 +284,7 @@ public void givenMap_whenEqualsAndHashCodeNotOverridden_thenMemoryLeak() {
 *   **不要用`ThreadLocal.set(null) `清除数值。**它实际上并不清除值，而是会查找与当前线程关联的`Map`，并将键值对分别设置为当前线程和`null,`。
 *   最好将`ThreadLocal `视为我们需要在`finally` 块中关闭的资源，即使是在异常情况下:
 
-```
+```java
 try {
     threadLocal.set(System.nanoTime());
     //... further processing
@@ -310,7 +310,7 @@ Java profilers 是监视和诊断应用程序内存泄漏的工具。它们分�
 
 通过启用详细的垃圾收集，我们可以跟踪垃圾收集的详细信息。为此，我们需要将以下内容添加到我们的 JVM 配置中:
 
-```
+```java
 -verbose:gc
 ```
 

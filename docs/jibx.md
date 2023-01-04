@@ -32,7 +32,7 @@ JiBX 绑定编译器将一个或多个绑定定义以及实际的类文件作为
 
 我们需要在`pom.xml`中添加 jibx-run 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.jibx</groupId>
     <artifactId>jibx-run</artifactId>
@@ -48,7 +48,7 @@ JiBX 绑定编译器将一个或多个绑定定义以及实际的类文件作为
 
 对于我们需要从 Java 代码开始并生成绑定和模式定义的情况，让我们配置插件:
 
-```
+```java
 <plugin>
     <groupId>org.jibx</groupId>
     <artifactId>maven-jibx-plugin</artifactId>
@@ -76,7 +76,7 @@ JiBX 绑定编译器将一个或多个绑定定义以及实际的类文件作为
 
 当我们有了一个模式并生成了 Java 代码和绑定定义时，`maven-jibx-plugin`被配置了关于模式文件路径和源代码目录路径的信息:
 
-```
+```java
 <plugin>
     <groupId>org.jibx</groupId>
     <artifactId>maven-jibx-plugin</artifactId>
@@ -115,7 +115,7 @@ JiBX 绑定编译器将一个或多个绑定定义以及实际的类文件作为
 
 绑定定义是 JiBX 的核心部分。基本绑定文件指定了 XML 和 Java 对象字段之间的映射:
 
-```
+```java
 <binding>
     <mapping name="customer" class="com.baeldung.xml.jibx.Customer">
         ...
@@ -128,7 +128,7 @@ JiBX 绑定编译器将一个或多个绑定定义以及实际的类文件作为
 
 结构映射使 XML 结构看起来类似于对象结构:
 
-```
+```java
 <binding>
     <mapping name="customer" class="com.baeldung.xml.jibx.Customer">
     ...
@@ -143,7 +143,7 @@ JiBX 绑定编译器将一个或多个绑定定义以及实际的类文件作为
 
 该结构的相应类将是:
 
-```
+```java
 public class Customer {
 
     private Person person;
@@ -167,7 +167,7 @@ public class Person {
 
 JiBX 绑定提供了一种处理对象集合的简单方法:
 
-```
+```java
 <mapping class="com.baeldung.xml.jibx.Order" name="Order">
     <collection get-method="getAddressList" 
       set-method="setAddressList" usage="optional" 
@@ -185,7 +185,7 @@ JiBX 绑定提供了一种处理对象集合的简单方法:
 
 让我们看看相应的映射 Java 对象:
 
-```
+```java
 public class Order {
     List<Address> addressList = new ArrayList<>();
     ...
@@ -208,7 +208,7 @@ public static class Address {
 
 让我们看看如何定义一个抽象映射:
 
-```
+```java
 <binding>
     <mapping name="customer" 
       class="com.baeldung.xml.jibx.Customer">
@@ -231,7 +231,7 @@ public static class Address {
 
 让我们看看它是如何绑定到 Java 对象的:
 
-```
+```java
 public class Customer {
     private Person person;
     ...
@@ -245,7 +245,7 @@ public class Customer {
 
 这里我们在`Customer`类中指定了多个`Phone`字段。这个`Phone` 本身又是一个 POJO:
 
-```
+```java
 public class Phone {
 
     private String number;
@@ -258,7 +258,7 @@ public class Phone {
 
 让我们看看扩展是如何工作的:
 
-```
+```java
 <binding>
     <mapping class="com.baeldung.xml.jibx.Identity" 
       abstract="true">
@@ -277,7 +277,7 @@ public class Phone {
 
 让我们看看相应的 Java 对象:
 
-```
+```java
 public class Identity {
 
     private long customerId;

@@ -16,7 +16,7 @@
 
 假设我们已经正确加载了我们的`Properties`,我们可以实现:
 
-```
+```java
 public static HashMap<String, String> typeCastConvert(Properties prop) {
     Map step1 = prop;
     Map<String, String> step2 = (Map<String, String>) step1;
@@ -34,7 +34,7 @@ public static HashMap<String, String> typeCastConvert(Properties prop) {
 
 根据文档，`Properties`类具有强制使用`String`值的 [`setProperty()`](https://web.archive.org/web/20220628063116/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Properties.html#setProperty(java.lang.String,java.lang.String)) 和 [`getProperty()`](https://web.archive.org/web/20220628063116/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Properties.html#getProperty(java.lang.String)) 方法。但是从`Hashtable`继承而来的 [`put()`](https://web.archive.org/web/20220628063116/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Hashtable.html#put(K,V)) 和 [`putAll()`](https://web.archive.org/web/20220628063116/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Hashtable.html#putAll(java.util.Map)) 方法允许在我们的`Properties`中使用任何类型作为键或值:
 
-```
+```java
 properties.put("property4", 456);
 properties.put(5, 10.11);
 
@@ -56,7 +56,7 @@ assertEquals(Double.class, ((Object) hMap.get(5)).getClass());
 
 如果我们可以使用第三方库，[谷歌番石榴 API](/web/20220628063116/https://www.baeldung.com/guava-guide) 就派上用场了。这个库提供了一个静态的`[Maps.fromProperties()](https://web.archive.org/web/20220628063116/https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/collect/Maps.html#fromProperties-java.util.Properties-)`方法，它几乎为我们做了所有的事情。根据文档，这个调用返回一个 [`ImmutableMap`](/web/20220628063116/https://www.baeldung.com/java-immutable-maps#guava-immutable-map) ，所以如果我们想要有`HashMap,`我们可以使用:
 
-```
+```java
 public HashMap<String, String> guavaConvert(Properties prop) {
     return Maps.newHashMap(Maps.fromProperties(prop));
 }
@@ -64,7 +64,7 @@ public HashMap<String, String> guavaConvert(Properties prop) {
 
 如前所述，当我们完全确定`Properties`只包含`String` 值时，**这种方法** **工作正常。**拥有一些不一致的价值观会导致意想不到的行为:
 
-```
+```java
 properties.put("property4", 456);
 assertThrows(NullPointerException.class, 
     () -> PropertiesToHashMapConverter.guavaConvert(properties));
@@ -88,7 +88,7 @@ Guava API 不执行任何额外的映射。结果，它不允许我们转换那�
 
 让我们实现一个简单的`for`-循环:
 
-```
+```java
 public HashMap<String, String> loopConvert(Properties prop) {
     HashMap<String, String> retMap = new HashMap<>();
     for (Map.Entry<Object, Object> entry : prop.entrySet()) {
@@ -106,7 +106,7 @@ public HashMap<String, String> loopConvert(Properties prop) {
 
 我们甚至可以使用现代的 Java 8 方式重构我们的方法:
 
-```
+```java
 public HashMap<String, String> streamConvert(Properties prop) {
     return prop.entrySet().stream().collect(
       Collectors.toMap(
@@ -123,7 +123,7 @@ public HashMap<String, String> streamConvert(Properties prop) {
 
 **然而，在将值**放到结果`HashMap`、**之前，我们可以访问它们，因此我们可以实现额外的检查或映射**:
 
-```
+```java
 properties.put("property4", 456);
 properties.put(5, 10.11);
 

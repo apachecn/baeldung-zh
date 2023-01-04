@@ -12,7 +12,7 @@ Lombok 库提供了一种简化数据对象的好方法。[项目 Lombok](/web/2
 
 类以其简单、流畅的语法使得构造不可变的数据对象变得容易。让我们看一个用 Lombok 的`@Builder`注释注释的示例类:
 
-```
+```java
 @Getter
 @Builder
 public class Person {
@@ -25,7 +25,7 @@ public class Person {
 
 我们现在可以使用构建器模式创建`Person`的实例。注意这里的`tags`属性是一个`List`。此外，标准 Lombok `@Builder`将提供设置该属性的方法，就像非列表属性一样:
 
-```
+```java
 Person person = Person.builder()
   .givenName("Aaron")
   .additionalName("A")
@@ -40,13 +40,13 @@ Person person = Person.builder()
 
 让我们给我们的`Person`对象添加另一个`List`，并用`@Singular`对其进行注释。这将为我们提供一个带注释和不带注释的字段的并列视图。除了一般的`tags`属性之外，我们还将在`Person`中添加一个`interests`列表:
 
-```
+```java
 @Singular private final List<String> interests;
 ```
 
 **我们现在可以一次建立一个值列表:**
 
-```
+```java
 Person person = Person.builder()
   .givenName("Aaron")
   .additionalName("A")
@@ -62,14 +62,14 @@ Person person = Person.builder()
 
 我们已经在这里用一个`java.util.List`说明了`@Singular`的工作，但是**它也可以应用于其他 Java `Collection`类**。让我们为我们的`Person`添加更多成员:
 
-```
+```java
 @Singular private final Set<String> skills;
 @Singular private final Map<String, LocalDate> awards;
 ```
 
 就`Builder` s 而言,`Set`的行为与`List`非常相似——我们可以一个一个地添加元素:
 
-```
+```java
 Person person = Person.builder()
   .givenName("Aaron")
   .skill("singing")
@@ -81,7 +81,7 @@ Person person = Person.builder()
 
 `Map`的处理略有不同，其中`Builder`公开的方法采用适当类型的键和值:
 
-```
+```java
 Person person = Person.builder()
   .givenName("Aaron")
   .award("Singer of the Year", LocalDate.now().minusYears(5))
@@ -101,7 +101,7 @@ Lombok 足够聪明，可以识别英语中简单的复数单词，它们遵循�
 
 让我们建立一个简单的海洋模型，包含鱼和海草:
 
-```
+```java
 @Getter
 @Builder
 public class Sea {
@@ -112,19 +112,19 @@ public class Sea {
 
 Lombok 可以处理“草”这个词，但与“鱼”一起丢失了。在英语中，单数和复数形式是一样的，奇怪的是。这段代码无法编译，我们会得到一个错误:
 
-```
+```java
 Can't singularize this name; please specify the singular explicitly (i.e. @Singular("sheep"))
 ```
 
 我们可以通过在注释中添加一个值作为单一的方法名来进行分类:
 
-```
+```java
 @Singular("oneFish") private final List<String> fish;
 ```
 
 我们现在可以编译代码并使用`Builder`:
 
-```
+```java
 Sea sea = Sea.builder()
   .grass("Dulse")
   .grass("Kelp")
@@ -143,7 +143,7 @@ Sea sea = Sea.builder()
 
 当我们的数据对象包含`Collection`类时，很容易忽略不变性。基本集合接口——`List`、`Set`和`Map`——都有可变和不可变的实现。如果我们依赖标准的 Lombok 构建器，我们可以意外地传入一个可变的集合，然后修改它:
 
-```
+```java
 List<String> tags= new ArrayList();
 tags.add("fictional");
 tags.add("incidental");

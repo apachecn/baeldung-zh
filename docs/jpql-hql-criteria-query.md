@@ -30,7 +30,7 @@ Hibernate `Session`的`createCriteria()`方法返回持久性对象实例，用�
 
 让我们获取最新版本的[参考 JPA 依赖](https://web.archive.org/web/20220524055217/https://search.maven.org/search?q=g:org.hibernate%20AND%20a:hibernate-core)——它在 Hibernate 中实现 JPA——并将其添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>
@@ -44,7 +44,7 @@ Hibernate `Session`的`createCriteria()`方法返回持久性对象实例，用�
 
 让我们来看看我们将在本文中使用的实体:
 
-```
+```java
 public class Employee {
 
     private Integer id;
@@ -57,7 +57,7 @@ public class Employee {
 
 让我们来看一个简单的标准查询，它将从数据库中检索所有的`“Employee”`行:
 
-```
+```java
 Session session = HibernateUtil.getHibernateSession();
 CriteriaBuilder cb = session.getCriteriaBuilder();
 CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
@@ -79,7 +79,7 @@ return results;
 
 让我们来看看`CriteriaQuery`中的另一个表达:
 
-```
+```java
 cr.select(root).where(cb.gt(root.get("salary"), 50000));
 ```
 
@@ -95,19 +95,19 @@ cr.select(root).where(cb.gt(root.get("salary"), 50000));
 
 让我们使用 JPQL 构建一个动态查询:
 
-```
+```java
 @Query(value = "SELECT e FROM Employee e")
 List<Employee> findAllEmployees(Sort sort);
 ```
 
 对于有参数的 JPQL 查询，Spring Data 按照与方法声明相同的顺序将方法参数传递给查询。让我们看几个将方法参数传递到查询中的例子:
 
-```
+```java
 @Query("SELECT e FROM Employee e WHERE e.salary = ?1")
 Employee findAllEmployeesWithSalary(Long salary);
 ```
 
-```
+```java
 @Query("SELECT e FROM Employee e WHERE e.name = ?1 and e.salary = ?2")
 Employee findEmployeeByNameAndSalary(String name, Long salary);
 ```
@@ -120,7 +120,7 @@ Employee findEmployeeByNameAndSalary(String name, Long salary);
 
 让我们来看一个本地查询，它显示了一个作为查询参数传递的索引参数:
 
-```
+```java
 @Query(
   value = "SELECT * FROM Employee e WHERE e.salary = ?1",
   nativeQuery = true)
@@ -129,7 +129,7 @@ Employee findEmployeeBySalaryNative(Long salary);
 
 在重构的情况下，使用命名参数使查询更容易阅读，更不容易出错。让我们看一个 JPQL 和本机格式的简单命名查询的示例:
 
-```
+```java
 @Query("SELECT e FROM Employee e WHERE e.name = :name and e.salary = :salary")
 Employee findEmployeeByNameAndSalaryNamedParameters(
   @Param("name") String name,
@@ -138,7 +138,7 @@ Employee findEmployeeByNameAndSalaryNamedParameters(
 
 使用命名参数将方法参数传递给查询。我们可以通过在存储库方法声明中使用@Param 注释来定义命名查询。因此，**`@Param`注释必须有一个与相应的 JPQL 或 SQL 查询名称相匹配的字符串值。**
 
-```
+```java
 @Query(value = "SELECT * FROM Employee e WHERE e.name = :name and e.salary = :salary", 
   nativeQuery = true) 
 Employee findUserByNameAndSalaryNamedParamsNative( 
@@ -154,14 +154,14 @@ Employee findUserByNameAndSalaryNamedParamsNative(
 
 命名查询使用预定义的、不可更改的查询字符串来定义查询。这些查询是快速失败的，因为它们是在创建会话工厂期间进行验证的。让我们使用`org.hibernate.annotations.NamedQuery `注释定义一个命名查询:
 
-```
+```java
 @NamedQuery(name = "Employee_FindByEmployeeId",
  query = "from Employee where id = :id")
 ```
 
 每个`@NamedQuery`注释只将自己附加到一个实体类。我们可以使用`@NamedQueries`注释对一个实体的多个命名查询进行分组:
 
-```
+```java
 @NamedQueries({
     @NamedQuery(name = "Employee_findByEmployeeId", 
       query = "from Employee where id = :id"),
@@ -174,7 +174,7 @@ Employee findUserByNameAndSalaryNamedParamsNative(
 
 总之，我们可以使用`@NamedNativeQuery`注释来存储过程和函数:
 
-```
+```java
 @NamedNativeQuery(
   name = "Employee_FindByEmployeeId", 
   query = "select * from employee emp where id=:id", 

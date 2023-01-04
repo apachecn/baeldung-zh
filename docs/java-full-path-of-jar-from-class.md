@@ -28,7 +28,7 @@ Java 的类对象提供了 [`getProtectionDomain()`](https://web.archive.org/web
 
 如果我们将上面提到的所有步骤都包含在一个方法中，几行代码就可以完成这项工作:
 
-```
+```java
 public class JarFilePathResolver {
     String byGetProtectionDomain(Class clazz) throws URISyntaxException {
         URL url = clazz.getProtectionDomain().getCodeSource().getLocation();
@@ -39,7 +39,7 @@ public class JarFilePathResolver {
 
 接下来，让我们以 Guava `Ascii`类为例来测试我们的方法是否如预期的那样工作:
 
-```
+```java
 String jarPath = jarFilePathResolver.byGetProtectionDomain(Ascii.class);
 assertThat(jarPath).endsWith(".jar").contains("guava");
 assertThat(new File(jarPath)).exists(); 
@@ -70,7 +70,7 @@ assertThat(new File(jarPath)).exists();
 
 让我们先看看实现，然后理解它是如何工作的:
 
-```
+```java
 String byGetResource(Class clazz) {
     URL classResource = clazz.getResource(clazz.getSimpleName() + ".class");
     if (classResource == null) {
@@ -100,13 +100,13 @@ String byGetResource(Class clazz) {
 
 **如果该类来自本地文件系统上的 JAR 文件，URL 字符串应该是这样的格式**:
 
-```
+```java
 jar:file:/FULL/PATH/TO/jarName.jar!/PACKAGE/HIERARCHY/TO/CLASS/className.class
 ```
 
 例如，下面是 Linux 系统上 Guava 的`Ascii`类的 URL 字符串:
 
-```
+```java
 jar:file:/home/kent/.m2/repository/com/google/guava/guava/31.0.1-jre/guava-31.0.1-jre.jar!/com/google/common/base/Ascii.class
 ```
 
@@ -120,7 +120,7 @@ jar:file:/home/kent/.m2/repository/com/google/guava/guava/31.0.1-jre/guava-31.0.
 
 现在，让我们创建一个测试来验证我们的方法是否适用于 Guava 的`Ascii`类:
 
-```
+```java
 String jarPath = jarFilePathResolver.byGetResource(Ascii.class);
 assertThat(jarPath).endsWith(".jar").contains("guava");
 assertThat(new File(jarPath)).exists(); 
@@ -138,7 +138,7 @@ assertThat(new File(jarPath)).exists();
 
 我们可以把这两种方法结合起来。首先，让我们尝试用`byGetProtectionDomain()`解析 JAR 文件的路径。如果失败，我们调用`byGetResource()`方法作为后备:
 
-```
+```java
 String getJarFilePath(Class clazz) {
     try {
         return byGetProtectionDomain(clazz);
@@ -154,7 +154,7 @@ String getJarFilePath(Class clazz) {
 
 为了在我们的本地开发环境中模拟`byGetProtectionDomain()`抛出`SecurityException`，让我们添加 [Mockito](/web/20220824180106/https://www.baeldung.com/mockito-series) 依赖项，**使用 [`@Spy`](/web/20220824180106/https://www.baeldung.com/mockito-spy) 注释**部分模拟`JarFilePathResolver`:
 
-```
+```java
 @ExtendWith(MockitoExtension.class)
 class JarFilePathResolverUnitTest {
     @Spy
@@ -165,7 +165,7 @@ class JarFilePathResolverUnitTest {
 
 接下来，我们先测试一下`getProtectionDomain()`方法不抛出`SecurityException`的场景:
 
-```
+```java
 String jarPath = jarFilePathResolver.getJarFilePath(Ascii.class);
 assertThat(jarPath).endsWith(".jar").contains("guava");
 assertThat(new File(jarPath)).exists();
@@ -177,7 +177,7 @@ verify(jarFilePathResolver, never()).byGetResource(Ascii.class);
 
 当然，如果`byGetProtectionDomain()`抛出`SecurityException`，这两个方法会被调用一次:
 
-```
+```java
 when(jarFilePathResolver.byGetProtectionDomain(Ascii.class)).thenThrow(new SecurityException("not allowed"));
 String jarPath = jarFilePathResolver.getJarFilePath(Ascii.class);
 assertThat(jarPath).endsWith(".jar").contains("guava");

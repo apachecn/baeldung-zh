@@ -16,7 +16,7 @@
 
 Java 的语法表明我们也许能够创建一个新的通用数组:
 
-```
+```java
 T[] elements = new T[size];
 ```
 
@@ -24,7 +24,7 @@ T[] elements = new T[size];
 
 要了解原因，让我们考虑以下情况:
 
-```
+```java
 public <T> T[] getArray(int size) {
     T[] genericArray = new T[size]; // suppose this is allowed
     return genericArray;
@@ -33,7 +33,7 @@ public <T> T[] getArray(int size) {
 
 当一个未绑定的泛型类型`T`解析为`Object,`时，我们在运行时的方法将是:
 
-```
+```java
 public Object[] getArray(int size) {
     Object[] genericArray = new Object[size];
     return genericArray;
@@ -42,7 +42,7 @@ public Object[] getArray(int size) {
 
 如果我们调用我们的方法并将结果存储在一个`String`数组中:
 
-```
+```java
 String[] myArray = getArray(5);
 ```
 
@@ -56,13 +56,13 @@ String[] myArray = getArray(5);
 
 首先，我们将创建一个字段来存储堆栈的元素，这是一个类型为`E`的通用数组:
 
-```
+```java
 private E[] elements;
 ```
 
 然后我们将添加一个构造函数:
 
-```
+```java
 public MyStack(Class<E> clazz, int capacity) {
     elements = (E[]) Array.newInstance(clazz, capacity);
 }
@@ -80,13 +80,13 @@ public MyStack(Class<E> clazz, int capacity) {
 
 首先，我们将创建一个字段来存储我们的元素:
 
-```
+```java
 private List<E> elements;
 ```
 
 然后，在我们的堆栈构造函数中，我们可以用初始容量初始化`ArrayList`:
 
-```
+```java
 elements = new ArrayList<>(capacity);
 ```
 
@@ -100,7 +100,7 @@ elements = new ArrayList<>(capacity);
 
 首先，让我们看看列表元素字段:
 
-```
+```java
 transient Object[] elementData;
 ```
 
@@ -116,7 +116,7 @@ transient Object[] elementData;
 
 首先，我们将创建一个带有类型参数`String,`的新`LinkedList`，并向其中添加项目:
 
-```
+```java
 List<String> items = new LinkedList();
 items.add("first item");
 items.add("second item"); 
@@ -124,7 +124,7 @@ items.add("second item");
 
 然后，我们将为刚刚添加的项目构建一个数组:
 
-```
+```java
 String[] itemsAsArray = items.toArray(new String[0]);
 ```
 
@@ -138,13 +138,13 @@ String[] itemsAsArray = items.toArray(new String[0]);
 
 首先，我们来看看方法签名:
 
-```
+```java
 public <T> T[] toArray(T[] a)
 ```
 
 然后，我们将了解如何在需要时创建新阵列:
 
-```
+```java
 a = (T[])java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), size);
 ```
 
@@ -158,7 +158,7 @@ Java Streams API 允许我们从流中的项目创建数组。有几个陷阱需
 
 我们可以很容易地将项目从 Java 8 `Stream`转换成一个数组:
 
-```
+```java
 Object[] strings = Stream.of("A", "AAA", "B", "AAB", "C")
   .filter(string -> string.startsWith("A"))
   .toArray();
@@ -168,7 +168,7 @@ assertThat(strings).containsExactly("A", "AAA", "AAB");
 
 然而，我们应该注意到，基本的`toArray`函数为我们提供了一个`Object`数组，而不是一个`String`数组:
 
-```
+```java
 assertThat(strings).isNotInstanceOf(String[].class);
 ```
 
@@ -178,7 +178,7 @@ assertThat(strings).isNotInstanceOf(String[].class);
 
 常见的集合类方法使用反射来构造特定类型的数组，而 Java Streams 库使用函数式方法。我们可以传入一个 lambda 或方法引用，当`Stream`准备好填充数组时，它会创建一个正确大小和类型的数组:
 
-```
+```java
 String[] strings = Stream.of("A", "AAA", "B", "AAB", "C")
   .filter(string -> string.startsWith("A"))
   .toArray(String[]::new);
@@ -195,13 +195,13 @@ assertThat(strings).isInstanceOf(String[].class);
 
 声明这种数组是有效的:
 
-```
+```java
 Optional<String>[] strings = null;
 ```
 
 我们也可以通过使用`map`方法轻松地将我们的`Stream<String>`转换成`Stream<Optional<String>>`:
 
-```
+```java
 Stream<Optional<String>> stream = Stream.of("A", "AAA", "B", "AAB", "C")
   .filter(string -> string.startsWith("A"))
   .map(Optional::of);
@@ -209,14 +209,14 @@ Stream<Optional<String>> stream = Stream.of("A", "AAA", "B", "AAB", "C")
 
 然而，如果我们试图构造我们的数组，我们会再次得到一个编译器错误:
 
-```
+```java
 // compiler error
 Optional<String>[] strings = new Optional<String>[1];
 ```
 
 幸运的是，这个例子和我们之前的例子有所不同。其中`String[]`不是`Object[]`的子类，`Optional[]`实际上是与`Optional<String>[]`相同的运行时类型。换句话说，这是一个我们可以通过类型转换来解决的问题:
 
-```
+```java
 Stream<Optional<String>> stream = Stream.of("A", "AAA", "B", "AAB", "C")
   .filter(string -> string.startsWith("A"))
   .map(Optional::of);
@@ -226,7 +226,7 @@ Optional<String>[] strings = stream
 
 这段代码可以编译并运行，但是会给我们一个`unchecked assignment` 警告。我们需要在我们的方法中添加一个`SuppressWarnings`来解决这个问题:
 
-```
+```java
 @SuppressWarnings("unchecked")
 ```
 
@@ -234,7 +234,7 @@ Optional<String>[] strings = stream
 
 如果我们想避免将`SuppressWarnings`添加到代码中的多个位置，并希望记录从原始类型创建泛型数组的方式，我们可以编写一个助手函数:
 
-```
+```java
 @SuppressWarnings("unchecked")
 static <T, R extends T> IntFunction<R[]> genericArray(IntFunction<T[]> arrayCreator) {
     return size -> (R[]) arrayCreator.apply(size);
@@ -243,7 +243,7 @@ static <T, R extends T> IntFunction<R[]> genericArray(IntFunction<T[]> arrayCrea
 
 此函数将生成原始类型数组的函数转换为承诺生成我们需要的特定类型数组的函数:
 
-```
+```java
 Optional<String>[] strings = Stream.of("A", "AAA", "B", "AAB", "C")
   .filter(string -> string.startsWith("A"))
   .map(Optional::of)
@@ -254,7 +254,7 @@ Optional<String>[] strings = Stream.of("A", "AAA", "B", "AAB", "C")
 
 但是，我们应该注意，可以调用这个函数来执行到更高类型的类型转换。例如，如果我们的流包含类型为`List<String>`的对象，我们可能会错误地调用`genericArray`来产生一个`ArrayList<String>`数组:
 
-```
+```java
 ArrayList<String>[] lists = Stream.of(singletonList("A"))
   .toArray(genericArray(List[]::new));
 ```

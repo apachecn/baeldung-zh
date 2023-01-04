@@ -21,7 +21,7 @@
 
 此外，参数`-Djavax.net.ssl.trustStorePassword `允许我们向`TrustStore`提供一个密码。最后，该命令如下所示:
 
-```
+```java
 java -Djavax.net.ssl.trustStore=/some/loc/on/server/ our_truststore.jks -Djavax.net.ssl.trustStorePassword=our_password -jar application.jar
 ```
 
@@ -29,7 +29,7 @@ java -Djavax.net.ssl.trustStore=/some/loc/on/server/ our_truststore.jks -Djavax.
 
 让我们看看为`$JAVA_HOME/lib/security/cacerts`执行的 Java 16 中的`keytool`实用程序的输出:
 
-```
+```java
 $ keytool -list -cacerts
 Enter keystore password:
 Keystore type: JKS
@@ -49,7 +49,7 @@ Your keystore contains 90 entries
 
 **当提供的`KeyStore` 没有** `**trustAnchors**`时抛出异常:
 
-```
+```java
 ...
 if (trustAnchors.isEmpty()) {
     throw new InvalidAlgorithmParameterException("the trustAnchors " +
@@ -60,7 +60,7 @@ if (trustAnchors.isEmpty()) {
 
 **我们来试着重现一下案例。首先，让我们创建一个空的 K `eyStore`** :
 
-```
+```java
 private KeyStore getKeyStore() throws CertificateException, NoSuchAlgorithmException, IOException, KeyStoreException {
     KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
     ks.load(null, "changeIt".toCharArray());
@@ -70,7 +70,7 @@ private KeyStore getKeyStore() throws CertificateException, NoSuchAlgorithmExcep
 
 现在让我们测试一下`PKIXParameters` 类的实例化:
 
-```
+```java
 @Test
 public void whenOpeningTrustStore_thenExceptionIsThrown() throws Exception {
     KeyStore keyStore = getKeyStore();

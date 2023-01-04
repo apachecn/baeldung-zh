@@ -70,7 +70,7 @@
 
 最后，为了能够享受所有这些特性，唯一的要求是在我们的 Spring Boot 项目中包括`actuator starter`(参见示例片段)，以及通过众所周知的日志记录属性的`/logfile`端点:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-actuator</artifactId>

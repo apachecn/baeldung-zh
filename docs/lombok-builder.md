@@ -12,7 +12,7 @@ Project Lombok 的 [`@Builder`](https://web.archive.org/web/20221208143832/https
 
 首先，我们需要将[项目龙目岛](https://web.archive.org/web/20221208143832/https://projectlombok.org/)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>
@@ -28,7 +28,7 @@ Maven Central 在这里有最新版本的 Project Lombok。
 
 第一步也是唯一的一步是将注释添加到类声明中:
 
-```
+```java
 @Getter
 @Builder
 public class Widget {
@@ -39,7 +39,7 @@ public class Widget {
 
 **龙目岛为我们做了所有的工作。**我们现在可以建造一个`Widget`并测试它:
 
-```
+```java
 Widget testWidget = Widget.builder()
   .name("foo")
   .id(1)
@@ -53,7 +53,7 @@ assertThat(testWidget.getId())
 
 **如果我们想要创建对象的副本或近似副本，我们可以将属性** **`toBuilder = true`添加到`@Builder`注释**:
 
-```
+```java
 @Builder(toBuilder = true)
 public class Widget {
 //...
@@ -62,7 +62,7 @@ public class Widget {
 
 这告诉 Lombok 将`toBuilder()`方法添加到我们的`Class`中。当我们调用`toBuilder()`方法时，它**返回一个构建器，用它所调用的实例的属性初始化:**
 
-```
+```java
 Widget testWidget = Widget.builder()
   .name("foo")
   .id(1)
@@ -81,7 +81,7 @@ assertThat(newWidget.getId())
 
 如果我们需要指定必需的字段，我们可以使用注释配置来创建一个辅助构建器:
 
-```
+```java
 @Builder(builderMethodName = "internalBuilder")
 public class RequiredFieldAnnotation {
     @NonNull
@@ -96,7 +96,7 @@ public class RequiredFieldAnnotation {
 
 在这种情况下，我们将默认的`builder`隐藏为`internalBuilder`，并创建我们自己的。因此，当我们创建构建器时，我们必须提供所需的参数:
 
-```
+```java
 RequiredField.builder("NameField").description("Field Description").build();
 ```
 
@@ -108,7 +108,7 @@ RequiredField.builder("NameField").description("Field Description").build();
 
 首先，让我们使用 [Lombok 的@Value 注释:](/web/20221208143832/https://www.baeldung.com/intro-to-project-lombok)创建一个简单的例子
 
-```
+```java
 @Value
 final class ImmutableClient {
     private int id;
@@ -122,7 +122,7 @@ final class ImmutableClient {
 
 然后，我们将创建一个新类，它包含一个创建不变客户端的方法:
 
-```
+```java
 class ClientBuilder {
 
     @Builder(builderMethodName = "builder")
@@ -136,7 +136,7 @@ class ClientBuilder {
 
 现在让我们构建一个`ImmutableClient`:
 
-```
+```java
 ImmutableClient testImmutableClient = ClientBuilder.builder()
   .name("foo")
   .id(1)

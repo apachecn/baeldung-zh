@@ -12,7 +12,7 @@
 
 首先，我们需要将 [JMapper 依赖关系](https://web.archive.org/web/20221127215441/https://search.maven.org/classic/#search%7Cga%7C1%7Cjmapper-core)添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.googlecode.jmapper-framework</groupId>
     <artifactId>jmapper-core</artifactId>
@@ -26,7 +26,7 @@
 
 首先，这是我们的源 bean——一个基本的`User`:
 
-```
+```java
 public class User {
     private long id;    
     private String email;
@@ -36,7 +36,7 @@ public class User {
 
 还有我们的目的地比恩，`UserDto:`
 
-```
+```java
 public class UserDto {
     private long id;
     private String username;
@@ -55,7 +55,7 @@ public class UserDto {
 
 这里，我们不需要向源类和目的类添加任何配置。相反，所有的**配置都可以使用** `**JMapperAPI**,`来完成，这使得它成为最灵活的配置方法:
 
-```
+```java
 @Test
 public void givenUser_whenUseApi_thenConverted(){
     JMapperAPI jmapperApi = new JMapperAPI() 
@@ -81,7 +81,7 @@ public void givenUser_whenUseApi_thenConverted(){
 
 让我们看看**如何使用`@JMap`注释来配置我们的映射**:
 
-```
+```java
 public class UserDto {  
     @JMap
     private long id;
@@ -93,7 +93,7 @@ public class UserDto {
 
 下面是我们如何使用我们的`JMapper`:
 
-```
+```java
 @Test
 public void givenUser_whenUseAnnotation_thenConverted(){
     JMapper<UserDto, User> userMapper = new JMapper<>(UserDto.class, User.class);
@@ -117,7 +117,7 @@ public void givenUser_whenUseAnnotation_thenConverted(){
 
 下面是我们在`user_jmapper.xml`的示例 XML 配置:
 
-```
+```java
 <jmapper>
   <class name="com.baeldung.jmapper.UserDto">
     <attribute name="id">
@@ -132,7 +132,7 @@ public void givenUser_whenUseAnnotation_thenConverted(){
 
 我们需要将我们的 XML 配置传递给`JMapper`:
 
-```
+```java
 @Test
 public void givenUser_whenUseXml_thenConverted(){
     JMapper<UserDto, User> userMapper = new JMapper<>
@@ -153,7 +153,7 @@ public void givenUser_whenUseXml_thenConverted(){
 
 例如，如果我们有一个包含两个字段`id`和`email`的`UserDto1`:
 
-```
+```java
 public class UserDto1 {  
     private long id;
     private String email;
@@ -168,7 +168,7 @@ public class UserDto1 {
 
 对于`JMapperAPI`配置，我们将使用`global()`:
 
-```
+```java
 @Test
 public void givenUser_whenUseApiGlobal_thenConverted() {
     JMapperAPI jmapperApi = new JMapperAPI()
@@ -187,7 +187,7 @@ public void givenUser_whenUseApiGlobal_thenConverted() {
 
 对于注释配置，我们将在类级别使用`@JGlobalMap` :
 
-```
+```java
 @JGlobalMap
 public class UserDto1 {  
     private long id;
@@ -197,7 +197,7 @@ public class UserDto1 {
 
 这里有一个简单的测试:
 
-```
+```java
 @Test
 public void whenUseGlobalMapAnnotation_thenConverted(){
     JMapper<UserDto1, User> userMapper= new JMapper<>(
@@ -215,7 +215,7 @@ public void whenUseGlobalMapAnnotation_thenConverted(){
 
 对于 XML 配置，我们有`<global/>`元素:
 
-```
+```java
 <jmapper>
   <class name="com.baeldung.jmapper.UserDto1">
     <global/>
@@ -225,7 +225,7 @@ public void whenUseGlobalMapAnnotation_thenConverted(){
 
 然后传递 XML 文件名:
 
-```
+```java
 @Test
 public void givenUser_whenUseXmlGlobal_thenConverted(){
     JMapper<UserDto1, User> userMapper = new JMapper<>
@@ -244,7 +244,7 @@ public void givenUser_whenUseXmlGlobal_thenConverted(){
 
 在我们的`UserDto`中有一个新字段`age`，我们需要从`User` `birthDate`属性中计算它:
 
-```
+```java
 public class UserDto {
     @JMap
     private long id;
@@ -265,7 +265,7 @@ public class UserDto {
 
 因此，**我们使用`@JMapConversion`来应用从`User's birthDate`到`UserDto's` `age`属性的复杂转换**。因此，当我们将`User`映射到`UserDto`时，将计算`age`字段:
 
-```
+```java
 @Test
 public void whenUseAnnotationExplicitConversion_thenConverted(){
     JMapper<UserDto, User> userMapper = new JMapper<>(
@@ -288,7 +288,7 @@ public void whenUseAnnotationExplicitConversion_thenConverted(){
 
 在这个例子中，我们有一个源 bean `User`:
 
-```
+```java
 public class User {
     private long id;    
     private String email;
@@ -297,7 +297,7 @@ public class User {
 
 和两个目的地 bean`UserDto1`:
 
-```
+```java
 public class UserDto1 {  
     private long id;
     private String username;
@@ -306,7 +306,7 @@ public class UserDto1 {
 
 和`UserDto2`:
 
-```
+```java
 public class UserDto2 {
     private long id;
     private String email;
@@ -319,7 +319,7 @@ public class UserDto2 {
 
 对于我们的 API 配置，我们可以使用`targetClasses()`为每个属性定义目标类:
 
-```
+```java
 @Test
 public void givenUser_whenUseApi_thenConverted(){
     JMapperAPI jmapperApi = new JMapperAPI()
@@ -354,7 +354,7 @@ public void givenUser_whenUseApi_thenConverted(){
 
 对于注释方法，我们也将定义`classes`:
 
-```
+```java
 public class User {
     @JMap(classes = {UserDto1.class, UserDto2.class})
     private long id;    
@@ -368,7 +368,7 @@ public class User {
 
 像往常一样，当我们使用注释时，不需要进一步的配置:
 
-```
+```java
 @Test
 public void givenUser_whenUseAnnotation_thenConverted(){
     RelationalJMapper<User> relationalMapper
@@ -392,7 +392,7 @@ public void givenUser_whenUseAnnotation_thenConverted(){
 
 这是我们的`user_jmapper2.xml`:
 
-```
+```java
 <jmapper>
   <class name="com.baeldung.jmapper.relational.User">
     <attribute name="id">
@@ -418,7 +418,7 @@ public void givenUser_whenUseAnnotation_thenConverted(){
 
 然后将 XML 配置文件传递给`RelationalJMapper`:
 
-```
+```java
 @Test
 public void givenUser_whenUseXml_thenConverted(){
     RelationalJMapper<User> relationalMapper

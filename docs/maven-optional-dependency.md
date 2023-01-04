@@ -24,7 +24,7 @@
 
 假设我们有以下项目 pom:
 
-```
+```java
 <project>
     ...
     <artifactId>project-with-optionals</artifactId>
@@ -44,7 +44,7 @@
 
 为了看到`<optional>`标签的效果，我们需要创建一个依赖于`project-with-optionals`的新项目:
 
-```
+```java
 <project>
     ...
     <artifactId>main-project</artifactId>

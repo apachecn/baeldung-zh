@@ -18,7 +18,7 @@
 
 首先，让我们创建一个包含几个`private`实例变量的`Employee` 类:
 
-```
+```java
 public class Employee {
     private String privateId;
     private boolean manager;
@@ -32,7 +32,7 @@ public class Employee {
 
 现在让我们创建一个`private`构造函数:
 
-```
+```java
 private Employee(String id, String name, boolean managerAttribute) {
     this.name = name;
     this.privateId = id + "_ID-MANAGER";
@@ -43,7 +43,7 @@ private Employee(String id, String name, boolean managerAttribute) {
 
 **让我们添加一个`static`方法，这将是我们从`Employee`类:**外部使用这个`private`构造函数的唯一方式
 
-```
+```java
 public static Employee buildManager(String id, String name) {
     return new Employee(id, name, true);
 }
@@ -51,7 +51,7 @@ public static Employee buildManager(String id, String name) {
 
 现在，我们可以通过简单地编写以下代码来获得我们的`Employee` 类的管理器实例:
 
-```
+```java
 Employee manager = Employee.buildManager("123MAN","Bob");
 ```
 
@@ -61,7 +61,7 @@ Employee manager = Employee.buildManager("123MAN","Bob");
 
 现在让我们给我们的类添加一个`private`方法:
 
-```
+```java
 private void setManager(boolean manager) {
     this.manager = manager;
 }
@@ -69,7 +69,7 @@ private void setManager(boolean manager) {
 
 让我们假设，出于某种原因，我们公司有一条武断的规定，只有名为“卡尔”的员工才能被提升为经理，尽管其他班级并不知道这一点。我们将创建一个带有一些逻辑的`public`方法来处理这个调用我们的`private`方法的规则:
 
-```
+```java
 public void elevateToManager() {
     if ("Carl".equals(this.name)) {
         setManager(true);
@@ -81,7 +81,7 @@ public void elevateToManager() {
 
 让我们看一个如何从外部使用我们的`Employee`类的例子:
 
-```
+```java
 public class ExampleClass {
 
     public static void main(String[] args) {
@@ -94,7 +94,7 @@ public class ExampleClass {
 
 在执行`ExampleClass`之后，我们将在控制台上看到它的输出:
 
-```
+```java
 BCD234_ID
 ```
 
@@ -102,7 +102,7 @@ BCD234_ID
 
 让我们看看**如果我们试图从我们的`Employee`类外部访问一个`private`方法、构造函数或变量**会发生什么:
 
-```
+```java
 public class ExampleClass {
 
     public static void main(String[] args) {
@@ -115,7 +115,7 @@ public class ExampleClass {
 
 **我们将得到每个非法语句的编译错误**:
 
-```
+```java
 The constructor Employee(String, String, boolean) is not visible
 The method setManager(boolean) from the type Employee is not visible
 The field Employee.privateId is not visible
@@ -125,7 +125,7 @@ The field Employee.privateId is not visible
 
 有一个**特例，我们可以创建一个`private`类**——作为某个其他类的内部类。否则，如果我们将一个外部类声明为`private`，我们将禁止其他类访问它，使它变得无用:
 
-```
+```java
 public class PublicOuterClass {
 
     public PrivateInnerClass getInnerClassInstance() {
@@ -146,7 +146,7 @@ public class PublicOuterClass {
 
 因为我们使用了`private`关键字，如果出于某种原因，**试图从`PublicOuterClass`** 之外实例化我们的`PrivateInnerClass`，代码不会编译，我们会看到错误:
 
-```
+```java
 PrivateInnerClass cannot be resolved to a type
 ```
 

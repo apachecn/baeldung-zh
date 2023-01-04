@@ -146,7 +146,7 @@
 
 是时候整理到目前为止生成的所有脚本并将它们缝合在一起了:
 
-```
+```java
 node('master') {
     stage('scm') {
         checkout([$class: 'GitSCM', 
@@ -228,7 +228,7 @@ node('master') {
 
 但是，我们必须在存储库中创建 Jenkinsfile 因此，让我们创建一个新的文本文件，将其命名为 Jenkinsfile，并使用这个简单的 groovy 脚本:
 
-```
+```java
 node('master') {
     stage('scm') {
         checkout scm

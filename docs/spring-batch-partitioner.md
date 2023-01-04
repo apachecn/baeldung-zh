@@ -49,7 +49,7 @@ Maven 依赖项与我们之前的[文章](/web/20220628052606/https://www.baeldu
 
 首先，让我们创建一个作业:
 
-```
+```java
 @Bean(name = "partitionerJob")
 public Job partitionerJob() 
   throws UnexpectedInputException, MalformedURLException, ParseException {
@@ -61,7 +61,7 @@ public Job partitionerJob()
 
 正如我们所看到的，这个`Job`从`PartitioningStep`开始。这是我们的主步骤，将被分为多个从步骤:
 
-```
+```java
 @Bean
 public Step partitionStep() 
   throws UnexpectedInputException, MalformedURLException, ParseException {
@@ -79,7 +79,7 @@ public Step partitionStep()
 
 让我们创建一个名为`CustomMultiResourcePartitioner`的实现，其中我们将把输入和输出文件名放在`ExecutionContext`中，以传递给每个从属步骤:
 
-```
+```java
 public class CustomMultiResourcePartitioner implements Partitioner {
 
     @Override
@@ -102,7 +102,7 @@ public class CustomMultiResourcePartitioner implements Partitioner {
 
 我们还将为这个类创建 bean，其中我们将给出输入文件的源目录:
 
-```
+```java
 @Bean
 public CustomMultiResourcePartitioner partitioner() {
     CustomMultiResourcePartitioner partitioner 
@@ -124,7 +124,7 @@ public CustomMultiResourcePartitioner partitioner() {
 
 请注意，这些 beans 需要有步骤范围，以便它们能够在每一步接收`stepExecutionContext`参数。如果它们不在步骤范围内，它们的 beans 将在最初创建，并且不接受步骤级别的文件名:
 
-```
+```java
 @StepScope
 @Bean
 public FlatFileItemReader<Transaction> itemReader(
@@ -148,7 +148,7 @@ public FlatFileItemReader<Transaction> itemReader(
 } 
 ```
 
-```
+```java
 @Bean
 @StepScope
 public ItemWriter<Transaction> itemWriter(Marshaller marshaller, 
@@ -165,7 +165,7 @@ public ItemWriter<Transaction> itemWriter(Marshaller marshaller,
 
 在从属步骤中提到读取器和写入器时，我们可以将参数作为 null 传递，因为这些文件名不会被使用，因为它们将从`stepExecutionContext`接收文件名:
 
-```
+```java
 @Bean
 public Step slaveStep() 
   throws UnexpectedInputException, MalformedURLException, ParseException {

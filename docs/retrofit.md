@@ -12,7 +12,7 @@
 
 我们将从添加改造库和 Gson 转换器开始:
 
-```
+```java
 <dependency>
     <groupId>com.squareup.retrofit2</groupId>
     <artifactId>retrofit</artifactId>
@@ -33,7 +33,7 @@
 
 我们将对来自 GitHub 的用户 API 建模；它有一个以 JSON 格式返回的`GET`端点:
 
-```
+```java
 {
   login: "mojombo",
   id: 1,
@@ -46,7 +46,7 @@
 
 为了简单起见，我们将通过对我们的`User`类建模来获取 JSON 的一小部分，该类将在我们收到值时获取这些值:
 
-```
+```java
 public class User {
     private String login;
     private long id;
@@ -62,7 +62,7 @@ public class User {
 
 现在我们可以转到接口建模，并解释一些改进的注释:
 
-```
+```java
 public interface UserService {
 
     @GET("/users")
@@ -89,7 +89,7 @@ public interface UserService {
 
 为了构造一个 HTTP 请求调用，我们需要首先构建我们的改进对象:
 
-```
+```java
 OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 Retrofit retrofit = new Retrofit.Builder()
   .baseUrl("https://api.github.com/")
@@ -108,7 +108,7 @@ Retrofit retrofit = new Retrofit.Builder()
 
 既然我们已经有了改造对象，我们就可以构造我们的服务调用了，让我们来看看如何以同步的方式来做这件事:
 
-```
+```java
 UserService service = retrofit.create(UserService.class);
 Call<User> callSync = service.getUser("eugenp");
 
@@ -126,7 +126,7 @@ try {
 
 进行同步调用非常容易，但通常，我们使用非阻塞异步请求:
 
-```
+```java
 UserService service = retrofit.create(UserService.class);
 Call<User> callAsync = service.getUser("eugenp");
 
@@ -153,7 +153,7 @@ callAsync.enqueue(new Callback<User>() {
 
 我们想要的是一个可重用的类，它允许我们创建一次这个对象，并在应用程序的整个生命周期中重用它:
 
-```
+```java
 public class GitHubServiceGenerator {
 
     private static final String BASE_URL = "https://api.github.com/";
@@ -178,7 +178,7 @@ public class GitHubServiceGenerator {
 
 下面是如何使用它的一个简单示例:
 
-```
+```java
 UserService service 
   = GitHubServiceGenerator.createService(UserService.class);
 ```
@@ -193,7 +193,7 @@ UserService service
 
 考虑到我们之前的生成器类，我们将添加一个创建服务方法，该方法采用一个带有`Authorization`头的 JWT 令牌:
 
-```
+```java
 public static <S> S createService(Class<S> serviceClass, final String token ) {
    if ( token != null ) {
        httpClient.interceptors().clear();
@@ -221,7 +221,7 @@ public static <S> S createService(Class<S> serviceClass, final String token ) {
 
 我们将使用我们以前关于拦截器的知识，但是我们需要一个额外的依赖项，即 OkHttp 中的`HttpLoggingInterceptor`，让我们将它添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.squareup.okhttp3</groupId>
     <artifactId>logging-interceptor</artifactId>
@@ -231,7 +231,7 @@ public static <S> S createService(Class<S> serviceClass, final String token ) {
 
 现在让我们扩展我们的`GitHubServiceGenerator`类:
 
-```
+```java
 public class GitHubServiceGenerator {
 
     private static final String BASE_URL = "https://api.github.com/";

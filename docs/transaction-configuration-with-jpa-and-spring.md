@@ -28,7 +28,7 @@ Learn how you can configure logging of the generated SQL statements in your Spri
 
 Spring 3.1 引入了**的`@EnableTransactionManagement`注释**，我们可以在`@Configuration`类中使用它来实现事务支持:
 
-```
+```java
 @Configuration
 @EnableTransactionManagement
 public class PersistenceJPAConfig{
@@ -56,7 +56,7 @@ public class PersistenceJPAConfig{
 
 对于 3.1 之前的版本，或者如果 Java 不是一个选项，下面是使用`annotation-driven`和名称空间支持的 XML 配置:
 
-```
+```java
 <bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
    <property name="entityManagerFactory" ref="myEmf" />
 </bean>
@@ -67,7 +67,7 @@ public class PersistenceJPAConfig{
 
 配置好事务后，我们现在可以在类或方法级别用`@Transactional`注释 bean:
 
-```
+```java
 @Service
 @Transactional
 public class FooService {
@@ -97,13 +97,13 @@ public class FooService {
 
 ### 5.2。改变隔离等级
 
-```
+```java
 courseDao.createWithRuntimeException(course);
 ```
 
 我们还可以更改事务隔离级别:
 
-```
+```java
 @Transactional(isolation = Isolation.SERIALIZABLE)
 ```
 
@@ -121,7 +121,7 @@ courseDao.createWithRuntimeException(course);
 
 理解**`readOnly`标志只与事务内部相关也很重要。**如果一个操作发生在事务上下文之外，这个标志就会被忽略。一个简单的例子是调用一个用以下内容注释的方法:
 
-```
+```java
 @Transactional( propagation = Propagation.SUPPORTS,readOnly = true )
 ```
 
@@ -141,7 +141,7 @@ courseDao.createWithRuntimeException(course);
 
 让我们看一个简单的例子，使用声明性方法回滚运行时异常或错误的事务:
 
-```
+```java
 @Transactional
 public void createCourseDeclarativeWithRuntimeException(Course course) {
     courseDao.create(course);
@@ -151,7 +151,7 @@ public void createCourseDeclarativeWithRuntimeException(Course course) {
 
 接下来，我们将使用声明性方法为列出的已检查异常回滚事务。中的 回滚 中的 我们的 例子 是 上的 `SQLException`:
 
-```
+```java
 @Transactional(rollbackFor = { SQLException.class })
 public void createCourseDeclarativeWithCheckedException(Course course) throws SQLException {
     courseDao.create(course);
@@ -161,7 +161,7 @@ public void createCourseDeclarativeWithCheckedException(Course course) throws SQ
 
 让我们看看属性`noRollbackFor`在声明性方法中的简单使用，以防止所列异常的事务回滚:
 
-```
+```java
 @Transactional(noRollbackFor = { SQLException.class })
 public void createCourseDeclarativeWithNoRollBack(Course course) throws SQLException {
     courseDao.create(course);
@@ -171,7 +171,7 @@ public void createCourseDeclarativeWithNoRollBack(Course course) throws SQLExcep
 
 在**编程方式** **中，我们使用`TransactionAspectSupport`** 回滚事务:
 
-```
+```java
 public void createCourseDefaultRatingProgramatic(Course course) {
     try {
        courseDao.create(course);

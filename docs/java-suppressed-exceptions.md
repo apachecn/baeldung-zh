@@ -14,7 +14,7 @@
 
 让我们先快速看一个例子，其中原始异常被发生在`finally`块中的异常所抑制:
 
-```
+```java
 public static void demoSuppressedException(String filePath) throws IOException {
     FileInputStream fileIn = null;
     try {
@@ -31,7 +31,7 @@ public static void demoSuppressedException(String filePath) throws IOException {
 
 但是，假设我们提供了一个不存在的文件:
 
-```
+```java
 @Test(expected = NullPointerException.class)
 public void givenNonExistentFileName_whenAttemptFileOpen_thenNullPointerException() throws IOException {
     demoSuppressedException("/non-existent-path/non-existent-file.txt");
@@ -44,7 +44,7 @@ public void givenNonExistentFileName_whenAttemptFileOpen_thenNullPointerExceptio
 
 现在让我们看看如何利用`Throwable.addSuppressed`方法来提供原始异常:
 
-```
+```java
 public static void demoAddSuppressedException(String filePath) throws IOException {
     Throwable firstException = null;
     FileInputStream fileIn = null;
@@ -67,7 +67,7 @@ public static void demoAddSuppressedException(String filePath) throws IOExceptio
 
 让我们进入单元测试，看看`getSuppressed`在这种情况下是如何工作的:
 
-```
+```java
 try {
     demoAddSuppressedException("/non-existent-path/non-existent-file.txt");
 } catch (Exception e) {
@@ -85,7 +85,7 @@ try {
 
 首先，让我们创建一个实现`AutoCloseable`的资源:
 
-```
+```java
 public class ExceptionalResource implements AutoCloseable {
 
     public void processSomething() {
@@ -101,7 +101,7 @@ public class ExceptionalResource implements AutoCloseable {
 
 接下来，让我们在`try-with-resources`块中使用`ExceptionalResource`:
 
-```
+```java
 public static void demoExceptionalResource() throws Exception {
     try (ExceptionalResource exceptionalResource = new ExceptionalResource()) {
         exceptionalResource.processSomething();
@@ -111,7 +111,7 @@ public static void demoExceptionalResource() throws Exception {
 
 最后，让我们回顾一下我们的单元测试，看看异常是如何出现的:
 
-```
+```java
 try {
     demoExceptionalResource();
 } catch (Exception e) {

@@ -26,13 +26,13 @@ Quick and practical guide to Functional Interfaces present in Java 8.[Read more]
 
 `filter()`方法是`Stream`接口的中间操作，它允许我们过滤与给定的`Predicate:`匹配的流元素
 
-```
+```java
 Stream<T> filter(Predicate<? super T> predicate)
 ```
 
 为了了解这是如何工作的，让我们创建一个`Customer`类:
 
-```
+```java
 public class Customer {
     private String name;
     private int points;
@@ -42,7 +42,7 @@ public class Customer {
 
 此外，让我们创建一个客户集合:
 
-```
+```java
 Customer john = new Customer("John P.", 15);
 Customer sarah = new Customer("Sarah M.", 200);
 Customer charles = new Customer("Charles B.", 150);
@@ -57,7 +57,7 @@ List<Customer> customers = Arrays.asList(john, sarah, charles, mary);
 
 让我们列出超过 100 个`points.`的客户。为此，我们可以使用 lambda 表达式:
 
-```
+```java
 List<Customer> customersWithMoreThan100Points = customers
   .stream()
   .filter(c -> c.getPoints() > 100)
@@ -66,7 +66,7 @@ List<Customer> customersWithMoreThan100Points = customers
 
 我们还可以使用[方法引用](/web/20220926153229/https://www.baeldung.com/java-8-double-colon-operator)，这是 lambda 表达式的简写:
 
-```
+```java
 List<Customer> customersWithMoreThan100Points = customers
   .stream()
   .filter(Customer::hasOverHundredPoints)
@@ -75,7 +75,7 @@ List<Customer> customersWithMoreThan100Points = customers
 
 在这种情况下，我们将`hasOverHundredPoints`方法添加到我们的`Customer`类中:
 
-```
+```java
 public boolean hasOverHundredPoints() {
     return this.points > 100;
 }
@@ -83,7 +83,7 @@ public boolean hasOverHundredPoints() {
 
 在这两种情况下，我们得到相同的结果:
 
-```
+```java
 assertThat(customersWithMoreThan100Points).hasSize(2);
 assertThat(customersWithMoreThan100Points).contains(sarah, charles);
 ```
@@ -92,7 +92,7 @@ assertThat(customersWithMoreThan100Points).contains(sarah, charles);
 
 此外，我们可以通过`filter()`使用多个条件。例如，我们可以通过`points`和`name`进行过滤:
 
-```
+```java
 List<Customer> charlesWithMoreThan100Points = customers
   .stream()
   .filter(c -> c.getPoints() > 100 && c.getName().startsWith("Charles"))
@@ -112,13 +112,13 @@ assertThat(charlesWithMoreThan100Points).contains(charles);
 
 首先，我们将开始向我们的`Customer` `:`添加一个`profilePhotoUrl`
 
-```
+```java
 private String profilePhotoUrl;
 ```
 
 此外，让我们添加一个简单的`hasValidProfilePhoto()`方法来检查概要文件的可用性:
 
-```
+```java
 public boolean hasValidProfilePhoto() throws IOException {
     URL url = new URL(this.profilePhotoUrl);
     HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
@@ -128,7 +128,7 @@ public boolean hasValidProfilePhoto() throws IOException {
 
 我们可以看到，`hasValidProfilePhoto()`方法抛出了一个`IOException`。现在，如果我们尝试用这种方法过滤客户:
 
-```
+```java
 List<Customer> customersWithValidProfilePhoto = customers
   .stream()
   .filter(Customer::hasValidProfilePhoto)
@@ -137,13 +137,13 @@ List<Customer> customersWithValidProfilePhoto = customers
 
 我们将看到以下错误:
 
-```
+```java
 Incompatible thrown types java.io.IOException in functional expression
 ```
 
 为了处理它，我们可以使用的替代方法之一是用 try-catch 块包装它:
 
-```
+```java
 List<Customer> customersWithValidProfilePhoto = customers
   .stream()
   .filter(c -> {
@@ -167,7 +167,7 @@ ThrowingFunction 是一个开源库，允许我们在 Java 函数接口中处理
 
 让我们从将 [`throwing-function`依赖项](https://web.archive.org/web/20220926153229/https://search.maven.org/search?q=g:pl.touk%20AND%20a:throwing-function%26core%3Dgav)添加到 pom 开始:
 
-```
+```java
 <dependency>
     <groupId>pl.touk</groupId>
     <artifactId>throwing-function</artifactId>
@@ -179,7 +179,7 @@ ThrowingFunction 是一个开源库，允许我们在 Java 函数接口中处理
 
 让我们来看看它的实际应用:
 
-```
+```java
 List customersWithValidProfilePhoto = customers
   .stream()
   .filter(ThrowingPredicate.unchecked(Customer::hasValidProfilePhoto))

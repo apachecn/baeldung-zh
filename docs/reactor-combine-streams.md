@@ -10,7 +10,7 @@
 
 让我们用[项目反应器](https://web.archive.org/web/20220630142440/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22io.projectreactor%22%20AND%20a%3A%22reactor-core%22)的依赖关系来设置我们的例子:
 
-```
+```java
 <dependency>
     <groupId>io.projectreactor</groupId>
     <artifactId>reactor-core</artifactId>
@@ -34,7 +34,7 @@
 
 我们将创建`oddNumbers`，也是奇数的`Integer`类型的`Flux`:
 
-```
+```java
 Flux<Integer> evenNumbers = Flux
   .range(min, max)
   .filter(x -> x % 2 == 0); // i.e. 2, 4
@@ -52,7 +52,7 @@ Flux<Integer> oddNumbers = Flux
 
 这里有一个简单的例子:
 
-```
+```java
 @Test
 public void givenFluxes_whenConcatIsInvoked_thenConcat() {
     Flux<Integer> fluxOfIntegers = Flux.concat(
@@ -74,7 +74,7 @@ public void givenFluxes_whenConcatIsInvoked_thenConcat() {
 
 使用静态方法`concatWith`，我们将产生两个类型为`Flux<T>`的源的串联结果:
 
-```
+```java
 @Test
 public void givenFluxes_whenConcatWithIsInvoked_thenConcatWith() {
     Flux<Integer> fluxOfIntegers = evenNumbers.concatWith(oddNumbers);
@@ -89,7 +89,7 @@ Flux 静态方法`combineLatest`将生成由来自每个发布者源的最近发
 
 以下是使用两个`Publisher`源和一个`BiFunction`作为参数的方法的示例:
 
-```
+```java
 @Test
 public void givenFluxes_whenCombineLatestIsInvoked_thenCombineLatest() {
     Flux<Integer> fluxOfIntegers = Flux.combineLatest(
@@ -112,7 +112,7 @@ public void givenFluxes_whenCombineLatestIsInvoked_thenCombineLatest() {
 
 `merge` 函数将包含在数组中的`Publisher`序列的数据合并到一个交错的合并序列中:
 
-```
+```java
 @Test
 public void givenFluxes_whenMergeIsInvoked_thenMerge() {
     Flux<Integer> fluxOfIntegers = Flux.merge(
@@ -134,7 +134,7 @@ public void givenFluxes_whenMergeIsInvoked_thenMerge() {
 
 这里，如果我们在发布者的元素之间插入一个延迟，我们可以看到`merge`函数的不同结果:
 
-```
+```java
 @Test
 public void givenFluxes_whenMergeWithDelayedElementsIsInvoked_thenMergeWithDelayedElements() {
     Flux<Integer> fluxOfIntegers = Flux.merge(
@@ -160,7 +160,7 @@ public void givenFluxes_whenMergeWithDelayedElementsIsInvoked_thenMergeWithDelay
 
 此外，与`merge`不同，它们发出的值按照订阅顺序合并到最终序列中:
 
-```
+```java
 @Test
 public void testMergeSequential() {
     Flux<Integer> fluxOfIntegers = Flux.mergeSequential(
@@ -188,7 +188,7 @@ public void testMergeSequential() {
 
 这里有一个`mergeDelayError:`的例子
 
-```
+```java
 @Test
 public void givenFluxes_whenMergeWithDelayedElementsIsInvoked_thenMergeWithDelayedElements() {
     Flux<Integer> fluxOfIntegers = Flux.mergeDelayError(1, 
@@ -212,7 +212,7 @@ public void givenFluxes_whenMergeWithDelayedElementsIsInvoked_thenMergeWithDelay
 
 同样，与`concat`不同的是，内部资源被急切地订阅:
 
-```
+```java
 @Test
 public void givenFluxes_whenMergeWithIsInvoked_thenMergeWith() {
     Flux<Integer> fluxOfIntegers = evenNumbers.mergeWith(oddNumbers);
@@ -235,7 +235,7 @@ public void givenFluxes_whenMergeWithIsInvoked_thenMergeWith() {
 
 操作员将继续这样做，直到任何源完成:
 
-```
+```java
 @Test
 public void givenFluxes_whenZipIsInvoked_thenZip() {
     Flux<Integer> fluxOfIntegers = Flux.zip(
@@ -257,7 +257,7 @@ public void givenFluxes_whenZipIsInvoked_thenZip() {
 
 `zipWith` 执行与`zip`相同的方法，但是只有两个发布者:
 
-```
+```java
 @Test
 public void givenFluxes_whenZipWithIsInvoked_thenZipWith() {
     Flux<Integer> fluxOfIntegers = evenNumbers

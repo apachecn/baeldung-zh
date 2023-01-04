@@ -36,19 +36,19 @@ Learn how to convert between String and Timestamp with a little help from LocalD
 
 在我们的第一个例子中，让我们将一个`String`转换成一个`java.time`。`LocalDate`:
 
-```
+```java
 LocalDate date = LocalDate.parse("2018-05-05");
 ```
 
 可以使用与上述类似的方法将`String`转换为`java.time`。`LocalDateTime`:
 
-```
+```java
 LocalDateTime dateTime = LocalDateTime.parse("2018-05-05T11:50:55");
 ```
 
 值得注意的是，`LocalDate`和`LocalDateTime`对象都是时区不可知的。但是，**当我们需要处理时区特定的日期和时间时，我们可以使用`ZonedDateTime`** `parse`方法直接得到一个时区特定的日期时间:
 
-```
+```java
 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z");
 ZonedDateTime zonedDateTime = ZonedDateTime.parse("2015-05-05 10:15:30 Europe/Paris", formatter);
 ```
@@ -63,7 +63,7 @@ ZonedDateTime zonedDateTime = ZonedDateTime.parse("2015-05-05 10:15:30 Europe/Pa
 
 让我们从使用`DateTimeFormatter`的一个预定义格式化程序的例子开始:
 
-```
+```java
 String dateInString = "19590709";
 LocalDate date = LocalDate.parse(dateInString, DateTimeFormatter.BASIC_ISO_DATE);
 ```
@@ -72,7 +72,7 @@ LocalDate date = LocalDate.parse(dateInString, DateTimeFormatter.BASIC_ISO_DATE)
 
 该格式化程序识别字符串，如“`Fri,  3 Jan 2003″ or “Wed, 23 Mar 1994`”:
 
-```
+```java
 String dateInString = "Mon, 05 May 1980";
 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy", Locale.ENGLISH);
 LocalDate dateTime = LocalDate.parse(dateInString, formatter);
@@ -102,7 +102,7 @@ LocalDate dateTime = LocalDate.parse(dateInString, formatter);
 
 让我们看看如何将一个字符串转换成一个`java.util.Date`对象:
 
-```
+```java
 SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
 
 String dateInString = "7-Jun-2013";
@@ -121,7 +121,7 @@ Date date = formatter.parse(dateInString);
 
 在最后一个示例中，我们将了解如何在添加时区信息的同时设置日期格式:
 
-```
+```java
 SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss a", Locale.ENGLISH);
 formatter.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 
@@ -132,7 +132,7 @@ String formattedDateString = formatter.format(date);
 
 我们还可以通过编程方式更改 JVM 时区，但不建议这样做:
 
-```
+```java
 TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
 ```
 
@@ -146,7 +146,7 @@ TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
 
 神器可以在 [Maven Central](https://web.archive.org/web/20221023102738/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22joda-time%22) 上找到:
 
-```
+```java
 <dependency>
     <groupId>joda-time</groupId>
     <artifactId>joda-time</artifactId>
@@ -156,7 +156,7 @@ TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
 
 这里有一个使用标准`DateTime`的简单例子:
 
-```
+```java
 DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
 
 String dateInString = "07/06/2013 10:11:59";
@@ -165,7 +165,7 @@ DateTime dateTime = DateTime.parse(dateInString, formatter);
 
 让我们看一个显式设置时区的例子:
 
-```
+```java
 DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
 
 String dateInString = "07/06/2013 10:11:59";
@@ -179,7 +179,7 @@ DateTime dateTimeWithZone = dateTime.withZone(DateTimeZone.forID("Asia/Kolkata")
 
 commons-lang3 工件可从 [Maven Central](https://web.archive.org/web/20221023102738/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22commons-lang3%22) 获得:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -189,7 +189,7 @@ commons-lang3 工件可从 [Maven Central](https://web.archive.org/web/202210231
 
 让我们使用日期模式的`Array`将日期`String`转换成`java.util.Date` :
 
-```
+```java
 String dateInString = "07/06-2013";
 Date date = DateUtils.parseDate(dateInString, 
   new String[] { "yyyy-MM-dd HH:mm:ss", "dd/MM-yyyy" });

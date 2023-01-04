@@ -12,7 +12,7 @@ MyBatis 是一个开源的持久性框架，它简化了 Java 应用程序中数
 
 为了使用 MyBatis，我们需要将依赖项添加到我们的`pom.xml:`
 
-```
+```java
 <dependency>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis</artifactId>
@@ -28,7 +28,7 @@ MyBatis 是一个开源的持久性框架，它简化了 Java 应用程序中数
 
 `SQLSessionFactory`是每个 MyBatis 应用程序的核心类。这个类通过使用`SQLSessionFactoryBuilder'`的`builder()` 方法来实例化，该方法加载一个配置 XML 文件:
 
-```
+```java
 String resource = "mybatis-config.xml";
 InputStream inputStream Resources.getResourceAsStream(resource);
 SQLSessionFactory sqlSessionFactory
@@ -37,7 +37,7 @@ SQLSessionFactory sqlSessionFactory
 
 Java 配置文件包括数据源定义、事务管理器细节和定义实体间关系的映射器列表等设置，这些一起用于构建`SQLSessionFactory` 实例:
 
-```
+```java
 public static SqlSessionFactory buildqlSessionFactory() {
     DataSource dataSource 
       = new PooledDataSource(DRIVER, URL, USERNAME, PASSWORD);
@@ -60,7 +60,7 @@ public static SqlSessionFactory buildqlSessionFactory() {
 
 执行数据库操作后，应该关闭会话。由于`SqlSession`实现了`AutoCloseable` 接口，我们可以使用`try-with-resources` 块:
 
-```
+```java
 try(SqlSession session = sqlSessionFactory.openSession()) {
     // do work
 }
@@ -70,7 +70,7 @@ try(SqlSession session = sqlSessionFactory.openSession()) {
 
 映射器是将方法映射到相应 SQL 语句的 Java 接口。MyBatis 为定义数据库操作提供了注释:
 
-```
+```java
 public interface PersonMapper {
 
     @Insert("Insert into person(name) values (#{name})")
@@ -98,7 +98,7 @@ public interface PersonMapper {
 
 *   `**@Insert, @Select, @Update, @Delete** –` 这些注释表示通过调用带注释的方法执行的 SQL 语句:
 
-    ```
+    ```java
     @Insert("Insert into person(name) values (#{name})")
     public Integer save(Person person);
 
@@ -115,7 +115,7 @@ public interface PersonMapper {
 
 *   **`@Results`** –这是一个结果映射列表，包含数据库列如何映射到 Java 类属性的细节:
 
-    ```
+    ```java
     @Select("Select personId, name from Person where personId=#{personId}")
     @Results(value = {
       @Result(property = "personId", column = "personId")
@@ -126,7 +126,7 @@ public interface PersonMapper {
 
 *   **`@Result`**–表示从`@Results.` 中检索到的结果列表中的`Result`的单个实例，包括从数据库列到 Java bean 属性的映射、属性的 Java 类型以及与其他 Java 对象的关联:
 
-    ```
+    ```java
     @Results(value = {
       @Result(property = "personId", column = "personId"),
       @Result(property="name", column = "name"),
@@ -138,7 +138,7 @@ public interface PersonMapper {
 
 *   `**@Many** –` it specifies a mapping of one object to a collection of the other objects:
 
-    ```
+    ```java
     @Results(value ={
       @Result(property = "addresses", javaType = List.class, 
         column = "personId",
@@ -148,7 +148,7 @@ public interface PersonMapper {
 
     这里的`getAddresses` 是通过查询地址表返回`Address` 集合的方法。
 
-    ```
+    ```java
     @Select("select addressId, streetAddress, personId from address 
       where personId=#{personId}")
     public Address getAddresses(Integer personId);
@@ -158,7 +158,7 @@ public interface PersonMapper {
 
 *   `**@MapKey** –` 用于将记录列表转换为`Map`条记录，记录的关键字由`value`属性定义:
 
-    ```
+    ```java
     @Select("select * from Person")
     @MapKey("personId")
     Map<Integer, Person> getAllPerson();
@@ -166,7 +166,7 @@ public interface PersonMapper {
 
 *   `**@Options** –` 该注释指定了要定义的各种开关和配置，因此我们可以`@Options`定义它们:
 
-    ```
+    ```java
     @Insert("Insert into address (streetAddress, personId) 
       values(#{streetAddress}, #{personId})")
     @Options(useGeneratedKeys = false, flushCache=true)
@@ -181,14 +181,14 @@ public interface PersonMapper {
 
 让我们探索一下如何在我们的应用程序中使用动态 SQL:
 
-```
+```java
 @SelectProvider(type=MyBatisUtil.class, method="getPersonByName")
 public Person getPersonByName(String name);
 ```
 
 这里我们指定了一个类和一个方法名，它实际上构造并生成了最终的 SQL:
 
-```
+```java
 public class MyBatisUtil {
 
     // ...
@@ -209,7 +209,7 @@ public class MyBatisUtil {
 
 我们还可以使用`@Select`注释来执行存储过程。这里我们需要传递存储过程的名称、参数列表，并对该过程使用一个显式的`Call`:
 
-```
+```java
 @Select(value= "{CALL getPersonByProc(#{personId,
   mode=IN, jdbcType=INTEGER})}")
 @Options(statementType = StatementType.CALLABLE)

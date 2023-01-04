@@ -24,7 +24,7 @@ Spring 和 Spring Boot 为加载外部配置提供了强大的支持——你可
 
 首先，我们可以在一个`UNIX` shell 中设置环境变量`SPRING_APPLICATION_JSON`:
 
-```
+```java
 $ SPRING_APPLICATION_JSON='{"environment":{"name":"production"}}' java -jar app.jar
 ```
 
@@ -32,13 +32,13 @@ $ SPRING_APPLICATION_JSON='{"environment":{"name":"production"}}' java -jar app.
 
 同样，我们可以将我们的`JSON`作为一个`System property, `来加载，例如:
 
-```
+```java
 $ java -Dspring.application.json='{"environment":{"name":"production"}}' -jar app.jar
 ```
 
 最后一个选项是使用一个简单的命令行参数:
 
-```
+```java
 $ java -jar app.jar --spring.application.json='{"environment":{"name":"production"}}'
 ```
 
@@ -54,7 +54,7 @@ Spring Boot 提供了一个强大的生态系统来通过注释创建配置类�
 
 首先，我们用一些简单的成员定义一个配置类:
 
-```
+```java
 public class JsonProperties {
 
     private int port;
@@ -70,7 +70,7 @@ public class JsonProperties {
 
 我们可以在一个外部文件中提供标准`JSON`格式的数据(姑且称之为`configprops.json`):
 
-```
+```java
 {
   "host" : "[[email protected]](/web/20220630133227/https://www.baeldung.com/cdn-cgi/l/email-protection)",
   "port" : 9090,
@@ -80,7 +80,7 @@ public class JsonProperties {
 
 现在我们必须将 JSON 文件连接到配置类:
 
-```
+```java
 @Component
 @PropertySource(value = "classpath:configprops.json")
 @ConfigurationProperties
@@ -95,7 +95,7 @@ public class JsonProperties {
 
 对于极简设置，我们可以定义应用程序的主要入口点:
 
-```
+```java
 @SpringBootApplication
 @ComponentScan(basePackageClasses = { JsonProperties.class})
 public class ConfigPropertiesDemoApplication {
@@ -107,7 +107,7 @@ public class ConfigPropertiesDemoApplication {
 
 现在我们可以创建我们的集成测试了:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @ContextConfiguration(
   classes = ConfigPropertiesDemoApplication.class)
@@ -127,7 +127,7 @@ public class JsonPropertiesIntegrationTest {
 
 因此，该测试将产生一个错误。即使加载`ApplicationContext`也会失败，原因如下:
 
-```
+```java
 ConversionFailedException: 
 Failed to convert from type [java.lang.String] 
 to type [boolean] for value 'true,'
@@ -141,7 +141,7 @@ to type [boolean] for value 'true,'
 
 **我们必须为客户`PropertySourceFactory`提供解析 JSON 数据的能力:**
 
-```
+```java
 public class JsonPropertySourceFactory 
   implements PropertySourceFactory {
 
@@ -158,7 +158,7 @@ public class JsonPropertySourceFactory
 
 我们可以提供这个工厂来加载我们的配置类。为此，我们必须引用来自`PropertySource`注释的工厂:
 
-```
+```java
 @Configuration
 @PropertySource(
   value = "classpath:configprops.json", 
@@ -175,14 +175,14 @@ public class JsonProperties {
 
 所以现在我们可以用一个列表成员(以及相应的 getters 和 setters)来扩展我们的配置类:
 
-```
+```java
 private List<String> topics;
 // getter and setter
 ```
 
 我们可以在 JSON 文件中提供输入值:
 
-```
+```java
 {
     // same fields as before
     "topics" : ["spring", "boot"]
@@ -191,7 +191,7 @@ private List<String> topics;
 
 我们可以用一个新的测试用例轻松测试列表值的绑定:
 
-```
+```java
 @Test
 public void whenPropertiesLoadedViaJsonPropertySource_thenLoadListValues() {
     assertThat(
@@ -206,14 +206,14 @@ public void whenPropertiesLoadedViaJsonPropertySource_thenLoadListValues() {
 
 所以我们可以用 getters 和 setters 向我们的`JsonProperties`类添加一个`Map`成员:
 
-```
+```java
 private LinkedHashMap<String, ?> sender;
 // getter and setter
 ```
 
 在 JSON 文件中，我们可以为这个字段提供一个嵌套的数据结构:
 
-```
+```java
 {
   // same fields as before
    "sender" : {
@@ -225,7 +225,7 @@ private LinkedHashMap<String, ?> sender;
 
 现在，我们可以通过地图访问嵌套数据:
 
-```
+```java
 @Test
 public void whenPropertiesLoadedViaJsonPropertySource_thenNestedLoadedAsMap() {
     assertEquals("sender", jsonProperties.getSender().get("name"));
@@ -241,7 +241,7 @@ public void whenPropertiesLoadedViaJsonPropertySource_thenNestedLoadedAsMap() {
 
 我们将像以前一样使用相同的 JSON 数据，但是我们将加载到不同的配置类中:
 
-```
+```java
 @Configuration
 @ConfigurationProperties(prefix = "custom")
 public class CustomJsonProperties {
@@ -265,7 +265,7 @@ public class CustomJsonProperties {
 
 为了给上面的 properties 类提供输入，我们将从 JSON 文件加载数据，在解析之后，我们将用`MapPropertySources:`填充 Spring `Environment`
 
-```
+```java
 public class JsonPropertyContextInitializer
  implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
@@ -306,7 +306,7 @@ public class JsonPropertyContextInitializer
 
 要使用这个初始化器，我们必须将它连接到应用程序。对于生产使用，我们可以将其添加到`SpringApplicationBuilder`:
 
-```
+```java
 @EnableAutoConfiguration
 @ComponentScan(basePackageClasses = { JsonProperties.class,
   CustomJsonProperties.class })
@@ -323,7 +323,7 @@ public class ConfigPropertiesDemoApplication {
 
 对于我们的测试环境，我们可以在`ContextConfiguration`注释中提供我们的定制初始化器:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = ConfigPropertiesDemoApplication.class, 
   initializers = JsonPropertyContextInitializer.class)
@@ -336,7 +336,7 @@ public class JsonPropertiesIntegrationTest {
 
 在自动连接我们的`CustomJsonProperties`类之后，我们可以从自定义名称空间测试数据绑定:
 
-```
+```java
 @Test
 public void whenLoadedIntoEnvironment_thenFlatValuesPopulated() {
     assertEquals("[[email protected]](/web/20220630133227/https://www.baeldung.com/cdn-cgi/l/email-protection)", customJsonProperties.getHost());
@@ -353,7 +353,7 @@ Spring 框架提供了一个强大的机制来将属性绑定到对象成员中�
 
 增强的`CustomJsonProperties`级:
 
-```
+```java
 @Configuration
 @ConfigurationProperties(prefix = "custom")
 public class CustomJsonProperties {
@@ -378,7 +378,7 @@ public class CustomJsonProperties {
 
 增强型`ApplicationContextInitializer`:
 
-```
+```java
 public class JsonPropertyContextInitializer 
   implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
@@ -439,7 +439,7 @@ public class JsonPropertyContextInitializer
 
 **因此，我们嵌套的 JSON 数据结构将被加载到一个配置对象:**
 
-```
+```java
 @Test
 public void whenLoadedIntoEnvironment_thenValuesLoadedIntoClassObject() {
     assertNotNull(customJsonProperties.getSender());

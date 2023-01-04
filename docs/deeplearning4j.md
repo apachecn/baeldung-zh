@@ -26,7 +26,7 @@
 
 在开始使用指南之前，让我们检查一下是否满足要求:
 
-```
+```java
 $ java -version
 java version "1.8.0_131"
 Java(TM) SE Runtime Environment (build 1.8.0_131-b11)
@@ -35,7 +35,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.131-b11, mixed mode)
 
 首先，让我们将所需的库添加到 Maven `pom.xml`文件中。我们将把库的版本提取到一个属性条目中(对于库的最新版本，请查看 [Maven Central](https://web.archive.org/web/20220901123902/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.deeplearning4j%22) 库):
 
-```
+```java
 <properties>
     <dl4j.version>0.9.1</dl4j.version>
 </properties>
@@ -70,7 +70,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.131-b11, mixed mode)
 
 我们将使用该数据的 CSV 版本，其中第 0 列..3 包含物种的不同特征，第 4 列包含记录的类别或物种，用值 0、1 或 2 编码:
 
-```
+```java
 5.1,3.5,1.4,0.2,0
 4.9,3.0,1.4,0.2,0
 4.7,3.2,1.3,0.2,0
@@ -87,7 +87,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.131-b11, mixed mode)
 
 首先，让我们使用这个库来输入带有矢量化数据的文件。当创建`CSVRecordReader`时，我们可以指定要跳过的行数(例如，如果文件有标题行)和分隔符(在我们的例子中是逗号):
 
-```
+```java
 try (RecordReader recordReader = new CSVRecordReader(0, ',')) {
     recordReader.initialize(new FileSplit(
       new ClassPathResource("iris.txt").getFile()));
@@ -106,7 +106,7 @@ try (RecordReader recordReader = new CSVRecordReader(0, ',')) {
 
 我们指定一个常量随机种子(42)来代替默认的`System.currentTimeMillis()`调用，这样洗牌的结果总是相同的。这使得我们每次运行程序时都能获得稳定的结果:
 
-```
+```java
 DataSetIterator iterator = new RecordReaderDataSetIterator(
   recordReader, 150, FEATURES_COUNT, CLASSES_COUNT);
 DataSet allData = iterator.next();
@@ -126,7 +126,7 @@ allData.shuffle(42);
 
 但对于数字来说，归一化通常意味着将其转化为所谓的正态分布。这个类可以帮助我们:
 
-```
+```java
 DataNormalization normalizer = new NormalizerStandardize();
 normalizer.fit(allData);
 normalizer.transform(allData);
@@ -138,7 +138,7 @@ normalizer.transform(allData);
 
 这将允许我们验证分类工作是否正确。我们将 65%的数据(0.65)用于训练，剩下的 35%用于测试:
 
-```
+```java
 SplitTestAndTrain testAndTrain = allData.splitTestAndTrain(0.65);
 DataSet trainingData = testAndTrain.getTrain();
 DataSet testData = testAndTrain.getTest();
@@ -150,7 +150,7 @@ DataSet testData = testAndTrain.getTest();
 
 现在，我们可以用一个奇特的 fluent 构建器来构建我们的网络配置:
 
-```
+```java
 MultiLayerConfiguration configuration 
   = new NeuralNetConfiguration.Builder()
     .iterations(1000)
@@ -219,7 +219,7 @@ MultiLayerConfiguration configuration
 
 现在让我们根据配置创建一个神经网络，初始化并运行它:
 
-```
+```java
 MultiLayerNetwork model = new MultiLayerNetwork(configuration);
 model.init();
 model.fit(trainingData);
@@ -227,7 +227,7 @@ model.fit(trainingData);
 
 现在，我们可以使用数据集的其余部分来测试已训练的模型，并使用三个类的评估指标来验证结果:
 
-```
+```java
 INDArray output = model.output(testData.getFeatureMatrix());
 Evaluation eval = new Evaluation(3);
 eval.eval(testData.getLabels(), output);
@@ -235,7 +235,7 @@ eval.eval(testData.getLabels(), output);
 
 如果我们现在打印出`eval.stats()`，我们会看到我们的网络在分类鸢尾花方面做得很好，尽管它确实三次将类别 1 误认为类别 2。
 
-```
+```java
 Examples labeled as 0 classified by model as 0: 19 times
 Examples labeled as 1 classified by model as 1: 16 times
 Examples labeled as 1 classified by model as 2: 3 times

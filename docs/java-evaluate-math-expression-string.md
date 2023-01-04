@@ -18,7 +18,7 @@
 
 要使用 exp4j，我们需要在项目中添加 [Maven 依赖项](https://web.archive.org/web/20220630132713/https://search.maven.org/search?q=g:net.objecthunter%20a:exp4j):
 
-```
+```java
 <dependency>
     <groupId>net.objecthunter</groupId>
     <artifactId>exp4j</artifactId>
@@ -30,7 +30,7 @@
 
 我们可以评估一个以`String`格式提供的简单数学表达式:
 
-```
+```java
 @Test
 public void givenSimpleExpression_whenCallEvaluateMethod_thenSuccess() {
     Expression expression = new ExpressionBuilder("3+2").build();
@@ -45,7 +45,7 @@ public void givenSimpleExpression_whenCallEvaluateMethod_thenSuccess() {
 
 现在我们知道了如何计算简单的表达式，让我们给表达式添加一些变量:
 
-```
+```java
 @Test
 public void givenTwoVariables_whenCallEvaluateMethod_thenSuccess() {
     Expression expression = new ExpressionBuilder("3x+2y")
@@ -66,7 +66,7 @@ public void givenTwoVariables_whenCallEvaluateMethod_thenSuccess() {
 
 现在让我们来看一个简短的例子，看看如何计算一些标准的数学函数:
 
-```
+```java
 @Test
 public void givenMathFunctions_whenCallEvaluateMethod_thenSuccess() {
     Expression expression = new ExpressionBuilder("sin(x)*sin(x)+cos(x)*cos(x)")
@@ -88,7 +88,7 @@ Java evaluator 是另一个独立的轻量级库，免费提供。像 exp4j 一�
 
 我们可以使用下面的 [Maven 依赖关系](https://web.archive.org/web/20220630132713/https://search.maven.org/search?q=g:com.fathzer%20a:javaluator)在我们的项目中使用 Javaluator:
 
-```
+```java
 <dependency>
     <groupId>com.fathzer</groupId>
     <artifactId>javaluator</artifactId>
@@ -100,7 +100,7 @@ Java evaluator 是另一个独立的轻量级库，免费提供。像 exp4j 一�
 
 要使用 Javaluator 计算表达式，我们首先需要创建一个`DoubleEvaluator`的实例:
 
-```
+```java
 @Test
 public void givenExpression_whenCallEvaluateMethod_thenSuccess() {
     String expression = "3+2";
@@ -116,7 +116,7 @@ public void givenExpression_whenCallEvaluateMethod_thenSuccess() {
 
 为了计算包含变量的表达式，我们使用`StaticVariableSet`:
 
-```
+```java
 @Test
 public void givenVariables_whenCallEvaluateMethod_thenSuccess() {
     String expression = "3*x+2*y";
@@ -137,7 +137,7 @@ public void givenVariables_whenCallEvaluateMethod_thenSuccess() {
 
 我们还可以使用 Javaluator 库求解包含数学函数的表达式:
 
-```
+```java
 @Test
 public void givenMathFunction_whenCallEvaluateMethod_thenSuccess() {
     String expression = "sin(x)*sin(x)+cos(x)*cos(x)";
@@ -161,7 +161,7 @@ public void givenMathFunction_whenCallEvaluateMethod_thenSuccess() {
 
 要创建一个`ScriptEngine`，我们首先要创建一个`ScriptEngineManager`的实例。一旦我们有了实例，我们需要调用`ScriptEngineManager#getEngineByName`方法来获得`ScriptEngine`:
 
-```
+```java
 ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
 ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("JavaScript");
 ```
@@ -172,7 +172,7 @@ ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("JavaScript");
 
 我们现在可以使用上面的`scriptEngine`实例来调用`ScriptEngine#eval`方法:
 
-```
+```java
 String expression = "3+2";
 Integer result = (Integer) scriptEngine.eval(expression);
 Assertions.assertEquals(5, result);
@@ -182,7 +182,7 @@ Assertions.assertEquals(5, result);
 
 为了计算包含变量的表达式，我们需要声明和初始化变量:
 
-```
+```java
 String expression = "x=2; y=3; 3*x+2*y;";
 Double result = (Double) scriptEngine.eval(expression);
 Assertions.assertEquals(12, result);

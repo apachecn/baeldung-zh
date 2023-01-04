@@ -10,7 +10,7 @@
 
 首先，我们将从定义我们将在所有解决方案中使用的示例字符串开始:
 
-```
+```java
 String example = "Katie";
 ```
 
@@ -20,7 +20,7 @@ String example = "Katie";
 
 我们将熟悉的第一个解决方案不需要新的依赖项。我们将使用`java.lang`包中`Character`类的`isUpperCase`方法:
 
-```
+```java
 public static boolean isUpperCase(int codePoint);
 ```
 
@@ -28,7 +28,7 @@ public static boolean isUpperCase(int codePoint);
 
 对于我们的例子，我们只需要提取字符串中的第一个字符。首先，我们将使用 [`charAt`](/web/20221208143926/https://www.baeldung.com/string/char-at) 方法进行提取。然后，我们将调用`isUpperCase`方法:
 
-```
+```java
 Assertions.assertTrue(Character.isUpperCase(example.charAt(0)));
 ```
 
@@ -42,7 +42,7 @@ Assertions.assertTrue(Character.isUpperCase(example.charAt(0)));
 
 下一步是定义匹配的模式。对于我们的例子，我们需要一个匹配的模式，如果一个字符串以大写字符开始，而其他字符可以是大写、小写或数字。然后，我们只需要检查模式是否与示例字符串匹配:
 
-```
+```java
 String regEx = "[A-Z]\\w*";
 Assertions.assertTrue(example.matches(regEx));
 ```
@@ -53,7 +53,7 @@ Assertions.assertTrue(example.matches(regEx));
 
 第一步是添加[番石榴](https://web.archive.org/web/20221208143926/https://search.maven.org/search?q=g:com.google.guava%20AND%20a:guava)依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -63,7 +63,7 @@ Assertions.assertTrue(example.matches(regEx));
 
 然后，我们将对示例字符串的第一个字母应用`isUpperCase` 方法:
 
-```
+```java
 Assertions.assertTrue(Ascii.isUpperCase(example.charAt(0)));
 ```
 

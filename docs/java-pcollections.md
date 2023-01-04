@@ -14,7 +14,7 @@ PCollections 类似于 Java Collections 框架并与之兼容。
 
 让我们将以下依赖项添加到我们的`pom.xml`中，以便在我们的项目中使用 PCollections:
 
-```
+```java
 <dependency>
     <groupId>org.pcollections</groupId>
     <artifactId>pcollections</artifactId>
@@ -24,7 +24,7 @@ PCollections 类似于 Java Collections 框架并与之兼容。
 
 如果我们的项目是基于 Gradle 的，我们可以将相同的工件添加到我们的`build.gradle`文件中:
 
-```
+```java
 compile 'org.pcollections:pcollections:2.1.2'
 ```
 
@@ -38,20 +38,20 @@ compile 'org.pcollections:pcollections:2.1.2'
 
 `HashTreePMap`类的静态`empty()`方法创建一个没有元素的空的`HashPMap`——就像使用默认的`java.util.HashMap`构造函数一样:
 
-```
+```java
 HashPMap<String, String> pmap = HashTreePMap.empty();
 ```
 
 我们可以使用另外两个静态方法来创建`HashPMap`。`singleton()`方法创建一个只有一个条目的`HashPMap`:
 
-```
+```java
 HashPMap<String, String> pmap1 = HashTreePMap.singleton("key1", "value1");
 assertEquals(pmap1.size(), 1);
 ```
 
 `from()`方法从现有的`java.util.HashMap`实例(和其他`java.util.Map`实现)创建一个`HashPMap`:
 
-```
+```java
 Map map = new HashMap();
 map.put("mkey1", "mval1");
 map.put("mkey2", "mval2");
@@ -64,7 +64,7 @@ assertEquals(pmap2.size(), 2);
 
 `minus()`方法从映射中删除单个条目，而`minusAll()`方法删除多个条目。还有分别添加单个和多个条目的`plus()`和`plusAll()`方法:
 
-```
+```java
 HashPMap<String, String> pmap = HashTreePMap.empty();
 HashPMap<String, String> pmap0 = pmap.plus("key1", "value1");
 
@@ -103,7 +103,7 @@ assertEquals(pmap3.size(), 0);
 
 让我们考虑下面的代码片段，它举例说明了上面提到的方法:
 
-```
+```java
 TreePVector pVector = TreePVector.empty();
 
 TreePVector pV1 = pVector.plus("e1");
@@ -133,7 +133,7 @@ assertEquals(pVW.get(0), "e10");
 
 `MapPSet`有`plus()`、`plusAll()`、`minus()`和`minusAll()`四种操作设定数据的方法。此外，它继承了`java.util.Set`、`java.util.AbstractCollection`和`java.util.AbstractSet`的方法:
 
-```
+```java
 MapPSet pSet = HashTreePSet.empty()     
   .plusAll(Arrays.asList("e1","e2","e3","e4"));
 assertEquals(pSet.size(), 4);

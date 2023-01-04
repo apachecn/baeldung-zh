@@ -22,7 +22,7 @@
 
 构造函数注入:
 
-```
+```java
 class Car {
     Engine engine;
 
@@ -35,7 +35,7 @@ class Car {
 
 Setter 注入:
 
-```
+```java
 class Car {
     Engine engine;
 
@@ -48,7 +48,7 @@ class Car {
 
 现场注射:
 
-```
+```java
 class Car {
     @Autowired
     Engine engine;
@@ -67,7 +67,7 @@ class Car {
 
 `@Bean`标记实例化 Spring bean 的工厂方法:
 
-```
+```java
 @Bean
 Engine engine() {
     return new Engine();
@@ -78,7 +78,7 @@ Engine engine() {
 
 生成的 bean 与工厂方法同名。如果我们想用不同的名字命名它，我们可以用这个注释的参数`name`或`value`来命名(参数`value`是参数`name`的别名):
 
-```
+```java
 @Bean("engine")
 Engine getEngine() {
     return new Engine();
@@ -93,7 +93,7 @@ Engine getEngine() {
 
 例如，以下两个 beans 实现了相同的接口:
 
-```
+```java
 class Bike implements Vehicle {}
 
 class Car implements Vehicle {}
@@ -103,7 +103,7 @@ class Car implements Vehicle {}
 
 使用构造函数注入:
 
-```
+```java
 @Autowired
 Biker(@Qualifier("bike") Vehicle vehicle) {
     this.vehicle = vehicle;
@@ -112,7 +112,7 @@ Biker(@Qualifier("bike") Vehicle vehicle) {
 
 使用 setter 进样:
 
-```
+```java
 @Autowired
 void setVehicle(@Qualifier("bike") Vehicle vehicle) {
     this.vehicle = vehicle;
@@ -121,7 +121,7 @@ void setVehicle(@Qualifier("bike") Vehicle vehicle) {
 
 或者:
 
-```
+```java
 @Autowired
 @Qualifier("bike")
 void setVehicle(Vehicle vehicle) {
@@ -131,7 +131,7 @@ void setVehicle(Vehicle vehicle) {
 
 使用现场注射:
 
-```
+```java
 @Autowired
 @Qualifier("bike")
 Vehicle vehicle;
@@ -143,14 +143,14 @@ Vehicle vehicle;
 
 `@Required`在 setter 方法上标记我们希望通过 XML 填充的依赖关系:
 
-```
+```java
 @Required
 void setColor(String color) {
     this.color = color;
 }
 ```
 
-```
+```java
 <bean class="com.baeldung.annotations.Bike">
     <property name="color" value="green" />
 </bean>
@@ -164,7 +164,7 @@ void setColor(String color) {
 
 构造函数注入:
 
-```
+```java
 Engine(@Value("8") int cylinderCount) {
     this.cylinderCount = cylinderCount;
 }
@@ -172,7 +172,7 @@ Engine(@Value("8") int cylinderCount) {
 
 Setter 注入:
 
-```
+```java
 @Autowired
 void setCylinderCount(@Value("8") int cylinderCount) {
     this.cylinderCount = cylinderCount;
@@ -181,7 +181,7 @@ void setCylinderCount(@Value("8") int cylinderCount) {
 
 或者:
 
-```
+```java
 @Value("8")
 void setCylinderCount(int cylinderCount) {
     this.cylinderCount = cylinderCount;
@@ -190,7 +190,7 @@ void setCylinderCount(int cylinderCount) {
 
 现场注射:
 
-```
+```java
 @Value("8")
 int cylinderCount;
 ```
@@ -199,13 +199,13 @@ int cylinderCount;
 
 让我们假设下面的`.properties`文件:
 
-```
+```java
 engine.fuelType=petrol
 ```
 
 我们可以用以下公式注入`engine.fuelType`的值:
 
-```
+```java
 @Value("${engine.fuelType}")
 String fuelType;
 ```
@@ -220,14 +220,14 @@ String fuelType;
 
 我们可以在依赖类上使用`@DependsOn`来指定依赖 beans 的名称。注释的`value`参数需要一个包含依赖 bean 名称的数组:
 
-```
+```java
 @DependsOn("engine")
 class Car implements Vehicle {}
 ```
 
 或者，如果我们用`@Bean`注释定义一个 bean，那么工厂方法应该用`@DependsOn`注释:
 
-```
+```java
 @Bean
 @DependsOn("fuel")
 Engine engine() {
@@ -252,7 +252,7 @@ Engine engine() {
 
 例如，当全局设置为惰性时，将 beans 标记为急切加载，或者在标记有`@Lazy`的`@Configuration`类中，将特定的`@Bean`方法配置为急切加载:
 
-```
+```java
 @Configuration
 @Lazy
 class VehicleFactoryConfig {
@@ -281,7 +281,7 @@ class VehicleFactoryConfig {
 
 然而，大多数时候我们需要一个特定的 bean，很少需要其他的。我们可以用`@Primary`来简化这种情况:如果**我们用`@Primary`** 标记最常用的 bean，它将被选在不合格的注入点上；
 
-```
+```java
 @Component
 @Primary
 class Car implements Vehicle {}
@@ -311,7 +311,7 @@ class Biker {
 
 例如:
 
-```
+```java
 @Component
 @Scope("prototype")
 class Engine {}
@@ -325,7 +325,7 @@ class Engine {}
 
 如果我们想让 Spring**只在一个特定的概要文件激活**时使用一个`@Component`类或者一个`@Bean`方法，我们可以用`@Profile`来标记它。我们可以用注释的`value`参数来配置概要文件的名称:
 
-```
+```java
 @Component
 @Profile("sportDay")
 class Bike implements Vehicle {}
@@ -337,7 +337,7 @@ class Bike implements Vehicle {}
 
 我们可以使用**特定的`@Configuration`类，而不需要组件扫描**这个注释。我们可以为这些类提供`@Import`的`value`参数:
 
-```
+```java
 @Import(VehiclePartSupplier.class)
 class VehicleFactoryConfig {}
 ```
@@ -346,7 +346,7 @@ class VehicleFactoryConfig {}
 
 我们可以用这个注释**导入 XML 配置**。我们可以用参数`locations`或者它的别名`value`来指定 XML 文件的位置:
 
-```
+```java
 @Configuration
 @ImportResource("classpath:/annotations.xml")
 class VehicleFactoryConfig {}
@@ -356,7 +356,7 @@ class VehicleFactoryConfig {}
 
 有了这个注释，我们可以**为应用程序设置**定义属性文件:
 
-```
+```java
 @Configuration
 @PropertySource("classpath:/annotations.properties")
 class VehicleFactoryConfig {}
@@ -364,7 +364,7 @@ class VehicleFactoryConfig {}
 
 `@PropertySource`利用 Java 8 的重复注释特性，这意味着我们可以用它多次标记一个类:
 
-```
+```java
 @Configuration
 @PropertySource("classpath:/annotations.properties")
 @PropertySource("classpath:/vehicle-factory.properties")
@@ -375,7 +375,7 @@ class VehicleFactoryConfig {}
 
 我们可以使用这个注释来指定多个`@PropertySource` 配置:
 
-```
+```java
 @Configuration
 @PropertySources({ 
     @PropertySource("classpath:/annotations.properties"),

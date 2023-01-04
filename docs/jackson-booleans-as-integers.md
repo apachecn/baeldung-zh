@@ -14,7 +14,7 @@
 
 首先，我们将研究序列化部分。为了测试`Boolean`到`Integer`的序列化，让我们定义我们的模型，`Game`:
 
-```
+```java
 public class Game {
 
     private Long id;
@@ -28,7 +28,7 @@ public class Game {
 
 像往常一样，`Game`对象的默认序列化将使用 Jackson 的`ObjectMapper`:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 Game game = new Game(1L, "My Game");
 game.setPaused(true);
@@ -38,13 +38,13 @@ String json = mapper.writeValueAsString(game);
 
 毫不奇怪，`Boolean`字段的输出将是默认的— `true`或`false`:
 
-```
+```java
 {"id":1, "name":"My Game", "paused":true, "over":false}
 ```
 
 然而，我们的目标是最终从我们的`Game`对象获得以下 JSON 输出:
 
-```
+```java
 {"id":1, "name":"My Game", "paused":1, "over":0}
 ```
 
@@ -52,7 +52,7 @@ String json = mapper.writeValueAsString(game);
 
 序列化为`Integer`的一个非常直接的方法是用`@JsonFormat`注释我们的`Boolean`字段，并为它设置`Shape.NUMBER`:
 
-```
+```java
 @JsonFormat(shape = Shape.NUMBER)
 private Boolean paused;
 
@@ -62,7 +62,7 @@ private Boolean over;
 
 然后，让我们在一个测试方法中尝试我们的序列化:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 Game game = new Game(1L, "My Game");
 game.setPaused(true);
@@ -81,7 +81,7 @@ assertThat(json)
 
 幸运的是， **Jackson 允许我们通过覆盖`ObjectMapper`** 中的默认值来全局配置`@JsonFormat`:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 mapper.configOverride(Boolean.class)
   .setFormat(JsonFormat.Value.forShape(Shape.NUMBER));
@@ -103,7 +103,7 @@ assertThat(json)
 
 因此，在没有配置的情况下，让我们借助另一种测试方法来看看这种行为:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 String json = "{\"id\":1,\"name\":\"My Game\",\"paused\":1,\"over\":0}";
 Game game = mapper.readValue(json, Game.class);
@@ -124,7 +124,7 @@ assertThat(game.isOver()).isEqualTo(false);
 
 所以，让我们通过扩展杰克逊的`JsonSerializer`来创建我们的`NumericBooleanSerializer`:
 
-```
+```java
 public class NumericBooleanSerializer extends JsonSerializer<Boolean> {
 
     @Override
@@ -143,7 +143,7 @@ public class NumericBooleanSerializer extends JsonSerializer<Boolean> {
 
 相应地，让我们注释我们的`Boolean`字段、`paused`和`over`:
 
-```
+```java
 @JsonSerialize(using = NumericBooleanSerializer.class)
 private Boolean paused;
 
@@ -153,7 +153,7 @@ private Boolean over;
 
 然后，同样，我们在一个测试方法中尝试序列化:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 Game game = new Game(1L, "My Game");
 game.setPaused(true);
@@ -168,7 +168,7 @@ assertThat(json)
 
 最后但同样重要的是，如果我们需要在任何地方执行这种自定义序列化， **Jackson 通过 Jackson 模块**将序列化程序添加到`ObjectMapper`中，从而支持序列化程序的全局配置:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 SimpleModule module = new SimpleModule();
 module.addSerializer(Boolean.class, new NumericBooleanSerializer());
@@ -191,7 +191,7 @@ assertThat(json)
 
 让我们通过扩展`JsonDeserializer`来创建我们的类`NumericBooleanDeserializer`:
 
-```
+```java
 public class NumericBooleanDeserializer extends JsonDeserializer<Boolean> {
 
     @Override
@@ -211,7 +211,7 @@ public class NumericBooleanDeserializer extends JsonDeserializer<Boolean> {
 
 接下来，我们再次注释我们的`Boolean`字段，但是这次用`@JsonDeserialize`:
 
-```
+```java
 @JsonSerialize(using = NumericBooleanSerializer.class)
 @JsonDeserialize(using = NumericBooleanDeserializer.class)
 private Boolean paused;
@@ -223,7 +223,7 @@ private Boolean over;
 
 因此，让我们编写另一个测试方法来看看我们的`NumericBooleanDeserializer`的运行情况:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 String json = "{\"id\":1,\"name\":\"My Game\",\"paused\":\"1\",\"over\":\"0\"}";
 Game game = mapper.readValue(json, Game.class);
@@ -234,7 +234,7 @@ assertThat(game.isOver()).isEqualTo(false);
 
 或者，也可以通过 Jackson 模块对我们的定制反串行化器进行全局配置:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 SimpleModule module = new SimpleModule();
 module.addDeserializer(Boolean.class, new NumericBooleanDeserializer());

@@ -14,13 +14,13 @@
 
 让我们创建一个可以包含多达 100 个元素的`LinkedBlockingQueue`:
 
-```
+```java
 BlockingQueue<Integer> boundedQueue = new LinkedBlockingQueue<>(100);
 ```
 
 我们还可以通过不指定大小来创建一个无界的`LinkedBlockingQueue `:
 
-```
+```java
 BlockingQueue<Integer> unboundedQueue = new LinkedBlockingQueue<>();
 ```
 
@@ -28,7 +28,7 @@ BlockingQueue<Integer> unboundedQueue = new LinkedBlockingQueue<>();
 
 我们也可以从现有的集合中创建一个`LinkedBlockingQueue `:
 
-```
+```java
 Collection<Integer> listOfNumbers = Arrays.asList(1,2,3,4,5);
 BlockingQueue<Integer> queue = new LinkedBlockingQueue<>(listOfNumbers);
 ```
@@ -37,7 +37,7 @@ BlockingQueue<Integer> queue = new LinkedBlockingQueue<>(listOfNumbers);
 
 阻塞队列表示如果队列已满(当队列受限时)或变空，队列将阻塞访问线程。如果队列已满，那么添加新元素将阻塞访问线程，除非有空间可用于新元素。类似地，如果队列为空，则访问元素会阻塞调用线程:
 
-```
+```java
 ExecutorService executorService = Executors.newFixedThreadPool(1);
 LinkedBlockingQueue<Integer> queue = new LinkedBlockingQueue<>();
 executorService.submit(() -> {
@@ -60,13 +60,13 @@ executorService.submit(() -> {
 
 让我们创建一个空的`ConcurrentLinkedQueue`:
 
-```
+```java
 ConcurrentLinkedQueue queue = new ConcurrentLinkedQueue();
 ```
 
 我们也可以从现有的集合中创建一个`ConcurrentLinkedQueue`:
 
-```
+```java
 Collection<Integer> listOfNumbers = Arrays.asList(1,2,3,4,5);
 ConcurrentLinkedQueue<Integer> queue = new ConcurrentLinkedQueue<>(listOfNumbers);
 ```
@@ -77,7 +77,7 @@ ConcurrentLinkedQueue<Integer> queue = new ConcurrentLinkedQueue<>(listOfNumbers
 
 在任何生产者-消费者情景中，消费者都不会与生产者竞争；然而，多个生产商将相互竞争:
 
-```
+```java
 int element = 1;
 ExecutorService executorService = Executors.newFixedThreadPool(2);
 ConcurrentLinkedQueue<Integer> queue = new ConcurrentLinkedQueue<>();

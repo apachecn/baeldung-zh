@@ -24,7 +24,7 @@ GraphQL 使用一个模式来定义哪些数据对客户机可用，以及如何
 
 为了简单起见，让我们看一下默认 AWS AppSync GraphQL 模式的一部分，我们的`Event` 模型:
 
-```
+```java
 type Event {
   id: ID!
   name: String
@@ -48,7 +48,7 @@ type Event {
 
 为了访问我们的 API，我们将使用 Spring Boot Starter WebFlux 库来访问`WebClient,` Spring 对`RestTemplate`的新替代:
 
-```
+```java
  <dependency> 
       <groupId>org.springframework.boot</groupId> 
       <artifactId>spring-boot-starter-webflux</artifactId> 
@@ -61,7 +61,7 @@ type Event {
 
 为了向我们的 API 发出请求，我们将首先使用提供 AWS AppSync API URL 和 API 密钥的`WebClient`构建器`,` 来创建我们的`RequestBodySpec`:
 
-```
+```java
 WebClient.RequestBodySpec requestBodySpec = WebClient
     .builder()
     .baseUrl(apiUrl)
@@ -79,7 +79,7 @@ WebClient.RequestBodySpec requestBodySpec = WebClient
 
 设置我们的查询包括将它添加到消息体中的一个`query`元素:
 
-```
+```java
 Map<String, Object> requestBody = new HashMap<>();
 requestBody.put("query", "query ListEvents {" 
   + " listEvents {"
@@ -96,7 +96,7 @@ requestBody.put("query", "query ListEvents {"
 
 使用我们的`requestBody, `让我们调用我们的`WebClient`来检索响应体:
 
-```
+```java
 WebClient.ResponseSpec response = requestBodySpec
     .body(BodyInserters.fromValue(requestBody))
     .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML)
@@ -106,7 +106,7 @@ WebClient.ResponseSpec response = requestBodySpec
 
 最后，我们可以得到身体作为`String`:
 
-```
+```java
 String bodyString = response.bodyToMono(String.class).block();
 assertNotNull(bodyString);
 assertTrue(bodyString.contains("My First Event"));
@@ -118,7 +118,7 @@ GraphQL 允许通过使用突变来更新和删除数据。突变根据需要修
 
 让我们添加一个带有`add`突变查询的新事件:
 
-```
+```java
 String queryString = "mutation add {"
   + "    createEvent("
   + "        name:\"My added GraphQL event\""
@@ -139,7 +139,7 @@ AppSync 和 GraphQL 最大的优点之一是一个端点 URL 提供了整个模�
 
 我们可以重用同一个`WebClient`来添加、更新和删除数据。我们将简单地根据查询或变异中的回调得到一个新的响应。
 
-```
+```java
 assertNotNull(bodyString);
 assertTrue(bodyString.contains("My added GraphQL event"));
 assertFalse(bodyString.contains("where"));

@@ -22,7 +22,7 @@
 
 首先，我们需要将`[jackson-databind](https://web.archive.org/web/20221129004411/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.fasterxml.jackson.core%22%20AND%20a%3A%22jackson-databind%22)`依赖项添加到我们的 `pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -34,7 +34,7 @@
 
 第二个是添加了 Jackson 的 XML 支持的`[jackson-dataformat-xml](https://web.archive.org/web/20221129004411/https://search.maven.org/classic/#search|gav|1|g%3A%22com.fasterxml.jackson.dataformat%22%20AND%20a%3A%22jackson-dataformat-xml%22)`:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.dataformat</groupId>
     <artifactId>jackson-dataformat-xml</artifactId>
@@ -48,7 +48,7 @@
 
 为了探究这一点，**让我们用`Flower`和`Color `属性**来定义我们的 XML:
 
-```
+```java
 <Flower>
     <name>Poppy</name>
     <color>RED</color>
@@ -58,7 +58,7 @@
 
 这类似于这个 Java 符号:
 
-```
+```java
 public class Flower {
     private String name;
     private Color color;
@@ -71,21 +71,21 @@ public enum Color { PINK, BLUE, YELLOW, RED; }
 
 **我们的第一步是将 XML 解析成一个`Flower`实例**。为此，让我们创建一个`XmlMapper`的实例，Jackson 的 XML 对`ObjectMapper`的等效物，并使用它的`readValue `方法:
 
-```
+```java
 XmlMapper xmlMapper = new XmlMapper();
 Flower poppy = xmlMapper.readValue(xml, Flower.class);
 ```
 
 **一旦我们有了`Flower`实例，我们将希望使用熟悉的`ObjectMapper` :** 把它写成 JSON
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 String json = mapper.writeValueAsString(poppy);
 ```
 
 结果，我们得到了我们的 JSON 等价物:
 
-```
+```java
 {
     "name":"Poppy",
     "color":"RED",
@@ -101,7 +101,7 @@ String json = mapper.writeValueAsString(poppy);
 
 第一步类似于我们使用数据绑定时的第一步。不过，这一次我们将使用`readTree`方法:
 
-```
+```java
 XmlMapper xmlMapper = new XmlMapper();
 JsonNode node = xmlMapper.readTree(xml.getBytes());
 ```
@@ -110,14 +110,14 @@ JsonNode node = xmlMapper.readTree(xml.getBytes());
 
 然后，我们可以再次使用`ObjectMapper`，只是发送我们的`JsonNode `:
 
-```
+```java
 ObjectMapper jsonMapper = new ObjectMapper();
 String json = jsonMapper.writeValueAsString(node);
 ```
 
 **现在，结果与我们上一个例子略有不同:**
 
-```
+```java
 {
     "name":"Poppy",
     "color":"RED",

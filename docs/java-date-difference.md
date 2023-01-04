@@ -22,7 +22,7 @@ Have a look at different ways to check if a String is a valid date in Java[Read 
 
 让我们首先使用核心 Java APIs 进行计算，并确定两个日期之间的天数:
 
-```
+```java
 @Test
 public void givenTwoDatesBeforeJava8_whenDifferentiating_thenWeGetSix()
   throws ParseException {
@@ -46,7 +46,7 @@ Java 8 中的时间 API 使用`[TemporalUnit](https://web.archive.org/web/202208
 
 例如，为了计算两个`LocalDateTime`之间的秒数:
 
-```
+```java
 @Test
 public void givenTwoDateTimesInJava8_whenDifferentiatingInSeconds_thenWeGetTen() {
     LocalDateTime now = LocalDateTime.now();
@@ -60,7 +60,7 @@ public void givenTwoDateTimesInJava8_whenDifferentiatingInSeconds_thenWeGetTen()
 
 [`ChronoUnit`](https://web.archive.org/web/20220811124302/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/temporal/ChronoUnit.html) 通过实现`TemporalUnit`接口提供了一组具体的时间单位。**强烈推荐`static import``ChronoUnit``enum`值，以达到更好的可读性**:
 
-```
+```java
 import static java.time.temporal.ChronoUnit.SECONDS;
 
 // omitted
@@ -71,7 +71,7 @@ long diff = SECONDS.between(now, tenSecondsLater);
 
 `ZonedDateTime`的伟大之处在于，即使他们被设置为不同的时区，计算也能工作:
 
-```
+```java
 @Test
 public void givenTwoZonedDateTimesInJava8_whenDifferentiating_thenWeGetSix() {
     LocalDateTime ldt = LocalDateTime.now();
@@ -90,7 +90,7 @@ public void givenTwoZonedDateTimesInJava8_whenDifferentiating_thenWeGetSix() {
 
 任何 [`Temporal`](https://web.archive.org/web/20220811124302/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/temporal/Temporal.html) 对象，如`LocalDate or ZonedDateTime`，**提供了一个 [`until`](https://web.archive.org/web/20220811124302/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/temporal/Temporal.html#until(java.time.temporal.Temporal,java.time.temporal.TemporalUnit)) 方法来计算直到另一个`Temporal`的时间量，以指定的单位**来计算:
 
-```
+```java
 @Test
 public void givenTwoDateTimesInJava8_whenDifferentiatingInSecondsUsingUntil_thenWeGetTen() {
     LocalDateTime now = LocalDateTime.now();
@@ -110,7 +110,7 @@ public void givenTwoDateTimesInJava8_whenDifferentiatingInSecondsUsingUntil_then
 
 **如果我们想要计算基于时间(小时、分钟或秒)的两个日期时间之间的差异，我们可以使用`Duration `类**:
 
-```
+```java
 @Test
 public void givenTwoDateTimesInJava8_whenDifferentiating_thenWeGetSix() {
     LocalDateTime now = LocalDateTime.now();
@@ -129,7 +129,7 @@ public void givenTwoDateTimesInJava8_whenDifferentiating_thenWeGetSix() {
 
 让我们使用`Period`类来计算两个日期之间的天数:
 
-```
+```java
 @Test
 public void givenTwoDatesInJava8_whenUsingPeriodGetDays_thenWorks()  {
     LocalDate aDate = LocalDate.of(2020, 9, 11);
@@ -148,7 +148,7 @@ public void givenTwoDatesInJava8_whenUsingPeriodGetDays_thenWorks()  {
 
 因此，让我们将上面测试中的`6`改为`60`，看看会发生什么:
 
-```
+```java
 @Test
 public void givenTwoDatesInJava8_whenUsingPeriodGetDays_thenDoesNotWork() {
     LocalDate aDate = LocalDate.of(2020, 9, 11);
@@ -163,7 +163,7 @@ public void givenTwoDatesInJava8_whenUsingPeriodGetDays_thenDoesNotWork() {
 
 现在，如果我们再次运行测试，我们会看到:
 
-```
+```java
 java.lang.AssertionError: 
 Expected :60
 Actual   :29
@@ -175,7 +175,7 @@ Actual   :29
 
 因此，上面测试中的`period `对象持有值“0 年 1 个月 29 天”:
 
-```
+```java
 @Test
 public void givenTwoDatesInJava8_whenUsingPeriod_thenWeGet0Year1Month29Days() {
     LocalDate aDate = LocalDate.of(2020, 9, 11);
@@ -196,7 +196,7 @@ public void givenTwoDatesInJava8_whenUsingPeriod_thenWeGet0Year1Month29Days() {
 
 我们也可以用`JodaTime`做一个相对简单的实现:
 
-```
+```java
 <dependency>
     <groupId>joda-time</groupId>
     <artifactId>joda-time</artifactId>
@@ -208,7 +208,7 @@ public void givenTwoDatesInJava8_whenUsingPeriod_thenWeGet0Year1Month29Days() {
 
 `LocalDate`案例:
 
-```
+```java
 @Test
 public void givenTwoDatesInJodaTime_whenDifferentiating_thenWeGetSix() {
     org.joda.time.LocalDate now = org.joda.time.LocalDate.now();
@@ -221,7 +221,7 @@ public void givenTwoDatesInJodaTime_whenDifferentiating_thenWeGetSix() {
 
 同样，用`LocalDateTime`:
 
-```
+```java
 @Test
 public void givenTwoDateTimesInJodaTime_whenDifferentiating_thenWeGetSix() {
     org.joda.time.LocalDateTime now = org.joda.time.LocalDateTime.now();
@@ -238,7 +238,7 @@ public void givenTwoDateTimesInJodaTime_whenDifferentiating_thenWeGetSix() {
 
 让我们从 Maven 依赖性开始:
 
-```
+```java
 <dependency>
     <groupId>com.darwinsys</groupId>
     <artifactId>hirondelle-date4j</artifactId>
@@ -248,7 +248,7 @@ public void givenTwoDateTimesInJodaTime_whenDifferentiating_thenWeGetSix() {
 
 这里有一个使用标准`DateTime`的快速测试:
 
-```
+```java
 @Test
 public void givenTwoDatesInDate4j_whenDifferentiating_thenWeGetSix() {
     DateTime now = DateTime.now(TimeZone.getDefault());

@@ -16,7 +16,7 @@
 
 我们用`pom.xml`中的 [`spring-boot-starter-web`](https://web.archive.org/web/20221228100122/https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web) 依赖关系定义了一个基本的 spring 应用程序:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -27,7 +27,7 @@
 
 接下来，让我们为 JSON 输入定义一个简单的模型类:
 
-```
+```java
 public class JsonRequest {
     int id;
     String name;
@@ -40,7 +40,7 @@ public class JsonRequest {
 
 最后，让我们根据用例设置一个端点，将请求作为一个文件来处理:
 
-```
+```java
 @PostMapping("/uploadFile")
 public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file){
     return ResponseEntity.ok().body("file received successfully");
@@ -53,7 +53,7 @@ public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFi
 
 让我们也创建一个处理 JSON 数据的端点:
 
-```
+```java
 @PostMapping("/uploadJson")
 public ResponseEntity<String> handleJsonInput(@RequestBody JsonRequest json){
     return ResponseEntity.ok().body(json.getId()+json.getName());

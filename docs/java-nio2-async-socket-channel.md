@@ -12,7 +12,7 @@
 
 使用 NIO.2 通道 API 所需的所有类都打包在`java.nio.channels`包中:
 
-```
+```java
 import java.nio.channels.*;
 ```
 
@@ -20,26 +20,26 @@ import java.nio.channels.*;
 
 通过调用其类上的静态 open API 来创建`AsynchronousServerSocketChannel`的实例:
 
-```
+```java
 AsynchronousServerSocketChannel server
   = AsynchronousServerSocketChannel.open();
 ```
 
 新创建的异步服务器套接字通道是打开的，但尚未绑定，因此我们必须将其绑定到一个本地地址，并选择一个端口:
 
-```
+```java
 server.bind(new InetSocketAddress("127.0.0.1", 4555));
 ```
 
 我们也可以传入 null，以便它使用本地地址并绑定到任意端口:
 
-```
+```java
 server.bind(null);
 ```
 
 一旦绑定，`accept` API 用于启动接受到通道套接字的连接:
 
-```
+```java
 Future<AsynchronousSocketChannel> acceptFuture = server.accept();
 ```
 
@@ -47,13 +47,13 @@ Future<AsynchronousSocketChannel> acceptFuture = server.accept();
 
 接下来，我们可以使用`get` API 来查询来自`Future`对象的响应:
 
-```
+```java
 AsynchronousSocketChannel worker = future.get();
 ```
 
 如果需要等待来自客户端的连接请求，这个调用将被阻塞。或者，如果我们不想永远等待，我们可以指定一个超时:
 
-```
+```java
 AsynchronousSocketChannel worker = acceptFuture.get(10, TimeUnit.SECONDS);
 ```
 
@@ -61,7 +61,7 @@ AsynchronousSocketChannel worker = acceptFuture.get(10, TimeUnit.SECONDS);
 
 让我们创建一个名为`runServer`的方法，在这个方法中我们将等待并处理任何传入的消息:
 
-```
+```java
 public void runServer() {
     clientChannel = acceptResult.get();
     if ((clientChannel != null) && (clientChannel.isOpen())) {
@@ -93,7 +93,7 @@ public void runServer() {
 
 为了启动服务器，我们调用它的构造函数，然后调用`main`中的`runServer`方法:
 
-```
+```java
 public static void main(String[] args) {
     AsyncEchoServer server = new AsyncEchoServer();
     server.runServer();
@@ -106,7 +106,7 @@ public static void main(String[] args) {
 
 在构造函数内部，我们创建了一个`AsynchronousServerSocketChannel`,并像以前一样将它绑定到一个本地地址:
 
-```
+```java
 serverChannel = AsynchronousServerSocketChannel.open();
 InetSocketAddress hostAddress = new InetSocketAddress("localhost", 4999);
 serverChannel.bind(hostAddress);
@@ -116,7 +116,7 @@ serverChannel.bind(hostAddress);
 
 为了**防止循环无休止地运行**，我们在循环结束时调用`System.in.read()`来阻止执行，直到从标准输入流中读取一个传入的连接:
 
-```
+```java
 while (true) {
     serverChannel.accept(
       null, new CompletionHandler<AsynchronousSocketChannel,Object>() {
@@ -163,7 +163,7 @@ while (true) {
 
 首先，我们来看一下`ReadWriteHandler`类:
 
-```
+```java
 class ReadWriteHandler implements 
   CompletionHandler<Integer, Map<String, Object>> {
 
@@ -212,7 +212,7 @@ class ReadWriteHandler implements
 
 设置好服务器之后，我们现在可以通过调用`AsyncronousSocketChannel`类上的`open` API 来设置客户端。这个调用创建了一个客户机套接字通道的新实例，然后我们用它来连接服务器:
 
-```
+```java
 AsynchronousSocketChannel client = AsynchronousSocketChannel.open();
 InetSocketAddress hostAddress = new InetSocketAddress("localhost", 4999)
 Future<Void> future = client.connect(hostAddress);
@@ -222,13 +222,13 @@ Future<Void> future = client.connect(hostAddress);
 
 让我们调用`get` API 来等待连接:
 
-```
+```java
 future.get()
 ```
 
 在这一步之后，我们可以开始向服务器发送消息并接收相同的回显。`sendMessage`方法如下所示:
 
-```
+```java
 public String sendMessage(String message) {
     byte[] byteMsg = new String(message).getBytes();
     ByteBuffer buffer = ByteBuffer.wrap(byteMsg);
@@ -253,7 +253,7 @@ public String sendMessage(String message) {
 
 为了确认我们的服务器和客户端应用程序按照预期执行，我们可以使用一个测试:
 
-```
+```java
 @Test
 public void givenServerClient_whenServerEchosMessage_thenCorrect() {
     String resp1 = client.sendMessage("hello");

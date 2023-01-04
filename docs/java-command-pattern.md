@@ -26,14 +26,14 @@
 
 为了更准确地了解命令对象是如何工作的，让我们开始开发一个简单的命令层，它只包含一个接口和两个实现:
 
-```
+```java
 @FunctionalInterface
 public interface TextFileOperation {
     String execute();
 }
 ```
 
-```
+```java
 public class OpenTextFileOperation implements TextFileOperation {
 
     private TextFile textFile;
@@ -47,7 +47,7 @@ public class OpenTextFileOperation implements TextFileOperation {
 }
 ```
 
-```
+```java
 public class SaveTextFileOperation implements TextFileOperation {
 
     // same field and constructor as above
@@ -71,7 +71,7 @@ public class SaveTextFileOperation implements TextFileOperation {
 
 在这种情况下，我们需要定义一个 receiver 类，它的作用是建模`TextFile`对象:
 
-```
+```java
 public class TextFile {
 
     private String name;
@@ -100,7 +100,7 @@ invoker 是一个对象，**知道如何执行给定的命令，但不知道命�
 
 让我们看看调用者的一个基本实现:
 
-```
+```java
 public class TextFileOperationExecutor {
 
     private final List<TextFileOperation> textFileOperations
@@ -123,7 +123,7 @@ public class TextFileOperationExecutor {
 
 因此，如果我们想要正统地使用模式的正式定义，我们必须使用典型的`main`方法创建一个客户端类:
 
-```
+```java
 public static void main(String[] args) {
     TextFileOperationExecutor textFileOperationExecutor
       = new TextFileOperationExecutor();
@@ -144,7 +144,7 @@ public static void main(String[] args) {
 
 由于`TextFileOperation`接口是一个[功能接口](https://web.archive.org/web/20221024094653/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/package-summary.html)，我们可以**以 lambda 表达式的形式将命令对象传递给调用者**，而不必显式创建`TextFileOperation`实例:
 
-```
+```java
 TextFileOperationExecutor textFileOperationExecutor
  = new TextFileOperationExecutor();
 textFileOperationExecutor.executeOperation(() -> "Opening file file1.txt");
@@ -163,7 +163,7 @@ textFileOperationExecutor.executeOperation(() -> "Saving file file1.txt");
 
 类似地，我们可以使用**的方法引用将命令对象传递给调用者:**
 
-```
+```java
 TextFileOperationExecutor textFileOperationExecutor
  = new TextFileOperationExecutor();
 TextFile textFile = new TextFile("file1.txt");

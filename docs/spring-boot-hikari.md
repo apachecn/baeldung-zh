@@ -26,7 +26,7 @@ A quick, practical intro to integrating Spring Boot and Hibernate/JPA.[Read more
 
 但是，要使用最新版本，我们需要在 pom.xml 中显式添加光依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.zaxxer</groupId>
     <artifactId>HikariCP</artifactId>
@@ -47,7 +47,7 @@ A quick, practical intro to integrating Spring Boot and Hibernate/JPA.[Read more
 
 我们可以通过使用前缀`spring.datasource.hikari`并附加光参数的名称来指定这些参数的值:
 
-```
+```java
 spring.datasource.hikari.connectionTimeout=30000 
 spring.datasource.hikari.idleTimeout=600000 
 spring.datasource.hikari.maxLifetime=1800000 
@@ -68,7 +68,7 @@ Spring Boot 1.x 默认使用 [Tomcat JDBC 连接池](https://web.archive.org/web
 
 首先，我们需要在我们的`pom.xml`中包括对光的依赖:
 
-```
+```java
 <dependency>
     <groupId>com.zaxxer</groupId>
     <artifactId>HikariCP</artifactId>
@@ -84,7 +84,7 @@ Spring Boot 1.x 默认使用 [Tomcat JDBC 连接池](https://web.archive.org/web
 
 为此，我们只需**将属性`spring.datasource.type `设置为我们想要使用的**的`DataSource`实现的完全限定名:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(
     properties = "spring.datasource.type=com.zaxxer.hikari.HikariDataSource"
@@ -109,7 +109,7 @@ public class HikariIntegrationTest {
 
 要从类路径中删除 Tomcat 连接池，我们可以在我们的`pom.xml`中排除它:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>

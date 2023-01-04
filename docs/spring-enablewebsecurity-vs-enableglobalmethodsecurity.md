@@ -16,7 +16,7 @@
 
 无论我们采用哪种方法，为了安全起见，我们首先需要添加 spring boot starter:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -35,7 +35,7 @@
 
 对于我们的第一种方法，让我们从创建一个扩展了`WebSecurityConfigurerAdapter`的`MySecurityConfigurer`类开始，确保我们用`@EnableWebSecurity.`对它进行了注释
 
-```
+```java
 @EnableWebSecurity
 public class MySecurityConfigurer extends WebSecurityConfigurerAdapter {
 }
@@ -47,7 +47,7 @@ public class MySecurityConfigurer extends WebSecurityConfigurerAdapter {
 
 首先，让我们看看`WebSecurityConfigurerAdapter`的默认`configure` 方法，这样我们就知道我们要覆盖什么:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) {
     http.authorizeRequests((requests) -> requests.anyRequest().authenticated());
@@ -60,7 +60,7 @@ protected void configure(HttpSecurity http) {
 
 当我们想使用`HttpSecurity` DSL 时，我们把它写成:
 
-```
+```java
 http.authorizeRequests().anyRequest().authenticated()
   .and().formLogin()
   .and().httpBasic()
@@ -72,7 +72,7 @@ http.authorizeRequests().anyRequest().authenticated()
 
 我们通过覆盖`configure`的`HttpSecurity`霸主来实现这一点:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) {
     http.authorizeRequests()
@@ -89,7 +89,7 @@ protected void configure(HttpSecurity http) {
 
 就像之前一样，让我们重写`WebSecurityConfigurerAdapter`的`configure`方法之一，但是这次`WebSecurity`重载了:
 
-```
+```java
 @Override
 public void configure(WebSecurity web) {
     web.ignoring()
@@ -113,7 +113,7 @@ public void configure(WebSecurity web) {
 
 让我们通过在`EnableGlobalMethodSecurity`注释中设置`jsr250Enabled=true`来启用 [JSR-250](https://web.archive.org/web/20220628132448/https://jcp.org/aboutJava/communityprocess/final/jsr250/index.html) 注释:
 
-```
+```java
 @EnableGlobalMethodSecurity(jsr250Enabled = true)
 @Controller
 public class AnnotationSecuredController {
@@ -147,7 +147,7 @@ Spring 的默认安全性强制对我们所有的端点进行认证，不管我�
 
 用注释保护了我们的方法之后，我们现在可以添加`WebSecurityCustomizer`来打开`/hello/*`资源:
 
-```
+```java
 public class MyPublicPermitter implements WebSecurityCustomizer {
     public void customize(WebSecurity webSecurity) {
         webSecurity.ignoring()
@@ -158,7 +158,7 @@ public class MyPublicPermitter implements WebSecurityCustomizer {
 
 或者，我们可以简单地创建一个 bean，在我们的配置类中实现它:
 
-```
+```java
 @Configuration
 public class MyWebConfig {
     @Bean
@@ -182,7 +182,7 @@ public class MyWebConfig {
 
 对于第一个选项，我们将创建一个带有`@TestRestTemplate`的`@SpringBootTest`测试类:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class WebSecuritySpringBootIntegrationTest {
@@ -193,7 +193,7 @@ public class WebSecuritySpringBootIntegrationTest {
 
 现在，让我们添加一个测试来确保我们的公共资源可用:
 
-```
+```java
 @Test
 public void givenPublicResource_whenGetViaWeb_thenOk() {
     ResponseEntity<String> result = template.getForEntity("/hello/baeldung.txt", String.class);
@@ -203,7 +203,7 @@ public void givenPublicResource_whenGetViaWeb_thenOk() {
 
 我们还可以看到当我们尝试访问我们的一个受保护资源时会发生什么:
 
-```
+```java
 @Test
 public void whenGetProtectedViaWeb_thenForbidden() {
     ResponseEntity<String> result = template.getForEntity("/protected", String.class);
@@ -219,7 +219,7 @@ public void whenGetProtectedViaWeb_thenForbidden() {
 
 现在让我们看看我们的第二个选择。让我们设置一个`@SpringBootTest`并自动连接我们的`AnnotationSecuredController:`
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class GlobalMethodSpringBootIntegrationTest {
@@ -230,7 +230,7 @@ public class GlobalMethodSpringBootIntegrationTest {
 
 让我们从使用`@WithAnonymousUser`测试我们的可公开访问的方法开始:
 
-```
+```java
 @Test
 @WithAnonymousUser
 public void givenAnonymousUser_whenPublic_thenOk() {
@@ -242,7 +242,7 @@ public void givenAnonymousUser_whenPublic_thenOk() {
 
 首先，让我们用一个具有“用户”角色的用户来测试我们的 JSR-250 保护方法:
 
-```
+```java
 @WithMockUser(username="baeldung", roles = "USER")
 @Test
 public void givenUserWithRole_whenJsr250_thenOk() {
@@ -252,7 +252,7 @@ public void givenUserWithRole_whenJsr250_thenOk() {
 
 现在，当我们的用户没有正确的角色时，让我们尝试访问相同的方法:
 
-```
+```java
 @WithMockUser(username="baeldung", roles = "NOT-USER")
 @Test(expected = AccessDeniedException.class)
 public void givenWrongRole_whenJsr250_thenAccessDenied() {
@@ -274,7 +274,7 @@ public void givenWrongRole_whenJsr250_thenAccessDenied() {
 
 早些时候，当我们调用一个带注释的方法时，我们看到我们的安全性被成功地应用。然而，现在让我们在同一个类中创建一个公共方法，但是没有安全注释。我们将让它调用我们的带注释的`jsr250Hello`方法:
 
-```
+```java
 @GetMapping("/indirect")
 public String indirectHello() {
     return jsr250Hello();
@@ -283,7 +283,7 @@ public String indirectHello() {
 
 现在让我们只使用匿名访问来调用我们的“/间接”端点:
 
-```
+```java
 @Test
 @WithAnonymousUser
 public void givenAnonymousUser_whenIndirectCall_thenNoSecurity() {
@@ -299,7 +299,7 @@ public void givenAnonymousUser_whenIndirectCall_thenNoSecurity() {
 
 首先，让我们用带注释的方法`differentJsr250Hello`创建一个`DifferentClass` :
 
-```
+```java
 @Component
 public class DifferentClass {
     @RolesAllowed("USER")
@@ -311,7 +311,7 @@ public class DifferentClass {
 
 现在，让我们将`DifferentClass`自动连接到我们的控制器中，并添加一个不受保护的`differentClassHello`公共方法来调用它。
 
-```
+```java
 @Autowired
 DifferentClass differentClass;
 
@@ -323,7 +323,7 @@ public String differentClassHello() {
 
 最后，让我们测试调用，看看我们的安全性是否得到了加强:
 
-```
+```java
 @Test(expected = AccessDeniedException.class)
 @WithAnonymousUser
 public void givenAnonymousUser_whenIndirectToDifferentClass_thenAccessDenied() {
@@ -339,13 +339,13 @@ public void givenAnonymousUser_whenIndirectToDifferentClass_thenAccessDenied() {
 
 例如，如果我们使用 JSR-250 注释，但是我们指定了`prePostEnabled=true`而不是`jsr250Enabled=true`，那么我们的 JSR-250 注释将什么也不做！
 
-```
+```java
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 ```
 
 当然，我们可以声明我们将使用不止一种注释类型，方法是将它们都添加到我们的`@EnableGlobalMethodSecurity`注释中:
 
-```
+```java
 @EnableGlobalMethodSecurity(jsr250Enabled = true, prePostEnabled = true)
 ```
 
@@ -353,7 +353,7 @@ public void givenAnonymousUser_whenIndirectToDifferentClass_thenAccessDenied() {
 
 相比于 JSR-250，我们还可以使用[弹簧法安全](/web/20220628132448/https://www.baeldung.com/spring-security-method-security "Introduction to Spring Method Security")。这包括为更高级的授权场景使用更强大的 [Spring 安全表达式](/web/20220628132448/https://www.baeldung.com/spring-security-expressions)语言(SpEL)。我们可以通过设置`prePostEnabled=true:`在我们的`EnableGlobalMethodSecurity`注释上启用 SpEL
 
-```
+```java
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 ```
 

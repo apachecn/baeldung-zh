@@ -16,13 +16,13 @@ ElasticSearch 是一个基于 [Apache Lucene](https://web.archive.org/web/202210
 
 RESTfull API 运行在端口 9200 上。让我们使用下面的 curl 命令来测试它是否正常运行:
 
-```
+```java
 curl -XGET 'http://localhost:9200/'
 ```
 
 如果您观察到以下响应，则该实例正在正常运行:
 
-```
+```java
 {
   "name": "NaIlQWU",
   "cluster_name": "elasticsearch",
@@ -46,7 +46,7 @@ ElasticSearch 面向文档。它存储和索引文档。索引创建或更新文
 
 我们将使用以下随机条目来执行全文搜索:
 
-```
+```java
 {
   "title": "He went",
   "random_text": "He went such dare good fact. The small own seven saved man age."
@@ -80,7 +80,7 @@ ElasticSearch 面向文档。它存储和索引文档。索引创建或更新文
 
 要添加文档，我们将运行以下命令:
 
-```
+```java
 curl -XPUT 'localhost:9200/text/article/1?pretty'
   -H 'Content-Type: application/json' -d '
 {
@@ -96,7 +96,7 @@ curl -XPUT 'localhost:9200/text/article/1?pretty'
 
 添加完所有文档后，我们可以使用以下命令检查集群中有多少文档:
 
-```
+```java
 curl -XGET 'http://localhost:9200/_count?pretty' -d '
 {
   "query": {
@@ -107,13 +107,13 @@ curl -XGET 'http://localhost:9200/_count?pretty' -d '
 
 此外，我们可以通过以下命令使用文档的 id 来获取文档:
 
-```
+```java
 curl -XGET 'localhost:9200/text/article/1?pretty' 
 ```
 
 而我们应该从弹性搜索得到以下答案:
 
-```
+```java
 {
   "_index": "text",
   "_type": "article",
@@ -134,7 +134,7 @@ curl -XGET 'localhost:9200/text/article/1?pretty'
 
 好的，让我们使用以下命令执行全文搜索:
 
-```
+```java
 curl -XGET 'localhost:9200/text/article/_search?pretty' 
   -H 'Content-Type: application/json' -d '
 {
@@ -148,7 +148,7 @@ curl -XGET 'localhost:9200/text/article/_search?pretty'
 
 我们得到以下结果:
 
-```
+```java
 {
   "took": 32,
   "timed_out": false,
@@ -208,7 +208,7 @@ Elasticsearch 支持最大编辑距离，由模糊度参数指定，为 2。“�
 
 好了，让我们用模糊性进行搜索:
 
-```
+```java
 curl -XGET 'localhost:9200/text/article/_search?pretty' -H 'Content-Type: application/json' -d' 
 { 
   "query": 
@@ -227,7 +227,7 @@ curl -XGET 'localhost:9200/text/article/_search?pretty' -H 'Content-Type: applic
 
 这是结果:
 
-```
+```java
 {
   "took": 88,
   "timed_out": false,

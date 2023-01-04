@@ -24,7 +24,7 @@ Apache Camel 提供了相当多有用的组件，支持诸如 [JPA](https://web.
 
 要将 Apache Camel 与 Spring 一起使用，POM 文件中需要以下依赖项:
 
-```
+```java
 <properties>
     <env.camel.version>2.16.1</env.camel.version>
     <env.spring.version>4.2.4.RELEASE</env.spring.version>
@@ -67,7 +67,7 @@ Apache Camel 提供了相当多有用的组件，支持诸如 [JPA](https://web.
 
 请注意该文件如何包含所有必需的 Apache Camel 和 Spring 名称空间以及模式位置:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -101,7 +101,7 @@ Apache Camel 提供了相当多有用的组件，支持诸如 [JPA](https://web.
 
 要设置这些步骤，包括输入、处理器和输出，请将以下路由添加到 Camel 上下文文件:
 
-```
+```java
 <route>
     <from uri="file://data/input" /> <!-- INPUT -->
     <process ref="myFileProcessor" /> <!-- PROCESS -->
@@ -111,7 +111,7 @@ Apache Camel 提供了相当多有用的组件，支持诸如 [JPA](https://web.
 
 此外，我们必须定义`myFileProcessor` bean:
 
-```
+```java
 <bean id="myFileProcessor" class="org.apache.camel.processor.FileProcessor" />
 ```
 
@@ -121,7 +121,7 @@ Apache Camel 提供了相当多有用的组件，支持诸如 [JPA](https://web.
 
 我们的方法必须从`Exchange`中读取消息，将内容大写，然后将新内容设置回`Exchange` 对象:
 
-```
+```java
 public class FileProcessor implements Processor {
 
     public void process(Exchange exchange) throws Exception {
@@ -138,7 +138,7 @@ public class FileProcessor implements Processor {
 
 现在，我们将为我们的骆驼路线添加另一个输出。这一次，我们将把同一个输入文件的数据转换成小写。然而，这一次我们将不会使用定制的处理器；我们将使用 Apache Camel 的[消息翻译特性](https://web.archive.org/web/20220815030745/https://people.apache.org/~dkulp/camel/message-translator.html)。这是最新的骆驼路线:
 
-```
+```java
 <route>
     <from uri="file://data/input" />
     <process ref="myFileProcessor" />
@@ -154,7 +154,7 @@ public class FileProcessor implements Processor {
 
 为了处理我们的路线，我们只需将 Camel 上下文文件加载到 Spring 应用程序上下文中:
 
-```
+```java
 ClassPathXmlApplicationContext applicationContext = 
   new ClassPathXmlApplicationContext("camel-context.xml"); 
 ```

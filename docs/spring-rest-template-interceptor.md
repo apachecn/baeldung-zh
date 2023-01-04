@@ -27,7 +27,7 @@ Spring `RestTemplate`允许我们添加实现 [`ClientHttpRequestInterceptor`](h
 
 **作为第一步，让我们创建一个实现`ClientHttpRequestInterceptor`接口的拦截器类:**
 
-```
+```java
 public class RestTemplateHeaderModifierInterceptor
   implements ClientHttpRequestInterceptor {
 
@@ -52,7 +52,7 @@ public class RestTemplateHeaderModifierInterceptor
 
 现在我们已经创建了我们的拦截器，让我们创建`RestTemplate` bean 并将我们的拦截器添加到其中:
 
-```
+```java
 @Configuration
 public class RestClientConfig {
 
@@ -82,7 +82,7 @@ public class RestClientConfig {
 
 下面是如何使用`BufferingClientHttpRequestFactory`初始化`RestTemplate`对象以启用请求/响应流缓存:
 
-```
+```java
 RestTemplate restTemplate 
   = new RestTemplate(
     new BufferingClientHttpRequestFactory(
@@ -95,7 +95,7 @@ RestTemplate restTemplate
 
 下面是测试我们的`RestTemplate`拦截器的 JUnit 测试用例:
 
-```
+```java
 public class RestTemplateItegrationTest {
 
     @Autowired

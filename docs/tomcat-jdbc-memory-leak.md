@@ -10,7 +10,7 @@
 
 该消息的一个版本可能如下:
 
-```
+```java
 SEVERE: A web application registered the JBDC driver [oracle.jdbc.driver.OracleDriver]
   but failed to unregister it when the web application was stopped.
   To prevent a memory leak, the JDBC Driver has been forcibly unregistered.
@@ -44,7 +44,7 @@ SEVERE: A web application registered the JBDC driver [oracle.jdbc.driver.OracleD
 
 我们可以在任何应用程序[关机回调](/web/20220813183430/https://www.baeldung.com/spring-shutdown-callbacks)上手动注销驱动程序。在标准情况下，我们的应用程序将加载一个 JDBC 驱动程序，我们可以用一行代码来完成:
 
-```
+```java
 DriverManager.deregisterDriver(DriverManager.getDrivers().nextElement());
 ```
 

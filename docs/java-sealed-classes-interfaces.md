@@ -32,7 +32,7 @@ Java SE 17 的发布引入了密封类( [JEP 409](https://web.archive.org/web/20
 
 使用包私有方法，如果不允许用户扩展抽象类，用户就不能访问它:
 
-```
+```java
 public class Vehicles {
 
     abstract static class Vehicle {
@@ -96,7 +96,7 @@ public class Vehicles {
 
 要密封一个接口，我们可以对它的声明应用`sealed`修饰符。然后，`permits`子句指定了允许实现密封接口的类:
 
-```
+```java
 public sealed interface Service permits Car, Truck {
 
     int getMaxServiceIntervalInMonths();
@@ -112,7 +112,7 @@ public sealed interface Service permits Car, Truck {
 
 类似于接口，我们可以通过应用相同的`sealed`修饰符来密封类。`permits`子句应定义在任何`extends`或`implements` 子句之后；
 
-```
+```java
 public abstract sealed class Vehicle permits Car, Truck {
 
     protected final String registrationNumber;
@@ -130,7 +130,7 @@ public abstract sealed class Vehicle permits Car, Truck {
 
 允许的子类必须定义一个修饰符。可以将[声明为`final`](/web/20220816172057/https://www.baeldung.com/java-final) 以防止任何进一步的扩展:
 
-```
+```java
 public final class Truck extends Vehicle implements Service {
 
     private final int loadCapacity;
@@ -154,7 +154,7 @@ public final class Truck extends Vehicle implements Service {
 
 允许的子类也可以声明为`sealed`。然而，如果我们声明它为`non-sealed,` ，那么它是开放扩展的:
 
-```
+```java
 public non-sealed class Car extends Vehicle implements Service {
 
     private final int numberOfSeats;
@@ -192,7 +192,7 @@ public non-sealed class Car extends Vehicle implements Service {
 
 推理子类的传统方法是使用一组`if-else`语句和`instanceof` 检查:
 
-```
+```java
 if (vehicle instanceof Car) {
     return ((Car) vehicle).getNumberOfSeats();
 } else if (vehicle instanceof Truck) {
@@ -206,7 +206,7 @@ if (vehicle instanceof Car) {
 
 通过应用[模式匹配](/web/20220816172057/https://www.baeldung.com/java-pattern-matching-instanceof)，我们可以避免额外的类转换，但是我们仍然需要一组 i `f-else`语句:
 
-```
+```java
 if (vehicle instanceof Car car) {
     return car.getNumberOfSeats();
 } else if (vehicle instanceof Truck truck) {
@@ -230,7 +230,7 @@ if (vehicle instanceof Car car) {
 
 密封类可以很好地处理[记录](/web/20220816172057/https://www.baeldung.com/java-record-keyword)。因为记录是隐式最终的，所以密封的层次结构更加简洁。让我们尝试使用记录重写我们的类示例:
 
-```
+```java
 public sealed interface Vehicle permits Car, Truck {
 
     String getRegistrationNumber();
@@ -273,7 +273,7 @@ public record Truck(int loadCapacity, String registrationNumber) implements Vehi
 
 我们可以利用这些方法来创建基于我们的示例的断言:
 
-```
+```java
 Assertions.assertThat(truck.getClass().isSealed()).isEqualTo(false);
 Assertions.assertThat(truck.getClass().getSuperclass().isSealed()).isEqualTo(true);
 Assertions.assertThat(truck.getClass().getSuperclass().getPermittedSubclasses())

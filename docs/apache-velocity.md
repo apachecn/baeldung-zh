@@ -27,7 +27,7 @@ Velocity 可用于生成 XML 文件、SQL、PostScript 和大多数其他基于�
 
 **让我们按照这些简单的步骤来看一个例子**:
 
-```
+```java
 VelocityEngine velocityEngine = new VelocityEngine();
 velocityEngine.init();
 
@@ -44,7 +44,7 @@ t.merge( context, writer );
 
 为了使用 Velocity，我们需要向我们的 Maven 项目添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.velocity</groupId>
     <artifactId>velocity</artifactId>
@@ -71,20 +71,20 @@ Velocity 模板语言(VTL)通过使用 VTL 引用，提供了将动态内容合�
 
 *   **变量**–使用`#set`指令或从 Java 对象的字段返回的值在页面内定义:
 
-    ```
+    ```java
     #set ($message="Hello World")
     ```
 
 *   **属性**–指对象内的字段；它们也可以引用属性
 
-    ```
+    ```java
     $customer.name
     ```
 
     的`getter`方法
 *   **方法**–指 Java 对象上的方法:
 
-    ```
+    ```java
     $customer.getName()
     ```
 
@@ -96,14 +96,14 @@ VTL 提供了一组丰富的指令:
 
 *   **设置**–可用于设置参考值；该值可以赋给变量或属性引用:
 
-    ```
+    ```java
     #set ($message = "Hello World")
     #set ($customer.name = "Brian Mcdonald")
     ```
 
 *   **条件**–`#if, #elseif` 和 `#else` 指令提供了一种基于条件检查生成内容的方法:
 
-    ```
+    ```java
     #if($employee.designation == "Manager")
         <h3> Manager </h3>
     #elseif($employee.designation == "Senior Developer")
@@ -115,7 +115,7 @@ VTL 提供了一组丰富的指令:
 
 *   **循环**–`#foreach` 指令允许循环对象集合:
 
-    ```
+    ```java
     <ul>
         #foreach($product in $productList)
             <li> $product </li>
@@ -125,19 +125,19 @@ VTL 提供了一组丰富的指令:
 
 *   **包含**–`#include` 元素提供将文件导入模板的能力:
 
-    ```
+    ```java
     #include("one.gif","two.txt","three.html"...)
     ```
 
 *   **解析**–`#parse`语句允许模板设计者导入另一个包含 VTL 的本地文件；Velocity 将解析内容并呈现它:
 
-    ```
+    ```java
     #parse (Template)
     ```
 
 *   **评估**–`#evaluate`指令可用于动态评估 VTL；这允许模板在渲染时评估一个`String`，例如国际化模板:
 
-    ```
+    ```java
     #set($firstName = "David")
     #set($lastName = "Johnson")
 
@@ -150,7 +150,7 @@ VTL 提供了一组丰富的指令:
 *   **停止**–`#stop`指令停止模板的任何进一步渲染和执行。
 *   **velocimacros** – `#macro` directive allows the template designer to define a repeated segment of VTL:
 
-    ```
+    ```java
     #macro(tablerows)
         <tr>
             <td>
@@ -161,7 +161,7 @@ VTL 提供了一组丰富的指令:
 
     这个宏现在可以作为# `tablerows():`放在模板的任何地方
 
-    ```
+    ```java
     #macro(tablerows $color $productList)
         #foreach($product in $productList)
             <tr>
@@ -175,14 +175,14 @@ VTL 提供了一组丰富的指令:
 
 *   **数学**–一些内置的数学函数，可以在模板中使用:
 
-    ```
+    ```java
     #set($percent = $number / 100)
     #set($remainder = $dividend % $divisor)
     ```
 
 *   **测距算子**——可与`#set`和`#foreach:`
 
-    ```
+    ```java
     #set($array = [0..10])
 
     #foreach($elem in $arr)
@@ -202,7 +202,7 @@ Velocity 提供了一个现成的实现`VelocityViewServlet`，它是 velocity-t
 
 为了利用`VelocityViewServlet,` 提供的内置功能，我们可以从`VelocityViewServlet` 扩展我们的 servlet 并覆盖`handleRequest()` 方法:
 
-```
+```java
 public class ProductServlet extends VelocityViewServlet {
 
     ProductService service = new ProductService();
@@ -229,7 +229,7 @@ public class ProductServlet extends VelocityViewServlet {
 
 我们需要指定可选的初始化参数，包括`velocity.properties`和`toolbox.xml`:
 
-```
+```java
 <web-app>
     <display-name>apache-velocity</display-name>
       //...
@@ -249,7 +249,7 @@ public class ProductServlet extends VelocityViewServlet {
 
 我们还需要为这个 servlet 指定映射。所有对 velocity 模板(`*.vm`)的请求都需要由 velocity servlet 提供服务:
 
-```
+```java
 <servlet-mapping>
     <servlet-name>velocityLayout</servlet-name>
     <url-pattern>*.vm</url-pattern>
@@ -269,7 +269,7 @@ Velocity 提供灵活的资源加载器系统。它允许一个或多个资源�
 
 这些资源加载器在`velocity.properties:`中配置
 
-```
+```java
 resource.loader=webapp
 webapp.resource.loader.class=org.apache.velocity.tools.view.WebappResourceLoader
 webapp.resource.loader.path = 
@@ -280,7 +280,7 @@ webapp.resource.loader.cache = true
 
 Velocity 模板是编写所有视图生成逻辑的地方。这些页面使用 Velocity 模板语言(VTL)编写:
 
-```
+```java
 <html>
     ...
     <body>
@@ -323,7 +323,7 @@ Velocity 为基于 Velocity 工具的应用程序提供了简单的布局控件�
 
 让我们看看如何配置`VelocityLayoutServlet.` ，servlet 被定义为拦截对 velocity 模板页面的请求，布局特定的属性在`velocity.properties`文件中定义:
 
-```
+```java
 <web-app>
     // ...
     <servlet>
@@ -348,14 +348,14 @@ Velocity 为基于 Velocity 工具的应用程序提供了简单的布局控件�
 
 布局模板定义了 velocity 页面的典型结构。默认情况下，`VelocityLayoutServlet`在布局文件夹下搜索`Default.vm` 。覆盖几个属性可以更改此位置:
 
-```
+```java
 tools.view.servlet.layout.directory = layout/
 tools.view.servlet.layout.default.template = Default.vm 
 ```
 
 布局文件由页眉模板、页脚模板和速度变量`$screen_content` 组成，该变量呈现所请求的速度页面的内容:
 
-```
+```java
 <html>
     <head>
         <title>Velocity</title>
@@ -379,7 +379,7 @@ tools.view.servlet.layout.default.template = Default.vm
 
 特定屏幕的布局可以定义为页面开头的速度变量。这是通过在页面中添加这一行来实现的:
 
-```
+```java
 #set($layout = "MyOtherLayout.vm")
 ```
 
@@ -393,7 +393,7 @@ tools.view.servlet.layout.default.template = Default.vm
 
 可以在`velocity.properties` 文件中配置错误页面:
 
-```
+```java
 tools.view.servlet.error.template = Error.vm
 ```
 

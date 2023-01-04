@@ -12,7 +12,7 @@
 
 让我们首先定义一个扩展了`Thread`的`SimpleThread`类:
 
-```
+```java
 public class SimpleThread extends Thread {
 
     private String message;
@@ -28,7 +28,7 @@ public class SimpleThread extends Thread {
 
 让我们看看如何运行这种类型的线程:
 
-```
+```java
 @Test
 public void givenAThread_whenRunIt_thenResult()
   throws Exception {
@@ -42,7 +42,7 @@ public void givenAThread_whenRunIt_thenResult()
 
 我们也可以使用一个`ExecutorService`来执行线程:
 
-```
+```java
 @Test
 public void givenAThread_whenSubmitToES_thenResult()
   throws Exception {
@@ -60,7 +60,7 @@ public void givenAThread_whenSubmitToES_thenResult()
 
 现在，让我们创建一个实现`java.lang.Runnable`接口的简单任务:
 
-```
+```java
 class SimpleRunnable implements Runnable {
 
     private String message;
@@ -78,7 +78,7 @@ class SimpleRunnable implements Runnable {
 
 我们可以用各种方法来运行它。其中之一是使用`Thread`类:
 
-```
+```java
 @Test
 public void givenRunnable_whenRunIt_thenResult()
  throws Exception {
@@ -91,7 +91,7 @@ public void givenRunnable_whenRunIt_thenResult()
 
 我们甚至可以使用一个`ExecutorService`:
 
-```
+```java
 @Test
 public void givenARunnable_whenSubmitToES_thenResult()
  throws Exception {
@@ -109,7 +109,7 @@ public void givenARunnable_whenSubmitToES_thenResult()
 
 **我们可以使用λ表达式**重写上面的`Runnable`代码:
 
-```
+```java
 @Test
 public void givenARunnableLambda_whenSubmitToES_thenResult() 
   throws Exception {

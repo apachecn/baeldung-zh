@@ -19,7 +19,7 @@
 
 让我们看看**如何定义私有构造函数**:
 
-```
+```java
 public class PrivateConstructorClass {
 
     private PrivateConstructorClass() {
@@ -34,7 +34,7 @@ public class PrivateConstructorClass {
 
 单例模式是我们最常遇到使用私有构造函数的地方之一。私有构造函数**允许我们将类实例化限制到单个对象实例**:
 
-```
+```java
 public final class SingletonClass {
 
     private static SingletonClass INSTANCE;
@@ -63,7 +63,7 @@ public final class SingletonClass {
 
 在这个例子中， *ValueTypeClass* 允许使用值和类型进行初始化——但是我们只希望允许它用于类型的子集。通用构造函数必须是私有的，以确保只使用允许的类型:
 
-```
+```java
 public class ValueTypeClass {
 
     private final String value;
@@ -92,7 +92,7 @@ public class ValueTypeClass {
 
 不可实例化的类是我们不能实例化的类。在这个例子中，我们将创建**一个简单包含静态方法**集合的类:
 
-```
+```java
 public class StringUtils {
 
     private StringUtils() {
@@ -119,7 +119,7 @@ public class StringUtils {
 
 在这个例子中，我们创建了一个保存雇员的`name`、`age`和`department`的`Employee`类:
 
-```
+```java
 public class Employee {
 
     private final String name;
@@ -138,7 +138,7 @@ public class Employee {
 
 我们现在将内部的`Builder`类添加到`Employee`类中:
 
-```
+```java
 public static class Builder {
 
     private String name;
@@ -168,7 +168,7 @@ public static class Builder {
 
 构建器现在可以用`name`、`age`或`department`创建不同的雇员——对于我们必须提供多少字段没有限制:
 
-```
+```java
 Employee.Builder emplBuilder = new Employee.Builder();
 
 Employee employee = emplBuilder

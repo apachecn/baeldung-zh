@@ -18,7 +18,7 @@
 
 为了这样配置一个`RestTemplate`，我们需要**将 Spring Boot** 提供的默认`RestTemplateBuilder` bean 注入到我们的类中:
 
-```
+```java
 private RestTemplate restTemplate;
 
 @Autowired
@@ -35,7 +35,7 @@ public HelloController(RestTemplateBuilder builder) {
 
 这是一个稍微复杂一点的方法。为此，我们需要**创建一个实现`RestTemplateCustomizer,`** 的类，并将其定义为一个 bean:
 
-```
+```java
 public class CustomRestTemplateCustomizer implements RestTemplateCustomizer {
     @Override
     public void customize(RestTemplate restTemplate) {
@@ -46,7 +46,7 @@ public class CustomRestTemplateCustomizer implements RestTemplateCustomizer {
 
 `CustomClientHttpRequestInterceptor `拦截器正在对请求进行基本的日志记录:
 
-```
+```java
 public class CustomClientHttpRequestInterceptor implements ClientHttpRequestInterceptor {
     private static Logger LOGGER = LoggerFactory
       .getLogger(CustomClientHttpRequestInterceptor.class);
@@ -69,7 +69,7 @@ public class CustomClientHttpRequestInterceptor implements ClientHttpRequestInte
 
 现在，我们将`CustomRestTemplateCustomizer `定义为配置类或 Spring Boot 应用程序类中的 bean:
 
-```
+```java
 @Bean
 public CustomRestTemplateCustomizer customRestTemplateCustomizer() {
     return new CustomRestTemplateCustomizer();
@@ -82,7 +82,7 @@ public CustomRestTemplateCustomizer customRestTemplateCustomizer() {
 
 这是定制一个`RestTemplate.`的最极端的方法，它**禁用了`RestTemplateBuilder` `,`的默认自动配置，所以我们需要自己定义:**
 
-```
+```java
 @Bean
 @DependsOn(value = {"customRestTemplateCustomizer"})
 public RestTemplateBuilder restTemplateBuilder() {
@@ -92,7 +92,7 @@ public RestTemplateBuilder restTemplateBuilder() {
 
 在这之后，我们可以**将定制构建器**注入到我们的类中，就像我们对默认的`RestTemplateBuilder`所做的那样，并像往常一样创建一个`RestTemplate` :
 
-```
+```java
 private RestTemplate restTemplate;
 
 @Autowired

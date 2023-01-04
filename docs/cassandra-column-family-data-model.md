@@ -12,7 +12,7 @@
 
 [Apache Cassandra git repo](https://web.archive.org/web/20220627181546/https://github.com/apache/cassandra) 上的`README`声明:
 
-```
+```java
 Cassandra is a partitioned row store. Rows are organized into tables with a required primary key.
 
 Partitioning means that Cassandra can distribute your data across multiple machines in an application-transparent matter. Cassandra will automatically repartition as machines are added and removed from the cluster.
@@ -28,7 +28,7 @@ Row store means that like relational databases, Cassandra organizes data by rows
 
 让我们以一个`Employees`表为例:
 
-```
+```java
  ID         Last    First   Age
   1          Cooper  James   32
   2          Bell    Lisa    57
@@ -37,13 +37,13 @@ Row store means that like relational databases, Cassandra organizes data by rows
 
 一个`row-oriented`数据库将上述数据存储为:
 
-```
+```java
 1,Cooper,James,32;2,Bell,Lisa,57;3,Young,Joseph,45;
 ```
 
 而`column-oriented` 数据库将数据存储为:
 
-```
+```java
 1,2,3;Cooper,Bell,Young;James,Lisa,Joseph;32,57,45;
 ```
 
@@ -55,7 +55,7 @@ Row store means that like relational databases, Cassandra organizes data by rows
 
 在`partitioned row store`中，`Employees`数据看起来像这样:
 
-```
+```java
 "Employees" : {
            row1 : { "ID":1, "Last":"Cooper", "First":"James", "Age":32},
            row2 : { "ID":2, "Last":"Bell", "First":"Lisa", "Age":57},

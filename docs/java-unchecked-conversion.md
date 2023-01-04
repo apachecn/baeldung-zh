@@ -24,7 +24,7 @@
 
 [Apache Maven](/web/20220807212928/https://www.baeldung.com/maven) 是一个广泛用于构建 Java 应用程序的工具。我们可以配置`maven-compiler-plugin`的`compilerArguments`来启用该选项:
 
-```
+```java
 <build>
 ...
     <plugins>
@@ -54,7 +54,7 @@
 
 举个例子就很快解释清楚了。假设我们有一个简单的方法来返回原始类型`List`:
 
-```
+```java
 public class UncheckedConversion {
     public static List getRawList() {
         List result = new ArrayList();
@@ -69,7 +69,7 @@ public class UncheckedConversion {
 
 接下来，让我们创建一个测试方法，它调用这个方法并将结果分配给一个类型为`List<String>`的变量:
 
-```
+```java
 @Test
 public void givenRawList_whenAssignToTypedList_shouldHaveCompilerWarning() {
     List<String> fromRawList = UncheckedConversion.getRawList();
@@ -82,7 +82,7 @@ public void givenRawList_whenAssignToTypedList_shouldHaveCompilerWarning() {
 
 让我们使用 Maven 构建并测试我们的程序:
 
-```
+```java
 $ mvn clean test
 ...
 [WARNING] .../UncheckedConversionDemoUnitTest.java:[12,66] unchecked conversion
@@ -105,7 +105,7 @@ $ mvn clean test
 
 然而，当我们试图将原始类型列表赋给参数化类型的列表时，我们会在编译时看到以下警告:
 
-```
+```java
 List<MyEntity> results = entityManager.createNativeQuery("... SQL ...", MyEntity.class).getResultList();
 ```
 
@@ -121,7 +121,7 @@ List<MyEntity> results = entityManager.createNativeQuery("... SQL ...", MyEntity
 
 现在，让我们稍微改变一下方法:
 
-```
+```java
 public static List getRawListWithMixedTypes() {
     List result = new ArrayList();
     result.add("I am the 1st String.");
@@ -136,7 +136,7 @@ public static List getRawListWithMixedTypes() {
 
 接下来，让我们创建一个新的测试方法来调用`getRawListWithMixedTypes()`方法并测试返回值:
 
-```
+```java
 @Test(expected = ClassCastException.class)
 public void givenRawList_whenListHasMixedType_shouldThrowClassCastException() {
     List<String> fromRawList = UncheckedConversion.getRawListWithMixedTypes();
@@ -171,7 +171,7 @@ public void givenRawList_whenListHasMixedType_shouldThrowClassCastException() {
 
 让我们看一个例子:
 
-```
+```java
 Query query = entityManager.createQuery("SELECT e.field1, e.field2, e.field3 FROM SomeEntity e");
 @SuppressWarnings("unchecked")
 List<Object[]> list = query.list();
@@ -189,7 +189,7 @@ List<Object[]> list = query.list();
 
 首先，假设我们将过滤掉具有错误类型的元素:
 
-```
+```java
 public static <T> List<T> castList(Class<? extends T> clazz, Collection<?> rawCollection) {
     List<T> result = new ArrayList<>(rawCollection.size());
     for (Object o : rawCollection) {
@@ -205,7 +205,7 @@ public static <T> List<T> castList(Class<? extends T> clazz, Collection<?> rawCo
 
 让我们通过一个单元测试方法来测试上面的`castList()`方法:
 
-```
+```java
 @Test
 public void givenRawList_whenAssignToTypedListAfterCallingCastList_shouldOnlyHaveElementsWithExpectedType() {
     List rawList = UncheckedConversion.getRawListWithMixedTypes();
@@ -220,7 +220,7 @@ public void givenRawList_whenAssignToTypedListAfterCallingCastList_shouldOnlyHav
 
 当然，如果需要的话，我们可以改变我们的`castList() `方法来中断类型转换，并在检测到错误类型时立即抛出`ClassCastException`:
 
-```
+```java
 public static <T> List<T> castList2(Class<? extends T> clazz, Collection<?> rawCollection) 
   throws ClassCastException {
     List<T> result = new ArrayList<>(rawCollection.size());
@@ -233,7 +233,7 @@ public static <T> List<T> castList2(Class<? extends T> clazz, Collection<?> rawC
 
 像往常一样，让我们创建一个单元测试方法来测试`castList2()`方法:
 
-```
+```java
 @Test(expected = ClassCastException.class)
 public void givenRawListWithWrongType_whenAssignToTypedListAfterCallingCastList2_shouldThrowException() {
     List rawList = UncheckedConversion.getRawListWithMixedTypes();

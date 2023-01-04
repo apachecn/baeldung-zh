@@ -12,7 +12,7 @@
 
 首先，让我们从在 Java 中定义一个`Vertex`开始:
 
-```
+```java
 public class Vertex {
 
     private String label;
@@ -40,7 +40,7 @@ public class Vertex {
 
 所以，现在让我们快速地用 Java 表示一个`Graph`:
 
-```
+```java
 public class Graph {
 
     private List<Vertex> vertices;
@@ -77,7 +77,7 @@ public class Graph {
 
 现在让我们看看我们的 Java 解决方案:
 
-```
+```java
 public boolean hasCycle(Vertex sourceVertex) {
     sourceVertex.setBeingVisited(true);
 
@@ -100,7 +100,7 @@ public boolean hasCycle(Vertex sourceVertex) {
 
 **对于一个断开的图，我们必须添加一个额外的包装方法:**
 
-```
+```java
 public boolean hasCycle() {
     for (Vertex vertex : vertices) {
         if (!vertex.isVisited() && hasCycle(vertex)) {
@@ -121,7 +121,7 @@ public boolean hasCycle() {
 
 我们可以快速编写一个 JUnit 来验证我们针对该图的`hasCycle()`方法:
 
-```
+```java
 @Test
 public void givenGraph_whenCycleExists_thenReturnTrue() {
 

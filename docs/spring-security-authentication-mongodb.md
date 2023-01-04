@@ -16,7 +16,7 @@
 
 **对于本教程，我们将使用[嵌入式 MongoDB](/web/20221011171932/https://www.baeldung.com/spring-boot-embedded-mongodb)** 。然而，MongoDB 实例和 [`Testcontainer`](/web/20221011171932/https://www.baeldung.com/spring-boot-testcontainers-integration-test) 可能是生产环境的有效选项。首先，让我们添加 [`spring-boot-starter-data-mongodb`](https://web.archive.org/web/20221011171932/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-data-mongodb) 和 [`de.flapdoodle.embed.mongo`](https://web.archive.org/web/20221011171932/https://search.maven.org/artifact/de.flapdoodle.embed/de.flapdoodle.embed.mongo) 的依赖关系:
 
-```
+```java
 <dependency>
    <groupId>org.springframework.boot</groupId>
    <artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -32,7 +32,7 @@
 
 一旦我们设置了依赖关系，我们就可以创建我们的配置:
 
-```
+```java
 @Configuration
 public class MongoConfig {
 
@@ -59,7 +59,7 @@ public class MongoConfig {
 
 我们还需要为我们的`[AuthenticationManager](https://web.archive.org/web/20221011171932/https://spring.io/guides/topicals/spring-security-architecture)`配置一个 HTTP 基本认证:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true)
@@ -108,7 +108,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 首先，让我们为我们的认证定义一个简单的用户和角色。我们将让它实现 [`UserDetails`](https://web.archive.org/web/20221011171932/https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/user-details.html#page-title) 接口来重用`Principal`对象的公共方法:
 
-```
+```java
 @Document
 public class User implements UserDetails {
     private @MongoId ObjectId id;
@@ -121,7 +121,7 @@ public class User implements UserDetails {
 
 现在我们有了用户，让我们定义一个简单存储库:
 
-```
+```java
 public interface UserRepository extends MongoRepository<User, String> {
 
     @Query("{username:'?0'}")
@@ -133,7 +133,7 @@ public interface UserRepository extends MongoRepository<User, String> {
 
 **最后，让我们实现我们的`UserDetailService` 来检索一个用户并检查它是否经过认证**:
 
-```
+```java
 @Service
 public class MongoAuthUserDetailService implements UserDetailsService {
     // ...
@@ -160,7 +160,7 @@ public class MongoAuthUserDetailService implements UserDetailsService {
 
 为了测试我们的应用程序，让我们定义一个简单的控制器。例如，我们定义了两个不同的角色来测试特定端点的身份验证和授权:
 
-```
+```java
 @RestController
 public class ResourceController {
 
@@ -181,7 +181,7 @@ public class ResourceController {
 
 让我们用一个 [Spring Boot 测试](/web/20221011171932/https://www.baeldung.com/spring-boot-testing)来检查我们的认证是否有效。正如我们所看到的，**我们正在等待一个 401 代码，针对提供无效凭证或在我们的系统中不存在的人**:
 
-```
+```java
 class MongoAuthApplicationTest {
 
     // set up

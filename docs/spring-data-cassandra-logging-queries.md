@@ -18,7 +18,7 @@ Apache Cassandra 是一个可伸缩的分布式 NoSQL 数据库。Cassandra 在�
 
 Spring Data 使我们能够创建基于公共 Spring 接口的 Cassandra 存储库。首先，让我们从定义一个简单的 DAO 类开始:
 
-```
+```java
 @Table
 public class Person {
 
@@ -39,14 +39,14 @@ public class Person {
 
 然后，我们将通过扩展`CassandraRepository`接口为我们的 DAO 定义一个 Spring 数据存储库:
 
-```
+```java
 @Repository
 public interface PersonRepository extends CassandraRepository<Person, UUID> {}
 ```
 
 最后，我们将在我们的`application.properties`文件中添加两个属性:
 
-```
+```java
 spring.data.cassandra.schema-action=create_if_not_exists
 spring.data.cassandra.local-datacenter=datacenter1
 ```
@@ -61,7 +61,7 @@ spring.data.cassandra.local-datacenter=datacenter1
 
 下一步，让我们在特定端口上配置和公开一个 Cassandra 容器:
 
-```
+```java
 @Container
 public static final CassandraContainer cassandra = 
   (CassandraContainer) new CassandraContainer("cassandra:3.11.2").withExposedPorts(9042);
@@ -69,7 +69,7 @@ public static final CassandraContainer cassandra =
 
 在使用容器进行集成测试之前，我们需要[覆盖 Spring 数据所需的测试属性](/web/20221208143830/https://www.baeldung.com/spring-tests-override-properties)来建立与它的连接:
 
-```
+```java
 TestPropertyValues.of(
   "spring.data.cassandra.keyspace-name=" + KEYSPACE_NAME,
   "spring.data.cassandra.contact-points=" + cassandra.getContainerIpAddress(),
@@ -89,7 +89,7 @@ createKeyspace(cassandra.getCluster());
 
 首先，我们将编写一个保存和更新个人记录的测试。我们期望这个测试执行两个插入和一个选择数据库查询:
 
-```
+```java
 @Test
 void givenExistingPersonRecord_whenUpdatingIt_thenRecordIsUpdated() {
     UUID personId = UUIDs.timeBased();
@@ -105,7 +105,7 @@ void givenExistingPersonRecord_whenUpdatingIt_thenRecordIsUpdated() {
 
 然后，我们将编写一个保存和删除现有人员记录的测试。我们期望这个测试执行一个插入、删除和选择数据库查询:
 
-```
+```java
 @Test
 void givenExistingPersonRecord_whenDeletingIt_thenRecordIsDeleted() {
     UUID personId = UUIDs.timeBased();
@@ -124,13 +124,13 @@ void givenExistingPersonRecord_whenDeletingIt_thenRecordIsDeleted() {
 
 对于 Apache Cassandra 或更高版本的 Spring Data，可以让**为 `application.properties`中的`CqlTemplate`类**设置日志级别:
 
-```
+```java
 logging.level.org.springframework.data.cassandra.core.cql.CqlTemplate=DEBUG
 ```
 
 因此，通过将日志级别设置为 DEBUG，我们可以记录所有执行的查询和准备好的语句:
 
-```
+```java
 2021-09-25 12:41:58.679 DEBUG 17856 --- [           main] o.s.data.cassandra.core.cql.CqlTemplate:
   Executing CQL statement [CREATE TABLE IF NOT EXISTS person
   (birthdate date, firstname text, id uuid, lastname text, lastpurchaseddate timestamp, lastvisiteddate timestamp, PRIMARY KEY (id));]
@@ -163,7 +163,7 @@ Apache Cassandra 的 DataStax Java 驱动程序附带了一个可选的请求跟
 
 默认的请求跟踪器实现称为`NoopRequestTracker`。因此，它什么也不做:
 
-```
+```java
 System.setProperty("datastax-java-driver.advanced.request-tracker.class", "NoopRequestTracker");
 ```
 
@@ -175,7 +175,7 @@ System.setProperty("datastax-java-driver.advanced.request-tracker.class", "NoopR
 
 我们可以通过设置特定的数据和 Java 驱动程序系统属性来启用它:
 
-```
+```java
 System.setProperty("datastax-java-driver.advanced.request-tracker.class", "RequestLogger");
 System.setProperty("datastax-java-driver.advanced.request-tracker.logs.success.enabled", "true");
 System.setProperty("datastax-java-driver.advanced.request-tracker.logs.slow.enabled", "true");
@@ -186,7 +186,7 @@ System.setProperty("datastax-java-driver.advanced.request-tracker.logs.error.ena
 
 现在，当我们运行测试时，我们将在日志中观察所有执行的数据库查询:
 
-```
+```java
 2021-09-25 13:06:31.799  INFO 11172 --- [        s0-io-4] c.d.o.d.i.core.tracker.RequestLogger:
   [s0|90232530][Node(endPoint=localhost/[0:0:0:0:0:0:0:1]:49281, hostId=c50413d5-03b6-4037-9c46-29f0c0da595a, hashCode=68c305fe)]
   Success (6 ms) [6 values] INSERT INTO person (birthdate,firstname,id,lastname,lastpurchaseddate,lastvisiteddate)
@@ -208,7 +208,7 @@ System.setProperty("datastax-java-driver.advanced.request-tracker.logs.error.ena
 
 内置的 **`RequestLogger`是高度可定制的组件**。我们可以使用以下系统属性配置绑定值的输出:
 
-```
+```java
 System.setProperty("datastax-java-driver.advanced.request-tracker.logs.show-values", "true");
 System.setProperty("datastax-java-driver.advanced.request-tracker.logs.max-value-length", "100");
 System.setProperty("datastax-java-driver.advanced.request-tracker.logs.max-values", "100");
@@ -222,13 +222,13 @@ System.setProperty("datastax-java-driver.advanced.request-tracker.logs.max-value
 
 在第一个例子中，我们启用了慢速请求的日志记录。我们可以**使用`threshold`属性将一个成功的请求归类为慢速**:
 
-```
+```java
 System.setProperty("datastax-java-driver.advanced.request-tracker.logs.slow.threshold ", "1 second");
 ```
 
 默认情况下，会为所有失败的请求记录堆栈跟踪。如果我们禁用它们，我们将只能在日志中看到异常的字符串表示:
 
-```
+```java
 System.setProperty("datastax-java-driver.advanced.request-tracker.logs.show-stack-trace", "true");
 ```
 

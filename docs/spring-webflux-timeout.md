@@ -24,7 +24,7 @@ Spring 5 增加了一个全新的框架——[Spring web flux](/web/202212081439
 
 响应超时是我们在发送请求后等待**接收响应的时间。**我们可以用 [`responseTimeout()`](https://web.archive.org/web/20221208143917/https://projectreactor.io/docs/netty/release/api/reactor/netty/http/client/HttpClient.html#responseTimeout-java.time.Duration-) 的方法为客户端进行配置:
 
-```
+```java
 HttpClient client = HttpClient.create()
   .responseTimeout(Duration.ofSeconds(1)); 
 ```
@@ -33,7 +33,7 @@ HttpClient client = HttpClient.create()
 
 之后，我们可以将`HttpClient`提供给弹簧`WebClient`:
 
-```
+```java
 WebClient webClient = WebClient.builder()
   .clientConnector(new ReactorClientHttpConnector(httpClient))
   .build();
@@ -45,7 +45,7 @@ WebClient webClient = WebClient.builder()
 
 连接超时是**客户端和服务器之间必须建立连接的时间段`. `** 我们可以使用不同的通道选项键和 [option()](https://web.archive.org/web/20221208143917/https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/Transport.html#option-io.netty.channel.ChannelOption-O-) 方法来进行配置:
 
-```
+```java
 HttpClient client = HttpClient.create()
   .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
 
@@ -56,7 +56,7 @@ HttpClient client = HttpClient.create()
 
 此外，我们可以配置 keep-alive 选项，它将在连接空闲时发送 TCP 检查探测:
 
-```
+```java
 HttpClient client = HttpClient.create()
   .option(ChannelOption.SO_KEEPALIVE, true)
   .option(EpollChannelOption.TCP_KEEPIDLE, 300)
@@ -74,7 +74,7 @@ HttpClient client = HttpClient.create()
 
 当**在特定时间段内没有读取数据时，发生读取超时，**，而当**写操作不能在特定时间完成时，发生写超时。**`HttpClient`允许配置额外的处理程序来配置那些超时:
 
-```
+```java
 HttpClient client = HttpClient.create()
   .doOnConnected(conn -> conn
     .addHandler(new ReadTimeoutHandler(10, TimeUnit.SECONDS))
@@ -93,7 +93,7 @@ HttpClient client = HttpClient.create()
 
 握手超时是**暂停操作**之前系统尝试建立 SSL 连接的持续时间。我们可以通过`[secure()](https://web.archive.org/web/20221208143917/https://projectreactor.io/docs/netty/release/api/reactor/netty/http/client/HttpClient.html#secure--)`方法设置 SSL 配置:
 
-```
+```java
 HttpClient.create()
   .secure(spec -> spec.sslContext(SslContextBuilder.forClient())
     .defaultConfiguration(SslProvider.DefaultConfigurationType.TCP)
@@ -112,7 +112,7 @@ HttpClient.create()
 
 `HttpClient`还支持代理功能。如果到对等体的**连接建立尝试没有在代理超时内完成，则连接尝试失败**。我们在 [`proxy()`](https://web.archive.org/web/20221208143917/https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/ClientTransport.html#proxy-java.util.function.Consumer-) 配置期间设置此超时:
 
-```
+```java
 HttpClient.create()
   .proxy(spec -> spec.type(ProxyProvider.Proxy.HTTP)
     .host("proxy")
@@ -134,7 +134,7 @@ Netty 库还实现了自己的**[`ProxyConnectException`](https://web.archive.or
 
 如前所述，我们可以在请求级别配置**响应超时:**
 
-```
+```java
 webClient.get()
   .uri("https://baeldung.com/path")
   .httpRequest(httpRequest -> {
@@ -151,7 +151,7 @@ webClient.get()
 
 Reactor Netty 使用 Reactor Core 作为其反应流实现。要配置另一个超时，我们可以使用由`Mono`和 `**Flux**` 出版商提供的 **`[timeout()](https://web.archive.org/web/20221208143917/https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Mono.html#timeout-java.time.Duration-)` 操作符:**
 
-```
+```java
 webClient.get()
   .uri("https://baeldung.com/path")
   .retrieve()
@@ -169,7 +169,7 @@ webClient.get()
 
 我们刚刚了解了不同的超时配置。现在是时候快速讨论一下异常处理了。每种类型的超时都提供了一个专用的异常，所以我们可以很容易地**使用活动流和`onError`块** `:`处理它们
 
-```
+```java
 webClient.get()
   .uri("https://baeldung.com/path")
   .retrieve()
@@ -185,7 +185,7 @@ webClient.get()
 
 而且，我们还可以**根据 HTTP 状态**添加一些逻辑:
 
-```
+```java
 webClient.get()
   .uri("https://baeldung.com/path")
   .onStatus(HttpStatus::is4xxClientError, resp -> {

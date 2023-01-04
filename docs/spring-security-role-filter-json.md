@@ -16,7 +16,7 @@
 
 让我们定义一个对象，我们将在 API 中将其作为 REST 响应负载返回:
 
-```
+```java
 class Item {
     private int id;
     private String name;
@@ -38,7 +38,7 @@ Jackson 库通过用`@JsonView`注释标记我们希望包含在 JSON 表示中�
 
 首先，让我们**用一些内部类定义一个`View`类，我们将用它们作为`@JsonView`注释**的参数:
 
-```
+```java
 class View {
     public static class User {}
     public static class Admin extends User {}
@@ -47,7 +47,7 @@ class View {
 
 接下来，我们将`@JsonView`注释添加到我们的类中，使得`ownerName`只能由管理员角色访问:
 
-```
+```java
 @JsonView(View.User.class)
 private int id;
 @JsonView(View.User.class)
@@ -60,7 +60,7 @@ private String ownerName;
 
 现在，让我们添加一个包含所有角色及其名称的枚举。之后，让我们介绍 JSON 视图和安全角色之间的映射:
 
-```
+```java
 enum Role {
     ROLE_USER,
     ROLE_ADMIN
@@ -83,7 +83,7 @@ class View {
 
 到目前为止，我们唯一需要做的就是用**覆盖`AbstractMappingJacksonResponseBodyAdvice`** 类的`beforeBodyWriteInternal`方法:
 
-```
+```java
 @RestControllerAdvice
 class SecurityJsonViewControllerAdvice extends AbstractMappingJacksonResponseBodyAdvice {
 

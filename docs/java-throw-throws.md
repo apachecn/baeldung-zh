@@ -26,7 +26,7 @@
 
 首先，想象我们正在编写一个简单的计算器。基本的算术运算之一是除法。因此，我们被要求实现这一功能:
 
-```
+```java
 public double divide(double a, double b) {
     return a / b;
 }
@@ -36,7 +36,7 @@ public double divide(double a, double b) {
 
 让我们这样做:
 
-```
+```java
 public double divide(double a, double b) {
     if (b == 0) {
         throw new ArithmeticException("Divider cannot be equal to zero!");
@@ -53,7 +53,7 @@ public double divide(double a, double b) {
 
 比如`java.lang`包里有一个`Integer`类。让我们来看看其中一个工厂方法声明:
 
-```
+```java
 public static Integer valueOf(String s) throws NumberFormatException 
 ```
 
@@ -63,7 +63,7 @@ public static Integer valueOf(String s) throws NumberFormatException
 
 让我们看一下示例实现:
 
-```
+```java
 public class DivideByZeroException extends RuntimeException {
 
     public DivideByZeroException(String message) {
@@ -78,7 +78,7 @@ public class DivideByZeroException extends RuntimeException {
 
 让我们从定义我们自己的异常开始:
 
-```
+```java
 public class DataAcessException extends RuntimeException {
 
     public DataAcessException(String message, Throwable cause) {
@@ -91,7 +91,7 @@ public class DataAcessException extends RuntimeException {
 
 让我们为`findAll() `函数写一个假的实现:
 
-```
+```java
 public List<String> findAll() throws SQLException {
     throw new SQLException();
 }
@@ -99,7 +99,7 @@ public List<String> findAll() throws SQLException {
 
 现在，在`SimpleService`中，让我们调用一个存储库函数，它可以产生`SQLException:`
 
-```
+```java
 public void wrappingException() {
     try {
         personRepository.findAll();
@@ -111,7 +111,7 @@ public void wrappingException() {
 
 我们重新抛出包装在我们自己的名为`DataAccessException. `的异常中的`SQLException`,下面的测试验证了一切:
 
-```
+```java
 @Test
 void whenSQLExceptionIsThrown_thenShouldBeRethrownWithWrappedException() {
     assertThrows(DataAccessException.class,
@@ -129,7 +129,7 @@ void whenSQLExceptionIsThrown_thenShouldBeRethrownWithWrappedException() {
 
 让我们来看看更广泛的 try-catch 块:
 
-```
+```java
 try {
     tryCatch.execute();
 } catch (ConnectionException | SocketException ex) {
@@ -149,7 +149,7 @@ try {
 
 让我们看一下我们以前的一个方法声明:
 
-```
+```java
 public static void execute() throws SocketException, ConnectionException, Exception
 ```
 
@@ -163,7 +163,7 @@ public static void execute() throws SocketException, ConnectionException, Except
 
 有一个简短的例子:
 
-```
+```java
 File file = new File("not_existing_file.txt");
 try {
     FileInputStream stream = new FileInputStream(file);
@@ -174,7 +174,7 @@ try {
 
 我们可以通过在方法声明中添加`throws `来避免使用 try-catch 块:
 
-```
+```java
 private static void uncheckedException() throws FileNotFoundException {
     File file = new File("not_existing_file.txt");
     FileInputStream stream = new FileInputStream(file);
@@ -191,7 +191,7 @@ private static void uncheckedException() throws FileNotFoundException {
 
 对空引用调用方法将导致以下异常:
 
-```
+```java
 public void runtimeNullPointerException() {
     String a = null;
     a.length();
@@ -200,7 +200,7 @@ public void runtimeNullPointerException() {
 
 让我们在测试中验证这一行为:
 
-```
+```java
 @Test
 void whenCalled_thenNullPointerExceptionIsThrown() {
     assertThrows(NullPointerException.class,

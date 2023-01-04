@@ -16,7 +16,7 @@
 
 首先，让我们看看将百里香与 Spring 集成所需的配置。在我们的依赖关系中需要`thymeleaf-spring`库:
 
-```
+```java
 <dependency>
     <groupId>org.thymeleaf</groupId>
     <artifactId>thymeleaf</artifactId>
@@ -33,7 +33,7 @@
 
 我们还需要自定义布局方言的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>nz.net.ultraq.thymeleaf</groupId>
     <artifactId>thymeleaf-layout-dialect</artifactId>
@@ -49,14 +49,14 @@
 
 一旦我们将 Maven dependency 添加为项目的一部分，我们就需要将`Layout Dialect`添加到我们现有的百里香模板引擎中。我们可以通过 Java 配置做到这一点:
 
-```
+```java
 SpringTemplateEngine engine = new SpringTemplateEngine();
 engine.addDialect(new LayoutDialect());
 ```
 
 或者使用 XML 文件配置:
 
-```
+```java
 <bean id="templateEngine" class="org.thymeleaf.spring5.SpringTemplateEngine">
     <property name="additionalDialects">
         <set>
@@ -72,13 +72,13 @@ engine.addDialect(new LayoutDialect());
 
 为了实现这一点，我们需要将排序策略添加到我们的配置中，在我们的例子中，它将是分组策略:
 
-```
+```java
 engine.addDialect(new LayoutDialect(new GroupingStrategy()));
 ```
 
 或者在 XML 中:
 
-```
+```java
 <bean class="nz.net.ultraq.thymeleaf.LayoutDialect">
     <constructor-arg ref="groupingStrategy"/>
 </bean>
@@ -94,7 +94,7 @@ engine.addDialect(new LayoutDialect(new GroupingStrategy()));
 
 为了创建用于 HTML 文件的布局模板，我们创建了以下文件，名为`template.html`:
 
-```
+```java
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 ...
@@ -109,7 +109,7 @@ engine.addDialect(new LayoutDialect(new GroupingStrategy()));
 
 为了在我们的布局中创建定制的部分或者可重用的模板，这些模板可以被共享相同名称的部分所替换，我们在我们的`template.html`主体中使用了`fragment`属性:
 
-```
+```java
 <body>
     <header>
         <h1>New dialect example</h1>
@@ -132,7 +132,7 @@ engine.addDialect(new LayoutDialect(new GroupingStrategy()));
 
 我们需要做的下一步是创建一个 HTML 文件，它将被我们的布局修饰:
 
-```
+```java
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
   layout:decorate="~{template.html}">
@@ -159,13 +159,13 @@ engine.addDialect(new LayoutDialect(new GroupingStrategy()));
 
 例如，我们可以创建面包屑或在页面标题中保留网站的名称。在这种情况下，`layout:title-pattern`处理器会提供帮助。您只需在布局文件中指定:
 
-```
+```java
 <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Baeldung</title>
 ```
 
 因此，上一段中呈现的布局和内容文件的最终结果将如下所示:
 
-```
+```java
 <title>Baeldung - Layout Dialect Example</title>
 ```
 

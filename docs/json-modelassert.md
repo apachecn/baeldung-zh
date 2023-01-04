@@ -16,7 +16,7 @@ ModelAssert 是一个数据断言库，语法类似于 [AssertJ](/web/2022082410
 
 让我们首先为这个 JSON 编写一些简单的断言:
 
-```
+```java
 {
    "name": "Baeldung",
    "isOnline": true,
@@ -28,7 +28,7 @@ ModelAssert 是一个数据断言库，语法类似于 [AssertJ](/web/2022082410
 
 首先，让我们将[模型断言](https://web.archive.org/web/20220824101529/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22uk.org.webcompere%22%20AND%20a%3A%22model-assert%22)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>uk.org.webcompere</groupId>
     <artifactId>model-assert</artifactId>
@@ -41,7 +41,7 @@ ModelAssert 是一个数据断言库，语法类似于 [AssertJ](/web/2022082410
 
 让我们假设 JSON 作为一个`String,`返回给我们，我们想检查一下`name`字段是否等于`Baeldung`:
 
-```
+```java
 assertJson(jsonString)
   .at("/name").isText("Baeldung");
 ```
@@ -52,14 +52,14 @@ assertJson(jsonString)
 
 我们可以通过使用稍微长一点的 JSON 指针表达式在`topics`数组中断言一个路径:
 
-```
+```java
 assertJson(jsonString)
   .at("/topics/1").isText("Spring");
 ```
 
 虽然我们可以一个接一个地编写字段断言，**但是我们也可以将它们组合成一个断言**:
 
-```
+```java
 assertJson(jsonString)
   .at("/name").isText("Baeldung")
   .at("/topics/1").isText("Spring");
@@ -69,7 +69,7 @@ assertJson(jsonString)
 
 我们经常想要将整个 JSON 文档与另一个文档进行比较。字符串比较虽然在某些情况下是可能的，但通常会被不相关的 JSON 格式问题抓住**:**
 
-```
+```java
 String expected = loadFile(EXPECTED_JSON_PATH);
 assertThat(jsonString)
   .isEqualTo(expected);
@@ -77,7 +77,7 @@ assertThat(jsonString)
 
 像这样的失败消息很常见:
 
-```
+```java
 org.opentest4j.AssertionFailedError: 
 expected: "{
     "name": "Baeldung",
@@ -91,7 +91,7 @@ but was : "{"name": "Baeldung","isOnline": true,"topics": [ "Java", "Spring", "K
 
 **要做一个整篇文档的对比，我们可以用`isEqualTo`** :
 
-```
+```java
 assertJson(jsonString)
   .isEqualTo(EXPECTED_JSON_PATH);
 ```
@@ -102,7 +102,7 @@ assertJson(jsonString)
 
 ModelAssert 还支持可以被 Jackson 转换成`JsonNode`的 Java 对象，以及`yaml`格式。
 
-```
+```java
 Map<String, String> map = new HashMap<>();
 map.put("name", "baeldung");
 
@@ -112,7 +112,7 @@ assertJson(map)
 
 对于`yaml`处理，`isEqualToYaml`方法用于指示字符串或文件的格式。这需要`assertYaml`如果来源是`yaml`:
 
-```
+```java
 assertYaml("name: baeldung")
   .isEqualTo(map);
 ```
@@ -127,7 +127,7 @@ ModelAssert 的 DSL 允许针对树中的任何节点添加几乎所有可能的
 
 让我们看一些我们可能添加到示例 JSON 的根节点的断言:
 
-```
+```java
 assertJson(jsonString)
   .isNotNull()
   .isNotNumber()
@@ -141,7 +141,7 @@ assertJson(jsonString)
 
 最常见的是，我们从根节点使用 JSON 指针表达式，以便在树的较低节点上执行断言:
 
-```
+```java
 assertJson(jsonString)
   .at("/topics").hasSize(5);
 ```
@@ -150,7 +150,7 @@ assertJson(jsonString)
 
 我们需要对字段做出的大多数断言取决于字段的确切类型。当我们试图编写特定类型的断言时，我们可以使用方法`number`、`array`、`text`、`booleanNode`和`object`来进入断言的更具体的子集。这是可选的，但可以更有表现力:
 
-```
+```java
 assertJson(jsonString)
   .at("/isOnline").booleanNode().isTrue();
 ```
@@ -161,14 +161,14 @@ assertJson(jsonString)
 
 当我们断言文本节点时，我们可以使用`isText`来用一个精确的值进行比较。或者，我们可以使用`textContains`断言一个子串:
 
-```
+```java
 assertJson(jsonString)
   .at("/name").textContains("ael");
 ```
 
 我们也可以通过`matches`使用[正则表达式](/web/20220824101529/https://www.baeldung.com/regular-expressions-java):
 
-```
+```java
 assertJson(jsonString)
   .at("/name").matches("[A-Z].+");
 ```
@@ -179,21 +179,21 @@ assertJson(jsonString)
 
 对于数字节点，DSL 提供了一些有用的数字比较:
 
-```
+```java
 assertJson("{count: 12}")
   .at("/count").isBetween(1, 25);
 ```
 
 我们还可以指定我们期望的 Java 数值类型:
 
-```
+```java
 assertJson("{height: 6.3}")
   .at("/height").isGreaterThanDouble(6.0);
 ```
 
 `isEqualTo`方法是为整树匹配保留的，所以为了比较数值相等，我们使用`isNumberEqualTo`:
 
-```
+```java
 assertJson("{height: 6.3}")
   .at("/height").isNumberEqualTo(6.3);
 ```
@@ -202,14 +202,14 @@ assertJson("{height: 6.3}")
 
 我们可以用`isArrayContaining`测试数组的内容:
 
-```
+```java
 assertJson(jsonString)
   .at("/topics").isArrayContaining("Scala", "Spring");
 ```
 
 这将测试给定值的存在，并允许实际数组包含附加项。如果我们希望断言一个更精确的匹配，我们可以使用`isArrayContainingExactlyInAnyOrder`:
 
-```
+```java
 assertJson(jsonString)
    .at("/topics")
    .isArrayContainingExactlyInAnyOrder("Scala", "Spring", "Java", "Linux", "Kotlin");
@@ -217,7 +217,7 @@ assertJson(jsonString)
 
 我们也可以使这种要求的确切顺序:
 
-```
+```java
 assertJson(ACTUAL_JSON)
   .at("/topics")
   .isArrayContainingExactly("Java", "Spring", "Kotlin", "Scala", "Linux");
@@ -231,7 +231,7 @@ assertJson(ACTUAL_JSON)
 
 使用`isEqualTo`方法(或`isNotEqualTo`)来比较整棵树。这可以与`at`结合，在进行比较之前移动到实际的子树:
 
-```
+```java
 assertJson(jsonString)
   .at("/topics")
   .isEqualTo("[ \"Java\", \"Spring\", \"Kotlin\", \"Scala\", \"Linux\" ]");
@@ -248,7 +248,7 @@ assertJson(jsonString)
 
 让我们看两个看起来相同的 JSON 文档:
 
-```
+```java
 String actualJson = "{a:{d:3, c:2, b:1}}";
 String expectedJson = "{a:{b:1, c:2, d:3}}";
 ```
@@ -259,7 +259,7 @@ String expectedJson = "{a:{b:1, c:2, d:3}}";
 
 我们可以通过添加一个`where`配置来放宽按键顺序规则:
 
-```
+```java
 assertJson(actualJson)
   .where().keysInAnyOrder()
   .isEqualTo(expectedJson);
@@ -269,7 +269,7 @@ assertJson(actualJson)
 
 我们可以将此规则局限于特定路径:
 
-```
+```java
 assertJson(actualJson)
   .where()
     .at("/a").keysInAnyOrder()
@@ -284,7 +284,7 @@ assertJson(actualJson)
 
 如果我们的数组中值的顺序可以变化，那么我们可以放松整个比较的数组排序约束:
 
-```
+```java
 String actualJson = "{a:[1, 2, 3, 4, 5]}";
 String expectedJson = "{a:[5, 4, 3, 2, 1]}";
 
@@ -299,7 +299,7 @@ assertJson(actualJson)
 
 也许我们的实际文档包含一些不感兴趣或不可预测的字段。我们可以添加一个规则来忽略该路径:
 
-```
+```java
 String actualJson = "{user:{name: \"Baeldung\", url:\"http://www.baeldung.com\"}}";
 String expectedJson = "{user:{name: \"Baeldung\"}}";
 
@@ -323,7 +323,7 @@ assertJson(actualJson)
 
 我们可以用路径规则忽略这个字段:
 
-```
+```java
 String actualJson = "{user:{credentials:[" +
   "{id:\"a7dc2567-3340-4a3b-b1ab-9ce1778f265d\",role:\"Admin\"}," +
   "{id:\"09da84ba-19c2-4674-974f-fd5afff3a0e5\",role:\"Sales\"}]}}";
@@ -343,7 +343,7 @@ assertJson(actualJson)
 
 忽略我们无法预测的字段是一种选择。更好的方法是通过类型来匹配这些节点，也可以通过它们必须满足的其他条件来匹配。让我们切换到强制这些 GUID 匹配 GUID 的模式，并让`id`节点出现在树的任何叶节点:
 
-```
+```java
 assertJson(actualJson)
   .where()
     .path(ANY_SUBTREE, "id").matches(GUID_PATTERN)
@@ -358,7 +358,7 @@ assertJson(actualJson)
 
 如果我们有一个通用的配置，在各种比较中重用，我们可以将其提取到一个方法中:
 
-```
+```java
 private static <T> WhereDsl<T> idsAreGuids(WhereDsl<T> where) {
     return where.path(ANY_SUBTREE, "id").matches(GUID_PATTERN);
 }
@@ -366,7 +366,7 @@ private static <T> WhereDsl<T> idsAreGuids(WhereDsl<T> where) {
 
 然后，我们可以使用`configuredBy`将该配置添加到特定的断言中:
 
-```
+```java
 assertJson(actualJson)
   .where()
     .configuredBy(where -> idsAreGuids(where))
@@ -383,7 +383,7 @@ ModelAssert 是为互操作性而构建的。到目前为止，我们已经看�
 
 Hamcrest 是一个被许多工具支持的主要断言助手库。**我们可以使用 ModelAssert 的 DSL 来生成一个 Hamcrest 匹配器**:
 
-```
+```java
 Matcher<String> matcher = json()
   .at("/name").hasValue("Baeldung");
 ```
@@ -394,7 +394,7 @@ Matcher<String> matcher = json()
 
 因此，我们可以将 ModelAssert 与 Hamcrest 的`MatcherAssert`一起使用:
 
-```
+```java
 MatcherAssert.assertThat(jsonString, json()
   .at("/name").hasValue("Baeldung")
   .at("/topics/1").isText("Spring"));
@@ -408,7 +408,7 @@ MatcherAssert.assertThat(jsonString, json()
 
 Mockito 已经可以与 Hamcrest 互操作。不过，ModelAssert 也提供了一个原生的 [`ArgumentMatcher`](/web/20220824101529/https://www.baeldung.com/mockito-argument-matchers) 。这既可以用来设置存根的行为，也可以用来验证对它们的调用:
 
-```
+```java
 public interface DataService {
     boolean isUserLoggedIn(String userDetails);
 }

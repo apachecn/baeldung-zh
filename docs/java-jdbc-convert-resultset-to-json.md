@@ -12,7 +12,7 @@
 
 我们将使用 [H2](/web/20220627155255/https://www.baeldung.com/spring-boot-h2-database) 数据库作为我们的代码示例。我们有一个示例 CSV 文件，我们使用 JDBC 将它读入一个表`words`。下面是示例 CSV 文件中的三行，第一行是标题:
 
-```
+```java
 Username,Id,First name,Last name
 doe1,7173,John,Doe
 smith3,3722,Dana,Smith
@@ -21,13 +21,13 @@ john22,5490,John,Wang
 
 构成`ResultSet`的代码行如下所示:
 
-```
+```java
 ResultSet resultSet = stmt.executeQuery("SELECT * FROM words");
 ```
 
 对于 JSON 处理，我们使用 [JSON-Java](/web/20220627155255/https://www.baeldung.com/java-org-json) ( `org.json`)库。首先，我们将[及其相应的依赖项](https://web.archive.org/web/20220627155255/https://mvnrepository.com/artifact/org.json/json)添加到我们的 POM 文件中:
 
-```
+```java
 <dependency>
     <groupId>org.json</groupId>
     <artifactId>json</artifactId>
@@ -43,7 +43,7 @@ JDBC API 早于现代 Java 集合框架。因此，**我们不能使用类似于
 
 这导致了一个基本的循环，包括每行形成一个 JSON 对象，将对象添加到一个`List`，最后将这个`List`转换成一个`JSON`数组。所有这些功能都包含在`org.json`包中:
 
-```
+```java
 ResultSetMetaData md = resultSet.getMetaData();
 int numCols = md.getColumnCount();
 List<String> colNames = IntStream.range(0, numCols)
@@ -79,7 +79,7 @@ while (resultSet.next()) {
 
 生成的 JSON 如下所示:
 
-```
+```java
 [
    {
       "Username":"doe1",
@@ -106,7 +106,7 @@ while (resultSet.next()) {
 
 [jOOQ](/web/20220627155255/https://www.baeldung.com/jooq-intro) 框架(Java 面向对象查询)提供了一组方便的实用函数来处理 JDBC 和`ResultSet `对象。首先，我们需要将 jOOQ 依赖项添加到 POM 文件中:
 
-```
+```java
 <dependency>
     <groupId>org.jooq</groupId>
     <artifactId>jooq</artifactId>
@@ -116,7 +116,7 @@ while (resultSet.next()) {
 
 添加完依赖项后，我们实际上可以使用一个单行解决方案将`ResultSet`转换成 JSON 对象:
 
-```
+```java
 JSONObject result = new JSONObject(DSL.using(dbConnection)
   .fetch(resultSet)
   .formatJSON());
@@ -124,7 +124,7 @@ JSONObject result = new JSONObject(DSL.using(dbConnection)
 
 **产生的 JSON 元素是一个由两个名为`fields`和`records`的字段组成的对象，其中`fields`包含列的名称和类型，`records`包含实际数据。**这与之前的 JSON 对象略有不同，在我们的示例表中是这样的:
 
-```
+```java
 {
    "records":[
       [
@@ -183,7 +183,7 @@ JSONObject result = new JSONObject(DSL.using(dbConnection)
 
 然后我们将`RecordMapper`作为 jOOQ 结果类的`map()`方法的输入:
 
-```
+```java
 List json = DSL.using(dbConnection)
   .fetch(resultSet)
   .map(new RecordMapper() {
@@ -201,7 +201,7 @@ return new JSONArray(json);
 
 生成的 JSON 如下所示，类似于第 3 节:
 
-```
+```java
 [
    {
       "Username":"doe1",

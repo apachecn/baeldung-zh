@@ -36,7 +36,7 @@
 
 **对象关系映射的问题导致抛出`MappingException`**:
 
-```
+```java
 public void whenQueryExecutedWithUnmappedEntity_thenMappingException() {
     thrown.expectCause(isA(MappingException.class));
     thrown.expectMessage("Unknown entity: java.lang.String");
@@ -74,7 +74,7 @@ public void whenQueryExecutedWithUnmappedEntity_thenMappingException() {
 
 为了理解`AnnotationException,` ,让我们创建一个在任何字段或属性上没有标识符注释的实体:
 
-```
+```java
 @Entity
 public class EntityWithNoId {
     private int id;
@@ -88,7 +88,7 @@ public class EntityWithNoId {
 
 因为 **Hibernate 期望每个实体都有一个[标识符](/web/20220703143024/https://www.baeldung.com/hibernate-identifiers)** ，所以当我们使用实体时，我们将得到一个`AnnotationException`:
 
-```
+```java
 public void givenEntityWithoutId_whenSessionFactoryCreated_thenAnnotationException() {
     thrown.expect(AnnotationException.class);
     thrown.expectMessage("No identifier specified for entity");
@@ -123,7 +123,7 @@ public void givenEntityWithoutId_whenSessionFactoryCreated_thenAnnotationExcepti
 
 为了演示，让我们指示 Hibernate 验证数据库模式:
 
-```
+```java
 public void givenMissingTable_whenSchemaValidated_thenSchemaManagementException() {
     thrown.expect(SchemaManagementException.class);
     thrown.expectMessage("Schema-validation: missing table");
@@ -148,7 +148,7 @@ public void givenMissingTable_whenSchemaValidated_thenSchemaManagementException(
 
 例如，让我们在设置`SessionFactory`时指定错误的方言:
 
-```
+```java
 public void whenWrongDialectSpecified_thenCommandAcceptanceException() {
     thrown.expect(SchemaManagementException.class);
 
@@ -210,7 +210,7 @@ Hibernate 将这个异常转换成`JDBCException`或者它的一个合适的子�
 
 例如，**在查询数据**时，一个缺失的表会导致此错误:
 
-```
+```java
 public void givenMissingTable_whenQueryExecuted_thenSQLGrammarException() {
     thrown.expect(isA(PersistenceException.class));
     thrown.expectCause(isA(SQLGrammarException.class));
@@ -225,7 +225,7 @@ public void givenMissingTable_whenQueryExecuted_thenSQLGrammarException() {
 
 此外，如果表丢失，我们在保存数据时也会出现此错误:
 
-```
+```java
 public void givenMissingTable_whenEntitySaved_thenSQLGrammarException() {
     thrown.expect(isA(PersistenceException.class));
     thrown.expectCause(isA(SQLGrammarException.class));
@@ -267,7 +267,7 @@ public void givenMissingTable_whenEntitySaved_thenSQLGrammarException() {
 
 此异常的一个常见原因是试图保存重复记录:
 
-```
+```java
 public void whenDuplicateIdSaved_thenConstraintViolationException() {
     thrown.expect(isA(PersistenceException.class));
     thrown.expectCause(isA(ConstraintViolationException.class));
@@ -306,7 +306,7 @@ public void whenDuplicateIdSaved_thenConstraintViolationException() {
 
 例如，对数值列使用字符数据会导致以下错误:
 
-```
+```java
 public void givenQueryWithDataTypeMismatch_WhenQueryExecuted_thenDataException() {
     thrown.expectCause(isA(DataException.class));
     thrown.expectMessage(
@@ -356,7 +356,7 @@ Hibernate 不允许两个对象在一个会话中有相同的标识符。
 
 要重现此错误，让我们尝试用会话保存两个具有相同 id 的`Product`实例:
 
-```
+```java
 public void 
 givenSessionContainingAnId_whenIdAssociatedAgain_thenNonUniqueObjectException() {
     thrown.expect(isA(NonUniqueObjectException.class));
@@ -404,7 +404,7 @@ givenSessionContainingAnId_whenIdAssociatedAgain_thenNonUniqueObjectException() 
 
 此外，如果相应的数据库行不存在，在尝试更新或删除实体时也会发生这种情况:
 
-```
+```java
 public void whenUpdatingNonExistingObject_thenStaleStateException() {
     thrown.expect(isA(OptimisticLockException.class));
     thrown.expectMessage(
@@ -484,7 +484,7 @@ public void whenUpdatingNonExistingObject_thenStaleStateException() {
 
 作为示例，让我们尝试提交一个已标记为回滚的事务:
 
-```
+```java
 public void 
 givenTxnMarkedRollbackOnly_whenCommitted_thenTransactionException() {
     thrown.expect(isA(TransactionException.class));
@@ -528,7 +528,7 @@ Hibernate 支持两种[锁定](https://web.archive.org/web/20220703143024/http:/
 
 抛出 **`OptimisticLockingException`表示乐观锁定冲突**。例如，如果我们对同一个实体执行两次更新或删除操作，而没有在第一次操作后刷新它，就会出现此错误:
 
-```
+```java
 public void whenDeletingADeletedObject_thenOptimisticLockException() {
     thrown.expect(isA(OptimisticLockException.class));
     thrown.expectMessage(

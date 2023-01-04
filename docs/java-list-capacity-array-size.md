@@ -18,14 +18,14 @@ Java 允许我们创建固定大小的数组或使用集合类来做类似的工
 
 在 java 中，创建数组的新实例时，必须指定数组的大小:
 
-```
+```java
 Integer[] array = new Integer[100]; 
 System.out.println("Size of an array:" + array.length);
 ```
 
 这里，我们创建了一个大小为 100 的`I` `nteger`数组，结果如下
 
-```
+```java
 Size of an array:100
 ```
 
@@ -33,12 +33,12 @@ Size of an array:100
 
 现在，让我们创建一个初始容量为 100 的`ArrayList `:
 
-```
+```java
 List<Integer> list = new ArrayList<>(100);
 System.out.println("Size of the list is :" + list.size());
 ```
 
-```
+```java
 Size of the list is :0
 ```
 
@@ -46,12 +46,12 @@ Size of the list is :0
 
 现在，让我们向列表中添加一个元素，并检查它的大小:
 
-```
+```java
 list.add(10);
 System.out.println("Size of the list is :" + list.size());
 ```
 
-```
+```java
 Size of the list is :1
 ```
 

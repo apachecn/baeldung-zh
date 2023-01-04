@@ -16,7 +16,7 @@
 
 换句话说，**我们需要从`SecurityContext`获取认证细节，并验证用户是否登录了**:
 
-```
+```java
 private boolean isAuthenticated() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication == null || AnonymousAuthenticationToken.class.
@@ -35,7 +35,7 @@ private boolean isAuthenticated() {
 
 如果用户通过了身份验证，我们还需要返回特定的页面，否则返回登录页面:
 
-```
+```java
 @GetMapping("/loginUser")
 public String getUserLoginPage() {
     if (isAuthenticated()) {
@@ -58,7 +58,7 @@ public String getUserLoginPage() {
 
 最后，我们将通过返回`false`来中断执行链:
 
-```
+```java
 public class LoginPageInterceptor implements HandlerInterceptor {
     UrlPathHelper urlPathHelper = new UrlPathHelper();
     @Override
@@ -81,7 +81,7 @@ public class LoginPageInterceptor implements HandlerInterceptor {
 
 **我们还需要将拦截器添加到 Spring MVC 生命周期中**:
 
-```
+```java
 @Configuration
 public class LoginRedirectMvcConfig implements WebMvcConfigurer {
 
@@ -94,7 +94,7 @@ public class LoginRedirectMvcConfig implements WebMvcConfigurer {
 
 我们可以使用 Spring 的基于 XML 模式的配置来达到同样的目的:
 
-```
+```java
 <mvc:interceptors>
     <mvc:interceptor>
         <mvc:mapping path="/loginUser"/>
@@ -111,7 +111,7 @@ public class LoginRedirectMvcConfig implements WebMvcConfigurer {
 
 让我们扩展`GenericFilterBean,`覆盖`doFilter`方法，并验证认证:
 
-```
+```java
 public class LoginPageFilter extends GenericFilterBean {
 
     @Override
@@ -139,7 +139,7 @@ public class LoginPageFilter extends GenericFilterBean {
 
 此外，我们需要授权对登录页面 URI 的请求，以便为它启用过滤器链:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class LoginRedirectSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -157,7 +157,7 @@ public class LoginRedirectSecurityConfig extends WebSecurityConfigurerAdapter {
 
 最后，如果我们选择使用 XML 配置，我们可以为过滤器定义 bean，并将其添加到安全`HTTP`标签中的过滤器链中:
 
-```
+```java
 <beans:bean id="loginPageFilter" class="com.baeldung.loginredirect.LoginPageFilter"/>
 
 <security:http pattern="/**" use-expressions="true" auto-config="true">

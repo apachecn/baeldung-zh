@@ -30,7 +30,7 @@
 
 然而，我们可以使用`excludes`和`includes`参数来改变这种配置:
 
-```
+```java
 <plugin>
     <artifactId>maven-surefire-plugin</artifactId>
     <version>2.22.2</version>

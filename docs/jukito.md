@@ -12,7 +12,7 @@
 
 首先，我们将在项目中添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.jukito</groupId>
     <artifactId>jukito</artifactId>
@@ -27,7 +27,7 @@
 
 为了开始理解 Jukito 的威力，我们将使用一个`Add`方法定义一个简单的`Calculator` 接口:
 
-```
+```java
 public interface Calculator {
     public double add(double a, double b);
 }
@@ -35,7 +35,7 @@ public interface Calculator {
 
 我们将实现以下接口:
 
-```
+```java
 public class SimpleCalculator implements Calculator {
 
     @Override
@@ -47,14 +47,14 @@ public class SimpleCalculator implements Calculator {
 
 我们还需要另一个实现:
 
-```
+```java
 public class ScientificCalculator extends SimpleCalculator {
 }
 ```
 
 现在，让我们使用 Jukito 来测试我们的两个实现:
 
-```
+```java
 @RunWith(JukitoRunner.class)
 public class CalculatorTest {
 
@@ -82,7 +82,7 @@ public class CalculatorTest {
 
 如果我们运行测试，我们可以看到实际上运行了两个测试，而不是一个:
 
-```
+```java
 Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 ```
 
@@ -90,7 +90,7 @@ Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
 
 现在让我们为我们的`Add`方法的不同测试组合添加一个简单的嵌套类:
 
-```
+```java
 public static class AdditionTest {
     int a;
     int b;
@@ -102,7 +102,7 @@ public static class AdditionTest {
 
 这将扩大我们可以运行的测试数量，但是首先，我们需要在我们的`configureTest`方法中添加额外的绑定:
 
-```
+```java
 bindManyInstances(AdditionTest.class, 
   new AdditionTest(1, 1, 2), 
   new AdditionTest(10, 10, 20), 
@@ -111,7 +111,7 @@ bindManyInstances(AdditionTest.class,
 
 最后，我们向套件中添加了另一个测试:
 
-```
+```java
 @Test
 public void givenTwoNumbers_WhenAdd_ThenSumBoth(
   @All Calculator calc, 
@@ -127,7 +127,7 @@ public void givenTwoNumbers_WhenAdd_ThenSumBoth(
 
 我们可以看看它现在产生的测试数量的增加:
 
-```
+```java
 Tests run: 8, Failures: 0, Errors: 0, Skipped: 0
 ```
 
@@ -141,7 +141,7 @@ Tests run: 8, Failures: 0, Errors: 0, Skipped: 0
 
 我们将讨论的最后一个功能是按名称分组:
 
-```
+```java
 bindManyNamedInstances(Integer.class, "even", 2, 4, 6);
 bindManyNamedInstances(Integer.class, "odd", 1, 3, 5);
 ```
@@ -150,7 +150,7 @@ bindManyNamedInstances(Integer.class, "odd", 1, 3, 5);
 
 现在让我们添加一些测试:
 
-```
+```java
 @Test
 public void givenEvenNumbers_whenPrint_thenOutput(@All("even") Integer i) {
     System.out.println("even " + i);

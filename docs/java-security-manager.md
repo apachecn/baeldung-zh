@@ -10,7 +10,7 @@
 
 这可能是一个惊喜，但是**默认`SecurityManager`设置不允许** **许多标准操作**:
 
-```
+```java
 System.setSecurityManager(new SecurityManager());
 new URL("http://www.google.com").openConnection().connect();
 ```
@@ -19,7 +19,7 @@ new URL("http://www.google.com").openConnection().connect();
 
 然后我们得到以下异常:
 
-```
+```java
 java.security.AccessControlException: access denied ("java.net.SocketPermission"
   "www.google.com:80" "connect,resolve")
 ```
@@ -48,7 +48,7 @@ java.security.AccessControlException: access denied ("java.net.SocketPermission"
 
 我们以特殊的策略格式定义权限。这些权限采用`grant`条目的形式:
 
-```
+```java
 grant codeBase "file:${{java.ext.dirs}}/*" {
     permission java.security.AllPermission;
 };
@@ -66,7 +66,7 @@ grant codeBase "file:${{java.ext.dirs}}/*" {
 
 让我们定义一个自定义权限:
 
-```
+```java
 public class CustomPermission extends BasicPermission {
     public CustomPermission(String name) {
         super(name);
@@ -80,7 +80,7 @@ public class CustomPermission extends BasicPermission {
 
 以及应该受到保护的共享服务:
 
-```
+```java
 public class Service {
 
     public static final String OPERATION = "my-operation";
@@ -97,7 +97,7 @@ public class Service {
 
 如果我们试图在启用安全管理器的情况下运行它，就会抛出一个异常:
 
-```
+```java
 java.security.AccessControlException: access denied
   ("com.baeldung.security.manager.CustomPermission" "my-operation")
 
@@ -109,7 +109,7 @@ java.security.AccessControlException: access denied
 
 我们可以用以下内容创建我们的`<user.home>/.java.policy`文件，并尝试重新运行应用程序:
 
-```
+```java
 grant codeBase "file:<our-code-source>" {
     permission com.baeldung.security.manager.CustomPermission "my-operation";
 };

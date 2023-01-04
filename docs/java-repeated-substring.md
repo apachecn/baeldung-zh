@@ -14,7 +14,7 @@
 
 通过检查几个重复的子字符串，可以用一些例子很好地说明这一点:
 
-```
+```java
 "aa"
 "ababab"
 "barrybarrybarry"
@@ -22,7 +22,7 @@
 
 还有几个不重复的:
 
-```
+```java
 "aba"
 "cbacbac"
 "carlosxcarlosy"
@@ -40,7 +40,7 @@
 
 接下来，我们将从原始的`String`中移除这些子字符串，并检查被“剥离”的子字符串的长度是否为零。这意味着它只由它的子串组成:
 
-```
+```java
 public static boolean containsOnlySubstrings(String string) {
 
     if (string.length() < 2) {
@@ -65,7 +65,7 @@ public static boolean containsOnlySubstrings(String string) {
 
 让我们创建一些`String`来测试我们的方法:
 
-```
+```java
 String validString = "aa";
 String validStringTwo = "ababab";
 String validStringThree = "baeldungbaeldung";
@@ -77,7 +77,7 @@ String invalidStringThree = "baeldungnonrepeatedbaeldung";
 
 最后，我们可以很容易地检查它的有效性:
 
-```
+```java
 assertTrue(containsOnlySubstrings(validString));
 assertTrue(containsOnlySubstrings(validStringTwo));
 assertTrue(containsOnlySubstrings(validStringThree));
@@ -103,7 +103,7 @@ assertFalse(containsOnlySubstrings(invalidStringThree));
 
 因为我们知道我们的`String` A 总是 AA 的子串，所以我们只需要检查`String` A 是否是 AA 的子串，不包括第一个字符:
 
-```
+```java
 public static boolean containsOnlySubstringsEfficient(String string) {
     return ((string + string).indexOf(string, 1) != string.length());
 }

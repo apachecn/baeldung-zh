@@ -12,7 +12,7 @@
 
 我们可以通过注册一个`WebSecurityCustomizer` bean 并忽略所有路径的请求来实现这一点:
 
-```
+```java
 @Configuration
 public class ApplicationNoSecurity {
 
@@ -32,7 +32,7 @@ public class ApplicationNoSecurity {
 
 假设我们有一个不需要安全性的单元测试套件。如果这个测试套件使用名为“test”的**概要文件运行，我们可以简单地用`@Profile`** 对我们的配置进行**注释:**
 
-```
+```java
 @Configuration
 @Profile("test")
 public class ApplicationNoSecurity {

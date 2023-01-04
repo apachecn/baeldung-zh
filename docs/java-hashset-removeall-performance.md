@@ -12,7 +12,7 @@
 
 `removeAll`方法删除了包含在`collection`中的所有元素:
 
-```
+```java
 Set<Integer> set = new HashSet<Integer>();
 set.add(1);
 set.add(2);
@@ -50,7 +50,7 @@ assertArrayEquals(expectedElements, set.toArray(actualElements));
 
 对于第一种情况，我们将初始化集合和集合，其中集合中的元素比集合中的多。在第二种情况下，我们将初始化集合和集合，其中集合中的元素比集合中的多。在第三种情况下，我们将初始化 2 个集合，其中第二个集合的元素数量比第一个多:
 
-```
+```java
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Warmup(iterations = 5)
@@ -82,7 +82,7 @@ public class HashSetBenchmark {
 
 之后，我们添加我们的基准测试:
 
-```
+```java
 @Benchmark
 public boolean given_SizeOfHashsetGreaterThanSizeOfCollection_whenRemoveAllFromHashSet_thenGoodPerformance(MyState state) {
     return state.employeeSet1.removeAll(state.employeeList1);
@@ -101,7 +101,7 @@ public boolean given_SizeOfHashsetSmallerThanSizeOfAnotherHashSet_whenRemoveAllF
 
 结果如下:
 
-```
+```java
 Benchmark                                              Mode  Cnt            Score            Error  Units
 HashSetBenchmark.testHashSetSizeGreaterThanCollection  avgt   20      2700457.099 ±     475673.379  ns/op
 HashSetBenchmark.testHashSetSmallerThanCollection      avgt   20  31522676649.950 ± 3556834894.168  ns/op

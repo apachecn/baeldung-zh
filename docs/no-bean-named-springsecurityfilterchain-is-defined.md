@@ -6,7 +6,7 @@
 
 本文讨论了一个 Spring 安全配置问题——应用程序引导进程抛出以下异常:
 
-```
+```java
 SEVERE: Exception starting filter springSecurityFilterChain
 org.springframework.beans.factory.NoSuchBeanDefinitionException: 
 No bean named 'springSecurityFilterChain' is defined
@@ -30,7 +30,7 @@ Quick intro to the Spring Security support for async requests in Spring MVC.[Rea
 
 这个异常的原因很简单——Spring Security 寻找一个名为`springSecurityFilterChain`的 bean(默认情况下),但是找不到它。这个 bean 是主**弹簧安全过滤器**—`DelegatingFilterProxy`—`web.xml`中定义的:
 
-```
+```java
 <filter>
     <filter-name>springSecurityFilterChain</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -47,7 +47,7 @@ Quick intro to the Spring Security support for async requests in Spring MVC.[Rea
 
 上下文中缺少此 bean 的最常见原因是安全 XML 配置没有定义**元素**:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans  
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -64,7 +64,7 @@ Quick intro to the Spring Security support for async requests in Spring MVC.[Rea
 
 如果 XML 配置使用安全名称空间——如上例所示，那么声明一个简单的< http >元素将确保过滤器 bean 被创建并且一切正常启动:
 
-```
+```java
 <http auto-config='true'>
     <intercept-url pattern="/**" access="ROLE_USER" />
 </http>
@@ -74,19 +74,19 @@ Quick intro to the Spring Security support for async requests in Spring MVC.[Rea
 
 如果安全 XML 配置文件被命名为`springSecurityConfig.xml`，确保**资源被导入**:
 
-```
+```java
 @ImportResource({"classpath:springSecurityConfig.xml"})
 ```
 
 或者在 XML 中:
 
-```
+```java
 <import resource="classpath:springSecurityConfig.xml" />
 ```
 
 最后，过滤器 bean 的默认名称可以在`web.xml`中更改——通常是使用一个具有 Spring 安全性的现有过滤器:
 
-```
+```java
 <filter>
     <filter-name>springSecurityFilterChain</filter-name>
     <filter-class>

@@ -16,7 +16,7 @@
 
 我们可以通过执行方法`natural():`来创建自然订单实例
 
-```
+```java
 List<Integer> integers = Arrays.asList(3, 2, 1);
 
 integers.sort(Ordering.natural());
@@ -26,7 +26,7 @@ assertEquals(Arrays.asList(1,2,3), integers);
 
 假设我们有一组`Person` 对象:
 
-```
+```java
 class Person {
     private String name;
     private Integer age;
@@ -37,7 +37,7 @@ class Person {
 
 我们希望通过`age`字段对这些对象的列表进行排序。我们可以创建自己的自定义`Ordering` ，通过扩展它来实现这一点:
 
-```
+```java
 List<Person> persons = Arrays.asList(new Person("Michael", 10), new Person("Alice", 3));
 Ordering<Person> orderingByAge = new Ordering<Person>() {
     @Override
@@ -57,7 +57,7 @@ assertEquals(Arrays.asList(new Person("Alice", 3), new Person("Michael", 10)), p
 
 这个类的一个有用的特性是，我们可以链接不同的`Ordering.` 方式，比如说我们有一个人的集合，我们想按`age` 字段对其进行排序，并在列表的开头有`null` 年龄字段值:
 
-```
+```java
 List<Person> persons = Arrays.asList(
   new Person("Michael", 10),
   new Person("Alice", 3), 

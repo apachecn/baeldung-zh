@@ -14,7 +14,7 @@
 
 我们可能希望更改的最常见配置**是端口号**:
 
-```
+```java
 server.port=80
 ```
 
@@ -22,7 +22,7 @@ server.port=80
 
 在某些情况下，我们可能希望设置一个服务器应该绑定的网络地址。换句话说，我们定义了一个 **IP 地址，我们的服务器将在这里监听** :
 
-```
+```java
 server.address=my_custom_ip
 ```
 
@@ -32,19 +32,19 @@ server.address=my_custom_ip
 
 **默认情况下，Spring Boot 提供一个标准的错误网页**。这个页面叫做`Whitelabel`。默认情况下它是启用的，但是如果我们不想显示任何错误信息，我们可以禁用它:
 
-```
+```java
 server.error.whitelabel.enabled=false
 ```
 
 到`Whitelabel`的默认路径是`/error`。我们可以通过设置`server.error.path`参数来定制:
 
-```
+```java
 server.error.path=/user-error
 ```
 
 我们还可以设置属性来决定显示哪些错误信息。例如，我们可以包括错误消息和堆栈跟踪:
 
-```
+```java
 server.error.include-exception=true
 server.error.include-stacktrace=always
 ```
@@ -57,31 +57,31 @@ server.error.include-stacktrace=always
 
 在 Spring Boot，我们可以定义 Tomcat 工作线程的最大数量:
 
-```
+```java
 server.tomcat.threads.max=200
 ```
 
 在配置 web 服务器时，**设置服务器连接超时**可能也是有用的。这表示服务器在连接后、连接关闭前等待客户端发出请求的最长时间:
 
-```
+```java
 server.connection-timeout=5s
 ```
 
 我们还可以定义请求报头的最大大小:
 
-```
+```java
 server.max-http-header-size=8KB
 ```
 
 请求正文的最大大小:
 
-```
+```java
 server.tomcat.max-swallow-size=2MB
 ```
 
 或者整个 post 请求的最大大小:
 
-```
+```java
 server.tomcat.max-http-post-size=2MB
 ```
 
@@ -89,14 +89,14 @@ server.tomcat.max-http-post-size=2MB
 
 **为了在我们的 Spring Boot 应用程序中启用 SSL 支持**，我们需要将`server.ssl.enabled`属性设置为`true`并定义一个 SSL 协议:
 
-```
+```java
 server.ssl.enabled=true
 server.ssl.protocol=TLS
 ```
 
 我们还应该配置保存证书的密钥库的密码、类型和路径:
 
-```
+```java
 server.ssl.key-store-password=my_password
 server.ssl.key-store-type=keystore_type
 server.ssl.key-store=keystore-path
@@ -104,7 +104,7 @@ server.ssl.key-store=keystore-path
 
 我们还必须定义在密钥库中标识密钥的别名:
 
-```
+```java
 server.ssl.key-alias=tomcat
 ```
 
@@ -116,13 +116,13 @@ Tomcat 访问日志在测量页面命中计数、用户会话活动等方面非�
 
 **要启用访问日志，**只需设置:
 
-```
+```java
 server.tomcat.accesslog.enabled=true
 ```
 
 我们还应该配置附加到日志文件的其他参数，如目录名、前缀、后缀和日期格式:
 
-```
+```java
 server.tomcat.accesslog.directory=logs
 server.tomcat.accesslog.file-date-format=yyyy-MM-dd
 server.tomcat.accesslog.prefix=access_log
@@ -141,7 +141,7 @@ server.tomcat.accesslog.suffix=.log
 
 记住这一点，要更新 Tomcat 版本，我们必须使用`tomcat.version`属性:
 
-```
+```java
 <properties>
     <tomcat.version>9.0.44</tomcat.version>
 </properties>
@@ -155,7 +155,7 @@ server.tomcat.accesslog.suffix=.log
 
 为了实现相同的目标，并且**仍然使用不同的 Tomcat 版本，我们需要在 pom 文件**的`dependencyManagement`部分添加一个条目。需要记住的重要一点是，我们必须将**放在**和`spring-boot-dependencies`之前:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>

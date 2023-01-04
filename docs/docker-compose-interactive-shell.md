@@ -24,7 +24,7 @@ Docker Compose 主要用于将多个容器作为单个服务运行，同时保�
 
 让我们创建一个简单的`docker-compose.yml`来展示如何使用 [`docker-compose up`](https://web.archive.org/web/20221025214318/https://docs.docker.com/engine/reference/commandline/compose_up/) 命令运行 Docker 容器:
 
-```
+```java
 version: "3"
 services:
  server:
@@ -35,7 +35,7 @@ services:
 
 这里，我们使用 [`tomcat`](/web/20221025214318/https://www.baeldung.com/tomcat) 作为基础映像，并在主机上显示端口`8080`。为了查看它的运行情况，让我们使用`docker-compose up`命令构建并运行这个映像:
 
-```
+```java
 $ docker-compose up
 Pulling server (tomcat:jre11-openjdk)...
 jre11-openjdk: Pulling from library/tomcat
@@ -69,7 +69,7 @@ Docker Compose 使用单主机部署，具有多种优势:
 
 现在让我们使用带有交互式 shell 的`docker-compose`来运行前面的`tomcat`容器:
 
-```
+```java
 version: "3"
 services:
  server:
@@ -84,13 +84,13 @@ services:
 
 当然，要访问 Docker 容器，我们首先需要使用下面的命令运行容器:
 
-```
+```java
 $ docker-compose up --d
 ```
 
 现在，我们可以得到一个运行`docker-compose`服务的交互外壳:
 
-```
+```java
 $ docker-compose exec server bash
 ```
 

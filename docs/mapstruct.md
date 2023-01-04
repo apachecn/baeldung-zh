@@ -34,7 +34,7 @@ Learn how to use multiple source objects with MapStruct.[Read more](/web/2022070
 
 让我们将下面的依赖关系添加到我们的 Maven `pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.mapstruct</groupId>
     <artifactId>mapstruct</artifactId>
@@ -48,7 +48,7 @@ Learn how to use multiple source objects with MapStruct.[Read more](/web/2022070
 
 `mapstruct-processor`用于在构建期间生成映射器实现:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-compiler-plugin</artifactId>
@@ -73,7 +73,7 @@ Learn how to use multiple source objects with MapStruct.[Read more](/web/2022070
 
 让我们首先创建一个简单的 Java POJO:
 
-```
+```java
 public class SimpleSource {
     private String name;
     private String description;
@@ -89,7 +89,7 @@ public class SimpleDestination {
 
 ### 4.2。映射器接口
 
-```
+```java
 @Mapper
 public interface SimpleSourceDestinationMapper {
     SimpleDestination sourceToDestination(SimpleSource source);
@@ -107,7 +107,7 @@ public interface SimpleSourceDestinationMapper {
 
 下面是 MapStruct 为我们自动创建的类:
 
-```
+```java
 public class SimpleSourceDestinationMapperImpl
   implements SimpleSourceDestinationMapper {
     @Override
@@ -137,7 +137,7 @@ public class SimpleSourceDestinationMapperImpl
 
 最后，生成所有内容后，让我们编写一个测试用例，显示`SimpleSource`中的值与`SimpleDestination`中的值匹配:
 
-```
+```java
 public class SimpleSourceDestinationMapperIntegrationTest {
     private SimpleSourceDestinationMapper mapper
       = Mappers.getMapper(SimpleSourceDestinationMapper.class);
@@ -179,7 +179,7 @@ public class SimpleSourceDestinationMapperIntegrationTest {
 
 将以下代码添加到`SimpleSourceDestinationMapper`:
 
-```
+```java
 @Mapper(componentModel = "spring")
 public interface SimpleSourceDestinationMapper
 ```
@@ -188,14 +188,14 @@ public interface SimpleSourceDestinationMapper
 
 有时，我们需要在映射逻辑中使用其他 Spring 组件。在这种情况下，**我们必须使用一个抽象类来代替接口**:
 
-```
+```java
 @Mapper(componentModel = "spring")
 public abstract class SimpleDestinationMapperUsingInjectedService
 ```
 
 然后，我们可以使用众所周知的`@Autowired`注释轻松地注入所需的组件，并在我们的代码中使用它:
 
-```
+```java
 @Mapper(componentModel = "spring")
 public abstract class SimpleDestinationMapperUsingInjectedService {
 
@@ -217,7 +217,7 @@ public abstract class SimpleDestinationMapperUsingInjectedService {
 
 ### 6.1。新 POJO
 
-```
+```java
 public class EmployeeDTO {
     private int employeeId;
     private String employeeName;
@@ -225,7 +225,7 @@ public class EmployeeDTO {
 }
 ```
 
-```
+```java
 public class Employee {
     private int id;
     private String name;
@@ -239,7 +239,7 @@ public class Employee {
 
 在 MapStruct 中，我们还可以使用点符号来定义 bean 的成员:
 
-```
+```java
 @Mapper
 public interface EmployeeMapper {
     @Mappings({
@@ -259,7 +259,7 @@ public interface EmployeeMapper {
 
 同样，我们需要测试源和目标对象值是否匹配:
 
-```
+```java
 @Test
 public void givenEmployeeDTOwithDiffNametoEmployee_whenMaps_thenCorrect() {
     EmployeeDTO dto = new EmployeeDTO();
@@ -283,7 +283,7 @@ public void givenEmployeeDTOwithDiffNametoEmployee_whenMaps_thenCorrect() {
 
 让我们给`Employee`对象添加一个新的 bean 引用:
 
-```
+```java
 public class EmployeeDTO {
     private int employeeId;
     private String employeeName;
@@ -292,7 +292,7 @@ public class EmployeeDTO {
 }
 ```
 
-```
+```java
 public class Employee {
     private int id;
     private String name;
@@ -301,7 +301,7 @@ public class Employee {
 }
 ```
 
-```
+```java
 public class Division {
     private int id;
     private String name;
@@ -315,7 +315,7 @@ public class Division {
 
 让我们将它添加到映射器中:
 
-```
+```java
 DivisionDTO divisionToDivisionDTO(Division entity);
 
 Division divisionDTOtoDivision(DivisionDTO dto);
@@ -325,7 +325,7 @@ Division divisionDTOtoDivision(DivisionDTO dto);
 
 让我们修改并添加一些测试用例到现有的用例中:
 
-```
+```java
 @Test
 public void givenEmpDTONestedMappingToEmp_whenMaps_thenCorrect() {
     EmployeeDTO dto = new EmployeeDTO();
@@ -348,7 +348,7 @@ MapStruct 还提供了一些现成的隐式类型转换，对于我们的示例�
 
 我们为员工添加了一个开始日期:
 
-```
+```java
 public class Employee {
     // other fields
     private Date startDt;
@@ -356,7 +356,7 @@ public class Employee {
 }
 ```
 
-```
+```java
 public class EmployeeDTO {
     // other fields
     private String employeeStartDt;
@@ -368,7 +368,7 @@ public class EmployeeDTO {
 
 我们修改映射器，并为我们的开始日期提供`dateFormat`:
 
-```
+```java
 @Mappings({
   @Mapping(target="employeeId", source = "entity.id"),
   @Mapping(target="employeeName", source = "entity.name"),
@@ -387,7 +387,7 @@ Employee employeeDTOtoEmployee(EmployeeDTO dto);
 
 让我们再添加几个测试用例来验证转换是否正确:
 
-```
+```java
 private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
 @Test
 public void givenEmpStartDtMappingToEmpDTO_whenMaps_thenCorrect() throws ParseException {
@@ -423,7 +423,7 @@ public void givenEmpDTOStartDtMappingToEmp_whenMaps_thenCorrect() throws ParseEx
 
 在这个例子中，我们将使用下面的类:
 
-```
+```java
 public class Transaction {
     private Long id;
     private String uuid = UUID.randomUUID().toString();
@@ -435,7 +435,7 @@ public class Transaction {
 
 和一个匹配的 DTO:
 
-```
+```java
 public class TransactionDTO {
 
     private String uuid;
@@ -451,7 +451,7 @@ public class TransactionDTO {
 
 我们可以通过将`Mapper` 创建为抽象类来实现这一点:
 
-```
+```java
 @Mapper
 abstract class TransactionMapper {
 
@@ -478,7 +478,7 @@ abstract class TransactionMapper {
 
 将生成以下内容:
 
-```
+```java
 @Generated
 class TransactionMapperImpl extends TransactionMapper {
 
@@ -514,7 +514,7 @@ class TransactionMapperImpl extends TransactionMapper {
 
 我们将使用以下类:
 
-```
+```java
 public class Car {
     private int id;
     private String name;
@@ -523,19 +523,19 @@ public class Car {
 
 `Car`的子类型:
 
-```
+```java
 public class BioDieselCar extends Car {
 }
 ```
 
-```
+```java
 public class ElectricCar extends Car {
 }
 ```
 
 具有枚举字段类型`FuelType`的 `CarDTO`:
 
-```
+```java
 public class CarDTO {
     private int id;
     private String name;
@@ -543,7 +543,7 @@ public class CarDTO {
 }
 ```
 
-```
+```java
 public enum FuelType {
     ELECTRIC, BIO_DIESEL
 }
@@ -553,7 +553,7 @@ public enum FuelType {
 
 现在让我们继续编写将`Car`映射到`CarDTO`的抽象映射器类:
 
-```
+```java
 @Mapper
 public abstract class CarsMapper {
     @BeforeMapping
@@ -581,7 +581,7 @@ public abstract class CarsMapper {
 
 上面定义的 **`CarsMapper` 生成******实现**:**
 
-```
+```java
 @Generated
 public class CarsMapperImpl extends CarsMapper {
 
@@ -613,7 +613,7 @@ public class CarsMapperImpl extends CarsMapper {
 
 为了启用 Lombok 支持，我们需要在注释处理器路径中添加[依赖关系](https://web.archive.org/web/20220706110125/https://search.maven.org/search?q=a:lombok)。从 Lombok 1 . 18 . 16 版本开始，我们还必须添加对`lombok-mapstruct-binding`的依赖。现在我们在 Maven 编译器插件中有了`mapstruct-processor`和 Lombok:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-compiler-plugin</artifactId>
@@ -642,7 +642,7 @@ public class CarsMapperImpl extends CarsMapper {
 </plugin>
 ```**  **让我们使用 Lombok 注释来定义源实体:
 
-```
+```java
 @Getter
 @Setter
 public class Car {
@@ -653,7 +653,7 @@ public class Car {
 
 和目的地数据传输对象:
 
-```
+```java
 @Getter
 @Setter
 public class CarDTO {
@@ -664,7 +664,7 @@ public class CarDTO {
 
 这个映射器接口与我们之前的示例相似:
 
-```
+```java
 @Mapper
 public interface CarMapper {
     CarMapper INSTANCE = Mappers.getMapper(CarMapper.class);
@@ -678,7 +678,7 @@ public interface CarMapper {
 
 源实体:
 
-```
+```java
 public class Person {
     private int id;
     private String name;
@@ -687,7 +687,7 @@ public class Person {
 
 目标数据传输对象:
 
-```
+```java
 public class PersonDTO {
     private int id;
     private String name;
@@ -696,7 +696,7 @@ public class PersonDTO {
 
 如果源实体的`id`字段是`null`，我们希望生成一个随机的`id`，并将其分配给目标，同时保持其他属性值不变:
 
-```
+```java
 @Mapper
 public interface PersonMapper {
     PersonMapper INSTANCE = Mappers.getMapper(PersonMapper.class);
@@ -709,7 +709,7 @@ public interface PersonMapper {
 
 让我们添加一个测试用例来验证表达式的执行:
 
-```
+```java
 @Test
 public void givenPersonEntitytoPersonWithExpression_whenMaps_thenCorrect() 
     Person entity  = new Person();

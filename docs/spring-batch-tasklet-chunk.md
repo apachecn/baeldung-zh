@@ -12,7 +12,7 @@
 
 让我们从**添加所需的依赖关系**开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.batch</groupId>
     <artifactId>spring-batch-core</artifactId>
@@ -32,7 +32,7 @@
 
 让我们考虑一个包含以下内容的 CSV 文件:
 
-```
+```java
 Mae Hodges,10/22/1972
 Gary Potter,02/22/1953
 Betty Wise,02/17/1968
@@ -45,7 +45,7 @@ Lucille Phillips,05/14/1992
 
 我们的用例是**生成另一个 CSV 文件，其中包含每个人的姓名和年龄**:
 
-```
+```java
 Mae Hodges,45
 Gary Potter,64
 Betty Wise,49
@@ -72,7 +72,7 @@ Lucille Phillips,25
 
 `LinesReader` 将负责从输入文件中读取数据:
 
-```
+```java
 public class LinesReader implements Tasklet {
     // ...
 }
@@ -80,7 +80,7 @@ public class LinesReader implements Tasklet {
 
 `LinesProcessor` 将计算文件中每个人的年龄:
 
-```
+```java
 public class LinesProcessor implements Tasklet {
     // ...
 }
@@ -88,7 +88,7 @@ public class LinesProcessor implements Tasklet {
 
 最后，`LinesWriter` 将负责将姓名和年龄写入输出文件:
 
-```
+```java
 public class LinesWriter implements Tasklet {
     // ...
 }
@@ -96,7 +96,7 @@ public class LinesWriter implements Tasklet {
 
 至此，**的所有步骤都实现了`Tasklet` 接口**。这将迫使我们实现它的`execute`方法:
 
-```
+```java
 @Override
 public RepeatStatus execute(StepContribution stepContribution, 
   ChunkContext chunkContext) throws Exception {
@@ -110,7 +110,7 @@ public RepeatStatus execute(StepContribution stepContribution,
 
 我们需要**给 Spring 的应用上下文**添加一些配置。为上一节中创建的类添加标准 bean 声明后，我们就可以创建作业定义了:
 
-```
+```java
 @Configuration
 @EnableBatchProcessing
 public class TaskletsConfig {
@@ -168,7 +168,7 @@ public class TaskletsConfig {
 
 因为我们将操作 CSV 文件中的行，所以我们将创建一个类`Line:`
 
-```
+```java
 public class Line implements Serializable {
 
     private String name;
@@ -186,7 +186,7 @@ public class Line implements Serializable {
 
 为此，我们将利用 OpenCSV:
 
-```
+```java
 <dependency>
     <groupId>com.opencsv</groupId>
     <artifactId>opencsv</artifactId>
@@ -198,7 +198,7 @@ public class Line implements Serializable {
 
 一旦包含了 OpenCSV，**我们还将创建一个`FileUtils`类**。它将提供读取和写入 CSV 行的方法:
 
-```
+```java
 public class FileUtils {
 
     public Line readLine() throws Exception {
@@ -239,7 +239,7 @@ public class FileUtils {
 
 让我们继续完成我们的`LinesReader`课程:
 
-```
+```java
 public class LinesReader implements Tasklet, StepExecutionListener {
 
     private final Logger logger = LoggerFactory
@@ -287,7 +287,7 @@ public class LinesReader implements Tasklet, StepExecutionListener {
 
 如果我们看一下`afterStep` 代码，我们会注意到结果列表(`lines)` 放在作业上下文中的那一行，使其可用于下一步:
 
-```
+```java
 stepExecution
   .getJobExecution()
   .getExecutionContext()
@@ -300,7 +300,7 @@ stepExecution
 
 **`LinesProcessor`也会实现`StepExecutionListener`当然还有`Tasklet`。**这意味着它也将实现`beforeStep`、`execute`和`afterStep`方法:
 
-```
+```java
 public class LinesProcessor implements Tasklet, StepExecutionListener {
 
     private Logger logger = LoggerFactory.getLogger(
@@ -348,7 +348,7 @@ public class LinesProcessor implements Tasklet, StepExecutionListener {
 
 **`LinesWriter`的任务是检查`lines` 列表，将姓名和年龄写入输出文件**:
 
-```
+```java
 public class LinesWriter implements Tasklet, StepExecutionListener {
 
     private final Logger logger = LoggerFactory
@@ -392,7 +392,7 @@ public class LinesWriter implements Tasklet, StepExecutionListener {
 
 为了运行该作业，我们将创建一个测试:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TaskletsConfig.class)
 public class TaskletsTest {
@@ -414,7 +414,7 @@ public class TaskletsTest {
 
 在运行测试之前，我们需要添加一些额外的 beans:
 
-```
+```java
 @Bean
 public JobLauncherTestUtils jobLauncherTestUtils() {
     return new JobLauncherTestUtils();
@@ -453,7 +453,7 @@ public JobLauncher jobLauncher() throws Exception {
 
 作业完成后，`output.csv` 有预期的内容，日志显示执行流程:
 
-```
+```java
 [main] DEBUG o.b.t.tasklets.LinesReader - Lines Reader initialized.
 [main] DEBUG o.b.t.tasklets.LinesReader - Read line: [Mae Hodges,10/22/1972]
 [main] DEBUG o.b.t.tasklets.LinesReader - Read line: [Gary Potter,02/22/1953]
@@ -500,19 +500,19 @@ public JobLauncher jobLauncher() throws Exception {
 
 因此，我们还需要为面向块的方法创建**三个 beans:**
 
-```
+```java
 public class LineReader {
      // ...
 }
 ```
 
-```
+```java
 public class LineProcessor {
     // ...
 }
 ```
 
-```
+```java
 public class LinesWriter {
     // ...
 }
@@ -524,7 +524,7 @@ public class LinesWriter {
 
 工作定义看起来也会不同:
 
-```
+```java
 @Configuration
 @EnableBatchProcessing
 public class ChunksConfig {
@@ -585,7 +585,7 @@ public class ChunksConfig {
 
 为了成为一个读者，**我们的类必须实现`ItemReader` 接口**:
 
-```
+```java
 public class LineReader implements ItemReader<Line> {
      @Override
      public Line read() throws Exception {
@@ -599,7 +599,7 @@ public class LineReader implements ItemReader<Line> {
 
 代码很简单，它只读取一行并返回它。我们还将为这个类的最终版本实现`StepExecutionListener` :
 
-```
+```java
 public class LineReader implements 
   ItemReader<Line>, StepExecutionListener {
 
@@ -638,7 +638,7 @@ public class LineReader implements
 
 然而，在本例中，**我们将实现`ItemProcessor` 及其方法`process()`** :
 
-```
+```java
 public class LineProcessor implements ItemProcessor<Line, Line> {
 
     private Logger logger = LoggerFactory.getLogger(LineProcessor.class);
@@ -657,7 +657,7 @@ public class LineProcessor implements ItemProcessor<Line, Line> {
 
 **`process()`方法获取一个输入行，处理它并返回一个输出行**。同样，我们也将实现`StepExecutionListener:`
 
-```
+```java
 public class LineProcessor implements 
   ItemProcessor<Line, Line>, StepExecutionListener {
 
@@ -690,7 +690,7 @@ public class LineProcessor implements
 
 与阅读器和处理器不同， **`LinesWriter`将写一整块行**，以便它接收`Lines:`的`List`
 
-```
+```java
 public class LinesWriter implements 
   ItemWriter<Line>, StepExecutionListener {
 
@@ -728,7 +728,7 @@ public class LinesWriter implements
 
 我们将创建一个新的测试，与我们为微线程方法创建的测试相同:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ChunksConfig.class)
 public class ChunksTest {
@@ -751,7 +751,7 @@ public class ChunksTest {
 
 一旦工作完成，我们可以看到`output.csv` 再次包含了预期的结果，并且日志描述了流程:
 
-```
+```java
 [main] DEBUG o.b.t.chunks.LineReader - Line Reader initialized.
 [main] DEBUG o.b.t.chunks.LinesWriter - Line Writer initialized.
 [main] DEBUG o.b.t.chunks.LineProcessor - Line Processor initialized.

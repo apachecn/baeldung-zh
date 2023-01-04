@@ -16,19 +16,19 @@
 
 这里我们声明了`id`变量:
 
-```
+```java
 int id;
 ```
 
 **另一方面，初始化就是分配一个值:**
 
-```
+```java
 id = 1;
 ```
 
 为了演示，我们将创建一个具有`name`和`id`属性的`User` 类:
 
-```
+```java
 public class User {
     private String name;
     private int id;
@@ -53,7 +53,7 @@ Java 有八种内置的数据类型，称为 Java 原语类型；这种类型的
 
 让我们看一个在我们的`User`类之外声明和初始化引用类型的例子:
 
-```
+```java
 @Test
 public void whenIntializedWithNew_thenInstanceIsNotNull() {
     User user = new User();
@@ -82,7 +82,7 @@ public void whenIntializedWithNew_thenInstanceIsNotNull() {
 
 让我们给我们的`User`类添加一个构造函数:
 
-```
+```java
 public User(String name, int id) {
     this.name = name;
     this.id = id;
@@ -91,7 +91,7 @@ public User(String name, int id) {
 
 现在我们可以使用我们的构造函数创建一个`User`对象，并为其属性设置初始值:
 
-```
+```java
 User user = new User("Alice", 1);
 ```
 
@@ -107,7 +107,7 @@ User user = new User("Alice", 1);
 
 现在让我们尝试定义一些与实例和类相关的变量，并测试它们是否有默认值:
 
-```
+```java
 @Test
 public void whenValuesAreNotInitialized_thenUserNameAndIdReturnDefault() {
     User user = new User();
@@ -123,7 +123,7 @@ public void whenValuesAreNotInitialized_thenUserNameAndIdReturnDefault() {
 
 例如，下面的代码会生成一个编译器错误:
 
-```
+```java
 public void print(){
     int i;
     System.out.println(i);
@@ -136,7 +136,7 @@ public void print(){
 
 让我们给我们的`User`类添加一个常量:
 
-```
+```java
 private static final int YEAR = 2000;
 ```
 
@@ -154,7 +154,7 @@ Java 提供了两种类型的初始化器，静态初始化器和实例初始化
 
 为了演示，我们将使用我们的`User`类中的实例初始化器为用户`id`提供一个值:
 
-```
+```java
 {
     id = 0;
 }
@@ -164,7 +164,7 @@ Java 提供了两种类型的初始化器，静态初始化器和实例初始化
 
 静态初始化器或静态块是用于初始化`static`字段的代码块。换句话说，这是一个简单的初始化器，标有关键字`static:`
 
-```
+```java
 private static String forum;
 static {
     forum = "Java";
@@ -206,7 +206,7 @@ Java 中的所有对象都存储在我们程序的堆内存中。事实上，堆
 
 反射是一种我们可以用来在运行时检查类、字段和方法的机制。这里有一个使用反射创建我们的`User`对象的例子:
 
-```
+```java
 @Test
 public void whenInitializedWithReflection_thenInstanceIsNotNull() 
   throws Exception {
@@ -221,13 +221,13 @@ public void whenInitializedWithReflection_thenInstanceIsNotNull()
 
 下一种方法，**克隆，是一种创建一个对象的精确副本的方法。**为此，我们的`User`类必须实现`Cloneable`接口:
 
-```
+```java
 public class User implements Cloneable { //... }
 ```
 
 现在我们可以使用`clone()`方法创建一个新的`clonedUser` 对象，它与`user`对象具有相同的属性值:
 
-```
+```java
 @Test
 public void whenCopiedWithClone_thenExactMatchIsCreated() 
   throws CloneNotSupportedException {
@@ -240,7 +240,7 @@ public void whenCopiedWithClone_thenExactMatchIsCreated()
 
 **我们也可以使用`[sun.misc.Unsafe](/web/20221208143921/https://www.baeldung.com/java-unsafe)`类为一个对象分配内存，而不需要调用构造函数:**
 
-```
+```java
 User u = (User) unsafeInstance.allocateInstance(User.class);
 ```
 

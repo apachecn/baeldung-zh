@@ -14,7 +14,7 @@
 
 让我们在整个示例中使用以下集合来演示如何使用不同的方法获得相同的结果:
 
-```
+```java
 Collection<String> names = new ArrayList<>();
 names.add("John");
 names.add("Ana");
@@ -29,7 +29,7 @@ names.add("Mark");
 
 为此，我们首先需要使用`[iterator](https://web.archive.org/web/20220815140904/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html#iterator())`方法检索元素上的迭代器。之后，我们可以借助 [`next`](https://web.archive.org/web/20220815140904/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html#next()) 访问每个元素，并使用`[remove](https://web.archive.org/web/20220815140904/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html#remove())`删除它们:
 
-```
+```java
 Iterator<String> i = names.iterator();
 
 while(i.hasNext()) {
@@ -50,7 +50,7 @@ while(i.hasNext()) {
 
 Java 8 引入了一个新方法给**`Collection`接口，提供了一个更简洁的方法来使用`[Predicate](https://web.archive.org/web/20220815140904/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html)`** `:`移除元素
 
-```
+```java
 names.removeIf(e -> e.startsWith("A"));
 ```
 
@@ -68,7 +68,7 @@ Java 8 新的主要特性之一是增加了 [`Stream`](/web/20220815140904/https
 
 使用`Stream`删除**过滤元素非常简单**，我们只需要使用`Collection`创建一个`Stream`的实例，使用`Predicate`调用`[filter](https://web.archive.org/web/20220815140904/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html#filter(java.util.function.Predicate))`，然后在`Collectors:`的帮助下使用 [`collect`](https://web.archive.org/web/20220815140904/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html#collect(java.util.stream.Collector)) 调用结果
 
-```
+```java
 Collection<String> filteredCollection = names
   .stream()
   .filter(e -> !e.startsWith("A"))
@@ -81,7 +81,7 @@ Collection<String> filteredCollection = names
 
 组合`Stream.filter`和`Collectors`非常方便，尽管**我们可能会遇到既需要匹配元素又需要非匹配元素的情况。**在这种情况下我们可以利用`[Collectors.partitioningBy](https://web.archive.org/web/20220815140904/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Collectors.html#partitioningBy(java.util.function.Predicate,java.util.stream.Collector))`:
 
-```
+```java
 Map<Boolean, List<String>> classifiedElements = names
     .stream()
     .collect(Collectors.partitioningBy((String e) -> 

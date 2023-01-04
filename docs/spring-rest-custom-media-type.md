@@ -18,7 +18,7 @@
 
 这是我们简单的终点:
 
-```
+```java
 @RequestMapping(
   method = RequestMethod.GET, 
   value = "/public/api/items/{id}", 
@@ -34,7 +34,7 @@ public BaeldungItem getItem( @PathVariable("id") String id ) {
 
 现在，`BaeldungItem`资源——它只有一个字段—`itemId`:
 
-```
+```java
 public class BaeldungItem {
     private String itemId;
 
@@ -44,7 +44,7 @@ public class BaeldungItem {
 
 最后但同样重要的是，让我们为端点编写一个集成测试:
 
-```
+```java
 @Test
 public void givenServiceEndpoint_whenGetRequestFirstAPIVersion_then200() {
     given()
@@ -66,7 +66,7 @@ public void givenServiceEndpoint_whenGetRequestFirstAPIVersion_then200() {
 
 这是我们新的资源定义:
 
-```
+```java
 public class BaeldungItemV2 {
     private String itemName;
 
@@ -78,7 +78,7 @@ public class BaeldungItemV2 {
 
 我们将通过**创建下一版本的自定义媒体类型**并定义一个新端点来实现这一点:
 
-```
+```java
 @RequestMapping(
   method = RequestMethod.GET, 
   value = "/public/api/items/{id}", 
@@ -96,7 +96,7 @@ public BaeldungItemV2 getItemSecondAPIVersion(@PathVariable("id") String id) {
 
 但是当客户端现在将`Accept`头设置为`“application/vnd.baeldung.api.v2+json” –` 时，他们将正确地点击新操作，并通过`itemName`字段(V2)取回资源:
 
-```
+```java
 @Test
 public void givenServiceEndpoint_whenGetRequestSecondAPIVersion_then200() {
     given()
@@ -114,7 +114,7 @@ public void givenServiceEndpoint_whenGetRequestSecondAPIVersion_then200() {
 
 最后，让我们来谈谈媒体类型的班级范围的定义，这也是可能的:
 
-```
+```java
 @RestController
 @RequestMapping(
   value = "/", 

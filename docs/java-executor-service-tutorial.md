@@ -28,7 +28,7 @@ Java 7 中的 Fork/Join 框架介绍，以及通过尝试使用所有可用的�
 
 例如，以下代码行将创建一个包含 10 个线程的线程池:
 
-```
+```java
 ExecutorService executor = Executors.newFixedThreadPool(10);
 ```
 
@@ -40,7 +40,7 @@ ExecutorService executor = Executors.newFixedThreadPool(10);
 
 例如，`ThreadPoolExecutor`类有几个构造函数，我们可以用它们来配置 executor 服务及其内部池:
 
-```
+```java
 ExecutorService executorService = 
   new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,   
   new LinkedBlockingQueue<Runnable>());
@@ -52,7 +52,7 @@ ExecutorService executorService =
 
 `ExecutorService`可以执行`Runnable`和`Callable`任务。为了使本文简单，将使用两个基本任务。注意，我们在这里使用 lambda 表达式，而不是匿名内部类:
 
-```
+```java
 Runnable runnableTask = () -> {
     try {
         TimeUnit.MILLISECONDS.sleep(300);
@@ -76,26 +76,26 @@ callableTasks.add(callableTask);
 
 **`execute()`** 方法是`void`，不提供任何获得任务执行结果或检查任务状态(是否正在运行)的可能性:
 
-```
+```java
 executorService.execute(runnableTask);
 ```
 
 **`submit()`** 向`ExecutorService`提交`Callable`或`Runnable`任务，并返回`Future`类型的结果:
 
-```
+```java
 Future<String> future = 
   executorService.submit(callableTask);
 ```
 
 **`invokeAny()`** 将一组任务分配给一个`ExecutorService`，使每个任务运行，并返回一个任务成功执行的结果(如果有成功执行的话):
 
-```
+```java
 String result = executorService.invokeAny(callableTasks);
 ```
 
 `**invokeAll()**`将一组任务分配给一个`ExecutorService`，使每个任务运行，并以`Future`类型对象列表的形式返回所有任务执行的结果:
 
-```
+```java
 List<Future<String>> futures = executorService.invokeAll(callableTasks);
 ```
 
@@ -113,13 +113,13 @@ List<Future<String>> futures = executorService.invokeAll(callableTasks);
 
 `**shutdown()**` 方法不会立即销毁`ExecutorService`。它将使`ExecutorService`停止接受新任务，并在所有正在运行的线程完成当前工作后关闭:
 
-```
+```java
 executorService.shutdown();
 ```
 
 **`shutdownNow()`** 方法试图立即销毁`ExecutorService`，但并不能保证所有正在运行的线程都会同时停止:
 
-```
+```java
 List<Runnable> notExecutedTasks = executorService.shutDownNow();
 ```
 
@@ -127,7 +127,7 @@ List<Runnable> notExecutedTasks = executorService.shutDownNow();
 
 关闭`ExecutorService` (这也是 Oracle 推荐的[)的一个好方法是将这两种方法与 **`awaitTermination()`** 方法结合使用:](https://web.archive.org/web/20221012100323/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/ExecutorService.html)
 
-```
+```java
 executorService.shutdown();
 try {
     if (!executorService.awaitTermination(800, TimeUnit.MILLISECONDS)) {
@@ -146,7 +146,7 @@ try {
 
 `Future`接口提供了一个特殊的阻塞方法`get()`，返回`Callable` 任务执行的实际结果，或者在`Runnable`任务的情况下返回`null` :
 
-```
+```java
 Future<String> future = executorService.submit(callableTask);
 String result = null;
 try {
@@ -160,7 +160,7 @@ try {
 
 对于由`get()` 方法引起的非常长的阻塞，应用程序的性能会降低。如果结果数据不重要，可以通过使用超时来避免这种问题:
 
-```
+```java
 String result = future.get(200, TimeUnit.MILLISECONDS);
 ```
 
@@ -170,7 +170,7 @@ String result = future.get(200, TimeUnit.MILLISECONDS);
 
 `Future`接口还提供了用`cancel()`方法取消任务执行和用`isCancelled()`方法检查取消的功能:
 
-```
+```java
 boolean canceled = future.cancel(true);
 boolean isCancelled = future.isCancelled();
 ```
@@ -183,7 +183,7 @@ boolean isCancelled = future.isCancelled();
 
 对于本节，我们使用一个带有一个线程的`ScheduledExecutorService`:
 
-```
+```java
 ScheduledExecutorService executorService = Executors
   .newSingleThreadScheduledExecutor();
 ```
@@ -192,7 +192,7 @@ ScheduledExecutorService executorService = Executors
 
 两种`scheduled()`方法允许您执行`Runnable`或`Callable` 任务:
 
-```
+```java
 Future<String> resultFuture = 
   executorService.schedule(callableTask, 1, TimeUnit.SECONDS);
 ```
@@ -201,7 +201,7 @@ Future<String> resultFuture =
 
 下面的代码块将在初始延迟 100 毫秒后运行任务。之后，它会每隔 450 毫秒运行一次相同的任务:
 
-```
+```java
 Future<String> resultFuture = service
   .scheduleAtFixedRate(runnableTask, 100, 450, TimeUnit.MILLISECONDS);
 ```
@@ -212,7 +212,7 @@ Future<String> resultFuture = service
 
 例如，以下代码将保证在当前执行结束和下一次执行开始之间有 150 毫秒的暂停:
 
-```
+```java
 service.scheduleWithFixedDelay(task, 100, 150, TimeUnit.MILLISECONDS);
 ```
 

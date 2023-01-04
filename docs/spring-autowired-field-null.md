@@ -10,7 +10,7 @@
 
 首先，让我们用一个空的`doWork`方法定义一个弹簧组件:
 
-```
+```java
 @Component
 public class MyComponent {
     public void doWork() {}
@@ -19,7 +19,7 @@ public class MyComponent {
 
 然后，让我们定义我们的服务类。我们将使用 Spring capacities 在我们的服务中注入一个`MyComponent` bean，这样我们就可以在服务方法中调用`doWork`方法:
 
-```
+```java
 public class MyService {
 
     @Autowired
@@ -34,7 +34,7 @@ public class MyService {
 
 现在，让我们添加一个控制器，它将实例化一个服务并调用`serve`方法:
 
-```
+```java
 @Controller
 public class MyController {
 
@@ -47,7 +47,7 @@ public class MyController {
 
 乍一看，我们的代码可能看起来非常好。但是，在运行应用程序后，调用我们的控制器的控制方法将导致以下异常:
 
-```
+```java
 java.lang.NullPointerException: null
   at com.baeldung.autowiring.service.MyService.serve(MyService.java:14)
   at com.baeldung.autowiring.controller.MyController.control(MyController.java:12)
@@ -61,7 +61,7 @@ java.lang.NullPointerException: null
 
 首先，让我们告诉 Spring 为我们的`MyService`类生成一个 Bean。我们有各种可能性来实现这一点。最简单的方法是用 [`@Component`](/web/20221108014505/https://www.baeldung.com/spring-component-annotation) 注释或其任何派生物来修饰`MyService`类。例如，我们可以执行以下操作:
 
-```
+```java
 @Service
 public class MyService {
 
@@ -77,7 +77,7 @@ public class MyService {
 
 达到相同目标的另一个替代方法是在一个`@Configuration`文件中添加一个 [`@Bean`](/web/20221108014505/https://www.baeldung.com/spring-bean-annotations) 方法:
 
-```
+```java
 @Configuration
 public class MyServiceConfiguration {
 
@@ -90,7 +90,7 @@ public class MyServiceConfiguration {
 
 然而，将`MyService`类变成 Spring 管理的 bean 是不够的。现在，我们必须在控制器内部自动连接它，而不是在它上面调用`new` 。让我们看看控制器的固定版本是什么样子的:
 
-```
+```java
 @Controller
 public class MyController {
 

@@ -14,7 +14,7 @@
 
 但是如果您想改变这些默认值，您可以在`application.yml`中定义您选择的数据源:
 
-```
+```java
 environments:
     development:
         dataSource:
@@ -31,7 +31,7 @@ Grails 能够根据数据库配置中的`dbCreate`属性为我们的域类创建
 
 让我们在这里定义其中一个域类:
 
-```
+```java
 Class User {
     String userName
     String password
@@ -51,7 +51,7 @@ Class User {
 
 我们还可以在模型的`mapping`属性中指定 GORM 映射:
 
-```
+```java
 static mapping = { sort "userName" }
 ```
 
@@ -59,7 +59,7 @@ static mapping = { sort "userName" }
 
 我们当然可以通过将 sort 传递给 list API 来获得相同的结果:
 
-```
+```java
 User.list(sort: "userName")
 ```
 
@@ -73,7 +73,7 @@ User.list(sort: "userName")
 
 下面是动态脚手架的工作原理:
 
-```
+```java
 class UserController {
     static scaffold = true
 }
@@ -93,7 +93,7 @@ class UserController {
 
 为了**创建新的“用户”记录**:
 
-```
+```java
 def user = new User(username: "test", password: "test123", email: "[[email protected]](/web/20220122061328/https://www.baeldung.com/cdn-cgi/l/email-protection)", age: 14)
 user.save()
 ```
@@ -101,19 +101,19 @@ user.save()
 **取单条记录**:
 
 
-```
+```java
 def user = User.get(1) 
 ```
 
 这个`get` API 将在可编辑模式下检索域对象。对于只读模式，我们可以使用`read` API:
 
-```
+```java
 def user = User.read(1)
 ```
 
 更新现有记录 :
 
-```
+```java
 def user = User.get(1)
 user.userName = "testUpdate"
 user.age = 20
@@ -122,7 +122,7 @@ user.save()
 
 以及对已有记录的简单删除操作:
 
-```
+```java
 def user = User.get(1)
 user.delete()
 ```
@@ -133,19 +133,19 @@ user.delete()
 
 让我们从`find` API 开始:
 
-```
+```java
 def user = User.find("from User as u where u.username = 'test' ")
 ```
 
 我们也可以使用不同的语法来传入参数:
 
-```
+```java
 def user = User.find("from User as u where u.username?", ['test'])
 ```
 
 我们也可以使用命名参数:
 
-```
+```java
 def user = User.find("from User as u where u.username=?", [username: 'test'])
 ```
 
@@ -153,7 +153,7 @@ def user = User.find("from User as u where u.username=?", [username: 'test'])
 
 Grails 提供了一个动态查找工具，它使用域属性在运行时执行查询并返回第一个匹配的记录:
 
-```
+```java
 def user = User.findByUsername("test")
 user = User.findByUsernameAndAge("test", 20)
 user = User.findByUsernameLike("tes")
@@ -166,7 +166,7 @@ user = User.findByUsernameAndAgeNotEquals("test", "100")
 
 我们还可以使用一些灵活的标准来检索数据:
 
-```
+```java
 def user = User.find { username == "test"}
 def user = User.createCriteria()
 def results = user.list {
@@ -185,14 +185,14 @@ def results = user.list {
 
 GORM 还支持 HQL 查询语法——对于读操作:
 
-```
+```java
 def user = User.executeQuery(
   "select u.userName from User u where u.userName = ?", ['test'])
 ```
 
 以及写操作:
 
-```
+```java
 def user = User.executeUpdate("delete User u where u.username =?", ['test'])
 ```
 

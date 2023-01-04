@@ -26,7 +26,7 @@ Boolean 是 Java 中的一种基本数据类型。通常，它只能有两个值
 
 让我们创建一个测试来看看它是如何工作的:
 
-```
+```java
 boolean b = true;
 b = !b;
 assertFalse(b);
@@ -52,7 +52,7 @@ assertTrue(b);
 
 既然我们已经理解了 XOR 的逻辑，那么将其翻译成 Java 代码对我们来说并不是一项具有挑战性的任务:
 
-```
+```java
 boolean b = true;
 b ^= true;
 assertFalse(b);
@@ -69,7 +69,7 @@ assertTrue(b);
 
 当我们对一个`Boolean`变量执行 NOT 或 XOR 运算时，Java 会自动取消`Boolean`到`boolean`的装箱。但是如果我们不妥善处理`null`事件，我们会遇到`NullPointerException`:
 
-```
+```java
 assertThatThrownBy(() -> {
     Boolean b = null;
     b = !b;
@@ -80,7 +80,7 @@ assertThatThrownBy(() -> {
 
 所以接下来，让我们创建空安全的`toggle()`方法来处理`Boolean`和`boolean`变量:
 
-```
+```java
 static Boolean toggle(Boolean b) {
     if (b == null){
         return b;
@@ -93,7 +93,7 @@ static Boolean toggle(Boolean b) {
 
 最后，让我们创建一个测试来验证我们的`toggle()`方法是否适用于所有情况:
 
-```
+```java
 // boxed Boolean
 Boolean b = true;
 b = ToggleBoolean.toggle(b);

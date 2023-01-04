@@ -12,7 +12,7 @@
 
 至少，**我们应该将 [Hibernate Validator](https://web.archive.org/web/20221127014958/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.hibernate%22%20AND%20a%3A%22hibernate-validator%22) 添加到我们的依赖项:**
 
-```
+```java
 <dependency>
     <groupId>org.hibernate.validator</groupId>
     <artifactId>hibernate-validator</artifactId>
@@ -34,14 +34,14 @@
 
 注意，默认情况下，如果字符串包含非数字字符，约束将失败，但是我们可以告诉它忽略它们:
 
-```
+```java
 @CreditCardNumber(ignoreNonDigitCharacters = true)
 private String lenientCreditCardNumber;
 ```
 
 然后，我们可以包含空格或破折号等字符:
 
-```
+```java
 validations.setLenientCreditCardNumber("7992-7398-713");
 constraintViolations = validator.validateProperty(validations, "lenientCreditCardNumber");
 assertTrue(constraintViolations.isEmpty());
@@ -51,7 +51,7 @@ assertTrue(constraintViolations.isEmpty());
 
 `@Currency` 验证器检查给定的货币金额是否是指定的货币:
 
-```
+```java
 @Currency("EUR")
 private MonetaryAmount balance;
 ```
@@ -60,7 +60,7 @@ private MonetaryAmount balance;
 
 一旦我们正确设置了 Java Money，我们就可以检查约束条件:
 
-```
+```java
 bean.setBalance(Money.of(new BigDecimal(100.0), Monetary.getCurrency("EUR")));
 constraintViolations = validator.validateProperty(bean, "balance");
 assertEquals(0, constraintViolations.size());
@@ -72,7 +72,7 @@ assertEquals(0, constraintViolations.size());
 
 bean validation 规范定义了几个约束，我们可以对数字字段实施这些约束。除此之外，Hibernate Validator 还提供了一个方便的注释，`@Range`，**作为`@Min` 和`@Max,`** 的组合来匹配一个范围:
 
-```
+```java
 @Range(min = 0, max = 100)
 private BigDecimal percent;
 ```
@@ -85,7 +85,7 @@ private BigDecimal percent;
 
 因此，**我们可以在属性上强制最小和最大持续时间:**
 
-```
+```java
 @DurationMin(days = 1, hours = 2)
 @DurationMax(days = 2, hours = 1)
 private Duration duration;
@@ -97,7 +97,7 @@ private Duration duration;
 
 如果我们希望边界值无效，我们将`inclusive` 属性定义为 false:
 
-```
+```java
 @DurationMax(minutes = 30, inclusive = false)
 ```
 
@@ -109,14 +109,14 @@ private Duration duration;
 
 通常，我们希望确保字符串的字符长度——我们用`length` 方法测量的长度——在最小值和最大值之间。在这种情况下，我们在字符串属性或字段上使用`@Length` :
 
-```
+```java
 @Length(min = 1, max = 3)
 private String someString;
 ```
 
 **然而，由于 Unicode 的复杂性，有时字符长度和码位长度会有所不同。当我们想检查后者时，我们用`@CodePointLength:`**
 
-```
+```java
 @CodePointLength(min = 1, max = 3)
 private String someString;
 ```
@@ -131,7 +131,7 @@ private String someString;
 
 我们回顾的第一个是`@LuhnCheck.` 这是`@CreditCardNumber,`的一般化版本，因为**它执行相同的检查，但是允许额外的参数:**
 
-```
+```java
 @LuhnCheck(startIndex = 0, endIndex = Integer.MAX_VALUE, checkDigitIndex = -1)
 private String someString;
 ```
@@ -148,7 +148,7 @@ private String someString;
 
 `@Url` 约束验证一个字符串是否是 URL 的有效表示。此外，我们可以检查 URL 的特定部分是否有特定值:
 
-```
+```java
 @URL(protocol = "https")
 private String url;
 ```
@@ -157,7 +157,7 @@ private String url;
 
 我们还可以验证属性是否包含“安全”的 HTML 代码(例如，没有脚本标记):
 
-```
+```java
 @SafeHtml
 private String html;
 ```
@@ -176,7 +176,7 @@ private String html;
 
 在这种情况下，注释是在类级别，脚本在整个实例上调用，作为变量`_this:`传递
 
-```
+```java
 @ScriptAssert(lang = "nashorn", script = "_this.valid")
 public class AdditionalValidations {
     private boolean valid = true;
@@ -186,7 +186,7 @@ public class AdditionalValidations {
 
 然后，我们可以检查整个实例上的约束:
 
-```
+```java
 bean.setValid(false);
 constraintViolations = validator.validate(bean);
 assertEquals(1, constraintViolations.size());

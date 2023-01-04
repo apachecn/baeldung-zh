@@ -14,13 +14,13 @@ Groovy 在处理集合时提供了一些有趣的快捷方式，这利用了它�
 
 让我们首先使用简写语法创建一个包含一些值的列表:
 
-```
+```java
 def list = [1,2,3]
 ```
 
 同样，我们可以创建一个空列表:
 
-```
+```java
 def emptyList = []
 ```
 
@@ -28,20 +28,20 @@ def emptyList = []
 
 然而，**我们也可以指定要创建的列表类型**:
 
-```
+```java
 def linkedList = [1,2,3] as LinkedList
 ArrayList arrList = [1,2,3]
 ```
 
 接下来，通过使用构造函数参数，列表可用于创建其他列表:
 
-```
+```java
 def copyList = new ArrayList(arrList)
 ```
 
 我们也可以通过克隆来做到这一点:
 
-```
+```java
 def cloneList = arrList.clone()
 ```
 
@@ -51,7 +51,7 @@ Groovy 使用“==”操作符来比较两个列表中的元素是否相等。
 
 继续前面的例子，比较`cloneList`和`arrlist`，结果是`true`:
 
-```
+```java
 assertTrue(cloneList == arrList)
 ```
 
@@ -61,14 +61,14 @@ assertTrue(cloneList == arrList)
 
 我们可以使用文字语法从列表中获取一个项目:
 
-```
+```java
 def list = ["Hello", "World"]
 assertTrue(list[1] == "World")
 ```
 
 或者我们可以使用`get()`和`getAt()`方法:
 
-```
+```java
 assertTrue(list.get(1) == "World")
 assertTrue(list.getAt(1) == "World")
 ```
@@ -77,7 +77,7 @@ assertTrue(list.getAt(1) == "World")
 
 使用负索引时，列表从右向左读取:
 
-```
+```java
 assertTrue(list[-1] == "World")
 assertTrue(list.getAt(-2) == "Hello")
 ```
@@ -90,7 +90,7 @@ assertTrue(list.getAt(-2) == "Hello")
 
 让我们定义一个空列表，并向其中添加一些项目:
 
-```
+```java
 def list = []
 
 list << 1
@@ -102,7 +102,7 @@ assertTrue(list == [1, "Apple"])
 
 另外，**如果列表的长度小于指定的索引，Groovy 会添加与差值**一样多的`null`值:
 
-```
+```java
 list[2] = "Box"
 list[4] = true
 assertTrue(list == [1, "Apple", "Box", null, true])
@@ -112,7 +112,7 @@ assertTrue(list == [1, "Apple", "Box", null, true])
 
 与其他方法相比，**这个操作符创建了一个新的列表对象，并将其赋给变量`list`** :
 
-```
+```java
 def list2 = [1,2]
 list += list2
 list += 12        
@@ -123,7 +123,7 @@ assertTrue(list == [1, 6.0, "Apple", "Box", null, true, 1, 2, 12])
 
 我们可以使用文字语法或`set()`方法更新列表中的条目:
 
-```
+```java
 def list =[1, "Apple", 80, "App"]
 list[1] = "Box"
 list.set(2,90)
@@ -136,7 +136,7 @@ assertTrue(list == [1, "Box", 90,  "App"])
 
 我们可以使用`remove()`方法删除特定索引处的项目:
 
-```
+```java
 def list = [1,2,3,4,5,5,6,6,7]
 list.remove(3)
 assertTrue(list == [1,2,3,5,5,6,6,7])
@@ -146,7 +146,7 @@ assertTrue(list == [1,2,3,5,5,6,6,7])
 
 这将从列表中移除元素的第一个匹配项:
 
-```
+```java
 list.removeElement(5)
 assertTrue(list == [1,2,3,5,6,6,7])
 ```
@@ -155,7 +155,7 @@ assertTrue(list == [1,2,3,5,6,6,7])
 
 但是，该运算符不会改变基础列表，而是返回一个新列表:
 
-```
+```java
 assertTrue(list - 6 == [1,2,3,5,7])
 ```
 
@@ -171,14 +171,14 @@ Groovy 在现有的 Java `Collections` API 中添加了新的方法。
 
 Groovy 在每次迭代中传递一个对应于当前元素的隐式参数`it`:
 
-```
+```java
 def list = [1,"App",3,4]
 list.each {println it * 2}
 ```
 
 另一个方法`eachWithIndex()`除了提供当前元素之外，还提供当前索引值:
 
-```
+```java
 list.eachWithIndex{ it, i -> println "$i : $it" }
 ```
 
@@ -188,19 +188,19 @@ list.eachWithIndex{ it, i -> println "$i : $it" }
 
 让我们定义一个要操作的列表:
 
-```
+```java
 def filterList = [2,1,3,4,5,6,76]
 ```
 
 为了找到匹配条件的第一个对象，我们可以使用`find`:
 
-```
+```java
 assertTrue(filterList.find {it > 3} == 4)
 ```
 
 为了找到所有符合条件的对象，我们可以使用`findAll`:
 
-```
+```java
 assertTrue(filterList.findAll {it > 3} == [4,5,6,76])
 ```
 
@@ -208,13 +208,13 @@ assertTrue(filterList.findAll {it > 3} == [4,5,6,76])
 
 这里我们需要一个包含所有数字元素的列表:
 
-```
+```java
 assertTrue(filterList.findAll {it instanceof Number} == [2,1,3,4,5,6,76])
 ```
 
 或者，我们可以使用`grep`方法来做同样的事情:
 
-```
+```java
 assertTrue(filterList.grep( Number ) == [2,1,3,4,5,6,76])
 ```
 
@@ -222,7 +222,7 @@ assertTrue(filterList.grep( Number ) == [2,1,3,4,5,6,76])
 
 因此，它允许进一步将条件语句减少到最低限度:
 
-```
+```java
 assertTrue(filterList.grep {it > 6} == [76])
 ```
 
@@ -234,7 +234,7 @@ assertTrue(filterList.grep {it > 6} == [76])
 
 默认情况下，它使用自然排序来确定唯一性:
 
-```
+```java
 def uniqueList = [1,3,3,4]
 uniqueList.unique()
 assertTrue(uniqueList == [1,3,4])
@@ -242,7 +242,7 @@ assertTrue(uniqueList == [1,3,4])
 
 或者，如果要求不改变底层列表，我们可以使用`toUnique()`方法:
 
-```
+```java
 assertTrue(["A", "B", "Ba", "Bat", "Cat"].toUnique {it.size()} == ["A", "Ba", "Bat"])
 ```
 
@@ -252,14 +252,14 @@ assertTrue(["A", "B", "Ba", "Bat", "Cat"].toUnique {it.size()} == ["A", "Ba", "B
 
 那么只有当列表中的所有元素都满足条件时，它才返回`true`:
 
-```
+```java
 def conditionList = [2,1,3,4,5,6,76]
 assertFalse(conditionList.every {it < 6})
 ```
 
 另一方面，如果列表中的任何元素满足条件，则`any()`方法返回`true`:
 
-```
+```java
 assertTrue(conditionList.any {it % 2 == 0})
 ```
 
@@ -267,13 +267,13 @@ assertTrue(conditionList.any {it % 2 == 0})
 
 默认情况下，Groovy 根据自然顺序对列表中的项目进行排序:
 
-```
+```java
 assertTrue([1,2,1,0].sort() == [0,1,1,2])
 ```
 
 但是**我们也可以通过自定义排序逻辑**传递一个`Comparator`:
 
-```
+```java
 Comparator mc = {a,b -> a == b? 0: a < b? 1 : -1}
 def list = [1,2,1,0]
 list.sort(mc)
@@ -282,12 +282,12 @@ assertTrue(list == [2,1,1,0])
 
 此外，我们可以使用`min()`或`max()`方法找到最大值或最小值，而不需要显式调用`sort()`:
 
-```
+```java
 def strList = ["na", "ppp", "as"]
 assertTrue(strList.max() == "ppp")
 ```
 
-```
+```java
 Comparator minc = {a,b -> a == b? 0: a < b? -1 : 1}
 def numberList = [3, 2, 0, 7]
 assertTrue(numberList.min(minc) == 0)
@@ -299,7 +299,7 @@ assertTrue(numberList.min(minc) == 0)
 
 我们可以使用`collect()`方法来做到这一点:
 
-```
+```java
 def list = ["Kay","Henry","Justin","Tom"]
 assertTrue(list.collect{"Hi " + it} == ["Hi Kay","Hi Henry","Hi Justin","Hi Tom"])
 ```
@@ -310,7 +310,7 @@ assertTrue(list.collect{"Hi " + it} == ["Hi Kay","Hi Henry","Hi Justin","Hi Tom"
 
 为此，我们可以使用`join()`方法:
 
-```
+```java
 assertTrue(["One","Two","Three"].join(",") == "One,Two,Three")
 ```
 

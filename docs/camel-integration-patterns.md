@@ -22,7 +22,7 @@
 
 让我们通过定义一个路由来说明这种 EIP，该路由消耗一个文件夹中的文件，并根据文件扩展名将它们移动到两个不同的文件夹中。我们的路线在 Spring XML 文件中引用，使用 Camel 的自定义 XML 语法:
 
-```
+```java
 <bean id="contentBasedFileRouter" 
   class="com.baeldung.camel.file.ContentBasedFileRouter" />
 
@@ -35,7 +35,7 @@
 
 或者，我们可以在这里使用 Spring Java config 方法，而不是使用 Spring XML 文件。为此，我们需要向我们的项目添加一个额外的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.camel</groupId>
     <artifactId>camel-spring-javaconfig</artifactId>
@@ -47,7 +47,7 @@
 
 之后，我们需要扩展`CamelConfiguration`类并覆盖引用`ContentBasedFileRouter`的`routes()`方法:
 
-```
+```java
 @Configuration
 public class ContentBasedFileRouterConfig extends CamelConfiguration {
 
@@ -65,7 +65,7 @@ public class ContentBasedFileRouterConfig extends CamelConfiguration {
 
 使用[简单表达式语言](https://web.archive.org/web/20220124003034/https://camel.apache.org/simple.html)通过`simple` () DSL 语句对扩展进行评估，DSL 语句旨在用于评估表达式和谓词:
 
-```
+```java
 public class ContentBasedFileRouter extends RouteBuilder {
 
     private static final String SOURCE_FOLDER 
@@ -97,7 +97,7 @@ Camel 支持`MessageTranslator`路由器，它允许我们使用路由逻辑中�
 
 现在让我们通过使用`transform()`语句来演示如何使用消息转换器:
 
-```
+```java
 public class MessageTranslatorFileRouter extends RouteBuilder {
     private static final String SOURCE_FOLDER 
       = "src/test/source-folder";
@@ -127,7 +127,7 @@ public class MessageTranslatorFileRouter extends RouteBuilder {
 
 让我们通过一个例子来看看多播 EIP 是什么样子的。我们将把文件从源文件夹多播到两条不同的路径上，在那里我们将转换它们的内容，并把它们发送到不同的目标文件夹。这里我们使用 [`direct:` 组件](https://web.archive.org/web/20220124003034/https://camel.apache.org/direct.html)，它允许我们将两条路由链接在一起:
 
-```
+```java
 public class MulticastFileRouter extends RouteBuilder {
     private static final String SOURCE_FOLDER 
       = "src/test/source-folder";
@@ -161,7 +161,7 @@ public class MulticastFileRouter extends RouteBuilder {
 
 为了在一个例子中演示这一点，我们将定义一个路径，在该路径中，文件中的每一行被分割并转换成一个单独的文件，然后该文件被移动到不同的目标文件夹中。创建每个新文件时，文件名将与文件内容相同:
 
-```
+```java
 public class SplitterFileRouter extends RouteBuilder {
     private static final String SOURCE_FOLDER 
       = "src/test/source-folder";
@@ -188,7 +188,7 @@ public class SplitterFileRouter extends RouteBuilder {
 
 让我们通过在路线上抛出异常的例子来演示这一点:
 
-```
+```java
 public class DeadLetterChannelFileRouter extends RouteBuilder {
     private static final String SOURCE_FOLDER 
       = "src/test/source-folder";
@@ -213,7 +213,7 @@ public class DeadLetterChannelFileRouter extends RouteBuilder {
 
 运行此测试后，在控制台中可以看到以下日志语句:
 
-```
+```java
 ERROR DeadLetterChannel:156 - Failed delivery for 
 (MessageId: ID-ZAG0025-50922-1481340325657-0-1 on 
 ExchangeId: ID-ZAG0025-50922-1481340325657-0-2). 

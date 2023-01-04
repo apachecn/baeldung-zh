@@ -12,7 +12,7 @@
 
 让我们添加杰克逊 YAML 数据格式的依赖性:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.dataformat</groupId>
     <artifactId>jackson-dataformat-yaml</artifactId>
@@ -24,7 +24,7 @@
 
 我们的 Java 对象使用了一个`LocalDate`，所以让我们也为 JSR-310 数据类型添加一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.datatype</groupId>
     <artifactId>jackson-datatype-jsr310</artifactId>
@@ -40,7 +40,7 @@
 
 让我们首先来看看我们将要读取的文件:
 
-```
+```java
 orderNo: A001
 date: 2019-04-17
 customerName: Customer, Joe
@@ -55,7 +55,7 @@ orderLines:
 
 然后，让我们定义一下`Order`类:
 
-```
+```java
 public class Order {
     private String orderNo;
     private LocalDate date;
@@ -68,7 +68,7 @@ public class Order {
 
 最后，让我们创建我们的`OrderLine`类:
 
-```
+```java
 public class OrderLine {
     private String item;
     private int quantity;
@@ -82,19 +82,19 @@ public class OrderLine {
 
 **我们将使用 Jackson 的`ObjectMapper`** 将我们的 YAML 文件读入一个`Order`对象，所以现在让我们来设置它:
 
-```
+```java
 mapper = new ObjectMapper(new YAMLFactory());
 ```
 
 我们需要使用`findAndRegisterModules` 方法，以便 Jackson 能够正确处理我们的`Date`:
 
-```
+```java
 mapper.findAndRegisterModules();
 ```
 
 一旦我们配置了`ObjectMapper`，**，我们只需使用`readValue` :**
 
-```
+```java
 Order order = mapper.readValue(new File("src/main/resources/orderInput.yaml"), Order.class);
 ```
 
@@ -104,7 +104,7 @@ Order order = mapper.readValue(new File("src/main/resources/orderInput.yaml"), O
 
 我们还将使用`ObjectMapper`将`Order`写到一个文件中。但是首先，让我们给它添加一些配置:
 
-```
+```java
 mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 ```
 
@@ -112,13 +112,13 @@ mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
 默认情况下，我们的文件将以三个破折号开始。这对 YAML 格式完全有效，但我们可以通过禁用`YAMLFactory`上的功能来关闭它:
 
-```
+```java
 mapper = new ObjectMapper(new YAMLFactory().disable(Feature.WRITE_DOC_START_MARKER));
 ```
 
 完成附加设置后，让我们创建一个`Order`:
 
-```
+```java
 List<OrderLine> lines = new ArrayList<>();
 lines.add(new OrderLine("Copper Wire (200ft)", 1, 
   new BigDecimal(50.67).setScale(2, RoundingMode.HALF_UP)));
@@ -133,13 +133,13 @@ Order order = new Order(
 
 让我们用`writeValue`写下我们的订单:
 
-```
+```java
 mapper.writeValue(new File("src/main/resources/orderOutput.yaml"), order);
 ```
 
 当我们查看`orderOutput.yaml`时，它应该类似于:
 
-```
+```java
 orderNo: "B-9910"
 date: "2019-04-18"
 customerName: "Customer, Jane"

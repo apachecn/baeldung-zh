@@ -18,7 +18,7 @@
 
 举个例子就能直白的说明。假设我们有一个简单的方法来返回原始类型`Map`:
 
-```
+```java
 public class UncheckedCast {
     public static Map getRawMap() {
         Map rawMap = new HashMap();
@@ -33,7 +33,7 @@ public class UncheckedCast {
 
 现在，让我们创建一个测试方法来调用上面的方法，并将结果转换为`Map<String, LocalDate>`:
 
-```
+```java
 @Test
 public void givenRawMap_whenCastToTypedMap_shouldHaveCompilerWarning() {
     Map<String, LocalDate> castFromRawMap = (Map<String, LocalDate>) UncheckedCast.getRawMap();
@@ -46,7 +46,7 @@ public void givenRawMap_whenCastToTypedMap_shouldHaveCompilerWarning() {
 
 但是如果我们编译 Java 源代码，编译器会打印出警告信息。接下来，让我们使用 Maven 编译并运行我们的单元测试:
 
-```
+```java
 $ mvn clean test
 ...
 [WARNING] .../src/test/java/com/baeldung/uncheckedcast/UncheckedCastUnitTest.java:[14,97] unchecked cast
@@ -81,7 +81,7 @@ $ mvn clean test
 
 为了分析潜在的问题，让我们稍微改变一下`getRawMap()`方法，在原始类型`Map`中增加一个条目:
 
-```
+```java
 public static Map getRawMapWithMixedTypes() {
     Map rawMap = new HashMap();
     rawMap.put("date 1", LocalDate.of(2021, Month.FEBRUARY, 10));
@@ -96,7 +96,7 @@ public static Map getRawMapWithMixedTypes() {
 
 现在，让我们编写一个新的测试方法来调用`getRawMapWithMixedTypes()`方法:
 
-```
+```java
 @Test(expected = ClassCastException.class)
 public void givenMixTypedRawMap_whenCastToTypedMap_shouldThrowClassCastException() {
     Map<String, LocalDate> castFromRawMap = (Map<String, LocalDate>) UncheckedCast.getRawMapWithMixedTypes();
@@ -117,7 +117,7 @@ public void givenMixTypedRawMap_whenCastToTypedMap_shouldThrowClassCastException
 
 例如，通过调用我们的方法，我们得到一个具有许多条目的原始类型`Map` ，然后我们将它转换成一个具有参数化类型的`Map`:
 
-```
+```java
 (Map<String, LocalDate>) UncheckedCast.getRawMapWithMixedTypes()
 ```
 
@@ -149,7 +149,7 @@ public void givenMixTypedRawMap_whenCastToTypedMap_shouldThrowClassCastException
 
 让我们以 [`ArrayList`](/web/20221130142140/https://www.baeldung.com/java-arraylist) 类中的`remove()`方法为例来看看:
 
-```
+```java
 public E remove(int index) {
     Objects.checkIndex(index, size);
     final Object[] es = elementData;

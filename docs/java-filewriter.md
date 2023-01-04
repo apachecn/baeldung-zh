@@ -18,7 +18,7 @@
 
 让我们看一下各种构造函数:
 
-```
+```java
 public FileWriter(String fileName) throws IOException {
     super(new FileOutputStream(fileName));
 }
@@ -42,7 +42,7 @@ public FileWriter(FileDescriptor fd) {
 
 Java 11 引入了四个额外的构造函数:
 
-```
+```java
 public FileWriter(String fileName, Charset charset) throws IOException {
     super(new FileOutputStream(fileName), charset);
 }
@@ -64,7 +64,7 @@ public FileWriter(File file, Charset charset, boolean append) throws IOException
 
 现在让我们使用一个`FileWriter`构造函数来创建一个`FileWriter`的实例，然后写入一个文件:
 
-```
+```java
 try (FileWriter fileWriter = new FileWriter("src/test/resources/FileWriterTest.txt")) {
     fileWriter.write("Hello Folks!");
 }
@@ -74,7 +74,7 @@ try (FileWriter fileWriter = new FileWriter("src/test/resources/FileWriterTest.t
 
 在执行上述代码时，`String` 将被写入指定的文件:
 
-```
+```java
 Hello Folks!
 ```
 
@@ -86,7 +86,7 @@ Hello Folks!
 
 我们经常需要将数据添加到文件的现有内容中。现在让我们看一个支持追加的`FileWriter`的例子:
 
-```
+```java
 try (FileWriter fileWriter = new FileWriter("src/test/resources/FileWriterTest.txt", true)) {
     fileWriter.write("Hello Folks Again!");
 }
@@ -96,7 +96,7 @@ try (FileWriter fileWriter = new FileWriter("src/test/resources/FileWriterTest.t
 
 在执行代码时，我们将把`String`附加到指定文件的现有内容中:
 
-```
+```java
 Hello Folks!Hello Folks Again! 
 ```
 

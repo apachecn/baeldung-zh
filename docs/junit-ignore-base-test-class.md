@@ -10,7 +10,7 @@
 
 让我们假设我们有一个带有一些助手方法的`BaseUnitTest`类:
 
-```
+```java
 public class BaseUnitTest {
     public void helperMethod() {
         // ...
@@ -20,7 +20,7 @@ public class BaseUnitTest {
 
 现在，让我们用一个包含测试的类来扩展它:
 
-```
+```java
 public class ExtendedBaseUnitTest extends BaseUnitTest {
     @Test
     public void whenDoTest_thenAssert() {
@@ -39,7 +39,7 @@ public class ExtendedBaseUnitTest extends BaseUnitTest {
 
 **我们可以将名称从`BaseUnitTest` 改为`BaseUnitTestHelper` 或类似的**:
 
-```
+```java
 public class BaseUnitTestHelper {
     public void helperMethod() {
         // ...
@@ -51,7 +51,7 @@ public class BaseUnitTestHelper {
 
 第二种选择是使用 JUnit `@Ignore`注释暂时禁用测试。我们可以在类级别添加它来禁用一个类中的所有测试:
 
-```
+```java
 @Ignore("Class not ready for tests")
 public class IgnoreClassUnitTest {
     @Test
@@ -63,7 +63,7 @@ public class IgnoreClassUnitTest {
 
 同样地，**我们可以在方法级别**添加它，以防我们仍然需要在类中运行其他测试，但只是排除一个或几个:
 
-```
+```java
 public class IgnoreMethodTest {
     @Ignore("This method not ready yet")
     @Test
@@ -75,7 +75,7 @@ public class IgnoreMethodTest {
 
 如果使用 Maven 运行，我们将看到如下输出:
 
-```
+```java
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.041 s - in com.baeldung.IgnoreMethodTest
 ```
 
@@ -87,7 +87,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.041 s - in com
 
 让我们将我们的`BaseUnitTest`类抽象化:
 
-```
+```java
 public abstract class BaseUnitTest {
     public void helperMethod() {
         // ...

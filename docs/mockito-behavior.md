@@ -26,7 +26,7 @@ This tutorial illustrates various uses of the standard static mock methods of th
 
 我们将**模仿一个简单的 list** 实现，这与我们在之前的 cookbook 中使用的实现相同:
 
-```
+```java
 public class MyList extends AbstractList<String> {
 
     @Override
@@ -44,7 +44,7 @@ public class MyList extends AbstractList<String> {
 
 **为模拟配置简单返回行为:**
 
-```
+```java
 MyList listMock = Mockito.mock(MyList.class);
 when(listMock.add(anyString())).thenReturn(false);
 
@@ -54,7 +54,7 @@ assertThat(added).isFalse();
 
 **以另一种方式配置 mock 的返回行为:**
 
-```
+```java
 MyList listMock = Mockito.mock(MyList.class);
 doReturn(false).when(listMock).add(anyString());
 
@@ -64,7 +64,7 @@ assertThat(added).isFalse();
 
 **配置 mock 在方法调用时抛出异常:**
 
-```
+```java
 @Test(expected = IllegalStateException.class)
 public void givenMethodIsConfiguredToThrowException_whenCallingMethod_thenExceptionIsThrown() {
     MyList listMock = Mockito.mock(MyList.class);
@@ -76,7 +76,7 @@ public void givenMethodIsConfiguredToThrowException_whenCallingMethod_thenExcept
 
 **配置返回类型为 void 的方法的行为——抛出异常:** 
 
-```
+```java
 MyList listMock = Mockito.mock(MyList.class);
 doThrow(NullPointerException.class).when(listMock).clear();
 
@@ -85,7 +85,7 @@ listMock.clear();
 
 **配置多个呼叫的行为:**
 
-```
+```java
 MyList listMock = Mockito.mock(MyList.class);
 when(listMock.add(anyString()))
   .thenReturn(false)
@@ -97,7 +97,7 @@ listMock.add(randomAlphabetic(6)); // will throw the exception
 
 **配置间谍的行为:**
 
-```
+```java
 MyList instance = new MyList();
 MyList spy = Mockito.spy(instance);
 
@@ -107,7 +107,7 @@ spy.size(); // will throw the exception
 
 **配置方法来调用真实的，底层方法上有一个模仿:**
 
-```
+```java
 MyList listMock = Mockito.mock(MyList.class);
 when(listMock.size()).thenCallRealMethod();
 
@@ -116,7 +116,7 @@ assertThat(listMock).hasSize(1);
 
 **用自定义答案配置模拟方法调用:**
 
-```
+```java
 MyList listMock = Mockito.mock(MyList.class);
 doAnswer(invocation -> "Always the same").when(listMock).get(anyInt());
 

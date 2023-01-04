@@ -22,7 +22,7 @@
 
 让我们介绍不同的过滤策略和示例性用例。要使用 Jetty Servlet 容器运行代码，只需执行:
 
-```
+```java
 $> mvn install jetty:run
 ```
 
@@ -42,7 +42,7 @@ $> mvn install jetty:run
 
 首先，我们将创建一个身份验证过滤器，它检查会话是否存在，如果不存在，则发出一个登录过程:
 
-```
+```java
 public class AuthenticationFilter implements Filter {
     ...
     @Override
@@ -69,7 +69,7 @@ public class AuthenticationFilter implements Filter {
 
 现在让我们创建访问者计数器。该过滤器维护一个唯一用户名的`HashSet`,并向请求添加一个“计数器”属性:
 
-```
+```java
 public class VisitorCounterFilter implements Filter {
     private static Set<String> users = new HashSet<>();
 
@@ -91,7 +91,7 @@ public class VisitorCounterFilter implements Filter {
 
 接下来，我们将实现一个`FilterChain`，它迭代注册的过滤器并执行`doFilter` 方法:
 
-```
+```java
 public class FilterChainImpl implements FilterChain {
     private Iterator<Filter> filters;
 
@@ -111,7 +111,7 @@ public class FilterChainImpl implements FilterChain {
 
 为了将我们的组件连接在一起，让我们创建一个简单的静态管理器，它负责实例化过滤器链，注册过滤器，并初始化它:
 
-```
+```java
 public class FilterManager {
     public static void process(HttpServletRequest request,
       HttpServletResponse response, OnIntercept callback) {
@@ -124,7 +124,7 @@ public class FilterManager {
 
 作为最后一步，我们必须从我们的`FrontCommand`内部调用我们的`FilterManager`作为请求处理序列的公共部分:
 
-```
+```java
 public abstract class FrontCommand {
     ...
 
@@ -144,7 +144,7 @@ public abstract class FrontCommand {
 
 抽象基类可用于应用属于过滤器链的自定义行为。我们将在示例中使用它来减少与过滤器配置和调试日志记录相关的样板代码:
 
-```
+```java
 public abstract class BaseFilter implements Filter {
     private Logger log = LoggerFactory.getLogger(BaseFilter.class);
 
@@ -165,7 +165,7 @@ public abstract class BaseFilter implements Filter {
 
 让我们扩展这个基类来创建一个请求日志过滤器，它将被集成到下一节:
 
-```
+```java
 public class LoggingFilter extends BaseFilter {
     private static final Logger log = LoggerFactory.getLogger(LoggingFilter.class);
 
@@ -204,7 +204,7 @@ public class LoggingFilter extends BaseFilter {
 
 让我们实现一个注释驱动的编码过滤器，它也使用基本过滤器策略:
 
-```
+```java
 @WebFilter(servletNames = {"intercepting-filter"}, 
   initParams = {@WebInitParam(name = "encoding", value = "UTF-8")})
 public class EncodingFilter extends BaseFilter {
@@ -231,7 +231,7 @@ public class EncodingFilter extends BaseFilter {
 
 在具有部署描述符的 Servlet 场景中，我们的`web.xml`将包含这些额外的声明:
 
-```
+```java
 <filter>
     <filter-name>encoding-filter</filter-name>
     <filter-class>
@@ -246,7 +246,7 @@ public class EncodingFilter extends BaseFilter {
 
 让我们拿起日志过滤器并对其进行注释，以便 Servlet 使用:
 
-```
+```java
 @WebFilter(servletNames = "intercepting-filter")
 public class LoggingFilter extends BaseFilter {
     ...
@@ -263,7 +263,7 @@ public class LoggingFilter extends BaseFilter {
 
 由于这种策略不太常见，我们在示例中没有使用它，所以具体的实现和用例取决于您的想象:
 
-```
+```java
 public abstract class TemplateFilter extends BaseFilter {
     protected abstract void preFilter(HttpServletRequest request,
       HttpServletResponse response);

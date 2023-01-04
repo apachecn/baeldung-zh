@@ -25,7 +25,7 @@ Ratpack 反应式支持使用 JVM 的反应式流 API 标准作为其实现的�
 
 一个很好的起点是`publish()`方法，我们可以用它从任何`Iterable`创建一个`Publisher`:
 
-```
+```java
 Publisher<String> pub = Streams.publish(Arrays.asList("hello", "hello again"));
 LoggingSubscriber<String> sub = new LoggingSubscriber<String>();
 pub.subscribe(sub);
@@ -36,7 +36,7 @@ sub.block();
 
 运行测试用例，我们将看到预期的事件序列:
 
-```
+```java
 onSubscribe: sub=7311908
 onNext: sub=7311908, value=hello
 onNext: sub=7311908, value=hello again
@@ -45,7 +45,7 @@ onComplete: sub=7311908
 
 另一个有用的方法是`yield()`。它有一个单一的`Function`参数，该参数接收一个`YieldRequest`对象并返回下一个要发出的对象:
 
-```
+```java
 @Test
 public void whenYield_thenSuccess() {
 
@@ -64,7 +64,7 @@ public void whenYield_thenSuccess() {
 
 现在，让我们看看如何为周期性事件创建一个`Publisher`:
 
-```
+```java
 @Test
 public void whenPeriodic_thenSuccess() {
     ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
@@ -87,7 +87,7 @@ public void whenPeriodic_thenSuccess() {
 
 作为一个例子，让我们使用`map`方法将一个整数序列转换成字符串:
 
-```
+```java
 @Test
 public void whenMap_thenSuccess() throws Exception {
     TransformablePublisher<String> pub = Streams.yield( t -> {
@@ -119,7 +119,7 @@ public void whenMap_thenSuccess() throws Exception {
 
 为了说明这是如何工作的，让我们创建一个简单的不兼容的`Publisher`，它忽略了所请求的项目的数量。相反，它将总是比请求的多生产至少 5 个项目:
 
-```
+```java
 private class NonCompliantPublisher implements Publisher<Integer> {
 
     @Override
@@ -158,7 +158,7 @@ private class NonCompliantPublisher implements Publisher<Integer> {
 
 首先，让我们使用我们的`LoggingSubscriber. `测试这个发布者，我们将使用`take()`操作符，这样它将只接收第一个项目
 
-```
+```java
 @Test
 public void whenNonCompliantPublisherWithoutBuffer_thenSuccess() throws Exception {
     TransformablePublisher<Integer> pub = Streams.transformable(new NonCompliantPublisher())
@@ -173,7 +173,7 @@ public void whenNonCompliantPublisherWithoutBuffer_thenSuccess() throws Exceptio
 
 **运行这个测试，我们看到尽管收到了一个`cancel()`请求，我们不符合要求的出版商继续生产新的项目:**
 
-```
+```java
 RatpackStreamsUnitTest - : event=StreamEvent[DataEvent{subscriptionId=0, data=0}]
 LoggingSubscriber - onNext: sub=583189145, value=0
 RatpackStreamsUnitTest - : event=StreamEvent[RequestEvent{requestAmount=1, subscriptionId=0}]
@@ -188,7 +188,7 @@ LoggingSubscriber - onComplete: sub=583189145
 
 现在，让我们在这个流程中添加一个`buffer()`步骤。我们将在它之前添加两个`wiretap`步骤来记录事件，因此它的效果变得更加明显:
 
-```
+```java
 @Test
 public void whenNonCompliantPublisherWithBuffer_thenSuccess() throws Exception {
     TransformablePublisher<Integer> pub = Streams.transformable(new NonCompliantPublisher())
@@ -205,7 +205,7 @@ public void whenNonCompliantPublisherWithBuffer_thenSuccess() throws Exception {
 
 这一次，运行这段代码会产生一个不同的日志序列:
 
-```
+```java
 LoggingSubscriber - onSubscribe: sub=675852144
 RatpackStreamsUnitTest - after buffer: event=StreamEvent[RequestEvent{requestAmount=1, subscriptionId=0}]
 NonCompliantPublisher - subscribe
@@ -232,7 +232,7 @@ LoggingSubscriber - onComplete: sub=67585214
 
 让我们看看这在实践中是如何工作的。和以前一样，我们将从一个没有`batch`的流开始:
 
-```
+```java
 @Test
 public void whenCompliantPublisherWithoutBatch_thenSuccess() throws Exception {
     TransformablePublisher<Integer> pub = Streams.transformable(new CompliantPublisher(10))
@@ -246,7 +246,7 @@ public void whenCompliantPublisherWithoutBatch_thenSuccess() throws Exception {
 
 这里，`CompliantPublisher`只是一个测试`Publisher`,它产生整数，但不包括传递给构造函数的值。让我们运行它来看看非批处理行为:
 
-```
+```java
 CompliantPublisher - subscribe
 LoggingSubscriber - onSubscribe: sub=-779393331
 RatpackStreamsUnitTest - : event=StreamEvent[RequestEvent{requestAmount=1, subscriptionId=0}]
@@ -261,7 +261,7 @@ LoggingSubscriber - onComplete: sub=-779393331
 
 **输出显示生产者逐个发出数值**。现在，让我们将步骤`batch()`添加到我们的管道中，这样上游发布者一次最多可以生成五个项目:
 
-```
+```java
 @Test
 public void whenCompliantPublisherWithBatch_thenSuccess() throws Exception {
 
@@ -278,7 +278,7 @@ public void whenCompliantPublisherWithBatch_thenSuccess() throws Exception {
 
 `batch()` 方法有两个参数:每个`request()`调用请求的项目数和一个用于处理丢弃项目(即请求但未消费的项目)的`Action`。如果出现错误或下游用户调用`cancel()`，就会出现这种情况。让我们看看生成的执行日志:
 
-```
+```java
 LoggingSubscriber - onSubscribe: sub=-1936924690
 RatpackStreamsUnitTest - after batch: event=StreamEvent[RequestEvent{requestAmount=1, subscriptionId=0}]
 CompliantPublisher - subscribe
@@ -313,7 +313,7 @@ Ratpack 支持将反应流与其异步 web 框架结合使用。
 
 从这个发布者，我们可以建立我们的处理管道:
 
-```
+```java
 @Bean
 public Action<Chain> uploadFile() {
 
@@ -359,7 +359,7 @@ public Action<Chain> uploadFile() {
 
 发送数据流最直接的方法是使用`Response.sendStream()`。该方法接受一个`ByteBuf`发布者参数，并将数据发送到客户端，根据需要应用反压力以避免溢出:
 
-```
+```java
 @Bean
 public Action<Chain> download() {
     return chain -> chain.get("download", ctx -> {
@@ -370,7 +370,7 @@ public Action<Chain> download() {
 
 虽然很简单，但使用这种方法也有不好的一面:**它不会自己设置任何头，包括`Content-Length`，这对客户来说可能是个问题:**
 
-```
+```java
 $ curl -v --output data.bin http://localhost:5050/download
 ... request messages omitted
 < HTTP/1.1 200 OK
@@ -380,7 +380,7 @@ $ curl -v --output data.bin http://localhost:5050/download
 
 **或者，更好的方法是使用句柄的`Context` `render()`方法，传递一个`ResponseChunks`对象**。在这种情况下，响应将使用“ [chunked](https://web.archive.org/web/20220525133756/https://en.wikipedia.org/wiki/Chunked_transfer_encoding) ”传输编码方法。创建 [`ResponseChunks`](https://web.archive.org/web/20220525133756/https://ratpack.io/manual/current/api/ratpack/http/ResponseChunks.html) 实例最直接的方法是通过该类中的一个静态方法:
 
-```
+```java
 @Bean
 public Action<Chain> downloadChunks() {
     return chain -> chain.get("downloadChunks", ctx -> {
@@ -392,7 +392,7 @@ public Action<Chain> downloadChunks() {
 
 经过这一更改，响应现在包括了`content-type`头:
 
-```
+```java
 $ curl -v --output data.bin http://localhost:5050/downloadChunks
 ... request messages omitted
 < HTTP/1.1 200 OK
@@ -406,7 +406,7 @@ $ curl -v --output data.bin http://localhost:5050/downloadChunks
 
 对服务器端事件(SSE)的支持也使用了`render()`方法。然而，在这种情况下，我们使用 [`ServerSentEvents`](https://web.archive.org/web/20220525133756/https://ratpack.io/manual/current/api/ratpack/sse/ServerSentEvents.html) 将来自`Producer`的项目改编为`Event` 对象，这些对象包含一些元数据以及事件有效载荷:
 
-```
+```java
 @Bean
 public Action<Chain> quotes() {
     ServerSentEvents sse = ServerSentEvents.serverSentEvents(quotesService.newTicker(), (evt) -> {
@@ -424,7 +424,7 @@ public Action<Chain> quotes() {
 
 我们可以使用`curl`来测试这个方法，产生一个显示随机引用序列的输出，以及事件元数据:
 
-```
+```java
 $ curl -v http://localhost:5050/quotes
 ... request messages omitted
 < HTTP/1.1 200 OK
@@ -442,7 +442,7 @@ data: Quote [ts=2021-10-11T01:20:52.081Z, symbol=ORCL, value=53.0]
 
 **我们可以使用 [`Websockets.websocketBroadcast()`](https://web.archive.org/web/20220525133756/https://ratpack.io/manual/current/api/ratpack/websocket/WebSockets.html#websocketBroadcast(ratpack.handling.Context,org.reactivestreams.Publisher)) :** 将数据从任何`Publisher`传输到 WebSocket 连接
 
-```
+```java
 @Bean
 public Action<Chain> quotesWS() {
     Publisher<String> pub = Streams.transformable(quotesService.newTicker())
@@ -453,7 +453,7 @@ public Action<Chain> quotesWS() {
 
 这里，我们使用我们之前见过的相同的`QuotesService`作为向客户广播报价的事件源。让我们再次使用`curl`来模拟一个 WebSocket 客户端:
 
-```
+```java
 $ curl --include -v \
      --no-buffer \
      --header "Connection: Upgrade" \

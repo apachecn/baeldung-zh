@@ -10,7 +10,7 @@
 
 `String`类有一个**构造函数，它接受一个`char`数组作为参数:**
 
-```
+```java
 @Test 
 public void whenStringConstructor_thenOK() {
     final char[] charArray = { 'b', 'a', 'e', 'l', 'd', 'u', 'n', 'g' };
@@ -25,7 +25,7 @@ public void whenStringConstructor_thenOK() {
 
 说到`valueOf(),` ，我们甚至可以直接使用它:
 
-```
+```java
 @Test
 public void whenStringValueOf_thenOK() {
     final char[] charArray = { 'b', 'a', 'e', 'l', 'd', 'u', 'n', 'g' };
@@ -44,7 +44,7 @@ public void whenStringValueOf_thenOK() {
 
 稍后，我们将使用` toString()`方法来获得它的`String`表示:
 
-```
+```java
 @Test
 public void whenStringBuilder_thenOK() {
     final char[][] arrayOfCharArray = { { 'b', 'a' }, { 'e', 'l', 'd', 'u' }, { 'n', 'g' } };    
@@ -64,7 +64,7 @@ public void whenStringBuilder_thenOK() {
 
 考虑到我们有一个`Character`数组，**我们可以使用`Collectors.joining()`操作来形成一个`String`实例:**
 
-```
+```java
 @Test
 public void whenStreamCollectors_thenOK() {
     final Character[] charArray = { 'b', 'a', 'e', 'l', 'd', 'u', 'n', 'g' };
@@ -80,7 +80,7 @@ public void whenStreamCollectors_thenOK() {
 
 假设我们需要创建的字符串是一个分隔字符串。番石榴给了我们一个简便的方法:
 
-```
+```java
 @Test
 public void whenGuavaCommonBaseJoiners_thenOK() {
     final Character[] charArray = { 'b', 'a', 'e', 'l', 'd', 'u', 'n', 'g' };

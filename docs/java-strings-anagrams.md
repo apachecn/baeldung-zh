@@ -24,7 +24,7 @@
 
 在 Java 中，我们可以先将这两个字符串转换成`char[]`数组。然后我们可以对这两个数组进行排序，并检查它们是否相等:
 
-```
+```java
 boolean isAnagramSort(String string1, String string2) {
     if (string1.length() != string2.length()) {
         return false;
@@ -49,7 +49,7 @@ boolean isAnagramSort(String string1, String string2) {
 
 直方图需要一个固定大小的计数表，其大小由字符集大小定义。例如，如果我们只使用一个字节来存储每个字符，那么我们可以使用 256 的计数数组来计算每个字符的出现次数:
 
-```
+```java
 private static int CHARACTER_RANGE= 256;
 
 public boolean isAnagramCounting(String string1, String string2) {
@@ -82,7 +82,7 @@ public boolean isAnagramCounting(String string1, String string2) {
 
 要使用`Multiset`，我们首先需要将[番石榴](https://web.archive.org/web/20220831065716/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.google.guava%22%20a%3A%22guava%22)依赖项添加到我们的项目`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -92,7 +92,7 @@ public boolean isAnagramCounting(String string1, String string2) {
 
 我们将把每个输入字符串转换成一个字符的`MultiSet`。然后我们将检查它们是否相等:
 
-```
+```java
 boolean isAnagramMultiset(String string1, String string2) {
     if (string1.length() != string2.length()) {
         return false;
@@ -121,7 +121,7 @@ boolean isAnagramMultiset(String string1, String string2) {
 
 要解决这个问题，我们可以先对两个输入字符串进行预处理，过滤掉不需要的字符，将字母转换成小写字母。然后我们可以使用上面的解决方案之一(比如说,`MultiSet `解决方案)来检查处理过的字符串上的变位词:
 
-```
+```java
 String preprocess(String source) {
     return source.replaceAll("[^a-zA-Z]", "").toLowerCase();
 }

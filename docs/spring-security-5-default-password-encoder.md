@@ -14,7 +14,7 @@
 
 我们将首先展示一个标准的安全配置，它提供简单的内存认证(对 Spring 4 有效):
 
-```
+```java
 @Configuration
 public class InMemoryAuthWebSecurityConfigurer 
   extends WebSecurityConfigurerAdapter {
@@ -45,7 +45,7 @@ public class InMemoryAuthWebSecurityConfigurer
 
 如果我们在 Spring Security 5 下使用相同的配置，我们将得到以下错误:
 
-```
+```java
 java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the id "null"
 ```
 
@@ -57,7 +57,7 @@ java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the i
 
 我们使用这个编码器来配置我们的用户:
 
-```
+```java
 @Configuration
 public class InMemoryAuthWebSecurityConfigurer {
 
@@ -75,7 +75,7 @@ public class InMemoryAuthWebSecurityConfigurer {
 
 现在，使用这种配置，我们使用 BCrypt 以如下格式存储内存中的密码:
 
-```
+```java
 {bcrypt}$2a$10$MF7hYnWLeLT66gNccBgxaONZHbrSMjlUofkp50sSpBw2PJjUqU.zS 
 ```
 
@@ -89,7 +89,7 @@ public class InMemoryAuthWebSecurityConfigurer {
 
 为此，我们只需在提供给`password()`方法的密码前面加上`{noop}`标识符:
 
-```
+```java
 @Configuration
 public class InMemoryNoOpAuthWebSecurityConfigurer {
 
@@ -114,13 +114,13 @@ public class InMemoryNoOpAuthWebSecurityConfigurer {
 
 *   用编码值更新纯文本存储的密码:
 
-```
+```java
 String encoded = new BCryptPasswordEncoder().encode(plainTextPassword); 
 ```
 
 *   以已知的编码器标识符作为哈希存储密码的前缀:
 
-```
+```java
 {bcrypt}$2a$10$MF7hYnWLeLT66gNccBgxaONZHbrSMjlUofkp50sSpBw2PJjUqU.zS
 {sha256}97cde38028ad898ebc02e690819fa220e88c62e0699403e94fff291cfffaf8410849f27605abcbc0 
 ```

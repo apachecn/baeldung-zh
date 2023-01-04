@@ -14,7 +14,7 @@ Java 提供了`Map`。`Entry`用两个简单的实现接口创建一个`Entry`�
 
 `SimpleEntry`类是`AbstractMap` 类中的静态嵌套类。它提供了两种不同的构造函数来初始化实例:
 
-```
+```java
 AbstractMap.SimpleEntry<String, String> firstEntry = new AbstractMap.SimpleEntry<>("key1", "value1");
 AbstractMap.SimpleEntry<String, String> secondEntry = new AbstractMap.SimpleEntry<>("key2", "value2");
 AbstractMap.SimpleEntry<String, String> thirdEntry = new AbstractMap.SimpleEntry<>(firstEntry);
@@ -34,7 +34,7 @@ assertThat(Stream.of(firstEntry, secondEntry, thirdEntry))
 
 就像使用`SimpleEntry`一样，我们可以使用`SimpleImmutableEntry`来创建条目:
 
-```
+```java
 AbstractMap.SimpleImmutableEntry<String, String> firstEntry = new AbstractMap.SimpleImmutableEntry<>("key1", "value1");
 AbstractMap.SimpleImmutableEntry<String, String> secondEntry = new AbstractMap.SimpleImmutableEntry<>("key2", "value2");
 AbstractMap.SimpleImmutableEntry<String, String> thirdEntry = new AbstractMap.SimpleImmutableEntry<>(firstEntry);
@@ -53,7 +53,7 @@ assertThat(Stream.of(firstEntry, secondEntry, thirdEntry))
 
 从版本 9 开始，Java 在`Map` 接口中有一个静态方法`entry()` 来创建一个`Entry`:
 
-```
+```java
 Map.Entry<String, String> entry = Map.entry("key", "value");
 
 assertThat(entry.getKey()).isEqualTo("key");
@@ -70,7 +70,7 @@ assertThat(entry.getValue()).isEqualTo("value");
 
 让我们首先包括我们的 [Maven](https://web.archive.org/web/20220816153818/https://mvnrepository.com/artifact/org.apache.commons/commons-collections4/4.4) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -79,7 +79,7 @@ assertThat(entry.getValue()).isEqualTo("value");
 
 我们应该提到，除了`Entry`接口，这个库还提供了一个名为`KeyValue:`的接口
 
-```
+```java
 Map.Entry<String, String> firstEntry = new DefaultMapEntry<>("key1", "value1");
 KeyValue<String, String> secondEntry = new DefaultMapEntry<>("key2", "value2");
 
@@ -104,7 +104,7 @@ assertThat(Stream.of(secondEntry, thirdEntry, fourthEntry))
 
 `UnmodifiableMapEntry`类也有相同的行为方式:
 
-```
+```java
 Map.Entry<String, String> firstEntry = new UnmodifiableMapEntry<>("key1", "value1");
 KeyValue<String, String> secondEntry = new UnmodifiableMapEntry<>("key2", "value2");
 
@@ -129,7 +129,7 @@ assertThat(Stream.of(secondEntry, thirdEntry, fourthEntry))
 
 让我们首先包括我们的 [Maven](https://web.archive.org/web/20220816153818/https://mvnrepository.com/artifact/com.google.guava/guava/31.0.1-jre) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -138,7 +138,7 @@ assertThat(Stream.of(secondEntry, thirdEntry, fourthEntry))
 
 现在，让我们看看如何使用`immutableEntry()`方法:
 
-```
+```java
 Map.Entry<String, String> firstEntry = Maps.immutableEntry("key1", "value1");
 Map.Entry<String, String> secondEntry = Maps.immutableEntry("key2", "value2");
 
@@ -157,7 +157,7 @@ assertThat(Stream.of(firstEntry, secondEntry))
 
 这意味着只要我们遵守相同的，我们就可以创建我们自己的`Entry`接口的实现。首先，让我们添加一个简单的实现:
 
-```
+```java
 public class SimpleCustomKeyValue<K, V> implements Map.Entry<K, V> {
 
     private final K key;
@@ -175,7 +175,7 @@ public class SimpleCustomKeyValue<K, V> implements Map.Entry<K, V> {
 
 最后，让我们来看几个用法示例:
 
-```
+```java
 Map.Entry<String, String> firstEntry = new SimpleCustomKeyValue<>("key1", "value1");
 
 Map.Entry<String, String> secondEntry = new SimpleCustomKeyValue<>("key2", "value2");

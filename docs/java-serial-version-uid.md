@@ -18,7 +18,7 @@
 
 让我们从创建一个可序列化的类并声明一个`serialVersionUID`标识符开始:
 
-```
+```java
 public class AppleProduct implements Serializable {
 
     private static final long serialVersionUID = 1234567L;
@@ -30,7 +30,7 @@ public class AppleProduct implements Serializable {
 
 接下来，我们需要两个实用程序类:一个将一个`AppleProduct`对象序列化为一个`String,`，另一个从那个`String:`反序列化对象
 
-```
+```java
 public class SerializationUtility {
 
     public static void main(String[] args) {
@@ -55,7 +55,7 @@ public class SerializationUtility {
 }
 ```
 
-```
+```java
 public class DeserializationUtility {
 
     public static void main(String[] args) {
@@ -94,7 +94,7 @@ public class DeserializationUtility {
 
 生成的输出应该如下所示:
 
-```
+```java
 Serialized AppleProduct object to string:
 rO0ABXNyACljb20uYmFlbGR1bmcuZGVzZXJpYWxpemF0aW9uLkFwcGxlUHJvZHVjdAAAAAAAEta
 HAgADTAANaGVhZHBob25lUG9ydHQAEkxqYXZhL2xhbmcvU3RyaW5nO0wADmxpZ2h0ZW5pbmdQb3
@@ -102,7 +102,7 @@ J0cQB+AAFMAA90aHVuZGVyYm9sdFBvcnRxAH4AAXhwdAARaGVhZHBob25lUG9ydDIwMjBwdAATd
 Gh1bmRlcmJvbHRQb3J0MjAyMA==
 ```
 
-```
+```java
 Deserializing AppleProduct...
 Headphone port of AppleProduct:headphonePort2020
 Thunderbolt port of AppleProduct:thunderboltPort2020
@@ -110,7 +110,7 @@ Thunderbolt port of AppleProduct:thunderboltPort2020
 
 **现在，让我们修改`AppleProduct.java,`中的`serialVersionUID`** **常量，并重新尝试反序列化**先前生成的同一字符串中的`AppleProduct`对象。重新运行`DeserializationUtility.java`应该会产生这个输出。
 
-```
+```java
 Deserializing AppleProduct...
 Exception in thread "main" java.io.InvalidClassException: com.baeldung.deserialization.AppleProduct; local class incompatible: stream classdesc serialVersionUID = 1234567, local class serialVersionUID = 7654321
 	at java.io.ObjectStreamClass.initNonProxy(ObjectStreamClass.java:616)
@@ -131,7 +131,7 @@ Exception in thread "main" java.io.InvalidClassException: com.baeldung.deseriali
 
 假设我们需要在现有的`AppleProduct`类中添加一个新字段`lightningPort`:
 
-```
+```java
 public class AppleProduct implements Serializable {
 //...
     public String lightningPort;
@@ -142,14 +142,14 @@ public class AppleProduct implements Serializable {
 
 让我们修改我们的`DeserializationUtility`类来打印这个新字段的值:
 
-```
+```java
 System.out.println("LightningPort port of AppleProduct:"
   + deserializedObj.getLightningPort());
 ```
 
 现在，当我们重新运行`DeserializationUtility`类时，我们将看到类似如下的输出:
 
-```
+```java
 Deserializing AppleProduct...
 Headphone port of AppleProduct:headphonePort2020
 Thunderbolt port of AppleProduct:thunderboltPort2020
@@ -162,27 +162,27 @@ Lightning port of AppleProduct:null
 
 让我们定义一个简单的`Serializable `类:
 
-```
+```java
 public class DefaultSerial implements Serializable {
 }
 ```
 
 如果我们序列化此类的实例，如下所示:
 
-```
+```java
 DefaultSerial instance = new DefaultSerial();
 System.out.println(SerializationUtility.serializeObjectToString(instance));
 ```
 
 这将打印序列化二进制文件的 Base64 摘要:
 
-```
+```java
 rO0ABXNyACpjb20uYmFlbGR1bmcuZGVzZXJpYWxpemF0aW9uLkRlZmF1bHRTZXJpYWx9iVz3Lz/mdAIAAHhw
 ```
 
 就像之前一样，我们应该能够从摘要中反序列化这个实例:
 
-```
+```java
 String digest = "rO0ABXNyACpjb20uYmFlbGR1bmcuZGVzZXJpY" 
   + "WxpemF0aW9uLkRlZmF1bHRTZXJpYWx9iVz3Lz/mdAIAAHhw";
 DefaultSerial instance = (DefaultSerial) DeserializationUtility.deSerializeObjectFromString(digest);
@@ -190,7 +190,7 @@ DefaultSerial instance = (DefaultSerial) DeserializationUtility.deSerializeObjec
 
 **但是，对此类的一些更改可能会破坏序列化兼容性。**例如，如果我们给这个类添加一个`private `字段:
 
-```
+```java
 public class DefaultSerial implements Serializable {
     private String name;
 }
@@ -198,7 +198,7 @@ public class DefaultSerial implements Serializable {
 
 然后尝试将相同的 Base64 摘要反序列化为一个类实例，我们将得到一个`InvalidClassException:`
 
-```
+```java
 Exception in thread "main" java.io.InvalidClassException: 
   com.baeldung.deserialization.DefaultSerial; local class incompatible: 
   stream classdesc serialVersionUID = 9045863543269746292, 

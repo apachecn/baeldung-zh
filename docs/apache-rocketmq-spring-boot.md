@@ -10,7 +10,7 @@
 
 对于 Maven 项目，我们需要添加 [RocketMQ Spring Boot 启动器](https://web.archive.org/web/20220926190008/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.rocketmq%22%20AND%20a%3A%22rocketmq-spring-boot-starter%22)依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.rocketmq</groupId>
     <artifactId>rocketmq-spring-boot-starter</artifactId>
@@ -24,7 +24,7 @@
 
 首先，让我们在`application.properties`中设置我们的服务器位置和组名:
 
-```
+```java
 rocketmq.name-server=127.0.0.1:9876
 rocketmq.producer.group=cart-producer-group
 ```
@@ -33,7 +33,7 @@ rocketmq.producer.group=cart-producer-group
 
 现在，为了简单起见，我们将创建一个`CommandLineRunner`应用程序，并在应用程序启动期间生成几个事件:
 
-```
+```java
 @SpringBootApplication
 public class CartEventProducer implements CommandLineRunner {
 
@@ -54,7 +54,7 @@ public class CartEventProducer implements CommandLineRunner {
 
 `CartItemEvent`只包含两个属性——商品的 id 和数量:
 
-```
+```java
 class CartItemEvent {
     private String itemId;
     private int quantity;
@@ -69,7 +69,7 @@ class CartItemEvent {
 
 消费 RocketMQ 消息就像创建一个用`@RocketMQMessageListener`注释的 Spring 组件并实现`RocketMQListener`接口一样简单:
 
-```
+```java
 @SpringBootApplication
 public class CartEventConsumer {
 
@@ -113,7 +113,7 @@ public class CartEventConsumer {
 
 例如，它可用于验证我们的消息是否成功发送或获取其 id:
 
-```
+```java
 public void run(String... args) throws Exception { 
     SendResult addBikeResult = rocketMQTemplate.syncSend("cart-item-add-topic", 
       new CartItemEvent("bike", 1)); 
@@ -132,7 +132,7 @@ public void run(String... args) throws Exception {
 
 我们可以用`asyncSend`来做这件事，它接受一个`SendCallback` 作为参数并立即返回:
 
-```
+```java
 rocketMQTemplate.asyncSend("cart-item-add-topic", new CartItemEvent("bike", 1), new SendCallback() {
     @Override
     public void onSuccess(SendResult sendResult) {
@@ -156,14 +156,14 @@ rocketMQTemplate.asyncSend("cart-item-add-topic", new CartItemEvent("bike", 1), 
 
 RocketMQ 为我们提供了在一个事务中发送消息的能力。我们可以通过使用 `sendInTransaction()`方法来实现:
 
-```
+```java
 MessageBuilder.withPayload(new CartItemEvent("bike", 1)).build();
 rocketMQTemplate.sendMessageInTransaction("test-transaction", "topic-name", msg, null);
 ```
 
 此外，我们必须实现一个`RocketMQLocalTransactionListener`接口:
 
-```
+```java
 @RocketMQTransactionListener(txProducerGroup="test-transaction")
 class TransactionListenerImpl implements RocketMQLocalTransactionListener {
       @Override

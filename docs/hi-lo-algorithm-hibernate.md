@@ -37,7 +37,7 @@ Hi/Lo 算法的主要目的是**创建一系列可以安全用作数据库标识
 
 首先，让我们定义一个要使用的数据库实体:
 
-```
+```java
 @Entity
 public class RestaurantOrder {
     @Id
@@ -60,7 +60,7 @@ public class RestaurantOrder {
 
 为了展示 Hi/Lo 算法的实际应用，我们将在一个循环中保存九个餐馆订单:
 
-```
+```java
 public void persist() {
     Transaction transaction = session.beginTransaction();
 
@@ -81,7 +81,7 @@ public void persist() {
 
 在执行 `persist()`方法期间捕获的休眠日志确认了这些值:
 
-```
+```java
 Hibernate: call next value for hilo_seqeunce
 org.hibernate.id.enhanced.SequenceStructure  - Sequence value obtained: 1
 org.hibernate.event.internal.AbstractSaveEventListener  - Generated identifier: 1, using strategy: org.hibernate.id.enhanced.SequenceStyleGenerator

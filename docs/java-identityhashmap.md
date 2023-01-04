@@ -24,13 +24,13 @@
 
 我们可以使用默认的构造函数创建它:
 
-```
+```java
 IdentityHashMap<String, String> identityHashMap = new IdentityHashMap<>();
 ```
 
 也可以使用初始预期容量来创建:
 
-```
+```java
 IdentityHashMap<Book, String> identityHashMap = new IdentityHashMap<>(10);
 ```
 
@@ -38,7 +38,7 @@ IdentityHashMap<Book, String> identityHashMap = new IdentityHashMap<>(10);
 
 我们也可以使用另一个地图对象来创建它:
 
-```
+```java
 IdentityHashMap<String, String> identityHashMap = new IdentityHashMap<>(otherMap);
 ```
 
@@ -48,7 +48,7 @@ IdentityHashMap<String, String> identityHashMap = new IdentityHashMap<>(otherMap
 
 `put()`方法用于添加一个条目:
 
-```
+```java
 identityHashMap.put("title", "Harry Potter and the Goblet of Fire");
 identityHashMap.put("author", "J. K. Rowling");
 identityHashMap.put("language", "English");
@@ -57,19 +57,19 @@ identityHashMap.put("genre", "Fantasy");
 
 我们还可以使用`putAll()`方法添加其他地图中的所有条目:
 
-```
+```java
 identityHashMap.putAll(otherMap);
 ```
 
 为了检索值，我们使用了`get()`方法:
 
-```
+```java
 String value = identityHashMap.get(key);
 ```
 
 为了更新一个键的值，我们使用`put()`方法:
 
-```
+```java
 String oldTitle = identityHashMap.put("title", "Harry Potter and the Deathly Hallows");
 assertEquals("Harry Potter and the Goblet of Fire", oldTitle);
 ```
@@ -78,7 +78,7 @@ assertEquals("Harry Potter and the Goblet of Fire", oldTitle);
 
 我们可以使用 `remove()`方法删除一个元素:
 
-```
+```java
 identityHashMap.remove("title");
 ```
 
@@ -86,7 +86,7 @@ identityHashMap.remove("title");
 
 我们可以使用`entitySet()`方法遍历所有条目:
 
-```
+```java
 Set<Map.Entry<String, String>> entries = identityHashMap.entrySet();
 for (Map.Entry<String, String> entry: entries) {
     System.out.println(entry.getKey() + ": " + entry.getValue());
@@ -95,7 +95,7 @@ for (Map.Entry<String, String> entry: entries) {
 
 我们还可以使用`the keySet()`方法遍历所有条目:
 
-```
+```java
 for (String key: identityHashMap.keySet()) {
     System.out.println(key + ": " + identityHashMap.get(key));
 }
@@ -118,7 +118,7 @@ for (String key: identityHashMap.keySet()) {
 
 `IdentityHashMap`允许`null`用于键和值:
 
-```
+```java
 IdentityHashMap<String, String> identityHashMap = new IdentityHashMap<>();
 identityHashMap.put(null, "Null Key Accepted");
 identityHashMap.put("Null Value Accepted", null);
@@ -134,7 +134,7 @@ assertEquals(null, identityHashMap.get("Null Value Accepted"));
 
 我们可以使用`Collections`类获得一个同步的地图:
 
-```
+```java
 Map<String, String> synchronizedMap = Collections.synchronizedMap(new IdentityHashMap<String, String>());
 ```
 
@@ -144,7 +144,7 @@ Map<String, String> synchronizedMap = Collections.synchronizedMap(new IdentityHa
 
 用四个属性创建的一个`IdentityHashMap`:
 
-```
+```java
 IdentityHashMap<String, String> identityHashMap = new IdentityHashMap<>();
 identityHashMap.put("title", "Harry Potter and the Goblet of Fire");
 identityHashMap.put("author", "J. K. Rowling");
@@ -154,7 +154,7 @@ identityHashMap.put("genre", "Fantasy");
 
 用相同属性创建的另一个`HashMap`:
 
-```
+```java
 HashMap<String, String> hashMap = new HashMap<>(identityHashMap);
 hashMap.put(new String("genre"), "Drama");
 assertEquals(4, hashMap.size()); 
@@ -164,7 +164,7 @@ assertEquals(4, hashMap.size());
 
 以下代码片段显示了`IdentityHashMap`的不同表现:
 
-```
+```java
 identityHashMap.put(new String("genre"), "Drama");
 assertEquals(5, identityHashMap.size()); 
 ```
@@ -177,7 +177,7 @@ assertEquals(5, identityHashMap.size());
 
 这里我们将一个简单的`Book`类作为可变对象:
 
-```
+```java
 class Book {
     String title;
     int year;
@@ -188,14 +188,14 @@ class Book {
 
 首先，创建了两个`Book`类的可变对象:
 
-```
+```java
 Book book1 = new Book("A Passage to India", 1924);
 Book book2 = new Book("Invisible Man", 1953); 
 ```
 
 以下代码显示了使用`HashMap`的可变键的用法:
 
-```
+```java
 HashMap<Book, String> hashMap = new HashMap<>(10);
 hashMap.put(book1, "A great work of fiction");
 hashMap.put(book2, "won the US National Book Award");
@@ -207,7 +207,7 @@ assertEquals(null, hashMap.get(book2));
 
 下面的代码片段使用了与`IdentityHashMap`相同的可变键:
 
-```
+```java
 IdentityHashMap<Book, String> identityHashMap = new IdentityHashMap<>(10);
 identityHashMap.put(book1, "A great work of fiction");
 identityHashMap.put(book2, "won the US National Book Award");

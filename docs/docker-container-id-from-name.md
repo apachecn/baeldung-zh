@@ -14,7 +14,7 @@ Docker 是一种被广泛采用的集装箱化技术。各种应用程序可以�
 
 让我们创建几个容器作为示例:
 
-```
+```java
 $ docker container run --rm --name web-server-1 -d nginx:alpine
 $ docker container run --rm --name web-server-10 -d nginx:alpine
 $ docker container run --rm --name web-server-11 -d nginx:alpine
@@ -22,7 +22,7 @@ $ docker container run --rm --name web-server-11 -d nginx:alpine
 
 现在，让我们检查这些容器是否已经创建:
 
-```
+```java
 $ docker container ls -a
 CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS     NAMES
 80f1bc1e7feb   nginx:alpine   "/docker-entrypoint.…"   36 seconds ago   Up 36 seconds   80/tcp    web-server-11
@@ -38,7 +38,7 @@ Docker 给每个集装箱分配一个唯一的 ID。完整的容器 ID 是 64 �
 
 让我们使用 Docker 的 [`container ls`](https://web.archive.org/web/20221005204656/https://docs.docker.com/engine/reference/commandline/container_ls/) 子命令来显示短容器 ID:
 
-```
+```java
 $ docker container ls --all --quiet --filter "name=web-server-10"
 acdea168264a
 ```
@@ -49,7 +49,7 @@ acdea168264a
 
 我们也可以使用 [`grep`](/web/20221005204656/https://www.baeldung.com/linux/grep-sed-awk-differences#grep) 和 [`awk`](/web/20221005204656/https://www.baeldung.com/linux/awk-guide) 命令的组合来显示短集装箱 ID:
 
-```
+```java
 $ docker container ls --all | grep web-server-10 | awk '{print $1}'
 acdea168264a
 ```
@@ -64,7 +64,7 @@ acdea168264a
 
 我们可以使用 Docker 的`container ls`子命令来显示完整的容器 ID:
 
-```
+```java
 $ docker container ls --all --quiet --no-trunc --filter "name=web-server-10"
 acdea168264a08f9aaca0dfc82ff3551418dfd22d02b713142a6843caa2f61bf
 ```
@@ -73,14 +73,14 @@ acdea168264a08f9aaca0dfc82ff3551418dfd22d02b713142a6843caa2f61bf
 
 我们可以通过组合使用`grep`和`awk`命令获得相同的结果:
 
-```
+```java
 $ docker container ls --all --no-trunc | grep web-server-10 | awk '{print $1}'
 acdea168264a08f9aaca0dfc82ff3551418dfd22d02b713142a6843caa2f61bf
 ```
 
 Docker 的 [`container inspect`](https://web.archive.org/web/20221005204656/https://docs.docker.com/engine/reference/commandline/container_inspect/) 子命令以 JSON 格式显示容器的详细信息。我们可以用它来显示容器 ID:
 
-```
+```java
 $ docker container inspect web-server-10 --format={{.Id}}
 acdea168264a08f9aaca0dfc82ff3551418dfd22d02b713142a6843caa2f61bf
 ```
@@ -93,7 +93,7 @@ acdea168264a08f9aaca0dfc82ff3551418dfd22d02b713142a6843caa2f61bf
 
 让我们显示`web-server-1`容器的 ID:
 
-```
+```java
 $ docker container ls --all --quiet --filter "name=web-server-1"
 80f1bc1e7feb
 acdea168264a
@@ -104,7 +104,7 @@ acdea168264a
 
 现在，让我们使用带有容器名的正则表达式:
 
-```
+```java
 $ docker container ls --all --quiet --filter "name=^web-server-1$"
 0cbfc6c17009
 ```
@@ -113,7 +113,7 @@ $ docker container ls --all --quiet --filter "name=^web-server-1$"
 
 以类似的方式，我们可以使用带有`grep`命令的`-w`选项来强制执行精确匹配:
 
-```
+```java
 $ docker container ls --all | grep -w web-server-1 | awk '{print $1}'
 0cbfc6c17009
 ```

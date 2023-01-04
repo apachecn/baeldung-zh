@@ -12,7 +12,7 @@
 
 让我们从向我们的`pom.xml`添加以下 Maven 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-text</artifactId>
@@ -40,7 +40,7 @@
 
 让我们看看如何将`String:`中每个单词的第一个字母大写
 
-```
+```java
 @Test
 public void whenCapitalized_thenCorrect() {
     String toBeCapitalized = "to be capitalized!";
@@ -52,7 +52,7 @@ public void whenCapitalized_thenCorrect() {
 
 下面是我们如何检查一个字符串是否包含数组中的所有单词:
 
-```
+```java
 @Test
 public void whenContainsWords_thenCorrect() {
     boolean containsWords = WordUtils
@@ -64,7 +64,7 @@ public void whenContainsWords_thenCorrect() {
 
 `StrSubstitutor`提供了一种从模板构建`Strings`的便捷方式:
 
-```
+```java
 @Test
 public void whenSubstituted_thenCorrect() {
     Map<String, String> substitutes = new HashMap<>();
@@ -84,7 +84,7 @@ public void whenSubstituted_thenCorrect() {
 
 这里有一个快速替换部分`String:`的例子
 
-```
+```java
 @Test
 public void whenReplaced_thenCorrect() {
     StrBuilder strBuilder = new StrBuilder("example StrBuilder!");
@@ -96,7 +96,7 @@ public void whenReplaced_thenCorrect() {
 
 要清除一个`String,`，我们可以简单地通过调用构建器上的`clear()`方法来完成:
 
-```
+```java
 strBuilder.clear();
 ```
 
@@ -110,7 +110,7 @@ strBuilder.clear();
 
 一个`EditScript` 对象持有将一个`String`转换成另一个应该运行的脚本。让我们计算一下为了将一个`String`转换成另一个【】应该进行的单字符修改的数量:
 
-```
+```java
 @Test
 public void whenEditScript_thenCorrect() {
     StringsComparator cmp = new StringsComparator("ABCFGH", "BCDEFG");
@@ -127,7 +127,7 @@ public void whenEditScript_thenCorrect() {
 
 例如，`LongestCommonSubsequence`可用于查找两个`Strings`中的共同字符数:
 
-```
+```java
 @Test
 public void whenCompare_thenCorrect() {
     LongestCommonSubsequence lcs = new LongestCommonSubsequence();
@@ -139,7 +139,7 @@ public void whenCompare_thenCorrect() {
 
 类似地，`LongestCommonSubsequenceDistance`可以用来找出两个`Strings`中不同字符的个数:
 
-```
+```java
 @Test
 public void whenCalculateDistance_thenCorrect() {
     LongestCommonSubsequenceDistance lcsd = new LongestCommonSubsequenceDistance();
@@ -157,7 +157,7 @@ public void whenCalculateDistance_thenCorrect() {
 
 让我们看看如何将一个`String`转换成它的等价 Unicode 文本:
 
-```
+```java
 @Test
 public void whenTranslate_thenCorrect() {
     UnicodeEscaper ue = UnicodeEscaper.above(0);

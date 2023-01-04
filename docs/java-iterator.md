@@ -22,7 +22,7 @@
 
 为简单起见，我们将从一个列表中获取`Iterator`实例:
 
-```
+```java
 List<String> items = ...
 Iterator<String> iter = items.iterator();
 ```
@@ -35,7 +35,7 @@ Iterator<String> iter = items.iterator();
 
 它被设计用作`while`循环中的条件:
 
-```
+```java
 while (iter.hasNext()) {
     // ...
 }
@@ -45,7 +45,7 @@ while (iter.hasNext()) {
 
 `next()`方法可用于跳过下一个元素并获得它:
 
-```
+```java
 String next = iter.next();
 ```
 
@@ -57,7 +57,7 @@ String next = iter.next();
 
 最后，如果我们想要**从集合中移除当前元素，**我们可以使用`remove:`
 
-```
+```java
 iter.remove();
 ```
 
@@ -67,7 +67,7 @@ iter.remove();
 
 现在，我们可以将它们结合起来，看看如何将这三种方法一起用于集合过滤:
 
-```
+```java
 while (iter.hasNext()) {
     String next = iter.next();
     System.out.println(next);
@@ -86,7 +86,7 @@ while (iter.hasNext()) {
 
 从 Java 8 开始，我们有了允许使用 lambdas 处理剩余元素的`forEachRemaining`方法:
 
-```
+```java
 iter.forEachRemaining(System.out::println);
 ```
 
@@ -94,7 +94,7 @@ iter.forEachRemaining(System.out::println);
 
 `ListIterator` 是一个扩展，增加了遍历列表的新功能:
 
-```
+```java
 ListIterator<String> listIterator = items.listIterator(items.size());
 ```
 
@@ -104,7 +104,7 @@ ListIterator<String> listIterator = items.listIterator(items.size());
 
 `ListIterator`可用于向后遍历，因此它提供了`hasNext()`和`next()`的等效物:
 
-```
+```java
 while(listIterator.hasPrevious()) {
     String previous = listIterator.previous();
 }
@@ -114,7 +114,7 @@ while(listIterator.hasPrevious()) {
 
 此外，我们可以遍历索引，而不是实际的元素:
 
-```
+```java
 String nextWithIndex = items.get(listIterator.nextIndex());
 String previousWithIndex = items.get(listIterator.previousIndex());
 ```
@@ -125,7 +125,7 @@ String previousWithIndex = items.get(listIterator.previousIndex());
 
 `add`方法，顾名思义，它允许我们在`next()`返回的项目之前和`previous():` 返回的项目之后添加一个元素
 
-```
+```java
 listIterator.add("FOUR");
 ```
 
@@ -133,7 +133,7 @@ listIterator.add("FOUR");
 
 最后一个值得一提的方法是`set(),` ，它让我们替换在调用`next()`或`previous()`时返回的元素:
 
-```
+```java
 String next = listIterator.next();
 if( "ONE".equals(next)) {
     listIterator.set("SWAPPED");
@@ -146,7 +146,7 @@ if( "ONE".equals(next)) {
 
 我们现在可以把它们结合起来，构成一个完整的例子:
 
-```
+```java
 ListIterator<String> listIterator = items.listIterator();
 while(listIterator.hasNext()) {
     String nextWithIndex = items.get(listIterator.nextIndex());		

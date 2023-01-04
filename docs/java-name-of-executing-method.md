@@ -12,7 +12,7 @@
 
 Java 9 引入了[堆栈审核 API](/web/20221126221330/https://www.baeldung.com/java-9-stackwalking-api) ，以一种懒惰且高效的方式遍历 JVM 堆栈帧。为了找到这个 API 当前执行的方法，我们可以编写一个简单的测试:
 
-```
+```java
 public void givenJava9_whenWalkingTheStack_thenFindMethod() {
     StackWalker walker = StackWalker.getInstance();
     Optional<String> methodName = walker.walk(frames -> frames
@@ -48,7 +48,7 @@ public void givenJava9_whenWalkingTheStack_thenFindMethod() {
 
 我们可以通过使用`getEnclosingMethod()` API 找到正在执行的方法的名称:
 
-```
+```java
 public void givenObject_whenGetEnclosingMethod_thenFindMethod() {
     String methodName = new Object() {}
       .getClass()
@@ -64,7 +64,7 @@ public void givenObject_whenGetEnclosingMethod_thenFindMethod() {
 
 使用一个`Throwable`堆栈跟踪给我们当前正在执行的方法的堆栈跟踪:
 
-```
+```java
 public void givenThrowable_whenGetStacktrace_thenFindMethod() {
     StackTraceElement[] stackTrace = new Throwable().getStackTrace();
 
@@ -78,7 +78,7 @@ public void givenThrowable_whenGetStacktrace_thenFindMethod() {
 
 此外，当前线程的堆栈跟踪(从 JDK 1.5 开始)通常包括正在执行的方法的名称:
 
-```
+```java
 public void givenCurrentThread_whenGetStackTrace_thenFindMethod() {
     StackTraceElement[] stackTrace = Thread.currentThread()
       .getStackTrace();

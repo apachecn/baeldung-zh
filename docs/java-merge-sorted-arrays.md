@@ -53,7 +53,7 @@
 
 现在让我们看看如何实现它:
 
-```
+```java
 public static int[] merge(int[] foo, int[] bar) {
 
     int fooLength = foo.length;
@@ -86,7 +86,7 @@ public static int[] merge(int[] foo, int[] bar) {
 
 让我们进行一个简单的测试:
 
-```
+```java
 @Test
 public void givenTwoSortedArrays_whenMerged_thenReturnMergedSortedArray() {
 

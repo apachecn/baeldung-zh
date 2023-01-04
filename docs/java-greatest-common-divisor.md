@@ -12,7 +12,7 @@
 
 对于我们的第一种方法，我们从 1 迭代到给定的最小数，并检查给定的整数是否能被索引整除。**分割给定数字**的最大指标是给定数字的 GCD:
 
-```
+```java
 int gcdByBruteForce(int n1, int n2) {
     int gcd = 1;
     for (int i = 1; i <= n1 && i <= n2; i++) {
@@ -37,7 +37,7 @@ int gcdByBruteForce(int n1, int n2) {
 
 请注意，在我们的实现中，我们将使用模而不是减法，因为它基本上是一次多次减法:
 
-```
+```java
 int gcdByEuclidsAlgorithm(int n1, int n2) {
     if (n2 == 0) {
         return n1;
@@ -63,7 +63,7 @@ Stein 的算法反复应用以下与 GCD 相关的基本恒等式来求两个非
 
 我们重复步骤 2-4，直到`n1`等于`n2`，或`n1 = 0`。GCD 是`(2^n) * n2`。这里，`n`是在执行步骤 2 时在`n1`和`n2`中发现 2 的次数:
 
-```
+```java
 int gcdBySteinsAlgorithm(int n1, int n2) {
     if (n1 == 0) {
         return n2;

@@ -12,7 +12,7 @@
 
 上传过程的第一部分是创建 jclouds API——这是亚马逊 S3 的自定义 API:
 
-```
+```java
 public AWSS3AsyncClient s3AsyncClient() {
    String identity = ...
    String credentials = ...
@@ -29,7 +29,7 @@ public AWSS3AsyncClient s3AsyncClient() {
 
 亚马逊 S3 上传的每个部分有 5 MB 的限制。因此，我们需要做的第一件事是确定我们可以将内容分成的正确部分数量，这样我们就不会有低于 5 MB 限制的部分:
 
-```
+```java
 public static int getMaximumNumberOfParts(byte[] byteArray) {
    int numberOfParts= byteArray.length / fiveMB; // 5*1024*1024
    if (numberOfParts== 0) {
@@ -43,7 +43,7 @@ public static int getMaximumNumberOfParts(byte[] byteArray) {
 
 我们要把字节数组分成一定数量的部分:
 
-```
+```java
 public static List<byte[]> breakByteArrayIntoParts(byte[] byteArray, int maxNumberOfParts) {
    List<byte[]> parts = Lists.<byte[]> newArrayListWithCapacity(maxNumberOfParts);
    int fullSize = byteArray.length;
@@ -64,7 +64,7 @@ public static List<byte[]> breakByteArrayIntoParts(byte[] byteArray, int maxNumb
 
 我们将**测试**将字节数组分成几部分的逻辑——我们将生成一些字节，分割字节数组，使用番石榴重新组合在一起，并且**验证**我们得到了原始的:
 
-```
+```java
 @Test
 public void given16MByteArray_whenFileBytesAreSplitInto3_thenTheSplitIsCorrect() {
    byte[] byteArray = randomByteData(16);
@@ -81,7 +81,7 @@ public void given16MByteArray_whenFileBytesAreSplitInto3_thenTheSplitIsCorrect()
 
 为了生成数据，我们只需使用来自`Random`的支持:
 
-```
+```java
 byte[] randomByteData(int mb) {
    byte[] randomBytes = new byte[mb * 1024 * 1024];
    new Random().nextBytes(randomBytes);
@@ -93,7 +93,7 @@ byte[] randomByteData(int mb) {
 
 既然我们已经为我们的内容确定了正确的部分数量，并且我们成功地将内容分成了多个部分，我们需要**为 jclouds API 生成有效负载对象**:
 
-```
+```java
 public static List<Payload> createPayloadsOutOfParts(Iterable<byte[]> fileParts) {
    List<Payload> payloads = Lists.newArrayList();
    for (byte[] filePart : fileParts) {
@@ -119,7 +119,7 @@ public static List<Payload> createPayloadsOutOfParts(Iterable<byte[]> fileParts)
 
 上传操作的第一步是**启动流程**。这个对 S3 的请求必须包含标准的 HTTP 头——`Content`—`MD5`头尤其需要计算。我们将在这里使用 Guava 哈希函数支持:
 
-```
+```java
 Hashing.md5().hashBytes(byteArray).asBytes();
 ```
 
@@ -127,7 +127,7 @@ Hashing.md5().hashBytes(byteArray).asBytes();
 
 为了**启动上传**，以及与 S3 的所有进一步交互，我们将使用 AWS S3 async client——我们之前创建的异步 API:
 
-```
+```java
 ObjectMetadata metadata = ObjectMetadataBuilder.create().key(key).contentMD5(md5Bytes).build();
 String uploadId = s3AsyncApi.initiateMultipartUpload(container, metadata).get();
 ```
@@ -142,7 +142,7 @@ String uploadId = s3AsyncApi.initiateMultipartUpload(container, metadata).get();
 
 下一步是**上传零件**。我们这里的目标是并行发送这些请求**，因为上传部分操作代表了大部分的上传过程:**
 
-```
+```java
 List<ListenableFuture<String>> ongoingOperations = Lists.newArrayList();
 for (int partNumber = 0; partNumber < filePartsAsByteArrays.size(); partNumber++) {
    ListenableFuture<String> future = s3AsyncApi.uploadPart(
@@ -155,7 +155,7 @@ for (int partNumber = 0; partNumber < filePartsAsByteArrays.size(); partNumber++
 
 在提交了所有上传部分请求之后，我们需要**等待它们的响应**，以便我们可以收集每个部分的单独 ETag 值:
 
-```
+```java
 Function<ListenableFuture<String>, String> getEtagFromOp = 
   new Function<ListenableFuture<String>, String>() {
    public String apply(ListenableFuture<String> ongoingOperation) {
@@ -175,7 +175,7 @@ List<String> etagsOfParts = Lists.transform(ongoingOperations, getEtagFromOp);
 
 上传过程的最后一步是**完成多部分操作**。S3 API 需要来自之前上传的部分的响应作为一个`Map`，我们现在可以很容易地从上面获得的 ETags 列表中创建它:
 
-```
+```java
 Map<Integer, String> parts = Maps.newHashMap();
 for (int i = 0; i < etagsOfParts.size(); i++) {
    parts.put(i + 1, etagsOfParts.get(i));
@@ -184,7 +184,7 @@ for (int i = 0; i < etagsOfParts.size(); i++) {
 
 最后，发送完整的请求:
 
-```
+```java
 s3AsyncApi.completeMultipartUpload(container, key, uploadId, parts).get();
 ```
 

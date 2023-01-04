@@ -26,13 +26,13 @@
 
 为了升级到最新的 Jenkins 版本，我们需要首先下载最新的 WAR 文件。我们可以使用 [`wget`](/web/20221223065112/https://www.baeldung.com/linux/tag/wget) 命令下载最新的詹金斯战争文件:
 
-```
+```java
 $ wget https://updates.jenkins-ci.org/latest/jenkins.war
 ```
 
 以上命令将下载最新的 Jenkins WAR 文件。或者，我们可以从[全球库](https://web.archive.org/web/20221223065112/https://updates.jenkins-ci.org/download/war/)下载任何 Jenkins 版本。让我们下载詹金斯的版本`2.375.1`:
 
-```
+```java
 $ wget https://updates.jenkins-ci.org/download/war/2.375.1/jenkins.war
 ```
 
@@ -50,13 +50,13 @@ $ wget https://updates.jenkins-ci.org/download/war/2.375.1/jenkins.war
 
 在上图中，**我们可以看到詹金斯战争文件在`executable-war`地产**中的位置。在我们升级 Jenkins 服务器之前，**让我们停止服务器以确保升级过程顺利**:
 
-```
+```java
 $ sudo systemctl stop jenkins
 ```
 
 一旦服务器停止，我们可以将新的`jenkins.war`移动到`/usr/share/jenkins/`目录。在移动`jenkins.war` 文件`,`之前，我们需要[更改其权限](/web/20221223065112/https://www.baeldung.com/linux/chown-chmod-permissions):
 
-```
+```java
 $ cd /download
 $ chown root:root jenkins.war
 $ chmod 644 jenkins.war
@@ -64,19 +64,19 @@ $ chmod 644 jenkins.war
 
 现在，**我们将`jenkins.war`文件从`executable-war`移动到**目录中:
 
-```
+```java
 $ sudo mv /download/jenkins.war /usr/share/jenkins/
 ```
 
 为了看到变化，我们需要启动 Jenkins 服务器:
 
-```
+```java
 $ sudo systemctl start jenkins
 ```
 
 让我们看一下检查 Jenkins 服务器状态的命令:
 
-```
+```java
 $ systemctl status jenkins
 ● jenkins.service - Jenkins Continuous Integration Server
    Loaded: loaded (/usr/lib/systemd/system/jenkins.service; enabled; vendor preset: disabled)

@@ -12,7 +12,7 @@ Moshi 的 API 比其他库(如 Jackson 或 Gson)要小，但没有牺牲功能�
 
 在使用它之前，我们首先需要将 [Moshi JSON 依赖项](https://web.archive.org/web/20221022081830/https://search.maven.org/search?q=g:com.squareup.moshi)添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.squareup.moshi</groupId>
     <artifactId>moshi</artifactId>
@@ -33,7 +33,7 @@ Moshi 允许我们将任何 Java 值转换成 JSON，并在我们出于任何原
 
 Moshi 使用一个`JsonAdapter`类的概念。这是一种类型安全机制，用于将特定的类序列化为 JSON 字符串，并将 JSON 字符串反序列化回正确的类型:
 
-```
+```java
 public class Post {
     private String title;
     private String author;
@@ -47,7 +47,7 @@ JsonAdapter<Post> jsonAdapter = moshi.adapter(Post.class);
 
 一旦我们构建了我们的`JsonAdapter`，我们可以在任何需要的时候使用它，以便使用`toJson()` 方法将我们的值转换成 JSON:
 
-```
+```java
 Post post = new Post("My Post", "Baeldung", "This is my post");
 String json = jsonAdapter.toJson(post);
 // {"author":"Baeldung","text":"This is my post","title":"My Post"}
@@ -55,7 +55,7 @@ String json = jsonAdapter.toJson(post);
 
 当然，我们可以用相应的`fromJson()`方法将 JSON 转换回预期的 Java 类型:
 
-```
+```java
 Post post = jsonAdapter.fromJson(json);
 // new Post("My Post", "Baeldung", "This is my post");
 ```
@@ -80,7 +80,7 @@ Moshi 内置了对标准 Java 类型的支持，完全按照预期在 JSON 之�
 
 在使用这些支持之前，需要向一个`Moshi`实例注册它们。当我们添加对我们自己的自定义类型的支持时，我们很快就会看到这种确切的模式:
 
-```
+```java
 Moshi moshi = new Moshi.builder()
   .add(new Rfc3339DateJsonAdapter())
   .add(CurrencyCode.class, EnumJsonAdapter.create(CurrencyCode.class).withUnknownFallback(CurrencyCode.USD))
@@ -99,7 +99,7 @@ Moshi moshi = new Moshi.builder()
 
 例如，假设我们有一个表示文章作者的 Java 类型:
 
-```
+```java
 public class Author {
     private String name;
     private String email;
@@ -111,7 +111,7 @@ public class Author {
 
 我们通过编写一个包含用`@ToJson`注释的方法的标准类来做到这一点:
 
-```
+```java
 public class AuthorAdapter {
     @ToJson
     public String toJson(Author author) {
@@ -122,7 +122,7 @@ public class AuthorAdapter {
 
 显然，我们也需要走另一条路。我们需要将字符串解析回我们的`Author`对象。这是通过添加一个用`@FromJson`注释的方法来实现的:
 
-```
+```java
 @FromJson
 public Author fromJson(String author) {
     Pattern pattern = Pattern.compile("^(.*) <(.*)>$");
@@ -133,7 +133,7 @@ public Author fromJson(String author) {
 
 一旦完成，我们需要实际利用这一点。我们在创建我们的`Moshi`时通过将适配器添加到我们的`Moshi.Builder`中来实现这一点:
 
-```
+```java
 Moshi moshi = new Moshi.Builder()
   .add(new AuthorAdapter())
   .build();
@@ -142,7 +142,7 @@ JsonAdapter<Post> jsonAdapter = moshi.adapter(Post.class);
 
 现在我们可以立即开始将这些对象与 JSON 相互转换，并获得我们想要的结果:
 
-```
+```java
 Post post = new Post("My Post", new Author("Baeldung", "[[email protected]](/web/20221022081830/https://www.baeldung.com/cdn-cgi/l/email-protection)"), "This is my post");
 String json = jsonAdapter.toJson(post);
 // {"author":"Baeldung <[[email protected]](/web/20221022081830/https://www.baeldung.com/cdn-cgi/l/email-protection)>","text":"This is my post","title":"My Post"}
@@ -159,7 +159,7 @@ Post post = jsonAdapter.fromJson(json);
 
 使用 Moshi，我们所要做的就是编写一个表示所需输出的 Java 类型，然后我们的`@ToJson`方法可以返回这个新的 Java 对象，Moshi 将使用它的标准规则将它转换成 JSON:
 
-```
+```java
 public class JsonDateTime {
     private String date;
     private String time;
@@ -180,7 +180,7 @@ public class JsonDateTimeAdapter {
 
 正如我们所料，通过编写一个`@FromJson`方法来实现另一种方式，该方法接受我们新的 JSON 结构化类型并返回我们想要的类型:
 
-```
+```java
 @FromJson
 public ZonedDateTime fromJson(JsonDateTime input) {
     LocalDate date = LocalDate.parse(input.getDate());
@@ -192,7 +192,7 @@ public ZonedDateTime fromJson(JsonDateTime input) {
 
 然后，我们能够完全像上面那样使用它将我们的`ZonedDateTime`转换成我们的结构化输出，然后再转换回来:
 
-```
+```java
 Moshi moshi = new Moshi.Builder()
   .add(new JsonDateTimeAdapter())
   .build();
@@ -213,7 +213,7 @@ ZonedDateTime now = jsonAdapter.fromJson(json);
 
 Moshi 允许我们通过使用一个特殊的注释来实现这一点，然后我们可以将它应用于我们的字段和适配器:
 
-```
+```java
 @Retention(RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @JsonQualifier
@@ -224,7 +224,7 @@ public @interface EpochMillis {}
 
 接下来，我们需要编写一个适配器。像往常一样，我们有一个`@FromJson`和一个`@ToJson`方法在我们的类型和 JSON 之间进行转换:
 
-```
+```java
 public class EpochMillisAdapter {
     @ToJson
     public Long toJson(@EpochMillis Instant input) {
@@ -242,7 +242,7 @@ public class EpochMillisAdapter {
 
 Moshi 现在可以使用这个适配器或任何同样标注了`@EpochMillis`的字段:
 
-```
+```java
 public class Post {
     private String title;
     private String author;
@@ -253,7 +253,7 @@ public class Post {
 
 现在，我们可以根据需要将带注释的类型转换成 JSON，或者反过来:
 
-```
+```java
 Moshi moshi = new Moshi.Builder()
   .add(new EpochMillisAdapter())
   .build();
@@ -276,7 +276,7 @@ Post post = jsonAdapter.fromJson(json);
 
 我们可以使用`@Json`注释为我们控制的任何 bean 中的任何字段赋予一个新名称:
 
-```
+```java
 public class Post {
     private String title;
     @Json(name = "authored_by")
@@ -287,7 +287,7 @@ public class Post {
 
 一旦我们这样做了，Moshi 立即意识到这个字段在 JSON 中有一个不同的名称:
 
-```
+```java
 Moshi moshi = new Moshi.Builder()
   .build();
 JsonAdapter<Post> jsonAdapter = moshi.adapter(Post.class);
@@ -305,7 +305,7 @@ Post post = jsonAdapter.fromJson(json);
 
 在某些情况下，我们可能有不应该包含在 JSON 中的字段。Moshi 使用标准的`transient`限定符来表示这些字段不会被序列化或反序列化:
 
-```
+```java
 public static class Post {
     private String title;
     private transient String author;
@@ -315,7 +315,7 @@ public static class Post {
 
 然后我们会看到，在序列化和反序列化时，该字段都被完全忽略:
 
-```
+```java
 Moshi moshi = new Moshi.Builder()
   .build();
 JsonAdapter<Post> jsonAdapter = moshi.adapter(Post.class);
@@ -340,7 +340,7 @@ Post post = jsonAdapter.fromJson("{\"author\":\"Baeldung\",\"title\":\"My Post\"
 
 这将允许我们在 JSON 被序列化之前预先填充 bean，为我们的字段提供任何必需的默认值:
 
-```
+```java
 public class Post {
     private String title;
     private String author;
@@ -355,7 +355,7 @@ public class Post {
 
 如果我们解析的 JSON 缺少`title`或`author`字段，那么这些字段将以值`null`结束。如果我们缺少`posted`字段，那么它将具有当前日期和时间:
 
-```
+```java
 Moshi moshi = new Moshi.Builder()
   .build();
 JsonAdapter<Post> jsonAdapter = moshi.adapter(Post.class);
@@ -373,7 +373,7 @@ Post post = jsonAdapter.fromJson(json);
 
 Moshi 提供了一些帮助来构建一个`java.lang.reflect.Type`，当我们构建它时，我们可以将它提供给`JsonAdapter`,这样我们就可以提供这个额外的通用信息:
 
-```
+```java
 Moshi moshi = new Moshi.Builder()
   .build();
 Type type = Types.newParameterizedType(List.class, String.class);
@@ -382,7 +382,7 @@ JsonAdapter<List<String>> jsonAdapter = moshi.adapter(type);
 
 完成后，我们的适配器完全按照预期工作，遵循这些新的通用界限:
 
-```
+```java
 String json = jsonAdapter.toJson(Arrays.asList("One", "Two", "Three"));
 // ["One", "Two", "Three"]
 

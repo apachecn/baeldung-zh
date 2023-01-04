@@ -14,13 +14,13 @@ Jenkins 是一个开源的持续集成服务器，它能够为特定的任务/�
 
 只需从 shell 中运行以下命令:
 
-```
+```java
 mvn archetype:generate -Dfilter=io.jenkins.archetypes:plugin
 ```
 
 我们将得到以下输出:
 
-```
+```java
 [INFO] Generating project in Interactive mode
 [INFO] No archetype defined. Using maven-archetype-quickstart
   (org.apache.maven.archetypes:maven-archetype-quickstart:1.0)
@@ -56,7 +56,7 @@ Jenkins 提供了许多扩展点。这些是接口或抽象类，它们为特定
 
 首先，我们在插件中定义一个静态内部类，并使用`hudson.Extension`注释对其进行标记:
 
-```
+```java
 class MyPlugin extends BuildWrapper {
     @Extension
     public static class DescriptorImpl 
@@ -81,7 +81,7 @@ class MyPlugin extends BuildWrapper {
 
 例如，考虑一下 [Maven 插件](https://web.archive.org/web/20220627080458/https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/tasks/Maven.java#L177):
 
-```
+```java
 @DataBoundConstructor
 public Maven(
   String targets,
@@ -107,7 +107,7 @@ public Maven(
 
 让我们来实现它:
 
-```
+```java
 class ProjectStatsBuildWrapper extends BuildWrapper {
 
     @DataBoundConstructor
@@ -141,7 +141,7 @@ class ProjectStatsBuildWrapper extends BuildWrapper {
 
 让我们为项目统计定义一个域类:
 
-```
+```java
 class ProjectStats {
 
     private int classesNumber;
@@ -153,7 +153,7 @@ class ProjectStats {
 
 并编写构建数据的代码:
 
-```
+```java
 private ProjectStats buildStats(FilePath root)
   throws IOException, InterruptedException {
 
@@ -176,7 +176,7 @@ private ProjectStats buildStats(FilePath root)
 
 最后，我们需要向最终用户显示统计数据。让我们为此创建一个 HTML 模板:
 
-```
+```java
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -201,7 +201,7 @@ Project $PROJECT_NAME$:
 
 并在构建过程中填充它:
 
-```
+```java
 public class ProjectStatsBuildWrapper extends BuildWrapper {
     @Override
     public Environment setUp(
@@ -239,13 +239,13 @@ public class ProjectStatsBuildWrapper extends BuildWrapper {
 
 现在，让我们构建我们的插件:
 
-```
+```java
 mvn install
 ```
 
 这将在`target`目录中创建一个`*.hpi`文件。我们需要将它复制到 Jenkins 插件目录中(默认为`~/.jenkins/plugin` ):
 
-```
+```java
 cp ./target/jenkins-hello-world.hpi ~/.jenkins/plugins/
 ```
 

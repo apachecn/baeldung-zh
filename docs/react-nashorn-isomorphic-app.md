@@ -63,7 +63,7 @@ React 解析这个层次结构，并创建一个名为虚拟 DOM 的内存数据
 
 让我们创建第一个 React 组件:
 
-```
+```java
 var App = React.createClass({displayName: "App",
     handleSubmit: function() {
     	var last = this.state.data[this.state.data.length-1];
@@ -114,7 +114,7 @@ var App = React.createClass({displayName: "App",
 
 React 在 HTML 页面中寻找一个名为“div”的元素来锚定其内容。我们所要做的就是提供一个带有“div”元素的 HTML 页面，并加载 JS 文件:
 
-```
+```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -151,7 +151,7 @@ React 在 HTML 页面中寻找一个名为“div”的元素来锚定其内容�
 
 对于我们的简单应用程序，我们将结合使用 JSP 和 Spring MVC，因此我们将向 POM 添加几个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -169,7 +169,7 @@ React 在 HTML 页面中寻找一个名为“div”的元素来锚定其内容�
 
 现在让我们创建我们的 web 控制器，它将处理我们的 JavaScript 文件并使用 JSP 返回一个 HTML:
 
-```
+```java
 @Controller
 public class MyWebController {
     @RequestMapping("/")
@@ -205,7 +205,7 @@ public class MyWebController {
 
 让我们看看 JSP 现在是什么样子:
 
-```
+```java
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -233,7 +233,7 @@ public class MyWebController {
 
 最后，我们还需要一个服务器端 REST 端点，它给出序列中的下一个斐波那契数:
 
-```
+```java
 @RestController
 public class MyRestController {
     @RequestMapping("/next/{last}/{secondLast}")
@@ -253,7 +253,7 @@ public class MyRestController {
 
 我们应该使用引导类正常启动 Spring Boot 应用程序:
 
-```
+```java
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
     @Override

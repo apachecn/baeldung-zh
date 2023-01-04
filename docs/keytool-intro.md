@@ -18,7 +18,7 @@ Java 在其版本中包含了`keytool`实用程序。我们用它来**管理** *
 
 为了让**生成证书**，我们将打开一个命令行提示符并使用带有`-genkeypair`选项的`keytool`命令:
 
-```
+```java
 keytool -genkeypair -alias <alias> -keypass <keypass> -validity <validity> -storepass <storepass>
 ```
 
@@ -31,13 +31,13 @@ keytool -genkeypair -alias <alias> -keypass <keypass> -validity <validity> -stor
 
 例如，让我们生成一个名为`“cert1”`的证书，它的私钥为`“pass123”`，有效期为一年。我们还将指定`“stpass123”`作为密钥库密码:
 
-```
+```java
 keytool -genkeypair -alias cert1 -keypass pass123 -validity 365 -storepass stpass123
 ```
 
 执行该命令后，它会要求我们提供一些信息:
 
-```
+```java
 What is your first and last name?
   [Unknown]:  Name
 What is the name of your organizational unit?
@@ -64,13 +64,13 @@ Is CN=Name, OU=Unit, O=Company, L=City, ST=State, C=US correct?
 
 接下来，我们将学习如何**查看存储在我们的密钥库中的证书**。为此，我们将使用`-list`选项:
 
-```
+```java
 keytool -list -storepass <storepass> 
 ```
 
 所执行命令的输出将显示我们创建的证书:
 
-```
+```java
 Keystore type: JKS
 Keystore provider: SUN
 
@@ -82,13 +82,13 @@ Certificate fingerprint (SHA1): 0B:3F:98:2E:A4:F7:33:6E:C4:2E:29:72:A7:17:E0:F5:
 
 如果我们想要获得具体证书的**信息，我们只需要在命令中包含` -alias`选项。为了获得比默认提供的更多的信息，我们还将添加`-v` (verbose)选项:**
 
-```
+```java
 keytool -list -v -alias <alias> -storepass <storepass> 
 ```
 
 这将为我们提供与请求的证书相关的所有信息:
 
-```
+```java
 Alias name: cert1
 Creation date: 02-ago-2020
 Entry type: PrivateKeyEntry
@@ -123,19 +123,19 @@ KeyIdentifier [
 
 例如，我们可以**删除我们从密钥库中创建的证书**:
 
-```
+```java
 keytool -delete -alias <alias> -storepass <storepass>
 ```
 
 另一个例子是，我们甚至能够**改变证书**的别名:
 
-```
+```java
 keytool -changealias -alias <alias> -destalias <new_alias> -keypass <keypass> -storepass <storepass>
 ```
 
 最后，为了获得关于该工具的更多信息，我们可以**通过命令行请求帮助**:
 
-```
+```java
 keytool -help
 ```
 

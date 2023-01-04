@@ -36,7 +36,7 @@ Java 10 中有一些与不可修改集合相关的变化。
 
 它返回给定`Collection:`的不可修改副本
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public void whenModifyCopyOfList_thenThrowsException() {
     List<Integer> copyList = List.copyOf(someIntList);
@@ -50,7 +50,7 @@ public void whenModifyCopyOfList_thenThrowsException() {
 
 `java.util.stream.Collectors `获得额外的方法将一个`Stream `收集成不可修改的`List`、`Map `或`Set`:
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public void whenModifyToUnmodifiableList_thenThrowsException() {
     List<Integer> evenList = someIntList.stream()
@@ -66,7 +66,7 @@ public void whenModifyToUnmodifiableList_thenThrowsException() {
 
 `java.util.Optional`、`java.util.OptionalDouble`、`java.util.OptionalInt`和`java.util.OptionalLong`各自得到了一个新方法`orElseThrow()`，该方法不接受任何参数，如果没有值，则抛出`NoSuchElementException`:
 
-```
+```java
 @Test
 public void whenListContainsInteger_OrElseThrowReturnsInteger() {
     Integer firstEven = someIntList.stream()
@@ -91,19 +91,19 @@ JVM 现在意识到正在 Docker 容器中运行，并将提取特定于容器�
 
 但是，这种支持仅适用于基于 Linux 的平台。这种新的支持是默认启用的，可以在命令行中使用 JVM 选项禁用:
 
-```
+```java
 -XX:-UseContainerSupport
 ```
 
 此外，此更改还添加了一个 JVM 选项，该选项提供了指定 JVM 将使用的 CPU 数量的能力:
 
-```
+```java
 -XX:ActiveProcessorCount=count
 ```
 
 此外，还添加了三个新的 JVM 选项，允许 Docker 容器用户对将用于 Java 堆的系统内存量进行更细粒度的控制:
 
-```
+```java
 -XX:InitialRAMPercentage
 -XX:MaxRAMPercentage
 -XX:MinRAMPercentage
@@ -144,7 +144,7 @@ cacerts 密钥库最初是空的，它旨在包含一组根证书，这些证书
 
 **`java -version `现在将包含正式发布日期**，从而更容易识别该版本的发布时间:
 
-```
+```java
 $ java -version
 openjdk version "10" 2018-03-20
 OpenJDK Runtime Environment 18.3 (build 10+46)

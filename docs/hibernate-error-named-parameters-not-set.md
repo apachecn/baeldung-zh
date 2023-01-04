@@ -21,7 +21,7 @@
 
 让我们看一个使用命名参数的查询示例:
 
-```
+```java
 Query<Event> query = session.createQuery("from Event E WHERE E.title = :eventTitle", Event.class);
 ```
 
@@ -29,13 +29,13 @@ Query<Event> query = session.createQuery("from Event E WHERE E.title = :eventTit
 
 但是，如果我们试图在不设置值的情况下执行查询:`eventTitle`:
 
-```
+```java
 List<Event> listOfEvents = query.list();
 ```
 
 当我们运行 Hibernate 时，它会抛出`org.hibernate.QueryException`，我们会得到错误:
 
-```
+```java
 Not all named parameters have been set
 ```
 
@@ -43,7 +43,7 @@ Not all named parameters have been set
 
 为了修复错误，我们只需在执行查询之前为命名参数提供一个值:
 
-```
+```java
 Query<Event> query = session.createQuery("from Event E WHERE E.title = :eventTitle", Event.class);
 query.setParameter("eventTitle", "Event 1");
 

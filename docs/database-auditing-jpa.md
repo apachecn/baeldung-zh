@@ -20,7 +20,7 @@ JPA 没有明确包含审计 API，但是我们可以通过使用实体生命周
 
 在 JPA `Entity`类中，我们可以指定一个方法作为回调，我们可以在特定的实体生命周期事件中调用它。由于我们对在相应的 DML 操作之前执行的回调感兴趣，因此`@PrePersist`、`@PreUpdate`和`@PreRemove`回调注释可用于我们的目的:
 
-```
+```java
 @Entity
 public class Bar {
 
@@ -48,7 +48,7 @@ public class Bar {
 
 在没有审计框架的情况下，我们必须手动维护数据库模式和域模型。对于我们的简单用例，让我们向实体添加两个新属性，因为我们只能管理“实体的非关系状态”一个`operation` 属性将存储所执行操作的名称，一个`timestamp`属性用于操作的时间戳:
 
-```
+```java
 @Entity
 public class Bar {
 
@@ -91,13 +91,13 @@ public class Bar {
 
 如果我们需要将这样的审计添加到多个类中，我们可以使用`@EntityListeners`来集中代码:
 
-```
+```java
 @EntityListeners(AuditListener.class)
 @Entity
 public class Bar { ... }
 ```
 
-```
+```java
 public class AuditListener {
 
     @PrePersist
@@ -116,7 +116,7 @@ public class AuditListener {
 
 要设置 Envers，我们需要将`hibernate-envers` JAR 添加到我们的类路径中:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-envers</artifactId>
@@ -126,7 +126,7 @@ public class AuditListener {
 
 然后我们在一个`@Entity`(审计整个实体)或特定的`@Column`(如果我们只需要审计特定的属性)上添加`@Audited`注释:
 
-```
+```java
 @Entity
 @Audited
 public class Bar { ... }
@@ -134,7 +134,7 @@ public class Bar { ... }
 
 注意`Bar`和`Foo`是一对多的关系。在这种情况下，我们或者需要通过在`Foo,`上添加`@Audited`来审计`Foo`，或者在`Bar`中的关系属性上设置`@NotAudited`:
 
-```
+```java
 @OneToMany(mappedBy = "bar")
 @NotAudited
 private Set<Foo> fooSet;
@@ -161,7 +161,7 @@ private Set<Foo> fooSet;
 
 例如，让我们将审计表后缀(默认为“`_AUD`”)更改为“`_AUDIT_LOG.`”，下面是我们如何设置相应属性`org.hibernate.envers.audit_table_suffix`的值:
 
-```
+```java
 Properties hibernateProperties = new Properties(); 
 hibernateProperties.setProperty(
   "org.hibernate.envers.audit_table_suffix", "_AUDIT_LOG"); 
@@ -174,20 +174,20 @@ sessionFactory.setHibernateProperties(hibernateProperties);
 
 我们可以像通过 Hibernate Criteria API 查询数据一样查询历史数据。我们可以使用`AuditReader`接口访问一个实体的审计历史，这可以通过打开`EntityManager`或者通过`AuditReaderFactory`使用`Session`来获得:
 
-```
+```java
 AuditReader reader = AuditReaderFactory.get(session);
 ```
 
 Envers 提供了`AuditQueryCreator`(由`AuditReader.createQuery()`返回)以便创建特定于审计的查询。下面的行将返回在修订#2 中修改的所有`Bar`实例(其中`bar_AUDIT_LOG.REV = 2`):
 
-```
+```java
 AuditQuery query = reader.createQuery()
   .forEntitiesAtRevision(Bar.class, 2)
 ```
 
 下面是我们如何查询`Bar`的修订。这将导致获得所有被审计的`Bar`实例在其所有状态下的列表:
 
-```
+```java
 AuditQuery query = reader.createQuery()
   .forRevisionsOfEntity(Bar.class, true, true);
 ```
@@ -196,7 +196,7 @@ AuditQuery query = reader.createQuery()
 
 然后我们可以使用`AuditEntity`工厂类指定约束:
 
-```
+```java
 query.addOrder(AuditEntity.revisionNumber().desc());
 ```
 
@@ -210,7 +210,7 @@ Spring Data JPA 是一个框架，它通过在 JPA 提供者之上添加一个�
 
 首先，我们希望通过注释配置来启用审计。为了做到这一点，我们在我们的`@Configuration`类中添加了`@EnableJpaAuditing`:
 
-```
+```java
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories
@@ -222,7 +222,7 @@ public class PersistenceConfig { ... }
 
 正如我们已经知道的，JPA 提供了`@EntityListeners`注释来指定回调监听器类。Spring Data 提供了自己的 JPA 实体监听器类，`AuditingEntityListener`。因此，让我们为`Bar`实体指定监听器:
 
-```
+```java
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class Bar { ... }
@@ -234,7 +234,7 @@ public class Bar { ... }
 
 接下来，我们将向我们的`Bar`实体添加两个新属性，用于存储创建日期和最后修改日期。属性由`@CreatedDate`和`@LastModifiedDate`注释相应地进行注释，并且它们的值被自动设置:
 
-```
+```java
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class Bar {
@@ -260,7 +260,7 @@ public class Bar {
 
 如果我们的应用程序使用了 Spring Security，我们就可以跟踪更改的时间和人员:
 
-```
+```java
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class Bar {
@@ -282,7 +282,7 @@ public class Bar {
 
 用 `@CreatedBy`和`@LastModifiedBy`标注的列由创建或最后修改实体的主体的名称填充。信息来自`SecurityContext`的`Authentication`实例。如果我们想要定制被设置到注释字段的值，我们可以实现`AuditorAware<T>`接口:
 
-```
+```java
 public class AuditorAwareImpl implements AuditorAware<String> {
 
     @Override
@@ -295,7 +295,7 @@ public class AuditorAwareImpl implements AuditorAware<String> {
 
 为了配置应用程序使用`AuditorAwareImpl`来查找当前主体，我们声明了一个`AuditorAware`类型的 bean，用一个`AuditorAwareImpl,`实例初始化，并将 bean 的名称指定为`@EnableJpaAuditing` : 中的 `auditorAwareRef`参数值
 
-```
+```java
 @EnableJpaAuditing(auditorAwareRef="auditorProvider")
 public class PersistenceConfig {
 

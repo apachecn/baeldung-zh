@@ -14,7 +14,7 @@ HTTP(超文本传输协议)是一种无状态的请求-响应协议。其简单�
 
 让我们将 Spring WebSocket 依赖项包含到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-websocket</artifactId>
@@ -45,7 +45,7 @@ STOMP 为客户机/服务器使用消息传递语义进行通信定义了一个�
 
 为了与 WebSocket 服务器通信，客户端必须通过向服务器发送一个 HTTP 请求来启动 WebSocket 连接，该请求带有正确设置的`Upgrade`头:
 
-```
+```java
 GET ws://websocket.example.com/ HTTP/1.1
 Origin: http://example.com
 Connection: Upgrade
@@ -57,7 +57,7 @@ Upgrade: websocket
 
 如果启用了 WebSockets 支持，服务器通过在响应中发送`Upgrade`头来响应。
 
-```
+```java
 HTTP/1.1 101 WebSocket Protocol Handshake
 Date: Wed, 16 Oct 2013 10:07:34 GMT
 Connection: Upgrade
@@ -80,7 +80,7 @@ Upgrade: WebSocket
 
 我们将使用`StandardWebSocketClient`，在我们的例子中是`WebSocketClient`的一个实现:
 
-```
+```java
 WebSocketClient client = new StandardWebSocketClient();
 
 WebSocketStompClient stompClient = new WebSocketStompClient(client);
@@ -106,7 +106,7 @@ new Scanner(System.in).nextLine(); // Don't close immediately.
 
 一旦 WebSocket 客户端连接到端点，就会通知`StompSessionHandler`并调用`afterConnected()`方法，我们使用`StompSession`来订阅主题:
 
-```
+```java
 @Override
 public void afterConnected(
   StompSession session, StompHeaders connectedHeaders) {
@@ -122,7 +122,7 @@ public void handleFrame(StompHeaders headers, Object payload) {
 
 确保 WebSocket 服务器正在运行并且正在运行客户端，消息将显示在控制台上:
 
-```
+```java
 INFO o.b.w.client.MyStompSessionHandler - New session established : 53b993eb-7ad6-4470-dd80-c4cfdab7f2ba
 INFO o.b.w.client.MyStompSessionHandler - Subscribed to /topic/messages
 INFO o.b.w.client.MyStompSessionHandler - Message sent to websocket server

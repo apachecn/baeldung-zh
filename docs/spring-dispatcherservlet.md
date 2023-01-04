@@ -47,7 +47,7 @@ Spring 的`DispatcherServlet`实现了这种模式，因此负责将`HttpRequest
 
 让我们看一个公开和处理`‘/user/example'`端点的`Controller`的例子:
 
-```
+```java
 @Controller
 @RequestMapping("/user")
 @ResponseBody
@@ -90,7 +90,7 @@ public class UserController {
 
 下面是一个示例配置，我们将把它放入我们的 *AppConfig* 中，用于呈现 JSP 页面:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 @ComponentScan("com.baeldung.springdispatcherservlet")
@@ -118,13 +118,13 @@ public class AppConfig implements WebMvcConfigurer {
 
 下面是一个使用 Spring 的 XML 配置为`InternalViewResolver`配置路径的例子:
 
-```
+```java
 <property name="prefix" value="/jsp/"/>
 ```
 
 出于示例的目的，我们假设我们的应用程序托管在:
 
-```
+```java
 http://localhost:8080/
 ```
 
@@ -132,13 +132,13 @@ http://localhost:8080/
 
 假设我们的应用程序名为`dispatcherexample-1.0.0`，我们的 JSP 视图可以从以下位置访问:
 
-```
+```java
 http://localhost:8080/dispatcherexample-1.0.0/jsp/
 ```
 
 这些视图在 Maven 的普通 Spring 项目中的路径是这样的:
 
-```
+```java
 src -|
      main -|
             java
@@ -156,7 +156,7 @@ src -|
 
 `CookieLocaleResolver` 是一个允许使用 cookies 配置无状态应用程序属性的实现。再加到`AppConfig`吧。
 
-```
+```java
 @Bean
 public CookieLocaleResolver cookieLocaleResolverExample() {
     CookieLocaleResolver localeResolver 
@@ -190,7 +190,7 @@ Spring 为我们的视图提供了风格化的主题。
 
 首先，**让我们设置所有必要的配置来找到并使用我们的静态主题文件**。我们需要为我们的`ThemeSource`设置一个静态资源位置来配置实际的`Themes`本身(`Theme`对象包含那些文件中规定的所有配置信息)。将此添加到`AppConfig`:
 
-```
+```java
 @Override
 public void addResourceHandlers(ResourceHandlerRegistry registry) {
     registry.addResourceHandler("/resources/**")
@@ -212,7 +212,7 @@ public ResourceBundleThemeSource themeSource() {
 
 由`DispatcherServlet` 管理的请求可以通过一个指定的参数来修改主题，该参数被传递给`ThemeChangeInterceptor` 对象`.` 上可用的`setParamName`()添加到`AppConfig:` 
 
-```
+```java
 @Bean
 public CookieThemeResolver themeResolver() {
     CookieThemeResolver resolver = new CookieThemeResolver();
@@ -237,13 +237,13 @@ public void addInterceptors(InterceptorRegistry registry) {
 
 下面的 JSP 标记被添加到我们的视图中，以显示正确的样式:
 
-```
+```java
 <link rel="stylesheet" href="${ctx}/<spring:theme code='styleSheet'/>" type="text/css"/>
 ```
 
 下面的 URL 请求使用传递到我们配置的`ThemeChangeIntercepter:`中的‘theme’参数来呈现`example`主题
 
-```
+```java
 http://localhost:8080/dispatcherexample-1.0.0/?theme=example
 ```
 
@@ -251,7 +251,7 @@ http://localhost:8080/dispatcherexample-1.0.0/?theme=example
 
 一个`MultipartResolver` 实现检查对多部分的请求，如果至少找到一个多部分，就将它们包装在一个`MultipartHttpServletRequest`中，供流程中的其他元素进一步处理。添加到`AppConfig`:
 
-```
+```java
 @Bean
 public CommonsMultipartResolver multipartResolver() 
   throws IOException {
@@ -264,7 +264,7 @@ public CommonsMultipartResolver multipartResolver()
 
 现在我们已经配置了我们的`MultipartResolver` bean，让我们设置一个控制器来处理`MultipartFile`请求:
 
-```
+```java
 @Controller
 public class MultipartController {
 
@@ -303,7 +303,7 @@ Spring 的`HandlerExceptionResolver`为整个 web 应用程序、单个控制器
 
 **为了提供应用程序范围的自定义异常处理，创建一个用`@ControllerAdvice`** 注释的类:
 
-```
+```java
 @ControllerAdvice
 public class ExampleGlobalExceptionHandler {
 
@@ -319,7 +319,7 @@ public class ExampleGlobalExceptionHandler {
 
 每当`@ExceptionHandler`被用作注释并且正确的类作为参数被传入时，`DispatcherServlet's ApplicationContext`中的`HandlerExceptionResolver`接口的实现可用于**拦截该调度程序负责区域**下的特定控制器**:**
 
-```
+```java
 @Controller
 public class FooController{
 

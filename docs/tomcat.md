@@ -24,19 +24,19 @@
 
 在 Windows 上，需要进行快速的额外安装。打开 Windows 终端，从 Tomcat 安装目录`bin`中:
 
-```
+```java
 C:\Java\Apache Tomcat 8.5.9\bin> 
 ```
 
 使用以下命令安装服务:
 
-```
+```java
 C:\Java\Apache Tomcat 8.5.9\bin>service install 
 ```
 
 输出应该如下所示:
 
-```
+```java
 Installing the service 'Tomcat8' ...
 Using CATALINA_HOME:    "C:\Java\Apache Tomcat 8.5.9"
 Using CATALINA_BASE:    "C:\Java\Apache Tomcat 8.5.9"
@@ -50,13 +50,13 @@ The service 'Tomcat8' has been installed.
 
 使用以下命令启动服务:
 
-```
+```java
 C:\Java\Apache Tomcat 8.5.9\bin>sc start Tomcat8 
 ```
 
 您应该得到以下输出:
 
-```
+```java
 SERVICE_NAME: Tomcat8
         TYPE               : 10  WIN32_OWN_PROCESS
         STATUS             : 2  START_PENDING
@@ -85,7 +85,7 @@ SERVICE_NAME: Tomcat8
 
 类似地，我们将[下载](https://web.archive.org/web/20220628093655/https://tomcat.apache.org/download-80.cgi)并解压缩 Tomcat:
 
-```
+```java
 sudo mkdir /opt/tomcat
 sudo tar xvf apache-tomcat-8.5.9.tar.gz -C /opt/tomcat --strip-components=1
 ```
@@ -94,7 +94,7 @@ sudo tar xvf apache-tomcat-8.5.9.tar.gz -C /opt/tomcat --strip-components=1
 
 我们还要确保系统上安装了 Java，并且 Java 可用:
 
-```
+```java
 java -version
 ```
 
@@ -106,19 +106,19 @@ java -version
 
 我们将在单独的组和用户下运行服务器；让我们先为它创建一个组:
 
-```
+```java
 sudo groupadd tomcat
 ```
 
 让我们创建一个 Tomcat 用户以避免使用 root 用户:
 
-```
+```java
 sudo useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
 ```
 
 我们还要更新服务器的权限，以便在新用户和组中使用它们:
 
-```
+```java
 cd /opt/tomcat
 sudo chgrp -R tomcat conf
 sudo chmod g+rwx conf
@@ -128,7 +128,7 @@ sudo chown -R tomcat work/ temp/ logs/
 
 最后，让我们确保 Tomcat 通过一个简单的 Upstart 脚本自动启动:
 
-```
+```java
 vi /etc/init/tomcat.conf
 ```
 
@@ -136,7 +136,7 @@ vi /etc/init/tomcat.conf
 
 该脚本用于在需要时启动和停止服务:
 
-```
+```java
 description "Tomcat Server"
     start on runlevel [2345]
     stop on runlevel [!2345]
@@ -151,13 +151,13 @@ description "Tomcat Server"
 
 转到 opt/tomcat/bin 目录并执行以下命令:
 
-```
+```java
 ./catalina.sh start
 ```
 
 您应该会看到以下输出:
 
-```
+```java
 Using CATALINA_BASE:   /opt/tomcat
 Using CATALINA_HOME:   /opt/tomcat
 Using CATALINA_TMPDIR: /opt/tomcat/temp
@@ -183,19 +183,19 @@ Tomcat started.
 
 **在 Windows 上:**
 
-```
+```java
 C:\Java\Apache Tomcat 8.5.9\conf\tomcat-users.xml
 ```
 
 **在 Linux 上:**
 
-```
+```java
 /opt/tomcat/conf/tomcat-users.xml
 ```
 
 在这个文件中，我们将定义访问 tomcat 管理器的用户。
 
-```
+```java
 <?xml version='1.0' encoding='utf-8'?>
 <tomcat-users 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -221,26 +221,26 @@ C:\Java\Apache Tomcat 8.5.9\conf\tomcat-users.xml
 
 **在 Windows 上:**
 
-```
+```java
 keytool -genkey -alias tomcat -keyalg RSA -keystore C:\Java\apache-tomcat-8.5.9\keystore\tomcat
 ```
 
 **在 Linux 上:**
 
-```
+```java
 keytool -genkey -alias tomcat -keyalg RSA -keystore /opt/tomcat/keystore/tomcat
 ```
 
 该工具将询问一些问题来提供证书。证书将放在文件夹中，证书的名称是“tomcat”。您可以在 Windows: 上用
 **检查证书**
 
-```
+```java
 keytool -list -keystore C:\Java\apache-tomcat-8.5.9\keystore\tomcat
 ```
 
 **在 Linux 上:**
 
-```
+```java
 keytool -list -keystore /opt/tomcat/keystore/tomcat
 ```
 
@@ -250,19 +250,19 @@ keytool -list -keystore /opt/tomcat/keystore/tomcat
 
 **在 Windows 上:**
 
-```
+```java
 C:\Java\Apache Tomcat 8.5.9\conf\server.xml
 ```
 
 **在 Linux 上:**
 
-```
+```java
 /opt/tomcat/conf/server.xml
 ```
 
 并添加一个 SSL 连接器。
 
-```
+```java
 <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
   maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
   clientAuth="false" sslProtocol="TLS"

@@ -14,7 +14,7 @@
 
 这负责为临时`Authentication`对象提供额外的特权:
 
-```
+```java
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
@@ -37,7 +37,7 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
 为了验证我们的临时`Authentication`对象，我们将设置一个`RunAsImplAuthenticationProvider`:
 
-```
+```java
 @Autowired
 public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
     ...
@@ -58,7 +58,7 @@ public AuthenticationProvider runAsAuthenticationProvider() {
 
 现在，让我们看看如何使用运行身份认证替换:
 
-```
+```java
 @Controller
 @RequestMapping("/runas")
 class RunAsController {
@@ -87,7 +87,7 @@ class RunAsController {
 
 最后，让我们实现实际的逻辑—一个简单的服务层，它也是安全的:
 
-```
+```java
 @Service
 public class RunAsService {
 
@@ -109,7 +109,7 @@ public class RunAsService {
 
 接下来，我们将使用一个简单的前端来测试我们的 Run-As 功能:
 
-```
+```java
 <html>
 <body>
 Current user authorities: 

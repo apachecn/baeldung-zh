@@ -12,13 +12,13 @@
 
 **`DateTimeFormatter`带有多个[预定义的日期/时间格式](https://web.archive.org/web/20221027035204/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeFormatter.html#ISO_LOCAL_DATE)** 遵循 ISO 和 RFC 标准。例如，我们可以使用`ISO_LOCAL_DATE`实例来解析日期，比如“2018-03-09”:
 
-```
+```java
 DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.of(2018, 3, 9));
 ```
 
 要解析一个有偏移量的日期，我们可以使用`ISO_OFFSET_DATE`得到一个类似‘2018-03-09-03:00’的输出:
 
-```
+```java
 DateTimeFormatter.ISO_OFFSET_DATE.format(LocalDate.of(2018, 3, 9).atStartOfDay(ZoneId.of("UTC-3")));
 ```
 
@@ -26,7 +26,7 @@ DateTimeFormatter.ISO_OFFSET_DATE.format(LocalDate.of(2018, 3, 9).atStartOfDay(Z
 
 然而，有一个不同的预定义实例，它解析 IETF 发布的 RFC-1123，对互联网主机的要求:
 
-```
+```java
 DateTimeFormatter.RFC_1123_DATE_TIME.format(LocalDate.of(2018, 3, 9).atStartOfDay(ZoneId.of("UTC-3")));
 ```
 
@@ -34,7 +34,7 @@ DateTimeFormatter.RFC_1123_DATE_TIME.format(LocalDate.of(2018, 3, 9).atStartOfDa
 
 有时，我们不得不将收到的数据处理成已知格式的`String`。为此，我们可以利用`parse()`方法:
 
-```
+```java
 LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse("2018-03-09")).plusDays(3);
 ```
 
@@ -46,7 +46,7 @@ LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse("2018-03-09")).plusDays(3)
 
 在这种情况下，我们可以将`java.time.format.FormatStyle`枚举(完整、长、中、短)值与我们的`DateTimeFormatter`一起使用:
 
-```
+```java
 LocalDate anotherSummerDay = LocalDate.of(2016, 8, 23);
 System.out.println(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(anotherSummerDay));
 System.out.println(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(anotherSummerDay));
@@ -56,7 +56,7 @@ System.out.println(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).format(a
 
 相同日期的这些不同格式样式的输出是:
 
-```
+```java
 Tuesday, August 23, 2016
 August 23, 2016
 Aug 23, 2016
@@ -65,7 +65,7 @@ Aug 23, 2016
 
 我们也可以使用预定义的日期和时间格式。要将`FormatStyle`与时间一起使用，我们必须使用`ZonedDateTime`实例，否则，将会抛出一个`DateTimeException`:
 
-```
+```java
 LocalDate anotherSummerDay = LocalDate.of(2016, 8, 23);
 LocalTime anotherTime = LocalTime.of(13, 12, 45);
 ZonedDateTime zonedDateTime = ZonedDateTime.of(anotherSummerDay, anotherTime, ZoneId.of("Europe/Helsinki"));
@@ -87,7 +87,7 @@ System.out.println(
 
 我们得到的输出是:
 
-```
+```java
 Tuesday, August 23, 2016 1:12:45 PM EEST
 August 23, 2016 1:12:45 PM EEST
 Aug 23, 2016 1:12:45 PM
@@ -98,7 +98,7 @@ Aug 23, 2016 1:12:45 PM
 
 然后，我们可以使用解析后的值来操作日期和时间变量:
 
-```
+```java
 ZonedDateTime dateTime = ZonedDateTime.from(
   DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL)
     .parse("Tuesday, August 23, 2016 1:12:45 PM EET"));
@@ -117,7 +117,7 @@ System.out.println(dateTime.plusHours(9));
 
 这将创建一个合适的`DateTimeFormatter`实例，我们可以用它来格式化我们的日期:
 
-```
+```java
 String europeanDatePattern = "dd.MM.yyyy";
 DateTimeFormatter europeanDateFormatter = DateTimeFormatter.ofPattern(europeanDatePattern);
 System.out.println(europeanDateFormatter.format(LocalDate.of(2016, 7, 31)));
@@ -127,7 +127,7 @@ System.out.println(europeanDateFormatter.format(LocalDate.of(2016, 7, 31)));
 
 我们可以使用许多不同的字母样式来创建符合我们需求的日期格式:
 
-```
+```java
  Symbol  Meaning                     Presentation      Examples
   ------  -------                     ------------      -------
    u       year                        year              2004; 04
@@ -146,7 +146,7 @@ System.out.println(europeanDateFormatter.format(LocalDate.of(2016, 7, 31)));
 
 同样，自定义格式模式也可用于解析保存日期的字符串:
 
-```
+```java
 DateTimeFormatter europeanDateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 System.out.println(LocalDate.from(europeanDateFormatter.parse("15.08.2014")).isLeapYear());
 ```
@@ -157,7 +157,7 @@ System.out.println(LocalDate.from(europeanDateFormatter.parse("15.08.2014")).isL
 
 也有可用于时间模式的模式字母:
 
-```
+```java
  Symbol  Meaning                     Presentation      Examples
   ------  -------                     ------------      -------
    H       hour-of-day (0-23)          number            0
@@ -169,7 +169,7 @@ System.out.println(LocalDate.from(europeanDateFormatter.parse("15.08.2014")).isL
 
 使用`DateTimeFormatter`格式化一个`java.time.LocalTime`实例非常简单。假设我们想要显示用冒号分隔的时间(小时、分钟和秒):
 
-```
+```java
 String timeColonPattern = "HH:mm:ss";
 DateTimeFormatter timeColonFormatter = DateTimeFormatter.ofPattern(timeColonPattern);
 LocalTime colonTime = LocalTime.of(17, 35, 50);
@@ -180,7 +180,7 @@ System.out.println(timeColonFormatter.format(colonTime));
 
 如果我们想在输出中增加毫秒，我们应该在模式中增加“SSS ”:
 
-```
+```java
 String timeColonPattern = "HH:mm:ss SSS";
 DateTimeFormatter timeColonFormatter = DateTimeFormatter.ofPattern(timeColonPattern);
 LocalTime colonTime = LocalTime.of(17, 35, 50).plus(329, ChronoUnit.MILLIS);
@@ -191,7 +191,7 @@ System.out.println(timeColonFormatter.format(colonTime));
 
 请注意，“HH”是一天中的小时模式，它生成 0-23 的输出。当我们想要显示 AM/PM 时，我们应该使用小写字母“hh”表示小时，并添加一个“a”模式:
 
-```
+```java
 String timeColonPattern = "hh:mm:ss a";
 DateTimeFormatter timeColonFormatter = DateTimeFormatter.ofPattern(timeColonPattern);
 LocalTime colonTime = LocalTime.of(17, 35, 50);
@@ -202,7 +202,7 @@ System.out.println(timeColonFormatter.format(colonTime));
 
 我们可能想用自定义格式化程序解析一个时间`String`,并检查它是否在中午之前:
 
-```
+```java
 DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss a");
 System.out.println(LocalTime.from(timeFormatter.parse("12:25:30 AM")).isBefore(LocalTime.NOON));
 ```
@@ -213,7 +213,7 @@ System.out.println(LocalTime.from(timeFormatter.parse("12:25:30 AM")).isBefore(L
 
 我们通常希望看到某个特定日期时间变量的时区。如果我们使用基于纽约的日期时间(UTC -4)，我们可以使用“z”模式字母作为时区名称:
 
-```
+```java
 String newYorkDateTimePattern = "dd.MM.yyyy HH:mm z";
 DateTimeFormatter newYorkDateFormatter = DateTimeFormatter.ofPattern(newYorkDateTimePattern);
 LocalDateTime summerDay = LocalDateTime.of(2016, 7, 31, 14, 15);
@@ -224,7 +224,7 @@ System.out.println(newYorkDateFormatter.format(ZonedDateTime.of(summerDay, ZoneI
 
 我们可以像前面一样解析带时区的日期时间字符串:
 
-```
+```java
 DateTimeFormatter zonedFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm z");
 System.out.println(ZonedDateTime.from(zonedFormatter.parse("31.07.2016 14:15 GMT+02:00")).getOffset().getTotalSeconds());
 ```
@@ -239,7 +239,7 @@ System.out.println(ZonedDateTime.from(zonedFormatter.parse("31.07.2016 14:15 GMT
 
 根据[官方文档](https://web.archive.org/web/20221027035204/https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/time/format/DateTimeFormatter.html#ISO_INSTANT)，**在没有指定时区的情况下，瞬间不能被格式化为日期或时间**。因此，试图在`LocalDateTime`或`LocalDate`对象上使用`ISO_INSTANT`将导致一个异常:
 
-```
+```java
 @Test(expected = UnsupportedTemporalTypeException.class)
 public void shouldExpectAnExceptionIfInputIsLocalDateTime() {
     DateTimeFormatter.ISO_INSTANT.format(LocalDateTime.now());
@@ -248,7 +248,7 @@ public void shouldExpectAnExceptionIfInputIsLocalDateTime() {
 
 然而，我们可以使用`ISO_INSTANT`来格式化`ZonedDateTime`实例，没有任何问题:
 
-```
+```java
 @Test
 public void shouldPrintFormattedZonedDateTime() {
     ZonedDateTime zonedDateTime = ZonedDateTime.of(2021, 02, 15, 0, 0, 0, 0, ZoneId.of("Europe/Paris"));
@@ -262,7 +262,7 @@ public void shouldPrintFormattedZonedDateTime() {
 
 同样，**解析到`ZonedDateTime`时，我们需要指定时区**:
 
-```
+```java
 @Test
 public void shouldParseZonedDateTime() {
     DateTimeFormatter formatter = DateTimeFormatter.ISO_INSTANT.withZone(ZoneId.systemDefault());
@@ -274,7 +274,7 @@ public void shouldParseZonedDateTime() {
 
 不这样做就会导致 [`DateTimeParseException`](https://web.archive.org/web/20221027035204/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeParseException.html) :
 
-```
+```java
 @Test(expected = DateTimeParseException.class)
 public void shouldExpectAnExceptionIfTimeZoneIsMissing() {
     ZonedDateTime zonedDateTime = ZonedDateTime.parse("2021-11-01T05:06:20Z", DateTimeFormatter.ISO_INSTANT);

@@ -18,7 +18,7 @@
 
 让我们编写一个使用`BufferedInputStream` s 来比较两个文件的方法:
 
-```
+```java
 public static long filesCompareByByte(Path path1, Path path2) throws IOException {
     try (BufferedInputStream fis1 = new BufferedInputStream(new FileInputStream(path1.toFile()));
          BufferedInputStream fis2 = new BufferedInputStream(new FileInputStream(path2.toFile()))) {
@@ -55,7 +55,7 @@ public static long filesCompareByByte(Path path1, Path path2) throws IOException
 
 让我们回顾一下我们的实现:
 
-```
+```java
 public static long filesCompareByLine(Path path1, Path path2) throws IOException {
     try (BufferedReader bf1 = Files.newBufferedReader(path1);
          BufferedReader bf2 = Files.newBufferedReader(path2)) {
@@ -101,7 +101,7 @@ public static long filesCompareByLine(Path path1, Path path2) throws IOException
 
 让我们编写一个非常简单的示例，展示如何使用内存映射文件比较两个文件的内容:
 
-```
+```java
 public static boolean compareByMemoryMappedFiles(Path path1, Path path2) throws IOException {
     try (RandomAccessFile randomAccessFile1 = new RandomAccessFile(path1.toFile(), "r"); 
          RandomAccessFile randomAccessFile2 = new RandomAccessFile(path2.toFile(), "r")) {
@@ -130,7 +130,7 @@ public static boolean compareByMemoryMappedFiles(Path path1, Path path2) throws 
 
 让我们看一个简单的例子来检查等式:
 
-```
+```java
 @Test
 public void whenFilesIdentical_thenReturnTrue() throws IOException {
     Path path1 = Files.createTempFile("file1Test", ".txt");
@@ -148,7 +148,7 @@ public void whenFilesIdentical_thenReturnTrue() throws IOException {
 
 如果我们想忽略换行符，但要检查内容是否相等:
 
-```
+```java
 @Test
 public void whenFilesIdenticalIgnoreEOF_thenReturnTrue() throws IOException {
     Path path1 = Files.createTempFile("file1Test", ".txt");

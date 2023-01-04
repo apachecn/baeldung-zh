@@ -18,7 +18,7 @@
 
 我们假设**我们的`FileEncrypterDecrypter`类将把输出写到一个名为`baz.enc`** 的文件中。之后，**我们使用相同的密钥**解密该文件，并检查解密的内容是否等于原始内容:
 
-```
+```java
 @Test
 public void whenEncryptingIntoFile_andDecryptingFileAgain_thenOriginalStringIsReturned() {
     String originalContent = "foobar";
@@ -41,7 +41,7 @@ public void whenEncryptingIntoFile_andDecryptingFileAgain_thenOriginalStringIsRe
 
 这允许我们在指定错误转换的情况下尽早失败:
 
-```
+```java
 FileEncrypterDecrypter(SecretKey secretKey, String transformation) {
     this.secretKey = secretKey;
     this.cipher = Cipher.getInstance(transformation);
@@ -50,7 +50,7 @@ FileEncrypterDecrypter(SecretKey secretKey, String transformation) {
 
 然后我们可以**使用实例化的密码和提供的密钥来执行加密:**
 
-```
+```java
 void encrypt(String content, String fileName) {
     cipher.init(Cipher.ENCRYPT_MODE, secretKey);
     byte[] iv = cipher.getIV();
@@ -75,7 +75,7 @@ Java 允许我们**利用方便的`CipherOutputStream`类将加密的内容写�
 
 同样，我们可以使用一个特殊的 Java 类 **`CipherInputStream`，它透明地负责实际的解密**:
 
-```
+```java
 String decrypt(String fileName) {
     String content;
 

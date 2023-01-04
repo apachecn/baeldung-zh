@@ -16,7 +16,7 @@ Java 8 中引入了`[Optional](/web/20221205153638/https://www.baeldung.com/java
 
 大多数时候，返回一个`Optional`就可以了:
 
-```
+```java
 public static Optional<User> findUserByName(String name) {
     User user = usersByName.get(name);
     Optional<User> opt = Optional.ofNullable(user);
@@ -26,7 +26,7 @@ public static Optional<User> findUserByName(String name) {
 
 这很方便，因为我们可以在调用方法中使用`Optional` API:
 
-```
+```java
 public static void changeUserName(String oldFirstName, String newFirstName) {
     findUserByFirstName(oldFirstName).ifPresent(user -> user.setFirstName(newFirstName));
 }
@@ -46,7 +46,7 @@ public static void changeUserName(String oldFirstName, String newFirstName) {
 
 假设我们有一个简单的实体:
 
-```
+```java
 public class Sock implements Serializable {
     Integer size;
     Optional<Sock> pair;
@@ -57,7 +57,7 @@ public class Sock implements Serializable {
 
 **这个其实根本行不通。**如果我们试图对此进行序列化，我们会得到一个`NotSerializableException`:
 
-```
+```java
 new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new Sock()); 
 ```
 
@@ -71,7 +71,7 @@ new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new Sock());
 
 假设我们有一个带有可选属性的 bean:
 
-```
+```java
 private String firstName;
 
 public Optional<String> getFirstName() {
@@ -85,13 +85,13 @@ public void setFirstName(String firstName) {
 
 因此，如果我们使用 Jackson 来序列化`Optional`的实例，我们将得到:
 
-```
+```java
 {"firstName":{"present":true}} 
 ```
 
 但是，我们真正想要的是:
 
-```
+```java
 {"firstName":"Baeldung"}
 ```
 
@@ -107,7 +107,7 @@ public void setFirstName(String firstName) {
 
 不过，这一次，它将是一个 JPA 实体:
 
-```
+```java
 @Entity
 public class UserOptionalField implements Serializable {
     @Id
@@ -121,7 +121,7 @@ public class UserOptionalField implements Serializable {
 
 让我们继续努力坚持下去:
 
-```
+```java
 UserOptionalField user = new UserOptionalField();
 user.setUserId(1l);
 user.setFirstName(Optional.of("Baeldung"));
@@ -130,7 +130,7 @@ entityManager.persist(user);
 
 遗憾的是，我们遇到了一个错误:
 
-```
+```java
 Caused by: javax.persistence.PersistenceException: [PersistenceUnit: com.baeldung.optionalReturnType] Unable to build Hibernate SessionFactory
 	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.persistenceException(EntityManagerFactoryBuilderImpl.java:1015)
 	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:941)
@@ -143,7 +143,7 @@ Caused by: org.hibernate.MappingException: Could not determine type for: java.ut
 
 我们可以尝试**偏离这个标准。**例如，我们可以保持属性为`String`，但是改变 getter:
 
-```
+```java
 @Column(nullable = true) 
 private String firstName; 
 
@@ -158,7 +158,7 @@ public Optional<String> getFirstName() {
 
 在 JPA 拥有优雅的`Optional`类型支持之前，我们应该坚持传统的代码。它更简单也更好:
 
-```
+```java
 private String firstName;
 
 // ... traditional getter and setter
@@ -172,13 +172,13 @@ private String firstName;
 
 例如，假设我们使用 JSP 模板从请求中读取我们的`UserOptional` DTO 的`firstName`:
 
-```
+```java
 <c:out value="${requestScope.user.firstName}" /> 
 ```
 
 既然是`Optional`，我们就看不到`Baeldung`。相反，我们将看到`Optional`类型的`String`表示:
 
-```
+```java
 Optional[Baeldung] 
 ```
 

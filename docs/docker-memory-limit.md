@@ -18,7 +18,7 @@
 
 **为了约束内存，我们需要使用`m`参数**:
 
-```
+```java
 $ docker run -m 512m nginx
 ```
 
@@ -26,7 +26,7 @@ $ docker run -m 512m nginx
 
 当 docker 检测到主机内存不足时，它会被激活:
 
-```
+```java
 $ docker run -m 512m --memory-reservation=256m nginx
 ```
 
@@ -36,7 +36,7 @@ $ docker run -m 512m --memory-reservation=256m nginx
 
 让我们将容器限制为最多使用两个 CPU:
 
-```
+```java
 $ docker run --cpus=2 nginx
 ```
 
@@ -44,7 +44,7 @@ $ docker run --cpus=2 nginx
 
 默认值为 1024，数字越大优先级越高:
 
-```
+```java
 $ docker run --cpus=2 --cpu-shares=2000 nginx
 ```
 
@@ -60,7 +60,7 @@ $ docker run --cpus=2 --cpu-shares=2000 nginx
 
 **我们需要在我们的服务配置**中创建`deploy`和`resources`段:
 
-```
+```java
 services:
   service:
     image: nginx
@@ -78,7 +78,7 @@ services:
 
 为了将堆栈部署到集群，我们运行`deploy`命令:
 
-```
+```java
 $ docker stack deploy --compose-file docker-compose.yml bael_stack
 ```
 
@@ -88,7 +88,7 @@ $ docker stack deploy --compose-file docker-compose.yml bael_stack
 
 它们的命名也略有不同:
 
-```
+```java
 service:
   image: nginx
   mem_limit: 512m
@@ -100,7 +100,7 @@ service:
 
 为了创建已配置的容器，我们需要运行`docker-compose`命令:
 
-```
+```java
 $ docker-compose up
 ```
 
@@ -108,7 +108,7 @@ $ docker-compose up
 
 设置限制后，我们可以使用`docker stats`命令验证它们:
 
-```
+```java
 $ docker stats
 CONTAINER ID        NAME                                             CPU %               MEM USAGE / LIMIT   MEM %               NET I/O             BLOCK I/O           PIDS
 8ad2f2c17078        bael_stack_service.1.jz2ks49finy61kiq1r12da73k   0.00%               2.578MiB / 512MiB   0.50%               936B / 0B           0B / 0B             2

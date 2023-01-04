@@ -28,7 +28,7 @@
 
 让我们在运行 SQL 语句之前创建一个状态条件:
 
-```
+```java
 public static void runIfOpened(Connection connection) throws SQLException
 {
     if (connection != null && !connection.isClosed()) {
@@ -47,7 +47,7 @@ public static void runIfOpened(Connection connection) throws SQLException
 
 让我们看看在运行任何语句之前如何验证连接:
 
-```
+```java
 public static void runIfValid(Connection connection)
         throws SQLException
 {
@@ -68,7 +68,7 @@ public static void runIfValid(Connection connection)
 
 让我们创建一个方法来运行预定义的验证查询:
 
-```
+```java
 public static boolean isConnectionValid(Connection connection)
 {
     try {
@@ -89,7 +89,7 @@ public static boolean isConnectionValid(Connection connection)
 
 现在，我们可以在运行任何语句之前使用自定义验证:
 
-```
+```java
 public static void runIfConnectionValid(Connection connection)
 {
     if (isConnectionValid(connection)) {

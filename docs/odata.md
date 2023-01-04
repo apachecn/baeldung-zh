@@ -12,7 +12,7 @@ OData 是使用 RESTful API 访问数据的 OASIS 和 ISO/IEC 标准。因此，
 
 **例如，我们可以通过一个简单的`curl `一行程序**访问[公开可用的 OData 服务](https://web.archive.org/web/20220630135825/https://www.odata.org/odata-services/):
 
-```
+```java
 curl -s https://services.odata.org/V2/Northwind/Northwind.svc/Regions
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <feed xml:base="https://services.odata.org/V2/Northwind/Northwind.svc/" 
@@ -45,7 +45,7 @@ OData 协议的核心是实体数据模型的概念——简称 EDM。EDM 描述
 
 返回的文档包含一组描述该服务器支持的模式的 XML:
 
-```
+```java
 <?xml version="1.0"?>
 <edmx:Edmx 
   xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" 
@@ -68,7 +68,7 @@ OData 协议的核心是实体数据模型的概念——简称 EDM。EDM 描述
 
 该元素定义给定实体的可用属性，包括其主键。它还可能包含关于与其他模式类型的关系的信息，通过看一个例子——a`CarMaker –` ,我们将能够看到它与其他 ORM 技术中的描述没有太大的不同，比如 JPA:
 
-```
+```java
 <EntityType Name="CarMaker">
     <Key>
         <PropertyRef Name="Id"/>
@@ -93,7 +93,7 @@ OData 协议的核心是实体数据模型的概念——简称 EDM。EDM 描述
 
 一个`Association `元素描述了两个实体之间的关联，包括两端的多重性和可选的参照完整性约束:
 
-```
+```java
 <Association Name="CarModel_CarMaker_Many_One0">
     <End Type="default.CarModel" Multiplicity="*" Role="CarModel"/>
     <End Type="default.CarMaker" Multiplicity="1" Role="CarMaker"/>
@@ -116,7 +116,7 @@ OData 协议的核心是实体数据模型的概念——简称 EDM。EDM 描述
 
 作为顶级模式元素的 `EntityContainer`元素将所有可用的`EntitySet`分组:
 
-```
+```java
 <EntityContainer Name="defaultContainer" 
   m:IsDefaultEntityContainer="true">
     <EntitySet Name="CarModels" 
@@ -142,7 +142,7 @@ OData 协议的核心是实体数据模型的概念——简称 EDM。EDM 描述
 
 让我们来看一个用于访问我们之前的 OData 服务的示例 URL:
 
-```
+```java
 http://example.org/odata/CarMakers 
 ```
 
@@ -150,7 +150,7 @@ http://example.org/odata/CarMakers
 
 在这种情况下，`CarMakers`指的是服务元数据中声明的`EntitySets`之一。我们可以使用常规浏览器访问这个 URL，然后它应该返回一个包含所有现有的这种类型的实体的文档:
 
-```
+```java
 <?xml version="1.0" encoding="utf-8"?>
 <feed  
   xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" 
@@ -206,7 +206,7 @@ http://example.org/odata/CarMakers
 
 我们可以使用`$top`和`$skip`查询选项:在大型数据集中进行**导航**
 
-```
+```java
 .../CarMakers?$top=10&$skip=10 
 ```
 
@@ -214,13 +214,13 @@ http://example.org/odata/CarMakers
 
 知道给定的`Entity Set` 的大小通常很有用，为此，我们可以使用`$count`子资源:
 
-```
+```java
 .../CarMakers/$count 
 ```
 
 该资源生成一个包含相应集合大小的`text/plain`文档。在这里，我们必须注意一个提供者支持的具体 OData 版本。虽然 OData V2 支持将`$count`作为集合中的子资源，但 V4 允许将其用作查询参数。在本例中，`$count`是一个布尔值，所以我们需要相应地更改 URL:
 
-```
+```java
 .../CarMakers?$count=true 
 ```
 
@@ -228,13 +228,13 @@ http://example.org/odata/CarMakers
 
 我们使用`$filter`查询选项**将从给定的`Entity Set`** 返回的实体限制为符合给定标准的实体。`$filter`的值是一个逻辑表达式，支持基本运算符、分组和许多有用的函数。例如，让我们构建一个查询，它返回所有的`CarMaker`实例，其中它的`Name `属性以字母‘B’开始:
 
-```
+```java
 .../CarMakers?$filter=startswith(Name,'B') 
 ```
 
 现在，让我们结合一些逻辑运算符来搜索特定的`Year`和`Maker`的`CarModels `:
 
-```
+```java
 .../CarModels?$filter=Year eq 2008 and CarMakerDetails/Name eq 'BWM' 
 ```
 
@@ -246,13 +246,13 @@ http://example.org/odata/CarMakers
 
 使用我们的示例域，让我们构建一个 URL，它从给定的模型`and`的制造者返回数据，从而避免额外的到服务器的往返行程:
 
-```
+```java
 .../CarModels(1L)?$expand=CarMakerDetails 
 ```
 
 返回的文档现在包括作为相关实体一部分的`CarMaker`数据:
 
-```
+```java
 <?xml version="1.0" encoding="utf-8"?>
 <entry  
   xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" 
@@ -307,13 +307,13 @@ http://example.org/odata/CarMakers
 
 让我们在一个只返回`Name`和`Sku `属性的查询中使用这个选项:
 
-```
+```java
 .../CarModels(1L)?$select=Name,Sku 
 ```
 
 生成的文档现在只具有请求的属性:
 
-```
+```java
 ... xml omitted
     <content type="application/xml">
         <m:properties>
@@ -330,7 +330,7 @@ http://example.org/odata/CarMakers
 
 `$orderBy`选项的工作方式与它的 SQL 对应物非常相似。我们用它来指定**我们希望服务器返回一组给定实体的顺序。**在其更简单的形式中，它的值只是所选实体的属性名称列表，可选地通知订单方向:
 
-```
+```java
 .../CarModels?$orderBy=Name asc,Sku desc 
 ```
 
@@ -344,7 +344,7 @@ http://example.org/odata/CarMakers
 
 例如，**我们可以用`json `作为`application/json`的缩写:**
 
-```
+```java
 .../CarModels?$format=json 
 ```
 

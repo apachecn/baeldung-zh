@@ -10,7 +10,7 @@
 
 如果我们需要将一个`String`转换成原语`int`或`Integer`包装类型，我们可以使用`parseInt()`或`valueOf()`API 来获得相应的`int`或`Integer`返回值:
 
-```
+```java
 @Test
 public void whenConvertedToInt_thenCorrect() {
     String beforeConvStr = "1";
@@ -32,7 +32,7 @@ public void whenConvertedToInteger_thenCorrect() {
 
 如果我们需要将一个`String`转换成原语`long`或`Long`包装类型，我们可以分别使用`parseLong()`或`valueOf()`:
 
-```
+```java
 @Test
 public void whenConvertedTolong_thenCorrect() {
     String beforeConvStr = "12345";
@@ -54,7 +54,7 @@ public void whenConvertedToLong_thenCorrect() {
 
 如果我们需要将一个`String`转换成原语`double`或`Double`包装类型，我们可以分别使用`parseDouble()`或`valueOf()`:
 
-```
+```java
 @Test
 public void whenConvertedTodouble_thenCorrect() {
     String beforeConvStr = "1.4";
@@ -78,7 +78,7 @@ public void whenConvertedToDouble_thenCorrect() {
 
 当传递的`String`不能使用默认字符集编码时，`getBytes()`的行为是未指定的。根据 java [文档](https://web.archive.org/web/20220625235933/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html)，当需要对编码过程进行更多控制时，应该使用[Java . nio . charset . charset encoder](https://web.archive.org/web/20220625235933/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/charset/CharsetEncoder.html)类:
 
-```
+```java
 @Test
 public void whenConvertedToByteArr_thenCorrect() {
     String beforeConvStr = "abc";
@@ -92,7 +92,7 @@ public void whenConvertedToByteArr_thenCorrect() {
 
 为了将一个`String`转换成一个`CharArray`实例，我们可以简单地使用`toCharArray()`:
 
-```
+```java
 @Test
 public void whenConvertedToCharArr_thenCorrect() {
     String beforeConvStr = "hello";
@@ -106,7 +106,7 @@ public void whenConvertedToCharArr_thenCorrect() {
 
 要将一个`String`实例转换成原始的`boolean`或`Boolean`包装类型，我们可以分别使用`parseBoolean()`或`valueOf()`API:
 
-```
+```java
 @Test
 public void whenConvertedToboolean_thenCorrect() {
     String beforeConvStr = "true";
@@ -138,7 +138,7 @@ Java 6 提供了用于表示日期的`java.util.Date`数据类型。Java 8 为`D
 
 作为参数传递的`String`应该与模式的格式相同。否则，运行时将抛出一个`ParseException`:
 
-```
+```java
 @Test
 public void whenConvertedToDate_thenCorrect() throws ParseException {
     String beforeConvStr = "15/10/2013";
@@ -162,7 +162,7 @@ public void whenConvertedToDate_thenCorrect() throws ParseException {
 
 为了将字符串对象转换成`LocalDateTime`对象，我们可以简单地使用`parse` API:
 
-```
+```java
 @Test
 public void whenConvertedToLocalDateTime_thenCorrect() {
     String str = "2007-12-03T10:15:30";

@@ -10,7 +10,7 @@
 
 贯穿全文，我们将使用 [`groovy-all`](https://web.archive.org/web/20220626071732/https://search.maven.org/artifact/org.codehaus.groovy/groovy-all) 和 [`spock-core`](https://web.archive.org/web/20220626071732/https://search.maven.org/artifact/org.spockframework/spock-core) 的依赖关系
 
-```
+```java
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.13'
     testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
@@ -23,7 +23,7 @@ Groovy 中的作用域首先遵循这样的规则:默认情况下，**所有变�
 
 我们将看到这些作用域意味着什么，为了测试这一点，我们将**运行 Groovy 脚本**。要运行脚本，我们只需运行:
 
-```
+```java
 groovy <scriptname>.groovy
 ```
 
@@ -31,13 +31,13 @@ groovy <scriptname>.groovy
 
 在 Groovy 脚本中创建全局变量最简单的方法是在脚本中的任何地方分配它，不需要任何特殊的关键字。我们甚至不需要定义类型:
 
-```
+```java
 x = 200
 ```
 
 然后，如果我们运行下面的 groovy 脚本:
 
-```
+```java
 x = 200
 logger = Logger.getLogger("Scopes.groovy")
 logger.info("- Global variable")
@@ -50,7 +50,7 @@ logger.info(x.toString())
 
 另一种访问全局变量的方法是使用函数作用域:
 
-```
+```java
 def getGlobalResult() { 
    return 1 + x
 }
@@ -60,7 +60,7 @@ def getGlobalResult() {
 
 如果我们运行以下脚本:
 
-```
+```java
 x = 200
 logger = Logger.getLogger("Scopes.groovy")
 
@@ -79,7 +79,7 @@ logger.info(getGlobalResult().toString())
 
 我们也可以在函数范围内创建全局变量。在这个局部范围内，如果我们在创建变量时不使用任何关键字，我们将在全局范围内创建它。然后，让我们在一个新函数中创建一个全局变量`z`:
 
-```
+```java
 def defineGlobalVariable() {
     z = 234
 } 
@@ -87,7 +87,7 @@ def defineGlobalVariable() {
 
 并尝试通过运行以下脚本来访问它:
 
-```
+```java
 logger = Logger.getLogger("Scopes.groovy")
 
 def defineGlobalVariable() {
@@ -112,7 +112,7 @@ logger.info(z.toString())
 
 所以，让我们试着定义一个全局变量`y`和一个函数局部变量:
 
-```
+```java
 logger = Logger.getLogger("ScopesFail.groovy")
 
 y = 2
@@ -133,7 +133,7 @@ logger.info(q.toString())
 
 显然，我们可以使用`fLocal `函数访问 q:
 
-```
+```java
 logger = Logger.getLogger("ScopesFail.groovy")
 
 y = 2

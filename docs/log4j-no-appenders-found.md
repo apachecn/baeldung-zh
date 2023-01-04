@@ -18,7 +18,7 @@ log4j 中没有定义默认的 appender。 **此外，[一个记录器可以有�
 
 让我们创建一个`NoAppenderExample`类来重现警告:
 
-```
+```java
 public class NoAppenderExample {
     private final static Logger logger = Logger.getLogger(NoAppenderExample.class);
 
@@ -30,7 +30,7 @@ public class NoAppenderExample {
 
 我们在没有任何 log4j 配置的情况下运行我们的类。此后，我们可以在控制台输出中看到警告以及更多详细信息:
 
-```
+```java
 log4j:WARN No appenders could be found for logger (com.baeldung.log4j.NoAppenderExample).
 log4j:WARN Please initialize the log4j system properly.
 log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
@@ -40,7 +40,7 @@ log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more in
 
 默认情况下，Log4j 在应用程序的资源中查找配置文件，该文件可以是 XML 或 Java 属性格式。现在让我们定义 resources 目录下的`log4j.xml` 文件:
 
-```
+```java
 <log4j:configuration debug="false">
     <!--Console appender -->
     <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
@@ -60,7 +60,7 @@ log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more in
 
 让我们再次运行`NoAppenderExample`类并检查控制台输出。因此，日志包含我们的声明:
 
-```
+```java
 2021-05-23 12:59:10 INFO Info log message
 ```
 
@@ -72,7 +72,7 @@ log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more in
 
 为了证明一个`logger`从祖先那里继承了 appenders，让我们在我们的`log4j.xml` 文件中为`NoAppenderExample`添加一个`logger`:
 
-```
+```java
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
 <log4j:configuration debug="false">
     ...
@@ -96,7 +96,7 @@ log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more in
 
 假设我们不想要配置文件。让我们删除`log4.xml`文件并修改`main `方法:
 
-```
+```java
 public class NoAppenderExample {
     private final static Logger logger = Logger.getLogger(NoAppenderExample.class);
 
@@ -109,7 +109,7 @@ public class NoAppenderExample {
 
 我们从`BasicConfigurator`类中调用静态的`configure`方法。它将`ConsoleAppender `添加到`root `记录器中。让我们看看`configure` 方法的源代码:
 
-```
+```java
 public static void configure() {
     Logger root = Logger.getRootLogger();
     root.addAppender(new ConsoleAppender(new PatternLayout("%r [%t] %p %c %x - %m%n")));

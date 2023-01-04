@@ -57,7 +57,7 @@ Consul 提供了一个易于使用的 KV 存储和[会话管理](https://web.arc
 
 首先，让我们包括依赖性:
 
-```
+```java
 <dependency>
    <groupId>com.github.kinguinltdhk</groupId>
    <artifactId>leadership-consul</artifactId>
@@ -75,13 +75,13 @@ Consul 提供了一个易于使用的 KV 存储和[会话管理](https://web.arc
 
 对于公共密钥，我们将使用:
 
-```
+```java
 services/%s/leader
 ```
 
 让我们用一个简单的片段来测试所有的过程:
 
-```
+```java
 new SimpleConsulClusterFactory()
     .mode(SimpleConsulClusterFactory.MODE_MULTI)
     .debug(true)
@@ -94,7 +94,7 @@ new SimpleConsulClusterFactory()
 
 **最后，我们定制 consul 配置和会话管理**，以及实例之间协商好的密钥来选举领导者:
 
-```
+```java
 cluster:
   leader:
     serviceName: cluster
@@ -119,7 +119,7 @@ cluster:
 
 我们将通过运行以下命令使用 Docker 部署 Consul:
 
-```
+```java
 docker run -d --name consul -p 8500:8500 -e CONSUL_BIND_INTERFACE=eth0 consul
 ```
 
@@ -131,7 +131,7 @@ docker run -d --name consul -p 8500:8500 -e CONSUL_BIND_INTERFACE=eth0 consul
 2.  **然后就当选了(`elected.first`)。**
 3.  **其余的实例一直观察到会话被释放**:
 
-```
+```java
 INFO: multi mode active
 INFO: Session created e11b6ace-9dc7-4e51-b673-033f8134a7d4
 INFO: Session refresh scheduled on 7 seconds frequency 

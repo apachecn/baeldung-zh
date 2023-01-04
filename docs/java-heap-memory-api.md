@@ -32,7 +32,7 @@
 
 在下面的例子中，我们初始化一个`ArrayList`并向其中添加元素，同时使用上面的三种方法跟踪 JVM 堆空间:
 
-```
+```java
 ArrayList<Integer> arrayList = new ArrayList<>();
 System.out.println("i \t Free Memory \t Total Memory \t Max Memory");
 for (int i = 0; i < 1000000; i++) {
@@ -45,7 +45,7 @@ for (int i = 0; i < 1000000; i++) {
 // ...
 ```
 
-```
+```java
 Output:
 i 	   Free Memory 	   Total Memory 	 Max Memory
 0 	     254741016 	 	 257425408 	 	 3817865216
@@ -77,7 +77,7 @@ i 	   Free Memory 	   Total Memory 	 Max Memory
 
 ### 4.1.使用
 
-```
+```java
 java -Xms32M -Xmx64M Main                                                                                        
 Free Memory   : 31792664 bytes
 Total Memory  : 32505856 bytes

@@ -10,7 +10,7 @@
 
 **让我们定义一个有两个容器**的`docker-compose.yml`配置文件:一个引用最新的`ubuntu`图像，另一个引用最新的`alpine`图像。我们将为每个带有“`tty: true`”的容器添加伪终端，以防止容器在启动时直接退出:
 
-```
+```java
 version: "3.9"
 services:
   ubuntu:
@@ -23,7 +23,7 @@ services:
 
 现在让我们构建容器并启动它们。我们将使用带有`-d`选项的`docker-compose up`命令让它们在后台运行:
 
-```
+```java
 $ docker-compose up -d
 
 Container {folder-name}-alpine-1  Creating
@@ -38,7 +38,7 @@ Container {folder-name}-ubuntu-1  Started
 
 我们可以快速检查我们的容器是否按预期运行:
 
-```
+```java
 $ docker-compose ps
 NAME                         COMMAND             SERVICE             STATUS              PORTS
 {folder-name}-alpine-1   "/bin/sh"           alpine              running
@@ -51,7 +51,7 @@ NAME                         COMMAND             SERVICE             STATUS     
 
 **将容器的名称添加到`docker-compose up`命令中即可。**我们将在启动容器之前添加`build`选项来构建图像。我们还将添加`force-recreate`旗帜，因为我们没有改变图像:
 
-```
+```java
 $ docker-compose up -d --force-recreate --build ubuntu
 Container {folder-name}-ubuntu-1  Recreate
 Container {folder-name}-ubuntu-1  Recreated
@@ -65,7 +65,7 @@ Container {folder-name}-ubuntu-1  Started
 
 现在让我们稍微更新一下我们的`docker-compose.yml`文件，使`ubuntu`容器依赖于`alpine`容器:
 
-```
+```java
 version: "3.9"
 services:
   ubuntu:
@@ -80,7 +80,7 @@ services:
 
 我们将**停止以前的容器，并使用新配置从头开始重建它们**:
 
-```
+```java
 $ docker-compose stop
 Container {folder-name}-alpine-1  Stopping
 Container {folder-name}-ubuntu-1  Stopping
@@ -99,7 +99,7 @@ Container {folder-name}-ubuntu-1  Started
 
 在这种情况下，我们需要**添加`no-deps`选项来明确告诉`docker-compose`不要重启链接的容器**:
 
-```
+```java
 $ docker-compose up -d --force-recreate --build --no-deps ubuntu
 Container {folder-name}-ubuntu-1  Recreate
 Container {folder-name}-ubuntu-1  Recreated

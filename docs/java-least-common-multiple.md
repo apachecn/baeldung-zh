@@ -46,7 +46,7 @@
 
 让我们实现我们的`lcm()`方法:
 
-```
+```java
 public static int lcm(int number1, int number2) {
     if (number1 == 0 || number2 == 0) {
         return 0;
@@ -65,7 +65,7 @@ public static int lcm(int number1, int number2) {
 
 接下来，让我们也验证一下这个方法:
 
-```
+```java
 @Test
 public void testLCM() {
     Assert.assertEquals(36, lcm(12, 18));
@@ -112,7 +112,7 @@ public void testLCM() {
 
 让我们看看`getPrimeFactors()`方法的迭代实现:
 
-```
+```java
 public static Map<Integer, Integer> getPrimeFactors(int number) {
     int absNumber = Math.abs(number);
 
@@ -135,7 +135,7 @@ public static Map<Integer, Integer> getPrimeFactors(int number) {
 
 我们知道 12 和 18 的素因子分解图分别是{2 → 2，3 → 1}和{2 → 1，3 → 2}。让我们用这个来测试上面的方法:
 
-```
+```java
 @Test
 public void testGetPrimeFactors() {
     Map<Integer, Integer> expectedPrimeFactorsMapForTwelve = new HashMap<>();
@@ -156,7 +156,7 @@ public void testGetPrimeFactors() {
 
 我们的`lcm()`方法首先使用`getPrimeFactors()`方法为每个数寻找质因数分解图。接下来，它使用这两个数字的质因数分解图来寻找它们的 LCM。让我们看看这个方法的迭代实现:
 
-```
+```java
 public static int lcm(int number1, int number2) {
     if(number1 == 0 || number2 == 0) {
         return 0;
@@ -182,7 +182,7 @@ public static int lcm(int number1, int number2) {
 
 作为一个好的实践，我们现在将验证`lcm()`方法的逻辑正确性:
 
-```
+```java
 @Test
 public void testLCM() {
     Assert.assertEquals(36, PrimeFactorizationAlgorithm.lcm(12, 18));
@@ -214,7 +214,7 @@ public void testLCM() {
 
 我们现在将看到欧几里德算法的**递归实现:**
 
-```
+```java
 public static int gcd(int number1, int number2) {
     if (number1 == 0 || number2 == 0) {
         return number1 + number2;
@@ -232,7 +232,7 @@ public static int gcd(int number1, int number2) {
 
 我们现在准备验证上述实现是否如预期的那样工作:
 
-```
+```java
 @Test
 public void testGCD() {
     Assert.assertEquals(6, EuclideanAlgorithm.gcd(12, 18));
@@ -243,7 +243,7 @@ public void testGCD() {
 
 使用早期的方法来寻找 GCD，我们现在可以很容易地计算 LCM。同样，我们的`lcm()`方法需要接受两个整数作为输入来返回它们的 LCM。让我们看看如何用 Java 实现这个方法:
 
-```
+```java
 public static int lcm(int number1, int number2) {
     if (number1 == 0 || number2 == 0)
         return 0;
@@ -256,7 +256,7 @@ public static int lcm(int number1, int number2) {
 
 我们现在可以验证上述方法的功能:
 
-```
+```java
 @Test
 public void testLCM() {
     Assert.assertEquals(36, EuclideanAlgorithm.lcm(12, 18));
@@ -277,7 +277,7 @@ public void testLCM() {
 
 在这种情况下，我们也将通过用数字乘积的绝对值除以它们的 GCD 来计算 LCM。与前面的例子类似，我们的`lcm()`方法将两个`BigInteger`值作为输入，并将这两个数字的 LCM 作为一个`BigInteger`返回。让我们来看看它的实际应用:
 
-```
+```java
 public static BigInteger lcm(BigInteger number1, BigInteger number2) {
     BigInteger gcd = number1.gcd(number2);
     BigInteger absProduct = number1.multiply(number2).abs();
@@ -287,7 +287,7 @@ public static BigInteger lcm(BigInteger number1, BigInteger number2) {
 
 最后，我们可以用一个测试案例来验证这一点:
 
-```
+```java
 @Test
 public void testLCM() {
     BigInteger number1 = new BigInteger("12");

@@ -35,7 +35,7 @@
 
 因为我们要使用正则表达式来匹配日期，所以让我们先画出一个接口`DateMatcher`，它提供了一个`matches`方法:
 
-```
+```java
 public interface DateMatcher {
     boolean matches(String date);
 }
@@ -47,7 +47,7 @@ public interface DateMatcher {
 
 我们将首先创建一个非常简单的原型来处理匹配器的格式约束:
 
-```
+```java
 class FormattedDateMatcher implements DateMatcher {
 
     private static Pattern DATE_PATTERN = Pattern.compile(
@@ -72,7 +72,7 @@ class FormattedDateMatcher implements DateMatcher {
 
 既然我们已经成功匹配了常规日期格式，我们需要进一步约束它，以确保日期实际上是正确的:
 
-```
+```java
 ^((19|2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$
 ```
 
@@ -97,7 +97,7 @@ class FormattedDateMatcher implements DateMatcher {
 
 这里有一个解决方案:
 
-```
+```java
 ^((2000|2400|2800|(19|2[0-9])(0[48]|[2468][048]|[13579][26]))-02-29)$
 ```
 
@@ -115,7 +115,7 @@ class FormattedDateMatcher implements DateMatcher {
 
 除了匹配闰年的 2 月 29 日，**我们还需要匹配所有年份中 2 月(1-28)的所有其他日子**:
 
-```
+```java
 ^(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))$
 ```
 
@@ -127,7 +127,7 @@ class FormattedDateMatcher implements DateMatcher {
 
 一月、三月、五月、七月、八月、十月和十二月应该匹配 1 到 31 天:
 
-```
+```java
 ^(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))$
 ```
 
@@ -139,7 +139,7 @@ class FormattedDateMatcher implements DateMatcher {
 
 四月、六月、九月和十一月应该匹配 1 到 30 天:
 
-```
+```java
 ^(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))$
 ```
 
@@ -151,7 +151,7 @@ class FormattedDateMatcher implements DateMatcher {
 
 现在我们可以**将上面所有的模式组合成一个匹配器，得到一个满足所有约束的完整的`GregorianDateMatcher`** :
 
-```
+```java
 class GregorianDateMatcher implements DateMatcher {
 
     private static Pattern DATE_PATTERN = Pattern.compile(

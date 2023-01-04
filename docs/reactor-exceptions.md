@@ -10,7 +10,7 @@
 
 让我们从添加[反应堆堆芯依赖性](https://web.archive.org/web/20220625074631/https://search.maven.org/search?q=g:%22io.projectreactor%22%20a:%22reactor-core%22)开始:
 
-```
+```java
 <dependency>
     <groupId>io.projectreactor</groupId>
     <artifactId>reactor-core</artifactId
@@ -26,7 +26,7 @@
 
 使用`map`操作符进行这种转换是一种常见的做法:
 
-```
+```java
 Function<String, Integer> mapper = input -> {
     if (input.matches("\\D")) {
         throw new NumberFormatException();
@@ -41,7 +41,7 @@ Flux<Integer> outFlux = inFlux.map(mapper);
 
 正如我们看到的，如果输入元素无效，操作符抛出一个`Exception`。当我们以这种方式抛出`Exception`时，**反应堆捕捉到它，并向下游**发出错误信号:
 
-```
+```java
 StepVerifier.create(outFlux)
     .expectNext(1)
     .expectError(NumberFormatException.class)
@@ -58,7 +58,7 @@ StepVerifier.create(outFlux)
 
 让我们更新上一节的例子，使用`handle`操作符:
 
-```
+```java
 BiConsumer<String, SynchronousSink<Integer>> handler = (input, sink) -> {
     if (input.matches("\\D")) {
         sink.error(new NumberFormatException());
@@ -79,7 +79,7 @@ Flux<Integer> outFlux = inFlux.handle(handler);
 
 让我们验证输出流:
 
-```
+```java
 StepVerifier.create(outFlux)
     .expectNext(1)
     .expectError(NumberFormatException.class)
@@ -92,7 +92,7 @@ StepVerifier.create(outFlux)
 
 让我们使用`flatMap`来尝试同样的例子:
 
-```
+```java
 Function<String, Publisher<Integer>> mapper = input -> {
     if (input.matches("\\D")) {
         return Mono.error(new NumberFormatException());
@@ -120,7 +120,7 @@ StepVerifier.create(outFlux)
 
 本节涵盖了对`null`引用的处理，这通常会导致`NullPointerException` s，这是 Java 中经常遇到的`Exception`。为了避免这种异常，我们通常将一个变量与`null`进行比较，如果这个变量实际上是`null`的话，我们就以不同的方式执行。在反应流中做同样的事情很有诱惑力:
 
-```
+```java
 Function<String, Integer> mapper = input -> {
     if (input == null) {
         return 0;
@@ -132,7 +132,7 @@ Function<String, Integer> mapper = input -> {
 
 我们可能认为`NullPointerException`不会发生，因为我们已经处理了输入值为`null`的情况。然而，现实告诉我们一个不同的故事:
 
-```
+```java
 Flux<String> inFlux = Flux.just("1", null, "2");
 Flux<Integer> outFlux = inFlux.map(mapper);
 

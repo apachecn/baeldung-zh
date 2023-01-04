@@ -14,7 +14,7 @@
 
 首先，让我们创建事件:
 
-```
+```java
 public class SingleResourceRetrieved extends ApplicationEvent {
     private HttpServletResponse response;
 
@@ -51,7 +51,7 @@ public class ResourceCreated extends ApplicationEvent {
 
 然后，**控制器，有两个简单的操作——`find by id`和`create` :**
 
-```
+```java
 @RestController
 @RequestMapping(value = "/foos")
 public class FooController {
@@ -91,7 +91,7 @@ public class FooController {
 
 我们将使用一个监听器来处理这个问题:
 
-```
+```java
 @Component
 class ResourceCreatedDiscoverabilityListener
   implements ApplicationListener<ResourceCreated>{
@@ -122,7 +122,7 @@ class ResourceCreatedDiscoverabilityListener
 
 在检索单个资源时，**客户端应该能够发现 URI 以获取该类型的所有资源**:
 
-```
+```java
 @Component
 class SingleResourceRetrievedDiscoverabilityListener
  implements ApplicationListener<SingleResourceRetrieved>{
@@ -151,7 +151,7 @@ class SingleResourceRetrievedDiscoverabilityListener
 
 **`Link`报头是最常用的 HTTP 报头之一** **用于发现目的。**创建这个标题的实用程序非常简单:
 
-```
+```java
 public class LinkUtil {
     public static String createLinkHeader(String uri, String rel) {
         return "<" + uri + ">; rel=\"" + rel + "\"";
@@ -167,7 +167,7 @@ public class LinkUtil {
 
 现在让我们来看看控制器:
 
-```
+```java
 @GetMapping("/")
 @ResponseStatus(value = HttpStatus.NO_CONTENT)
 public void adminRoot(final HttpServletRequest request, final HttpServletResponse response) {

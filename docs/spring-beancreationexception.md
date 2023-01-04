@@ -26,7 +26,7 @@ See how to register beans using the functional approach in Spring 5.[Read more](
 
 例如，`BeanA`正在尝试注入`BeanB`:
 
-```
+```java
 @Component
 public class BeanA {
 
@@ -38,7 +38,7 @@ public class BeanA {
 
 如果在上下文中没有找到`BeanB`，那么将抛出以下异常(创建 Bean 时出错):
 
-```
+```java
 Error creating bean with name 'beanA': Injection of autowired dependencies failed; 
 nested exception is org.springframework.beans.factory.BeanCreationException: 
 Could not autowire field: private com.baeldung.web.BeanB cpm.baeldung.web.BeanA.dependency; 
@@ -76,7 +76,7 @@ bean 创建异常的另一个类似原因是 Spring 试图通过类型注入 bea
 
 例如，`BeanB1`和`BeanB2`都实现了相同的接口:
 
-```
+```java
 @Component
 public class BeanB1 implements IBeanB { ... }
 @Component
@@ -93,7 +93,7 @@ public class BeanA {
 
 这将导致 Spring bean 工厂抛出以下异常:
 
-```
+```java
 Error creating bean with name 'beanA': Injection of autowired dependencies failed; 
 nested exception is org.springframework.beans.factory.BeanCreationException: 
 Could not autowire field: private com.baeldung.web.IBeanB com.baeldung.web.BeanA.b; 
@@ -108,7 +108,7 @@ expected single matching bean but found 2: beanB1,beanB2
 
 接下来是一个在创建过程中抛出异常的 **bean。**一个容易理解问题的简化示例是在 bean 的构造函数中抛出一个异常:
 
-```
+```java
 @Component
 public class BeanA {
 
@@ -122,7 +122,7 @@ public class BeanA {
 
 正如所料，这将导致 Spring 快速失败，并出现以下异常:
 
-```
+```java
 Error creating bean with name 'beanA' defined in file [...BeanA.class]: 
 Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: 
 Could not instantiate bean class [com.baeldung.web.BeanA]: 
@@ -134,20 +134,20 @@ nested exception is java.lang.NullPointerException
 
 `BeanInstantiationException`的另一个可能出现的情况是在 XML 中将抽象类定义为 bean 这必须在 XML 中，因为在 Java `@Configuration`文件中没有办法做到这一点，并且类路径扫描将忽略抽象类:
 
-```
+```java
 @Component
 public abstract class BeanA implements IBeanA { ... }
 ```
 
 下面是 bean 的 XML 定义:
 
-```
+```java
 <bean id="beanA" class="com.baeldung.web.BeanA" />
 ```
 
 此设置将导致类似的异常:
 
-```
+```java
 org.springframework.beans.factory.BeanCreationException: 
 Error creating bean with name 'beanA' defined in class path resource [beansInXml.xml]: 
 Instantiation of bean failed; 
@@ -161,7 +161,7 @@ nested exception is java.lang.InstantiationException
 
 如果 bean 没有默认的构造函数，而 Spring 试图通过查找该构造函数来实例化它，这将导致运行时异常:
 
-```
+```java
 @Component
 public class BeanA implements IBeanA {
 
@@ -174,7 +174,7 @@ public class BeanA implements IBeanA {
 
 当类路径扫描机制选择这个 bean 时，失败将是:
 
-```
+```java
 Error creating bean with name 'beanA' defined in file [...BeanA.class]: Instantiation of bean failed; 
 nested exception is org.springframework.beans.BeanInstantiationException: 
 Could not instantiate bean class [com.baeldung.web.BeanA]: 
@@ -188,7 +188,7 @@ nested exception is java.lang.NoSuchMethodException: com.baeldung.web.BeanA.<ini
 
 还有一种可能性是定义一个 bean，`BeanA,`并引用另一个 bean，`BeanB,`，而在`BeanA`中没有相应的 setter 方法:
 
-```
+```java
 @Component
 public class BeanA {
     private IBeanB dependency;
@@ -200,7 +200,7 @@ public class BeanB implements IBeanB { ... }
 
 爱马仕
 
-```
+```java
 <bean id="beanA" class="com.baeldung.web.BeanA">
     <property name="beanB" ref="beanB" />
 </bean>
@@ -210,7 +210,7 @@ public class BeanB implements IBeanB { ... }
 
 当然，为了解决这个问题，我们需要为`IBeanB`添加 setter:
 
-```
+```java
 @Component
 public class BeanA {
     private IBeanB dependency;
@@ -225,13 +225,13 @@ public class BeanA {
 
 **Spring 在无法加载已定义 bean** 的类时抛出这个异常。如果 Spring XML 配置包含一个没有相应类的 bean，就会出现这种情况。例如，如果类`BeanZ`不存在，下面的定义将导致一个异常:
 
-```
+```java
 <bean id="beanZ" class="com.baeldung.web.BeanZ" />
 ```
 
 本例中`ClassNotFoundException`和完整异常的根本原因是:
 
-```
+```java
 nested exception is org.springframework.beans.factory.BeanCreationException: 
 ...
 nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: 
@@ -246,7 +246,7 @@ nested exception is java.lang.ClassNotFoundException: com.baeldung.web.BeanZ
 
 `BeanCreationException`的一个子类是`BeanCurrentlyInCreationException.`，这通常发生在使用构造函数注入时，例如，在循环依赖的情况下:
 
-```
+```java
 @Component
 public class BeanA implements IBeanA {
     private IBeanB beanB;
@@ -271,7 +271,7 @@ public class BeanB implements IBeanB {
 
 Spring 无法解决这种连接场景，最终结果将是:
 
-```
+```java
 org.springframework.beans.factory.BeanCurrentlyInCreationException: 
 Error creating bean with name 'beanA': 
 Requested bean is currently in creation: Is there an unresolvable circular reference?
@@ -279,7 +279,7 @@ Requested bean is currently in creation: Is there an unresolvable circular refer
 
 完整的异常非常详细:
 
-```
+```java
 org.springframework.beans.factory.UnsatisfiedDependencyException: 
 Error creating bean with name 'beanA' defined in file [...BeanA.class]: 
 Unsatisfied dependency expressed through constructor argument with index 0 
@@ -309,7 +309,7 @@ Requested bean is currently in creation: Is there an unresolvable circular refer
 
 当 bean 工厂试图检索和实例化被声明为抽象的 Bean 时，可能会发生此实例化异常:
 
-```
+```java
 public abstract class BeanA implements IBeanA {
    ...
 }
@@ -317,13 +317,13 @@ public abstract class BeanA implements IBeanA {
 
 我们在 XML 配置中将其声明为:
 
-```
+```java
 <bean id="beanA" abstract="true" class="com.baeldung.web.BeanA" />
 ```
 
 如果我们试图通过名称从 Spring 上下文中检索`BeanA`，就像实例化另一个 bean 一样:
 
-```
+```java
 @Configuration
 public class Config {
     @Autowired
@@ -339,14 +339,14 @@ public class Config {
 
 这将导致以下异常:
 
-```
+```java
 org.springframework.beans.factory.BeanIsAbstractException: 
 Error creating bean with name 'beanA': Bean definition is abstract
 ```
 
 和完整的异常堆栈跟踪:
 
-```
+```java
 org.springframework.beans.factory.BeanCreationException: 
 Error creating bean with name 'beanB' defined in class path resource 
 [org/baeldung/spring/config/WebConfig.class]: Instantiation of bean failed; 

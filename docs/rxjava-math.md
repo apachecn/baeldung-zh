@@ -16,7 +16,7 @@
 
 为了使用额外的操作符，我们需要[将额外的依赖关系](https://web.archive.org/web/20221205161936/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22io.reactivex%22%20rxjava-math)添加到`pom.xml:`中
 
-```
+```java
 <dependency>
     <groupId>io.reactivex</groupId>
     <artifactId>rxjava-math</artifactId>
@@ -26,7 +26,7 @@
 
 或者，对于 Gradle 项目:
 
-```
+```java
 compile 'io.reactivex:rxjava-math:1.0.0'
 ```
 
@@ -40,7 +40,7 @@ compile 'io.reactivex:rxjava-math:1.0.0'
 
 让我们看看实际情况:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.range(1, 20);
 TestSubscriber<Integer> subscriber = TestSubscriber.create();
 
@@ -57,7 +57,7 @@ subscriber.assertValue(10);
 
 让我们看看实际情况:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.range(1, 20);
 TestSubscriber<Integer> subscriber = TestSubscriber.create();
 
@@ -72,7 +72,7 @@ subscriber.assertValue(9);
 
 让我们定义一下`Item` 类:
 
-```
+```java
 class Item {
     private Integer id;
 
@@ -82,7 +82,7 @@ class Item {
 
 我们现在可以定义`itemObservable`，然后使用`max`操作符来发出具有最高`id`的`Item`:
 
-```
+```java
 Item five = new Item(5);
 List<Item> list = Arrays.asList(
   new Item(1), 
@@ -105,7 +105,7 @@ subscriber.assertValue(five);
 
 `min` 操作符发出包含源中最小元素的单个项目:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.range(1, 20);
 TestSubscriber<Integer> subscriber = TestSubscriber.create();
 
@@ -116,7 +116,7 @@ subscriber.assertValue(1);
 
 `min`操作符有一个接受比较器实例的重载方法:
 
-```
+```java
 Item one = new Item(1);
 List<Item> list = Arrays.asList(
   one, 
@@ -138,7 +138,7 @@ subscriber.assertValue(one);
 
 `sum`操作符发出一个值，代表由源`Observable:`发出的所有数字的总和
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.range(1, 20);
 TestSubscriber<Integer> subscriber = TestSubscriber.create();
 
@@ -157,7 +157,7 @@ subscriber.assertValue(210);
 
 现在让我们定义两个`Observables`并将它们连接起来:
 
-```
+```java
 List<Integer> listOne = Arrays.asList(1, 2, 3, 4);
 Observable<Integer> observableOne = Observable.from(listOne);
 
@@ -184,7 +184,7 @@ subscriber.assertValues(1, 2, 3, 4, 5, 6, 7, 8);
 
 让我们来数一数`Observable`发出的物品数量:
 
-```
+```java
 List<String> lettersList = Arrays.asList(
   "A", "B", "C", "D", "E", "F", "G");
 TestSubscriber<Integer> subscriber = TestSubscriber.create();
@@ -208,7 +208,7 @@ subscriber.assertValue(7);
 
 现在，让我们看看如何简化一个列表`String`，以相反的顺序连接它们:
 
-```
+```java
 List<String> list = Arrays.asList("A", "B", "C", "D", "E", "F", "G");
 TestSubscriber<String> subscriber = TestSubscriber.create();
 
@@ -230,7 +230,7 @@ subscriber.assertValue("GFEDCBA");
 
 让我们看看如何从一个`Observable`返回一个`set`项:
 
-```
+```java
 List<String> list = Arrays.asList("A", "B", "C", "B", "B", "A", "D");
 TestSubscriber<HashSet> subscriber = TestSubscriber.create();
 
@@ -246,7 +246,7 @@ subscriber.assertValues(new HashSet(list));
 
 The `toList` operator works just like the `collect` operation, but collects all elements into a single list – think about `Collectors.toList()` from the Stream API:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.range(1, 5);
 TestSubscriber<List> subscriber = TestSubscriber.create();
 
@@ -261,7 +261,7 @@ subscriber.assertValue(Arrays.asList(1, 2, 3, 4, 5));
 
 就像前面的例子一样，但是发出的列表是排序的:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.range(10, 5);
 TestSubscriber<List> subscriber = TestSubscriber.create();
 
@@ -274,7 +274,7 @@ subscriber.assertValue(Arrays.asList(10, 11, 12, 13, 14));
 
 正如我们所见，`toSortedList`使用默认的比较，但是也可以提供定制的比较函数。我们现在可以看到如何使用自定义排序函数对整数进行逆序排序:
 
-```
+```java
 Observable<Integer> sourceObservable = Observable.range(10, 5);
 TestSubscriber<List> subscriber = TestSubscriber.create();
 
@@ -297,7 +297,7 @@ subscriber.assertValue(Arrays.asList(14, 13, 12, 11, 10));
 
 让我们开始定义一个简单的类`Book`:
 
-```
+```java
 class Book {
     private String title;
     private Integer year;
@@ -308,7 +308,7 @@ class Book {
 
 我们现在可以看到如何将一系列发出的`Book` 项转换为`Map`，将书名作为键，将年份作为值`:`
 
-```
+```java
 Observable<Book> bookObservable = Observable.just(
   new Book("The North Water", 2016), 
   new Book("Origin", 2017), 
@@ -335,7 +335,7 @@ subscriber.assertValue(new HashMap() {{
 
 这个操作符向`toMap` 操作符添加了另一个参数，这个参数允许指定值应该存储在哪个集合类型中。让我们来看看如何做到这一点:
 
-```
+```java
 Observable<Book> bookObservable = Observable.just(
   new Book("The North Water", 2016), 
   new Book("Origin", 2017), 

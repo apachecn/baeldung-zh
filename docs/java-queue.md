@@ -42,7 +42,7 @@
 
 首先，让我们用一个`LinkedList `来定义我们的类，以存储我们的`Queue's `元素:
 
-```
+```java
 public class CustomBaeldungQueue<T> extends AbstractQueue<T> {
 
     private LinkedList<T> elements;
@@ -56,7 +56,7 @@ public class CustomBaeldungQueue<T> extends AbstractQueue<T> {
 
 接下来，让我们**覆盖所需的方法并提供代码:**
 
-```
+```java
 @Override
 public Iterator<T> iterator() {
     return elements.iterator();
@@ -93,7 +93,7 @@ public T peek() {
 
 太好了，让我们用一个快速的单元测试来检查它的工作情况:
 
-```
+```java
 customQueue.add(7);
 customQueue.add(5);
 
@@ -138,7 +138,7 @@ Java 附带了一个`TransferQueue `接口的实现`[LinkedTransferQueue](/web/
 
 让我们通过一个简单的单元测试来看看这是如何工作的:
 
-```
+```java
 PriorityQueue<Integer> integerQueue = new PriorityQueue<>();
 
 integerQueue.add(9);
@@ -158,7 +158,7 @@ assertEquals(9, third);
 
 我们可以看到，同样的情况也适用于`Strings`:
 
-```
+```java
 PriorityQueue<String> stringQueue = new PriorityQueue<>();
 
 stringQueue.add("blueberry");

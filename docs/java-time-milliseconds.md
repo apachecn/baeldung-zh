@@ -18,7 +18,7 @@
 
 首先，让我们定义一个保存毫秒随机值的`millis`属性:
 
-```
+```java
 long millis = 1556175797428L; // April 25, 2019 7:03:17.428 UTC
 ```
 
@@ -26,13 +26,13 @@ long millis = 1556175797428L; // April 25, 2019 7:03:17.428 UTC
 
 接下来，让我们从一个`Date`对象开始:
 
-```
+```java
 Date date = // implementation details
 ```
 
 现在，我们准备好通过简单地调用`getTime()`方法将`date`转换成毫秒:
 
-```
+```java
 Assert.assertEquals(millis, date.getTime());
 ```
 
@@ -40,7 +40,7 @@ Assert.assertEquals(millis, date.getTime());
 
 同样，如果我们有一个`Calendar`对象，我们可以使用`getTimeInMillis()`方法:
 
-```
+```java
 Calendar calendar = // implementation details
 Assert.assertEquals(millis, calendar.getTimeInMillis());
 ```
@@ -53,7 +53,7 @@ Assert.assertEquals(millis, calendar.getTimeInMillis());
 
 我们可以从`Instant`获得以毫秒为单位的当前时间:
 
-```
+```java
 java.time.Instant instant = // implementation details
 Assert.assertEquals(millis, instant.toEpochMilli());
 ```
@@ -64,7 +64,7 @@ Assert.assertEquals(millis, instant.toEpochMilli());
 
 类似地，我们可以使用 Java 8 的[日期和时间 API](/web/20220815045938/https://www.baeldung.com/java-8-date-time-intro) 将`LocalDateTime`转换成毫秒:
 
-```
+```java
 LocalDateTime localDateTime = // implementation details
 ZonedDateTime zdt = ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
 Assert.assertEquals(millis, zdt.toInstant().toEpochMilli());
@@ -82,7 +82,7 @@ Assert.assertEquals(millis, zdt.toInstant().toEpochMilli());
 
 首先，我们可以使用`getMillis()`方法从 **[Joda-Time](/web/20220815045938/https://www.baeldung.com/joda-time)** `Instant`类实例中获取当前系统毫秒数:
 
-```
+```java
 Instant jodaInstant = // implementation details
 Assert.assertEquals(millis, jodaInstant.getMillis());
 ```
@@ -91,13 +91,13 @@ Assert.assertEquals(millis, jodaInstant.getMillis());
 
 此外，如果我们有一个 Joda-Time `DateTime`实例:
 
-```
+```java
 DateTime jodaDateTime = // implementation details
 ```
 
 然后我们可以用`getMillis()`方法检索毫秒:
 
-```
+```java
 Assert.assertEquals(millis, jodaDateTime.getMillis());
 ```
 

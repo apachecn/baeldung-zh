@@ -35,7 +35,7 @@
 
 在内部，动物群是一个文档数据库。这意味着它将每个记录存储为一个结构化文档，用 JSON 表示任意形状。这使得 Fauna 可以充当键值存储(文档只有一个字段`value`)或表格存储(文档有任意多个字段，但它们都是平面的)。但是，我们也可以存储更复杂的文档，包括嵌套的字段、数组等等:
 
-```
+```java
 // Key-Value document
 {
   "value": "Baeldung"
@@ -147,7 +147,7 @@ Java 驱动程序要求我们在 Java 11 或更高版本上运行。
 
 我们需要做的第一件事是添加依赖性。如果我们使用 Maven，我们只需将它添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.faunadb</groupId>
     <artifactId>faunadb-java</artifactId>
@@ -158,7 +158,7 @@ Java 驱动程序要求我们在 Java 11 或更高版本上运行。
 
 然后，我们需要创建一个客户机连接，我们可以用它来与数据库通信:
 
-```
+```java
 FaunaClient client = FaunaClient.builder()
     .withEndpoint("https://db.us.fauna.com/")
     .withSecret("put-your-authorization-key-here")
@@ -173,7 +173,7 @@ FaunaClient client = FaunaClient.builder()
 
 现在我们有了一个客户机，我们可以用它向数据库发送查询:
 
-```
+```java
 client.query(
     language.Get(language.Ref(language.Collection("customers"), 101))
 ).get();
@@ -201,7 +201,7 @@ Fauna 提供了一个完整的 GraphQL API 来与我们的数据库交互。这�
 
 为此，我们将把`fauna.region`和`fauna.secret`的属性添加到我们的`application.properties`文件中——或者任何其他支持的[弹簧配置方法](/web/20220630132911/https://www.baeldung.com/properties-with-spring):
 
-```
+```java
 fauna.region=us
 fauna.secret=FaunaSecretHere
 ```
@@ -212,7 +212,7 @@ fauna.secret=FaunaSecretHere
 
 **如果我们计划在应用程序中使用 FQL，我们可以在 Spring 上下文中添加一个`FaunaClient` bean。**这将涉及创建一个 Spring 配置对象来使用适当的属性并构造`FaunaClient`对象:
 
-```
+```java
 @Configuration
 class FaunaClientConfiguration {
     @Value("https://db.${fauna.region}.fauna.com/")
@@ -239,7 +239,7 @@ class FaunaClientConfiguration {
 
 为了实现这一点，我们将编写一个类来包装`RestTemplate`，并可以对动物群进行适当的 HTTP 调用:
 
-```
+```java
 @Component
 public class GraphqlClient {
     @Value("https://graphql.${fauna.region}.fauna.com/graphql")

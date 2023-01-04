@@ -12,7 +12,7 @@
 
 让我们向项目的`pom.xml`文件的`<plugins>`部分添加一个插件:
 
-```
+```java
 <plugin>
     <groupId>pl.project13.maven</groupId>
     <artifactId>git-commit-id-plugin</artifactId>
@@ -34,7 +34,7 @@
 
 如果找不到 Git 存储库，您可以将其配置为忽略错误:
 
-```
+```java
 <failOnNoGitDirectory>false</failOnNoGitDirectory>
 ```
 
@@ -42,7 +42,7 @@
 
 如果要指定自定义的`.git`储存库位置，使用`dotGitDirectory`属性:
 
-```
+```java
 <dotGitDirectory>${project.basedir}/submodule_directory/.git</dotGitDirectory>
 ```
 
@@ -50,7 +50,7 @@
 
 为了生成具有自定义名称和/或目录的属性文件，请使用以下部分:
 
-```
+```java
 <generateGitPropertiesFilename>
     ${project.build.outputDirectory}/filename.properties
 </generateGitPropertiesFilename>
@@ -60,7 +60,7 @@
 
 对于更多的日志记录用途:
 
-```
+```java
 <verbose>true</verbose>
 ```
 
@@ -68,7 +68,7 @@
 
 您可以关闭`git.properties`文件的创建:
 
-```
+```java
 <generateGitPropertiesFile>false</generateGitPropertiesFile>
 ```
 
@@ -76,7 +76,7 @@
 
 如果要指定自定义属性前缀，请使用:
 
-```
+```java
 <prefix>git</prefix>
 ```
 
@@ -84,7 +84,7 @@
 
 使用带有子模块的项目时，设置此标志可确保该插件仅适用于父存储库:
 
-```
+```java
 <runOnlyOnce>true</runOnlyOnce>
 ```
 
@@ -92,7 +92,7 @@
 
 您可能希望排除一些敏感数据，如存储库用户信息:
 
-```
+```java
 <excludeProperties>
     <excludeProperty>git.user.*</excludeProperty>
 </excludeProperties>
@@ -102,7 +102,7 @@
 
 仅包括指定的数据也是可能的:
 
-```
+```java
 <includeOnlyProperties>    
     <includeOnlyProperty>git.commit.id</includeOnlyProperty>
 </includeOnlyProperties>
@@ -120,7 +120,7 @@
 
 `CommitIdApplication`将作为我们应用程序的根:
 
-```
+```java
 @SpringBootApplication(scanBasePackages = { "com.baeldung.git" })
 public class CommitIdApplication {
 
@@ -146,7 +146,7 @@ public class CommitIdApplication {
 
 ### 4.2。控制器
 
-```
+```java
 @RestController
 public class CommitInfoController {
 
@@ -178,7 +178,7 @@ public class CommitInfoController {
 
 我们将首先设置插件要执行的执行步骤，以及我们认为有用的任何其他配置属性:
 
-```
+```java
 <plugin>
     <groupId>pl.project13.maven</groupId>
     <artifactId>git-commit-id-plugin</artifactId>
@@ -207,7 +207,7 @@ public class CommitInfoController {
 
 第一种是让插件来生成文件。我们可以通过将`generateGitPropertiesFile`配置属性设置为`true`值来指定这一点:
 
-```
+```java
 <configuration>
     <generateGitPropertiesFile>true</generateGitPropertiesFile>
 </configuration>
@@ -215,7 +215,7 @@ public class CommitInfoController {
 
 第二个选项是在 resources 文件夹中包含一个`git.properties`文件。我们可以只包含我们将在项目中使用的条目:
 
-```
+```java
 # git.properties
 git.tags=${git.tags}
 git.branch=${git.branch}
@@ -245,7 +245,7 @@ Maven 将用适当的值替换占位符。
 
 在启动并请求`localhost:8080/commitId`之后，您可以看到一个 JSON 文件，其结构类似于以下内容:
 
-```
+```java
 {
     "Commit id":"7adb64f1800f8a84c35fef9e5d15c10ab8ecffa6",
     "Commit branch":"commit_id_plugin",
@@ -259,7 +259,7 @@ Maven 将用适当的值替换占位符。
 
 正如您在[文档](https://web.archive.org/web/20221012201743/https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html)中所看到的，`GitInfoContributor`将获取`git.properties`文件(如果有的话)。因此，使用默认插件配置，调用`/info`端点时将返回 Git 信息:
 
-```
+```java
 {
   "git": {
     "branch": "commit_id_plugin",

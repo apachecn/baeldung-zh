@@ -18,19 +18,19 @@ Java 为我们提供了具有各种属性和特征的不同数据结构来存储
 
 首先，我们定义`javaB` `ookAuthorsMap,`，它将 Java 相关书籍的名称映射到其作者列表:
 
-```
+```java
 HashMap<String, List<String>> javaBooksAuthorsMap = new HashMap<>(); 
 ```
 
 此外，我们定义`phpBooksAuthorsMap`来保存 PHP 类别书籍的名称和作者:
 
-```
+```java
 HashMap<String, List<String>> phpBooksAuthorsMap = new HashMap<>();
 ```
 
 然后，我们定义`booksAuthorsMapsList`来保存不同类别的`HashMap`:
 
-```
+```java
 List<HashMap<String, List<String>>> booksAuthorsMapsList = new ArrayList<>();
 ```
 
@@ -40,7 +40,7 @@ List<HashMap<String, List<String>>> booksAuthorsMapsList = new ArrayList<>();
 
 让我们看看下面的单元测试:
 
-```
+```java
 @Test
 public void givenMaps_whenAddToList_thenListContainsMaps() {
     HashMap<String, List<String>> javaBooksAuthorsMap = new HashMap<>();

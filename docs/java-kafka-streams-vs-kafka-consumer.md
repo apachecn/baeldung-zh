@@ -47,7 +47,7 @@ Apache Kafka 是最流行的开源分布式容错流处理系统。Kafka Consume
 
 为了实现这些示例，我们只需将 [Kafka 消费者 API](https://web.archive.org/web/20221221193728/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.kafka%22%20AND%20a%3A%22kafka-clients%22) 和 [Kafka 流 API](https://web.archive.org/web/20221221193728/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.kafka%22%20AND%20a%3A%22kafka-streams%22) 依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.apache.kafka</groupId>
     <artifactId>kafka-clients</artifactId>
@@ -77,7 +77,7 @@ Kafka 流支持流，也支持可以双向转换的表。就是所谓的[流表�
 
 我们可以将一个主题作为一个流来读取和反序列化:
 
-```
+```java
 StreamsBuilder builder = new StreamsBuilder();
 KStream<String, String> textLines = 
   builder.stream(inputTopic, Consumed.with(Serdes.String(), Serdes.String()));
@@ -85,14 +85,14 @@ KStream<String, String> textLines =
 
 也可以阅读一个主题，以表格的形式跟踪最新收到的单词:
 
-```
+```java
 KTable<String, String> textLinesTable = 
   builder.table(inputTopic, Consumed.with(Serdes.String(), Serdes.String()));
 ```
 
 最后，我们能够使用全局表来阅读主题:
 
-```
+```java
 GlobalKTable<String, String> textLinesGlobalTable = 
   builder.globalTable(inputTopic, Consumed.with(Serdes.String(), Serdes.String()));
 ```
@@ -109,7 +109,7 @@ GlobalKTable<String, String> textLinesGlobalTable =
 
 现在让我们看看如何将值映射为大写，从主题中过滤它们，并将它们存储为流:
 
-```
+```java
 KStream<String, String> textLinesUpperCase =
   textLines
     .map((key, value) -> KeyValue.pair(value, value.toUpperCase()))
@@ -122,7 +122,7 @@ KStream<String, String> textLinesUpperCase =
 
 有状态转换的一个例子是字数统计算法:
 
-```
+```java
 KTable<String, Long> wordCounts = textLines
   .flatMapValues(value -> Arrays.asList(value
     .toLowerCase(Locale.getDefault()).split("\\W+")))
@@ -132,14 +132,14 @@ KTable<String, Long> wordCounts = textLines
 
 我们将把这两个字符串发送到主题:
 
-```
+```java
 String TEXT_EXAMPLE_1 = "test test and test";
 String TEXT_EXAMPLE_2 = "test filter filter this sentence"; 
 ```
 
 结果是:
 
-```
+```java
 Word: and -> 1
 Word: test -> 4
 Word: filter -> 2
@@ -151,7 +151,7 @@ DSL 涵盖了几个转换特性。我们可以`join`，或者用同一个键合�
 
 与 5s 窗口连接的一个例子是将两个流中按键分组的记录合并成一个流:
 
-```
+```java
 KStream<String, String> leftRightSource = leftSource.outerJoin(rightSource,
   (leftValue, rightValue) -> "left=" + leftValue + ", right=" + rightValue,
     JoinWindows.of(Duration.ofSeconds(5))).groupByKey()
@@ -161,14 +161,14 @@ KStream<String, String> leftRightSource = leftSource.outerJoin(rightSource,
 
 所以我们将左边的流`value=left`和`key=1`放在一起，右边的流`value=right`和`key=2`放在一起。结果如下:
 
-```
+```java
 (key= 1) -> (left=left, right=null)
 (key= 2) -> (left=null, right=right)
 ```
 
 对于聚合示例，我们将计算字数算法，但使用每个单词的前两个字母作为关键字:
 
-```
+```java
 KTable<String, Long> aggregated = input
   .groupBy((key, value) -> (value != null && value.length() > 0)
     ? value.substring(0, 2).toLowerCase() : "",
@@ -179,13 +179,13 @@ KTable<String, Long> aggregated = input
 
 包含以下条目:
 
-```
+```java
 "one", "two", "three", "four", "five" 
 ```
 
 输出是:
 
-```
+```java
 Word: on -> 3
 Word: tw -> 3
 Word: th -> 5
@@ -199,7 +199,7 @@ Word: fi -> 4
 
 为了在 Kafka 流中配置 EOS，我们将包括以下属性:
 
-```
+```java
 streamsConfiguration.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG,
   StreamsConfig.EXACTLY_ONCE);
 ```
@@ -210,7 +210,7 @@ streamsConfiguration.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG,
 
 让我们看一个使用交互式查询的例子。首先，我们将定义处理拓扑，在我们的例子中是字数统计算法:
 
-```
+```java
 KStream<String, String> textLines = 
   builder.stream(TEXT_LINES_TOPIC, Consumed.with(Serdes.String(), Serdes.String()));
 
@@ -221,7 +221,7 @@ final KGroupedStream<String, String> groupedByWord = textLines
 
 接下来，我们将为所有计算出的字数创建一个状态存储(键值):
 
-```
+```java
 groupedByWord
   .count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("WordCountsStore")
   .withValueSerde(Serdes.Long()));
@@ -229,7 +229,7 @@ groupedByWord
 
 然后，我们可以查询键值存储:
 
-```
+```java
 ReadOnlyKeyValueStore<String, Long> keyValueStore =
   streams.store(StoreQueryParameters.fromNameAndType(
     "WordCountsStore", QueryableStoreTypes.keyValueStore()));
@@ -243,7 +243,7 @@ while (range.hasNext()) {
 
 该示例的输出如下:
 
-```
+```java
 Count for and: 1
 Count for filter: 2
 Count for sentence: 1

@@ -16,7 +16,7 @@
 
 让我们使用一个可用的初学者模板来设置一个简单的 Spring Boot web 应用程序:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId> 
@@ -35,7 +35,7 @@
 
 然后我们将添加一个简单的 REST 端点来为我们返回一些有效的内容:
 
-```
+```java
 @RestController
 public class TomcatController {
 
@@ -58,13 +58,13 @@ Servlet 容器期望应用程序满足一些要部署的契约。对于 Tomcat �
 
 首先，我们需要打包一个 WAR 应用程序，而不是一个 JAR。为此，我们将用以下内容更改`pom.xml`:
 
-```
+```java
 <packaging>war</packaging>
 ```
 
 接下来，我们将修改最终的`WAR`文件名，以避免包含版本号:
 
-```
+```java
 <build>
     <finalName>${artifactId}</finalName>
     ... 
@@ -73,7 +73,7 @@ Servlet 容器期望应用程序满足一些要部署的契约。对于 Tomcat �
 
 然后我们将添加 Tomcat 依赖项:
 
-```
+```java
 <dependency>
    <groupId>org.springframework.boot</groupId>
    <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -83,7 +83,7 @@ Servlet 容器期望应用程序满足一些要部署的契约。对于 Tomcat �
 
 最后，我们将通过实现`SpringBootServletInitializer`接口`:`来初始化 Tomcat 所需的 Servlet 上下文
 
-```
+```java
 @SpringBootApplication
 public class SpringBootTomcatApplication extends SpringBootServletInitializer {
 }

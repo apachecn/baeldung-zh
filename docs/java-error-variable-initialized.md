@@ -12,7 +12,7 @@
 
 让我们编写一个包含未初始化变量的简单代码:
 
-```
+```java
 public class VariableMightNotHaveBeenInitializedError {
     public static void main(String[] args) {
         int sum;
@@ -33,7 +33,7 @@ public class VariableMightNotHaveBeenInitializedError {
 
 为了解决这个错误，**我们可以简单地在创建变量时给它赋值**:
 
-```
+```java
 public class VariableMightNotHaveBeenInitializedError {
     public static void main(String[] args) {
         int sum = 0;

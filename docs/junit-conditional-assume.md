@@ -24,7 +24,7 @@
 
 `assumeThat()` 方法检查状态——在本例中是`getOsName()`——是否满足传入的匹配器的条件:
 
-```
+```java
 @Test
 public void whenAssumeThatAndOSIsLinux_thenRunTest() {
     assumeThat(getOsName(), is("Linux"));
@@ -39,7 +39,7 @@ public void whenAssumeThatAndOSIsLinux_thenRunTest() {
 
 类似地，我们可以使用`assumeTrue()`方法来指定一个布尔表达式，这个布尔表达式必须计算为`true`才能运行测试。如果评估为`false`，测试将被忽略:
 
-```
+```java
 private boolean isExpectedOS(String osName) {
     return "Linux".equals(osName);
 }
@@ -58,7 +58,7 @@ public void whenAssumeTrueAndOSIsLinux_thenRunTest() {
 
 最后，我们可以使用相反的`assumeFalse()`方法来指定一个布尔表达式，这个布尔表达式的值必须为*假*，这样测试才能运行。如果评估结果为`true`，测试将被忽略:
 
-```
+```java
 @Test
 public void whenAssumeFalseAndOSIsLinux_thenIgnore() {
     assumeFalse(isExpectedOS(getOsName()));
@@ -73,7 +73,7 @@ public void whenAssumeFalseAndOSIsLinux_thenIgnore() {
 
 当我们想忽略某个表达式为`null,` 的测试时，我们可以使用 `assumeNotNull()`方法:
 
-```
+```java
 @Test
 public void whenAssumeNotNullAndNotNullOSVersion_thenRun() {
     assumeNotNull(getOsName());
@@ -88,7 +88,7 @@ public void whenAssumeNotNullAndNotNullOSVersion_thenRun() {
 
 最后，如果抛出异常，我们可能希望忽略测试。为此，我们可以使用`assumeNoException()`:
 
-```
+```java
 @Test
 public void whenAssumeNoExceptionAndExceptionThrown_thenIgnore() {
     assertEquals("everything ok", "EVERYTHING OK".toLowerCase());
@@ -110,7 +110,7 @@ public void whenAssumeNoExceptionAndExceptionThrown_thenIgnore() {
 
 让我们稍微修改一下我们的`assumeThat`例子，让`assertEquals()`调用先进行。还有，让我们让 `assertEquals()`失败:
 
-```
+```java
 @Test
 public void whenAssumeFalseAndOSIsLinux_thenIgnore() {
     assertEquals("run", "RUN");
@@ -120,7 +120,7 @@ public void whenAssumeFalseAndOSIsLinux_thenIgnore() {
 
 当我们运行这个例子时，我们将有:
 
-```
+```java
 org.junit.ComparisonFailure: 
 Expected :run
 Actual   :RUN

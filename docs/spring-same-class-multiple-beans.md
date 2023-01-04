@@ -14,7 +14,7 @@ Spring IoC 容器创建并管理 Spring beans，它是我们应用程序的核�
 
 让我们考虑一个简单的例子。我们有一个`Person`类，它有两个类成员`firstName`和 `lastName`:
 
-```
+```java
 public class Person {
     private String firstName;
     private String lastName;
@@ -34,7 +34,7 @@ public class Person {
 
 接下来，我们将构建一个名为`PersonConfig`的配置类，并在其中定义多个`Person`类的 beans:
 
-```
+```java
 @Configuration
 public class PersonConfig {
     @Bean
@@ -63,7 +63,7 @@ public class PersonConfig {
 
 首先，我们将创建多个子类，即扩展`Person`超类的`PersonOne`和`PersonTwo,`:
 
-```
+```java
 @Component
 public class PersonOne extends Person {
 
@@ -73,7 +73,7 @@ public class PersonOne extends Person {
 }
 ```
 
-```
+```java
 @Component
 public class PersonTwo extends Person {
 
@@ -85,7 +85,7 @@ public class PersonTwo extends Person {
 
 接下来，在`PersonConfig`文件中，我们将使用 [`@ComponentScan`](/web/20220820090132/https://www.baeldung.com/spring-component-scanning) 注释来启用对整个包的组件扫描。**这使得 Spring 容器能够自动创建用`@Component` :** 注释的任何类的 beans
 
-```
+```java
 @Configuration
 @ComponentScan("com.baeldung.multibeaninstantiation.solution2")
 public class PersonConfig {
@@ -108,7 +108,7 @@ public class PersonConfig {
 
 为了更好地理解这种方法，我们将进一步扩展这个例子。假设有一个`Human` 类依赖于`Person`类的多个实例:
 
-```
+```java
 public class Human implements InitializingBean {
 
     private Person personOne;
@@ -144,7 +144,7 @@ public class Human implements InitializingBean {
 
 该接口旨在创建实现它的 bean 的更多实例。在我们的例子中，它生成类型`Person`类的实例并自动配置它:
 
-```
+```java
 @Qualifier(value = "personOne, personTwo")
 public class Person implements FactoryBean<Object> {
     private String firstName;
@@ -180,7 +180,7 @@ public class Person implements FactoryBean<Object> {
 
 **`BeanFactoryPostProcessor`扫描所有用`@Qualifier.` 注释的类。此外，它从注释中提取名称(bean ids)并手动创建具有指定名称的类类型的实例:**
 
-```
+```java
 public class PersonFactoryPostProcessor implements BeanFactoryPostProcessor {
 
     @Override
@@ -209,7 +209,7 @@ public class PersonFactoryPostProcessor implements BeanFactoryPostProcessor {
 
 接下来，为了简单起见，我们将使用一个 Java 配置类来初始化自定义和`BeanFactory`实现:
 
-```
+```java
 @Configuration
 public class PersonConfig {
     @Bean

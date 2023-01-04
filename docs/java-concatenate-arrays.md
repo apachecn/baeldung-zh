@@ -16,14 +16,14 @@
 
 假设我们有两个数组:
 
-```
+```java
 String[] strArray1 = {"element 1", "element 2", "element 3"};
 String[] strArray2 = {"element 4", "element 5"};
 ```
 
 现在，我们想加入他们并获得一个新阵列:
 
-```
+```java
 String[] expectedStringArray = {"element 1", "element 2", "element 3", "element 4", "element 5"}
 ```
 
@@ -31,7 +31,7 @@ String[] expectedStringArray = {"element 1", "element 2", "element 3", "element 
 
 此外，我们不应该忘记原始数组的情况。如果我们的解决方案也适用于原始数组，那就太好了:
 
-```
+```java
 int[] intArray1 = { 0, 1, 2, 3 };
 int[] intArray2 = { 4, 5, 6, 7 };
 int[] expectedIntArray = { 0, 1, 2, 3, 4, 5, 6, 7 }; 
@@ -47,7 +47,7 @@ int[] expectedIntArray = { 0, 1, 2, 3, 4, 5, 6, 7 };
 
 我们可以创建一个`List`对象，然后调用这个方法两次，将两个数组添加到列表中。最后，我们将得到的`List` 转换回一个数组:
 
-```
+```java
 static <T> T[] concatWithCollection(T[] array1, T[] array2) {
     List<T> resultList = new ArrayList<>(array1.length + array2.length);
     Collections.addAll(resultList, array1);
@@ -64,7 +64,7 @@ static <T> T[] concatWithCollection(T[] array1, T[] array2) {
 
 让我们编写一个测试来验证我们的方法是否有效:
 
-```
+```java
 @Test
 public void givenTwoStringArrays_whenConcatWithList_thenGetExpectedResult() {
     String[] result = ArrayConcatUtil.concatWithCollection(strArray1, strArray2);
@@ -92,7 +92,7 @@ Java 没有提供数组拼接方法，但是提供了两种数组复制方法:`[
 
 首先，让我们看看方法的实现:
 
-```
+```java
 static <T> T[] concatWithArrayCopy(T[] array1, T[] array2) {
     T[] result = Arrays.copyOf(array1, array1.length + array2.length);
     System.arraycopy(array2, 0, result, array1.length, array2.length);
@@ -104,7 +104,7 @@ static <T> T[] concatWithArrayCopy(T[] array1, T[] array2) {
 
 现在，让我们编写一个测试方法来检查它是否如我们预期的那样工作:
 
-```
+```java
 @Test
 public void givenTwoStringArrays_whenConcatWithCopy_thenGetExpectedResult() {
     String[] result = ArrayConcatUtil.concatWithArrayCopy(strArray1, strArray2);
@@ -128,7 +128,7 @@ public void givenTwoStringArrays_whenConcatWithCopy_thenGetExpectedResult() {
 
 首先，让我们来看看修改后的方法:
 
-```
+```java
 static <T> T concatWithCopy2(T array1, T array2) {
     if (!array1.getClass().isArray() || !array2.getClass().isArray()) {
         throw new IllegalArgumentException("Only arrays are accepted.");
@@ -159,7 +159,7 @@ static <T> T concatWithCopy2(T array1, T array2) {
 
 由于该方法现在允许类型为`T`的参数，我们需要**确保两个参数都是数组**:
 
-```
+```java
 if (!array1.getClass().isArray() || !array2.getClass().isArray()) {
     throw new IllegalArgumentException("Only arrays are accepted.");
 }
@@ -167,7 +167,7 @@ if (!array1.getClass().isArray() || !array2.getClass().isArray()) {
 
 如果两个参数是数组，还是不够安全。例如，我们不想连接一个`Integer[]`数组和一个`String[]`数组。所以，我们需要**确保两个数组的`ComponentType`是相同的**:
 
-```
+```java
 if (!compType1.equals(compType2)) {
     throw new IllegalArgumentException("Two arrays have different types.");
 }
@@ -179,7 +179,7 @@ if (!compType1.equals(compType2)) {
 
 接下来，让我们测试我们的新方法是否如我们预期的那样工作。首先，我们传递两个非数组对象，并查看该方法是否会引发预期的异常:
 
-```
+```java
 @Test
 public void givenTwoStrings_whenConcatWithCopy2_thenGetException() {
     String exMsg = "Only arrays are accepted.";
@@ -196,7 +196,7 @@ public void givenTwoStrings_whenConcatWithCopy2_thenGetException() {
 
 最后，让我们构建一个测试来检查新方法是否可以连接基本数组:
 
-```
+```java
 @Test
 public void givenTwoArrays_whenConcatWithCopy2_thenGetExpectedResult() {
     String[] result = ArrayConcatUtil.concatWithCopy2(strArray1, strArray2);
@@ -223,7 +223,7 @@ public void givenTwoArrays_whenConcatWithCopy2_thenGetExpectedResult() {
 
 使用 Java 流构建通用解决方案非常简单:
 
-```
+```java
 static <T> T[] concatWithStream(T[] array1, T[] array2) {
     return Stream.concat(Arrays.stream(array1), Arrays.stream(array2))
       .toArray(size -> (T[]) Array.newInstance(array1.getClass().getComponentType(), size));
@@ -236,7 +236,7 @@ static <T> T[] concatWithStream(T[] array1, T[] array2) {
 
 接下来，让我们构建一个简单的测试方法来检查解决方案是否有效:
 
-```
+```java
 @Test
 public void givenTwoStringArrays_whenConcatWithStream_thenGetExpectedResult() {
     String[] result = ArrayConcatUtil.concatWithStream(strArray1, strArray2);
@@ -258,7 +258,7 @@ Stream API 提供了不同的`Stream`类，可以将`Stream`对象转换为相�
 
 让我们看一个使用`IntStream`连接两个 `int[]`数组的例子:
 
-```
+```java
 static int[] concatIntArraysWithIntStream(int[] array1, int[] array2) {
     return IntStream.concat(Arrays.stream(array1), Arrays.stream(array2)).toArray();
 } 
@@ -270,7 +270,7 @@ static int[] concatIntArraysWithIntStream(int[] array1, int[] array2) {
 
 像往常一样，让我们创建一个测试，看看它是否适用于我们的`int[]`输入数据:
 
-```
+```java
 @Test
 public void givenTwoIntArrays_whenConcatWithIntStream_thenGetExpectedResult() {
     int[] intResult = ArrayConcatUtil.concatIntArraysWithIntStream(intArray1, intArray2);
@@ -290,7 +290,7 @@ Apache Commons Lang 库在现实世界中的 Java 应用程序中被广泛使用
 
 让我们用一个测试方法来验证一下:
 
-```
+```java
 @Test
 public void givenTwoArrays_whenConcatWithCommonsLang_thenGetExpectedResult() {
     String[] result = ArrayUtils.addAll(strArray1, strArray2);
@@ -311,7 +311,7 @@ Guava 还提供了方便的助手类来进行数组连接。
 
 如果我们想要连接非原始数组，`[ObjectArrays.concat()](https://web.archive.org/web/20220724034804/https://guava.dev/releases/19.0/api/docs/com/google/common/collect/ObjectArrays.html#concat(T[],%20T[],%20java.lang.Class))`方法是一个很好的选择:
 
-```
+```java
 @Test
 public void givenTwoStringArrays_whenConcatWithGuava_thenGetExpectedResult() {
     String[] result = ObjectArrays.concat(strArray1, strArray2, String.class);
@@ -330,7 +330,7 @@ public void givenTwoStringArrays_whenConcatWithGuava_thenGetExpectedResult() {
 
 接下来，让我们使用`Ints.concat()`方法连接两个`int[]`数组:
 
-```
+```java
 @Test
 public void givenTwoIntArrays_whenConcatWithGuava_thenGetExpectedResult() {
     int[] intResult = Ints.concat(intArray1, intArray2);

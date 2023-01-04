@@ -26,7 +26,7 @@ Have a look at a practical example using Kafka connectors.[Read more](/web/20220
 
 我们还需要将`spring-kafka`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.kafka</groupId>
     <artifactId>spring-kafka</artifactId>
@@ -44,7 +44,7 @@ Have a look at a practical example using Kafka connectors.[Read more](/web/20220
 
 以前，我们在 Kafka 中运行命令行工具来创建主题:
 
-```
+```java
 $ bin/kafka-topics.sh --create \
   --zookeeper localhost:2181 \
   --replication-factor 1 --partitions 1 \
@@ -55,7 +55,7 @@ $ bin/kafka-topics.sh --create \
 
 **我们需要添加`KafkaAdmin` Spring bean，它将自动为所有类型为`NewTopic`** 的 bean 添加主题:
 
-```
+```java
 @Configuration
 public class KafkaTopicConfig {
 
@@ -86,7 +86,7 @@ public class KafkaTopicConfig {
 
 ### 4.1。生产者配置
 
-```
+```java
 @Configuration
 public class KafkaProducerConfig {
 
@@ -116,7 +116,7 @@ public class KafkaProducerConfig {
 
 我们可以使用`KafkaTemplate`类发送消息:
 
-```
+```java
 @Autowired
 private KafkaTemplate<String, String> kafkaTemplate;
 
@@ -131,7 +131,7 @@ Kafka 是一个快速的流处理平台。因此，最好异步处理结果，�
 
 我们可以通过回调来做到这一点:
 
-```
+```java
 public void sendMessage(String message) {
 
     ListenableFuture<SendResult<String, String>> future = 
@@ -161,7 +161,7 @@ public void sendMessage(String message) {
 
 配置类上需要 **[`@EnableKafka`](https://web.archive.org/web/20220712173816/https://docs.spring.io/autorepo/docs/spring-kafka-dist/1.1.3.RELEASE/api/org/springframework/kafka/annotation/EnableKafka.html) 注释，以便能够检测 spring 管理的 beans 上的`@KafkaListener`注释**:
 
-```
+```java
 @EnableKafka
 @Configuration
 public class KafkaConsumerConfig {
@@ -198,7 +198,7 @@ public class KafkaConsumerConfig {
 
 ### 5.2。消费信息
 
-```
+```java
 @KafkaListener(topics = "topicName", groupId = "foo")
 public void listenGroupFoo(String message) {
     System.out.println("Received Message in group foo: " + message);
@@ -207,13 +207,13 @@ public void listenGroupFoo(String message) {
 
 我们可以为一个主题实现多个监听器，每个监听器有一个不同的组 Id。此外，消费者可以收听各种主题的消息:
 
-```
+```java
 @KafkaListener(topics = "topic1, topic2", groupId = "foo")
 ```
 
 Spring 还支持使用监听器中的 [`@Header`](https://web.archive.org/web/20220712173816/https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/messaging/handler/annotation/Header.html) 注释来检索一个或多个消息头:
 
-```
+```java
 @KafkaListener(topics = "topicName")
 public void listenWithHeaders(
   @Payload String message, 
@@ -230,7 +230,7 @@ public void listenWithHeaders(
 
 然而，对于具有多个分区的主题，`@KafkaListener`可以显式地订阅具有初始偏移的主题的特定分区:
 
-```
+```java
 @KafkaListener(
   topicPartitions = @TopicPartition(topic = "topicName",
   partitionOffsets = {
@@ -250,7 +250,7 @@ public void listenToPartition(
 
 如果我们不需要设置偏移量，我们可以使用`@TopicPartition`注释的`partitions`属性只设置没有偏移量的分区:
 
-```
+```java
 @KafkaListener(topicPartitions 
   = @TopicPartition(topic = "topicName", partitions = { "0", "1" }))
 ```
@@ -259,7 +259,7 @@ public void listenToPartition(
 
 我们可以通过添加自定义过滤器来配置侦听器，以使用特定类型的消息。这可以通过将`[RecordFilterStrategy](https://web.archive.org/web/20220712173816/https://docs.spring.io/spring-kafka/api/org/springframework/kafka/listener/adapter/RecordFilterStrategy.html)`设置为`KafkaListenerContainerFactory`来实现:
 
-```
+```java
 @Bean
 public ConcurrentKafkaListenerContainerFactory<String, String>
   filterKafkaListenerContainerFactory() {
@@ -275,7 +275,7 @@ public ConcurrentKafkaListenerContainerFactory<String, String>
 
 然后，我们可以配置一个侦听器来使用这个容器工厂:
 
-```
+```java
 @KafkaListener(
   topics = "topicName", 
   containerFactory = "filterKafkaListenerContainerFactory")
@@ -292,7 +292,7 @@ public void listenWithFilter(String message) {
 
 让我们看一个简单的 bean 类`,`，我们将把它作为消息发送:
 
-```
+```java
 public class Greeting {
 
     private String msg;
@@ -308,7 +308,7 @@ public class Greeting {
 
 让我们看看`ProducerFactory`和 `KafkaTemplate`的代码:
 
-```
+```java
 @Bean
 public ProducerFactory<String, Greeting> greetingProducerFactory() {
     // ...
@@ -326,7 +326,7 @@ public KafkaTemplate<String, Greeting> greetingKafkaTemplate() {
 
 我们可以使用这个新的`KafkaTemplate`来发送`Greeting`消息:
 
-```
+```java
 kafkaTemplate.send(topicName, new Greeting("Hello", "World"));
 ```
 
@@ -334,7 +334,7 @@ kafkaTemplate.send(topicName, new Greeting("Hello", "World"));
 
 类似地，让我们修改`ConsumerFactory`和`KafkaListenerContainerFactory`来正确地反序列化问候消息:
 
-```
+```java
 @Bean
 public ConsumerFactory<String, Greeting> greetingConsumerFactory() {
     // ...
@@ -359,7 +359,7 @@ spring-kafka JSON 序列化器和反序列化器使用 [Jackson](/web/2022071217
 
 所以，让我们把它添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -371,7 +371,7 @@ spring-kafka JSON 序列化器和反序列化器使用 [Jackson](/web/2022071217
 
 最后，我们需要编写一个监听器来使用`Greeting`消息:
 
-```
+```java
 @KafkaListener(
   topics = "topicName", 
   containerFactory = "greetingKafkaListenerContainerFactory")

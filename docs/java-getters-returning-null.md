@@ -12,7 +12,7 @@
 
 我们需要的唯一设置是创建一个简单的 POJO 类:
 
-```
+```java
 public class Customer {
 
     private Integer id;
@@ -30,7 +30,7 @@ public class Customer {
 
 我们将首先收集我们的`Customer` 类的所有`PropertyDescriptor`实例。`PropertyDescriptor`捕获 Java Bean 属性的所有信息:
 
-```
+```java
 PropertyDescriptor[] propDescArr = Introspector
   .getBeanInfo(Customer.class, Object.class)
   .getPropertyDescriptors(); 
@@ -38,7 +38,7 @@ PropertyDescriptor[] propDescArr = Introspector
 
 现在让我们检查所有的`PropertyDescriptor` 实例，并为每个属性调用 read 方法:
 
-```
+```java
 return Arrays.stream(propDescArr)
   .filter(nulls(customer))
   .map(PropertyDescriptor::getName)
@@ -47,7 +47,7 @@ return Arrays.stream(propDescArr)
 
 我们上面使用的`nulls` 谓词检查属性是否可读，调用 getter 并只过滤空值:
 
-```
+```java
 private static Predicate<PropertyDescriptor> nulls(Customer customer) { 
     return = pd -> { 
         Method getterMethod = pd.getReadMethod(); 
@@ -59,7 +59,7 @@ private static Predicate<PropertyDescriptor> nulls(Customer customer) {
 
 最后，现在让我们创建一个`Customer`的实例，将一些属性设置为 null，并测试我们的实现:
 
-```
+```java
 @Test
 public void givenCustomer_whenAFieldIsNull_thenFieldNameInResult() {
     Customer customer = new Customer(1, "John", null, null);

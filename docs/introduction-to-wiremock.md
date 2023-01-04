@@ -12,7 +12,7 @@ WireMock 是一个用于存根和模仿 web 服务的库。它构造了一个 HT
 
 为了利用 WireMock 库，我们需要在 POM 中包含这种依赖性:
 
-```
+```java
 <dependency>
     <groupId>com.github.tomakehurst</groupId>
     <artifactId>wiremock</artifactId>
@@ -29,7 +29,7 @@ WireMock 是一个用于存根和模仿 web 服务的库。它构造了一个 HT
 
 首先，我们实例化一个 WireMock 服务器:
 
-```
+```java
 WireMockServer wireMockServer = new WireMockServer(String host, int port);
 ```
 
@@ -37,13 +37,13 @@ WireMockServer wireMockServer = new WireMockServer(String host, int port);
 
 然后，我们可以使用两种简单的方法启动和停止服务器:
 
-```
+```java
 wireMockServer.start();
 ```
 
 并且:
 
-```
+```java
 wireMockServer.stop();
 ```
 
@@ -53,45 +53,45 @@ wireMockServer.stop();
 
 让我们创建一个服务器实例:
 
-```
+```java
 WireMockServer wireMockServer = new WireMockServer();
 ```
 
 WireMock 服务器必须在客户端连接到它之前运行:
 
-```
+```java
 wireMockServer.start();
 ```
 
 然后 web 服务被存根化:
 
-```
+```java
 configureFor("localhost", 8080);
 stubFor(get(urlEqualTo("/baeldung")).willReturn(aResponse().withBody("Welcome to Baeldung!")));
 ```
 
 本教程利用 Apache HttpClient API 来表示连接到服务器的客户机:
 
-```
+```java
 CloseableHttpClient httpClient = HttpClients.createDefault();
 ```
 
 执行一个请求，然后返回一个响应:
 
-```
+```java
 HttpGet request = new HttpGet("http://localhost:8080/baeldung");
 HttpResponse httpResponse = httpClient.execute(request);
 ```
 
 我们将使用一个助手方法将`httpResponse`变量转换为`String`:
 
-```
+```java
 String responseString = convertResponseToString(httpResponse);
 ```
 
 下面是转换助手方法的实现:
 
-```
+```java
 private String convertResponseToString(HttpResponse response) throws IOException {
     InputStream responseStream = response.getEntity().getContent();
     Scanner scanner = new Scanner(responseStream, "UTF-8");
@@ -103,14 +103,14 @@ private String convertResponseToString(HttpResponse response) throws IOException
 
 下面的代码验证了服务器已经收到了对预期 URL 的请求，并且到达客户端的响应与发送的完全相同:
 
-```
+```java
 verify(getRequestedFor(urlEqualTo("/baeldung")));
 assertEquals("Welcome to Baeldung!", stringResponse);
 ```
 
 最后，我们应该停止 WireMock 服务器来释放系统资源:
 
-```
+```java
 wireMockServer.stop();
 ```
 
@@ -124,7 +124,7 @@ wireMockServer.stop();
 
 与以编程方式管理的服务器类似，JUnit 管理的 WireMock 服务器可以创建为具有给定端口号的 Java 对象:
 
-```
+```java
 @Rule
 public WireMockRule wireMockRule = new WireMockRule(int port);
 ```
@@ -137,7 +137,7 @@ public WireMockRule wireMockRule = new WireMockRule(int port);
 
 在这一小节中，我们将使用正则表达式为服务端点提供一个 REST 存根:
 
-```
+```java
 stubFor(get(urlPathMatching("/baeldung/.*"))
   .willReturn(aResponse()
   .withStatus(200)
@@ -147,7 +147,7 @@ stubFor(get(urlPathMatching("/baeldung/.*"))
 
 让我们继续创建一个 HTTP 客户端，执行请求并接收响应:
 
-```
+```java
 CloseableHttpClient httpClient = HttpClients.createDefault();
 HttpGet request = new HttpGet("http://localhost:8080/baeldung/wiremock");
 HttpResponse httpResponse = httpClient.execute(request);
@@ -156,7 +156,7 @@ String stringResponse = convertHttpResponseToString(httpResponse);
 
 上面的代码片段利用了一个转换助手方法:
 
-```
+```java
 private String convertHttpResponseToString(HttpResponse httpResponse) throws IOException {
     InputStream inputStream = httpResponse.getEntity().getContent();
     return convertInputStreamToString(inputStream);
@@ -165,7 +165,7 @@ private String convertHttpResponseToString(HttpResponse httpResponse) throws IOE
 
 这又利用了另一个私有方法:
 
-```
+```java
 private String convertInputStreamToString(InputStream inputStream) {
     Scanner scanner = new Scanner(inputStream, "UTF-8");
     String string = scanner.useDelimiter("\\Z").next();
@@ -176,7 +176,7 @@ private String convertInputStreamToString(InputStream inputStream) {
 
 下面的测试代码验证了存根的操作:
 
-```
+```java
 verify(getRequestedFor(urlEqualTo("/baeldung/wiremock")));
 assertEquals(200, httpResponse.getStatusLine().getStatusCode());
 assertEquals("application/json", httpResponse.getFirstHeader("Content-Type").getValue());
@@ -189,7 +189,7 @@ assertEquals("\"testing-library\": \"WireMock\"", stringResponse);
 
 让我们从存根配置开始:
 
-```
+```java
 stubFor(get(urlPathEqualTo("/baeldung/wiremock"))
   .withHeader("Accept", matching("text/.*"))
   .willReturn(aResponse()
@@ -200,7 +200,7 @@ stubFor(get(urlPathEqualTo("/baeldung/wiremock"))
 
 与前面的小节类似，我们使用 HttpClient API 说明 HTTP 交互，并借助相同的 helper 方法:
 
-```
+```java
 CloseableHttpClient httpClient = HttpClients.createDefault();
 HttpGet request = new HttpGet("http://localhost:8080/baeldung/wiremock");
 request.addHeader("Accept", "text/html");
@@ -210,7 +210,7 @@ String stringResponse = convertHttpResponseToString(httpResponse);
 
 以下验证和断言确认了我们之前创建的存根的功能:
 
-```
+```java
 verify(getRequestedFor(urlEqualTo("/baeldung/wiremock")));
 assertEquals(503, httpResponse.getStatusLine().getStatusCode());
 assertEquals("text/html", httpResponse.getFirstHeader("Content-Type").getValue());
@@ -223,7 +223,7 @@ assertEquals("!!! Service Unavailable !!!", stringResponse);
 
 以下是这种存根的配置:
 
-```
+```java
 stubFor(post(urlEqualTo("/baeldung/wiremock"))
   .withHeader("Content-Type", equalTo("application/json"))
   .withRequestBody(containing("\"testing-library\": \"WireMock\""))
@@ -235,7 +235,7 @@ stubFor(post(urlEqualTo("/baeldung/wiremock"))
 
 现在是时候创建一个将被用作请求主体的`StringEntity`对象了:
 
-```
+```java
 InputStream jsonInputStream 
   = this.getClass().getClassLoader().getResourceAsStream("wiremock_intro.json");
 String jsonString = convertInputStreamToString(jsonInputStream);
@@ -246,7 +246,7 @@ StringEntity entity = new StringEntity(jsonString);
 
 下面是类路径上的`wiremock_intro.json`文件的内容:
 
-```
+```java
 {
     "testing-library": "WireMock",
     "creator": "Tom Akehurst",
@@ -256,7 +256,7 @@ StringEntity entity = new StringEntity(jsonString);
 
 我们可以配置和运行 HTTP 请求和响应:
 
-```
+```java
 CloseableHttpClient httpClient = HttpClients.createDefault();
 HttpPost request = new HttpPost("http://localhost:8080/baeldung/wiremock");
 request.addHeader("Content-Type", "application/json");
@@ -266,7 +266,7 @@ HttpResponse response = httpClient.execute(request);
 
 这是用于验证存根的测试代码:
 
-```
+```java
 verify(postRequestedFor(urlEqualTo("/baeldung/wiremock"))
   .withHeader("Content-Type", equalTo("application/json")));
 assertEquals(200, response.getStatusLine().getStatusCode());
@@ -284,7 +284,7 @@ assertEquals(200, response.getStatusLine().getStatusCode());
 
 这两种情况都将使用下面的私有 helper 方法:
 
-```
+```java
 private HttpResponse generateClientAndReceiveResponseForPriorityTests() throws IOException {
     CloseableHttpClient httpClient = HttpClients.createDefault();
     HttpGet request = new HttpGet("http://localhost:8080/baeldung/wiremock");
@@ -295,7 +295,7 @@ private HttpResponse generateClientAndReceiveResponseForPriorityTests() throws I
 
 首先，我们配置两个存根，不考虑优先级:
 
-```
+```java
 stubFor(get(urlPathMatching("/baeldung/.*"))
   .willReturn(aResponse()
   .withStatus(200)));
@@ -307,20 +307,20 @@ stubFor(get(urlPathEqualTo("/baeldung/wiremock"))
 
 接下来，我们创建一个 HTTP 客户机，并使用 helper 方法执行一个请求:
 
-```
+```java
 HttpResponse httpResponse = generateClientAndReceiveResponseForPriorityTests();
 ```
 
 以下代码片段验证当请求与最后配置的存根匹配时，是否应用最后配置的存根，而不考虑之前定义的存根:
 
-```
+```java
 verify(getRequestedFor(urlEqualTo("/baeldung/wiremock")));
 assertEquals(503, httpResponse.getStatusLine().getStatusCode());
 ```
 
 让我们来看一下设置了优先级的存根，其中较低的数字代表较高的优先级:
 
-```
+```java
 stubFor(get(urlPathMatching("/baeldung/.*"))
   .atPriority(1)
   .willReturn(aResponse()
@@ -334,13 +334,13 @@ stubFor(get(urlPathEqualTo("/baeldung/wiremock"))
 
 现在我们将创建和执行一个 HTTP 请求:
 
-```
+```java
 HttpResponse httpResponse = generateClientAndReceiveResponseForPriorityTests();
 ```
 
 以下代码验证了优先级的效果，其中应用了第一个配置的存根而不是最后一个:
 
-```
+```java
 verify(getRequestedFor(urlEqualTo("/baeldung/wiremock")));
 assertEquals(200, httpResponse.getStatusLine().getStatusCode());
 ```

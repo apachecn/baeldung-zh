@@ -12,7 +12,7 @@
 
 让我们从在我们的`pom.xml`文件中添加 Maven 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.testng</groupId>
     <artifactId>testng</artifactId>
@@ -29,7 +29,7 @@
 
 要使用 TestNG 编写一个测试，我们只需要用`org.testng.annotations.Test` 注释对测试方法进行注释:
 
-```
+```java
 @Test
 public void givenNumber_whenEven_thenTrue() {
     assertTrue(number % 2 == 0);
@@ -40,7 +40,7 @@ public void givenNumber_whenEven_thenTrue() {
 
 在编写测试用例时，我们经常需要在测试执行前执行一些配置或初始化指令，以及在测试完成后进行一些清理。TestNG 在方法、类、组和套件级别提供了许多初始化和清理功能:
 
-```
+```java
 @BeforeClass
 public void setup() {
     number = 12;
@@ -60,7 +60,7 @@ public void tearDown() {
 
 我们可以用 Maven 的“test”命令运行测试用例，它将执行所有标注了`@Test` 的测试用例，并将它们放入默认的测试套件中。我们还可以使用`[maven-surefire-plugin](https://web.archive.org/web/20220524033319/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.maven.plugins%22%20AND%20a%3A%22maven-surefire-plugin%22):`从 TestNG 测试套件 XML 文件中运行测试用例
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-surefire-plugin</artifactId>
@@ -77,7 +77,7 @@ public void tearDown() {
 
 注意，如果我们有多个 XML 文件，覆盖了所有的测试用例，我们可以将它们全部添加到`suiteXmlFiles` 标签中:
 
-```
+```java
 <suiteXmlFiles>
     <suiteXmlFile>
       src/test/resources/parametrized_test.xml
@@ -90,7 +90,7 @@ public void tearDown() {
 
 为了独立运行测试，我们需要在类路径中有 TestNG 库，以及编译好的测试类和 XML 配置文件:
 
-```
+```java
 java org.testng.TestNG test_suite.xml
 ```
 
@@ -100,7 +100,7 @@ java org.testng.TestNG test_suite.xml
 
 在 TestNG 中，套件中的分组测试使用 XML 文件完成:
 
-```
+```java
 <suite name="suite">
     <test name="test suite">
         <classes>
@@ -115,7 +115,7 @@ java org.testng.TestNG test_suite.xml
 
 除了测试套件，我们还可以在 TestNG 中创建测试组，而不是将测试类方法分组在一起。为此，在`@Test` 注释中添加`groups` 参数:
 
-```
+```java
 @Test(groups = "regression")
 public void givenNegativeNumber_sumLessthanZero_thenCorrect() {
     int sum = numbers.stream().reduce(0, Integer::sum);
@@ -126,7 +126,7 @@ public void givenNegativeNumber_sumLessthanZero_thenCorrect() {
 
 让我们使用 XML 来执行这些组:
 
-```
+```java
 <test name="test groups">
     <groups>
         <run>
@@ -148,7 +148,7 @@ public void givenNegativeNumber_sumLessthanZero_thenCorrect() {
 
 在 TestNG 中，我们可以使用@ `Parameter` 或`@DataProvider` 注释来参数化测试。在使用 XML 文件时，用@ `Parameter:`标注测试方法
 
-```
+```java
 @Test
 @Parameters({"value", "isEven"})
 public void
@@ -160,7 +160,7 @@ public void
 
 And provide the data using XML file:
 
-```
+```java
 <suite name="My test suite">
     <test name="numbersXML">
         <parameter name="value" value="1"/>
@@ -174,7 +174,7 @@ And provide the data using XML file:
 
 使用 XML 文件中的数据是有用的，但是我们经常需要更复杂的数据。`@DataProvider`注释用于处理这些场景，可用于映射测试方法的复杂参数类型。`@DataProvider`对于原始数据类型:
 
-```
+```java
 @DataProvider(name = "numbers")
 public static Object[][] evenNumbers() {
     return new Object[][]{{1, false}, {2, true}, {4, true}};
@@ -189,7 +189,7 @@ public void
 
 `@DataProvider`对于物体:
 
-```
+```java
 @Test(dataProvider = "numbersObject")
 public void 
   givenNumberObjectFromDataProvider_ifEvenCheckOK_thenCorrect(EvenNumber number) {  
@@ -209,7 +209,7 @@ public Object[][] parameterProvider() {
 
 我们有时不希望在开发过程中暂时执行某个测试用例。这可以通过在@ `Test` 注释中添加`enabled` `=false,` 来实现:
 
-```
+```java
 @Test(enabled=false)
 public void givenNumbers_sumEquals_thenCorrect() { 
     int sum = numbers.stream.reduce(0, Integer::sum);
@@ -221,7 +221,7 @@ public void givenNumbers_sumEquals_thenCorrect() {
 
 让我们考虑一个场景，如果最初的测试用例失败，所有后续的测试用例都应该被执行，而不是被标记为跳过。TestNG 用`@Test` 注释的`dependsOnMethods` 参数提供了这个特性:
 
-```
+```java
 @Test
 public void givenEmail_ifValid_thenTrue() {
     boolean valid = email.contains("@");
@@ -247,7 +247,7 @@ TestNG 允许测试以并行或多线程模式运行，从而提供了一种测�
 
 要并行运行测试类，在 XML 配置文件的`suite`标签中提到`parallel` 属性，值为`classes:`
 
-```
+```java
 <suite name="suite" parallel="classes" thread-count="2">
     <test name="test suite">
         <classes>
@@ -264,7 +264,7 @@ TestNG 允许测试以并行或多线程模式运行，从而提供了一种测�
 
 假设我们需要测试一个代码在多线程中运行时的行为。TestNG 允许在多线程中运行一个测试方法:
 
-```
+```java
 public class MultiThreadedTests {
 
     @Test(threadPoolSize = 5, invocationCount = 10, timeOut = 1000)

@@ -10,7 +10,7 @@
 
 `HashMap`实现`Map`接口，也允许`null`值和`null`键:
 
-```
+```java
 @Test
 public void givenHashMap_whenEquals_thenTrue() {
     Map<String, Integer> map = new HashMap<>();
@@ -34,7 +34,7 @@ public void givenHashMap_whenEquals_thenTrue() {
 
 在使用`MultivaluedMap`接口及其实现类之前，我们需要将它的库 [Jakarta RESTful WS API](https://web.archive.org/web/20230103152512/https://search.maven.org/artifact/jakarta.ws.rs/jakarta.ws.rs-api) 添加到我们的 Maven 项目中。为此，我们需要在项目的`pom.xml`文件中声明一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>jakarta.ws.rs</groupId>
     <artifactId>jakarta.ws.rs-api</artifactId>
@@ -48,7 +48,7 @@ public void givenHashMap_whenEquals_thenTrue() {
 
 `MultivaluedHashMap`实现`MultivaluedMap`接口，它允许`null`值和`null `键:
 
-```
+```java
 @Test
 public void givenMultivaluedHashMap_whenEquals_thenTrue() {
     MultivaluedMap<String, Integer> mulmap = new MultivaluedHashMap<>();
@@ -74,20 +74,20 @@ public void givenMultivaluedHashMap_whenEquals_thenTrue() {
 
 例如，`addFirst(K key, V value)`是`MultivaluedMap`的方法之一，它将一个值添加到所提供键的当前值列表的第一个位置:
 
-```
+```java
 MultivaluedMap<String, String> mulmap = new MultivaluedHashMap<>();
 mulmap.addFirst("firstKey", "firstValue");
 ```
 
 另一方面，`getFirst(K key)`获得所提供的键的第一个值:
 
-```
+```java
 String value = mulmap.getFirst("firstKey");
 ```
 
 最后，`addAll(K key, V… newValues)`将多个值添加到所提供的键的当前值列表中:
 
-```
+```java
 mulmap.addAll("firstKey", "secondValue", "thirdValue");
 ```
 

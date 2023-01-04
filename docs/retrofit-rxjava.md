@@ -16,7 +16,7 @@
 
 为了开始一个带有改造的项目，让我们包括这些 Maven 工件:
 
-```
+```java
 <dependency>
     <groupId>com.squareup.retrofit2</groupId>
     <artifactId>retrofit</artifactId>
@@ -36,7 +36,7 @@
 
 让我们创建一个简单的界面:
 
-```
+```java
 public interface GitHubBasicApi {
 
     @GET("users/{user}/repos")
@@ -57,7 +57,7 @@ public interface GitHubBasicApi {
 
 让我们使用改进的`Call`对象和普通的 Java 代码来实现所需的逻辑:
 
-```
+```java
 class GitHubBasicService {
 
     private GitHubBasicApi gitHubApi;
@@ -115,7 +115,7 @@ class GitHubBasicService {
 
 要使用 RxJava 适配器，我们需要包含这个 Maven 工件:
 
-```
+```java
 <dependency>
     <groupId>com.squareup.retrofit2</groupId>
     <artifactId>adapter-rxjava</artifactId>
@@ -129,7 +129,7 @@ class GitHubBasicService {
 
 让我们将`RxJavaCallAdapter`添加到构建器中:
 
-```
+```java
 Retrofit retrofit = new Retrofit.Builder()
   .baseUrl("https://api.github.com/")
   .addConverterFactory(GsonConverterFactory.create())
@@ -143,7 +143,7 @@ Retrofit retrofit = new Retrofit.Builder()
 
 让我们修改我们的 API 接口以使用`Observable`:
 
-```
+```java
 public interface GitHubRxApi {
 
     @GET("users/{user}/repos")
@@ -160,7 +160,7 @@ public interface GitHubRxApi {
 
 让我们使用 RxJava 来实现它:
 
-```
+```java
 class GitHubRxService {
 
     private GitHubRxApi gitHubApi;

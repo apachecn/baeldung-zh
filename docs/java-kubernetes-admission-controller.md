@@ -46,7 +46,7 @@ API 服务器进程(`kube-apiserver`)已经附带了几个内置控制器，每�
 
 这是一个请求的例子:
 
-```
+```java
 {
   "kind": "AdmissionReview",
   "apiVersion": "admission.k8s.io/v1",
@@ -97,7 +97,7 @@ API 服务器进程(`kube-apiserver`)已经附带了几个内置控制器，每�
 
 预期的响应也是一个`AdmissionReview` JSON 对象，用一个`response `字段代替`response:`
 
-```
+```java
 {
   "apiVersion": "admission.k8s.io/v1",
   "kind": "AdmissionReview",
@@ -121,7 +121,7 @@ API 服务器进程(`kube-apiserver`)已经附带了几个内置控制器，每�
 
 **出现在来自变异准入控制器的响应中的`patch` 字段告诉 API 服务器在请求可以继续进行**之前需要改变什么。它的值是一个 Base64 编码的 [JSONPatch](/web/20220625082950/https://www.baeldung.com/spring-rest-json-patch) 对象，包含 API 服务器用来修改传入 API 调用体的指令数组:
 
-```
+```java
 [
   {
     "op": "add",
@@ -138,7 +138,7 @@ API 服务器进程(`kube-apiserver`)已经附带了几个内置控制器，每�
 
 例如，只有当传入的`deployment`已经至少有一个卷时，前面的例子才有效。如果不是这种情况，我们必须使用稍微不同的指令:
 
-```
+```java
 [
   {
     "op": "add",
@@ -165,7 +165,7 @@ API 服务器进程(`kube-apiserver`)已经附带了几个内置控制器，每�
 
 这是添加了`wait-for-it` init 容器的典型部署:
 
-```
+```java
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -197,7 +197,7 @@ spec:
 
 进入我们的准入控制器。**为了解决这个用例，我们将编写一个变异准入控制器，它在资源中寻找特定注释的存在，如果存在**，就给它添加`initContainer`。这就是带注释的部署规范的样子:
 
-```
+```java
 apiVersion: apps/v1 
 kind: Deployment 
 metadata: 
@@ -235,7 +235,7 @@ spec:
 
 接纳请求的入口点是一个简单的 Spring REST 控制器，它将传入负载的处理委托给一个服务:
 
-```
+```java
 @RestController
 @RequiredArgsConstructor
 public class AdmissionReviewController {
@@ -259,7 +259,7 @@ public class AdmissionReviewController {
 
 完整的代码可以在网上找到，基本上由一长串 JSON 操作组成。大部分都是琐碎的，但一些摘录值得一些解释:
 
-```
+```java
 if (admissionControllerProperties.isDisabled()) {
     data = createSimpleAllowedReview(body);
 } else if (annotations.isMissingNode()) {
@@ -275,7 +275,7 @@ if (admissionControllerProperties.isDisabled()) {
 
 另一个有趣的片段来自于`injectInitContainer()`方法中的 JSONPatch 生成逻辑:
 
-```
+```java
 JsonNode maybeInitContainers = originalSpec.path("initContainers");
 ArrayNode initContainers = 
 maybeInitContainers.isMissingNode() ?
@@ -293,7 +293,7 @@ values.addAll(initContainers);
 
 这样做时，我们可以使用一个“添加”补丁指令。**尽管其名称如此，但其行为是创建字段或替换同名的现有字段**。`value`字段总是一个数组，它包括(可能是空的)原始的`initContainers`数组。最后一步添加实际的`wait-for-it`容器:
 
-```
+```java
 ObjectNode wfi = values.addObject();
 wfi.put("name", "wait-for-it-" + UUID.randomUUID())
 // ... additional container fields added (omitted)
@@ -311,7 +311,7 @@ wfi.put("name", "wait-for-it-" + UUID.randomUUID())
 
 例如，假设我们希望 Kubernetes 在每次创建或更新部署时使用我们的准入控制器。在`MutatingWebhookConfiguration`文档中，我们将看到这样一个`rule`定义:
 
-```
+```java
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
@@ -334,13 +334,13 @@ webhooks:
 
 一旦我们准备好了部署工件，最后是时候在现有集群中测试我们的准入控制器了。在我们的例子中，我们使用 Terraform 来执行部署，所以我们所要做的就是一个`apply`:
 
-```
+```java
 $ terraform apply -auto-approve
 ```
 
 完成后，我们可以使用`kubectl`检查部署和准入控制器的状态:
 
-```
+```java
 $ kubectl get mutatingwebhookconfigurations
 NAME                               WEBHOOKS   AGE
 wait-for-it-admission-controller   1          58s
@@ -351,14 +351,14 @@ wait-for-it-admission-controller   1/1     1            1           10m
 
 现在，让我们创建一个简单的 nginx 部署，包括我们的注释:
 
-```
+```java
 $ kubectl apply -f nginx.yaml
 deployment.apps/frontend created
 ```
 
 我们可以检查相关的日志，看看`wait-for-it` init 容器确实被注入了:
 
-```
+```java
  $ kubectl logs --since=1h --all-containers deployment/frontend
 wait-for-it.sh: waiting 15 seconds for www.google.com:80
 wait-for-it.sh: www.google.com:80 is available after 0 seconds
@@ -366,7 +366,7 @@ wait-for-it.sh: www.google.com:80 is available after 0 seconds
 
 为了确保万无一失，让我们检查一下 YAML 的部署:
 
-```
+```java
 $ kubectl get deployment/frontend -o yaml
 apiVersion: apps/v1
 kind: Deployment

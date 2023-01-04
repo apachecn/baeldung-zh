@@ -10,13 +10,13 @@
 
 `Single.just()`是创建一个`Observable.`实例的简单方法，它将一个对象作为参数，并将其包装在 RxJava 的`Single`中:
 
-```
+```java
 Single<String> employee = Single.just("John Doe");
 ```
 
 不过，大多数时候，我们会以某种方式检索或计算这些数据。出于演示的目的，让我们假设我们正在从`EmployeeRepository`类中检索雇员的姓名。为了测试，我们将使用 [Mockito](/web/20221209231817/https://www.baeldung.com/mockito-series) 来检查与这个存储库的交互，使用 [`TestSubscriber`](/web/20221209231817/https://www.baeldung.com/rxjava-testing) 来测试结果可观察对象发布的值:
 
-```
+```java
 @Test
 void givenASubscriber_whenUsingJust_thenReturnTheCorrectValue() {
     TestSubscriber<String> testSubscriber = new TestSubscriber<>();
@@ -32,7 +32,7 @@ void givenASubscriber_whenUsingJust_thenReturnTheCorrectValue() {
 
 正如所料，`testSubscriber` 发布的值与存储库返回的值相同。另一方面，**即使没有订户，数据仍然会被提取**。让我们使用`Mockito`来验证与`EmployeeRepostory`的交互次数:
 
-```
+```java
 @Test
 void givenNoSubscriber_whenUsingJust_thenDataIsFetched() {
     Mockito.when(repository.findById(123L)).thenReturn("John Doe");
@@ -47,7 +47,7 @@ void givenNoSubscriber_whenUsingJust_thenDataIsFetched() {
 
 作为替代，我们可以使用`Single.fromCallable()`。在这种情况下，我们需要提供一个*可调用*接口或 lambda 表达式的实现。换句话说，我们可以传递一个获取数据的函数，这个函数只有在有人订阅时才会被调用。因此，**如果没有订阅者，就不会与`repository`** 进行交互:
 
-```
+```java
 @Test
 void givenNoSubscriber_whenUsingFromCallable_thenNoDataIsFetched() {
     Single<String> employee = Single.fromCallable(() -> repository.findById(123L));
@@ -58,7 +58,7 @@ void givenNoSubscriber_whenUsingFromCallable_thenNoDataIsFetched() {
 
 但是，一旦有人订阅了`employee`，数据就会被获取并发布。让我们添加另一个测试，检查产生的`Single` 对象是否发布了正确的值:
 
-```
+```java
 @Test
 void givenASubscriber_whenUsingFromCallable_thenReturnCorrectValue() {
     TestSubscriber<String> testSubscriber = new TestSubscriber<>();

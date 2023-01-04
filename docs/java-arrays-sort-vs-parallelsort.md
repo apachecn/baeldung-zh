@@ -19,7 +19,7 @@
 
 让我们看一个两种变体的例子:
 
-```
+```java
 @Test
 public void givenArrayOfIntegers_whenUsingArraysSortMethod_thenSortFullArrayInAscendingOrder() {
     int[] array = { 10, 4, 6, 2, 1, 9, 7, 8, 3, 5 };
@@ -52,7 +52,7 @@ public void givenArrayOfIntegers_whenUsingArraysSortWithRange_thenSortRangeOfArr
 
 此方法还对对象或基元的数组进行排序。与`sort()`相似，它也有两种变体来排序全数组和部分数组:
 
-```
+```java
 @Test
 public void givenArrayOfIntegers_whenUsingArraysParallelSortMethod_thenSortFullArrayInAscendingOrder() {
     int[] array = { 10, 4, 6, 2, 1, 9, 7, 8, 3, 5 };

@@ -24,14 +24,14 @@ StAX 是 Java 中几个 [XML 库之一。**这是一个从 Java 6 开始就包�
 
 不用说，解析 XML 的第一步是读取它。我们需要一个`XMLInputFactory`来创建一个`XMLEventReader`来读取我们的文件:
 
-```
+```java
 XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 XMLEventReader reader = xmlInputFactory.createXMLEventReader(new FileInputStream(path));
 ```
 
 现在`XMLEventReader`已经准备好了，我们带着`nextEvent()`继续前进:
 
-```
+```java
 while (reader.hasNext()) {
     XMLEvent nextEvent = reader.nextEvent();
 }
@@ -39,7 +39,7 @@ while (reader.hasNext()) {
 
 接下来，我们需要首先找到我们想要的开始标记:
 
-```
+```java
 if (nextEvent.isStartElement()) {
     StartElement startElement = nextEvent.asStartElement();
     if (startElement.getName().getLocalPart().equals("desired")) {
@@ -50,14 +50,14 @@ if (nextEvent.isStartElement()) {
 
 因此，我们可以读取属性和数据:
 
-```
+```java
 String url = startElement.getAttributeByName(new QName("url")).getValue();
 String name = nextEvent.asCharacters().getData();
 ```
 
 我们还可以检查是否到达了结束标记:
 
-```
+```java
 if (nextEvent.isEndElement()) {
     EndElement endElement = nextEvent.asEndElement();
 }
@@ -67,7 +67,7 @@ if (nextEvent.isEndElement()) {
 
 为了更好地理解，让我们在一个样本 XML 文件上运行我们的解析器:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <websites>
     <website url="https://baeldung.com">
@@ -90,7 +90,7 @@ if (nextEvent.isEndElement()) {
 
 让我们解析 XML 并将所有数据存储到名为`websites`的实体对象列表中:
 
-```
+```java
 while (reader.hasNext()) {
     XMLEvent nextEvent = reader.nextEvent();
     if (nextEvent.isStartElement()) {

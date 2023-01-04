@@ -25,7 +25,7 @@
 
 让我们将 [`commons-configuration`](https://web.archive.org/web/20220628145405/https://search.maven.org/search?q=g:commons-configuration%20a:commons-configuration) 添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>commons-configuration</groupId>
     <artifactId>commons-configuration</artifactId>
@@ -35,7 +35,7 @@
 
 然后，我们添加一个方法来创建一个`PropertiesConfiguration` bean，我们稍后会用到它:
 
-```
+```java
 @Bean
 @ConditionalOnProperty(name = "spring.config.location", matchIfMissing = false)
 public PropertiesConfiguration propertiesConfiguration(
@@ -58,7 +58,7 @@ public PropertiesConfiguration propertiesConfiguration(
 
 让我们从扩展`PropertySource`开始:
 
-```
+```java
 public class ReloadablePropertySource extends PropertySource {
 
     PropertiesConfiguration propertiesConfiguration;
@@ -89,7 +89,7 @@ public class ReloadablePropertySource extends PropertySource {
 
 现在，我们将把我们的`ReloadablePropertySource`添加到`Environment`的财产来源中:
 
-```
+```java
 @Configuration
 public class ReloadablePropertySourceConfig {
 
@@ -114,7 +114,7 @@ public class ReloadablePropertySourceConfig {
 
 让我们创建一个 bean 来读取来自`Environment`的属性:
 
-```
+```java
 @Component
 public class EnvironmentConfigBean {
 
@@ -132,7 +132,7 @@ public class EnvironmentConfigBean {
 
 如果我们需要添加其他可重载的外部属性源，首先我们必须实现我们的自定义 `PropertySourceFactory`:
 
-```
+```java
 public class ReloadablePropertySourceFactory extends DefaultPropertySourceFactory {
     @Override
     public PropertySource<?> createPropertySource(String s, EncodedResource encodedResource)
@@ -152,7 +152,7 @@ public class ReloadablePropertySourceFactory extends DefaultPropertySourceFactor
 
 然后我们可以用`@PropertySource`注释一个组件的类:
 
-```
+```java
 @PropertySource(value = "file:path-to-config", factory = ReloadablePropertySourceFactory.class)
 ```
 
@@ -160,7 +160,7 @@ public class ReloadablePropertySourceFactory extends DefaultPropertySourceFactor
 
 `Environment`是比`Properties`更好的选择，尤其是当我们需要从文件中重新加载属性的时候。但是，如果我们需要，我们可以延长`java.util.Properties`:
 
-```
+```java
 public class ReloadableProperties extends Properties {
     private PropertiesConfiguration propertiesConfiguration;
 
@@ -204,7 +204,7 @@ public class ReloadableProperties extends Properties {
 
 让我们从将`spring-boot-starter-actuator`添加到`pom.xml`开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-actuator</artifactId>
@@ -213,7 +213,7 @@ public class ReloadableProperties extends Properties {
 
 那么，我们也导入 [`spring-cloud-dependencies`](https://web.archive.org/web/20220628145405/https://search.maven.org/search?q=g:org.springframework.cloud%20a:spring-cloud-dependencies) :
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -233,7 +233,7 @@ public class ReloadableProperties extends Properties {
 
 然后我们加上`spring-cloud-starter`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter</artifactId>
@@ -242,7 +242,7 @@ public class ReloadableProperties extends Properties {
 
 最后，让我们启用刷新端点:
 
-```
+```java
 management.endpoints.web.exposure.include=refresh
 ```
 
@@ -252,7 +252,7 @@ management.endpoints.web.exposure.include=refresh
 
 让我们展示一下如何将`@ConfigurationProperties`与`@RefreshScope`一起使用:
 
-```
+```java
 @Component
 @ConfigurationProperties(prefix = "application.theme")
 @RefreshScope
@@ -275,7 +275,7 @@ public class ConfigurationPropertiesRefreshConfigBean {
 
 让我们创建示例组件:
 
-```
+```java
 @Component
 @RefreshScope
 public class ValueRefreshConfigBean {

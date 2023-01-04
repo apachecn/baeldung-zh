@@ -73,14 +73,14 @@ Hibernate jar 文件的大小是 7 MB。Hibernate 在启动时需要时间来检
 
 我们可以测试我们是否有 Docker:
 
-```
+```java
 $ docker --version
 Docker version 19.03.12, build 48a66213fe
 ```
 
 接下来，我们需要[安装 AWS SAM CLI](https://web.archive.org/web/20220524114622/https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html) ，然后测试它:
 
-```
+```java
 $ sam --version
 SAM CLI, version 1.1.0
 ```
@@ -91,13 +91,13 @@ SAM CLI, version 1.1.0
 
 SAM CLI 为我们提供了一种创建新 Lambda 函数的方法:
 
-```
+```java
 $ sam init
 ```
 
 这将提示我们新项目的设置。让我们选择以下选项:
 
-```
+```java
 1 - AWS Quick Start Templates
 13 - Java 8
 1 - maven
@@ -109,7 +109,7 @@ Project name - shipping-tracker
 
 现在，应该有一个名为`shipping-tracker`的新目录，其中有一个存根应用程序。如果我们查看其`template.yaml`文件的内容，我们会发现一个名为`HelloWorldFunction`的函数，带有一个简单的 REST API:
 
-```
+```java
 Events:
   HelloWorld:
     Type: Api 
@@ -120,7 +120,7 @@ Events:
 
 默认情况下，这满足了对`/hello`的一个基本 GET 请求。我们应该通过使用`sam`来构建和测试它，快速测试一切都在工作:
 
-```
+```java
 $ sam build
 ... lots of maven output
 $ sam start-api
@@ -128,7 +128,7 @@ $ sam start-api
 
 然后我们可以使用`curl`测试`hello world` API:
 
-```
+```java
 $ curl localhost:3000/hello
 { "message": "hello world", "location": "192.168.1.1" }
 ```
@@ -141,7 +141,7 @@ $ curl localhost:3000/hello
 
 为了创建我们的 API，我们需要将我们自己的路径添加到`template.yaml`文件的`Events`部分:
 
-```
+```java
 CreateConsignment:
   Type: Api 
   Properties:
@@ -166,7 +166,7 @@ ViewConsignment:
 
 让我们也将我们调用的函数从`HelloWorldFunction`重命名为`ShippingFunction`:
 
-```
+```java
 Resources:
   ShippingFunction:
     Type: AWS::Serverless::Function 
@@ -174,7 +174,7 @@ Resources:
 
 接下来，我们将目录 it 重命名为`ShippingFunction`，并将 Java 包从`helloworld`更改为`com.baeldung.lambda.shipping`。这意味着我们需要更新`template.yaml`中的`CodeUri`和`Handler`属性，以指向新的位置:
 
-```
+```java
 Properties:
   CodeUri: ShippingFunction
   Handler: com.baeldung.lambda.shipping.App::handleRequest
@@ -182,7 +182,7 @@ Properties:
 
 最后，为了给我们自己的实现腾出空间，让我们替换处理程序的主体:
 
-```
+```java
 public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent input, Context context) {
     Map<String, String> headers = new HashMap<>();
     headers.put("Content-Type", "application/json");
@@ -201,7 +201,7 @@ public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent in
 
 现在我们已经移动了一些东西，并创建了我们的 API 和一个基本的处理程序，让我们仔细检查一下一切是否仍然工作:
 
-```
+```java
 $ sam build
 ... maven output
 $ sam start-api
@@ -209,14 +209,14 @@ $ sam start-api
 
 让我们使用`curl`来测试 HTTP GET 请求:
 
-```
+```java
 $ curl localhost:3000/consignment/123
 /consignment/{id}
 ```
 
 我们也可以使用`curl -d`来发布:
 
-```
+```java
 $ curl -d '{"source":"data.orange.brings", "destination":"heave.wipes.clay"}' \
   -H 'Content-Type: application/json' \
   http://localhost:3000/consignment/
@@ -231,7 +231,7 @@ $ curl -d '{"source":"data.orange.brings", "destination":"heave.wipes.clay"}' \
 
 然而，我们需要构建一个 REST 控制器的等价物，将每个请求分派给一个合适的 Java 函数。因此，我们将创建一个存根`ShippingService`类，并从处理程序路由到它:
 
-```
+```java
 public class ShippingService {
     public String createConsignment(Consignment consignment) {
         return UUID.randomUUID().toString();
@@ -253,7 +253,7 @@ public class ShippingService {
 
 现在我们有了一个服务，让我们使用`resource`来路由到适当的服务方法。我们将在处理程序中添加一个`switch`语句，将请求路由到服务:
 
-```
+```java
 Object result = "OK";
 ShippingService service = new ShippingService();
 
@@ -299,7 +299,7 @@ return new APIGatewayProxyResponseEvent()
 
 首先，我们将提取一个 PostgreSQL docker 映像:
 
-```
+```java
 $ docker pull postgres:latest
 ... docker output
 Status: Downloaded newer image for postgres:latest
@@ -308,13 +308,13 @@ docker.io/library/postgres:latest
 
 现在让我们为这个数据库创建一个 docker 网络来运行。这个网络将允许我们的 Lambda 与数据库容器通信:
 
-```
+```java
 $ docker network create shipping
 ```
 
 接下来，我们需要在该网络中启动数据库容器:
 
-```
+```java
 docker run --name postgres \
   --network shipping \
   -e POSTGRES_PASSWORD=password \
@@ -329,7 +329,7 @@ docker run --name postgres \
 
 我们需要一个新的表模式，所以让我们使用 PostgreSQL 容器中的`psql`客户端来添加`shipping`模式:
 
-```
+```java
 $ docker exec -it postgres psql -U postgres
 psql (12.4 (Debian 12.4-1.pgdg100+1))
 Type "help" for help.
@@ -339,7 +339,7 @@ postgres=#
 
 在这个 shell 中，我们创建了模式:
 
-```
+```java
 postgres=# create schema shipping;
 CREATE SCHEMA 
 ```
@@ -356,7 +356,7 @@ CREATE SCHEMA
 
 我们将为 [Hibernate](https://web.archive.org/web/20220524114622/https://search.maven.org/artifact/org.hibernate/hibernate-core) 和[光连接池](https://web.archive.org/web/20220524114622/https://search.maven.org/artifact/org.hibernate/hibernate-hikaricp)添加对`pom.xml`的依赖。我们还将添加 [PostgreSQL JDBC 驱动程序](https://web.archive.org/web/20220524114622/https://search.maven.org/artifact/org.postgresql/postgresql):
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>
@@ -378,7 +378,7 @@ CREATE SCHEMA
 
 让我们充实实体对象。一个`Consignment`有一个物品和值机的列表，还有它的`source`、`destination`，还有它是否已经送达(也就是是否已经签到了它的最终目的地):
 
-```
+```java
 @Entity(name = "consignment")
 @Table(name = "consignment")
 public class Consignment {
@@ -395,7 +395,7 @@ public class Consignment {
 
 我们将该类注释为一个实体，并带有一个表名。我们也会提供 getters 和 setters。让我们用列名来标记 getters:
 
-```
+```java
 @Id
 @Column(name = "consignment_id")
 public String getId() {
@@ -420,7 +420,7 @@ public boolean isDelivered() {
 
 对于我们的列表，我们将使用`@ElementCollection`注释使它们成为独立表中的有序列表，并与`consignment`表建立外键关系:
 
-```
+```java
 @ElementCollection(fetch = EAGER)
 @CollectionTable(name = "consignment_item", joinColumns = @JoinColumn(name = "consignment_id"))
 @OrderColumn(name = "item_index")
@@ -440,7 +440,7 @@ public List getCheckins() {
 
 `Item`实体更简单:
 
-```
+```java
 @Embeddable
 public class Item {
     private String location;
@@ -470,7 +470,7 @@ public class Item {
 
 类似地，我们将定义`Checkin`:
 
-```
+```java
 @Embeddable
 public class Checkin {
     private String timeStamp;
@@ -494,7 +494,7 @@ public class Checkin {
 
 我们的`ShippingDao`类将依赖于被传递一个开放休眠`Session`。这将需要`ShippingService` 来管理会话:
 
-```
+```java
 public void save(Session session, Consignment consignment) {
     Transaction transaction = session.beginTransaction();
     session.save(consignment);
@@ -516,7 +516,7 @@ public Optional<Consignment> find(Session session, String id) {
 
 如果我们要从 Lambda 访问数据库，那么它需要是可配置的。让我们将 JDBC URL 和数据库凭证放入我们的`template.yaml`中的环境变量:
 
-```
+```java
 Environment: 
   Variables:
     DB_URL: jdbc:postgresql://postgres/postgres
@@ -534,7 +534,7 @@ Environment:
 
 我们需要配置 Hibernate 和光连接池。为了给 Hibernate 提供设置，我们将它们添加到一个`Map`:
 
-```
+```java
 Map<String, String> settings = new HashMap<>();
 settings.put(URL, System.getenv("DB_URL"));
 settings.put(DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
@@ -556,7 +556,7 @@ settings.put(HBM2DDL_DATABASE_ACTION, "create");
 
 现在我们有了设置，我们需要构建`SessionFactory`。我们将分别向其中添加我们的实体类:
 
-```
+```java
 StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
   .applySettings(settings)
   .build();
@@ -575,7 +575,7 @@ return new MetadataSources(registry)
 
 因此，我们应该创建`SessionFactory`，因为我们的处理程序对象是由 Lambda 框架创建的。我们可以在 handler 类的初始化列表中这样做:
 
-```
+```java
 private SessionFactory sessionFactory = createSessionFactory();
 ```
 
@@ -585,7 +585,7 @@ private SessionFactory sessionFactory = createSessionFactory();
 
 我们可以通过挖掘连接池的`SessionFactory`并显式关闭任何连接来解决这个问题:
 
-```
+```java
 private void flushConnectionPool() {
     ConnectionProvider connectionProvider = sessionFactory.getSessionFactoryOptions()
       .getServiceRegistry()
@@ -603,7 +603,7 @@ private void flushConnectionPool() {
 
 **现在，我们需要确保处理程序使用会话工厂并释放它的连接**。记住这一点，让我们将大部分控制器功能提取到一个名为`routeRequest`的方法中，并修改我们的处理程序来释放`finally`块中的资源:
 
-```
+```java
 try {
     ShippingService service = new ShippingService(sessionFactory, new ShippingDao());
     return routeRequest(input, service);
@@ -620,7 +620,7 @@ try {
 
 在注释掉它的设置之前，让我们仔细检查它生成的 DDL:
 
-```
+```java
 $ sam build
 $ sam local start-api --docker-network shipping
 ```
@@ -629,14 +629,14 @@ $ sam local start-api --docker-network shipping
 
 当我们第一次使用`curl`到达终点时，我们的表应该被创建:
 
-```
+```java
 $ curl localhost:3000/consignment/123
 {"id":null,"source":null,"destination":null,"items":[],"checkins":[],"delivered":false}
 ```
 
 存根代码仍然返回空白的`Consignment`。但是，现在让我们检查数据库，看看这些表是否已经创建:
 
-```
+```java
 $ docker exec -it postgres pg_dump -s -U postgres
 ... DDL output
 CREATE TABLE shipping.consignment_item (
@@ -654,7 +654,7 @@ CREATE TABLE shipping.consignment_item (
 
 新的货物尚未交付，应该会收到一个新的 ID。那么我们应该将它保存在数据库中:
 
-```
+```java
 public String createConsignment(Consignment consignment) {
     try (Session session = sessionFactory.openSession()) {
         consignment.setDelivered(false);
@@ -669,7 +669,7 @@ public String createConsignment(Consignment consignment) {
 
 要获得一批货物，我们需要通过 ID 从数据库中读取它。虽然 REST API 应该对未知请求返回`Not Found`,但是对于这个例子，如果没有找到，我们将返回一个空的委托:
 
-```
+```java
 public Consignment view(String consignmentId) {
     try (Session session = sessionFactory.openSession()) {
         return shippingDao.find(session, consignmentId)
@@ -682,7 +682,7 @@ public Consignment view(String consignmentId) {
 
 项目将按照收到的顺序进入我们的项目列表:
 
-```
+```java
 public void addItem(String consignmentId, Item item) {
     try (Session session = sessionFactory.openSession()) {
         shippingDao.find(session, consignmentId)
@@ -703,7 +703,7 @@ private void addItem(Session session, Consignment consignment, Item item) {
 
 签入需要按照发生的时间排序，而不是按照收到请求的时间排序。此外，当物品到达最终目的地时，应标记为已送达:
 
-```
+```java
 public void checkIn(String consignmentId, Checkin checkin) {
     try (Session session = sessionFactory.openSession()) {
         shippingDao.find(session, consignmentId)
@@ -727,7 +727,7 @@ private void checkIn(Session session, Consignment consignment, Checkin checkin) 
 
 代理创建旅程:
 
-```
+```java
 $ curl -d '{"source":"data.orange.brings", "destination":"heave.wipes.clay"}' \
   -H 'Content-Type: application/json' \
   http://localhost:3000/consignment/
@@ -737,7 +737,7 @@ $ curl -d '{"source":"data.orange.brings", "destination":"heave.wipes.clay"}' \
 
 我们现在有了货物的 ID `3dd0f0e4-fc4a-46b4-8dae-a57d47df5207`。然后，有人收集了托运的两件物品——一幅画和一架钢琴:
 
-```
+```java
 $ curl -d '{"location":"data.orange.brings", "timeStamp":"20200101T120000", "description":"picture"}' \
   -H 'Content-Type: application/json' \
   http://localhost:3000/consignment/3dd0f0e4-fc4a-46b4-8dae-a57d47df5207/item
@@ -751,7 +751,7 @@ $ curl -d '{"location":"data.orange.brings", "timeStamp":"20200101T120001", "des
 
 一段时间后，有一个签到:
 
-```
+```java
 $ curl -d '{"location":"united.alarm.raves", "timeStamp":"20200101T173301"}' \
 -H 'Content-Type: application/json' \
 http://localhost:3000/consignment/3dd0f0e4-fc4a-46b4-8dae-a57d47df5207/checkin
@@ -760,7 +760,7 @@ http://localhost:3000/consignment/3dd0f0e4-fc4a-46b4-8dae-a57d47df5207/checkin
 
 后来又一次:
 
-```
+```java
 $ curl -d '{"location":"wink.sour.chasing", "timeStamp":"20200101T191202"}' \
 -H 'Content-Type: application/json' \
 http://localhost:3000/consignment/3dd0f0e4-fc4a-46b4-8dae-a57d47df5207/checkin
@@ -769,7 +769,7 @@ http://localhost:3000/consignment/3dd0f0e4-fc4a-46b4-8dae-a57d47df5207/checkin
 
 此时，客户请求货物的状态:
 
-```
+```java
 $ curl http://localhost:3000/consignment/3dd0f0e4-fc4a-46b4-8dae-a57d47df5207
 {
   "id":"3dd0f0e4-fc4a-46b4-8dae-a57d47df5207",
@@ -791,7 +791,7 @@ $ curl http://localhost:3000/consignment/3dd0f0e4-fc4a-46b4-8dae-a57d47df5207
 
 应该在 20:12 发送一条消息说它到达了`deflection.famed.apple`，但是它被延迟了，并且来自目的地的 21:46 的消息首先到达那里:
 
-```
+```java
 $ curl -d '{"location":"heave.wipes.clay", "timeStamp":"20200101T214622"}' \
 -H 'Content-Type: application/json' \
 http://localhost:3000/consignment/3dd0f0e4-fc4a-46b4-8dae-a57d47df5207/checkin
@@ -800,7 +800,7 @@ http://localhost:3000/consignment/3dd0f0e4-fc4a-46b4-8dae-a57d47df5207/checkin
 
 此时，客户请求货物的状态:
 
-```
+```java
 $ curl http://localhost:3000/consignment/3dd0f0e4-fc4a-46b4-8dae-a57d47df5207
 {
   "id":"3dd0f0e4-fc4a-46b4-8dae-a57d47df5207",
@@ -814,7 +814,7 @@ $ curl http://localhost:3000/consignment/3dd0f0e4-fc4a-46b4-8dae-a57d47df5207
 
 现在送来了。因此，当延迟的消息通过时:
 
-```
+```java
 $ curl -d '{"location":"deflection.famed.apple", "timeStamp":"20200101T201254"}' \
 -H 'Content-Type: application/json' \
 http://localhost:3000/consignment/3dd0f0e4-fc4a-46b4-8dae-a57d47df5207/checkin

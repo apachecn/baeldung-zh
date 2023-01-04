@@ -16,7 +16,7 @@ Hibernate 提供了几种不同的方法来定义标识符。在本文中，我�
 
 让我们看一个用主键类型`long`定义实体的简单例子:
 
-```
+```java
 @Entity
 public class Student {
 
@@ -43,7 +43,7 @@ public class Student {
 
 让我们首先使用自动生成策略映射一个实体主键:
 
-```
+```java
 @Entity
 public class Student {
 
@@ -61,7 +61,7 @@ public class Student {
 
 为了使用这个特性，我们只需要用`@GeneratedValue`注释声明一个类型为`UUID`的 id:
 
-```
+```java
 @Entity
 public class Course {
 
@@ -81,7 +81,7 @@ Hibernate 将生成一个“8d D5 f 315-9788-4d 00-87 bb-10 eed 9 eff 566”形�
 
 要使用这种生成类型，我们只需设置`strategy`参数:
 
-```
+```java
 @Entity
 public class Student {
 
@@ -103,7 +103,7 @@ public class Student {
 
 为了定制序列名称，我们可以使用带有`SequenceStyleGenerator strategy`的`@GenericGenerator`注释:
 
-```
+```java
 @Entity
 public class User {
     @Id
@@ -135,7 +135,7 @@ public class User {
 
 让我们使用`@TableGenerator`注释定制表名:
 
-```
+```java
 @Entity
 public class Department {
     @Id
@@ -163,7 +163,7 @@ public class Department {
 
 我们将创建一个生成器来构建包含一个前缀和一个数字的标识符:
 
-```
+```java
 public class MyGenerator 
   implements IdentifierGenerator, Configurable {
 
@@ -207,7 +207,7 @@ public class MyGenerator
 
 为此，**我们可以使用带有`strategy`参数的`@GenericGenerator`注释，该参数包含我们的生成器类**的完整类名:
 
-```
+```java
 @Entity
 public class Product {
 
@@ -226,7 +226,7 @@ public class Product {
 
 让我们看一个快速的 JUnit 测试，以便更清楚地理解生成的 id 值:
 
-```
+```java
 @Test
 public void whenSaveCustomGeneratedId_thenOk() {
     Product product = new Product();
@@ -260,7 +260,7 @@ public void whenSaveCustomGeneratedId_thenOk() {
 
 首先，我们需要一个用`@Embeddable`注释的主键类:
 
-```
+```java
 @Embeddable
 public class OrderEntryPK implements Serializable {
 
@@ -274,7 +274,7 @@ public class OrderEntryPK implements Serializable {
 
 接下来，我们可以使用@ `EmbeddedId`将类型为`OrderEntryPK`的 id 添加到实体中:
 
-```
+```java
 @Entity
 public class OrderEntry {
 
@@ -287,7 +287,7 @@ public class OrderEntry {
 
 让我们看看如何使用这种类型的复合 id 来设置实体的主键:
 
-```
+```java
 @Test
 public void whenSaveCompositeIdEntity_thenOk() {
     OrderEntryPK entryPK = new OrderEntryPK();
@@ -310,7 +310,7 @@ public void whenSaveCompositeIdEntity_thenOk() {
 
 让我们用一个`@IdClass`来重写`OrderEntry`的例子:
 
-```
+```java
 @Entity
 @IdClass(OrderEntryPK.class)
 public class OrderEntry {
@@ -325,7 +325,7 @@ public class OrderEntry {
 
 然后我们可以直接在`OrderEntry`对象上设置 id 值:
 
-```
+```java
 @Test
 public void whenSaveIdClassEntity_thenOk() {        
     OrderEntry entry = new OrderEntry();
@@ -349,7 +349,7 @@ Hibernate 还允许定义由`@ManyToOne`关联和`@Id`注释组成的主键。�
 
 首先，让我们创建一个`UserProfile`实体，它从与`User`实体的一对一关联中获得其 id:
 
-```
+```java
 @Entity
 public class UserProfile {
 
@@ -366,7 +366,7 @@ public class UserProfile {
 
 接下来，让我们验证一个`UserProfile`实例与其关联的`User`实例具有相同的 id:
 
-```
+```java
 @Test
 public void whenSaveDerivedIdEntity_thenOk() {        
     User user = new User();

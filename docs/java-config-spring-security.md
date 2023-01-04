@@ -12,7 +12,7 @@ Java 配置在 [Spring 3.1](https://web.archive.org/web/20220703144957/https://d
 
 要在 Maven 项目中使用 Spring 安全性，我们首先需要在项目`pom.xml`中拥有`spring-security-core`依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-core</artifactId>
@@ -26,7 +26,7 @@ Java 配置在 [Spring 3.1](https://web.archive.org/web/20220703144957/https://d
 
 让我们从一个 Spring Security Java 配置的基本示例开始:
 
-```
+```java
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 您可能已经注意到，该配置设置了一个基本的内存中身份验证配置。另外，从春天 5 号开始，我们需要一个 [`PasswordEncoder`](/web/20220703144957/https://www.baeldung.com/spring-security-5-default-password-encoder) bean:
 
-```
+```java
 @Bean
 public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
@@ -52,7 +52,7 @@ public PasswordEncoder passwordEncoder() {
 
 为了在 Spring 中启用 HTTP 安全性，我们需要扩展`WebSecurityConfigurerAdapter`以在`configure(HttpSecurity http)`方法中提供默认配置:
 
-```
+```java
 protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests()
       .anyRequest().authenticated()
@@ -64,7 +64,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 此外，它与以下 XML 配置完全相似:
 
-```
+```java
 <http>
     <intercept-url pattern="/**" access="isAuthenticated()"/>
     <form-login />
@@ -76,7 +76,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 有趣的是，Spring Security 自动生成一个登录页面，基于启用的特性并使用 URL 的标准值来处理提交的登录:
 
-```
+```java
 protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests()
       .anyRequest().authenticated()
@@ -91,7 +91,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 现在让我们使用角色在每个 URL 上配置一些简单的授权:
 
-```
+```java
 protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests()
       .antMatchers("/", "/home").access("hasRole('USER')")
@@ -112,7 +112,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 下面是一个简单的注销配置:
 
-```
+```java
 protected void configure(HttpSecurity http) throws Exception {
     http.logout();
 }
@@ -120,7 +120,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 但是，如果您想对可用的处理程序进行更多的控制，下面是一个更完整的实现:
 
-```
+```java
 protected void configure(HttpSecurity http) throws Exception {
     http.logout().logoutUrl("/my/logout")
       .logoutSuccessUrl("/my/index")
@@ -141,7 +141,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 我们将从一个简单的内存配置开始:
 
-```
+```java
 @Autowired
 public void configureGlobal(AuthenticationManagerBuilder auth) 
   throws Exception {
@@ -156,7 +156,7 @@ public void configureGlobal(AuthenticationManagerBuilder auth)
 
 要将其迁移到 JDBC，您只需在应用程序中定义一个数据源，并直接使用它:
 
-```
+```java
 @Autowired
 private DataSource dataSource;
 

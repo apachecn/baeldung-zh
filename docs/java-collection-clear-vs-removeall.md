@@ -28,7 +28,7 @@
 
 我们将用几个数字初始化一个`Integers`集合，并对其调用`clear()`,这样列表中就没有元素了:
 
-```
+```java
 @Test
 void whenClear_thenListBecomesEmpty() {
     Collection<Integer> collection = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));
@@ -45,7 +45,7 @@ void whenClear_thenListBecomesEmpty() {
 
 我们希望第一个集合中只保留数字 1 和 2(而第二个集合保持不变):
 
-```
+```java
 @Test
 void whenRemoveAll_thenFirstListMissElementsFromSecondList() {
     Collection<Integer> firstCollection = new ArrayList<>(

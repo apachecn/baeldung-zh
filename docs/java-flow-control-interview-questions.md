@@ -25,7 +25,7 @@
 
 这两个语句都告诉我们的程序，只有当一个特定的条件评估为`true`时，才执行其中的代码。然而，如果 if 子句的计算结果为`false`，那么`if-then-else`语句提供了第二条执行路径:
 
-```
+```java
 if (age >= 21) {
     // ...
 } else {
@@ -41,7 +41,7 @@ if (age >= 21) {
 
 每条路径都标有`case`或`default`，`switch`语句评估每个`case`表达式是否匹配，并执行匹配标签后面的所有语句，直到找到`break`语句。如果找不到匹配，将改为执行`default`块:
 
-```
+```java
 switch (yearsOfJavaExperience) {
     case 0:
         System.out.println("Student");
@@ -65,7 +65,7 @@ switch (yearsOfJavaExperience) {
 
 这里有一个例子来说明这一点:
 
-```
+```java
 int operation = 2;
 int number = 10;
 
@@ -89,7 +89,7 @@ switch (operation) {
 
 当针对多个单值测试单个变量时，或者当多个值将执行相同的代码时，更适合使用`switch`语句:
 
-```
+```java
 switch (month) {
     case 1:
     case 3:
@@ -110,7 +110,7 @@ default:
 
 当我们需要检查值的范围或多个条件时，最好使用`if-then-else`语句:
 
-```
+```java
 if (aPassword == null || aPassword.isEmpty()) {
     // empty password
 } else if (aPassword.length() < 8 || aPassword.equals("12345678")) {
@@ -126,7 +126,7 @@ Java 提供了三种不同类型的循环:`for`、`while`和`do-while`。
 
 一个`for`循环提供了一种迭代一系列值的方法。当我们预先知道一项任务将重复多少次时，这是最有用的:
 
-```
+```java
 for (int i = 0; i < 10; i++) {
      // ...
 }
@@ -134,7 +134,7 @@ for (int i = 0; i < 10; i++) {
 
 当特定条件为`true`时，`while`循环可以执行一组语句:
 
-```
+```java
 while (iterator.hasNext()) {
     // ...
 }
@@ -142,7 +142,7 @@ while (iterator.hasNext()) {
 
 `do-while`是`while`语句的变体，其中`boolean`表达式的求值在循环的底部。这保证了代码至少会执行一次:
 
-```
+```java
 do {
     // ...
 } while (choice != -1);
@@ -152,7 +152,7 @@ do {
 
 `for`语句的另一个语法是用来遍历集合、数组、枚举或任何实现`Iterable`接口的对象的所有元素:
 
-```
+```java
 for (String aString : arrayOfStrings) {
     // ...
 }
@@ -162,7 +162,7 @@ for (String aString : arrayOfStrings) {
 
 使用`break`语句，我们可以立即终止循环的执行:
 
-```
+```java
 for (int i = 0; ; i++) {
     if (i > 10) {
         break;
@@ -176,7 +176,7 @@ for (int i = 0; ; i++) {
 
 让我们创建一个示例来演示这一点:
 
-```
+```java
 int[][] table = { { 1, 2, 3 }, { 25, 37, 49 }, { 55, 68, 93 } };
 boolean found = false;
 int loopCycles = 0;
@@ -202,7 +202,7 @@ outer: for (int[] rows : table) {
 
 这里有一个例子来说明这一点:
 
-```
+```java
 int[][] table = { { 1, 15, 3 }, { 25, 15, 49 }, { 15, 68, 93 } };
 int loopCycles = 0;
 
@@ -234,7 +234,7 @@ outer: for (int[] rows : table) {
 
 ### Q12。执行以下代码的结果是什么？
 
-```
+```java
 public static int assignment() {
     int number = 1;
     try {
@@ -262,7 +262,7 @@ System.out.println(assignment());
 
 当我们希望确保不会因为遇到`break`、`continue`或`return`语句而意外绕过代码中使用的资源清理时，这个块非常有用:
 
-```
+```java
 HeavyProcess heavyProcess = new HeavyProcess();
 try {
     // ...
@@ -274,7 +274,7 @@ try {
 
 此外，我们可能会面临这样的情况:我们无法在本地处理抛出的异常，或者我们希望当前方法在允许我们释放资源的同时仍然抛出异常:
 
-```
+```java
 public void doDangerousTask(Task task) throws ComplicatedException {
     try {
         // ...
@@ -293,7 +293,7 @@ public void doDangerousTask(Task task) throws ComplicatedException {
 
 `try-with-resources`语句在执行`try`块之前声明并初始化一个或多个资源，并在语句结束时自动关闭它们，而不管该块是正常完成还是突然完成。任何实现`AutoCloseable`或`Closeable`接口的对象都可以作为资源使用；
 
-```
+```java
 try (StringWriter writer = new StringWriter()) {
     writer.write("Hello world!");
 }

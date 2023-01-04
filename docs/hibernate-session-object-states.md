@@ -24,7 +24,7 @@ Hibernate 是一个管理持久数据的便利框架，但是理解它的内部�
 
 让我们用构造函数创建一个用户对象，并确认它不是由会话管理的:
 
-```
+```java
 Session session = openSession();
 UserEntity userEntity = new UserEntity("John");
 assertThat(session.contains(userEntity)).isFalse();
@@ -36,7 +36,7 @@ assertThat(session.contains(userEntity)).isFalse();
 
 让我们创建一个对象，然后使用`persist`方法使其持久化:
 
-```
+```java
 Session session = openSession();
 UserEntity userEntity = new UserEntity("John");
 session.persist(userEntity);
@@ -49,7 +49,7 @@ assertThat(session.contains(userEntity)).isTrue();
 
 当我们关闭`session`时，里面的所有物体都分离了。**尽管它们仍然代表数据库中的行，但它们不再由任何`session` :** 管理
 
-```
+```java
 session.persist(userEntity);
 session.close();
 assertThat(session.isOpen()).isFalse();
@@ -66,7 +66,7 @@ assertThatThrownBy(() -> session.contains(userEntity));
 
 为了`persist`我们的新实体，我们将使用`persist`方法:
 
-```
+```java
 UserEntity userEntity = new UserEntity("John");
 session.persist(userEntity);
 ```
@@ -75,7 +75,7 @@ session.persist(userEntity);
 
 相反，**我们将使用`merge`方法来更新数据库并使对象持久化**:
 
-```
+```java
 UserEntity onceAgainJohn = new UserEntity("John");
 session.merge(onceAgainJohn);
 ```
@@ -84,7 +84,7 @@ session.merge(onceAgainJohn);
 
 **如果我们关闭前面的`session`，我们的对象将处于分离状态。**与前面的例子类似，它们在数据库中有表示，但是它们当前不受任何`session`管理。我们可以使用`merge`方法让它们再次持久化:
 
-```
+```java
 UserEntity userEntity = new UserEntity("John");
 session.persist(userEntity);
 session.close();
@@ -95,7 +95,7 @@ session.merge(userEntity);
 
 当我们考虑嵌套实体时，事情变得更加复杂。假设我们的用户实体也将存储关于他的经理的信息:
 
-```
+```java
 public class UserEntity {
     @Id
     private String name;
@@ -107,7 +107,7 @@ public class UserEntity {
 
 当我们保存这个实体时，我们不仅需要考虑实体本身的状态，还需要考虑嵌套实体的状态。让我们创建一个持久用户实体，然后设置它的管理器:
 
-```
+```java
 UserEntity userEntity = new UserEntity("John");
 session.persist(userEntity);
 UserEntity manager = new UserEntity("Adam");
@@ -116,14 +116,14 @@ userEntity.setManager(manager);
 
 如果我们现在尝试更新它，我们会得到一个异常:
 
-```
+```java
 assertThatThrownBy(() -> {
             session.saveOrUpdate(userEntity);
             transaction.commit();
 });
 ```
 
-```
+```java
 java.lang.IllegalStateException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : com.baeldung.states.UserEntity.manager -> com.baeldung.states.UserEntity 
 ```
 
@@ -133,7 +133,7 @@ java.lang.IllegalStateException: org.hibernate.TransientPropertyValueException: 
 
 解决这个问题的一个方法是显式持久化嵌套实体:
 
-```
+```java
 UserEntity manager = new UserEntity("Adam");
 session.persist(manager);
 userEntity.setManager(manager);
@@ -141,7 +141,7 @@ userEntity.setManager(manager);
 
 然后，在提交事务后，我们将能够检索正确保存的实体:
 
-```
+```java
 transaction.commit();
 session.close();
 
@@ -154,14 +154,14 @@ assertThat(savedUser.getManager().getName()).isEqualTo("Adam");
 
 如果我们在实体类中正确配置了关系的`cascade`属性，瞬态嵌套实体可以自动持久化:
 
-```
+```java
 @ManyToOne(cascade = CascadeType.PERSIST)
 private UserEntity manager;
 ```
 
 **现在，当我们持久化对象时，该操作将级联到所有嵌套的实体:**
 
-```
+```java
 UserEntityWithCascade userEntity = new UserEntityWithCascade("John");
 session.persist(userEntity);
 UserEntityWithCascade manager = new UserEntityWithCascade("Adam");

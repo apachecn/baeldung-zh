@@ -16,7 +16,7 @@
 
 为了选择一个随机指标，可以使用`Random.nextInt(int bound)` 方法:
 
-```
+```java
 public void givenList_shouldReturnARandomElement() {
     List<Integer> givenList = Arrays.asList(1, 2, 3);
     Random rand = new Random();
@@ -30,7 +30,7 @@ public void givenList_shouldReturnARandomElement() {
 
 当使用单个`Random`类实例编写多线程应用程序时，可能会导致为访问该实例的每个进程选择相同的值。我们总是可以通过使用专用的`ThreadLocalRandom` 类为每个线程创建一个新的实例:
 
-```
+```java
 int randomElementIndex
   = ThreadLocalRandom.current().nextInt(listSize) % givenList.size();
 ```
@@ -39,7 +39,7 @@ int randomElementIndex
 
 有时你可能想从列表中挑选一些元素。这很简单:
 
-```
+```java
 public void givenList_whenNumberElementsChosen_shouldReturnRandomElementsRepeat() {
     Random rand = new Random();
     List<String> givenList = Arrays.asList("one", "two", "three", "four");
@@ -57,7 +57,7 @@ public void givenList_whenNumberElementsChosen_shouldReturnRandomElementsRepeat(
 
 这里，您需要确保元素在选择后从列表中删除:
 
-```
+```java
 public void givenList_whenNumberElementsChosen_shouldReturnRandomElementsNoRepeat() {
     Random rand = new Random();
     List<String> givenList = Lists.newArrayList("one", "two", "three", "four");
@@ -76,7 +76,7 @@ public void givenList_whenNumberElementsChosen_shouldReturnRandomElementsNoRepea
 
 如果您想获得随机的元素序列，utils 类可能会很方便:
 
-```
+```java
 public void givenList_whenSeriesLengthChosen_shouldReturnRandomSeries() {
     List<Integer> givenList = Lists.newArrayList(1, 2, 3, 4, 5, 6);
     Collections.shuffle(givenList);

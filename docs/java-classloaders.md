@@ -24,7 +24,7 @@ Learn about the differences between ClassNotFoundException and NoClassDefFoundEr
 
 让我们从学习如何使用各种类装入器装入不同的类开始:
 
-```
+```java
 public void printClassLoaders() throws ClassNotFoundException {
 
     System.out.println("Classloader of this class:"
@@ -40,7 +40,7 @@ public void printClassLoaders() throws ClassNotFoundException {
 
 执行时，上述方法会打印:
 
-```
+```java
 Class loader of this class:[[email protected]](/web/20221103080026/https://www.baeldung.com/cdn-cgi/l/email-protection)
 Class loader of Logging:[[email protected]](/web/20221103080026/https://www.baeldung.com/cdn-cgi/l/email-protection)
 Class loader of ArrayList:null
@@ -92,7 +92,7 @@ Java 类由`java.lang.ClassLoader`的实例加载。然而，类装入器本身�
 
 让我们来看一个抛出`ClassNotFoundException`时的输出示例:
 
-```
+```java
 java.lang.ClassNotFoundException: com.baeldung.classloader.SampleClassLoader    
     at java.net.URLClassLoader.findClass(URLClassLoader.java:381)    
     at java.lang.ClassLoader.loadClass(ClassLoader.java:424)    
@@ -161,7 +161,7 @@ java.lang.ClassNotFoundException: com.baeldung.classloader.SampleClassLoader
 
 **我们需要扩展`ClassLoader`类并覆盖`findClass()`方法:**
 
-```
+```java
 public class CustomClassLoader extends ClassLoader {
 
     @Override
@@ -197,7 +197,7 @@ public class CustomClassLoader extends ClassLoader {
 
 ### 5.1.`loadClass()`法
 
-```
+```java
 public Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
 ```
 
@@ -209,7 +209,7 @@ Java 虚拟机调用`loadClass()`方法来解析类引用，将 resolve 设置�
 
 我们可以试着从`java.lang.ClassLoader:`的源代码中了解`loadClass()`方法的内部工作原理
 
-```
+```java
 protected Class<?> loadClass(String name, boolean resolve)
   throws ClassNotFoundException {
 
@@ -251,7 +251,7 @@ protected Class<?> loadClass(String name, boolean resolve)
 
 ### 5.2.`defineClass()`法
 
-```
+```java
 protected final Class<?> defineClass(
   String name, byte[] b, int off, int len) throws ClassFormatError
 ```
@@ -264,7 +264,7 @@ protected final Class<?> defineClass(
 
 ### 5.3.`findClass()`法
 
-```
+```java
 protected Class<?> findClass(
   String name) throws ClassNotFoundException
 ```
@@ -277,7 +277,7 @@ protected Class<?> findClass(
 
 ### 5.4.`getParent()`法
 
-```
+```java
 public final ClassLoader getParent()
 ```
 
@@ -287,7 +287,7 @@ public final ClassLoader getParent()
 
 ### 5.5.`getResource()`法
 
-```
+```java
 public URL getResource(String name)
 ```
 

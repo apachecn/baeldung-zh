@@ -18,7 +18,7 @@
 
 首先，让我们看一个简单的例子，看看如何编译我们的类并创建一个带有清单文件的可执行 JAR:
 
-```
+```java
 $ javac com/baeldung/jarArguments/*.java
 $ jar cfm JarExample.jar ../resources/example_manifest.txt com/baeldung/jarArguments/*.class
 ```
@@ -27,7 +27,7 @@ $ jar cfm JarExample.jar ../resources/example_manifest.txt com/baeldung/jarArgum
 
 下面是我们如何创建一个没有清单文件的不可执行 JAR:
 
-```
+```java
 $ jar cf JarExample2.jar com/baeldung/jarArguments/*.class
 ```
 
@@ -61,13 +61,13 @@ $ jar cf JarExample2.jar com/baeldung/jarArguments/*.class
 
 下面是一个有两个参数的例子:
 
-```
+```java
 $ java -jar JarExample.jar "arg 1" [[email protected]](/web/20221103233850/https://www.baeldung.com/cdn-cgi/l/email-protection) 
 ```
 
 我们将在控制台中看到以下输出:
 
-```
+```java
 Hello Baeldung Reader in JarExample!
 There are 2 argument(s)!
 Argument(1):arg 1
@@ -94,13 +94,13 @@ Argument(2):[[email protected]](/web/20221103233850/https://www.baeldung.com/cd
 
 下面是一个有两个参数的例子:
 
-```
+```java
 $ java -cp JarExample2.jar com.baeldung.jarArguments.JarExample "arg 1" [[email protected]](/web/20221103233850/https://www.baeldung.com/cdn-cgi/l/email-protection)
 ```
 
 就像我们在上面看到的一样，我们将看到以下输出:
 
-```
+```java
 Hello Baeldung Reader in JarExample!
 There are 2 argument(s)!
 Argument(1):arg 1

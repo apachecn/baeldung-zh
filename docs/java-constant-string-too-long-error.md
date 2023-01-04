@@ -12,7 +12,7 @@
 
 让我们通过编写一个小测试来重现这个问题，其中我们声明了一个太长的`String`:
 
-```
+```java
 @Test
 public void whenDeclaringTooLongString_thenCompilationError() {
     String stringTooLong = "stringstringstring ... 100,000 characters ... string";  
@@ -26,7 +26,7 @@ public void whenDeclaringTooLongString_thenCompilationError() {
 
 原因是 ide 通常更宽松。然而，当试图从命令行编译项目(`mvn package`)或者只是试图执行测试(`mvn test`)时，我们将收到以下输出:
 
-```
+```java
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD FAILURE
 [INFO] ------------------------------------------------------------------------
@@ -45,7 +45,7 @@ public void whenDeclaringTooLongString_thenCompilationError() {
 
 让我们创建一个文本文件来存储变量的内容，并将我们的测试修改为[从文件](/web/20221208143837/https://www.baeldung.com/reading-file-in-java)中获取值:
 
-```
+```java
 @Test
 public void whenStoringInFileTooLongString_thenNoCompilationError() throws IOException {
     FileInputStream fis = new FileInputStream("src/test/resources/stringtoolong.txt");
@@ -56,7 +56,7 @@ public void whenStoringInFileTooLongString_thenNoCompilationError() throws IOExc
 
 解决这个问题的另一种方法是将变量的内容存储在一个属性文件中，然后从我们的测试方法中访问它:
 
-```
+```java
 @Test
 public void whenStoringInPropertiesString_thenNoCompilationError() throws IOException {
     try (InputStream input = new FileInputStream("src/main/resources/config.properties")) {         
@@ -70,7 +70,7 @@ public void whenStoringInPropertiesString_thenNoCompilationError() throws IOExce
 
 现在，如果我们试图编译我们的项目或执行测试，一切都将正常工作:
 
-```
+```java
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------

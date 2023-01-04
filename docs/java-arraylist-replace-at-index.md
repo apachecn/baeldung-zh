@@ -20,7 +20,7 @@
 
 让我们通过一个例子来看看如何在 Java `ArrayList`中的特定索引处替换一个元素。
 
-```
+```java
 List<Integer> EXPECTED = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));
 
 List<Integer> aList = new ArrayList<>(Arrays.asList(1, 2, 7, 4, 5));

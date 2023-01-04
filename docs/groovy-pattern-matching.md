@@ -14,7 +14,7 @@ Groovy 语言引入了所谓的模式操作符`~`。这个操作符可以被认�
 
 作为`Spock`测试的一部分，让我们在实践中检验一下:
 
-```
+```java
 def "pattern operator example"() {
     given: "a pattern"
     def p = ~'foo'
@@ -38,7 +38,7 @@ def "pattern operator example"() {
 
 同样，作为`Spock`测试的一部分，我们将在实践中研究它:
 
-```
+```java
 def "match operator example"() {
     expect:
     'foobar' ==~ /.*oba.*/
@@ -58,7 +58,7 @@ def "match operator example"() {
 
 在这里，我们可以看到操作人员的行动:
 
-```
+```java
 def "find operator example"() {
     when: "using the find operator"
     def matcher = 'foo and bar, baz and buz' =~ /(\w+) and (\w+)/

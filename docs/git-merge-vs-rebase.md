@@ -14,7 +14,7 @@
 
 让我们创建一个新的存储库，并在存储库中创建一个特性分支，以了解如何重新构建工作:
 
-```
+```java
 git clone <your_repository_here>
 git branch testBranch1
 git branch testBranch2
@@ -22,7 +22,7 @@ git branch testBranch2
 
 让我们在`testBranch1`特征分支中创建一个新文件，并提交更改:
 
-```
+```java
 git add .
 git commit -m "<Commit_Message_Here>"
 git push --set-upstream origin testBranch1
@@ -35,7 +35,7 @@ git log
 
 现在，让我们试着在`main`分支上改变这个分支的基础:
 
-```
+```java
 git rebase main
 ```
 
@@ -47,7 +47,7 @@ git rebase main
 
 现在，让我们将功能分支合并到主分支上:
 
-```
+```java
 git checkout main
 git merge testBranch1
 git push
@@ -66,7 +66,7 @@ git log
 
 让我们在`testBranch2`特征分支中创建一个新文件，并提交更改:
 
-```
+```java
 git checkout testBranch2
 git add .
 git commit -m "<Commit_Message_Here>"
@@ -80,7 +80,7 @@ git log
 
 现在让我们试着将这个分支基于`main`分支:
 
-```
+```java
 git rebase main
 ```
 
@@ -90,7 +90,7 @@ git rebase main
 
 由于在`main` 分支上有一些提交，特性分支是基于它的。现在让我们合并主分支上的 featureBranch2。我们应该**期望`featureBranch2`的提交 id 在 rebase:** 之前和之后是不同的
 
-```
+```java
 git checkout main
 git merge testBranch2
 git push
@@ -103,7 +103,7 @@ git log
 
 提交 id 与预期的不同，如果我们看一下 git 日志图，我们会看到回购具有线性历史:
 
-```
+```java
 git log --graph --oneline
 ```
 
@@ -119,7 +119,7 @@ Git merge 将获取我们正在合并的两个分支，**找到公共基础提�
 
 在您的本地计算机中克隆存储库，并创建一个新的功能分支:
 
-```
+```java
 git clone <your_repository_here>
 git branch testBranch1
 git branch testBranch2
@@ -127,7 +127,7 @@ git branch testBranch2
 
 让我们在`testBranch1`特征分支中创建一个新文件，并提交更改:
 
-```
+```java
 git add .
 git commit -m "<Commit_Message_Here>"
 git push --set-upstream origin testBranch1
@@ -140,7 +140,7 @@ git log
 
 现在让我们使用合并命令将该特征分支合并到`main`分支上:
 
-```
+```java
 git checkout main
 git merge testBranch1
 git push
@@ -159,7 +159,7 @@ git log
 
 让我们在`testBranch2`特征分支中创建一个新文件，并提交更改:
 
-```
+```java
 git checkout testBranch2
 git add .
 git commit -m "<Commit_Message_Here>"
@@ -173,7 +173,7 @@ git log
 
 现在让我们使用合并命令将该特征分支合并到`main`分支上:
 
-```
+```java
 git checkout main
 git merge testBranch2
 git log
@@ -187,7 +187,7 @@ git log
 
 我们还可以检查分支图并验证存储库的历史:
 
-```
+```java
 git log --graph --oneline
 ```
 

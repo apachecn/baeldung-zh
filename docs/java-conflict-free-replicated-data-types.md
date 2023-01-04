@@ -26,7 +26,7 @@
 
 首先，让我们向库中添加一个提供一组有用的 CRDTs 的依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.netopyr.wurmloch</groupId>
     <artifactId>wurmloch-crdt</artifactId>
@@ -42,7 +42,7 @@
 
 首先，让我们创建两个副本来模拟分布式数据结构，并使用`connect()` 方法连接这两个副本:
 
-```
+```java
 LocalCrdtStore crdtStore1 = new LocalCrdtStore();
 LocalCrdtStore crdtStore2 = new LocalCrdtStore();
 crdtStore1.connect(crdtStore2);
@@ -50,14 +50,14 @@ crdtStore1.connect(crdtStore2);
 
 一旦我们在集群中获得了两个副本，我们可以在第一个副本上创建一个`GSet` ,并在第二个副本上引用它:
 
-```
+```java
 GSet<String> replica1 = crdtStore1.createGSet("ID_1");
 GSet<String> replica2 = crdtStore2.<String>findGSet("ID_1").get();
 ```
 
 此时，我们的集群工作正常，两个副本之间有一个活动连接。我们可以从两个不同的副本向集合添加两个元素，并断言集合在两个副本上包含相同的元素:
 
-```
+```java
 replica1.add("apple");
 replica2.add("banana");
 
@@ -67,13 +67,13 @@ assertThat(replica2).contains("apple", "banana");
 
 假设我们突然有了一个网络分区，并且第一个和第二个副本之间没有连接。我们可以使用`disconnect()`方法模拟网络分区:
 
-```
+```java
 crdtStore1.disconnect(crdtStore2);
 ```
 
 接下来，当我们从两个副本向数据集添加元素时，这些更改并不是全局可见的，因为它们之间没有联系:
 
-```
+```java
 replica1.add("strawberry");
 replica2.add("pear");
 
@@ -83,7 +83,7 @@ assertThat(replica2).contains("apple", "banana", "pear");
 
 **一旦两个集群成员之间的连接再次建立，`GSet` 在两个集合上使用联合在内部合并**，并且两个副本再次一致:
 
-```
+```java
 crdtStore1.connect(crdtStore2);
 
 assertThat(replica1)
@@ -100,7 +100,7 @@ Increment-Only 计数器是一个 CRDT，它在每个节点上本地聚合所有
 
 让我们使用`GCounter` 创建一个只递增的计数器，并从两个副本中递增它。我们可以看到，总和计算得当:
 
-```
+```java
 LocalCrdtStore crdtStore1 = new LocalCrdtStore();
 LocalCrdtStore crdtStore2 = new LocalCrdtStore();
 crdtStore1.connect(crdtStore2);
@@ -117,7 +117,7 @@ assertThat(replica2.get()).isEqualTo(3L);
 
 当我们断开两个集群成员的连接并执行本地增量操作时，我们可以看到值不一致:
 
-```
+```java
 crdtStore1.disconnect(crdtStore2);
 
 replica1.increment(3L);
@@ -129,7 +129,7 @@ assertThat(replica2.get()).isEqualTo(8L);
 
 但是，一旦集群恢复正常，增量将被合并，产生正确的值:
 
-```
+```java
 crdtStore1.connect(crdtStore2);
 
 assertThat(replica1.get())
@@ -144,7 +144,7 @@ assertThat(replica2.get())
 
 **当副本同步时，结果值将等于** **所有增量的总和减去所有减量的总和**:
 
-```
+```java
 @Test
 public void givenPNCounter_whenReplicasDiverge_thenMergesWithoutConflict() {
     LocalCrdtStore crdtStore1 = new LocalCrdtStore();
@@ -183,7 +183,7 @@ public void givenPNCounter_whenReplicasDiverge_thenMergesWithoutConflict() {
 
 让我们创建一个包含两个副本和`LWWRegister` 类实例的集群:
 
-```
+```java
 LocalCrdtStore crdtStore1 = new LocalCrdtStore("N_1");
 LocalCrdtStore crdtStore2 = new LocalCrdtStore("N_2");
 crdtStore1.connect(crdtStore2);
@@ -202,7 +202,7 @@ assertThat(replica2.get()).isEqualTo("banana");
 
 让我们看看如果集群断开连接会发生什么:
 
-```
+```java
 crdtStore1.disconnect(crdtStore2);
 
 replica1.set("strawberry");
@@ -216,7 +216,7 @@ assertThat(replica2.get()).isEqualTo("pear");
 
 集群同步时，**取最高版本** **的值，** **丢弃之前的每次更新**:
 
-```
+```java
 crdtStore1.connect(crdtStore2);
 
 assertThat(replica1.get()).isEqualTo("pear");

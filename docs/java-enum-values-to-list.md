@@ -14,7 +14,7 @@ Java 在 1.5 版本中引入了 [`enum`](/web/20221115043639/https://www.baeldun
 
 首先，让我们创建一个`enum`类型`MagicNumber`:
 
-```
+```java
 enum MagicNumber {
     ONE, TWO, THREE, FOUR, FIVE
 }
@@ -22,7 +22,7 @@ enum MagicNumber {
 
 然后，我们的目标是获得一个填充了所有`MagicNumber enum`实例的`List` :
 
-```
+```java
 List<MagicNumber> EXPECTED_LIST = Arrays.asList(ONE, TWO, THREE, FOUR, FIVE);
 ```
 
@@ -38,7 +38,7 @@ List<MagicNumber> EXPECTED_LIST = Arrays.asList(ONE, TWO, THREE, FOUR, FIVE);
 
 **每个`enum`类型都提供了标准的`values()`方法来返回数组**中的所有实例。接下来，让我们从`MagicNumber.values()`开始建立一个列表:
 
-```
+```java
 List<MagicNumber> result = Arrays.asList(MagicNumber.values());
 assertEquals(EXPECTED_LIST, result);
 ```
@@ -51,14 +51,14 @@ assertEquals(EXPECTED_LIST, result);
 
 从 Java 1.5 开始，**`Class`对象提供了从`enum Class`对象**获取所有`enum`实例的`getEnumConstants()`方法。因此，我们可以让`getEnumConstants()` 提供`enum`实例:
 
-```
+```java
 List<MagicNumber> result = Arrays.asList(MagicNumber.class.getEnumConstants());
 assertEquals(EXPECTED_LIST, result);
 ```
 
 正如上面的测试所示，我们已经使用了`MagicNumber.class.getEnumConstants()`来提供`enum`实例数组。此外，很容易构建一个适用于所有`enum`类型的实用方法:
 
-```
+```java
 static <T> List<T> enumValuesInList(Class<T> enumCls) {
     T[] arr = enumCls.getEnumConstants();
     return arr == null ? Collections.emptyList() : Arrays.asList(arr);
@@ -69,7 +69,7 @@ static <T> List<T> enumValuesInList(Class<T> enumCls) {
 
 接下来，让我们创建一个测试来验证`enumValuesInList()`:
 
-```
+```java
 List<MagicNumber> result1 = enumValuesInList(MagicNumber.class);
 assertEquals(EXPECTED_LIST, result1);
 
@@ -85,7 +85,7 @@ assertTrue(result2.isEmpty());
 
 因此，我们可以使用`ArrayList()`构造函数和填充的`EnumSet`构造一个`List`对象。接下来，让我们通过测试来看看它是如何工作的:
 
-```
+```java
 List<MagicNumber> result = new ArrayList<>(EnumSet.allOf(MagicNumber.class));
 assertEquals(EXPECTED_LIST, result);
 ```

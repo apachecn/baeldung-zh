@@ -16,7 +16,7 @@
 
 为了有效地读取文件，我们将使用`openStream()`方法获得一个`InputStream`:
 
-```
+```java
 BufferedInputStream in = new BufferedInputStream(new URL(FILE_URL).openStream())
 ```
 
@@ -28,7 +28,7 @@ BufferedInputStream in = new BufferedInputStream(new URL(FILE_URL).openStream())
 
 为了将从 URL 读取的字节写入我们的本地文件，我们将使用来自`FileOutputStream `类的`write()`方法:
 
-```
+```java
 try (BufferedInputStream in = new BufferedInputStream(new URL(FILE_URL).openStream());
   FileOutputStream fileOutputStream = new FileOutputStream(FILE_NAME)) {
     byte dataBuffer[] = new byte[1024];
@@ -47,7 +47,7 @@ try (BufferedInputStream in = new BufferedInputStream(new URL(FILE_URL).openStre
 
 **我们可以使用`Files.copy()`** 方法从`InputStream`中读取所有的字节，并将它们复制到一个本地文件中:
 
-```
+```java
 InputStream in = new URL(FILE_URL).openStream();
 Files.copy(in, Paths.get(FILE_NAME), StandardCopyOption.REPLACE_EXISTING);
 ```
@@ -64,20 +64,20 @@ Java NIO 包提供了在两个`Channels`之间传输字节的可能性，而无�
 
 为了从我们的 URL 中读取文件，我们将从`URL `流中创建一个新的`ReadableByteChannel`:
 
-```
+```java
 ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
 ```
 
 从`ReadableByteChannel`读取的字节将被传输到与将要下载的文件对应的`FileChannel`:
 
-```
+```java
 FileOutputStream fileOutputStream = new FileOutputStream(FILE_NAME);
 FileChannel fileChannel = fileOutputStream.getChannel();
 ```
 
 我们将使用来自`ReadableByteChannel`类的`transferFrom()`方法从给定的 URL 下载字节到我们的`FileChannel`:
 
-```
+```java
 fileOutputStream.getChannel()
   .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
 ```
@@ -102,19 +102,19 @@ fileOutputStream.getChannel()
 
 首先，我们需要创建一个 HTTP 客户端:
 
-```
+```java
 AsyncHttpClient client = Dsl.asyncHttpClient();
 ```
 
 下载的内容将被放入`FileOutputStream`:
 
-```
+```java
 FileOutputStream stream = new FileOutputStream(FILE_NAME);
 ```
 
 接下来，我们创建一个 HTTP GET 请求并注册一个`AsyncCompletionHandler`处理程序来处理下载的内容:
 
-```
+```java
 client.prepareGet(FILE_URL).execute(new AsyncCompletionHandler<FileOutputStream>() {
 
     @Override
@@ -144,7 +144,7 @@ client.prepareGet(FILE_URL).execute(new AsyncCompletionHandler<FileOutputStream>
 
 要从 URL 下载文件，我们可以使用这个命令行程序:
 
-```
+```java
 FileUtils.copyURLToFile(
   new URL(FILE_URL), 
   new File(FILE_NAME), 
@@ -158,7 +158,7 @@ FileUtils.copyURLToFile(
 
 一个区别是这里的`URLConnection`类用于控制连接超时，这样下载就不会长时间阻塞:
 
-```
+```java
 URLConnection connection = source.openConnection();
 connection.setConnectTimeout(connectionTimeout);
 connection.setReadTimeout(readTimeout);
@@ -172,7 +172,7 @@ connection.setReadTimeout(readTimeout);
 
 首先要知道的是**我们可以通过使用 HTTP HEAD 方法**从给定的 URL 读取文件的大小，而不需要实际下载它:
 
-```
+```java
 URL url = new URL(FILE_URL);
 HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
 httpConnection.setRequestMethod("HEAD");
@@ -183,7 +183,7 @@ long removeFileSize = httpConnection.getContentLengthLong();
 
 如果是这样，我们将从磁盘上记录的最后一个字节开始继续下载:
 
-```
+```java
 long existingFileSize = outputFile.length();
 if (existingFileSize < fileLength) {
     httpFileConnection.setRequestProperty(
@@ -199,7 +199,7 @@ if (existingFileSize < fileLength) {
 
 与第 2 节中的代码的另一个细微区别是， **`FileOutputStream`是在`append`参数设置为 true** 的情况下打开的:
 
-```
+```java
 OutputStream os = new FileOutputStream(FILE_NAME, true);
 ```
 

@@ -28,7 +28,7 @@
 
 让我们来看一个例子:
 
-```
+```java
 <repositories>
     <repository>
         <id>central</id>
@@ -46,7 +46,7 @@
 
 默认的插件存储库是中央 Maven 存储库。让我们看看它在 *pluginRepository* 部分是如何定义的:
 
-```
+```java
 <pluginRepositories>
     <pluginRepository>
         <id>central</id>
@@ -71,7 +71,7 @@
 
 让我们看一个默认`build`部分的例子:
 
-```
+```java
 <build>
     <directory>${project.basedir}/target</directory>
     <outputDirectory>${project.build.directory}/classes</outputDirectory>
@@ -120,7 +120,7 @@
 
 对于`reporting`，超级 POM 只为输出目录提供一个默认值:
 
-```
+```java
 <reporting>
     <outputDirectory>${project.build.directory}/site</outputDirectory>
 </reporting>
@@ -132,7 +132,7 @@
 
 默认的*概要文件*部分如下所示:
 
-```
+```java
 <profiles>
     <!-- NOTE: The release profile will be removed from future versions of the super POM -->
     <profile>
@@ -188,7 +188,7 @@
 
 让我们来看看 Maven 项目的最低要求:
 
-```
+```java
 <project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.baeldung</groupId>
@@ -203,7 +203,7 @@ Maven 中 POM 层次结构的一个主要优点是我们可以扩展和覆盖从
 
 **Effective POM 结合了超级 POM 文件中的所有默认设置和我们的应用程序 POM 中定义的配置。**当配置元素在应用程序`pom.xml`中没有被覆盖时，Maven 使用默认值。因此，如果我们从最简单的 POM 部分获取相同的样本 POM 文件，我们将看到有效的 POM 文件将是最简单和超级 POM 的合并。我们可以从命令行直观地看到它:
 
-```
+```java
 mvn help:effective-pom
 ```
 

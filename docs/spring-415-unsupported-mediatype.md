@@ -16,19 +16,19 @@
 
 我们的应用程序已经开始使用 API。让我们练习这个 API 来获得所有用户:
 
-```
+```java
 curl -X GET https://baeldung.service.com/user
 ```
 
 万岁！API 以成功的响应进行了回应。之后，让我们请求一个用户:
 
-```
+```java
 curl -X GET https://baeldung.service.com/user/{user-id}
 ```
 
 让我们来看看回应:
 
-```
+```java
 {
     "id": 1,
     "name": "Jason",
@@ -41,13 +41,13 @@ curl -X GET https://baeldung.service.com/user/{user-id}
 
 现在，让我们尝试添加一个新用户:
 
-```
+```java
 curl -X POST -d '{"name":"Abdullah", "age":28, "address":"Apartment 2201"}' https://baeldung.service.com/user/
 ```
 
 因此，**我们收到了 HTTP 状态为 415** 的错误响应:
 
-```
+```java
 {
     "timestamp": "yyyy-MM-ddThh:mm:ss.SSS+00:00",
     "status": 415,
@@ -68,7 +68,7 @@ curl -X POST -d '{"name":"Abdullah", "age":28, "address":"Apartment 2201"}' http
 
 为了找到 API 支持的格式，我们决定深入研究服务器端后端代码，我们找到了 API 定义:
 
-```
+```java
 @PostMapping(value = "/", consumes = {"application/xml"})
 void AddUser(@RequestBody User user)
 ```
@@ -87,13 +87,13 @@ void AddUser(@RequestBody User user)
 
 第一种选择是**以 XML 格式发送请求，而不是 JSON** :
 
-```
+```java
 curl -X POST -d '<user><name>Abdullah</name><age>28</age><address>Apartment 2201</address></user>' https://baeldung.service.com/user/
 ```
 
 不幸的是，由于上述请求，我们得到了同样的错误。如果我们记得，我们曾经问过[问题](#1-consumes-method-in-spring)，API 中的那个`consumes`元素的用途是什么。这为我们指出了方向，即**我们的一个头标(`Content-Type`)丢失了**。让我们发送请求，这一次带有丢失的头:
 
-```
+```java
 curl -X POST -H "Content-Type: application/xml" -d '<user><name>Abdullah</name><age>28</age><address>Apartment 2201</address></user>' https://baeldung.service.com/user/
 ```
 
@@ -105,14 +105,14 @@ curl -X POST -H "Content-Type: application/xml" -d '<user><name>Abdullah</name><
 
 **第一个也是最业余的选择是在 API 上用 JSON 替换 XML 格式**:
 
-```
+```java
 @PostMapping(value = "/", consumes = {"application/json"}) 
 void AddUser(@RequestBody User user)
 ```
 
 让我们从客户端应用程序以 JSON 格式再次发送请求:
 
-```
+```java
 curl -X POST -H "Content-Type: application/json" -d '{"name":"Abdullah", "age":28, "address":"Apartment 2201"} https://baeldung.service.com/user/'
 ```
 
@@ -120,7 +120,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"name":"Abdullah", "age":2
 
 **第二个更简单的选择是允许请求有效载荷中的每种格式**:
 
-```
+```java
 @PostMapping(value = "/", consumes = {"*/*"}) 
 void AddUser(@RequestBody User user
 ```
@@ -129,7 +129,7 @@ void AddUser(@RequestBody User user
 
 第三个也是推荐的选项是专门添加客户端应用程序当前使用的那些格式。由于 API 已经支持 XML 格式，我们将保留它，因为已经有客户端应用程序向 API 发送 XML。为了使 API 也支持我们的应用程序格式，我们将做一个简单的 API 代码更改:
 
-```
+```java
 @PostMapping(value = "/", consumes = {"application/xml","application/json"}) 
 void AddUser(@RequestBody User user
 ```

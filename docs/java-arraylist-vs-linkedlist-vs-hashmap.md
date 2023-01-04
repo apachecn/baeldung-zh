@@ -34,7 +34,7 @@ Java 集合框架包含四个基本接口:`List`、`Set`、`Map, and` 、T3。�
 
 让我们来看一个糟糕的例子，我们使用一个地图来保存基于位置键的数据:
 
-```
+```java
 Map<Integer, String> map = new HashMap<>();
 map.put(1, "Daniel");
 map.put(2, "Marko");
@@ -48,7 +48,7 @@ assertThat(map.values()).containsExactlyInAnyOrder("Daniel", "Marko");
 
 我们可以用一个列表以一种可读性更强的方式重写这个例子。`Lists`根据定义是有序的，所以我们可以按照插入的顺序遍历这些项目:
 
-```
+```java
 List<String> list = new ArrayList<>();
 list.add("Daniel");
 list.add("Marko");
@@ -66,7 +66,7 @@ assertThat(list).containsExactly("Daniel", "Marko");
 
 我们使用从零开始的索引来访问列表元素。我们可以在列表的末尾或特定位置插入一个新元素:
 
-```
+```java
 List<String> list = new ArrayList<>();
 list.add("Daniel");
 list.add(0, "Marko");
@@ -76,7 +76,7 @@ assertThat(list.get(0)).isEqualTo("Marko");
 
 要从列表中删除元素，我们需要提供对象引用或其索引:
 
-```
+```java
 List<String> list = new ArrayList<>(Arrays.asList("Daniel", "Marko"));
 list.remove(1);
 assertThat(list).hasSize(1);
@@ -109,7 +109,7 @@ assertThat(list).doesNotContain("Marko");
 
 除了标准的`List`插入方法之外，`LinkedList`还支持额外的方法，可以在列表的开头或结尾添加元素:
 
-```
+```java
 LinkedList<String> list = new LinkedList<>();
 list.addLast("Daniel");
 list.addFirst("Marko");
@@ -119,7 +119,7 @@ assertThat(list.getLast()).isEqualTo("Daniel");
 
 这个列表实现还提供了从列表的开头或结尾移除元素的方法:
 
-```
+```java
 LinkedList<String> list = new LinkedList<>(Arrays.asList("Daniel", "Marko", "David"));
 list.removeFirst();
 list.removeLast();
@@ -129,7 +129,7 @@ assertThat(list).containsExactly("Marko");
 
 实现的`Deque`接口提供了类似队列的方法来检索、添加和删除元素:
 
-```
+```java
 LinkedList<String> list = new LinkedList<>();
 list.push("Daniel");
 list.push("Marko");
@@ -159,7 +159,7 @@ assertThat(list).hasSize(1);
 
 与`ArrayList`和`LinkedList`不同， *HashMap* 实现了`Map`接口。这意味着每个键都映射到一个值。我们总是需要知道从集合中检索相应值的键:
 
-```
+```java
 Map<String, String> map = new HashMap<>();
 map.put("123456", "Daniel");
 map.put("654321", "Marko");
@@ -168,7 +168,7 @@ assertThat(map.get("654321")).isEqualTo("Marko");
 
 同样，我们只能使用值的键从集合中删除值:
 
-```
+```java
 Map<String, String> map = new HashMap<>();
 map.put("123456", "Daniel");
 map.put("654321", "Marko");

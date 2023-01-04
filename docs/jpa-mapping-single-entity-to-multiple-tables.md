@@ -33,7 +33,7 @@ JPA 使我们在 Java 应用程序中处理关系数据库模型变得不那么�
 
 让我们从定义`Meal` 实体开始:
 
-```
+```java
 @Entity
 @Table(name = "meal")
 class Meal {
@@ -61,7 +61,7 @@ class Meal {
 
 接下来，我们将添加`Allergens`实体:
 
-```
+```java
 @Entity
 @Table(name = "allergens")
 class Allergens {
@@ -103,7 +103,7 @@ class Allergens {
 
 **我们可以使用`@SecondaryTable` 注释:**创建一个实体，指定我们在不同的表中有列
 
-```
+```java
 @Entity
 @Table(name = "meal")
 @SecondaryTable(name = "allergens", pkJoinColumns = @PrimaryKeyJoinColumn(name = "meal_id"))
@@ -149,7 +149,7 @@ class Meal {
 
 让我们看看当我们将`@SecondaryTable`与`@Embedded`和`@Embeddable`组合在一起时会得到什么:
 
-```
+```java
 @Entity
 @Table(name = "meal")
 @SecondaryTable(name = "allergens", pkJoinColumns = @PrimaryKeyJoinColumn(name = "meal_id"))

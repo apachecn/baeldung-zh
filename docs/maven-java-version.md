@@ -26,7 +26,7 @@ Learn how to use the Maven compiler plugin, used to compile the source code of a
 
 第一个选项是在编译器插件属性中设置版本:
 
-```
+```java
 <properties>
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -41,7 +41,7 @@ Maven 编译器接受–`target`和–`source `版本的这个命令。如果�
 
 或者，我们可以直接配置编译器插件:
 
-```
+```java
 <plugins>
     <plugin>    
         <artifactId>maven-compiler-plugin</artifactId>
@@ -67,7 +67,7 @@ Maven 编译器接受–`target`和–`source `版本的这个命令。如果�
 
 转换我们的示例后，我们可以为插件属性声明以下内容:
 
-```
+```java
 <properties>
     <maven.compiler.release>7</maven.compiler.release>
 </properties>
@@ -75,7 +75,7 @@ Maven 编译器接受–`target`和–`source `版本的这个命令。如果�
 
 而对于从 3.6 版本开始的`maven-compiler-plugin`，我们可以这样写:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-compiler-plugin</artifactId>
@@ -96,7 +96,7 @@ Spring Boot 应用程序在`the pom.xml `文件的`properties`标签中指定�
 
 首先，我们需要添加*spring-boot-starter-parent*作为我们项目的父项目:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -107,7 +107,7 @@ Spring Boot 应用程序在`the pom.xml `文件的`properties`标签中指定�
 
 然而，我们可以通过指定`java.version`属性来覆盖父节点的默认版本:
 
-```
+```java
 <properties>
     <java.version>9</java.version>
 </properties>

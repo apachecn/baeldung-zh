@@ -12,7 +12,7 @@
 
 首先，让我们看看 Spring Boot 所需的依赖项和配置。首先，让我们将最新版本的 [`spring-session-data-mongodb`](https://web.archive.org/web/20220627090416/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.session%22%20AND%20a%3A%22spring-session-data-mongodb%22) 和`[spring-boot-starter-data-mongodb](https://web.archive.org/web/20220627090416/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-data-mongodb%22)`添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.session</groupId>
     <artifactId>spring-session-data-mongodb</artifactId>
@@ -27,7 +27,7 @@
 
 之后，为了启用 Spring Boot 自动配置，我们需要在`application.properties`中添加 Spring Session 存储类型作为`mongodb`:
 
-```
+```java
 spring.session.store-type=mongodb
 ```
 
@@ -37,7 +37,7 @@ spring.session.store-type=mongodb
 
 类似于 Spring Boot 配置，我们将需要`spring-session-data-mongodb`依赖项。然而，这里我们将使用 [`spring-data-mongodb`](https://web.archive.org/web/20220627090416/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.data%22%20AND%20a%3A%22spring-data-mongodb%22) 依赖项来访问我们的 MongoDB 数据库:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.session</groupId>
     <artifactId>spring-session-data-mongodb</artifactId>
@@ -52,7 +52,7 @@ spring.session.store-type=mongodb
 
 最后，让我们看看如何配置应用程序:
 
-```
+```java
 @EnableMongoHttpSession
 public class HttpSessionConfig {
 
@@ -73,7 +73,7 @@ public class HttpSessionConfig {
 
 我们将从创建控制器来处理请求开始:
 
-```
+```java
 @RestController
 public class SpringSessionMongoDBController {
 
@@ -105,7 +105,7 @@ public class SpringSessionMongoDBController {
 
 之后，我们将查询 MongoDB 集合，使用会话 id 获取会话数据:
 
-```
+```java
 @Test
 public void 
   givenEndpointIsCalledTwiceAndResponseIsReturned_whenMongoDBIsQueriedForCount_thenCountMustBeSame() {
@@ -141,7 +141,7 @@ private String getSessionId(String cookie) {
 
 例如，这里我们禁用了 cookie 的`httponly`属性:
 
-```
+```java
 @Bean
 public DefaultCookieSerializer customCookieSerializer(){
     DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
@@ -156,13 +156,13 @@ public DefaultCookieSerializer customCookieSerializer(){
 
 让我们在 MongoDB 控制台中使用以下命令来查询我们的会话集合:
 
-```
+```java
 db.sessions.findOne()
 ```
 
 结果，我们将得到一个类似于以下内容的 [BSON](/web/20220627090416/https://www.baeldung.com/mongodb-bson) 文档:
 
-```
+```java
 {
     "_id" : "5d985be4-217c-472c-ae02-d6fca454662b",
     "created" : ISODate("2019-05-14T16:45:41.021Z"),

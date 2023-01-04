@@ -32,7 +32,7 @@ Spring 创建一个代理，或者操纵类字节码，来管理事务的创建�
 
 简而言之，如果我们有一个类似于`callMethod`的方法，并且我们将它标记为`@Transactional,` ，Spring 将在调用的`@Transactional`方法周围包装一些事务管理代码:
 
-```
+```java
 createTransactionIfNecessary();
 try {
     callMethod();
@@ -53,7 +53,7 @@ try {
 
 让我们从一个接口示例开始:
 
-```
+```java
 @Transactional
 public interface TransferService {
     void transfer(String user1, String user2, double val);
@@ -62,7 +62,7 @@ public interface TransferService {
 
 通常不建议在界面上设置`@Transactional`；但是对于像`@Repository`这样有 Spring 数据的情况是可以接受的。我们可以将注释放在类定义上，以覆盖接口/超类的事务设置:
 
-```
+```java
 @Service
 @Transactional
 public class TransferServiceImpl implements TransferService {
@@ -75,7 +75,7 @@ public class TransferServiceImpl implements TransferService {
 
 现在让我们通过直接在方法上设置注释来覆盖它:
 
-```
+```java
 @Transactional
 public void transfer(String user1, String user2, double val) {
     // ...
@@ -94,7 +94,7 @@ Spring 调用`TransactionManager::getTransaction`来根据传播获取或创建�
 
 `REQUIRED`是默认传播。Spring 检查是否有活动的事务，如果没有，它就创建一个新的事务。否则，业务逻辑会向当前活动的事务追加:
 
-```
+```java
 @Transactional(propagation = Propagation.REQUIRED)
 public void requiredExample(String user) { 
     // ... 
@@ -103,7 +103,7 @@ public void requiredExample(String user) {
 
 此外，由于`REQUIRED`是默认传播，我们可以通过删除它来简化代码:
 
-```
+```java
 @Transactional
 public void requiredExample(String user) { 
     // ... 
@@ -112,7 +112,7 @@ public void requiredExample(String user) {
 
 让我们看看事务创建如何为`REQUIRED`传播工作的伪代码:
 
-```
+```java
 if (isExistingTransaction()) {
     if (isValidateExistingTransaction()) {
         validateExisitingAndThrowExceptionIfNotValid();
@@ -126,7 +126,7 @@ return createNewTransaction();
 
 对于`SUPPORTS`，Spring 首先检查是否存在活动事务。如果存在事务，则将使用现有的事务。如果没有事务，它将以非事务方式执行:
 
-```
+```java
 @Transactional(propagation = Propagation.SUPPORTS)
 public void supportsExample(String user) { 
     // ... 
@@ -135,7 +135,7 @@ public void supportsExample(String user) {
 
 让我们看看`SUPPORTS`的事务创建的伪代码:
 
-```
+```java
 if (isExistingTransaction()) {
     if (isValidateExistingTransaction()) {
         validateExisitingAndThrowExceptionIfNotValid();
@@ -149,7 +149,7 @@ return emptyTransaction;
 
 当传播为`MANDATORY`时，如果有一个活动的事务，那么它将被使用。如果没有活动的事务，那么 Spring 抛出一个异常:
 
-```
+```java
 @Transactional(propagation = Propagation.MANDATORY)
 public void mandatoryExample(String user) { 
     // ... 
@@ -158,7 +158,7 @@ public void mandatoryExample(String user) {
 
 让我们再次看看伪代码:
 
-```
+```java
 if (isExistingTransaction()) {
     if (isValidateExistingTransaction()) {
         validateExisitingAndThrowExceptionIfNotValid();
@@ -172,7 +172,7 @@ throw IllegalTransactionStateException;
 
 对于带有`NEVER`传播的事务逻辑，如果有一个活动的事务，Spring 会抛出一个异常:
 
-```
+```java
 @Transactional(propagation = Propagation.NEVER)
 public void neverExample(String user) { 
     // ... 
@@ -181,7 +181,7 @@ public void neverExample(String user) {
 
 让我们看看事务创建如何为`NEVER`传播工作的伪代码:
 
-```
+```java
 if (isExistingTransaction()) {
     throw IllegalTransactionStateException;
 }
@@ -192,7 +192,7 @@ return emptyTransaction;
 
 如果存在当前事务，首先 Spring 会暂停它，然后在没有事务的情况下执行业务逻辑:
 
-```
+```java
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 public void notSupportedExample(String user) { 
     // ... 
@@ -205,7 +205,7 @@ public void notSupportedExample(String user) {
 
 当传播为`REQUIRES_NEW`时，Spring 暂停当前的事务(如果它存在的话)，然后创建一个新的事务:
 
-```
+```java
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 public void requiresNewExample(String user) { 
     // ... 
@@ -216,7 +216,7 @@ public void requiresNewExample(String user) {
 
 伪代码看起来像这样:
 
-```
+```java
 if (isExistingTransaction()) {
     suspend(existing);
     try {
@@ -239,7 +239,7 @@ return createNewTransaction();
 
 最后，让我们将`propagation`设置为`NESTED`:
 
-```
+```java
 @Transactional(propagation = Propagation.NESTED)
 public void nestedExample(String user) { 
     // ... 
@@ -266,7 +266,7 @@ public void nestedExample(String user) {
 
 那么交易验证的伪代码将是:
 
-```
+```java
 if (isolationLevel != ISOLATION_DEFAULT) {
     if (currentTransactionIsolationLevel() != isolationLevel) {
         throw IllegalTransactionStateException
@@ -284,7 +284,7 @@ if (isolationLevel != ISOLATION_DEFAULT) {
 
 我们可以为一个方法或类设置`isolation`级别:
 
-```
+```java
 @Transactional(isolation = Isolation.READ_UNCOMMITTED)
 public void log(String message) {
     // ...
@@ -301,7 +301,7 @@ public void log(String message) {
 
 这里我们设置`isolation`等级:
 
-```
+```java
 @Transactional(isolation = Isolation.READ_COMMITTED)
 public void log(String message){
     // ...
@@ -321,7 +321,7 @@ public void log(String message){
 
 以下是如何设置方法的`isolation`级别:
 
-```
+```java
 @Transactional(isolation = Isolation.REPEATABLE_READ) 
 public void log(String message){
     // ...
@@ -338,7 +338,7 @@ public void log(String message){
 
 现在让我们看看如何将`SERIALIZABLE`设置为`isolation`电平:
 
-```
+```java
 @Transactional(isolation = Isolation.SERIALIZABLE)
 public void log(String message){
     // ...

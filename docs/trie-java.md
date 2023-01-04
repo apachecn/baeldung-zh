@@ -20,7 +20,7 @@ trie(也称为数字树)有时甚至是基数树或前缀树(因为它们可以�
 
 这里我们有一个`TrieNode` 的预览，我们将在`Trie:`的实现中使用它
 
-```
+```java
 public class TrieNode {
     private HashMap<Character, TrieNode> children;
     private String content;
@@ -38,7 +38,7 @@ public class TrieNode {
 
 下面是`Trie` 类，它代表了 trie 数据结构的一个实现:
 
-```
+```java
 public class Trie {
     private TrieNode root;
     //...
@@ -64,7 +64,7 @@ public class Trie {
 
 下面是该算法的实现:
 
-```
+```java
 public void insert(String word) {
     TrieNode current = root;
 
@@ -77,7 +77,7 @@ public void insert(String word) {
 
 现在让我们看看如何使用这个方法在一个 trie 中插入新元素:
 
-```
+```java
 private Trie createExampleTrie() {
     Trie trie = new Trie();
 
@@ -94,7 +94,7 @@ private Trie createExampleTrie() {
 
 我们可以通过以下测试来测试 trie 是否已经填充了新节点:
 
-```
+```java
 @Test
 public void givenATrie_WhenAddingElements_ThenTrieNotEmpty() {
     Trie trie = createTrie();
@@ -116,7 +116,7 @@ public void givenATrie_WhenAddingElements_ThenTrieNotEmpty() {
 
 Java 实现可能看起来像:
 
-```
+```java
 public boolean find(String word) {
     TrieNode current = root;
     for (int i = 0; i < word.length(); i++) {
@@ -133,7 +133,7 @@ public boolean find(String word) {
 
 实际上:
 
-```
+```java
 @Test
 public void givenATrie_WhenAddingElements_ThenTrieContainsThoseElements() {
     Trie trie = createExampleTrie();
@@ -157,7 +157,7 @@ public void givenATrie_WhenAddingElements_ThenTrieContainsThoseElements() {
 
 让我们快速看一下实现:
 
-```
+```java
 public void delete(String word) {
     delete(root, word, 0);
 }
@@ -187,7 +187,7 @@ private boolean delete(TrieNode current, String word, int index) {
 
 实际上:
 
-```
+```java
 @Test
 void whenDeletingElements_ThenTreeDoesNotContainThoseElements() {
     Trie trie = createTrie();

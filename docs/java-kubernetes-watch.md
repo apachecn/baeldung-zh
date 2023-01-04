@@ -27,7 +27,7 @@ Java Kubernetes API 通过`Watch`类支持`Watches`，该类有一个静态方�
 
 我们使用库中任何一个可用的`xxxApi`类的`listXXXCall()` 方法创建一个`Call `实例。例如，要创建一个检测 [Pod](https://web.archive.org/web/20221208143832/https://kubernetes.io/docs/concepts/workloads/pods/) 事件的`Watch`，我们可以使用`listPodForAllNamespacesCall()`:
 
-```
+```java
 CoreV1Api api = new CoreV1Api(client);
 Call call = api.listPodForAllNamespacesCall(null, null, null, null, null, null, null, null, 10, true, null);
 Watch<V1Pod> watch = Watch.createWatch(
@@ -44,7 +44,7 @@ Watch<V1Pod> watch = Watch.createWatch(
 
 仔细看看`Watch`类，我们可以看到它实现了标准 JRE 中的`Iterator`和`Iterable`，因此我们可以在`for-each`或`hasNext()-next()` 循环中使用从`createWatch()` 返回的值:
 
-```
+```java
 for (Response<V1Pod> event : watch) {
     V1Pod pod = event.object;
     V1ObjectMeta meta = pod.getMetadata();
@@ -76,7 +76,7 @@ Kubernetes 中的每个资源在其元数据中都包含一个`resourceVersion`�
 
 但是，我们如何在电话中加入一个`resourceVersion`?简单:我们只进行一次初始同步调用来检索初始资源列表，其中包括集合的`resourceVersion,`，然后在后续的`Watch`调用中使用它:
 
-```
+```java
 String resourceVersion = null;
 while (true) {
     if (resourceVersion == null) {
@@ -118,7 +118,7 @@ while (true) {
 
 当与前面单独使用`resourceVersion`的方法相比时，书签允许我们在很大程度上摆脱昂贵的同步调用:
 
-```
+```java
 String resourceVersion = null;
 
 while (true) {

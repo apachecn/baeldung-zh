@@ -40,7 +40,7 @@ Java 中的[流](/web/20221208143859/https://www.baeldung.com/java-8-streams-int
 
 顺序流使用单个线程来处理管道:
 
-```
+```java
 List<Integer> listOfNumbers = Arrays.asList(1, 2, 3, 4);
 listOfNumbers.stream().forEach(number ->
     System.out.println(number + " " + Thread.currentThread().getName())
@@ -49,7 +49,7 @@ listOfNumbers.stream().forEach(number ->
 
 这个顺序流的输出是可预测的。列表元素将始终按有序顺序打印:
 
-```
+```java
 1 main
 2 main
 3 main
@@ -62,7 +62,7 @@ Java 中的任何流都可以很容易地从顺序转换成并行。
 
 我们可以通过**将`parallel`方法添加到顺序流中，或者通过使用集合**的`parallelStream` 方法创建一个流来实现这一点:
 
-```
+```java
 List<Integer> listOfNumbers = Arrays.asList(1, 2, 3, 4);
 listOfNumbers.parallelStream().forEach(number ->
     System.out.println(number + " " + Thread.currentThread().getName())
@@ -73,7 +73,7 @@ listOfNumbers.parallelStream().forEach(number ->
 
 然而，执行的顺序不在我们的控制范围内。每次我们运行程序时，它都可能改变:
 
-```
+```java
 4 ForkJoinPool.commonPool-worker-3
 2 ForkJoinPool.commonPool-worker-5
 1 ForkJoinPool.commonPool-worker-7
@@ -94,7 +94,7 @@ fork-join 框架负责在工作线程之间分割源数据，并在任务完成�
 
 我们将使用 [`reduce`](/web/20221208143859/https://www.baeldung.com/java-stream-reduce) 方法，将起始和加 5，而不是从零开始:
 
-```
+```java
 List<Integer> listOfNumbers = Arrays.asList(1, 2, 3, 4);
 int sum = listOfNumbers.parallelStream().reduce(5, Integer::sum);
 assertThat(sum).isNotEqualTo(15);
@@ -110,7 +110,7 @@ assertThat(sum).isNotEqualTo(15);
 
 为了解决这个问题，应该在并行流之外添加数字 5:
 
-```
+```java
 List<Integer> listOfNumbers = Arrays.asList(1, 2, 3, 4);
 int sum = listOfNumbers.parallelStream().reduce(0, Integer::sum) + 5;
 assertThat(sum).isEqualTo(15);
@@ -124,7 +124,7 @@ assertThat(sum).isEqualTo(15);
 
 然而，API 允许我们通过传递一个 JVM 参数来指定它将使用的线程数量:
 
-```
+```java
 -D java.util.concurrent.ForkJoinPool.common.parallelism=4
 ```
 
@@ -134,7 +134,7 @@ assertThat(sum).isEqualTo(15);
 
 除了在默认的公共线程池中，还可以在[自定义线程池](/web/20221208143859/https://www.baeldung.com/java-8-parallel-streams-custom-threadpool)中运行并行流:
 
-```
+```java
 List<Integer> listOfNumbers = Arrays.asList(1, 2, 3, 4);
 ForkJoinPool customThreadPool = new ForkJoinPool(4);
 int sum = customThreadPool.submit(
@@ -155,14 +155,14 @@ assertThat(sum).isEqualTo(10);
 
 我们将对顺序和并行缩减操作运行基准测试:
 
-```
+```java
 IntStream.rangeClosed(1, 100).reduce(0, Integer::sum);
 IntStream.rangeClosed(1, 100).parallel().reduce(0, Integer::sum);
 ```
 
 在这种简单的求和缩减中，将顺序流转换为并行流会导致更差的性能:
 
-```
+```java
 Benchmark                                                     Mode  Cnt        Score        Error  Units
 SplittingCosts.sourceSplittingIntStreamParallel               avgt   25      35476,283 ±     204,446  ns/op
 SplittingCosts.sourceSplittingIntStreamSequential             avgt   25         68,274 ±       0,963  ns/op
@@ -176,7 +176,7 @@ SplittingCosts.sourceSplittingIntStreamSequential             avgt   25         
 
 让我们用一个 [`ArrayList`](/web/20221208143859/https://www.baeldung.com/java-arraylist) 和一个 [`LinkedList`](/web/20221208143859/https://www.baeldung.com/java-linkedlist) 来演示一下:
 
-```
+```java
 private static final List<Integer> arrayListOfNumbers = new ArrayList<>();
 private static final List<Integer> linkedListOfNumbers = new LinkedList<>();
 
@@ -190,7 +190,7 @@ static {
 
 我们将对两种类型的列表的顺序和并行归约操作运行基准测试:
 
-```
+```java
 arrayListOfNumbers.stream().reduce(0, Integer::sum)
 arrayListOfNumbers.parallelStream().reduce(0, Integer::sum);
 linkedListOfNumbers.stream().reduce(0, Integer::sum);
@@ -199,7 +199,7 @@ linkedListOfNumbers.parallelStream().reduce(0, Integer::sum);
 
 我们的结果表明，将顺序流转换为并行流只会给`ArrayList`带来性能优势:
 
-```
+```java
 Benchmark                                                     Mode  Cnt        Score        Error  Units
 DifferentSourceSplitting.differentSourceArrayListParallel     avgt   25    2004849,711 ±    5289,437  ns/op
 DifferentSourceSplitting.differentSourceArrayListSequential   avgt   25    5437923,224 ±   37398,940  ns/op
@@ -215,7 +215,7 @@ DifferentSourceSplitting.differentSourceLinkedListSequential  avgt   25   106649
 
 让我们在顺序和并行流上运行一个基准测试，将求和与分组作为不同的合并操作:
 
-```
+```java
 arrayListOfNumbers.stream().reduce(0, Integer::sum);
 arrayListOfNumbers.stream().parallel().reduce(0, Integer::sum);
 arrayListOfNumbers.stream().collect(Collectors.toSet());
@@ -224,7 +224,7 @@ arrayListOfNumbers.stream().parallel().collect(Collectors.toSet())
 
 我们的结果表明，将顺序流转换为并行流只会为 sum 操作带来性能优势:
 
-```
+```java
 Benchmark                                                     Mode  Cnt        Score        Error  Units
 MergingCosts.mergingCostsGroupingParallel                     avgt   25  135093312,675 ± 4195024,803  ns/op
 MergingCosts.mergingCostsGroupingSequential                   avgt   25   70631711,489 ± 1517217,320  ns/op
@@ -242,7 +242,7 @@ MergingCosts.mergingCostsSumSequential                        avgt   25    55095
 
 让我们使用两个数组来演示这一点，一个使用基本类型，另一个使用对象数据类型:
 
-```
+```java
 private static final int[] intArray = new int[1_000_000];
 private static final Integer[] integerArray = new Integer[1_000_000];
 
@@ -256,7 +256,7 @@ static {
 
 我们将对两个阵列上的顺序和并行缩减操作运行基准测试:
 
-```
+```java
 Arrays.stream(intArray).reduce(0, Integer::sum);
 Arrays.stream(intArray).parallel().reduce(0, Integer::sum);
 Arrays.stream(integerArray).reduce(0, Integer::sum);
@@ -265,7 +265,7 @@ Arrays.stream(integerArray).parallel().reduce(0, Integer::sum);
 
 我们的结果表明，当使用一组原语时，将顺序流转换为并行流会带来略微更多的性能优势:
 
-```
+```java
 Benchmark                                                     Mode  Cnt        Score        Error  Units
 MemoryLocalityCosts.localityIntArrayParallel                sequential stream  avgt   25     116247,787 ±     283,150  ns/op
 MemoryLocalityCosts.localityIntArraySequential                avgt   25     293142,385 ±    2526,892  ns/op
@@ -285,7 +285,7 @@ Oracle 提供了一个简单的模型，可以帮助我们确定并行性是否�
 
 与顺序流相比，使用并行流的文件搜索性能更好。让我们在顺序和并行流上运行一个基准测试，搜索超过 1500 个文本文件:
 
-```
+```java
 Files.walk(Paths.get("src/main/resources/")).map(Path::normalize).filter(Files::isRegularFile)
       .filter(path -> path.getFileName().toString().endsWith(".txt")).collect(Collectors.toList());
 Files.walk(Paths.get("src/main/resources/")).parallel().map(Path::normalize).filter(Files::
@@ -295,7 +295,7 @@ Files.walk(Paths.get("src/main/resources/")).parallel().map(Path::normalize).fil
 
 我们的结果表明，在搜索更多文件时，将顺序流转换为并行流会带来更多性能优势:
 
-```
+```java
 Benchmark                                Mode  Cnt     Score         Error    Units
 FileSearchCost.textFileSearchParallel    avgt   25  10808832.831 ± 446934.773  ns/op
 FileSearchCost.textFileSearchSequential  avgt   25  13271799.599 ± 245112.749  ns/op

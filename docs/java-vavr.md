@@ -18,12 +18,12 @@ Vavr 中的`Value`接口是大多数 Vavr 工具的基础接口。因此，所�
 
 我们来看看如何从 Vavr 的`List`或`Stream`中获取一个 Java `List`:
 
-```
+```java
 List<String> vavrStringList = List.of("JAVA", "Javascript", "Scala");
 java.util.List<String> javaStringList = vavrStringList.toJavaList();
 ```
 
-```
+```java
 Stream<String> vavrStream = Stream.of("JAVA", "Javascript", "Scala");
 java.util.List<String> javaStringList = vavrStream.toJavaList();
 ```
@@ -34,7 +34,7 @@ java.util.List<String> javaStringList = vavrStream.toJavaList();
 
 让我们看另一个将 Vavr `Map`转换成 Java `Map:`的例子
 
-```
+```java
 Map<String, String> vavrMap = HashMap.of("1", "a", "2", "b", "3", "c");
 java.util.Map<String, String> javaMap = vavrMap.toJavaMap();
 ```
@@ -43,7 +43,7 @@ java.util.Map<String, String> javaMap = vavrMap.toJavaMap();
 
 让我们看一个使用`toJavaOptional()`方法获得`Optional `的例子:
 
-```
+```java
 List<String> vavrList = List.of("Java");
 Optional<String> optional = vavrList.toJavaOptional();
 assertEquals("Java", optional.get());
@@ -68,14 +68,14 @@ Vavr 中的所有集合实现都有一个基本类型`Traversable. `，因此�
 
 让我们看看如何将`java.util.List `转换成 Vavr `List`:
 
-```
+```java
 java.util.List<String> javaList = Arrays.asList("Java", "Haskell", "Scala");
 List<String> vavrList = List.ofAll(javaList); 
 ```
 
 类似地，我们可以使用`ofAll()`方法将 Java 流转换成 Vavr 集合:
 
-```
+```java
 java.util.stream.Stream<String> javaStream 
   = Arrays.asList("Java", "Haskell", "Scala").stream();
 Stream<String> vavrStream = Stream.ofAll(javaStream);
@@ -93,7 +93,7 @@ Vavr 到 Java 的转换方法通过遍历所有元素来构建 Java 集合，从
 
 这里有一个展示不可变 Java `List`的例子:
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public void givenParams_whenVavrListConverted_thenException() {
     java.util.List<String> javaList 
@@ -110,7 +110,7 @@ public void givenParams_whenVavrListConverted_thenException() {
 
 我们是这样做的:
 
-```
+```java
 @Test
 public void givenParams_whenVavrListConvertedToMutable_thenRetunMutableList() {
     java.util.List<String> javaList = List.of("Java", "Haskell", "Scala")
@@ -127,7 +127,7 @@ public void givenParams_whenVavrListConvertedToMutable_thenRetunMutableList() {
 
 例如，我们有一个`List`条目，我们希望在保留顺序的同时过滤掉重复的条目。在这种情况下，我们需要一个`LinkedHashSet`。这里有一个演示使用案例的示例:
 
-```
+```java
 List<String> vavrList = List.of("Java", "Haskell", "Scala", "Java");
 Set<String> linkedSet = vavrList.toLinkedSet();
 assertEquals(3, linkedSet.size());

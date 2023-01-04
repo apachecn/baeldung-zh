@@ -28,7 +28,7 @@
 
 **访问这些边界之外的数组元素会抛出一个`ArrayIndexOutOfBoundsException` :**
 
-```
+```java
 int[] numbers = new int[] {1, 2, 3, 4, 5};
 int lastNumber = numbers[5];
 ```
@@ -37,7 +37,7 @@ int lastNumber = numbers[5];
 
 在这种情况下，访问第 5 个索引会导致一个`ArrayIndexOutOfBoundsException`:
 
-```
+```java
 Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 5 out of bounds for length 5
     at ...
 ```
@@ -52,14 +52,14 @@ Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 5 out
 
 **如果我们试图在这个范围之外访问由`Arrays.asList()`返回的`List`的元素，我们将得到一个`ArrayIndexOutOfBoundsException` :**
 
-```
+```java
 List<Integer> numbersList = Arrays.asList(1, 2, 3, 4, 5);
 int lastNumber = numbersList.get(5);
 ```
 
 这里，我们再次尝试获取`List`的最后一个元素。最后一个元素的位置是 5，但它的索引是 4(大小-1)。因此，我们得到`ArrayIndexOutOfBoundsException`如下:
 
-```
+```java
 Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 5 out of bounds for length 5
     at java.base/java.util.Arrays$ArrayList.get(Arrays.java:4351)
     at  ...
@@ -73,7 +73,7 @@ Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 5 out
 
 不是在比数组长度小 1 的位置终止索引，我们可能会迭代到它的长度:
 
-```
+```java
 int sum = 0;
 for (int i = 0; i <= numbers.length; i++) {
     sum += numbers[i];
@@ -84,7 +84,7 @@ for (int i = 0; i <= numbers.length; i++) {
 
 由于索引 5 超出了`numbers,`的范围，它将再次导致`ArrayIndexOutOfBoundsException`:
 
-```
+```java
 Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 5 out of bounds for length 5
     at com.baeldung.concatenate.IndexOutOfBoundExceptionExamples.main(IndexOutOfBoundExceptionExamples.java:22)
 ```
@@ -113,7 +113,7 @@ Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 5 out
 
 **此外，使用增强的`for`循环有助于我们完全避免`ArrayIndexOutOfBoundsException` ，因为它不涉及索引变量**:
 
-```
+```java
 for (int number : numbers) {
     sum += number;
 }

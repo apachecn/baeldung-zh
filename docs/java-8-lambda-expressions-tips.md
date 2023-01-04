@@ -22,7 +22,7 @@ Elegant Sort in Java 8 - Lambda Expressions go right past syntactic sugar and br
 
 让我们考虑一个接口` Foo`:
 
-```
+```java
 @FunctionalInterface
 public interface Foo {
     String method(String string);
@@ -31,7 +31,7 @@ public interface Foo {
 
 另外，我们在某个类`UseFoo`中有一个方法`add() `，它把这个接口作为一个参数:
 
-```
+```java
 public String add(String string, Foo foo) {
     return foo.method(string);
 }
@@ -39,7 +39,7 @@ public String add(String string, Foo foo) {
 
 要执行它，我们应该写:
 
-```
+```java
 Foo foo = parameter -> parameter + " from lambda";
 String result = useFoo.add("Message ", foo);
 ```
@@ -48,7 +48,7 @@ String result = useFoo.add("Message ", foo);
 
 现在我们可以完全移除接口`Foo`，并将代码改为:
 
-```
+```java
 public String add(String string, Function<String, String> fn) {
     return fn.apply(string);
 }
@@ -56,7 +56,7 @@ public String add(String string, Function<String, String> fn) {
 
 要执行此操作，我们可以编写:
 
-```
+```java
 Function<String, String> fn = 
   parameter -> parameter + " from lambda";
 String result = useFoo.add("Message ", fn);
@@ -72,7 +72,7 @@ String result = useFoo.add("Message ", fn);
 
 所以我们可以用这个:
 
-```
+```java
 @FunctionalInterface
 public interface Foo {
     String method();
@@ -81,7 +81,7 @@ public interface Foo {
 
 而不仅仅是:
 
-```
+```java
 public interface Foo {
     String method();
 }
@@ -91,7 +91,7 @@ public interface Foo {
 
 我们可以很容易地将默认方法添加到函数接口中。只要只有一个抽象方法声明，函数接口契约就可以接受这一点:
 
-```
+```java
 @FunctionalInterface
 public interface Foo {
     String method(String string);
@@ -101,7 +101,7 @@ public interface Foo {
 
 如果抽象方法具有相同的签名，函数接口可以由其他函数接口扩展:
 
-```
+```java
 @FunctionalInterface
 public interface FooExtended extends Baz, Bar {}
 
@@ -122,7 +122,7 @@ public interface Bar {
 
 例如，让我们将`defaultCommon()`方法添加到`Bar`和`Baz`接口中:
 
-```
+```java
 @FunctionalInterface
 public interface Baz {
     String method(String string);
@@ -140,13 +140,13 @@ public interface Bar {
 
 在这种情况下，我们将得到一个编译时错误:
 
-```
+```java
 interface FooExtended inherits unrelated defaults for defaultCommon() from types Baz and Bar...
 ```
 
 要解决这个问题，应该在`FooExtended`接口中覆盖`defaultCommon()`方法。我们可以提供该方法的自定义实现；然而，**我们也可以重用来自父接口**的实现:
 
-```
+```java
 @FunctionalInterface
 public interface FooExtended extends Baz, Bar {
     @Override
@@ -162,13 +162,13 @@ public interface FooExtended extends Baz, Bar {
 
 编译器将允许我们使用一个内部类来实例化一个函数接口；然而，这可能导致非常冗长的代码。我们应该更喜欢使用 lambda 表达式:
 
-```
+```java
 Foo foo = parameter -> parameter + " from Foo";
 ```
 
 在内部类上:
 
-```
+```java
 Foo fooByIC = new Foo() {
     @Override
     public String method(String string) {
@@ -183,7 +183,7 @@ Foo fooByIC = new Foo() {
 
 我们应该使用不同名称的方法来避免冲突:
 
-```
+```java
 public interface Processor {
     String process(Callable<String> c) throws Exception;
     String process(Supplier<String> s);
@@ -204,13 +204,13 @@ public class ProcessorImpl implements Processor {
 
 乍一看，这似乎是合理的，但是任何执行`ProcessorImpl`的方法的尝试:
 
-```
+```java
 String result = processor.process(() -> "abc");
 ```
 
 以包含以下消息的错误结束:
 
-```
+```java
 reference to process is ambiguous
 both method process(java.util.concurrent.Callable<java.lang.String>) 
 in com.baeldung.java8.lambda.tips.ProcessorImpl 
@@ -220,7 +220,7 @@ in com.baeldung.java8.lambda.tips.ProcessorImpl match
 
 要解决这个问题，我们有两个选择。**第一个选项是使用不同名称的方法:**
 
-```
+```java
 String processWithCallable(Callable<String> c) throws Exception;
 
 String processWithSupplier(Supplier<String> s);
@@ -228,7 +228,7 @@ String processWithSupplier(Supplier<String> s);
 
 **第二个选项是手动执行铸造，**这不是首选:
 
-```
+```java
 String result = processor.process((Supplier<String>) () -> "abc");
 ```
 
@@ -242,13 +242,13 @@ String result = processor.process((Supplier<String>) () -> "abc");
 
 例如，在类`UseFoo,` 中，我们有一个实例变量`value:`
 
-```
+```java
 private String value = "Enclosing scope value";
 ```
 
 然后在该类的某个方法中，放置以下代码并执行该方法:
 
-```
+```java
 public String scopeExperiment() {
     Foo fooIC = new Foo() {
         String value = "Inner class value";
@@ -291,11 +291,11 @@ public String scopeExperiment() {
 
 考虑到这一点，请执行以下操作:
 
-```
+```java
 Foo foo = parameter -> buildString(parameter);
 ```
 
-```
+```java
 private String buildString(String parameter) {
     String result = "Something " + parameter;
     //many lines of code
@@ -305,7 +305,7 @@ private String buildString(String parameter) {
 
 而不是:
 
-```
+```java
 Foo foo = parameter -> { String result = "Something " + parameter; 
     //many lines of code 
     return result; 
@@ -320,13 +320,13 @@ Foo foo = parameter -> { String result = "Something " + parameter;
 
 我们可以这样做:
 
-```
+```java
 (a, b) -> a.toLowerCase() + b.toLowerCase();
 ```
 
 而不是这个:
 
-```
+```java
 (String a, String b) -> a.toLowerCase() + b.toLowerCase();
 ```
 
@@ -336,13 +336,13 @@ Lambda 语法只需要在多个参数周围加上括号，或者根本没有参�
 
 所以我们可以这样做:
 
-```
+```java
 a -> a.toLowerCase();
 ```
 
 而不是这个:
 
-```
+```java
 (a) -> a.toLowerCase();
 ```
 
@@ -352,13 +352,13 @@ a -> a.toLowerCase();
 
 我们可以这样做:
 
-```
+```java
 a -> a.toLowerCase();
 ```
 
 而不是这个:
 
-```
+```java
 a -> {return a.toLowerCase()};
 ```
 
@@ -368,13 +368,13 @@ a -> {return a.toLowerCase()};
 
 λ表达式将是:
 
-```
+```java
 a -> a.toLowerCase();
 ```
 
 我们可以替换为:
 
-```
+```java
 String::toLowerCase;
 ```
 
@@ -390,7 +390,7 @@ String::toLowerCase;
 
 例如，以下代码将不会编译:
 
-```
+```java
 public void method() {
     String localVariable = "Local";
     Foo foo = parameter -> {
@@ -402,7 +402,7 @@ public void method() {
 
 编译器会通知我们:
 
-```
+```java
 Variable 'localVariable' is already defined in the scope.
 ```
 
@@ -416,7 +416,7 @@ lambdas 的主要用途之一是用于并行计算，这意味着它们在线程
 
 考虑以下代码:
 
-```
+```java
 int[] total = new int[1];
 Runnable r = () -> total[0]++;
 r.run();

@@ -20,7 +20,7 @@
 
 让我们首先将必要的 Spring 安全依赖项添加到我们的 web 应用程序中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -33,7 +33,7 @@
 
 没有 Spring Boot:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-web</artifactId>
@@ -61,7 +61,7 @@
 
 如果认证成功，`authenticate`方法返回一个完全填充的`Authentication`对象。如果认证失败，它抛出一个`AuthenticationException`类型的异常:
 
-```
+```java
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
@@ -101,7 +101,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 我们还确保对 URL 模式“`/api/**`”的访问需要经过身份验证:
 
-```
+```java
 @EnableWebSecurity
 public class MultipleAuthProvidersSecurityConfig 
   extends WebSecurityConfigurerAdapter {
@@ -139,7 +139,7 @@ public class MultipleAuthProvidersSecurityConfig
 
 或者，如果我们想使用 XML 配置而不是 Java 配置:
 
-```
+```java
 <security:authentication-manager>
     <security:authentication-provider>
         <security:user-service>
@@ -164,7 +164,7 @@ public class MultipleAuthProvidersSecurityConfig
 
 要访问此端点，必须提供有效的用户名和密码。我们的身份验证提供商将验证凭据，并确定是否允许访问:
 
-```
+```java
 @RestController
 public class MultipleAuthController {
     @GetMapping("/api/ping")
@@ -178,7 +178,7 @@ public class MultipleAuthController {
 
 最后，现在让我们测试对安全应用程序的访问。只有在提供有效凭据的情况下，才允许访问:
 
-```
+```java
 @Autowired
 private TestRestTemplate restTemplate;
 

@@ -34,7 +34,7 @@ Spring Cloud 是一个用于构建健壮的云应用程序的框架。该框架�
 
 这些依赖关系将在所有项目之间共享:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -74,7 +74,7 @@ Spring Cloud 是一个用于构建健壮的云应用程序的框架。该框架�
 
 让我们为配置服务器添加一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-config-server</artifactId>
@@ -87,7 +87,7 @@ Spring Cloud 是一个用于构建健壮的云应用程序的框架。该框架�
 
 要启用配置服务器，我们必须向主应用程序类添加一些注释:
 
-```
+```java
 @SpringBootApplication
 @EnableConfigServer
 public class ConfigApplication {...}
@@ -99,7 +99,7 @@ public class ConfigApplication {...}
 
 让我们在`src/main/resources`中添加`application.properties`:
 
-```
+```java
 server.port=8081
 spring.application.name=config
 
@@ -120,7 +120,7 @@ spring.cloud.config.server.git.uri=file://${user.home}/application-config
 
 我们应该看到以下输出，表明服务器正在运行:
 
-```
+```java
 Tomcat started on port(s): 8081 (http)
 ```
 
@@ -150,7 +150,7 @@ Tomcat started on port(s): 8081 (http)
 
 或者，我们可以创建一个`Spring Boot`项目，从配置服务器复制`POM`的内容，并交换这些依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-config</artifactId>
@@ -167,7 +167,7 @@ Tomcat started on port(s): 8081 (http)
 
 让我们将 Java config 添加到主类中:
 
-```
+```java
 @SpringBootApplication
 @EnableEurekaServer
 public class DiscoveryApplication {...}
@@ -181,7 +181,7 @@ public class DiscoveryApplication {...}
 
 首先，我们将`bootstrap.properties`添加到`src/main/resources`中:
 
-```
+```java
 spring.cloud.config.name=discovery
 spring.cloud.config.uri=http://localhost:8081
 ```
@@ -190,7 +190,7 @@ spring.cloud.config.uri=http://localhost:8081
 
 其次，我们将`discovery.properties`添加到我们的 Git 存储库中
 
-```
+```java
 spring.application.name=discovery
 server.port=8082
 
@@ -213,7 +213,7 @@ eureka.client.fetch-registry=false
 
 将此依赖项添加到配置服务器 POM 文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-eureka</artifactId>
@@ -224,7 +224,7 @@ eureka.client.fetch-registry=false
 
 将这些属性添加到配置服务器的`src/main/resources`中的`application.properties`文件中:
 
-```
+```java
 eureka.client.region = default
 eureka.client.registryFetchIntervalSeconds = 5
 eureka.client.serviceUrl.defaultZone=http://localhost:8082/eureka/
@@ -234,7 +234,7 @@ eureka.client.serviceUrl.defaultZone=http://localhost:8082/eureka/
 
 使用相同的命令`mvn spring-boot:run`启动发现服务器。命令行的输出应该包括:
 
-```
+```java
 Fetching config from server at: http://localhost:8081
 ...
 Tomcat started on port(s): 8082 (http)
@@ -242,7 +242,7 @@ Tomcat started on port(s): 8082 (http)
 
 停止并重新运行配置服务。如果一切正常，输出应该如下所示:
 
-```
+```java
 DiscoveryClient_CONFIG/10.1.10.235:config:8081: registering service...
 Tomcat started on port(s): 8081 (http)
 DiscoveryClient_CONFIG/10.1.10.235:config:8081 - registration status: 204
@@ -262,7 +262,7 @@ DiscoveryClient_CONFIG/10.1.10.235:config:8081 - registration status: 204
 
 或者，我们可以用这些依赖项创建一个`Spring Boot`应用程序:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-config</artifactId>
@@ -283,7 +283,7 @@ DiscoveryClient_CONFIG/10.1.10.235:config:8081 - registration status: 204
 
 让我们将配置添加到主类中:
 
-```
+```java
 @SpringBootApplication
 @EnableZuulProxy
 @EnableEurekaClient
@@ -296,7 +296,7 @@ public class GatewayApplication {...}
 
 `src/main/resources`中的`bootstrap.properties`:
 
-```
+```java
 spring.cloud.config.name=gateway
 spring.cloud.config.discovery.service-id=config
 spring.cloud.config.discovery.enabled=true
@@ -306,7 +306,7 @@ eureka.client.serviceUrl.defaultZone=http://localhost:8082/eureka/
 
 在我们的 Git 存储库中
 
-```
+```java
 spring.application.name=gateway
 server.port=8080
 
@@ -335,7 +335,7 @@ hystrix.command.discovery.execution.isolation.thread.timeoutInMilliseconds=60000
 
 运行配置和发现应用程序，并等待配置应用程序向发现服务器注册。如果它们已经在运行，我们不必重新启动它们。完成后，运行网关服务器。网关服务器应该在端口 8080 上启动，并向发现服务器注册自己。控制台的输出应该包含:
 
-```
+```java
 Fetching config from server at: http://10.1.10.235:8081/
 ...
 DiscoveryClient_GATEWAY/10.1.10.235:gateway:8080: registering service...
@@ -345,7 +345,7 @@ Tomcat started on port(s): 8080 (http)
 
 一个容易犯的错误是在配置服务器向 Eureka 注册之前启动服务器。在这种情况下，我们将看到一个输出如下的日志:
 
-```
+```java
 Fetching config from server at: http://localhost:8888
 ```
 
@@ -361,7 +361,7 @@ Fetching config from server at: http://localhost:8888
 
 或者，将这些依赖项添加到项目中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-config</artifactId>
@@ -382,7 +382,7 @@ Fetching config from server at: http://localhost:8888
 
 让我们修改我们的主类:
 
-```
+```java
 @SpringBootApplication
 @EnableEurekaClient
 @RestController
@@ -413,7 +413,7 @@ public class BookServiceApplication {
 
 现在让我们添加 POJO 这本书:
 
-```
+```java
 public class Book {
     private Long id;
     private String author;
@@ -429,7 +429,7 @@ public class Book {
 
 `src/main/resources`中的`bootstrap.properties`:
 
-```
+```java
 spring.cloud.config.name=book-service
 spring.cloud.config.discovery.service-id=config
 spring.cloud.config.discovery.enabled=true
@@ -439,7 +439,7 @@ eureka.client.serviceUrl.defaultZone=http://localhost:8082/eureka/
 
 在我们的 Git 存储库中:
 
-```
+```java
 spring.application.name=book-service
 server.port=8083
 
@@ -454,7 +454,7 @@ eureka.client.serviceUrl.defaultZone=http://localhost:8082/eureka/
 
 一旦所有其他应用程序启动，我们就可以启动图书服务。控制台输出应该如下所示:
 
-```
+```java
 DiscoveryClient_BOOK-SERVICE/10.1.10.235:book-service:8083: registering service...
 DiscoveryClient_BOOK-SERVICE/10.1.10.235:book-service:8083 - registration status: 204
 Tomcat started on port(s): 8083 (http)
@@ -472,7 +472,7 @@ Tomcat started on port(s): 8083 (http)
 
 或者，将这些依赖项添加到项目中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-config</artifactId>
@@ -493,7 +493,7 @@ Tomcat started on port(s): 8083 (http)
 
 让我们修改我们的主类:
 
-```
+```java
 @SpringBootApplication
 @EnableEurekaClient
 @RestController
@@ -526,7 +526,7 @@ public class RatingServiceApplication {
 
 让我们添加评级 POJO:
 
-```
+```java
 public class Rating {
     private Long id;
     private Long bookId;
@@ -542,7 +542,7 @@ public class Rating {
 
 `src/main/resources`中的`bootstrap.properties`:
 
-```
+```java
 spring.cloud.config.name=rating-service
 spring.cloud.config.discovery.service-id=config
 spring.cloud.config.discovery.enabled=true
@@ -552,7 +552,7 @@ eureka.client.serviceUrl.defaultZone=http://localhost:8082/eureka/
 
 在我们的 Git 存储库中:
 
-```
+```java
 spring.application.name=rating-service
 server.port=8084
 
@@ -567,7 +567,7 @@ eureka.client.serviceUrl.defaultZone=http://localhost:8082/eureka/
 
 一旦所有其他应用程序启动，我们就可以启动评级服务。控制台输出应该如下所示:
 
-```
+```java
 DiscoveryClient_RATING-SERVICE/10.1.10.235:rating-service:8083: registering service...
 DiscoveryClient_RATING-SERVICE/10.1.10.235:rating-service:8083 - registration status: 204
 Tomcat started on port(s): 8084 (http)

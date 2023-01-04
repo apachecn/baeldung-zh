@@ -24,7 +24,7 @@ A Spring Login Example - How to Set Up a simple Login Form, a Basic Security XML
 
 使用 Spring Boot 时， [`spring-boot-starter-security`](https://web.archive.org/web/20220727020632/https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security) 启动器将自动包含所有依赖项，例如`spring-security-core`、`spring-security-web`和`spring-security-config`等等:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -40,7 +40,7 @@ A Spring Login Example - How to Set Up a simple Login Form, a Basic Security XML
 
 通过添加`@EnableWebSecurity`，我们获得了 Spring 安全性和 MVC 集成支持:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -67,7 +67,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 
 身份验证提供者由一个简单的内存实现`InMemoryUserDetailsManager`提供支持。当还不需要完整的持久性机制时，这对于快速原型开发很有用:
 
-```
+```java
 protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
     auth.inMemoryAuthentication()
         .withUser("user1").password(passwordEncoder().encode("user1Pass")).roles("USER")
@@ -82,7 +82,7 @@ protected void configure(final AuthenticationManagerBuilder auth) throws Excepti
 
 从 Spring 5 开始，我们还必须定义一个密码编码器。在我们的例子中，我们将使用`BCryptPasswordEncoder:`
 
-```
+```java
 @Bean 
 public PasswordEncoder passwordEncoder() { 
     return new BCryptPasswordEncoder(); 
@@ -97,7 +97,7 @@ public PasswordEncoder passwordEncoder() {
 
 这里我们允许匿名访问`/login`,这样用户就可以进行身份验证。我们将把`/admin`限制为`ADMIN`角色，并保护其他一切:
 
-```
+```java
 @Override
 protected void configure(final HttpSecurity http) throws Exception {
     http
@@ -118,7 +118,7 @@ protected void configure(final HttpSecurity http) throws Exception {
 
 接下来，我们将扩展上述表单登录和注销的配置:
 
-```
+```java
 @Override
 protected void configure(final HttpSecurity http) throws Exception {
     http
@@ -150,7 +150,7 @@ protected void configure(final HttpSecurity http) throws Exception {
 
 我们将使用`WebApplicationInitializer`，所以我们不需要提供任何`web.xml:`
 
-```
+```java
 public class AppInitializer implements WebApplicationInitializer {
 
     @Override
@@ -175,7 +175,7 @@ public class AppInitializer implements WebApplicationInitializer {
 
 整个项目使用 Java 配置，因此我们需要通过 Java `@Configuration`类导入 XML 配置文件:
 
-```
+```java
 @Configuration
 @ImportResource({ "classpath:webSecurityConfig.xml" })
 public class SecSecurityConfig {
@@ -187,7 +187,7 @@ public class SecSecurityConfig {
 
 和 Spring 安全 XML 配置，`webSecurityConfig.xml`:
 
-```
+```java
 <http use-expressions="true">
     <intercept-url pattern="/login*" access="isAnonymous()" />
     <intercept-url pattern="/**" access="isAuthenticated()"/>
@@ -216,7 +216,7 @@ public class SecSecurityConfig {
 
 **在引入 Spring 4** 之前，我们曾经在`web.xml;` 中配置 Spring 安全，只是在标准的 Spring MVC `web.xml`中增加了一个额外的过滤器:
 
-```
+```java
 <display-name>Spring Secured Application</display-name>
 
 <!-- Spring MVC -->
@@ -239,13 +239,13 @@ public class SecSecurityConfig {
 
 登录表单页面将用 Spring MVC 注册，使用简单的机制[将视图名称映射到 URL](/web/20220727020632/https://www.baeldung.com/spring-mvc-tutorial#configviews "Spring MVC View Configuration")。此外，中间不需要显式控制器:
 
-```
+```java
 registry.addViewController("/login.html");
 ```
 
 这当然对应于`login.jsp`:
 
-```
+```java
 <html>
 <head></head>
 <body>
@@ -283,7 +283,7 @@ registry.addViewController("/login.html");
 
 完全配置后，登录元素如下所示:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http.formLogin()
@@ -296,7 +296,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 或者相应的 XML 配置:
 
-```
+```java
 <form-login 
   login-page='/login.html' 
   login-processing-url="/perform_login" 
@@ -309,14 +309,14 @@ protected void configure(HttpSecurity http) throws Exception {
 
 接下来，我们将使用`loginPage() method:`配置一个定制的登录页面
 
-```
+```java
 http.formLogin()
   .loginPage("/login.html")
 ```
 
 类似地，我们可以使用 XML 配置:
 
-```
+```java
 login-page='/login.html'
 ```
 
@@ -328,14 +328,14 @@ Spring 登录触发认证过程的默认 URL 是`/login,`，以前是 [Spring Se
 
 我们可以使用`loginProcessingUrl`方法来覆盖这个 URL:
 
-```
+```java
 http.formLogin()
   .loginProcessingUrl("/perform_login")
 ```
 
 我们还可以使用 XML 配置:
 
-```
+```java
 login-processing-url="/perform_login"
 ```
 
@@ -347,14 +347,14 @@ login-processing-url="/perform_login"
 
 我们可以通过`defaultSuccessUrl()`方法覆盖它:
 
-```
+```java
 http.formLogin()
   .defaultSuccessUrl("/homepage.html")
 ```
 
 或者使用 XML 配置:
 
-```
+```java
 default-target-url="/homepage.html"
 ```
 
@@ -366,14 +366,14 @@ default-target-url="/homepage.html"
 
 要覆盖它，我们可以使用`failureUrl()`方法:
 
-```
+```java
 http.formLogin()
   .failureUrl("/login.html?error=true")
 ```
 
 或者使用 XML:
 
-```
+```java
 authentication-failure-url="/login.html?error=true"
 ```
 
@@ -385,6 +385,6 @@ authentication-failure-url="/login.html?error=true"
 
 当项目在本地运行时，可以在以下位置访问示例 HTML:
 
-```
+```java
 http://localhost:8080/spring-security-mvc-login/login.html
 ```

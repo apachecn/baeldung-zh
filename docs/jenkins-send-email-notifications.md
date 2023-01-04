@@ -16,7 +16,7 @@
 
 让我们创建描述我们环境的`docker-compose.yaml`文件:
 
-```
+```java
 version: '3.7'
 
 services:
@@ -87,7 +87,7 @@ Jenkins 容器需要一些时间来启动，它在 UI 上显示一个加载指�
 
 当我们创建这个任务时，我们被重定向到配置屏幕。让我们向下滚动到`Build Steps`并添加一个`Execute shell`步骤。我们在这里添加一个简单的脚本:
 
-```
+```java
 echo "Test job for sending emails."
 ```
 
@@ -99,7 +99,7 @@ echo "Test job for sending emails."
 
 **此电子邮件通知仅针对特定事件触发。**当一个构建失败、变得不稳定或者回到稳定状态时，会发送一封电子邮件。这意味着我们应该创造一个情境，让其中一个事件发生。例如，我们可以通过修改执行的 shell 脚本来创建一个失败的构建。让我们用这个脚本中的一个非零退出代码退出。这使得 Jenkins 将其视为一个失败的构建:
 
-```
+```java
 echo "Test job for sending emails."
 exit 1
 ```
@@ -130,7 +130,7 @@ exit 1
 
 让我们运行它，看看我们在 MailHog 中的收件箱。我们收到了一封关于成功构建的电子邮件。让我们再次更改作业的 shell 脚本，并返回一个错误代码退出:
 
-```
+```java
 echo "Test job for sending emails."
 exit 1
 ```

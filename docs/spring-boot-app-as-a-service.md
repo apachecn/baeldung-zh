@@ -22,7 +22,7 @@ Spring Boot 应用程序可以打包成 WAR 和 JAR 文件。后者在 JAR 文�
 
 让我们从定义我们的`pom.xml`文件的配置开始:
 
-```
+```java
 <packaging>jar</packaging>
 
 <parent>
@@ -56,13 +56,13 @@ Spring Boot 应用程序可以打包成 WAR 和 JAR 文件。后者在 JAR 文�
 
 在应用程序的根目录中运行以下命令:
 
-```
+```java
 $ mvn clean package
 ```
 
 可执行 JAR 文件现在位于`target`目录中，我们可以通过在命令行上执行以下命令来启动应用程序:
 
-```
+```java
 $ java -jar your-app.jar
 ```
 
@@ -78,7 +78,7 @@ $ java -jar your-app.jar
 
 为了增强安全性，我们首先创建一个运行服务的特定用户，并相应地更改可执行 JAR 文件的权限:
 
-```
+```java
 $ sudo useradd baeldung
 $ sudo passwd baeldung
 $ sudo chown baeldung:baeldung your-app.jar
@@ -89,13 +89,13 @@ $ sudo chmod 500 your-app.jar
 
 Spring Boot 可执行 JAR 文件使得服务设置过程非常简单:
 
-```
+```java
 $ sudo ln -s /path/to/your-app.jar /etc/init.d/your-app
 ```
 
 上面的命令创建了一个到可执行 JAR 文件的符号链接。您必须使用可执行 JAR 文件的完整路径，否则，符号链接将无法正常工作。此链接使您能够将应用程序作为服务启动:
 
-```
+```java
 $ sudo service your-app start
 ```
 
@@ -109,7 +109,7 @@ $ sudo service your-app start
 
 `systemd`服务设置也非常简单。首先，我们使用下面的示例创建一个名为`your-app.service`的脚本，并将其放在`/etc/systemd/system`目录中:
 
-```
+```java
 [Unit]
 Description=A Spring Boot application
 After=syslog.target
@@ -134,7 +134,7 @@ WantedBy=multi-user.target
 
 我们创建一个作业`your-app.conf`来启动我们的 Spring Boot 应用程序:
 
-```
+```java
 # Place in /home/{user}/.config/upstart
 
 description "Some Spring Boot application"
@@ -160,7 +160,7 @@ Upstart 提供了许多作业配置选项，你可以在这里找到大多数选
 
 首先，你在这里下载二进制文件[。接下来，定义我们的 Windows 服务的配置文件`MyApp.xml`应该如下所示:](https://web.archive.org/web/20220707143823/https://repo.jenkins-ci.org/releases/com/sun/winsw/winsw/)
 
-```
+```java
 <service>
     <id>MyApp</id>
     <name>MyApp</name>
@@ -174,7 +174,7 @@ Upstart 提供了许多作业配置选项，你可以在这里找到大多数选
 
 最后，您必须将`winsw.exe`重命名为`MyApp.exe`,以便其名称与`MyApp.xml`配置文件相匹配。此后，您可以像这样安装服务:
 
-```
+```java
 $ MyApp.exe install
 ```
 

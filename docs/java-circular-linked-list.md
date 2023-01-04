@@ -24,7 +24,7 @@
 
 让我们首先创建一个辅助的`Node`类，它将存储`int`值和一个指向下一个节点`:`的指针
 
-```
+```java
 class Node {
 
     int value;
@@ -38,7 +38,7 @@ class Node {
 
 现在让我们创建循环链表中的第一个和最后一个节点，通常称为`head`和`tail:`
 
-```
+```java
 public class CircularLinkedList {
     private Node head = null;
     private Node tail = null;
@@ -60,7 +60,7 @@ public class CircularLinkedList {
 
 让我们创建一个`addNode`方法，它将待插入的`value`作为参数:
 
-```
+```java
 public void addNode(int value) {
     Node newNode = new Node(value);
 
@@ -77,7 +77,7 @@ public void addNode(int value) {
 
 现在，我们可以向循环链表添加一些数字:
 
-```
+```java
 private CircularLinkedList createCircularLinkedList() {
     CircularLinkedList cll = new CircularLinkedList();
 
@@ -101,7 +101,7 @@ private CircularLinkedList createCircularLinkedList() {
 
 让我们添加一个新方法`containsNode`，它将`searchValue`作为参数:
 
-```
+```java
 public boolean containsNode(int searchValue) {
     Node currentNode = head;
 
@@ -121,7 +121,7 @@ public boolean containsNode(int searchValue) {
 
 现在，让我们添加几个测试来验证上面创建的列表包含我们添加的元素，并且没有新的元素:
 
-```
+```java
 @Test
  public void givenACircularLinkedList_WhenAddingElements_ThenListContainsThoseElements() {
     CircularLinkedList cll = createCircularLinkedList();
@@ -152,7 +152,7 @@ public void givenACircularLinkedList_WhenLookingForNonExistingElement_ThenReturn
 
 让我们来看看删除一个元素的实现:
 
-```
+```java
 public void deleteNode(int valueToDelete) {
     Node currentNode = head;
     if (head == null) { // the list is empty
@@ -182,7 +182,7 @@ public void deleteNode(int valueToDelete) {
 
 现在，让我们创建一些测试来验证删除在所有情况下都能正常工作:
 
-```
+```java
 @Test
 public void givenACircularLinkedList_WhenDeletingInOrderHeadMiddleTail_ThenListDoesNotContainThoseElements() {
     CircularLinkedList cll = createCircularLinkedList();
@@ -232,7 +232,7 @@ public void givenACircularLinkedListWithOneNode_WhenDeletingElement_ThenListDoes
 
 让我们添加一个新方法`traverseList`,它打印添加到列表中的元素:
 
-```
+```java
 public void traverseList() {
     Node currentNode = head;
 

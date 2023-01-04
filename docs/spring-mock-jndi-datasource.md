@@ -26,7 +26,7 @@ Spring 通过`SimpleNamingContextBuilder`提供了与 JNDI 的开箱即用集成
 
 首先，我们需要为绑定和检索数据源对象构建一个**初始命名上下文:**
 
-```
+```java
 @BeforeEach
 public void init() throws Exception {
     SimpleNamingContextBuilder.emptyActivatedContextBuilder();
@@ -38,7 +38,7 @@ public void init() throws Exception {
 
 现在我们有了一个上下文，让我们实现一个单元测试，看看如何使用 JNDI 存储和检索一个 JDBC `DataSource` 对象:
 
-```
+```java
 @Test
 public void whenMockJndiDataSource_thenReturnJndiDataSource() throws Exception {
     this.initContext.bind("java:comp/env/jdbc/datasource", 
@@ -63,7 +63,7 @@ public void whenMockJndiDataSource_thenReturnJndiDataSource() throws Exception {
 
 因此，让我们看看如何使用它`.`。首先，我们需要将`Simple-JNDI`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.github.h-thurow</groupId>
     <artifactId>simple-jndi</artifactId>
@@ -75,7 +75,7 @@ public void whenMockJndiDataSource_thenReturnJndiDataSource() throws Exception {
 
 接下来，我们将为简单 JNDI 配置设置 JNDI 上下文所需的所有细节。为此，**我们需要创建一个`jndi.properties`文件，该文件需要放在类路径**中:
 
-```
+```java
 java.naming.factory.initial=org.osjava.sj.SimpleContextFactory
 org.osjava.sj.jndi.shared=true
 org.osjava.sj.delimiter=.
@@ -96,7 +96,7 @@ org.osjava.sj.root=src/main/resources/jndi
 
 因此，让我们在我们的`datasource.properties`文件中定义一个`javax.sql.DataSource`对象:
 
-```
+```java
 ds.type=javax.sql.DataSource
 ds.driver=org.h2.Driver
 ds.url=jdbc:jdbc:h2:mem:testdb
@@ -106,7 +106,7 @@ ds.password=password
 
 现在，让我们为单元测试创建一个`InitialContext`对象:
 
-```
+```java
 @BeforeEach
 public void setup() throws Exception {
     this.initContext = new InitialContext();
@@ -115,7 +115,7 @@ public void setup() throws Exception {
 
 最后，我们将实现一个单元测试用例**来检索已经在`datasource.properties`文件**中定义的`DataSource`对象:
 
-```
+```java
 @Test
 public void whenMockJndiDataSource_thenReturnJndiDataSource() throws Exception {
     String dsString = "org.h2.Driver::::jdbc:jdbc:h2:mem:testdb::::sa";

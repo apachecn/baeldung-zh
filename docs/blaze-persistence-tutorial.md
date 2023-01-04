@@ -14,7 +14,7 @@
 
 为了在我们的项目中包含 Blaze Persistence core，我们需要在`pom.xml`文件中添加以下[三个依赖项](https://web.archive.org/web/20221211080952/https://search.maven.org/search?q=g:com.blazebit%20AND%20(a:blaze-persistence-core-api%20OR%20a:blaze-persistence-core-impl%20OR%20a:blaze-persistence-integration-hibernate-5.4)):
 
-```
+```java
 <dependency>
     <groupId>com.blazebit</groupId>
     <artifactId>blaze-persistence-core-api</artifactId>
@@ -40,7 +40,7 @@
 
 我们将有两个实体，`Person`和`Post`，它们使用一对多关系连接:
 
-```
+```java
 @Entity
 public class Person {
 
@@ -57,7 +57,7 @@ public class Person {
 }
 ```
 
-```
+```java
 @Entity
 public class Post {
 
@@ -84,7 +84,7 @@ Blaze 持久性库是对 JPA 标准 API 的替代。这两个 API 都让我们�
 
 **为了使用 Blaze 持久性标准 API，我们需要在我们的配置类中定义`CriteriaBuilderFactory`bean:**
 
-```
+```java
 @Autowired
 private EntityManagerFactory entityManagerFactory;
 
@@ -99,7 +99,7 @@ public CriteriaBuilderFactory createCriteriaBuilderFactory() {
 
 现在，让我们从一个简单的查询开始，它从数据库中选择每一个`Post`。我们只需要两个方法调用来定义和执行一个查询:
 
-```
+```java
 List<Post> posts = builderFactory.create(entityManager, Post.class).getResultList();
 ```
 
@@ -113,7 +113,7 @@ List<Post> posts = builderFactory.create(entityManager, Post.class).getResultLis
 
 一旦执行，该查询将生成以下 JPQL:
 
-```
+```java
 SELECT post
 FROM Post post;
 ```
@@ -124,7 +124,7 @@ FROM Post post;
 
 让我们来看看，如果一个人写了至少两篇帖子，并且年龄在 18 岁到 40 岁之间，我们会如何得到他写的帖子:
 
-```
+```java
 CriteriaBuilder<Person> personCriteriaBuilder = builderFactory.create(entityManager, Person.class, "p")
   .where("p.age")
     .betweenExpression("18")
@@ -140,7 +140,7 @@ CriteriaBuilder<Person> personCriteriaBuilder = builderFactory.create(entityMana
 
 例如，让我们创建一个查询，选择具有特定标题或作者姓名的文章:
 
-```
+```java
 CriteriaBuilder<Post> postCriteriaBuilder = builderFactory.create(entityManager, Post.class, "p")
   .whereOr()
     .where("p.title").like().value(title + "%").noEscape()
@@ -152,7 +152,7 @@ CriteriaBuilder<Post> postCriteriaBuilder = builderFactory.create(entityManager,
 
 FROM 子句包含应该查询的实体。如前所述，我们可以在 create 方法中指定根实体。但是，我们可以定义 from 子句来指定根。这样，隐式创建的查询根将被删除:
 
-```
+```java
 CriteriaBuilder<Post> postCriteriaBuilder = builderFactory.create(entityManager, Post.class)
   .from(Person.class, "person")
   .select("person.posts");
@@ -162,7 +162,7 @@ CriteriaBuilder<Post> postCriteriaBuilder = builderFactory.create(entityManager,
 
 因为我们从不同的表中选择，所以构建器将在生成的查询中添加隐式连接:
 
-```
+```java
 SELECT posts_1 
 FROM Person person 
 LEFT JOIN person.posts posts_1;
@@ -176,7 +176,7 @@ Blaze 持久化实体视图模块试图解决实体和 DTO 类之间的高效映
 
 我们需要在我们的项目中包含额外的[实体-视图依赖关系](https://web.archive.org/web/20221211080952/https://search.maven.org/search?q=g:com.blazebit%20AND%20(a:blaze-persistence-entity-view-api%20OR%20a:blaze-persistence-entity-view-impl%20OR%20a:blaze-persistence-entity-view-processor)):
 
-```
+```java
 <dependency>
     <groupId>com.blazebit</groupId>
     <artifactId>blaze-persistence-entity-view-api</artifactId>
@@ -195,7 +195,7 @@ Blaze 持久化实体视图模块试图解决实体和 DTO 类之间的高效映
 
 此外，我们需要一个注册了实体视图类的`EntityViewManager` bean:
 
-```
+```java
 @Bean
 public EntityViewManager createEntityViewManager(
   CriteriaBuilderFactory criteriaBuilderFactory, EntityViewConfiguration entityViewConfiguration) {
@@ -211,7 +211,7 @@ public EntityViewManager createEntityViewManager(
 
 让我们为`Post`类创建一个表示实体视图的接口:
 
-```
+```java
 @EntityView(Post.class)
 public interface PostView {
 
@@ -230,7 +230,7 @@ public interface PostView {
 
 然而，如果我们想为 getter 方法使用不同的名称，我们可以添加一个`@Mapping`注释。使用这个注释，我们也可以定义整个表达式:
 
-```
+```java
 @Mapping("UPPER(title)")
 String getTitle();
 ```
@@ -241,7 +241,7 @@ String getTitle();
 
 首先，我们将定义一个`PersonView`接口:
 
-```
+```java
 @EntityView(Person.class)
 public interface PersonView {
 
@@ -256,7 +256,7 @@ public interface PersonView {
 
 其次，让我们定义一个扩展`PostView`接口的新接口和一个返回`PersonView`信息的方法:
 
-```
+```java
 @EntityView(Post.class)
 public interface PostWithAuthorView extends PostView {
     PersonView getAuthor();
@@ -267,7 +267,7 @@ public interface PostWithAuthorView extends PostView {
 
 我们可以定义一个基本查询，然后创建映射:
 
-```
+```java
 CriteriaBuilder<Post> postCriteriaBuilder = builderFactory.create(entityManager, Post.class, "p")
   .whereOr()
     .where("p.title").like().value("title%").noEscape()
@@ -280,7 +280,7 @@ CriteriaBuilder<PostWithAuthorView> postWithAuthorViewCriteriaBuilder =
 
 上面的代码将创建一个优化的查询，并基于结果构建我们的实体视图:
 
-```
+```java
 SELECT p.id AS PostWithAuthorView_id,
   p.author.id AS PostWithAuthorView_author_id,
   author_1.age AS PostWithAuthorView_author_age,
@@ -299,7 +299,7 @@ WHERE p.title LIKE REPLACE(:param_0, '\\', '\\\\')
 
 此外，我们需要包含一个 [Spring 集成依赖项](https://web.archive.org/web/20221211080952/https://search.maven.org/search?q=g:com.blazebit%20AND%20a:blaze-persistence-integration-spring-data-2.4):
 
-```
+```java
 <dependency>
     <groupId>com.blazebit</groupId>
     <artifactId>blaze-persistence-integration-spring-data-2.4</artifactId>
@@ -312,7 +312,7 @@ WHERE p.title LIKE REPLACE(:param_0, '\\', '\\\\')
 
 现在，让我们定义一个与`PostWithAuthorView`一起工作的接口:
 
-```
+```java
 @Repository
 @Transactional(readOnly = true)
 public interface PostViewRepository extends EntityViewRepository<PostWithAuthorView, Long> {

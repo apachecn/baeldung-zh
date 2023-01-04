@@ -10,7 +10,7 @@
 
 首先，我们将使用 [API 注释](https://web.archive.org/web/20220627085836/https://tomcat.apache.org/tomcat-9.0-doc/servletapi/index.html)定义一个 Servlet(查看 [Servlets Intro](/web/20220627085836/https://www.baeldung.com/intro-to-servlets) 了解更多细节),默认的`GET`处理器将抛出一个异常:
 
-```
+```java
 @WebServlet(urlPatterns = "/randomError")
 public class RandomErrorServlet extends HttpServlet {
 
@@ -44,7 +44,7 @@ public class RandomErrorServlet extends HttpServlet {
 
 我们可以在`web.xml`中为 HTTP 404 错误设置自定义错误处理策略:
 
-```
+```java
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 
   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
@@ -65,7 +65,7 @@ public class RandomErrorServlet extends HttpServlet {
 
 我们可以在`web.xml`中为`java.lang.Exception`设置自定义错误处理策略:
 
-```
+```java
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 
   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
@@ -80,7 +80,7 @@ public class RandomErrorServlet extends HttpServlet {
 
 在`ErrorHandlerServlet`中，我们可以使用请求中提供的[错误属性](https://web.archive.org/web/20220627085836/https://tomcat.apache.org/tomcat-7.0-doc/servletapi/constant-values.html)来访问错误细节:
 
-```
+```java
 @WebServlet(urlPatterns = "/errorHandler")
 public class ErrorHandlerServlet extends HttpServlet {
 
@@ -114,7 +114,7 @@ public class ErrorHandlerServlet extends HttpServlet {
 
 我们还可以在我们的`ErrorHandlerServlet`组件中使用[容器提供的 servlet 记录器](https://web.archive.org/web/20220627085836/https://javaee.github.io/javaee-spec/javadocs/javax/servlet/ServletContext.html#log-java.lang.String-)来记录额外的细节:
 
-```
+```java
 Exception exception = (Exception) req.getAttribute(ERROR_EXCEPTION);
 if (IllegalArgumentException.class.isInstance(exception)) {
     getServletContext()

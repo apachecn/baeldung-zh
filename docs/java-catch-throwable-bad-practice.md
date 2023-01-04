@@ -42,7 +42,7 @@
 
 假设我们有一个 API，它允许调用者使用`addIDsToStorage`方法将惟一的 id 添加到一些存储设备中:
 
-```
+```java
 class StorageAPI {
 
     public void addIDsToStorage(int capacity, Set<String> storage) throws CapacityException {
@@ -72,7 +72,7 @@ class StorageAPI {
 
 让我们假设 API 的用户在调用`addIDsToStorage`时只捕获`try-catch`中的`Throwable` :
 
-```
+```java
 public void add(StorageAPI api, int capacity, Set<String> storage) {
     try {
         api.addIDsToStorage(capacity, storage);

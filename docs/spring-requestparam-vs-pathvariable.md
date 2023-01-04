@@ -26,7 +26,7 @@ Have a look at the @ResponseStatus annotation and how to use it to set the respo
 
 **s 从查询字符串中提取值，`@PathVariable` s 从 URI 路径中提取值**:
 
-```
+```java
 @GetMapping("/foos/{id}")
 @ResponseBody
 public String getFooById(@PathVariable String id) {
@@ -36,7 +36,7 @@ public String getFooById(@PathVariable String id) {
 
 然后我们可以根据路径进行映射:
 
-```
+```java
 http://localhost:8080/spring-mvc-basics/foos/abc
 ----
 ID: abc
@@ -44,7 +44,7 @@ ID: abc
 
 对于`@RequestParam`，它将是:
 
-```
+```java
 @GetMapping("/foos")
 @ResponseBody
 public String getFooByIdUsingQueryParam(@RequestParam String id) {
@@ -54,7 +54,7 @@ public String getFooByIdUsingQueryParam(@RequestParam String id) {
 
 这将给我们同样的回答，只是一个不同的 URI:
 
-```
+```java
 http://localhost:8080/spring-mvc-basics/foos?id=abc
 ----
 ID: abc
@@ -66,7 +66,7 @@ ID: abc
 
 使用前面的例子，`ab+c`将原样返回:
 
-```
+```java
 http://localhost:8080/spring-mvc-basics/foos/ab+c
 ----
 ID: ab+c
@@ -74,7 +74,7 @@ ID: ab+c
 
 **但是对于`a @RequestParam`请求，参数是 URL 解码的**:
 
-```
+```java
 http://localhost:8080/spring-mvc-basics/foos?id=ab+c
 ----
 ID: ab c
@@ -86,7 +86,7 @@ ID: ab c
 
 从 Spring 4.3.3 开始，我们可以通过使用`required`属性使`@PathVariable`可选:
 
-```
+```java
 @GetMapping({"/myfoos/optional", "/myfoos/optional/{id}"})
 @ResponseBody
 public String getFooByOptionalId(@PathVariable(required = false) String id){
@@ -96,7 +96,7 @@ public String getFooByOptionalId(@PathVariable(required = false) String id){
 
 那么我们可以选择:
 
-```
+```java
 http://localhost:8080/spring-mvc-basics/myfoos/optional/abc
 ----
 ID: abc 
@@ -104,7 +104,7 @@ ID: abc
 
 或者:
 
-```
+```java
 http://localhost:8080/spring-mvc-basics/myfoos/optional
 ----
 ID: null

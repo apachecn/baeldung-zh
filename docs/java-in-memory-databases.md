@@ -18,7 +18,7 @@
 
 要在应用程序中使用`H2`数据库，我们需要添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -32,7 +32,7 @@
 
 为了连接到一个`H2`内存中的数据库，我们可以使用一个连接`String`，协议为`mem,` ，后跟数据库名称。`driverClassName, URL, username`和`password`属性可以放在一个`.properties`文件中，由我们的应用程序读取:
 
-```
+```java
 driverClassName=org.h2.Driver
 url=jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1
 username=sa
@@ -45,7 +45,7 @@ password=sa
 
 如果我们将数据库与 Hibernate 一起使用，我们还需要指定 Hibernate 方言:
 
-```
+```java
 hibernate.dialect=org.hibernate.dialect.H2Dialect
 ```
 
@@ -61,7 +61,7 @@ hibernate.dialect=org.hibernate.dialect.H2Dialect
 
 要使用`HSQLDB`开发应用程序，我们需要 Maven 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.hsqldb</groupId>
     <artifactId>hsqldb</artifactId>
@@ -75,7 +75,7 @@ hibernate.dialect=org.hibernate.dialect.H2Dialect
 
 我们需要的连接属性具有以下格式:
 
-```
+```java
 driverClassName=org.hsqldb.jdbc.JDBCDriver
 url=jdbc:hsqldb:mem:myDb
 username=sa
@@ -86,7 +86,7 @@ password=sa
 
 `HSQLDB`的`Hibernate`方言属性为:
 
-```
+```java
 hibernate.dialect=org.hibernate.dialect.HSQLDialect
 ```
 
@@ -102,7 +102,7 @@ JAR 文件还包含一个带有 GUI 的数据库管理器。更多信息可以�
 
 要在应用程序中使用`Derby`数据库，我们需要添加以下 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.derby</groupId>
     <artifactId>derby</artifactId>
@@ -116,7 +116,7 @@ JAR 文件还包含一个带有 GUI 的数据库管理器。更多信息可以�
 
 连接字符串使用`memory`协议:
 
-```
+```java
 driverClassName=org.apache.derby.jdbc.EmbeddedDriver
 url=jdbc:derby:memory:myDb;create=true
 username=sa
@@ -127,7 +127,7 @@ password=sa
 
 如果使用带有`Hibernate`的数据库，我们需要定义方言:
 
-```
+```java
 hibernate.dialect=org.hibernate.dialect.DerbyDialect
 ```
 
@@ -141,7 +141,7 @@ hibernate.dialect=org.hibernate.dialect.DerbyDialect
 
 要使用一个`SQLite`数据库，我们需要添加 JDBC 驱动程序 JAR:
 
-```
+```java
 <dependency>
     <groupId>org.xerial</groupId>
     <artifactId>sqlite-jdbc</artifactId>
@@ -155,7 +155,7 @@ hibernate.dialect=org.hibernate.dialect.DerbyDialect
 
 连接属性将`org.sqlite.JDBC`驱动程序类和`memory`协议用于连接字符串:
 
-```
+```java
 driverClassName=org.sqlite.JDBC
 url=jdbc:sqlite:memory:myDb
 username=sa

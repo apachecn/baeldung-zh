@@ -26,7 +26,7 @@
 
 我们将创建一个实现`Runnable` 接口的`LongRunningAction` 类:
 
-```
+```java
 class LongRunningAction implements Runnable {
     private String threadName;
     private Phaser ph;
@@ -60,7 +60,7 @@ class LongRunningAction implements Runnable {
 
 当从主线程创建`Phaser` 实例时，我们将`1`作为参数传递。这相当于从当前线程中调用`register()` 方法。我们这样做是因为，当我们创建三个工作线程时，主线程是一个协调器，因此`Phaser`需要注册四个线程:
 
-```
+```java
 ExecutorService executorService = Executors.newCachedThreadPool();
 Phaser ph = new Phaser(1);
 
@@ -75,7 +75,7 @@ assertEquals(0, ph.getPhase());
 
 请记住，我们已经用`1`初始化了`Phaser`，并调用了`register()`三次。现在，三个动作线程已经宣布它们已经到达了关卡，所以还需要一个对`arriveAndAwaitAdvance()`的调用——来自主线程:
 
-```
+```java
 executorService.submit(new LongRunningAction("thread-1", ph));
 executorService.submit(new LongRunningAction("thread-2", ph));
 executorService.submit(new LongRunningAction("thread-3", ph));
@@ -89,7 +89,7 @@ assertEquals(1, ph.getPhase());
 
 假设两个线程应该执行下一阶段的处理。我们可以利用`Phaser` 来实现这一点，因为它允许我们动态配置应该在屏障上等待的线程数量。我们正在启动两个新线程，但是这些线程将不会继续执行，直到从主线程调用`arriveAndAwaitAdvance()` (与前一个例子相同):
 
-```
+```java
 executorService.submit(new LongRunningAction("thread-4", ph));
 executorService.submit(new LongRunningAction("thread-5", ph));
 ph.arriveAndAwaitAdvance();
@@ -103,7 +103,7 @@ ph.arriveAndDeregister();
 
 运行该程序将产生以下输出(带有打印行语句的完整源代码可以在代码库中找到):
 
-```
+```java
 This is phase 0
 This is phase 0
 This is phase 0

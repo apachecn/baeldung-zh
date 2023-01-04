@@ -34,7 +34,7 @@ YAML 代表“ **YAML 不是标记语言**”的递归首字母缩写词。它�
 
 在我们的例子中，出于部署的目的，我们将有三个:测试、开发和生产:
 
-```
+```java
 spring:
   profiles:
     active:
@@ -83,13 +83,13 @@ servers:
 
 Spring 中另一个有趣的特性是您可以通过环境变量启用概要文件:
 
-```
+```java
 export SPRING_PROFILES_ACTIVE=dev
 ```
 
 我们将在测试部分看到这个环境变量的相关性。最后，我们可以配置 YAML 属性，直接从环境中分配值:
 
-```
+```java
 name: ${DEV_NAME:dev-YAML}
 ```
 
@@ -99,7 +99,7 @@ name: ${DEV_NAME:dev-YAML}
 
 **YAML 的分层结构提供了减少配置属性文件**上层的方法。让我们通过一个例子来看看它们的区别:
 
-```
+```java
 component:
   idm:
     url: myurl
@@ -118,7 +118,7 @@ component:
 
 使用属性文件，相同的配置会变得多余:
 
-```
+```java
 component.idm.url=myurl
 component.idm.user=user
 component.idm.password=password
@@ -138,7 +138,7 @@ component.service.description=this should be another long \
 
 有两种方法分配值并将它们存储在列表中:
 
-```
+```java
 servers:
   - www.abc.test.com
   - www.xyz.test.com
@@ -148,7 +148,7 @@ external: [www.abc.test.com, www.xyz.test.com]
 
 两个例子提供了相同的结果。使用属性文件的等效配置将更加难以阅读:
 
-```
+```java
 servers[0]=www.abc.test.com
 servers[1]=www.xyz.test.com
 
@@ -159,7 +159,7 @@ external=www.abc.test.com, www.xyz.test.com
 
 同样，我们可以配置地图:
 
-```
+```java
 map:
   firstkey: key1
   secondkey: key2
@@ -169,7 +169,7 @@ map:
 
 现在，让我们检查一下是否一切都按预期运行。如果我们检查应用程序的日志，我们可以看到默认选择的环境正在测试:
 
-```
+```java
 2020-06-11 13:58:28.846  INFO 10720 --- [main] com.baeldung.yaml.MyApplication: ...
 using environment:testing
 name:test-YAML
@@ -190,13 +190,13 @@ Service:
 
 我们可以通过在环境中配置`DEV_NAME`来覆盖该名称:
 
-```
+```java
 export DEV_NAME=new-dev-YAML
 ```
 
 我们可以看到，使用 dev 配置文件执行应用程序时，环境的名称发生了变化:
 
-```
+```java
 2020-06-11 17:00:45.459  INFO 19636 --- [main] com.baeldung.yaml.MyApplication: ...
 using environment:development
 name:new-dev-YAML
@@ -205,7 +205,7 @@ servers:[www.abc.dev.com, www.xyz.dev.com]
 
 让我们使用`SPRING_PROFILES_ACTIVE=prod`运行生产环境:
 
-```
+```java
 export SPRING_PROFILES_ACTIVE=prod
 
 2020-06-11 17:03:33.074  INFO 20716 --- [main] ...

@@ -18,7 +18,7 @@ Java 8 引入了一些新特性，主要围绕 lambda 表达式的使用。在�
 
 幸运的是，有一个解决方法:
 
-```
+```java
 ForkJoinPool forkJoinPool = new ForkJoinPool(2);
 forkJoinPool.submit(() -> /*some parallel stream pipeline */)
   .get();
@@ -34,7 +34,7 @@ forkJoinPool.submit(() -> /*some parallel stream pipeline */)
 
 首先，我们来看这个简单的例子:
 
-```
+```java
 public static int getLength(String input) {
     if (StringUtils.isEmpty(input) {
         throw new IllegalArgumentException();
@@ -53,21 +53,21 @@ for (String name : Arrays.asList(args)) {
 
 如果我们传递空的`String`作为输入——结果是——代码将抛出一个异常，在调试控制台中，我们可以看到:
 
-```
+```java
 at LmbdaMain.getLength(LmbdaMain.java:19)
 at LmbdaMain.main(LmbdaMain.java:34)
 ```
 
 现在，让我们使用 Stream API 重新编写相同的代码，看看当一个空的`String`被传递时会发生什么:
 
-```
+```java
 Stream lengths = names.stream()
   .map(name -> getLength(name));
 ```
 
 调用堆栈将类似于:
 
-```
+```java
 at LmbdaMain.getLength(LmbdaMain.java:19)
 at LmbdaMain.lambda$0(LmbdaMain.java:37)
 at LmbdaMain$Lambda$1/821270929.apply(Unknown Source)
@@ -128,20 +128,20 @@ Java 8 中引入了 [`Optional`](https://web.archive.org/web/20220629002327/http
 
 必须立即捕获或声明检查过的异常。由于`java.util.function`函数接口不声明抛出异常，抛出检查异常的代码将在编译期间失败:
 
-```
+```java
 static void writeToFile(Integer integer) throws IOException {
     // logic to write to file which throws IOException
 }
 ```
 
-```
+```java
 List<Integer> integers = Arrays.asList(3, 9, 7, 0, 10, 20);
 integers.forEach(i -> writeToFile(i));
 ```
 
 克服这个问题的一个方法是将检查过的异常封装在一个`try-catch`块中，然后重新抛出`RuntimeException`:
 
-```
+```java
 List<Integer> integers = Arrays.asList(3, 9, 7, 0, 10, 20);
 integers.forEach(i -> {
     try {
@@ -156,14 +156,14 @@ integers.forEach(i -> {
 
 另一个解决方案是编写一个消费者功能接口——它可以抛出一个异常:
 
-```
+```java
 @FunctionalInterface
 public interface ThrowingConsumer<T, E extends Exception> {
     void accept(T t) throws E;
 }
 ```
 
-```
+```java
 static <T> Consumer<T> throwingConsumerWrapper(
   ThrowingConsumer<T, Exception> throwingConsumer) {
 

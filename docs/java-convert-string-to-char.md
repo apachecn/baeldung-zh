@@ -19,7 +19,7 @@
 
 对于第一种情况，我们可以很容易地得到单个字符作为`char`。例如，假设这是我们的输入:
 
-```
+```java
 String STRING_b = "b";
 ```
 
@@ -31,7 +31,7 @@ String STRING_b = "b";
 
 我们将使用`STRING_Baeldung`作为输入示例:
 
-```
+```java
 String STRING_Baeldung = "Baeldung";
 ```
 
@@ -41,13 +41,13 @@ String STRING_Baeldung = "Baeldung";
 
 **Java 的`String`类提供了 [`charAt()`](/web/20221031080025/https://www.baeldung.com/string/char-at) 从输入字符串中获取第 n 个字符(从 0 开始)作为** `**char**.`因此，我们可以直接调用方法`getChar(0)`将单个字符`String`转换为`char`:
 
-```
+```java
 assertEquals('b', STRING_b.charAt(0));
 ```
 
 但是，我们应该注意到，**如果输入的是空字符串，`charAt()`方法调用抛出`StringIndexOutOfBoundsException`** :
 
-```
+```java
 assertThrows(StringIndexOutOfBoundsException.class, () -> "".charAt(0));
 ```
 
@@ -57,19 +57,19 @@ assertThrows(StringIndexOutOfBoundsException.class, () -> "".charAt(0));
 
 我们已经学会了使用`charAt(0)`将单个字符`String`转换成`char`。如果输入是一个多字符`String`，并且我们确切地知道我们想要将哪个字符转换成`char`，我们仍然可以使用`charAt()`方法。例如，我们可以从输入字符串“`Baeldung`”中获得第四个字符(“`l`”):
 
-```
+```java
 assertEquals('l', STRING_Baeldung.charAt(3));
 ```
 
 此外，我们可以使用`String.toCharArray()`获得一个包含所有字符的`char[]`数组:
 
-```
+```java
 assertArrayEquals(new char[] { 'B', 'a', 'e', 'l', 'd', 'u', 'n', 'g' }, STRING_Baeldung.toCharArray());
 ```
 
 值得一提的是**`toCharArray()`方法也适用于空字符串输入**。它返回一个空的`char`数组作为结果:
 
-```
+```java
 assertArrayEquals(new char[] {}, "".toCharArray());
 ```
 
@@ -82,7 +82,7 @@ assertArrayEquals(new char[] {}, "".toCharArray());
 
 首先，我们从字符串“`Baeldung`”中提取“`aeld`”，并将其填充到一个预定义的`char`数组中:
 
-```
+```java
 char[] aeld = new char[4];
 STRING_Baeldung.getChars(1, 5, aeld, 0);
 assertArrayEquals(new char[] { 'a', 'e', 'l', 'd' }, aeld);
@@ -96,7 +96,7 @@ assertArrayEquals(new char[] { 'a', 'e', 'l', 'd' }, aeld);
 
 接下来，让我们看另一个例子，将"`aeld`"转换为 chars 并从第二个(index=1)元素开始覆盖目标数组:
 
-```
+```java
 char[] anotherArray = new char[] { '#', '#', '#', '#', '#', '#' };
 STRING_Baeldung.getChars(1, 5, anotherArray, 1);
 assertArrayEquals(new char[] { '#', 'a', 'e', 'l', 'd', '#' }, anotherArray);

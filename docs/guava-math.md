@@ -21,7 +21,7 @@
 
 这个函数计算 n 和 k 的二项式系数。它确保结果在整数范围内。否则，它给出`Integer.MAX_VALUE`。答案可以通过公式 n/k(n-k)得出:
 
-```
+```java
 @Test
 public void whenBinomialOnTwoInt_shouldReturnResultIfUnderInt() {
     int result = IntMath.binomial(6, 3);
@@ -41,7 +41,7 @@ public void whenBinomialOnTwoInt_shouldReturnIntMaxIfOVerflowInt() {
 
 这将计算大于或等于 x 的 2 的最小幂的值。结果 n 是这样的:2^(n-1) < x < 2 ^n:
 
-```
+```java
 @Test
 public void whenCeilPowOfTwoInt_shouldReturnResult() {
   int result = IntMath.ceilingPowerOfTwo(20);
@@ -54,7 +54,7 @@ public void whenCeilPowOfTwoInt_shouldReturnResult() {
 
 该函数计算两个参数的和。这个函数提供了一个额外的检查，如果结果溢出就抛出`ArithmeticException`:
 
-```
+```java
 @Test
 public void whenAddTwoInt_shouldReturnTheSumIfNotOverflow() {
     int result = IntMath.checkedAdd(1, 2);
@@ -74,7 +74,7 @@ Guava 检查了另外三个可以溢出的运算符的方法:`checkedMultiply`�
 
 这是一个简单的除法，但允许我们定义一个舍入模式:
 
-```
+```java
 @Test
 public void whenDivideTwoInt_shouldReturnTheResultForCeilingRounding() {
     int result = IntMath.divide(10, 3, RoundingMode.CEILING);
@@ -92,7 +92,7 @@ public void whenDivideTwoInt_shouldThrowArithmeticExIfRoundNotDefinedButNeeded()
 
 计算 n 的阶乘值，即前 n 个正整数的乘积。如果 n = 0，则返回 1，如果结果不适合 int 范围，则返回`Integer.MAX_VALUE`。结果可由 n×n-1×n-2×x 得到..x 2 x 1:
 
-```
+```java
 @Test
 public void whenFactorialInt_shouldReturnTheResultIfInIntRange() {
     int result = IntMath.factorial(5);
@@ -112,7 +112,7 @@ public void whenFactorialInt_shouldReturnIntMaxIfNotInIntRange() {
 
 返回 2 的最大幂，其结果小于或等于 x。结果 n 是 2^n < x < 2 ^(n+1):
 
-```
+```java
 @Test
 public void whenFloorPowerOfInt_shouldReturnValue() {
     int result = IntMath.floorPowerOfTwo(30);
@@ -125,7 +125,7 @@ public void whenFloorPowerOfInt_shouldReturnValue() {
 
 这个函数给出了 a 和 b 的最大公约数:
 
-```
+```java
 @Test
 public void whenGcdOfTwoInt_shouldReturnValue() {
     int result = IntMath.gcd(30, 40);
@@ -137,7 +137,7 @@ public void whenGcdOfTwoInt_shouldReturnValue() {
 
 返回 x 是否是 2 的幂。如果值是 2 的幂，则返回 true，否则返回 false:
 
-```
+```java
 @Test
 public void givenIntOfPowerTwo_whenIsPowOfTwo_shouldReturnTrue() {
     boolean result = IntMath.isPowerOfTwo(16);
@@ -157,7 +157,7 @@ public void givenIntNotOfPowerTwo_whenIsPowOfTwo_shouldReturnFalse() {
 
 这个函数将告诉我们传递的数字是否是质数:
 
-```
+```java
 @Test
 public void givenNonPrimeInt_whenIsPrime_shouldReturnFalse() {
     boolean result = IntMath.isPrime(20);
@@ -170,7 +170,7 @@ public void givenNonPrimeInt_whenIsPrime_shouldReturnFalse() {
 
 这个 API 计算给定数字的以 10 为底的对数。使用提供的舍入模式对结果进行舍入:
 
-```
+```java
 @Test
 public void whenLog10Int_shouldReturnTheResultForCeilingRounding() {
     int result = IntMath.log10(30, RoundingMode.CEILING);
@@ -188,7 +188,7 @@ public void whenLog10Int_shouldThrowArithmeticExIfRoundNotDefinedButNeeded() {
 
 返回给定数字的以 2 为底的对数。使用提供的舍入模式对结果进行舍入:
 
-```
+```java
 @Test
 public void whenLog2Int_shouldReturnTheResultForCeilingRounding() {
     int result = IntMath.log2(30, RoundingMode.CEILING);
@@ -206,7 +206,7 @@ public void whenLog2Int_shouldThrowArithmeticExIfRoundNotDefinedButNeeded() {
 
 使用此函数，我们可以计算两个值的平均值:
 
-```
+```java
 @Test
 public void whenMeanTwoInt_shouldReturnTheResult() {
     int result = IntMath.mean(30, 20);
@@ -219,7 +219,7 @@ public void whenMeanTwoInt_shouldReturnTheResult() {
 
 返回一个数被另一个数整除的余数:
 
-```
+```java
 @Test
 public void whenModTwoInt_shouldReturnTheResult() {
     int result = IntMath.mod(30, 4);
@@ -231,7 +231,7 @@ public void whenModTwoInt_shouldReturnTheResult() {
 
 返回 b 的 k 次方值:
 
-```
+```java
 @Test
 public void whenPowTwoInt_shouldReturnTheResult() {
     int result = IntMath.pow(6, 4);
@@ -244,7 +244,7 @@ public void whenPowTwoInt_shouldReturnTheResult() {
 
 一个 sum 函数，通过在发生溢出或下溢时分别返回值`Integer.MAX_VALUE`或`Integer.MIN_VALUE`来控制溢出或下溢:
 
-```
+```java
 @Test:
 public void whenSaturatedAddTwoInt_shouldReturnTheResult() {
     int result = IntMath.saturatedAdd(6, 4);
@@ -266,7 +266,7 @@ public void whenSaturatedAddTwoInt_shouldReturnIntMaxIfOverflow() {
 
 返回给定数字的平方根。使用提供的舍入模式对结果进行舍入:
 
-```
+```java
 @Test
 public void whenSqrtInt_shouldReturnTheResultForCeilingRounding() {
     int result = IntMath.sqrt(30, RoundingMode.CEILING);
@@ -288,7 +288,7 @@ public void whenSqrtInt_shouldThrowArithmeticExIfRoundNotDefinedButNeded() {
 
 返回 x mod m。x 除以 m 的整数的余数:
 
-```
+```java
 @Test
 public void whenModLongAndInt_shouldModThemAndReturnTheResult() {
     int result = LongMath.mod(30L, 4);
@@ -297,7 +297,7 @@ public void whenModLongAndInt_shouldModThemAndReturnTheResult() {
 }
 ```
 
-```
+```java
 @Test
 public void whenModTwoLongValues_shouldModThemAndReturnTheResult() {
     long result = LongMath.mod(30L, 4L);
@@ -322,7 +322,7 @@ public void whenModTwoLongValues_shouldModThemAndReturnTheResult() {
 
 返回 x 是否是一个数学整数。它检查数字是否可以表示为整数而不丢失数据:
 
-```
+```java
 @Test
 public void givenInt_whenMathematicalDouble_shouldReturnTrue() {
     boolean result = DoubleMath.isMathematicalInteger(5);
@@ -342,7 +342,7 @@ public void givenDouble_whenMathematicalInt_shouldReturnFalse() {
 
 计算 x 的以 2 为底的对数:
 
-```
+```java
 @Test
 public void whenLog2Double_shouldReturnResult() {
     double result = DoubleMath.log2(4);

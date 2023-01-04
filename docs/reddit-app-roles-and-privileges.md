@@ -12,7 +12,7 @@
 
 首先，我们将修改`User`实体——我们通过我们的 [Reddit 应用程序系列](/web/20210917093839/https://www.baeldung.com/case-study-a-reddit-app-with-spring)使用它——来添加角色:
 
-```
+```java
 @Entity
 public class User {
     ...
@@ -35,7 +35,7 @@ public class User {
 
 接下来，我们将在项目引导上运行一些基本设置，以创建这些角色和权限:
 
-```
+```java
 private void createRoles() {
     Privilege adminReadPrivilege = createPrivilegeIfNotFound("ADMIN_READ_PRIVILEGE");
     Privilege adminWritePrivilege = createPrivilegeIfNotFound("ADMIN_WRITE_PRIVILEGE");
@@ -50,7 +50,7 @@ private void createRoles() {
 
 并让我们的测试用户成为管理员:
 
-```
+```java
 private void createTestUser() {
     Role adminRole = roleRepository.findByName("ROLE_ADMIN");
     Role superUserRole = roleRepository.findByName("ROLE_SUPER_USER");
@@ -63,7 +63,7 @@ private void createTestUser() {
 
 我们还需要确保我们通过`registerNewUser()`实现注册了标准用户:
 
-```
+```java
 @Override
 public void registerNewUser(String username, String email, String password) {
     ...
@@ -82,7 +82,7 @@ public void registerNewUser(String username, String email, String password) {
 
 接下来，让我们将这些新特权集成到我们的主要实现中:
 
-```
+```java
 public class UserPrincipal implements UserDetails {
     ...
 
@@ -107,7 +107,7 @@ public class UserPrincipal implements UserDetails {
 
 首先，我们将在我们的`PostRepository`实现中添加一个新操作——统计特定用户在特定时间段内的预定帖子:
 
-```
+```java
 public interface PostRepository extends JpaRepository<Post, Long> {
     ...
 
@@ -120,7 +120,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 然后，我们将向`schedule()`和`updatePost()`方法添加一个简单的检查:
 
-```
+```java
 public class ScheduledPostRestController {
     private static final int LIMIT_SCHEDULED_POSTS_PER_DAY = 3;
 
@@ -161,7 +161,7 @@ public class ScheduledPostRestController {
 
 这里列出所有用户的 API:
 
-```
+```java
 @PreAuthorize("hasRole('ADMIN_READ_PRIVILEGE')")
 @RequestMapping(value="/admin/users", method = RequestMethod.GET)
 @ResponseBody
@@ -172,7 +172,7 @@ public List<User> getUsersList() {
 
 和服务层实现:
 
-```
+```java
 @Transactional
 public List<User> getUsersList() {
     return userRepository.findAll();
@@ -181,7 +181,7 @@ public List<User> getUsersList() {
 
 然后，简单的前端:
 
-```
+```java
 <table>
     <thead>
         <tr>
@@ -218,7 +218,7 @@ function extractRolesName(roles){
 
 接下来，一些简单的逻辑来管理这些用户的角色；让我们从控制器开始:
 
-```
+```java
 @PreAuthorize("hasRole('USER_WRITE_PRIVILEGE')")
 @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
 @ResponseStatus(HttpStatus.OK)
@@ -238,7 +238,7 @@ public List<Role> getRolesList() {
 
 服务层:
 
-```
+```java
 @Transactional
 public List<Role> getRolesList() {
     return roleRepository.findAll();
@@ -259,7 +259,7 @@ public void modifyUserRoles(Long userId, String ids) {
 
 最后，简单的前端:
 
-```
+```java
 <div id="myModal">
     <h4 class="modal-title">Modify User Roles</h4>
     <input type="hidden" name="id" id="userId"/>
@@ -309,7 +309,7 @@ function modifyUserRoles(){
 
 最后，我们需要修改安全配置，将管理员用户重定向到系统中这个新的独立页面:
 
-```
+```java
 @Autowired 
 private AuthenticationSuccessHandler successHandler;
 
@@ -326,7 +326,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 我们使用一个定制的身份验证成功处理程序来**决定用户登录**后的位置:
 
-```
+```java
 @Component
 public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
@@ -346,7 +346,7 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
 
 以及极其简单的管理主页`adminHome.html`:
 
-```
+```java
 <html>
 <body>
     <h1>Welcome, <small><span sec:authentication="principal.username">Bob</span></small></h1>

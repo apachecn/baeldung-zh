@@ -16,7 +16,7 @@
 
 例如，假设我们正在编写一个博客应用程序，并且有一个代表单个博客帖子的 DTO:
 
-```
+```java
 class BlogDTO {
     long id;
     String title;
@@ -29,7 +29,7 @@ class BlogDTO {
 
 我们可以使用 HTML 表单通过百里香叶和 Java 创建这个 DTO 的新实例:
 
-```
+```java
 <form action="#" method="post" th:action="@{/blog}" th:object="${blog}">
     <input type="text" th:field="*{title}">
     <input type="text" th:field="*{category}">
@@ -45,7 +45,7 @@ class BlogDTO {
 
 为隐藏输入赋值的最快方法是使用`th:field`属性:
 
-```
+```java
 <input type="hidden" th:field="*{blogId}" id="blogId">
 ```
 
@@ -55,7 +55,7 @@ class BlogDTO {
 
 我们可以在百里香叶中使用隐藏输入的下一种方法是使用内置的`th:attr`属性:
 
-```
+```java
 <input type="hidden" th:value="${blog.id}" th:attr="name='blogId'"/>
 ```
 
@@ -65,7 +65,7 @@ class BlogDTO {
 
 另一个不太冗长的方法是使用标准的 HTML `name`属性:
 
-```
+```java
 <input type="hidden" th:value="${blog.id}" name="blogId" />
 ```
 

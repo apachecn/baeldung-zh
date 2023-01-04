@@ -56,7 +56,7 @@ SAM 基于 CloudFormation 模板语法，因此我们可以使用简单的 SAM �
 
 最后，我们的地区需要一个 S3 存储桶，可以通过 AWS CLI 使用以下命令创建:
 
-```
+```java
 $>aws s3 mb s3://baeldung-sam-bucket
 ```
 
@@ -74,7 +74,7 @@ $>aws s3 mb s3://baeldung-sam-bucket
 
 首先，让我们看看模板的整体结构:
 
-```
+```java
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: Baeldung Serverless Application Model example
@@ -112,7 +112,7 @@ SAM 规范目前支持三种类型:`AWS::Serverless::Api`、`AWS::Serverless::Fu
 
 现在让我们定义我们的 DynamoDB 表:
 
-```
+```java
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: Baeldung Serverless Application Model example
@@ -137,7 +137,7 @@ Resources:
 
 接下来，让我们定义我们的两个函数:
 
-```
+```java
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: Baeldung Serverless Application Model example
@@ -218,7 +218,7 @@ Resources:
 
 第一种可能性是使用 Swagger 格式内联定义我们的 API:
 
-```
+```java
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: Baeldung Serverless Application Model example
@@ -298,7 +298,7 @@ Resources:
 
 第二种选择是在函数资源中隐式定义 API:
 
-```
+```java
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: Baeldung Serverless Application Model Example with Implicit API Definition
@@ -378,7 +378,7 @@ Resources:
 
 我们可以通过 AWS CLI 调用 CloudFormation 来实现:
 
-```
+```java
 $> aws cloudformation package --template-file ./sam-templates/template.yml --s3-bucket baeldung-sam-bucket --output-template-file ./sam-templates/packaged-template.yml
 ```
 
@@ -386,7 +386,7 @@ $> aws cloudformation package --template-file ./sam-templates/template.yml --s3-
 
 让我们来看看 CLI 输出:
 
-```
+```java
 Uploading to 4b445c195c24d05d8a9eee4cd07f34d0 92702076 / 92702076.0 (100.00%)
 Successfully packaged artifacts and wrote output template to file packaged-template.yml.
 Execute the following command to deploy the packaged template
@@ -397,7 +397,7 @@ aws cloudformation deploy --template-file c:\zz_workspace\tutorials\aws-lambda\s
 
 现在，我们可以开始实际部署了:
 
-```
+```java
 $> aws cloudformation deploy --template-file ./sam-templates/packaged-template.yml --stack-name baeldung-sam-stack  --capabilities CAPABILITY_IAM
 ```
 
@@ -405,7 +405,7 @@ $> aws cloudformation deploy --template-file ./sam-templates/packaged-template.y
 
 CLI 输出应该如下所示:
 
-```
+```java
 Waiting for changeset to be created..
 Waiting for stack create/update to complete
 Successfully created/updated stack - baeldung-sam-stack
@@ -415,7 +415,7 @@ Successfully created/updated stack - baeldung-sam-stack
 
 部署后，我们可以查看结果:
 
-```
+```java
 $> aws cloudformation describe-stack-resources --stack-name baeldung-sam-stack
 ```
 
@@ -429,7 +429,7 @@ CloudFormation 将列出所有资源，这些资源是我们堆栈的一部分�
 
 `StorePersonFunction`:
 
-```
+```java
 $> curl -X PUT 'https://0skaqfgdw4.execute-api.eu-central-1.amazonaws.com/test/persons' \
    -H 'content-type: application/json' \
    -d '{"id": 1, "name": "John Doe"}'
@@ -437,14 +437,14 @@ $> curl -X PUT 'https://0skaqfgdw4.execute-api.eu-central-1.amazonaws.com/test/p
 
 `GetPersonByPathParamFunction`:
 
-```
+```java
 $> curl -X GET 'https://0skaqfgdw4.execute-api.eu-central-1.amazonaws.com/test/persons/1' \
    -H 'content-type: application/json'
 ```
 
 `GetPersonByQueryParamFunction`:
 
-```
+```java
 $> curl -X GET 'https://0skaqfgdw4.execute-api.eu-central-1.amazonaws.com/test/persons?id=1' \
    -H 'content-type: application/json'
 ```
@@ -453,7 +453,7 @@ $> curl -X GET 'https://0skaqfgdw4.execute-api.eu-central-1.amazonaws.com/test/p
 
 最后，我们可以通过移除堆栈和所有包含的资源来进行清理:
 
-```
+```java
 aws cloudformation delete-stack --stack-name baeldung-sam-stack
 ```
 

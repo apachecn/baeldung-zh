@@ -28,7 +28,7 @@ Learn to configure a method call to throw an exception in Mockito.[Read more](/w
 
 这需要预期异常的类型和一个`Executable`函数接口，我们可以通过一个 lambda 表达式传递测试中的代码:
 
-```
+```java
 @Test
 public void whenExceptionThrown_thenAssertionSucceeds() {
     Exception exception = assertThrows(NumberFormatException.class, () -> {
@@ -50,7 +50,7 @@ public void whenExceptionThrown_thenAssertionSucceeds() {
 
 如果我们将上面的测试改为期望一个`RuntimeException`，这也将通过:
 
-```
+```java
 @Test
 public void whenDerivedExceptionThrown_thenAssertionSucceeds() {
     Exception exception = assertThrows(RuntimeException.class, () -> {
@@ -72,7 +72,7 @@ public void whenDerivedExceptionThrown_thenAssertionSucceeds() {
 
 因此，当测试运行时，如果没有引发指定的异常，测试将失败，如果引发了异常，测试将通过:
 
-```
+```java
 @Test(expected = NullPointerException.class)
 public void whenExceptionThrown_thenExpectationSatisfied() {
     String test = null;
@@ -88,7 +88,7 @@ public void whenExceptionThrown_thenExpectationSatisfied() {
 
 让我们看一个验证异常的`message`属性的例子:
 
-```
+```java
 @Rule
 public ExpectedException exceptionRule = ExpectedException.none();
 

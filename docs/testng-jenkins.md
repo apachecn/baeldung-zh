@@ -12,7 +12,7 @@
 
 让我们首先将 TestNG 的 Maven [依赖项](https://web.archive.org/web/20221122032748/https://search.maven.org/search?q=g:org.testng%20AND%20a:testng)添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.testng</groupId>
     <artifactId>testng</artifactId>
@@ -27,7 +27,7 @@
 
 让我们使用从`org.testng.annotations.Test`导入的`@Test`注释添加一个单元测试:
 
-```
+```java
 @Test
 public void givenNumber_whenEven_thenTrue() {
     assertTrue(number % 2 == 0);
@@ -36,7 +36,7 @@ public void givenNumber_whenEven_thenTrue() {
 
 我们还将在 `/test/resources`文件夹中添加一个 XML 文件，通过指定测试类来运行 TestNG 套件:
 
-```
+```java
 <suite name="suite">
     <test name="test suite">
         <classes>
@@ -48,7 +48,7 @@ public void givenNumber_whenEven_thenTrue() {
 
 然后，我们可以在我们的`pom.xml`的插件部分指定这个 XML 文件本身的名称:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-surefire-plugin</artifactId>
@@ -88,7 +88,7 @@ public void givenNumber_whenEven_thenTrue() {
 
 让我们看看运行 Jenkins 的命令:
 
-```
+```java
 $ /usr/local/opt/jenkins/bin/jenkins --httpListenAddress=127.0.0.1 --httpPort=8080
 ```
 

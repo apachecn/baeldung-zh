@@ -30,13 +30,13 @@ Docker 引擎存储图像并运行容器。为此，**Docker 引擎保留一定�
 
 但是在我们下载这两个映像之前，让我们先检查一下 Docker 映像在存储池中占用了多少空间:
 
-```
+```java
 docker system df --format 'table {{.Type}}\t{{.TotalCount}}\t{{.Size}}'
 ```
 
 这是测试机器的输出。第一行显示我们的 71 个 Docker 映像使用 7.8 GB:
 
-```
+```java
 TYPE                TOTAL               SIZE
 Images              71                  7.813GB
 Containers          1                   359.1MB
@@ -46,7 +46,7 @@ Build Cache         770                 31.54GB
 
 现在，我们下载两个 PostgreSQL 映像，并重新检查 Docker 存储池:
 
-```
+```java
 docker pull postgres:13-beta1-alpine
 docker pull postgres:13-beta2-alpine
 docker system df --format 'table {{.Type}}\t{{.TotalCount}}\t{{.Size}}' 
@@ -56,7 +56,7 @@ docker system df --format 'table {{.Type}}\t{{.TotalCount}}\t{{.Size}}'
 
 为了简洁起见，我们只显示第一行:
 
-```
+```java
 TYPE                TOTAL               SIZE
 Images              73                  8.119GB 
 ```
@@ -65,33 +65,33 @@ Images              73                  8.119GB
 
 让我们用 PostgreSQL 13 beta 2 映像开始一个容器。我们将`secr3t`设置为数据库根用户的密码，因为 PostgreSQL 容器不会在没有密码的情况下启动:
 
-```
+```java
 docker run -d -e POSTGRES_PASSWORD=secr3t postgres:13-beta2-alpine
 docker ps --format 'table {{.ID}}\t{{.Image}}\t{{.Status}}'
 ```
 
 下面是测试机器上的运行容器:
 
-```
+```java
 CONTAINER ID        IMAGE                      STATUS
 527bfd4cfb89        postgres:13-beta2-alpine   Up Less than a second
 ```
 
 现在我们来移除 PostgreSQL 13 beta 2 镜像。我们**使用 [`docker image rm`](https://web.archive.org/web/20221126234722/https://docs.docker.com/engine/reference/commandline/image_rm/) 移除一个码头工人图像**。该命令会删除一个或多个图像:
 
-```
+```java
 docker image rm postgres:13-beta2-alpine 
 ```
 
 此命令失败，因为正在运行的容器仍在使用该映像:
 
-```
+```java
 Error response from daemon: conflict: unable to remove repository reference "postgres:13-beta2-alpine" (must force) - container 527bfd4cfb89 is using its referenced image cac2ee40fa5a
 ```
 
 因此，让我们使用从`docker ps`获得的 ID 来停止正在运行的容器:
 
-```
+```java
 docker container stop 527bfd4cfb89
 ```
 
@@ -99,14 +99,14 @@ docker container stop 527bfd4cfb89
 
 所以让我们把容器移走。然后我们终于可以移除图像了:
 
-```
+```java
 docker container rm 527bfd4cfb89
 docker image rm postgres:13-beta2-alpine 
 ```
 
 Docker 引擎打印图像删除的详细信息:
 
-```
+```java
 Untagged: postgres:13-beta2-alpine
 Untagged: [[email protected]](/web/20221126234722/https://www.baeldung.com/cdn-cgi/l/email-protection):b3a4ebdb37b892696a7bd7e05763b938345f29a7327fc17049c7148c03ff6a92
 removed: sha256:cac2ee40fa5a40f0abe53e0138033fe7a9bcee28e7fb6c9eaac4d3a2076b1a86
@@ -119,7 +119,7 @@ removed: sha256:8294c0a7818c9a435b8908a3bcccbc2171c5cefa7f4f378ad23f40e28ad2f843
 
 `docker system df`确认删除:图像数量从 73 减少到 72。整体图像大小从 8.1 GB 变为 8.0 GB:
 
-```
+```java
 TYPE                TOTAL               SIZE
 Images              72                  7.966GB
 ```
@@ -128,7 +128,7 @@ Images              72                  7.966GB
 
 让我们再次下载我们在上一节中刚刚删除的 PostgreSQL 13 beta 2 映像:
 
-```
+```java
 docker pull postgres:13-beta2-alpine
 ```
 
@@ -146,26 +146,26 @@ docker pull postgres:13-beta2-alpine
 
 让我们开始把这些放在一起。为了测试正确性，让我们只运行其中的前两段:
 
-```
+```java
 docker image ls --format '{{.Repository}}:{{.Tag}}' | grep '^postgres:13-beta'
 ```
 
 在我们的测试机上，我们得到:
 
-```
+```java
 postgres:13-beta2-alpine
 postgres:13-beta1-alpine 
 ```
 
 鉴于此，我们可以将它添加到我们的`docker image rm`命令中:
 
-```
+```java
 docker image rm $(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep '^postgres:13-beta')
 ```
 
 和以前一样，我们只能在没有容器(运行或停止)使用图像的情况下删除它们。然后，我们会看到与上一节相同的图像移除细节。`docker system df`显示我们在测试机上返回了 71 个 7.8 GB 的图像:
 
-```
+```java
 TYPE                TOTAL               SIZE
 Images              71                  7.813GB
 ```
@@ -178,13 +178,13 @@ Images              71                  7.813GB
 
 现在`docker image ls`也不能按大小排序了。因此，**我们列出所有图像，并用 [`sort`](/web/20221126234722/https://www.baeldung.com/linux/sort-command) 命令对输出进行排序，以便按大小查看图像**:
 
-```
+```java
 docker image ls | sort -k7 -h -r
 ```
 
 在我们的测试机器上输出:
 
-```
+```java
 collabora/code   4.2.5.3         8ae6850294e5   3 weeks ago  1.28GB
 nextcloud        19.0.1-apache   25b6e2f7e916   6 days ago   752MB
 nextcloud        latest          6375cff75f7b   5 weeks ago  750MB
@@ -195,13 +195,13 @@ nextcloud        19.0.0-apache   5c44e8445287   7 days ago   750MB
 
 假设我们想要删除`nextcloud:latest`和`nextcloud:19.0.0-apache`。简单地说，我们可以在我们的表中查看它们对应的 id，并在我们的`docker image rm`命令中列出它们:
 
-```
+```java
 docker image rm 6375cff75f7b 5c44e8445287
 ```
 
 和以前一样，我们只能删除没有被任何容器使用的图像，并查看通常的图像删除细节。现在，我们在测试机上减少到 69 个 7.1 GB 的图像:
 
-```
+```java
 TYPE                TOTAL               SIZE
 Images              69                  7.128GB
 ```
@@ -212,20 +212,20 @@ Images              69                  7.128GB
 
 现在，让我们删除 2020 年 7 月 7 日之前创建的所有映像:
 
-```
+```java
 docker image prune -a --force --filter "until=2020-07-07T00:00:00"
 ```
 
 我们仍然只能删除没有被任何容器使用的图像，我们仍然可以看到通常的图像删除细节。该命令删除了测试机器上的两个映像，因此我们在测试机器上有 67 个映像和 5.7 GB:
 
-```
+```java
 TYPE                TOTAL               SIZE
 Images              67                  5.686GB
 ```
 
 按创建日期删除图像的另一种方法是指定时间跨度，而不是截止日期。假设我们想删除一周前的所有图像:
 
-```
+```java
 docker image prune -a --force --filter "until=168h"
 ```
 
@@ -235,13 +235,13 @@ docker image prune -a --force --filter "until=168h"
 
 [`**docker image prune**`](https://web.archive.org/web/20221126234722/https://docs.docker.com/engine/reference/commandline/image_prune/) **批量删除未使用的图像**。它与 **[`docker container prune`](https://web.archive.org/web/20221126234722/https://docs.docker.com/engine/reference/commandline/container_prune/) 一起批量移除停止的集装箱**。让我们从最后一个命令开始:
 
-```
+```java
 docker container prune
 ```
 
 这会打印一条警告消息。我们必须输入`y`并按下`Enter`才能继续:
 
-```
+```java
 WARNING! This will remove all stopped containers.
 Are you sure you want to continue? [y/N] y
 removed Containers:
@@ -256,7 +256,7 @@ Total reclaimed space: 359.1MB
 
 让我们看看 PostgreSQL beta 2 映像的[docker 文件的顶部，看看它扩展了什么映像:](https://web.archive.org/web/20221126234722/https://github.com/docker-library/postgres/blob/bb0d97951918e6d281f510adb3896da433a52bc4/13/alpine/Dockerfile)
 
-```
+```java
 FROM alpine:3.12
 ```
 
@@ -264,13 +264,13 @@ FROM alpine:3.12
 
 现在假设我们删除了 PostgreSQL 13 beta 2 映像。如果没有其他 Docker 映像扩展了`alpine:3.12`，那么 Docker 会认为`alpine:3.12`是一个所谓的“悬空映像”:一个曾经隐式下载的映像，现在不再需要了。 **`docker image prune`去掉这些悬空的图像:**
 
-```
+```java
 docker image prune
 ```
 
 该命令还要求我们输入`y`并按下`Enter`继续:
 
-```
+```java
 WARNING! This will remove all dangling images.
 Are you sure you want to continue? [y/N] y
 Total reclaimed space: 0B
@@ -280,13 +280,13 @@ Total reclaimed space: 0B
 
 **`docker image prune -a`删除容器**未使用的所有图像。所以**如果我们没有任何容器(运行或不运行)，那么这将删除所有 Docker 图像**！这的确是一个危险的命令:
 
-```
+```java
 docker image prune -a
 ```
 
 在测试机器上，这删除了所有图像。`docker system df`确认没有留下容器或图像:
 
-```
+```java
 TYPE                TOTAL               SIZE
 Images              0                   0B
 Containers          0                   0B 
@@ -296,7 +296,7 @@ Containers          0                   0B
 
 `docker prune`命令删除停止的容器和悬挂的图像。但是，如果我们希望从我们的机器上删除所有的 Docker 图像呢？为此，我们首先需要删除我们机器上运行的所有 Docker 容器，然后删除 Docker 映像:
 
-```
+```java
 docker rm -f $(docker ps -qa)
 ```
 
@@ -304,7 +304,7 @@ docker rm -f $(docker ps -qa)
 
 现在让我们使用`docker rmi`命令删除所有 Docker 图像:
 
-```
+```java
 docker rmi -f $(docker images -aq)
 ```
 

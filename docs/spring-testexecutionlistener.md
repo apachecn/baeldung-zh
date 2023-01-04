@@ -14,7 +14,7 @@
 
 首先，我们来访问一下`TestExecutionListener`界面:
 
-```
+```java
 public interface TestExecutionListener {
     default void beforeTestClass(TestContext testContext) throws Exception {};
     default void prepareTestInstance(TestContext testContext) throws Exception {};
@@ -54,7 +54,7 @@ public interface TestExecutionListener {
 
 现在，让我们定义一个自定义`TestExecutionListener`:
 
-```
+```java
 public class CustomTestExecutionListener implements TestExecutionListener, Ordered {
     private static final Logger logger = LoggerFactory.getLogger(CustomTestExecutionListener.class);
 
@@ -91,7 +91,7 @@ public class CustomTestExecutionListener implements TestExecutionListener, Order
 
 现在，让我们在测试类中使用这个监听器。为此，我们将使用`@TestExecutionListeners`注释来注册它:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @TestExecutionListeners(value = {
   CustomTestExecutionListener.class,
@@ -107,7 +107,7 @@ public class AdditionServiceUnitTest {
 
 如果我们需要任何其他的默认侦听器，我们必须指定它们中的每一个。但是，我们也可以使用注释的`mergeMode`属性:
 
-```
+```java
 @TestExecutionListeners(
   value = { CustomTestExecutionListener.class }, 
   mergeMode = MergeMode.MERGE_WITH_DEFAULTS)
@@ -117,7 +117,7 @@ public class AdditionServiceUnitTest {
 
 现在，当我们运行上面的测试时，监听器将记录它接收到的每个事件:
 
-```
+```java
 [main] INFO  o.s.t.c.s.DefaultTestContextBootstrapper - Using TestExecutionListeners: 
 [[[email protected]](/web/20220626203154/https://www.baeldung.com/cdn-cgi/l/email-protection)38364841, 
 org.springframewor[[email protected]](/web/20220626203154/https://www.baeldung.com/cdn-cgi/l/email-protection)28c4711c]
@@ -146,7 +146,7 @@ class com.baeldung.testexecutionlisteners.TestExecutionListenersWithoutMergeMode
 
 `spring-test`模块在其`META-INF/spring.factories`属性文件中的`org.springframework.test.context.TestExecutionListener`键下声明了所有的核心默认监听器。类似地，我们可以通过在我们自己的`META-INF/spring.factories`属性文件中使用上面的键来**注册我们的定制监听器:**
 
-```
+```java
 org.springframework.test.context.TestExecutionListener=\
 com.baeldung.testexecutionlisteners.CustomTestExecutionListener
 ```
@@ -157,7 +157,7 @@ com.baeldung.testexecutionlisteners.CustomTestExecutionListener
 
 请注意，Spring 提供的所有默认`TestExecutionListener`实现都使用适当的值来实现`Ordered`。因此，我们必须确保我们的自定义`TestExecutionListener`实现以正确的顺序注册。因此，我们在自定义监听器中实现了`Ordered`:
 
-```
+```java
 public class CustomTestExecutionListener implements TestExecutionListener, Ordered {
     // ...
     @Override

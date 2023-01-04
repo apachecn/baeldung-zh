@@ -20,7 +20,7 @@
 
 考虑一个用户从 web 提交支付请求的例子。在应用程序级别，一旦该请求得到处理，将记录一个条目，其金额为:
 
-```
+```java
 private final Logger logger 
   = LoggerFactory.getLogger(LogForgingDemo.class);
 
@@ -36,14 +36,14 @@ public static void main( String[] args ) {
 
 如果我们查看控制台，我们会看到类似这样的内容:
 
-```
+```java
 web - 2017-04-12 17:45:29,978 [main] 
   INFO  com.baeldung.logforging.LogForgingDemo - Amount credited = 300
 ```
 
 现在，假设攻击者以`“\n\nweb – 2017-04-12 17:47:08,957 [main] INFO Amount reversed successfully”,` 的形式提供输入，那么日志将会是:
 
-```
+```java
 web - 2017-04-12 17:52:14,124 [main] INFO  com.baeldung.logforging.
   LogForgingDemo - Amount credited = 300
 
@@ -76,7 +76,7 @@ web - 2017-04-12 17:47:08,957 [main] INFO Amount reversed successfully
 
 在这种情况下，使用`ESAPI`是最常见和最可取的技术。在这里，每个用户数据在写入日志之前都要进行编码。`ESAPI` 是来自`OWASP`的开源 API:
 
-```
+```java
 <dependency>
     <groupId>org.owasp.esapi</groupId>
     <artifactId>esapi</artifactId>
@@ -88,7 +88,7 @@ web - 2017-04-12 17:47:08,957 [main] INFO Amount reversed successfully
 
 我们可以使用`ESAPI`的 [`Encoder`](https://web.archive.org/web/20220831223237/https://static.javadoc.io/org.owasp.esapi/esapi/2.0.1/org/owasp/esapi/Encoder.html) 接口对数据进行编码:
 
-```
+```java
 public String encode(String message) {
     message = message.replace( '\n' ,  '_' ).replace( '\r' , '_' )
       .replace( '\t' , '_' );
@@ -101,7 +101,7 @@ public String encode(String message) {
 
 在前面的示例中，如果我们使用此包装函数对消息进行编码，日志应该类似于以下内容:
 
-```
+```java
 web - 2017-04-12 18:15:58,528 [main] INFO  com.baeldung.logforging.
   LogForgingDemo - Amount credited = 300
 __web - 2017-04-12 17:47:08,957 [main] INFO Amount reversed successfully

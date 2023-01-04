@@ -20,7 +20,7 @@ A quick, practical intro to integrating Spring Boot and Hibernate/JPA.[Read more
 
 让我们从`[h2](https://web.archive.org/web/20221011074419/https://search.maven.org/search?q=g:com.h2database%20a:h2)`和`[spring-boot-starter-data-jpa](https://web.archive.org/web/20221011074419/https://search.maven.org/search?q=a:spring-boot-starter-data-jpa%20g:org.springframework.boot)` 的依赖关系开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -38,7 +38,7 @@ A quick, practical intro to integrating Spring Boot and Hibernate/JPA.[Read more
 
 但是，我们可以通过向`application.properties`文件添加以下属性来更改这些参数:
 
-```
+```java
 spring.datasource.url=jdbc:h2:mem:testdb
 spring.datasource.driverClassName=org.h2.Driver
 spring.datasource.username=sa
@@ -48,7 +48,7 @@ spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 
 或者，我们也可以通过向`application.yaml`文件添加相应的属性，将 YAML 用于应用程序的数据库配置:
 
-```
+```java
 spring:
   datasource:
     url: jdbc:h2:mem:mydb
@@ -63,13 +63,13 @@ spring:
 
 我们可以通过使用基于文件的存储来改变这种行为。为此，我们需要更新`spring.datasource.url`属性:
 
-```
+```java
 spring.datasource.url=jdbc:h2:file:/data/demo
 ```
 
 类似地，在`application.yaml`中，我们可以为基于文件的存储添加相同的属性:
 
-```
+```java
 spring:
   datasource:
     url: jdbc:h2:file:/data/demo
@@ -85,7 +85,7 @@ spring:
 
 我们可以使用基本的 SQL 脚本来初始化数据库。为了演示这一点，让我们在`src/main/resources`目录下添加一个`data.sql` 文件:
 
-```
+```java
 INSERT INTO countries (id, name) VALUES (1, 'USA');
 INSERT INTO countries (id, name) VALUES (2, 'France');
 INSERT INTO countries (id, name) VALUES (3, 'Brazil');
@@ -105,7 +105,7 @@ Spring Boot 将自动获取这个文件，并在嵌入式内存数据库中运�
 
 默认情况下，**`data.sql`脚本在休眠初始化**之前执行。这使得基于脚本的初始化与其他数据库迁移工具保持一致，例如 [Flyway](/web/20221011074419/https://www.baeldung.com/database-migrations-with-flyway) 和 [Liquibase](/web/20221011074419/https://www.baeldung.com/liquibase-refactor-schema-of-java-app) 。因为我们每次都要重新创建 Hibernate 生成的模式，所以我们需要设置一个额外的属性:
 
-```
+```java
 spring.jpa.defer-datasource-initialization=true
 ```
 
@@ -117,13 +117,13 @@ H2 数据库有一个嵌入式 GUI 控制台，用于浏览数据库内容和运
 
 要启用它，我们需要将以下属性添加到`application.properties`:
 
-```
+```java
 spring.h2.console.enabled=true
 ```
 
 如果我们使用 YAML 配置，我们需要将属性添加到`application.yaml`:
 
-```
+```java
 spring:
   h2:
     console.enabled: true
@@ -143,7 +143,7 @@ web 控制台具有自动完成功能，可以建议 SQL 关键字。控制台�
 
 此外，我们可以通过在项目的`application.properties`中用我们想要的值指定以下属性来进一步配置控制台:
 
-```
+```java
 spring.h2.console.path=/h2-console
 spring.h2.console.settings.trace=false
 spring.h2.console.settings.web-allow-others=false
@@ -151,7 +151,7 @@ spring.h2.console.settings.web-allow-others=false
 
 同样，当使用 YAML 配置时，我们可以将上述属性添加为:
 
-```
+```java
 spring:
   h2:
     console.path: /h2-console

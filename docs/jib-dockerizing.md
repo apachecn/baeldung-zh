@@ -24,13 +24,13 @@ Google 将 Jib 发布为 Maven 和 Gradle 插件。这很好，因为这意味�
 
 让我们来看一个简单的 spring-boot 应用程序，并使用 Jib 对其进行 dockerize。它将公开一个简单的 GET 端点:
 
-```
+```java
 http://localhost:8080/greeting
 ```
 
 我们可以用 Spring MVC 控制器很简单地做到这一点:
 
-```
+```java
 @RestController
 public class GreetingController {
 
@@ -53,7 +53,7 @@ public class GreetingController {
 
 对于这个例子，我们将**向`.m2/settings.xml`** 提供我们的 DockerHub 凭证:
 
-```
+```java
 <servers>
     <server>
         <id>registry.hub.docker.com</id>
@@ -69,7 +69,7 @@ public class GreetingController {
 
 现在，我们可以用一个简单的命令来使用`jib-maven-plugin`，或者说[中的](https://web.archive.org/web/20220823060050/https://github.com/GoogleContainerTools/jib/tree/master/jib-gradle-plugin)、**到**、**来封装我们的应用程序:**
 
-```
+```java
 mvn compile com.google.cloud.tools:jib-maven-plugin:2.5.0:build -Dimage=$IMAGE_PATH
 ```
 
@@ -77,7 +77,7 @@ mvn compile com.google.cloud.tools:jib-maven-plugin:2.5.0:build -Dimage=$IMAGE_P
 
 例如，要将图像`baeldungjib/spring-jib-app`上传到`DockerHub`，我们需要:
 
-```
+```java
 export IMAGE_PATH=registry.hub.docker.com/baeldungjib/spring-jib-app
 ```
 
@@ -91,7 +91,7 @@ export IMAGE_PATH=registry.hub.docker.com/baeldungjib/spring-jib-app
 
 同样，我们可以通过在我们的`pom`中配置插件来缩短我们的初始命令，就像任何其他 maven 插件一样。
 
-```
+```java
 <project>
     ...
     <build>
@@ -116,7 +116,7 @@ export IMAGE_PATH=registry.hub.docker.com/baeldungjib/spring-jib-app
 
 通过这一更改，我们可以简化 maven 命令:
 
-```
+```java
 mvn compile jib:build
 ```
 
@@ -132,7 +132,7 @@ mvn compile jib:build
 
 当然，我们将在 Boot 中进行适当的更改。之后，我们可以使用 Jib 使其在图像中可公开:
 
-```
+```java
 <configuration>
     ...
     <container>
@@ -147,7 +147,7 @@ mvn compile jib:build
 
 如果我们想在不同的基础映像上运行我们的应用程序，比如 [alpine-java](https://web.archive.org/web/20220823060050/https://hub.docker.com/r/anapsix/alpine-java/) ，我们可以用类似的方式配置它:
 
-```
+```java
 <configuration>
     ...
     <from>                           

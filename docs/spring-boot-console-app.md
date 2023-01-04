@@ -10,7 +10,7 @@
 
 我们的项目依赖于 spring-boot 父节点:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -20,7 +20,7 @@
 
 所需的初始依赖关系是:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter</artifactId>
@@ -37,7 +37,7 @@
 
 这是我们的控制台应用程序:
 
-```
+```java
 @SpringBootApplication
 public class SpringBootConsoleApplication 
   implements CommandLineRunner {
@@ -66,7 +66,7 @@ public class SpringBootConsoleApplication
 
 当我们执行`SpringBootConsoleApplication`时，我们可以看到以下记录:
 
-```
+```java
 00:48:51.888 [main] INFO  c.b.s.SpringBootConsoleApplication - STARTING THE APPLICATION
 00:48:52.752 [main] INFO  c.b.s.SpringBootConsoleApplication - No active profile set, falling back to default profiles: default
 00:48:52.851 [main] INFO  o.s.c.a.AnnotationConfigApplicationContext 

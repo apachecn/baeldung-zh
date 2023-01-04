@@ -18,7 +18,7 @@
 
 使用迭代，我们可以简单地遍历一个`Map`的所有条目来挑选最高值，将当前最高值存储在一个变量中:
 
-```
+```java
 public <K, V extends Comparable<V>> V maxUsingIteration(Map<K, V> map) {
     Map.Entry<K, V> maxEntry = null;
     for (Map.Entry<K, V> entry : map.entrySet()) {
@@ -37,7 +37,7 @@ public <K, V extends Comparable<V>> V maxUsingIteration(Map<K, V> map) {
 
 现在让我们看看`Collections`类中的实用方法`max()`如何让我们不用自己编写大量的代码:
 
-```
+```java
 public <K, V extends Comparable<V>> V maxUsingCollectionsMax(Map<K, V> map) {
     Entry<K, V> maxEntry = Collections.max(map.entrySet(), new Comparator<Entry<K, V>>() {
         public int compare(Entry<K, V> e1, Entry<K, V> e2) {
@@ -59,7 +59,7 @@ Java 8 的特性可以简化我们以上从一个`Map`中获得最大值的尝�
 
 让我们从探究 lambda 表达式如何简化对`Collections.max()`的调用开始:
 
-```
+```java
 public <K, V extends Comparable<V>> V maxUsingCollectionsMaxAndLambda(Map<K, V> map) {
     Entry<K, V> maxEntry = Collections.max(map.entrySet(), (Entry<K, V> e1, Entry<K, V> e2) -> e1.getValue()
         .compareTo(e2.getValue()));
@@ -73,7 +73,7 @@ public <K, V extends Comparable<V>> V maxUsingCollectionsMaxAndLambda(Map<K, V> 
 
 `Stream` API 是`Java 8`的另一个补充，它极大地简化了集合的工作:
 
-```
+```java
 public <K, V extends Comparable<V>> V maxUsingStreamAndLambda(Map<K, V> map) {
     Optional<Entry<K, V>> maxEntry = map.entrySet()
         .stream()
@@ -93,7 +93,7 @@ public <K, V extends Comparable<V>> V maxUsingStreamAndLambda(Map<K, V> map) {
 
 最后，让我们看看方法引用如何进一步简化 lambda 表达式的使用:
 
-```
+```java
 public <K, V extends Comparable<V>> V maxUsingStreamAndMethodReference(Map<K, V> map) {
     Optional<Entry<K, V>> maxEntry = map.entrySet()
         .stream()

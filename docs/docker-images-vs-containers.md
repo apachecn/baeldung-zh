@@ -28,7 +28,7 @@ Docker 的一个主要优势是其庞大的社区。如果我们想要构建一�
 
 使用`docker images`命令，我们可以查看文件系统中可用的图像列表:
 
-```
+```java
 $ docker images
 REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
 postgres             11.6                d3d96b1e5d48        4 weeks ago         332MB
@@ -44,7 +44,7 @@ java                 8-jre               e44d62cf8862        3 years ago        
 
 使用带有图像名称和标签的`docker run`命令运行图像。假设我们想要运行 postgres 11.6 映像:
 
-```
+```java
 docker run -d postgres:11.6
 ```
 
@@ -52,7 +52,7 @@ docker run -d postgres:11.6
 
 使用`docker ps`命令，我们可以检查我们的映像是否正在运行。我们应该使用此命令:
 
-```
+```java
 $ docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
 3376143f0991        postgres:11.6       "docker-entrypoint.s…"   3 minutes ago       Up 3 minutes        5432/tcp            tender_heyrovsky
@@ -78,27 +78,27 @@ Docker 为容器定义了七种状态:`created`、`restarting`、`running`、`re
 
 启动一个新容器需要我们先`create`它，然后再`start`它。这意味着它必须经过创建状态才能运行。我们可以通过显式创建和启动容器来实现这一点:
 
-```
+```java
 docker container create <image_name>:<tag>
 docker container start <container_id>
 ```
 
 或者我们可以用`run`命令轻松做到这一点:
 
-```
+```java
 docker run <image_name>:<tag>
 ```
 
 我们可以暂停一个正在运行的容器，然后再次将其置于运行状态:
 
-```
+```java
 docker pause <container_id>
 docker unpause <container_id>
 ```
 
 当我们检查流程时，暂停的容器将显示“暂停”状态:
 
-```
+```java
 $ docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS               NAMES
 9bef2edcad7b        postgres:11.6       "docker-entrypoint.s…"   5 minutes ago       Up 4 minutes (Paused)   5432/tcp            tender_heyrovsky
@@ -106,14 +106,14 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 
 我们还可以停止正在运行的容器，然后重新运行它:
 
-```
+```java
 docker stop <container_id>
 docker start <container_id>
 ```
 
 最后，我们可以移除一个容器:
 
-```
+```java
 docker container rm <container_id>
 ```
 

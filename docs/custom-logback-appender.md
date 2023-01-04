@@ -10,7 +10,7 @@ Logback 附带了许多内置的附加器，可以写入标准输出、文件系
 
 在本教程中，我们将关注`logback-classic`，它需要以下 Maven 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>ch.qos.logback</groupId>
     <artifactId>logback-classic</artifactId>
@@ -36,7 +36,7 @@ Logback 提供了基类，我们可以扩展这些基类来创建定制的 appen
 
 对于我们的自定义示例，我们将创建一个名为`MapAppender`的玩具附加器。这个 appender 将把所有的日志事件插入到一个`Concurrent` `HashMap`中，并带有键的时间戳。首先，我们将子类化`AppenderBase`并使用`ILoggingEvent`作为泛型类型:
 
-```
+```java
 public class MapAppender extends AppenderBase<ILoggingEvent> {
 
     private ConcurrentMap<String, ILoggingEvent> eventMap 
@@ -55,7 +55,7 @@ public class MapAppender extends AppenderBase<ILoggingEvent> {
 
 接下来，为了使`MapAppender`能够开始接收日志事件，让我们在配置文件`logback.xml`中将它添加为一个追加器:
 
-```
+```java
 <configuration>
     <appender name="map" class="com.baeldung.logback.MapAppender"/>
     <root level="info">
@@ -70,7 +70,7 @@ Logback 使用 JavaBeans 自省来分析 appender 上的属性集。我们的定
 
 让我们给`MapAppender`添加一个属性，为`eventMap` 的键添加一个前缀:
 
-```
+```java
 public class MapAppender extends AppenderBase<ILoggingEvent> {
 
     //...
@@ -97,7 +97,7 @@ public class MapAppender extends AppenderBase<ILoggingEvent> {
 
 接下来，在我们的配置中添加一个属性来设置这个前缀:
 
-```
+```java
 <configuration debug="true">
 
     <appender name="map" class="com.baeldung.logback.MapAppender">
@@ -115,7 +115,7 @@ public class MapAppender extends AppenderBase<ILoggingEvent> {
 
 例如，当前缀属性为 null 或空字符串时，`MapAppender` 可以调用`addError()`并提前返回:
 
-```
+```java
 public class MapAppender extends AppenderBase<ILoggingEvent> {
 
     //...
@@ -137,7 +137,7 @@ public class MapAppender extends AppenderBase<ILoggingEvent> {
 
 当调试标志在我们的配置中打开时，我们将在控制台中看到一个错误，警告我们 prefix 属性尚未设置:
 
-```
+```java
 <configuration debug="true">
 
     //...

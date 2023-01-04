@@ -30,7 +30,7 @@ REST 可以用各种编程语言实现，并支持多种数据格式，如 JSON 
 
 我们可以在 Spring 中通过**使用 [`@RestController`](/web/20221205162726/https://www.baeldung.com/spring-controller-vs-restcontroller) 注释**定义一个控制器类来构建一个 REST 服务。接下来，我们通过`[@GetMapping](/web/20221205162726/https://www.baeldung.com/spring-new-requestmapping-shortcuts)`注释定义一个对应于 HTTP 方法的函数，例如 GET。最后，在 annotation 参数中，我们提供了一个应该触发该方法的资源路径:
 
-```
+```java
 @GetMapping("/rest/books")
 public List<Book> books() {
     return booksService.getBooks();
@@ -39,7 +39,7 @@ public List<Book> books() {
 
 [`MockMvc`](/web/20221205162726/https://www.baeldung.com/integration-testing-in-spring) 支持 Spring 中 REST 服务的集成测试。它封装了所有 web 应用程序 beans，并使它们可用于测试:
 
-```
+```java
 this.mockMvc.perform(get("/rest/books"))
   .andDo(print())
   .andExpect(status().isOk())
@@ -48,7 +48,7 @@ this.mockMvc.perform(get("/rest/books"))
 
 由于 REST 服务是基于 HTTP 的，所以可以在浏览器中或者使用类似于 [Postman](/web/20221205162726/https://www.baeldung.com/postman-testing-collections) 或 [CURL](/web/20221205162726/https://www.baeldung.com/curl-rest) 的工具来测试它们:
 
-```
+```java
 $ curl http://localhost:8082/rest/books
 ```
 
@@ -78,7 +78,7 @@ GraphQL 是客户端驱动的，因为它使其客户端能够准确定义特定
 
 在 GraphQL 中，**数据用定义对象、它们的字段和类型**的模式来表示。因此，我们将首先为我们的示例服务定义一个 GraphQL 模式:
 
-```
+```java
 type Author {
     firstName: String!
     lastName: String!
@@ -97,7 +97,7 @@ type Query {
 
 通过使用`@RestController` 类注释，我们可以在 Spring 中构建类似于 REST 服务的 GraphQL 服务。接下来，我们用 [`@QueryMapping`](/web/20221205162726/https://www.baeldung.com/spring-graphql) 注释我们的函数，将其标记为一个 GraphQL 数据获取组件:
 
-```
+```java
 @QueryMapping
 public List<Book> books() {
     return booksService.getBooks();
@@ -106,7 +106,7 @@ public List<Book> books() {
 
 `HttpGraphQlTester`为 Spring 中 GraphQL 服务的集成测试提供支持。它封装了所有 web 应用程序 beans，并使它们可用于测试:
 
-```
+```java
 this.graphQlTester.document(document)
   .execute()
   .path("books")
@@ -115,7 +115,7 @@ this.graphQlTester.document(document)
 
 GraphQL 服务可以用 Postman 或 CURL 之类的工具来测试。但是，它们要求在 POST 主体中指定查询:
 
-```
+```java
 $ curl -X POST -H "Content-Type: application/json" -d "{\"query\":\"query{books{title}}\"}" http://localhost:8082/graphql
 ```
 
@@ -149,7 +149,7 @@ gRPC 框架基于远程过程调用的客户机-服务器模型。客户端应�
 
 与 GraphQL 类似，**我们从定义一个模式开始，该模式定义了服务、请求和响应，包括它们的字段和类型**:
 
-```
+```java
 message BooksRequest {}
 
 message AuthorProto {
@@ -174,7 +174,7 @@ service BooksService {
 
 然后，我们需要将我们的协议缓冲文件传递给协议缓冲编译器，以便生成所需的代码。我们可以选择使用预编译的二进制文件之一手动执行该操作，或者使用 [`protobuf-maven-plugin`](https://web.archive.org/web/20221205162726/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.xolstice.maven.plugins%22%20AND%20a%3A%22protobuf-maven-plugin%22) 使其成为构建过程的一部分:
 
-```
+```java
 <plugin>
     <groupId>org.xolstice.maven.plugins</groupId>
     <artifactId>protobuf-maven-plugin</artifactId>
@@ -197,7 +197,7 @@ service BooksService {
 
 现在，我们可以扩展生成的`BooksServiceImplBase`类，用`@GrpcService`注释对其进行注释，并覆盖`books`方法:
 
-```
+```java
 @Override
 public void books(BooksRequest request, StreamObserver<BooksResponse> responseObserver) {
     List<Book> books = booksService.getBooks();
@@ -211,7 +211,7 @@ public void books(BooksRequest request, StreamObserver<BooksResponse> responseOb
 
 Spring 中 gRPC 服务的集成测试是可能的，但还没有 REST 和 GraphQL 那样成熟:
 
-```
+```java
 BooksRequest request = BooksRequest.newBuilder().build();
 BooksResponse response = booksServiceGrpc.books(request);
 
@@ -230,7 +230,7 @@ JSONAssert.assertEquals(objectMapper.writeValueAsString(books), expectedJson, tr
 
 Postman 最近增加了对测试 gRPC 服务的支持。与 CURL 类似，一个名为 [`grpcurl`](https://web.archive.org/web/20221205162726/https://github.com/fullstorydev/grpcurl) 的命令行工具使我们能够与 gRPC 服务器进行交互:
 
-```
+```java
 $ grpcurl --plaintext localhost:9090 com.baeldung.chooseapi.BooksService/books
 ```
 

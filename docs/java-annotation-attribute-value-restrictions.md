@@ -27,7 +27,7 @@ Java 规范定义了产生[常量表达式](https://web.archive.org/web/20220926
 
 假设我们有一个注释`@Marker`，它有一个属性`value`:
 
-```
+```java
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Marker {
@@ -37,7 +37,7 @@ public @interface Marker {
 
 例如，以下代码编译时没有错误:
 
-```
+```java
 @Marker(Example.ATTRIBUTE_FOO + Example.ATTRIBUTE_BAR)
 public class Example {
     static final String ATTRIBUTE_FOO = "foo";
@@ -53,7 +53,7 @@ public class Example {
 
 让我们考虑一个在`static`块中初始化的常数:
 
-```
+```java
 @Marker(Example.ATTRIBUTE_FOO)
 public class Example {
     static final String[] ATTRIBUTES = {"foo", "Bar"};
@@ -75,7 +75,7 @@ public class Example {
 
 在字段初始化时出现相同的错误。出于同样的原因，此代码不正确:
 
-```
+```java
 @Marker(Example.ATTRIBUTE_FOO)
 public class Example {
     static final String[] ATTRIBUTES = {"foo", "Bar"};
@@ -91,7 +91,7 @@ JVM 如何初始化`ATTRIBUTE_FOO`？数组访问操作符`ATTRIBUTES[0]`在类�
 
 让我们考虑一个数组注释属性:
 
-```
+```java
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Marker {
@@ -101,7 +101,7 @@ public @interface Marker {
 
 此代码将不会编译:
 
-```
+```java
 @Marker(value = Example.ATTRIBUTES)
 public class Example {
     static final String[] ATTRIBUTES = {"foo", "bar"};
@@ -118,7 +118,7 @@ public class Example {
 
 因此，我们每次只能指定一个数组属性:
 
-```
+```java
 @Marker(value = {"foo", "bar"})
 public class Example {
     // ...
@@ -131,7 +131,7 @@ public class Example {
 
 所以，如果一个注释属性是一个数组，我们必须每次都重复它。但是我们希望避免这种复制粘贴。我们为什么不做注解呢？我们可以将我们的注释添加到一个[标记接口](/web/20220926191050/https://www.baeldung.com/java-marker-interfaces#:~:text=A%20marker%20interface%20is%20an,also%20called%20a%20tagging%20interface.):
 
-```
+```java
 @Marker(value = {"foo", "bar"})
 public interface MarkerInterface {
 } 
@@ -139,7 +139,7 @@ public interface MarkerInterface {
 
 然后，我们可以让需要这个注释的类实现它:
 
-```
+```java
 public class Example implements MarkerInterface {
     // ...
 }
@@ -155,7 +155,7 @@ public class Example implements MarkerInterface {
 
 假设我们有一个数组常量，我们将这个常量用作注释属性:
 
-```
+```java
 @Marker(Example.ATTRIBUTES[0])
 public class Example {
     static final String[] ATTRIBUTES = {"Foo", "Bar"};
@@ -171,7 +171,7 @@ public class Example {
 
 相反，我们应该明确地引用一个常数:
 
-```
+```java
 @Marker(Example.ATTRIBUTE_FOO)
 public class Example {
     static final String ATTRIBUTE_FOO = "Foo";

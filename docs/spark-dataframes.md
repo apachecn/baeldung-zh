@@ -22,7 +22,7 @@
 
 让我们首先将 [`spark-core`](https://web.archive.org/web/20220524054718/https://search.maven.org/artifact/org.apache.spark/spark-core_2.11) 和 [`spark-sql`](https://web.archive.org/web/20220524054718/https://search.maven.org/artifact/org.apache.spark/spark-sql_2.11) 依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.spark</groupId>
     <artifactId>spark-core_2.11</artifactId>
@@ -44,7 +44,7 @@
 
 让我们定义一个示例`Customer`模式`StructType`:
 
-```
+```java
 public static StructType minimumCustomerDataSchema() {
     return DataTypes.createStructType(new StructField[] {
       DataTypes.createStructField("id", DataTypes.StringType, true),
@@ -63,7 +63,7 @@ public static StructType minimumCustomerDataSchema() {
 
 **它为我们提供了一个进入`DataFrames`** 的入口。让我们从创建`SparkSession`开始:
 
-```
+```java
 public static SparkSession getSparkSession() {
     return SparkSession.builder()
       .appName("Customer Aggregation pipeline")
@@ -80,7 +80,7 @@ public static SparkSession getSparkSession() {
 
 先建一个`List<Customer>`:
 
-```
+```java
 List<Customer> customers = Arrays.asList(
   aCustomerWith("01", "jo", "Female", 2000), 
   aCustomerWith("02", "jack", "Male", 1200)
@@ -89,7 +89,7 @@ List<Customer> customers = Arrays.asList(
 
 接下来，让我们使用 `createDataFrame`从`List<Customer>` 构造`DataFrame`:
 
-```
+```java
 Dataset<Row> df = SPARK_SESSION
   .createDataFrame(customerList, Customer.class);
 ```
@@ -100,14 +100,14 @@ Dataset<Row> df = SPARK_SESSION
 
 让我们先创建一个`Dataset<Customer>`，使用*创建数据集*，它需要`org.apache.spark.sql.Encoders`:
 
-```
+```java
 Dataset<Customer> customerPOJODataSet = SPARK_SESSION
   .createDataset(CUSTOMERS, Encoders.bean(Customer.class));
 ```
 
 接下来，我们把它转换成`DataFrame`:
 
-```
+```java
 Dataset<Row> df = customerPOJODataSet.toDF();
 ```
 
@@ -117,7 +117,7 @@ Dataset<Row> df = customerPOJODataSet.toDF();
 
 基本上，通过实现`MapFunction<Customer, Row>` 并覆盖 `call`方法，我们可以使用 `RowFactory.create`将每个`Customer`映射到`a Row `:
 
-```
+```java
 public class CustomerToRowMapper implements MapFunction<Customer, Row> {
 
     @Override
@@ -139,7 +139,7 @@ public class CustomerToRowMapper implements MapFunction<Customer, Row> {
 
 我们还可以从一列`Row`对象中创建一个`DataFrame`:
 
-```
+```java
 List<Row> rows = customer.stream()
   .map(c -> new CustomerToRowMapper().call(c))
   .collect(Collectors.toList());
@@ -147,7 +147,7 @@ List<Row> rows = customer.stream()
 
 现在，让我们把这个`List<Row>`和 `StructType`模式一起交给`SparkSession`:
 
-```
+```java
 Dataset<Row> df = SparkDriver.getSparkSession()
   .createDataFrame(rows, SchemaFactory.minimumCustomerDataSchema());
 ```
@@ -162,7 +162,7 @@ Dataset<Row> df = SparkDriver.getSparkSession()
 
 让我们从多行 JSON 数据创建`DataFrame`:
 
-```
+```java
 Dataset<Row> df = SparkDriver.getSparkSession()
   .read()
   .format("org.apache.spark.sql.execution.datasources.json.JsonFileFormat")
@@ -172,7 +172,7 @@ Dataset<Row> df = SparkDriver.getSparkSession()
 
 类似地，在从数据库读取的情况下，我们将有:
 
-```
+```java
 Dataset<Row> df = SparkDriver.getSparkSession()
   .read()
   .option("url", "jdbc:postgresql://localhost:5432/customerdb")
@@ -192,7 +192,7 @@ Dataset<Row> df = SparkDriver.getSparkSession()
 
 让我们调用一个 mapper 函数，它获取`Dataset<Row>`的每一行，并将其转换成一个`Customer`对象:
 
-```
+```java
 Dataset<Customer> ds = df.map(
   new CustomerMapper(),
   Encoders.bean(Customer.class)
@@ -201,7 +201,7 @@ Dataset<Customer> ds = df.map(
 
 这里，`CustomerMapper`实现了`MapFunction<Row, Customer>`:
 
-```
+```java
 public class CustomerMapper implements MapFunction<Row, Customer> {
 
     @Override
@@ -230,7 +230,7 @@ public class CustomerMapper implements MapFunction<Row, Customer> {
 
 首先，让我们从 JSON 数据开始，使用`SparkSession`的`read`方法从几个源获取数据:
 
-```
+```java
 Dataset<Row> jsonDataToDF = SPARK_SESSION.read()
   .format("org.apache.spark.sql.execution.datasources.json.JsonFileFormat")
   .option("multiline", true)
@@ -239,7 +239,7 @@ Dataset<Row> jsonDataToDF = SPARK_SESSION.read()
 
 现在，让我们对我们的 CSV 源做同样的事情:
 
-```
+```java
 Dataset<Row> csvDataToDF = SPARK_SESSION.read()
   .format("csv")
   .option("header", "true")
@@ -266,7 +266,7 @@ return csvData;
 
 在这里，让我们来看看执行的一些转换:
 
-```
+```java
 private Dataset<Row> normalizeCustomerDataFromEbay(Dataset<Row> rawDataset) {
     Dataset<Row> transformedDF = rawDataset
       .withColumn("id", concat(rawDataset.col("zoneId"),lit("-"), rawDataset.col("customerId")))
@@ -301,7 +301,7 @@ private Dataset<Row> normalizeCustomerDataFromEbay(Dataset<Row> rawDataset) {
 
 最终，两个数据框都规范化为相同的模式，如下所示:
 
-```
+```java
 root
  |-- gender: string (nullable = true)
  |-- transaction_amount: long (nullable = true)
@@ -317,7 +317,7 @@ root
 
 接下来我们结合归一化的`DataFrames`:
 
-```
+```java
 Dataset<Row> combineDataframes(Dataset<Row> df1, Dataset<Row> df2) {
     return df1.unionByName(df2); 
 }
@@ -334,7 +334,7 @@ Dataset<Row> combineDataframes(Dataset<Row> df1, Dataset<Row> df2) {
 
 然后，我们将按列`year`升序和 `yearly spent`降序对聚合数据进行排序:
 
-```
+```java
 Dataset<Row> aggDF = dataset
   .groupBy(column("year"), column("source"), column("gender"))
   .sum("transactionAmount")
@@ -351,7 +351,7 @@ Dataset<Row> aggDF = dataset
 
 最后，我们用 `the show`的方法来看看数据帧转换后是什么样子的:
 
-```
+```java
 +----+------+------+---------------+
 |year|source|gender|annual_spending|
 +----+------+------+---------------+
@@ -367,7 +367,7 @@ Dataset<Row> aggDF = dataset
 
 因此，最终转换后的模式应该是:
 
-```
+```java
 root
  |-- source: string (nullable = false)
  |-- gender: string (nullable = true)
@@ -379,7 +379,7 @@ root
 
 最后，让我们将转换后的`DataFrame`写成关系数据库中的一个表:
 
-```
+```java
 Properties dbProps = new Properties();
 
 dbProps.setProperty("connectionURL", "jdbc:postgresql://localhost:5432/customerdb");
@@ -390,7 +390,7 @@ dbProps.setProperty("password", "postgres");
 
 接下来，我们可以使用 Spark 会话写入数据库:
 
-```
+```java
 String connectionURL = dbProperties.getProperty("connectionURL");
 
 dataset.write()
@@ -402,7 +402,7 @@ dataset.write()
 
 现在，我们可以使用两个摄取源，通过`postgres`和`pgAdmin` Docker 图像，对管道进行端到端测试:
 
-```
+```java
 @Test
 void givenCSVAndJSON_whenRun_thenStoresAggregatedDataFrameInDB() throws Exception {
     Properties dbProps = new Properties();

@@ -10,7 +10,7 @@
 
 我们将在所有示例中使用相同的列表:
 
-```
+```java
 List<Optional<String>> listOfOptionals = Arrays.asList(
   Optional.empty(), Optional.of("foo"), Optional.empty(), Optional.of("bar"));
 ```
@@ -19,7 +19,7 @@ List<Optional<String>> listOfOptionals = Arrays.asList(
 
 Java 8 中的一个选项是用`Optional::isPresent`过滤掉值，然后用`Optional::get`函数执行映射来提取值:
 
-```
+```java
 List<String> filteredList = listOfOptionals.stream()
   .filter(Optional::isPresent)
   .map(Optional::get)
@@ -30,7 +30,7 @@ List<String> filteredList = listOfOptionals.stream()
 
 另一种选择是使用带有 lambda 表达式的`flatMap`，将空的`Optional`转换成空的`Stream`实例，将非空的`Optional`转换成只包含一个元素的`Stream`实例:
 
-```
+```java
 List<String> filteredList = listOfOptionals.stream()
   .flatMap(o -> o.isPresent() ? Stream.of(o.get()) : Stream.empty())
   .collect(Collectors.toList());
@@ -38,7 +38,7 @@ List<String> filteredList = listOfOptionals.stream()
 
 或者，您可以应用相同的方法，使用不同的方式将`Optional`转换为`Stream`:
 
-```
+```java
 List<String> filteredList = listOfOptionals.stream()
   .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
   .collect(Collectors.toList());
@@ -52,7 +52,7 @@ List<String> filteredList = listOfOptionals.stream()
 
 无论`Optional`值是否存在，它都将返回一个或零个元素的流:
 
-```
+```java
 List<String> filteredList = listOfOptionals.stream()
   .flatMap(Optional::stream)
   .collect(Collectors.toList());

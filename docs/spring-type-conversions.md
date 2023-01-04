@@ -14,7 +14,7 @@ Spring 为内置类型提供了开箱即用的各种转换器；这意味着在�
 
 我们将从春季现成可用的转换器开始；让我们来看看`String`到`Integer` 的转换:
 
-```
+```java
 @Autowired
 ConversionService conversionService;
 
@@ -35,7 +35,7 @@ public void whenConvertStringToIntegerUsingDefaultConverter_thenSuccess() {
 
 下面是`Employee`类:
 
-```
+```java
 public class Employee {
 
     private long id;
@@ -49,7 +49,7 @@ public class Employee {
 
 **为了创建我们的自定义`Converter`，我们需要实现`Converter<S, T>`接口并实现`convert()`方法:**
 
-```
+```java
 public class StringToEmployeeConverter
   implements Converter<String, Employee> {
 
@@ -65,7 +65,7 @@ public class StringToEmployeeConverter
 
 我们还没完呢。我们还需要通过将`StringToEmployeeConverter`添加到`FormatterRegistry`来告诉 Spring 这个新的转换器。这可以通过实现`WebMvcConfigurer`并覆盖`addFormatters()`方法来实现:
 
-```
+```java
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
@@ -78,7 +78,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 仅此而已。我们的新`Converter`现在对`ConversionService`可用，我们可以像使用任何其他内置`Converter`一样使用它:
 
-```
+```java
 @Test
 public void whenConvertStringToEmployee_thenSuccess() {
     Employee employee = conversionService
@@ -95,7 +95,7 @@ public void whenConvertStringToEmployee_thenSuccess() {
 
 除了这些使用`ConversionService`， **Spring 的显式转换之外，它还能够在`Controller`方法**中为所有注册的转换器隐式转换值:
 
-```
+```java
 @RestController
 public class StringToEmployeeConverterController {
 
@@ -109,7 +109,7 @@ public class StringToEmployeeConverterController {
 
 这是使用`Converter`的一种更自然的方式。让我们添加一个测试来看看它的实际效果:
 
-```
+```java
 @Test
 public void getStringToEmployeeTest() throws Exception {
     mockMvc.perform(get("/string-to-employee?employee=1,2000"))
@@ -121,7 +121,7 @@ public void getStringToEmployeeTest() throws Exception {
 
 如您所见，测试将打印请求和响应的所有细节。以下是作为响应的一部分返回的 JSON 格式的`Employee`对象:
 
-```
+```java
 {"id":1,"salary":2000.0}
 ```
 
@@ -131,7 +131,7 @@ public void getStringToEmployeeTest() throws Exception {
 
 让我们来看看一个非常简单的枚举:
 
-```
+```java
 public enum Modes {
     ALPHA, BETA;
 }
@@ -139,7 +139,7 @@ public enum Modes {
 
 接下来，让我们创建一个`StringToEnumConverterFactory`，它可以生成将一个`String`转换成任何一个`Enum`的`Converter`:
 
-```
+```java
 @Component
 public class StringToEnumConverterFactory 
   implements ConverterFactory<String, Enum> {
@@ -172,7 +172,7 @@ public class StringToEnumConverterFactory
 
 下一步是注册这个工厂类，就像我们在前一个例子中注册我们的`Converter`一样:
 
-```
+```java
 @Override
 public void addFormatters(FormatterRegistry registry) {
     registry.addConverter(new StringToEmployeeConverter());
@@ -182,7 +182,7 @@ public void addFormatters(FormatterRegistry registry) {
 
 现在`ConversionService`准备将`String` s 转换为`Enum` s:
 
-```
+```java
 @Test
 public void whenConvertStringToEnum_thenSuccess() {
     assertThat(conversionService.convert("ALPHA", Modes.class))
@@ -198,7 +198,7 @@ public void whenConvertStringToEnum_thenSuccess() {
 
 第一步是告诉 Spring 支持什么类型的转换。我们通过创建一个`ConvertiblePair`的`Set`来做到这一点:
 
-```
+```java
 public class GenericBigDecimalConverter 
   implements GenericConverter {
 
@@ -215,7 +215,7 @@ public Set<ConvertiblePair> getConvertibleTypes () {
 
 下一步是在同一个类中覆盖`convert()`方法:
 
-```
+```java
 @Override
 public Object convert (Object source, TypeDescriptor sourceType, 
   TypeDescriptor targetType) {
@@ -239,7 +239,7 @@ public Object convert (Object source, TypeDescriptor sourceType,
 
 您可能已经猜到了，下一步是注册这个`Converter`:
 
-```
+```java
 @Override
 public void addFormatters(FormatterRegistry registry) {
     registry.addConverter(new StringToEmployeeConverter());
@@ -250,7 +250,7 @@ public void addFormatters(FormatterRegistry registry) {
 
 使用这个`Converter`类似于我们已经看到的其他例子:
 
-```
+```java
 @Test
 public void whenConvertingToBigDecimalUsingGenericConverter_thenSuccess() {
     assertThat(conversionService

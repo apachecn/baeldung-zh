@@ -18,20 +18,20 @@ Spring Boot 支持 [Tomcat](/web/20220628055021/https://www.baeldung.com/tomcat)
 
 为了修改最大 HTTP 头大小，我们将属性添加到我们的`application.properties`文件中:
 
-```
+```java
 server.max-http-header-size=20000
 ```
 
 同样，对于`application.yaml`格式:
 
-```
+```java
 server:
     max-http-header-size: 20000
 ```
 
 在 Spring Boot 2.1 中，我们现在将使用一个 *DataSize* 可解析值:
 
-```
+```java
 server.max-http-header-size=10KB
 ```
 
@@ -41,7 +41,7 @@ server.max-http-header-size=10KB
 
 让我们创建一个控制器，它有一个名为 token 的头属性:
 
-```
+```java
 @RestController
 @RequestMapping(value = "/request-header-test")
 public class MaxHttpHeaderSizeController {
@@ -54,7 +54,7 @@ public class MaxHttpHeaderSizeController {
 
 接下来，让我们给我们的 `application.properties`文件添加一些属性:
 
-```
+```java
 ## Server connections configuration
 server.tomcat.threads.max=200
 server.connection-timeout=5s
@@ -69,7 +69,7 @@ server.tomcat.max-http-post-size=2MB
 
 在日志中，我们看到以下错误:
 
-```
+```java
 19:41:50.757 [http-nio-8080-exec-7] INFO  o.a.coyote.http11.Http11Processor - Error parsing HTTP request header
  Note: further occurrences of HTTP request parsing errors will be logged at DEBUG level.
 java.lang.IllegalArgumentException: Request header is too large

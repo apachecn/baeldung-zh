@@ -52,7 +52,7 @@
 
 为了能够在我们的项目中使用`Spring ACL` ,让我们首先定义我们的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-acl</artifactId>
@@ -80,7 +80,7 @@
 
 我们需要通过启用`Global Method Security:`来保护所有返回安全域对象或对对象进行更改的方法
 
-```
+```java
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class AclMethodSecurityConfiguration 
@@ -99,7 +99,7 @@ public class AclMethodSecurityConfiguration
 
 让我们通过将 `prePostEnabled` 设置为 `true`来启用`Expression-Based Access Control` 以使用`Spring Expression Language (SpEL)` `.` 此外`,`我们需要一个支持`ACL` 的表达式处理程序:
 
-```
+```java
 @Bean
 public MethodSecurityExpressionHandler 
   defaultMethodSecurityExpressionHandler() {
@@ -116,7 +116,7 @@ public MethodSecurityExpressionHandler
 
 为简单起见，我们使用提供的`JdbcMutableAclService`:
 
-```
+```java
 @Bean 
 public JdbcMutableAclService aclService() { 
     return new JdbcMutableAclService(
@@ -128,7 +128,7 @@ public JdbcMutableAclService aclService() {
 
 同样，为了简单起见，我们使用提供的`BasicLookupStrategy`和`EhCacheBasedAclCache`。
 
-```
+```java
 @Autowired
 DataSource dataSource;
 
@@ -189,7 +189,7 @@ public LookupStrategy lookupStrategy() {
 
 让我们尝试定义一些安全规则:
 
-```
+```java
 @PostFilter("hasPermission(filterObject, 'READ')")
 List<NoticeMessage> findAll();
 
@@ -212,7 +212,7 @@ NoticeMessage save(@Param("noticeMessage")NoticeMessage noticeMessage);
 
 我们需要添加:
 
-```
+```java
 <dependency>
   <groupId>com.h2database</groupId>
   <artifactId>h2</artifactId>
@@ -235,7 +235,7 @@ NoticeMessage save(@Param("noticeMessage")NoticeMessage noticeMessage);
 
 在这个场景中，我们将有两个用户(`manager, hr)`和一个用户角色(`ROLE_EDITOR),` )，因此我们的`acl_sid`将是:
 
-```
+```java
 INSERT INTO acl_sid (id, principal, sid) VALUES
   (1, 1, 'manager'),
   (2, 1, 'hr'),
@@ -246,7 +246,7 @@ INSERT INTO acl_sid (id, principal, sid) VALUES
 
 此外，这 3 个实例的相应记录必须在`acl_object_identity`中声明:
 
-```
+```java
 INSERT INTO acl_class (id, class) VALUES
   (1, 'com.baeldung.acl.persistence.entity.NoticeMessage');
 
@@ -268,7 +268,7 @@ INSERT INTO acl_object_identity
 
 这里，因为我们使用默认的`Spring ACL` `BasePermission` 类进行权限检查， `READ` 权限的掩码值将为 1， `WRITE` 权限的掩码值将为 2。我们在`acl_entry`的数据将是:
 
-```
+```java
 INSERT INTO acl_entry 
   (id, acl_object_identity, ace_order, 
   sid, mask, granting, audit_success, audit_failure) 
@@ -290,7 +290,7 @@ INSERT INTO acl_entry
 
 因此，我们希望结果列表只包含第一条消息:
 
-```
+```java
 @Test
 @WithMockUser(username = "manager")
 public void 
@@ -307,7 +307,7 @@ public void
 
 因此，我们期望结果列表将包含所有三条消息:
 
-```
+```java
 @Test
 @WithMockUser(roles = {"EDITOR"})
 public void 
@@ -321,7 +321,7 @@ public void
 
 接下来，使用`manager`用户，我们将尝试通过 id 获取第一条消息，并更新其内容——这一切都应该工作正常:
 
-```
+```java
 @Test
 @WithMockUser(username = "manager")
 public void 
@@ -343,7 +343,7 @@ public void
 
 但是，如果任何具有`ROLE_EDITOR`角色的用户更新了第一条消息的内容，我们的系统将抛出一个`AccessDeniedException`:
 
-```
+```java
 @Test(expected = AccessDeniedException.class)
 @WithMockUser(roles = {"EDITOR"})
 public void 
@@ -360,7 +360,7 @@ public void
 
 类似地，`hr`用户可以通过 id 找到第二条消息，但是无法更新它:
 
-```
+```java
 @Test
 @WithMockUser(username = "hr")
 public void givenUsernameHr_whenFindMessageById2_thenOK(){

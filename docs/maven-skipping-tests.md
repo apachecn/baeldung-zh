@@ -26,7 +26,7 @@
 
 首先，让我们来看一个无法编译的测试示例:
 
-```
+```java
 @Test
 public void thisDoesntCompile() {
     baeldung;
@@ -35,13 +35,13 @@ public void thisDoesntCompile() {
 
 运行命令行命令时:
 
-```
+```java
 mvn package
 ```
 
 我们会得到一个错误:
 
-```
+```java
 [INFO] -------------------------------------------------------------
 [ERROR] COMPILATION ERROR :
 [INFO] -------------------------------------------------------------
@@ -51,7 +51,7 @@ mvn package
 
 因此，让我们探索一下**如何跳过测试源代码的编译阶段**。在 Maven 中，我们可以使用`maven.test.skip` 标志:
 
-```
+```java
 mvn -Dmaven.test.skip package
 ```
 
@@ -61,7 +61,7 @@ mvn -Dmaven.test.skip package
 
 作为第二个选择，让我们看看如何**我们可以编译测试文件夹，但跳过运行过程**。这对于那些我们没有改变方法或类的签名，但是我们改变了业务逻辑，并因此破坏了测试的情况是很有用的。让我们考虑一个像下面这样的人为测试用例，它总是会失败:
 
-```
+```java
 @Test
 public void thisTestFails() {
     fail("This is a failed test case");
@@ -70,7 +70,7 @@ public void thisTestFails() {
 
 由于我们包含了语句`fail()`，如果我们运行`package`阶段，构建将会失败，并出现错误:
 
-```
+```java
 [ERROR] Failures:
 [ERROR]   PowServiceTest.thisTestFails:16 This is a failed test case
 [INFO]
@@ -79,7 +79,7 @@ public void thisTestFails() {
 
 **让我们假设我们想要跳过运行测试，但是我们仍然想要编译它们。**在这种情况下，我们可以使用`-DskipTests`标志:
 
-```
+```java
 mvn -DskipTests package
 ```
 
@@ -95,7 +95,7 @@ mvn -DskipTests package
 
 正如我们在上一节所做的，让我们检查一下如何避免编译测试文件夹。在这种情况下，我们将使用`pom.xml`文件。让我们添加以下属性:
 
-```
+```java
 <properties>
     <maven.test.skip>true</maven.test.skip>
 </properties>
@@ -103,7 +103,7 @@ mvn -DskipTests package
 
 请记住，**我们可以通过在命令行**中添加相反的标志来覆盖该值:
 
-```
+```java
 mvn -Dmaven.test.skip=false package
 ```
 
@@ -111,7 +111,7 @@ mvn -Dmaven.test.skip=false package
 
 再次，作为第二步，让我们探索如何使用 Maven 配置**构建测试文件夹，但是跳过测试执行**。为此，我们必须为 Maven Surefire 插件配置一个属性:
 
-```
+```java
 <properties>
     <tests.skip>true</tests.skip>
 </properties>
@@ -127,7 +127,7 @@ mvn -Dmaven.test.skip=false package
 
 Maven 属性`tests.skip`是我们之前定义的自定义属性。因此，如果我们想要执行测试，我们可以覆盖它:
 
-```
+```java
 mvn -Dtests.skip=false package
 ```
 

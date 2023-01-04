@@ -27,7 +27,7 @@ REST(表述性状态转移)是分布式超媒体系统的一种架构风格。RE
 
 为了创建一个产品，我们将在 API 上使用一个`POST`方法:
 
-```
+```java
 curl -X POST -H "Content-Type:application/json" -d '
 {
   "name": "Watch",
@@ -48,7 +48,7 @@ curl -X POST -H "Content-Type:application/json" -d '
 
 在 REST 中，我们通常使用`PUT`方法更新产品:
 
-```
+```java
 curl -X PUT -H "Content-Type:application/json" -d '
 {
   "name": "Watch",
@@ -70,13 +70,13 @@ https://graphqlvsrest.com/product/{product-id}
 
 列出产品通常是一个`GET`操作，我们可以使用一个查询字符串来指定分页:
 
-```
+```java
 curl -X GET https://graphqlvsrest.com/product?size=10&page;=0
 ```
 
 第一个响应对象是:
 
-```
+```java
 {
   "id": 1,
   "name": "T-Shirt",
@@ -95,13 +95,13 @@ curl -X GET https://graphqlvsrest.com/product?size=10&page;=0
 
 为了获得一个产品及其订单，我们通常期望获得一个带有以前 API 的产品列表，然后调用一个`orde` `r` 资源来查找相关订单:
 
-```
+```java
 curl -X GET https://graphqlvsrest.com/order?product-id=1
 ```
 
 第一个响应对象是:
 
-```
+```java
 {
   "id": 1,
   "product_id": 1,
@@ -128,7 +128,7 @@ GraphQL 的构建模块是[查询和变异](https://web.archive.org/web/20220617
 
 让我们使用一个名为`saveProduct`的突变:
 
-```
+```java
 curl -X POST -H "Content-Type:application/json" -d'
 {
   "query": "mutation {saveProduct (
@@ -147,7 +147,7 @@ https://graphqlvsrest.com/graphql
 
 当我们运行变异时，我们应该期待一个带有所选字段的响应:
 
-```
+```java
 {
   "data": {
     "saveProduct": {
@@ -167,7 +167,7 @@ https://graphqlvsrest.com/graphql
 
 同样，我们可以使用另一个名为`updateProduct`的突变来修改产品:
 
-```
+```java
 curl -X POST -H "Content-Type:application/json" -d'
 {
   "query": "mutation {updateProduct (id:12
@@ -182,7 +182,7 @@ https://graphqlvsrest.com/graphql
 
 我们在响应中收到选择的字段:
 
-```
+```java
 {
   "data": {
     "updateProduct": {
@@ -202,7 +202,7 @@ https://graphqlvsrest.com/graphql
 
 为了从服务器获取数据，我们将使用一个查询:
 
-```
+```java
 curl -X POST -H "Content-Type:application/json" -d
 '{
     "query": "query {products(size:10,page:0){ id name status}}"
@@ -212,7 +212,7 @@ https://graphqlvsrest.com/graphql
 
 在这里，我们还描述了我们希望看到的结果页面:
 
-```
+```java
 {
   "data": {
     "products": [
@@ -230,7 +230,7 @@ https://graphqlvsrest.com/graphql
 
 使用 GraphQL，我们可以要求 GraphQL 服务器将产品和订单连接在一起:
 
-```
+```java
 curl -X POST -H "Content-Type:application/json" -d 
 '{
     "query": "query {product(id:1){ id name orders{customer_uuid address status creation_date}}}"
@@ -240,7 +240,7 @@ https://graphqlvsrest.com/graphql
 
 在这个查询中，我们获取了`id`等于 1 的产品及其订单。这使我们能够在单个操作中发出请求，让我们检查响应:
 
-```
+```java
 {
   "data": {
     "product": {

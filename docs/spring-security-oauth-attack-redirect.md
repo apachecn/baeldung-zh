@@ -52,7 +52,7 @@ OAuth 是委托授权的行业标准框架。在创建构成标准的各种流�
 
 当这些条件满足时，攻击者就需要欺骗用户从他控制的子域中启动一个页面，例如，通过向用户发送[一封看起来可信的电子邮件](https://web.archive.org/web/20220627184928/https://www.vadesecure.com/en/5-common-phishing-techniques/)，要求他对 OAuth 保护的帐户采取一些行动。通常情况下，这看起来类似于`https://evil.cloudapp.net/login`。当用户打开此链接并选择登录时，他将被重定向到授权服务器，并带有一个授权请求:
 
-```
+```java
 GET /authorize?response_type=code&client_id={apps-client-id}&state={state}&redirect_uri=https%3A%2F%2Fevil.cloudapp.net%2Fcb HTTP/1.1
 ```
 
@@ -68,7 +68,7 @@ GET /authorize?response_type=code&client_id={apps-client-id}&state={state}&redir
 
 让我们来看看一个简单的 Spring OAuth 授权服务器配置:
 
-```
+```java
 @Configuration
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {    
     @Override
@@ -97,7 +97,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 让我们只使用我们需要的东西。如果我们可以精确匹配重定向 URL，我们应该做:
 
-```
+```java
 @Configuration
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {    
     //...
@@ -115,7 +115,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 我们可以在[Spring Security OAuth source](https://web.archive.org/web/20220627184928/https://github.com/spring-projects/spring-security-oauth/blob/7bfe08d8f95b2fec035de484068f7907851b27d0/spring-security-oauth2/src/main/java/org/springframework/security/oauth2/provider/endpoint/DefaultRedirectResolver.java)中找到处理重定向 URL 匹配的默认代码:
 
-```
+```java
 /**
 Whether the requested redirect URI "matches" the specified redirect URI. For a URL, this implementation tests if
 the user requested redirect starts with the registered redirect, so it would have the same host and root path if
@@ -159,20 +159,20 @@ protected boolean redirectMatches(String requestedRedirect, String redirectUri) 
 
 攻击像以前一样开始，攻击者让用户访问攻击者控制下的页面，例如`https://evil.cloudapp.net/info`。该页面被精心设计为像以前一样启动授权请求。但是，它现在包含一个重定向 URL:
 
-```
+```java
 GET /authorize?response_type=token&client;_id=ABCD&state;=xyz&redirect;_uri=https%3A%2F%2Fapp.cloudapp.net%2Fcb%26redirect_to
 %253Dhttps%253A%252F%252Fevil.cloudapp.net%252Fcb HTTP/1.1 
 ```
 
 `redirect_to https://evil.cloudapp.net`正在设置授权端点，将令牌重定向到攻击者控制下的域。授权服务器现在将首先重定向到实际的应用程序站点:
 
-```
+```java
 Location: https://app.cloudapp.net/cb?redirect_to%3Dhttps%3A%2F%2Fevil.cloudapp.net%2Fcb#access_token=LdKgJIfEWR34aslkf&... 
 ```
 
 当该请求到达开放重定向器时，它将提取重定向 URL `evil.cloudapp.net`，然后重定向到攻击者的站点:
 
-```
+```java
 https://evil.cloudapp.net/cb#access_token=LdKgJIfEWR34aslkf&... 
 ```
 

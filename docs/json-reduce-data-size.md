@@ -12,7 +12,7 @@ Java 应用程序经常使用 JSON 作为发送和接收数据的通用格式。
 
 让我们用一些联系数据为`Customer`创建一个域模型:
 
-```
+```java
 public class Customer {
     private long id;
     private String firstName;
@@ -48,7 +48,7 @@ public class Customer {
 
 让我们用默认的 Jackson 选项为 JSON 编写一个 Java 对象:
 
-```
+```java
 Customer[] customers = Customer.fromMockFile();
 ObjectMapper mapper = new ObjectMapper();
 byte[] feedback = mapper.writeValueAsBytes(customers); 
@@ -56,7 +56,7 @@ byte[] feedback = mapper.writeValueAsBytes(customers);
 
 让我们看看第一个`Customer`的模拟数据:
 
-```
+```java
 {
   "id" : 1, 
   "firstName" : "Horatius", 
@@ -80,7 +80,7 @@ byte[] feedback = mapper.writeValueAsBytes(customers);
 
 如果我们的 Spring Boot 应用程序将 JSON 数据交付给其他服务或前端，那么我们将在 Spring Boot 配置中启用`gzip`压缩。让我们看看 YAML 语法中的典型压缩配置:
 
-```
+```java
 server:
   compression:
     enabled: true
@@ -100,7 +100,7 @@ server:
 
 最佳实践是使用既不太短也不太长的字段名。为了便于演示，我们省略这一点:我们将在 JSON 中使用单字符字段名，但是我们不会更改 Java 字段名。这减少了 JSON 数据的大小，但是降低了 JSON 的可读性。因为它还需要更新所有服务和前端，所以我们可能只在存储数据时使用这些短字段名:
 
-```
+```java
 {
   "i" : 1,
   "f" : "Horatius",
@@ -116,7 +116,7 @@ server:
 
 用 Jackson 很容易改变 JSON 字段名，同时保持 Java 字段名不变。我们将使用`@JsonProperty`注释:
 
-```
+```java
 @JsonProperty("p")
 private String postalCode; 
 ```
@@ -127,7 +127,7 @@ private String postalCode;
 
 让我们看看如何通过完全省略字段名来进一步减小 JSON 数据的大小。我们可以通过在 JSON 中存储一个`customers`数组来实现这一点。请注意，我们还会降低可读性。我们还需要更新所有使用我们 JSON 数据的服务和前端:
 
-```
+```java
 [ 1, "Horatius", "Strognell", "4848 New Castle Point", "33432", "Boca Raton", "FL", "561-824-9105", "[[email protected]](/web/20221016015348/https://www.baeldung.com/cdn-cgi/l/email-protection)" ] 
 ```
 
@@ -151,7 +151,7 @@ Jackson 和其他 JSON 处理库在读写 JSON 时可能无法正确处理 JSON 
 
 让我们设想一个 JSON 数据的前端，它将所有客户显示为一个包含两列的表:姓名和街道地址。让我们专门为这个前端编写 JSON 数据:
 
-```
+```java
 {
   "id" : 1,
   "name" : "Horatius Strognell",
@@ -165,7 +165,7 @@ Jackson 和其他 JSON 处理库在读写 JSON 时可能无法正确处理 JSON 
 
 让我们为这个前端创建一个新的域类`CustomerSlim`:
 
-```
+```java
 public class CustomerSlim {
     private long id;
     private String name;

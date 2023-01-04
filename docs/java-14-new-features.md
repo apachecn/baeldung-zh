@@ -34,7 +34,7 @@ Java 14 继承了以前版本的一些特性。我们一个一个来看。
 
 在此增强之前，我们会将其写成:
 
-```
+```java
 boolean isTodayHoliday;
 switch (day) {
     case "MONDAY":
@@ -55,7 +55,7 @@ switch (day) {
 
 使用开关表达式，我们可以更简洁地编写相同的内容:
 
-```
+```java
 boolean isTodayHoliday = switch (day) {
     case "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY" -> false;
     case "SATURDAY", "SUNDAY" -> true;
@@ -74,13 +74,13 @@ boolean isTodayHoliday = switch (day) {
 
 例如:
 
-```
+```java
 String multiline = "A quick brown fox jumps over a lazy dog; the lazy dog howls loudly.";
 ```
 
 现在可以写成:
 
-```
+```java
 String multiline = """
     A quick brown fox jumps over a lazy dog; \
     the lazy dog howls loudly.""";
@@ -98,7 +98,7 @@ JDK 14 为 [`instanceof`](/web/20220824092108/https://www.baeldung.com/java-patt
 
 在这个专题之前，我们写道:
 
-```
+```java
 if (obj instanceof String) {
     String str = (String) obj;
     int len = str.length();
@@ -108,7 +108,7 @@ if (obj instanceof String) {
 
 现在，我们开始使用`obj`时不需要像 String 一样多的代码:
 
-```
+```java
 if (obj instanceof String str) {
     int len = str.length();
     // ...
@@ -123,7 +123,7 @@ if (obj instanceof String str) {
 
 例如，带有`id`和`password`的`User`的数据模型可以简单地定义为:
 
-```
+```java
 public record User(int id, String password) { };
 ```
 
@@ -131,7 +131,7 @@ public record User(int id, String password) { };
 
  **让我们看看 JUnit 的实际应用:
 
-```
+```java
 private User user1 = new User(0, "UserOne");
 
 @Test
@@ -166,21 +166,21 @@ public void whenRecord_thenToStringImplemented() {
 
 例如，考虑这个简单的片段:
 
-```
+```java
 int[] arr = null;
 arr[0] = 1;
 ```
 
 之前，在运行这段代码时，日志会说:
 
-```
+```java
 Exception in thread "main" java.lang.NullPointerException
 at com.baeldung.MyClass.main(MyClass.java:27)
 ```
 
 但是现在，给定相同的场景，日志可能会说:
 
-```
+```java
 java.lang.NullPointerException: Cannot store to int array because "a" is null
 ```
 

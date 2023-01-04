@@ -40,7 +40,7 @@ The article discusses Jackson's central ObjectMapper class, basic serialization 
 
 我们将通过使用`String`和`LocalDateTime`对象来举例说明定制选项:
 
-```
+```java
 public class Coffee {
 
     private String name;
@@ -53,7 +53,7 @@ public class Coffee {
 
 **我们还将定义一个简单的 REST 控制器来演示序列化**:
 
-```
+```java
 @GetMapping("/coffee")
 public Coffee getCoffee(
         @RequestParam(required = false) String brand,
@@ -67,7 +67,7 @@ public Coffee getCoffee(
 
 默认情况下，这将是调用 GET `http://lolcahost:8080/coffee?brand=Lavazza`时的响应:
 
-```
+```java
 {
   "name": null,
   "brand": "Lavazza",
@@ -77,7 +77,7 @@ public Coffee getCoffee(
 
 我们希望排除`null`值，并有一个自定义的日期格式(dd-MM-yyyy HH:mm)。这是我们最后的回应:
 
-```
+```java
 {
   "brand": "Lavazza",
   "date": "04-11-2020 10:34"
@@ -96,19 +96,19 @@ public Coffee getCoffee(
 
 这是配置的一般结构:
 
-```
+```java
 spring.jackson.<category_name>.<feature_name>=true,false
 ```
 
 作为一个例子，我们将添加以下内容来禁用`SerializationFeature.WRITE_DATES_AS_TIMESTAMPS`:
 
-```
+```java
 spring.jackson.serialization.write-dates-as-timestamps=false
 ```
 
 除了提到的功能类别，我们还可以配置属性包含:
 
-```
+```java
 spring.jackson.default-property-inclusion=always, non_null, non_absent, non_default, non_empty 
 ```
 
@@ -116,7 +116,7 @@ spring.jackson.default-property-inclusion=always, non_null, non_absent, non_defa
 
 此时，我们将获得以下结果:
 
-```
+```java
 {
   "brand": "Lavazza",
   "date": "2020-11-16T10:35:34.593"
@@ -125,7 +125,7 @@ spring.jackson.default-property-inclusion=always, non_null, non_absent, non_defa
 
 为了实现我们的目标，我们将使用自定义日期格式注册一个新的`JavaTimeModule `:
 
-```
+```java
 @Configuration
 @PropertySource("classpath:coffee.properties")
 public class CoffeeRegisterModuleConfig {
@@ -141,13 +141,13 @@ public class CoffeeRegisterModuleConfig {
 
 此外，配置属性文件`coffee.properties`将包含以下内容:
 
-```
+```java
 spring.jackson.default-property-inclusion=non_null
 ```
 
 Spring Boot 将自动注册任何类型`com.fasterxml.jackson.databind.Module`的 bean。这是我们的最终结果:
 
-```
+```java
 {
   "brand": "Lavazza",
   "date": "16-11-2020 10:43"
@@ -160,7 +160,7 @@ Spring Boot 将自动注册任何类型`com.fasterxml.jackson.databind.Module`�
 
 它们将应用于通过`Jackson2ObjectMapperBuilder`创建的默认`ObjectMapper`:
 
-```
+```java
 @Bean
 public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
     return builder -> builder.serializationInclusion(JsonInclude.Include.NON_NULL)
@@ -180,7 +180,7 @@ public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
 
 覆盖默认配置的最简单方法是定义一个`ObjectMapper` bean，并将其标记为`@Primary`:
 
-```
+```java
 @Bean
 @Primary
 public ObjectMapper objectMapper() {
@@ -200,7 +200,7 @@ public ObjectMapper objectMapper() {
 
 实际上，Spring Boot 在构建`ObjectMapper`时默认使用这个构建器，并将自动选择已定义的构建器:
 
-```
+```java
 @Bean
 public Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder() {
     return new Jackson2ObjectMapperBuilder().serializers(LOCAL_DATETIME_SERIALIZER)
@@ -226,7 +226,7 @@ public Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder() {
 
 我们可以定义一个类型为`MappingJackson2HttpMessageConverter`的 bean，Spring Boot 会自动使用它:
 
-```
+```java
 @Bean
 public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
     Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder().serializers(LOCAL_DATETIME_SERIALIZER)
@@ -243,7 +243,7 @@ public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter()
 
 通过这种方式，我们可以验证我们的`Coffee` 对象是在没有`null`值的情况下使用自定义日期格式序列化的:
 
-```
+```java
 @Test
 public void whenGetCoffee_thenSerializedWithDateAndNonNull() {
     String formattedDate = DateTimeFormatter.ofPattern(CoffeeConstants.dateTimeFormat).format(FIXED_DATE);

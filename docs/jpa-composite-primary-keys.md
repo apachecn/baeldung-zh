@@ -39,7 +39,7 @@ In this tutorial, we'll discuss how we can handle auto-generated ids with JPA.[R
 
 按照 JPA 规范，让我们用这些主键字段创建一个`AccountId`类:
 
-```
+```java
 public class AccountId implements Serializable {
     private String accountNumber;
 
@@ -60,7 +60,7 @@ public class AccountId implements Serializable {
 
 为了做到这一点，我们需要用`[@IdClass](/web/20220926131649/https://www.baeldung.com/hibernate-identifiers)`注释来注释实体。我们还必须在实体*帐户*中声明来自`AccountId`类的字段，并用`@Id`对它们进行注释:
 
-```
+```java
 @Entity
 @IdClass(AccountId.class)
 public class Account {
@@ -82,7 +82,7 @@ public class Account {
 
 在这种情况下， ***的主键类，*的 BookId 必须用`@Embeddable`** 标注:
 
-```
+```java
 @Embeddable
 public class BookId implements Serializable {
     private String title;
@@ -101,7 +101,7 @@ public class BookId implements Serializable {
 
 然后我们需要使用`[@EmbeddedId](/web/20220926131649/https://www.baeldung.com/jpa-many-to-many)`将这个类嵌入到`B` *ook* 实体中:
 
-```
+```java
 @Entity
 public class Book {
     @EmbeddedId
@@ -121,13 +121,13 @@ public class Book {
 
 使用`@IdClass`，查询稍微简单一点:
 
-```
+```java
 SELECT account.accountNumber FROM Account account
 ```
 
 使用`@EmbeddedId`，我们必须进行一次额外的遍历:
 
-```
+```java
 SELECT book.bookId.title FROM Book book
 ```
 

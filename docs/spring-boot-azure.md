@@ -14,13 +14,13 @@
 
 接下来，登录平台并使用 [Azure CLI](https://web.archive.org/web/20220630130149/https://docs.microsoft.com/en-us/cli/azure/index?view=azure-cli-latest) 创建服务主体:
 
-```
+```java
 > az login
 To sign in, use a web browser to open the page \
 https://microsoft.com/devicelogin and enter the code XXXXXXXX to authenticate.
 ```
 
-```
+```java
 > az ad sp create-for-rbac --name "app-name" --password "password"
 {
     "appId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
@@ -33,7 +33,7 @@ https://microsoft.com/devicelogin and enter the code XXXXXXXX to authenticate.
 
 现在**我们在我们的 Maven [`settings.xml`](https://web.archive.org/web/20220630130149/https://maven.apache.org/settings.html)** 中配置 Azure 服务主体认证设置，借助于`<servers>`下的以下部分:
 
-```
+```java
 <server>
     <id>azure-auth</id>
     <configuration>
@@ -49,7 +49,7 @@ https://microsoft.com/devicelogin and enter the code XXXXXXXX to authenticate.
 
 让我们将下面的 Maven 插件添加到`pom.xml`中:
 
-```
+```java
 <plugin>
     <groupId>com.microsoft.azure</groupId>
     <artifactId>azure-webapp-maven-plugin</artifactId>
@@ -70,7 +70,7 @@ https://microsoft.com/devicelogin and enter the code XXXXXXXX to authenticate.
 
 当我们访问“`/hello`”时，我们的应用程序回复“`hello azure!`”:
 
-```
+```java
 @GetMapping("/hello")
 public String hello() {
     return "hello azure!";
@@ -85,7 +85,7 @@ public String hello() {
 
 如果我们打算在 Windows 实例上部署 Tomcat，我们将对`azure-webapp-maven-plugin`使用以下配置:
 
-```
+```java
 <configuration>
     <javaVersion>1.8</javaVersion>
     <javaWebContainer>tomcat 8.5</javaWebContainer>
@@ -95,7 +95,7 @@ public String hello() {
 
 对于 Linux 实例，请尝试以下配置:
 
-```
+```java
 <configuration>
     <linuxRuntime>tomcat 8.5-jre8</linuxRuntime>
     <!-- ... -->
@@ -104,7 +104,7 @@ public String hello() {
 
 我们不要忘记 Azure 身份验证:
 
-```
+```java
 <configuration>
     <authentication>
         <serverId>azure-auth</serverId>
@@ -119,7 +119,7 @@ public String hello() {
 
 **现在我们准备使用 azure-web app:deploy Maven target**扣动扳机，我们将看到输出:
 
-```
+```java
 > mvn clean package azure-webapp:deploy
 ...
 [INFO] Start deploying to Web App spring-baeldung...
@@ -140,7 +140,7 @@ https://spring-baeldung.azurewebsites.net
 
 在部署过程中，Azure 自动为我们创建了一个应用服务计划。查看官方文件了解 Azure 应用服务计划的详细信息。如果我们已经有一个应用服务计划，我们可以设置属性`<appServicePlanName>`以避免创建新的:
 
-```
+```java
 <configuration>
     <!-- ... -->
     <appServicePlanName>ServicePlanssssssss-bbbb-0000</appServicePlanName>
@@ -151,7 +151,7 @@ https://spring-baeldung.azurewebsites.net
 
 要通过 FTP 进行部署，我们可以使用以下配置:
 
-```
+```java
 <configuration>
     <authentication>
         <serverId>azure-auth</serverId>
@@ -177,7 +177,7 @@ https://spring-baeldung.azurewebsites.net
 
 假设我们的最终工件被命名为`azure-0.1.war,`，一旦我们开始部署，我们将看到如下输出:
 
-```
+```java
 > mvn clean package azure-webapp:deploy
 ...
 [INFO] Start deploying to Web App spring-baeldung...
@@ -209,7 +209,7 @@ https://spring-baeldung.azurewebsites.net
 
 由于没有一行程序可以创建启用了应用内 MySQL 的 web 应用，我们必须首先使用 CLI 创建 web 应用:
 
-```
+```java
 az group create --location japanwest --name bealdung-group
 az appservice plan create --name baeldung-plan --resource-group bealdung-group --sku B1
 az webapp create --name baeldung-webapp --resource-group baeldung-group \
@@ -226,7 +226,7 @@ az webapp create --name baeldung-webapp --resource-group baeldung-group \
 
 这里，为了演示的需要，我们创建了一个`User`实体和两个端点用于`register`和`list`
 
-```
+```java
 @PostMapping("/user")
 public String register(@RequestParam String name) {
     userRepository.save(userNamed(name));
@@ -241,7 +241,7 @@ public Iterable<User> userlist() {
 
 我们将在本地环境中使用 H2 数据库，并将其切换到 Azure 上的 MySQL。通常，我们在`application.properties`文件中配置数据源属性:
 
-```
+```java
 spring.datasource.url=jdbc:h2:file:~/test
 spring.datasource.username=sa
 spring.datasource.password=
@@ -249,7 +249,7 @@ spring.datasource.password=
 
 而对于 Azure 部署，**我们需要在** `**<appSettings>**:`中配置`azure-webapp-maven-plugin`
 
-```
+```java
 <configuration>
     <authentication>
         <serverId>azure-auth</serverId>
@@ -277,7 +277,7 @@ spring.datasource.password=
 
 现在我们可以开始部署了:
 
-```
+```java
 > mvn clean package azure-webapp:deploy
 ...
 [INFO] Start deploying to Web App custom-webapp...
@@ -295,7 +295,7 @@ https://baeldung-webapp.azurewebsites.net
 
 让我们测试我们的新端点:
 
-```
+```java
 > curl -d "" -X POST https://baeldung-webapp.azurewebsites.net/user\?name\=baeldung
 registered
 
@@ -313,7 +313,7 @@ registered
 
 我们已经有一篇关于[如何停靠 Spring Boot 应用](/web/20220630130149/https://www.baeldung.com/dockerizing-spring-boot-application)的文章，但是在这里**我们将使用另一个 maven 插件:`docker-maven-plugin`，为我们自动停靠:**
 
-```
+```java
 <plugin>
     <groupId>com.spotify</groupId>
     <artifactId>docker-maven-plugin</artifactId>
@@ -332,14 +332,14 @@ registered
 
 所以让我们创建一个:
 
-```
+```java
 az acr create --admin-enabled --resource-group baeldung-group \
   --location japanwest --name baeldungadr --sku Basic
 ```
 
 我们还需要容器注册中心的认证信息，这可以通过以下方式查询:
 
-```
+```java
 > az acr credential show --name baeldungadr --query passwords[0]
 {
   "additionalProperties": {},
@@ -350,7 +350,7 @@ az acr create --admin-enabled --resource-group baeldung-group \
 
 然后在 Maven 的`settings.xml`中添加以下服务器认证配置:
 
-```
+```java
 <server>
     <id>baeldungadr</id>
     <username>baeldungadr</username>
@@ -362,7 +362,7 @@ az acr create --admin-enabled --resource-group baeldung-group \
 
 让我们将下面的 Maven 插件配置添加到`pom.xml`中:
 
-```
+```java
 <properties>
     <!-- ... -->
     <azure.containerRegistry>baeldungadr</azure.containerRegistry>
@@ -398,7 +398,7 @@ az acr create --admin-enabled --resource-group baeldung-group \
 
 注意，插件将使用`<dockerDirectory>`中的值来定位`Dockerfile`。我们将`Dockerfile`放在`docker`目录中，其内容是:
 
-```
+```java
 FROM frolvlad/alpine-oraclejdk8:slim
 VOLUME /tmp
 ADD azure-0.1.jar app.jar
@@ -411,7 +411,7 @@ ENTRYPOINT [ "sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -jar /app
 
 现在我们可以构建一个 Docker 映像并将其推送到 Azure 注册表:
 
-```
+```java
 > mvn docker:build -DpushImage
 ...
 [INFO] Building image baeldungadr.azurecr.io/azure-0.1
@@ -435,7 +435,7 @@ latest: digest: sha256:0f0f... size: 1375
 
 一旦实例启动，我们就可以通过它的公共 IP 地址访问应用程序提供的服务:
 
-```
+```java
 > curl http://a.x.y.z:8080/hello
 hello azure!
 ```
@@ -446,7 +446,7 @@ hello azure!
 
 借助下面的`azure-webapp-maven-plugin`配置，我们还可以将我们的 Spring Boot web 应用程序部署到容器中:
 
-```
+```java
 <configuration>
     <containerSettings>
         <imageName>${docker.image.prefix}/${project.artifactId}</imageName>

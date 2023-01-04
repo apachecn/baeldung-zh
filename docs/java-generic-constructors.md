@@ -14,7 +14,7 @@
 
 首先，我们有一个简单的类`Entry`，它不是一个泛型类:
 
-```
+```java
 public class Entry {
     private String data;
     private int rank;
@@ -27,7 +27,7 @@ public class Entry {
 
 第一个`Entry`构造函数是一个简单的构造函数，有两个参数:
 
-```
+```java
 public Entry(String data, int rank) {
     this.data = data;
     this.rank = rank;
@@ -36,7 +36,7 @@ public Entry(String data, int rank) {
 
 现在，让我们使用这个基本的构造函数来创建一个`Entry`对象:
 
-```
+```java
 @Test
 public void givenNonGenericConstructor_whenCreateNonGenericEntry_thenOK() {
     Entry entry = new Entry("sample", 1);
@@ -50,7 +50,7 @@ public void givenNonGenericConstructor_whenCreateNonGenericEntry_thenOK() {
 
 接下来，我们的第二个构造函数是一个泛型构造函数:
 
-```
+```java
 public <E extends Rankable & Serializable> Entry(E element) {
     this.data = element.toString();
     this.rank = element.getRank();
@@ -63,7 +63,7 @@ public <E extends Rankable & Serializable> Entry(E element) {
 
 现在，让我们看看`Rankable`接口，它有一个方法:
 
-```
+```java
 public interface Rankable {
     public int getRank();
 }
@@ -71,7 +71,7 @@ public interface Rankable {
 
 假设我们有一个实现了`Rankable`接口的类`Product`:
 
-```
+```java
 public class Product implements Rankable, Serializable {
     private String name;
     private double price;
@@ -91,7 +91,7 @@ public class Product implements Rankable, Serializable {
 
 然后，我们可以使用通用构造函数通过一个`Product`来创建`Entry`对象:
 
-```
+```java
 @Test
 public void givenGenericConstructor_whenCreateNonGenericEntry_thenOK() {
     Product product = new Product("milk", 2.5);
@@ -108,7 +108,7 @@ public void givenGenericConstructor_whenCreateNonGenericEntry_thenOK() {
 
 接下来，我们将看看一个名为`GenericEntry`的泛型类:
 
-```
+```java
 public class GenericEntry<T> {
     private T data;
     private int rank;
@@ -121,7 +121,7 @@ public class GenericEntry<T> {
 
 首先，让我们为我们的`GenericEntry`类编写一个简单的非泛型构造函数:
 
-```
+```java
 public GenericEntry(int rank) {
     this.rank = rank;
 }
@@ -131,7 +131,7 @@ public GenericEntry(int rank) {
 
 现在，我们可以使用这个构造函数来创建一个`GenericEntry<String>`:
 
-```
+```java
 @Test
 public void givenNonGenericConstructor_whenCreateGenericEntry_thenOK() {
     GenericEntry<String> entry = new GenericEntry<String>(1);
@@ -145,7 +145,7 @@ public void givenNonGenericConstructor_whenCreateGenericEntry_thenOK() {
 
 接下来，让我们向我们的类添加第二个构造函数:
 
-```
+```java
 public GenericEntry(T data, int rank) {
     this.data = data;
     this.rank = rank;
@@ -156,7 +156,7 @@ public GenericEntry(T data, int rank) {
 
 现在，让我们测试我们的通用构造函数:
 
-```
+```java
 @Test
 public void givenGenericConstructor_whenCreateGenericEntry_thenOK() {
     GenericEntry<String> entry = new GenericEntry<String>("sample", 1);
@@ -170,7 +170,7 @@ public void givenGenericConstructor_whenCreateGenericEntry_thenOK() {
 
 在我们的泛型类中，我们也可以有一个泛型类型不同于类的泛型类型的构造函数:
 
-```
+```java
 public <E extends Rankable & Serializable> GenericEntry(E element) {
     this.data = (T) element;
     this.rank = element.getRank();
@@ -179,7 +179,7 @@ public <E extends Rankable & Serializable> GenericEntry(E element) {
 
 这个`GenericEntry`构造函数有一个类型为`E`的参数`element`，它不同于`T`类型。让我们来看看它的实际应用:
 
-```
+```java
 @Test
 public void givenGenericConstructorWithDifferentType_whenCreateGenericEntry_thenOK() {
     Product product = new Product("milk", 2.5);
@@ -201,7 +201,7 @@ public void givenGenericConstructorWithDifferentType_whenCreateGenericEntry_then
 
 接下来，我们有一个包含两个泛型类型的泛型类`MapEntry`:
 
-```
+```java
 public class MapEntry<K, V> {
     private K key;
     private V value;
@@ -215,7 +215,7 @@ public class MapEntry<K, V> {
 
 **`MapEntry`有一个带两个参数的泛型构造函数，每个参数都是不同的类型。**让我们在一个简单的单元测试中使用它:
 
-```
+```java
 @Test
 public void givenGenericConstructor_whenCreateGenericEntryWithTwoTypes_thenOK() {
     MapEntry<String,Integer> entry = new MapEntry<String,Integer>("sample", 1);
@@ -229,7 +229,7 @@ public void givenGenericConstructor_whenCreateGenericEntryWithTwoTypes_thenOK() 
 
 最后，我们可以在通用构造函数中使用通配符:
 
-```
+```java
 public GenericEntry(Optional<? extends Rankable> optional) {
     if (optional.isPresent()) {
         this.data = (T) optional.get();
@@ -240,7 +240,7 @@ public GenericEntry(Optional<? extends Rankable> optional) {
 
 这里，我们在这个`GenericEntry`构造函数中使用通配符来绑定`Optional`类型:
 
-```
+```java
 @Test
 public void givenGenericConstructorWithWildCard_whenCreateGenericEntry_thenOK() {
     Product product = new Product("milk", 2.5);

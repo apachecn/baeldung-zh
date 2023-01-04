@@ -10,7 +10,7 @@
 
 首先，让我们创建一个 [Spring Boot](/web/20220811173852/https://www.baeldung.com/spring-boot) web 项目，并将 [`spring-cloud-starter-openfeign`](https://web.archive.org/web/20220811173852/https://search.maven.org/search?q=a:spring-cloud-starter-openfeign) 或 [`feign-core`](https://web.archive.org/web/20220811173852/https://search.maven.org/artifact/io.github.openfeign/feign-core) 依赖项包含到我们的`pom.xml`文件中。`spring-cloud-starter-openfeign`中包含`feign-core`依赖关系；
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-openfeign</artifactId>
@@ -20,7 +20,7 @@
 
 或者
 
-```
+```java
 <dependency>
     <groupId>io.github.openfeign</groupId>
     <artifactId>feign-core</artifactId>
@@ -38,7 +38,7 @@
 
 让我们创建一个使用`@RequestLine`的界面:
 
-```
+```java
 public interface EmployeeClient {
     @RequestLine("GET /empployee/{id}?active={isActive}")
     @Headers("Content-Type: application/json")
@@ -50,7 +50,7 @@ public interface EmployeeClient {
 
 现在，我们将调用这样创建的接口来调用实际的`API`:
 
-```
+```java
 EmployeeClient employeeResource = Feign.builder().encoder(new SpringFormEncoder())
   .target(EmployeeClient.class, "http://localhost:8081");
 Employee employee = employeeResource.getEmployee(id, true);

@@ -10,7 +10,7 @@
 
 让我们从两个实体类开始——*雇员*和`Department`:
 
-```
+```java
 class Employee {
     Integer employeeId;
     String employeeName;
@@ -33,7 +33,7 @@ class Department {
 
 为了实现这一点，我们实际上是将一个过滤到另一个中:
 
-```
+```java
 @Test
 public void givenDepartmentList_thenEmployeeListIsFilteredCorrectly() {
     Integer expectedId = 1002;

@@ -12,7 +12,7 @@
 
 假设我们已经创建了前一篇文章中描述的`AWSCredentials,`的实例，我们可以继续创建我们的 SQS 客户端:
 
-```
+```java
 AmazonSQS sqs = AmazonSQSClientBuilder.standard()
   .withCredentials(new AWSStaticCredentialsProvider(credentials))
   .withRegion(Regions.US_EAST_1)
@@ -27,7 +27,7 @@ AmazonSQS sqs = AmazonSQSClientBuilder.standard()
 
 让我们看看如何创建一个标准队列。为此，**我们需要创建一个`CreateQueueRequest:`** 的实例
 
-```
+```java
 CreateQueueRequest createStandardQueueRequest = new CreateQueueRequest("baeldung-queue");
 String standardQueueUrl = sqs.createQueue(createStandardQueueRequest).getQueueUrl(); 
 ```
@@ -36,7 +36,7 @@ String standardQueueUrl = sqs.createQueue(createStandardQueueRequest).getQueueUr
 
 创建 FIFO 类似于创建标准队列。我们仍将使用`CreateQueueRequest`的一个实例，就像我们之前做的那样。只是这一次，**我们必须传入队列属性，并将`FifoQueue`属性设置为`true` :**
 
-```
+```java
 Map<String, String> queueAttributes = new HashMap<>();
 queueAttributes.put("FifoQueue", "true");
 queueAttributes.put("ContentBasedDeduplication", "true");
@@ -56,7 +56,7 @@ String fifoQueueUrl = sqs.createQueue(createFifoQueueRequest)
 
 然后，我们将消息属性映射附加到该请求:
 
-```
+```java
 Map<String, MessageAttributeValue> messageAttributes = new HashMap<>();
 messageAttributes.put("AttributeOne", new MessageAttributeValue()
   .withStringValue("This is an attribute")
@@ -77,7 +77,7 @@ sqs.sendMessage(sendMessageStandardQueue);
 
 在这种情况下，唯一的区别是**我们必须指定消息所属的[`group`](https://web.archive.org/web/20220524015952/https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues.html):**
 
-```
+```java
 SendMessageRequest sendMessageFifoQueue = new SendMessageRequest()
   .withQueueUrl(fifoQueueUrl)
   .withMessageBody("Another simple message.")
@@ -91,7 +91,7 @@ SendMessageRequest sendMessageFifoQueue = new SendMessageRequest()
 
 我们也可以**使用一个请求向一个队列发送多条消息。**我们将创建一个`SendMessageBatchRequestEntry` 列表，我们将使用`SendMessageBatchRequest`的实例发送该列表:
 
-```
+```java
 List <SendMessageBatchRequestEntry> messageEntries = new ArrayList<>();
 messageEntries.add(new SendMessageBatchRequestEntry()
   .withId("id-1")
@@ -111,7 +111,7 @@ sqs.sendMessageBatch(sendMessageBatchRequest);
 
 我们可以通过**调用`ReceiveMessageRequest:`** 实例上的`receiveMessage() `方法来接收队列中的消息
 
-```
+```java
 ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(fifoQueueUrl)
   .withWaitTimeSeconds(10)
   .withMaxNumberOfMessages(10);
@@ -127,7 +127,7 @@ List<Message> sqsMessages = sqs.receiveMessage(receiveMessageRequest).getMessage
 
 我们可以**获得给定消息的属性和正文:**
 
-```
+```java
 sqsMessages.get(0).getAttributes();
 sqsMessages.get(0).getBody();
 ```
@@ -136,7 +136,7 @@ sqsMessages.get(0).getBody();
 
 要删除消息，我们将使用一个`DeleteMessageRequest`:
 
-```
+```java
 sqs.deleteMessage(new DeleteMessageRequest()
   .withQueueUrl(fifoQueueUrl)
   .withReceiptHandle(sqsMessages.get(0).getReceiptHandle())); 
@@ -148,13 +148,13 @@ sqs.deleteMessage(new DeleteMessageRequest()
 
 我们需要做的第一件事是**创建将成为死信队列的内容:**
 
-```
+```java
 String deadLetterQueueUrl = sqs.createQueue("baeldung-dead-letter-queue").getQueueUrl(); 
 ```
 
 接下来，我们将**获取我们新创建的队列的 [ARN(亚马逊资源名称)](https://web.archive.org/web/20220524015952/https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) :**
 
-```
+```java
 GetQueueAttributesResult deadLetterQueueAttributes = sqs.getQueueAttributes(
   new GetQueueAttributesRequest(deadLetterQueueUrl)
     .withAttributeNames("QueueArn"));
@@ -165,7 +165,7 @@ String deadLetterQueueARN = deadLetterQueueAttributes.getAttributes()
 
 最后，我们**将这个新创建的队列设置为我们原来的标准队列的死信队列:**
 
-```
+```java
 SetQueueAttributesRequest queueAttributesRequest = new SetQueueAttributesRequest()
   .withQueueUrl(standardQueueUrl)
   .addAttributesEntry("RedrivePolicy",
@@ -185,7 +185,7 @@ sqs.setQueueAttributes(queueAttributesRequest);
 
 从这里，我们将检查队列的状态:
 
-```
+```java
 GetQueueAttributesRequest getQueueAttributesRequest 
   = new GetQueueAttributesRequest(standardQueueUrl)
     .withAttributeNames("All");

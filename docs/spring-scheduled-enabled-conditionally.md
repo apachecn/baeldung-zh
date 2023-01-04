@@ -12,7 +12,7 @@
 
 **有条件地启用 Spring 调度作业的最简单方法是使用一个`boolean`变量**，我们在调度作业中检查这个变量。该变量可以用`@Value`进行注释，使其可以使用普通的[弹簧配置机制](/web/20221129021325/https://www.baeldung.com/properties-with-spring)进行配置:
 
-```
+```java
 @Configuration
 @EnableScheduling
 public class ScheduledJobs {
@@ -36,7 +36,7 @@ public class ScheduledJobs {
 
 首先，我们创建一个新的类，它封装了调度作业代码，包括调度间隔:
 
-```
+```java
 public class ScheduledJob {
     @Scheduled(fixedDelay = 60000)
     public void cleanTempDir() {
@@ -47,7 +47,7 @@ public class ScheduledJob {
 
 然后，我们有条件地创建该类型的 bean:
 
-```
+```java
 @Configuration
 @EnableScheduling
 public class ScheduledJobs {
@@ -69,7 +69,7 @@ public class ScheduledJobs {
 
 这类似于使用`@ConditionalOnProperty`，除了我们在 bean 方法上使用`@Profile`注释:
 
-```
+```java
 @Profile("prod")
 @Bean
 public ScheduledJob scheduledJob() {
@@ -85,7 +85,7 @@ public ScheduledJob scheduledJob() {
 
 使用 Spring 值占位符，我们不仅可以有条件地启用一个作业，还可以更改它的调度:
 
-```
+```java
 @Scheduled(cron = "${jobs.cronSchedule:-}")
 public void cleanTempDirectory() {
     // do work here

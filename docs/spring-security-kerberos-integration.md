@@ -36,7 +36,7 @@ Kerberos 是一种网络认证协议，由 MIT 在 20 世纪 80 年代创建，�
 
 首先，我们将推出我们的主要配送中心，它将为我们发放 TGTs:
 
-```
+```java
 String[] config = MiniKdcConfigBuilder.builder()
   .workDir(prepareWorkDir())
   .principals("client/localhost", "HTTP/localhost")
@@ -53,7 +53,7 @@ MiniKdc.main(config);
 
 `MiniKdc.main` 启动 KDC，应该会输出如下内容:
 
-```
+```java
 Standalone MiniKdc Running
 ---------------------------------------------------
   Realm           : EXAMPLE.COM
@@ -70,7 +70,7 @@ Standalone MiniKdc Running
 
 但是，我们打算用**代替**。它需要密钥表和客户端的主体:
 
-```
+```java
 @Configuration
 public class KerberosConfig {
 
@@ -91,7 +91,7 @@ public class KerberosConfig {
 
 因此，让我们创建一个快速类，它将从一个托管在端点`app.access-url`的 Kerberized 化服务中查询一些数据:
 
-```
+```java
 @Service
 class SampleClient {
 
@@ -116,7 +116,7 @@ class SampleClient {
 
 此外，请注意，服务将有其主体，并且也使用 keytab:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -199,7 +199,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 基本上，我们将使用来自客户端应用程序的`SampleClient`向我们的服务应用程序发出请求。让我们来测试一下:
 
-```
+```java
 @Autowired
 private SampleClient sampleClient;
 
@@ -211,7 +211,7 @@ public void givenKerberizedRestTemplate_whenServiceCall_thenSuccess() {
 
 注意，我们也可以通过点击没有它的服务来证明`KerberizedRestTemplate`的重要性:
 
-```
+```java
 @Test
 public void givenRestTemplate_whenServiceCall_thenFail() {
     sampleClient.setRestTemplate(new RestTemplate());

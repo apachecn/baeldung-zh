@@ -20,7 +20,7 @@ Spring Cloud Feign Client 是一个方便的声明式 REST 客户端，我们用
 
 我们可以通过在我们的`application.yml`文件中设置的`feign.client.config.` `default` 属性，设置应用于应用程序中每个虚拟客户端的连接和读取超时:
 
-```
+```java
 feign:
   client:
     config:
@@ -35,7 +35,7 @@ feign:
 
 还可以通过命名客户端:来设置每个特定客户端的超时值
 
-```
+```java
 feign:
   client:
     config:

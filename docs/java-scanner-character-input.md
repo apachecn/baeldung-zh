@@ -14,7 +14,7 @@
 
 让我们首先创建一个输入字符串:
 
-```
+```java
 String input = new StringBuilder().append("abc\n")
   .append("mno\n")
   .append("xyz\n")
@@ -25,7 +25,7 @@ String input = new StringBuilder().append("abc\n")
 
 让我们看看**如何使用`Scanner`的`next()`方法和`String`类的`charAt()`方法来获取一个字符作为输入**:
 
-```
+```java
 @Test
 public void givenInputSource_whenScanCharUsingNext_thenOneCharIsRead() {
     Scanner sc = new Scanner(input);
@@ -40,7 +40,7 @@ public void givenInputSource_whenScanCharUsingNext_thenOneCharIsRead() {
 
 这个方法接受一个字符串模式作为输入，我们将传递“.”(点)仅匹配单个字符。然而，这将返回一个字符串形式的字符，所以我们将使用`charAt()`方法来获取字符:
 
-```
+```java
 @Test
 public void givenInputSource_whenScanCharUsingFindInLine_thenOneCharIsRead() {
     Scanner sc = new Scanner(input);
@@ -53,7 +53,7 @@ public void givenInputSource_whenScanCharUsingFindInLine_thenOneCharIsRead() {
 
 这个方法也只扫描一个字符，但是作为一个类似于`findInLine()` API 的字符串对象。我们可以类似地使用`charAt()`方法来获取字符值:
 
-```
+```java
 @Test
 public void givenInputSource_whenScanCharUsingUseDelimiter_thenOneCharIsRead() {
     Scanner sc = new Scanner(input);

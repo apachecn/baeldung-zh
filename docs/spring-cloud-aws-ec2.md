@@ -14,7 +14,7 @@ AWS [`EC2MetadataUtils`](https://web.archive.org/web/20220625233808/https://docs
 
 这可以通过在任何配置类上添加`@EnableContextInstanceData`注释来实现:
 
-```
+```java
 @Configuration
 @EnableContextInstanceData
 public class EC2EnableMetadata {
@@ -26,7 +26,7 @@ public class EC2EnableMetadata {
 
 然后，我们可以注入这些值:
 
-```
+```java
 @Value("${ami-id}")
 private String amiId;
 
@@ -44,7 +44,7 @@ private String serviceDomain;
 
 此外，Spring 还支持注入用户自定义的[标签](https://web.archive.org/web/20220625233808/https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Tags.html)。我们可以通过使用以下 XML 配置在`context-instance-data`中定义属性`user-tags-map`来实现这一点:
 
-```
+```java
 <beans...>
     <aws-context:context-instance-data user-tags-map="instanceData"/>
 </beans>
@@ -52,7 +52,7 @@ private String serviceDomain;
 
 现在，让我们借助 Spring 表达式语法注入用户定义的标签:
 
-```
+```java
 @Value("#{instanceData.myTagKey}")
 private String myTagValue;
 ```
@@ -61,7 +61,7 @@ private String myTagValue;
 
 此外，如果为实例配置了用户标签，Spring 将创建一个`AmazonEC2`客户端，我们可以使用`@Autowired`将它注入到我们的代码中:
 
-```
+```java
 @Autowired
 private AmazonEC2 amazonEc2;
 ```

@@ -34,13 +34,13 @@ SSL 证书，也称为数字证书，在建立 TLS 握手、促进通信方之�
 
 首先，让我们为`OkHttpClient`创建一个构建器:
 
-```
+```java
 OkHttpClient.Builder builder = new OkHttpClient.Builder();
 ```
 
 此外，让我们声明我们将在整个教程中使用的 HTTPS URL:
 
-```
+```java
 int SSL_APPLICATION_PORT = 8443;
 String HTTPS_WELCOME_URL = "https://localhost:" + SSL_APPLICATION_PORT + "/welcome";
 ```
@@ -49,7 +49,7 @@ String HTTPS_WELCOME_URL = "https://localhost:" + SSL_APPLICATION_PORT + "/welco
 
 在没有为 SSL 配置`OkHttpClient`的情况下，如果我们试图使用 HTTPS URL，我们会得到一个安全异常:
 
-```
+```java
 @Test(expected = SSLHandshakeException.class)
 public void whenHTTPSSelfSignedCertGET_thenException() {
     builder.build()
@@ -61,7 +61,7 @@ public void whenHTTPSSelfSignedCertGET_thenException() {
 
 堆栈跟踪是:
 
-```
+```java
 javax.net.ssl.SSLHandshakeException: PKIX path building failed: 
     sun.security.provider.certpath.SunCertPathBuilderException:
     unable to find valid certification path to requested target
@@ -78,7 +78,7 @@ javax.net.ssl.SSLHandshakeException: PKIX path building failed:
 
 首先，我们需要创建我们自己的 [`TrustManager`](https://web.archive.org/web/20221028002251/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/javax/net/ssl/X509TrustManager.html) ,它会使默认的证书验证无效，并用我们的自定义实现覆盖那些验证:
 
-```
+```java
 TrustManager TRUST_ALL_CERTS = new X509TrustManager() {
     @Override
     public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
@@ -97,7 +97,7 @@ TrustManager TRUST_ALL_CERTS = new X509TrustManager() {
 
 接下来，我们将使用上面的`TrustManager`来初始化一个`[SSLContext](https://web.archive.org/web/20221028002251/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/javax/net/ssl/SSLContext.html)`，同时设置`OkHttpClient`生成器的 [`SSLSocketFactory`](https://web.archive.org/web/20221028002251/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/javax/net/ssl/SSLSocketFactory.html) :
 
-```
+```java
 SSLContext sslContext = SSLContext.getInstance("SSL");
 sslContext.init(null, new TrustManager[] { TRUST_ALL_CERTS }, new java.security.SecureRandom());
 builder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) TRUST_ALL_CERTS);
@@ -105,7 +105,7 @@ builder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) TRUST
 
 同样，让我们运行测试。不难相信，即使在进行了上述调整之后，使用 HTTPS 网址也会抛出一个错误:
 
-```
+```java
 @Test(expected = SSLPeerUnverifiedException.class)
 public void givenTrustAllCerts_whenHTTPSSelfSignedCertGET_thenException() {
     // initializing the SSLContext and set the sslSocketFactory
@@ -118,7 +118,7 @@ public void givenTrustAllCerts_whenHTTPSSelfSignedCertGET_thenException() {
 
 确切的误差是:
 
-```
+```java
 javax.net.ssl.SSLPeerUnverifiedException: Hostname localhost not verified:
     certificate: sha256/bzdWeeiDwIVjErFX98l+ogWy9OFfBJsTRWZLB/bBxbw=
     DN: CN=localhost, OU=localhost, O=localhost, L=localhost, ST=localhost, C=IN
@@ -133,7 +133,7 @@ javax.net.ssl.SSLPeerUnverifiedException: Hostname localhost not verified:
 
 让我们进行最后一项定制:
 
-```
+```java
 builder.hostnameVerifier(new HostnameVerifier() {
     @Override
     public boolean verify(String hostname, SSLSession session) {
@@ -144,7 +144,7 @@ builder.hostnameVerifier(new HostnameVerifier() {
 
 现在，让我们最后一次运行测试:
 
-```
+```java
 @Test
 public void givenTrustAllCertsSkipHostnameVerification_whenHTTPSSelfSignedCertGET_then200OK() {
     // initializing the SSLContext and set the sslSocketFactory

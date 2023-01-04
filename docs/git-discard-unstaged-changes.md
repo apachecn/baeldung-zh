@@ -14,7 +14,7 @@
 
 让我们检查工作目录的状态:
 
-```
+```java
 $ git status
 On branch master
 Your branch is up to date with 'origin/master'.
@@ -36,7 +36,7 @@ no changes added to commit (use "git add" and/or "git commit -a")
 
 现在，让我们使用`git add `转移现有的 Java 文件，并再次检查状态:
 
-```
+```java
 $ git add gradle/maven-to-gradle/src/main/java/com/sample/javacode/DisplayTime.java
 $ git status
 On branch master
@@ -66,19 +66,19 @@ Untracked files:
 
 未跟踪的文件是存储库中的新文件，还没有被添加到版本控制中。**我们可以用`clean`命令**删除这些:
 
-```
+```java
 $ git clean -df
 ```
 
 `-df`选项确保强制删除，并且未跟踪的目录也包括在删除范围内。运行此命令将输出删除了哪些文件:
 
-```
+```java
 Removing gradle/maven-to-gradle/src/main/java/com/sample/javacode/TimeZones.java
 ```
 
 现在，让我们再次检查状态:
 
-```
+```java
 $ git status
 On branch master
 Your branch is up to date with 'origin/master'.
@@ -99,13 +99,13 @@ Changes not staged for commit:
 
 现在我们已经删除了未跟踪的文件，剩下的是处理工作目录中的暂存和未暂存文件。我们可以**使用带有“–”选项**的`checkout`命令来删除所有未提交的更改:
 
-```
+```java
 $ git checkout -- .
 ```
 
 让我们在运行命令后再次检查状态:
 
-```
+```java
 $ git status
 On branch master
 Your branch is up to date with 'origin/master'.

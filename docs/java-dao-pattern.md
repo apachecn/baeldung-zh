@@ -30,7 +30,7 @@ A quick and practical overview of JPA/Hibernate Cascade Types.[Read more](/web/2
 
 因为我们的应用程序将与用户一起工作，所以我们只需要定义一个类来实现它的域模型:
 
-```
+```java
 public class User {
 
     private String name;
@@ -52,7 +52,7 @@ public class User {
 
 下面是 DAO API:
 
-```
+```java
 public interface Dao<T> {
 
     Optional<T> get(long id);
@@ -75,7 +75,7 @@ public interface Dao<T> {
 
 让我们定义一个特定于用户的`Dao`接口实现:
 
-```
+```java
 public class UserDao implements Dao<User> {
 
     private List<User> users = new ArrayList<>();
@@ -125,7 +125,7 @@ public class UserDao implements Dao<User> {
 
 虽然`User`和`UserDao`类独立地共存于同一个应用程序中，但是我们仍然需要了解如何使用后者来保持持久层对应用程序逻辑隐藏:
 
-```
+```java
 public class UserApplication {
 
     private static Dao<User> userDao;
@@ -167,7 +167,7 @@ public class UserApplication {
 
 让我们创建一个新的`Dao`接口实现，看看它如何封装 JPA 的实体管理器提供的现成功能:
 
-```
+```java
 public class JpaUserDao implements Dao<User> {
 
     private EntityManager entityManager;
@@ -227,7 +227,7 @@ public class JpaUserDao implements Dao<User> {
 
 在这种情况下，我们将使用 Hibernate 作为 JPA 的默认实现，因此我们将相应地重构`User`类:
 
-```
+```java
 @Entity
 @Table(name = "users")
 public class User {
@@ -257,7 +257,7 @@ public class User {
 
 最后，让我们重构初始的`UserApplication`类，这样它就可以使用`JpaUserDao`实例并在`User`实体上运行 CRUD 操作:
 
-```
+```java
 public class UserApplication {
 
     private static Dao<User> jpaUserDao;

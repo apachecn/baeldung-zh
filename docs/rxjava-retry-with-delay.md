@@ -10,7 +10,7 @@
 
 首先，让我们创建一个 Maven 或 Gradle 项目。这里，**我们使用基于 Maven 的项目**。让我们将`rxjava`依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>io.reactivex.rxjava2</groupId>
     <artifactId>rxjava</artifactId>
@@ -46,7 +46,7 @@
 
 If an `Observable` call succeeds, then the Observer's `onNext` method is invoked. Let's see an example:
 
-```
+```java
 @Test
 public void givenObservable_whenSuccess_thenOnNext(){
     Observable.just(remoteCallSuccess())
@@ -66,7 +66,7 @@ public void givenObservable_whenSuccess_thenOnNext(){
 
 Let's introduce a new utility function called `remoteCallError()` that mocks calling a remote server. This method is vulnerable to errors. Therefore, our `retryWhen` logic would kick in:
 
-```
+```java
 @Test
 public void givenObservable_whenError_thenOnError(){
     Observable.just(remoteCallError())
@@ -86,7 +86,7 @@ public void givenObservable_whenError_thenOnError(){
 
 We can add a delay during the resubscription process:
 
-```
+```java
 @Test
 public void givenError_whenRetry_thenCanDelay(){
     Observable.just(remoteCallError())

@@ -44,7 +44,7 @@ Dockerfile 是一个纯文本文件，包含构建 Docker [图像](/web/20220727
 
 让我们来看一个 docker 文件示例:
 
-```
+```java
 FROM openjdk:17-alpine
 ARG JAR_FILE=target/my-app.jar
 COPY ${JAR_FILE} my-app.jar
@@ -63,7 +63,7 @@ Docker Compose 是一个定义和运行多容器 Docker 应用程序的工具。
 
 让我们编写一个简单的 Docker 编写文件:
 
-```
+```java
 version: "3.9"
 services:
   database:

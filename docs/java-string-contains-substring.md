@@ -12,20 +12,20 @@
 
 当我们搜索“Rhap”时，它将返回 9:
 
-```
+```java
 Assert.assertEquals(9, "Bohemian Rhapsodyan".indexOf("Rhap"));
 ```
 
 当我们搜索“rhap”时，**它将返回-1，因为它区分大小写。**
 
-```
+```java
 Assert.assertEquals(-1, "Bohemian Rhapsodyan".indexOf("rhap"));
 Assert.assertEquals(9, "Bohemian Rhapsodyan".toLowerCase().indexOf("rhap"));
 ```
 
 同样需要注意的是，如果我们搜索`substring`“an”，它将返回 6，因为它返回的是第一个匹配项:
 
-```
+```java
 Assert.assertEquals(6, "Bohemian Rhapsodyan".indexOf("an"));
 ```
 
@@ -35,19 +35,19 @@ Assert.assertEquals(6, "Bohemian Rhapsodyan".indexOf("an"));
 
 在本例中，`contains`返回`true`，因为找到了“Hey”。
 
-```
+```java
 Assert.assertTrue("Hey Ho, let's go".contains("Hey"));
 ```
 
 如果没有找到字符串，`contains`返回`false`:
 
-```
+```java
 Assert.assertFalse("Hey Ho, let's go".contains("jey"));
 ```
 
 在最后一个例子中，没有找到“hey ”,因为 **`String.contains`是区分大小写的。**
 
-```
+```java
 Assert.assertFalse("Hey Ho, let's go".contains("hey"));
 Assert.assertTrue("Hey Ho, let's go".toLowerCase().contains("hey"));
 ```
@@ -58,7 +58,7 @@ Assert.assertTrue("Hey Ho, let's go".toLowerCase().contains("hey"));
 
 我们的第三种方法将使用来自 [Apache Commons Lang](https://web.archive.org/web/20221206155502/https://commons.apache.org/proper/commons-lang/) 库的`**StringUtils#**` **`containsIgnoreCase`:**
 
-```
+```java
 Assert.assertTrue(StringUtils.containsIgnoreCase("Runaway train", "train"));
 Assert.assertTrue(StringUtils.containsIgnoreCase("Runaway train", "Train"));
 ```
@@ -71,20 +71,20 @@ Assert.assertTrue(StringUtils.containsIgnoreCase("Runaway train", "Train"));
 
 我们的最后一种方法将使用带有正则表达式的 **`Pattern`:**
 
-```
+```java
 Pattern pattern = Pattern.compile("(?<!\\S)" + "road" + "(?!\\S)");
 ```
 
 我们可以看到，**我们需要首先构建 [`Pattern`](/web/20221206155502/https://www.baeldung.com/regular-expressions-java) ，然后我们需要创建`Matcher`，最后，我们可以用`find`方法检查是否出现子串:**
 
-```
+```java
 Matcher matcher = pattern.matcher("Hit the road Jack");
 Assert.assertTrue(matcher.find());
 ```
 
 例如，第一次执行`find`时，它返回`true`,因为单词“road”包含在字符串“Hit the road Jack”中，但是当我们试图在字符串“and don’t back no more”中查找相同的单词时，它返回`false:`
 
-```
+```java
 Matcher matcher = pattern.matcher("and don't you come back no more");
 Assert.assertFalse(matcher.find());
 ```
@@ -97,7 +97,7 @@ Assert.assertFalse(matcher.find());
 
 正如在每个 JMH 基准测试中一样，我们有能力编写一个`setup`方法，以便在我们的基准测试运行之前准备好某些东西:
 
-```
+```java
 @Setup
 public void setup() {
     message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " + 
@@ -119,7 +119,7 @@ public void setup() {
 
 我们的第一个基准测试将使用`indexOf`:
 
-```
+```java
 @Benchmark
 public int indexOf() {
     return message.indexOf("eiusmod");
@@ -132,7 +132,7 @@ public int indexOf() {
 
 我们的第二个基准将使用`contains`:
 
-```
+```java
 @Benchmark
 public boolean contains() {
     return message.contains("eiusmod");
@@ -145,7 +145,7 @@ public boolean contains() {
 
 我们的第三个基准将使用`StringUtils#` `containsIgnoreCase`:
 
-```
+```java
 @Benchmark
 public boolean containsStringUtilsIgnoreCase() {
     return StringUtils.containsIgnoreCase(message, "eiusmod");
@@ -158,7 +158,7 @@ public boolean containsStringUtilsIgnoreCase() {
 
 我们最后的基准测试将使用`Pattern`:
 
-```
+```java
 @Benchmark
 public boolean searchWithPattern() {
     return pattern.matcher(message).find();

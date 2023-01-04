@@ -14,7 +14,7 @@ URI 规范 [RFC 3986](https://web.archive.org/web/20220827073606/https://tools.i
 
 要启用 Spring MVC 矩阵变量，让我们从配置开始:
 
-```
+```java
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
@@ -35,13 +35,13 @@ public class WebConfig implements WebMvcConfigurer {
 
 我们的例子有一个控制器，它提供关于雇员的信息。每个员工都有一个工作区，我们可以根据该属性进行搜索。以下请求可用于搜索:
 
-```
+```java
 http://localhost:8080/spring-mvc-java-2/employeeArea/workingArea=rh,informatics,admin
 ```
 
 或者像这样:
 
-```
+```java
 http://localhost:8080/spring-mvc-java-2
   /employeeArea/workingArea=rh;workingArea=informatics;workingArea=admin
 ```
@@ -50,7 +50,7 @@ http://localhost:8080/spring-mvc-java-2
 
 在我们的例子中，我们将使用`Employee` 类:
 
-```
+```java
 public class Employee {
 
     private long id;
@@ -63,7 +63,7 @@ public class Employee {
 
 还有`Company`类:
 
-```
+```java
 public class Company {
 
     private long id;
@@ -79,13 +79,13 @@ public class Company {
 
 我们可以为变量指定必需的或默认的属性。在下面的例子中，`contactNumber`是必需的，所以它必须包含在我们的路径中，就像这样:
 
-```
+```java
 http://localhost:8080/spring-mvc-java-2/employeesContacts/contactNumber=223334411
 ```
 
 该请求将通过以下方法处理:
 
-```
+```java
 @RequestMapping(value = "/employeesContacts/{contactNumber}", 
   method = RequestMethod.GET)
 @ResponseBody
@@ -107,13 +107,13 @@ public ResponseEntity<List<Employee>> getEmployeeByContactNumber(
 
 该搜索的请求应该是这样的:
 
-```
+```java
 http://localhost:8080/spring-mvc-java-2/employees/John;beginContactNumber=22001
 ```
 
 该请求将通过以下方法处理:
 
-```
+```java
 @RequestMapping(value = "/employees/{name}", method = RequestMethod.GET)
 @ResponseBody
 public ResponseEntity<List<Employee>> getEmployeeByNameAndBeginContactNumber(
@@ -130,13 +130,13 @@ public ResponseEntity<List<Employee>> getEmployeeByNameAndBeginContactNumber(
 
 如果出于某种原因，我们想要获得路径上所有可用的变量，我们可以将它们绑定到一个`Map`:
 
-```
+```java
 http://localhost:8080/spring-mvc-java-2/employeeData/id=1;name=John;contactNumber=2200112334
 ```
 
 该请求将通过以下方法处理:
 
-```
+```java
 @GetMapping("employeeData/{employee}")
 @ResponseBody
 public ResponseEntity<Map<String, String>> getEmployeeData(
@@ -147,7 +147,7 @@ public ResponseEntity<Map<String, String>> getEmployeeData(
 
 当然，我们可以限制绑定到路径特定部分的矩阵变量。例如，如果我们有这样一个请求:
 
-```
+```java
 http://localhost:8080/spring-mvc-java-2/
   companyEmployee/id=2;name=Xpto/employeeData/id=1;name=John;
   contactNumber=2200112334
@@ -155,7 +155,7 @@ http://localhost:8080/spring-mvc-java-2/
 
 而我们只想得到属于`employeeData`的所有变量；那么我们应该使用以下内容作为输入参数:
 
-```
+```java
 @RequestMapping(
  value = "/companyEmployee/{company}/employeeData/{employee}",
  method = RequestMethod.GET)
@@ -170,7 +170,7 @@ public ResponseEntity<Map<String, String>> getEmployeeDataFromCompany(
 
 除了简单之外，灵活性是另一个好处，矩阵变量可以以各种不同的方式使用。例如，我们可以从每个路径段获得每个变量。考虑以下请求:
 
-```
+```java
 http://localhost:8080/spring-mvc-java-2/
   companyData/id=2;name=Xpto/employeeData/id=1;name=John;
   contactNumber=2200112334
@@ -178,7 +178,7 @@ http://localhost:8080/spring-mvc-java-2/
 
 如果我们只想知道`companyData`段的矩阵变量`name`，那么，我们应该使用以下作为输入参数:
 
-```
+```java
 @MatrixVariable(value="name", pathVar="company") String name 
 ```
 

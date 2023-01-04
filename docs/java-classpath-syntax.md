@@ -16,7 +16,7 @@
 
 **而分号(；)在 Microsoft Windows 系统上用作分隔符，冒号(`:`)在类似 Unix 的系统上使用:**
 
-```
+```java
 # On Windows system:
 CLASSPATH="PATH1;PATH2;PATH3"
 

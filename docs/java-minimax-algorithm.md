@@ -51,7 +51,7 @@ Minimax 是一种决策算法，**通常用于回合制双人游戏**。该算�
 
 为了定义游戏规则，我们将实现`GameOfBones` 类:
 
-```
+```java
 class GameOfBones {
     static List<Integer> getPossibleStates(int noOfBonesInHeap) {
         return IntStream.rangeClosed(1, 3).boxed()
@@ -64,7 +64,7 @@ class GameOfBones {
 
 此外，我们还需要实现`Node` 和`Tree` 类:
 
-```
+```java
 public class Node {
     int noOfBones;
     boolean isMaxPlayer;
@@ -80,7 +80,7 @@ public class Tree {
 
 现在我们来实现算法。它需要一个博弈树来预测未来并找到最佳的行动。让我们来实现它:
 
-```
+```java
 public class MiniMax {
     Tree tree;
 
@@ -113,7 +113,7 @@ public class MiniMax {
 
 如果第一个玩家(在我们的例子中是最大化者)获胜,`checkWin`将返回 true:
 
-```
+```java
 public boolean checkWin() {
     Node root = tree.getRoot();
     checkWin(root);
@@ -137,7 +137,7 @@ private void checkWin(Node node) {
 
 在这里，如果一个玩家是最大化者，`findBestChild` 方法找到具有最大分数的节点。否则，它返回具有最低分数的子节点:
 
-```
+```java
 private Node findBestChild(boolean isMaxPlayer, List<Node> children) {
     Comparator<Node> byScoreComparator = Comparator.comparing(Node::getScore);
     return children.stream()
@@ -148,7 +148,7 @@ private Node findBestChild(boolean isMaxPlayer, List<Node> children) {
 
 最后，让我们用一些值`n`(堆中骨头的数量)实现一个测试用例:
 
-```
+```java
 @Test
 public void givenMiniMax_whenCheckWin_thenComputeOptimal() {
     miniMax.constructTree(6);

@@ -15,13 +15,13 @@ JDK 10 中最明显的改进之一是使用初始化器对局部变量进行类�
 
 在 Java 9 之前，我们必须明确提到局部变量的类型，并确保它与用于初始化它的初始化器兼容:
 
-```
+```java
 String message = "Good bye, Java 9";
 ```
 
 在 Java 10 中，我们可以这样声明一个局部变量:
 
-```
+```java
 @Test
 public void whenVarInitWithString_thenGetStringTypeVar() {
     var message = "Hello, Java 10";
@@ -37,13 +37,13 @@ public void whenVarInitWithString_thenGetStringTypeVar() {
 
 这种增强有助于减少样板代码；例如:
 
-```
+```java
 Map<Integer, String> map = new HashMap<>();
 ```
 
 这现在可以重写为:
 
-```
+```java
 var idToNameMap = new HashMap<Integer, String>();
 ```
 
@@ -57,31 +57,31 @@ var idToNameMap = new HashMap<Integer, String>();
 
 如前所述，`var `没有初始化器就无法工作:
 
-```
+```java
 var n; // error: cannot use 'var' on variable without initializer
 ```
 
 如果用`null`初始化，它也不会工作:
 
-```
+```java
 var emptyList = null; // error: variable initializer is 'null'
 ```
 
 它不适用于非局部变量:
 
-```
+```java
 public var = "hello"; // error: 'var' is not allowed here
 ```
 
 Lambda 表达式需要显式目标类型，因此不能使用`var `:
 
-```
+```java
 var p = (String s) -> s.length() > 10; // error: lambda expression needs an explicit target-type
 ```
 
 数组初始值设定项也是如此:
 
-```
+```java
 var arr = { 1, 2, 3 }; // error: array initializer needs an explicit target-type
 ```
 
@@ -91,7 +91,7 @@ var arr = { 1, 2, 3 }; // error: array initializer needs an explicit target-type
 
 例如，在代码可读性变差的情况下:
 
-```
+```java
 var result = obj.prcoess();
 ```
 
@@ -101,7 +101,7 @@ var result = obj.prcoess();
 
 最好避免`var `的另一种情况是在具有长管道的流中:
 
-```
+```java
 var x = emp.getProjects.stream()
   .findFirst()
   .map(String::length)
@@ -112,13 +112,13 @@ var x = emp.getProjects.stream()
 
 例如，如果我们将它与 Java 7 中引入的菱形运算符一起使用:
 
-```
+```java
 var empList = new ArrayList<>();
 ```
 
 `empList`的类型将是`ArrayList<Object>`而不是`List<Object>`。如果我们想让它成为`ArrayList<Employee>`，我们必须明确:
 
-```
+```java
 var empList = new ArrayList<Employee>();
 ```
 
@@ -126,7 +126,7 @@ var empList = new ArrayList<Employee>();
 
 例如，如果我们对匿名类实例使用`var `:
 
-```
+```java
 @Test
 public void whenVarInitWithAnonymous_thenGetAnonymousType() {
     var obj = new Object() {};
@@ -136,7 +136,7 @@ public void whenVarInitWithAnonymous_thenGetAnonymousType() {
 
 现在，如果我们试图将另一个`Object`赋值给`obj`，我们会得到一个编译错误:
 
-```
+```java
 obj = new Object(); // error: Object cannot be converted to <anonymous Object>
 ```
 

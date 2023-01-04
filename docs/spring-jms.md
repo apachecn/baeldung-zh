@@ -10,7 +10,7 @@ Spring 提供了一个 JMS 集成框架，简化了 JMS API 的使用。本文�
 
 为了在我们的应用程序中使用 Spring JMS，我们需要在`pom.xml`中添加必要的构件:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-jms</artifactId>
@@ -63,7 +63,7 @@ Spring 提供了像`DynamicDestinationResolver`这样的通用解析器和像 `J
 
 让我们看看实现定制`MessageConverter`的示例代码片段，
 
-```
+```java
 public class SampleMessageConverter implements MessageConverter {
     public Object fromMessage(Message message) 
       throws JMSException, MessageConversionException {
@@ -87,7 +87,7 @@ public class SampleMessageConverter implements MessageConverter {
 
 下面我们可以看到这些方法的实现:
 
-```
+```java
 public class SampleJmsMessageSender {
 
     private JmsTemplate jmsTemplate;
@@ -100,7 +100,7 @@ public class SampleJmsMessageSender {
     }
 ```
 
-```
+```java
  public void sendMessage(Employee employee) { 
         System.out.println("Jms Message Sender : " + employee); 
         Map<String, Object> map = new HashMap<>(); 
@@ -114,7 +114,7 @@ public class SampleJmsMessageSender {
 
 除了`onMessage()`方法，我们的`SampleListener`类还调用了一个方法`receiveAndConvert()`来接收自定义消息:
 
-```
+```java
 public class SampleListener implements MessageListener {
 
     public JmsTemplate getJmsTemplate() {
@@ -143,7 +143,7 @@ public class SampleListener implements MessageListener {
 
 我们看到了如何实现`MessageListener`，下面我们看到了 Spring 应用程序上下文中的配置:
 
-```
+```java
 <bean id="messageListener" class="com.baeldung.spring.jms.SampleListener" /> 
 
 <bean id="jmsContainer" 
@@ -162,7 +162,7 @@ public class SampleListener implements MessageListener {
 
 我们可以看到下面注释的一些示例类:
 
-```
+```java
 @JmsListener(destination = "myDestination")
 public void SampleJmsListenerMethod(Message<Order> order) { ... }
 ```
@@ -171,7 +171,7 @@ public void SampleJmsListenerMethod(Message<Order> order) { ... }
 
 **我们需要将`@EnableJms`注释添加到我们的一个配置类中，以支持`@JmsListener`注释方法:**
 
-```
+```java
 @Configuration
 @EnableJms
 public class AppConfig {
@@ -192,7 +192,7 @@ public class AppConfig {
 
 让我们首先实现`org.springframework.util.ErrorHandler` 接口:
 
-```
+```java
 @Service
 public class SampleJmsErrorHandler implements ErrorHandler {
 
@@ -211,7 +211,7 @@ public class SampleJmsErrorHandler implements ErrorHandler {
 
 然后，我们需要使用`setErrorHandler()` 方法在`DefaultJmsListenerConnectionFactory` 中引用我们的错误处理服务:
 
-```
+```java
 @Bean
 public DefaultJmsListenerContainerFactorybjmsListenerContainerFactory() {
     DefaultJmsListenerContainerFactory factory 
@@ -226,7 +226,7 @@ public DefaultJmsListenerContainerFactorybjmsListenerContainerFactory() {
 
 可选地，我们也可以通过更新我们的 `appContext.xml:`,使用普通的 XML 配置来配置错误处理程序
 
-```
+```java
 <bean id="sampleJmsErrorHandler"
   class="com.baeldung.spring.jms.SampleJmsErrorHandler" />
 

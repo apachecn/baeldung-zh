@@ -22,7 +22,7 @@ Java Cryptography Extension (JCE)是 Java Cryptography Architecture(JCA)的**部
 
 让我们编写一个示例类来说明`Cipher`的实例化:
 
-```
+```java
 public class Encryptor {
 
     public byte[] encryptMessage(byte[] message, byte[] keyBytes) 
@@ -37,7 +37,7 @@ public class Encryptor {
 
 我们还可以通过在转换中只指定算法来实例化`Cipher`对象:
 
-```
+```java
 Cipher cipher = Cipher.getInstance("AES");
 ```
 
@@ -61,7 +61,7 @@ Cipher cipher = Cipher.getInstance("AES");
 
 让我们从提供的密钥字节创建一个对称的`Key`:
 
-```
+```java
 SecretKey secretKey = new SecretKeySpec(keyBytes, "AES");
 ```
 
@@ -82,7 +82,7 @@ SecretKey secretKey = new SecretKeySpec(keyBytes, "AES");
 
 让我们初始化`Cipher`对象:
 
-```
+```java
 Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 SecretKey secretKey = new SecretKeySpec(keyBytes, "AES");
 cipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -95,7 +95,7 @@ cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
 让我们看一个使用`Certificate`的例子:
 
-```
+```java
 public byte[] encryptMessage(byte[] message, Certificate certificate) 
   throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException {
 
@@ -115,7 +115,7 @@ public byte[] encryptMessage(byte[] message, Certificate certificate)
 
 让我们在我们的`encryptMessage`方法中调用`doFinal`:
 
-```
+```java
 public byte[] encryptMessage(byte[] message, byte[] keyBytes)
   throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, 
     BadPaddingException, IllegalBlockSizeException {
@@ -129,7 +129,7 @@ public byte[] encryptMessage(byte[] message, byte[] keyBytes)
 
 为了执行解密操作，我们将`opmode`改为`DECRYPT_MODE`:
 
-```
+```java
 public byte[] decryptMessage(byte[] encryptedMessage, byte[] keyBytes) 
   throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, 
     BadPaddingException, IllegalBlockSizeException {
@@ -151,7 +151,7 @@ public byte[] decryptMessage(byte[] encryptedMessage, byte[] keyBytes)
 
 我们在列表的末尾添加一行:
 
-```
+```java
 ...
 security.provider.4=com.sun.net.ssl.internal.ssl.Provider
 security.provider.5=com.sun.crypto.provider.SunJCE
@@ -163,13 +163,13 @@ security.provider.7=org.bouncycastle.jce.provider.BouncyCastleProvider
 
 **我们还可以动态添加 BouncyCastle 安全提供者**,而无需修改安全文件:
 
-```
+```java
 Security.addProvider(new BouncyCastleProvider());
 ```
 
 我们现在可以在密码初始化期间指定提供者:
 
-```
+```java
 Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding", "BC");
 ```
 
@@ -181,7 +181,7 @@ Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding", "BC");
 
 在此测试中，我们使用 AES 加密算法和 128 位密钥，并断言解密结果等于原始消息文本:
 
-```
+```java
 @Test
 public void whenIsEncryptedAndDecrypted_thenDecryptedEqualsOriginal() 
   throws Exception {

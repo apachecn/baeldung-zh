@@ -28,7 +28,7 @@ Mariadb4j 和 MySql 的配置是相似的，甚至 mysql-connector 库也适用�
 
 让我们来看看建立一个简单的 hibernate-spatial 项目所需的 Maven 依赖性:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>
@@ -57,7 +57,7 @@ Mariadb4j 和 MySql 的配置是相似的，甚至 mysql-connector 库也适用�
 
 第一步是在`resources`目录中创建一个`hibernate.properties`:
 
-```
+```java
 hibernate.dialect=org.hibernate.spatial.dialect.mysql.MySQL56SpatialDialect
 // ...
 ```
@@ -72,7 +72,7 @@ hibernate.dialect=org.hibernate.spatial.dialect.mysql.MySQL56SpatialDialect
 
 通过解析类型的一个`String`表示，我们得到了一个`Geometry`的实例。JTS 提供的实用程序类`WKTReader`可用于将任何[知名文本](https://web.archive.org/web/20221126233811/https://en.wikipedia.org/wiki/Well-known_text)表示转换为`Geometry`类型；
 
-```
+```java
 public Geometry wktToGeometry(String wellKnownText) 
   throws ParseException {
 
@@ -82,7 +82,7 @@ public Geometry wktToGeometry(String wellKnownText)
 
 现在，让我们来看看这个方法的实际应用:
 
-```
+```java
 @Test
 public void shouldConvertWktToGeometry() {
     Geometry geometry = wktToGeometry("POINT (2 5)");
@@ -98,7 +98,7 @@ public void shouldConvertWktToGeometry() {
 
 既然我们对什么是`Geometry`类型以及如何从`String`中获得`Point`有了很好的了解，那么让我们来看看`PointEntity`:
 
-```
+```java
 @Entity
 public class PointEntity {
 
@@ -114,7 +114,7 @@ public class PointEntity {
 
 注意，实体`PointEntity`包含一个空间类型`Point`。如前所述，`Point`由两个坐标表示:
 
-```
+```java
 public void insertPoint(String point) {
     PointEntity entity = new PointEntity();
     entity.setPoint((Point) wktToGeometry(point));
@@ -130,7 +130,7 @@ public void insertPoint(String point) {
 
 让我们来看一些测试:
 
-```
+```java
 @Test
 public void shouldInsertAndSelectPoints() {
     PointEntity entity = new PointEntity();
@@ -151,7 +151,7 @@ public void shouldInsertAndSelectPoints() {
 
 让我们看看那张表:
 
-```
+```java
 desc PointEntity;
 Field    Type          Null    Key
 id       bigint(20)    NO      PRI
@@ -160,7 +160,7 @@ point    geometry      YES
 
 果然，`Field` `Point`的`Type`是`GEOMETRY`。因此，在使用我们的 SQL 编辑器(如 MySql workbench)获取数据时，我们需要将这种几何类型转换为人类可读的文本:
 
-```
+```java
 select id, astext(point) from PointEntity;
 
 id      astext(point)
@@ -179,7 +179,7 @@ MySQL 中的一个这样的函数是`ST_WITHIN()`,它告诉我们一个`Geometry
 
 让我们先来看看如何创建一个圆:
 
-```
+```java
 public Geometry createCircle(double x, double y, double radius) {
     GeometricShapeFactory shapeFactory = new GeometricShapeFactory();
     shapeFactory.setNumPoints(32);
@@ -193,7 +193,7 @@ public Geometry createCircle(double x, double y, double radius) {
 
 现在让我们向前看，看看如何获取给定半径内的点:
 
-```
+```java
 @Test
 public void shouldSelectAllPointsWithinRadius() throws ParseException {
     insertPoint("POINT (1 1)");
@@ -219,7 +219,7 @@ Hibernate 将其`within()`函数映射到 MySql 的`ST_WITHIN()`函数。
 
 这里，我们将给出一个例子，在数据库中插入一组`Polygon`并选择与给定的`Polygon`相邻的`Polygon`。让我们快速浏览一下`PolygonEntity`类:
 
-```
+```java
 @Entity
 public class PolygonEntity {
 
@@ -237,7 +237,7 @@ public class PolygonEntity {
 
 现在让我们开始测试:
 
-```
+```java
 @Test
 public void shouldSelectAdjacentPolygons() throws ParseException {
     insertPolygon("POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))");

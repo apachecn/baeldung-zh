@@ -22,7 +22,7 @@
 
 假设我们有一个`Order`实体，我们想要跟踪订单中所有商品的名称和价格。因此，**我们想引入一个`Map<String, Double>` 到`Order`，它将把商品的名称映射到它的价格:**
 
-```
+```java
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -52,7 +52,7 @@ public class Order {
 
 众所周知，需求会随着时间而变化——所以，现在，假设我们需要存储更多的`Item `属性以及`itemName `和`itemPrice`:
 
-```
+```java
 @Entity
 @Table(name = "item")
 public class Item {
@@ -81,7 +81,7 @@ public class Item {
 
 相应地，让我们将`Order `实体类中的`Map<String, Double>`改为`Map<String, Item> `:
 
-```
+```java
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -116,7 +116,7 @@ public class Order {
 
 接下来，假设我们还需要跟踪每件商品的卖家。我们可以这样做的一个方法是添加一个`Seller` 实体，并将它绑定到我们的`Item` 实体:
 
-```
+```java
 @Entity
 @Table(name = "seller")
 public class Seller {
@@ -134,7 +134,7 @@ public class Seller {
 }
 ```
 
-```
+```java
 @Entity
 @Table(name = "item")
 public class Item {
@@ -167,7 +167,7 @@ public class Item {
 
 在这种情况下，让我们假设我们的用例是按照`Seller. `将所有`Order`的`Item`分组，因此，让我们将`Map<String, Item>` 改为`Map<Seller, Item>`:
 
-```
+```java
 @Entity
 @Table(name = "orders")
 public class Order {

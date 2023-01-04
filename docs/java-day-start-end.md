@@ -14,7 +14,7 @@
 
 首先，让我们看看如何将一天的开始或结束作为一个`[LocalDate](https://web.archive.org/web/20221126224722/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/LocalDate.html)`对象给我们，例如:
 
-```
+```java
 LocalDate localDate = LocalDate.parse("2018-06-23");
 ```
 
@@ -22,13 +22,13 @@ LocalDate localDate = LocalDate.parse("2018-06-23");
 
 获得代表某一天开始的`[LocalDateTime](https://web.archive.org/web/20221126224722/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/LocalDateTime.html)`的最简单方法是使用`atStartOfDay()`方法:
 
-```
+```java
 LocalDateTime startOfDay = localDate.atStartOfDay();
 ```
 
 这个方法是重载的，因此如果我们想从中获得一个 [`ZonedDateTime`](https://web.archive.org/web/20221126224722/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/ZonedDateTime.html) ，我们可以通过指定`[ZoneId](https://web.archive.org/web/20221126224722/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/ZoneId.html)`来实现:
 
-```
+```java
 ZonedDateTime startOfDay = localDate.atStartOfDay(ZoneId.of("Europe/Paris"));
 ```
 
@@ -36,7 +36,7 @@ ZonedDateTime startOfDay = localDate.atStartOfDay(ZoneId.of("Europe/Paris"));
 
 我们可以实现相同结果的另一种方法是使用`of()`方法，提供一个`LocalDate`和一个 [`LocalTime`](https://web.archive.org/web/20221126224722/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/LocalTime.html) 的静态字段:
 
-```
+```java
 LocalDateTime startOfDay = LocalDateTime.of(localDate, LocalTime.MIDNIGHT);
 ```
 
@@ -52,7 +52,7 @@ LocalDateTime startOfDay = LocalDateTime.of(localDate, LocalTime.MIDNIGHT);
 
 在这种情况下，无论如何，我们将使用`LocalTime`的`MAX`字段作为参数来获取给定一天的最后时刻:
 
-```
+```java
 LocalDateTime startOfDay = localDate.atTime(LocalTime.MAX);
 ```
 
@@ -60,7 +60,7 @@ LocalDateTime startOfDay = localDate.atTime(LocalTime.MAX);
 
 这个例子与前面的例子非常相似，但是这一次，我们将使用一个`LocalTime`对象的`atDate()`方法，传递`LocalDate`作为参数:
 
-```
+```java
 LocalDateTime endOfDate = LocalTime.MAX.atDate(localDate);
 ```
 
@@ -68,7 +68,7 @@ LocalDateTime endOfDate = LocalTime.MAX.atDate(localDate);
 
 不言而喻，我们可以从中获得`LocalDate`，然后使用第 2 节中的任何方法从中获得一天的结束或开始:
 
-```
+```java
 LocalDateTime localDateTime = LocalDateTime
   .parse("2018-06-23T05:55:55");
 LocalDateTime endOfDate = localDateTime
@@ -83,7 +83,7 @@ LocalDateTime endOfDate = localDateTime
 
 在这种情况下，我们将使用该方法的签名，它将一个`[TemporalField](https://web.archive.org/web/20221126224722/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/temporal/TemporalField.html)`(特别是一个`[ChronoField Enum](https://web.archive.org/web/20221126224722/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/temporal/ChronoField.html)`值)和一个`long `参数作为该字段的新值:
 
-```
+```java
 LocalDateTime endOfDate = localDateTime.with(ChronoField.NANO_OF_DAY, LocalTime.MAX.toNanoOfDay());
 ```
 
@@ -91,7 +91,7 @@ LocalDateTime endOfDate = localDateTime.with(ChronoField.NANO_OF_DAY, LocalTime.
 
 如果给我们一个`ZonedDateTime,`，我们可以使用`with()`方法，因为它也实现了`Temporal interface`:
 
-```
+```java
 ZonedDateTime startofDay = zonedDateTime.with(ChronoField.HOUR_OF_DAY, 0);
 ```
 

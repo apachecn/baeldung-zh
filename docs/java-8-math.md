@@ -22,7 +22,7 @@
 
 添加了两个参数，**在溢出时抛出`ArithmeticException`(这适用于加法的所有`*Exact()`方法)**:
 
-```
+```java
 Math.addExact(100, 50);               // returns 150
 Math.addExact(Integer.MAX_VALUE, 1);  // throws ArithmeticException
 ```
@@ -31,7 +31,7 @@ Math.addExact(Integer.MAX_VALUE, 1);  // throws ArithmeticException
 
 从第一个参数中减去第二个参数的值，在减法溢出的情况下抛出`ArithmeticException`:
 
-```
+```java
 Math.subtractExact(100, 50);           // returns 50
 Math.subtractExact(Long.MIN_VALUE, 1); // throws ArithmeticException
 ```
@@ -40,7 +40,7 @@ Math.subtractExact(Long.MIN_VALUE, 1); // throws ArithmeticException
 
 将参数增加 1，在溢出的情况下抛出`ArithmeticException`:
 
-```
+```java
 Math.incrementExact(100);               // returns 101
 Math.incrementExact(Integer.MAX_VALUE); // throws ArithmeticException
 ```
@@ -49,7 +49,7 @@ Math.incrementExact(Integer.MAX_VALUE); // throws ArithmeticException
 
 将参数减 1，在溢出的情况下抛出`ArithmeticException`:
 
-```
+```java
 Math.decrementExact(100);            // returns 99
 Math.decrementExact(Long.MIN_VALUE); // throws ArithmeticException
 ```
@@ -58,7 +58,7 @@ Math.decrementExact(Long.MIN_VALUE); // throws ArithmeticException
 
 将两个参数相乘，如果乘积溢出，抛出`ArithmeticException`:
 
-```
+```java
 Math.multiplyExact(100, 5);            // returns 500
 Math.multiplyExact(Long.MAX_VALUE, 2); // throws ArithmeticException
 ```
@@ -69,7 +69,7 @@ Math.multiplyExact(Long.MAX_VALUE, 2); // throws ArithmeticException
 
 在这种情况下，我们必须考虑内存中值的内部表示，以理解为什么会出现溢出，因为这不像其他“精确”方法那样直观:
 
-```
+```java
 Math.negateExact(100);               // returns -100
 Math.negateExact(Integer.MIN_VALUE); // throws ArithmeticException
 ```
@@ -82,7 +82,7 @@ Math.negateExact(Integer.MIN_VALUE); // throws ArithmeticException
 
 将第一个参数除以第二个参数，然后对结果执行`floor()`运算，返回小于或等于商的`Integer`:
 
-```
+```java
 Math.floorDiv(7, 2));  // returns 3 
 ```
 
@@ -90,7 +90,7 @@ Math.floorDiv(7, 2));  // returns 3
 
 让我们看另一个例子:
 
-```
+```java
 Math.floorDiv(-7, 2)); // returns -4 
 ```
 
@@ -100,13 +100,13 @@ Math.floorDiv(-7, 2)); // returns -4
 
 这种方法与前面的方法`floorDiv()`相似，但是对除法的模或余数而不是商应用了`floor()`运算:
 
-```
+```java
 Math.modDiv(5, 3));  // returns 2 
 ```
 
 我们可以看到，两个正数的 **`modDiv()`与%运算符**相同。让我们看一个不同的例子:
 
-```
+```java
 Math.modDiv(-5, 3));  // returns 1 
 ```
 
@@ -116,7 +116,7 @@ Math.modDiv(-5, 3));  // returns 1
 
 返回参数的下一个值(支持`float`或`double`参数):
 
-```
+```java
 float f = Math.nextDown(3);  // returns 2.9999998
 double d = Math.nextDown(3); // returns 2.999999761581421
 ```

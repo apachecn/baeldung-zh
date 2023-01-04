@@ -16,7 +16,7 @@
 
 我们的名为`WarInitializerApplication`的`@SpringBootApplication`类扩展了`SpringBootServletInitializer`并覆盖了`configure()`方法。该方法使用`SpringApplicationBuilder`简单地将我们的类注册为应用程序的配置类:
 
-```
+```java
 @SpringBootApplication
 public class WarInitializerApplication extends SpringBootServletInitializer {
 

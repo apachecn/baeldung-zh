@@ -20,7 +20,7 @@ RxJava 提供了各种操作符来将一个可观察对象发出的项目转换�
 
 此外，我们总是为每个单词返回两个搜索结果。
 
-```
+```java
 // given
 List<String> actualOutput = new ArrayList<>();
 TestScheduler scheduler = new TestScheduler();
@@ -54,7 +54,7 @@ assertThat(actualOutput, hasItems("b FirstResult", "b SecondResult",
 
 如果我们在上面的代码示例中用`switchMap`替换`flatMap`，下面的断言将是有效的:
 
-```
+```java
 assertEquals(2, actualOutput.size());
 assertThat(actualOutput, hasItems("books FirstResult", "books SecondResult"));
 ```

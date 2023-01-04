@@ -36,7 +36,7 @@
 
 **例 2.1。**
 
-```
+```java
 @Entity
 public class VerificationToken {
     private static final int EXPIRATION = 60 * 24;
@@ -72,7 +72,7 @@ public class VerificationToken {
 
 让我们从将字段添加到我们的 `User`实体开始:
 
-```
+```java
 public class User {
     ...
     @Column(name = "enabled")
@@ -105,7 +105,7 @@ public class User {
 
 **例 3.1。**
 
-```
+```java
 @Autowired
 ApplicationEventPublisher eventPublisher
 
@@ -140,7 +140,7 @@ public ModelAndView registerUserAccount(
 
 **例 3.2.1。**—`OnRegistrationCompleteEvent`
 
-```
+```java
 public class OnRegistrationCompleteEvent extends ApplicationEvent {
     private String appUrl;
     private Locale locale;
@@ -161,7 +161,7 @@ public class OnRegistrationCompleteEvent extends ApplicationEvent {
 
 **例 3.2.2。**–**`The RegistrationListener`**处理`OnRegistrationCompleteEvent`
 
-```
+```java
 @Component
 public class RegistrationListener implements 
   ApplicationListener<OnRegistrationCompleteEvent> {
@@ -214,7 +214,7 @@ public class RegistrationListener implements
 
 **例 3.3.1。–`RegistrationController`处理注册确认**
 
-```
+```java
 @Autowired
 private IUserService service;
 
@@ -254,7 +254,7 @@ public String confirmRegistration
 
 **例 3.3.2。— `badUser.html`**
 
-```
+```java
 <html>
 <body>
     <h1 th:text="${param.message[0]}>Error Message</h1>
@@ -281,7 +281,7 @@ public String confirmRegistration
 
 **例 4.1。**
 
-```
+```java
 @Autowired
 UserRepository userRepository;
 
@@ -319,7 +319,7 @@ public UserDetails loadUserByUsername(String email)
 
 **例 4.2。–`CustomAuthenticationFailureHandler`:**
 
-```
+```java
 @Component
 public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
@@ -356,7 +356,7 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
 **例 4.3。–在`login.html` :** 显示错误信息
 
-```
+```java
 <div th:if="${param.error != null}" 
   th:text="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</div>
 ```
@@ -374,7 +374,7 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
 **例 5.1。**—`VerificationTokenRepository`
 
-```
+```java
 public interface VerificationTokenRepository 
   extends JpaRepository<VerificationToken, Long> {
 
@@ -386,7 +386,7 @@ public interface VerificationTokenRepository
 
 **例 5.2。**–界面`IUserService`
 
-```
+```java
 public interface IUserService {
 
     User registerNewUserAccount(UserDto userDto) 
@@ -404,7 +404,7 @@ public interface IUserService {
 
 **例 5.3。**`UserService`
 
-```
+```java
 @Service
 @Transactional
 public class UserService implements IUserService {

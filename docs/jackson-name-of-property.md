@@ -12,7 +12,7 @@
 
 使用简单实体:
 
-```
+```java
 public class MyDto {
     private String stringValue;
 
@@ -32,13 +32,13 @@ public class MyDto {
 
 将其序列化将产生以下 JSON:
 
-```
+```java
 {"stringValue":"some value"}
 ```
 
 **为了定制输出，我们需要简单地注释 getter:** ，而不是`stringValue`
 
-```
+```java
 @JsonProperty("strVal")
 public String getStringValue() {
     return stringValue;
@@ -47,13 +47,13 @@ public String getStringValue() {
 
 现在，在序列化时，我们将得到期望的输出:
 
-```
+```java
 {"strVal":"some value"}
 ```
 
 简单的单元测试应该可以验证输出是否正确:
 
-```
+```java
 @Test
 public void givenNameOfFieldIsChanged_whenSerializing_thenCorrect() 
   throws JsonParseException, IOException {

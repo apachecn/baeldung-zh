@@ -12,7 +12,7 @@
 
 让我们先来看一下这三种方法的定义，以及基于用户主目录中存在以下目录结构的示例:
 
-```
+```java
 |-- baeldung
     |-- baeldung.txt
     |-- foo
@@ -34,14 +34,14 @@
 
 如果我们从`{user.home}/baeldung`目录中调用以下代码:
 
-```
+```java
 File file = new File("foo/foo-one.txt");
 String path = file.getPath();
 ```
 
 `path`变量的值为:
 
-```
+```java
 foo/foo-one.txt  // on Unix systems
 foo\foo-one.txt  // on Windows systems
 ```
@@ -52,21 +52,21 @@ foo\foo-one.txt  // on Windows systems
 
 `getAbsolutePath()`方法在解析当前用户目录的路径后返回**文件的路径名——这称为绝对路径名。因此，对于我们之前的示例，`file.getAbsolutePath()`将返回:**
 
-```
+```java
 /home/username/baeldung/foo/foo-one.txt     // on Unix systems
 C:\Users\username\baeldung\foo\foo-one.txt  // on Windows systems
 ```
 
 此方法仅解析相对路径的当前目录。速记表示(如"`.”`和"`..”`)不会被进一步解析。因此，当我们从`{user.home}/baeldung:`目录中执行下面的代码时
 
-```
+```java
 File file = new File("bar/baz/../bar-one.txt");
 String path = file.getAbsolutePath();
 ```
 
 变量`path`的值将是:
 
-```
+```java
 /home/username/baeldung/bar/baz/../bar-one.txt      // on Unix systems
 C:\Users\username\baeldung\bar\baz\..\bar-one.txt   // on Windows systems
 ```
@@ -77,14 +77,14 @@ C:\Users\username\baeldung\bar\baz\..\bar-one.txt   // on Windows systems
 
 因此对于前面的例子，`getCanonicalPath()`方法将返回:
 
-```
+```java
 /home/username/baeldung/bar/bar-one.txt     // on Unix systems
 C:\Users\username\baeldung\bar\bar-one.txt  // on Windows systems
 ```
 
 我们再举一个例子。给定当前目录为使用参数`new File(“bar/baz/./baz-one.txt”)`创建的`${user.home}/baeldung`和`File`对象，`getCanonicalPath()`的输出将是:
 
-```
+```java
 /home/username/baeldung/bar/baz/baz-one.txt     // on Unix systems
 C:\Users\username\baeldung\bar\baz\baz-one.txt  // on Windows Systems
 ```
@@ -95,7 +95,7 @@ C:\Users\username\baeldung\bar\baz\baz-one.txt  // on Windows Systems
 
 例如，在 Windows 系统上，如果我们用一个非法字符创建一个`File`对象，解析规范路径将抛出一个`IOException`:
 
-```
+```java
 new File("*").getCanonicalPath();
 ```
 

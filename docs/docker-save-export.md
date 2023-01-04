@@ -24,13 +24,13 @@ Docker 容器和图像类似于 Java 类和对象。Java 类是如何创建对�
 
 默认情况下，该命令将 tar 文件内容打印到 STDOUT，因此典型的用法是:
 
-```
+```java
 docker save IMAGE > /path/to/file.tar
 ```
 
 注意，我们还可以指定一个文件来打印内容，这样就不需要重定向了:
 
-```
+```java
 docker save -o /path/to/file.tar IMAGE 
 ```
 
@@ -45,13 +45,13 @@ docker save -o /path/to/file.tar IMAGE
 
 语法与`save`命令完全相同。与`save`一样，`export`命令将输出发送到 STDOUT，因此我们必须将其重定向到一个文件:
 
-```
+```java
 docker export CONTAINER > /path/to/file.tar
 ```
 
 或者我们可以指定输出文件名:
 
-```
+```java
 docker export -o /path/to/file.tar CONTAINER
 ```
 

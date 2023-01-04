@@ -12,7 +12,7 @@
 
 **`ApplicationContextRunner`是一个运行`ApplicationContext`并提供 AssertJ 风格断言**的实用程序类。最好将**用作共享配置的测试类**中的一个字段，然后我们在每个测试中进行定制:
 
-```
+```java
 private final ApplicationContextRunner contextRunner 
     = new ApplicationContextRunner(); 
 ```
@@ -23,7 +23,7 @@ private final ApplicationContextRunner contextRunner
 
 在本节中，我们将通过**测试一些使用`@ConditionalOnClass`和`@ConditionalOnMissingClass`注释**的自动配置类:
 
-```
+```java
 @Configuration
 @ConditionalOnClass(ConditionalOnClassIntegrationTest.class)
 protected static class ConditionalOnClassConfiguration {
@@ -53,7 +53,7 @@ protected static class ConditionalOnMissingClassConfiguration {
 
 `run`方法将一个`ContextConsumer` 作为将断言应用到上下文的参数。当测试退出时，`ApplicationContext`将自动关闭；
 
-```
+```java
 @Test
 public void whenDependentClassIsPresent_thenBeanCreated() {
     this.contextRunner.withUserConfiguration(ConditionalOnClassConfiguration.class)
@@ -78,7 +78,7 @@ public void whenDependentClassIsPresent_thenBeanMissing() {
 
 这就是 *FilteredClassLoader* 发挥作用的地方。它用于在运行时过滤类路径上的指定类:
 
-```
+```java
 @Test
 public void whenDependentClassIsNotPresent_thenBeanMissing() {
     this.contextRunner.withUserConfiguration(ConditionalOnClassConfiguration.class)
@@ -109,7 +109,7 @@ public void whenDependentClassIsNotPresent_thenBeanCreated() {
 
 作为开始，我们同样需要**一些自动配置类**:
 
-```
+```java
 @Configuration
 protected static class BasicConfiguration {
     @Bean
@@ -137,7 +137,7 @@ protected static class ConditionalOnMissingBeanConfiguration {
 
 然后，我们像前一节一样调用`withUserConfiguration` 方法，并发送我们的自定义配置类来测试自动配置是否适当地实例化或跳过不同条件下的`createOnBean`或`createOnMissingBean`bean`:`
 
-```
+```java
 @Test
 public void whenDependentBeanIsPresent_thenConditionalBeanCreated() {
     this.contextRunner.withUserConfiguration(
@@ -159,13 +159,13 @@ public void whenDependentBeanIsNotPresent_thenConditionalMissingBeanCreated() {
 
 首先，我们需要这个测试的一个属性:
 
-```
+```java
 com.baeldung.service=custom
 ```
 
 之后，我们编写嵌套的自动配置类来基于前面的属性创建 beans:
 
-```
+```java
 @Configuration
 @TestPropertySource("classpath:ConditionalOnPropertyTest.properties")
 protected static class SimpleServiceConfiguration {
@@ -177,7 +177,7 @@ protected static class SimpleServiceConfiguration {
     }
 ```
 
-```
+```java
  @Bean
     @ConditionalOnProperty(name = "com.baeldung.service", havingValue = "custom")
     @ConditionalOnMissingBean
@@ -189,7 +189,7 @@ protected static class SimpleServiceConfiguration {
 
 现在，我们调用`withPropertyValues`方法来覆盖每个测试中的属性值:
 
-```
+```java
 @Test
 public void whenGivenCustomPropertyValue_thenCustomServiceCreated() {
     this.contextRunner.withPropertyValues("com.baeldung.service=custom")

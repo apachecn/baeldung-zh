@@ -10,7 +10,7 @@
 
 为了演示这一点，让我们创建一个简单的 Spring Boot web 项目。首先，我们需要在 Maven 项目文件中添加[Spring Boot web starter 依赖项](https://web.archive.org/web/20221129004617/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-web/2.3.0.RELEASE/jar):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -21,7 +21,7 @@
 
 然后，让我们创建一个简单的 Spring Boot 应用程序，其中一个`Controller`解析为一个路径:
 
-```
+```java
 @Controller
 public class CircularViewPathController {
 
@@ -34,7 +34,7 @@ public class CircularViewPathController {
 
 返回值是将产生响应数据的视图名称。在我们的例子中，返回值是`path`，它与`path.html`模板相关联:
 
-```
+```java
 <html>
 <head>
     <title>path.html</title>
@@ -47,7 +47,7 @@ public class CircularViewPathController {
 
 启动服务器后，我们可以通过向`[http://localhost:8080/path](https://web.archive.org/web/20221129004617/http://localhost:8080/path)`发出 GET 请求来重现错误。结果将是循环视图路径错误:
 
-```
+```java
 {"timestamp":"2020-05-22T11:47:42.173+0000","status":500,"error":"Internal Server Error",
 "message":"Circular view path [path]: would dispatch back to the current handler URL [/path] 
 again. Check your ViewResolver setup! (Hint: This may be the result of an unspecified view, 
@@ -60,7 +60,7 @@ due to default view name generation.)","path":"/path"}
 
 一个可能的解决方案是重命名视图，并更改控制器方法中的返回值。
 
-```
+```java
 @Controller
 public class CircularViewPathController {
   @GetMapping("/path")
@@ -74,7 +74,7 @@ public class CircularViewPathController {
 
 对于最常见的情况，我们可以选择[百里香 Java 模板引擎](https://web.archive.org/web/20221129004617/https://www.thymeleaf.org/)。让我们将[`spring-boot-starter-thymeleaf` 依赖项](https://web.archive.org/web/20221129004617/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-thymeleaf/2.3.0.RELEASE/jar)添加到项目中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>

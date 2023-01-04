@@ -12,7 +12,7 @@
 
 让我们从添加几个依赖项开始， `[slf4j-api](https://web.archive.org/web/20221205215412/https://mvnrepository.com/artifact/org.slf4j/slf4j-api)` (我们将使用的)和 `[common-collections](https://web.archive.org/web/20221205215412/https://mvnrepository.com/artifact/commons-collections/commons-collections)`(我们将不使用的):
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>commons-collections</groupId>
@@ -29,7 +29,7 @@
 
 我们可以访问[Maven 依赖插件](https://web.archive.org/web/20221205215412/https://search.maven.org/artifact/org.apache.maven.plugins/maven-dependency-plugin)，而无需在 pom 中指定它。在任何情况下，我们都可以使用`pom.xml`定义来指定版本，如果需要的话还可以指定一些属性:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -44,7 +44,7 @@
 
 现在我们已经设置好了项目，**让我们写一行代码，其中使用了我们之前定义的依赖项之一:**
 
-```
+```java
 public Logger getLogger() {
     return LoggerFactory.getLogger(UnusedDependenciesExample.class);
 }
@@ -56,7 +56,7 @@ Slf4J 库中的`LoggerFactory`在方法**中返回，但是没有使用 common-c
 
 使用 Maven 依赖插件，我们可以找到项目中没有使用的依赖项。为此，我们调用插件的分析目标:
 
-```
+```java
 $ mvn dependency:analyze
 
 [INFO] --- maven-dependency-plugin:3.1.1:analyze (default-cli) @ maven-unused-dependencies ---
@@ -80,7 +80,7 @@ $ mvn dependency:analyze
 
 我们通过列出`usedDependencies`属性中的依赖项来做到这一点:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-dependency-plugin</artifactId>

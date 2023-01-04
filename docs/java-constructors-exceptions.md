@@ -16,7 +16,7 @@
 
 在构造函数中抛出异常与在任何其他方法中抛出异常没有什么不同。让我们从创建一个带有无参数构造函数的`Animal`类开始:
 
-```
+```java
 public Animal() throws InstantiationException {
     throw new InstantiationException("Cannot be instantiated");
 }
@@ -42,7 +42,7 @@ public Animal() throws InstantiationException {
 
 参数验证是在构造函数中抛出异常的常见用例。构造函数多用于给变量赋值。如果传递给构造函数的参数无效，我们可以抛出异常。让我们考虑一个简单的例子:
 
-```
+```java
 public Animal(String id, int age) {
     if (id == null)
         throw new NullPointerException("Id cannot be null");
@@ -59,7 +59,7 @@ public Animal(String id, int age) {
 
 让我们考虑我们的`Animal`类从用户输入文件中加载属性:
 
-```
+```java
 public Animal(File file) throws SecurityException, IOException {
     if (file.isAbsolute()) {
         throw new SecurityException("Traversal attempt");
@@ -79,7 +79,7 @@ public Animal(File file) throws SecurityException, IOException {
 
 让我们创建一个子类`Bird`，它扩展了我们的`Animal`类:
 
-```
+```java
 public class Bird extends Animal {
     public Bird() throws ReflectiveOperationException {
         super();

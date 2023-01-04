@@ -20,7 +20,7 @@ Kafka 流的一个重要概念是处理器拓扑。**处理器拓扑是 Kafka �
 
 我们首先将 [`spring-kafka`](https://web.archive.org/web/20220707145357/https://search.maven.org/search?q=g:org.springframework.kafka%20AND%20a:spring-kafka) 和 [`kafka-streams`](https://web.archive.org/web/20220707145357/https://search.maven.org/search?q=g:org.apache.kafka%20AND%20a:kafka-streams) 依赖项添加到 POM 中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.kafka</groupId>
     <artifactId>spring-kafka</artifactId>
@@ -43,7 +43,7 @@ Kafka 流的一个重要概念是处理器拓扑。**处理器拓扑是 Kafka �
 
 首先，让我们在 Java config 类中定义 Kafka 流配置:
 
-```
+```java
 @Configuration
 @EnableKafka
 @EnableKafkaStreams
@@ -75,7 +75,7 @@ public class KafkaConfig {
 
 现在我们已经设置了配置，让我们为我们的应用程序构建拓扑，以记录来自输入消息的单词数:
 
-```
+```java
 @Component
 public class WordCountProcessor {
 
@@ -113,7 +113,7 @@ public class WordCountProcessor {
 
 首先，让我们修改前面的`KTable`,并将聚合计数具体化为本地状态存储。这可以从 REST 控制器中查询:
 
-```
+```java
 KTable<String, Long> wordCounts = textStream
   .mapValues((ValueMapper<String, String>) String::toLowerCase)
   .flatMapValues(value -> Arrays.asList(value.split("\\W+")))
@@ -123,7 +123,7 @@ KTable<String, Long> wordCounts = textStream
 
 在此之后，我们可以更新控制器，从这个`counts`状态存储中检索计数值:
 
-```
+```java
 @GetMapping("/count/{word}")
 public Long getWordCount(@PathVariable String word) {
     KafkaStreams kafkaStreams = factoryBean.getKafkaStreams();
@@ -144,7 +144,7 @@ public Long getWordCount(@PathVariable String word) {
 
 首先，让我们使用`TopologyTestDriver`为我们的拓扑设置一个单元测试。这是测试 Kafka Streams 应用程序的主要测试工具:
 
-```
+```java
 @Test
 void givenInputMessages_whenProcessed_thenWordCountIsProduced() {
     StreamsBuilder streamsBuilder = new StreamsBuilder();
@@ -177,7 +177,7 @@ void givenInputMessages_whenProcessed_thenWordCountIsProduced() {
 
 最后，让我们使用 Testcontainers 框架来端到端地测试我们的应用程序。这使用了一个正在运行的 Kafka 代理，并启动我们的应用程序进行一个完整的测试:
 
-```
+```java
 @Testcontainers
 @SpringBootTest(classes = KafkaStreamsApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 class KafkaStreamsApplicationLiveTest {

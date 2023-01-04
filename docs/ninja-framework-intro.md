@@ -32,14 +32,14 @@ Ninja 需要一套标准的工具来创建 web 应用程序:
 
 我们将使用一个 [Maven 原型](/web/20221128054812/https://www.baeldung.com/maven-archetype#creating-archetype)来快速建立 Ninja 项目。它将提示我们提供一个组 id、一个工件 id 和一个版本号，后面是一个项目名称:
 
-```
+```java
 mvn archetype:generate -DarchetypeGroupId=org.ninjaframework \
   -DarchetypeArtifactId=ninja-servlet-archetype-simple
 ```
 
 或者，对于现有的 Maven 项目，我们可以将最新的[忍者核心](https://web.archive.org/web/20221128054812/https://search.maven.org/search?q=g:org.ninjaframework%20a:ninja-core)依赖项添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.ninjaframework</groupId>
     <artifactId>ninja-core</artifactId>
@@ -49,13 +49,13 @@ mvn archetype:generate -DarchetypeGroupId=org.ninjaframework \
 
 然后，我们将第一次运行 Maven 命令来编译文件:
 
-```
+```java
 mvn clean install
 ```
 
 最后，让我们使用 Ninja 提供的 Maven 命令运行应用程序:
 
-```
+```java
 mvn ninja:run
 ```
 
@@ -85,7 +85,7 @@ mvn ninja:run
 
 让我们用一个简单的方法创建`ApplicationController`类来呈现 HTML:
 
-```
+```java
 @Singleton
 public class ApplicationController {
     public Result index() {
@@ -106,7 +106,7 @@ public class ApplicationController {
 
 让我们为`index`方法创建`i` `ndex` `.ftl.html`文件:
 
-```
+```java
 <html>  
 <head>
     <title>Ninja: Index</title>
@@ -128,7 +128,7 @@ Ninja 使用`conf`包中的`Routes`类将 URL 映射到控制器的特定方法�
 
 让我们添加一个路由来访问`ApplicationController`的`index`方法:
 
-```
+```java
 public class Routes implements ApplicationRoutes {
     @Override
     public void init(Router router) {          
@@ -146,7 +146,7 @@ public class Routes implements ApplicationRoutes {
 
 让我们在`ApplicationController`类中添加`userJson`方法，并在 JSON 中呈现一个简单`HashMap`的内容:
 
-```
+```java
 public Result userJson() {
     HashMap<String, String> userMap = new HashMap<>();
     userMap.put("name", "Norman Lewis");
@@ -157,7 +157,7 @@ public Result userJson() {
 
 然后，我们将添加访问`userJson`所需的路由:
 
-```
+```java
 router.GET().route("/userJson").with(ApplicationController::userJson);
 ```
 
@@ -170,7 +170,7 @@ router.GET().route("/userJson").with(ApplicationController::userJson);
 
 首先，让我们创建一个简单的`UserService`接口来定义抽象:
 
-```
+```java
 public interface UserService {
     HashMap<String, String> getUserMap();
 }
@@ -178,7 +178,7 @@ public interface UserService {
 
 然后，我们将在`UserServiceImpl`类中实现`UserService`接口，并覆盖`getUserMap`方法:
 
-```
+```java
 public class UserServiceImpl implements UserService {
     @Override
     public HashMap<String, String> getUserMap() {
@@ -194,7 +194,7 @@ public class UserServiceImpl implements UserService {
 
 让我们在`conf`包中可用的`Module`类中添加绑定:
 
-```
+```java
 @Singleton
 public class Module extends AbstractModule {
     protected void configure() {        
@@ -205,7 +205,7 @@ public class Module extends AbstractModule {
 
 最后，我们将使用 [`@Inject`](https://web.archive.org/web/20221128054812/https://google.github.io/guice/api-docs/latest/javadoc/index.html?com/google/inject/Inject.html) 注释在`ApplicationController`类中注入`UserService`依赖项:
 
-```
+```java
 public class ApplicationController {
     @Inject
     UserService userService;
@@ -216,7 +216,7 @@ public class ApplicationController {
 
 因此，我们都准备在`ApplicationController`中使用`UserService`的`getUserMap`方法:
 
-```
+```java
 public Result userJson() {
     HashMap<String, String> userMap = userService.getUserMap();
     return Results.json().render(userMap);
@@ -229,7 +229,7 @@ Ninja 通过其名为 Flash Scope 的特性提供了一种简单而有效的方�
 
 为了在控制器中使用它，我们将把`FlashScope`参数添加到方法中:
 
-```
+```java
 public Result showFlashMsg(FlashScope flashScope) {
     flashScope.success("Success message");
     flashScope.error("Error message");
@@ -241,7 +241,7 @@ public Result showFlashMsg(FlashScope flashScope) {
 
 然后，我们将向`showFlashMsg`方法添加一个路由`/flash`，并修改视图以显示 flash 消息:
 
-```
+```java
 <#if (flash.error)??>
     <div class="alert alert-danger">
         ${flash.error}
@@ -264,20 +264,20 @@ Ninja 提供了易于配置的内置国际化特性。
 
 首先，我们将在 `application.conf`文件中定义支持的语言列表:
 
-```
+```java
 application.languages=fr,en
 ```
 
 然后，我们将为英语创建默认属性文件—`messages.properties`——为消息创建键值对:
 
-```
+```java
 header.home=Home!
 helloMsg=Hello, welcome to Ninja Framework!
 ```
 
 类似地，我们可以在特定于语言的属性文件的文件名中添加语言代码—例如，`message_fr.properties` 文件表示法语:
 
-```
+```java
 header.home=Accueil!
 helloMsg=Bonjour, bienvenue dans Ninja Framework!
 ```
@@ -286,7 +286,7 @@ helloMsg=Bonjour, bienvenue dans Ninja Framework!
 
 我们有两种方法，要么使用`[Lang](https://web.archive.org/web/20221128054812/https://www.ninjaframework.org/apidocs/ninja/i18n/Lang.html)`类，要么使用 [`Messages`](https://web.archive.org/web/20221128054812/https://www.ninjaframework.org/apidocs/ninja/i18n/Messages.html) 类:
 
-```
+```java
 @Singleton
 public class ApplicationController {
     @Inject
@@ -301,14 +301,14 @@ public class ApplicationController {
 
 然后，使用`Lang`类，我们可以设置结果的语言:
 
-```
+```java
 Result result = Results.html();
 lang.setLanguage("fr", result);
 ```
 
 类似地，使用`Messages`类，我们可以获得特定于语言的消息:
 
-```
+```java
 Optional<String> language = Optional.of("fr");        
 String helloMsg = msg.get("helloMsg", language).get();
 ```
@@ -321,7 +321,7 @@ Ninja 支持 JPA 2.0，并利用 Hibernate 来支持 web 应用程序中的持�
 
 我们需要一个`Entity`类来连接数据库中的一个表。为此，Ninja 遵循在`models`包中寻找实体类的惯例。所以，我们将在那里创建`User`实体类:
 
-```
+```java
 @Entity
 public class User {
     @Id
@@ -338,7 +338,7 @@ public class User {
 
 对于 Hibernate 配置，Ninja 希望`persistence.xml`文件在`src/main/java/META-INF`目录中:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -363,7 +363,7 @@ public class User {
 
 然后，我们将数据库连接细节添加到`application.conf`:
 
-```
+```java
 ninja.jpa.persistence_unit_name=dev_unit
 db.connection.url=jdbc:h2:./devDb
 db.connection.username=sa
@@ -374,7 +374,7 @@ db.connection.password=
 
 最后，我们将使用 Guice 的 [`Provider`](https://web.archive.org/web/20221128054812/https://google.github.io/guice/api-docs/latest/javadoc/index.html?com/google/inject/Provider.html) 类在`ApplicationController`中注入 [`EntityManager`](/web/20221128054812/https://www.baeldung.com/hibernate-entitymanager) 的实例:
 
-```
+```java
 public class ApplicationController {
     @Inject 
     Provider<EntityManager> entityManagerProvider;
@@ -385,7 +385,7 @@ public class ApplicationController {
 
 因此，我们准备使用`EntityManager`来持久化`User`对象:
 
-```
+```java
 @Transactional
 public Result insertUser(User user) {
     EntityManager entityManager = entityManagerProvider.get();
@@ -397,7 +397,7 @@ public Result insertUser(User user) {
 
 类似地，我们可以使用`EntityManager`从数据库中读取`User`对象:
 
-```
+```java
 @UnitOfWork
 public Result fetchUsers() {
     EntityManager entityManager = entityManagerProvider.get();
@@ -415,7 +415,7 @@ public Result fetchUsers() {
 
 让我们通过用 [`@NotNull`](https://web.archive.org/web/20221128054812/https://docs.oracle.com/javaee/7/api/javax/validation/constraints/NotNull.html) 注释来注释`User`实体中的一个属性来检查这个特性:
 
-```
+```java
 public class User {
     // ...
 
@@ -426,7 +426,7 @@ public class User {
 
 然后，我们将修改已经讨论过的`ApplicationController`中的`insertUser` 方法来启用验证:
 
-```
+```java
 @Transactional
 public Result insertUser(FlashScope flashScope, @JSR303Validation User user, Validation validation) {
     if (validation.getViolations().size() > 0) {

@@ -46,7 +46,7 @@ Crunch 提供了一个用 Java 编写、测试和运行 MapReduce 管道的框�
 
 首先，让我们添加`crunch-core`库:
 
-```
+```java
 <dependency>
     <groupId>org.apache.crunch</groupId>
     <artifactId>crunch-core</artifactId>
@@ -56,7 +56,7 @@ Crunch 提供了一个用 Java 编写、测试和运行 MapReduce 管道的框�
 
 接下来，让我们添加`hadoop-client`库来与 Hadoop 通信。我们使用与 Hadoop 安装相匹配的版本:
 
-```
+```java
 <dependency>
     <groupId>org.apache.hadoop</groupId>
     <artifactId>hadoop-client</artifactId>
@@ -71,7 +71,7 @@ Crunch 提供了一个用 Java 编写、测试和运行 MapReduce 管道的框�
 
 **另一种方法是使用 Crunch** 提供的 Maven 原型快速生成一个启动项目:
 
-```
+```java
 mvn archetype:generate -Dfilter=org.apache.crunch:crunch-archetype 
 ```
 
@@ -89,13 +89,13 @@ mvn archetype:generate -Dfilter=org.apache.crunch:crunch-archetype
 
 如果我们需要内存管道，我们可以使用静态方法`getInstance`来获得`MemPipeline`实例:
 
-```
+```java
 Pipeline pipeline = MemPipeline.getInstance();
 ```
 
 但是现在，让我们创建一个`MRPipeline`的实例来用 Hadoop `:`执行应用程序
 
-```
+```java
 Pipeline pipeline = new MRPipeline(WordCount.class, getConf());
 ```
 
@@ -105,7 +105,7 @@ Pipeline pipeline = new MRPipeline(WordCount.class, getConf());
 
 让我们调用这个方法来读取输入的文本文件:
 
-```
+```java
 PCollection<String> lines = pipeline.readTextFile(inputPath);
 ```
 
@@ -113,7 +113,7 @@ PCollection<String> lines = pipeline.readTextFile(inputPath);
 
 下一步，让我们编写一个读取输入的测试用例:
 
-```
+```java
 @Test
 public void givenPipeLine_whenTextFileRead_thenExpectedNumberOfRecordsRead() {
     Pipeline pipeline = MemPipeline.getInstance();
@@ -150,7 +150,7 @@ public void givenPipeLine_whenTextFileRead_thenExpectedNumberOfRecordsRead() {
 
 我们需要在这个方法中实现拆分逻辑:
 
-```
+```java
 public class Tokenizer extends DoFn<String, String> {
     private static final Splitter SPLITTER = Splitter
       .onPattern("\\s+")
@@ -169,7 +169,7 @@ public class Tokenizer extends DoFn<String, String> {
 
 接下来，让我们为`Tokenizer`类编写一个单元测试:
 
-```
+```java
 @RunWith(MockitoJUnitRunner.class)
 public class TokenizerUnitTest {
 
@@ -196,7 +196,7 @@ public class TokenizerUnitTest {
 
 让我们在 lines 集合上调用这个方法，并传递一个`Tokenizer`的实例:
 
-```
+```java
 PCollection<String> words = lines.parallelDo(new Tokenizer(), Writables.strings()); 
 ```
 
@@ -208,7 +208,7 @@ PCollection<String> words = lines.parallelDo(new Tokenizer(), Writables.strings(
 
 然而，我们将扩展`FilterFn`而不是`DoFn`。`FilterFn`有一个抽象方法叫做`accept`。我们需要在这个方法中实现过滤逻辑:
 
-```
+```java
 public class StopWordFilter extends FilterFn<String> {
 
     // English stop words, borrowed from Lucene.
@@ -227,7 +227,7 @@ public class StopWordFilter extends FilterFn<String> {
 
 接下来，让我们为`StopWordFilter`类编写单元测试:
 
-```
+```java
 public class StopWordFilterUnitTest {
 
     @Test
@@ -264,7 +264,7 @@ public class StopWordFilterUnitTest {
 
 让我们在单词集合上调用这个方法，并传递一个`StopWordFilter`的实例:
 
-```
+```java
 PCollection<String> noStopWords = words.filter(new StopWordFilter());
 ```
 
@@ -281,7 +281,7 @@ PCollection<String> noStopWords = words.filter(new StopWordFilter());
 
 让我们使用`count`方法获得唯一的单词及其计数:
 
-```
+```java
 // The count method applies a series of Crunch primitives and returns
 // a map of the unique words in the input PCollection to their counts.
 PTable<String, Long> counts = noStopWords.count();
@@ -291,7 +291,7 @@ PTable<String, Long> counts = noStopWords.count();
 
 作为前面步骤的结果，我们有了一个单词及其计数的表格。我们希望将这个结果写入一个文本文件。**`Pipeline`接口提供了方便的方法来编写输出:**
 
-```
+```java
 void write(PCollection<?> collection, Target target);
 
 void write(PCollection<?> collection, Target target,
@@ -302,7 +302,7 @@ void write(PCollection<?> collection, Target target,
 
 因此，让我们调用`writeTextFile`方法:
 
-```
+```java
 pipeline.writeTextFile(counts, outputPath); 
 ```
 
@@ -318,7 +318,7 @@ pipeline.writeTextFile(counts, outputPath);
 
 因此，让我们调用`done`方法将管道作为 MapReduce 作业来执行:
 
-```
+```java
 PipelineResult result = pipeline.done(); 
 ```
 
@@ -330,7 +330,7 @@ PipelineResult result = pipeline.done();
 
 接下来，让我们将它们放在一起，构建整个数据管道:
 
-```
+```java
 public int run(String[] args) throws Exception {
     String inputPath = args[0];
     String outputPath = args[1];
@@ -369,7 +369,7 @@ public int run(String[] args) throws Exception {
 
 然而，我们需要启动它的代码。因此，让我们编写`main`方法来启动应用程序:
 
-```
+```java
 public class WordCount extends Configured implements Tool {
 
     public static void main(String[] args) throws Exception {
@@ -383,7 +383,7 @@ public class WordCount extends Configured implements Tool {
 
 完整的应用程序现在已经准备好了。让我们运行以下命令来构建它:
 
-```
+```java
 mvn package 
 ```
 
@@ -391,13 +391,13 @@ mvn package
 
 让我们使用这个作业 jar 在 Hadoop 上执行应用程序:
 
-```
+```java
 hadoop jar target/crunch-1.0-SNAPSHOT-job.jar <input file path> <output directory>
 ```
 
 应用程序读取输入文件，并将结果写入输出文件。输出文件包含唯一的单词及其计数，如下所示:
 
-```
+```java
 [Add,1]
 [Added,1]
 [Admiration,1]

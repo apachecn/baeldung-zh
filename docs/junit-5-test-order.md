@@ -26,7 +26,7 @@ JUnit 5 带有一组内置的`MethodOrderer`实现，以字母数字顺序运行
 
 例如，它提供了从`MethodOrderer.MethodName`到**的分类测试方法，根据它们的名字和它们的形参表**:
 
-```
+```java
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class AlphanumericOrderUnitTest {
     private static StringBuilder output = new StringBuilder("");
@@ -63,7 +63,7 @@ public class AlphanumericOrderUnitTest {
 
 在下面的例子中，这些方法将运行`firstTest()`，然后运行`secondTest()`，最后运行`thirdTest()`:
 
-```
+```java
 @TestMethodOrder(OrderAnnotation.class)
 public class OrderAnnotationUnitTest {
     private static StringBuilder output = new StringBuilder("");
@@ -97,7 +97,7 @@ public class OrderAnnotationUnitTest {
 
 我们还可以使用`MethodOrderer.Random` 实现伪随机地排序测试方法:
 
-```
+```java
 @TestMethodOrder(MethodOrderer.Random.class)
 public class RandomOrderUnitTest {
 
@@ -132,7 +132,7 @@ public class RandomOrderUnitTest {
 
 我们可以在`junit-platform.properties`文件中指定自定义种子的值:
 
-```
+```java
 junit.jupiter.execution.order.random.seed=100
 ```
 
@@ -142,7 +142,7 @@ junit.jupiter.execution.order.random.seed=100
 
 在我们的`CustomOrder`中，我们将按照不区分大小写的字母数字顺序对测试进行排序:
 
-```
+```java
 public class CustomOrder implements MethodOrderer {
     @Override
     public void orderMethods(MethodOrdererContext context) {
@@ -155,7 +155,7 @@ public class CustomOrder implements MethodOrderer {
 
 然后，我们将使用`CustomOrder` 按照`myATest()`、`myaTest()`和最后`myBTest()`的顺序运行与上一个例子相同的测试:
 
-```
+```java
 @TestMethodOrder(CustomOrder.class)
 public class CustomOrderUnitTest {
 
@@ -174,7 +174,7 @@ JUnit 5 提供了一种通过`junit.jupiter.testmethod.order.default` 参数设�
 
 同样，我们可以在`junit-platform.properties`文件中配置我们的参数:
 
-```
+```java
 junit.jupiter.testmethod.order.default = org.junit.jupiter.api.MethodOrderer$DisplayName
 ```
 
@@ -194,7 +194,7 @@ junit.jupiter.testmethod.order.default = org.junit.jupiter.api.MethodOrderer$Dis
 
 在哈希冲突的情况下，使用字典顺序:
 
-```
+```java
 @FixMethodOrder(MethodSorters.DEFAULT)
 public class DefaultOrderOfExecutionTest {
     private static StringBuilder output = new StringBuilder("");
@@ -229,7 +229,7 @@ public class DefaultOrderOfExecutionTest {
 
 **这种策略利用了自然的 JVM 排序，每次运行都有所不同**:
 
-```
+```java
 @FixMethodOrder(MethodSorters.JVM)
 public class JVMOrderOfExecutionTest {    
     // same as above
@@ -242,7 +242,7 @@ public class JVMOrderOfExecutionTest {
 
 最后，这种策略可以用于按照字典顺序运行测试:
 
-```
+```java
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class NameAscendingOrderOfExecutionTest {
     // same as above

@@ -14,7 +14,7 @@
 
 为了检测电子邮件地址，我们将使用一个简单的正则表达式模式:
 
-```
+```java
 ([a-z0-9_.-]+)@([a-z0-9_.-]+[a-z])
 ```
 
@@ -22,7 +22,7 @@
 
 我们需要在一个`Pattern`对象中使用这个正则表达式，这样我们就可以使用它:
 
-```
+```java
 Pattern EMAIL_ADDRESS_PATTERN = 
   Pattern.compile("([a-z0-9_.-]+)@([a-z0-9_.-]+[a-z])");
 ```
@@ -31,7 +31,7 @@ Pattern EMAIL_ADDRESS_PATTERN =
 
 对于我们的示例文本，我们将尝试在字符串中找到三封电子邮件:
 
-```
+```java
 "You can contact me through [[email protected]](/web/20220626203042/https://www.baeldung.com/cdn-cgi/l/email-protection), [[email protected]](/web/20220626203042/https://www.baeldung.com/cdn-cgi/l/email-protection), and [[email protected]](/web/20220626203042/https://www.baeldung.com/cdn-cgi/l/email-protection)"
 ```
 
@@ -41,7 +41,7 @@ Pattern EMAIL_ADDRESS_PATTERN =
 
 计算匹配数的一个简单方法是迭代`Matcher`类的 [`find`](https://web.archive.org/web/20220626203042/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/regex/Matcher.html#find()) 方法。这个方法试图**找到匹配模式**的输入序列的下一个子序列:
 
-```
+```java
 Matcher countEmailMatcher = EMAIL_ADDRESS_PATTERN.matcher(TEXT_CONTAINING_EMAIL_ADDRESSES);
 
 int count = 0;
@@ -52,7 +52,7 @@ while (countEmailMatcher.find()) {
 
 使用这种方法，我们将找到三个匹配项，正如我们所料:
 
-```
+```java
 assertEquals(3, count);
 ```
 
@@ -60,7 +60,7 @@ assertEquals(3, count);
 
 例如，让我们考虑这个例子:
 
-```
+```java
 String OVERLAPPING_EMAIL_ADDRESSES = "Try to contact us at [[email protected]](/web/20220626203042/https://www.baeldung.com/cdn-cgi/l/email-protection)@baeldung.com, [[email protected]](/web/20220626203042/https://www.baeldung.com/cdn-cgi/l/email-protection)";
 
 Matcher countOverlappingEmailsMatcher = EMAIL_ADDRESS_PATTERN.matcher(OVERLAPPING_EMAIL_ADDRESSES);
@@ -83,7 +83,7 @@ assertEquals(2, count);
 
 然而，如果我们有新版本的 Java 可用，我们可以使用`Matcher`类的 [`results​`](https://web.archive.org/web/20220626203042/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/regex/Matcher.html#results()) 方法。Java 9 中添加的这个方法返回一个连续的匹配结果流，使我们能够更容易地计算匹配数:
 
-```
+```java
 long count = countEmailMatcher.results()
   .count();
 

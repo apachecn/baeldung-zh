@@ -14,7 +14,7 @@
 
 然而，**泛型的引入导致了编写样板代码的必要性，因为需要传递类型参数**。一些例子是:
 
-```
+```java
 Map<String, Map<String, String>> mapOfMaps = new HashMap<String, Map<String, String>>();
 List<String> strList = Collections.<String>emptyList();
 List<Integer> intList = Collections.<Integer>emptyList();
@@ -28,14 +28,14 @@ List<Integer> intList = Collections.<Integer>emptyList();
 
 我们可以看到使用新概念的相同代码:
 
-```
+```java
 List<String> strListInferred = Collections.emptyList();
 List<Integer> intListInferred = Collections.emptyList(); 
 ```
 
 在上面的例子中，基于预期的返回类型`List<String>`和`List<Integer>`，编译器能够将类型参数推断为下面的泛型方法:
 
-```
+```java
 public static final <T> List<T> emptyList() 
 ```
 
@@ -47,7 +47,7 @@ Java 7 扩展了它的执行环境。它介绍了钻石运算符 **< >** 。你�
 
 现在，**我们可以在赋值上下文中为泛型类构造函数执行这个操作。**一个这样的例子是:
 
-```
+```java
 Map<String, Map<String, String>> mapOfMapsInferred = new HashMap<>();
 ```
 
@@ -63,7 +63,7 @@ Java 8 支持在方法上下文中使用 Target-Type 进行推理。当我们在
 
 让我们看一个示例代码:
 
-```
+```java
 static <T> List<T> add(List<T> list, T a, T b) {
     list.add(a);
     list.add(b);
@@ -83,7 +83,7 @@ List<Number> numListGeneralized = add(new ArrayList<>(), 1, 2.0);
 
 目标类型推理允许我们不为 lambda 表达式参数指定类型:
 
-```
+```java
 List<Integer> intList = Arrays.asList(5, 2, 4, 2, 1);
 Collections.sort(intList, (a, b) -> a.compareTo(b));
 

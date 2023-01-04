@@ -36,7 +36,7 @@ STS 还提供了其他有用的特性，不仅仅局限于 Spring 应用程序�
 
 在`New Spring Starter Project`屏幕中，使用默认值或进行自己的调整，然后进入下一个屏幕。选择`Web` 并点击完成。您的`pom.xml`现在应该看起来像这样:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -69,7 +69,7 @@ STS 还提供了其他有用的特性，不仅仅局限于 Spring 应用程序�
 
 可以通过右键单击项目并选择 run as `Spring Boot App`来启动上述应用程序。如果没有 STS，您最有可能使用以下命令从命令行运行应用程序:
 
-```
+```java
 $ mvn spring-boot:run
 ```
 
@@ -79,7 +79,7 @@ $ mvn spring-boot:run
 
 当您使用 run 命令从 IDE 运行项目时，您会注意到控制台输出了一些漂亮的[颜色编码的](https://web.archive.org/web/20220815032147/https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-logging.html#boot-features-logging-color-coded-output)日志语句。如果您想将其关闭，请转到`run configurations` …并禁用`Spring Boot`选项卡上的复选框`Enable ANSI console output`。或者，您也可以通过在`application.properties` 文件中设置一个属性值来禁用它。
 
-```
+```java
 spring.output.ansi.enabled=NEVER
 ```
 
@@ -91,7 +91,7 @@ spring.output.ansi.enabled=NEVER
 
 首先，将 JPA 的以下依赖项添加到之前生成的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -106,7 +106,7 @@ spring.output.ansi.enabled=NEVER
 
 为了让 JPA 工作，需要正确定义实体管理器和事务管理器。然而，Spring 会自动为您配置这些。留给开发人员的唯一事情是创建实际的实体类。这些实体由实体管理器管理，而实体管理器又由容器创建。例如，让我们像这样创建一个实体类`Foo`:
 
-```
+```java
 @Entity
 public class Foo implements Serializable {
     @Id
@@ -120,7 +120,7 @@ public class Foo implements Serializable {
 
 容器从配置包的根扫描所有用`@Entity`标注的类。接下来，我们为`Foo`实体创建一个 JPA 存储库:
 
-```
+```java
 public interface FooRepository extends JpaRepository<Foo, Integer> {
     public Foo findByNames(String name);
 }
@@ -128,13 +128,13 @@ public interface FooRepository extends JpaRepository<Foo, Integer> {
 
 此时，您可能已经注意到，IDE 现在用一个异常标记此查询方法:
 
-```
+```java
 Invalid derived query! No property names found for type Foo! 
 ```
 
 这当然是因为我们不小心在 JPA 存储库的方法名中写了一个‘s’。要解决这个问题，请像这样移除乱真的:
 
-```
+```java
 public Foo findByName(String name);
 ```
 
@@ -146,13 +146,13 @@ public Foo findByName(String name);
 
 例如，让我们向`Foo`实体类添加一行。为了让这个例子正常工作，请首先确保 `java.util.List`的 import 语句已经存在。现在我们可以添加谷歌番石榴如下:
 
-```
+```java
 private List<String> strings = Lists // ctrl + SPACE to get code completion
 ```
 
 IDE 会建议将几个依赖项添加到类路径中。从`com.google.common.collect,`添加依赖关系按回车键，从`Guava`添加依赖关系。番石榴罐现在会自动添加到您的`pom.xml` 文件中，如下所示:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -168,19 +168,19 @@ Spring 的另一个强大功能是支持外部配置，这些配置可以通过�
 
 为了在默认端口之外的 Tomcat 端口上运行应用程序，您可以使用下面的命令，其中自定义端口被指定为命令行参数:
 
-```
+```java
 mvn spring-boot:run -Drun.arguments="--server.port=7070"
 ```
 
 使用 STS 时，您必须进入`run`菜单。从运行配置对话框中选择`run configurations` …从左侧面板中选择`Spring Boot App`，然后选择`demo – DemoApplication`(如果您没有选择默认项目，这将会有所不同)。从`Program Arguments`窗口中的`(x)= Arguments`选项卡键入
 
-```
+```java
 --server.port=7070
 ```
 
 还有`run`。您应该会在控制台中看到类似如下所示的输出:
 
-```
+```java
 .
 .
 2016-07-06 13:51:40.999  INFO 8724 --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 7070 (http)

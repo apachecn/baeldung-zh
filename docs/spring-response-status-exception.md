@@ -14,7 +14,7 @@ RESTful 应用程序可以通过**在对客户端**的响应中返回正确的�
 
 我们可以使用`@ResponseStatus`注释来设置 HTTP 响应中的状态和原因:
 
-```
+```java
 @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Actor Not Found")
 public class ActorNotFoundException extends Exception {
     // ...
@@ -31,7 +31,7 @@ public class ActorNotFoundException extends Exception {
 
 Spring 提供了 3 个构造函数来生成`ResponseStatusException:`
 
-```
+```java
 ResponseStatusException(HttpStatus status)
 ResponseStatusException(HttpStatus status, java.lang.String reason)
 ResponseStatusException(
@@ -65,7 +65,7 @@ ResponseStatusException(
 
 现在，让我们看一个生成`ResponseStatusException`的例子:
 
-```
+```java
 @GetMapping("/actor/{id}")
 public String getActorName(@PathVariable("id") int id) {
     try {
@@ -81,7 +81,7 @@ Spring Boot 提供了一个默认的`/error`映射，返回一个带有 HTTP 状
 
 下面是回应的样子:
 
-```
+```java
 $ curl -i -s -X GET http://localhost:8081/actor/8
 HTTP/1.1 404
 Content-Type: application/json;charset=UTF-8
@@ -103,7 +103,7 @@ Date: Sat, 26 Dec 2020 19:38:09 GMT
 
 让我们将它设置为`always`，看看会发生什么:
 
-```
+```java
 $ curl -i -s -X GET http://localhost:8081/actor/8
 HTTP/1.1 404
 Content-Type: application/json;charset=UTF-8
@@ -125,7 +125,7 @@ Date: Sat, 26 Dec 2020 19:39:11 GMT
 
 现在，让我们看看当引发相同类型的异常时，如何将不同的状态代码设置为 HTTP 响应:
 
-```
+```java
 @PutMapping("/actor/{id}/{name}")
 public String updateActorName(
   @PathVariable("id") int id, 
@@ -142,7 +142,7 @@ public String updateActorName(
 
 下面是回应的样子:
 
-```
+```java
 $ curl -i -s -X PUT http://localhost:8081/actor/8/BradPitt
 HTTP/1.1 400
 ...

@@ -14,7 +14,7 @@
 
 让我们将以下弹簧靴起动器添加到我们的`pom.xml`:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -35,7 +35,7 @@
 
 正如概述中所讨论的，我们将创建一个集合，为其他集合存储自动递增的序列。我们将这个集合称为`database_sequences. `，它可以使用`mongo` shell 或 MongoDB Compass 来创建。让我们创建一个相应的模型类:
 
-```
+```java
 @Document(collection = "database_sequences")
 public class DatabaseSequence {
 
@@ -50,7 +50,7 @@ public class DatabaseSequence {
 
 然后让我们创建一个`users`集合，以及一个相应的模型对象，它将存储使用我们系统的人的详细信息:
 
-```
+```java
 @Document(collection = "users")
 public class User {
 
@@ -76,7 +76,7 @@ public class User {
 
 让我们创建一个拥有`generateSequence()`的`SequenceGeneratorService`:
 
-```
+```java
 public long generateSequence(String seqName) {
     DatabaseSequence counter = mongoOperations.findAndModify(query(where("_id").is(seqName)),
       new Update().inc("seq",1), options().returnNew(true).upsert(true),
@@ -87,7 +87,7 @@ public long generateSequence(String seqName) {
 
 现在，我们可以在创建新记录时使用`generateSequence()`:
 
-```
+```java
 User user = new User();
 user.setId(sequenceGenerator.generateSequence(User.SEQUENCE_NAME));
 user.setEmail("[[email protected]](/web/20220526050715/https://www.baeldung.com/cdn-cgi/l/email-protection)");
@@ -96,7 +96,7 @@ userRepository.save(user);
 
 为了列出所有用户，我们将使用`UserRepository`:
 
-```
+```java
 List<User> storedUsers = userRepository.findAll();
 storedUsers.forEach(System.out::println);
 ```
@@ -105,7 +105,7 @@ storedUsers.forEach(System.out::println);
 
 **为此，我们将创建一个扩展`AbstractMongoEventListener<User>`的`UserModelListener`，然后我们将覆盖`onBeforeConvert()` :**
 
-```
+```java
 @Override
 public void onBeforeConvert(BeforeConvertEvent<User> event) {
     if (event.getSource().getId() < 1) {

@@ -12,7 +12,7 @@
 
 `while` 循环的语法是:
 
-```
+```java
 while (Boolean-expression) 
     statement;
 ```
@@ -21,7 +21,7 @@ while (Boolean-expression)
 
 让我们看一个简单的例子:
 
-```
+```java
 int i = 0;
 while (i < 5) {
     System.out.println("While loop: i = " + i++);

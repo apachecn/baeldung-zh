@@ -16,7 +16,7 @@
 
 此方法使用 Java Net 库建立 UDP 连接:
 
-```
+```java
 try (final DatagramSocket datagramSocket = new DatagramSocket()) {
     datagramSocket.connect(InetAddress.getByName("8.8.8.8"), 12345);
     return datagramSocket.getLocalAddress().getHostAddress();
@@ -31,7 +31,7 @@ try (final DatagramSocket datagramSocket = new DatagramSocket()) {
 
 或者，**我们可以通过可靠的互联网连接使用** **套接字连接来查找 IP 地址**:
 
-```
+```java
 try (Socket socket = new Socket()) {
     socket.connect(new InetSocketAddress("google.com", 80));
     return socket.getLocalAddress().getHostAddress();
@@ -52,7 +52,7 @@ try (Socket socket = new Socket()) {
 
 简单地说，我们可以连接到 Amazon AWS `checkip.amazonaws.com` URL 并读取响应:
 
-```
+```java
 String urlString = "http://checkip.amazonaws.com/";
 URL url = new URL(urlString);
 try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {

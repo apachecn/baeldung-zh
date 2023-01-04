@@ -14,7 +14,7 @@ Apache Camel 是一个强大的开源集成框架，实现了许多已知的 T2 
 
 首先，让我们将 [`camel-jackson`依赖项](https://web.archive.org/web/20220929002006/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3Aorg.apache.camel%20a%3Acamel-jackson)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.camel</groupId>
     <artifactId>camel-jackson</artifactId>
@@ -24,7 +24,7 @@ Apache Camel 是一个强大的开源集成框架，实现了许多已知的 T2 
 
 然后，我们还将专门为我们的单元测试添加`camel-test`依赖项，这也可以从 [Maven Central](https://web.archive.org/web/20220929002006/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3Aorg.apache.camel%20a%3Acamel-test) 获得:
 
-```
+```java
 <dependency>
     <groupId>org.apache.camel</groupId>
     <artifactId>camel-test</artifactId>
@@ -38,7 +38,7 @@ Apache Camel 是一个强大的开源集成框架，实现了许多已知的 T2 
 
 让我们继续定义一个带有 id 和名称的类来表示一种水果:
 
-```
+```java
 public class Fruit {
 
     private String name;
@@ -50,7 +50,7 @@ public class Fruit {
 
 接下来，我们将定义一个容器来保存一列`Fruit`对象:
 
-```
+```java
 public class FruitList {
 
     private List<Fruit> fruits;
@@ -71,7 +71,7 @@ public class FruitList {
 
 在第一个例子中，我们将使用 JSON 格式表示一个简单的水果列表:
 
-```
+```java
 {
     "fruits": [
         {
@@ -90,7 +90,7 @@ public class FruitList {
 
 现在让我们设置 Apache Camel [路由](/web/20220929002006/https://www.baeldung.com/apache-camel-intro#domain-specific-language)来执行反序列化:
 
-```
+```java
 @Override
 protected RouteBuilder createRouteBuilder() throws Exception {
     return new RouteBuilder() {
@@ -112,7 +112,7 @@ protected RouteBuilder createRouteBuilder() throws Exception {
 
 记住这一点，让我们继续编写我们的第一个单元测试:
 
-```
+```java
 public class FruitListJacksonUnmarshalUnitTest extends CamelTestSupport {
 
     @Test
@@ -155,7 +155,7 @@ public class FruitListJacksonUnmarshalUnitTest extends CamelTestSupport {
 
 另一方面，我们希望避免使用容器对象来保存我们的`Fruit`对象。我们可以修改我们的 JSON 来直接保存一个水果数组:
 
-```
+```java
 [
     {
         "id": 100,
@@ -170,7 +170,7 @@ public class FruitListJacksonUnmarshalUnitTest extends CamelTestSupport {
 
 这一次，我们的路线几乎是相同的，但是我们将它设置为专门使用 JSON 数组:
 
-```
+```java
 @Override
 protected RouteBuilder createRouteBuilder() throws Exception {
     return new RouteBuilder() {
@@ -188,7 +188,7 @@ protected RouteBuilder createRouteBuilder() throws Exception {
 
 同样，我们的单元测试也非常相似:
 
-```
+```java
 @Test
 public void givenJsonFruitArray_whenUnmarshalled_thenSuccess() throws Exception {
     MockEndpoint mock = getMockEndpoint("mock:marshalledObject");

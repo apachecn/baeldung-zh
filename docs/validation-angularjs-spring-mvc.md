@@ -16,7 +16,7 @@
 
 首先，让我们添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-webmvc</artifactId>
@@ -46,7 +46,7 @@ Spring MVC 通过使用`JSR 349 Bean Validation`规范注释提供了对服务�
 
 让我们创建一个`User`类，它的属性用适当的验证注释进行了注释:
 
-```
+```java
 public class User {
 
     @NotNull
@@ -80,7 +80,7 @@ public class User {
 
 如果`hasErrors()`返回`true`，我们可以返回一个`JSON array`，其中包含与没有通过的验证相关的错误消息。否则，我们会将对象添加到列表中:
 
-```
+```java
 @PostMapping(value = "/user")
 @ResponseBody
 public ResponseEntity<Object> saveUser(@Valid User user, 
@@ -109,7 +109,7 @@ public ResponseEntity<Object> saveUser(@Valid User user,
 
 我们还需要定义用户列表，并用几个值对其进行初始化:
 
-```
+```java
 private List<User> users = Arrays.asList(
   new User("[[email protected]](/web/20221126234945/https://www.baeldung.com/cdn-cgi/l/email-protection)", "pass", "Ana", 20),
   new User("[[email protected]](/web/20221126234945/https://www.baeldung.com/cdn-cgi/l/email-protection)", "pass", "Bob", 30),
@@ -119,7 +119,7 @@ private List<User> users = Arrays.asList(
 
 让我们还添加一个映射，以 JSON 对象的形式检索用户列表:
 
-```
+```java
 @GetMapping(value = "/users")
 @ResponseBody
 public List<User> getUsers() {
@@ -129,7 +129,7 @@ public List<User> getUsers() {
 
 我们在 Spring MVC 控制器中需要的最后一项是返回应用程序主页的映射:
 
-```
+```java
 @GetMapping("/userPage")
 public String getUserProfilePage() {
     return "user";
@@ -142,7 +142,7 @@ public String getUserProfilePage() {
 
 让我们为应用程序添加一个基本的 MVC 配置:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "com.baeldung.springmvcforms")
@@ -168,7 +168,7 @@ class ApplicationConfiguration implements WebMvcConfigurer {
 
 让我们创建一个实现`WebApplicationInitializer`接口的类来运行我们的应用程序:
 
-```
+```java
 public class WebInitializer implements WebApplicationInitializer {
 
     public void onStartup(ServletContext container) throws ServletException {
@@ -191,14 +191,14 @@ public class WebInitializer implements WebApplicationInitializer {
 
 在我们实现 AngularJS 客户端部分之前，我们可以使用 cURL 命令测试我们的 API:
 
-```
+```java
 curl -i -X POST -H "Accept:application/json" 
   "localhost:8080/spring-mvc-forms/user?email=aaa&password;=12&age;=12"
 ```
 
 响应是一个包含默认错误消息的数组:
 
-```
+```java
 [
     "not a well-formed email address",
     "size must be between 4 and 15",
@@ -215,7 +215,7 @@ AngularJS 库非常支持在表单字段上添加验证需求、处理错误消�
 
 首先，让我们创建一个 AngularJS 模块，它注入了用于验证消息的`ngMessages`模块:
 
-```
+```java
 var app = angular.module('app', ['ngMessages']);
 ```
 
@@ -225,7 +225,7 @@ var app = angular.module('app', ['ngMessages']);
 
 我们的服务将有两个调用 MVC 控制器方法的方法——一个保存用户，一个检索用户列表:
 
-```
+```java
 app.service('UserService',['$http', function ($http) {
 
     this.saveUser = function saveUser(user){
@@ -255,7 +255,7 @@ app.service('UserService',['$http', function ($http) {
 
 `UserCtrl`控制器注入`UserService`，调用服务方法，处理响应和错误消息:
 
-```
+```java
 app.controller('UserCtrl', ['$scope','UserService', function ($scope,UserService) {
 
 	$scope.submitted = false;
@@ -303,7 +303,7 @@ app.controller('UserCtrl', ['$scope','UserService', function ($scope,UserService
 
 为了利用 AngularJS 库和我们的 AngularJS 模块，我们需要将脚本添加到我们的`user.html`页面:
 
-```
+```java
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js">
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js">
@@ -313,13 +313,13 @@ app.controller('UserCtrl', ['$scope','UserService', function ($scope,UserService
 
 然后我们可以通过设置`ng-app`和`ng-controller`属性来使用我们的模块和控制器:
 
-```
+```java
 <body ng-app="app" ng-controller="UserCtrl">
 ```
 
 让我们创建我们的 HTML 表单:
 
-```
+```java
 <form name="userForm" method="POST" novalidate 
   ng-class="{'form-error':submitted}" ng-submit="saveUser()" >
 ...
@@ -334,7 +334,7 @@ app.controller('UserCtrl', ['$scope','UserService', function ($scope,UserService
 
 现在让我们为用户属性添加四个输入字段:
 
-```
+```java
 <label class="form-label">Email:</label>
 <input type="email" name="email" required ng-model="user.email" class="form-input"/>
 
@@ -361,7 +361,7 @@ app.controller('UserCtrl', ['$scope','UserService', function ($scope,UserService
 
 让我们在输入定义之后添加针对`email`字段的指令:
 
-```
+```java
 <div ng-messages="userForm.email.$error" 
   ng-show="submitted && userForm.email.$invalid" class="error-messages">
     <p ng-message="email">Invalid email!</p>
@@ -377,7 +377,7 @@ app.controller('UserCtrl', ['$scope','UserService', function ($scope,UserService
 
 根据`$valid`属性，我们还可以在输入字段后添加一个复选标记(用十六进制代码字符\003;表示),以防该字段有效:
 
-```
+```java
 <div class="check" ng-show="userForm.email.$valid">✓</div>
 ```
 
@@ -385,7 +385,7 @@ AngularJS 验证还支持使用 CSS 类如`ng-valid` 和 `ng-invalid`或更具�
 
 让我们为表单的`form-error`类中的无效输入添加 CSS 属性`border-color:red`:
 
-```
+```java
 .form-error input.ng-invalid {
     border-color:red;
 }
@@ -393,7 +393,7 @@ AngularJS 验证还支持使用 CSS 类如`ng-valid` 和 `ng-invalid`或更具�
 
 我们还可以使用 CSS 类以红色显示错误消息:
 
-```
+```java
 .error-messages {
     color:red;
 }

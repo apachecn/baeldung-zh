@@ -14,7 +14,7 @@
 
 从 Java 10 开始，我们可以使用 Java 的`Collectors`类中的`toUnmodifiableList`方法:
 
-```
+```java
 List<String> givenList = Arrays.asList("a", "b", "c");
 List<String> result = givenList.stream()
   .collect(toUnmodifiableList());
@@ -22,7 +22,7 @@ List<String> result = givenList.stream()
 
 通过使用这种方法，我们得到了一个不支持来自 Java 的`ImmutableCollections`的`null`值的`List`实现:
 
-```
+```java
 class java.util.ImmutableCollections$ListN
 ```
 
@@ -30,7 +30,7 @@ class java.util.ImmutableCollections$ListN
 
 Java 的`Collectors`类中的`collectingAndThen`方法接受一个`Collector`和一个`finisher` `Function`。该`finisher` 应用于从`Collector:`返回的结果
 
-```
+```java
 List<String> givenList = Arrays.asList("a", "b", "c");
 List<String> result = givenList.stream()
   .collect(collectingAndThen(toList(), ImmutableList::copyOf));
@@ -44,7 +44,7 @@ System.out.println(result.getClass());
 
 Java 16 在[流 API](/web/20220926195021/https://www.baeldung.com/java-8-streams) 上引入了一个名为`toList().` 的新方法。这个简便的方法返回一个包含流元素的**不可修改的`List` :**
 
-```
+```java
 @Test
 public void whenUsingStreamToList_thenReturnImmutableList() {
     List<String> immutableList = Stream.of("a", "b", "c", "d").toList();
@@ -67,7 +67,7 @@ public void whenUsingStreamToList_thenReturnImmutableList() {
 
 为了实现这一点，我们可以使用静态的`Collector.of`方法:
 
-```
+```java
 public static <T> Collector<T, List<T>, List<T>> toImmutableList() {
     return Collector.of(ArrayList::new, List::add,
       (left, right) -> {
@@ -79,7 +79,7 @@ public static <T> Collector<T, List<T>, List<T>> toImmutableList() {
 
 我们可以像使用任何内置的`Collector`一样使用这个函数:
 
-```
+```java
 List<String> givenList = Arrays.asList("a", "b", "c", "d");
 List<String> result = givenList.stream()
   .collect(MyImmutableListCollector.toImmutableList());
@@ -87,7 +87,7 @@ List<String> result = givenList.stream()
 
 最后，让我们检查输出类型:
 
-```
+```java
 class java.util.Collections$UnmodifiableRandomAccessList
 ```
 
@@ -95,7 +95,7 @@ class java.util.Collections$UnmodifiableRandomAccessList
 
 我们的实现有一个限制——它总是返回一个由`ArrayList`支持的不可变实例。但是，稍加改进，我们可以让这个收集器返回用户指定的类型:
 
-```
+```java
 public static <T, A extends List<T>> Collector<T, A, List<T>> toImmutableList(
   Supplier<A> supplier) {
 
@@ -110,7 +110,7 @@ public static <T, A extends List<T>> Collector<T, A, List<T>> toImmutableList(
 
 所以现在，我们不是在方法实现中确定`Supplier`，而是向用户请求`Supplier`:
 
-```
+```java
 List<String> givenList = Arrays.asList("a", "b", "c", "d");
 List<String> result = givenList.stream()
   .collect(MyImmutableListCollector.toImmutableList(LinkedList::new));
@@ -118,7 +118,7 @@ List<String> result = givenList.stream()
 
 此外，我们使用的是`LinkedList`而不是`ArrayList`。
 
-```
+```java
 class java.util.Collections$UnmodifiableList
 ```
 
@@ -128,7 +128,7 @@ class java.util.Collections$UnmodifiableList
 
 在本节中，我们将使用 [Google Guava](https://web.archive.org/web/20220926195021/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.google.guava%22%20AND%20a%3A%22guava%22) 库来驱动我们的一些示例:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -138,7 +138,7 @@ class java.util.Collections$UnmodifiableList
 
 从 Guava 21 开始，每个不可变的类都附带了一个像 Java 的标准`Collector` s `:`一样容易使用的`Collector`
 
-```
+```java
 List<Integer> list = IntStream.range(0, 9)
   .boxed()
   .collect(ImmutableList.toImmutableList());
@@ -146,7 +146,7 @@ List<Integer> list = IntStream.range(0, 9)
 
 产生的实例是`RegularImmutableList`:
 
-```
+```java
 class com.google.common.collect.RegularImmutableList
 ```
 

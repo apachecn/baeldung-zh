@@ -22,7 +22,7 @@ Spring 4.3 版本对框架的核心容器、缓存、JMS、Web MVC 和测试子�
 
 考虑以下服务类别:
 
-```
+```java
 @Service
 public class FooService {
 
@@ -39,7 +39,7 @@ public class FooService {
 
 所以从 4.3 开始，您不再需要在这种单构造函数场景中指定显式注入注释。这对于根本不带有任何注释的类来说尤其优雅:
 
-```
+```java
 public class FooService {
 
     private final FooRepository repository;
@@ -52,7 +52,7 @@ public class FooService {
 
 在 Spring 4.2 和更低版本中，这个 bean 的以下配置将不起作用，因为 Spring 将无法为`FooService`找到默认的构造函数。Spring 4.3 更加智能，将自动连接构造函数:
 
-```
+```java
 <beans>
     <bean class="com.baeldung.spring43.ctor.FooRepository" />
     <bean class="com.baeldung.spring43.ctor.FooService" />
@@ -61,7 +61,7 @@ public class FooService {
 
 类似地，你可能已经注意到`@Configuration`类在历史上不支持构造函数注入。从 4.3 开始，它们允许了，并且它们自然地允许在单构造函数场景中省略`@Autowired`:
 
-```
+```java
 @Configuration
 public class FooConfiguration {
 
@@ -84,7 +84,7 @@ public class FooConfiguration {
 
 这并不容易实现，因为即使是 JDK 的 JavaBean 内省器也没有将默认方法检测为访问器。从 Spring 4.3 开始，作为默认接口方法实现的 getters 和 setters 在注入过程中被识别，这允许使用它们作为被访问属性的公共预处理程序，如下例所示:
 
-```
+```java
 public interface IDateHolder {
 
     void setLocalDate(LocalDate localDate);
@@ -101,7 +101,7 @@ public interface IDateHolder {
 
 这个 bean 现在可能已经注入了`stringDate`属性:
 
-```
+```java
 <bean id="dateHolder" 
   class="com.baeldung.spring43.defaultmethods.DateHolder">
     <property name="stringDate" value="15.10.1982"/>
@@ -110,7 +110,7 @@ public interface IDateHolder {
 
 在默认接口方法上使用类似于`@BeforeTransaction`和`@AfterTransaction` 的测试注释也是如此。JUnit 5 已经支持默认接口方法的测试注释，Spring 4.3 紧随其后。现在，您可以在一个接口中抽象公共测试逻辑，并在测试类中实现它。下面是测试用例的一个接口，它记录测试中事务之前和之后的消息:
 
-```
+```java
 public interface ITransactionalTest {
 
     Logger log = LoggerFactory.getLogger(ITransactionalTest.class);
@@ -134,7 +134,7 @@ public interface ITransactionalTest {
 
 最新版本还引入了`ObjectProvider`，这是对现有`ObjectFactory`接口的扩展，带有方便的签名，如`getIfAvailable`和`getIfUnique`，以便仅在 bean 存在或可以确定单个候选项的情况下检索 bean(特别是:在多个匹配 bean 的情况下作为主要候选项)。
 
-```
+```java
 @Service
 public class FooService {
 
@@ -152,7 +152,7 @@ public class FooService {
 
 缓存抽象主要用于缓存消耗 CPU 和 IO 的值。在特定的用例中，给定的密钥可能被几个线程(即客户端)并行请求，尤其是在启动时。同步缓存支持是一个长期要求的特性，现在已经实现了。假设如下:
 
-```
+```java
 @Service
 public class FooService {
 
@@ -182,7 +182,7 @@ Spring Framework 4.3 引入了下面的方法级组合变体`@RequestMapping`注
 
 例如，`@GetMapping`是`@RequestMapping(method = RequestMethod.GET)`的一种更简短的说法。下面的例子展示了一个用组合的`@GetMapping`注释简化的 MVC 控制器。
 
-```
+```java
 @Controller
 @RequestMapping("/appointments")
 public class AppointmentsController {
@@ -207,7 +207,7 @@ public class AppointmentsController {
 
 `TARGET_CLASS` mode 表示 CGLIB 代理将用于代理这个 bean，并确保它可以被注入到任何其他 bean 中，甚至是更广的范围。模式不仅允许接口代理，也允许类代理`.`
 
-```
+```java
 @RequestScope
 @Component
 public class LoginAction {
@@ -215,7 +215,7 @@ public class LoginAction {
 }
 ```
 
-```
+```java
 @SessionScope
 @Component
 public class UserPreferences {
@@ -223,7 +223,7 @@ public class UserPreferences {
 }
 ```
 
-```
+```java
 @ApplicationScope
 @Component
 public class AppPreferences {
@@ -237,7 +237,7 @@ public class AppPreferences {
 
 假设我们已经注册了下面的`HandlerInterceptor`实现，它解析请求并将`login`参数添加到会话中，并将另一个`query`参数添加到请求中:
 
-```
+```java
 public class ParamInterceptor extends HandlerInterceptorAdapter {
 
     @Override
@@ -253,7 +253,7 @@ public class ParamInterceptor extends HandlerInterceptorAdapter {
 
 这样的参数可以被注入到一个`Controller`实例中，在方法参数上有相应的注释:
 
-```
+```java
 @GetMapping
 public String get(@SessionAttribute String login, 
   @RequestAttribute String query) {
@@ -289,7 +289,7 @@ Spring 4.3 支持以下库版本和服务器版本:
 
 这个类非常有用的一个例子是当我们想要基于 beans 所属的类创建`Logger`bean 时:
 
-```
+```java
 @Bean
 @Scope("prototype")
 public Logger logger(InjectionPoint injectionPoint) {
@@ -302,7 +302,7 @@ bean 必须用一个`prototype`作用域来定义，以便为每个类创建一�
 
 然后，我们可以将 bean 注入到我们的`AppointmentsController`:
 
-```
+```java
 @Autowired
 private Logger logger;
 ```

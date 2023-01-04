@@ -18,13 +18,13 @@
 
 为了在 Spring Boot 应用程序中演示 Kong Ingress Controller (KIC)的使用，我们需要访问 K8s 集群，这样我们就可以使用完整的 Kubernetes、内部安装或云提供的，或者使用 Minikube 开发我们的示例[应用程序。在启动我们的 K8s 环境之后，我们需要在我们的集群](/web/20221112225153/https://www.baeldung.com/spring-boot-minikube)上部署 Kong 入口控制器[。Kong 公开了一个外部 IP，我们需要使用它来访问我们的应用程序，因此使用该地址创建一个环境变量是一个很好的做法:](https://web.archive.org/web/20221112225153/https://docs.konghq.com/kubernetes-ingress-controller/2.7.x/guides/getting-started/)
 
-```
+```java
 export PROXY_IP=$(minikube service -n kong kong-proxy --url | head -1)
 ```
 
 就是这样！安装了 Kong 入口控制器，我们可以通过访问那个`PROXY_IP`来测试它是否在运行:
 
-```
+```java
 curl -i $PROXY_IP
 ```
 
@@ -34,7 +34,7 @@ curl -i $PROXY_IP
 
 现在我们需要一个 Spring Boot 应用程序，并将其部署到 K8s 集群。要用至少一个公开的 web 资源生成一个简单的 HTTP 服务器应用程序，我们可以这样做:
 
-```
+```java
 curl https://start.spring.io/starter.tgz -d dependencies=webflux,actuator -d type=maven-project | tar -xzvf -
 ```
 
@@ -44,7 +44,7 @@ curl https://start.spring.io/starter.tgz -d dependencies=webflux,actuator -d typ
 
 在这个示例应用程序中，我们选择了`webflux,`，它使用 [Spring WebFlux 和 Netty](/web/20221112225153/https://www.baeldung.com/spring-webflux) 生成了一个反应式 web 应用程序。但是增加了另一个重要的依赖项。`[actuator](/web/20221112225153/https://www.baeldung.com/spring-boot-actuators),`这是一个 Spring 应用的监控工具，已经公开了一些 web 资源，这正是我们需要和孔一起测试的。这样，我们的应用程序已经公开了一些我们可以使用的 web 资源。让我们来建造它:
 
-```
+```java
 ./mvnw install
 ```
 
@@ -54,13 +54,13 @@ java -jar target/*。罐子
 
 为了测试应用程序，我们需要打开另一个终端并键入以下命令:
 
-```
+```java
 curl -i http://localhost:8080/actuator/health
 ```
 
 响应必须是应用程序的健康状态，由执行器提供:
 
-```
+```java
 HTTP/1.1 200 OK
 Content-Type: application/vnd.spring-boot.actuator.v3+json
 Content-Length: 15
@@ -72,13 +72,13 @@ Content-Length: 15
 
 将应用程序部署到 Kubernetes 集群的过程包括创建容器映像并将其部署到集群可访问的存储库中。在现实生活中，我们会将图像推送到 DockerHub 或我们自己的私有容器图像注册中心。但是，当我们使用 Minikube 时，让我们将 Docker 客户机环境变量指向 Minikube 的 Docker:
 
-```
+```java
 $(minikube docker-env)
 ```
 
 我们可以构建应用程序映像:
 
-```
+```java
 ./mvnw spring-boot:build-image
 ```
 
@@ -92,7 +92,7 @@ $(minikube docker-env)
 
 一个部署对象只是创建运行我们的映像所必需的 pod，这是创建它的 YAML 文件:
 
-```
+```java
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -123,19 +123,19 @@ status: {}
 
 我们指向 Minikube 内部创建的图像，并获得它的全名。请注意，有必要将`imagePullPolicy`属性指定为`Never `，因为我们没有使用图像注册服务器，所以我们不希望 K8s 尝试下载图像，而是使用已经在其内部 Docker 存档中的图像。我们可以用`kubectl`来部署它:
 
-```
+```java
 kubectl apply -f serviceDeployment.yaml
 ```
 
 如果部署成功，我们可以看到消息:
 
-```
+```java
 deployment.apps/demo created
 ```
 
 为了让我们的应用程序有一个统一的 IP 地址，我们需要创建一个服务，为它分配一个内部集群范围的 IP 地址，这是创建它的 YAML 文件:
 
-```
+```java
 apiVersion: v1
 kind: Service
 metadata:
@@ -158,13 +158,13 @@ status:
 
 现在我们也可以用`kubectl`来部署它:
 
-```
+```java
 kubectl apply -f clusterIp.yaml
 ```
 
 请注意，我们选择的标签`demo`指向我们部署的应用程序。为了能够从外部访问(在 K8s 集群之外)，我们需要创建一个入口规则，在我们的例子中，我们将它指向路径`/actuator/health`和端口 8080:
 
-```
+```java
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -185,13 +185,13 @@ spec:
 
 最后，我们用`kubectl`部署它:
 
-```
+```java
 kubectl apply -f ingress-rule.yaml 
 ```
 
 现在我们可以使用 Kong 的代理 IP 地址进行外部访问:
 
-```
+```java
 $ curl -i $PROXY_IP/actuator/health
 HTTP/1.1 200 OK
 Content-Type: application/vnd.spring-boot.actuator.v3+json
@@ -206,7 +206,7 @@ Via: kong/3.0.0
 
 我们设法在 Kubernetes 上部署了一个 Spring Boot 应用程序，并使用 Kong Ingress 控制器来提供对它的访问。但是 KIC 做的远不止这些:身份验证、负载平衡、监控、速率限制和其他功能。为了展示 Kong 的强大功能，我们将在应用程序中实现一个简单的速率限制器，将访问限制为每分钟只有五个请求。为此，我们需要在 K8s 集群中创建一个名为`KongClusterPlugin`的对象。YAML 的文件做到了这一点:
 
-```
+```java
 apiVersion: configuration.konghq.com/v1
 kind: KongClusterPlugin
 metadata:
@@ -223,13 +223,13 @@ plugin: rate-limiting
 
 插件配置允许我们为应用程序指定额外的访问规则，我们将对它的访问限制为每分钟五个请求。让我们应用这个配置并测试结果:
 
-```
+```java
 kubectl apply -f rate-limiter.yaml
 ```
 
 为了测试它，我们可以在一分钟内重复之前使用的 CURL 命令五次以上，我们将得到一个 429 错误:
 
-```
+```java
 curl -i $PROXY_IP/actuator/health
 HTTP/1.1 429 Too Many Requests
 Date: Sun, 06 Nov 2022 19:33:36 GMT
@@ -256,7 +256,7 @@ Server: kong/3.0.0
 
 为了清理这个演示，我们需要按 LIFO 顺序删除所有对象:
 
-```
+```java
 kubectl delete -f rate-limiter.yaml
 kubectl delete -f ingress-rule.yaml
 kubectl delete -f clusterIp.yaml
@@ -265,7 +265,7 @@ kubectl delete -f serviceDeployment.yaml
 
 并停止 Minikube 集群:
 
-```
+```java
 minikube stop
 ```
 

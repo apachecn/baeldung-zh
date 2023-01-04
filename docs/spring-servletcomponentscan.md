@@ -24,7 +24,7 @@
 
 现在我们将首先定义一个服务于`GET`请求并响应`“hello”`的`Servlet`:
 
-```
+```java
 @WebServlet("/hello")
 public class HelloServlet extends HttpServlet {
 
@@ -46,7 +46,7 @@ public class HelloServlet extends HttpServlet {
 
 然后一个过滤器过滤对目标`“/hello”`的请求，并将`“filtering “`添加到输出中:
 
-```
+```java
 @WebFilter("/hello")
 public class HelloFilter implements Filter {
 
@@ -69,7 +69,7 @@ public class HelloFilter implements Filter {
 
 最后，在`ServletContext`中设置定制属性的监听器:
 
-```
+```java
 @WebListener
 public class AttrListener implements ServletContextListener {
 
@@ -99,7 +99,7 @@ public class AttrListener implements ServletContextListener {
 
 要使用`@ServletComponentScan`，我们需要 1.3.0 或以上版本的`Spring Boot`。下面给`pom`加上最新版本的 [`spring-boot-starter-parent`](https://web.archive.org/web/20221208143917/https://search.maven.org/classic/#artifactdetails%7Corg.springframework.boot%7Cspring-boot-starter-parent%7C1.5.1.RELEASE%7Cpom) 和 [`spring-boot-starter-web`](https://web.archive.org/web/20221208143917/https://search.maven.org/classic/#artifactdetails%7Corg.springframework.boot%7Cspring-boot-starter-web%7C1.5.1.RELEASE%7Cjar) :
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -108,7 +108,7 @@ public class AttrListener implements ServletContextListener {
 </parent>
 ```
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -122,7 +122,7 @@ public class AttrListener implements ServletContextListener {
 
 这个应用程序非常简单。我们添加了`@ServletComponentScan`来启用对`@WebFilter`、`@WebListener`和`@WebServlet:`的扫描
 
-```
+```java
 @ServletComponentScan
 @SpringBootApplication
 public class SpringBootAnnotatedApp {
@@ -136,7 +136,7 @@ public class SpringBootAnnotatedApp {
 
 无需对之前的 web 应用程序进行任何更改，它就可以正常工作:
 
-```
+```java
 @Autowired private TestRestTemplate restTemplate;
 
 @Test
@@ -150,7 +150,7 @@ public void givenServletFilter_whenGetHello_thenRequestFiltered() {
 }
 ```
 
-```
+```java
 @Autowired private ServletContext servletContext;
 
 @Test
@@ -174,19 +174,19 @@ public void givenServletContext_whenAccessAttrs_thenFoundAttrsPutInServletListne
 
 假设我们的`SpringBootAnnotatedApp`在包`com.baeldung.annotation`下，我们想要扫描在上面的 web 应用程序中创建的包`com.baeldung.annotation.components`中的类，下面的配置是等价的:
 
-```
+```java
 @ServletComponentScan
 ```
 
-```
+```java
 @ServletComponentScan("com.baeldung.annotation.components")
 ```
 
-```
+```java
 @ServletComponentScan(basePackages = "com.baeldung.annotation.components")
 ```
 
-```
+```java
 @ServletComponentScan(
   basePackageClasses = 
     {AttrListener.class, HelloFilter.class, HelloServlet.class})
@@ -196,7 +196,7 @@ public void givenServletContext_whenAccessAttrs_thenFoundAttrsPutInServletListne
 
 `@ServletComponentScan`标注由 [`ServletComponentRegisteringPostProcessor`](https://web.archive.org/web/20221208143917/https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot/src/main/java/org/springframework/boot/web/servlet/ServletComponentRegisteringPostProcessor.java) 处理。在扫描指定的`@WebFilter`、`@WebListener`和`@WebServlet`注释包后，[、`ServletComponentHandlers`、](https://web.archive.org/web/20221208143917/https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot/src/main/java/org/springframework/boot/web/servlet/ServletComponentHandler.java)列表将处理它们的注释属性，并注册扫描的 beans:
 
-```
+```java
 class ServletComponentRegisteringPostProcessor
   implements BeanFactoryPostProcessor, ApplicationContextAware {
 

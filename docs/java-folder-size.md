@@ -12,7 +12,7 @@
 
 让我们从一个简单的计算文件夹大小的例子开始—**使用其内容的总和**:
 
-```
+```java
 private long getFolderSize(File folder) {
     long length = 0;
     File[] files = folder.listFiles();
@@ -33,7 +33,7 @@ private long getFolderSize(File folder) {
 
 我们可以测试我们的方法`getFolderSize()`,如下例所示:
 
-```
+```java
 @Test
 public void whenGetFolderSizeRecursive_thenCorrect() {
     long expectedSize = 12607;
@@ -51,7 +51,7 @@ public void whenGetFolderSizeRecursive_thenCorrect() {
 
 接下来——让我们看看如何使用 **Java 7 来获得文件夹大小**。在下面的例子中——我们使用`Files.walkFileTree()`遍历文件夹中的所有文件，对它们的大小求和:
 
-```
+```java
 @Test
 public void whenGetFolderSizeUsingJava7_thenCorrect() throws IOException {
     long expectedSize = 12607;
@@ -78,7 +78,7 @@ public void whenGetFolderSizeUsingJava7_thenCorrect() throws IOException {
 
 现在——让我们看看如何使用 **Java 8、流操作和 lambdas** 获得文件夹大小。在下面的例子中——我们使用`Files.walk()`遍历文件夹中的所有文件，对它们的大小求和:
 
-```
+```java
 @Test
 public void whenGetFolderSizeUsingJava8_thenCorrect() throws IOException {
     long expectedSize = 12607;
@@ -99,7 +99,7 @@ public void whenGetFolderSizeUsingJava8_thenCorrect() throws IOException {
 
 接下来，让我们看看如何使用 **Apache Commons IO** 来获取文件夹大小。在下面的例子中，我们简单地使用`FileUtils.sizeOfDirectory()`来获得文件夹的大小:
 
-```
+```java
 @Test
 public void whenGetFolderSizeUsingApacheCommonsIO_thenCorrect() {
     long expectedSize = 12607;
@@ -119,7 +119,7 @@ public void whenGetFolderSizeUsingApacheCommonsIO_thenCorrect() {
 
 现在，让我们看看如何使用**番石榴**来计算一个文件夹的大小。在下面的例子中——我们使用`Files.fileTreeTraverser()`遍历文件夹中的所有文件，对它们的大小求和:
 
-```
+```java
 @Test public void whenGetFolderSizeUsingGuava_thenCorrect() { 
     long expectedSize = 12607; 
     File folder = new File("src/test/resources"); 
@@ -136,7 +136,7 @@ public void whenGetFolderSizeUsingApacheCommonsIO_thenCorrect() {
 
 最后，让我们看看如何获得一个更易于用户阅读的文件夹大小表示，而不仅仅是以字节为单位的大小:
 
-```
+```java
 @Test
 public void whenGetReadableSize_thenCorrect() {
     File folder = new File("src/test/resources");

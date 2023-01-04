@@ -24,7 +24,7 @@ Java 提供了一些原语，比如`int `或者`long`，来执行整数运算�
 
 `signum`属性**决定了`BigInteger`** 的符号。三个整数值代表数值的符号:`-1`代表负数，`0`代表零，`1 `代表正数:
 
-```
+```java
 assertEquals(1, BigInteger.TEN.signum());
 assertEquals(-1, BigInteger.TEN.negate().signum());
 assertEquals(0, BigInteger.ZERO.signum());
@@ -42,7 +42,7 @@ assertEquals(0, BigInteger.ZERO.signum());
 
 这个数组**以大端记数法**保存给定值的大小。这个数组的第 0 个元素是最重要的整数。让我们用 [`BigInteger(byte[] bytes)`](https://web.archive.org/web/20220616203429/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/math/BigInteger.html#%3Cinit%3E(byte%5B%5D)) 来检查一下:
 
-```
+```java
 assertEquals(new BigInteger("1"), new BigInteger(new byte[]{0b1}))
 assertEquals(new BigInteger("2"), new BigInteger(new byte[]{0b10}))
 assertEquals(new BigInteger("4"), new BigInteger(new byte[]{0b100}))
@@ -52,7 +52,7 @@ assertEquals(new BigInteger("4"), new BigInteger(new byte[]{0b100}))
 
 因为有一个符号幅度变量(`signum`)，我们**不使用第一位作为值**的符号位。让我们快速检查一下:
 
-```
+```java
 byte[] bytes = { -128 }; // 1000 0000
 assertEquals(new BigInteger("128"), new BigInteger(1, bytes));
 assertEquals(new BigInteger("-128"), new BigInteger(-1, bytes));
@@ -62,7 +62,7 @@ assertEquals(new BigInteger("-128"), new BigInteger(-1, bytes));
 
 我们也可以使用 [`toString(int radix)`](https://web.archive.org/web/20220616203429/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/math/BigInteger.html#toString(int)) 方法打印星等:
 
-```
+```java
 assertEquals("10000000", new BigInteger(1, bytes));
 assertEquals("-10000000", new BigInteger(-1, bytes));
 ```
@@ -71,7 +71,7 @@ assertEquals("-10000000", new BigInteger(-1, bytes));
 
 最后，**量值的最高有效位`int`必须是非零的**。这意味着`BigInteger.ZERO`有一个零长度的磁阵列:
 
-```
+```java
 assertEquals(0, BigInteger.ZERO.bitCount()); 
 assertEquals(BigInteger.ZERO, new BigInteger(0, new byte[]{}));
 ```
@@ -91,7 +91,7 @@ assertEquals(BigInteger.ZERO, new BigInteger(0, new byte[]{}));
 
 首先，让我们使用 [`setBit(int n)`](https://web.archive.org/web/20220616203429/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/math/BigInteger.html#setBit(int)) 函数创建一个`BigInteger`:
 
-```
+```java
 BigInteger bi1 = BigInteger.ZERO.setBit(63);
 String str = bi1.toString(2);
 assertEquals(64, bi1.bitLength());
@@ -107,7 +107,7 @@ assertTrue(str.matches("^10{63}$")); // 1000 0000 ... 0000
 
 另一方面，相同的位序列由`Long.MIN_VALUE`表示。让我们将这个常量转换成`byte[]`数组并创建`BigInteger:`
 
-```
+```java
 byte[] bytes = ByteBuffer.allocate(Long.BYTES).putLong(Long.MIN_VALUE).array();
 BigInteger bi2 = new BigInteger(1, bytes);
 assertEquals(bi1, bi2);

@@ -14,7 +14,7 @@
 
 我们将把`String`数据和`delayInMilliseconds` 作为参数传递给它的构造函数:
 
-```
+```java
 public class DelayObject implements Delayed {
     private String data;
     private long startTime;
@@ -29,7 +29,7 @@ public class DelayObject implements Delayed {
 
 因此，我们需要使用`TimeUnit.convert()` 方法来返回适当的`TimeUnit:`中的剩余延迟
 
-```
+```java
 @Override
 public long getDelay(TimeUnit unit) {
     long diff = startTime - System.currentTimeMillis();
@@ -41,7 +41,7 @@ public long getDelay(TimeUnit unit) {
 
 我们还需要实现`compareTo()` 方法，因为`DelayQueue` 中的元素将根据到期时间进行排序。将首先到期的项目被保存在队列的头部，而具有最高到期时间的元素被保存在队列的尾部:
 
-```
+```java
 @Override
 public int compareTo(Delayed o) {
     return Ints.saturatedCast(
@@ -55,7 +55,7 @@ public int compareTo(Delayed o) {
 
 然后，当调用`run()` 方法时，它将元素放入队列，并在每次放入后休眠 500 毫秒:
 
-```
+```java
 public class DelayQueueProducer implements Runnable {
 
     private BlockingQueue<DelayObject> queue;
@@ -84,7 +84,7 @@ public class DelayQueueProducer implements Runnable {
 
 **消费者实现**非常相似，但是它也跟踪被消费的消息的数量:
 
-```
+```java
 public class DelayQueueConsumer implements Runnable {
     private BlockingQueue<DelayObject> queue;
     private Integer numberOfElementsToTake;
@@ -113,7 +113,7 @@ public class DelayQueueConsumer implements Runnable {
 
 生产者将两个对象以 500 毫秒的延迟放到队列中。该测试断言消费者消费了两条消息:
 
-```
+```java
 @Test
 public void givenDelayQueue_whenProduceElement
   _thenShouldConsumeAfterGivenDelay() throws InterruptedException {
@@ -142,7 +142,7 @@ public void givenDelayQueue_whenProduceElement
 
 我们可以观察到，运行该程序将产生以下输出:
 
-```
+```java
 Put object: {data='86046157-e8a0-49b2-9cbb-8326124bcab8', startTime=1494069868007}
 Consumer take: {data='86046157-e8a0-49b2-9cbb-8326124bcab8', startTime=1494069868007}
 Put object: {data='d47927ef-18c7-449b-b491-5ff30e6795ed', startTime=1494069868512}
@@ -157,7 +157,7 @@ Consumer take: {data='d47927ef-18c7-449b-b491-5ff30e6795ed', startTime=149406986
 
 假设我们有一个生产者正在生产一个元素，这个元素将在 10 秒后过期:
 
-```
+```java
 int numberOfElementsToProduce = 1;
 int delayOfEachProducedMessageMilliseconds = 10_000;
 DelayQueueConsumer consumer = new DelayQueueConsumer(
@@ -168,7 +168,7 @@ DelayQueueProducer producer = new DelayQueueProducer(
 
 我们将开始测试，但它将在 5 秒后终止。由于`DelayQueue,` 的特征，消费者将不能消费队列中的消息，因为元素还没有过期:
 
-```
+```java
 executor.submit(producer);
 executor.submit(consumer);
 
@@ -185,7 +185,7 @@ assertEquals(consumer.numberOfConsumedElements.get(), 0);
 
 我们可以测试产生具有负延迟的元素的情况:
 
-```
+```java
 int numberOfElementsToProduce = 1;
 int delayOfEachProducedMessageMilliseconds = -10_000;
 DelayQueueConsumer consumer = new DelayQueueConsumer(queue, numberOfElementsToProduce);
@@ -195,7 +195,7 @@ DelayQueueProducer producer = new DelayQueueProducer(
 
 当我们开始测试用例时，消费者将立即消费该元素，因为它已经过期:
 
-```
+```java
 executor.submit(producer);
 executor.submit(consumer);
 

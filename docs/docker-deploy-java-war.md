@@ -34,7 +34,7 @@ WAR (Web 应用程序存档)是一个压缩存档文件，它打包了所有与 
 
 让我们仔细看看:
 
-```
+```java
 $ ls
 Dockerfile  ROOT.war
 $ cat Dockerfile 
@@ -51,7 +51,7 @@ COPY ROOT.war /usr/local/tomcat/webapps/
 
 现在，让我们使用刚刚创建的 Docker 文件来创建 Docker 映像:
 
-```
+```java
 $ pwd
 /baeldung
 $ ls
@@ -75,7 +75,7 @@ Successfully tagged myapp:latest
 
 到目前为止，我们已经创建了一个 Docker 文件，并用它构建了一个 Docker 映像。现在让我们运行 Docker 容器:
 
-```
+```java
 $ docker run -itd -p 8080:8080 --name my_application_container myapp
 e90c61fdb4ac85b198903e4d744f7b0f3c18c9499ed6e2bbe2f39da0211d42c0
 $ docker ps 
@@ -95,7 +95,7 @@ Tomcat 服务器的默认端口是 8080。因此，在启动 Docker 容器时，
 
 我们还可以使用 Linux 中的 [`curl`](https://web.archive.org/web/20220727020703/https://curl.se/docs/manpage.html) 实用程序来验证设置:
 
-```
+```java
 $ curl http://localhost:8080
 Hi from Baeldung!!!
 ```

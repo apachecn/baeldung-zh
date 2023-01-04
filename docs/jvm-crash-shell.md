@@ -28,7 +28,7 @@ CRaSH 是一个可重用的 shell，部署在 JVM 中，帮助我们与 JVM 进�
 
 让我们将 CRaSH 嵌入到 Spring web 应用程序中。首先，我们需要一些依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.crashub</groupId>
     <artifactId>crash.embed.spring</artifactId>
@@ -50,7 +50,7 @@ CRaSH 是一个可重用的 shell，部署在 JVM 中，帮助我们与 JVM 进�
 
 CRaSH 同时支持 Java 和 Groovy，所以我们需要添加 Groovy 来让 Groovy 脚本工作:
 
-```
+```java
 <dependency>
     <groupId>org.codehaus.groovy</groupId>
     <artifactId>groovy</artifactId>
@@ -62,7 +62,7 @@ CRaSH 同时支持 Java 和 Groovy，所以我们需要添加 Groovy 来让 Groo
 
 接下来，我们需要在我们的`web.xml:`中添加一个监听器
 
-```
+```java
 <listener>
     <listener-class>org.crsh.plugin.WebPluginLifeCycle</listener-class>
 </listener>
@@ -74,7 +74,7 @@ CRaSH 同时支持 Java 和 Groovy，所以我们需要添加 Groovy 来让 Groo
 
 部署应用程序后，我们可以通过 telnet 连接到 shell:
 
-```
+```java
 telnet localhost 5000 
 ```
 
@@ -82,7 +82,7 @@ telnet localhost 5000
 
 或者，我们也可以创建一个 Spring bean 来配置属性并覆盖命令的目录位置:
 
-```
+```java
 <bean class="org.crsh.spring.SpringWebBootstrap">
     <property name="cmdMountPointConfig" value="war:/WEB-INF/crash/commands/" />
     <property name="confMountPointConfig" value="war:/WEB-INF/crash/" />
@@ -98,7 +98,7 @@ telnet localhost 5000
 
 Spring Boot 曾经通过远程外壳将 CRaSH 作为嵌入式产品出售:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-remote-shell</artifactId>
@@ -107,7 +107,7 @@ Spring Boot 曾经通过远程外壳将 CRaSH 作为嵌入式产品出售:
 
 不幸的是，该支持现在已被否决。如果我们仍然想将 shell 与 Spring Boot 应用程序一起使用，我们可以使用附加模式。在附加模式下，崩溃挂钩到 Spring Boot 应用程序的 JVM，而不是它自己的 JVM:
 
-```
+```java
 crash.sh <PID>
 ```
 
@@ -121,7 +121,7 @@ crash.sh <PID>
 
 首先，让我们用 Groovy 创建一个简单的命令:
 
-```
+```java
 class message {
 
     @Usage("show my own message")
@@ -145,7 +145,7 @@ class message {
 
 让我们用 Java 创建相同的命令:
 
-```
+```java
 public class message2 extends BaseCommand {
     @Usage("show my own message using java")
     @Command

@@ -30,7 +30,7 @@ Spring Security 为集成 Spring 数据提供了很好的支持。前者处理�
 
 回想一下，从 [Spring Security 登录表单](/web/20220524033438/https://www.baeldung.com/spring-security-login)(第 4 节&第 5 节)，我们可以使用基于注释的配置将 Spring Security 添加到我们的项目中:
 
-```
+```java
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // Bean definitions
@@ -41,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 **为了在 Spring Security 中启用 Spring 数据，我们只需将这个 bean 添加到`WebSecurityConfig` :**
 
-```
+```java
 @Bean
 public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
     return new SecurityEvaluationContextExtension();
@@ -54,7 +54,7 @@ public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
 
 基于 XML 的配置从包含 Spring 安全名称空间开始:
 
-```
+```java
 <beans:beans 
   xmlns:beans="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -68,7 +68,7 @@ public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
 
 就像在基于 Java 的配置中一样，对于基于 XML 或名称空间的配置，我们将向 XML 配置文件添加**securityevaluationcontextension**bean:
 
-```
+```java
 <bean class="org.springframework.security.data.repository
   .query.SecurityEvaluationContextExtension"/>
 ```
@@ -89,7 +89,7 @@ public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
 
 为了实现这一点，我们将下面的查询添加到我们的`UserRepository`接口:
 
-```
+```java
 @Query("UPDATE AppUser u SET u.lastLogin=:lastLogin WHERE" 
   +" u.username = ?#{ principal?.username }")
 void updateLastLogin (Date lastLogin);
@@ -107,7 +107,7 @@ Spring Data 和 Spring Security 完美结合的另一个场景是，我们需要
 
 当然，这可能涉及到编写查询来与数据库中的一个或多个表进行交互。有了 Spring 数据和 Spring 安全，这就像写:
 
-```
+```java
 public interface TweetRepository extends PagingAndSortingRepository<Tweet, Long> {
     @Query("SELECT twt FROM Tweet twt JOIN twt.likes AS lk WHERE lk = ?#{ principal?.username }" +
       " OR twt.owner = ?#{ principal?.username }")

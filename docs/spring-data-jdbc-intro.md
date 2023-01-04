@@ -12,7 +12,7 @@ Spring Data JDBC 是一个持久性框架，不像 Spring Data JPA 那样复杂�
 
 通过 JDBC 依赖启动器，Spring Boot 应用程序可以使用 Spring Data JDBC。**这个依赖启动器没有带数据库驱动，虽然**。这个决定必须由开发商做出。让我们添加 Spring 数据 JPA 的依赖启动器:
 
-```
+```java
 <dependency> 
     <groupId>org.springframework.boot</groupId> 
     <artifactId>spring-boot-starter-data-jdbc</artifactId>
@@ -29,7 +29,7 @@ Spring Data JDBC 是一个持久性框架，不像 Spring Data JPA 那样复杂�
 
 此外，我们可以通过使用`@Table`和`@Column`注释将实体和属性显式地映射到表和列。例如，下面我们定义了将在本例中使用的实体:
 
-```
+```java
 public class Person {
     @Id
     private long id;
@@ -47,7 +47,7 @@ Spring Data JDBC 使用类似于 Spring Data JPA 的语法。我们可以通过�
 
 让我们创建一个我们将在示例中使用的 JDBC 存储库:
 
-```
+```java
 @Repository 
 public interface PersonRepository extends CrudRepository<Person, Long> {
 }
@@ -61,7 +61,7 @@ public interface PersonRepository extends CrudRepository<Person, Long> {
 
 现在，让我们用一个非修改查询和一个修改查询来定制我们的`PersonRepository`:
 
-```
+```java
 @Repository
 public interface PersonRepository extends CrudRepository<Person, Long> {
 
@@ -87,7 +87,7 @@ public interface PersonRepository extends CrudRepository<Person, Long> {
 
 最后，我们需要用数据填充数据库，这些数据将用于测试我们上面创建的 Spring 数据 JDBC 存储库。因此，我们将创建一个将插入虚拟数据的数据库种子。让我们为这个示例添加数据库播种器的实现:
 
-```
+```java
 @Component
 public class DatabaseSeeder {
 

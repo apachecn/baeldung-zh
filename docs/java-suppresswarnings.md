@@ -12,7 +12,7 @@
 
 尤其是当我们不能或不想解决这些问题时:
 
-```
+```java
 public class Machine {
     private List versions;
 
@@ -32,7 +32,7 @@ public class Machine {
 
 因此，在上面的例子中，**我们可以取消与我们的原始类型用法**相关联的警告:
 
-```
+```java
 public class Machine {
     private List versions;
 
@@ -47,7 +47,7 @@ public class Machine {
 
 为了抑制多个警告的列表，我们设置了一个包含相应警告列表的`String`数组:
 
-```
+```java
 @SuppressWarnings({"unchecked", "deprecated"})
 ```
 

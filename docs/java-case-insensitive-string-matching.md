@@ -10,7 +10,7 @@
 
 最简单的解决方法是使用 [`String.toLowerCase()`](/web/20220630130920/https://www.baeldung.com/java-string-convert-case) 。在这种情况下，我们将把两个字符串都转换成小写，然后使用`contains()`方法:
 
-```
+```java
 assertTrue(src.toLowerCase().contains(dest.toLowerCase()));
 ```
 
@@ -20,7 +20,7 @@ assertTrue(src.toLowerCase().contains(dest.toLowerCase()));
 
 另一种选择是通过使用带有正则表达式的`[String.matches()](https://web.archive.org/web/20220630130920/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#matches(java.lang.String))` :
 
-```
+```java
 assertTrue(src.matches("(?i).*" + dest + ".*"));
 ```
 
@@ -30,7 +30,7 @@ assertTrue(src.matches("(?i).*" + dest + ".*"));
 
 我们也可以用 [`String.regionMatches()`](https://web.archive.org/web/20220630130920/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#regionMatches(boolean,int,java.lang.String,int,int)) 。它检查两个`String`区域是否匹配，使用`true`作为`ignoreCase`参数:
 
-```
+```java
 public static boolean processRegionMatches(String src, String dest) {
     for (int i = src.length() - dest.length(); i >= 0; i--) 
         if (src.regionMatches(true, i, dest, 0, dest.length())) 
@@ -39,7 +39,7 @@ public static boolean processRegionMatches(String src, String dest) {
 }
 ```
 
-```
+```java
 assertTrue(processRegionMatches(src, dest));
 ```
 
@@ -49,7 +49,7 @@ assertTrue(processRegionMatches(src, dest));
 
 [`java.util.regex.Pattern`](https://web.archive.org/web/20220630130920/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/regex/Pattern.html) 类为我们提供了一种使用`matcher()`方法匹配字符串的方法。在这种情况下，我们可以使用`quote()`方法来转义任何特殊字符，以及`CASE_INSENSITIVE`标志。让我们来看看:
 
-```
+```java
 assertTrue(Pattern.compile(Pattern.quote(dest), Pattern.CASE_INSENSITIVE)
     .matcher(src)
     .find());
@@ -59,7 +59,7 @@ assertTrue(Pattern.compile(Pattern.quote(dest), Pattern.CASE_INSENSITIVE)
 
 最后，我们将利用 [Apache Commons `StringUtils` class](/web/20220630130920/https://www.baeldung.com/string-processing-commons-lang) :
 
-```
+```java
 assertTrue(StringUtils.containsIgnoreCase(src, dest));
 ```
 

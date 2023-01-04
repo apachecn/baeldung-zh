@@ -14,7 +14,7 @@
 
 首先，我们将使用`addAll()`，它将一个集合作为它的参数:
 
-```
+```java
 List<Integer> anotherList = Arrays.asList(5, 12, 9, 3, 15, 88);
 list.addAll(anotherList);
 ```
@@ -31,14 +31,14 @@ list.addAll(anotherList);
 
 下面是如何将它用于单个元素的示例:
 
-```
+```java
 List<Integer> list = new ArrayList<>();
 Collections.addAll(list, 1, 2, 3, 4, 5);
 ```
 
 另一个示例了两个阵列的操作:
 
-```
+```java
 List<Integer> list = new ArrayList<>();
 Integer[] otherList = new Integer[] {1, 2, 3, 4, 5};
 Collections.addAll(list, otherList);
@@ -50,7 +50,7 @@ Collections.addAll(list, otherList);
 
 这个版本的 Java 通过添加新工具为我们打开了可能性。我们将在接下来的例子中探索的是`Stream`:
 
-```
+```java
 List<Integer> source = ...;
 List<Integer> target = ...;
 
@@ -60,7 +60,7 @@ source.stream()
 
 这种方式的主要优点是有机会使用跳过和过滤器。在下一个例子中，我们将跳过第一个元素:
 
-```
+```java
 source.stream()
   .skip(1)
   .forEachOrdered(target::add);
@@ -68,7 +68,7 @@ source.stream()
 
 根据我们的需要来过滤元素是可能的。例如，整数值:
 
-```
+```java
 source.stream()
   .filter(i -> i > 10)
   .forEachOrdered(target::add);
@@ -76,7 +76,7 @@ source.stream()
 
 最后，在一些场景中，我们希望以零安全的方式工作。对于那些，我们可以使用`Optional`:
 
-```
+```java
 Optional.ofNullable(source).ifPresent(target::addAll)
 ```
 

@@ -28,7 +28,7 @@ The article is an example-heavy introduction of the possibilities and operations
 
 在 Java 中，`Collection`接口将`Iterable`作为它的超级接口。从 Java 8 开始，这个接口有了一个新的 API:
 
-```
+```java
 void forEach(Consumer<? super T> action)
 ```
 
@@ -38,7 +38,7 @@ void forEach(Consumer<? super T> action)
 
 例如，考虑迭代和打印`Strings`的`Collection`的`for-loop`版本:
 
-```
+```java
 for (String name : names) {
     System.out.println(name);
 }
@@ -46,7 +46,7 @@ for (String name : names) {
 
 我们可以用`forEach`来写这个:
 
-```
+```java
 names.forEach(name -> {
     System.out.println(name);
 });
@@ -60,7 +60,7 @@ names.forEach(name -> {
 
 定义如下:
 
-```
+```java
 @FunctionalInterface
 public interface Consumer {
     void accept(T t);
@@ -69,7 +69,7 @@ public interface Consumer {
 
 因此，任何实现，例如，一个简单地打印一个`String`:
 
-```
+```java
 Consumer<String> printConsumer = new Consumer<String>() {
     public void accept(String name) {
         System.out.println(name);
@@ -79,7 +79,7 @@ Consumer<String> printConsumer = new Consumer<String>() {
 
 可以作为参数传递给`forEach` :
 
-```
+```java
 names.forEach(printConsumer);
 ```
 
@@ -91,7 +91,7 @@ names.forEach(printConsumer);
 
 我们可以使用匿名类实例化`Consumer`接口的实现，然后将其作为参数应用于`forEach`方法:
 
-```
+```java
 Consumer<String> printConsumer= new Consumer<String>() {
     public void accept(String name) {
         System.out.println(name);
@@ -110,19 +110,19 @@ Java 8 函数接口的主要好处是我们可以使用 Lambda 表达式来实�
 
 由于 `Consumer`接口是一个函数接口，我们可以用 Lambda 来表示:
 
-```
+```java
 (argument) -> { //body }
 ```
 
 因此，我们的`printConsumer`被简化为:
 
-```
+```java
 name -> System.out.println(name)
 ```
 
 我们可以把它传给`forEach`:
 
-```
+```java
 names.forEach(name -> System.out.println(name));
 ```
 
@@ -134,7 +134,7 @@ Lambdas 确实有一个非常真实的学习曲线，所以如果你刚刚开始
 
 我们可以使用方法引用语法来代替普通的 Lambda 语法，其中已经存在一个方法来对类执行操作:
 
-```
+```java
 names.forEach(System.out::println);
 ```
 
@@ -146,7 +146,7 @@ names.forEach(System.out::println);
 
 因此，如我们所见，我们可以这样迭代列表元素:
 
-```
+```java
 List<String> names = Arrays.asList("Larry", "Steve", "James");
 
 names.forEach(System.out::println);
@@ -154,7 +154,7 @@ names.forEach(System.out::println);
 
 还有一套是类似的:
 
-```
+```java
 Set<String> uniqueNames = new HashSet<>(Arrays.asList("Larry", "Steve", "James"));
 
 uniqueNames.forEach(System.out::println);
@@ -162,7 +162,7 @@ uniqueNames.forEach(System.out::println);
 
 最后，我们来看一个`Queue`，它也是一个`Collection`:
 
-```
+```java
 Queue<String> namesQueue = new ArrayDeque<>(Arrays.asList("Larry", "Steve", "James"));
 
 namesQueue.forEach(System.out::println);
@@ -176,7 +176,7 @@ Java 8 引入了一个`BiConsumer`来代替 Iterable 的`forEach`中的`Consumer
 
 让我们用这些条目创建一个`Map`:
 
-```
+```java
 Map<Integer, String> namesMap = new HashMap<>();
 namesMap.put(1, "Larry");
 namesMap.put(2, "Steve");
@@ -185,13 +185,13 @@ namesMap.put(3, "James");
 
 接下来，让我们使用 Map 的`forEach`迭代`namesMap`:
 
-```
+```java
 namesMap.forEach((key, value) -> System.out.println(key + " " + value));
 ```
 
 正如我们在这里看到的，我们使用了一个`BiConsumer`来迭代`Map`的条目:
 
-```
+```java
 (key, value) -> System.out.println(key + " " + value)
 ```
 
@@ -201,7 +201,7 @@ namesMap.forEach((key, value) -> System.out.println(key + " " + value));
 
 由于**的条目被存储在一个叫做`EntrySet,`的`Set`中，我们可以使用一个`forEach`T5 来迭代:**
 
-```
+```java
 namesMap.entrySet().forEach(entry -> System.out.println(
   entry.getKey() + " " + entry.getValue()));
 ```
@@ -220,7 +220,7 @@ namesMap.entrySet().forEach(entry -> System.out.println(
 
 让我们看一个内部迭代器的例子:
 
-```
+```java
 names.forEach(name -> System.out.println(name));
 ```
 
@@ -234,7 +234,7 @@ names.forEach(name -> System.out.println(name));
 
 考虑这个熟悉的循环:
 
-```
+```java
 for (String name : names) {
     System.out.println(name);
 }

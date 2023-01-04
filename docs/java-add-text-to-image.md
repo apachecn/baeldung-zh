@@ -16,7 +16,7 @@
 
 首先，让我们看看**如何使用 [ImageJ 库](https://web.archive.org/web/20221105185655/https://imagej.nih.gov/ij/developer/api/index.html)中可用的 [`ImagePlus`](https://web.archive.org/web/20221105185655/https://imagej.nih.gov/ij/source/ij/ImagePlus.java) 和 [`ImageProcessor`](https://web.archive.org/web/20221105185655/https://imagej.nih.gov/ij/developer/api/ij/ij/process/ImageProcessor.html)** 类。为了使用这个库，我们需要在我们的项目中包含这个依赖项:
 
-```
+```java
 <dependency>
     <groupId>net.imagej</groupId>
     <artifactId>ij</artifactId>
@@ -26,13 +26,13 @@
 
 为了读取图像，我们将使用`openImage`静态方法。该方法的结果将使用一个`ImagePlus`对象存储在内存中:
 
-```
+```java
 ImagePlus image = IJ.openImage(path);
 ```
 
 一旦我们将图像加载到内存中，让我们使用类`ImageProcessor`向它添加一些文本:
 
-```
+```java
 Font font = new Font("Arial", Font.BOLD, 18);
 
 ImageProcessor ip = image.getProcessor();
@@ -49,13 +49,13 @@ ip.drawString(text, 0, 20);
 
 和我们使用`ImageJ`的`openImage`一样，我们将使用`ImageIO`中可用的`read`方法:
 
-```
+```java
 BufferedImage image = ImageIO.read(new File(path));
 ```
 
 一旦我们将图像加载到内存中，让我们使用类`Graphics`向它添加一些文本:
 
-```
+```java
 Font font = new Font("Arial", Font.BOLD, 18);
 
 Graphics g = image.getGraphics();
@@ -70,7 +70,7 @@ g.drawString(text, 0, 20);
 
 `Graphics`中可用的方法`drawString`允许我们**使用 [`AttributedCharacterIterator`](https://web.archive.org/web/20221105185655/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/AttributedCharacterIterator.html)** 打印文本。这意味着我们可以使用带有相关属性的文本，而不是使用普通的`String`。让我们看一个例子:
 
-```
+```java
 Font font = new Font("Arial", Font.BOLD, 18);
 
 AttributedString attributedText = new AttributedString(text);
@@ -98,7 +98,7 @@ g.drawString(attributedText.getIterator(), 0, 20);
 
 让我们来看一个例子，我们计算文本的正确位置并绘制它:
 
-```
+```java
 Graphics g = image.getGraphics();
 
 FontMetrics metrics = g.getFontMetrics(font);
@@ -112,7 +112,7 @@ g.drawString(attributedText.getIterator(), positionX, positionY);
 
 **我们将要看到的下一种对齐方式是右下角的**。在这种情况下，我们需要动态地获得正确的位置:
 
-```
+```java
 int positionX = (image.getWidth() - metrics.stringWidth(text));
 int positionY = (image.getHeight() - metrics.getHeight()) + metrics.getAscent();
 ```
@@ -121,7 +121,7 @@ int positionY = (image.getHeight() - metrics.getHeight()) + metrics.getAscent();
 
 最后，让我们看看**如何在左上角**打印我们的文本:
 
-```
+```java
 int positionX = 0;
 int positionY = metrics.getAscent();
 ```
@@ -134,7 +134,7 @@ int positionY = metrics.getAscent();
 
 首先，我们需要使用基本字体获得文本的预期宽度和高度。为了实现这一点，我们将利用类 [`FontMetrics`](https://web.archive.org/web/20221105185655/https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/FontMetrics.html) 、`[GlyphVector](https://web.archive.org/web/20221105185655/https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/font/GlyphVector.html),`和 [`Shape`](https://web.archive.org/web/20221105185655/https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/Shape.html) 。
 
-```
+```java
 FontMetrics ruler = graphics.getFontMetrics(baseFont);
 GlyphVector vector = baseFont.createGlyphVector(ruler.getFontRenderContext(), text);
 
@@ -146,13 +146,13 @@ double expectedHeight = outline.getBounds().getHeight();
 
 下一步是检查是否有必要调整字体的大小。为此，让我们比较一下文本的预期大小和图像的大小:
 
-```
+```java
 boolean textFits = image.getWidth() >= expectedWidth && image.getHeight() >= expectedHeight;
 ```
 
 最后，如果我们的文本不适合图像，我们必须减小字体大小。为此，我们将使用方法`deriveFont`:
 
-```
+```java
 double widthBasedFontSize = (baseFont.getSize2D()*image.getWidth())/expectedWidth;
 double heightBasedFontSize = (baseFont.getSize2D()*image.getHeight())/expectedHeight;
 

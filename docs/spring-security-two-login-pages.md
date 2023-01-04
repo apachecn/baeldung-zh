@@ -21,7 +21,7 @@
 
 两者都将被放在一个常规的`@Configuration`类中:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -31,7 +31,7 @@ public class SecurityConfig {
 
 让我们为`“ADMIN”`用户定义`ConfigurerAdapter`:
 
-```
+```java
 @Configuration
 @Order(1)
 public static class App1ConfigurationAdapter {
@@ -69,7 +69,7 @@ public static class App1ConfigurationAdapter {
 
 现在，让我们为普通用户定义`ConfigurerAdapter`:
 
-```
+```java
 @Configuration
 @Order(2)
 public static class App2ConfigurationAdapter {
@@ -113,7 +113,7 @@ public static class App2ConfigurationAdapter {
 
 我们将为每种类型的用户创建自己的自定义登录页面。对于管理员用户，登录表单将有一个`“user_login”`动作，如配置中所定义:
 
-```
+```java
 <p>User login page</p>
 <form name="f" action="user_login" method="POST">
     <table>
@@ -144,7 +144,7 @@ public static class App2ConfigurationAdapter {
 
 让我们用一个定义了两个用户的`InMemoryUserDetailsManager`来演示这个场景——一个角色是`“USER”`,另一个角色是`“ADMIN”`:
 
-```
+```java
 @Bean
 public UserDetailsService userDetailsService() throws Exception {
     InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
@@ -173,7 +173,7 @@ public static PasswordEncoder encoder() {
 
 如果您有不同的用户认证来源——一个用于管理员，一个用于普通用户——您可以在每个静态`@Configuration`类中配置一个`AuthenticationManagerBuilder`。让我们看一个针对`“ADMIN”`用户的认证管理器的例子:
 
-```
+```java
 @Configuration
 @Order(1)
 public static class App1ConfigurationAdapter {

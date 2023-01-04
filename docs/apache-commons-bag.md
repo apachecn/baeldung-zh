@@ -31,7 +31,7 @@ Learn how to use Apache Commons Text for common String operations.[Read more](/w
 
 在开始之前，我们需要从 [Maven Central](https://web.archive.org/web/20221208143854/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.commons%22%20AND%20a%3A%22commons-collections4%22) 导入最新的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -43,7 +43,7 @@ Learn how to use Apache Commons Text for common String operations.[Read more](/w
 
 简单地说， `Bag`是一个允许存储多个项目及其重复计数的集合:
 
-```
+```java
 public void whenAdded_thenCountIsKept() {
     Bag<Integer> bag = new HashBag<>(
       Arrays.asList(1, 2, 3, 3, 3, 1, 4));
@@ -58,7 +58,7 @@ public void whenAdded_thenCountIsKept() {
 
 例如，当我们从 Java 集合中使用一个`add()` API 时，我们会收到`true` ,即使该项目已经在集合中:
 
-```
+```java
 Collection<Integer> collection = new ArrayList<>();
 collection.add(1);
 assertThat(collection.add(1), is(true));
@@ -66,7 +66,7 @@ assertThat(collection.add(1), is(true));
 
 当我们添加集合中已经可用的元素时，来自`Bag`实现的相同 API 将返回一个`false`:
 
-```
+```java
 Bag<Integer> bag = new HashBag<>();
 bag.add(1);
 
@@ -75,7 +75,7 @@ assertThat(bag.add(1), is(not(true)));
 
 为了解决这些问题，Apache Collections 的库提供了一个名为`CollectionBag.`的装饰器，我们可以使用它来使我们的包集合符合 Java `Collection`契约:
 
-```
+```java
 public void whenBagAddAPILikeCollectionAPI_thenTrue() {
     Bag<Integer> bag = CollectionBag.collectionBag(new HashBag<>());
     bag.add(1);
@@ -92,7 +92,7 @@ public void whenBagAddAPILikeCollectionAPI_thenTrue() {
 
 我们可以添加一个元素，并指示 API 该元素在我们的包集合中应该有多少个副本:
 
-```
+```java
 public void givenAdd_whenCountOfElementsDefined_thenCountAreAdded() {
     Bag<Integer> bag = new HashBag<>();
 
@@ -104,7 +104,7 @@ public void givenAdd_whenCountOfElementsDefined_thenCountAreAdded() {
 
 我们还可以从包中删除元素的特定数量的副本或每个实例:
 
-```
+```java
 public void givenMultipleCopies_whenRemove_allAreRemoved() {
     Bag<Integer> bag = new HashBag<>(
       Arrays.asList(1, 2, 3, 3, 3, 1, 4));
@@ -123,7 +123,7 @@ public void givenMultipleCopies_whenRemove_allAreRemoved() {
 
 我们可以自然地用一个`TreeBag`对整数数组进行排序，然后查询集合中每个元素的实例数量:
 
-```
+```java
 public void givenTree_whenDuplicateElementsAdded_thenSort() {
     TreeBag<Integer> bag = new TreeBag<>(Arrays.asList(7, 5,
       1, 7, 2, 3, 3, 3, 1, 4, 7));
@@ -137,7 +137,7 @@ public void givenTree_whenDuplicateElementsAdded_thenSort() {
 
 `TreeBag`实现了一个`SortedBag`接口，这个接口的所有实现都可以使用装饰器`CollectionSortedBag`来遵守 Java 集合契约:
 
-```
+```java
 public void whenTreeAddAPILikeCollectionAPI_thenTrue() {
     SortedBag<Integer> bag 
       = CollectionSortedBag.collectionSortedBag(new TreeBag<>());
@@ -154,7 +154,7 @@ public void whenTreeAddAPILikeCollectionAPI_thenTrue() {
 
 我们可以使用这个装饰器和上一节中的`TreeBag`(一个`SortedBag`的实现)来同步对我们包的访问:
 
-```
+```java
 public void givenSortedBag_whenDuplicateElementsAdded_thenSort() {
     SynchronizedSortedBag<Integer> bag = SynchronizedSortedBag
       .synchronizedSortedBag(new TreeBag<>(

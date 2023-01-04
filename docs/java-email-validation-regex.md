@@ -30,7 +30,7 @@
 
 让我们定义一个简单的助手方法来匹配正则表达式模式:
 
-```
+```java
 public static boolean patternMatches(String emailAddress, String regexPattern) {
     return Pattern.compile(regexPattern)
       .matcher(emailAddress)
@@ -40,7 +40,7 @@ public static boolean patternMatches(String emailAddress, String regexPattern) {
 
 我们还将编写代码，使用以下正则表达式来验证电子邮件地址:
 
-```
+```java
 @Test
 public void testUsingSimpleRegex() {
     emailAddress = "[[email protected]](/web/20220529013448/https://www.baeldung.com/cdn-cgi/l/email-protection)";
@@ -75,7 +75,7 @@ public void testUsingSimpleRegex() {
 
 我们还将编写代码来测试这个正则表达式:
 
-```
+```java
 @Test
 public void testUsingStrictRegex() {
     emailAddress = "[[email protected]](/web/20220529013448/https://www.baeldung.com/cdn-cgi/l/email-protection)";
@@ -114,7 +114,7 @@ public void testUsingStrictRegex() {
 
 让我们通过编写测试来检查这个正则表达式:
 
-```
+```java
 @Test
 public void testUsingUnicodeRegex() {
     emailAddress = "用户名@领域.电脑";
@@ -142,7 +142,7 @@ public void testUsingUnicodeRegex() {
 
 让我们用这个正则表达式编写验证电子邮件的代码:
 
-```
+```java
 @Test
 public void testUsingRFC5322Regex() {
     emailAddress = "[[email protected]](/web/20220529013448/https://www.baeldung.com/cdn-cgi/l/email-protection)";
@@ -163,7 +163,7 @@ public void testUsingRFC5322Regex() {
 
 我们还将编写一些代码，使用以下正则表达式来验证电子邮件地址:
 
-```
+```java
 @Test
 public void testTopLevelDomain() {
     emailAddress = "[[email protected]](/web/20220529013448/https://www.baeldung.com/cdn-cgi/l/email-protection)";
@@ -183,7 +183,7 @@ public void testTopLevelDomain() {
 
 让我们看一下代码:
 
-```
+```java
 @Test
 public void testRestrictDots() {
     emailAddress = "[[email protected]](/web/20220529013448/https://www.baeldung.com/cdn-cgi/l/email-protection)";
@@ -203,7 +203,7 @@ public void testRestrictDots() {
 
 让我们使用下面的代码来验证电子邮件地址:
 
-```
+```java
 @Test
 public void testOwaspValidation() {
     emailAddress = "[[email protected]](/web/20220529013448/https://www.baeldung.com/cdn-cgi/l/email-protection)";
@@ -224,7 +224,7 @@ public void testOwaspValidation() {
 
 让我们写一个例子来测试这个用例:
 
-```
+```java
 @Test
 public void testGmailSpecialCase() {
     emailAddress = "[[email protected]](/web/20220529013448/https://www.baeldung.com/cdn-cgi/l/email-protection)";
@@ -242,7 +242,7 @@ Apache Commons Validator 是一个包含标准验证规则的验证包。因此�
 
 让我们在项目中添加 [commons-validator](https://web.archive.org/web/20220529013448/https://search.maven.org/artifact/commons-validator/commons-validator/1.7/jar) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>commons-validator</groupId>
     <artifactId>commons-validator</artifactId>
@@ -252,7 +252,7 @@ Apache Commons Validator 是一个包含标准验证规则的验证包。因此�
 
 现在，我们可以使用下面的代码来验证电子邮件地址:
 
-```
+```java
 @Test
 public void testUsingEmailValidator() {
     emailAddress = "[[email protected]](/web/20220529013448/https://www.baeldung.com/cdn-cgi/l/email-protection)";

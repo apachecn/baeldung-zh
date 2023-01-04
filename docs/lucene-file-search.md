@@ -12,7 +12,7 @@ Apache Lucene 是一个全文搜索引擎，可以被各种编程语言使用。
 
 让我们首先添加必要的依赖项:
 
-```
+```java
 <dependency>        
     <groupId>org.apache.lucene</groupId>          
     <artifactId>lucene-core</artifactId>
@@ -24,7 +24,7 @@ Apache Lucene 是一个全文搜索引擎，可以被各种编程语言使用。
 
 此外，为了解析我们的搜索查询，我们需要:
 
-```
+```java
 <dependency>
     <groupId>org.apache.lucene</groupId>
     <artifactId>lucene-queryparser</artifactId>
@@ -40,7 +40,7 @@ Apache Lucene 是一个全文搜索引擎，可以被各种编程语言使用。
 
 Lucene 提供了`FSDirectory` 类来创建文件系统索引:
 
-```
+```java
 Directory directory = FSDirectory.open(Paths.get(indexPath));
 ```
 
@@ -58,7 +58,7 @@ Lucene 提供了抽象的`FSDirectory`类的三个具体实现:`SimpleFSDirector
 
 一旦我们创建了索引目录，让我们继续向索引添加一个文件:
 
-```
+```java
 public void addFileToIndex(String filepath) {
 
     Path path = Paths.get(filepath);
@@ -96,7 +96,7 @@ public void addFileToIndex(String filepath) {
 
 现在，让我们搜索我们已编制索引的文件:
 
-```
+```java
 public List<Document> searchFiles(String inField, String queryString) {
     Query query = new QueryParser(inField, analyzer)
       .parse(queryString);
@@ -115,7 +115,7 @@ public List<Document> searchFiles(String inField, String queryString) {
 
 现在让我们测试功能:
 
-```
+```java
 @Test
 public void givenSearchQueryWhenFetchedFileNamehenCorrect(){
     String indexPath = "/tmp/index";

@@ -22,7 +22,7 @@ Java 中的`equals()`用于检查两个对象是否等价。测试这一点的�
 
 让我们考虑一个仅由原始成员变量组成的 Java 类:
 
-```
+```java
 public class PrimitiveClass {
 
     private boolean primitiveBoolean;
@@ -40,7 +40,7 @@ public class PrimitiveClass {
 
 请注意，插入点:下面列出的选项会影响生成代码的样式。这里，我们不选择这些选项中的任何一个，选择“OK ”,这些方法就被添加到我们的类中:
 
-```
+```java
 @Override
 public int hashCode() {
     final int prime = 31;
@@ -72,7 +72,7 @@ public boolean equals(Object obj) {
 
 所以我们可以编写简单的测试:
 
-```
+```java
 PrimitiveClass aObject = new PrimitiveClass(false, 2);
 PrimitiveClass bObject = new PrimitiveClass(false, 2);
 PrimitiveClass dObject = new PrimitiveClass(true, 2);
@@ -88,7 +88,7 @@ assertFalse(aObject.hashCode() == dObject.hashCode());
 
 现在，让我们考虑一个更复杂的具有集合和泛型的 Java 类:
 
-```
+```java
 public class ComplexClass {
 
     private List<?> genericList;
@@ -100,7 +100,7 @@ public class ComplexClass {
 
 我们再次使用 Eclipse 的“Source-> Generate”`hashCode()`和`equals()'.` 注意，`hashCode()` 使用`instanceOf`来比较类对象，因为我们在对话框的 Eclipse 选项中选择了“使用‘instance of’来比较类型”。我们得到:
 
-```
+```java
 @Override
 public int hashCode() {
     final int prime = 31;
@@ -138,7 +138,7 @@ public boolean equals(Object obj) {
 
 我们可以通过测试一些例子来验证健壮性:
 
-```
+```java
 ArrayList<String> strArrayList = new ArrayList<String>();
 strArrayList.add("abc");
 strArrayList.add("def");
@@ -161,7 +161,7 @@ assertFalse(aObject.hashCode() == dObject.hashCode());
 
 让我们考虑使用继承的 Java 类:
 
-```
+```java
 public abstract class Shape {
     public abstract double area();
 
@@ -198,7 +198,7 @@ public class Square extends Rectangle {
 
 然而，`Square`类从 Rectangle 继承了`width`和`length`成员变量，以及它自己的颜色变量。在`Square`中创建`hashCode()`和`equals()`而不先为`Rectangle`做同样的事情，意味着在`equals()` / `hashCode()`中只使用`color`:
 
-```
+```java
 @Override
 public int hashCode() {
     final int prime = 31;
@@ -223,7 +223,7 @@ public boolean equals(Object obj) {
 
 快速测试表明，如果仅仅是`width`不同，那么`Square`的`equals()` / `hashCode()`是不够的，因为`width`不包括在`equals()` / `hashCode()`计算中:
 
-```
+```java
 Square aObject = new Square(10, Color.BLUE);     
 Square dObject = new Square(20, Color.BLUE);
 
@@ -233,7 +233,7 @@ Assert.assertFalse(aObject.hashCode() == dObject.hashCode());
 
 让我们通过使用 Eclipse 为`Rectangle`类生成`equals()` / `hashCode()`来解决这个问题:
 
-```
+```java
 @Override
 public int hashCode() {
     final int prime = 31;
@@ -262,7 +262,7 @@ public boolean equals(Object obj) {
 
 我们必须在`Square`类中重新生成`equals()` / `hashCode()`，所以`Rectangle`的`equals()` / `hashCode()`被调用。在这一代代码中，我们选择了 Eclipse 对话框中的所有选项，因此我们看到了注释、`instanceOf`比较和`if`块:
 
-```
+```java
 @Override
 public int hashCode() {
     final int prime = 31;

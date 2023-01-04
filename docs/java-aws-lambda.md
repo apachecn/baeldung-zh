@@ -14,7 +14,7 @@
 
 要启用 AWS lambda，我们的项目中需要以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>aws-lambda-java-core</artifactId>
@@ -26,7 +26,7 @@
 
 我们还需要 [Maven Shade 插件](https://web.archive.org/web/20220630124205/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22maven-shade-plugin%22)来构建 lambda 应用程序:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-shade-plugin</artifactId>
@@ -61,7 +61,7 @@
 
 另外，可选的`Context`对象将允许我们访问 Lambda 执行环境中可用的有用信息:
 
-```
+```java
 public class LambdaMethodHandler {
     public String handleRequest(String input, Context context) {
         context.getLogger().log("Input: " + input);
@@ -74,7 +74,7 @@ public class LambdaMethodHandler {
 
 我们还可以将`RequestHandler`实现到我们的类中，并覆盖`handleRequest`方法，这将是我们请求的入口点:
 
-```
+```java
 public class LambdaRequestHandler
   implements RequestHandler<String, String> {
     public String handleRequest(String input, Context context) {
@@ -92,7 +92,7 @@ public class LambdaRequestHandler
 
 不同之处在于，`InputStream`、`ObjectStream`和`Context`对象是作为参数传递的:
 
-```
+```java
 public class LambdaRequestStreamHandler
   implements RequestStreamHandler {
     public void handleRequest(InputStream inputStream, 
@@ -107,7 +107,7 @@ public class LambdaRequestStreamHandler
 
 完成所有配置后，我们可以通过运行以下命令来创建部署文件:
 
-```
+```java
 mvn clean package shade:shade
 ```
 
@@ -145,7 +145,7 @@ mvn clean package shade:shade
 
 在屏幕上，您可以看到**执行结果**部分，成功返回的输出如下:
 
-```
+```java
 "Hello World - Baeldung"
 ```
 

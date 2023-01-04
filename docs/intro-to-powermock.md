@@ -18,7 +18,7 @@
 
 为 Mockito 集成 PowerMock 支持的第一步是在 Maven POM 文件中包含以下两个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.powermock</groupId>
     <artifactId>powermock-module-junit4</artifactId>
@@ -35,7 +35,7 @@
 
 接下来，我们需要通过应用以下两个注释来准备使用`PowerMockito`的测试用例:
 
-```
+```java
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(fullyQualifiedNames = "com.baeldung.powermockito.introduction.*")
 ```
@@ -50,7 +50,7 @@
 
 下面是我们将如何定义协作类，它的构造函数和最终方法将被模仿:
 
-```
+```java
 public class CollaboratorWithFinalMethods {
     public final String helloMethod() {
         return "Hello World!";
@@ -60,38 +60,38 @@ public class CollaboratorWithFinalMethods {
 
 首先，我们使用`PowerMockito` API 创建一个模拟对象:
 
-```
+```java
 CollaboratorWithFinalMethods mock = mock(CollaboratorWithFinalMethods.class);
 ```
 
 接下来，我们设置一个期望，即无论何时调用该类的无参数构造函数，都应该返回一个模拟实例，而不是一个真实的实例:
 
-```
+```java
 whenNew(CollaboratorWithFinalMethods.class).withNoArguments().thenReturn(mock);
 ```
 
 让我们通过使用默认构造函数实例化`CollaboratorWithFinalMethods`类来看看这个构造模拟是如何工作的，然后我们将验证 PowerMock 的行为:
 
-```
+```java
 CollaboratorWithFinalMethods collaborator = new CollaboratorWithFinalMethods();
 verifyNew(CollaboratorWithFinalMethods.class).withNoArguments();
 ```
 
 在下一步中，为最终方法设置一个期望值:
 
-```
+```java
 when(collaborator.helloMethod()).thenReturn("Hello Baeldung!");
 ```
 
 然后执行该方法:
 
-```
+```java
 String welcome = collaborator.helloMethod();
 ```
 
 下面的断言确认了`helloMethod`方法已经在*协作者*对象上被调用，并返回模仿期望设置的值:
 
-```
+```java
 Mockito.verify(collaborator).helloMethod();
 assertEquals("Hello Baeldung!", welcome);
 ```
@@ -104,7 +104,7 @@ assertEquals("Hello Baeldung!", welcome);
 
 下面是我们声明这个类的方法:
 
-```
+```java
 public class CollaboratorWithStaticMethods {
     public static String firstMethod(String name) {
         return "Hello " + name + " !";
@@ -122,7 +122,7 @@ public class CollaboratorWithStaticMethods {
 
 为了模仿这些静态方法，我们需要用`PowerMockito` API 注册封闭类:
 
-```
+```java
 mockStatic(CollaboratorWithStaticMethods.class);
 ```
 
@@ -130,7 +130,7 @@ mockStatic(CollaboratorWithStaticMethods.class);
 
 接下来，可以设置期望值来定义方法在被调用时应该返回的值:
 
-```
+```java
 when(CollaboratorWithStaticMethods.firstMethod(Mockito.anyString()))
   .thenReturn("Hello Baeldung!");
 when(CollaboratorWithStaticMethods.secondMethod()).thenReturn("Nothing special");
@@ -138,14 +138,14 @@ when(CollaboratorWithStaticMethods.secondMethod()).thenReturn("Nothing special")
 
 或者可以设置在调用`thirdMethod`方法时抛出异常:
 
-```
+```java
 doThrow(new RuntimeException()).when(CollaboratorWithStaticMethods.class);
 CollaboratorWithStaticMethods.thirdMethod();
 ```
 
 现在是运行前两个方法的时候了:
 
-```
+```java
 String firstWelcome = CollaboratorWithStaticMethods.firstMethod("Whoever");
 String secondWelcome = CollaboratorWithStaticMethods.firstMethod("Whatever");
 ```
@@ -154,7 +154,7 @@ String secondWelcome = CollaboratorWithStaticMethods.firstMethod("Whatever");
 
 这些断言证明嘲弄已经生效:
 
-```
+```java
 assertEquals("Hello Baeldung!", firstWelcome);
 assertEquals("Hello Baeldung!", secondWelcome);
 ```
@@ -163,7 +163,7 @@ assertEquals("Hello Baeldung!", secondWelcome);
 
 在这种情况下，`firstMethod`被调用了两次，而`secondMethod`从未被调用过:
 
-```
+```java
 verifyStatic(Mockito.times(2));
 CollaboratorWithStaticMethods.firstMethod(Mockito.anyString());
 
@@ -177,7 +177,7 @@ CollaboratorWithStaticMethods.secondMethod();
 
 它由`@Test`注释的`expected`柠檬验证:
 
-```
+```java
 @Test(expected = RuntimeException.class)
 public void givenStaticMethods_whenUsingPowerMockito_thenCorrect() {
     // other methods   
@@ -192,7 +192,7 @@ public void givenStaticMethods_whenUsingPowerMockito_thenCorrect() {
 
 这个类将作为合作者来说明 PowerMock 对部分模仿的支持:
 
-```
+```java
 public class CollaboratorForPartialMocking {
     public static String staticMethod() {
         return "Hello Baeldung!";
@@ -216,27 +216,27 @@ public class CollaboratorForPartialMocking {
 
 首先，我们使用`PowerMockito` API 部分模拟`CollaboratorForPartialMocking`类，并为其静态方法设置一个期望值:
 
-```
+```java
 spy(CollaboratorForPartialMocking.class);
 when(CollaboratorForPartialMocking.staticMethod()).thenReturn("I am a static mock method.");
 ```
 
 然后执行静态方法:
 
-```
+```java
 returnValue = CollaboratorForPartialMocking.staticMethod();
 ```
 
 嘲讽的行为得到了验证:
 
-```
+```java
 verifyStatic();
 CollaboratorForPartialMocking.staticMethod();
 ```
 
 下面的断言通过将返回值与期望值进行比较来确认 mock 方法实际上已被调用:
 
-```
+```java
 assertEquals("I am a static mock method.", returnValue);
 ```
 
@@ -244,7 +244,7 @@ assertEquals("I am a static mock method.", returnValue);
 
 为了说明这些方法的部分嘲讽，我们需要实例化这个类，并告诉`PowerMockito` API 去`spy`它:
 
-```
+```java
 CollaboratorForPartialMocking collaborator = new CollaboratorForPartialMocking();
 CollaboratorForPartialMocking mock = spy(collaborator);
 ```
@@ -253,20 +253,20 @@ CollaboratorForPartialMocking mock = spy(collaborator);
 
 我们现在将通过设置期望值和调用方法来处理最后一个方法:
 
-```
+```java
 when(mock.finalMethod()).thenReturn("I am a final mock method.");
 returnValue = mock.finalMethod();
 ```
 
 部分嘲笑该方法的行为被证明:
 
-```
+```java
 Mockito.verify(mock).finalMethod();
 ```
 
 一个测试验证了调用`finalMethod`方法将返回一个符合预期的值:
 
-```
+```java
 assertEquals("I am a final mock method.", returnValue);
 ```
 
@@ -276,20 +276,20 @@ assertEquals("I am a final mock method.", returnValue);
 
 让我们从期望和调用开始:
 
-```
+```java
 when(mock, "privateMethod").thenReturn("I am a private mock method.");
 returnValue = mock.privateMethodCaller();
 ```
 
 对私有方法的嘲讽得到了证实:
 
-```
+```java
 verifyPrivate(mock).invoke("privateMethod");
 ```
 
 以下测试确保调用私有方法的返回值与预期值相同:
 
-```
+```java
 assertEquals("I am a private mock method. Welcome to the Java world.", returnValue);
 ```
 

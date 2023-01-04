@@ -16,7 +16,7 @@
 
 任何结构上的改变都会抛出`UnsupportedOperationException`，比如向列表中添加新元素或者从列表中移除元素。现在，让我们用一个测试来检验它:
 
-```
+```java
 List<String> arraysAsList = Arrays.asList("ONE");
 assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(
     () -> arraysAsList.add("TWO")
@@ -27,7 +27,7 @@ assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(
 
 尽管我们不能在列表上调用`add()`或`remove()`操作，但是**我们可以使用`set()`方法**改变列表中的元素:
 
-```
+```java
 arraysAsList.set(0, "A brand new string");
 assertThat(arraysAsList.get(0)).isEqualTo("A brand new string");
 ```
@@ -40,7 +40,7 @@ assertThat(arraysAsList.get(0)).isEqualTo("A brand new string");
 
 **`Arrays.asList()`方法返回一个`List`对象，该对象由给定的数组**支持。也就是说，该方法不会将数组中的元素复制到新的`List`对象中。相反，该方法在给定的数组上提供了一个`List`视图。因此，我们对数组所做的任何更改都将在返回的列表中可见。类似地，对列表所做的更改也将在数组中可见:
 
-```
+```java
 String[] theArray = new String[] { "ONE", "TWO" };
 List<String> theList = Arrays.asList(theArray);
 //changing the list, the array is changed too
@@ -60,7 +60,7 @@ assertThat(theList.get(1)).isEqualTo("TWO [changed in array]");
 
 换句话说，不允许对由`singletonList().` 返回的列表进行结构性和非结构性的更改。一个测试可以快速说明这一点:
 
-```
+```java
 List<String> singletonList = Collections.singletonList("ONE");
 assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(
     () -> singletonList.add("TWO")
@@ -74,7 +74,7 @@ assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(
 
 值得一提的是，如果我们看一下返回列表类的源代码，与其他`List`实现不同，返回列表中的单个元素没有存储在数组或任何其他复杂的数据结构中。相反，**list 直接保存元素对象**:
 
-```
+```java
 private static class SingletonList<E> extends AbstractList<E> implements RandomAccess, Serializable {
     ...
     private final E element;

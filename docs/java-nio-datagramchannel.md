@@ -20,7 +20,7 @@ Java 的 NIO 模块的 [`DatagramChannel`](https://web.archive.org/web/202205240
 
 首先，让我们用`openChannel`方法创建`DatagramChannelBuilder`类，它提供一个开放但未连接的数据报通道:
 
-```
+```java
 public class DatagramChannelBuilder {
     public static DatagramChannel openChannel() throws IOException {
         DatagramChannel datagramChannel = DatagramChannel.open();
@@ -33,7 +33,7 @@ public class DatagramChannelBuilder {
 
 因此，我们将添加将`DatagramChannel`绑定到所提供的本地地址的`bindChannel`方法:
 
-```
+```java
 public static DatagramChannel bindChannel(SocketAddress local) throws IOException {
     return openChannel().bind(local); 
 }
@@ -45,7 +45,7 @@ public static DatagramChannel bindChannel(SocketAddress local) throws IOExceptio
 
 首先，让我们用`startClient`方法创建`DatagramClient`类，它使用了已经讨论过的`DatagramChannelBuilder`类的`bindChannel`方法
 
-```
+```java
 public class DatagramClient {
     public static DatagramChannel startClient() throws IOException {
         DatagramChannel client = DatagramChannelBuilder.bindChannel(null);
@@ -58,7 +58,7 @@ public class DatagramClient {
 
 然后，让我们添加`sendMessage`方法来发送服务器地址上的数据报:
 
-```
+```java
 public static void sendMessage(DatagramChannel client, String msg, SocketAddress serverAddress) throws IOException {
     ByteBuffer buffer = ByteBuffer.wrap(msg.getBytes());
     client.send(buffer, serverAddress);
@@ -67,7 +67,7 @@ public static void sendMessage(DatagramChannel client, String msg, SocketAddress
 
 就是这样！现在，我们准备使用客户端发送消息:
 
-```
+```java
 DatagramChannel client = startClient();
 String msg = "Hello, this is a Baeldung's DatagramChannel based UDP client!";
 InetSocketAddress serverAddress = new InetSocketAddress("localhost", 7001);
@@ -81,7 +81,7 @@ sendMessage(client, msg, serverAddress);
 
 类似地，让我们用`startServer`方法创建`DatagramServer`类，在`localhost:7001`地址上启动一个服务器:
 
-```
+```java
 public class DatagramServer {
     public static DatagramChannel startServer() throws IOException {
         InetSocketAddress address = new InetSocketAddress("localhost", 7001);
@@ -94,7 +94,7 @@ public class DatagramServer {
 
 然后，让我们添加从客户端接收数据报、提取消息并打印出来的`receiveMessage`方法:
 
-```
+```java
 public static void receiveMessage(DatagramChannel server) throws IOException {
     ByteBuffer buffer = ByteBuffer.allocate(1024);
     SocketAddress remoteAdd = server.receive(buffer);
@@ -105,7 +105,7 @@ public static void receiveMessage(DatagramChannel server) throws IOException {
 
 此外，为了从接收到的缓冲区中提取客户端的消息，我们需要添加`extractMessage`方法:
 
-```
+```java
 private static String extractMessage(ByteBuffer buffer) {
     buffer.flip();
     byte[] bytes = new byte[buffer.remaining()];
@@ -120,14 +120,14 @@ private static String extractMessage(ByteBuffer buffer) {
 
 现在，我们可以启动服务器并接收来自客户端的消息:
 
-```
+```java
 DatagramChannel server = startServer();
 receiveMessage(server);
 ```
 
 因此，当服务器收到我们的消息时，打印输出将是:
 
-```
+```java
 Server started at #localhost/127.0.0.1:7001
 Client at #/127.0.0.1:52580  sent: Hello, this is a Baeldung's DatagramChannel based UDP client!
 ```
@@ -136,7 +136,7 @@ Client at #/127.0.0.1:52580  sent: Hello, this is a Baeldung's DatagramChannel b
 
 现在我们已经准备好了客户端和服务器，我们可以编写一个单元测试来验证端到端数据报(UDP 数据包)的交付:
 
-```
+```java
 @Test
 public void whenClientSendsAndServerReceivesUDPPacket_thenCorrect() throws IOException {
     DatagramChannel server = DatagramServer.startServer();
@@ -165,7 +165,7 @@ public void whenClientSendsAndServerReceivesUDPPacket_thenCorrect() throws IOExc
 
 默认情况下，数据报通道是阻塞的。当传递`false`值时，我们可以使用`configureBlocking`方法使通道不阻塞:
 
-```
+```java
 client.configureBlocking(false);
 ```
 

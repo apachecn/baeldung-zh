@@ -29,7 +29,7 @@
 
 让我们首先为我们的处理器创建一个抽象基类:
 
-```
+```java
 public abstract class AuthenticationProcessor {
 
     public AuthenticationProcessor nextProcessor;
@@ -42,7 +42,7 @@ public abstract class AuthenticationProcessor {
 
 接下来，让我们创建扩展`AuthenticationProcessor`的具体处理器:
 
-```
+```java
 public class OAuthProcessor extends AuthenticationProcessor {
 
     public OAuthProcessor(AuthenticationProcessor nextProcessor) {
@@ -62,7 +62,7 @@ public class OAuthProcessor extends AuthenticationProcessor {
 }
 ```
 
-```
+```java
 public class UsernamePasswordProcessor extends AuthenticationProcessor {
 
     public UsernamePasswordProcessor(AuthenticationProcessor nextProcessor) {
@@ -87,7 +87,7 @@ public class UsernamePasswordProcessor extends AuthenticationProcessor {
 
 现在让我们创建几个测试:
 
-```
+```java
 public class ChainOfResponsibilityTest {
 
     private static AuthenticationProcessor getChainOfAuthProcessor() {
@@ -139,7 +139,7 @@ public class ChainOfResponsibilityTest {
 
 让我们看看下面的代码片段，以便更好地理解 Servlet 过滤器 **:** 中的这种模式
 
-```
+```java
 public class CustomFilter implements Filter {
 
     public void doFilter(

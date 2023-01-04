@@ -16,7 +16,7 @@
 
 例如，下面是一个简单的 JAR 文件结构:
 
-```
+```java
 META-INF/
     MANIFEST.MF
 com/
@@ -34,7 +34,7 @@ WAR 代表 Web 应用程序档案或 Web 应用程序资源。这些归档文件
 
 下面是一个典型 WAR 文件结构的布局示例:
 
-```
+```java
 META-INF/
     MANIFEST.MF
 WEB-INF/

@@ -28,7 +28,7 @@ Java 应用程序使用**套接字通过互联网**进行通信和发送数据�
 
 首先，我们需要实例化一个`ServerSocket`来监听传入的连接请求。`ServerSocket`类的构造函数需要一个端口号作为参数:
 
-```
+```java
 public class ApplicationServer {
 
     private ServerSocket serverSocket;
@@ -46,13 +46,13 @@ public class ApplicationServer {
 
 **`getRemoteSocketAddress`方法返回一个`SocketAddress`** 类型的对象。这是一个抽象的 Java 类。在这个例子中，我们知道这是一个 TCP/IP 连接，所以我们可以将它转换为`InetSocketAddress`:
 
-```
+```java
 InetSocketAddress socketAddress = (InetSocketAddress) connectedSocket.getRemoteSocketAddress();
 ```
 
 正如我们已经看到的，套接字地址是 IP 地址和端口号的组合。我们可以使用`getAddress`来获取 IP 地址`.`，这将返回一个`InetAddress`对象。然而，**我们也可以使用`getHostAddress`来获得 IP 地址的字符串表示**:
 
-```
+```java
 String clientIpAddress = socketAddress.getAddress()
     .getHostAddress();
 ```
@@ -61,7 +61,7 @@ String clientIpAddress = socketAddress.getAddress()
 
 现在，服务器和客户机可以交换问候消息:
 
-```
+```java
 String msg = in.readLine();
 System.out.println("Message received from the client :: " + msg);
 PrintWriter out = new PrintWriter(connectedSocket.getOutputStream(), true);
@@ -76,7 +76,7 @@ out.println("Hello Client !!");
 
 首先，我们需要使用 IP 地址和端口号建立到服务的`Socket`连接:
 
-```
+```java
 public class ApplicationClient {
     public void connect(String ip, int port) throws IOException {
         clientSocket = new Socket(ip, port);
@@ -86,7 +86,7 @@ public class ApplicationClient {
 
 类似于服务器应用程序，我们将使用`BufferedReader`和`PrintWriter`来读取和写入套接字。为了向服务器发送消息，让我们创建一个方法来写入连接的套接字:
 
-```
+```java
 public void sendGreetings(String msg) throws IOException {
     out.println(msg);
     String reply = in.readLine();
@@ -100,7 +100,7 @@ public void sendGreetings(String msg) throws IOException {
 
 之后，我们需要从另一台 PC 启动客户端应用程序。对于这个例子，假设服务器的 IP 地址是`192.168.0.100` ，端口 5000 是空闲的:
 
-```
+```java
 java -cp com.baeldung.clientaddress.ApplicationClient 192.168.0.100 5000 Hello
 ```
 
@@ -108,7 +108,7 @@ java -cp com.baeldung.clientaddress.ApplicationClient 192.168.0.100 5000 Hello
 
 例如，如果客户端 IP 地址是 192.168.0.102，我们应该能够在控制台中看到它:
 
-```
+```java
 IP address of the connected client :: 192.168.0.102
 ```
 

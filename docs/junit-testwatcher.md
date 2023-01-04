@@ -14,25 +14,25 @@
 
 但是，在我们深入一些真实的例子之前，**让我们后退一步，简要总结一下`TestWatcher`接口**中的方法:
 
-*   ```
+*   ```java
     testAborted​(ExtensionContext context, Throwable cause)
     ```
 
     为了处理中止测试的结果，我们可以覆盖`testAborted`方法。顾名思义，这个方法是在测试中止后调用的。
 
-*   ```
+*   ```java
     testDisabled​(ExtensionContext context, Optional reason)
     ```
 
     当我们想要处理一个被禁用的测试方法的结果时，我们可以覆盖`testDisabled`方法。该方法还可以包括测试被禁用的原因。
 
-*   ```
+*   ```java
     testFailed(ExtensionContext context, Throwable cause)
     ```
 
     如果我们想在测试失败后做一些额外的处理，我们可以简单地实现`testFailed`方法中的功能。该方法可能包括测试失败的原因。
 
-*   ```
+*   ```java
     testSuccessful(ExtensionContext context)
     ```
 
@@ -45,7 +45,7 @@
 首先，让我们添加例子中需要的项目依赖项。
 除了主要的 JUnit 5 库`junit-jupiter-engine`，我们还需要`junit-jupiter-api`库:
 
-```
+```java
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-api</artifactId>
@@ -62,7 +62,7 @@
 
 **让我们首先创建一个简单的扩展来记录结果并提供我们测试的摘要**。在这种情况下，为了创建扩展，我们需要定义一个实现`TestWatcher`接口的类:
 
-```
+```java
 public class TestResultLoggerExtension implements TestWatcher, AfterAllCallback {
     private List<TestResultStatus> testResultsStatus = new ArrayList<>();
 
@@ -82,7 +82,7 @@ public class TestResultLoggerExtension implements TestWatcher, AfterAllCallback 
 
 现在，让我们看看如何处理单个单元测试方法的结果:
 
-```
+```java
 @Override
 public void testDisabled(ExtensionContext context, Optional<String> reason) {
     LOG.info("Test Disabled for test {}: with reason :- {}", 
@@ -106,7 +106,7 @@ public void testSuccessful(ExtensionContext context) {
 
 **我们将以这种方式继续其他两种方法— `testAborted()`和`testFailed()` :**
 
-```
+```java
 @Override
 public void testAborted(ExtensionContext context, Throwable cause) {
     LOG.info("Test Aborted for test {}: ", context.getDisplayName());
@@ -126,7 +126,7 @@ public void testFailed(ExtensionContext context, Throwable cause) {
 
 在我们例子的最后一部分，**我们将覆盖`afterAll()`方法**:
 
-```
+```java
 @Override
 public void afterAll(ExtensionContext context) throws Exception {
     Map<TestResultStatus, Long> summary = testResultsStatus.stream()
@@ -146,7 +146,7 @@ public void afterAll(ExtensionContext context) throws Exception {
 
 既然我们已经定义了我们的扩展，我们将首先使用标准的`@ExtendWith`注释注册它:
 
-```
+```java
 @ExtendWith(TestResultLoggerExtension.class)
 class TestWatcherAPIUnitTest {
 
@@ -170,7 +170,7 @@ class TestWatcherAPIUnitTest {
 
 当我们运行单元测试时，我们应该看到每个测试的输出:
 
-```
+```java
 INFO  c.b.e.t.TestResultLoggerExtension - 
     Test Successful for test givenTrueIsTrue_whenTestAbortedThenCaptureResult()
 ...

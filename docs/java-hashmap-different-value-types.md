@@ -10,7 +10,7 @@
 
 自从引入了 [Java 泛型](/web/20220627165559/https://www.baeldung.com/java-generics)，我们通常以一种通用的方式使用`HashMap`——例如:
 
-```
+```java
 Map<String, Integer> numberByName = new HashMap<>();
 ```
 
@@ -20,7 +20,7 @@ Map<String, Integer> numberByName = new HashMap<>();
 
 在讨论如何实现之前，让我们创建一个示例问题，以便于演示和解释。假设我们有三个不同类型的对象:
 
-```
+```java
 Integer intValue = 777;
 int[] intArray = new int[]{2, 3, 5, 7, 11, 13};
 Instant instant = Instant.now(); 
@@ -42,7 +42,7 @@ Instant instant = Instant.now();
 
 正如我们前面提到的，一个`Map<String, Object>`允许我们将任何类型的值放入其中:
 
-```
+```java
 Map<String, Object> rawMap = new HashMap<>();
 rawMap.put("E1 (Integer)", intValue);
 rawMap.put("E2 (IntArray)", intArray);
@@ -55,7 +55,7 @@ rawMap.put("E3 (Instant)", instant);
 
 在我们将一个值放入`Map<String, Object>`之后，我们已经丢失了该值的具体类型。因此，**在使用数据**之前，我们需要检查并把值转换成合适的类型。例如，我们可以使用[`instanceof`操作符](/web/20220627165559/https://www.baeldung.com/java-instanceof)来验证值的类型:
 
-```
+```java
 rawMap.forEach((k, v) -> {
     if (v instanceof Integer) {
         Integer theV = (Integer) v;
@@ -77,7 +77,7 @@ rawMap.forEach((k, v) -> {
 
 如果我们执行上面的代码，我们将看到输出:
 
-```
+```java
 E1 (Integer) -> The value is a positive integer: 777
 E2 (IntArray) -> The value is an array of 6 integers: [2, 3, 5, 7, 11, 13]
 E3 (Instant) -> The value is an instant: 2021-11-23 21:48:02
@@ -111,7 +111,7 @@ E3 (Instant) -> The value is an instant: 2021-11-23 21:48:02
 
 首先，我们创建一个接口`DynamicTypeValue`:
 
-```
+```java
 public interface DynamicTypeValue {
     String valueDescription();
 }
@@ -121,7 +121,7 @@ public interface DynamicTypeValue {
 
 然后**，我们为每个具体类型创建一个类来包装值并实现我们创建的接口**。例如，我们可以为`Integer`类型创建一个`IntegerTypeValue`类:
 
-```
+```java
 public class IntegerTypeValue implements DynamicTypeValue {
     private Integer value;
 
@@ -141,7 +141,7 @@ public class IntegerTypeValue implements DynamicTypeValue {
 
 类似地，让我们为其他两种类型创建类:
 
-```
+```java
 public class IntArrayTypeValue implements DynamicTypeValue {
     private int[] value;
 
@@ -155,7 +155,7 @@ public class IntArrayTypeValue implements DynamicTypeValue {
 }
 ```
 
-```
+```java
 public class InstantTypeValue implements DynamicTypeValue {
     private static DateTimeFormatter FORMATTER = ...
 
@@ -179,7 +179,7 @@ public class InstantTypeValue implements DynamicTypeValue {
 
 首先，让我们看看如何声明`Map`并将各种类型的数据放入其中:
 
-```
+```java
 Map<String, DynamicTypeValue> theMap = new HashMap<>();
 theMap.put("E1 (Integer)", new IntegerTypeValue(intValue));
 theMap.put("E2 (IntArray)", new IntArrayTypeValue(intArray));
@@ -192,13 +192,13 @@ theMap.put("E3 (Instant)", new InstantTypeValue(instant));
 
 当我们使用数据时，不需要**型式检查和铸造**:
 
-```
+```java
 theMap.forEach((k, v) -> System.out.println(k + " -> " + v.valueDescription())); 
 ```
 
 如果我们运行代码，它会打印:
 
-```
+```java
 E1 (Integer) -> The value is a positive integer: 777
 E2 (IntArray) -> The value is an array of 5 integers: [2, 3, 5, 7, 11]
 E3 (Instant) -> The value is an instant: 2021-11-23 22:32:43

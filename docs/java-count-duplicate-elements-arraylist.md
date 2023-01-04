@@ -15,7 +15,7 @@
 *   如果`resultMap`包含元素，我们将计数器加 1
 *   否则，我们`put`一个新的地图条目`(element, 1)` 到该地图
 
-```
+```java
 public <T> Map<T, Long> countByClassicalLoop(List<T> inputList) {
     Map<T, Long> resultMap = new HashMap<>();
     for (T element : inputList) {
@@ -33,7 +33,7 @@ public <T> Map<T, Long> countByClassicalLoop(List<T> inputList) {
 
 如果我们不需要 Java 8 之前的兼容性，我们可以进一步简化我们的方法:
 
-```
+```java
 public <T> Map<T, Long> countByForEachLoopWithGetOrDefault(List<T> inputList) {
     Map<T, Long> resultMap = new HashMap<>();
     inputList.forEach(e -> resultMap.put(e, resultMap.getOrDefault(e, 0L) + 1L));
@@ -43,7 +43,7 @@ public <T> Map<T, Long> countByForEachLoopWithGetOrDefault(List<T> inputList) {
 
 接下来，让我们创建一个输入列表来测试这个方法:
 
-```
+```java
 private List<String> INPUT_LIST = Lists.list(
   "expect1",
   "expect2", "expect2",
@@ -53,7 +53,7 @@ private List<String> INPUT_LIST = Lists.list(
 
 现在让我们来验证一下:
 
-```
+```java
 private void verifyResult(Map<String, Long> resultMap) {
     assertThat(resultMap)
       .isNotEmpty().hasSize(4)
@@ -71,7 +71,7 @@ private void verifyResult(Map<String, Long> resultMap) {
 
 在 Java 8 中，方便的 [`compute()`](https://web.archive.org/web/20221127122833/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#compute(K,java.util.function.BiFunction)) 方法被引入到了`Map`接口中。我们也可以利用这种方法:
 
-```
+```java
 public <T> Map<T, Long> countByForEachLoopWithMapCompute(List<T> inputList) {
     Map<T, Long> resultMap = new HashMap<>();
     inputList.forEach(e -> resultMap.compute(e, (k, v) -> v == null ? 1L : v + 1L));
@@ -89,7 +89,7 @@ public <T> Map<T, Long> countByForEachLoopWithMapCompute(List<T> inputList) {
 
 让我们借助 [`Map.merge()`](https://web.archive.org/web/20221127122833/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#merge(K,V,java.util.function.BiFunction)) 方法进一步清理我们的代码:
 
-```
+```java
 public <T> Map<T, Long> countByForEachLoopWithMapMerge(List<T> inputList) {
     Map<T, Long> resultMap = new HashMap<>();
     inputList.forEach(e -> resultMap.merge(e, 1L, Long::sum));
@@ -109,7 +109,7 @@ public <T> Map<T, Long> countByForEachLoopWithMapMerge(List<T> inputList) {
 
 [`toMap()`](https://web.archive.org/web/20221127122833/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Collectors.html#toMap(java.util.function.Function,java.util.function.Function,java.util.function.BinaryOperator)) 收集器帮助我们将输入列表转换成一个`Map`:
 
-```
+```java
 public <T> Map<T, Long> countByStreamToMap(List<T> inputList) {
     return inputList.stream().collect(Collectors.toMap(Function.identity(), v -> 1L, Long::sum));
 }
@@ -121,7 +121,7 @@ public <T> Map<T, Long> countByStreamToMap(List<T> inputList) {
 
 除了`toMap()`之外，我们的问题可以由另外两个收藏家来解决， [`groupingBy()`](https://web.archive.org/web/20221127122833/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Collectors.html#groupingBy(java.util.function.Function,java.util.stream.Collector)) 和`[counting()](https://web.archive.org/web/20221127122833/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Collectors.html#counting())`:
 
-```
+```java
 public <T> Map<T, Long> countByStreamGroupBy(List<T> inputList) {
     return inputList.stream().collect(Collectors.groupingBy(k -> k, Collectors.counting()));
 }

@@ -12,7 +12,7 @@
 
 让我们建立一个例子。首先，我们将定义我们的自定义注释。让我们用`[@Retention](/web/20220603091232/https://www.baeldung.com/java-default-annotations)(RetentionPolicy.RUNTIME)` 对其进行注释，以确保注释可以在运行时被程序访问:
 
-```
+```java
 @Retention( RetentionPolicy.RUNTIME )
 public @interface MyCustomAnnotation {
 
@@ -21,7 +21,7 @@ public @interface MyCustomAnnotation {
 
 现在，让我们定义第一个用我们的注释注释的 bean。我们也用 [`@Component`](/web/20220603091232/https://www.baeldung.com/spring-component-annotation) 来注释:
 
-```
+```java
 @Component
 @MyCustomAnnotation
 public class MyComponent {
@@ -31,7 +31,7 @@ public class MyComponent {
 
 然后，让我们用我们的注释定义另一个 bean。然而，这次我们将借助一个`@Configuration`文件中的 [`@Bean`](/web/20220603091232/https://www.baeldung.com/spring-bean-annotations) 注释方法来创建它:
 
-```
+```java
 public class MyService {
 
 }
@@ -49,7 +49,7 @@ public class MyConfigurationBean {
 
 现在，让我们编写一个测试来检查`getBeansWithAnnotation` 方法是否可以检测到我们的两个 beans:
 
-```
+```java
 @Test
 void whenApplicationContextStarted_ThenShouldDetectAllAnnotatedBeans() {
     try (AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext( MyComponent.class, MyConfigurationBean.class )) {
@@ -79,7 +79,7 @@ void whenApplicationContextStarted_ThenShouldDetectAllAnnotatedBeans() {
 
 我们的注释将看起来像这样:
 
-```
+```java
 @Retention( RetentionPolicy.RUNTIME )
 @Qualifier
 public @interface MyCustomAnnotation {
@@ -89,7 +89,7 @@ public @interface MyCustomAnnotation {
 
 现在，我们能够自动连接两个带注释的 beans。让我们通过测试来验证这一点:
 
-```
+```java
 @Autowired
 @MyCustomAnnotation
 private List<Object> annotatedBeans;
@@ -123,7 +123,7 @@ void whenAutowiring_ThenShouldDetectAllAnnotatedBeans() {
 
 让我们创建自己的`BeanUtils`实用程序类，并在方法中实现这个逻辑:
 
-```
+```java
 public class BeanUtils {
 
     public static List<String> getBeansWithAnnotation(GenericApplicationContext applicationContext, Class<?> annotationClass) {
@@ -145,7 +145,7 @@ public class BeanUtils {
 
 或者，我们也可以使用`[Streams](/web/20220603091232/https://www.baeldung.com/java-streams)`编写相同的函数:
 
-```
+```java
 public static List<String> getBeansWithAnnotation(GenericApplicationContext applicationContext, Class<?> annotationClass) {
     ConfigurableListableBeanFactory factory = applicationContext.getBeanFactory();
     return Arrays.stream(factory.getBeanDefinitionNames())
@@ -167,7 +167,7 @@ private static boolean isAnnotated(ConfigurableListableBeanFactory factory, Stri
 
 例如，为了访问`GenericApplicationContext`，我们可以将它注入到一个 Spring 组件中:
 
-```
+```java
 @Component
 public class AnnotatedBeansComponent {
 

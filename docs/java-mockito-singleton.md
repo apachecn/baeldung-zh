@@ -14,7 +14,7 @@
 
 让我们首先将 [JUnit](https://web.archive.org/web/20221108223429/https://search.maven.org/search?q=g:org.junit.jupiter%20AND%20a:junit-jupiter-api) 和 [Mockito](https://web.archive.org/web/20221108223429/https://search.maven.org/search?q=g:org.mockito%20AND%20a:mockito-core) 依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.junit.jupiter</groupId>
@@ -35,7 +35,7 @@
 
 我们将创建一个管理内存缓存的 singleton `CacheManager`:
 
-```
+```java
 public class CacheManager {
     private final HashMap<String, Object> map;
     private static CacheManager instance;
@@ -65,7 +65,7 @@ public class CacheManager {
 
 接下来，我们将制作一个`ProduceService`:
 
-```
+```java
 public class ProductService {
 
     private final ProductDAO productDAO;
@@ -97,7 +97,7 @@ public class ProductService {
 
 一种解决方法是向`ProductService`添加另一个构造函数，这使得注入单例`CacheManager`的模拟实例变得容易:
 
-```
+```java
 public ProductService(ProductDAO productDAO, CacheManager cacheManager) {
     this.productDAO = productDAO;
     this.cacheManager = cacheManager;
@@ -106,7 +106,7 @@ public ProductService(ProductDAO productDAO, CacheManager cacheManager) {
 
 让我们编写一个测试，利用这个构造函数并使用 Mockito 模拟`CacheManager`:
 
-```
+```java
 @Test
 void givenValueExistsInCache_whenGetProduct_thenDAOIsNotCalled() {
     ProductDAO productDAO = mock(ProductDAO.class);
@@ -140,7 +140,7 @@ void givenValueExistsInCache_whenGetProduct_thenDAOIsNotCalled() {
 
 用 Mockito 启用[模仿`static`方法的一种方式是添加](/web/20221108223429/https://www.baeldung.com/mockito-mock-static-methods) [Mockito-inline](https://web.archive.org/web/20221108223429/https://search.maven.org/search?q=g:org.mockito%20AND%20a:mockito-inline) 依赖项，而不是 Mockito-core:
 
-```
+```java
 <dependency>
     <groupId>org.mockito</groupId>
     <artifactId>mockito-inline</artifactId>
@@ -157,7 +157,7 @@ void givenValueExistsInCache_whenGetProduct_thenDAOIsNotCalled() {
 
 让我们对模拟`CacheManager`的测试做一些修改:
 
-```
+```java
 @Test
 void givenValueExistsInCache_whenGetProduct_thenDAOIsNotCalled_mockingStatic() {
     ProductDAO productDAO = mock(ProductDAO.class);

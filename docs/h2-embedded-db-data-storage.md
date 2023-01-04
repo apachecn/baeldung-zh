@@ -18,7 +18,7 @@ H2 可以配置为作为[内存数据库](/web/20220524040032/https://www.baeldu
 
 如果我们想使用 H2 数据库，我们需要将 [`h2`](https://web.archive.org/web/20220524040032/https://search.maven.org/search?q=g:com.h2database%20a:h2) 和 [`spring-boot-starter-data-jpa`](https://web.archive.org/web/20220524040032/https://search.maven.org/search?q=a:spring-boot-starter-data-jpa%20g:org.springframework.boot) Maven 依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -63,7 +63,7 @@ H2 在数据库文件的存储方面非常灵活。此时，我们可以将其�
 
 我们可以设置存储数据库文件的特定目录位置:
 
-```
+```java
 spring.datasource.url=jdbc:h2:file:C:/data/demodb
 ```
 
@@ -73,7 +73,7 @@ spring.datasource.url=jdbc:h2:file:C:/data/demodb
 
 如果我们希望将数据库文件存储在当前用户目录中，我们将使用在关键字`file`后包含波浪号`(~)`的数据源 URL:
 
-```
+```java
 spring.datasource.url=jdbc:h2:file:~/demodb
 ```
 
@@ -81,7 +81,7 @@ spring.datasource.url=jdbc:h2:file:~/demodb
 
 将数据库文件存储在当前用户目录的子目录中:
 
-```
+```java
 spring.datasource.url=jdbc:h2:file:~/subdirectory/demodb
 ```
 
@@ -91,13 +91,13 @@ spring.datasource.url=jdbc:h2:file:~/subdirectory/demodb
 
 当前工作目录是应用程序启动的地方，用点(.)在数据源 URL 中。如果我们希望数据库文件在那里，我们将配置如下:
 
-```
+```java
 spring.datasource.url=jdbc:h2:file:./demodb
 ```
 
 将数据库文件存储在当前工作目录的子目录中:
 
-```
+```java
 spring.datasource.url=jdbc:h2:file:./subdirectory/demodb
 ```
 

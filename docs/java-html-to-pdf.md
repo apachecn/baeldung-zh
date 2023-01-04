@@ -18,7 +18,7 @@ OpenPDF 是一个免费的 Java 库，用于在 LGPL 和 MPL 许可下创建和�
 
 我们将从 Maven 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.jsoup</groupId>
     <artifactId>jsoup</artifactId>
@@ -41,7 +41,7 @@ OpenPDF 是一个免费的 Java 库，用于在 LGPL 和 MPL 许可下创建和�
 
 让我们来看看我们的样本 HTML 代码:
 
-```
+```java
 <html>
     <head>
         <style>
@@ -71,7 +71,7 @@ OpenPDF 是一个免费的 Java 库，用于在 LGPL 和 MPL 许可下创建和�
 
 要将 HTML 转换为 PDF，我们将首先从定义的位置读取 HTML 文件:
 
-```
+```java
 File inputHTML = new File(HTML);
 ```
 
@@ -79,7 +79,7 @@ File inputHTML = new File(HTML);
 
 下面给出的是 XHTML 输出:
 
-```
+```java
 Document document = Jsoup.parse(inputHTML, "UTF-8");
 document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
 return document;
@@ -87,7 +87,7 @@ return document;
 
 现在，作为最后一步，让我们从上一步生成的 XHTML 文档创建一个 PDF。`ITextRenderer`将获取这个 XHTML 文档并创建一个输出 PDF 文件。注意**我们将代码包装在`[try-with-resources](/web/20220928075047/https://www.baeldung.com/java-try-with-resources)`块中，以确保输出流是关闭的** :
 
-```
+```java
 try (OutputStream outputStream = new FileOutputStream(outputPdf)) {
     ITextRenderer renderer = new ITextRenderer();
     SharedContext sharedContext = renderer.getSharedContext();
@@ -103,13 +103,13 @@ try (OutputStream outputStream = new FileOutputStream(outputPdf)) {
 
 我们可以将 HTML 输入文档中使用的额外字体注册到`ITextRenderer`,这样它就可以在生成 PDF 时包含这些字体:
 
-```
+```java
 renderer.getFontResolver().addFont(getClass().getClassLoader().getResource("fonts/PRISTINA.ttf").toString(), true);
 ```
 
 `ITextRenderer`可能需要注册相关 URL 以访问外部样式:
 
-```
+```java
 String baseUrl = FileSystems.getDefault()
   .getPath("src/main/resources/")
   .toUri().toURL().toString();
@@ -118,7 +118,7 @@ renderer.setDocumentFromString(xhtml, baseUrl);
 
 我们可以通过实现`ReplacedElementFactory` : 来定制图像相关的属性
 
-```
+```java
 public ReplacedElement createReplacedElement(LayoutContext lc, BlockBox box, UserAgentCallback uac, int cssWidth, int cssHeight) {
     Element e = box.getElement();
     String nodeName = e.getNodeName();
@@ -147,7 +147,7 @@ public ReplacedElement createReplacedElement(LayoutContext lc, BlockBox box, Use
 
 然后，我们可以将自定义的`ReplacedElementFactory` 添加到 `SharedContext`中:
 
-```
+```java
 sharedContext.setReplacedElementFactory(new CustomElementFactoryImpl()); 
 ```
 
@@ -159,7 +159,7 @@ Open HTML to PDF 是一个 Java 库，它使用 CSS 2.1(以及更高版本的标
 
 除了上面显示的`jsoup`库之外，我们还需要添加几个打开的 HTML 到 PDF 库到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.openhtmltopdf</groupId>
     <artifactId>openhtmltopdf-core</artifactId>
@@ -180,7 +180,7 @@ Open HTML to PDF 是一个 Java 库，它使用 CSS 2.1(以及更高版本的标
 
 在最后一步中，为了从 XHTML 文档创建一个 PDF， **`PdfRendererBuilder`将获取这个 XHTML 文档并创建一个 PDF 作为输出文件**。同样，我们使用`try-with-resources`来包装我们的逻辑:
 
-```
+```java
 try (OutputStream os = new FileOutputStream(outputPdf)) {
     PdfRendererBuilder builder = new PdfRendererBuilder();
     builder.withUri(outputPdf);
@@ -194,13 +194,13 @@ try (OutputStream os = new FileOutputStream(outputPdf)) {
 
 我们可以将 HTML 输入文档中使用的额外字体注册到`PdfRendererBuilder`,这样它就可以将它们包含在 PDF 中:
 
-```
+```java
 builder.useFont(new File(getClass().getClassLoader().getResource("fonts/PRISTINA.ttf").getFile()), "PRISTINA");
 ```
 
 `PdfRendererBuilder`库也可能需要注册相对 URL 来访问外部样式，类似于我们之前的例子:
 
-```
+```java
 String baseUrl = FileSystems.getDefault()
   .getPath("src/main/resources/")
   .toUri().toURL().toString();

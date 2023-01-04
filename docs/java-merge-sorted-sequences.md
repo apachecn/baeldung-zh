@@ -38,13 +38,13 @@
 
 现在让我们来看一个样本输入和运行算法后的预期结果，这样我们可以更好地理解这个问题。所以对于这些阵列:
 
-```
+```java
 { { 0, 6 }, { 1, 5, 10, 100 }, { 2, 4, 200, 650 } }
 ```
 
 该算法应该返回一个结果数组:
 
-```
+```java
 { 0, 1, 2, 4, 5, 6, 10, 100, 200, 650 }
 ```
 
@@ -56,7 +56,7 @@
 
 在实现算法本身之前，让我们创建一个表示堆节点的类。这将存储节点值和两个支持字段:
 
-```
+```java
 public class HeapNode {
 
     int element;
@@ -78,7 +78,7 @@ public class HeapNode {
 
 我们的下一个类是表示最小堆本身，并实现合并算法:
 
-```
+```java
 public class MinHeap {
 
     HeapNode[] heapNodes;
@@ -110,7 +110,7 @@ public class MinHeap {
 
 现在我们已经创建了 min-heap 类，让我们添加一个方法来堆化一个子树，其中子树的根节点位于数组的给定索引处:
 
-```
+```java
 void heapify(int index) {
     int leftNodeIndex = getLeftNodeIndex(index);
     int rightNodeIndex = getRightNodeIndex(index);
@@ -132,7 +132,7 @@ void heapify(int index) {
 
 当我们用一个数组来表示一个最小堆时，最后一个叶子节点总是在数组的末尾。因此，当通过迭代调用`heapify() `方法将数组转换为最小堆时，我们只需要从最后一个叶子的父节点开始迭代:
 
-```
+```java
 void heapifyFromLastLeafsParent() {
     int lastLeafsParentIndex = getParentNodeIndex(heapNodes.length);
     while (lastLeafsParentIndex >= 0) {
@@ -144,7 +144,7 @@ void heapifyFromLastLeafsParent() {
 
 我们的下一个方法将实际实现我们的算法。为了更好地理解，让我们把这个方法分成两部分，看看它是如何工作的:
 
-```
+```java
 int[] merge(int[][] array) {
     // transform input arrays
     // run the minheap algorithm
@@ -154,7 +154,7 @@ int[] merge(int[][] array) {
 
 第一部分将输入数组转换为包含第一个数组的所有元素的堆节点数组，并查找结果数组的大小:
 
-```
+```java
 HeapNode[] heapNodes = new HeapNode[array.length];
 int resultingArraySize = 0;
 
@@ -167,7 +167,7 @@ for (int i = 0; i < array.length; i++) {
 
 下一部分通过实现我们算法的步骤 4、5、6 和 7 来填充结果数组:
 
-```
+```java
 MinHeap minHeap = new MinHeap(heapNodes);
 int[] resultingArray = new int[resultingArraySize];
 
@@ -188,7 +188,7 @@ for (int i = 0; i < resultingArraySize; i++) {
 
 现在让我们用之前提到的相同输入来测试我们的算法:
 
-```
+```java
 int[][] inputArray = { { 0, 6 }, { 1, 5, 10, 100 }, { 2, 4, 200, 650 } };
 int[] expectedArray = { 0, 1, 2, 4, 5, 6, 10, 100, 200, 650 };
 

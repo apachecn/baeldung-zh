@@ -20,7 +20,7 @@
 
 让我们定义两个实体类:
 
-```
+```java
 @Entity
 public class Address {
 
@@ -44,7 +44,7 @@ public class Address {
 
 并且:
 
-```
+```java
 @Entity
 public class Person {
 
@@ -72,7 +72,7 @@ public class Person {
 
 我们将使用`projection-insert-data.sql`脚本来普及两个支持表:
 
-```
+```java
 INSERT INTO person(id,first_name,last_name) VALUES (1,'John','Doe');
 INSERT INTO address(id,person_id,state,city,street,zip_code) 
   VALUES (1,1,'CA', 'Los Angeles', 'Standford Ave', '90001');
@@ -80,7 +80,7 @@ INSERT INTO address(id,person_id,state,city,street,zip_code)
 
 为了在每次测试运行后清理数据库，我们可以使用另一个脚本，`projection-clean-up-data.sql`:
 
-```
+```java
 DELETE FROM address;
 DELETE FROM person;
 ```
@@ -89,7 +89,7 @@ DELETE FROM person;
 
 然后，为了确认投影产生正确的数据，我们需要一个测试类:
 
-```
+```java
 @DataJpaTest
 @RunWith(SpringRunner.class)
 @Sql(scripts = "/projection-insert-data.sql")
@@ -111,7 +111,7 @@ public class JpaProjectionIntegrationTest {
 
 让我们为`Address`类声明一个投影接口:
 
-```
+```java
 public interface AddressView {
     String getZipCode();
 }
@@ -119,7 +119,7 @@ public interface AddressView {
 
 然后我们将在存储库接口中使用它:
 
-```
+```java
 public interface AddressRepository extends Repository<Address, Long> {
     List<AddressView> getAddressByState(String state);
 }
@@ -131,7 +131,7 @@ public interface AddressRepository extends Repository<Address, Long> {
 
 让我们快速测试一下`Address`投影:
 
-```
+```java
 @Autowired
 private AddressRepository addressRepository;
 
@@ -147,7 +147,7 @@ public void whenUsingClosedProjections_thenViewWithRequiredPropertiesIsReturned(
 
 我们可以递归地使用投影。例如，这里有一个`Person`类的投影接口:
 
-```
+```java
 public interface PersonView {
     String getFirstName();
 
@@ -157,7 +157,7 @@ public interface PersonView {
 
 现在我们将添加一个返回类型为`PersonView,`的嵌套投影方法，在`Address`投影中:
 
-```
+```java
 public interface AddressView {
     // ...
     PersonView getPerson();
@@ -168,7 +168,7 @@ public interface AddressView {
 
 我们将通过在刚刚编写的测试方法中添加一些语句来验证嵌套投影:
 
-```
+```java
 // ...
 PersonView personView = addressView.getPerson();
 assertThat(personView.getFirstName()).isEqualTo("John");
@@ -185,7 +185,7 @@ assertThat(personView.getLastName()).isEqualTo("Doe");
 
 让我们回到`Person`投影界面，添加一个新方法:
 
-```
+```java
 public interface PersonView {
     // ...
 
@@ -198,7 +198,7 @@ public interface PersonView {
 
 现在我们将定义另一个存储库接口:
 
-```
+```java
 public interface PersonRepository extends Repository<Person, Long> {
     PersonView findByLastName(String lastName);
 }
@@ -208,7 +208,7 @@ public interface PersonRepository extends Repository<Person, Long> {
 
 该测试证实了开放预测的预期效果:
 
-```
+```java
 @Autowired
 private PersonRepository personRepository;
 
@@ -228,7 +228,7 @@ public void whenUsingOpenProjections_thenViewWithRequiredPropertiesIsReturned() 
 
 例如，这里有一个用于`Person`实体的投影类:
 
-```
+```java
 public class PersonDto {
     private String firstName;
     private String lastName;
@@ -248,7 +248,7 @@ public class PersonDto {
 
 现在让我们向`Person`存储库中添加一个方法:
 
-```
+```java
 public interface PersonRepository extends Repository<Person, Long> {
     // ...
 
@@ -258,7 +258,7 @@ public interface PersonRepository extends Repository<Person, Long> {
 
 这个测试验证了我们基于类的投影:
 
-```
+```java
 @Test
 public void whenUsingClassBasedProjections_thenDtoWithRequiredPropertiesIsReturned() {
     PersonDto personDto = personRepository.findByFirstName("John");
@@ -278,7 +278,7 @@ public void whenUsingClassBasedProjections_thenDtoWithRequiredPropertiesIsReturn
 
 **我们可以通过用`Class`参数**声明一个存储库方法来应用动态投影
 
-```
+```java
 public interface PersonRepository extends Repository<Person, Long> {
     // ...
 
@@ -288,7 +288,7 @@ public interface PersonRepository extends Repository<Person, Long> {
 
 通过将投影类型或实体类传递给这样的方法，我们可以检索所需类型的对象:
 
-```
+```java
 @Test
 public void whenUsingDynamicProjections_thenObjectWithRequiredPropertiesIsReturned() {
     Person person = personRepository.findByLastName("Doe", Person.class);

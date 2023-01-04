@@ -38,7 +38,7 @@ Spring Security 是 Spring 项目的一部分。它试图将 Spring 项目上用
 
 一方面，我们将定义所需的配置:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http.csrf()
@@ -67,7 +67,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 另一方面，我们必须定义定义我们可以处理的异常类型的 Beans:
 
-```
+```java
 @Bean
 public AuthenticationFailureHandler authenticationFailureHandler() {
     return new CustomAuthenticationFailureHandler();
@@ -90,7 +90,7 @@ public AccessDeniedHandler accessDeniedHandler() {
 
 一方面，我们有了`AuthenticationFailureHandler`界面。负责**管理用户无法登录**时产生的异常。这个接口为我们提供了定制处理程序逻辑的`onAuthenticationFailure()`方法。**它将在登录失败时被 Spring Security 调用**。记住这一点，让我们定义异常处理程序，以便在登录失败时将我们重定向到错误页面:
 
-```
+```java
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
     @Override
@@ -105,7 +105,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
 另一方面，当未经授权的用户试图访问安全或受保护的页面时， **Spring Security 将抛出一个拒绝访问异常**。Spring Security 提供了一个默认的 403 拒绝访问页面，我们可以自定义它。这是由`AccessDeniedHandler`接口管理的。**此外，它还提供了`handle()`方法，用于在将用户重定向到 403 页面**之前自定义逻辑:
 
-```
+```java
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override

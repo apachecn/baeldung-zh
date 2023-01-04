@@ -32,7 +32,7 @@ Maven 是用 Java 写的。因此，要运行 Maven，我们需要一个安装�
 
 为此，我们将运行下面的命令来获取当前安装的版本信息:
 
-```
+```java
 java -version
 ```
 
@@ -50,7 +50,7 @@ java -version
 
 为了验证这一点，我们运行:
 
-```
+```java
 mvn -version
 ```
 
@@ -64,13 +64,13 @@ Redhat、Ubuntu 和许多其他 Linux 发行版都使用 BASH 作为它们的默
 
 首先，让我们为 Maven 创建一个位置:
 
-```
+```java
 $ mkdir -p /usr/local/apache-maven/apache-maven-3.8.4
 ```
 
 然后，我们将归档文件提取到我们的 Maven 位置:
 
-```
+```java
 $ tar -xvf apache-maven-3.8.4-bin.tar.gz -C /usr/local/apache-maven/apache-maven-3.8.4
 ```
 
@@ -78,13 +78,13 @@ $ tar -xvf apache-maven-3.8.4-bin.tar.gz -C /usr/local/apache-maven/apache-maven
 
 我们打开命令终端，使用下面的命令编辑`.bashrc`文件:
 
-```
+```java
 $ nano ~/.bashrc
 ```
 
 接下来，让我们将特定于 Maven 的行添加到文件中:
 
-```
+```java
 export M2_HOME=/usr/local/apache-maven/apache-maven-3.8.4 
 export M2=$M2_HOME/bin 
 export MAVEN_OPTS=-Xms256m -Xmx512m 
@@ -93,19 +93,19 @@ export PATH=$M2:$PATH
 
 保存文件后，我们可以重新加载环境配置，而无需重新启动:
 
-```
+```java
 $ source ~/.bashrc
 ```
 
 最后，我们可以验证是否添加了 Maven:
 
-```
+```java
 $ mvn -version
 ```
 
 输出应该类似于以下内容:
 
-```
+```java
 Apache Maven 3.8.4 (81a9f75f19aa7275152c262bcea1a77223b93445; 2021-01-07T15:30:30+01:29)
 Maven home: /usr/local/apache-maven/apache-maven-3.8.4
 
@@ -120,7 +120,7 @@ Java home: /usr/local/java-current/jdk1.8.0_75/jre
 
 在终端中，我们运行`apt-cache search maven`来获取所有可用的 Maven 包:
 
-```
+```java
 $ apt-cache search maven
 ....
 libxmlbeans-maven-plugin-java-doc - Documentation for Maven XMLBeans Plugin
@@ -133,7 +133,7 @@ Maven 包总是附带最新的 Apache Maven。
 
 我们运行命令`sudo apt-get install maven`来安装最新的 Maven:
 
-```
+```java
 $ sudo apt-get install maven
 ```
 
@@ -151,20 +151,20 @@ $ sudo apt-get install maven
 
 其次，我们需要删除`tar.gz`档案:
 
-```
+```java
 rm Downloads/apache-maven*bin.tar.gz
 ```
 
 第三，我们必须修复权限并切换 Maven 内容:
 
-```
+```java
 chown -R root:wheel Downloads/apache-maven* 
 mv Downloads/apache-maven* /opt/apache-maven
 ```
 
 然后，让我们归档管理会话，并将 Maven 二进制文件添加到路径中，并附加:
 
-```
+```java
 exit 
 nano $HOME/.profile 
 export PATH=$PATH:/opt/apache-maven/bin
@@ -174,13 +174,13 @@ export PATH=$PATH:/opt/apache-maven/bin
 
 要加载新的设置，让我们运行:
 
-```
+```java
 bash
 ```
 
 现在，我们使用下面的命令测试 Maven 是否安装成功:
 
-```
+```java
 mvn -version
 ```
 
@@ -194,14 +194,14 @@ Zsh 凭借其先进的命令完成机制、错别字纠正，甚至是添加功�
 
 在 macOS Catalina 或更高版本的情况下，默认 shell 是`zsh,`,我们必须添加到不同的文件中:
 
-```
+```java
 nano ~/.zshenv  
 export PATH=$PATH:/opt/apache-maven/bin
 ```
 
 要重新加载环境，我们需要发出:
 
-```
+```java
 source ~/.zshenv 
 ```
 
@@ -211,7 +211,7 @@ source ~/.zshenv 
 
 对于 HighSierra，我们需要额外将 Maven 二进制文件添加到路径中，并追加:
 
-```
+```java
 nano $HOME/.bashrc
 export PATH=$PATH:/opt/apache-maven/bin
 ```

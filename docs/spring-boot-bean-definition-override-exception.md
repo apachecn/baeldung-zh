@@ -12,7 +12,7 @@ Spring Boot 2.1 的升级让人们惊讶于`BeanDefinitionOverrideException`的�
 
 对于我们的示例 Maven 项目，我们需要添加 [Spring Boot 启动器](https://web.archive.org/web/20221206082907/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter%22)依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter</artifactId>
@@ -40,7 +40,7 @@ Spring beans 通过它们在一个`ApplicationContext`中的名字来识别。
 
 让我们创建两个不同的弹簧配置，每个配置都有一个`testBean()`方法，以产生`BeanDefinitionOverrideException:`
 
-```
+```java
 @Configuration
 public class TestConfiguration1 {
 
@@ -58,7 +58,7 @@ public class TestConfiguration1 {
 } 
 ```
 
-```
+```java
 @Configuration
 public class TestConfiguration2 {
 
@@ -78,7 +78,7 @@ public class TestConfiguration2 {
 
 接下来，我们将创建我们的 Spring Boot 测试类:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {TestConfiguration1.class, TestConfiguration2.class})
 public class SpringBootBeanDefinitionOverrideExceptionIntegrationTest {
@@ -94,7 +94,7 @@ public class SpringBootBeanDefinitionOverrideExceptionIntegrationTest {
 
 运行测试会产生一个`BeanDefinitionOverrideException`。但是，该异常为我们提供了一些有用的信息:
 
-```
+```java
 Invalid bean definition with name 'testBean' defined in ... 
 ... com.baeldung.beandefinitionoverrideexception.TestConfiguration2 ...
 Cannot register bean definition [ ... defined in ... 
@@ -107,13 +107,13 @@ There is already [ ... defined in ...
 
 第一个是冲突的 bean 名称，`testBean`:
 
-```
+```java
 Invalid bean definition with name 'testBean' ... 
 ```
 
 第二个向我们展示了受影响的配置的完整路径:
 
-```
+```java
 ... com.baeldung.beandefinitionoverrideexception.TestConfiguration2 ...
 ... com.baeldung.beandefinitionoverrideexception.TestConfiguration1 ... 
 ```
@@ -132,14 +132,14 @@ Invalid bean definition with name 'testBean' ...
 
 因此，如果我们在一个配置类中定义了 beans，就像我们的例子一样，那么简单地改变方法名将会阻止`BeanDefinitionOverrideException`:
 
-```
+```java
 @Bean
 public TestBean1 testBean1() {
     return new TestBean1();
 } 
 ```
 
-```
+```java
 @Bean
 public TestBean2 testBean2() {
     return new TestBean2();
@@ -152,14 +152,14 @@ Spring 的`@Bean`注释是定义 bean 的一种非常常见的方式。
 
 所以另一个选择是设置`@Bean`注释的`name`属性:
 
-```
+```java
 @Bean("testBean1")
 public TestBean1 testBean() {
     return new TestBean1();
 } 
 ```
 
-```
+```java
 @Bean("testBean2")
 public TestBean1 testBean() {
     return new TestBean2();
@@ -170,7 +170,7 @@ public TestBean1 testBean() {
 
 定义 bean 的另一种方式是使用[原型注释](/web/20221206082907/https://www.baeldung.com/spring-bean-annotations)。启用 Spring 的`@ComponentScan`特性后，我们可以使用`@Component`注释在类级别定义 bean 名称:
 
-```
+```java
 @Component("testBean1")
 class TestBean1 {
 
@@ -181,7 +181,7 @@ class TestBean1 {
 } 
 ```
 
-```
+```java
 @Component("testBean2")
 class TestBean2 {
 
@@ -202,7 +202,7 @@ class TestBean2 {
 
 为了启用 bean 覆盖，我们将在我们的`application.properties`文件中将`spring.main.allow-bean-definition-overriding`属性设置为`true`:
 
-```
+```java
 spring.main.allow-bean-definition-overriding=true 
 ```
 

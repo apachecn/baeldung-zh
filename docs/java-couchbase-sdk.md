@@ -10,7 +10,7 @@
 
 如果您使用的是 Maven，请将以下内容添加到 pom.xml 文件中:
 
-```
+```java
 <dependency>
     <groupId>com.couchbase.client</groupId>
     <artifactId>java-client</artifactId>
@@ -30,13 +30,13 @@ SDK 提供了`CouchbaseEnvironment`接口和一个实现类`DefaultCouchbaseEnvi
 
 在本例中，我们连接到本地工作站上的单节点集群:
 
-```
+```java
 Cluster cluster = CouchbaseCluster.create("localhost");
 ```
 
 为了连接到多节点集群，我们将指定至少两个节点，以防其中一个节点在应用程序尝试建立连接时不可用:
 
-```
+```java
 Cluster cluster = CouchbaseCluster.create("192.168.4.1", "192.168.4.2");
 ```
 
@@ -48,7 +48,7 @@ Cluster cluster = CouchbaseCluster.create("192.168.4.1", "192.168.4.2");
 
 下面是一个使用自定义`CouchbaseEnvironment`连接到单节点集群的示例，连接超时为 10 秒，键值查找超时为 3 秒:
 
-```
+```java
 CouchbaseEnvironment env = DefaultCouchbaseEnvironment.builder()
   .connectTimeout(10000)
   .kvTimeout(3000)
@@ -58,7 +58,7 @@ Cluster cluster = CouchbaseCluster.create(env, "localhost");
 
 并使用自定义环境连接到多节点集群:
 
-```
+```java
 Cluster cluster = CouchbaseCluster.create(env,
   "192.168.4.1", "192.168.4.2");
 ```
@@ -71,25 +71,25 @@ Cluster cluster = CouchbaseCluster.create(env,
 
 这里有一种方法可以打开密码为空的`“default”`桶:
 
-```
+```java
 Bucket bucket = cluster.openBucket();
 ```
 
 您也可以在打开存储桶时指定其名称:
 
-```
+```java
 Bucket bucket = cluster.openBucket("default");
 ```
 
 对于任何其他密码为空的存储桶，您需要`must`提供存储桶名称:
 
-```
+```java
 Bucket myBucket = cluster.openBucket("myBucket");
 ```
 
 要打开密码非空的存储桶，您必须提供存储桶名称`and`密码:
 
-```
+```java
 Bucket bucket = cluster.openBucket("bucketName", "bucketPassword");
 ```
 
@@ -97,7 +97,7 @@ Bucket bucket = cluster.openBucket("bucketName", "bucketPassword");
 
 在本节中，我们将展示如何在 Couchbase 中执行 CRUD 操作。在我们的示例中，我们将使用代表一个人的简单 JSON 文档，如这个示例文档所示:
 
-```
+```java
 {
   "name": "John Doe",
   "type": "Person",
@@ -124,7 +124,7 @@ Bucket bucket = cluster.openBucket("bucketName", "bucketPassword");
 
 在我们可以将新文档插入我们的 bucket 之前，我们必须首先创建一个包含文档内容的`JSONObject`实例:
 
-```
+```java
 JsonObject content = JsonObject.empty()
   .put("name", "John Doe")
   .put("type", "Person")
@@ -134,14 +134,14 @@ JsonObject content = JsonObject.empty()
 
 接下来，我们创建一个由`id`值和`JSONObject`组成的`JSONDocument`对象:
 
-```
+```java
 String id = UUID.randomUUID().toString();
 JsonDocument document = JsonDocument.create(id, content);
 ```
 
 为了向桶中添加新文档，我们使用了`insert`方法:
 
-```
+```java
 JsonDocument inserted = bucket.insert(document);
 ```
 
@@ -151,7 +151,7 @@ JsonDocument inserted = bucket.insert(document);
 
 我们也可以使用`upsert`方法，它要么插入文档(如果没有找到`id`要么更新文档(如果找到了`id`):
 
-```
+```java
 JsonDocument upserted = bucket.upsert(document);
 ```
 
@@ -159,7 +159,7 @@ JsonDocument upserted = bucket.upsert(document);
 
 为了通过文档的`id`来检索文档，我们使用了`get`方法:
 
-```
+```java
 JsonDocument retrieved = bucket.get(id);
 ```
 
@@ -169,7 +169,7 @@ JsonDocument retrieved = bucket.get(id);
 
 我们可以使用`upsert`方法更新现有文档:
 
-```
+```java
 JsonObject content = document.content();
 content.put("homeTown", "Kansas City");
 JsonDocument upserted = bucket.upsert(document);
@@ -181,7 +181,7 @@ JsonDocument upserted = bucket.upsert(document);
 
 如果我们需要在应用程序中防止这种情况，我们可以使用`replace`方法，如果在 Couchbase 中找不到带有给定`id`的文档，该方法将失败并返回一个`DocumentDoesNotExistException`:
 
-```
+```java
 JsonDocument replaced = bucket.replace(document);
 ```
 
@@ -189,13 +189,13 @@ JsonDocument replaced = bucket.replace(document);
 
 要删除 Couchbase 文档，我们使用`remove`方法:
 
-```
+```java
 JsonDocument removed = bucket.remove(document);
 ```
 
 您也可以通过`id`删除:
 
-```
+```java
 JsonDocument removed = bucket.remove(id);
 ```
 
@@ -223,7 +223,7 @@ Couchbase 将一个 bucket 的文档分布在 1024 个虚拟 bucket 或`vbuckets
 
 以下代码将使用找到的第一个副本:
 
-```
+```java
 JsonDocument doc;
 try{
     doc = bucket.get(id);
@@ -242,7 +242,7 @@ catch(CouchbaseException e) {
 
 同样值得注意的是，Couchbase 异步检索副本(如果找到的话)。因此，如果您的 bucket 配置了多个副本，则 SDK 返回它们的顺序没有保证，您可能希望遍历找到的所有副本，以确保您的应用程序拥有最新的副本版本:
 
-```
+```java
 long maxCasValue = -1;
 for(JsonDocument replica : bucket.getFromReplica(id, ReplicaMode.ALL)) {
     if(replica.cas() > maxCasValue) {

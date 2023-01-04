@@ -16,7 +16,7 @@ Java 是一种通用编程语言，它专注于 WORA(一次编写，随处运行
 
 让我们打开任何 IDE 或文本编辑器，创建一个名为`HelloWorld.java`的简单文件:
 
-```
+```java
 public class HelloWorld {
     public static void main(String[] args) {
         System.out.println("Hello World!");
@@ -34,7 +34,7 @@ public class HelloWorld {
 
 为了编译一个 Java 程序，我们需要从命令行调用 [Java 编译器](/web/20221126220351/https://www.baeldung.com/javac):
 
-```
+```java
 $ javac HelloWorld.java
 ```
 
@@ -42,13 +42,13 @@ $ javac HelloWorld.java
 
 让我们通过调用来运行它:
 
-```
+```java
 $ java HelloWorld
 ```
 
 看看结果:
 
-```
+```java
 Hello World!
 ```
 

@@ -12,7 +12,7 @@
 
 该方法接受两个参数，如果不是`null`，则返回第一个参数，否则返回第二个参数。如果两个参数都是`null`，它抛出`NullPointerException`:
 
-```
+```java
 private List<String> aMethodReturningNullList(){
     return null;
 }
@@ -47,7 +47,7 @@ public void givenNull_whenRequireNonNullElse_thenException() {
 
 这个方法类似于`requireNonNullElse`，除了第二个参数**是一个`java.util.function.Supplier`接口，它允许对所提供的集合进行惰性实例化。**`Supplier`实现负责返回一个非空对象，如下所示:
 
-```
+```java
 @Test
 public void givenObject_whenRequireNonNullElseGet_thenObject() {
     List<String> aList = Objects.<List>requireNonNullElseGet(
@@ -60,7 +60,7 @@ public void givenObject_whenRequireNonNullElseGet_thenObject() {
 
 此方法用于检查索引是否在给定长度内。如果`0 <= index < length`，则返回索引。否则，它抛出一个`IndexOutOfBoundsException` ，如下所示:
 
-```
+```java
 @Test
 public void givenNumber_whenInvokeCheckIndex_thenNumber() {
     int length = 5;
@@ -79,7 +79,7 @@ public void givenOutOfRangeNumber_whenInvokeCheckIndex_thenException() {
 
 该方法用于检查`[fromIndex, toIndex)`形成的给定子范围是否在`[0, length)`形成的范围内。如果子范围有效，则它返回下限，如下所示:
 
-```
+```java
 @Test
 public void givenSubRange_whenCheckFromToIndex_thenNumber() {
     int length = 6;
@@ -102,7 +102,7 @@ public void givenInvalidSubRange_whenCheckFromToIndex_thenException() {
 
 在这种情况下，子范围是`[fromIndex, fromIndex + size)`，并且该方法检查子范围是否在由`[0, length)`形成的范围内:
 
-```
+```java
 @Test
 public void givenSubRange_whenCheckFromIndexSize_thenNumber() {
     int length = 6;

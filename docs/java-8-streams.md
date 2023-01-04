@@ -26,13 +26,13 @@ The article discusses Java 8 Collectors, showing examples of built-in collectors
 
 在创建空流的情况下，我们应该使用 **`empty()`** 方法:
 
-```
+```java
 Stream<String> streamEmpty = Stream.empty();
 ```
 
 我们经常在创建时使用`empty()` 方法，以避免为没有元素的流返回`null`:
 
-```
+```java
 public Stream<String> streamOf(List<String> list) {
     return list == null || list.isEmpty() ? Stream.empty() : list.stream();
 }
@@ -42,7 +42,7 @@ public Stream<String> streamOf(List<String> list) {
 
 我们也可以创建任何类型的`Collection` ( `Collection, List, Set`)流:
 
-```
+```java
 Collection<String> collection = Arrays.asList("a", "b", "c");
 Stream<String> streamOfCollection = collection.stream();
 ```
@@ -51,13 +51,13 @@ Stream<String> streamOfCollection = collection.stream();
 
 数组也可以是流的源:
 
-```
+```java
 Stream<String> streamOfArray = Stream.of("a", "b", "c");
 ```
 
 我们还可以从现有数组或数组的一部分创建一个流:
 
-```
+```java
 String[] arr = new String[]{"a", "b", "c"};
 Stream<String> streamOfArrayFull = Arrays.stream(arr);
 Stream<String> streamOfArrayPart = Arrays.stream(arr, 1, 3);
@@ -67,7 +67,7 @@ Stream<String> streamOfArrayPart = Arrays.stream(arr, 1, 3);
 
 **当使用生成器时，** **需要在语句的右边额外指定类型，**否则`build()`方法会创建一个`Stream<Object>:`的实例
 
-```
+```java
 Stream<String> streamBuilder =
   Stream.<String>builder().add("a").add("b").add("c").build();
 ```
@@ -76,7 +76,7 @@ Stream<String> streamBuilder =
 
 **`generate()`** 方法接受一个`Supplier<T>` 来生成元素。由于产生的流是无限的，开发人员应该指定所需的大小，否则`generate()`方法将一直工作到达到内存限制:
 
-```
+```java
 Stream<String> streamGenerated =
   Stream.generate(() -> "element").limit(10);
 ```
@@ -87,7 +87,7 @@ Stream<String> streamGenerated =
 
 另一种创建无限流的方法是使用 **`iterate()`** 方法:
 
-```
+```java
 Stream<Integer> streamIterated = Stream.iterate(40, n -> n + 2).limit(20);
 ```
 
@@ -99,7 +99,7 @@ Java 8 提供了用三种原语类型创建流的可能性:`int, long`和`double
 
 使用新界面减少了不必要的自动装箱，从而提高了生产效率:
 
-```
+```java
 IntStream intStream = IntStream.range(1, 3);
 LongStream longStream = LongStream.rangeClosed(1, 3);
 ```
@@ -110,7 +110,7 @@ LongStream longStream = LongStream.rangeClosed(1, 3);
 
 从 Java 8 开始， [`Random`](https://web.archive.org/web/20220718115601/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Random.html) 类为生成原语流提供了广泛的方法。例如，下面的代码创建了一个包含三个元素的`DoubleStream,` :
 
-```
+```java
 Random random = new Random();
 DoubleStream doubleStream = random.doubles(3);
 ```
@@ -119,13 +119,13 @@ DoubleStream doubleStream = random.doubles(3);
 
 在`String`类的`chars()`方法的帮助下，我们也可以使用` String`作为创建流的源。由于在 JDK 没有`CharStream` 的接口，我们使用`IntStream`来表示字符流。
 
-```
+```java
 IntStream streamOfChars = "abc".chars();
 ```
 
 以下示例根据指定的`RegEx`将`String` 分解成子字符串:
 
-```
+```java
 Stream<String> streamOfString =
   Pattern.compile(", ").splitAsStream("a, b, c");
 ```
@@ -134,7 +134,7 @@ Stream<String> streamOfString =
 
 此外，Java NIO 类`Files` 允许我们通过`lines()`方法生成文本文件的`Stream<String>`。文本的每一行都成为流的一个元素:
 
-```
+```java
 Path path = Paths.get("C:\\file.txt");
 Stream<String> streamOfStrings = Files.lines(path);
 Stream<String> streamWithCharset = 
@@ -149,7 +149,7 @@ Stream<String> streamWithCharset =
 
 为了证明这一点，我们将暂时忘记，最佳实践是将操作序列链接起来。除了不必要的冗长之外，从技术上讲，以下代码是有效的:
 
-```
+```java
 Stream<String> stream = 
   Stream.of("a", "b", "c").filter(element -> element.contains("b"));
 Optional<String> anyElement = stream.findAny();
@@ -157,7 +157,7 @@ Optional<String> anyElement = stream.findAny();
 
 然而，在调用终端操作后试图重用同一引用将触发`IllegalStateException:`
 
-```
+```java
 Optional<String> firstElement = stream.findFirst();
 ```
 
@@ -167,7 +167,7 @@ Optional<String> firstElement = stream.findFirst();
 
 因此，为了使前面的代码正常工作，应该进行一些更改:
 
-```
+```java
 List<String> elements =
   Stream.of("a", "b", "c").filter(element -> element.contains("b"))
     .collect(Collectors.toList());
@@ -181,14 +181,14 @@ Optional<String> firstElement = elements.stream().findFirst();
 
 中间操作返回新的修改后的流。例如，要创建一个没有几个元素的现有流的新流，应该使用`skip()`方法:
 
-```
+```java
 Stream<String> onceModifiedStream =
   Stream.of("abcd", "bbcd", "cbcd").skip(1);
 ```
 
 如果我们需要一个以上的修改，我们可以链接中间操作。假设我们还需要用前几个字符的子字符串替换当前`Stream<String>`的每个元素。我们可以通过链接 *skip()* 和 *map()* 方法来做到这一点:
 
-```
+```java
 Stream<String> twiceModifiedStream =
   stream.skip(1).map(element -> element.substring(0, 3));
 ```
@@ -199,7 +199,7 @@ Stream<String> twiceModifiedStream =
 
 使用流的正确和最方便的方式是通过**流管道，它是由流源、中间操作和终端操作组成的链:**
 
-```
+```java
 List<String> list = Arrays.asList("abc1", "abc2", "abc3");
 long size = list.stream().skip(1)
   .map(element -> element.substring(0, 3)).sorted().count();
@@ -211,7 +211,7 @@ long size = list.stream().skip(1)
 
 例如，让我们调用方法 `wasCalled()` `,` ，它在每次被调用时递增一个内部计数器:
 
-```
+```java
 private long counter;
 
 private void wasCalled() {
@@ -221,7 +221,7 @@ private void wasCalled() {
 
 现在让我们从操作`filter()`中调用方法`wasCalled` `()`:
 
-```
+```java
 List<String> list = Arrays.asList(“abc1”, “abc2”, “abc3”);
 counter = 0;
 Stream<String> stream = list.stream().filter(element -> {
@@ -234,7 +234,7 @@ Stream<String> stream = list.stream().filter(element -> {
 
 让我们稍微重写一下代码，添加一个`map()`操作和一个终端操作，`findFirst().`我们还将添加在日志记录的帮助下跟踪方法调用顺序的能力:
 
-```
+```java
 Optional<String> stream = list.stream().filter(element -> {
     log.info("filter() was called");
     return element.contains("2");
@@ -252,7 +252,7 @@ Optional<String> stream = list.stream().filter(element -> {
 
 从性能的角度来看，**正确的顺序是流管道中链接操作最重要的方面之一:**
 
-```
+```java
 long size = list.stream().map(element -> {
     wasCalled();
     return element.substring(0, 3);
@@ -263,7 +263,7 @@ long size = list.stream().map(element -> {
 
 如果我们改变`skip()` 和`map()`方法`,` 的顺序，`counter` 只会增加一个。所以我们将只调用一次`map()` 方法:
 
-```
+```java
 long size = list.stream().skip(2).map(element -> {
     wasCalled();
     return element.substring(0, 3);
@@ -288,21 +288,21 @@ API 有许多终端操作，它们将流聚合到一个类型或一个原语:`co
 
 现在让我们来看看这三种方法的实际应用:
 
-```
+```java
 OptionalInt reduced =
   IntStream.range(1, 4).reduce((a, b) -> a + b);
 ```
 
 `reduced` = 6 (1 + 2 + 3)
 
-```
+```java
 int reducedTwoParams =
   IntStream.range(1, 4).reduce(10, (a, b) -> a + b);
 ```
 
 `reducedTwoParams` = 16 (10 + 1 + 2 + 3)
 
-```
+```java
 int reducedParams = Stream.of(1, 2, 3)
   .reduce(10, (a, b) -> a + b, (a, b) -> {
      log.info("combiner was called");
@@ -312,7 +312,7 @@ int reducedParams = Stream.of(1, 2, 3)
 
 结果将与上一个示例(16)相同，并且没有登录，这意味着没有调用 combiner。要使合并器工作，流应该是并行的:
 
-```
+```java
 int reducedParallel = Arrays.asList(1, 2, 3).parallelStream()
     .reduce(10, (a, b) -> a + b, (a, b) -> {
        log.info("combiner was called");
@@ -328,7 +328,7 @@ int reducedParallel = Arrays.asList(1, 2, 3).parallelStream()
 
 在本节中，我们将使用以下`List`作为所有流的源:
 
-```
+```java
 List<Product> productList = Arrays.asList(new Product(23, "potatoes"),
   new Product(14, "orange"), new Product(13, "lemon"),
   new Product(23, "bread"), new Product(13, "sugar"));
@@ -336,14 +336,14 @@ List<Product> productList = Arrays.asList(new Product(23, "potatoes"),
 
 **将流转换到`Collection` ( *集合，列表*或*集合* ):**
 
-```
+```java
 List<String> collectorCollection = 
   productList.stream().map(Product::getName).collect(Collectors.toList());
 ```
 
 **还原为*串* :**
 
-```
+```java
 String listToString = productList.stream().map(Product::getName)
   .collect(Collectors.joining(", ", "[", "]"));
 ```
@@ -352,14 +352,14 @@ String listToString = productList.stream().map(Product::getName)
 
 **处理流中所有数值元素的平均值:**
 
-```
+```java
 double averagePrice = productList.stream()
   .collect(Collectors.averagingInt(Product::getPrice));
 ```
 
 **处理流中所有数值元素的和:**
 
-```
+```java
 int summingPrice = productList.stream()
   .collect(Collectors.summingInt(Product::getPrice));
 ```
@@ -368,7 +368,7 @@ int summingPrice = productList.stream()
 
 **收集流元素的统计信息:**
 
-```
+```java
 IntSummaryStatistics statistics = productList.stream()
   .collect(Collectors.summarizingInt(Product::getPrice));
 ```
@@ -379,7 +379,7 @@ IntSummaryStatistics statistics = productList.stream()
 
 **根据指定函数对流的元素进行分组:**
 
-```
+```java
 Map<Integer, List<Product>> collectorMapOfLists = productList.stream()
   .collect(Collectors.groupingBy(Product::getPrice));
 ```
@@ -388,14 +388,14 @@ Map<Integer, List<Product>> collectorMapOfLists = productList.stream()
 
 **根据一些谓词将流的元素分组:**
 
-```
+```java
 Map<Boolean, List<Product>> mapPartioned = productList.stream()
   .collect(Collectors.partitioningBy(element -> element.getPrice() > 15));
 ```
 
 **推动收集器执行附加转换:**
 
-```
+```java
 Set<Product> unmodifiableSet = productList.stream()
   .collect(Collectors.collectingAndThen(Collectors.toSet(),
   Collections::unmodifiableSet));
@@ -407,7 +407,7 @@ Set<Product> unmodifiableSet = productList.stream()
 
 如果出于某种原因需要创建自定义收集器，那么最简单、最不冗长的方法就是使用类型为`Collector.`的方法`of()`
 
-```
+```java
 Collector<Product, ?, LinkedList<Product>> toLinkedList =
   Collector.of(LinkedList::new, LinkedList::add, 
     (first, second) -> { 
@@ -427,7 +427,7 @@ LinkedList<Product> linkedListOfPersons =
 
 API 允许我们创建并行流，以并行模式执行操作。当流的来源是一个*集合*或一个*数组*时，可以借助 ***parallelStream()*** 方法来实现:
 
-```
+```java
 Stream<Product> streamOfCollection = productList.parallelStream();
 boolean isParallel = streamOfCollection.isParallel();
 boolean bigPrice = streamOfCollection
@@ -437,7 +437,7 @@ boolean bigPrice = streamOfCollection
 
 如果流的来源不是`Collection` 或`array`，则应使用 **`parallel()`** 方法:
 
-```
+```java
 IntStream intStreamParallel = IntStream.range(1, 150).parallel();
 boolean isParallel = intStreamParallel.isParallel();
 ```
@@ -448,7 +448,7 @@ boolean isParallel = intStreamParallel.isParallel();
 
 使用`sequential()`方法可以将并行模式下的流转换回顺序模式:
 
-```
+```java
 IntStream intStreamSequential = intStreamParallel.sequential();
 boolean isParallel = intStreamSequential.isParallel();
 ```

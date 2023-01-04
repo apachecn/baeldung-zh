@@ -16,7 +16,7 @@
 
 `nextLine()`方法的签名是:
 
-```
+```java
 public String nextLine()
 ```
 
@@ -24,7 +24,7 @@ public String nextLine()
 
 让我们看看它的用法:
 
-```
+```java
 try (Scanner scanner = new Scanner("Scanner\nTest\n")) {
     assertEquals("Scanner", scanner.nextLine());
     assertEquals("Test", scanner.nextLine());
@@ -33,7 +33,7 @@ try (Scanner scanner = new Scanner("Scanner\nTest\n")) {
 
 正如我们所看到的，该方法从当前扫描器位置返回输入，直到找到行分隔符:
 
-```
+```java
 try (Scanner scanner = new Scanner("Scanner\n")) {
     scanner.useDelimiter("");
     scanner.next();
@@ -49,7 +49,7 @@ try (Scanner scanner = new Scanner("Scanner\n")) {
 
 首先，当没有找到行分隔符时，抛出`NoSuchElementException`:
 
-```
+```java
 @Test(expected = NoSuchElementException.class)
 public void whenReadingLines_thenThrowNoSuchElementException() {
     try (Scanner scanner = new Scanner("")) {
@@ -60,7 +60,7 @@ public void whenReadingLines_thenThrowNoSuchElementException() {
 
 其次，如果扫描仪关闭，它抛出`IllegalStateException` :
 
-```
+```java
 @Test(expected = IllegalStateException.class)
 public void whenReadingLines_thenThrowIllegalStateException() {
     Scanner scanner = new Scanner("");

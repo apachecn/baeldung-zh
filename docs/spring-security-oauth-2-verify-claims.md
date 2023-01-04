@@ -10,7 +10,7 @@
 
 首先，我们需要将最新版本的`spring-security-oauth2`添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security.oauth</groupId>
     <artifactId>spring-security-oauth2</artifactId>
@@ -22,7 +22,7 @@
 
 接下来，让我们在资源服务器中配置我们的`TokenStore`:
 
-```
+```java
 @Bean
 public TokenStore tokenStore() {
     return new JwtTokenStore(accessTokenConverter());
@@ -47,7 +47,7 @@ public JwtAccessTokenConverter accessTokenConverter() {
 
 我们从简单的开始，通过使用`IssuerClaimVerifier`验证发卡行的`iss`声明，如下所示:
 
-```
+```java
 @Bean
 public JwtClaimsSetVerifier issuerClaimVerifier() {
     try {
@@ -66,7 +66,7 @@ public JwtClaimsSetVerifier issuerClaimVerifier() {
 
 但是，有趣的是，我们还可以构建我们的自定义声明验证器:
 
-```
+```java
 @Bean
 public JwtClaimsSetVerifier customJwtClaimVerifier() {
     return new CustomClaimVerifier();
@@ -75,7 +75,7 @@ public JwtClaimsSetVerifier customJwtClaimVerifier() {
 
 下面是一个简单的实现——检查`user_name`声明是否存在于我们的 JWT 令牌中:
 
-```
+```java
 public class CustomClaimVerifier implements JwtClaimsSetVerifier {
     @Override
     public void verify(Map<String, Object> claims) throws InvalidTokenException {
@@ -93,7 +93,7 @@ public class CustomClaimVerifier implements JwtClaimsSetVerifier {
 
 最后，让我们看看如何使用`DelegatingJwtClaimsSetVerifier`组合多个声明验证器，如下所示:
 
-```
+```java
 @Bean
 public JwtClaimsSetVerifier jwtClaimsSetVerifier() {
     return new DelegatingJwtClaimsSetVerifier(Arrays.asList(
@@ -107,7 +107,7 @@ public JwtClaimsSetVerifier jwtClaimsSetVerifier() {
 
 现在我们已经完成了实现，让我们用一个简单的[集成测试](https://web.archive.org/web/20220629012419/https://github.com/Baeldung/spring-security-oauth/blob/master/oauth-legacy/oauth-resource-server-legacy-2/src/test/java/com/baeldung/test/JwtClaimsVerifierIntegrationTest.java)来测试我们的声明验证器:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(
   classes = ResourceServerApplication.class, 
@@ -123,7 +123,7 @@ public class JwtClaimsVerifierIntegrationTest {
 
 我们将从一个不包含发行者(但包含一个`user_name`)的令牌开始，它应该是有效的:
 
-```
+```java
 @Test
 public void whenTokenDontContainIssuer_thenSuccess() {
     String tokenValue = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....";
@@ -137,7 +137,7 @@ public void whenTokenDontContainIssuer_thenSuccess() {
 
 接下来，让我们看看一个令牌，它包含一个有效的发布者(`http://localhost:8081`)和一个`user_name`。这也应该是有效的:
 
-```
+```java
 @Test
 public void whenTokenContainValidIssuer_thenSuccess() {
     String tokenValue = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9....";
@@ -149,7 +149,7 @@ public void whenTokenContainValidIssuer_thenSuccess() {
 
 当令牌包含无效的颁发者(`http://localhost:8082`)时，它将被验证并确定为无效:
 
-```
+```java
 @Test(expected = InvalidTokenException.class)
 public void whenTokenContainInvalidIssuer_thenException() {
     String tokenValue = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9....";
@@ -161,7 +161,7 @@ public void whenTokenContainInvalidIssuer_thenException() {
 
 接下来，当令牌不包含`user_name`声明时，它将是无效的:
 
-```
+```java
 @Test(expected = InvalidTokenException.class)
 public void whenTokenDontContainUsername_thenException() {
     String tokenValue = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9....";
@@ -173,7 +173,7 @@ public void whenTokenDontContainUsername_thenException() {
 
 最后，当令牌包含空的`user_name`声明时，它也是无效的:
 
-```
+```java
 @Test(expected = InvalidTokenException.class)
 public void whenTokenContainEmptyUsername_thenException() {
     String tokenValue = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9....";

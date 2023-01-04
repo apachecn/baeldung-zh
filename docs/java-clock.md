@@ -26,7 +26,7 @@
 
 此方法返回表示时钟定义的当前时刻的时刻:
 
-```
+```java
 Clock clock = Clock.systemDefaultZone();
 Instant instant = clock.instant();
 System.out.println(instant);
@@ -34,7 +34,7 @@ System.out.println(instant);
 
 将产生:
 
-```
+```java
 2018-04-07T03:59:35.555Z
 ```
 
@@ -42,14 +42,14 @@ System.out.println(instant);
 
 该方法返回一个代表 UTC 时区当前时刻的`Clock`对象:
 
-```
+```java
 Clock clock = Clock.systemUTC();
 System.out.println("UTC time :: " + clock.instant());
 ```
 
 将产生:
 
-```
+```java
 UTC time :: 2018-04-04T17:40:12.353Z
 ```
 
@@ -57,14 +57,14 @@ UTC time :: 2018-04-04T17:40:12.353Z
 
 这个静态方法返回由给定时区 id 标识的时区的`Clock`对象:
 
-```
+```java
 Clock clock = Clock.system(ZoneId.of("Asia/Calcutta"));
 System.out.println(clock.instant());
 ```
 
 将产生:
 
-```
+```java
 2018-04-04T18:00:31.376Z
 ```
 
@@ -72,20 +72,20 @@ System.out.println(clock.instant());
 
 这个静态方法返回一个代表当前时刻的`Clock`对象，并使用运行它的系统的默认时区:
 
-```
+```java
 Clock clock = Clock.systemDefaultZone();
 System.out.println(clock);
 ```
 
 上述行产生以下结果(假设我们的默认时区是“亚洲/加尔各答”):
 
-```
+```java
 SystemClock[Asia/Calcutta]
 ```
 
 我们可以通过传递`ZoneId.systemDefault()`来实现相同的行为:
 
-```
+```java
 Clock clock = Clock.system(ZoneId.systemDefault());
 ```
 
@@ -93,14 +93,14 @@ Clock clock = Clock.system(ZoneId.systemDefault());
 
 这个方法以毫秒为单位返回时钟的当前时刻。提供**是为了允许在高性能用例中使用时钟，在这些用例中创建对象是不可接受的**。这种方法可以用在我们本该使用`System.currentTimeInMillis()`的地方:
 
-```
+```java
 Clock clock = Clock.systemDefaultZone();
 System.out.println(clock.millis());
 ```
 
 将产生:
 
-```
+```java
 1523104441258
 ```
 
@@ -112,7 +112,7 @@ System.out.println(clock.millis());
 
 **使用`offset`，我们可以得到给定基准时钟的过去和未来的瞬间。**如果我们传递一个零持续时间，那么我们将得到与给定基础时钟相同的时钟:
 
-```
+```java
 Clock baseClock = Clock.systemDefaultZone();
 
 // result clock will be later than baseClock
@@ -130,7 +130,7 @@ System.out.println(clock.instant());
 
 将产生:
 
-```
+```java
 2018-04-10T13:24:07.347Z
 2018-04-07T13:24:07.348Z
 2018-04-04T13:24:07.348Z
@@ -140,7 +140,7 @@ System.out.println(clock.instant());
 
 这个静态方法返回从指定时钟**舍入到指定持续时间**的最近事件的瞬间。指定的时钟持续时间必须是正数:
 
-```
+```java
 Clock clockDefaultZone = Clock.systemDefaultZone();
 Clock clocktick = Clock.tick(clockDefaultZone, Duration.ofSeconds(30));
 
@@ -150,7 +150,7 @@ System.out.println("Clock tick: " + clocktick.instant());
 
 将产生:
 
-```
+```java
 Clock Default Zone: 2018-04-07T16:42:05.473Z
 Clock tick: 2018-04-07T16:42:00Z
 ```
@@ -159,7 +159,7 @@ Clock tick: 2018-04-07T16:42:00Z
 
 这个静态方法返回给定时区的当前时刻，以整秒为单位。该时钟将始终将`nano-of-second`字段设置为零:
 
-```
+```java
 ZoneId zoneId = ZoneId.of("Asia/Calcutta");
 Clock clock = Clock.tickSeconds(zoneId);
 System.out.println(clock.instant());
@@ -167,13 +167,13 @@ System.out.println(clock.instant());
 
 将产生:
 
-```
+```java
 2018-04-07T17:40:23Z
 ```
 
 同样可以通过使用`tick()`来实现:
 
-```
+```java
 Clock clock = Clock.tick(Clock.system(ZoneId.of("Asia/Calcutta")), Duration.ofSeconds(1));
 ```
 
@@ -181,7 +181,7 @@ Clock clock = Clock.tick(Clock.system(ZoneId.of("Asia/Calcutta")), Duration.ofSe
 
 这个静态方法返回指定时区的时钟时刻，以整分钟为单位。该时钟总是将`nano-of-second`和`second-of-minute`字段设置为零:
 
-```
+```java
 ZoneId zoneId = ZoneId.of("Asia/Calcutta");
 Clock clock = Clock.tickMinutes(zoneId);
 System.out.println(clock.instant());
@@ -189,13 +189,13 @@ System.out.println(clock.instant());
 
 将产生:
 
-```
+```java
 2018-04-07T17:26:00Z
 ```
 
 同样可以通过使用`tick()`来实现:
 
-```
+```java
 Clock clock = Clock.tick(Clock.system(ZoneId.of("Asia/Calcutta")), Duration.ofMinutes(1));
 ```
 
@@ -205,7 +205,7 @@ Clock clock = Clock.tick(Clock.system(ZoneId.of("Asia/Calcutta")), Duration.ofMi
 
 如果我们有一个特定时区时钟实例，我们可以为不同的时区复制一个时钟:
 
-```
+```java
 ZoneId zoneSingapore = ZoneId.of("Asia/Singapore");  
 Clock clockSingapore = Clock.system(zoneSingapore); 
 System.out.println(clockSingapore.instant());
@@ -217,7 +217,7 @@ System.out.println(clockCalcutta.instant());
 
 将产生:
 
-```
+```java
 2018-04-07T17:55:43.035Z
 2018-04-07T17:55:43.035Z
 ```
@@ -226,7 +226,7 @@ System.out.println(clockCalcutta.instant());
 
 该方法返回给定`Clock`的时区。
 
-```
+```java
 Clock clock = Clock.systemDefaultZone();
 ZoneId zone = clock.getZone();
 System.out.println(zone.getId());
@@ -234,7 +234,7 @@ System.out.println(zone.getId());
 
 将产生:
 
-```
+```java
 Asia/Calcutta
 ```
 
@@ -242,7 +242,7 @@ Asia/Calcutta
 
 这个方法返回的时钟**总是返回同一个时刻**。这种方法的主要用例是在测试中，固定时钟确保测试不依赖于当前时钟。
 
-```
+```java
 Clock fixedClock = Clock.fixed(Instant.parse("2018-04-29T10:15:30.00Z"),
 ZoneId.of("Asia/Calcutta"));
 System.out.println(fixedClock);
@@ -250,7 +250,7 @@ System.out.println(fixedClock);
 
 将产生:
 
-```
+```java
 FixedClock[2018-04-29T10:15:30Z,Asia/Calcutta]
 ```
 

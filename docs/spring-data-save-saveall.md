@@ -12,7 +12,7 @@
 
 让我们创建一个图书实体:
 
-```
+```java
 @Entity
 public class Book {
 
@@ -29,7 +29,7 @@ public class Book {
 
 此外，让我们为它创建一个存储库:
 
-```
+```java
 public interface BookRepository extends JpaRepository<Book, Long> {
 }
 ```
@@ -40,7 +40,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
 首先，我们将使用 `save()`方法:
 
-```
+```java
 for(int i = 0; i < bookCount; i++) {
     bookRepository.save(new Book("Book " + i, "Author " + i));
 }
@@ -48,7 +48,7 @@ for(int i = 0; i < bookCount; i++) {
 
 然后，我们将创建一个图书列表，并使用`saveAll()`方法一次性保存所有图书:
 
-```
+```java
 List<Book> bookList = new ArrayList<>();
 for (int i = 0; i < bookCount; i++) {
     bookList.add(new Book("Book " + i, "Author " + i));

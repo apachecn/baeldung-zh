@@ -14,7 +14,7 @@ Keycloak 提供了一些特性，比如保护 REST API、用户联盟、细粒�
 
 为了简单起见，我们将使用嵌入在 Spring Boot 应用程序中的 [Keycloak。让我们假设我们正在使用 GitHub](/web/20220811170118/https://www.baeldung.com/keycloak-embedded-in-spring-boot-app) 上可用的授权服务器项目[。首先，我们将在我们的嵌入式 Keycloak 服务器](https://web.archive.org/web/20220811170118/https://github.com/Baeldung/spring-security-oauth/tree/master/oauth-resource-server/authorization-server) [![](img/c946eac2d2043de44afb9bffb024116c.png)](/web/20220811170118/https://www.baeldung.com/wp-content/uploads/2022/05/keycloak-spring-boot.png) 中定义领域`baeldung`中的`customerClient`客户端，然后，我们将领域细节导出为`customer-realm.json`，并在我们的`application-customer.yml`中设置领域文件:
 
-```
+```java
 keycloak:
   server:
     contextPath: /auth
@@ -30,7 +30,7 @@ keycloak:
 
 现在我们已经配置了授权服务器，让我们设置资源服务器。为此，我们将使用 GitHub 上的资源服务器项目[。首先，让我们添加`application-embedded.properties`文件作为资源:](/web/20220811170118/https://www.baeldung.com/spring-boot-keycloak)
 
-```
+```java
 keycloak.auth-server-url=http://localhost:8083/auth
 keycloak.realm=baeldung
 keycloak.resource=customerClient
@@ -48,7 +48,7 @@ keycloak.principal-attribute=preferred_username
 
 在 [Spring Boot 应用程序](/web/20220811170118/https://www.baeldung.com/keycloak-custom-user-attributes) `CustomUserAttrController`类的基础上，让我们修改`getUserInfo()`方法来获取用户 ID:
 
-```
+```java
 @GetMapping(path = "/users")
 public String getUserInfo(Model model) {
 
@@ -76,7 +76,7 @@ public String getUserInfo(Model model) {
 
 我们可以在客户端映射器中添加一个用户 ID，并在 Spring Boot 应用程序中获取它。首先，我们在`customerClient` 客户端: [![](img/e75b95592787b36d6d0f02b5fa31f229.png)](/web/20220811170118/https://www.baeldung.com/wp-content/uploads/2022/05/keycloak-spring-boot-2.png) 中定义一个客户端映射器，然后，我们在`CustomUserAttrController`类中获取用户 ID:
 
-```
+```java
 @GetMapping(path = "/users")
 public String getUserInfo(Model model) {
 
@@ -104,7 +104,7 @@ public String getUserInfo(Model model) {
 
 我们将修改`userInfo.html` 模板来显示用户 ID 信息:
 
-```
+```java
 <div id="container">
     <h1>
 	User ID By Token: <span th:text="${userIDByToken}">--userID--</span>.

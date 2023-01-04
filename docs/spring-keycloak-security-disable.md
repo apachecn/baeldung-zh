@@ -16,7 +16,7 @@ Keycloak 是一个免费的开源身份和访问管理程序，目前经常在�
 
 让我们从添加`[keycloak-spring-boot-starter](https://web.archive.org/web/20220815155800/https://search.maven.org/search?q=keycloak-spring-boot-starter)`依赖项到我们的项目开始:
 
-```
+```java
 <dependency>
     <groupId>org.keycloak</groupId>
     <artifactId>keycloak-spring-boot-starter</artifactId>
@@ -25,7 +25,7 @@ Keycloak 是一个免费的开源身份和访问管理程序，目前经常在�
 
 此外，我们需要添加由`[keycloak-adapter-bom](https://web.archive.org/web/20220815155800/https://search.maven.org/search?q=keycloak-adapter-bom)`依赖项带来的各种嵌入式容器的依赖项:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -41,7 +41,7 @@ Keycloak 是一个免费的开源身份和访问管理程序，目前经常在�
 
 接下来，我们将在`application.properties`中添加 Keycloak 服务器的配置:
 
-```
+```java
 keycloak.auth-server-url=http://localhost:8180/auth
 keycloak.realm=SpringBootKeycloak
 keycloak.resource=login-app
@@ -54,7 +54,7 @@ keycloak.security-constraints[0].securityCollections[0].patterns[0]=/users/*
 
 最后，让我们添加一个检索`User`的`UserController`:
 
-```
+```java
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -69,7 +69,7 @@ public class UserController {
 
 现在我们的应用程序已经就绪，让我们编写一个简单的测试来获得用户:
 
-```
+```java
 @Test
 public void givenUnauthenticated_whenGettingUser_shouldReturnUser() {
     ResponseEntity<User> responseEntity = restTemplate.getForEntity("/users/1", User.class);
@@ -86,7 +86,7 @@ public void givenUnauthenticated_whenGettingUser_shouldReturnUser() {
 
 **要禁用 Keycloak 安全性，我们需要通知适配器不要加载相应的配置**。我们可以通过如下方式分配属性来实现这一点:
 
-```
+```java
 keycloak.enabled=false
 ```
 
@@ -100,7 +100,7 @@ keycloak.enabled=false
 
 让我们从添加[spring-boot-starter-security](https://web.archive.org/web/20220815155800/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-starter-security)依赖项到我们的项目开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -109,7 +109,7 @@ keycloak.enabled=false
 
 接下来，我们实现`WebSecurityConfigurerAdapter`来定义 Spring 安全性所需的配置。Keycloak 适配器为此提供了一个抽象类和注释:
 
-```
+```java
 @KeycloakConfiguration
 public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
@@ -145,7 +145,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
 
 我们可以使用[配置文件](/web/20220815155800/https://www.baeldung.com/spring-profiles)来告诉 Spring 在测试期间是否激活 Keycloak 配置:
 
-```
+```java
 @KeycloakConfiguration
 @Profile("tests")
 public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
@@ -155,7 +155,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
 
 **然而，一种更优雅的方式是重用`keycloak.enable`属性**，类似于键锁适配器:
 
-```
+```java
 @KeycloakConfiguration
 @ConditionalOnProperty(name = "keycloak.enabled", havingValue = "true", matchIfMissing = true)
 public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
@@ -169,7 +169,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
 
 让我们创建一个配置类来禁用它:
 
-```
+```java
 @Configuration
 @ConditionalOnProperty(name = "keycloak.enabled", havingValue = "false")
 public class DisableSecurityConfiguration extends WebSecurityConfigurerAdapter {

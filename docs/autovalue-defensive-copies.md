@@ -14,7 +14,7 @@ Java 社区通常认为值对象是表示不可变数据记录的一类类型。
 
 例如，考虑一个`Person`值对象:
 
-```
+```java
 class Person {
     private final String name;
     private final List<String> favoriteMovies;
@@ -25,7 +25,7 @@ class Person {
 
 因为 Java 的标准集合类型可能是可变的，所以不可变的`Person`类型必须保护自己，防止调用者在创建新的`Person`后修改`favoriteMovies`列表:
 
-```
+```java
 var favoriteMovies = new ArrayList<String>();
 favoriteMovies.add("Clerks"); // fine
 var person = new Person("Katy", favoriteMovies);
@@ -36,7 +36,7 @@ favoriteMovies.add("Dogma"); // oh, no!
 
 `Person`类构造函数可以使用`List.copyOf`静态工厂方法来制作`favoriteMovies`列表的防御性副本:
 
-```
+```java
 public Person(String name, List<String> favoriteMovies) {
     this.name = name;
     this.favoriteMovies = List.copyOf(favoriteMovies);
@@ -45,7 +45,7 @@ public Person(String name, List<String> favoriteMovies) {
 
 Java 10 引入了`List.copyOf`等防御性复制静态工厂方法。使用旧版本 Java 的应用程序可能会使用复制构造函数和`Collections`类上的一个“不可修改的”静态工厂方法创建一个防御性副本:
 
-```
+```java
 public Person(String name, List<String> favoriteMovies) {
     this.name = name;
     this.favoriteMovies = Collections.unmodifiableList(new ArrayList<>(favoriteMovies));
@@ -62,7 +62,7 @@ AutoValue 是一个注释处理工具，用于生成定义值对象类型的样�
 
 最后，我们向`Person`类添加一个静态工厂方法，并调用生成的`AutoValue_Person`构造函数:
 
-```
+```java
 @AutoValue
 public abstract class Person {
 
@@ -79,7 +79,7 @@ AutoValue 生成的构造函数不会自动创建任何防御副本，包括一�
 
 因此，我们需要**在我们定义的静态工厂方法**中创建一个`favoriteMovies`集合的防御副本:
 
-```
+```java
 public abstract class Person {
 
     public static Person of(String name, List<String> favoriteMovies) {
@@ -97,7 +97,7 @@ public abstract class Person {
 
 如果需要，我们可以使用`@AutoValue.Builder`注释，它指示 AutoValue 生成一个`Builder`类:
 
-```
+```java
 @AutoValue
 public abstract class Person {
 
@@ -121,7 +121,7 @@ public abstract class Person {
 
 首先，我们将用两个新的包私有抽象方法来补充我们的构建器:`favoriteMovies()`和`autoBuild()`。这些方法是包私有的，因为我们想在`build()`方法的自定义实现中使用它们，但是我们不希望这个 API 的消费者使用它们。
 
-```
+```java
 @AutoValue.Builder
 public static abstract class Builder {
 
@@ -139,7 +139,7 @@ public static abstract class Builder {
 
 最后，我们将提供一个`build()`方法的**定制实现，它在构造`Person`之前创建列表的防御副本**。我们将使用`favoriteMovies()`方法来检索用户设置的`List`。接下来，在调用`autoBuild()`来构造`Person`之前，我们将用一个新的副本替换这个列表:
 
-```
+```java
 public Person build() {
     List<String> favoriteMovies = favoriteMovies();
     List<String> copy = Collections.unmodifiableList(new ArrayList<>(favoriteMovies));

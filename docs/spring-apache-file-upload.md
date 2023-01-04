@@ -12,7 +12,7 @@
 
 要使用这个库，我们需要`commons-fileupload`工件:
 
-```
+```java
 <dependency>
     <groupId>commons-fileupload</groupId>
     <artifactId>commons-fileupload</artifactId>
@@ -26,7 +26,7 @@
 
 出于演示的目的，我们将创建一个使用文件有效负载处理请求的`Controller`:
 
-```
+```java
 @PostMapping("/upload")
 public String handleUpload(HttpServletRequest request) throws Exception {
     boolean isMultipart = ServletFileUpload.isMultipartContent(request);
@@ -65,7 +65,7 @@ public String handleUpload(HttpServletRequest request) throws Exception {
 
 我们可以通过将此配置包含在我们的`application.properties`文件中来实现这一点:
 
-```
+```java
 spring.http.multipart.enabled=false
 ```
 
@@ -91,7 +91,7 @@ spring.http.multipart.enabled=false
 
 流式 API 易于使用，这使得它成为处理大文件的一种很好的方式，只需不将其复制到临时位置即可:
 
-```
+```java
 ServletFileUpload upload = new ServletFileUpload();
 FileItemIterator iterStream = upload.getItemIterator(request);
 while (iterStream.hasNext()) {

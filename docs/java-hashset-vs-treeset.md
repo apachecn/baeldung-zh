@@ -14,7 +14,7 @@
 
 **`HashSet`以随机顺序存储对象，而`TreeSet`应用元素的自然顺序。**让我们看看下面的例子:
 
-```
+```java
 @Test
 public void givenTreeSet_whenRetrievesObjects_thenNaturalOrder() {
     Set<String> set = new TreeSet<>();
@@ -33,7 +33,7 @@ public void givenTreeSet_whenRetrievesObjects_thenNaturalOrder() {
 
 另一个区别是 **`HashSet`可以存储`null`对象，而`TreeSet`不允许**:
 
-```
+```java
 @Test(expected = NullPointerException.class)
 public void givenTreeSet_whenAddNullObject_thenNullPointer() {
     Set<String> set = new TreeSet<>();
@@ -84,7 +84,7 @@ public void givenHashSet_whenAddNullObject_thenOK() {
 
 `TreeSet`和`HashSet`都保证了**元素的无重复集合，因为**是通用`Set`接口的一部分:
 
-```
+```java
 @Test
 public void givenHashSetAndTreeSet_whenAddDuplicates_thenOnlyUnique() {
     Set<String> set = new HashSet<>();
@@ -111,7 +111,7 @@ public void givenHashSetAndTreeSet_whenAddDuplicates_thenOnlyUnique() {
 
 这意味着在`Iterator`创建后的任何时候对`Set`的任何修改都会抛出一个`ConcurrentModificationException:`
 
-```
+```java
 @Test(expected = ConcurrentModificationException.class)
 public void givenHashSet_whenModifyWhenIterator_thenFailFast() {
     Set<String> set = new HashSet<>();

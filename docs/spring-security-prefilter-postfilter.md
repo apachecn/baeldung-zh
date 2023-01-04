@@ -20,7 +20,7 @@
 
 默认情况下，这些注释是不活动的——我们需要在我们的安全配置中使用`@EnableGlobalMethodSecurity` 注释和`prePostEnabled = true`来启用它们:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -37,7 +37,7 @@ Spring Security 提供了许多其他内置对象来创建非常具体和精确�
 
 **例如**，我们可以用`@PreFilter` 来检查一个`Task`对象的`assignee`属性是否等于当前认证用户的`name` :
 
-```
+```java
 @PostFilter("filterObject.assignee == authentication.name")
 List<Task> findAll() {
     ...
@@ -50,7 +50,7 @@ List<Task> findAll() {
 
 现在让我们把规则变得更有趣一点。假设如果用户是经理，他们可以查看所有任务，而不管任务分配给谁:
 
-```
+```java
 @PostFilter("hasRole('MANAGER') or filterObject.assignee == authentication.name")
 List<Task> findAll() {
     // ...
@@ -61,7 +61,7 @@ List<Task> findAll() {
 
 现在让我们使用`@PreFilter`过滤作为参数传递给`save`方法的列表:
 
-```
+```java
 @PreFilter("hasRole('MANAGER') or filterObject.assignee == authentication.name")
 Iterable<Task> save(Iterable<Task> entities) {
     // ...

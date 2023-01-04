@@ -16,7 +16,7 @@ batch 语句组合了多个数据修改语言语句(如 INSERT、UPDATE 和 DELE
 
 批量查询的语法如下:
 
-```
+```java
 BEGIN [ ( UNLOGGED | COUNTER ) ] BATCH
 [ USING TIMESTAMP [ epoch_microseconds ] ]
 dml_statement [ USING TIMESTAMP [ epoch_microseconds ] ] ;
@@ -26,7 +26,7 @@ APPLY BATCH;
 
 让我们用一个例子来看一下上面的语法:
 
-```
+```java
 BEGIN BATCH 
 
 INSERT INTO product (product_id, variant_id, product_name) 
@@ -80,7 +80,7 @@ APPLY BATCH;
 
 首先，让我们创建一个`product`表来运行一些批处理查询:
 
-```
+```java
 CREATE TABLE product (
   product_id UUID,
   variant_id UUID,
@@ -95,7 +95,7 @@ CREATE TABLE product (
 
 我们将针对`product`表的单个分区执行下面的批处理查询，并且不提供时间戳:
 
-```
+```java
 BEGIN BATCH 
 
 INSERT INTO product (product_id, variant_id, product_name) 
@@ -121,7 +121,7 @@ APPLY BATCH;
 
 现在让我们验证数据的`writetime`在批量执行后是否相同:
 
-```
+```java
 cqlsh:testkeyspace> select product_id, variant_id, product_name, description, price, writetime(product_name) from product;
 
 @ Row 1
@@ -149,7 +149,7 @@ writetime(product_name) | 1639275574653000
 
 下面是对所有 DML 语句应用相同时间戳的批处理查询:
 
-```
+```java
 BEGIN BATCH USING TIMESTAMP 1638810270 
 
 INSERT INTO product (product_id, variant_id, product_name) 
@@ -169,7 +169,7 @@ APPLY BATCH;
 
 现在，让我们在任何单个 DML 语句上指定自定义时间戳:
 
-```
+```java
 BEGIN BATCH 
 
 INSERT INTO product (product_id, variant_id, product_name) 
@@ -189,7 +189,7 @@ APPLY BATCH;
 
 我们现在将看到一个无效的批处理查询，它既有自定义时间戳又有`compare-and-set (CAS)`逻辑，即`IF NOT EXISTS` 子句`:`
 
-```
+```java
 BEGIN BATCH USING TIMESTAMP 1638810270 
 
 INSERT INTO product (product_id, variant_id, product_name) 
@@ -209,7 +209,7 @@ APPLY BATCH;
 
 在执行上面的查询时，我们会得到下面的错误:
 
-```
+```java
 InvalidRequest: Error from server: code=2200 [Invalid query]
 message="Cannot provide custom timestamp for conditional BATCH"
 ```
@@ -222,7 +222,7 @@ message="Cannot provide custom timestamp for conditional BATCH"
 
 让我们将相同的数据插入到具有不同分区键的`product_by_name`和`product_by_id`表中:
 
-```
+```java
 BEGIN BATCH 
 
 INSERT INTO product_by_name (product_name, product_id, description, price) 
@@ -236,7 +236,7 @@ APPLY BATCH;
 
 现在让我们为上面的查询启用`UNLOGGED`选项:
 
-```
+```java
 BEGIN UNLOGGED BATCH 
 
 INSERT INTO product_by_name (product_name, product_id, description, price) 
@@ -256,7 +256,7 @@ APPLY BATCH;
 
 让我们创建一个表`product_by_sales` ，它将`sales_vol` 存储为`Counter` 数据类型:
 
-```
+```java
 CREATE TABLE product_by_sales (
   product_id UUID,
   sales_vol counter,
@@ -266,7 +266,7 @@ CREATE TABLE product_by_sales (
 
 下面的`counter`批处理查询将`sales_vol`增加了两次，每次 100:
 
-```
+```java
 BEGIN COUNTER BATCH
 
 UPDATE product_by_sales
@@ -288,7 +288,7 @@ APPLY BATCH
 
 首先，我们需要包含与 [DataStax](/web/20220815041158/https://www.baeldung.com/cassandra-datastax-java-driver) 相关的 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.datastax.oss</groupId>
     <artifactId>java-driver-core</artifactId>
@@ -309,7 +309,7 @@ APPLY BATCH
 
 首先，我们将创建一个方法，通过将`Product`属性绑定到`PreparedStatement` 插入查询来获取`BoundStatement`实例:
 
-```
+```java
 BoundStatement getProductVariantInsertStatement(Product product, UUID productId) {
     String insertQuery = new StringBuilder("") 
       .append("INSERT INTO ")
@@ -341,7 +341,7 @@ BoundStatement getProductVariantInsertStatement(Product product, UUID productId)
 
 现在，我们将使用相同的`Product` `UUID`为上面创建的`BoundStatement` 执行`BatchStatement`:
 
-```
+```java
 UUID productId = UUID.randomUUID();
 BoundStatement productBoundStatement1 = this.getProductVariantInsertStatement(productVariant1, productId);
 BoundStatement productBoundStatement2 = this.getProductVariantInsertStatement(productVariant2, productId);
@@ -360,7 +360,7 @@ session.execute(batch);
 
 首先，我们将创建一个可重用的方法来为`PreparedStatement`插入查询获取一个`BoundStatement`实例:
 
-```
+```java
 BoundStatement getProductInsertStatement(Product product, UUID productId, String productTableName) {
     String cqlQuery1 = new StringBuilder("")
       .append("INSERT INTO ")
@@ -389,7 +389,7 @@ BoundStatement getProductInsertStatement(Product product, UUID productId, String
 
 现在，我们将使用同一个`Product` `UUID:`来执行`BatchStatement`
 
-```
+```java
 UUID productId = UUID.randomUUID();
 
 BoundStatement productBoundStatement1 = this.getProductInsertStatement(product, productId, PRODUCT_BY_ID_TABLE_NAME);

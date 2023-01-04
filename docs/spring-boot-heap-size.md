@@ -16,7 +16,7 @@
 
 让我们首先创建一个简单的 REST 控制器，它返回一些基本的内存信息，我们可以用这些信息来验证我们的设置:
 
-```
+```java
 @GetMapping("memory-status")
 public MemoryStats getMemoryStatistics() {
     MemoryStats stats = new MemoryStats();
@@ -29,13 +29,13 @@ public MemoryStats getMemoryStatistics() {
 
 让我们使用`mvn spring-boot:run`来运行它，以获得一个基线。一旦我们的应用程序启动，我们可以使用`[curl](/web/20221022100505/https://www.baeldung.com/curl-rest)`来调用我们的 REST 控制器:
 
-```
+```java
 curl http://localhost:8080/memory-status
 ```
 
 我们的结果会因我们的机器而异，但看起来会像这样:
 
-```
+```java
 {"heapSize":333447168,"heapMaxSize":5316280320,"heapFreeSize":271148080}
 ```
 
@@ -43,13 +43,13 @@ curl http://localhost:8080/memory-status
 
 让我们用`-Dspring-boot.run.jvmArguments`将起始堆大小和最大堆大小传递给我们的应用程序:
 
-```
+```java
 mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xms2048m -Xmx4096m"
 ```
 
 现在，当我们到达终点时，我们应该看到我们指定的堆设置:
 
-```
+```java
 {"heapSize":2147483648,"heapMaxSize":4294967296,"heapFreeSize":2042379008}
 ```
 
@@ -59,7 +59,7 @@ mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xms2048m -Xmx4096m"
 
 让我们配置插件来设置我们想要的堆大小:
 
-```
+```java
 <plugins>
     <plugin>
         <groupId>org.springframework.boot</groupId>
@@ -84,7 +84,7 @@ mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xms2048m -Xmx4096m"
 
 现在，我们可以只使用`mvn spring-boot:run`运行我们的应用程序，并在 ping 端点时看到我们指定的 JVM 参数在使用中:
 
-```
+```java
 {"heapSize":259588096,"heapMaxSize":1037959168,"heapFreeSize":226205152}
 ```
 
@@ -96,25 +96,25 @@ mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xms2048m -Xmx4096m"
 
 首先，我们必须在 Maven 文件中将打包指定为`jar`:
 
-```
+```java
 <packaging>jar</packaging>
 ```
 
 然后，我们可以将我们的应用程序打包成一个 j `ar`文件:
 
-```
+```java
 mvn clean package
 ```
 
 现在我们有了 j `ar`文件，我们可以用`java -jar`运行它并覆盖堆配置:
 
-```
+```java
 java -Xms512m -Xmx1024m -jar target/spring-boot-runtime-2.jar
 ```
 
 让我们`curl`我们的端点来检查内存值:
 
-```
+```java
 {"heapSize":536870912,"heapMaxSize":1073741824,"heapFreeSize":491597032}
 ```
 
@@ -126,13 +126,13 @@ java -Xms512m -Xmx1024m -jar target/spring-boot-runtime-2.jar
 
 我们现在可以将它放在 resources 下的一个文件夹中，并将我们的堆配置添加到`JAVA_OPTS`:
 
-```
+```java
 JAVA_OPTS="-Xms512m -Xmx1024m"
 ```
 
 接下来，我们将修改我们的 Maven 构建，将`spring-boot-runtime-2.conf`文件复制到`jar`文件旁边的`target`文件夹中:
 
-```
+```java
 <build>
     <finalName>${project.artifactId}</finalName>
     <resources>
@@ -168,25 +168,25 @@ JAVA_OPTS="-Xms512m -Xmx1024m"
 
 我们可以打包我们的`jar`文件，并使用 Maven 复制我们的`.conf`文件:
 
-```
+```java
 mvn clean package spring-boot:repackage
 ```
 
 让我们创建我们的`init.d`服务:
 
-```
+```java
 sudo ln -s /path/to/spring-boot-runtime-2.jar /etc/init.d/spring-boot-runtime-2
 ```
 
 现在，让我们开始我们的应用程序:
 
-```
+```java
 sudo /etc/init.d/spring-boot-runtime-2 start
 ```
 
 然后，当我们到达我们的端点时，我们应该看到在`.conf`文件中指定的`JAVA_OPT`值被考虑:
 
-```
+```java
 {"heapSize":538968064,"heapMaxSize":1073741824,"heapFreeSize":445879544}
 ```
 

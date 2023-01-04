@@ -26,7 +26,7 @@ A quick and practical example of Spring Security 5 framework's features for sec
 
 让我们从定义一个`AuthenticationFailureListener`开始——监听`AuthenticationFailureBadCredentialsEvent`事件并通知我们认证失败:
 
-```
+```java
 @Component
 public class AuthenticationFailureListener implements 
   ApplicationListener<AuthenticationFailureBadCredentialsEvent> {
@@ -55,7 +55,7 @@ public class AuthenticationFailureListener implements
 
 让我们也定义一个`AuthenticationSuccessEventListener` ——它监听`AuthenticationSuccessEvent`事件并通知我们认证成功:
 
-```
+```java
 @Component
 public class AuthenticationSuccessEventListener implements 
   ApplicationListener<AuthenticationSuccessEvent> {
@@ -84,7 +84,7 @@ public class AuthenticationSuccessEventListener implements
 
 现在，让我们讨论一下我们的`LoginAttemptService`实现；简而言之，我们将每个 IP 地址的错误尝试次数保留 24 小时:
 
-```
+```java
 @Service
 public class LoginAttemptService {
 
@@ -134,7 +134,7 @@ public class LoginAttemptService {
 
 现在，让我们在自定义的`UserDetailsService`实现中添加额外的检查；当我们加载`UserDetails`、**时，我们首先需要检查这个 IP 地址是否被阻止**:
 
-```
+```java
 @Service("userDetailsService")
 @Transactional
 public class MyUserDetailsService implements UserDetailsService {
@@ -178,7 +178,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
 这里是`getClientIP()`方法:
 
-```
+```java
 private String getClientIP() {
     String xfHeader = request.getHeader("X-Forwarded-For");
     if (xfHeader == null){
@@ -192,7 +192,7 @@ private String getClientIP() {
 
 对于这些罕见的场景，我们使用`X-Forwarded-For`头来获取原始 IP；这个标题的语法如下:
 
-```
+```java
 X-Forwarded-For: clientIpAddress, proxy1, proxy2
 ```
 
@@ -200,7 +200,7 @@ X-Forwarded-For: clientIpAddress, proxy1, proxy2
 
 现在，这很酷。我们将不得不在我们的`web.xml`中添加一个快速监听器，这将使事情变得容易得多。
 
-```
+```java
 <listener>
     <listener-class>
         org.springframework.web.context.request.RequestContextListener
@@ -216,7 +216,7 @@ X-Forwarded-For: clientIpAddress, proxy1, proxy2
 
 我们正在处理用户实际上被阻止 24 小时的情况，我们通知用户，他的 IP 被阻止，因为他超过了允许的最大错误身份验证尝试次数:
 
-```
+```java
 @Component
 public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 

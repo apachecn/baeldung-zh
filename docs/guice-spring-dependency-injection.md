@@ -12,7 +12,7 @@
 
 让我们首先将 Guice 和 Spring Maven 依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context</artifactId>
@@ -46,7 +46,7 @@ Spring 还支持`@Inject. @Inject`是 [Java CDI(上下文和依赖注入)](/web
 
 假设我们想自动将一个依赖项连接到一个成员变量。我们可以简单地用`@Autowired`来注释它:
 
-```
+```java
 @Component
 public class UserService {
     @Autowired
@@ -54,7 +54,7 @@ public class UserService {
 }
 ```
 
-```
+```java
 @Component
 public class AccountServiceImpl implements AccountService {
 }
@@ -62,7 +62,7 @@ public class AccountServiceImpl implements AccountService {
 
 其次，让我们创建一个配置类，在加载应用程序上下文时用作 beans 的源:
 
-```
+```java
 @Configuration
 @ComponentScan("com.baeldung.di.spring")
 public class SpringMainConfig {
@@ -75,13 +75,13 @@ public class SpringMainConfig {
 
 然后，我们需要定义一个应用程序上下文来访问 beans。请注意，我们将在所有的 Spring 单元测试中引用这个上下文:
 
-```
+```java
 ApplicationContext context = new AnnotationConfigApplicationContext(SpringMainConfig.class);
 ```
 
 现在在运行时，我们可以从我们的`UserService` bean 中检索`A` `ccountService`实例:
 
-```
+```java
 UserService userService = context.getBean(UserService.class);
 assertNotNull(userService.getAccountService());
 ```
@@ -96,7 +96,7 @@ Guice 使用绑定作为 Spring 中连接的等价物。简单地说，**绑定�
 
 让我们创建一个等效的果汁示例:
 
-```
+```java
 public class GuiceUserService {
     @Inject
     private AccountService accountService;
@@ -105,7 +105,7 @@ public class GuiceUserService {
 
 其次，我们将创建模块类，它是我们绑定定义的来源:
 
-```
+```java
 public class GuiceModule extends AbstractModule {
     @Override
     protected void configure() {
@@ -118,13 +118,13 @@ public class GuiceModule extends AbstractModule {
 
 然后，我们需要使用`GuiceModule`定义一个`Injector`来获取我们的类的实例。请注意，我们所有的 Guice 测试都将使用这个`Injector`:
 
-```
+```java
 Injector injector = Guice.createInjector(new GuiceModule());
 ```
 
 最后，在运行时，我们检索一个具有非空`accountService`依赖关系的`GuiceUserService`实例:
 
-```
+```java
 GuiceUserService guiceUserService = injector.getInstance(GuiceUserService.class);
 assertNotNull(guiceUserService.getAccountService());
 ```
@@ -135,7 +135,7 @@ assertNotNull(guiceUserService.getAccountService());
 
 假设我们有一个`BookServiceImpl`的实例，我们想让它可用于注入。我们可以使用`@Bean`来注册我们的实例:
 
-```
+```java
 @Bean 
 public BookService bookServiceGenerator() {
     return new BookServiceImpl();
@@ -144,7 +144,7 @@ public BookService bookServiceGenerator() {
 
 现在我们可以得到一个`BookService` bean:
 
-```
+```java
 BookService bookService = context.getBean(BookService.class);
 assertNotNull(bookService);
 ```
@@ -155,7 +155,7 @@ assertNotNull(bookService);
 
 现在让我们用 Guice 实现前面的 Spring bean 示例。我们需要做的就是将下面的代码添加到我们的模块类中:
 
-```
+```java
 @Provides
 public BookService bookServiceGenerator() {
     return new BookServiceImpl();
@@ -164,7 +164,7 @@ public BookService bookServiceGenerator() {
 
 现在，我们可以检索一个`BookService`的实例:
 
-```
+```java
 BookService bookService = injector.getInstance(BookService.class);
 assertNotNull(bookService);
 ```
@@ -185,7 +185,7 @@ Spring 通过名称来识别对象。**弹簧将物体保持在一个大致类�
 
 由于拥有多个同名 Bean 而导致的 Bean 冲突是 Spring 开发者遇到的一个常见问题。例如，让我们考虑以下 bean 声明:
 
-```
+```java
 @Configuration
 @Import({SpringBeansConfig.class})
 @ComponentScan("com.baeldung.di.spring")
@@ -197,7 +197,7 @@ public class SpringMainConfig {
 }
 ```
 
-```
+```java
 @Configuration
 public class SpringBeansConfig {
     @Bean
@@ -213,7 +213,7 @@ public class SpringBeansConfig {
 
 现在，让我们在单元测试中引用这些 beans:
 
-```
+```java
 BookService bookService = context.getBean(BookService.class);
 assertNotNull(bookService); 
 AudioBookService audioBookService = context.getBean(AudioBookService.class);
@@ -222,7 +222,7 @@ assertNotNull(audioBookService);
 
 单元测试将失败，出现以下情况:
 
-```
+```java
 org.springframework.beans.factory.NoSuchBeanDefinitionException:
 No qualifying bean of type 'AudioBookService' available
 ```
@@ -237,14 +237,14 @@ No qualifying bean of type 'AudioBookService' available
 
 Guice 提供了[绑定注释](https://web.archive.org/web/20220930092230/https://github.com/google/guice/wiki/BindingAnnotations)来为同一类型定义多个绑定。让我们看看如果在 Guice 中同一类型有两个不同的绑定会发生什么。
 
-```
+```java
 public class Person {
 }
 ```
 
 现在，让我们为`Person`类声明两个不同的绑定:
 
-```
+```java
 bind(Person.class).toConstructor(Person.class.getConstructor());
 bind(Person.class).toProvider(new Provider<Person>() {
     public Person get() {
@@ -256,14 +256,14 @@ bind(Person.class).toProvider(new Provider<Person>() {
 
 下面是我们如何获得一个`Person`类的实例:
 
-```
+```java
 Person person = injector.getInstance(Person.class);
 assertNotNull(person);
 ```
 
 这将失败，原因是:
 
-```
+```java
 com.google.inject.CreationException: A binding to Person was already configured at GuiceModule.configure()
 ```
 
@@ -279,7 +279,7 @@ com.google.inject.CreationException: A binding to Person was already configured 
 
 现在让我们看看下面的例子:
 
-```
+```java
 @Component
 public class BookServiceImpl implements BookService {
     @Autowired
@@ -287,7 +287,7 @@ public class BookServiceImpl implements BookService {
 }
 ```
 
-```
+```java
 public class AuthorServiceImpl implements AuthorService {
 }
 ```
@@ -296,21 +296,21 @@ public class AuthorServiceImpl implements AuthorService {
 
 现在，让我们运行下面的测试来看看会发生什么:
 
-```
+```java
 BookService bookService = context.getBean(BookService.class);
 assertNotNull(bookService);
 ```
 
 毫不奇怪，它会失败:
 
-```
+```java
 org.springframework.beans.factory.NoSuchBeanDefinitionException: 
 No qualifying bean of type 'AuthorService' available
 ```
 
 **我们可以通过使用 [Java 8 的`Optional`类型](/web/20220930092230/https://www.baeldung.com/java-optional)来避免这种异常，从而使`authorService`依赖成为可选的。**
 
-```
+```java
 public class BookServiceImpl implements BookService {
     @Autowired
     private Optional<AuthorService> authorService;
@@ -323,7 +323,7 @@ public class BookServiceImpl implements BookService {
 
 因此，如果其数据类型的 bean 在上下文中不可用，Spring 将跳过注入依赖项。依赖性将保持设置为`null:`
 
-```
+```java
 @Component
 public class BookServiceImpl implements BookService {
     @Autowired(required = false)
@@ -341,7 +341,7 @@ public class BookServiceImpl implements BookService {
 
 假设我们想要创建一个具有`Foo`依赖关系的类:
 
-```
+```java
 public class FooProcessor {
     @Inject
     private Foo foo;
@@ -350,7 +350,7 @@ public class FooProcessor {
 
 现在，让我们为`Foo`类定义一个绑定:
 
-```
+```java
 bind(Foo.class).toProvider(new Provider<Foo>() {
     public Foo get() {
         return null;
@@ -360,14 +360,14 @@ bind(Foo.class).toProvider(new Provider<Foo>() {
 
 现在让我们试着在单元测试中获得一个`FooProcessor`的实例:
 
-```
+```java
 FooProcessor fooProcessor = injector.getInstance(FooProcessor.class);
 assertNotNull(fooProcessor);
 ```
 
 我们的单元测试将会失败:
 
-```
+```java
 com.google.inject.ProvisionException:
 null returned by binding at GuiceModule.configure(..)
 but the 1st parameter of FooProcessor.[...] is not @Nullable
@@ -375,7 +375,7 @@ but the 1st parameter of FooProcessor.[...] is not @Nullable
 
 为了跳过这个异常，我们可以通过简单的更新使`foo`依赖项可选:
 
-```
+```java
 public class FooProcessor {
     @Inject
     private Optional<Foo> foo;
@@ -386,7 +386,7 @@ public class FooProcessor {
 
 Guice 允许在使用`@Nullable`的情况下注入`null`值，如上面的异常消息所示。让我们套用一下`@Nullable`的注解:
 
-```
+```java
 public class FooProcessor {
     @Inject
     @Nullable
@@ -404,7 +404,7 @@ public class FooProcessor {
 
 假设我们想要一个 Spring 组件，并想通过它的构造函数添加依赖项。我们可以用`@Autowired`来注释构造函数:
 
-```
+```java
 @Component
 public class SpringPersonService {
 
@@ -421,7 +421,7 @@ public class SpringPersonService {
 
 让我们在测试中检索一个`SpringPersonService` bean:
 
-```
+```java
 SpringPersonService personService = context.getBean(SpringPersonService.class);
 assertNotNull(personService);
 ```
@@ -430,7 +430,7 @@ assertNotNull(personService);
 
 我们可以重新安排前面的例子，让**在 Guice** 中实现构造函数注入。注意 Guice 用的是`@Inject`而不是`@Autowired`。
 
-```
+```java
 public class GuicePersonService {
 
     private PersonDao personDao;
@@ -444,7 +444,7 @@ public class GuicePersonService {
 
 下面是我们如何在测试中从`injector`中获取`GuicePersonService`类的实例:
 
-```
+```java
 GuicePersonService personService = injector.getInstance(GuicePersonService.class);
 assertNotNull(personService);
 ```
@@ -455,7 +455,7 @@ assertNotNull(personService);
 
 假设我们希望 Spring 使用 setter 方法自动连接一个依赖项。我们可以用`@Autowired`来注释 setter 方法:
 
-```
+```java
 @Component
 public class SpringPersonService {
 
@@ -472,7 +472,7 @@ public class SpringPersonService {
 
 我们可以得到一个`SpringPersonService` bean，并在下面的测试中访问它的`personDao`字段:
 
-```
+```java
 SpringPersonService personService = context.getBean(SpringPersonService.class);
 assertNotNull(personService);
 assertNotNull(personService.getPersonDao());
@@ -482,7 +482,7 @@ assertNotNull(personService.getPersonDao());
 
 我们将简单地稍微改变一下我们的例子，以在 Guice 中实现 **setter 注入。**
 
-```
+```java
 public class GuicePersonService {
 
     private PersonDao personDao;
@@ -498,7 +498,7 @@ public class GuicePersonService {
 
 下面是我们如何创建一个`GuicePersonService`类的实例，并在测试中访问它的`personDao`字段:
 
-```
+```java
 GuicePersonService personService = injector.getInstance(GuicePersonService.class);
 assertNotNull(personService);
 assertNotNull(personService.getPersonDao());

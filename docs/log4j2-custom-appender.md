@@ -16,7 +16,7 @@ Log4j2 是 Log4j 的升级版本，在 Log4j 的基础上有显著的改进。�
 
 首先，我们需要`pom.xml`中的`log4j-core`依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-core</artifactId>
@@ -34,7 +34,7 @@ Log4j2 是 Log4j 的升级版本，在 Log4j 的基础上有显著的改进。�
 
 下面是我们如何创建`MapAppender:`
 
-```
+```java
 @Plugin(
   name = "MapAppender", 
   category = Core.CATEGORY_NAME, 
@@ -77,7 +77,7 @@ public class MapAppender extends AbstractAppender {
 
 下面是我们如何在`log4j2.xml`文件中定义配置部分:
 
-```
+```java
 <Configuration xmlns:xi="http://www.w3.org/2001/XInclude" packages="com.baeldung" status="WARN">
 ```
 
@@ -85,7 +85,7 @@ public class MapAppender extends AbstractAppender {
 
 接下来，在我们的 appender 部分，我们定义 appender。下面是我们如何在配置中将自定义 appender 添加到 appender 列表中:
 
-```
+```java
 <MapAppender name="MapAppender" />
 ```
 
@@ -93,7 +93,7 @@ public class MapAppender extends AbstractAppender {
 
 这是如何做到的:
 
-```
+```java
 <Root level="DEBUG">
     <AppenderRef ref="MapAppender" />
 </Root>
@@ -107,7 +107,7 @@ public class MapAppender extends AbstractAppender {
 
 我们可以使用`AbstractAppender`的`error `方法来记录错误消息。我们班是这样做的:
 
-```
+```java
 public void append(LogEvent event) {
     if (event.getLevel().isLessSpecificThan(Level.WARN)) {
         error("Unable to log less than WARN level.");

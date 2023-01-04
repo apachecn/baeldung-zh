@@ -16,7 +16,7 @@
 
 此外，我们还需要在`pom.xml`文件中包含`json-schema-validator`模块:
 
-```
+```java
 <dependency>
     <groupId>io.rest-assured</groupId>
     <artifactId>json-schema-validator</artifactId>
@@ -33,7 +33,7 @@
 
 作为 JSON 模式，我们将使用保存在名为`event_0.json`的文件中的 JSON，该文件位于类路径中:
 
-```
+```java
 {
     "id": "390",
     "data": {
@@ -54,7 +54,7 @@
 
 然后假设这是 REST API 返回的所有数据遵循的通用格式，我们可以检查 JSON 响应的一致性，如下所示:
 
-```
+```java
 @Test
 public void givenUrl_whenJsonResponseConformsToSchema_thenCorrect() {
     get("/events?id=390").then().assertThat()
@@ -72,7 +72,7 @@ public void givenUrl_whenJsonResponseConformsToSchema_thenCorrect() {
 
 假设我们希望我们的验证总是使用 JSON 模式版本 4:
 
-```
+```java
 @Test
 public void givenUrl_whenValidatesResponseWithInstanceSettings_thenCorrect() {
     JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.newBuilder()
@@ -92,7 +92,7 @@ public void givenUrl_whenValidatesResponseWithInstanceSettings_thenCorrect() {
 
 默认情况下，`json-schema-validator`对 JSON 响应字符串运行检查验证。这意味着如果模式将`odds`定义为如下 JSON 所示的数组:
 
-```
+```java
 {
     "odds": [{
         "price": "1.30",
@@ -107,13 +107,13 @@ public void givenUrl_whenValidatesResponseWithInstanceSettings_thenCorrect() {
 
 那么验证器将总是期待一个数组作为`odds`的值，因此当`odds`是一个`String`时，响应将无法通过验证。因此，如果我们希望对我们的响应不那么严格，我们可以在验证期间添加一个自定义规则，首先进行以下静态导入:
 
-```
+```java
 io.restassured.module.jsv.JsonSchemaValidatorSettings.settings;
 ```
 
 然后在验证检查设置为`false`的情况下执行测试:
 
-```
+```java
 @Test
 public void givenUrl_whenValidatesResponseWithStaticSettings_thenCorrect() {
     get("/events?id=390").then().assertThat().body(matchesJsonSchemaInClasspath
@@ -129,7 +129,7 @@ public void givenUrl_whenValidatesResponseWithStaticSettings_thenCorrect() {
 
 我们将把验证配置为未检查的，并且总是在 JSON 模式版本 3:
 
-```
+```java
 JsonSchemaFactory factory = JsonSchemaFactory.newBuilder()
   .setValidationConfiguration(
    ValidationConfiguration.newBuilder()
@@ -142,7 +142,7 @@ JsonSchemaValidator.settings = settings()
 
 然后调用 reset 方法来删除此配置:
 
-```
+```java
 JsonSchemaValidator.reset();
 ```
 

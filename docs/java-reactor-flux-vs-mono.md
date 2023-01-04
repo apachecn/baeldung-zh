@@ -12,7 +12,7 @@
 
 让我们看一个带有完成信号的`Mono`的例子:
 
-```
+```java
 @Test
 public void givenMonoPublisher_whenSubscribeThenReturnSingleValue() {
     Mono<String> helloMono = Mono.just("Hello");
@@ -31,7 +31,7 @@ public void givenMonoPublisher_whenSubscribeThenReturnSingleValue() {
 
 让我们看一个带有完成信号的`Flux`的例子:
 
-```
+```java
 @Test
 public void givenFluxPublisher_whenSubscribedThenReturnMultipleValues() {
     Flux<String> stringFlux = Flux.just("Hello", "Baeldung");
@@ -45,7 +45,7 @@ public void givenFluxPublisher_whenSubscribedThenReturnMultipleValues() {
 
 现在，让我们看一个带有错误信号的`Flux`的例子:
 
-```
+```java
 @Test
 public void givenFluxPublisher_whenSubscribeThenReturnMultipleValuesWithError() {
     Flux<String> stringFlux = Flux.just("Hello", "Baeldung", "Error")

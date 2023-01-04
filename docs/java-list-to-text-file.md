@@ -12,7 +12,7 @@
 
 让我们看看初始化一个`FileWriter`可用的构造函数:
 
-```
+```java
 FileWriter f = new FileWriter(File file);
 FileWriter f = new FileWriter(File file, boolean append);
 FileWriter f = new FileWriter(FileDescriptor fd);
@@ -28,7 +28,7 @@ FileWriter f = new FileWriter(String fileName, Charset charset, boolean append);
 
 现在，让我们学习如何使用`FileWriter`将`Strings`的`List`写入文本文件:
 
-```
+```java
 FileWriter fileWriter = new FileWriter(TEXT_FILENAME);
 for (String str : stringList) {
     fileWriter.write(str + System.lineSeparator());
@@ -49,7 +49,7 @@ return TEXT_FILENAME;
 
 让我们看看初始化一个`BufferedWriter`可用的构造函数:
 
-```
+```java
 BufferedWriter b = new BufferedWriter(Writer w);
 BufferedWriter b = new BufferedWriter(Writer w, int size);
 ```
@@ -58,7 +58,7 @@ BufferedWriter b = new BufferedWriter(Writer w, int size);
 
 现在，让我们探索如何使用`BufferedWriter`将`Strings`的`List`写入文本文件:
 
-```
+```java
 BufferedWriter br = new BufferedWriter(new FileWriter(TEXT_FILENAME));
 for (String str : stringList) {
     br.write(str + System.lineSeparator());
@@ -75,14 +75,14 @@ return TEXT_FILENAME;
 
 让我们看看`java.nio.file.Files`中可用的两个重载方法:
 
-```
+```java
 public static Path writeString​(Path path, CharSequence csq, OpenOption… options) throws IOException
 public static Path writeString​(Path path, CharSequence csq, Charset cs, OpenOption… options) throws IOException
 ```
 
 注意，在第一种方法中，我们不必指定`Charset`。默认情况下，它采用`UTF-8 Charset`，而在第二种方法中，我们可以指定`Charset`。最后，让我们学习如何使用`Files.writeString`将`Strings`的`List`写入文本文件:
 
-```
+```java
 Path filePath = Paths.get(TEXT_FILENAME);
 Files.deleteIfExists(filePath);
 Files.createFile(filePath);
@@ -102,7 +102,7 @@ return filePath.toString();
 
 对于 JUnit 测试，让我们定义一个`Strings`的`List`:
 
-```
+```java
 private static final List<String> stringList = Arrays.asList("Hello", "World"); 
 ```
 
@@ -110,7 +110,7 @@ private static final List<String> stringList = Arrays.asList("Hello", "World");
 
 现在，让我们开始测试我们的`FileWriter`实现:
 
-```
+```java
 @Test
 public void givenUsingFileWriter_whenStringList_thenGetTextFile() throws IOException {
     String fileName = FileWriterExample.generateFileFromStringList(stringList);
@@ -121,7 +121,7 @@ public void givenUsingFileWriter_whenStringList_thenGetTextFile() throws IOExcep
 
 接下来，我们将测试`BufferedWriter`的实现:
 
-```
+```java
 @Test
 public void givenUsingBufferedWriter_whenStringList_thenGetTextFile() throws IOException {
     String fileName = BufferedWriterExample.generateFileFromStringList(stringList);
@@ -132,7 +132,7 @@ public void givenUsingBufferedWriter_whenStringList_thenGetTextFile() throws IOE
 
 最后，让我们测试一下我们的`Files.writeString`实现:
 
-```
+```java
 @Test
 public void givenUsingFileWriteString_whenStringList_thenGetTextFile() throws IOException {
     String fileName = FileWriteStringExample.generateFileFromStringList(stringList);

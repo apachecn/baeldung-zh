@@ -14,7 +14,7 @@
 
 当我们不显式使用任何关键字时，Java 会设置一个对给定类、方法或属性的`default`访问。默认的访问修饰符也叫做`package-private`，这意味着**所有的成员在同一个包**中是可见的，但是不能从其他包中访问:
 
-```
+```java
 package com.baeldung.accessmodifiers;
 
 public class SuperPublic {
@@ -26,7 +26,7 @@ public class SuperPublic {
 
 `defaultMethod()`可在同一包的另一个类中访问:
 
-```
+```java
 package com.baeldung.accessmodifiers;
 
 public class Public {
@@ -42,7 +42,7 @@ public class Public {
 
 如果我们将关键字`public`添加到一个类、方法或属性中，那么**我们就可以让全世界**都可以使用它，也就是说，所有包中的所有其他类都可以使用它。这是限制最少的访问修饰符:
 
-```
+```java
 package com.baeldung.accessmodifiers;
 
 public class SuperPublic {
@@ -54,7 +54,7 @@ public class SuperPublic {
 
 `publicMethod()`在另一个包装中提供:
 
-```
+```java
 package com.baeldung.accessmodifiers.another;
 
 import com.baeldung.accessmodifiers.SuperPublic;
@@ -72,7 +72,7 @@ public class AnotherPublic {
 
 任何带有`private`关键字**的方法、属性或构造函数只能从同一个类**中访问。这是最严格的访问修饰符，是封装概念的核心。所有数据将对外界隐藏:
 
-```
+```java
 package com.baeldung.accessmodifiers;
 
 public class SuperPublic {
@@ -94,7 +94,7 @@ public class SuperPublic {
 
 如果我们用关键字`protected`声明一个方法、属性或构造函数，我们可以从**相同的包(和`package-private`访问级别一样)中访问成员，此外还可以从它的类**的所有子类中访问成员，即使它们位于其他包中:
 
-```
+```java
 package com.baeldung.accessmodifiers;
 
 public class SuperPublic {
@@ -106,7 +106,7 @@ public class SuperPublic {
 
 `protectedMethod()`在子类中可用(不考虑包):
 
-```
+```java
 package com.baeldung.accessmodifiers.another;
 
 import com.baeldung.accessmodifiers.SuperPublic;
@@ -127,28 +127,28 @@ public class AnotherSubClass extends SuperPublic {
 | 修饰语 | 班级 | 包裹 | 亚纲 | 世界 |
 | 
 
-```
+```java
 public
 ```
 
  | Y | Y | Y | Y |
 | 
 
-```
+```java
 protected
 ```
 
  | Y | Y | Y | 普通 |
 | 
 
-```
+```java
 default
 ```
 
  | Y | Y | 普通 | 普通 |
 | 
 
-```
+```java
 private
 ```
 

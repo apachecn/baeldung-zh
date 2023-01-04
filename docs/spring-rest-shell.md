@@ -18,13 +18,13 @@ Spring REST Shell 是一个命令行 Shell，旨在方便使用 Spring HATEOAS �
 
 如果我们使用带有家酿软件的 macOS 机器，我们可以简单地执行下一个命令:
 
-```
+```java
 brew install rest-shell
 ```
 
 对于其他操作系统的用户，我们需要从[官方 GitHub 项目页面](https://web.archive.org/web/20220629004953/https://github.com/spring-projects/rest-shell)下载一个二进制包，解包后找到一个可执行文件运行:
 
-```
+```java
 tar -zxvf rest-shell-1.2.0.RELEASE.tar.gz
 cd rest-shell-1.2.0.RELEASE
 bin/rest-shell
@@ -32,7 +32,7 @@ bin/rest-shell
 
 另一种选择是下载源代码并执行一个梯度任务:
 
-```
+```java
 git clone git://github.com/spring-projects/rest-shell.git
 cd rest-shell
 ./gradlew installApp
@@ -42,7 +42,7 @@ bin/rest-shell
 
 如果一切设置正确，我们将看到下面的问候:
 
-```
+```java
  ___ ___  __ _____  __  _  _     _ _  __    
 | _ \ __/' _/_   _/' _/| || |   / / | \ \   
 | v / _|`._`. | | `._`.| >< |  / / /   > >  
@@ -73,14 +73,14 @@ http://localhost:8080:>
 
 首先，我们需要`follow`与我们想要添加的资源相关联的 URL。命令 *follow* 获取一个相对 URI，将其与 *baseUri* 连接，并将结果设置为当前位置:
 
-```
+```java
 http://localhost:8080:> follow articles
 http://localhost:8080/articles:> post --data "{title: "First Article"}"
 ```
 
 该命令的执行结果将是:
 
-```
+```java
 < 201 CREATED
 < Location: http://localhost:8080/articles/1
 < Content-Type: application/hal+json;charset=UTF-8
@@ -105,7 +105,7 @@ http://localhost:8080/articles:> post --data "{title: "First Article"}"
 
 现在，当我们有了一些资源，让我们把它们找出来。我们将使用***discover*命令，该命令显示当前 URI** 的所有可用资源:
 
-```
+```java
 http://localhost:8080/articles:> discover
 
 rel        href                                  
@@ -117,7 +117,7 @@ article    http://localhost:8080/articles/1
 
 知道了资源 URI，我们可以通过使用 *get* 命令来获取它:
 
-```
+```java
 http://localhost:8080/articles:> get 1
 
 > GET http://localhost:8080/articles/1
@@ -147,7 +147,7 @@ http://localhost:8080/articles:> get 1
 
 让我们根据给定的标题来获取一篇文章:
 
-```
+```java
 http://localhost:8080/articles:> get search/findByTitle \
 > --params "{title: "First Article"}"
 
@@ -178,7 +178,7 @@ http://localhost:8080/articles:> get search/findByTitle \
 
 我们将添加几个标头，并发出一个包含这些标头的请求:
 
-```
+```java
 http://localhost:8080/articles:>
   headers set --name Accept --value application/json
 
@@ -207,7 +207,7 @@ http://localhost:8080/articles:> get 1
 
 `–output`参数允许执行这样的操作:
 
-```
+```java
 http://localhost:8080/articles:> get search/findByTitle \
 > --params "{title: "First Article"}" \
 > --output first_article.txt
@@ -229,7 +229,7 @@ http://localhost:8080/articles:> get search/findByTitle \
 
 让我们从文件 *second_article.txt* 创建下一篇文章:
 
-```
+```java
 http://localhost:8080/articles:> post --from second_article.txt
 
 1 files uploaded to the server using POST
@@ -241,7 +241,7 @@ http://localhost:8080/articles:> post --from second_article.txt
 
 与`headers`类似，自变量`–name`和`–value`用于给出新变量的名称和值:
 
-```
+```java
 http://localhost:8080:> var set --name articlesURI --value articles
 http://localhost:8080/articles:> var get --name articlesURI
 
@@ -250,7 +250,7 @@ articles
 
 现在，我们将打印出上下文中当前可用变量的列表:
 
-```
+```java
 http://localhost:8080:> var list
 
 {
@@ -260,7 +260,7 @@ http://localhost:8080:> var list
 
 确保我们的变量被保存后，我们将使用它和 *follow* 命令切换到给定的 URI:
 
-```
+```java
 http://localhost:8080:> follow #{articlesURI}
 http://localhost:8080/articles:> 
 ```
@@ -269,7 +269,7 @@ http://localhost:8080/articles:>
 
 我们走过的路都被记录了下来。**命令`history`按时间顺序显示这些路径**:
 
-```
+```java
 http://localhost:8080:> history list
 
 1: http://localhost:8080/articles
@@ -278,7 +278,7 @@ http://localhost:8080:> history list
 
 每个 URI 都与一个可用于前往该 URI 的号码相关联:
 
-```
+```java
 http://localhost:8080:> history go 1
 http://localhost:8080/articles:> 
 ```

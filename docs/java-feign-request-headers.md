@@ -14,7 +14,7 @@
 
 我们可以轻松地克隆项目并在本地运行它:
 
-```
+```java
 $ mvn install spring-boot:run
 ```
 
@@ -30,7 +30,7 @@ $ mvn install spring-boot:run
 
 让我们在`BookClient`中配置两个静态头，即`Accept-Language`和`Content-Type,`:
 
-```
+```java
 @Headers("Accept-Language: en-US")
 public interface BookClient {
 
@@ -47,7 +47,7 @@ public interface BookClient {
 
 接下来，让我们看看如何使用 Feign 的`Builder`方法创建`BookClient`，并传递 [`HEADERS`](/web/20221128035320/https://www.baeldung.com/java-feign-logging) 日志级别:
 
-```
+```java
 Feign.builder()
   .encoder(new GsonEncoder())
   .decoder(new GsonDecoder())
@@ -58,7 +58,7 @@ Feign.builder()
 
 现在，让我们测试一下`create`方法:
 
-```
+```java
 String isbn = UUID.randomUUID().toString();
 Book book = new Book(isbn, "Me", "It's me!", null, null);
 
@@ -69,7 +69,7 @@ book = bookClient.findByIsbn(isbn).getBook();
 
 然后，让我们验证输出记录器中的标题:
 
-```
+```java
 18:01:15.039 [main] DEBUG c.b.f.c.h.staticheader.BookClient - [BookClient#create] Accept-Language: en-US
 18:01:15.039 [main] DEBUG c.b.f.c.h.staticheader.BookClient - [BookClient#create] Content-Type: application/json
 18:01:15.096 [main] DEBUG c.b.f.c.h.staticheader.BookClient - [BookClient#findByIsbn] Accept-Language: en-US
@@ -83,7 +83,7 @@ book = bookClient.findByIsbn(isbn).getBook();
 
 让我们用占位符`requester` :将`x-requester-id`头包含到`BookClient`中
 
-```
+```java
 @Headers("x-requester-id: {requester}")
 public interface BookClient {
 
@@ -96,14 +96,14 @@ public interface BookClient {
 
 现在，让我们用`x-requester-id` 头调用`BookClient` API:
 
-```
+```java
 String requester = "test";
 book = bookClient.findByIsbn(requester, isbn).getBook();
 ```
 
 然后，让我们验证输出记录器中的请求头:
 
-```
+```java
 18:04:27.515 [main] DEBUG c.b.f.c.h.s.parameterized.BookClient - [BookClient#findByIsbn] x-requester-id: test
 ```
 
@@ -113,14 +113,14 @@ book = bookClient.findByIsbn(requester, isbn).getBook();
 
 使用标注有 `@HeaderMap` 的`Map`参数设置动态头:
 
-```
+```java
 @RequestLine("POST")
 void create(@HeaderMap Map<String, Object> headers, Book book);
 ```
 
 现在，让我们用头文件测试一下`create`方法:
 
-```
+```java
 Map<String,Object> headerMap = new HashMap<>();
 
 headerMap.put("metadata-key1", "metadata-value1");
@@ -131,7 +131,7 @@ bookClient.create(headerMap, book);
 
 然后，让我们验证输出记录器中的标题:
 
-```
+```java
 18:05:03.202 [main] DEBUG c.b.f.c.h.dynamicheader.BookClient - [BookClient#create] metadata-key1: metadata-value1
 18:05:03.202 [main] DEBUG c.b.f.c.h.dynamicheader.BookClient - [BookClient#create] metadata-key2: metadata-value2
 ```
@@ -146,7 +146,7 @@ Feign 提供了一个`RequestInterceptor`接口。这样，我们可以添加请
 
 让我们通过实现一个用于生成授权令牌的`AuthorisationService` 来尝试一下:
 
-```
+```java
 public class ApiAuthorisationService implements AuthorisationService {
 
     @Override
@@ -158,7 +158,7 @@ public class ApiAuthorisationService implements AuthorisationService {
 
 现在，让我们实现我们的定制请求拦截器:
 
-```
+```java
 public class AuthRequestInterceptor implements RequestInterceptor {
 
     private AuthorisationService authTokenService;
@@ -178,7 +178,7 @@ public class AuthRequestInterceptor implements RequestInterceptor {
 
 现在，让我们使用`builder`方法`:`将`AuthInterceptor` 添加到 `BookClient`
 
-```
+```java
 Feign.builder()
   .requestInterceptor(new AuthInterceptor(new ApiAuthorisationService()))
   .encoder(new GsonEncoder())
@@ -190,13 +190,13 @@ Feign.builder()
 
 然后，让我们测试带有`Authorisation`头的`BookClient` API:
 
-```
+```java
 bookClient.findByIsbn("0151072558").getBook();
 ```
 
 现在，让我们验证输出记录器中的标题:
 
-```
+```java
 18:06:06.135 [main] DEBUG c.b.f.c.h.staticheader.BookClient - [BookClient#findByIsbn] Authorisation: Bearer 629e0af7-513d-4385-a5ef-cb9b341cedb5
 ```
 

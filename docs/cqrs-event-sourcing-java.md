@@ -58,7 +58,7 @@
 
 首先，我们必须创建代表我们的领域模型的 Java 类。这是一个相当简单的领域模型，甚至可能不需要像事件源和 CQRS 这样复杂的设计模式。但是，我们将保持简单，专注于理解基础知识:
 
-```
+```java
 public class User {
 private String userid;
     private String firstName;
@@ -84,7 +84,7 @@ public class Address {
 
 此外，我们将为应用程序状态的持久性定义一个简单的内存存储库。当然，这不会增加任何价值，但足以满足我们后面的演示:
 
-```
+```java
 public class UserRepository {
     private Map<String, User> store = new HashMap<>();
 }
@@ -92,7 +92,7 @@ public class UserRepository {
 
 现在，我们将定义一个服务来公开我们的域模型上的典型 CRUD 操作:
 
-```
+```java
 public class UserService {
     private UserRepository repository;
     public UserService(UserRepository repository) {
@@ -168,7 +168,7 @@ CQRS 自然受益于聚合模式，该模式将写域模型分组，提供事务
 
 让我们看看我们的命令:
 
-```
+```java
 public class CreateUserCommand {
     private String userId;
     private String firstName;
@@ -186,7 +186,7 @@ public class UpdateUserCommand {
 
 接下来，我们定义一个负责接受和处理命令的集合。聚合可以接受或拒绝命令:
 
-```
+```java
 public class UserAggregate {
     private UserWriteRepository writeRepository;
     public UserAggregate(UserWriteRepository repository) {
@@ -213,7 +213,7 @@ public class UserAggregate {
 
 最后，我们需要一个存储库来保存领域模型的状态。这通常是一个数据库或其他持久存储，但这里我们将简单地用内存中的数据结构来替换它们:
 
-```
+```java
 public class UserWriteRepository {
     private Map<String, User> store = new HashMap<>();
     // accessors and mutators
@@ -226,7 +226,7 @@ public class UserWriteRepository {
 
 现在让我们切换到应用程序的读取端。我们将从定义域模型的读取端开始:
 
-```
+```java
 public class UserAddress {
     private Map<String, Set<Address>> addressByRegion = new HashMap<>();
 }
@@ -240,7 +240,7 @@ public class UserContact {
 
 接下来，我们将定义读取存储库。同样，我们将只使用内存中的数据结构，尽管在实际应用程序中这将是更持久的数据存储:
 
-```
+```java
 public class UserReadRepository {
     private Map<String, UserAddress> userAddress = new HashMap<>();
     private Map<String, UserContact> userContact = new HashMap<>();
@@ -252,7 +252,7 @@ public class UserReadRepository {
 
 让我们看看我们的疑问:
 
-```
+```java
 public class ContactByTypeQuery {
     private String userId;
     private String contactType;
@@ -268,7 +268,7 @@ public class AddressByRegionQuery {
 
 我们现在需要的是能够处理这些查询的投影:
 
-```
+```java
 public class UserProjection {
     private UserReadRepository readRepository;
     public UserProjection(UserReadRepository readRepository) {
@@ -299,7 +299,7 @@ public class UserProjection {
 
 有更复杂的方法来处理这个问题，但是我们将保持它相对简单:
 
-```
+```java
 public class UserProjector {
     UserReadRepository readRepository = new UserReadRepository();
     public UserProjector(UserReadRepository readRepository) {
@@ -376,7 +376,7 @@ public class UserProjector {
 
 事件驱动应用程序中的基本对象是事件，事件源也不例外。正如我们前面所看到的，**事件代表了在特定时间点**域模型状态的特定变化。因此，我们将从定义简单应用程序的基本事件开始:
 
-```
+```java
 public abstract class Event {
     public final UUID id = UUID.randomUUID();
     public final Date created = new Date();
@@ -389,7 +389,7 @@ public abstract class Event {
 
 接下来，让我们创建一些继承自这个基本事件的特定于域的事件:
 
-```
+```java
 public class UserCreatedEvent extends Event {
     private String userId;
     private String firstName;
@@ -425,7 +425,7 @@ public class UserAddressRemovedEvent extends Event {
 
 现在，自然地，我们需要一个存储库来保存我们的领域事件:
 
-```
+```java
 public class EventStore {
     private Map<String, List<Event>> store = new HashMap<>();
 }
@@ -439,7 +439,7 @@ public class EventStore {
 
 让我们看看如何实现这一点:
 
-```
+```java
 public class UserService {
     private EventStore repository;
     public UserService(EventStore repository) {
@@ -530,7 +530,7 @@ public class UserService {
 
 只有一些变化。我们首先将聚合改为**生成事件，而不是更新状态**:
 
-```
+```java
 public class UserAggregate {
     private EventStore writeRepository;
     public UserAggregate(EventStore repository) {
@@ -577,7 +577,7 @@ public class UserAggregate {
 
 唯一需要的其他变化是投影仪，它现在需要**处理事件，而不是域对象状态**:
 
-```
+```java
 public class UserProjector {
     UserReadRepository readRepository = new UserReadRepository();
     public UserProjector(UserReadRepository readRepository) {

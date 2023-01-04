@@ -22,7 +22,7 @@ Spring web 框架是围绕 MVC(模型-视图-控制器)模式构建的，这使�
 
 JSP 是 Java 应用程序中最受欢迎的视图技术之一，它受 Spring 开箱即用的支持。为了呈现 JSP 文件，一种常用的`ViewResolver` bean 类型是`InternalResourceViewResolver`:
 
-```
+```java
 @EnableWebMvc
 @Configuration
 public class ApplicationConfiguration implements WebMvcConfigurer {
@@ -38,7 +38,7 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
 
 接下来，我们可以开始在`/WEB-INF/views`位置创建 JSP 文件:
 
-```
+```java
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <html>
     <head>
@@ -60,7 +60,7 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
 
 如果我们将文件添加到一个`Spring Boot`应用程序中，那么我们可以在一个`application.properties`文件中定义以下属性，而不是在`ApplicationConfiguration`类中:
 
-```
+```java
 spring.mvc.view.prefix: /WEB-INF/views/
 spring.mvc.view.suffix: .jsp
 ```
@@ -75,7 +75,7 @@ spring.mvc.view.suffix: .jsp
 
 为了将`Thymeleaf`与 Spring 集成，我们需要添加 [`thymeleaf`](https://web.archive.org/web/20220909001904/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22thymeleaf%22%20AND%20g%3A%22org.thymeleaf%22) 和 [`thymeleaf-spring4`](https://web.archive.org/web/20220909001904/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22thymeleaf-spring4%22%20AND%20g%3A%22org.thymeleaf%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.thymeleaf</groupId>
     <artifactId>thymeleaf</artifactId>
@@ -96,7 +96,7 @@ spring.mvc.view.suffix: .jsp
 
 `SpringResourceTemplateResolver`集成了 Spring 的资源解析机制:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 public class ThymeleafConfiguration {
@@ -122,7 +122,7 @@ public class ThymeleafConfiguration {
 
 此外，我们需要一个类型为`ThymeleafViewResolver`的`ViewResolver` bean:
 
-```
+```java
 @Bean
 public ThymeleafViewResolver thymeleafViewResolver() {
     ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
@@ -135,7 +135,7 @@ public ThymeleafViewResolver thymeleafViewResolver() {
 
 现在我们可以在`WEB-INF/views`位置添加一个 HTML 文件:
 
-```
+```java
 <html>
     <head>
         <meta charset="ISO-8859-1" />
@@ -162,7 +162,7 @@ public ThymeleafViewResolver thymeleafViewResolver() {
 
 `Spring Boot`将通过添加 [`spring-boot-starter-thymeleaf`](https://web.archive.org/web/20220909001904/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-thymeleaf%22) 依赖关系为`Thymeleaf`提供自动配置:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -182,7 +182,7 @@ public ThymeleafViewResolver thymeleafViewResolver() {
 
 要开始在我们的项目中使用模板，我们需要 [`freemarker`](https://web.archive.org/web/20220909001904/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22freemarker%22%20AND%20g%3A%22org.freemarker%22) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.freemarker</groupId>
     <artifactId>freemarker</artifactId>
@@ -192,7 +192,7 @@ public ThymeleafViewResolver thymeleafViewResolver() {
 
 对于 Spring 集成，我们还需要 [`spring-context-support`](https://web.archive.org/web/20220909001904/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-context-support%22) 的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context-support</artifactId>
@@ -204,7 +204,7 @@ public ThymeleafViewResolver thymeleafViewResolver() {
 
 将`FreeMarker`与 Spring MVC 集成需要定义一个`FreemarkerConfigurer` bean 来指定模板文件的位置:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 public class FreemarkerConfiguration {
@@ -220,7 +220,7 @@ public class FreemarkerConfiguration {
 
 接下来，我们需要定义一个合适的类型为`FreeMarkerViewResolver`的`ViewResolver` bean:
 
-```
+```java
 @Bean 
 public FreeMarkerViewResolver freemarkerViewResolver() { 
     FreeMarkerViewResolver resolver = new FreeMarkerViewResolver(); 
@@ -235,7 +235,7 @@ public FreeMarkerViewResolver freemarkerViewResolver() {
 
 我们可以在`WEB-INF/views`位置使用`FreeMarker`创建一个 HTML 模板:
 
-```
+```java
 <#import "/spring.ftl" as spring/>
 <html>
     <head>
@@ -261,7 +261,7 @@ public FreeMarkerViewResolver freemarkerViewResolver() {
 
 在`Spring Boot`应用中，我们可以通过使用 [`spring-boot-starter-freemarker`](https://web.archive.org/web/20220909001904/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-freemarker%22) 依赖关系来简化所需的配置:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-freemarker</artifactId>
@@ -279,7 +279,7 @@ Spring MVC 视图也可以使用 [Groovy 标记模板引擎](https://web.archive
 
 需要将 [`groovy-templates`](https://web.archive.org/web/20220909001904/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22groovy-templates%22) 依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.codehaus.groovy</groupId>
     <artifactId>groovy-templates</artifactId>
@@ -291,7 +291,7 @@ Spring MVC 视图也可以使用 [Groovy 标记模板引擎](https://web.archive
 
 `Markup Template Engine`与 Spring MVC 的集成需要定义一个`GroovyMarkupConfigurer` bean 和一个`GroovyMarkupViewResolver`类型的`ViewResolver`:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 public class GroovyConfiguration {
@@ -318,7 +318,7 @@ public class GroovyConfiguration {
 
 让我们为“用户注册”表单创建一个 Groovy 模板，它包括数据绑定:
 
-```
+```java
 yieldUnescaped '<!DOCTYPE html>'                                                    
 html(lang:'en') {                                                                   
     head {                                                                          
@@ -344,7 +344,7 @@ html(lang:'en') {
 
 `Spring Boot`包含对`Groovy Template Engine`的自动配置，通过包含`[spring-boot-starter-groovy-templates](https://web.archive.org/web/20220909001904/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-groovy-templates%22)`依赖关系来添加:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-groovy-templates</artifactId>
@@ -362,7 +362,7 @@ html(lang:'en') {
 
 对于 Spring 集成，我们需要 [spring-jade4j](https://web.archive.org/web/20220909001904/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-jade4j%22) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>de.neuland-bfi</groupId>
     <artifactId>spring-jade4j</artifactId>
@@ -374,7 +374,7 @@ html(lang:'en') {
 
 要将`Jade4j`用于 Spring，我们必须定义一个配置模板位置的`SpringTemplateLoader` bean，以及一个`JadeConfiguration` bean:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 public class JadeTemplateConfiguration {
@@ -401,7 +401,7 @@ public class JadeTemplateConfiguration {
 
 接下来，我们需要普通的`ViewResolver` bean，在本例中是类型`JadeViewResolver`:
 
-```
+```java
 @Bean
 public ViewResolver viewResolver() {
     JadeViewResolver viewResolver = new JadeViewResolver();
@@ -414,7 +414,7 @@ public ViewResolver viewResolver() {
 
 模板的特点是易于使用的区分空白的语法:
 
-```
+```java
 doctype html
 html
   head

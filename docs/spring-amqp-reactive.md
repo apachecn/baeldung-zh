@@ -21,7 +21,7 @@
 
 以下命令将启动独立的 RabbitMQ 服务器:
 
-```
+```java
 $ docker run -d --name rabbitmq -p 5672:5672 rabbitmq:3 
 ```
 
@@ -29,7 +29,7 @@ $ docker run -d --name rabbitmq -p 5672:5672 rabbitmq:3
 
 我们可以用`docker logs`命令检查服务器日志，它应该会产生如下输出:
 
-```
+```java
 $ docker logs rabbitmq
 2018-06-09 13:42:29.718 [info] <0.33.0>
   Application lager started on node [[email protected]](/web/20221126222632/https://www.baeldung.com/cdn-cgi/l/email-protection)
@@ -61,7 +61,7 @@ $ docker logs rabbitmq
 
 例如，我们可以使用以下命令获取服务器状态信息:
 
-```
+```java
 $ docker exec rabbitmq rabbitmqctl status
 Status of node [[email protected]](/web/20221126222632/https://www.baeldung.com/cdn-cgi/l/email-protection) ...
 [{pid,299},
@@ -85,7 +85,7 @@ Status of node [[email protected]](/web/20221126222632/https://www.baeldung.com
 
 我们需要添加到`pom.xml`项目文件中的主要依赖项是:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-amqp</artifactId>
@@ -114,7 +114,7 @@ Status of node [[email protected]](/web/20221126222632/https://www.baeldung.com
 
 下面的 *@PostConstruct* 方法将负责该初始设置:
 
-```
+```java
 @Autowired
 private AmqpAdmin amqpAdmin;
 
@@ -155,7 +155,7 @@ public void setupQueueDestinations() {
 
 这是一个反应端点，所以我们使用一个`Mono`来返回一个简单的确认:
 
-```
+```java
 @SpringBootApplication
 @EnableConfigurationProperties(DestinationsConfig.class)
 @RestController
@@ -197,7 +197,7 @@ public class SpringWebfluxAmqpApplication {
 
 在我们的例子中，每当我们调用工厂方法的`createMessageListenerContainer` 方法时，它都会返回一个新的`SimpleMessageContainerListener`:
 
-```
+```java
 @Component
 public class MessageListenerContainerFactory {
 
@@ -220,7 +220,7 @@ public class MessageListenerContainerFactory {
 
 该端点返回一个`Flux `事件，其中每个事件对应一个接收到的消息:
 
-```
+```java
 @Autowired
 private MessageListenerContainerFactory messageListenerContainerFactory;
 
@@ -275,7 +275,7 @@ public Flux<?> receiveMessagesFromQueue(@PathVariable String name) {
 
 我们需要在我们的`application.yml`上定义 RabbitMQ 的服务器连接细节和至少一个目的地，应该是这样的:
 
-```
+```java
 spring:
   rabbitmq:
     host: localhost
@@ -298,7 +298,7 @@ destinations:
 
 下面的清单显示了如何将消息发送到我们的目的地以及服务器的预期响应:
 
-```
+```java
 $ curl -v -d "Test message" http://localhost:8080/queue/NYSE
 * timeout on name lookup is not supported
 *   Trying 127.0.0.1...
@@ -319,7 +319,7 @@ $ curl -v -d "Test message" http://localhost:8080/queue/NYSE
 
 执行此命令后，我们可以通过发出以下命令来验证 RabbitMQ 是否收到了消息，以及消息是否已准备好供使用:
 
-```
+```java
 $ docker exec rabbitmq rabbitmqctl list_queues
 Timeout: 60.0 seconds ...
 Listing queues for vhost / ...
@@ -328,7 +328,7 @@ NYSE    1
 
 现在，我们可以使用 curl 通过以下命令读取消息:
 
-```
+```java
 $ curl -v http://localhost:8080/queue/NYSE
 * timeout on name lookup is not supported
 *   Trying 127.0.0.1...
@@ -355,7 +355,7 @@ data:No news is good news...
 
 $ dock exec rabbitq rabbitqctl list _ queues
 
-```
+```java
 Timeout: 60.0 seconds ...
 Listing queues for vhost / ...
 NYSE    0
@@ -377,7 +377,7 @@ RabbitMQ 还支持头交换，这允许更复杂的消息过滤，但是它的�
 
 唯一的区别是我们只创建了`Exchanges`，而没有`Queues`——这些将按需创建并在以后绑定到`Exchange`，因为我们希望每个客户端都有一个专属的`Queue`:
 
-```
+```java
 @PostConstruct
 public void setupTopicDestinations(
     destinationsConfig.getTopics()
@@ -397,7 +397,7 @@ public void setupTopicDestinations(
 
 和前面的场景一样，我们使用一个`@PostMapping`在发送消息后返回一个带有状态的`Mono`:
 
-```
+```java
 @PostMapping(value = "/topic/{name}")
 public Mono<ResponseEntity<?>> sendMessageToTopic(
   @PathVariable String name, @RequestBody String payload) {
@@ -424,7 +424,7 @@ public Mono<ResponseEntity<?>> sendMessageToTopic(
 
 这些消息包括收到的消息和每 5 秒钟生成的假消息:
 
-```
+```java
 @GetMapping(
   value = "/topic/{name}",
   produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -462,7 +462,7 @@ public Flux<?> receiveMessagesFromTopic(@PathVariable String name) {
 
 我们通过调用`createTopicQueue()`方法来实现这一点，该方法使用来自`DestinationInfo`实例的信息来创建一个独占的、非持久的队列，然后我们使用配置的路由键将该队列绑定到`Exchange`:
 
-```
+```java
 private Queue createTopicQueue(DestinationInfo destination) {
 
     Exchange ex = ExchangeBuilder
@@ -491,7 +491,7 @@ private Queue createTopicQueue(DestinationInfo destination) {
 
 为了测试发布订阅场景，我们必须首先在 out `application.yml`中定义一个主题目的地，如下所示:
 
-```
+```java
 destinations:
 ## ... queue destinations omitted      
   topics:
@@ -504,7 +504,7 @@ destinations:
 
 启动服务器后，我们可以使用`rabbitmqctl`命令验证是否已经创建了交换:
 
-```
+```java
 $ docker exec docker_rabbitmq_1 rabbitmqctl list_exchanges
 Listing exchanges for vhost / ...
 amq.topic       topic
@@ -519,7 +519,7 @@ alerts  topic
 
 现在，如果我们发出`list_bindings`命令，我们可以看到没有与“警报”交换相关的队列:
 
-```
+```java
 $ docker exec rabbitmq rabbitmqctl list_bindings
 Listing bindings for vhost /...
         exchange        NYSE    queue   NYSE    []
@@ -528,7 +528,7 @@ nyse    exchange        NYSE    queue   NYSE    []
 
 让我们启动几个订阅我们的目的地的订阅者，打开两个命令 shellss 并在每个 shell 上发出以下命令:
 
-```
+```java
 $ curl -v http://localhost:8080/topic/weather
 * timeout on name lookup is not supported
 *   Trying 127.0.0.1...
@@ -549,7 +549,7 @@ data:No news is good news...
 
 最后，我们再次使用 curl 向我们的订户发送一些警报:
 
-```
+```java
 $ curl -v -d "Hurricane approaching!" http://localhost:8080/topic/weather
 * timeout on name lookup is not supported
 *   Trying 127.0.0.1...
@@ -572,7 +572,7 @@ $ curl -v -d "Hurricane approaching!" http://localhost:8080/topic/weather
 
 如果我们现在检查可用的绑定，我们可以看到每个订户都有一个队列:
 
-```
+```java
 $ docker exec rabbitmq rabbitmqctl list_bindings
 Listing bindings for vhost /...
         exchange        IBOV    queue   IBOV    []

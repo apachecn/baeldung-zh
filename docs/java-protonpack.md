@@ -12,7 +12,7 @@
 
 为了使用 Protonpack 库，我们需要在我们的`pom.xml`文件中添加一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.codepoetics</groupId>
     <artifactId>protonpack</artifactId>
@@ -32,7 +32,7 @@
 
 `takeWhile()`从源流**中取值，只要它们满足提供的条件**:
 
-```
+```java
 Stream<Integer> streamOfInt = Stream
   .iterate(1, i -> i + 1);
 List<Integer> result = StreamUtils
@@ -43,7 +43,7 @@ assertThat(result).contains(1, 2, 3, 4);
 
 相反，`takeUntil()`取值**，直到某个值满足提供的条件**，然后停止:
 
-```
+```java
 Stream<Integer> streamOfInt = Stream
   .iterate(1, i -> i + 1);
 List<Integer> result = StreamUtils
@@ -60,7 +60,7 @@ assertThat(result).containsExactly(1, 2, 3, 4);
 
 这样做，直到其中一个流的值用完:
 
-```
+```java
 String[] clubs = {"Juventus", "Barcelona", "Liverpool", "PSG"};
 String[] players = {"Ronaldo", "Messi", "Salah"};
 Set<String> zippedFrom2Sources = StreamUtils
@@ -73,7 +73,7 @@ assertThat(zippedFrom2Sources)
 
 类似地，一个重载的`zip()`接受三个源流:
 
-```
+```java
 String[] leagues = { "Serie A", "La Liga", "Premier League" };
 Set<String> zippedFrom3Sources = StreamUtils
   .zip(stream(clubs), stream(players), stream(leagues), 
@@ -90,7 +90,7 @@ assertThat(zippedFrom3Sources).contains(
 
 `zipWithIndex() ` **取值并压缩每个值及其索引，以创建一个索引值流:**
 
-```
+```java
 Stream<String> streamOfClubs = Stream
   .of("Juventus", "Barcelona", "Liverpool");
 Set<Indexed<String>> zipsWithIndex = StreamUtils
@@ -109,7 +109,7 @@ assertThat(zipsWithIndex)
 
 然后，将该值传递给组合器，并将得到的组合值反馈给组合器，以创建下一个值:
 
-```
+```java
 Stream<String> streamOfClubs = Stream
   .of("Juventus", "Barcelona", "Liverpool", "PSG");
 Stream<String> streamOfPlayers = Stream
@@ -134,7 +134,7 @@ assertThat(merged)
 
 `mergeToList()`接受多个流作为输入。它**将来自每个流的相同索引的值组合成一个`List`** :
 
-```
+```java
 Stream<String> streamOfClubs = Stream
   .of("Juventus", "Barcelona", "PSG");
 Stream<String> streamOfPlayers = Stream
@@ -163,7 +163,7 @@ assertThat(mergedListOfList.get(2))
 
 下一个例子使用`interleave() `通过`round-robin`策略创建交替值:
 
-```
+```java
 Stream<String> streamOfClubs = Stream
   .of("Juventus", "Barcelona", "Liverpool");
 Stream<String> streamOfPlayers = Stream
@@ -186,7 +186,7 @@ assertThat(interleavedList)
 
 `skipUntil()`跳过值**，直到一个值满足条件**:
 
-```
+```java
 Integer[] numbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 List skippedUntilGreaterThan5 = StreamUtils
   .skipUntil(stream(numbers), i -> i > 5)
@@ -197,7 +197,7 @@ assertThat(skippedUntilGreaterThan5).containsExactly(6, 7, 8, 9, 10);
 
 相反，`skipWhile()` **在值满足条件**时跳过值:
 
-```
+```java
 Integer[] numbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 List skippedWhileLessThanEquals5 = StreamUtils
   .skipWhile(stream(numbers), i -> i <= 5 || )
@@ -208,7 +208,7 @@ assertThat(skippedWhileLessThanEquals5).containsExactly(6, 7, 8, 9, 10);
 
 关于`skipWhile() `很重要的一点是，它会在找到第一个不满足条件的值后继续流式传输:
 
-```
+```java
 List skippedWhileGreaterThan5 = StreamUtils
   .skipWhile(stream(numbers), i -> i > 5)
   .collect(Collectors.toList());
@@ -221,7 +221,7 @@ assertThat(skippedWhileGreaterThan5).containsExactly(1, 2, 3, 4, 5, 6, 7, 8, 9, 
 
 `unfold()`通过将自定义生成器应用于种子值，然后应用于每个生成的值，生成一个潜在的无限流——可以通过返回`Optional.empty():`来终止该流
 
-```
+```java
 Stream<Integer> unfolded = StreamUtils
   .unfold(2, i -> (i < 100) 
     ? Optional.of(i * i) : Optional.empty());
@@ -236,7 +236,7 @@ assertThat(unfolded.collect(Collectors.toList()))
 
 `List`长度等于`window` `size, `，而 s `kip value`确定子集相对于前一个子集的开始位置:
 
-```
+```java
 Integer[] numbers = { 1, 2, 3, 4, 5, 6, 7, 8 };
 
 List<List> windowedWithSkip1 = StreamUtils
@@ -248,7 +248,7 @@ assertThat(windowedWithSkip1)
 
 此外，最后一个窗口保证具有所需的大小，正如我们在下面的示例中看到的:
 
-```
+```java
 List<List> windowedWithSkip2 = StreamUtils.windowed(stream(numbers), 3, 2).collect(Collectors.toList());
 assertThat(windowedWithSkip2).containsExactly(asList(1, 2, 3), asList(3, 4, 5), asList(5, 6, 7)); 
 ```
@@ -259,7 +259,7 @@ assertThat(windowedWithSkip2).containsExactly(asList(1, 2, 3), asList(3, 4, 5), 
 
 第一个`aggregate() ` **根据给定的谓词**将相同值的元素组合在一起:
 
-```
+```java
 Integer[] numbers = { 1, 2, 2, 3, 4, 4, 4, 5 };
 List<List> aggregated = StreamUtils
   .aggregate(Arrays.stream(numbers), (int1, int2) -> int1.compareTo(int2) == 0)
@@ -271,7 +271,7 @@ assertThat(aggregated).containsExactly(asList(1), asList(2, 2), asList(3), asLis
 
 另一方面，第二个`aggregate()`简单地用于**将来自源流的元素组合成期望大小的组**:
 
-```
+```java
 List<List> aggregatedFixSize = StreamUtils
   .aggregate(stream(numbers), 5)
   .collect(Collectors.toList());
@@ -284,7 +284,7 @@ assertThat(aggregatedFixSize).containsExactly(asList(1, 2, 2, 3, 4), asList(4, 4
 
 以下示例解决了将连续的整数值分组到一个组中的要求，其中每个组中的值之和不得大于 5:
 
-```
+```java
 Integer[] numbers = { 1, 1, 2, 3, 4, 4, 5 };
 Stream<List<Integer>> aggregated = StreamUtils
   .aggregateOnListCondition(stream(numbers), 
@@ -297,7 +297,7 @@ assertThat(aggregated)
 
 `Stream `的实例不可重用。因此， **`Streamable`通过包装和公开与`Stream` :** 相同的方法来提供可重用的流
 
-```
+```java
 Streamable<String> s = Streamable.of("a", "b", "c", "d");
 List<String> collected1 = s.collect(Collectors.toList());
 List<String> collected2 = s.collect(Collectors.toList());
@@ -313,7 +313,7 @@ assertThat(collected2).hasSize(4);
 
 `maxBy()` **使用提供的投影逻辑**找到流中的最大值:
 
-```
+```java
 Stream<String> clubs = Stream.of("Juventus", "Barcelona", "PSG");
 Optional<String> longestName = clubs.collect(CollectorUtils.maxBy(String::length));
 assertThat(longestName).contains("Barcelona");
@@ -325,7 +325,7 @@ assertThat(longestName).contains("Barcelona");
 
 `unique()`收集器做一件非常简单的事情:**如果一个给定的流正好有 1 个元素，它返回唯一的值:**
 
-```
+```java
 Stream<Integer> singleElement = Stream.of(1);
 Optional<Integer> unique = singleElement.collect(CollectorUtils.unique());
 assertThat(unique).contains(1); 
@@ -333,7 +333,7 @@ assertThat(unique).contains(1);
 
 否则，`unique()`将抛出一个异常:
 
-```
+```java
 Stream multipleElement = Stream.of(1, 2, 3);
 assertThatExceptionOfType(NonUniqueValueException.class).isThrownBy(() -> {
     multipleElement.collect(CollectorUtils.unique());

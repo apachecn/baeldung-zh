@@ -12,7 +12,7 @@
 
 从 Java 1.1 开始， [`GregorianCalendar`](/web/20220627093726/https://www.baeldung.com/java-gregorian-calendar) 类允许我们检查一年是否是闰年:
 
-```
+```java
 public boolean isLeapYear(int year);
 ```
 
@@ -26,13 +26,13 @@ Java 8 引入了`java`。`time`用一个好得多的[日期时间 API](/web/2022
 
 `java`中的 [`Year`](https://web.archive.org/web/20220627093726/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/Year.html) 类。`time`包有一个`static`方法来检查给定的年份是否是闰年:
 
-```
+```java
 public static boolean isLeap(long year);
 ```
 
 它还有一个实例方法来做同样的事情:
 
-```
+```java
 public boolean isLeap();
 ```
 
@@ -42,7 +42,7 @@ public boolean isLeap();
 
 没有预定义的 API 方法来查找 Joda-Time 中的闰年。然而，我们可以使用它们的`[LocalDate](https://web.archive.org/web/20220627093726/https://www.joda.org/joda-time/apidocs/org/joda/time/LocalDate.html)`和`[Days](https://web.archive.org/web/20220627093726/https://www.joda.org/joda-time/apidocs/org/joda/time/Days.html)`类来检查闰年:
 
-```
+```java
 LocalDate localDate = new LocalDate(2020, 1, 31);
 int numberOfDays = Days.daysBetween(localDate, localDate.plusYears(1)).getDays();
 

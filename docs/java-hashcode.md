@@ -30,7 +30,7 @@ A comprehensive and very practical introduction to many useful usecases of Proje
 
 举例来说，这触发了线性搜索，这对于巨大的列表是非常无效的:
 
-```
+```java
 List<String> words = Arrays.asList("Welcome", "to", "Baeldung");
 if (words.contains("Baeldung")) {
     System.out.println("Baeldung is in the list");
@@ -63,7 +63,7 @@ Java 提供了许多数据结构来专门处理这个问题。比如几个 *Map*
 
 为了演示这一点，我们将定义一个示例 *User* 类，它覆盖了该方法的默认实现:
 
-```
+```java
 public class User {
 
     private long id;
@@ -102,7 +102,7 @@ public class User {
 
 让我们通过包含*用户*类的所有字段来改进当前的 *hashCode()* 实现，以便它可以为不相等的对象产生不同的结果:
 
-```
+```java
 @Override
 public int hashCode() {
     return (int) id * name.hashCode() * email.hashCode();
@@ -119,7 +119,7 @@ public int hashCode() {
 
 让我们来看一个“标准”实现，它使用两个素数来为计算出的散列码增加更多的唯一性:
 
-```
+```java
 @Override
 public int hashCode() {
     int hash = 7;
@@ -132,13 +132,13 @@ public int hashCode() {
 
 虽然我们需要理解 *hashCode()* 和 *equals()* 方法扮演的角色，但我们不必每次都从头实现它们。这是因为大多数 ide 可以生成定制的 *hashCode()* 和 *equals()* 实现。从 Java 7 开始，我们有了一个`Objects.hash()`实用方法来轻松散列:
 
-```
+```java
 Objects.hash(name, email)
 ```
 
 [IntelliJ IDEA](https://web.archive.org/web/20220926202041/https://www.jetbrains.com/idea/) 生成以下实现:
 
-```
+```java
 @Override
 public int hashCode() {
     int result = (int) (id ^ (id >>> 32));
@@ -150,7 +150,7 @@ public int hashCode() {
 
 而[日蚀](https://web.archive.org/web/20220926202041/https://www.eclipse.org/downloads/)产生了这个:
 
-```
+```java
 @Override
 public int hashCode() {
     final int prime = 31;
@@ -166,7 +166,7 @@ public int hashCode() {
 
 在这种情况下，我们需要将 [lombok-maven](https://web.archive.org/web/20220926202041/https://search.maven.org/classic/#search%7Cga%7C1%7Clombok) 依赖项添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok-maven</artifactId>
@@ -177,7 +177,7 @@ public int hashCode() {
 
 现在用 *@EqualsAndHashCode* 来注释*用户*类就足够了:
 
-```
+```java
 @EqualsAndHashCode 
 public class User {
     // fields and methods here
@@ -186,7 +186,7 @@ public class User {
 
 类似地，如果我们希望 [Apache Commons Lang 的 *HashCodeBuilder* 类](https://web.archive.org/web/20220926202041/https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/builder/HashCodeBuilder.html)为我们生成一个 *hashCode()* 实现，我们在 pom 文件中包含 [commons-lang](https://web.archive.org/web/20220926202041/https://search.maven.org/classic/#search%7Cga%7C1%7Capache-commons-lang) Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>commons-lang</groupId>
     <artifactId>commons-lang</artifactId>
@@ -196,7 +196,7 @@ public class User {
 
 而 *hashCode()* 可以这样实现:
 
-```
+```java
 public class User {
     public int hashCode() {
         return new HashCodeBuilder(17, 37).
@@ -212,7 +212,7 @@ public class User {
 
 请注意，所有这些实现都以某种形式使用了数字 31。这是因为 31 有一个很好的属性。它的乘法可以用比标准乘法更快的按位移位来代替:
 
-```
+```java
 31 * i == (i << 5) - i
 ```
 
@@ -238,7 +238,7 @@ Java 8 为`HashMap`实现带来了一个有趣的[增强。如果一个桶的大
 
 下面是示例应用程序的入口点:
 
-```
+```java
 public class Application {
 
     public static void main(String[] args) {
@@ -259,7 +259,7 @@ public class Application {
 
 这是 *hashCode()* 的实现:
 
-```
+```java
 public class User {
 
     // ...
@@ -277,7 +277,7 @@ public class User {
 
 这里需要注意的是，每次对象被存储在哈希映射中并用 *containsKey()* 方法检查时， *hashCode()* 被调用，计算出的哈希代码被输出到控制台:
 
-```
+```java
 [main] INFO com.baeldung.entities.User - hashCode() called - Computed hash: 1255477819
 [main] INFO com.baeldung.entities.User - hashCode() called - Computed hash: -282948472
 [main] INFO com.baeldung.entities.User - hashCode() called - Computed hash: -1540702691

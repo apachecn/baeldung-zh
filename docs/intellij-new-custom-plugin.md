@@ -46,7 +46,7 @@ IntelliJ 的插件功能通常分为 4 类:
 
 第一个操作在新的浏览器窗口中打开“提出问题”页面:
 
-```
+```java
 public class AskQuestionAction extends AnAction {
    @Override
    public void actionPerformed(AnActionEvent e) {
@@ -67,7 +67,7 @@ public class AskQuestionAction extends AnAction {
 
 在这种情况下，我们使用 PSI 来确定文件的编程语言:
 
-```
+```java
 PsiFile file = e.getData(CommonDataKeys.PSI_FILE);
 Language lang = e.getData(CommonDataKeys.PSI_FILE).getLanguage();
 String languageTag = "+[" + lang.getDisplayName().toLowerCase() + "]";
@@ -77,7 +77,7 @@ String languageTag = "+[" + lang.getDisplayName().toLowerCase() + "]";
 
 为了获取要搜索的文本，我们将使用`Editor ` API 来检索屏幕上高亮显示的文本:
 
-```
+```java
 final Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
 CaretModel caretModel = editor.getCaretModel();
 String selectedText = caretModel.getCurrentCaret().getSelectedText();
@@ -87,7 +87,7 @@ String selectedText = caretModel.getCurrentCaret().getSelectedText();
 
 现在，我们可以将所有这些放在一个`actionPerformed`声明中:
 
-```
+```java
 @Override
 public void actionPerformed(AnActionEvent e) {
 
@@ -108,7 +108,7 @@ public void actionPerformed(AnActionEvent e) {
 
 在这种情况下，当没有选定的文本时，我们禁用搜索操作:
 
-```
+```java
 @Override
 public void update(AnActionEvent e) {
      Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
@@ -125,7 +125,7 @@ public void update(AnActionEvent e) {
 
 默认情况下，该文件将有一个空的`<actions>`元素，我们将在这里添加我们的操作:
 
-```
+```java
 <actions>
     <action 
       id="StackOverflow.AskQuestion.ToolsMenu"
@@ -155,7 +155,7 @@ public void update(AnActionEvent e) {
 
 注册动作的第二种方式是以编程方式使用`ActionManager`类:
 
-```
+```java
 ActionManager.getInstance().registerAction("StackOverflow.SearchAction", new SearchAction());
 ```
 

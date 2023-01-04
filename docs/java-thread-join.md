@@ -21,7 +21,7 @@ join 方法在`[Thread](https://web.archive.org/web/20220524034555/https://docs.
 
 我们可以在下面的代码中看到这种行为:
 
-```
+```java
 class SampleThread extends Thread {
     public int processingCount = 0;
 
@@ -59,7 +59,7 @@ public void givenStartedThread_whenJoinCalled_waitsTillCompletion()
 
 在执行代码时，我们应该会看到类似以下的结果:
 
-```
+```java
 INFO: Thread Created
 INFO: Invoking join
 INFO: Thread Thread-1 started
@@ -71,7 +71,7 @@ INFO: Returned from join
 
 最后，**如果被引用的线程已经终止或者还没有启动，对`join()`方法的调用会立即返回**。
 
-```
+```java
 Thread t1 = new SampleThread(0);
 t1.join();  //returns immediately
 ```
@@ -90,7 +90,7 @@ t1.join();  //returns immediately
 
 我们可以使用下面的定时`join()`:
 
-```
+```java
 @Test
 public void givenStartedThread_whenTimedJoinCalled_waitsUntilTimedout()
   throws InterruptedException {
@@ -117,7 +117,7 @@ public void givenStartedThread_whenTimedJoinCalled_waitsUntilTimedout()
 
 我们可以在下面看到一个错误同步代码的例子:
 
-```
+```java
 SampleThread t4 = new SampleThread(10);
 t4.start();
 // not guaranteed to stop even if t4 finishes.

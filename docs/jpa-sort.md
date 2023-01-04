@@ -20,14 +20,14 @@ Take a look at mapping JDBC types to Java classes in JPA using attribute convert
 
 使用 JQL 进行排序是在`Order By`子句的帮助下完成的:
 
-```
+```java
 String jql ="Select f from Foo as f order by f.id";
 Query query = entityManager.createQuery (jql);
 ```
 
 基于这个查询，JPA 生成下面的 straighforward **SQL 语句**:
 
-```
+```java
 Hibernate: select foo0_.id as id1_4_, foo0_.name as name2_4_ 
     from Foo foo0_ order by foo0_.id
 ```
@@ -38,14 +38,14 @@ Hibernate: select foo0_.id as id1_4_, foo0_.name as name2_4_
 
 默认情况下**排序顺序是升序**，但是可以在 JQL 字符串中显式设置。正如在纯 SQL 中一样，排序选项是 `asc`和`desc`:
 
-```
+```java
 String jql = "Select f from Foo as f order by f.id desc";
 Query sortQuery = entityManager.createQuery(jql);
 ```
 
 **生成的 SQL 查询**将包含订单方向:
 
-```
+```java
 Hibernate: select foo0_.id as id1_4_, foo0_.name as name2_4_ 
     from Foo foo0_ order by foo0_.id desc
 ```
@@ -54,14 +54,14 @@ Hibernate: select foo0_.id as id1_4_, foo0_.name as name2_4_
 
 为了按多个属性排序，这些属性被添加到 JQL 字符串的 o `rder by`子句中:
 
-```
+```java
 String jql ="Select f from Foo as f order by f.name asc, f.id desc";
 Query sortQuery = entityManager.createQuery(jql);
 ```
 
 这两种排序条件都会出现在**生成的 SQL 查询**语句中:
 
-```
+```java
 Hibernate: select foo0_.id as id1_4_, foo0_.name as name2_4_ 
     from Foo foo0_ order by foo0_.name asc, foo0_.id desc
 ```
@@ -72,14 +72,14 @@ Hibernate: select foo0_.id as id1_4_, foo0_.name as name2_4_
 
 下面是一个简单的例子——按`Foo`的`name`降序排序，并将`Null`放在最后:
 
-```
+```java
 Query sortQuery = entityManager.createQuery
     ("Select f from Foo as f order by f.name desc NULLS LAST");
 ```
 
 生成的 SQL 查询包括`is null the 1 else 0 end clause`(第 3 行):
 
-```
+```java
 Hibernate: select foo0_.id as id1_4_, foo0_.BAR_ID as BAR_ID2_4_, 
     foo0_.bar_Id as bar_Id2_4_, foo0_.name as name3_4_,from Foo foo0_ order 
     by case when foo0_.name is null then 1 else 0 end, foo0_.name desc
@@ -93,7 +93,7 @@ Hibernate: select foo0_.id as id1_4_, foo0_.BAR_ID as BAR_ID2_4_,
 
 1.  对集合排序:在`Bar`实体:
 
-    ```
+    ```java
     @OrderBy("name ASC")
     List <Foo> fooList;
     ```
@@ -101,7 +101,7 @@ Hibernate: select foo0_.id as id1_4_, foo0_.BAR_ID as BAR_ID2_4_,
     中的`Foo`集合之前添加一个`OrderBy`注释
 2.  对包含集合的实体进行排序:
 
-    ```
+    ```java
     String jql = "Select b from Bar as b order by b.id";
     Query barQuery = entityManager.createQuery(jql);
     List<Bar> barList = barQuery.getResultList();
@@ -111,7 +111,7 @@ Hibernate: select foo0_.id as id1_4_, foo0_.BAR_ID as BAR_ID2_4_,
 
 让我们看看发送到 RDMS 的 SQL 查询:
 
-```
+```java
 Hibernate: select bar0_.id as id1_0_, bar0_.name as name2_0_ from Bar bar0_ order by bar0_.id
 
 Hibernate: 
@@ -135,7 +135,7 @@ where foolist0_.BAR_ID=? order by foolist0_.name asc
 
 这里有一个简单的例子——按照`name`对`Foos`进行排序:
 
-```
+```java
 CriteriaQuery<Foo> criteriaQuery = criteriaBuilder.createQuery(Foo.class);
 Root<Foo> from = criteriaQuery.from(Foo.class);
 CriteriaQuery<Foo> select = criteriaQuery.select(from);
@@ -148,7 +148,7 @@ t 方法的参数是区分大小写的，因为它需要匹配属性的名称。
 
 当执行上述代码时，JPA 生成如下所示的 SQL 查询。JPA Criteria 对象生成一个带有显式 `asc`子句的 SQL 语句:
 
-```
+```java
 Hibernate: select foo0_.id as id1_4_, foo0_.name as name2_4_
     from Foo foo0_ order by foo0_.name asc
 ```
@@ -159,7 +159,7 @@ Hibernate: select foo0_.id as id1_4_, foo0_.name as name2_4_
 
 下面是一个简单的例子——分别按照`asc`和`desc`的顺序，按`name`和`id`排序:
 
-```
+```java
 CriteriaQuery<Foo> criteriaQuery = criteriaBuilder.createQuery(Foo.class);
 Root<Foo> from = criteriaQuery.from(Foo.class); 
 CriteriaQuery<Foo> select = criteriaQuery.select(from); 
@@ -169,7 +169,7 @@ criteriaQuery.orderBy(criteriaBuilder.asc(from.get("name")),
 
 相应的 SQL 查询如下所示:
 
-```
+```java
 Hibernate: select foo0_.id as id1_4_, foo0_.name as name2_4_ 
     from Foo foo0_ order by foo0_.name asc, foo0_.id desc
 ```

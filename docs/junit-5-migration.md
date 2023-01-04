@@ -31,7 +31,7 @@ JUnit 5 对其注释进行了重要的修改。**最重要的一点是，我们�
 
 JUnit 4 中的`expected`参数:
 
-```
+```java
 @Test(expected = Exception.class)
 public void shouldRaiseAnException() throws Exception {
     // ...
@@ -40,7 +40,7 @@ public void shouldRaiseAnException() throws Exception {
 
 现在我们可以使用方法`assertThrows`:
 
-```
+```java
 public void shouldRaiseAnException() throws Exception {
     Assertions.assertThrows(Exception.class, () -> {
         //...
@@ -50,7 +50,7 @@ public void shouldRaiseAnException() throws Exception {
 
 JUnit 4 中的`timeout` 属性:
 
-```
+```java
 @Test(timeout = 1)
 public void shouldFailBecauseTimeout() throws InterruptedException {
     Thread.sleep(10);
@@ -59,7 +59,7 @@ public void shouldFailBecauseTimeout() throws InterruptedException {
 
 现在 JUnit 5 中的`assertTimeout`方法:
 
-```
+```java
 @Test
 public void shouldFailBecauseTimeout() throws InterruptedException {
     Assertions.assertTimeout(Duration.ofMillis(1), () -> Thread.sleep(10));
@@ -78,7 +78,7 @@ public void shouldFailBecauseTimeout() throws InterruptedException {
 
 我们还可以在 JUnit 5 的 lambda 中编写断言消息，允许惰性评估跳过复杂的消息构造，直到需要为止:
 
-```
+```java
 @Test
 public void shouldFailBecauseTheNumbersAreNotEqual_lazyEvaluation() {
     Assertions.assertTrue(
@@ -89,7 +89,7 @@ public void shouldFailBecauseTheNumbersAreNotEqual_lazyEvaluation() {
 
 此外，我们可以在 JUnit 5 中对断言进行分组:
 
-```
+```java
 @Test
 public void shouldAssertAllTheGroup() {
     List<Integer> list = Arrays.asList(1, 2, 4);
@@ -104,7 +104,7 @@ public void shouldAssertAllTheGroup() {
 
 新的`Assumptions`类现在在`org.junit.jupiter.api.Assumptions`中。JUnit 5 完全支持 JUnit 4 中现有的假设方法，还添加了一组新方法，允许我们仅在特定场景下运行一些断言:
 
-```
+```java
 @Test
 public void whenEnvironmentIsWeb_thenUrlsShouldStartWithHttp() {
     assumingThat("WEB".equals(System.getenv("ENV")),
@@ -118,7 +118,7 @@ public void whenEnvironmentIsWeb_thenUrlsShouldStartWithHttp() {
 
 在 JUnit 4 中，我们可以使用`@Category`注释对测试进行分组。在 JUnit 5 中， `@Category`注释被`@Tag`注释所取代:
 
-```
+```java
 @Tag("annotations")
 @Tag("junit5")
 public class AnnotationTestExampleTest {
@@ -128,7 +128,7 @@ public class AnnotationTestExampleTest {
 
 我们可以使用`maven-surefire-plugin`来包含/排除特定的标签:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -151,7 +151,7 @@ public class AnnotationTestExampleTest {
 
 例如，要使用 JUnit 4 中的 Spring 特性:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
   {"/app-config.xml", "/test-data-access-config.xml"})
@@ -162,7 +162,7 @@ public class SpringExtensionTest {
 
 在 JUnit 5 中，它是一个简单的扩展:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(
   { "/app-config.xml", "/test-data-access-config.xml" })
@@ -179,7 +179,7 @@ public class SpringExtensionTest {
 
 例如，假设我们在 JUnit 4 中有一个自定义规则，用于在测试前后编写日志跟踪:
 
-```
+```java
 public class TraceUnitTestRule implements TestRule {
 
     @Override
@@ -197,14 +197,14 @@ public class TraceUnitTestRule implements TestRule {
 
 我们在一个测试套件中实现了它:
 
-```
+```java
 @Rule
 public TraceUnitTestRule traceRuleTests = new TraceUnitTestRule(); 
 ```
 
 在 JUnit 5 中，我们可以用更直观的方式编写相同的内容:
 
-```
+```java
 public class TraceUnitExtension implements AfterEachCallback, BeforeEachCallback {
 
     @Override
@@ -221,7 +221,7 @@ public class TraceUnitExtension implements AfterEachCallback, BeforeEachCallback
 
 使用 JUnit 5 的`AfterEachCallback` 和 `BeforeEachCallback`接口，在`org.junit.jupiter.api.extension` 包中可用，我们可以很容易地在测试套件中实现这个规则:
 
-```
+```java
 @ExtendWith(TraceUnitExtension.class)
 public class RuleExampleTest {
 
@@ -238,7 +238,7 @@ JUnit Vintage 通过在 JUnit 5 环境中运行 JUnit 3 或 JUnit 4 测试来帮
 
 我们可以通过导入 JUnit Vintage 引擎来使用它:
 
-```
+```java
 <dependency>
     <groupId>org.junit.vintage</groupId>
     <artifactId>junit-vintage-engine</artifactId>

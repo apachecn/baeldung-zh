@@ -32,14 +32,14 @@ Learn about Java marker interfaces and how they compare to typical interfaces an
 
 创建定制注释的第一步是使用`@interface`关键字声明它
 
-```
+```java
 public @interface JsonSerializable {
 }
 ```
 
 下一步是**添加元注释来指定自定义注释的范围和目标**:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.Type)
 public @interface JsonSerializable {
@@ -52,7 +52,7 @@ public @interface JsonSerializable {
 
 同样，我们创建第二个注释来标记将要包含在生成的 JSON 中的字段:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface JsonElement {
@@ -68,7 +68,7 @@ public @interface JsonElement {
 
 让我们想象一下，在将一个对象序列化为 JSON 字符串之前，我们想要执行一些方法来初始化一个对象。因此，我们将创建一个注释来标记这个方法:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Init {
@@ -81,7 +81,7 @@ public @interface Init {
 
 现在让我们看看如何使用我们的自定义注释。例如，假设我们有一个类型为`Person`的对象，我们希望将其序列化为一个 JSON 字符串。此类型有一个方法，它将名和姓的第一个字母大写。我们希望在序列化对象之前调用此方法:
 
-```
+```java
 @JsonSerializable
 public class Person {
 
@@ -120,7 +120,7 @@ public class Person {
 
 第一步将检查我们的对象是否是`null`，以及它的类型是否有`@JsonSerializable`注释:
 
-```
+```java
 private void checkIfSerializable(Object object) {
     if (Objects.isNull(object)) {
         throw new JsonSerializationException("The object to serialize is null");
@@ -137,7 +137,7 @@ private void checkIfSerializable(Object object) {
 
 然后我们寻找任何带有@Init 注释的方法，并执行它来初始化对象的字段:
 
-```
+```java
 private void initializeObject(Object object) throws Exception {
     Class<?> clazz = object.getClass();
     for (Method method : clazz.getDeclaredMethods()) {
@@ -153,7 +153,7 @@ private void initializeObject(Object object) throws Exception {
 
 初始化之后，我们遍历对象的字段，检索 JSON 元素的键和值，并将它们放在一个 map 中。然后，我们从映射中创建 JSON 字符串:
 
-```
+```java
 private String getJsonString(Object object) throws Exception {	
     Class<?> clazz = object.getClass();
     Map<String, String> jsonElementsMap = new HashMap<>();
@@ -177,7 +177,7 @@ private String getJsonString(Object object) throws Exception {
 
 我们的 JSON 序列化程序类结合了上述所有步骤:
 
-```
+```java
 public class ObjectToJsonConverter {
     public String convertToJson(Object object) throws JsonSerializationException {
         try {
@@ -193,7 +193,7 @@ public class ObjectToJsonConverter {
 
 最后，我们运行一个单元测试来验证我们的对象是否按照自定义注释的定义进行了序列化:
 
-```
+```java
 @Test
 public void givenObjectSerializedThenTrueReturned() throws JsonSerializationException {
     Person person = new Person("soufiane", "cheouati", "34");

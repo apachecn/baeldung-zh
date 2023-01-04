@@ -14,7 +14,7 @@
 
 让我们编写代码来设置客户端并调用服务:
 
-```
+```java
 HttpClient httpClient = HttpClient.newHttpClient();
 
 HttpRequest request = HttpRequest.newBuilder()
@@ -28,7 +28,7 @@ HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandle
 
 当我们将上面的代码放入一个测试用例中并执行下面的断言时，我们会观察到它通过了:
 
-```
+```java
 assertEquals(200, response.statusCode());
 ```
 
@@ -36,7 +36,7 @@ assertEquals(200, response.statusCode());
 
 现在，让我们将 URL 更改为另一个没有有效 SSL 证书的 URL。我们可以通过更改请求对象来做到这一点:
 
-```
+```java
 HttpRequest request = HttpRequest.newBuilder()
   .uri(new URI("https://www.testingmcafeesites.com/"))
   .build();
@@ -44,7 +44,7 @@ HttpRequest request = HttpRequest.newBuilder()
 
 当我们再次运行测试时，我们得到以下错误:
 
-```
+```java
 Caused by: java.security.cert.CertificateException: No subject alternative DNS name matching www.testingmcafeesites.com found.
   at java.base/sun.security.util.HostnameChecker.matchDNS(HostnameChecker.java:212)
   at java.base/sun.security.util.HostnameChecker.match(HostnameChecker.java:103) 
@@ -64,13 +64,13 @@ Caused by: java.security.cert.CertificateException: No subject alternative DNS n
 
 我们可以在运行应用程序时**将该属性设置为命令行参数**:
 
-```
+```java
 java -Djdk.internal.httpclient.disableHostnameVerification=true -jar target/java-httpclient-ssl-0.0.1-SNAPSHOT.jar 
 ```
 
 **或者，我们可以在创建客户端**之前通过 **以编程方式设置该属性:**
 
-```
+```java
 Properties props = System.getProperties();
 props.setProperty("jdk.internal.httpclient.disableHostnameVerification", Boolean.TRUE.toString());
 

@@ -24,7 +24,7 @@ Ratpack 对`Guice`依赖有一流的支持。因此，我们不需要为`Guice;`
 
 因此，我们只需要在`pom.xml`中添加以下核心`Ratpack`依赖关系:
 
-```
+```java
 <dependency>
     <groupId>io.ratpack</groupId>
     <artifactId>ratpack-core</artifactId>
@@ -40,7 +40,7 @@ Ratpack 对`Guice`依赖有一流的支持。因此，我们不需要为`Guice;`
 
 让我们创建一个服务接口和一个服务类:
 
-```
+```java
 public interface DataPumpService {
     String generate();
 }
@@ -48,7 +48,7 @@ public interface DataPumpService {
 
 这是将充当注入器的服务接口。现在，我们必须构建服务类来实现它，并定义服务方法`generate():`
 
-```
+```java
 public class DataPumpServiceImpl implements DataPumpService {
 
     @Override
@@ -67,7 +67,7 @@ public class DataPumpServiceImpl implements DataPumpService {
 
 第一种是使用`Guice`的 [`AbstractModule`](https://web.archive.org/web/20220626203748/https://google.github.io/guice/api-docs/latest/javadoc/index.html?com/google/inject/AbstractModule.html) ，其他的是使用 Guice 的[实例绑定](https://web.archive.org/web/20220626203748/https://github.com/google/guice/wiki/InstanceBindings)机制的方法:
 
-```
+```java
 public class DependencyModule extends AbstractModule {
 
     @Override
@@ -89,7 +89,7 @@ public class DependencyModule extends AbstractModule {
 
 既然依赖关系管理配置已经准备好了，现在让我们集成它:
 
-```
+```java
 public class Application {
 
     public static void main(String[] args) throws Exception {
@@ -115,7 +115,7 @@ public class Application {
 
 如前所述，我们现在将使用 Guice 的实例绑定机制在运行时进行依赖管理。除了使用 Guice 的`bindInstance()`方法代替`AbstractModule`来注入依赖关系之外，它几乎与前面的技术一样:
 
-```
+```java
 public class Application {
 
     public static void main(String[] args) throws Exception {
@@ -145,7 +145,7 @@ public class Application {
 
 我们可以使用已经创建的服务类来启用工厂绑定。我们只需要创建一个类似于`DependencyModule`的工厂类(它扩展了`Guice's AbstractModule`类)并通过静态方法绑定实例:
 
-```
+```java
 public class ServiceFactory {
 
     private static DataPumpService instance;
@@ -169,7 +169,7 @@ public class ServiceFactory {
 
 此后，我们可以在应用程序链中使用这个工厂实例:
 
-```
+```java
 .get("factory", ctx -> ctx.render(ServiceFactory.getInstance().generate()))
 ```
 
@@ -179,7 +179,7 @@ public class ServiceFactory {
 
 这里要注意的一点是，由于 URL 内容是动态的，我们在编写测试用例时无法预测它。因此，我们将匹配测试用例中的`/randomString` URL 端点的内容长度:
 
-```
+```java
 @RunWith(JUnit4.class)
 public class ApplicationTest {
 

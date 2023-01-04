@@ -24,7 +24,7 @@
 
 让我们首先创建一个包含一系列方法调用的类:
 
-```
+```java
 public class StackWalkerDemo {
 
     public void methodOne() {
@@ -45,7 +45,7 @@ public class StackWalkerDemo {
 
 让我们继续，添加一些堆栈审核代码:
 
-```
+```java
 public void methodThree() {
     List<StackFrame> stackTrace = StackWalker.getInstance()
       .walk(this::walkExample);
@@ -56,7 +56,7 @@ public void methodThree() {
 
 现在让我们定义一下`StackWalkerDemo::walkExample`方法:
 
-```
+```java
 public List<StackFrame> walkExample(Stream<StackFrame> stackFrameStream) {
     return stackFrameStream.collect(Collectors.toList());
 }
@@ -64,7 +64,7 @@ public List<StackFrame> walkExample(Stream<StackFrame> stackFrameStream) {
 
 这个方法只是收集`StackFrame`并将其作为`List<StackFrame>`返回。为了测试这个例子，请运行一个 JUnit 测试:
 
-```
+```java
 @Test
 public void giveStalkWalker_whenWalkingTheStack_thenShowStackFrames() {
     new StackWalkerDemo().methodOne();
@@ -73,7 +73,7 @@ public void giveStalkWalker_whenWalkingTheStack_thenShowStackFrames() {
 
 将它作为 JUnit 测试运行的唯一原因是我们的堆栈中有更多的帧:
 
-```
+```java
 class com.baeldung.java9.stackwalker.StackWalkerDemo#methodThree, Line 20
 class com.baeldung.java9.stackwalker.StackWalkerDemo#methodTwo, Line 15
 class com.baeldung.java9.stackwalker.StackWalkerDemo#methodOne, Line 11
@@ -94,7 +94,7 @@ class org.eclipse.jdt.internal.junit.runner.RemoteTestRunner#main, Line 192
 
 让我们增强堆栈审核代码并消除干扰:
 
-```
+```java
 public List<StackFrame> walkExample2(Stream<StackFrame> stackFrameStream) {
     return stackFrameStream
       .filter(f -> f.getClassName().contains("com.baeldung"))
@@ -104,7 +104,7 @@ public List<StackFrame> walkExample2(Stream<StackFrame> stackFrameStream) {
 
 利用`Stream` API 的强大功能，我们只保留我们感兴趣的帧。这将清除噪声，在堆栈日志中留下前四行:
 
-```
+```java
 class com.baeldung.java9.stackwalker.StackWalkerDemo#methodThree, Line 27
 class com.baeldung.java9.stackwalker.StackWalkerDemo#methodTwo, Line 15
 class com.baeldung.java9.stackwalker.StackWalkerDemo#methodOne, Line 11
@@ -114,7 +114,7 @@ class com.baeldung.java9.stackwalker
 
 现在让我们来确定发起呼叫的 JUnit 测试:
 
-```
+```java
 public String walkExample3(Stream<StackFrame> stackFrameStream) {
     return stackFrameStream
       .filter(frame -> frame.getClassName()
@@ -132,7 +132,7 @@ public String walkExample3(Stream<StackFrame> stackFrameStream) {
 
 为了捕捉默认隐藏的反射帧，`StackWalker`需要配置一个额外的选项`SHOW_REFLECT_FRAMES`:
 
-```
+```java
 List<StackFrame> stackTrace = StackWalker
   .getInstance(StackWalker.Option.SHOW_REFLECT_FRAMES)
   .walk(this::walkExample);
@@ -140,7 +140,7 @@ List<StackFrame> stackTrace = StackWalker
 
 使用此选项，包括`Method.invoke()`和`Constructor.newInstance()`在内的所有反射帧都将被捕获:
 
-```
+```java
 com.baeldung.java9.stackwalker.StackWalkerDemo#methodThree, Line 40
 com.baeldung.java9.stackwalker.StackWalkerDemo#methodTwo, Line 16
 com.baeldung.java9.stackwalker.StackWalkerDemo#methodOne, Line 12
@@ -163,7 +163,7 @@ org.eclipse.jdt.internal.junit.runner.RemoteTestRunner#main, Line 192
 
 然而，这些帧并没有对`StackWalker`隐藏:
 
-```
+```java
 Runnable r = () -> {
     List<StackFrame> stackTrace2 = StackWalker
       .getInstance(StackWalker.Option.SHOW_HIDDEN_FRAMES)
@@ -177,7 +177,7 @@ r.run();
 
 这在堆栈跟踪中清晰可见:
 
-```
+```java
 com.baeldung.java9.stackwalker.StackWalkerDemo#lambda$0, Line 47
 com.baeldung.java9.stackwalker.StackWalkerDemo$Lambda$39/924477420#run, Line -1
 com.baeldung.java9.stackwalker.StackWalkerDemo#methodThree, Line 50
@@ -202,7 +202,7 @@ org.eclipse.jdt.internal.junit.runner.RemoteTestRunner#main, Line 192
 
 让我们使用`StackWalker::getCallerClass`方法来识别调用类:
 
-```
+```java
 public void findCaller() {
     Class<?> caller = StackWalker
       .getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE)
@@ -213,7 +213,7 @@ public void findCaller() {
 
 这一次，我们将从一个单独的 JUnit 测试中直接调用这个方法:
 
-```
+```java
 @Test
 public void giveStalkWalker_whenInvokingFindCaller_thenFindCallingClass() {
     new StackWalkerDemo().findCaller();
@@ -222,7 +222,7 @@ public void giveStalkWalker_whenInvokingFindCaller_thenFindCallingClass() {
 
 `caller.getCanonicalName(),`的输出将是:
 
-```
+```java
 com.baeldung.java9.stackwalker.StackWalkerDemoTest
 ```
 

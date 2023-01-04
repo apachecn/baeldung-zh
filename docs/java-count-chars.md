@@ -30,7 +30,7 @@ Quick intro to working with Strings with the Apache Commons library and StringUt
 
 让我们从一个简单/幼稚的方法开始:
 
-```
+```java
 String someString = "elephant";
 char someChar = 'e';
 int count = 0;
@@ -49,7 +49,7 @@ assertEquals(2, count);
 
 一个不太明显但仍然有趣的解决方案是使用递归:
 
-```
+```java
 private static int countOccurences(
   String someString, char searchedChar, int index) {
     if (index >= someString.length()) {
@@ -68,7 +68,7 @@ private static int countOccurences(
 
 另一种方法是使用正则表达式:
 
-```
+```java
 Pattern pattern = Pattern.compile("[^e]*e");
 Matcher matcher = pattern.matcher("elephant");
 int count = 0;
@@ -87,7 +87,7 @@ Java 8 中的新特性在这里非常有用。
 
 让我们使用 streams 和 lambdas 来实现计数:
 
-```
+```java
 String someString = "elephant";
 long count = someString.chars().filter(ch -> ch == 'e').count();
 assertEquals(2, count);
@@ -108,7 +108,7 @@ assertEquals(2, count2);
 
 首先，我们需要包含适当的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -120,7 +120,7 @@ assertEquals(2, count2);
 
 现在让我们使用`countMatches()`来计算“大象”字符串文字中`e`字符的数量:
 
-```
+```java
 int count = StringUtils.countMatches("elephant", "e");
 assertEquals(2, count);
 ```
@@ -129,7 +129,7 @@ assertEquals(2, count);
 
 番石榴也有助于计算字符。我们需要定义依赖性:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -141,7 +141,7 @@ assertEquals(2, count);
 
 让我们看看番石榴如何快速帮助我们计算字符:
 
-```
+```java
 int count = CharMatcher.is('e').countIn("elephant");
 assertEquals(2, count);
 ```
@@ -152,7 +152,7 @@ assertEquals(2, count);
 
 然而，如果我们的项目中已经有了它，我们只需要使用`countOccurencesOf()`方法:
 
-```
+```java
 int count = StringUtils.countOccurrencesOf("elephant", "e");
 assertEquals(2, count);
 ```

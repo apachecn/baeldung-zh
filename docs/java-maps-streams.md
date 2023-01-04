@@ -30,31 +30,31 @@ The article is an example-heavy introduction of the possibilities and operations
 
 让我们看看从一个`Map`中获得不同的`Collection`的方法，然后我们可以将它们转换成一个`Stream`:
 
-```
+```java
 Map<String, Integer> someMap = new HashMap<>();
 ```
 
 我们可以获得一组键值对:
 
-```
+```java
 Set<Map.Entry<String, Integer>> entries = someMap.entrySet();
 ```
 
 我们还可以获得与`Map`相关联的键集:
 
-```
+```java
 Set<String> keySet = someMap.keySet();
 ```
 
 或者我们可以直接使用这些值:
 
-```
+```java
 Collection<Integer> values = someMap.values();
 ```
 
 这些都为我们提供了一个通过从这些集合中获取流来处理这些集合的入口点:
 
-```
+```java
 Stream<Map.Entry<String, Integer>> entriesStream = entries.stream();
 Stream<Integer> valuesStream = values.stream();
 Stream<String> keysStream = keySet.stream();
@@ -66,7 +66,7 @@ Stream<String> keysStream = keySet.stream();
 
 让我们假设我们有一个`Map`:
 
-```
+```java
 Map<String, String> books = new HashMap<>();
 books.put(
 "978-0201633610", "Design patterns : elements of reusable object-oriented software");
@@ -83,7 +83,7 @@ books.put("978-0134685991", "Effective Java");
 
 在这个例子中，我们假设我们对与书名相匹配的任何一本书的关键字感兴趣:
 
-```
+```java
 Optional<String> optionalIsbn = books.entrySet().stream()
   .filter(e -> "Effective Java".equals(e.getValue()))
   .map(Map.Entry::getKey)
@@ -102,7 +102,7 @@ assertEquals("978-0134685991", optionalIsbn.get());
 
 让我们看一个标题不存在的情况:
 
-```
+```java
 Optional<String> optionalIsbn = books.entrySet().stream()
   .filter(e -> "Non Existent Title".equals(e.getValue()))
   .map(Map.Entry::getKey).findFirst();
@@ -116,13 +116,13 @@ assertEquals(false, optionalIsbn.isPresent());
 
 为了返回多个结果，让我们将下面的书添加到我们的`Map`:
 
-```
+```java
 books.put("978-0321356680", "Effective Java: Second Edition"); 
 ```
 
 所以现在如果我们寻找以“有效的 Java”开头的`all`书，我们将得到不止一个结果:
 
-```
+```java
 List<String> isbnCodes = books.entrySet().stream()
   .filter(e -> e.getValue().startsWith("Effective Java"))
   .map(Map.Entry::getKey)
@@ -142,7 +142,7 @@ assertTrue(isbnCodes.contains("978-0134685991"));
 
 还是用原来的`Map`吧。我们希望找到 ISBN 以“978-0”开头的图书。
 
-```
+```java
 List<String> titles = books.entrySet().stream()
   .filter(e -> e.getKey().startsWith("978-0"))
   .map(Map.Entry::getValue)

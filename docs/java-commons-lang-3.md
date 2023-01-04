@@ -14,7 +14,7 @@ Apache Commons Lang 3 library**是一个流行的、功能齐全的实用程序�
 
 像往常一样，要开始使用 Apache Commons Lang 3，我们首先需要添加 [Maven 依赖项](https://web.archive.org/web/20221229040443/https://search.maven.org/search?q=g:org.apache.commons%20AND%20a:commons-lang3&core=gav):
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -30,7 +30,7 @@ Apache Commons Lang 3 library**是一个流行的、功能齐全的实用程序�
 
 让我们开始展示对给定的`string`执行几项检查的一组实用方法，例如确定`string`是空白、空、小写、大写、字母数字等等:
 
-```
+```java
 @Test
 public void whenCalledisBlank_thenCorrect() {
     assertThat(StringUtils.isBlank(" ")).isTrue();
@@ -79,7 +79,7 @@ public void whenCalledisAlphanumeric_thenCorrect() {
 
 让我们从`the toString()`方法的两个重载实现开始，当`array`为空时，它返回给定`array` 的一个`string`表示和一个特定的`string`:
 
-```
+```java
 @Test
 public void whenCalledtoString_thenCorrect() {
     String[] array = {"a", "b", "c"};
@@ -98,7 +98,7 @@ public void whenCalledtoStringIfArrayisNull_thenCorrect() {
 
 前者为一个`array,`生成一个定制的 [hashCode](/web/20221229040443/https://www.baeldung.com/java-hashcode) 实现，而后者将一个`array`转换成一个`[Map](https://web.archive.org/web/20221229040443/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html)`:
 
-```
+```java
 @Test
 public void whenCalledhashCode_thenCorrect() {
     String[] array = {"a", "b", "c"};
@@ -122,7 +122,7 @@ public void whenCalledtoMap_thenCorrect() {
 
 前者用于检查两个数组是否具有相同的长度，后者用于获取给定元素的索引:
 
-```
+```java
 @Test
 public void whenCalledisSameLength_thenCorrect() {
     int[] array1 = {1, 2, 3};
@@ -151,7 +151,7 @@ Apache Commons Lang 3 的另一个关键组件是 [NumberUtils](https://web.arch
 
 让我们看看`compare()`方法的重载实现，它比较不同原语的相等性，比如`int`和`long`:
 
-```
+```java
 @Test
 public void whenCalledcompareWithIntegers_thenCorrect() {
     assertThat(NumberUtils.compare(1, 1))
@@ -171,7 +171,7 @@ public void whenCalledcompareWithLongs_thenCorrect() {
 
 第一个允许我们创建一个`string`的数字表示，而第二个检查一个`string`是否只由数字组成:
 
-```
+```java
 @Test
 public void whenCalledcreateNumber_thenCorrect() {
     assertThat(NumberUtils.createNumber("123456"))
@@ -186,7 +186,7 @@ public void whenCalledisDigits_thenCorrect() {
 
 在查找所提供数组的 mix 和 max 值时，`NumberUtils`类通过重载实现`min()`和`max()`方法为这些操作提供了强大的支持:
 
-```
+```java
 @Test
 public void whenCalledmaxwithIntegerArray_thenCorrect() {
     int[] array = {1, 2, 3, 4, 5, 6};
@@ -214,7 +214,7 @@ public void whenCalledminwithByteArray_thenCorrect() {
 
 **`[Fraction](https://web.archive.org/web/20221229040443/https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/math/Fraction.html)`类轻松完成分数的加减乘除**:
 
-```
+```java
 @Test
 public void whenCalledgetFraction_thenCorrect() {
     assertThat(Fraction.getFraction(5, 6)).isInstanceOf(Fraction.class);
@@ -252,7 +252,7 @@ public void givenTwoFractionInstances_whenCalledmultiply_thenCorrect() {
 
 例如，让我们考虑一下`getJavaHome()`、`getUserHome()`和`isJavaVersionAtLeast()`方法:
 
-```
+```java
 @Test
 public void whenCalledgetJavaHome_thenCorrect() {
     assertThat(SystemUtils.getJavaHome())
@@ -281,7 +281,7 @@ Apache Commons Lang 3 最吸引人的方面之一是实现了一些众所周知�
 
 在这种情况下，我们需要做的就是扩展参数化的 [LazyInitializer](https://web.archive.org/web/20221229040443/https://commons.apache.org/proper/commons-lang/apidocs/index.html?org/apache/commons/lang3/concurrent/LazyInitializer.html) 抽象类并覆盖它的`initialize()`方法:
 
-```
+```java
 public class UserInitializer extends LazyInitializer<User> {
 
     @Override
@@ -293,7 +293,7 @@ public class UserInitializer extends LazyInitializer<User> {
 
 现在，如果我们想在需要的时候获取代价高昂的`User`对象，我们只需调用`UserInitializer's get()`方法:
 
-```
+```java
 @Test 
 public void whenCalledget_thenCorrect() 
   throws ConcurrentException { 
@@ -304,7 +304,7 @@ public void whenCalledget_thenCorrect()
 
 **`get()`方法是实例字段的双重检查习语(线程安全)的实现，如** [**约书亚·布洛赫的《有效的 Java》，第 71 项**](https://web.archive.org/web/20221229040443/https://www.pearson.com/us/higher-education/program/Bloch-Effective-Java-3rd-Edition/PGM1763855.html) 所述:
 
-```
+```java
 private volatile User instance;
 
 User get() { 
@@ -321,7 +321,7 @@ User get() {
 
 此外，Apache Commons Lang 3 实现了 [HashCodeBuilder](https://web.archive.org/web/20221229040443/https://commons.apache.org/proper/commons-lang/javadocs/api-3.1/org/apache/commons/lang3/builder/HashCodeBuilder.html) 类，它允许我们基于典型的 fluent API，通过向构建器提供不同的参数来生成`hashCode()`实现:
 
-```
+```java
 @Test
 public void whenCalledtoHashCode_thenCorrect() {
     int hashcode = new HashCodeBuilder(17, 37)
@@ -334,7 +334,7 @@ public void whenCalledtoHashCode_thenCorrect() {
 
 我们可以用 [`BasicThreadFactory`](https://web.archive.org/web/20221229040443/https://commons.apache.org/proper/commons-lang/javadocs/api-3.1/org/apache/commons/lang3/concurrent/BasicThreadFactory.html) 类做一些类似的事情，创建带有命名模式和优先级的守护线程:
 
-```
+```java
 @Test
 public void whenCalledBuilder_thenCorrect() {
     BasicThreadFactory factory = new BasicThreadFactory.Builder()
@@ -354,7 +354,7 @@ public void whenCalledBuilder_thenCorrect() {
 
 例如，假设我们已经实现了一个简单的`User`域类:
 
-```
+```java
 public class User {
 
     private String name;
@@ -366,7 +366,7 @@ public class User {
 
 假设它的参数化构造函数是`public`，我们可以很容易地用`[ConstructorUtils](https://web.archive.org/web/20221229040443/https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/reflect/ConstructorUtils.html)`类访问它:
 
-```
+```java
 @Test
 public void whenCalledgetAccessibleConstructor_thenCorrect() {
     assertThat(ConstructorUtils
@@ -377,7 +377,7 @@ public void whenCalledgetAccessibleConstructor_thenCorrect() {
 
 除了通过构造函数进行标准的类实例化，我们还可以通过调用`invokeConstructor()`和`invokeExactConstructor()`方法来反射性地创建`User`实例:
 
-```
+```java
 @Test
 public void whenCalledinvokeConstructor_thenCorrect() 
   throws Exception {
@@ -403,7 +403,7 @@ public void whenCalledinvokeExactConstructor_thenCorrect()
 
 在这种情况下，我们可以调用`getField()`方法:
 
-```
+```java
 @Test
 public void whenCalledgetField_thenCorrect() {
     assertThat(FieldUtils.getField(User.class, "name", true).getName())
@@ -413,7 +413,7 @@ public void whenCalledgetField_thenCorrect() {
 
 或者，**如果我们想要使用更严格的反射范围，并且只获取在`User` 类中声明的字段，而不是从超类**中继承的字段，我们只需使用`getDeclaredField()`方法:
 
-```
+```java
 @Test
 public void whenCalledgetDeclaredFieldForceAccess_thenCorrect() {
     assertThat(FieldUtils.getDeclaredField(User.class, "name", true).getName())
@@ -423,7 +423,7 @@ public void whenCalledgetDeclaredFieldForceAccess_thenCorrect() {
 
 此外，我们可以使用`getAllFields()`方法来获取反射类的字段数量，并使用 `writeField()`和`writeDeclaredField()`方法向声明的字段或层次结构中定义的字段写入一个值:
 
-```
+```java
 @Test
 public void whenCalledgetAllFields_thenCorrect() {
     assertThat(FieldUtils.getAllFields(User.class).length)
@@ -452,7 +452,7 @@ public void givenFieldUtilsClass_whenCalledwriteDeclaredField_thenCorrect() thro
 
 在这种情况下，`User`类的`getName()`方法的可见性是`public`。因此，我们可以用`getAccessibleMethod()`方法访问它:
 
-```
+```java
 @Test
 public void whenCalledgetAccessibleMethod_thenCorrect() {
     assertThat(MethodUtils.getAccessibleMethod(User.class, "getName"))
@@ -462,7 +462,7 @@ public void whenCalledgetAccessibleMethod_thenCorrect() {
 
 说到反射调用方法，我们可以使用`invokeExactMethod()`和`invokeMethod()`方法:
 
-```
+```java
 @Test
 public 
   void whenCalledinvokeExactMethod_thenCorrect() 
@@ -488,7 +488,7 @@ public void whenCalledinvokeMethod_thenCorrect()
 
 为此，Apache Commons Lang 3 提供了`[MutableObject](https://web.archive.org/web/20221229040443/https://commons.apache.org/proper/commons-lang/javadocs/api-3.1/org/apache/commons/lang3/mutable/MutableObject.html)`类，这是一个简单的包装类，用于以最小的代价创建可变对象:
 
-```
+```java
 @BeforeClass
 public static void setUpMutableObject() {
     mutableObject = new MutableObject("Initial value");
@@ -523,7 +523,7 @@ public void whenCalledtoString_thenCorrect() {
 
 在这种情况下，我们将使用`[MutablePair](https://web.archive.org/web/20221229040443/https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/tuple/MutablePair.html)`类:
 
-```
+```java
 private static MutablePair<String, String> mutablePair;
 
 @BeforeClass
@@ -556,7 +556,7 @@ public void whenCalledsetLeft_thenCorrect() {
 
 毫不奇怪，`MutablePair`类也有一个不可变的对应实现，叫做`[ImmutablePair](https://web.archive.org/web/20221229040443/https://commons.apache.org/proper/commons-lang/javadocs/api-3.1/org/apache/commons/lang3/tuple/ImmutablePair.html)`:
 
-```
+```java
 private static ImmutablePair<String, String> immutablePair = new ImmutablePair<>("leftElement", "rightElement");
 
 @Test
@@ -589,7 +589,7 @@ public void whenCalledSetValue_thenThrowUnsupportedOperationException() {
 
 由于类是抽象的，我们可以通过使用 [`of()`](https://web.archive.org/web/20221229040443/https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/tuple/Triple.html#of-L-M-R-) 静态工厂方法来创建`Triple`实例:
 
-```
+```java
 @BeforeClass
 public static void setUpTripleInstance() {
     triple = Triple.of("leftElement", "middleElement", "rightElement");

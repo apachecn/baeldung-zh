@@ -16,7 +16,7 @@
 
 我们可以使用两个`InputStream`对象初始化一个`SequenceInputStream`T2:
 
-```
+```java
 InputStream first = new FileInputStream(file1);
 InputStream second = new FileInputStream(file2);
 SequenceInputStream sequenceInputStream = new SequenceInputStream(first, second);
@@ -24,7 +24,7 @@ SequenceInputStream sequenceInputStream = new SequenceInputStream(first, second)
 
 我们也可以使用`InputStream`对象的`Enumeration`实例化它**:**
 
-```
+```java
 Vector<InputStream> inputStreams = new Vector<>();
 for (String fileName: fileNames) {
     inputStreams.add(new FileInputStream(fileName));
@@ -38,7 +38,7 @@ sequenceInputStream = new SequenceInputStream(inputStreams.elements());
 
 为了**读取单个字节的数据**，我们使用`read()`方法:
 
-```
+```java
 int byteValue = sequenceInputStream.read();
 ```
 
@@ -46,7 +46,7 @@ int byteValue = sequenceInputStream.read();
 
 我们还可以**读取一个字节数组**:
 
-```
+```java
 byte[] bytes = new byte[100];
 sequenceInputStream.read(bytes, 0, 50);
 ```
@@ -57,7 +57,7 @@ sequenceInputStream.read(bytes, 0, 50);
 
 将两个字符串作为输入源来演示读取序列:
 
-```
+```java
 InputStream first = new ByteArrayInputStream("One".getBytes());
 InputStream second = new ByteArrayInputStream("Magic".getBytes());
 SequenceInputStream sequenceInputStream = new SequenceInputStream(first, second);
@@ -71,7 +71,7 @@ assertEquals("OneMagic", stringBuilder.toString());
 
 从上面的例子中，如果我们打印`stringBuilder.toString()`,它会显示以下输出:
 
-```
+```java
 OneMagic
 ```
 

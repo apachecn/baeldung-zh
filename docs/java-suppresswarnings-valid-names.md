@@ -42,7 +42,7 @@
 
 在下面的示例中，警告名称在方法中取消了对`unusedVal`的警告:
 
-```
+```java
 @SuppressWarnings("unused")
 void suppressUnusedWarning() {
     int usedVal = 5;
@@ -56,7 +56,7 @@ void suppressUnusedWarning() {
 
 在下面的示例中，警告名称取消了对使用`@deprecated`方法的警告:
 
-```
+```java
 @SuppressWarnings("deprecated")
 void suppressDeprecatedWarning() {
     ClassWithSuppressWarningsNames cls = new ClassWithSuppressWarningsNames();
@@ -73,7 +73,7 @@ String deprecatedMethod() {
 
 在下面的示例中，警告名称取消了对缺少的`break`语句的警告——我们将它们包含在这里，并将其注释掉，以显示否则我们会在哪里得到警告:
 
-```
+```java
 @SuppressWarnings("fallthrough")
 String suppressFallthroughWarning() {
     int day = 5;
@@ -94,7 +94,7 @@ String suppressFallthroughWarning() {
 
 该警告名称位于类级别。在下面的例子中，警告名称取消了对一个`Serializable`类中缺少`serialVersionUID`(我们已经注释掉了)的警告:
 
-```
+```java
 @SuppressWarnings("serial")
 public class ClassWithSuppressWarningsNames implements Serializable {
 //    private static final long serialVersionUID = -1166032307853492833L; // no warning even though this is commented
@@ -104,7 +104,7 @@ public class ClassWithSuppressWarningsNames implements Serializable {
 
 `@SuppressWarnings`注释需要一个`String`的数组，因此我们可以组合多个警告名称:
 
-```
+```java
 @SuppressWarnings({"serial", "unchecked"})
 ```
 

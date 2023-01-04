@@ -29,7 +29,7 @@
 
 让我们看看我们的`CallbackHandler`接口的实现:
 
-```
+```java
 public class ConsoleCallbackHandler implements CallbackHandler {
 
     @Override
@@ -52,14 +52,14 @@ public class ConsoleCallbackHandler implements CallbackHandler {
 
 因此，为了提示和读取用户名，我们使用了:
 
-```
+```java
 NameCallback nameCallback = (NameCallback) callback;
 nameCallback.setName(console.readLine(nameCallback.getPrompt()));
 ```
 
 同样，要提示并读取密码:
 
-```
+```java
 PasswordCallback passwordCallback = (PasswordCallback) callback;
 passwordCallback.setPassword(console.readPassword(passwordCallback.getPrompt()));
 ```
@@ -70,7 +70,7 @@ passwordCallback.setPassword(console.readPassword(passwordCallback.getPrompt()))
 
 为了简单起见，我们将提供一个存储硬编码用户的实现。所以，姑且称之为`InMemoryLoginModule`:
 
-```
+```java
 public class InMemoryLoginModule implements LoginModule {
 
     private static final String USERNAME = "testuser";
@@ -93,7 +93,7 @@ public class InMemoryLoginModule implements LoginModule {
 
 **首先加载`LoginModule`，然后用`Subject`和`CallbackHandler`** 初始化。此外，`LoginModule`可以使用一个`Map`在它们之间共享数据，另一个`Map`用于存储私有配置数据:
 
-```
+```java
 public void initialize(
   Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState, Map<String, ?> options) {
     this.subject = subject;
@@ -107,7 +107,7 @@ public void initialize(
 
 在`login()`方法中，我们用一个`NameCallback`和一个`PasswordCallback`调用`CallbackHandler.handle()`方法来提示并获取用户名和密码。然后，我们将这些提供的凭证与硬编码的凭证进行比较:
 
-```
+```java
 @Override
 public boolean login() throws LoginException {
     NameCallback nameCallback = new NameCallback("username: ");
@@ -132,7 +132,7 @@ public boolean login() throws LoginException {
 
 如果对`LoginModule#login`的所有调用成功，我们**用一个附加的`Principal`** 更新`Subject`:
 
-```
+```java
 @Override
 public boolean commit() throws LoginException {
     if (!loginSucceeded) {
@@ -152,7 +152,7 @@ public boolean commit() throws LoginException {
 
 JAAS 使用`Configuration`服务提供者在运行时加载`LoginModule`。默认情况下，它提供并使用`ConfigFile`实现，其中`LoginModule`是通过登录文件配置的。例如，下面是我们的`LoginModule`使用的文件的内容:
 
-```
+```java
 jaasApplication {
    com.baeldung.jaas.loginmodule.InMemoryLoginModule required debug=true;
 };
@@ -162,13 +162,13 @@ jaasApplication {
 
 最后，注意我们也可以通过`java.security.auth.login.config`系统属性指定登录文件:
 
-```
+```java
 $ java -Djava.security.auth.login.config=src/main/resources/jaas/jaas.login.config
 ```
 
 我们还可以通过 Java 安全文件`${java.home}/jre/lib/security/java.security`中的属性`login.config.url`指定一个或多个登录文件:
 
-```
+```java
 login.config.url.1=file:${user.home}/.java.login.config
 ```
 
@@ -176,7 +176,7 @@ login.config.url.1=file:${user.home}/.java.login.config
 
 首先，**应用程序通过创建一个 [`LoginContext`](https://web.archive.org/web/20220628124807/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/javax/security/auth/login/LoginContext.html) 实例**来初始化认证过程。为此，我们可以看一下完整的构造函数，以了解我们需要什么参数:
 
-```
+```java
 LoginContext(String name, Subject subject, CallbackHandler callbackHandler, Configuration config)
 ```
 
@@ -187,31 +187,31 @@ LoginContext(String name, Subject subject, CallbackHandler callbackHandler,
 
 这里，我们将使用重载的构造函数，在这里我们将提供我们的`CallbackHandler`实现:
 
-```
+```java
 LoginContext(String name, CallbackHandler callbackHandler)
 ```
 
 现在我们有了一个`CallbackHandler`和一个已配置的`LoginModule`、**，我们可以通过初始化一个`LoginContext`对象**来开始认证过程:
 
-```
+```java
 LoginContext loginContext = new LoginContext("jaasApplication", new ConsoleCallbackHandler());
 ```
 
 此时，**我们可以调用`login()`方法来认证用户**:
 
-```
+```java
 loginContext.login();
 ```
 
 反过来，`login()`方法创建我们的`LoginModule`的一个新实例，并调用它的`login()`方法。并且，**认证成功后，我们可以检索已认证的`Subject`** :
 
-```
+```java
 Subject subject = loginContext.getSubject();
 ```
 
 现在，让我们运行一个连接了`LoginModule`的示例应用程序:
 
-```
+```java
 $ mvn clean package
 $ java -Djava.security.auth.login.config=src/main/resources/jaas/jaas.login.config \
     -classpath target/core-java-security-2-0.1.0-SNAPSHOT.jar com.baeldung.jaas.JaasAuthentication
@@ -223,7 +223,7 @@ $ java -Djava.security.auth.login.config=src/main/resources/jaas/jaas.login.conf
 
 当用户第一次连接并关联到`AccessControlContext`时，授权开始生效。**使用 Java 安全策略，我们可以向`Principal`授予一个或多个访问控制权限。然后我们可以通过调用`SecurityManager#checkPermission`方法:**来阻止对敏感代码的访问
 
-```
+```java
 SecurityManager.checkPermission(Permission perm)
 ```
 
@@ -233,7 +233,7 @@ SecurityManager.checkPermission(Permission perm)
 
 接下来，我们将通过`ResourcePermission`类提供一个权限实现，其中用户可能拥有访问资源的权限:
 
-```
+```java
 public final class ResourcePermission extends BasicPermission {
     public ResourcePermission(String name) {
         super(name);
@@ -247,7 +247,7 @@ public final class ResourcePermission extends BasicPermission {
 
 通常，我们不需要知道策略文件的语法，因为我们总是可以使用[策略工具](https://web.archive.org/web/20220628124807/https://docs.oracle.com/javase/8/docs/technotes/guides/security/PolicyGuide.html)来创建一个。让我们看一下我们的策略文件:
 
-```
+```java
 grant principal com.sun.security.auth.UserPrincipal testuser {
     permission com.baeldung.jaas.ResourcePermission "test_resource"
 };
@@ -259,7 +259,7 @@ grant principal com.sun.security.auth.UserPrincipal testuser {
 
 一旦`Subject`被认证并且权限被配置，**我们可以通过调用`Subject#doAs`或`Subject#doAsPrivilieged`静态方法**来检查访问。为此，我们将提供一个`PrivilegedAction`来保护对敏感代码的访问。在`run()`方法中，我们调用`SecurityManager#checkPermission`方法来确保被认证的用户拥有`test_resource`权限:
 
-```
+```java
 public class ResourceAction implements PrivilegedAction {
     @Override
     public Object run() {
@@ -275,7 +275,7 @@ public class ResourceAction implements PrivilegedAction {
 
 最后一件事是调用`Subject#doAsPrivileged`方法:
 
-```
+```java
 Subject subject = loginContext.getSubject();
 PrivilegedAction privilegedAction = new ResourceAction();
 Subject.doAsPrivileged(subject, privilegedAction, null);
@@ -283,7 +283,7 @@ Subject.doAsPrivileged(subject, privilegedAction, null);
 
 与身份验证一样，我们将运行一个简单的授权应用程序，其中除了`LoginModule`之外，我们还提供了一个权限配置文件:
 
-```
+```java
 $ mvn clean package
 $ java -Djava.security.manager -Djava.security.policy=src/main/resources/jaas/jaas.policy \
     -Djava.security.auth.login.config=src/main/resources/jaas/jaas.login.config \

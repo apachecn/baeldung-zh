@@ -22,7 +22,7 @@ Apache Curator 是 [Apache Zookeeper](https://web.archive.org/web/20220625222137
 
 首先，我们需要将[策展人-x-异步](https://web.archive.org/web/20220625222137/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.curator%22%20AND%20a%3A%22curator-x-async%22)依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.apache.curator</groupId>
     <artifactId>curator-x-async</artifactId>
@@ -42,7 +42,7 @@ Apache Curator 是 [Apache Zookeeper](https://web.archive.org/web/20220625222137
 
 所以我们需要排除 Zookeeper 依赖项，并将 Zookeeper 版本的[依赖项添加到我们的`pom.xml`:](https://web.archive.org/web/20220625222137/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.zookeeper%22%20AND%20a%3A%22zookeeper%22)
 
-```
+```java
 <dependency>
     <groupId>org.apache.zookeeper</groupId>
     <artifactId>zookeeper</artifactId>
@@ -58,7 +58,7 @@ Apache Curator 的基本用例是连接到一个正在运行的 Apache Zookeeper
 
 该工具提供了一个工厂来使用重试策略建立与 Zookeeper 的连接:
 
-```
+```java
 int sleepMsBetweenRetries = 100;
 int maxRetries = 3;
 RetryPolicy retryPolicy = new RetryNTimes(
@@ -81,7 +81,7 @@ assertThat(client.checkExists().forPath("/")).isNotNull();
 
 让我们看看前面的例子是如何使用异步包装器的:
 
-```
+```java
 int sleepMsBetweenRetries = 100;
 int maxRetries = 3;
 RetryPolicy retryPolicy 
@@ -110,7 +110,7 @@ await().until(() -> assertThat(exists.get()).isTrue());
 
 让我们看一个使用 Apache Curator 获取和设置数据的例子:
 
-```
+```java
 CuratorFramework client = newClient();
 client.start();
 AsyncCuratorFramework async = AsyncCuratorFramework.wrap(client);
@@ -138,7 +138,7 @@ Zookeeper 中另一个有趣的特性是监视关键点或节点的能力。**�
 
 让我们看看上面的例子在使用观察器时是什么样子的:
 
-```
+```java
 CuratorFramework client = newClient()
 client.start();
 AsyncCuratorFramework async = AsyncCuratorFramework.wrap(client);
@@ -179,7 +179,7 @@ Zookeeper 主要处理字节数组，所以我们需要序列化和反序列化�
 
 首先，我们需要一个序列化框架。馆长建议使用杰克逊实现，所以让我们将杰克逊依赖关系添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -189,7 +189,7 @@ Zookeeper 主要处理字节数组，所以我们需要序列化和反序列化�
 
 现在，让我们尝试保存我们的自定义类`HostConfig`:
 
-```
+```java
 public class HostConfig {
     private String hostname;
     private int port;
@@ -200,7 +200,7 @@ public class HostConfig {
 
 我们需要提供从`HostConfig`类到路径的模型规范映射，并使用 Apache Curator 提供的模型化框架包装器:
 
-```
+```java
 ModelSpec<HostConfig> mySpec = ModelSpec.builder(
   ZPath.parseWithIds("/config/dev"), 
   JacksonModelSerializer.build(HostConfig.class))
@@ -238,7 +238,7 @@ Apache Curator 为这些食谱中的大部分提供了一个实现。要查看�
 
 所有这些配方都在单独的模块中提供:
 
-```
+```java
 <dependency>
     <groupId>org.apache.curator</groupId>
     <artifactId>curator-recipes</artifactId>
@@ -254,7 +254,7 @@ Apache Curator 为这些食谱中的大部分提供了一个实现。要查看�
 
 这是[领袖选举配方](https://web.archive.org/web/20220625222137/https://curator.apache.org/curator-recipes/leader-election.html)在策展人中的用法:
 
-```
+```java
 CuratorFramework client = newClient();
 client.start();
 LeaderSelector leaderSelector = new LeaderSelector(client, 
@@ -285,7 +285,7 @@ leaderSelector.close();
 
 [共享锁方法](https://web.archive.org/web/20220625222137/https://curator.apache.org/curator-recipes/shared-lock.html)是关于拥有一个完全分布式的锁:
 
-```
+```java
 CuratorFramework client = newClient();
 client.start();
 InterProcessSemaphoreMutex sharedLock = new InterProcessSemaphoreMutex(
@@ -304,7 +304,7 @@ sharedLock.release();
 
 [计数器配方](https://web.archive.org/web/20220625222137/https://curator.apache.org/curator-recipes/shared-counter.html)协调所有客户端之间的共享`Integer` :
 
-```
+```java
 CuratorFramework client = newClient();
 client.start();
 

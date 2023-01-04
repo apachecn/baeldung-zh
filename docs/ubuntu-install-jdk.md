@@ -23,45 +23,45 @@
 
 首先我们来下载一下最近发布的 OpenJDK 11 的`tar`存档:
 
-```
+```java
 $ wget https://download.java.net/java/ga/jdk11/openjdk-11_linux-x64_bin.tar.gz
 ```
 
 我们将下载包的总和`sha256`与 OpenJDK 网站上提供的总和[进行比较:](https://web.archive.org/web/20221206023446/https://download.java.net/java/ga/jdk11/openjdk-11_linux-x64_bin.tar.gz.sha256)
 
-```
+```java
 $ sha256sum openjdk-11_linux-x64_bin.tar.gz
 ```
 
 让我们提取`tar`档案:
 
-```
+```java
 $ tar xzvf openjdk-11_linux-x64_bin.tar.gz
 ```
 
 接下来，让我们将刚刚提取的`jdk-11`目录移动到`/usr/lib/jvm`的子目录中。下一节中描述的`apt`包也将它们的 JDK 放到这个目录中:
 
-```
+```java
 $ sudo mkdir /usr/lib/jvm
 $ sudo mv jdk-11 /usr/lib/jvm/openjdk-11-manual-installation/ 
 ```
 
 现在，我们想要**使`java`和`javac`命令可用**。一种可能是为它们创建符号链接，例如在`/usr/bin`目录中。但是，我们将为它们安装一个替代品。这样，如果我们希望安装其他版本的 JDK，它们可以很好地配合使用:
 
-```
+```java
 $ sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/openjdk-11-manual-installation/bin/java 1
 $ sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/openjdk-11-manual-installation/bin/javac 1
 ```
 
 让我们验证安装:
 
-```
+```java
 $ java -version
 ```
 
 从输出中我们可以看到，我们确实安装了最新版本的 OpenJDK JRE 和 JVM:
 
-```
+```java
 openjdk version "11" 2018-09-25
 OpenJDK Runtime Environment 18.9 (build 11+28)
 OpenJDK 64-Bit Server VM 18.9 (build 11+28, mixed mode) 
@@ -69,11 +69,11 @@ OpenJDK 64-Bit Server VM 18.9 (build 11+28, mixed mode)
 
 让我们看看编译器的版本:
 
-```
+```java
 $ javac -version
 ```
 
-```
+```java
 javac 11
 ```
 
@@ -81,7 +81,7 @@ javac 11
 
 如果我们想确保使用最新版本的 Oracle JDK，我们可以遵循类似的手动安装工作流，就像 OpenJDK 一样。为了从[甲骨文网站](https://web.archive.org/web/20221206023446/https://www.oracle.com/technetwork/java/javase/downloads/index.html)、**下载 JDK 11 号的`tar`档案，我们必须先接受许可协议**。出于这个原因，通过`wget`下载比 OpenJDK 更复杂一些:
 
-```
+```java
 $ wget -c --header "Cookie: oraclelicense=accept-securebackup-cookie" \
 http://download.oracle.com/otn-pub/java/jdk/11.0.1+13/90cf5d8f270a4347a95050320eef3fb7/jdk-11.0.1_linux-x64_bin.tar.gz
 ```
@@ -90,7 +90,7 @@ http://download.oracle.com/otn-pub/java/jdk/11.0.1+13/90cf5d8f270a4347a95050320e
 
 以下步骤与 OpenJDK 相同:
 
-```
+```java
 $ sha256sum jdk-11.0.1_linux-x64_bin.tar.gz
 $ tar xzvf jdk-11.0.1_linux-x64_bin.tar.gz
 $ sudo mkdir /usr/lib/jvm
@@ -101,11 +101,11 @@ $ sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/oracle-jd
 
 验证也是一样。但是输出显示，这一次，我们安装的不是 OpenJDK，而是 Java(TM):
 
-```
+```java
 $ java -version
 ```
 
-```
+```java
 java version "11.0.1" 2018-10-16 LTS
 Java(TM) SE Runtime Environment 18.9 (build 11.0.1+13-LTS)
 Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.1+13-LTS, mixed mode)
@@ -113,11 +113,11 @@ Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.1+13-LTS, mixed mode)
 
 对于编译器来说:
 
-```
+```java
 $ javac -version
 ```
 
-```
+```java
 javac 11.0.1
 ```
 
@@ -125,7 +125,7 @@ javac 11.0.1
 
 目前，Oracle JDK 11 也在 PPA(个人包归档)中提供。这个安装包括 2 个步骤:将存储库添加到我们的系统中，并通过`apt:`从存储库中安装软件包
 
-```
+```java
 $ sudo add-apt-repository ppa:linuxuprising/java
 $ sudo apt update
 $ sudo apt install oracle-java11-installer
@@ -133,11 +133,11 @@ $ sudo apt install oracle-java11-installer
 
 验证步骤应显示与第 2.2.1 节中手动安装后相同的结果。：
 
-```
+```java
 $ java -version
 ```
 
-```
+```java
 java version "11.0.1" 2018-10-16 LTS
 Java(TM) SE Runtime Environment 18.9 (build 11.0.1+13-LTS)
 Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.1+13-LTS, mixed mode)
@@ -145,17 +145,17 @@ Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.1+13-LTS, mixed mode)
 
 对于编译器来说:
 
-```
+```java
 $ javac -version
 ```
 
-```
+```java
 javac 11.0.1
 ```
 
 在 Ubuntu 14.04 LTS 上，默认情况下`add-apt-repository`命令不可用。为了添加一个存储库，首先我们需要安装`software-properties-common`包。
 
-```
+```java
 $ sudo apt update
 $ sudo apt install software-properties-common
 ```
@@ -172,20 +172,20 @@ JDK 8 是一个已经存在了一段时间的 LTS 版本。出于这个原因，
 
 让我们用`apt`从“主”存储库中安装 OpenJDK 8:
 
-```
+```java
 $ sudo apt update
 $ sudo apt install openjdk-8-jdk
 ```
 
 现在，让我们验证安装:
 
-```
+```java
 $ java -version
 ```
 
 结果应该列出一个运行时环境和一个 JVM:
 
-```
+```java
 openjdk version "1.8.0_181"
 OpenJDK Runtime Environment (build 1.8.0_181-8u181-b13-0ubuntu0.18.04.1-b13)
 OpenJDK 64-Bit Server VM (build 25.181-b13, mixed mode)
@@ -193,13 +193,13 @@ OpenJDK 64-Bit Server VM (build 25.181-b13, mixed mode)
 
 让我们检查一下`javac`可执行文件是否也可用:
 
-```
+```java
 $ javac -version
 ```
 
 现在我们应该会看到如上所示的相同版本号:
 
-```
+```java
 javac 1.8.0_181
 ```
 
@@ -207,7 +207,7 @@ javac 1.8.0_181
 
 在 Ubuntu 14.04 LTS 版上，OpenJDK 包在“主”存储库中不可用，所以我们将从`openjdk-r` PPA 安装它们。正如我们在上面 2.3 节中看到的，默认情况下`add-apt-repository`命令是不可用的。我们需要`software-properties-common`的包装:
 
-```
+```java
 $ sudo apt update
 $ sudo apt install software-properties-common
 $ sudo add-apt-repository ppa:openjdk-r/ppa
@@ -221,26 +221,26 @@ $ sudo apt install openjdk-8-jdk
 
 首先，我们需要将 PPA `apt`存储库添加到我们的系统中:
 
-```
+```java
 $ sudo add-apt-repository ppa:webupd8team/java
 ```
 
 然后我们可以用通常的方式安装这个包:
 
-```
+```java
 $ sudo apt update
 $ sudo apt install oracle-java8-installer
 ```
 
 在安装过程中，我们必须接受 Oracle 的许可协议。让我们验证安装:
 
-```
+```java
 $ java -version
 ```
 
 输出显示了一个 Java(TM) JRE 和 JVM:
 
-```
+```java
 java version "1.8.0_181"
 Java(TM) SE Runtime Environment (build 1.8.0_181-b13)
 Java HotSpot(TM) 64-Bit Server VM (build 25.181-b13, mixed mode)
@@ -248,11 +248,11 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.181-b13, mixed mode)
 
 我们还可以验证编译器是否已经安装:
 
-```
+```java
 $ javac -version
 ```
 
-```
+```java
 javac 1.8.0_181
 ```
 
@@ -271,7 +271,7 @@ javac 1.8.0_181
 
 我们来看看如何安装 OpenJDK 10.0.1:
 
-```
+```java
 $ wget https://download.java.net/java/GA/jdk10/10.0.1/fb4372174a714e6b8c52526dc134031e/10/openjdk-10.0.1_linux-x64_bin.tar.gz
 $ sha256sum openjdk-10.0.1_linux-x64_bin.tar.gz
 $ tar xzvf openjdk-10.0.1_linux-x64_bin.tar.gz
@@ -287,7 +287,7 @@ $ javac -version
 
 正如我们在 2.2 节中看到的。为了从甲骨文网站**下载软件包，我们必须首先接受许可协议**。与受支持的版本相反，我们不能通过`wget`和 cookie 下载较旧的 Oracle JDKs。我们需要前往[https://www . Oracle . com/tech network/Java/javase/downloads/Java-archive-javase 10-4425482 . html](https://web.archive.org/web/20221206023446/https://www.oracle.com/technetwork/java/javase/downloads/java-archive-javase10-4425482.html)并下载`tar.gz`文件。之后，我们遵循熟悉的步骤:
 
-```
+```java
 $ sha256sum jdk-10.0.2_linux-x64_bin.tar.gz
 $ tar xzvf jdk-10.0.2_linux-x64_bin.tar.gz
 $ sudo mkdir /usr/lib/jvm
@@ -304,7 +304,7 @@ $ javac -version
 
 就像我们在上面看到的 OpenJDK 10.0.1 一样，我们通过`wget`下载 OpenJDK 9 包，并根据约定进行设置:
 
-```
+```java
 $ wget https://download.java.net/java/GA/jdk9/9.0.4/binaries/openjdk-9.0.4_linux-x64_bin.tar.gz
 $ sha256sum openjdk-9.0.4_linux-x64_bin.tar.gz
 $ tar xzvf openjdk-9.0.4_linux-x64_bin.tar.gz
@@ -320,7 +320,7 @@ $ javac -version
 
 我们再次使用与 JDK 10 号相同的方法。我们需要前往[https://www . Oracle . com/tech network/Java/javase/downloads/Java-archive-javase 9-3934878 . html](https://web.archive.org/web/20221206023446/https://www.oracle.com/technetwork/java/javase/downloads/java-archive-javase9-3934878.html)并下载`tar.gz`文件。之后，我们遵循熟悉的步骤:
 
-```
+```java
 $ sha256sum jdk-9.0.4_linux-x64_bin.tar.gz
 $ tar xzvf jdk-9.0.4_linux-x64_bin.tar.gz
 $ sudo mkdir /usr/lib/jvm
@@ -363,13 +363,13 @@ PPAs 是由个人开发者或团队维护的小型软件仓库。这也意味着
 
 让我们看看“主”存储库中还有哪些其他的 JDK 包:
 
-```
+```java
 $ apt list openjdk*jdk
 ```
 
 在 Ubuntu 18.04 LTS 上，我们可以在两个当前的 LTS Java 版本之间进行选择:
 
-```
+```java
 Listing... Done
 openjdk-11-jdk/bionic-updates,bionic-security,now 10.0.2+13-1ubuntu0.18.04.2 amd64 [installed,automatic]
 openjdk-8-jdk/bionic-updates,bionic-security 8u181-b13-0ubuntu0.18.04.1 amd64
@@ -377,13 +377,13 @@ openjdk-8-jdk/bionic-updates,bionic-security 8u181-b13-0ubuntu0.18.04.1 amd64
 
 另外值得注意的是，虽然这个包名为`openjdk-11-jdk`，但截至本文撰写之时，它实际上安装的是 10.0.2 版本。这种情况可能很快会改变。我们可以看到，如果我们检查包装:
 
-```
+```java
 $ apt show openjdk-11-jdk
 ```
 
 让我们看看输出的“依赖”部分。请注意，这些包(例如 JRE)也是与`openjdk-11-jdk`一起安装的:
 
-```
+```java
 Depends: openjdk-11-jre (= 10.0.2+13-1ubuntu0.18.04.2),
 openjdk-11-jdk-headless (= 10.0.2+13-1ubuntu0.18.04.2),
 libc6 (>= 2.2.5)
@@ -391,11 +391,11 @@ libc6 (>= 2.2.5)
 
 让我们看看除了默认的 jdk 包之外，我们还有哪些其他的包:
 
-```
+```java
 $ apt list openjdk-11*
 ```
 
-```
+```java
 Listing... Done
 openjdk-11-dbg/bionic-updates,bionic-security 10.0.2+13-1ubuntu0.18.04.2 amd64
 openjdk-11-demo/bionic-updates,bionic-security 10.0.2+13-1ubuntu0.18.04.2 amd64
@@ -412,7 +412,7 @@ openjdk-11-source/bionic-updates,bionic-updates,bionic-security,bionic-security 
 
 除了`openjdk-*`家族，还有`default-jdk` 套餐，值得一探:
 
-```
+```java
 $ apt show default-jdk
 ```
 
@@ -442,13 +442,13 @@ $ apt show default-jdk
 
 让我们看看我们的替代方案:
 
-```
+```java
 $ update-alternatives --display java
 ```
 
 在我们的测试系统上，我们安装了两个不同版本的 OpenJDK，输出列出了两个选项及其各自的优先级:
 
-```
+```java
 java - auto mode
 link best version is /usr/lib/jvm/java-11-openjdk-amd64/bin/java
 link currently points to /usr/lib/jvm/java-11-openjdk-amd64/bin/java
@@ -462,13 +462,13 @@ slave java.1.gz: /usr/lib/jvm/java-8-openjdk-amd64/jre/man/man1/java.1.gz
 
 现在我们已经看到了我们的选择，**我们也可以在它们之间切换:**
 
-```
+```java
 $ sudo update-alternatives --config java
 ```
 
 此外，我们还获得了一个交互式输出，我们可以通过键盘在选项之间切换:
 
-```
+```java
 There are 2 choices for the alternative java (providing /usr/bin/java).
 
 Selection Path Priority Status

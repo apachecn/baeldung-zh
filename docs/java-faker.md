@@ -16,7 +16,7 @@ JavaFaker 是一个库，可以用来生成从地址到流行文化参考的大�
 
 首先，我们需要基于 Maven 的项目的依赖性:
 
-```
+```java
 <dependency>
     <groupId>com.github.javafaker</groupId>
     <artifactId>javafaker</artifactId>
@@ -26,7 +26,7 @@ JavaFaker 是一个库，可以用来生成从地址到流行文化参考的大�
 
 对于 Gradle 用户，您可以将以下内容添加到您的`build.gradle `文件中:
 
-```
+```java
 compile group: 'com.github.javafaker', name: 'javafaker', version: '0.15'
 ```
 
@@ -46,7 +46,7 @@ compile group: 'com.github.javafaker', name: 'javafaker', version: '0.15'
 
 `FakeValueService`需要一个有效的`Locale,`以及一个`RandomService:`
 
-```
+```java
 @Test
 public void whenBothifyCalled_checkPatternMatches() throws Exception {
 
@@ -70,7 +70,7 @@ public void whenBothifyCalled_checkPatternMatches() throws Exception {
 
 在这个代码片段中，我们将使用`FakeValueService`来创建一个遵循指定正则表达式的随机序列:
 
-```
+```java
 @Test
 public void givenValidService_whenRegexifyCalled_checkPattern() throws Exception {
 
@@ -92,7 +92,7 @@ public void givenValidService_whenRegexifyCalled_checkPattern() throws Exception
 
 在这一节中，我们将看到如何实例化一个`Faker`对象并使用它来调用一些假数据:
 
-```
+```java
 Faker faker = new Faker();
 
 String streetName = faker.address().streetName();
@@ -111,7 +111,7 @@ System.out.println(String.format("%s\n%s\n%s\n%s",
 
 当我们运行这段代码时，我们将得到一个输出示例:
 
-```
+```java
 3188
 Dayna Mountains
 New Granvilleborough
@@ -133,7 +133,7 @@ Tonga
 
 在这里，我们将介绍如何**使用 locales 来使生成的数据更特定于单个位置**。我们将介绍一个带有美国地区和英国地区的`Faker`:
 
-```
+```java
 @Test
 public void givenJavaFakersWithDifferentLocals_thenHeckZipCodesMatchRegex() {
 
@@ -164,7 +164,7 @@ public void givenJavaFakersWithDifferentLocals_thenHeckZipCodesMatchRegex() {
 
 我们将用下面的单元测试对此进行测试:
 
-```
+```java
 @Test(expected = LocaleDoesNotExistException.class)
 public void givenWrongLocale_whenFakerInitialised_testExceptionThrown() {
     Faker wrongLocaleFaker = new Faker(new Locale("en-seaWorld"));
@@ -181,7 +181,7 @@ public void givenWrongLocale_whenFakerInitialised_testExceptionThrown() {
 
 我们可以通过用相同的种子创建两个`Fakers`来看看这是如何工作的:
 
-```
+```java
 @Test
 public void givenJavaFakersWithSameSeed_whenNameCalled_CheckSameName() {
 

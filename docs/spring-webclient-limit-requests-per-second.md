@@ -16,7 +16,7 @@
 
 为了探索这个场景，我们将从一个简单的 [`@RestController`](/web/20221106142100/https://www.baeldung.com/spring-controller-vs-restcontroller) 开始，它提供固定范围内的随机数:
 
-```
+```java
 @RestController
 @RequestMapping("/random")
 public class RandomController {
@@ -38,7 +38,7 @@ public class RandomController {
 
 其次，我们将添加一个延迟来处理我们的响应，模拟一个昂贵的操作。虽然还有[更强大的解决方案](/web/20221106142100/https://www.baeldung.com/spring-bucket4j#:~:text=Free%3A%2020%20requests%20per%20hour,per%20hour%20per%20API%20client)可用，但我们这样做只是为了举例说明:
 
-```
+```java
 public class Concurrency {
 
     public static final int MAX_CONCURRENT = 5;
@@ -61,7 +61,7 @@ public class Concurrency {
 
 最后，让我们更改端点来使用它:
 
-```
+```java
 @GetMapping
 Integer getRandom() {
     return Concurrency.protect(() -> new Random().nextInt(50));
@@ -74,7 +74,7 @@ Integer getRandom() {
 
 所有示例都将遵循这种模式来生成一个`n`请求的 [`Flux`](/web/20221106142100/https://www.baeldung.com/spring-webflux) ，并向我们的服务发出一个`GET`请求:
 
-```
+```java
 Flux.range(1, n)
   .flatMap(i -> {
     // GET request
@@ -83,7 +83,7 @@ Flux.range(1, n)
 
 为了减少样板文件，让我们用一种可以在所有示例中重用的方法来实现请求部分。**我们会收到一个`WebClient`，调用`get(),`和`retrieve()`响应体用[泛型](/web/20221106142100/https://www.baeldung.com/java-generics)使用 [`ParameterizedTypeReference`](https://web.archive.org/web/20221106142100/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/ParameterizedTypeReference.html) :**
 
-```
+```java
 public interface RandomConsumer {
 
     static <T> Mono<T> get(WebClient client) {
@@ -100,7 +100,7 @@ public interface RandomConsumer {
 
 我们的第一个例子使用 [`zipWith()`](/web/20221106142100/https://www.baeldung.com/reactor-combine-streams) 将我们的请求与固定延迟结合起来:
 
-```
+```java
 public class ZipWithInterval {
 
     public static Flux<Integer> fetch(
@@ -118,7 +118,7 @@ public class ZipWithInterval {
 
 `Flux`有一个更直接的方法来延迟它的元素:
 
-```
+```java
 public class DelayElements {
 
     public static Flux<Integer> fetch(
@@ -136,7 +136,7 @@ public class DelayElements {
 
 因此，如果我们不提供足够长的延迟，我们将得到一个错误:
 
-```
+```java
 @Test
 void givenSmallDelay_whenDelayElements_thenExceptionThrown() {
     int delay = 100;
@@ -159,7 +159,7 @@ void givenSmallDelay_whenDelayElements_thenExceptionThrown() {
 
 鉴于我们服务的局限性，我们最好的选择是并行发送最多`Concurrency.MAX_CONCURRENT`个请求。**要做到这一点，我们可以在`flatMap()`中增加一个参数来表示并行处理的最大数量:**
 
-```
+```java
 public class LimitConcurrency {
 
     public static Flux<Integer> fetch(
@@ -172,7 +172,7 @@ public class LimitConcurrency {
 
 **该参数保证并发请求的最大数量不超过`concurrency`，并且我们的处理不会被不必要的延迟:**
 
-```
+```java
 @Test
 void givenLimitInsideServerRange_whenLimitedConcurrency_thenNoExceptionThrown() {
     int limit = Concurrency.MAX_CONCURRENT;
@@ -193,7 +193,7 @@ Resilience4j 是一个多功能的库，用于处理应用程序中的容错。*
 
 让我们从添加 [resilience4j-reactor](https://web.archive.org/web/20221106142100/https://search.maven.org/search?q=g:io.github.resilience4j%20a:resilience4j-reactor) 和 [resilience4j-ratelimiter](https://web.archive.org/web/20221106142100/https://search.maven.org/search?q=g:io.github.resilience4j%20a:resilience4j-ratelimiter) 依赖关系开始:
 
-```
+```java
 <dependency>
     <groupId>io.github.resilience4j</groupId>
     <artifactId>resilience4j-reactor</artifactId>
@@ -208,7 +208,7 @@ Resilience4j 是一个多功能的库，用于处理应用程序中的容错。*
 
 然后我们用`RateLimiter.of()`构建我们的速率限制器，提供名称、发送新请求的时间间隔、并发限制和超时:
 
-```
+```java
 public class Resilience4jRateLimit {
 
     public static Flux<Integer> fetch(
@@ -226,7 +226,7 @@ public class Resilience4jRateLimit {
 
 **现在我们将它包含在我们的`Flux`和`transformDeferred(),` 中，因此它控制我们的`GET`请求率:**
 
-```
+```java
 return Flux.range(1, requests)
   .flatMap(i -> RandomConsumer.get(client)
     .transformDeferred(RateLimiterOperator.of(limiter))
@@ -241,7 +241,7 @@ return Flux.range(1, requests)
 
 首先，我们需要将[番石榴](https://web.archive.org/web/20221106142100/https://search.maven.org/search?q=g:com.google.guava%20a:guava)添加到 pom.xml 中:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -251,7 +251,7 @@ return Flux.range(1, requests)
 
 要使用它，我们调用`RateLimiter.create()`并向它传递我们希望每秒发送的最大请求数。然后，我们调用`limiter`上的`acquire()`，然后在必要时发送我们的请求来限制执行:
 
-```
+```java
 public class GuavaRateLimit {
 
     public static Flux<Integer> fetch(

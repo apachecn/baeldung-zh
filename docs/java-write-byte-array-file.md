@@ -12,7 +12,7 @@ Java 的 IO 包从 JDK 1.0 开始就存在了，它提供了一系列用于读�
 
 让我们用一个`FileOutputStream`将图像写到一个文件中:
 
-```
+```java
 File outputFile = tempFolder.newFile("outputFile.jpg");
 try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
     outputStream.write(dataForWriting);
@@ -27,7 +27,7 @@ Java NIO 包是在 Java 1.4 中引入的，NIO 的[文件系统 API 是在 Java 
 
 我们可以使用`Files`类在一行中编写我们的`byte[]`:
 
-```
+```java
 Files.write(outputFile.toPath(), dataForWriting);
 ```
 
@@ -41,7 +41,7 @@ Files.write(outputFile.toPath(), dataForWriting);
 
 让我们将[番石榴](https://web.archive.org/web/20221013193919/https://search.maven.org/search?q=g:com.google.guava%20a:guava)导入到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -53,7 +53,7 @@ Files.write(outputFile.toPath(), dataForWriting);
 
 与 Java NIO 包一样，我们可以在一行中编写我们的`byte[]`:
 
-```
+```java
 Files.write(dataForWriting, outputFile);
 ```
 
@@ -67,7 +67,7 @@ Guava 的`Files.write`方法也有一个可选的`OptionOptions`，并使用与`
 
 我们也可以创建一个`ByteSink`来写我们的`byte[]`:
 
-```
+```java
 ByteSink byteSink = Files.asByteSink(outputFile);
 byteSink.write(dataForWriting);
 ```
@@ -76,7 +76,7 @@ byteSink.write(dataForWriting);
 
 如果我们需要使用一个`java.nio.files.Path`或者提供一个特殊的`OpenOption`，我们可以使用`MoreFiles`类来获取我们的`ByteSink`:
 
-```
+```java
 ByteSink byteSink = MoreFiles.asByteSink(outputFile.toPath(), 
     StandardOpenOption.CREATE, 
     StandardOpenOption.WRITE);
@@ -89,7 +89,7 @@ Apache [Commons IO](/web/20221013193919/https://www.baeldung.com/apache-commons-
 
 让我们导入最新版本的 [commons-io](https://web.archive.org/web/20221013193919/https://search.maven.org/search?q=g:commons-io%20a:commons-io) :
 
-```
+```java
 <dependency>
     <groupId>commons-io</groupId>
     <artifactId>commons-io</artifactId>
@@ -99,7 +99,7 @@ Apache [Commons IO](/web/20221013193919/https://www.baeldung.com/apache-commons-
 
 现在，让我们使用`FileUtils`类编写我们的`byte[]`:
 
-```
+```java
 FileUtils.writeByteArrayToFile(outputFile, dataForWriting);
 ```
 

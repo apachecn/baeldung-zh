@@ -18,7 +18,7 @@ Flux API 在 Flux 上提供了几个静态工厂方法来创建源代码或从�
 
 我们需要`[reactor-core](https://web.archive.org/web/20220802122224/https://search.maven.org/search?q=g:io.projectreactor%20AND%20a:reactor-core&core=gav) `[`reactor-test`](https://web.archive.org/web/20220802122224/https://search.maven.org/search?q=g:io.projectreactor%20AND%20a:reactor-test)美凤的依赖:
 
-```
+```java
 <dependency>
     <groupId>io.projectreactor</groupId>
     <artifactId>reactor-core</artifactId>
@@ -48,7 +48,7 @@ Flux API 的`generate()`方法提供了一个简单直接的编程方法来创�
 
 在这个例子中，让我们使用`generate(Callable<S> stateSupplier, BiFunction<S, SynchronousSink<T>, S> generator)`来生成一个`Flux`:
 
-```
+```java
 public class CharacterGenerator {
 
     public Flux<Character> generateCharacters() {
@@ -74,7 +74,7 @@ public class CharacterGenerator {
 
 让我们用 [`StepVerifier`](/web/20220802122224/https://www.baeldung.com/reactive-streams-step-verifier-test-publisher) 来验证生成的序列:
 
-```
+```java
 @Test
 public void whenGeneratingCharacters_thenCharactersAreProduced() {
     CharacterGenerator characterGenerator = new CharacterGenerator();
@@ -101,7 +101,7 @@ public void whenGeneratingCharacters_thenCharactersAreProduced() {
 
 现在让我们演示一下`create()`方法的例子:
 
-```
+```java
 public class CharacterCreator {
     public Consumer<List<Character>> consumer;
 
@@ -115,7 +115,7 @@ public class CharacterCreator {
 
 现在让我们使用带有两个字符序列的`CharacterCreator`:
 
-```
+```java
 @Test
 public void whenCreatingCharactersWithMultipleThreads_thenSequenceIsProducedAsynchronously() throws InterruptedException {
     CharacterGenerator characterGenerator = new CharacterGenerator();
@@ -128,7 +128,7 @@ public void whenCreatingCharactersWithMultipleThreads_thenSequenceIsProducedAsyn
 
 现在让我们定义一个`characterCreator` 实例和两个线程实例:
 
-```
+```java
 CharacterCreator characterCreator = new CharacterCreator();
 Thread producerThread1 = new Thread(() -> characterCreator.consumer.accept(sequence1));
 Thread producerThread2 = new Thread(() -> characterCreator.consumer.accept(sequence2));
@@ -136,14 +136,14 @@ Thread producerThread2 = new Thread(() -> characterCreator.consumer.accept(seque
 
 我们现在正在创建两个线程实例，它们将向发布者提供元素。当调用 accept 操作符时，字符元素开始流入序列源。接下来，我们`subscribe`到新的合并序列:
 
-```
+```java
 List<Character> consolidated = new ArrayList<>();
 characterCreator.createCharacterSequence().subscribe(consolidated::add);
 ```
 
 请注意，`createCharacterSequence`返回了我们订阅的流量，并使用了`consolidated`列表中的元素。接下来，让我们触发看到项目在两个不同线程上移动的整个过程:
 
-```
+```java
 producerThread1.start();
 producerThread2.start();
 producerThread1.join();
@@ -152,7 +152,7 @@ producerThread2.join();
 
 最后，让我们验证操作的结果:
 
-```
+```java
 assertThat(consolidated).containsExactlyInAnyOrder('a', 'b', 'c', 'a', 'b');
 ```
 

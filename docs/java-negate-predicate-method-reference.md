@@ -14,7 +14,7 @@
 
 首先，让我们用一个`age `字段和一个`isAdult()`方法创建一个`Person`类:
 
-```
+```java
 public class Person {
     private static final int ADULT_AGE = 18;
 
@@ -32,7 +32,7 @@ public class Person {
 
 现在，假设我们有一个人员列表:
 
-```
+```java
 List<Person> people = Arrays.asList(
   new Person(1),
   new Person(18),
@@ -42,7 +42,7 @@ List<Person> people = Arrays.asList(
 
 我们想找回所有成年的。为了在 Java 8 中实现这一点，我们可以:
 
-```
+```java
 people.stream()                      
   .filter(Person::isAdult)           
   .collect(Collectors.toList());
@@ -50,7 +50,7 @@ people.stream()
 
 但是，如果我们要检索的是未成年人呢？那么我们必须否定这个谓词:
 
-```
+```java
 people.stream()                       
   .filter(person -> !person.isAdult())
   .collect(Collectors.toList());
@@ -58,7 +58,7 @@ people.stream()
 
 **不幸的是，我们被迫放弃方法引用，尽管我们发现它更容易阅读。**一个可能的解决方法是在`Person`类上创建一个`isNotAdult()`方法，然后使用对该方法的引用:
 
-```
+```java
 people.stream()                 
   .filter(Person::isNotAdult)   
   .collect(Collectors.toList());
@@ -72,7 +72,7 @@ people.stream()
 
 让我们看一下前面的例子，看看这意味着什么。我们可以不使用 lambda 或者在`Person`类上创建一个新方法，而是使用这个新方法:
 
-```
+```java
 people.stream()                          
   .filter(Predicate.not(Person::isAdult))
   .collect(Collectors.toList());
@@ -82,7 +82,7 @@ people.stream()
 
 我们可以通过静态导入使这一点更加清楚:
 
-```
+```java
 people.stream()                  
   .filter(not(Person::isAdult))  
   .collect(Collectors.toList());

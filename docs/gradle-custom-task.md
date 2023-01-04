@@ -12,7 +12,7 @@
 
 为了创建一个简单的 Gradle 任务，我们需要将其定义添加到我们的`build.gradle`文件中:
 
-```
+```java
 task welcome {
     doLast {
         println 'Welcome in the Baeldung!'
@@ -22,13 +22,13 @@ task welcome {
 
 上述任务的主要目标只是打印文本“欢迎来到 Baeldung！”。我们可以通过运行`**gradle tasks –all**`命令来检查**任务是否可用**:
 
-```
+```java
 gradle tasks --all 
 ```
 
 该任务在组**其他任务**下的列表中:
 
-```
+```java
 Other tasks
 -----------
 welcome
@@ -36,7 +36,7 @@ welcome
 
 它可以像其他 Gradle 任务一样执行:
 
-```
+```java
 gradle welcome 
 ```
 
@@ -48,7 +48,7 @@ gradle welcome
 
 有时按功能对任务进行分组很方便，因此它们在一个类别下是可见的。我们可以快速**为我们的自定义任务设置** **组，只需定义一个组属性**:
 
-```
+```java
 task welcome {
     group 'Sample category'
     doLast {
@@ -59,7 +59,7 @@ task welcome {
 
 现在，当我们运行 Gradle 命令列出所有可用任务时(`–all`选项不再需要)，我们将在新组下看到我们的任务:
 
-```
+```java
 Sample category tasks
 ---------------------
 welcome 
@@ -67,7 +67,7 @@ welcome
 
 然而，让其他人看到任务负责什么也是有益的。我们可以**创建包含简短信息的描述**:
 
-```
+```java
 task welcome {
     group 'Sample category'
     description 'Tasks which shows a welcome message'
@@ -79,7 +79,7 @@ task welcome {
 
 当我们打印可用任务的列表时，输出如下:
 
-```
+```java
 Sample category tasks
 ---------------------
 welcome - Tasks which shows a welcome message 
@@ -95,7 +95,7 @@ welcome - Tasks which shows a welcome message
 
 我们可以通过创建任务类型来快速**实现任务的定制。仅仅是，任务类型是在构建脚本中定义的:**
 
-```
+```java
 class PrintToolVersionTask extends DefaultTask {
     String tool
 
@@ -119,7 +119,7 @@ class PrintToolVersionTask extends DefaultTask {
 
 `PrintToolVersionTask` **任务包含工具属性，可由该任务的**实例定制；
 
-```
+```java
 String tool 
 ```
 
@@ -129,7 +129,7 @@ String tool
 
 为了基于创建的任务类型运行定制任务，我们需要**创建一个这种类型的新任务实例**:
 
-```
+```java
 task printJavaVersion(type : PrintToolVersionTask) {
     tool 'java'
 } 
@@ -142,14 +142,14 @@ task printJavaVersion(type : PrintToolVersionTask) {
 
 当我们运行上述任务时，输出与预期的一样(取决于安装的 Java 版本):
 
-```
+```java
 > Task :printJavaVersion 
 9.0.1 
 ```
 
 现在让我们创建一个打印 Groovy 安装版本的任务:
 
-```
+```java
 task printGroovyVersion(type : PrintToolVersionTask) {
     tool 'groovy'
 } 
@@ -157,7 +157,7 @@ task printGroovyVersion(type : PrintToolVersionTask) {
 
 它使用与我们之前定义的相同的任务类型，但是它具有不同的工具属性值。当我们执行这个任务时，它打印 Groovy 版本:
 
-```
+```java
 > Task :printGroovyVersion 
 2.4.12 
 ```

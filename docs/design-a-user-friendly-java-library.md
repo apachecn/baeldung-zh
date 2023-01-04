@@ -30,7 +30,7 @@ Java 是开源世界的支柱之一。几乎每个 Java 项目都使用其他开
 
 例如，下面是我们可以使用 jcabi-github 实例化 Github API 入口点的几种方法:
 
-```
+```java
 Github noauth = new RtGithub();
 Github basicauth = new RtGithub("username", "password");
 Github oauth = new RtGithub("token"); 
@@ -40,7 +40,7 @@ Github oauth = new RtGithub("token");
 
 作为第二个例子，下面是我们如何使用 charles，一个网络爬行库:
 
-```
+```java
 WebDriver driver = new FirefoxDriver();
 Repository repo = new InMemoryRepository();
 String indexPage = "http://www.amihaiemil.com/index.html";
@@ -64,7 +64,7 @@ graph.crawl();
 
 再看看上面的代码。为什么我们必须提供存储库实现？为什么 WebCrawl.crawl()方法不直接返回网页元素列表？处理被抓取的网页显然不是图书馆的工作。它怎么知道我们想用它们做什么？大概是这样的:
 
-```
+```java
 WebCrawl graph = new GraphCrawl(...);
 List<WebPage> pages = graph.crawl(); 
 ```
@@ -86,7 +86,7 @@ List<WebPage> pages = graph.crawl();
 
 例如，在`jcabi-github`库中，RtGithub 类是用户实际看到的唯一一个类:
 
-```
+```java
 Repo repo = new RtGithub("oauth_token").repos().get(
   new Coordinates.Simple("eugenp/tutorials"));
 Issue issue = repo.issues()
@@ -95,7 +95,7 @@ Issue issue = repo.issues()
 
 上面的代码片段在 [eugenp/tutorials repo](https://web.archive.org/web/20220117213420/https://github.com/eugenp/tutorials) 中创建了一个票据。使用了回购和发行的实例，但实际类型从未透露。我们不能这样做:
 
-```
+```java
 Repo repo = new RtRepo(...)
 ```
 

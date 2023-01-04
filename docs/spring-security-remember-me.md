@@ -14,7 +14,7 @@
 
 让我们看看如何使用 Java 设置安全配置:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class SecSecurityConfig {
@@ -67,13 +67,13 @@ public class SecSecurityConfig {
 
 此外，令牌有效的**时间可以使用`tokenValiditySeconds()`配置**，从默认的 2 周至例如 1 天:
 
-```
+```java
 rememberMe().key("uniqueAndSecret").tokenValiditySeconds(86400)
 ```
 
 我们还可以看看等效的 XML 配置:
 
-```
+```java
 <http use-expressions="true">
     <intercept-url pattern="/anonymous*" access="isAnonymous()" />
     <intercept-url pattern="/login*" access="permitAll" />
@@ -100,7 +100,7 @@ rememberMe().key("uniqueAndSecret").tokenValiditySeconds(86400)
 
 登录表单类似于[我们用于表单登录](/web/20221127083815/https://www.baeldung.com/spring-security-login#login-form "A basic Login Form")的表单:
 
-```
+```java
 <html>
 <head></head>
 
@@ -135,7 +135,7 @@ rememberMe().key("uniqueAndSecret").tokenValiditySeconds(86400)
 
 此默认路径也可以更改如下:
 
-```
+```java
 .rememberMe().rememberMeParameter("remember-me-new")
 ```
 

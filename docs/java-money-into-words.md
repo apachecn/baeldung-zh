@@ -12,7 +12,7 @@
 
 先从我们自己的实现说起。**第一步是用以下元素声明两个`String`数组**:
 
-```
+```java
 public static String[] ones = { 
   "", "one", "two", "three", "four", 
   "five", "six", "seven", "eight", 
@@ -38,14 +38,14 @@ public static String[] tens = {
 
 当我们收到一个输入时，我们需要处理无效值(零和负值)。**一旦收到有效的输入，我们就可以将美元和美分的数量提取到变量中:**
 
-```
+```java
  long dollars = (long) money;
  long cents = Math.round((money - dollars) * 100);
 ```
 
 如果给定的数字小于 20，那么我们将根据索引从数组中获取适当的`ones'` 元素:
 
-```
+```java
 if (n < 20) {
     return ones[(int) n];
 }
@@ -53,7 +53,7 @@ if (n < 20) {
 
 我们将对小于 100 的数字使用类似的方法，但是现在我们也必须使用`tens` 数组:
 
-```
+```java
 if (n < 100) {
     return tens[(int) n / 10] 
       + ((n % 10 != 0) ? " " : "") 
@@ -65,7 +65,7 @@ if (n < 100) {
 
 接下来，我们使用递归调用来处理小于一百万的数字，如下所示:
 
-```
+```java
 if (n < 1_000_000) {
     return convert(n / 1000) + " thousand" + ((n % 1000 != 0) ? " " : "") 
       + convert(n % 1000);
@@ -76,7 +76,7 @@ if (n < 1_000_000) {
 
 下面是可以调用来完成此转换的主要方法:
 
-```
+```java
  public static String getMoneyIntoWords(double money) {
     long dollars = (long) money;
     long cents = Math.round((money - dollars) * 100);
@@ -105,7 +105,7 @@ if (n < 1_000_000) {
 
 让我们测试我们的代码，以确保它正常工作:
 
-```
+```java
 @Test
 public void whenGivenDollarsAndCents_thenReturnWords() {
     String expectedResult
@@ -139,7 +139,7 @@ public void whenThirtyMillionDollarsGiven_thenReturnWords() {
 
 让我们也测试一些边缘情况，并确保我们也涵盖了它们:
 
-```
+```java
 @Test
 public void whenZeroDollarsGiven_thenReturnEmptyString() {
     assertEquals("", NumberWordConverter.getMoneyIntoWords(0));
@@ -166,7 +166,7 @@ public void whenNoDollarsAndOneCent_thenReturnCentSingular() {
 
 [`Tradukisto`](https://web.archive.org/web/20221126234556/https://github.com/allegro/tradukisto) 是 Java 8+的一个库，可以帮助我们将数字转换成它们的文字表示。首先，我们需要将它导入到我们的项目中(这个库的最新版本可以在[这里](https://web.archive.org/web/20221126234556/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22pl.allegro.finance%22%20AND%20a%3A%22tradukisto%22)找到):
 
-```
+```java
 <dependency>
     <groupId>pl.allegro.finance</groupId>
     <artifactId>tradukisto</artifactId>
@@ -176,7 +176,7 @@ public void whenNoDollarsAndOneCent_thenReturnCentSingular() {
 
 我们现在可以使用`MoneyConverters`的`asWords()`方法来完成这个转换:
 
-```
+```java
 public String getMoneyIntoWords(String input) {
     MoneyConverters converter = MoneyConverters.ENGLISH_BANKING_MONEY_VALUE;
     return converter.asWords(new BigDecimal(input));
@@ -185,7 +185,7 @@ public String getMoneyIntoWords(String input) {
 
 让我们用一个简单的测试用例来测试这个方法:
 
-```
+```java
 @Test
 public void whenGivenDollarsAndCents_thenReturnWordsVersionTwo() {
     assertEquals(

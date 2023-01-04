@@ -24,7 +24,7 @@ RabbitMQ 是 [AMQP](/web/20221023101403/https://www.baeldung.com/rabbitmq-spring
 
 使用 Java 时，与 RabbitMQ 浏览器通信的标准方式是使用`amqp-client` Java 库。我们可以通过添加相应的 Maven 依赖项将这个库添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>com.rabbitmq</groupId>
     <artifactId>amqp-client</artifactId>
@@ -36,14 +36,14 @@ RabbitMQ 是 [AMQP](/web/20221023101403/https://www.baeldung.com/rabbitmq-spring
 
 这个库使用[工厂](/web/20221023101403/https://www.baeldung.com/creational-design-patterns)模式来创建新的连接。首先，我们创建一个新的`ConnectionFactory`实例，并设置创建连接所需的所有参数。至少，这需要告知 RabbitMQ 主机的地址:
 
-```
+```java
 ConnectionFactory factory = new ConnectionFactory();
 factory.setHost("amqp.example.com"); 
 ```
 
 一旦我们设置完这些参数，我们就使用`newConnection()`工厂方法来创建一个新的`Connection`实例:
 
-```
+```java
 Connection conn = factory.newConnection();
 ```
 
@@ -65,13 +65,13 @@ Connection conn = factory.newConnection();
 
 使用`amqp-client`库的 Java 应用程序使用现有`Connection`的`createChannel()`方法创建一个新的`Channel`:
 
-```
+```java
 channel = conn.createChannel();
 ```
 
 一旦我们有了一个`Channel,`，我们就可以向服务器发送命令。例如，为了创建一个队列，我们使用了`queueDeclare()`方法:
 
-```
+```java
 channel.queueDeclare("example.queue", true, false, true, null);
 ```
 
@@ -84,7 +84,7 @@ channel.queueDeclare("example.queue", true, false, true, null);
 
 现在，要使用默认交换向该队列发送消息，我们使用`basicPublish()`方法:
 
-```
+```java
 channel.basicPublish("", queue, null, payload);
 ```
 
@@ -116,7 +116,7 @@ channel.basicPublish("", queue, null, payload);
 
 为了评估这些候选策略，让我们为每个策略运行一个简单的基准测试。**基准测试包括并行运行多个 workerss，每个 worker 发送一千条 4kb 的消息。**在构建时，工人接收到一个`Connection`，它将从中创建一个`Channel`来发送命令。它还接收迭代次数、有效负载大小和一个用于通知测试运行程序它已经完成发送消息的`CountDownLatch`:
 
-```
+```java
 public class Worker implements Callable<Worker.WorkerResult> {
 
     // ... field and constructor omitted
@@ -151,7 +151,7 @@ public class Worker implements Callable<Worker.WorkerResult> {
 
 控制器根据正在评估的策略创建连接工厂和工人。对于单个连接，它创建`Connection`实例，并将其传递给每个工作者:
 
-```
+```java
 @Override
 public Long call() {
 
@@ -185,7 +185,7 @@ public Long call() {
 
 对于多连接策略，我们为每个工人创建一个新的`Connection`:
 
-```
+```java
 for (int i = 0; i < workerCount; i++) {
     Connection conn = factory.newConnection();
     workers.add(new Worker("queue_" + i, conn, iterations, counter, payloadSize));
@@ -194,7 +194,7 @@ for (int i = 0; i < workerCount; i++) {
 
 `throughput`函数计算的基准度量将是完成所有工作所需的总时间除以工作人数:
 
-```
+```java
 private static long throughput(int workerCount, int iterations, long elapsed) {
     return (iterations * workerCount * 1000) / elapsed;
 } 

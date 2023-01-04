@@ -16,7 +16,7 @@
 
 幸运的是，**我们可以使用反射获得实例:**
 
-```
+```java
 Field f = Unsafe.class.getDeclaredField("theUnsafe");
 f.setAccessible(true);
 unsafe = (Unsafe) f.get(null);
@@ -26,7 +26,7 @@ unsafe = (Unsafe) f.get(null);
 
 假设我们有一个简单的类，它的构造函数在对象创建时设置一个变量值:
 
-```
+```java
 class InitializationOrdering {
     private long a;
 
@@ -42,14 +42,14 @@ class InitializationOrdering {
 
 当我们使用构造函数初始化该对象时，`getA()` 方法将返回值 1:
 
-```
+```java
 InitializationOrdering o1 = new InitializationOrdering();
 assertEquals(o1.getA(), 1);
 ```
 
 但是我们可以使用`Unsafe.`来使用`allocateInstance()` 方法，它只会为我们的类分配内存，而不会调用构造函数:
 
-```
+```java
 InitializationOrdering o3 
   = (InitializationOrdering) unsafe.allocateInstance(InitializationOrdering.class);
 
@@ -62,7 +62,7 @@ assertEquals(o3.getA(), 0);
 
 假设我们有一个保存私有值的类:
 
-```
+```java
 class SecretHolder {
     private int SECRET_VALUE = 0;
 
@@ -74,7 +74,7 @@ class SecretHolder {
 
 使用来自`Unsafe,`的`putInt()` 方法，我们可以改变私有`SECRET_VALUE` 字段的值，改变/破坏该实例的状态:
 
-```
+```java
 SecretHolder secretHolder = new SecretHolder();
 
 Field f = secretHolder.getClass().getDeclaredField("SECRET_VALUE");
@@ -89,7 +89,7 @@ assertTrue(secretHolder.secretIsDisclosed());
 
 编译器不会像检查普通 Java 代码一样检查通过`Unsafe` 调用的代码。我们可以使用`throwException()` 方法抛出任何异常，而不限制调用者处理该异常，即使它是一个检查过的异常:
 
-```
+```java
 @Test(expected = IOException.class)
 public void givenUnsafeThrowException_whenThrowCheckedException_thenNotNeedToCatchIt() {
     unsafe.throwException(new IOException());
@@ -108,7 +108,7 @@ public void givenUnsafeThrowException_whenThrowCheckedException_thenNotNeedToCat
 
 假设我们想要创建大型堆外内存字节数组。我们可以使用`allocateMemory()`方法来实现:
 
-```
+```java
 class OffHeapArray {
     private final static int BYTE = 1;
     private long size;
@@ -142,7 +142,7 @@ class OffHeapArray {
     }
 ```
 
-```
+```java
 }
 ```
 
@@ -150,14 +150,14 @@ class OffHeapArray {
 
 接下来，我们可以使用其构造函数来分配堆外数组:
 
-```
+```java
 long SUPER_SIZE = (long) Integer.MAX_VALUE * 2;
 OffHeapArray array = new OffHeapArray(SUPER_SIZE);
 ```
 
 我们可以将 N 个字节值放入该数组，然后检索这些值，将它们相加以测试我们的寻址是否正确:
 
-```
+```java
 int sum = 0;
 for (int i = 0; i < 100; i++) {
     array.set((long) Integer.MAX_VALUE + i, (byte) 3);
@@ -176,7 +176,7 @@ assertEquals(sum, 300);
 
 我们可以使用`Unsafe`中的`compareAndSwapLong()` 方法构建基于 CAS 的计数器:
 
-```
+```java
 class CASCounter {
     private Unsafe unsafe;
     private volatile long counter = 0;
@@ -214,7 +214,7 @@ class CASCounter {
 
 我们可以通过从多个线程递增共享计数器来测试我们的代码:
 
-```
+```java
 int NUM_OF_THREADS = 1_000;
 int NUM_OF_INCREMENTS = 10_000;
 ExecutorService service = Executors.newFixedThreadPool(NUM_OF_THREADS);
@@ -228,7 +228,7 @@ IntStream.rangeClosed(0, NUM_OF_THREADS - 1)
 
 接下来，为了断言计数器的状态是正确的，我们可以从中获得计数器值:
 
-```
+```java
 assertEquals(NUM_OF_INCREMENTS * NUM_OF_THREADS, casCounter.getCounter());
 ```
 

@@ -18,7 +18,7 @@ Docker 使用[存储](https://web.archive.org/web/20221006124104/https://docs.do
 
 首先，让我们[创建](https://web.archive.org/web/20221006124104/https://docs.docker.com/engine/reference/commandline/volume_create/)两个不同命名的卷:
 
-```
+```java
 docker volume create --name first-volume-data && docker volume create --name second-volume-data 
 ```
 
@@ -26,7 +26,7 @@ docker volume create --name first-volume-data && docker volume create --name sec
 
 如果我们使用命令行，我们可以使用`-v`选项:
 
-```
+```java
 docker run -d -p 8080:8080 -v first-volume-data:/container-path-1 -v second-volume-data:/container-path-2:ro --name web-app web-app:latest 
 ```
 
@@ -34,13 +34,13 @@ docker run -d -p 8080:8080 -v first-volume-data:/container-path-1 -v second-volu
 
 让我们[检查](https://web.archive.org/web/20221006124104/https://docs.docker.com/engine/reference/commandline/inspect/)我们的集装箱，检查我们的装载是否正确:
 
-```
+```java
 docker inspect 0050cda73c6f
 ```
 
 我们可以看到相关信息，如源和目标、类型，以及第二个卷的只读状态:
 
-```
+```java
 "Mounts": [
   {
       "Type": "volume",
@@ -67,7 +67,7 @@ docker inspect 0050cda73c6f
 
 类似地，Docker 建议我们使用`–mount`选项:
 
-```
+```java
 docker run -d \
   --name web-app \
   -p 8080:8080 \
@@ -80,7 +80,7 @@ docker run -d \
 
 因此，如果我们想为有多个挂载的 web 应用程序创建一个[服务](https://web.archive.org/web/20221006124104/https://docs.docker.com/engine/reference/commandline/service/)，我们需要使用`–mount`选项:
 
-```
+```java
 docker service create --name web-app-service \
   --replicas 3 \
   --publish published=8080,target=80 \
@@ -91,13 +91,13 @@ docker service create --name web-app-service \
 
 同样，我们可以检查我们的服务:
 
-```
+```java
 docker service inspect web-app-service
 ```
 
 同样，我们将在服务规范中获得一些关于容器的信息:
 
-```
+```java
 "Mounts": [
   {
       "Type": "volume",
@@ -119,7 +119,7 @@ docker service inspect web-app-service
 
 假设我们有一个 [MySQL](/web/20221006124104/https://www.baeldung.com/ops/docker-mysql-container) 数据库映像，我们需要运行一个初始脚本来创建一个模式或者用一些数据填充它:
 
-```
+```java
 docker run -d \
   --name db \
   -p 3306:3306 \
@@ -130,7 +130,7 @@ docker run -d \
 
 如果我们检查我们的容器，我们现在可以看到两种不同的装载类型:
 
-```
+```java
 "Mounts": [
   {
       "Type": "volume",
@@ -159,7 +159,7 @@ docker run -d \
 
 假设我们想要启动一个本地 S3 服务:
 
-```
+```java
 docker run --name localstack -d \
   -p 4563-4599:4563-4599 -p 8055:8080 \
   -e SERVICES=s3 -e DEBUG=1 -e DATA_DIR=/tmp/localstack/data \
@@ -169,7 +169,7 @@ docker run --name localstack -d \
 
 检查容器时，我们看到主机配置中有多个绑定:
 
-```
+```java
 "Binds": [
   "/.localstack:/var/lib/localstack",
   "/var/run/docker.sock:/var/run/docker.sock"
@@ -184,7 +184,7 @@ docker run --name localstack -d \
 
 首先，让我们从两卷开始，如我们的 YAML 模板所示:
 
-```
+```java
 services:
   my_app:
     image: web-app:latest
@@ -206,7 +206,7 @@ volumes:
 
 [长语法](https://web.archive.org/web/20221006124104/https://docs.docker.com/compose/compose-file/#volumes)也可用于 Docker Compose，例如:
 
-```
+```java
 volumes:
   - type: volume
     source: volume-data
@@ -217,7 +217,7 @@ volumes:
 
 同样，这里有一个使用 MySQL 服务的例子:
 
-```
+```java
 services:
   mysql-db:
     image: mysql:latest
@@ -239,7 +239,7 @@ volumes:
 
 最后，让我们将之前的 Localstack 示例转换为 Docker Compose:
 
-```
+```java
 services:
   localstack:
     privileged: true

@@ -26,7 +26,7 @@
 
 如果我们使用基于 Java 的配置，我们在`ApplicationInitializer`中的过滤器注册将被定义为:
 
-```
+```java
 @Override
 protected javax.servlet.Filter[] getServletFilters() {
     DelegatingFilterProxy delegateFilterProxy = new DelegatingFilterProxy();
@@ -37,7 +37,7 @@ protected javax.servlet.Filter[] getServletFilters() {
 
 如果我们使用 XML，那么，在`web.xml`文件中:
 
-```
+```java
 <filter>
     <filter-name>applicationFilter</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -66,7 +66,7 @@ protected javax.servlet.Filter[] getServletFilters() {
 
 让我们首先创建一个自定义过滤器类:
 
-```
+```java
 @Component("loggingFilter")
 public class CustomFilter implements Filter {
 
@@ -104,7 +104,7 @@ public class CustomFilter implements Filter {
 
 要使用 Java 配置注册自定义过滤器，我们需要覆盖`AbstractAnnotationConfigDispatcherServletInitializer`的`getServletFilters()`方法:
 
-```
+```java
 public class ApplicationInitializer 
   extends AbstractAnnotationConfigDispatcherServletInitializer {
     // some other methods here
@@ -122,7 +122,7 @@ public class ApplicationInitializer
 
 让我们看看`web.xml`中的滤波器配置是怎样的:
 
-```
+```java
 <filter>
     <filter-name>loggingFilter</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>

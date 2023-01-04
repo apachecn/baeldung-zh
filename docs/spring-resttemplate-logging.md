@@ -16,13 +16,13 @@
 
 让我们开始**配置`application.properties`** 文件中的`RestTemplate`记录器:
 
-```
+```java
 logging.level.org.springframework.web.client.RestTemplate=DEBUG
 ```
 
 因此，**只能看到基本信息**，比如请求 URL、方法、主体和响应状态:
 
-```
+```java
 o.s.w.c.RestTemplate - HTTP POST http://localhost:8082/spring-rest/persons
 o.s.w.c.RestTemplate - Accept=[text/plain, application/json, application/*+json, */*]
 o.s.w.c.RestTemplate - Writing [my request body] with org.springframework.http.converter.StringHttpMessageConverter
@@ -39,7 +39,7 @@ o.s.w.c.RestTemplate - Response 200 OK
 
 我们将需要[Maven 依赖](https://web.archive.org/web/20220804184856/https://search.maven.org/artifact/org.apache.httpcomponents/httpclient):
 
-```
+```java
 <dependency>
     <groupId>org.apache.httpcomponents</groupId>
     <artifactId>httpclient</artifactId>
@@ -49,21 +49,21 @@ o.s.w.c.RestTemplate - Response 200 OK
 
 当创建`RestTemplate`实例时，**我们应该告诉它我们正在使用 Apache HttpClient** :
 
-```
+```java
 RestTemplate restTemplate = new RestTemplate();
 restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 ```
 
 然后，让我们在`application.properties`文件中配置客户端记录器:
 
-```
+```java
 logging.level.org.apache.http=DEBUG
 logging.level.httpclient.wire=DEBUG
 ```
 
 现在我们可以看到请求/响应头和主体:
 
-```
+```java
  o.a.http.headers - http-outgoing-0 >> POST /spring-rest/persons HTTP/1.1
     o.a.http.headers - http-outgoing-0 >> Accept: text/plain, application/json, application/*+json, */*
 // ... more request headers
@@ -96,7 +96,7 @@ org.apache.http.wire - http-outgoing-0 << "["Lucie","Jackie","Danesh","Tao"][\r]
 
 首先，让我们**创建一个新的`LoggingInterceptor`来定制我们的日志**。这个拦截器将请求体记录为一个简单的字节数组。但是，对于响应，我们必须阅读整个正文流:
 
-```
+```java
 public class LoggingInterceptor implements ClientHttpRequestInterceptor {
 
     static Logger LOGGER = LoggerFactory.getLogger(LoggingInterceptor.class);
@@ -124,7 +124,7 @@ public class LoggingInterceptor implements ClientHttpRequestInterceptor {
 
 为了避免这种情况，我们应该使用`BufferingClientHttpRequestFactory`:它将流内容缓冲到内存中。这样，它可以被读取两次:一次由我们的拦截器读取，另一次由我们的客户端应用程序读取:
 
-```
+```java
 ClientHttpRequestFactory factory = 
         new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory());
         RestTemplate restTemplate = new RestTemplate(factory);
@@ -134,7 +134,7 @@ ClientHttpRequestFactory factory =
 
 然后我们可以将日志拦截器添加到`RestTemplate`实例中——我们将把它附加在现有拦截器之后，如果有的话:
 
-```
+```java
 List<ClientHttpRequestInterceptor> interceptors = restTemplate.getInterceptors();
 if (CollectionUtils.isEmpty(interceptors)) {
     interceptors = new ArrayList<>();
@@ -145,7 +145,7 @@ restTemplate.setInterceptors(interceptors);
 
 因此，日志中只显示必要的信息:
 
-```
+```java
 c.b.r.l.LoggingInterceptor - Request body: my request body
 c.b.r.l.LoggingInterceptor - Response body: ["Lucie","Jackie","Danesh","Tao"]
 ```
@@ -156,7 +156,7 @@ c.b.r.l.LoggingInterceptor - Response body: ["Lucie","Jackie","Danesh","Tao"]
 
 为了防止这种情况，一个可能的选择是假设当数据量增加时，这些详细日志将被关闭，这通常发生在生产中。例如，只有在我们的记录器上启用了`DEBUG`级别时，我们才能**使用缓冲的`RestTemplate`实例:**
 
-```
+```java
 RestTemplate restTemplate = null;
 if (LOGGER.isDebugEnabled()) {
     ClientHttpRequestFactory factory 
@@ -169,7 +169,7 @@ if (LOGGER.isDebugEnabled()) {
 
 类似地，我们将**确保我们的拦截器只在`DEBUG`日志记录被启用时读取响应**:
 
-```
+```java
 if (LOGGER.isDebugEnabled()) {
     InputStreamReader isr = new InputStreamReader(response.getBody(), StandardCharsets.UTF_8);
     String body = new BufferedReader(isr)

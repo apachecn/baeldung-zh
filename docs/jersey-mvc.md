@@ -38,7 +38,7 @@ Jersey 包含一个扩展来支持模型-视图-控制器(MVC)设计模式。
 
 我们可以从 [Maven Central](https://web.archive.org/web/20220625230515/https://search.maven.org/classic/#search%7Cga%7C1%7Cjersey-mvc-freemarker) 获得最新版本:
 
-```
+```java
 <dependency>
     <groupId>org.glassfish.jersey.ext</groupId>
     <artifactId>jersey-mvc-freemarker</artifactId>
@@ -50,7 +50,7 @@ Jersey 包含一个扩展来支持模型-视图-控制器(MVC)设计模式。
 
 同样，我们可以在 [Maven Central](https://web.archive.org/web/20220625230515/https://search.maven.org/classic/#search%7Cga%7C1%7Cjersey-container-grizzly2-servlet) 中找到最新版本:
 
-```
+```java
 <dependency>
     <groupId>org.glassfish.jersey.containers</groupId>
     <artifactId>jersey-container-grizzly2-servlet</artifactId>
@@ -64,7 +64,7 @@ Jersey 包含一个扩展来支持模型-视图-控制器(MVC)设计模式。
 
 考虑到这一点，我们定义了一个自定义资源配置:
 
-```
+```java
 public class ViewApplicationConfig extends ResourceConfig {    
     public ViewApplicationConfig() {
         packages("com.baeldung.jersey.server");
@@ -84,7 +84,7 @@ public class ViewApplicationConfig extends ResourceConfig {
 
 现在让我们看看如何运行我们的 web 应用程序。我们将使用 [exec-maven-plugin](https://web.archive.org/web/20220625230515/https://www.mojohaus.org/exec-maven-plugin/) 来配置我们的`pom.xml`来执行我们的嵌入式 web 服务器:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>exec-maven-plugin</artifactId>
@@ -96,7 +96,7 @@ public class ViewApplicationConfig extends ResourceConfig {
 
 现在让我们使用 Maven 编译并运行我们的应用程序:
 
-```
+```java
 mvn clean compile exec:java
 ...
 Jul 28, 2018 6:21:08 PM org.glassfish.grizzly.http.server.HttpServer start
@@ -122,7 +122,7 @@ Stop the application using CTRL+C
 
 我们先来看一下`Viewable`:
 
-```
+```java
 @Path("/fruit")
 public class FruitResource {
     @GET
@@ -142,7 +142,7 @@ public class FruitResource {
 
 在下一个例子中，我们将简单地用`@Template`来注释我们的资源方法:
 
-```
+```java
 @GET
 @Template(name = "/all.ftl")
 @Path("/all")
@@ -167,7 +167,7 @@ public Map<String, Object> getAllFruit() {
 
 现在让我们看看如何使用`@ErrorTemplate`注释来处理错误:
 
-```
+```java
 @GET
 @ErrorTemplate(name = "/error.ftl")
 @Template(name = "/named.ftl")
@@ -189,7 +189,7 @@ public String getFruitByName(@PathParam("name") String name) {
 
 让我们快速浏览一下`error.ftl`模板中的一个片段来强调这一点:
 
-```
+```java
 <body>
     <h1>Error - ${model.message}!</h1>
 </body>
@@ -197,7 +197,7 @@ public String getFruitByName(@PathParam("name") String name) {
 
 在我们的最后一个例子中，我们将看看一个简单的单元测试:
 
-```
+```java
 @Test
 public void givenGetFruitByName_whenFruitUnknown_thenErrorTemplateInvoked() {
     String response = target("/fruit/orange").request()

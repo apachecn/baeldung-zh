@@ -24,7 +24,7 @@
 
 有了这些规则，我们就可以进行实验了。一旦实验结束，我们就可以看到结果:
 
-```
+```java
 Time	Cumulative Downloads	Downloads/min
 ----------------------------------------------
 T       497                     0  
@@ -65,7 +65,7 @@ T+60    43395                   40
 
 通过前面的例子，我们已经了解了如何获取一个简单的指标并对其进行分析，现在让我们将它应用到一个简单的 Java 方法上— `isPrimeNumber`:
 
-```
+```java
 private static boolean isPrimeNumber(long number) {
     for (long i = 2; i <= number / 2; i++) {
         if (number % i == 0)
@@ -87,7 +87,7 @@ SPF4J 为我们提供了许多用于不同目的的不同库，但是对于我�
 
 让我们将其添加为 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.spf4j</groupId>
     <artifactId>spf4j-core</artifactId>
@@ -99,7 +99,7 @@ SPF4J 为我们提供了许多用于不同目的的不同库，但是对于我�
 
 我们将在我们的示例中探索这一点，所以我们也添加这一点:
 
-```
+```java
 <dependency>
     <groupId>org.spf4j</groupId>
     <artifactId>spf4j-aspects</artifactId>
@@ -109,7 +109,7 @@ SPF4J 为我们提供了许多用于不同目的的不同库，但是对于我�
 
 最后，SPF4J 还附带了一个简单的 UI，对于数据可视化非常有用，所以让我们也添加 [`spf4j-ui`](https://web.archive.org/web/20221205151829/https://search.maven.org/search?q=g:org.spf4j%20AND%20a:spf4j-ui) :
 
-```
+```java
 <dependency>
     <groupId>org.spf4j</groupId>
     <artifactId>spf4j-ui</artifactId>
@@ -123,7 +123,7 @@ SPF4J 框架将数据写入时序数据库(TSDB ),也可以选择写入文本文
 
 让我们配置它们并设置一个系统属性`spf4j.perf.ms.config`:
 
-```
+```java
 public static void initialize() {
   String tsDbFile = System.getProperty("user.dir") + File.separator + "spf4j-performance-monitoring.tsdb2";
   String tsTextFile = System.getProperty("user.dir") + File.separator + "spf4j-performance-monitoring.txt";
@@ -151,7 +151,7 @@ SPF4J 框架的核心功能是记录、聚集和保存指标，因此在分析�
 
 首先，让我们创建一个助手方法来创建一个`MeasurementRecorder`的实例:
 
-```
+```java
 public static MeasurementRecorder getMeasurementRecorder(Object forWhat) {
     String unitOfMeasurement = "ms";
     int sampleTimeMillis = 1_000;
@@ -181,7 +181,7 @@ public static MeasurementRecorder getMeasurementRecorder(Object forWhat) {
 
 接下来，让我们使用另一个助手方法创建一个`MeasurementRecorderSource` 的实例:
 
-```
+```java
 public static final class RecorderSourceForIsPrimeNumber extends RecorderSourceInstance {
     public static final MeasurementRecorderSource INSTANCE;
     static {
@@ -205,7 +205,7 @@ public static final class RecorderSourceForIsPrimeNumber extends RecorderSourceI
 
 现在让我们创建一个方便的`Spf4jConfig`类，并将上述所有方法放入其中:
 
-```
+```java
 public class Spf4jConfig {
     public static void initialize() {
         //...
@@ -227,7 +227,7 @@ SPF4J 为我们提供了注释方法的选项，以便进行性能测量和监�
 
 让我们使用加载时编织器来编织我们的类和方面，并将`aop.xml`放在一个`META-INF` 文件夹下:
 
-```
+```java
 <aspectj>
     <aspects>
         <aspect name="org.spf4j.perf.aspects.PerformanceMonitorAspect" />
@@ -247,7 +247,7 @@ SPF4J 为我们提供了注释方法的选项，以便进行性能测量和监�
 
 让我们生成 100 个随机数，并在一个循环中调用质数检查方法。在此之前，让我们调用我们的`Spf4jConfig`类进行初始化，并创建一个`MeasureRecorder`类的实例。使用这个实例，让我们调用`record()`方法来节省 100 个`isPrimeNumber()`调用所花费的时间:
 
-```
+```java
 Spf4jConfig.initialize();
 MeasurementRecorder measurementRecorder = Spf4jConfig
   .getMeasurementRecorder(App.class + " isPrimeNumber");
@@ -267,7 +267,7 @@ for (int i = 0; i < 100; i++) {
 
 让我们运行代码，看看结果:
 
-```
+```java
 Time Series DB (TSDB) : E:\Projects\spf4j-core-app\spf4j-performance-monitoring.tsdb2
 Time Series text file : E:\Projects\spf4j-core-app\spf4j-performance-monitoring.txt
 1\. 406704834 is prime? false
@@ -285,7 +285,7 @@ Time Series text file : E:\Projects\spf4j-core-app\spf4j-performance-monitoring.
 
 让我们通过运行项目文件夹中的命令来启动 SPF4J UI:
 
-```
+```java
 java -jar target/dependency-jars/spf4j-ui-8.6.9.jar
 ```
 
@@ -315,7 +315,7 @@ java -jar target/dependency-jars/spf4j-ui-8.6.9.jar
 
 首先，我们将删除为捕获和记录指标而添加的额外代码:
 
-```
+```java
 Spf4jConfig.initialize();
 Random random = new Random();
 for (int i = 0; i < 50; i++) {
@@ -326,7 +326,7 @@ for (int i = 0; i < 50; i++) {
 
 取代所有的样板文件，接下来，让我们使用`@PerformanceMonitor`注释`isPrimeNumber()`方法:
 
-```
+```java
 @PerformanceMonitor(
   warnThresholdMillis = 1,
   errorThresholdMillis = 100, 
@@ -346,13 +346,13 @@ private static boolean isPrimeNumber(long number) {
 
 让我们先做一个 Maven 构建，然后通过传递一个 Java 代理来执行代码:
 
-```
+```java
 java -javaagent:target/dependency-jars/aspectjweaver-1.8.13.jar -jar target/spf4j-aspects-app.jar
 ```
 
 我们看到了结果:
 
-```
+```java
 Time Series DB (TSDB) : E:\Projects\spf4j-aspects-app\spf4j-performance-monitoring.tsdb2
 Time Series text file : E:\Projects\spf4j-aspects-app\spf4j-performance-monitoring.txt
 

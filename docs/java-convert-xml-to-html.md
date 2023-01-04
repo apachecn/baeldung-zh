@@ -16,7 +16,7 @@
 
 让我们使用一个简单的 Jenkins 通知作为示例 XML:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <notification>
     <from>[[email protected]](/web/20220826140012/https://www.baeldung.com/cdn-cgi/l/email-protection)</from>
@@ -35,7 +35,7 @@ Java Architecture for XML Processing([JAXP](https://web.archive.org/web/20220826
 
 让我们将 JAXP 的 [Maven 依赖项添加到我们的项目中:](https://web.archive.org/web/20220826140012/https://search.maven.org/search?q=a:jaxp-api%20g:javax.xml)
 
-```
+```java
 <dependency>
     <groupId>javax.xml</groupId>
     <artifactId>jaxp-api</artifactId>
@@ -47,7 +47,7 @@ Java Architecture for XML Processing([JAXP](https://web.archive.org/web/20220826
 
 让我们首先将 XML 文件解组成一个 Java `Element`对象:
 
-```
+```java
 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
@@ -62,7 +62,7 @@ Element xml = input.getDocumentElement();
 
 现在，让我们用 XML 文件的相关内容构建一个`Map`:
 
-```
+```java
 Map<String, String> map = new HashMap<>();
 map.put("heading", 
   xml.getElementsByTagName("heading")
@@ -84,7 +84,7 @@ map.put("content",
 
 让我们准备一个用于写出 HTML 的传输`Document`:
 
-```
+```java
 Document doc = factory
   .newDocumentBuilder()
   .newDocument(); 
@@ -92,7 +92,7 @@ Document doc = factory
 
 接下来，我们将在`map`中用`Elements`填充`Document`:
 
-```
+```java
 Element html = doc.createElement("html");
 
 Element head = doc.createElement("head");
@@ -121,7 +121,7 @@ doc.appendChild(html);
 
 最后，让我们的**用一个`TransformerFactory`** 来编组我们的`Document`对象:
 
-```
+```java
 TransformerFactory transformerFactory = TransformerFactory.newInstance();
 transformerFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
@@ -145,7 +145,7 @@ try (Writer output = new StringWriter()) {
 
 让我们将 StAX API 的 [Maven 依赖项添加到我们的项目中:](https://web.archive.org/web/20220826140012/https://search.maven.org/search?q=g:javax.xml.stream%20AND%20a:stax-api)
 
-```
+```java
 <dependency>
     <groupId>javax.xml.stream</groupId>
     <artifactId>stax-api</artifactId>
@@ -157,7 +157,7 @@ try (Writer output = new StringWriter()) {
 
 我们将使用一个简单的迭代控制流来将 XML 值存储到我们的`Map` 中:
 
-```
+```java
 XMLInputFactory factory = XMLInputFactory.newInstance();
 factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
 factory.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
@@ -191,7 +191,7 @@ try (FileInputStream file = new FileInputStream(resourcePath)) {
 
 现在，让我们用我们的`map`和**写出 HTML** :
 
-```
+```java
 try (Writer output = new StringWriter()) {
     XMLStreamWriter writer = XMLOutputFactory
       .newInstance()
@@ -235,7 +235,7 @@ Apache FreeMarker 是一个基于 Java 的模板引擎，用于生成文本输�
 
 为了使用它，我们需要将 [freemarker](https://web.archive.org/web/20220826140012/https://search.maven.org/search?q=g:org.freemarker%20AND%20a:freemarker) 依赖项添加到我们的 [Maven](/web/20220826140012/https://www.baeldung.com/maven) 项目中:
 
-```
+```java
 <dependency>
     <groupId>org.freemarker</groupId>
     <artifactId>freemarker</artifactId>
@@ -245,7 +245,7 @@ Apache FreeMarker 是一个基于 Java 的模板引擎，用于生成文本输�
 
 首先，让我们使用 FreeMarker 语法创建一个模板:
 
-```
+```java
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -261,7 +261,7 @@ Apache FreeMarker 是一个基于 Java 的模板引擎，用于生成文本输�
 
 现在，让我们重用我们的`map`并填充模板中的空白:
 
-```
+```java
 Configuration cfg = new Configuration(Configuration.VERSION_2_3_29);
 cfg.setDirectoryForTemplateLoading(new File(templateDirectory));
 cfg.setDefaultEncoding(StandardCharsets.UTF_8.toString());
@@ -281,7 +281,7 @@ Mustache 是一个无逻辑的模板引擎。Mustache 可以用于 HTML、配置
 
 要使用它，我们需要将 [mustache](https://web.archive.org/web/20220826140012/https://search.maven.org/search?q=g:com.github.spullara.mustache.java%20AND%20a:compiler) 依赖项添加到我们的 [Maven](/web/20220826140012/https://www.baeldung.com/maven) 项目中:
 
-```
+```java
 <dependency>
     <groupId>com.github.spullara.mustache.java</groupId>
     <artifactId>compiler</artifactId>
@@ -291,7 +291,7 @@ Mustache 是一个无逻辑的模板引擎。Mustache 可以用于 HTML、配置
 
 让我们开始使用 Mustache 语法创建一个模板:
 
-```
+```java
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -307,7 +307,7 @@ Mustache 是一个无逻辑的模板引擎。Mustache 可以用于 HTML、配置
 
 现在，让我们用我们的`map`填充模板:
 
-```
+```java
 MustacheFactory mf = new DefaultMustacheFactory();
 Mustache mustache = mf.compile(templateFile);
 try (Writer output = new StringWriter()) {
@@ -320,7 +320,7 @@ try (Writer output = new StringWriter()) {
 
 最后，对于所有的代码示例，我们将得到相同的 HTML 输出:
 
-```
+```java
 <!DOCTYPE html>
 <html lang="en">
 <head>

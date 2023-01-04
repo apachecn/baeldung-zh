@@ -16,19 +16,19 @@
 
 让我们开始使用名为`gradle-employee-app`的 PowerShell 控制台创建一个项目文件夹:
 
-```
+```java
 > mkdir gradle-employee-app
 ```
 
 之后，让我们导航到项目文件夹并创建子文件夹:
 
-```
+```java
 > mkdir src/main/java/employee
 ```
 
 结果输出如下所示:
 
-```
+```java
 Directory: D:\gradle-employee-app\src\main\java
 
 Mode                LastWriteTime         Length Name
@@ -38,7 +38,7 @@ d-----        4/10/2020  12:14 PM                employee
 
 在上面的项目结构中，让我们创建两个类。一个是简单的`Employee`类，包含姓名、电子邮件地址和出生年份等数据:
 
-```
+```java
 public class Employee {
     String name;
     String emailAddress;
@@ -48,7 +48,7 @@ public class Employee {
 
 第二个是打印`Employee `数据的主`Employee App`类:
 
-```
+```java
 public class EmployeeApp {
 
     public static void main(String[] args){
@@ -71,13 +71,13 @@ public class EmployeeApp {
 
 以下是 PowerShell 命令行中的内容:
 
-```
+```java
 Echo > build.gradle
 ```
 
 我们跳过与输入参数相关的下一步:
 
-```
+```java
 cmdlet Write-Output at command pipeline position 1
 Supply values for the following parameters:
 InputObject[0]:
@@ -85,7 +85,7 @@ InputObject[0]:
 
 为了使构建成功，我们需要添加 [**应用程序插件**](https://web.archive.org/web/20220626194841/https://docs.gradle.org/current/userguide/application_plugin.html) :
 
-```
+```java
 plugins {
     id 'application'
 }
@@ -93,7 +93,7 @@ plugins {
 
 然后，我们应用一个应用程序插件， **添加一个主类的全限定名** :
 
-```
+```java
 apply plugin: 'application'
 mainClassName = 'employee.EmployeeApp'
 ```
@@ -102,7 +102,7 @@ mainClassName = 'employee.EmployeeApp'
 
 例如，我们可以在配置文件中添加一个任务，打印一条关于已完成项目配置的消息:
 
-```
+```java
 println 'This is executed during configuration phase'
 task configured {
     println 'The project is configured'
@@ -111,13 +111,13 @@ task configured {
 
 **通常情况下，`gradle build`是首要任务，也是使用最多的一个。这个任务编译、测试和汇编代码到一个 JAR 文件**。通过键入以下命令开始构建:
 
-```
+```java
 > gradle build 
 ```
 
 执行上面的命令以输出:
 
-```
+```java
 > Configure project :
 This is executed during configuration phase
 The project is configured
@@ -127,7 +127,7 @@ BUILD SUCCESSFUL in 1s
 
 **要查看构建结果，让我们看看构建文件夹，其中包含子文件夹:** **类、发行版、库和报告**。键入`Tree / F`给出构建文件夹的结构:
 
-```
+```java
 ├───build
 │   ├───classes
 │   │   └───java
@@ -162,7 +162,7 @@ BUILD SUCCESSFUL in 1s
 
 现在，通过键入`gradle run.`退出时执行应用程序的结果:，一切都准备好了，可以运行 Java 项目
 
-```
+```java
 > Configure project :
 This is executed during configuration phase
 The project is configured
@@ -182,7 +182,7 @@ Gradle 包装器是一个调用 Gradle 声明版本的脚本。
 
 首先，让我们在`build.gradle`文件中定义一个包装器任务:
 
-```
+```java
 task wrapper(type: Wrapper){
     gradleVersion = '5.3.1'
 }
@@ -190,7 +190,7 @@ task wrapper(type: Wrapper){
 
 让我们使用 Power Shell 中的`gradle wrapper`来运行这个任务:
 
-```
+```java
 > Configure project :
 This is executed during configuration phase
 The project is configured
@@ -201,7 +201,7 @@ BUILD SUCCESSFUL in 1s
 
 项目文件夹下会创建几个文件，包括`/gradle/wrapper`位置下的文件:
 
-```
+```java
 │   gradlew
 │   gradlew.bat
 │   
@@ -220,7 +220,7 @@ BUILD SUCCESSFUL in 1s
 
 首先，在我们的配置文件中，我们需要设置一个远程存储库，从那里下载依赖关系 jar。大多数情况下，这些存储库要么是`mavenCentral()`要么是`jcenter()`。让我们选择第二个:
 
-```
+```java
 repositories {
     jcenter()
 }
@@ -230,7 +230,7 @@ repositories {
 
 它建立在一个额外的测试块上:
 
-```
+```java
 dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
     testImplementation('junit:junit:4.13')
@@ -243,13 +243,13 @@ test {
 
 完成后，让我们在一个简单的测试上尝试 JUnit 的工作。导航到`src`文件夹，并为测试创建子文件夹:
 
-```
+```java
 src> mkdir test/java/employee
 ```
 
 在最后一个子文件夹中，让我们创建`EmployeeAppTest.java`:
 
-```
+```java
 public class EmployeeAppTest {
 
     @Test
@@ -281,13 +281,13 @@ public class EmployeeAppTest {
 
 创建一个新的项目文件夹并将其命名为`gradle-java-example.`,然后切换到那个空的项目文件夹并运行 init 脚本:
 
-```
+```java
 > gradle init
 ```
 
 Gradle 会问我们一些问题，并提供创建项目的选项。第一个问题是我们想要生成什么类型的项目:
 
-```
+```java
 Select type of project to generate:
   1: basic
   2: cpp-application
@@ -309,7 +309,7 @@ Enter selection [1..10] 6
 
 接下来，会出现一个问题列表:
 
-```
+```java
 Select test framework:
   1: junit
   2: testng
@@ -327,7 +327,7 @@ BUILD SUCCESSFUL in 57m 45s
 
 要查看`/src`项目文件夹中的完整目录结构，让我们在 Power Shell 中键入`Tree /F` :
 
-```
+```java
 ├───main
 │   ├───java
 │   │   └───employee
@@ -344,7 +344,7 @@ BUILD SUCCESSFUL in 57m 45s
 
 最后，如果我们用`gradle run,` 构建项目，我们在退出时得到`“Hello World”`:
 
-```
+```java
 > Task :run
 Hello world.
 

@@ -27,7 +27,7 @@
 如何配置 http client with SSL 的例子。[阅读更多](/web/20220630140247/https://www.baeldung.com/httpclient-ssl) →
 例题 2.1。**获取低层连接的连接请求(`HttpClientConnection` )**
 
-```
+```java
 BasicHttpClientConnectionManager connManager
  = new BasicHttpClientConnectionManager();
 HttpRoute route = new HttpRoute(new HttpHost("www.baeldung.com", 80));
@@ -44,7 +44,7 @@ ConnectionRequest connRequest = connManager.requestConnection(route, null);
 
 例 3.1。**在 HttpClient 上设置 PoolingHttpClientConnectionManager**
 
-```
+```java
 HttpClientConnectionManager poolingConnManager
   = new PoolingHttpClientConnectionManager();
 CloseableHttpClient client
@@ -58,7 +58,7 @@ assertTrue(poolingConnManager.getTotalStats().getLeased() == 1);
 
 例 3.2。**使用两个 HttpClients 分别连接到一个目标主机**
 
-```
+```java
 HttpGet get1 = new HttpGet("/");
 HttpGet get2 = new HttpGet("http://google.com"); 
 PoolingHttpClientConnectionManager connManager 
@@ -82,7 +82,7 @@ thread2.join();
 
 例 3.3。**自定义线程`Executing a` 获取请求**
 
-```
+```java
 public class MultiHttpClientConnThread extends Thread {
     private CloseableHttpClient client;
     private HttpGet get;
@@ -111,7 +111,7 @@ public class MultiHttpClientConnThread extends Thread {
 
 例 4.1。**增加可以打开和管理的连接数，使其超过默认限制**
 
-```
+```java
 PoolingHttpClientConnectionManager connManager 
   = new PoolingHttpClientConnectionManager();
 connManager.setMaxTotal(5);
@@ -130,7 +130,7 @@ connManager.setMaxPerRoute(new HttpRoute(host), 5);
 
 例 4.2。**使用线程执行连接**
 
-```
+```java
 HttpGet get = new HttpGet("http://www.baeldung.com");
 PoolingHttpClientConnectionManager connManager 
   = new PoolingHttpClientConnectionManager();
@@ -154,7 +154,7 @@ thread3.join();
 
 让我们看一下日志——我们有三个线程在运行，但只有两个租用的连接:
 
-```
+```java
 [Thread-0] INFO  o.b.h.c.MultiHttpClientConnThread
  - Before - Leased Connections = 0
 [Thread-1] INFO  o.b.h.c.MultiHttpClientConnThread
@@ -175,7 +175,7 @@ thread3.join();
 
 例 5.1。**自定义保活策略**
 
-```
+```java
 ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
     @Override
     public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
@@ -199,7 +199,7 @@ ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
 
 现在，让我们用这个定制策略创建一个客户端**:**
 
-```
+```java
 PoolingHttpClientConnectionManager connManager 
   = new PoolingHttpClientConnectionManager();
 CloseableHttpClient client = HttpClients.custom()
@@ -216,7 +216,7 @@ HTTP/1.1 规范规定，如果连接没有被关闭，就可以被重用，这�
 
 例 6.1。 **`BasicHttpClientConnectionManager`** **连接重用**
 
-```
+```java
 BasicHttpClientConnectionManager basicConnManager = 
     new BasicHttpClientConnectionManager();
 HttpClientContext context = HttpClientContext.create();
@@ -248,7 +248,7 @@ client.execute(get);
 
 然后，客户端再次成功执行 GET 请求。如果我们跳过释放连接，我们将从 HttpClient 得到一个 IllegalStateException:
 
-```
+```java
 java.lang.IllegalStateException: Connection is still allocated
   at o.a.h.u.Asserts.check(Asserts.java:34)
   at o.a.h.i.c.BasicHttpClientConnectionManager.getConnection
@@ -261,7 +261,7 @@ java.lang.IllegalStateException: Connection is still allocated
 
 例 6.2。 ****`PoolingHttpClientConnectionManager` :** 重用线程连接**
 
-```
+```java
 HttpGet get = new HttpGet("http://echo.200please.com");
 PoolingHttpClientConnectionManager connManager 
   = new PoolingHttpClientConnectionManager();
@@ -293,7 +293,7 @@ for (MultiHttpClientConnThread thread: threads) {
 
 例 7.1。**将套接字超时设置为 5 秒**
 
-```
+```java
 HttpRoute route = new HttpRoute(new HttpHost("www.baeldung.com", 80));
 PoolingHttpClientConnectionManager connManager 
   = new PoolingHttpClientConnectionManager();
@@ -312,7 +312,7 @@ connManager.setSocketConfig(route.getTargetHost(),SocketConfig.custom().
 
 例 8.1。**设置`HttpClient`以检查陈旧连接**
 
-```
+```java
 PoolingHttpClientConnectionManager connManager 
   = new PoolingHttpClientConnectionManager();
 CloseableHttpClient client = HttpClients.custom().setDefaultRequestConfig(
@@ -322,7 +322,7 @@ CloseableHttpClient client = HttpClients.custom().setDefaultRequestConfig(
 
 例 8.2。**使用过时的连接监视器线程**
 
-```
+```java
 PoolingHttpClientConnectionManager connManager 
   = new PoolingHttpClientConnectionManager();
 CloseableHttpClient client = HttpClients.custom()
@@ -335,7 +335,7 @@ staleMonitor.join(1000);
 
 下面列出了 **`IdleConnectionMonitorThread`** 类:
 
-```
+```java
 public class IdleConnectionMonitorThread extends Thread {
     private final HttpClientConnectionManager connMgr;
     private volatile boolean shutdown;
@@ -382,7 +382,7 @@ public class IdleConnectionMonitorThread extends Thread {
 
 例 9.1。**关闭连接释放资源**
 
-```
+```java
 connManager = new PoolingHttpClientConnectionManager();
 CloseableHttpClient client = HttpClients.custom()
   .setConnectionManager(connManager).build();

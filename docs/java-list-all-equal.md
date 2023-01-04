@@ -12,7 +12,7 @@
 
 假设我们有以下 3 个列表:
 
-```
+```java
 notAllEqualList = Arrays.asList("Jack", "James", "Sam", "James");
 emptyList = Arrays.asList();
 allEqualList = Arrays.asList("Jack", "Jack", "Jack", "Jack");
@@ -24,7 +24,7 @@ allEqualList = Arrays.asList("Jack", "Jack", "Jack", "Jack");
 
 首先，对于所有相等的元素，它们都必须等于第一个元素。让我们在循环中利用这一点:
 
-```
+```java
 public boolean verifyAllEqualUsingALoop(List<String> list) {
     for (String s : list) {
         if (!s.equals(list.get(0)))
@@ -40,7 +40,7 @@ public boolean verifyAllEqualUsingALoop(List<String> list) {
 
 我们也可以使用 [`HashSet`](/web/20221019231159/https://www.baeldung.com/java-hashset) ，因为它的所有元素都是不同的。I **如果我们将一个`List`转换成一个`HashSet`，并且结果大小小于或等于 1，那么我们知道列表中的所有元素都相等:**
 
-```
+```java
 public boolean verifyAllEqualUsingHashSet(List<String> list) {
     return new HashSet<String>(list).size() <= 1;
 }
@@ -54,7 +54,7 @@ public boolean verifyAllEqualUsingHashSet(List<String> list) {
 
 所以，如果频率结果等于列表的大小，我们知道所有的元素都是相等的:
 
-```
+```java
 public boolean verifyAllEqualUsingFrequency(List<String> list) {
     return list.isEmpty() || Collections.frequency(list, list.get(0)) == list.size();
 }
@@ -72,7 +72,7 @@ Java 8 中的 [`Stream` API 为我们提供了更多检测列表中所有项目�
 
 为了验证一个列表中的所有元素是否相等，**我们对其流中的不同元素进行计数:**
 
-```
+```java
 public boolean verifyAllEqualUsingStream(List<String> list) {
     return list.stream()
       .distinct()
@@ -88,7 +88,7 @@ public boolean verifyAllEqualUsingStream(List<String> list) {
 
 `Stream` API 的`allMatch()`方法提供了一个完美的解决方案来确定这个流的所有元素是否匹配所提供的谓词:
 
-```
+```java
 public boolean verifyAllEqualAnotherUsingStream(List<String> list) {
     return list.isEmpty() || list.stream()
       .allMatch(list.get(0)::equals);
@@ -107,7 +107,7 @@ public boolean verifyAllEqualAnotherUsingStream(List<String> list) {
 
 要使用其中任何一个，我们可以将 [`guava`](https://web.archive.org/web/20221019231159/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.google.guava%22%20a%3A%22guava%22) 或 [`commons-collections4`](https://web.archive.org/web/20221019231159/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22commons-collections4%22%20g%3A%22org.apache.commons%22) 分别添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -115,7 +115,7 @@ public boolean verifyAllEqualAnotherUsingStream(List<String> list) {
 </dependency>
 ```
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -127,7 +127,7 @@ public boolean verifyAllEqualAnotherUsingStream(List<String> list) {
 
 [在`Google Guava`中，如果列表中的所有元素都满足谓词，静态方法`Iterables.all()`](/web/20221019231159/https://www.baeldung.com/guava-filter-and-transform-a-collection) 返回`true`:
 
-```
+```java
 public boolean verifyAllEqualUsingGuava(List<String> list) {
     return Iterables.all(list, new Predicate<String>() {
         public boolean apply(String s) {
@@ -143,7 +143,7 @@ public boolean verifyAllEqualUsingGuava(List<String> list) {
 
 特别是，如果列表中的所有元素都满足谓词，静态方法`IterableUtils.matchesAll()`将返回`true`:
 
-```
+```java
 public boolean verifyAllEqualUsingApacheCommon(List<String> list) {
     return IterableUtils.matchesAll(list, new org.apache.commons.collections4.Predicate<String>() {
         public boolean evaluate(String s) {

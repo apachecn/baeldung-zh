@@ -16,7 +16,7 @@ Spring Data MongoDB 为 MongoDB 原生查询语言提供了简单的高级抽象
 
 在我们继续下一步之前，让我们看看我们将使用的数据模型:
 
-```
+```java
 @Document
 public class User {
     @Id
@@ -32,7 +32,7 @@ public class User {
 
 `Field`类上的`include()`和`exclude()`方法分别用于包含和排除字段:
 
-```
+```java
 Query query = new Query();
 query.fields().include("name").exclude("id");
 List<User> john = mongoTemplate.find(query, User.class);
@@ -50,7 +50,7 @@ List<User> john = mongoTemplate.find(query, User.class);
 
 使用 MongoRepositories 时，`@Query`注释的`fields`可以用 JSON 格式定义:
 
-```
+```java
 @Query(value="{}", fields="{name : 1, _id : 0}")
 List<User> findNameAndExcludeId();
 ```
@@ -65,7 +65,7 @@ Spring Data MongoDB 使用三个类为原生聚合查询提供了一个抽象:�
 
 要执行聚合，首先使用静态构建器方法在`Aggregation`类上创建聚合管道，然后使用`Aggregation`类上的`newAggregation()`方法创建`Aggregation`的实例，最后使用`MongoTemplate`运行聚合:
 
-```
+```java
 MatchOperation matchStage = Aggregation.match(new Criteria("foo").is("bar"));
 ProjectionOperation projectStage = Aggregation.project("foo", "bar.baz");
 
@@ -84,7 +84,7 @@ AggregationResults<OutType> output
 
 让我们在将一个样本文档导入到数据库`test`中一个名为`zips`的集合中之后，来看看这个样本文档。
 
-```
+```java
 {
     "_id" : "01001",
     "city" : "AGAWAM",
@@ -109,7 +109,7 @@ AggregationResults<OutType> output
 
 预期输出将有一个字段`_id`作为 state，还有一个字段`statePop`包含总的 state 人口。让我们为此创建一个数据模型并运行聚合:
 
-```
+```java
 public class StatePoulation {
 
     @Id
@@ -122,7 +122,7 @@ public class StatePoulation {
 
 `@Id`注释将把`_id`字段从输出映射到模型中的`state`:
 
-```
+```java
 GroupOperation groupByStateAndSumPop = group("state")
   .sum("pop").as("statePop");
 MatchOperation filterStates = match(new Criteria("statePop").gt(10000000));
@@ -149,7 +149,7 @@ AggregationResults<StatePopulation> result = mongoTemplate.aggregate(
 
 虽然这不是必须的，但是我们将使用一个额外的`$project`阶段按照 out `StatePopulation`数据模型重新格式化文档。
 
-```
+```java
 GroupOperation sumTotalCityPop = group("state", "city")
   .sum("pop").as("cityPop");
 GroupOperation averageStatePop = group("_id.state")
@@ -181,7 +181,7 @@ StatePopulation smallestState = result.getUniqueMappedResult();
 2.  `$sort`按照邮政编码的数量对各州进行排序
 3.  `$group`使用`$first`和`$last`操作符找到带有最大和最小邮政编码的州
 
-```
+```java
 GroupOperation sumZips = group("state").count().as("zipCount");
 SortOperation sortByCount = sort(Direction.ASC, "zipCount");
 GroupOperation groupFirstAndLast = group().first("_id").as("minZipState")

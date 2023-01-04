@@ -12,7 +12,7 @@
 
 让我们首先为我们的示例定义一个枚举:
 
-```
+```java
 public enum Modes {
     ALPHA, BETA;
 } 
@@ -20,7 +20,7 @@ public enum Modes {
 
 然后我们可以在 Spring 控制器中使用这个枚举作为`RequestParameter`:
 
-```
+```java
 @GetMapping("/mode2str")
 public String getStringToMode(@RequestParam("mode") Modes mode) {
     // ...
@@ -29,7 +29,7 @@ public String getStringToMode(@RequestParam("mode") Modes mode) {
 
 或者我们可以把它作为一个`PathVariable`:
 
-```
+```java
 @GetMapping("/findbymode/{mode}")
 public String findByEnum(@PathVariable("mode") Modes mode) {
     // ...
@@ -48,7 +48,7 @@ public String findByEnum(@PathVariable("mode") Modes mode) {
 
 在这种情况下，我们需要创建一个自定义转换器:
 
-```
+```java
 public class StringToEnumConverter implements Converter<String, Modes> {
     @Override
     public Modes convert(String source) {
@@ -59,7 +59,7 @@ public class StringToEnumConverter implements Converter<String, Modes> {
 
 要使用我们的定制转换器，我们需要**在 Spring 配置**中注册它:
 
-```
+```java
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     @Override
@@ -75,7 +75,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 例如，我们可以简单地让转换器为不匹配的`String` s 返回`null`:
 
-```
+```java
 public class StringToEnumConverter implements Converter<String, Modes> {
     @Override
     public Modes convert(String source) {
@@ -92,7 +92,7 @@ public class StringToEnumConverter implements Converter<String, Modes> {
 
 例如，我们可以使用全局异常处理程序类:
 
-```
+```java
 @ControllerAdvice
 public class GlobalControllerExceptionHandler {
     @ExceptionHandler(ConversionFailedException.class)

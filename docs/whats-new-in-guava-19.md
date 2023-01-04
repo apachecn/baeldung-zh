@@ -12,7 +12,7 @@ Google Guava 为库提供了简化 Java 开发的工具。在本教程中，我�
 
 `CharMatcher`顾名思义，用于检查一个字符串是否匹配一组需求。
 
-```
+```java
 String inputString = "someString789";
 boolean result = CharMatcher.javaLetterOrDigit().matchesAllOf(inputString); 
 ```
@@ -21,7 +21,7 @@ boolean result = CharMatcher.javaLetterOrDigit().matchesAllOf(inputString);
 
 `CharMatcher`也可以在需要变换字符串的时候使用。
 
-```
+```java
 String number = "8 123 456 123";
 String result = CharMatcher.whitespace().collapseFrom(number, '-'); 
 ```
@@ -30,7 +30,7 @@ String result = CharMatcher.whitespace().collapseFrom(number, '-');
 
 在`CharMatcher`的帮助下，您可以计算一个字符在给定字符串中出现的次数:
 
-```
+```java
 String number = "8 123 456 123";
 int result = CharMatcher.digit().countIn(number);
 ```
@@ -47,7 +47,7 @@ int result = CharMatcher.digit().countIn(number);
 
 该方法返回所提供的`Throwable`的 stacktrace 元素(行)的`List`。如果只需要一部分，它会比遍历整个 stacktrace ( `Throwable.getStackTrace()`)更快，但是如果遍历整个 stacktrace，它会更慢。
 
-```
+```java
 IllegalArgumentException e = new IllegalArgumentException("Some argument is incorrect");
 List<StackTraceElement> stackTraceElements = Throwables.lazyStackTrace(e); 
 ```
@@ -58,7 +58,7 @@ List<StackTraceElement> stackTraceElements = Throwables.lazyStackTrace(e);
 
 在之前的 Baeldung 文章中，[番石榴 18](/web/20220521211352/https://www.baeldung.com/whats-new-in-guava-18) 有什么新变化，我们看了一下`FluentIterable`。当您需要将一个`FluentIterable`转换成一个`ImmutableMultiSet`时，可以使用`toMultiset()`方法。
 
-```
+```java
 User[] usersArray = {new User(1L, "John", 45), new User(2L, "Max", 15)};
 ImmutableMultiset<User> users = FluentIterable.of(usersArray).toMultiset();
 ```
@@ -67,7 +67,7 @@ ImmutableMultiset<User> users = FluentIterable.of(usersArray).toMultiset();
 
 让我们看几个例子:
 
-```
+```java
 List<String> userNames = Arrays.asList("David", "Eugen", "Alex", "Alex", "David", "David", "David");
 
 Multiset<String> userNamesMultiset = HashMultiset.create(userNames);
@@ -91,38 +91,38 @@ assertThat(userNamesMultiset.elementSet(), anyOf(containsInAnyOrder("Alex", "Dav
 
 例如(0，5)表示“大于 0 小于 5 的任何值”，而(0，5)表示“大于 0 小于等于 5 的任何值”:
 
-```
+```java
 RangeSet<Integer> rangeSet = TreeRangeSet.create();
 rangeSet.add(Range.closed(1, 10));
 ```
 
 在这里，我们将 range [1，10]添加到我们的`RangeSet`中。现在，我们想通过增加新的产品系列来扩展它:
 
-```
+```java
 rangeSet.add(Range.closed(5, 15));
 ```
 
 你可以看到这两个范围在 5 处相连，所以`RangeSet`会将它们合并成一个新的单一范围，[1，15]:
 
-```
+```java
 rangeSet.add(Range.closedOpen(10, 17));
 ```
 
 这些范围在 10 处连接，因此它们将被合并，产生一个闭-开范围，[1，17]。您可以使用`contains`方法检查某个值是否包含在范围内:
 
-```
+```java
 rangeSet.contains(15);
 ```
 
 这将返回`true`，因为范围[1，17]包含 15。让我们试试另一个值:
 
-```
+```java
 rangeSet.contains(17); 
 ```
 
 这将返回`false`，因为 range [1，17]不包含它的上端点 17。您还可以使用`encloses`方法检查范围是否包含任何其他范围:
 
-```
+```java
 rangeSet.encloses(Range.closed(2, 3));
 ```
 
@@ -130,7 +130,7 @@ rangeSet.encloses(Range.closed(2, 3));
 
 还有几种方法可以帮助你进行区间操作，比如`Range.greaterThan()`、`Range.lessThan()`、`Range.atLeast()`、`Range.atMost()`。前两个将添加开放区间，后两个将添加封闭区间。例如:
 
-```
+```java
 rangeSet.add(Range.greaterThan(22)); 
 ```
 
@@ -142,7 +142,7 @@ rangeSet.add(Range.greaterThan(22));
 
 笛卡尔积返回两个或更多集合的所有可能组合:
 
-```
+```java
 List<String> first = Lists.newArrayList("value1", "value2");
 List<String> second = Lists.newArrayList("value3", "value4");
 
@@ -162,7 +162,7 @@ assertThat(cartesianProduct, anyOf(containsInAnyOrder(pair1, pair2, pair3, pair4
 
 一个标准`LinkedHashMap`的初始大小是 16(你可以在`LinkedHashMap`的源码中验证这一点)。当它达到`HashMap`(默认为 0.75)的负载系数时，`HashMap`会重新散列并使其大小加倍。但是如果您知道您的`HashMap`将处理许多键-值对，您可以指定一个大于 16 的初始大小，这样可以避免重复的重散列:
 
-```
+```java
 LinkedHashMap<Object, Object> someLinkedMap = Maps.newLinkedHashMapWithExpectedSize(512);
 ```
 
@@ -170,7 +170,7 @@ LinkedHashMap<Object, Object> someLinkedMap = Maps.newLinkedHashMapWithExpectedS
 
 该方法用于删除`Multiset`中的指定事件:
 
-```
+```java
 Multiset<String> multisetToModify = HashMultiset.create();
 Multiset<String> occurrencesToRemove = HashMultiset.create();
 
@@ -194,7 +194,7 @@ Multisets.removeOccurrences(multisetToModify, occurrencesToRemove);
 
 `Hashing.sha384()` 方法返回实现 SHA-384 算法的散列函数:
 
-```
+```java
 int inputData = 15;
 
 HashFunction hashFunction = Hashing.sha384();
@@ -207,7 +207,7 @@ SHA-384 有 15 个是“0904 b 6277381 DCF bddd…2240 a 621 b 2 b5 E3 CDA 8”�
 
 在`Hashing.concatenating`方法的帮助下，您可以连接一系列散列函数的结果:
 
-```
+```java
 int inputData = 15;
 
 HashFunction crc32Function = Hashing.crc32();
@@ -231,7 +231,7 @@ Java 在运行时不保留对象的泛型信息，所以不可能知道一个给
 
 在我们的例子中，你可以看到，如果没有`TypeToken`方法`isAssignableFrom`，将返回`true`，即使`ArrayList<String>`不能从`ArrayList<Integer>`赋值:
 
-```
+```java
 ArrayList<String> stringList = new ArrayList<>();
 ArrayList<Integer> intList = new ArrayList<>();
 boolean isAssignableFrom = stringList.getClass().isAssignableFrom(intList.getClass());
@@ -239,7 +239,7 @@ boolean isAssignableFrom = stringList.getClass().isAssignableFrom(intList.getCla
 
 要解决这个问题，我们可以借助`TypeToken`来检查这个。
 
-```
+```java
 TypeToken<ArrayList<String>> listString = new TypeToken<ArrayList<String>>() { };
 TypeToken<ArrayList<Integer>> integerString = new TypeToken<ArrayList<Integer>>() { };
 
@@ -250,7 +250,7 @@ boolean isSupertypeOf = listString.isSupertypeOf(integerString);
 
 在以前的番石榴版本中，有一个用于此目的的方法`isAssignableFrom` ，但是从番石榴 19 开始，它被弃用，取而代之的是`isSupertypeOf`。此外，方法`isSubtypeOf(TypeToken)` 可以用来确定一个类是否是另一个类的子类型:
 
-```
+```java
 TypeToken<ArrayList<String>> stringList = new TypeToken<ArrayList<String>>() { };
 TypeToken<List> list = new TypeToken<List>() { };
 
@@ -265,7 +265,7 @@ boolean isSubtypeOf = stringList.isSubtypeOf(list);
 
 此方法返回源的字节大小(如果可以确定的话),而不打开数据流:
 
-```
+```java
 ByteSource charSource = Files.asByteSource(file);
 Optional<Long> size = charSource.sizeIfKnown();
 ```
@@ -278,7 +278,7 @@ Optional<Long> size = charSource.sizeIfKnown();
 
 与`ByteSource,` 相同，但使用`CharSource.lengthIfKnown()`您可以确定文件的字符长度:
 
-```
+```java
 CharSource charSource = Files.asCharSource(file, Charsets.UTF_8);
 Optional<Long> length = charSource.lengthIfKnown(); 
 ```

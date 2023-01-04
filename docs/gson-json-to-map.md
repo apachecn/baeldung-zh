@@ -12,13 +12,13 @@
 
 一般来说， **Gson 在它的`Gson`类中提供了以下 API 来将 JSON 字符串转换成对象**:
 
-```
+```java
 public <T> T fromJson(String json, Class<T> classOfT) throws JsonSyntaxException;
 ```
 
 从签名中可以清楚地看出，第二个参数是我们希望 JSON 解析到的对象的类。在我们的例子中，应该是`Map.class`:
 
-```
+```java
 String jsonString = "{'employee.name':'Bob','employee.salary':10000}";
 Gson gson = new Gson();
 Map map = gson.fromJson(jsonString, Map.class);
@@ -38,13 +38,13 @@ Assert.assertEquals(Double.class, map.get("employee.salary").getClass());
 
 **为了克服泛型类型的类型删除问题，`Gson`有一个重载版本的 API** :
 
-```
+```java
 public <T> T fromJson(String json, Type typeOfT) throws JsonSyntaxException;
 ```
 
 我们可以使用 Gson 的`TypeToken`用它的类型参数构造一个`Map` 。**`TypeToken`类返回一个`ParameterizedTypeImpl`的实例，该实例即使在运行时也能保持键和值的类型**:
 
-```
+```java
 String jsonString = "{'Bob' : {'name': 'Bob Willis'},"
   + "'Jenny' : {'name': 'Jenny McCarthy'}, "
   + "'Steve' : {'name': 'Steven Waugh'}}";
@@ -67,7 +67,7 @@ Assert.assertEquals(Employee.class, nameEmployeeMap.get("Bob").getClass());
 
 我们可以配置 Gson 以不同的方式解析我们的地图，然后通过实现一个`JsonDeserializer:`
 
-```
+```java
 public class StringDateMapDeserializer implements JsonDeserializer<Map<String, Date>> {
 
     private SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
@@ -101,7 +101,7 @@ public class StringDateMapDeserializer implements JsonDeserializer<Map<String, D
 
 当我们在这个`Gson`对象上调用`fromJson` API 时，解析器调用定制的反序列化器并返回期望的`Map`实例:
 
-```
+```java
 String jsonString = "{'Bob': '2017-06-01', 'Jennie':'2015-01-03'}";
 Type type = new TypeToken<Map<String, Date>>(){}.getType();
 Gson gson = new GsonBuilder()

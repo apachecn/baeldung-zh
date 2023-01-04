@@ -26,14 +26,14 @@ Every app should enable users to change their own password in case they forget i
 
 **检索当前已认证主体的最简单方法是通过静态调用`SecurityContextHolder`** :
 
-```
+```java
 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 String currentPrincipalName = authentication.getName();
 ```
 
 对该代码片段的改进是，在尝试访问之前，首先检查是否有经过身份验证的用户:
 
-```
+```java
 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 if (!(authentication instanceof AnonymousAuthenticationToken)) {
     String currentUserName = authentication.getName();
@@ -49,7 +49,7 @@ if (!(authentication instanceof AnonymousAuthenticationToken)) {
 
 **我们可以直接将主体定义为方法参数**，它会被框架正确解析:
 
-```
+```java
 @Controller
 public class SecurityController {
 
@@ -63,7 +63,7 @@ public class SecurityController {
 
 或者，**我们也可以使用认证令牌**:
 
-```
+```java
 @Controller
 public class SecurityController {
 
@@ -77,14 +77,14 @@ public class SecurityController {
 
 `Authentication`类的 API 非常开放，因此框架尽可能保持灵活性。因此，**Spring 安全主体只能作为`Object`被检索，并且需要被转换为正确的`UserDetails`实例**:
 
-```
+```java
 UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 System.out.println("User has authorities: " + userDetails.getAuthorities());
 ```
 
 最后，这里是直接来自 HTTP 请求的**:**
 
-```
+```java
 @Controller
 public class GetUserWithHTTPServletRequestController {
 
@@ -101,7 +101,7 @@ public class GetUserWithHTTPServletRequestController {
 
 为了充分利用 Spring 依赖注入并能够在任何地方检索认证，而不仅仅是在`@Controller beans`中，我们需要将静态访问隐藏在一个简单的外观后面:
 
-```
+```java
 public interface IAuthenticationFacade {
     Authentication getAuthentication();
 }
@@ -117,7 +117,7 @@ public class AuthenticationFacade implements IAuthenticationFacade {
 
 facade 公开了`Authentication`对象，同时隐藏了静态状态并保持代码解耦和完全可测试:
 
-```
+```java
 @Controller
 public class GetUserWithCustomInterfaceController {
     @Autowired
@@ -138,13 +138,13 @@ public class GetUserWithCustomInterfaceController {
 
 首先，我们需要在页面中定义标签:
 
-```
+```java
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 ```
 
 接下来，我们可以**参考委托人**:
 
-```
+```java
 <security:authorize access="isAuthenticated()">
     authenticated as <security:authentication property="principal.username" /> 
 </security:authorize>
@@ -158,7 +158,7 @@ public class GetUserWithCustomInterfaceController {
 
 首先，我们需要添加 [`thymeleaf-spring5`](https://web.archive.org/web/20220707143845/https://search.maven.org/search?q=a:thymeleaf-spring5) 和 [`thymeleaf-extras-springsecurity5`](https://web.archive.org/web/20220707143845/https://search.maven.org/search?q=a:thymeleaf-extras-springsecurity5) 依赖项来集成百里叶和春天的安全性:
 
-```
+```java
 <dependency>
     <groupId>org.thymeleaf.extras</groupId>
     <artifactId>thymeleaf-extras-springsecurity5</artifactId>
@@ -171,7 +171,7 @@ public class GetUserWithCustomInterfaceController {
 
 现在**我们可以使用`sec:authorize`属性**在 HTML 页面中引用主体:
 
-```
+```java
 <html xmlns:th="https://www.thymeleaf.org" 
   xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <body>
@@ -187,6 +187,6 @@ public class GetUserWithCustomInterfaceController {
 
 这些例子的实现可以在[GitHub 项目](https://web.archive.org/web/20220707143845/https://github.com/eugenp/tutorials/tree/master/spring-security-modules/spring-security-web-rest-custom "Spring Security User retrieval example project")中找到。这是一个基于 Eclipse 的项目，因此应该很容易导入和运行。在本地运行项目时，我们可以在此处访问主页 HTML:
 
-```
+```java
 http://localhost:8080/spring-security-rest-custom/foos/1
 ```

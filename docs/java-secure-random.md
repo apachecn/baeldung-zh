@@ -20,7 +20,7 @@
 
 使用`SecureRandom`最常见的方式是**生成`int`、`long`、`float`、`double`或`boolean`值**:
 
-```
+```java
 int randomInt = secureRandom.nextInt();
 long randomLong = secureRandom.nextLong();
 float randomFloat = secureRandom.nextFloat();
@@ -30,13 +30,13 @@ boolean randomBoolean = secureRandom.nextBoolean();
 
 为了生成`int`值，我们可以传递一个上限作为参数:
 
-```
+```java
 int randomInt = secureRandom.nextInt(upperBound);
 ```
 
 此外，我们可以**为`int,` `double`和`long`生成一个值流**:
 
-```
+```java
 IntStream randomIntStream = secureRandom.ints();
 LongStream randomLongStream = secureRandom.longs();
 DoubleStream randomDoubleStream = secureRandom.doubles();
@@ -44,19 +44,19 @@ DoubleStream randomDoubleStream = secureRandom.doubles();
 
 对于所有流，我们可以显式设置流大小:
 
-```
+```java
 IntStream intStream = secureRandom.ints(streamSize);
 ```
 
 以及原点(包括)和边界(不包括)值:
 
-```
+```java
 IntStream intStream = secureRandom.ints(streamSize, originValue, boundValue);
 ```
 
 我们也可以生成一个随机字节序列。`nextBytes()`函数获取用户提供的`byte`数组并用随机的 `byte`填充它:
 
-```
+```java
 byte[] values = new byte[124];
 secureRandom.nextBytes(values);
 ```
@@ -65,7 +65,7 @@ secureRandom.nextBytes(values);
 
 **默认情况下，`SecureRandom`使用 SHA1PRNG 算法**生成随机值。我们可以通过调用`getInstance()`方法显式地让它使用另一种算法:
 
-```
+```java
 SecureRandom secureRandom = SecureRandom.getInstance("NativePRNG");
 ```
 
@@ -81,14 +81,14 @@ Java 中所有可用的随机数生成器都可以在官方文档页面上找到
 
 我们可以通过将种子作为构造函数参数传递来更改它:
 
-```
+```java
 byte[] seed = getSecureRandomSeed();
 SecureRandom secureRandom = new SecureRandom(seed);
 ```
 
 或者通过在已经创建的对象上调用 setter 方法:
 
-```
+```java
 byte[] seed = getSecureRandomSeed();
 secureRandom.setSeed(seed);
 ```

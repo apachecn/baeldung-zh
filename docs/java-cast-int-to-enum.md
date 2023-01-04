@@ -12,7 +12,7 @@
 
 让我们首先创建一个枚举`PizzaStatus`来定义一个比萨饼订单的状态:
 
-```
+```java
 public enum PizzaStatus {
     ORDERED(5),
     READY(2),
@@ -32,7 +32,7 @@ public enum PizzaStatus {
 
 **[`static`](/web/20220628143636/https://www.baeldung.com/java-static) `values`方法返回一个数组，该数组包含枚举的所有值，按其声明的顺序排列。**因此，我们可以用`timeToDelivery`的整数值来得到相应的 enum 值:
 
-```
+```java
 int timeToDeliveryForOrderedPizzaStatus = 5;
 
 PizzaStatus pizzaOrderedStatus = null;
@@ -54,7 +54,7 @@ assertThat(pizzaOrderedStatus).isEqualTo(PizzaStatus.ORDERED);
 
 让我们看看如何使用 Java 8 方法找到匹配的`PizzaStatus`:
 
-```
+```java
 int timeToDeliveryForOrderedPizzaStatus = 5;
 
 Optional<PizzaStatus> pizzaStatus = Arrays.stream(PizzaStatus.values())
@@ -78,7 +78,7 @@ assertThat(pizzaStatus).hasValue(PizzaStatus.ORDERED);
 
 此外，`Enum`类的`values`方法提供了所有的枚举值。**在`static`块中，我们遍历枚举值的数组，并将它们和相应的时间一起添加到映射中，以将整数值作为关键字:**
 
-```
+```java
 private static Map<Integer, PizzaStatus> timeToDeliveryToEnumValuesMapping = new HashMap<>();
 
 static {
@@ -93,7 +93,7 @@ static {
 
 最后，我们创建一个`static`方法，它将`timeToDelivery`整数作为参数。该方法使用静态映射`timeToDeliveryToEnumValuesMapping`返回相应的枚举值:
 
-```
+```java
 public static PizzaStatus castIntToEnum(int timeToDelivery) {
     return timeToDeliveryToEnumValuesMapping.get(timeToDelivery);
 }

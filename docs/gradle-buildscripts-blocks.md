@@ -35,7 +35,7 @@
 
 该脚本显示了如何读取 application.yml 文件的属性`temp.files.path`。`buildScript`块包含了 [`snakeyaml`](/web/20221124122810/https://www.baeldung.com/java-snake-yaml) 的依赖库和储存库位置下载它:
 
-```
+```java
 import org.yaml.snakeyaml.Yaml
 
 buildscript {

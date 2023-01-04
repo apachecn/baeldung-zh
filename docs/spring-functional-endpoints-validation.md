@@ -16,7 +16,7 @@
 
 想象我们有以下的`RouterFunction`:
 
-```
+```java
 @Bean
 public RouterFunction<ServerResponse> functionalRoute(
   FunctionalHandler handler) {
@@ -28,7 +28,7 @@ public RouterFunction<ServerResponse> functionalRoute(
 
 该路由器使用下列控制器类提供的处理程序功能:
 
-```
+```java
 @Component
 public class FunctionalHandler {
 
@@ -47,7 +47,7 @@ public class FunctionalHandler {
 
 正如我们所看到的，我们在这个功能端点中所做的只是格式化和检索我们在请求体中接收到的信息，该请求体被构造为一个`CustomRequestEntity`对象:
 
-```
+```java
 public class CustomRequestEntity {
 
     private String name;
@@ -66,7 +66,7 @@ public class CustomRequestEntity {
 
 **正如在[这个 Spring 参考文档](https://web.archive.org/web/20221208143919/https://docs.spring.io/spring/docs/5.1.x/spring-framework-reference/core.html#validator)中所解释的，我们可以使用 Spring 的`Validator`接口来评估我们资源的价值**:
 
-```
+```java
 public class CustomRequestEntityValidator 
   implements Validator {
 
@@ -109,7 +109,7 @@ public class CustomRequestEntityValidator
 
 让我们继续修改我们的处理程序方法，包括验证逻辑:
 
-```
+```java
 public Mono<ServerResponse> handleRequest(ServerRequest request) {
     Validator validator = new CustomRequestEntityValidator();
     Mono<String> responseBody = request
@@ -150,7 +150,7 @@ public Mono<ServerResponse> handleRequest(ServerRequest request) {
 
 我们将使用泛型，以使它足够灵活来支持任何主体类型及其各自的验证器:
 
-```
+```java
 public abstract class AbstractValidationHandler<T, U extends Validator> {
 
     private final Class<T> validationClass;
@@ -170,7 +170,7 @@ public abstract class AbstractValidationHandler<T, U extends Validator> {
 
 现在让我们用标准过程来编码我们的`handleRequest`方法:
 
-```
+```java
 public Mono<ServerResponse> handleRequest(final ServerRequest request) {
     return request.bodyToMono(this.validationClass)
       .flatMap(body -> {
@@ -192,7 +192,7 @@ public Mono<ServerResponse> handleRequest(final ServerRequest request) {
 
 让我们先定义当我们有验证错误时调用的那个:
 
-```
+```java
 protected Mono<ServerResponse> onValidationErrors(
   Errors errors,
   T invalidBody,
@@ -207,7 +207,7 @@ protected Mono<ServerResponse> onValidationErrors(
 
 **最后，我们将设置未定义的`processBody`方法——我们将让子类来决定在这种情况下如何进行**:
 
-```
+```java
 abstract protected Mono<ServerResponse> processBody(
   T validBody,
   ServerRequest originalRequest);
@@ -231,7 +231,7 @@ abstract protected Mono<ServerResponse> processBody(
 
 通过这样做，**我们将被迫使用父类的构造函数，并定义如何在`processBody` 方法**中处理我们的请求:
 
-```
+```java
 @Component
 public class FunctionalHandler
   extends AbstractValidationHandler<CustomRequestEntity, CustomRequestEntityValidator> {
@@ -263,7 +263,7 @@ public class FunctionalHandler
 
 例如，让我们定义一个带有注释字段的新实体:
 
-```
+```java
 public class AnnotatedRequestEntity {
 
     @NotNull
@@ -279,7 +279,7 @@ public class AnnotatedRequestEntity {
 
 **我们现在可以简单地创建一个新的处理器，注入由`LocalValidatorFactoryBean` bean** 提供的默认弹簧`Validator`:
 
-```
+```java
 public class AnnotatedRequestEntityValidationHandler
   extends AbstractValidationHandler<AnnotatedRequestEntity, Validator> {
 
@@ -300,7 +300,7 @@ public class AnnotatedRequestEntityValidationHandler
 
 我们必须记住，如果上下文中存在其他的`Validator` beans，我们可能必须使用`@Primary`注释显式声明这个 bean:
 
-```
+```java
 @Bean
 @Primary
 public Validator springValidator() {

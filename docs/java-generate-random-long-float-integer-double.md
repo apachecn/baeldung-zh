@@ -10,7 +10,7 @@
 
 让我们从生成一个长:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenGeneratingRandomLongUnbounded_thenCorrect() {
     long generatedLong = new Random().nextLong();
@@ -23,7 +23,7 @@ public void givenUsingPlainJava_whenGeneratingRandomLongUnbounded_thenCorrect() 
 
 接下来，让我们看看如何创建一个随机有界长整型值，即在给定范围或区间内的长整型值:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenGeneratingRandomLongBounded_thenCorrect() {
     long leftLimit = 1L;
@@ -36,7 +36,7 @@ public void givenUsingPlainJava_whenGeneratingRandomLongBounded_thenCorrect() {
 
 让我们来看看用一个更简洁的 API 和 Commons Math 来生成 random Long:
 
-```
+```java
 @Test
 public void givenUsingApacheCommons_whenGeneratingRandomLongBounded_thenCorrect() {
     long leftLimit = 10L;
@@ -49,7 +49,7 @@ public void givenUsingApacheCommons_whenGeneratingRandomLongBounded_thenCorrect(
 
 让我们继续生成一个没有边界的随机整数:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenGeneratingRandomIntegerUnbounded_thenCorrect() {
     int generatedInteger = new Random().nextInt();
@@ -64,7 +64,7 @@ public void givenUsingPlainJava_whenGeneratingRandomIntegerUnbounded_thenCorrect
 
 下一个–给定范围内的随机整数:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenGeneratingRandomIntegerBounded_thenCorrect() {
     int leftLimit = 1;
@@ -77,7 +77,7 @@ public void givenUsingPlainJava_whenGeneratingRandomIntegerBounded_thenCorrect()
 
 普通数学也是如此:
 
-```
+```java
 @Test
 public void givenUsingApache_whenGeneratingRandomIntegerBounded_thenCorrect() {
     int leftLimit = 1;
@@ -90,7 +90,7 @@ public void givenUsingApache_whenGeneratingRandomIntegerBounded_thenCorrect() {
 
 现在，让我们回顾一下生成随机浮点数——首先是无界的:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenGeneratingRandomFloatUnbouned_thenCorrect() {
     float generatedFloat = new Random().nextFloat();
@@ -103,7 +103,7 @@ public void givenUsingPlainJava_whenGeneratingRandomFloatUnbouned_thenCorrect() 
 
 和一个有界随机浮点数:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenGeneratingRandomFloatBouned_thenCorrect() {
     float leftLimit = 1F;
@@ -116,7 +116,7 @@ public void givenUsingPlainJava_whenGeneratingRandomFloatBouned_thenCorrect() {
 
 现在——一个有限的随机浮动，带有公共数学:
 
-```
+```java
 @Test
 public void givenUsingApache_whenGeneratingRandomFloatBounded_thenCorrect() {
     float leftLimit = 1F;
@@ -132,7 +132,7 @@ public void givenUsingApache_whenGeneratingRandomFloatBounded_thenCorrect() {
 
 最后，我们将生成随机双精度值，首先使用 Java Math API:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenGeneratingRandomDoubleUnbounded_thenCorrect() {
     double generatedDouble = Math.random();
@@ -143,7 +143,7 @@ public void givenUsingPlainJava_whenGeneratingRandomDoubleUnbounded_thenCorrect(
 
 以及 Apache Commons 数学库的随机双精度值:
 
-```
+```java
 @Test
 public void givenUsingApache_whenGeneratingRandomDoubleUnbounded_thenCorrect() {
     double generatedDouble = new RandomDataGenerator().getRandomGenerator().nextDouble();
@@ -156,7 +156,7 @@ public void givenUsingApache_whenGeneratingRandomDoubleUnbounded_thenCorrect() {
 
 在这个例子中，让我们看看在一个时间间隔内用 Java 生成的随机双精度数:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenGeneratingRandomDoubleBounded_thenCorrect() {
     double leftLimit = 1D;
@@ -169,7 +169,7 @@ public void givenUsingPlainJava_whenGeneratingRandomDoubleBounded_thenCorrect() 
 
 最后——使用 Apache Commons 数学库，在一个区间内随机双精度:
 
-```
+```java
 @Test
 public void givenUsingApache_whenGeneratingRandomDoubleBounded_thenCorrect() {
     double leftLimit = 1D;

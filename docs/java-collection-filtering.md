@@ -32,7 +32,7 @@
 
 在所有情况下，我们必须将这个条件定义为一个`Predicate`对象:
 
-```
+```java
 public Collection<Integer> findEvenNumbers(Collection<Integer> baseCollection) {
     Predicate<Integer> streamsPredicate = item -> item % 2 == 0;
 
@@ -56,7 +56,7 @@ Streams 允许我们使用 [`groupingBy collector`](/web/20220630021051/https:/
 
 按照我们的示例，假设我们希望在过滤掉奇数之前，根据每个整数的位数对集合进行分组:
 
-```
+```java
 public Map<Integer, List<Integer>> findEvenNumbersAfterGrouping(
   Collection<Integer> baseCollection) {
 
@@ -85,7 +85,7 @@ public Map<Integer, List<Integer>> findEvenNumbersAfterGrouping(
 
 让我们从向项目的`pom.xml`添加以下依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.eclipse.collections</groupId>
     <artifactId>eclipse-collections</artifactId>
@@ -99,7 +99,7 @@ public Map<Integer, List<Integer>> findEvenNumbersAfterGrouping(
 
 现在让我们在它的一个数据结构上使用 eclipse 的过滤功能，比如它的`MutableList`:
 
-```
+```java
 public Collection<Integer> findEvenNumbers(Collection<Integer> baseCollection) {
     Predicate<Integer> eclipsePredicate
       = item -> item % 2 == 0;
@@ -114,7 +114,7 @@ public Collection<Integer> findEvenNumbers(Collection<Integer> baseCollection) {
 
 或者，我们可以使用`Iterate`的`select()` 静态方法来定义`filteredList`对象:
 
-```
+```java
 Collection<Integer> filteredList
  = Iterate.select(baseCollection, eclipsePredicate);
 ```
@@ -129,7 +129,7 @@ Collection<Integer> filteredList
 
 首先，我们需要在`pom.xml`文件中包含以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -141,7 +141,7 @@ Collection<Integer> filteredList
 
 我们现在准备使用`CollectonUtils`方法:
 
-```
+```java
 public Collection<Integer> findEvenNumbers(Collection<Integer> baseCollection) {
     Predicate<Integer> apachePredicate = item -> item % 2 == 0;
 
@@ -162,7 +162,7 @@ public Collection<Integer> findEvenNumbers(Collection<Integer> baseCollection) {
 
 让我们从在我们的`pom.xml`文件中添加[这个依赖关系](https://web.archive.org/web/20220630021051/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.google.guava%22%20AND%20a%3A%22guava%22)开始:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -174,7 +174,7 @@ public Collection<Integer> findEvenNumbers(Collection<Integer> baseCollection) {
 
 正如我们所看到的，这种方法与上一节中遵循的方法非常相似:
 
-```
+```java
 public Collection<Integer> findEvenNumbers(Collection<Integer> baseCollection) {
     Predicate<Integer> guavaPredicate = item -> item % 2 == 0;
 

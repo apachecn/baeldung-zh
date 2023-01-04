@@ -10,7 +10,7 @@
 
 对于我们的例子，假设我们已经分叉并克隆了一个 [Git 库](https://web.archive.org/web/20220909210247/https://github.com/eugenp/tutorials)。现在，让我们对`README.md` 文件做一些修改，只需在末尾添加新的一行，并检查我们的工作目录的状态:
 
-```
+```java
 $ git status
 On branch master
 Your branch is up to date with 'origin/master'.
@@ -25,14 +25,14 @@ no changes added to commit (use "git add" and/or "git commit -a")
 
 从这里，我们可以使用`git stash `命令暂时搁置我们的更改。
 
-```
+```java
 $ git stash
 Saved working directory and index state WIP on master: a8088442db Updated pom.xml
 ```
 
 现在，如果再做一次`git status `，我们会看到我们的工作目录是干净的。
 
-```
+```java
 $ git status
 On branch master
 Your branch is up to date with 'origin/master'.
@@ -48,7 +48,7 @@ nothing to commit, working tree clean
 
 我们可以像这样将隐藏的更改放回我们的工作目录:
 
-```
+```java
 $ git stash pop
 On branch master
 Your branch is up to date with 'origin/master'.
@@ -72,7 +72,7 @@ Dropped refs/[[email protected]](/web/20220909210247/https://www.baeldung.com/c
 
 即使我们关闭了终端，我们仍然可以通过以下方式找到我们的哈希:
 
-```
+```java
 $ git fsck --no-reflog
 Checking object directories: 100% (256/256), done.
 Checking objects: 100% (302901/302901), done.
@@ -89,7 +89,7 @@ dangling commit 59861637f7b599d87cb7a1ff003f1b0212e8908e
 
 使用悬空提交的散列，我们仍然有可能恢复这些更改:
 
-```
+```java
 $ git stash apply 59861637f7b599d87cb7a1ff003f1b0212e8908e
 On branch master
 Your branch is up to date with 'origin/master'.
@@ -108,7 +108,7 @@ no changes added to commit (use "git add" and/or "git commit -a")
 
 如果我们没有现成的散列，我们可以找到它:
 
-```
+```java
 git fsck --no-reflog | awk '/dangling commit/ {print $3}'
 ```
 

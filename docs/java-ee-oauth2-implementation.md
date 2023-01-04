@@ -64,13 +64,13 @@ OAuth 2.0 框架意味着以下四个角色之间的协作:
 
 不过，为了简单起见，我们将使用一个预配置的客户端:
 
-```
+```java
 INSERT INTO clients (client_id, client_secret, redirect_uri, scope, authorized_grant_types) 
 VALUES ('webappclient', 'webappclientsecret', 'http://localhost:9180/callback', 
   'resource.read resource.write', 'authorization_code refresh_token');
 ```
 
-```
+```java
 @Entity
 @Table(name = "clients")
 public class Client {
@@ -92,12 +92,12 @@ public class Client {
 
 和预先配置的用户:
 
-```
+```java
 INSERT INTO users (user_id, password, roles, scopes)
 VALUES ('appuser', 'appusersecret', 'USER', 'resource.read resource.write');
 ```
 
-```
+```java
 @Entity
 @Table(name = "users")
 public class User implements Principal {
@@ -130,7 +130,7 @@ public class User implements Principal {
 
 首先，**授权端点要求对用户进行身份验证**。规范在这里不要求某种方式，所以让我们使用来自 [Jakarta EE 8 安全 API](/web/20220628143947/https://www.baeldung.com/java-ee-8-security) 的表单认证:
 
-```
+```java
 @FormAuthenticationMechanismDefinition(
   loginToContinue = @LoginToContinue(loginPage = "/login.jsp", errorPage = "/login.jsp")
 )
@@ -138,13 +138,13 @@ public class User implements Principal {
 
 用户将被重定向到`/login.jsp`进行身份验证，然后将作为`CallerPrincipal`通过 S `ecurityContext` API 提供:
 
-```
+```java
 Principal principal = securityContext.getCallerPrincipal();
 ```
 
 我们可以用 JAX 遥感器把这些放在一起:
 
-```
+```java
 @FormAuthenticationMechanismDefinition(
   loginToContinue = @LoginToContinue(loginPage = "/login.jsp", errorPage = "/login.jsp")
 )
@@ -174,13 +174,13 @@ public class AuthorizationEndpoint {
 
 由于授权是一个多步骤的过程，我们可以在会话中临时存储这些值:
 
-```
+```java
 request.getSession().setAttribute("ORIGINAL_PARAMS", params);
 ```
 
 然后准备询问用户应用程序可以使用哪些权限，重定向到该页面:
 
-```
+```java
 String allowedScopes = checkUserScopes(user.getScopes(), requestedScope);
 request.setAttribute("scopes", allowedScopes);
 request.getRequestDispatcher("/authorize.jsp").forward(request, response);
@@ -190,7 +190,7 @@ request.getRequestDispatcher("/authorize.jsp").forward(request, response);
 
 此时，浏览器为用户呈现一个授权 UI，**用户做出选择。**然后，浏览器**提交用户在** **的选择，一个 HTTP POST** :
 
-```
+```java
 @POST
 @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 @Produces(MediaType.TEXT_HTML)
@@ -215,7 +215,7 @@ public Response doPost(@Context HttpServletRequest request, @Context HttpServlet
 
 因此，让我们创建一个带有自动生成的 id `:`的`AuthorizationCode` JPA 实体
 
-```
+```java
 @Entity
 @Table(name ="authorization_code")
 public class AuthorizationCode {
@@ -231,7 +231,7 @@ private String code;
 
 然后填充它:
 
-```
+```java
 AuthorizationCode authorizationCode = new AuthorizationCode();
 authorizationCode.setClientId(clientId);
 authorizationCode.setUserId(userId);
@@ -242,7 +242,7 @@ authorizationCode.setRedirectUri(redirectUri);
 
 当我们保存 bean 时，code 属性是自动填充的，因此我们可以获取它并将其发送回客户端:
 
-```
+```java
 appDataRepository.save(authorizationCode);
 String code = authorizationCode.getCode();
 ```
@@ -251,7 +251,7 @@ String code = authorizationCode.getCode();
 
 然后我们重定向回应用程序的`redirect_uri,` ，给它代码以及应用程序在其`/authorize` 请求中指定的任何`state` 参数:
 
-```
+```java
 StringBuilder sb = new StringBuilder(redirectUri);
 // ...
 
@@ -272,7 +272,7 @@ return Response.seeOther(location).build();
 
 与授权端点相反，令牌端点**不需要浏览器来与客户端**通信，因此，我们将把它实现为 JAX-RS 端点:
 
-```
+```java
 @Path("token")
 public class TokenEndpoint {
 
@@ -298,13 +298,13 @@ public class TokenEndpoint {
 
 正如我们所讨论的，我们将只支持`authorization code`授权类型:
 
-```
+```java
 List<String> supportedGrantTypes = Collections.singletonList("authorization_code");
 ```
 
 因此，应该支持接收到的`grant_type`作为必需参数:
 
-```
+```java
 String grantType = params.getFirst("grant_type");
 Objects.requireNonNull(grantType, "grant_type params is required");
 if (!supportedGrantTypes.contains(grantType)) {
@@ -319,7 +319,7 @@ if (!supportedGrantTypes.contains(grantType)) {
 
 接下来，我们通过 HTTP 基本身份验证检查客户端身份验证。也就是说，我们检查**是否通过`Authorization` 报头接收到的`client_id`和`client_secret`** `,` ，**匹配一个注册的客户:**
 
-```
+```java
 String[] clientCredentials = extract(authHeader);
 String clientId = clientCredentials[0];
 String clientSecret = clientCredentials[1];
@@ -335,7 +335,7 @@ if (client == null || clientSecret == null || !clientSecret.equals(client.getCli
 
 最后，我们将`TokenResponse`的生产委托给相应的授权类型处理程序:
 
-```
+```java
 public interface AuthorizationGrantTypeHandler {
     TokenResponse createAccessToken(String clientId, MultivaluedMap<String, String> params) throws Exception;
 }
@@ -343,13 +343,13 @@ public interface AuthorizationGrantTypeHandler {
 
 由于我们对授权代码授权类型更感兴趣，我们提供了一个适当的 CDI bean 实现，并用`Named`注释对其进行了修饰:
 
-```
+```java
 @Named("authorization_code")
 ```
 
 运行时，根据接收到的`grant_type`值，通过 [CDI 实例机制](https://web.archive.org/web/20220628143947/https://javaee.github.io/javaee-spec/javadocs/javax/enterprise/inject/Instance.html)激活相应的实现:
 
-```
+```java
 String grantType = params.getFirst("grant_type");
 //...
 AuthorizationGrantTypeHandler authorizationGrantTypeHandler = 
@@ -364,33 +364,33 @@ AuthorizationGrantTypeHandler authorizationGrantTypeHandler =
 
 为此，我们将使用 OpenSSL:
 
-```
+```java
 # PRIVATE KEY
 openssl genpkey -algorithm RSA -out private-key.pem -pkeyopt rsa_keygen_bits:2048
 ```
 
 使用文件`META-INF/microprofile-config.properties:`通过微文件配置`signingKey`属性将`private-key.pem`提供给服务器
 
-```
+```java
 signingkey=/META-INF/private-key.pem
 ```
 
 服务器可以使用注入的`Config`对象读取属性:
 
-```
+```java
 String signingkey = config.getValue("signingkey", String.class);
 ```
 
 类似地，我们可以生成相应的公钥:
 
-```
+```java
 # PUBLIC KEY
 openssl rsa -pubout -in private-key.pem -out public-key.pem
 ```
 
 并使用微文件配置`verificationKey`来读取它:
 
-```
+```java
 verificationkey=/META-INF/public-key.pem
 ```
 
@@ -398,7 +398,7 @@ verificationkey=/META-INF/public-key.pem
 
 **[光轮穆+JWT](https://web.archive.org/web/20220628143947/https://connect2id.com/products/nimbus-jose-jwt)** 是一个可以在这里帮上大忙的库。让我们先添加[的`nimbus-jose-jwt` 依赖](https://web.archive.org/web/20220628143947/https://search.maven.org/search?q=g:com.nimbusds AND a:nimbus-jose-jwt&core=gav):
 
-```
+```java
 <dependency>
     <groupId>com.nimbusds</groupId>
     <artifactId>nimbus-jose-jwt</artifactId>
@@ -408,7 +408,7 @@ verificationkey=/META-INF/public-key.pem
 
 现在，我们可以利用 Nimbus 的 JWK 支持来简化我们的端点:
 
-```
+```java
 @Path("jwk")
 @ApplicationScoped
 public class JWKEndpoint {
@@ -441,13 +441,13 @@ public class JWKEndpoint {
 
 因此，要创建一个签名的 JWT，**我们首先要构造 JWT 报头:**
 
-```
+```java
 JWSHeader jwsHeader = new JWSHeader.Builder(JWSAlgorithm.RS256).type(JOSEObjectType.JWT).build();
 ```
 
 **然后，我们构建有效负载**，它是标准化和定制声明的`Set`:
 
-```
+```java
 Instant now = Instant.now();
 Long expiresInMin = 30L;
 Date in30Min = Date.from(now.plus(expiresInMin, ChronoUnit.MINUTES));
@@ -473,7 +473,7 @@ SignedJWT signedJWT = new SignedJWT(jwsHeader, jwtClaims);
 
 因为我们已经以 PEM 格式提供了私钥，所以我们应该检索它并将其转换成一个`RSAPrivateKey:`
 
-```
+```java
 SignedJWT signedJWT = new SignedJWT(jwsHeader, jwtClaims);
 //...
 String signingkey = config.getValue("signingkey", String.class);
@@ -483,14 +483,14 @@ RSAKey rsaKey = (RSAKey) JWK.parseFromPEMEncodedObjects(pemEncodedRSAPrivateKey)
 
 接下来，**我们签署并序列化 JWT:**
 
-```
+```java
 signedJWT.sign(new RSASSASigner(rsaKey.toRSAPrivateKey()));
 String accessToken = signedJWT.serialize();
 ```
 
 最后**我们构造一个令牌响应:**
 
-```
+```java
 return Json.createObjectBuilder()
   .add("token_type", "Bearer")
   .add("access_token", accessToken)
@@ -501,7 +501,7 @@ return Json.createObjectBuilder()
 
 多亏了 JSON-P，它被序列化为 JSON 格式并发送给客户端:
 
-```
+```java
 {
   "access_token": "acb6803a48114d9fb4761e403c17f812",
   "token_type": "Bearer",  
@@ -534,7 +534,7 @@ return Json.createObjectBuilder()
 
 所有这些信息都是通过微配置文件`META-INF/microprofile-config.properties:`提供的
 
-```
+```java
 # Client registration
 client.clientId=webappclient
 client.clientSecret=webappclientsecret
@@ -552,7 +552,7 @@ provider.tokenUri=http://127.0.0.1:9080/token
 
 通常，当用户试图在未经授权的情况下访问受保护的资源 API 时，或者通过显式调用客户端`/authorize`路径时，会发生这种情况:
 
-```
+```java
 @WebServlet(urlPatterns = "/authorize")
 public class AuthorizationCodeServlet extends HttpServlet {
 
@@ -569,14 +569,14 @@ public class AuthorizationCodeServlet extends HttpServlet {
 
 在`doGet()`方法中，我们从生成和存储安全状态值开始:
 
-```
+```java
 String state = UUID.randomUUID().toString();
 request.getSession().setAttribute("CLIENT_LOCAL_STATE", state);
 ```
 
 然后，我们检索客户端配置信息:
 
-```
+```java
 String authorizationUri = config.getValue("provider.authorizationUri", String.class);
 String clientId = config.getValue("client.clientId", String.class);
 String redirectUri = config.getValue("client.redirectUri", String.class);
@@ -585,7 +585,7 @@ String scope = config.getValue("client.scope", String.class);
 
 然后，我们将这些信息作为查询参数附加到授权服务器的授权端点:
 
-```
+```java
 String authorizationLocation = authorizationUri + "?response_type=code"
   + "&client;_id=" + clientId
   + "&redirect;_uri=" + redirectUri
@@ -595,7 +595,7 @@ String authorizationLocation = authorizationUri + "?response_type=code"
 
 最后，我们将浏览器重定向到以下 URL:
 
-```
+```java
 response.sendRedirect(authorizationLocation);
 ```
 
@@ -605,7 +605,7 @@ response.sendRedirect(authorizationLocation);
 
 客户端回调 servlet，`/callback,`通过验证接收到的`state:`开始
 
-```
+```java
 String localState = (String) request.getSession().getAttribute("CLIENT_LOCAL_STATE");
 if (!localState.equals(request.getParameter("state"))) {
     request.setAttribute("error", "The state attribute doesn't match!");
@@ -616,7 +616,7 @@ if (!localState.equals(request.getParameter("state"))) {
 
 接下来，**我们将使用之前收到的代码，通过授权服务器的令牌端点请求访问令牌**:
 
-```
+```java
 String code = request.getParameter("code");
 Client client = ClientBuilder.newClient();
 WebTarget target = client.target(config.getValue("provider.tokenUri", String.class));
@@ -643,7 +643,7 @@ TokenResponse tokenResponse = target.request(MediaType.APPLICATION_JSON_TYPE)
 
 为此，**我们必须提供`Authorization`报头**。使用 JAX-RS 客户端 API，这可以通过`Invocation.Builder header()`方法简单地完成:
 
-```
+```java
 resourceWebTarget = webTarget.path("resource/read");
 Invocation.Builder invocationBuilder = resourceWebTarget.request();
 response = invocationBuilder
@@ -659,7 +659,7 @@ response = invocationBuilder
 
 除了对 [Java EE Web API](https://web.archive.org/web/20220628143947/https://search.maven.org/search?q=g:javax AND a:javaee-web-api&core=gav) 的依赖，我们还需要[微配置](https://web.archive.org/web/20220628143947/https://search.maven.org/search?q=g:org.eclipse.microprofile.config AND a:microprofile-config-api&core=gav)和[微配置 JWT](https://web.archive.org/web/20220628143947/https://search.maven.org/search?q=g:org.eclipse.microprofile.jwt AND a:microprofile-jwt-auth-api&core=gav)API:
 
-```
+```java
 <dependency>
     <groupId>javax</groupId>
     <artifactId>javaee-web-api</artifactId>
@@ -684,7 +684,7 @@ response = invocationBuilder
 
 为了在服务器中启用 **JWT 认证机制，我们需要**在 JAX-RS 应用程序中添加`LoginConfig`注释**:**
 
-```
+```java
 @ApplicationPath("/api")
 @DeclareRoles({"resource.read", "resource.write"})
 @LoginConfig(authMethod = "MP-JWT")
@@ -694,13 +694,13 @@ public class OAuth2ResourceServerApplication extends Application {
 
 此外，**JWT 微档案需要 RSA 公钥来验证 JWT 签名**。我们可以通过自省来提供，或者为了简单起见，通过从授权服务器手动复制密钥来提供。无论哪种情况，我们都需要提供公钥的位置:
 
-```
+```java
 mp.jwt.verify.publickey.location=/META-INF/public-key.pem
 ```
 
 最后，微文件 JWT 需要验证传入 JWT 的`iss`声明，它应该存在并与微文件配置属性的值相匹配:
 
-```
+```java
 mp.jwt.verify.issuer=http://127.0.0.1:9080
 ```
 
@@ -712,7 +712,7 @@ mp.jwt.verify.issuer=http://127.0.0.1:9080
 
 对作用域的限制是通过`@RolesAllowed`注释完成的:
 
-```
+```java
 @Path("/resource")
 @RequestScoped
 public class ProtectedResource {
@@ -740,13 +740,13 @@ public class ProtectedResource {
 
 要运行一个服务器，我们只需要调用相应目录中的 Maven 命令:
 
-```
+```java
 mvn package liberty:run-server
 ```
 
 授权服务器、客户端和资源服务器将分别在以下位置运行和可用:
 
-```
+```java
 # Authorization Server
 http://localhost:9080/
 

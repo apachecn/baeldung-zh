@@ -16,7 +16,7 @@
 
 让我们从定义`Book`类开始，我们将为其生成一个构建器:
 
-```
+```java
 public class Book {
     private String title;
     private Author author;
@@ -33,7 +33,7 @@ public class Book {
 
 让我们创建一个:
 
-```
+```java
 public Book(String title, Author author, LocalDate publishDate, int pageCount) {
     this.title = title;
     this.author = author;
@@ -52,7 +52,7 @@ public Book(String title, Author author, LocalDate publishDate, int pageCount) {
 
 结果，我们生成了`BookBuilder`类:
 
-```
+```java
 public class BookBuilder {
     private String title;
     private Author author;
@@ -101,7 +101,7 @@ public class BookBuilder {
 
 首先，我们需要手动创建一个空的内部类，并将构造函数设为私有:
 
-```
+```java
 public class Book {
 
     private String title;
@@ -144,7 +144,7 @@ public class Book {
 
 让我们看看当所有选项都取消选中时生成的构建器:
 
-```
+```java
 public static final class Builder {
     private String title;
     private Author author;
@@ -196,7 +196,7 @@ public static final class Builder {
 
 让我们保留所有未选中的选项，并查看生成的构建器类:
 
-```
+```java
 public final class BookBuilder {
     private String title;
     private Author author;
@@ -249,7 +249,7 @@ public final class BookBuilder {
 
 如果我们选择这个选项，插件将向`BookBuilder`类添加一个`but()` 方法:
 
-```
+```java
 public BookBuilder but() {
     return aBook().withTitle(title).withAuthor(author)
       .withPublishDate(publishDate).withPageCount(pageCount);
@@ -260,7 +260,7 @@ public BookBuilder but() {
 
 让我们来看一个例子:
 
-```
+```java
 BookBuilder commonBuilder = BookBuilder.aBook().withAuthor(johnDoe).withPageCount(123);
 
 Book my_first_book = commonBuilder.but()
@@ -280,7 +280,7 @@ Book my_last_book = commonBuilder.but()
 
 如果我们选择这个选项，生成的构建器将保存对创建的`Book`对象的引用，而不是书的所有属性:
 
-```
+```java
 public final class BookBuilder {
     private Book book;
 

@@ -18,7 +18,7 @@
 
 首先，让我们看看`AbstractMethodError`在 Java 异常层次结构中的位置:
 
-```
+```java
 java.lang.Object
 |_java.lang.Throwable
   |_java.lang.Error
@@ -37,7 +37,7 @@ java.lang.Object
 
 比方说，在我们的应用程序中，我们包含了一个`baeldung-queue`库。`baeldung-queue`库是一个高级规范库，它只包含一个接口:
 
-```
+```java
 public interface BaeldungQueue {
     void enqueue(Object o);
     Object dequeue();
@@ -46,7 +46,7 @@ public interface BaeldungQueue {
 
 同样，为了使用`BaeldungQueue` 接口，我们导入了一个`BaeldungQueue`实现库:`good-queue`。`good-queue`库也只有一个类:
 
-```
+```java
 public class GoodQueue implements BaeldungQueue {
     @Override
     public void enqueue(Object o) {
@@ -62,7 +62,7 @@ public class GoodQueue implements BaeldungQueue {
 
 现在，如果`good-queue` 和`baeldung-queue`都在类路径中，我们可以在应用程序中创建一个`BaeldungQueue`实例:
 
-```
+```java
 public class Application {
     BaeldungQueue queue = new GoodQueue();
 
@@ -79,7 +79,7 @@ public class Application {
 
 有一天，我们得知`baeldung-queue` 发布了版本`2.0`,并且它采用了一种新的方法:
 
-```
+```java
 public interface BaeldungQueue {
     void enqueue(Object o);
     Object dequeue();
@@ -94,7 +94,7 @@ public interface BaeldungQueue {
 
 此外，我们开始在应用程序中使用新方法:
 
-```
+```java
 public class Application {
     BaeldungQueue queue = new GoodQueue();
 
@@ -124,7 +124,7 @@ public class Application {
 
 让我们创建一个单元测试类来验证调用`Connection.getSchema()`方法是否会抛出`AbstractMethodError`:
 
-```
+```java
 class AbstractMethodErrorUnitTest {
     private static final String url = "jdbc:h2:mem:A-DATABASE;INIT=CREATE SCHEMA IF NOT EXISTS myschema";
     private static final String username = "sa";

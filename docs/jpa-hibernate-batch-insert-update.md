@@ -16,7 +16,7 @@
 
 首先，我们将创建一个`School`实体:
 
-```
+```java
 @Entity
 public class School {
 
@@ -35,7 +35,7 @@ public class School {
 
 每个`School`将有零个或多个`Student`:
 
-```
+```java
 @Entity
 public class Student {
 
@@ -56,7 +56,7 @@ public class Student {
 
 在运行我们的示例时，我们需要验证 insert/update 语句确实是成批发送的。不幸的是，我们无法从 [Hibernate 日志语句](/web/20220628083432/https://www.baeldung.com/sql-logging-spring-boot)中判断 SQL 语句是否是批处理的。因此，我们将使用数据源代理来跟踪 Hibernate/JPA SQL 语句:
 
-```
+```java
 private static class ProxyDataSourceInterceptor implements MethodInterceptor {
     private final DataSource dataSource;
     public ProxyDataSourceInterceptor(final DataSource dataSource) {
@@ -73,7 +73,7 @@ private static class ProxyDataSourceInterceptor implements MethodInterceptor {
 
 **Hibernate 默认不启用批处理**。这意味着它将为每个插入/更新操作发送一个单独的 SQL 语句:
 
-```
+```java
 @Transactional
 @Test
 public void whenNotConfigured_ThenSendsInsertsSeparately() {
@@ -87,7 +87,7 @@ public void whenNotConfigured_ThenSendsInsertsSeparately() {
 
 这里我们持久化了 10 个`School`实体。如果我们查看查询日志，我们可以看到 Hibernate 分别发送每个 insert 语句:
 
-```
+```java
 "querySize":1, "batchSize":0, "query":["insert into school (name, id) values (?, ?)"], 
   "params":[["School1","1"]]
 "querySize":1, "batchSize":0, "query":["insert into school (name, id) values (?, ?)"], 
@@ -114,7 +114,7 @@ public void whenNotConfigured_ThenSendsInsertsSeparately() {
 
 如果我们手动创建`EntityManager` ，我们应该将`hibernate.jdbc.batch_size`添加到 Hibernate 属性中:
 
-```
+```java
 public Properties hibernateProperties() {
     Properties properties = new Properties();
     properties.put("hibernate.jdbc.batch_size", "5");
@@ -126,7 +126,7 @@ public Properties hibernateProperties() {
 
 如果我们使用 Spring Boot，我们可以将其定义为应用程序属性:
 
-```
+```java
 spring.jpa.properties.hibernate.jdbc.batch_size=5
 ```
 
@@ -138,7 +138,7 @@ spring.jpa.properties.hibernate.jdbc.batch_size=5
 
 我们将使用前面的代码示例，但这次启用了批处理:
 
-```
+```java
 @Transactional
 @Test
 public void whenInsertingSingleTypeOfEntity_thenCreatesSingleBatch() {
@@ -151,7 +151,7 @@ public void whenInsertingSingleTypeOfEntity_thenCreatesSingleBatch() {
 
 这里我们持久化了 10 个`School` 实体。当我们查看日志时，我们可以验证 Hibernate 成批发送 insert 语句:
 
-```
+```java
 "batch":true, "querySize":1, "batchSize":5, "query":["insert into school (name, id) values (?, ?)"], 
   "params":[["School1","1"],["School2","2"],["School3","3"],["School4","4"],["School5","5"]]
 "batch":true, "querySize":1, "batchSize":5, "query":["insert into school (name, id) values (?, ?)"], 
@@ -170,7 +170,7 @@ public void whenInsertingSingleTypeOfEntity_thenCreatesSingleBatch() {
 
 因此，为了减少批处理期间的内存负载，每当达到批处理大小时，我们可以在应用程序代码上调用`EntityManager.flush()`和`EntityManager.clear()`:
 
-```
+```java
 @Transactional
 @Test
 public void whenFlushingAfterBatch_ThenClearsMemory() {
@@ -195,7 +195,7 @@ public void whenFlushingAfterBatch_ThenClearsMemory() {
 
 此外，当 Hibernate 收集 insert 语句时，只要遇到与当前批处理中不同的实体类型，它就会创建一个新的批处理。即使该实体类型已经有一个批处理，也是如此:
 
-```
+```java
 @Transactional
 @Test
 public void whenThereAreMultipleEntities_ThenCreatesNewBatch() {
@@ -218,7 +218,7 @@ public void whenThereAreMultipleEntities_ThenCreatesNewBatch() {
 
 在日志中，我们看到 Hibernate 在几个大小为 1 的批处理中发送了`School` insert 语句，而我们预期只有 2 个大小为 5 的批处理。此外，`Student` insert 语句也以大小为 2 的几个批次发送，而不是大小为 5 的 4 个批次:
 
-```
+```java
 "batch":true, "querySize":1, "batchSize":1, "query":["insert into school (name, id) values (?, ?)"], 
   "params":[["School1","1"]]
 "batch":true, "querySize":1, "batchSize":2, "query":["insert into student (name, school_id, id) 
@@ -238,7 +238,7 @@ Other log lines...
 
 我们可以使用`EntityManagerFactory`手动配置 Hibernate 属性:
 
-```
+```java
 public Properties hibernateProperties() {
     Properties properties = new Properties();
     properties.put("hibernate.order_inserts", "true");
@@ -250,13 +250,13 @@ public Properties hibernateProperties() {
 
 如果我们使用 Spring Boot，我们可以在应用程序中配置属性。属性:
 
-```
+```java
 spring.jpa.properties.hibernate.order_inserts=true
 ```
 
 添加该属性后，我们将有 1 批`School` 插入和 2 批`Student` 插入:
 
-```
+```java
 "batch":true, "querySize":1, "batchSize":5, "query":["insert into school (name, id) values (?, ?)"], 
   "params":[["School6","16"],["School7","19"],["School8","22"],["School9","25"],["School10","28"]]
 "batch":true, "querySize":1, "batchSize":5, "query":["insert into student (name, school_id, id) 
@@ -275,7 +275,7 @@ spring.jpa.properties.hibernate.order_inserts=true
 
 如果我们手动创建我们的`EntityManagerFactory` ,我们可以通过编程来设置属性:
 
-```
+```java
 public Properties hibernateProperties() {
     Properties properties = new Properties();
     properties.put("hibernate.order_updates", "true");
@@ -288,14 +288,14 @@ public Properties hibernateProperties() {
 
 如果我们使用 Spring Boot，我们只需将它们添加到应用程序中。属性:
 
-```
+```java
 spring.jpa.properties.hibernate.order_updates=true
 spring.jpa.properties.hibernate.batch_versioned_data=true
 ```
 
 配置完这些属性后，Hibernate 应该分批对更新语句进行分组:
 
-```
+```java
 @Transactional
 @Test
 public void whenUpdatingEntities_thenCreatesBatch() {
@@ -310,7 +310,7 @@ public void whenUpdatingEntities_thenCreatesBatch() {
 
 这里我们已经更新了学校实体，Hibernate 分两批发送 SQL 语句，每批大小为 5:
 
-```
+```java
 "batch":true, "querySize":1, "batchSize":5, "query":["update school set name=? where id=?"], 
   "params":[["Updated_School1","1"],["Updated_School2","2"],["Updated_School3","3"],
   ["Updated_School4","4"],["Updated_School5","5"]]
@@ -325,7 +325,7 @@ public void whenUpdatingEntities_thenCreatesBatch() {
 
 由于我们示例中的实体使用了`GenerationType.SEQUENCE`标识符生成器，Hibernate 支持批处理操作:
 
-```
+```java
 @Id
 @GeneratedValue(strategy = GenerationType.SEQUENCE)
 private long id;

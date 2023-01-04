@@ -36,7 +36,7 @@ BIRT 有两个主要组件:创建报表设计文件的可视化报表设计器�
 
 包括 BIRT 现在非常容易:
 
-```
+```java
 <dependency>
     <groupId>com.innoventsolutions.birt.runtime</groupId>
     <artifactId>org.eclipse.birt.runtime_4.8.0-20180626</artifactId>
@@ -52,7 +52,7 @@ BIRT 有两个主要组件:创建报表设计文件的可视化报表设计器�
 
 因为我们不能从 jar 中删除它，为了解决这个问题，**我们需要排除 Logback** :
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-logging</artifactId>
@@ -115,7 +115,7 @@ BIRT 有两个主要组件:创建报表设计文件的可视化报表设计器�
 
 为了证明这一点，这里有一个如何定义一个简单的带有图像和文本的静态页面的例子:
 
-```
+```java
 DesignElementHandle element = factory.newSimpleMasterPage("Page Master");
 design.getMasterPages().add(element);
 
@@ -151,7 +151,7 @@ label.setText("Hello, Baeldung world!");
 
 对于我们的示例项目，我们使用了一个包含三个条目的简单 CSV 文件。它可以在`reports`文件夹中找到，由三行简单的数据和标题组成:
 
-```
+```java
 Student, Math, Geography, History
 Bill, 10,3,8
 Tom, 5,6,5
@@ -228,7 +228,7 @@ Anne, 7, 4,9
 
 报告引擎是通过由`Platform`提供的工厂创建的。在创建引擎之前，我们必须启动`Platform`，它将加载适当的插件:
 
-```
+```java
 @PostConstruct
 protected void initialize() throws BirtException {
     EngineConfig config = new EngineConfig();
@@ -244,7 +244,7 @@ protected void initialize() throws BirtException {
 
 当我们不再需要它时，我们可以销毁它:
 
-```
+```java
 @Override
 public void destroy() {
     birtEngine.destroy();
@@ -264,7 +264,7 @@ public void destroy() {
 
 因此，**PDF 渲染功能非常简单**:
 
-```
+```java
 private void generatePDFReport(IReportRunnable report, HttpServletResponse response, 
   HttpServletRequest request) {
     IRunAndRenderTask runAndRenderTask = birtEngine.createRunAndRenderTask(report);
@@ -288,7 +288,7 @@ private void generatePDFReport(IReportRunnable report, HttpServletResponse respo
 
 **而 HTML 渲染功能需要更多设置:**
 
-```
+```java
 private void generateHTMLReport(IReportRunnable report, HttpServletResponse response, 
   HttpServletRequest request) {
     IRunAndRenderTask runAndRenderTask = birtEngine.createRunAndRenderTask(report);
@@ -331,7 +331,7 @@ private void generateHTMLReport(IReportRunnable report, HttpServletResponse resp
 
 出于这个原因，在我们的`ReportEngineApplication`中，我们配置 Spring 来发布`images`文件夹:
 
-```
+```java
 @SpringBootApplication
 @EnableWebMvc
 public class ReportEngineApplication implements WebMvcConfigurer {
@@ -358,7 +358,7 @@ public class ReportEngineApplication implements WebMvcConfigurer {
 
 让我们的应用程序做好准备的最后一个组件是一个返回渲染结果的`Controller`:
 
-```
+```java
 @RequestMapping(method = RequestMethod.GET, value = "/report/{name}")
 @ResponseBody
 public void generateFullReport(HttpServletResponse response, HttpServletRequest request,

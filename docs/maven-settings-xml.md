@@ -30,7 +30,7 @@ In this article, we explore the different packaging types available in Maven.[Re
 
 让我们探索一下可以在`settings.xml`文件中配置的元素。`settings.xml`文件的主`settings `元素可以包含九个可能的预定义子元素:
 
-```
+```java
 <settings  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
     <localRepository/>
@@ -49,7 +49,7 @@ In this article, we explore the different packaging types available in Maven.[Re
 
 一些顶级配置元素包含简单值:
 
-```
+```java
 <settings  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
     <localRepository>${user.home}/.m2/repository</localRepository>
@@ -68,7 +68,7 @@ In this article, we explore the different packaging types available in Maven.[Re
 
 `pluginGroups`元素包含一个指定了`groupId`的子元素列表。一个`groupId` 是创建特定 Maven 工件的组织的唯一标识符:
 
-```
+```java
 <settings  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
     <pluginGroups>
@@ -81,7 +81,7 @@ In this article, we explore the different packaging types available in Maven.[Re
 
 上面定义的`settings.xml`文件允许我们执行截断的 Tomcat 插件命令:
 
-```
+```java
 mvn tomcat7:help
 mvn tomcat7:deploy
 mvn tomcat7:run
@@ -91,7 +91,7 @@ mvn tomcat7:run
 
 我们可以为 Maven 的部分或全部 HTTP 请求配置一个代理。*代理*元素允许一系列子代理元素，但是**一次只能有一个代理处于活动状态**:
 
-```
+```java
 <settings  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
     <proxies>
@@ -119,7 +119,7 @@ mvn tomcat7:run
 
 例如，我们可以通过镜像所有存储库请求来强制 Maven 使用单个存储库:
 
-```
+```java
 <settings  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
     <mirrors>
@@ -139,7 +139,7 @@ mvn tomcat7:run
 
 在项目 `pom.xml`中定义存储库是一个很好的实践。然而，我们不应该用`pom.xml`将安全设置(比如凭证)放入我们的源代码库中。相反，我们**在`settings.xml`文件**中定义这个 **安全信息:**
 
-```
+```java
 <settings  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
     <servers>
@@ -171,7 +171,7 @@ mvn tomcat7:run
 
 我们只能在给定的情况下使用配置文件来修改某些值。我们可以使用`activation `元素来指定这些情况。因此，当满足所有指定标准时，配置文件**激活**:
 
-```
+```java
 <settings  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
     <profiles>
@@ -209,13 +209,13 @@ mvn tomcat7:run
 
 为了检查哪个概要文件将激活某个构建，我们可以使用 Maven help 插件:
 
-```
+```java
 mvn help:active-profiles
 ```
 
 输出将显示给定项目的当前活动配置文件:
 
-```
+```java
 [INFO] --- maven-help-plugin:3.2.0:active-profiles (default-cli) @ core-java-streams-3 ---
 [INFO]
 Active Profiles for Project 'com.baeldung.core-java-modules:core-java-streams-3:jar:0.1.0-SNAPSHOT':
@@ -227,7 +227,7 @@ The following profiles are active:
 
 Maven 属性可以被认为是某个值的命名占位符。使用`${property_name}`符号可以在`pom.xml`文件中访问这些值的**:**
 
-```
+```java
 <settings  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
     <profiles>
@@ -253,7 +253,7 @@ Maven 属性可以被认为是某个值的命名占位符。使用`${property_na
 
 远程存储库包含 Maven 用来填充本地存储库的工件集合。特定的工件可能需要不同的远程存储库。Maven **搜索在活动概要文件**下启用的存储库:
 
-```
+```java
 <settings  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
     <profiles>
@@ -284,7 +284,7 @@ Maven 属性可以被认为是某个值的命名占位符。使用`${property_na
 
 Maven 工件有两种标准类型，依赖性和插件。由于 Maven 插件是一种特殊类型的工件，我们可以**将插件库与其他插件库**分开:
 
-```
+```java
 <settings  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
     <profiles>
@@ -315,7 +315,7 @@ Maven 工件有两种标准类型，依赖性和插件。由于 Maven 插件是�
 
 `activeProfiles`元素包含引用特定概要文件`ID`的子元素。 **Maven 自动激活此处引用的任何配置文件**:
 
-```
+```java
 <settings  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
     <activeProfiles>
@@ -340,7 +340,7 @@ Maven 工件有两种标准类型，依赖性和插件。由于 Maven 插件是�
 
 为了确定全局和用户设置的位置，我们可以使用 debug 标志运行 Maven，并在输出中搜索`“settings”`:
 
-```
+```java
 $ mvn -X clean | grep "settings"  [DEBUG] Reading global settings from C:\Program Files (x86)\Apache\apache-maven-3.6.3\bin\..\conf\settings.xml
 [DEBUG] Reading user settings from C:\Users\Baeldung\.m2\settings.xml
 ```
@@ -349,13 +349,13 @@ $ mvn -X clean | grep "settings"  [DEBUG] Reading global settings from C:\Progra
 
 我们可以使用 Maven help 插件来**找出组合的全局和用户设置**的内容:
 
-```
+```java
 mvn help:effective-settings
 ```
 
 这以 XML 格式描述了设置:
 
-```
+```java
 <settings  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
     <localRepository>C:\Users\Baeldung\.m2\repository</localRepository>
@@ -371,13 +371,13 @@ mvn help:effective-settings
 
 Maven 还允许我们通过命令行覆盖全局和用户设置的位置:
 
-```
+```java
 $ mvn clean --settings c:\user\user-settings.xml --global-settings c:\user\global-settings.xml
 ```
 
 我们还可以使用相同命令的更短的`–s`版本:
 
-```
+```java
 $ mvn clean --s c:\user\user-settings.xml --gs c:\user\global-settings.xml
 ```
 

@@ -37,14 +37,14 @@ Java 是一种类型化语言，这意味着它利用了类型的概念。有两
 
 当我们需要从比目标类型更简单或更小的原语进行转换时，我们不必为此使用任何特殊的符号:
 
-```
+```java
 int myInt = 127;
 long myLong = myInt;
 ```
 
 在扩大转换过程中，较小的原始值被放在一个较大的容器上，这意味着该值左侧所有多余的空间都用零填充。这也可以用于从整数组到浮点组:
 
-```
+```java
 float myFloat = myLong;
 double myDouble = myLong;
 ```
@@ -57,7 +57,7 @@ double myDouble = myLong;
 
 在这种情况下，我们必须通过使用演员来明确表达我们知道这种情况并且同意这种情况:
 
-```
+```java
 int myInt = (int) myDouble;
 byte myByte = (byte) myInt;
 ```
@@ -68,13 +68,13 @@ byte myByte = (byte) myInt;
 
 一个例子将阐明这一点:
 
-```
+```java
 byte myLargeValueByte = (byte) 130;   //0b10000010 -126
 ```
 
 130 的二进制表示与-126 相同，不同之处在于信号位的解释。现在让我们从`byte`转换到`char`:
 
-```
+```java
 char myLargeValueChar = (char) myLargeValueByte;
   //0b11111111 10000010 unsigned value
 int myLargeValueInt = myLargeValueChar; //0b11111111 10000010 65410
@@ -84,13 +84,13 @@ int myLargeValueInt = myLargeValueChar; //0b11111111 10000010 65410
 
 如果我们再次将其转换为`byte`,我们得到:
 
-```
+```java
 byte myOtherByte = (byte) myLargeValueInt; //0b10000010 -126
 ```
 
 我们使用的原始值。如果整个代码都以`char`开始，那么值将会不同:
 
-```
+```java
 char myLargeValueChar2 = 130; //This is an int not a byte! 
   //0b 00000000 10000010 unsigned value
 
@@ -105,7 +105,7 @@ byte myOtherByte2 = (byte) myLargeValueInt2; //0b10000010 -126
 
 在 Java 中，我们为每一个原始类型都提供了一个包装类，这是一种为程序员提供有用的处理方法的聪明方式，而没有将所有东西都作为重量级对象引用的开销。从 Java 1.5 开始，就包含了在原语和对象之间自动转换的能力，这是通过简单的属性实现的:
 
-```
+```java
 Integer myIntegerReference = myInt;
 int myOtherInt = myIntegerReference;
 ```
@@ -114,13 +114,13 @@ int myOtherInt = myIntegerReference;
 
 所有的原始类型都可以通过它们的包装类转换成`String`，包装类覆盖了`toString()`方法:
 
-```
+```java
 String myString = myIntegerReference.toString();
 ```
 
 如果我们需要回到原始类型，我们需要使用由相应的包装类定义的解析方法:
 
-```
+```java
 byte  myNewByte   = Byte.parseByte(myString);
 short myNewShort  = Short.parseShort(myString);
 int   myNewInt    = Integer.parseInt(myString);
@@ -130,13 +130,13 @@ float  myNewFloat  = Float.parseFloat(myString);
 double myNewDouble = Double.parseDouble(myString); 
 ```
 
-```
+```java
 boolean myNewBoolean = Boolean.parseBoolean(myString);
 ```
 
 这里唯一的例外是`Character`类，因为无论如何`String`是由`char`构成的，这样，考虑到`String`可能是由单个`char`构成的，我们可以使用`String`类的`charAt()`方法:
 
-```
+```java
 char myNewChar = myString.charAt(0);
 ```
 
@@ -153,7 +153,7 @@ char myNewChar = myString.charAt(0);
 
 让我们看一个例子:
 
-```
+```java
 byte op1 = 4;
 byte op2 = 5;
 byte myResultingByte = (byte) (op1 + op2);

@@ -32,7 +32,7 @@
 
 首先，让我们创建一个服务 bean 和一个位于父包中的 bean 定义类。我们希望这个 bean 返回一个问候语，显示给我们的 web 应用程序的客户端:
 
-```
+```java
 @Service
 public class HomeService implements IHomeService {
 
@@ -44,7 +44,7 @@ public class HomeService implements IHomeService {
 
 和 bean 定义类:
 
-```
+```java
 @Configuration
 @ComponentScan("com.baeldung.parent")
 public class ServiceConfig {}
@@ -60,7 +60,7 @@ public class ServiceConfig {}
 
 让我们首先为第一个子上下文定义一个属性文件:
 
-```
+```java
 server.port=8074
 server.servlet.context-path=/ctx1
 
@@ -72,7 +72,7 @@ spring.application.admin.jmx-name=org.springframework.boot:type=Ctx1Rest,name=Ct
 
 现在让我们为这个上下文添加主配置类:
 
-```
+```java
 @Configuration
 @ComponentScan("com.baeldung.ctx1")
 @EnableAutoConfiguration
@@ -89,7 +89,7 @@ public class Ctx1Config {
 
 让我们看看`GreetingService`类的定义:
 
-```
+```java
 @Service
 public class GreetingService implements IHomeService {
 
@@ -101,7 +101,7 @@ public class GreetingService implements IHomeService {
 
 最后，我们将为这个 web 上下文添加一个控制器，它使用`homeService` bean 向用户显示一条消息:
 
-```
+```java
 @RestController
 public class Ctx1Controller {
 
@@ -123,7 +123,7 @@ public class Ctx1Controller {
 
 首先，让我们为这个上下文添加一个属性文件:
 
-```
+```java
 server.port=8075
 server.servlet.context-path=/ctx2
 
@@ -133,7 +133,7 @@ spring.application.admin.jmx-name=org.springframework.boot:type=WebAdmin,name=Sp
 
 以及同级应用程序的配置类:
 
-```
+```java
 @Configuration
 @ComponentScan("com.baeldung.ctx2")
 @EnableAutoConfiguration
@@ -143,7 +143,7 @@ public class Ctx2Config {}
 
 让我们也添加一个控制器，它有`HomeService` 作为依赖项:
 
-```
+```java
 @RestController
 public class Ctx2Controller {
 
@@ -163,7 +163,7 @@ public class Ctx2Controller {
 
 现在我们可以把所有东西放在一起，用`SpringApplicationBuilder:`定义上下文层次结构
 
-```
+```java
 public class App {
     public static void main(String[] args) {
         new SpringApplicationBuilder()

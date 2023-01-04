@@ -10,7 +10,7 @@
 
 让我们创建一个简单的类，我们将在下面的例子中使用它:
 
-```
+```java
 public class Operations {
     public double publicSum(int a, double b) {
         return a + b;
@@ -40,7 +40,7 @@ public class Operations {
 
 基本上，它接收方法名作为第一个参数，后面是方法参数的类型:
 
-```
+```java
 Method sumInstanceMethod
   = Operations.class.getMethod("publicSum", int.class, double.class);
 
@@ -55,13 +55,13 @@ Method multiplyStaticMethod
 
 它接收与`getMethod()`相同的参数:
 
-```
+```java
 Method andPrivateMethod
   = Operations.class.getDeclaredMethod(
     "privateAnd", boolean.class, boolean.class);
 ```
 
-```
+```java
 Method maxProtectedMethod
   = Operations.class.getDeclaredMethod("protectedMax", int.class, int.class);
 ```
@@ -74,7 +74,7 @@ Method maxProtectedMethod
 
 要调用实例方法，`invoke()`的第一个参数必须是反映被调用方法的`Method`的实例:
 
-```
+```java
 @Test
 public void givenObject_whenInvokePublicMethod_thenCorrect() {
     Method sumInstanceMethod
@@ -92,7 +92,7 @@ public void givenObject_whenInvokePublicMethod_thenCorrect() {
 
 由于这些方法不需要调用实例，我们可以将`null`作为第一个参数传递:
 
-```
+```java
 @Test
 public void givenObject_whenInvokeStaticMethod_thenCorrect() {
     Method multiplyStaticMethod
@@ -112,7 +112,7 @@ public void givenObject_whenInvokeStaticMethod_thenCorrect() {
 
 例如，如果我们试图调用其定义类之外的私有方法，或者从子类或其类的包之外调用受保护的方法，我们将得到一个`IllegalAccessException`:
 
-```
+```java
 @Test(expected = IllegalAccessException.class)
 public void givenObject_whenInvokePrivateMethod_thenFail() {
     Method andPrivateMethod
@@ -144,7 +144,7 @@ public void givenObject_whenInvokeProtectedMethod_thenFail() {
 
 **通过在反射的方法对象上调用`setAccesible(true)`，JVM 取消了访问控制检查**，并允许我们调用方法而不抛出异常:
 
-```
+```java
 @Test
 public void givenObject_whenInvokePrivateMethod_thenCorrect() throws Exception {
     Method andPrivatedMethod = Operations.class.getDeclaredMethod("privateAnd", boolean.class, boolean.class);
@@ -165,7 +165,7 @@ Java 9 提供了一种全新的方式来**检查调用者是否可以访问反�
 
 让我们来看看它的实际应用:
 
-```
+```java
 @Test
 public void givenObject_whenInvokePrivateMethod_thenCheckAccess() throws Exception {
     Operations operationsInstance = new Operations();
@@ -186,7 +186,7 @@ public void givenObject_whenInvokePrivateMethod_thenCheckAccess() throws Excepti
 
 让我们举例说明`trySetAccessible`方法的使用:
 
-```
+```java
 @Test
 public void givenObject_whenInvokePublicMethod_thenEnableAccess() throws Exception {
     Operations operationsInstance = new Operations();

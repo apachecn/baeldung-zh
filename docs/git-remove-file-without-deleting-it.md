@@ -10,7 +10,7 @@ Git 已经成为一个广泛使用的分布式版本控制系统。在本教程�
 
 像往常一样，让我们通过一个例子来理解这个问题。假设我们正在开发一个 Git 库`myRepo`:
 
-```
+```java
 $ ls -l
 total 12
 drwxr-xr-x 2 kent kent 60 May 12 23:00 logs/
@@ -39,14 +39,14 @@ drwxr-xr-x 2 kent kent 60 May 12 23:00 logs/
 
 接下来，让我们用`user-list.txt`文件试试:
 
-```
+```java
 $ git rm --cached user-list.txt
 rm 'user-list.txt' 
 ```
 
 如上面的输出所示，`user-list.txt`文件已经被删除。现在，让我们执行`git status`命令来验证它:
 
-```
+```java
 $ git status
 On branch master
 Your branch is up to date with 'origin/master'.
@@ -64,14 +64,14 @@ Untracked files:
 
 我们可以类似地删除`logs`目录。然而，由于它是一个目录，我们需要额外将`-r (recursively)`选项传递给`git rm`命令:
 
-```
+```java
 $ git rm --cached -r logs
 rm 'logs/server.log'
 ```
 
 现在，让我们提交我们的更改:
 
-```
+```java
 $ git commit -m 'remove user-list.txt and logs'
 [master ee8cfe8] remove user-list.txt and logs
  2 files changed, 4 deletions(-)
@@ -81,7 +81,7 @@ $ git commit -m 'remove user-list.txt and logs'
 
 然后，让我们使用`[git ls-files](https://web.archive.org/web/20220811181129/https://git-scm.com/docs/git-ls-files) `命令检查当前暂存的文件:
 
-```
+```java
 $ git ls-files -c
 .gitignore
 README.md
@@ -104,7 +104,7 @@ some-file.txt
 
 让我们恢复之前的提交，并再次删除`user-list.txt`文件和`logs`目录。这一次，让我们先把它们添加到`.gitignore`文件中:
 
-```
+```java
 $ cat .gitignore
 user-list.txt
 logs/ 
@@ -112,7 +112,7 @@ logs/
 
 接下来，让我们找出想要从 Git 索引中删除的文件:
 
-```
+```java
 $ git ls-files -i -c -X .gitignore
 logs/server.log
 user-list.txt 
@@ -122,7 +122,7 @@ user-list.txt
 
 现在，让**将`git rm –cached `和`git ls-files`命令结合起来，一次性删除它们**:
 
-```
+```java
 $ git rm --cached $(git ls-files -i -c -X .gitignore)
 rm 'logs/server.log'
 rm 'user-list.txt'
@@ -132,7 +132,7 @@ rm 'user-list.txt'
 
 现在，如果我们检查转移的文件，被删除的文件就不见了:
 
-```
+```java
 $ git ls-files -c
 .gitignore
 README.md
@@ -141,7 +141,7 @@ some-file.txt
 
 当然，`user-list.txt`和`logs/`仍然在我们的本地工作树中:
 
-```
+```java
 $ ls -l
 total 12
 drwxr-xr-x 2 kent kent 60 May 13 00:45 logs/
@@ -154,7 +154,7 @@ drwxr-xr-x 2 kent kent 60 May 13 00:45 logs/
 
 我们已经使用`git rm –cached`命令解决了我们的问题。然而，我们应该记住**我们只是从 Git 的跟踪索引**中删除了这个文件。我们仍然可以在 Git 的提交历史中看到该文件及其内容。例如，我们仍然可以通过检查之前的提交来查看`user-list.txt`的内容:
 
-```
+```java
 $ git show 668fa2f user-list.txt
 commit 668fa2f...
 Author: ...

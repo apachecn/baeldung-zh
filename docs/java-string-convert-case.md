@@ -8,7 +8,7 @@
 
 我们将从创建一个名为`name`的`String`开始:
 
-```
+```java
 String name = "John Doe";
 ```
 
@@ -16,13 +16,13 @@ String name = "John Doe";
 
 为了基于`name`创建一个新的大写字母`String`，我们调用`toUpperCase`方法:
 
-```
+```java
 String uppercaseName = name.toUpperCase();
 ```
 
 这导致`uppercaseName`具有值`“JOHN DOE”`:
 
-```
+```java
 assertEquals("JOHN DOE", uppercaseName);
 ```
 
@@ -32,13 +32,13 @@ assertEquals("JOHN DOE", uppercaseName);
 
 类似地，我们通过调用`toLowerCase`基于`name`创建一个新的小写字母`String`:
 
-```
+```java
 String lowercaseName = name.toLowerCase();
 ```
 
 这导致`lowercaseName`具有值`“john doe”`:
 
-```
+```java
 assertEquals("john doe", lowercaseName);
 ```
 
@@ -50,7 +50,7 @@ assertEquals("john doe", lowercaseName);
 
 例如，我们可以提供一个`Locale`来大写一个土耳其语`i` (Unicode `0069` ) `:`
 
-```
+```java
 Locale TURKISH = new Locale("tr");
 System.out.println("\u0069".toUpperCase());
 System.out.println("\u0069".toUpperCase(TURKISH));
@@ -58,35 +58,35 @@ System.out.println("\u0069".toUpperCase(TURKISH));
 
 因此，这导致大写`I`和带点的大写`I`:
 
-```
+```java
 I
 İ
 ```
 
 我们可以使用以下断言来验证这一点:
 
-```
+```java
 assertEquals("\u0049", "\u0069".toUpperCase());
 assertEquals("\u0130", "\u0069".toUpperCase(TURKISH));
 ```
 
 同样，我们可以使用土耳其语`I` (Unicode `0049`)对`toLowerCase`做同样的事情:
 
-```
+```java
 System.out.println("\u0049".toLowerCase());
 System.out.println("\u0049".toLowerCase(TURKISH));
 ```
 
 因此，这导致小写`i`和小写无点`i`:
 
-```
+```java
 i
 ı
 ```
 
 我们可以使用以下断言来验证这一点:
 
-```
+```java
 assertEquals("\u0069", "\u0049".toLowerCase());
 assertEquals("\u0131", "\u0049".toLowerCase(TURKISH));
 ```

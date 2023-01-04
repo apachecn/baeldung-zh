@@ -38,7 +38,7 @@ Cassandra 使用来自飞贼的信息将节点分组到机架和数据中心。�
 
 下面是`cassandra-topology.properties`的内容示例:
 
-```
+```java
 # Cassandra Node IP=Data Center:Rack 
 172.86.22.125=DC1:RAC1 
 172.80.23.120=DC1:RAC1 
@@ -64,7 +64,7 @@ default=DC1:RAC1
 
 下面是`cassandra-rackdc.properties`文件的内容示例:
 
-```
+```java
 dc=DC1
 rack=RAC1
 ```
@@ -77,7 +77,7 @@ rack=RAC1
 
 例如，在`us-east`区域，如果我们需要几个数据中心，我们可以提供如下的`dc_suffix`配置:
 
-```
+```java
 dc_suffix=_1_DC1
 dc_suffix=_1_DC2
 ```

@@ -22,7 +22,7 @@ Apache Kafka **中的消息在配置的[保留时间](/web/20221102005738/https:
 
 为了模拟这个场景，让我们从从 Kafka 安装目录创建一个`purge-scenario` 主题开始:
 
-```
+```java
 $ bin/kafka-topics.sh \
   --create --topic purge-scenario --if-not-exists \
   --partitions 2 --replication-factor 1 \
@@ -31,7 +31,7 @@ $ bin/kafka-topics.sh \
 
 接下来，让我们使用 [`shuf`](/web/20221102005738/https://www.baeldung.com/linux/read-random-line-from-file#using-shuf) 命令来让**生成随机数据并将其馈送给`kafka-console-producer.sh`** 脚本:
 
-```
+```java
 $ /usr/bin/shuf -i 1-100000 -n 50000000 \
   | tee -a /tmp/kafka-random-data \
   | bin/kafka-console-producer.sh \
@@ -43,7 +43,7 @@ $ /usr/bin/shuf -i 1-100000 -n 50000000 \
 
 最后，让我们验证一个消费者可以使用来自主题的消息:
 
-```
+```java
 $ bin/kafka-console-consumer.sh \
   --bootstrap-server=0.0.0.0:9092 \
   --from-beginning --topic purge-scenario \
@@ -58,7 +58,7 @@ Processed a total of 3 messages
 
 在`purge-scenario `主题中生成的消息将有一个七天的[默认保留期](/web/20221102005738/https://www.baeldung.com/kafka-message-retention#basics)。为了清除消息，我们可以**暂时将 [`retention.ms`](https://web.archive.org/web/20221102005738/http://log.retention.minutes/) 主题级属性**重置为 10 秒，然后等待消息过期:
 
-```
+```java
 $ bin/kafka-configs.sh --alter \
   --add-config retention.ms=10000 \
   --bootstrap-server=0.0.0.0:9092 \
@@ -68,7 +68,7 @@ $ bin/kafka-configs.sh --alter \
 
 接下来，让我们验证主题中的消息是否已过期:
 
-```
+```java
 $ bin/kafka-console-consumer.sh  \
   --bootstrap-server=0.0.0.0:9092 \
   --from-beginning --topic purge-scenario \
@@ -80,7 +80,7 @@ Processed a total of 0 messages
 
 最后，我们可以将主题的保留期恢复为七天:
 
-```
+```java
 $ bin/kafka-configs.sh --alter \
   --add-config retention.ms=604800000 \
   --bootstrap-server=0.0.0.0:9092 \
@@ -97,7 +97,7 @@ $ bin/kafka-configs.sh --alter \
 
 让我们使用`offset=-1`清除来自`partition=1`的所有消息:
 
-```
+```java
 {
   "partitions": [
     {
@@ -112,7 +112,7 @@ $ bin/kafka-configs.sh --alter \
 
 接下来，让我们继续删除记录:
 
-```
+```java
 $ bin/kafka-delete-records.sh \
   --bootstrap-server localhost:9092 \
   --offset-json-file delete-config.json
@@ -120,7 +120,7 @@ $ bin/kafka-delete-records.sh \
 
 我们可以验证我们仍然能够从`partition=0`开始读取:
 
-```
+```java
 $ bin/kafka-console-consumer.sh \
   --bootstrap-server=0.0.0.0:9092 \
   --from-beginning --topic purge-scenario --partition=0 \
@@ -131,7 +131,7 @@ $ bin/kafka-console-consumer.sh \
 
 但是，当我们从`partition=1`开始读取时，将没有要处理的记录:
 
-```
+```java
 $ bin/kafka-console-consumer.sh \
   --bootstrap-server=0.0.0.0:9092 \
   --from-beginning --topic purge-scenario \
@@ -146,14 +146,14 @@ Processed a total of 0 messages
 
 清除 Kafka 主题的所有消息的另一个解决方法是删除并重新创建它。然而，只有当我们在启动 Kafka 服务器时将`delete.topic.enable`属性设置为 `**true**` **时，这才有可能**:****
 
-```
+```java
 $ bin/kafka-server-start.sh config/server.properties \
   --override delete.topic.enable=true
 ```
 
 要删除主题，我们可以使用`kafka-topics.sh`脚本:
 
-```
+```java
 $ bin/kafka-topics.sh \
   --delete --topic purge-scenario \
   --zookeeper localhost:2181
@@ -163,7 +163,7 @@ Note: This will have no impact if delete.topic.enable is not set to true.
 
 我们来列个题目验证一下:
 
-```
+```java
 $ bin/kafka-topics.sh --zookeeper localhost:2181 --list
 ```
 

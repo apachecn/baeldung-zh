@@ -24,7 +24,7 @@ Java Bean [验证](https://web.archive.org/web/20220627172045/https://beanvalida
 
 首先，让我们将 Bean 验证依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.glassfish.jersey.ext</groupId>
     <artifactId>jersey-bean-validation</artifactId>
@@ -42,7 +42,7 @@ Java Bean [验证](https://web.archive.org/web/20220627172045/https://beanvalida
 
 最后，为了向客户机**发送验证错误，我们将向自定义资源配置**添加一个服务器属性:
 
-```
+```java
 public ViewApplicationConfig() {
     packages("com.baeldung.jersey.server");
     property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
@@ -60,7 +60,7 @@ public ViewApplicationConfig() {
 
 让我们从查看内置约束注释开始:
 
-```
+```java
 @POST
 @Path("/create")
 @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -79,7 +79,7 @@ public void createFruit(
 
 自然，我们将用一个单元测试来证明这一点:
 
-```
+```java
 @Test
 public void givenCreateFruit_whenFormContainsNullParam_thenResponseCodeIsBadRequest() {
     Form form = new Form();
@@ -103,7 +103,7 @@ public void givenCreateFruit_whenFormContainsNullParam_thenResponseCodeIsBadRequ
 
 使用我们简单的水果 API 示例，假设我们需要验证所有水果都有有效的序列号:
 
-```
+```java
 @PUT
 @Path("/update")
 @Consumes("application/x-www-form-urlencoded")
@@ -116,7 +116,7 @@ public void updateFruit(@SerialNumber @FormParam("serial") String serial) {
 
 我们将首先定义约束注释:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = { SerialNumber.Validator.class })
     public @interface SerialNumber {
@@ -133,7 +133,7 @@ public void updateFruit(@SerialNumber @FormParam("serial") String serial) {
 
 接下来，我们将定义验证器类`SerialNumber.Validator`:
 
-```
+```java
 public class Validator implements ConstraintValidator<SerialNumber, String> {
     @Override
     public void initialize(SerialNumber serial) {
@@ -164,7 +164,7 @@ public class Validator implements ConstraintValidator<SerialNumber, String> {
 
 让我们从给我们的`Fruit`对象添加`@Min`注释开始:
 
-```
+```java
 @XmlRootElement
 public class Fruit {
 
@@ -178,7 +178,7 @@ public class Fruit {
 
 首先，我们将在我们的`FruitResource` 类中使用`@Valid`来启用验证:
 
-```
+```java
 @POST
 @Path("/create")
 @Consumes("application/json")
@@ -193,7 +193,7 @@ public void createFruit(@Valid Fruit fruit) {
 
 同样，在下一个示例中，我们将看到如何验证响应资源:
 
-```
+```java
 @GET
 @Valid
 @Produces("application/json")
@@ -211,7 +211,7 @@ public Fruit findFruitByName(@PathParam("name") String name) {
 
 让我们从定义我们的`FruitExceptionMapper`开始:
 
-```
+```java
 public class FruitExceptionMapper implements ExceptionMapper<ConstraintViolationException> {
 
     @Override
@@ -240,7 +240,7 @@ public class FruitExceptionMapper implements ExceptionMapper<ConstraintViolation
 
 **接下来，为了使用我们的定制异常映射器，我们需要注册我们的提供者**:
 
-```
+```java
 @Override
 protected Application configure() {
     ViewApplicationConfig config = new ViewApplicationConfig();
@@ -251,7 +251,7 @@ protected Application configure() {
 
 最后，我们添加一个端点来返回一个无效的`Fruit` ,以显示运行中的异常处理器:
 
-```
+```java
 @GET
 @Produces(MediaType.TEXT_HTML)
 @Path("/exception")

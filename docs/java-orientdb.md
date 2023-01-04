@@ -62,7 +62,7 @@ OrientDB 允许 Java 开发人员使用三种不同的 API，例如:
 
 让我们从一个 Maven 项目开始，并使用以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.orientechnologies</groupId>
     <artifactId>orientdb-core</artifactId>
@@ -117,7 +117,7 @@ TinkerPop 是一个图形计算框架，提供了许多构建图形数据库的�
 
 现在让我们连接到所需的数据库，知道`ORIENTDB_HOME`是一个环境变量，对应于`OrientDB`的安装文件夹:
 
-```
+```java
 @BeforeClass
 public static void setup() {
     String orientDBFolder = System.getenv("ORIENTDB_HOME");
@@ -128,7 +128,7 @@ public static void setup() {
 
 让我们初始化`Article`、`Author`和`Editor`类——同时展示如何向它们的字段添加验证:
 
-```
+```java
 @BeforeClass
 public static void init() {
     graph.createVertexType("Article");
@@ -183,13 +183,13 @@ public static void init() {
 
 让我们看看如何获得数据库中所有记录(顶点)的数量:
 
-```
+```java
 long size = graph.countVertices();
 ```
 
 现在，让我们只显示`Writer (Author & Editor)`对象的数量:
 
-```
+```java
 @Test
 public void givenBaeldungDB_checkWeHaveTwoWriters() {
     long size = graph.countVertices("Writer");
@@ -200,13 +200,13 @@ public void givenBaeldungDB_checkWeHaveTwoWriters() {
 
 在下一步中，我们可以使用以下语句找到所有`Writer`的数据:
 
-```
+```java
 Iterable<Vertex> writers = graph.getVerticesOfClass("Writer");
 ```
 
 最后，让我们查询所有带有`level` 7 的`Editor`;这里我们只有一个匹配的:
 
-```
+```java
 @Test
 public void givenBaeldungDB_getEditorWithLevelSeven() {
     String onlyEditor = "";
@@ -232,7 +232,7 @@ public void givenBaeldungDB_getEditorWithLevelSeven() {
 
 数据库连接仍然很简单，因为我们只需要实例化一个`ODatabaseDocumentTx`对象，提供数据库 URL 和数据库用户的凭证:
 
-```
+```java
 @BeforeClass
 public static void setup() {
     String orientDBFolder = System.getenv("ORIENTDB_HOME");
@@ -246,7 +246,7 @@ public static void setup() {
 
 在这里，我们可以看到该类已被自动创建:
 
-```
+```java
 @Test
 public void givenDB_whenSavingDocument_thenClassIsAutoCreated() {
     ODocument doc = new ODocument("Author");
@@ -259,13 +259,13 @@ public void givenDB_whenSavingDocument_thenClassIsAutoCreated() {
 
 相应地，为了计算`Authors`的数量，我们可以使用:
 
-```
+```java
 long size = db.countClass("Author");
 ```
 
 让我们使用一个字段值再次查询文档，搜索带有`level` 7:
 
-```
+```java
 @Test
 public void givenDB_whenSavingAuthors_thenWeGetOnesWithLevelSeven() {
     for (ODocument author : db.browseClass("Author")) author.delete();
@@ -289,7 +289,7 @@ public void givenDB_whenSavingAuthors_thenWeGetOnesWithLevelSeven() {
 
 同样，要删除`Author`类的所有记录，我们可以使用:
 
-```
+```java
 for (ODocument author : db.browseClass("Author")) {
     author.delete();
 }
@@ -307,7 +307,7 @@ OrientDB 没有数据库的对象类型。因此，对象 API 依赖于文档数
 
 让我们从使用`OObjectDatabaseTx`类连接到`BaeldungDBThree`开始:
 
-```
+```java
 @BeforeClass
 public static void setup() {
     String orientDBFolder = System.getenv("ORIENTDB_HOME");
@@ -319,7 +319,7 @@ public static void setup() {
 
 接下来，假设`Author`是用于保存`Author`数据的 POJO，我们需要注册它:
 
-```
+```java
 db.getEntityManager().registerEntityClass(Author.class);
 ```
 
@@ -331,7 +331,7 @@ db.getEntityManager().registerEntityClass(Author.class);
 
 让我们创建一个带有多行指令的`Author`,如果我们确认了一个无参数的构造函数:
 
-```
+```java
 Author author = db.newInstance(Author.class);
 author.setFirstName("Luke");
 author.setLastName("Sky");
@@ -341,14 +341,14 @@ db.save(author);
 
 另一方面，如果我们有另一个构造函数，它分别接受`Author`的`firstName`、`lastName`和`level`，那么实例化只有一行:
 
-```
+```java
 Author author = db.newInstance(Author.class, "Luke", "Sky", 9);
 db.save(author);
 ```
 
 下面几行用来浏览和删除 Author 类的所有记录:
 
-```
+```java
 for (Author author : db.browseClass(Author.class)) {
     db.delete(author);
 }
@@ -356,13 +356,13 @@ for (Author author : db.browseClass(Author.class)) {
 
 为了统计所有作者，我们只需提供类和数据库实例，而无需编写 SQL 查询:
 
-```
+```java
 long authorsCount = db.countClass(Author.class);
 ```
 
 类似地，我们用`level` 7 查询作者，如下所示:
 
-```
+```java
 @Test
 public void givenDB_whenSavingAuthors_thenWeGetOnesWithLevelSeven() {
     for (Author author : db.browseClass(Author.class)) {

@@ -10,7 +10,7 @@
 
 **`UnknownHostException`表示主机名的 IP 地址无法确定。** **这可能是因为主机名:**中的一个错别字
 
-```
+```java
 String hostname = "http://locaihost";
 URL url = new URL(hostname);
 HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -36,7 +36,7 @@ con.getResponseCode();
 
 让我们来处理例子中的异常:
 
-```
+```java
 try {
     con.getResponseCode();
 } catch (UnknownHostException e) {

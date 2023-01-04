@@ -18,7 +18,7 @@
 
 首先，我们应该确保从 Apache 网站下载正确的 Kafka 版本。下载完成后，我们应该提取下载的归档文件:
 
-```
+```java
 $ tar xvf kafka_2.13-2.6.0.tgz
 ```
 
@@ -26,20 +26,20 @@ Kafka 正在使用 Apache Zookeeper 来管理它的集群元数据，所以我�
 
 出于测试目的，我们可以使用`bin`目录中的`zookeeper-server-start.sh`脚本运行一个单节点 Zookeeper 实例:
 
-```
+```java
 $ cd kafka_2.13-2.6.0 # extracted directory
 $ ./bin/zookeeper-server-start.sh config/zookeeper.properties
 ```
 
 这将启动 Zookeeper 服务监听端口 2181。之后，我们可以使用另一个脚本来运行 Kafka 服务器:
 
-```
+```java
 $ ./bin/kafka-server-start.sh config/server.properties
 ```
 
 一段时间后，一个卡夫卡经纪人将开始。让我们[向这个简单的集群添加几个主题](https://web.archive.org/web/20221109150434/https://kafka.apache.org/documentation/#basic_ops_add_topic):
 
-```
+```java
 $ bin/kafka-topics.sh --create --topic users.registrations --replication-factor 1 \
   --partitions 2  --zookeeper localhost:2181
 $ bin/kafka-topics.sh --create --topic users.verfications --replication-factor 1 \
@@ -52,7 +52,7 @@ $ bin/kafka-topics.sh --create --topic users.verfications --replication-factor 1
 
 要列出一个集群中的所有 Kafka 主题，我们可以使用下载的 Kafka 发行版中捆绑的`bin/kafka-topics.sh ` shell 脚本。**我们所要做的就是传递`–list `选项，以及关于集群**的信息。例如，我们可以传递动物园管理员服务地址:
 
-```
+```java
 $ bin/kafka-topics.sh --list --zookeeper localhost:2181
 users.registrations
 users.verfications
@@ -64,7 +64,7 @@ users.verfications
 
 **甚至可以使用`–bootstrap-server`选项**直接传递 Kafka 集群地址:
 
-```
+```java
 $ ./bin/kafka-topics.sh --bootstrap-server=localhost:9092 --list
 users.registrations
 users.verfications
@@ -74,7 +74,7 @@ users.verfications
 
 如果我们不传递与 Kafka 集群对话所需的信息，`kafka-topics.sh` shell 脚本将报错:
 
-```
+```java
 $ ./bin/kafka-topics.sh --list
 Exception in thread "main" java.lang.IllegalArgumentException: Only one of --bootstrap-server or --zookeeper must be specified
         at kafka.admin.TopicCommand$TopicCommandOptions.checkArgs(TopicCommand.scala:721)
@@ -88,7 +88,7 @@ Exception in thread "main" java.lang.IllegalArgumentException: Only one of --boo
 
 一旦我们找到了一个主题列表，我们就可以浏览一个特定主题的细节。为此，**我们可以使用`“` `–describe –topic <topic name>”`选项的组合**:
 
-```
+```java
 $ ./bin/kafka-topics.sh --bootstrap-server=localhost:9092 --describe --topic users.registrations
 Topic: users.registrations      PartitionCount: 2       ReplicationFactor: 1    Configs: segment.bytes=1073741824
         Topic: users.registrations      Partition: 0    Leader: 0       Replicas: 0     Isr: 0

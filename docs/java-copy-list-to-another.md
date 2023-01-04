@@ -12,7 +12,7 @@
 
 复制`List`的一个简单方法是使用将集合作为参数的构造函数:
 
-```
+```java
 List<Plant> copy = new ArrayList<>(list);
 ```
 
@@ -20,7 +20,7 @@ List<Plant> copy = new ArrayList<>(list);
 
 因此，最好使用构造函数来复制不可变对象:
 
-```
+```java
 List<Integer> copy = new ArrayList<>(list);
 ```
 
@@ -48,7 +48,7 @@ List<Integer> copy = new ArrayList<>(list);
 
 复制元素的另一种方法是使用 `addAll`方法:
 
-```
+```java
 List<Integer> copy = new ArrayList<>();
 copy.addAll(list);
 ```
@@ -63,7 +63,7 @@ copy.addAll(list);
 
 它将维护目标列表中每个复制元素的索引，例如原始元素:
 
-```
+```java
 List<Integer> source = Arrays.asList(1,2,3);
 List<Integer> dest = Arrays.asList(4,5,6);
 Collections.copy(dest, source);
@@ -73,7 +73,7 @@ Collections.copy(dest, source);
 
 如果目标列表比源列表大:
 
-```
+```java
 List<Integer> source = Arrays.asList(1, 2, 3);
 List<Integer> dest = Arrays.asList(5, 6, 7, 8, 9, 10);
 Collections.copy(dest, source);
@@ -85,14 +85,14 @@ Collections.copy(dest, source);
 
 这个版本的 Java 通过添加新工具扩展了我们的可能性。我们将在下面的例子中探索的是`Stream`:
 
-```
+```java
 List<String> copy = list.stream()
   .collect(Collectors.toList());
 ```
 
 这个选项的主要优点是能够使用跳过和过滤器。在下一个例子中，我们将跳过第一个元素:
 
-```
+```java
 List<String> copy = list.stream()
   .skip(1)
   .collect(Collectors.toList());
@@ -100,13 +100,13 @@ List<String> copy = list.stream()
 
 也可以通过`String,`的长度或者通过比较我们对象的属性来过滤:
 
-```
+```java
 List<String> copy = list.stream()
   .filter(s -> s.length() > 10)
   .collect(Collectors.toList());
 ```
 
-```
+```java
 List<Flower> flowers = list.stream()
   .filter(f -> f.getPetals() > 6)
   .collect(Collectors.toList());
@@ -114,7 +114,7 @@ List<Flower> flowers = list.stream()
 
 很可能我们希望以一种零安全的方式工作:
 
-```
+```java
 List<Flower> flowers = Optional.ofNullable(list)
   .map(List::stream)
   .orElseGet(Stream::empty)
@@ -123,7 +123,7 @@ List<Flower> flowers = Optional.ofNullable(list)
 
 我们可能也想以这种方式跳过一个元素:
 
-```
+```java
 List<Flower> flowers = Optional.ofNullable(list)
   .map(List::stream).orElseGet(Stream::empty)
   .skip(1)
@@ -134,7 +134,7 @@ List<Flower> flowers = Optional.ofNullable(list)
 
 最后，最后一个 Java 版本允许我们创建一个不可变的`List`，包含给定的`Collection:`的元素
 
-```
+```java
 List<T> copy = List.copyOf(list);
 ```
 

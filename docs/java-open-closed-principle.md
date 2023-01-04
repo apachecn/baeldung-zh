@@ -20,13 +20,13 @@
 
 首先，我们将定义一个顶级接口—`CalculatorOperation`:
 
-```
+```java
 public interface CalculatorOperation {}
 ```
 
 **让我们定义一个`Addition`类，它将两个数相加并实现 C `alculatorOperation` :**
 
-```
+```java
 public class Addition implements CalculatorOperation {
     private double left;
     private double right;
@@ -44,7 +44,7 @@ public class Addition implements CalculatorOperation {
 
 到目前为止，我们只有一个类`Addition,` ，所以我们需要定义另一个名为`Subtraction`的类:
 
-```
+```java
 public class Subtraction implements CalculatorOperation {
     private double left;
     private double right;
@@ -61,7 +61,7 @@ public class Subtraction implements CalculatorOperation {
 
 **现在让我们定义我们的主类，它将执行我们的计算器操作:**
 
-```
+```java
 public class Calculator {
 
     public void calculate(CalculatorOperation operation) {
@@ -90,7 +90,7 @@ public class Calculator {
 
 一种解决方案是将每个操作委托给它们各自的类:
 
-```
+```java
 public interface CalculatorOperation {
     void perform();
 }
@@ -98,7 +98,7 @@ public interface CalculatorOperation {
 
 **因此，`Addition`类可以实现两个数相加的逻辑:**
 
-```
+```java
 public class Addition implements CalculatorOperation {
     private double left;
     private double right;
@@ -115,7 +115,7 @@ public class Addition implements CalculatorOperation {
 
 同样，更新后的`Subtraction`类也有类似的逻辑。类似于`Addition`和`Subtraction`，作为一个新的变更请求，我们可以实现`division`逻辑:
 
-```
+```java
 public class Division implements CalculatorOperation {
     private double left;
     private double right;
@@ -133,7 +133,7 @@ public class Division implements CalculatorOperation {
 
 **最后，我们的`Calculator`类不需要实现新的逻辑，因为我们引入了新的操作符:**
 
-```
+```java
 public class Calculator {
 
     public void calculate(CalculatorOperation operation) {

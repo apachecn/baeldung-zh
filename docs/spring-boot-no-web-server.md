@@ -22,7 +22,7 @@ Spring Boot 是为各种用例快速创建新 Java 应用程序的一个很好�
 
 在 Spring Boot 禁用嵌入式 web 服务器的另一种方法是使用代码。我们可以使用`SpringApplicationBuilder`:
 
-```
+```java
 new SpringApplicationBuilder(MainApplication.class)
   .web(WebApplicationType.NONE)
   .run(args);
@@ -30,7 +30,7 @@ new SpringApplicationBuilder(MainApplication.class)
 
 或者我们可以参考`SpringApplication`:
 
-```
+```java
 SpringApplication application = new SpringApplication(MainApplication.class);
 application.setWebApplicationType(WebApplicationType.NONE);
 application.run(args);
@@ -44,13 +44,13 @@ application.run(args);
 
 在这种情况下，我们可以使用 Spring 应用程序属性:
 
-```
+```java
 spring.main.web-application-type=none
 ```
 
 或者使用等效的 YAML:
 
-```
+```java
 spring:
   main:
     web-application-type: none

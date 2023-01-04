@@ -14,7 +14,7 @@
 
 首先，我们需要在我们的实体上定义过滤器，使用`@JsonFilter`注释:
 
-```
+```java
 @JsonFilter("myFilter")
 public class MyDto {
     private int intValue;
@@ -35,7 +35,7 @@ public class MyDto {
 
 然后，我们需要定义我们的定制`PropertyFilter`:
 
-```
+```java
 PropertyFilter theFilter = new SimpleBeanPropertyFilter() {
    @Override
    public void serializeAsField
@@ -69,7 +69,7 @@ PropertyFilter theFilter = new SimpleBeanPropertyFilter() {
 
 接下来，我们将这个过滤器挂接到`ObjectMapper`中，并序列化一个实体:
 
-```
+```java
 FilterProvider filters = new SimpleFilterProvider().addFilter("myFilter", theFilter);
 MyDto dtoObject = new MyDto();
 dtoObject.setIntValue(-1);
@@ -80,7 +80,7 @@ String dtoAsString = mapper.writer(filters).writeValueAsString(dtoObject);
 
 最后，我们可以检查`intValue`字段确实是**的一部分，而不是被编组的 JSON 输出**的一部分:
 
-```
+```java
 assertThat(dtoAsString, not(containsString("intValue")));
 ```
 
@@ -92,7 +92,7 @@ assertThat(dtoAsString, not(containsString("intValue")));
 
 首先，我们来看看我们的`Hidable`界面:
 
-```
+```java
 @JsonIgnoreProperties("hidden")
 public interface Hidable {
     boolean isHidden();
@@ -103,7 +103,7 @@ public interface Hidable {
 
 `Person`类别:
 
-```
+```java
 public class Person implements Hidable {
     private String name;
     private Address address;
@@ -113,7 +113,7 @@ public class Person implements Hidable {
 
 和`Address`类:
 
-```
+```java
 public class Address implements Hidable {
     private String city;
     private String country;
@@ -127,7 +127,7 @@ public class Address implements Hidable {
 
 接下来——这是我们的自定义序列化程序:
 
-```
+```java
 public class HidableSerializer extends JsonSerializer<Hidable> {
 
     private JsonSerializer<Object> defaultSerializer;
@@ -160,7 +160,7 @@ public class HidableSerializer extends JsonSerializer<Hidable> {
 
 最后，我们将需要使用`BeanSerializerModifier`在我们的自定义`HidableSerializer`中注入默认的序列化程序，如下所示:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 mapper.setSerializationInclusion(Include.NON_EMPTY);
 mapper.registerModule(new SimpleModule() {
@@ -185,7 +185,7 @@ mapper.registerModule(new SimpleModule() {
 
 下面是一个简单的序列化示例:
 
-```
+```java
 Address ad1 = new Address("tokyo", "jp", true);
 Address ad2 = new Address("london", "uk", false);
 Address ad3 = new Address("ny", "usa", false);
@@ -198,7 +198,7 @@ System.out.println(mapper.writeValueAsString(Arrays.asList(p1, p2, p3)));
 
 输出是:
 
-```
+```java
 [
     {
         "name":"john"
@@ -219,7 +219,7 @@ System.out.println(mapper.writeValueAsString(Arrays.asList(p1, p2, p3)));
 
 第一种情况，**无所隐瞒**:
 
-```
+```java
 @Test
 public void whenNotHidden_thenCorrect() throws JsonProcessingException {
     Address ad = new Address("ny", "usa", false);
@@ -235,7 +235,7 @@ public void whenNotHidden_thenCorrect() throws JsonProcessingException {
 
 接下来，**只有地址被隐藏**:
 
-```
+```java
 @Test
 public void whenAddressHidden_thenCorrect() throws JsonProcessingException {
     Address ad = new Address("ny", "usa", true);
@@ -251,7 +251,7 @@ public void whenAddressHidden_thenCorrect() throws JsonProcessingException {
 
 现在，**整个人被隐藏起来**:
 
-```
+```java
 @Test
 public void whenAllHidden_thenCorrect() throws JsonProcessingException {
     Address ad = new Address("ny", "usa", false);

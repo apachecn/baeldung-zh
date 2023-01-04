@@ -34,19 +34,19 @@ Slope One 被命名为基于评级的最简单形式的非平凡的基于项目�
 
 在我们的模型中，我们有两个主要对象——条目和用户。`Item`类包含项目的名称:
 
-```
+```java
 private String itemName;
 ```
 
 另一方面，`User`类包含用户名:
 
-```
+```java
 private String username;
 ```
 
 最后，我们有一个用于初始化数据的`InputData`类。让我们假设我们将在商店中创建五种不同的产品:
 
-```
+```java
 List<Item> items = Arrays.asList(
   new Item("Candy"), 
   new Item("Drink"), 
@@ -58,7 +58,7 @@ List<Item> items = Arrays.asList(
 
 此外，我们将创建三个用户，使用 0.0-1.0 的评分标准对上述内容进行随机评分，其中 0 表示不感兴趣，0.5 表示有点兴趣，1.0 表示完全感兴趣。作为数据初始化的结果，我们将获得一个包含用户项目排名数据的`Map`:
 
-```
+```java
 Map<User, HashMap<Item, Double>> data;
 ```
 
@@ -66,7 +66,7 @@ Map<User, HashMap<Item, Double>> data;
 
 根据可用的数据，我们将计算项目之间的关系，以及项目出现的次数。对于每个用户，我们检查他/她对项目的评分:
 
-```
+```java
 for (HashMap<Item, Double> user : data.values()) {
     for (Entry<Item, Double> e : user.entrySet()) {
         // ...
@@ -76,7 +76,7 @@ for (HashMap<Item, Double> user : data.values()) {
 
 在下一步中，我们检查该项目是否存在于我们的矩阵中。如果这是第一次出现，我们在映射中创建新条目:
 
-```
+```java
 if (!diff.containsKey(e.getKey())) {
     diff.put(e.getKey(), new HashMap<Item, Double>());
     freq.put(e.getKey(), new HashMap<Item, Integer>());
@@ -87,7 +87,7 @@ if (!diff.containsKey(e.getKey())) {
 
 下一步，我们将比较所有项目的评分:
 
-```
+```java
 for (Entry<Item, Double> e2 : user.entrySet()) {
     int oldCount = 0;
     if (freq.get(e.getKey()).containsKey(e2.getKey())){
@@ -111,7 +111,7 @@ for (Entry<Item, Double> e2 : user.entrySet()) {
 
 最后，我们计算矩阵内部的相似性得分:
 
-```
+```java
 for (Item j : diff.keySet()) {
     for (Item i : diff.get(j).keySet()) {
         double oldValue = diff.get(j).get(i).doubleValue();
@@ -127,7 +127,7 @@ for (Item j : diff.keySet()) {
 
 作为 Slope One 的主要部分，我们将根据现有数据预测所有缺失的评分。为此，我们需要将用户项目评分与上一步中计算的差异矩阵进行比较:
 
-```
+```java
 for (Entry<User, HashMap<Item, Double>> e : data.entrySet()) {
     for (Item j : e.getValue().keySet()) {
         for (Item k : diff.keySet()) {
@@ -144,7 +144,7 @@ for (Entry<User, HashMap<Item, Double>> e : data.entrySet()) {
 
 之后，我们需要使用下面的代码准备“干净”的预测:
 
-```
+```java
 HashMap<Item, Double> clean = new HashMap<Item, Double>();
 for (Item j : uPred.keySet()) {
     if (uFreq.get(j) > 0) {

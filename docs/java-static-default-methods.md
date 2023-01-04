@@ -32,7 +32,7 @@ Learn about Java static fields, static methods, static blocks and static inner c
 
 让我们看一个简单的例子:
 
-```
+```java
 public interface MyInterface {
 
     // regular interface methods
@@ -57,7 +57,7 @@ Java 8 发行版包含`default`方法的原因很明显。
 
 假设我们有一个简单的接口和一个实现。可能还有更多，但让我们保持简单:
 
-```
+```java
 public interface Vehicle {
 
     String getBrand();
@@ -78,7 +78,7 @@ public interface Vehicle {
 
 现在让我们编写实现类:
 
-```
+```java
 public class Car implements Vehicle {
 
     private String brand;
@@ -104,7 +104,7 @@ public class Car implements Vehicle {
 
 最后，让我们定义一个典型的`main`类，它创建一个 `Car`的实例并调用它的方法:
 
-```
+```java
 public static void main(String[] args) { 
     Vehicle car = new Car("BMW");
     System.out.println(car.getBrand());
@@ -123,7 +123,7 @@ public static void main(String[] args) {
 
 此外，我们可以使用它们来为现有的抽象方法提供额外的功能:
 
-```
+```java
 public interface Vehicle {
 
     // additional interface methods 
@@ -142,7 +142,7 @@ public interface Vehicle {
 
 为了更好地理解这个场景，让我们定义一个新的 `Alarm`接口并重构`Car`类:
 
-```
+```java
 public interface Alarm {
 
     default String turnAlarmOn() {
@@ -157,7 +157,7 @@ public interface Alarm {
 
 这个新接口定义了自己的一组`default`方法，`Car`类将实现`Vehicle`和`Alarm`:
 
-```
+```java
 public class Car implements Vehicle, Alarm {
     // ...
 }
@@ -167,7 +167,7 @@ public class Car implements Vehicle, Alarm {
 
 **为了解决这种模糊性，我们必须明确地提供方法的实现:**
 
-```
+```java
 @Override
 public String turnAlarmOn() {
     // custom implementation
@@ -183,7 +183,7 @@ public String turnAlarmOff() {
 
 让我们看一个使用来自`Vehicle`接口的`default`方法的例子:
 
-```
+```java
 @Override
 public String turnAlarmOn() {
     return Vehicle.super.turnAlarmOn();
@@ -197,7 +197,7 @@ public String turnAlarmOff() {
 
 类似地，我们可以让类使用在`Alarm`接口中定义的`default`方法:
 
-```
+```java
 @Override
 public String turnAlarmOn() {
     return Alarm.super.turnAlarmOn();
@@ -211,7 +211,7 @@ public String turnAlarmOff() {
 
 甚至有可能让`Car`类使用两套默认方法:
 
-```
+```java
 @Override
 public String turnAlarmOn() {
     return Vehicle.super.turnAlarmOn() + " " + Alarm.super.turnAlarmOn();
@@ -231,7 +231,7 @@ public String turnAlarmOff() {
 
 为了理解`static`方法在接口中是如何工作的，让我们重构`Vehicle`接口并向其添加一个`static`实用方法:
 
-```
+```java
 public interface Vehicle {
 
     // regular / default interface methods
@@ -246,7 +246,7 @@ public interface Vehicle {
 
 假设我们想要计算给定车辆发动机的[马力](https://web.archive.org/web/20221129002420/https://en.wikipedia.org/wiki/Horsepower)。我们只是调用了`getHorsePower()`方法:
 
-```
+```java
 Vehicle.getHorsePower(2500, 480)); 
 ```
 

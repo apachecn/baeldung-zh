@@ -38,7 +38,7 @@ This article demonstrates three approaches to introducing auditing into an appli
 
 让我们快速看一下`AbstractHibernateDao`类:
 
-```
+```java
 public abstract class AbstractHibernateDao<T extends Serializable> {
     private Class<T> clazz;
 
@@ -93,7 +93,7 @@ public abstract class AbstractHibernateDao<T extends Serializable> {
 
 现在我们有了抽象的 DAO 类，我们可以只扩展它一次。**通用 DAO 实现将成为我们需要的唯一实现**:
 
-```
+```java
 @Repository
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class GenericHibernateDao<T extends Serializable>
@@ -110,7 +110,7 @@ public class GenericHibernateDao<T extends Serializable>
 
 `IGenericDao`只是所有 DAO 方法的一个接口，因此我们可以注入我们需要的实现:
 
-```
+```java
 public interface IGenericDao<T extends Serializable> {
     void setClazz(Class< T > clazzToSet);
 
@@ -132,7 +132,7 @@ public interface IGenericDao<T extends Serializable> {
 
 `AbstractJpaDao`与`AbstractHibernateDao:`非常相似
 
-```
+```java
 public abstract class AbstractJpaDAO<T extends Serializable> {
     private Class<T> clazz;
 
@@ -178,7 +178,7 @@ public abstract class AbstractJpaDAO<T extends Serializable> {
 
 与 Hibernate 实现类似，JPA 数据访问对象也很简单:
 
-```
+```java
 @Repository
 @Scope( BeanDefinition.SCOPE_PROTOTYPE )
 public class GenericJpaDao< T extends Serializable >
@@ -191,7 +191,7 @@ public class GenericJpaDao< T extends Serializable >
 
 **我们现在有了一个可以注入的单一 DAO 接口。**我们还需要指定`Class:`
 
-```
+```java
 @Service
 class FooService implements IFooService{
 

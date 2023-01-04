@@ -52,7 +52,7 @@
 
 除了通常的 Maven 依赖项，如 [`spring-boot-starter-web`](https://web.archive.org/web/20220630005925/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-web) 和`[spring-boot-starter-security](https://web.archive.org/web/20220630005925/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-security),`，我们将需要`[spring-security-saml2-core](https://web.archive.org/web/20220630005925/https://search.maven.org/search?q=g:org.springframework.security.extensions%20a:spring-security-saml2-core)`依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -72,7 +72,7 @@
 
 另外，确保**添加 [`Shibboleth`库](https://web.archive.org/web/20220630005925/https://build.shibboleth.net/nexus/content/repositories/releases/)来下载`spring-security-saml2-core` 依赖项所需的最新`opensaml` jar** :
 
-```
+```java
 <repository>
     <id>Shibboleth</id>
     <name>Shibboleth</name>
@@ -82,7 +82,7 @@
 
 或者，我们可以在 Gradle 项目中设置依赖关系:
 
-```
+```java
 compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "2.5.1" 
 compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: "2.5.1"
 compile group: 'org.springframework.security.extensions', name: 'spring-security-saml2-core', version: "1.0.10.RELEASE" 
@@ -96,7 +96,7 @@ compile group: 'org.springframework.security.extensions', name: 'spring-security
 
 首先，我们将创建一个 [`SAMLEntryPoint`](https://web.archive.org/web/20220630005925/https://docs.spring.io/spring-security-saml/docs/current/api/org/springframework/security/saml/SAMLEntryPoint.html) 类的 bean，它将作为 SAML 认证的入口点:
 
-```
+```java
 @Bean
 public WebSSOProfileOptions defaultWebSSOProfileOptions() {
     WebSSOProfileOptions webSSOProfileOptions = new WebSSOProfileOptions();
@@ -118,7 +118,7 @@ public SAMLEntryPoint samlEntryPoint() {
 
 接下来，让我们为我们的 SAML URIs 创建一些过滤器，比如/ `discovery,` / `login`和/ `logout`:
 
-```
+```java
 @Bean
 public FilterChainProxy samlFilter() throws Exception {
     List<SecurityFilterChain> chains = new ArrayList<>();
@@ -138,7 +138,7 @@ public FilterChainProxy samlFilter() throws Exception {
 
 然后，我们将添加一些相应的过滤器和处理程序:
 
-```
+```java
 @Bean
 public SAMLProcessingFilter samlWebSSOProcessingFilter() throws Exception {
     SAMLProcessingFilter samlWebSSOProcessingFilter = new SAMLProcessingFilter();
@@ -180,7 +180,7 @@ public SimpleUrlAuthenticationFailureHandler authenticationFailureHandler() {
 
 最后，让我们为单个和全局注销添加注销处理程序:
 
-```
+```java
 @Bean
 public SimpleUrlLogoutSuccessHandler successLogoutHandler() {
     SimpleUrlLogoutSuccessHandler successLogoutHandler = new SimpleUrlLogoutSuccessHandler();
@@ -215,7 +215,7 @@ public SAMLLogoutFilter samlLogoutFilter() {
 
 因此，我们将配置 [`MetadataGenerator`](https://web.archive.org/web/20220630005925/https://docs.spring.io/spring-security-saml/docs/current/api/org/springframework/security/saml/metadata/MetadataGenerator.html) bean，使 Spring SAML 能够处理元数据:
 
-```
+```java
 public MetadataGenerator metadataGenerator() {
     MetadataGenerator metadataGenerator = new MetadataGenerator();
     metadataGenerator.setEntityId(samlAudience);
@@ -240,7 +240,7 @@ public ExtendedMetadata extendedMetadata() {
 
 `MetadataGenerator` bean 需要 [`KeyManager`](https://web.archive.org/web/20220630005925/https://docs.spring.io/spring-security-saml/docs/current/api/org/springframework/security/saml/key/KeyManager.html) 的实例来加密 SP 和 IdP 之间的交换:
 
-```
+```java
 @Bean
 public KeyManager keyManager() {
     DefaultResourceLoader loader = new DefaultResourceLoader();
@@ -253,7 +253,7 @@ public KeyManager keyManager() {
 
 这里，我们必须为`KeyManager` bean 创建并提供一个密钥库。我们可以使用 JRE 命令创建自签名密钥和密钥库:
 
-```
+```java
 keytool -genkeypair -alias baeldungspringsaml -keypass baeldungsamlokta -keystore saml-keystore.jks
 ```
 
@@ -261,7 +261,7 @@ keytool -genkeypair -alias baeldungspringsaml -keypass baeldungsamlokta -keystor
 
 然后，我们将使用 [`ExtendedMetadataDelegate`](https://web.archive.org/web/20220630005925/https://docs.spring.io/spring-security-saml/docs/current/api/org/springframework/security/saml/metadata/ExtendedMetadataDelegate.html) 实例将 IdP 元数据配置到我们的 Spring Boot 应用程序中:
 
-```
+```java
 @Bean
 @Qualifier("okta")
 public ExtendedMetadataDelegate oktaExtendedMetadataProvider() throws MetadataProviderException {
@@ -296,7 +296,7 @@ public CachingMetadataManager metadata() throws MetadataProviderException, Resou
 
 对于 XML 解析，我们可以使用 [`StaticBasicParserPool`](https://web.archive.org/web/20220630005925/https://javadoc.io/doc/org.opensaml/xmltooling/latest/org/opensaml/xml/parse/StaticBasicParserPool.html) 类的一个实例:
 
-```
+```java
 @Bean(initMethod = "initialize")
 public StaticBasicParserPool parserPool() {
     return new StaticBasicParserPool();
@@ -312,7 +312,7 @@ public ParserPoolHolder parserPoolHolder() {
 
 然后，我们需要一个处理器来解析 HTTP 请求中的 SAML 消息:
 
-```
+```java
 @Bean
 public HTTPPostBinding httpPostBinding() {
     return new HTTPPostBinding(parserPool(), VelocityFactory.getEngine());
@@ -338,7 +338,7 @@ public SAMLProcessorImpl processor() {
 
 最后，我们需要一个定制的 [`SAMLAuthenticationProvider`](https://web.archive.org/web/20220630005925/https://docs.spring.io/spring-security-saml/docs/current/api/org/springframework/security/saml/SAMLAuthenticationProvider.html) 类的实现来检查 [`ExpiringUsernameAuthenticationToken`](https://web.archive.org/web/20220630005925/https://docs.spring.io/spring-security-saml/docs/current/api/org/springframework/security/providers/ExpiringUsernameAuthenticationToken.html) 类的实例并设置获得的权限:
 
-```
+```java
 public class CustomSAMLAuthenticationProvider extends SAMLAuthenticationProvider {
     @Override
     public Collection<? extends GrantedAuthority> getEntitlements(SAMLCredential credential, Object userDetail) {
@@ -355,7 +355,7 @@ public class CustomSAMLAuthenticationProvider extends SAMLAuthenticationProvider
 
 此外，我们应该将`CustomSAMLAuthenticationProvider`配置为`SecurityConfig` 类中的 bean:
 
-```
+```java
 @Bean
 public SAMLAuthenticationProvider samlAuthenticationProvider() {
     return new CustomSAMLAuthenticationProvider();
@@ -366,7 +366,7 @@ public SAMLAuthenticationProvider samlAuthenticationProvider() {
 
 最后，我们将使用已经讨论过的`samlEntryPoint`和`samlFilter`来配置基本的 HTTP 安全性:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     http.csrf().disable();
@@ -401,7 +401,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 首先，让我们添加到默认目标 URI ` (/)`和/ `auth` URI 的映射:
 
-```
+```java
 @RequestMapping("/")
 public String index() {
     return "index";
@@ -420,7 +420,7 @@ public String handleSamlAuth() {
 
 然后，我们将添加一个简单的`index.html`，允许用户使用`login`链接重定向 Okta SAML 认证:
 
-```
+```java
 <!doctype html>
 <html>
 <head>
@@ -444,7 +444,7 @@ public String handleSamlAuth() {
 
 接下来，让我们添加到`/home` URI 的映射，以便在成功通过身份验证时重定向用户:
 
-```
+```java
 @RequestMapping("/home")
 public String home(Model model) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -455,7 +455,7 @@ public String home(Model model) {
 
 此外，我们将添加`home.html`来显示登录的用户和注销链接:
 
-```
+```java
 <!doctype html>
 <html>
 <head>

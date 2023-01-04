@@ -28,7 +28,7 @@ Gradle 6.0 允许我们将[丰富的版本信息](https://web.archive.org/web/20
 
 我们可以使用`require`声明来告诉 Gradle，这个项目可以使用 10.0 以后的任何版本的 Guava，我们使用`prefer `声明来告诉 Gradle，如果没有其他约束阻止它这样做，它应该使用 28.1-jre。`because`声明添加了一个注释来解释这个丰富的版本信息:
 
-```
+```java
 implementation("com.google.guava:guava") {
     version {
         require("10.0")
@@ -40,7 +40,7 @@ implementation("com.google.guava:guava") {
 
 这如何帮助我们的构建更加稳定？假设这个项目还依赖于一个必须使用 16.0 版本的 Guava 的依赖项`foo`。`foo`项目的构建文件会将依赖关系声明为:
 
-```
+```java
 dependencies {
     implementation("com.google.guava:guava:16.0")
 }
@@ -54,7 +54,7 @@ dependencies {
 
 如果我们的项目依赖于一个我们知道将在 Guava 29 中删除的 API，那么我们使用`strictly`声明来阻止 Gradle 使用高于 28 的 Guava 版本。同样，如果我们知道在 Guava 27.0 中有一个 bug 给我们的项目带来了问题，我们使用`reject`来排除它:
 
-```
+```java
 implementation("com.google.guava:guava") {
     version {
         strictly("[10.0, 28[")
@@ -78,7 +78,7 @@ implementation("com.google.guava:guava") {
 
 让我们创建一个新平台，以确保我们的多项目构建跨项目使用相同版本的 Apache HTTP Client。首先，我们创建一个使用`java-platform`插件的项目`httpclient-platform,`:
 
-```
+```java
 plugins {
     `java-platform`
 }
@@ -86,7 +86,7 @@ plugins {
 
 接下来，我们**声明这个平台中包含的依赖关系**的约束。在本例中，我们将选择希望在项目中使用的 Apache HTTP 组件的版本:
 
-```
+```java
 dependencies {
     constraints {
         api("org.apache.httpcomponents:fluent-hc:4.5.10")
@@ -97,7 +97,7 @@ dependencies {
 
 最后，让我们添加一个使用 Apache HTTP 客户端 Fluent API 的`person-rest-client`项目。这里，我们使用`platform`方法在我们的`httpclient-platform`项目上添加一个依赖项。我们还将添加对`org.apache.httpcomponents:fluent-hc`的依赖。这种依赖性不包括版本，因为`httpclient-platform`决定了要使用的版本:
 
-```
+```java
 plugins {
     `java-library`
 }
@@ -120,7 +120,7 @@ dependencies {
 
 首先，让我们为我们的抽象和测试设备创建一个新项目`fibonacci-spi`。这个项目需要`java-library`和`java-test-fixtures`插件:
 
-```
+```java
 plugins {
     `java-library`
     `java-test-fixtures`
@@ -129,7 +129,7 @@ plugins {
 
 接下来，让我们将 JUnit 5 依赖项添加到我们的测试设备中。正如`java-library`插件定义了`api`和`implementation`配置一样，`java-test-fixtures`插件定义了`testFixturesApi`和`testFixturesImplementation`配置:
 
-```
+```java
 dependencies {
     testFixturesApi("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testFixturesImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.1")
@@ -138,7 +138,7 @@ dependencies {
 
 有了依赖项，让我们将 JUnit 5 测试混合添加到由`java-test-fixtures`插件创建的`src/testFixtures/java`源集中。这个测试混合验证了我们的`FibonacciSequenceGenerator`抽象的契约:
 
-```
+```java
 public interface FibonacciSequenceGeneratorFixture {
 
     FibonacciSequenceGenerator provide();
@@ -164,7 +164,7 @@ public interface FibonacciSequenceGeneratorFixture {
 
 现在，让我们创建一个新项目`fibonacci-recursive`，它将重用这个测试夹具。这个项目将在我们的`dependencies`块中使用`testFixtures`方法声明对来自我们的`fibonacci-spi`项目的测试夹具的依赖:
 
-```
+```java
 dependencies {
     api(project(":fibonacci-spi"))
 
@@ -176,7 +176,7 @@ dependencies {
 
 最后，我们现在可以使用在`fibonacci-spi`项目中定义的测试混合来为我们的递归 fibonacci 序列生成器创建一个新的测试:
 
-```
+```java
 class RecursiveFibonacciUnitTest implements FibonacciSequenceGeneratorFixture {
     @Override
     public FibonacciSequenceGenerator provide() {
@@ -203,7 +203,7 @@ Gradle 6.0 通过引入 [Gradle 模块元数据规范](https://web.archive.org/w
 
 让我们配置一个 build 来向 Maven 发布 Gradle 模块元数据。首先，我们将`maven-publish`包含在我们的构建文件中:
 
-```
+```java
 plugins {
     `java-library`
     `maven-publish`
@@ -212,7 +212,7 @@ plugins {
 
 接下来，我们配置一个发布。一个出版物可以包含任意数量的工件。让我们添加与`java`配置相关联的工件:
 
-```
+```java
 publishing {
     publications {
         register("mavenJava", MavenPublication::class) {
@@ -224,13 +224,13 @@ publishing {
 
 `maven-publish`插件增加了`publishToMavenLocal`任务。让我们使用此任务来测试我们的 Gradle 模块元数据发布:
 
-```
+```java
 ./gradlew publishToMavenLocal
 ```
 
 接下来，让我们列出这个工件在本地 Maven 存储库中的目录:
 
-```
+```java
 ls ~/.m2/repository/com/baeldung/gradle-6/1.0.0/
 gradle-6-1.0.0.jar	gradle-6-1.0.0.module	gradle-6-1.0.0.pom
 ```
@@ -245,7 +245,7 @@ gradle-6-1.0.0.jar	gradle-6-1.0.0.module	gradle-6-1.0.0.pom
 
 让我们使用惰性 API 添加一个定制任务。首先，我们使用`TaskContainer.registering`扩展方法注册任务。因为`registering`返回一个`TaskProvider`，所以`Task`实例的创建被推迟，直到 Gradle 或构建作者调用`TaskProvider.get()`。最后，我们提供了一个闭包，它将在 Gradle 创建之后配置我们的`Task`:
 
-```
+```java
 val copyExtraLibs by tasks.registering(Copy::class) {
     from(extralibs)
     into(extraLibsDir)
@@ -263,14 +263,14 @@ Gradle 的任务配置避免[迁移指南](https://web.archive.org/web/202206301
 
 Gradle 6.0 引入了对 JDK 13 构建项目的支持。我们可以通过熟悉的`sourceCompatibility`和`targetCompatibility`设置配置我们的 Java 构建来使用 Java 13:
 
-```
+```java
 sourceCompatibility = JavaVersion.VERSION_13
 targetCompatibility = JavaVersion.VERSION_13
 ```
 
 JDK 13 的一些最令人兴奋的语言功能，如原始字符串文字，仍处于预览状态。让我们配置 Java 构建中的任务，以启用这些预览特性:
 
-```
+```java
 tasks.compileJava {
     options.compilerArgs.add("--enable-preview")
 }

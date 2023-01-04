@@ -14,7 +14,7 @@
 
 首先，让我们创建一个简单的消费者函数，它将被用作来自`Observables`的元素的消费者，我们将在后面定义:
 
-```
+```java
 public class ComputeFunction {
     public static void compute(Integer v) {
         try {
@@ -39,7 +39,7 @@ public class ComputeFunction {
 
 例如，如果您基于从 1 到 100 万的静态元素范围创建一个`Observable`,那么无论这些项目被观察的频率如何，该`Observable`都将发出相同的项目序列:
 
-```
+```java
 Observable.range(1, 1_000_000)
   .observeOn(Schedulers.computation())
   .subscribe(ComputeFunction::compute);
@@ -49,7 +49,7 @@ Observable.range(1, 1_000_000)
 
 程序的输出将由一个`compute()`方法的结果组成，该方法从一个`Observable`中为一个项目调用:
 
-```
+```java
 compute integer v: 1
 compute integer v: 2
 compute integer v: 3
@@ -67,7 +67,7 @@ hot `Observable`开始生成项目，并在它们被创建时立即发出。这�
 
 让我们考虑一个热点`Observable,` 的例子，即生产 100 万件商品给正在处理这些商品的最终消费者。当`Observer`中的`compute()`方法花费一些时间来处理每一个项目时，`Observable` 开始用项目填满内存，导致程序失败:
 
-```
+```java
 PublishSubject<Integer> source = PublishSubject.<Integer>create();
 
 source.observeOn(Schedulers.computation())
@@ -86,7 +86,7 @@ hot `Observable`发出的项目示例可能包括鼠标&键盘事件、系统事
 
 我们可以通过调用一个`buffer()` 方法来实现:
 
-```
+```java
 PublishSubject<Integer> source = PublishSubject.<Integer>create();
 
 source.buffer(1024)
@@ -106,7 +106,7 @@ source.buffer(1024)
 
 当`Observable`生成元素的速度快于`Observer`处理元素的速度时，我们可以通过将生成的元素组合在一起，并将一批元素发送给能够处理一组元素而不是逐个处理元素的`Observer` 来缓解这种情况:
 
-```
+```java
 PublishSubject<Integer> source = PublishSubject.<Integer>create();
 
 source.window(500)
@@ -127,7 +127,7 @@ source.window(500)
 
 持续时间是从产生的元素序列中选取一个特定元素之后的时间。我们可以通过跳过元素来指定处理背压的策略:
 
-```
+```java
 PublishSubject<Integer> source = PublishSubject.<Integer>create();
 
 source.sample(100, TimeUnit.MILLISECONDS)
@@ -156,7 +156,7 @@ source.sample(100, TimeUnit.MILLISECONDS)
 
 让我们看看如何指定该策略:
 
-```
+```java
 Observable.range(1, 1_000_000)
   .onBackpressureBuffer(16, () -> {}, BackpressureOverflow.ON_OVERFLOW_DROP_OLDEST)
   .observeOn(Schedulers.computation())
@@ -175,7 +175,7 @@ Observable.range(1, 1_000_000)
 
 当我们可以安全地忽略来自源`Observable`的值(如鼠标移动或当前 GPS 位置信号)时，该运算符很有用，因为稍后会有更多的最新值:
 
-```
+```java
 Observable.range(1, 1_000_000)
   .onBackpressureDrop()
   .observeOn(Schedulers.computation())

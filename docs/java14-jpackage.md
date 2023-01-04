@@ -37,7 +37,7 @@
 
 例如，我们可以使用以下命令创建一个包:
 
-```
+```java
 jpackage --input target/ \
   --name JPackageDemoApp \
   --main-jar JPackageDemoApp.jar \

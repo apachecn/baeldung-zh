@@ -25,7 +25,7 @@
 
 在 Spring MVC 中，有多种方法可以做到这一点。让我们使用`ModelAndView`方法:
 
-```
+```java
 @RequestMapping("/index")
 public ModelAndView thymeleafView(Map<String, Object> model) {
     model.put("number", 1234);
@@ -40,7 +40,7 @@ public ModelAndView thymeleafView(Map<String, Object> model) {
 
 嵌入式 JS 代码只是位于`<script>`元素内部的 `index.html`文件的一部分。我们可以非常直接地传递 Spring MVC 变量:
 
-```
+```java
 <script>
     var number = [[${number}]];
     var message = "[[${message}]]";
@@ -49,7 +49,7 @@ public ModelAndView thymeleafView(Map<String, Object> model) {
 
 百里香模板引擎用当前执行范围内可用的值替换每个表达式。这意味着模板引擎将上述代码转换为以下 HTML 代码:
 
-```
+```java
 <script>
     var number = 1234;
     var message = "Hello from Spring MVC!";
@@ -60,7 +60,7 @@ public ModelAndView thymeleafView(Map<String, Object> model) {
 
 假设我们的外部 JS 代码包含在使用相同的`<script>`标签的 `index.html`文件中，其中我们指定了`src`属性:
 
-```
+```java
 <script src="/js/script.js"></script>
 ```
 
@@ -77,7 +77,7 @@ public ModelAndView thymeleafView(Map<String, Object> model) {
 
 我们可以通过在`index.html`中嵌入的 JS 代码之后声明外部 JS 代码来做到这一点:
 
-```
+```java
 <script>
     var number = [[${number}]];
     var message = "[[${message}]]";
@@ -89,7 +89,7 @@ public ModelAndView thymeleafView(Map<String, Object> model) {
 
 在这种情况下，我们在`index.html`中声明外部和嵌入式 JS 代码的顺序并不重要，但是我们应该将来自`script.js`的代码放入一个典型的页面加载包装器中:
 
-```
+```java
 window.onload = function() {
     // JS code
 };
@@ -97,7 +97,7 @@ window.onload = function() {
 
 尽管这段代码很简单，但最常见的做法是使用`jQuery `来代替。我们将这个库作为第一个`<script>`元素包含在`index.html`文件中:
 
-```
+```java
 <!DOCTYPE html>
 <html>
     <head>
@@ -110,7 +110,7 @@ window.onload = function() {
 
 现在，我们可以将 JS 代码放在下面的`jQuery`包装器中:
 
-```
+```java
 $(function () {
     // JS code
 });

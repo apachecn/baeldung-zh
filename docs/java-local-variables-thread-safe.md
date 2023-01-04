@@ -20,7 +20,7 @@
 
 现在让我们继续看一个包含一个本地原语和一个(原语)字段的小代码示例:
 
-```
+```java
 public class LocalVariables implements Runnable {
     private int field;
 
@@ -53,7 +53,7 @@ public class LocalVariables implements Runnable {
 
 例如，在执行时，我们可以得到以下输出:
 
-```
+```java
  821695124:1189444795
 821695124:47842893
 ```
@@ -70,7 +70,7 @@ Lambdas(和[匿名内部类](/web/20221129005355/https://www.baeldung.com/java-a
 
 我们可以在下面的例子中看到这种行为:
 
-```
+```java
 public static void main(String... args) {
     String text = "";
     // text = "675";

@@ -27,7 +27,7 @@
 
 关键字`throws`用于指定一个方法在执行过程中可能会引发异常。它在调用方法时强制执行显式异常处理:
 
-```
+```java
 public void simpleMethod() throws Exception {
     // ...
 }
@@ -35,7 +35,7 @@ public void simpleMethod() throws Exception {
 
 `throw`关键字允许我们抛出一个异常对象来中断程序的正常流程。当程序不能满足给定条件时，这是最常用的:
 
-```
+```java
 if (task.isTooComplicated()) {
     throw new TooComplicatedException("The task is too complicated");
 }
@@ -45,7 +45,7 @@ if (task.isTooComplicated()) {
 
 通过使用`try-catch-finally`语句:
 
-```
+```java
 try {
     // ...
 } catch (ExceptionType1 ex) {
@@ -69,7 +69,7 @@ try {
 
 第一种是使用一个能够处理所有抛出的异常类型的`catch`块:
 
-```
+```java
 try {
     // ...
 } catch (Exception ex) {
@@ -83,7 +83,7 @@ try {
 
 第二种方法是实现多个 catch 块:
 
-```
+```java
 try {
     // ...
 } catch (FileNotFoundException ex) {
@@ -97,7 +97,7 @@ try {
 
 第三种是使用多重捕捉块:
 
-```
+```java
 try {
     // ...
 } catch (FileNotFoundException | EOFException ex) {
@@ -131,7 +131,7 @@ JVM 抛出的所有错误都是`Error`或其子类之一的实例，更常见的
 
 ### Q7。执行下面的代码块会抛出什么异常？
 
-```
+```java
 Integer[][] ints = { { 1, 2, 3 }, { null }, { 7, 8, 9 } };
 System.out.println("value = " + ints[1][1].intValue());
 ```
@@ -142,7 +142,7 @@ System.out.println("value = " + ints[1][1].intValue());
 
 当引发一个异常以响应另一个异常时发生。这允许我们发现我们提出的问题的完整历史:
 
-```
+```java
 try {
     task.readConfigFile();
 } catch (FileNotFoundException ex) {
@@ -176,7 +176,7 @@ try {
 
 当使用 Java 已经提供的标准函数接口时，您只能抛出未检查的异常，因为标准函数接口在方法签名中没有“throws”子句:
 
-```
+```java
 List<Integer> integers = Arrays.asList(3, 9, 7, 0, 10, 20);
 integers.forEach(i -> {
     if (i == 0) {
@@ -188,14 +188,14 @@ integers.forEach(i -> {
 
 但是，如果您使用自定义函数接口，则可能会引发检查异常:
 
-```
+```java
 @FunctionalInterface
 public static interface CheckedFunction<T> {
     void apply(T t) throws Exception;
 }
 ```
 
-```
+```java
 public void processTasks(
   List<Task> taks, CheckedFunction<Task> checkedFunction) {
     for (Task task : taks) {
@@ -221,7 +221,7 @@ processTasks(taskList, t -> {
 
 下面是演示这一点的示例代码:
 
-```
+```java
 class Parent {
     void doSomething() {
         // ...
@@ -237,7 +237,7 @@ class Child extends Parent {
 
 下一个范例将无法编译，因为覆写方法会掷回未在覆写方法中宣告的已检查例外状况:
 
-```
+```java
 class Parent {
     void doSomething() {
         // ...
@@ -255,7 +255,7 @@ class Child extends Parent {
 
 下面是一个成功遵循上述规则的示例代码:
 
-```
+```java
 class Parent {
     void doSomething() throws IOException, ParseException {
         // ...
@@ -281,7 +281,7 @@ class Child extends Parent {
 
 然而，如果我们试图抛出一个父类方法没有声明的检查异常，或者抛出一个范围更广的异常；我们将得到一个编译错误:
 
-```
+```java
 class Parent {
     void doSomething() throws FileNotFoundException {
         // ...
@@ -299,7 +299,7 @@ class Child extends Parent {
 
 这里有一个遵守规则的例子:
 
-```
+```java
 class Parent {
     void doSomething() throws IllegalArgumentException {
         // ...
@@ -316,7 +316,7 @@ class Child extends Parent {
 
 ### Q14。下面的代码会编译吗？
 
-```
+```java
 void doSomething() {
     // ...
     throw new RuntimeException(new Exception("Chained Exception"));
@@ -329,7 +329,7 @@ void doSomething() {
 
 是的。我们可以利用编译器执行的类型擦除，让它认为我们正在抛出一个未经检查的异常，而实际上；我们正在抛出一个检查异常:
 
-```
+```java
 public <T extends Throwable> T sneakyThrow(Throwable ex) throws T {
     throw (T) ex;
 }

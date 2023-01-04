@@ -14,7 +14,7 @@
 
 因此，我们将有以下类:
 
-```
+```java
 @Entity 
 public class User {
 
@@ -31,7 +31,7 @@ public class User {
 } 
 ```
 
-```
+```java
 @Entity 
 public class Address {
 
@@ -57,7 +57,7 @@ public class Address {
 
 **让我们看看`AddressRepository` 存储库并解释框架配置是如何工作的:**
 
-```
+```java
 public interface AddressRepository extends JpaRepository<Address, Long>, 
   QuerydslPredicateExecutor<Address>, QuerydslBinderCustomizer<QAddress> {
 
@@ -79,7 +79,7 @@ public interface AddressRepository extends JpaRepository<Address, Long>,
 
 **同样，我们可能想要查询`address`表；所以对于这一点，我们只要添加一个类似的方法:**
 
-```
+```java
 @GetMapping(value = "/addresses", produces = MediaType.APPLICATION_JSON_VALUE)
 public Iterable<Address> queryOverAddress(
   @QuerydslPredicate(root = Address.class) Predicate predicate) {
@@ -98,7 +98,7 @@ public Iterable<Address> queryOverAddress(
 
 `/users?addresses.country=Spain `
 
-```
+```java
 @Test
 public void givenRequest_whenQueryUserFilteringByCountrySpain_thenGetJohn() throws Exception {
     mockMvc.perform(get("/users?address.country=Spain")).andExpect(status().isOk()).andExpect(content()
@@ -112,7 +112,7 @@ public void givenRequest_whenQueryUserFilteringByCountrySpain_thenGetJohn() thro
 
 因此，Querydsl 将映射通过 HTTP 发送的谓词，并生成以下 SQL 脚本:
 
-```
+```java
 select user0_.id as id1_1_, 
        user0_.name as name2_1_ 
 from user user0_ 

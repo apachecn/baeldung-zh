@@ -28,13 +28,13 @@
 
 让我们了解如何在包含以下内容的文件上使用`FileChannel`来读取文件:
 
-```
+```java
 Hello world
 ```
 
 该测试读取文件并检查它是否正常读取:
 
-```
+```java
 @Test
 public void givenFile_whenReadWithFileChannelUsingRandomAccessFile_thenCorrect() 
   throws IOException {
@@ -72,7 +72,7 @@ public void givenFile_whenReadWithFileChannelUsingRandomAccessFile_thenCorrect()
 
 让我们看看如何使用`RandomAccessFile`打开一个`FileChannel `:
 
-```
+```java
 RandomAccessFile reader = new RandomAccessFile(file, "r");
 FileChannel channel = reader.getChannel();
 ```
@@ -81,7 +81,7 @@ FileChannel channel = reader.getChannel();
 
 接下来，我们将看到使用`FileInputStream`打开一个`FileChannel`来读取一个文件:
 
-```
+```java
 FileInputStream fin= new FileInputStream(file);
 FileChannel channel = fin.getChannel();
 ```
@@ -94,7 +94,7 @@ FileChannel channel = fin.getChannel();
 
 让我们看看如何读取一个字节序列。我们将使用一个`ByteBuffer`来保存数据:
 
-```
+```java
 ByteBuffer buff = ByteBuffer.allocate(1024);
 int noOfBytesRead = channel.read(buff);
 String fileContent = new String(buff.array(), StandardCharsets.UTF_8);
@@ -104,7 +104,7 @@ assertEquals("Hello world", fileContent);
 
 接下来，我们将了解如何从文件位置开始读取一个字节序列:
 
-```
+```java
 ByteBuffer buff = ByteBuffer.allocate(1024);
 int noOfBytesRead = channel.read(buff, 5);
 String fileContent = new String(buff.array(), StandardCharsets.UTF_8);
@@ -121,7 +121,7 @@ assertEquals("world", fileContent);
 
 让我们来探索如何使用`FileChannel`进行写作:
 
-```
+```java
 @Test
 public void whenWriteWithFileChannelUsingRandomAccessFile_thenCorrect()   
   throws IOException {
@@ -146,7 +146,7 @@ public void whenWriteWithFileChannelUsingRandomAccessFile_thenCorrect()
 
 让我们看看如何使用`RandomAccessFile`打开一个`FileChannel `:
 
-```
+```java
 RandomAccessFile writer = new RandomAccessFile(file, "rw");
 FileChannel channel = writer.getChannel();
 ```
@@ -155,7 +155,7 @@ FileChannel channel = writer.getChannel();
 
 让我们看看如何使用`FileOutputStream`打开一个`FileChannel`:
 
-```
+```java
 FileOutputStream fout = new FileOutputStream(file);
 FileChannel channel = fout.getChannel(); 
 ```
@@ -166,14 +166,14 @@ FileChannel channel = fout.getChannel();
 
 让我们看看如何编写一个字节序列，使用一个`ByteBuffer`来存储数据:
 
-```
+```java
 ByteBuffer buff = ByteBuffer.wrap("Hello world".getBytes(StandardCharsets.UTF_8));
 channel.write(buff); 
 ```
 
 接下来，我们将了解如何从文件位置开始编写一个字节序列:
 
-```
+```java
 ByteBuffer buff = ByteBuffer.wrap("Hello world".getBytes(StandardCharsets.UTF_8));
 channel.write(buff, 5); 
 ```
@@ -184,13 +184,13 @@ channel.write(buff, 5);
 
 让我们看看如何获得当前位置:
 
-```
+```java
 long originalPosition = channel.position();
 ```
 
 接下来，我们来看看如何设置位置:
 
-```
+```java
 channel.position(5);
 assertEquals(originalPosition + 5, channel.position());
 ```
@@ -199,7 +199,7 @@ assertEquals(originalPosition + 5, channel.position());
 
 让我们看看如何使用`[FileChannel.size](https://web.archive.org/web/20221013193919/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/channels/FileChannel.html#size() "API usage")`方法获得文件的字节大小:
 
-```
+```java
 @Test
 public void whenGetFileSize_thenCorrect() 
   throws IOException {
@@ -218,7 +218,7 @@ public void whenGetFileSize_thenCorrect()
 
 让我们了解如何使用`[FileChannel.truncate](https://web.archive.org/web/20221013193919/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/channels/FileChannel.html#truncate(long) "API usage")`方法将文件截断到给定的字节大小:
 
-```
+```java
 @Test
 public void whenTruncateFile_thenCorrect() 
   throws IOException {
@@ -243,7 +243,7 @@ public void whenTruncateFile_thenCorrect()
 
 出于性能原因，操作系统可能会缓存文件更改，如果系统崩溃，数据可能会丢失。要强制文件内容和元数据持续写入磁盘，我们可以使用`force`方法:
 
-```
+```java
 channel.force(true);
 ```
 
@@ -253,7 +253,7 @@ channel.force(true);
 
 让我们看看如何使用`[FileChannel.map](https://web.archive.org/web/20221013193919/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/channels/FileChannel.html#map(java.nio.channels.FileChannel.MapMode,long,long)).` 将文件的一部分加载到内存中。我们使用 [`FileChannel.MapMode.READ_ONLY`](https://web.archive.org/web/20221013193919/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/channels/FileChannel.MapMode.html) 以只读模式打开文件:
 
-```
+```java
 @Test
 public void givenFile_whenReadAFileSectionIntoMemoryWithFileChannel_thenCorrect() 
   throws IOException { 
@@ -280,7 +280,7 @@ public void givenFile_whenReadAFileSectionIntoMemoryWithFileChannel_thenCorrect(
 
 让我们了解如何使用 [`FileChannel.tryLock`](https://web.archive.org/web/20221013193919/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/channels/FileChannel.html#tryLock(long,long,boolean)) 方法锁定文件的一部分，以防止对一部分的并发访问:
 
-```
+```java
 @Test
 public void givenFile_whenWriteAFileUsingLockAFileSectionWithFileChannel_thenCorrect() 
   throws IOException { 
@@ -305,7 +305,7 @@ public void givenFile_whenWriteAFileUsingLockAFileSectionWithFileChannel_thenCor
 
 如有必要，我们可以用`close`方法直接关闭`FileChannel `:
 
-```
+```java
 channel.close();
 ```
 

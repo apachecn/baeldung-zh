@@ -14,7 +14,7 @@ NIO APIs 的另一个增强是新的文件系统 API。你也可以在这个网�
 
 为了在我们的项目中使用 NIO2 异步通道，我们必须导入 `java.nio.channels`包，因为其中捆绑了所需的类:
 
-```
+```java
 import java.nio.channels.*;
 ```
 
@@ -34,14 +34,14 @@ import java.nio.channels.*;
 
 **`Future`对象表示异步计算的结果。**假设我们想要创建一个服务器来监听客户端连接，我们调用`AsynchronousServerSocketChannel`上的静态`open` API，并可选地将返回的套接字通道绑定到一个地址:
 
-```
+```java
 AsynchronousServerSocketChannel server 
   = AsynchronousServerSocketChannel.open().bind(null);
 ```
 
 我们已经传入了`null`以便系统可以自动分配一个地址。然后，我们在返回的服务器`SocketChannel`上调用`accept`方法:
 
-```
+```java
 Future<AsynchronousSocketChannel> future = server.accept();
 ```
 
@@ -51,7 +51,7 @@ Future<AsynchronousSocketChannel> future = server.accept();
 
 我们可以使用`Future`对象来查询操作的状态:
 
-```
+```java
 future.isDone();
 ```
 
@@ -59,13 +59,13 @@ future.isDone();
 
 我们还可以明确检查操作是否已被取消:
 
-```
+```java
 future.isCancelled();
 ```
 
 如果操作在正常完成前被取消，它只返回`true`，否则返回`false`。取消通过`cancel`方法执行:
 
-```
+```java
 future.cancel(true);
 ```
 
@@ -73,7 +73,7 @@ future.cancel(true);
 
 为了检索计算的结果，我们使用了`get`方法:
 
-```
+```java
 AsynchronousSocketChannel client= future.get();
 ```
 
@@ -83,7 +83,7 @@ AsynchronousSocketChannel client= future.get();
 
 使用 Future 处理操作的替代方法是使用`CompletionHandler`类的回调机制。异步通道允许指定完成处理程序来使用操作的结果:
 
-```
+```java
 AsynchronousServerSocketChannel listener
   = AsynchronousServerSocketChannel.open().bind(null);
 

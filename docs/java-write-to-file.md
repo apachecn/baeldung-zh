@@ -28,7 +28,7 @@ Take a look at some common ways of copying files in Java.[Read more](/web/202209
 
 让我们从简单的**开始，使用`BufferedWriter`将一个`String`写入一个新文件**:
 
-```
+```java
 public void whenWriteStringUsingBufferedWritter_thenCorrect() 
   throws IOException {
     String str = "Hello";
@@ -41,13 +41,13 @@ public void whenWriteStringUsingBufferedWritter_thenCorrect()
 
 文件中的输出将是:
 
-```
+```java
 Hello
 ```
 
 然后我们可以**将一个 `String`添加到现有的文件**中:
 
-```
+```java
 @Test
 public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo() 
   throws IOException {
@@ -62,7 +62,7 @@ public void whenAppendStringUsingBufferedWritter_thenOldContentShouldExistToo()
 
 该文件将成为:
 
-```
+```java
 Hello World
 ```
 
@@ -70,7 +70,7 @@ Hello World
 
 接下来，让我们看看如何使用`PrintWriter`将格式化文本写入文件:
 
-```
+```java
 @Test
 public void givenWritingStringToFile_whenUsingPrintWriter_thenCorrect() 
   throws IOException {
@@ -84,7 +84,7 @@ public void givenWritingStringToFile_whenUsingPrintWriter_thenCorrect()
 
 生成的文件将包含:
 
-```
+```java
 Some String
 Product name is iPhone and its price is 1000$
 ```
@@ -99,7 +99,7 @@ Product name is iPhone and its price is 1000$
 
 下面的代码将一个`String`转换成字节，并使用`FileOutputStream`将字节写入一个文件:
 
-```
+```java
 @Test
 public void givenWritingStringToFile_whenUsingFileOutputStream_thenCorrect() 
   throws IOException {
@@ -114,7 +114,7 @@ public void givenWritingStringToFile_whenUsingFileOutputStream_thenCorrect()
 
 文件中的输出当然是:
 
-```
+```java
 Hello
 ```
 
@@ -122,7 +122,7 @@ Hello
 
 接下来，让我们看看如何使用`DataOutputStream`将`String`写入文件:
 
-```
+```java
 @Test
 public void givenWritingToFile_whenUsingDataOutputStream_thenCorrect() 
   throws IOException {
@@ -151,7 +151,7 @@ public void givenWritingToFile_whenUsingDataOutputStream_thenCorrect()
 
 **这段代码从文件的开头开始写一个带有给定偏移量的整数值:**
 
-```
+```java
 private void writeToPosition(String filename, int data, long position) 
   throws IOException {
     RandomAccessFile writer = new RandomAccessFile(filename, "rw");
@@ -163,7 +163,7 @@ private void writeToPosition(String filename, int data, long position)
 
 如果我们想**读取存储在特定位置**的`int`，我们可以使用这个方法:
 
-```
+```java
 private int readFromPosition(String filename, long position) 
   throws IOException {
     int result = 0;
@@ -177,7 +177,7 @@ private int readFromPosition(String filename, long position)
 
 为了测试我们的函数，让我们写一个整数，编辑它，最后读回来:
 
-```
+```java
 @Test
 public void whenWritingToSpecificPositionInFile_thenCorrect() 
   throws IOException {
@@ -196,7 +196,7 @@ public void whenWritingToSpecificPositionInFile_thenCorrect()
 
 **如果我们处理的是大文件，`FileChannel`可以比标准 IO 更快。**下面的代码使用`FileChannel`将`String`写入一个文件:
 
-```
+```java
 @Test
 public void givenWritingToFile_whenUsingFileChannel_thenCorrect() 
   throws IOException {
@@ -224,7 +224,7 @@ Java 7 引入了一种处理文件系统的新方法，以及一个新的实用�
 
 使用`Files`类，我们可以创建、移动、复制和删除文件和目录。它还可以用于读取和写入文件:
 
-```
+```java
 @Test
 public void givenUsingJava7_whenWritingToFile_thenCorrect() 
   throws IOException {
@@ -244,7 +244,7 @@ public void givenUsingJava7_whenWritingToFile_thenCorrect()
 
 现在让我们试着写入一个临时文件。以下代码创建一个临时文件，并向其中写入一个`String`:
 
-```
+```java
 @Test
 public void whenWriteToTmpFile_thenCorrect() throws IOException {
     String toWrite = "Hello";
@@ -267,7 +267,7 @@ public void whenWriteToTmpFile_thenCorrect() throws IOException {
 
 让我们利用`FileChannel` 在写入文件之前尝试锁定文件:
 
-```
+```java
 @Test
 public void whenTryToLockFile_thenItShouldBeLocked() 
   throws IOException {

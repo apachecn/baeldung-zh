@@ -28,7 +28,7 @@ A quick and practical guide to working with CORS and Spring Webflux.[Read more](
 
 ### 2.1。`@CrossOrigin`上一个`@RequestMapping-`带注释的处理程序方法
 
-```
+```java
 @RestController
 @RequestMapping("/account")
 public class AccountController {
@@ -54,7 +54,7 @@ public class AccountController {
 
 ### 2.2。`@CrossOrigin`控制器上的
 
-```
+```java
 @CrossOrigin(origins = "http://example.com", maxAge = 3600)
 @RestController
 @RequestMapping("/account")
@@ -76,7 +76,7 @@ public class AccountController {
 
 ### 2.3。`@CrossOrigin`关于控制器和处理器的方法
 
-```
+```java
 @CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping("/account")
@@ -107,7 +107,7 @@ Spring 将组合两个注释的属性来创建一个合并的 CORS 配置。
 
 ### 3.1。JavaConfig
 
-```
+```java
 @Configuration
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
@@ -129,7 +129,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 这个最小的 XML 配置使 CORS 能够在一个`/**`路径模式上使用与 JavaConfig 相同的默认属性:
 
-```
+```java
 <mvc:cors>
     <mvc:mapping path="/**" />
 </mvc:cors>
@@ -137,7 +137,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 还可以用自定义属性声明几个 CORS 映射:
 
-```
+```java
 <mvc:cors>
 
     <mvc:mapping path="/api/**"
@@ -159,7 +159,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 幸运的是，Spring Security 提供了一个现成的解决方案:
 
-```
+```java
 @EnableWebSecurity
 public class WebSecurityConfig {
 

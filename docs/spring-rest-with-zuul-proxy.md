@@ -30,7 +30,7 @@ This article introduces Spring REST Docs, a test-driven mechanism to generate do
 
 首先，我们需要从 Spring Cloud 添加一个对 zuul 支持的依赖项到我们的 UI 应用程序的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
@@ -44,7 +44,7 @@ This article introduces Spring REST Docs, a test-driven mechanism to generate do
 
 接下来，我们需要配置 Zuul，因为我们使用的是 Spring Boot，所以我们将在`application.yml`中完成:
 
-```
+```java
 zuul:
   routes:
     foos:
@@ -65,7 +65,7 @@ zuul:
 
 让我们首先为将要使用的资源定义基本 DTO:
 
-```
+```java
 public class Foo {
     private long id;
     private String name;
@@ -76,7 +76,7 @@ public class Foo {
 
 和一个简单的控制器:
 
-```
+```java
 @RestController
 public class FooController {
 
@@ -96,7 +96,7 @@ public class FooController {
 
 让我们从主要的`index.html`开始——使用一些角度:
 
-```
+```java
 <html>
 <body ng-app="myApp" ng-controller="mainCtrl">
 <script src="angular.min.js"></script>
@@ -133,7 +133,7 @@ app.controller('mainCtrl', function($scope,$resource,$http) {
 
 最后，实际启动的应用程序:
 
-```
+```java
 @EnableZuulProxy
 @SpringBootApplication
 public class UiApplication extends SpringBootServletInitializer {
@@ -150,7 +150,7 @@ public class UiApplication extends SpringBootServletInitializer {
 
 现在，让我们测试我们的 UI 应用程序，如下所示:
 
-```
+```java
 @Test
 public void whenSendRequestToFooResource_thenOK() {
     Response response = RestAssured.get("http://localhost:8080/foos/1");
@@ -163,7 +163,7 @@ public void whenSendRequestToFooResource_thenOK() {
 
 有多种 Zuul 过滤器可用，我们也可以创建自己的自定义过滤器:
 
-```
+```java
 @Component
 public class CustomZuulFilter extends ZuulFilter {
 
@@ -188,7 +188,7 @@ public class CustomZuulFilter extends ZuulFilter {
 
 最后，让我们测试一下，确保我们的定制过滤器正在工作——首先，我们将在 Foos 资源服务器上修改我们的`FooController`:
 
-```
+```java
 @RestController
 public class FooController {
 
@@ -205,7 +205,7 @@ public class FooController {
 
 现在，让我们来测试一下:
 
-```
+```java
 @Test
 public void whenSendRequest_thenHeaderAdded() {
     Response response = RestAssured.get("http://localhost:8080/foos/1");

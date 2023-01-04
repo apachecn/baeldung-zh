@@ -16,7 +16,7 @@
 
 例如，让我们考虑一个简单的消费逻辑，它只包含订阅和轮询循环:
 
-```
+```java
 void consume() {
     try {
         consumer.subscribe(Arrays.asList("foo", "bar"));
@@ -59,7 +59,7 @@ void consume() {
 
 对于我们的示例，让我们考虑一个应用程序，它使用 Kafka 主题中的国家人口更新。更新仅包含国家名称及其当前人口:
 
-```
+```java
 class CountryPopulation {
 
     private String country;
@@ -71,7 +71,7 @@ class CountryPopulation {
 
 我们的消费者只是使用 Kafka `Consumer` 实例轮询更新，处理它们，最后使用`commitSync` 方法提交偏移量:
 
-```
+```java
 public class CountryPopulationConsumer {
 
     private Consumer<String, Integer> consumer;
@@ -117,7 +117,7 @@ public class CountryPopulationConsumer {
 
 接下来，让我们看看如何创建一个`MockConsumer`的实例:
 
-```
+```java
 @BeforeEach
 void setUp() {
     consumer = new MockConsumer<>(OffsetResetStrategy.EARLIEST);
@@ -139,7 +139,7 @@ void setUp() {
 
 首先，让我们为`startByAssigning`方法创建一个测试:
 
-```
+```java
 @Test
 void whenStartingByAssigningTopicPartition_thenExpectUpdatesAreConsumedCorrectly() {
     // GIVEN
@@ -176,7 +176,7 @@ void whenStartingByAssigningTopicPartition_thenExpectUpdatesAreConsumedCorrectly
 
 现在，让我们为我们的`startBySubscribing`方法创建一个测试:
 
-```
+```java
 @Test
 void whenStartingBySubscribingToTopic_thenExpectUpdatesAreConsumedCorrectly() {
     // GIVEN
@@ -214,7 +214,7 @@ void whenStartingBySubscribingToTopic_thenExpectUpdatesAreConsumedCorrectly() {
 
 最后，我们可以使用`setPollException` 方法**设置要抛出的异常:**
 
-```
+```java
 @Test
 void whenStartingBySubscribingToTopicAndExceptionOccurs_thenExpectExceptionIsHandledCorrectly() {
     // GIVEN

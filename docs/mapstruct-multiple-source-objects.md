@@ -10,7 +10,7 @@
 
 MapStruct 最常见的用例是将一个对象映射到另一个对象。假设我们有一个`Customer`类:
 
-```
+```java
 class Customer {
 
     private String firstName;
@@ -23,7 +23,7 @@ class Customer {
 
 让我们进一步假设有一个对应的`CustomerDto`:
 
-```
+```java
 class CustomerDto {
 
     private String forename;
@@ -36,7 +36,7 @@ class CustomerDto {
 
 我们现在可以定义一个映射器，将一个`Customer`对象映射到一个`CustomerDto`对象:
 
-```
+```java
 @Mapper
 public interface CustomerDtoMapper {
 
@@ -53,7 +53,7 @@ public interface CustomerDtoMapper {
 
 我们需要构建一个送货地址来运送我们的货物:
 
-```
+```java
 class DeliveryAddress {
 
     private String forename;
@@ -69,7 +69,7 @@ class DeliveryAddress {
 
 每个客户可以有多个地址。一个可以是家庭住址。另一个可以是工作地址:
 
-```
+```java
 class Address {
 
     private String street;
@@ -83,7 +83,7 @@ class Address {
 
 我们现在需要一个映射器，它从一个客户及其一个地址中创建交货地址。MapStruct 通过拥有多个源对象来支持这一点:
 
-```
+```java
 @Mapper
 interface DeliveryAddressMapper {
 
@@ -99,7 +99,7 @@ interface DeliveryAddressMapper {
 
 让我们通过编写一个小测试来看看这一点:
 
-```
+```java
 // given a customer
 Customer customer = new Customer().setFirstName("Max")
   .setLastName("Powers");
@@ -130,7 +130,7 @@ assertEquals(deliveryAddress.getPostalcode(), homeAddress.getPostalcode());
 
 例如，假设我们想要更新一个交货地址的与客户相关的属性。我们所需要的就是让其中一个参数与方法返回的类型相同，并用`@MappingTarget`对其进行注释:
 
-```
+```java
 @Mapper
 interface DeliveryAddressMapper {
 
@@ -143,7 +143,7 @@ interface DeliveryAddressMapper {
 
 因此，让我们继续用一个`DeliveryAddress`实例做一个快速测试:
 
-```
+```java
 // given a delivery address
 DeliveryAddress deliveryAddress = new DeliveryAddress().setForename("Max")
   .setSurname("Powers")

@@ -12,7 +12,7 @@
 
 第一步，让我们添加它的 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -22,7 +22,7 @@
 
 此外，我们将使用一个只有两列的非常简单的表:
 
-```
+```java
 public class JdbcInsertIdIntegrationTest {
 
     private static Connection connection;
@@ -53,7 +53,7 @@ public class JdbcInsertIdIntegrationTest {
 
 **在自动生成之后获取密钥的一种方法是将`[Statement.RETURN_GENERATED_KEYS](https://web.archive.org/web/20220524124950/https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/java/sql/Statement.html#RETURN_GENERATED_KEYS) `传递给`[prepareStatement()](https://web.archive.org/web/20220524124950/https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/java/sql/Connection.html#prepareStatement(java.lang.String,int)) `方法:**
 
-```
+```java
 String QUERY = "insert into persons (name) values (?)";
 try (PreparedStatement statement = connection.prepareStatement(QUERY, Statement.RETURN_GENERATED_KEYS)) {
     statement.setString(1, "Foo");
@@ -68,7 +68,7 @@ try (PreparedStatement statement = connection.prepareStatement(QUERY, Statement.
 
 在准备和执行查询之后，我们可以调用`PreparedStatement `上的`[getGeneratedKeys()](https://web.archive.org/web/20220524124950/https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/java/sql/Statement.html#getGeneratedKeys()) `方法来获得 id:
 
-```
+```java
 try (ResultSet keys = statement.getGeneratedKeys()) {
     assertThat(keys.next()).isTrue();
     assertThat(keys.getLong(1)).isGreaterThanOrEqualTo(1);
@@ -79,7 +79,7 @@ try (ResultSet keys = statement.getGeneratedKeys()) {
 
 此外，也可以对普通的`Statement` s 使用相同的技术:
 
-```
+```java
 try (Statement statement = connection.createStatement()) {
     String query = "insert into persons (name) values ('Foo')";
     int affectedRows = statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
@@ -98,7 +98,7 @@ try (Statement statement = connection.createStatement()) {
 
 事实证明，**我们还可以要求 JDBC 在发出查询**后返回特定的列。为此，我们只需传递一组列名:
 
-```
+```java
 try (PreparedStatement statement = connection.prepareStatement(QUERY, new String[] { "id" })) {
     statement.setString(1, "Foo");
     int affectedRows = statement.executeUpdate();
@@ -110,7 +110,7 @@ try (PreparedStatement statement = connection.prepareStatement(QUERY, new String
 
 如上所示，我们告诉 JDBC 在执行给定查询后返回`id `列的值。类似于前面的例子，我们可以在之后获取`id `:
 
-```
+```java
 try (ResultSet keys = statement.getGeneratedKeys()) {
     assertThat(keys.next()).isTrue();
     assertThat(keys.getLong(1)).isGreaterThanOrEqualTo(1);
@@ -119,7 +119,7 @@ try (ResultSet keys = statement.getGeneratedKeys()) {
 
 我们也可以对简单的`Statement`使用相同的方法:
 
-```
+```java
 try (Statement statement = connection.createStatement()) {
     int affectedRows = statement.executeUpdate("insert into persons (name) values ('Foo')", 
       new String[] { "id" });

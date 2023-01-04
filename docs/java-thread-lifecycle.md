@@ -35,7 +35,7 @@
 
 下面的代码片段显示了一个新创建的处于`NEW`状态的线程:
 
-```
+```java
 Runnable runnable = new NewState();
 Thread t = new Thread(runnable);
 System.out.println(t.getState());
@@ -43,7 +43,7 @@ System.out.println(t.getState());
 
 因为我们还没有开始提到的线程，方法`t.getState()` 打印:
 
-```
+```java
 NEW
 ```
 
@@ -55,7 +55,7 @@ NEW
 
 例如，让我们将`t.start()`方法添加到前面的代码中，并尝试访问它的当前状态:
 
-```
+```java
 Runnable runnable = new NewState();
 Thread t = new Thread(runnable);
 t.start();
@@ -64,7 +64,7 @@ System.out.println(t.getState());
 
 此代码**最有可能**返回如下输出:
 
-```
+```java
 RUNNABLE
 ```
 
@@ -78,7 +78,7 @@ RUNNABLE
 
 让我们试着重现这种状态:
 
-```
+```java
 public class BlockedState {
     public static void main(String[] args) throws InterruptedException {
         Thread t1 = new Thread(new DemoBlockedRunnable());
@@ -119,7 +119,7 @@ class DemoBlockedRunnable implements Runnable {
 
 在这种状态下，我们调用`t2.getState()` 并得到如下输出:
 
-```
+```java
 BLOCKED
 ```
 
@@ -137,7 +137,7 @@ BLOCKED
 
 现在，让我们试着重现这种状态:
 
-```
+```java
 public class WaitingState implements Runnable {
     public static Thread t1;
 
@@ -182,7 +182,7 @@ class DemoWaitingStateRunnable implements Runnable {
 
 如您所料，这里的输出是:
 
-```
+```java
 WAITING
 ```
 
@@ -202,7 +202,7 @@ WAITING
 
 现在，让我们试着快速重现这种状态:
 
-```
+```java
 public class TimedWaitingState {
     public static void main(String[] args) throws InterruptedException {
         DemoTimeWaitingRunnable runnable= new DemoTimeWaitingRunnable();
@@ -231,7 +231,7 @@ class DemoTimeWaitingRunnable implements Runnable {
 
 这里，我们创建并启动了一个线程`t1`，它进入休眠状态，超时时间为 5 秒；输出将是:
 
-```
+```java
 TIMED_WAITING
 ```
 
@@ -243,7 +243,7 @@ TIMED_WAITING
 
 让我们试着在下面的例子中达到这种状态:
 
-```
+```java
 public class TerminatedState implements Runnable {
     public static void main(String[] args) throws InterruptedException {
         Thread t1 = new Thread(new TerminatedState());
@@ -263,13 +263,13 @@ public class TerminatedState implements Runnable {
 
 这里，虽然我们已经启动了线程`t1`，但是下一条语句`Thread.sleep(1000)` 给了`t1`足够的时间来完成，所以这个程序给我们的输出是:
 
-```
+```java
 TERMINATED
 ```
 
 除了线程状态之外，我们还可以检查`[isAlive()](https://web.archive.org/web/20221206113224/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.html#isAlive()) `方法来确定线程是否处于活动状态。例如，如果我们在这个线程上调用`isAlive() `方法:
 
-```
+```java
 Assert.assertFalse(t1.isAlive());
 ```
 

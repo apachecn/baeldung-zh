@@ -16,7 +16,7 @@
 
 **将一个`String `解析成一个`Timestamp`的最简单的方法是它的`valueOf `方法:**
 
-```
+```java
 Timestamp.valueOf("2018-11-12 01:02:03.123456789")
 ```
 
@@ -40,7 +40,7 @@ Timestamp.valueOf("2018-11-12 01:02:03.123456789")
 
 **这意味着我们可以采用任何格式的日期，**我们只需要先[将其转换成`LocalDateTime`](/web/20221126221618/https://www.baeldung.com/java-string-to-date) :
 
-```
+```java
 String pattern = "MMM dd, yyyy HH:mm:ss.SSSSSSSS";
 String timestampAsString = "Nov 12, 2018 13:02:56.12345678";
 DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
@@ -49,7 +49,7 @@ LocalDateTime localDateTime = LocalDateTime.from(formatter.parse(timestampAsStri
 
 然后我们可以使用之前用过的`valueOf`:
 
-```
+```java
 Timestamp timestamp = Timestamp.valueOf(localDateTime);
 assertEquals("2018-11-12 13:02:56.12345678", timestamp.toString());
 ```
@@ -60,13 +60,13 @@ assertEquals("2018-11-12 13:02:56.12345678", timestamp.toString());
 
 要格式化`Timestamp`，我们将面临同样的挑战，因为它的默认格式是专有的 JDBC 时间戳格式:
 
-```
+```java
 assertEquals("2018-11-12 13:02:56.12345678", timestamp.toString());
 ```
 
 但是，同样，使用中间转换，我们可以将结果`String`格式化为不同的日期和时间模式，就像 ISO-8601 标准:
 
-```
+```java
 Timestamp timestamp = Timestamp.valueOf("2018-12-12 01:02:03.123456789");
 DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 

@@ -12,7 +12,7 @@
 
 让我们想象一下，我们正在根据树木是否会在冬天落叶进行分类。我们有两个类，`Evergreen `和`Deciduous,` 都实现了一个`Tree`接口`. `我们有一个简单的排序器，它根据树的名称返回正确的类型:
 
-```
+```java
 Tree sortTree(String name) {
 
     List<String> deciduous = List.of("Beech", "Birch", "Ash", "Whitebeam", "Hornbeam", "Hazel & Willow");
@@ -34,7 +34,7 @@ Tree sortTree(String name) {
 
 如果我们想使用 [JUnit5](/web/20220524035421/https://www.baeldung.com/junit-5) ，**，我们可以通过使用`assertEquals`方法**来检查我们对象的类是否等于我们正在测试的类:
 
-```
+```java
 @Test
 public void sortTreeShouldReturnEvergreen_WhenPineIsPassed() {
     Tree tree = tested.sortTree("Pine");
@@ -46,7 +46,7 @@ public void sortTreeShouldReturnEvergreen_WhenPineIsPassed() {
 
 在使用 [Hamcrest](/web/20220524035421/https://www.baeldung.com/java-junit-hamcrest-guide) 库的时候，**我们可以使用 assertThat 和`instanceOf `方法**:
 
-```
+```java
 @Test
 public void sortTreeShouldReturnEvergreen_WhenPineIsPassed() {
 Tree tree = tested.sortTree("Pine");
@@ -56,7 +56,7 @@ assertThat(tree, instanceOf(Evergreen.class));
 
 当我们用`org.hamcrest.Matchers.isA` `:`导入时，有一个快捷版本可供我们使用
 
-```
+```java
 assertThat(tree, isA(Evergreen.class));
 ```
 
@@ -64,7 +64,7 @@ assertThat(tree, isA(Evergreen.class));
 
 我们也可以使用 [AssertJ 核心](/web/20220524035421/https://www.baeldung.com/introduction-to-assertj)库的`isExactlyInstanceOf`方法:
 
-```
+```java
 @Test
 public void sortTreeShouldReturnEvergreen_WhenPineIsPassed() {
     Tree tree = tested.sortTree("Pine");
@@ -74,7 +74,7 @@ public void sortTreeShouldReturnEvergreen_WhenPineIsPassed() {
 
 完成**相同测试的另一种方法是使用`hasSameClassAs` 方法**:
 
-```
+```java
 @Test
 public void sortTreeShouldReturnDecidious_WhenBirchIsPassed() {
     Tree tree = tested.sortTree("Birch");

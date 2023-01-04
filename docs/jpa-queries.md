@@ -10,7 +10,7 @@
 
 首先，让我们定义将在本文所有示例中使用的`UserEntity`类:
 
-```
+```java
 @Table(name = "users")
 @Entity
 public class UserEntity {
@@ -35,7 +35,7 @@ public class UserEntity {
 
 **A `Query`在语法上类似于 SQL，一般用于执行 CRUD 操作:**
 
-```
+```java
 public UserEntity getUserByIdWithPlainQuery(Long id) {
     Query jpqlQuery = getEntityManager().createQuery("SELECT u FROM UserEntity u WHERE u.id=:id");
     jpqlQuery.setParameter("id", id);
@@ -60,7 +60,7 @@ public UserEntity getUserByIdWithPlainQuery(Long id) {
 
 让我们来看一个`TypedQuery`替代方案，与我们的第一个例子相比:
 
-```
+```java
 public UserEntity getUserByIdWithTypedQuery(Long id) {
     TypedQuery<UserEntity> typedQuery
       = getEntityManager().createQuery("SELECT u FROM UserEntity u WHERE u.id=:id", UserEntity.class);
@@ -85,7 +85,7 @@ JPA 也用另一个叫做`[NamedQuery](/web/20221205231836/https://www.baeldung.
 
 让我们看看如何将一个`NamedQuery`添加到我们的`UserEntity`类中:
 
-```
+```java
 @Table(name = "users")
 @Entity
 @NamedQuery(name = "UserEntity.findByUserId", query = "SELECT u FROM UserEntity u WHERE u.id=:userId")
@@ -103,7 +103,7 @@ public class UserEntity {
 
 使用`NamedQuery`非常简单:
 
-```
+```java
 public UserEntity getUserByIdWithNamedQuery(Long id) {
     Query namedQuery = getEntityManager().createNamedQuery("UserEntity.findByUserId");
     namedQuery.setParameter("userId", id);
@@ -119,7 +119,7 @@ public UserEntity getUserByIdWithNamedQuery(Long id) {
 
 让我们看看如何使用一个`NativeQuery`来产生与我们之前的例子相同的结果:
 
-```
+```java
 public UserEntity getUserByIdWithNativeQuery(Long id) {
     Query nativeQuery
       = getEntityManager().createNativeQuery("SELECT * FROM users WHERE id=:userId", UserEntity.class);
@@ -158,7 +158,7 @@ public UserEntity getUserByIdWithNativeQuery(Long id) {
 
 一旦定义了一个`NamedQuery`，我们可以使用`EntityManager`来引用它:
 
-```
+```java
 entityManager.createNamedQuery(queryName);
 ```
 
@@ -178,7 +178,7 @@ entityManager.createNamedQuery(queryName);
 
 我们可以使用`EntityManager`创建一个`NativeQuery`:
 
-```
+```java
 entityManager.createNativeQuery(sqlStmt);
 ```
 
@@ -199,7 +199,7 @@ entityManager.createNativeQuery(sqlStmt);
 
 **[`Criteria` API 查询](/web/20221205231836/https://www.baeldung.com/hibernate-criteria-queries)是以编程方式构建的类型安全查询——在语法上有点类似于 JPQL 查询:**
 
-```
+```java
 public UserEntity getUserByIdWithCriteriaQuery(Long id) {
     CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
     CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);

@@ -12,7 +12,7 @@
 
 例如，我们可以在一个简单的方法上使用所述注释引入`/save/{id} `端点:
 
-```
+```java
 @PostMapping("/save/{id}")
 @ResponseBody
 public Book save(@RequestBody Book book, @PathVariable int id) {
@@ -44,7 +44,7 @@ public Book save(@RequestBody Book book, @PathVariable int id) {
 
 让我们定义一个普通的 Java 接口，其中我们不仅定义了方法的签名，还定义了它们应该处理的 web 请求的类型:
 
-```
+```java
 @RequestMapping("/default")
 public interface BookOperations {
 
@@ -61,7 +61,7 @@ public interface BookOperations {
 
 注意，我们可能有类级别的注释，也可能有方法级别的注释。现在，我们可以创建一个实现该接口的控制器:
 
-```
+```java
 @RestController
 @RequestMapping("/book")
 public class BookController implements BookOperations {
@@ -82,13 +82,13 @@ public class BookController implements BookOperations {
 
 为了检查控制器现在是否按预期工作，让我们运行应用程序并通过发出相应的请求来点击`getAll()`方法:
 
-```
+```java
 curl http://localhost:8081/book/
 ```
 
 尽管控制器实现了接口，但我们可以通过添加 web 请求注释来进一步微调它。我们可以像对接口那样做:要么在类级别，要么在方法级别。事实上，我们在定义控制器时已经使用了这种可能性:
 
-```
+```java
 @RequestMapping("/book")
 public class BookController implements BookOperations {...}
 ```
@@ -101,7 +101,7 @@ public class BookController implements BookOperations {...}
 
 当我们有一个接口和实现它的各种控制器时，我们可能会遇到一个 web 请求可能被多种方法处理的情况。自然，Spring 会抛出一个异常:
 
-```
+```java
 Caused by: java.lang.IllegalStateException: Ambiguous mapping.
 ```
 

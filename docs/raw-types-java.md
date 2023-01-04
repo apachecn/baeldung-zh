@@ -10,13 +10,13 @@
 
 原始类型是没有类型参数的通用接口或类的名称
 
-```
+```java
 List list = new ArrayList(); // raw type
 ```
 
 而不是:
 
-```
+```java
 List<Integer> listIntgrs = new ArrayList<>(); // parameterized type
 ```
 
@@ -38,7 +38,7 @@ List<Integer> listIntgrs = new ArrayList<>(); // parameterized type
 
 让我们看看`List`接口中方法`get(int index)` 的签名，以便更好地理解这一点:
 
-```
+```java
 /**
  * Returns the element at the specified position in this list.
  *
@@ -60,7 +60,7 @@ E get(int index);
 
 让我们通过创建一些代码来了解这一点，这些代码在将一个`List<String>`传递给一个接受原始类型`List`并向其添加一个`Integer`的方法之前实例化它:
 
-```
+```java
 public void methodA() {
     List<String> parameterizedList = new ArrayList<>();
     parameterizedList.add("Hello Folks");
@@ -76,7 +76,7 @@ public void methodB(List rawList) { // raw type!
 
 由于使用了原始类型，编译器会打印出一条警告:
 
-```
+```java
 Note: RawTypeDemo.java uses unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
 ```
@@ -87,7 +87,7 @@ Note: Recompile with -Xlint:unchecked for details.
 
 让我们修改前面的例子，这样在调用`methodB`之后，`methodA`可以获得`List<String>`的索引位置 1 的元素:
 
-```
+```java
 public void methodA() {
     List<String> parameterizedList = new ArrayList<>();
     parameterizedList.add("Hello Folks");
@@ -102,7 +102,7 @@ public void methodB(List rawList) {
 
 代码被编译(带有相同的警告)并在执行时抛出一个`ClassCastException`。当方法`get(int index)`返回一个`Integer`时就会发生这种情况，该值不能赋给类型为`String`的变量:
 
-```
+```java
 Exception in thread "main" java.lang.ClassCastException: java.lang.Integer cannot be cast to java.lang.String
 ```
 

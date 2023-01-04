@@ -83,7 +83,7 @@ spring framework[被划分为模块](https://web.archive.org/web/20220627175755/
 
 让我们首先将`Employee`定义为一个简单的 JPA 实体:
 
-```
+```java
 @Entity
 public class Employee {
     @Id
@@ -101,7 +101,7 @@ public class Employee {
 
 现在我们必须为我们的实体定义一个 JPA 存储库。这就是 Spring 让它变得非常简单的地方:
 
-```
+```java
 public interface EmployeeRepository 
   extends CrudRepository<Employee, Long> {
     List<Employee> findAll();
@@ -114,7 +114,7 @@ public interface EmployeeRepository
 
 现在我们必须定义一个 web 控制器来路由和处理我们的传入请求:
 
-```
+```java
 @RestController
 public class EmployeeController {
     @Autowired
@@ -137,7 +137,7 @@ public class EmployeeController {
 
 Spring Security 在这一领域大放异彩:
 
-```
+```java
 @EnableWebSecurity
 public class WebSecurityConfig 
   extends WebSecurityConfigurerAdapter {
@@ -166,7 +166,7 @@ public class WebSecurityConfig
 
 让我们看看 Spring 是否能让为 REST 控制器编写单元测试变得更容易:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -198,7 +198,7 @@ public class EmployeeControllerTests {
 
 但是这有什么好玩！ **Spring Boot 配备了嵌入式 Tomcat 服务器**:
 
-```
+```java
 @SpringBootApplication
 public class Application {
     public static void main(String[] args) {

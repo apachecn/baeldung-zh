@@ -20,7 +20,7 @@ OAuth 授权服务器负责对用户进行身份验证，并发布包含用户�
 
 首先，我们需要向我们的`pom.xml`文件添加一些依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -42,14 +42,14 @@ OAuth 授权服务器负责对用户进行身份验证，并发布包含用户�
 
 现在，让我们通过设置`application.yml`文件中的`server.port`属性来配置我们的认证服务器将运行的端口:
 
-```
+```java
 server:
   port: 9000
 ```
 
 之后，我们可以转移到 Spring beans 配置。首先，我们需要一个`@Configuration`类，在其中我们将创建一些特定于 OAuth 的 beans。第一个将是客户服务的存储库。在我们的例子中，我们将有一个使用`RegisteredClient` builder 类创建的客户端:
 
-```
+```java
 @Configuration
 @Import(OAuth2AuthorizationServerConfiguration.class)
 public class AuthorizationServerConfig {
@@ -82,7 +82,7 @@ public class AuthorizationServerConfig {
 
 接下来，让我们配置一个 bean 来应用默认的 OAuth 安全性，并生成一个默认的表单登录页面:
 
-```
+```java
 @Bean
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public SecurityFilterChain authServerSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -93,7 +93,7 @@ public SecurityFilterChain authServerSecurityFilterChain(HttpSecurity http) thro
 
 每个授权服务器需要其令牌的签名密钥，以在安全域之间保持适当的边界。让我们生成一个 2048 字节的 RSA 密钥:
 
-```
+```java
 @Bean
 public JWKSource<SecurityContext> jwkSource() {
     RSAKey rsaKey = generateRsa();
@@ -120,7 +120,7 @@ private static KeyPair generateRsaKey() {
 
 除了签名密钥之外，每个授权服务器还需要有一个唯一的发行者 URL。我们将通过创建`ProviderSettings` bean 将其设置为端口`9000` 上`http://auth-server` 的本地主机别名:
 
-```
+```java
 @Bean
 public ProviderSettings providerSettings() {
     return ProviderSettings.builder()
@@ -133,7 +133,7 @@ public ProviderSettings providerSettings() {
 
 最后，我们将使用一个`@EnableWebSecurity` 带注释的配置类来启用 Spring web 安全模块:
 
-```
+```java
 @EnableWebSecurity
 public class DefaultSecurityConfig {
 
@@ -154,7 +154,7 @@ public class DefaultSecurityConfig {
 
 此外，我们将定义一组用于测试的示例用户。对于这个例子，让我们创建一个只有一个管理员用户的存储库:
 
-```
+```java
 @Bean
 UserDetailsService users() {
     UserDetails user = User.withDefaultPasswordEncoder()
@@ -173,7 +173,7 @@ UserDetailsService users() {
 
 首先，让我们包括所需的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -195,14 +195,14 @@ UserDetailsService users() {
 
 在我们开始实现代码之前，我们应该在`application.yml`文件中配置一些属性。第一个是服务器端口:
 
-```
+```java
 server:
   port: 8090
 ```
 
 接下来，是安全配置的时候了。我们需要为我们的认证服务器设置正确的 URL，包括我们之前在`ProviderSettings` bean 中配置的主机和端口:
 
-```
+```java
 spring:
   security:
     oauth2:
@@ -213,7 +213,7 @@ spring:
 
 现在，我们可以设置我们的 web 安全配置。同样，我们想明确地说，对文章资源的每个请求都应该得到授权，并拥有适当的`articles.read`权限:
 
-```
+```java
 @EnableWebSecurity
 public class ResourceServerConfig {
 
@@ -237,7 +237,7 @@ public class ResourceServerConfig {
 
 最后，我们将创建一个 REST 控制器，它将在`GET /articles`端点下返回一个文章列表:
 
-```
+```java
 @RestController
 public class ArticlesController {
 
@@ -256,7 +256,7 @@ public class ArticlesController {
 
 首先，让我们包括所需的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -288,7 +288,7 @@ public class ArticlesController {
 
 正如我们前面所做的，我们将定义一些用于身份验证的配置属性:
 
-```
+```java
 server:
   port: 8080
 
@@ -320,7 +320,7 @@ spring:
 
 现在，让我们创建一个`WebClient`实例来执行对资源服务器的 HTTP 请求。我们将使用标准实现，只增加一个 OAuth 授权过滤器:
 
-```
+```java
 @Bean
 WebClient webClient(OAuth2AuthorizedClientManager authorizedClientManager) {
     ServletOAuth2AuthorizedClientExchangeFilterFunction oauth2Client =
@@ -333,7 +333,7 @@ WebClient webClient(OAuth2AuthorizedClientManager authorizedClientManager) {
 
 `WebClient`需要一个`OAuth2AuthorizedClientManager`作为依赖项。让我们创建一个默认实现:
 
-```
+```java
 @Bean
 OAuth2AuthorizedClientManager authorizedClientManager(
         ClientRegistrationRepository clientRegistrationRepository,
@@ -354,7 +354,7 @@ OAuth2AuthorizedClientManager authorizedClientManager(
 
 最后，我们将配置 web 安全性:
 
-```
+```java
 @EnableWebSecurity
 public class SecurityConfig {
 
@@ -378,7 +378,7 @@ public class SecurityConfig {
 
 最后，我们可以创建数据访问控制器。我们将使用之前配置的`WebClient`向我们的资源服务器发送一个 HTTP 请求:
 
-```
+```java
 @RestController
 public class ArticlesController {
 

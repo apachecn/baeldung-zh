@@ -20,7 +20,7 @@ Docker 标签帮助维护构建版本，以将映像推送到 Docker Hub **。Do
 
 在我们继续之前，让我们首先创建一个示例 docker 文件来演示标记:
 
-```
+```java
 FROM centos:7
 RUN yum -y install wget 
 RUN yum -y install unzip 
@@ -36,7 +36,7 @@ RUN export JAVA_HOME
 
 在 Docker 中，我们可以在构建时标记图像。为了说明这一点，我们来看看标记图像的命令:
 
-```
+```java
 $ docker build -t baeldung-java:5 .
 Sending build context to Docker daemon  2.048kB
 Step 1/2 : FROM centos:7
@@ -52,7 +52,7 @@ Successfully tagged baeldung-java:5
 
 我们还可以使用以下语法提供带有用户名和图像名称的标记:
 
-```
+```java
 $ docker build -t baeldung/baeldung-java:5 .
 Sending build context to Docker daemon  2.048kB
 Step 1/2 : FROM centos:7
@@ -70,7 +70,7 @@ Successfully tagged baeldung/baeldung-java:5
 
 为了进行演示，我们来看看上面 docker 文件的命令:
 
-```
+```java
 $ docker build -t baeldung-java:5 -t baeldung-java:6 .
 Sending build context to Docker daemon  2.048kB
 Step 1/2 : FROM centos:7
@@ -87,7 +87,7 @@ Successfully tagged baeldung-java:6
 
 我们还可以不使用任何标签来构建 Docker 图像。但是为了跟踪图像，我们应该始终提供一个带有图像名称的标签。让我们来看看构建没有标签的图像的命令:
 
-```
+```java
 $ docker build -t baeldung-java .
 Sending build context to Docker daemon  2.048kB
 Step 1/2 : FROM centos:7
@@ -107,7 +107,7 @@ Docker 总是使用最新的标签指向最新的稳定版本。旧版本甚至�
 
 Docker 图像名称的一般格式如下:
 
-```
+```java
 <user-name>/<image-name>:<tag-name>
 ```
 
@@ -115,19 +115,19 @@ Docker 图像名称的一般格式如下:
 
 让我们看看使用图像名称标记图像的命令:
 
-```
+```java
 $ docker tag baeldung-java:6 baeldung-java:8 
 ```
 
 使用`imageId`标记图像的命令如下:
 
-```
+```java
 $ docker tag 46ee47a7422d baeldung-java:9 
 ```
 
 让我们来看看到目前为止创建的所有图像:
 
-```
+```java
 $ docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 baeldung-java       5                   46ee47a7422d        13 minutes ago      370MB
@@ -149,13 +149,13 @@ Docker 标签在创建图像或从 Docker Hub 存储库中提取图像时非常�
 
 让我们研究一个带有特定标记的命令:
 
-```
+```java
 $ docker pull centos:7
 ```
 
 `docker pull`没有任何标记的命令:
 
-```
+```java
 $ docker pull centos
 ```
 

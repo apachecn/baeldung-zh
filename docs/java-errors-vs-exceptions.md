@@ -20,7 +20,7 @@
 
 现在让我们看一个例子:
 
-```
+```java
 public class ErrorExample {
 
     public static void main(String[] args) {
@@ -37,7 +37,7 @@ public class ErrorExample {
 
 如果我们运行上面的代码，我们会得到以下结果:
 
-```
+```java
 overflow...
 overflow...
 overflow...
@@ -68,7 +68,7 @@ Exception in thread "main" java.lang.StackOverflowError
 
 让我们看一个例子:
 
-```
+```java
 public class RuntimeExceptionExample {
     public static void main(String[] args) {
         int[] arr = new int[20];
@@ -82,7 +82,7 @@ public class RuntimeExceptionExample {
 
 运行上述代码后，我们得到以下结果:
 
-```
+```java
 Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 20
   at com.baeldung.exception.exceptions_vs_errors.RuntimeExceptionExample.main(RuntimeExceptionExample.java:7)
 ```
@@ -95,7 +95,7 @@ Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 20
 
 不是`RuntimeException`子类的其他异常是检查异常。如果一旦方法被执行并且传播到方法范围之外，它们就可以被抛出，那么需要在方法签名中使用`throws`关键字来声明它们:
 
-```
+```java
 public class CheckedExceptionExcample {
     public static void main(String[] args) {
         try (FileInputStream fis = new FileInputStream(new File("test.txt"))) {
@@ -109,7 +109,7 @@ public class CheckedExceptionExcample {
 
 如果我们运行上面的代码，我们会得到以下结果:
 
-```
+```java
 java.io.FileNotFoundException: test.txt (No such file or directory)
   at java.io.FileInputStream.open0(Native Method)
   at java.io.FileInputStream.open(FileInputStream.java:195)

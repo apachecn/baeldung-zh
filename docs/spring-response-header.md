@@ -18,7 +18,7 @@
 
 我们只需将`HttpServletResponse`对象作为参数添加到我们的 REST 端点，然后使用`addHeader()`方法:
 
-```
+```java
 @GetMapping("/http-servlet-response")
 public String usingHttpServletResponse(HttpServletResponse response) {
     response.addHeader("Baeldung-Example-Header", "Value-HttpServletResponse");
@@ -32,7 +32,7 @@ public String usingHttpServletResponse(HttpServletResponse response) {
 
 在这种情况下，让我们使用由`ResponseEntity`类提供的`BodyBuilder`:
 
-```
+```java
 @GetMapping("/response-entity-builder-with-http-headers")
 public ResponseEntity<String> usingResponseEntityBuilderAndHttpHeaders() {
     HttpHeaders responseHeaders = new HttpHeaders();
@@ -57,7 +57,7 @@ public ResponseEntity<String> usingResponseEntityBuilderAndHttpHeaders() {
 
 更好的方法是通过在我们的服务中配置一个`Filter`:
 
-```
+```java
 @WebFilter("/filter-response-header/*")
 public class AddResponseHeaderFilter implements Filter {
 
@@ -86,7 +86,7 @@ public class AddResponseHeaderFilter implements Filter {
 
 正如我们在本文中指出的[，为了让我们的`Filter`被 Spring 发现，我们需要向我们的 Spring 应用程序类添加`@ServletComponentScan `注释:](/web/20220602092821/https://www.baeldung.com/spring-servletcomponentscan)
 
-```
+```java
 @ServletComponentScan
 @SpringBootApplication
 public class ResponseHeadersApplication {
@@ -109,7 +109,7 @@ public class ResponseHeadersApplication {
 
 这种方法与`HttpServletResponse`的对应方法非常相似:
 
-```
+```java
 @GetMapping("/server-http-response")
 public Mono<String> usingServerHttpResponse(ServerHttpResponse response) {
     response.getHeaders().add("Baeldung-Example-Header", "Value-ServerHttpResponse");
@@ -121,7 +121,7 @@ public Mono<String> usingServerHttpResponse(ServerHttpResponse response) {
 
 我们可以像对待非反应性端点一样使用`ResponseEntity`类:
 
-```
+```java
 @GetMapping("/response-entity")
 public Mono<ResponseEntity<String>> usingResponseEntityBuilder() {
     String responseHeaderKey = "Baeldung-Example-Header";
@@ -140,7 +140,7 @@ public Mono<ResponseEntity<String>> usingResponseEntityBuilder() {
 
 如果我们想让**在`HandlerFunction`上设置一个标题，那么我们需要得到`ServerResponse`** 接口:
 
-```
+```java
 public Mono<ServerResponse> useHandler(final ServerRequest request) {
      return ServerResponse.ok()
         .header("Baeldung-Example-Header", "Value-Handler")
@@ -152,7 +152,7 @@ public Mono<ServerResponse> useHandler(final ServerRequest request) {
 
 最后， **Spring 5 提供了一个`WebFilter`接口来为服务获取的所有响应**设置一个头:
 
-```
+```java
 @Component
 public class AddResponseHeaderWebFilter implements WebFilter {
 

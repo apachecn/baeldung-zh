@@ -18,7 +18,7 @@
 
 让我们在测试函数中注入一个`TestInfo`对象:
 
-```
+```java
 @Test
 void givenNumbers_whenOddCheck_thenVerify(TestInfo testInfo) {
     System.out.println("displayName = " + testInfo.getDisplayName());
@@ -29,7 +29,7 @@ void givenNumbers_whenOddCheck_thenVerify(TestInfo testInfo) {
 
 这里我们使用了接口`TestInfo` 的 **`getDisplayName` 方法来显示测试**的名称。当我们运行测试时，我们得到测试名:
 
-```
+```java
 displayName = givenNumbers_whenOddCheck_thenVerify(TestInfo)
 ```
 
@@ -37,7 +37,7 @@ displayName = givenNumbers_whenOddCheck_thenVerify(TestInfo)
 
 让我们用一个[参数化测试](/web/20220524050301/https://www.baeldung.com/parameterized-tests-junit-5)来尝试一下。这里我们将使用`@ParameterizedTest` 注释的`name`字段向 JUnit 描述如何为我们生成测试名称:
 
-```
+```java
 private TestInfo testInfo;
 
 @BeforeEach
@@ -57,7 +57,7 @@ void givenNumbers_whenOddCheck_thenVerify(int number) {
 
 当我们运行测试时，我们得到测试名称:
 
-```
+```java
 displayName = givenNumbers_whenOddCheck_thenVerify5
 displayName = givenNumbers_whenOddCheck_thenVerify-3
 displayName = givenNumbers_whenOddCheck_thenVerify3
@@ -73,7 +73,7 @@ displayName = givenNumbers_whenOddCheck_thenVerify15
 
 让我们考虑一个单独的测试:
 
-```
+```java
 @Rule
 public TestName name = new TestName();
 
@@ -89,7 +89,7 @@ public void givenString_whenSort_thenVerifySortForString() {
 
 让我们进行测试:
 
-```
+```java
 displayName = givenString_whenSort_thenVerifySortForString
 ```
 
@@ -97,7 +97,7 @@ displayName = givenString_whenSort_thenVerifySortForString
 
 现在让我们使用相同的方法来显示为参数化测试生成的测试名称。首先，我们需要用特殊的测试运行程序来注释测试:
 
-```
+```java
 @RunWith(Parameterized.class)
 public class JUnit4ParameterizedTestNameUnitTest {
 }
@@ -105,12 +105,12 @@ public class JUnit4ParameterizedTestNameUnitTest {
 
 然后，我们可以使用`TestName` 规则和字段以及构造函数来实现测试，以分配当前测试的参数值:
 
-```
+```java
 @Rule
 public TestName name = new TestName();
 ```
 
-```
+```java
 private String input;
 private String expected;  public JUnit4ParameterizedTestNameUnitTest(String input, String expected) {
     this.input = input;
@@ -134,7 +134,7 @@ public void givenString_whenSort_thenVerifySortForString() {
 
 当我们运行测试时，`TestName`规则被赋予了每个测试的名称供我们查看:
 
-```
+```java
 displayName = givenString_whenSort_thenVerifySortForString[abc]
 displayName = givenString_whenSort_thenVerifySortForString[cba]
 displayName = givenString_whenSort_thenVerifySortForString[onm]

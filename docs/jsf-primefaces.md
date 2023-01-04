@@ -30,7 +30,7 @@ Java Server Faces 是一个面向组件的框架，用于为 Java web 应用程�
 
 Primefaces 有一个轻量级的配置，只有一个 jar，所以首先，让我们将依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.primefaces</groupId>
     <artifactId>primefaces</artifactId>
@@ -44,7 +44,7 @@ Primefaces 有一个轻量级的配置，只有一个 jar，所以首先，让�
 
 接下来，让我们为组件创建 bean 类:
 
-```
+```java
 @ManagedBean(name = "helloPFBean")
 public class HelloPFBean {
 }
@@ -56,7 +56,7 @@ public class HelloPFBean {
 
 最后，让我们在。`xhtml`文件:
 
-```
+```java
 <html xmlns:p="http://primefaces.org/ui"> 
 ```
 
@@ -64,7 +64,7 @@ public class HelloPFBean {
 
 要呈现页面，请启动服务器并导航到:
 
-```
+```java
 http://localhost:8080/jsf/pf_intro.xhtml
 ```
 
@@ -72,7 +72,7 @@ http://localhost:8080/jsf/pf_intro.xhtml
 
 让我们用`PanelGrid`作为标准 JSF `panelGrid` `:`的**扩展**
 
-```
+```java
 <p:panelGrid columns="2">
     <h:outputText value="#{helloPFBean.firstName}"/>
     <h:outputText value="#{helloPFBean.lastName}" />
@@ -83,14 +83,14 @@ http://localhost:8080/jsf/pf_intro.xhtml
 
 每个`outputText `中声明的值对应于我们的`@ManagedBean`中声明的`firstName `和`lastName `属性:
 
-```
+```java
 private String firstName;
 private String lastName; 
 ```
 
 让我们看看第一个简单的组件:
 
-```
+```java
 <img class=" wp-image-32802 alignnone" style="font-family: Georgia, 'Times New Roman', 'Bitstream Charter', Times, serif; white-space: normal;" src="https://www.baeldung.com/wp-content/uploads/2018/04/panelGridPF-300x68.png" alt="" width="256" height="58" />
 ```
 
@@ -98,7 +98,7 @@ private String lastName;
 
 我们可以**使用`selectOneRadio `组件来提供单选按钮功能**:
 
-```
+```java
 <h:panelGrid columns="2">
     <p:outputLabel for="jsfCompSuite" value="Component Suite" />
     <p:selectOneRadio id="jsfCompSuite" value="#{helloPFBean.componentSuite}">
@@ -110,7 +110,7 @@ private String lastName;
 
 我们需要在后台 bean 中声明 value 变量来保存单选按钮的值:
 
-```
+```java
 private String componentSuite; 
 ```
 
@@ -122,7 +122,7 @@ private String componentSuite;
 
 接下来，让**使用`dataTable`组件在表格布局**中显示数据:
 
-```
+```java
 <p:dataTable var="technology" value="#{helloPFBean.technologies}">
     <p:column headerText="Name">
         <h:outputText value="#{technology.name}" />
@@ -136,7 +136,7 @@ private String componentSuite;
 
 类似地，我们需要提供一个 Bean 属性来保存表中的数据:
 
-```
+```java
 private List<Technology> technologies; 
 ```
 
@@ -150,7 +150,7 @@ private List<Technology> technologies;
 
 例如，让我们使用此组件来应用模糊事件:
 
-```
+```java
 <h:panelGrid columns="3">
     <h:outputText value="Blur event " />
     <p:inputText id="inputTextId" value="#{helloPFBean.inputText}}">
@@ -164,14 +164,14 @@ private List<Technology> technologies;
 
 相应地，我们需要在 bean 中提供属性:
 
-```
+```java
 private String inputText;
 private String outputText; 
 ```
 
 此外，我们还需要在 bean 中为 AJAX 模糊事件提供一个监听器方法:
 
-```
+```java
 public void onBlurEvent() {
     outputText = inputText.toUpperCase();
 }
@@ -187,7 +187,7 @@ public void onBlurEvent() {
 
 例如:
 
-```
+```java
 <p:commandButton value="Open Dialog" 
   icon="ui-icon-note" 
   onclick="PF('exDialog').show();">
@@ -204,7 +204,7 @@ public void onBlurEvent() {
 
 让我们也使用上一个示例中的按钮来单击打开对话框:
 
-```
+```java
 <p:dialog header="Example dialog" widgetVar="exDialog" minHeight="40">
     <h:outputText value="Hello Baeldung!" />
 </p:dialog>
@@ -224,7 +224,7 @@ Primefaces Mobile (PFM) **提供了一个 UI 工具包来为移动设备创建 P
 
 首先，我们需要在我们的`faces-config.xml`中启用移动导航支持:
 
-```
+```java
 <navigation-handler>
     org.primefaces.mobile.application.MobileNavigationHandler
 </navigation-handler>
@@ -234,7 +234,7 @@ Primefaces Mobile (PFM) **提供了一个 UI 工具包来为移动设备创建 P
 
 然后，为了使用 PFM 组件，我们需要在我们的`.xhtml`文件中包含 PFM 名称空间:
 
-```
+```java
 xmlns:pm="http://primefaces.org/mobile"
 ```
 
@@ -246,13 +246,13 @@ xmlns:pm="http://primefaces.org/mobile"
 
 如果应用程序中只有一个 PFM 页面，我们可以在页面中定义一个`RenderKit`:
 
-```
+```java
 <f:view renderKitId="PRIMEFACES_MOBILE" />
 ```
 
 对于完整的 PFM 应用程序，我们可以在`faces-config.xml`内的应用程序范围中定义我们的`RenderKit`:
 
-```
+```java
 <default-render-kit-id>PRIMEFACES_MOBILE</default-render-kit-id> 
 ```
 
@@ -260,7 +260,7 @@ xmlns:pm="http://primefaces.org/mobile"
 
 现在，让我们以 page 佩奇为例:
 
-```
+```java
 <pm:page id="enter">
     <pm:header>
         <p:outputLabel value="Introduction to PFM"></p:outputLabel>
@@ -289,7 +289,7 @@ xmlns:pm="http://primefaces.org/mobile"
 
 此外，我们使用我们的后备 bean 进行用户输入检查和导航:
 
-```
+```java
 public String go() {
     if(this.magicWord != null 
       && this.magicWord.toUpperCase().equals("BAELDUNG")) {
@@ -302,7 +302,7 @@ public String go() {
 
 如果单词正确，我们将进入下一页:
 
-```
+```java
 <pm:page id="success">
     <pm:content>
         <p:outputLabel value="Correct!">
@@ -320,7 +320,7 @@ public String go() {
 
 如果单词不正确，我们将进入下一页:
 
-```
+```java
 <pm:page id="failure">
     <pm:content>
         <p:outputLabel value="That is not the magic word">

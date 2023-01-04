@@ -32,7 +32,7 @@ Java 库试图扩展 Java 集合框架。它提供了**特定类型的映射、�
 
 在我们的`pom.xml `文件中，我们需要以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>it.unimi.dsi</groupId>
     <artifactId>fastutil</artifactId>
@@ -54,7 +54,7 @@ Java 库试图扩展 Java 集合框架。它提供了**特定类型的映射、�
 
 或者对于 Gradle 用户:
 
-```
+```java
 testCompile group: 'org.openjdk.jmh', name: 'jmh-core', version: '1.19'
 testCompile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: '1.19'
 compile group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.2'
@@ -72,20 +72,20 @@ compile group: 'it.unimi.dsi', name: 'fastutil', version: '8.2.2'
 
 为此，`FastUtils `提供了一个`[Double2DoubleMap](https://web.archive.org/web/20221205144339/http://fastutil.di.unimi.it/docs/it/unimi/dsi/fastutil/doubles/Double2DoubleMap.html) `接口和一个`[Double2DoubleOpenHashMap](https://web.archive.org/web/20221205144339/http://fastutil.di.unimi.it/docs/it/unimi/dsi/fastutil/doubles/Double2DoubleOpenHashMap.html) `实现:
 
-```
+```java
 Double2DoubleMap d2dMap = new Double2DoubleOpenHashMap();
 ```
 
 现在我们已经实例化了我们的类，我们可以简单地用 Java Collections API 中的任何`Map `填充数据:
 
-```
+```java
 d2dMap.put(2.0, 5.5);
 d2dMap.put(3.0, 6.6);
 ```
 
 最后，我们可以检查数据是否已正确添加:
 
-```
+```java
 assertEquals(5.5, d2dMap.get(2.0));
 ```
 
@@ -95,7 +95,7 @@ assertEquals(5.5, d2dMap.get(2.0));
 
 首先，让我们看看如何实现`IntOpenHashSet:`
 
-```
+```java
 @Param({"100", "1000", "10000", "100000"})
 public int setSize;
 
@@ -115,7 +115,7 @@ public IntSet givenFastUtilsIntSetWithInitialSizeSet_whenPopulated_checkTimeTake
 
 接下来，**让我们使用 Java 集合实现做同样的事情:**
 
-```
+```java
 @Benchmark
 public Set<Integer> givenCollectionsHashSetWithInitialSizeSet_whenPopulated_checkTimeTaken() {
     Set<Integer> intSet = new HashSet<>(setSize);
@@ -128,7 +128,7 @@ public Set<Integer> givenCollectionsHashSetWithInitialSizeSet_whenPopulated_chec
 
 最后，让我们运行基准测试并比较这两种实现:
 
-```
+```java
 Benchmark                                     (setSize)  Mode  Cnt     Score   Units
 givenCollectionsHashSetWithInitialSizeSet...        100  avgt    2     1.460   us/op
 givenCollectionsHashSetWithInitialSizeSet...       1000  avgt    2    12.740   us/op
@@ -152,7 +152,7 @@ givenFastUtilsIntSetWithInitialSizeSet...        100000  avgt    2   896.467   u
 
 首先，我们将从初始化一维数组开始，并使用`IntBigArray's wrap `方法将其转换为二维数组:
 
-```
+```java
 int[] oneDArray = new int[] { 2, 1, 5, 2, 1, 7 };
 int[][] twoDArray = IntBigArrays.wrap(oneDArray.clone());
 ```
@@ -161,14 +161,14 @@ int[][] twoDArray = IntBigArrays.wrap(oneDArray.clone());
 
 现在，就像我们处理`List `或`Map`一样，我们可以使用`get `方法来访问元素:
 
-```
+```java
 int firstIndex = IntBigArrays.get(twoDArray, 0);
 int lastIndex = IntBigArrays.get(twoDArray, IntBigArrays.length(twoDArray)-1);
 ```
 
 最后，让我们添加一些检查来确保我们的`IntBigArray `返回正确的值:
 
-```
+```java
 assertEquals(2, firstIndex);
 assertEquals(7, lastIndex);
 ```

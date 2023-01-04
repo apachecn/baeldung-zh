@@ -30,25 +30,25 @@ Java 进程或 JVM 的内存在[堆、栈](/web/20221128054842/https://www.baeld
 
 我们可以使用`-Xns`参数覆盖 nursery 大小限制。因为 nursery 是堆的一部分，所以它的值不应该大于`-Xmx`值:
 
-```
+```java
 java -Xns:10m MyApplication
 ```
 
 我们还可以使用–`XXkeepAreaRatio`参数覆盖保留区域限制的默认值。例如，我们可以将其设置为 10 %:
 
-```
+```java
 java -XXkeepAreaRatio:10 MyApplication
 ```
 
 最后，下面是我们如何在 Linux 上检查堆大小:
 
-```
+```java
 java -XX:+PrintFlagsFinal -version | grep HeapSize
 ```
 
 在 Windows 上检查堆大小的相同命令将是:
 
-```
+```java
 java -XX:+PrintFlagsFinal -version | findstr HeapSize
 ```
 
@@ -58,19 +58,19 @@ java -XX:+PrintFlagsFinal -version | findstr HeapSize
 
 因此，我们可以使用`-Xss`参数来定义线程堆栈的大小。例如，我们可以将其分配到 512 kB:
 
-```
+```java
 java -Xss:512k MyApplication
 ```
 
 然后，我们可以检查 Linux 上的线程堆栈大小:
 
-```
+```java
 java -XX:+PrintFlagsFinal -version | grep ThreadStackSize
 ```
 
 或者在 Windows 机器上做同样的事情:
 
-```
+```java
 java -XX:+PrintFlagsFinal -version | findstr ThreadStackSize
 ```
 

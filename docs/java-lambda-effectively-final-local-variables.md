@@ -22,7 +22,7 @@ Lambda 表达式可以使用外部作用域中定义的变量。我们将这些�
 
 简单来说，**这个不会编译:**
 
-```
+```java
 Supplier<Integer> incrementer(int start) {
   return () -> start++;
 }
@@ -40,7 +40,7 @@ Supplier<Integer> incrementer(int start) {
 
 我们在这里应该做什么:
 
-```
+```java
 public void localVariableMultithreading() {
     boolean run = true;
     executor.execute(() -> {
@@ -63,7 +63,7 @@ public void localVariableMultithreading() {
 
 我们可以通过将我们的`start`变量转换成实例变量来编译我们的第一个例子:
 
-```
+```java
 private int start = 0;
 
 Supplier<Integer> incrementer() {
@@ -77,7 +77,7 @@ Supplier<Integer> incrementer() {
 
 我们可以通过同样的方法修复第二个示例:
 
-```
+```java
 private volatile boolean run = true;
 
 public void instanceVariableMultithreading() {
@@ -101,7 +101,7 @@ public void instanceVariableMultithreading() {
 
 让我们看一个在单线程应用程序中使用数组存储变量的示例:
 
-```
+```java
 public int workaroundSingleThread() {
     int[] holder = new int[] { 2 };
     IntStream sums = IntStream
@@ -118,7 +118,7 @@ public int workaroundSingleThread() {
 
 让我们更进一步，在另一个线程中执行 sum:
 
-```
+```java
 public void workaroundMultithreading() {
     int[] holder = new int[] { 2 };
     Runnable runnable = () -> System.out.println(IntStream

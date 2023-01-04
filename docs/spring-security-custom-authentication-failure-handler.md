@@ -27,7 +27,7 @@
 
 如果是这样，我们可以通过实现 **[`AuthenticationFailureHandler`](https://web.archive.org/web/20220902174603/https://docs.spring.io/spring-security/site/docs/4.2.6.RELEASE/apidocs/org/springframework/security/web/authentication/AuthenticationFailureHandler.html)** 接口来创建我们自己的组件并提供我们想要的自定义行为:
 
-```
+```java
 public class CustomAuthenticationFailureHandler 
   implements AuthenticationFailureHandler {
 
@@ -68,7 +68,7 @@ public class CustomAuthenticationFailureHandler
 
 既然我们已经创建了自定义的`AuthenticationFailureHandler`，让我们配置我们的应用程序并覆盖默认的`Spring's`处理程序:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {

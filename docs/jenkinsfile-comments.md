@@ -18,7 +18,7 @@
 
 让我们使用单行注释来注释掉一个基本的管道定义:
 
-```
+```java
 //pipeline {
 //    agent any
 //    stages {
@@ -39,7 +39,7 @@
 
 在本例中，我们将使用块注释来注释掉管道定义:
 
-```
+```java
 /*
 pipeline {
     agent any
@@ -58,7 +58,7 @@ pipeline {
 
 在 shell `(sh) `部分中，我们将**使用 shell 注释字符 hash `(#)`** 进行注释:
 
-```
+```java
 pipeline {
     agent any
     stages {

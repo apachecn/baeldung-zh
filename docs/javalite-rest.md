@@ -14,7 +14,7 @@
 
 那么，让我们开始添加我们需要的第一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.javalite</groupId>
     <artifactId>activeweb</artifactId>
@@ -26,7 +26,7 @@ ActiveWeb 工件包含了 ActiveJDBC，所以不需要单独添加。请注意�
 
 我们需要的第二个依赖项是数据库连接器。对于本例，我们将使用 MySQL，因此需要添加:
 
-```
+```java
 <dependency>
     <groupId>mysql</groupId>
     <artifactId>mysql-connector-java</artifactId>
@@ -38,7 +38,7 @@ ActiveWeb 工件包含了 ActiveJDBC，所以不需要单独添加。请注意�
 
 我们必须添加的最后一个依赖项是 JavaLite 特有的:
 
-```
+```java
 <plugin>
     <groupId>org.javalite</groupId>
     <artifactId>activejdbc-instrumentation</artifactId>
@@ -66,13 +66,13 @@ ActiveWeb 工件包含了 ActiveJDBC，所以不需要单独添加。请注意�
 
 让我们从**创建一个`Product`类开始，它将是我们的主要实体**:
 
-```
+```java
 public class Product {}
 ```
 
 并且，让我们也为它创建相应的表**:**
 
-```
+```java
 CREATE TABLE PRODUCTS (
     id int(11) DEFAULT NULL auto_increment PRIMARY KEY,
     name VARCHAR(128)
@@ -81,7 +81,7 @@ CREATE TABLE PRODUCTS (
 
 最后，我们可以**修改我们的`Product` 类来进行映射**:
 
-```
+```java
 public class Product extends Model {}
 ```
 
@@ -93,7 +93,7 @@ public class Product extends Model {}
 
 运行检测之后，我们将能够做如下事情:
 
-```
+```java
 Product p = new Product();
 p.set("name","Bread");
 p.saveIt();
@@ -101,13 +101,13 @@ p.saveIt();
 
 或者:
 
-```
+```java
 List<Product> products = Product.findAll();
 ```
 
 这就是`activejdbc-instrumentation`插件的用武之地。由于我们的 pom 中已经有了依赖关系，我们应该看到在构建过程中被插装的类:
 
-```
+```java
 ...
 [INFO] --- activejdbc-instrumentation:1.4.11:instrument (default) @ javalite ---
 **************************** START INSTRUMENTATION ****************************
@@ -123,7 +123,7 @@ Instrumented class: .../tutorials/java-lite/target/classes/app/models/Product.cl
 
 最后，为了测试我们的映射，我们将遵循三个简单的步骤:打开到数据库的连接，保存新产品并检索它:
 
-```
+```java
 @Test
 public void givenSavedProduct_WhenFindFirst_ThenSavedProductIsReturned() {
 
@@ -155,7 +155,7 @@ public void givenSavedProduct_WhenFindFirst_ThenSavedProductIsReturned() {
 
 让我们创建我们的`ProductsController`:
 
-```
+```java
 @RESTful
 public class ProductsController extends AppController {
 
@@ -168,7 +168,7 @@ public class ProductsController extends AppController {
 
 通过这种实现，ActiveWeb 将自动将`index()` 方法映射到以下 URI:
 
-```
+```java
 http://<host>:<port>/products
 ```
 
@@ -183,7 +183,7 @@ http://<host>:<port>/products
 
 如果我们将这组方法添加到我们的`ProductsController`:
 
-```
+```java
 @RESTful
 public class ProductsController extends AppController {
 
@@ -215,7 +215,7 @@ public class ProductsController extends AppController {
 
 ActiveWeb 主要基于约定，项目结构就是一个例子。 **ActiveWeb 项目需要遵循预定义的包布局**:
 
-```
+```java
 src
  |----main
        |----java.app
@@ -232,7 +232,7 @@ src
 
 在这个包中，我们将创建三个类:
 
-```
+```java
 public class DbConfig extends AbstractDBConfig {
     @Override
     public void init(AppContext appContext) {
@@ -243,7 +243,7 @@ public class DbConfig extends AbstractDBConfig {
 
 **该类使用项目根目录中的属性文件配置数据库连接**，该文件包含所需的参数:
 
-```
+```java
 development.driver=com.mysql.jdbc.Driver
 development.username=user
 development.password=password
@@ -254,7 +254,7 @@ development.url=jdbc:mysql://localhost/dbname
 
 我们需要包含在`app.config` 包中的第二个类是:
 
-```
+```java
 public class AppControllerConfig extends AbstractControllerConfig {
 
     @Override
@@ -268,7 +268,7 @@ public class AppControllerConfig extends AbstractControllerConfig {
 
 第三个类**将** **配置我们应用的上下文**:
 
-```
+```java
 public class AppBootstrap extends Bootstrap {
     public void init(AppContext context) {}
 }
@@ -276,7 +276,7 @@ public class AppBootstrap extends Bootstrap {
 
 创建完三个类之后，关于配置的最后一件事是**在`webapp/WEB-INF`目录下创建我们的`web.xml`文件**:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns=...>
 
@@ -307,7 +307,7 @@ public class AppBootstrap extends Bootstrap {
 
 有了我们的`Product` 类提供的类似 DAO 的功能，**添加基本的 CRUD 功能**非常简单:
 
-```
+```java
 @RESTful
 public class ProductsController extends AppController {
 
@@ -358,7 +358,7 @@ public class ProductsController extends AppController {
 
 在该目录中，我们将视图放在一个名为`products`的文件夹中(与我们的控制器相同)。让我们创建第一个名为`_product.ftl`的模板:
 
-```
+```java
 {
     "id" : ${product.id},
     "name" : "${product.name}"
@@ -367,7 +367,7 @@ public class ProductsController extends AppController {
 
 很明显，这是一个 JSON 响应。当然，这只适用于一个产品，所以让我们继续创建另一个名为`index.ftl`的模板:
 
-```
+```java
 [<@render partial="product" collection=products/>]
 ```
 
@@ -375,7 +375,7 @@ public class ProductsController extends AppController {
 
 最后，**我们需要将来自控制器的结果绑定到相应的视图**:
 
-```
+```java
 @RESTful
 public class ProductsController extends AppController {
 
@@ -402,7 +402,7 @@ public class ProductsController extends AppController {
 
 我们还可以创建一个视图`message.ftl`:
 
-```
+```java
 {
     "message" : "${message}",
     "code" : ${code}
@@ -411,14 +411,14 @@ public class ProductsController extends AppController {
 
 然后调用它形成我们的任何一个`ProductsController`的方法:
 
-```
+```java
 view("message", "There was an error.", "code", 200);
 render("message");
 ```
 
 现在让我们看看最后的`ProductsController`:
 
-```
+```java
 @RESTful
 public class ProductsController extends AppController {
 
@@ -496,7 +496,7 @@ public class ProductsController extends AppController {
 
 我们将使用 Jetty 插件:
 
-```
+```java
 <plugin>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-maven-plugin</artifactId>
@@ -508,13 +508,13 @@ public class ProductsController extends AppController {
 
 我们准备好了，**我们可以运行我们的应用程序了**:
 
-```
+```java
 mvn jetty:run
 ```
 
 让我们创建几个产品:
 
-```
+```java
 $ curl -X POST http://localhost:8080/products 
   -H 'content-type: application/json' 
   -d '{"name":"Water"}'
@@ -524,7 +524,7 @@ $ curl -X POST http://localhost:8080/products
 }
 ```
 
-```
+```java
 $ curl -X POST http://localhost:8080/products 
   -H 'content-type: application/json' 
   -d '{"name":"Bread"}'
@@ -536,7 +536,7 @@ $ curl -X POST http://localhost:8080/products
 
 ..阅读它们:
 
-```
+```java
 $ curl -X GET http://localhost:8080/products
 [
     {
@@ -552,7 +552,7 @@ $ curl -X GET http://localhost:8080/products
 
 ..更新其中一个:
 
-```
+```java
 $ curl -X PUT http://localhost:8080/products/1 
   -H 'content-type: application/json' 
   -d '{"name":"Juice"}'
@@ -564,7 +564,7 @@ $ curl -X PUT http://localhost:8080/products/1
 
 …阅读我们刚刚更新的内容:
 
-```
+```java
 $ curl -X GET http://localhost:8080/products/1
 {
     "id" : 1,
@@ -574,7 +574,7 @@ $ curl -X GET http://localhost:8080/products/1
 
 最后，我们可以删除一个:
 
-```
+```java
 $ curl -X DELETE http://localhost:8080/products/2
 {
     "message" : "Successfully deleted product id 2",

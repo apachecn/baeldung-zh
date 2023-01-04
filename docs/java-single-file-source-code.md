@@ -16,13 +16,13 @@
 
 例如，如果一个名为`HelloWorld.java`的文件包含一个名为`HelloWorld`的带有`main()`方法的类，**我们必须首先编译它:**
 
-```
+```java
 $ javac HelloWorld.java
 ```
 
 这将生成一个类文件，我们必须使用命令运行该文件
 
-```
+```java
 $ java HelloWorld
 Hello Java 11!
 ```
@@ -39,7 +39,7 @@ Hello Java 11!
 
 此外，从 Java 11 开始，我们可以使用下面的命令来执行一个单文件程序:
 
-```
+```java
 $ java HelloWorld.java
 Hello Java 11!
 ```
@@ -54,7 +54,7 @@ Hello Java 11!
 
 例如，如果我们重命名文件`WrongName.java`而不改变其内容，我们可以运行它:
 
-```
+```java
 java WrongName.java
 ```
 
@@ -75,13 +75,13 @@ Java launcher 引入了一个新的`source-file mode`来支持这个特性。如
 
 例如，我们有一个名为`Addition.java`的文件，其中包含一个`Addition`类。这个类包含一个计算其参数总和的`main()`方法:
 
-```
+```java
 $ java Addition.java 1 2 3
 ```
 
 此外，我们可以在文件名前传递类似于`–class-path`的选项:
 
-```
+```java
 $ java --class-path=/some-path Addition.java 1 2 3
 ```
 
@@ -89,20 +89,20 @@ $ java --class-path=/some-path Addition.java 1 2 3
 
 例如，假设在开发过程中的某个时刻，我们使用`javac`编译了当前工作目录中的文件:
 
-```
+```java
 $ javac HelloWorld.java
 ```
 
 我们现在在当前工作目录中有两个`HelloWorld.java and HelloWorld.class`:
 
-```
+```java
 $ ls
 HelloWorld.class  HelloWorld.java
 ```
 
 但是，如果我们尝试使用源文件模式，我们会得到一个错误:
 
-```
+```java
 $ java HelloWorld.java                                            
 error: class found on application class path: HelloWorld
 ```
@@ -113,13 +113,13 @@ error: class found on application class path: HelloWorld
 
 例如，shell 脚本通常以下列开头:
 
-```
+```java
 #!/bin/sh
 ```
 
 然后，我们可以执行脚本:
 
-```
+```java
 $ ./some_script
 ```
 
@@ -129,13 +129,13 @@ $ ./some_script
 
 如果我们将以下内容添加到文件的开头:
 
-```
+```java
 #!/path/to/java --source version
 ```
 
 例如，让我们在名为`add`的文件中添加以下代码:
 
-```
+```java
 #!/usr/local/bin/java --source 11
 
 import java.util.Arrays;
@@ -154,20 +154,20 @@ public class Addition
 
 并将文件标记为可执行文件:
 
-```
+```java
 $ chmod +x add
 ```
 
 然后，我们可以像执行脚本一样执行该文件:
 
-```
+```java
 $ ./add 1 2 3
 6
 ```
 
 我们还可以显式地使用启动器来调用 shebang 文件:
 
-```
+```java
 $ java --source 11 add 1 2 3
 6
 ```
@@ -176,7 +176,7 @@ $ java --source 11 add 1 2 3
 
 然而**，我们不能将`.java`文件视为 shebang 文件，即使它包含有效的 shebang。**因此下面将导致一个错误:
 
-```
+```java
 $ ./Addition.java
 ./Addition.java:1: error: illegal character: '#'
 #!/usr/local/bin/java --source 11

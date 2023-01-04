@@ -44,7 +44,7 @@
 
 让我们用 Java 来看看这个例子。首先，让我们定义一下`Account`类:
 
-```
+```java
 public abstract class Account {
     protected abstract void deposit(BigDecimal amount);
 
@@ -61,7 +61,7 @@ public abstract class Account {
 
 并且，让我们定义一下`BankingAppWithdrawalService`:
 
-```
+```java
 public class BankingAppWithdrawalService {
     private Account account;
 
@@ -85,7 +85,7 @@ public class BankingAppWithdrawalService {
 
 所以，我们让`FixedTermDepositAccount`成为`Account`的子类:
 
-```
+```java
 public class FixedTermDepositAccount extends Account {
     // Overridden methods...
 }
@@ -95,7 +95,7 @@ public class FixedTermDepositAccount extends Account {
 
 这意味着新的`FixedTermDepositAccount`类不能有意义地提供`Account`定义的`withdraw`方法。一个常见的解决方法是让`FixedTermDepositAccount`在它无法实现的方法中抛出一个`UnsupportedOperationException`:
 
-```
+```java
 public class FixedTermDepositAccount extends Account {
     @Override
     protected void deposit(BigDecimal amount) {
@@ -113,7 +113,7 @@ public class FixedTermDepositAccount extends Account {
 
 虽然这个新类工作得很好，但是让我们试着将它与`BankingAppWithdrawalService`一起使用:
 
-```
+```java
 Account myFixedTermDepositAccount = new FixedTermDepositAccount();
 myFixedTermDepositAccount.deposit(new BigDecimal(1000.00));
 
@@ -123,7 +123,7 @@ withdrawalService.withdraw(new BigDecimal(100.00));
 
 不出所料，银行应用程序崩溃了，错误如下:
 
-```
+```java
 Withdrawals are not supported by FixedTermDepositAccount!!
 ```
 
@@ -133,7 +133,7 @@ Withdrawals are not supported by FixedTermDepositAccount!!
 
 `BankingAppWithdrawalService`是`Account`类的客户端。它期望`Account`及其子类型都保证`Account`类为其`withdraw`方法指定的行为:
 
-```
+```java
 /**
  * Reduces the account balance by the specified amount
  * provided given amount > 0 and account meets minimum available
@@ -210,7 +210,7 @@ Java 中的子类型要求基类的属性和方法在子类中可用。
 
 `BankingAppWithdrawalService`现在需要使用`WithdrawableAccount` `:`
 
-```
+```java
 public class BankingAppWithdrawalService {
     private WithdrawableAccount withdrawableAccount;
 
@@ -246,7 +246,7 @@ Java 的方法覆盖规则通过强制被覆盖的方法参数类型与超类型
 
 被覆盖的子类型方法的返回类型可以比超类型方法的返回类型更窄。这被称为返回类型的[协方差](https://web.archive.org/web/20221203233830/https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)#Covariant_method_return_type)。协方差表示何时接受子类型代替超类型。Java 支持返回类型的协变性。让我们看一个例子:
 
-```
+```java
 public abstract class Foo {
     public abstract Number generateNumber();    
     // Other Methods
@@ -255,7 +255,7 @@ public abstract class Foo {
 
 `Foo`中的`generateNumber`方法的返回类型为`Number`。现在让我们通过返回一个更窄类型的`Integer`来覆盖这个方法:
 
-```
+```java
 public class Bar extends Foo {
     @Override
     public Integer generateNumber() {
@@ -285,7 +285,7 @@ Java 的方法覆盖规则已经对检查的异常实施了这个规则。但是
 
 让我们看一个例子:
 
-```
+```java
 public abstract class Car {
     protected int limit;
 
@@ -303,7 +303,7 @@ public abstract class Car {
 
 让我们定义一个保持类不变量的子类`Car`:
 
-```
+```java
 public class HybridCar extends Car {
     // invariant: charge >= 0;
     private int charge;
@@ -328,7 +328,7 @@ public class HybridCar extends Car {
 
 让我们看一个例子:
 
-```
+```java
 public abstract class Car {
 
     // Allowed to be set once at the time of creation.
@@ -349,7 +349,7 @@ public abstract class Car {
 
 现在让我们定义一个扩展了`Car:`的`ToyCar`
 
-```
+```java
 public class ToyCar extends Car {
     public void reset() {
         mileage = 0;
@@ -367,7 +367,7 @@ public class ToyCar extends Car {
 
 在一个方法可以被执行之前，一个[先决条件](https://web.archive.org/web/20221203233830/https://en.wikipedia.org/wiki/Precondition)应该被满足。让我们看一个关于参数值的前提条件的例子:
 
-```
+```java
 public class Foo {
 
     // precondition: 0 < num <= 5
@@ -384,7 +384,7 @@ public class Foo {
 
 现在让我们用一个弱化的前提条件覆盖`doStuff`方法:
 
-```
+```java
 public class Bar extends Foo {
 
     @Override
@@ -410,7 +410,7 @@ public class Bar extends Foo {
 
 让我们看一个例子:
 
-```
+```java
 public abstract class Car {
 
     protected int speed;
@@ -426,7 +426,7 @@ public abstract class Car {
 
 现在，让我们定义一个`Car`的派生类来加强这个前提条件:
 
-```
+```java
 public class HybridCar extends Car {
 
    // Some properties and other methods...
@@ -462,7 +462,7 @@ public class HybridCar extends Car {
 
 这里有一个例子。让我们定义一个`FileSystem`接口:
 
-```
+```java
 public interface FileSystem {
     File[] listFiles(String path);
 
@@ -472,7 +472,7 @@ public interface FileSystem {
 
 让我们定义一个实现`FileSystem:`的`ReadOnlyFileSystem`
 
-```
+```java
 public class ReadOnlyFileSystem implements FileSystem {
     public File[] listFiles(String path) {
         // code to list files
@@ -494,7 +494,7 @@ public class ReadOnlyFileSystem implements FileSystem {
 
 让我们用一个`FilePurgingJob`来说明这一点:
 
-```
+```java
 public class FilePurgingJob {
     private FileSystem fileSystem;
 
@@ -517,7 +517,7 @@ public class FilePurgingJob {
 
 这是一个比其他更微妙的违规行为，也更难被发现。在本例中，`ToyCar`总是为`remainingFuel`属性返回一个固定值:
 
-```
+```java
 public class ToyCar extends Car {
 
     @Override

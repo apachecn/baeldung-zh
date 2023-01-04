@@ -37,7 +37,7 @@
 
 让我们编写一个 Java 程序来实现这种方法。`isAutomorphicUsingLoop()`方法接受一个整数作为输入，并检查它是否是自同构的:
 
-```
+```java
 public boolean isAutomorphicUsingLoop(int number) {
     int square = number * number;
 
@@ -59,7 +59,7 @@ public boolean isAutomorphicUsingLoop(int number) {
 
 让我们来测试一下:
 
-```
+```java
 assertTrue(AutomorphicNumber.isAutomorphicUsingLoop(76));
 assertFalse(AutomorphicNumber.isAutomorphicUsingLoop(9));
 ```
@@ -78,7 +78,7 @@ assertFalse(AutomorphicNumber.isAutomorphicUsingLoop(9));
 
 **我们可以使用 [`Math`](/web/20221208143830/https://www.baeldung.com/java-lang-math) 类来执行数字运算，例如计算给定数字的位数，并从它的平方中得到最后的位数:**
 
-```
+```java
 public boolean isAutomorphicUsingMath(int number) {
     int square = number * number;
 
@@ -95,7 +95,7 @@ public boolean isAutomorphicUsingMath(int number) {
 
 让我们来测试一下:
 
-```
+```java
 assertTrue(AutomorphicNumber.isAutomorphicUsingMath(76));
 assertFalse(AutomorphicNumber.isAutomorphicUsingMath(9));
 ```

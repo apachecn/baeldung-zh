@@ -32,7 +32,7 @@ Java 持久性 API(JPA)是一种规范，它定义了 Java 应用程序中关系
 
 让我们看一个由 JPA 描述的实体的简单例子。
 
-```
+```java
 @Entity
 public class Car {
 
@@ -64,7 +64,7 @@ JPA 的另一个核心概念是字段持久性。当 Java 中的一个对象被�
 
 让我们来看看这是如何工作的:
 
-```
+```java
 @Entity
 public class SteeringWheel {
 

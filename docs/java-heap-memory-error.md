@@ -10,7 +10,7 @@
 
 “无法为对象堆保留足够的空间”是一个特定的 JVM 错误，当 **Java 进程由于在运行系统**上遇到内存限制而无法创建 **虚拟机时会引发该错误**
 
-```
+```java
 java -Xms4G -Xmx4G -jar HelloWorld.jar
 
 Error occurred during initialization of VM
@@ -50,7 +50,7 @@ Java 堆空间是运行时 Java 程序的内存分配池，由 JVM 自己管理�
 
 首先，通过在每次 JVM 初始化时使用 Java **命令行参数**:
 
-```
+```java
 -Xms<size>    Sets initial Java heap size. This value must be a multiple of 1024 and greater than 1 MB.
 -Xmx<size>    Sets maximum Java heap size. This value must be a multiple of 1024 and greater than 2 MB.
 -Xmn<size>    Sets the initial and maximum size (in bytes) of the heap for the young generation.
@@ -58,7 +58,7 @@ Java 堆空间是运行时 Java 程序的内存分配池，由 JVM 自己管理�
 
 对于大小值，我们可以附加字母`k`或`K`、`m`或`M`和`g`或`G`来分别表示千字节、兆字节和千兆字节。如果没有指定字母，则使用默认单位(字节)。
 
-```
+```java
 -Xmn2g
 -Xmn2048m
 -Xmn2097152k
@@ -67,7 +67,7 @@ Java 堆空间是运行时 Java 程序的内存分配池，由 JVM 自己管理�
 
 其次，通过使用环境变量`JAVA_OPTS`来全局配置上述 Java 命令行参数。因此，系统上的每个 JVM 初始化都将自动使用环境变量中设置的配置。
 
-```
+```java
 JAVA_OPTS="-Xms256m -Xmx512m"
 ```
 

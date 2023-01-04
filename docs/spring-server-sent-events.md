@@ -20,7 +20,7 @@ Spring 4.2 版本已经支持它，但是从 Spring 5 开始，[我们现在有�
 
 要创建 SSE 流端点，我们必须遵循 W3C 规范的[，并将其 MIME 类型指定为`text/event-stream`:](https://web.archive.org/web/20220625081657/https://www.w3.org/TR/eventsource/)
 
-```
+```java
 @GetMapping(path = "/stream-flux", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 public Flux<String> streamFlux() {
     return Flux.interval(Duration.ofSeconds(1))
@@ -38,7 +38,7 @@ public Flux<String> streamFlux() {
 
 我们现在将把输出`String`包装到一个`ServerSentSevent`对象中，并检查这样做的好处:
 
-```
+```java
 @GetMapping("/stream-sse")
 public Flux<ServerSentEvent<String>> streamEvents() {
     return Flux.interval(Duration.ofSeconds(1))
@@ -63,7 +63,7 @@ public Flux<ServerSentEvent<String>> streamEvents() {
 
 现在让我们用一个 [`WebClient`](/web/20220625081657/https://www.baeldung.com/spring-5-webclient) 来消费我们的事件流。：
 
-```
+```java
 public void consumeServerSentEvent() {
     WebClient client = WebClient.create("http://localhost:8080/sse-server");
     ParameterizedTypeReference<ServerSentEvent<String>> type
@@ -98,7 +98,7 @@ public void consumeServerSentEvent() {
 
 **简单来说，我们将定义一个`ExecutorService`，一个线程，在那里`SseEmitter`将完成推送数据的工作，并返回发射器实例，以这种方式保持连接打开:**
 
-```
+```java
 @GetMapping("/stream-sse-mvc")
 public SseEmitter streamSseMvc() {
     SseEmitter emitter = new SseEmitter();

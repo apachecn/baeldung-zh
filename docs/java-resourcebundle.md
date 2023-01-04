@@ -35,7 +35,7 @@
 
 让我们分析一个样本属性文件:
 
-```
+```java
 # Buttons
 continueButton continue
 cancelButton=cancel
@@ -56,7 +56,7 @@ helloLabel:hello
 
 下面是一个示例类:
 
-```
+```java
 public class ExampleResource_pl_PL extends ListResourceBundle {
 
     @Override
@@ -80,7 +80,7 @@ public class ExampleResource_pl_PL extends ListResourceBundle {
 
 让我们来看看这段简短的代码:
 
-```
+```java
 Locale locale = new Locale("pl", "PL");
 ResourceBundle exampleBundle = ResourceBundle.getBundle("package.ExampleResource", locale);
 
@@ -124,7 +124,7 @@ assertArrayEquals(exampleBundle.getStringArray("cities"), new String[]{"Warsaw",
 
 假设我们有三个属性文件:
 
-```
+```java
 #resource.properties
 cancelButton = cancel
 
@@ -151,7 +151,7 @@ backButton = cofnij
 
 为了更好地理解，让我们准备一个简短的方法作为示例:
 
-```
+```java
 public class ExampleControl extends ResourceBundle.Control {
 
     @Override
@@ -173,13 +173,13 @@ public class ExampleControl extends ResourceBundle.Control {
 
 下面是一个命令示例:
 
-```
+```java
 native2ascii -encoding UTF-8 utf8.properties nonUtf8.properties
 ```
 
 让我们看看编码改变前后的属性:
 
-```
+```java
 #Before
 polishHello=cześć
 

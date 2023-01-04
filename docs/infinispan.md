@@ -14,7 +14,7 @@
 
 最新版本可以在 [Maven Central](https://web.archive.org/web/20220627082753/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.infinispan%22%20AND%20a%3A%22infinispan-core%22) 资源库中找到:
 
-```
+```java
 <dependency>
     <groupId>org.infinispan</groupId>
     <artifactId>infinispan-core</artifactId>
@@ -30,7 +30,7 @@
 
 Infinispan 提供了一种非常简单的方法来构建`CacheManager`:
 
-```
+```java
 public DefaultCacheManager cacheManager() {
     return new DefaultCacheManager();
 }
@@ -44,7 +44,7 @@ public DefaultCacheManager cacheManager() {
 
 为了测试我们的缓存，我们将构建一个简单的方法来模拟一些繁重的查询:
 
-```
+```java
 public class HelloWorldRepository {
     public String getHelloWorld() {
         try {
@@ -63,7 +63,7 @@ public class HelloWorldRepository {
 
 在定义我们的缓存时，我们可以传递一些对其内部发生的任何事件感兴趣的对象，Infinispan 会在处理缓存时通知它:
 
-```
+```java
 @Listener
 public class CacheListener {
     @CacheEntryCreated
@@ -122,7 +122,7 @@ public class CacheListener {
 
 现在，让我们构建一个方法来为我们处理缓存创建:
 
-```
+```java
 private <K, V> Cache<K, V> buildCache(
   String cacheName, 
   DefaultCacheManager cacheManager, 
@@ -144,7 +144,7 @@ private <K, V> Cache<K, V> buildCache(
 
 最简单的缓存类型可以在一行中定义，使用我们的方法`buildCache`:
 
-```
+```java
 public Cache<String, String> simpleHelloWorldCache(
   DefaultCacheManager cacheManager, 
   CacheListener listener) {
@@ -155,7 +155,7 @@ public Cache<String, String> simpleHelloWorldCache(
 
 我们现在可以建造一个`Service`:
 
-```
+```java
 public String findSimpleHelloWorld() {
     String cacheKey = "simple-hello";
     return simpleHelloWorldCache
@@ -167,7 +167,7 @@ public String findSimpleHelloWorld() {
 
 让我们在测试中添加一个简单的方法来计时我们的方法:
 
-```
+```java
 protected <T> long timeThis(Supplier<T> supplier) {
     long millis = System.currentTimeMillis();
     supplier.get();
@@ -177,7 +177,7 @@ protected <T> long timeThis(Supplier<T> supplier) {
 
 测试它，我们可以检查执行两个方法调用之间的时间:
 
-```
+```java
 @Test
 public void whenGetIsCalledTwoTimes_thenTheSecondShouldHitTheCache() {
     assertThat(timeThis(() -> helloWorldService.findSimpleHelloWorld()))
@@ -192,7 +192,7 @@ public void whenGetIsCalledTwoTimes_thenTheSecondShouldHitTheCache() {
 
 我们可以定义一个缓存，其中所有的条目都有一个生命周期，换句话说，在给定的时间段后，元素将从缓存中移除。配置非常简单:
 
-```
+```java
 private Configuration expiringConfiguration() {
     return new ConfigurationBuilder().expiration()
       .lifespan(1, TimeUnit.SECONDS)
@@ -202,7 +202,7 @@ private Configuration expiringConfiguration() {
 
 现在，我们使用上面的配置来构建缓存:
 
-```
+```java
 public Cache<String, String> expiringHelloWorldCache(
   DefaultCacheManager cacheManager, 
   CacheListener listener) {
@@ -214,7 +214,7 @@ public Cache<String, String> expiringHelloWorldCache(
 
 最后，从上面的简单缓存中以类似的方法使用它:
 
-```
+```java
 public String findSimpleHelloWorldInExpiringCache() {
     String cacheKey = "simple-hello";
     String helloWorld = expiringHelloWorldCache.get(cacheKey);
@@ -228,7 +228,7 @@ public String findSimpleHelloWorldInExpiringCache() {
 
 让我们再次测试我们的时代:
 
-```
+```java
 @Test
 public void whenGetIsCalledTwoTimesQuickly_thenTheSecondShouldHitTheCache() {
     assertThat(timeThis(() -> helloWorldService.findExpiringHelloWorld()))
@@ -241,7 +241,7 @@ public void whenGetIsCalledTwoTimesQuickly_thenTheSecondShouldHitTheCache() {
 
 运行它，我们看到在快速连续的缓存命中。为了展示过期是相对于它的条目`put`时间的，让我们在我们的条目中强制它:
 
-```
+```java
 @Test
 public void whenGetIsCalledTwiceSparsely_thenNeitherHitsTheCache()
   throws InterruptedException {
@@ -258,7 +258,7 @@ public void whenGetIsCalledTwiceSparsely_thenNeitherHitsTheCache()
 
 运行测试后，注意在给定时间后我们的条目是如何从缓存中过期的。我们可以通过查看侦听器的打印日志行来确认这一点:
 
-```
+```java
 Executing some heavy query
 Adding key 'simple-hello' to cache
 Expiring key 'simple-hello' from cache
@@ -270,13 +270,13 @@ Adding key 'simple-hello' to cache
 
 我们甚至可以在主配置中没有过期的缓存中使用它。方法`put`接受更多的参数:
 
-```
+```java
 simpleHelloWorldCache.put(cacheKey, helloWorld, 10, TimeUnit.SECONDS);
 ```
 
 或者，我们可以给我们的条目一个最大值`idleTime`，而不是一个固定的生命周期:
 
-```
+```java
 simpleHelloWorldCache.put(cacheKey, helloWorld, -1, TimeUnit.SECONDS, 10, TimeUnit.SECONDS);
 ```
 
@@ -286,7 +286,7 @@ simpleHelloWorldCache.put(cacheKey, helloWorld, -1, TimeUnit.SECONDS, 10, TimeUn
 
 在 Infinispan 中，我们可以使用`eviction configuration:`来限制给定缓存中的条目数量
 
-```
+```java
 private Configuration evictingConfiguration() {
     return new ConfigurationBuilder()
       .memory().evictionType(EvictionType.COUNT).size(1)
@@ -298,7 +298,7 @@ private Configuration evictingConfiguration() {
 
 同样，该方法类似于这里已经介绍的方法:
 
-```
+```java
 public String findEvictingHelloWorld(String key) {
     String value = evictingHelloWorldCache.get(key);
     if(value == null) {
@@ -311,7 +311,7 @@ public String findEvictingHelloWorld(String key) {
 
 让我们构建我们的测试:
 
-```
+```java
 @Test
 public void whenTwoAreAdded_thenFirstShouldntBeAvailable() {
 
@@ -331,7 +331,7 @@ public void whenTwoAreAdded_thenFirstShouldntBeAvailable() {
 
 运行测试，我们可以查看我们的监听器活动日志:
 
-```
+```java
 Executing some heavy query
 Adding key 'key 1' to cache
 Executing some heavy query
@@ -350,7 +350,7 @@ Adding key 'key 1' to cache
 
 让我们来看看钝化配置:
 
-```
+```java
 private Configuration passivatingConfiguration() {
     return new ConfigurationBuilder()
       .memory().evictionType(EvictionType.COUNT).size(1)
@@ -367,7 +367,7 @@ private Configuration passivatingConfiguration() {
 
 让我们看看当我们试图填充多个条目时会发生什么:
 
-```
+```java
 public String findPassivatingHelloWorld(String key) {
     return passivatingHelloWorldCache.computeIfAbsent(key, k -> 
       repository.getHelloWorld());
@@ -376,7 +376,7 @@ public String findPassivatingHelloWorld(String key) {
 
 让我们构建并运行我们的测试:
 
-```
+```java
 @Test
 public void whenTwoAreAdded_thenTheFirstShouldBeAvailable() {
 
@@ -396,7 +396,7 @@ public void whenTwoAreAdded_thenTheFirstShouldBeAvailable() {
 
 现在让我们看看我们的听众活动:
 
-```
+```java
 Executing some heavy query
 Adding key 'key 1' to cache
 Executing some heavy query
@@ -423,7 +423,7 @@ Infinispan 附带了强大的事务控制。与数据库类似，当多个线程
 
 让我们看看如何定义具有事务处理能力的缓存:
 
-```
+```java
 private Configuration transactionalConfiguration() {
     return new ConfigurationBuilder()
       .transaction().transactionMode(TransactionMode.TRANSACTIONAL)
@@ -434,7 +434,7 @@ private Configuration transactionalConfiguration() {
 
 为了能够测试它，让我们构建两个方法——一个快速完成事务，另一个需要一段时间:
 
-```
+```java
 public Integer getQuickHowManyVisits() {
     TransactionManager tm = transactionalCache
       .getAdvancedCache().getTransactionManager();
@@ -454,7 +454,7 @@ public Integer getQuickHowManyVisits() {
 }
 ```
 
-```
+```java
 public void startBackgroundBatch() {
     TransactionManager tm = transactionalCache
       .getAdvancedCache().getTransactionManager();
@@ -470,7 +470,7 @@ public void startBackgroundBatch() {
 
 现在，让我们创建一个执行这两种方法的测试，并检查 Infinispan 将如何运行:
 
-```
+```java
 @Test
 public void whenLockingAnEntry_thenItShouldBeInaccessible() throws InterruptedException {
     Runnable backGroundJob = () -> transactionalService.startBackgroundBatch();
@@ -486,7 +486,7 @@ public void whenLockingAnEntry_thenItShouldBeInaccessible() throws InterruptedEx
 
 执行它时，我们将再次在控制台中看到以下活动:
 
-```
+```java
 Adding key 'key' to cache
 Key 'key' was visited
 Ill try to set HowManyVisits to 1

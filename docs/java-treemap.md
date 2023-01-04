@@ -18,7 +18,7 @@
 
 让我们看看测试中的自然排序:
 
-```
+```java
 @Test
 public void givenTreeMap_whenOrdersEntriesNaturally_thenCorrect() {
     TreeMap<Integer, String> map = new TreeMap<>();
@@ -36,7 +36,7 @@ public void givenTreeMap_whenOrdersEntriesNaturally_thenCorrect() {
 
 同样，当我们使用字符串时，它们将按自然顺序排序，即按字母顺序排序:
 
-```
+```java
 @Test
 public void givenTreeMap_whenOrdersEntriesNaturally_thenCorrect2() {
     TreeMap<String, String> map = new TreeMap<>();
@@ -58,7 +58,7 @@ public void givenTreeMap_whenOrdersEntriesNaturally_thenCorrect2() {
 
 在下面的例子中，我们希望整数键按降序排列:
 
-```
+```java
 @Test
 public void givenTreeMap_whenOrdersEntriesByComparator_thenCorrect() {
     TreeMap<Integer, String> map = 
@@ -81,7 +81,7 @@ public void givenTreeMap_whenOrdersEntriesByComparator_thenCorrect() {
 
 下面的代码只涵盖了这些情况中的一小部分:
 
-```
+```java
 @Test
 public void givenTreeMap_whenPerformsQueries_thenCorrect() {
     TreeMap<Integer, String> map = new TreeMap<>();
@@ -107,7 +107,7 @@ public void givenTreeMap_whenPerformsQueries_thenCorrect() {
 
 `TreeMap`实现`NavigableMap`接口，内部工作基于[红黑树](/web/20221003101503/https://www.baeldung.com/cs/red-black-trees)的原理:
 
-```
+```java
 public class TreeMap<K,V> extends AbstractMap<K,V>
   implements NavigableMap<K,V>, Cloneable, java.io.Serializable
 ```

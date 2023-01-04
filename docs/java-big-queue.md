@@ -12,7 +12,7 @@
 
 我们需要将`bigqueue`依赖项添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>com.leansoft</groupId>
     <artifactId>bigqueue</artifactId>
@@ -22,7 +22,7 @@
 
 我们还需要添加它的存储库:
 
-```
+```java
 <repository>
     <id>github.release.repo</id>
     <url>https://raw.github.com/bulldog2011/bulldog-repo/master/repo/releases/</url>
@@ -35,7 +35,7 @@
 
 我们可以通过简单地调用队列的构造函数来初始化队列:
 
-```
+```java
 @Before
 public void setup() {
     String queueDir = System.getProperty("user.home");
@@ -50,7 +50,7 @@ public void setup() {
 
 **我们应该记得在完成后关闭队列，以防止内存泄漏:**
 
-```
+```java
 bigQueue.close();
 ```
 
@@ -58,7 +58,7 @@ bigQueue.close();
 
 我们可以通过简单地调用`enqueue`方法向尾部添加元素:
 
-```
+```java
 @Test
 public void whenAddingRecords_ThenTheSizeIsCorrect() {
     for (int i = 1; i <= 100; i++) {
@@ -75,7 +75,7 @@ public void whenAddingRecords_ThenTheSizeIsCorrect() {
 
 正如我们所料，使用`dequeue`方法读取数据也很简单:
 
-```
+```java
 @Test
 public void whenAddingRecords_ThenTheyCanBeRetrieved() {
     bigQueue.enqueue(String.valueOf("new_record").getBytes());
@@ -92,7 +92,7 @@ public void whenAddingRecords_ThenTheyCanBeRetrieved() {
 
 我们应该使用`isEmpty`方法验证我们的队列中有值:
 
-```
+```java
 if(!bigQueue.isEmpty()){
     // read
 }
@@ -100,7 +100,7 @@ if(!bigQueue.isEmpty()){
 
 **为了清空我们的队列而不必遍历每条记录，我们可以使用`removeAll`方法:**
 
-```
+```java
 bigQueue.removeAll();
 ```
 
@@ -108,7 +108,7 @@ bigQueue.removeAll();
 
 当窥视时，我们只是简单地读取记录而不消耗它:
 
-```
+```java
 @Test
 public void whenPeekingRecords_ThenSizeDoesntChange() {
     for (int i = 1; i <= 100; i++) {
@@ -130,7 +130,7 @@ public void whenPeekingRecords_ThenSizeDoesntChange() {
 
 **幸运的是，我们可以使用`gc`方法删除已消费的记录:**
 
-```
+```java
 bigQueue.gc();
 ```
 

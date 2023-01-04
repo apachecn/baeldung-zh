@@ -10,7 +10,7 @@ Every program needs a place to start its execution; talking about Java programs,
 
 The most common main method template is:
 
-```
+```java
 public static void main(String[] args) { }
 ```
 
@@ -27,7 +27,7 @@ public static void main(String[] args) { }
 
 参数`args`是一个由`String`组成的数组。在下面的例子中:
 
-```
+```java
 java CommonMainMethodSignature foo bar
 ```
 
@@ -35,7 +35,7 @@ java CommonMainMethodSignature foo bar
 
 在下一个示例中，我们将检查参数以决定是加载测试参数还是生产参数:
 
-```
+```java
 public static void main(String[] args) {
     if (args.length > 0) {
         if (args[0].equals("test")) {
@@ -57,23 +57,23 @@ public static void main(String[] args) {
 
 方括号可以放在`String`附近，如在通用模板中，或者放在`args`附近的任一侧:
 
-```
+```java
 public static void main(String []args) { } 
 ```
 
-```
+```java
 public static void main(String args[]) { }
 ```
 
 参数可以表示为 varargs:
 
-```
+```java
 public static void main(String...args) { }
 ```
 
 我们甚至可以为`main()`方法添加`strictfp`，该方法用于处理浮点值时处理器之间的兼容性:
 
-```
+```java
 public strictfp static void main(String[] args) { }
 ```
 
@@ -81,13 +81,13 @@ public strictfp static void main(String[] args) { }
 
 另一方面，`final`可以应用于`args`以防止数组被修改:
 
-```
+```java
 public static void main(final String[] args) { }
 ```
 
 为了结束这些例子，我们还可以用上述所有关键字编写`main`方法(当然，在实际应用程序中您可能不会用到这些关键字):
 
-```
+```java
 final static synchronized strictfp void main(final String[] args) { }
 ```
 
@@ -99,7 +99,7 @@ final static synchronized strictfp void main(final String[] args) { }
 
 为了指定 JVM 应该执行哪个`main`方法作为我们应用程序的入口点，我们使用了`MANIFEST.MF`文件。在清单中，我们可以指出主要的类:
 
-```
+```java
 Main-Class: mypackage.ClassWithMainMethod
 ```
 

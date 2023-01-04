@@ -67,7 +67,7 @@
 
 首先，我们将介绍基准测试的主要参数:
 
-```
+```java
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @Warmup(iterations = 10)
@@ -81,7 +81,7 @@ public class ArrayListBenchmark {
 
 现在是时候运行我们的性能测试了。首先，我们从`ArrayList`开始:
 
-```
+```java
 @State(Scope.Thread)
 public static class MyState {
 
@@ -111,7 +111,7 @@ public static class MyState {
 
 最后，是时候为`add(), contains(), indexOf(), remove(),` 和`get()`方法添加基准测试了:
 
-```
+```java
 @Benchmark
 public void testAdd(ArrayListBenchmark.MyState state) {
     state.employeeList.add(new Employee(state.iterations + 1, "John"));
@@ -147,7 +147,7 @@ public boolean testRemove(ArrayListBenchmark.MyState state) {
 
 所有结果都以微秒表示:
 
-```
+```java
 Benchmark                        Mode  Cnt     Score     Error
 ArrayListBenchmark.testAdd       avgt   20     2.296 ±   0.007
 ArrayListBenchmark.testAddAt     avgt   20   101.092 ±  14.145
@@ -165,7 +165,7 @@ ArrayListBenchmark.testRemove    avgt   20   624.856 ±  51.101
 
 以下是基准测试的结果:
 
-```
+```java
 Benchmark                          Mode  Cnt    Score     Error
 CopyOnWriteBenchmark.testAdd       avgt   20  652.189 ±  36.641
 CopyOnWriteBenchmark.testAddAt     avgt   20  897.258 ±  35.363
@@ -181,7 +181,7 @@ CopyOnWriteBenchmark.testRemove    avgt   20  648.162 ± 138.379
 
 现在是`LinkedList`时间:
 
-```
+```java
 Benchmark        Cnt     Score       Error
 testAdd          20     2.580        ± 0.003
 testContains     20     1808.102     ± 68.155
@@ -205,7 +205,7 @@ testRemove       20     0.006        ± 0.001
 
 现在让我们来看一些实际数字。第一，`HashMap`:
 
-```
+```java
 Benchmark                         Mode  Cnt  Score   Error
 HashMapBenchmark.testContainsKey  avgt   20  0.009 ± 0.002
 HashMapBenchmark.testGet          avgt   20  0.011 ± 0.001
@@ -219,7 +219,7 @@ HashMapBenchmark.testRemove       avgt   20  0.010 ± 0.001
 
 让我们以表格的形式呈现剩余测试分数的结果:
 
-```
+```java
 Benchmark      LinkedHashMap  IdentityHashMap  WeakHashMap  ConcurrentHashMap
 testContainsKey    0.008         0.009          0.014          0.011
 testGet            0.011         0.109          0.019          0.012
@@ -237,7 +237,7 @@ testRemove         0.011         0.115          0.021          0.019
 
 在这种情况下，我们感兴趣的是总的执行时间:
 
-```
+```java
 items count (n)         1000      10,000     100,000   1,000,000
 all tests total score   00:03:17  00:03:17   00:03:30  00:05:27 
 ```
@@ -262,7 +262,7 @@ all tests total score   00:03:17  00:03:17   00:03:30  00:05:27
 
 现在让我们跳到我们的基准测试:
 
-```
+```java
 @Benchmark
 public boolean testAdd(SetBenchMark.MyState state) {
     return state.employeeSet.add(state.employee);
@@ -287,7 +287,7 @@ public boolean testRemove(SetBenchMark.MyState state) {
 
 对于`HashSet,` ，数字是:
 
-```
+```java
 Benchmark      1000    10,000    100,000
 .add()         0.026   0.023     0.024
 .remove()      0.009   0.009     0.009
@@ -296,7 +296,7 @@ Benchmark      1000    10,000    100,000
 
 类似地，`LinkedHashSet`的结果是:
 
-```
+```java
 Benchmark      1000    10,000    100,000
 .add()         0.022   0.026     0.027
 .remove()      0.008   0.012     0.009

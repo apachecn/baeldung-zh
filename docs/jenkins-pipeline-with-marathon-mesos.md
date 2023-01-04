@@ -78,7 +78,7 @@ Marathon 是用于将我们的应用程序部署到 Mesos 的框架，为我们�
 
 首先，让我们在项目根目录中创建一个 [Dockerfile](https://web.archive.org/web/20221006082513/https://docs.docker.com/engine/reference/builder/) 。实质上，Docker 文件是一个包含 Docker 守护程序如何构建映像的指令的文件:
 
-```
+```java
 FROM openjdk:8-jre-alpine
 ADD target/mesos-marathon-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8082 
@@ -91,7 +91,7 @@ ENTRYPOINT ["java","-jar","/app.jar"]
 
 现在我们已经能够构建我们的映像了，让我们创建一个简单的 bash 脚本，它构建并发布到我们的私有 [Docker Hub](https://web.archive.org/web/20221006082513/https://hub.docker.com/) 存储库中，并把它放在我们的项目根目录中:
 
-```
+```java
 #!/usr/bin/env bash
 set -e
 docker login -u baeldung -p $DOCKER_PASSWORD
@@ -125,7 +125,7 @@ Jenkins 附带了一个“[部署马拉松](https://web.archive.org/web/20221006
 
 这个文件:“marathon.json”包含一个 [Mesos 应用程序定义](https://web.archive.org/web/20221006082513/https://mesosphere.github.io/marathon/docs/application-basics.html)。这是我们想要运行的长期运行服务(应用程序)的描述。最终，Jenkins Marathon 插件会将文件内容发布到马拉松`/v2/apps` 端点。然后，Marathon 将依次安排定义的应用程序在 Mesos 上运行:
 
-```
+```java
 {
   "id": "mesos-marathon-demo",
   "container": {

@@ -44,7 +44,7 @@
 
 假设我们的对象的身份纯粹基于它的整数`id`。然后，我们可以使用这个`id`作为散列函数:
 
-```
+```java
 @Override
 public boolean equals(Object o) {
     if (this == o) return true;
@@ -65,7 +65,7 @@ public int hashCode() {
 
 如果我们需要考虑更多的领域，情况会变得更加复杂。假设我们希望将平等建立在`id`和`name`的基础上:
 
-```
+```java
 @Override
 public boolean equals(Object o) {
     if (this == o) return true;
@@ -82,7 +82,7 @@ public boolean equals(Object o) {
 
 首先，我们将像以前一样得到`id`的散列。然后，我们将它乘以一些精心选择的数字，并加上`name`的散列:
 
-```
+```java
 @Override
 public int hashCode() {
     int result = id.hashCode();
@@ -93,13 +93,13 @@ public int hashCode() {
 
 如何选择这个数字并不是一个容易回答的问题。从历史上看，最流行的数字是`31. `它是质数，它产生良好的分布，它很小，乘以它可以使用移位操作进行优化:
 
-```
+```java
 31 * i == (i << 5) - i
 ```
 
 但是，现在不需要每个 CPU 周期都去争了，可以用一些更大的素数。例如，`524287 `也可以被优化:
 
-```
+```java
 524287 * i == i << 19 - i
 ```
 
@@ -109,7 +109,7 @@ public int hashCode() {
 
 我们刚刚实现的算法已经很好地建立起来了，我们通常不需要每次都手工重新创建它。相反，我们可以使用由`Objects`类提供的 helper 方法:
 
-```
+```java
 @Override
 public int hashCode() {
     return Objects.hash(id, name);
@@ -124,7 +124,7 @@ public int hashCode() {
 
 如果出于某种原因，我们真的需要质量而不太在乎速度，我们可以看看来自[番石榴](/web/20221128113736/https://www.baeldung.com/guava-guide)库的`Hashing`类:
 
-```
+```java
 @Override
 public int hashCode() {
     HashFunction hashFunction = Hashing.murmur3_32();

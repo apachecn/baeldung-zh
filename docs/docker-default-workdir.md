@@ -26,7 +26,7 @@ docker 文件中的`WORKDIR`指令为 docker 文件中的后续指令设置当�
 
 在 Docker 中，我们还可以更改容器的工作目录。我们可以使用`WORKDIR`指令为 [CMD/ `ENTRYPOINT`](/web/20221229073156/https://www.baeldung.com/ops/dockerfile-run-cmd-entrypoint) 指令中指定的命令指定工作目录。让我们看看如何在 docker 文件中使用`WORKDIR`:
 
-```
+```java
 FROM centos 
 WORKDIR /home
 ENTRYPOINT ["sh", "-c", "pwd"]
@@ -36,7 +36,7 @@ ENTRYPOINT ["sh", "-c", "pwd"]
 
 或者，我们也可以在运行 Docker 容器时使用–`w`或`–workdir`选项来指定工作目录:
 
-```
+```java
 $ docker run -w /home centos:latest sh -c "pwd"
 ```
 

@@ -28,7 +28,7 @@
 
 首先，由于 DGS 框架基于 Spring Boot，[让我们创建一个 Spring Boot 应用](/web/20220707143855/https://www.baeldung.com/spring-boot-start)。然后，让我们将 [DGS 依赖项](https://web.archive.org/web/20220707143855/https://search.maven.org/search?q=g:com.netflix.graphql.dgs%20a:graphql-dgs)添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>com.netflix.graphql.dgs</groupId>
     <artifactId>graphql-dgs-spring-boot-starter</artifactId>
@@ -46,7 +46,7 @@
 
 让我们使用[模式定义语言(SDL)](https://web.archive.org/web/20220707143855/https://www.howtographql.com/basics/2-core-concepts/) 为我们的示例应用程序创建一个简单的 GraphQL 模式:
 
-```
+```java
 type Query {
     albums(titleFilter: String): [Album]
 }
@@ -64,7 +64,7 @@ type Album {
 
 让我们从创建一个对应于我们的模式的`Album`类开始:
 
-```
+```java
 public class Album {
     private final String title;
     private final String artist;
@@ -88,7 +88,7 @@ public class Album {
 
 **因此，为了定义 DGS 数据提取器，我们需要在`@DgsComponent`类**中创建一个查询方法。在我们的例子中，我们想要查询一个列表`Albums`，所以让我们用`@DgsQuery`标记这个方法:
 
-```
+```java
 private final List<Album> albums = Arrays.asList(
   new Album("Rumours", "Fleetwood Mac", 20),
   new Album("What's Going On", "Marvin Gaye", 10), 
@@ -118,7 +118,7 @@ DGS 还附带了一个 code-gen 插件，用于从 GraphQL 模式生成 Java 或
 
 查询我们的 API 的一种便捷方式是 [GraphiQL](https://web.archive.org/web/20220707143855/https://github.com/graphql/graphiql) 。 **GraphiQL 是一个与 DGS 框架一起开箱即用的查询编辑器。**让我们在默认的 Spring Boot 端口上启动应用程序，并检查 URL ` http://localhost:8080/graphiql`。让我们尝试以下查询并测试结果:
 
-```
+```java
 {
     albums{
         title
@@ -128,7 +128,7 @@ DGS 还附带了一个 code-gen 插件，用于从 GraphQL 模式生成 Java 或
 
 注意，与 REST 不同，我们必须明确列出希望从查询中返回哪些字段。我们来看看回应:
 
-```
+```java
 {
   "data": {
     "albums": [

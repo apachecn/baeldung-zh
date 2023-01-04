@@ -18,7 +18,7 @@
 
 指定所需转换器有不同的方法。这里我们实现了`WebMvcConfigurer`并明确地提供了我们想要在被覆盖的`configureMessageConverters`方法中使用的转换器:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 @ComponentScan({ "com.baeldung.web" })
@@ -40,7 +40,7 @@ Kryo 是一种二进制编码格式，与基于文本的格式相比，它提供
 
 我们使用以下 Maven 依赖项添加必要的 Kryo 库:
 
-```
+```java
 <dependency>
     <groupId>com.esotericsoftware</groupId>
     <artifactId>kryo</artifactId>
@@ -54,7 +54,7 @@ Kryo 是一种二进制编码格式，与基于文本的格式相比，它提供
 
 为了利用 Kryo 作为数据传输格式，我们创建了一个定制的`HttpMessageConverter`并实现了必要的序列化和反序列化逻辑。此外，我们为 Kryo: `application/x-kryo`定义了自定义的 HTTP 头。这是一个完全简化的工作示例，我们用于演示目的:
 
-```
+```java
 public class KryoHttpMessageConverter extends AbstractHttpMessageConverter<Object> {
 
     public static final MediaType KRYO = new MediaType("application", "x-kryo");
@@ -103,7 +103,7 @@ public class KryoHttpMessageConverter extends AbstractHttpMessageConverter<Objec
 
 控制器方法很简单(注意，不需要任何定制的特定于协议的数据类型，我们使用普通的`Foo` DTO):
 
-```
+```java
 @RequestMapping(method = RequestMethod.GET, value = "/foos/{id}")
 @ResponseBody
 public Foo findById(@PathVariable long id) {
@@ -113,7 +113,7 @@ public Foo findById(@PathVariable long id) {
 
 以及一个快速测试来证明我们已经正确地将所有东西连接在一起:
 
-```
+```java
 RestTemplate restTemplate = new RestTemplate();
 restTemplate.setMessageConverters(Arrays.asList(new KryoHttpMessageConverter()));
 
@@ -136,7 +136,7 @@ assertThat(resource, notNullValue());
 
 例如，要添加对 JSON 和 Kryo 的支持，需要注册`KryoHttpMessageConverter`和`MappingJackson2HttpMessageConverter`:
 
-```
+```java
 @Override
 public void configureMessageConverters(List<HttpMessageConverter<?>> messageConverters) {
     messageConverters.add(new MappingJackson2HttpMessageConverter());
@@ -147,7 +147,7 @@ public void configureMessageConverters(List<HttpMessageConverter<?>> messageConv
 
 现在，让我们假设我们也想将 Google 协议缓冲区添加到列表中。对于这个例子，我们假设有一个由`protoc`编译器基于下面的`proto`文件生成的类`FooProtos.Foo`:
 
-```
+```java
 package baeldung;
 option java_package = "com.baeldung.web.dto";
 option java_outer_classname = "FooProtos";
@@ -159,7 +159,7 @@ message Foo {
 
 Spring 自带了一些对协议缓冲区的内置支持。我们需要做的就是将`ProtobufHttpMessageConverter`包含在支持的转换器列表中:
 
-```
+```java
 @Override
 public void configureMessageConverters(List<HttpMessageConverter<?>> messageConverters) {
     messageConverters.add(new MappingJackson2HttpMessageConverter());
@@ -172,7 +172,7 @@ public void configureMessageConverters(List<HttpMessageConverter<?>> messageConv
 
 有两种方法可以解决调用哪个方法的模糊性。第一种方法是对 protobuf 和其他格式使用不同的 URL。例如，对于 protobuf:
 
-```
+```java
 @RequestMapping(method = RequestMethod.GET, value = "/fooprotos/{id}")
 @ResponseBody
 public FooProtos.Foo findProtoById(@PathVariable long id) { … } 
@@ -180,7 +180,7 @@ public FooProtos.Foo findProtoById(@PathVariable long id) { … }
 
 对于其他人来说:
 
-```
+```java
 @RequestMapping(method = RequestMethod.GET, value = "/foos/{id}")
 @ResponseBody
 public Foo findById(@PathVariable long id) { … } 
@@ -190,7 +190,7 @@ public Foo findById(@PathVariable long id) { … }
 
 **第二种也是更好的方法是使用相同的 URL，但是在 protobuf 的请求映射中明确指定生成的数据格式:**
 
-```
+```java
 @RequestMapping(
   method = RequestMethod.GET, 
   value = "/foos/{id}", 
@@ -211,7 +211,7 @@ public FooProtos.Foo findProtoById(@PathVariable long id) { … }
 
 虽然有时这正是您想要的，但在许多情况下，您只是想添加新的转换器，同时仍然保留默认的转换器，这些转换器已经处理了 JSON 等标准数据格式。为此，重写`extendMessageConverters`方法:
 
-```
+```java
 @Configuration
 @EnableWebMvc
 @ComponentScan({ "com.baeldung.web" })

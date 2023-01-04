@@ -22,7 +22,7 @@
 
 **让`this`引用转义的最常见方式之一是在构造函数中启动一个线程。**为了更好地理解这一点，让我们考虑一个例子:
 
-```
+```java
 public class LoggerRunnable implements Runnable {
 
     public LoggerRunnable() {
@@ -41,7 +41,7 @@ public class LoggerRunnable implements Runnable {
 
 **也可以隐式地传递`this `引用**:
 
-```
+```java
 public class ImplicitEscape {
 
     public ImplicitEscape() {
@@ -66,7 +66,7 @@ public class ImplicitEscape {
 
 我们可以为这个场景声明一个专用的方法，而不是在构造函数中启动一个线程:
 
-```
+```java
 public class SafePublication implements Runnable {
 
     private final Thread thread;
@@ -88,7 +88,7 @@ public class SafePublication implements Runnable {
 
 如上所示，我们仍然发布对`Thread. `的`this `引用，但是，这一次，我们在构造函数返回后启动线程:
 
-```
+```java
 SafePublication publication = new SafePublication();
 publication.start();
 ```

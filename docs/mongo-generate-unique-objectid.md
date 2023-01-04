@@ -34,13 +34,13 @@ Java 中有多种创建`ObjectId`的方法。它可以用非参数或参数化�
 
 第一种也是最简单的一种方法是通过一个带有非参数化构造函数的新关键字:
 
-```
+```java
 ObjectId objectId = new ObjectId();
 ```
 
 第二种方法是简单地调用一个`ObjectId`类上的静态方法`get()`。不直接调用非参数化的构造函数。然而，`get()`方法的实现包括创建与第一个例子相同的`ObjectId`——通过新的关键字:
 
-```
+```java
 ObjectId objectId = ObjectId.get();
 ```
 
@@ -50,7 +50,7 @@ ObjectId objectId = ObjectId.get();
 
 然而，如果我们在同一秒钟内创建两个`ObjectId`到`new ObjectId(date, counter)`，我们将得到一个重复的`ObjectId`，因为它是在同一秒钟内，在同一台机器上，用同一计数器生成的。让我们看一个例子:
 
-```
+```java
 @Test
 public void givenSameDateAndCounter_whenComparingObjectIds_thenTheyAreNotEqual() {
     Date date = new Date();
@@ -67,7 +67,7 @@ public void givenSameDateAndCounter_whenComparingObjectIds_thenTheyAreNotEqual()
 
 此外，可以通过直接提供一个十六进制值作为参数来创建`ObjectId`:
 
-```
+```java
 ObjectId objectIdHex = new ObjectId("635981f6e40f61599e000064");
 ```
 
@@ -75,7 +75,7 @@ ObjectId objectIdHex = new ObjectId("635981f6e40f61599e000064");
 
 让我们看一个例子:
 
-```
+```java
 @Test
 public void givenSameArrayOfBytes_whenComparingObjectIdsCreatedViaDifferentMethods_thenTheObjectIdsAreEqual(){
     byte[] bytes = "123456789012".getBytes();
@@ -116,7 +116,7 @@ public void givenSameArrayOfBytes_whenComparingObjectIdsCreatedViaDifferentMetho
 
 让我们来看一个例子。考虑一个`User`类:
 
-```
+```java
 public class User {
     public static final String NAME_FIELD = "name";
 
@@ -132,7 +132,7 @@ public class User {
 
 让我们看一个例子:
 
-```
+```java
 @Test
 public void givenUserInDatabase_whenInsertingAnotherUserWithTheSameObjectId_DKEThrownAndInsertRetried() {
     // given

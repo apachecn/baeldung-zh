@@ -34,7 +34,7 @@ WSDL 是可用服务的契约定义。它是输入/输出消息以及如何调�
 
 `definitions`元素是所有 WSDL 文档的根元素。它定义了名称、命名空间等。如你所见，这里非常宽敞:
 
-```
+```java
 <definitions  
   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
   xmlns:tns="http://jaxws.baeldung.com/" 
@@ -53,7 +53,7 @@ WSDL 是可用服务的契约定义。它是输入/输出消息以及如何调�
 
 `types`元素定义了 web 服务使用的数据类型。WSDL 使用 [XSD](https://web.archive.org/web/20220526040446/https://www.w3.org/TR/xmlschema-2/) (XML 模式定义)作为帮助实现互操作性的类型系统:
 
-```
+```java
 <definitions ...>
     ...
     <types>
@@ -70,7 +70,7 @@ WSDL 是可用服务的契约定义。它是输入/输出消息以及如何调�
 
 元素提供了被传输数据的抽象定义。每个`message`元素描述了服务方法的输入或输出以及可能的异常:
 
-```
+```java
 <definitions ...>
     ...
     <message name="getEmployee">
@@ -90,7 +90,7 @@ WSDL 是可用服务的契约定义。它是输入/输出消息以及如何调�
 
 `portType`元素描述了每个可以执行的`operation`和所有涉及的`message`元素。例如，`getEmployee`操作指定了 web 服务`operation`抛出的请求`input`、`output`和可能的`fault`异常:
 
-```
+```java
 <definitions ...>
     ...
     <portType name="EmployeeService">
@@ -114,7 +114,7 @@ WSDL 是可用服务的契约定义。它是输入/输出消息以及如何调�
 
 `binding`元素为每个`portType`提供协议和数据格式细节:
 
-```
+```java
 <definitions ...>
     ...
     <binding name="EmployeeServiceImplPortBinding" 
@@ -143,7 +143,7 @@ WSDL 是可用服务的契约定义。它是输入/输出消息以及如何调�
 
 `service`元素定义了 web 服务支持的端口。`service`中的`port`元素定义了服务的`name`、`binding`和`address`:
 
-```
+```java
 <definitions ...>
     ...
     <service name="EmployeeService">
@@ -161,7 +161,7 @@ WSDL 是可用服务的契约定义。它是输入/输出消息以及如何调�
 
 让我们从自顶向下的方法开始，创建一个 WSDL 文件`employeeservicetopdown.wsdl.` 为了简单起见，它只有一个方法:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions 
   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
@@ -222,7 +222,7 @@ WSDL 是可用服务的契约定义。它是输入/输出消息以及如何调�
 
 在命令提示符下:
 
-```
+```java
 wsimport -s . -p com.baeldung.jaxws.server.topdown employeeservicetopdown.wsdl
 ```
 
@@ -242,7 +242,7 @@ wsimport -s . -p com.baeldung.jaxws.server.topdown employeeservicetopdown.wsdl
 
 `wsimport` 工具已经生成了 web 服务端点接口 `EmployeeServiceTopDown`。它声明了 web 服务方法:
 
-```
+```java
 @WebService(
   name = "EmployeeServiceTopDown", 
   targetNamespace = "http://topdown.server.jaxws.baeldung.com/")
@@ -266,7 +266,7 @@ public interface EmployeeServiceTopDown {
 
 `wsimport`工具已经创建了 web 服务的结构。我们必须创建 web 服务的实现:
 
-```
+```java
 @WebService(
   name = "EmployeeServiceTopDown", 
   endpointInterface = "com.baeldung.jaxws.server.topdown.EmployeeServiceTopDown",
@@ -294,7 +294,7 @@ public class EmployeeServiceTopDownImpl
 
 `Employee`模型类:
 
-```
+```java
 public class Employee {
     private int id;
     private String firstName;
@@ -307,7 +307,7 @@ public class Employee {
 
 声明 web 服务方法的 web 服务端点接口:
 
-```
+```java
 @WebService
 public interface EmployeeService {
     @WebMethod
@@ -336,7 +336,7 @@ public interface EmployeeService {
 
 web 服务端点接口的实现类:
 
-```
+```java
 @WebService(endpointInterface = "com.baeldung.jaxws.EmployeeService")
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -371,7 +371,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 为了发布 web 服务(自顶向下和自底向上)，我们需要将 web 服务实现的地址和实例传递给`javax.xml.ws.Endpoint` 类的`publish()`方法:
 
-```
+```java
 public class EmployeeServicePublisher {
     public static void main(String[] args) {
         Endpoint.publish(
@@ -394,7 +394,7 @@ public class EmployeeServicePublisher {
 
 为了生成 JAX-WS 客户端工件，我们可以再次使用`wsimport` 工具:
 
-```
+```java
 wsimport -keep -p com.baeldung.jaxws.client http://localhost:8080/employeeservice?wsdl
 ```
 
@@ -404,7 +404,7 @@ wsimport -keep -p com.baeldung.jaxws.client http://localhost:8080/employeeservic
 
 web 服务客户端使用生成的`EmployeeService_Service`连接到服务器并远程调用 web 服务:
 
-```
+```java
 public class EmployeeServiceClient {
     public static void main(String[] args) throws Exception {
         URL url = new URL("http://localhost:8080/employeeservice?wsdl");

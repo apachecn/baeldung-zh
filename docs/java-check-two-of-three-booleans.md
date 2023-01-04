@@ -16,7 +16,7 @@
 
 我们将通过单元测试来验证每种方法。因此，让我们首先创建一个`Map`对象来保存测试用例以及预期的结果:
 
-```
+```java
 static final Map<boolean[], Boolean> TEST_CASES_AND_EXPECTED = ImmutableMap.of(
     new boolean[]{true, true, true}, true,
     new boolean[]{true, true, false}, true,
@@ -35,7 +35,7 @@ static final Map<boolean[], Boolean> TEST_CASES_AND_EXPECTED = ImmutableMap.of(
 
 一旦计数器大于或等于`2`，我们停止检查并返回`true`。否则，三只`booleans`中的`trues`数量小于 2。于是，我们返回`false`:
 
-```
+```java
 public static boolean twoOrMoreAreTrueByLoop(boolean a, boolean b, boolean c) {
     int count = 0;
     for (boolean i : new Boolean[] { a, b, c }) {
@@ -50,7 +50,7 @@ public static boolean twoOrMoreAreTrueByLoop(boolean a, boolean b, boolean c) {
 
 接下来，让我们使用`TEST_CASES_AND_EXPECTED`地图来测试这种方法是否有效:
 
-```
+```java
 TEST_CASES_AND_EXPECTED.forEach((array, expected) -> 
   assertThat(ThreeBooleans.twoOrMoreAreTrueByLoop(array[0], array[1], array[2])).isEqualTo(expected));
 ```
@@ -59,7 +59,7 @@ TEST_CASES_AND_EXPECTED.forEach((array, expected) ->
 
 这种方法非常容易理解。此外，假设我们将方法的参数更改为一个`boolean`数组(或一个`Collection`)和一个`int x`。在这种情况下，**可以很容易地扩展成解决问题的通用解决方案:给定`n booleans,`检查它们中是否至少有`x`是`true`** :
 
-```
+```java
 public static boolean xOrMoreAreTrueByLoop(boolean[] booleans, int x) {
     int count = 0;
     for (boolean i : booleans) { 
@@ -76,7 +76,7 @@ public static boolean xOrMoreAreTrueByLoop(boolean[] booleans, int x) {
 
 类似地，**我们可以将三个布尔值转换成数字，计算它们的总和，并检查它是否大于`2`**:
 
-```
+```java
 public static boolean twoOrMoreAreTrueBySum(boolean a, boolean b, boolean c) {
     return (a ? 1 : 0) + (b ? 1 : 0) + (c ? 1 : 0) >= 2;
 } 
@@ -84,14 +84,14 @@ public static boolean twoOrMoreAreTrueBySum(boolean a, boolean b, boolean c) {
 
 让我们执行测试，以确保它按预期工作:
 
-```
+```java
 TEST_CASES_AND_EXPECTED.forEach((array, expected) -> 
   assertThat(ThreeBooleans.twoOrMoreAreTrueBySum(array[0], array[1], array[2])).isEqualTo(expected)); 
 ```
 
 我们也可以将这种方法转化为一种通用的解决方案，至少从`n booleans`开始检查`x trues`:
 
-```
+```java
 public static boolean xOrMoreAreTrueBySum(Boolean[] booleans, int x) {
     return Arrays.stream(booleans)
       .mapToInt(b -> Boolean.TRUE.equals(b) ? 1 : 0)
@@ -107,7 +107,7 @@ public static boolean xOrMoreAreTrueBySum(Boolean[] booleans, int x) {
 
 我们可以对每两个布尔值执行逻辑 AND ( `&&`)运算。因此，我们将对给定的三个布尔值进行三次 AND 运算。**如果三个布尔中的两个是`true`，那么至少一个逻辑 AND 运算应该产生`true`** :
 
-```
+```java
 public static boolean twoOrMoreAreTrueByOpeators(boolean a, boolean b, boolean c) {
     return (a && b) || (a && c) || (b && c);
 }
@@ -115,7 +115,7 @@ public static boolean twoOrMoreAreTrueByOpeators(boolean a, boolean b, boolean c
 
 接下来，如果我们使用`TEST_CASES_AND_EXPECTED`图测试这个方法，它也通过了:
 
-```
+```java
 TEST_CASES_AND_EXPECTED.forEach((array, expected) -> 
   assertThat(ThreeBooleans.twoOrMoreAreTrueByOpeators(array[0], array[1], array[2])).isEqualTo(expected)); 
 ```
@@ -130,7 +130,7 @@ TEST_CASES_AND_EXPECTED.forEach((array, expected) ->
 
 接下来，我们来看看如何用卡诺图解决这个问题。假设我们有三个布尔，A、B 和 C，我们可以构建一个卡诺图:
 
-```
+```java
  | C | !C
 ------|---|----
  A  B | 1 | 1 
@@ -152,7 +152,7 @@ TEST_CASES_AND_EXPECTED.forEach((array, expected) ->
 
 最后，让我们将这两组结合起来，得出解决方案:
 
-```
+```java
 public static boolean twoorMoreAreTrueByKarnaughMap(boolean a, boolean b, boolean c) {
     return (c && (a || b)) || (a && b);
 } 
@@ -160,7 +160,7 @@ public static boolean twoorMoreAreTrueByKarnaughMap(boolean a, boolean b, boolea
 
 现在，让我们测试该方法是否如预期的那样工作:
 
-```
+```java
 TEST_CASES_AND_EXPECTED.forEach((array, expected) -> 
   assertThat(ThreeBooleans.twoorMoreAreTrueByKarnaughMap(array[0], array[1], array[2])).isEqualTo(expected)); 
 ```
@@ -184,7 +184,7 @@ TEST_CASES_AND_EXPECTED.forEach((array, expected) ->
 
 因此，我们可以得出解决方案:`a != b ? c : a`。此外，`a != b`检查实际上是一个[异或运算](/web/20220815224946/https://www.baeldung.com/java-xor-operator)。因此，解决方案可以简单到:
 
-```
+```java
 public static boolean twoOrMoreAreTrueByXor(boolean a, boolean b, boolean c) {
     return a ^ b ? c : a;
 } 
@@ -192,7 +192,7 @@ public static boolean twoOrMoreAreTrueByXor(boolean a, boolean b, boolean c) {
 
 当我们使用`TEST_CASES_AND_EXPECTED`图测试该方法时，测试将通过:
 
-```
+```java
 TEST_CASES_AND_EXPECTED.forEach((array, expected) -> 
   assertThat(ThreeBooleans.twoOrMoreAreTrueByXor(array[0], array[1], array[2])).isEqualTo(expected)); 
 ```

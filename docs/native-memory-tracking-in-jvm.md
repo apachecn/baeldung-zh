@@ -57,13 +57,13 @@ JVM 通常是大量本机内存分配的嫌疑人，但有时开发人员也可�
 
 在本节中，我们针对不同的优化场景使用了一些 JVM 调优标志。使用下面的技巧，我们可以找到几乎所有与特定概念相关的调优标志:
 
-```
+```java
 $ java -XX:+PrintFlagsFinal -version | grep <concept>
 ```
 
 `PrintFlagsFinal` 打印 JVM 中所有的–`XX `选项。例如，要查找所有与元空间相关的标志:
 
-```
+```java
 $ java -XX:+PrintFlagsFinal -version | grep Metaspace
       // truncated
       uintx MaxMetaspaceSize                          = 18446744073709547520                    {product}
@@ -77,7 +77,7 @@ $ java -XX:+PrintFlagsFinal -version | grep Metaspace
 
 假设我们想要跟踪一个典型的 Spring Boot 应用程序的本机分配:
 
-```
+```java
 $ java -XX:NativeMemoryTracking=summary -Xms300m -Xmx300m -XX:+UseG1GC -jar app.jar
 ```
 
@@ -87,13 +87,13 @@ $ java -XX:NativeMemoryTracking=summary -Xms300m -Xmx300m -XX:+UseG1GC -jar app.
 
 启用 NMT 后，我们可以随时使用`jcmd `命令获取本机内存信息:
 
-```
+```java
 $ jcmd <pid> VM.native_memory
 ```
 
 为了找到 JVM 应用程序的 PID，我们可以使用*jps**命令:*
 
-```
+```java
 $ jps -l                    
 7858 app.jar // This is our app
 7899 sun.tools.jps.Jps
@@ -101,7 +101,7 @@ $ jps -l
 
 现在，如果我们将`jcmd `与适当的`pid`一起使用，`VM.native_memory `会让 JVM 打印出关于本机分配的信息:
 
-```
+```java
 $ jcmd 7858 VM.native_memory
 ```
 
@@ -111,7 +111,7 @@ $ jcmd 7858 VM.native_memory
 
 NMT 报告保留和提交的总内存如下:
 
-```
+```java
 Native Memory Tracking:
 Total: reserved=1731124KB, committed=448152KB
 ```
@@ -126,7 +126,7 @@ Total: reserved=1731124KB, committed=448152KB
 
 NMT 报告了我们预期的堆分配:
 
-```
+```java
 Java Heap (reserved=307200KB, committed=307200KB)
           (mmap: reserved=307200KB, committed=307200KB)
 ```
@@ -137,7 +137,7 @@ Java Heap (reserved=307200KB, committed=307200KB)
 
 以下是 NMT 对加载类的类元数据的描述:
 
-```
+```java
 Class (reserved=1091407KB, committed=45815KB)
       (classes #6566)
       (malloc=10063KB #8519) 
@@ -150,7 +150,7 @@ Class (reserved=1091407KB, committed=45815KB)
 
 这是 NMT 关于线程分配的报告:
 
-```
+```java
 Thread (reserved=37018KB, committed=37018KB)
        (thread #37)
        (stack: reserved=36864KB, committed=36864KB)
@@ -164,7 +164,7 @@ Thread (reserved=37018KB, committed=37018KB)
 
 让我们看看 NMT 对 JIT 生成和缓存的汇编指令怎么说:
 
-```
+```java
 Code (reserved=251549KB, committed=14169KB)
      (malloc=1949KB #3424) 
      (mmap: reserved=249600KB, committed=12220KB)
@@ -176,7 +176,7 @@ Code (reserved=251549KB, committed=14169KB)
 
 以下是 NMT 关于 G1 GC 内存使用的报告:
 
-```
+```java
 GC (reserved=61771KB, committed=61771KB)
    (malloc=17603KB #4501) 
    (mmap: reserved=44168KB, committed=44168KB)
@@ -186,13 +186,13 @@ GC (reserved=61771KB, committed=61771KB)
 
 让我们看看一个简单得多的 GC 的内存使用情况，比如串行 GC:
 
-```
+```java
 $ java -XX:NativeMemoryTracking=summary -Xms300m -Xmx300m -XX:+UseSerialGC -jar app.jar
 ```
 
 串行 GC 几乎不使用 1 MB:
 
-```
+```java
 GC (reserved=1034KB, committed=1034KB)
    (malloc=26KB #158) 
    (mmap: reserved=1008KB, committed=1008KB)
@@ -204,7 +204,7 @@ GC (reserved=1034KB, committed=1034KB)
 
 以下是 NMT 关于符号分配的报告，如字符串表和常量池:
 
-```
+```java
 Symbol (reserved=10148KB, committed=10148KB)
        (malloc=7295KB #66194) 
        (arena=2853KB #1)
@@ -216,20 +216,20 @@ Symbol (reserved=10148KB, committed=10148KB)
 
 NMT 允许我们跟踪内存分配如何随时间变化。首先，我们应该将应用程序的当前状态标记为基线:
 
-```
+```java
 $ jcmd <pid> VM.native_memory baseline
 Baseline succeeded
 ```
 
 然后，过一会儿，我们可以将当前的内存使用情况与基线进行比较:
 
-```
+```java
 $ jcmd <pid> VM.native_memory summary.diff
 ```
 
 NMT 使用+和–符号，告诉我们这段时间内存使用的变化情况:
 
-```
+```java
 Total: reserved=1771487KB +3373KB, committed=491491KB +6873KB
 -             Java Heap (reserved=307200KB, committed=307200KB)
                         (mmap: reserved=307200KB, committed=307200KB)

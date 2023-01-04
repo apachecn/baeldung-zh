@@ -14,7 +14,7 @@
 
 让我们在表达式中使用带有`(?=criteria)`语法的肯定前瞻断言来匹配主表达式`import`之后的字符组`static`:
 
-```
+```java
 Pattern pattern = Pattern.compile("import (?=static).+");
 
 Matcher matcher = pattern
@@ -31,7 +31,7 @@ assertFalse(pattern.matcher("import java.util.regex.Matcher;").find());
 
 让我们在表达式中使用带有`(?!criteria)`语法的否定前瞻断言来确保字符组`static`不能在我们的主表达式`import`之后匹配:
 
-```
+```java
 Pattern pattern = Pattern.compile("import (?!static).+");
 
 Matcher matcher = pattern.matcher("import java.util.regex.Matcher;");
@@ -60,7 +60,7 @@ assertFalse(pattern
 
 让我们在表达式中使用带有`(?<=criteria)`语法的肯定后视断言来匹配主表达式之前的字符组`jupiter`。* `assertEquals`:
 
-```
+```java
 Pattern pattern = Pattern.compile(".*(?<=jupiter).*assertEquals;");
 
 Matcher matcher = pattern
@@ -77,7 +77,7 @@ assertFalse(pattern.matcher("import static org.junit.Assert.assertEquals;").find
 
 为此，让我们在表达式中使用带有`(?<!criteria)`语法的负后视断言，以确保字符组 `jupiter.{0,30}`不能在我们的主表达式`assertEquals`之前匹配:
 
-```
+```java
 Pattern pattern = Pattern.compile(".*(?<!jupiter.{0,30})assertEquals;");
 
 Matcher matcher = pattern.matcher("import static org.junit.Assert.assertEquals;");

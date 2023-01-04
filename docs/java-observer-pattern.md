@@ -16,7 +16,7 @@
 
 首先，我们将定义`NewsAgency`类:
 
-```
+```java
 public class NewsAgency {
     private String news;
     private List<Channel> channels = new ArrayList<>();
@@ -44,7 +44,7 @@ public class NewsAgency {
 
 现在让我们看看观察者这个`Channel` 类会是什么样子。它应该有`update()`方法，当`NewsAgency`的状态改变时调用该方法:
 
-```
+```java
 public class NewsChannel implements Channel {
     private String news;
 
@@ -59,7 +59,7 @@ public class NewsChannel implements Channel {
 
 `Channel`接口只有一个方法:
 
-```
+```java
 public interface Channel {
     public void update(Object o);
 }
@@ -67,7 +67,7 @@ public interface Channel {
 
 现在，如果我们将`NewsChannel`的实例添加到观察者`,`的列表中，并更改`NewsAgency`的状态，那么`NewsChannel`的实例将被更新:
 
-```
+```java
 NewsAgency observable = new NewsAgency();
 NewsChannel observer = new NewsChannel();
 
@@ -84,7 +84,7 @@ Java 核心库中有一个预定义的`Observer`接口，这使得 observer 模�
 
 让我们看看如何在我们的实现中使用它:
 
-```
+```java
 public class ONewsChannel implements Observer {
 
     private String news;
@@ -102,7 +102,7 @@ public class ONewsChannel implements Observer {
 
 为了定义可观察的`,`,我们需要扩展 Java 的`Observable`类:
 
-```
+```java
 public class ONewsAgency extends Observable {
     private String news;
 
@@ -120,7 +120,7 @@ public class ONewsAgency extends Observable {
 
 为了测试结果，我们只需要将观察者添加到这个列表中，并设置新闻:
 
-```
+```java
 ONewsAgency observable = new ONewsAgency();
 ONewsChannel observer = new ONewsChannel();
 
@@ -141,7 +141,7 @@ assertEquals(observer.getNews(), "news");
 
 让我们来定义可观察的:
 
-```
+```java
 public class PCLNewsAgency {
     private String news;
 
@@ -168,7 +168,7 @@ public class PCLNewsAgency {
 
 使用这个`support`，我们可以添加和删除观察者，并在可观察的状态改变时通知他们:
 
-```
+```java
 support.firePropertyChange("news", this.news, value);
 ```
 
@@ -176,7 +176,7 @@ support.firePropertyChange("news", this.news, value);
 
 观察员应实施 `[PropertyChangeListener](https://web.archive.org/web/20221005171216/https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/beans/PropertyChangeListener.html)`:
 
-```
+```java
 public class PCLNewsChannel implements PropertyChangeListener {
 
     private String news;
@@ -193,7 +193,7 @@ public class PCLNewsChannel implements PropertyChangeListener {
 
 让我们测试一下实现，以确保它也能工作:
 
-```
+```java
 PCLNewsAgency observable = new PCLNewsAgency();
 PCLNewsChannel observer = new PCLNewsChannel();
 

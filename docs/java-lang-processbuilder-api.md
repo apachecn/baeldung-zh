@@ -29,37 +29,37 @@
 
 在本节中，**我们将后退一步，简要地看一下`ProcessBuilder`类**中最重要的方法。这将有助于我们以后深入研究一些真实的例子:
 
-*   ```
+*   ```java
     ProcessBuilder(String... command)
     ```
 
     要使用指定的操作系统程序和参数创建新的 process builder，我们可以使用这个方便的构造函数。
 
-*   ```
+*   ```java
     directory(File directory)
     ```
 
     我们可以通过调用`directory`方法并传递一个`File`对象来覆盖当前进程的默认工作目录。**默认情况下，当前工作目录设置为`user.dir` 系统属性**返回的值。
 
-*   ```
+*   ```java
     environment()
     ```
 
     如果我们想获得当前的环境变量，我们可以简单地调用 `environment` 方法。它返回给我们一个 当前进程环境的副本，使用 `System.getenv()` 但是作为 `Map` 。
 
-*   ```
+*   ```java
     inheritIO()
     ```
 
     如果我们想要指定我们的子进程标准 I/O 的源和目的地应该与当前 Java 进程的相同，我们可以使用`inheritIO`方法。
 
-*   ```
+*   ```java
     redirectInput(File file), redirectOutput(File file), redirectError(File file)
     ```
 
     当我们想要将 process builder 的标准输入、输出和错误目标重定向到一个文件时，我们可以使用这三种类似的重定向方法。
 
-*   ```
+*   ```java
     start()
     ```
 
@@ -75,7 +75,7 @@
 
 **在第一个例子中，我们将运行带有一个参数的`java`命令来获取版本**。
 
-```
+```java
 Process process = new ProcessBuilder("java", "-version").start();
 ```
 
@@ -83,7 +83,7 @@ Process process = new ProcessBuilder("java", "-version").start();
 
 现在让我们看看如何处理输出:
 
-```
+```java
 List<String> results = readOutput(process.getInputStream());
 
 assertThat("Results should not be empty", results, is(not(empty())));
@@ -110,7 +110,7 @@ assertEquals("No errors should be detected", 0, exitCode);
 
 **但在此之前，让我们先来看看在默认环境中可以找到的信息种类**:
 
-```
+```java
 ProcessBuilder processBuilder = new ProcessBuilder();        
 Map<String, String> environment = processBuilder.environment();
 environment.forEach((key, value) -> System.out.println(key + value));
@@ -118,7 +118,7 @@ environment.forEach((key, value) -> System.out.println(key + value));
 
 这只是打印出默认情况下提供的每个变量条目:
 
-```
+```java
 PATH/usr/bin:/bin:/usr/sbin:/sbin
 SHELL/bin/bash
 ...
@@ -126,7 +126,7 @@ SHELL/bin/bash
 
 **现在我们要给我们的`ProcessBuilder`对象添加一个新的环境变量，并运行一个命令来输出它的值:**
 
-```
+```java
 environment.put("GREETING", "Hola Mundo");
 
 processBuilder.command("/bin/bash", "-c", "echo $GREETING");
@@ -141,7 +141,7 @@ Process process = processBuilder.start();
 
 为了完成该示例，我们验证输出是否包含我们的问候语:
 
-```
+```java
 List<String> results = readOutput(process.getInputStream());
 assertThat("Results should not be empty", results, is(not(empty())));
 assertThat("Results should contain java version: ", results, hasItem(containsString("Hola Mundo")));
@@ -151,7 +151,7 @@ assertThat("Results should contain java version: ", results, hasItem(containsStr
 
 有时改变工作目录会很有用。在下一个示例中，我们将了解如何做到这一点:
 
-```
+```java
 @Test
 public void givenProcessBuilder_whenModifyWorkingDir_thenSuccess() 
   throws IOException, InterruptedException {
@@ -181,7 +181,7 @@ public void givenProcessBuilder_whenModifyWorkingDir_thenSuccess()
 
 让我们回到最初的例子，打印出 Java 的版本。但是这次让我们将输出重定向到一个日志文件，而不是标准的输出管道:
 
-```
+```java
 ProcessBuilder processBuilder = new ProcessBuilder("java", "-version");
 
 processBuilder.redirectErrorStream(true);
@@ -195,7 +195,7 @@ Process process = processBuilder.start();
 
 在最后一个代码片段中，我们简单地检查了`getInputStream()`确实是`null`,并且我们文件的内容与预期的一样:
 
-```
+```java
 assertEquals("If redirected, should be -1 ", -1, process.getInputStream().read());
 List<String> lines = Files.lines(log.toPath()).collect(Collectors.toList());
 assertThat("Results should contain java version: ", lines, hasItem(containsString("java version")));
@@ -203,7 +203,7 @@ assertThat("Results should contain java version: ", lines, hasItem(containsStrin
 
 现在让我们来看看这个例子的一个细微变化。例如，当我们希望追加到一个日志文件中，而不是每次都创建一个新的日志文件时:
 
-```
+```java
 File log = tempFolder.newFile("java-version-append.log");
 processBuilder.redirectErrorStream(true);
 processBuilder.redirectOutput(Redirect.appendTo(log));
@@ -213,7 +213,7 @@ processBuilder.redirectOutput(Redirect.appendTo(log));
 
 当然，我们可以为标准输出和标准错误输出指定单独的文件:
 
-```
+```java
 File outputLog = tempFolder.newFile("standard-output.log");
 File errorLog = tempFolder.newFile("error.log");
 
@@ -225,7 +225,7 @@ processBuilder.redirectError(Redirect.appendTo(errorLog));
 
 在倒数第二个例子中，我们将看到`inheritIO()`方法的运行。**当我们想要将子进程 I/O 重定向到当前进程的标准 I/O 时，我们可以使用这个方法:**
 
-```
+```java
 @Test
 public void givenProcessBuilder_whenInheritIO_thenSuccess() throws IOException, InterruptedException {
     ProcessBuilder processBuilder = new ProcessBuilder("/bin/sh", "-c", "echo hello");
@@ -246,7 +246,7 @@ public void givenProcessBuilder_whenInheritIO_thenSuccess() throws IOException, 
 
 **Java 9 向`ProcessBuilder` API:** 引入了管道的概念
 
-```
+```java
 public static List<Process> startPipeline​(List<ProcessBuilder> builders) 
 ```
 
@@ -254,13 +254,13 @@ public static List<Process> startPipeline​(List<ProcessBuilder> builders)
 
 例如，如果我们想运行这样的程序:
 
-```
+```java
 find . -name *.java -type f | wc -l
 ```
 
 我们要做的是为每个独立的命令创建一个流程构建器，并将它们组合成一个管道:
 
-```
+```java
 @Test
 public void givenProcessBuilder_whenStartingPipeline_thenSuccess()
   throws IOException, InterruptedException {

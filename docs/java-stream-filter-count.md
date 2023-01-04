@@ -12,7 +12,7 @@
 
 让我们使用我们在[教程中为`Stream.filter()`](/web/20220930105629/https://www.baeldung.com/java-stream-filter-lambda) 定义的同一个`Customer`类:
 
-```
+```java
 public class Customer {
     private String name;
     private int points;
@@ -22,7 +22,7 @@ public class Customer {
 
 此外，我们还创建了相同的客户群:
 
-```
+```java
 Customer john = new Customer("John P.", 15);
 Customer sarah = new Customer("Sarah M.", 200);
 Customer charles = new Customer("Charles B.", 150);
@@ -37,7 +37,7 @@ List<Customer> customers = Arrays.asList(john, sarah, charles, mary);
 
 让我们来看看`count()`的基本用法:
 
-```
+```java
 long count = customers.stream().count();
 
 assertThat(count).isEqualTo(4L);
@@ -51,7 +51,7 @@ assertThat(count).isEqualTo(4L);
 
 当我们将 **`Stream.count()`与其他`Stream`方法结合时，它真的大放异彩——最常见的是与`filter()` :** 结合
 
-```
+```java
 long countBigCustomers = customers
   .stream()
   .filter(c -> c.getPoints() > 100)
@@ -64,7 +64,7 @@ assertThat(countBigCustomers).isEqualTo(2L);
 
 当然，也可能没有元素与我们的过滤器匹配:
 
-```
+```java
 long count = customers
   .stream()
   .filter(c -> c.getPoints() > 500)
@@ -79,7 +79,7 @@ assertThat(count).isEqualTo(0L);
 
 **我们可以根据多个标准过滤收藏:**
 
-```
+```java
 long count = customers
   .stream()
   .filter(c -> c.getPoints() > 10 && c.getName().startsWith("Charles"))
@@ -92,7 +92,7 @@ assertThat(count).isEqualTo(1L);
 
 **我们也可以将标准提取到自己的方法中，并使用方法引用:**
 
-```
+```java
 long count = customers
   .stream()
   .filter(Customer::hasOverHundredPoints)

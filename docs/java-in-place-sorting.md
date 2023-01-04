@@ -24,7 +24,7 @@
 
 那么，为什么我们不覆盖输入，而是将它的值移动到一个全新的数组中，因为这可能是最明显的方法。为此，**我们只需要一个额外的变量**来临时存储我们当前正在处理的值:
 
-```
+```java
 reversInPlace(array A[n])
     for i from 0 to n/2
     temp = A[i]
@@ -42,7 +42,7 @@ reversInPlace(array A[n])
 
 另一方面，我们也可以用一种非常简单、更明显的方式做到这一点。我们可以创建一个相同大小的新数组，按照相应的顺序复制原始数组中的值，然后删除原始数组:
 
-```
+```java
 reverseOutOfPlace(array A[n])
     create new array B[n]
     for i from 0 to n - 1
@@ -63,7 +63,7 @@ reverseOutOfPlace(array A[n])
 
 首先，我们将实现一个就地算法:
 
-```
+```java
 public static int[] reverseInPlace(int A[]) {
     int n = A.length;
     for (int i = 0; i < n / 2; i++) {
@@ -77,7 +77,7 @@ public static int[] reverseInPlace(int A[]) {
 
 我们可以很容易地测试这是否如预期的那样工作:
 
-```
+```java
 @Test
 public void givenArray_whenInPlaceSort_thenReversed() {
     int[] input = {1, 2, 3, 4, 5, 6, 7};
@@ -89,7 +89,7 @@ public void givenArray_whenInPlaceSort_thenReversed() {
 
 其次，让我们来看看错位算法的实现:
 
-```
+```java
 public static int[] reverseOutOfPlace(int A[]) {
     int n = A.length;
     int[] B = new int[n];
@@ -102,7 +102,7 @@ public static int[] reverseOutOfPlace(int A[]) {
 
 测试非常简单:
 
-```
+```java
 @Test
 public void givenArray_whenOutOfPlaceSort_thenReversed() {
     int[] input = {1, 2, 3, 4, 5, 6, 7};

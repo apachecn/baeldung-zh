@@ -34,7 +34,7 @@
 
 首先，让我们实现如上所述的欧几里德算法的强制 Java 版本:
 
-```
+```java
 int iterativeGCD(int a, int b) {
     int tmp;
     while (b != 0) {
@@ -57,7 +57,7 @@ int iterativeGCD(int a, int b) {
 
 接下来，让我们看一个递归实现。这可能更干净，因为它避免了显式的变量值交换:
 
-```
+```java
 int recursiveGCD(int a, int b) {
     if (b == 0) {
         return a;
@@ -75,7 +75,7 @@ int recursiveGCD(int a, int b) {
 
 使用这种方法，我们可以更容易地将相对质数的算法写成:
 
-```
+```java
 boolean bigIntegerRelativelyPrime(int a, int b) {
     return BigInteger.valueOf(a).gcd(BigInteger.valueOf(b)).equals(BigInteger.ONE);
 } 

@@ -12,7 +12,7 @@
 
 为了给我们的例子做准备，我们将创建一个实体`Car`，它有两个属性`model `和`power`:
 
-```
+```java
 @Entity
 public class Car {
 
@@ -31,7 +31,7 @@ public class Car {
 
 `JpaRepository` 接口公开了`existsById`方法，该方法检查数据库中是否存在具有给定`id`的实体:
 
-```
+```java
 int searchId = 2; // ID of the Car
 boolean exists = repository.existsById(searchId)
 ```
@@ -42,7 +42,7 @@ boolean exists = repository.existsById(searchId)
 
 我们还可以使用 Spring 的派生查询方法特性来制定我们的查询。在我们的例子中，我们想要检查具有给定模型名称的`Car`是否存在；因此，我们设计了以下查询方法:
 
-```
+```java
 boolean existsCarByModel(String model);
 ```
 
@@ -60,7 +60,7 @@ boolean existsCarByModel(String model);
 
 假设我们想以不区分大小写的方式搜索模型名称。我们将从创建我们的`ExampleMatcher`开始:
 
-```
+```java
 ExampleMatcher modelMatcher = ExampleMatcher.matching()
   .withIgnorePaths("id") 
   .withMatcher("model", ignoreCase());
@@ -72,7 +72,7 @@ ExampleMatcher modelMatcher = ExampleMatcher.matching()
 
 接下来，我们需要定义一个所谓的“探针”，它是我们想要查找的类的一个实例。它设置了所有与搜索相关的属性。然后，我们将它连接到我们的`nameMatcher,`并执行查询:
 
-```
+```java
 Car probe = new Car();
 probe.setModel("bmw");
 Example<Car> example = Example.of(probe, modelMatcher);
@@ -85,7 +85,7 @@ boolean exists = repository.exists(example);
 
 我们将研究的最后一种方法使用 JPQL (Java 持久性查询语言)来实现带有 exists `–`语义的定制查询:
 
-```
+```java
 @Query("select case when count(c)> 0 then true else false end from Car c where lower(c.model) like lower(:model)")
 boolean existsCarLikeCustomQuery(@Param("model") String model);
 ```

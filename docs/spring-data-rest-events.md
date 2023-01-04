@@ -16,7 +16,7 @@
 
 在下面的例子中，我们用对应于实体`Author – `的`RepositoryEventHandler` 来注释该类，并在`AuthorEventHandler`类中声明与对应于实体`Author`的不同之前和之后事件相关的方法:
 
-```
+```java
 @RepositoryEventHandler(Author.class) 
 public class AuthorEventHandler {
     Logger logger = Logger.getLogger("Class AuthorEventHandler");
@@ -67,7 +67,7 @@ public class AuthorEventHandler {
 
 我们也可以在一个类中声明对应于相同事件类型的不同实体类型的方法:
 
-```
+```java
 @RepositoryEventHandler
 public class BookEventHandler {
 
@@ -87,7 +87,7 @@ public class BookEventHandler {
 
 此外，我们需要在`@Configuration`类中声明事件处理程序，该类将检查 bean 中的处理程序，并将它们与正确的事件进行匹配:
 
-```
+```java
 @Configuration
 public class RepositoryConfiguration{
 

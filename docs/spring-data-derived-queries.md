@@ -26,7 +26,7 @@ Learn different ways to sort results in Spring Data queries.[Read more](/web/202
 
 **派生方法名有两个主要部分，由第一个`By` 关键字**分隔:
 
-```
+```java
 List<User> findByName(String name)
 ```
 
@@ -36,7 +36,7 @@ List<User> findByName(String name)
 
 我们还可以使用`Distinct`、`First`或`Top`来删除重复项或[来限制我们的结果集](/web/20221109154644/https://www.baeldung.com/jpa-limit-query-results#spring-data-jpa):
 
-```
+```java
 List<User> findTop3ByAge()
 ```
 
@@ -50,7 +50,7 @@ List<User> findTop3ByAge()
 
 在该应用程序中，让我们定义一个实体类:
 
-```
+```java
 @Table(name = "users")
 @Entity
 class User {
@@ -71,7 +71,7 @@ class User {
 
 它将扩展`JpaRepository`，Spring 数据仓库类型的[之一:](/web/20221109154644/https://www.baeldung.com/spring-data-repositories)
 
-```
+```java
 interface UserRepository extends JpaRepository<User, Integer> {}
 ```
 
@@ -83,20 +83,20 @@ interface UserRepository extends JpaRepository<User, Integer> {}
 
 对于精确匹配条件，我们可以只添加属性名，而不添加任何关键字:
 
-```
+```java
 List<User> findByName(String name);
 ```
 
 为了可读性，我们可以添加`Is`或`Equals`:
 
-```
+```java
 List<User> findByNameIs(String name);
 List<User> findByNameEquals(String name);
 ```
 
 当我们需要表达不平等时，这种额外的可读性就派上了用场:
 
-```
+```java
 List<User> findByNameIsNot(String name);
 ```
 
@@ -106,7 +106,7 @@ List<User> findByNameIsNot(String name);
 
 我们还可以使用`IsNull`关键字将 IS NULL 标准添加到查询中:
 
-```
+```java
 List<User> findByNameIsNull();
 List<User> findByNameIsNotNull();
 ```
@@ -117,7 +117,7 @@ List<User> findByNameIsNotNull();
 
 我们可以使用`True`和`False` 关键字为`boolean`类型添加等式条件:
 
-```
+```java
 List<User> findByActiveTrue();
 List<User> findByActiveFalse();
 ```
@@ -130,7 +130,7 @@ List<User> findByActiveFalse();
 
 我们可以使用`StartingWith`找到以某个值开头的名称:
 
-```
+```java
 List<User> findByNameStartingWith(String prefix);
 ```
 
@@ -138,13 +138,13 @@ List<User> findByNameStartingWith(String prefix);
 
 如果我们想要以一个值结尾的名字，`EndingWith`就是我们想要的:
 
-```
+```java
 List<User> findByNameEndingWith(String suffix);
 ```
 
 或者我们可以找到哪些名称包含带有`Containing`的值:
 
-```
+```java
 List<User> findByNameContaining(String infix);
 ```
 
@@ -154,13 +154,13 @@ List<User> findByNameContaining(String infix);
 
 为此，我们可以用关键字`Like` 添加我们自己的 LIKE:
 
-```
+```java
 List<User> findByNameLike(String likePattern);
 ```
 
 当我们调用这个方法时，我们可以传递我们喜欢的模式:
 
-```
+```java
 String likePattern = "a%b%c";
 userRepository.findByNameLike(likePattern);
 ```
@@ -171,27 +171,27 @@ userRepository.findByNameLike(likePattern);
 
 此外，我们可以使用`LessThan`和`LessThanEqual` 关键字，通过`<` 和`<=` 操作符将记录与给定值进行比较:
 
-```
+```java
 List<User> findByAgeLessThan(Integer age);
 List<User> findByAgeLessThanEqual(Integer age);
 ```
 
 在相反的情况下，我们可以使用`GreaterThan`和`GreaterThanEqual` 关键字:
 
-```
+```java
 List<User> findByAgeGreaterThan(Integer age);
 List<User> findByAgeGreaterThanEqual(Integer age);
 ```
 
 或者我们可以用`Between`找到两个年龄之间的用户:
 
-```
+```java
 List<User> findByAgeBetween(Integer startAge, Integer endAge);
 ```
 
 我们还可以提供一个年龄集合来匹配使用`In`:
 
-```
+```java
 List<User> findByAgeIn(Collection<Integer> ages);
 ```
 
@@ -199,7 +199,7 @@ List<User> findByAgeIn(Collection<Integer> ages);
 
 我们用`Before`和`After`来表示:
 
-```
+```java
 List<User> findByBirthDateAfter(ZonedDateTime birthDate);
 List<User> findByBirthDateBefore(ZonedDateTime birthDate);
 ```
@@ -208,7 +208,7 @@ List<User> findByBirthDateBefore(ZonedDateTime birthDate);
 
 我们可以使用`And`和`Or` 关键字组合任意多的表达式:
 
-```
+```java
 List<User> findByNameOrBirthDate(String name, ZonedDateTime birthDate);
 List<User> findByNameOrBirthDateAndActive(String name, ZonedDateTime birthDate, Boolean active);
 ```
@@ -223,14 +223,14 @@ List<User> findByNameOrBirthDateAndActive(String name, ZonedDateTime birthDate, 
 
 我们可以使用`OrderBy`让用户按照名字的字母顺序排序:
 
-```
+```java
 List<User> findByNameOrderByName(String name);
 List<User> findByNameOrderByNameAsc(String name);
 ```
 
 升序是默认的排序选项，但是我们可以使用`Desc` 来反向排序:
 
-```
+```java
 List<User> findByNameOrderByNameDesc(String name);
 ```
 
@@ -240,13 +240,13 @@ List<User> findByNameOrderByNameDesc(String name);
 
 以前在 Spring Boot 1.x 中，当我们想通过主键检索一个实体时，我们会调用`findOne`:
 
-```
+```java
 User user = userRepository.findOne(1);
 ```
 
 从 Spring Boot 2.x 开始，我们可以用`findById`做同样的事情:
 
-```
+```java
 User user = userRepository.findById(1);
 ```
 

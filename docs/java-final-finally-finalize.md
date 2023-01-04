@@ -26,7 +26,7 @@
 
 让我们创建一个具有两个`int `字段的`Parent`类，一个`final`字段和一个常规的非最终字段:
 
-```
+```java
 public class Parent {
 
     int field1 = 1;
@@ -44,7 +44,7 @@ public class Parent {
 
 现在让我们添加一个带有常规参数和最后一个参数的方法:
 
-```
+```java
  void method1(int arg1, final int arg2) {
         arg1 = 2; // OK
         arg2 = 3; // Compilation error
@@ -55,7 +55,7 @@ public class Parent {
 
 我们现在可以添加第二个方法来说明如何使用局部变量:
 
-```
+```java
  void method2() {
         final int localVar = 2; // OK
         localVar = 3; // Compilation error
@@ -68,7 +68,7 @@ public class Parent {
 
 现在假设我们将`method2`设为 final 并创建`Parent`的一个子类，比如说`Child`，我们试图覆盖它的两个超类方法:
 
-```
+```java
 public class Child extends Parent {
 
     @Override
@@ -90,13 +90,13 @@ public class Child extends Parent {
 
 最后，让我们将`Child`类设为 final，并尝试创建它的子类`GrandChild`:
 
-```
+```java
 public final class Child extends Parent { 
     // ... 
 }
 ```
 
-```
+```java
 public class GrandChild extends Child {
     // Compilation error
 }
@@ -114,7 +114,7 @@ public class GrandChild extends Child {
 
 现在让我们在一个简短的例子中演示一个`finally`块。我们将创建一个带有`try/catch/finally`结构的虚拟`main()`方法:
 
-```
+```java
 public static void main(String args[]) {
     try {
         System.out.println("Execute try block");
@@ -129,7 +129,7 @@ public static void main(String args[]) {
 
 如果我们运行这段代码，它将输出以下内容:
 
-```
+```java
 Execute try block
 Execute catch block
 Execute finally block
@@ -137,7 +137,7 @@ Execute finally block
 
 现在让我们通过移除 catch 块来修改该方法(并将`throws Exception`添加到签名中):
 
-```
+```java
 public static void main(String args[]) throws Exception {
     try {
         System.out.println("Execute try block");
@@ -150,7 +150,7 @@ public static void main(String args[]) throws Exception {
 
 现在的输出是:
 
-```
+```java
 Execute try block
 Execute finally block
 ```
@@ -167,7 +167,7 @@ Execute finally block
 
 让我们来看一个它是如何工作的例子。我们将使用`System.gc()`来建议`JVM`触发`garbage collection`:
 
-```
+```java
  @Override
     protected void finalize() throws Throwable {
         System.out.println("Execute finalize method");
@@ -175,7 +175,7 @@ Execute finally block
     }
 ```
 
-```
+```java
  public static void main(String[] args) throws Exception {
         FinalizeObject object = new FinalizeObject();
         object = null;
@@ -190,7 +190,7 @@ Execute finally block
 
 这段代码执行的输出应该是:
 
-```
+```java
 Execute finalize method
 ```
 

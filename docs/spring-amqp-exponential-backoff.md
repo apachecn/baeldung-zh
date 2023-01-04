@@ -18,13 +18,13 @@
 
 让我们开始一个 RabbitMQ docker 容器:
 
-```
+```java
 docker run -p 5672:5672 -p 15672:15672 --name rabbit rabbitmq:3-management
 ```
 
 为了实现我们的例子，我们需要添加对`spring-boot-starter-amqp`的依赖。最新版本可从 [Maven Central](https://web.archive.org/web/20221128052351/https://search.maven.org/classic/#search%7Cga%7C1%7C(g%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-amqp%22)) 获得:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -40,7 +40,7 @@ docker run -p 5672:5672 -p 15672:15672 --name rabbit rabbitmq:3-management
 
 首先，让我们创建队列:
 
-```
+```java
 @Bean
 public Queue blockingQueue() {
     return QueueBuilder.nonDurable("blocking-queue").build();
@@ -49,7 +49,7 @@ public Queue blockingQueue() {
 
 其次，让我们在`RetryOperationsInterceptor`中配置一个回退策略，并将其连接到一个自定义的`RabbitListenerContainerFactory`中:
 
-```
+```java
 @Bean
 public RetryOperationsInterceptor retryInterceptor() {
     return RetryInterceptorBuilder.stateless()
@@ -76,7 +76,7 @@ public SimpleRabbitListenerContainerFactory retryContainerFactory(
 
 让我们添加我们的消费者，并通过抛出一个异常来强制一个失败的消息:
 
-```
+```java
 @RabbitListener(queues = "blocking-queue", containerFactory = "retryContainerFactory")
 public void consumeBlocking(String payload) throws Exception {
     logger.info("Processing message from blocking-queue: {}", payload);
@@ -87,7 +87,7 @@ public void consumeBlocking(String payload) throws Exception {
 
 最后，让我们创建一个测试，并向我们的队列发送两条消息:
 
-```
+```java
 @Test
 public void whenSendToBlockingQueue_thenAllMessagesProcessed() throws Exception {
     int nb = 2;
@@ -107,7 +107,7 @@ public void whenSendToBlockingQueue_thenAllMessagesProcessed() throws Exception 
 
 让我们运行测试并检查我们的日志输出:
 
-```
+```java
 2020-02-18 21:17:55.638  INFO : Processing message from blocking-queue: blocking message 1
 2020-02-18 21:17:56.641  INFO : Processing message from blocking-queue: blocking message 1
 2020-02-18 21:17:59.644  INFO : Processing message from blocking-queue: blocking message 1
@@ -124,7 +124,7 @@ public void whenSendToBlockingQueue_thenAllMessagesProcessed() throws Exception 
 
 可以看出，该日志正确地显示了每次重试之间的指数等待时间。**当我们的退避策略起作用时，我们的消费者被阻塞，直到重试次数用尽。**一个微小的改进是通过设置`@RabbitListener`的`concurrency`属性使我们的消费者并发执行:
 
-```
+```java
 @RabbitListener(queues = "blocking-queue", containerFactory = "retryContainerFactory", concurrency = "2")
 ```
 
@@ -140,7 +140,7 @@ public void whenSendToBlockingQueue_thenAllMessagesProcessed() throws Exception 
 
 首先，让我们为重试队列创建死信队列:
 
-```
+```java
 @Bean
 public Queue retryWaitEndedQueue() {
     return QueueBuilder.nonDurable("retry-wait-ended-queue").build();
@@ -149,7 +149,7 @@ public Queue retryWaitEndedQueue() {
 
 让我们在重试死信队列中添加一个消费者。**该消费者的唯一责任是将消息发送回其原始队列**:
 
-```
+```java
 @RabbitListener(queues = "retry-wait-ended-queue", containerFactory = "defaultContainerFactory")
 public void consumeRetryWaitEndedMessage(String payload, Message message, Channel channel) throws Exception{
     MessageProperties props = message.getMessageProperties();
@@ -161,7 +161,7 @@ public void consumeRetryWaitEndedMessage(String payload, Message message, Channe
 
 其次，让我们为重试队列创建一个包装器对象。该对象将保存指数补偿配置:
 
-```
+```java
 public class RetryQueues {
     private Queue[] queues;
     private long initialInterval;
@@ -173,7 +173,7 @@ public class RetryQueues {
 
 第三，让我们定义三个重试队列:
 
-```
+```java
 @Bean
 public Queue retryQueue1() {
     return QueueBuilder.nonDurable("retry-queue-1")
@@ -206,7 +206,7 @@ public RetryQueues retryQueues() {
 
 然后，我们需要一个拦截器来处理消息消费:
 
-```
+```java
 public class RetryQueuesInterceptor implements MethodInterceptor {
 
     // fields and constructor
@@ -229,7 +229,7 @@ public class RetryQueuesInterceptor implements MethodInterceptor {
 
 **然而，如果消费者抛出一个异常，并且还有剩余的尝试，我们将消息发送到下一个重试队列:**
 
-```
+```java
 private void sendToNextRetryQueue(MessageAndChannel mac, int retryCount) throws Exception {
     String retryQueueName = retryQueues.getQueueName(retryCount);
 
@@ -250,7 +250,7 @@ private void sendToNextRetryQueue(MessageAndChannel mac, int retryCount) throws 
 
 同样，让我们用自定义的`RabbitListenerContainerFactory`来连接我们的拦截器:
 
-```
+```java
 @Bean
 public SimpleRabbitListenerContainerFactory retryQueuesContainerFactory(
   ConnectionFactory connectionFactory, RetryQueuesInterceptor retryInterceptor) {
@@ -266,7 +266,7 @@ public SimpleRabbitListenerContainerFactory retryQueuesContainerFactory(
 
 最后，我们定义我们的主队列和一个模拟失败消息的消费者:
 
-```
+```java
 @Bean
 public Queue nonBlockingQueue() {
     return QueueBuilder.nonDurable("non-blocking-queue")
@@ -284,7 +284,7 @@ public void consumeNonBlocking(String payload) throws Exception {
 
 让我们创建另一个测试并发送两条消息:
 
-```
+```java
 @Test
 public void whenSendToNonBlockingQueue_thenAllMessageProcessed() throws Exception {
     int nb = 2;
@@ -302,7 +302,7 @@ public void whenSendToNonBlockingQueue_thenAllMessageProcessed() throws Exceptio
 
 然后，让我们启动测试并检查日志:
 
-```
+```java
 2020-02-19 10:31:40.640  INFO : Processing message from non-blocking-queue: non blocking message 1
 2020-02-19 10:31:40.656  INFO : Processing message from non-blocking-queue: non blocking message 2
 2020-02-19 10:31:41.620  INFO : Processing message from non-blocking-queue: non blocking message 1

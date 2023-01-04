@@ -25,7 +25,7 @@ JBoss WildFly 10 附带了 rest easy 3 . 0 . 11 版本，但正如你将看到�
 
 让我们看看 **`pom.xml`** `:`
 
-```
+```java
 <properties>
     <resteasy.version>3.0.14.Final</resteasy.version>
 </properties>
@@ -51,7 +51,7 @@ JBoss WildFly 10 附带了 rest easy 3 . 0 . 11 版本，但正如你将看到�
 
 这样，我们的`WAR`中包含的所有类和`JAR`文件都将被加载:
 
-```
+```java
 <jboss-deployment-structure>
     <deployment>
         <exclude-subsystems>
@@ -71,7 +71,7 @@ JBoss WildFly 10 附带了 rest easy 3 . 0 . 11 版本，但正如你将看到�
 
 如果您打算用 JBoss version 6 或更高版本运行 RESTEasy，您可以选择采用已经捆绑在应用服务器中的库，从而简化 pom:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.jboss.resteasy</groupId>
@@ -89,7 +89,7 @@ JBoss WildFly 10 附带了 rest easy 3 . 0 . 11 版本，但正如你将看到�
 
 现在让我们快速浏览一下这个简单项目的 web.xml:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -116,7 +116,7 @@ JBoss WildFly 10 附带了 rest easy 3 . 0 . 11 版本，但正如你将看到�
 
 `javax.ws.rs.core.Application`类是一个标准的 JAX-RS 类，您可以实现它来提供关于您的部署的信息:
 
-```
+```java
 @ApplicationPath("/rest")
 public class RestEasyServices extends Application {
 
@@ -141,7 +141,7 @@ public class RestEasyServices extends Application {
 
 最后，让我们在这里看一个实际的 API 定义:
 
-```
+```java
 @Path("/movies")
 public class MovieCrudService {
 

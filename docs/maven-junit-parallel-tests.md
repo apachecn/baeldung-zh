@@ -12,7 +12,7 @@
 
 让我们从导入所需的依赖项开始。**我们需要使用 [JUnit 4.7 或更高版本](https://web.archive.org/web/20221118191751/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22junit%22%20AND%20a%3A%22junit%22)以及 [Surefire 2.16 或更高版本:](https://web.archive.org/web/20221118191751/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.maven.surefire%22%20AND%20a%3A%22surefire%22)**
 
-```
+```java
 <dependency>
     <groupId>junit</groupId>
     <artifactId>junit</artifactId>
@@ -21,7 +21,7 @@
 </dependency>
 ```
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-surefire-plugin</artifactId>
@@ -58,7 +58,7 @@
 
 在我们的例子中，我们使用`all`:
 
-```
+```java
 <configuration>
     <parallel>all</parallel>
 </configuration>
@@ -68,19 +68,19 @@
 
 使用定义 Surefire 将创建的最大线程数的`threadCount`:
 
-```
+```java
 <threadCount>10</threadCount>
 ```
 
 或者使用`useUnlimitedThreads`参数，每个 CPU 内核创建一个线程:
 
-```
+```java
 <useUnlimitedThreads>true</useUnlimitedThreads>
 ```
 
 默认情况下，`threadCount`是每个 CPU 内核。我们可以使用参数`perCoreThreadCount`来启用或禁用这种行为:
 
-```
+```java
 <perCoreThreadCount>true</perCoreThreadCount>
 ```
 
@@ -90,7 +90,7 @@
 
 让我们将这些参数与前面配置中的`threadCount`:结合起来
 
-```
+```java
 <threadCountSuites>2</threadCountSuites>
 <threadCountClasses>2</threadCountClasses>
 <threadCountMethods>6</threadCountMethods>
@@ -104,7 +104,7 @@
 
 在这种情况下，我们也可以应用线程数限制:
 
-```
+```java
 <useUnlimitedThreads>true</useUnlimitedThreads>
 <threadCountClasses>2</threadCountClasses>
 ```
@@ -115,7 +115,7 @@
 
 **为此，我们可以使用`parallelTestTimeoutForcedInSeconds `参数。**这将中断当前正在运行的线程，并且在超时后不会执行任何排队的线程:
 
-```
+```java
 <parallelTestTimeoutForcedInSeconds>5</parallelTestTimeoutForcedInSeconds>
 ```
 
@@ -123,7 +123,7 @@
 
 在这种情况下，只有排队的线程将停止执行:
 
-```
+```java
 <parallelTestTimeoutInSeconds>3.5</parallelTestTimeoutInSeconds>
 ```
 
@@ -145,13 +145,13 @@ Surefire 在父线程中调用用`@Parameters`、`@BeforeClass`和 `@AfterClass`
 
 我们可以指定构建项目时要使用的确切线程数:
 
-```
+```java
 mvn -T 4 surefire:test
 ```
 
 或者使用可移植版本，并指定每个 CPU 内核要创建的线程数量:
 
-```
+```java
 mvn -T 1C surefire:test
 ```
 
@@ -169,7 +169,7 @@ mvn -T 1C surefire:test
 
 总之，**为了启用分叉，我们只需使用`forkCount `属性，并将其设置为任意正值:**
 
-```
+```java
 <forkCount>3</forkCount>
 ```
 
@@ -177,7 +177,7 @@ mvn -T 1C surefire:test
 
 `forkCount `属性支持与`-T`相同的语法。也就是说，如果我们将`C `附加到这个值上，这个值将会乘以我们系统中可用的 CPU 内核的数量。例如:
 
-```
+```java
 <forkCount>2.5C</forkCount>
 ```
 

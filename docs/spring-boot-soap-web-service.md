@@ -28,7 +28,7 @@ Spring-WS 只支持契约优先的开发风格。
 
 让我们首先将 [`spring-boot-starter-parent`](https://web.archive.org/web/20221126222213/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-parent) 添加到我们的项目中:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -38,7 +38,7 @@ Spring-WS 只支持契约优先的开发风格。
 
 接下来，让我们添加 [`spring-boot-starter-web-services`](https://web.archive.org/web/20221126222213/https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot-starter-web-services) 和`[wsdl4j](https://web.archive.org/web/20221126222213/https://search.maven.org/search?q=g:wsdl4j%20%20a:wsdl4j)`的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web-services</artifactId>
@@ -53,7 +53,7 @@ Spring-WS 只支持契约优先的开发风格。
 
 契约优先的方法要求我们首先为服务创建域(方法和参数)。我们将使用一个 XML 模式文件(XSD ), Spring-WS 会将其自动导出为 WSDL:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.baeldung.com/springsoap/gen"
            targetNamespace="http://www.baeldung.com/springsoap/gen" elementFormDefault="qualified">
@@ -105,7 +105,7 @@ Spring-WS 只支持契约优先的开发风格。
 
 让我们在 pom.xml 中添加和配置插件:
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>jaxb2-maven-plugin</artifactId>
@@ -133,7 +133,7 @@ Spring-WS 只支持契约优先的开发风格。
 
 为了生成 Java 类，我们可以使用 Java 安装中的 XJC 工具。不过，在我们的 Maven 项目中，这甚至更简单，因为在通常的 Maven 构建过程中，**类会自动生成**:
 
-```
+```java
 mvn compile
 ```
 
@@ -143,7 +143,7 @@ SOAP web 服务端点类将处理服务的所有传入请求。它将启动处�
 
 在定义它之前，我们将创建一个`Country`存储库，以便向 web 服务提供数据:
 
-```
+```java
 @Component
 public class CountryRepository {
 
@@ -162,7 +162,7 @@ public class CountryRepository {
 
 接下来，我们将配置端点:
 
-```
+```java
 @Endpoint
 public class CountryEndpoint {
 
@@ -197,7 +197,7 @@ public class CountryEndpoint {
 
 现在让我们创建一个类来配置 Spring message dispatcher servlet 以接收请求:
 
-```
+```java
 @EnableWs
 @Configuration
 public class WebServiceConfig extends WsConfigurerAdapter {
@@ -209,7 +209,7 @@ public class WebServiceConfig extends WsConfigurerAdapter {
 
 让我们创建一个用于处理 SOAP 请求的`MessageDispatcherServlet,`:
 
-```
+```java
 @Bean
 public ServletRegistrationBean messageDispatcherServlet(ApplicationContext applicationContext) {
     MessageDispatcherServlet servlet = new MessageDispatcherServlet();
@@ -225,7 +225,7 @@ public ServletRegistrationBean messageDispatcherServlet(ApplicationContext appli
 
 最后，我们将创建一个`DefaultWsdl11Definition`对象。这公开了一个使用 XsdSchema 的标准 WSDL 1.1。WSDL 名称将与 bean 名称相同:
 
-```
+```java
 @Bean(name = "countries")
 public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema countriesSchema) {
     DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
@@ -252,7 +252,7 @@ public XsdSchema countriesSchema() {
 
 首先，我们将添加以下类来使应用程序可执行:
 
-```
+```java
 @SpringBootApplication
 public class Application {
     public static void main(String[] args) {
@@ -265,7 +265,7 @@ public class Application {
 
 现在我们已经准备好构建和运行应用程序了:
 
-```
+```java
 mvn spring-boot:run
 ```
 
@@ -275,7 +275,7 @@ mvn spring-boot:run
 
 为了测试一个请求，我们将创建以下文件并将其命名为 request.xml:
 
-```
+```java
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
                   xmlns:gs="http://www.baeldung.com/springsoap/gen">
     <soapenv:Header/>
@@ -289,7 +289,7 @@ mvn spring-boot:run
 
 要将请求发送到我们的测试服务器，我们可以使用外部工具，比如 SoapUI 或 Google Chrome extension Wizdler。另一种方法是在我们的 shell 中运行以下命令:
 
-```
+```java
 curl --header "content-type: text/xml" -d @request.xml http://localhost:8080/ws
 ```
 
@@ -297,13 +297,13 @@ curl --header "content-type: text/xml" -d @request.xml http://localhost:8080/ws
 
 要查看它的格式，我们可以将它复制粘贴到我们的 IDE 或其他工具中。如果我们已经安装了 xmllib2，我们可以将 curl 命令的输出通过管道传输到`xmllint`:
 
-```
+```java
 curl [command-line-options] | xmllint --format -
 ```
 
 回复应包含关于西班牙的信息:
 
-```
+```java
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
 <SOAP-ENV:Header/>
 <SOAP-ENV:Body>

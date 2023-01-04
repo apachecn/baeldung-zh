@@ -14,7 +14,7 @@
 
 假设我们正在开发一个使用 PostgreSQL 作为数据库的典型应用程序。我们从一个简单的 JPA [实体](/web/20220827110142/https://www.baeldung.com/jpa-entities)开始:
 
-```
+```java
 @Entity
 @Table(name = "articles")
 public class Article {
@@ -57,7 +57,7 @@ public class Article {
 
 **实现动态属性的第一种方法是使用自定义的 [`ApplicationContextInitializer`](https://web.archive.org/web/20220827110142/https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/context/ApplicationContextInitializer.html)** 。基本上，我们首先建立基础设施，并使用第一步中的信息定制 [`ApplicationContext`](/web/20220827110142/https://www.baeldung.com/spring-application-context) :
 
-```
+```java
 @SpringBootTest
 @Testcontainers
 @ContextConfiguration(initializers = ArticleTraditionalLiveTest.EnvInitializer.class)
@@ -90,7 +90,7 @@ class ArticleTraditionalLiveTest {
 
 只有在这些步骤之后，我们才能编写我们的测试:
 
-```
+```java
 @Autowired
 private ArticleRepository articleRepository;
 
@@ -113,7 +113,7 @@ void givenAnArticle_whenPersisted_thenShouldBeAbleToReadIt() {
 
 **Spring Framework 5.2.5 引入了`@DynamicPropertySource `注释，方便添加带有动态值**的属性。我们所要做的就是创建一个用`@DynamicPropertySource`注释的静态方法，并且只有一个`[DynamicPropertyRegistry](https://web.archive.org/web/20220827110142/https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/context/DynamicPropertyRegistry.html) `实例作为输入:
 
-```
+```java
 @SpringBootTest
 @Testcontainers
 public class ArticleLiveTest {
@@ -149,7 +149,7 @@ public class ArticleLiveTest {
 
 为了避免这些缺点，**我们可以使用大多数测试框架提供的测试夹具设施**。例如，在 JUnit 5 中，我们可以定义一个[扩展](/web/20220827110142/https://www.baeldung.com/junit-5-extensions)，它在我们的测试类中的所有测试之前启动 PostgreSQL 实例，配置 Spring Boot，并在运行测试之后停止 PostgreSQL 实例:
 
-```
+```java
 public class PostgreSQLExtension implements BeforeAllCallback, AfterAllCallback {
 
     private PostgreSQLContainer<?> postgres;
@@ -178,7 +178,7 @@ public class PostgreSQLExtension implements BeforeAllCallback, AfterAllCallback 
 
 这里，我们实现了`[AfterAllCallback](https://web.archive.org/web/20220827110142/https://junit.org/junit5/docs/5.1.1/api/org/junit/jupiter/api/extension/AfterAllCallback.html) `和`[BeforeAllCallback](https://web.archive.org/web/20220827110142/https://junit.org/junit5/docs/5.1.1/api/org/junit/jupiter/api/extension/BeforeAllCallback.html) `来创建一个 JUnit 5 扩展。这样，JUnit 5 将在运行所有测试之前执行`beforeAll() `逻辑，并在运行测试之后执行`afterAll() `方法中的逻辑。使用这种方法，我们的测试代码将会非常简洁:
 
-```
+```java
 @SpringBootTest
 @ExtendWith(PostgreSQLExtension.class)
 @DirtiesContext

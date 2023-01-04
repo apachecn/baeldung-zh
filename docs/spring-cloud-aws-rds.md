@@ -16,13 +16,13 @@ Content Series:[This article is part of a series:](javascript:void(0);)[• Spri
 
 如果一个 AWS 帐户有一个 RDS 实例，其 DB 实例标识符为`spring-cloud-test-db`，主密码为`se3retpass`，那么创建一个`DataSource`所需要的就是`application.properties`中的下面一行:
 
-```
+```java
 cloud.aws.rds.spring-cloud-test-db.password=se3retpass
 ```
 
 如果您希望使用 RDS 默认值以外的值，可以添加其他三个属性:
 
-```
+```java
 cloud.aws.rds.spring-cloud-test-db.username=testuser
 cloud.aws.rds.spring-cloud-test-db.readReplicaSupport=true
 cloud.aws.rds.spring-cloud-test-db.databaseName=test
@@ -32,7 +32,7 @@ cloud.aws.rds.spring-cloud-test-db.databaseName=test
 
 在没有 Spring Boot 的应用程序中，或者在需要定制配置的情况下，**我们也可以使用基于 Java 的配置**来创建`DataSource`:
 
-```
+```java
 @Configuration
 @EnableRdsInstance(
   dbInstanceIdentifier = "spring-cloud-test-db", 

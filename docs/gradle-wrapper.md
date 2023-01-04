@@ -28,7 +28,7 @@ Gradle Wrapper，简称`Wrapper` ，解决了这个问题。这是一个运行 G
 
 现在，让我们运行项目目录中的`wrapper`任务:
 
-```
+```java
 $ gradle wrapper 
 ```
 
@@ -45,7 +45,7 @@ $ gradle wrapper
 
 默认情况下，`wrapper`任务使用机器上当前安装的 Gradle 版本生成包装文件。如果需要，我们可以指定另一个版本:
 
-```
+```java
 $ gradle wrapper --gradle-version 6.3 
 ```
 
@@ -57,13 +57,13 @@ $ gradle wrapper --gradle-version 6.3
 
 要列出可用的任务，我们可以使用`gradlew tasks`命令:
 
-```
+```java
 $ gradlew tasks
 ```
 
 让我们来看看输出:
 
-```
+```java
 Help tasks
 ----------
 buildEnvironment - Displays all buildscript dependencies declared in root project 'gradle-wrapper'.
@@ -89,7 +89,7 @@ tasks - Displays the tasks runnable from root project 'gradle-wrapper'.
 
 一些组织不允许开发人员将 jar 文件签入他们的源代码控制系统。通常，这样的项目在全局`.gitignore`文件中有一个忽略所有 jar 文件的规则。因此，`gradle-wrapper.jar`文件不会被签入 git 存储库。因此，包装任务无法在其他机器上运行。在这种情况下，**我们需要添加`gradle-wrapper.jar`文件来强制 git**:
 
-```
+```java
 git add -f gradle/wrapper/gradle-wrapper.jar
 ```
 

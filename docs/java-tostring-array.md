@@ -10,7 +10,7 @@
 
 在 Java 中，如果我们想直接从一个对象打印一个值，我们可以尝试的第一件事就是调用它的`toString`方法:
 
-```
+```java
 Object[] arrayOfObjects = { "John", 2, true };
 assertTrue(arrayOfObjects.toString().startsWith("[Ljava.lang.Object;"));
 ```
@@ -19,7 +19,7 @@ assertTrue(arrayOfObjects.toString().startsWith("[Ljava.lang.Object;"));
 
 我们要做的是打印数组中的值。取而代之，我们有`[Ljava.lang.Object.`类的名字，如`Object.class` :
 
-```
+```java
 getClass().getName() + '@' + Integer.toHexString(hashCode())
 ```
 
@@ -35,14 +35,14 @@ getClass().getName() + '@' + Integer.toHexString(hashCode())
 
 对于一维数组，我们可以使用`toString`方法:
 
-```
+```java
 Object[] arrayOfObjects = { "John", 2, true };
 assertEquals(Arrays.toString(arrayOfObjects), "[John, 2, true]");
 ```
 
 对于更深的数组，我们有`deepToString`方法:
 
-```
+```java
 Object[] innerArray = { "We", "Are", "Inside" };
 Object[] arrayOfObjects = { "John", 2, innerArray };
 assertEquals(Arrays.deepToString(arrayOfObjects), "[John, 2, [We, Are, Inside]]");
@@ -52,7 +52,7 @@ assertEquals(Arrays.deepToString(arrayOfObjects), "[John, 2, [We, Are, Inside]]"
 
 **JDK 8 中一个重要的新特性是[引入了 Java 流](/web/20221208143956/https://www.baeldung.com/java-8-streams-introduction)** ，它包含了处理元素序列的类:
 
-```
+```java
 Object[] arrayOfObjects = { "John", 2, true };
 List<String> listOfString = Stream.of(arrayOfObjects)
   .map(Object::toString)

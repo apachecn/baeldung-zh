@@ -22,7 +22,7 @@
 
 在数组未满的情况下添加一个新项，就像将该项分配给一个特定的数组索引一样简单。这个数组索引是由当前数组大小决定的，因为我们实际上是追加到列表中:
 
-```
+```java
 backingArray[size] = newItem;
 size++;
 ```
@@ -53,7 +53,7 @@ size++;
 
 有时我们需要同样频繁的读写。**如果我们对可能的项目的最大数量有一个估计，那么使用`ArrayList`** 仍然是有意义的。如果是这种情况，我们可以用初始容量初始化`ArrayList `:
 
-```
+```java
 int possibleUpperBound = 10_000;
 List<String> items = new ArrayList<>(possibleUpperBound);
 ```

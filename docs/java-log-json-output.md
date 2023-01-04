@@ -22,7 +22,7 @@ Log4j2 是最流行的 Java 日志库 Log4j 的直接继承者。
 
 首先，我们必须在我们的`pom.` xml 文件中包含以下依赖项:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.apache.logging.log4j</groupId>
@@ -45,7 +45,7 @@ Log4j2 是最流行的 Java 日志库 Log4j 的直接继承者。
 
 然后，在我们的`log4j2.` xml 文件中，我们可以创建一个使用`JsonLayout` 的新`Appender`和一个使用这个 `Appender`的新`Logger`:
 
-```
+```java
 <Appenders>
     <Console name="ConsoleJSONAppender" target="SYSTEM_OUT">
         <JsonLayout complete="false" compact="false">
@@ -67,14 +67,14 @@ Log4j2 是最流行的 Java 日志库 Log4j 的直接继承者。
 
 在我们的代码中，我们现在可以实例化新的 JSON 记录器，并创建新的调试级别跟踪:
 
-```
+```java
 Logger logger = LogManager.getLogger("CONSOLE_JSON_APPENDER");
 logger.debug("Debug message"); 
 ```
 
 前面代码的调试输出消息应该是:
 
-```
+```java
 {
   "timeMillis" : 1513290111664,
   "thread" : "main",
@@ -99,7 +99,7 @@ logger.debug("Debug message");
 
 让我们在`pom.xml`中包含以下依赖项:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>ch.qos.logback</groupId>
@@ -135,7 +135,7 @@ logger.debug("Debug message");
 
 之后，我们可以创建一个新的使用这个`appender`的`logger`:
 
-```
+```java
 <appender name="json" class="ch.qos.logback.core.ConsoleAppender">
     <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
         <jsonFormatter
@@ -157,14 +157,14 @@ logger.debug("Debug message");
 
 让我们在代码中实例化记录器，并记录一条调试消息:
 
-```
+```java
 Logger logger = LoggerFactory.getLogger("jsonLogger");
 logger.debug("Debug message"); 
 ```
 
 这样，我们将获得以下输出:
 
-```
+```java
 {
   "timestamp" : "2017-12-14 23:36:22.305",
   "level" : "DEBUG",

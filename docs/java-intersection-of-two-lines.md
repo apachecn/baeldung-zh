@@ -10,7 +10,7 @@
 
 平面上的任何直线(垂直线除外)都可以用线性函数来定义:
 
-```
+```java
 y = mx + b
 ```
 
@@ -20,39 +20,39 @@ y = mx + b
 
 假设我们有两条线。第一个函数定义第一行:
 
-```
+```java
 y = m1x + b1
 ```
 
 第二个函数定义了第二行:
 
-```
+```java
 y = m2x + b2
 ```
 
 [![](img/e558b19cd41a063060f11d1018227037.png)](/web/20220523233851/https://www.baeldung.com/wp-content/uploads/2018/09/general-y1-y2.png) 
 我们要找到这些线的交点。显然，这个等式对于交点是正确的:
 
-```
+```java
 y1 = y2
 ```
 
 让我们代入`y-`变量:
 
-```
+```java
 m1x + b1 = m2x + b2
 ```
 
 **从上面的等式我们可以找到`x-`坐标:**
 
-```
+```java
 x(m1 - m2) = b2 - b1
 x = (b2 - b1) / (m1 - m2)
 ```
 
 **最后可以找到交点的 y 坐标:**
 
-```
+```java
 y = m1x + b1
 ```
 
@@ -66,7 +66,7 @@ y = m1x + b1
 
 最后，线可能是平行的，因此让我们将返回值设为`Optional<Point>`:
 
-```
+```java
 public Optional<Point> calculateIntersectionPoint(
     double m1, 
     double b1, 
@@ -100,7 +100,7 @@ public Optional<Point> calculateIntersectionPoint(
 
 首先，让我们确保存在一个`Point`，因为这些线不平行，然后检查`x`和`y`的值:
 
-```
+```java
 @Test
 public void givenNotParallelLines_whenCalculatePoint_thenPresent() {
     double m1 = 0;
@@ -120,7 +120,7 @@ public void givenNotParallelLines_whenCalculatePoint_thenPresent() {
 
 [![](img/5e7cb40720c8dd5a1b8e15bc5e982a04.png)](/web/20220523233851/https://www.baeldung.com/wp-content/uploads/2018/09/parallel.png)
 
-```
+```java
 @Test
 public void givenParallelLines_whenCalculatePoint_thenEmpty() {
     double m1 = 1;

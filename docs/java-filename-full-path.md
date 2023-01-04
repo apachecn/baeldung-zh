@@ -12,7 +12,7 @@
 
 这个问题很简单。假设给我们一个绝对文件路径字符串。我们想从中提取文件名。有几个例子可以很快解释这个问题:
 
-```
+```java
 String PATH_LINUX = "/root/with space/subDir/myFile.linux";
 String EXPECTED_FILENAME_LINUX = "myFile.linux";
 
@@ -30,7 +30,7 @@ String EXPECTED_FILENAME_WIN = "myFile.win";
 
 首先，**文件系统不允许文件名包含文件分隔符。**因此，例如，我们不能在 Linux 的 Ext2、Ext3 或 Ext4 文件系统上创建一个文件名包含“/”的文件:
 
-```
+```java
 $ touch "a/b.txt"
 touch: cannot touch 'a/b.txt': No such file or directory
 ```
@@ -41,7 +41,7 @@ String 的 [`lastIndexOf()`](/web/20221010153619/https://www.baeldung.com/string
 
 正如我们所见，实现非常简单。但是，我们应该注意，为了使我们的解决方案独立于系统，我们不应该将文件分隔符硬编码为“\”用于 Windows，或者“/”用于*nix 系统。相反，**让我们在代码中使用`[File.separator](/web/20221010153619/https://www.baeldung.com/java-file-vs-file-path-separator)`,这样我们的程序就能自动适应运行它的系统:**
 
-```
+```java
 int index = PATH_LINUX.lastIndexOf(File.separator);
 String filenameLinux = PATH_LINUX.substring(index + 1);
 assertEquals(EXPECTED_FILENAME_LINUX, filenameLinux);
@@ -49,7 +49,7 @@ assertEquals(EXPECTED_FILENAME_LINUX, filenameLinux);
 
 如果我们在 Linux 机器上运行，上面的测试就通过了。类似地，下面的测试在 Windows 机器上通过:
 
-```
+```java
 int index = PATH_WIN.lastIndexOf(File.pathSeparator);
 String filenameWin = PATH_WIN.substring(index + 1);
 assertEquals(EXPECTED_FILENAME_WIN, filenameWin);
@@ -65,14 +65,14 @@ assertEquals(EXPECTED_FILENAME_WIN, filenameWin);
 
 让我们首先在 Linux 系统上测试它:
 
-```
+```java
 File fileLinux = new File(PATH_LINUX);
 assertEquals(EXPECTED_FILENAME_LINUX, fileLinux.getName());
 ```
 
 如果我们试一试，测试就会通过。由于 **`File`在内部**使用`File.separator`，如果我们在 Windows 系统上测试相同的解决方案，它也通过了:
 
-```
+```java
 File fileWin = new File(PATH_WIN);
 assertEquals(EXPECTED_FILENAME_WIN, fileWin.getName());
 ```
@@ -85,7 +85,7 @@ assertEquals(EXPECTED_FILENAME_WIN, fileWin.getName());
 
 接下来，让我们从给定的`PATH_LINUX`字符串创建一个`Path`实例，并在 Linux 上测试该解决方案:
 
-```
+```java
 Path pathLinux = Paths.get(PATH_LINUX);
 assertEquals(EXPECTED_FILENAME_LINUX, pathLinux.getFileName().toString());
 ```
@@ -94,7 +94,7 @@ assertEquals(EXPECTED_FILENAME_LINUX, pathLinux.getFileName().toString());
 
 同样的实现也适用于使用`PATH_WIN`作为路径字符串的 Windows 系统。这是因为`Path`可以检测到它正在运行的电流`[FileSystem](https://web.archive.org/web/20221010153619/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/FileSystem.html)`:
 
-```
+```java
 Path pathWin = Paths.get(PATH_WIN);
 assertEquals(EXPECTED_FILENAME_WIN, pathWin.getFileName().toString());
 ```
@@ -109,7 +109,7 @@ assertEquals(EXPECTED_FILENAME_WIN, pathWin.getFileName().toString());
 
 接下来，让我们创建一个测试:
 
-```
+```java
 String filenameLinux = FilenameUtils.getName(PATH_LINUX);
 assertEquals(EXPECTED_FILENAME_LINUX, filenameLinux);
 
@@ -125,7 +125,7 @@ assertEquals(EXPECTED_FILENAME_WIN, filenameWin);
 
 如果我们看看`FilenameUtils.getName()`的实现，它的逻辑类似于我们的“lastIndexOf”文件分隔符方法。不同的是，`FilenameUtils`调用了两次 `lastIndexOf()` 方法，一次用*nix 分隔符(/)，然后用 Windows 文件分隔符(\)。最后，它将较大的索引作为“lastIndex”:
 
-```
+```java
 ...
 final int lastUnixPos = fileName.lastIndexOf(UNIX_SEPARATOR); // UNIX_SEPARATOR = '/'
 final int lastWindowsPos = fileName.lastIndexOf(WINDOWS_SEPARATOR); // WINDOWS_SEPARATOR = '\\'
@@ -138,7 +138,7 @@ return Math.max(lastUnixPos, lastWindowsPos);
 
 现在我们明白了`FilenameUtils.getName()`是如何工作的。这确实是一个聪明的解决方案，而且在大多数情况下都有效。然而，**许多 Linux 支持的文件系统允许文件名包含反斜杠(' \')** :
 
-```
+```java
 $ echo 'Hi there!' > 'my\file.txt'
 
 $ ls -l my*
@@ -150,7 +150,7 @@ Hi there!
 
 如果给定 Linux 文件路径中的文件名包含反斜杠，`FilenameUtils.getName()`将会失败。一项测试可以清楚地解释这一点:
 
-```
+```java
 String filenameToBreak = FilenameUtils.getName("/root/somedir/magic\\file.txt");
 assertNotEquals("magic\\file.txt", filenameToBreak); // <-- filenameToBreak = "file.txt", but we expect: magic\file.txt
 ```

@@ -24,7 +24,7 @@
 
 我们可以通过创建一个新的`worker`并调度一些动作来调度任何`Scheduler`上的作业:
 
-```
+```java
 Scheduler scheduler = Schedulers.immediate();
 Scheduler.Worker worker = scheduler.createWorker();
 worker.schedule(() -> result += "action");
@@ -38,7 +38,7 @@ Assert.assertTrue(result.equals("action"));
 
 `Scheduler.Worker` 延伸`Subscription`。在`worker`上调用`unsubscribe`方法将导致队列被清空，所有未决任务被取消。我们可以通过例子看出:
 
-```
+```java
 Scheduler scheduler = Schedulers.newThread();
 Scheduler.Worker worker = scheduler.createWorker();
 worker.schedule(() -> {
@@ -58,7 +58,7 @@ Assert.assertTrue(result.equals("First_Action"));
 
 这几乎不是一个好的选择，不仅因为启动线程时的延迟，还因为这个线程没有被重用:
 
-```
+```java
 Observable.just("Hello")
   .observeOn(Schedulers.newThread())
   .doOnNext(s ->
@@ -75,7 +75,7 @@ Assert.assertTrue(result2.equals("RxNewThreadScheduler-2"));
 
 当`Worker`完成时，线程简单地终止。这个`Scheduler`只能在任务是粗粒度的时候使用:它需要很多时间来完成，但是它们很少，所以线程根本不可能被重用。
 
-```
+```java
 Scheduler scheduler = Schedulers.newThread();
 Scheduler.Worker worker = scheduler.createWorker();
 worker.schedule(() -> {
@@ -94,7 +94,7 @@ Assert.assertTrue(result.equals(
 
 `Schedulers.immediate`是一个特殊的调度程序，它以阻塞的方式调用客户端线程中的任务，而不是异步调用，并在动作完成时返回:
 
-```
+```java
 Scheduler scheduler = Schedulers.immediate();
 Scheduler.Worker worker = scheduler.createWorker();
 worker.schedule(() -> {
@@ -109,7 +109,7 @@ Assert.assertTrue(result.equals(
 
 事实上，通过`immediate Scheduler`订阅`Observable`通常与根本不订阅任何特定的`S`日程具有相同的效果:
 
-```
+```java
 Observable.just("Hello")
   .subscribeOn(Schedulers.immediate())
   .subscribe(s ->
@@ -125,7 +125,7 @@ Assert.assertTrue(result.equals("main"));
 
 然而，当所有先前计划的任务完成时，即将到来的任务被执行:
 
-```
+```java
 Observable.just(2, 4, 6, 8)
   .subscribeOn(Schedulers.trampoline())
   .subscribe(i -> result += "" + i);
@@ -140,7 +140,7 @@ Assert.assertTrue(result.equals("246813579"));
 
 `trampoline`的`worker`在调度第一个任务的线程上执行每个任务。对`schedule`的第一个调用被阻塞，直到队列被清空:
 
-```
+```java
 Scheduler scheduler = Schedulers.trampoline();
 Scheduler.Worker worker = scheduler.createWorker();
 worker.schedule(() -> {
@@ -165,7 +165,7 @@ Assert.assertTrue(result
 
 但是因为它们在概念上非常相似，所以毫不奇怪有一个包装器可以使用`from`工厂方法将`Executor`转换成`Scheduler`:
 
-```
+```java
 private ThreadFactory threadFactory(String pattern) {
     return new ThreadFactoryBuilder()
       .setNameFormat(pattern)
@@ -211,7 +211,7 @@ public void givenExecutors_whenSchedulerFrom_thenReturnElements()
 
 这个实现的工作方式类似于来自`java.util.concurrent`的`ThreadPoolExecutor` ,具有一个无限的线程池。每次请求一个新的`worker`时，要么启动一个新线程(稍后保持空闲一段时间)，要么重用空闲的线程:
 
-```
+```java
 Observable.just("io")
   .subscribeOn(Schedulers.io())
   .subscribe(i -> result += Thread.currentThread().getName());
@@ -231,7 +231,7 @@ Assert.assertTrue(result.equals("RxIoScheduler-2"));
 
 它在每个线程前面使用一个无限队列，所以如果任务被调度，但所有内核都被占用，它将被排队。但是，就在每个线程之前的队列会不断增长:
 
-```
+```java
 Observable.just("computation")
   .subscribeOn(Schedulers.computation())
   .subscribe(i -> result += Thread.currentThread().getName());
@@ -246,7 +246,7 @@ Assert.assertTrue(result.equals("RxComputationScheduler-1"));
 
 这个`Scheduler`仅用于测试目的，我们永远不会在产品代码中看到它。它的主要优点是能够提前时钟，模拟时间任意流逝:
 
-```
+```java
 List<String> letters = Arrays.asList("A", "B", "C");
 TestScheduler scheduler = Schedulers.test();
 TestSubscriber<String> subscriber = new TestSubscriber<>();
@@ -282,7 +282,7 @@ RxJava 中的一些`Observable`操作符有替代形式，允许我们设置操�
 
 例如，`delay`操作符获取上游事件，并在给定时间后将它们推到下游。显然，它不能在此期间保持原来的线程，所以它必须使用不同的`Scheduler`:
 
-```
+```java
 ExecutorService poolA = newFixedThreadPool(
   10, threadFactory("Sched1-"));
 Scheduler schedulerA = Schedulers.from(poolA);

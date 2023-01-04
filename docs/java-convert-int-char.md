@@ -20,7 +20,7 @@
 
 我们可以通过将`char`值转换为`int`来轻松检查这一点:
 
-```
+```java
 assertEquals(65, (int)'A');
 ```
 
@@ -36,7 +36,7 @@ assertEquals(65, (int)'A');
 
 UTF-16 中的字符是按顺序表示的。所以我们可以用`7`来抵消`0`字符，得到`7`字符:
 
-```
+```java
 @Test
 public void givenAnInt_whenAdding0_thenExpectedCharType() {
     int num = 7;
@@ -51,7 +51,7 @@ public void givenAnInt_whenAdding0_thenExpectedCharType() {
 
 加'`0`'可以，但是好像有点 hackish。幸运的是，我们有一个更干净的方法来使用`[Character.forDigit()](https://web.archive.org/web/20221219195909/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Character.html#forDigit(int,int))`方法:
 
-```
+```java
 @Test
 public void givenAnInt_whenUsingForDigit_thenExpectedCharType() {
     int num = 7;
@@ -68,7 +68,7 @@ public void givenAnInt_whenUsingForDigit_thenExpectedCharType() {
 
 我们可以使用包装类`Integer,`,它具有将给定的`int`转换成其`String`表示的`[toString()](/web/20221219195909/https://www.baeldung.com/java-tostring-valueof)`方法。当然，这可以用来将一个多位数的数字转换成`String. B` ut，我们也可以通过链接 [`charAt()`](/web/20221219195909/https://www.baeldung.com/java-convert-string-to-char) 方法并选择第一个`char`来将一位数转换成`char`:
 
-```
+```java
 @Test
 public void givenAnInt_whenUsingToString_thenExpectedCharType() {
     int num = 7;
@@ -83,7 +83,7 @@ public void givenAnInt_whenUsingToString_thenExpectedCharType() {
 
 之前，我们看到了如何将一个`int`转换成`char`。让我们看看如何得到一个`char`的`int`值。正如我们可能预料的那样，**将`char`转换为`int`是行不通的，因为这给了我们字符的 UTF-16 编码的十进制表示:**
 
-```
+```java
 @Test
 public void givenAChar_whenCastingFromCharToInt_thenExpectedUnicodeRepresentation() {
 
@@ -97,7 +97,7 @@ public void givenAChar_whenCastingFromCharToInt_thenExpectedUnicodeRepresentatio
 
 如果当我们加上‘0’时，我们得到`char,` ，那么反过来减去十进制值‘0’，我们应该得到`int`:
 
-```
+```java
 @Test
 public void givenAChar_whenSubtracting0_thenExpectedNumericType() {
 
@@ -115,7 +115,7 @@ public void givenAChar_whenSubtracting0_thenExpectedNumericType() {
 
 `Character` 类再次提供了另一个助手方法， [`getNumericValue()`](https://web.archive.org/web/20221219195909/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Character.html#getNumericValue(char)) `,`，它基本上实现了它所说的功能:
 
-```
+```java
 @Test
 public void givenAChar_whenUsingGetNumericValue_thenExpectedNumericType() {
 
@@ -131,7 +131,7 @@ public void givenAChar_whenUsingGetNumericValue_thenExpectedNumericType() {
 
 我们可以使用`[Integer.parseInt()](https://web.archive.org/web/20221219195909/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html#parseInt(java.lang.String))`将`String`转换成数字表示。就像以前一样，虽然我们可以用它将一个多位数的整数转换成`int`表示，但我们也可以用它来表示一位数:
 
-```
+```java
 @Test
 public void givenAChar_whenUsingParseInt_thenExpectedNumericType() {
 

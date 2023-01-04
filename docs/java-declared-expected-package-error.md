@@ -14,7 +14,7 @@
 
 假设我们在`src/main/java/com/baeldung/bookstore`目录中有下面的类:
 
-```
+```java
 package com.baeldung;
 
 public class Book {
@@ -34,7 +34,7 @@ public class Book {
 
 否则，我们可以用以下反向 DNS 格式更正包声明:
 
-```
+```java
 package com.baeldung.bookstore;
 ```
 
@@ -44,7 +44,7 @@ package com.baeldung.bookstore;
 
 然后，我们将把`Book` 类移动到以下正确的目录位置:
 
-```
+```java
 <source-path>/com/baeldung/bookstore
 ```
 
@@ -68,7 +68,7 @@ package com.baeldung.bookstore;
 
 同样，当[运行 maven 构建](/web/20220529024805/https://www.baeldung.com/maven)时，我们会得到下面的错误:
 
-```
+```java
 [ERROR] COMPILATION ERROR : 
 [INFO] -------------------------------------------------------------
 [ERROR] /Users/saichakr2/baeldung-projects/tutorials/core-java-modules/core-java-lang-4/src/main/java/com/baeldung/bookstore/Book.java:[3,8] duplicate class: com.baeldung.Book
@@ -102,7 +102,7 @@ package com.baeldung.bookstore;
 
 然而，我们可以在需要的时候使用*构建-助手-maven-插件:*来[添加额外的源代码](/web/20220529024805/https://www.baeldung.com/maven-project-multiple-src-directories)
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>build-helper-maven-plugin</artifactId>

@@ -28,7 +28,7 @@ Take a look at how filters and interceptors work in the Jersey framework.[Read m
 
 让我们首先在`pom.xml`中添加所需的依赖项(针对泽西 JAX-RS 客户端):
 
-```
+```java
 <dependency>
     <groupId>org.glassfish.jersey.core</groupId>
     <artifactId>jersey-client</artifactId>
@@ -38,7 +38,7 @@ Take a look at how filters and interceptors work in the Jersey framework.[Read m
 
 要使用 Jackson 2.x 作为 JSON 提供者:
 
-```
+```java
 <dependency>
     <groupId>org.glassfish.jersey.media</groupId>
     <artifactId>jersey-media-json-jackson</artifactId>
@@ -56,7 +56,7 @@ Take a look at how filters and interceptors work in the Jersey framework.[Read m
 
 让我们来看看资源表示类:
 
-```
+```java
 @XmlRootElement
 public class Employee {
     private int id;
@@ -72,7 +72,7 @@ public class Employee {
 
 我们首先需要的是一个`Client`的实例:
 
-```
+```java
 Client client = ClientBuilder.newClient();
 ```
 
@@ -80,14 +80,14 @@ Client client = ClientBuilder.newClient();
 
 一旦我们有了`Client`实例，我们就可以使用目标 web 资源的 URI 创建一个`WebTarget`:
 
-```
+```java
 WebTarget webTarget 
   = client.target("http://localhost:8082/spring-jersey");
 ```
 
 使用`WebTarget`，我们可以定义一个特定资源的路径:
 
-```
+```java
 WebTarget employeeWebTarget 
   = webTarget.path("resources/employees");
 ```
@@ -96,7 +96,7 @@ WebTarget employeeWebTarget
 
 调用生成器实例是通过`WebTarget.request()`方法之一创建的:
 
-```
+```java
 Invocation.Builder invocationBuilder 
   = employeeWebTarget.request(MediaType.APPLICATION_JSON);
 ```
@@ -107,14 +107,14 @@ Invocation.Builder invocationBuilder
 
 调用 HTTP GET:
 
-```
+```java
 Response response 
   = invocationBuilder.get(Employee.class);
 ```
 
 调用 HTTP POST:
 
-```
+```java
 Response response 
   = invocationBuilder
   .post(Entity.entity(employee, MediaType.APPLICATION_JSON);
@@ -126,7 +126,7 @@ Response response
 
 流畅地使用 JAX-RS API 创建 web 目标，调用生成器并调用一个 GET HTTP 请求:
 
-```
+```java
 public class RestClient {
 
     private static final String REST_URI 
@@ -147,7 +147,7 @@ public class RestClient {
 
 现在让我们为 POST HTTP 请求添加一个方法。`createJsonEmployee()`方法通过调用用于`Employee`创建的 [REST Web 服务](/web/20221129003653/https://www.baeldung.com/jersey-rest-api-with-spring)来创建一个`Employee`。在调用 HTTP POST 方法之前，客户端 API 在内部将`Employee`对象序列化为 JSON:
 
-```
+```java
 public Response createJsonEmployee(Employee emp) {
     return client
       .target(REST_URI)
@@ -160,7 +160,7 @@ public Response createJsonEmployee(Employee emp) {
 
 让我们用 JUnit 测试我们的客户机:
 
-```
+```java
 public class JerseyClientLiveTest {
 
     public static final int HTTP_CREATED = 201;

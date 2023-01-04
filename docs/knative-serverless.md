@@ -54,13 +54,13 @@ Knative Eventing 使用 HTTP POST 请求来发送和接收符合[cloud events](h
 
 在基于 Windows 的机器上，安装 kind 最简单的方法是使用[Chocolatey 包](https://web.archive.org/web/20220529024933/https://chocolatey.org/packages/kind):
 
-```
+```java
 choco install kind
 ```
 
 使用 Kubernetes 集群的一种便捷方式是使用命令行工具`kubectl`。同样，我们可以使用[巧克力包](https://web.archive.org/web/20220529024933/https://community.chocolatey.org/packages/kubernetes-cli)安装`kubectl`:
 
-```
+```java
 choco install kubernetes-cli
 ```
 
@@ -90,7 +90,7 @@ choco install kubernetes-cli
 
 首先，我们将从[主动发球](https://web.archive.org/web/20220529024933/https://knative.dev/docs/serving/)开始。我们将了解如何在 Knative Serving 提供的无服务器环境中部署我们的工作负载。正如我们前面看到的，**服务是负责管理我们应用程序**的整个生命周期的服务对象。因此，我们首先将这个对象描述为应用程序的 YAML 文件:
 
-```
+```java
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
@@ -110,7 +110,7 @@ spec:
 
 使用 Kubernetes CLI 部署这个资源非常容易。我们可以使用下面的命令，假设我们已经将我们的 YAML 文件命名为`my-service.yaml`:
 
-```
+```java
 kubectl apply -f my-service.yaml
 ```
 
@@ -118,7 +118,7 @@ kubectl apply -f my-service.yaml
 
 如果创建 YAML 文件似乎有点笨拙，我们也可以使用 Knative CLI 来达到相同的结果:
 
-```
+```java
 kn service create hello \
   --image <location_of_container_image_in_a_registry> \
   --port 8080 \
@@ -135,7 +135,7 @@ kn service create hello \
 
 要做到这一点，我们需要做的就是修改描述我们服务的同一个 YAML 文件:
 
-```
+```java
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
@@ -158,7 +158,7 @@ spec:
 
 正如我们所看到的，我们添加了一个新的部分来描述两个版本之间的流量划分。我们要求 **Knative 将一半的流量发送到新版本，而将另一半发送到以前的版本**。在我们部署这个资源之后，我们可以通过列出所有的修订来验证分割:
 
-```
+```java
 kn revisions list
 ```
 
@@ -172,7 +172,7 @@ kn revisions list
 
 使用 Knative Eventing 的第一步是确保我们有一个可用的代理。现在，通常作为标准安装的一部分，我们应该在集群中拥有**一个可用的内存代理。我们可以通过列出所有可用的经纪人来快速验证这一点:**
 
-```
+```java
 kn broker list
 ```
 
@@ -180,7 +180,7 @@ kn broker list
 
 出于本教程的目的，让我们假设我们有一个既产生又消费事件的单一服务。首先，我们必须定义事件的来源。我们可以扩展我们之前使用的服务定义，将它转换为一个源:
 
-```
+```java
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
@@ -208,7 +208,7 @@ spec:
 
 和以前一样，我们可以简单地创建一个 YAML 文件来描述我们的触发器:
 
-```
+```java
 apiVersion: eventing.knative.dev/v1
 kind: Trigger
 metadata:

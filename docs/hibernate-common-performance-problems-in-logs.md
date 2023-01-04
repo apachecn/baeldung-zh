@@ -16,7 +16,7 @@
 
 写一些日志语句听起来没什么大不了的，有很多应用程序就是这么做的。但是这是非常低效的，尤其是通过`System.out.println`，因为 Hibernate 会将 Hibernate 配置中的`show_sql`参数设置为`true`:
 
-```
+```java
 Hibernate: select 
     order0_.id as id1_2_, 
     order0_.orderNumber as orderNum2_2_, 
@@ -64,7 +64,7 @@ Hibernate: select
 
 开发配置应该提供尽可能多的有用信息，以便您可以看到 Hibernate 如何与数据库交互。因此，您至少应该在开发配置中记录生成的 SQL 语句。您可以通过激活`org.hibernate.SQL`类别的`DEBUG`消息来完成此操作。如果您还想查看绑定参数的值，您必须将`org.hibernate.type.descriptor.sql`的日志级别设置为`TRACE`:
 
-```
+```java
 log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 log4j.appender.stdout.Target=System.out
 log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
@@ -81,7 +81,7 @@ log4j.logger.org.hibernate.type.descriptor.sql=trace
 
 下面的代码片段显示了 Hibernate 使用这个日志配置写入的一些示例日志消息。如您所见，您可以获得关于已执行的 SQL 查询以及所有设置和检索的参数值的详细信息:
 
-```
+```java
 23:03:22,246 DEBUG SQL:92 - select 
     order0_.id as id1_2_, 
     order0_.orderNumber as orderNum2_2_, 
@@ -99,7 +99,7 @@ log4j.logger.org.hibernate.type.descriptor.sql=trace
 
 您可以在下面的代码片段中看到一些示例统计信息:
 
-```
+```java
 23:04:12,123 INFO StatisticalLoggingSessionEventListener:258 - Session Metrics {
  23793 nanoseconds spent acquiring 1 JDBC connections;
  0 nanoseconds spent releasing 0 JDBC connections;
@@ -128,7 +128,7 @@ log4j.logger.org.hibernate.type.descriptor.sql=trace
 
 如果您使用 Log4j，您可以通过以下配置来实现:
 
-```
+```java
 log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 log4j.appender.stdout.Target=System.out
 log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
@@ -145,7 +145,7 @@ log4j.logger.org.hibernate=error
 
 Hibernate 为实体之间的关系提供了非常方便的映射。您只需要一个具有相关实体类型的属性和一些注释来定义它:
 
-```
+```java
 @Entity
 @Table(name = "purchaseOrder")
 public class Order implements Serializable {
@@ -161,7 +161,7 @@ public class Order implements Serializable {
 
 当您开始使用 Hibernate 时，您可能已经知道应该对大多数关系使用`FetchType.LAZY`,并且它是多对多关系的默认设置。这告诉 Hibernate，如果使用映射关系的属性，就只获取相关的实体。一般来说，只获取您需要的数据是一件好事，但是这也需要 Hibernate 执行一个额外的查询来初始化每个关系。这可能会导致大量的查询，如果您在实体列表上工作，就像我在下面的代码片段中所做的那样:
 
-```
+```java
 List<Order> orders = em.createQuery("SELECT o FROM Order o").getResultList();
 for (Order order : orders) {
     log.info("Order: " + order.getOrderNumber());
@@ -171,7 +171,7 @@ for (Order order : orders) {
 
 您可能不会想到这几行代码可以创建数百甚至数千个数据库查询。但是，如果您使用`FetchType.LAZY`来表示与`OrderItem`实体的关系，就会出现这种情况:
 
-```
+```java
 22:47:30,065 DEBUG SQL:92 - select 
     order0_.id as id1_2_, 
     order0_.orderNumber as orderNum2_2_, 
@@ -227,7 +227,7 @@ Hibernate 执行一个查询来获取所有的`Order`实体，并为 n 个`Order
 
 有几种不同的[选项来初始化关系](https://web.archive.org/web/20220926183539/http://www.thoughts-on-java.org/5-ways-to-initialize-lazy-relations-and-when-to-use-them/)。我更喜欢使用`@NamedEntityGraph`，这是 JPA 2.1 中引入的我最喜欢的[特性之一。它提供了一种独立于查询的方式来指定 Hibernate 应该从数据库中获取的实体图。在下面的代码片段中，您可以看到一个简单图形的示例，它让 Hibernate 急切地获取实体的 items 属性:](https://web.archive.org/web/20220926183539/http://www.thoughts-on-java.org/2015/02/jpa-21-overview.html)
 
-```
+```java
 @Entity
 @Table(name = "purchase_order")
 @NamedEntityGraph(
@@ -243,7 +243,7 @@ public class Order implements Serializable {
 
 现在，您可以使用实体图来控制获取行为或特定的查询。因此，您必须基于`@NamedEntityGraph`定义实例化一个`EntityGraph`，并将其作为提示提供给`EntityManager.find()`方法或您的查询。我在下面的代码片段中这样做，我从数据库中选择 id 为 1 的`Order`实体:
 
-```
+```java
 EntityGraph graph = this.em.getEntityGraph("graph.Order.items");
 
 Map hints = new HashMap();
@@ -254,7 +254,7 @@ return this.em.find(Order.class, 1L, hints);
 
 Hibernate 使用这些信息创建一条 SQL 语句，从数据库中获取`Order`实体的属性和实体图的属性:
 
-```
+```java
 17:34:51,310 DEBUG [org.hibernate.loader.plan.build.spi.LoadPlanTreePrinter] (pool-2-thread-1) 
   LoadPlan(entity=blog.thoughts.on.java.jpa21.entity.graph.model.Order) 
     - Returns 
@@ -322,7 +322,7 @@ Hibernate 使用这些信息创建一条 SQL 语句，从数据库中获取`Orde
 对于一篇博客文章来说，只初始化一个关系就足够了，但是在一个真实的项目中，您很可能想要构建更复杂的图。让我们开始吧。
 当然，您可以提供一组`@NamedAttributeNode`注释来获取同一个实体的多个属性，并且您可以使用`@NamedSubGraph`来为其他级别的实体定义获取行为。我在下面的代码片段中使用它不仅获取所有相关的`OrderItem`实体，还获取每个`OrderItem:`的`Product`实体
 
-```
+```java
 @Entity
 @Table(name = "purchase_order")
 @NamedEntityGraph(
@@ -345,7 +345,7 @@ public class Order implements Serializable {
 
 如果您只需要更改几个实体，这种方法就可以了。但是，当您处理实体列表时，效率会变得非常低，这是您可以在日志文件中很容易发现的第三个性能问题。您只需寻找一堆看起来完全相同的 SQL UPDATE 语句，正如您在以下日志文件中看到的:
 
-```
+```java
 22:58:05,829 DEBUG SQL:92 - select 
   product0_.id as id1_1_, 
   product0_.name as name2_1_, 
@@ -364,7 +364,7 @@ public class Order implements Serializable {
 
 您可以用与 SQL 中类似的方式定义 JPQL UPDATE 语句。您只需定义要更新哪个实体，如何更改其属性值，并在 WHERE 语句中限制受影响的实体。你可以在下面的代码片段中看到一个例子，我将所有产品的价格提高了 10%:
 
-```
+```java
 em.createQuery("UPDATE Product p SET p.price = p.price*0.1").executeUpdate();
 ```
 

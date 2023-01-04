@@ -29,7 +29,7 @@ Quick introduction to working with Quartz in Spring.[Read more](/web/20220628081
 
 为了在 Spring 中启用对调度任务和`@Scheduled`注释的支持，我们可以使用 Java enable-style 注释:
 
-```
+```java
 @Configuration
 @EnableScheduling
 public class SpringConfig {
@@ -39,7 +39,7 @@ public class SpringConfig {
 
 相反，我们可以在 XML 中做同样的事情:
 
-```
+```java
 <task:annotation-driven>
 ```
 
@@ -47,7 +47,7 @@ public class SpringConfig {
 
 让我们从配置一个在固定延迟后运行的任务开始:
 
-```
+```java
 @Scheduled(fixedDelay = 1000)
 public void scheduleFixedDelayTask() {
     System.out.println(
@@ -63,7 +63,7 @@ public void scheduleFixedDelayTask() {
 
 现在让我们以固定的时间间隔执行一项任务:
 
-```
+```java
 @Scheduled(fixedRate = 1000)
 public void scheduleFixedRateTask() {
     System.out.println(
@@ -77,7 +77,7 @@ public void scheduleFixedRateTask() {
 
 **如果我们想在调度任务中支持并行行为，我们需要添加`@Async`注释:**
 
-```
+```java
 @EnableAsync
 public class ScheduledFixedRateExample {
     @Async
@@ -111,7 +111,7 @@ public class ScheduledFixedRateExample {
 
 接下来，让我们调度一个延迟任务(以毫秒为单位):
 
-```
+```java
 @Scheduled(fixedDelay = 1000, initialDelay = 1000)
 public void scheduleFixedRateWithInitialDelayTask() {
 
@@ -129,7 +129,7 @@ public void scheduleFixedRateWithInitialDelayTask() {
 
 有时延迟和速率是不够的，我们需要 cron 表达式的灵活性来控制我们任务的时间表:
 
-```
+```java
 @Scheduled(cron = "0 15 10 15 * ?")
 public void scheduleTaskUsingCronExpression() {
 
@@ -143,7 +143,7 @@ public void scheduleTaskUsingCronExpression() {
 
 默认情况下，Spring 将对 cron 表达式使用服务器的本地时区。然而，**我们可以使用`zone`属性来改变这个时区**:
 
-```
+```java
 @Scheduled(cron = "0 15 10 15 * ?", zone = "Europe/Paris")
 ```
 
@@ -157,19 +157,19 @@ public void scheduleTaskUsingCronExpression() {
 
 一个`fixedDelay`任务:
 
-```
+```java
 @Scheduled(fixedDelayString = "${fixedDelay.in.milliseconds}")
 ```
 
 一个`fixedRate` 任务:
 
-```
+```java
 @Scheduled(fixedRateString = "${fixedRate.in.milliseconds}")
 ```
 
 基于`cron`表达式的任务:
 
-```
+```java
 @Scheduled(cron = "${cron.expression}")
 ```
 
@@ -177,7 +177,7 @@ public void scheduleTaskUsingCronExpression() {
 
 Spring 还提供了一种配置调度任务的 XML 方式。下面是设置这些的 XML 配置:
 
-```
+```java
 <!-- Configure the scheduler -->
 <task:scheduler id="myScheduler" pool-size="10" />
 
@@ -202,7 +202,7 @@ Spring 还提供了一种配置调度任务的 XML 方式。下面是设置这�
 
 让我们创建一个弹簧配置`DynamicSchedulingConfig`，并实现`SchedulingConfigurer`接口:
 
-```
+```java
 @Configuration
 @EnableScheduling
 public class DynamicSchedulingConfig implements SchedulingConfigurer {
@@ -254,7 +254,7 @@ public class DynamicSchedulingConfig implements SchedulingConfigurer {
 
 如果我们的任务是真正独立的，那么并行运行它们会更方便。为此，我们需要提供一个更适合我们需求的 [`TaskScheduler`](/web/20220628081929/https://www.baeldung.com/spring-task-scheduler) :
 
-```
+```java
 @Bean
 public TaskScheduler  taskScheduler() {
     ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();

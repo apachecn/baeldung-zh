@@ -18,7 +18,7 @@ Java 11 正式引入了 [Java HttpClient](/web/20221120204744/https://www.baeldu
 
 我们可以根据需要多次添加相同的头名称，如下例所示，它们都将被发送:
 
-```
+```java
 HttpClient httpClient = HttpClient.newHttpClient();
 
 HttpRequest request = HttpRequest.newBuilder()
@@ -34,7 +34,7 @@ return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
 如果我们想同时添加多个头，我们可以使用`headers()`方法:
 
-```
+```java
 HttpRequest request = HttpRequest.newBuilder()
   .headers("X-Our-Header-1", "value1", "X-Our-Header-2", "value2")
   .uri(new URI(url)).build();
@@ -42,7 +42,7 @@ HttpRequest request = HttpRequest.newBuilder()
 
 该方法还允许我们向一个标题名添加多个值:
 
-```
+```java
 HttpRequest request = HttpRequest.newBuilder()
   .headers("X-Our-Header-1", "value1", "X-Our-Header-1", "value2")
   .uri(new URI(url)).build();
@@ -52,7 +52,7 @@ HttpRequest request = HttpRequest.newBuilder()
 
 最后，我们可以使用`setHeader()`方法添加一个头。但是，与`header()`方法不同的是，**如果我们不止一次地使用同一个头名称，它将覆盖我们之前用那个名称**设置的任何头:
 
-```
+```java
 HttpRequest request = HttpRequest.newBuilder()
   .setHeader("X-Our-Header-1", "value1")
   .setHeader("X-Our-Header-1", "value2")

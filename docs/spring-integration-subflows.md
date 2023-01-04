@@ -33,7 +33,7 @@ Spring Integration 使得使用一些[企业集成模式](/web/20220627171759/ht
 
 我们将制作这些`QueueChannel`,因为这样更容易演示:
 
-```
+```java
 @EnableIntegration
 @IntegrationComponentScan
 public class SubflowsConfiguration {
@@ -83,7 +83,7 @@ public class SubflowsConfiguration {
 
 首先，让我们定义我们的`SubflowConfiguration `类中的每个`IntegrationFlow` bean:
 
-```
+```java
 @Bean
 public IntegrationFlow multipleOfThreeFlow() {
     return flow -> flow.split()
@@ -104,7 +104,7 @@ public IntegrationFlow multipleOfThreeFlow() {
 
 简单地说，这些抽象了调用者的 Spring 集成消息 API，类似于 REST 服务如何抽象 HTTP:
 
-```
+```java
 @MessagingGateway
 public interface NumbersClassifier {
 
@@ -128,7 +128,7 @@ public interface NumbersClassifier {
 
 现在，我们来测试一下:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { SeparateFlowsConfiguration.class })
 public class SeparateFlowsUnitTest {
@@ -140,7 +140,7 @@ public class SeparateFlowsUnitTest {
     private NumbersClassifier numbersClassifier; 
 ```
 
-```
+```java
  @Test
     public void whenSendMessagesToMultipleOf3Flow_thenOutputMultiplesOf3() {
         numbersClassifier.multipleOfThree(Arrays.asList(1, 2, 3, 4, 5, 6));
@@ -170,7 +170,7 @@ public class SeparateFlowsUnitTest {
 
 `publishSubscribeChannel()`方法向所有订阅子流广播消息。这样，我们可以创建一个流，而不是三个。
 
-```
+```java
 @Bean
 public IntegrationFlow classify() {
     return flow -> flow.split()
@@ -192,14 +192,14 @@ public IntegrationFlow classify() {
 
 现在，我们只有一个流，所以让我们也编辑我们的`NumbersClassifier `:
 
-```
+```java
 @Gateway(requestChannel = "classify.input")
 void classify(Collection<Integer> numbers);
 ```
 
 现在，**因为我们只有一个`IntegrationFlow` bean 和一个网关方法，我们只需要发送一次我们的列表:**
 
-```
+```java
 @Test
 public void whenSendMessagesToFlow_thenNumbersAreClassified() {
     numbersClassifier.classify(Arrays.asList(1, 2, 3, 4, 5, 6));
@@ -220,7 +220,7 @@ public void whenSendMessagesToFlow_thenNumbersAreClassified() {
 
 在下面的代码中，我们将根据我们的条件指定`multipleof3Channel`、`remainderIs1Channel,` 和`remainderIsTwoChannel`为接收者:
 
-```
+```java
 @Bean
 public IntegrationFlow classify() {
     return flow -> flow.split()
@@ -242,7 +242,7 @@ public IntegrationFlow classify() {
 
 让我们修改上面的代码，并将一个**匿名子流指定为第一个接收者**:
 
-```
+```java
 .routeToRecipients(route -> route
   .recipientFlow(subflow -> subflow
       .<Integer> filter(this::isMultipleOfThree)
@@ -262,7 +262,7 @@ public IntegrationFlow classify() {
 
 **我们可以把丢弃的流和通道想象成一个`else `块:**
 
-```
+```java
 @Bean
 public IntegrationFlow classify() {
     return flow -> flow.split()
@@ -290,7 +290,7 @@ public IntegrationFlow classify() {
 
 让我们定义一下我们的`IntegrationFlow` bean:
 
-```
+```java
 @Bean
 public IntegrationFlow classify() {
     return classify -> classify.split()
@@ -304,13 +304,13 @@ public IntegrationFlow classify() {
 
 在上面的代码中，我们通过执行除法来计算路由关键字:
 
-```
+```java
 route(p -> p % 3,...
 ```
 
 基于这个密钥，我们路由消息:
 
-```
+```java
 channelMapping(0, "multipleof3Channel")
 ```
 
@@ -318,13 +318,13 @@ channelMapping(0, "multipleof3Channel")
 
 现在，和其他流程一样，我们可以通过指定一个子流程来进行更多的控制，用`subFlowMapping`替换`channelMapping`:
 
-```
+```java
 .subFlowMapping(1, subflow -> subflow.channel("remainderIsOneChannel"))
 ```
 
 或者通过调用`handle `方法而不是`channel `方法来获得更多的控制:
 
-```
+```java
 .subFlowMapping(2, subflow -> subflow
   .<Integer> handle((payload, headers) -> {
       // do extra work on the payload

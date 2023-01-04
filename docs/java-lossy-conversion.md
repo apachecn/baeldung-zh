@@ -18,14 +18,14 @@
 
 例如，让我们尝试将一个`long`分配给一个`int`:
 
-```
+```java
 long longNum = 10;
 int intNum = longNum;
 ```
 
 编译这段代码时，Java 将发出一个错误:
 
-```
+```java
 incompatible types: possible lossy conversion from long to int
 ```
 
@@ -33,12 +33,12 @@ incompatible types: possible lossy conversion from long to int
 
 类似地，让我们尝试将一个`float`分配给一个 `long`:
 
-```
+```java
 float floatNum = 10.12f;
 long longNum = floatNum;
 ```
 
-```
+```java
 incompatible types: possible lossy conversion from float to long
 ```
 
@@ -46,12 +46,12 @@ incompatible types: possible lossy conversion from float to long
 
 类似地，给`int` 分配一个`double`号也会导致同样的错误:
 
-```
+```java
 double doubleNum = 1.2;
 int intNum = doubleNum;
 ```
 
-```
+```java
 incompatible types: possible lossy conversion from double to int
 ```
 
@@ -59,7 +59,7 @@ incompatible types: possible lossy conversion from double to int
 
 此外，在执行简单计算时，我们可能会遇到以下错误:
 
-```
+```java
 int fahrenheit = 100;
 int celcius = (fahrenheit - 32) * 5.0 / 9.0;
 ```
@@ -91,7 +91,7 @@ int celcius = (fahrenheit - 32) * 5.0 / 9.0;
 
 例如，让我们使用向下转换`:`将`a long` 数字转换为 `short`
 
-```
+```java
 long longNum = 24;
 short shortNum = (short) longNum;
 assertEquals(24, shortNum);
@@ -99,7 +99,7 @@ assertEquals(24, shortNum);
 
 同样，让我们将一个`double`转换成一个`int`:
 
-```
+```java
 double doubleNum = 15.6;
 int integerNum = (int) doubleNum;
 assertEquals(15, integerNum);
@@ -109,7 +109,7 @@ assertEquals(15, integerNum);
 
 让我们转换`short`范围之外的`long`值:
 
-```
+```java
 long largeLongNum = 32768; 
 short minShortNum = (short) largeLongNum;
 assertEquals(-32768, minShortNum);
@@ -129,7 +129,7 @@ assertEquals(32767, maxShortNum);
 
 同样，让我们看看当我们将一个`long`的最大值和最小值转换成一个`int`时会发生什么:
 
-```
+```java
 long maxLong = Long.MAX_VALUE; 
 int minInt = (int) maxLong;
 assertEquals(-1, minInt);
@@ -145,7 +145,7 @@ assertEquals(0, maxInt);
 
 例如，让我们将一个`Float`对象转换成一个`long`:
 
-```
+```java
 Float floatNum = 17.564f;
 long longNum = floatNum.longValue();
 assertEquals(17, longNum);
@@ -153,7 +153,7 @@ assertEquals(17, longNum);
 
 同样，如果我们看看`longValue` 或类似方法的实现，我们会发现收缩原语转换的使用:
 
-```
+```java
 public long longValue() {
     return (long) value;
 }
@@ -161,7 +161,7 @@ public long longValue() {
 
 但是，有时应该避免收缩原语转换，以保存有价值的信息:
 
-```
+```java
 Double doubleNum = 15.9999;
 long longNum = doubleNum.longValue();
 assertEquals(15, longNum); 
@@ -171,7 +171,7 @@ assertEquals(15, longNum);
 
 相反，我们可以使用`Math.round()`转换成最接近的整数:
 
-```
+```java
 Double doubleNum = 15.9999;
 long longNum = Math.round(doubleNum);
 
@@ -186,7 +186,7 @@ assertEquals(16, longNum);
 
 例如，让我们将一个`Double`对象转换成一个`Integer` 对象:
 
-```
+```java
 Double doubleNum = 10.3;
 double dbl = doubleNum.doubleValue(); // unboxing
 int intgr = (int) dbl; // downcasting

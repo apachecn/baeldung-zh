@@ -22,7 +22,7 @@
 
 例如，让我们在一个简单的汽车服务上使用和配置 Spring `Transactional`注释:
 
-```
+```java
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -51,7 +51,7 @@ public class CarService {
 
 让我们使用 JTA `Transactional`注释对一个简单的租赁服务做同样的事情:
 
-```
+```java
 import javax.transaction.Transactional;
 
 @Service

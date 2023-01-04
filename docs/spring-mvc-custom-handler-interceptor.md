@@ -14,7 +14,7 @@
 
 为了使用`Interceptors`，您需要在您的`pom.xml`文件的`dependencies`部分中包含以下部分:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-web</artifactId>
@@ -32,7 +32,7 @@
 
 因此，我们希望确保如果用户不活动，会话将无效。例如，如果用户忘记注销，非活动时间计数器将防止未经授权的用户访问该帐户。为了做到这一点，我们需要为非活动时间设置常数:
 
-```
+```java
 private static final long MAX_INACTIVE_SESSION_TIME = 5 * 10000;
 ```
 
@@ -40,7 +40,7 @@ private static final long MAX_INACTIVE_SESSION_TIME = 5 * 10000;
 
 现在，我们需要跟踪应用程序中的每个会话，所以我们需要包含这个 Spring 接口:
 
-```
+```java
 @Autowired
 private HttpSession session;
 ```
@@ -57,7 +57,7 @@ private HttpSession session;
 
 让我们看一下实现:
 
-```
+```java
 @Override
 public boolean preHandle(
   HttpServletRequest req, HttpServletResponse res, Object handler) throws Exception {
@@ -69,7 +69,7 @@ public boolean preHandle(
 
 在这部分代码中，我们设置了处理执行的`startTime`。从这一刻起，我们将数秒来完成每个请求的处理。在下一部分中，我们将提供会话时间的逻辑，前提是有人在 HTTP 会话期间登录:
 
-```
+```java
 if (UserInterceptor.isUserLogged()) {
     session = request.getSession();
     log.info("Time since last request in this session: {} ms",
@@ -97,7 +97,7 @@ return true;
 
 这个方法的实现只是为了获取信息，处理当前请求花了多长时间。正如您在前面的代码片段中看到的，我们在 Spring 模型中设置了`executionTime`。现在是时候使用它了:
 
-```
+```java
 @Override
 public void postHandle(
   HttpServletRequest request, 
@@ -119,7 +119,7 @@ public void postHandle(
 
 要将新创建的`Interceptor`添加到 Spring 配置中，我们需要覆盖实现`WebMvcConfigurer:`的`WebConfig`类中的`addInterceptors()`方法
 
-```
+```java
 @Override
 public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(new SessionTimerInterceptor());
@@ -128,7 +128,7 @@ public void addInterceptors(InterceptorRegistry registry) {
 
 我们可以通过编辑 XML Spring 配置文件来实现相同的配置:
 
-```
+```java
 <mvc:interceptors>
     <bean id="sessionTimerInterceptor" class="com.baeldung.web.interceptor.SessionTimerInterceptor"/>
 </mvc:interceptors>
@@ -136,7 +136,7 @@ public void addInterceptors(InterceptorRegistry registry) {
 
 此外，我们需要添加监听器，以便自动创建`ApplicationContext`:
 
-```
+```java
 public class ListenerConfig implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext sc) throws ServletException {

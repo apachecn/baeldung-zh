@@ -20,7 +20,7 @@
 
 考虑这段简单的代码:
 
-```
+```java
 int n = 1000;
 System.out.println("Hey - your input is: " + n);
 ```
@@ -29,7 +29,7 @@ System.out.println("Hey - your input is: " + n);
 
 类似地:
 
-```
+```java
 int n = 1000;
 System.out.println("Hey - your input is: " + n);
 System.out.println("Hmm.. I'm doing more stuff with: " + n);
@@ -48,7 +48,7 @@ System.out.println("And more: " + n);
 
 这里重要的是，**运行时间与输入的对数成比例增长(在这种情况下，对数以 2 为底):**
 
-```
+```java
 for (int i = 1; i < n; i = i * 2){
     System.out.println("Hey - I'm busy looking at: " + i);
 }
@@ -56,7 +56,7 @@ for (int i = 1; i < n; i = i * 2){
 
 如果`n`为 8，则输出如下:
 
-```
+```java
 Hey - I'm busy looking at: 1
 Hey - I'm busy looking at: 2
 Hey - I'm busy looking at: 4
@@ -72,7 +72,7 @@ Hey - I'm busy looking at: 4
 
 想象一个简单的 for 循环:
 
-```
+```java
 for (int i = 0; i < n; i++) {
     System.out.println("Hey - I'm busy looking at: " + i);
 }
@@ -86,7 +86,7 @@ for (int i = 0; i < n; i++) {
 
 同样，如果算法更改为以下形式:
 
-```
+```java
 for (int i = 0; i < n; i++) {
     System.out.println("Hey - I'm busy looking at: " + i);
     System.out.println("Hmm.. Let's have another look at: " + i);
@@ -102,7 +102,7 @@ for (int i = 0; i < n; i++) {
 
 **`n log n`是下一类算法。**运行时间与输入的`n log n`成比例增长:
 
-```
+```java
 for (int i = 1; i <= n; i++){
     for(int j = 1; j < n; j = j * 2) {
         System.out.println("Hey - I'm busy looking at: " + i + " and " + j);
@@ -120,7 +120,7 @@ for (int i = 1; i <= n; i++){
 
 让我们来看一个二次时间算法的简单例子:
 
-```
+```java
 for (int i = 1; i <= n; i++) {
     for(int j = 1; j <= n; j++) {
         System.out.println("Hey - I'm busy looking at: " + i + " and " + j);
@@ -140,7 +140,7 @@ for (int i = 1; i <= n; i++) {
 
 让我们来看一个简单的`O(2^n)`时间算法的例子:
 
-```
+```java
 for (int i = 1; i <= Math.pow(2, n); i++){
     System.out.println("Hey - I'm busy looking at: " + i);
 }
@@ -158,7 +158,7 @@ for (int i = 1; i <= Math.pow(2, n); i++){
 
 相反，让我们来看一个简单的`O(n!)`算法，如前几节所述:
 
-```
+```java
 for (int i = 1; i <= factorial(n); i++){
     System.out.println("Hey - I'm busy looking at: " + i);
 }

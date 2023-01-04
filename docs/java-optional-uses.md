@@ -34,7 +34,7 @@
 
 让我们尝试一个模拟`User` s: 的数据库的例子
 
-```
+```java
 public class User {
 
     public User(String id, String name) {
@@ -58,7 +58,7 @@ public class User {
 
 让我们定义一个存储库类，如果找到它，它将返回一个`User`。否则，它返回`null`:
 
-```
+```java
 public class UserRepositoryWithNull {
 
     private final List<User> dbUsers = Arrays.asList(new User("1", "John"), new User("2", "Maria"), new User("3", "Daniel"));
@@ -78,7 +78,7 @@ public class UserRepositoryWithNull {
 
 现在，我们将编写一个单元测试，展示如果我们不使用`null`检查来寻址`null`，代码如何被`NullPointerException`破坏:
 
-```
+```java
 @Test
 public void givenNonExistentUserId_whenSearchForUser_andNoNullCheck_thenThrowException() {
 
@@ -96,7 +96,7 @@ public void givenNonExistentUserId_whenSearchForUser_andNoNullCheck_thenThrowExc
 
 为了避免这种情况，我们可以创建另一个存储库，如果我们找到一个`User,`，那么我们返回一个完整的`Optional`。否则，我们返回一个空的。让我们在实践中看看这个:
 
-```
+```java
 public class UserRepositoryWithOptional {
 
     private final List<User> dbUsers = Arrays.asList(new User("1", "John"), new User("2", "Maria"), new User("3", "Daniel"));
@@ -116,7 +116,7 @@ public class UserRepositoryWithOptional {
 
 现在，当我们重写单元测试时，我们看到当我们找不到任何`User`时，我们必须如何首先处理`Optional`来获得它的值:
 
-```
+```java
 @Test
 public void givenNonExistentUserId_whenSearchForUser_thenOptionalShouldBeTreatedProperly() {
 
@@ -155,7 +155,7 @@ public void givenNonExistentUserId_whenSearchForUser_thenOptionalShouldBeTreated
 
 首先，让我们看看命令式方法，使用不返回`Optional` : 的存储库
 
-```
+```java
 @Test
 public void givenExistentUserId_whenFoundUserWithNameStartingWithMInRepositoryUsingNull_thenNameShouldBeUpperCased() {
 
@@ -176,7 +176,7 @@ public void givenExistentUserId_whenFoundUserWithNameStartingWithMInRepositoryUs
 
 现在，让我们来看看声明性的方式，使用存储库的`Optional`版本:
 
-```
+```java
 @Test
 public void givenExistentUserId_whenFoundUserWithNameStartingWithMInRepositoryUsingOptional_thenNameShouldBeUpperCased() {
 

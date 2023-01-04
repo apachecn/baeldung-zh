@@ -12,7 +12,7 @@
 
 假设我们有两个`Set`对象，`set1`和`set2`:
 
-```
+```java
 set1: {"Kotlin", "Java", "Rust", "Python", "C++"}
 set2: {"Kotlin", "Java", "Rust", "Ruby", "C#"}
 ```
@@ -36,7 +36,7 @@ set2: {"Kotlin", "Java", "Rust", "Ruby", "C#"}
 
 为了简单起见，我们把它作为一个单元测试来展示:
 
-```
+```java
 Set<String> set1 = Stream.of("Kotlin", "Java", "Rust", "Python", "C++").collect(Collectors.toSet());
 Set<String> set2 = Stream.of("Kotlin", "Java", "Rust", "Ruby", "C#").collect(Collectors.toSet());
 Set<String> expectedOnlyInSet1 = Set.of("Python", "C++");
@@ -60,7 +60,7 @@ assertThat(set1).isEqualTo(expectedOnlyInSet1);
 
 我们也可以使用`Stream.filter`来解决这个问题，而不需要修改原来的`set1`对象。让我们首先将这两个集合初始化为不可变集合:
 
-```
+```java
 Set<String> immutableSet1 = Set.of("Kotlin", "Java", "Rust", "Python", "C++");
 Set<String> immutableSet2 = Set.of("Kotlin", "Java", "Rust", "Ruby", "C#");
 Set<String> expectedOnlyInSet1 = Set.of("Python", "C++");
@@ -70,7 +70,7 @@ Set<String> expectedOnlyInSet1 = Set.of("Python", "C++");
 
 接下来，让我们编写一个单元测试，使用`Stream.filter`来找出不同之处:
 
-```
+```java
 Set<String> actualOnlyInSet1 = immutableSet1.stream().filter(e -> !immutableSet2.contains(e)).collect(Collectors.toSet());
 assertThat(actualOnlyInSet1).isEqualTo(expectedOnlyInSet1); 
 ```
@@ -85,7 +85,7 @@ Guava 是一个流行的 Java 库，附带了一些新的集合类型和方便�
 
 但是首先，我们需要在我们的类路径中包含这个库。假设我们通过[专家](/web/20220926153220/https://www.baeldung.com/maven)来管理项目依赖。我们可能需要将[番石榴属地](https://web.archive.org/web/20220926153220/https://search.maven.org/search?q=g:com.google.guava%20AND%20a:guava)添加到`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -95,7 +95,7 @@ Guava 是一个流行的 Java 库，附带了一些新的集合类型和方便�
 
 一旦我们的 Java 项目中有了番石榴，**我们就可以使用它的 [`Sets.difference`](https://web.archive.org/web/20220926153220/https://guava.dev/releases/31.0-jre/api/docs/com/google/common/collect/Sets.html#difference(java.util.Set,java.util.Set)) 方法来得到预期的结果**:
 
-```
+```java
 Set<String> actualOnlyInSet1 = Sets.difference(immutableSet1, immutableSet2);
 assertThat(actualOnlyInSet1).isEqualTo(expectedOnlyInSet1); 
 ```
@@ -111,7 +111,7 @@ Apache Commons 是另一个广泛使用的库。Apache Commons Collections4 库�
 
 在我们开始使用它之前，让我们将依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -125,7 +125,7 @@ Apache Commons 是另一个广泛使用的库。Apache Commons Collections4 库�
 
 接下来，让我们用两个不可变的`Set`对象来测试它:
 
-```
+```java
 Set<String> actualOnlyInSet1 = new HashSet<>(CollectionUtils.removeAll(immutableSet1, immutableSet2));
 assertThat(actualOnlyInSet1).isEqualTo(expectedOnlyInSet1); 
 ```
@@ -142,7 +142,7 @@ assertThat(actualOnlyInSet1).isEqualTo(expectedOnlyInSet1);
 
 预期的结果是:
 
-```
+```java
 Set<String> expectedDiff = Set.of("Python", "C++", "Ruby", "C#");
 ```
 
@@ -158,7 +158,7 @@ Set<String> expectedDiff = Set.of("Python", "C++", "Ruby", "C#");
 
 接下来，让我们用 Java 实现这个想法:
 
-```
+```java
 public static <T> Set<T> findSymmetricDiff(Set<T> set1, Set<T> set2) {
     Map<T, Integer> map = new HashMap<>();
     set1.forEach(e -> putKey(map, e));
@@ -180,7 +180,7 @@ private static <T> void putKey(Map<T, Integer> map, T key) {
 
 现在，让我们测试我们的解决方案，看看它是否能给出预期的结果:
 
-```
+```java
 Set<String> actualDiff = SetDiff.findSymmetricDiff(immutableSet1, immutableSet2);
 assertThat(actualDiff).isEqualTo(expectedDiff); 
 ```
@@ -191,7 +191,7 @@ assertThat(actualDiff).isEqualTo(expectedDiff);
 
 当发现两个集合之间的不对称差异时，我们已经介绍了 Apache Commons 库。实际上，**`commons-collections4`库有一个简便的`SetUtils.disjunction`方法可以直接返回两个集合之间的对称差**:
 
-```
+```java
 Set<String> actualDiff = SetUtils.disjunction(immutableSet1, immutableSet2);
 assertThat(actualDiff).isEqualTo(expectedDiff); 
 ```

@@ -16,7 +16,7 @@
 
 在我们开始之前，让我们设置一下我们的 [Maven 依赖关系](https://web.archive.org/web/20221226061918/https://search.maven.org/classic/#search%7Cga%7C1%7C%20(g%3A%22org.spockframework%22%20AND%20a%3A%22spock-core%22)%20OR%20(g%3A%22org.codehaus.groovy%22%20AND%20a%3A%22groovy-all%22)):
 
-```
+```java
 <dependency>
     <groupId>org.spockframework</groupId>
     <artifactId>spock-core</artifactId>z
@@ -43,7 +43,7 @@
 
 **我们可以在方法级别使用`@Ignore` 来跳过一个单独的规格说明方法:**
 
-```
+```java
 @Ignore
 def "I won't be executed"() {
     expect:
@@ -55,14 +55,14 @@ def "I won't be executed"() {
 
 此外，我们可以在类级别使用`@Ignore `:
 
-```
+```java
 @Ignore
 class IgnoreTest extends Specification
 ```
 
 我们可以简单地**提供为什么**我们的测试套件或方法被忽略的原因:
 
-```
+```java
 @Ignore("probably no longer needed")
 ```
 
@@ -70,7 +70,7 @@ class IgnoreTest extends Specification
 
 同样，我们可以忽略所有规范，只有一个除外，我们可以用`@IgnoreRest` 注释来标记它:
 
-```
+```java
 def "I won't run"() { }
 
 @IgnoreRest
@@ -83,7 +83,7 @@ def "I won't run too"() { }
 
 有时，我们希望有条件地忽略一两个测试。在这种情况下，**我们可以使用 `@IgnoreIf,` ，它接受一个谓词**作为参数:
 
-```
+```java
 @IgnoreIf({System.getProperty("os.name").contains("windows")})
 def "I won't run on windows"() { }
 ```
@@ -97,7 +97,7 @@ Spock 提供了一组属性和助手类，使我们的谓词更容易读写:
 
 我们可以在使用`os `属性的过程中重写前面的例子。实际上，它是带有一些有用方法的`spock.util.environment.OperatingSystem`类，例如`isWindows()`:
 
-```
+```java
 @IgnoreIf({ os.isWindows() })
 def "I'm using Spock helper classes to run only on windows"() {}
 ```
@@ -110,7 +110,7 @@ def "I'm using Spock helper classes to run only on windows"() {}
 
 有时，从`@IgnoreIf.` 反转我们的谓词逻辑更容易，在这种情况下，我们可以使用`@Requires`:
 
-```
+```java
 @Requires({ System.getProperty("os.name").contains("windows") })
 def "I will run only on Windows"()
 ```
@@ -125,7 +125,7 @@ def "I will run only on Windows"()
 
 这是`@PendingFeature:`的一个很好的用例
 
-```
+```java
 @PendingFeature
 def 'test for not implemented yet feature. Maybe in the future it will pass'()
 ```
@@ -140,7 +140,7 @@ def 'test for not implemented yet feature. Maybe in the future it will pass'()
 
 我们可以用`@Stepwise`注释按照给定的顺序执行规范的方法:
 
-```
+```java
 def 'I will run as first'() { }
 
 def 'I will run as second'() { }
@@ -154,7 +154,7 @@ def 'I will run as second'() { }
 
 **我们可以限制一个 spec 的单个方法的执行时间，让它更早失败:**
 
-```
+```java
 @Timeout(1)
 def 'I have one second to finish'() { }
 ```
@@ -163,14 +163,14 @@ def 'I have one second to finish'() { }
 
 默认情况下，`spock.lang.Timeout`使用秒作为基本时间单位。但是，**我们可以指定其他时间单位:**
 
-```
+```java
 @Timeout(value = 200, unit = TimeUnit.SECONDS)
 def 'I will fail after 200 millis'() { }
 ```
 
 `@Timeout`在类级别上具有与将其分别应用于每个特性方法相同的效果:
 
-```
+```java
 @Timeout(5)
 class ExampleTest extends Specification {
 
@@ -191,7 +191,7 @@ class ExampleTest extends Specification {
 
 为了避免这种情况，**我们可以在方法或类级别上使用`@Retry `注释，来重复失败的测试**:
 
-```
+```java
 @Retry
 def 'I will retry three times'() { }
 ```
@@ -200,28 +200,28 @@ def 'I will retry three times'() { }
 
 确定我们应该重试测试的条件是非常有用的。我们可以指定例外列表:
 
-```
+```java
 @Retry(exceptions = [RuntimeException])
 def 'I will retry only on RuntimeException'() { }
 ```
 
 或者出现特定异常消息时:
 
-```
+```java
 @Retry(condition = { failure.message.contains('error') })
 def 'I will retry with a specific message'() { }
 ```
 
 延迟重试非常有用:
 
-```
+```java
 @Retry(delay = 1000)
 def 'I will retry after 1000 millis'() { }
 ```
 
 最后，像通常一样，我们可以在类级别指定重试:
 
-```
+```java
 @Retry
 class RetryTest extends Specification
 ```
@@ -232,7 +232,7 @@ class RetryTest extends Specification
 
 应用该注释时，保存变量的当前状态，并在以后恢复它们。它还包括`setup`或`cleanup`方法:
 
-```
+```java
 @RestoreSystemProperties
 def 'all environment variables will be saved before execution and restored after tests'() {
     given:
@@ -246,14 +246,14 @@ def 'all environment variables will be saved before execution and restored after
 
 我们可以通过使用`@Title`注释来添加一个人性化的测试标题:
 
-```
+```java
 @Title("This title is easy to read for humans")
 class CustomTitleTest extends Specification
 ```
 
 类似地，我们可以添加带有`@Narrative`注释和多行`Groovy S`字符串的规范描述:
 
-```
+```java
 @Narrative("""
     as a user
     i want to save favourite items 
@@ -266,14 +266,14 @@ class NarrativeDescriptionTest extends Specification
 
 要链接一个或多个外部引用，我们可以使用` @See`注释:
 
-```
+```java
 @See("https://example.org")
 def 'Look at the reference'()
 ```
 
 为了传递多个链接，我们可以使用 Groovy `[]`操作数来创建一个列表:
 
-```
+```java
 @See(["https://example.org/first", "https://example.org/first"])
 def 'Look at the references'()
 ```
@@ -282,7 +282,7 @@ def 'Look at the references'()
 
 我们可以表示一个特征方法指的是一个或多个问题:
 
-```
+```java
 @Issue("https://jira.org/issues/LO-531")
 def 'single issue'() {
 
@@ -296,7 +296,7 @@ def 'multiple issues'()
 
 最后，我们可以用`@Subject`指出哪个类是测试中的类:
 
-```
+```java
 @Subject
 ItemService itemService // initialization here...
 ```
@@ -319,7 +319,7 @@ ItemService itemService // initialization here...
 
 通过使用配置文件，我们可以过滤(或不过滤)堆栈跟踪:
 
-```
+```java
 runner {
     filterStackTrace false
 }
@@ -329,7 +329,7 @@ runner {
 
 为了了解它是如何工作和实践的，让我们创建一个简单的测试来抛出一个`RuntimeException:`
 
-```
+```java
 def 'stacktrace'() {
     expect:
     throw new RuntimeException("blabla")
@@ -338,7 +338,7 @@ def 'stacktrace'() {
 
 当`filterStackTrace `设置为 false 时，我们将在输出中看到:
 
-```
+```java
 java.lang.RuntimeException: blabla
 
   at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
@@ -355,7 +355,7 @@ java.lang.RuntimeException: blabla
 
 通过将该属性设置为`true,`,我们将得到:
 
-```
+```java
 java.lang.RuntimeException: blabla
 
   at extensions.StackTraceTest.stacktrace(StackTraceTest.groovy:10)
@@ -369,7 +369,7 @@ java.lang.RuntimeException: blabla
 
 我们可以添加一个简单的条件，例如基于环境变量:
 
-```
+```java
 if (System.getenv("FILTER_STACKTRACE") == null) {   
     filterStackTrace false
 }
@@ -385,7 +385,7 @@ Spock 配置文件是一个 Groovy 文件，因此它可以包含 Groovy 代码�
 
 我们需要在`the report`中添加这两个属性:
 
-```
+```java
 report {
     issueNamePrefix 'Bug '
     issueUrlPrefix 'https://jira.org/issues/'
@@ -400,7 +400,7 @@ report {
 
 该行为可在配置文件中启用。为了启用优化器，我们使用`optimizeRunOrder `属性:
 
-```
+```java
 runner {
   optimizeRunOrder true
 }
@@ -414,7 +414,7 @@ runner {
 
 我们可以简单地通过使用`exclude`属性从类`TimeoutTest` 中排除一个测试套件:
 
-```
+```java
 import extensions.TimeoutTest
 
 runner {
@@ -426,7 +426,7 @@ runner {
 
 我们可以分别指定注释和基类:
 
-```
+```java
 import extensions.TimeoutTest
 import spock.lang.Issue
     exclude {
@@ -447,7 +447,7 @@ import spock.lang.Issue
 
 我们所要做的就是传递一些属性的值:
 
-```
+```java
 report {
     enabled true
     logFileDir '.'

@@ -28,7 +28,7 @@ Learn how to handle path variables that contain a dot in Spring MVC request mapp
 
 `@PathVariable`注释的一个简单用例是用主键标识实体的端点:
 
-```
+```java
 @GetMapping("/api/employees/{id}")
 @ResponseBody
 public String getEmployeesById(@PathVariable String id) {
@@ -40,7 +40,7 @@ public String getEmployeesById(@PathVariable String id) {
 
 一个简单的`GET request`到`/api/employees/{id}` 将使用提取的 id 值调用`getEmployeesById` :
 
-```
+```java
 http://localhost:8080/api/employees/111 
 ---- 
 ID: 111
@@ -54,7 +54,7 @@ ID: 111
 
 但是，如果路径变量名不同，我们可以在`@PathVariable`注释的参数中指定它:
 
-```
+```java
 @GetMapping("/api/employeeswithvariable/{id}")
 @ResponseBody
 public String getEmployeesByIdWithVariableName(@PathVariable("id") String employeeId) {
@@ -62,7 +62,7 @@ public String getEmployeesByIdWithVariableName(@PathVariable("id") String employ
 }
 ```
 
-```
+```java
 http://localhost:8080/api/employeeswithvariable/1 
 ---- 
 ID: 1
@@ -74,7 +74,7 @@ ID: 1
 
 根据用例的不同，**在控制器方法的请求 URI 中，我们可以有不止一个路径变量，它也有多个方法参数**:
 
-```
+```java
 @GetMapping("/api/employees/{id}/{name}")
 @ResponseBody
 public String getEmployeesByIdAndName(@PathVariable String id, @PathVariable String name) {
@@ -82,7 +82,7 @@ public String getEmployeesByIdAndName(@PathVariable String id, @PathVariable Str
 }
 ```
 
-```
+```java
 http://localhost:8080/api/employees/1/bar 
 ---- 
 ID: 1, name: bar
@@ -90,7 +90,7 @@ ID: 1, name: bar
 
 **我们也可以使用`java.util.Map<String, String>:`** 类型的方法参数来处理多个`@PathVariable`参数
 
-```
+```java
 @GetMapping("/api/employeeswithmapvariable/{id}/{name}")
 @ResponseBody
 public String getEmployeesByIdAndNameWithMapVariable(@PathVariable Map<String, String> pathVarsMap) {
@@ -104,7 +104,7 @@ public String getEmployeesByIdAndNameWithMapVariable(@PathVariable Map<String, S
 }
 ```
 
-```
+```java
 http://localhost:8080/api/employees/1/bar 
 ---- 
 ID: 1, name: bar
@@ -116,7 +116,7 @@ ID: 1, name: bar
 
 **在 Spring 中，带`@PathVariable`注释的方法参数默认是必需的:**
 
-```
+```java
 @GetMapping(value = { "/api/employeeswithrequired", "/api/employeeswithrequired/{id}" })
 @ResponseBody
 public String getEmployeesByIdWithRequired(@PathVariable String id) {
@@ -126,7 +126,7 @@ public String getEmployeesByIdWithRequired(@PathVariable String id) {
 
 从表面上看，上面的控制器应该处理`/api/employeeswithrequired`和`/api/employeeswithrequired/1`请求路径。然而，由于默认情况下由`@PathVariables`注释的方法参数是强制的，它不处理发送到`/api/employeeswithrequired`路径的请求:
 
-```
+```java
 http://localhost:8080/api/employeeswithrequired 
 ---- 
 {"timestamp":"2020-07-08T02:20:07.349+00:00","status":404,"error":"Not Found","message":"","path":"/api/employeeswithrequired"}  http://localhost:8080/api/employeeswithrequired/1 
@@ -140,7 +140,7 @@ ID: 111
 
 **我们可以将`@PathVariable`的`required` 属性设置为`false` ，使其可选。**因此，修改我们前面的例子，我们现在可以处理有和没有路径变量的 URI 版本:
 
-```
+```java
 @GetMapping(value = { "/api/employeeswithrequiredfalse", "/api/employeeswithrequiredfalse/{id}" })
 @ResponseBody
 public String getEmployeesByIdWithRequiredFalse(@PathVariable(required = false) String id) {
@@ -152,7 +152,7 @@ public String getEmployeesByIdWithRequiredFalse(@PathVariable(required = false) 
 }
 ```
 
-```
+```java
 http://localhost:8080/api/employeeswithrequiredfalse 
 ---- 
 ID missing
@@ -162,7 +162,7 @@ ID missing
 
 自从引入 Spring 4.1 之后，我们还可以使用[`java.util.Optional<T>`](/web/20221113133230/https://www.baeldung.com/java-optional)(Java 8+中可用)来处理一个非强制的路径变量:
 
-```
+```java
 @GetMapping(value = { "/api/employeeswithoptional", "/api/employeeswithoptional/{id}" })
 @ResponseBody
 public String getEmployeesByIdWithOptional(@PathVariable Optional<String> id) {
@@ -176,7 +176,7 @@ public String getEmployeesByIdWithOptional(@PathVariable Optional<String> id) {
 
 现在，如果我们不在请求中指定路径变量`id`，我们将得到默认响应:
 
-```
+```java
 http://localhost:8080/api/employeeswithoptional 
 ----
 ID missing 
@@ -186,7 +186,7 @@ ID missing
 
 如前所述，我们可以使用类型为`java.util.Map`的单个方法参数来处理请求 URI 中的所有路径变量。**我们也可以用这个策略来处理可选路径变量的情况:**
 
-```
+```java
 @GetMapping(value = { "/api/employeeswithmap/{id}", "/api/employeeswithmap" })
 @ResponseBody
 public String getEmployeesByIdWithMap(@PathVariable Map<String, String> pathVarsMap) {
@@ -205,7 +205,7 @@ public String getEmployeesByIdWithMap(@PathVariable Map<String, String> pathVars
 
 例如，使用`java.util.Optional<String, String>`，我们可以识别路径变量是否是`null`。如果是`null,`，那么我们可以用一个默认值来响应请求:
 
-```
+```java
 @GetMapping(value = { "/api/defaultemployeeswithoptional", "/api/defaultemployeeswithoptional/{id}" })
 @ResponseBody
 public String getDefaultEmployeesByIdWithOptional(@PathVariable Optional<String> id) {

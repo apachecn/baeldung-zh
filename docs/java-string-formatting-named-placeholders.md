@@ -12,7 +12,7 @@ Java 标准库提供了 [`String.format()`](/web/20220831130238/https://www.bael
 
 `String.format()`方法使用起来非常简单。然而，当`format()`调用有许多参数时，很难理解哪个值将属于哪个格式说明符，例如:
 
-```
+```java
 Employee e = ...; // get an employee instance
 String template = "Firstname: %s, Lastname: %s, Id: %s, Company: %s, Role: %s, Department: %s, Address: %s ...";
 String.format(template, e.firstName, e.lastName, e.Id, e.company, e.department, e.role ... ) 
@@ -22,7 +22,7 @@ String.format(template, e.firstName, e.lastName, e.Id, e.company, e.department, 
 
 因此，如果我们可以在模板中使用命名参数之类的东西，然后通过保存所有参数映射的`Map`应用格式，那就太好了:
 
-```
+```java
 String template = "Firstname: ${firstname}, Lastname: ${lastname}, Id: ${id} ...";
 ourFormatMethod.format(template, parameterMap);
 ```
@@ -41,7 +41,7 @@ ourFormatMethod.format(template, parameterMap);
 
 首先，让我们将这个库作为新的依赖项添加到我们的 Maven 配置文件中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-text</artifactId>
@@ -53,13 +53,13 @@ ourFormatMethod.format(template, parameterMap);
 
 在我们看到如何使用`StrSubstitutor`类之前，让我们创建一个模板作为例子:
 
-```
+```java
 String TEMPLATE = "Text: [${text}] Number: [${number}] Text again: [${text}]";
 ```
 
 接下来，让我们创建一个测试，使用`StrSubstitutor`基于上面的模板构建一个字符串:
 
-```
+```java
 Map<String, Object> params = new HashMap<>();
 params.put("text", "It's awesome!");
 params.put("number", 42);
@@ -77,7 +77,7 @@ assertThat(result).isEqualTo("Text: [It's awesome!] Number: [42] Text again: [It
 
 现在，让我们测试这个案例:
 
-```
+```java
 Map<String, Object> params = new HashMap<>();
 params.put("text", "'${number}' is a placeholder.");
 params.put("number", 42);
@@ -90,7 +90,7 @@ assertThat(result).isEqualTo("Text: ['${number}' is a placeholder.] Number: [42]
 
 但是，如果我们执行它，测试就会失败:
 
-```
+```java
 org.opentest4j.AssertionFailedError: 
 expected: "Text: ['${number}' is a placeholder.] Number: [42] Text again: ['${number}' is a placeholder.]"
  but was: "Text: ['42' is a placeholder.] Number: [42] Text again: ['42' is a placeholder.]"
@@ -106,7 +106,7 @@ expected: "Text: ['${number}' is a placeholder.] Number: [42] Text again: ['${nu
 
 为了绕过这个问题，我们可以选择不同的前缀和后缀，这样它们就不会受到干扰:
 
-```
+```java
 String TEMPLATE = "Text: [%{text}] Number: [%{number}] Text again: [%{text}]";
 Map<String, Object> params = new HashMap<>();
 params.put("text", "'${number}' is a placeholder.");
@@ -128,14 +128,14 @@ assertThat(result).isEqualTo("Text: ['${number}' is a placeholder.] Number: [42]
 
 想法是我们在模板中搜索参数名模式。然而，当我们找到一个时，我们不会立即用地图上的值替换它。相反，我们构建了一个新的模板，可以用于标准的`String.format()`方法。以我们的例子为例，我们将尝试转换:
 
-```
+```java
 String TEMPLATE = "Text: [${text}] Number: [${number}] Text again: [${text}]";
 Map<String, Object> params ...
 ```
 
 变成:
 
-```
+```java
 String NEW_TEMPLATE = "Text: [%s] Number: [%s] Text again: [%s]";
 List<Object> valueList = List.of("'${number}' is a placeholder.", 42, "'${number}' is a placeholder.");
 ```
@@ -146,7 +146,7 @@ List<Object> valueList = List.of("'${number}' is a placeholder.", 42, "'${number
 
 接下来，让我们创建一个方法来实现这个想法:
 
-```
+```java
 public static String format(String template, Map<String, Object> parameters) {
     StringBuilder newTemplate = new StringBuilder(template);
     List<Object> valueList = new ArrayList<>();
@@ -182,7 +182,7 @@ public static String format(String template, Map<String, Object> parameters) {
 
 接下来，让我们测试该方法是否适用于常规情况:
 
-```
+```java
 Map<String, Object> params = new HashMap<>();
 params.put("text", "It's awesome!");
 params.put("number", 42);
@@ -194,7 +194,7 @@ assertThat(result).isEqualTo("Text: [It's awesome!] Number: [42] Text again: [It
 
 当然，我们也想看看它是否适用于边缘情况:
 
-```
+```java
 params.put("text", "'${number}' is a placeholder.");
 result = NamedFormatter.format(TEMPLATE, params);
 assertThat(result).isEqualTo("Text: ['${number}' is a placeholder.] Number: [42] Text again: ['${number}' is a placeholder.]"); 

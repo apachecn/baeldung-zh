@@ -20,7 +20,7 @@
 
 **从`java.util package`到`Collections`的默认迭代器，如`ArrayList`、`HashMap`等。不会出故障。**
 
-```
+```java
 ArrayList<Integer> numbers = // ...
 
 Iterator<Integer> iterator = numbers.iterator();
@@ -38,7 +38,7 @@ while (iterator.hasNext()) {
 
 但是，如果使用`Collection`的`remove()`方法移除一个元素，它会抛出一个异常:
 
-```
+```java
 ArrayList<Integer> numbers = // ...
 
 Iterator<Integer> iterator = numbers.iterator();
@@ -72,7 +72,7 @@ while (iterator.hasNext()) {
 
 **、`Iterators`、`Collections`上的`java.util.concurrent`包如`ConcurrentHashMap`、`CopyOnWriteArrayList`等。本质上是自动防故障的。**
 
-```
+```java
 ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();
 
 map.put("First", 10);

@@ -12,7 +12,7 @@
 
 首先，让我们写一个测试来看看`parseBoolean()`如何用值 `true:`转换一个`String`
 
-```
+```java
 assertThat(Boolean.parseBoolean("true")).isTrue();
 ```
 
@@ -28,7 +28,7 @@ assertThat(Boolean.parseBoolean("true")).isTrue();
 
 我们可以看到这个方法也成功地转换了我们的`String:`
 
-```
+```java
 assertThat(Boolean.valueOf("true")).isTrue();
 ```
 
@@ -42,7 +42,7 @@ assertThat(Boolean.valueOf("true")).isTrue();
 
 如果不看文档或这个方法的实现，人们可能会合理地假设这个方法也用于将它的`String`参数转换成`boolean:`
 
-```
+```java
 assertThat(Boolean.getBoolean("true")).isTrue(); // this test fails!
 ```
 
@@ -50,7 +50,7 @@ assertThat(Boolean.getBoolean("true")).isTrue(); // this test fails!
 
 通过定义系统属性:
 
-```
+```java
 System.setProperty("CODING_IS_FUN", "true");
 assertThat(Boolean.getBoolean("CODING_IS_FUN")).isTrue();
 ```

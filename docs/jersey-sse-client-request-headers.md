@@ -22,7 +22,7 @@
 
 为了开始我们的旅程，我们需要在我们的 Maven `pom.xml`文件中有[的`jersey-client` 依赖关系](https://web.archive.org/web/20220625164018/https://search.maven.org/search?q=g:org.glassfish.jersey.core%20AND%20a:jersey-client&core=gav)以及[新泽西的 SSE 依赖关系](https://web.archive.org/web/20220625164018/https://search.maven.org/search?q=g:org.glassfish.jersey.media%20AND%20a:jersey-media-sse&core=gav):
 
-```
+```java
 <dependency>
     <groupId>org.glassfish.jersey.core</groupId>
     <artifactId>jersey-client</artifactId>
@@ -30,7 +30,7 @@
 </dependency>
 ```
 
-```
+```java
 <dependency>
     <groupId>org.glassfish.jersey.media</groupId>
     <artifactId>jersey-media-sse</artifactId>
@@ -44,7 +44,7 @@
 
 首先，我们将实现向每个客户端请求添加报头的过滤器:
 
-```
+```java
 public class AddHeaderOnRequestFilter implements ClientRequestFilter {
 
     public static final String FILTER_HEADER_VALUE = "filter-header-value";
@@ -61,7 +61,7 @@ public class AddHeaderOnRequestFilter implements ClientRequestFilter {
 
 对于我们的例子，我们将使用`https://sse.example.org`作为一个假想的端点，我们希望我们的客户端从这里消费事件。实际上，我们会将其更改为我们希望客户使用的真正的 [SSE 事件服务器端点](/web/20220625164018/https://www.baeldung.com/java-ee-jax-rs-sse)。
 
-```
+```java
 Client client = ClientBuilder.newBuilder()
   .register(AddHeaderOnRequestFilter.class)
   .build();
@@ -83,7 +83,7 @@ sseEventSource.close();
 
 **重要的是要知道默认的球衣传输连接器实现使用了 JDK** 的`HttpURLConnection`类。这个类限制了某些头的使用。为了避免这种限制，我们可以设置系统属性:
 
-```
+```java
 System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
 ```
 
@@ -93,7 +93,7 @@ System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
 
 定义头部最直接的方法是调用`WebTarget#request` 来获得提供`header`方法的`Invocation.Builder`。
 
-```
+```java
 public Response simpleHeader(String headerKey, String headerValue) {
     Client client = ClientBuilder.newClient();
     WebTarget webTarget = client.target("https://sse.example.org/");
@@ -105,7 +105,7 @@ public Response simpleHeader(String headerKey, String headerValue) {
 
 实际上，我们可以很好地压缩它以增加可读性:
 
-```
+```java
 public Response simpleHeaderFluently(String headerKey, String headerValue) {
     Client client = ClientBuilder.newClient();
 
@@ -122,7 +122,7 @@ public Response simpleHeaderFluently(String headerKey, String headerValue) {
 
 实际上，Jersey 客户端 API **提供了`HttpAuthenticationFeature`类，允许我们轻松地发送认证头**:
 
-```
+```java
 public Response basicAuthenticationAtClientLevel(String username, String password) {
     HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic(username, password);
     Client client = ClientBuilder.newBuilder().register(feature).build();
@@ -139,7 +139,7 @@ public Response basicAuthenticationAtClientLevel(String username, String passwor
 
 现在，我们也可以在请求时指定 creds:
 
-```
+```java
 public Response basicAuthenticationAtRequestLevel(String username, String password) {
     HttpAuthenticationFeature feature = HttpAuthenticationFeature.basicBuilder().build();
     Client client = ClientBuilder.newBuilder().register(feature).build();
@@ -156,7 +156,7 @@ public Response basicAuthenticationAtRequestLevel(String username, String passwo
 
 Jersey 的`HttpAuthenticationFeature` 也支持摘要认证:
 
-```
+```java
 public Response digestAuthenticationAtClientLevel(String username, String password) {
     HttpAuthenticationFeature feature = HttpAuthenticationFeature.digest(username, password);
     Client client = ClientBuilder.newBuilder().register(feature).build();
@@ -169,7 +169,7 @@ public Response digestAuthenticationAtClientLevel(String username, String passwo
 
 同样，我们可以在请求时覆盖:
 
-```
+```java
 public Response digestAuthenticationAtRequestLevel(String username, String password) {
     HttpAuthenticationFeature feature = HttpAuthenticationFeature.digest();
     Client client = ClientBuilder.newBuilder().register(feature).build();
@@ -188,7 +188,7 @@ OAuth 2.0 支持承载令牌的概念作为另一种认证机制。
 
 我们需要[新泽西的`oauth2-client` 属地](https://web.archive.org/web/20220625164018/https://search.maven.org/search?q=g:org.glassfish.jersey.security%20AND%20a:oauth2-client&core=gav)给我们`OAuth2ClientSupportFeature` ，类似于`HttpAuthenticationFeature`:
 
-```
+```java
 <dependency>
     <groupId>org.glassfish.jersey.security</groupId>
     <artifactId>oauth2-client</artifactId>
@@ -198,7 +198,7 @@ OAuth 2.0 支持承载令牌的概念作为另一种认证机制。
 
 要添加不记名令牌，我们将遵循与前面类似的模式:
 
-```
+```java
 public Response bearerAuthenticationWithOAuth2AtClientLevel(String token) {
     Feature feature = OAuth2ClientSupport.feature(token);
     Client client = ClientBuilder.newBuilder().register(feature).build();
@@ -211,7 +211,7 @@ public Response bearerAuthenticationWithOAuth2AtClientLevel(String token) {
 
 或者，我们可以在请求级别覆盖，这在令牌由于旋转而改变时特别方便:
 
-```
+```java
 public Response bearerAuthenticationWithOAuth2AtRequestLevel(String token, String otherToken) {
     Feature feature = OAuth2ClientSupport.feature(token);
     Client client = ClientBuilder.newBuilder().register(feature).build();
@@ -227,7 +227,7 @@ public Response bearerAuthenticationWithOAuth2AtRequestLevel(String token, Strin
 
 第四，如果我们需要集成使用 OAuth 1.0 的遗留代码，我们将需要 [Jersey 的`oauth1-client` dependency](https://web.archive.org/web/20220625164018/https://search.maven.org/search?q=g:org.glassfish.jersey.security%20AND%20a:oauth1-client&core=gav) :
 
-```
+```java
 <dependency>
     <groupId>org.glassfish.jersey.security</groupId>
     <artifactId>oauth1-client</artifactId>
@@ -237,7 +237,7 @@ public Response bearerAuthenticationWithOAuth2AtRequestLevel(String token, Strin
 
 与 OAuth 2.0 类似，我们可以使用`OAuth1ClientSupport`:
 
-```
+```java
 public Response bearerAuthenticationWithOAuth1AtClientLevel(String token, String consumerKey) {
     ConsumerCredentials consumerCredential = 
       new ConsumerCredentials(consumerKey, "my-consumer-secret");

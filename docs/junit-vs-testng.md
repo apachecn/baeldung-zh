@@ -14,7 +14,7 @@ JUnit 和 TestNG 无疑是 Java 生态系统中最流行的两个单元测试框
 
 **JUnit 在两个层次上提供初始化和清理，在每个方法和类之前和之后。**我们在方法级别有`@BeforeEach`、 `@AfterEach`注释，在类级别有`@BeforeAll` 和 `@AfterAll`:
 
-```
+```java
 public class SummationServiceTest {
 
     private static List<Integer> numbers;
@@ -53,7 +53,7 @@ public class SummationServiceTest {
 
 与 JUnit 类似， **TestNG 也提供方法和类级别的初始化和清理**。虽然`@BeforeClass` 和`@AfterClass` 在类级别保持不变，但是方法级别的注释是@ `BeforeMethod` 和`@AfterMethod:`
 
-```
+```java
 @BeforeClass
 public void initialize() {
     numbers = new ArrayList<>();
@@ -79,7 +79,7 @@ public void runAfterEachTest() {
 
 **TestNG 还为套件和组级别的配置提供了`@BeforeSuite, @AfterSuite, @BeforeGroup and @AfterGroup` 注释:**
 
-```
+```java
 @BeforeGroups("positive_tests")
 public void runBeforeEachGroup() {
     numbers.add(1);
@@ -95,7 +95,7 @@ public void runAfterEachGroup() {
 
 此外，如果我们需要 TestNG XML 配置文件中的`<test>` 标签中包含的测试用例之前或之后的任何配置，我们可以使用`@BeforeTest` 和@ `AfterTest` :
 
-```
+```java
 <test name="test setup">
     <classes>
         <class name="SummationServiceTest">
@@ -113,7 +113,7 @@ public void runAfterEachGroup() {
 
 **两个框架都支持忽略测试用例**，尽管他们做的很不一样。JUnit 提供了`@Ignore` 注释:
 
-```
+```java
 @Ignore
 @Test
 public void givenNumbers_sumEquals_thenCorrect() {
@@ -124,7 +124,7 @@ public void givenNumbers_sumEquals_thenCorrect() {
 
 而 TestNG 使用带有布尔值`true`或`false`的参数`@Test` :
 
-```
+```java
 @Test(enabled=false)
 public void givenNumbers_sumEquals_thenCorrect() {
     int sum = numbers.stream.reduce(0, Integer::sum);
@@ -140,7 +140,7 @@ public void givenNumbers_sumEquals_thenCorrect() {
 
 如果我们想要将不同包的测试用例分组在一个`Suite `中一起运行，我们需要`@SelectPackages`注释:
 
-```
+```java
 @Suite
 @SelectPackages({ "org.baeldung.java.suite.childpackage1", "org.baeldung.java.suite.childpackage2" })
 public class SelectPackagesSuiteUnitTest {
@@ -150,7 +150,7 @@ public class SelectPackagesSuiteUnitTest {
 
 如果我们想要特定的测试类一起运行，`JUnit 5`通过`@SelectClasses`提供了灵活性:
 
-```
+```java
 @Suite
 @SelectClasses({Class1UnitTest.class, Class2UnitTest.class})
 public class SelectClassesSuiteUnitTest {
@@ -160,7 +160,7 @@ public class SelectClassesSuiteUnitTest {
 
 之前使用`JUnit 4`，我们使用`@RunWith`和`@Suite `注释实现了分组和一起运行多个测试:
 
-```
+```java
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ RegistrationTest.class, SignInTest.class })
 public class SuiteTest {
@@ -170,7 +170,7 @@ public class SuiteTest {
 
 在 TestNG 中，我们可以使用一个 XML 文件对测试进行分组:
 
-```
+```java
 <suite name="suite">
     <test name="test suite">
         <classes>
@@ -185,7 +185,7 @@ public class SuiteTest {
 
 除了对类进行分组，TestNG 还可以使用@ `Test(groups=”groupName”)`注释对方法进行分组:
 
-```
+```java
 @Test(groups = "regression")
 public void givenNegativeNumber_sumLessthanZero_thenCorrect() {
     int sum = numbers.stream().reduce(0, Integer::sum);
@@ -195,7 +195,7 @@ public void givenNegativeNumber_sumLessthanZero_thenCorrect() {
 
 让我们使用 XML 来执行这些组:
 
-```
+```java
 <test name="test groups">
     <groups>
         <run>
@@ -217,7 +217,7 @@ public void givenNegativeNumber_sumLessthanZero_thenCorrect() {
 
 让我们首先用抛出异常的方法创建一个类:
 
-```
+```java
 public class Calculator {
     public double divide(double a, double b) {
         if (b == 0) {
@@ -230,7 +230,7 @@ public class Calculator {
 
 在`JUnit 5`中，我们可以使用`assertThrows ` API 来测试异常:
 
-```
+```java
 @Test
 public void whenDividerIsZero_thenDivideByZeroExceptionIsThrown() {
     Calculator calculator = new Calculator();
@@ -242,7 +242,7 @@ public void whenDividerIsZero_thenDivideByZeroExceptionIsThrown() {
 
 使用 TestNG，我们也可以实现同样的功能:
 
-```
+```java
 @Test(expectedExceptions = ArithmeticException.class) 
 public void givenNumber_whenThrowsException_thenCorrect() { 
     int i = 1 / 0;
@@ -259,7 +259,7 @@ public void givenNumber_whenThrowsException_thenCorrect() {
 
 *   `@ValueSource:`我们可以将它与类型为`Short, Byte, Int, Long, Float, Double, Char,` 和 `String:`的值数组一起使用
 
-```
+```java
 @ParameterizedTest
 @ValueSource(strings = { "Hello", "World" })
 void givenString_TestNullOrNot(String word) {
@@ -269,7 +269,7 @@ void givenString_TestNullOrNot(String word) {
 
 *   `@EnumSource – `将`Enum `常量作为参数传递给测试方法:
 
-```
+```java
 @ParameterizedTest
 @EnumSource(value = PizzaDeliveryStrategy.class, names = {"EXPRESS", "NORMAL"})
 void givenEnum_TestContainsOrNot(PizzaDeliveryStrategy timeUnit) {
@@ -279,7 +279,7 @@ void givenEnum_TestContainsOrNot(PizzaDeliveryStrategy timeUnit) {
 
 *   `@MethodSource – p`评估生成流的外部方法:
 
-```
+```java
 static Stream<String> wordDataProvider() {
     return Stream.of("foo", "bar");
 }
@@ -293,7 +293,7 @@ void givenMethodSource_TestInputStream(String argument) {
 
 *   `@CsvSource –` 使用 CSV 值作为参数的来源:
 
-```
+```java
 @ParameterizedTest
 @CsvSource({ "1, Car", "2, House", "3, Train" })
 void givenCSVSource_TestContent(int id, String word) {
@@ -308,7 +308,7 @@ void givenCSVSource_TestContent(int id, String word) {
 
 **在 TestNG 中，我们可以使用@ `Parameter` 或`@DataProvider` 注释来参数化测试。**在使用 XML 文件时，用@ `Parameter:`标注测试方法
 
-```
+```java
 @Test
 @Parameters({"value", "isEven"})
 public void 
@@ -319,7 +319,7 @@ public void
 
 并在 XML 文件中提供数据:
 
-```
+```java
 <suite name="My test suite">
     <test name="numbersXML">
         <parameter name="value" value="1"/>
@@ -337,7 +337,7 @@ public void
 
 下面是一个对原始数据类型使用`@DataProvider`的例子:
 
-```
+```java
 @DataProvider(name = "numbers")
 public static Object[][] evenNumbers() {
     return new Object[][]{{1, false}, {2, true}, {4, true}};
@@ -352,7 +352,7 @@ public void givenNumberFromDataProvider_ifEvenCheckOK_thenCorrect
 
 和`@DataProvider `对于物体:
 
-```
+```java
 @Test(dataProvider = "numbersObject")
 public void givenNumberObjectFromDataProvider_ifEvenCheckOK_thenCorrect
   (EvenNumber number) {
@@ -374,7 +374,7 @@ public Object[][] parameterProvider() {
 
 超时测试意味着，如果在某个特定的时间段内执行没有完成，测试用例应该失败。JUnit 和 TestNG 都支持超时测试。在`JUnit 5`中，我们可以将超时测试写成`:`
 
-```
+```java
 @Test
 public void givenExecution_takeMoreTime_thenFail() throws InterruptedException {
     Assertions.assertTimeout(Duration.ofMillis(1000), () -> Thread.sleep(10000));
@@ -383,7 +383,7 @@ public void givenExecution_takeMoreTime_thenFail() throws InterruptedException {
 
 在`JUnit 4`和 TestNG 中，我们可以使用@ `Test(timeout=1000)`进行相同的测试
 
-```
+```java
 @Test(timeOut = 1000)
 public void givenExecution_takeMoreTime_thenFail() {
     while (true);
@@ -396,7 +396,7 @@ TestNG 支持依赖测试。这意味着在一组测试方法中，如果初始�
 
 让我们来看一个场景，我们需要验证电子邮件，如果成功，将继续登录:
 
-```
+```java
 @Test
 public void givenEmail_ifValid_thenTrue() {
     boolean valid = email.contains("@");
@@ -415,7 +415,7 @@ public void givenValidEmail_whenLoggedIn_thenTrue() {
 
 为了有更多的控制，我们将用`@FixMethodOrder` 注释来注释测试类，并提到一个方法排序器:
 
-```
+```java
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SortedTests {
 
@@ -438,7 +438,7 @@ public class SortedTests {
 
 同时 TestNG 还提供了几种控制测试方法执行顺序的方法。我们在`@Test` 注释中提供了`priority` 参数:
 
-```
+```java
 @Test(priority = 1)
 public void givenString_whenChangedToInt_thenCorrect() {
     Assert.assertTrue(
@@ -462,7 +462,7 @@ public void givenInt_whenChangedToString_thenCorrect() {
 
 这个注释没有提供任何测试好处，但是它也为非技术人员带来了易于阅读和理解的测试结果:
 
-```
+```java
 @ParameterizedTest
 @ValueSource(strings = { "Hello", "World" })
 @DisplayName("Test Method to check that the inputs are not nullable")

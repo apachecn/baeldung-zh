@@ -64,7 +64,7 @@ JavaFX 使用一种特殊的 FXML 标记语言来创建视图界面。
 
 首先，让我们添加一个`Person`模型类——来表示我们的领域:
 
-```
+```java
 public class Person {
     private SimpleIntegerProperty id;
     private SimpleStringProperty name;
@@ -78,7 +78,7 @@ public class Person {
 
 **接下来，让我们创建扩展了`Application`抽象类的`Main`类:**
 
-```
+```java
 public class Main extends Application {
 
     @Override
@@ -113,7 +113,7 @@ public class Main extends Application {
 
 对于我们的搜索应用程序，我们将添加一个文本字段来输入关键字和搜索按钮:
 
-```
+```java
 <AnchorPane 
   xmlns:fx="http://javafx.com/fxml"
 
@@ -153,7 +153,7 @@ public class Main extends Application {
 
 **然后，为了将它们映射到 Java 字段，我们使用了`@FXML`注释:**
 
-```
+```java
 public class SearchController {
 
     @FXML
@@ -181,7 +181,7 @@ public class SearchController {
 
 在`initTable()`方法中，我们将创建包含 3 列结果的表格，并将其添加到`dataContainer` VBox:
 
-```
+```java
 private void initTable() {        
     tableView = new TableView<>();
     TableColumn id = new TableColumn("ID");
@@ -206,7 +206,7 @@ private void initTable() {
 
 单向绑定仅提供一个方向的绑定:
 
-```
+```java
 searchLabel.textProperty().bind(searchField.textProperty());
 ```
 
@@ -216,7 +216,7 @@ searchLabel.textProperty().bind(searchField.textProperty());
 
 **可选的字段绑定方式有`ChangeListeners:`**
 
-```
+```java
 searchField.textProperty().addListener((observable, oldValue, newValue) -> {
     searchLabel.setText(newValue);
 });
@@ -226,7 +226,7 @@ searchField.textProperty().addListener((observable, oldValue, newValue) -> {
 
 举例来说，最常用的实现是 `javafx.collections.ObservableList<T>`接口:
 
-```
+```java
 ObservableList<Person> masterData = FXCollections.observableArrayList();
 ObservableList<Person> results = FXCollections.observableList(masterData);
 ```
@@ -237,7 +237,7 @@ ObservableList<Person> results = FXCollections.observableList(masterData);
 
 我们还必须更新`initTable()`方法，将表中的数据绑定到初始列表，并将每一列连接到`Person`类字段:
 
-```
+```java
 private void initTable() {        
     tableView = new TableView<>(FXCollections.observableList(masterData));
     TableColumn id = new TableColumn("ID");
@@ -258,7 +258,7 @@ private void initTable() {
 
 让我们看看如何在后台线程中执行数据搜索:
 
-```
+```java
 private void loadData() {
     String searchText = searchField.getText();
     Task<ObservableList<Person>> task = new Task<ObservableList<Person>>() {
@@ -280,7 +280,7 @@ private void loadData() {
 
 但是，可以调用`updateProgress(), updateMessage()`来更新应用程序线程项。当任务状态转换到成功状态时，从应用程序线程调用`onSucceeded()`事件处理程序:
 
-```
+```java
 task.setOnSucceeded(event -> {
     results = task.getValue();
     tableView.setItems(FXCollections.observableList(results));
@@ -291,7 +291,7 @@ task.setOnSucceeded(event -> {
 
 `Task`是`Runnable`，所以要启动它，我们只需要用`task`参数启动一个新的`Thread`:
 
-```
+```java
 Thread th = new Thread(task);
 th.setDaemon(true);
 th.start();
@@ -313,7 +313,7 @@ th.start();
 
 为了进行演示，**下面的代码片段捕捉了在`searchField`** 上按下`Enter`键的事件:
 
-```
+```java
 searchField.setOnKeyPressed(event -> {
     if (event.getCode().equals(KeyCode.ENTER)) {
         loadData();
@@ -329,13 +329,13 @@ searchField.setOnKeyPressed(event -> {
 
 要覆盖默认样式，我们可以向场景添加一个样式表:
 
-```
+```java
 scene.getStylesheets().add("/search.css");
 ```
 
 我们也可以使用内嵌样式；例如，要设置特定节点的样式属性:
 
-```
+```java
 searchButton.setStyle("-fx-background-color: slateblue; -fx-text-fill: white;");
 ```
 

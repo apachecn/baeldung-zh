@@ -14,14 +14,14 @@ MapStruct 是一个 Java 注释处理器。因此，我们需要做的就是定�
 
 为了简单起见，让我们从两个具有相同字段名的类开始:
 
-```
+```java
 public class CarDTO {
     private int id;
     private String name;
 }
 ```
 
-```
+```java
 public class Car {
     private int id;
     private String name;
@@ -30,7 +30,7 @@ public class Car {
 
 接下来，让我们创建一个映射器接口:
 
-```
+```java
 @Mapper
 public interface CarMapper {
     CarMapper INSTANCE = Mappers.getMapper(CarMapper.class);
@@ -40,7 +40,7 @@ public interface CarMapper {
 
 最后，让我们测试一下我们的映射器:
 
-```
+```java
 @Test
 public void givenCarEntitytoCar_whenMaps_thenCorrect() {
     Car entity = new Car();
@@ -58,7 +58,7 @@ public void givenCarEntitytoCar_whenMaps_thenCorrect() {
 
 由于 MapStruct 在编译时运行，因此它比动态映射框架更快。如果映射不完整，它还可以**生成错误报告**——也就是说，如果没有映射所有的目标属性:
 
-```
+```java
 Warning:(X,X) java: Unmapped target property: "propertyName".
 ```
 
@@ -66,7 +66,7 @@ Warning:(X,X) java: Unmapped target property: "propertyName".
 
 让我们用一个映射两个简单对象的例子来探讨这个问题:
 
-```
+```java
 public class DocumentDTO {
     private int id;
     private String title;
@@ -76,7 +76,7 @@ public class DocumentDTO {
 }
 ```
 
-```
+```java
 public class Document {
     private int id;
     private String title;
@@ -93,7 +93,7 @@ public class Document {
 
 如果我们定义一个映射器接口，它将在构建期间导致警告消息:
 
-```
+```java
 @Mapper
 public interface DocumentMapper {
     DocumentMapper INSTANCE = Mappers.getMapper(DocumentMapper.class);
@@ -109,7 +109,7 @@ public interface DocumentMapper {
 
 为了跳过特定映射方法中的几个属性，我们可以**使用`@Mapping`注释**中的`ignore`属性:
 
-```
+```java
 @Mapper
 public interface DocumentMapperMappingIgnore {
 
@@ -145,7 +145,7 @@ public interface DocumentMapperMappingIgnore {
 
 我们可以将**中的`unmappedTargetPolicy`设为** **`@Mapper`** 的注释。因此，它的所有方法都将忽略未映射的属性:
 
-```
+```java
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface DocumentMapperUnmappedPolicy {
     // mapper methods
@@ -158,7 +158,7 @@ public interface DocumentMapperUnmappedPolicy {
 
 首先，我们创建一个带注释的接口:
 
-```
+```java
 @MapperConfig(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface IgnoreUnmappedMapperConfig {
 }
@@ -166,7 +166,7 @@ public interface IgnoreUnmappedMapperConfig {
 
 然后，我们将该共享配置应用于映射器:
 
-```
+```java
 @Mapper(config = IgnoreUnmappedMapperConfig.class)
 public interface DocumentMapperWithConfig { 
     // mapper methods 
@@ -179,7 +179,7 @@ public interface DocumentMapperWithConfig {
 
 最后，我们可以配置 MapStruct 代码生成器的注释处理器选项。当使用 [Maven](/web/20221205122114/https://www.baeldung.com/maven-compiler-plugin) 时，我们可以使用处理器插件的`compilerArgs` 参数传递处理器选项:
 
-```
+```java
 <build>
     <plugins>
         <plugin>

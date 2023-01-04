@@ -27,7 +27,7 @@ RabbitMQ 是一个消息代理，它实现了高级消息队列协议( [AMQP](ht
 
 我们自然会使用 Java 客户端与 RabbitMQ 服务器进行交互；该客户端的 [Maven 依赖关系](https://web.archive.org/web/20220930021900/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.rabbitmq%22%20AND%20a%3A%22amqp-client%22)为:
 
-```
+```java
 <dependency>
     <groupId>com.rabbitmq</groupId>
     <artifactId>amqp-client</artifactId>
@@ -37,7 +37,7 @@ RabbitMQ 是一个消息代理，它实现了高级消息队列协议( [AMQP](ht
 
 在使用官方指南运行 RabbitMQ 代理之后，我们需要使用 java 客户端连接到它:
 
-```
+```java
 ConnectionFactory factory = new ConnectionFactory();
 factory.setHost("localhost");
 Connection connection = factory.newConnection();
@@ -48,13 +48,13 @@ Channel channel = connection.createChannel();
 
 如果 RabbitMQ 服务器不使用默认端口，我们可以使用 *setPort* 来设置端口；RabbitMQ 的默认端口是`15672`:
 
-```
+```java
 factory.setPort(15678);
 ```
 
 我们可以设置用户名和密码:
 
-```
+```java
 factory.setUsername("user1");
 factory.setPassword("MyPassword");
 ```
@@ -67,20 +67,20 @@ factory.setPassword("MyPassword");
 
 首先，让我们定义一个队列:
 
-```
+```java
 channel.queueDeclare("products_queue", false, false, false, null);
 ```
 
 每次用户添加新产品时，我们都会向队列发布一条消息:
 
-```
+```java
 String message = "product details"; 
 channel.basicPublish("", "products_queue", null, message.getBytes());
 ```
 
 最后，我们关闭通道和连接:
 
-```
+```java
 channel.close();
 connection.close();
 ```
@@ -91,13 +91,13 @@ connection.close();
 
 看看我们能在消费端实现什么；我们将声明同一个队列:
 
-```
+```java
 channel.queueDeclare("products_queue", false, false, false, null);
 ```
 
 下面是我们如何定义将异步处理来自队列的消息的使用者:
 
-```
+```java
 DefaultConsumer consumer = new DefaultConsumer(channel) {
     @Override
      public void handleDelivery(

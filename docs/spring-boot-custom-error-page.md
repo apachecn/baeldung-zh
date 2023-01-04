@@ -10,7 +10,7 @@
 
 首先，让我们看看如何通过将`server.error.whitelabel.enabled`属性设置为`false:`来完全禁用白色标签错误页面
 
-```
+```java
 server.error.whitelabel.enabled=false
 ```
 
@@ -18,7 +18,7 @@ server.error.whitelabel.enabled=false
 
 **我们可以通过排除`ErrorMvcAutoConfiguration` bean 获得相同的结果。**我们可以通过将这个条目添加到属性文件中:
 
-```
+```java
 spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.web.ErrorMvcAutoConfiguration
 
 #for Spring Boot 2.0
@@ -27,7 +27,7 @@ spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.web.ErrorMvc
 
 或者将这个注释添加到主类中:
 
-```
+```java
 @EnableAutoConfiguration(exclude = {ErrorMvcAutoConfiguration.class})
 ```
 
@@ -41,7 +41,7 @@ spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.web.ErrorMvc
 
 **我们将文件保存为`error.html`** ，因为我们正在使用`Thymeleaf` 模板引擎:
 
-```
+```java
 <!DOCTYPE html>
 <html>
 <body>
@@ -66,7 +66,7 @@ spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.web.ErrorMvc
 
 为此，**我们必须创建一个实现`ErrorController`接口的类。**此外，我们需要设置`server.error.path`属性来返回一个自定义路径，以便在发生错误时调用
 
-```
+```java
 @Controller
 public class MyErrorController implements ErrorController  {
 
@@ -80,7 +80,7 @@ public class MyErrorController implements ErrorController  {
 
 在上面的代码片段中，我们还用`@Controller`注释了这个类，并为被指定为属性`server.error.path:`的路径创建了一个映射
 
-```
+```java
 server.error.path=/error
 ```
 
@@ -92,7 +92,7 @@ server.error.path=/error
 
 例如，我们可以专门为 404 和 500 错误类型设计精美的页面。然后，我们可以使用错误的 HTTP 状态代码来确定要显示的合适的错误页面:
 
-```
+```java
 @RequestMapping("/error")
 public String handleError(HttpServletRequest request) {
     Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);

@@ -28,7 +28,7 @@
 
 让我们声明一个名为`positiveInfinity`的`double`变量，并给它赋值`Double.POSITIVE_INFINITY`和另一个`double`变量`negativeInfinity`，并给它赋值`Double.NEGATIVE_INFINITY`。然后，我们得到以下运算结果:
 
-```
+```java
 Double positiveInfinity = Double.POSITIVE_INFINITY;
 Double negativeInfinity = Double.NEGATIVE_INFINITY;
 
@@ -43,7 +43,7 @@ assertEquals(Double.NEGATIVE_INFINITY, (positiveInfinity * negativeInfinity));
 
 让我们来看看无穷大和正数的数学运算:
 
-```
+```java
 Double positiveInfinity = Double.POSITIVE_INFINITY;
 Double negativeInfinity = Double.NEGATIVE_INFINITY;
 double positiveNumber = 10.0; 
@@ -69,7 +69,7 @@ assertEquals(-0.0, (positiveNumber / negativeInfinity));
 
 现在，让我们来看看无穷大和负数的数学运算:
 
-```
+```java
 Double positiveInfinity = Double.POSITIVE_INFINITY;
 Double negativeInfinity = Double.NEGATIVE_INFINITY;
 double negativeNumber = -10.0; 
@@ -105,7 +105,7 @@ assertEquals(0.0, (negativeNumber / negativeInfinity));
 
 举例来说，让我们取一个`double`值`d`,并用零检查以下除法的结果:
 
-```
+```java
 double d = 1.0;
 
 assertEquals(Double.POSITIVE_INFINITY, (d / 0.0));

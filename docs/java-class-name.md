@@ -18,14 +18,14 @@
 
 让我们想象下面的类:
 
-```
+```java
 package com.baeldung.className;
 public class RetrieveClassName {}
 ```
 
 它的简单名字是`RetrieveClassName`:
 
-```
+```java
 assertEquals("RetrieveClassName", RetrieveClassName.class.getSimpleName());
 ```
 
@@ -33,7 +33,7 @@ assertEquals("RetrieveClassName", RetrieveClassName.class.getSimpleName());
 
 对于数组，该方法将返回数组类型的简单名称**，后跟数组每个维度的一对左右括号([])** :
 
-```
+```java
 RetrieveClassName[] names = new RetrieveClassName[];
 assertEquals("RetrieveClassName[]", names.getClass().getSimpleName());
 ```
@@ -54,7 +54,7 @@ assertEquals("RetrieveClassName[]", names.getClass().getSimpleName());
 
 让我们从基本类型开始，因为它们很简单。**对于原始类型，所有三个方法`getName(), getTypeName()` 和`getCanonicalName()`将返回与`getSimpleName()`** 相同的结果:
 
-```
+```java
 assertEquals("int", int.class.getName());
 assertEquals("int", int.class.getTypeName());
 assertEquals("int", int.class.getCanonicalName());
@@ -66,7 +66,7 @@ assertEquals("int", int.class.getCanonicalName());
 
 在大多数情况下，这是一个包含所有类包简单名称和类简单名称的限定名称:
 
-```
+```java
 assertEquals("com.baeldung.className.RetrieveClassName", RetrieveClassName.class.getName());
 assertEquals("com.baeldung.className.RetrieveClassName", RetrieveClassName.class.getTypeName());
 assertEquals("com.baeldung.className.RetrieveClassName", RetrieveClassName.class.getCanonicalName());
@@ -84,7 +84,7 @@ assertEquals("com.baeldung.className.RetrieveClassName", RetrieveClassName.class
 
 让我们想象一下我们的`RetrieveClassName`的一个内部类`InnerClass`:
 
-```
+```java
 public class RetrieveClassName {
     public class InnerClass {}
 }
@@ -92,7 +92,7 @@ public class RetrieveClassName {
 
 然后每个调用以稍微不同的方式表示内部类:
 
-```
+```java
 assertEquals("com.baeldung.RetrieveClassName.InnerClass", 
   RetrieveClassName.InnerClass.class.getCanonicalName());
 assertEquals("com.baeldung.RetrieveClassName$InnerClass", 
@@ -111,7 +111,7 @@ assertEquals("com.baeldung.RetrieveClassName$InnerClass",
 
 让我们用一个例子来说明这一点。我们将在这里创建两个匿名类，第一个调用`getName()`，第二个调用`getTypeName() `，在`com.baeldung.Main`中声明它们:
 
-```
+```java
 assertEquals("com.baeldung.Main$1", new RetrieveClassName() {}.getClass().getName());
 assertEquals("com.baeldung.Main$2", new RetrieveClassName() {}.getClass().getTypeName());
 ```
@@ -126,7 +126,7 @@ assertEquals("com.baeldung.Main$2", new RetrieveClassName() {}.getClass().getTyp
 
 让我们看看下面的例子，我们在二维`InnerClass`数组上调用`getTypeName() `和`getCanonicalName()`:
 
-```
+```java
 assertEquals("com.baeldung.RetrieveClassName$InnerClass[][]", 
   RetrieveClassName.InnerClass[][].class.getTypeName());
 assertEquals("com.baeldung.RetrieveClassName.InnerClass[][]", 
@@ -137,13 +137,13 @@ assertEquals("com.baeldung.RetrieveClassName.InnerClass[][]",
 
 现在让我们看看`getName()` 方法是如何工作的。当在一个原始类型数组上被调用时，它将返回**一个左括号和[一个代表原始类型](https://web.archive.org/web/20220901133708/https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/lang/Class.html#getName())** 的字母。让我们看看下面的例子，在一个二维原始整数数组上调用这个方法:
 
-```
+```java
 assertEquals("[[I", int[][].class.getName());
 ```
 
 另一方面，当在一个对象数组上被调用时，它会**给它的标准结果添加一个左括号和 L 字母，并以一个分号**结束。让我们在一组`RetrieveClassName`上试试:
 
-```
+```java
 assertEquals("[Lcom.baeldung.className.RetrieveClassName;", RetrieveClassName[].class.getName());
 ```
 

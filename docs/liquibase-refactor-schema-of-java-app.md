@@ -12,7 +12,7 @@
 
 让我们从需要添加到我们的 `pom.xml`中的 Maven 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.liquibase</groupId>
      <artifactId>liquibase-core</artifactId>
@@ -42,7 +42,7 @@ A quick and practical example of using data.sql and schema.sql files in Spring B
 
 这只是在表“`users`”中增加了一列“`address`”:
 
-```
+```java
 <databaseChangeLog 
 
   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" 
@@ -71,7 +71,7 @@ A quick and practical example of using data.sql and schema.sql files in Spring B
 
 当然，还有许多其他方法，但是如果我们正在处理一个 Spring 应用程序，这是一个好的、简单的方法:
 
-```
+```java
 @Bean
 public SpringLiquibase liquibase() {
     SpringLiquibase liquibase = new SpringLiquibase();
@@ -91,7 +91,7 @@ public SpringLiquibase liquibase() {
 
 我们可以使用`**liquibase.change-log**`属性更改默认的 changelog 文件:
 
-```
+```java
 liquibase.change-log=classpath:liquibase-changeLog.xml
 ```
 
@@ -103,13 +103,13 @@ liquibase.change-log=classpath:liquibase-changeLog.xml
 
 这是 Spring Boot 新协议的例子:
 
-```
+```java
 spring.liquibase.enabled=false
 ```
 
 对于 Spring Boot 1.x，我们需要使用一个`liquibase.enabled`属性:
 
-```
+```java
 liquibase.enabled=false
 ```
 
@@ -121,7 +121,7 @@ liquibase.enabled=false
 
 以下是我们`pom.xml`的变化:
 
-```
+```java
 <dependency>
     <groupId>org.liquibase</groupId>
     <artifactId>liquibase-maven-plugin</artifactId>
@@ -144,13 +144,13 @@ liquibase.enabled=false
 
 我们可以使用插件从现有的数据库中生成一个 changelog:
 
-```
+```java
 mvn liquibase:generateChangeLog
 ```
 
 以下是`liquibase` 属性:
 
-```
+```java
 url=jdbc:mysql://localhost:3306/oauth_reddit
 username=tutorialuser
 password=tutorialmy5ql
@@ -162,7 +162,7 @@ outputChangeLogFile=src/main/resources/liquibase-outputChangeLog.xml
 
 这看起来是这样的:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog ...>
 
@@ -193,13 +193,13 @@ outputChangeLogFile=src/main/resources/liquibase-outputChangeLog.xml
 
 我们可以使用插件从两个现有数据库(例如，开发和生产)之间的差异生成一个`changeLog`文件:
 
-```
+```java
 mvn liquibase:diff
 ```
 
 以下是属性:
 
-```
+```java
 changeLogFile=src/main/resources/liquibase-changeLog.xml
 url=jdbc:mysql://localhost:3306/oauth_reddit
 username=tutorialuser
@@ -214,7 +214,7 @@ referencePassword=
 
 下面是生成的`changeLog`的一个片段:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog ...>
     <changeSet author="John" id="1439227853089-1">
@@ -233,7 +233,7 @@ referencePassword=
 
 首先，让我们配置新插件并使用正确的依赖项:
 
-```
+```java
 <plugins>
     <plugin>
         <groupId>org.liquibase</groupId>
@@ -271,7 +271,7 @@ referencePassword=
 
 以下是`liquibase`属性:
 
-```
+```java
 changeLogFile=classpath:liquibase-changeLog.xml
 url=jdbc:mysql://localhost:3306/oauth_reddit
 username=tutorialuser

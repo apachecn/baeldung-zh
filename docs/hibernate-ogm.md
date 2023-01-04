@@ -28,7 +28,7 @@ Hibernate OGM 能够在许多 NoSQL 数据存储上提供抽象，因为有两�
 
 让我们看看使用 Hibernate OGM 和 MongoDB 所需的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate.ogm</groupId>
     <artifactId>hibernate-ogm-mongodb</artifactId>
@@ -50,7 +50,7 @@ Hibernate OGM 能够在许多 NoSQL 数据存储上提供抽象，因为有两�
 
 我们还必须**定义休眠`persistance.xml`中的数据存储细节**:
 
-```
+```java
 <persistence-unit name="ogm-mongodb" transaction-type="JTA">
     <provider>org.hibernate.ogm.jpa.HibernateOgmPersistence</provider>
     <properties>
@@ -81,7 +81,7 @@ Hibernate OGM 能够在许多 NoSQL 数据存储上提供抽象，因为有两�
 
 让我们也用 Java 来定义它们:
 
-```
+```java
 @Entity
 public class Article {
     @Id
@@ -98,7 +98,7 @@ public class Article {
 }
 ```
 
-```
+```java
 @Entity
 public class Author {
     @Id
@@ -118,7 +118,7 @@ public class Author {
 }
 ```
 
-```
+```java
 @Entity
 public class Editor {
     @Id
@@ -148,7 +148,7 @@ public class Editor {
 
 让我们看看如何使用这些来保存和检索我们之前创建的实体:
 
-```
+```java
 private void persistTestData(EntityManagerFactory entityManagerFactory, Editor editor) 
   throws Exception {
     TransactionManager transactionManager = 
@@ -166,7 +166,7 @@ private void persistTestData(EntityManagerFactory entityManagerFactory, Editor e
 
 现在，我们准备加载刚刚持久化的实体，并验证其内容。我们可以运行一个测试来验证这一点:
 
-```
+```java
 @Test
 public void givenMongoDB_WhenEntitiesCreated_thenCanBeRetrieved() throws Exception {
     EntityManagerFactory entityManagerFactory = 
@@ -197,7 +197,7 @@ public void givenMongoDB_WhenEntitiesCreated_thenCanBeRetrieved() throws Excepti
 
 首先，让我们为 Neo4j 添加 [Maven 依赖项:](https://web.archive.org/web/20220628154233/https://search.maven.org/search?q=a:hibernate-ogm-neo4j)
 
-```
+```java
 <dependency>
     <groupId>org.hibernate.ogm</groupId>
     <artifactId>hibernate-ogm-neo4j</artifactId>
@@ -207,7 +207,7 @@ public void givenMongoDB_WhenEntitiesCreated_thenCanBeRetrieved() throws Excepti
 
 接下来，我们必须在我们的`persistence.xml`中添加相关的持久性单元:
 
-```
+```java
 <persistence-unit name="ogm-neo4j" transaction-type="JTA">
     <provider>org.hibernate.ogm.jpa.HibernateOgmPersistence</provider>
     <properties>

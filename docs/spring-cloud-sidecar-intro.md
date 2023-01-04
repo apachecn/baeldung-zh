@@ -27,7 +27,7 @@ Spring Cloud 带来了广泛的特性和库，如客户端负载平衡、服务�
 
 让我们首先创建一个名为`hello.js`的 JS 文件。我们使用`express`来服务我们的 hello 请求。在我们的`hello.js`文件中，我们引入了三个端点——默认的“/”端点、`/hello`端点和`/health`端点，以满足 Spring Cloud Sidecar 的要求:
 
-```
+```java
 const express = require('express')
 const app = express()
 const port = 3000
@@ -51,26 +51,26 @@ app.listen(port, () => {
 
 接下来，我们将安装`express`:
 
-```
+```java
 npm install express
 ```
 
 最后，让我们开始我们的应用:
 
-```
+```java
 node hello.js
 ```
 
 随着应用程序的启动，让我们`curl`hello 端点:
 
-```
+```java
 curl http://localhost:3000/hello/baeldung
 Hello baeldung!
 ```
 
 然后，我们测试健康端点:
 
-```
+```java
 curl http://localhost:3000/health
 status":"UP"}
 ```
@@ -83,7 +83,7 @@ status":"UP"}
 
 让我们把 [`spring-cloud-netflix-sidecar`](https://web.archive.org/web/20221128051913/https://search.maven.org/artifact/org.springframework.cloud/spring-cloud-netflix-sidecar) 加为一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-netflix-sidecar</artifactId>
@@ -95,7 +95,7 @@ status":"UP"}
 
 然后让我们实现启用了 sidecar 的 Spring Boot 应用程序类:
 
-```
+```java
 @SpringBootApplication
 @EnableSidecar
 public class SidecarApplication {
@@ -107,7 +107,7 @@ public class SidecarApplication {
 
 下一步，我们必须设置连接到 Eureka 的属性。此外，我们使用 NodeJS hello 应用程序的端口和健康 URI 设置 sidecar 配置:
 
-```
+```java
 server.port: 8084
 spring:
   application:
@@ -141,7 +141,7 @@ sidecar:
 
 首先，让我们添加依赖项:
 
-```
+```java
  <dependency>
      <groupId>org.springframework.cloud</groupId>
      <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
@@ -158,7 +158,7 @@ sidecar:
 
 然后让我们创建 Spring Boot 主类并启用 Zuul 代理:
 
-```
+```java
 @SpringBootApplication
 @EnableEurekaClient
 @EnableZuulProxy
@@ -169,7 +169,7 @@ public class EchoApplication {
 
 然后，我们像在上一节中一样配置 Eureka 客户端:
 
-```
+```java
 server.port: 8085
 spring:
   application:
@@ -189,20 +189,20 @@ eureka:
 
 要检查 sidecar 应用程序，让我们查询 echo 服务的元数据:
 
-```
+```java
 curl http://localhost:8084/hosts/echo
 ```
 
 然后，为了验证 echo 应用程序是否可以调用 sidecar 应用程序公开的 NodeJS 端点，让我们使用 Zuul 代理的魔力并卷曲这个 url:
 
-```
+```java
 curl http://localhost:8085/sidecar/hello/baeldung
 Hello baeldung!
 ```
 
 既然我们已经验证了一切正常，那么让我们尝试另一种方法来调用 hello 端点。首先，我们将在 echo 应用程序中创建一个控制器并注入`DiscoveryClient.` ,然后我们添加一个`GET`端点，该端点使用`DiscoveryClient`查询 hello 服务并用`RestTemplate:`调用它
 
-```
+```java
 @Autowired
 DiscoveryClient discoveryClient;
 
@@ -219,14 +219,14 @@ public ResponseEntity<String> echo(@PathVariable("me") String me) {
 
 让我们重新启动 echo 应用程序，并执行这个 curl 来验证从 echo 应用程序调用的 echo 端点:
 
-```
+```java
 curl http://localhost:8085/hello/baeldung
 Hello baeldung!
 ```
 
 或者更有趣一点，从 sidecar 应用程序调用它:
 
-```
+```java
 curl http://localhost:8084/echo/hello/baeldung
 Hello baeldung!
 ```

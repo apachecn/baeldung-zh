@@ -30,7 +30,7 @@ JPA 的核心部分之一是实体类。我们将这些类标记为实体(用`@E
 
 让我们使用 Hibernate、H2 内存数据库和一个以`UserId` 作为组合键的`User` 域对象创建一个简单的例子:
 
-```
+```java
 @Entity
 public class User {
     @EmbeddedId UserId userId;
@@ -50,7 +50,7 @@ public class UserId implements Serializable{
 
 我们可以使用集成测试来测试我们的领域定义:
 
-```
+```java
 @Test
 public void givenUser_whenPersisted_thenOperationSuccessful() {
     UserId userId = new UserId();
@@ -73,7 +73,7 @@ public void givenUser_whenPersisted_thenOperationSuccessful() {
 
 让我们扩展前面的`User` 类，其中`email` 字段不再是一个`String`，而是一个独立的实体。此外，我们将添加`an Account` 类，它将引用一个用户，并有一个字段`type.` ，每个`User` 可以有多个不同类型的帐户。我们将通过`email`映射`Account` ，因为通过电子邮件地址搜索更自然:
 
-```
+```java
 @Entity
 public class User {
     @EmbeddedId private UserId userId;
@@ -101,7 +101,7 @@ public class Account {
 
 为了测试我们的模型，我们将编写一个测试，为一个用户创建两个帐户，并通过一个电子邮件对象进行查询:
 
-```
+```java
 @Test
 public void givenAssociation_whenPersisted_thenMultipleAccountsWillBeFoundByEmail() {
     // object creation 

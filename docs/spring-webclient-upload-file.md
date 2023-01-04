@@ -13,7 +13,7 @@
 
 为了使用`WebClient`，我们需要向我们的项目添加`spring-boot-starter-webflux`依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>. 
     <artifactId>spring-boot-starter-webflux</artifactId>
@@ -24,14 +24,14 @@
 
 首先，我们要声明我们的 URL:
 
-```
+```java
 URI url = UriComponentsBuilder.fromHttpUrl(EXTERNAL_UPLOAD_URL).build().toUri(); 
 ```
 
 假设在这个例子中，我们想要上传一个 PDF。**我们将用`MediaType.APPLICATION_PDF`作为我们的`ContentType`** 。
 我们的上传端点返回一个`HttpStatus. `，因为我们只期望一个结果，所以我们将它包装在一个`Mono`中:
 
-```
+```java
 Mono<HttpStatus> httpStatusMono = webClient.post()
     .uri(url)
     .contentType(MediaType.APPLICATION_PDF)
@@ -53,7 +53,7 @@ Mono<HttpStatus> httpStatusMono = webClient.post()
 
 **如果我们的外部上传端点接受多部分表单数据，我们可以使用** **`MultiPartBodyBuilder`** 来处理这些部分:
 
-```
+```java
 MultipartBodyBuilder builder = new MultipartBodyBuilder();
 builder.part("file", multipartFile.getResource());
 ```
@@ -62,7 +62,7 @@ builder.part("file", multipartFile.getResource());
 
 当我们调用`WebClient`时，我们使用`BodyInsterter.fromMultipartData`并构建对象:
 
-```
+```java
 .body(BodyInserters.fromMultipartData(builder.build()))
 ```
 
@@ -70,7 +70,7 @@ builder.part("file", multipartFile.getResource());
 
 让我们看一下整个通话:
 
-```
+```java
 Mono<HttpStatus> httpStatusMono = webClient.post()
     .uri(url)
     .contentType(MediaType.MULTIPART_FORM_DATA)

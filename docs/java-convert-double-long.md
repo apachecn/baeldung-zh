@@ -10,7 +10,7 @@
 
 让我们检查一种使用 cast 操作符将`double`转换为`long`的简单方法:
 
-```
+```java
 Assert.assertEquals(9999, (long) 9999.999);
 ```
 
@@ -22,7 +22,7 @@ Assert.assertEquals(9999, (long) 9999.999);
 
 现在，让我们探索一下将`double`转换成`long`的`Double's`内置方法`longValue`:
 
-```
+```java
 Assert.assertEquals(9999, Double.valueOf(9999.999).longValue());
 ```
 
@@ -34,7 +34,7 @@ Assert.assertEquals(9999, Double.valueOf(9999.999).longValue());
 
 让我们首先检查`Math.round.` 这产生了一个最接近参数的值:
 
-```
+```java
 Assert.assertEquals(9999, Math.round(9999.0));
 Assert.assertEquals(9999, Math.round(9999.444));
 Assert.assertEquals(10000, Math.round(9999.999));
@@ -42,7 +42,7 @@ Assert.assertEquals(10000, Math.round(9999.999));
 
 其次，`Math.` `ceil`将产生大于或等于自变量的最小值:
 
-```
+```java
 Assert.assertEquals(9999, Math.ceil(9999.0), 0);
 Assert.assertEquals(10000, Math.ceil(9999.444), 0);
 Assert.assertEquals(10000, Math.ceil(9999.999), 0);
@@ -50,7 +50,7 @@ Assert.assertEquals(10000, Math.ceil(9999.999), 0);
 
 另一方面，`Math.floor`与`Math.ceil.` 正好相反，它返回小于或等于参数的最大值:
 
-```
+```java
 Assert.assertEquals(9999, Math.floor(9999.0), 0);
 Assert.assertEquals(9999, Math.floor(9999.444), 0);
 Assert.assertEquals(9999, Math.floor(9999.999), 0);

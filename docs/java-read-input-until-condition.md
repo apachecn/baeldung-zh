@@ -18,7 +18,7 @@
 
 解决问题的一个想法是编写一个[无限循环](/web/20221208143956/https://www.baeldung.com/infinite-loops-java)来保持逐行读取用户输入。在循环中，我们检查用户发送的每一行。一旦条件满足，我们就打破了无限循环:
 
-```
+```java
 while (true) {
     String line = ... //get one input line
     if (matchTheCondition(line)) {
@@ -36,7 +36,7 @@ while (true) {
 
 因此，按照我们之前谈到的想法，我们可以创建一个方法来解决这个问题:
 
-```
+```java
 public static List<String> readUserInput() {
     List<String> userData = new ArrayList<>();
     System.out.println("Please enter your data below: (send 'bye' to exit) ");
@@ -58,7 +58,7 @@ public static List<String> readUserInput() {
 
 接下来，让我们将[中的`readUserInput`方法称为`main`方法](/web/20221208143956/https://www.baeldung.com/java-main-method):
 
-```
+```java
 public static void main(String[] args) {
     List<String> userData = readUserInput();
     System.out.printf("User Input Data:\n%s", String.join("\n", userData));
@@ -71,13 +71,13 @@ public static void main(String[] args) {
 
 当应用程序启动时，它等待我们输入提示:
 
-```
+```java
 Please enter your data below: (send 'bye' to exit)
 ```
 
 所以，我们发一些文字，最后发“`bye`”:
 
-```
+```java
 Hello there,
 Today is 19\. Mar. 2022.
 Have a nice day!
@@ -86,7 +86,7 @@ bye
 
 在我们输入“`bye`”并按下`Enter`后，应用程序输出我们收集的用户输入数据并退出:
 
-```
+```java
 User Input Data:
 Hello there,
 Today is 19\. Mar. 2022.
@@ -103,7 +103,7 @@ Have a nice day!
 
 接下来，我们先来看看测试方法，然后再来说明问题是如何解决的:
 
-```
+```java
 @Test
 public void givenDataInSystemIn_whenCallingReadUserInputMethod_thenHaveUserInputData() {
     String[] inputLines = new String[]{

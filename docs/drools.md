@@ -12,7 +12,7 @@ Drools 是一个业务规则管理系统(BRMS)解决方案。它提供了一个�
 
 为了开始使用 Drools，我们需要首先在我们的`pom.xml`中添加几个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.kie</groupId>
     <artifactId>kie-ci</artifactId>
@@ -46,7 +46,7 @@ Drools 是一个业务规则管理系统(BRMS)解决方案。它提供了一个�
 
 首先，我们需要设置`KieFileSystem` bean；这是一个由框架提供的内存文件系统。以下代码提供了以编程方式定义 Drools 资源(如规则文件、决策表)的容器:
 
-```
+```java
 public KieFileSystem kieFileSystem() throws IOException {
     KieFileSystem kieFileSystem = getKieServices().newKieFileSystem();
         for (Resource file : getRuleFiles()) {
@@ -66,7 +66,7 @@ public KieFileSystem kieFileSystem() throws IOException {
 
 在`KieBuilder` 上调用的`buildAll()` 方法构建所有资源并将它们绑定到`KieBase.` ，只有当它能够找到并验证所有规则文件时，它才成功执行:
 
-```
+```java
 public KieContainer kieContainer() throws IOException {
     KieRepository kieRepository = getKieServices().getRepository();
 
@@ -88,7 +88,7 @@ public KieContainer kieContainer() throws IOException {
 
 规则是通过打开一个`KieSession` bean 触发的——这个 bean 可以从`KieContainer:`中检索到
 
-```
+```java
 public KieSession kieSession() throws IOException {
     return kieContainer().newKieSession();
 }
@@ -106,7 +106,7 @@ public KieSession kieSession() throws IOException {
 
 **一个规则包括一个`When-Then` 结构**，这里的`When`部分列出了要检查的条件，`Then`部分列出了条件满足时要采取的行动:
 
-```
+```java
 package com.baeldung.drools.rules;
 
 import com.baeldung.drools.model.Applicant;
@@ -127,7 +127,7 @@ end
 
 可以通过在`KieSession:`中插入`Applicant`和`SuggestedRole`事实来触发该规则
 
-```
+```java
 public SuggestedRole suggestARoleForApplicant(
     Applicant applicant,SuggestedRole suggestedRole){
     KieSession kieSession = kieContainer.newKieSession();
@@ -142,7 +142,7 @@ public SuggestedRole suggestARoleForApplicant(
 
 这可以通过执行测试来验证:
 
-```
+```java
 @Test
 public void whenCriteriaMatching_ThenSuggestManagerRole(){
     Applicant applicant = new Applicant("David", 37, 1600000.0,11);
@@ -182,7 +182,7 @@ public void whenCriteriaMatching_ThenSuggestManagerRole(){
 
 我们可以通过执行测试来验证应用这些规则的结果:
 
-```
+```java
 @Test
 public void whenProductTypeElectronic_ThenLabelBarcode() {
     Product product = new Product("Microwave", "Electronic");

@@ -20,7 +20,7 @@
 
 要使用这个库，我们需要`google-http-client`依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client</artifactId>
@@ -34,7 +34,7 @@
 
 让我们从向 GitHub 页面发出一个简单的 GET 请求开始，展示 Google Http 客户端是如何开箱即用的:
 
-```
+```java
 HttpRequestFactory requestFactory
   = new NetHttpTransport().createRequestFactory();
 HttpRequest request = requestFactory.buildGetRequest(
@@ -55,7 +55,7 @@ String rawResponse = request.execute().parseAsString()
 
 这个库有一个很好抽象的`HttpTransport`类，允许我们在它的基础上构建和**改变底层的底层 HTTP 传输库选择**:
 
-```
+```java
 public class GitHubExample {
     static HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 }
@@ -67,7 +67,7 @@ public class GitHubExample {
 
 对于这种情况，有`ApacheHttpTransport:`
 
-```
+```java
 public class GitHubExample {
     static HttpTransport HTTP_TRANSPORT = new ApacheHttpTransport();
 }
@@ -87,7 +87,7 @@ Google Http 客户端包括另一个用于 JSON 解析的抽象。这样做的�
 
 在我们的例子中，我们将使用 Jackson2 实现，这需要 [`google-http-client-jackson2`](https://web.archive.org/web/20220625231214/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22google-http-client-jackson2%22) 的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-jackson2</artifactId>
@@ -97,7 +97,7 @@ Google Http 客户端包括另一个用于 JSON 解析的抽象。这样做的�
 
 接下来，我们现在可以包括`JsonFactory:`
 
-```
+```java
 public class GitHubExample {
 
     static HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -115,7 +115,7 @@ public class GitHubExample {
 
 我们可以使用`@Key`注释来指示需要从 JSON 解析或序列化到 JSON 的字段:
 
-```
+```java
 public class User {
 
     @Key
@@ -141,7 +141,7 @@ public class User {
 
 为了保留其他内容，我们可以声明我们的类来扩展`GenericJson:`
 
-```
+```java
 public class User extends GenericJson {
     //...
 }
@@ -153,7 +153,7 @@ public class User extends GenericJson {
 
 为了用 Google Http 客户端连接到一个端点，我们需要一个`HttpRequestFactory`，它将用我们之前的抽象`HttpTransport`和`JsonFactory:`来配置
 
-```
+```java
 public class GitHubExample {
 
     static HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -171,7 +171,7 @@ public class GitHubExample {
 
 接下来我们需要一个 URL 来连接。该库将此作为一个扩展`GenericUrl` 的类来处理，在该类上声明的任何字段都被视为查询参数:
 
-```
+```java
 public class GitHubUrl extends GenericUrl {
 
     public GitHubUrl(String encodedUrl) {
@@ -188,7 +188,7 @@ public class GitHubUrl extends GenericUrl {
 
 让我们继续使用`GitHubUrl:`构建我们的通话
 
-```
+```java
 private static void run() throws Exception {
     HttpRequestFactory requestFactory
       = HTTP_TRANSPORT.createRequestFactory(
@@ -215,7 +215,7 @@ private static void run() throws Exception {
 
 当发出一个 API 请求时，我们通常会做的一件事是包含某种自定义头，甚至是修改过的头:
 
-```
+```java
 HttpHeaders headers = request.getHeaders();
 headers.setUserAgent("Baeldung Client");
 headers.set("Time-Zone", "Europe/Amsterdam");
@@ -231,7 +231,7 @@ Google Http 客户端的另一个重要特性是基于某些状态代码和阈�
 
 我们可以在创建请求对象后立即包含指数补偿设置:
 
-```
+```java
 ExponentialBackOff backoff = new ExponentialBackOff.Builder()
   .setInitialIntervalMillis(500)
   .setMaxElapsedTimeMillis(900000)
@@ -251,7 +251,7 @@ Google Http 客户端使用`java.util.logging.Logger`来记录 Http 请求和响
 
 通常，使用`logging.properties`文件来管理日志记录:
 
-```
+```java
 handlers = java.util.logging.ConsoleHandler
 java.util.logging.ConsoleHandler.level = ALL
 com.google.api.client.http.level = ALL
@@ -261,13 +261,13 @@ com.google.api.client.http.level = ALL
 
 属性文件配置 JDK 日志记录工具的操作。可以将此配置文件指定为系统属性:
 
-```
+```java
 -Djava.util.logging.config.file=logging.properties
 ```
 
 因此，在设置了文件和系统属性之后，库将生成如下所示的日志:
 
-```
+```java
 -------------- REQUEST  --------------
 GET https://api.github.com/users?page=1&per;_page=10
 Accept-Encoding: gzip

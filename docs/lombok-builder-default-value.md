@@ -12,7 +12,7 @@
 
 在本教程中，我们将使用 [Lombok](https://web.archive.org/web/20221127130432/https://search.maven.org/artifact/org.projectlombok/lombok/1.18.2/jar) ，因此我们只需要一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>
@@ -27,7 +27,7 @@
 
 我们将从一个简单的 POJO 开始:
 
-```
+```java
 public class Pojo {
     private String name;
     private boolean original;
@@ -38,7 +38,7 @@ public class Pojo {
 
 除此之外，我们希望这个类有一个构建器。使用 Lombok，我们可以通过一些简单的注释实现所有这些:
 
-```
+```java
 @Getter
 @Builder
 @NoArgsConstructor
@@ -55,7 +55,7 @@ public class Pojo {
 
 第一个也是最基本的要求是，在我们用构建器构建一个对象之后，要有默认值:
 
-```
+```java
 @Test
 public void givenBuilderWithDefaultValue_ThanDefaultValueIsPresent() {
     Pojo build = Pojo.builder()
@@ -69,7 +69,7 @@ public void givenBuilderWithDefaultValue_ThanDefaultValueIsPresent() {
 
 如果我们使用 ORM，它通常依赖于默认的构造函数。因此，我们应该期望默认构造函数的行为与构建器的行为相同:
 
-```
+```java
 @Test
 public void givenBuilderWithDefaultValue_NoArgsWorksAlso() {
     Pojo build = Pojo.builder()
@@ -88,7 +88,7 @@ public void givenBuilderWithDefaultValue_NoArgsWorksAlso() {
 
 从 Lombok v1.16.16 开始，我们可以使用`@Builder`的内部注释:
 
-```
+```java
 // class annotations as before
 public class Pojo {
     @Builder.Default
@@ -108,7 +108,7 @@ public class Pojo {
 
 我们可以通过在极简构建器实现中定义缺省值来尝试通过这两个测试:
 
-```
+```java
 // class annotations as before
 public class Pojo {
     private String name = "foo";
@@ -129,7 +129,7 @@ public class Pojo {
 
 为了消除这种风险，我们可以装饰构建器的注释:
 
-```
+```java
 // class annotations as before
 @Builder(builderClassName = "PojoBuilder")
 public class Pojo {
@@ -147,7 +147,7 @@ public class Pojo {
 
 `@Builder `还支持从原始类的实例生成构建器的实例。默认情况下，此功能不启用。我们可以通过在构建器注释中设置`toBuilder`参数来启用它:
 
-```
+```java
 // class annotations as before
 @Builder(toBuilder = true)
 public class Pojo {
@@ -160,7 +160,7 @@ public class Pojo {
 
 当然，这是有代价的。我们必须实例化这个类来创建一个构建器。所以我们也必须修改我们的测试:
 
-```
+```java
 @Test
 public void givenBuilderWithDefaultValue_ThenDefaultValueIsPresent() {
     Pojo build =  new Pojo().toBuilder()

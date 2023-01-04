@@ -10,7 +10,7 @@
 
 让我们将 *commons-lang3* 依赖项添加到我们项目的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -44,7 +44,7 @@
 
 我们可以删除一个元素的第一种方法是通过它的索引和`ArrayUtils#remove`:
 
-```
+```java
 public int[] removeAnElementWithAGivenIndex(int[] array, int index) {
       return ArrayUtils.remove(array, index);
 }
@@ -52,7 +52,7 @@ public int[] removeAnElementWithAGivenIndex(int[] array, int index) {
 
 另一种变化是`removeAll`方法，我们可以使用它从一个数组中删除多个元素，给出它们的索引:
 
-```
+```java
 public int[] removeAllElementsWithGivenIndices(int[] array, int... indices) {
     return ArrayUtils.removeAll(array, indices);
 }
@@ -62,7 +62,7 @@ public int[] removeAllElementsWithGivenIndices(int[] array, int... indices) {
 
 或者，假设我们不知道要删除的内容的索引。在这种情况下，我们可以使用`ArrayUtils#removeElement`提供要删除的元素:
 
-```
+```java
 public int[] removeFirstOccurrenceOfGivenElement(int[] array, int element) {
     return ArrayUtils.removeElement(array, element);
 }
@@ -70,7 +70,7 @@ public int[] removeFirstOccurrenceOfGivenElement(int[] array, int element) {
 
 这里是这个方法`ArrayUtils#removeElements`的另一个有用的变体，以防我们想要删除不止一个元素:
 
-```
+```java
 public int[] removeAllGivenElements(int[] array, int... elements) {
     return ArrayUtils.removeElements(array, elements);
 }
@@ -78,7 +78,7 @@ public int[] removeAllGivenElements(int[] array, int... elements) {
 
 有时，我们希望删除给定元素的所有出现。我们可以通过使用`ArrayUtils#removeAllOccurences`来实现:
 
-```
+```java
 public int[] removeAllOccurrencesOfAGivenElement(int[] array, int element) {
     return ArrayUtils.removeAllOccurences(array, element);
 }

@@ -18,7 +18,7 @@
 
 让我们将[网络](https://web.archive.org/web/20220524060104/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-starter-web)和[尤里卡客户端](https://web.archive.org/web/20220524060104/https://search.maven.org/search?q=spring-cloud-starter-netflix-eureka-client)启动器依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.cloud</groupId>
@@ -35,7 +35,7 @@
 
 当使用 [Spring Initializr](https://web.archive.org/web/20220524060104/https://start.spring.io/) 创建项目时，这些都已经设置好了。如果没有，我们可以将它们添加到我们的`pom.xml `文件中:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -57,7 +57,7 @@
 
 一旦我们有了依赖项，我们需要做的就是将新的客户端应用程序的配置属性添加到`application.properties `文件中:
 
-```
+```java
 eureka.client.serviceUrl.defaultZone=${EUREKA_URI:http://localhost:8761/eureka}
 eureka.instance.preferIpAddress=false
 spring.application.name=spring-cloud-eureka-client
@@ -71,7 +71,7 @@ spring.application.name=spring-cloud-eureka-client
 
 为了测试我们的应用程序，我们需要一个可以点击的示例 URL。让我们创建一个将返回问候消息的简单控制器:
 
-```
+```java
 @RestController
 public class HelloWorldController {
 
@@ -100,7 +100,7 @@ public class HelloWorldController {
 
 因此，让我们创建另一个名为`application-dev.properties`的属性文件:
 
-```
+```java
 spring.cloud.discovery.enabled=false
 ```
 
@@ -114,7 +114,7 @@ spring.cloud.discovery.enabled=false
 
 为此，我们将添加两个属性:
 
-```
+```java
 #---
 spring.config.activate.on-profile=dev
 spring.cloud.discovery.enabled=false

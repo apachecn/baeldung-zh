@@ -14,7 +14,7 @@ Java 允许类和接口[互相嵌套](/web/20221205232039/https://www.baeldung.c
 
 考虑下面的嵌套类示例:
 
-```
+```java
 public class Outer {
 
     public void outerPublic() {
@@ -52,7 +52,7 @@ JVM 访问规则不允许嵌套成员之间的私有访问。理想情况下，�
 
 例如，如果我们试图从`Inner`类反射性地调用`outerPrivate()`:
 
-```
+```java
 public void innerPublicReflection(Outer ob) throws Exception {
     Method method = ob.getClass().getDeclaredMethod("outerPrivate");
     method.invoke(ob);
@@ -61,7 +61,7 @@ public void innerPublicReflection(Outer ob) throws Exception {
 
 我们会得到一个异常:
 
-```
+```java
 java.lang.IllegalAccessException: 
 Class com.baeldung.Outer$Inner can not access a member of class com.baeldung.Outer with modifiers "private"
 ```
@@ -91,7 +91,7 @@ Java 11 在 JVM 中引入了嵌套的概念和相关的访问规则。这简化�
 
 这将返回该`Class`对象所属嵌套的嵌套主机:
 
-```
+```java
 @Test
 public void whenGetNestHostFromOuter_thenGetNestHost() {
     is(Outer.class.getNestHost().getName()).equals("com.baeldung.Outer");
@@ -109,7 +109,7 @@ public void whenGetNestHostFromInner_thenGetNestHost() {
 
 这决定了给定的`Class`是否是这个`Class`对象的嵌套:
 
-```
+```java
 @Test
 public void whenCheckNestmatesForNestedClasses_thenGetTrue() {
     is(Outer.Inner.class.isNestmateOf(Outer.class)).equals(true);
@@ -120,7 +120,7 @@ public void whenCheckNestmatesForNestedClasses_thenGetTrue() {
 
 这将返回一个数组，其中包含代表这个`Class`对象所属嵌套的所有成员的`Class`对象:
 
-```
+```java
 @Test
 public void whenGetNestMembersForNestedClasses_thenGetAllNestedClasses() {
     Set<String> nestMembers = Arrays.stream(Outer.Inner.class.getNestMembers())
@@ -140,7 +140,7 @@ public void whenGetNestMembersForNestedClasses_thenGetAllNestedClasses() {
 
 让我们深入研究编译器生成的桥接方法的细节。我们可以通过分解生成的类文件来看到这一点:
 
-```
+```java
 $ javap -c Outer
 Compiled from "Outer.java"
 public class com.baeldung.Outer {
@@ -166,7 +166,7 @@ public class com.baeldung.Outer {
 
 `innerPublic()`通过这个方法调用`outerPrivate()`:
 
-```
+```java
 $ javap -c Outer\$Inner
 Compiled from "Outer.java"
 class com.baeldung.Outer$Inner {
@@ -196,7 +196,7 @@ class com.baeldung.Outer$Inner {
 
 Java 11 编译器将生成以下反汇编的`Outer`类文件:
 
-```
+```java
 $ javap -c Outer
 Compiled from "Outer.java"
 public class com.baeldung.Outer {
@@ -214,7 +214,7 @@ public class com.baeldung.Outer {
 
 注意，这里没有编译器生成的桥接方法。另外，`Inner`类现在可以直接调用`outerPrivate()`方法:
 
-```
+```java
 $ javap -c Outer\$Inner.class 
 Compiled from "Outer.java"
 class com.baeldung.Outer$Inner {

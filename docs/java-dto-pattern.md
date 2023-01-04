@@ -38,7 +38,7 @@ dto 在具有远程调用的系统中很方便，因为它们有助于减少远�
 
 以下是两种模型的定义:
 
-```
+```java
 public class User {
 
     private String id;
@@ -60,7 +60,7 @@ public class User {
 }
 ```
 
-```
+```java
 public class Role {
 
     private String id;
@@ -76,7 +76,7 @@ public class Role {
 
 因此，细微的区别是要么将发送到服务器的请求打包在一起，要么优化客户端的响应:
 
-```
+```java
 public class UserDTO {
     private String name;
     private List<String> roles;
@@ -89,7 +89,7 @@ public class UserDTO {
 
 下一个 DTO 对创建用户所需的所有数据进行分组，并在一个请求中将其发送到服务器，这优化了与 API 的交互:
 
-```
+```java
 public class UserCreationDTO {
 
     private String name;
@@ -106,7 +106,7 @@ public class UserCreationDTO {
 
 这通常发生在表示层:
 
-```
+```java
 @RestController
 @RequestMapping("/users")
 class UserController {
@@ -146,7 +146,7 @@ class UserController {
 
 最后，我们有**传输数据的`Mapper`组件，确保 DTO 和域模型都不需要知道对方**:
 
-```
+```java
 @Component
 class Mapper {
     public UserDTO toDto(User user) {

@@ -16,7 +16,7 @@
 
 Java 有一个名为`java.util.Stack`的内置 API。**由于`char`是一个原始数据类型**，不能在泛型中使用，**我们必须使用`java.lang.Character`** 的包装类来创建一个`Stack`:
 
-```
+```java
 Stack<Character> charStack = new Stack<>();
 ```
 
@@ -28,7 +28,7 @@ Stack<Character> charStack = new Stack<>();
 
 让我们使用一个`LinkedList`作为后端数据结构来实现一个`char`栈:
 
-```
+```java
 public class CharStack {
 
     private LinkedList<Character> items;
@@ -43,7 +43,7 @@ public class CharStack {
 
 现在，我们必须提供`push`、`peek`和`pop`方法的实现:
 
-```
+```java
 public void push(Character item) {
     items.push(item);
 }
@@ -69,7 +69,7 @@ public Character pop() {
 
 我们也可以使用数组作为我们的数据结构:
 
-```
+```java
 public class CharStackWithArray {
 
     private char[] elements;
@@ -87,7 +87,7 @@ public class CharStackWithArray {
 
 现在，让我们实现`push`方法:
 
-```
+```java
 public void push(char item) {
     ensureCapacity(size + 1);
     elements[size] = item;
@@ -110,7 +110,7 @@ private void ensureCapacity(int newSize) {
 
 最后，让我们实现`peek`和`pop`方法:
 
-```
+```java
 public char peek() {
     if (size == 0) {
         throw new EmptyStackException();

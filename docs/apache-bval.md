@@ -10,7 +10,7 @@
 
 为了使用`Apache BVal`，我们首先需要将以下依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.bval</groupId>
     <artifactId>bval-jsr</artifactId>
@@ -25,7 +25,7 @@
 
 自定义`BVal`约束可以在可选的`bval-extras`依赖关系中找到:
 
-```
+```java
 <dependency>
     <groupId>org.apache.bval</groupId>
     <artifactId>bval-extras</artifactId>
@@ -41,7 +41,7 @@
 
 让我们创建一个有四个属性的`User`类，然后应用`@NotNull`、`@Size`和`@Min`注释:
 
-```
+```java
 public class User {
 
     @NotNull
@@ -67,7 +67,7 @@ public class User {
 
 `Apache BVal`文档建议获取该类的一个实例，因为工厂创建是一个要求很高的过程:
 
-```
+```java
 ValidatorFactory validatorFactory 
   = Validation.byProvider(ApacheValidationProvider.class)
   .configure().buildValidatorFactory();
@@ -77,7 +77,7 @@ ValidatorFactory validatorFactory
 
 接下来，我们需要从上面定义的`validatorFactory`中获取一个`Validator`实例:
 
-```
+```java
 Validator validator = validatorFactory.getValidator();
 ```
 
@@ -93,7 +93,7 @@ Validator validator = validatorFactory.getValidator();
 
 让我们创建一个`JUnit`测试，其中我们定义了一个`User`对象，并使用`validate()`方法来测试它的属性:
 
-```
+```java
 @Test
 public void givenUser_whenValidate_thenValidationViolations() {
     User user
@@ -110,7 +110,7 @@ public void givenUser_whenValidate_thenValidationViolations() {
 
 让我们创建一个`JUnit`测试，在这个测试中，我们将定义一个`User`对象，它的`age`属性小于要求的最小值 18，并验证验证这个属性会导致一个违例:
 
-```
+```java
 @Test
 public void givenInvalidAge_whenValidateProperty_thenConstraintViolation() {
     User user = new User("[[email protected]](/web/20220524020626/https://www.baeldung.com/cdn-cgi/l/email-protection)", "pass", "Ana", 12);
@@ -128,7 +128,7 @@ public void givenInvalidAge_whenValidateProperty_thenConstraintViolation() {
 
 让我们用一个`User`对象创建一个`JUnit`测试，然后验证值`20`对于属性`age`是一个有效值:
 
-```
+```java
 @Test
 public void givenValidAge_whenValidateValue_thenNoConstraintViolation() {
     User user = new User("[[email protected]](/web/20220524020626/https://www.baeldung.com/cdn-cgi/l/email-protection)", "pass", "Ana", 18);
@@ -144,7 +144,7 @@ public void givenValidAge_whenValidateValue_thenNoConstraintViolation() {
 
 **使用完`ValidatorFactory`后，一定要记得在结束时关闭**:
 
-```
+```java
 if (validatorFactory != null) {
     validatorFactory.close();
 }
@@ -168,7 +168,7 @@ if (validatorFactory != null) {
 
 让我们在我们的`User`类上定义额外的属性，并对它们应用一些非`JSR`注释:
 
-```
+```java
 public class User {
 
     @NotNull
@@ -202,7 +202,7 @@ public class User {
 
 可以用与`JSR`约束相似的方式测试约束:
 
-```
+```java
 @Test
 public void whenValidateNonJSR_thenCorrect() {
     User user = new User("[[email protected]](/web/20220524020626/https://www.baeldung.com/cdn-cgi/l/email-protection)", "pass", "Ana", 20);
@@ -234,7 +234,7 @@ public void whenValidateNonJSR_thenCorrect() {
 
 让我们创建一个`Password`注释，它将定义用户密码必须满足的条件:
 
-```
+```java
 @Constraint(validatedBy = { PasswordValidator.class })
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
@@ -253,7 +253,7 @@ public @interface Password {
 
 **`password`值的实际验证是在实现`ConstraintValidator`接口**的类中完成的——在我们的例子中，是`PasswordValidator`类。这个类覆盖了`isValid()`方法，并验证`password`的长度是否小于`length`属性，以及它包含的非字母数字字符是否少于`nonAlpha`属性中指定的数量:
 
-```
+```java
 public class PasswordValidator 
   implements ConstraintValidator<Password, String> {
 
@@ -287,14 +287,14 @@ public class PasswordValidator
 
 让我们将自定义约束应用于`User`类的`password`属性:
 
-```
+```java
 @Password(length = 8)
 private String password;
 ```
 
 我们可以创建一个`JUnit`测试来验证无效的`password`值会导致违反约束:
 
-```
+```java
 @Test
 public void givenValidPassword_whenValidatePassword_thenNoConstraintViolation() {
     User user = new User("[[email protected]](/web/20220524020626/https://www.baeldung.com/cdn-cgi/l/email-protection)", "password", "Ana", 20);
@@ -310,7 +310,7 @@ public void givenValidPassword_whenValidatePassword_thenNoConstraintViolation() 
 
 现在让我们创建一个`JUnit`测试，在这个测试中我们验证一个有效的`password`值:
 
-```
+```java
 @Test
 public void givenValidPassword_whenValidatePassword_thenNoConstraintViolation() {
     User user = new User("[[email protected]](/web/20220524020626/https://www.baeldung.com/cdn-cgi/l/email-protection)", "password#", "Ana", 20);

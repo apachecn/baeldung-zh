@@ -36,7 +36,7 @@ Spring Cloud 负载平衡器库**允许我们创建以负载平衡方式与其�
 
 对于我们的示例服务器，我们从一个简单的 Spring Boot 应用程序开始:
 
-```
+```java
 @SpringBootApplication
 @RestController
 public class ServerApplication {
@@ -59,7 +59,7 @@ public class ServerApplication {
 
 默认实例将在 ID 为 1 的端口 8080 上运行。为了运行第二个实例，我们只需要添加几个程序参数:
 
-```
+```java
 --server.instance.id=2 --server.port=8081
 ```
 
@@ -67,7 +67,7 @@ public class ServerApplication {
 
 现在，让我们看看客户端代码。**这就是我们使用 Spring Cloud 负载平衡器**的地方，所以让我们从将它包含在我们的应用程序中开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-loadbalancer</artifactId>
@@ -78,7 +78,7 @@ public class ServerApplication {
 
 对于我们的示例应用程序，我们将对示例服务器的两个不同实例进行硬编码。它们运行在同一台机器上，但使用不同的端口:
 
-```
+```java
 class DemoInstanceSupplier implements ServiceInstanceListSupplier {
     private final String serviceId;
 
@@ -104,7 +104,7 @@ class DemoInstanceSupplier implements ServiceInstanceListSupplier {
 
 现在，让我们创建一个`LoadBalancerConfiguration`类:
 
-```
+```java
 @Configuration
 @LoadBalancerClient(name = "example-service", configuration = DemoServerInstanceConfiguration.class)
 class WebClientConfig {
@@ -122,7 +122,7 @@ class WebClientConfig {
 
 接下来，让我们创建一个`Configuration`类来实例化我们的服务实例供应商。请注意，我们使用了与上面相同的伪名称:
 
-```
+```java
 @Configuration
 class DemoServerInstanceConfiguration {
     @Bean
@@ -134,7 +134,7 @@ class DemoServerInstanceConfiguration {
 
 现在，我们可以创建实际的客户端应用程序。让我们使用上面的`WebClient` bean 向示例服务器发送十个请求:
 
-```
+```java
 @SpringBootApplication
 public class ClientApplication {
 
@@ -159,7 +159,7 @@ public class ClientApplication {
 
 查看输出，我们可以确认我们正在两个不同的实例之间进行负载平衡:
 
-```
+```java
 Hello from instance 2
 Hello from instance 1
 Hello from instance 2

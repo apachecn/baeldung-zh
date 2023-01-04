@@ -53,7 +53,7 @@ Spring 框架提供了多种特性，使得 web 应用程序的开发更加容�
 
 继承`spring-boot-starter-parent`项目很简单——我们只需要在`pom.xml`中指定一个`parent`元素:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -100,7 +100,7 @@ Spring Initializr 是创建 Spring Boot 项目的一种便捷方式。
 
 例如，这段代码中和了`DataSourceAutoConfiguration`:
 
-```
+```java
 // other annotations
 @EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
 public class MyConfiguration { }
@@ -108,7 +108,7 @@ public class MyConfiguration { }
 
 如果我们使用`@SpringBootApplication`注释启用自动配置——它使用`@EnableAutoConfiguration`作为元注释——我们可以使用相同名称的属性禁用自动配置:
 
-```
+```java
 // other annotations
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class MyConfiguration { }
@@ -116,7 +116,7 @@ public class MyConfiguration { }
 
 我们还可以使用`spring.autoconfigure.exclude`环境属性禁用自动配置。`application.properties`文件中的这个设置和以前做的一样:
 
-```
+```java
 spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 ```
 
@@ -124,7 +124,7 @@ spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSou
 
 要注册一个自动配置类，我们必须在`META-INF/spring.factories`文件中的`EnableAutoConfiguration`键下面列出它的完全限定名:
 
-```
+```java
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.baeldung.autoconfigure.CustomAutoConfiguration
 ```
 
@@ -141,7 +141,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.baeldung.auto
 
 当放置在用`@Bean`修饰的方法上时，目标类型默认为方法的返回类型:
 
-```
+```java
 @Configuration
 public class CustomConfiguration {
     @Bean
@@ -160,7 +160,7 @@ public class CustomConfiguration {
 
 要包含这个插件，只需在`pom.xml`中添加一个`plugin`元素:
 
-```
+```java
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -173,7 +173,7 @@ public class CustomConfiguration {
 
 注意，`pom.xml`文件中的`packaging`元素必须设置为`jar`才能构建一个 JAR 文件:
 
-```
+```java
 <packaging>jar</packaging>
 ```
 
@@ -181,13 +181,13 @@ public class CustomConfiguration {
 
 为了构建一个 WAR 文件，我们将`packaging`元素改为`war`:
 
-```
+```java
 <packaging>war</packaging>
 ```
 
 并离开打包文件的容器依赖性:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -203,7 +203,7 @@ public class CustomConfiguration {
 
 这个方法作为一个入口点，调用`SpringApplication#run` 方法来引导应用程序:
 
-```
+```java
 @SpringBootApplication
 public class MyApplication {
     public static void main(String[] args) {
@@ -239,7 +239,7 @@ Spring Boot 开发工具，或称 DevTools，是一套使开发过程更容易�
 
 为了包含这些开发时特性，我们只需要向`pom.xml`文件添加一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-devtools</artifactId>
@@ -272,7 +272,7 @@ Spring Boot 开发工具，或称 DevTools，是一套使开发过程更容易�
 
 将 Spring Boot 执行器集成到项目中非常简单。我们需要做的就是在`pom.xml`文件中包含`spring-boot-starter-actuator`启动器:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-actuator</artifactId>
@@ -325,7 +325,7 @@ Spring Boot 注解为这个主题提供了更多的见解。
 *   以编程方式——在我们的主`@SpringBootApplication`类中，我们可以在`SpringApplication`实例上设置`server.port`。
 *   使用命令行——当应用程序作为 jar 文件运行时，我们可以将 server.port 设置为 java 命令参数:
 
-    ```
+    ```java
     java -jar -Dserver.port=8081 myspringproject.jar 
     ```
 
@@ -337,7 +337,7 @@ Spring Boot 注解为这个主题提供了更多的见解。
 
 在 Spring MVC 中，要改变默认设置，比如 Jetty，我们需要在依赖项中排除 Tomcat 并包含 Jetty:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>

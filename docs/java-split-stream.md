@@ -22,7 +22,7 @@ Java 的 Streams API 是处理数据的强大而通用的工具。根据定义�
 
 假设我们有一个文章列表，其中包含了关于它们应该被发布到的目标站点以及它们是否应该被展示的信息。
 
-```
+```java
 List<Article> articles = Lists.newArrayList(
   new Article("Baeldung", true),
   new Article("Baeldung", false),
@@ -32,14 +32,14 @@ List<Article> articles = Lists.newArrayList(
 
 我们将它分成两组，一组只包含 Baeldung 文章，另一组包含其余的文章:
 
-```
+```java
 Map<Boolean, List<Article>> groupedArticles = articles.stream()
   .collect(Collectors.partitioningBy(a -> a.target.equals("Baeldung"))); 
 ```
 
 让我们看看哪些文章被归档在地图中的`true`和`false`键下:
 
-```
+```java
 assertThat(groupedArticles.get(true)).containsExactly(
   new Article("Baeldung", true),
   new Article("Baeldung", false));
@@ -54,7 +54,7 @@ assertThat(groupedArticles.get(false)).containsExactly(
 
 假设我们想按目标站点对文章进行分组。返回的`Map`将具有包含站点名称的键和包含与给定站点相关的文章集合的值:
 
-```
+```java
 Map<String, List<Article>> groupedArticles = articles.stream()
   .collect(Collectors.groupingBy(a -> a.target));
 assertThat(groupedArticles.get("Baeldung")).containsExactly(
@@ -74,7 +74,7 @@ assertThat(groupedArticles.get("The Code")).containsExactly(new Article("The Cod
 
 让我们把文章分成 Baeldung 和非 Baeldung 两类来统计一下。我们还将使用`List`构造函数作为合并函数:
 
-```
+```java
 List<Long> countedArticles = articles.stream().collect(Collectors.teeing(
   Collectors.filtering(article -> article.target.equals("Baeldung"), Collectors.counting()),
   Collectors.filtering(article -> !article.target.equals("Baeldung"), Collectors.counting()),
@@ -91,7 +91,7 @@ assertThat(countedArticles.get(1)).isEqualTo(2);
 
 这次我们不再计数，而是将它们收集到列表中:
 
-```
+```java
 List<List<Article>> groupedArticles = articles.stream().collect(Collectors.teeing(
   Collectors.filtering(article -> article.target.equals("Baeldung"), Collectors.toList()),
   Collectors.filtering(article -> article.featured, Collectors.toList()),
@@ -114,7 +114,7 @@ assertThat(groupedArticles.get(1)).containsExactly(new Article("Baeldung", true)
 
 **首先，我们需要从文章列表中创建一个`Observable`实例。**我们可以使用`Observable`类的`from`工厂方法:
 
-```
+```java
 Observable<Article> observableArticles = Observable.from(articles);
 ```
 
@@ -122,7 +122,7 @@ Observable<Article> observableArticles = Observable.from(articles);
 
 接下来，我们需要创建过滤文章的`Observables`。为此，我们将使用来自`Observable `类的`filter`方法:
 
-```
+```java
 Observable<Article> baeldungObservable = observableArticles.filter(
   article -> article.target.equals("Baeldung"));
 Observable<Article> featuredObservable = observableArticles.filter(
@@ -133,7 +133,7 @@ Observable<Article> featuredObservable = observableArticles.filter(
 
 **最后，我们需要订阅`Observables`并提供一个`Action`来描述我们想要对文章做什么。**现实世界中的一个例子是将它们保存在数据库中或发送给客户端，但我们将满足于将它们添加到列表中:
 
-```
+```java
 List<Article> baeldungArticles = new ArrayList<>();
 List<Article> featuredArticles = new ArrayList<>();
 baeldungObservable.subscribe(baeldungArticles::add);

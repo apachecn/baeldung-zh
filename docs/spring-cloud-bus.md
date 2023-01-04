@@ -18,7 +18,7 @@
 
 让我们从 RabbitMQ 开始，我们推荐它作为 docker 映像作为 [RabbitMQ 运行。这很容易设置——要让 RabbitMQ 在本地运行，我们需要](https://web.archive.org/web/20220630142054/https://hub.docker.com/_/rabbitmq/)[安装 Docker](https://web.archive.org/web/20220630142054/https://www.docker.com/get-docker) 并在 Docker 安装成功后运行以下命令:
 
-```
+```java
 docker pull rabbitmq:3-management
 ```
 
@@ -26,7 +26,7 @@ docker pull rabbitmq:3-management
 
 接下来，我们可以运行 RabbitMQ:
 
-```
+```java
 docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
 ```
 
@@ -38,7 +38,7 @@ docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:567
 
 让我们停止配置客户端并用`@RefreshScope`注释`ConfigClient`控制器类:
 
-```
+```java
 @SpringBootApplication
 @RestController
 @RefreshScope
@@ -49,7 +49,7 @@ public class SpringCloudConfigClientApplication {
 
 最后，让我们更新`pom.xml`文件并添加致动器:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-actuator</artifactId>
@@ -61,7 +61,7 @@ public class SpringCloudConfigClientApplication {
 
 默认情况下，执行器添加的所有敏感端点都是安全的。这包括`‘/refresh'`端点。为简单起见，我们将通过更新`application.yml`来关闭安全性:
 
-```
+```java
 management:
   security:
     enabled: false
@@ -69,7 +69,7 @@ management:
 
 此外，从 Spring Boot 2 开始，[致动器端点默认不暴露](https://web.archive.org/web/20220630142054/https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-endpoints)。为了使它们可供访问，我们需要将它添加到一个`application.yml`中:
 
-```
+```java
 management:
   endpoints:
     web:
@@ -79,13 +79,13 @@ management:
 
 让我们首先启动客户端，在 GitHub 的属性文件中将用户角色从现有的`‘Developer'`更新为`‘Programmer'`。配置服务器将立即显示更新的值；但是，客户端不会。为了让客户端看到新文件，我们只需要向`‘/refresh'`端点发送一个空的 POST 请求，这是由 actuator 添加的:
 
-```
+```java
 $> curl -X POST http://localhost:8080/actuator/refresh
 ```
 
 我们将获得显示更新属性的 JSON 文件:
 
-```
+```java
 [
   "user.role"
 ]
@@ -93,7 +93,7 @@ $> curl -X POST http://localhost:8080/actuator/refresh
 
 最后，我们可以检查用户角色是否已更新:
 
-```
+```java
 $> curl http://localhost:8080/whoami/Mr_Pink
 Hello Mr_Pink! You are a(n) Programmer and your password is 'd3v3L'.
 ```
@@ -110,7 +110,7 @@ Hello Mr_Pink! You are a(n) Programmer and your password is 'd3v3L'.
 
 我们需要更新云配置客户端，以便它可以订阅 RabbitMQ exchange:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-bus-amqp</artifactId>
@@ -122,7 +122,7 @@ Hello Mr_Pink! You are a(n) Programmer and your password is 'd3v3L'.
 
 要完成配置客户端更改，我们需要在一个`application.yml`文件中添加 RabbitMQ 细节并启用云总线:
 
-```
+```java
 ---
 spring:
   rabbitmq:
@@ -151,7 +151,7 @@ spring:
 
 最后，让我们向配置服务器添加两个依赖项，以完全自动化配置更改。
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-config-monitor</artifactId>
@@ -161,7 +161,7 @@ spring:
 
 最新版本可以在这里找到[。](https://web.archive.org/web/20220630142054/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.cloud%22%20AND%20a%3A%22spring-cloud-config-monitor%22)
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
@@ -175,7 +175,7 @@ spring:
 
 我们只需要更新`application.properties`并给出 RabbitMQ 细节:
 
-```
+```java
 spring.rabbitmq.host=localhost
 spring.rabbitmq.port=5672
 spring.rabbitmq.username=guest
@@ -198,20 +198,20 @@ http://root: [【邮件保护】](/web/20220630142054/https://www.baeldung.com/c
 
 让我们确保所有应用程序都在运行。如果我们返回并检查客户端，它会将`user.role`显示为`‘Programmer'`并将`user.password`显示为“`d3v3L`”:
 
-```
+```java
 $> curl http://localhost:8080/whoami/Mr_Pink
 Hello Mr_Pink! You are a(n) Programmer and your password is 'd3v3L'.
 ```
 
 以前，我们必须使用`‘/refresh'`端点来重新加载配置更改。让我们打开属性文件，将`user.role`改回`Developer`，并推送更改:
 
-```
+```java
 user.role=Programmer
 ```
 
 如果我们现在检查客户端，我们会看到:
 
-```
+```java
 $> curl http://localhost:8080/whoami/Mr_Pink
 Hello Mr_Pink! You are a(n) Developer and your password is 'd3v3L'.
 ```
@@ -220,7 +220,7 @@ Hello Mr_Pink! You are a(n) Developer and your password is 'd3v3L'.
 
 我们还可以检查配置和服务器日志，我们将看到以下条目:
 
-```
+```java
 o.s.cloud.bus.event.RefreshListener: Received remote refresh request. Keys refreshed []
 ```
 

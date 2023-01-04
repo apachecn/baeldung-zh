@@ -10,7 +10,7 @@
 
 与关系数据库不同，MongoDB 不提供创建约束的选项。**因此，我们唯一的选择是创建唯一的[索引](/web/20220813065802/https://www.baeldung.com/spring-data-mongodb-index-annotations-converter)。**但是，默认情况下，Spring 数据中的自动索引创建是关闭的。首先，让我们打开我们的`application.properties`:
 
-```
+```java
 spring.data.mongodb.auto-index-creation=true
 ```
 
@@ -20,7 +20,7 @@ spring.data.mongodb.auto-index-creation=true
 
 `@Indexed`注释允许我们将字段标记为有索引。因为我们配置了自动索引创建，所以我们不必自己创建它们。**默认情况下，索引不是唯一的。**因此，我们必须通过`unique`属性打开它。让我们通过创建第一个示例来看看它的实际应用:
 
-```
+```java
 @Document
 public class Company {
     @Id
@@ -37,7 +37,7 @@ public class Company {
 
 注意，我们仍然可以拥有我们的`@Id`注释，它完全独立于我们的索引。**这就是我们拥有一个具有唯一字段的文档所需要的一切。**因此，如果我们插入多个具有相同`email`的文档，就会产生一个`DuplicateKeyException`:
 
-```
+```java
 @Test
 public void givenUniqueIndex_whenInsertingDupe_thenExceptionIsThrown() {
     Company a = new Company();
@@ -61,7 +61,7 @@ public void givenUniqueIndex_whenInsertingDupe_thenExceptionIsThrown() {
 
 我们还可以向多个字段添加注释。让我们继续创建第二个示例:
 
-```
+```java
 @Document
 public class Asset {
     @Indexed(unique = true)
@@ -76,7 +76,7 @@ public class Asset {
 
 此外，现在我们有两个独特的领域。**注意，这并不意味着它是一个复合指数。**因此，对任何字段多次插入相同的值都会导致重复的键。让我们来测试一下:
 
-```
+```java
 @Test
 public void givenMultipleIndexes_whenAnyFieldDupe_thenExceptionIsThrown() {
     Asset a = new Asset();
@@ -109,7 +109,7 @@ public void givenMultipleIndexes_whenAnyFieldDupe_thenExceptionIsThrown() {
 
 类似地，我们可以注释一个自定义类型的字段。这将达到复合指数的效果。让我们从一个`SaleId`类开始来表示我们的复合指数:
 
-```
+```java
 public class SaleId {
     private Long item;
     private String date;
@@ -120,7 +120,7 @@ public class SaleId {
 
 现在让我们创建我们的`Sale`类来使用它:
 
-```
+```java
 @Document
 public class Sale {
     @Indexed(unique = true)
@@ -134,7 +134,7 @@ public class Sale {
 
 现在，每次我们试图用相同的`SaleId`添加一个新的`Sale`，我们都会得到一个重复的键。让我们来测试一下:
 
-```
+```java
 @Test
 public void givenCustomTypeIndex_whenInsertingDupe_thenExceptionIsThrown() {
     SaleId id = new SaleId();
@@ -161,7 +161,7 @@ public void givenCustomTypeIndex_whenInsertingDupe_thenExceptionIsThrown() {
 
 要拥有一个由多个字段组成的唯一索引，而不需要定制类，我们必须创建一个复合索引。**为此，我们在类中直接使用了`@CompoundIndex`注释。**这个注释包含一个`def`属性，我们将使用它来包含我们需要的字段。让我们创建我们的`Customer`类，为`storeId`和`number`字段定义唯一的索引:
 
-```
+```java
 @Document
 @CompoundIndex(def = "{'storeId': 1, 'number': 1}", unique = true)
 public class Customer {
@@ -178,7 +178,7 @@ public class Customer {
 
 这与多个字段上的`@Indexed` 不同。如果我们尝试插入一个具有相同`storeId`和`number`值的客户，这种方法只会产生一个`DuplicateKeyException`:
 
-```
+```java
 @Test
 public void givenCompoundIndex_whenDupeInsert_thenExceptionIsThrown() {
     Customer customerA = new Customer("Name A");

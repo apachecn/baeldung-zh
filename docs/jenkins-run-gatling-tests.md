@@ -16,7 +16,7 @@ Gatling 提供了一个插件 Gatling Maven 插件——它允许我们在项目
 
 那么，让我们将加特林集成到一个样例 Maven 项目中。首先，我们需要在我们的`pom.xml` 文件中有以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.gatling.highcharts</groupId>
     <artifactId>gatling-charts-highcharts</artifactId>
@@ -36,7 +36,7 @@ Gatling 提供了一个插件 Gatling Maven 插件——它允许我们在项目
 
 除了前面的依赖项，我们需要在`pom.xml` : 的插件部分指定`gatling-maven-plugin`
 
-```
+```java
 <plugin>
     <groupId>io.gatling</groupId>
     <artifactId>gatling-maven-plugin</artifactId>
@@ -59,7 +59,7 @@ Gatling 提供了一个插件 Gatling Maven 插件——它允许我们在项目
 
 一旦我们编写了执行负载测试所需的代码，**我们就可以构建项目并运行模拟:**
 
-```
+```java
 mvn clean package
 mvn gatling:test
 ```
@@ -78,7 +78,7 @@ mvn gatling:test
 
 在我们的项目中，我们创建了一个`Jenkinsfile`来指导它如何运行加特林:
 
-```
+```java
 pipeline {
     agent any
     stages {

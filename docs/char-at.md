@@ -31,13 +31,13 @@
 
 ### 可用签名
 
-```
+```java
 public char charAt(int index)
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenCallCharAt_thenCorrect() {
     assertEquals('P', "Paul".charAt(0));
@@ -48,7 +48,7 @@ public void whenCallCharAt_thenCorrect() {
 
 *   `IndexOutOfBoundsException`–如果向方法传递了不存在的或负的索引
 
-```
+```java
 @Test(expected = IndexOutOfBoundsException.class)
 public void whenCharAtOnNonExistingIndex_thenIndexOutOfBoundsExceptionThrown() {
     int character = "Paul".charAt(4);

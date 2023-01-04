@@ -30,7 +30,7 @@
 
 让我们讨论 ACO 算法的主要参数，在`AntColonyOptimization`类中声明:
 
-```
+```java
 private double c = 1.0;
 private double alpha = 1;
 private double beta = 5;
@@ -50,7 +50,7 @@ private double randomFactor = 0.01;
 
 每个`Ant` 将能够访问一个特定的城市，记住所有访问过的城市，并跟踪路径长度:
 
-```
+```java
 public void visitCity(int currentIndex, int city) {
     trail[currentIndex + 1] = city;
     visited[city] = true;
@@ -73,7 +73,7 @@ public double trailLength(double graph[][]) {
 
 在最开始，我们需要通过提供踪迹和蚂蚁矩阵来初始化我们的 ACO 代码实现:
 
-```
+```java
 graph = generateRandomMatrix(noOfCities);
 numberOfCities = graph.length;
 numberOfAnts = (int) (numberOfCities * antFactor);
@@ -86,7 +86,7 @@ IntStream.range(0, numberOfAnts).forEach(i -> ants.add(new Ant(numberOfCities)))
 
 接下来，我们需要**设置`ants`矩阵**，从一个随机的城市开始:
 
-```
+```java
 public void setupAnts() {
     IntStream.range(0, numberOfAnts)
       .forEach(i -> {
@@ -101,7 +101,7 @@ public void setupAnts() {
 
 对于循环的每次迭代，我们将执行以下操作:
 
-```
+```java
 IntStream.range(0, maxIterations).forEach(i -> {
     moveAnts();
     updateTrails();
@@ -113,7 +113,7 @@ IntStream.range(0, maxIterations).forEach(i -> {
 
 先说`moveAnts()`法。我们需要**为所有蚂蚁选择下一个城市，**记住每只蚂蚁都试图跟随其他蚂蚁的足迹:
 
-```
+```java
 public void moveAnts() {
     IntStream.range(currentIndex, numberOfCities - 1).forEach(i -> {
         ants.forEach(ant -> {
@@ -126,7 +126,7 @@ public void moveAnts() {
 
 最重要的是正确选择下一个要去的城市。我们应该根据概率逻辑选择下一个城镇。首先，我们可以检查`Ant`是否应该随机访问一个城市:
 
-```
+```java
 int t = random.nextInt(numberOfCities - currentIndex);
 if (random.nextDouble() < randomFactor) {
     OptionalInt cityIndex = IntStream.range(0, numberOfCities)
@@ -140,7 +140,7 @@ if (random.nextDouble() < randomFactor) {
 
 如果我们没有随机选择任何城市，我们需要计算选择下一个城市的概率，记住蚂蚁更喜欢沿着更强更短的路径。我们可以通过在数组中存储移动到每个城市的概率来做到这一点:
 
-```
+```java
 public void calculateProbabilities(Ant ant) {
     int i = ant.trail[currentIndex];
     double pheromone = 0.0;
@@ -164,7 +164,7 @@ public void calculateProbabilities(Ant ant) {
 
 在我们计算了概率之后，我们可以使用以下公式来决定去哪个城市:
 
-```
+```java
 double r = random.nextDouble();
 double total = 0;
 for (int i = 0; i < numberOfCities; i++) {
@@ -179,7 +179,7 @@ for (int i = 0; i < numberOfCities; i++) {
 
 在这一步，我们应该更新踪迹和留下的信息素:
 
-```
+```java
 public void updateTrails() {
     for (int i = 0; i < numberOfCities; i++) {
         for (int j = 0; j < numberOfCities; j++) {
@@ -200,7 +200,7 @@ public void updateTrails() {
 
 这是每次迭代的最后一步。我们需要更新最佳解决方案，以便保留对它的引用:
 
-```
+```java
 private void updateBest() {
     if (bestTourOrder == null) {
         bestTourOrder = ants[0].trail;

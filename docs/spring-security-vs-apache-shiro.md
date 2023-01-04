@@ -26,7 +26,7 @@ Spring Security 始于 2003 年的 Acegi，并在 2008 年首次公开发布时�
 
 因为我们将在 Spring Boot 应用程序中使用 Shiro，所以我们需要它的启动器和`shiro-core`模块:
 
-```
+```java
 <dependency>
     <groupId>org.apache.shiro</groupId>
     <artifactId>shiro-spring-boot-web-starter</artifactId>
@@ -45,7 +45,7 @@ Spring Security 始于 2003 年的 Acegi，并在 2008 年首次公开发布时�
 
 为了在内存中声明用户及其角色和权限，我们需要创建一个扩展 Shiro 的`JdbcRealm`的领域。我们将定义两个用户–Tom 和 Jerry，角色分别为 USER 和 ADMIN:
 
-```
+```java
 public class CustomRealm extends JdbcRealm {
 
     private Map<String, String> credentials = new HashMap<>();
@@ -67,7 +67,7 @@ public class CustomRealm extends JdbcRealm {
 
 接下来，为了能够检索这个身份验证和授权，我们需要覆盖一些方法:
 
-```
+```java
 @Override
 protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) 
   throws AuthenticationException {
@@ -102,7 +102,7 @@ protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principal
 
 方法`doGetAuthorizationInfo`使用几个助手方法来获取用户的角色和权限:
 
-```
+```java
 @Override
 protected Set getRoleNamesForUser(Connection conn, String username) 
   throws SQLException {
@@ -128,7 +128,7 @@ protected Set getPermissions(Connection conn, String username, Collection roles)
 
 接下来，我们需要将这个`CustomRealm`作为 bean 包含在我们的引导应用程序中:
 
-```
+```java
 @Bean
 public Realm customRealm() {
     return new CustomRealm();
@@ -137,7 +137,7 @@ public Realm customRealm() {
 
 此外，要为我们的端点配置身份验证，我们需要另一个 bean:
 
-```
+```java
 @Bean
 public ShiroFilterChainDefinition shiroFilterChainDefinition() {
     DefaultShiroFilterChainDefinition filter = new DefaultShiroFilterChainDefinition();
@@ -160,7 +160,7 @@ public ShiroFilterChainDefinition shiroFilterChainDefinition() {
 
 首先，依赖性:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -178,7 +178,7 @@ public ShiroFilterChainDefinition shiroFilterChainDefinition() {
 
 接下来，我们将在类`SecurityConfig`中定义我们的 Spring 安全配置，扩展`WebSecurityConfigurerAdapter`:
 
-```
+```java
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -233,7 +233,7 @@ Spring Security 还为我们提供了它的`HttpSecurity`对象，用于进一�
 
 对于呈现视图的端点，实现是相同的:
 
-```
+```java
 @GetMapping("/")
 public String index() {
     return "index";
@@ -257,7 +257,7 @@ public String getMeHome(Model model) {
 
 Shiro 提供了一个`SecurityUtils#getSubject`来检索当前的`Subject`，以及它的角色和权限:
 
-```
+```java
 private void addUserAttributes(Model model) {
     Subject currentUser = SecurityUtils.getSubject();
     String permission = "";
@@ -280,7 +280,7 @@ private void addUserAttributes(Model model) {
 
 另一方面，Spring Security 为此目的从其`SecurityContextHolder`的上下文中提供了一个`Authentication`对象:
 
-```
+```java
 private void addUserAttributes(Model model) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     if (auth != null && !auth.getClass().equals(AnonymousAuthenticationToken.class)) {
@@ -305,7 +305,7 @@ private void addUserAttributes(Model model) {
 
 在 Shiro 中，我们将用户输入的凭证映射到一个 POJO:
 
-```
+```java
 public class UserCredentials {
 
     private String username;
@@ -317,7 +317,7 @@ public class UserCredentials {
 
 然后我们将创建一个`UsernamePasswordToken` 来登录用户，或`Subject`，登录:
 
-```
+```java
 @PostMapping("/login")
 public String doLogin(HttpServletRequest req, UserCredentials credentials, RedirectAttributes attr) {
 
@@ -339,7 +339,7 @@ public String doLogin(HttpServletRequest req, UserCredentials credentials, Redir
 
 在 Spring 安全方面，这只是重定向到主页的问题。 **Spring 的登录过程由它的`UsernamePasswordAuthenticationFilter`处理，对我们**是透明的:
 
-```
+```java
 @PostMapping("/login")
 public String doLogin(HttpServletRequest req) {
     return "redirect:/home";
@@ -352,7 +352,7 @@ public String doLogin(HttpServletRequest req) {
 
 让我们看看如何在 Shiro 中做到这一点:
 
-```
+```java
 @GetMapping("/admin")
 public String adminOnly(ModelMap modelMap) {
     addUserAttributes(modelMap);
@@ -368,7 +368,7 @@ public String adminOnly(ModelMap modelMap) {
 
 在 Spring Security 中，不需要以编程方式检查角色，我们已经在`SecurityConfig`中定义了谁可以到达这个端点。所以现在，只是添加业务逻辑的问题:
 
-```
+```java
 @GetMapping("/admin")
 public String adminOnly(HttpServletRequest req, Model model) {
     addUserAttributes(model);
@@ -383,7 +383,7 @@ public String adminOnly(HttpServletRequest req, Model model) {
 
 在 Shiro 中，我们将简单地调用`Subject#logout`:
 
-```
+```java
 @PostMapping("/logout")
 public String logout() {
     Subject subject = SecurityUtils.getSubject();

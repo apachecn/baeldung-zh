@@ -24,20 +24,20 @@
 
 假设我们正在创建一个存储整数的`CopyOnWriteArrayList` 实例:
 
-```
+```java
 CopyOnWriteArrayList<Integer> numbers 
   = new CopyOnWriteArrayList<>(new Integer[]{1, 3, 5, 8});
 ```
 
 接下来，我们想要迭代这个数组，所以我们创建了一个`Iterator` 实例:
 
-```
+```java
 Iterator<Integer> iterator = numbers.iterator();
 ```
 
 在创建了`Iterator`之后，我们向`numbers` 列表中添加了一个新元素:
 
-```
+```java
 numbers.add(10);
 ```
 
@@ -45,7 +45,7 @@ numbers.add(10);
 
 因此，在对它进行迭代时，我们不会在迭代中看到数字`10`:
 
-```
+```java
 List<Integer> result = new LinkedList<>();
 iterator.forEachRemaining(result::add);
 
@@ -54,7 +54,7 @@ assertThat(result).containsOnly(1, 3, 5, 8);
 
 使用新创建的`Iterator`的后续迭代也将返回添加的数字 10:
 
-```
+```java
 Iterator<Integer> iterator2 = numbers.iterator();
 List<Integer> result2 = new LinkedList<>();
 iterator2.forEachRemaining(result2::add);
@@ -68,7 +68,7 @@ assertThat(result2).containsOnly(1, 3, 5, 8, 10);
 
 由于复制机制，不允许对返回的`Iterator` 进行`remove()` 操作——导致`UnsupportedOperationException:`
 
-```
+```java
 @Test(expected = UnsupportedOperationException.class)
 public void whenIterateOverItAndTryToRemoveElement_thenShouldThrowException() {
 

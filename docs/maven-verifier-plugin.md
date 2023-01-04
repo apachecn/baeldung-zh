@@ -28,7 +28,7 @@
 
 只有当`verifier`插件被显式添加到`pom.xml`时，它才会被触发:
 
-```
+```java
 <plugin>
     <artifactId>maven-verifier-plugin</artifactId>
     <version>1.1</version>
@@ -51,7 +51,7 @@
 
 以下是给定配置中显示的验证文件的内容:
 
-```
+```java
 <verifications 
 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

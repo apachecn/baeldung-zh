@@ -12,7 +12,7 @@
 
 让我们从在`pom.xml`中将`spring-context, spring-jdbc, spring-test,` 和`h2`声明为依赖关系开始:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework</groupId>
@@ -45,7 +45,7 @@
 
 如果您使用 Spring Boot，我们可以使用 Spring 数据和测试的启动器:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -71,7 +71,7 @@
 
 与`AbstractRoutingDatasource` 一起使用的`Context`可以是任何一个`Object,` ，用`enum`来定义它们。在我们的例子中，我们将使用`ClientDatabase`的概念作为以下实现的上下文:
 
-```
+```java
 public enum ClientDatabase {
     CLIENT_A, CLIENT_B
 }
@@ -91,7 +91,7 @@ public enum ClientDatabase {
 
 必须采用这种方法，以便当数据访问逻辑跨越多个数据源并使用事务时，行为是可靠的:
 
-```
+```java
 public class ClientDatabaseContextHolder {
 
     private static ThreadLocal<ClientDatabase> CONTEXT
@@ -118,7 +118,7 @@ public class ClientDatabaseContextHolder {
 
 `AbstractRoutingDataSource`实现为我们处理剩下的工作，并透明地返回适当的`DataSource:`
 
-```
+```java
 public class ClientDataSourceRouter
   extends AbstractRoutingDataSource {
 
@@ -135,7 +135,7 @@ public class ClientDataSourceRouter
 
 我们使用的`DataSource`可以来自任何地方，但通常要么在运行时创建，要么使用 JNDI 查找:
 
-```
+```java
 @Configuration
 public class RoutingTestConfiguration {
 
@@ -167,7 +167,7 @@ public class RoutingTestConfiguration {
 
 使用 Spring Boot 时，可以在`application.properties`文件中配置`DataSources` (即**ClientA**&**ClientB**):
 
-```
+```java
 #database details for CLIENT_A
 client-a.datasource.name=CLIENT_A
 client-a.datasource.script=SOME_SCRIPT.sql
@@ -179,7 +179,7 @@ client-b.datasource.script=SOME_SCRIPT.sql
 
 然后您可以创建 POJOs 来保存您的`DataSources`的属性:
 
-```
+```java
 @Component
 @ConfigurationProperties(prefix = "client-a.datasource")
 public class ClientADetails {
@@ -193,7 +193,7 @@ public class ClientADetails {
 
 并使用它们来构建您的数据源 beans:
 
-```
+```java
 @Autowired
 private ClientADetails clientADetails;
 @Autowired
@@ -224,7 +224,7 @@ return dbBuilder.setType(EmbeddedDatabaseType.H2)
 
 记住上下文是`thread bound`很重要，尤其是如果数据访问逻辑将跨越多个数据源和事务:
 
-```
+```java
 public class ClientService {
 
     private ClientDao clientDao;

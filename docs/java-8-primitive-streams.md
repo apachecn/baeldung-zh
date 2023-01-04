@@ -20,7 +20,7 @@
 
 让我们从一些常用算术运算的有趣方法开始，比如`min`、`max`、`sum`和`average:`
 
-```
+```java
 int[] integers = new int[] {20, 98, 12, 7, 35};
 int min = Arrays.stream(integers)
   .min()
@@ -33,7 +33,7 @@ int min = Arrays.stream(integers)
 
 创建`IntStream`的另一种方法是使用`IntStream.of(int…)`。`max()`方法将返回最大的整数:
 
-```
+```java
 int max = IntStream.of(20, 98, 12, 7, 35)
   .max()
   .getAsInt(); // returns 98
@@ -41,13 +41,13 @@ int max = IntStream.of(20, 98, 12, 7, 35)
 
 接下来——要得到整数的和，我们只需调用`sum()`方法，我们不需要使用`getAsInt()`,因为它已经将结果作为`int`值返回:
 
-```
+```java
 int sum = IntStream.of(20, 98, 12, 7, 35).sum(); // returns 172
 ```
 
 我们调用`average()`方法来获得整数值的平均值，正如我们所看到的，我们应该使用`getAsDouble()`,因为它返回一个`double`类型的值。
 
-```
+```java
 double avg = IntStream.of(20, 98, 12, 7, 35)
   .average()
   .getAsDouble(); // returns 34.4
@@ -57,7 +57,7 @@ double avg = IntStream.of(20, 98, 12, 7, 35)
 
 我们还可以基于一个范围创建一个`IntStream`:
 
-```
+```java
 int sum = IntStream.range(1, 10)
   .sum(); // returns 45
 int sum = IntStream.rangeClosed(1, 10)
@@ -72,14 +72,14 @@ int sum = IntStream.rangeClosed(1, 10)
 
 我们可以使用 range 作为 for-each 循环的一种奇特形式:
 
-```
+```java
 IntStream.rangeClosed(1, 5)
   .forEach(System.out::println);
 ```
 
 将它们用作 for-each 循环替换的好处是，我们还可以利用并行执行:
 
-```
+```java
 IntStream.rangeClosed(1, 5)
   .parallel()
   .forEach(System.out::println);
@@ -93,7 +93,7 @@ IntStream.rangeClosed(1, 5)
 
 在那些情况下，我们可以使用`boxed()` 方法:
 
-```
+```java
 List<Integer> evenInts = IntStream.rangeClosed(1, 10)
   .filter(i -> i % 2 == 0)
   .boxed()
@@ -102,7 +102,7 @@ List<Integer> evenInts = IntStream.rangeClosed(1, 10)
 
 我们还可以从包装类流转换到原始流:
 
-```
+```java
 // returns 78
 int sum = Arrays.asList(33,45)
   .stream()

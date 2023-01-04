@@ -14,7 +14,7 @@
 
 **[朱尼](https://web.archive.org/web/20221205110525/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22junit%22%20AND%20a%3A%22junit%22) :**
 
-```
+```java
 <dependency>
     <groupId>junit</groupId>
     <artifactId>junit</artifactId>
@@ -24,7 +24,7 @@
 
 **:**
 
-```
+```java
 <dependency>
     <groupId>org.hamcrest</groupId>
     <artifactId>hamcrest-core</artifactId>
@@ -34,7 +34,7 @@
 
 **[【Apache common lang】](https://web.archive.org/web/20221205110525/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.apache.commons%22%20AND%20a%3A%22commons-lang3%22):**
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -44,7 +44,7 @@
 
 **评估**
 
-```
+```java
 <dependency>
     <groupId>org.assertj</groupId>
     <artifactId>assertj-core</artifactId>
@@ -54,7 +54,7 @@
 
 **[谷歌番石榴](https://web.archive.org/web/20221205110525/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.google.guava%22%20AND%20a%3A%22guava%22) :**
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -66,25 +66,25 @@
 
 **我们将使用来自`[String](https://web.archive.org/web/20221205110525/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html)`类的 [`isEmpty`](/web/20221205110525/https://www.baeldung.com/string/is-empty) 方法以及来自 JUnit 的 [`Assert`](https://web.archive.org/web/20221205110525/http://junit.sourceforge.net/javadoc/org/junit/Assert.html) 类来验证给定的`String`是否为空。**因为如果输入`String`为空，则`isEmpty`方法返回 true，所以我们可以将它与`assertFalse` 方法一起使用:
 
-```
+```java
 assertFalse(text.isEmpty());
 ```
 
 或者，我们也可以使用:
 
-```
+```java
 assertTrue(!text.isEmpty());
 ```
 
 **认为既然`text`可能为空，**另一种方法是使用`assertNotEquals`方法进行等式检查:
 
-```
+```java
 assertNotEquals("", text);
 ```
 
 或者:
 
-```
+```java
 assertNotSame("", text);
 ```
 
@@ -98,7 +98,7 @@ Hamcrest 是一个众所周知的框架，它提供了在 Java 生态系统中�
 
 **我们可以利用 Hamcrest `CoreMatchers `类进行空字符串检查**:
 
-```
+```java
 assertThat(text, CoreMatchers.not(isEmptyString()));
 ```
 
@@ -106,7 +106,7 @@ assertThat(text, CoreMatchers.not(isEmptyString()));
 
 失败时，这也会返回 AssertionError，但输出更有帮助:
 
-```
+```java
 java.lang.AssertionError: 
 Expected: not an empty string
      but: was ""
@@ -114,7 +114,7 @@ Expected: not an empty string
 
 如果需要，为了验证一个字符串既不是空的也不是 null，我们可以使用`isEmptyOrNullString`:
 
-```
+```java
 assertThat(text, CoreMatchers.not(isEmptyOrNullString()));
 ```
 
@@ -126,7 +126,7 @@ assertThat(text, CoreMatchers.not(isEmptyOrNullString()));
 
 **`StringUtils`类提供了一个方法，我们可以用它来检查空字符串**:
 
-```
+```java
 assertTrue(StringUtils.isNotBlank(text));
 ```
 
@@ -140,13 +140,13 @@ AssertJ 是一个开源的、社区驱动的库，用于在 Java 测试中编写
 
 方法`AbstractCharSequenceAssert.isNotEmpty()` 验证实际的`CharSequence`不为空，或者**换句话说，它不为空并且长度为 1 或更多**:
 
-```
+```java
 Assertions.assertThat(text).isNotEmpty()
 ```
 
 如果失败，将打印输出:
 
-```
+```java
 java.lang.AssertionError: 
 Expecting actual not to be empty
 ```
@@ -159,7 +159,7 @@ Expecting actual not to be empty
 
 **Guava`Strings`类的方法`isNullOrEmpty`可以用来验证一个字符串是否为空**(或 null):
 
-```
+```java
 assertFalse(Strings.isNullOrEmpty(text));
 ```
 

@@ -10,7 +10,7 @@
 
 让我们从一个简单的例子开始，使用`Files`将`String`写入文件:
 
-```
+```java
 @Test
 public void whenWriteUsingFiles_thenWritten() throws IOException {
     String expectedValue = "Hello world";
@@ -27,7 +27,7 @@ public void whenWriteUsingFiles_thenWritten() throws IOException {
 
 接下来——让我们看看如何使用`CharSink`将`String`写入文件。在下面的例子中——我们使用`Files.asCharSink()`从一个文件中获得一个`CharSink`,然后用它来写:
 
-```
+```java
 @Test
 public void whenWriteUsingCharSink_thenWritten() throws IOException {
     String expectedValue = "Hello world";
@@ -42,7 +42,7 @@ public void whenWriteUsingCharSink_thenWritten() throws IOException {
 
 我们也可以使用`CharSink`向一个文件中写入多行。在下面的例子中，我们写了一个名称的`List`,并使用一个空格作为行分隔符:
 
-```
+```java
 @Test
 public void whenWriteMultipleLinesUsingCharSink_thenWritten() throws IOException {
     List<String> names = Lists.newArrayList("John", "Jane", "Adam", "Tom");
@@ -60,7 +60,7 @@ public void whenWriteMultipleLinesUsingCharSink_thenWritten() throws IOException
 
 我们也可以使用`ByteSink`写入原始字节。在下面的例子中——我们使用`Files.asByteSink()`从一个文件中获得一个`ByteSink`,然后用它来写:
 
-```
+```java
 @Test
 public void whenWriteUsingByteSink_thenWritten() throws IOException {
     String expectedValue = "Hello world";
@@ -81,7 +81,7 @@ public void whenWriteUsingByteSink_thenWritten() throws IOException {
 
 在下面的例子中，我们使用简单的`Files.toString():`来读取文件的所有内容
 
-```
+```java
 @Test
 public void whenReadUsingFiles_thenRead() throws IOException {
     String expectedValue = "Hello world";
@@ -94,7 +94,7 @@ public void whenReadUsingFiles_thenRead() throws IOException {
 
 我们也可以将文件读入一个`List`行，如下例所示:
 
-```
+```java
 @Test
 public void whenReadMultipleLinesUsingFiles_thenRead() throws IOException {
     File file = new File("test.txt");
@@ -112,7 +112,7 @@ public void whenReadMultipleLinesUsingFiles_thenRead() throws IOException {
 
 在下面的例子中——我们使用`Files.asCharSource()`从一个文件中获取一个`CharSource`,然后使用`read()`用它来读取所有文件内容:
 
-```
+```java
 @Test
 public void whenReadUsingCharSource_thenRead() throws IOException {
     String expectedValue = "Hello world";
@@ -128,7 +128,7 @@ public void whenReadUsingCharSource_thenRead() throws IOException {
 
 在下面的例子中，我们读取两个文件，第一个包含“`Hello world`”，另一个包含“`Test`”:
 
-```
+```java
 @Test
 public void whenReadMultipleCharSources_thenRead() throws IOException {
     String expectedValue = "Hello worldTest";
@@ -148,7 +148,7 @@ public void whenReadMultipleCharSources_thenRead() throws IOException {
 
 现在——让我们看看如何使用`CharStreams`,通过中介`FileReader`将文件的内容读入`String`:
 
-```
+```java
 @Test
 public void whenReadUsingCharStream_thenRead() throws IOException {
     String expectedValue = "Hello world";
@@ -164,7 +164,7 @@ public void whenReadUsingCharStream_thenRead() throws IOException {
 
 我们可以将`ByteSource`用于原始字节格式的文件内容——如下例所示:
 
-```
+```java
 @Test
 public void whenReadUsingByteSource_thenRead() throws IOException {
     String expectedValue = "Hello world";
@@ -178,7 +178,7 @@ public void whenReadUsingByteSource_thenRead() throws IOException {
 
 我们还可以使用`slice()`在特定偏移之后开始读取字节，如下例所示:
 
-```
+```java
 @Test
 public void whenReadAfterOffsetUsingByteSource_thenRead() throws IOException {
     String expectedValue = "lo world";
@@ -198,7 +198,7 @@ public void whenReadAfterOffsetUsingByteSource_thenRead() throws IOException {
 
 接下来——让我们看看如何使用`ByteStreams`将文件内容读入原始字节数组；我们将使用中介`FileInputStream`来执行转换:
 
-```
+```java
 @Test
 public void whenReadUsingByteStream_thenRead() throws IOException {
     String expectedValue = "Hello world";
@@ -214,7 +214,7 @@ public void whenReadUsingByteStream_thenRead() throws IOException {
 
 最后——让我们看看如何读取类路径中存在的文件——使用`Resources`实用程序，如下例所示:
 
-```
+```java
 @Test
 public void whenReadUsingResources_thenRead() throws IOException {
     String expectedValue = "Hello world";

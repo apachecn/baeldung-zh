@@ -22,7 +22,7 @@
 
 让我们从一个简单的嵌套类开始:
 
-```
+```java
 public class SyntheticFieldDemo {
     class NestedClass {}
 }
@@ -32,7 +32,7 @@ public class SyntheticFieldDemo {
 
 为了确保这是正在发生的事情，我们将实现一个测试，通过反射获取嵌套的类字段，并使用`isSynthetic()`方法检查它们:
 
-```
+```java
 public void givenSyntheticField_whenIsSynthetic_thenTrue() {
     Field[] fields = SyntheticFieldDemo.NestedClass.class
       .getDeclaredFields();
@@ -54,7 +54,7 @@ public void givenSyntheticField_whenIsSynthetic_thenTrue() {
 
 接下来，我们将在嵌套类中添加一个私有字段:
 
-```
+```java
 public class SyntheticMethodDemo {
     class NestedClass {
         private String nestedField;
@@ -74,7 +74,7 @@ public class SyntheticMethodDemo {
 
 同样，我们可以使用相同的技术来检查这一点，该技术显示了两种合成方法，称为`access$0`和`access$1`:
 
-```
+```java
 public void givenSyntheticMethod_whenIsSynthetic_thenTrue() {
     Method[] methods = SyntheticMethodDemo.NestedClass.class
       .getDeclaredMethods();
@@ -100,7 +100,7 @@ public void givenSyntheticMethod_whenIsSynthetic_thenTrue() {
 
 例如，让我们考虑一个简单的` Comparator`:
 
-```
+```java
 public class BridgeMethodDemo implements Comparator<Integer> {
     @Override
     public int compare(Integer o1, Integer o2) {
@@ -113,7 +113,7 @@ public class BridgeMethodDemo implements Comparator<Integer> {
 
 为了做到这一点，**编译器创建了一个综合桥，负责转换参数**:
 
-```
+```java
 public int compare(Object o1, Object o2) {
     return compare((Integer) o1, (Integer) o2);
 }
@@ -121,7 +121,7 @@ public int compare(Object o1, Object o2) {
 
 除了我们之前的测试，这次我们还将从`Method`类中调用`isBridge()`:
 
-```
+```java
 public void givenBridgeMethod_whenIsBridge_thenTrue() {
     int syntheticMethods = 0;
     Method[] methods = BridgeMethodDemo.class.getDeclaredMethods();
@@ -143,7 +143,7 @@ public void givenBridgeMethod_whenIsBridge_thenTrue() {
 
 最后，我们将添加一个私有构造函数:
 
-```
+```java
 public class SyntheticConstructorDemo {
     private NestedClass nestedClass = new NestedClass();
 
@@ -155,7 +155,7 @@ public class SyntheticConstructorDemo {
 
 这一次，一旦我们运行测试或反汇编程序，我们将看到实际上有两个构造函数，其中一个是合成的:
 
-```
+```java
 public void givenSyntheticConstructor_whenIsSynthetic_thenTrue() {
     int syntheticConstructors = 0;
     Constructor<?>[] constructors = SyntheticConstructorDemo.NestedClass

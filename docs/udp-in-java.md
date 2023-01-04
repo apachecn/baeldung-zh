@@ -32,7 +32,7 @@ UDP 与更常见的 TCP 有很大不同。但是在考虑 UDP 的表面缺点之
 
 让我们从设置一个简单的服务器开始:
 
-```
+```java
 public class EchoServer extends Thread {
 
     private DatagramSocket socket;
@@ -87,7 +87,7 @@ public class EchoServer extends Thread {
 
 现在，让我们为这个新服务器部署一个简单的客户端:
 
-```
+```java
 public class EchoClient {
     private DatagramSocket socket;
     private InetAddress address;
@@ -131,7 +131,7 @@ public class EchoClient {
 
 在类`UDPTest.java`中，我们简单地创建一个测试来检查我们两个应用程序的响应能力:
 
-```
+```java
 public class UDPTest {
     EchoClient client;
 

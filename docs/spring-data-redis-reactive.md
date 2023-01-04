@@ -14,7 +14,7 @@
 
 要在我们的代码中使用`ReactiveRedisTemplate `，首先，我们需要为 Spring Boot 的 Redis Reactive 模块添加[依赖项:](https://web.archive.org/web/20220625221934/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-data-redis-reactive%22)
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
@@ -27,7 +27,7 @@
 
 但是，**如果我们的服务器是远程的或者在不同的端口上，我们可以在`LettuceConnectionFactory `构造函数:**中提供主机名和端口
 
-```
+```java
 @Bean
 public ReactiveRedisConnectionFactory reactiveRedisConnectionFactory() {
     return new LettuceConnectionFactory(host, port);
@@ -42,7 +42,7 @@ Redis 列表是按插入顺序排序的字符串列表。我们可以通过从�
 
 为了处理列表，我们需要一个 **`ReactiveStringRedisTemplate`的实例来获取对*redist operations***的引用:
 
-```
+```java
 @Autowired
 private ReactiveStringRedisTemplate redisTemplate;
 private ReactiveListOperations<String, String> reactiveListOps;
@@ -58,7 +58,7 @@ public void setup() {
 
 之后，我们将对列表进行 LPOP，然后验证弹出的元素:
 
-```
+```java
 @Test
 public void givenListAndValues_whenLeftPushAndLeftPop_thenLeftPushAndLeftPop() {
     Mono<Long> lPush = reactiveListOps.leftPushAll(LIST_NAME, "first", "second")
@@ -82,7 +82,7 @@ public void givenListAndValues_whenLeftPushAndLeftPop_thenLeftPushAndLeftPop() {
 
 因此，让我们在一个`Employee`对象上做一些类似的操作来演示我们在 POJO 上的操作:
 
-```
+```java
 public class Employee implements Serializable {
     private String id;
     private String name;
@@ -96,7 +96,7 @@ public class Employee implements Serializable {
 
 我们需要创建`ReactiveRedisTemplate.` 的第二个实例，我们仍然使用`String `作为我们的键，但是这一次值将是`Employee`:
 
-```
+```java
 @Bean
 public ReactiveRedisTemplate<String, Employee> reactiveRedisTemplate(
   ReactiveRedisConnectionFactory factory) {
@@ -117,7 +117,7 @@ public ReactiveRedisTemplate<String, Employee> reactiveRedisTemplate(
 
 接下来，我们将创建一个 `ReactiveValueOperations` 的实例，就像我们之前创建`ReactiveListOperations`一样:
 
-```
+```java
 @Autowired
 private ReactiveRedisTemplate<String, Employee> redisTemplate;
 private ReactiveValueOperations<String, Employee> reactiveValueOps;
@@ -131,7 +131,7 @@ public void setup() {
 
 现在我们有了一个`ReactiveValueOperations, `的实例，让我们用它来存储一个`Employee`的实例:
 
-```
+```java
 @Test
 public void givenEmployee_whenSet_thenSet() {
     Mono<Boolean> result = reactiveValueOps.set("123", 
@@ -144,7 +144,7 @@ public void givenEmployee_whenSet_thenSet() {
 
 然后我们可以从 Redis 获得相同的对象:
 
-```
+```java
 @Test
 public void givenEmployeeId_whenGet_thenReturnsEmployee() {
     Mono<Employee> fetchedEmployee = reactiveValueOps.get("123");
@@ -158,7 +158,7 @@ public void givenEmployeeId_whenGet_thenReturnsEmployee() {
 
 我们经常希望**将值放入一个将自然过期的缓存中**，我们可以通过相同的`set `操作来实现这一点:
 
-```
+```java
 @Test
 public void givenEmployee_whenSetWithExpiry_thenSetsWithExpiryTime() 
   throws InterruptedException {
@@ -194,7 +194,7 @@ Redis 命令基本上是 Redis 客户机可以在服务器上调用的方法。R
 
 我们可以从我们的`ReactiveRedisConnectionFactory`实例中获得它们:
 
-```
+```java
 @Bean
 public ReactiveKeyCommands keyCommands(ReactiveRedisConnectionFactory 
   reactiveRedisConnectionFactory) {
@@ -213,7 +213,7 @@ public ReactiveStringCommands stringCommands(ReactiveRedisConnectionFactory
 
 然后，我们可以通过`ReactiveKeyCommands`、**调用按键命令**来检索这些按键:
 
-```
+```java
 @Test
 public void givenFluxOfKeys_whenPerformOperations_thenPerformOperations() {
     Flux<SetCommand> keys = Flux.just("key1", "key2", "key3", "key4");

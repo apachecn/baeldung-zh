@@ -64,7 +64,7 @@ JPA Buddy 会显示此类情况的警告并提供快速修复，它帮助我们�
 
 一个更有用的特性是查询提取。对于像这样的复杂查询，有时派生的方法名可能会变得太长:
 
-```
+```java
 List<Owner> findDistinctByFirstNameIgnoreCaseOrLastNameIgnoreCaseOrPets_NameIgnoreCaseAllIgnoreCaseOrderByFirstNameAsc(
   String firstName, String lastName, String name);
 ```
@@ -73,7 +73,7 @@ JPA Buddy 分析派生的方法名，并允许我们通过重命名和移动 JPQ
 
 [![JPA Repository query extraction window](img/52d3756c259e841c7ac4b33414b7b539.png)](/web/20221207045809/https://www.baeldung.com/wp-content/uploads/2022/04/Picture-10.png)
 
-```
+```java
 @Query("select distinct o from Owner o left join o.pets pets " +
   "where upper(o.firstName) = upper(:firstName) " +
   "or upper(o.lastName) = upper(:lastName) " +
@@ -108,7 +108,7 @@ JPA Buddy 可以使用 MapStruct 库生成 dto 和映射器。我们需要做的
 
 该插件生成一个 DTO 和一个映射器，包括正确的关联映射。JPA Buddy 在这种情况下也支持 Lombok，并为 dto 生成适当的注释:
 
-```
+```java
 @Data
 public class OwnerDto implements Serializable {
    private final Integer id;

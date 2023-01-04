@@ -34,7 +34,7 @@ Learn how to configure a Spring Boot DataSource programmatically, thereby side-s
 
 这里是第一个`User`实体:
 
-```
+```java
 package com.baeldung.multipledb.model.user;
 
 @Entity
@@ -56,7 +56,7 @@ public class User {
 
 这是第二个实体，`Product`:
 
-```
+```java
 package com.baeldung.multipledb.model.product;
 
 @Entity
@@ -78,7 +78,7 @@ public class Product {
 
 接下来，让我们看看我们的两个 JPA 存储库，`UserRepository`:
 
-```
+```java
 package com.baeldung.multipledb.dao.user;
 
 public interface UserRepository
@@ -87,7 +87,7 @@ public interface UserRepository
 
 和 `ProductRepository`:
 
-```
+```java
 package com.baeldung.multipledb.dao.product;
 
 public interface ProductRepository
@@ -108,7 +108,7 @@ public interface ProductRepository
 
 让我们从查看用户配置开始:
 
-```
+```java
 @Configuration
 @PropertySource({ "classpath:persistence-multiple-db.properties" })
 @EnableJpaRepositories(
@@ -174,7 +174,7 @@ public class PersistenceUserConfiguration {
 
 接下来，让我们讨论 `PersistenceProductConfiguration`，在这里我们定义相似的 beans:
 
-```
+```java
 @Configuration
 @PropertySource({ "classpath:persistence-multiple-db.properties" })
 @EnableJpaRepositories(
@@ -238,7 +238,7 @@ public class PersistenceProductConfiguration {
 
 为此，我们将为每个实体创建一个实例，并确保它已创建:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @EnableTransactionManagement
@@ -304,7 +304,7 @@ Spring Boot 可以简化上面的配置。
 
 默认情况下， **Spring Boot 会用前缀为`spring.datasource.*`** 的配置属性实例化其默认`DataSource`:
 
-```
+```java
 spring.datasource.jdbcUrl = [url]
 spring.datasource.username = [username]
 spring.datasource.password = [password]
@@ -312,7 +312,7 @@ spring.datasource.password = [password]
 
 我们现在想继续使用相同的方式来配置第二个`DataSource`，但是使用不同的属性名称空间:
 
-```
+```java
 spring.second-datasource.jdbcUrl = [url]
 spring.second-datasource.username = [username]
 spring.second-datasource.password = [password]
@@ -320,7 +320,7 @@ spring.second-datasource.password = [password]
 
 因为我们希望 Spring Boot 自动配置选择这些不同的属性(并实例化两个不同的`DataSources`)，我们将定义两个类似于前面章节的配置类:
 
-```
+```java
 @Configuration
 @PropertySource({"classpath:persistence-multiple-db-boot.properties"})
 @EnableJpaRepositories(
@@ -341,7 +341,7 @@ public class PersistenceUserAutoConfiguration {
 }
 ```
 
-```
+```java
 @Configuration
 @PropertySource({"classpath:persistence-multiple-db-boot.properties"})
 @EnableJpaRepositories(
@@ -370,7 +370,7 @@ public class PersistenceProductAutoConfiguration {
 
 当调用`DataSourceBuilder`上的`build()`方法时，它将调用其私有的`bind()`方法:
 
-```
+```java
 public T build() {
     Class<? extends DataSource> type = getType();
     DataSource result = BeanUtils.instantiateClass(type);
@@ -382,7 +382,7 @@ public T build() {
 
 这个私有方法执行许多自动配置的魔术，将解析的配置绑定到实际的`DataSource`实例:
 
-```
+```java
 private void bind(DataSource result) {
     ConfigurationPropertySource source = new MapConfigurationPropertySource(this.properties);
     ConfigurationPropertyNameAliases aliases = new ConfigurationPropertyNameAliases();

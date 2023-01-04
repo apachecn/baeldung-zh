@@ -12,14 +12,14 @@
 
 提醒一下， **`radians `只是表示角度**的另一种方式，换算为:
 
-```
+```java
 double inRadians = inDegrees * PI / 180;
 inDegrees = inRadians * 180 / PI;
 ```
 
 Java 通过`toRadians `和`toDegrees`让这变得简单:
 
-```
+```java
 double inRadians = Math.toRadians(inDegrees);
 double inDegrees = Math.toDegrees(inRadians);
 ```
@@ -30,31 +30,31 @@ double inDegrees = Math.toDegrees(inRadians);
 
 我们可以通过查看`Math.s` `in`方法来了解这一原理，这是 Java 提供的众多方法之一:
 
-```
+```java
 public static double sin(double a)
 ```
 
 它相当于数学上的正弦函数，**它期望它的输入以弧度为单位**。假设我们有一个已知的角度，单位是度:
 
-```
+```java
 double inDegrees = 30;
 ```
 
 我们首先需要将其转换为弧度:
 
-```
+```java
 double inRadians = Math.toRadians(inDegrees);
 ```
 
 然后我们可以计算正弦值:
 
-```
+```java
 double sine = Math.sin(inRadians);
 ```
 
 但是，**如果我们知道它已经是弧度，那么我们不需要做转换**:
 
-```
+```java
 @Test
 public void givenAnAngleInDegrees_whenUsingToRadians_thenResultIsInRadians() {
     double angleInDegrees = 30;

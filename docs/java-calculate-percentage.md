@@ -20,7 +20,7 @@
 
 现在我们已经清楚了如何用数学方法计算百分比，让我们用 Java 编写一个程序来计算它:
 
-```
+```java
 public class PercentageCalculator {
 
     public double calculatePercentage(double obtained, double total) {
@@ -48,7 +48,7 @@ public class PercentageCalculator {
 
 让我们运行这个程序，看看结果:
 
-```
+```java
 Enter obtained marks:
 87
 Enter total marks:

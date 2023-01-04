@@ -16,7 +16,7 @@
 
 我们可以同时开始向前和向后迭代给定的`string`，一次一个字符。如果存在匹配，则循环继续；否则，循环退出:
 
-```
+```java
 public boolean isPalindrome(String text) {
     String clean = text.replaceAll("\\s+", "").toLowerCase();
     int length = clean.length();
@@ -38,7 +38,7 @@ public boolean isPalindrome(String text) {
 
 让我们先看看没有助手 API 的代码实现:
 
-```
+```java
 public boolean isPalindromeReverseTheString(String text) {
     StringBuilder reverse = new StringBuilder();
     String clean = text.replaceAll("\\s+", "").toLowerCase();
@@ -58,7 +58,7 @@ public boolean isPalindromeReverseTheString(String text) {
 
 让我们来看一个快速演示:
 
-```
+```java
 public boolean isPalindromeUsingStringBuilder(String text) {
     String clean = text.replaceAll("\\s+", "").toLowerCase();
     StringBuilder plain = new StringBuilder(clean);
@@ -80,7 +80,7 @@ public boolean isPalindromeUsingStringBuffer(String text) {
 
 我们还可以使用一个`IntStream`来提供一个解决方案:
 
-```
+```java
 public boolean isPalindromeUsingIntStream(String text) {
     String temp  = text.replaceAll("\\s+", "").toLowerCase();
     return IntStream.range(0, temp.length() / 2)
@@ -94,7 +94,7 @@ public boolean isPalindromeUsingIntStream(String text) {
 
 递归是解决这类问题的一种非常流行的方法。在演示的例子中，我们递归地迭代给定的`String`，并测试它是否是一个回文:
 
-```
+```java
 public boolean isPalindromeRecursive(String text){
     String clean = text.replaceAll("\\s+", "").toLowerCase();
     return recursivePalindrome(clean,0,clean.length()-1);

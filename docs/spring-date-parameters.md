@@ -10,7 +10,7 @@
 
 让我们考虑一个控制器，它有三种方法接受`Date`、`LocalDate`和`LocalDateTime`参数:
 
-```
+```java
 @RestController
 public class DateTimeController {
 
@@ -35,7 +35,7 @@ public class DateTimeController {
 
 例如，当向`/date`端点发送“2018-10-22”时，我们会得到一个错误的请求错误，消息如下:
 
-```
+```java
 Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDate'; 
   nested exception is org.springframework.core.convert.ConversionFailedException.
 ```
@@ -46,7 +46,7 @@ Failed to convert value of type 'java.lang.String' to required type 'java.time.L
 
 处理这个问题的方法之一是用`@DateTimeFormat `注释来注释参数，并提供一个格式化模式参数:
 
-```
+```java
 @RestController
 public class DateTimeController {
 
@@ -74,7 +74,7 @@ public class DateTimeController {
 
 我们也可以通过在`@DateTimeFormat`注释中提供一个模式参数来使用我们自己的转换模式:
 
-```
+```java
 @PostMapping("/date")
 public void date(@RequestParam("date") 
   @DateTimeFormat(pattern = "dd.MM.yyyy") Date date) {
@@ -86,7 +86,7 @@ public void date(@RequestParam("date")
 
 Spring 中处理日期和时间对象转换的另一种方式是提供一个全局配置。通过遵循[官方文档](https://web.archive.org/web/20221023123327/https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#format-configuring-formatting-globaldatetimeformat)，我们应该扩展`WebMvcConfigurationSupport`配置及其`mvcConversionService`方法:
 
-```
+```java
 @Configuration
 public class DateTimeConfig extends WebMvcConfigurationSupport {
 
@@ -117,7 +117,7 @@ public class DateTimeConfig extends WebMvcConfigurationSupport {
 
 Spring 还为我们提供了通过应用程序属性文件设置全局日期时间格式的选项。日期、日期时间和时间格式有三个单独的参数:
 
-```
+```java
 spring.mvc.format.date=yyyy-MM-dd
 spring.mvc.format.date-time=yyyy-MM-dd HH:mm:ss
 spring.mvc.format.time=HH:mm:ss
@@ -125,13 +125,13 @@ spring.mvc.format.time=HH:mm:ss
 
 所有这些参数都可以用一个`iso`值代替。例如，将日期时间参数设置为:
 
-```
+```java
 spring.mvc.format.date-time=iso
 ```
 
 将等同于 ISO-8601 格式:
 
-```
+```java
 spring.mvc.format.date-time=yyyy-MM-dd HH:mm:ss
 ```
 

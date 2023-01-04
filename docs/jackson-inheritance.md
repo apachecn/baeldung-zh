@@ -18,7 +18,7 @@
 
 `Vehicle`超类:
 
-```
+```java
 public abstract class Vehicle {
     private String make;
     private String model;
@@ -34,7 +34,7 @@ public abstract class Vehicle {
 
 `Car`子类:
 
-```
+```java
 public class Car extends Vehicle {
     private int seatingCapacity;
     private double topSpeed;
@@ -51,7 +51,7 @@ public class Car extends Vehicle {
 
 `Truck`子类:
 
-```
+```java
 public class Truck extends Vehicle {
     private double payloadCapacity;
 
@@ -68,7 +68,7 @@ public class Truck extends Vehicle {
 
 上面显示的`Vehicle`结构用于填充`Fleet`类的一个实例:
 
-```
+```java
 public class Fleet {
     private List<Vehicle> vehicles;
 
@@ -78,7 +78,7 @@ public class Fleet {
 
 为了嵌入类型元数据，我们需要在`ObjectMapper`对象上启用类型功能，该功能稍后将用于数据对象的序列化和反序列化:
 
-```
+```java
 ObjectMapper.activateDefaultTyping(PolymorphicTypeValidator ptv, 
   ObjectMapper.DefaultTyping applicability, JsonTypeInfo.As includeAs)
 ```
@@ -90,7 +90,7 @@ ObjectMapper.activateDefaultTyping(PolymorphicTypeValidator ptv,
 
 让我们看看它是如何工作的。首先，我们需要创建一个验证器:
 
-```
+```java
 PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
   .allowIfSubType("com.baeldung.jackson.inheritance")
   .allowIfSubType("java.util.ArrayList")
@@ -99,14 +99,14 @@ PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
 
 接下来，让我们创建一个`ObjectMapper`对象，并使用上面的验证器激活它的默认类型:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 mapper.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL);
 ```
 
 下一步是实例化和填充本小节开头介绍的数据结构。完成这项工作的代码将在后面的小节中重用。为了方便和重用，我们将其命名为**车辆实例化块**。
 
-```
+```java
 Car car = new Car("Mercedes-Benz", "S500", 5, 250.0);
 Truck truck = new Truck("Isuzu", "NQR", 7500.0);
 
@@ -120,13 +120,13 @@ serializedFleet.setVehicles(vehicles);
 
 这些填充的对象将被序列化:
 
-```
+```java
 String jsonDataString = mapper.writeValueAsString(serializedFleet);
 ```
 
 产生的 JSON 字符串:
 
-```
+```java
 {
     "vehicles": 
     [
@@ -157,13 +157,13 @@ String jsonDataString = mapper.writeValueAsString(serializedFleet);
 
 在反序列化过程中，从 JSON 字符串中恢复对象，并保留类型数据:
 
-```
+```java
 Fleet deserializedFleet = mapper.readValue(jsonDataString, Fleet.class);
 ```
 
 重新创建的对象将具有与序列化前相同的具体子类型:
 
-```
+```java
 assertThat(deserializedFleet.getVehicles().get(0), instanceOf(Car.class));
 assertThat(deserializedFleet.getVehicles().get(1), instanceOf(Truck.class));
 ```
@@ -174,7 +174,7 @@ assertThat(deserializedFleet.getVehicles().get(1), instanceOf(Truck.class));
 
 为了使用这个方法，超类型应该用`@JsonTypeInfo`和其他几个相关的注释进行注释。这一小节将使用一个类似于前面例子中的`Vehicle`结构的数据模型来说明每个类的注释。唯一的变化是在`Vehicle`抽象类上增加了注释，如下所示:
 
-```
+```java
 @JsonTypeInfo(
   use = JsonTypeInfo.Id.NAME, 
   include = JsonTypeInfo.As.PROPERTY, 
@@ -190,13 +190,13 @@ public abstract class Vehicle {
 
 使用前面小节中介绍的**车辆实例化块**创建数据对象，然后序列化:
 
-```
+```java
 String jsonDataString = mapper.writeValueAsString(serializedFleet);
 ```
 
 序列化产生以下 JSON 结构:
 
-```
+```java
 {
     "vehicles": 
     [
@@ -220,13 +220,13 @@ String jsonDataString = mapper.writeValueAsString(serializedFleet);
 
 该字符串用于重新创建数据对象:
 
-```
+```java
 Fleet deserializedFleet = mapper.readValue(jsonDataString, Fleet.class);
 ```
 
 最后，对整个过程进行了验证:
 
-```
+```java
 assertThat(deserializedFleet.getVehicles().get(0), instanceOf(Car.class));
 assertThat(deserializedFleet.getVehicles().get(1), instanceOf(Truck.class));
 ```
@@ -243,7 +243,7 @@ assertThat(deserializedFleet.getVehicles().get(1), instanceOf(Truck.class));
 
 下面的类结构用于演示注释的用法:
 
-```
+```java
 public abstract class Vehicle {
     private String make;
     private String model;
@@ -297,7 +297,7 @@ public class Crossover extends Car {
 
 下面的测试验证了这两种注释的行为。首先，我们需要实例化`ObjectMapper`和数据类，然后使用那个`ObjectMapper`实例来序列化数据对象:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 
 Sedan sedan = new Sedan("Mercedes-Benz", "S500", 5, 250.0);
@@ -312,7 +312,7 @@ String jsonDataString = mapper.writeValueAsString(vehicles);
 
 `jsonDataString`包含以下 JSON 数组:
 
-```
+```java
 [
     {
         "make": "Mercedes-Benz"
@@ -326,7 +326,7 @@ String jsonDataString = mapper.writeValueAsString(vehicles);
 
 最后，我们将证明结果 JSON 字符串中是否存在各种属性名:
 
-```
+```java
 assertThat(jsonDataString, containsString("make"));
 assertThat(jsonDataString, not(containsString("model")));
 assertThat(jsonDataString, not(containsString("seatingCapacity")));
@@ -340,7 +340,7 @@ mix-in 允许我们应用行为(比如在序列化和反序列化时忽略属性
 
 这一小节重用了上一小节中介绍的类继承链，除了在`Car`类上的`@JsonIgnore`和`@JsonIgnoreProperties`注释已经被移除:
 
-```
+```java
 public abstract class Car extends Vehicle {
     private int seatingCapacity;
     private double topSpeed;
@@ -353,7 +353,7 @@ public abstract class Car extends Vehicle {
 
 第一步是声明一个混合类型:
 
-```
+```java
 private abstract class CarMixIn {
     @JsonIgnore
     public String make;
@@ -364,14 +364,14 @@ private abstract class CarMixIn {
 
 接下来，mix-in 通过一个`ObjectMapper`对象绑定到一个数据类:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 mapper.addMixIn(Car.class, CarMixIn.class);
 ```
 
 之后，我们实例化数据对象并将它们序列化为一个字符串:
 
-```
+```java
 Sedan sedan = new Sedan("Mercedes-Benz", "S500", 5, 250.0);
 Crossover crossover = new Crossover("BMW", "X6", 5, 250.0, 6000.0);
 
@@ -384,7 +384,7 @@ String jsonDataString = mapper.writeValueAsString(vehicles);
 
 `jsonDataString`现在包含以下 JSON:
 
-```
+```java
 [
     {
         "model": "S500",
@@ -400,7 +400,7 @@ String jsonDataString = mapper.writeValueAsString(vehicles);
 
 最后，让我们验证结果:
 
-```
+```java
 assertThat(jsonDataString, not(containsString("make")));
 assertThat(jsonDataString, containsString("model"));
 assertThat(jsonDataString, containsString("seatingCapacity"));
@@ -414,7 +414,7 @@ assertThat(jsonDataString, containsString("towingCapacity"));
 
 这一小节使用与前一小节相同的类层次结构。在这个用例中，我们将要求 Jackson 忽略`Vehicle.model`、`Crossover.towingCapacity`以及在`Car`类中声明的所有属性。让我们从声明一个扩展了`JacksonAnnotationIntrospector`接口的类开始:
 
-```
+```java
 class IgnoranceIntrospector extends JacksonAnnotationIntrospector {
     public boolean hasIgnoreMarker(AnnotatedMember m) {
         return m.getDeclaringClass() == Vehicle.class && m.getName() == "model" 
@@ -429,14 +429,14 @@ class IgnoranceIntrospector extends JacksonAnnotationIntrospector {
 
 下一步是用一个`ObjectMapper`对象注册一个`IgnoranceIntrospector`类的实例:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 mapper.setAnnotationIntrospector(new IgnoranceIntrospector());
 ```
 
 现在，我们以与 3.2 节相同的方式创建和序列化数据对象。新生成的字符串的内容是:
 
-```
+```java
 [
     {
         "make": "Mercedes-Benz"
@@ -449,7 +449,7 @@ mapper.setAnnotationIntrospector(new IgnoranceIntrospector());
 
 最后，我们将验证自省器是否按预期工作:
 
-```
+```java
 assertThat(jsonDataString, containsString("make"));
 assertThat(jsonDataString, not(containsString("model")));
 assertThat(jsonDataString, not(containsString("seatingCapacity")));
@@ -467,7 +467,7 @@ Jackson 允许将一个对象转换成不同于原始类型的类型。事实上
 
 为了演示从一种类型到另一种类型的转换，我们将重用第 2 节中的`Vehicle`层次结构，在`Car`和`Truck`中的属性上添加了`@JsonIgnore`注释以避免不兼容。
 
-```
+```java
 public class Car extends Vehicle {
     @JsonIgnore
     private int seatingCapacity;
@@ -488,7 +488,7 @@ public class Truck extends Vehicle {
 
 下面的代码将验证转换是否成功，以及新对象是否保留了旧对象的数据值:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 
 Car car = new Car("Mercedes-Benz", "S500", 5, 250.0);
@@ -504,7 +504,7 @@ assertEquals("S500", truck.getModel());
 
 这一节将使用与第 2 节相似的对象结构，只是对构造函数做了一些修改。具体来说，所有无参数的构造函数都被丢弃，具体子类型的构造函数用`@JsonCreator`和`@JsonProperty`标注，使它们成为 creator 方法。
 
-```
+```java
 public class Car extends Vehicle {
 
     @JsonCreator
@@ -538,7 +538,7 @@ public class Truck extends Vehicle {
 
 测试将验证 Jackson 可以处理缺少无参数构造函数的对象:
 
-```
+```java
 ObjectMapper mapper = new ObjectMapper();
 mapper.enableDefaultTyping();
 

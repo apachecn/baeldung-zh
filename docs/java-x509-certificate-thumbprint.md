@@ -12,7 +12,7 @@
 
 首先，让我们从证书文件中获取一个`X509Certificate`对象:
 
-```
+```java
 public static X509Certificate getCertObject(String filePath) 
   throws IOException, CertificateException {
      try (FileInputStream is = new FileInputStream(filePath)) {
@@ -25,7 +25,7 @@ public static X509Certificate getCertObject(String filePath)
 
 接下来，让我们从这个对象获取指纹:
 
-```
+```java
 private static String getThumbprint(X509Certificate cert) 
   throws NoSuchAlgorithmException, CertificateEncodingException {
     MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -36,14 +36,14 @@ private static String getThumbprint(X509Certificate cert)
 
 例如，如果我们有一个名为`baeldung.pem`的 X509 证书文件，我们可以使用上面的方法轻松地打印它的指纹:
 
-```
+```java
 X509Certificate certObject = getCertObject("baeldung.pem");
 System.out.println(getThumbprint(certObject));
 ```
 
 结果将类似于:
 
-```
+```java
 c9fa9f008655c8401ad27e213b985804854d928c
 ```
 
@@ -53,7 +53,7 @@ c9fa9f008655c8401ad27e213b985804854d928c
 
 让我们给我们的`pom.xml`文件添加一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>commons-codec</groupId>
     <artifactId>commons-codec</artifactId>
@@ -63,7 +63,7 @@ c9fa9f008655c8401ad27e213b985804854d928c
 
 现在，我们简单地使用`sha1Hex()`方法从我们的`X509Certificate`对象中获取指纹:
 
-```
+```java
 DigestUtils.sha1Hex(certObject.getEncoded());
 ```
 

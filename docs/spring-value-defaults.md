@@ -28,7 +28,7 @@ This article explores Spring Expression Language (SpEL), a powerful expression l
 
 让我们看看为`String`属性设置默认值的基本语法:
 
-```
+```java
 @Value("${some.key:my default value}")
 private String stringWithDefaultValue; 
 ```
@@ -37,7 +37,7 @@ private String stringWithDefaultValue;
 
 类似地，我们可以将零长度的`String`设置为默认值:
 
-```
+```java
 @Value("${some.key:})"
 private String stringWithBlankDefaultValue;
 ```
@@ -46,12 +46,12 @@ private String stringWithBlankDefaultValue;
 
 为了给像`boolean`和`int`这样的原始类型设置默认值，我们使用文字值:
 
-```
+```java
 @Value("${some.key:true}")
 private boolean booleanWithDefaultValue;
 ```
 
-```
+```java
 @Value("${some.key:42}")
 private int intWithDefaultValue; 
 ```
@@ -62,7 +62,7 @@ private int intWithDefaultValue;
 
 我们还可以将逗号分隔的值列表注入数组:
 
-```
+```java
 @Value("${some.key:one,two,three}")
 private String[] stringArrayWithDefaults;
 
@@ -80,7 +80,7 @@ private int[] intArrayWithDefaults;
 
 在下面的例子中，我们希望将`some.system.key` 设置为系统属性，如果没有设置，我们希望使用`my default system property value`作为默认值:
 
-```
+```java
 @Value("#{systemProperties['some.key'] ?: 'my default system property value'}")
 private String spelWithDefaultValue;
 ```

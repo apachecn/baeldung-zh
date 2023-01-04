@@ -18,13 +18,13 @@
 
 让我们简单地回顾一下它背后的历史。在 Mockito 的早期版本中，如果我们想要使用 Mockito JUnit Runner，我们需要导入的包是:
 
-```
+```java
 import org.mockito.runners.MockitoJUnitRunner;
 ```
 
 从版本 2.2.20 开始，JUnit 相关的类被重新组织到一个特定的 JUnit 包中。我们可以在这里找到这个包:
 
-```
+```java
 import org.mockito.junit.MockitoJUnitRunner;
 ```
 
@@ -44,7 +44,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 让我们从最简单的解决方案开始，简单地**改变包导入语句**:
 
-```
+```java
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -59,7 +59,7 @@ public class ExampleTest {
 
 在下一个例子中，**我们将使用`MockitoAnnotations`类**以不同的方式初始化我们的模拟:
 
-```
+```java
 import org.junit.Before;
 import org.mockito.MockitoAnnotations;
 
@@ -82,7 +82,7 @@ public class ExampleTest {
 
 然而，正如我们已经提到的，`MockitoJUnitRunner`绝不是强制性的。在最后一个例子中，**我们将看看使用** `**MockitoRule**:`让`@Mock`工作的另一种方式
 
-```
+```java
 import org.junit.Rule;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;

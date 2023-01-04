@@ -32,7 +32,7 @@
 
 我们所做的看起来类似于实现一个[功能接口](/web/20220627083557/https://www.baeldung.com/java-8-functional-interfaces)。不过有趣的是，我们实际上不能使用那个特定的特性，因为 Finagle 是用 Scala 编写的，我们正在利用 Java-Scala 的互操作性:
 
-```
+```java
 public class GreetingService extends Service<Request, Response> {
     @Override
     public Future<Response> apply(Request request) {
@@ -51,7 +51,7 @@ public class GreetingService extends Service<Request, Response> {
 
 为此，我们将使用`[SimpleFilter](https://web.archive.org/web/20220627083557/https://twitter.github.io/finagle/docs/com/twitter/finagle/SimpleFilter.html)`将四个类型参数合并成两个。我们将打印请求中的一些信息，然后简单地从提供的服务中调用`apply`方法:
 
-```
+```java
 public class LogFilter extends SimpleFilter<Request, Response> {
     @Override
     public Future apply(Request request, Service<Request, Response> service) {
@@ -69,7 +69,7 @@ public class LogFilter extends SimpleFilter<Request, Response> {
 
 我们将为该服务器提供一个服务，该服务包含我们的过滤器和使用`andThen`方法链接在一起的服务:
 
-```
+```java
 Service serverService = new LogFilter().andThen(new GreetingService()); 
 Http.serve(":8080", serverService);
 ```
@@ -84,7 +84,7 @@ Http.serve(":8080", serverService);
 
 **最后一个操作是异步的，其最终结果存储在`Future`实例中。**我们可以等待这个`Future`成功或失败，但这将是一个阻塞操作，我们可能希望避免它。相反，我们可以实现一个在`Future`成功时触发的回调:
 
-```
+```java
 Service<Request, Response> clientService = new LogFilter().andThen(Http.newService(":8080"));
 Request request = Request.apply(Method.Get(), "/?name=John");
 request.host("localhost");

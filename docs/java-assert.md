@@ -14,7 +14,7 @@ Java `assert`关键字是在 Java 1.4 中引入的，所以它已经存在很长
 
 例如，在我们的代码中，我们经常需要验证某些可能阻止我们的应用程序正常工作的条件。通常我们会这样写:
 
-```
+```java
 Connection conn = getConnection();
 if(conn == null) {
     throw new RuntimeException("Connection is null");
@@ -31,7 +31,7 @@ if(conn == null) {
 
 因此，为了向后兼容，**JVM 默认禁用断言验证**。必须使用`-enableassertions`命令行参数或其简写`-ea:`显式启用它们
 
-```
+```java
 java -ea com.baeldung.assertion.Assertion
 ```
 
@@ -39,7 +39,7 @@ java -ea com.baeldung.assertion.Assertion
 
 我们还可以为特定的包和类启用断言:
 
-```
+```java
 java -ea:com.baeldung.assertion... com.baeldung.assertion.Assertion
 ```
 
@@ -51,7 +51,7 @@ java -ea:com.baeldung.assertion... com.baeldung.assertion.Assertion
 
 要添加断言，**只需使用`assert`关键字并给它一个`boolean`条件**:
 
-```
+```java
 public void setup() {
     Connection conn = getConnection();
     assert conn != null;
@@ -60,7 +60,7 @@ public void setup() {
 
 Java 还为接受字符串的断言提供了第二种语法，如果抛出一个字符串，它将用于构造`AssertionError`:
 
-```
+```java
 public void setup() {
     Connection conn = getConnection();
     assert conn != null : "Connection is null";
@@ -73,7 +73,7 @@ public void setup() {
 
 让我们看看启用断言后运行我们的类的结果:
 
-```
+```java
 Exception in thread "main" java.lang.AssertionError: Connection is null
         at com.baeldung.assertion.Assertion.setup(Assertion.java:15)
         at com.baeldung.assertion.Assertion.main(Assertion.java:10)

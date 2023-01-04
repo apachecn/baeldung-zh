@@ -20,18 +20,18 @@ CDI(Contexts and Dependency Injection)是 Java EE 6 及更高版本中包含的�
 
 下面是一个基本的 DYDI 实现的样子:
 
-```
+```java
 public interface TextService {
     String doSomethingWithText(String text);
     String doSomethingElseWithText(String text);    
 }
 ```
 
-```
+```java
 public class SpecializedTextService implements TextService { ... }
 ```
 
-```
+```java
 public class TextClass {
     private TextService textService;
 
@@ -39,7 +39,7 @@ public class TextClass {
 }
 ```
 
-```
+```java
 public class TextClassFactory {
 
     public TextClass getTextClass() {
@@ -66,7 +66,7 @@ CDI 将 DI 变成了一个简单的过程，归结起来就是用一些简单的
 
 首先，我们必须在`“src/main/resources/META-INF/”`文件夹中放置一个`“beans.xml”`文件。**即使这个文件根本不包含任何特定的 DI 指令，它也是启动和运行 c DI 所必需的**:
 
-```
+```java
 <beans  
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
@@ -78,7 +78,7 @@ CDI 将 DI 变成了一个简单的过程，归结起来就是用一些简单的
 
 接下来，让我们创建对 GIF、JPG 和 PNG 文件执行上述文件操作的服务类:
 
-```
+```java
 public interface ImageFileEditor {
     String openFile(String fileName);
     String editFile(String fileName);
@@ -87,7 +87,7 @@ public interface ImageFileEditor {
 }
 ```
 
-```
+```java
 public class GifFileEditor implements ImageFileEditor {
 
     @Override
@@ -112,14 +112,14 @@ public class GifFileEditor implements ImageFileEditor {
 }
 ```
 
-```
+```java
 public class JpgFileEditor implements ImageFileEditor {
     // JPG-specific implementations for openFile() / editFile() / writeFile() / saveFile()
     ...
 }
 ```
 
-```
+```java
 public class PngFileEditor implements ImageFileEditor {
     // PNG-specific implementations for openFile() / editFile() / writeFile() / saveFile()
     ...
@@ -130,7 +130,7 @@ public class PngFileEditor implements ImageFileEditor {
 
 最后，让我们实现一个客户端类，它在构造函数中接受一个`ImageFileEditor`实现，让我们用`@Inject`注释定义一个注入点:
 
-```
+```java
 public class ImageFileProcessor {
 
     private ImageFileEditor imageFileEditor;
@@ -156,7 +156,7 @@ public class ImageFileProcessor {
 
 **由于我们不依赖任何 Java EE 应用服务器来使用 CDI，我们将使用 Java SE 中的 CDI 参考实现 [Weld](https://web.archive.org/web/20220817121616/http://weld.cdi-spec.org/) 来完成这项工作**:
 
-```
+```java
 public static void main(String[] args) {
     Weld weld = new Weld();
     WeldContainer container = weld.initialize();
@@ -172,7 +172,7 @@ public static void main(String[] args) {
 
 不出所料，如果我们运行应用程序，CDI 会抛出一个`DeploymentException:`来大声抱怨
 
-```
+```java
 Unsatisfied dependencies for type ImageFileEditor with qualifiers @Default at injection point...
 ```
 
@@ -186,17 +186,17 @@ Unsatisfied dependencies for type ImageFileEditor with qualifiers @Default at in
 
 因此，我们应该明确地告诉它应该将哪个实现注入到客户端类中:
 
-```
+```java
 @Alternative
 public class GifFileEditor implements ImageFileEditor { ... }
 ```
 
-```
+```java
 @Alternative
 public class JpgFileEditor implements ImageFileEditor { ... } 
 ```
 
-```
+```java
 public class PngFileEditor implements ImageFileEditor { ... }
 ```
 
@@ -204,7 +204,7 @@ public class PngFileEditor implements ImageFileEditor { ... }
 
 如果我们重新运行应用程序，这次它将按预期执行:
 
-```
+```java
 Opening PNG file file1.png 
 ```
 
@@ -218,7 +218,7 @@ CDI 支持开箱即用的字段和 setter 注入。
 
 下面是如何执行字段注入的(**使用`@Default`和`@Alternative`注释来限定服务的规则保持不变**):
 
-```
+```java
 @Inject
 private final ImageFileEditor imageFileEditor;
 ```
@@ -227,7 +227,7 @@ private final ImageFileEditor imageFileEditor;
 
 类似地，下面是如何进行 setter 注入:
 
-```
+```java
 @Inject 
 public void setImageFileEditor(ImageFileEditor imageFileEditor) { ... }
 ```
@@ -240,7 +240,7 @@ public void setImageFileEditor(ImageFileEditor imageFileEditor) { ... }
 
 **该方法通过将一个有意义的名称绑定到一个实现，提供了一种更具语义的注入服务的方式:**
 
-```
+```java
 @Named("GifFileEditor")
 public class GifFileEditor implements ImageFileEditor { ... }
 
@@ -253,14 +253,14 @@ public class PngFileEditor implements ImageFileEditor { ... }
 
 现在，我们应该重构`ImageFileProcessor`类中的注入点，以匹配一个命名的实现:
 
-```
+```java
 @Inject 
 public ImageFileProcessor(@Named("PngFileEditor") ImageFileEditor imageFileEditor) { ... }
 ```
 
 还可以使用命名实现执行字段和设置器注入，这看起来非常类似于使用`@Default`和`@Alternative`注释:
 
-```
+```java
 @Inject 
 private final @Named("PngFileEditor") ImageFileEditor imageFileEditor;
 
@@ -280,7 +280,7 @@ CDI 通过`@Produces`注释为这些情况提供了支持。
 
 该服务将用于记录执行某个图像文件操作的时间:
 
-```
+```java
 @Inject
 public ImageFileProcessor(ImageFileEditor imageFileEditor, TimeLogger timeLogger) { ... } 
 
@@ -293,7 +293,7 @@ public String openFile(String fileName) {
 
 在这种情况下，`TimeLogger`类接受两个额外的服务，`SimpleDateFormat`和`Calendar`:
 
-```
+```java
 public class TimeLogger {
 
     private SimpleDateFormat dateFormat;
@@ -311,7 +311,7 @@ public class TimeLogger {
 
 我们只需创建一个`TimeLogger`工厂类，并用`@Produces`注释对其工厂方法进行注释:
 
-```
+```java
 public class TimeLoggerFactory {
 
     @Produces
@@ -325,7 +325,7 @@ public class TimeLoggerFactory {
 
 如果我们用`Weld`运行重构的示例应用程序，它将输出以下内容:
 
-```
+```java
 Opening PNG file file1.png at: 17:46
 ```
 
@@ -337,21 +337,21 @@ CDI 支持使用自定义限定符来限定依赖项和解决不明确的注入�
 
 让我们看看如何在我们的应用程序中使用自定义限定符:
 
-```
+```java
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER})
 public @interface GifFileEditorQualifier {} 
 ```
 
-```
+```java
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER})
 public @interface JpgFileEditorQualifier {} 
 ```
 
-```
+```java
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.TYPE, ElementType.PARAMETER})
@@ -360,24 +360,24 @@ public @interface PngFileEditorQualifier {}
 
 现在，让我们将自定义限定符绑定到`ImageFileEditor`实现:
 
-```
+```java
 @GifFileEditorQualifier
 public class GifFileEditor implements ImageFileEditor { ... } 
 ```
 
-```
+```java
 @JpgFileEditorQualifier
 public class JpgFileEditor implements ImageFileEditor { ... }
 ```
 
-```
+```java
 @PngFileEditorQualifier
 public class PngFileEditor implements ImageFileEditor { ... } 
 ```
 
 最后，让我们重构`ImageFileProcessor`类`:`中的注入点
 
-```
+```java
 @Inject
 public ImageFileProcessor(@PngFileEditorQualifier ImageFileEditor imageFileEditor, TimeLogger timeLogger) { ... } 
 ```

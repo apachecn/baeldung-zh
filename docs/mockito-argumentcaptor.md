@@ -28,7 +28,7 @@ Learn how to use the ArgumentMatcher and how it differs from the ArgumentCap
 
 例如，考虑一个带有我们想要测试的`send`方法的`EmailService`类:
 
-```
+```java
 public class EmailService {
 
     private DeliveryPlatform platform;
@@ -59,7 +59,7 @@ public class EmailService {
 
 首先，让我们创建我们的单元测试类:
 
-```
+```java
 @RunWith(MockitoJUnitRunner.class)
 public class EmailServiceUnitTest {
 
@@ -79,7 +79,7 @@ public class EmailServiceUnitTest {
 
 其次，让我们添加一个新的`Email`类型的`ArgumentCaptor`字段来存储我们捕获的参数:
 
-```
+```java
 @Captor
 ArgumentCaptor<Email> emailCaptor;
 ```
@@ -88,13 +88,13 @@ ArgumentCaptor<Email> emailCaptor;
 
 第三，让我们用 `Mockito.verify`和`ArgumentCaptor`来捕捉`Email`:
 
-```
+```java
 Mockito.verify(platform).deliver(emailCaptor.capture());
 ```
 
 然后我们可以获取捕获的值，并将其存储为一个新的`Email`对象:
 
-```
+```java
 Email emailCaptorValue = emailCaptor.getValue();
 ```
 
@@ -102,7 +102,7 @@ Email emailCaptorValue = emailCaptor.getValue();
 
 最后，让我们看一下整个测试，用一个断言来检查被捕获的`Email`对象:
 
-```
+```java
 @Test
 public void whenDoesSupportHtml_expectHTMLEmailFormat() {
     String to = "[[email protected]](/web/20221108185122/https://www.baeldung.com/cdn-cgi/l/email-protection)";
@@ -127,7 +127,7 @@ public void whenDoesSupportHtml_expectHTMLEmailFormat() {
 
 首先，考虑一个简单的测试:
 
-```
+```java
 Credentials credentials = new Credentials("baeldung", "correct_password", "correct_key");
 Mockito.when(platform.authenticate(Mockito.eq(credentials)))
   .thenReturn(AuthenticationStatus.AUTHENTICATED);
@@ -139,7 +139,7 @@ assertTrue(emailService.authenticatedSuccessfully(credentials));
 
 接下来，考虑使用`ArgumentCaptor`的相同测试:
 
-```
+```java
 Credentials credentials = new Credentials("baeldung", "correct_password", "correct_key");
 Mockito.when(platform.authenticate(credentialsCaptor.capture()))
   .thenReturn(AuthenticationStatus.AUTHENTICATED);
@@ -156,7 +156,7 @@ assertEquals(credentials, credentialsCaptor.getValue());
 
 另一个原因是，如果`emailService.authenticatedSuccessfully`不调用`platform.authenticate`，我们会得到一个异常:
 
-```
+```java
 org.mockito.exceptions.base.MockitoException: 
 No argument value was captured!
 ```

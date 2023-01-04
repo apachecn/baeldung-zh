@@ -22,7 +22,7 @@
 
 首先，让我们来看一个更简单的用例。在上一节中，我们提到了 [`getReference`方法](/web/20220625072049/https://www.baeldung.com/jpa-entity-manager-get-reference)。我们使用这个方法来获取一个特定实体的代理。该代理仅初始化了主键字段。当我们在这个代理实体上调用一个 getter 时，持久性提供者初始化其余的字段。如果数据库中不存在该实体，那么我们得到`EntityNotFoundException`:
 
-```
+```java
 @Test(expected = EntityNotFoundException.class)
 public void givenNonExistingUserId_whenGetReferenceIsUsed_thenExceptionIsThrown() {
     User user = entityManager.getReference(User.class, 1L);
@@ -34,7 +34,7 @@ public void givenNonExistingUserId_whenGetReferenceIsUsed_thenExceptionIsThrown(
 
 对于下一个例子，我们将使用不同的域实体。我们将创建`Item`和`Category` 实体，它们之间具有双向关系:
 
-```
+```java
 @Entity
 public class Item implements Serializable {
     @Id
@@ -61,7 +61,7 @@ public class Category implements Serializable {
 
 请注意，我们对`@ManyToOne`注释使用了延迟获取。同样，我们使用`@ForeignKey` 从数据库中删除约束:
 
-```
+```java
 @Test(expected = EntityNotFoundException.class)
 public void givenItem_whenManyToOneEntityIsMissing_thenExceptionIsThrown() {
     entityManager.createNativeQuery("Insert into Item (category_id, name, id) values (1, 'test', 1)").executeUpdate();

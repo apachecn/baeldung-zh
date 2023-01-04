@@ -12,7 +12,7 @@
 
 首先，我们通过在任何实现了`Statement`接口的对象上调用`executeQuery()`来检索一个`ResultSet`。`PreparedStatement`和`CallableStatement`都是`Statement`的子接口:
 
-```
+```java
 PreparedStatement pstmt = dbConnection.prepareStatement("select * from employees");
 ResultSet rs = pstmt.executeQuery();
 ```
@@ -21,7 +21,7 @@ ResultSet rs = pstmt.executeQuery();
 
 接下来，我们将**使用`getX()`方法，同时遍历结果，从数据库列**中获取值，其中`X`是列的数据类型。事实上，我们将为`getX()`方法提供数据库列名:
 
-```
+```java
 while(rs.next()) {
     String name = rs.getString("name");
     Integer empId = rs.getInt("emp_id");
@@ -34,7 +34,7 @@ while(rs.next()) {
 
 如果 select 语句没有列出列名，则索引号是表中列的顺序。列索引编号从 1 开始:
 
-```
+```java
 Integer empId = rs.getInt(1);
 String name = rs.getString(2);
 String position = rs.getString(3);
@@ -47,13 +47,13 @@ Double salary = rs.getDouble(4);
 
 首先，让我们使用`ResultSet`上的`getMetaData()`方法来获得 [`ResultSetMetaData`](https://web.archive.org/web/20220627092439/https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/java/sql/ResultSetMetaData.html) :
 
-```
+```java
 ResultSetMetaData metaData = rs.getMetaData();
 ```
 
 接下来，让我们获取`ResultSet`中的列数:
 
-```
+```java
 Integer columnCount = metaData.getColumnCount();
 ```
 
@@ -74,7 +74,7 @@ Integer columnCount = metaData.getColumnCount();
 
 让我们遍历这些列以获取它们的属性:
 
-```
+```java
 for (int columnNumber = 1; columnNumber <= columnCount; columnNumber++) {
     String catalogName = metaData.getCatalogName(columnNumber);
     String className = metaData.getColumnClassName(columnNumber);
@@ -113,7 +113,7 @@ for (int columnNumber = 1; columnNumber <= columnCount; columnNumber++) {
 
 并非所有的数据库都支持所有的`ResultSet`类型。因此，让我们通过在我们的`DatabaseMetaData`对象上使用`supportsResultSetType`来检查该类型是否受支持:
 
-```
+```java
 DatabaseMetaData dbmd = dbConnection.getMetaData();
 boolean isSupported = dbmd.supportsResultSetType(ResultSet.TYPE_SCROLL_INSENSITIVE);
 ```
@@ -124,7 +124,7 @@ boolean isSupported = dbmd.supportsResultSetType(ResultSet.TYPE_SCROLL_INSENSITI
 
 例如，我们将通过使用`TYPE_SCROLL_INSENSITIVE`或`TYPE_SCROLL_SENSITIVE`作为`ResultSet`类型来获得一个可滚动的`ResultSet`:
 
-```
+```java
 PreparedStatement pstmt = dbConnection.prepareStatement(
   "select * from employees",
   ResultSet.TYPE_SCROLL_INSENSITIVE,
@@ -147,7 +147,7 @@ ResultSet rs = pstmt.executeQuery();
 
 让我们看一些例子:
 
-```
+```java
 PreparedStatement pstmt = dbConnection.prepareStatement(
   "select * from employees",
   ResultSet.TYPE_SCROLL_SENSITIVE,
@@ -179,7 +179,7 @@ while (rs.previous()) {
 
 首先，我们将导航到`ResultSet`的最后一行，然后使用`getRow()`获得记录数:
 
-```
+```java
 rs.last();
 int rowCount = rs.getRow();
 ```
@@ -198,7 +198,7 @@ int rowCount = rs.getRow();
 
 **并非所有数据库都支持所有`ResultSet`类型**的所有并发模式。因此，我们需要使用`supportsResultSetConcurrency()`方法检查我们想要的类型和并发模式是否受支持:
 
-```
+```java
 DatabaseMetaData dbmd = dbConnection.getMetaData(); 
 boolean isSupported = dbmd.supportsResultSetConcurrency(
   ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE); 
@@ -208,7 +208,7 @@ boolean isSupported = dbmd.supportsResultSetConcurrency(
 
 为了获得可更新的`ResultSet`，我们需要在准备`Statement`时传递一个额外的参数。为此，让我们在创建语句时使用`CONCUR_UPDATABLE`作为第三个参数:
 
-```
+```java
 PreparedStatement pstmt = dbConnection.prepareStatement(
   "select * from employees",
   ResultSet.TYPE_SCROLL_SENSITIVE,
@@ -224,7 +224,7 @@ ResultSet rs = pstmt.executeQuery();
 
 让我们更新类型为`double`的`“salary”`列:
 
-```
+```java
 rs.updateDouble("salary", 1100.0);
 ```
 
@@ -232,13 +232,13 @@ rs.updateDouble("salary", 1100.0);
 
 最后，让我们调用`updateRow()`来**保存对数据库**的更新:
 
-```
+```java
 rs.updateRow(); 
 ```
 
 我们可以将列索引传递给`updateX()`方法，而不是列名。这类似于使用列索引通过`getX()`方法获取值。将列名或索引传递给`updateX()`方法会产生相同的结果:
 
-```
+```java
 rs.updateDouble(4, 1100.0);
 rs.updateRow(); 
 ```
@@ -249,13 +249,13 @@ rs.updateRow();
 
 首先，我们将使用`moveToInsertRow()`移动光标来插入一个新行:
 
-```
+```java
 rs.moveToInsertRow();
 ```
 
 接下来，我们必须调用`updateX()`方法将信息添加到行中。我们需要为数据库表中的所有列提供数据。如果我们不为每一列提供数据，则使用默认的列值:
 
-```
+```java
 rs.updateString("name", "Venkat"); 
 rs.updateString("position", "DBA"); 
 rs.updateDouble("salary", 925.0);
@@ -263,13 +263,13 @@ rs.updateDouble("salary", 925.0);
 
 然后，让我们调用`insertRow()`向数据库中插入一个新行:
 
-```
+```java
 rs.insertRow();
 ```
 
 最后，让我们使用`moveToCurrentRow().`这将把光标位置带回到我们开始使用`moveToInsertRow()`方法插入新行之前所在的行:
 
-```
+```java
 rs.moveToCurrentRow();
 ```
 
@@ -279,7 +279,7 @@ rs.moveToCurrentRow();
 
 首先，我们将导航到要删除的行。然后，我们将调用`deleteRow() `方法来删除当前行:
 
-```
+```java
 rs.absolute(2);
 rs.deleteRow();
 ```
@@ -298,7 +298,7 @@ rs.deleteRow();
 
 所以，让我们用`DatabaseMetaData`对象上的`supportsResultSetHoldability()`来检查是否支持可持有性类型。然后，我们将使用`getResultSetHoldability()`获得数据库的默认可持有性:
 
-```
+```java
 boolean isCloseCursorSupported
   = dbmd.supportsResultSetHoldability(ResultSet.CLOSE_CURSORS_AT_COMMIT);
 boolean isOpenCursorSupported
@@ -313,13 +313,13 @@ boolean defaultHoldability
 
 注意，如果我们使用 Microsoft SQL Server (MSSQL)，我们必须在数据库连接上设置可保持性，而不是在`ResultSet`上:
 
-```
+```java
 dbConnection.setHoldability(ResultSet.HOLD_CURSORS_OVER_COMMIT);
 ```
 
 让我们来看看实际情况。首先，让我们创建一个`Statement`，将可持有性设置为`HOLD_CURSORS_OVER_COMMIT`:
 
-```
+```java
 Statement pstmt = dbConnection.createStatement(
   ResultSet.TYPE_SCROLL_SENSITIVE, 
   ResultSet.CONCUR_UPDATABLE, 
@@ -328,7 +328,7 @@ Statement pstmt = dbConnection.createStatement(
 
 现在，让我们在检索数据时更新一行。这类似于我们之前讨论的更新示例，除了在将更新事务提交给数据库之后，我们将继续遍历`ResultSet`。这在 MySQL 和 MSSQL 数据库上都能很好地工作:
 
-```
+```java
 dbConnection.setAutoCommit(false);
 ResultSet rs = pstmt.executeQuery("select * from employees");
 while (rs.next()) {
@@ -359,7 +359,7 @@ MSSQL 数据库支持`CLOSE_CURSORS_AT_COMMIT`。这意味着当我们提交事�
 
 现在，让我们看看`Statement`上的读取大小。我们将把`Statement`的获取大小设置为 10 条记录。如果我们的查询返回 100 条记录，那么将有 10 次数据库往返，每次加载 10 条记录:
 
-```
+```java
 PreparedStatement pstmt = dbConnection.prepareStatement(
   "select * from employees", 
   ResultSet.TYPE_SCROLL_SENSITIVE, 
@@ -383,7 +383,7 @@ while (rs.next()) {
 
 因此，加载所有记录只需要 6 次数据库旅行:
 
-```
+```java
 PreparedStatement pstmt = dbConnection.prepareStatement(
   "select * from employees", 
   ResultSet.TYPE_SCROLL_SENSITIVE, 
@@ -407,7 +407,7 @@ while (rs.next()) {
 
 因此，我们需要 7 次数据库访问来加载所有 100 条记录:
 
-```
+```java
 PreparedStatement pstmt = dbConnection.prepareStatement(
   "select * from employees", 
   ResultSet.TYPE_SCROLL_SENSITIVE, 

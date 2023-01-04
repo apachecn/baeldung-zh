@@ -12,7 +12,7 @@
 
 首先，我们需要添加一个 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.neo4j</groupId>
     <artifactId>neo4j</artifactId>
@@ -24,26 +24,26 @@
 
 接下来，让我们创建一个工厂:
 
-```
+```java
 GraphDatabaseFactory graphDbFactory = new GraphDatabaseFactory();
 ```
 
 最后，我们创建一个嵌入式数据库:
 
-```
+```java
 GraphDatabaseService graphDb = graphDbFactory.newEmbeddedDatabase(
   new File("data/cars"));
 ```
 
 现在真正的行动可以开始了！首先，我们需要在我们的图中创建一些节点，为此，我们需要启动一个事务，因为`Neo4j`将拒绝任何破坏性操作，除非已经启动了一个事务:
 
-```
+```java
 graphDb.beginTx();
 ```
 
 一旦我们有了正在进行的事务，我们就可以开始添加节点:
 
-```
+```java
 Node car = graphDb.createNode(Label.label("Car"));
 car.setProperty("make", "tesla");
 car.setProperty("model", "model3");
@@ -57,13 +57,13 @@ owner.setProperty("lastName", "baeldung");
 
 现在我们可以添加一个关系:
 
-```
+```java
 owner.createRelationshipTo(car, RelationshipType.withName("owner"));
 ```
 
 上面的语句添加了一条连接两个带有`owner`标签的节点的边。我们可以通过运行用强大的`Cypher`语言编写的查询来验证这种关系:
 
-```
+```java
 Result result = graphDb.execute(
   "MATCH (c:Car) <-[owner]- (p:Person) " +
   "WHERE c.make = 'tesla'" +
@@ -80,7 +80,7 @@ Result result = graphDb.execute(
 
 Create 关键字可用于创建节点和关系。
 
-```
+```java
 CREATE (self:Company {name:"Baeldung"})
 RETURN self
 ```
@@ -91,7 +91,7 @@ RETURN self
 
 可以在一个查询中创建一个节点和与该节点的关系:
 
-```
+```java
 Result result = graphDb.execute(
   "CREATE (baeldung:Company {name:\"Baeldung\"}) " +
   "-[:owns]-> (tesla:Car {make: 'tesla', model: 'modelX'})" +
@@ -106,7 +106,7 @@ Result result = graphDb.execute(
 
 让我们找出拥有特斯拉 modelX 的公司名称:
 
-```
+```java
 Result result = graphDb.execute(
   "MATCH (company:Company)-[:owns]-> (car:Car)" +
   "WHERE car.make='tesla' and car.model='modelX'" +
@@ -117,7 +117,7 @@ Result result = graphDb.execute(
 
 `SET`关键字可用于更新节点属性或标签。让我们为我们的特斯拉增加里程:
 
-```
+```java
 Result result = graphDb.execute("MATCH (car:Car)" +
   "WHERE car.make='tesla'" +
   " SET car.milage=120" +
@@ -132,7 +132,7 @@ Result result = graphDb.execute("MATCH (car:Car)" +
 
 DELETE 关键字可用于从图形中永久删除节点或关系:
 
-```
+```java
 graphDb.execute("MATCH (company:Company)" +
   " WHERE company.name='Baeldung'" +
   " DELETE company");
@@ -144,7 +144,7 @@ graphDb.execute("MATCH (company:Company)" +
 
 在上面的例子中，我们有硬编码的参数值，这不是最佳实践。幸运的是，`Neo4j`提供了将变量绑定到查询的工具:
 
-```
+```java
 Map<String, Object> params = new HashMap<>();
 params.put("name", "baeldung");
 params.put("make", "tesla");
@@ -159,7 +159,7 @@ Result result = graphDb.execute("CREATE (baeldung:Company {name:$name}) " +
 
 到目前为止，我们一直在寻找与嵌入式`Neo4j`实例的交互，然而，在所有生产可能性中，我们希望运行一个独立的服务器，并通过提供的驱动程序连接到它。首先，我们需要在 maven `pom.xml`中添加另一个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.neo4j.driver</groupId>
     <artifactId>neo4j-java-driver</artifactId>
@@ -171,20 +171,20 @@ Result result = graphDb.execute("CREATE (baeldung:Company {name:$name}) " +
 
 现在我们可以建立联系了:
 
-```
+```java
 Driver driver = GraphDatabase.driver(
   "bolt://localhost:7687", AuthTokens.basic("neo4j", "12345"));
 ```
 
 然后，创建一个会话:
 
-```
+```java
 Session session = driver.session();
 ```
 
 最后，我们可以运行一些查询:
 
-```
+```java
 session.run("CREATE (baeldung:Company {name:\"Baeldung\"}) " +
   "-[:owns]-> (tesla:Car {make: 'tesla', model: 'modelX'})" +
   "RETURN baeldung, tesla");
@@ -192,7 +192,7 @@ session.run("CREATE (baeldung:Company {name:\"Baeldung\"}) " +
 
 完成所有工作后，我们需要关闭会话和驱动程序:
 
-```
+```java
 session.close();
 driver.close();
 ```
@@ -201,7 +201,7 @@ driver.close();
 
 也可以通过 JDBC 驱动程序与`Neo4j`交互。我们`pom.xml`的另一个依赖:
 
-```
+```java
 <dependency>
     <groupId>org.neo4j</groupId>
     <artifactId>neo4j-jdbc-driver</artifactId>
@@ -213,14 +213,14 @@ driver.close();
 
 接下来，让我们建立一个 JDBC 连接:
 
-```
+```java
 Connection con = DriverManager.getConnection(
   "jdbc:neo4j:bolt://localhost/?user=neo4j,password=12345,scheme=basic");
 ```
 
 这里的`con`是一个常规的 JDBC 连接，可用于创建和执行语句或准备好的语句:
 
-```
+```java
 try (Statement stmt = con.
   stmt.execute("CREATE (baeldung:Company {name:\"Baeldung\"}) "
   + "-[:owns]-> (tesla:Car {make: 'tesla', model: 'modelX'})"
@@ -241,7 +241,7 @@ try (Statement stmt = con.
 
 对象图映射或 OGM 是一种技术，它使我们能够使用我们的领域 POJOs 作为`Neo4j`数据库中的实体。让我们来看看这是如何工作的。第一步，通常，我们向我们的`pom.xml`添加新的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.neo4j</groupId>
     <artifactId>neo4j-ogm-core</artifactId>
@@ -259,7 +259,7 @@ try (Statement stmt = con.
 
 其次，我们用 OGM 注释来注释 POJO:
 
-```
+```java
 @NodeEntity
 public class Company {
     private Long id;
@@ -287,19 +287,19 @@ public class Car {
 
 然后，我们需要创建一个用于引导`Neo4j`的 OGM 的配置。为简单起见，让我们使用一个嵌入式内存数据库:
 
-```
+```java
 Configuration conf = new Configuration.Builder().build();
 ```
 
 之后，我们用我们创建的配置和包名初始化`SessionFactory`,带注释的 POJO 驻留在这个包名中:
 
-```
+```java
 SessionFactory factory = new SessionFactory(conf, "com.baeldung.graph");
 ```
 
 最后，我们可以创建一个`Session`并开始使用它:
 
-```
+```java
 Session session = factory.openSession();
 Car tesla = new Car("tesla", "modelS");
 Company baeldung = new Company("baeldung");

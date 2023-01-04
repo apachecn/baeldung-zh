@@ -49,7 +49,7 @@ Keycloak 为 OAuth 2.0 流公开了各种 REST 端点。
 
 然后我们执行请求，如果一切顺利，我们会得到一个响应:
 
-```
+```java
 {
     "issuer": "http://localhost:8083/auth/realms/baeldung",
     "authorization_endpoint": "http://localhost:8083/auth/realms/baeldung/protocol/openid-connect/auth",
@@ -109,7 +109,7 @@ Keycloak 为 OAuth 2.0 流公开了各种 REST 端点。
 
 我们需要响应`access_token`来测试其他端点。为了加速我们对 Postman 的测试，我们可以在令牌端点请求的`Tests`部分编写一个脚本:
 
-```
+```java
 var jsonData = JSON.parse(responseBody);
 postman.setEnvironmentVariable("refresh_token", jsonData.refresh_token);
 postman.setEnvironmentVariable("access_token", jsonData.access_token);
@@ -129,7 +129,7 @@ postman.setEnvironmentVariable("access_token", jsonData.access_token);
 
 然后我们执行请求。以下是成功的回应:
 
-```
+```java
 {
     "sub": "a5461470-33eb-4b2d-82d4-b0484e96ad7f",
     "preferred_username": "[[email protected]](/web/20220812013908/https://www.baeldung.com/cdn-cgi/l/email-protection)",
@@ -150,7 +150,7 @@ postman.setEnvironmentVariable("access_token", jsonData.access_token);
 
 如果`access_token`有效，那么我们得到我们的响应:
 
-```
+```java
 {
     "exp": 1601824811,
     "iat": 1601824511,
@@ -174,7 +174,7 @@ postman.setEnvironmentVariable("access_token", jsonData.access_token);
 
 但是，如果我们使用无效的访问令牌，那么响应是:
 
-```
+```java
 {
     "active": false
 }

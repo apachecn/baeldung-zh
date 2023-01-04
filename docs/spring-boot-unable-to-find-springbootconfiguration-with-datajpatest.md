@@ -24,7 +24,7 @@
 
 但是，如果找不到任何配置，应用程序将报告一个错误:
 
-```
+```java
 Unable to find a @SpringBootConfiguration, you need to use @ContextConfiguration or @SpringBootTest(classes=...)
   with your test java.lang.IllegalStateException
 ```
@@ -41,7 +41,7 @@ Unable to find a @SpringBootConfiguration, you need to use @ContextConfiguration
 
 因此，解决方案很简单。让我们给测试代码添加一个`@SpringBootApplication`:
 
-```
+```java
 @SpringBootApplication
 public class TestApplication {}
 ```
@@ -50,7 +50,7 @@ public class TestApplication {}
 
 为了验证我们的设置，让我们注入一个`TestEntityManager`并验证它已经设置好了:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class DataJpaUnitTest {

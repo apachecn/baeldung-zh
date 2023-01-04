@@ -28,7 +28,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 让我们创建我们的自定义`MyCustomLoginAuthenticationSuccessHandler`并实现`onAuthenticationSuccess()`方法:
 
-```
+```java
 @Override
 public void onAuthenticationSuccess(final HttpServletRequest request,
   final HttpServletResponse response, final Authentication authentication)
@@ -43,7 +43,7 @@ public void onAuthenticationSuccess(final HttpServletRequest request,
 
 现在，让我们看看添加 cookie 的代码:
 
-```
+```java
 private String gerUserName(Authentication authentication) {
     return ((User) authentication.getPrincipal()).getFirstName();
 }
@@ -68,7 +68,7 @@ private Cookie getWelcomeCookie(String user) {
 
 首先，让我们添加占位符`“welcometext”`以在登录页面上显示我们的消息:
 
-```
+```java
 <form name='f' action="login" method='POST' onsubmit="return validate();">
     <span id="welcometext"> </span>
 
@@ -83,7 +83,7 @@ private Cookie getWelcomeCookie(String user) {
 
 现在，我们来看看相应的`Javascript`:
 
-```
+```java
 function getCookie(name) {
     return document.cookie.split('; ').reduce((r, v) => {
         const parts = v.split('=')
@@ -103,7 +103,7 @@ function display_username() {
 
 函数`display_username()`在`HTML <body>`标签的`onload`事件上被调用:
 
-```
+```java
 <body onload="display_username()">
 ```
 

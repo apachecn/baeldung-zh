@@ -30,7 +30,7 @@ IntelliJ 为内置属性 beans 提供帮助和自动完成。然而，它需要�
 
 首先，我们需要将 [`spring-boot-configuration-processor`](https://web.archive.org/web/20221208143837/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-configuration-processor) 依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-configuration-processor</artifactId>
@@ -48,7 +48,7 @@ IntelliJ 为内置属性 beans 提供帮助和自动完成。然而，它需要�
 
 我们在用`@ConfigurationProperties`注释的类中定义我们的属性:
 
-```
+```java
 @Configuration
 @ConfigurationProperties(prefix = "com.baeldung")
 public class CustomProperties {
@@ -78,7 +78,7 @@ public class CustomProperties {
 
 描述定制属性的[元数据文件驱动 IntelliJ 中的上下文帮助，例如:](/web/20221208143837/https://www.baeldung.com/spring-boot-configuration-metadata#generating-metadata)
 
-```
+```java
 {
   "groups": [
     {
@@ -118,7 +118,7 @@ public class CustomProperties {
 
 这里我们看到一个`Define configuration key`选项，我们可以用它来创建一个`additional-spring-configuration-metadata.json`文件。创建的文件将如下所示:
 
-```
+```java
 {
   "properties": [
     {
@@ -134,7 +134,7 @@ public class CustomProperties {
 
 让我们在文件中添加一些额外的信息:
 
-```
+```java
 {
   "properties": [
     {

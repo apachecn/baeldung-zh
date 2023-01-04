@@ -14,7 +14,7 @@
 
 让我们看一个简单的例子:
 
-```
+```java
 long start = System.currentTimeMillis();
 long end = start + 30 * 1000;
 while (System.currentTimeMillis() < end) {
@@ -37,7 +37,7 @@ while (System.currentTimeMillis() < end) {
 
 让我们来看看工作线程:
 
-```
+```java
 class LongRunningTask implements Runnable {
     @Override
     public void run() {
@@ -60,7 +60,7 @@ class LongRunningTask implements Runnable {
 
 或者，我们可以创建一个 [`TimerTask`](/web/20220929100635/https://www.baeldung.com/java-timer-and-timertask) 来在超时时中断工作线程:
 
-```
+```java
 class TimeOutTask extends TimerTask {
     private Thread thread;
     private Timer timer;
@@ -82,7 +82,7 @@ class TimeOutTask extends TimerTask {
 
 这里，我们定义了一个`TimerTask` ,它在创建时获取一个工作线程。它将在调用其`run`方法时**中断工作线程。 [`Timer`](/web/20220929100635/https://www.baeldung.com/java-timer-and-timertask) 会在三秒延迟后触发`TimerTask `:**
 
-```
+```java
 Thread thread = new Thread(new LongRunningTask());
 thread.start();
 
@@ -95,7 +95,7 @@ timer.schedule(timeOutTask, 3000);
 
 我们也可以使用 [`Future`](/web/20220929100635/https://www.baeldung.com/java-future) 的`get`方法来代替使用`Timer`:
 
-```
+```java
 ExecutorService executor = Executors.newSingleThreadExecutor();
 Future future = executor.submit(new LongRunningTask());
 try {
@@ -117,7 +117,7 @@ try {
 
 我们也可以使用 [`ScheduledExecutorService`](/web/20220929100635/https://www.baeldung.com/java-executor-service-tutorial#ScheduledExecutorService) 来中断任务。这个类是一个`ExecutorService`的扩展，提供相同的功能，并增加了几个处理执行调度的方法。这可以在设定的时间单位的一定延迟之后执行给定的任务:
 
-```
+```java
 ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
 Future future = executor.submit(new LongRunningTask());
 Runnable cancelTask = () -> future.cancel(true);
@@ -156,7 +156,7 @@ executor.shutdown();
 
 让我们为任务步骤创建一个类:
 
-```
+```java
 class Step {
     private static int MAX = Integer.MAX_VALUE/2;
     int number;
@@ -181,7 +181,7 @@ class Step {
 
 现在，让我们定义将执行所有步骤的任务:
 
-```
+```java
 public class SteppedTask implements Runnable {
     private List<Step> steps;
 
@@ -207,7 +207,7 @@ public class SteppedTask implements Runnable {
 
 最后，让我们看一个使用可中断任务的例子:
 
-```
+```java
 List<Step> steps = Stream.of(
   new Step(1),
   new Step(2),

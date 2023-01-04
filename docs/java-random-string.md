@@ -12,7 +12,7 @@
 
 让我们从简单开始，生成一个 7 个字符的随机`String`:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenGeneratingRandomStringUnbounded_thenCorrect() {
     byte[] array = new byte[7]; // length is bounded by 7
@@ -43,7 +43,7 @@ Learn how the JVM optimizes the amount of memory allocated to String storage in 
 
 接下来让我们看看如何创建一个更受约束的随机字符串；我们将使用小写字母和设定的长度生成一个随机的`String`:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenGeneratingRandomStringBounded_thenCorrect() {
 
@@ -67,7 +67,7 @@ public void givenUsingPlainJava_whenGeneratingRandomStringBounded_thenCorrect() 
 
 现在让我们使用 JDK 8 中添加的`Random.ints,` ，来生成一个字母`String:`
 
-```
+```java
 @Test
 public void givenUsingJava8_whenGeneratingRandomAlphabeticString_thenCorrect() {
     int leftLimit = 97; // letter 'a'
@@ -88,7 +88,7 @@ public void givenUsingJava8_whenGeneratingRandomAlphabeticString_thenCorrect() {
 
 然后，我们可以扩大我们的字符集，以获得一个字母数字`String:`
 
-```
+```java
 @Test
 public void givenUsingJava8_whenGeneratingRandomAlphanumericString_thenCorrect() {
     int leftLimit = 48; // numeral '0'
@@ -112,7 +112,7 @@ public void givenUsingJava8_whenGeneratingRandomAlphanumericString_thenCorrect()
 
 Apache 的 Commons Lang 库在随机字符串生成方面帮助很大。让我们看看**只使用字母**生成有界的`String`:
 
-```
+```java
 @Test
 public void givenUsingApache_whenGeneratingRandomStringBounded_thenCorrect() {
 
@@ -131,7 +131,7 @@ public void givenUsingApache_whenGeneratingRandomStringBounded_thenCorrect() {
 
 下面是另一个非常简单的例子，这次是一个只有字母字符的有界的`String`，但是没有将布尔标志传递给 API:
 
-```
+```java
 @Test
 public void givenUsingApache_whenGeneratingRandomAlphabeticString_thenCorrect() {
     String generatedString = RandomStringUtils.randomAlphabetic(10);
@@ -144,7 +144,7 @@ public void givenUsingApache_whenGeneratingRandomAlphabeticString_thenCorrect() 
 
 最后，我们有相同的随机有界的`String,`,但这次是数字:
 
-```
+```java
 @Test
 public void givenUsingApache_whenGeneratingRandomAlphanumericString_thenCorrect() {
     String generatedString = RandomStringUtils.randomAlphanumeric(10);

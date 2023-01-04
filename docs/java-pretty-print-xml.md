@@ -14,7 +14,7 @@
 
 为简单起见，我们将采用一个未格式化的`emails.xml` 文件作为输入:
 
-```
+```java
 <emails> <email> <from>Kai</from> <to>Amanda</to> <time>2018-03-05</time>
 <subject>I am flying to you</subject></email> <email>
 <from>Jerry</from> <to>Tom</to> <time>1992-08-08</time> <subject>Hey Tom, catch me if you can!</subject>
@@ -29,7 +29,7 @@
 
 indent-size 属性非常简单:它是要缩进的空格数(每一级)。另一方面，抑制 XML 声明选项决定我们是否希望在生成的 XML 中包含 XML 声明标记。典型的 XML 声明如下所示:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 ```
 
@@ -45,7 +45,7 @@ Java API 提供了`[Transformer](/web/20221109185607/https://www.baeldung.com/ja
 
 首先，让我们看看使用`Transformer`类的漂亮打印解决方案:
 
-```
+```java
 public static String prettyPrintByTransformer(String xmlString, int indent, boolean ignoreDeclaration) {
 
     try {
@@ -78,7 +78,7 @@ public static String prettyPrintByTransformer(String xmlString, int indent, bool
 
 我们已经在上面的方法中设置了`TransformerFactory`对象的缩进大小。**或者，我们也可以在`transformer`实例**上定义`indent-amount`属性:
 
-```
+```java
 transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(indent));
 ```
 
@@ -88,7 +88,7 @@ transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", Strin
 
 我们的 Java 项目是一个 Maven 项目，我们已经将`emails.xml `放在了`src/main/resources/xml/email.xml`下。我们已经创建了`readFromInputStream`方法来作为`String`读取输入文件。但是，我们不会深入这个方法的细节，因为它与我们这里的主题没有太大关系。假设我们希望设置 indent-size=2，并跳过结果中的 XML 声明:
 
-```
+```java
 public static void main(String[] args) throws IOException {
     InputStream inputStream = XmlPrettyPrinter.class.getResourceAsStream("/xml/emails.xml");
     String xmlString = readFromInputStream(inputStream);
@@ -102,7 +102,7 @@ public static void main(String[] args) throws IOException {
 
 接下来，**让我们用 Java 8** 运行`main `方法:
 
-```
+```java
 Pretty printing by Transformer
 =============================================
 <emails>
@@ -127,7 +127,7 @@ Pretty printing by Transformer
 
 接下来，**让我们看看如果用 Java 9** 运行它会产生什么:
 
-```
+```java
 Pretty printing by Transformer
 =============================================
 <emails>
@@ -164,7 +164,7 @@ Pretty printing by Transformer
 
 这是因为我们的原始输入在元素之间包含空白，例如:
 
-```
+```java
 <emails> <email> <from>Kai</from> ...
 ```
 
@@ -178,7 +178,7 @@ Pretty printing by Transformer
 
 首先，让我们创建`prettyprint.xsl`文件来定义输出格式:
 
-```
+```java
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:strip-space elements="*"/>
     <xsl:output method="xml" encoding="UTF-8"/>
@@ -196,7 +196,7 @@ Pretty printing by Transformer
 
 接下来，我们仍然需要对我们的方法做一个小的改变。我们将不再使用默认的变压器。相反，**我们将使用 XSLT 文档**创建一个`Transformer`对象:
 
-```
+```java
 Transformer transformer = transformerFactory.newTransformer(new StreamSource(new StringReader(readPrettyPrintXslt())));
 ```
 
@@ -204,7 +204,7 @@ Transformer transformer = transformerFactory.newTransformer(new StreamSource(new
 
 现在，如果我们在 Java 8 和 Java 9 中测试该方法，两者都会产生相同的输出:
 
-```
+```java
 Pretty printing by Transformer
 =============================================
 <emails>
@@ -226,7 +226,7 @@ Dom4j 是一个流行的 XML 库。它允许我们轻松地打印 XML 文档。
 
 首先，让我们将 Dom4j 依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.dom4j</groupId>
     <artifactId>dom4j</artifactId>
@@ -238,7 +238,7 @@ Dom4j 是一个流行的 XML 库。它允许我们轻松地打印 XML 文档。
 
 接下来，让我们看看如何使用 Dom4j 库来美化 XML:
 
-```
+```java
 public static String prettyPrintByDom4j(String xmlString, int indent, boolean skipDeclaration) {
     try {
         OutputFormat format = OutputFormat.createPrettyPrint();
@@ -265,7 +265,7 @@ public static String prettyPrintByDom4j(String xmlString, int indent, boolean sk
 
 接下来，让我们测试它是否能漂亮地打印出`emails.xml`文件。这一次，假设我们想要包含声明，并且在结果中缩进大小为 8:
 
-```
+```java
 System.out.println("Pretty printing by Dom4j");
 System.out.println("=============================================");
 System.out.println(prettyPrintByDom4j(xmlString, 8, false));
@@ -273,7 +273,7 @@ System.out.println(prettyPrintByDom4j(xmlString, 8, false));
 
 当我们运行该方法时，我们将看到输出:
 
-```
+```java
 Pretty printing by Dom4j
 =============================================
 <?xml version="1.0" encoding="UTF-8"?>

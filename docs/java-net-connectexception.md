@@ -20,7 +20,7 @@
 
 我们通常使用`java.net.Socket`类以编程方式连接到服务器。为了建立 TCP 连接，我们必须**确保我们连接到正确的主机和端口组合:**
 
-```
+```java
 String host = "localhost";
 int port = 5000;
 
@@ -48,13 +48,13 @@ try {
 
 例如，我们可以检查 Baeldung 服务器是否已启动:
 
-```
+```java
 ping baeldung.com
 ```
 
 如果 Baeldung 服务器正在运行，我们应该会看到关于发送和接收的包的信息。
 
-```
+```java
 PING baeldung.com (104.18.63.78): 56 data bytes
 64 bytes from 104.18.63.78: icmp_seq=0 ttl=57 time=7.648 ms
 64 bytes from 104.18.63.78: icmp_seq=1 ttl=57 time=14.493 ms
@@ -64,7 +64,7 @@ PING baeldung.com (104.18.63.78): 56 data bytes
 
 例如，如果我们想在端口 80 上连接到 Baeldung 网站，我们可以运行:
 
-```
+```java
 telnet baeldung.com 80
 ```
 

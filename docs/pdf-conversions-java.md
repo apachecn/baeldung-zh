@@ -12,7 +12,7 @@
 
 我们要看的第一个库是 **[Pdf2Dom](https://web.archive.org/web/20220922043838/http://cssbox.sourceforge.net/pdf2dom/documentation.php)** 。让我们从需要添加到项目中的 Maven 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.apache.pdfbox</groupId>
     <artifactId>pdfbox-tools</artifactId>
@@ -31,7 +31,7 @@
 
 让我们看看我们需要包含在项目中的 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.itextpdf</groupId>
     <artifactId>itextpdf</artifactId>
@@ -66,7 +66,7 @@ iText 的最新版本可以在[这里](https://web.archive.org/web/2022092204383
 
 让我们来看一个从 PDF 到 HTML 的简单转换:
 
-```
+```java
 private void generateHTMLFromPDF(String filename) {
     PDDocument pdf = PDDocument.load(new File(filename));
     Writer output = new PrintWriter("src/output/pdf.html", "utf-8");
@@ -84,7 +84,7 @@ private void generateHTMLFromPDF(String filename) {
 
 现在，让我们看看从 HTML 到 PDF 的转换:
 
-```
+```java
 private static void generatePDFFromHTML(String filename) {
     Document document = new Document();
     PdfWriter writer = PdfWriter.getInstance(document,
@@ -108,7 +108,7 @@ private static void generatePDFFromHTML(String filename) {
 
 让我们看一下代码示例:
 
-```
+```java
 private void generateImageFromPDF(String filename, String extension) {
     PDDocument document = PDDocument.load(new File(filename));
     PDFRenderer pdfRenderer = new PDFRenderer(document);
@@ -132,7 +132,7 @@ private void generateImageFromPDF(String filename, String extension) {
 
 让我们看一下代码示例:
 
-```
+```java
 private static void generatePDFFromImage(String filename, String extension) {
     Document document = new Document();
     String input = filename + "." + extension;
@@ -160,7 +160,7 @@ private static void generatePDFFromImage(String filename, String extension) {
 
 让我们从装载零件开始:
 
-```
+```java
 File f = new File(filename);
 String parsedText;
 PDFParser parser = new PDFParser(new RandomAccessFile(f, "r"));
@@ -171,7 +171,7 @@ parser.parse();
 
 让我们来看看提取文本部分:
 
-```
+```java
 COSDocument cosDoc = parser.getDocument();
 PDFTextStripper pdfStripper = new PDFTextStripper();
 PDDocument pdDoc = new PDDocument(cosDoc);
@@ -182,7 +182,7 @@ parsedText = pdfStripper.getText(pdDoc);
 
 在最后一部分中，我们将使用简单的 Java `PrintWriter`将文本保存到新创建的文件中:
 
-```
+```java
 PrintWriter pw = new PrintWriter("src/output/pdf.txt");
 pw.print(parsedText);
 pw.close();
@@ -198,7 +198,7 @@ pw.close();
 
 首先，我们需要定义 PDF 文件的大小、版本和输出文件。让我们看一下代码示例:
 
-```
+```java
 Document pdfDoc = new Document(PageSize.A4);
 PdfWriter.getInstance(pdfDoc, new FileOutputStream("src/output/txt.pdf"))
   .setPdfVersion(PdfWriter.PDF_VERSION_1_7);
@@ -207,7 +207,7 @@ pdfDoc.open();
 
 在下一步中，我们将定义字体以及用于生成新段落的命令:
 
-```
+```java
 Font myfont = new Font();
 myfont.setStyle(Font.NORMAL);
 myfont.setSize(11);
@@ -216,7 +216,7 @@ pdfDoc.add(new Paragraph("\n"));
 
 最后，我们将在新创建的 PDF 文件中添加段落:
 
-```
+```java
 BufferedReader br = new BufferedReader(new FileReader(filename));
 String strLine;
 while ((strLine = br.readLine()) != null) {
@@ -236,7 +236,7 @@ br.close();
 
 让我们来看看 PDF 加载部分的代码片段:
 
-```
+```java
 XWPFDocument doc = new XWPFDocument();
 String pdf = filename;
 PdfReader reader = new PdfReader(pdf);
@@ -245,7 +245,7 @@ PdfReaderContentParser parser = new PdfReaderContentParser(reader);
 
 加载 PDF 后，我们需要在循环中分别读取和呈现每个页面，然后写入输出文件:
 
-```
+```java
 for (int i = 1; i <= reader.getNumberOfPages(); i++) {
     TextExtractionStrategy strategy =
       parser.processContent(i, new SimpleTextExtractionStrategy());

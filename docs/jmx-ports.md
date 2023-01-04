@@ -20,7 +20,7 @@
 
 在我们的例子中，我们将使用 Java 6 或更高版本。首先，让我们创建一个无限循环的类。该类什么也不做，但是它允许我们检查哪些端口是打开的:
 
-```
+```java
 public class JMXConfiguration {
 
     public static void main(String[] args) {
@@ -33,19 +33,19 @@ public class JMXConfiguration {
 
 现在，我们将编译该类并启动它:
 
-```
+```java
 java com.baeldung.jmx.JMXConfiguration
 ```
 
 之后，我们可以**检查哪个 pid 被分配给进程，并检查进程**打开的端口:
 
-```
+```java
 netstat -ao | grep <pid>
 ```
 
 因此，我们将获得应用程序公开的端口列表:
 
-```
+```java
 Active Connections
 Proto  Local Address          Foreign Address        State           PID
 TCP    127.0.0.1:55846        wujek:55845            ESTABLISHED     2604
@@ -55,7 +55,7 @@ TCP    127.0.0.1:55846        wujek:55845            ESTABLISHED     2604
 
 现在让我们通过向 JVM 提供选项来启用远程连接:
 
-```
+```java
 -Dcom.sun.management.jmxremote=true
 -Dcom.sun.management.jmxremote.port=1234
 -Dcom.sun.management.jmxremote.authenticate=false
@@ -66,7 +66,7 @@ TCP    127.0.0.1:55846        wujek:55845            ESTABLISHED     2604
 
 现在， [`netstat`](/web/20220625225825/https://www.baeldung.com/linux/find-process-using-port#netstat) 命令返回:
 
-```
+```java
 Proto  Local Address    Foreign Address State       PID
 TCP    0.0.0.0:1234     wujek:0         LISTENING   11088
 TCP    0.0.0.0:58738    wujek:0         LISTENING   11088
@@ -79,7 +79,7 @@ TCP    0.0.0.0:58739    wujek:0         LISTENING   11088
 
 首先，我们可以使用`-XX:+DisableAttachMechanism`选项禁止从 JConsole 公开本地连接的应用程序:
 
-```
+```java
 java -XX:+DisableAttachMechanism com.baeldung.jmx.JMXConfiguration
 ```
 
@@ -87,7 +87,7 @@ java -XX:+DisableAttachMechanism com.baeldung.jmx.JMXConfiguration
 
 此外，从 JDK 16 开始，我们可以设置本地端口号:
 
-```
+```java
 java 
   -Dcom.sun.management.jmxremote=true 
   -Dcom.sun.management.jmxremote.local.port=1235 
@@ -98,7 +98,7 @@ java
 
 还有一个额外的选项`-Dcom.sun.management.jmxremote.rmi.port=1234`，允许我们将 RMI 端口设置为与 JMX 端口相同的值。现在，完整的命令是:
 
-```
+```java
 java 
   -Dcom.sun.management.jmxremote=true 
   -Dcom.sun.management.jmxremote.port=1234 
@@ -111,7 +111,7 @@ java
 
 之后，`netstat`命令返回:
 
-```
+```java
 Proto  Local Address    Foreign Address State       PID
 TCP    0.0.0.0:1234     wujek:0         LISTENING   19504
 TCP    0.0.0.0:1235     wujek:0         LISTENING   19504
@@ -121,7 +121,7 @@ TCP    0.0.0.0:1235     wujek:0         LISTENING   19504
 
 但是，当我们启用远程连接并禁用连接机制时:
 
-```
+```java
 java 
   -XX:+DisableAttachMechanism 
   -Dcom.sun.management.jmxremote=true 
@@ -134,7 +134,7 @@ java
 
 然后，应用程序仍然公开两个端口:
 
-```
+```java
 Proto Local Address     Foreign Address     State       PID
 TCP   0.0.0.0:1234      wujek:0             LISTENING   9856
 TCP   0.0.0.0:60565     wujek:0             LISTENING   9856

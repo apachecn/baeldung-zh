@@ -26,7 +26,7 @@ Storm 允许与市场上的各种数据库和排队系统集成。
 
 在我们使用 Apache Storm 之前，我们需要在我们的项目中包含 storm-core 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.apache.storm</groupId>
     <artifactId>storm-core</artifactId>
@@ -53,7 +53,7 @@ Storm 需要知道如何序列化元组中使用的所有值。默认情况下�
 
 首先，我们可以使用全名注册要序列化的类:
 
-```
+```java
 Config config = new Config();
 config.registerSerialization(User.class);
 ```
@@ -62,7 +62,7 @@ config.registerSerialization(User.class);
 
 或者，我们可以同时提供要序列化的类和我们希望 Storm 为该类使用的序列化程序:
 
-```
+```java
 Config config = new Config();
 config.registerSerialization(User.class, UserSerializer.class);
 ```
@@ -93,7 +93,7 @@ Storms 允许并行处理多个流。
 
 让我们创建一个`unreliable `喷口:
 
-```
+```java
 public class RandomIntSpout extends BaseRichSpout {
 
     private Random random;
@@ -131,7 +131,7 @@ public class RandomIntSpout extends BaseRichSpout {
 
 还有多个助手类可用于实现`Bolt. `在这种情况下，我们将使用`BaseBasicBolt`:
 
-```
+```java
 public class PrintingBolt extends BaseBasicBolt {
     @Override
     public void execute(Tuple tuple, BasicOutputCollector basicOutputCollector) {
@@ -155,7 +155,7 @@ public class PrintingBolt extends BaseBasicBolt {
 
 一开始，我们将创建一个不可靠的喷口。它将每秒生成(0，100)范围内的随机整数:
 
-```
+```java
 public class RandomNumberSpout extends BaseRichSpout {
     private Random random;
     private SpoutOutputCollector collector;
@@ -188,7 +188,7 @@ public class RandomNumberSpout extends BaseRichSpout {
 
 接下来，我们将创建一个 bolt 来过滤掉所有`operation`等于 0 的元素:
 
-```
+```java
 public class FilteringBolt extends BaseBasicBolt {
     @Override
     public void execute(Tuple tuple, BasicOutputCollector basicOutputCollector) {
@@ -219,7 +219,7 @@ public class FilteringBolt extends BaseBasicBolt {
 
 我们的`AggregatingBolt`将从一个`time window`连同它的开始和结束时间戳产生所有正操作的总和:
 
-```
+```java
 public class AggregatingBolt extends BaseWindowedBolt {
     private OutputCollector outputCollector;
 
@@ -260,7 +260,7 @@ public class AggregatingBolt extends BaseWindowedBolt {
 
 最后，我们将创建一个 bolt，它将获取所有大于 2000 的元素，将它们序列化并写入文件:
 
-```
+```java
 public class FileWritingBolt extends BaseRichBolt {
     public static Logger logger = LoggerFactory.getLogger(FileWritingBolt.class);
     private BufferedWriter writer;
@@ -318,7 +318,7 @@ public class FileWritingBolt extends BaseRichBolt {
 
 最后，我们可以将所有内容整合在一起，运行我们的拓扑结构:
 
-```
+```java
 public static void runTopology() {
     TopologyBuilder builder = new TopologyBuilder();
 

@@ -12,7 +12,7 @@
 
 结合了`@OneToOne`映射的`@JoinColumn`注释表示所有者实体中的给定列引用了引用实体中的主键:
 
-```
+```java
 @Entity
 public class Office {
     @OneToOne(fetch = FetchType.LAZY)
@@ -27,7 +27,7 @@ public class Office {
 
 当使用`@OneToMany`映射时，我们可以使用`mappedBy`参数来指示给定的列属于另一个实体:
 
-```
+```java
 @Entity
 public class Employee {
 
@@ -55,7 +55,7 @@ public class Email {
 
 当我们想要创建多个连接列时，我们可以使用`@JoinColumns`注释:
 
-```
+```java
 @Entity
 public class Office {
     @ManyToOne(fetch = FetchType.LAZY)

@@ -44,7 +44,7 @@
 
 为了检查 JVM 中对象或数组的内存布局，我们将使用 Java 对象布局( [JOL](https://web.archive.org/web/20220826185127/https://openjdk.java.net/projects/code-tools/jol/) )工具。因此，我们需要添加 [`jol-core`](https://web.archive.org/web/20220826185127/https://search.maven.org/artifact/org.openjdk.jol/jol-core) 的依赖关系:
 
-```
+```java
 <dependency> 
     <groupId>org.openjdk.jol</groupId> 
     <artifactId>jol-core</artifactId>    
@@ -56,13 +56,13 @@
 
 为了更好地理解更复杂对象的大小，我们应该首先知道每个简单数据类型消耗多少空间。为此，我们可以要求 Java 内存布局或 JOL 打印 VM 信息:
 
-```
+```java
 System.out.println(VM.current().details());
 ```
 
 上述代码将打印简单数据类型大小，如下所示:
 
-```
+```java
 # Running 64-bit HotSpot VM.
 # Using compressed oop with 3-bit shift.
 # Using compressed klass with 3-bit shift.
@@ -87,7 +87,7 @@ System.out.println(VM.current().details());
 
 如果我们通过`-XX:-UseCompressedOops `调整标志禁用压缩引用，那么大小要求将会改变:
 
-```
+```java
 # Objects are 8 bytes aligned.
 # Field sizes by type: 8, 1, 1, 2, 2, 4, 4, 8, 8 [bytes]
 # Array element sizes: 8, 1, 1, 2, 2, 4, 4, 8, 8 [bytes]
@@ -105,7 +105,7 @@ System.out.println(VM.current().details());
 
 为了计算复杂对象的大小，让我们考虑一个典型的教授与课程的关系:
 
-```
+```java
 public class Course {
 
     private String name;
@@ -116,7 +116,7 @@ public class Course {
 
 每个`Professor, `除了个人详细信息，还可以有一个`Course`列表:
 
-```
+```java
 public class Professor {
 
     private String name;
@@ -134,13 +134,13 @@ public class Professor {
 
 `Course `类实例的浅层大小应该包括一个 4 字节的对象引用(用于`name `字段)加上一些对象开销。我们可以使用 JOL 来检验这个假设:
 
-```
+```java
 System.out.println(ClassLayout.parseClass(Course.class).toPrintable());
 ```
 
 这将打印以下内容:
 
-```
+```java
 Course object internals:
  OFFSET  SIZE               TYPE DESCRIPTION               VALUE
       0    12                    (object header)           N/A
@@ -155,13 +155,13 @@ Space losses: 0 bytes internal + 0 bytes external = 0 bytes total
 
 如果我们为`Professor `类运行相同的代码:
 
-```
+```java
 System.out.println(ClassLayout.parseClass(Professor.class).toPrintable());
 ```
 
 然后 JOL 将打印出`Professor `类的内存消耗，如下所示:
 
-```
+```java
 Professor object internals:
  OFFSET  SIZE                  TYPE DESCRIPTION                     VALUE
       0    12                       (object header)                 N/A
@@ -191,7 +191,7 @@ Space losses: 3 bytes internal + 0 bytes external = 3 bytes total
 
 JOL 中的`[sizeOf()](https://web.archive.org/web/20220826185127/https://www.javadoc.io/doc/org.openjdk.jol/jol-core/latest/org/openjdk/jol/vm/VirtualMachine.html#sizeOf-java.lang.Object-) `方法提供了一种更简单的方法来计算对象实例的浅层大小。如果我们运行下面的代码片段:
 
-```
+```java
 String ds = "Data Structures";
 Course course = new Course(ds);
 
@@ -200,7 +200,7 @@ System.out.println("The shallow size is: " + VM.current().sizeOf(course));
 
 它将打印如下的浅尺寸:
 
-```
+```java
 The shallow size is: 16
 ```
 
@@ -208,7 +208,7 @@ The shallow size is: 16
 
 如果我们禁用压缩引用或使用超过 32 GB 的堆，浅层大小将会增加:
 
-```
+```java
 Professor object internals:
  OFFSET  SIZE                  TYPE DESCRIPTION                               VALUE
       0    16                       (object header)                           N/A
@@ -229,7 +229,7 @@ Space losses: 3 bytes internal + 0 bytes external = 3 bytes total
 
 为了计算深度大小，我们应该包括物体本身及其所有合作者的完整大小。例如，对于这个简单的场景:
 
-```
+```java
 String ds = "Data Structures";
 Course course = new Course(ds);
 ```
@@ -238,13 +238,13 @@ Course course = new Course(ds);
 
 也就是说，让我们看看`String `实例消耗了多少空间:
 
-```
+```java
 System.out.println(ClassLayout.parseInstance(ds).toPrintable());
 ```
 
 每个`String `实例封装了一个`char[] `(稍后会详细介绍)和一个`int ` hashcode:
 
-```
+```java
 java.lang.String object internals:
  OFFSET  SIZE     TYPE DESCRIPTION                               VALUE
       0     4          (object header)                           01 00 00 00 
@@ -261,13 +261,13 @@ Space losses: 0 bytes internal + 4 bytes external = 4 bytes total
 
 为了查看`char[], `的实际大小，我们也可以解析它的类布局:
 
-```
+```java
 System.out.println(ClassLayout.parseInstance(ds.toCharArray()).toPrintable());
 ```
 
 `char[]`的布局看起来是这样的:
 
-```
+```java
 [C object internals:
  OFFSET  SIZE   TYPE DESCRIPTION                               VALUE
       0     4        (object header)                           01 00 00 00
@@ -284,7 +284,7 @@ Space losses: 0 bytes internal + 2 bytes external = 2 bytes total
 
 随着 Java 9 中[紧凑字符串](/web/20220826185127/https://www.baeldung.com/java-9-compact-string)的引入，`String` 类在内部使用一个`byte[] `来存储字符:
 
-```
+```java
 java.lang.String object internals:
  OFFSET  SIZE     TYPE DESCRIPTION                               
       0     4          (object header)                         
@@ -304,13 +304,13 @@ java.lang.String object internals:
 
 例如，我们可以看到`Course `实例的总占用空间如下:
 
-```
+```java
 System.out.println(GraphLayout.parseInstance(course).toFootprint());
 ```
 
 它打印以下摘要:
 
-```
+```java
 [[email protected]](/web/20220826185127/https://www.baeldung.com/cdn-cgi/l/email-protection) footprint:
      COUNT       AVG       SUM   DESCRIPTION
          1        48        48   [C
@@ -321,7 +321,7 @@ System.out.println(GraphLayout.parseInstance(course).toFootprint());
 
 总共有 88 个字节。`totalSize() `方法返回对象的总占用空间，为 88 字节:
 
-```
+```java
 System.out.println(GraphLayout.parseInstance(course).totalSize());
 ```
 
@@ -329,7 +329,7 @@ System.out.println(GraphLayout.parseInstance(course).totalSize());
 
 为了计算一个对象的浅层大小，我们也可以使用 Java [检测包](/web/20220826185127/https://www.baeldung.com/java-instrumentation)和 Java 代理。首先，我们应该用`premain() `方法创建一个类:
 
-```
+```java
 public class ObjectSizeCalculator {
 
     private static Instrumentation instrumentation;
@@ -346,19 +346,19 @@ public class ObjectSizeCalculator {
 
 如上所示，我们将使用`[getObjectSize()](https://web.archive.org/web/20220826185127/https://docs.oracle.com/en/java/javase/11/docs/api/java.instrument/java/lang/instrument/Instrumentation.html#getObjectSize(java.lang.Object)) `方法来找到一个对象的浅尺寸。我们还需要一个清单文件:
 
-```
+```java
 Premain-Class: com.baeldung.objectsize.ObjectSizeCalculator
 ```
 
 然后使用这个`MANIFEST.MF `文件，我们可以[创建一个 JAR 文件](/web/20220826185127/https://www.baeldung.com/java-create-jar)，并将其用作 Java 代理:
 
-```
+```java
 $ jar cmf MANIFEST.MF agent.jar *.class
 ```
 
 最后，如果我们使用`-javaagent:/path/to/agent.jar `参数运行任何代码，那么我们可以使用`sizeOf() `方法:
 
-```
+```java
 String ds = "Data Structures";
 Course course = new Course(ds);
 
@@ -371,13 +371,13 @@ System.out.println(ObjectSizeCalculator.sizeOf(course));
 
 要查看已经运行的应用程序中对象的浅层大小，我们可以使用`jcmd:`来查看类统计信息
 
-```
+```java
 $ jcmd <pid> GC.class_stats [output_columns]
 ```
 
 例如，我们可以看到所有`Course `实例的每个实例大小和数量:
 
-```
+```java
 $ jcmd 63984 GC.class_stats InstSize,InstCount,InstBytes | grep Course 
 63984:
 InstSize InstCount InstBytes ClassName
@@ -392,13 +392,13 @@ InstSize InstCount InstBytes ClassName
 
 使用[堆转储](/web/20220826185127/https://www.baeldung.com/java-heap-dump-capture)是检查正在运行的应用程序中的实例大小的另一种选择。这样，我们可以看到每个实例的保留大小。要进行堆转储，我们可以如下使用`jcmd `:
 
-```
+```java
 $ jcmd <pid> GC.heap_dump [options] /path/to/dump/file
 ```
 
 例如:
 
-```
+```java
 $ jcmd 63984 GC.heap_dump -all ~/dump.hpro
 ```
 

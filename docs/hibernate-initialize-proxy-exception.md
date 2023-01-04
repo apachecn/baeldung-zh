@@ -36,7 +36,7 @@
 
 这是我们的`User`实体:
 
-```
+```java
 @Entity
 @Table(name = "user")
 public class User {
@@ -60,7 +60,7 @@ public class User {
 
 以及相关联的`Role`实体:
 
-```
+```java
 @Entity
 @Table(name = "role")
 public class Role {
@@ -80,14 +80,14 @@ public class Role {
 
 然后我们将创建两个`Role`对象:
 
-```
+```java
 Role admin = new Role("Admin");
 Role dba = new Role("DBA");
 ```
 
 我们还将创建一个包含角色的`User`:
 
-```
+```java
 User user = new User("Bob", "Smith");
 user.addRole(admin);
 user.addRole(dba);
@@ -95,7 +95,7 @@ user.addRole(dba);
 
 最后，我们可以打开一个会话并持久保存对象:
 
-```
+```java
 Session session = sessionFactory.openSession();
 session.beginTransaction();
 user.getRoles().forEach(role -> session.save(role));
@@ -108,7 +108,7 @@ session.close();
 
 在第一个场景中，我们将看到如何以适当的方式获取用户角色:
 
-```
+```java
 @Test
 public void whenAccessUserRolesInsideSession_thenSuccess() {
 
@@ -132,7 +132,7 @@ public void whenAccessUserRolesInsideSession_thenSuccess() {
 
 在第二个场景中，我们将在会话外调用一个`getRoles`方法:
 
-```
+```java
 @Test
 public void whenAccessUserRolesOutsideSession_thenThrownException() {
 
@@ -173,7 +173,7 @@ public void whenAccessUserRolesOutsideSession_thenThrownException() {
 
 默认情况下，该属性为`false`。打开它意味着对关联的惰性加载实体的每次访问都将被包装在新事务中运行的新会话中:
 
-```
+```java
 <property name="hibernate.enable_lazy_load_no_trans" value="true"/>
 ```
 
@@ -185,7 +185,7 @@ public void whenAccessUserRolesOutsideSession_thenThrownException() {
 
 我们可以将这个策略与`@OneToMany`注释一起使用:
 
-```
+```java
 @OneToMany(fetch = FetchType.EAGER)
 @JoinColumn(name = "user_id")
 private Set<Role> roles;
@@ -199,13 +199,13 @@ private Set<Role> roles;
 
 我们还可以使用`JPQL`中的`JOIN FETCH`指令按需获取相关的集合:
 
-```
+```java
 SELECT u FROM User u JOIN FETCH u.roles
 ```
 
 或者我们可以使用 Hibernate Criteria API:
 
-```
+```java
 Criteria criteria = session.createCriteria(User.class);
 criteria.setFetchMode("roles", FetchMode.EAGER);
 ```

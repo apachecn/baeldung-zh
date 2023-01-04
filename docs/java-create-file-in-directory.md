@@ -16,7 +16,7 @@
 
 我们使用谷歌番石榴的一部分`Files.touch()`，作为创建一个空文件的简单方法:
 
-```
+```java
 File tempDirectory = new File(System.getProperty("java.io.tmpdir"));
 File fileWithAbsolutePath = new File(tempDirectory.getAbsolutePath() + "/testFile.txt");
 
@@ -31,7 +31,7 @@ assertTrue(fileWithAbsolutePath.exists());
 
 我们还可以在相对于另一个目录的目录**中创建一个文件。例如，让我们在用户`temp`目录中创建文件:**
 
-```
+```java
 File tempDirectory = new File(System.getProperty("java.io.tmpdir"));
 File fileWithRelativePath = new File(tempDirectory, "newFile.txt");
 
@@ -50,7 +50,7 @@ assertTrue(fileWithRelativePath.exists());
 
 让我们看一个用这种方法创建文件的例子:
 
-```
+```java
 File tempDirectory = new File(System.getProperty("java.io.tmpdir"));
 File newFile = new File(tempDirectory.getAbsolutePath() + File.separator + "newFile.txt");
 

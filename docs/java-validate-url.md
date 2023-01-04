@@ -14,7 +14,7 @@
 
 让我们看看如何使用类`java.net.URL`来验证 URL:
 
-```
+```java
 boolean isValidURL(String url) throws MalformedURLException, URISyntaxException {
     try {
         new URL(url).toURI();
@@ -33,7 +33,7 @@ boolean isValidURL(String url) throws MalformedURLException, URISyntaxException 
 
 现在，让我们通过一个小测试来验证我们的方法是否有效:
 
-```
+```java
 assertTrue(isValidURL("http://baeldung.com/"));
 assertFalse(isValidURL("https://www.baeldung.com/ java-%%$^&& iuyi"));
 ```
@@ -42,7 +42,7 @@ assertFalse(isValidURL("https://www.baeldung.com/ java-%%$^&& iuyi"));
 
 让我们看一个例子，如果我们只使用`new URL(String url)`，许多不符合的 URL 将通过验证:
 
-```
+```java
 boolean isValidUrl(String url) throws MalformedURLException {
     try {
         // it will check only for scheme and not null input 
@@ -56,7 +56,7 @@ boolean isValidUrl(String url) throws MalformedURLException {
 
 让我们看看上面的方法如何通过一些测试来验证不同的 URL:
 
-```
+```java
 assertTrue(isValidUrl("http://baeldung.com/"));
 assertTrue(isValidUrl("https://www.baeldung.com/ java-%%$^&& iuyi")); 
 assertFalse(isValidUrl(""));
@@ -70,7 +70,7 @@ assertFalse(isValidUrl(""));
 
 我们需要将`[commons-validator](https://web.archive.org/web/20221220190132/https://mvnrepository.com/artifact/commons-validator/commons-validator)`依赖项导入到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>commons-validator</groupId>
     <artifactId>commons-validator</artifactId>
@@ -80,7 +80,7 @@ assertFalse(isValidUrl(""));
 
 让我们使用这个库中的`UrlValidator` 类来验证:
 
-```
+```java
 boolean isValidURL(String url) throws MalformedURLException {
     UrlValidator validator = new UrlValidator();
     return validator.isValid(url);
@@ -91,7 +91,7 @@ boolean isValidURL(String url) throws MalformedURLException {
 
 让我们看看上面的方法对于不同的输入是如何表现的:
 
-```
+```java
 assertFalse(isValidURL("https://www.baeldung.com/ java-%%$^&& iuyi"));
 assertTrue(isValidURL("http://baeldung.com/"));
 ```

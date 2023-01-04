@@ -14,7 +14,7 @@
 
 为了运行我们的实验，我们首先需要设置一个运行的实例`ActiveMQ`。我们可以从几种方法中选择:遵循[官方指南](https://web.archive.org/web/20220625222544/https://activemq.apache.org/getting-started.html)中描述的步骤，将其嵌入到`Java`应用程序中，或者更简单地用下面的命令构建一个`Docker`容器:
 
-```
+```java
 docker run -p 61616:61616 -p 8161:8161 rmohr/activemq:5.14.3
 ```
 
@@ -26,7 +26,7 @@ docker run -p 61616:61616 -p 8161:8161 rmohr/activemq:5.14.3
 
 正如通常我们仔细选择`Spring Boot`起始依赖项一样，[在这里解释为](/web/20220625222544/https://www.baeldung.com/spring-boot-starters):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-activemq</artifactId>
@@ -51,7 +51,7 @@ docker run -p 61616:61616 -p 8161:8161 rmohr/activemq:5.14.3
 
 第一步是声明一个 bean，它实现了我们想要向客户端公开的服务的接口。这是将在服务器上执行业务逻辑的 bean:
 
-```
+```java
 @Bean 
 CabBookingService bookingService() {
     return new CabBookingServiceImpl();
@@ -60,7 +60,7 @@ CabBookingService bookingService() {
 
 然后，让我们定义服务器将从中检索调用的队列，并在构造函数中指定其名称:
 
-```
+```java
 @Bean 
 Queue queue() {
     return new ActiveMQQueue("remotingQueue");
@@ -71,7 +71,7 @@ Queue queue() {
 
 为了使用`JMS`，我们定义了一个`JmsInvokerServiceExporter`:
 
-```
+```java
 @Bean 
 JmsInvokerServiceExporter exporter(CabBookingService implementation) {
     JmsInvokerServiceExporter exporter = new JmsInvokerServiceExporter();
@@ -83,7 +83,7 @@ JmsInvokerServiceExporter exporter(CabBookingService implementation) {
 
 最后，我们需要定义一个负责消费消息的侦听器。**监听器充当`ApacheMQ`和** `**JmsInvokerServiceExporter**,`之间的桥梁，它监听队列上可用的调用消息，将调用转发给服务导出器，并序列化回结果:
 
-```
+```java
 @Bean SimpleMessageListenerContainer listener(
   ConnectionFactory factory, 
   JmsInvokerServiceExporter exporter) {
@@ -103,7 +103,7 @@ JmsInvokerServiceExporter exporter(CabBookingService implementation) {
 
 各种参数的值主要取决于`ApacheMQ`的安装方式，以下是在运行这些示例的同一台机器上运行的`Docker`容器的合理配置:
 
-```
+```java
 spring.activemq.broker-url=tcp://localhost:61616
 spring.activemq.packages.trusted=org.springframework.remoting.support,java.lang,com.baeldung.api
 ```
@@ -122,7 +122,7 @@ spring.activemq.packages.trusted=org.springframework.remoting.support,java.lang,
 
 让我们现在处理客户。同样，我们需要定义调用消息将被写入的队列。我们需要仔细检查客户机和服务器是否使用了相同的名称。
 
-```
+```java
 @Bean 
 Queue queue() {
     return new ActiveMQQueue("remotingQueue");
@@ -131,7 +131,7 @@ Queue queue() {
 
 然后我们需要建立一个出口商:
 
-```
+```java
 @Bean 
 FactoryBean invoker(ConnectionFactory factory, Queue queue) {
     JmsInvokerProxyFactoryBean factoryBean = new JmsInvokerProxyFactoryBean();
@@ -144,7 +144,7 @@ FactoryBean invoker(ConnectionFactory factory, Queue queue) {
 
 我们现在可以使用远程服务，就像它被声明为本地 bean 一样:
 
-```
+```java
 CabBookingService service = context.getBean(CabBookingService.class);
 out.println(service.bookRide("13 Seagate Blvd, Key Largo, FL 33037"));
 ```

@@ -22,7 +22,7 @@
 
 ### 3.1.默认无参数构造函数
 
-```
+```java
 Set<String> linkedHashSet = new LinkedHashSet<>();
 assertTrue(linkedHashSet.isEmpty());
 ```
@@ -31,7 +31,7 @@ assertTrue(linkedHashSet.isEmpty());
 
 初始容量代表`LinkedHashSet`的初始长度。**提供初始容量可以防止`Set`随着**的增长而不必要地调整大小。默认初始容量为 16:
 
-```
+```java
 LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>(20);
 ```
 
@@ -39,7 +39,7 @@ LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>(20);
 
 我们还可以在创建时使用`Collection`的内容来填充`LinkedHashSet`对象:
 
-```
+```java
 @Test
  void whenCreatingLinkedHashSetWithExistingCollection_shouldContainAllElementOfCollection(){
       Collection<String> data = Arrays.asList("first", "second", "third", "fourth", "fifth");
@@ -55,7 +55,7 @@ LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>(20);
 
 当`LinkedHashSet`的大小超过初始容量值时，新的容量是负载系数和先前容量的乘积。在下面的代码片段中，初始容量设置为 20，负载系数为 3。
 
-```
+```java
 LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>(20, 3);
 ```
 
@@ -69,7 +69,7 @@ LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>(20, 3);
 
 下面是一个向`LinkedHashSet`添加元素的实现:
 
-```
+```java
 @Test
 void whenAddingElement_shouldAddElement(){
     Set<Integer> linkedHashSet = new LinkedHashSet<>();
@@ -84,7 +84,7 @@ void whenAddingElement_shouldAddElement(){
 
 如前所述，我们还可以向一个`LinkedHashSet`添加一个`Collection`元素:
 
-```
+```java
 @Test
 void whenAddingCollection_shouldAddAllContentOfCollection(){
     Collection<Integer> data = Arrays.asList(1,2,3);
@@ -97,7 +97,7 @@ void whenAddingCollection_shouldAddAllContentOfCollection(){
 
 **不添加重复项的规则也适用于`addAll()`方法**，如下所示:
 
-```
+```java
 @Test
 void whenAddingCollectionWithDuplicateElements_shouldMaintainUniqueValuesInSet(){
     LinkedHashSet<Integer> linkedHashSet = new LinkedHashSet<>();
@@ -120,7 +120,7 @@ void whenAddingCollectionWithDuplicateElements_shouldMaintainUniqueValuesInSet()
 
 ### 5.1.使用`Iterator`进行迭代
 
-```
+```java
 @Test
 void whenIteratingWithIterator_assertThatElementIsPresent(){
     LinkedHashSet<Integer> linkedHashSet = new LinkedHashSet<>();
@@ -138,7 +138,7 @@ void whenIteratingWithIterator_assertThatElementIsPresent(){
 
 ### 5.2.用一个`Spliterator`迭代
 
-```
+```java
 @Test
 void whenIteratingWithSpliterator_assertThatElementIsPresent(){
     LinkedHashSet<Integer> linkedHashSet = new LinkedHashSet<>();
@@ -163,7 +163,7 @@ void whenIteratingWithSpliterator_assertThatElementIsPresent(){
 
 这个方法从`Set`中移除一个元素，假设我们知道我们想要移除的确切元素。它接受一个参数，即我们想要移除的实际元素，如果成功移除，则返回`true`，否则返回`false`:
 
-```
+```java
 @Test
 void whenRemovingAnElement_shouldRemoveElement(){
     Collection<String> data = Arrays.asList("first", "second", "third", "fourth", "fifth");
@@ -178,7 +178,7 @@ void whenRemovingAnElement_shouldRemoveElement(){
 
 **`removeIf()`方法删除满足指定谓词条件的元素。**以下示例删除了`LinkedHashSet`中大于 2 的所有元素:
 
-```
+```java
 @Test
 void whenRemovingAnElementGreaterThanTwo_shouldRemoveElement(){
     LinkedHashSet<Integer> linkedHashSet = new LinkedHashSet<>();
@@ -198,7 +198,7 @@ void whenRemovingAnElementGreaterThanTwo_shouldRemoveElement(){
 
 `iterator`也是我们可以用来从`LinkedHashSet`中移除元素的另一个选项。`Iterator`的`remove()`方法移除了`Iterator`当前所在的元素:
 
-```
+```java
 @Test
 void whenRemovingAnElementWithIterator_shouldRemoveElement(){
     LinkedHashSet<Integer> linkedHashSet = new LinkedHashSet<>();

@@ -14,7 +14,7 @@
 
 这里是我们的`ClusterService`界面:
 
-```
+```java
 public interface ClusterService {
     Bucket openBucket(String name, String password);
 }
@@ -26,7 +26,7 @@ public interface ClusterService {
 
 这确保了集群不为空，并且当该类被注入到其他服务类中时它是连接的，从而使它们能够打开一个或多个数据桶:
 
-```
+```java
 @Service
 public class ClusterServiceImpl implements ClusterService {
     private Cluster cluster;
@@ -42,7 +42,7 @@ public class ClusterServiceImpl implements ClusterService {
 
 接下来，我们提供一个`ConcurrentHashMap`来包含打开的桶并实现`openBucket`方法:
 
-```
+```java
 private Map<String, Bucket> buckets = new ConcurrentHashMap<>();
 
 @Override
@@ -67,7 +67,7 @@ synchronized public Bucket openBucket(String name, String password) {
 
 这里是我们的`BucketService`界面:
 
-```
+```java
 public interface BucketService {
     Bucket getBucket();
 }
@@ -77,7 +77,7 @@ public interface BucketService {
 
 下面的类提供了对“`baeldung-tutorial`”桶的访问:
 
-```
+```java
 @Service
 @Qualifier("TutorialBucketService")
 public class TutorialBucketService implements BucketService {
@@ -109,7 +109,7 @@ public class TutorialBucketService implements BucketService {
 
 下面是我们希望保留的`Person`实体类:
 
-```
+```java
 public class Person {
 
     private String id;
@@ -125,7 +125,7 @@ public class Person {
 
 为了在实体类和 Couchbase 在持久化操作中使用的`JsonDocument`对象之间进行转换，我们定义了`JsonDocumentConverter`接口:
 
-```
+```java
 public interface JsonDocumentConverter<T> {
     JsonDocument toDocument(T t);
     T fromDocument(JsonDocument doc);
@@ -136,7 +136,7 @@ public interface JsonDocumentConverter<T> {
 
 接下来，我们需要为`Person`实体实现一个`JsonConverter`。
 
-```
+```java
 @Service
 public class PersonDocumentConverter
   implements JsonDocumentConverter<Person> {
@@ -148,7 +148,7 @@ public class PersonDocumentConverter
 
 相反，对于`toDocument`方法，我们将使用`JsonObject`类的流畅方法创建并填充一个`JsonObject`，然后将其包装为`JsonDocument`:
 
-```
+```java
 @Override
 public JsonDocument toDocument(Person p) {
     JsonObject content = JsonObject.empty()
@@ -161,7 +161,7 @@ public JsonDocument toDocument(Person p) {
 
 对于`fromDocument`方法，我们将使用`JsonObject`类的`getString`方法以及`Person`类的`fromDocument`方法中的设置器:
 
-```
+```java
 @Override
 public Person fromDocument(JsonDocument doc) {
     JsonObject content = doc.content();
@@ -178,7 +178,7 @@ public Person fromDocument(JsonDocument doc) {
 
 我们现在创建一个通用的`CrudService`接口，为实体类定义持久化操作:
 
-```
+```java
 public interface CrudService<T> {
     void create(T t);
     T read(String id);
@@ -193,7 +193,7 @@ public interface CrudService<T> {
 
 有了实体和转换器类，我们现在为`Person`实体实现`CrudService`，注入上面显示的 bucket 服务和文档转换器，并在初始化期间检索 bucket:
 
-```
+```java
 @Service
 public class PersonCrudService implements CrudService<Person> {
 
@@ -253,7 +253,7 @@ public class PersonCrudService implements CrudService<Person> {
 
 现在我们已经准备好了持久层的所有部分，下面是一个简单的注册服务示例，它使用`PersonCrudService`来持久化和检索注册者:
 
-```
+```java
 @Service
 public class RegistrationService {
 

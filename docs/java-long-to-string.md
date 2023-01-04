@@ -10,14 +10,14 @@
 
 例如，假设我们有两个类型为`long`和`Long`的变量(一个是原始类型，另一个是引用类型):
 
-```
+```java
 long l = 10L;
 Long obj = 15L;
 ```
 
 我们可以简单地使用`Long`类的`toString()`方法将它们转换成`String`:
 
-```
+```java
 String str1 = Long.toString(l);
 String str2 = Long.toString(obj);
 
@@ -27,7 +27,7 @@ System.out.println(str2);
 
 输出将如下所示:
 
-```
+```java
 10
 15
 ```
@@ -38,7 +38,7 @@ System.out.println(str2);
 
 我们可以使用`String`类的`valueOf()`方法来实现同样的目标:
 
-```
+```java
 String str1 = String.valueOf(l);
 String str2 = String.valueOf(obj);
 ```
@@ -49,7 +49,7 @@ String str2 = String.valueOf(obj);
 
 除了`String`类的`valueOf()`方法，我们还可以使用`format()`方法:
 
-```
+```java
 String str1 = String.format("%d", l);
 String str2 = String.format("%d", obj);
 ```
@@ -60,7 +60,7 @@ String str2 = String.format("%d", obj);
 
 我们的`obj`对象可以使用它的`toString()`方法来获得`String`表示:
 
-```
+```java
 String str = obj.toString();
 ```
 
@@ -70,7 +70,7 @@ String str = obj.toString();
 
 我们可以简单地使用+运算符和空的`String`来获得相同的结果:
 
-```
+```java
 String str1 = "" + l;
 String str2 = "" + obj;
 ```
@@ -81,7 +81,7 @@ String str2 = "" + obj;
 
 [`StringBuilder``StringBuffer`](/web/20221208143926/https://www.baeldung.com/java-string-builder-string-buffer)对象可用于将`Long`转换为`String`:
 
-```
+```java
 String str1 = new StringBuilder().append(l).toString();
 String str2 = new StringBuilder().append(obj).toString();
 ```
@@ -92,7 +92,7 @@ String str2 = new StringBuilder().append(obj).toString();
 
 最后，我们可以使用`format()`方法得到一个 [`DecimalFormat`](/web/20221208143926/https://www.baeldung.com/java-decimalformat) 对象:
 
-```
+```java
 String str1 = new DecimalFormat("#").format(l);
 String str2 = new DecimalFormat("#").format(obj);
 ```

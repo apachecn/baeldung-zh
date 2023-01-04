@@ -24,7 +24,7 @@ In this quick tutorial, we'll investigate how can we initialize a List using one
 
 让我们从一个简单的基于循环的方法开始:
 
-```
+```java
 for (int i = 0; i < array.length; i++) {
     array[i] = i + 2;
 }
@@ -32,7 +32,7 @@ for (int i = 0; i < array.length; i++) {
 
 我们还将看到如何一次一个元素地初始化多维数组:
 
-```
+```java
 for (int i = 0; i < 2; i++) {
     for (int j = 0; j < 5; j++) {
         array[i][j] = j + 1;
@@ -44,14 +44,14 @@ for (int i = 0; i < 2; i++) {
 
 现在让我们在声明时初始化一个数组:
 
-```
+```java
 String array[] = new String[] { 
   "Toyota", "Mercedes", "BMW", "Volkswagen", "Skoda" };
 ```
 
 在实例化数组时，我们不必指定它的类型:
 
-```
+```java
 int array[] = { 1, 2, 3, 4, 5 };
 ```
 
@@ -61,14 +61,14 @@ int array[] = { 1, 2, 3, 4, 5 };
 
 `java.util.Arrays`类有几个名为`fill(),`的方法，它们接受不同类型的参数并用相同的值填充整个数组:
 
-```
+```java
 long array[] = new long[5];
 Arrays.fill(array, 30);
 ```
 
 该方法还有几个替代方法，将数组的范围设置为特定值:
 
-```
+```java
 int array[] = new int[5];
 Arrays.fill(array, 0, 3, -50);
 ```
@@ -81,7 +81,7 @@ Arrays.fill(array, 0, 3, -50);
 
 让我们看一个简单的例子:
 
-```
+```java
 int array[] = { 1, 2, 3, 4, 5 };
 int[] copy = Arrays.copyOf(array, 5);
 ```
@@ -97,7 +97,7 @@ int[] copy = Arrays.copyOf(array, 5);
 
 方法`Arrays.setAll()`使用生成器函数设置数组的所有元素:
 
-```
+```java
 int[] array = new int[20];
 Arrays.setAll(array, p -> p > 9 ? 0 : p);
 
@@ -110,7 +110,7 @@ Arrays.setAll(array, p -> p > 9 ? 0 : p);
 
 最后，让我们利用 Apache Commons Lang 3 的`ArrayUtils.clone()` API，它通过创建另一个数组的直接副本来初始化一个数组:
 
-```
+```java
 char[] array = new char[] {'a', 'b', 'c'};
 char[] copy = ArrayUtils.clone(array);
 ```

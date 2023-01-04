@@ -16,19 +16,19 @@
 
 让我们启动一个测试 Redis 服务器:
 
-```
+```java
 docker run --name redis -p 6379:6379 -d redis:latest
 ```
 
 并且，我们可以运行 [`redis-cli`](https://web.archive.org/web/20220524114953/https://redis.io/topics/rediscli) 来测试该服务器是否工作正常:
 
-```
+```java
 docker exec -it redis redis-cli
 ```
 
 这将我们带入 cli shell，其中命令`ping`将测试服务器是否启动:
 
-```
+```java
 127.0.0.1:6379> ping
 PONG
 ```
@@ -55,7 +55,7 @@ PONG
 
 首先，我们需要为 [Jedis](https://web.archive.org/web/20220524114953/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22redis.clients%22%20AND%20a%3A%22jedis%22) 添加 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>redis.clients</groupId>
     <artifactId>jedis</artifactId>
@@ -65,7 +65,7 @@ PONG
 
 为了使测试更容易，让我们也使用一个[嵌入式 Redis 服务器](https://web.archive.org/web/20220524114953/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.github.kstyrc%22%20AND%20a%3A%22embedded-redis%22):
 
-```
+```java
 <dependency>
     <groupId>com.github.kstyrc</groupId>
     <artifactId>embedded-redis</artifactId>
@@ -77,13 +77,13 @@ PONG
 
 我们将创建一个嵌入式 Redis 服务器进行测试，在一个可用的端口上运行它:
 
-```
+```java
 RedisService redisServer = new RedisServer(port);
 ```
 
 然后，我们的 Jedis 客户机被创建，并使用`localhost`作为主机名，以及相同的端口:
 
-```
+```java
 Jedis jedis = new Jedis("localhost", port);
 ```
 
@@ -91,7 +91,7 @@ Jedis jedis = new Jedis("localhost", port);
 
 让我们将一些数据放入数据库，并检查它是否被记住:
 
-```
+```java
 String key = "key";
 String value = "value";
 jedis.set(key, value);
@@ -102,7 +102,7 @@ assertEquals(value, received);
 
 现在让我们使用`flushDB` 方法来**刷新数据库:**
 
-```
+```java
 jedis.flushDB();
 
 assertNull(jedis.get(key));
@@ -114,7 +114,7 @@ assertNull(jedis.get(key));
 
 Redis 提供了多个数据库，这些数据库是有编号的。**在添加值之前，我们可以使用`select`命令**将数据添加到不同的数据库中:
 
-```
+```java
 jedis.select(0);
 jedis.set("key1", "value1");
 jedis.select(1);
@@ -123,7 +123,7 @@ jedis.set("key2", "value2");
 
 我们现在应该在两个数据库中各有一个键:
 
-```
+```java
 jedis.select(0);
 assertEquals("value1", jedis.get("key1"));
 assertNull(jedis.get("key2"));
@@ -135,13 +135,13 @@ assertNull(jedis.get("key1"));
 
 **`flushDB`方法只会清除当前数据库**。为了清除所有数据库，我们使用`flushAll`方法:
 
-```
+```java
 jedis.flushAll();
 ```
 
 我们可以测试这是否有效:
 
-```
+```java
 jedis.select(0);
 
 assertNull(jedis.get("key1"));

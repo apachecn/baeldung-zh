@@ -12,7 +12,7 @@ Spring Boot 中的自动配置机制试图根据应用程序的依赖关系自�
 
 让我们编写一个简单的 Spring Boot 应用程序，我们将在我们的例子中使用:
 
-```
+```java
 @SpringBootApplication
 public class App {
     public static void main(String[] args) {
@@ -27,13 +27,13 @@ public class App {
 
 但是，**我们可以让 Spring Boot 简单地通过在我们的`application.properties`文件中启用调试模式**来创建一个报告:
 
-```
+```java
 debug=true 
 ```
 
 或者我们的`application.yml`文件:
 
-```
+```java
 debug: true
 ```
 
@@ -41,7 +41,7 @@ debug: true
 
 或者，如果我们不想使用属性文件方法，我们可以通过**用`–debug`开关**启动应用程序来触发自动配置报告:
 
-```
+```java
 $ java -jar myproject-0.0.1-SNAPSHOT.jar --debug 
 ```
 
@@ -51,7 +51,7 @@ $ java -jar myproject-0.0.1-SNAPSHOT.jar --debug
 
 而且，因为我们已经设置了`debug=true`，所以我们可以在输出中看到它:
 
-```
+```java
 ============================
 CONDITIONS EVALUATION REPORT
 ============================

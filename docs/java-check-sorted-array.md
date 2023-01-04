@@ -20,7 +20,7 @@
 
 如果它们中的一些没有排序，该方法将返回`false.`如果没有一个比较返回`false,`，这意味着一个数组已经排序:
 
-```
+```java
 boolean isSorted(int[] array) {
     for (int i = 0; i < array.length - 1; i++) {
         if (array[i] > array[i + 1])
@@ -34,7 +34,7 @@ boolean isSorted(int[] array) {
 
 我们可以对实现`Comparable.`的对象做类似的事情，而不是使用大于号**，我们将使用`compareTo` :**
 
-```
+```java
 boolean isSorted(Comparable[] array) {
     for (int i = 0; i < array.length - 1; ++i) {
         if (array[i].compareTo(array[i + 1]) > 0)
@@ -50,7 +50,7 @@ boolean isSorted(Comparable[] array) {
 
 在这个例子中，我们将使用`Employee`对象。这是一个简单的 POJO，有三个字段:
 
-```
+```java
 public class Employee implements Serializable {
     private int id;
     private String name;
@@ -62,13 +62,13 @@ public class Employee implements Serializable {
 
 然后，我们需要选择我们想要排序的字段。这里，让我们按`age` 字段排序:
 
-```
+```java
 Comparator<Employee> byAge = Comparator.comparingInt(Employee::getAge);
 ```
 
 然后，我们可以改变我们的方法，取一个`Comparator`:
 
-```
+```java
 boolean isSorted(Object[] array, Comparator comparator) {
     for (int i = 0; i < array.length - 1; ++i) {
         if (comparator.compare(array[i], (array[i + 1])) > 0)
@@ -87,7 +87,7 @@ boolean isSorted(Object[] array, Comparator comparator) {
 
 在这个方法中，**我们检查最后两个位置。如果它们被排序了，我们将再次调用这个方法，但是使用先前的位置。**如果其中一个位置没有排序，该方法将返回`false:`
 
-```
+```java
 boolean isSorted(int[] array, int length) {
     if (array == null || length < 2) 
         return true; 
@@ -101,7 +101,7 @@ boolean isSorted(int[] array, int length) {
 
 现在，让我们再次看看实现了`Comparable. `的对象，我们会看到同样的方法对`compareTo`也有效:
 
-```
+```java
 boolean isSorted(Comparable[] array, int length) {
     if (array == null || length < 2) 
         return true; 
@@ -115,7 +115,7 @@ boolean isSorted(Comparable[] array, int length) {
 
 最近，让我们再次尝试我们的`Employee` 对象，添加`Comparator `参数:
 
-```
+```java
 boolean isSorted(Object[] array, Comparator comparator, int length) {
     if (array == null || length < 2)
         return true;

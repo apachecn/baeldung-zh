@@ -16,7 +16,7 @@
 
 另一方面，我们使用 *POST* API 为一篇新文章添加细节:
 
-```
+```java
 @RestController
 @RequestMapping("/articles")
 public class ArticlesController {
@@ -39,7 +39,7 @@ public class ArticlesController {
 
 我们将使用`Article`类作为这些 API 的数据传输对象(DTO)。现在，让我们在*文章*类中添加几个字段:
 
-```
+```java
 public class Article {
 
     private int id;
@@ -69,7 +69,7 @@ public class Article {
 
 让我们试一试:
 
-```
+```java
 @JsonIgnore
 private int id; 
 ```
@@ -84,7 +84,7 @@ private int id;
 
 让我们在`id` 字段尝试一下:
 
-```
+```java
 @ApiModelProperty(hidden = true)
 private int id;
 ```
@@ -95,7 +95,7 @@ Swagger 为**提供了一个可选属性，*只读*，**也是如此。我们可
 
 让我们来检查一下:
 
-```
+```java
 @ApiModelProperty(readOnly = true)
 private int id;
 ```
@@ -112,7 +112,7 @@ private int id;
 
 Jackson 提供了 *@JsonProperty* 注释。我们可以使用它来添加与 POJO 字段的 getter/setter 相关的元数据，这些元数据可以在对象的序列化/反序列化过程中使用。我们可以**设置注释的*访问*属性，只允许对特定字段进行*读取*操作**:
 
-```
+```java
 @JsonProperty(access = JsonProperty.Access.READ_ONLY)
 private int id;
 ```
@@ -126,14 +126,14 @@ private int id;
 
 让我们试一试:
 
-```
+```java
 @PostMapping("")
 public void addArticle(@ModelAttribute Article article) {
     articleService.addArticle(article);
 } 
 ```
 
-```
+```java
 @ApiParam(hidden = true)
 private int id;
 ```

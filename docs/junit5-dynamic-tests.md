@@ -24,7 +24,7 @@
 
 我们将创建一个`DynamicTest`的`Collection`:
 
-```
+```java
 @TestFactory
 Collection<DynamicTest> dynamicTestsWithCollection() {
     return Arrays.asList(
@@ -39,14 +39,14 @@ Collection<DynamicTest> dynamicTestsWithCollection() {
 
 输出将包含我们传递给动态测试的显示名称:
 
-```
+```java
 Add test(dynamicTestsWithCollection())
 Multiply Test(dynamicTestsWithCollection())
 ```
 
 相同的测试可以修改为返回一个`Iterable`、`Iterator`或`Stream`:
 
-```
+```java
 @TestFactory
 Iterable<DynamicTest> dynamicTestsWithIterable() {
     return Arrays.asList(
@@ -84,7 +84,7 @@ Stream<DynamicTest> dynamicTestsFromIntStream() {
 
 为了简单起见，让我们看一下我们工厂方法的高层框架:
 
-```
+```java
 @TestFactory
 Stream<DynamicTest> dynamicTestsFromStream() {
 
@@ -116,7 +116,7 @@ Stream<DynamicTest> dynamicTestsFromStream() {
 
 现在让我们来看看输入生成器:
 
-```
+```java
 Iterator<String> inputGenerator = inputList.iterator();
 ```
 
@@ -124,7 +124,7 @@ Iterator<String> inputGenerator = inputList.iterator();
 
 显示名称生成器相当简单:
 
-```
+```java
 Function<String, String> displayNameGenerator 
   = (input) -> "Resolving: " + input;
 ```
@@ -135,7 +135,7 @@ Function<String, String> displayNameGenerator
 
 **现在让我们看看测试的核心部分——测试执行代码:**
 
-```
+```java
 DomainNameResolver resolver = new DomainNameResolver();
 ThrowingConsumer<String> testExecutor = (input) -> {
     int id = inputList.indexOf(input);
@@ -148,14 +148,14 @@ ThrowingConsumer<String> testExecutor = (input) -> {
 
 现在，最后一部分只是简单地组装所有的部件，并作为`DynamicTest`的`Stream`返回:
 
-```
+```java
 return DynamicTest.stream(
   inputGenerator, displayNameGenerator, testExecutor);
 ```
 
 就是这样。运行测试将显示包含由我们的显示名称生成器定义的名称的报告:
 
-```
+```java
 Resolving: www.somedomain.com(dynamicTestsFromStream())
 Resolving: www.anotherdomain.com(dynamicTestsFromStream())
 Resolving: www.yetanotherdomain.com(dynamicTestsFromStream())
@@ -165,7 +165,7 @@ Resolving: www.yetanotherdomain.com(dynamicTestsFromStream())
 
 通过使用 Java 8 的特性，可以极大地改进前一节中编写的测试工厂。生成的代码将更加简洁，并且可以用更少的行来编写:
 
-```
+```java
 @TestFactory
 Stream<DynamicTest> dynamicTestsFromStreamInJava8() {
 
@@ -193,7 +193,7 @@ Stream<DynamicTest> dynamicTestsFromStreamInJava8() {
 
 在这个例子中，我们进一步探索动态测试的能力，根据测试用例过滤输入:
 
-```
+```java
 @TestFactory
 Stream<DynamicTest> dynamicTestsForEmployeeWorkflows() {
     List<Employee> inputList = Arrays.asList(
@@ -231,7 +231,7 @@ Stream<DynamicTest> dynamicTestsForEmployeeWorkflows() {
 
 现在，让我们来看看输出:
 
-```
+```java
 saveEmployee: Employee 
   [id=1, firstName=Fred](dynamicTestsForEmployeeWorkflows())
 saveEmployee: Employee 

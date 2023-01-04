@@ -12,7 +12,7 @@
 
 对于使用*spring-boot-starter-parent*的 Maven 项目，不需要额外的配置来利用属性扩展:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -22,7 +22,7 @@
 
 现在我们可以使用 `@…@`占位符来扩展我们项目的属性。下面是一个例子，说明我们如何将取自 Maven 的项目版本保存到我们的属性中:
 
-```
+```java
 [[email protected]](/web/20220926184421/https://www.baeldung.com/cdn-cgi/l/email-protection)@
 [[email protected]](/web/20220926184421/https://www.baeldung.com/cdn-cgi/l/email-protection)@ 
 ```
@@ -37,7 +37,7 @@
 
 在没有*spring-boot-starter-parent*parent 的情况下，我们需要手动配置这个过滤和扩展。我们需要将*资源*元素包含到我们`pom.xml`文件的< *构建>* 部分:
 
-```
+```java
 <resources>
     <resource>
         <directory>${basedir}/src/main/resources</directory>
@@ -53,7 +53,7 @@
 
 而在<*插件>中*:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-resources-plugin</artifactId>
@@ -69,7 +69,7 @@
 
 如果需要使用类型为 *${variable.name}* 的标准占位符，我们需要将*usedefaultdelimiters*设置为 *true* ，您的 *application.properties* 将如下所示:
 
-```
+```java
 expanded.project.version=${project.version}
 expanded.project.property=${custom.property} 
 ```
@@ -82,7 +82,7 @@ expanded.project.property=${custom.property}
 
 为了允许我们使用属性扩展机制，我们需要将以下代码包含到 *build.gradle* 中:
 
-```
+```java
 processResources {
     expand(project.properties)
 } 
@@ -98,7 +98,7 @@ processResources {
 
 为了复制标准的 Maven 解决方案并利用`@…@`样式的占位符，我们需要将以下代码添加到我们的 *build.gradle* :
 
-```
+```java
 import org.apache.tools.ant.filters.ReplaceTokens
 processResources {
     with copySpec {

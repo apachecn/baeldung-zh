@@ -14,7 +14,7 @@
 
 让我们来看看我们的 Spring Boot 应用程序的一个最小的`Dockerfile`:
 
-```
+```java
 FROM openjdk:11
 COPY target/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]
@@ -22,19 +22,19 @@ ENTRYPOINT ["java", "-jar", "/app.jar"]
 
 当然，我们可以通过`docker build`建立我们的码头工人形象:
 
-```
+```java
 docker build --tag=docker-with-spring-profile:latest .
 ```
 
 因此，我们可以从图像`docker-with-spring-profile`运行我们的应用程序:
 
-```
+```java
 docker run docker-with-spring-profile:latest
 ```
 
 正如我们注意到的，我们的 Spring Boot 应用程序从`“default”`概要文件开始:
 
-```
+```java
 2022-04-22 22:34:25.268 INFO 1 --- [main] c.b.docker.spring.DemoApplication: Starting DemoApplication using Java 11.0.14.1 on ea8851bea75f with PID 1 (/app.jar started by root in /)
 2022-04-22 22:34:25.270 INFO 1 --- [main] c.b.docker.spring.DemoApplication: No active profile set, falling back to 1 default profile: "default"
 //... 
@@ -46,20 +46,20 @@ docker run docker-with-spring-profile:latest
 
 因此，为了将概要文件设置为`“test”`，我们在我们的`Dockerfile's ENTRYPOINT`行中添加了一个新的参数`“-Dspring.profiles.active=test”,`:
 
-```
+```java
 //...
 ENTRYPOINT ["java", "-Dspring.profiles.active=test", "-jar", "/app.jar"]
 ```
 
 要查看配置文件的变化，让我们用同样的命令再次运行我们的容器:
 
-```
+```java
 docker run docker-with-spring-profile:latest
 ```
 
 相应地，我们可以看到配置文件`“test”`被我们的应用程序成功选取:
 
-```
+```java
 2022-04-22 22:39:33.210 INFO 1 --- [main] c.b.docker.spring.DemoApplication: Starting DemoApplication using Java 11.0.14.1 on 227974fa84b2 with PID 1 (/app.jar started by root in /)
 2022-04-22 22:39:33.212 INFO 1 --- [main] c.b.docker.spring.DemoApplication: The following 1 profile is active: "test"
 //... 
@@ -73,13 +73,13 @@ docker run docker-with-spring-profile:latest
 
 因此，我们实际上可以利用`docker run`命令在启动时设置 Spring 配置文件:
 
-```
+```java
 docker run -e "SPRING_PROFILES_ACTIVE=test" docker-with-spring-profile:latest
 ```
 
 此外，根据我们的用例，我们可以通过逗号分隔的字符串一次设置多个概要文件:
 
-```
+```java
 docker run -e "SPRING_PROFILES_ACTIVE=test1,test2,test3" docker-with-spring-profile:latest
 ```
 
@@ -87,14 +87,14 @@ docker run -e "SPRING_PROFILES_ACTIVE=test1,test2,test3" docker-with-spring-prof
 
 因此，我们从我们的`Dockerfile's ENTRYPOINT`行中删除了`“-Dspring.profiles.active=test”`参数:
 
-```
+```java
 //...
 ENTRYPOINT ["java", "-jar", "/app.jar"]
 ```
 
 最后，我们可以看到我们通过`SPRING_PROFILES_ACTIVE`设置的配置文件被考虑在内:
 
-```
+```java
 2022-04-22 22:50:28.924 INFO 1 --- [main] c.b.docker.spring.DemoApplication: Starting DemoApplication using Java 11.0.14.1 on 18eacb6362f8 with PID 1 (/app.jar started by root in /)
 2022-04-22T22:50:28.926562249Z 2022-04-22 22:50:28.926 INFO 1 --- [main] c.b.docker.spring.DemoApplication: The following 3 profiles are active: "test1", "test2", "test3"
 //.. 
@@ -108,7 +108,7 @@ ENTRYPOINT ["java", "-jar", "/app.jar"]
 
 让我们为`“test”`概要文件创建一个`docker-compose-test.yml`文件:
 
-```
+```java
 version: "3.5"
 services:
   docker-with-spring-profile:
@@ -119,7 +119,7 @@ services:
 
 类似地，我们为`“prod”`概要文件创建另一个文件`docker-compose-prod.yml`——唯一的不同是第二个文件中的概要文件`“prod”`:
 
-```
+```java
 //...
 environment:
   - "SPRING_PROFILES_ACTIVE=prod" 
@@ -127,7 +127,7 @@ environment:
 
 因此，我们可以通过两个不同的`docker-compose`文件运行我们的容器:
 
-```
+```java
 # for the profile 'test'
 docker-compose -f docker-compose-test.yml up
 

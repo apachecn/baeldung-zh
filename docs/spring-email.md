@@ -24,7 +24,7 @@ A quick intro to Spring Boot Actuators - using and extending the existing ones, 
 
 下面是我们将添加到普通 Spring 框架中使用的内容:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context-support</artifactId>
@@ -38,7 +38,7 @@ A quick intro to Spring Boot Actuators - using and extending the existing ones, 
 
 对 Spring Boot 来说:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-mail</artifactId>
@@ -67,7 +67,7 @@ Spring 框架中支持 Java 邮件的接口和类组织如下:
 
 对于 Gmail，可以按如下所示进行配置:
 
-```
+```java
 @Bean
 public JavaMailSender getJavaMailSender() {
     JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -93,7 +93,7 @@ public JavaMailSender getJavaMailSender() {
 
 我们可以这样指定 Gmail SMTP 服务器的属性:
 
-```
+```java
 spring.mail.host=smtp.gmail.com
 spring.mail.port=587
 spring.mail.username=<login user to smtp server>
@@ -116,7 +116,7 @@ spring.mail.properties.mail.smtp.starttls.enable=true
 
 为了使用 Amazon SES 发送电子邮件，我们设置了我们的`application.properties`:
 
-```
+```java
 spring.mail.host=email-smtp.us-west-2.amazonaws.com
 spring.mail.username=username
 spring.mail.password=password
@@ -139,7 +139,7 @@ spring.mail.properties.mail.smtp.starttls.required=true
 
 让我们首先撰写并发送一封不带任何附件的简单电子邮件:
 
-```
+```java
 @Component
 public class EmailServiceImpl implements EmailService {
 
@@ -170,7 +170,7 @@ public class EmailServiceImpl implements EmailService {
 
 首先，我们将向`EmailServiceImpl` 添加一个方法来发送带有附件的电子邮件:
 
-```
+```java
 @Override
 public void sendMessageWithAttachment(
   String to, String subject, String text, String pathToAttachment) {
@@ -200,7 +200,7 @@ public void sendMessageWithAttachment(
 
 我们可以通过在配置中定义模板 bean 来创建电子邮件模板:
 
-```
+```java
 @Bean
 public SimpleMailMessage templateSimpleMessage() {
     SimpleMailMessage message = new SimpleMailMessage();
@@ -212,7 +212,7 @@ public SimpleMailMessage templateSimpleMessage() {
 
 现在我们可以使用这个 bean 作为电子邮件的模板，并且只需要向模板提供必要的参数:
 
-```
+```java
 @Autowired
 public SimpleMailMessage template;
 ...

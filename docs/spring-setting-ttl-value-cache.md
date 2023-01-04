@@ -12,7 +12,7 @@
 
 首先，我们将创建`SpringCachingConfig`:
 
-```
+```java
 @Configuration
 @EnableCaching
 public class SpringCachingConfig {
@@ -26,7 +26,7 @@ public class SpringCachingConfig {
 
 我们还需要`SpringCacheCustomizer`:
 
-```
+```java
 @Component
 public class SpringCacheCustomizer implements CacheManagerCustomizer<ConcurrentMapCacheManager> {
 
@@ -41,7 +41,7 @@ public class SpringCacheCustomizer implements CacheManagerCustomizer<ConcurrentM
 
 设置完成后，我们就可以使用 Spring 配置了。我们可以通过在内存中存储`Hotel`对象来减少 REST 端点响应时间。我们使用`@Cacheable`注释来缓存一列`Hotel`对象，如下面的代码片段所示:
 
-```
+```java
 @Cacheable("hotels")
 public List<Hotel> getAllHotels() {
     return hotelRepository.getAllHotels();
@@ -52,7 +52,7 @@ public List<Hotel> getAllHotels() {
 
 但是，由于更新、删除或添加，数据库中缓存的`Hotels`列表可能会随着时间而改变。我们希望通过设置生存时间间隔(TTL)来刷新缓存，在此之后，现有的缓存条目将被删除，并在第一次调用上面第 3 节中的方法时重新填充。我们可以通过使用`@CacheEvict`注释来做到这一点。例如，在下面的例子中，我们通过`caching.hotelCacheTTL`变量设置 TTL:
 
-```
+```java
 @CacheEvict(value = "hotels", allEntries = true)
 @Scheduled(fixedRateString = "${caching.hotelListTTL}")
 public void emptyHotelsCache() {
@@ -62,13 +62,13 @@ public void emptyHotelsCache() {
 
 我们希望 TTL 为 12 小时。以毫秒为单位的值是 12 x 3600 x 1000 = 43200000。我们在环境属性中定义了这一点。此外，如果我们使用基于属性的环境配置，我们可以如下设置缓存 TTL:
 
-```
+```java
 caching.spring.hotelListTTL=43200000
 ```
 
 或者，如果我们使用基于 YAML 的设计，我们可以将其设置为:
 
-```
+```java
 caching:
   spring:
     hotelListTTL: 43200000

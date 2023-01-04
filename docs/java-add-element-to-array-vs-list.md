@@ -14,14 +14,14 @@
 
 我们可以使用方括号符号来访问和修改数组元素:
 
-```
+```java
 System.out.println(anArray[1]);
 anArray[1] = 4;
 ```
 
 另一方面，`ArrayList`有一套访问和修改元素的方法:
 
-```
+```java
 int n = anArrayList.get(1);
 anArrayList.set(1, 4);
 ```
@@ -54,7 +54,7 @@ anArrayList.set(1, 4);
 
 让我们看看它在 Java 中的实现，不使用任何实用程序类:
 
-```
+```java
 public Integer[] addElementUsingPureJava(Integer[] srcArray, int elementToAdd) {
     Integer[] destArray = new Integer[srcArray.length+1];
 
@@ -69,19 +69,19 @@ public Integer[] addElementUsingPureJava(Integer[] srcArray, int elementToAdd) {
 
 或者， [`Arrays`](/web/20221205184906/https://www.baeldung.com/java-util-arrays) 类提供了一个实用方法`copyOf()`，它帮助创建一个更大的新数组，并从旧数组中复制所有元素:
 
-```
+```java
 int[] destArray = Arrays.copyOf(srcArray, srcArray.length + 1);
 ```
 
 一旦我们创建了一个新的数组，我们可以很容易地将新元素添加到数组中:
 
-```
+```java
 destArray[destArray.length - 1] = elementToAdd;
 ```
 
 另一方面，**在`ArrayList`中添加一个元素是非常容易的**:
 
-```
+```java
 anArrayList.add(newElement);
 ```
 
@@ -93,7 +93,7 @@ anArrayList.add(newElement);
 
 此外，我们需要将指定索引之后的所有元素向右移动一个位置:
 
-```
+```java
 public static int[] insertAnElementAtAGivenIndex(final int[] srcArray, int index, int newElement) {
     int[] destArray = new int[srcArray.length+1];
     int j = 0;
@@ -112,7 +112,7 @@ public static int[] insertAnElementAtAGivenIndex(final int[] srcArray, int index
 
 然而， **[`ArrayUtils`](/web/20221205184906/https://www.baeldung.com/array-processing-commons-lang) 类给了我们一个更简单的解决方案来将项目插入到数组**中:
 
-```
+```java
 int[] destArray = ArrayUtils.insert(2, srcArray, 77);
 ```
 
@@ -124,7 +124,7 @@ int[] destArray = ArrayUtils.insert(2, srcArray, 77);
 
 让我们用它从索引二开始在`srcArray`中插入三个元素:
 
-```
+```java
 int[] destArray = ArrayUtils.insert(2, srcArray, 77, 88, 99);
 ```
 
@@ -132,7 +132,7 @@ int[] destArray = ArrayUtils.insert(2, srcArray, 77, 88, 99);
 
 此外，这对于`ArrayList`来说可以很容易地实现:
 
-```
+```java
 anArrayList.add(index, newElement);
 ```
 

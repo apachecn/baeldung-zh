@@ -18,7 +18,7 @@ RSocket 提供了四种交互模型。记住这一点，我们将通过一个例
 
 对于我们的示例，RSocket 只需要两个直接依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.rsocket</groupId>
     <artifactId>rsocket-core</artifactId>
@@ -39,7 +39,7 @@ RSocket 提供了四种交互模型。记住这一点，我们将通过一个例
 
 首先，让我们创建`Server`类:
 
-```
+```java
 public class Server {
     private final Disposable server;
 
@@ -63,7 +63,7 @@ public class Server {
 
 接下来，要启动服务器，我们只需要实例化它:
 
-```
+```java
 Server server = new Server();
 ```
 
@@ -81,7 +81,7 @@ RSocket 提供了一个请求/响应模型——每个请求接收一个响应�
 
 让我们首先向我们的`AbstractRSocket, ` `RSocketImpl`扩展添加一个方法:
 
-```
+```java
 @Override
 public Mono<Payload> requestResponse(Payload payload) {
     try {
@@ -98,7 +98,7 @@ public Mono<Payload> requestResponse(Payload payload) {
 
 接下来，我们可以创建我们的客户端类:
 
-```
+```java
 public class ReqResClient {
 
     private final RSocket socket;
@@ -129,7 +129,7 @@ public class ReqResClient {
 
 最后，我们可以运行集成测试来查看请求/响应的运行情况。我们将向服务器发送一个`String`,并验证是否返回了相同的`String`:
 
-```
+```java
 @Test
 public void whenSendingAString_thenRevceiveTheSameString() {
     ReqResClient client = new ReqResClient();
@@ -149,7 +149,7 @@ public void whenSendingAString_thenRevceiveTheSameString() {
 
 让我们在服务器的`RSocketImpl`类中添加一个一次性处理程序:
 
-```
+```java
 @Override
 public Mono<Void> fireAndForget(Payload payload) {
     try {
@@ -167,7 +167,7 @@ public Mono<Void> fireAndForget(Payload payload) {
 
 接下来，我们将创建一次性客户端:
 
-```
+```java
 public class FireNForgetClient {
     private final RSocket socket;
     private final List<Float> data;
@@ -209,7 +209,7 @@ public class FireNForgetClient {
 
 和以前一样，让我们从向服务器上的`RSocketImpl`添加一个新的监听器开始:
 
-```
+```java
 @Override
 public Flux<Payload> requestStream(Payload payload) {
     return Flux.from(dataPublisher);
@@ -220,7 +220,7 @@ public Flux<Payload> requestStream(Payload payload) {
 
 接下来让我们创建请求/流客户端:
 
-```
+```java
 public class ReqStreamClient {
 
     private final RSocket socket;
@@ -254,7 +254,7 @@ public class ReqStreamClient {
 
 我们可以断言每个值的接收顺序与发送顺序相同。然后，我们可以断言，我们收到的值与发送的值数量相同:
 
-```
+```java
 @Test
 public void whenSendingStream_thenReceiveTheSameStream() {
     FireNForgetClient fnfClient = new FireNForgetClient(); 
@@ -289,7 +289,7 @@ public void whenSendingStream_thenReceiveTheSameStream() {
 
 首先，我们将在服务器上创建处理程序。像以前一样，我们给`RSocketImpl`加上:
 
-```
+```java
 @Override
 public Flux<Payload> requestChannel(Publisher<Payload> payloads) {
     Flux.from(payloads)
@@ -304,7 +304,7 @@ public Flux<Payload> requestChannel(Publisher<Payload> payloads) {
 
 下面是对`GameController`类的总结:
 
-```
+```java
 public class GameController implements Publisher<Payload> {
 
     @Override
@@ -322,7 +322,7 @@ public class GameController implements Publisher<Payload> {
 
 接下来，让我们创建客户端:
 
-```
+```java
 public class ChannelClient {
 
     private final RSocket socket;
@@ -363,7 +363,7 @@ public class ChannelClient {
 
 最后，让我们在测试中运行模拟:
 
-```
+```java
 @Test
 public void whenRunningChannelGame_thenLogTheResults() {
     ChannelClient client = new ChannelClient();

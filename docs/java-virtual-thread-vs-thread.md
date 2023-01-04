@@ -30,7 +30,7 @@
 
 在 Loom 中，我们在`Thread`类中获得了新的构建器 API，以及几个工厂方法。让我们看看如何创建标准和虚拟工厂，并利用它们来执行线程:
 
-```
+```java
 Runnable printThread = () -> System.out.println(Thread.currentThread());
 
 ThreadFactory virtualThreadFactory = Thread.builder().virtual().factory();
@@ -45,7 +45,7 @@ kernelThread.start();
 
 下面是上面运行的输出:
 
-```
+```java
 Thread[Thread-0,5,main]
 VirtualThread[<unnamed>,ForkJoinPool-1-worker-3,CarrierThreads]
 ```
@@ -68,7 +68,7 @@ VirtualThread[<unnamed>,ForkJoinPool-1-worker-3,CarrierThreads]
 
 然而，为了展示它是如何在引擎盖下工作的，现在我们将继续进行我们的实验:
 
-```
+```java
 var scope = new ContinuationScope("C1");
 var c = new Continuation(scope, () -> {
     System.out.println("Start C1");
@@ -85,7 +85,7 @@ while (!c.isDone()) {
 
 下面是上面运行的输出:
 
-```
+```java
 Start run()
 Start C1
 End run()

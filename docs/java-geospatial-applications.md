@@ -106,7 +106,7 @@
 
 Redis 提供了简单的命令来处理地理空间索引，并执行常见的操作，如创建新的集合，添加或更新集合中的成员。例如，要从命令行创建一个新的集合并向其中添加成员，我们可以使用 GEOADD 命令:
 
-```
+```java
 GEOADD locations 20.99 65.44 Vehicle-1 23.99 55.45 Vehicle-2
 ```
 
@@ -114,7 +114,7 @@ GEOADD locations 20.99 65.44 Vehicle-1 23.99 55.45 Vehicle-2
 
 Redis 还提供了几种读取索引的方法，比如 ZRANGE、ZSCAN 和 GEOPOS。此外，我们可以使用 GEODIST 命令来计算集合中成员之间的距离。但是最有趣的命令是那些允许我们按位置搜索索引的命令。例如，我们可以使用 GEORADIUSYMEMBER 命令来搜索特定成员半径范围内的成员:
 
-```
+```java
 GEORADIUSBYMEMBER locations Vehicle-3 1000 m
 ```
 
@@ -130,7 +130,7 @@ Redis 在支持存储大量地理空间数据和执行低延迟地理空间查�
 
 要指定 GeoJSON 数据，我们可以使用一个嵌入式文档，其中一个名为`type`的字段用于指示 GeoJSON 对象类型，另一个名为`coordinates`的字段用于指示对象的坐标:
 
-```
+```java
 db.vehicles.insert( {
     name: "Vehicle-1",
     location: { type: "Point", coordinates: [ 83.97, 70.77 ] }
@@ -141,7 +141,7 @@ db.vehicles.insert( {
 
 此外，MongoDB **提供了多种地理空间索引类型，如`2dsphere`和`2d`** 来支持地理空间查询。一个`2dsphere`支持在类地球球体上计算几何图形的查询:
 
-```
+```java
 db.vehicles.createIndex( { location : "2dsphere" } )
 ```
 
@@ -151,7 +151,7 @@ db.vehicles.createIndex( { location : "2dsphere" } )
 
 例如，让我们看看如何使用`near`操作符:
 
-```
+```java
 db.places.find(
    {
      location:
@@ -180,7 +180,7 @@ db.places.find(
 
 PostGIS **支持几何和地理数据类型**。我们可以使用常规的 SQL 查询来创建一个表并插入一个地理数据类型:
 
-```
+```java
 CREATE TABLE vehicles (name VARCHAR, geom GEOGRAPHY(Point));
 INSERT INTO vehicles VALUES ('Vehicle-1', 'POINT(44.34 82.96)');
 ```
@@ -189,13 +189,13 @@ INSERT INTO vehicles VALUES ('Vehicle-1', 'POINT(44.34 82.96)');
 
 PostGIS 添加了相当多的空间功能来对数据执行空间操作。例如，我们可以使用空间函数`ST_AsText`将几何数据作为文本读取:
 
-```
+```java
 SELECT name, ST_AsText(geom) FROM vehicles;
 ```
 
 当然，对我们来说，更有用的查询是查找给定点附近的所有车辆:
 
-```
+```java
 SELECT geom FROM vehicles 
   WHERE ST_Distance( geom, 'SRID=4326;POINT(43.32 68.35)' ) < 1000
 ```
@@ -228,7 +228,7 @@ PostGIS 向 PostgreSQL 添加了空间功能，允许我们利用众所周知的
 
 GeoAPI 提供了与实现无关的 Java 接口。在我们实际使用 GeoAPI 之前，我们必须**从第三方实现列表中选择**。我们可以使用 GeoAPI 执行一些地理空间操作。例如，我们可以从 EPSG 电码得到一个坐标参考系统。然后，我们可以在一对坐标系之间执行类似地图投影的坐标操作:
 
-```
+```java
 CoordinateReferenceSystem sourceCRS = 
   crsFactory.createCoordinateReferenceSystem("EPSG:4326");  // WGS 84
 CoordinateReferenceSystem targetCRS = 
@@ -252,7 +252,7 @@ GeoTools 是一个 OSGeo 项目，**提供了一个开源的 Java 库来处理�
 
 要在地理工具中创建地理空间数据，我们需要定义一个要素类型。最简单的方法是使用类`SimpleFeatureType`:
 
-```
+```java
 SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
 builder.setName("Location");
 builder.setCRS(DefaultGeographicCRS.WGS84);
@@ -265,7 +265,7 @@ SimpleFeatureType VEHICLE = builder.buildFeatureType();
 
 一旦我们准备好了特征类型，我们就可以用它来创建带有`SimpleFeatureBuilder`的特征:
 
-```
+```java
 SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(VEHICLE);
 DefaultFeatureCollection collection = new DefaultFeatureCollection();
 GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(null);
@@ -273,7 +273,7 @@ GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(null);
 
 我们还实例化了存储我们的特性的集合和为位置创建一个`Point`的 GeoTools 工厂类。现在，我们可以将特定位置作为特征添加到我们的系列中:
 
-```
+```java
 Point point = geometryFactory.createPoint(new Coordinate(13.46, 42.97));
 featureBuilder.add(point);
 featureBuilder.add("Vehicle-1");

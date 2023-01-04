@@ -34,7 +34,7 @@
 
 现在，让我们看看这个例子，我们将设置自己的`Exception`描述并抛出一个链接的`Exception`:
 
-```
+```java
 public class MyChainedException {
 
     public void main(String[] args) {
@@ -51,7 +51,7 @@ public class MyChainedException {
 
 正如猜测的那样，这将导致:
 
-```
+```java
 Caught: java.lang.ArithmeticException: Top Level Exception.
 Actual cause: java.io.IOException: IO cause.
 ```
@@ -62,7 +62,7 @@ Actual cause: java.io.IOException: IO cause.
 
 首先，我们将创建一系列异常:
 
-```
+```java
 class NoLeaveGrantedException extends Exception {
 
     public NoLeaveGrantedException(String message, Throwable cause) {
@@ -85,7 +85,7 @@ class TeamLeadUpsetException extends Exception {
 
 让我们编写一个不链接自定义异常的示例程序。
 
-```
+```java
 public class MainClass {
 
     public void main(String[] args) throws Exception {
@@ -109,7 +109,7 @@ public class MainClass {
 
 在上面的示例中，日志如下所示:
 
-```
+```java
 com.baeldung.chainedexception.exceptions.TeamLeadUpsetException: 
   Team lead Upset
     at com.baeldung.chainedexception.exceptions.MainClass
@@ -130,7 +130,7 @@ Exception in thread "main" com.baeldung.chainedexception.exceptions.
 
 接下来，让我们编写一个链接自定义异常的示例:
 
-```
+```java
 public class MainClass {
     public void main(String[] args) throws Exception {
         getLeave();
@@ -152,7 +152,7 @@ public class MainClass {
 
 最后，让我们来看看通过链式异常获得的日志:
 
-```
+```java
 Exception in thread "main" com.baeldung.chainedexception.exceptions
   .NoLeaveGrantedException: Leave not sanctioned. 
     at com.baeldung.chainedexception.exceptions.MainClass

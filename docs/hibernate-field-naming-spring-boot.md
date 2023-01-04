@@ -10,7 +10,7 @@
 
 如果我们从一个基于 Maven 的 Spring Boot 应用程序开始，并且我们乐于接受 Spring 数据，那么我们只需要添加 Spring 数据 JPA 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -19,7 +19,7 @@
 
 另外，我们需要一个数据库，所以我们将使用[内存数据库 H2](https://web.archive.org/web/20221206183643/https://search.maven.org/search?q=g:com.h2database%20AND%20a:h2) :
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -50,7 +50,7 @@ Spring 数据 JPA 依赖为我们带来了 Hibernate 依赖。
 
 如果我们创建一个`Account`实体:
 
-```
+```java
 @Entity
 public class Account {
     @Id 
@@ -61,13 +61,13 @@ public class Account {
 
 然后在我们的属性文件中打开一些 SQL 调试:
 
-```
+```java
 hibernate.show_sql: true
 ```
 
 启动时，我们会在日志中看到下面的`create`语句:
 
-```
+```java
 Hibernate: create table account (id bigint not null, default_email varchar(255))
 ```
 
@@ -81,7 +81,7 @@ Hibernate: create table account (id bigint not null, default_email varchar(255))
 
 我们只需要在我们的属性文件中指明它:
 
-```
+```java
 spring:
   jpa:
     hibernate:
@@ -92,7 +92,7 @@ spring:
 
 或者，将它们暴露为:
 
-```
+```java
 @Bean
 public PhysicalNamingStrategy physical() {
     return new PhysicalNamingStrategyStandardImpl();
@@ -106,7 +106,7 @@ public ImplicitNamingStrategy implicit() {
 
 不管怎样，如果我们用这些变化运行我们的例子，我们将看到一个稍微不同的 DDL 语句:
 
-```
+```java
 Hibernate: create table Account (id bigint not null, defaultEmail varchar(255), primary key (id))
 ```
 

@@ -36,11 +36,11 @@ An [ETag](https://web.archive.org/web/20220707143826/https://en.wikipedia.org/wi
 
 首先，客户端发出一个 REST API 调用–**响应包含 ETag 头**,它将被存储以备将来使用:
 
-```
+```java
 curl -H "Accept: application/json" -i http://localhost:8080/spring-boot-rest/foos/1
 ```
 
-```
+```java
 HTTP/1.1 200 OK
 ETag: "f88dd058fe004909615a64f01be66a7"
 Content-Type: application/json;charset=UTF-8
@@ -49,25 +49,25 @@ Content-Length: 52
 
 **对于下一个请求，客户端将在`If-None-Match`请求头中包含上一步的 ETag 值。**如果服务器上的资源没有改变，响应将不包含正文和状态代码`of 304 – Not Modified`:
 
-```
+```java
 curl -H "Accept: application/json" -H 'If-None-Match: "f88dd058fe004909615a64f01be66a7"'
  -i http://localhost:8080/spring-boot-rest/foos/1
 ```
 
-```
+```java
 HTTP/1.1 304 Not Modified
 ETag: "f88dd058fe004909615a64f01be66a7"
 ```
 
 现在，在再次检索资源之前，让我们通过执行更新来更改它:
 
-```
+```java
 curl -H "Content-Type: application/json" -i 
   -X PUT --data '{ "id":1, "name":"Transformers2"}' 
     http://localhost:8080/spring-boot-rest/foos/1
 ```
 
-```
+```java
 HTTP/1.1 200 OK
 ETag: "d41d8cd98f00b204e9800998ecf8427e" 
 Content-Length: 0
@@ -75,12 +75,12 @@ Content-Length: 0
 
 最后，我们再次发出检索 Foo 的最后一个请求。请记住，自从我们上次请求它以来，我们已经对它进行了更新，所以以前的 ETag 值应该不再有效。该响应将包含新的数据和新的 ETag，其同样可以被存储以供进一步使用:
 
-```
+```java
 curl -H "Accept: application/json" -H 'If-None-Match: "f88dd058fe004909615a64f01be66a7"' -i 
   http://localhost:8080/spring-boot-rest/foos/1
 ```
 
-```
+```java
 HTTP/1.1 200 OK
 ETag: "03cb37ca667706c68c0aad4cb04c3a211"
 Content-Type: application/json;charset=UTF-8
@@ -93,7 +93,7 @@ Content-Length: 56
 
 关于 Spring 支持:在 Spring 中使用 ETag 非常容易设置，并且对应用程序完全透明。**我们可以通过在`web.xml`中添加一个简单的`Filter`** 来启用支持:
 
-```
+```java
 <filter>
    <filter-name>etagFilter</filter-name>
    <filter-class>org.springframework.web.filter.ShallowEtagHeaderFilter</filter-class>
@@ -118,7 +118,7 @@ ETag 机制的更深层次的实现可能会提供更大的好处——比如从
 
 让我们通过在我们的 Spring 上下文中**声明一个`ShallowEtagHeaderFilter` bean 来看看基于 Java 的配置会是什么样子:**
 
-```
+```java
 @Bean
 public ShallowEtagHeaderFilter shallowEtagHeaderFilter() {
     return new ShallowEtagHeaderFilter();
@@ -127,7 +127,7 @@ public ShallowEtagHeaderFilter shallowEtagHeaderFilter() {
 
 请记住，如果我们需要提供进一步的过滤器配置，我们可以声明一个`FilterRegistrationBean`实例:
 
-```
+```java
 @Bean
 public FilterRegistrationBean<ShallowEtagHeaderFilter> shallowEtagHeaderFilter() {
     FilterRegistrationBean<ShallowEtagHeaderFilter> filterRegistrationBean
@@ -148,7 +148,7 @@ public FilterRegistrationBean<ShallowEtagHeaderFilter> shallowEtagHeaderFilter()
 
 我们可以使用版本本身作为 ETag 来指示实体是否已经被修改:
 
-```
+```java
 @GetMapping(value = "/{id}/custom-etag")
 public ResponseEntity<Foo>
   findByIdWithCustomEtag(@PathVariable("id") final Long id) {
@@ -167,7 +167,7 @@ public ResponseEntity<Foo>
 
 让我们从简单的开始—**我们需要验证检索单个资源的简单请求的响应实际上会返回“`ETag”`头:**
 
-```
+```java
 @Test
 public void givenResourceExists_whenRetrievingResource_thenEtagIsAlsoReturned() {
     // Given
@@ -184,7 +184,7 @@ public void givenResourceExists_whenRetrievingResource_thenEtagIsAlsoReturned() 
 
 **接下来**，**我们验证一下 ETag 行为的快乐路径。**如果从服务器检索`Resource`的请求使用正确的`ETag`值，则服务器不检索资源:
 
-```
+```java
 @Test
 public void givenResourceWasRetrieved_whenRetrievingAgainWithEtag_thenNotModifiedReturned() {
     // Given
@@ -211,7 +211,7 @@ public void givenResourceWasRetrieved_whenRetrievingAgainWithEtag_thenNotModifie
 
 **最后，我们验证资源在第一次和第二次检索请求之间改变的情况:**
 
-```
+```java
 @Test
 public void 
   givenResourceWasRetrievedThenModified_whenRetrievingAgainWithEtag_thenResourceIsReturned() {
@@ -243,7 +243,7 @@ public void
 
 最后，最后一个测试是**对`If-Match` HTTP 头:**的支持，这个测试不会起作用，因为这个功能[还没有在 Spring](https://web.archive.org/web/20220707143826/https://jira.springsource.org/browse/SPR-10164 " ShallowEtagHeaderFilter should deal with the If-Match HTTP Header ") 中实现
 
-```
+```java
 @Test
 public void givenResourceExists_whenRetrievedWithIfMatchIncorrectEtag_then412IsReceived() {
     // Given

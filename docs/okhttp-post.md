@@ -12,7 +12,7 @@
 
 我们可以使用`FormBody.Builder`构建一个基本的`RequestBody`来发送两个参数——*用户名*和`password` ——以及一个 POST 请求:
 
-```
+```java
 @Test
 public void whenSendPostRequest_thenCorrect() 
   throws IOException {
@@ -39,7 +39,7 @@ public void whenSendPostRequest_thenCorrect()
 
 在这个简单的例子中，我们还将发送一个`String`作为请求的主体:
 
-```
+```java
 @Test
 public void whenSendPostRequestWithAuthorization_thenCorrect() 
   throws IOException {
@@ -63,7 +63,7 @@ public void whenSendPostRequestWithAuthorization_thenCorrect()
 
 为了在请求体中发送 JSON，我们必须设置它的媒体类型`application/json`。我们可以使用`RequestBody.create`构建器来实现:
 
-```
+```java
 @Test
 public void whenPostJson_thenCorrect() throws IOException {
     String json = "{\"id\":1,\"name\":\"John\"}";
@@ -87,7 +87,7 @@ public void whenPostJson_thenCorrect() throws IOException {
 
 我们要看的最后一个例子是 POST multipart 请求。我们需要将我们的`RequestBody`构建成一个`MultipartBody` 来发布文件、用户名和密码:
 
-```
+```java
 @Test
 public void whenSendMultipartRequest_thenCorrect() 
   throws IOException {	
@@ -116,7 +116,7 @@ public void whenSendMultipartRequest_thenCorrect()
 
 OkHttp 的默认字符编码是 UTF-8:
 
-```
+```java
 @Test
 public void whenPostJsonWithoutCharset_thenCharsetIsUtf8() throws IOException {
     final String json = "{\"id\":1,\"name\":\"John\"}";
@@ -132,7 +132,7 @@ public void whenPostJsonWithoutCharset_thenCharsetIsUtf8() throws IOException {
 
 如果我们想使用不同的字符编码，我们可以将它作为第二个参数传递给`MediaType.parse()`:
 
-```
+```java
 @Test
 public void whenPostJsonWithUtf16Charset_thenCharsetIsUtf16() throws IOException {
     final String json = "{\"id\":1,\"name\":\"John\"}";

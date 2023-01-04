@@ -28,7 +28,7 @@
 
 首先，让我们创建一个简单的 Java 类:
 
-```
+```java
 public class Outer {
 
 // variables and methods...
@@ -45,7 +45,7 @@ When we compile the `Outer` class, the compiler will create an `Outer.class` fil
 
 让我们在我们的`Outer`类中声明一个静态嵌套类:
 
-```
+```java
 public class Outer {
     static class StaticNested {
         public String message() {
@@ -67,7 +67,7 @@ public class Outer {
 
 让我们给我们的`Outer` 类再添加一个嵌套类:
 
-```
+```java
 public class Outer {
     class Nested {
         public String message() {
@@ -89,7 +89,7 @@ public class Outer {
 
 让我们在方法中声明一个局部类:
 
-```
+```java
 public String message() {
     class Local {
         private String message() {
@@ -107,7 +107,7 @@ public String message() {
 
 类似地，我们可以在一个`if`子句中声明一个局部类:
 
-```
+```java
 public String message(String name) {
     if (StringUtils.isEmpty(name)) {
         class Local {
@@ -134,7 +134,7 @@ public String message(String name) {
 
 让我们看一个简单的例子:
 
-```
+```java
 public String greet() {
     Outer anonymous = new Outer() {
         @Override
@@ -154,7 +154,7 @@ public String greet() {
 
 这里，我们正在创建一个界面:
 
-```
+```java
 interface HelloWorld {
     public String greet(String name);
 }
@@ -162,7 +162,7 @@ interface HelloWorld {
 
 现在，让我们创建一个匿名类:
 
-```
+```java
 public String greet(String name) {
     HelloWorld helloWorld = new HelloWorld() {
         @Override
@@ -186,7 +186,7 @@ public String greet(String name) {
 
 让我们在我们的`HelloWorld`接口中声明一个内部类:
 
-```
+```java
 interface HelloWorld {
     public String greet(String name);
     class InnerClass implements HelloWorld {
@@ -216,7 +216,7 @@ interface HelloWorld {
 
 让我们在`HelloWorld`接口中声明我们的接口:
 
-```
+```java
 interface HelloWorld {
     public String greet(String name);
 
@@ -234,7 +234,7 @@ interface HelloWorld {
 
 让我们在我们的`Outer` 类中声明一个接口:
 
-```
+```java
 public class Outer {
      interface HelloOuter {
         public String hello(String name);
@@ -258,7 +258,7 @@ Java 5 中引入了[枚举](/web/20221006054941/https://www.baeldung.com/a-guide
 
 首先，让我们创建一个简单的`enum`:
 
-```
+```java
 enum Level {
     LOW, MEDIUM, HIGH;
 }
@@ -270,7 +270,7 @@ enum Level {
 
 现在，让我们在我们的`Outer` 类中声明一个嵌套的`enum`:
 
-```
+```java
 public class Outer {
     enum Color{ 
         RED, GREEN, BLUE; 
@@ -284,7 +284,7 @@ public class Outer {
 
 类似地，我们可以在一个接口中声明一个`enum`:
 
-```
+```java
 interface HelloWorld {
     enum DIRECTIONS {
         NORTH, SOUTH, EAST, WEST;
@@ -298,7 +298,7 @@ interface HelloWorld {
 
 我们可以在另一个`enum`中声明一个`enum`:
 
-```
+```java
 enum Foods {
     DRINKS, EATS;
     enum DRINKS {

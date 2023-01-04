@@ -14,7 +14,7 @@
 
 让我们也给我们的参数添加一个`@NotNull`注释:
 
-```
+```java
 public class NotNullMethodParameter {
     public int validateNotNull(@NotNull String data) {
         return data.length();
@@ -28,14 +28,14 @@ public class NotNullMethodParameter {
 
 现在，让我们创建一个`NotNullMethodParameter`并用一个`null`参数调用我们的方法:
 
-```
+```java
 NotNullMethodParameter notNullMethodParameter = new NotNullMethodParameter();
 notNullMethodParameter.doesNotValidate(null);
 ```
 
 尽管我们有了`NotNull`注释，我们还是得到了一个`NullPointerException`:
 
-```
+```java
 java.lang.NullPointerException
 ```
 
@@ -47,7 +47,7 @@ java.lang.NullPointerException
 
 除了我们的验证器，我们还需要为表达式语言(EL)添加一个依赖项，它用于呈现消息:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate.validator</groupId>
     <artifactId>hibernate-validator</artifactId>
@@ -63,7 +63,7 @@ java.lang.NullPointerException
 
 当我们不包括 EL 依赖项时，我们得到一个`ValidationException`来提醒我们:
 
-```
+```java
 javax.validation.ValidationException: HV000183: Unable to initialize 'javax.el.ExpressionFactory'. Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator instead
 ```
 
@@ -71,20 +71,20 @@ javax.validation.ValidationException: HV000183: Unable to initialize 'javax.el.E
 
 因此，让我们使用默认的`ValidatorFactory`创建一个验证器:
 
-```
+```java
 ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 Validator validator = factory.getValidator();
 ```
 
 然后，让我们把我们的论点作为我们注释方法的第一行:
 
-```
+```java
 validator.validate(myString);
 ```
 
 现在，当我们用空参数调用我们的方法时，我们的`@NotNull`被强制执行:
 
-```
+```java
 java.lang.IllegalArgumentException: HV000116: The object to be validated must not be null.
 ```
 
@@ -98,7 +98,7 @@ java.lang.IllegalArgumentException: HV000116: The object to be validated must no
 
 首先，让我们添加 Maven 依赖项，以便用 Spring Boot 进行验证:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-validation</artifactId>
@@ -110,7 +110,7 @@ java.lang.IllegalArgumentException: HV000116: The object to be validated must no
 
 现在，让我们创建一个 Spring 管理的`Component`，**，确保我们添加了`@Validated`** **注释**。让我们用一个`validateNotNull`方法来创建它，该方法接受一个`String`参数并返回我们数据的长度，并用@ `NotNull`来注释我们的参数:
 
-```
+```java
 @Component
 @Validated
 public class ValidatingComponent {
@@ -122,7 +122,7 @@ public class ValidatingComponent {
 
 最后，让我们用自动连接的`ValidatingComponent`创建一个`SpringBootTest`。让我们也添加一个使用`null`作为方法参数的测试:
 
-```
+```java
 @SpringBootTest
 class ValidatingComponentTest {
     @Autowired ValidatingComponent component;
@@ -136,7 +136,7 @@ class ValidatingComponentTest {
 
 我们得到的`ConstraintViolationException`有我们的参数名和一个‘不得为空’的消息`:`
 
-```
+```java
 javax.validation.ConstraintViolationException: validate.data: must not be null
 ```
 
@@ -146,7 +146,7 @@ javax.validation.ConstraintViolationException: validate.data: must not be null
 
 尽管这适用于我们的`public`方法，但是让我们看看当我们添加另一个没有注释但是调用我们原来的注释方法的方法时会发生什么:
 
-```
+```java
 public String callAnnotatedMethod(String data) {
     return validateNotNull(data);
 }

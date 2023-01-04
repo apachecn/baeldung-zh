@@ -28,14 +28,14 @@ Java 有很多内置的标记接口，比如`Serializable`、`Cloneable`、`Remo
 
 例如，我们可以创建一个标记来指示某个对象是否可以从数据库中删除:
 
-```
+```java
 public interface Deletable {
 }
 ```
 
 为了从数据库中删除一个实体，表示这个实体的对象必须实现我们的`Deletable `标记接口:
 
-```
+```java
 public class Entity implements Deletable {
     // implementation details
 }
@@ -43,7 +43,7 @@ public class Entity implements Deletable {
 
 假设我们有一个 DAO 对象，它有一个从数据库中删除实体的方法。我们可以编写我们的`delete()`方法，这样**只有实现我们的标记接口**的对象才能被删除:
 
-```
+```java
 public class ShapeDao {
 
     // other dao methods
@@ -72,7 +72,7 @@ public class ShapeDao {
 
 例如，让我们添加一个限制，即只能从数据库中删除一个`Shape `类型:
 
-```
+```java
 public interface Shape {
     double getArea();
     double getCircumference();
@@ -81,14 +81,14 @@ public interface Shape {
 
 在这种情况下，我们的标记接口，姑且称之为`DeletableShape,`将如下所示:
 
-```
+```java
 public interface DeletableShape extends Shape {
 }
 ```
 
 然后我们的类将实现标记接口:
 
-```
+```java
 public class Rectangle implements DeletableShape {
     // implementation details
 }
@@ -102,7 +102,7 @@ public class Rectangle implements DeletableShape {
 
 在前面的例子中，我们可以通过修改我们的 DAO 的`delete()`方法来测试我们的对象是否是一个`Shape `或者不是一个`,`，而不是测试它是否是一个`Deletable:`，从而得到相同的结果
 
-```
+```java
 public class ShapeDao { 
 
     // other dao methods 
@@ -125,7 +125,7 @@ public class ShapeDao {
 
 第一个选项是**向我们之前的`delete()`方法**添加一个额外的检查，以验证要删除的对象是否是`Person `的实例。
 
-```
+```java
 public boolean delete(Object object) {
     if (!(object instanceof Shape || object instanceof Person)) {
         return false;

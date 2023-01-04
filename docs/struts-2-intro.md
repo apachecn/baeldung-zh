@@ -34,7 +34,7 @@ Struts2 是基于 MVC 的框架，因此以下三个组件将出现在所有 Str
 
 让我们将以下条目添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-core</artifactId>
@@ -58,7 +58,7 @@ Struts2 是基于 MVC 的框架，因此以下三个组件将出现在所有 Str
 
 让我们创建一个动作类`CarAction`，它为一个特定的输入值返回一条消息。`CarAction`有两个字段——`carName` (用于存储用户的输入)和`carMessage` (用于存储要显示的自定义消息):
 
-```
+```java
 public class CarAction {
 
     private String carName;
@@ -76,7 +76,7 @@ public class CarAction {
 
 `CarAction` 类使用 `CarMessageService`，它为`Car`品牌提供定制消息:
 
-```
+```java
 public class CarMessageService {
 
     public String getMessage(String carName) {
@@ -97,7 +97,7 @@ public class CarMessageService {
 
 让我们添加一个`JSP`，它是我们应用程序的入口点。这是`input.jsp`文件的一个内容:
 
-```
+```java
 <body>
     <form method="get" action="/struts2/tutorial/car.action">
         <p>Welcome to Baeldung Struts 2 app</p>
@@ -118,7 +118,7 @@ public class CarMessageService {
 
 `StrutsPrepareAndExecuteFilter` 是控制器，它将拦截所有传入的请求。我们需要在`web.xml:`中注册以下过滤器
 
-```
+```java
 <filter>
     <filter-name>struts2</filter-name>
     <filter-class>org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter</filter-class>
@@ -136,7 +136,7 @@ public class CarMessageService {
 
 让我们给动作类`Car`添加以下注释:
 
-```
+```java
 @Namespace("/tutorial")
 @Action("/car")
 @Result(name = "success", location = "/result.jsp")
@@ -152,7 +152,7 @@ public class CarMessageService {
 
 通过提供 XML 配置文件可以实现相同的配置:
 
-```
+```java
 <struts>
     <package name="tutorial" extends="struts-default" namespace="/tutorial">
         <action name="car" class="com.baeldung.struts.CarAction" method="execute">
@@ -166,7 +166,7 @@ public class CarMessageService {
 
 这是`result.jsp` 的内容，将用于向用户呈现消息:
 
-```
+```java
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <body>

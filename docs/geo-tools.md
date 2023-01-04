@@ -12,7 +12,7 @@
 
 我们需要将地理工具依赖项添加到我们的`pom.xml`文件中。由于这些依赖项不在 Maven Central 上托管，我们还需要声明它们的存储库，以便 Maven 可以下载它们:
 
-```
+```java
 <repositories>
     <repository>
         <id>osgeo</id>
@@ -29,7 +29,7 @@
 
 之后，我们可以添加依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.geotools</groupId>
     <artifactId>gt-shapefile</artifactId>
@@ -78,7 +78,7 @@
 
 让我们创建一个助手方法来简化我们的`Map`对象中的数据存储:
 
-```
+```java
 private static void addToLocationMap(
   String name,
   double lat,
@@ -94,7 +94,7 @@ private static void addToLocationMap(
 
 现在让我们填写我们的`Map`对象:
 
-```
+```java
 Map<String, List<Double>> locations = new HashMap<>();
 
 addToLocationMap("Bangkok", 13.752222, 100.493889, locations);
@@ -113,14 +113,14 @@ addToLocationMap("Cairo", 30.07708, 31.285909, locations);
 
 一种方法是使用`DataUtilites`类的`createType`方法:
 
-```
+```java
 SimpleFeatureType TYPE = DataUtilities.createType(
   "Location", "location:Point:srid=4326," + "name:String");
 ```
 
 另一种方法是**使用`SimpleFeatureTypeBuilder`，这提供了更大的灵活性**。例如，我们可以为类型设置坐标参考系统，并且可以为名称字段设置最大长度:
 
-```
+```java
 SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
 builder.setName("Location");
 builder.setCRS(DefaultGeographicCRS.WGS84);
@@ -143,19 +143,19 @@ SimpleFeatureType CITY = builder.buildFeatureType();
 
 让我们实例化一个`SimpleFeatureBuilder`来提供我们的特征类型:
 
-```
+```java
 SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(CITY);
 ```
 
 我们还需要一个集合来存储所有创建的特征对象:
 
-```
+```java
 DefaultFeatureCollection collection = new DefaultFeatureCollection();
 ```
 
 因为我们在我们的特征类型中声明了为位置保存一个`Point`，我们将需要**根据他们的坐标**为我们的城市创建点。我们可以用`GeoTools's JTSGeometryFactoryFinder`来做这件事:
 
-```
+```java
 GeometryFactory geometryFactory
   = JTSFactoryFinder.getGeometryFactory(null);
 ```
@@ -164,7 +164,7 @@ GeometryFactory geometryFactory
 
 我们可以创建一个`function`来帮助我们将功能放入系列中:
 
-```
+```java
 private static Function<Map.Entry<String, List<Double>>, SimpleFeature>
   toFeature(SimpleFeatureType CITY, GeometryFactory geometryFactory) {
     return location -> {
@@ -183,7 +183,7 @@ private static Function<Map.Entry<String, List<Double>>, SimpleFeature>
 
 一旦我们有了构建器和集合，通过使用先前创建的`function`，我们可以**创建特征并将它们存储在我们的集合**中:
 
-```
+```java
 locations.entrySet().stream()
   .map(toFeature(CITY, geometryFactory))
   .forEach(collection::add);
@@ -197,14 +197,14 @@ locations.entrySet().stream()
 
 让我们设置将包含特性的文件:
 
-```
+```java
 File shapeFile = new File(
   new File(".").getAbsolutePath() + "shapefile.shp");
 ```
 
 现在，让我们设置参数，我们将使用这些参数来告诉`DataStoreFactory`使用哪个文件，并指示我们需要在创建`DataStore`时存储一个空间索引:
 
-```
+```java
 Map<String, Serializable> params = new HashMap<>();
 params.put("url", shapeFile.toURI().toURL());
 params.put("create spatial index", Boolean.TRUE);
@@ -212,7 +212,7 @@ params.put("create spatial index", Boolean.TRUE);
 
 让我们使用刚刚创建的参数来创建`DataStoreFactory`，并使用该工厂来创建`DataStore`:
 
-```
+```java
 ShapefileDataStoreFactory dataStoreFactory
   = new ShapefileDataStoreFactory();
 
@@ -227,7 +227,7 @@ dataStore.createSchema(CITY);
 
 这个接口让我们有可能**轻松`commit`我们对文件**的修改。它还提供了一种方法，如果在写入文件时出现问题，则**执行不成功更改的`rollback`:**
 
-```
+```java
 Transaction transaction = new DefaultTransaction("create");
 
 String typeName = dataStore.getTypeNames()[0];

@@ -14,7 +14,7 @@
 
 为了在 Spring Security 中使用异步集成，我们需要在我们的`pom.xml`的`dependencies`中包含以下部分:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security</groupId>
     <artifactId>spring-security-config</artifactId>
@@ -28,7 +28,7 @@ Spring 安全依赖的最新版本可以在[这里](https://web.archive.org/web/
 
 让我们先写一个简单的例子:
 
-```
+```java
 @RequestMapping(method = RequestMethod.GET, value = "/async")
 @ResponseBody
 public Object standardProcessing() throws Exception {
@@ -46,7 +46,7 @@ public Object standardProcessing() throws Exception {
 
 **我们要检查弹簧`SecurityContext`是否传播到新线程。**首先，我们在异步调用之前记录上下文，接下来我们运行异步方法，最后我们再次记录上下文。`asyncCall()`方法有以下实现:
 
-```
+```java
 @Async
 @Override
 public void asyncCall() {
@@ -63,7 +63,7 @@ public void asyncCall() {
 
 特别是，如果我们运行异步逻辑，我们将能够在主程序中记录`Authentication`对象，但是当我们在`@Async`中记录它时，它将是`null`。这是一个日志输出示例:
 
-```
+```java
 web - 2016-12-30 22:41:58,916 [http-nio-8081-exec-3] INFO
   o.baeldung.web.service.AsyncService -
   Outside the @Async logic - before the async call:
@@ -89,7 +89,7 @@ web - 2016-12-30 22:41:58,921 [http-nio-8081-exec-3] INFO
 
 如果我们想要访问异步线程内部的主体，就像我们在外部访问它一样，我们需要创建`DelegatingSecurityContextAsyncTaskExecutor` bean:
 
-```
+```java
 @Bean 
 public DelegatingSecurityContextAsyncTaskExecutor taskExecutor(ThreadPoolTaskExecutor delegate) { 
     return new DelegatingSecurityContextAsyncTaskExecutor(delegate); 
@@ -100,7 +100,7 @@ public DelegatingSecurityContextAsyncTaskExecutor taskExecutor(ThreadPoolTaskExe
 
 现在，让我们再次运行该应用程序，并查看日志记录信息以确保情况确实如此:
 
-```
+```java
 web - 2016-12-30 22:45:18,013 [http-nio-8081-exec-3] INFO
   o.baeldung.web.service.AsyncService -
   Outside the @Async logic - before the async call:

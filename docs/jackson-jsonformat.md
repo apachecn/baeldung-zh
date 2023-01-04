@@ -14,7 +14,7 @@
 
 `@JsonFormat`是在 [jackson-databind](https://web.archive.org/web/20220626202434/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.fasterxml.jackson.core%22%20AND%20a%3A%22jackson-databind%22) 包中定义的，所以我们需要下面的 Maven 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -30,7 +30,7 @@
 
 因为我们想解释注释的细节，所以将根据请求创建`User`对象(而不是从数据库中存储或加载)并序列化为 JSON:
 
-```
+```java
 public class User {
     private String firstName;
     private String lastName;
@@ -42,7 +42,7 @@ public class User {
 
 构建和运行此代码示例将返回以下输出:
 
-```
+```java
 {"firstName":"John","lastName":"Smith","createdDate":1482047026009}
 ```
 
@@ -56,7 +56,7 @@ public class User {
 
 用于`pattern`参数的数据格式由`[SimpleDateFormat](https://web.archive.org/web/20220626202434/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/SimpleDateFormat.html)`指定:
 
-```
+```java
 @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "[[email protected]](/web/20220626202434/https://www.baeldung.com/cdn-cgi/l/email-protection):mm:ss.SSSZ")
 private Date createdDate;
 ```
@@ -65,7 +65,7 @@ private Date createdDate;
 
 这是输出结果:
 
-```
+```java
 {"firstName":"John","lastName":"Smith","createdDate":"[[email protected]](/web/20220626202434/https://www.baeldung.com/cdn-cgi/l/email-protection):53:34.740+0000"}
 ```
 
@@ -77,7 +77,7 @@ private Date createdDate;
 
 请注意，我们还更改了模式，只返回即时消息的日期部分:
 
-```
+```java
 @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 public Date getCurrentDate() {
     return new Date();
@@ -86,7 +86,7 @@ public Date getCurrentDate() {
 
 这是输出结果:
 
-```
+```java
 { ... , "currentDate":"2016-12-18", ...}
 ```
 
@@ -96,7 +96,7 @@ public Date getCurrentDate() {
 
 不指定此参数会导致使用默认区域设置执行序列化:
 
-```
+```java
 @JsonFormat(
   shape = JsonFormat.Shape.STRING, pattern = "[[email protected]](/web/20220626202434/https://www.baeldung.com/cdn-cgi/l/email-protection):mm:ss.SSSZ", locale = "en_GB")
 public Date getCurrentDate() {
@@ -110,7 +110,7 @@ public Date getCurrentDate() {
 
 参数`pattern`不适用于这种情况，忽略不计:
 
-```
+```java
 @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 public Date getDateNum() {
     return new Date();
@@ -119,7 +119,7 @@ public Date getDateNum() {
 
 让我们看看输出:
 
-```
+```java
 { ..., "dateNum":1482054723876 }
 ```
 

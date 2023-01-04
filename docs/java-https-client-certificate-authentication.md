@@ -26,7 +26,7 @@ Java 从 Java 11 开始支持这个版本的协议。我们将使用这个版本
 
 首先，**我们生成服务器密钥存储库**:
 
-```
+```java
 keytool -genkey -alias serverkey -keyalg RSA -keysize 2048 -sigalg SHA256withRSA -keystore serverkeystore.p12 -storepass password -ext san=ip:127.0.0.1,dns:localhost
 ```
 
@@ -34,13 +34,13 @@ keytool -genkey -alias serverkey -keyalg RSA -keysize 2048 -sigalg SHA256withRSA
 
 接下来，我们将证书导出到文件`server-certificate.pem`:
 
-```
+```java
 keytool -exportcert -keystore serverkeystore.p12 -alias serverkey -storepass password -rfc -file server-certificate.pem
 ```
 
 最后，**我们将服务器证书添加到客户端的信任存储库**:
 
-```
+```java
 keytool -import -trustcacerts -file server-certificate.pem -keypass password -storepass password -keystore clienttruststore.jks
 ```
 
@@ -48,7 +48,7 @@ keytool -import -trustcacerts -file server-certificate.pem -keypass password -st
 
 类似地，**我们生成客户端密钥存储库**并导出其证书:
 
-```
+```java
 keytool -genkey -alias clientkey -keyalg RSA -keysize 2048 -sigalg SHA256withRSA -keystore clientkeystore.p12 -storepass password -ext san=ip:127.0.0.1,dns:localhost
 
 keytool -exportcert -keystore clientkeystore.p12 -alias clientkey -storepass password -rfc -file client-certificate.pem
@@ -62,7 +62,7 @@ keytool -import -trustcacerts -file client-certificate.pem -keypass password -st
 
 使用 java 套接字，服务器实现是简单的。`SSLSocketEchoServer`类获得一个`SSLServerSocket`来轻松支持 TLS 认证。我们只需要指定密码和协议，剩下的只是一个标准的 echo 服务器，它回复客户端发送的相同消息:
 
-```
+```java
 public class SSLSocketEchoServer {
 
     static void startServer(int port) throws IOException {
@@ -99,7 +99,7 @@ public class SSLSocketEchoServer {
 
 与我们对服务器所做的一样，客户端实现是一个简单的`SSLScocketClient`类:
 
-```
+```java
 public class SSLScocketClient {
 
     static void startClient(String host, int port) throws IOException {
@@ -133,7 +133,7 @@ public class SSLScocketClient {
 
 要运行服务器，请打开命令窗口并运行:
 
-```
+```java
 java -Djavax.net.ssl.keyStore=/path/to/serverkeystore.p12 \ 
   -Djavax.net.ssl.keyStorePassword=password \
   -Djavax.net.ssl.trustStore=/path/to/servertruststore.jks \ 
@@ -145,7 +145,7 @@ java -Djavax.net.ssl.keyStore=/path/to/serverkeystore.p12 \
 
 要运行客户端，我们打开另一个命令窗口并运行:
 
-```
+```java
 java -Djavax.net.ssl.keyStore=/path/to/clientkeystore.p12 \ 
   -Djavax.net.ssl.keyStorePassword=password \ 
   -Djavax.net.ssl.trustStore=/path/to/clienttruststore.jks \ 

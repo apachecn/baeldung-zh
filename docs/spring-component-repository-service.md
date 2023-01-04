@@ -44,13 +44,13 @@ A guide to the most commonest usage of Springs @Autowired annotation and qualifi
 
 它们被注册在`ApplicationContext`中，因为它们被标注了`@Component`:
 
-```
+```java
 @Component
 public @interface Service {
 } 
 ```
 
-```
+```java
 @Component
 public @interface Repository {
 } 
@@ -64,7 +64,7 @@ public @interface Repository {
 
 为此，Spring 提供了`PersistenceExceptionTranslationPostProcessor`，我们需要将它添加到我们的应用程序上下文中(如果我们使用 Spring Boot，就已经包含了):
 
-```
+```java
 <bean class=
   "org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 ```

@@ -42,7 +42,7 @@
 
 假设我们有一个简单的`Exam`实体对象，带有一个`description`字段，可以有任意长度:
 
-```
+```java
 @Entity
 public class Exam {
 
@@ -63,7 +63,7 @@ public class Exam {
 
 让我们再次使用同一个`Exam`实体对象，但这次我们将添加一个文本字段，它可以是任意长度:
 
-```
+```java
 @Entity
 public class Exam {
 
@@ -86,7 +86,7 @@ public class Exam {
 
 在本节中，我们将编写一个简单的单元测试来验证我们的解决方案是否有效:
 
-```
+```java
 @Test
 public void givenExam_whenSaveExam_thenReturnExpectedExam() {
     Exam exam = new Exam();
@@ -103,14 +103,14 @@ public void givenExam_whenSaveExam_thenReturnExpectedExam() {
 
 为了证明这一点，如果我们快速修改我们的`Exam`实体上的描述字段:
 
-```
+```java
 @Column(length = 20)
 private String description; 
 ```
 
 当我们再次运行测试时，我们会看到一个错误:
 
-```
+```java
 ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Value too long for column "TEXT VARCHAR(20)"
 ```
 

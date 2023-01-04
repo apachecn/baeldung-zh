@@ -33,7 +33,7 @@
 
 我们可以使用 mod 操作将序列映射到数组中的索引:
 
-```
+```java
 arrayIndex = sequence % capacity 
 ```
 
@@ -43,7 +43,7 @@ arrayIndex = sequence % capacity
 
 让我们看看如何插入一个元素:
 
-```
+```java
 buffer[++writeSequence % capacity] = element 
 ```
 
@@ -51,7 +51,7 @@ buffer[++writeSequence % capacity] = element
 
 为了消耗一个元素，我们进行后增量:
 
-```
+```java
 element = buffer[readSequence++ % capacity] 
 ```
 
@@ -65,7 +65,7 @@ element = buffer[readSequence++ % capacity]
 
 **如果缓冲区的大小等于其容量**，则缓冲区已满，其中缓冲区的大小等于未读元素的数量:
 
-```
+```java
 size = (writeSequence - readSequence) + 1
 isFull = (size == capacity) 
 ```
@@ -74,7 +74,7 @@ isFull = (size == capacity)
 
 **如果写序列落后于读序列，则缓冲器为空**:
 
-```
+```java
 isEmpty = writeSequence < readSequence 
 ```
 
@@ -94,7 +94,7 @@ isEmpty = writeSequence < readSequence
 
 首先，让我们定义一个用预定义容量初始化缓冲区的构造函数:
 
-```
+```java
 public CircularBuffer(int capacity) {
     this.capacity = (capacity < 1) ? DEFAULT_CAPACITY : capacity;
     this.data = (E[]) new Object[this.capacity];
@@ -111,7 +111,7 @@ public CircularBuffer(int capacity) {
 
 让我们用 Java 实现`offer`方法:
 
-```
+```java
 public boolean offer(E element) {
     boolean isFull = (writeSequence - readSequence) + 1 == capacity;
     if (!isFull) {
@@ -128,7 +128,7 @@ public boolean offer(E element) {
 
 让我们试一试:
 
-```
+```java
 @Test
 public void givenCircularBuffer_whenAnElementIsEnqueued_thenSizeIsOne() {
     CircularBuffer buffer = new CircularBuffer<>(defaultCapacity);
@@ -144,7 +144,7 @@ public void givenCircularBuffer_whenAnElementIsEnqueued_thenSizeIsOne() {
 
 让我们来实现它:
 
-```
+```java
 public E poll() {
     boolean isEmpty = writeSequence < readSequence;
     if (!isEmpty) {
@@ -160,7 +160,7 @@ public E poll() {
 
 让我们来测试一下:
 
-```
+```java
 @Test
 public void givenCircularBuffer_whenAnElementIsDequeued_thenElementMatchesEnqueuedElement() {
     CircularBuffer buffer = new CircularBuffer<>(defaultCapacity);
@@ -187,7 +187,7 @@ public void givenCircularBuffer_whenAnElementIsDequeued_thenElementMatchesEnqueu
 
 **在这种情况下，我们可以通过设置序列字段 [`volatile`](/web/20221206025158/https://www.baeldung.com/java-volatile)** 来使环形缓冲区并发且无锁:
 
-```
+```java
 private volatile int writeSequence = -1, readSequence = 0; 
 ```
 
@@ -197,7 +197,7 @@ private volatile int writeSequence = -1, readSequence = 0;
 
 让我们实现一个简单的生产者`Runnable`来写入环形缓冲区:
 
-```
+```java
 public void run() {
     for (int i = 0; i < items.length;) {
         if (buffer.offer(items[i])) {
@@ -214,7 +214,7 @@ public void run() {
 
 我们将实现一个从缓冲区读取数据的消费者`Callable`:
 
-```
+```java
 public T[] call() {
     T[] items = (T[]) new Object[expectedCount];
     for (int i = 0; i < items.length;) {
@@ -232,14 +232,14 @@ public T[] call() {
 
 让我们编写驱动程序代码:
 
-```
+```java
 executorService.submit(new Thread(new Producer<String>(buffer)));
 executorService.submit(new Thread(new Consumer<String>(buffer))); 
 ```
 
 执行我们的生产者-消费者程序产生如下输出:
 
-```
+```java
 Produced: Circle
 Produced: Triangle
   Consumed: Circle

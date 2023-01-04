@@ -12,7 +12,7 @@
 
 首先，让我们通过一个例子来看看如何使用`save() `和`saveAndFlush()` 方法。我们将首先创建一个实体类:
 
-```
+```java
 @Entity
 public class Employee {
 
@@ -27,7 +27,7 @@ public class Employee {
 
 接下来，我们将为*雇员*实体类上的 CRUD 操作创建一个 [JPA 存储库](/web/20220703153110/https://www.baeldung.com/spring-data-repositories):
 
-```
+```java
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 }
 ```
@@ -36,7 +36,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
 顾名思义， [`save()`](/web/20220703153110/https://www.baeldung.com/spring-data-crud-repository-save) 方法允许我们**将一个实体保存到 DB** 。属于 Spring 数据定义的`CrudRepository`接口。让我们看看如何使用它:
 
-```
+```java
 employeeRepository.save(new Employee(1L, "John"));
 ```
 
@@ -52,7 +52,7 @@ employeeRepository.save(new Employee(1L, "John"));
 
 与`save()`不同的是，`saveAndFlush()`方法**在执行过程中会立即刷新数据。**该方法属于 Spring Data JPA 的`JpaRepository`接口。我们是这样使用它的:
 
-```
+```java
 employeeRepository.saveAndFlush(new Employee(2L, "Alice"));
 ```
 

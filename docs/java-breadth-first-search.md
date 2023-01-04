@@ -42,7 +42,7 @@
 
 首先，我们将实现树算法。让我们设计我们的`Tree`类，它由一个值和由其他`Tree`列表表示的子类组成:
 
-```
+```java
 public class Tree<T> {
     private T value;
     private List<Tree<T>> children;
@@ -68,7 +68,7 @@ public class Tree<T> {
 
 之后，我们来提供一个`search()`方法:
 
-```
+```java
 public static <T> Optional<Tree<T>> search(T value, Tree<T> root) {
     //...
 }
@@ -76,14 +76,14 @@ public static <T> Optional<Tree<T>> search(T value, Tree<T> root) {
 
 正如我们前面提到的，**BFS 算法使用一个队列来遍历节点**。首先，我们将`root`节点添加到这个队列中:
 
-```
+```java
 Queue<Tree<T>> queue = new ArrayDeque<>();
 queue.add(root);
 ```
 
 然后，我们必须在队列不为空时循环，每次从队列中弹出一个节点:
 
-```
+```java
 while(!queue.isEmpty()) {
     Tree<T> currentNode = queue.remove();
 }
@@ -91,7 +91,7 @@ while(!queue.isEmpty()) {
 
 如果该节点是我们正在搜索的节点，我们返回它，否则我们将它的子节点添加到队列中:
 
-```
+```java
 if (currentNode.getValue().equals(value)) {
     return Optional.of(currentNode);
 } else {
@@ -101,7 +101,7 @@ if (currentNode.getValue().equals(value)) {
 
 最后，如果我们访问了所有节点，但没有找到我们要搜索的节点，我们将返回一个空结果:
 
-```
+```java
 return Optional.empty();
 ```
 
@@ -111,7 +111,7 @@ return Optional.empty();
 
 翻译成 Java 代码:
 
-```
+```java
 Tree<Integer> root = Tree.of(10);
 Tree<Integer> rootFirstChild = root.addChild(2);
 Tree<Integer> depthMostChild = rootFirstChild.addChild(3);
@@ -120,13 +120,13 @@ Tree<Integer> rootSecondChild = root.addChild(4);
 
 然后，如果搜索值 4，我们期望算法遍历值为 10、2 和 4 的节点，顺序如下:
 
-```
+```java
 BreadthFirstSearchAlgorithm.search(4, root)
 ```
 
 我们可以通过记录被访问节点的值来验证:
 
-```
+```java
 [main] DEBUG  c.b.a.b.BreadthFirstSearchAlgorithm - Visited node with value: 10
 [main] DEBUG  c.b.a.b.BreadthFirstSearchAlgorithm - Visited node with value: 2 
 [main] DEBUG  c.b.a.b.BreadthFirstSearchAlgorithm - Visited node with value: 4
@@ -136,7 +136,7 @@ BreadthFirstSearchAlgorithm.search(4, root)
 
 这就结束了树木的情况。现在让我们看看如何处理图形。与树相反，图可以包含圈。这意味着，正如我们在上一节中看到的，**我们必须记住我们访问过的节点，以避免无限循环**。我们一会儿将看到如何更新算法来考虑这个问题，但首先，让我们定义我们的图结构:
 
-```
+```java
 public class Node<T> {
     private T value;
     private Set<Node<T>> neighbors;
@@ -160,7 +160,7 @@ public class Node<T> {
 
 首先，让我们重新使用上面的算法，适应新的结构:
 
-```
+```java
 public static <T> Optional<Node<T>> search(T value, Node<T> start) {
     Queue<Node<T>> queue = new ArrayDeque<>();
     queue.add(start);
@@ -183,7 +183,7 @@ public static <T> Optional<Node<T>> search(T value, Node<T> start) {
 
 我们不能这样运行算法，否则任何一个循环都会让它永远运行下去。因此，我们必须添加指令来处理已经访问过的节点:
 
-```
+```java
 while (!queue.isEmpty()) {
     currentNode = queue.remove();
     LOGGER.debug("Visited node with value: {}", currentNode.getValue());
@@ -202,19 +202,19 @@ return Optional.empty();
 
 正如我们所看到的，我们首先初始化一个包含被访问节点的`Set`。
 
-```
+```java
 Set<Node<T>> alreadyVisited = new HashSet<>();
 ```
 
 然后，**当值的比较失败时，我们将节点添加到已访问的节点中**:
 
-```
+```java
 alreadyVisited.add(currentNode);
 ```
 
 最后，**在将节点的邻居添加到队列之后，我们从队列中移除已经访问过的节点**(这是检查当前节点在该集合中的存在的另一种方法):
 
-```
+```java
 queue.removeAll(alreadyVisited);
 ```
 
@@ -226,7 +226,7 @@ queue.removeAll(alreadyVisited);
 
 Java 代码也是如此:
 
-```
+```java
 Node<Integer> start = new Node<>(10);
 Node<Integer> firstNeighbor = new Node<>(2);
 start.connect(firstNeighbor);
@@ -241,13 +241,13 @@ start.connect(secondNeighbor);
 
 让我们再一次假设我们想要搜索值 4。由于没有根节点，我们可以从任何想要的节点开始搜索，我们将选择`firstNeighborNeighbor`:
 
-```
+```java
 BreadthFirstSearchAlgorithm.search(4, firstNeighborNeighbor);
 ```
 
 同样，我们将添加一个日志来查看哪些节点被访问，我们期望它们是 3、2、10 和 4，每个节点只被访问一次，顺序如下:
 
-```
+```java
 [main] DEBUG c.b.a.b.BreadthFirstSearchAlgorithm - Visited node with value: 3 
 [main] DEBUG c.b.a.b.BreadthFirstSearchAlgorithm - Visited node with value: 2 
 [main] DEBUG c.b.a.b.BreadthFirstSearchAlgorithm - Visited node with value: 10 

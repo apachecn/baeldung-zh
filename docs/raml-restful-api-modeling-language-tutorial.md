@@ -48,7 +48,7 @@ Learn how to implement REST APIs with the Javalin framework[Read more](/web/2022
 
 我们将首先创建一个名为`api.raml`的简单文本文件(建议使用前缀`.raml`；名称是任意的)并在第一行添加 RAML 版本头。在文件的根级别，我们定义了适用于整个 API 的设置:
 
-```
+```java
 #%RAML 1.0
 title: Baeldung Foo REST Services API using Data Types
 version: v1
@@ -65,7 +65,7 @@ mediaType: application/json
 
 安全性也在`.raml`文件的根级别定义。因此，让我们添加我们的 HTTP 基本安全方案定义:
 
-```
+```java
 securitySchemes:
   basicAuth:
     description: Each request must contain the headers necessary for
@@ -89,7 +89,7 @@ securitySchemes:
 
 接下来，我们将定义 API 将使用的数据类型:
 
-```
+```java
 types:
   Foo:
     type: object
@@ -107,7 +107,7 @@ types:
 
 上面的例子使用扩展的语法来定义我们的数据类型。RAML 提供了一些语法快捷方式，使我们的类型定义不那么冗长。下面是使用这些快捷方式的等效数据类型部分:
 
-```
+```java
 types:
   Foo:
     properties:
@@ -126,7 +126,7 @@ types:
 
 现在，我们将定义 API 的顶级资源(URI ):
 
-```
+```java
 /foos:
 ```
 
@@ -134,7 +134,7 @@ types:
 
 接下来，我们将从顶级资源开始扩展资源列表:
 
-```
+```java
 /foos:
   /{id}:
   /name/{name}: 
@@ -146,7 +146,7 @@ types:
 
 下一步是定义适用于每个资源的 HTTP 方法:
 
-```
+```java
 /foos:
   get:
   post:
@@ -162,7 +162,7 @@ types:
 
 现在我们将定义一种使用查询参数查询`foos`集合的方法。请注意，查询参数是使用我们在上面为数据类型使用的相同语法来定义的:
 
-```
+```java
 /foos:
   get:
     description: List all Foos matching query criteria, if provided;
@@ -182,7 +182,7 @@ JSON 模式可以用来代替数据类型，以向后兼容早期版本的 RAML�
 
 让我们从`/foos/{id}:`上的简单 GET 操作开始
 
-```
+```java
 /foos:
   ...
   /{id}:
@@ -200,7 +200,7 @@ JSON 模式可以用来代替数据类型，以向后兼容早期版本的 RAML�
 
 下面是我们如何定义对`/foos`资源的 GET 请求:
 
-```
+```java
 /foos:
   get:
     description: List all Foos matching query criteria, if provided;
@@ -226,7 +226,7 @@ JSON 模式可以用来代替数据类型，以向后兼容早期版本的 RAML�
 
 接下来，我们将定义对应于每个 POST 和 PUT 请求的请求体。让我们从创建一个新的`Foo`对象开始:
 
-```
+```java
 /foos:
   ...
   post:
@@ -251,7 +251,7 @@ JSON 模式可以用来代替数据类型，以向后兼容早期版本的 RAML�
 
 让我们看看，当没有找到具有给定 id 的资源时，我们将如何定义对`/foos/{id}`资源的 GET 请求的预期响应:
 
-```
+```java
  404:
           body:
             application/json:
@@ -269,7 +269,7 @@ JSON 模式可以用来代替数据类型，以向后兼容早期版本的 RAML�
 
 下面是如何使用 JSON 模式在`.raml`文件的根级别定义 Foo 对象类型:
 
-```
+```java
 types:
   foo: |
     { "$schema": "http://json-schema.org/schema",
@@ -286,7 +286,7 @@ types:
 
 下面是如何在 GET `/foos/{id}`资源定义中引用模式:
 
-```
+```java
 /foos:
   ...
   /{id}:
@@ -310,7 +310,7 @@ RAML 规范提供了一种包含机制，允许我们将重复和冗长的代码
 
 例如，我们可以将一个`Foo`对象的数据类型放在文件`types/Foo.raml`中，将一个`Error`对象的数据类型放在`types/Error.raml`中。那么我们的`types`部分将如下所示:
 
-```
+```java
 types:
   Foo: !include types/Foo.raml
   Error: !include types/Error.raml
@@ -318,7 +318,7 @@ types:
 
 如果我们使用 JSON 模式，我们的`types`部分可能看起来像这样:
 
-```
+```java
 types:
   foo: !include schemas/foo.json
   error: !include schemas/error.json
@@ -328,7 +328,7 @@ types:
 
 在将所有数据类型和示例外部化到它们的文件中之后，我们可以使用 include 工具来重构我们的 API:
 
-```
+```java
 #%RAML 1.0
 title: Baeldung Foo REST Services API
 version: v1

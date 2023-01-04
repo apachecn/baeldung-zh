@@ -18,7 +18,7 @@
 
 在 Log4J 中，我们必须在配置 XML 中添加一个`logger`元素:
 
-```
+```java
 <logger name="org.hibernate.SQL">
      <level value="debug"/>
 </logger>
@@ -26,19 +26,19 @@
 
 类似地，在 Log4J2 中，我们将添加一个`Logger`元素:
 
-```
+```java
 <Logger name="org.hibernate.SQL" level="debug"/>
 ```
 
 在 Logback 中，我们将添加一个`logger`元素:
 
-```
+```java
 <logger name="org.hibernate.SQL" level="DEBUG" />
 ```
 
 我们现在应该在日志中看到生成的 SQL:
 
-```
+```java
 2019-12-07 23:04:23 | DEBUG | [main] o.h.SQL:127 - insert into Employee 
 (employeeNumber, name, title, id) values (?, ?, ?, ?)
 2019-12-07 23:04:23 | DEBUG | [main] o.h.SQL:127 - select employee0_.id as id1_0_, 
@@ -54,7 +54,7 @@ employee0_.title as title4_0_ from Employee employee0_
 
 在 Log4J 中，我们做到了:
 
-```
+```java
 <logger name="org.hibernate.type.descriptor.sql"> 
     <level value="trace"/> 
 </logger>
@@ -62,19 +62,19 @@ employee0_.title as title4_0_ from Employee employee0_
 
 在 Log4J2 中:
 
-```
+```java
 <Logger name="org.hibernate.type.descriptor.sql" level="trace"/>
 ```
 
 最后，在 Logback 中:
 
-```
+```java
 <logger name="org.hibernate.type.descriptor.sql" level="TRACE" />
 ```
 
 因此，我们应该看到传递给 SQL 语句的参数值以及执行结果:
 
-```
+```java
 2019-12-07 23:04:23 | DEBUG | [main] o.h.SQL:127 - insert into Employee (employeeNumber, name, title, id) 
 values (?, ?, ?, ?)
 2019-12-07 23:04:23 | TRACE | [main] o.h.t.d.s.BasicBinder:64 - binding parameter [1] 
@@ -112,13 +112,13 @@ Hibernate 使用类别`*org.hibernate.stat*`来记录这些信息。但是，Hib
 
 例如，我们可以在我们的`hibernate.cfg.xml`文件中设置这个属性:
 
-```
+```java
 <property name="hibernate.generate_statistics">true</property>
 ```
 
 除了这个属性，**将类别`*org.hibernate.stat*`设置为 DEBUG 将记录一个语句，其中包含执行的每个查询的统计信息**。它还会在会话结束时记录一个多行日志语句，其中包含汇总的统计信息:
 
-```
+```java
 2019-12-07 23:25:18 | DEBUG | [main] o.h.s.i.StatisticsInitiator:101 - Statistics initialized 
 [enabled=true]
 2019-12-07 23:25:19 | DEBUG | [main] o.h.s.i.StatisticsImpl:729 - HHH000117: HQL: 

@@ -12,7 +12,7 @@ JUnit 5 对定制测试类和测试方法名称有很好的支持。在这个快
 
 首先，JUnit 5 提供了一个`DisplayNameGenerator.ReplaceUnderscores`类，用空格替换名称中的任何下划线。让我们来看一个例子:
 
-```
+```java
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ReplaceUnderscoresGeneratorUnitTest {
 
@@ -33,7 +33,7 @@ class ReplaceUnderscoresGeneratorUnitTest {
 
 现在，当我们运行测试时，我们可以看到显示名称的生成使得测试输出更具可读性:
 
-```
+```java
 └─ ReplaceUnderscoresGeneratorUnitTest ✓
    └─ when doing something ✓
       ├─ then something should happen() ✓
@@ -48,7 +48,7 @@ class ReplaceUnderscoresGeneratorUnitTest {
 
 让我们从一个简单的显示名称生成器开始，它用可读的句子替换 camel case 名称。首先，我们可以**扩展`DisplayNameGenerator.Standard`类**:
 
-```
+```java
  static class ReplaceCamelCase extends DisplayNameGenerator.Standard {
         @Override
         public String generateDisplayNameForClass(Class<?> testClass) {
@@ -86,7 +86,7 @@ class ReplaceUnderscoresGeneratorUnitTest {
 
 让我们为我们的生成器编写一个测试:
 
-```
+```java
 @DisplayNameGeneration(DisplayNameGeneratorUnitTest.ReplaceCamelCase.class)
 class DisplayNameGeneratorUnitTest {
 
@@ -98,7 +98,7 @@ class DisplayNameGeneratorUnitTest {
 
 接下来，当运行测试时，我们可以看到**camel 案例名称已经被替换为可读的句子**:
 
-```
+```java
 └─ Display name generator unit test ✓
    └─ camel case name() ✓
 ```
@@ -107,7 +107,7 @@ class DisplayNameGeneratorUnitTest {
 
 到目前为止，我们已经讨论了非常简单的用例。然而，我们可以变得更有创造力:
 
-```
+```java
  static class IndicativeSentences extends ReplaceCamelCase {
         @Override
         public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
@@ -123,7 +123,7 @@ class DisplayNameGeneratorUnitTest {
 
 这里的想法是**从嵌套的类和测试方法**中创建指示语句。换句话说，嵌套的类名将被添加到测试方法名的前面:
 
-```
+```java
 class DisplayNameGeneratorUnitTest {
 
     @Nested
@@ -156,7 +156,7 @@ class DisplayNameGeneratorUnitTest {
 
 看看这个例子，我们使用嵌套类作为测试方法的上下文。为了更好地说明结果，让我们运行测试:
 
-```
+```java
 └─ Display name generator unit test ✓
    ├─ A number is buzz... ✓
    │  ├─ A number is buzz if it is one of the following numbers. ✓

@@ -14,7 +14,7 @@
 
 我们可以通过在我们的`application.properties`文件中添加/修改下面一行来改变这个文件的位置:
 
-```
+```java
 logging.config=/path/to/log4j2.xml
 ```
 
@@ -22,7 +22,7 @@ logging.config=/path/to/log4j2.xml
 
 在运行我们的程序时，我们还可以添加以下 VM 选项来实现相同的目标:
 
-```
+```java
 -Dlogging.config=/path/to/log4j2.xml
 ```
 
@@ -30,7 +30,7 @@ logging.config=/path/to/log4j2.xml
 
 最后，我们可以通过改变我们的 Spring Boot `Application`类来编程配置这个文件的位置，如下所示:
 
-```
+```java
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 

@@ -12,7 +12,7 @@
 
 交换两个变量的最简单方法是使用第三个变量作为临时存储:
 
-```
+```java
 Object a, b;
 Object temp;
 temp = a;
@@ -28,7 +28,7 @@ b = temp;
 
 如果我们必须在代码中的几个地方交换变量，那么创建一个像这样交换变量的方法听起来可能很有吸引力:
 
-```
+```java
 public void swap(Object a, Object b)
 ```
 
@@ -36,7 +36,7 @@ public void swap(Object a, Object b)
 
 如果我们真的想要一个交换方法，**我们必须在你的对象**周围使用一个包装类，并交换包装中包含的对象:
 
-```
+```java
 private class Wrapper {
     public String string;
 }
@@ -44,7 +44,7 @@ private class Wrapper {
 
 和交换方法:
 
-```
+```java
 private static void swap(Wrapper a, Wrapper b) {
     String temp = b.string;
     b.string = a.string;
@@ -66,7 +66,7 @@ private static void swap(Wrapper a, Wrapper b) {
 
 我们可以使用加法和减法进行交换:
 
-```
+```java
 a = a + b;  // a = 15
 b = a - b;  // b = 5
 a = a - b;  // a = 10
@@ -74,7 +74,7 @@ a = a - b;  // a = 10
 
 或者，我们可以使用乘法和除法:
 
-```
+```java
 a = a * b;  // a = 50
 b = a / b;  // b = 5
 a = a / b;  // a = 10
@@ -88,7 +88,7 @@ a = a / b;  // a = 10
 
 如果我们处理的是`char`、`byte`或`short`类型的数据，则需要进行显式强制转换，因为算术运算符的结果至少在 Java 中是`int`类型的值:
 
-```
+```java
 a = (char)(a + b);
 b = (char)(a - b);
 a = (char)(a - b);
@@ -98,7 +98,7 @@ a = (char)(a - b);
 
 如果我们正在处理整数数据类型(即 `char, short, byte, int, long`)，我们可以使用异或按位运算符(XOR)。“^”运算符将对变量的所有位进行按位异或运算:
 
-```
+```java
 a = a ^ b;  // a = 1111 (15)
 b = a ^ b;  // b = 1010 (5) 
 a = a ^ b;  // a = 0101 (10) 
@@ -110,7 +110,7 @@ a = a ^ b;  // a = 0101 (10)
 
 **我们可以使用单行版本的交换方法来减少代码量:**
 
-```
+```java
 b = (a + b) – (a = b);
 a += b – (b = a);
 a = a * b / (b = a);

@@ -12,14 +12,14 @@
 
 让我们创建两个有交集的`String`的`List`——两个都有一些重复的元素:
 
-```
+```java
 List<String> list = Arrays.asList("red", "blue", "blue", "green", "red");
 List<String> otherList = Arrays.asList("red", "green", "green", "yellow");
 ```
 
 现在**我们将在流方法**的帮助下确定列表的交集:
 
-```
+```java
 Set<String> result = list.stream()
   .distinct()
   .filter(otherList::contains)

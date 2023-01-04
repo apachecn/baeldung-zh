@@ -43,7 +43,7 @@
 
 由于我们将使用 Guava 的`Striped` 类，我们将添加`guava`依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -55,7 +55,7 @@
 
 我们的`ConcurrentAccessExperiment`类实现了前面描述的行为:
 
-```
+```java
 public abstract class ConcurrentAccessExperiment {
 
     public final Map<String,String> doWork(Map<String,String> map, int threads, int slots) {
@@ -85,7 +85,7 @@ public abstract class ConcurrentAccessExperiment {
 
 我们的`SingleLock`类使用`ReentrantLock`为整个数据结构定义了一个锁:
 
-```
+```java
 public class SingleLock extends ConcurrentAccessExperiment {
     ReentrantLock lock;
 
@@ -121,7 +121,7 @@ public class SingleLock extends ConcurrentAccessExperiment {
 
 然后，`StripedLock`类为每个桶定义了一个条带锁:
 
-```
+```java
 public class StripedLock extends ConcurrentAccessExperiment {
     Striped lock;
 
@@ -165,7 +165,7 @@ public class StripedLock extends ConcurrentAccessExperiment {
 
 运行我们的基准测试，我们能够看到类似下面的内容(注意，吞吐量越高越好):
 
-```
+```java
 Benchmark                                                Mode  Cnt  Score   Error   Units
 ConcurrentAccessBenchmark.singleLockConcurrentHashMap   thrpt   10  0,059 ± 0,006  ops/ms
 ConcurrentAccessBenchmark.singleLockHashMap             thrpt   10  0,061 ± 0,005  ops/ms

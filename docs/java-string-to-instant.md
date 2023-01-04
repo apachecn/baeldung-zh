@@ -14,7 +14,7 @@
 
 让我们看看如何使用`LocalDateTime.parse()`从`String`获得时间:
 
-```
+```java
 String stringDate = "09:15:30 PM, Sun 10/09/2022"; 
 String pattern = "hh:mm:ss a, EEE M/d/uuuu"; 
 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern, Locale.US); 
@@ -29,7 +29,7 @@ LocalDateTime localDateTime = LocalDateTime.parse(stringDate, dateTimeFormatter)
 
 在我们的下一个例子中，我们将使用前面的`LocalDateTime`来获得一个带有赋值`ZoneId`的瞬间:
 
-```
+```java
 String stringDate = "09:15:30 PM, Sun 10/09/2022"; 
 String pattern = "hh:mm:ss a, EEE M/d/uuuu"; 
 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern, Locale.US); 

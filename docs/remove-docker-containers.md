@@ -22,7 +22,7 @@
 
 首先，我们将以非交互模式启动 CentOS Docker 容器。通过这样做，容器将在我们运行容器后立即停止:
 
-```
+```java
 $ docker run --name mycontainer centos:7
 $ docker ps -a
 CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS                     PORTS              NAMES
@@ -31,7 +31,7 @@ CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS   
 
 现在让我们使用`docker rm`命令删除 Docker 容器`mycontainer`:
 
-```
+```java
 $ docker rm mycontainer
 mycontainer
 $ docker ps -a
@@ -40,7 +40,7 @@ CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
 
 我们还可以使用 Docker 容器 id 而不是 Docker 容器名称来删除 Docker 容器，方法是使用`docker rm`命令:
 
-```
+```java
 $ docker rm 418c28b4b04e
 ```
 
@@ -48,7 +48,7 @@ $ docker rm 418c28b4b04e
 
 我们还可以使用`docker rm`命令删除多个 Docker 容器。`docker rm`命令接受一个以空格分隔的 Docker 容器名称或 id 列表，并删除它们:
 
-```
+```java
 $ docker ps -a
 CONTAINER ID   IMAGE      COMMAND       CREATED          STATUS                      PORTS     NAMES
 23c70ec6e724   centos:7   "/bin/bash"   6 seconds ago    Exited (0) 5 seconds ago              mycontainer3
@@ -68,7 +68,7 @@ mycontainer2
 
 考虑一个场景，机器上有太多停止的码头集装箱，现在我们希望将它们全部移除。当然，我们可以使用上述方法，将所有容器 id 传递给`docker rm`命令。但是，让我们研究一个更优化、更简单的命令来删除所有 Docker 容器:
 
-```
+```java
 $ docker ps -a
 CONTAINER ID   IMAGE      COMMAND       CREATED          STATUS                      PORTS     NAMES
 b5c45fa5764f   centos:7   "/bin/bash"   4 seconds ago    Exited (0) 3 seconds ago              mycontainer1
@@ -84,7 +84,7 @@ ed806b1743cd
 
 我们也可以使用 [`docker container prune`](https://web.archive.org/web/20220614151341/https://docs.docker.com/engine/reference/commandline/container_prune/) 命令来删除所有停止的容器:
 
-```
+```java
 $ docker container prune -f
 ```
 
@@ -94,7 +94,7 @@ $ docker container prune -f
 
 我们在上面的例子中讨论的所有命令只有在 Docker 容器停止时才起作用。如果我们试图删除一个正在运行的容器，而没有先停止它，我们将得到一个类似如下的错误消息:
 
-```
+```java
 $ docker ps
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 f84692b27b0a        centos:7            "/bin/bash"         59 seconds ago      Up 58 seconds                           mycontainer
@@ -108,7 +108,7 @@ Error response from daemon:
 
 另一种方法是使用`-f`选项强制移除此类容器:
 
-```
+```java
 $ docker rm -f mycontainer
 mycontainer
 ```

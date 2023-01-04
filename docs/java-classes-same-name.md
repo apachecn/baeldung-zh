@@ -16,7 +16,7 @@
 
 首先，让我们在定制包`com.baeldung.date.`中创建一个名为`Date` 的类
 
-```
+```java
 package com.baeldung.date;
 
 public class Date {
@@ -45,7 +45,7 @@ public class Date {
 
 另一方面，当内部使用的对象是太大的类或方法时，它有助于调试:
 
-```
+```java
 public class DateUnitTest {
 
     @Test
@@ -63,7 +63,7 @@ public class DateUnitTest {
 
 **我们导入最常用的类路径，使用最少用的类路径，因为这是 Java 开发人员的常用技术和最佳实践:**
 
-```
+```java
 import java.util.Date;
 
 public class DateUnitTest {

@@ -18,7 +18,7 @@
 
 在本例中，中点是三:
 
-```
+```java
 int length = twoDArray.length
 int diagonalLines = (length + length) - 1
 int midPoint = (diagonalLines / 2) + 1
@@ -28,7 +28,7 @@ int midPoint = (diagonalLines / 2) + 1
 
 为了遍历整个数组，我们从 1 开始循环，直到循环变量小于或等于`diagonalLines` 变量。
 
-```
+```java
 for (int i = 1; i <= diagonalLines; i++) {
     // some operations
 }
@@ -40,7 +40,7 @@ for (int i = 1; i <= diagonalLines; i++) {
 
 然后我们使用循环变量`i `和`j` 来获得行和列的索引。这个计算的逻辑取决于循环变量`i` 是否大于`midPoint`。当`i `大于`midPoint`时，我们也使用`length`变量来确定行和列索引:
 
-```
+```java
 int rowIndex;
 int columnIndex;
 

@@ -10,7 +10,7 @@ Guava 库提供了允许组件间发布-订阅通信的`EventBus`。在本教程
 
 首先，我们在`pom.xml:`中添加谷歌番石榴库依赖项
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -28,7 +28,7 @@ The latest version can be found [here](https://web.archive.org/web/2022063015382
 
 我们从查看`EventBus`对象开始。它可以注册侦听器和发布事件。使用它就像实例化该类一样简单:
 
-```
+```java
 EventBus eventBus = new EventBus();
 ```
 
@@ -38,7 +38,7 @@ Guava library 给了你以最适合你的开发需求的方式使用`EventBus`�
 
 We create a listener class that has handler methods to receive specific events. We annotate the handler methods with `@Subscribe`. The method accepts as an argument an object of the same type as the event being posted:
 
-```
+```java
 public class EventListener {
 
     private static int eventsHandled;
@@ -54,7 +54,7 @@ public class EventListener {
 
 We can subscribe to an event by registering our `EventListener` class on the `EventBus`:
 
-```
+```java
 EventListener listener = new EventListener();
 eventBus.register(listener);
 ```
@@ -63,7 +63,7 @@ eventBus.register(listener);
 
 如果出于某种原因，我们想从`EventBus`中注销一个类，这也很容易做到:
 
-```
+```java
 eventBus.unregister(listener);
 ```
 
@@ -71,7 +71,7 @@ eventBus.unregister(listener);
 
 We can post events as well with the `EventBus`:
 
-```
+```java
 @Test
 public void givenStringEvent_whenEventHandled_thenSuccess() {
     eventBus.post("String Event");
@@ -83,7 +83,7 @@ public void givenStringEvent_whenEventHandled_thenSuccess() {
 
 We can also specify a custom event class and post that event. We start by creating a custom event:
 
-```
+```java
 public class CustomEvent {
     private String action;
 
@@ -93,7 +93,7 @@ public class CustomEvent {
 
 在该事件的`EventListener`类中添加一个处理程序方法:
 
-```
+```java
 @Subscribe
 public void someCustomEvent(CustomEvent customEvent) {
     eventsHandled++;
@@ -102,7 +102,7 @@ public void someCustomEvent(CustomEvent customEvent) {
 
 我们现在可以发布我们的自定义事件:
 
-```
+```java
 @Test
 public void givenCustomEvent_whenEventHandled_thenSuccess() {
     CustomEvent customEvent = new CustomEvent("Custom Event");
@@ -116,7 +116,7 @@ public void givenCustomEvent_whenEventHandled_thenSuccess() {
 
 我们提供了一个`DeadEvent`类，允许我们处理任何没有监听器的事件。我们可以添加一个方法来处理`DeadEvent`类:
 
-```
+```java
 @Subscribe
 public void handleDeadEvent(DeadEvent deadEvent) {
     eventsHandled++;

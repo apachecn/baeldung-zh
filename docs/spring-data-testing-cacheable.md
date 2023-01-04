@@ -12,7 +12,7 @@
 
 首先，让我们创建一个简单的模型:
 
-```
+```java
 @Entity
 public class Book {
 
@@ -25,7 +25,7 @@ public class Book {
 
 然后，让我们添加一个具有`@Cacheable`方法的存储库接口:
 
-```
+```java
 public interface BookRepository extends CrudRepository<Book, UUID> {
 
     @Cacheable(value = "books", unless = "#a0=='Foundation'")
@@ -48,7 +48,7 @@ public interface BookRepository extends CrudRepository<Book, UUID> {
 
 首先，我们将设置我们的测试依赖项，添加一些测试数据，并创建一个简单的实用方法来检查一本书是否在缓存中:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = CacheApplication.class)
 public class BookRepositoryIntegrationTest {
@@ -72,7 +72,7 @@ public class BookRepositoryIntegrationTest {
 
 现在，让我们确保**在请求一本书之后，它被放入缓存**:
 
-```
+```java
  @Test
     void givenBookThatShouldBeCached_whenFindByTitle_thenResultShouldBePutInCache() {
         Optional<Book> dune = repository.findFirstByTitle("Dune");
@@ -83,7 +83,7 @@ public class BookRepositoryIntegrationTest {
 
 还有，**一些书没有放在缓存中**:
 
-```
+```java
  @Test
     void givenBookThatShouldNotBeCached_whenFindByTitle_thenResultShouldNotBePutInCache() {
         repository.findFirstByTitle("Foundation");
@@ -100,7 +100,7 @@ public class BookRepositoryIntegrationTest {
 
 我们将从创建一个为我们的`BookRepository`提供`mock`实现的`@Configuration` 开始:
 
-```
+```java
 @ContextConfiguration
 @ExtendWith(SpringExtension.class)
 public class BookRepositoryCachingIntegrationTest {
@@ -135,7 +135,7 @@ public class BookRepositoryCachingIntegrationTest {
 *   `BookRepository`是**在我们模拟周围的代理。**因此，为了使用`Mockito`验证，我们通过`AopTestUtils.getTargetObject`检索实际的模拟
 *   我们**确保在测试之间`reset(mock)`** ，因为`CachingTestConfig`只加载一次
 
-```
+```java
  @BeforeEach
     void setUp() {
         mock = AopTestUtils.getTargetObject(bookRepository);
@@ -153,7 +153,7 @@ public class BookRepositoryCachingIntegrationTest {
 
 现在，我们可以添加我们的测试方法。首先，我们将确保在将一本书放入缓存后，当稍后尝试检索该书时，不会再与存储库实现进行交互:
 
-```
+```java
  @Test
     void givenCachedBook_whenFindByTitle_thenRepositoryShouldNotBeHit() {
         assertEquals(of(DUNE), bookRepository.findFirstByTitle("Dune"));
@@ -168,7 +168,7 @@ public class BookRepositoryCachingIntegrationTest {
 
 我们还想检查**对于未缓存的书籍，我们每次都调用存储库**:
 
-```
+```java
  @Test
     void givenNotCachedBook_whenFindByTitle_thenRepositoryShouldBeHit() {
         assertEquals(of(FOUNDATION), bookRepository.findFirstByTitle("Foundation"));

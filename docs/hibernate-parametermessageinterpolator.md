@@ -30,7 +30,7 @@ Java JSR 380 的一个特性是允许在用参数插入验证消息时使用表�
 
 因此，我们可以用`ParameterMessageInterpolator`构建一个`ValidatorFactory`实例:
 
-```
+```java
 ValidatorFactory validatorFactory = Validation.byDefaultProvider()
   .configure()
   .messageInterpolator(new ParameterMessageInterpolator())
@@ -41,7 +41,7 @@ ValidatorFactory validatorFactory = Validation.byDefaultProvider()
 
 类似地，我们可以在初始化`Validator`实例时设置`ParameterMessageInterpolator`:
 
-```
+```java
 Validator validator = validatorFactory.usingContext()
   .messageInterpolator(new ParameterMessageInterpolator())
   .getValidator(); 
@@ -55,7 +55,7 @@ Validator validator = validatorFactory.usingContext()
 
 让我们定义我们的样本 Java bean `Person`:
 
-```
+```java
 public class Person {
 
     @Size(min = 10, max = 100, message = "Name should be between {min} and {max} characters")
@@ -77,13 +77,13 @@ public class Person {
 
 因此，我们需要访问我们的`Validator`:
 
-```
+```java
 Validator validator = validatorFactory.getValidator(); 
 ```
 
 之后，我们可以为`name`字段编写测试方法:
 
-```
+```java
 @Test
 public void givenNameLengthLessThanMin_whenValidate_thenValidationFails() {
     Person person = new Person();
@@ -102,13 +102,13 @@ public void givenNameLengthLessThanMin_whenValidate_thenValidationFails() {
 
 验证消息正确地插入了变量`{min}`和`{max}`:
 
-```
+```java
 Name should be between 10 and 100 characters 
 ```
 
 接下来，让我们为`age`字段编写一个类似的测试:
 
-```
+```java
 @Test
 public void givenAgeIsLessThanMin_whenValidate_thenValidationFails() {
     Person person = new Person();
@@ -127,7 +127,7 @@ public void givenAgeIsLessThanMin_whenValidate_thenValidationFails() {
 
 类似地，如我们所料，验证消息被正确地插入了变量`{value}`:
 
-```
+```java
 Age should not be less than 18 
 ```
 
@@ -135,7 +135,7 @@ Age should not be less than 18
 
 为了查看`ParameterMessageInterpolator`如何处理表达式，让我们为`email`字段编写另一个测试，其中包含一个简单的`${validatedValue}`表达式:
 
-```
+```java
 @Test
 public void givenEmailIsMalformed_whenValidate_thenValidationFails() {
     Person person = new Person();

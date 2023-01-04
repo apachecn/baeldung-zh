@@ -96,7 +96,7 @@ IntelliJ IDEA 默认安装了 jBPM 插件，但是它只存在于终极版中，
 
 我们将用我们的`kbase`和 BPMN 文件包声明在`resources/META-INF`下创建`kmodule.xml`:
 
-```
+```java
 <kmodule >
     <kbase name="kbase" packages="com.baeldung.bpmn.process" />
 </kmodule>
@@ -104,7 +104,7 @@ IntelliJ IDEA 默认安装了 jBPM 插件，但是它只存在于终极版中，
 
 一旦声明完成，我们就可以使用`KieContainer`来加载`kbase`:
 
-```
+```java
 KieServices kService = KieServices.Factory.get();
 KieContainer kContainer = kService.getKieClasspathContainer();
 KieBase kbase = kContainer.getKieBase(kbaseId);
@@ -118,7 +118,7 @@ KieBase kbase = kContainer.getKieBase(kbaseId);
 
 `JBPMHelper `有启动内存中的 H2 服务器和设置数据源的方法。使用同样的方法，我们可以创建`EntityManagerFactory`:
 
-```
+```java
 JBPMHelper.startH2Server();
 JBPMHelper.setupDataSource();
 EntityManagerFactory emf = Persistence.createEntityManagerFactory(persistenceUnit);
@@ -126,7 +126,7 @@ EntityManagerFactory emf = Persistence.createEntityManagerFactory(persistenceUni
 
 一旦一切准备就绪，我们就可以创建我们的`RuntimeEnvironment`:
 
-```
+```java
 RuntimeEnvironmentBuilder runtimeEnvironmentBuilder = 
   RuntimeEnvironmentBuilder.Factory.get().newDefaultBuilder();
 RuntimeEnvironment runtimeEnvironment = runtimeEnvironmentBuilder.
@@ -135,7 +135,7 @@ RuntimeEnvironment runtimeEnvironment = runtimeEnvironmentBuilder.
 
 使用`RuntimeEnvironment`，我们可以创建我们的 jBPM 运行时管理器:
 
-```
+```java
 RuntimeManager runtimeManager = RuntimeManagerFactory.Factory.get()
   .newSingletonRuntimeManager(runtimeEnvironment);
 ```
@@ -144,13 +144,13 @@ RuntimeManager runtimeManager = RuntimeManagerFactory.Factory.get()
 
 最后，我们将使用`RuntimeManager`来获得`RuntimeEngine`:
 
-```
+```java
 RuntimeEngine engine = manager.getRuntimeEngine(initialContext);
 ```
 
 使用`RuntimeEngine, `,我们将创建一个知识讲座并启动流程:
 
-```
+```java
 KieSession ksession = engine.getKieSession();
 ksession.startProcess(processId);
 ```

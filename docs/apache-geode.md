@@ -18,7 +18,7 @@
 
 从我们的临时目录中，我们需要启动一个`Locator`实例:
 
-```
+```java
 gfsh> start locator --name=locator --bind-address=localhost
 ```
 
@@ -26,7 +26,7 @@ gfsh> start locator --name=locator --bind-address=localhost
 
 接下来，让我们启动一个`Server`实例来托管一个或多个数据`Region`:
 
-```
+```java
 gfsh> start server --name=server1 --server-port=0
 ```
 
@@ -34,7 +34,7 @@ gfsh> start server --name=server1 --server-port=0
 
 最后，我们需要一个`Region`:
 
-```
+```java
 gfsh> create region --name=baeldung --type=REPLICATE
 ```
 
@@ -46,7 +46,7 @@ gfsh> create region --name=baeldung --type=REPLICATE
 
 首先，让我们检查一下我们是否有我们的`Server `和`Locator`:
 
-```
+```java
 gfsh> list members
  Name   | Id
 ------- | ----------------------------------------------------------
@@ -56,7 +56,7 @@ locator | 127.0.0.1(locator:5996:locator)<ec><v0>:1024 [Coordinator]
 
 接下来，我们有我们的`Region`:
 
-```
+```java
 gfsh> describe region --name=baeldung
 ..........................................................
 Name            : baeldung
@@ -82,7 +82,7 @@ Region | data-policy | REPLICATE
 
 为了在我们的 Java 代码中使用 Geode，我们需要将 [Apache Geode Java 客户端](https://web.archive.org/web/20220703150239/https://search.maven.org/search?q=a:geode-core)库添加到我们的`pom`:
 
-```
+```java
 <dependency>
      <groupId>org.apache.geode</groupId>
      <artifactId>geode-core</artifactId>
@@ -98,7 +98,7 @@ Region | data-policy | REPLICATE
 
 要开始在我们的“baeldung”区域中存储数据，让我们使用定位器连接到它:
 
-```
+```java
 @Before
 public void connect() {
     this.cache = new ClientCacheFactory()
@@ -114,7 +114,7 @@ public void connect() {
 
 现在，我们可以简单地存储和检索我们所在地区的数据:
 
-```
+```java
 @Test
 public void whenSendMessageToRegion_thenMessageSavedSuccessfully() {
 
@@ -130,7 +130,7 @@ public void whenSendMessageToRegion_thenMessageSavedSuccessfully() {
 
 我们还可以一次保存多个值，比如在尝试减少网络延迟时:
 
-```
+```java
 @Test
 public void whenPutMultipleValuesAtOnce_thenValuesSavedSuccessfully() {
 
@@ -151,7 +151,7 @@ public void whenPutMultipleValuesAtOnce_thenValuesSavedSuccessfully() {
 
 假设我们有一个客户记录，我们希望使用以下键类型来存储:
 
-```
+```java
 public class CustomerKey implements Serializable {
     private long id;
     private String country;
@@ -163,7 +163,7 @@ public class CustomerKey implements Serializable {
 
 和以下值类型:
 
-```
+```java
 public class Customer implements Serializable {
     private CustomerKey key;
     private String firstName;
@@ -184,7 +184,7 @@ public class Customer implements Serializable {
 
 然后我们可以在新的`start server`命令中引用结果 jar:
 
-```
+```java
 gfsh> stop server --name=server1
 gfsh> start server --name=server1 --classpath=../lib/apache-geode-1.0-SNAPSHOT.jar --server-port=0
 ```
@@ -193,13 +193,13 @@ gfsh> start server --name=server1 --classpath=../lib/apache-geode-1.0-SNAPSHOT.j
 
 最后，让我们使用与创建“baeldung”区域相同的命令在`Server`上创建一个名为“baeldung-customers”的新`Region`:
 
-```
+```java
 gfsh> create region --name=baeldung-customers --type=REPLICATE
 ```
 
 在代码中，我们将像以前一样使用定位器，指定自定义类型:
 
-```
+```java
 @Before
 public void connect() {
     // ... connect through the locator
@@ -211,7 +211,7 @@ public void connect() {
 
 然后，我们可以像以前一样存储我们的客户:
 
-```
+```java
 @Test
 public void whenPutCustomKey_thenValuesSavedSuccessfully() {
     CustomerKey key = new CustomerKey(123);
@@ -237,7 +237,7 @@ public void whenPutCustomKey_thenValuesSavedSuccessfully() {
 
 从工作目录中的`gfsh `控制台，我们再向集群添加一个名为`server2`的`Server`:
 
-```
+```java
 gfsh> start server --name=server2 --classpath=../lib/apache-geode-1.0-SNAPSHOT.jar --server-port=0
 ```
 
@@ -245,7 +245,7 @@ gfsh> start server --name=server2 --classpath=../lib/apache-geode-1.0-SNAPSHOT.j
 
 让我们通过停止`server1:`来验证这一点
 
-```
+```java
 gfsh> stop server --name=server1
 ```
 
@@ -253,7 +253,7 @@ gfsh> stop server --name=server1
 
 如果数据复制成功，我们将得到结果:
 
-```
+```java
 gfsh> query --query='select e.key from /baeldung.entries e'
 Result : true
 Limit  : 100
@@ -280,13 +280,13 @@ D
 
 让我们创建一个名为“baeldung-partitioned”的分区`Region` :
 
-```
+```java
 gfsh> create region --name=baeldung-partitioned --type=PARTITION
 ```
 
 添加一些数据:
 
-```
+```java
 gfsh> put --region=baeldung-partitioned --key="1" --value="one"
 gfsh> put --region=baeldung-partitioned --key="2" --value="two"
 gfsh> put --region=baeldung-partitioned --key="3" --value="three"
@@ -294,7 +294,7 @@ gfsh> put --region=baeldung-partitioned --key="3" --value="three"
 
 并快速验证:
 
-```
+```java
 gfsh> query --query='select e.key, e.value from /baeldung-partitioned.entries e'
 Result : true
 Limit  : 100
@@ -309,7 +309,7 @@ key | value
 
 然后，为了验证数据已经分区，让我们再次停止`server1`并重新查询:
 
-```
+```java
 gfsh> stop server --name=server1
 gfsh> query --query='select e.key, e.value from /baeldung-partitioned.entries e'
 Result : true
@@ -337,7 +337,7 @@ Geode 还支持对象查询语言或 OQL，这比简单的关键字查找功能�
 
 如果我们再增加几个客户:
 
-```
+```java
 Map<CustomerKey, Customer> data = new HashMap<>();
 data.put(new CustomerKey(1), new Customer("Gheorge", "Manuc", 36));
 data.put(new CustomerKey(2), new Customer("Allan", "McDowell", 43));
@@ -346,7 +346,7 @@ this.customerRegion.putAll(data);
 
 然后，我们可以使用`QueryService` 来查找名字为“Allan”的客户:
 
-```
+```java
 QueryService queryService = this.cache.getQueryService();
 String query = 
   "select * from /baeldung-customers c where c.firstName = 'Allan'";
@@ -371,7 +371,7 @@ assertEquals(1, results.size());
 
 我们不需要查询数据并让我们的应用程序来完成这项工作，我们只需要实现`Function`:
 
-```
+```java
 public class UpperCaseNames implements Function<Boolean> {
     @Override
     public void execute(FunctionContext<Boolean> context) {
@@ -404,7 +404,7 @@ public class UpperCaseNames implements Function<Boolean> {
 
 但是这一次，我们可以只使用`deploy`命令:
 
-```
+```java
 gfsh> deploy --jar=./lib/apache-geode-1.0-SNAPSHOT.jar
 ```
 
@@ -412,7 +412,7 @@ gfsh> deploy --jar=./lib/apache-geode-1.0-SNAPSHOT.jar
 
 现在，我们可以使用`FunctionService:`从应用程序中执行`Function`
 
-```
+```java
 @Test
 public void whenExecuteUppercaseNames_thenCustomerNamesAreUppercased() {
     Execution execution = FunctionService.onRegion(this.customerRegion);

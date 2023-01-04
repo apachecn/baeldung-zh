@@ -29,7 +29,7 @@ JDBC 驱动程序是一种 JDBC API 实现，用于连接特定类型的数据�
 
 由于我们使用的是 MySQL 数据库，我们需要 [`mysql-connector-java`](https://web.archive.org/web/20221208095137/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22mysql-connector-java%22%20AND%20g%3A%22mysql%22) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>mysql</groupId>
     <artifactId>mysql-connector-java</artifactId>
@@ -39,7 +39,7 @@ JDBC 驱动程序是一种 JDBC API 实现，用于连接特定类型的数据�
 
 接下来，让我们使用`Class.forName()`方法注册驱动程序，该方法动态加载驱动程序类:
 
-```
+```java
 Class.forName("com.mysql.cj.jdbc.Driver");
 ```
 
@@ -49,7 +49,7 @@ Class.forName("com.mysql.cj.jdbc.Driver");
 
 要打开一个连接，我们可以使用`DriverManager`类的`getConnection()`方法。这个方法需要一个连接 URL `String` 参数:
 
-```
+```java
 try (Connection con = DriverManager
   .getConnection("jdbc:mysql://localhost:3306/myDb", "user1", "pass")) {
     // use con here
@@ -60,21 +60,21 @@ try (Connection con = DriverManager
 
 连接 URL 的语法取决于所使用的数据库类型。让我们来看几个例子:
 
-```
+```java
 jdbc:mysql://localhost:3306/myDb?user=user1&password;=pass
 ```
 
-```
+```java
 jdbc:postgresql://localhost/myDb
 ```
 
-```
+```java
 jdbc:hsqldb:mem:myDb
 ```
 
 要连接到指定的`myDb`数据库，我们必须创建数据库和用户，并添加必要的访问权限:
 
-```
+```java
 CREATE DATABASE myDb;
 CREATE USER 'user1' IDENTIFIED BY 'pass';
 GRANT ALL on myDb.* TO 'user1';
@@ -90,7 +90,7 @@ GRANT ALL on myDb.* TO 'user1';
 
 首先，让我们创建一个`Statement`对象:
 
-```
+```java
 try (Statement stmt = con.createStatement()) {
     // use stmt here
 }
@@ -106,7 +106,7 @@ try (Statement stmt = con.createStatement()) {
 
 让我们使用`execute()`方法向数据库添加一个`students`表:
 
-```
+```java
 String tableSql = "CREATE TABLE IF NOT EXISTS employees" 
   + "(emp_id int PRIMARY KEY AUTO_INCREMENT, name varchar(30),"
   + "position varchar(30), salary double)";
@@ -121,7 +121,7 @@ stmt.execute(tableSql);
 
 接下来，让我们使用`executeUpdate()`方法向表中添加一条记录:
 
-```
+```java
 String insertSql = "INSERT INTO employees(name, position, salary)"
   + " VALUES('john', 'developer', 2000)";
 stmt.executeUpdate(insertSql);
@@ -131,7 +131,7 @@ stmt.executeUpdate(insertSql);
 
 我们可以使用返回类型为`ResultSet`的对象的`executeQuery()`方法从表中检索记录:
 
-```
+```java
 String selectSql = "SELECT * FROM employees"; 
 try (ResultSet resultSet = stmt.executeQuery(selectSql)) {
     // use resultSet here
@@ -146,7 +146,7 @@ try (ResultSet resultSet = stmt.executeQuery(selectSql)) {
 
 让我们创建一个`PreparedStatement`，它根据给定的参数更新`employees`表中的记录:
 
-```
+```java
 String updatePositionSql = "UPDATE employees SET position=? WHERE emp_id=?";
 try (PreparedStatement pstmt = con.prepareStatement(updatePositionSql)) {
     // use pstmt here
@@ -155,14 +155,14 @@ try (PreparedStatement pstmt = con.prepareStatement(updatePositionSql)) {
 
 要向`PreparedStatement`添加参数，我们可以使用简单的 setter–`setX()`–其中 X 是参数的类型，方法参数是参数的顺序和值:
 
-```
+```java
 pstmt.setString(1, "lead developer");
 pstmt.setInt(2, 1);
 ```
 
 该语句用前面描述的三种方法之一执行:`executeQuery(), executeUpdate(), execute()`不带 SQL `String`参数:
 
-```
+```java
 int rowsAffected = pstmt.executeUpdate();
 ```
 
@@ -172,7 +172,7 @@ int rowsAffected = pstmt.executeUpdate();
 
 要创建一个`CallableStatement`对象，我们可以使用`Connection`的`prepareCall()`方法:
 
-```
+```java
 String preparedSql = "{call insertEmployee(?,?,?,?)}";
 try (CallableStatement cstmt = con.prepareCall(preparedSql)) {
     // use cstmt here
@@ -181,7 +181,7 @@ try (CallableStatement cstmt = con.prepareCall(preparedSql)) {
 
 使用`setX()`方法，像在`PreparedStatement`接口中一样设置存储过程的输入参数值:
 
-```
+```java
 cstmt.setString(2, "ana");
 cstmt.setString(3, "tester");
 cstmt.setDouble(4, 2000);
@@ -189,20 +189,20 @@ cstmt.setDouble(4, 2000);
 
 如果存储过程有输出参数，我们需要使用`registerOutParameter()`方法添加它们:
 
-```
+```java
 cstmt.registerOutParameter(1, Types.INTEGER);
 ```
 
 然后，让我们执行该语句，并使用相应的`getX()`方法检索返回值:
 
-```
+```java
 cstmt.execute();
 int new_id = cstmt.getInt(1);
 ```
 
 例如，我们需要在 MySql 数据库中创建存储过程:
 
-```
+```java
 delimiter //
 CREATE PROCEDURE insertEmployee(OUT emp_id int, 
   IN emp_name varchar(30), IN position varchar(30), IN salary double) 
@@ -217,13 +217,13 @@ delimiter ;
 
 为了能够从 Java 运行存储过程，连接用户需要能够访问存储过程的元数据。这可以通过向用户授予对所有数据库中所有存储过程的权限来实现:
 
-```
+```java
 GRANT ALL ON mysql.proc TO 'user1';
 ```
 
 或者，我们可以打开属性`noAccessToProcedureBodies`设置为`true`的连接:
 
-```
+```java
 con = DriverManager.getConnection(
   "jdbc:mysql://localhost:3306/myDb?noAccessToProcedureBodies=true", 
   "user1", "pass");
@@ -241,7 +241,7 @@ con = DriverManager.getConnection(
 
 让我们首先创建一个`Employee`类来存储我们检索到的记录:
 
-```
+```java
 public class Employee {
     private int id;
     private String name;
@@ -254,7 +254,7 @@ public class Employee {
 
 接下来，让我们遍历`ResultSet`并为每条记录创建一个`Employee`对象:
 
-```
+```java
 String selectSql = "SELECT * FROM employees"; 
 try (ResultSet resultSet = stmt.executeQuery(selectSql)) {
     List<Employee> employees = new ArrayList<>(); 
@@ -279,7 +279,7 @@ try (ResultSet resultSet = stmt.executeQuery(selectSql)) {
 
 如果我们想使用`ResultSet`来更新数据并在两个方向上遍历它，我们需要创建带有附加参数的`Statement`对象:
 
-```
+```java
 stmt = con.createStatement(
   ResultSet.TYPE_SCROLL_INSENSITIVE, 
   ResultSet.CONCUR_UPDATABLE
@@ -306,7 +306,7 @@ stmt = con.createStatement(
 
 让我们看一个通过更新`employee's`表中的数据来使用这些方法的例子:
 
-```
+```java
 try (Statement updatableStmt = con.createStatement(
   ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
     try (ResultSet updatableResultSet = updatableStmt.executeQuery(selectSql)) {
@@ -329,7 +329,7 @@ JDBC API 允许查找关于数据库的信息，称为元数据。
 
 让我们快速看一下如何在数据库表上检索信息:
 
-```
+```java
 DatabaseMetaData dbmd = con.getMetaData();
 ResultSet tablesResultSet = dbmd.getTables(null, null, "%", null);
 while (tablesResultSet.next()) {
@@ -341,7 +341,7 @@ while (tablesResultSet.next()) {
 
 该界面可用于查找某个`ResultSet`的信息，如其列的编号和名称:
 
-```
+```java
 ResultSetMetaData rsmd = rs.getMetaData();
 int nrColumns = rsmd.getColumnCount();
 
@@ -364,7 +364,7 @@ IntStream.range(1, nrColumns).forEach(i -> {
 
 让我们在 employee `position`列更新之后为`salary`列添加第二个 update 语句，并将它们包装在一个事务中。这样，只有职位成功更新后，工资才会更新:
 
-```
+```java
 String updatePositionSql = "UPDATE employees SET position=? WHERE emp_id=?";
 PreparedStatement pstmt = con.prepareStatement(updatePositionSql);
 pstmt.setString(1, "lead developer");
@@ -396,7 +396,7 @@ try {
 
 我们可以使用`close()` API 来做到这一点:
 
-```
+```java
 con.close();
 ```
 

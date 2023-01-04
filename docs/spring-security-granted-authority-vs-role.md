@@ -58,7 +58,7 @@ Spring 安全框架并没有就我们应该如何使用这个概念给出任何�
 
 让我们在安全配置中配置这样一个场景:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) throws Exception {
     // ...
@@ -76,7 +76,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 我们将监听上下文刷新事件:
 
-```
+```java
 @Override
 @Transactional
 public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -93,7 +93,7 @@ public void onApplicationEvent(ContextRefreshedEvent event) {
 
 我们的 **`UserDetailsService`实现是权限映射发生的地方**。一旦用户通过了身份验证，我们的`getAuthorities()`方法就会填充并返回一个`UserDetails`对象:
 
-```
+```java
 private Collection<? extends GrantedAuthority> getAuthorities(
   Collection<Role> roles) {
     List<GrantedAuthority> authorities

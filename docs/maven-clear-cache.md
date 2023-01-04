@@ -14,31 +14,31 @@
 
 在 Windows 中，默认位置是:
 
-```
+```java
 C:\Users\<user_name>\.m2
 ```
 
 在 Mac 上:
 
-```
+```java
 /Users/<user_name>/.m2 
 ```
 
 在基于 Linux 的系统上:
 
-```
+```java
 /home/<user_name>/.m2
 ```
 
 找到目录后，我们可以简单地删除文件夹`.m2/repository.`对于基于 Unix 的系统，如 MacOS 或 Linux，我们可以用一个命令删除目录:
 
-```
+```java
 rm -rf ~/.m2/repository
 ```
 
 如果我们的缓存目录不在默认位置，我们可以使用 [Maven 帮助插件](https://web.archive.org/web/20221128045513/https://maven.apache.org/plugins/maven-help-plugin/evaluate-mojo.html)来定位它:
 
-```
+```java
 mvn help:evaluate -Dexpression=settings.localRepository -q -DforceStdout 
 ```
 
@@ -48,7 +48,7 @@ mvn help:evaluate -Dexpression=settings.localRepository -q -DforceStdout
 
 首先，我们需要导航到 Maven 项目的根目录。然后，我们可以运行:
 
-```
+```java
 mvn dependency:purge-local-repository
 ```
 
@@ -56,13 +56,13 @@ mvn dependency:purge-local-repository
 
 或者，为了删除我们的缓存并避免预下载缺失依赖项的第一步，我们可以传入标志`actTransitively=false`:
 
-```
+```java
 mvn dependency:purge-local-repository -DactTransitively=false
 ```
 
 最后，**如果我们只是想清空我们的缓存，而不是预下载或重新解析工件**:
 
-```
+```java
 mvn dependency:purge-local-repository -DactTransitively=false -DreResolve=false
 ```
 

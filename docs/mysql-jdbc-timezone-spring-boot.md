@@ -16,7 +16,7 @@
 
 为了选择我们的时区，我们必须添加`connectionTimeZone`属性来指定时区:
 
-```
+```java
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/test?connectionTimeZone=UTC
@@ -32,13 +32,13 @@ spring:
 
 或者，我们可以在 Spring Boot 配置中指定`time_zone` 属性，而不是通过`connectionTimeZone` URL 参数来指示时区:
 
-```
+```java
 spring.jpa.properties.hibernate.jdbc.time_zone=UTC
 ```
 
 或者和 YAML 一起:
 
-```
+```java
 spring:
   jpa:
     properties:
@@ -53,7 +53,7 @@ spring:
 
 为了选择我们的时区，我们必须在 URL 中添加属性`forceConnectionTimeZoneToSession=true` 。然后我们只需要添加一个简单的方法:
 
-```
+```java
 @PostConstruct
 void started() {
   TimeZone.setDefault(TimeZone.getTimeZone("UTC"));

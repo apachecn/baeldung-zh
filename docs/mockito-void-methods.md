@@ -20,7 +20,7 @@ Learn to configure a method call to throw an exception in Mockito.[Read more](/w
 
 我们将为本教程添加一个新方法:
 
-```
+```java
 public class MyList extends AbstractList<String> {
 
     @Override
@@ -34,7 +34,7 @@ public class MyList extends AbstractList<String> {
 
 `Void`方法可以和 Mockito 的`doNothing()`、 `doThrow()`、 `and doAnswer()`方法一起使用，使嘲讽和验证变得直观:
 
-```
+```java
 @Test
 public void whenAddCalledVerified() {
     MyList myList = mock(MyList.class);
@@ -49,7 +49,7 @@ public void whenAddCalledVerified() {
 
 这个版本的`whenAddCalledVerified()`完成了与上面版本相同的事情:
 
-```
+```java
 @Test
 public void whenAddCalledVerified() {
     MyList myList = mock(MyList.class);
@@ -61,7 +61,7 @@ public void whenAddCalledVerified() {
 
 `DoThrow()`生成异常:
 
-```
+```java
 @Test(expected = Exception.class)
 public void givenNull_AddThrows() {
     MyList myList = mock(MyList.class);
@@ -83,7 +83,7 @@ public void givenNull_AddThrows() {
 
 在这些情况下，我们像上面一样使用`doNothing()`，但是带有一个`ArgumentCaptor`:
 
-```
+```java
 @Test
 public void whenAddCalledValueCaptured() {
     MyList myList = mock(MyList.class);
@@ -101,7 +101,7 @@ public void whenAddCalledValueCaptured() {
 
 对于这些情况，我们可以使用 Mockito 的`Answer`来添加我们需要的行为:
 
-```
+```java
 @Test
 public void whenAddCalledAnswered() {
     MyList myList = mock(MyList.class);
@@ -123,7 +123,7 @@ public void whenAddCalledAnswered() {
 
 部分模拟也是一种选择。Mockito 的`doCallRealMethod()`可用于`void`方法:
 
-```
+```java
 @Test
 public void whenAddCalledRealMethodCalled() {
     MyList myList = mock(MyList.class);

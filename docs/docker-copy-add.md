@@ -14,7 +14,7 @@
 
 乍一看，`COPY`和`ADD`指令看起来是一样的。它们有相同的语法:
 
-```
+```java
 COPY <source> <destination>
 ADD <source> <destination>
 ```

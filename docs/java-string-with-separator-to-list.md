@@ -10,7 +10,7 @@
 
 我们将用于转换的一些方法需要 [Apache Commons Lang 3](https://web.archive.org/web/20221117064052/https://search.maven.org/search?q=g:org.apache.commons%20AND%20a:commons-lang3) 和 [Guava](https://web.archive.org/web/20221117064052/https://search.maven.org/search?q=a:guava%20AND%20g:com.google.guava) 库。因此，让我们将它们添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -27,21 +27,21 @@
 
 在我们开始之前，让我们定义两个输入字符串，我们将在我们的例子中使用。第一个字符串`countries,`包含由逗号分隔的几个字符串，第二个字符串`ranks,`包含由逗号分隔的数字:
 
-```
+```java
 String countries = "Russia,Germany,England,France,Italy";
 String ranks = "1,2,3,4,5,6,7";
 ```
 
 在本教程中，我们将把上述字符串转换成字符串和整数的列表，并存储在:
 
-```
+```java
 List<String> convertedCountriesList;
 List<Integer> convertedRankList;
 ```
 
 最后，在我们执行转换后，预期输出将是:
 
-```
+```java
 List<String> expectedCountriesList = Arrays.asList("Russia", "Germany", "England", "France", "Italy");
 List<Integer> expectedRanksList = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
 ```
@@ -52,7 +52,7 @@ List<Integer> expectedRanksList = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
 
 首先，我们将使用`split, `一个`String`类实用方法[把我们的字符串分割成一个字符串数组](/web/20221117064052/https://www.baeldung.com/java-split-string)。然后，我们将在新的字符串数组上使用`Arrays.asList`,将其转换成一个字符串列表:
 
-```
+```java
 List<String> convertedCountriesList = Arrays.asList(countries.split(",", -1));
 ```
 
@@ -60,7 +60,7 @@ List<String> convertedCountriesList = Arrays.asList(countries.split(",", -1));
 
 我们将使用`split`方法将数字字符串转换成字符串数组。然后，我们将把新数组中的每个字符串转换成一个整数，并将其添加到我们的列表`:`
 
-```
+```java
 String[] convertedRankArray = ranks.split(",");
 List<Integer> convertedRankList = new ArrayList<Integer>();
 for (String number : convertedRankArray) {
@@ -80,7 +80,7 @@ for (String number : convertedRankArray) {
 
 首先，我们将使用`String`类中的 [`split`方法将我们的`countries`字符串转换成一个字符串数组。然后，我们将使用`Stream`类将数组转换成字符串列表:](/web/20221117064052/https://www.baeldung.com/string/split)
 
-```
+```java
 List<String> convertedCountriesList = Stream.of(countries.split(",", -1))
   .collect(Collectors.toList());
 ```
@@ -95,7 +95,7 @@ List<String> convertedCountriesList = Stream.of(countries.split(",", -1))
 
 最后，我们将调用`Stream`上的`collect(Collectors.toList())`,将其转换为一个整数列表:
 
-```
+```java
 List<Integer> convertedRankList = Stream.of(ranks.split(","))
   .map(String::trim)
   .map(Integer::parseInt)
@@ -108,7 +108,7 @@ List<Integer> convertedRankList = Stream.of(ranks.split(","))
 
 首先，我们将使用`StringUtils.splitPreserveAllTokens` `.`把我们的字符串分割成一个字符串数组，然后，我们将使用`Arrays.asList` 方法把我们的新字符串数组转换成一个列表:
 
-```
+```java
 List<String> convertedCountriesList = Arrays.asList(StringUtils.splitPreserveAllTokens(countries, ","));
 ```
 
@@ -116,7 +116,7 @@ List<String> convertedCountriesList = Arrays.asList(StringUtils.splitPreserveAll
 
 我们将再次使用`StringUtils.split`方法从我们的字符串创建一个字符串数组。然后，我们将使用`Integer.parseInt `将新数组中的每个字符串转换成一个整数，并将转换后的整数添加到我们的列表中:
 
-```
+```java
 String[] convertedRankArray = StringUtils.split(ranks, ",");
 List<Integer> convertedRankList = new ArrayList<Integer>();
 for (String number : convertedRankArray) {
@@ -140,7 +140,7 @@ for (String number : convertedRankArray) {
 
 最后，我们将使用`splitToList `方法来分割我们的输入字符串，并将其转换为一个列表:
 
-```
+```java
 List<String> convertedCountriesList = Splitter.on(",")
   .trimResults()
   .splitToList(countries);
@@ -154,7 +154,7 @@ List<String> convertedCountriesList = Splitter.on(",")
 
 `Function`接口实现将我们列表中的每个字符串转换成一个整数:
 
-```
+```java
 List<Integer> convertedRankList = Lists.transform(Splitter.on(",")
   .trimResults()
   .splitToList(ranks), new Function<String, Integer>() {

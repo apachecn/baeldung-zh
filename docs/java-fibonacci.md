@@ -16,7 +16,7 @@
 
 在数学术语中，斐波纳契数列的序列`S[n]`由递归关系定义:
 
-```
+```java
 S(n) = S(n-1) + S(n-2), with S(0) = 0 and S(1) = 1
 ```
 
@@ -26,7 +26,7 @@ S(n) = S(n-1) + S(n-2), with S(0) = 0 and S(1) = 1
 
 对于我们的第一个解决方案，让我们简单地用 Java 直接表达递归关系:
 
-```
+```java
 public static int nthFibonacciTerm(int n) {
     if (n == 1 || n == 0) {
         return n;
@@ -47,7 +47,7 @@ public static int nthFibonacciTerm(int n) {
 
 让我们来看看它的实现:
 
-```
+```java
 public static int nthFibonacciTerm(int n) {
     if(n == 0 || n == 1) {
         return n;
@@ -75,13 +75,13 @@ public static int nthFibonacciTerm(int n) {
 
 首先，让我们看看`golden ratio`是如何计算的:
 
-```
+```java
 Φ = ( 1 + √5 )/2 = 1.6180339887...
 ```
 
 现在，我们来看看`Binet's formula`:
 
-```
+```java
 Sn = Φⁿ–(– Φ⁻ⁿ)/√5
 ```
 
@@ -89,7 +89,7 @@ Sn = Φⁿ–(– Φ⁻ⁿ)/√5
 
 让我们用 Java 来表达这个:
 
-```
+```java
 public static int nthFibonacciTerm(int n) {
     double squareRootOf5 = Math.sqrt(5);
     double phi = (1 + squareRootOf5)/2;

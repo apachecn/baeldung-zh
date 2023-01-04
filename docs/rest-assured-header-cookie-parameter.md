@@ -18,7 +18,7 @@
 
 我们可以使用`pathParam(parameter-name, value)`来指定一个路径参数:
 
-```
+```java
 @Test
 public void whenUsePathParam_thenOK() {
     given().pathParam("user", "eugenp")
@@ -29,7 +29,7 @@ public void whenUsePathParam_thenOK() {
 
 要添加多个路径参数，我们将使用`pathParams()`方法:
 
-```
+```java
 @Test
 public void whenUseMultiplePathParam_thenOK() {
     given().pathParams("owner", "eugenp", "repo", "tutorials")
@@ -44,7 +44,7 @@ public void whenUseMultiplePathParam_thenOK() {
 
 在本例中，我们使用了命名的路径参数，但是我们也可以添加未命名的参数，甚至将两者结合起来:
 
-```
+```java
 given().pathParams("owner", "eugenp")
   .when().get("/repos/{owner}/{repo}", "tutorials")
   .then().statusCode(200);
@@ -58,7 +58,7 @@ given().pathParams("owner", "eugenp")
 
 接下来，让我们看看如何使用`queryParam():`指定查询参数
 
-```
+```java
 @Test
 public void whenUseQueryParam_thenOK() {
     given().queryParam("q", "john").when().get("/search/users")
@@ -73,7 +73,7 @@ public void whenUseQueryParam_thenOK() {
 
 为了添加多个查询参数，我们可以将几个`queryParam()`方法链接起来，或者将参数添加到一个`queryParams()`方法中:
 
-```
+```java
 @Test
 public void whenUseMultipleQueryParam_thenOK() {
 
@@ -92,7 +92,7 @@ public void whenUseMultipleQueryParam_thenOK() {
 
 最后，我们可以使用`formParam():`指定表单参数
 
-```
+```java
 @Test
 public void whenUseFormParam_thenSuccess() {
 
@@ -110,7 +110,7 @@ public void whenUseFormParam_thenSuccess() {
 
 接下来，**我们可以使用`header():`** 定制我们的请求头
 
-```
+```java
 @Test
 public void whenUseCustomHeader_thenOK() {
 
@@ -123,7 +123,7 @@ public void whenUseCustomHeader_thenOK() {
 
 我们还可以使用相同的方法添加具有多个值的标题:
 
-```
+```java
 @Test
 public void whenUseMultipleHeaderValues_thenOK() {
 
@@ -137,7 +137,7 @@ public void whenUseMultipleHeaderValues_thenOK() {
 
 **对于添加多个表头，我们将使用`headers()`方法:**
 
-```
+```java
 @Test
 public void whenUseMultipleHeaders_thenOK() {
 
@@ -151,7 +151,7 @@ public void whenUseMultipleHeaders_thenOK() {
 
 我们还可以使用`cookie()`为我们的请求指定定制 cookie:
 
-```
+```java
 @Test
 public void whenUseCookie_thenOK() {
 
@@ -162,7 +162,7 @@ public void whenUseCookie_thenOK() {
 
 我们还可以使用 cookie `Builder`定制我们的 cookie:
 
-```
+```java
 @Test
 public void whenUseCookieBuilder_thenOK() {
     Cookie myCookie = new Cookie.Builder("session_id", "1234")

@@ -24,7 +24,7 @@
 
 让我们以任意顺序的 10 个坐标为例来更好地理解这一点:
 
-```
+```java
 (21,25), (55,53), (70,318), (98,302), (49,229), (135,229), (224,292), (206,321), (197,258), (245,238)
 ```
 
@@ -48,7 +48,7 @@
 
 首先，我们将创建一个 **`Point`类来存储 XY 坐标**:
 
-```
+```java
 public class Point {
     private float x;
     private float y;
@@ -64,7 +64,7 @@ public class Point {
 
 其次，让我们创建一个 **`Region`类来定义象限**的边界:
 
-```
+```java
 public class Region {
     private float x1;
     private float y1;
@@ -84,7 +84,7 @@ public class Region {
 
 最后，让我们用一个 **`QuadTree`类将数据存储为`Point`实例，将孩子存储为`QuadTree`类**:
 
-```
+```java
 public class QuadTree {
     private static final int MAX_POINTS = 3;
     private Region area;
@@ -109,7 +109,7 @@ public class QuadTree {
 
 首先，让我们用方法`containsPoint`到**来表示给定的`point`是落在`region's`区域**之内还是之外:
 
-```
+```java
 public boolean containsPoint(Point point) {
     return point.getX() >= this.x1 
         && point.getX() < this.x2 
@@ -120,7 +120,7 @@ public boolean containsPoint(Point point) {
 
 接下来，让我们用方法`doesOverlap`到**来表示给定的`region`是否与另一个`region`** 重叠:
 
-```
+```java
 public boolean doesOverlap(Region testRegion) {
     if (testRegion.getX2() < this.getX1()) {
         return false;
@@ -140,7 +140,7 @@ public boolean doesOverlap(Region testRegion) {
 
 最后，让我们创建一个方法`getQuadrant`到**将一个范围分成四个相等的象限**并返回一个指定的象限:
 
-```
+```java
 public Region getQuadrant(int quadrantIndex) {
     float quadrantWidth = (this.x2 - this.x1) / 2;
     float quadrantHeight = (this.y2 - this.y1) / 2;
@@ -164,7 +164,7 @@ public Region getQuadrant(int quadrantIndex) {
 
 我们现在可以编写逻辑来存储数据。让我们首先在`QuadTree`类上定义一个新方法`addPoint`来添加一个新的`point.`，如果成功添加了一个点，该方法将返回`true`:
 
-```
+```java
 public boolean addPoint(Point point) {
     // ...
 }
@@ -174,7 +174,7 @@ public boolean addPoint(Point point) {
 
 如果两个条件都满足，我们可以添加新的点:
 
-```
+```java
 if (this.area.containsPoint(point)) {
     if (this.points.size() < MAX_POINTS) {
         this.points.add(point);
@@ -187,7 +187,7 @@ if (this.area.containsPoint(point)) {
 
 我们可以将所有这些逻辑封装在一个助手方法中:
 
-```
+```java
 private boolean addPointToOneQuadrant(Point point) {
     boolean isPointAdded;
     for (int i = 0; i < 4; i++) {
@@ -202,7 +202,7 @@ private boolean addPointToOneQuadrant(Point point) {
 
 另外，让我们用一个简便的方法`createQuadrants`将当前的四叉树细分成四个象限:
 
-```
+```java
 private void createQuadrants() {
     Region region;
     for (int i = 0; i < 4; i++) {
@@ -216,7 +216,7 @@ private void createQuadrants() {
 
 综上所述，我们得到了更新的`addPoint`方法:
 
-```
+```java
 public boolean addPoint(Point point) {
     if (this.area.containsPoint(point)) {
         if (this.points.size() < MAX_POINTS) {
@@ -243,7 +243,7 @@ public boolean addPoint(Point point) {
 
 让我们把上面的逻辑写成一个递归方法放在`QuadTree`类中:
 
-```
+```java
 public List<Point> search(Region searchRegion, List<Point> matches) {
     if (matches == null) {
         matches = new ArrayList<Point>();
@@ -275,7 +275,7 @@ public List<Point> search(Region searchRegion, List<Point> matches) {
 
 首先，让我们用之前使用的相同的 10 个坐标填充四叉树:
 
-```
+```java
 Region area = new Region(0, 0, 400, 400);
 QuadTree quadTree = new QuadTree(area);
 
@@ -292,27 +292,27 @@ for (int i = 0; i < points.length; i++) {
 
 接下来，让我们在由下限坐标(200，200)和上限坐标(250，250)包围的区域中执行范围搜索:
 
-```
+```java
 Region searchArea = new Region(200, 200, 250, 250);
 List<Point> result = quadTree.search(searchArea, null);
 ```
 
 运行代码会给我们一个包含在搜索区域内的附近坐标:
 
-```
+```java
 [[245.0 , 238.0]]
 ```
 
 让我们尝试坐标(0，0)和(100，100)之间的不同搜索区域:
 
-```
+```java
 Region searchArea = new Region(0, 0, 100, 100);
 List<Point> result = quadTree.search(searchArea, null);
 ```
 
 运行代码会给我们指定搜索区域附近的两个坐标:
 
-```
+```java
 [[21.0 , 25.0], [55.0 , 53.0]]
 ```
 

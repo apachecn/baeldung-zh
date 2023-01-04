@@ -14,7 +14,7 @@
 
 对于 L-Trim，我们将从左向右读取字符串，直到遇到一个非空白字符:
 
-```
+```java
 int i = 0;
 while (i < s.length() && Character.isWhitespace(s.charAt(i))) {
     i++;
@@ -26,7 +26,7 @@ String ltrim = s.substring(i);
 
 或者对于 R-Trim，我们将从右向左读取字符串，直到遇到非空白字符:
 
-```
+```java
 int i = s.length()-1;
 while (i >= 0 && Character.isWhitespace(s.charAt(i))) {
     i--;
@@ -40,7 +40,7 @@ String rtrim = s.substring(0,i+1);
 
 另一个选择是使用 [`String.replaceAll()`](https://web.archive.org/web/20221007082754/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#replaceAll(java.lang.String,java.lang.String)) 和一个正则表达式:
 
-```
+```java
 String ltrim = src.replaceAll("^\\s+", "");
 String rtrim = src.replaceAll("\\s+$", "");
 ```
@@ -51,7 +51,7 @@ String rtrim = src.replaceAll("\\s+$", "");
 
 我们可以重用带有 [`java.util.regex.Pattern`](https://web.archive.org/web/20221007082754/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/regex/Pattern.html) 的正则表达式，也是:
 
-```
+```java
 private static Pattern LTRIM = Pattern.compile("^\\s+");
 private static Pattern RTRIM = Pattern.compile("\\s+$");
 
@@ -65,7 +65,7 @@ String rtim = RTRIM.matcher(s).replaceAll("");
 
 为此，让我们首先添加[的`commons-lang3`依赖关系](https://web.archive.org/web/20221007082754/https://mvnrepository.com/artifact/org.apache.commons/commons-lang3):
 
-```
+```java
 <dependency> 
     <groupId>org.apache.commons</groupId> 
     <artifactId>commons-lang3</artifactId> 
@@ -75,7 +75,7 @@ String rtim = RTRIM.matcher(s).replaceAll("");
 
 遵循文档，我们使用`null`来去除空白:
 
-```
+```java
 String ltrim = StringUtils.stripStart(src, null);
 String rtrim = StringUtils.stripEnd(src, null);
 ```
@@ -86,7 +86,7 @@ String rtrim = StringUtils.stripEnd(src, null);
 
 再次，让我们添加适当的 Maven 依赖项，这次它的 [`guava`](https://web.archive.org/web/20221007082754/https://mvnrepository.com/artifact/com.google.guava/guava) :
 
-```
+```java
 <dependency> 
     <groupId>com.google.guava</groupId> 
     <artifactId>guava</artifactId> 
@@ -96,7 +96,7 @@ String rtrim = StringUtils.stripEnd(src, null);
 
 在 Guava 中，这与 Apache Commons 中的做法非常相似，只是方法更有针对性:
 
-```
+```java
 String ltrim = CharMatcher.whitespace().trimLeadingFrom(s); 
 String rtrim = CharMatcher.whitespace().trimTrailingFrom(s);
 ```
@@ -109,7 +109,7 @@ String rtrim = CharMatcher.whitespace().trimTrailingFrom(s);
 
 对于基准的初始配置，我们使用了五个分支和以纳秒为单位的平均时间计算时间:
 
-```
+```java
 @Fork(5)
 @State(Scope.Benchmark)
 @BenchmarkMode(Mode.AverageTime)
@@ -118,7 +118,7 @@ String rtrim = CharMatcher.whitespace().trimTrailingFrom(s);
 
 在 setup 方法中，我们初始化原始消息字段和结果字符串，以便与以下内容进行比较:
 
-```
+```java
 @Setup
 public void setup() {
     src = "       White spaces left and right          ";
@@ -133,7 +133,7 @@ public void setup() {
 
 对于我们的第一个基准测试，让我们使用`while`循环方法:
 
-```
+```java
 @Benchmark
 public boolean whileCharacters() {
     String ltrim = whileLtrim(src);
@@ -146,7 +146,7 @@ public boolean whileCharacters() {
 
 那么，我们来试试`String.replaceAll()`:
 
-```
+```java
 @Benchmark
 public boolean replaceAllRegularExpression() {
     String ltrim = src.replaceAll("^\\s+", "");
@@ -159,7 +159,7 @@ public boolean replaceAllRegularExpression() {
 
 之后是`Pattern.compile().matches()`:
 
-```
+```java
 @Benchmark
 public boolean patternMatchesLTtrimRTrim() {
     String ltrim = patternLtrim(src);
@@ -172,7 +172,7 @@ public boolean patternMatchesLTtrimRTrim() {
 
 第四，Apache Commons:
 
-```
+```java
 @Benchmark
 public boolean apacheCommonsStringUtils() {
     String ltrim = StringUtils.stripStart(src, " ");
@@ -185,7 +185,7 @@ public boolean apacheCommonsStringUtils() {
 
 最后，让我们用番石榴:
 
-```
+```java
 @Benchmark
 public boolean guavaCharMatcher() {
     String ltrim = CharMatcher.whitespace().trimLeadingFrom(src);
@@ -198,7 +198,7 @@ public boolean guavaCharMatcher() {
 
 我们应该会得到类似如下的结果:
 
-```
+```java
 # Run complete. Total time: 00:16:57
 
 Benchmark                               Mode  Cnt     Score    Error  Units

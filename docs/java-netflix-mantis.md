@@ -26,7 +26,7 @@ Mantis 是一个构建流处理应用程序的平台。它提供了一种简单�
 
 让我们从添加`[mantis-runtime](https://web.archive.org/web/20220627180555/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22io.mantisrx%22%20a%3A%22mantis-runtime%22)`和`[jackson-databind](https://web.archive.org/web/20220627180555/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.fasterxml.jackson.core%22%20a%3A%22jackson-databind%22)`依赖关系开始:
 
-```
+```java
 <dependency>
     <groupId>io.mantisrx</groupId>
     <artifactId>mantis-runtime</artifactId>
@@ -40,7 +40,7 @@ Mantis 是一个构建流处理应用程序的平台。它提供了一种简单�
 
 现在，为了设置我们作业的数据源，让我们实现 Mantis `Source` 接口:
 
-```
+```java
 public class RandomLogSource implements Source<String> {
 
     @Override
@@ -67,7 +67,7 @@ public class RandomLogSource implements Source<String> {
 
 首先，让我们创建一个`LogEvent`实体:
 
-```
+```java
 public class LogEvent implements JsonType {
     private Long index;
     private String level;
@@ -81,7 +81,7 @@ public class LogEvent implements JsonType {
 
 这是一个简单的阶段，它实现了 ScalarComputation 接口，并拆分一个日志条目来构建一个`LogEvent`。此外，它还会过滤掉任何格式错误的字符串:
 
-```
+```java
 public class TransformLogStage implements ScalarComputation<String, LogEvent> {
 
     @Override
@@ -99,7 +99,7 @@ public class TransformLogStage implements ScalarComputation<String, LogEvent> {
 
 此时，我们已经有足够的构件来组合我们的螳螂工作:
 
-```
+```java
 public class LogCollectingJob extends MantisJobProvider<LogEvent> {
 
     @Override
@@ -121,7 +121,7 @@ public class LogCollectingJob extends MantisJobProvider<LogEvent> {
 
 现在，让我们将作业配置为在启动时本地执行:
 
-```
+```java
 @SpringBootApplication
 public class MantisApplication implements CommandLineRunner {
 
@@ -136,14 +136,14 @@ public class MantisApplication implements CommandLineRunner {
 
 让我们运行应用程序。我们将看到一条日志消息，如下所示:
 
-```
+```java
 ...
 Serving modern HTTP SSE server sink on port: 86XX
 ```
 
 现在让我们使用`curl`连接到水槽:
 
-```
+```java
 $ curl localhost:86XX
 data: {"index":86,"level":"WARN","message":"login attempt"}
 data: {"index":87,"level":"ERROR","message":"user created"}
@@ -164,7 +164,7 @@ data: {"index":93,"level":"INFO","message":"user created"}
 
 让我们创建一个实现`Sink<LogEvent>` 接口的`LogSink`:
 
-```
+```java
 public class LogSink implements Sink<LogEvent> {
     @Override
     public void call(Context context, PortRequest portRequest, Observable<LogEvent> logEventObservable) {
@@ -189,7 +189,7 @@ public class LogSink implements Sink<LogEvent> {
 
 在这个 sink 实现中，我们配置了一个谓词，它使用`filter` 参数只检索包含在`filter`参数中设置的文本的日志:
 
-```
+```java
 $ curl localhost:8874?filter=login
 data: {"index":93,"level":"ERROR","message":"login attempt"}
 data: {"index":95,"level":"INFO","message":"login attempt"}
@@ -209,7 +209,7 @@ data: {"index":97,"level":"ERROR","message":"login attempt"}
 
 这个阶段是一个从现有的`TransformLogStage`接收`LogEvent`流数据的`ToGroupComputation`实现。之后，它按日志记录级别对条目进行分组，并将它们发送到下一阶段:
 
-```
+```java
 public class GroupLogStage implements ToGroupComputation<LogEvent, String, LogEvent> {
 
     @Override
@@ -235,7 +235,7 @@ public class GroupLogStage implements ToGroupComputation<LogEvent, String, LogEv
 
 在我们继续并创建下一个阶段之前，让我们首先添加一个`LogAggregate`实体:
 
-```
+```java
 public class LogAggregate implements JsonType {
 
     private final Integer count;
@@ -248,7 +248,7 @@ public class LogAggregate implements JsonType {
 
 这个阶段实现`GroupToScalarComputation`并将日志组流转换为标量`LogAggregate`。它通过计算每种类型的日志在流中出现的次数来做到这一点。此外，它还有一个`LogAggregationDuration`参数，可以用来控制聚合窗口的大小:
 
-```
+```java
 public class CountLogStage implements GroupToScalarComputation<String, LogEvent, LogAggregate> {
 
     private int duration;
@@ -295,7 +295,7 @@ public class CountLogStage implements GroupToScalarComputation<String, LogEvent,
 
 现在唯一要做的就是配置我们的作业:
 
-```
+```java
 public class LogAggregationJob extends MantisJobProvider<LogAggregate> {
 
     @Override
@@ -315,7 +315,7 @@ public class LogAggregationJob extends MantisJobProvider<LogAggregate> {
 
 当我们运行应用程序并执行新作业时，我们可以看到每隔几秒钟就检索一次日志计数:
 
-```
+```java
 $ curl localhost:8133
 data: {"count":3,"level":"ERROR"}
 data: {"count":13,"level":"INFO"}

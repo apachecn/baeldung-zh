@@ -40,7 +40,7 @@ Keycloak 提供了单点登录(SSO)、身份代理和社交登录、用户联盟
 
 **一旦我们下载了独立服务器发行版，我们就可以从终端解压并启动 key cloak:**
 
-```
+```java
 $ unzip keycloak-legacy-19.0.1.zip 
 $ cd keycloak-legacy-19.0.1/keycloak-19.0.1/bin
 $ ./standalone.sh -Djboss.socket.binding.port-offset=100
@@ -128,13 +128,13 @@ Keycloak 提供了一个 REST API 来生成和刷新访问令牌。我们可以�
 
 首先，我们需要通过向以下 URL 发送 POST 请求，从 Keycloak 获取一个访问令牌:
 
-```
+```java
 http://localhost:8180/auth/realms/SpringBootKeycloak/protocol/openid-connect/token
 ```
 
 该请求的正文格式应为`x-www-form-urlencoded`:
 
-```
+```java
 client_id:<your_client_id>
 username:<your_username>
 password:<your_password>
@@ -145,7 +145,7 @@ grant_type:password
 
 访问令牌应该在对受 Keycloak 保护的资源的每个请求中使用，只需将它放在`Authorization`头中:
 
-```
+```java
 headers: {
     'Authorization': 'Bearer' + access_token
 }
@@ -153,7 +153,7 @@ headers: {
 
 一旦访问令牌过期，我们可以通过向上述相同的 URL 发送 POST 请求来刷新它，但是包含刷新令牌而不是用户名和密码:
 
-```
+```java
 {
     'client_id': 'your_client_id',
     'refresh_token': refresh_token_from_previous_request,
@@ -173,7 +173,7 @@ Keycloak 将用一个新的`access_token`和`refresh_token.`对此做出响应
 
 让我们从在 Spring Boot 应用程序的`pom.xml`中声明 [`spring-boot-starter-oauth2-client`](https://web.archive.org/web/20220924064051/https://search.maven.org/search?q=a:spring-boot-starter-oauth2-client) 依赖关系开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-oauth2-client</artifactId>
@@ -182,7 +182,7 @@ Keycloak 将用一个新的`access_token`和`refresh_token.`对此做出响应
 
 此外，由于我们需要对 Spring Boot 使用 Spring Security，我们必须添加这个[依赖项](https://web.archive.org/web/20220924064051/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-security%22):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -199,7 +199,7 @@ Keycloak 将用一个新的`access_token`和`refresh_token.`对此做出响应
 
 让我们配置客户端注册配置:
 
-```
+```java
 spring.security.oauth2.client.registration.keycloak.client-id=login-app
 spring.security.oauth2.client.registration.keycloak.authorization-grant-type=authorization_code
 spring.security.oauth2.client.registration.keycloak.scope=openid
@@ -211,7 +211,7 @@ spring.security.oauth2.client.registration.keycloak.scope=openid
 
 让我们配置 OIDC 提供者配置:
 
-```
+```java
 spring.security.oauth2.client.provider.keycloak.issuer-uri=http://localhost:8180/auth/realms/SpringBootKeycloak
 spring.security.oauth2.client.provider.keycloak.user-name-attribute=preferred_username
 ```
@@ -224,7 +224,7 @@ spring.security.oauth2.client.provider.keycloak.user-name-attribute=preferred_us
 
 让我们创建安全配置:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -263,7 +263,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 最后，我们需要处理 Keycloak 的注销。为此，我们添加`KeycloakLogoutHandler`类:
 
-```
+```java
 @Component
 public class KeycloakLogoutHandler implements LogoutHandler {
 
@@ -316,7 +316,7 @@ public class KeycloakLogoutHandler implements LogoutHandler {
 
 web 控制器将内部和外部 URL 映射到适当的百里香模板:
 
-```
+```java
 @GetMapping(path = "/")
 public String index() {
     return "external";
@@ -341,7 +341,7 @@ public String customers(Principal principal, Model model) {
 
 现在我们准备测试我们的应用程序。要运行 Spring Boot 应用程序，我们可以通过 IDE 轻松启动它，比如 Spring Tool Suite (STS ),或者在终端中运行以下命令:
 
-```
+```java
 mvn clean spring-boot:run
 ```
 

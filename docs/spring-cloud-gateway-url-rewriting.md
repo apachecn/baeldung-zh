@@ -34,7 +34,7 @@ Spring Cloud Gateway 的一个常见用例是充当一个或多个服务的门�
 
 为了创建一个基于配置的重写，我们只需要在应用程序的配置中添加一些属性。这里，为了清楚起见，我们将使用基于 YAML 的配置，但是该信息可以来自任何支持的`PropertySource`:
 
-```
+```java
 spring:
   cloud:
     gateway:
@@ -61,7 +61,7 @@ Spring 处理配置文件的方式需要注意的是，我们不能使用标准�
 
 **但是，如果情况并非如此，我们可以使用基于 DSL 的方法创建路由。**我们需要做的就是创建一个实现路由逻辑的`RouteLocator` bean。例如，让我们创建一个简单的路由，像以前一样，使用正则表达式重写传入的 URI。但是，这一次，替换字符串将在每次请求时动态生成:
 
-```
+```java
 @Configuration
 public class DynamicRewriteRoute {
 
@@ -103,7 +103,7 @@ public class DynamicRewriteRoute {
 
 **然而，这种方法的缺点是我们必须找出哪个端口实际上被分配给了服务器，并将其传递给 Spring，这样我们就可以用它来设置路由的`uri`属性**。幸运的是，Spring 为我们提供了一个优雅的解决方案:`[@DynamicPropertySource](/web/20220524065753/https://www.baeldung.com/spring-dynamicpropertysource).`在这里，我们将使用它来启动服务器，并用绑定端口的值注册一个属性:
 
-```
+```java
 @DynamicPropertySource
 static void registerBackendServer(DynamicPropertyRegistry registry) {
     registry.add("rewrite.backend.uri", () -> {
@@ -115,7 +115,7 @@ static void registerBackendServer(DynamicPropertyRegistry registry) {
 
 [测试处理程序](https://web.archive.org/web/20220524065753/https://github.com/eugenp/tutorials/blob/master/spring-cloud/spring-cloud-gateway/src/test/java/com/baeldung/springcloudgateway/rewrite/URLRewriteGatewayApplicationLiveTest.java)只是在响应体中回显接收到的 URI。这允许我们验证重写规则是否如预期的那样工作。例如，这是
 
-```
+```java
 @Test
 void testWhenApiCall_thenRewriteSuccess(@Autowired WebTestClient webClient) {
     webClient.get()

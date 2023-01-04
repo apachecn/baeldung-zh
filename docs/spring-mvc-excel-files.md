@@ -10,7 +10,7 @@
 
 为了能够上传文件，我们将首先创建一个控制器映射，它接收一个`MultipartFile`并将其保存在当前位置:
 
-```
+```java
 private String fileLocation;
 
 @PostMapping("/uploadExcelFile")
@@ -34,7 +34,7 @@ public String uploadFile(Model model, MultipartFile file) throws IOException {
 
 接下来，让我们用一个包含`type file`的`input`的表单创建一个`JSP`文件，该表单将`accept`属性设置为只允许 Excel 文件:
 
-```
+```java
 <c:url value="/uploadExcelFile" var="uploadFileUrl" />
 <form method="post" enctype="multipart/form-data"
   action="${uploadFileUrl}">
@@ -49,7 +49,7 @@ public String uploadFile(Model model, MultipartFile file) throws IOException {
 
 让我们创建一个名为`MyCell`的助手类，它将包含与内容和格式相关的 Excel 单元格的属性:
 
-```
+```java
 public class MyCell {
     private String content;
     private String textColor;
@@ -73,7 +73,7 @@ public class MyCell {
 
 **为了解析单元格的格式，我们将获得`HSSFCellStyle`** **对象，**，它可以帮助我们确定背景颜色和字体等属性。所有读取的属性将在`MyCell`对象的属性中设置:
 
-```
+```java
 HSSFCellStyle cellStyle = cell.getCellStyle();
 
 MyCell myCell = new MyCell();
@@ -91,7 +91,7 @@ HSSFFont font = cell.getCellStyle().getFont(workbook);
 
 让我们也获得字体大小、粗细和颜色:
 
-```
+```java
 myCell.setTextSize(font.getFontHeightInPoints() + "");
 if (font.getBold()) {
     myCell.setTextWeight("bold");
@@ -110,7 +110,7 @@ if (textColor != null) {
 
 让我们仔细看看如何以`.xlsx`格式读取单元格的格式。首先，**我们将检索与单元格相关联的`XSSFCellStyle`对象**，并使用它来确定背景颜色和字体:
 
-```
+```java
 XSSFCellStyle cellStyle = cell.getCellStyle();
 
 MyCell myCell = new MyCell();
@@ -129,7 +129,7 @@ XSSFFont font = cellStyle.getFont();
 
 让我们也确定字体的属性:
 
-```
+```java
 myCell.setTextSize(font.getFontHeightInPoints() + "");
 if (font.getBold()) {
     myCell.setTextWeight("bold");
@@ -152,7 +152,7 @@ if (textColor != null) {
 
 为了确定我们应该添加多少空的`String`对象，我们将首先使用`maxNrCols`变量确定 Excel 文件中最长的一行。然后，我们将把这个数量的空的`String`对象添加到我们的`HashMap`中所有大小为 0:
 
-```
+```java
 int maxNrCols = data.values().stream()
   .mapToInt(List::size)
   .max()
@@ -174,7 +174,7 @@ data.values().stream()
 
 让我们创建一个`@RequestMapping`方法，该方法将调用上面的代码来读取上传文件的内容，然后添加返回的`Map`作为一个`Model`属性:
 
-```
+```java
 @Resource(name = "excelPOIHelper")
 private ExcelPOIHelper excelPOIHelper;
 
@@ -200,7 +200,7 @@ public String readPOI(Model model) throws IOException {
 
 为了直观地显示文件的内容，我们将创建一个`HTML` `table`，并在每个表格单元格的`style`属性中添加 Excel 文件中每个单元格对应的格式属性:
 
-```
+```java
 <c:if test="${not empty data}">
     <table style="border: 1px solid black; border-collapse: collapse;">
         <c:forEach items="${data}" var="row">

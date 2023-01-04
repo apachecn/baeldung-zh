@@ -111,7 +111,7 @@ Java 集合是 Java 开发人员技术访谈中经常提到的一个话题。本
 
 由于`Comparator`接口是一个函数接口，您可以用 lambda 表达式替换它，如下例所示。它展示了使用自然排序(`Integer`的`Comparable`接口)和使用定制迭代器(`Comparator<Integer>`接口)对列表进行排序。
 
-```
+```java
 List<Integer> list1 = Arrays.asList(5, 2, 3, 4, 1);
 Collections.sort(list1);
 assertEquals(new Integer(1), list1.get(0));

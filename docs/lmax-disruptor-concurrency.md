@@ -53,7 +53,7 @@ Disruptor 具有基于阵列的循环数据结构(环形缓冲区)。这是一�
 
 让我们从在`pom.xml`中添加中断器库依赖开始:
 
-```
+```java
 <dependency>
     <groupId>com.lmax</groupId>
     <artifactId>disruptor</artifactId>
@@ -67,7 +67,7 @@ Disruptor 具有基于阵列的循环数据结构(环形缓冲区)。这是一�
 
 让我们定义携带数据的事件:
 
-```
+```java
 public static class ValueEvent {
     private int value;
     public final static EventFactory EVENT_FACTORY 
@@ -83,7 +83,7 @@ public static class ValueEvent {
 
 消费者从环形缓冲区读取数据。让我们定义一个将处理事件的消费者:
 
-```
+```java
 public class SingleEventPrintConsumer {
     ...
 
@@ -107,7 +107,7 @@ public class SingleEventPrintConsumer {
 
 构建干扰器:
 
-```
+```java
 ThreadFactory threadFactory = DaemonThreadFactory.INSTANCE;
 
 WaitStrategy waitStrategy = new BusySpinWaitStrategy();
@@ -130,7 +130,7 @@ Disruptor<ValueEvent> disruptor
 
 连接消费者处理程序:
 
-```
+```java
 disruptor.handleEventsWith(getEventHandler()); 
 ```
 
@@ -140,7 +140,7 @@ disruptor.handleEventsWith(getEventHandler());
 
 要启动干扰器:
 
-```
+```java
 RingBuffer<ValueEvent> ringBuffer = disruptor.start();
 ```
 
@@ -150,7 +150,7 @@ RingBuffer<ValueEvent> ringBuffer = disruptor.start();
 
 使用 Disruptor 中的`RingBuffer`进行发布:
 
-```
+```java
 for (int eventCount = 0; eventCount < 32; eventCount++) {
     long sequenceId = ringBuffer.next();
     ValueEvent valueEvent = ringBuffer.get(sequenceId);

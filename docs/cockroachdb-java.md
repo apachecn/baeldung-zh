@@ -33,7 +33,7 @@ CockroachDB 是一个分布式 SQL 数据库，构建在事务性和一致的键
 
 在我们[安装了 cocroach db](https://web.archive.org/web/20220526052752/https://www.cockroachlabs.com/docs/stable/install-cockroachdb.html)之后，我们可以启动本地集群的第一个节点:
 
-```
+```java
 cockroach start --insecure --host=localhost;
 ```
 
@@ -41,7 +41,7 @@ cockroach start --insecure --host=localhost;
 
 此时，我们的本地集群已经启动并运行。只有一个节点，我们已经可以连接到它并进行操作，但是**为了更好地利用 CockroachDB 的自动复制、重新平衡和容错功能，我们将再添加两个节点**:
 
-```
+```java
 cockroach start --insecure --store=node2 \
   --host=localhost --port=26258 --http-port=8081 \
   --join=localhost:26257;
@@ -61,13 +61,13 @@ cockroach start --insecure --store=node3 \
 
 首先，让我们启动 SQL 控制台:
 
-```
+```java
 cockroach sql --insecure;
 ```
 
 现在，让我们创建我们的`testdb` 数据库，创建一个用户并向该用户添加授权，以便能够执行 CRUD 操作:
 
-```
+```java
 CREATE DATABASE testdb;
 CREATE USER user17 with password 'qwerty';
 GRANT ALL ON DATABASE testdb TO user17;
@@ -75,13 +75,13 @@ GRANT ALL ON DATABASE testdb TO user17;
 
 如果我们想要验证数据库是否正确创建，我们可以列出在当前节点中创建的所有数据库:
 
-```
+```java
 SHOW DATABASES;
 ```
 
 最后，如果我们想要验证 CockroachDB 的自动复制特性，我们可以检查另外两个节点中的一个是否正确创建了数据库。为此，我们必须在使用 SQL 控制台时表达`port`标志:
 
-```
+```java
 cockroach sql --insecure --port=26258;
 ```
 
@@ -104,7 +104,7 @@ cockroach sql --insecure --port=26258;
 
 给定我们正在运行的本地集群 CockroachDB，为了能够连接到它，我们必须向我们的`pom.xml:`添加一个[附加依赖](https://web.archive.org/web/20220526052752/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.postgresql%22%20AND%20a%3A%22postgresql%22)
 
-```
+```java
 <dependency>
     <groupId>org.postgresql</groupId>
     <artifactId>postgresql</artifactId>
@@ -114,7 +114,7 @@ cockroach sql --insecure --port=26258;
 
 或者，对于 Gradle 项目:
 
-```
+```java
 compile 'org.postgresql:postgresql:42.1.4'
 ```
 
@@ -132,7 +132,7 @@ compile 'org.postgresql:postgresql:42.1.4'
 
 要打开与数据库的连接，我们可以使用`DriverManager` 类的`getConnection()`方法。这个方法需要一个连接 URL `String` 参数、一个用户名和一个密码:
 
-```
+```java
 Connection con = DriverManager.getConnection(
   "jdbc:postgresql://localhost:26257/testdb", "user17", "qwerty"
 );
@@ -142,7 +142,7 @@ Connection con = DriverManager.getConnection(
 
 有了工作连接，我们就可以开始创建将用于所有 CRUD 操作的`articles`表:
 
-```
+```java
 String TABLE_NAME = "articles";
 StringBuilder sb = new StringBuilder("CREATE TABLE IF NOT EXISTS ")
   .append(TABLE_NAME)
@@ -157,7 +157,7 @@ stmt.execute(query);
 
 如果我们想验证表是否被正确创建，我们可以使用`SHOW TABLES`命令:
 
-```
+```java
 PreparedStatement preparedStatement = con.prepareStatement("SHOW TABLES");
 ResultSet resultSet = preparedStatement.executeQuery();
 List tables = new ArrayList<>();
@@ -174,7 +174,7 @@ assertTrue(tables.stream().anyMatch(t -> t.equals(TABLE_NAME)));
 
 如果我们在创建表的过程中遗漏了一些列，或者因为我们稍后需要它们，我们可以很容易地添加它们:
 
-```
+```java
 StringBuilder sb = new StringBuilder("ALTER TABLE ").append(TABLE_NAME)
   .append(" ADD ")
   .append(columnName)
@@ -188,7 +188,7 @@ stmt.execute(query);
 
 一旦我们更改了表，我们可以使用`SHOW COLUMNS FROM`命令来验证新列是否被添加:
 
-```
+```java
 String query = "SHOW COLUMNS FROM " + TABLE_NAME;
 PreparedStatement preparedStatement = con.prepareStatement(query);
 ResultSet resultSet = preparedStatement.executeQuery();
@@ -204,7 +204,7 @@ assertTrue(columns.stream().anyMatch(c -> c.equals(columnName)));
 
 使用表格时，有时我们需要删除它们，这可以通过几行代码轻松实现:
 
-```
+```java
 StringBuilder sb = new StringBuilder("DROP TABLE IF EXISTS ")
   .append(TABLE_NAME);
 
@@ -217,7 +217,7 @@ stmt.execute(query);
 
 一旦我们明确了可以在表上执行的操作，我们现在就可以开始处理数据了。我们可以开始定义`Article`类:
 
-```
+```java
 public class Article {
 
     private UUID id;
@@ -230,7 +230,7 @@ public class Article {
 
 现在我们可以看看如何将一个`Article`添加到我们的`articles`表中:
 
-```
+```java
 StringBuilder sb = new StringBuilder("INSERT INTO ").append(TABLE_NAME)
   .append("(id, title, author) ")
   .append("VALUES (?,?,?)");
@@ -247,7 +247,7 @@ preparedStatement.execute();
 
 一旦数据存储在表中，我们就想读取这些数据，这很容易实现:
 
-```
+```java
 StringBuilder sb = new StringBuilder("SELECT * FROM ")
   .append(TABLE_NAME);
 
@@ -258,7 +258,7 @@ ResultSet rs = preparedStatement.executeQuery();
 
 然而，如果我们不想读取`articles`表中的所有数据，而只想读取一个`Article`，我们可以简单地改变构建`PreparedStatement`的方式:
 
-```
+```java
 StringBuilder sb = new StringBuilder("SELECT * FROM ").append(TABLE_NAME)
   .append(" WHERE title = ?");
 
@@ -272,7 +272,7 @@ ResultSet rs = preparedStatement.executeQuery();
 
 最后但同样重要的是，如果我们想从表中删除数据，我们可以使用标准的`DELETE FROM`命令删除一组有限的记录:
 
-```
+```java
 StringBuilder sb = new StringBuilder("DELETE FROM ").append(TABLE_NAME)
   .append(" WHERE title = ?");
 
@@ -284,7 +284,7 @@ preparedStatement.execute();
 
 或者我们可以用`TRUNCATE`函数删除表中的所有记录:
 
-```
+```java
 StringBuilder sb = new StringBuilder("TRUNCATE TABLE ")
   .append(TABLE_NAME);
 
@@ -303,7 +303,7 @@ stmt.execute(query);
 
 让我们看看如何在进行多次插入时实现数据一致性:
 
-```
+```java
 try {
     con.setAutoCommit(false);
 

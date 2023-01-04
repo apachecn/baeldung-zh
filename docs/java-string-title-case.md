@@ -18,7 +18,7 @@
 
 让我们使用空格作为单词分隔符，并实现此解决方案:
 
-```
+```java
 public static String convertToTitleCaseIteratingChars(String text) {
     if (text == null || text.isEmpty()) {
         return text;
@@ -47,14 +47,14 @@ public static String convertToTitleCaseIteratingChars(String text) {
 
 如果我们使用这些输入来测试该方法:
 
-```
+```java
 tHis IS a tiTLe
 tHis, IS a   tiTLe
 ```
 
 我们得到以下预期输出:
 
-```
+```java
 This Is A Title
 This, Is A   Title
 ```
@@ -65,7 +65,7 @@ This, Is A   Title
 
 让我们看看它的代码，再次使用空格作为单词分隔符，以及有用的`Stream` API:
 
-```
+```java
 private static final String WORD_SEPARATOR = " ";
 
 public static String convertToTitleCaseSplitting(String text) {
@@ -86,7 +86,7 @@ public static String convertToTitleCaseSplitting(String text) {
 
 使用与之前相同的输入，我们得到完全相同的输出:
 
-```
+```java
 This Is A Title
 This, Is A   Title
 ```
@@ -97,7 +97,7 @@ This, Is A   Title
 
 这为**提供了`WordUtils`类，该类具有`capitalizeFully()`方法**，该方法正是我们想要实现的:
 
-```
+```java
 public static String convertToTileCaseWordUtilsFull(String text) {
     return WordUtils.capitalizeFully(text);
 }
@@ -105,7 +105,7 @@ public static String convertToTileCaseWordUtilsFull(String text) {
 
 正如我们所看到的，这非常容易使用，如果我们使用与之前相同的输入进行测试，我们会得到相同的结果:
 
-```
+```java
 This Is A Title
 This, Is A   Title
 ```
@@ -114,7 +114,7 @@ This, Is A   Title
 
 让我们看看如何使用它:
 
-```
+```java
 public static String convertToTileCaseWordUtils(String text) {
     return WordUtils.capitalize(text);
 }
@@ -122,7 +122,7 @@ public static String convertToTileCaseWordUtils(String text) {
 
 现在，如果我们使用与之前相同的输入进行测试，我们会得到这些不同的输出:
 
-```
+```java
 THis IS A TiTLe
 THis, IS A   TiTLe
 ```
@@ -133,7 +133,7 @@ THis, IS A   TiTLe
 
 要使用它，我们需要将这个依赖项添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>com.ibm.icu</groupId>
     <artifactId>icu4j</artifactId>
@@ -145,7 +145,7 @@ THis, IS A   TiTLe
 
 这个库的工作方式与`WordUtils`非常相似，但是我们可以指定一个`BreakIterator `来告诉这个方法我们想要如何拆分`String`，以及我们想要将哪些单词转换成标题大小写:
 
-```
+```java
 public static String convertToTitleCaseIcu4j(String text) {
     if (text == null || text.isEmpty()) {
         return text;

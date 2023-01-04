@@ -22,7 +22,7 @@
 
 让我们定义一个多模块项目结构来进行实验。我们的项目由一个`version-collision`父模块和三个子模块组成:
 
-```
+```java
 version-collision
     project-a
     project-b
@@ -31,7 +31,7 @@ version-collision
 
 `project-a`和`project-b` 的`pom.xml` 几乎相同。唯一的区别是他们所依赖的` com.google.guava`工件的版本。特别是`project-a`使用版本`22.0`:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>com.google.guava</groupId>
@@ -43,7 +43,7 @@ version-collision
 
 但是，`project-b`用的是更新的版本，`29.0-jre`:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>com.google.guava</groupId>
@@ -55,7 +55,7 @@ version-collision
 
 第三个模块`project-collision`，依赖于另外两个模块:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>com.baeldung</groupId>
@@ -76,7 +76,7 @@ version-collision
 
 我们可以通过在使用来自`guava`的`Futures.immediateVoidFuture`方法的`project-collision`模块中创建一个简单的测试来找出使用了哪个依赖项:
 
-```
+```java
 @Test
 public void whenVersionCollisionDoesNotExist_thenShouldCompile() {
     assertThat(Futures.immediateVoidFuture(), notNullValue());
@@ -89,7 +89,7 @@ public void whenVersionCollisionDoesNotExist_thenShouldCompile() {
 
 根据`project-collision`模块中依赖关系的顺序，在某些组合中，Maven 会返回一个编译错误:
 
-```
+```java
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.8.1:testCompile (default-testCompile) on project project-collision: Compilation failure
 [ERROR] /tutorials/maven-all/version-collision/project-collision/src/test/java/com/baeldung/version/collision/VersionCollisionUnitTest.java:[12,27] cannot find symbol
 [ERROR]   symbol:   method immediateVoidFuture()
@@ -102,7 +102,7 @@ public void whenVersionCollisionDoesNotExist_thenShouldCompile() {
 
 `maven-dependency-plugin` 是一个非常有用的工具，可以显示所有依赖项及其版本:
 
-```
+```java
 % mvn dependency:tree -Dverbose
 
 [INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ project-collision ---
@@ -121,7 +121,7 @@ public void whenVersionCollisionDoesNotExist_thenShouldCompile() {
 
 因此，我们可以将其排除在`project-collision` pom 中:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>com.baeldung</groupId>
@@ -144,7 +144,7 @@ public void whenVersionCollisionDoesNotExist_thenShouldCompile() {
 
 现在，当我们运行`dependency:tree`命令时，我们可以看到它不再存在:
 
-```
+```java
 % mvn dependency:tree -Dverbose
 
 [INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ project-collision ---
@@ -161,7 +161,7 @@ Maven 的`dependencyManagement`部分是一个用于集中依赖信息的**机�
 
 记住这一点，让我们在父`pom`中创建一个`dependencyManagement`配置:
 
-```
+```java
 <dependencyManagement>
    <dependencies>
       <dependency>
@@ -175,7 +175,7 @@ Maven 的`dependencyManagement`部分是一个用于集中依赖信息的**机�
 
 因此，Maven 将确保在所有子模块中使用`com.google.guava`工件的版本`29.0-jre`:
 
-```
+```java
 % mvn dependency:tree -Dverbose
 
 [INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ project-collision ---
@@ -192,7 +192,7 @@ Maven 的`dependencyManagement`部分是一个用于集中依赖信息的**机�
 
 显式依赖声明消除了工件版本冲突的可能性。让我们将带有该规则的`maven-enforcer-plugin`添加到父 pom 中:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-enforcer-plugin</artifactId>

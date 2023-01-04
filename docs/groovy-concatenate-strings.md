@@ -8,7 +8,7 @@
 
 我们将从定义一个`numOfWonder`变量开始，我们将在整个例子中使用它:
 
-```
+```java
 def numOfWonder = 'seven'
 ```
 
@@ -16,13 +16,13 @@ def numOfWonder = 'seven'
 
 很简单，我们可以使用 [+运算符](/web/20221110163406/https://www.baeldung.com/groovy-strings#string-concatenation)来连接`String` s:
 
-```
+```java
 'The ' + numOfWonder + ' wonders of the world' 
 ```
 
 类似地，Groovy 也支持左移<
 
-```
+```java
 'The ' << numOfWonder << ' wonders of ' << 'the world'
 ```
 
@@ -30,13 +30,13 @@ def numOfWonder = 'seven'
 
 下一步，我们将尝试在字符串文字中使用 [Groovy 表达式来提高代码的可读性:](/web/20221110163406/https://www.baeldung.com/groovy-strings#string-interpolation)
 
-```
+```java
 "The $numOfWonder wonders of the world\n"
 ```
 
 这也可以使用花括号来实现:
 
-```
+```java
 "The ${numOfWonder} wonders of the world\n" 
 ```
 
@@ -44,7 +44,7 @@ def numOfWonder = 'seven'
 
 假设我们想要打印世界上所有的奇迹，那么我们可以使用[的三重双引号](/web/20221110163406/https://www.baeldung.com/groovy-strings#triple-quoted-string)来定义一个多行的`String`，仍然包括我们的`numOfWonder`变量:
 
-```
+```java
 """
 There are $numOfWonder wonders of the world.
 Can you name them all? 
@@ -62,13 +62,13 @@ Can you name them all?
 
 作为最后一个选择，我们将看看`String`的`concat` 方法:
 
-```
+```java
 'The '.concat(numOfWonder).concat(' wonders of the world')​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
 ```
 
 对于非常长的文本，我们建议使用 [`StringBuilder`](/web/20221110163406/https://www.baeldung.com/java-string-builder-string-buffer) 或 [`StringBuffer`](/web/20221110163406/https://www.baeldung.com/java-string-builder-string-buffer) 来代替:
 
-```
+```java
 new StringBuilder().append('The ').append(numOfWonder).append(' wonders of the world')
 new StringBuffer().append('The ').append(numOfWonder).append(' wonders of the world')​​​​​​​​​​​​​​​
 ```

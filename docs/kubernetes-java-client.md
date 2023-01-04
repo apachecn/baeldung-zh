@@ -38,7 +38,7 @@
 
 首先，让我们将 Kubernetes Java API 依赖项添加到我们项目的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>io.kubernetes</groupId>
     <artifactId>client-java</artifactId>
@@ -58,7 +58,7 @@
 
 **`ApiClient`类是 API 中最重要的类之一，因为它包含了调用 Kubernetes API 服务器**的所有逻辑。创建该类实例的推荐方法是使用`Config`类中的一个可用静态方法。特别是，最简单的方法是使用`defaultClient()`方法:
 
-```
+```java
 ApiClient client = Config.defaultClient();
 ```
 
@@ -77,7 +77,7 @@ ApiClient client = Config.defaultClient();
 
 一旦我们获得了一个`ApiClient `实例，我们就可以用它为任何可用的 API 创建一个存根。在我们的例子中，我们将使用`CoreV1Api`类，它包含列出可用节点所需的方法:
 
-```
+```java
 CoreV1Api api = new CoreV1Api(client);
 ```
 
@@ -91,7 +91,7 @@ CoreV1Api api = new CoreV1Api(client);
 
 最后，让我们进入返回可用节点的实际 API 调用。`CoreApiV1`存根有一个方法可以做到这一点，所以这变得微不足道:
 
-```
+```java
 V1NodeList nodeList = api.listNode(null, null, null, null, null, null, null, null, 10, false);
 nodeList.getItems()
   .stream()
@@ -100,7 +100,7 @@ nodeList.getItems()
 
 **在我们的例子中，我们为方法的大多数参数传递`null`，因为它们是可选的。**最后两个参数与所有`listXXX `呼叫相关，因为它们指定了呼叫超时以及这是否是一个`Watch`呼叫。检查方法的签名揭示了剩余的参数:
 
-```
+```java
 public V1NodeList listNode(
   String pretty,
   Boolean allowWatchBookmarks,
@@ -118,7 +118,7 @@ public V1NodeList listNode(
 
 对于这个快速介绍，我们将忽略分页、观察和过滤参数。**在本例中，返回值是一个 POJO，用 Java 表示返回的文档**。对于这个 API 调用，文档包含一个`V1Node `对象列表，其中包含关于每个节点的几条信息。以下是这段代码在控制台上生成的典型输出:
 
-```
+```java
 class V1Node {
     metadata: class V1ObjectMeta {
         labels: {
@@ -173,7 +173,7 @@ class V1Node {
 
 正如我们所看到的，有相当多的信息可用。作为比较，这是具有默认设置的等效`kubectl`输出:
 
-```
+```java
 [[email protected]](/web/20220627141113/https://www.baeldung.com/cdn-cgi/l/email-protection):~# kubectl get nodes
 NAME               STATUS   ROLES                  AGE   VERSION
 rancher-template   Ready    control-plane,master   24h   v1.20.2+k3s1 

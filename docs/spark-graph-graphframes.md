@@ -24,7 +24,7 @@
 
 我们再加上`[spark-graphx 2.11](https://web.archive.org/web/20221208143839/https://search.maven.org/search?q=g:org.apache.spark%20AND%20a:spark-graphx_2.11),` `[graphframes](https://web.archive.org/web/20221208143839/https://mvnrepository.com/artifact/graphframes/graphframes?repo=spark-packages)`，和 [`spark-sql 2.11`](https://web.archive.org/web/20221208143839/https://search.maven.org/search?q=g:org.apache.spark%20AND%20a:spark-sql_2.11) :
 
-```
+```java
 <dependency>
     <groupId>org.apache.spark</groupId>
     <artifactId>spark-graphx_2.11</artifactId>
@@ -46,7 +46,7 @@
 
 还有，碰巧 GraphFrames 不在 Maven Central 中。因此，让我们也添加所需的 Maven 存储库:
 
-```
+```java
 <repositories>
      <repository>
           <id>SparkPackagesRepo</id>
@@ -63,7 +63,7 @@
 
 接下来，让我们通过创建基本配置来开始我们的代码:
 
-```
+```java
 SparkConf sparkConf = new SparkConf()
   .setAppName("SparkGraphFrames")
   .setMaster("local[*]");
@@ -72,7 +72,7 @@ JavaSparkContext javaSparkContext = new JavaSparkContext(sparkConf);
 
 我们还需要创建一个`SparkSession`:
 
-```
+```java
 SparkSession session = SparkSession.builder()
   .appName("SparkGraphFrameSample")
   .config("spark.sql.warehouse.dir", "/file:C:/temp")
@@ -91,7 +91,7 @@ SparkSession session = SparkSession.builder()
 
 首先，对于这个例子，让我们将两个实体都定义为`User`和`Relationship`:
 
-```
+```java
 public class User {
     private Long id;
     private String name;
@@ -116,7 +116,7 @@ public class Relationship implements Serializable {
 
 接下来，让我们定义一些`User`和`Relationship`实例:
 
-```
+```java
 List<User> users = new ArrayList<>();
 users.add(new User(1L, "John"));
 users.add(new User(2L, "Martin"));
@@ -135,7 +135,7 @@ relationships.add(new Relationship("Relative", "3", "4"));
 
 现在，为了创建和操作我们的关系图，我们将创建一个`GraphFrame`的实例。`GraphFrame`构造函数需要两个`Dataset<Row>`实例，第一个代表顶点，第二个代表边:
 
-```
+```java
 Dataset<Row> userDataset = session.createDataFrame(users, User.class);
 Dataset<Row> relationshipDataset = session.createDataFrame(relationships, Relation.class);
 
@@ -144,12 +144,12 @@ GraphFrame graph = new GraphFrame(userDataframe, relationshipDataframe);
 
 最后，我们将在控制台中记录我们的顶点和边，看看它看起来如何:
 
-```
+```java
 graph.vertices().show();
 graph.edges().show();
 ```
 
-```
+```java
 +---+------+
 | id|  name|
 +---+------+
@@ -180,13 +180,13 @@ GraphFrames 允许我们通过查询过滤边和顶点。
 
 接下来，让我们通过`User`上的`name `属性过滤顶点:
 
-```
+```java
 graph.vertices().filter("name = 'Martin'").show();
 ```
 
 在控制台上，我们可以看到结果:
 
-```
+```java
 +---+------+
 | id|  name|
 +---+------+
@@ -196,7 +196,7 @@ graph.vertices().filter("name = 'Martin'").show();
 
 此外，我们可以通过调用`filterEdges`或`filterVertices`直接在图上过滤:
 
-```
+```java
 graph.filterEdges("type = 'Friend'")
   .dropIsolatedVertices().vertices().show();
 ```
@@ -205,7 +205,7 @@ graph.filterEdges("type = 'Friend'")
 
 因此，我们有一个子图，仍然是一个`GraphFrame`实例，其中只有具有“朋友”状态的关系:
 
-```
+```java
 +---+------+
 | id|  name|
 +---+------+
@@ -223,13 +223,13 @@ graph.filterEdges("type = 'Friend'")
 
 让我们计算一下图中所有顶点的传入度:
 
-```
+```java
 graph.inDegrees().show();
 ```
 
 因此，我们有一个`GraphFrame`来显示每个顶点的传入边的数量，不包括那些没有传入边的:
 
-```
+```java
 +---+--------+
 | id|inDegree|
 +---+--------+
@@ -253,7 +253,7 @@ GraphFrames 还提供了现成的流行算法——让我们来看看其中的�
 
 运行页面排名算法非常简单:
 
-```
+```java
 graph.pageRank()
   .maxIter(20)
   .resetProbability(0.15)
@@ -269,7 +269,7 @@ graph.pageRank()
 
 响应是类似的`GraphFrame,` ,不过这次我们看到了一个额外的列，给出了每个顶点的页面排名:
 
-```
+```java
 +---+------+------------------+
 | id|  name|          pagerank|
 +---+------+------------------+
@@ -288,13 +288,13 @@ graph.pageRank()
 
 我们可以通过`connectedComponents()` 方法调用不带任何参数的算法:
 
-```
+```java
 graph.connectedComponents().run().show();
 ```
 
 该算法返回一个包含每个顶点和每个顶点所连接的组件的`GraphFrame` :
 
-```
+```java
 +---+------+------------+
 | id|  name|   component|
 +---+------+------------+
@@ -317,13 +317,13 @@ graph.connectedComponents().run().show();
 
 我们可以很容易地直接从我们的`GraphFrame`实例中执行三角形计数:
 
-```
+```java
 graph.triangleCount().run().show();
 ```
 
 算法还返回一个`GraphFrame`，其中包含经过每个顶点的三角形数量。
 
-```
+```java
 +-----+---+------+
 |count| id|  name|
 +-----+---+------+

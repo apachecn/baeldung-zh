@@ -12,7 +12,7 @@
 
 例如，要使用`baeldung`用户名和`HttpClient`密码进行验证，我们必须发送这个头:
 
-```
+```java
 Basic YmFlbGR1bmc6SHR0cENsaWVudA==
 ```
 
@@ -24,7 +24,7 @@ Basic YmFlbGR1bmc6SHR0cENsaWVudA==
 
 让我们从执行一个简单的 GET 请求开始，现在不需要任何认证:
 
-```
+```java
 HttpClient client = HttpClient.newHttpClient();
 
 HttpRequest request = HttpRequest.newBuilder()
@@ -43,7 +43,7 @@ logger.info("Status {}", response.statusCode());
 
 让我们运行应用程序并检查日志。输出应该如下所示:
 
-```
+```java
 INFO com.baeldung.httpclient.basicauthentication.HttpClientBasicAuthentication - Status 200
 ```
 
@@ -53,7 +53,7 @@ INFO com.baeldung.httpclient.basicauthentication.HttpClientBasicAuthentication -
 
 在我们配置身份验证之前，我们需要一个 URL 来测试它。让我们使用一个需要认证的 [Postman Echo](https://web.archive.org/web/20220617075807/https://learning.postman.com/docs/developer/echo-api/) 端点。首先，将之前的 URL 改为这个，并再次运行应用程序:
 
-```
+```java
 HttpRequest request = HttpRequest.newBuilder()
   .GET()
   .uri(new URI("https://postman-echo.com/basic-auth"))
@@ -64,7 +64,7 @@ HttpRequest request = HttpRequest.newBuilder()
 
 让我们更改我们的客户机，以便它发送所需的身份验证数据。**我们可以通过配置`HttpClient Builder`来做到这一点，我们的客户端将使用我们设置的凭证。**该端点接受用户名`“postman”`和密码`“password”`。让我们为我们的客户端添加一个`authenticator`:
 
-```
+```java
 HttpClient client = HttpClient.newBuilder()
   .authenticator(new Authenticator() {
       @Override
@@ -83,7 +83,7 @@ HttpClient client = HttpClient.newBuilder()
 
 让我们移除验证器，看看如何设置请求头。我们需要使用 [base64 编码](/web/20220617075807/https://www.baeldung.com/java-base64-encode-and-decode#1-java-8-basic-base64)来构造头值:
 
-```
+```java
 private static final String getBasicAuthenticationHeader(String username, String password) {
     String valueToEncode = username + ":" + password;
     return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
@@ -92,7 +92,7 @@ private static final String getBasicAuthenticationHeader(String username, String
 
 让我们为`Authorization`头设置这个值并运行应用程序:
 
-```
+```java
 HttpRequest request = HttpRequest.newBuilder()
   .GET()
   .uri(new URI("https://postman-echo.com/basic-auth"))

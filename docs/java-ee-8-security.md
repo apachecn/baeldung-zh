@@ -22,7 +22,7 @@ Jakarta EE 8 安全 API 是新的标准，是处理 Java 容器中安全问题�
 
 Jakarta EE 8 兼容服务器已经提供了 Jakarta EE 8 安全 API 的实现，因此我们只需要[Jakarta EE Web Profile API](https://web.archive.org/web/20220710163703/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22javax%22%20AND%20a%3A%22javaee-web-api%22)Maven 工件:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>javax</groupId>
@@ -37,7 +37,7 @@ Jakarta EE 8 兼容服务器已经提供了 Jakarta EE 8 安全 API 的实现，
 
 首先，我们为 Jakarta EE 8 [安全 API](https://web.archive.org/web/20220710163703/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22javax.security.enterprise-api%22) 指定 Maven 工件:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>javax.security.enterprise</groupId>
@@ -49,7 +49,7 @@ Jakarta EE 8 兼容服务器已经提供了 Jakarta EE 8 安全 API 的实现，
 
 然后，我们将添加一个实现，例如，[Soteria](https://web.archive.org/web/20220710163703/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22javax.security.enterprise%22)–参考实现:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.glassfish.soteria</groupId>
@@ -77,7 +77,7 @@ Jakarta EE 8 兼容服务器已经提供了 Jakarta EE 8 安全 API 的实现，
 
 **如上所述，web 应用只需使用`@BasicAuthenticationMechanismDefinition annotation on a CDI bean` :** 就可以配置基本的 HTTP 认证
 
-```
+```java
 @BasicAuthenticationMechanismDefinition(
   realmName = "userRealm")
 @ApplicationScoped
@@ -88,13 +88,13 @@ public class AppConfig{}
 
 在收到未授权的请求时，容器通过`WWW-Authenticate`响应头询问客户端是否提供合适的认证信息。
 
-```
+```java
 WWW-Authenticate: Basic realm="userRealm"
 ```
 
 然后，客户机通过`Authorization`请求头发送用户名和密码，用冒号“:”分隔，并用 Base64 编码:
 
-```
+```java
 //user=baeldung, password=baeldung
 Authorization: Basic YmFlbGR1bmc6YmFlbGR1bmc= 
 ```
@@ -107,7 +107,7 @@ Authorization: Basic YmFlbGR1bmc6YmFlbGR1bmc=
 
 然后，我们可以选择指定登录和错误页面，或者使用默认的合理页面`/login`和`/login-error`:
 
-```
+```java
 @FormAuthenticationMechanismDefinition(
   loginToContinue = @LoginToContinue(
     loginPage = "/login.html",
@@ -118,7 +118,7 @@ public class AppConfig{}
 
 作为调用`loginPage,`的结果，服务器应该将表单发送给客户机:
 
-```
+```java
 <form action="j_security_check" method="post">
     <input name="j_username" type="text"/>
     <input name="j_password" type="password"/>
@@ -132,7 +132,7 @@ public class AppConfig{}
 
 web 应用程序可以通过使用注释`@CustomFormAuthenticationMechanismDefinition:`来触发定制的基于表单的认证实现
 
-```
+```java
 @CustomFormAuthenticationMechanismDefinition(
   loginToContinue = @LoginToContinue(loginPage = "/login.xhtml"))
 @ApplicationScoped
@@ -144,7 +144,7 @@ public class AppConfig {
 
 让我们看一下支持`LoginBean`，它包含登录逻辑:
 
-```
+```java
 @Named
 @RequestScoped
 public class LoginBean {
@@ -173,7 +173,7 @@ public class LoginBean {
 
 作为调用定制`login.xhtml`页面的结果，客户端将收到的表单提交给`LoginBean'`的 `login()`方法:
 
-```
+```java
 //...
 <input type="submit" value="Login" jsf:action="#{loginBean.login}"/>
 ```
@@ -186,7 +186,7 @@ public class LoginBean {
 
 让我们来看一个示例实现:
 
-```
+```java
 @ApplicationScoped
 public class CustomAuthentication 
   implements HttpAuthenticationMechanism {
@@ -219,7 +219,7 @@ public class CustomAuthentication
 
 在凭证的有效验证和用户角色的最终检索之后，**实现应该通知容器，然后**:
 
-```
+```java
 HttpMessageContext.notifyContainerAboutLogin(Principal principal, Set groups)
 ```
 
@@ -227,7 +227,7 @@ HttpMessageContext.notifyContainerAboutLogin(Principal principal, Set groups)
 
 **web 应用程序可以通过在 Servlet 实现上使用@ `ServletSecurity`注释来实施安全约束**:
 
-```
+```java
 @WebServlet("/secured")
 @ServletSecurity(
   value = @HttpConstraint(rolesAllowed = {"admin_role"}),
@@ -261,7 +261,7 @@ Jakarta EE 兼容服务器应该为两个身份存储提供实现:数据库和 L
 
 **通过将配置数据传递给`@DataBaseIdentityStoreDefinition`注释:**来初始化数据库`IdentityStore`的实现
 
-```
+```java
 @DatabaseIdentityStoreDefinition(
   dataSourceLookup = "java:comp/env/jdbc/securityDS",
   callerQuery = "select password from users where username = ?",
@@ -278,7 +278,7 @@ public class AppConfig {
 
 与数据库一样， **LDAP IdentityStore 实现通过传递配置数据由`@LdapIdentityStoreDefinition`** 初始化:
 
-```
+```java
 @LdapIdentityStoreDefinition(
   url = "ldap://localhost:10389",
   callerBaseDn = "ou=caller,dc=baeldung,dc=com",
@@ -295,7 +295,7 @@ public class AppConfig {
 
 **`IdentityStore`接口定义了四种默认方法:**
 
-```
+```java
 default CredentialValidationResult validate(
   Credential credential)
 default Set<String> getCallerGroups(
@@ -310,7 +310,7 @@ default Set<ValidationType> validationTypes()
 
 因此，我们可以将`IdentityStore`配置为仅用于凭证验证:
 
-```
+```java
 @Override
 public Set<ValidationType> validationTypes() {
     return EnumSet.of(ValidationType.VALIDATE);
@@ -319,7 +319,7 @@ public Set<ValidationType> validationTypes() {
 
 在这种情况下，我们应该为`validate()`方法提供一个实现:
 
-```
+```java
 @ApplicationScoped
 public class InMemoryIdentityStore implements IdentityStore {
     // init from a file or harcoded
@@ -349,7 +349,7 @@ public class InMemoryIdentityStore implements IdentityStore {
 
 或者我们可以选择配置`IdentityStore`,使其仅用于组检索:
 
-```
+```java
 @Override
 public Set<ValidationType> validationTypes() {
     return EnumSet.of(ValidationType.PROVIDE_GROUPS);
@@ -358,7 +358,7 @@ public Set<ValidationType> validationTypes() {
 
 然后我们应该为`getCallerGroups()`方法提供一个实现:
 
-```
+```java
 @ApplicationScoped
 public class InMemoryIdentityStore implements IdentityStore {
     // init from a file or harcoded
@@ -391,7 +391,7 @@ Jakarta EE 8 安全 API 通过`SecurityContext`接口为**提供了一个编程�
 
 `SecurityContext`接口的默认实现应该在运行时作为 CDI bean 提供，因此我们需要注入它:
 
-```
+```java
 @Inject
 SecurityContext securityContext;
 ```
@@ -406,7 +406,7 @@ SecurityContext securityContext;
 
 **新的 Jakarta EE 8 安全 API 已经通过标准化了这个*，通过`SecurityContext`接口***提供了一个类似的方法
 
-```
+```java
 Principal getCallerPrincipal();
 boolean isCallerInRole(String role);
 <T extends Principal> Set<T> getPrincipalsByType(Class<T> type);
@@ -420,7 +420,7 @@ boolean isCallerInRole(String role);
 
 首先，我们需要配置一个受保护的资源:
 
-```
+```java
 @WebServlet("/protectedServlet")
 @ServletSecurity(@HttpConstraint(rolesAllowed = "USER_ROLE"))
 public class ProtectedServlet extends HttpServlet {
@@ -430,7 +430,7 @@ public class ProtectedServlet extends HttpServlet {
 
 然后，为了检查对这个受保护资源的访问，我们应该调用`hasAccessToWebResource() method:`
 
-```
+```java
 securityContext.hasAccessToWebResource("/protectedServlet", "GET");
 ```
 
@@ -440,7 +440,7 @@ securityContext.hasAccessToWebResource("/protectedServlet", "GET");
 
 应用程序可以通过调用`authenticate()`以编程方式触发认证过程:
 
-```
+```java
 AuthenticationStatus authenticate(
   HttpServletRequest request, 
   HttpServletResponse response,
@@ -449,7 +449,7 @@ AuthenticationStatus authenticate(
 
 然后通知容器，容器将依次调用为应用程序配置的身份验证机制。`AuthenticationParameters`参数为`HttpAuthenticationMechanism:`提供凭证
 
-```
+```java
 withParams().credential(credential)
 ```
 
@@ -461,7 +461,7 @@ withParams().credential(credential)
 
 要运行示例，只需访问相应的模块并调用以下命令:
 
-```
+```java
 mvn clean package liberty:run
 ```
 

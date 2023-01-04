@@ -47,7 +47,7 @@ Spring 有一个围绕`ApplicationContext.` 构建的事件机制，它可以用
 
 特别是，我们可以利用这个注释来让**根据方法**的签名自动注册一个`ApplicationListener` :
 
-```
+```java
 @EventListener
 public void handleContextRefreshEvent(ContextStartedEvent ctxStartEvt) {
     System.out.println("Context Start Event received.");
@@ -64,7 +64,7 @@ public void handleContextRefreshEvent(ContextStartedEvent ctxStartEvt) {
 
 对于这样的场景，我们可以利用[类的](https://web.archive.org/web/20220628063256/https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/context/event/EventListener.html#classes)属性:
 
-```
+```java
 @EventListener(classes = { ContextStartedEvent.class, ContextStoppedEvent.class })
 public void handleMultipleEvents() {
     System.out.println("Multi-event listener invoked");

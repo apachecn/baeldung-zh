@@ -14,7 +14,7 @@
 
 在我们开始编写测试之前，我们需要将 [`io.rest-assured:spring-mock-mvc`模块](https://web.archive.org/web/20221129010551/https://search.maven.org/search?q=g:io.rest-assured%20AND%20a:spring-mock-mvc)导入到我们的 Maven `pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>io.rest-assured</groupId>
     <artifactId>spring-mock-mvc</artifactId>
@@ -35,7 +35,7 @@
 
 如果我们只有几个测试，我们可以及时初始化`RestAssuredMockMvc`:
 
-```
+```java
 @Test
 public void whenGetCourse() {
     given()
@@ -46,7 +46,7 @@ public void whenGetCourse() {
 
 但是，如果我们有很多测试，静态地做一次会更容易:
 
-```
+```java
 @Before
 public void initialiseRestAssuredMockMvcStandalone() {
     RestAssuredMockMvc.standaloneSetup(new CourseController());
@@ -59,7 +59,7 @@ public void initialiseRestAssuredMockMvcStandalone() {
 
 类似于我们在独立模式设置中看到的，我们可以在每次测试时及时初始化`RestAssuredMockMvc`:
 
-```
+```java
 @Autowired
 private WebApplicationContext webApplicationContext;
 
@@ -73,7 +73,7 @@ public void whenGetCourse() {
 
 或者，我们可以静态地做一次:
 
-```
+```java
 @Autowired
 private WebApplicationContext webApplicationContext;
 
@@ -87,7 +87,7 @@ public void initialiseRestAssuredMockMvcWebApplicationContext() {
 
 在我们开始几个示例测试之前，我们需要测试一些东西。让我们检查一下测试中的系统，从我们的`[@SpringBootApplication](https://web.archive.org/web/20221129010551/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/autoconfigure/SpringBootApplication.html)`配置开始:
 
-```
+```java
 @SpringBootApplication
 class Application {
 
@@ -99,7 +99,7 @@ class Application {
 
 接下来，我们有一个简单的`[@RestController](https://web.archive.org/web/20221129010551/https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/bind/annotation/RestController.html)`来展示我们的`Course`域:
 
-```
+```java
 @RestController
 @RequestMapping(path = "/courses")
 public class CourseController {
@@ -122,7 +122,7 @@ public class CourseController {
 }
 ```
 
-```
+```java
 class Course {
 
     private String code;
@@ -133,7 +133,7 @@ class Course {
 
 最后但同样重要的是，我们的服务类和处理我们的`CourseNotFoundException`的`@ControllerAdvice`:
 
-```
+```java
 @Service
 class CourseService {
 
@@ -155,7 +155,7 @@ class CourseService {
 }
 ```
 
-```
+```java
 @ControllerAdvice(assignableTypes = CourseController.class)
 public class CourseControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -167,7 +167,7 @@ public class CourseControllerExceptionHandler extends ResponseEntityExceptionHan
 }
 ```
 
-```
+```java
 class CourseNotFoundException extends RuntimeException {
 
     CourseNotFoundException(String code) {
@@ -184,7 +184,7 @@ class CourseNotFoundException extends RuntimeException {
 
 首先，我们模仿并构建我们的 SUT，然后如上所述在独立模式下初始化`RestAssuredMockMvc`:
 
-```
+```java
 @RunWith(MockitoJUnitRunner.class)
 public class CourseControllerUnitTest {
 
@@ -207,7 +207,7 @@ public class CourseControllerUnitTest {
 
 现在，让我们来看一个测试示例:
 
-```
+```java
 @Test
 public void givenNoExistingCoursesWhenGetCoursesThenRespondWithStatusOkAndEmptyArray() {
     when(courseService.getCourses()).thenReturn(Collections.emptyList());
@@ -225,7 +225,7 @@ public void givenNoExistingCoursesWhenGetCoursesThenRespondWithStatusOkAndEmptyA
 
 除了我们的`@RestController`之外，用我们的`@ControllerAdvice`初始化`RestAssuredMockMvc`也使我们能够测试我们的异常场景:
 
-```
+```java
 @Test
 public void givenNoMatchingCoursesWhenGetCoursesThenRespondWithStatusNotFound() {
     String nonMatchingCourseCode = "nonMatchingCourseCode";
@@ -254,7 +254,7 @@ public void givenNoMatchingCoursesWhenGetCoursesThenRespondWithStatusNotFound() 
 
 首先，我们用`@RunWith(SpringRunner.class)`和 [`@SpringBootTest(webEnvironment = RANDOM_PORT)`](https://web.archive.org/web/20221129010551/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/test/context/SpringBootTest.html) 设置我们的测试类:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class CourseControllerIntegrationTest {
@@ -266,7 +266,7 @@ public class CourseControllerIntegrationTest {
 
 接下来，我们注入我们的`WebApplicationContext`,并使用它初始化`RestAssuredMockMvc`,如上所示:
 
-```
+```java
 @Autowired
 private WebApplicationContext webApplicationContext;
 
@@ -278,7 +278,7 @@ public void initialiseRestAssuredMockMvcWebApplicationContext() {
 
 既然我们已经设置了测试类并且初始化了`RestAssuredMockMvc`,我们就可以开始编写测试了:
 
-```
+```java
 @Test
 public void givenNoMatchingCourseCodeWhenGetCourseThenRespondWithStatusNotFound() {
     String nonMatchingCourseCode = "nonMatchingCourseCode";

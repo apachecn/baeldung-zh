@@ -99,7 +99,7 @@ Explore different ways to start a thread and execute parallel tasks.[Read more](
 
 让我们首先创建一个由将从`Sender`发送到`Receiver`的数据`packet`组成的`Data`类。我们将使用`wait()`和`notifyAll()` 来设置它们之间的同步:
 
-```
+```java
 public class Data {
     private String packet;
 
@@ -167,7 +167,7 @@ public class Data {
 
 首先，我们来看看`Sender`是如何工作的:
 
-```
+```java
 public class Sender implements Runnable {
     private Data data;
 
@@ -205,7 +205,7 @@ public class Sender implements Runnable {
 
 最后，让我们实现我们的`Receiver`:
 
-```
+```java
 public class Receiver implements Runnable {
     private Data load;
 
@@ -234,7 +234,7 @@ public class Receiver implements Runnable {
 
 现在让我们来看看这个应用程序的运行情况:
 
-```
+```java
 public static void main(String[] args) {
     Data data = new Data();
     Thread sender = new Thread(new Sender(data));
@@ -247,7 +247,7 @@ public static void main(String[] args) {
 
 我们将收到以下输出:
 
-```
+```java
 First packet
 Second packet
 Third packet

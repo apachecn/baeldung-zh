@@ -14,7 +14,7 @@ Java 流 API 向我们介绍了一种强大的处理数据的替代方法。
 
 因为`peek()`期望一个`Consumer<T>`作为它唯一的参数，这看起来很合适，所以让我们试一试:
 
-```
+```java
 Stream<String> nameStream = Stream.of("Alice", "Bob", "Chuck");
 nameStream.peek(System.out::println);
 ```
@@ -35,7 +35,7 @@ nameStream.peek(System.out::println);
 
 在我们的第一个例子中,`peek()`不起作用的原因是,**是一个`intermediate`操作，我们没有对流水线应用`terminal`操作**。或者，我们可以使用带有相同参数的`forEach()`来获得期望的行为:
 
-```
+```java
 Stream<String> nameStream = Stream.of("Alice", "Bob", "Chuck");
 nameStream.forEach(System.out::println);
 ```
@@ -44,7 +44,7 @@ nameStream.forEach(System.out::println);
 
 让我们考虑来自同一个 Javadoc 页面的这个片段:
 
-```
+```java
 Stream.of("one", "two", "three", "four")
   .filter(e -> e.length() > 3)
   .peek(e -> System.out.println("Filtered value: " + e))
@@ -57,7 +57,7 @@ Stream.of("one", "two", "three", "four")
 
 除此之外，`peek()`在另一个场景中也很有用:当**我们想要改变元素**的内部状态时。例如，假设我们想在打印之前将所有用户名转换成小写:
 
-```
+```java
 Stream<User> userStream = Stream.of(new User("Alice"), new User("Bob"), new User("Chuck"));
 userStream.peek(u -> u.setName(u.getName().toLowerCase()))
   .forEach(System.out::println);

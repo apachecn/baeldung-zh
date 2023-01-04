@@ -41,7 +41,7 @@ W3C 委员会已经定义了多种格式，我们可以用它们在网络层发�
 
 首先，让我们创建一个将数组作为实例变量的`Student`类:
 
-```
+```java
 class StudentSimple {
 
    private String firstName;
@@ -54,7 +54,7 @@ class StudentSimple {
 
 其次，我们将定义一个将公开 REST 端点的控制器类:
 
-```
+```java
 @PostMapping(
   path = "/simple", 
   consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
@@ -81,7 +81,7 @@ public ResponseEntity<StudentSimple> createStudentSimple(StudentSimple student) 
 
 我们可以使用 [cURL](/web/20221207012128/https://www.baeldung.com/curl-rest) 请求来测试我们的应用程序:
 
-```
+```java
 curl -X POST \
   http://localhost:8080/students/simple \
   -H 'Content-Type: application/x-www-form-urlencoded' \
@@ -97,7 +97,7 @@ curl -X POST \
 
 首先，让我们定义代表单一课程的`Course`类:
 
-```
+```java
 class Course {
 
     private String name;
@@ -109,7 +109,7 @@ class Course {
 
 接下来，我们将创建一个代表学生的类:
 
-```
+```java
 class StudentComplex {
 
     private String firstName;
@@ -122,7 +122,7 @@ class StudentComplex {
 
 让我们在控制器类中添加一个新的端点:
 
-```
+```java
 @PostMapping(
   path = "/complex",
   consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
@@ -139,7 +139,7 @@ public ResponseEntity<StudentComplex> createStudentComplex(StudentComplex studen
 
 同样，我们可以使用 cURL 请求测试端点:
 
-```
+```java
 curl -X POST \
   http://localhost:8080/students/complex \
   -H 'Content-Type: application/x-www-form-urlencoded' \

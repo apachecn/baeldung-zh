@@ -26,7 +26,7 @@ Avro 创建一个数据文件，将数据和模式保存在元数据部分。最
 
 让我们从定义一个名为`AvroHttRequest`的类开始，我们将在我们的例子中使用它。该类包含基本类型和复杂类型属性:
 
-```
+```java
 class AvroHttpRequest {
 
     private long requestTime;
@@ -54,7 +54,7 @@ Avro 支持两种类型的数据:
 
 在这种情况下，`ClientIdentifier`的模式应该如下所示:
 
-```
+```java
 {
    "type":"record",
    "name":"ClientIdentifier",
@@ -87,7 +87,7 @@ Avro 支持两种类型的数据:
 
 然而，总是建议在 [Maven Central](https://web.archive.org/web/20220625233241/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22avro%22%20AND%20g%3A%22org.apache.avro%22) 上找到最新版本:
 
-```
+```java
 <dependency>
     <groupId>org.apache.avro</groupId>
     <artifactId>avro-compiler</artifactId>
@@ -126,7 +126,7 @@ Avro 使用 JSON 格式描述它的模式。对于给定的 Avro 模式，主要
 
 首先，让我们为`ClientIdentifier:`创建模式
 
-```
+```java
 Schema clientIdentifier = SchemaBuilder.record("ClientIdentifier")
   .namespace("com.baeldung.avro")
   .fields().requiredString("hostName").requiredString("ipAddress")
@@ -135,7 +135,7 @@ Schema clientIdentifier = SchemaBuilder.record("ClientIdentifier")
 
 现在，让我们用它来创建一个`avroHttpRequest`模式:
 
-```
+```java
 Schema avroHttpRequest = SchemaBuilder.record("AvroHttpRequest")
   .namespace("com.baeldung.avro")
   .fields().requiredLong("requestTime")
@@ -175,7 +175,7 @@ Schema avroHttpRequest = SchemaBuilder.record("AvroHttpRequest")
 
 让我们将插件添加到我们的`pom.xml`文件中:
 
-```
+```java
 <plugin>
     <groupId>org.apache.avro</groupId>
     <artifactId>avro-maven-plugin</artifactId>
@@ -224,7 +224,7 @@ Avro 支持两种数据序列化格式:JSON 格式和二进制格式。
 
 首先我们用 JSON 格式序列化一下:
 
-```
+```java
 public byte[] serealizeAvroHttpRequestJSON(
   AvroHttpRequest request) {
 
@@ -248,7 +248,7 @@ public byte[] serealizeAvroHttpRequestJSON(
 
 让我们来看看这个方法的一个测试案例:
 
-```
+```java
 @Test
 public void whenSerialized_UsingJSONEncoder_ObjectGetsSerialized(){
     byte[] data = serealizer.serealizeAvroHttpRequestJSON(request);
@@ -261,7 +261,7 @@ public void whenSerialized_UsingJSONEncoder_ObjectGetsSerialized(){
 
 如果我们想使用二进制编码器，我们需要用`binaryEncoder():`替换`jsonEncoder()`方法
 
-```
+```java
 Encoder jsonEncoder = EncoderFactory.get().binaryEncoder(stream,null);
 ```
 
@@ -273,7 +273,7 @@ Encoder jsonEncoder = EncoderFactory.get().binaryEncoder(stream,null);
 
 让我们使用 JSON 格式反序列化数据:
 
-```
+```java
 public AvroHttpRequest deSerealizeAvroHttpRequestJSON(byte[] data) {
     DatumReader<AvroHttpRequest> reader
      = new SpecificDatumReader<>(AvroHttpRequest.class);
@@ -290,7 +290,7 @@ public AvroHttpRequest deSerealizeAvroHttpRequestJSON(byte[] data) {
 
 让我们看看测试案例:
 
-```
+```java
 @Test
 public void whenDeserializeUsingJSONDecoder_thenActualAndExpectedObjectsAreEqual(){
     byte[] data = serealizer.serealizeAvroHttpRequestJSON(request);
@@ -304,7 +304,7 @@ public void whenDeserializeUsingJSONDecoder_thenActualAndExpectedObjectsAreEqual
 
 同样，我们可以使用二进制解码器:
 
-```
+```java
 Decoder decoder = DecoderFactory.get().binaryDecoder(data, null);
 ```
 

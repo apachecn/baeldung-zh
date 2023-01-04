@@ -16,7 +16,7 @@
 
 让我们来看看这个界面中可用的各种方法:
 
-```
+```java
 public interface HandlerAdapter {
     boolean supports(Object handler);
 
@@ -37,7 +37,7 @@ public interface HandlerAdapter {
 
 让我们从需要添加到`pom.xml`的 Maven 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-webmvc</artifactId>
@@ -57,7 +57,7 @@ public interface HandlerAdapter {
 
 让我们定义一个简单的控制器类，使用旧风格的控制器(实现`Controller`接口):
 
-```
+```java
 public class SimpleController implements Controller {
     @Override
     public ModelAndView handleRequest(
@@ -73,7 +73,7 @@ public class SimpleController implements Controller {
 
 类似的 XML 配置:
 
-```
+```java
 <beans ...>
     <bean name="/greeting.html"
       class="com.baeldung.spring.controller.SimpleControllerHandlerAdapterExample"/>
@@ -95,7 +95,7 @@ public class SimpleController implements Controller {
 
 实现`Servlet` 接口的 beans 由这个适配器自动处理。默认情况下它没有注册，我们需要像其他普通 bean 一样在`DispatcherServlet`的配置文件中注册它:
 
-```
+```java
 <bean name="simpleServletHandlerAdapter" 
   class="org.springframework.web.servlet.handler.SimpleServletHandlerAdapter" />
 ```
@@ -110,7 +110,7 @@ public class SimpleController implements Controller {
 
 让我们定义一个控制器类:
 
-```
+```java
 @Controller
 public class AnnotationHandler {
     @RequestMapping("/annotedName")
@@ -128,7 +128,7 @@ public class AnnotationHandler {
 
 根据应用程序是使用基于 Java 的配置还是基于 XML 的配置，有两种不同的方法来配置这个适配器。让我们看看使用 Java 配置的第一种方式:
 
-```
+```java
 @ComponentScan("com.baeldung.spring.controller")
 @Configuration
 @EnableWebMvc
@@ -145,7 +145,7 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
 
 如果应用程序使用 XML 配置，那么有两种不同的方法在 web 应用程序上下文 XML 中配置这个处理程序适配器。让我们看看文件`spring-servlet_AnnotationMethodHandlerAdapter.xml`中定义的第一种方法:
 
-```
+```java
 <beans ...>
     <context:component-scan base-package="com.baeldung.spring.controller" />
     <bean 
@@ -164,7 +164,7 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
 
 让我们来看看第二种方法:
 
-```
+```java
 <beans ...>
     <mvc:annotation-driven/>
     <context:component-scan base-package="com.baeldung.spring.controller" />
@@ -194,7 +194,7 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
 
 让我们定义一个简单的控制器类:
 
-```
+```java
 @Controller
 public class RequestMappingHandler {
 
@@ -211,7 +211,7 @@ public class RequestMappingHandler {
 
 让我们看看使用 Java 配置的第一种方式:
 
-```
+```java
 @ComponentScan("com.baeldung.spring.controller")
 @Configuration
 @EnableWebMvc
@@ -228,7 +228,7 @@ public class ServletConfig implements WebMvcConfigurer {
 
 如果应用程序使用 XML 配置，那么有两种不同的方法在 web 应用程序上下文 XML 中配置这个处理程序适配器。让我们看看文件`spring-servlet_RequestMappingHandlerAdapter.xml`中定义的第一种方法:
 
-```
+```java
 <beans ...>
     <context:component-scan base-package="com.baeldung.spring.controller" />
 
@@ -248,7 +248,7 @@ public class ServletConfig implements WebMvcConfigurer {
 
 这是第二种方法:
 
-```
+```java
 <beans ...>
     <mvc:annotation-driven />
 
@@ -276,7 +276,7 @@ public class ServletConfig implements WebMvcConfigurer {
 
 如果应用程序部署在端口号为`8082`的`localhost`上，并且上下文根为`spring-mvc-handlers`:
 
-```
+```java
 http://localhost:8082/spring-mvc-handlers/
 ```
 

@@ -10,14 +10,14 @@
 
 要获得字符的 [ASCII](/web/20221115042544/https://www.baeldung.com/cs/ascii-code) 值，我们可以简单地将我们的`char`转换为`int`:
 
-```
+```java
 char c = 'a';
 System.out.println((int) c);
 ```
 
 这是输出结果:
 
-```
+```java
 97
 ```
 
@@ -27,7 +27,7 @@ System.out.println((int) c);
 
 如果我们的`char`在一个`String`中，我们可以使用`charAt()`方法来检索它:
 
-```
+```java
 String str = "abc";
 char c = str.charAt(0);
 System.out.println((int) c);

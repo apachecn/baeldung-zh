@@ -22,7 +22,7 @@ Spring 使用它的`DispatcherServlet` 实现了带有[前端控制器模式的 
 
 为了通过 Java 配置类启用 Spring MVC 支持，我们只需**添加`@EnableWebMvc`注释**:
 
-```
+```java
 @EnableWebMvc
 @Configuration
 public class WebConfig {
@@ -35,7 +35,7 @@ public class WebConfig {
 
 **如果我们想要定制这个配置，我们需要实现`WebMvcConfigurer`接口**:
 
-```
+```java
 @EnableWebMvc
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -64,7 +64,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 如果我们还想定义和扫描控制器类，我们可以在包含控制器的包中添加`@ComponentScan`注释:
 
-```
+```java
 @EnableWebMvc
 @Configuration
 @ComponentScan(basePackages = { "com.baeldung.web.controller" })
@@ -75,7 +75,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 为了引导一个应用程序加载这个配置，我们还需要一个初始化器类:
 
-```
+```java
 public class MainWebAppInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(final ServletContext sc) throws ServletException {
@@ -100,7 +100,7 @@ public class MainWebAppInitializer implements WebApplicationInitializer {
 
 除了上面的 Java 配置，我们还可以使用纯 XML 配置:
 
-```
+```java
 <context:component-scan base-package="com.baeldung.web.controller" />
 <mvc:annotation-driven />    
 
@@ -121,7 +121,7 @@ public class MainWebAppInitializer implements WebApplicationInitializer {
 
 让我们来看一个基本控制器的例子:
 
-```
+```java
 @Controller
 public class SampleController {
     @GetMapping("/sample")
@@ -134,7 +134,7 @@ public class SampleController {
 
 而对应的 JSP 资源是`sample.jsp`文件:
 
-```
+```java
 <html>
    <head></head>
 
@@ -158,7 +158,7 @@ Spring Boot 是对 Spring 平台的一个补充，它使入门和创建独立的
 
 最快的开始方式是添加[弹簧-启动-启动-父母](https://web.archive.org/web/20221228013248/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-parent%22) `pom.xml`:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -174,7 +174,7 @@ Spring Boot 是对 Spring 平台的一个补充，它使入门和创建独立的
 
 这通常是一个带有`main`方法的 Java 类，用`@SpringBootApplication`注释:
 
-```
+```java
 @SpringBootApplication
 public class Application {
     public static void main(String[] args) {

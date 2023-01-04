@@ -14,13 +14,13 @@
 
 首先，让我们将 Mongo shell 上下文切换到一个`existence`数据库:
 
-```
+```java
 use existence
 ```
 
 值得指出的是，MongoDB 只在您第一次在数据库中存储数据时创建数据库。我们将在`users`集合中插入一个用户:
 
-```
+```java
 db.users.insert({name: "Ben", surname: "Big" })
 ```
 
@@ -30,13 +30,13 @@ db.users.insert({name: "Ben", surname: "Big" })
 
 有时我们需要通过使用基本查询来检查特定字段的存在，例如在 Mongo Shell 或任何其他数据库控制台中。幸运的是，Mongo 为此提供了一个特殊的查询操作符`$exists`:
 
-```
+```java
 db.users.find({ 'name' : { '$exists' : true }})
 ```
 
 我们使用一个标准的`find` Mongo 方法，在该方法中，我们指定要查找的字段，并使用`$exists`查询操作符。如果`name`字段存在于`users`集合中，将返回包含该字段的所有行:
 
-```
+```java
 [
   {
     "_id": {"$oid": "6115ad91c4999031f8e6f582"},
@@ -52,7 +52,7 @@ db.users.find({ 'name' : { '$exists' : true }})
 
 在我们讨论 Java 中检查字段存在的可能方法之前，让我们向我们的项目添加必要的 [Mongo 依赖项。以下是 Maven 的依赖性:](https://web.archive.org/web/20220926194125/https://search.maven.org/search?q=a:mongo-java-driver%20AND%20g:org.mongodb)
 
-```
+```java
 <dependency>
     <groupId>org.mongodb</groupId>
     <artifactId>mongo-java-driver</artifactId>
@@ -62,13 +62,13 @@ db.users.find({ 'name' : { '$exists' : true }})
 
 这是格雷尔的版本:
 
-```
+```java
 implementation group: 'org.mongodb', name: 'mongo-java-driver', version: '3.12.10'
 ```
 
 最后，让我们连接到`existence`数据库和`users`集合:
 
-```
+```java
 MongoClient mongoClient = new MongoClient();
 MongoDatabase db = mongoClient.getDatabase("existence");
 MongoCollection<Document> collection = db.getCollection("users");
@@ -78,7 +78,7 @@ MongoCollection<Document> collection = db.getCollection("users");
 
 `com.mongodb.client.model.Filters `是来自 Mongo 依赖项的一个 util 类，包含了许多有用的方法。在我们的例子中，我们将使用`exists()`方法:
 
-```
+```java
 Document nameDoc = collection.find(Filters.exists("name")).first();
 assertNotNull(nameDoc);
 assertFalse(nameDoc.isEmpty());
@@ -88,7 +88,7 @@ assertFalse(nameDoc.isEmpty());
 
 现在，让我们看看当我们试图找到一个不存在的字段时会发生什么:
 
-```
+```java
 Document nameDoc = collection.find(Filters.exists("non_existing")).first();
 assertNull(nameDoc);
 ```
@@ -99,7 +99,7 @@ assertNull(nameDoc);
 
 `com.mongodb.client.model.Filters`类不是检查字段存在的唯一方法。我们可以使用`com.mongodb.BasicDBObject:`的一个实例
 
-```
+```java
 Document query = new Document("name", new BasicDBObject("$exists", true));
 Document doc = collection.find(query).first();
 assertNotNull(doc);
@@ -110,7 +110,7 @@ assertFalse(doc.isEmpty());
 
 当我们试图查找一个不存在的字段时，代码的行为也是一样的:
 
-```
+```java
 Document query = new Document("non_existing", new BasicDBObject("$exists", true));
 Document doc = collection.find(query).first();
 assertNull(doc);

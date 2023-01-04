@@ -42,7 +42,7 @@ GWT API 有用于构建用户界面、进行服务器调用、国际化、执行
 
 为了用 Maven 设置项目，我们需要向`pom.xml`添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.gwt</groupId>
     <artifactId>gwt-servlet</artifactId>
@@ -64,7 +64,7 @@ GWT API 有用于构建用户界面、进行服务器调用、国际化、执行
 
 为了确保所有的依赖项使用相同的版本，我们需要包括父 GWT 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.gwt</groupId>
     <artifactId>gwt</artifactId>
@@ -88,7 +88,7 @@ GWT API 有用于构建用户界面、进行服务器调用、国际化、执行
 
 让我们首先创建一个接口:
 
-```
+```java
 @RemoteServiceRelativePath("greet")
 public interface MessageService extends RemoteService {
     String sendMessage(String message) throws IllegalArgumentException;
@@ -99,7 +99,7 @@ public interface MessageService extends RemoteService {
 
 `MessageService`的实现在服务器端:
 
-```
+```java
 public class MessageServiceImpl extends RemoteServiceServlet 
   implements MessageService {
 
@@ -121,7 +121,7 @@ public class MessageServiceImpl extends RemoteServiceServlet
 
 为了在客户端执行，我们需要创建服务的异步版本:
 
-```
+```java
 public interface MessageServiceAsync {
     void sendMessage(String input, AsyncCallback<String> callback) 
       throws IllegalArgumentException;
@@ -150,7 +150,7 @@ SDK 为设计图形界面提供了一些 UI 元素和布局。
 
 让我们仔细看看应用程序的主要入口点:
 
-```
+```java
 public class Google_web_toolkit implements EntryPoint {
 
     private MessageServiceAsync messageServiceAsync = GWT.create(MessageService.class);
@@ -180,7 +180,7 @@ public class Google_web_toolkit implements EntryPoint {
 
 这里我们还定义了`Button`和`TextBox`小部件。为了将它们添加到 DOM 树中，我们使用了`RootPanel`类。它是根面板，返回一个 singleton 值来绑定小部件元素:
 
-```
+```java
 RootPanel.get("sendButtonContainer").add(sendButton);
 ```
 
@@ -192,7 +192,7 @@ RootPanel.get("sendButtonContainer").add(sendButton);
 
 我们可以用特定的 id 标记标签元素，这样框架就可以将它们绑定到 Java 对象中:
 
-```
+```java
 <body>
     <h1>Sample GWT Application</h1>
     <table align="center">
@@ -213,7 +213,7 @@ RootPanel.get("sendButtonContainer").add(sendButton);
 
 让我们看看`Google_web_toolkit.gwt.xml`主模块描述符文件的典型配置:
 
-```
+```java
 <module rename-to='google_web_toolkit'>
     <inherits name='com.google.gwt.user.User'/>
     <inherits name='com.google.gwt.user.theme.clean.Clean'/>
@@ -233,7 +233,7 @@ RootPanel.get("sendButtonContainer").add(sendButton);
 
 这将在每次按下按钮时触发`onClick()`方法:
 
-```
+```java
 closeButton.addClickHandler(new ClickHandler() {
     public void onClick(ClickEvent event) {
         vPanel.hide();
@@ -247,7 +247,7 @@ closeButton.addClickHandler(new ClickHandler() {
 
 另一种方法是定义一个内部类并实现必要的接口:
 
-```
+```java
 class MyHandler implements ClickHandler, KeyUpHandler {
 
     public void onClick(ClickEvent event) {
@@ -266,7 +266,7 @@ class MyHandler implements ClickHandler, KeyUpHandler {
 
 下面是我们如何使用`MyHandler`类注册两个事件处理程序:
 
-```
+```java
 MyHandler handler = new MyHandler();
 sendButton.addClickHandler(handler);
 nameField.addKeyUpHandler(handler);
@@ -278,7 +278,7 @@ nameField.addKeyUpHandler(handler);
 
 **该方法的第二个参数是`AsyncCallback<String>`接口，其中`String`是对应同步方法**的返回类型:
 
-```
+```java
 messageServiceAsync.sendMessage(textToServer, new AsyncCallback<String>() {
     public void onFailure(Throwable caught) {
         serverResponseLabel.addStyleName("serverResponseLabelError");
@@ -301,19 +301,19 @@ messageServiceAsync.sendMessage(textToServer, new AsyncCallback<String>() {
 
 当使用 eclipse 插件创建项目时，它会自动在`/webapp`目录下生成`Google_web_toolkit.css`文件，并将其链接到主 HTML 文件。
 
-```
+```java
 <link type="text/css" rel="stylesheet" href="Google_web_toolkit.css">
 ```
 
 当然，我们可以通过编程为特定的 UI 组件定义自定义样式:
 
-```
+```java
 sendButton.addStyleName("sendButton");
 ```
 
 这里我们用类名`sendButton`给我们的`sendButton`组件分配一个 CSS 样式:
 
-```
+```java
 .sendButton {
     display: block;
     font-size: 16pt;

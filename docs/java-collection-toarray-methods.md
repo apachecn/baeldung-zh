@@ -14,7 +14,7 @@ Java 编程语言提供了[数组](/web/20220831131001/https://www.baeldung.com/
 
 在漫无目的地调用`toArray `方法之前，让我们先了解一下盒子里面是什么。`Collection `接口提供了两种将集合转换成数组的方法:
 
-```
+```java
 Object[] toArray()
 
 <T> T[] toArray(T[] a)
@@ -22,7 +22,7 @@ Object[] toArray()
 
 这两种方法都返回包含集合中所有元素的数组。为了演示这一点，让我们创建一个自然数列表:
 
-```
+```java
 List<Integer> naturalNumbers = IntStream
     .range(1, 10000)
     .boxed()
@@ -33,7 +33,7 @@ List<Integer> naturalNumbers = IntStream
 
 `toArray()`方法分配一个新的内存数组，长度等于集合的大小。**内部，** **调用底层数组上的`[Arrays.copyOf](/web/20220831131001/https://www.baeldung.com/java-array-copy)` 支持集合**。因此，返回的数组没有对它的引用，可以安全使用:
 
-```
+```java
 Object[] naturalNumbersArray = naturalNumbers.toArray();
 ```
 
@@ -47,13 +47,13 @@ Object[] naturalNumbersArray = naturalNumbers.toArray();
 
 *   如果预分配数组的长度小于集合的大小，则分配所需长度和相同类型的新数组:
 
-```
+```java
 Integer[] naturalNumbersArray = naturalNumbers.toArray(new Integer[0]);
 ```
 
 *   如果输入数组足够大，可以包含集合的元素，则返回时会包含这些元素:
 
-```
+```java
 Integer[] naturalNumbersArray = naturalNumbers.toArray(new Integer[naturalNumbers.size]);
 ```
 
@@ -67,7 +67,7 @@ Integer[] naturalNumbersArray = naturalNumbers.toArray(new Integer[naturalNumber
 
 接下来，让我们为我们的试验建立一个 JMH (Java 微基准测试工具)基准。我们将为基准配置集合的大小和类型参数:
 
-```
+```java
 @Param({ "10", "10000", "10000000" })
 private int size;
 
@@ -77,7 +77,7 @@ private String type;
 
 此外，我们将为零大小和预设大小的`toArray`变体定义基准方法:
 
-```
+```java
 @Benchmark
 public String[] zero_sized() {
     return collection.toArray(new String[0]);
@@ -95,7 +95,7 @@ public String[] pre_sized() {
 
 值越低，性能越好:
 
-```
+```java
 Benchmark                   (size)      (type)  Mode  Cnt          Score          Error  Units
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -131,7 +131,7 @@ TestBenchmark.pre_sized   10000000    tree-set  avgt   15  212882486.630 ± 2092
 
 JMH 提供了一个 [GC 分析器](https://web.archive.org/web/20220831131001/http://mail.openjdk.java.net/pipermail/jmh-dev/2015-April/001828.html) ( `-prof gc`)，它在内部使用`ThreadMXBean#getThreadAllocatedBytes` 来计算每个@ `Benchmark`的分配率:
 
-```
+```java
 Benchmark                                                    (size)      (type)  Mode  Cnt          Score           Error   Units
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -163,7 +163,7 @@ TestBenchmark.pre_sized:·gc.alloc.rate.norm                10000000    tree-set
 
 为了进一步找出问题的原因，让我们深入研究一下`ArrayList`的内部原因:
 
-```
+```java
 if (a.length < size)
     return (T[]) Arrays.copyOf(elementData, size, a.getClass());
 System.arraycopy(elementData, 0, a, 0, size);
@@ -176,7 +176,7 @@ return a;
 
 此外，注意一下`copyOf `方法，很明显，首先创建一个长度等于集合大小的复制数组，然后是`System.arraycopy `调用:
 
-```
+```java
 T[] copy = ((Object)newType == (Object)Object[].class)
     ? (T[]) new Object[newLength]
     : (T[]) Array.newInstance(newType.getComponentType(), newLength);
@@ -194,7 +194,7 @@ Java 语言规范指示**新实例化的数组和对象应该具有默认的字�
 
 让我们考虑几个基准:
 
-```
+```java
 @Benchmark
 public Foo[] arraycopy_srcLength() {
     Object[] src = this.src;
@@ -220,7 +220,7 @@ public Foo[] arraycopy_dstLength() {
 
 最后，让我们在最近发布的 JDK 上执行最初的基准测试，并配置 JVM 使用更新的、改进很多的 [G1 垃圾收集器](https://web.archive.org/web/20220831131001/https://docs.oracle.com/javase/9/gctuning/garbage-first-garbage-collector.htm#JSGCT-GUID-0394E76A-1A8F-425E-A0D0-B48A3DC82B42):
 
-```
+```java
 # VM version: JDK 11.0.2, OpenJDK 64-Bit Server VM, 11.0.2+9
 -----------------------------------------------------------------------------------
 Benchmark                    (size)      (type)  Mode  Cnt    Score    Error  Units
@@ -232,7 +232,7 @@ ToArrayBenchmark.zero_sized     100    tree-set  avgt   15  819.306 ± 85.916  n
 ToArrayBenchmark.pre_sized      100    tree-set  avgt   15  972.771 ± 69.743  ns/op
 ```
 
-```
+```java
 ###################################################################################
 
 # VM version: JDK 14.0.2, OpenJDK 64-Bit Server VM, 14.0.2+12-46

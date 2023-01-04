@@ -16,7 +16,7 @@
 
 在您的`pom.xml`中包含以下 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.sparkjava</groupId>
     <artifactId>spark-core</artifactId>
@@ -30,7 +30,7 @@
 
 在示例的不同地方，我们将使用 Gson 库进行 JSON 操作。要在您的项目中包含 Gson，请在您的`pom.xml`中包含这个依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.google.code.gson</groupId>
     <artifactId>gson</artifactId>
@@ -54,7 +54,7 @@ Spark Java 中的 Web 服务是建立在路由及其处理程序之上的。路�
 
 这里我们展示了使用`get`动词的路线的基本结构:
 
-```
+```java
 get("/your-route-path/", (request, response) -> {
     // your callback code
 });
@@ -64,7 +64,7 @@ get("/your-route-path/", (request, response) -> {
 
 让我们创建一个简单的 web 服务，它有两条 GET 请求路径，并返回“Hello”消息作为响应。这些路由使用`get`方法，这是从类`spark.Spark`的静态导入:
 
-```
+```java
 import static spark.Spark.*;
 
 public class HelloWorldService {
@@ -95,13 +95,13 @@ lambda 表达式将请求和响应作为参数，并帮助返回响应。我们�
 
 **请求:**
 
-```
+```java
 GET http://localhost:4567/hello
 ```
 
 **响应:**
 
-```
+```java
 Hello, world
 ```
 
@@ -109,13 +109,13 @@ Hello, world
 
 **请求:**
 
-```
+```java
 GET http://localhost:4567/hello/baeldung
 ```
 
 **响应:**
 
-```
+```java
 Hello, baeldung
 ```
 
@@ -125,7 +125,7 @@ Hello, baeldung
 
 在本节中，我们将为下面的`User`实体设计一个简单的 REST web 服务:
 
-```
+```java
 public class User {
     private String id;
     private String firstName;
@@ -151,7 +151,7 @@ public class User {
 
 下面是为`User`实体声明 CRUD 操作的`UserService`接口:
 
-```
+```java
 public interface UserService {
 
     public void addUser (User user);
@@ -174,7 +174,7 @@ public interface UserService {
 
 下面是 REST 服务中使用的响应的 JSON 结构:
 
-```
+```java
 {
     status: <STATUS>
     message: <TEXT-MESSAGE>
@@ -188,7 +188,7 @@ public interface UserService {
 
 让我们用一个 Java 类来表示上面的 JSON 结构:
 
-```
+```java
 public class StandardResponse {
 
     private StatusResponse status;
@@ -211,7 +211,7 @@ public class StandardResponse {
 
 其中`StatusResponse`是定义如下的`enum`:
 
-```
+```java
 public enum StatusResponse {
     SUCCESS ("Success"),
     ERROR ("Error");
@@ -229,7 +229,7 @@ public enum StatusResponse {
 
 下面的 Java 类包含我们的 API 的路由，包括动词和路径以及每个路由的处理程序的概要:
 
-```
+```java
 public class SparkRestExample {
     public static void main(String[] args) {
         post("/users", (request, response) -> {
@@ -260,7 +260,7 @@ public class SparkRestExample {
 
 下面是将添加一个`User`的`post`方法响应处理程序:
 
-```
+```java
 post("/users", (request, response) -> {
     response.type("application/json");
     User user = new Gson().fromJson(request.body(), User.class);
@@ -277,7 +277,7 @@ post("/users", (request, response) -> {
 
 **请求:**
 
-```
+```java
 POST http://localhost:4567/users
 {
     "id": "1012", 
@@ -289,7 +289,7 @@ POST http://localhost:4567/users
 
 **响应:**
 
-```
+```java
 {
     "status":"SUCCESS"
 }
@@ -299,7 +299,7 @@ POST http://localhost:4567/users
 
 下面是从`UserService`返回所有用户的`get`方法响应处理器:
 
-```
+```java
 get("/users", (request, response) -> {
     response.type("application/json");
     return new Gson().toJson(
@@ -312,13 +312,13 @@ get("/users", (request, response) -> {
 
 **请求:**
 
-```
+```java
 GET http://localhost:4567/users
 ```
 
 **响应:**
 
-```
+```java
 {
     "status":"SUCCESS",
     "data":[
@@ -342,7 +342,7 @@ GET http://localhost:4567/users
 
 下面是用给定的`id`返回一个`User`的`get`方法响应处理器:
 
-```
+```java
 get("/users/:id", (request, response) -> {
     response.type("application/json");
     return new Gson().toJson(
@@ -355,13 +355,13 @@ get("/users/:id", (request, response) -> {
 
 **请求:**
 
-```
+```java
 GET http://localhost:4567/users/1012
 ```
 
 **响应:**
 
-```
+```java
 {
     "status":"SUCCESS",
     "data":{
@@ -377,7 +377,7 @@ GET http://localhost:4567/users/1012
 
 下面是`put` 方法响应处理程序，它编辑在路由模式中提供了`id`的用户:
 
-```
+```java
 put("/users/:id", (request, response) -> {
     response.type("application/json");
     User toEdit = new Gson().fromJson(request.body(), User.class);
@@ -401,7 +401,7 @@ put("/users/:id", (request, response) -> {
 
 **请求:**
 
-```
+```java
 PUT http://localhost:4567/users/1012
 {
     "lastName": "Mason"
@@ -410,7 +410,7 @@ PUT http://localhost:4567/users/1012
 
 **响应:**
 
-```
+```java
 {
     "status":"SUCCESS",
     "data":{
@@ -426,7 +426,7 @@ PUT http://localhost:4567/users/1012
 
 下面是`delete` 方法响应处理程序，它将删除带有给定`id`的`User`:
 
-```
+```java
 delete("/users/:id", (request, response) -> {
     response.type("application/json");
     userService.deleteUser(request.params(":id"));
@@ -439,13 +439,13 @@ delete("/users/:id", (request, response) -> {
 
 **请求:**
 
-```
+```java
 DELETE http://localhost:4567/users/1012
 ```
 
 **响应:**
 
-```
+```java
 {
     "status":"SUCCESS",
     "message":"user deleted"
@@ -456,7 +456,7 @@ DELETE http://localhost:4567/users/1012
 
 对于条件检查来说，`options`方法是一个很好的选择。下面是`options` 方法响应处理器，它将检查带有给定`id`的`User`是否存在:
 
-```
+```java
 options("/users/:id", (request, response) -> {
     response.type("application/json");
     return new Gson().toJson(
@@ -470,13 +470,13 @@ options("/users/:id", (request, response) -> {
 
 **请求:**
 
-```
+```java
 OPTIONS http://localhost:4567/users/1012
 ```
 
 **响应:**
 
-```
+```java
 {
     "status":"SUCCESS",
     "message":"User exists"

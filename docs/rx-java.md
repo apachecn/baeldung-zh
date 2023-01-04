@@ -14,7 +14,7 @@
 
 为了在我们的 [Maven](https://web.archive.org/web/20220627173244/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22io.reactivex%22) 项目中使用 RxJava，我们需要向我们的`pom.xml:`添加以下依赖项
 
-```
+```java
 <dependency>
     <groupId>io.reactivex</groupId>
     <artifactId>rxjava</artifactId>
@@ -24,7 +24,7 @@
 
 或者，对于 Gradle 项目:
 
-```
+```java
 compile 'io.reactivex.rxjava:rxjava:x.y.z'
 ```
 
@@ -68,7 +68,7 @@ compile 'io.reactivex.rxjava:rxjava:x.y.z'
 
 *   所有的`onNext`观察者调用将是同步的，并且不可能在事件流中间取消订阅。我们总是可以将一个`Observable`转换成一个`Blocking Observable`，使用方法`toBlocking:`
 
-```
+```java
 BlockingObservable<String> blockingObservable = observable.toBlocking();
 ```
 
@@ -84,7 +84,7 @@ BlockingObservable<String> blockingObservable = observable.toBlocking();
 
 基本操作符`just` 产生一个`Observable`，它在完成之前发出一个通用实例，字符串`“Hello”.` 当我们想从`Observable`中获取信息时，我们实现一个`observer`接口，然后在期望的`Observable:`上调用 subscribe
 
-```
+```java
 Observable<String> observable = Observable.just("Hello");
 observable.subscribe(s -> result = s);
 
@@ -101,7 +101,7 @@ assertTrue(result.equals("Hello"));
 
 `Observables` `subscribe`方法的返回值是一个`subscribe`接口:
 
-```
+```java
 String[] letters = {"a", "b", "c", "d", "e", "f", "g"};
 Observable<String> observable = Observable.from(letters);
 observable.subscribe(
@@ -120,7 +120,7 @@ m `ap operator` 通过对每个项目应用一个函数来转换由一个`Observ
 
 假设有一个声明的字符串数组，其中包含字母表中的一些字母，我们希望以大写形式打印它们:
 
-```
+```java
 Observable.from(letters)
   .map(String::toUpperCase)
   .subscribe(letter -> result += letter);
@@ -133,7 +133,7 @@ assertTrue(result.equals("ABCDEFG"));
 
 假设我们有一个从字符串列表中返回`Observable<String>` 的方法。现在我们将根据`Subscriber` 看到的内容为新`Observable` 的每个字符串打印标题列表:
 
-```
+```java
 Observable<String> getTitle() {
     return Observable.from(titleList);
 }
@@ -150,7 +150,7 @@ assertTrue(result.equals("titletitle"));
 
 它允许我们将状态从一个事件延续到另一个事件:
 
-```
+```java
 String[] letters = {"a", "b", "c"};
 Observable.from(letters)
   .scan(new StringBuilder(), StringBuilder::append)
@@ -164,7 +164,7 @@ assertTrue(result.equals("aababc"));
 
 假设我们创建了一个从 0 到 10 的整数数组，然后应用`group by`将它们分成类别`even`和`odd`:
 
-```
+```java
 Observable.from(numbers)
   .groupBy(i -> 0 == (i % 2) ? "EVEN" : "ODD")
   .subscribe(group ->
@@ -186,7 +186,7 @@ assertTrue(ODD[0].equals("13579"));
 
 因此，让我们在一个整数数组中过滤奇数:
 
-```
+```java
 Observable.from(numbers)
   .filter(i -> (i % 2 == 1))
   .subscribe(i -> result += i);
@@ -198,7 +198,7 @@ assertTrue(result.equals("13579"));
 
 `DefaultIfEmpty` 从源`Observable`发出项目，如果源`Observable`为空，则发出默认项目:
 
-```
+```java
 Observable.empty()
   .defaultIfEmpty("Observable is empty")
   .subscribe(s -> result += s);
@@ -208,7 +208,7 @@ assertTrue(result.equals("Observable is empty"));
 
 以下代码发出字母表'`a'` 的第一个字母，因为数组`letters` 不为空，这是它在第一个位置包含的内容:
 
-```
+```java
 Observable.from(letters)
   .defaultIfEmpty("Observable is empty")
   .first()
@@ -219,7 +219,7 @@ assertTrue(result.equals("a"));
 
 `TakeWhile` 操作员在指定条件变为假后丢弃由`Observable`发出的项目；
 
-```
+```java
 Observable.from(numbers)
   .takeWhile(i -> i < 5)
   .subscribe(s -> sum[0] += s);
@@ -235,7 +235,7 @@ assertTrue(sum[0] == 10);
 
 这样，我们可以在`Observable`开始发送项目之前，等待所有预期的观察者订阅`Observable`:
 
-```
+```java
 String[] result = {""};
 ConnectableObservable<Long> connectable
   = Observable.interval(200, TimeUnit.MILLISECONDS).publish();
@@ -257,7 +257,7 @@ assertTrue(result[0].equals("01"));
 *   `OnSuccess` 返回一个`Single`,它也调用我们指定的方法
 *   `OnError` 还返回一个`Single`,它会立即通知订阅者一个错误
 
-```
+```java
 String[] result = {""};
 Single<String> single = Observable.just("Hello")
   .toSingle()
@@ -278,7 +278,7 @@ assertTrue(result[0].equals("Hello"));
 
 在下一个示例中，我们将了解观察者如何能够看到他们订阅后发生的事件:
 
-```
+```java
 Integer subscriber1 = 0;
 Integer subscriber2 = 0;
 Observer<Integer> getFirstObserver() {
@@ -337,7 +337,7 @@ assertTrue(subscriber1 + subscriber2 == 14)
 
 在这里，我们在评论中介绍了实现这一目标所需的步骤，以及一个实施示例:
 
-```
+```java
 String[] result = {""};
 Observable<Character> values = Observable.using(
   () -> "MyResource",

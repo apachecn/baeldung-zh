@@ -10,7 +10,7 @@
 
 `equalsIgnoreCase()`接受另一个`String`并返回一个`boolean`值:
 
-```
+```java
 String lower = "equals ignore case";
 String UPPER = "EQUALS IGNORE CASE";
 
@@ -21,7 +21,7 @@ assertThat(lower.equalsIgnoreCase(UPPER)).isTrue();
 
 [Apache Commons Lang](/web/20221205210828/https://www.baeldung.com/string-processing-commons-lang) 库包含一个名为 [`StringUtils`](/web/20221205210828/https://www.baeldung.com/string-processing-commons-lang) 的类，该类提供了一个类似于上述方法的方法，但是它具有处理`null`值的额外好处:
 
-```
+```java
 String lower = "equals ignore case"; 
 String UPPER = "EQUALS IGNORE CASE"; 
 

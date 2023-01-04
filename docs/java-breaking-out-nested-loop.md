@@ -16,7 +16,7 @@
 
 当我们打印学生和课程的名字时，我们将得到以下结果:
 
-```
+```java
 student 0
   course 0
   course 1
@@ -33,7 +33,7 @@ student 1
 
 我们跳出嵌套循环的第一个选择是简单地使用`break`语句:
 
-```
+```java
 String result = "";
 for (int outerCounter = 0; outerCounter < 2; outerCounter++) {
     result += "outer" + outerCounter;
@@ -49,13 +49,13 @@ return result;
 
 我们有一个外循环和一个内循环，两个循环都有两次迭代。如果内部循环的计数器等于 0，我们执行`break`命令。当我们运行该示例时，它将显示以下结果:
 
-```
+```java
 outer0inner0outer1inner0
 ```
 
 或者我们可以调整代码，使其更具可读性:
 
-```
+```java
 outer 0
   inner 0
 outer 1
@@ -70,7 +70,7 @@ outer 1
 
 前面的例子是朝着正确方向迈出的一步，但是我们需要对它进行一点改进。我们可以通过使用一个`labeled break`来实现:
 
-```
+```java
 String result = "";
 myBreakLabel:
 for (int outerCounter = 0; outerCounter < 2; outerCounter++) {
@@ -87,13 +87,13 @@ return result;
 
 **一个`labeled`中断将终止外环，而不仅仅是内环。**我们通过在循环外添加`myBreakLabel`并更改 break 语句来停止 `myBreakLabel`来实现这一点。运行该示例后，我们得到以下结果:
 
-```
+```java
 outer0inner0
 ```
 
 我们可以通过一些格式更好地阅读它:
 
-```
+```java
 outer 0
   inner 0
 ```
@@ -104,7 +104,7 @@ outer 0
 
 或者，我们也可以使用`return`语句在找到结果时直接返回结果:
 
-```
+```java
 String result = "";
 for (int outerCounter = 0; outerCounter < 2; outerCounter++) {
     result += "outer" + outerCounter;

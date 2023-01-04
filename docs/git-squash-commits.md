@@ -14,7 +14,7 @@
 
 让我们看一个例子:
 
-```
+```java
  ┌───┐      ┌───┐     ┌───┐      ┌───┐
     ...   │ A │◄─────┤ B │◄────┤ C │◄─────┤ D │
           └───┘      └───┘     └───┘      └───┘
@@ -69,13 +69,13 @@
 
 在我们开始之前，让我们创建一个 Git [别名](https://web.archive.org/web/20221031205125/https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases) `slog`(代表短日志)来以简洁的视图显示 Git 提交日志:
 
-```
+```java
 git config --global alias.slog = log --graph --all --topo-order --pretty='format:%h %ai %s%d (%an)' 
 ```
 
 我们准备了一个 Git 存储库作为示例:
 
-```
+```java
 $ git slog
 * ac7dd5f 2021-08-23 23:29:15 +0200 Commit D (HEAD -> master) (Kai Yuan)
 * 5de0b6f 2021-08-23 23:29:08 +0200 Commit C (Kai Yuan)
@@ -96,7 +96,7 @@ Git 的交互式 rebase 将在默认编辑器中列出所有相关的提交。�
 
 因此，在这种情况下，这是最后四次提交:
 
-```
+```java
 * ac7dd5f ... Commit D (HEAD -> master)
 * 5de0b6f ... Commit C 
 * 54a204d ... Commit B 
@@ -117,13 +117,13 @@ Git 的交互式 rebase 将在默认编辑器中列出所有相关的提交。�
 
 下面是使用交互式 rebase 压缩最后一次`X`提交的语法:
 
-```
+```java
 git rebase -i HEAD~[X]
 ```
 
 所以，这是我们应该运行的:
 
-```
+```java
 git rebase -i HEAD~4
 ```
 
@@ -141,7 +141,7 @@ git rebase -i HEAD~4
 
 如果我们保存更改并退出编辑器，Git 将按照我们的指示进行重置:
 
-```
+```java
 $ git rebase -i HEAD~4
 [detached HEAD f9a9cd5] Commit A
  Date: Mon Aug 23 23:28:56 2021 +0200
@@ -151,7 +151,7 @@ Successfully rebased and updated refs/heads/master.
 
 现在，如果我们再次检查 Git 提交日志，我们将看到以下内容:
 
-```
+```java
 $ git slog
 * f9a9cd5 2021-08-23 23:28:56 +0200 Commit A (HEAD -> master) (Kai Yuan)
 * 29976c5 2021-08-23 23:28:33 +0200 BugFix #1 (Kai Yuan)
@@ -163,7 +163,7 @@ $ git slog
 
 现在，如果我们看一下提交的完整日志，我们可以看到所有被压缩的提交的消息被组合在一起:
 
-```
+```java
 $ git log -1
 commit f9a9cd50a0d11b6312ba4e6308698bea46e10cf1 (HEAD -> master)
 Author: Kai Yuan
@@ -188,7 +188,7 @@ Date:   2021-08-23 23:28:56 +0200
 
 让我们看看它是如何工作的:
 
-```
+```java
 $ git slog
 e7cb693 2021-08-24 15:00:56 +0200 Commit F (HEAD -> master) (Kai Yuan)
 2c1aa63 2021-08-24 15:00:45 +0200 Commit E (Kai Yuan)
@@ -209,7 +209,7 @@ cbd350d 2021-08-23 23:26:19 +0200 Init commit (Kai Yuan)
 
 我们已经知道，我们需要在编辑器中将`pick`命令改为`squash`，Git 将按照我们的预期进行压缩:
 
-```
+```java
 $ git rebase -i 29976c5
 [detached HEAD aabf37e] Commit A
  Date: Mon Aug 23 23:28:56 2021 +0200
@@ -235,7 +235,7 @@ $ git slog
 
 我们通过一个例子来了解一下:
 
-```
+```java
 $ git slog
 * 0ff435a 2021-08-24 15:28:07 +0200 finally, it works. phew! (HEAD -> feature) (Kai Yuan)
 * cb5fc72 2021-08-24 15:27:47 +0200 fix a typo (Kai Yuan)
@@ -256,7 +256,7 @@ $ git slog
 
 现在我们想通过一次提交将结果合并回`master`分支，以保持`master`分支干净:
 
-```
+```java
 $ git checkout master
 Switched to branch 'master'
 
@@ -269,7 +269,7 @@ Automatic merge went well; stopped before committing as requested
 
 **相反，它将所有来自源分支(本场景中的`feature`分支)的变更转化为工作副本**中的本地变更:
 
-```
+```java
 $ git status
 On branch master
 Changes to be committed:
@@ -281,7 +281,7 @@ Changes to be committed:
 
 我们需要提交更改以完成合并:
 
-```
+```java
 $ git commit -am'Squashed and merged the Feature2 branch'
 [master 565b254] Squashed and merged the Feature2 branch
  1 file changed, 4 insertions(+) 
@@ -289,7 +289,7 @@ $ git commit -am'Squashed and merged the Feature2 branch'
 
 现在让我们检查分支图:
 
-```
+```java
 $ git slog
 * 565b254 2021-08-24 15:53:05 +0200 Squashed and merged the Feature2 branch (HEAD -> master) (Kai Yuan)
 * 204b03f 2021-08-24 15:30:29 +0200 Urgent HotFix2 (Kai Yuan)

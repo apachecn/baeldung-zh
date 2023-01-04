@@ -16,7 +16,7 @@
 
 为了更好地理解这一点，让我们来看一个简单的例子，在这个例子中，我们在一个异常之后转储了当前的堆栈跟踪:
 
-```
+```java
 public class DumpStackTraceDemo 
 { 
     public static void main(String[] args) {
@@ -36,7 +36,7 @@ public class DumpStackTraceDemo
 
 在上面的例子中，`methodA()`抛出`ArithmeticException,` ,后者转储当前堆栈跟踪到`catch` 块中:
 
-```
+```java
 java.lang.ArithmeticException: / by zero
 at main.java.com.baeldung.tutorials.DumpStackTraceDemo.methodA(DumpStackTraceDemo.java:11)
 at main.java.com.baeldung.tutorials.DumpStackTraceDemo.main(DumpStackTraceDemo.java:6)
@@ -57,7 +57,7 @@ at main.java.com.baeldung.tutorials.DumpStackTraceDemo.main(DumpStackTraceDemo.j
 
 让我们看一个例子:
 
-```
+```java
 public class StackTraceUsingThreadDemo {
 
     public static void main(String[] args) {
@@ -79,7 +79,7 @@ public class StackTraceUsingThreadDemo {
 
 让我们用下面的测试用例来验证它，其中测试用例方法正在调用`methodA()`:
 
-```
+```java
 @Test
 public void whenElementIsFetchedUsingThread_thenCorrectMethodAndClassIsReturned() {
     StackTraceElement[] stackTrace = new StackTraceUsingThreadDemo().methodA();
@@ -110,7 +110,7 @@ public void whenElementIsFetchedUsingThread_thenCorrectMethodAndClassIsReturned(
 
 让我们看一个例子:
 
-```
+```java
 public class StackTraceUsingThrowableDemo {
 
     public static void main(String[] args) {
@@ -136,7 +136,7 @@ public class StackTraceUsingThrowableDemo {
 
 让我们用一个测试来验证它:
 
-```
+```java
 @Test
 public void whenElementIsFecthedUsingThrowable_thenCorrectMethodAndClassIsReturned() {
     StackTraceElement[] stackTrace = new StackTraceUsingThrowableDemo().methodA();

@@ -18,7 +18,7 @@
 
 我们举个例子来了解一下这个滤镜的使用方法。我们将定义一个扩展了`OncePerRequestFilter`的类`AuthenticationFilter`，并覆盖`doFilterInternal()`方法:
 
-```
+```java
 public class AuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(
@@ -46,7 +46,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
 类似地，**我们将覆盖`shouldNotFilterErrorDispatch()`方法，并返回`true`或`false`，这取决于我们是否要过滤错误派单**:
 
-```
+```java
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
     @Override
@@ -76,7 +76,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
 我们可以通过覆盖`shouldNotFilter()`方法，有条件地将过滤器仅应用于某些特定的请求，并跳过其他请求:
 
-```
+```java
 @Override
 protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
     return Boolean.TRUE.equals(request.getAttribute(SHOULD_NOT_FILTER));
@@ -88,7 +88,7 @@ protected boolean shouldNotFilter(HttpServletRequest request) throws ServletExce
 让我们看一个简单的例子来理解`OncePerRequestFilter`的行为。
 首先，我们将定义一个`Controller`，它使用 Spring 的 [`DeferredResult`](/web/20220525122016/https://www.baeldung.com/spring-deferred-result) 异步处理请求:
 
-```
+```java
 @Controller
 public class HelloController  {
     @GetMapping(path = "/greeting")
@@ -108,7 +108,7 @@ public class HelloController  {
 
 现在，让我们定义一个实现`OncePerRequestFilter`的`Filter`:
 
-```
+```java
 @Component
 public class MyOncePerRequestFilter extends OncePerRequestFilter {
     @Override
@@ -129,13 +129,13 @@ public class MyOncePerRequestFilter extends OncePerRequestFilter {
 
 让我们调用端点来演示这一点:
 
-```
+```java
 curl -X GET http://localhost:8082/greeting 
 ```
 
 **输出:**
 
-```
+```java
 10:23:24.175 [http-nio-8082-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
 10:23:24.175 [http-nio-8082-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
 10:23:24.176 [http-nio-8082-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
@@ -144,7 +144,7 @@ curl -X GET http://localhost:8082/greeting
 
 现在，让我们看看我们希望请求和异步调度都调用我们的过滤器的情况。我们只需要覆盖`shouldNotFilterAsyncDispatch()`以返回`false`来实现这一点:
 
-```
+```java
 @Override
 protected boolean shouldNotFilterAsyncDispatch() {
     return false;
@@ -153,7 +153,7 @@ protected boolean shouldNotFilterAsyncDispatch() {
 
 **输出:**
 
-```
+```java
 2:53.616 [http-nio-8082-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
 10:32:53.616 [http-nio-8082-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
 10:32:53.617 [http-nio-8082-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms

@@ -20,7 +20,7 @@
 
 首先，我们需要向 [`vavr-test`](https://web.archive.org/web/20220627182007/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22io.javaslang%22%20AND%20a%3A%22javaslang-test%22) 库中添加一个 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>io.vavr</groupId>
     <artifactId>jvavr-test</artifactId>
@@ -36,7 +36,7 @@
 
 让我们考虑一个返回字符串流的函数。它是一个无限的 0 以上的流，根据简单的规则将数字映射到字符串。我们在这里使用了一个有趣的 Vavr 特性，称为[模式匹配](/web/20220627182007/https://www.baeldung.com/vavr-pattern-matching):
 
-```
+```java
 private static Predicate<Integer> divisibleByTwo = i -> i % 2 == 0;
 private static Predicate<Integer> divisibleByFive = i -> i % 5 == 0;
 
@@ -53,7 +53,7 @@ private Stream<String> stringsSupplier() {
 
 幸运的是，我们可以编写一个基于属性的测试来覆盖所有的边缘情况。首先，我们需要定义哪种数字应该作为测试的输入:
 
-```
+```java
 Arbitrary<Integer> multiplesOf2 = Arbitrary.integer()
   .filter(i -> i > 0)
   .filter(i -> i % 2 == 0 && i % 5 != 0);
@@ -63,14 +63,14 @@ Arbitrary<Integer> multiplesOf2 = Arbitrary.integer()
 
 接下来，我们需要定义一个条件来检查被测试的函数是否为给定的参数返回正确的值:
 
-```
+```java
 CheckedFunction1<Integer, Boolean> mustEquals
   = i -> stringsSupplier().get(i).equals("DividedByTwoWithoutRemainder");
 ```
 
 要开始一个基于属性的测试，我们需要使用`[Property](https://web.archive.org/web/20220627182007/https://static.javadoc.io/io.javaslang/javaslang-test/2.0.4/javaslang/test/Property.Property5.html)` 类:
 
-```
+```java
 CheckResult result = Property
   .def("Every second element must equal to DividedByTwoWithoutRemainder")
   .forAll(multiplesOf2)
@@ -86,7 +86,7 @@ result.assertIsSatisfied();
 
 `Arbitrary`供应商和`CheckedFunction`需要变更:
 
-```
+```java
 Arbitrary<Integer> multiplesOf5 = Arbitrary.integer()
   .filter(i -> i > 0)
   .filter(i -> i % 5 == 0 && i % 2 == 0);
@@ -97,7 +97,7 @@ CheckedFunction1<Integer, Boolean> mustEquals
 
 然后我们可以运行基于属性的测试一千次:
 
-```
+```java
 Property.def("Every fifth element must equal to DividedByTwoAndFiveWithoutRemainder")
   .forAll(multiplesOf5)
   .suchThat(mustEquals)

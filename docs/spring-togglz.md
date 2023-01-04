@@ -18,7 +18,7 @@
 
 除了 Spring Boot 依赖项，`Togglz`库还提供了一个 Spring Boot 启动 jar:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -62,7 +62,7 @@
 
 首先，让我们创建一个枚举来实现`Feature`接口，并包含一个特性名称列表:
 
-```
+```java
 public enum MyFeatures implements Feature {
 
     @Label("Employee Management Feature")
@@ -78,7 +78,7 @@ public enum MyFeatures implements Feature {
 
 然后我们可以在 Spring Boot 配置类中定义一个类型为`EnumBasedFeatureProvider`的 bean:
 
-```
+```java
 @Configuration
 public class ToggleConfiguration {
 
@@ -93,7 +93,7 @@ public class ToggleConfiguration {
 
 接下来，我们将创建一个方面，它截取一个定制的`AssociatedFeature`注释，并检查注释参数中提供的特性，以确定它是否是活动的:
 
-```
+```java
 @Aspect
 @Component
 public class FeaturesAspect {
@@ -119,7 +119,7 @@ public class FeaturesAspect {
 
 让我们定义一个名为`FeatureAssociation`的定制注释，它将有一个`MyFeatures`枚举类型的`value()`参数:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface FeatureAssociation {
@@ -139,7 +139,7 @@ public @interface FeatureAssociation {
 
 在我们的示例中，让我们将`SystemPropertyActivationStrategy` 用于 EMPLOYEE_MANAGEMENT_FEATURE，它根据系统属性的值来评估特性的状态。可以使用`@ActivationParameter` 注释指定所需的属性名和值:
 
-```
+```java
 public enum MyFeatures implements Feature {
 
     @Label("Employee Management Feature") 
@@ -178,7 +178,7 @@ public enum MyFeatures implements Feature {
 
 首先，让我们基于 Spring 数据定义一个`Employee`实体类和存储库:
 
-```
+```java
 @Entity
 public class Employee {
 
@@ -190,14 +190,14 @@ public class Employee {
 }
 ```
 
-```
+```java
 public interface EmployeeRepository
   extends CrudRepository<Employee, Long>{ }
 ```
 
 接下来，让我们添加一个带有增加员工工资的方法的`EmployeeService`。我们将用参数`EMPLOYEE_MANAGEMENT_FEATURE`将`@AssociatedFeature`注释添加到方法中:
 
-```
+```java
 @Service
 public class SalaryService {
 
@@ -216,7 +216,7 @@ public class SalaryService {
 
 该方法将从一个`/increaseSalary`端点调用，我们将调用该端点进行测试:
 
-```
+```java
 @Controller
 public class SalaryController {
 
@@ -235,7 +235,7 @@ public class SalaryController {
 
 首先，让我们添加一个测试，在将`employee.feature`属性设置为`false`之后，我们调用我们的 POST 映射。在这种情况下，该功能不应处于活动状态，员工的工资值也不应改变:
 
-```
+```java
 @Test
 public void givenFeaturePropertyFalse_whenIncreaseSalary_thenNoIncrease() 
   throws Exception {
@@ -255,7 +255,7 @@ public void givenFeaturePropertyFalse_whenIncreaseSalary_thenNoIncrease()
 
 接下来，让我们添加一个测试，在将属性设置为`true`后执行调用。在这种情况下，工资的价值应该增加:
 
-```
+```java
 @Test
 public void givenFeaturePropertyTrue_whenIncreaseSalary_thenIncrease() 
   throws Exception {

@@ -10,7 +10,7 @@
 
 让我们从一个简单的例子开始，使用`Joiner`将一个`List`加入到一个`String`中。在下面的例子中，我们使用逗号“，”作为分隔符将一个`List`的名字连接成一个`String`:
 
-```
+```java
 @Test
 public void whenConvertListToString_thenConverted() {
     List<String> names = Lists.newArrayList("John", "Jane", "Adam", "Tom");
@@ -24,7 +24,7 @@ public void whenConvertListToString_thenConverted() {
 
 接下来，让我们看看如何使用`Joiner`将一个`Map`转换成一个`String`。在下面的例子中，我们使用`withKeyValueSeparator()`来连接键和它的值:
 
-```
+```java
 @Test
 public void whenConvertMapToString_thenConverted() {
     Map<String, Integer> salary = Maps.newHashMap();
@@ -42,7 +42,7 @@ public void whenConvertMapToString_thenConverted() {
 
 现在，让我们看看如何将嵌套的集合合并成一个`String`。在下面的例子中，我们将每个`List`转换成一个`String`的结果连接起来:
 
-```
+```java
 @Test
 public void whenJoinNestedCollections_thenJoined() {
     List<ArrayList<String>> nested = Lists.newArrayList(
@@ -69,7 +69,7 @@ public void whenJoinNestedCollections_thenJoined() {
 
 要在联接集合时**跳过空值**，请使用`skipNulls()`，如下例所示:
 
-```
+```java
 @Test
 public void whenConvertListToStringAndSkipNull_thenConverted() {
     List<String> names = Lists.newArrayList("John", null, "Jane", "Adam", "Tom");
@@ -81,7 +81,7 @@ public void whenConvertListToStringAndSkipNull_thenConverted() {
 
 如果你不想跳过空值，而想用**代替**，使用`useForNull()`，如下例所示:
 
-```
+```java
 @Test
 public void whenUseForNull_thenUsed() {
     List<String> names = Lists.newArrayList("John", null, "Jane", "Adam", "Tom");
@@ -97,7 +97,7 @@ public void whenUseForNull_thenUsed() {
 
 现在，让我们看看如何将一个`String`分割成一个`List`。在下面的例子中，我们使用“-”分隔符将输入`String`拆分为`List`:
 
-```
+```java
 @Test
 public void whenCreateListFromString_thenCreated() {
     String input = "apple - banana - orange";
@@ -114,7 +114,7 @@ public void whenCreateListFromString_thenCreated() {
 
 接下来，让我们看看如何使用拆分器从字符串创建映射。在下面的例子中，我们使用`withKeyValueSeparator()`将一个`String`分割成一个`Map`:
 
-```
+```java
 @Test
 public void whenCreateMapFromString_thenCreated() {
     String input = "John=first,Adam=second";
@@ -131,7 +131,7 @@ public void whenCreateMapFromString_thenCreated() {
 
 现在，让我们看看如何用多个分隔符分割一个`String`。在下面的例子中，我们使用两个“.”和“，”来分裂我们的`String`:
 
-```
+```java
 @Test
 public void whenSplitStringOnMultipleSeparator_thenSplit() {
     String input = "apple.banana,,orange,,.";
@@ -149,7 +149,7 @@ public void whenSplitStringOnMultipleSeparator_thenSplit() {
 
 接下来——让我们看看如何以特定长度分割一个`String`。在下面的例子中，我们每隔 3 个字符分割我们的`String`:
 
-```
+```java
 @Test
 public void whenSplitStringOnSpecificLength_thenSplit() {
     String input = "Hello world";
@@ -163,7 +163,7 @@ public void whenSplitStringOnSpecificLength_thenSplit() {
 
 最后，让我们看看如何限制分割结果。如果您想让`Splitter`到**在特定数量的项目**后停止分割–使用`limit()`，如下例所示:
 
-```
+```java
 @Test
 public void whenLimitSplitting_thenLimited() {
     String input = "a,b,c,d,e";

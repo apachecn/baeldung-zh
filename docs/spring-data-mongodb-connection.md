@@ -10,7 +10,7 @@
 
 在开始构建我们的应用程序之前，我们将创建一个测试类。让我们从几个我们将重复使用的常量开始:
 
-```
+```java
 public class MongoConnectionApplicationLiveTest {
     private static final String HOST = "localhost";
     private static final String PORT = "27017";
@@ -24,7 +24,7 @@ public class MongoConnectionApplicationLiveTest {
 
 **我们的测试包括运行我们的应用程序，然后尝试在名为`“items”`的集合中插入一个文档。**插入我们的文档后，我们应该从数据库中收到一个`“_id”`，我们认为测试成功了。让我们为此创建一个助手方法:
 
-```
+```java
 private void assertInsertSucceeds(ConfigurableApplicationContext context) {
     String name = "A";
 
@@ -45,7 +45,7 @@ private void assertInsertSucceeds(ConfigurableApplicationContext context) {
 
 我们的第一个例子是配置连接的最常见方式。**我们只需在`application.properties` :** 中提供我们的数据库信息
 
-```
+```java
 spring.data.mongodb.host=localhost
 spring.data.mongodb.port=27017
 spring.data.mongodb.database=baeldung
@@ -57,7 +57,7 @@ spring.data.mongodb.password=password
 
 在我们的应用程序类中，我们不需要任何特殊的东西来启动和运行:
 
-```
+```java
 @SpringBootApplication
 public class SpringMongoConnectionViaPropertiesApp {
 
@@ -71,7 +71,7 @@ public class SpringMongoConnectionViaPropertiesApp {
 
 为了测试它，我们可以使用`SpringApplicationBuilder to`获取对应用程序上下文的引用。**然后，为了断言我们的连接是有效的，我们使用前面创建的`assertInsertSucceeds`方法:**
 
-```
+```java
 @Test
 public void whenPropertiesConfig_thenInsertSucceeds() {
     SpringApplicationBuilder app = new SpringApplicationBuilder(SpringMongoConnectionViaPropertiesApp.class)
@@ -89,7 +89,7 @@ public void whenPropertiesConfig_thenInsertSucceeds() {
 
 **让我们看一个例子[使用`mvn` 运行我们的 Spring Boot 应用](/web/20221004150550/https://www.baeldung.com/spring-boot-command-line-arguments) :**
 
-```
+```java
 mvn spring-boot:run -Dspring-boot.run.arguments='--spring.data.mongodb.port=7017 --spring.data.mongodb.host=localhost'
 ```
 
@@ -99,7 +99,7 @@ mvn spring-boot:run -Dspring-boot.run.arguments='--spring.data.mongodb.port=7017
 
 为了在测试中模拟这一点，我们可以在运行应用程序之前设置系统属性。同样，我们可以用`properties`方法覆盖我们的`application.properties`:
 
-```
+```java
 @Test
 public void givenPrecedence_whenSystemConfig_thenInsertSucceeds() {
     System.setProperty("spring.data.mongodb.host", HOST);
@@ -128,19 +128,19 @@ public void givenPrecedence_whenSystemConfig_thenInsertSucceeds() {
 
 也可以使用单个属性来代替单独的主机、端口等。：
 
-```
+```java
 spring.data.mongodb.uri="mongodb://admin:[[email protected]](/web/20221004150550/https://www.baeldung.com/cdn-cgi/l/email-protection):27017/baeldung"
 ```
 
 这个属性包括初始属性的所有值，所以我们不需要指定所有的五个值。让我们检查一下基本格式:
 
-```
+```java
 mongodb://<username>:<password>@<host>:<port>/<database>
 ```
 
 更确切地说，URI 中的`database`部分是[默认的 auth DB](https://web.archive.org/web/20221004150550/https://www.mongodb.com/docs/master/reference/connection-string/#std-label-connections-standard-connection-string-format) 。**最重要的是，不能为主机、端口和凭证单独指定`spring.data.mongodb.uri`属性。**否则，在运行我们的应用程序时，我们会得到以下错误:
 
-```
+```java
 @Test
 public void givenConnectionUri_whenAlsoIncludingIndividualParameters_thenInvalidConfig() {
     System.setProperty(
@@ -177,7 +177,7 @@ public void givenConnectionUri_whenAlsoIncludingIndividualParameters_thenInvalid
 
 在我们的第一个例子中，我们将在应用程序类中扩展 Spring Data MongoDB 的`AbstractMongoClientConfiguration`类:
 
-```
+```java
 @SpringBootApplication
 public class SpringMongoConnectionViaClientApp extends AbstractMongoClientConfiguration {
     // main method
@@ -186,7 +186,7 @@ public class SpringMongoConnectionViaClientApp extends AbstractMongoClientConfig
 
 接下来，让我们注入我们需要的属性:
 
-```
+```java
 @Value("${spring.data.mongodb.uri}")
 private String uri;
 
@@ -198,7 +198,7 @@ private String db;
 
 `AbstractMongoClientConfiguration`要求我们覆盖`getDatabaseName()`。这是因为 URI 中不需要数据库名称:
 
-```
+```java
 protected String getDatabaseName() {
     return db;
 }
@@ -206,7 +206,7 @@ protected String getDatabaseName() {
 
 此时，因为我们使用默认的 Spring 数据变量，我们已经能够连接到我们的数据库。此外，如果数据库不存在，MongoDB 会创建它。让我们来测试一下:
 
-```
+```java
 @Test
 public void whenClientConfig_thenInsertSucceeds() {
     SpringApplicationBuilder app = new SpringApplicationBuilder(SpringMongoConnectionViaClientApp.class);
@@ -222,7 +222,7 @@ public void whenClientConfig_thenInsertSucceeds() {
 
 最后，我们可以覆盖`mongoClient()`来获得优于传统配置的优势。这个方法将使用我们的 URI 变量来构建一个 MongoDB 客户端。这样，我们可以直接引用它。例如，这使我们能够列出我们的连接中所有可用的数据库:
 
-```
+```java
 @Override
 public MongoClient mongoClient() {
     MongoClient client = MongoClients.create(uri);
@@ -238,7 +238,7 @@ public MongoClient mongoClient() {
 
 在下一个例子中，我们将创建一个`MongoClientFactoryBean`。**这一次，我们将创建一个名为`custom.uri`的属性来保存我们的连接配置:**
 
-```
+```java
 @SpringBootApplication
 public class SpringMongoConnectionViaFactoryApp {
 
@@ -264,7 +264,7 @@ public class SpringMongoConnectionViaFactoryApp {
 
 在我们的最后一个例子中，我们将使用一个`MongoClientSettingsBuilderCustomizer`:
 
-```
+```java
 @SpringBootApplication
 public class SpringMongoConnectionViaBuilderApp {
 

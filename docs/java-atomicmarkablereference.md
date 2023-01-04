@@ -18,7 +18,7 @@
 
 让我们更深入地看看`AtomicMarkableReference`类的实现:
 
-```
+```java
 public class AtomicMarkableReference<V> {
 
     private static class Pair<T> {
@@ -47,7 +47,7 @@ public class AtomicMarkableReference<V> {
 
 首先，为了发现`AtomicMarkableReference`的有用性，让我们从创建一个`Employee` POJO 开始:
 
-```
+```java
 class Employee {
     private int id;
     private String name;
@@ -58,7 +58,7 @@ class Employee {
 
 现在，我们可以创建一个`AtomicMarkableReference`类的实例:
 
-```
+```java
 AtomicMarkableReference<Employee> employeeNode 
   = new AtomicMarkableReference<>(new Employee(123, "Mike"), true);
 ```
@@ -71,7 +71,7 @@ AtomicMarkableReference<Employee> employeeNode
 
 我们使用`getReference`方法返回`reference`变量的当前值:
 
-```
+```java
 Employee employee = new Employee(123, "Mike");
 AtomicMarkableReference<Employee> employeeNode = new AtomicMarkableReference<>(employee, true);
 
@@ -82,7 +82,7 @@ Assertions.assertEquals(employee, employeeNode.getReference());
 
 为了获得`mark`变量的值，我们应该调用`isMarked`方法:
 
-```
+```java
 Employee employee = new Employee(123, "Mike");
 AtomicMarkableReference<Employee> employeeNode = new AtomicMarkableReference<>(employee, true);
 
@@ -93,7 +93,7 @@ Assertions.assertTrue(employeeNode.isMarked());
 
 接下来，当我们想要检索当前的`reference`和当前的`mark`时，我们使用`get`方法。为了得到`mark`，**，我们应该发送一个大小至少为 1 的`boolean`数组作为参数，该数组将在索引 0 处存储`boolean`变量**的当前值。同时，该方法将返回`reference`的当前值:
 
-```
+```java
 Employee employee = new Employee(123, "Mike");
 AtomicMarkableReference<Employee> employeeNode = new AtomicMarkableReference<>(employee, true);
 
@@ -112,7 +112,7 @@ Java 的公共 API 中没有通用的`Pair<T, U>`类。这样做的主要原因�
 
 如果我们想无条件地更新`reference`和`mark`字段，我们应该使用`set`方法。如果作为参数发送的值中至少有一个不同，则`reference`和`mark`将被更新:
 
-```
+```java
 Employee employee = new Employee(123, "Mike");
 AtomicMarkableReference<Employee> employeeNode = new AtomicMarkableReference<>(employee, true);
 
@@ -129,7 +129,7 @@ Assertions.assertFalse(employeeNode.isMarked());
 
 现在，让我们看看如何使用`compareAndSet`来更新`reference`和`mark`字段:
 
-```
+```java
 Employee employee = new Employee(123, "Mike");
 AtomicMarkableReference<Employee> employeeNode = new AtomicMarkableReference<>(employee, true);
 Employee newEmployee = new Employee(124, "John");
@@ -157,7 +157,7 @@ Assertions.assertFalse(employeeNode.isMarked());
 
 最后，我们有`attemptMark`方法。它检查当前的`reference`是否等于作为参数发送的预期的`reference`。如果它们匹配，它自动将标记的值设置为给定的更新值:
 
-```
+```java
 Employee employee = new Employee(123, "Mike");
 AtomicMarkableReference<Employee> employeeNode = new AtomicMarkableReference<>(employee, true);
 

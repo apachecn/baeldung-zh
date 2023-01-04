@@ -20,7 +20,7 @@ Groovy 编程语言是一种强大的、**可选类型的动态语言**。它得
 
 类似于 Spring Boot，**我们只需要包含`[groovy-all](https://web.archive.org/web/20220626203305/https://search.maven.org/search?q=g:org.codehaus.groovy%20a:groovy-all)` pom 来添加我们可能需要的所有依赖项**，而不用担心它们的版本:
 
-```
+```java
 <dependency>
     <groupId>org.codehaus.groovy</groupId>
     <artifactId>groovy-all</artifactId>
@@ -62,7 +62,7 @@ Maven 最常用的两个是 Groovy——Eclipse Maven 和 GMaven+。
 
 为了能够检索最新的编译器工件，我们必须添加 Maven Bintray 存储库:
 
-```
+```java
 <pluginRepositories>
     <pluginRepository>
         <id>bintray</id>
@@ -83,7 +83,7 @@ Maven 最常用的两个是 Groovy——Eclipse Maven 和 GMaven+。
 
 事实上，我们将使用的插件——[Maven 编译器插件](/web/20220626203305/https://www.baeldung.com/maven-compiler-plugin)——实际上并不编译，而是将工作委托给[工件](https://web.archive.org/web/20220626203305/https://search.maven.org/search?q=g:org.codehaus.groovy%20a:groovy-eclipse-batch):
 
-```
+```java
 <plugin>
     <artifactId>maven-compiler-plugin</artifactId>
     <version>3.8.0</version>
@@ -115,7 +115,7 @@ Maven 最常用的两个是 Groovy——Eclipse Maven 和 GMaven+。
 
 为了强制文件发现，我们可以在`src/main/java` 和`src/test/java`中添加任何文件，或者简单地添加 [`groovy-eclipse-compiler`插件](https://web.archive.org/web/20220626203305/https://search.maven.org/search?q=g:org.codehaus.groovy%20a:groovy-eclipse-compiler):
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.groovy</groupId>
     <artifactId>groovy-eclipse-compiler</artifactId>
@@ -141,7 +141,7 @@ GMavenPlus 编译器**增加了对当时其他编译器**还没有的功能的�
 
 为了配置我们的项目，我们需要添加 [gmavenplus-plugin](https://web.archive.org/web/20220626203305/https://search.maven.org/search?q=g:org.codehaus.gmavenplus%20a:gmavenplus-plugin) :
 
-```
+```java
 <plugin>
     <groupId>org.codehaus.gmavenplus</groupId>
     <artifactId>gmavenplus-plugin</artifactId>
@@ -184,7 +184,7 @@ GMavenPlus 编译器**增加了对当时其他编译器**还没有的功能的�
 
 让我们用 Eclipse-Maven 插件构建一切:
 
-```
+```java
 $ mvn clean compile
 ...
 [INFO] --- maven-compiler-plugin:3.8.0:compile (default-compile) @ core-groovy-2 ---
@@ -199,7 +199,7 @@ $ mvn clean compile
 
 GMavenPlus 显示了一些差异:
 
-```
+```java
 $ mvn -f gmavenplus-pom.xml clean compile
 ...
 [INFO] --- gmavenplus-plugin:1.7.0:generateStubs (default) @ core-groovy-2 ---
@@ -240,7 +240,7 @@ $ mvn -f gmavenplus-pom.xml clean compile
 
 为了让 **[从命令行](/web/20220626203305/https://www.baeldung.com/executable-jar-with-maven)**将程序作为 jar 运行，我们添加了[`maven-assembly-plugin`](https://web.archive.org/web/20220626203305/https://search.maven.org/search?q=g:org.apache.maven.plugins%20a:maven-assembly-plugin)，它将所有 Groovy 依赖项包含在一个“胖 jar”中，这个“胖 jar”以属性`descriptorRef:`中定义的后缀命名
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-assembly-plugin</artifactId>
@@ -272,7 +272,7 @@ $ mvn -f gmavenplus-pom.xml clean compile
 
 编译完成后，我们可以使用以下命令运行代码:
 
-```
+```java
 $ java -jar target/core-groovy-2-1.0-SNAPSHOT-jar-with-dependencies.jar com.baeldung.MyJointCompilationApp
 ```
 
@@ -296,7 +296,7 @@ Maven 编译允许我们在项目中包含 Groovy 文件，并从 Java 中引用
 
 实现相对简单:
 
-```
+```java
 private final GroovyClassLoader loader;
 
 private Double addWithGroovyClassLoader(int x, int y) 
@@ -323,7 +323,7 @@ Shell 脚本加载器`parse()`方法接受文本或文件格式的源代码，�
 
 调用`Script.run()` 的实现如下所示:
 
-```
+```java
 private Double addWithGroovyShellRun(int x, int y) throws IOException {
     Script script = shell.parse(new File("src/main/groovy/com/baeldung/", "CalcScript.groovy"));
     return (Double) script.run();
@@ -344,7 +344,7 @@ public MyJointCompilationApp() {
 
 让我们来看看这个实现:
 
-```
+```java
 private final GroovyShell shell;
 
 private Double addWithGroovyShell(int x, int y) throws IOException {
@@ -367,7 +367,7 @@ public MyJointCompilationApp() {
 
 虽然我们有这些额外的功能，但实现只有一些小的不同:
 
-```
+```java
 private final GroovyScriptEngine engine;
 
 private void addWithGroovyScriptEngine(int x, int y) throws IllegalAccessException,
@@ -407,7 +407,7 @@ public MyJointCompilationApp() {
 
 实现看起来很相似，尽管我们回到通过完整的文件路径加载:
 
-```
+```java
 private final ScriptEngine engineFromFactory;
 
 private void addWithEngineFactory(int x, int y) throws IllegalAccessException, 
@@ -450,7 +450,7 @@ public MyJointCompilationApp() {
 
 如果我们分析从 Java 到 Groovy 的方法调用，例如，当运行示例`addWithCompiledClasses`时，`.calcSum`和实际 Groovy 方法的第一行之间的操作栈看起来像:
 
-```
+```java
 calcSum:4, CalcScript (com.baeldung)
 addWithCompiledClasses:43, MyJointCompilationApp (com.baeldung)
 addWithStaticCompiledClasses:95, MyJointCompilationApp (com.baeldung)
@@ -461,7 +461,7 @@ main:117, App (com.baeldung)
 
 然而，这就是`invokeMethod`调用的作用:
 
-```
+```java
 calcSum:4, CalcScript (com.baeldung)
 invoke0:-1, NativeMethodAccessorImpl (sun.reflect)
 invoke:62, NativeMethodAccessorImpl (sun.reflect)
@@ -499,7 +499,7 @@ main:118, MyJointCompilationApp (com.baeldung)
 
 如果我们认为编译可以拯救我们，让我们看看 Groovy 脚本的方法`calcSum2()`:
 
-```
+```java
 // this method will fail in runtime
 def calcSum2(x, y) {
     // DANGER! The variable "log" may be undefined

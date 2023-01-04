@@ -48,7 +48,7 @@ IntelliJ 吸引 Java 开发人员的一个特性是使用插件扩展和创建�
 
 第一个操作在新的浏览器窗口中打开“提出问题”页面:
 
-```
+```java
 public class AskQuestionAction extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -65,7 +65,7 @@ public class AskQuestionAction extends AnAction {
 
 在这种情况下，我们使用 PSI 来确定文件的编程语言:
 
-```
+```java
 Optional<PsiFile> psiFile = Optional.ofNullable(e.getData(LangDataKeys.PSI_FILE));
 String languageTag = psiFile.map(PsiFile::getLanguage)
   .map(Language::getDisplayName)
@@ -76,7 +76,7 @@ String languageTag = psiFile.map(PsiFile::getLanguage)
 
 为了获取要搜索的文本，我们将使用`Editor` API 来检索屏幕上高亮显示的文本:
 
-```
+```java
 Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
 CaretModel caretModel = editor.getCaretModel();
 String selectedText = caretModel.getCurrentCaret().getSelectedText();
@@ -86,7 +86,7 @@ String selectedText = caretModel.getCurrentCaret().getSelectedText();
 
 现在，我们可以将所有这些放在一个`actionPerformed`声明中:
 
-```
+```java
 @Override
 public void actionPerformed(@NotNull AnActionEvent e) {
     Optional<PsiFile> psiFile = Optional.ofNullable(e.getData(LangDataKeys.PSI_FILE));
@@ -106,7 +106,7 @@ public void actionPerformed(@NotNull AnActionEvent e) {
 
 这个动作还覆盖了另一个名为`update`的方法，它允许我们在不同的条件下启用或禁用这个动作。在这种情况下，如果没有选定的文本，我们将禁用搜索操作:
 
-```
+```java
 Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
 CaretModel caretModel = editor.getCaretModel();
 e.getPresentation().setEnabledAndVisible(caretModel.getCurrentCaret().hasSelection());
@@ -120,7 +120,7 @@ e.getPresentation().setEnabledAndVisible(caretModel.getCurrentCaret().hasSelecti
 
 默认情况下，该文件将有一个空的`<actions>`元素，我们将在这里添加我们的操作:
 
-```
+```java
 <actions>
     <action
       id="StackOverflow.AskQuestion.ToolsMenu"
@@ -150,7 +150,7 @@ e.getPresentation().setEnabledAndVisible(caretModel.getCurrentCaret().hasSelecti
 
 注册动作的第二种方式是以编程方式使用`ActionManager`类:
 
-```
+```java
 ActionManager.getInstance().registerAction("StackOverflow.SearchAction", new SearchAction());
 ```
 

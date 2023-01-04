@@ -14,7 +14,7 @@
 
 让我们从创建一个空的`Stack`实例开始，使用默认的无参数构造函数:
 
-```
+```java
 @Test
 public void whenStackIsCreated_thenItHasSizeZero() {
     Stack<Integer> intStack = new Stack<>();
@@ -35,7 +35,7 @@ public void whenStackIsCreated_thenItHasSizeZero() {
 
 让我们从使用`push()`方法向`Stack`的顶部添加一个元素开始——该方法也返回添加的元素:
 
-```
+```java
 @Test
 public void whenElementIsPushed_thenStackSizeIsIncreased() {
     Stack<Integer> intStack = new Stack<>();
@@ -49,7 +49,7 @@ public void whenElementIsPushed_thenStackSizeIsIncreased() {
 
 我们还可以一次添加多个元素:
 
-```
+```java
 @Test
 public void whenMultipleElementsArePushed_thenStackSizeIsIncreased() {
     Stack<Integer> intStack = new Stack<>();
@@ -66,7 +66,7 @@ public void whenMultipleElementsArePushed_thenStackSizeIsIncreased() {
 
 接下来，让我们看看如何获取和移除一个`Stack`中的最后一个元素:
 
-```
+```java
 @Test
 public void whenElementIsPoppedFromStack_thenElementIsRemovedAndSizeChanges() {
     Stack<Integer> intStack = new Stack<>();
@@ -81,7 +81,7 @@ public void whenElementIsPoppedFromStack_thenElementIsRemovedAndSizeChanges() {
 
 我们也可以不移除 S `tack`的最后一个元素:
 
-```
+```java
 @Test
 public void whenElementIsPeeked_thenElementIsNotRemovedAndSizeDoesNotChange() {
     Stack<Integer> intStack = new Stack<>();
@@ -101,7 +101,7 @@ public void whenElementIsPeeked_thenElementIsNotRemovedAndSizeDoesNotChange() {
 
 *Stack* 允许我们搜索一个元素并得到它与顶部的距离:
 
-```
+```java
 @Test
 public void whenElementIsOnStack_thenSearchReturnsItsDistanceFromTheTop() {
     Stack<Integer> intStack = new Stack<>();
@@ -120,7 +120,7 @@ public void whenElementIsOnStack_thenSearchReturnsItsDistanceFromTheTop() {
 
 为了获得 S `tack,` 上元素的索引，我们也可以使用 `indexOf()` 和`lastIndexOf()`方法:
 
-```
+```java
 @Test
 public void whenElementIsOnStack_thenIndexOfReturnsItsIndex() {
     Stack<Integer> intStack = new Stack<>();
@@ -134,7 +134,7 @@ public void whenElementIsOnStack_thenIndexOfReturnsItsIndex() {
 
 **`lastIndexOf()`将总是找到最靠近栈顶的元素的索引**。这与`search()`非常相似——重要的区别在于它返回的是索引，而不是与顶部的距离:
 
-```
+```java
 @Test
 public void whenMultipleElementsAreOnStack_thenIndexOfReturnsLastElementIndex() {
     Stack<Integer> intStack = new Stack<>();
@@ -156,7 +156,7 @@ public void whenMultipleElementsAreOnStack_thenIndexOfReturnsLastElementIndex() 
 
 我们可以使用`removeElement()`方法删除第一次出现的给定元素:
 
-```
+```java
 @Test
 public void whenRemoveElementIsInvoked_thenElementIsRemoved() {
     Stack<Integer> intStack = new Stack<>();
@@ -171,7 +171,7 @@ public void whenRemoveElementIsInvoked_thenElementIsRemoved() {
 
 我们也可以使用`removeElementAt()`来删除`Stack:`中指定索引下的元素
 
-```
+```java
  @Test
     public void whenRemoveElementAtIsInvoked_thenElementIsRemoved() {
         Stack<Integer> intStack = new Stack<>();
@@ -188,7 +188,7 @@ public void whenRemoveElementIsInvoked_thenElementIsRemoved() {
 
 让我们快速看一下如何使用`removeAll()` API 从`Stack` 中移除多个元素——它将把*集合*作为参数，并从`Stack`中移除所有匹配的元素:
 
-```
+```java
 @Test
 public void givenElementsOnStack_whenRemoveAllIsInvoked_thenAllElementsFromCollectionAreRemoved() {
     Stack<Integer> intStack = new Stack<>();
@@ -205,7 +205,7 @@ public void givenElementsOnStack_whenRemoveAllIsInvoked_thenAllElementsFromColle
 
 也可以使用`clear()` 或`removeAllElements()`方法从`Stack`中移除所有元素**；这两种方法的工作原理相同:**
 
-```
+```java
 @Test
 public void whenRemoveAllElementsIsInvoked_thenAllElementsAreRemoved() {
     Stack<Integer> intStack = new Stack<>();
@@ -222,7 +222,7 @@ public void whenRemoveAllElementsIsInvoked_thenAllElementsAreRemoved() {
 
 我们还可以使用一个条件来从`Stack.`中删除元素，让我们看看如何使用`removeIf` `()`来实现这一点，使用一个过滤表达式作为参数:
 
-```
+```java
 @Test
 public void whenRemoveIfIsInvoked_thenAllElementsSatysfyingConditionAreRemoved() {
     Stack<Integer> intStack = new Stack<>();
@@ -239,7 +239,7 @@ public void whenRemoveIfIsInvoked_thenAllElementsSatysfyingConditionAreRemoved()
 
 `Stack`允许我们使用一个`Iterator` 和一个`ListIterator.` ，主要区别是第一个允许我们在一个方向上移动`Stack`，第二个允许我们在两个方向上移动:
 
-```
+```java
 @Test
 public void whenAnotherStackCreatedWhileTraversingStack_thenStacksAreEqual() {
     Stack<Integer> intStack = new Stack<>();
@@ -263,7 +263,7 @@ public void whenAnotherStackCreatedWhileTraversingStack_thenStacksAreEqual() {
 
 `Stack`是一个集合，这意味着我们可以用 Java 8 `Streams` API 来使用它。**将`Stream`与 `Stack`一起使用类似于将它与任何其他`Collection:`** 一起使用
 
-```
+```java
 @Test
 public void whenStackIsFiltered_allElementsNotSatisfyingFilterConditionAreDiscarded() {
     Stack<Integer> intStack = new Stack<>();

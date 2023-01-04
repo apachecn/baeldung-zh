@@ -49,7 +49,7 @@ Spark 的基础计算框架是一个巨大的优势。在此之上，MLlib 提�
 
 首先，我们必须在 Maven 中定义下面的[依赖项来提取相关的库:](https://web.archive.org/web/20221205153215/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.spark%22%20AND%20a%3A%22spark-mllib_2.11%22)
 
-```
+```java
 <dependency>
     <groupId>org.apache.spark</groupId>
     <artifactId>spark-mllib_2.11</artifactId>
@@ -60,7 +60,7 @@ Spark 的基础计算框架是一个巨大的优势。在此之上，MLlib 提�
 
 我们需要初始化 SparkContext 来使用 Spark APIs:
 
-```
+```java
 SparkConf conf = new SparkConf()
   .setAppName("Main")
   .setMaster("local[2]");
@@ -71,14 +71,14 @@ JavaSparkContext sc = new JavaSparkContext(conf);
 
 首先，我们应该下载数据，这是一个 CSV 格式的文本文件。然后我们必须将这些数据加载到 Spark 中:
 
-```
+```java
 String dataFile = "data\\iris.data";
 JavaRDD<String> data = sc.textFile(dataFile);
 ```
 
 Spark MLlib 提供了几种本地和分布式数据类型，来表示输入数据和相应的标签。最简单的数据类型是`Vector`:
 
-```
+```java
 JavaRDD<Vector> inputData = data
   .map(line -> {
       String[] parts = line.split(",");
@@ -94,7 +94,7 @@ JavaRDD<Vector> inputData = data
 
 一个训练示例通常由多个输入特征和一个标签组成，由类`LabeledPoint`表示:
 
-```
+```java
 Map<String, Integer> map = new HashMap<>();
 map.put("Iris-setosa", 0);
 map.put("Iris-versicolor", 1);
@@ -123,7 +123,7 @@ JavaRDD<LabeledPoint> labeledData = data
 
 让我们从一些简单的统计分析开始:
 
-```
+```java
 MultivariateStatisticalSummary summary = Statistics.colStats(inputData.rdd());
 System.out.println("Summary Mean:");
 System.out.println(summary.mean());
@@ -137,7 +137,7 @@ System.out.println(summary.numNonzeros());
 
 以下是我们输入数据的输出:
 
-```
+```java
 Summary Mean:
 [5.843333333333332,3.0540000000000003,3.7586666666666666,1.1986666666666668]
 Summary Variance:
@@ -148,7 +148,7 @@ Summary Non-zero:
 
 另一个需要分析的重要指标是输入数据中要素之间的相关性:
 
-```
+```java
 Matrix correlMatrix = Statistics.corr(inputData.rdd(), "pearson");
 System.out.println("Correlation Matrix:");
 System.out.println(correlMatrix.toString());
@@ -156,7 +156,7 @@ System.out.println(correlMatrix.toString());
 
 任何两个特征之间的高相关性表明它们没有增加任何增量值,其中一个可以被丢弃。下面是我们的特征是如何相互关联的:
 
-```
+```java
 Correlation Matrix:
 1.0                   -0.10936924995064387  0.8717541573048727   0.8179536333691672   
 -0.10936924995064387  1.0                   -0.4205160964011671  -0.3565440896138163  
@@ -170,7 +170,7 @@ Correlation Matrix:
 
 为了做到这一点，**我们必须将我们的训练数据分成训练集、验证集和测试集**。为了简单起见，我们将跳过验证部分。因此，让我们将数据分成训练集和测试集:
 
-```
+```java
 JavaRDD<LabeledPoint>[] splits = parsedData.randomSplit(new double[] { 0.8, 0.2 }, 11L);
 JavaRDD<LabeledPoint> trainingData = splits[0];
 JavaRDD<LabeledPoint> testData = splits[1];
@@ -184,7 +184,7 @@ JavaRDD<LabeledPoint> testData = splits[1];
 
 其中最简单的是逻辑回归(让回归这个词不要迷惑我们；它毕竟是一种分类算法):
 
-```
+```java
 LogisticRegressionModel model = new LogisticRegressionWithLBFGS()
   .setNumClasses(3)
   .run(trainingData.rdd());
@@ -196,7 +196,7 @@ LogisticRegressionModel model = new LogisticRegressionWithLBFGS()
 
 请记住，模型训练涉及到多次迭代，但是为了简单起见，我们在这里只使用了一次。现在我们已经训练了我们的模型，是时候在测试数据集上测试它了:
 
-```
+```java
 JavaPairRDD<Object, Object> predictionAndLabels = testData
   .mapToPair(p -> new Tuple2<>(model.predict(p.features()), p.label()));
 MulticlassMetrics metrics = new MulticlassMetrics(predictionAndLabels.rdd());
@@ -206,7 +206,7 @@ System.out.println("Model Accuracy on Test Data: " + accuracy);
 
 现在，我们如何衡量一个模型的有效性？我们可以使用几个度量标准，但最简单的一个是准确性。简单来说，准确率就是预测正确数和预测总数的比值。下面是我们的模型在一次运行中可以实现的结果:
 
-```
+```java
 Model Accuracy on Test Data: 0.9310344827586207
 ```
 
@@ -218,7 +218,7 @@ Model Accuracy on Test Data: 0.9310344827586207
 
 最后，我们经常需要将训练好的模型保存到文件系统中，并加载它来预测生产数据。这在 Spark 中是微不足道的:
 
-```
+```java
 model.save(sc, "model\\logistic-regression");
 LogisticRegressionModel sameModel = LogisticRegressionModel
   .load(sc, "model\\logistic-regression");
@@ -229,7 +229,7 @@ System.out.println("Model Prediction on New Data = " + prediction);
 
 因此，我们将模型保存到文件系统中，并将其加载回来。加载后，模型可以直接用于预测新数据的输出。以下是对随机新数据的预测示例:
 
-```
+```java
 Model Prediction on New Data = 2.0
 ```
 

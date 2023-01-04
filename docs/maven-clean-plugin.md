@@ -30,7 +30,7 @@
 
 我们可以使用`filesets`参数添加要清理的目录:
 
-```
+```java
 <plugin>
     <artifactId>maven-clean-plugin</artifactId>
     <version>3.0.0</version>

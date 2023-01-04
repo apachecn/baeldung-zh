@@ -12,7 +12,7 @@
 
 首先，让我们看看 Java 解决方案:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenConvertingByteArrayToInputStream_thenCorrect() 
   throws IOException {
@@ -25,7 +25,7 @@ public void givenUsingPlainJava_whenConvertingByteArrayToInputStream_thenCorrect
 
 接下来——让我们将字节数组包装到番石榴树`ByteSource`中——然后让我们**得到流**:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenConvertingByteArrayToInputStream_thenCorrect() 
   throws IOException {

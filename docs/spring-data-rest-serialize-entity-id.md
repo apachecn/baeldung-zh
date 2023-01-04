@@ -14,7 +14,7 @@
 
 所以，这里有一个示例实体，`Person`:
 
-```
+```java
 @Entity
 public class Person {
 
@@ -31,7 +31,7 @@ public class Person {
 
 此外，我们还有一个存储库，`PersonRepository`:
 
-```
+```java
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
 }
@@ -39,7 +39,7 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
 如果我们使用 Spring Boot，只需添加 [`spring-boot-starter-data-rest`](https://web.archive.org/web/20220831094937/https://search.maven.org/search?q=a:spring-boot-starter-data-rest) 依赖项就可以启用 Spring 数据休息模块:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-rest</artifactId>
@@ -50,7 +50,7 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
 下一步，让我们请求资源`http://localhost:8080/persons`，并检查框架生成的默认 JSON 响应:
 
-```
+```java
 {
     "_embedded" : {
         "persons" : [ {
@@ -85,7 +85,7 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
 **公开实体 id 最常见的解决方案是配置`RepositoryRestConfigurer`** :
 
-```
+```java
 @Configuration
 public class RestConfiguration implements RepositoryRestConfigurer {
 
@@ -99,7 +99,7 @@ public class RestConfiguration implements RepositoryRestConfigurer {
 
 **在 Spring Data Rest 版本 3.1 或 Spring Boot 版本 2.1 之前，我们会使用`RepositoryRestConfigurerAdapter`** :
 
-```
+```java
 @Configuration
 public class RestConfiguration extends RepositoryRestConfigurerAdapter {
     @Override
@@ -113,7 +113,7 @@ public class RestConfiguration extends RepositoryRestConfigurerAdapter {
 
 在我们对实体`Person,` 进行配置之后，响应也为我们提供了`id`字段:
 
-```
+```java
 {
     "_embedded" : {
         "persons" : [ {
@@ -137,7 +137,7 @@ public class RestConfiguration extends RepositoryRestConfigurerAdapter {
 
 因此，让我们通过一种通用方法来改进我们的`RestConfiguration`:
 
-```
+```java
 @Configuration
 public class RestConfiguration implements RepositoryRestConfigurer {
 
@@ -162,7 +162,7 @@ public class RestConfiguration implements RepositoryRestConfigurer {
 
 另一个解决方案是使用`@Projection`注释。通过定义一个`PersonView`接口，我们也可以公开`id`字段:
 
-```
+```java
 @Projection(name = "person-view", types = Person.class)
 public interface PersonView {
 
@@ -175,7 +175,7 @@ public interface PersonView {
 
 然而，我们现在应该使用不同的请求来测试，`http://localhost:8080/persons?projection=person-view`:
 
-```
+```java
 {
     "_embedded" : {
         "persons" : [ {
@@ -197,7 +197,7 @@ public interface PersonView {
 
 **为了启用由存储库生成的所有端点的投影，我们可以在`PersonRepository`上使用`@RepositoryRestResource`注释**:
 
-```
+```java
 @RepositoryRestResource(excerptProjection = PersonView.class)
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
@@ -210,7 +210,7 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
 此外，我们应该记住，我们的投影中定义的字段并不总是按顺序排列的:
 
-```
+```java
 {
     ...            
     "persons" : [ {
@@ -224,7 +224,7 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
 为了让**保持字段顺序，我们可以将`@JsonPropertyOrder`注释放在我们的`PersonView`类**上:
 
-```
+```java
 @JsonPropertyOrder({"id", "name"})
 @Projection(name = "person-view", types = Person.class)
 public interface PersonView { 
@@ -240,7 +240,7 @@ public interface PersonView {
 
 首先，我们定义一个 DTO 对象来表示我们的`Person`实体:
 
-```
+```java
 public class PersonDto {
 
     private Long id;
@@ -262,7 +262,7 @@ public class PersonDto {
 
 因此，让我们定义我们的`PersonController`来覆盖内置端点:
 
-```
+```java
 @RepositoryRestController
 public class PersonController {
 
@@ -288,7 +288,7 @@ public class PersonController {
 
 最后，让我们试试我们的端点，`http://localhost:8080/persons`:
 
-```
+```java
 {
     "_embedded" : {
         "personDtoes" : [ {

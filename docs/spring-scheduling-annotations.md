@@ -20,7 +20,7 @@
 
 我们必须和`@Configuration`一起使用:
 
-```
+```java
 @Configuration
 @EnableAsync
 class VehicleFactoryConfig {}
@@ -34,7 +34,7 @@ class VehicleFactoryConfig {}
 
 我们还必须将它与`@Configuration`结合使用:
 
-```
+```java
 @Configuration
 @EnableScheduling
 class VehicleFactoryConfig {}
@@ -48,7 +48,7 @@ class VehicleFactoryConfig {}
 
 为了实现这一点，我们可以用`@Async`来注释该方法:
 
-```
+```java
 @Async
 void repairCar() {
     // ...
@@ -65,7 +65,7 @@ void repairCar() {
 
 如果我们需要一个方法来使**周期性地执行**，我们可以使用这个注释:
 
-```
+```java
 @Scheduled(fixedRate = 10000)
 void checkVehicle() {
     // ...
@@ -76,7 +76,7 @@ void checkVehicle() {
 
 `@Scheduled`利用 Java 8 的重复注释特性，这意味着我们可以用它多次标记一个方法:
 
-```
+```java
 @Scheduled(fixedRate = 10000)
 @Scheduled(cron = "0 * * * * MON-FRI")
 void checkVehicle() {
@@ -94,7 +94,7 @@ void checkVehicle() {
 
 我们可以使用这个注释来指定多个`@Scheduled`规则:
 
-```
+```java
 @Schedules({ 
   @Scheduled(fixedRate = 10000), 
   @Scheduled(cron = "0 * * * * MON-FRI")

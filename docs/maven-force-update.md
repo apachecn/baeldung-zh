@@ -24,14 +24,14 @@ Maven 将项目的所有依赖项保存在`.m2`文件夹中。例如，在下图
 
 当我们执行以下命令时，下载发生:
 
-```
+```java
 mvn package
 mvn install
 ```
 
 以上两者都包括执行以下命令:
 
-```
+```java
 mvn dependency:resolve 
 ```
 
@@ -57,7 +57,7 @@ Maven 通常在通知构建失败时显示损坏的依赖项:
 
 正如我们已经知道的，Maven 不会再次下载现有的依赖项。因此，为了强制 Maven 更新所有损坏的快照依赖项，我们应该在命令中添加`-U/–update-snapshots` 选项:
 
-```
+```java
 mvn package -U
 mvn install -U
 ```
@@ -70,7 +70,7 @@ mvn install -U
 
 我们可以告诉 Maven 解决我们的依赖性并更新快照，而不需要任何打包或安装命令。为此，我们将使用`dependency:resolve`目标，包括`-U `选项:
 
-```
+```java
 mvn dependency:resolve -U
 ```
 
@@ -78,7 +78,7 @@ mvn dependency:resolve -U
 
 我们知道`-U `只是重新下载损坏的快照依赖关系。因此，在本地发布依赖关系被破坏的情况下，我们可能需要更深入的命令。为此，我们应该使用:
 
-```
+```java
 mvn dependency:purge-local-repository
 ```
 
@@ -88,7 +88,7 @@ mvn dependency:purge-local-repository
 
 通过为`resolutionFuzziness`选项指定“`groupId”` ，并使用`include`选项指定要搜索的确切组 ID，可以将清除本地存储库配置为仅针对特定的依赖项组运行:
 
-```
+```java
 mvn dependency:purge-local-repository -Dinclude:org.slf4j -DresolutionFuzziness=groupId -Dverbose
 ```
 
@@ -98,7 +98,7 @@ mvn dependency:purge-local-repository -Dinclude:org.slf4j -DresolutionFuzziness=
 
 如果找到任何符合条件的文件，日志将显示如下文本:
 
-```
+```java
 Deleting 2 transitive dependencies for project [...] with artifact groupId resolution fuzziness
 [INFO] Purging artifact: org.slf4j:jul-to-slf4j:jar:1.7.31
 Purging artifact: org.slf4j:slf4j-api:jar:1.7.31 
@@ -106,7 +106,7 @@ Purging artifact: org.slf4j:slf4j-api:jar:1.7.31
 
 注意，**要指定删除或刷新包含或排除的工件，我们可以使用选项`include/exclude:`**
 
-```
+```java
 mvn dependency:purge-local-repository -Dinclude=com.yyy.projectA:projectB -Dexclude=com.yyy.projectA:projectC
 ```
 

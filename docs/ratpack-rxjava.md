@@ -14,7 +14,7 @@ RxJava 是目前最流行的反应式编程库之一。
 
 现在，我们首先需要`[ratpack-core](https://web.archive.org/web/20221129014402/https://search.maven.org/search?q=g:io.ratpack%20AND%20a:ratpack-core) `和`[ratpack-rx](https://web.archive.org/web/20221129014402/https://search.maven.org/search?q=g:io.ratpack%20AND%20a:ratpack-rx) `依赖关系:
 
-```
+```java
 <dependency>
     <groupId>io.ratpack</groupId>
     <artifactId>ratpack-core</artifactId>
@@ -35,7 +35,7 @@ RxJava 使用其插件系统支持第三方库的集成。**所以，我们可�
 
 Ratpack 通过`RxRatpack`插入这个执行模型，我们在启动时初始化它:
 
-```
+```java
 RxRatpack.initialise(); 
 ```
 
@@ -53,7 +53,7 @@ RxRatpack 通过提供两种不同的方法来处理这个问题:`promiseSingle(
 
 因此，假设我们有一个名为`MovieService` 的服务，它在`getMovie(). `上发出一个承诺，我们将使用`promiseSingle()`，因为我们知道它只会发出一次:
 
-```
+```java
 Handler movieHandler = (ctx) -> {
     MovieService movieSvc = ctx.get(MovieService.class);
     Observable<Movie> movieObs = movieSvc.getMovie();
@@ -64,7 +64,7 @@ Handler movieHandler = (ctx) -> {
 
 另一方面，如果`getMovies()`可以返回电影结果流，我们将使用`promise()`:
 
-```
+```java
 Handler moviesHandler = (ctx) -> {
     MovieService movieSvc = ctx.get(MovieService.class);
     Observable<Movie> movieObs = movieSvc.getMovies();
@@ -75,7 +75,7 @@ Handler moviesHandler = (ctx) -> {
 
 然后，我们可以像平常一样将这些处理程序添加到 Ratpack 服务器中:
 
-```
+```java
 RatpackServer.start(def -> def.registryOf(rSpec -> rSpec.add(MovieService.class, new MovieServiceImpl()))
   .handlers(chain -> chain
     .get("movie", movieHandler)
@@ -92,7 +92,7 @@ RatpackServer.start(def -> def.registryOf(rSpec -> rSpec.add(MovieService.class,
 
 没有
 
-```
+```java
 Handler moviePromiseHandler = ctx -> {
     MoviePromiseService promiseSvc = ctx.get(MoviePromiseService.class);
     Promise<Movie> moviePromise = promiseSvc.getMovie();
@@ -103,7 +103,7 @@ Handler moviePromiseHandler = ctx -> {
 
 当我们得到一个列表时，比如用`getMovies()`，我们会用`observeEach()`:
 
-```
+```java
 Handler moviesPromiseHandler = ctx -> {
     MoviePromiseService promiseSvc = ctx.get(MoviePromiseService.class);
     Promise<List<Movie>> moviePromises = promiseSvc.getMovies();
@@ -115,7 +115,7 @@ Handler moviesPromiseHandler = ctx -> {
 
 然后，我们可以像预期的那样添加处理程序:
 
-```
+```java
 RatpackServer.start(def -> def.registryOf(regSpec -> regSpec
   .add(MoviePromiseService.class, new MoviePromiseServiceImpl()))
     .handlers(chain -> chain
@@ -137,7 +137,7 @@ RatpackServer.start(def -> def.registryOf(regSpec -> regSpec
 
 简单地说，我们可以使用`forkEach()`将每个线程的执行卸载到一个线程池中:
 
-```
+```java
 Observable<Movie> movieObs = movieSvc.getMovies();
 Observable<String> upperCasedNames = movieObs.compose(RxRatpack::forkEach)
   .map(movie -> movie.getName().toUpperCase())
@@ -156,7 +156,7 @@ Observable<String> upperCasedNames = movieObs.compose(RxRatpack::forkEach)
 
 注意，我们通过`Observable`抛出的异常被我们的`ServerErrorHandler`捕获并处理:
 
-```
+```java
 RatpackServer.start(def -> def.registryOf(regSpec -> regSpec
   .add(ServerErrorHandler.class, (ctx, throwable) -> {
         ctx.render("Error caught by handler : " + throwable.getMessage());

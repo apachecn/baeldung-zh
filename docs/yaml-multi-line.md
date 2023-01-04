@@ -12,7 +12,7 @@
 
 在我们开始之前，让我们创建一个方法，简单地将一个 YAML 键从一个文件读入一个`String`:
 
-```
+```java
 String parseYamlKey(String fileName, String key) {
     InputStream inputStream = this.getClass()
       .getClassLoader()
@@ -32,7 +32,7 @@ String parseYamlKey(String fileName, String key) {
 
 让我们来看看 YAML 的档案`literal.yaml`:
 
-```
+```java
 key: |
   Line1
   Line2
@@ -41,14 +41,14 @@ key: |
 
 我们可以看到我们的换行符保留了下来:
 
-```
+```java
 String key = parseYamlKey("literal.yaml", "key");
 assertEquals("Line1\nLine2\nLine3", key);
 ```
 
 接下来我们来看看`literal2.yaml`，里面有**一些开头和结尾的换行符:**
 
-```
+```java
 key: |
 
   Line1
@@ -62,7 +62,7 @@ key: |
 
 我们可以看到，除了结尾换行符，每个换行符都存在，结尾换行符减少为一个:
 
-```
+```java
 String key = parseYamlKey("literal2.yaml", "key");
 assertEquals("\n\nLine1\n\nLine2\n\nLine3\n", key);
 ```
@@ -75,7 +75,7 @@ assertEquals("\n\nLine1\n\nLine2\n\nLine3\n", key);
 
 Keep 由“+”表示，正如我们在`literal_keep.yaml`中看到的:
 
-```
+```java
 key: |+
   Line1
   Line2
@@ -86,7 +86,7 @@ key: |+
 
 通过覆盖默认行为，我们可以看到**每个结束空行都被保留**:
 
-```
+```java
 String key = parseYamlKey("literal_keep.yaml", "key");
 assertEquals("Line1\nLine2\nLine3\n\n", key);
 ```
@@ -95,7 +95,7 @@ assertEquals("Line1\nLine2\nLine3\n\n", key);
 
 正如我们在`literal_strip.yaml`中看到的，该条用“-”表示:
 
-```
+```java
 key: |-
   Line1
   Line2
@@ -106,7 +106,7 @@ key: |-
 
 正如我们可能已经预料到的，这会导致**删除每个结束空行**:
 
-```
+```java
 String key = parseYamlKey("literal_strip.yaml", "key");
 assertEquals("Line1\nLine2\nLine3", key);
 ```
@@ -115,7 +115,7 @@ assertEquals("Line1\nLine2\nLine3", key);
 
 折叠运算符由“>”表示，正如我们在`folded.yaml`中看到的:
 
-```
+```java
 key: >
   Line1
   Line2
@@ -124,14 +124,14 @@ key: >
 
 **默认情况下，对于连续的非空行，换行符由空格字符替换:**
 
-```
+```java
 String key = parseYamlKey("folded.yaml", "key");
 assertEquals("Line1 Line2 Line3", key);
 ```
 
 让我们看一个类似的文件`folded2.yaml`，它有几个结束空行:
 
-```
+```java
 key: >
   Line1
   Line2
@@ -143,7 +143,7 @@ key: >
 
 我们可以看到**空行被保留，但是结束换行符也被减少到一个**:
 
-```
+```java
 String key = parseYamlKey("folded2.yaml", "key");
 assertEquals("Line1 Line2\n\nLine3\n", key);
 ```
@@ -158,11 +158,11 @@ assertEquals("Line1 Line2\n\nLine3\n", key);
 
 有了双引号，我们可以通过使用“`\n`”轻松地创建多行字符串:
 
-```
+```java
 key: "Line1\nLine2\nLine3"
 ```
 
-```
+```java
 String key = parseYamlKey("plain_double_quotes.yaml", "key");
 assertEquals("Line1\nLine2\nLine3", key);
 ```
@@ -171,13 +171,13 @@ assertEquals("Line1\nLine2\nLine3", key);
 
 另一方面，单引号将"`\n`"视为字符串的一部分，因此插入换行符的唯一方法是使用空行:
 
-```
+```java
 key: 'Line1\nLine2
 
   Line3'
 ```
 
-```
+```java
 String key = parseYamlKey("plain_single_quotes.yaml", "key");
 assertEquals("Line1\\nLine2\nLine3", key);
 ```

@@ -10,13 +10,13 @@
 
 [责任链](/web/20220627080214/https://www.baeldung.com/chain-of-responsibility-pattern)模式允许对象实现一个公共接口，并允许每个实现在适当的时候委托给下一个实现。**这允许我们构建一个实现链，其中每个实现在调用链中下一个元素之前或之后执行一些动作**:
 
-```
+```java
 interface ChainOfResponsibility {
     void perform();
 }
 ```
 
-```
+```java
 class LoggingChain {
     private ChainOfResponsibility delegate;
 
@@ -36,7 +36,7 @@ class LoggingChain {
 
 [Servlet 过滤器](https://web.archive.org/web/20220627080214/https://www.oracle.com/java/technologies/filters.html)是 JEE 生态系统中以这种方式工作的一个例子。一个实例接收 servlet 请求和响应，一个`FilterChain`实例代表整个过滤器链。**然后每个都应该执行它的工作，然后要么终止链，要么调用`chain.doFilter()`将控制传递给下一个过滤器**:
 
-```
+```java
 public class AuthenticatingFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
       throws IOException, ServletException {
@@ -55,13 +55,13 @@ public class AuthenticatingFilter implements Filter {
 
 通常我们会有一个命令接口、一个接收命令实例的接收者实例和一个负责调用正确命令实例的调用者。**然后，我们可以定义命令接口的不同实例，以在接收器上执行不同的操作**:
 
-```
+```java
 interface DoorCommand {
     perform(Door door);
 }
 ```
 
-```
+```java
 class OpenDoorCommand implements DoorCommand {
     public void perform(Door door) {
         door.setState("open");
@@ -77,7 +77,7 @@ class OpenDoorCommand implements DoorCommand {
 
 这种模式的一个非常常见的例子是 Swing 中的`Action`类:
 
-```
+```java
 Action saveAction = new SaveAction();
 button = new JButton(saveAction)
 ```
@@ -88,7 +88,7 @@ button = new JButton(saveAction)
 
 迭代器模式允许我们处理集合中的元素，并依次与每个元素交互。我们用它来编写函数，在一些元素上采用任意迭代器，而不考虑它们来自哪里。源可以是有序列表、无序集合或无限流:
 
-```
+```java
 void printAll<T>(Iterator<T> iter) {
     while (iter.hasNext()) {
         System.out.println(iter.next());
@@ -106,7 +106,7 @@ void printAll<T>(Iterator<T> iter) {
 
 这可以通过在任何时候调用 setter 时存储以前的状态来相对容易地实现:
 
-```
+```java
 class Undoable {
     private String value;
     private String previous;
@@ -137,7 +137,7 @@ class Undoable {
 
 [观察者](/web/20220627080214/https://www.baeldung.com/java-observer-pattern)模式允许一个对象向其他人表明已经发生了变化。通常我们会有一个主体——发出事件的对象，以及一系列观察者——接收这些事件的对象。观察者将向受试者登记他们希望被告知的变化。一旦发生这种情况，**受试者身上发生的任何变化都会通知观察者**:
 
-```
+```java
 class Observable {
     private String state;
     private Set<Consumer<String>> listeners = new HashSet<>;
@@ -163,7 +163,7 @@ class Observable {
 
 充当一个类，可以添加和删除观察者，并且可以通知他们所有的状态变化。`PropertyChangeListener`是一个接口，我们的代码可以实现它来接收已经发生的任何变化:
 
-```
+```java
 PropertyChangeSupport observable = new PropertyChangeSupport();
 
 // Add some observers to be notified when the value changes
@@ -181,19 +181,19 @@ observable.firePropertyChange("field", "old value", "new value");
 
 这通常通过一个表示策略的接口来实现。然后，客户端代码能够根据具体情况的需要编写实现该接口的具体类。例如，我们可能有一个系统，在这个系统中，我们需要通知最终用户，并将通知机制实现为可插入的策略:
 
-```
+```java
 interface NotificationStrategy {
     void notify(User user, Message message);
 }
 ```
 
-```
+```java
 class EmailNotificationStrategy implements NotificationStrategy {
     ....
 }
 ```
 
-```
+```java
 class SMSNotificationStrategy implements NotificationStrategy {
     ....
 }
@@ -207,7 +207,7 @@ class SMSNotificationStrategy implements NotificationStrategy {
 
 不过，例子可以追溯到更早。Java 1.2 中引入的`Comparator`接口是一种策略，可以根据需要对集合中的元素进行排序。我们可以提供不同的`Comparator`实例，根据需要以不同的方式对相同的列表进行排序:
 
-```
+```java
 // Sort by name
 Collections.sort(users, new UsersNameComparator());
 
@@ -219,7 +219,7 @@ Collections.sort(users, new UsersIdComparator());
 
 当我们想要编排几个不同的方法一起工作时，使用[模板方法](/web/20220627080214/https://www.baeldung.com/java-template-method-pattern)模式。**我们将使用模板方法和一组一个或多个抽象方法**定义一个基类——要么未实现，要么通过一些默认行为实现。**模板方法然后以固定的模式调用这些抽象方法。**我们的代码实现了这个类的一个子类，并根据需要实现了这些抽象方法:
 
-```
+```java
 class Component {
     public void render() {
         doRender();
@@ -247,7 +247,7 @@ class Component {
 
 **[访问者](/web/20220627080214/https://www.baeldung.com/java-visitor-pattern)模式允许我们的代码以一种类型安全的方式处理各种子类，而不需要求助于`instanceof`检查。**我们将有一个 visitor 接口，为我们需要支持的每个具体子类提供一个方法。我们的基类将会有一个`accept(Visitor)`方法。每个子类都将调用这个 visitor 上的适当方法，并将自己传入。这允许我们在每个方法中实现具体的行为，每个方法都知道它将与具体的类型一起工作:
 
-```
+```java
 interface UserVisitor<T> {
     T visitStandardUser(StandardUser user);
     T visitAdminUser(AdminUser user);
@@ -255,7 +255,7 @@ interface UserVisitor<T> {
 }
 ```
 
-```
+```java
 class StandardUser {
     public <T> T accept(UserVisitor<T> visitor) {
         return visitor.visitStandardUser(this);
@@ -265,7 +265,7 @@ class StandardUser {
 
 这里我们有我们的`UserVisitor`接口，上面有三个不同的访问者方法。我们的例子`StandardUser`调用适当的方法，同样的事情将在`AdminUser`和`Superuser`中完成。然后，我们可以根据需要让我们的访问者使用这些功能:
 
-```
+```java
 class AuthenticatingVisitor {
     public Boolean visitStandardUser(StandardUser user) {
         return false;
@@ -285,7 +285,7 @@ class AuthenticatingVisitor {
 
 Java NIO2 框架用 [`Files.walkFileTree()`](/web/20220627080214/https://www.baeldung.com/java-nio2-file-visitor) 使用这种模式。这需要一个`FileVisitor`的实现，它有处理遍历文件树的各种不同方面的方法。**我们的代码可以用它来搜索文件，打印出匹配的文件，处理目录中的许多文件，或者许多其他需要在目录中工作的事情**:
 
-```
+```java
 Files.walkFileTree(startingDir, new SimpleFileVisitor() {
     public FileVisitResult visitFile(Path file, BasicFileAttributes attr) {
         System.out.println("Found file: " + file);

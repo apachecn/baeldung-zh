@@ -83,7 +83,7 @@ QR 码正在成为全球最广泛认可的 2D 条形码。二维码的最大好�
 
 首先，我们需要添加[烧烤](https://web.archive.org/web/20220926181229/https://search.maven.org/search?q=g:net.sourceforge.barbecue%20AND%20a:barbecue) Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>net.sourceforge.barbecue</groupId>
     <artifactId>barbecue</artifactId>
@@ -93,7 +93,7 @@ QR 码正在成为全球最广泛认可的 2D 条形码。二维码的最大好�
 
 让我们为 EAN13 条形码创建一个生成器:
 
-```
+```java
 public static BufferedImage generateEAN13BarcodeImage(String barcodeText) throws Exception {
     Barcode barcode = BarcodeFactory.createEAN13(barcodeText);
     barcode.setFont(BARCODE_TEXT_FONT);
@@ -110,7 +110,7 @@ public static BufferedImage generateEAN13BarcodeImage(String barcodeText) throws
 
 让我们从添加 [Barcode4j](https://web.archive.org/web/20220926181229/https://search.maven.org/search?q=g:net.sf.barcode4j%20AND%20a:barcode4j) Maven 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>net.sf.barcode4j</groupId>
     <artifactId>barcode4j</artifactId>
@@ -120,7 +120,7 @@ public static BufferedImage generateEAN13BarcodeImage(String barcodeText) throws
 
 同样，让我们为 EAN13 条形码构建一个生成器:
 
-```
+```java
 public static BufferedImage generateEAN13BarcodeImage(String barcodeText) {
     EAN13Bean barcodeGenerator = new EAN13Bean();
     BitmapCanvasProvider canvas = 
@@ -137,7 +137,7 @@ public static BufferedImage generateEAN13BarcodeImage(String barcodeText) {
 
 这里，我们需要添加两个 Maven 依赖项:[核心映像库](https://web.archive.org/web/20220926181229/https://search.maven.org/search?q=g:com.google.zxing%20AND%20a:core)和 [Java 客户端](https://web.archive.org/web/20220926181229/https://search.maven.org/search?q=g:com.google.zxing%20AND%20a:javase):
 
-```
+```java
 <dependency>
     <groupId>com.google.zxing</groupId>
     <artifactId>core</artifactId>
@@ -152,7 +152,7 @@ public static BufferedImage generateEAN13BarcodeImage(String barcodeText) {
 
 让我们创建一个 EAN13 生成器:
 
-```
+```java
 public static BufferedImage generateEAN13BarcodeImage(String barcodeText) throws Exception {
     EAN13Writer barcodeWriter = new EAN13Writer();
     BitMatrix bitMatrix = barcodeWriter.encode(barcodeText, BarcodeFormat.EAN_13, 300, 150);
@@ -171,7 +171,7 @@ public static BufferedImage generateEAN13BarcodeImage(String barcodeText) throws
 
 我们将使用这个库来生成一个二维码。API 类似于线性条形码的 API:
 
-```
+```java
 public static BufferedImage generateQRCodeImage(String barcodeText) throws Exception {
     QRCodeWriter barcodeWriter = new QRCodeWriter();
     BitMatrix bitMatrix = 
@@ -187,7 +187,7 @@ public static BufferedImage generateQRCodeImage(String barcodeText) throws Excep
 
 首先，我们需要将 jitpack 存储库和 QRGen 依赖项添加到 pom.xml 中:
 
-```
+```java
 <repositories>
     <repository>
         <id>jitpack.io</id>
@@ -206,7 +206,7 @@ public static BufferedImage generateQRCodeImage(String barcodeText) throws Excep
 
 让我们创建一个生成 QR 码的方法:
 
-```
+```java
 public static BufferedImage generateQRCodeImage(String barcodeText) throws Exception {
     ByteArrayOutputStream stream = QRCode
       .from(barcodeText)
@@ -226,7 +226,7 @@ public static BufferedImage generateQRCodeImage(String barcodeText) throws Excep
 
 我们从一个`RestController`开始:
 
-```
+```java
 @RestController
 @RequestMapping("/barcodes")
 public class BarcodesController {
@@ -242,7 +242,7 @@ public class BarcodesController {
 
 此外，我们需要手动**为 BufferedImage HTTP 响应**注册一个[消息转换器](/web/20220926181229/https://www.baeldung.com/spring-httpmessageconverter-rest)，因为没有缺省值:
 
-```
+```java
 @Bean
 public HttpMessageConverter<BufferedImage> createImageHttpMessageConverter() {
     return new BufferedImageHttpMessageConverter();
@@ -255,7 +255,7 @@ public HttpMessageConverter<BufferedImage> createImageHttpMessageConverter() {
 
 让我们使用烧烤库调用 UPC-A web 服务:
 
-```
+```java
 [GET] http://localhost:8080/barcodes/barbecue/upca/12345678901
 ```
 
@@ -267,7 +267,7 @@ public HttpMessageConverter<BufferedImage> createImageHttpMessageConverter() {
 
 类似地，我们将调用 EAN13 web 服务:
 
-```
+```java
 [GET] http://localhost:8080/barcodes/barbecue/ean13/012345678901
 ```
 
@@ -279,13 +279,13 @@ public HttpMessageConverter<BufferedImage> createImageHttpMessageConverter() {
 
 在这种情况下，我们将使用 POST 方法。让我们使用烧烤库调用 Code128 web 服务:
 
-```
+```java
 [POST] http://localhost:8080/barcodes/barbecue/code128
 ```
 
 我们将提供包含数据的请求体:
 
-```
+```java
 Lorem ipsum dolor sit amet, consectetur adipiscing elit,
  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 ```
@@ -298,13 +298,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit,
 
 这里，我们将调用 PDF417 web 服务，它类似于 Code128:
 
-```
+```java
 [POST] http://localhost:8080/barcodes/barbecue/pdf417
 ```
 
 我们将提供包含数据的请求体:
 
-```
+```java
 Lorem ipsum dolor sit amet, consectetur adipiscing elit,
  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 ```
@@ -317,13 +317,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit,
 
 让我们使用 ZXing 库调用二维码 web 服务:
 
-```
+```java
 [POST] http://localhost:8080/barcodes/zxing/qrcode
 ```
 
 我们将提供包含数据的请求体:
 
-```
+```java
 Lorem ipsum dolor sit amet, consectetur adipiscing elit,
  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

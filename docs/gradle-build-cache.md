@@ -32,7 +32,7 @@ Gradle 构建缓存是保存构建任务输出的半永久性存储。它支持�
 
 让我们在`settings.gradle`文件中添加本地构建缓存配置:
 
-```
+```java
 buildCache {
     local {
         directory = new File(rootDir, 'build-cache')
@@ -47,7 +47,7 @@ buildCache {
 
 **我们也可以通过从`$USER_HOME/.gradle/caches` 文件夹中删除条目来手动清理。**在 Linux 系统上，我们可以使用`rm `命令来清理目录:
 
-```
+```java
 rm -r $HOME/.gradle/caches
 ```
 
@@ -59,7 +59,7 @@ rm -r $HOME/.gradle/caches
 
 对于远程缓存，我们需要以 URL 的形式提供位置以及访问它的`username`和`password`:
 
-```
+```java
 buildCache {
     remote(HttpBuildCache) {
         url = 'https://example.com:8123/cache/'

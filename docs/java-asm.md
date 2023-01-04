@@ -10,7 +10,7 @@
 
 我们需要将 ASM 依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.ow2.asm</groupId>
     <artifactId>asm</artifactId>
@@ -43,7 +43,7 @@ ASM API 为转换和生成提供了两种与 Java 类交互的风格:基于事�
 
 基于事件的 API 中的 *ClassVisitor* 方法按以下顺序调用:
 
-```
+```java
 visit
 visitSource?
 visitOuterClass?
@@ -64,7 +64,7 @@ visitEnd
 
 我们只需要覆盖必要的 visitor 方法来实现我们的更改。让我们从设置必备组件开始:
 
-```
+```java
 public class CustomClassWriter {
 
     static String className = "java.lang.Integer"; 
@@ -85,7 +85,7 @@ public class CustomClassWriter {
 
 让我们创建我们的`ClassVisitor`，我们将使用它向`Integer` 类添加一个字段:
 
-```
+```java
 public class AddFieldAdapter extends ClassVisitor {
     private String fieldName;
     private String fieldDefault;
@@ -108,7 +108,7 @@ public class AddFieldAdapter extends ClassVisitor {
 
 该方法还允许我们**修改现有字段**的可见性或类型:
 
-```
+```java
 @Override
 public FieldVisitor visitField(
   int access, String name, String desc, String signature, Object value) {
@@ -125,7 +125,7 @@ public FieldVisitor visitField(
 
 然后，我们需要在这个对象上调用`visitEnd`方法来**表示我们已经完成了对这个字段的访问:**
 
-```
+```java
 @Override
 public void visitEnd() {
     if (!isFieldPresent) {
@@ -143,7 +143,7 @@ public void visitEnd() {
 
 我们现在在`addField` 方法中使用我们的适配器，**用我们添加的字段获得了`java.lang.Integer`** 的转换版本:
 
-```
+```java
 public class CustomClassWriter {
     AddFieldAdapter addFieldAdapter;
     //...
@@ -170,7 +170,7 @@ public class CustomClassWriter {
 
 让我们公开 toUnsignedString 方法:
 
-```
+```java
 public class PublicizeMethodAdapter extends ClassVisitor {
     public PublicizeMethodAdapter(int api, ClassVisitor cv) {
         super(ASM4, cv);
@@ -200,7 +200,7 @@ public class PublicizeMethodAdapter extends ClassVisitor {
 
 在这种情况下，我们使用`org.objectweb.asm.Opcodes` 包中的访问修饰符来**改变方法**的可见性。然后我们插入我们的`ClassVisitor`:
 
-```
+```java
 public byte[] publicizeMethod() {
     pubMethAdapter = new PublicizeMethodAdapter(writer);
     reader.accept(pubMethAdapter, 0);
@@ -212,7 +212,7 @@ public byte[] publicizeMethod() {
 
 沿着与修改方法相同的路线，我们**通过拦截适当的访问者方法**来修改类。在这种情况下，我们截取`visit`，这是访问者层次结构中的第一个方法:
 
-```
+```java
 public class AddInterfaceAdapter extends ClassVisitor {
 
     public AddInterfaceAdapter(ClassVisitor cv) {
@@ -248,7 +248,7 @@ ASM 库提供了`TraceClassVisitor` 实用程序类，我们将用它来**自省
 
 因为`TraceClassVisitor`是一个`ClassVisitor`，我们可以用它来代替标准的`ClassVisitor`:
 
-```
+```java
 PrintWriter pw = new PrintWriter(System.out);
 
 public PublicizeMethodAdapter(ClassVisitor cv) {
@@ -295,7 +295,7 @@ public void visitEnd(){
 *   实现名为`premain`的方法的类
 *   一个`[ClassFileTransformer](https://web.archive.org/web/20220818200429/https://docs.oracle.com/en/java/javase/11/docs/api/java.instrument/java/lang/instrument/ClassFileTransformer.html)` 的实现，其中我们将有条件地提供我们类的修改版本
 
-```
+```java
 public class Premain {
     public static void premain(String agentArgs, Instrumentation inst) {
         inst.addTransformer(new ClassFileTransformer() {
@@ -320,7 +320,7 @@ public class Premain {
 
 我们现在使用 Maven jar 插件在 JAR 清单文件中定义我们的`premain`实现类:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-jar-plugin</artifactId>
@@ -342,7 +342,7 @@ public class Premain {
 
 到目前为止，构建和打包我们的代码产生了可以作为代理加载的 jar。要在假设的“`YourClass.class`”中使用我们定制的`Integer`类:
 
-```
+```java
 java YourClass -javaagent:"/path/to/theAgentJar.jar"
 ```
 

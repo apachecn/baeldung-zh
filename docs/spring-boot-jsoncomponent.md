@@ -14,7 +14,7 @@
 
 让我们从下面的`User`对象开始，它包含了一种喜爱的颜色:
 
-```
+```java
 public class User {
     private Color favoriteColor;
 
@@ -24,7 +24,7 @@ public class User {
 
 如果我们使用 Jackson 和默认设置序列化这个对象，我们会得到:
 
-```
+```java
 {
   "favoriteColor": {
     "red": 0.9411764740943909,
@@ -43,7 +43,7 @@ public class User {
 
 在这种情况下，我们只需要创建一个实现`JsonSerializer`的类:
 
-```
+```java
 @JsonComponent
 public class UserJsonSerializer extends JsonSerializer<User> {
 
@@ -70,13 +70,13 @@ public class UserJsonSerializer extends JsonSerializer<User> {
 
 有了这个序列化器，生成的 JSON 被简化为:
 
-```
+```java
 {"favoriteColor":"#f0f8ff"} 
 ```
 
 由于有了`@JsonComponent`注释，序列化程序被注册在 Spring Boot 应用程序的 Jackson `ObjectMapper`中。我们可以用下面的 JUnit 测试来测试这一点:
 
-```
+```java
 @JsonTest
 @RunWith(SpringRunner.class)
 public class UserJsonSerializerTest {
@@ -98,7 +98,7 @@ public class UserJsonSerializerTest {
 
 继续同一个例子，我们可以编写一个反序列化器，将 web color `String`转换成 JavaFX Color 对象:
 
-```
+```java
 @JsonComponent
 public class UserJsonDeserializer extends JsonDeserializer<User> {
 
@@ -117,7 +117,7 @@ public class UserJsonDeserializer extends JsonDeserializer<User> {
 
 让我们测试新的反序列化器，并确保一切按预期工作:
 
-```
+```java
 @JsonTest
 @RunWith(SpringRunner.class)
 public class UserJsonDeserializerTest {
@@ -139,7 +139,7 @@ public class UserJsonDeserializerTest {
 
 如果需要，我们可以通过使用两个内部类并在封闭类上添加`@JsonComponent`来连接一个类中的序列化器和反序列化器:
 
-```
+```java
 @JsonComponent
 public class UserCombinedSerializer {
 

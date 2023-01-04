@@ -14,7 +14,7 @@
 
 由于舍入不准确，可能会出现有趣的错误:
 
-```
+```java
 double d1 = 0;
 for (int i = 1; i <= 8; i++) {
     d1 += 0.1;
@@ -28,7 +28,7 @@ System.out.println(d2);
 
 两个变量 `d1` 和`d2, `都应该等于 0.8。但是，当我们运行上面的代码时，我们会看到以下结果:
 
-```
+```java
 0.7999999999999999
 0.8
 ```
@@ -41,7 +41,7 @@ System.out.println(d2);
 
 在普通 Java 中比较双精度值的推荐算法是一种**阈值比较方法**。在这种情况下，我们需要检查两个数之差**是否在规定的公差范围内，通常称为** `**epsilon**:`
 
-```
+```java
 double epsilon = 0.000001d;
 
 assertThat(Math.abs(d1 - d2) < epsilon).isTrue();
@@ -55,7 +55,7 @@ assertThat(Math.abs(d1 - d2) < epsilon).isTrue();
 
 [Apache Commons Math](/web/20220819091322/https://www.baeldung.com/apache-commons-math) 是最大的致力于数学和统计组件的开源库之一。从各种不同的类和方法中，**我们将特别关注`org.apache.commons.math3.util.Precision`类。它包含两个有用的`equals()`方法来正确比较双精度值**:
 
-```
+```java
 double epsilon = 0.000001d;
 
 assertThat(Precision.equals(d1, d2, epsilon)).isTrue();
@@ -70,7 +70,7 @@ assertThat(Precision.equals(d1, d2)).isTrue();
 
 谷歌的 [Guava](/web/20220819091322/https://www.baeldung.com/guava-guide) 是一个大型的核心 Java 库集，它扩展了标准的 JDK 功能。它在`com.google.common.math`包中包含了大量有用的数学工具。**为了在 Guava 中正确地比较 double 值，让我们从`DoubleMath` 类`:`中实现`fuzzyEquals()`** 方法
 
-```
+```java
 double epsilon = 0.000001d;
 
 assertThat(DoubleMath.fuzzyEquals(d1, d2, epsilon)).isTrue();
@@ -82,7 +82,7 @@ assertThat(DoubleMath.fuzzyEquals(d1, d2, epsilon)).isTrue();
 
 JUnit 是最广泛使用的 Java 单元测试框架之一。一般来说，每个单元测试通常以分析期望值和实际值之间的差异而结束。因此，测试框架必须有正确和精确的比较算法。事实上，JUnit 为公共对象、集合和基本类型提供了一组比较方法，包括检查双值相等的专用方法:
 
-```
+```java
 double epsilon = 0.000001d;
 assertEquals(d1, d2, epsilon);
 ```

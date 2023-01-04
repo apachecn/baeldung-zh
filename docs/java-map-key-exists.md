@@ -18,7 +18,7 @@
 
 让我们创建一个非常简单的地图，并用`containsKey`验证它的内容:
 
-```
+```java
 @Test
 public void whenKeyIsPresent_thenContainsKeyReturnsTrue() {
     Map<String, String> map = Collections.singletonMap("key", "value");
@@ -42,7 +42,7 @@ public void whenKeyIsPresent_thenContainsKeyReturnsTrue() {
 
 **所以，如果我们的目标是查看一个键是否有值，那么`get`就可以了:**
 
-```
+```java
 @Test
 public void whenKeyHasNullValue_thenGetStillWorks() {
     Map<String, String> map = Collections.singletonMap("nothing", null);

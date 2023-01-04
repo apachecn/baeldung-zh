@@ -18,7 +18,7 @@
 
 在我们的演示应用程序中，我们有两个属性文件。在默认属性文件`application.properties`中，我们添加:
 
-```
+```java
 spring.resources.cache.period=31536000
 spring.resources.chain.compressed=false
 spring.resources.chain.html-application-cache=false
@@ -26,7 +26,7 @@ spring.resources.chain.html-application-cache=false
 
 对于`dev`档案`YAML`档案`application-dev.yaml`:
 
-```
+```java
 spring:
   resources:
     cache:
@@ -42,7 +42,7 @@ spring:
 
 首先，让我们在模块中添加 [`spring-boot-properties-migrator`](https://web.archive.org/web/20220520161837/https://search.maven.org/artifact/org.springframework.boot/spring-boot-properties-migrator) 作为依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-properties-migrator</artifactId>
@@ -52,7 +52,7 @@ spring:
 
 如果我们使用 Gradle，我们可以添加:
 
-```
+```java
 runtime("org.springframework.boot:spring-boot-properties-migrator") 
 ```
 
@@ -62,13 +62,13 @@ runtime("org.springframework.boot:spring-boot-properties-migrator")
 
 其次，让我们打包并运行我们的应用程序。我们将使用 Maven 来构建和打包:
 
-```
+```java
 mvn clean package
 ```
 
 最后，让我们运行它:
 
-```
+```java
 java -jar target/spring-boot-properties-migrator-demo-1.0-SNAPSHOT.jar
 ```
 
@@ -82,7 +82,7 @@ java -jar target/spring-boot-properties-migrator-demo-1.0-SNAPSHOT.jar
 
 对于具有已知替换的属性，**我们看到来自`PropertiesMigrationListener`类**的`WARN` **日志:**
 
-```
+```java
 WARN 34777 --- [           main] o.s.b.c.p.m.PropertiesMigrationListener  : 
 The use of configuration keys that have been renamed was found in the environment:
 
@@ -111,7 +111,7 @@ Each configuration key has been temporarily mapped to its replacement for your c
 
 对于没有已知替换的属性，**我们看到来自`PropertiesMigrationListener`类**的`ERROR` **日志:**
 
-```
+```java
 ERROR 34777 --- [           main] o.s.b.c.p.m.PropertiesMigrationListener  : 
 The use of configuration keys that are no longer supported was found in the environment:
 
@@ -134,14 +134,14 @@ Property source 'Config resource 'class path resource [application-dev.yaml]' vi
 
 让我们修复我们的属性文件。在默认属性文件`application.properties`中，让我们按照建议替换属性:
 
-```
+```java
 spring.web.resources.cache.period=31536000
 spring.web.resources.chain.compressed=false
 ```
 
 同样，让我们更新`dev`概要文件`YAML`文件`application-dev.yaml`:
 
-```
+```java
 spring:
   web:
     resources:
@@ -155,13 +155,13 @@ spring:
 
 让我们再次运行扫描。首先，让我们构建应用程序:
 
-```
+```java
 mvn clean package
 ```
 
 那么，让我们运行它:
 
-```
+```java
 java -jar target/spring-boot-properties-migrator-demo-1.0-SNAPSHOT.jar
 ```
 
@@ -175,7 +175,7 @@ java -jar target/spring-boot-properties-migrator-demo-1.0-SNAPSHOT.jar
 
 在`spring-autoconfigure:2.6.3.jar` `META-INF/spring-configuration-metadata.json`中，我们将找到`spring.resources.cache.period`的条目:
 
-```
+```java
 {
     "name": "spring.resources.cache.period",
     "type": "java.time.Duration",
@@ -189,7 +189,7 @@ java -jar target/spring-boot-properties-migrator-demo-1.0-SNAPSHOT.jar
 
 同样，在`spring-boot:2.0.0.RELEASE.jar` `META-INF/spring-configuration-metadata.json`中，我们会找到`banner.image.location`的条目:
 
-```
+```java
 {
     "defaultValue": "banner.gif",
     "deprecated": true,
@@ -215,13 +215,13 @@ java -jar target/spring-boot-properties-migrator-demo-1.0-SNAPSHOT.jar
 
 我们不应该在升级期间跳转版本，因为模块可能无法检测在更老的版本中被弃用的真正旧的属性。例如，让我们将`banner.image.location`添加到我们的`application.properties`文件:
 
-```
+```java
 banner.image.location="myBanner.txt"
 ```
 
 在 Spring Boot 2.0 中，此属性[已被弃用。如果我们尝试直接用 Spring Boot 版本 2.6.3 运行我们的应用程序，我们不会看到任何关于它的警告或错误消息。我们必须使用 Spring Boot 2.0 运行扫描才能检测到该属性:](https://web.archive.org/web/20220520161837/https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.0-Configuration-Changelog)
 
-```
+```java
 WARN 25015 --- [           main] o.s.b.c.p.m.PropertiesMigrationListener  : 
 The use of configuration keys that have been renamed was found in the environment:
 

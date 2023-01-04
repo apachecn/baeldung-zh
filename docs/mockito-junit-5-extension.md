@@ -16,7 +16,7 @@
 
 让我们将 JUnit 5 (jupiter)和`mockito`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-engine</artifactId>
@@ -35,7 +35,7 @@
 
 让我们配置 Maven Surefire 插件，使用新的 JUnit 平台启动器运行我们的测试类:
 
-```
+```java
 <plugin>
     <artifactId>maven-surefire-plugin</artifactId>
     <version>2.22.2</version>
@@ -57,7 +57,7 @@
 
 我们将把这种依赖性包含在我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.mockito</groupId>
     <artifactId>mockito-junit-jupiter</artifactId>
@@ -70,7 +70,7 @@
 
 让我们构建我们的测试类，并将 Mockito 扩展附加到它:
 
-```
+```java
 @ExtendWith(MockitoExtension.class)
 class UserServiceUnitTest {
 
@@ -82,13 +82,13 @@ class UserServiceUnitTest {
 
 我们可以使用`@Mock`注释为一个实例变量注入一个 mock，我们可以在测试类的任何地方使用它:
 
-```
+```java
 @Mock UserRepository userRepository;
 ```
 
 同样，我们可以将模拟对象注入到方法参数中:
 
-```
+```java
 @BeforeEach
 void init(@Mock SettingRepository settingRepository) {
     userService = new DefaultUserService(userRepository, settingRepository, mailClient);
@@ -107,7 +107,7 @@ void init(@Mock SettingRepository settingRepository) {
 
 我们甚至可以将模拟对象注入到测试方法参数中:
 
-```
+```java
 @Test
 void givenValidUser_whenSaveUser_thenSucceed(@Mock MailClient mailClient) {
     // Given

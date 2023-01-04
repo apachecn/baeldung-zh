@@ -97,7 +97,7 @@ Spring 还提供了一个名为`Flo`的图形界面，用于创建和监控流�
 
 让我们向项目添加一个 Maven 依赖项。由于我们将需要`Dataflow Local Server`库，让我们添加[spring-cloud-starter-data flow-server-local](https://web.archive.org/web/20221012201802/https://search.maven.org/search?q=spring-cloud-starter-dataflow-server-local)依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-dataflow-server-local</artifactId>
@@ -106,7 +106,7 @@ Spring 还提供了一个名为`Flo`的图形界面，用于创建和监控流�
 
 现在我们需要用`@EnableDataFlowServer`注释来注释`Spring Boot`主类:
 
-```
+```java
 @EnableDataFlowServer
 @SpringBootApplication
 public class SpringDataFlowServerApplication {
@@ -120,7 +120,7 @@ public class SpringDataFlowServerApplication {
 
 仅此而已。我们的`Local Data Flow Server`准备执行:
 
-```
+```java
 mvn spring-boot:run
 ```
 
@@ -132,7 +132,7 @@ mvn spring-boot:run
 
 一旦我们下载并导入了项目，让我们添加一个[spring-cloud-data flow-shell](https://web.archive.org/web/20221012201802/https://search.maven.org/search?q=a:spring-cloud-dataflow-shell)依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-dataflow-shell</artifactId>
@@ -141,7 +141,7 @@ mvn spring-boot:run
 
 现在我们需要将`@EnableDataFlowShell`注释添加到`Spring Boot`主类中:
 
-```
+```java
 @EnableDataFlowShell
 @SpringBootApplication
 public class SpringDataFlowShellApplication {
@@ -154,7 +154,7 @@ public class SpringDataFlowShellApplication {
 
 我们现在可以运行 shell 了:
 
-```
+```java
 mvn spring-boot:run
 ```
 
@@ -164,7 +164,7 @@ mvn spring-boot:run
 
 类似地，在 Initializr 上，我们现在将创建一个简单的应用程序，并添加一个名为[spring-cloud-starter-stream-rabbit:](https://web.archive.org/web/20221012201802/https://search.maven.org/search?q=a:spring-cloud-starter-stream-rabbit)的`Stream Rabbit`依赖项
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
@@ -173,7 +173,7 @@ mvn spring-boot:run
 
 然后我们将把`@EnableBinding(Source.class)`注释添加到`Spring Boot`主类中:
 
-```
+```java
 @EnableBinding(Source.class)
 @SpringBootApplication
 public class SpringDataFlowTimeSourceApplication {
@@ -191,7 +191,7 @@ public class SpringDataFlowTimeSourceApplication {
 
 `@InboundChannelAdapter`注释将消息发送到源的输出通道，使用返回值作为消息的有效负载:
 
-```
+```java
 @Bean
 @InboundChannelAdapter(
   value = Source.OUTPUT, 
@@ -210,7 +210,7 @@ public MessageSource<Long> timeMessageSource() {
 
 然后我们将把`@EnableBinding(Processor.class)`注释添加到`Spring Boot`主类中:
 
-```
+```java
 @EnableBinding(Processor.class)
 @SpringBootApplication
 public class SpringDataFlowTimeProcessorApplication {
@@ -226,7 +226,7 @@ public class SpringDataFlowTimeProcessorApplication {
 
 为了定义一个转换器，我们需要用`@Transformer`注释来注释这个方法:
 
-```
+```java
 @Transformer(inputChannel = Processor.INPUT, 
   outputChannel = Processor.OUTPUT)
 public Object transform(Long timestamp) {
@@ -247,7 +247,7 @@ public Object transform(Long timestamp) {
 
 然后将 `@EnableBinding(Sink.class)`注释添加到`Spring Boot`主类中:
 
-```
+```java
 @EnableBinding(Sink.class)
 @SpringBootApplication
 public class SpringDataFlowLoggingSinkApplication {
@@ -263,7 +263,7 @@ public class SpringDataFlowLoggingSinkApplication {
 
 为此，我们需要向我们的方法添加`@StreamListener(Sink.INPUT)`注释:
 
-```
+```java
 @StreamListener(Sink.INPUT)
 public void loggerSink(String date) {
     logger.info("Received: " + date);
@@ -280,13 +280,13 @@ Spring Cloud 数据流 Shell 允许我们使用`app register`命令向应用注�
 
 使用 maven 方案提供 URI 时，格式应符合以下要求:
 
-```
+```java
 maven://<groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>
 ```
 
 要注册之前创建的 的`Source`、`Processor`和`Sink`应用 ，请转到`Spring Cloud Data Flow Shell`并在提示符下发出以下命令:
 
-```
+```java
 app register --name time-source --type source 
   --uri maven://com.baeldung.spring.cloud:spring-data-flow-time-source:jar:0.0.1-SNAPSHOT
 
@@ -301,7 +301,7 @@ app register --name logging-sink --type sink
 
 要创建新的流定义，请转到`Spring Cloud Data Flow Shell`并执行以下 shell 命令:
 
-```
+```java
 stream create --name time-to-log 
   --definition 'time-source | time-processor | logging-sink'
 ```
@@ -310,7 +310,7 @@ stream create --name time-to-log
 
 然后，要部署流，请执行以下 shell 命令:
 
-```
+```java
 stream deploy --name time-to-log
 ```
 
@@ -318,7 +318,7 @@ stream deploy --name time-to-log
 
 如果流 是正确部署的，您将在 `Data Flow Server`日志中看到模块已经启动并绑定在一起:
 
-```
+```java
 2016-08-24 12:29:10.516  INFO 8096 --- [io-9393-exec-10] o.s.c.d.spi.local.LocalAppDeployer: deploying app time-to-log.logging-sink instance 0
    Logs will be in PATH_TO_LOG/spring-cloud-dataflow-1276836171391672089/time-to-log-1472034549734/time-to-log.logging-sink
 2016-08-24 12:29:17.600  INFO 8096 --- [io-9393-exec-10] o.s.c.d.spi.local.LocalAppDeployer       : deploying app time-to-log.time-processor instance 0
@@ -333,7 +333,7 @@ stream deploy --name time-to-log
 
 日志文件位于显示在`Data Flow Server`日志输出中的目录中，如上所示。要查看结果，我们可以跟踪日志:
 
-```
+```java
 tail -f PATH_TO_LOG/spring-cloud-dataflow-1276836171391672089/time-to-log-1472034549734/time-to-log.logging-sink/stdout_0.log
 2016-08-24 12:40:42.029  INFO 9488 --- [r.time-to-log-1] s.c.SpringDataFlowLoggingSinkApplication : Received: 2016/08/24 11:40:01
 2016-08-24 12:40:52.035  INFO 9488 --- [r.time-to-log-1] s.c.SpringDataFlowLoggingSinkApplication : Received: 2016/08/24 11:40:11

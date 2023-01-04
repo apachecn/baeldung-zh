@@ -16,19 +16,19 @@
 
 通常，我们可以在配置文件中编写如下内容:
 
-```
+```java
 <logger name="org.springframework.data.mongodb.core.MongoTemplate" level="DEBUG" />
 ```
 
 **然而，如果我们正在运行一个 [Spring Boot](/web/20221009161527/https://www.baeldung.com/spring-boot) 应用**，**我们可以在我们的`application.properties`** 文件中进行配置:
 
-```
+```java
 logging.level.org.springframework.data.mongodb.core.MongoTemplate=DEBUG
 ```
 
 同样，我们可以使用`YAML`语法:
 
-```
+```java
 logging:
   level:
     org:
@@ -43,7 +43,7 @@ logging:
 
 首先，让我们创建一个`Book`类:
 
-```
+```java
 @Document(collection = "book")
 public class Book {
 
@@ -60,7 +60,7 @@ public class Book {
 
 为了演示这一点，我们使用了[嵌入式 MongoDB](/web/20221009161527/https://www.baeldung.com/spring-boot-embedded-mongodb) 。为了确保安全，让我们先检查一下我们的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -75,7 +75,7 @@ public class Book {
 
 最后，让我们使用 [Spring Boot 测试](/web/20221009161527/https://www.baeldung.com/spring-boot-testing)来定义我们的测试类:
 
-```
+```java
 @SpringBootTest
 @TestPropertySource(properties = { "logging.level.org.springframework.data.mongodb.core.MongoTemplate=DEBUG" })
 public class LoggingUnitTest {
@@ -117,7 +117,7 @@ public class LoggingUnitTest {
 
 首先，让我们从插入单个`Document`开始:
 
-```
+```java
 Book book = new Book();
 book.setBookName("Book");
 book.setAuthorName("Author");
@@ -127,7 +127,7 @@ mongoTemplate.insert(book);
 
 日志显示了我们正在插入哪个集合。当找到一个`Document`时，id 也被记录:
 
-```
+```java
 [2022-03-20 17:42:47,093]-[main] DEBUG MongoTemplate - Inserting Document containing fields: [bookName, authorName, _class] in collection: book
 ...
 [2022-03-20 17:42:47,144]-[main] DEBUG MongoTemplate - findOne using query: { "id" : { "$oid" : "623759871ff6275fe96a5ecb"}} fields: Document{{}} for class: class com.baeldung.mongodb.models.Book in collection: book
@@ -138,7 +138,7 @@ mongoTemplate.insert(book);
 
 同样，当更新一个`Document`时:
 
-```
+```java
 Book book = new Book();
 book.setBookName("Book");
 book.setAuthorName("Author");
@@ -153,7 +153,7 @@ mongoTemplate.updateFirst(query(where("bookName").is("Book")), update("authorNam
 
 我们可以在日志中看到实际更新的`Document`字段:
 
-```
+```java
 [2022-03-20 17:48:31,759]-[main] DEBUG MongoTemplate - Calling update using query: { "bookName" : "Book"} and update: { "$set" : { "authorName" : "AuthorNameUpdate"}} in collection: book
 ```
 
@@ -161,7 +161,7 @@ mongoTemplate.updateFirst(query(where("bookName").is("Book")), update("authorNam
 
 让我们添加一个批量插入的示例:
 
-```
+```java
 Book book = new Book();
 book.setBookName("Book");
 book.setAuthorName("Author");
@@ -175,7 +175,7 @@ mongoTemplate.insert(Arrays.asList(book, book1), Book.class);
 
 我们可以在日志中看到插入的`Document`的数量:
 
-```
+```java
 [2022-03-20 17:52:00,564]-[main] DEBUG MongoTemplate - Inserting list of Documents containing 2 items
 ```
 
@@ -183,7 +183,7 @@ mongoTemplate.insert(Arrays.asList(book, book1), Book.class);
 
 另外，让我们添加一个删除示例:
 
-```
+```java
 Book book = new Book();
 book.setBookName("Book");
 book.setAuthorName("Author");
@@ -195,7 +195,7 @@ mongoTemplate.remove(book);
 
 我们可以在日志中看到，在本例中，被删除的`Document`的 id:
 
-```
+```java
 [2022-03-20 17:56:42,151]-[main] DEBUG MongoTemplate - Remove using query: { "_id" : { "$oid" : "62375cca2a2cba4db774d8c1"}} in collection: book.
 ```
 
@@ -203,7 +203,7 @@ mongoTemplate.remove(book);
 
 让我们看一个 [`Aggregation`](/web/20221009161527/https://www.baeldung.com/spring-data-mongodb-projections-aggregations) 的例子。在这种情况下，我们需要定义一个结果类。例如，我们将按作者姓名进行聚合:
 
-```
+```java
 public class GroupByAuthor {
 
     @Id
@@ -216,7 +216,7 @@ public class GroupByAuthor {
 
 接下来，让我们为分组定义一个测试用例:
 
-```
+```java
 Book book = new Book();
 book.setBookName("Book");
 book.setAuthorName("Author");
@@ -242,7 +242,7 @@ AggregationResults<GroupByAuthor> aggregationResults = mongoTemplate.aggregate(a
 
 我们可以在日志中看到我们聚合了哪个字段以及聚合管道的类型:
 
-```
+```java
 [2022-03-20 17:58:51,237]-[main] DEBUG MongoTemplate - Executing aggregation: [{ "$group" : { "_id" : "$authorName", "authCount" : { "$sum" : 1}}}] in collection book
 ```
 

@@ -22,7 +22,7 @@ Open Liberty 是 Java 生态系统的一个开放框架，允许使用 [Eclipse 
 
 首先，我们将创建一个简单的名为`open-liberty`的基于 Maven 的项目，然后将最新的 [`liberty-maven-plugin`](https://web.archive.org/web/20221205162813/https://search.maven.org/search?q=g:io.openliberty.tools%20a:liberty-maven-plugin) 插件添加到`pom.xml`中:
 
-```
+```java
 <plugin>
     <groupId>io.openliberty.tools</groupId>
     <artifactId>liberty-maven-plugin</artifactId>
@@ -32,7 +32,7 @@ Open Liberty 是 Java 生态系统的一个开放框架，允许使用 [Eclipse 
 
 或者，我们可以添加最新的 [`openliberty-runtime`](https://web.archive.org/web/20221205162813/https://search.maven.org/search?q=g:io.openliberty%20a:openliberty-runtime) Maven 依赖作为`liberty-maven-plugin`的替代:
 
-```
+```java
 <dependency>
     <groupId>io.openliberty</groupId>
     <artifactId>openliberty-runtime</artifactId>
@@ -43,7 +43,7 @@ Open Liberty 是 Java 生态系统的一个开放框架，允许使用 [Eclipse 
 
 类似地，我们可以将最新的 Gradle 依赖项添加到`build.gradle`:
 
-```
+```java
 dependencies {
     libertyRuntime group: 'io.openliberty', name: 'openliberty-runtime', version: '20.0.0.1'
 }
@@ -51,7 +51,7 @@ dependencies {
 
 然后，我们再添加最新的 [`jakarta.jakartaee-web-api`](https://web.archive.org/web/20221205162813/https://search.maven.org/search?q=g:jakarta.platform%20a:jakarta.jakartaee-web-api) 和 [`microprofile`](https://web.archive.org/web/20221205162813/https://search.maven.org/search?q=g:org.eclipse.microprofile%20a:microprofile) 美文依赖关系:
 
-```
+```java
 <dependency>
     <groupId>jakarta.platform</groupId>
     <artifactId>jakarta.jakartaee-web-api</artifactId>
@@ -69,7 +69,7 @@ dependencies {
 
 然后，让我们将默认的 HTTP 端口属性添加到 `pom.xml`:
 
-```
+```java
 <properties>
     <liberty.var.default.http.port>9080</liberty.var.default.http.port>
     <liberty.var.default.https.port>9443</liberty.var.default.https.port>
@@ -78,7 +78,7 @@ dependencies {
 
 接下来，我们将在`src/main/liberty/config`目录中创建`server.xml`文件:
 
-```
+```java
 <server description="Baeldung Open Liberty server">
     <featureManager>
         <feature>mpHealth-2.0</feature>
@@ -93,13 +93,13 @@ dependencies {
 
 这就是所有的基本设置。让我们第一次运行 Maven 命令来编译文件:
 
-```
+```java
 mvn clean package
 ```
 
 最后，让我们使用 Liberty 提供的 Maven 命令运行服务器:
 
-```
+```java
 mvn liberty:dev
 ```
 
@@ -109,7 +109,7 @@ mvn liberty:dev
 
 此外，我们可以在`localhost:9080/health`访问应用程序的运行状况:
 
-```
+```java
 {"checks":[],"status":"UP"}
 ```
 
@@ -123,7 +123,7 @@ mvn liberty:dev
 
 为了在应用程序中使用 servlets，我们将在`server.xml`中添加`servlet-4.0`特性:
 
-```
+```java
 <featureManager>
     ...
     <feature>servlet-4.0</feature>
@@ -132,7 +132,7 @@ mvn liberty:dev
 
 如果使用`pom.xml`中的`openliberty-runtime` Maven 依赖，则添加最新的 [`servlet-4.0`](https://web.archive.org/web/20221205162813/https://search.maven.org/search?q=g:io.openliberty.features%20a:servlet-4.0) Maven 依赖:
 
-```
+```java
 <dependency>
     <groupId>io.openliberty.features</groupId>
     <artifactId>servlet-4.0</artifactId>
@@ -145,7 +145,7 @@ mvn liberty:dev
 
 然后，我们将创建扩展了`HttpServlet`类的`AppServlet`类:
 
-```
+```java
 @WebServlet(urlPatterns="/app")
 public class AppServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -169,7 +169,7 @@ public class AppServlet extends HttpServlet {
 
 首先，让我们将 [`jaxrs-2.1`](https://web.archive.org/web/20221205162813/https://search.maven.org/search?q=g:io.openliberty.features%20a:jaxrs-2.1) 特性添加到`server.xml`中:
 
-```
+```java
 <featureManager>
     ...
     <feature>jaxrs-2.1</feature>
@@ -178,7 +178,7 @@ public class AppServlet extends HttpServlet {
 
 然后`,` 我们将创建`ApiApplication` 类，它提供 RESTful web 服务的端点:
 
-```
+```java
 @ApplicationPath("/api")
 public class ApiApplication extends Application {
 }
@@ -188,7 +188,7 @@ public class ApiApplication extends Application {
 
 然后，让我们创建服务于模型的`Person` 类:
 
-```
+```java
 public class Person {
     private String username;
     private String email;
@@ -200,7 +200,7 @@ public class Person {
 
 接下来，我们将创建`PersonResource` 类来定义 HTTP 映射:
 
-```
+```java
 @RequestScoped
 @Path("persons")
 public class PersonResource {
@@ -216,19 +216,19 @@ public class PersonResource {
 
 让我们使用 curl GET 请求来访问`/api/persons` RESTful web 服务:
 
-```
+```java
 curl --request GET --url http://localhost:9080/api/persons
 ```
 
 然后，我们将得到一个 JSON 数组作为响应:
 
-```
+```java
 [{"id":1, "username":"normanlewis", "email":"[[email protected]](/web/20221205162813/https://www.baeldung.com/cdn-cgi/l/email-protection)"}]
 ```
 
 类似地，我们可以通过创建`addPerson`方法来添加 POST 映射:
 
-```
+```java
 @POST
 @Consumes(MediaType.APPLICATION_JSON)
 public Response addPerson(Person person) {
@@ -239,7 +239,7 @@ public Response addPerson(Person person) {
 
 现在，我们可以用 curl POST 请求调用端点:
 
-```
+```java
 curl --request POST --url http://localhost:9080/api/persons \
   --header 'content-type: application/json' \
   --data '{"username": "normanlewis", "email": "[[email protected]](/web/20221205162813/https://www.baeldung.com/cdn-cgi/l/email-protection)"}'
@@ -247,7 +247,7 @@ curl --request POST --url http://localhost:9080/api/persons \
 
 响应将类似于:
 
-```
+```java
 Person normanlewis received successfully.
 ```
 
@@ -259,7 +259,7 @@ Person normanlewis received successfully.
 
 首先，我们将把 [`derby`](https://web.archive.org/web/20221205162813/https://search.maven.org/search?q=g:org.apache.derby%20a:derby%20AND%20v:10.14.2.0) Maven 依赖项添加到`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.apache.derby</groupId>
     <artifactId>derby</artifactId>
@@ -269,7 +269,7 @@ Person normanlewis received successfully.
 
 然后，我们将向`server.xml`添加一些特性，如`jpa-2.2`、`jsonp-1.1`和`cdi-2.0`:
 
-```
+```java
 <featureManager>
     ...
     <feature>jpa-2.2</feature> 
@@ -282,7 +282,7 @@ Person normanlewis received successfully.
 
 接下来，我们将在`src/main/resources/META-INF`目录中创建`persistence.xml`:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.2"
 
@@ -303,7 +303,7 @@ Person normanlewis received successfully.
 
 然后，让我们将`dataSource`配置添加到`server.xml`中:
 
-```
+```java
 <library id="derbyJDBCLib">
     <fileset dir="${shared.resource.dir}" includes="derby*.jar"/> 
 </library>
@@ -319,7 +319,7 @@ Person normanlewis received successfully.
 
 然后，我们将把 [`@Entity`](/web/20221205162813/https://www.baeldung.com/jpa-entities) 注释和一个标识符添加到我们的`Person`类中:
 
-```
+```java
 @Entity
 public class Person {
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -335,7 +335,7 @@ public class Person {
 
 接下来，让我们创建将使用 [`EntityManager`](/web/20221205162813/https://www.baeldung.com/hibernate-entitymanager) 实例与数据库交互的`PersonDao`类:
 
-```
+```java
 @RequestScoped
 public class PersonDao {
     @PersistenceContext(name = "jpa-unit")
@@ -356,7 +356,7 @@ public class PersonDao {
 
 现在，我们将在`PersonResource`类中注入`PersonDao`依赖项:
 
-```
+```java
 @RequestScoped
 @Path("person")
 public class PersonResource {
@@ -371,7 +371,7 @@ public class PersonResource {
 
 最后，我们将更新`PersonResource`类的`addPerson`方法来持久化`Person`对象:
 
-```
+```java
 @POST
 @Consumes(MediaType.APPLICATION_JSON)
 @Transactional
@@ -386,7 +386,7 @@ public Response addPerson(Person person) {
 
 让我们用已经讨论过的 curl POST 请求调用端点:
 
-```
+```java
 curl --request POST --url http://localhost:9080/api/persons \
   --header 'content-type: application/json' \
   --data '{"username": "normanlewis", "email": "[[email protected]](/web/20221205162813/https://www.baeldung.com/cdn-cgi/l/email-protection)"}'
@@ -394,13 +394,13 @@ curl --request POST --url http://localhost:9080/api/persons \
 
 然后，我们会收到一条短信回复:
 
-```
+```java
 Person #1 created successfully.
 ```
 
 类似地，让我们添加带有 GET 映射的`getPerson`方法来获取一个`Person`对象:
 
-```
+```java
 @GET
 @Path("{id}")
 @Produces(MediaType.APPLICATION_JSON)
@@ -413,13 +413,13 @@ public Person getPerson(@PathParam("id") int id) {
 
 让我们使用 curl GET 请求调用端点:
 
-```
+```java
 curl --request GET --url http://localhost:9080/api/persons/1
 ```
 
 然后，我们将获得作为 JSON 响应的`Person`对象:
 
-```
+```java
 {"email":"[[email protected]](/web/20221205162813/https://www.baeldung.com/cdn-cgi/l/email-protection)","id":1,"username":"normanlewis"}
 ```
 
@@ -427,7 +427,7 @@ curl --request GET --url http://localhost:9080/api/persons/1
 
 首先，我们将通过向`server.xml`添加 [`jsonb-1.0`](https://web.archive.org/web/20221205162813/https://search.maven.org/search?q=g:io.openliberty.features%20a:jsonb-1.0) 特性来启用直接序列化和反序列化模型的能力:
 
-```
+```java
 <featureManager>
     ...
     <feature>jsonb-1.0</feature>
@@ -436,7 +436,7 @@ curl --request GET --url http://localhost:9080/api/persons/1
 
 然后，让我们用`consumeWithJsonb` 方法创建`RestConsumer`类:
 
-```
+```java
 public class RestConsumer {
     public static String consumeWithJsonb(String targetUrl) {
         Client client = ClientBuilder.newClient();
@@ -453,7 +453,7 @@ public class RestConsumer {
 
 最后，让我们编写一个单元测试来使用`/api/person` RESTful web 服务并验证响应:
 
-```
+```java
 @Test
 public void whenConsumeWithJsonb_thenGetPerson() {
     String url = "http://localhost:9080/api/persons/1";

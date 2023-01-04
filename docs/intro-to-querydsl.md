@@ -18,7 +18,7 @@
 
 JPA 2.0 标准以 [Criteria Query API](https://web.archive.org/web/20221208143841/https://docs.oracle.com/javaee/7/tutorial/persistence-criteria.htm#GJITV) 的形式带来了改进——这是一种新的类型安全的查询构建方法，利用了注释预处理过程中生成的元模型类。不幸的是，从本质上来说是开创性的，Criteria Query API 最终变得非常冗长，几乎不可读。这里有一个来自 Jakarta EE 教程的例子，用于生成一个像`SELECT p FROM Pet p`一样简单的查询:
 
-```
+```java
 EntityManager em = ...;
 CriteriaBuilder cb = em.getCriteriaBuilder();
 CriteriaQuery<Pet> cq = cb.createQuery(Pet.class);
@@ -38,7 +38,7 @@ List<Pet> allPets = q.getResultList();
 
 将 Querydsl 包含在项目中非常简单，只需在构建文件中添加几个依赖项，并配置一个插件来处理 JPA 注释。让我们从依赖项开始。Querydsl 库的版本应该被提取到`<project><properties>`部分中的一个单独的属性中，如下所示(对于 Querydsl 库的最新版本，请查看 [Maven Central](https://web.archive.org/web/20221208143841/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22com.querydsl%22) 资源库):
 
-```
+```java
 <properties>
     <querydsl.version>4.1.3</querydsl.version>
 </properties>
@@ -46,7 +46,7 @@ List<Pet> allPets = q.getResultList();
 
 接下来，将以下依赖项添加到您的`pom.xml`文件的`<project><dependencies>`部分:
 
-```
+```java
 <dependencies>
 
     <dependency>
@@ -73,7 +73,7 @@ querydsl-jpa 库是 querydsl 本身，设计用于与 jpa 应用程序一起使�
 
 要配置利用`querydsl-apt`的注释处理插件，将以下插件配置添加到 pom 中——在`<project><build><plugins>`元素内:
 
-```
+```java
 <plugin>
     <groupId>com.mysema.maven</groupId>
     <artifactId>apt-maven-plugin</artifactId>
@@ -98,7 +98,7 @@ querydsl-jpa 库是 querydsl 本身，设计用于与 jpa 应用程序一起使�
 
 对于本文，我们将使用一个简单的博客服务 JPA 模型，由`Users`和它们的`BlogPosts`组成，它们之间有一对多的关系:
 
-```
+```java
 @Entity
 public class User {
 
@@ -138,7 +138,7 @@ public class BlogPost {
 
 要为您的模型生成 Q 类型，只需运行:
 
-```
+```java
 mvn compile
 ```
 
@@ -150,7 +150,7 @@ mvn compile
 
 除了这个文件中出现的几个`QUser`构造函数，您还应该注意到一个`QUser`类的公共静态最终实例:
 
-```
+```java
 public static final QUser user = new QUser("user");
 ```
 
@@ -164,7 +164,7 @@ public static final QUser user = new QUser("user");
 
 要构建一个查询，首先我们需要一个 [`JPAQueryFactory`](https://web.archive.org/web/20221208143841/http://www.querydsl.com/static/querydsl/4.1.3/apidocs/com/querydsl/jpa/impl/JPAQueryFactory.html) 的实例，这是开始构建过程的首选方式。`JPAQueryFactory`唯一需要的是一个`EntityManager`，它应该已经可以通过`EntityManagerFactory.createEntityManager()`调用或`@PersistenceContext`注入在您的 JPA 应用程序中获得。
 
-```
+```java
 EntityManagerFactory emf = 
   Persistence.createEntityManagerFactory("com.baeldung.querydsl.intro");
 EntityManager em = entityManagerFactory.createEntityManager();
@@ -173,7 +173,7 @@ JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
 现在让我们创建第一个查询:
 
-```
+```java
 QUser user = QUser.user;
 
 User c = queryFactory.selectFrom(user)
@@ -191,7 +191,7 @@ User c = queryFactory.selectFrom(user)
 
 现在让我们获取一个列表中的所有用户，按照他们的登录名升序排序。
 
-```
+```java
 List<User> c = queryFactory.selectFrom(user)
   .orderBy(user.login.asc())
   .fetch();
@@ -201,7 +201,7 @@ List<User> c = queryFactory.selectFrom(user)
 
 现在我们来试试更难的。假设我们需要按标题对所有文章进行分组，并对重复标题进行计数。这是通过`.groupBy()`子句完成的。我们还想根据出现次数对标题进行排序。
 
-```
+```java
 NumberPath<Long> count = Expressions.numberPath(Long.class, "c");
 
 List<Tuple> userTitleCounts = queryFactory.select(
@@ -218,7 +218,7 @@ List<Tuple> userTitleCounts = queryFactory.select(
 
 让我们找到所有写了标题为“Hello World！”的帖子的用户对于这样的查询，我们可以使用内部连接。注意，我们已经为连接的表创建了一个别名`blogPost`，以便在`.on()`子句中引用它:
 
-```
+```java
 QBlogPost blogPost = QBlogPost.blogPost;
 
 List<User> users = queryFactory.selectFrom(user)
@@ -229,7 +229,7 @@ List<User> users = queryFactory.selectFrom(user)
 
 现在，让我们尝试用子查询实现同样的功能:
 
-```
+```java
 List<User> users = queryFactory.selectFrom(user)
   .where(user.id.in(
     JPAExpressions.select(blogPost.user.id)
@@ -244,7 +244,7 @@ List<User> users = queryFactory.selectFrom(user)
 
 `JPAQueryFactory`不仅允许构造查询，还允许修改和删除记录。让我们更改用户的登录并禁用帐户:
 
-```
+```java
 queryFactory.update(user)
   .where(user.login.eq("Ash"))
   .set(user.login, "Ash2")
@@ -256,7 +256,7 @@ queryFactory.update(user)
 
 要删除符合特定条件的记录，我们可以使用类似的语法:
 
-```
+```java
 queryFactory.delete(user)
   .where(user.login.eq("David"))
   .execute();

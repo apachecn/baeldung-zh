@@ -12,7 +12,7 @@
 
 首先，让我们创建一个简单的 Feign client builder，稍后我们将使用重试特性来增强它。我们将使用 [`OkHttpClient`](/web/20220617075715/https://www.baeldung.com/guide-to-okhttp) 作为 HTTP 客户端。此外，我们将使用`GsonEncoder`和`GsonDecoder`对请求和响应进行编码和解码。最后，我们需要指定目标的 URI 和响应类型:
 
-```
+```java
 public class ResilientFeignClientBuilder {
     public static <T> T createClient(Class<T> type, String uri) {
         return Feign.builder()
@@ -36,7 +36,7 @@ public class ResilientFeignClientBuilder {
 
 让我们编写一个非常简单的 Retryer 实现，它总是在等待一秒钟后重试调用:
 
-```
+```java
 public class NaiveRetryer implements feign.Retryer {
     @Override
     public void continueOrPropagate(RetryableException e) {
@@ -52,7 +52,7 @@ public class NaiveRetryer implements feign.Retryer {
 
 因为`Retryer`实现了`Cloneable`接口，我们还需要覆盖`clone`方法。
 
-```
+```java
 @Override
 public Retryer clone() {
     return new NaiveRetryer();
@@ -61,7 +61,7 @@ public Retryer clone() {
 
 最后，我们需要将我们的实现添加到客户端构建器中:
 
-```
+```java
 public static <T> T createClient(Class<T> type, String uri) {
     return Feign.builder()
       // ...
@@ -72,7 +72,7 @@ public static <T> T createClient(Class<T> type, String uri) {
 
 或者，如果我们正在使用 Spring，我们可以用 [`@Component`](/web/20220617075715/https://www.baeldung.com/spring-component-annotation) 注释来注释`NaiveRetryer`，或者在配置类中定义一个 [bean](/web/20220617075715/https://www.baeldung.com/spring-bean) ，让 Spring 完成剩下的工作:
 
-```
+```java
 @Bean
 public Retryer retryer() {
     return new NaiveRetryer();
@@ -83,7 +83,7 @@ public Retryer retryer() {
 
 Feign 提供了一个合理的默认实现`Retryer`接口。**它只会重试给定的次数，以一定的时间间隔开始，然后随着每次重试而增加，直到达到规定的最大值。**我们来定义一下，开始间隔 100 毫秒，最大间隔 3 秒，最大尝试次数 5:
 
-```
+```java
 public static <T> T createClient(Class<T> type, String uri) {
     return Feign.builder()
 // ...
@@ -112,7 +112,7 @@ public static <T> T createClient(Class<T> type, String uri) {
 
 我们的`decode`方法将简单地检查响应的状态代码是否大于或等于 500。如果是这种情况，它将创建`RetryableException`。如果没有，它将从`FeignException`类返回用`errorStatus`工厂函数创建的基本`FeignException`:
 
-```
+```java
 public class Custom5xxErrorDecoder implements ErrorDecoder {
     @Override
     public Exception decode(String methodKey, Response response) {
@@ -136,7 +136,7 @@ public class Custom5xxErrorDecoder implements ErrorDecoder {
 
 最后，我们需要将解码器插入客户端构建器:
 
-```
+```java
 public static <T> T createClient(Class<T> type, String uri) {
     return Feign.builder()
       // ...

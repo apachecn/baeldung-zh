@@ -26,7 +26,7 @@ Learn how to use Flapdoodle's embedded MongoDB solution together with Spring Boo
 
 对于这两者，我们需要从定义依赖关系开始——例如，在`pom.xml`中，用 Maven:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-mongodb</artifactId>
@@ -42,7 +42,7 @@ Learn how to use Flapdoodle's embedded MongoDB solution together with Spring Boo
 
 让我们从 Mongo 模板的简单 XML 配置开始:
 
-```
+```java
 <mongo:mongo-client id="mongoClient" host="localhost" />
 <mongo:db-factory id="mongoDbFactory" dbname="test" mongo-client-ref="mongoClient" />
 ```
@@ -51,7 +51,7 @@ Learn how to use Flapdoodle's embedded MongoDB solution together with Spring Boo
 
 接下来，我们需要实际定义(和配置)模板 bean:
 
-```
+```java
 <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate"> 
     <constructor-arg ref="mongoDbFactory"/> 
 </bean>
@@ -59,7 +59,7 @@ Learn how to use Flapdoodle's embedded MongoDB solution together with Spring Boo
 
 最后，我们需要定义一个后处理器来翻译任何在`@Repository`注释类中抛出的`MongoExceptions`:
 
-```
+```java
 <bean class=
   "org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 ```
@@ -68,7 +68,7 @@ Learn how to use Flapdoodle's embedded MongoDB solution together with Spring Boo
 
 现在让我们通过扩展 MongoDB 配置`AbstractMongoConfiguration`的基类，使用 Java config 创建一个类似的配置:
 
-```
+```java
 @Configuration
 public class MongoConfig extends AbstractMongoClientConfiguration {
 
@@ -98,7 +98,7 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
 我们也可以从头开始使用我们的配置，而无需扩展`AbstractMongoClientConfiguration`:
 
-```
+```java
 @Configuration
 public class SimpleMongoConfig {
 
@@ -125,7 +125,7 @@ public class SimpleMongoConfig {
 
 为了利用定制库(扩展`MongoRepository`)，我们需要继续 3.1 节中的配置。并设置存储库:
 
-```
+```java
 <mongo:repositories 
   base-package="com.baeldung.repository" mongo-template-ref="mongoTemplate"/> 
 ```
@@ -134,7 +134,7 @@ public class SimpleMongoConfig {
 
 类似地，我们将在 3.2 节中已经创建的配置的基础上进行构建。并添加新的注释:
 
-```
+```java
 @EnableMongoRepositories(basePackages = "com.baeldung.repository") 
 ```
 
@@ -142,7 +142,7 @@ public class SimpleMongoConfig {
 
 配置完成后，我们需要创建一个存储库——扩展现有的`MongoRepository`接口:
 
-```
+```java
 public interface UserRepository extends MongoRepository<User, String> {
     // 
 }
@@ -156,14 +156,14 @@ public interface UserRepository extends MongoRepository<User, String> {
 
 让我们从插入操作和一个空数据库开始:
 
-```
+```java
 {
 }
 ```
 
 现在，如果我们插入一个新用户:
 
-```
+```java
 User user = new User();
 user.setName("Jon");
 mongoTemplate.insert(user, "user");
@@ -171,7 +171,7 @@ mongoTemplate.insert(user, "user");
 
 数据库将如下所示:
 
-```
+```java
 {
     "_id" : ObjectId("55b4fda5830b550a8c2ca25a"),
     "_class" : "com.baeldung.model.User",
@@ -187,14 +187,14 @@ mongoTemplate.insert(user, "user");
 
 这里是数据库的初始状态`:`
 
-```
+```java
 {
 }
 ```
 
 当我们现在`save`一个新用户:
 
-```
+```java
 User user = new User();
 user.setName("Albert"); 
 mongoTemplate.save(user, "user");
@@ -202,7 +202,7 @@ mongoTemplate.save(user, "user");
 
 实体将被插入到数据库中:
 
-```
+```java
 {
     "_id" : ObjectId("55b52bb7830b8c9b544b6ad5"),
     "_class" : "com.baeldung.model.User",
@@ -216,7 +216,7 @@ mongoTemplate.save(user, "user");
 
 现在让我们看看带有更新语义的`save`,对现有实体进行操作:
 
-```
+```java
 {
     "_id" : ObjectId("55b52bb7830b8c9b544b6ad5"),
     "_class" : "com.baeldung.model.User",
@@ -226,7 +226,7 @@ mongoTemplate.save(user, "user");
 
 当我们`save`现有用户时，我们将更新它:
 
-```
+```java
 user = mongoTemplate.findOne(
   Query.query(Criteria.where("name").is("Jack")), User.class);
 user.setName("Jim");
@@ -235,7 +235,7 @@ mongoTemplate.save(user, "user");
 
 数据库将如下所示:
 
-```
+```java
 {
     "_id" : ObjectId("55b52bb7830b8c9b544b6ad5"),
     "_class" : "com.baeldung.model.User",
@@ -251,7 +251,7 @@ mongoTemplate.save(user, "user");
 
 让我们从数据库的初始状态开始:
 
-```
+```java
 [
     {
         "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
@@ -268,7 +268,7 @@ mongoTemplate.save(user, "user");
 
 当我们现在运行`updateFirst`:
 
-```
+```java
 Query query = new Query();
 query.addCriteria(Criteria.where("name").is("Alex"));
 Update update = new Update();
@@ -278,7 +278,7 @@ mongoTemplate.updateFirst(query, update, User.class);
 
 只有第一个条目会被更新:
 
-```
+```java
 [
     {
         "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
@@ -299,7 +299,7 @@ mongoTemplate.updateFirst(query, update, User.class);
 
 首先，这里是数据库在执行`updateMulti`之前的状态:
 
-```
+```java
 [
     {
         "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
@@ -316,7 +316,7 @@ mongoTemplate.updateFirst(query, update, User.class);
 
 现在让我们运行`updateMulti`操作:
 
-```
+```java
 Query query = new Query();
 query.addCriteria(Criteria.where("name").is("Eugen"));
 Update update = new Update();
@@ -326,7 +326,7 @@ mongoTemplate.updateMulti(query, update, User.class);
 
 数据库中的两个现有对象都将被更新:
 
-```
+```java
 [
     {
         "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
@@ -347,7 +347,7 @@ mongoTemplate.updateMulti(query, update, User.class);
 
 首先，这是调用`findAndModify`之前数据库的状态:
 
-```
+```java
 {
     "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
     "_class" : "com.baeldung.model.User",
@@ -357,7 +357,7 @@ mongoTemplate.updateMulti(query, update, User.class);
 
 让我们来看看实际的操作代码:
 
-```
+```java
 Query query = new Query();
 query.addCriteria(Criteria.where("name").is("Markus"));
 Update update = new Update();
@@ -369,7 +369,7 @@ User user = mongoTemplate.findAndModify(query, update, User.class);
 
 但是，这是数据库中的新状态:
 
-```
+```java
 {
     "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
     "_class" : "com.baeldung.model.User",
@@ -383,7 +383,7 @@ User user = mongoTemplate.findAndModify(query, update, User.class);
 
 让我们从数据库的初始状态开始:
 
-```
+```java
 {
     "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
     "_class" : "com.baeldung.model.User",
@@ -393,7 +393,7 @@ User user = mongoTemplate.findAndModify(query, update, User.class);
 
 现在让我们运行`upsert`:
 
-```
+```java
 Query query = new Query();
 query.addCriteria(Criteria.where("name").is("Markus"));
 Update update = new Update();
@@ -403,7 +403,7 @@ mongoTemplate.upsert(query, update, User.class);
 
 以下是操作后数据库的状态:
 
-```
+```java
 {
     "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
     "_class" : "com.baeldung.model.User",
@@ -415,7 +415,7 @@ mongoTemplate.upsert(query, update, User.class);
 
 我们将在调用`remove`之前查看数据库的状态:
 
-```
+```java
 {
     "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
     "_class" : "com.baeldung.model.User",
@@ -425,13 +425,13 @@ mongoTemplate.upsert(query, update, User.class);
 
 现在让我们运行`remove`:
 
-```
+```java
 mongoTemplate.remove(user, "user");
 ```
 
 结果将如预期的那样:
 
-```
+```java
 {
 }
 ```
@@ -442,14 +442,14 @@ mongoTemplate.remove(user, "user");
 
 首先，我们将在运行`insert`之前看到数据库的状态:
 
-```
+```java
 {
 }
 ```
 
 现在我们将插入一个新用户:
 
-```
+```java
 User user = new User();
 user.setName("Jon");
 userRepository.insert(user); 
@@ -457,7 +457,7 @@ userRepository.insert(user);
 
 这是数据库的最终状态:
 
-```
+```java
 {
     "_id" : ObjectId("55b4fda5830b550a8c2ca25a"),
     "_class" : "com.baeldung.model.User",
@@ -475,14 +475,14 @@ userRepository.insert(user);
 
 下面是数据库的初始状态:
 
-```
+```java
 {
 }
 ```
 
 现在我们执行`save`操作:
 
-```
+```java
 User user = new User();
 user.setName("Aaron");
 userRepository.save(user);
@@ -490,7 +490,7 @@ userRepository.save(user);
 
 这导致用户被添加到数据库中:
 
-```
+```java
 {
     "_id" : ObjectId("55b52bb7830b8c9b544b6ad5"),
     "_class" : "com.baeldung.model.User",
@@ -506,7 +506,7 @@ userRepository.save(user);
 
 首先，这里是运行新的`save`之前数据库的状态:
 
-```
+```java
 {
     "_id" : ObjectId("55b52bb7830b8c9b544b6ad5"),
     "_class" : "com.baeldung.model.User",
@@ -516,7 +516,7 @@ userRepository.save(user);
 
 现在我们执行操作:
 
-```
+```java
 user = mongoTemplate.findOne(
   Query.query(Criteria.where("name").is("Jack")), User.class);
 user.setName("Jim");
@@ -525,7 +525,7 @@ userRepository.save(user);
 
 最后，这里是数据库的状态:
 
-```
+```java
 {
     "_id" : ObjectId("55b52bb7830b8c9b544b6ad5"),
     "_class" : "com.baeldung.model.User",
@@ -539,7 +539,7 @@ userRepository.save(user);
 
 下面是调用`delete`之前数据库的状态:
 
-```
+```java
 {
     "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
     "_class" : "com.baeldung.model.User",
@@ -549,13 +549,13 @@ userRepository.save(user);
 
 让我们运行`delete`:
 
-```
+```java
 userRepository.delete(user); 
 ```
 
 这是我们的结果:
 
-```
+```java
 {
 }
 ```
@@ -564,7 +564,7 @@ userRepository.delete(user);
 
 接下来，这是调用`findOne`时数据库的状态:
 
-```
+```java
 {
     "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
     "_class" : "com.baeldung.model.User",
@@ -574,13 +574,13 @@ userRepository.delete(user);
 
 现在让我们执行`findOne`:
 
-```
+```java
 userRepository.findOne(user.getId()) 
 ```
 
 结果将返回现有数据:
 
-```
+```java
 {
     "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
     "_class" : "com.baeldung.model.User",
@@ -592,7 +592,7 @@ userRepository.findOne(user.getId())
 
 调用`exists`前数据库的状态:
 
-```
+```java
 {
     "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
     "_class" : "com.baeldung.model.User",
@@ -602,7 +602,7 @@ userRepository.findOne(user.getId())
 
 现在让我们运行`exists`，它当然会返回`true`:
 
-```
+```java
 boolean isExists = userRepository.exists(user.getId());
 ```
 
@@ -610,7 +610,7 @@ boolean isExists = userRepository.exists(user.getId());
 
 调用`findAll`前数据库的状态:
 
-```
+```java
 [
     {
         "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
@@ -627,13 +627,13 @@ boolean isExists = userRepository.exists(user.getId());
 
 现在让我们用 `Sort`运行`findAll` :
 
-```
+```java
 List<User> users = userRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
 ```
 
 结果将**按姓名升序排序**:
 
-```
+```java
 [
     {
         "_id" : ObjectId("67b5ffa5511fee0e45ed614b"),
@@ -652,7 +652,7 @@ List<User> users = userRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
 
 调用`findAll`前数据库的状态:
 
-```
+```java
 [
     {
         "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
@@ -669,7 +669,7 @@ List<User> users = userRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
 
 现在让我们用分页请求来执行`findAll` :
 
-```
+```java
 Pageable pageableRequest = PageRequest.of(0, 1);
 Page<User> page = userRepository.findAll(pageableRequest);
 List<User> users = pages.getContent();
@@ -677,7 +677,7 @@ List<User> users = pages.getContent();
 
 产生的`users`列表将只有一个用户:
 
-```
+```java
 {
     "_id" : ObjectId("55b5ffa5511fee0e45ed614b"),
     "_class" : "com.baeldung.model.User",
@@ -691,7 +691,7 @@ List<User> users = pages.getContent();
 
 字段级`@Id`标注可以修饰任何类型，包括`long`和`string`:
 
-```
+```java
 @Id
 private String id;
 ```
@@ -700,7 +700,7 @@ private String id;
 
 我们接下来来看看`@Document`:
 
-```
+```java
 @Document
 public class User {
     //

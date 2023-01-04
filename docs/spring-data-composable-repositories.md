@@ -16,7 +16,7 @@
 
 让我们为 Spring 数据 JPA 添加所需的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-jpa</artifactId>
@@ -40,7 +40,7 @@ Spring Data JPA 是数据访问抽象层，在它下面我们可以使用任何�
 
 相反，我们只需要创建接口来扩展通用的 Spring 数据存储库接口:
 
-```
+```java
 public interface LocationRepository extends JpaRepository<Location, Long> {
 }
 ```
@@ -49,7 +49,7 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
 
 此外，Spring Data JPA 配备了一个查询构建器机制，该机制提供了使用方法名称约定代表我们生成查询的能力:
 
-```
+```java
 public interface StoreRepository extends JpaRepository<Store, Long> {
     List<Store> findStoreByLocationId(Long locationId);
 }
@@ -61,7 +61,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
 例如，这里我们通过扩展一个片段库来丰富我们的`ItemTypeRepository`:
 
-```
+```java
 public interface ItemTypeRepository 
   extends JpaRepository<ItemType, Long>, CustomItemTypeRepository {
 }
@@ -69,7 +69,7 @@ public interface ItemTypeRepository
 
 这里`CustomItemTypeRepository`是另一个界面:
 
-```
+```java
 public interface CustomItemTypeRepository {
     void deleteCustomById(ItemType entity);
 }
@@ -77,7 +77,7 @@ public interface CustomItemTypeRepository {
 
 它的实现可以是任何类型的存储库，而不仅仅是 JPA:
 
-```
+```java
 public class CustomItemTypeRepositoryImpl implements CustomItemTypeRepository {
 
     @Autowired
@@ -92,13 +92,13 @@ public class CustomItemTypeRepositoryImpl implements CustomItemTypeRepository {
 
 我们只需要确保它有后缀`Impl`。但是，我们可以使用以下 XML 配置来设置自定义后缀:
 
-```
+```java
 <repositories base-package="com.baeldung.repository" repository-impl-postfix="CustomImpl" />
 ```
 
 或者使用以下注释:
 
-```
+```java
 @EnableJpaRepositories(
   basePackages = "com.baeldung.repository", repositoryImplementationPostfix = "CustomImpl")
 ```
@@ -113,7 +113,7 @@ public class CustomItemTypeRepositoryImpl implements CustomItemTypeRepository {
 
 为了演示这一点，让我们创建两个片段:
 
-```
+```java
 public interface CustomItemTypeRepository {
     void deleteCustom(ItemType entity);
     void findThenDelete(Long id);
@@ -128,7 +128,7 @@ public interface CustomItemRepository {
 
 当然，我们需要编写它们的实现。但是，我们可以扩展单个 JPA 存储库的功能，而不是将这些定制存储库(具有相关功能)插入到它们自己的 JPA 存储库中:
 
-```
+```java
 public interface ItemTypeRepository 
   extends JpaRepository<ItemType, Long>, CustomItemTypeRepository, CustomItemRepository {
 }
@@ -144,7 +144,7 @@ public interface ItemTypeRepository
 
 我们可以通过使用这个测试用例来测试这一点:
 
-```
+```java
 @Test
 public void givenItemAndItemTypeWhenDeleteThenItemTypeDeleted() {
     Optional<ItemType> itemType = composedRepository.findById(1L);

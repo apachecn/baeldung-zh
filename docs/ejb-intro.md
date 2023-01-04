@@ -18,7 +18,7 @@ Enterprise JavaBeans 用于开发可伸缩的、分布式的服务器端组件�
 
 为了使用 EJB 3.2 **，**确保将最新版本添加到`pom.xml` 文件的`dependencies`部分:
 
-```
+```java
 <dependency>
     <groupId>javax</groupId>
     <artifactId>javaee-api</artifactId>
@@ -35,7 +35,7 @@ You will find the latest dependency in the [Maven Repository](https://web.archiv
 
 下面是 Maven 配置文件的代码，它提供了 WildFly 服务器:
 
-```
+```java
 <profile>
     <id>wildfly-standalone</id>
     <build>
@@ -81,7 +81,7 @@ You will find the latest dependency in the [Maven Repository](https://web.archiv
 
 为此，导航到`ejb-remote` 目录并运行以下命令:
 
-```
+```java
 mvn clean package cargo:run
 ```
 
@@ -93,7 +93,7 @@ mvn clean package cargo:run
 
 将文件内容下载并解压缩到要安装服务器的位置后，配置以下环境变量:
 
-```
+```java
 JBOSS_HOME=/Users/$USER/../wildfly.x.x.Final
 JAVA_HOME=`/usr/libexec/java_home -v 1.8`
 ```
@@ -106,7 +106,7 @@ JAVA_HOME=`/usr/libexec/java_home -v 1.8`
 
 通过设置两个概要文件，项目 POM 已经被配置为与 Cargo 插件和手动服务器配置一起工作。默认情况下，选择 Cargo 插件。然而，要将应用程序部署到已经安装、配置并运行的 Wildfly 服务器，请在`ejb-remote`目录中执行以下命令:
 
-```
+```java
 mvn clean install wildfly:deploy -Pwildfly-runtime
 ```
 
@@ -130,7 +130,7 @@ bean 的业务接口可以是`local`或`remote.`
 
 让我们首先创建 bean 的接口，并将其命名为`HelloWorld:`
 
-```
+```java
 @Remote
 public interface HelloWorld {
     String getHelloWorld();
@@ -139,7 +139,7 @@ public interface HelloWorld {
 
 现在我们将实现上面的接口，并将具体实现命名为`HelloWorldBean:`
 
-```
+```java
 @Stateless(name = "HelloWorld")
 public class HelloWorldBean implements HelloWorld {
 
@@ -173,7 +173,7 @@ EJB 容器通常会创建一个无状态 bean 的对象池，并使用这些对�
 
 以下插件配置用于为 bean 设置目标 JAR:
 
-```
+```java
 <plugin>
     <artifactId>maven-ejb-plugin</artifactId>
     <version>2.4</version>
@@ -189,13 +189,13 @@ EJB 容器通常会创建一个无状态 bean 的对象池，并使用这些对�
 
 然后，为了执行远程设置，我们需要对`ejb-remote`项目中的 pom 文件运行以下 Maven 命令:
 
-```
+```java
 mvn clean install 
 ```
 
 那我们应该跑:
 
-```
+```java
 mvn wildfly:deploy
 ```
 
@@ -211,7 +211,7 @@ mvn wildfly:deploy
 
 为了启动 EJB3 客户端，我们需要添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.wildfly</groupId>
     <artifactId>wildfly-ejb-client-bom</artifactId>
@@ -222,7 +222,7 @@ mvn wildfly:deploy
 
 我们依靠这个应用程序的 EJB 远程业务接口来运行客户端。因此，我们需要指定 EJB 客户端 JAR 依赖关系。我们在父 pom 中添加了以下内容:
 
-```
+```java
 <dependency>
     <groupId>com.baeldung.ejb</groupId>
     <artifactId>ejb-remote</artifactId>
@@ -236,7 +236,7 @@ mvn wildfly:deploy
 
 我们需要在`src/main/resources`下创建一个文件，并将其命名为 `jboss-ejb-client.properties` ，该文件将包含访问已部署 bean 所需的所有属性:
 
-```
+```java
 remote.connections=default
 remote.connection.default.host=127.0.0.1
 remote.connection.default.port=8080
@@ -258,7 +258,7 @@ remote.connection.default.password=admin1234!
 
 远程 bean 通过符合以下格式的 URL 定位:
 
-```
+```java
 ejb:${appName}/${moduleName}/${distinctName}/${beanName}!${viewClassName}
 ```
 
@@ -272,7 +272,7 @@ ejb:${appName}/${moduleName}/${distinctName}/${beanName}!${viewClassName}
 
 接下来，让我们看看我们简单的查找逻辑:
 
-```
+```java
 public HelloWorld lookup() throws NamingException { 
     String appName = ""; 
     String moduleName = "remote"; 
@@ -291,7 +291,7 @@ public HelloWorld lookup() throws NamingException {
 
 我们现在将创建/初始化会话上下文:
 
-```
+```java
 public void createInitialContext() throws NamingException {
     Properties prop = new Properties();
     prop.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
@@ -321,7 +321,7 @@ public void createInitialContext() throws NamingException {
 
 为了测试部署和检查设置，我们可以运行以下测试来确保一切正常工作:
 
-```
+```java
 @Test
 public void testEJBClient() {
     EJBClient ejbClient = new EJBClient();

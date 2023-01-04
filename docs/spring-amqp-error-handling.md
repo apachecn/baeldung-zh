@@ -14,7 +14,7 @@
 
 让我们将 RabbitMQ 作为一个独立的服务器来运行。我们将通过执行以下命令在 [Docker 容器](/web/20221126223148/https://www.baeldung.com/dockerizing-spring-boot-application)中运行它:
 
-```
+```java
 docker run -d -p 5672:5672 -p 15672:15672 --name my-rabbit rabbitmq:3-management
 ```
 
@@ -41,7 +41,7 @@ docker run -d -p 5672:5672 -p 15672:15672 --name my-rabbit rabbitmq:3-management
 
 现在，让我们先定义一个简单的队列和交换配置:
 
-```
+```java
 public static final String QUEUE_MESSAGES = "baeldung-messages-queue";
 public static final String EXCHANGE_MESSAGES = "baeldung-messages-exchange";
 
@@ -64,7 +64,7 @@ Binding bindingMessages() {
 
 接下来，让我们创建一个简单的生成器:
 
-```
+```java
 public void sendMessage() {
     rabbitTemplate
       .convertAndSend(SimpleDLQAmqpConfiguration.EXCHANGE_MESSAGES,
@@ -74,7 +74,7 @@ public void sendMessage() {
 
 最后，一个消费者抛出一个异常:
 
-```
+```java
 @RabbitListener(queues = SimpleDLQAmqpConfiguration.QUEUE_MESSAGES)
 public void receiveMessage(Message message) throws BusinessException {
     throw new BusinessException();
@@ -85,13 +85,13 @@ public void receiveMessage(Message message) throws BusinessException {
 
 让我们通过执行下一个 Maven 命令来运行我们的示例应用程序:
 
-```
+```java
 mvn spring-boot:run -Dstart-class=com.baeldung.springamqp.errorhandling.ErrorHandlingApp
 ```
 
 现在，我们应该看到类似的结果输出:
 
-```
+```java
 WARN 22260 --- [ntContainer#0-1] s.a.r.l.ConditionalRejectingErrorHandler :
   Execution of Rabbit message listener failed.
 Caused by: com.baeldung.springamqp.errorhandling.errorhandler.BusinessException: null
@@ -122,7 +122,7 @@ Caused by: com.baeldung.springamqp.errorhandling.errorhandler.BusinessException:
 
 为了配置 DLQ，我们需要在定义队列时指定额外的参数:
 
-```
+```java
 @Bean
 Queue messagesQueue() {
     return QueueBuilder.durable(QUEUE_MESSAGES)
@@ -145,7 +145,7 @@ Queue deadLetterQueue() {
 
 因此，当消息无法传递时，它会被路由到死信交换。但是正如我们已经指出的，DLX 是一个正常的交易所。因此，如果失败的消息路由关键字与交换不匹配，它将不会被传递到 DLQ。
 
-```
+```java
 Exchange: (AMQP default)
 Routing Key: baeldung-messages-queue.dlq
 ```
@@ -154,7 +154,7 @@ Routing Key: baeldung-messages-queue.dlq
 
 此外，消息的原始元信息可在`x-death`报头中获得:
 
-```
+```java
 x-death:
   count: 1
   exchange: baeldung-messages-exchange
@@ -172,7 +172,7 @@ x-death:
 
 在上一节中，我们已经看到，当消息被路由到死信交换时，路由键会发生变化。但是这种行为并不总是可取的。我们可以通过自己配置 DLX 并使用`fanout`类型定义它来改变它:
 
-```
+```java
 public static final String DLX_EXCHANGE_MESSAGES = QUEUE_MESSAGES + ".dlx";
 
 @Bean
@@ -202,7 +202,7 @@ Binding deadLetterBinding() {
 
 现在，如果我们运行我们的示例，失败的消息应该被传递到 DLQ，但是不改变初始路由键:
 
-```
+```java
 Exchange: baeldung-messages-queue.dlx
 Routing Key: baeldung-messages-queue 
 ```
@@ -213,7 +213,7 @@ Routing Key: baeldung-messages-queue
 
 让我们为死信队列定义一个监听器:
 
-```
+```java
 @RabbitListener(queues = QUEUE_MESSAGES_DLQ)
 public void processFailedMessages(Message message) {
     log.info("Received failed message: {}", message.toString());
@@ -222,7 +222,7 @@ public void processFailedMessages(Message message) {
 
 如果我们现在运行我们的代码示例，我们应该会看到日志输出:
 
-```
+```java
 WARN 11752 --- [ntContainer#0-1] s.a.r.l.ConditionalRejectingErrorHandler :
   Execution of Rabbit message listener failed.
 INFO 11752 --- [ntContainer#1-1] c.b.s.e.consumer.SimpleDLQAmqpContainer  : 
@@ -233,7 +233,7 @@ INFO 11752 --- [ntContainer#1-1] c.b.s.e.consumer.SimpleDLQAmqpContainer  :
 
 例如，我们可以将消息重新排队到原始目的地:
 
-```
+```java
 @RabbitListener(queues = QUEUE_MESSAGES_DLQ)
 public void processFailedMessagesRequeue(Message failedMessage) {
     log.info("Received failed message, requeueing: {}", failedMessage.toString());
@@ -244,7 +244,7 @@ public void processFailedMessagesRequeue(Message failedMessage) {
 
 但是这种异常逻辑与默认的重试策略没有什么不同:
 
-```
+```java
 INFO 23476 --- [ntContainer#0-1] c.b.s.e.c.RoutingDLQAmqpContainer        :
   Received message: 
 WARN 23476 --- [ntContainer#0-1] s.a.r.l.ConditionalRejectingErrorHandler :
@@ -255,7 +255,7 @@ INFO 23476 --- [ntContainer#1-1] c.b.s.e.c.RoutingDLQAmqpContainer        :
 
 常见的策略可能需要重试处理消息`n`次，然后拒绝它。让我们通过利用消息头来实现这一策略:
 
-```
+```java
 public void processFailedMessagesRetryHeaders(Message failedMessage) {
     Integer retriesCnt = (Integer) failedMessage.getMessageProperties()
       .getHeaders().get(HEADER_X_RETRIES_COUNT);
@@ -274,7 +274,7 @@ public void processFailedMessagesRetryHeaders(Message failedMessage) {
 
 首先，我们获取`x-retries-count`头的值，然后将这个值与最大允许值进行比较。随后，如果计数器达到尝试次数限制，消息将被丢弃:
 
-```
+```java
 WARN 1224 --- [ntContainer#0-1] s.a.r.l.ConditionalRejectingErrorHandler : 
   Execution of Rabbit message listener failed.
 INFO 1224 --- [ntContainer#1-1] c.b.s.e.consumer.DLQCustomAmqpContainer  : 
@@ -299,7 +299,7 @@ INFO 1224 --- [ntContainer#1-1] c.b.s.e.consumer.DLQCustomAmqpContainer  :
 
 现在让我们来实现这个想法:
 
-```
+```java
 public static final String QUEUE_PARKING_LOT = QUEUE_MESSAGES + ".parking-lot";
 public static final String EXCHANGE_PARKING_LOT = QUEUE_MESSAGES + "exchange.parking-lot";
 
@@ -321,7 +321,7 @@ Binding parkingLotBinding() {
 
 其次，让我们重构侦听器逻辑，向停车场队列发送一条消息:
 
-```
+```java
 @RabbitListener(queues = QUEUE_MESSAGES_DLQ)
 public void processFailedMessagesRetryWithParkingLot(Message failedMessage) {
     Integer retriesCnt = (Integer) failedMessage.getMessageProperties()
@@ -343,7 +343,7 @@ public void processFailedMessagesRetryWithParkingLot(Message failedMessage) {
 
 最终，我们还需要处理到达停车场队列的消息:
 
-```
+```java
 @RabbitListener(queues = QUEUE_PARKING_LOT)
 public void processParkingLotQueue(Message failedMessage) {
     log.info("Received message in parking lot queue");
@@ -355,7 +355,7 @@ public void processParkingLotQueue(Message failedMessage) {
 
 让我们通过运行我们的应用程序来测试这个逻辑:
 
-```
+```java
 WARN 14768 --- [ntContainer#0-1] s.a.r.l.ConditionalRejectingErrorHandler : 
   Execution of Rabbit message listener failed.
 INFO 14768 --- [ntContainer#1-1] c.b.s.e.c.ParkingLotDLQAmqpContainer     : 
@@ -388,7 +388,7 @@ INFO 14768 --- [ntContainer#2-1] c.b.s.e.c.ParkingLotDLQAmqpContainer     :
 
 让我们定义一个自定义的`ErrorHandler`,它将只对`BusinessException`进行重新排队:
 
-```
+```java
 public class CustomErrorHandler implements ErrorHandler {
     @Override
     public void handleError(Throwable t) {
@@ -416,7 +416,7 @@ public class CustomErrorHandler implements ErrorHandler {
 
 **不用实现`ErrorHandler`接口，我们只需提供我们的`FatalExceptionStrategy`** :
 
-```
+```java
 public class CustomFatalExceptionStrategy 
       extends ConditionalRejectingErrorHandler.DefaultExceptionStrategy {
     @Override
@@ -428,7 +428,7 @@ public class CustomFatalExceptionStrategy
 
 最后，我们需要将我们的定制策略传递给`ConditionalRejectingErrorHandler`构造函数:
 
-```
+```java
 @Bean
 public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(
   ConnectionFactory connectionFactory,

@@ -26,7 +26,7 @@ Java 中流行的实用程序类的典型例子是来自`java.util`*的`Arrays` 
 
 Java 没有提供特殊的关键字或创建实用程序类的方法。因此，我们通常**创建一个作为普通 Java 类的实用程序类，但是只有静态成员**:
 
-```
+```java
 public final class StringUtils {
 
     public static boolean isEmpty(String source) {
@@ -47,7 +47,7 @@ public final class StringUtils {
 
 让我们尝试使用一个流行的静态代码分析工具 [SonarQube](/web/20220625232723/https://www.baeldung.com/sonar-qube) 来分析我们的示例实用程序类。我们可以使用构建工具插件在 Java 项目上运行 SonarQube 分析，在本例中是 Maven:
 
-```
+```java
 mvn clean verify sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=XYXYXYXY
 ```
 
@@ -57,7 +57,7 @@ mvn clean verify sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.logi
 
 虽然我们没有给我们的实用程序类添加构造函数，但是 Java 隐式地添加了一个默认的公共构造函数。因此，允许 API 用户创建它的实例:
 
-```
+```java
 StringUtils utils = new StringUtils();
 ```
 
@@ -71,7 +71,7 @@ StringUtils utils = new StringUtils();
 
 让我们向实用程序类添加一个不带参数的私有构造函数。我们将**永远不会真正使用这个私有构造函数**。因此，在调用异常时抛出异常是一个很好的做法:
 
-```
+```java
 public final class StringUtils {
 
     private StringUtils() {
@@ -88,7 +88,7 @@ public final class StringUtils {
 
 我们可以利用 **`NoArgsConstructor` [龙目](/web/20220625232723/https://www.baeldung.com/intro-to-project-lombok)标注来** **自动生成私有构造函数**:
 
-```
+```java
 @NoArgsConstructor(access= AccessLevel.PRIVATE)
 public final class StringUtils {
 
@@ -102,7 +102,7 @@ public final class StringUtils {
 
 我们还可以使用 **`UtilityClass` Lombok 注释，将整个类标记为实用程序**:
 
-```
+```java
 @UtilityClass
 public class StringUtils {
 
@@ -126,7 +126,7 @@ public class StringUtils {
 
 让我们利用 Java 的`SuppressWarnings`注释来**禁用单个类级别的警告**:
 
-```
+```java
 @SuppressWarnings("java:S1118")
 public final class StringUtils {
 
@@ -154,7 +154,7 @@ public final class StringUtils {
 
 从 Java 8 开始，我们可以在接口中定义并**实现 [`static`方法](/web/20220625232723/https://www.baeldung.com/java-static-default-methods):**
 
-```
+```java
 public interface StringUtils {
 
     static boolean isEmpty(String source) {
@@ -175,7 +175,7 @@ public interface StringUtils {
 
 枚举是托管实例的容器。然而，我们可以创建一个实用程序作为一个 **enum，其中没有实例，只包含静态方法**:
 
-```
+```java
 public enum StringUtils {;
 
     public static boolean isEmpty(String source) {

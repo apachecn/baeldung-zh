@@ -16,7 +16,7 @@ JVM 参数`InitialRAMPercentage` 允许我们**配置 Java 应用程序的初始
 
 首先，让我们检查 JVM 中`IntialRAMPercentage` 的默认值:
 
-```
+```java
 $ docker run openjdk:8 java -XX:+PrintFlagsFinal -version | grep -E "InitialRAMPercentage"
    double InitialRAMPercentage                      = 1.562500                            {product}
 
@@ -26,7 +26,7 @@ OpenJDK Runtime Environment (build 1.8.0_292-b10)
 
 然后，让我们为 JVM 设置 50%的初始堆大小:
 
-```
+```java
 $ docker run -m 1GB openjdk:8 java -XX:InitialRAMPercentage=50.0 -XX:+PrintFlagsFinal -version | grep -E "InitialRAMPercentage"
    double InitialRAMPercentage                     := 50.000000                           {product}
 
@@ -42,7 +42,7 @@ OpenJDK Runtime Environment (build 1.8.0_292-b10)
 
 首先，我们将探索`MinRAMPercentage`的默认值:
 
-```
+```java
 $ docker run openjdk:8 java -XX:+PrintFlagsFinal -version | grep -E "MinRAMPercentage"
    double MinRAMPercentage                      = 50.000000                            {product}
 
@@ -52,7 +52,7 @@ OpenJDK Runtime Environment (build 1.8.0_292-b10)
 
 然后，让我们使用参数为总内存为 100MB 的 JVM 设置最大堆大小:
 
-```
+```java
 $ docker run -m 100MB openjdk:8 java -XX:MinRAMPercentage=80.0 -XshowSettings:VM -version
 
 VM settings:
@@ -66,7 +66,7 @@ OpenJDK Runtime Environment (build 1.8.0_292-b10)
 
 此外，JVM 在为小型内存服务器/容器设置最大堆大小时会忽略`MaxRAMPercentage`参数:
 
-```
+```java
 $ docker run -m 100MB openjdk:8 java -XX:MinRAMPercentage=80.0 -XX:MaxRAMPercentage=50.0 -XshowSettings:vm -version
 VM settings:
     Max. Heap Size (Estimated): 77.38M
@@ -83,7 +83,7 @@ OpenJDK Runtime Environment (build 1.8.0_292-b10)
 
 首先，让我们探索一下`MaxRAMPercentage`的默认值:
 
-```
+```java
 $ docker run openjdk:8 java -XX:+PrintFlagsFinal -version | grep -E "MaxRAMPercentage"
    double MaxRAMPercentage                      = 25.000000                            {product}
 
@@ -93,7 +93,7 @@ OpenJDK Runtime Environment (build 1.8.0_292-b10)
 
 然后，对于总内存为 500 MB 的 JVM，我们可以使用参数将最大堆大小设置为 60%:
 
-```
+```java
 $ docker run -m 500MB openjdk:8 java -XX:MaxRAMPercentage=60.0 -XshowSettings:vm -version
 VM settings:
     Max. Heap Size (Estimated): 290.00M
@@ -106,7 +106,7 @@ OpenJDK Runtime Environment (build 1.8.0_292-b10)
 
 类似地，对于大型内存服务器/容器，JVM 会忽略`MinRAMPercentage`参数:
 
-```
+```java
 $ docker run -m 500MB openjdk:8 java -XX:MaxRAMPercentage=60.0 -XX:MinRAMPercentage=30.0 -XshowSettings:vm -version
 VM settings:
     Max. Heap Size (Estimated): 290.00M

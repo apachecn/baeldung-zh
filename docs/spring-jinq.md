@@ -10,7 +10,7 @@ Jinq 提供了一种用 Java 查询数据库的直观便捷的方法。在本教
 
 我们需要在`pom.xml`文件中添加[Jinq 依赖关系](https://web.archive.org/web/20221126231416/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.jinq%22%20AND%20a%3A%22jinq%22):
 
-```
+```java
 <dependency>
     <groupId>org.jinq</groupId>
     <artifactId>jinq-jpa</artifactId>
@@ -20,7 +20,7 @@ Jinq 提供了一种用 Java 查询数据库的直观便捷的方法。在本教
 
 对于 Spring，我们将在`pom.xml`文件中添加[Spring ORM 依赖关系](https://web.archive.org/web/20221126231416/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework%22%20AND%20a%3A%22spring-orm%22):
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-orm</artifactId>
@@ -30,7 +30,7 @@ Jinq 提供了一种用 Java 查询数据库的直观便捷的方法。在本教
 
 最后，为了测试，我们将使用一个 H2 内存数据库，所以我们也将这个[依赖项](https://web.archive.org/web/20221126231416/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.h2database%22%20AND%20a%3A%22h2%22)和`spring-boot-starter-data-jpa`添加到 pom.xml 文件中:
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -49,7 +49,7 @@ Jinq 通过公开一个基于 Java Stream API 的 fluent API，帮助我们编�
 
 让我们看一个按车型过滤汽车的例子:
 
-```
+```java
 jinqDataProvider.streamAll(entityManager, Car.class)
   .where(c -> c.getModel().equals(model))
   .toList();
@@ -57,7 +57,7 @@ jinqDataProvider.streamAll(entityManager, Car.class)
 
 **Jinq 以一种高效的方式将上述代码片段转换成一个 SQL 查询**，因此本例中的最终查询将是:
 
-```
+```java
 select c.* from car c where c.model=?
 ```
 
@@ -93,7 +93,7 @@ Jinq 只支持 JPA 中的基本类型和 SQL 函数的具体列表。它通过�
 
 **Spring 使用存储库的概念来管理实体。**让我们来看看我们的`CarRepository`接口，其中我们有一个方法来检索给定模型的`Car`:
 
-```
+```java
 public interface CarRepository {
     Optional<Car> findByModel(String model);
 }
@@ -103,7 +103,7 @@ public interface CarRepository {
 
 接下来，**我们需要一个基础库**来提供所有的 Jinq 功能:
 
-```
+```java
 public abstract class BaseJinqRepositoryImpl<T> {
     @Autowired
     private JinqJPAStreamProvider jinqDataProvider;
@@ -129,7 +129,7 @@ public abstract class BaseJinqRepositoryImpl<T> {
 
 让我们看一下使用我们刚刚定义的 Jinq 基本存储库的`Car`存储库实现:
 
-```
+```java
 @Repository
 public class CarRepositoryImpl 
   extends BaseJinqRepositoryImpl<Car> implements CarRepository {
@@ -152,7 +152,7 @@ public class CarRepositoryImpl
 
 为了连接`JinqJPAStreamProvider`实例，我们将**添加 Jinq 提供者配置:**
 
-```
+```java
 @Configuration
 public class JinqProviderConfiguration {
 
@@ -168,7 +168,7 @@ public class JinqProviderConfiguration {
 
 最后一步是使用 Hibernate 和我们的 Jinq 配置来配置我们的 Spring 应用程序。作为参考，参见我们的`application.properties`文件，其中我们使用内存中的 H2 实例作为数据库:
 
-```
+```java
 spring.datasource.url=jdbc:h2:~/jinq
 spring.datasource.username=sa
 spring.datasource.password=
@@ -185,7 +185,7 @@ spring.jpa.hibernate.ddl-auto=create-drop
 
 在下一个示例中，我们希望按车型和描述过滤汽车:
 
-```
+```java
 stream()
   .where(c -> c.getModel().equals(model)
     && c.getDescription().contains(desc))
@@ -194,7 +194,7 @@ stream()
 
 这是 Jinq 翻译的 SQL:
 
-```
+```java
 select c.model, c.description from car c where c.model=? and locate(?, c.description)>0
 ```
 
@@ -204,7 +204,7 @@ select c.model, c.description from car c where c.model=? and locate(?, c.descrip
 
 为了映射多个值，Jinq 提供了许多具有多达八个值的`Tuple`类:
 
-```
+```java
 stream()
   .select(c -> new Tuple3<>(c.getModel(), c.getYear(), c.getEngine()))
   .toList()
@@ -212,7 +212,7 @@ stream()
 
 以及翻译后的 SQL:
 
-```
+```java
 select c.model, c.year, c.engine from car c
 ```
 
@@ -222,7 +222,7 @@ select c.model, c.year, c.engine from car c
 
 例如，如果我们在`Car`中添加制造商实体:
 
-```
+```java
 @Entity(name = "CAR")
 public class Car {
     //...
@@ -236,7 +236,7 @@ public class Car {
 
 以及具有列表`Car`的`Manufacturer`实体:
 
-```
+```java
 @Entity(name = "MANUFACTURER")
 public class Manufacturer {
     // ...
@@ -249,7 +249,7 @@ public class Manufacturer {
 
 我们现在能够获得给定模型的`Manufacturer`:
 
-```
+```java
 Optional<Manufacturer> manufacturer = stream()
   .where(c -> c.getModel().equals(model))
   .select(c -> c.getManufacturer())
@@ -258,13 +258,13 @@ Optional<Manufacturer> manufacturer = stream()
 
 正如所料， **Jinq 将在这个场景中使用一个内部连接 SQL 子句**:
 
-```
+```java
 select m.name, m.city from car c inner join manufacturer m on c.name=m.name where c.model=?
 ```
 
 **如果我们需要对`join`子句有更多的控制，以便对实体实现更复杂的关系，比如多对多关系，我们可以使用`join`方法:**
 
-```
+```java
 List<Pair<Manufacturer, Car>> list = streamOf(Manufacturer.class)
   .join(m -> JinqStream.from(m.getCars()))
   .toList()
@@ -280,7 +280,7 @@ List<Pair<Manufacturer, Car>> list = streamOf(Manufacturer.class)
 
 例如，让我们使用`count`方法来获得数据库中具体车型的汽车总数:
 
-```
+```java
 long total = stream()
   .where(c -> c.getModel().equals(model))
   .count()
@@ -288,7 +288,7 @@ long total = stream()
 
 最终的 SQL 使用了预期的`count` SQL 方法:
 
-```
+```java
 select count(c.model) from car c where c.model=?
 ```
 
@@ -300,7 +300,7 @@ Jinq 还提供了`sum`、`average`、`min`、`max,`等聚合方法，以及组�
 
 让我们看一个例子，我们想跳过前 10 辆车，只得到 20 件商品:
 
-```
+```java
 stream()
   .skip(10)
   .limit(20)
@@ -309,7 +309,7 @@ stream()
 
 生成的 SQL 是:
 
-```
+```java
 select c.* from car c limit ? offset ?
 ```
 

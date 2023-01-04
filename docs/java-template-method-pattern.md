@@ -14,7 +14,7 @@
 
 给定模式的定义，**算法的结构将在定义模板`build()`方法**的基类中定义:
 
-```
+```java
 public abstract class ComputerBuilder {
 
     // ...
@@ -44,7 +44,7 @@ public abstract class ComputerBuilder {
 
 已经设置了基类，让我们试着通过创建两个子类来使用它。一个制造“标准”计算机，另一个制造“高端”计算机:
 
-```
+```java
 public class StandardComputerBuilder extends ComputerBuilder {
 
     @Override
@@ -71,7 +71,7 @@ public class StandardComputerBuilder extends ComputerBuilder {
 
 这里是`HighEndComputerBuilder`的变体:
 
-```
+```java
 public class HighEndComputerBuilder extends ComputerBuilder {
 
     @Override
@@ -100,7 +100,7 @@ public class HighEndComputerBuilder extends ComputerBuilder {
 
 现在，让我们来看看它的运行情况:
 
-```
+```java
 new StandardComputerBuilder()
   .buildComputer();
   .getComputerParts()
@@ -120,7 +120,7 @@ new HighEndComputerBuilder()
 
 模板方法的一个例子是`addAll()`方法，尽管它没有被明确定义为`final:`
 
-```
+```java
 public boolean addAll(int index, Collection<? extends E> c) {
     rangeCheckForAdd(index);
     boolean modified = false;
@@ -134,7 +134,7 @@ public boolean addAll(int index, Collection<? extends E> c) {
 
 用户只需要实现`add()`方法:
 
-```
+```java
 public void add(int index, E element) {
     throw new UnsupportedOperationException();
 }

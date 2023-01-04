@@ -42,7 +42,7 @@
 
 首先，我们将创建一个新的 Maven 项目，并将依赖项放入其中。注意，我们正在将`[spring-cloud-starter-parent](https://web.archive.org/web/20220807183451/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.cloud%22%20AND%20a%3A%22spring-cloud-starter-parent%22)`导入到本教程中描述的所有项目中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
@@ -65,7 +65,7 @@
 
 然后我们将创建主应用程序类:
 
-```
+```java
 @SpringBootApplication
 @EnableEurekaServer
 public class EurekaServerApplication {
@@ -77,7 +77,7 @@ public class EurekaServerApplication {
 
 最后，我们将以`YAML`格式配置属性，因此`application.yml`将是我们的配置文件:
 
-```
+```java
 server:
   port: 8761
 eureka:
@@ -104,7 +104,7 @@ eureka:
 
 但是首先，我们将添加依赖项。同样，我们可以让`spring-cloud-starter-parent` 依赖关系来为我们计算工件版本:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-netflix-eureka-starter</artifactId>
@@ -117,7 +117,7 @@ eureka:
 
 这里我们将实现主要的应用程序类:
 
-```
+```java
 @SpringBootApplication
 @RestController
 public class EurekaClientApplication implements GreetingController {
@@ -143,7 +143,7 @@ public class EurekaClientApplication implements GreetingController {
 
 和`GreetingController`界面:
 
-```
+```java
 public interface GreetingController {
     @RequestMapping("/greeting")
     String greeting();
@@ -158,7 +158,7 @@ public interface GreetingController {
 
 最后，我们必须告诉我们的客户注册中心的位置:
 
-```
+```java
 spring:
   application:
     name: spring-cloud-eureka-client
@@ -188,7 +188,7 @@ eureka:
 
 我们将使用这个`Application`来获取这个服务的所有实例的列表，选择一个合适的实例，然后使用这个`InstanceInfo`来获取主机名和端口。有了这个，我们可以对任何`http client:`做一个标准的请求
 
-```
+```java
 @Autowired
 private EurekaClient eurekaClient;
 
@@ -211,7 +211,7 @@ public String greeting(Model model) {
 
 为了设置我们的`Feign Client`项目，我们将向它的`pom.xml`添加以下四个依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-feign</artifactId>
@@ -240,7 +240,7 @@ public String greeting(Model model) {
 
 这将是我们的`Feign Client`界面:
 
-```
+```java
 @FeignClient("spring-cloud-eureka-client")
 public interface GreetingClient {
     @RequestMapping("/greeting")
@@ -250,7 +250,7 @@ public interface GreetingClient {
 
 这里我们将实现主应用程序类，它同时充当控制器:
 
-```
+```java
 @SpringBootApplication
 @EnableFeignClients
 @Controller
@@ -272,7 +272,7 @@ public class FeignClientApplication {
 
 这将是我们视图的 HTML 模板:
 
-```
+```java
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
@@ -286,7 +286,7 @@ public class FeignClientApplication {
 
 `application.yml`配置文件与上一步几乎相同:
 
-```
+```java
 spring:
   application:
     name: spring-cloud-eureka-feign-client
@@ -300,7 +300,7 @@ eureka:
 
 现在我们可以构建和运行这个服务了。最后，我们将浏览器指向 [`http://localhost:8080/get-greeting`](https://web.archive.org/web/20220807183451/http://localhost:8080/get-greeting) ，它应该会显示如下内容:
 
-```
+```java
 Hello from SPRING-CLOUD-EUREKA-CLIENT!
 ```
 
@@ -308,7 +308,7 @@ Hello from SPRING-CLOUD-EUREKA-CLIENT!
 
 在运行 Eureka 服务器时，我们经常会遇到如下异常:
 
-```
+```java
 com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
 ```
 
@@ -323,7 +323,7 @@ com.netflix.discovery.shared.transport.TransportException: Cannot execute reques
 
 所以我们不应该在`Eureka`服务器应用程序中将这些属性配置为`true`。应该输入`application.yml`的正确设置是:
 
-```
+```java
 eureka:
   client:
     registerWithEureka: false

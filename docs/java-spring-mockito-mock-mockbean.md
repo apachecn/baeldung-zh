@@ -24,7 +24,7 @@ Learn to configure a method call to throw an exception in Mockito.[Read more](/w
 
 让我们看一个例子:
 
-```
+```java
 @Test
 public void givenCountMethodMocked_WhenCountInvoked_ThenMockedValueReturned() {
     UserRepository localMockRepository = Mockito.mock(UserRepository.class);
@@ -47,7 +47,7 @@ public void givenCountMethodMocked_WhenCountInvoked_ThenMockedValueReturned() {
 
 让我们看一个使用`MockitoJUnitRunner`的例子:
 
-```
+```java
 @RunWith(MockitoJUnitRunner.class)
 public class MockAnnotationUnitTest {
 
@@ -68,7 +68,7 @@ public class MockAnnotationUnitTest {
 
 除了使代码可读性更好之外， **`@Mock`还使得在失败的情况下更容易找到问题模拟，因为字段的名称出现在失败消息中:**
 
-```
+```java
 Wanted but not invoked:
 mockRepository.count();
 -> at org.baeldung.MockAnnotationTest.testMockAnnotation(MockAnnotationTest.java:22)
@@ -87,7 +87,7 @@ Actually, there were zero interactions with this mock.
 
 为了使用这个注释，我们必须使用`SpringRunner`来运行测试:
 
-```
+```java
 @RunWith(SpringRunner.class)
 public class MockBeanAnnotationIntegrationTest {
 

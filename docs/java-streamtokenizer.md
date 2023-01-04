@@ -31,7 +31,7 @@
 
 这里，我们将创建一个例子来理解`StreamTokenizer`机制。我们首先创建这个类的一个实例，然后调用`nextToken()`方法，直到它返回`TT_EOF`值:
 
-```
+```java
 private static final int QUOTE_CHARACTER = '\'';
 private static final int DOUBLE_QUOTE_CHARACTER = '"';
 
@@ -61,7 +61,7 @@ public static List<Object> streamTokenizerWithDefaultConfiguration(Reader reader
 
 测试文件只包含:
 
-```
+```java
 3 quick brown foxes jump over the "lazy" dog!
 #test1
 //test2
@@ -69,7 +69,7 @@ public static List<Object> streamTokenizerWithDefaultConfiguration(Reader reader
 
 现在，如果我们打印出数组的内容，我们会看到:
 
-```
+```java
 Number: 3.0
 Word: quick
 Word: brown
@@ -102,7 +102,7 @@ Word: test1
 
 我们只需要在`streamTokenizer` 对象上调用这些方法:
 
-```
+```java
 public static List<Object> streamTokenizerWithCustomConfiguration(Reader reader) throws IOException {
     StreamTokenizer streamTokenizer = new StreamTokenizer(reader);
     List<Object> tokens = new ArrayList<Object>();
@@ -120,7 +120,7 @@ public static List<Object> streamTokenizerWithCustomConfiguration(Reader reader)
 
 这里我们有一个新的输出:
 
-```
+```java
 // same output as earlier
 Word: "lazy"
 Word: dog!

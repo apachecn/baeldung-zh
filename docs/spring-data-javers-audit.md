@@ -24,7 +24,7 @@
 
 首先，我们需要将 JaVers Spring Boot 启动器依赖项添加到我们的项目中。根据持久存储的类型，我们有两种选择: [`org.javers:javers-spring-boot-starter-sql`](https://web.archive.org/web/20220628063434/https://search.maven.org/search?q=javers-spring-boot-starter-sql) 和 [`org.javers:javers-spring-boot-starter-mongo`](https://web.archive.org/web/20220628063434/https://search.maven.org/search?q=javers-spring-boot-starter-mongo) 。在本教程中，我们将使用 Spring Boot SQL 启动。
 
-```
+```java
 <dependency>
     <groupId>org.javers</groupId>
     <artifactId>javers-spring-boot-starter-sql</artifactId>
@@ -34,7 +34,7 @@
 
 因为我们将使用 H2 数据库，所以让我们也包括这个依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -55,7 +55,7 @@ JaVers 允许配置几个选项，尽管[Spring Boot 默认值](https://web.arch
 
 让我们只覆盖一个对象`newObjectSnapshot`，这样我们就可以获得新创建对象的快照:
 
-```
+```java
 javers.newObjectSnapshot=true 
 ```
 
@@ -85,7 +85,7 @@ JaVers 内部定义了以下类型:实体、值对象、值、容器和原语。
 
 让我们定义一下`Store`实体:
 
-```
+```java
 @Entity
 public class Store {
 
@@ -115,7 +115,7 @@ public class Store {
 
 可嵌入的类以通常的方式定义:
 
-```
+```java
 @Embeddable
 public class Address {
     private String address;
@@ -129,7 +129,7 @@ public class Address {
 
 让我们用那个注释来定义`StoreRepository`:
 
-```
+```java
 @JaversSpringDataAuditable
 public interface StoreRepository extends CrudRepository<Store, Integer> {
 }
@@ -137,7 +137,7 @@ public interface StoreRepository extends CrudRepository<Store, Integer> {
 
 此外，我们将有`ProductRepository`，但没有注释:
 
-```
+```java
 public interface ProductRepository extends CrudRepository<Product, Integer> {
 }
 ```
@@ -146,7 +146,7 @@ public interface ProductRepository extends CrudRepository<Product, Integer> {
 
 例如，我们可以定义一个方法来持久化一个产品，如下所示:
 
-```
+```java
 @JaversAuditable
 public void saveProduct(Product product) {
     // save object
@@ -155,7 +155,7 @@ public void saveProduct(Product product) {
 
 或者，我们甚至可以将此注释直接添加到存储库接口中的方法之上:
 
-```
+```java
 public interface ProductRepository extends CrudRepository<Product, Integer> {
     @Override
     @JaversAuditable
@@ -169,7 +169,7 @@ JaVers 中每一个提交的变化都应该有它的作者。而且，JaVers 支
 
 因此，每次提交都是由特定的经过身份验证的用户进行的。然而，在本教程中，我们将创建一个非常简单的`AuthorProvider`接口的定制实现:
 
-```
+```java
 private static class SimpleAuthorProvider implements AuthorProvider {
     @Override
     public String provide() {
@@ -180,7 +180,7 @@ private static class SimpleAuthorProvider implements AuthorProvider {
 
 最后一步，为了让 JaVers 使用我们的定制实现，我们需要覆盖默认的配置 bean:
 
-```
+```java
 @Bean
 public AuthorProvider provideJaversAuthor() {
     return new SimpleAuthorProvider();
@@ -195,7 +195,7 @@ public AuthorProvider provideJaversAuthor() {
 
 为了获得一些初始样本数据，让我们使用一个`EventListener`用一些产品填充我们的数据库:
 
-```
+```java
 @EventListener
 public void appReady(ApplicationReadyEvent event) {
     Store store = new Store("Baeldung store", new Address("Some street", 22222));
@@ -213,7 +213,7 @@ public void appReady(ApplicationReadyEvent event) {
 
 让我们在应用程序启动后检查快照:
 
-```
+```java
 @GetMapping("/stores/snapshots")
 public String getStoresSnapshots() {
     QueryBuilder jqlQuery = QueryBuilder.byClass(Store.class);
@@ -224,7 +224,7 @@ public String getStoresSnapshots() {
 
 在上面的代码中，我们向 JaVers 查询了`Store`类的快照。如果我们向这个端点发出请求，我们将得到如下所示的结果:
 
-```
+```java
 [
   {
     "commitMetadata": {
@@ -280,7 +280,7 @@ public String getStoresSnapshots() {
 
 例如，我们可以用`Store`实体中的注释来注释`products`字段:
 
-```
+```java
 @DiffIgnore
 private List<Product> products = new ArrayList<>();
 ```
@@ -293,7 +293,7 @@ private List<Product> products = new ArrayList<>();
 
 让我们定义一个方法来更新商店实体和商店中的所有产品:
 
-```
+```java
 public void rebrandStore(int storeId, String updatedName) {
     Optional<Store> storeOpt = storeRepository.findById(storeId);
     storeOpt.ifPresent(store -> {
@@ -308,13 +308,13 @@ public void rebrandStore(int storeId, String updatedName) {
 
 如果我们运行这个方法，我们将在调试输出中得到下面一行(在相同的产品和商店计数的情况下):
 
-```
+```java
 11:29:35.439 [http-nio-8080-exec-2] INFO  org.javers.core.Javers - Commit(id:2.0, snapshots:3, author:Baeldung Author, changes - ValueChange:3), done in 48 millis (diff:43, persist:5)
 ```
 
 既然 JaVers 已经成功地持久化了更改，那么让我们查询产品的快照:
 
-```
+```java
 @GetMapping("/products/snapshots")
 public String getProductSnapshots() {
     QueryBuilder jqlQuery = QueryBuilder.byClass(Product.class);
@@ -325,7 +325,7 @@ public String getProductSnapshots() {
 
 我们将获得以前的`INITIAL`次提交和新的`UPDATE`次提交:
 
-```
+```java
  {
     "commitMetadata": {
       "author": "Baeldung Author",
@@ -360,7 +360,7 @@ JaVers 将变化记录为对象版本之间的原子差异。正如我们从 JaV
 
 让我们更新一个产品价格:
 
-```
+```java
 public void updateProductPrice(Integer productId, Double price) {
     Optional<Product> productOpt = productRepository.findById(productId);
     productOpt.ifPresent(product -> {
@@ -372,7 +372,7 @@ public void updateProductPrice(Integer productId, Double price) {
 
 然后，让我们查询 JaVers 的更改:
 
-```
+```java
 @GetMapping("/products/{productId}/changes")
 public String getProductChanges(@PathVariable int productId) {
     Product product = storeService.findProductById(productId);
@@ -384,7 +384,7 @@ public String getProductChanges(@PathVariable int productId) {
 
 输出包含更改后的属性及其前后的值:
 
-```
+```java
 [
   {
     "changeType": "ValueChange",
@@ -422,7 +422,7 @@ public String getProductChanges(@PathVariable int productId) {
 
 让我们使用子值对象范围，并获得单个商店的阴影:
 
-```
+```java
 @GetMapping("/stores/{storeId}/shadows")
 public String getStoreShadows(@PathVariable int storeId) {
     Store store = storeService.findStoreById(storeId);
@@ -435,7 +435,7 @@ public String getStoreShadows(@PathVariable int storeId) {
 
 因此，我们将获得带有`Address`值对象的商店实体:
 
-```
+```java
 {
   "commitMetadata": {
     "author": "Baeldung Author",

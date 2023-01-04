@@ -46,14 +46,14 @@ A practical guide to Regular Expressions API in Java.[Read more](/web/2022082914
 
 ### 可用签名
 
-```
+```java
 public String[] split(String regex, int limit)
 public String[] split(String regex)
 ```
 
 ### 例子
 
-```
+```java
 @Test
 public void whenSplit_thenCorrect() {
     String s = "Welcome to Baeldung";
@@ -69,7 +69,7 @@ public void whenSplit_thenCorrect() {
 
 *   `PatternSyntaxException`–如果分隔符的模式无效。
 
-```
+```java
 @Test(expected = PatternSyntaxException.class)
 public void whenPassInvalidParameterToSplit_thenPatternSyntaxExceptionThrown() {
     String s = "Welcome*to Baeldung";

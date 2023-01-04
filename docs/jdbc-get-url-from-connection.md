@@ -10,7 +10,7 @@
 
 为了演示这一点，我们将使用方法`getConnection`创建一个`DBConfiguration`类:
 
-```
+```java
 public class DBConfiguration {
 
     public static Connection getConnection() throws Exception {
@@ -25,7 +25,7 @@ public class DBConfiguration {
 
 我们可以通过使用`[DatabaseMetaData#getURL](https://web.archive.org/web/20220524020832/https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/java/sql/DatabaseMetaData.html#getURL())`方法获得数据库 URL:
 
-```
+```java
 @Test
 void givenConnectionObject_whenExtractMetaData_thenGetDbURL() throws Exception {
     Connection connection = DBConfiguration.getConnection();

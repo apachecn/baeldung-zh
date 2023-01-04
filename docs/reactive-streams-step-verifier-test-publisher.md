@@ -14,7 +14,7 @@ Spring Reactor 附带了几个用于测试反应流的类。
 
 我们可以通过添加[的`reactor-test`依赖](https://web.archive.org/web/20221126234152/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22io.projectreactor%22%20AND%20a%3A%22reactor-test%22)来得到这些:
 
-```
+```java
 <dependency>
     <groupId>io.projectreactor</groupId>
     <artifactId>reactor-test</artifactId>
@@ -40,7 +40,7 @@ Spring Reactor 附带了几个用于测试反应流的类。
 
 由于高级操作符超出了本文的范围，我们将只创建一个简单的 publisher，它只输出映射到大写字母的四个字母的名称:
 
-```
+```java
 Flux<String> source = Flux.just("John", "Monica", "Mark", "Cloe", "Frank", "Casper", "Olivia", "Emily", "Cate")
   .filter(name -> name.length() == 4)
   .map(String::toUpperCase);
@@ -50,7 +50,7 @@ Flux<String> source = Flux.just("John", "Monica", "Mark", "Cloe", "Frank", "Casp
 
 现在，让我们用`StepVerifier` **来测试我们的`source `，以便测试当有人订阅**时会发生什么:
 
-```
+```java
 StepVerifier
   .create(source)
   .expectNext("JOHN")
@@ -76,7 +76,7 @@ StepVerifier
 
 **当订阅**时，我们将让此`Mono `因错误而立即终止:
 
-```
+```java
 Flux<String> error = source.concatWith(
   Mono.error(new IllegalArgumentException("Our message"))
 );
@@ -84,7 +84,7 @@ Flux<String> error = source.concatWith(
 
 现在，在四个元素之后，**我们期望我们的流以一个异常**终止:
 
-```
+```java
 StepVerifier
   .create(error)
   .expectNextCount(4)
@@ -115,7 +115,7 @@ StepVerifier
 
 为了演示我们如何测试事件之间的预期延迟，让我们创建一个运行两秒钟的间隔为一秒钟的`Flux `。**如果计时器运行正确，我们应该只得到两个元素:**
 
-```
+```java
 StepVerifier
   .withVirtualTime(() -> Flux.interval(Duration.ofSeconds(1)).take(2))
   .expectSubscription()
@@ -143,7 +143,7 @@ StepVerifier
 
 让我们创建一个自定义发布者。**它将发射一些元素，然后完成，暂停，再发射一个元素，我们将删除**:
 
-```
+```java
 Flux<Integer> source = Flux.<Integer>create(emitter -> {
     emitter.next(1);
     emitter.next(2);
@@ -162,7 +162,7 @@ Flux<Integer> source = Flux.<Integer>create(emitter -> {
 
 所以，让我们通过使用`verifyThenAssertThat. `来验证这个行为。这个方法返回`StepVerifier.Assertions `，我们可以在上面添加我们的断言:
 
-```
+```java
 @Test
 public void droppedElements() {
     StepVerifier.create(source)
@@ -195,7 +195,7 @@ public void droppedElements() {
 
 让我们创建一个简单的`TestPublisher `，它发出几个信号，然后以一个异常终止:
 
-```
+```java
 TestPublisher
   .<String>create()
   .next("First", "Second", "Third")
@@ -210,7 +210,7 @@ TestPublisher
 
 首先，让我们创建一个使用`Flux<String> `作为构造函数参数来执行操作`getUpperCase()`的类:
 
-```
+```java
 class UppercaseConverter {
     private final Flux<String> source;
 
@@ -229,7 +229,7 @@ class UppercaseConverter {
 
 我们可以用`TestPublisher:`轻松实现这一点
 
-```
+```java
 final TestPublisher<String> testPublisher = TestPublisher.create();
 
 UppercaseConverter uppercaseConverter = new UppercaseConverter(testPublisher.flux());
@@ -248,7 +248,7 @@ StepVerifier.create(uppercaseConverter.getUpperCase())
 
 让我们来看看一个不会为`null`元素抛出`NullPointerException `的`TestPublisher `:
 
-```
+```java
 TestPublisher
   .createNoncompliant(TestPublisher.Violation.ALLOW_NULL)
   .emit("1", "2", null, "3"); 

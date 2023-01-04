@@ -14,7 +14,7 @@ JUnit 5 库提供了比以前版本更多的新特性。一个这样的特性是
 
 我们需要添加主要的 JUnit 5 `[junit-jupiter-engine](https://web.archive.org/web/20221128055004/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22junit-jupiter-engine%22%20AND%20g%3Aorg.junit.jupiter)`依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-engine</artifactId>
@@ -24,7 +24,7 @@ JUnit 5 库提供了比以前版本更多的新特性。一个这样的特性是
 
 除此之外，我们还需要添加 [`junit-jupiter-api`](https://web.archive.org/web/20221128055004/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22junit-jupiter-api%22%20AND%20g%3Aorg.junit.jupiter) 的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-api</artifactId>
@@ -34,7 +34,7 @@ JUnit 5 库提供了比以前版本更多的新特性。一个这样的特性是
 
 同样，我们可以向我们的`build.gradle`文件添加必要的依赖项:
 
-```
+```java
 testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.8.1'
 testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.8.1'
 ```
@@ -73,7 +73,7 @@ testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.8
 
 让我们定义一下`UserIdGeneratorImpl`类:
 
-```
+```java
 public class UserIdGeneratorImpl implements UserIdGenerator {
     private boolean isFeatureEnabled;
 
@@ -92,7 +92,7 @@ public class UserIdGeneratorImpl implements UserIdGenerator {
 
 让我们看看这个是什么样子的:
 
-```
+```java
 Given feature switch is disabled When firstName = "John" and lastName = "Smith" Then "JSmith" is returned
 Given feature switch is enabled When firstName = "John" and lastName = "Smith" Then "baelJSmith" is returned
 ```
@@ -103,7 +103,7 @@ Given feature switch is enabled When firstName = "John" and lastName = "Smith" T
 
 这是我们的测试目标方法`UserIdGeneratorImpl.generate`的测试模板:
 
-```
+```java
 public class UserIdGeneratorImplUnitTest {
     @TestTemplate
     @ExtendWith(UserIdGeneratorTestInvocationContextProvider.class)
@@ -125,7 +125,7 @@ public class UserIdGeneratorImplUnitTest {
 
 同样，模板方法接收一个`UserIdGeneratorTestCase`的实例作为参数。这只是一个测试用例的输入和预期结果的包装类:
 
-```
+```java
 public class UserIdGeneratorTestCase {
     private boolean isFeatureEnabled;
     private String firstName;
@@ -148,7 +148,7 @@ public class UserIdGeneratorTestCase {
 
 现在让我们来定义这个类:
 
-```
+```java
 public class UserIdGeneratorTestInvocationContextProvider implements TestTemplateInvocationContextProvider {
     //...
 }
@@ -161,7 +161,7 @@ public class UserIdGeneratorTestInvocationContextProvider implements TestTemplat
 
 让我们从实现`supportsTestTemplate`方法开始:
 
-```
+```java
 @Override
 public boolean supportsTestTemplate(ExtensionContext extensionContext) {
     return true;
@@ -172,7 +172,7 @@ JUnit 5 执行引擎首先调用`supportsTestTemplate`方法来验证提供者�
 
 现在，让我们实现`provideTestTemplateInvocationContexts`方法:
 
-```
+```java
 @Override
 public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
   ExtensionContext extensionContext) {
@@ -211,7 +211,7 @@ public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContex
 
 让我们定义返回第一个调用上下文实例的`featureDisabledContext`方法:
 
-```
+```java
 private TestTemplateInvocationContext featureDisabledContext(
   UserIdGeneratorTestCase userIdGeneratorTestCase) {
     return new TestTemplateInvocationContext() {
@@ -250,7 +250,7 @@ private TestTemplateInvocationContext featureDisabledContext(
 
 然而，对于由`featureEnabledContext`方法返回的第二个调用上下文，让我们注册一组不同的扩展(保留`GenericTypedParameterResolver`):
 
-```
+```java
 private TestTemplateInvocationContext featureEnabledContext(
   UserIdGeneratorTestCase userIdGeneratorTestCase) {
     return new TestTemplateInvocationContext() {

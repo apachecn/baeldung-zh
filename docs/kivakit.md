@@ -60,7 +60,7 @@ KivaKit 的另一个集成特性是 mixins 迷你框架。KivaKit mixins 允许�
 
 但是我们很快就遇到了这个设计的问题。我们知道，在 Java 中，一个已经有基类的类也不能扩展`BaseComponent`。KivaKit mixins 允许将`BaseComponent`功能添加到已经有基类的组件中。例如:
 
-```
+```java
 public class MyComponent extends MyBaseClass implements ComponentMixin { [...] }
 ```
 
@@ -74,7 +74,7 @@ public class MyComponent extends MyBaseClass implements ComponentMixin { [...] }
 
 **服务定位器类注册中心允许我们将组件连接在一起**。A `[Registry](https://web.archive.org/web/20220625162908/https://www.kivakit.org/1.0.0/javadoc/kivakit/kivakit.configuration/com/telenav/kivakit/configuration/lookup/Registry.html)`提供了与依赖注入(DI)大致相同的功能。然而，它在一个重要方面不同于 DI 的典型用法。在服务定位器模式中，组件接触它们需要的接口。另一方面，DI 将接口推入组件。因此，服务定位器方法改进了封装。也缩小了参考的范围。例如，`Registry`可以在一个方法中灵活使用:
 
-```
+```java
 class MyData extends BaseComponent {
 
     [...]
@@ -173,7 +173,7 @@ class MyData extends BaseComponent {
 
 这些插件可以组合起来提供一个 RESTful 微服务，带有 Swagger 文档和 web 界面:
 
-```
+```java
 var application = new MyRestApplication();
 listenTo(new JettyServer())
     .port(8080)
@@ -200,7 +200,7 @@ KivaKit 的文档由 Lexakai 生成。 [Lexakai](https://web.archive.org/web/202
 
 首先，我们将`kivakit`存储库克隆到我们的工作空间中:
 
-```
+```java
 mkdir ~/Workspace
 cd ~/Workspace
 git clone --branch develop https://github.com/Telenav/kivakit.git
@@ -208,13 +208,13 @@ git clone --branch develop https://github.com/Telenav/kivakit.git
 
 接下来，我们将样本 bash 配置文件复制到我们的主文件夹:
 
-```
+```java
 cp kivakit/setup/profile ~/.profile
 ```
 
 然后我们修改~/。概要文件指向我们的工作区，以及我们的 Java 和 Maven 安装:
 
-```
+```java
 export KIVAKIT_WORKSPACE=$HOME/Workspace 
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-16.jdk/Contents/Home 
 export M2_HOME=$HOME/Developer/apache-maven-3.8.2
@@ -222,13 +222,13 @@ export M2_HOME=$HOME/Developer/apache-maven-3.8.2
 
 在我们的概要文件建立之后，我们确保我们正在运行`bash`(在 macOS 上，`zsh`现在是默认的):
 
-```
+```java
 chsh -s /bin/bash
 ```
 
 最后，我们重新启动终端程序并执行命令:
 
-```
+```java
 $KIVAKIT_HOME/setup/setup.sh
 ```
 

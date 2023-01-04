@@ -14,7 +14,7 @@
 
 **我们可以通过调用`Cipher.getInstance()`静态方法来实例化一个密码对象，使用请求的转换的名称作为参数:**
 
-```
+```java
 Cipher cipher = Cipher.getInstance("AES");
 ```
 
@@ -22,7 +22,7 @@ Cipher cipher = Cipher.getInstance("AES");
 
 首先，我们需要**使用 [`Security.getProviders()`](https://web.archive.org/web/20220628062613/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/security/Security.html#getProviders()) 方法**获得注册提供者的列表。**然后，调用 `Provider` 对象上的`[getServices()](https://web.archive.org/web/20220628062613/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/security/Provider.html#getServices())` 方法将返回一组不可修改的由这个** `**Provider**` **:** 支持的所有服务
 
-```
+```java
 for (Provider provider : Security.getProviders()) {
     for (Provider.Service service : provider.getServices()) {
         String algorithm = service.getAlgorithm();
@@ -33,7 +33,7 @@ for (Provider provider : Security.getProviders()) {
 
 可用算法列表:
 
-```
+```java
 SHA3-224
 NONEwithDSA
 DSA
@@ -47,19 +47,19 @@ SHA1withDSA
 
 然而，**并不是所有列出的算法都被`[Cipher.getInstance()](https://web.archive.org/web/20220628062613/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/javax/crypto/Cipher.html#getInstance(java.lang.String))`静态方法作为转换来支持** **。比如用`SHA3-224`实例化一个密码对象，这是一个哈希算法，会抛出一个`NoSuchAlgorithmException:`**
 
-```
+```java
 Cipher cipher = Cipher.getInstance("SHA3-224");
 ```
 
 让我们来看看运行时异常消息:
 
-```
+```java
 java.security.NoSuchAlgorithmException: Cannot find any provider supporting SHA3-224
 ```
 
 **因此，我们需要过滤列表并保留带有`Cipher`类型**的服务。我们可以使用 Java 流来过滤和收集兼容算法的名称列表:
 
-```
+```java
 List<String> algorithms = Arrays.stream(Security.getProviders())
   .flatMap(provider -> provider.getServices().stream())
   .filter(service -> "Cipher".equals(service.getType()))
@@ -70,7 +70,7 @@ List<String> algorithms = Arrays.stream(Security.getProviders())
 
 结果将类似于:
 
-```
+```java
 AES_192/CBC/NoPadding
 AES_192/OFB/NoPadding
 AES_192/CFB/NoPadding

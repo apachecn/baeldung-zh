@@ -16,7 +16,7 @@
 
 要将 Hystrix 与 Ratpack 一起使用，我们需要项目`pom.xml`中的 ratpack-hystrix 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>io.ratpack</groupId>
     <artifactId>ratpack-hystrix</artifactId>
@@ -28,7 +28,7 @@ ratpack-hystrix 的最新版本可以在[这里](https://web.archive.org/web/202
 
 为了利用 Ratpack 的反应特性，我们还需要 ratpack-rx:
 
-```
+```java
 <dependency>
     <groupId>io.ratpack</groupId>
     <artifactId>ratpack-rx</artifactId>
@@ -48,7 +48,7 @@ ratpack-rx 的最新版本可以在[这里](https://web.archive.org/web/20221128
 
 首先，让我们用 Hystrix 构建一个反应式后端服务:
 
-```
+```java
 public class HystrixReactiveHttpCommand extends HystrixObservableCommand<String> {
 
     //...
@@ -69,7 +69,7 @@ public class HystrixReactiveHttpCommand extends HystrixObservableCommand<String>
 
 这里用一个 Ratpack reactive [`HttpClient`](https://web.archive.org/web/20221128104429/https://hc.apache.org/httpcomponents-client-5.1.x/index.html) 来做一个 GET 请求。`HystrixReactiveHttpCommand`可以作为一个反应处理器:
 
-```
+```java
 chain.get("rx", ctx -> 
   new HystrixReactiveHttpCommand(
     ctx.get(HttpClient.class), eugenGithubProfileUri, timeout)
@@ -79,7 +79,7 @@ chain.get("rx", ctx ->
 
 可通过以下测试验证终点:
 
-```
+```java
 @Test
 public void whenFetchReactive_thenGotEugenProfile() {
     assertThat(appUnderTest.getHttpClient().getText("rx"), 
@@ -91,7 +91,7 @@ public void whenFetchReactive_thenGotEugenProfile() {
 
 `HystrixCommand`的异步执行将命令在线程池上排队，并返回一个`Future`:
 
-```
+```java
 chain.get("async", ctx -> ctx.render(
   new HystrixAsyncHttpCommand(eugenGithubProfileUri, timeout)
     .queue()
@@ -100,7 +100,7 @@ chain.get("async", ctx -> ctx.render(
 
 `HystrixAsyncHttpCommand`看起来像是:
 
-```
+```java
 public class HystrixAsyncHttpCommand extends HystrixCommand<String> {
 
     //...
@@ -126,7 +126,7 @@ public class HystrixAsyncHttpCommand extends HystrixCommand<String> {
 
 异步执行也会产生预期的结果:
 
-```
+```java
 @Test
 public void whenFetchAsync_thenGotEugenProfile() {
     assertThat(appUnderTest.getHttpClient().getText("async"),
@@ -138,14 +138,14 @@ public void whenFetchAsync_thenGotEugenProfile() {
 
 同步执行直接在当前线程中执行命令:
 
-```
+```java
 chain.get("sync", ctx -> ctx.render(
   new HystrixSyncHttpCommand(eugenGithubProfileUri, timeout).execute()));
 ```
 
 除了我们给它一个不同的回退结果外，`HystrixSyncHttpCommand`的实现与`HystrixAsyncHttpCommand`几乎相同。当不回退时，它的行为与被动和异步执行完全相同:
 
-```
+```java
 @Test
 public void whenFetchSync_thenGotEugenProfile() {
     assertThat(appUnderTest.getHttpClient().getText("sync"),
@@ -157,7 +157,7 @@ public void whenFetchSync_thenGotEugenProfile() {
 
 通过将 [Guice 模块](/web/20221128104429/https://www.baeldung.com/ratpack-google-guice)–[`HystrixModule`](https://web.archive.org/web/20221128104429/https://ratpack.io/manual/current/api/ratpack/hystrix/HystrixModule.html)注册到 Ratpack registry 中，我们可以流式传输请求范围的度量，并通过`GET`端点公开事件流:
 
-```
+```java
 serverSpec.registry(
   Guice.registry(spec -> spec.module(new HystrixModule().sse())))
   .handlers(c -> c.get("hystrix", new HystrixMetricsEventStreamHandler()));
@@ -175,7 +175,7 @@ serverSpec.registry(
 
 在`HystrixModule`中， [Hystrix 并发策略](https://web.archive.org/web/20221128104429/https://netflix.github.io/Hystrix/javadoc/com/netflix/hystrix/strategy/concurrency/HystrixConcurrencyStrategy.html)通过 [HystrixPlugin](https://web.archive.org/web/20221128104429/https://github.com/Netflix/Hystrix/wiki/Plugins) 向 Hystrix 注册，以管理 Ratpack 注册表的请求上下文。这消除了在每个请求开始之前初始化 Hystrix 请求上下文的必要性。
 
-```
+```java
 public class HystrixModule extends ConfigurableModule<HystrixModule.Config> {
 
     //...

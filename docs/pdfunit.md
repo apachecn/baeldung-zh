@@ -20,7 +20,7 @@
 
 让我们从一个简单的例子开始，它简单地验证给定 PDF 文件中的页数:
 
-```
+```java
 @Test
 public void givenSinglePage_whenCheckForOnePage_thenSuccess() {
 
@@ -38,7 +38,7 @@ public void givenSinglePage_whenCheckForOnePage_thenSuccess() {
 
 让我们看一个如何测试抛出异常时的场景的例子:
 
-```
+```java
 @Test(expected = PDFUnitValidationException.class)
 public void givenMultiplePages_whenCheckForOnePage_thenException() {
     String filename = getFilePath("multiple_pages.pdf");
@@ -53,7 +53,7 @@ public void givenMultiplePages_whenCheckForOnePage_thenException() {
 
 处理受密码保护的文件再次变得非常简单。唯一的区别是在对`AssertThat.document()`的调用中，我们需要**传递第二个参数，也就是文件**的密码:
 
-```
+```java
 @Test
 public void givenPwdProtected_whenOpenWithPwd_thenSuccess() {
     String filename = getFilePath("password_protected.pdf");
@@ -68,7 +68,7 @@ public void givenPwdProtected_whenOpenWithPwd_thenSuccess() {
 
 现在让我们将测试 PDF ( `sample.pdf`)与参考 PDF ( `sample_reference.pdf`)进行比较。如果被测文件的文本与参考文件相同，则测试成功:
 
-```
+```java
 @Test
 public void whenMatchWithReferenceFile_thenSuccess() {
     String testFileName = getFilePath("sample.pdf");
@@ -84,7 +84,7 @@ public void whenMatchWithReferenceFile_thenSuccess() {
 
 如果我们不想比较两个文件之间的完整文本，而是想验证某个页面上特定文本的存在，那么`containing()`方法就很方便:
 
-```
+```java
 @Test
 public void whenPage2HasExpectedText_thenSuccess() {
 
@@ -124,7 +124,7 @@ A `PageRegion`由四个要素定义:
 
 一旦概念清楚了，相应的测试用例就相对简单了:
 
-```
+```java
 @Test
 public void whenPageRegionHasExpectedtext_thenSuccess() {
     String filename = getFilePath("sample.pdf");
@@ -148,7 +148,7 @@ public void whenPageRegionHasExpectedtext_thenSuccess() {
 
 让我们看几个与书签相关的测试案例:
 
-```
+```java
 @Test
 public void whenHasBookmarks_thenSuccess() {
     String filename = getFilePath("with_bookmarks.pdf");
@@ -162,7 +162,7 @@ public void whenHasBookmarks_thenSuccess() {
 
 也可以验证书签的标签:
 
-```
+```java
 @Test
 public void whenHasBookmarksWithLabel_thenSuccess() {
     String filename = getFilePath("with_bookmarks.pdf");
@@ -181,7 +181,7 @@ public void whenHasBookmarksWithLabel_thenSuccess() {
 
 图像是 PDF 文档的另一个重要方面。再次单元测试 PDF 里面的图像非常容易:
 
-```
+```java
 @Test
 public void whenHas2DifferentImages_thenSuccess() {
     String filename = getFilePath("with_images.pdf");
@@ -197,7 +197,7 @@ public void whenHas2DifferentImages_thenSuccess() {
 
 让我们看看如何验证可见图像:
 
-```
+```java
 @Test
 public void whenHas2VisibleImages_thenSuccess() {
     String filename = getFilePath("with_images.pdf");
@@ -210,7 +210,7 @@ PDFUnit 功能强大，可以逐字节比较图像内容。这也意味着 PDF �
 
 由于字节比较，不同格式的图像如 BMP 和 PNG 被认为是不平等的:
 
-```
+```java
 @Test
 public void whenImageIsOnAnyPage_thenSuccess() {
     String filename = getFilePath("with_images.pdf");
@@ -231,7 +231,7 @@ public void whenImageIsOnAnyPage_thenSuccess() {
 
 某些 PDF 文档带有嵌入的文件或附件。也有必要测试这些:
 
-```
+```java
 @Test
 public void whenHasEmbeddedFile_thenSuccess() {
     String filename = getFilePath("with_attachments.pdf");
@@ -245,7 +245,7 @@ public void whenHasEmbeddedFile_thenSuccess() {
 
 我们也可以验证嵌入文件的名称:
 
-```
+```java
 @Test
 public void whenHasmultipleEmbeddedFiles_thenSuccess() {
     String filename = getFilePath("with_attachments.pdf");
@@ -263,7 +263,7 @@ public void whenHasmultipleEmbeddedFiles_thenSuccess() {
 
 **我们可以进一步验证嵌入文件的内容:**
 
-```
+```java
 @Test
 public void whenEmbeddedFileContentMatches_thenSuccess() {
     String filename = getFilePath("with_attachments.pdf");

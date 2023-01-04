@@ -18,20 +18,20 @@
 
 要修复这个错误，我们只需要在`persistence.xml` 文件中**定义持久性提供者:**
 
-```
+```java
 <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 ```
 
 或者，如果我们使用的是 **Hibernate 版本 4.2 或更早的版本**:
 
-```
+```java
 <provider>org.hibernate.ejb.HibernatePersistence</provider>
 ```
 
 如果我们已经在应用程序中实现了`PersistenceUnitInfo`接口，我们还必须覆盖
 `getPersistenceProviderClassName()`方法:
 
-```
+```java
 @Override
 public String getPersistenceProviderClassName() {
     return HibernatePersistenceProvider.class.getName();
@@ -40,7 +40,7 @@ public String getPersistenceProviderClassName() {
 
 为了确保所有必需的 Hibernate jars 都可用，在`pom.xml`文件中添加 [`hibernate-core`](https://web.archive.org/web/20220627080255/https://search.maven.org/artifact/org.hibernate/hibernate-core) 依赖项很重要:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>

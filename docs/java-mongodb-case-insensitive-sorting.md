@@ -12,7 +12,7 @@
 
 首先，我们需要运行一个 MongoDB 服务器。让我们使用一个 Docker 图像:
 
-```
+```java
 $ docker run -d -p 27017:27017 --name example-mongo mongo:latest
 ```
 
@@ -20,19 +20,19 @@ $ docker run -d -p 27017:27017 --name example-mongo mongo:latest
 
 首先，让我们打开容器内部的 Mongo Shell:
 
-```
+```java
 $ docker exec -it example-mongo mongosh
 ```
 
 进入 shell 后，让我们切换上下文，进入名为“`sorting`”的数据库:
 
-```
+```java
 > use sorting
 ```
 
 最后，让我们插入一些数据来尝试我们的排序操作:
 
-```
+```java
 > db.users.insertMany([
   {name: "ben", surname: "ThisField" },
   {name: "aen", surname: "Does" },
@@ -47,13 +47,13 @@ $ docker exec -it example-mongo mongosh
 
 让我们运行没有定制的标准查询:
 
-```
+```java
 > db.getCollection('users').find({}).sort({name:1})
 ```
 
 返回的数据将根据情况进行排序。这意味着，例如，**大写字符"`B”`将在小写字符"`a”`** 之前被考虑:
 
-```
+```java
 [
   {
     _id: ..., name: 'Aen', surname: 'Not'
@@ -80,13 +80,13 @@ $ docker exec -it example-mongo mongosh
 
 **Collation ICU`locale`参数驱动数据库如何进行排序。**让我们用`“en”`(英语)`locale:`
 
-```
+```java
 > db.getCollection('users').find({}).collation({locale: "en"}).sort({name:1})
 ```
 
 这将生成按字母分类的名称输出:
 
-```
+```java
 [
   {
     _id: ..., name: 'aen', surname: 'Does'
@@ -107,7 +107,7 @@ $ docker exec -it example-mongo mongosh
 
 现在让我们使用`Aggregation`函数:
 
-```
+```java
 > db.getCollection('users').aggregate([{
         "$project": {
             "name": 1,
@@ -127,7 +127,7 @@ $ docker exec -it example-mongo mongosh
 
 使用 [`$project`](https://web.archive.org/web/20221011171933/https://docs.mongodb.com/manual/reference/operator/aggregation/project/) 功能，我们添加一个`lowerName`字段作为`name`字段的小写版本。这允许我们使用该字段进行排序。它将为我们提供一个带有附加字段的结果对象，按照期望的排序顺序:
 
-```
+```java
 [
   {
     _id: ..., name: 'aen', surname: 'Does', lowerName: 'aen'
@@ -152,7 +152,7 @@ $ docker exec -it example-mongo mongosh
 
 让我们首先添加 [mongo-java-driver](https://web.archive.org/web/20221011171933/https://search.maven.org/artifact/org.mongodb/mongo-java-driver) 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.mongodb</groupId>
     <artifactId>mongo-java-driver</artifactId>
@@ -162,7 +162,7 @@ $ docker exec -it example-mongo mongosh
 
 然后，让我们使用`MongoClient`进行连接:
 
-```
+```java
 MongoClient mongoClient = new MongoClient();
 MongoDatabase db = mongoClient.getDatabase("sorting");
 MongoCollection<Document> collection = db.getCollection("users");
@@ -172,7 +172,7 @@ MongoCollection<Document> collection = db.getCollection("users");
 
 让我们看看如何用 Java 实现`“Collation”`解决方案:
 
-```
+```java
 FindIterable<Document> nameDoc = collection.find().sort(ascending("name"))
   .collation(Collation.builder().locale("en").build());
 ```
@@ -181,7 +181,7 @@ FindIterable<Document> nameDoc = collection.find().sort(ascending("name"))
 
 接下来，让我们使用`[MongoCursor](https://web.archive.org/web/20221011171933/https://mongodb.github.io/mongo-java-driver/3.6/javadoc/index.html?com/mongodb/client/MongoCursor.html)`逐个读取结果:
 
-```
+```java
 MongoCursor cursor = nameDoc.cursor();
 List expectedNamesOrdering = Arrays.asList("aen", "Aen", "ben", "Ben", "cen", "Cen");
 List actualNamesOrdering = new ArrayList<>();
@@ -198,7 +198,7 @@ assertEquals(expectedNamesOrdering, actualNamesOrdering);
 
 首先，我们依靠`[project](https://web.archive.org/web/20221011171933/https://mongodb.github.io/mongo-java-driver/3.6/javadoc/com/mongodb/client/model/Aggregates.html#project-org.bson.conversions.Bson-)`方法创建一个`[Bson](https://web.archive.org/web/20221011171933/https://mongodb.github.io/mongo-java-driver/3.4/bson/)`对象。该对象还将包括通过使用 [`Projections`](https://web.archive.org/web/20221011171933/https://mongodb.github.io/mongo-java-driver/3.6/javadoc/com/mongodb/client/model/Projections.html) 类将姓名的每个字符转换成小写字母而计算出的`lowerName` 字段:
 
-```
+```java
 Bson projectBson = project(
   Projections.fields(
     Projections.include("name","surname"),
@@ -207,7 +207,7 @@ Bson projectBson = project(
 
 接下来，我们向`aggregate`方法提供一个包含前面代码片段的 [`Bson`](https://web.archive.org/web/20221011171933/https://mongodb.github.io/mongo-java-driver/3.4/bson/) 和`sort`方法的列表:
 
-```
+```java
 AggregateIterable<Document> nameDoc = collection.aggregate(
   Arrays.asList(projectBson,
   sort(Sorts.ascending("lowerName")))); 

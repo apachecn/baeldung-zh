@@ -12,7 +12,7 @@
 
 为了更容易理解这个问题，我们先来看一个字符串示例:
 
-```
+```java
 String myString = "   I    am a    wonderful String     !   ";
 ```
 
@@ -39,7 +39,7 @@ String myString = "   I    am a    wonderful String     !   ";
 
 接下来，让我们创建一个测试，看看这个想法是否适用于我们的示例字符串:
 
-```
+```java
 String result = myString.replaceAll("\\s", "");
 assertThat(result).isEqualTo("IamawonderfulString!");
 ```
@@ -52,7 +52,7 @@ Apache Commons Lang3 库附带了一个`[StringUtils](https://web.archive.org/we
 
 为了开始使用 Apache Commons Lang 3，让我们添加 [Maven 依赖项](https://web.archive.org/web/20220906090139/https://search.maven.org/search?q=g:org.apache.commons%20AND%20a:commons-lang3&core=gav):
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -64,7 +64,7 @@ Apache Commons Lang3 库附带了一个`[StringUtils](https://web.archive.org/we
 
 接下来，让我们使用`StringUtils.deleteWhitespace()` 从字符串中移除所有空格:
 
-```
+```java
 String result = StringUtils.deleteWhitespace(myString);
 assertThat(result).isEqualTo("IamawonderfulString!");
 ```
@@ -88,7 +88,7 @@ assertThat(result).isEqualTo("IamawonderfulString!");
 
 接下来，让我们创建一个测试来检查我们的想法是否能解决问题。为了清楚起见，我们为这两个步骤编写了两个断言:
 
-```
+```java
 String result = myString.replaceAll("\\s+", " ");
 assertThat(result).isEqualTo(" I am a wonderful String ! ");
 assertThat(result.trim()).isEqualTo("I am a wonderful String !");
@@ -102,7 +102,7 @@ assertThat(result.trim()).isEqualTo("I am a wonderful String !");
 
 **`StringUtils.normalizeSpace()`方法修剪输入字符串，然后用一个空格替换空白字符序列。**因此，我们可以直接调用这种方法来解决问题:
 
-```
+```java
 String result = StringUtils.normalizeSpace(myString);
 assertThat(result).isEqualTo("I am a wonderful String !");
 ```

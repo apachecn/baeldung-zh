@@ -14,7 +14,7 @@
 
 首先，我们将创建用于计算存储在缓存中的值的`CacheLoader,`。从这里开始，我们将使用方便的`CacheBuilder`按照给定的规范构建我们的缓存:
 
-```
+```java
 @Test
 public void whenCacheMiss_thenValueIsComputed() {
     CacheLoader<String, String> loader;
@@ -48,7 +48,7 @@ public void whenCacheMiss_thenValueIsComputed() {
 
 在下面的代码中，我们将把缓存大小限制为三条记录:
 
-```
+```java
 @Test
 public void whenCacheReachMaxSize_thenEviction() {
     CacheLoader<String, String> loader;
@@ -75,7 +75,7 @@ public void whenCacheReachMaxSize_thenEviction() {
 
 我们还可以使用自定义的权重函数来限制缓存大小(T2)。在下面的代码中，我们将使用`length`作为我们的自定义权重函数:
 
-```
+```java
 @Test
 public void whenCacheReachMaxWeight_thenEviction() {
     CacheLoader<String, String> loader;
@@ -116,7 +116,7 @@ public void whenCacheReachMaxWeight_thenEviction() {
 
 除了使用大小来驱逐旧记录，我们还可以使用时间。在下面的例子中，我们将定制我们的缓存来**删除空闲了 2ms** 的记录:
 
-```
+```java
 @Test
 public void whenEntryIdle_thenEviction()
   throws InterruptedException {
@@ -147,7 +147,7 @@ public void whenEntryIdle_thenEviction()
 
 我们还可以根据记录的总生存时间来驱逐记录。在下面的示例中，缓存将在记录存储 2 毫秒后删除它们:
 
-```
+```java
 @Test
 public void whenEntryLiveTimeExpire_thenEviction()
   throws InterruptedException {
@@ -179,7 +179,7 @@ public void whenEntryLiveTimeExpire_thenEviction()
 
 默认情况下，缓存键和值都有强引用，但是我们可以通过使用`weakKeys()`让缓存使用弱引用来存储键:
 
-```
+```java
 @Test
 public void whenWeakKeyHasNoRef_thenRemoveFromCache() {
     CacheLoader<String, String> loader;
@@ -199,7 +199,7 @@ public void whenWeakKeyHasNoRef_thenRemoveFromCache() {
 
 我们还可以允许垃圾收集器通过使用`softValues()`来收集我们的缓存值:
 
-```
+```java
 @Test
 public void whenSoftValue_thenRemoveFromCache() {
     CacheLoader<String, String> loader;
@@ -223,7 +223,7 @@ public void whenSoftValue_thenRemoveFromCache() {
 
 但是如果一个`null`值在我们的代码中意味着什么，那么我们可以很好地利用`Optional`类:
 
-```
+```java
 @Test
 public void whenNullValue_thenOptional() {
     CacheLoader<String, Optional<String>> loader;
@@ -257,7 +257,7 @@ private String getSuffix(final String str) {
 
 我们可以借助`LoadingCache.refresh(key):`手动刷新单个密钥
 
-```
+```java
 String value = loadingCache.get("key");
 loadingCache.refresh("key");
 ```
@@ -270,7 +270,7 @@ loadingCache.refresh("key");
 
 我们还可以使用`CacheBuilder.refreshAfterWrite(duration)`来自动刷新缓存值:
 
-```
+```java
 @Test
 public void whenLiveTimeEnd_thenRefresh() {
     CacheLoader<String, String> loader;
@@ -294,7 +294,7 @@ public void whenLiveTimeEnd_thenRefresh() {
 
 我们可以使用`putAll()`方法在缓存中插入多条记录。在下面的例子中，我们将使用一个`Map`将多个记录添加到我们的缓存中:
 
-```
+```java
 @Test
 public void whenPreloadCache_thenUsePutAll() {
     CacheLoader<String, String> loader;
@@ -325,7 +325,7 @@ public void whenPreloadCache_thenUsePutAll() {
 
 在下面的例子中，当高速缓存中的第四个元素由于其大小而被移除时，接收到一个`RemovalNotification`:
 
-```
+```java
 @Test
 public void whenEntryRemovedFromCache_thenNotify() {
     CacheLoader<String, String> loader;

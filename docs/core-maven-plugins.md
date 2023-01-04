@@ -33,7 +33,7 @@ Maven 定义了三个构建生命周期:`default`、`site`和`clean`。每个生
 
 所有插件都包含在 POM 的一个`build`元素中:
 
-```
+```java
 <build>
     <plugins>
         <!-- plugins go here -->

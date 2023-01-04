@@ -28,7 +28,7 @@ Google AutoService 是一个开源代码生成器工具，在 Google Auto 项目
 
 首先，让我们在应用程序中添加[自动服务](https://web.archive.org/web/20220626203526/https://search.maven.org/search?q=g:com.google.auto.service%20AND%20a:auto-service&core=gav)依赖项。我们可以将依赖项设置为`optional`，因为我们只在编译时需要它:
 
-```
+```java
 <dependency>
     <groupId>com.google.auto.service</groupId>
     <artifactId>auto-service</artifactId>
@@ -43,7 +43,7 @@ Google AutoService 是一个开源代码生成器工具，在 Google Auto 项目
 
 让我们假设我们的应用程序具有翻译功能。我们的目标是使这个特性可扩展。因此，我们可以轻松插入任何翻译服务提供商组件:
 
-```
+```java
 public interface TranslationService {
     String translate(String message, Locale from, Locale to);
 }
@@ -53,7 +53,7 @@ public interface TranslationService {
 
 接下来，我们将使用`@AutoService` 注释，用两个不同的翻译提供者实现这个服务:
 
-```
+```java
 @AutoService(TranslationService.class)
 public class BingTranslationServiceProvider implements TranslationService {
     @Override
@@ -64,7 +64,7 @@ public class BingTranslationServiceProvider implements TranslationService {
 }
 ```
 
-```
+```java
 @AutoService(TranslationService.class)
 public class GoogleTranslationServiceProvider implements TranslationService {
     @Override
@@ -79,7 +79,7 @@ public class GoogleTranslationServiceProvider implements TranslationService {
 
 因此，我们现在将有一个名为`com.baeldung.autoservice.TranslationService.`的配置文件。该文件包含两个提供者的全限定名称:
 
-```
+```java
 com.baeldung.autoservice.BingTranslationServiceProvider
 com.baeldung.autoservice.GoogleTranslationServiceProvider
 ```
@@ -88,7 +88,7 @@ com.baeldung.autoservice.GoogleTranslationServiceProvider
 
 现在，一切准备就绪。让我们通过`ServiceLoader`加载提供者:
 
-```
+```java
 ServiceLoader<TranslationService> loader = ServiceLoader.load(TranslationService.class);
 ```
 
@@ -96,7 +96,7 @@ ServiceLoader<TranslationService> loader = ServiceLoader.load(TranslationService
 
 让我们检查加载的提供程序数:
 
-```
+```java
 long count = StreamSupport.stream(loader.spliterator(), false).count();
 assertEquals(2, count);
 ```
@@ -105,7 +105,7 @@ assertEquals(2, count);
 
 所以现在，让我们挑选一个提供者，然后调用服务方法来查看加载器是否按预期工作:
 
-```
+```java
 TranslationService googleService = StreamSupport.stream(loader.spliterator(), false)
   .filter(p -> p.getClass().getSimpleName().equals("GoogleTranslationServiceProvider"))
   .findFirst()

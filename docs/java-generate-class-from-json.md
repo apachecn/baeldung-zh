@@ -12,7 +12,7 @@
 
 **我们可以使用`[jsonschema2pojo-core](https://web.archive.org/web/20220628122907/https://search.maven.org/search?q=g:%20org.jsonschema2pojo%20a:%20jsonschema2pojo-core)`依赖关系:**将 JSON 对象转换成 Java 类
 
-```
+```java
 <dependency>
     <groupId>org.jsonschema2pojo</groupId>
     <artifactId>jsonschema2pojo-core</artifactId>
@@ -41,7 +41,7 @@
 
 让我们来看看实现:
 
-```
+```java
 public void convertJsonToJavaClass(URL inputJsonUrl, File outputJavaClassDirectory, String packageName, String javaClassName) 
   throws IOException {
     JCodeModel jcodeModel = new JCodeModel();
@@ -69,7 +69,7 @@ public void convertJsonToJavaClass(URL inputJsonUrl, File outputJavaClassDirecto
 
 让我们使用这个样本 JSON 来执行程序:
 
-```
+```java
 {
   "name": "Baeldung",
   "area": "tech blogs",
@@ -90,7 +90,7 @@ public void convertJsonToJavaClass(URL inputJsonUrl, File outputJavaClassDirecto
 
 一旦我们执行我们的程序，它就在给定的目录中创建下面的 Java 类:
 
-```
+```java
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"name", "area", "author", "id", "topics", "address"})
 @Generated("jsonschema2pojo")
@@ -119,7 +119,7 @@ public class Input {
 
 **注意，它已经为嵌套的 JSON 对象创建了一个新的`Address`类**:
 
-```
+```java
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"city", "country"})
 @Generated("jsonschema2pojo")

@@ -44,7 +44,7 @@ Learn how to define clients dynamically with Spring Security and OAuth2.[Read mo
 
 我们的资源服务器的 pom 与之前的授权服务器 pom 非常相似，除了 Keycloak 部分和**一个额外的 [`spring-boot-starter-oauth2-resource-server`](https://web.archive.org/web/20220707143825/https://search.maven.org/search?q=a:spring-boot-starter-oauth2-resource-server) 依赖**:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
@@ -57,7 +57,7 @@ Learn how to define clients dynamically with Spring Security and OAuth2.[Read mo
 
 我们将在一个`application.yml`文件中这样做:
 
-```
+```java
 server: 
   port: 8081
   servlet: 
@@ -80,7 +80,7 @@ spring:
 
 接下来，让我们为 API 设置一个**安全配置来保护端点**:
 
-```
+```java
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -112,7 +112,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 接下来，让我们为我们的模型`Foo`定义一个`javax.persistence.Entity`:
 
-```
+```java
 @Entity
 public class Foo {
 
@@ -128,7 +128,7 @@ public class Foo {
 
 然后我们需要一个`Foo`的存储库。我们将使用 Spring 的`PagingAndSortingRepository`:
 
-```
+```java
 public interface IFooRepository extends PagingAndSortingRepository<Foo, Long> {
 } 
 ```
@@ -137,7 +137,7 @@ public interface IFooRepository extends PagingAndSortingRepository<Foo, Long> {
 
 之后，我们将为我们的 API 定义并实现一个简单的服务:
 
-```
+```java
 public interface IFooService {
     Optional<Foo> findById(Long id);
 
@@ -177,7 +177,7 @@ public class FooServiceImpl implements IFooService {
 
 现在让我们实现一个简单的控制器，通过 DTO 公开我们的`Foo`资源:
 
-```
+```java
 @RestController
 @RequestMapping(value = "/api/foos")
 public class FooController {
@@ -216,7 +216,7 @@ public class FooController {
 
 这是我们的`FooDto`:
 
-```
+```java
 public class FooDto {
     private long id;
     private String name;
@@ -233,7 +233,7 @@ public class FooDto {
 
 然后我们需要使用 [`frontend-maven-plugin`](https://web.archive.org/web/20220707143825/https://github.com/eirslett/frontend-maven-plugin) 来使用 Maven 构建我们的 Angular 项目:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -275,7 +275,7 @@ public class FooDto {
 
 最后，**使用 Angular CLI 生成新模块:**
 
-```
+```java
 ng new oauthApp
 ```
 
@@ -291,7 +291,7 @@ ng new oauthApp
 
 让我们从我们的主要组件`HomeComponent`开始，所有的动作都从这里开始:
 
-```
+```java
 @Component({
   selector: 'home-header',
   providers: [AppService],
@@ -345,7 +345,7 @@ export class HomeComponent {
 *   `checkCredentials()`:检查用户是否登录
 *   `logout()`:删除访问令牌 cookie 并注销用户
 
-```
+```java
 export class Foo {
   constructor(public id: number, public name: string) { }
 } 
@@ -409,7 +409,7 @@ cookie 存储在这里特别重要，因为我们只是将 cookie 用于存储�
 
 最后，我们的`FooComponent`显示我们的 Foo 细节:
 
-```
+```java
 @Component({
   selector: 'foo-details',
   providers: [AppService],  
@@ -446,7 +446,7 @@ export class FooComponent {
 
 我们简单的`AppComponent`充当根组件:
 
-```
+```java
 @Component({
   selector: 'app-root',
   template: `<nav class="navbar navbar-default">
@@ -464,7 +464,7 @@ export class AppComponent { }
 
 我们包装所有组件、服务和路线的地方:
 
-```
+```java
 @NgModule({
   declarations: [
     AppComponent,
@@ -487,31 +487,31 @@ export class AppModule { }
 
 1.要运行我们的任何前端模块，我们需要首先构建应用程序:
 
-```
+```java
 mvn clean install
 ```
 
 2.然后我们需要导航到我们的 Angular 应用程序目录:
 
-```
+```java
 cd src/main/resources
 ```
 
 3.最后，我们将启动我们的应用:
 
-```
+```java
 npm start
 ```
 
 默认情况下，服务器将在端口 4200 上启动；要更改任何模块的端口，请更改:
 
-```
+```java
 "start": "ng serve"
 ```
 
 例如，在`package.json;` 中，要让它在端口 8089 上运行，添加:
 
-```
+```java
 "start": "ng serve --port 8089"
 ```
 

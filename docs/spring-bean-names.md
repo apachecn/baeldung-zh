@@ -22,7 +22,7 @@ Spring 为创建 beans 提供了多个[注释](/web/20221001115719/https://www.b
 
 让我们来看一个例子:
 
-```
+```java
 @Service
 public class LoggingService {
 }
@@ -38,7 +38,7 @@ Spring 提供了类似于 [`@Bean`](/web/20221001115719/https://www.baeldung.com
 
 让我们看一个例子来理解`@Bean` 注释的默认命名策略:
 
-```
+```java
 @Configuration
 public class AuditConfiguration {
     @Bean
@@ -58,7 +58,7 @@ public class AuditConfiguration {
 
 那么，让我们看看如何给我们的 Spring bean 起一个自定义名称:
 
-```
+```java
 @Component("myBean")
 public class MyCustomComponent {
 }
@@ -78,7 +78,7 @@ public class MyCustomComponent {
 
 这个默认的 bean 名称可以被覆盖——我们可以使用 `@Bean` 注释来指定这个值:
 
-```
+```java
 @Configuration
 public class MyConfiguration {
     @Bean("beanComponent")
@@ -98,7 +98,7 @@ Spring `@Bean`注释通常在配置类方法中声明。它可能通过直接调
 
 首先，让我们创建一个将由多个类实现的接口`Animal`:
 
-```
+```java
 public interface Animal {
     String name();
 }
@@ -106,7 +106,7 @@ public interface Animal {
 
 现在，让我们定义一个实现类`Cat `，并用值“`cat`”向它添加`@Qualifier `注释:
 
-```
+```java
 @Component 
 @Qualifier("cat") 
 public class Cat implements Animal { 
@@ -119,7 +119,7 @@ public class Cat implements Animal {
 
 让我们添加`Animal`的另一个实现，并用`@Qualifier` 和值`dog`:对其进行注释
 
-```
+```java
 @Component
 @Qualifier("dog")
 public class Dog implements Animal {
@@ -132,7 +132,7 @@ public class Dog implements Animal {
 
 现在，让我们编写一个类`PetShow`，我们可以在其中注入`Animal`的两个不同实例:
 
-```
+```java
 @Service 
 public class PetShow { 
     private final Animal dog; 
@@ -159,7 +159,7 @@ public class PetShow {
 
 让我们看一个单元测试来验证这个行为:
 
-```
+```java
 @ExtendWith(SpringExtension.class)
 public class SpringBeanNamingUnitTest {
     private AnnotationConfigApplicationContext context;
@@ -172,7 +172,7 @@ public class SpringBeanNamingUnitTest {
     } 
 ```
 
-```
+```java
  @Test
     void givenMultipleImplementationsOfAnimal_whenFieldIsInjectedWithQualifiedName_thenTheSpecificBeanShouldGetInjected() {
         PetShow petShow = (PetShow) context.getBean("petShow");

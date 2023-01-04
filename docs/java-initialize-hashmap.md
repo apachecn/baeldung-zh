@@ -22,7 +22,7 @@ Learn how to combine Java Maps and Streams[Read more](/web/20220828131433/https:
 
 我们可以使用一个`static`代码块初始化一个`HashMap `:
 
-```
+```java
 public static Map<String, String> articleMapOne;
 static {
     articleMapOne = new HashMap<>();
@@ -35,7 +35,7 @@ static {
 
 让我们继续测试它:
 
-```
+```java
 @Test
 public void givenStaticMap_whenUpdated_thenCorrect() {
 
@@ -50,7 +50,7 @@ public void givenStaticMap_whenUpdated_thenCorrect() {
 
 我们还可以使用双括号语法初始化映射:
 
-```
+```java
 Map<String, String> doubleBraceMap  = new HashMap<String, String>() {{
     put("key1", "value1");
     put("key2", "value2");
@@ -63,7 +63,7 @@ Map<String, String> doubleBraceMap  = new HashMap<String, String>() {{
 
 如果我们需要创建一个只有一个条目的单一不可变映射，`Collections.singletonMap() `变得非常有用:
 
-```
+```java
 public static Map<String, String> createSingletonMap() {
     return Collections.singletonMap("username1", "password1");
 }
@@ -73,7 +73,7 @@ public static Map<String, String> createSingletonMap() {
 
 我们也可以使用`Collections.emptyMap():`创建一个不可变的空地图
 
-```
+```java
 Map<String, String> emptyMap = Collections.emptyMap();
 ```
 
@@ -85,7 +85,7 @@ Map<String, String> emptyMap = Collections.emptyMap();
 
 让我们使用一个二维`String`数组的`Stream`并将它们收集到一个地图中:
 
-```
+```java
 Map<String, String> map = Stream.of(new String[][] {
   { "Hello", "World" }, 
   { "John", "Doe" }, 
@@ -96,7 +96,7 @@ Map<String, String> map = Stream.of(new String[][] {
 
 为了使它更通用，让我们取`Objects `的数组并执行相同的操作:
 
-```
+```java
  Map<String, Integer> map = Stream.of(new Object[][] { 
      { "data1", 1 }, 
      { "data2", 2 }, 
@@ -111,7 +111,7 @@ Map<String, String> map = Stream.of(new String[][] {
 
 首先，让我们使用`Entry `接口的`SimpleEntry `实现:
 
-```
+```java
 Map<String, Integer> map = Stream.of(
   new AbstractMap.SimpleEntry<>("idea", 1), 
   new AbstractMap.SimpleEntry<>("mobile", 2))
@@ -120,7 +120,7 @@ Map<String, Integer> map = Stream.of(
 
 现在让我们使用`SimpleImmutableEntry `实现来创建地图:
 
-```
+```java
 Map<String, Integer> map = Stream.of(
   new AbstractMap.SimpleImmutableEntry<>("idea", 1),    
   new AbstractMap.SimpleImmutableEntry<>("mobile", 2))
@@ -131,7 +131,7 @@ Map<String, Integer> map = Stream.of(
 
 在某些用例中，我们需要初始化一个不可变的映射。这可以通过将`Collectors.toMap()`包装在`Collectors.collectingAndThen()`中来实现:
 
-```
+```java
 Map<String, String> map = Stream.of(new String[][] { 
     { "Hello", "World" }, 
     { "John", "Doe" },
@@ -152,7 +152,7 @@ Java 9 在`Map`接口中提供了各种工厂方法，简化了不可变映射�
 
 此工厂方法不带任何参数、单个参数和可变参数:
 
-```
+```java
 Map<String, String> emptyMap = Map.of();
 Map<String, String> singletonMap = Map.of("key1", "value");
 Map<String, String> map = Map.of("key1","value1", "key2", "value2");
@@ -164,7 +164,7 @@ Map<String, String> map = Map.of("key1","value1", "key2", "value2");
 
 它与`Map.of() `类似，但是对键值对的数量没有限制:
 
-```
+```java
 Map<String, String> map = Map.ofEntries(
   new AbstractMap.SimpleEntry<String, String>("name", "John"),
   new AbstractMap.SimpleEntry<String, String>("city", "budapest"),
@@ -179,7 +179,7 @@ Map<String, String> map = Map.ofEntries(
 
 现在，如果我们在初始化后需要一个可变的或增长的映射，我们可以创建任何一个`Map`接口的实现，并在构造函数中传递这些不可变的映射:
 
-```
+```java
 Map<String, String> map = new HashMap<String, String> (
   Map.of("key1","value1", "key2", "value2"));
 Map<String, String> map2 = new HashMap<String, String> (
@@ -192,21 +192,21 @@ Map<String, String> map2 = new HashMap<String, String> (
 
 我们已经研究了使用核心 Java 的方法，让我们继续使用 Guava 库初始化一个 map:
 
-```
+```java
 Map<String, String> articles 
   = ImmutableMap.of("Title", "My New Article", "Title2", "Second Article");
 ```
 
 这将创建一个不可变的映射，并创建一个可变的映射:
 
-```
+```java
 Map<String, String> articles 
   = Maps.newHashMap(ImmutableMap.of("Title", "My New Article", "Title2", "Second Article"));
 ```
 
 方法`[ImmutableMap.of()](https://web.archive.org/web/20220828131433/https://guava.dev/releases/23.0/api/docs/com/google/common/collect/ImmutableMap.html#of--) `也有重载版本，可以接受多达 5 对键值参数。下面是一个有 2 对参数的示例:
 
-```
+```java
 ImmutableMap.of("key1", "value1", "key2", "value2");
 ```
 

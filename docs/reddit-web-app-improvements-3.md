@@ -14,7 +14,7 @@
 
 首先，我们将添加一个方法来**统计用户**的预定帖子——当然是利用 Spring 数据语法:
 
-```
+```java
 public interface PostRepository extends JpaRepository<Post, Long> {
     ...
     Long countByUser(User user);
@@ -23,7 +23,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 接下来，让我们快速看一下**服务层实现**——基于分页参数检索用户的帖子:
 
-```
+```java
 @Override
 public List<SimplePostDto> getPostsList(int page, int size, String sortDir, String sort) {
     PageRequest pageReq = new PageRequest(page, size, Sort.Direction.fromString(sortDir), sort);
@@ -34,7 +34,7 @@ public List<SimplePostDto> getPostsList(int page, int size, String sortDir, Stri
 
 我们正在根据用户的时区**转换日期:**
 
-```
+```java
 private List<SimplePostDto> constructDataAccordingToUserTimezone(List<Post> posts) {
     String timeZone = userService.getCurrentUser().getPreference().getTimezone();
     return posts.stream().map(post -> new SimplePostDto(
@@ -51,7 +51,7 @@ private String convertToUserTomeZone(Date date, String timeZone) {
 
 接下来，我们将通过 API 发布带有完整分页和排序的操作:
 
-```
+```java
 @RequestMapping(method = RequestMethod.GET)
 @ResponseBody
 public List<SimplePost> getScheduledPosts(
@@ -70,7 +70,7 @@ public List<SimplePost> getScheduledPosts(
 
 然而，这种实现非常简单——我们有一个简单的方法来生成寻呼信息:
 
-```
+```java
 public PagingInfo generatePagingInfo(int page, int size) {
     long total = postRepository.countByUser(userService.getCurrentUser());
     return new PagingInfo(page, size, total);
@@ -79,7 +79,7 @@ public PagingInfo generatePagingInfo(int page, int size) {
 
 而`PagingInfo`本身:
 
-```
+```java
 public class PagingInfo {
     private long totalNoRecords;
     private int totalNoPages;
@@ -103,7 +103,7 @@ public class PagingInfo {
 
 最后，简单的前端将使用一个定制的 JS 方法与 API 进行交互，并处理 [jQuery 数据表参数](https://web.archive.org/web/20220815042615/https://www.datatables.net/manual/server-side):
 
-```
+```java
 <table>
 <thead><tr>
 <th>Post title</th><th>Submission Date</th><th>Status</th>
@@ -148,7 +148,7 @@ $(document).ready(function() {
 
 有了现在发布的 API，我们可以编写一些简单的 API 测试来确保分页机制的基本功能按预期工作:
 
-```
+```java
 @Test
 public void givenMoreThanOnePage_whenGettingUserScheduledPosts_thenNextPageExist() 
   throws ParseException, IOException {
@@ -200,7 +200,7 @@ public void givenMoreThanOnePage_whenGettingUserScheduledPostsForSecondPage_then
 
 首先，让我们进行电子邮件配置:
 
-```
+```java
 @Bean
 public JavaMailSenderImpl javaMailSenderImpl() {
     JavaMailSenderImpl mailSenderImpl = new JavaMailSenderImpl();
@@ -219,7 +219,7 @@ public JavaMailSenderImpl javaMailSenderImpl() {
 
 以及使 SMTP 工作的必要属性:
 
-```
+```java
 smtp.host=email-smtp.us-east-1.amazonaws.com
 smtp.port=465
 smtp.protocol=smtps
@@ -232,7 +232,7 @@ smtp.password=
 
 现在，让我们确保在预定的帖子成功发布到 Reddit 时触发一个事件:
 
-```
+```java
 private void updatePostFromResponse(JsonNode node, Post post) {
     JsonNode errorNode = node.get("json").get("errors").get(0);
     if (errorNode == null) {
@@ -248,7 +248,7 @@ private void updatePostFromResponse(JsonNode node, Post post) {
 
 事件实现非常简单:
 
-```
+```java
 public class OnPostSubmittedEvent extends ApplicationEvent {
     private Post post;
     private String email;
@@ -263,7 +263,7 @@ public class OnPostSubmittedEvent extends ApplicationEvent {
 
 而听者:
 
-```
+```java
 @Component
 public class SubmissionListner implements ApplicationListener<OnPostSubmittedEvent> {
     @Autowired
@@ -313,7 +313,7 @@ public class SubmissionListner implements ApplicationListener<OnPostSubmittedEve
 
 首先，我们将修改分数逻辑来计算并跟踪投票总数:
 
-```
+```java
 public PostScores getPostScores(Post post) {
     ...
 
@@ -326,7 +326,7 @@ public PostScores getPostScores(Post post) {
 
 当然，我们将在**检查一个帖子是否被认为失败时使用它**:
 
-```
+```java
 private boolean didPostGoalFail(Post post) {
     PostScores postScores = getPostScores(post);
     int totalVotes = postScores.getTotalVotes();
@@ -347,7 +347,7 @@ private boolean didPostGoalFail(Post post) {
 
 下面是简单的`checkIfValidResubmitOptions()`方法:
 
-```
+```java
 private boolean checkIfValidResubmitOptions(Post post) {
     if (checkIfAllNonZero(
           post.getNoOfAttempts(), 
@@ -370,7 +370,7 @@ private boolean checkIfAllNonZero(int... args) {
 
 在安排新帖子时，我们将充分利用这一验证:
 
-```
+```java
 public Post schedulePost(boolean isSuperUser, Post post, boolean resubmitOptionsActivated) 
   throws ParseException {
     if (resubmitOptionsActivated && !checkIfValidResubmitOptions(post)) {
@@ -390,7 +390,7 @@ public Post schedulePost(boolean isSuperUser, Post post, boolean resubmitOptions
 
 最后——在输入无效的情况下，在我们的主要错误处理逻辑中处理`InvalidResubmitOptionsException`:
 
-```
+```java
 @ExceptionHandler({ InvalidResubmitOptionsException.class })
 public ResponseEntity<Object> handleInvalidResubmitOptions
   (RuntimeException ex, WebRequest request) {
@@ -406,7 +406,7 @@ public ResponseEntity<Object> handleInvalidResubmitOptions
 
 最后，让我们现在测试我们的重新提交选项–我们将测试激活和停用条件:
 
-```
+```java
 public class ResubmitOptionsLiveTest extends AbstractLiveTest {
     private static final String date = "2016-01-01 00:00";
 

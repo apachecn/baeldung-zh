@@ -12,7 +12,7 @@
 
 我们可以在 setter 方法上使用`@Autowired`:
 
-```
+```java
 public abstract class BallService {
 
     private LogRepository logRepository;
@@ -34,7 +34,7 @@ Spring 不评估抽象类的构造函数上的`@Autowired`注释。子类应该�
 
 相反，我们应该在子类的构造函数上使用`@Autowired`:
 
-```
+```java
 public abstract class BallService {
 
     private RuleRepository ruleRepository;
@@ -45,7 +45,7 @@ public abstract class BallService {
 }
 ```
 
-```
+```java
 @Component
 public class BasketballService extends BallService {
 

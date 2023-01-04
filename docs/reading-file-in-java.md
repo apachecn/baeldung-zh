@@ -30,7 +30,7 @@ The many ways to write data to File using Java.[Read more](/web/20220929055251/h
 
 在本文的大多数例子中，我们将读取一个文件名为`fileTest.txt`的文本文件，其中包含一行:
 
-```
+```java
 Hello, world!
 ```
 
@@ -42,7 +42,7 @@ Hello, world!
 
 测试将共享一个公共的*readfrompinputstream*方法，该方法将一个*InputStream*转换为 *字符串* 以便于断言结果:
 
-```
+```java
 private String readFromInputStream(InputStream inputStream)
   throws IOException {
     StringBuilder resultStringBuilder = new StringBuilder();
@@ -65,7 +65,7 @@ private String readFromInputStream(InputStream inputStream)
 
 本节解释了如何读取类路径中的文件。我们先来读一下“*filetest . txt*”下可用*src/main/resources*:
 
-```
+```java
 @Test
 public void givenFileNameAsAbsolutePath_whenUsingClasspath_thenFileData() {
     String expectedData = "Hello, world!";
@@ -82,7 +82,7 @@ public void givenFileNameAsAbsolutePath_whenUsingClasspath_thenFileData() {
 
 同样的方法也适用于 *类加载器* 实例:
 
-```
+```java
 ClassLoader classLoader = getClass().getClassLoader();
 InputStream inputStream = classLoader.getResourceAsStream("fileTest.txt");
 String data = readFromInputStream(inputStream);
@@ -96,7 +96,7 @@ String data = readFromInputStream(inputStream);
 
 **当然，注意在实践中，开放的流应该总是关闭的**，比如我们例子中的`InputStream`:
 
-```
+```java
 InputStream inputStream = null;
 try {
     File file = new File(classLoader.getResource("fileTest.txt").getFile());
@@ -119,7 +119,7 @@ finally {
 
 **另一个常见的选项是使用 [`commons-io`](/web/20220929055251/https://www.baeldung.com/apache-commons-io) 包的 *FileUtils* 类:**
 
-```
+```java
 @Test
 public void givenFileName_whenUsingFileUtils_thenFileData() {
     String expectedData = "Hello, world!";
@@ -136,7 +136,7 @@ public void givenFileName_whenUsingFileUtils_thenFileData() {
 
 **同一个库还提供了`IOUtils` 类:**
 
-```
+```java
 @Test
 public void givenFileName_whenUsingIOUtils_thenFileData() {
     String expectedData = "Hello, world!";
@@ -156,7 +156,7 @@ public void givenFileName_whenUsingIOUtils_thenFileData() {
 
 **我们将从使用`BufferedReader:`** 读取文件的简单方法开始
 
-```
+```java
 @Test
 public void whenReadWithBufferedReader_thenCorrect()
   throws IOException {
@@ -185,7 +185,7 @@ public void whenReadWithBufferedReader_thenCorrect()
 
 下面的代码展示了如何使用新的`Files`类读取一个小文件:
 
-```
+```java
 @Test
 public void whenReadSmallFileJava7_thenCorrect()
   throws IOException {
@@ -206,7 +206,7 @@ public void whenReadSmallFileJava7_thenCorrect()
 
 下面的代码使用新的`Files`类和`BufferedReader`读取文件:
 
-```
+```java
 @Test
 public void whenReadLargeFileJava7_thenCorrect()
   throws IOException {
@@ -228,7 +228,7 @@ public void whenReadLargeFileJava7_thenCorrect()
 
 以下代码使用新的`Files.lines()`读取文件:
 
-```
+```java
 @Test
 public void givenFilePath_whenUsingFilesLines_thenFileData() {
     String expectedData = "Hello, world!";
@@ -254,7 +254,7 @@ public void givenFilePath_whenUsingFilesLines_thenFileData() {
 
 接下来让我们使用一个`Scanner`来读取文件。这里我们将使用空白作为分隔符:
 
-```
+```java
 @Test
 public void whenReadWithScanner_thenCorrect()
   throws IOException {
@@ -287,13 +287,13 @@ public void whenReadWithScanner_thenCorrect()
 
 在本例中，我们将使用一个不同的输入文件，它只包含:
 
-```
+```java
 Hello 1
 ```
 
 以下代码从文件中读取字符串和数字:
 
-```
+```java
 @Test
 public void whenReadWithStreamTokenizer_thenCorrectTokens()
   throws IOException {
@@ -328,7 +328,7 @@ public void whenReadWithStreamTokenizer_thenCorrectTokens()
 
 以下测试使用`DataInputStream`读取文件:
 
-```
+```java
 @Test
 public void whenReadWithDataInputStream_thenCorrect() throws IOException {
     String expectedValue = "Hello, world!";
@@ -353,7 +353,7 @@ public void whenReadWithDataInputStream_thenCorrect() throws IOException {
 
 以下代码使用`FileChannel`和`RandomAccessFile`从文件中读取数据字节:
 
-```
+```java
 @Test
 public void whenReadWithFileChannel_thenCorrect()
   throws IOException {
@@ -380,7 +380,7 @@ public void whenReadWithFileChannel_thenCorrect()
 
 现在让我们看看如何使用`BufferedReader.` 读取 UTF-8 编码的文件。在本例中，我们将读取一个包含中文字符的文件:
 
-```
+```java
 @Test
 public void whenReadUTFEncodedFile_thenCorrect()
   throws IOException {
@@ -399,7 +399,7 @@ public void whenReadUTFEncodedFile_thenCorrect()
 
 要从 URL 读取内容，我们将在示例中使用“`/`”URL:
 
-```
+```java
 @Test
 public void givenURLName_whenUsingURL_thenFileData() {
     String expectedData = "Baeldung";
@@ -419,7 +419,7 @@ public void givenURLName_whenUsingURL_thenFileData() {
 
 要读取位于 JAR 文件中的文件，我们需要一个里面有文件的 JAR。对于我们的示例，我们将从"`hamcrest-library-1.3.jar`"文件中读取"`LICENSE.txt`:
 
-```
+```java
 @Test
 public void givenFileName_whenUsingJarFile_thenFileData() {
     String expectedData = "BSD License";

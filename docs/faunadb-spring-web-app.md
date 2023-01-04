@@ -40,7 +40,7 @@
 
 接下来，我们需要将动物驱动程序添加到我们的项目中。这是通过向生成的`pom.xml`文件添加对它们的依赖来实现的:
 
-```
+```java
 <dependency>
     <groupId>com.faunadb</groupId>
     <artifactId>faunadb-java</artifactId>
@@ -57,14 +57,14 @@
 
 首先，我们需要做一些配置。为此，我们将向我们的`application.properties`文件添加两个属性，为我们的数据库提供正确的值:
 
-```
+```java
 fauna.region=us
 fauna.secret=<Secret>
 ```
 
 然后，我们需要一个新的 Spring 配置类来构建动物群客户端:
 
-```
+```java
 @Configuration
 class FaunaConfiguration {
     @Value("https://db.${fauna.region}.fauna.com/")
@@ -97,7 +97,7 @@ class FaunaConfiguration {
 
 接下来，我们将添加一个用户记录。为此，我们按下集合中的“新建文档”按钮，并提供以下 JSON:
 
-```
+```java
 {
   "username": "baeldung",
   "password": "Pa55word",
@@ -113,7 +113,7 @@ class FaunaConfiguration {
 
 现在，我们将能够使用“users_by_username”索引编写 FQL 查询来查找我们的用户。例如:
 
-```
+```java
 Map(
   Paginate(Match(Index("users_by_username"), "baeldung")),
   Lambda("user", Get(Var("user")))
@@ -128,7 +128,7 @@ Map(
 
 为了实现这一点，我们首先需要一个 [`UserDetailsService`](/web/20220524051216/https://www.baeldung.com/spring-security-authentication-with-a-database) 来查找用户的动物群:
 
-```
+```java
 public class FaunaUserDetailsService implements UserDetailsService {
     private final FaunaClient faunaClient;
 
@@ -161,7 +161,7 @@ public class FaunaUserDetailsService implements UserDetailsService {
 
 接下来，我们需要一些弹簧配置来设置它。这是连接上述`UserDetailsService`的标准 Spring 安全配置:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -209,7 +209,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 为此，我们需要在动物外壳中执行 FQL 的一部分:
 
-```
+```java
 CreateIndex({
   name: "posts_sort_by_created_desc",
   source: Collection("posts"),
@@ -225,7 +225,7 @@ web 用户界面所做的一切同样可以用这种方式来完成，允许对�
 
 然后，我们可以在动物群外壳中创建一个帖子，以获得一些初始数据:
 
-```
+```java
 Create(
   Collection("posts"),
   {
@@ -247,7 +247,7 @@ Create(
 
 首先，我们需要一些 Java 记录来表示我们正在获取的数据。这将由一个`Author`和一个`Post`记录类组成:
 
-```
+```java
 public record Author(String username, String name) {}
 
 public record Post(String id, String title, String content, Author author, Instant created, Long version) {}
@@ -255,7 +255,7 @@ public record Post(String id, String title, String content, Author author, Insta
 
 现在，我们可以开始我们的邮政服务。这将是一个 Spring 组件，它包装`FaunaClient`并使用它来访问数据存储:
 
-```
+```java
 @Component
 public class PostsService {
     @Autowired
@@ -269,7 +269,7 @@ public class PostsService {
 
 为此，我们将把下面的方法添加到我们的`PostsService`类中:
 
-```
+```java
 List<Post> getAllPosts() throws Exception {
     var postsResult = faunaClient.query(Map(
       Paginate(
@@ -296,7 +296,7 @@ List<Post> getAllPosts() throws Exception {
 
 现在，我们需要能够将这个响应转换回我们的`Post`对象:
 
-```
+```java
 private Post parsePost(Value entry) {
     var author = entry.at("author");
     var post = entry.at("post");
@@ -327,7 +327,7 @@ private Post parsePost(Value entry) {
 
 为此，我们将向`PostsService`类添加一个新方法:
 
-```
+```java
 List<Post> getAuthorPosts(String author) throws Exception {
     var postsResult = faunaClient.query(Map(
       Paginate(
@@ -354,7 +354,7 @@ List<Post> getAuthorPosts(String author) throws Exception {
 
 我们现在能够编写我们的 posts 控制器，它将允许 HTTP 请求到我们的服务来检索帖子。它将监听“/posts”URL，并根据是否提供了“author”参数，返回所有帖子或单个作者的帖子:
 
-```
+```java
 @RestController
 @RequestMapping("/posts")
 public class PostsController {
@@ -373,7 +373,7 @@ public class PostsController {
 
 此时，我们可以启动我们的应用程序，向`/posts` 或`/posts?author=baeldung`发出请求并获得结果:
 
-```
+```java
 [
     {
         "author": {
@@ -419,7 +419,7 @@ public class PostsController {
 
 首先，我们将支持创建新的职位。为此，我们将向我们的`PostsService`添加一个新方法:
 
-```
+```java
 public void createPost(String author, String title, String contents) throws Exception {
     faunaClient.query(
       Create(Collection("posts"),
@@ -440,13 +440,13 @@ public void createPost(String author, String title, String contents) throws Exce
 
 接下来，我们可以添加一个控制器方法，让客户端创建帖子。为此，我们首先需要一个 Java 记录来表示传入的请求数据:
 
-```
+```java
 public record UpdatedPost(String title, String content) {}
 ```
 
 现在，我们可以在`PostsController`中创建一个新的控制器方法来处理请求:
 
-```
+```java
 @PostMapping
 @ResponseStatus(HttpStatus.NO_CONTENT)
 @PreAuthorize("isAuthenticated()")
@@ -466,7 +466,7 @@ public void createPost(@RequestBody UpdatedPost post) throws Exception {
 
 和以前一样，我们首先需要在`PostsService`上有一个新的方法来支持它:
 
-```
+```java
 public void updatePost(String id, String title, String contents) throws Exception {
     faunaClient.query(
       Update(Ref(Collection("posts"), id),
@@ -483,7 +483,7 @@ public void updatePost(String id, String title, String contents) throws Exceptio
 
 接下来，我们将处理程序添加到`PostsController`:
 
-```
+```java
 @PutMapping("/{id}")
 @ResponseStatus(HttpStatus.NO_CONTENT)
 @PreAuthorize("isAuthenticated()")
@@ -497,7 +497,7 @@ public void updatePost(@PathVariable("id") String id, @RequestBody UpdatedPost p
 
 此时，启动服务并向正确的 URL 发送 PUT 将导致记录被更新。然而，如果我们用一个未知的 ID 调用，我们将得到一个错误。我们可以用一个异常处理方法来解决这个问题:
 
-```
+```java
 @ExceptionHandler(NotFoundException.class)
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public void postNotFound() {}
@@ -511,7 +511,7 @@ public void postNotFound() {}
 
 首先，我们将向我们的`PostsService`添加一个新方法来检索帖子。这需要文章的 ID，以及可选地，我们想要获取的之前的版本——换句话说，如果我们提供版本“5 ”,那么我们想要返回版本“4 ”:
 
-```
+```java
 Post getPost(String id, Long before) throws Exception {
     var query = Get(Ref(Collection("posts"), id));
     if (before != null) {
@@ -537,7 +537,7 @@ Post getPost(String id, Long before) throws Exception {
 
 同样，我们需要一个控制器方法来处理传入的调用。我们将把它添加到我们的`PostsController`:
 
-```
+```java
 @GetMapping("/{id}")
 public Post getPost(@PathVariable("id") String id, @RequestParam(value = "before", required = false) Long before)
     throws Exception {

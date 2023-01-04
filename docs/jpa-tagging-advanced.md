@@ -20,7 +20,7 @@
 
 下面是如何创建这种标记的示例:
 
-```
+```java
 @Embeddable
 public class SkillTag {
     private String name;
@@ -32,7 +32,7 @@ public class SkillTag {
 
 要使用这个标签，我们只需将其中的一个`List`添加到我们的数据对象中:
 
-```
+```java
 @ElementCollection
 private List<SkillTag> skillTags = new ArrayList<>();
 ```
@@ -47,7 +47,7 @@ private List<SkillTag> skillTags = new ArrayList<>();
 
 下面是一个示例查询，用于查找任何拥有超过一定数量背书的学生:
 
-```
+```java
 @Query(
   "SELECT s FROM Student s JOIN s.skillTags t WHERE t.name = LOWER(:tagName) AND t.value > :tagValue")
 List<Student> retrieveByNameFilterByMinimumSkillTag(
@@ -56,7 +56,7 @@ List<Student> retrieveByNameFilterByMinimumSkillTag(
 
 接下来，让我们看一个如何使用它的例子:
 
-```
+```java
 Student student = new Student(1, "Will");
 SkillTag skill1 = new SkillTag("java", 5);
 student.setSkillTags(Arrays.asList(skill1));
@@ -86,7 +86,7 @@ assertEquals("size incorrect", 1, students.size());
 
 以下是给照片添加标签的示例:
 
-```
+```java
 @Embeddable
 public class LocationTag {
     private String name;
@@ -103,14 +103,14 @@ public class LocationTag {
 
 该查询看起来类似于上一篇文章中的简单标记实现:
 
-```
+```java
 @Query("SELECT s FROM Student s JOIN s.locationTags t WHERE t.name = LOWER(:tag)")
 List<Student> retrieveByLocationTag(@Param("tag") String tag);
 ```
 
 使用位置标签的例子看起来也很熟悉:
 
-```
+```java
 Student student = new Student(0, "Steve");
 student.setLocationTags(Arrays.asList(new LocationTag("here", 0, 0));
 studentRepository.save(student);
@@ -131,7 +131,7 @@ assertEquals("name incorrect", "Steve", student2.getName());
 
 实现看起来类似于上面的标记:
 
-```
+```java
 @Embeddable
 public class KVTag {
     private String key;
@@ -143,14 +143,14 @@ public class KVTag {
 
 我们可以像这样将它添加到我们的模型中:
 
-```
+```java
 @ElementCollection
 private List<KVTag> kvTags = new ArrayList<>();
 ```
 
 现在我们可以向我们的存储库添加一个新的查询:
 
-```
+```java
 @Query("SELECT s FROM Student s JOIN s.kvTags t WHERE t.key = LOWER(:key)")
 List<Student> retrieveByKeyTag(@Param("key") String key);
 ```
@@ -159,7 +159,7 @@ List<Student> retrieveByKeyTag(@Param("key") String key);
 
 让我们对此进行测试，并验证它是否都工作正常:
 
-```
+```java
 @Test
 public void givenStudentWithKVTags_whenSave_thenGetByTagOk(){
     Student student = new Student(0, "John");
@@ -192,7 +192,7 @@ public void givenStudentWithKVTags_whenSave_thenGetByTagOk(){
 
 首先，我们需要重建我们的模型。我们将从一个`ManyStudent`模型开始:
 
-```
+```java
 @Entity
 public class ManyStudent {
 
@@ -223,7 +223,7 @@ public class ManyStudent {
 
 现在我们可以继续我们的新标签模型，我们称之为`ManyTag`:
 
-```
+```java
 @Entity
 public class ManyTag {
 
@@ -247,7 +247,7 @@ public class ManyTag {
 
 除了模型之外，我们还需要建立两个存储库:每个实体一个。我们将让 Spring 数据来完成所有繁重的工作:
 
-```
+```java
 public interface ManyTagRepository extends JpaRepository<ManyTag, Long> {
 }
 ```
@@ -256,7 +256,7 @@ public interface ManyTagRepository extends JpaRepository<ManyTag, Long> {
 
 我们的学生资源库只是稍微复杂一点:
 
-```
+```java
 public interface ManyStudentRepository extends JpaRepository<ManyStudent, Long> {
     List<ManyStudent> findByManyTags_Name(String name);
 }
@@ -268,7 +268,7 @@ public interface ManyStudentRepository extends JpaRepository<ManyStudent, Long> 
 
 最后，让我们看看这一切在测试中是什么样子的:
 
-```
+```java
 @Test
 public void givenStudentWithManyTags_whenSave_theyGetByTagOk() {
     ManyTag tag = new ManyTag("full time");

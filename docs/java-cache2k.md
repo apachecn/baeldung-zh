@@ -18,7 +18,7 @@
 
 要使用 cache2k，我们需要首先将 [`cache2k-base-bom`依赖](https://web.archive.org/web/20221129011727/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.cache2k%22%20AND%20a%3A%22cache2k-base-bom%22)添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.cache2k</groupId>
     <artifactId>cache2k-base-bom</artifactId>
@@ -35,7 +35,7 @@
 
 因此，首先，我们将创建一个`ProductHelper`类，并创建一个简单的缓存实现:
 
-```
+```java
 public class ProductHelper {
 
     private Cache<String, Integer> cachedDiscounts;
@@ -68,7 +68,7 @@ public class ProductHelper {
 
 接下来，我们将编写一个测试用例并验证我们的实现:
 
-```
+```java
 @Test
 public void whenInvokedGetDiscountTwice_thenGetItFromCache() {
     ProductHelper productHelper = new ProductHelper();
@@ -101,7 +101,7 @@ public void whenInvokedGetDiscountTwice_thenGetItFromCache() {
 
 为了满足这一新需求，我们将使用`expireAfterWrite`方法配置缓存到期时间:
 
-```
+```java
 cachedDiscounts = Cache2kBuilder.of(String.class, Integer.class)
   // other configurations
   .expireAfterWrite(10, TimeUnit.MILLISECONDS)
@@ -110,7 +110,7 @@ cachedDiscounts = Cache2kBuilder.of(String.class, Integer.class)
 
 现在让我们编写一个测试用例来检查缓存是否过期:
 
-```
+```java
 @Test
 public void whenInvokedGetDiscountAfterExpiration_thenDiscountCalculatedAgain() 
   throws InterruptedException {
@@ -138,7 +138,7 @@ public void whenInvokedGetDiscountAfterExpiration_thenDiscountCalculatedAgain()
 
 现在，让我们进一步增强我们的示例，以自动计算和加载缓存:
 
-```
+```java
 cachedDiscounts = Cache2kBuilder.of(String.class, Integer.class)
   // other configurations
   .loader((key) -> {
@@ -150,7 +150,7 @@ cachedDiscounts = Cache2kBuilder.of(String.class, Integer.class)
 
 此外，我们将从`getDiscount`中删除计算和更新折扣的逻辑:
 
-```
+```java
 public Integer getDiscount(String productType) {
     return cachedDiscounts.get(productType);
 }
@@ -158,7 +158,7 @@ public Integer getDiscount(String productType) {
 
 之后，让我们编写一个测试用例来确保加载器按预期工作:
 
-```
+```java
 @Test
 public void whenInvokedGetDiscount_thenPopulateCacheUsingLoader() {
     ProductHelper productHelper = new ProductHelper();
@@ -178,7 +178,7 @@ public void whenInvokedGetDiscount_thenPopulateCacheUsingLoader() {
 
 假设我们想要记录缓存中添加的所有条目。因此，让我们在缓存构建器中添加一个事件监听器配置:
 
-```
+```java
 .addListener(new CacheEntryCreatedListener<String, Integer>() {
     @Override
     public void onEntryCreated(Cache<String, Integer> cache, CacheEntry<String, Integer> entry) {
@@ -189,7 +189,7 @@ public void whenInvokedGetDiscount_thenPopulateCacheUsingLoader() {
 
 现在，我们可以执行我们已经创建的任何测试用例，并验证日志:
 
-```
+```java
 Entry created: [Sports, 20].
 ```
 

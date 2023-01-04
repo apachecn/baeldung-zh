@@ -12,7 +12,7 @@
 
 首先，我们来看一个简单的例子。考虑下面的代码片段:
 
-```
+```java
 String[] strArray = new String[] { "John", "Snow" };
 ArrayList<String> strList = (ArrayList<String>) Arrays.asList(strArray);
 System.out.println("String list: " + strList);
@@ -28,7 +28,7 @@ System.out.println("String list: " + strList);
 
 我们可以简单地将我们的`ArrayList`声明为`List`来避免这个异常:
 
-```
+```java
 List<String> strList = Arrays.asList(strArray);
 System.out.println("String list: " + strList);
 ```

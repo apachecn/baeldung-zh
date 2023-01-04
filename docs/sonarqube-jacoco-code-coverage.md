@@ -36,7 +36,7 @@ SonarQube 与 Java 的免费代码覆盖库 [JaCoCo](/web/20221129015925/https:/
 
 让我们首先添加定义 JaCoCo 版本、插件名称、报告路径和 sonar 语言的必要属性:
 
-```
+```java
 <properties>
     <!-- JaCoCo Properties -->
     <jacoco.version>0.8.6</jacoco.version>
@@ -55,7 +55,7 @@ JaCoCo Maven 插件提供对 JaCoCo 运行时代理的访问，该代理记录�
 
 现在让我们看看我们将添加到`pom.xml` 文件中的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.jacoco</groupId> 
     <artifactId>jacoco-maven-plugin</artifactId>
@@ -65,7 +65,7 @@ JaCoCo Maven 插件提供对 JaCoCo 运行时代理的访问，该代理记录�
 
 接下来，让我们配置将 Maven 项目与 JaCoCo 集成的插件:
 
-```
+```java
 <plugin>
     <groupId>org.jacoco</groupId>
     <artifactId>jacoco-maven-plugin</artifactId>

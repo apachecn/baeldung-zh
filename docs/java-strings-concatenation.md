@@ -14,7 +14,7 @@ Java 提供了大量的方法和类来连接和`**Strings.**`
 
 让我们使用`StringBuilder `类构建一个`String `连接的快速示例:
 
-```
+```java
 StringBuilder stringBuilder = new StringBuilder(100);
 
 stringBuilder.append("Baeldung");
@@ -36,7 +36,7 @@ assertEquals("Baeldung is awesome", stringBuilder.toString());
 
 让我们快速看一下这是如何工作的:
 
-```
+```java
 String myString = "The " + "quick " + "brown " + "fox...";
 
 assertEquals("The quick brown fox...", myString);
@@ -54,7 +54,7 @@ assertEquals("The quick brown fox...", myString);
 
 不出所料，`String.concat`方法是我们试图连接`String `对象时的第一个调用端口。**这个方法返回一个`String `对象，所以将方法链接在一起是一个有用的特性。**
 
-```
+```java
 String myString = "Both".concat(" fickle")
   .concat(" dwarves")
   .concat(" jinx")
@@ -77,7 +77,7 @@ assertEquals("Both fickle dwarves jinx my pig quiz", myString);
 
 让我们通过一个简单的例子来看看这是如何工作的:
 
-```
+```java
 String myString = String.format("%s %s %.2f %s %s, %s...", "I",
   "ate",
   2.5056302,
@@ -94,7 +94,7 @@ assertEquals("I ate 2.51 blueberry pies, oops...", myString);
 
 如果我们的**应用程序运行在 Java 8** **或更高版本**上，我们可以利用`String.join `方法。有了这个，我们可以用一个公共分隔符将**加入到一个`Strings `的数组中，确保没有空格被遗漏。**
 
-```
+```java
 String[] strings = {"I'm", "running", "out", "of", "pangrams!"};
 
 String myString = String.join(" ", strings);
@@ -108,7 +108,7 @@ assertEquals("I'm running out of pangrams!", myString);
 
 `StringJoiner`将所有的`String.join `功能抽象成一个简单易用的类。**构造函数接受一个分隔符，带有可选的前缀和后缀**。我们可以使用名副其实的`add `方法添加`Strings `。
 
-```
+```java
 StringJoiner fruitJoiner = new StringJoiner(", ");
 
 fruitJoiner.add("Apples");
@@ -126,7 +126,7 @@ assertEquals("Apples, Oranges, Bananas", fruitJoiner.toString());
 
 关于数组， [`Array `类](/web/20221031124834/https://www.baeldung.com/java-util-arrays)也包含**一个方便的`toString `方法，它很好地格式化了一个对象数组。**`Arrays.``toString `方法也调用任何封闭对象的`toString `方法——所以我们需要确保我们定义了一个方法。
 
-```
+```java
 String[] myFavouriteLanguages = {"Java", "JavaScript", "Python"};
 
 String toString = Arrays.toString(myFavouriteLanguages);
@@ -140,7 +140,7 @@ assertEquals("[Java, JavaScript, Python]", toString);
 
 最后，让我们来看看`Collectors.joining `方法，该方法**允许我们将一个`Stream `的输出汇集到一个`String.`T4 中**
 
-```
+```java
 List<String> awesomeAnimals = Arrays.asList("Shark", "Panda", "Armadillo");
 
 String animalString = awesomeAnimals.stream().collect(Collectors.joining(", "));

@@ -18,7 +18,7 @@
 
 让我们看一个例子:
 
-```
+```java
 float givenFloat = 1.25f;
 
 String result = givenFloat + "";
@@ -28,7 +28,7 @@ assertEquals("1.25", result);
 
 类似地，我们可以向空的`String`添加一个`Float`对象，得到相同的结果。当我们使用一个`Float`对象时，它的`toString()`方法被自动调用:
 
-```
+```java
 Float givenFloat = 1.25f;
 
 String result = givenFloat + "";
@@ -38,7 +38,7 @@ assertEquals("1.25", result);
 
 **如果`Float`对象为空，拼接结果将是一个“空”** `**String**:`
 
-```
+```java
 Float givenFloat = null;
 
 String result = givenFloat + "";
@@ -50,7 +50,7 @@ assertEquals("null", result);
 
 我们可以使用的另一个选项是用于`String`转换的`Float`类的静态`toString()`方法。**我们可以将一个`float`原始值或者一个`Float`对象传递给`toString()`方法:**
 
-```
+```java
 Float givenFloat = 1.25f;
 
 String result = Float.toString(givenFloat);
@@ -60,7 +60,7 @@ assertEquals("1.25", result);
 
 如果我们将 null 作为参数传递给方法，我们将在运行时得到一个`NullPointerException`:
 
-```
+```java
 Float givenFloat = null;
 
 assertThrows(NullPointerException.class, () -> Float.toString(givenFloat));
@@ -70,7 +70,7 @@ assertThrows(NullPointerException.class, () -> Float.toString(givenFloat));
 
 同样，我们可以使用`String`的静态`valueOf`方法:
 
-```
+```java
 Float givenFloat = 1.25f;
 
 String result = String.valueOf(givenFloat);
@@ -80,7 +80,7 @@ assertEquals("1.25", result);
 
 **与`Float.toString()`不同，如果我们将 null 作为参数传递，`String.valueOf()`不会抛出异常，而是返回“null”`String`**:
 
-```
+```java
 Float givenFloat = null;
 
 String result = String.valueOf(givenFloat);
@@ -92,7 +92,7 @@ assertEquals("null", result);
 
 [`String`的`format()`静态方法](/web/20221023005054/https://www.baeldung.com/string/format)为我们提供了额外的格式化选项。我们必须知道，如果不限制小数位数，即使没有小数部分，结果也会包含尾随零，如下例所示:
 
-```
+```java
 Float givenFloat = 1.25f;
 
 String result = String.format("%f", givenFloat);
@@ -102,7 +102,7 @@ assertEquals("1.250000", result);
 
 当我们格式化指定小数位数的浮点数时，**`format()`方法也会将结果**四舍五入:
 
-```
+```java
 Float givenFloat = 1.256f;
 
 String result = String.format("%.2f", givenFloat);
@@ -112,7 +112,7 @@ assertEquals("1.26", result);
 
 如果我们传递一个空值`Float`，那么转换后的结果将是一个“空值”`String`:
 
-```
+```java
 Float givenFloat = null;
 
 String result = String.format("%f", givenFloat);
@@ -126,7 +126,7 @@ assertEquals("null", result);
 
 让我们看看如何在一个例子中使用它:
 
-```
+```java
 Float givenFloat = 1.25f;
 
 String result = new DecimalFormat("#.0000").format(givenFloat);
@@ -136,7 +136,7 @@ assertEquals("1.2500", result);
 
 如果我们应用格式后，没有小数部分， **`DecimalFormat`将返回整数**:
 
-```
+```java
 Float givenFloat = 1.0025f;
 
 String result = new DecimalFormat("#.##").format(givenFloat);
@@ -146,7 +146,7 @@ assertEquals("1", result);
 
 如果我们将 null 作为参数传递，那么我们将得到一个`IllegalArgumentException`:
 
-```
+```java
 Float givenFloat = null;
 
 assertThrows(IllegalArgumentException.class, () -> new DecimalFormat("#.000").format(givenFloat));
@@ -160,7 +160,7 @@ assertThrows(IllegalArgumentException.class, () -> new DecimalFormat("#.000").fo
 
 最常见的一种方式就是使用`Float`的静态方法:`parseFloat()`。**它将返回一个原始的`float`值，由`String`参数**表示。此外，前导空格和尾随空格会被忽略:
 
-```
+```java
 String givenString = "1.25";
 
 float result = Float.parseFloat(givenString);
@@ -170,7 +170,7 @@ assertEquals(1.25f, result);
 
 如果`String`参数为空，我们得到一个`NullPointerException`:
 
-```
+```java
 String givenString = null;
 
 assertThrows(NullPointerException.class, () -> Float.parseFloat(givenString));
@@ -178,7 +178,7 @@ assertThrows(NullPointerException.class, () -> Float.parseFloat(givenString));
 
 如果`String`参数不包含可解析的`float`，我们得到一个`NumberFormatException:`
 
-```
+```java
 String givenString = "1.23x";
 
 assertThrows(NumberFormatException.class, () -> Float.parseFloat(givenString));
@@ -188,7 +188,7 @@ assertThrows(NumberFormatException.class, () -> Float.parseFloat(givenString));
 
 同样，我们可以使用`Float`的静态`valueOf()`方法。**不同的是`valueOf()`返回一个`Float`对象**。具体来说，它调用了`parseFloat()`方法并将其打包成一个`Float`对象:
 
-```
+```java
 String givenString = "1.25";
 
 Float result = Float.valueOf(givenString);
@@ -198,7 +198,7 @@ assertEquals(1.25f, result);
 
 同样，如果我们传递一个不可解析的`String`，我们将得到一个`NumberFormatException`:
 
-```
+```java
 String givenString = "1.25x";
 
 assertThrows(NumberFormatException.class, () -> Float.valueOf(givenString));
@@ -208,7 +208,7 @@ assertThrows(NumberFormatException.class, () -> Float.valueOf(givenString));
 
 我们也可以使用`DecimalFormat`将`String`转换成`Float`。**主要优势之一是指定自定义小数点分隔符**。
 
-```
+```java
 String givenString = "1,250";
 DecimalFormatSymbols symbols = new DecimalFormatSymbols();
 symbols.setDecimalSeparator(',');
@@ -224,7 +224,7 @@ assertEquals(1.25f, result);
 
 最后，我们可以直接使用`Float`的构造函数进行转换。**内部将使用`Float`的静态`parseFloat()`方法并创建`Float`对象:**
 
-```
+```java
 String givenString = "1.25";
 
 Float result = new Float(givenString);

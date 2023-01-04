@@ -12,7 +12,7 @@ Apache Flink 是一个流处理框架，可以很容易地与 Java 一起使用�
 
 要安装和配置 Apache Kafka，请参考[官方指南](https://web.archive.org/web/20221126224609/https://kafka.apache.org/quickstart)。安装后，我们可以使用以下命令来创建名为`flink_input`和`flink_output:`的新主题
 
-```
+```java
  bin/kafka-topics.sh --create \
   --zookeeper localhost:2181 \
   --replication-factor 1 --partitions 1 \
@@ -43,7 +43,7 @@ Apache Flink 允许实时流处理技术。该框架允许使用多个第三方�
 
 要将 Flink 添加到我们的项目中，我们需要包含以下 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.flink</groupId>
     <artifactId>flink-core</artifactId>
@@ -64,7 +64,7 @@ Apache Flink 允许实时流处理技术。该框架允许使用多个第三方�
 
 让我们创建一个静态方法，它将使`FlinkKafkaConsumer `的创建更加容易:
 
-```
+```java
 public static FlinkKafkaConsumer011<String> createStringConsumerForTopic(
   String topic, String kafkaAddress, String kafkaGroup ) {
 
@@ -86,7 +86,7 @@ public static FlinkKafkaConsumer011<String> createStringConsumerForTopic(
 
 为了向 Kafka 生成数据，我们需要提供我们想要使用的 Kafka 地址和主题。同样，我们可以创建一个静态方法，帮助我们为不同的主题创建生产者:
 
-```
+```java
 public static FlinkKafkaProducer011<String> createStringProducer(
   String topic, String kafkaAddress){
 
@@ -105,7 +105,7 @@ public static FlinkKafkaProducer011<String> createStringProducer(
 
 为此，我们需要创建一个自定义的`MapFunction`:
 
-```
+```java
 public class WordsCapitalizer implements MapFunction<String, String> {
     @Override
     public String map(String s) {
@@ -116,7 +116,7 @@ public class WordsCapitalizer implements MapFunction<String, String> {
 
 创建函数后，我们可以在流处理中使用它:
 
-```
+```java
 public static void capitalize() {
     String inputTopic = "flink_input";
     String outputTopic = "flink_output";
@@ -146,7 +146,7 @@ public static void capitalize() {
 
 下面的类表示一条简单的消息，其中包含发件人和收件人的信息:
 
-```
+```java
 @JsonSerialize
 public class InputMessage {
     String sender;
@@ -160,7 +160,7 @@ public class InputMessage {
 
 为此，我们需要一个自定义的`DeserializationSchema:`
 
-```
+```java
 public class InputMessageDeserializationSchema implements
   DeserializationSchema<InputMessage> {
 
@@ -202,7 +202,7 @@ Apache Spark 也有类似的问题。这个问题的一个已知解决方案是�
 
 为此，我们可以创建以下类:
 
-```
+```java
 public class Backup {
     @JsonProperty("inputMessages")
     List<InputMessage> inputMessages;
@@ -224,7 +224,7 @@ public class Backup {
 
 我们希望将我们的`Backup`对象保存为 Kafka 的 JSON，因此我们需要创建我们的`SerializationSchema`:
 
-```
+```java
 public class BackupSerializationSchema
   implements SerializationSchema<Backup> {
 
@@ -257,7 +257,7 @@ Flink 提供了三种不同的时间特性`EventTime, ProcessingTime, `和`Inge
 
 为了使用`EventTime` **，我们需要一个`TimestampAssigner`，它将从我们的输入数据**中提取时间戳:
 
-```
+```java
 public class InputMessageTimestampAssigner 
   implements AssignerWithPunctuatedWatermarks<InputMessage> {
 
@@ -293,7 +293,7 @@ Flink 定义了`Watermark. ` **水印的概念，在数据没有按照发送顺
 
 为此，我们需要一个自定义的`AggregateFunction`:
 
-```
+```java
 public class BackupAggregator 
   implements AggregateFunction<InputMessage, List<InputMessage>, Backup> {
 
@@ -328,7 +328,7 @@ public class BackupAggregator
 
 在分配了适当的时间戳并实现了我们的`AggregateFunction`之后，我们终于可以获取我们的 Kafka 输入并处理它了:
 
-```
+```java
 public static void createBackup () throws Exception {
     String inputTopic = "flink_input";
     String outputTopic = "flink_output";

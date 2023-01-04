@@ -14,14 +14,14 @@ MongoDB 是一个跨平台、面向文档、开源的 NoSQL 数据库，用 C++�
 
 在我们继续更新查询之前，让我们首先创建一个数据库`baeldung`和一个样本集合`student:`
 
-```
+```java
 use baeldung;
 db.createCollection(student);
 ```
 
 作为一个例子，让我们使用`insertMany`查询将一些文档添加到集合`student`中:
 
-```
+```java
 db.student.insertMany([
     {
         "student_id": 8764,
@@ -42,7 +42,7 @@ db.student.insertMany([
 
 成功插入后，我们将获得一个带有`acknowledged:true`的 JSON:
 
-```
+```java
 {
     "acknowledged" : true,
     "insertedIds" : [
@@ -62,7 +62,7 @@ MongoDB 中的更新操作可以通过添加新字段、删除字段或更新现
 
 为了进行演示，我们来看看更新集合中的单个文档的查询:
 
-```
+```java
 db.student.updateOne(
     { 
         "student_name" : "Paul Starc"
@@ -77,7 +77,7 @@ db.student.updateOne(
 
 我们将得到类似如下所示的输出:
 
-```
+```java
 {
     "acknowledged":true,
     "matchedCount":1,
@@ -87,7 +87,7 @@ db.student.updateOne(
 
 现在让我们来看看上面的`updateOne`查询的 Java 驱动程序代码:
 
-```
+```java
 UpdateResult updateResult = collection.updateOne(Filters.eq("student_name", "Paul Starc"),
 Updates.set("address", "Hostel 2"));
 ```
@@ -100,7 +100,7 @@ Updates.set("address", "Hostel 2"));
 
 让我们看看使用`updateMany`方法的 MongoDB shell 查询:
 
-```
+```java
 db.student.updateMany(
     { 
         age: { 
@@ -117,7 +117,7 @@ db.student.updateMany(
 
 上述命令将返回以下输出:
 
-```
+```java
 {
     "acknowledged":true,
     "matchedCount":2,
@@ -129,7 +129,7 @@ db.student.updateMany(
 
 现在让我们使用`updateMany`方法来研究 Java 驱动程序代码:
 
-```
+```java
 UpdateResult updateResult = collection.updateMany(Filters.lt("age", 20), Updates.set("Review", true));
 ```
 
@@ -139,7 +139,7 @@ UpdateResult updateResult = collection.updateMany(Filters.lt("age", 20), Updates
 
 MongoDB 的 [`replaceOne`](https://web.archive.org/web/20221008232507/https://docs.mongodb.com/manual/reference/method/db.collection.replaceOne/) 方法替换整个文档。**`replaceOne`的缺点之一是所有旧字段将被新字段替换，并且旧字段也将丢失:**
 
-```
+```java
 db.student.replaceOne(
     { 
         "student_id": 8764
@@ -156,7 +156,7 @@ db.student.replaceOne(
 
 在这种情况下，我们将得到以下输出:
 
-```
+```java
 {
     "acknowledged":true,
     "matchedCount":1,
@@ -166,7 +166,7 @@ db.student.replaceOne(
 
 如果没有找到匹配，该操作将`matchedCount`返回为 0:
 
-```
+```java
 {
     "acknowledged":true,
     "matchedCount":0,
@@ -176,7 +176,7 @@ db.student.replaceOne(
 
 让我们使用`replaceOne`方法编写相应的 Java 驱动程序代码:
 
-```
+```java
 Document replaceDocument = new Document();
 replaceDocument
   .append("student_id", 8764)
@@ -195,7 +195,7 @@ UpdateResult updateResult = collection.replaceOne(Filters.eq("student_id", 8764)
 
 简而言之，`findOneAndReplace`根据应用的过滤器替换集合中的第一个匹配文档:
 
-```
+```java
 db.student.findOneAndReplace(
     { 
         "student_id" : { 
@@ -217,7 +217,7 @@ db.student.findOneAndReplace(
 
 该查询将返回以下文档:
 
-```
+```java
 {
     "student_id":8764,
     "student_name":"Paul Starc",
@@ -229,7 +229,7 @@ db.student.findOneAndReplace(
 
 如果我们将`returnNewDocument`设置为`true`，那么操作将返回被替换的文档:
 
-```
+```java
 {
     "student_id":8764,
     "student_name":"Paul Starc",
@@ -241,7 +241,7 @@ db.student.findOneAndReplace(
 
 现在让我们使用`findOneAndReplace`方法来投影返回文档中的`student_id`和`age`字段:
 
-```
+```java
 db.student.findOneAndReplace(
     { 
         "student_id" : {
@@ -267,7 +267,7 @@ db.student.findOneAndReplace(
 
 上述查询的输出将只包含投影的字段:
 
-```
+```java
 {
     "student_id":"8764",
     "age":16
@@ -276,7 +276,7 @@ db.student.findOneAndReplace(
 
 上面的 Java 驱动代码查询了`findOneAndReplace:`的各个选项
 
-```
+```java
 Document replaceDocument = new Document();
 replaceDocument
   .append("student_id", 8764)
@@ -298,7 +298,7 @@ Document resultDocument = collection.findOneAndReplace(
 
 [`findOneAndUpdate`](https://web.archive.org/web/20221008232507/https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndUpdate/) 方法更新集合中第一个匹配的文档。如果有多个文档与选择标准匹配，那么它只更新第一个匹配的文档。当我们更新文档时，`_id`字段的值保持不变:
 
-```
+```java
 db.student.findOneAndUpdate(
     { 
         "student_id" : 8764
@@ -324,7 +324,7 @@ db.student.findOneAndUpdate(
 
 查询的输出将只包含旧文档的`studentId`和`address`:
 
-```
+```java
 {
     "student_id":8764,
     "address":"Hostel 1"
@@ -333,7 +333,7 @@ db.student.findOneAndUpdate(
 
 上面查询的 Java 驱动代码，使用`findOneAndUpdate` 的不同选项如下`:`
 
-```
+```java
 Document sort = new Document("roll_no", 1);
 Document projection = new Document("_id", 0).append("student_id", 1).append("address", 1);
 Document resultDocument = collection.findOneAndUpdate(

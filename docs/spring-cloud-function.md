@@ -19,7 +19,7 @@
 
 我们首先需要做的是包含 [`spring-cloud-starter-function-web`](https://web.archive.org/web/20220525122810/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.cloud%22%20AND%20a%3A%22spring-cloud-starter-function-web%22) 的依赖关系。这将充当我们的本地适配器，并带来在本地运行我们的功能所需的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-function-web</artifactId>
@@ -33,7 +33,7 @@
 
 通过 Spring Cloud 函数，**我们可以将`Function`、`Consumer`或`Supplier` 类型的`@Bean`公开为单独的方法**:
 
-```
+```java
 @SpringBootApplication
 public class CloudFunctionApplication {
 
@@ -54,7 +54,7 @@ public class CloudFunctionApplication {
 
 `spring-cloud-starter-function-web `将函数公开为 HTTP 端点。在我们运行了`CloudFunctionApplication`之后，我们可以卷曲我们的目标来本地测试它:
 
-```
+```java
 curl localhost:8080/reverseString -H "Content-Type: text/plain" -d "Baeldung User"
 ```
 
@@ -62,7 +62,7 @@ curl localhost:8080/reverseString -H "Content-Type: text/plain" -d "Baeldung Use
 
 正如所料，我们得到了反转的字符串作为输出:
 
-```
+```java
 resU gnudleaB
 ```
 
@@ -70,7 +70,7 @@ resU gnudleaB
 
 除了将我们的方法公开为一个`@Bean, `之外，我们还可以将我们的软件编写为实现函数接口`Function<T, R>`的类:
 
-```
+```java
 public class Greeter implements Function<String, String> {
 
     @Override
@@ -82,7 +82,7 @@ public class Greeter implements Function<String, String> {
 
 然后我们可以在`application.properties`中指定要扫描相关 beans 的包:
 
-```
+```java
 spring.cloud.function.scan.packages=com.baeldung.spring.cloudfunction.functions
 ```
 
@@ -90,7 +90,7 @@ spring.cloud.function.scan.packages=com.baeldung.spring.cloudfunction.functions
 
 同样，我们可以启动应用程序并使用 curl 来测试`Greeter`函数:
 
-```
+```java
 curl localhost:8080/greeter -H "Content-Type: text/plain" -d "World"
 ```
 
@@ -98,7 +98,7 @@ curl localhost:8080/greeter -H "Content-Type: text/plain" -d "World"
 
 不出所料，我们得到了预期的问候:
 
-```
+```java
 Hello World, and welcome to Spring Cloud function!!!
 ```
 
@@ -118,7 +118,7 @@ Spring Cloud 功能如此强大的原因在于，我们可以构建与云无关�
 
 对于 AWS，我们将使用 [`spring-cloud-function-adapter-aws`](https://web.archive.org/web/20220525122810/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.cloud%22%20AND%20a%3A%22spring-cloud-function-adapter-aws%22) :
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-function-adapter-aws</artifactId>
@@ -127,7 +127,7 @@ Spring Cloud 功能如此强大的原因在于，我们可以构建与云无关�
 
 接下来，让我们添加处理 Lambda 事件所需的 AWS 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>aws-lambda-java-events</artifactId>
@@ -146,7 +146,7 @@ Spring Cloud 功能如此强大的原因在于，我们可以构建与云无关�
 
 [`spring-boot-thin-layout`](https://web.archive.org/web/20220525122810/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.boot.experimental%22%20AND%20a%3A%22spring-boot-thin-layout%22) 依赖项通过排除一些不需要的依赖项来帮助我们减少工件的大小:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -184,7 +184,7 @@ Spring Cloud 功能如此强大的原因在于，我们可以构建与云无关�
 
 如果我们想通过 HTTP 请求再次暴露我们的字符串反向器，那么 Spring Cloud 函数 AWS 附带了`SpringBootRequestHandler.` ，它实现了 AWS 的`RequestHandler`，并负责将 AWS 请求分派给我们的函数。
 
-```
+```java
 public class MyStringHandlers extends SpringBootRequestHandler<String, String> {
 
 }

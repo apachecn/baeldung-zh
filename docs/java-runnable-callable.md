@@ -22,7 +22,7 @@
 
 这适用于我们不需要寻找线程执行结果的情况，例如传入事件记录:
 
-```
+```java
 public interface Runnable {
     public void run();
 }
@@ -30,7 +30,7 @@ public interface Runnable {
 
 让我们用一个例子来理解这一点:
 
-```
+```java
 public class EventLoggingTask implements  Runnable{
     private Logger logger
       = LoggerFactory.getLogger(EventLoggingTask.class);
@@ -46,7 +46,7 @@ public class EventLoggingTask implements  Runnable{
 
 我们可以使用`ExecutorService`启动任务:
 
-```
+```java
 public void executeTask() {
     executorService = Executors.newSingleThreadExecutor();
     Future future = executorService.submit(new EventLoggingTask());
@@ -60,7 +60,7 @@ public void executeTask() {
 
 `Callable`接口是一个通用接口，包含一个返回通用值`V`的`call()`方法:
 
-```
+```java
 public interface Callable<V> {
     V call() throws Exception;
 }
@@ -68,7 +68,7 @@ public interface Callable<V> {
 
 让我们来看看计算一个数的阶乘:
 
-```
+```java
 public class FactorialTask implements Callable<Integer> {
     int number;
 
@@ -88,7 +88,7 @@ public class FactorialTask implements Callable<Integer> {
 
 `call()` 方法的结果在`Future` 对象中返回:
 
-```
+```java
 @Test
 public void whenTaskSubmitted_ThenFutureResultObtained(){
     FactorialTask task = new FactorialTask(5);
@@ -110,7 +110,7 @@ public void whenTaskSubmitted_ThenFutureResultObtained(){
 
 `Callable`的 `call()`方法包含“throws `Exception`”子句，因此我们可以轻松地进一步传播已检查的异常:
 
-```
+```java
 public class FactorialTask implements Callable<Integer> {
     // ...
     public Integer call() throws InvalidParamaterException {
@@ -127,7 +127,7 @@ public class FactorialTask implements Callable<Integer> {
 
 这将抛出一个`ExecutionException`，它包装了最初的异常:
 
-```
+```java
 @Test(expected = ExecutionException.class)
 public void whenException_ThenCallableThrowsIt() {
 
@@ -141,7 +141,7 @@ public void whenException_ThenCallableThrowsIt() {
 
 如果我们不调用`Future` 类的`get()` 方法，那么`call()` 方法抛出的异常不会被报告回来，任务仍然会被标记为完成:
 
-```
+```java
 @Test
 public void whenException_ThenCallableDoesntThrowsItIfGetIsNotCalled(){
     FactorialCallableTask task = new FactorialCallableTask(-5);

@@ -10,7 +10,7 @@
 
 通常，当使用原生 SQL 查询在 Hibernate 中获取结果时，我们使用`createNativeQuery()` 方法，然后是 `list()` 方法:
 
-```
+```java
 session.createNativeQuery("SELECT * FROM Student student")
   .list();
 ```
@@ -25,7 +25,7 @@ session.createNativeQuery("SELECT * FROM Student student")
 
 让我们创建一个新方法，使用 `addScalar()`方法获取学生列表:
 
-```
+```java
 public List<Object[]> fetchColumnWithScalar() {
     return session.createNativeQuery("SELECT * FROM Student student")
       .addScalar("studentId", StandardBasicTypes.LONG)
@@ -49,7 +49,7 @@ public List<Object[]> fetchColumnWithScalar() {
 
 让我们编写另一个方法`fetchLimitedColumnWithScalar()` 来只获取学生姓名列:
 
-```
+```java
 public List<String> fetchLimitedColumnWithScalar() {
     return session.createNativeQuery("SELECT * FROM Student student")
       .addScalar("name", StandardBasicTypes.STRING)
@@ -59,7 +59,7 @@ public List<String> fetchLimitedColumnWithScalar() {
 
 这里，我们在查询中使用了星号来获取学生的`List`:
 
-```
+```java
 SELECT * FROM Student student
 ```
 
@@ -67,7 +67,7 @@ SELECT * FROM Student student
 
 让我们创建一个 JUnit 方法来验证由`fetchLimitedColumnWithScalar()`方法返回的列:
 
-```
+```java
 List<String> list = scalarExample.fetchLimitedColumnWithScalar();
 for (String colValue : list) {
     assertTrue(colValue.startsWith("John"));
@@ -84,7 +84,7 @@ for (String colValue : list) {
 
 让我们创建一个返回所有学生平均年龄的方法:
 
-```
+```java
 public Integer fetchAvgAgeWithScalar() {
     return (Integer) session.createNativeQuery("SELECT AVG(age) as avgAge FROM Student student")
       .addScalar("avgAge")
@@ -94,7 +94,7 @@ public Integer fetchAvgAgeWithScalar() {
 
 现在，让我们用一个单元测试方法来验证这一点:
 
-```
+```java
 Integer avgAge = scalarExample.fetchAvgAgeWithScalar();
 assertEquals(true, (avgAge >= 5 && avgAge <= 24));
 ```
@@ -111,7 +111,7 @@ assertEquals(true, (avgAge >= 5 && avgAge <= 24));
 
 让我们创建一个新方法并使用重载的`addScalar()`方法，该方法获取`“`年龄`“`列而不指定其类型:
 
-```
+```java
 public List<Object[]> fetchWithOverloadedScalar() {
     return session.createNativeQuery("SELECT * FROM Student student")
       .addScalar("name", StandardBasicTypes.STRING)
@@ -122,7 +122,7 @@ public List<Object[]> fetchWithOverloadedScalar() {
 
 现在，让我们编写另一个 JUnit 方法来验证我们的方法是否返回两列或更多列:
 
-```
+```java
 List<Object[]> list = scalarExample.fetchColumnWithOverloadedScalar();
 for (Object[] colArray : list) {
     assertEquals(2, colArray.length);

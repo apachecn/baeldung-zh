@@ -51,7 +51,7 @@
 
 首先，我们需要**点击[API 端点来获取所有国家](https://web.archive.org/web/20220630125052/https://api.countrylayer.com/rest/v2/all)并将响应保存在本地的 JSON 文件**中。下一步是使用`mongoimport`命令将其导入 MongoDB:
 
-```
+```java
 mongoimport.exe --db <db_name> --collection <collection_name> --file <path_to_file> --jsonArray
 ```
 
@@ -63,7 +63,7 @@ mongoimport.exe --db <db_name> --collection <collection_name> --file <path_to_fi
 
 但在此之前，我们需要连接到数据库:
 
-```
+```java
 @BeforeClass
 public static void setUpDB() throws IOException {
     mongoClient = MongoClients.create();
@@ -76,7 +76,7 @@ public static void setUpDB() throws IOException {
 
 为了提高代码片段的可读性，我们可以添加一个静态导入:
 
-```
+```java
 import static com.mongodb.client.model.Aggregates.*;
 ```
 
@@ -86,7 +86,7 @@ import static com.mongodb.client.model.Aggregates.*;
 
 现在，假设我们想要**检查世界上有多少国家将英语作为官方语言**:
 
-```
+```java
 @Test
 public void givenCountryCollection_whenEnglishSpeakingCountriesCounted_thenNinetyOne() {
     Document englishSpeakingCountries = collection.aggregate(Arrays.asList(
@@ -107,7 +107,7 @@ public void givenCountryCollection_whenEnglishSpeakingCountriesCounted_thenNinet
 
 在本例中，我们的目标是**找出包含最多国家的地理区域**:
 
-```
+```java
 @Test
 public void givenCountryCollection_whenCountedRegionWise_thenMaxInAfrica() {
     Document maxCountriedRegion = collection.aggregate(Arrays.asList(
@@ -126,7 +126,7 @@ public void givenCountryCollection_whenCountedRegionWise_thenMaxInAfrica() {
 
 现在，让我们使用 **`sort`、`[limit](https://web.archive.org/web/20220630125052/http://docs.mongodb.org/manual/reference/operator/aggregation/limit/)`和 [`out`](https://web.archive.org/web/20220630125052/http://docs.mongodb.org/manual/reference/operator/aggregation/out/) 来提取区域范围内最大的七个国家，并将它们写入新的集合**:
 
-```
+```java
 @Test
 public void givenCountryCollection_whenAreaSortedDescending_thenSuccess() {
     collection.aggregate(Arrays.asList(
@@ -152,7 +152,7 @@ public void givenCountryCollection_whenAreaSortedDescending_thenSuccess() {
 
 现在在我们的数据集中，我们有一个`borders` 字段，它是一个数组，列出了这个国家**所有接壤国家的`alpha3Code`，但是没有任何字段直接给我们计数。**所以我们需要用 [`project`](https://web.archive.org/web/20220630125052/https://docs.mongodb.com/manual/reference/operator/aggregation/project/) 来推导出`borderingCountries`的数字:
 
-```
+```java
 @Test
 public void givenCountryCollection_whenNeighborsCalculated_thenMaxIsFifteenInChina() {
     Bson borderingCountriesCollection = project(Projections.fields(Projections.excludeId(), 

@@ -12,7 +12,7 @@
 
 现在，假设我们将继续使用 Spring Boot 2.1.2。但是，我们希望使用 JUnit 5.7.1。一种可能的方法是在我们的`pom.xml`文件中包含`junit-jupiter-api`、`junit-jupiter-params`、`junit-jupiter-engine`和`junit-platform-launcher`依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-api</artifactId>
@@ -24,7 +24,7 @@
 
 然而，在这种情况下，当我们运行测试时，我们将得到一个`NoClassDefFoundError`:
 
-```
+```java
 [ERROR] java.lang.NoClassDefFoundError: org/junit/platform/commons/util/ClassNamePatternFilterUtils
 ```
 
@@ -42,7 +42,7 @@
 
 在我们的示例中，修复错误的有效方法是覆盖由 Spring 管理的 JUnit 版本:
 
-```
+```java
 <properties>
     <junit-jupiter.version>5.7.1</junit-jupiter.version>
 </properties>
@@ -50,7 +50,7 @@
 
 现在，我们也可以用下面的代码替换我们的 JUnit 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter</artifactId>
@@ -61,7 +61,7 @@
 
 类似地，**我们也可以覆盖 Gradle 项目中的托管版本**:
 
-```
+```java
 ext['junit-jupiter.version'] = '5.7.1'
 ```
 

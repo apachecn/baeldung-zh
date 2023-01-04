@@ -16,7 +16,7 @@
 
 让我们从 Maven 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>org.jmockit</groupId>
     <artifactId>jmockit</artifactId>
@@ -31,7 +31,7 @@
 
 首先，让我们考虑这样一种情况，当我们有一个非静态方法的类**在内部依赖于静态方法**时:
 
-```
+```java
 public class AppManager {
 
     public boolean managerResponse(String question) {
@@ -57,7 +57,7 @@ public class AppManager {
 
 我们可以使用`JMockit's`匿名类`mockit.MockUp.MockUp<T>` ( `where T will be the class name`)和`@Mock `注释来模拟这个静态方法:
 
-```
+```java
 @Test
 public void givenAppManager_whenStaticMethodCalled_thenValidateExpectedResponse() {
     new MockUp<AppManager>() {
@@ -77,7 +77,7 @@ public void givenAppManager_whenStaticMethodCalled_thenValidateExpectedResponse(
 
 在少数情况下，其他方法使用类的私有静态方法:
 
-```
+```java
 private static Integer stringToInteger(String num) {
     return Integer.parseInt(num);
 }
@@ -85,7 +85,7 @@ private static Integer stringToInteger(String num) {
 
 为了测试这样的方法，**，我们需要模仿私有静态方法**。我们可以使用`JMockit`提供的`Deencapsulation.invoke() `实用方法:
 
-```
+```java
 @Test
 public void givenAppManager_whenPrivateStaticMethod_thenValidateExpectedResponse() {
     int response = Deencapsulation.invoke(AppManager.class, "stringToInteger", "110");

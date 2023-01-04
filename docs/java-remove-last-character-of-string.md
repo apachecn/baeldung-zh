@@ -16,7 +16,7 @@
 
 为了克服 null 和空字符串的问题，我们可以将该方法包装在一个助手类中:
 
-```
+```java
 public static String removeLastChar(String s) {
     return (s == null || s.length() == 0)
       ? null 
@@ -26,7 +26,7 @@ public static String removeLastChar(String s) {
 
 我们可以重构代码，使用 Java 8:
 
-```
+```java
 public static String removeLastCharOptional(String s) {
     return Optional.ofNullable(s)
       .filter(str -> str.length() != 0)
@@ -41,7 +41,7 @@ public static String removeLastCharOptional(String s) {
 
 为了包含`StringUtils,`，我们必须更新我们的`pom.xml`文件:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -51,7 +51,7 @@ public static String removeLastCharOptional(String s) {
 
 `StringUtils.substring()`需要三个参数:一个给定的`String,`的第一个字符的索引(在我们的例子中它总是 0)，和倒数第二个字符的索引。同样，我们可以简单地使用`length()`方法减去`1:`
 
-```
+```java
 String TEST_STRING = "abcdef";
 
 StringUtils.substring(TEST_STRING, 0, TEST_STRING.length() - 1);
@@ -65,7 +65,7 @@ StringUtils.substring(TEST_STRING, 0, TEST_STRING.length() - 1);
 
 它非常容易使用，并且只需要一个参数:`String.`它唯一的目的是删除最后一个字符，不多也不少:
 
-```
+```java
 StringUtils.chop(TEST_STRING);
 ```
 
@@ -75,7 +75,7 @@ StringUtils.chop(TEST_STRING);
 
 例如，我们可以使用`String`类本身的 **`replaceAll()`方法，**采用两个参数:正则表达式和替换`String`:
 
-```
+```java
 TEST_STRING.replaceAll(".$", "");
 ```
 
@@ -83,7 +83,7 @@ TEST_STRING.replaceAll(".$", "");
 
 另外，`replaceAll()`和正则表达式乍一看可能很复杂。我们可以在这里阅读更多关于正则表达式[的内容，但是为了使逻辑更加用户友好，我们可以将它包装在一个助手类中:](/web/20220925222917/https://www.baeldung.com/regular-expressions-java)
 
-```
+```java
 public static String removeLastCharRegex(String s) {
     return (s == null) ? null : s.replaceAll(".$", "");
 }
@@ -93,7 +93,7 @@ public static String removeLastCharRegex(String s) {
 
 最后，让我们用 Java 8 重写**的实现:**
 
-```
+```java
 public static String removeLastCharRegexOptional(String s) {
     return Optional.ofNullable(s)
       .map(str -> str.replaceAll(".$", ""))

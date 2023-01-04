@@ -18,14 +18,14 @@
 
 在我们的`Foo`类的例子中，name 列被定义为不允许使用`null` 值:
 
-```
+```java
 @Column(nullable = false)
 private String name;
 ```
 
 如果我们试图保存一个实例而不设置名称的值，我们可以预期会抛出一个`DataIntegrityViolationException`:
 
-```
+```java
 @Test(expected = DataIntegrityViolationException.class)
 public void whenSavingNullValue_thenDataIntegrityException() {
     Foo fooEntity = new Foo();
@@ -37,7 +37,7 @@ public void whenSavingNullValue_thenDataIntegrityException() {
 
 `DataIntegrityViolationException`的一个子类是`DuplicateKeyException`，当试图保存一个主键已经存在的记录或者一个值已经存在于具有`unique`约束的列中时，比如试图在`foo`表中插入两行具有相同的`id`1:
 
-```
+```java
 @Test(expected = DuplicateKeyException.class)
 public void whenSavingDuplicateKeyValues_thenDuplicateKeyException() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(restDataSource);
@@ -52,7 +52,7 @@ public void whenSavingDuplicateKeyValues_thenDuplicateKeyException() {
 
 例如，我们将使用`JdbcTemplate`类，它有一个抛出这个异常的方法:
 
-```
+```java
 @Test(expected = DataRetrievalFailureException.class)
 public void whenRetrievingNonExistentValue_thenDataRetrievalException() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(restDataSource);
@@ -65,7 +65,7 @@ public void whenRetrievingNonExistentValue_thenDataRetrievalException() {
 
 当试图从一个表中检索多个列而没有创建适当的`RowMapper`时，抛出这个异常子类:
 
-```
+```java
 @Test(expected = IncorrectResultSetColumnCountException.class)
 public void whenRetrievingMultipleColumns_thenIncorrectResultSetColumnCountException() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(restDataSource);
@@ -79,7 +79,7 @@ public void whenRetrievingMultipleColumns_thenIncorrectResultSetColumnCountExcep
 
 当检索到的记录数与预期的记录数不同时，会引发此异常，例如，当预期只有一个`Integer`值，但为查询检索到两行时:
 
-```
+```java
 @Test(expected = IncorrectResultSizeDataAccessException.class)
 public void whenRetrievingMultipleValues_thenIncorrectResultSizeException() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(restDataSource);
@@ -95,7 +95,7 @@ public void whenRetrievingMultipleValues_thenIncorrectResultSizeException() {
 
 当无法获取指定的数据源时，将引发此异常。例如，我们将使用类`JndiDataSourceLookup`来寻找一个不存在的数据源:
 
-```
+```java
 @Test(expected = DataSourceLookupFailureException.class)
 public void whenLookupNonExistentDataSource_thenDataSourceLookupFailureException() {
     JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
@@ -110,7 +110,7 @@ public void whenLookupNonExistentDataSource_thenDataSourceLookupFailureException
 
 为了测试这个异常，我们需要撤销用户的`SELECT`权限，然后运行一个选择查询:
 
-```
+```java
 @Test(expected = InvalidDataAccessResourceUsageException.class)
 public void whenRetrievingDataUserNoSelectRights_thenInvalidResourceUsageException() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(restDataSource);
@@ -130,7 +130,7 @@ public void whenRetrievingDataUserNoSelectRights_thenInvalidResourceUsageExcepti
 
 `InvalidDataAccessResourceUsageException` 的一个非常常见的子类型是`BadSqlGrammarException`，当试图用无效的 SQL 运行查询时抛出:
 
-```
+```java
 @Test(expected = BadSqlGrammarException.class)
 public void whenIncorrectSql_thenBadSqlGrammarException() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(restDataSource);
@@ -144,13 +144,13 @@ public void whenIncorrectSql_thenBadSqlGrammarException() {
 
 当通过`JDBC`的连接尝试失败时，例如当数据库 url 不正确时，抛出该异常。如果我们像下面这样写 url:
 
-```
+```java
 jdbc.url=jdbc:mysql:3306://localhost/spring_hibernate4_exceptions?createDatabaseIfNotExist=true
 ```
 
 然后在试图执行一条语句时会抛出`CannotGetJdbcConnectionException`:
 
-```
+```java
 @Test(expected = CannotGetJdbcConnectionException.class)
 public void whenJdbcUrlIncorrect_thenCannotGetJdbcConnectionException() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(restDataSource);

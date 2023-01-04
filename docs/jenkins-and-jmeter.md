@@ -38,7 +38,7 @@ In the next step, on the `General` `Tab`, we can configure it with these general
 
 下面是相应的小型 shell 脚本:
 
-```
+```java
 cd jmeter
 ./mvnw clean install -DskipTests
 nohup ./mvnw spring-boot:run -Dserver.port=8989 &
@@ -91,7 +91,7 @@ jmeter -Jjmeter.save.saveservice.output_format=xml
 3.  在`Pipeline` `Tab`上，在定义上选择`Pipeline script`并勾选`Use Groovy Sandbox`
 4.  在`script`区域，只需填写以下几行:
 
-```
+```java
 node {
     stage 'Build, Test and Package'
     git 'https://github.com/eugenp/tutorials.git'

@@ -20,13 +20,13 @@
 
 接下来，我们将使用命令行启动`mongod`服务:
 
-```
+```java
 mongod --replSet rs0
 ```
 
 最后，启动副本集—如果尚未启动:
 
-```
+```java
 mongo --eval "rs.initiate()"
 ```
 
@@ -36,7 +36,7 @@ mongo --eval "rs.initiate()"
 
 接下来，我们需要将以下依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-mongodb</artifactId>
@@ -50,7 +50,7 @@ mongo --eval "rs.initiate()"
 
 现在，让我们来看看我们的配置:
 
-```
+```java
 @Configuration
 @EnableMongoRepositories(basePackages = "com.baeldung.repository")
 public class MongoConfig extends AbstractMongoClientConfiguration{
@@ -84,7 +84,7 @@ public class MongoConfig extends AbstractMongoClientConfiguration{
 
 注释方法中的所有内容都将在一个事务中执行:
 
-```
+```java
 @Test
 @Transactional
 public void whenPerformMongoTransaction_thenSuccess() {
@@ -99,7 +99,7 @@ public void whenPerformMongoTransaction_thenSuccess() {
 
 注意，我们不能在多文档事务中使用`listCollections`命令，例如:
 
-```
+```java
 @Test(expected = MongoTransactionException.class)
 @Transactional
 public void whenListCollectionDuringMongoTransaction_thenException() {
@@ -118,7 +118,7 @@ public void whenListCollectionDuringMongoTransaction_thenException() {
 
 **我们可以使用 Spring 数据`TransactionTemplate`** 执行非本地事务:
 
-```
+```java
 @Test
 public void givenTransactionTemplate_whenPerformTransaction_thenSuccess() {
     mongoTemplate.setSessionSynchronization(SessionSynchronization.ALWAYS);                                     
@@ -147,7 +147,7 @@ public void givenTransactionTemplate_whenPerformTransaction_thenSuccess() {
 
 我们需要向`pom.xml`添加更多的依赖项来使用反应式 MongoDB:
 
-```
+```java
 <dependency>
     <groupId>org.mongodb</groupId>
     <artifactId>mongodb-driver-reactivestreams</artifactId>
@@ -172,7 +172,7 @@ Maven Central 上提供了[MongoDB-driver-react 流](https://web.archive.org/web
 
 当然，我们需要配置我们的反应式 MongoDB:
 
-```
+```java
 @Configuration
 @EnableReactiveMongoRepositories(basePackages 
   = "com.baeldung.reactive.repository")
@@ -193,7 +193,7 @@ public class MongoReactiveConfig
 
 要在 reactive MongoDB 中使用事务，我们需要使用`ReactiveMongoOperations`中的`inTransaction()`方法:
 
-```
+```java
 @Autowired
 private ReactiveMongoOperations reactiveOps;
 

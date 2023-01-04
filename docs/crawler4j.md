@@ -12,7 +12,7 @@
 
 让我们使用 [Maven Central](https://web.archive.org/web/20221101005732/https://search.maven.org/search?q=a:crawler4j%20AND%20g:edu.uci.ics) 来查找最新版本并引入 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>edu.uci.ics</groupId>
     <artifactId>crawler4j</artifactId>
@@ -28,7 +28,7 @@
 
 让我们通过扩展 crawler 类中的`WebCrawler`并定义一个排除某些文件类型的模式来创建我们的 crawler:
 
-```
+```java
 public class HtmlCrawler extends WebCrawler {
 
     private final static Pattern EXCLUSIONS
@@ -42,7 +42,7 @@ public class HtmlCrawler extends WebCrawler {
 
 现在让我们使用我们创建的`EXCLUSIONS`模式来创建我们的`shouldVisit`方法:
 
-```
+```java
 @Override
 public boolean shouldVisit(Page referringPage, WebURL url) {
     String urlString = url.getURL().toLowerCase();
@@ -53,7 +53,7 @@ public boolean shouldVisit(Page referringPage, WebURL url) {
 
 然后，我们可以在`visit`方法中对访问过的页面进行处理:
 
-```
+```java
 @Override
 public void visit(Page page) {
     String url = page.getWebURL().getURL();
@@ -72,7 +72,7 @@ public void visit(Page page) {
 
 一旦我们写好了爬虫，我们需要配置并运行它:
 
-```
+```java
 File crawlStorage = new File("src/test/resources/crawler4j");
 CrawlConfig config = new CrawlConfig();
 config.setCrawlStorageFolder(crawlStorage.getAbsolutePath());
@@ -101,7 +101,7 @@ controller.start(factory, numCrawlers);
 
 让我们首先用一个构造函数定义`ImageCrawler`类，该构造函数采用一个保存图像的目录:
 
-```
+```java
 public class ImageCrawler extends WebCrawler {
     private final static Pattern EXCLUSIONS
       = Pattern.compile(".*(\\.(css|js|xml|gif|png|mp3|mp4|zip|gz|pdf))$");
@@ -121,7 +121,7 @@ public class ImageCrawler extends WebCrawler {
 
 接下来，让我们实现`shouldVisit`方法:
 
-```
+```java
 @Override
 public boolean shouldVisit(Page referringPage, WebURL url) {
     String urlString = url.getURL().toLowerCase();
@@ -140,7 +140,7 @@ public boolean shouldVisit(Page referringPage, WebURL url) {
 
 现在，我们准备实现`visit`方法:
 
-```
+```java
 @Override
 public void visit(Page page) {
     String url = page.getWebURL().getURL();
@@ -156,7 +156,7 @@ public void visit(Page page) {
 
 运行我们的`ImageCrawler`类似于运行`HttpCrawler`，但是我们需要配置它以包含二进制内容:
 
-```
+```java
 CrawlConfig config = new CrawlConfig();
 config.setIncludeBinaryContentInCrawling(true);
 
@@ -173,7 +173,7 @@ controller.start(factory, numCrawlers);
 
 首先，让我们定义一个简单的类来保存一些统计数据:
 
-```
+```java
 public class CrawlerStatistics {
     private int processedPageCount = 0;
     private int totalLinksCount = 0;
@@ -192,7 +192,7 @@ public class CrawlerStatistics {
 
 接下来，让我们修改我们的`HtmlCrawler`,通过构造函数接受一个`CrawlerStatistics`实例:
 
-```
+```java
 private CrawlerStatistics stats;
 
 public HtmlCrawler(CrawlerStatistics stats) {
@@ -202,7 +202,7 @@ public HtmlCrawler(CrawlerStatistics stats) {
 
 有了新的`CrawlerStatistics`对象，让我们修改`visit`方法来收集我们想要的东西:
 
-```
+```java
 @Override
 public void visit(Page page) {
     String url = page.getWebURL().getURL();
@@ -223,7 +223,7 @@ public void visit(Page page) {
 
 现在，让我们回到控制器，给`HtmlCrawler`提供一个`CrawlerStatistics`的实例:
 
-```
+```java
 CrawlerStatistics stats = new CrawlerStatistics();
 CrawlController.WebCrawlerFactory<HtmlCrawler> factory = () -> new HtmlCrawler(stats);
 ```
@@ -240,7 +240,7 @@ CrawlController.WebCrawlerFactory<HtmlCrawler> factory = () -> new HtmlCrawler(s
 
 现在，让我们创建一个控制器来同时运行`HtmlCrawler`和`ImageCrawler`:
 
-```
+```java
 File crawlStorageBase = new File("src/test/resources/crawler4j");
 CrawlConfig htmlConfig = new CrawlConfig();
 CrawlConfig imageConfig = new CrawlConfig();
@@ -284,7 +284,7 @@ imageController.waitUntilFinish();
 
 默认情况下，我们的爬虫会尽可能深地爬行。为了限制它们前进的深度，我们可以设置爬行深度:
 
-```
+```java
 crawlConfig.setMaxDepthOfCrawling(2);
 ```
 
@@ -294,7 +294,7 @@ crawlConfig.setMaxDepthOfCrawling(2);
 
 另一种限制爬网程序覆盖的页数的方法是设置要爬网的最大页数:
 
-```
+```java
 crawlConfig.setMaxPagesToFetch(500);
 ```
 
@@ -302,7 +302,7 @@ crawlConfig.setMaxPagesToFetch(500);
 
 我们还可以限制每个页面的链接数量:
 
-```
+```java
 crawlConfig.setMaxOutgoingLinksToFollow(2000);
 ```
 
@@ -310,7 +310,7 @@ crawlConfig.setMaxOutgoingLinksToFollow(2000);
 
 由于非常高效的爬虫很容易成为网络服务器的负担，crawler4j 有一个所谓的礼貌延迟。默认情况下，它被设置为 200 毫秒。如果需要，我们可以调整该值:
 
-```
+```java
 crawlConfig.setPolitenessDelay(300);
 ```
 
@@ -318,7 +318,7 @@ crawlConfig.setPolitenessDelay(300);
 
 我们已经在`ImageCrawler`中使用了包含二进制内容的选项:
 
-```
+```java
 crawlConfig.setIncludeBinaryContentInCrawling(true);
 ```
 
@@ -326,7 +326,7 @@ crawlConfig.setIncludeBinaryContentInCrawling(true);
 
 默认情况下，爬网程序将包括 HTTPS 页面，但我们可以将其关闭:
 
-```
+```java
 crawlConfig.setIncludeHttpsPages(false);
 ```
 
@@ -334,7 +334,7 @@ crawlConfig.setIncludeHttpsPages(false);
 
 如果我们有一个长时间运行的爬虫，并且我们想让它自动恢复，我们可以设置可恢复的爬行。打开它可能会导致它运行速度变慢:
 
-```
+```java
 crawlConfig.setResumableCrawling(true);
 ```
 
@@ -342,7 +342,7 @@ crawlConfig.setResumableCrawling(true);
 
 crawler4j 的默认用户代理字符串是`[crawler4j](https://web.archive.org/web/20221101005732/https://github.com/yasserg/crawler4j/)`。让我们定制一下:
 
-```
+```java
 crawlConfig.setUserAgentString("baeldung demo (https://github.com/yasserg/crawler4j/)");
 ```
 

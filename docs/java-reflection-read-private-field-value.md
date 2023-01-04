@@ -12,7 +12,7 @@
 
 让我们用一些`private`字段定义一个样本类`Person`:
 
-```
+```java
 public class Person {
 
     private String name = "John";
@@ -33,7 +33,7 @@ public class Person {
 
 为了使任何`private`字段可访问，**我们必须调用`Field#setAccessible`方法:**
 
-```
+```java
 Person person = new Person(); 
 Field nameField = person.getClass().getDeclaredField("name"); 
 nameField.setAccessible(true);
@@ -49,7 +49,7 @@ nameField.setAccessible(true);
 
 我们可以使用`getByte,` `getShort`、`getInt`和`getLong`方法分别访问`byte` `,` `short`、`int`和`long`字段:
 
-```
+```java
 @Test
 public void whenGetIntegerFields_thenSuccess() 
   throws Exception {
@@ -83,7 +83,7 @@ public void whenGetIntegerFields_thenSuccess()
 
 **也可以用原始类型**执行[自动装箱](/web/20221208143832/https://www.baeldung.com/java-wrapper-classes#autoboxing-and-unboxing)
 
-```
+```java
 @Test
 public void whenDoAutoboxing_thenSuccess() 
   throws Exception {
@@ -99,7 +99,7 @@ public void whenDoAutoboxing_thenSuccess()
 
 **原始数据类型的`getXxx`方法也支持[扩展](/web/20221208143832/https://www.baeldung.com/java-primitive-conversions#widening-primitive-conversions) :**
 
-```
+```java
 @Test
 public void whenDoWidening_thenSuccess() 
   throws Exception {
@@ -117,7 +117,7 @@ public void whenDoWidening_thenSuccess()
 
 为了访问`float`和`double`字段，我们需要分别使用`getFloat`和`getDouble`方法:
 
-```
+```java
 @Test
 public void whenGetFloatingTypeFields_thenSuccess() 
   throws Exception {
@@ -141,7 +141,7 @@ public void whenGetFloatingTypeFields_thenSuccess()
 
 要访问`char`字段，我们可以使用`getChar`方法:
 
-```
+```java
 @Test
 public void whenGetCharacterFields_thenSuccess() 
   throws Exception {
@@ -159,7 +159,7 @@ public void whenGetCharacterFields_thenSuccess()
 
 类似地，我们可以使用`getBoolean`方法来访问`boolean`字段:
 
-```
+```java
 @Test
 public void whenGetBooleanFields_thenSuccess() 
   throws Exception {
@@ -177,7 +177,7 @@ public void whenGetBooleanFields_thenSuccess()
 
 我们可以通过使用`Field#get`方法来**访问作为对象的`private`字段。需要注意的是，通用的`get`方法**返回一个`Object`，所以我们需要将它转换成目标类型以利用值**:**
 
-```
+```java
 @Test
 public void whenGetObjectFields_thenSuccess() 
   throws Exception {
@@ -199,7 +199,7 @@ public void whenGetObjectFields_thenSuccess()
 
 如果我们使用与目标字段的类型不兼容的`getXxx`访问器，JVM 将抛出`IllegalArgumentException` **。在我们的例子中，如果我们写`nameField.getInt(person)`，JVM 抛出这个异常，因为字段的类型是`String`，而不是`int`或`Integer`:**
 
-```
+```java
 @Test
 public void givenInt_whenSetStringField_thenIllegalArgumentException() 
   throws Exception {
@@ -213,7 +213,7 @@ public void givenInt_whenSetStringField_thenIllegalArgumentException()
 
 正如我们已经看到的，`getXxx`方法支持基本类型的扩展。需要注意的是**我们需要提供正确的扩展目标，这样才能取得成功**。否则，JVM 抛出一个`IllegalArgumentException`:
 
-```
+```java
 @Test
 public void givenInt_whenGetLongField_thenIllegalArgumentException() 
   throws Exception {
@@ -229,7 +229,7 @@ public void givenInt_whenGetLongField_thenIllegalArgumentException()
 
 如果我们试图访问一个没有访问权限的字段，JVM 将抛出一个`IllegalAccessException` **。在上面的例子中，如果我们不写语句`nameField.setAccessible(true)`，那么 JVM 抛出异常:**
 
-```
+```java
 @Test
 public void whenFieldNotSetAccessible_thenIllegalAccessException() 
   throws Exception {
@@ -244,7 +244,7 @@ public void whenFieldNotSetAccessible_thenIllegalAccessException()
 
 **如果我们试图访问一个在`Person`类中不存在的字段**，那么 JVM 可能会抛出`NoSuchFieldException`:
 
-```
+```java
 Assertions.assertThrows(NoSuchFieldException.class,
   () -> person.getClass().getDeclaredField("firstName"));
 ```
@@ -253,7 +253,7 @@ Assertions.assertThrows(NoSuchFieldException.class,
 
 最后，如您所料，如果我们将字段名作为`null` 传递，JVM 会抛出一个`NullPointerException` **:**
 
-```
+```java
 Assertions.assertThrows(NullPointerException.class,
   () -> person.getClass().getDeclaredField(null));
 ```

@@ -22,7 +22,7 @@
 
 所以，让我们继续添加依赖关系为`optional`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-configuration-processor</artifactId>
@@ -39,7 +39,7 @@
 
 为了查看运行中的处理器，让我们假设有几个属性需要通过 Java bean 包含在我们的 Spring Boot 应用程序中:
 
-```
+```java
 @Configuration
 @ConfigurationProperties(prefix = "database")
 public class DatabaseProperties {
@@ -64,7 +64,7 @@ public class DatabaseProperties {
 
 让我们将这些属性添加到一个属性文件中。在这种情况下，我们称之为`databaseproperties-test.properties`:
 
-```
+```java
 #Simple Properties
 database.username=baeldung
 database.password=password
@@ -72,7 +72,7 @@ database.password=password
 
 为了确保万无一失，我们还将添加一个测试来确保我们都准备好了:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AnnotationProcessorApplication.class)
 @TestPropertySource("classpath:databaseproperties-test.properties")
@@ -97,7 +97,7 @@ public class DatabasePropertiesIntegrationTest {
 
 在我们的测试中，让我们快速检查一下，以确保我们也可以成功地设置和读取嵌套属性:
 
-```
+```java
 @Test
 public void whenNestedPropertyQueriedThenReturnsPropertyValue() 
   throws Exception {
@@ -116,7 +116,7 @@ public void whenNestedPropertyQueriedThenReturnsPropertyValue()
 
 所以，编译完我们的项目后，我们会看到一个名为`**spring-configuration-metadata.json**`**`**target/classes/META-INF**`**:**的**文件****
 
-```
+```java
 {
   "groups": [
     {
@@ -166,7 +166,7 @@ public void whenNestedPropertyQueriedThenReturnsPropertyValue()
 
 其次，让我们给`database.server.port`字段一个默认值，最后添加`@Min`和`@Max`注释:
 
-```
+```java
 public static class Server {
 
     /**
@@ -189,7 +189,7 @@ public static class Server {
 
 如果我们现在检查`spring-configuration-metadata.json`文件，我们将看到这些额外的信息被反映出来:
 
-```
+```java
 {
   "groups": [
     {

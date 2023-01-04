@@ -12,7 +12,7 @@
 
 省略通配符，`mapMulti`方法可以更简洁地编写:
 
-```
+```java
 <R> Stream<R> mapMulti​(BiConsumer<T, Consumer<R>> mapper)
 ```
 
@@ -26,7 +26,7 @@
 
 让我们考虑对一个整数列表做如下操作:
 
-```
+```java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
 double percentage = .01;
 List<Double> evenDoubles = integers.stream()
@@ -46,7 +46,7 @@ List<Double> evenDoubles = integers.stream()
 
 请注意，前面的代码示例中的`if statement`扮演了一个`Stream::filter`的角色，并将整数转换为一个双精度数，这是一个`Stream::map`的角色。因此，我们可以使用`Stream's` `filter`和`map`来实现相同的结果:
 
-```
+```java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
 double percentage = .01;
 List<Double> evenDoubles = integers.stream()
@@ -63,7 +63,7 @@ List<Double> evenDoubles = integers.stream()
 
 例如，我们可以使用`mapMultiToDouble`来计算前`List`个 doubles 的和:
 
-```
+```java
 List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5);
 double percentage = .01;
 double sum = integers.stream()
@@ -79,7 +79,7 @@ double sum = integers.stream()
 
 让我们考虑一组`Album` s:
 
-```
+```java
 public class Album {
 
     private String albumName;
@@ -97,7 +97,7 @@ public class Album {
 
 每个`Album`都有一个`Artist`列表:
 
-```
+```java
 public class Artist {
 
     private final String name;
@@ -115,7 +115,7 @@ public class Artist {
 
 如果我们想要收集艺术家-专辑名称对的列表，我们可以使用`mapMulti`来实现它:
 
-```
+```java
 List<Pair<String, String>> artistAlbum = albums.stream()
   .<Pair<String, String>> mapMulti((album, consumer) -> {
       for (Artist artist : album.getArtists()) {
@@ -128,7 +128,7 @@ List<Pair<String, String>> artistAlbum = albums.stream()
 
 这具有一对多转换的效果，其中结果在消费者中累积，但最终被平铺到新的流中。这基本上就是`Stream::flatMap`所做的，因此我们可以通过以下实现获得相同的结果:
 
-```
+```java
 List<Pair<String, String>> artistAlbum = albums.stream()
   .flatMap(album -> album.getArtists()
       .stream()
@@ -146,7 +146,7 @@ List<Pair<String, String>> artistAlbum = albums.stream()
 
 让我们写一个简单的例子来说明这个场景:
 
-```
+```java
 int upperCost = 9;
 List<Pair<String, String>> artistAlbum = albums.stream()
   .<Pair<String, String>> mapMulti((album, consumer) -> {
@@ -162,7 +162,7 @@ List<Pair<String, String>> artistAlbum = albums.stream()
 
 使用`flatMap`完成相同的结果:
 
-```
+```java
 int upperCost = 9;
 List<Pair<String, String>> artistAlbum = albums.stream()
   .flatMap(album -> album.getArtists()
@@ -178,7 +178,7 @@ List<Pair<String, String>> artistAlbum = albums.stream()
 
 让我们在`Album`类中编写一个方法，将所有艺术家-专辑对及其相关的主要标签传递给消费者:
 
-```
+```java
 public class Album {
 
     //...
@@ -199,7 +199,7 @@ public class Album {
 
 如果我们想获得所有对的列表，那么使用带有方法引用`Album::artistAlbumPairsToMajorLabels`的`mapMulti`就很简单:
 
-```
+```java
 List<Pair<String, String>> copyrightedArtistAlbum = albums.stream()
   .<Pair<String, String>> mapMulti(Album::artistAlbumPairsToMajorLabels)
   .collect(toList());

@@ -109,7 +109,7 @@ Spring 提供了几个选项来测试 web 应用程序，大多数 Spring 开发
 
 如果我们正确地测试了我们的服务，这种方法应该足够了:
 
-```
+```java
 class UsersControllerIntegrationTest : AbstractSpringIntegrationTest() {
 
     @Autowired
@@ -140,7 +140,7 @@ interface UserService {
 
 然而，这违反了测试界限:
 
-```
+```java
 @Test
 fun links() {
     mvc.perform(post("/users")
@@ -158,7 +158,7 @@ fun links() {
 
 如果我们通过 HTTP 运行我们的应用程序，我们也可以通过 HTTP 断言结果吗？
 
-```
+```java
 @Test
 fun links() {
     mvc.perform(post("/users")
@@ -223,7 +223,7 @@ fun links() {
 
 让我们来看一个简单的基类，它考虑了前面的几点:
 
-```
+```java
 @SpringBootTest
 @ActiveProfiles("test")
 abstract class AbstractSpringIntegrationTest {
@@ -256,7 +256,7 @@ abstract class AbstractSpringIntegrationTest {
 
 在我们的例子中，我们将假设有几个存储库(来自各种数据源)和一个`Wiremock`服务器:
 
-```
+```java
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureWireMock(port = 8666)

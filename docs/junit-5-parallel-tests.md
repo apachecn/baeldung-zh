@@ -12,13 +12,13 @@
 
 首先，**我们需要在我们的`src/test/resources`文件夹中创建一个`junit-platform.properties` 文件来启用并行测试执行**。我们通过在提到的文件中添加以下行来启用并行化功能:
 
-```
+```java
 junit.jupiter.execution.parallel.enabled = true
 ```
 
 让我们通过运行一些测试来检查我们的配置。首先，我们将创建 `FirstParallelUnitTest` 类和其中的两个测试:
 
-```
+```java
 public class FirstParallelUnitTest{
 
     @Test
@@ -39,7 +39,7 @@ public class FirstParallelUnitTest{
 
 当我们运行测试时，我们在控制台中得到以下输出:
 
-```
+```java
 FirstParallelUnitTest second() start => ForkJoinPool-1-worker-19
 FirstParallelUnitTest second() end => ForkJoinPool-1-worker-19
 FirstParallelUnitTest first() start => ForkJoinPool-1-worker-19
@@ -52,13 +52,13 @@ FirstParallelUnitTest first() end => ForkJoinPool-1-worker-19
 
 动态策略根据处理器/内核数量乘以因子参数(默认为 1)来确定线程数量，该因子参数由以下公式指定:
 
-```
+```java
 junit.jupiter.execution.parallel.config.dynamic.factor
 ```
 
 另一方面，固定策略依赖于预定义数量的线程，这些线程由以下各项指定:
 
-```
+```java
 junit.jupiter.execution.parallel.config.fixed.parallelism
 ```
 
@@ -68,13 +68,13 @@ junit.jupiter.execution.parallel.config.fixed.parallelism
 
 我们已经启用了并行执行并选择了一个策略。现在是时候在同一个类中并行执行测试了。有两种方法可以进行配置。一个是使用`@Execution(ExecutionMode.CONCURRENT)` 注释，第二个是使用属性文件和行:
 
-```
+```java
 junit.jupiter.execution.parallel.mode.default = concurrent
 ```
 
 在我们选择如何配置并运行我们的`FirstParallelUnitTest` 类之后，我们可以看到下面的输出:
 
-```
+```java
 FirstParallelUnitTest second() start => ForkJoinPool-1-worker-5
 FirstParallelUnitTest first() start => ForkJoinPool-1-worker-19
 FirstParallelUnitTest second() end => ForkJoinPool-1-worker-5
@@ -89,7 +89,7 @@ FirstParallelUnitTest first() end => ForkJoinPool-1-worker-19
 
 在引入新属性之前，我们将创建一个`SecondParallelUnitTest` 类，它有两个类似于`FirstParallelUnitTest:`的方法
 
-```
+```java
 public class SecondParallelUnitTest{
 
     @Test
@@ -110,13 +110,13 @@ public class SecondParallelUnitTest{
 
 在我们在同一个批处理中运行我们的测试之前，我们需要设置属性:
 
-```
+```java
 junit.jupiter.execution.parallel.mode.classes.default = concurrent
 ```
 
 当我们运行这两个测试类时，我们得到以下输出:
 
-```
+```java
 SecondParallelUnitTest second() start => ForkJoinPool-1-worker-23
 FirstParallelUnitTest first() start => ForkJoinPool-1-worker-19
 FirstParallelUnitTest second() start => ForkJoinPool-1-worker-9
@@ -142,7 +142,7 @@ SecondParallelUnitTest second() end => ForkJoinPool-1-worker-23
 
 类似地，和以前一样，让我们创建`ParallelResourceLockUnitTest` 类:
 
-```
+```java
 public class ParallelResourceLockUnitTest{
     private List<String> resources;
     @BeforeEach
@@ -177,7 +177,7 @@ public class ParallelResourceLockUnitTest{
 
 **`@ResourceLock`允许我们指定哪个资源是共享的，以及我们想要使用的锁的类型(默认为`ResourceAccessMode.READ_WRITE` )** 。使用当前的设置，JUnit 引擎将检测到我们的测试使用了共享资源，并将按顺序执行它们:
 
-```
+```java
 ParallelResourceLockUnitTest second() start => ForkJoinPool-1-worker-5
 [test, second]
 ParallelResourceLockUnitTest second() end => ForkJoinPool-1-worker-5

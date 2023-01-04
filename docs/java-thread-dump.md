@@ -20,7 +20,7 @@ jstack 是一个命令行 JDK 工具，我们可以用它来捕获线程转储�
 
 **让我们看看使用 jstack 捕获线程转储的基本命令语法:**
 
-```
+```java
 jstack [-F] [-l] [-m] <pid>
 ```
 
@@ -32,7 +32,7 @@ jstack [-F] [-l] [-m] <pid>
 
 让我们通过捕获线程转储并将结果重定向到一个文件来使用这些知识:
 
-```
+```java
 jstack 17264 > /tmp/threaddump.txt
 ```
 
@@ -62,7 +62,7 @@ jcmd 是一个通过向 JVM 发送命令请求来工作的工具。虽然功能�
 
 **它的众多命令之一就是` Thread.print`** 。我们可以用它来获得一个线程转储，只需指定进程的`pid`:
 
-```
+```java
 jcmd 17264 Thread.print
 ```
 
@@ -92,7 +92,7 @@ jcmd 17264 Thread.print
 
 使用前面例子中的相同的`pid`,让我们看看如何使用`kill`来捕获线程转储:
 
-```
+```java
 kill -3 17264
 ```
 
@@ -100,7 +100,7 @@ kill -3 17264
 
 如果我们使用下面的调优标志组合运行 Java 进程，那么它也会将线程转储重定向到给定的文件:
 
-```
+```java
 -XX:+UnlockDiagnosticVMOptions -XX:+LogVMOutput -XX:LogFile=~/jvm.log
 ```
 
@@ -118,7 +118,7 @@ kill -3 17264
 
 本文中我们将讨论的最后一种方法是使用 [JMX](/web/20220627183729/https://www.baeldung.com/java-management-extensions) 。**我们将使用`ThreadMxBean`来捕获线程转储**。让我们看看它的代码:
 
-```
+```java
 private static String threadDump(boolean lockedMonitors, boolean lockedSynchronizers) {
     StringBuffer threadDump = new StringBuffer(System.lineSeparator());
     ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();

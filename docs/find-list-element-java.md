@@ -22,7 +22,7 @@ In this quick tutorial, we'll investigate how can we initialize a List using one
 
 首先让我们从定义一个`Customer` POJO 开始:
 
-```
+```java
 public class Customer {
 
     private int id;
@@ -34,7 +34,7 @@ public class Customer {
 
 然后是一个 [`ArrayList`](/web/20221118235115/https://www.baeldung.com/java-arraylist) 的客户:
 
-```
+```java
 List<Customer> customers = new ArrayList<>();
 customers.add(new Customer(1, "Jack"));
 customers.add(new Customer(2, "James"));
@@ -60,7 +60,7 @@ Java 本身提供了几种在列表中查找项目的方法:
 
 `List`公开了一个名为`contains`的方法:
 
-```
+```java
 boolean contains(Object element)
 ```
 
@@ -68,7 +68,7 @@ boolean contains(Object element)
 
 因此，当我们需要检查列表中是否存在某个特定项目时，我们可以:
 
-```
+```java
 Customer james = new Customer(2, "James");
 if (customers.contains(james)) {
     // ...
@@ -79,7 +79,7 @@ if (customers.contains(james)) {
 
 `indexOf`是另一种查找元素的有用方法:
 
-```
+```java
 int indexOf(Object element)
 ```
 
@@ -87,7 +87,7 @@ int indexOf(Object element)
 
 所以从逻辑上讲，如果这个方法返回-1 以外的任何值，我们知道列表包含元素:
 
-```
+```java
 if(customers.indexOf(james) != -1) {
     // ...
 }
@@ -103,7 +103,7 @@ if(customers.indexOf(james) != -1) {
 
 遍历列表的传统方式是使用 Java 的循环结构之一。在每次迭代中，我们将列表中的当前项目与我们正在寻找的元素进行比较，以查看它是否匹配:
 
-```
+```java
 public Customer findUsingEnhancedForLoop(
   String name, List<Customer> customers) {
 
@@ -124,7 +124,7 @@ public Customer findUsingEnhancedForLoop(
 
 我们可以简单地拿我们之前的例子做一点调整:
 
-```
+```java
 public Customer findUsingIterator(
   String name, List<Customer> customers) {
     Iterator<Customer> iterator = customers.iterator();
@@ -150,7 +150,7 @@ public Customer findUsingIterator(
 *   用适当的 `Predicate`调用`f` `ilter()`方法
 *   调用`findAny() `构造，它返回第一个与包装在`Optional` 中的`filter` 谓词匹配的**元素，如果这样的元素存在的话**
 
-```
+```java
 Customer james = customers.stream()
   .filter(customer -> "James".equals(customer.getName()))
   .findAny()
@@ -169,7 +169,7 @@ Customer james = customers.stream()
 
 谷歌番石榴提供的功能类似于我们对流的处理:
 
-```
+```java
 Customer james = Iterables.tryFind(customers,
   new Predicate<Customer>() {
       public boolean apply(Customer customer) {
@@ -180,7 +180,7 @@ Customer james = Iterables.tryFind(customers,
 
 就像使用`Stream` API 一样，我们可以选择返回一个默认值，而不是`null`:
 
-```
+```java
 Customer james = Iterables.tryFind(customers,
   new Predicate<Customer>() {
       public boolean apply(Customer customer) {
@@ -197,7 +197,7 @@ Customer james = Iterables.tryFind(customers,
 
 我们可以使用 Apache Commons 以几乎完全相同的方式找到一个元素:
 
-```
+```java
 Customer james = IterableUtils.find(customers,
   new Predicate<Customer>() {
       public boolean evaluate(Customer customer) {

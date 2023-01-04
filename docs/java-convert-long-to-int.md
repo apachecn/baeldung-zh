@@ -16,7 +16,7 @@
 
 首先，在 Java 中对值进行强制转换是最常见的类型转换方式——这很简单:
 
-```
+```java
 public int longToIntCast(long number) {
     return (int) number;
 }
@@ -26,7 +26,7 @@ public int longToIntCast(long number) {
 
 从 Java 8 开始，我们可以使用另外两种方法来进行类型转换:使用`[Math](/web/20221208143815/https://www.baeldung.com/java-lang-math)` 包或者使用 lambda 函数。对于`Math` 包，我们可以使用`toIntExact` 方法:
 
-```
+```java
 public int longToIntJavaWithMath(long number) {
 return Math.toIntExact(number);
 }
@@ -36,7 +36,7 @@ return Math.toIntExact(number);
 
 另一方面，我们可以使用包装类`Long`来获取`int`值:
 
-```
+```java
 public int longToIntBoxingValues(long number) {
     return Long.valueOf(number).intValue();
 }
@@ -46,7 +46,7 @@ public int longToIntBoxingValues(long number) {
 
 此外，我们可以使用`BigDecimal`类来完成这种转换:
 
-```
+```java
 public static int longToIntWithBigDecimal(long number) {
     return new BigDecimal(number).intValueExact();
 }
@@ -56,7 +56,7 @@ public static int longToIntWithBigDecimal(long number) {
 
 接下来，我们将展示使用[谷歌番石榴](/web/20221208143815/https://www.baeldung.com/guava-guide)的`Ints`类的类型转换:
 
-```
+```java
 public int longToIntGuava(long number) {
     return Ints.checkedCast(number);
 }
@@ -64,7 +64,7 @@ public int longToIntGuava(long number) {
 
 另外，[的谷歌番石榴](/web/20221208143815/https://www.baeldung.com/guava-guide)的`Ints`类提供了一个`saturatedCast` 方法:
 
-```
+```java
 public int longToIntGuavaSaturated(long number) {
     return Ints.saturatedCast(number);
 }
@@ -76,7 +76,7 @@ public int longToIntGuavaSaturated(long number) {
 
 在下一段代码中，我们将测试 int 值无法保存 long 值的情况:
 
-```
+```java
 @Test
 public void longToIntSafeCast() {
     long max = Integer.MAX_VALUE + 10L;
@@ -91,7 +91,7 @@ public void longToIntSafeCast() {
 
 另一方面，本文描述的三种方法可能抛出不同类型的异常:
 
-```
+```java
 @Test
 public void longToIntIntegerException() {
     long max = Integer.MAX_VALUE + 10L;
@@ -105,7 +105,7 @@ public void longToIntIntegerException() {
 
 最后，从 Guava 开始，`saturatedCast` 方法，首先检查整数极限并返回极限值是大于还是小于整数上限和下限的传递数:
 
-```
+```java
 @Test
 public void longToIntGuavaSaturated() {
     long max = Integer.MAX_VALUE + 10L;

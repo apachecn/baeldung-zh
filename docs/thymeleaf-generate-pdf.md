@@ -10,7 +10,7 @@
 
 首先，让我们添加我们的[百里香叶](https://web.archive.org/web/20220728105348/https://search.maven.org/artifact/org.thymeleaf/thymeleaf)依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.thymeleaf</groupId>
     <artifactId>thymeleaf</artifactId>
@@ -20,7 +20,7 @@
 
 **百里香本身只是一个模板引擎，它不能自己生成 pdf。为此，我们将把`[flying-saucer-pdf](https://web.archive.org/web/20220728105348/https://search.maven.org/artifact/org.xhtmlrenderer/flying-saucer-pdf)`添加到我们的`pom.xml` :**
 
-```
+```java
 <dependency>
     <groupId>org.xhtmlrenderer</groupId>
     <artifactId>flying-saucer-pdf</artifactId>
@@ -32,7 +32,7 @@
 
 接下来，让我们创建一个简单的百里香 HTML 模板—`thymeleaf_template.html`:
 
-```
+```java
 <html xmlns:th="http://www.thymeleaf.org">
   <body>
     <h3 style="text-align: center; color: green">
@@ -44,7 +44,7 @@
 
 然后，我们将创建一个简单的函数——`parseThymeleafTemplate`——它将解析我们的模板并返回一个 HTML `String`:
 
-```
+```java
 private String parseThymeleafTemplate() {
     ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
     templateResolver.setSuffix(".html");
@@ -62,7 +62,7 @@ private String parseThymeleafTemplate() {
 
 最后，让我们**实现一个简单的函数，它接收前面生成的 HTML 作为输入，并将一个 PDF 文件写入我们的主文件夹:**
 
-```
+```java
 public void generatePdfFromHtml(String html) {
     String outputFolder = System.getProperty("user.home") + File.separator + "thymeleaf.pdf";
     OutputStream outputStream = new FileOutputStream(outputFolder);

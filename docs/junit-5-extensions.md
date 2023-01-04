@@ -26,7 +26,7 @@ JUnit 5 扩展与测试执行中的某个事件相关，称为扩展点。当到
 
 首先，让我们添加例子中需要的项目依赖项。我们需要的主要 JUnit 5 库是`junit-jupiter-engine`:
 
-```
+```java
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-engine</artifactId>
@@ -37,7 +37,7 @@ JUnit 5 扩展与测试执行中的某个事件相关，称为扩展点。当到
 
 同样，让我们也添加两个助手库用于我们的示例:
 
-```
+```java
 <dependency>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-core</artifactId>
@@ -62,7 +62,7 @@ JUnit 5 扩展与测试执行中的某个事件相关，称为扩展点。当到
 
 该扩展的一个典型用例是将依赖项注入实例。例如，让我们创建一个扩展，它实例化一个`logger`对象，然后在测试实例上调用`setLogger()`方法:
 
-```
+```java
 public class LoggingExtension implements TestInstancePostProcessor {
 
     @Override
@@ -86,7 +86,7 @@ JUnit 5 提供了一种扩展，可以控制是否应该运行测试。这是通
 
 该方法验证表示当前环境名称的属性是否等于`“qa”`，并在这种情况下禁用测试:
 
-```
+```java
 public class EnvironmentExtension implements ExecutionCondition {
 
     @Override
@@ -114,7 +114,7 @@ public class EnvironmentExtension implements ExecutionCondition {
 
 这可以通过使用`-Djunit.conditions.deactivate=<pattern>`属性启动 JVM，或者通过向`LauncherDiscoveryRequest`添加一个配置参数来实现:
 
-```
+```java
 public class TestLauncher {
     public static void main(String[] args) {
         LauncherDiscoveryRequest request
@@ -164,7 +164,7 @@ public class TestLauncher {
 
 首先，让我们创建一个简单的`Employee`实体:
 
-```
+```java
 public class Employee {
 
     private long id;
@@ -175,7 +175,7 @@ public class Employee {
 
 我们还需要一个基于`.properties`文件创建`Connection`的实用程序类:
 
-```
+```java
 public class JdbcConnectionUtil {
 
     private static Connection con;
@@ -193,7 +193,7 @@ public class JdbcConnectionUtil {
 
 最后，让我们添加一个简单的基于 JDBC 的操作`Employee`记录的`DAO`:
 
-```
+```java
 public class EmployeeJdbcDao {
     private Connection con;
 
@@ -217,7 +217,7 @@ public class EmployeeJdbcDao {
 
 **让我们创建实现一些生命周期接口的扩展:**
 
-```
+```java
 public class EmployeeDatabaseSetupExtension implements 
   BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback {
     //...
@@ -228,7 +228,7 @@ public class EmployeeDatabaseSetupExtension implements
 
 对于`BeforeAllCallback`接口，我们将覆盖`beforeAll()`方法，并在执行任何测试方法之前添加逻辑来创建我们的`employees`表:
 
-```
+```java
 private EmployeeJdbcDao employeeDao = new EmployeeJdbcDao();
 
 @Override
@@ -241,7 +241,7 @@ public void beforeAll(ExtensionContext context) throws SQLException {
 
 在`beforeEach()`方法中，我们将创建一个保存点，用于将数据库的状态回滚到:
 
-```
+```java
 private Connection con = JdbcConnectionUtil.getConnection();
 private Savepoint savepoint;
 
@@ -254,7 +254,7 @@ public void beforeEach(ExtensionContext context) throws SQLException {
 
 然后，在`afterEach()`方法中，我们将回滚在测试方法执行期间所做的数据库更改:
 
-```
+```java
 @Override
 public void afterEach(ExtensionContext context) throws SQLException {
     con.rollback(savepoint);
@@ -263,7 +263,7 @@ public void afterEach(ExtensionContext context) throws SQLException {
 
 为了关闭连接，我们将使用在所有测试完成后执行的`afterAll()`方法:
 
-```
+```java
 @Override
 public void afterAll(ExtensionContext context) throws SQLException {
     if (con != null) {
@@ -278,7 +278,7 @@ public void afterAll(ExtensionContext context) throws SQLException {
 
 让我们定义我们自己的自定义`ParameterResolver`来解析类型`EmployeeJdbcDao`的参数:
 
-```
+```java
 public class EmployeeDaoParameterResolver implements ParameterResolver {
 
     @Override
@@ -304,7 +304,7 @@ public class EmployeeDaoParameterResolver implements ParameterResolver {
 
 例如，我们可以创建一个扩展，它将记录并忽略类型`FileNotFoundException`的所有异常，同时重新抛出任何其他类型:
 
-```
+```java
 public class IgnoreFileNotFoundExceptionExtension 
   implements TestExecutionExceptionHandler {
 
@@ -330,7 +330,7 @@ public class IgnoreFileNotFoundExceptionExtension
 
 注释可以被多次添加到一个测试中，或者接收一个扩展列表作为参数:
 
-```
+```java
 @ExtendWith({ EnvironmentExtension.class, 
   EmployeeDatabaseSetupExtension.class, EmployeeDaoParameterResolver.class })
 @ExtendWith(LoggingExtension.class)
@@ -375,13 +375,13 @@ public class EmployeesTest {
 
 如果我们想为我们应用程序中的所有测试注册一个扩展，我们可以通过将完全限定名添加到`/META-INF/services/org.junit.jupiter.api.extension.Extension`文件中来实现:
 
-```
+```java
 com.baeldung.extensions.LoggingExtension
 ```
 
 为了启用这种机制，我们还需要将`junit.jupiter.extensions.autodetection.enabled`配置键设置为 true。这可以通过使用–`Djunit.jupiter.extensions.autodetection.enabled=true` 属性启动 JVM，或者通过向`LauncherDiscoveryRequest`添加一个配置参数来实现:
 
-```
+```java
 LauncherDiscoveryRequest request
   = LauncherDiscoveryRequestBuilder.request()
   .selectors(selectClass("com.baeldung.EmployeesTest"))
@@ -395,7 +395,7 @@ LauncherDiscoveryRequest request
 
 除了基于声明性注释的方法，JUnit 还提供了一个 API 来注册扩展`p` `rogrammatically. `例如，我们可以改进`JdbcConnectionUtil `类来接受连接属性:
 
-```
+```java
 public class JdbcConnectionUtil {
 
     private static Connection con;
@@ -415,7 +415,7 @@ public class JdbcConnectionUtil {
 
 此外，我们应该为`EmployeeDatabaseSetupExtension `扩展添加一个新的构造函数，以支持定制的数据库属性:
 
-```
+```java
 public EmployeeDatabaseSetupExtension(String url, String driver, String username, String password) {
     con = JdbcConnectionUtil.getConnection(url, driver, username, password);
     employeeDao = new EmployeeJdbcDao(con);
@@ -424,7 +424,7 @@ public EmployeeDatabaseSetupExtension(String url, String driver, String username
 
 **现在，为了用定制的数据库属性注册雇员扩展，我们应该用@ `RegisterExtension `注释:**注释一个静态字段
 
-```
+```java
 @ExtendWith({EnvironmentExtension.class, EmployeeDaoParameterResolver.class})
 public class ProgrammaticEmployeesUnitTest {
 
@@ -446,7 +446,7 @@ public class ProgrammaticEmployeesUnitTest {
 
 如果我们通过`@RegisterExtension`以编程方式注册多个扩展，JUnit 将按照确定的顺序注册这些扩展。尽管排序是确定的，但是用于排序的算法是不明显的和内部的。为了**强制执行特定的注册顺序，我们可以使用`[@Order](https://web.archive.org/web/20220628060626/https://junit.org/junit5/docs/current/api/org.junit.jupiter.api/org/junit/jupiter/api/Order.html) `注释:**
 
-```
+```java
 public class MultipleExtensionsUnitTest {
 
     @Order(1) 

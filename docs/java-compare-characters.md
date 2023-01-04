@@ -18,7 +18,7 @@
 
 **简而言之，Java 中的字符根据其** [**ASCII 码**](/web/20221023150043/https://www.baeldung.com/cs/ascii-code) 的顺序进行比较:
 
-```
+```java
 assertFalse('a' == 'A');
 assertTrue('a' < 'v');
 assertTrue('F' > 'D'); 
@@ -30,7 +30,7 @@ assertTrue('F' > 'D');
 
 简单地说，*字符*类将原始类型`char`的值包装在一个对象中。**`compare()`方法接受两个`char`参数，并对它们进行数值比较**:
 
-```
+```java
 assertTrue(Character.compare('C', 'C') == 0);
 assertTrue(Character.compare('f', 'A') > 0);
 assertTrue(Character.compare('Y', 'z') < 0); 
@@ -48,7 +48,7 @@ assertTrue(Character.compare('Y', 'z') < 0);
 
 `Character` 类提供了`compareTo()`方法来从数字上比较两个角色对象:
 
-```
+```java
 Character chK = Character.valueOf('K');
 assertTrue(chK.compareTo(chK) == 0);
 
@@ -67,7 +67,7 @@ assertTrue(chG.compareTo(chH) < 0);
 
 那么，让我们看看如何用它来比较字符:
 
-```
+```java
 Character chL = 'L';
 assertTrue(chL.equals(chL));
 
@@ -79,7 +79,7 @@ assertFalse(chL.equals(chV));
 
 `Objects` 类由操作对象的实用方法组成。它提供了另一种通过`equals()`方法比较角色对象的方式:
 
-```
+```java
 Character chA = 'A';
 Character chB = 'B';
 

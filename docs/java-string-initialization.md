@@ -14,7 +14,7 @@ Java *String* 是最重要的类之一，我们已经在与 [`String`相关的�
 
 我们可以使用`new`关键字或字面语法:
 
-```
+```java
 String usingNew = new String("baeldung");
 String usingLiteral = "baeldung";
 ```
@@ -27,7 +27,7 @@ String usingLiteral = "baeldung";
 
 我们可以在本地或作为成员变量来实现这一点:
 
-```
+```java
 public class StringInitialization {
 
     String fieldString;
@@ -47,7 +47,7 @@ public class StringInitialization {
 
 如果我们给`localVarString` 一个值`null`，我们会看到这两者现在确实相等:
 
-```
+```java
 String localVarString = null;
 assertEquals(fieldString, localVarString);
 ```
@@ -56,14 +56,14 @@ assertEquals(fieldString, localVarString);
 
 现在让我们使用相同的文字创建两个`String`:
 
-```
+```java
 String literalOne = "Baeldung";
 String literalTwo = "Baeldung";
 ```
 
 我们将通过比较引用来确认只创建了一个对象:
 
-```
+```java
 assertTrue(literalOne == literalTwo);
 ```
 
@@ -73,14 +73,14 @@ assertTrue(literalOne == literalTwo);
 
 但是，如果我们使用`new` 关键字，我们会看到一些不同的行为。
 
-```
+```java
 String newStringOne = new String("Baeldung");
 String newStringTwo = new String("Baeldung");
 ```
 
 尽管两个`String`的值将与前面的相同，但这次我们将不得不使用不同的对象:
 
-```
+```java
 assertFalse(newStringOne == newStringTwo);
 ```
 
@@ -88,7 +88,7 @@ assertFalse(newStringOne == newStringTwo);
 
 现在让我们创建三个空的`String`:
 
-```
+```java
 String emptyLiteral = "";
 String emptyNewString = new String("");
 String emptyNewStringTwo = new String();
@@ -98,7 +98,7 @@ String emptyNewStringTwo = new String();
 
 虽然这些[不会是相同的对象，但是它们都具有相同的值](/web/20221127015222/https://www.baeldung.com/java-compare-strings):
 
-```
+```java
 assertFalse(emptyLiteral == emptyNewString)
 assertFalse(emptyLiteral == emptyNewStringTwo)
 assertFalse(emptyNewString == emptyNewStringTwo)
@@ -112,7 +112,7 @@ assertEquals(emptyNewString, emptyNewStringTwo);
 
 让我们声明并初始化一个空值`String`:
 
-```
+```java
 String nullValue = null;
 ```
 
@@ -126,7 +126,7 @@ String nullValue = null;
 
 如果我们看一下`PrintStream#` `println`的实现，我们会看到它调用了`String#valueOf`:
 
-```
+```java
 public void println(Object x) {
     String s = String.valueOf(x);
     synchronized (this) {
@@ -138,7 +138,7 @@ public void println(Object x) {
 
 并且，**如果我们看`String#valueOf,` 我们得到我们的答案:**
 
-```
+```java
 public static String valueOf(Object obj) {
     return (obj == null) ? "null" : obj.toString();
 }

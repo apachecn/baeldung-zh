@@ -25,7 +25,7 @@
 
 现在，让我们看看如何使用 Docker CLI 为单个容器设置重启策略的示例:
 
-```
+```java
 docker run --restart always my-service
 ```
 
@@ -41,13 +41,13 @@ docker run --restart always my-service
 
 首先，我们必须通过从项目根目录运行以下命令来确认我们可以运行这两个容器:
 
-```
+```java
 docker-compose up --detach --build
 ```
 
 现在，我们应该能够通过执行`docker-compose ps`看到两个服务都在运行:
 
-```
+```java
 $ docker ps
      Name                   Command              State            Ports         
 --------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ product-server   java -jar /product-server.jar   Up      0.0.0.0:19999->9999/tcp
 
 现在，让我们为容器创建一个重启策略。在 [`spring-cloud-docker`](https://web.archive.org/web/20220926125221/https://github.com/eugenp/tutorials/tree/master/spring-cloud/spring-cloud-docker) 项目中，我们必须通过添加重启策略属性来更改`docker-compose.yml`配置文件。例如:
 
-```
+```java
 message-server:
     container_name: message-server
     build:
@@ -107,13 +107,13 @@ product-server:
 
 现在，让我们定义我们的重启策略。首先，我们必须确保我们正在使用 Docker Compose v3，方法是像这样更改`version` 属性:
 
-```
+```java
 version: '3'
 ```
 
 一旦我们更改了版本，我们就可以将`restart_policy` 属性添加到我们的服务中。与上一节类似，我们的`message-server` 容器将总是通过在`condition`中提供`any` 值来自动重启，如下所示:
 
-```
+```java
 deploy:
     restart_policy:
         condition: any
@@ -124,7 +124,7 @@ deploy:
 
 类似地，我们向`product-server`添加一个`on-failure`重启策略:
 
-```
+```java
 deploy:
     restart_policy:
         condition: on-failure

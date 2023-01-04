@@ -12,7 +12,7 @@
 
 在某些情况下，我们可能会认为==没问题，但外表是具有欺骗性的。考虑到我们可以将==用于较小的数字:
 
-```
+```java
 Long l1 = 127L;
 Long l2 = 127L;
 
@@ -21,7 +21,7 @@ assertThat(l1 == l2).isTrue();
 
 但数量不多。如果值超出了-128 到 127 的范围，就会出现完全不同的意外结果:
 
-```
+```java
 Long l1 = 128L;
 Long l2 = 128L;
 
@@ -36,7 +36,7 @@ assertThat(l1 == l2).isFalse();
 
 解决方法之一是使用 [`.equals()`](https://web.archive.org/web/20220628155747/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html#equals(java.lang.Object)) 。**这将评估两个对象的内容**(而非参考):
 
-```
+```java
 Long l1 = 128L;
 Long l2 = 128L;
 
@@ -51,7 +51,7 @@ assertThat(l1.equals(l2)).isTrue();
 
 让我们看看它在实践中是如何工作的:
 
-```
+```java
 Long l1 = null;
 Long l2 = 128L;
 
@@ -68,7 +68,7 @@ assertThatCode(() -> Objects.equals(l1, l2)).doesNotThrowAnyException();
 
 接下来，让我们使用“==”比较运算符，但是要安全。类`Number`有一个方法 [`.longValue()`](https://web.archive.org/web/20220628155747/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html#longValue()) ，该方法解开原始的`long`值:
 
-```
+```java
 Long l1 = 128L;
 Long l2 = 128L;
 
@@ -79,7 +79,7 @@ assertThat(l1.longValue() == l2.longValue()).isTrue();
 
 对`Long`取消装箱的另一种方式是通过[将对象转换为原始类型的](/web/20220628155747/https://www.baeldung.com/java-type-casting)。因此，我们将提取原始值，然后我们可以继续使用比较运算符:
 
-```
+```java
 Long l1 = 128L;
 Long l2 = 128L;
 

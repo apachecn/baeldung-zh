@@ -50,7 +50,7 @@ Axon 框架支持聚合的快照。要全面了解这一过程，请查看 Axon 
 
 由于应用程序使用 Spring，我们可以向应用程序上下文添加一个`SnapshotTriggerDefinition`。为此，我们添加了一个`Configuration`类:
 
-```
+```java
 @Configuration
 public class OrderApplicationConfiguration {
     @Bean
@@ -74,7 +74,7 @@ public class OrderApplicationConfiguration {
 
 在注释上设置 bean 名称将自动为聚合配置触发器定义:
 
-```
+```java
 @Aggregate(snapshotTriggerDefinition = "orderAggregateSnapshotTriggerDefinition")
 public class OrderAggregate {
     // state, command handlers and event sourcing handlers omitted

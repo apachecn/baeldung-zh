@@ -19,19 +19,19 @@
 
 让我们使用 [GCP 控制台](https://web.archive.org/web/20221129020842/https://console.cloud.google.com/)在 GCP 上创建一个项目:
 
-```
+```java
 gcloud init
 ```
 
 接下来，让我们配置项目名称:
 
-```
+```java
 gcloud config set project baeldung-spring-boot-bootstrap
 ```
 
 然后，我们将安装应用引擎支持并创建一个应用引擎实例:
 
-```
+```java
 gcloud components install app-engine-java
 gcloud app create
 ```
@@ -40,7 +40,7 @@ gcloud app create
 
 我们可以轻松检查可用层:
 
-```
+```java
 gcloud sql tiers list 
 ```
 
@@ -50,7 +50,7 @@ gcloud sql tiers list
 
 因为我们要将应用程序部署到`europe-west2`，所以让我们对实例做同样的事情:
 
-```
+```java
 # create instance
 gcloud sql instances create \
   baeldung-spring-boot-bootstrap-db \
@@ -66,7 +66,7 @@ gcloud sql databases create \
 
 我们的应用程序将需要来自云原生 API 的 [Spring Cloud GCP](https://web.archive.org/web/20221129020842/https://spring.io/projects/spring-cloud-gcp) 项目的依赖。为此，让我们使用名为`cloud-gcp`的 Maven 概要文件:
 
-```
+```java
 <profile>
   <id>cloud-gcp</id>
   <dependencies>
@@ -85,7 +85,7 @@ gcloud sql databases create \
 
 然后我们添加 App Engine Maven 插件:
 
-```
+```java
  <build>
       <plugins>
         <plugin>
@@ -104,13 +104,13 @@ gcloud sql databases create \
 
 春云 GCP 使用`spring-cloud-bootstrap.properties`来确定应用名称:
 
-```
+```java
 spring.cloud.appId=baeldung-spring-boot-bootstrap
 ```
 
 对于这个部署，我们将使用名为`gcp`的 Spring 概要文件，并且我们需要配置数据库连接。因此我们创建了`src/main/resources/application-gcp.properties`:
 
-```
+```java
 spring.cloud.gcp.sql.instance-connection-name=\
     baeldung-spring-boot-bootstrap:europe-west2:baeldung-spring-boot-bootstrap-db
 spring.cloud.gcp.sql.database-name=baeldung_bootstrap_db
@@ -125,7 +125,7 @@ Google App Engine 提供了两种 Java 环境:
 
 我们需要激活`gcp`和`mysql` Spring 概要文件，因此我们通过将`SPRING_PROFILES_ACTIVE`环境变量添加到`src/main/appengine/app.yaml`中的部署配置中来为应用程序提供该变量:
 
-```
+```java
 runtime: java
 env: flex
 runtime_config:
@@ -141,13 +141,13 @@ manual_scaling:
 
 现在，**让我们使用`appengine` maven 插件**构建和部署应用程序:
 
-```
+```java
 mvn clean package appengine:deploy -P cloud-gcp
 ```
 
 部署后，我们可以查看或跟踪日志文件:
 
-```
+```java
 # view
 gcloud app logs read
 
@@ -157,14 +157,14 @@ gcloud app logs tail
 
 现在，**让我们通过添加一本书来验证我们的应用程序正在工作**:
 
-```
+```java
 http POST https://baeldung-spring-boot-bootstrap.appspot.com/api/books \
         title="The Player of Games" author="Iain M. Banks" 
 ```
 
 需要以下输出:
 
-```
+```java
 HTTP/1.1 201 
 {
     "author": "Iain M. Banks",
@@ -179,7 +179,7 @@ HTTP/1.1 201
 
 在我们理解运行时行为以及相关的预算和成本之前，从手动缩放开始可能更好。我们可以为应用分配资源，并在`app.yaml`中配置自动扩展:
 
-```
+```java
 # Application Resources
 resources:
   cpu: 2

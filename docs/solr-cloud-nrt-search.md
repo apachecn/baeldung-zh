@@ -35,7 +35,7 @@ Solr 中的集合由多个碎片组成，每个碎片都有不同的副本。创
 
 提交操作可以由客户端通过调用`commit` API 专门完成:
 
-```
+```java
 String zkHostString = "zkServer1:2181,zkServer2:2181,zkServer3:2181/solr";
 SolrClient solr = new CloudSolrClient.Builder()
   .withZkHost(zkHostString)
@@ -65,7 +65,7 @@ solr.commit();
 
 `solrconfig.xml` 文件是 SolrCloud 中最重要的配置文件之一。它在集合创建时生成。要启用`autoCommit`或`autoSoftCommit`，我们需要更新文件中的以下部分:
 
-```
+```java
 <autoCommit>
   <maxDocs>10000</maxDocs>
   <maxTime>30000</maxTime>
@@ -98,7 +98,7 @@ Solr 提供的另一个特性实际上是实时的——`get`API。**`get` API �
 
 然而，像所有太好的事情一样，这里有一个陷阱。**我们需要在`get` API 调用中传递文档的`id` 。**当然，我们可以随`id`一起提供其他过滤查询，但是如果没有`id`，调用就不起作用:
 
-```
+```java
 http://localhost:8985/solr/myCollection/get?id=1234&fq;=name:baeldung
 ```
 

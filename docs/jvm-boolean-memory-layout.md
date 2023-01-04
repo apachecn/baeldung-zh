@@ -12,7 +12,7 @@
 
 为了检查 JVM 中对象的内存布局，我们将广泛使用 Java 对象布局( [JOL](https://web.archive.org/web/20220523144001/https://openjdk.java.net/projects/code-tools/jol/) )。因此，我们需要添加 [`jol-core`](https://web.archive.org/web/20220523144001/https://search.maven.org/artifact/org.openjdk.jol/jol-core) 的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.openjdk.jol</groupId>
     <artifactId>jol-core</artifactId>
@@ -24,13 +24,13 @@
 
 如果我们要求 JOL 打印关于对象大小的 VM 细节:
 
-```
+```java
 System.out.println(VM.current().details());
 ```
 
 当[压缩引用](/web/20220523144001/https://www.baeldung.com/jvm-compressed-oops)被启用时(默认行为)，我们将看到输出:
 
-```
+```java
 # Running 64-bit HotSpot VM.
 # Using compressed oop with 3-bit shift.
 # Using compressed klass with 3-bit shift.
@@ -50,7 +50,7 @@ System.out.println(VM.current().details());
 
 即使我们通过`-XX:-UseCompressedOops`、**禁用压缩引用，布尔大小也不会改变**:
 
-```
+```java
 # Field sizes by type: 8, 1, 1, 2, 2, 4, 4, 8, 8 [bytes]
 # Array element sizes: 8, 1, 1, 2, 2, 4, 4, 8, 8 [bytes]
 ```
@@ -71,7 +71,7 @@ System.out.println(VM.current().details());
 
 现在我们知道`boolean`是 1 个字节，让我们考虑这个简单的类:
 
-```
+```java
 class BooleanWrapper {
     private boolean value;
 }
@@ -79,13 +79,13 @@ class BooleanWrapper {
 
 如果我们使用 JOL 检查这个类的内存布局:
 
-```
+```java
 System.out.println(ClassLayout.parseClass(BooleanWrapper.class).toPrintable());
 ```
 
 然后 JOL 将打印内存布局:
 
-```
+```java
  OFFSET  SIZE      TYPE DESCRIPTION                               VALUE
       0    12           (object header)                           N/A
      12     1   boolean BooleanWrapper.value                      N/A
@@ -108,7 +108,7 @@ Space losses: 0 bytes internal + 3 bytes external = 3 bytes total
 
 如果我们通过`-XX:ObjectAlignmentInBytes=32, `将对齐值更改为 32，则相同的类布局更改为:
 
-```
+```java
 OFFSET  SIZE      TYPE DESCRIPTION                               VALUE
       0    12           (object header)                           N/A
      12     1   boolean BooleanWrapper.value                      N/A
@@ -123,14 +123,14 @@ Space losses: 0 bytes internal + 19 bytes external = 19 bytes total
 
 让我们看看 JVM 如何在内存中布置一个`boolean `数组:
 
-```
+```java
 boolean[] value = new boolean[3];
 System.out.println(ClassLayout.parseInstance(value).toPrintable());
 ```
 
 这将打印实例布局，如下所示:
 
-```
+```java
 OFFSET  SIZE      TYPE DESCRIPTION                              
       0     4           (object header)  # mark word
       4     4           (object header)  # mark word

@@ -10,7 +10,7 @@
 
 首先，我们将从可读性的角度比较这两种解决方案。对于本节中的代码示例，我们将使用`Student`类:
 
-```
+```java
 public class Student {
 
     private String name;
@@ -35,7 +35,7 @@ public class Student {
 
 这种方法将产生一个清晰易懂的代码:
 
-```
+```java
 @Test
 public void whenUsingMultipleFilters_dataShouldBeFiltered() {
     List<Student> filteredStream = students.stream()
@@ -54,7 +54,7 @@ public void whenUsingMultipleFilters_dataShouldBeFiltered() {
 
 不幸的是，产生的代码将有点难以阅读:
 
-```
+```java
 @Test
 public void whenUsingSingleComplexFilter_dataShouldBeFiltered() {
     List<Student> filteredStream = students.stream()
@@ -69,7 +69,7 @@ public void whenUsingSingleComplexFilter_dataShouldBeFiltered() {
 
 但是，我们可以通过将几个条件提取到一个单独的方法中来使它变得更好:
 
-```
+```java
 public boolean isEligibleForScholarship() {
     return getMarksAverage() > 50
       && marks.size() > 3
@@ -79,7 +79,7 @@ public boolean isEligibleForScholarship() {
 
 因此，我们将隐藏复杂的条件，并赋予过滤标准更多的含义:
 
-```
+```java
 @Test
 public void whenUsingSingleComplexFilterExtracted_dataShouldBeFiltered() {
     List<Student> filteredStream = students.stream()
@@ -112,7 +112,7 @@ public void whenUsingSingleComplexFilterExtracted_dataShouldBeFiltered() {
 
 如果我们首先检查数字的奇偶性，我们将得到总共 150 张支票。这是因为第一个条件每次都要计算，而第二个条件只对偶数计算。
 
-```
+```java
 @Test
 public void givenWrongFilterOrder_whenUsingMultipleFilters_shouldEvaluateManyConditions() {
     long filteredStreamSize = IntStream.range(0, 100).boxed()

@@ -20,7 +20,7 @@ PostgreSQL 数据库引擎运行在各种平台上，包括 Windows、Mac OS X �
 
 要使用 Docker 运行 PostgreSQL，我们首先需要提取在 [Docker Hub](https://web.archive.org/web/20221014083849/https://hub.docker.com/_/postgres) 上可用的`postgres`公共图像:
 
-```
+```java
 $ docker pull postgres
 Using default tag: latest
 latest: Pulling from library/postgres
@@ -34,7 +34,7 @@ docker.io/library/postgres:latest
 
 在上面的命令中，我们拉出了`postgres`最新的稳定图像。我们还可以使用下面的命令提取特定版本的`postgres`图像:
 
-```
+```java
 $ docker pull postgres:14.2
 14.2: Pulling from library/postgres
 Digest: sha256:e3d8179786b8f16d066b313f381484a92efb175d1ce8355dc180fee1d5fa70ec
@@ -44,7 +44,7 @@ docker.io/library/postgres:14.2
 
 现在，我们将使用下面的命令运行使用`postgres:latest`图像的 Docker 容器:
 
-```
+```java
 $ docker run -itd -e POSTGRES_USER=baeldung -e POSTGRES_PASSWORD=baeldung -p 5432:5432 -v /data:/var/lib/postgresql/data --name postgresql postgres
 5aeda2b20a708296d22db4451d0ca57e8d23acbfe337be0dc9b526a33b302cf5
 ```
@@ -54,13 +54,13 @@ $ docker run -itd -e POSTGRES_USER=baeldung -e POSTGRES_PASSWORD=baeldung -p 543
 
 `psql` 是一个命令行实用程序，用于交互式访问 PostgreSQL 数据库。现在让我们使用`psql`来连接数据库:
 
-```
+```java
 $ PGPASSWORD=baeldung psql -U baeldung 
 ```
 
 为了从所有数据库中获取列表，我们将使用命令`\l `:
 
-```
+```java
 $ PGPASSWORD=baeldung psql -U baeldung -c '\l' 
                                     List of databases
     Name    |   Owner    | Encoding |  Collate   |   Ctype    |     Access privileges     
@@ -80,7 +80,7 @@ $ PGPASSWORD=baeldung psql -U baeldung -c '\l'
 
 我们还可以通过创建定制的 docker 文件来设置 PostgreSQL 数据库服务器。在这里，我们将创建一个 Dockerfile 文件，其中包含使用 CentOS 作为基本映像安装`Postgres`所需的所有命令:
 
-```
+```java
 FROM centos:7
 COPY startUpScript.sh /
 RUN yum install -y epel-release maven wget \
@@ -95,7 +95,7 @@ CMD ["/bin/bash","-c","/startUpScript.sh && tail -f /dev/null"]
 
 在上面的 docker 文件中，我们使用`startUpScript.sh`在成功安装后启动 PostgreSQL 数据库服务器。让我们看看`startUpScript.sh`文件:
 
-```
+```java
 #!/bin/bash
 su -l postgres -c /usr/pgsql-11/bin/initdb
 su -l postgres -c "/usr/pgsql-11/bin/pg_ctl -D /var/lib/pgsql/11/data -l /tmp/pg_logfile start"
@@ -110,7 +110,7 @@ createdb -U postgres baeldung
 
 要从 UI 中执行所有查询，我们可以使用 pgAdmin，为此，我们需要使用以下命令提取 [pgAdmin](https://web.archive.org/web/20221014083849/https://hub.docker.com/r/dpage/pgadmin4/) 图像:
 
-```
+```java
 $ docker pull dpage/pgadmin4:latest
 latest: Pulling from dpage/pgadmin4
 40e059520d19: Pull complete 
@@ -123,7 +123,7 @@ docker.io/dpage/pgadmin4:latest
 
 为了演示，让我们使用下面的命令运行容器:
 
-```
+```java
 $ docker run --name pgadmin-baeldung -p 5051:80 -e "[[email protected]](/web/20221014083849/https://www.baeldung.com/cdn-cgi/l/email-protection)" -e "PGADMIN_DEFAULT_PASSWORD=baeldung" -d dpage/pgadmin4
 ```
 
@@ -139,13 +139,13 @@ $ docker run --name pgadmin-baeldung -p 5051:80 -e "[[email protected]](/web/20
 
 首先，为了备份数据，让我们创建一个虚拟数据库`baeldung`和一个表`baeldungauthor.`
 
-```
+```java
 $ createdb -h localhost -p 5432 -U baeldung baeldung
 ```
 
 创建表格的命令如下:
 
-```
+```java
 CREATE TABLE baeldungauthor (
    AUTHOR_ID INT PRIMARY KEY     NOT NULL,
    AUTHOR_NAME           TEXT    NOT NULL,
@@ -156,7 +156,7 @@ CREATE TABLE baeldungauthor (
 
 让我们列出数据库中创建的表:
 
-```
+```java
 psql -U baeldung -d baeldung -c "\d"
               List of relations
  Schema |      Name      | Type  |   Owner    
@@ -167,7 +167,7 @@ psql -U baeldung -d baeldung -c "\d"
 
 现在使用下面的命令获取表`baeldungauthor`的模式细节:
 
-```
+```java
 psql -U baeldung -d baeldung -c "\d baedlungauthor"
               Table "public.baedlungauthor"
     Column    |  Type   | Collation | Nullable | Default 
@@ -182,7 +182,7 @@ Indexes:
 
 到目前为止，我们已经创建了一个数据库和一个表。让我们研究一下为 Docker 容器备份数据库的命令:
 
-```
+```java
 $ docker exec -t postgresql pg_dumpall -c -U baeldung > dump.sql
 ```
 
@@ -190,7 +190,7 @@ $ docker exec -t postgresql pg_dumpall -c -U baeldung > dump.sql
 
 现在让我们来看看恢复数据库的命令:
 
-```
+```java
 $ cat dump.sql | docker exec -i postgresql psql -U baeldung
 ```
 

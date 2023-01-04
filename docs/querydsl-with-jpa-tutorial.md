@@ -26,7 +26,7 @@ Querydsl 是一个扩展的 Java 框架，它有助于用类似于 SQL 的领域
 
 让我们首先将必要的依赖项添加到 Maven 项目中:
 
-```
+```java
 <properties>
     <querydsl.version>2.5.0</querydsl.version>
 </properties>
@@ -53,7 +53,7 @@ Querydsl 是一个扩展的 Java 框架，它有助于用类似于 SQL 的领域
 
 现在让我们配置 Maven APT 插件:
 
-```
+```java
 <project>
     <build>
     <plugins>
@@ -92,7 +92,7 @@ Querydsl 是一个扩展的 Java 框架，它有助于用类似于 SQL 的领域
 
 让我们首先定义一个简单的实体，我们将在下面的例子中使用它:
 
-```
+```java
 @Entity
 public class Person {
 
@@ -123,13 +123,13 @@ Querydsl 将生成一个简单名称为`QPerson`的查询类型，并将其放�
 
 首先–`QPerson`有一个默认的实例变量，可以作为静态字段访问:
 
-```
+```java
 QPerson person = QPerson.person;
 ```
 
 或者，您可以像这样定义自己的`Person`变量:
 
-```
+```java
 QPerson person = new QPerson("Erich", "Gamma");
 ```
 
@@ -137,7 +137,7 @@ QPerson person = new QPerson("Erich", "Gamma");
 
 我们现在可以使用`JPAQuery`实例进行查询:
 
-```
+```java
 JPAQuery query = new JPAQuery(entityManager);
 ```
 
@@ -145,7 +145,7 @@ JPAQuery query = new JPAQuery(entityManager);
 
 现在让我们检索名字为“`Kent`”的所有人，作为一个简单的例子:
 
-```
+```java
 QPerson person = QPerson.person;
 List<Person> persons = query.from(person).where(person.firstName.eq("Kent")).list(person);
 ```
@@ -154,25 +154,25 @@ List<Person> persons = query.from(person).where(person.firstName.eq("Kent")).lis
 
 我们也可以使用多个过滤器:
 
-```
+```java
 query.from(person).where(person.firstName.eq("Kent"), person.surname.eq("Beck"));
 ```
 
 或者:
 
-```
+```java
 query.from(person).where(person.firstName.eq("Kent").and(person.surname.eq("Beck")));
 ```
 
 在原生 JPQL 格式中，查询将如下所示:
 
-```
+```java
 select person from Person as person where person.firstName = "Kent" and person.surname = "Beck"
 ```
 
 如果您想通过“或”来组合过滤器，请使用以下模式:
 
-```
+```java
 query.from(person).where(person.firstName.eq("Kent").or(person.surname.eq("Beck")));
 ```
 
@@ -184,7 +184,7 @@ query.from(person).where(person.firstName.eq("Kent").or(person.surname.eq("Beck"
 
 我们将从按`surname`字段降序排列我们的结果开始:
 
-```
+```java
 QPerson person = QPerson.person;
 List<Person> persons = query.from(person)
     .where(person.firstname.eq(firstname))
@@ -196,7 +196,7 @@ List<Person> persons = query.from(person)
 
 现在让我们使用一个简单的聚合，因为我们有几个可用的(总和、平均值、最大值、最小值):
 
-```
+```java
 QPerson person = QPerson.person;    
 int maxAge = query.from(person).list(person.age.max()).get(0);
 ```
@@ -207,7 +207,7 @@ int maxAge = query.from(person).list(person.age.max()).get(0);
 
 这里有一个简单的例子，结果以`Map`的形式返回，其中`firstname`是键，`max age`是值:
 
-```
+```java
 QPerson person = QPerson.person;   
 Map<String, Integer> results = 
   query.from(person).transform(
@@ -218,7 +218,7 @@ Map<String, Integer> results =
 
 现在，让我们使用 Querydsl 定义一个 DAO 实现——并定义以下搜索操作:
 
-```
+```java
 public List<Person> findPersonsByFirstnameQuerydsl(String firstname) {
     JPAQuery query = new JPAQuery(em);
     QPerson person = QPerson.person;
@@ -228,7 +228,7 @@ public List<Person> findPersonsByFirstnameQuerydsl(String firstname) {
 
 现在让我们使用这个新的 DAO 构建几个测试，让我们使用 Querydsl 来搜索新创建的`Person`对象(在`PersonDao`类中实现),并在另一个使用`GroupBy`类的测试聚合中进行测试:
 
-```
+```java
 @Autowired
 private PersonDao personDao;
 

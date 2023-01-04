@@ -18,7 +18,7 @@
 
 让我们看看`try-catch-finally`块中的`finally `:
 
-```
+```java
 try {
     System.out.println("The count is " + Integer.parseInt(count));
 } catch (NumberFormatException e) {
@@ -34,7 +34,7 @@ try {
 
 同样，我们可以将**块与`try`块一起使用`finally` 块，而不管`catch`块是否存在**:
 
-```
+```java
 try {
     System.out.println("Inside try");
 } finally {
@@ -44,7 +44,7 @@ try {
 
 我们会得到输出:
 
-```
+```java
 Inside try
 Inside finally
 ```
@@ -63,7 +63,7 @@ Inside finally
 
 当`try`块完成时，执行`finally `块，即使没有异常:
 
-```
+```java
 try {
     System.out.println("Inside try");
 } finally {
@@ -75,7 +75,7 @@ try {
 
 这将输出:
 
-```
+```java
 Inside try
 Inside finally
 ```
@@ -84,7 +84,7 @@ Inside finally
 
 如果有一个异常并且没有被捕获，那么`finally`块仍然被执行:
 
-```
+```java
 try {
     System.out.println("Inside try");
     throw new Exception();
@@ -97,7 +97,7 @@ try {
 
 输出将是:
 
-```
+```java
 Inside try
 Inside finally
 Exception in thread "main" java.lang.Exception
@@ -107,7 +107,7 @@ Exception in thread "main" java.lang.Exception
 
 如果出现异常并且被`catch`块捕获，那么`finally`块仍然被执行:
 
-```
+```java
 try {
     System.out.println("Inside try");
     throw new Exception();
@@ -120,7 +120,7 @@ try {
 
 在这种情况下，`catch`块处理抛出的异常，然后 JVM 执行`finally`块并产生输出:
 
-```
+```java
 Inside try
 Inside catch
 Inside finally
@@ -130,7 +130,7 @@ Inside finally
 
 即使从该方法返回也不会阻止`finally`块运行:
 
-```
+```java
 try {
     System.out.println("Inside try");
     return "from try";
@@ -143,7 +143,7 @@ try {
 
 我们将得到输出:
 
-```
+```java
 Inside try
 Inside finally
 ```
@@ -152,7 +152,7 @@ Inside finally
 
 当`catch`块包含一个`return`语句时，`finally`块仍然被调用:
 
-```
+```java
 try {
     System.out.println("Inside try");
     throw new Exception();
@@ -166,7 +166,7 @@ try {
 
 当我们从`try`块抛出一个异常时，`catch`块处理这个异常。虽然在`catch`块中有一个 return 语句，但是 JVM 在将控制权移交给调用方法之前执行了`finally`块，它输出:
 
-```
+```java
 Inside try
 Inside catch
 Inside finally
@@ -182,7 +182,7 @@ Inside finally
 
 在这种情况下，我们通过调用 [`System.exit`](/web/20221028145408/https://www.baeldung.com/java-system-exit) 来终止 JVM，因此 JVM 不会执行我们的`finally`块:
 
-```
+```java
 try {
     System.out.println("Inside try");
     System.exit(1);
@@ -193,7 +193,7 @@ try {
 
 这将输出:
 
-```
+```java
 Inside try
 ```
 
@@ -201,7 +201,7 @@ Inside try
 
 与`System.exit`类似，对 [`Runtime.halt`](/web/20221028145408/https://www.baeldung.com/java-runtime-halt-vs-system-exit) 的调用也停止执行，JVM 不执行任何`finally`块:
 
-```
+```java
 try {
     System.out.println("Inside try");
     Runtime.getRuntime().halt(1);
@@ -212,7 +212,7 @@ try {
 
 因此，输出将是:
 
-```
+```java
 Inside try
 ```
 
@@ -220,7 +220,7 @@ Inside try
 
 如果[守护线程](/web/20221028145408/https://www.baeldung.com/java-daemon-thread)进入`try/finally`块的执行，并且所有其他非守护线程在守护线程执行`finally`块之前退出，JVM 不会等待守护线程完成`finally`块的执行:
 
-```
+```java
 Runnable runnable = () -> {
     try {
         System.out.println("Inside try");
@@ -247,7 +247,7 @@ daemon.start();
 
 以下是输出结果:
 
-```
+```java
 Inside try
 Inside try
 Inside finally
@@ -257,7 +257,7 @@ Inside finally
 
 这里有一个包含无限`while`循环的`try`块:
 
-```
+```java
 try {
     System.out.println("Inside try");
     while (true) {
@@ -279,7 +279,7 @@ try {
 
 `finally`块中的`return`语句忽略一个未捕获的异常:
 
-```
+```java
 try {
     System.out.println("Inside try");
     throw new RuntimeException();
@@ -295,7 +295,7 @@ try {
 
 `finally`块中的`return`语句忽略`try`或`catch`块中的任何其他返回语句。只有`finally`块中的`return`语句执行:
 
-```
+```java
 try {
     System.out.println("Inside try");
     return "from try";
@@ -311,7 +311,7 @@ try {
 
 此外，在从`finally`块抛出异常的情况下，该方法忽略抛出的异常或`try`和`catch`块中的`return`语句:
 
-```
+```java
 try {
     System.out.println("Inside try");
     return "from try";

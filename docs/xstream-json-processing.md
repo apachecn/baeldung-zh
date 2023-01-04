@@ -14,7 +14,7 @@
 
 ## 3。依赖性
 
-```
+```java
 <dependency>
     <groupId>com.thoughtworks.xstream</groupId>
     <artifactId>xstream</artifactId>
@@ -34,7 +34,7 @@
 
 这个驱动程序类能够在 JSON 和对象之间进行转换。使用这个驱动程序类，我们需要为`jettison**.**`添加一个额外的依赖项
 
-```
+```java
 <dependency>
     <groupId>org.codehaus.jettison</groupId>
     <artifactId>jettison</artifactId>
@@ -46,7 +46,7 @@
 
 让我们创建一个`Customer`类:
 
-```
+```java
 public class Customer {
 
     private String firstName;
@@ -65,14 +65,14 @@ public class Customer {
 
 我们将传递一个`JsonHierarchicalStreamDriver`来创建一个 XStream 实例。
 
-```
+```java
 xstream = new XStream(new JsonHierarchicalStreamDriver());
 dataJson = xstream.toXML(customer);
 ```
 
 这会生成以下 JSON:
 
-```
+```java
 {
   "com.baeldung.pojo.Customer": {
     "firstName": "John",
@@ -97,14 +97,14 @@ dataJson = xstream.toXML(customer);
 
 我们将传递一个`JettisonMappedXmlDriver`类来创建一个实例。
 
-```
+```java
 xstream = new XStream(new JettisonMappedXmlDriver());
 dataJson = xstream.toXML(customer);
 ```
 
 这会生成以下 JSON:
 
-```
+```java
 {
   "com.baeldung.pojo.Customer": {
     "firstName": "John",
@@ -133,7 +133,7 @@ dataJson = xstream.toXML(customer);
 
 基于两个驱动程序的输出，我们可以清楚地看到生成的 JSON 有一些细微的差别。例如，`JettisonMappedXmlDriver`省略了数值的双引号，尽管数据类型是`java.lang.String` :
 
-```
+```java
 "mobile": 4676543565,
 "age": 30,
 ```
@@ -144,7 +144,7 @@ dataJson = xstream.toXML(customer);
 
 让我们用下面的 JSON 将其转换回一个`Customer` 对象:
 
-```
+```java
 {
   "customer": {
     "firstName": "John",
@@ -173,7 +173,7 @@ dataJson = xstream.toXML(customer);
 
 使用抛弃驱动程序，我们可以反序列化`Customer`对象:
 
-```
+```java
 customer = (Customer) xstream.fromXML(dataJson);
 ```
 

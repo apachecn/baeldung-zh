@@ -27,14 +27,14 @@ Java MongoDB 驱动程序提供了各种类型的[构建器](https://web.archive
 
 首先，为了演示各种过滤操作，让我们建立一个数据库`baeldung`和一个样本集合`user`:
 
-```
+```java
 use baeldung;
 db.createCollection("user");
 ```
 
 此外，让我们将一些文档填充到`user`集合中:
 
-```
+```java
 db.user.insertMany([
 {
     "userId":"123",
@@ -59,7 +59,7 @@ db.user.insertMany([
 
 成功插入后，上述查询将返回确认结果的响应:
 
-```
+```java
 {
     "acknowledged" : true,
     "insertedIds" : [
@@ -88,13 +88,13 @@ db.user.insertMany([
 
 首先，让我们看一下 MongoDB Shell 查询来过滤`user`集合文档，其中`userName`等于`“Jack”`:
 
-```
+```java
 db.getCollection('user').find({"userName":"Jack"})
 ```
 
 上面的查询从`user`集合中返回一个文档:
 
-```
+```java
 {
     "_id" : ObjectId("6357c4736c9084bcac72eced"),
     "userId" : "123",
@@ -106,7 +106,7 @@ db.getCollection('user').find({"userName":"Jack"})
 
 现在，让我们看看相应的 MongoDB Java 驱动程序代码:
 
-```
+```java
 Bson filter = Filters.eq("userName", "Jack");
 FindIterable<Document> documents = collection.find(filter);
 
@@ -120,7 +120,7 @@ while (cursor.hasNext()) {
 
 另外， **`Filters.ne()`正好与`Filters.eq()`方法**相反——它匹配所有命名字段的值不等于指定值的文档:
 
-```
+```java
 Bson filter = Filters.ne("userName", "Jack");
 FindIterable<Document> documents = collection.find(filter);
 
@@ -136,7 +136,7 @@ while (cursor.hasNext()) {
 
 让我们看一个例子:
 
-```
+```java
 Bson filter = Filters.gt("age", 25);
 FindIterable<Document> documents = collection.find(filter);
 
@@ -148,7 +148,7 @@ while (cursor.hasNext()) {
 
 上面的代码片段获取所有`age`大于`25.`的`user`集合文档，就像`Filters.gt()`方法一样，**还有一个`Filters.lt()`方法匹配所有命名字段的值小于指定值**的文档:
 
-```
+```java
 Bson filter = Filters.lt("age", 25);
 FindIterable<Document> documents = collection.find(filter);
 
@@ -166,7 +166,7 @@ while (cursor.hasNext()) {
 
 让我们来看看它的实际应用:
 
-```
+```java
 Bson filter = Filters.in("userName", "Jack", "Lisa");
 FindIterable<Document> documents = collection.find(filter);
 
@@ -180,7 +180,7 @@ while (cursor.hasNext()) {
 
 就像`Filters.in()`方法一样，**有一个`Filters.nin()`方法匹配所有文档，其中指定字段的值不等于指定值列表**中的任何值:
 
-```
+```java
 Bson filter = Filters.nin("userName", "Jack", "Lisa");
 FindIterable<Document> documents = collection.find(filter);
 
@@ -196,7 +196,7 @@ while (cursor.hasNext()) {
 
 让我们找出所有的`age`大于`25`、`role`等于`“Admin”`的`user`收款单据:
 
-```
+```java
 Bson filter = Filters.and(Filters.gt("age", 25), Filters.eq("role", "Admin"));
 FindIterable<Document> documents = collection.find(filter);
 
@@ -212,7 +212,7 @@ while (cursor.hasNext()) {
 
 让我们编写一个代码片段，返回所有的`user`集合文档，其中`age`大于`30`或者`role`等于`“Admin”`:
 
-```
+```java
 Bson filter = Filters.or(Filters.gt("age", 30), Filters.eq("role", "Admin"));
 FindIterable<Document> documents = collection.find(filter);
 
@@ -226,7 +226,7 @@ while (cursor.hasNext()) {
 
 此外，`Filters.exists()`方法**创建一个过滤器，匹配包含给定字段**的所有文档:
 
-```
+```java
 Bson filter = Filters.exists("type");
 FindIterable<Document> documents = collection.find(filter);
 
@@ -242,7 +242,7 @@ while (cursor.hasNext()) {
 
 最后，`Filters.regex()`方法**创建一个匹配文档的过滤器，其中指定字段的值匹配给定的正则表达式模式**:
 
-```
+```java
 Bson filter = Filters.regex("userName", "a");
 FindIterable<Document> documents = collection.find(filter);
 

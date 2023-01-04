@@ -14,7 +14,7 @@
 
 我们将假设我们已经在本地主机(默认端口 3306)上安装并运行了一个 MySQL 服务器，并且我们有一个包含以下人员表的测试模式:
 
-```
+```java
 CREATE TABLE person 
 ( 
     ID         INT, 
@@ -25,7 +25,7 @@ CREATE TABLE person
 
 我们还需要`mysql-connector-java`神器，它总是可以从 [Maven Central](https://web.archive.org/web/20221006163534/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22mysql-connector-java%22%20AND%20g%3A%22mysql%22) 获得:
 
-```
+```java
 <dependency>
     <groupId>mysql</groupId>
     <artifactId>mysql-connector-java</artifactId>
@@ -43,7 +43,7 @@ CREATE TABLE person
 
 *   Connection URL – a string that the JDBC driver uses to connect to a database. It can contain information such as where to search for the database, the name of the database to connect to and other configuration properties:
 
-    ```
+    ```java
     jdbc:mysql://[host][,failoverhost...]
         [:port]/[database]
         [?propertyName1][=propertyValue1]
@@ -59,7 +59,7 @@ CREATE TABLE person
 
 让我们看看如何连接到我们的数据库，并通过一个[多资源尝试](/web/20221006163534/https://www.baeldung.com/java-try-with-resources#resources)来执行一个简单的全选:
 
-```
+```java
 String sqlSelectAllPersons = "SELECT * FROM person";
 String connectionUrl = "jdbc:mysql://localhost:3306/test?serverTimezone=UTC";
 
@@ -91,7 +91,7 @@ try (Connection conn = DriverManager.getConnection(connectionUrl, "username", "p
 
 首先，我们需要添加`[hibernate-core](https://web.archive.org/web/20221006163534/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.hibernate%22%20AND%20a%3A%22hibernate-core%22)` Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-core</artifactId>
@@ -101,7 +101,7 @@ try (Connection conn = DriverManager.getConnection(connectionUrl, "username", "p
 
 Hibernate 要求必须为每个表创建一个实体类。让我们继续定义`Person`类:
 
-```
+```java
 @Entity
 @Table(name = "Person")
 public class Person {
@@ -119,7 +119,7 @@ public class Person {
 
 **另一个重要方面是创建 Hibernate 资源文件，通常命名为`hibernate.cfg.xml`** ，我们将在其中定义配置信息:
 
-```
+```java
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE hibernate-configuration PUBLIC
         "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
@@ -153,7 +153,7 @@ Hibernate 有很多[配置属性](https://web.archive.org/web/20221006163534/htt
 
 通常，只需为应用程序设置一次:
 
-```
+```java
 SessionFactory sessionFactory;
 // configures settings from hibernate.cfg.xml 
 StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build(); 
@@ -166,7 +166,7 @@ try {
 
 现在我们已经建立了连接，我们可以运行一个查询来从 person 表中选择所有的人:
 
-```
+```java
 Session session = sessionFactory.openSession();
 session.beginTransaction();
 
@@ -186,7 +186,7 @@ session.close();
 
 要使用它，我们需要添加 [`mybatis`](https://web.archive.org/web/20221006163534/https://search.maven.org/classic/#artifactdetails%7Corg.mybatis%7Cmybatis%7C3.5.3%7Cjar) 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis</artifactId>
@@ -196,7 +196,7 @@ session.close();
 
 假设我们重用了上面没有注释的`Person`类，我们可以继续创建一个`PersonMapper`接口:
 
-```
+```java
 public interface PersonMapper {
     String selectAll = "SELECT * FROM Person"; 
 
@@ -212,7 +212,7 @@ public interface PersonMapper {
 
 下一步是关于 MyBatis 的配置:
 
-```
+```java
 Configuration initMybatis() throws SQLException {
     DataSource dataSource = getDataSource();
     TransactionFactory trxFactory = new JdbcTransactionFactory();
@@ -243,7 +243,7 @@ DataSource getDataSource() throws SQLException {
 
 然后我们可以使用`Configuration`对象，它通常为应用程序创建一次`SqlSessionFactory`:
 
-```
+```java
 Configuration configuration = initMybatis();
 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 try (SqlSession session = sqlSessionFactory.openSession()) {
@@ -260,7 +260,7 @@ Apache Cayenne 是一个持久性框架，其首次发布可以追溯到 2002 �
 
 像往常一样，让我们添加 `[cayenne-server](https://web.archive.org/web/20221006163534/https://search.maven.org/classic/#artifactdetails%7Corg.apache.cayenne%7Ccayenne-server%7C4.0.2%7Cjar)` Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.cayenne</groupId>
     <artifactId>cayenne-server</artifactId>
@@ -270,7 +270,7 @@ Apache Cayenne 是一个持久性框架，其首次发布可以追溯到 2002 �
 
 **我们将特别关注 MySQL 连接设置。在这种情况下，我们将配置`cayenne-project.xml`** :
 
-```
+```java
 <?xml version="1.0" encoding="utf-8"?>
 <domain project-version="9"> 
     <map name="datamap"/> 
@@ -292,7 +292,7 @@ Apache Cayenne 是一个持久性框架，其首次发布可以追溯到 2002 �
 
 例如，我们将像前面一样继续全选:
 
-```
+```java
 ServerRuntime cayenneRuntime = ServerRuntime.builder()
     .addConfig("cayenne-project.xml")
     .build();
@@ -317,7 +317,7 @@ Spring Data JPA 是一个健壮的框架，它有助于减少样板代码，并�
 
 这个`spring-data-jpa`神器可以在 [Maven Central](https://web.archive.org/web/20221006163534/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.springframework.data%22%20AND%20a%3A%22spring-data-jpa%22) 上找到:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-jpa</artifactId>
@@ -327,7 +327,7 @@ Spring Data JPA 是一个健壮的框架，它有助于减少样板代码，并�
 
 我们将继续使用`Person`类。下一步是使用注释配置 JPA:
 
-```
+```java
 @Configuration
 @EnableJpaRepositories("packages.to.scan")
 public class JpaConfiguration {
@@ -367,7 +367,7 @@ public class JpaConfiguration {
 
 为了让 Spring 数据实现 CRUD 操作，我们必须创建一个接口来扩展 [`CrudRepository`](https://web.archive.org/web/20221006163534/https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html) 接口:
 
-```
+```java
 @Repository
 public interface PersonRepository extends CrudRepository<Person, Long> {
 
@@ -376,7 +376,7 @@ public interface PersonRepository extends CrudRepository<Person, Long> {
 
 最后，让我们看一个包含 Spring 数据的 select-all 示例:
 
-```
+```java
 personRepository.findAll().forEach(person -> {
     // do something with the extracted person
 });
@@ -390,7 +390,7 @@ Spring Data JDBC 是 Spring Data 家族的一个有限实现，其主要目标�
 
 这次我们需要的 Maven 依赖项是`[spring-data-jdbc](https://web.archive.org/web/20221006163534/https://search.maven.org/classic/#artifactdetails%7Corg.springframework.data%7Cspring-data-jdbc%7C1.1.4.RELEASE%7Cjar)`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-jdbc</artifactId>
@@ -400,7 +400,7 @@ Spring Data JDBC 是 Spring Data 家族的一个有限实现，其主要目标�
 
 与我们在上一节中为 Spring Data JPA 使用的配置相比，这个配置更轻:
 
-```
+```java
 @Configuration
 @EnableJdbcRepositories("packages.to.scan")
 public class JdbcConfiguration extends AbstractJdbcConfiguration {
@@ -431,7 +431,7 @@ public class JdbcConfiguration extends AbstractJdbcConfiguration {
 
 这是因为 Spring 数据 JDBC 将直接处理实体映射，而不是 Hibernate:
 
-```
+```java
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;

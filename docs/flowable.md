@@ -24,7 +24,7 @@
 
 让我们根据 BPMN 2.0 标准来定义我们的简单流程:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions
 
@@ -99,7 +99,7 @@
 
 首先，让我们看看我们需要从 Maven 获取的依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -136,7 +136,7 @@
 
 在我们的流程定义中，我们使用了几个 Java 类，它们应该作为服务任务的一部分被调用。**这些类实现了`JavaDelegate`接口，在可流动的**中被称为 Java 代理。我们现在将为这些 Java 委托定义虚拟类:
 
-```
+```java
 public class PublishArticleService implements JavaDelegate {
     public void execute(DelegateExecution execution) {
         System.out.println("Publishing the approved article.");
@@ -144,7 +144,7 @@ public class PublishArticleService implements JavaDelegate {
 }
 ```
 
-```
+```java
 public class SendMailService implements JavaDelegate {
     public void execute(DelegateExecution execution) {
         System.out.println("Sending rejection mail to author.");
@@ -160,7 +160,7 @@ public class SendMailService implements JavaDelegate {
 
 我们将从定义一个公开三个端点的控制器开始:
 
-```
+```java
 @RestController
 public class ArticleWorkflowController {
     @Autowired
@@ -187,7 +187,7 @@ public class ArticleWorkflowController {
 
 **我们实际上把大部分工作委托给了`ArticleWorkflowService` :**
 
-```
+```java
 @Service
 public class ArticleWorkflowService {
     @Autowired
@@ -239,7 +239,7 @@ public class ArticleWorkflowService {
 
 为了创建业务流程的单元测试，Flowable 支持不同版本的 JUnit，包括 JUnit 5。与弹簧的可流动集成对此也有合适的支持。让我们看看 Spring 中一个典型的流程单元测试:
 
-```
+```java
 @ExtendWith(FlowableSpringExtension.class)
 @ExtendWith(SpringExtension.class)
 public class ArticleWorkflowUnitTest {
@@ -291,7 +291,7 @@ public class ArticleWorkflowUnitTest {
 
 让我们看一个简单的查询来获取完成的流程实例:
 
-```
+```java
 HistoryService historyService = processEngine.getHistoryService();
 List<HistoricActivityInstance> activities = historyService
   .createHistoricActivityInstanceQuery()

@@ -18,7 +18,7 @@
 
 让我们考虑一个包含以某种方式改变文本的代码的类。这个类唯一的工作应该是**操纵文本**。
 
-```
+```java
 public class TextManipulator {
     private String text;
 
@@ -58,7 +58,7 @@ public class TextManipulator {
 
 在这个类中使用打印文本的方法违反了单一责任原则。为此，我们应该创建另一个类，它只处理打印文本:
 
-```
+```java
 public class TextPrinter {
     TextManipulator textManipulator;
 
@@ -102,7 +102,7 @@ public class TextPrinter {
 
 让我们回到我们的`TextManipulator`类方法:
 
-```
+```java
 ...
 
 public void appendText(String newText) {

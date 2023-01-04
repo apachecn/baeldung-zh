@@ -12,7 +12,7 @@
 
 让我们来看看我们将在本文中使用的`Employee`实体:
 
-```
+```java
 public class Employee implements Comparable<Employee> {
 
     private String name;
@@ -34,7 +34,7 @@ public class Employee implements Comparable<Employee> {
 
 我们将使用这个方法来比较当前对象和作为参数传递的对象:
 
-```
+```java
 public class Employee implements Comparable<Employee> {
 
     // ...
@@ -57,7 +57,7 @@ public class Employee implements Comparable<Employee> {
 
 在大多数情况下，`compareTo()`方法**描述了自然排序对象之间的比较逻辑。**这里，我们将员工的入职日期字段与同类型的其他对象进行比较。如果任何两个雇员有相同的加入日期，他们将返回 0:
 
-```
+```java
 @Test
 public void givenEmpList_SortEmpList_thenSortedListinNaturalOrder() {
     Collections.sort(employees);
@@ -67,7 +67,7 @@ public void givenEmpList_SortEmpList_thenSortedListinNaturalOrder() {
 
 现在，`Collections.sort(employees)`将根据它的`joiningDate`而不是它的主键或名字对雇员列表进行排序。我们可以看到，该列表是按照员工的`joiningDate`排序的，这现在变成了`Employee`类的自然顺序:
 
-```
+```java
 [(Pearl,Tue Apr 27 23:30:47 IST 2021),
 (Earl,Sun Feb 27 23:30:47 IST 2022),
 (Steve,Sun Apr 17 23:30:47 IST 2022),
@@ -78,7 +78,7 @@ public void givenEmpList_SortEmpList_thenSortedListinNaturalOrder() {
 
 [`Collections.reverseOrder()`](https://web.archive.org/web/20220706232727/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Comparator.html#reverseOrder()) 方法**对对象进行排序，但顺序与自然排序相反。**这将返回一个比较器，该比较器将反向执行排序。当对象在比较中返回`null`时，它会抛出一个`NullPointerException`:
 
-```
+```java
 @Test
 public void givenEmpList_SortEmpList_thenSortedListinDescOrder() {
     Collections.sort(employees, Collections.reverseOrder());
@@ -92,7 +92,7 @@ public void givenEmpList_SortEmpList_thenSortedListinDescOrder() {
 
 现在让我们使用`Comparator`接口实现对我们的员工列表进行排序。这里，我们将动态地将一个匿名内部类参数传递给`Collections.sort()` API:
 
-```
+```java
 @Test
 public void givenEmpList_SortEmpList_thenCheckSortedList() {
 
@@ -108,7 +108,7 @@ public void givenEmpList_SortEmpList_thenCheckSortedList() {
 
 我们也可以用 Java 8 Lambda 语法替换这个语法，这样可以使我们的代码更小，如下所示:
 
-```
+```java
 @Test
 public void givenEmpList_SortEmpList_thenCheckSortedListAscLambda() {
 
@@ -124,7 +124,7 @@ public void givenEmpList_SortEmpList_thenCheckSortedListAscLambda() {
 
 我们可以通过反转 employee 对象比较，即比较`Employee2`和`Employee1`，对给定的`Employee`列表进行降序排序。这将反转比较，从而以降序返回结果:
 
-```
+```java
 @Test
 public void givenEmpList_SortEmpList_thenCheckSortedListDescV1() {
 
@@ -140,7 +140,7 @@ public void givenEmpList_SortEmpList_thenCheckSortedListDescV1() {
 
 我们还可以使用 Java 8 Lambda 表达式将上述方法转换成更简洁的形式。这将执行与上述函数相同的功能，唯一的区别是与上面的代码相比，该代码包含更少的代码行。尽管这也降低了代码的可读性。在使用 Comparator 时，我们为`Collections.sort()` API 动态传递一个匿名内部类:
 
-```
+```java
 @Test
 public void givenEmpList_SortEmpList_thenCheckSortedListDescLambda() {
 

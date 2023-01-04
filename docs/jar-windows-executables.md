@@ -24,7 +24,7 @@
 
 创建 JAR 文件的一般语法是:
 
-```
+```java
 jar cf jar-file input-file(s)
 ```
 
@@ -38,7 +38,7 @@ jar cf jar-file input-file(s)
 
 一旦我们创建了一个 JAR 文件，我们将经常检查它的内容。要查看 JAR 文件包含的内容，我们使用以下语法:
 
-```
+```java
 jar tf jar-file 
 ```
 
@@ -70,7 +70,7 @@ jar tf jar-file
 
 第二步是创建一个清单文件。让我们将清单文件创建为`MySampleGUIAppn.mf`:
 
-```
+```java
 Manifest-Version: 1.0
 Main-Class: MySampleGUIAppn 
 ```
@@ -79,19 +79,19 @@ Main-Class: MySampleGUIAppn
 
 一旦清单文件准备就绪，我们将创建一个可执行的 JAR:
 
-```
+```java
 jar cmf MySampleGUIAppn.mf MySampleGUIAppn.jar MySampleGUIAppn.class MySampleGUIAppn.java
 ```
 
 让我们来查看我们创建的 JAR 的内容:
 
-```
+```java
 jar tf MySampleGUIAppn.jar
 ```
 
 下面是一个输出示例:
 
-```
+```java
 META-INF/
 META-INF/MANIFEST.MF
 MySampleGUIAppn.class
@@ -102,7 +102,7 @@ MySampleGUIAppn.java
 
 让我们在命令行上运行它:
 
-```
+```java
 java -jar MySampleGUIAppn.jar
 ```
 
@@ -112,7 +112,7 @@ java -jar MySampleGUIAppn.jar
 
 现在，我们的可执行 JAR 已经准备好并可以工作了，让我们为我们的示例项目生成一个 Windows 可执行文件:
 
-```
+```java
 jpackage --input . --main-jar MySampleGUIAppn.jar
 ```
 

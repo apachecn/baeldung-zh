@@ -27,13 +27,13 @@
 
 打开命令提示符并检查`JAVA_HOME`变量的值:
 
-```
+```java
 echo %JAVA_HOME%
 ```
 
 结果应该是 JDK 安装的路径:
 
-```
+```java
 C:\Program Files\Java\jdk1.8.0_111
 ```
 
@@ -45,7 +45,7 @@ C:\Program Files\Java\jdk1.8.0_111
 
 在任何文本编辑器中打开`~/.bash_profile`并添加以下内容:
 
-```
+```java
 export JAVA_HOME=$(/usr/libexec/java_home)
 ```
 
@@ -53,19 +53,19 @@ export JAVA_HOME=$(/usr/libexec/java_home)
 
 打开终端并运行 source 命令以应用更改:
 
-```
+```java
 source ~/.bash_profile
 ```
 
 现在我们可以检查`JAVA_HOME`变量的值:
 
-```
+```java
 echo $JAVA_HOME
 ```
 
 结果应该是 JDK 安装的路径:
 
-```
+```java
 /Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home
 ```
 
@@ -75,7 +75,7 @@ echo $JAVA_HOME
 
 在任何编辑器中打开`~/.bash_profile`,并添加以下内容:
 
-```
+```java
 export JAVA_HOME=/path/to/java_installation
 ```
 
@@ -83,19 +83,19 @@ export JAVA_HOME=/path/to/java_installation
 
 打开终端并运行 source 命令以应用更改:
 
-```
+```java
 source ~/.bash_profile
 ```
 
 现在我们可以检查`JAVA_HOME`变量的值:
 
-```
+```java
 echo $JAVA_HOME
 ```
 
 结果应该是 JDK 安装的路径:
 
-```
+```java
 /Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home
 ```
 
@@ -113,7 +113,7 @@ echo $JAVA_HOME
 
 在任何文本编辑器中打开~ `/.bashrc`,并添加以下内容:
 
-```
+```java
 export JAVA_HOME=/path/to/java_installation
 ```
 
@@ -121,19 +121,19 @@ export JAVA_HOME=/path/to/java_installation
 
 运行 source 命令加载变量:
 
-```
+```java
 source ~/.bashrc
 ```
 
 现在我们可以检查`JAVA_HOME`变量的值:
 
-```
+```java
 echo $JAVA_HOME
 ```
 
 结果应该是 JDK 安装的路径:
 
-```
+```java
 /usr/lib/jvm/java-8-oracle
 ```
 
@@ -143,7 +143,7 @@ echo $JAVA_HOME
 
 在任何文本编辑器中打开`/etc/environment`并添加以下内容:
 
-```
+```java
 JAVA_HOME=/path/to/java_installation
 ```
 
@@ -151,25 +151,25 @@ JAVA_HOME=/path/to/java_installation
 
 要使用`/etc/profile`设置`JAVA_HOME`，我们将在文件中添加以下内容:
 
-```
+```java
 export JAVA_HOME=/path/to/java_installation
 ```
 
 运行 source 命令加载变量:
 
-```
+```java
 source /etc/profile
 ```
 
 现在我们可以检查`JAVA_HOME`变量的值:
 
-```
+```java
 echo $JAVA_HOME
 ```
 
 结果应该是 JDK 安装的路径:
 
-```
+```java
 /usr/lib/jvm/java-8-oracle
 ```
 

@@ -46,7 +46,7 @@
 
 找到第`k`个最小元素的最简单方法是连接数组，对它们进行排序，并返回结果数组的第`k`个元素:
 
-```
+```java
 int getKthElementSorted(int[] list1, int[] list2, int k) {
 
     int length1 = list1.length, length2 = list2.length;
@@ -81,7 +81,7 @@ int getKthElementSorted(int[] list1, int[] list2, int k) {
 
 下面是一个 Java 实现:
 
-```
+```java
 public static int getKthElementMerge(int[] list1, int[] list2, int k) {
 
     int i1 = 0, i2 = 0;
@@ -114,7 +114,7 @@ public static int getKthElementMerge(int[] list1, int[] list2, int k) {
 
 让我们为将要实现的方法定义框架:
 
-```
+```java
 int findKthElement(int k, int[] list1, int[] list2)
     throws NoSuchElementException, IllegalArgumentException {
 
@@ -138,7 +138,7 @@ int findKthElement(int k, int[] list1, int[] list2)
 
 我们从第一个数组中的一定数量的元素开始搜索。让我们称那个数字为`nElementsList1`。由于我们总共需要`k`个元素，所以数量`nElementsList1 is:`
 
-```
+```java
 int nElementsList2 = k - nElementsList1; 
 ```
 
@@ -152,7 +152,7 @@ int nElementsList2 = k - nElementsList1;
 
 我们继续，直到达到停止标准。在我们看这是什么之前，让我们先看一下目前为止我们所描述的代码:
 
-```
+```java
 int right = k;
 int left = = 0;
 do {
@@ -186,7 +186,7 @@ do {
 
 以下是停止标准的代码:
 
-```
+```java
 private static boolean foundCorrectNumberOfElementsInBothLists(int[] list1, int[] list2, int nElementsList1, int nElementsList2) {
 
     // we do not take any element from the second list
@@ -222,7 +222,7 @@ private static boolean foundCorrectNumberOfElementsInBothLists(int[] list1, int[
 
 让我们看看代码:
 
-```
+```java
 return nElementsList2 == 0 ? list1[nElementsList1-1] : max(list1[nElementsList1-1], list2[nElementsList2-1]);
 ```
 
@@ -232,7 +232,7 @@ return nElementsList2 == 0 ? list1[nElementsList1-1] : max(list1[nElementsList1-
 
 到目前为止，我们用`k`和`0`初始化了第一个数组的右边界和左边界:
 
-```
+```java
 int right = k;
 int left = 0;
 ```
@@ -247,7 +247,7 @@ int left = 0;
 
 以下是调整后的左右边框的代码:
 
-```
+```java
 // correct left boundary if k is bigger than the size of list2
 int left = k < list2.length ? 0 : k - list2.length - 1;
 
@@ -259,7 +259,7 @@ int right = min(k-1, list1.length - 1);
 
 在我们进行实际的二分搜索法之前，我们可以处理一些特殊情况，使算法稍微简单一些，并避免异常。下面是注释中有解释的代码:
 
-```
+```java
 // we are looking for the minimum value
 if(k == 1) {
     return min(list1[0], list2[0]);
@@ -287,7 +287,7 @@ if(k <= list2.length && list2[k-1] < list1[0]) {
 
 下面是我们的代码验证:
 
-```
+```java
 void checkInput(int k, int[] list1, int[] list2) throws NoSuchElementException, IllegalArgumentException {
 
     if(list1 == null || list2 == null || k < 1) { 
@@ -308,7 +308,7 @@ void checkInput(int k, int[] list1, int[] list2) throws NoSuchElementException, 
 
 这是我们刚刚描述的算法的完整代码:
 
-```
+```java
 public static int findKthElement(int k, int[] list1, int[] list2) throws NoSuchElementException, IllegalArgumentException {
 
     checkInput(k, list1, list2);
@@ -384,7 +384,7 @@ private static boolean foundCorrectNumberOfElementsInBothLists(int[] list1, int[
 
 这里，我们只指出其中一个测试，它不是针对静态输入数组进行测试，而是将我们的双二分搜索法算法的结果与简单的连接排序算法的结果进行比较。输入由两个随机数组组成:
 
-```
+```java
 int[] sortedRandomIntArrayOfLength(int length) {
     int[] intArray = new Random().ints(length).toArray();
     Arrays.sort(intArray);
@@ -394,7 +394,7 @@ int[] sortedRandomIntArrayOfLength(int length) {
 
 以下方法执行一个单一测试:
 
-```
+```java
 private void random() {
 
     Random random = new Random();
@@ -417,7 +417,7 @@ private void random() {
 
 我们可以调用上面的方法来运行大量这样的测试:
 
-```
+```java
 @Test
 void randomTests() {
     IntStream.range(1, 100000).forEach(i -> random());

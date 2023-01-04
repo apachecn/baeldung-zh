@@ -49,7 +49,7 @@
 
 弱引用由 [`java.lang.ref.WeakReference`](https://web.archive.org/web/20220820044725/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ref/WeakReference.html) 类表示。我们可以通过传递一个 referent 作为参数来初始化它。可选地，我们可以提供一个 [`java.lang.ref.ReferenceQueue`](https://web.archive.org/web/20220820044725/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ref/ReferenceQueue.html) :
 
-```
+```java
 Object referent = new Object();
 ReferenceQueue<Object> referenceQueue = new ReferenceQueue<>();
 
@@ -59,14 +59,14 @@ WeakReference weakReference2 = new WeakReference<>(referent, referenceQueue);
 
 引用的被引用对象可以通过 [`get`](https://web.archive.org/web/20220820044725/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ref/Reference.html#get()) 方法获取，通过 [`clear`](https://web.archive.org/web/20220820044725/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ref/Reference.html#clear()) 方法手动移除:
 
-```
+```java
 Object referent2 = weakReference1.get();
 weakReference1.clear(); 
 ```
 
 这种参考的安全工作模式与[软参考](/web/20220820044725/https://www.baeldung.com/java-soft-references)相同:
 
-```
+```java
 Object referent3 = weakReference2.get();
 if (referent3 != null) {
     // GC hasn't removed the instance yet

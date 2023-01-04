@@ -12,7 +12,7 @@
 
 要使用 Spring Data MongoDB 模块，我们需要添加以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-mongodb</artifactId>
@@ -24,7 +24,7 @@
 
 让我们定义一个名为`Action`(带有一个`ZonedDateTime`属性)的模型类:
 
-```
+```java
 @Document
 public class Action {
     @Id
@@ -39,13 +39,13 @@ public class Action {
 
 为了与 MongoDB 交互，我们还将创建一个扩展了`MongoRepository`的接口:
 
-```
+```java
 public interface ActionRepository extends MongoRepository<Action, String> { }
 ```
 
 现在我们将定义一个测试，将一个`Action`对象插入到 MongoDB 中，并断言它是以正确的时间存储的。在 assert 评估中，我们删除了纳秒信息，因为 MongoDB `Date`类型的精度是毫秒:
 
-```
+```java
 @Test
 public void givenSavedAction_TimeIsRetrievedCorrectly() {
     String id = "testId";
@@ -60,7 +60,7 @@ public void givenSavedAction_TimeIsRetrievedCorrectly() {
 
 开箱即用，当运行我们的测试时，我们将得到以下错误:
 
-```
+```java
 org.bson.codecs.configuration.CodecConfigurationException:
   Can't find a codec for class java.time.ZonedDateTime
 ```
@@ -73,7 +73,7 @@ org.bson.codecs.configuration.CodecConfigurationException:
 
 对于读取，我们将从一个`Date`对象转换成一个`ZonedDateTime`对象。在下一个例子中，我们使用`ZoneOffset.UTC`,因为`Date`对象不存储区域信息:
 
-```
+```java
 public class ZonedDateTimeReadConverter implements Converter<Date, ZonedDateTime> {
     @Override
     public ZonedDateTime convert(Date date) {
@@ -84,7 +84,7 @@ public class ZonedDateTimeReadConverter implements Converter<Date, ZonedDateTime
 
 然后，我们将从一个`ZonedDateTime`对象转换成一个`Date`对象。如果需要，我们可以将区域信息添加到另一个字段:
 
-```
+```java
 public class ZonedDateTimeWriteConverter implements Converter<ZonedDateTime, Date> {
     @Override
     public Date convert(ZonedDateTime zonedDateTime) {
@@ -97,7 +97,7 @@ public class ZonedDateTimeWriteConverter implements Converter<ZonedDateTime, Dat
 
 存储对象的简单打印如下所示:
 
-```
+```java
 Action{id='testId', description='click', time=2018-11-08T08:03:11.257Z}
 ```
 

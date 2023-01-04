@@ -21,7 +21,7 @@
 
 让我们定义一个简单的包含几个属性的`Person`类:
 
-```
+```java
 public class Person {
     private final String firstName;
     private final String middleName;
@@ -36,7 +36,7 @@ public class Person {
 
 考虑到这一点，我们将创建两个构造函数。第一个接受所有四个属性:
 
-```
+```java
 public Person(String firstName, String middleName, String lastName, int age) {
     this.firstName = firstName;
     this.middleName = middleName;
@@ -47,7 +47,7 @@ public Person(String firstName, String middleName, String lastName, int age) {
 
 第二个构造函数将接受三个必需的属性并省略可选字段:
 
-```
+```java
 public Person(String firstName, String lastName, int age) {
     this(firstName, null, lastName, age);
 }
@@ -61,7 +61,7 @@ public Person(String firstName, String lastName, int age) {
 
 让我们定义一个从上一节中创建的`Person`类继承而来的`Customer`类:
 
-```
+```java
 public class Customer extends Person {
     private final String loyaltyCardId;
 
@@ -71,7 +71,7 @@ public class Customer extends Person {
 
 它包含一个额外的属性。现在，让我们以类似于在`Person`类中的方式创建两个构造函数:
 
-```
+```java
 public Customer(String firstName, String lastName, int age, String loyaltyCardId) {
     this(firstName, null, lastName, age, loyaltyCardId);
 }

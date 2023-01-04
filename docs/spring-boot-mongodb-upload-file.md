@@ -12,7 +12,7 @@
 
 首先，我们将把`[spring-boot-starter-data-mongodb](https://web.archive.org/web/20220626211356/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-starter-data-mongodb)`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -29,7 +29,7 @@
 
 让我们从**MongoDB 属性**开始:
 
-```
+```java
 spring.data.mongodb.host=localhost
 spring.data.mongodb.port=27017
 spring.data.mongodb.database=springboot-mongo
@@ -37,7 +37,7 @@ spring.data.mongodb.database=springboot-mongo
 
 **我们还将设置 Servlet 多部分属性，以允许上传大文件:**
 
-```
+```java
 spring.servlet.multipart.max-file-size=256MB
 spring.servlet.multipart.max-request-size=256MB
 spring.servlet.multipart.enabled=true
@@ -49,7 +49,7 @@ spring.servlet.multipart.enabled=true
 
 这里，我们有一个简单的`Document`类— `Photo.` **我们将把我们的图像文件存储在一个`BSON` `Binary`** :
 
-```
+```java
 @Document(collection = "photos")
 public class Photo {
     @Id
@@ -63,7 +63,7 @@ public class Photo {
 
 我们会有一个简单的`PhotoRepository`:
 
-```
+```java
 public interface PhotoRepository extends MongoRepository<Photo, String> { }
 ```
 
@@ -72,7 +72,7 @@ public interface PhotoRepository extends MongoRepository<Photo, String> { }
 *   `addPhoto()` —将`Photo`上传到 MongoDB
 *   `getPhoto()` —检索具有给定 id 的`Photo`
 
-```
+```java
 @Service
 public class PhotoService {
 
@@ -98,7 +98,7 @@ public class PhotoService {
 
 首先，我们将定义一个简单的 DTO 来表示一个大文件:
 
-```
+```java
 public class Video {
     private String title;
     private InputStream stream;
@@ -107,7 +107,7 @@ public class Video {
 
 类似于`PhotoService`，我们将有一个带有两种方法的`VideoService`—`addVideo()`和`getVideo()`:
 
-```
+```java
 @Service
 public class VideoService {
 
@@ -148,7 +148,7 @@ public class VideoService {
 
 我们将定义`addPhoto()`方法来上传并创建一个新的`Photo`:
 
-```
+```java
 @PostMapping("/photos/add")
 public String addPhoto(@RequestParam("title") String title, 
   @RequestParam("image") MultipartFile image, Model model) 
@@ -160,7 +160,7 @@ public String addPhoto(@RequestParam("title") String title,
 
 我们还需要`getPhoto()`来检索具有给定 id 的照片:
 
-```
+```java
 @GetMapping("/photos/{id}")
 public String getPhoto(@PathVariable String id, Model model) {
     Photo photo = photoService.getPhoto(id);
@@ -179,7 +179,7 @@ public String getPhoto(@PathVariable String id, Model model) {
 
 这将有一个类似的方法`addVideo()`，上传一个`Video`到我们的 MongoDB:
 
-```
+```java
 @PostMapping("/videos/add")
 public String addVideo(@RequestParam("title") String title, 
   @RequestParam("file") MultipartFile file, Model model) throws IOException {
@@ -190,7 +190,7 @@ public String addVideo(@RequestParam("title") String title,
 
 这里我们用`getVideo()`来检索一个带有给定`id`的`Video`:
 
-```
+```java
 @GetMapping("/videos/{id}")
 public String getVideo(@PathVariable String id, Model model) throws Exception {
     Video video = videoService.getVideo(id);
@@ -202,7 +202,7 @@ public String getVideo(@PathVariable String id, Model model) throws Exception {
 
 我们还可以添加一个`streamVideo()`方法，该方法将从`Video` `InputStream`创建一个流 URL:
 
-```
+```java
 @GetMapping("/videos/stream/{id}")
 public void streamVideo(@PathVariable String id, HttpServletResponse response) throws Exception {
     Video video = videoService.getVideo(id);
@@ -215,7 +215,7 @@ public void streamVideo(@PathVariable String id, HttpServletResponse response) t
 最后，让我们看看我们的前端。
 让我们从`uploadPhoto.html`开始，它提供了一个简单的上传图片的表单:
 
-```
+```java
 <html>
 <body>
 <h1>Upload new Photo</h1>
@@ -230,7 +230,7 @@ public void streamVideo(@PathVariable String id, HttpServletResponse response) t
 
 接下来，我们将添加`photos.html`视图来显示我们的照片:
 
-```
+```java
 <html>
 <body>
     <h1>View Photo</h1>
@@ -242,7 +242,7 @@ public void streamVideo(@PathVariable String id, HttpServletResponse response) t
 
 类似地，我们用`uploadVideo.html`上传一个`Video`:
 
-```
+```java
 <html>
 <body>
 <h1>Upload new Video</h1>
@@ -257,7 +257,7 @@ public void streamVideo(@PathVariable String id, HttpServletResponse response) t
 
 和`videos.html`显示视频:
 
-```
+```java
 <html>
 <body>
     <h1>View Video</h1>

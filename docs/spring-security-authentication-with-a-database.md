@@ -16,7 +16,7 @@
 
 为了存储用户，我们将创建一个映射到数据库表的`User`实体，它具有以下属性:
 
-```
+```java
 @Entity
 public class User {
 
@@ -37,7 +37,7 @@ public class User {
 
 为了检索与用户名相关联的用户，我们将通过扩展`JpaRepository`接口使用`Spring Data`创建一个`DAO`类:
 
-```
+```java
 public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByUsername(String username);
@@ -52,7 +52,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 在这个方法中，我们使用`DAO`检索`User`对象，如果它存在，将它包装成一个 *MyUserPrincipal* 对象，它实现了`UserDetails`，并返回它:
 
-```
+```java
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
@@ -72,7 +72,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
 让我们如下定义 `MyUserPrincipal`类:
 
-```
+```java
 public class MyUserPrincipal implements UserDetails {
     private User user;
 
@@ -102,7 +102,7 @@ public class MyUserPrincipal implements UserDetails {
 
 另一方面，对于 XML 配置，我们需要定义一个类型为`MyUserDetailsService`的 bean，并将其注入到 Spring 的`authentication-provider` bean 中:
 
-```
+```java
 <bean id="myUserDetailsService" 
   class="org.baeldung.security.MyUserDetailsService"/>
 

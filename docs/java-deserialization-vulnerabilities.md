@@ -24,7 +24,7 @@ Java 广泛使用反序列化从输入源创建对象。
 
 这种情况的典型实现可能如下所示:
 
-```
+```java
 public class Thing implements Serializable {
     private static final long serialVersionUID = 0L;
 
@@ -44,7 +44,7 @@ public class Thing implements Serializable {
 
 当类具有通用的或松散定义的字段并使用反射来设置这些字段的属性时，类变得易受攻击:
 
-```
+```java
 public class BadThing implements Serializable {
     private static final long serialVersionUID = 0L;
 
@@ -73,7 +73,7 @@ public class BadThing implements Serializable {
 
 如果类`MyCustomAttackObject` 在系统的类路径中，上面的代码在执行时等效于下面的代码:
 
-```
+```java
 BadThing badThing = new BadThing();
 badThing.looselyDefinedThing = new MyCustomAttackObject();
 badThing.methodName = "methodThatTriggersAttack";
@@ -82,7 +82,7 @@ Method method = looselyDefinedThing.getClass().getMethod(methodName);
 method.invoke(methodName);
 ```
 
-```
+```java
 public class MyCustomAttackObject implements Serializable {
     public static void methodThatTriggersAttack() {
         try {

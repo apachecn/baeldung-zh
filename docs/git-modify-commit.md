@@ -12,13 +12,13 @@
 
 让我们用一个例子来试试*修正*选项。为了简单起见，让我们更新一个文件并用消息“Commit 1”进行提交。现在，让我们尝试使用*修改*选项来更新提交:
 
-```
+```java
 git commit --amend
 ```
 
 执行上面的命令会打开一个编辑器来包含更改。让我们更新提交消息并保存更改。关闭编辑器后，我们可以看到更新后的提交，如下所示:
 
-```
+```java
 [master c0bc5d3] Amended Commit 1
  Date: Wed Jun 29 22:41:08 2022 +0530
  1 file changed, 1 insertion(+), 1 deletion(-) 
@@ -26,7 +26,7 @@ git commit --amend
 
 在修改提交时，我们还可以包含分阶段的更改。让我们创建额外的更改，并使用 *amend* 选项将它们包含在最新的提交中，再次更改提交消息:
 
-```
+```java
 [master 0a1d571] Amended Commit 1 - Added new file
  Date: Wed Jun 29 22:41:08 2022 +0530
  2 files changed, 2 insertions(+), 1 deletion(-)
@@ -35,7 +35,7 @@ git commit --amend
 
 如果我们只想添加阶段化的更改而不更新提交消息，我们可以使用 *no-edit* 选项:
 
-```
+```java
 git commit --amend --no-edit
 ```
 
@@ -52,7 +52,7 @@ git commit --amend --no-edit
 
  **让我们尝试使用上面的命令更新我们示例中的提交历史。在这一步， *git 日志*显示了以下提交:
 
-```
+```java
 commit 5742fcbe1cb14a9c4f1425eea9032ffb4c6191e5 (HEAD -> master)
 Author: #####
 Date:   Fri Jul 1 08:11:52 2022 +0530
@@ -79,13 +79,13 @@ Date:   Wed Jun 29 22:41:08 2022 +0530
 
 让我们将上面的提交设置为新的基础:
 
-```
+```java
 git rebase -i 1376dc1182a798b16dc85239ec7382e8340d5267
 ```
 
 这将打开一个编辑器，我们可以在其中根据需要进行更改:
 
-```
+```java
 pick d5923e0 commit 2
 pick 080e3ec commit 3
 pick e9ed266 commit 4
@@ -119,7 +119,7 @@ pick 5742fcb commit 5
 
 现在，让我们尝试几个命令来更新 Git 历史:
 
-```
+```java
 reword d5923e0 commit 2-updated
 edit 080e3ec commit 3
 squash e9ed266 commit 4
@@ -128,7 +128,7 @@ drop 5742fcb commit 5
 
 在第一个命令之后，我们将看到输出:
 
-```
+```java
 [detached HEAD 178e8eb] commit 2-alter
  Date: Fri Jul 1 08:10:58 2022 +0530
  1 file changed, 1 insertion(+)
@@ -144,7 +144,7 @@ Once you are satisfied with your changes, run
 
 现在，正如 Git 输出中所指定的，我们执行*Git commit–amend*命令并做一些更改:
 
-```
+```java
 commit 3          
 # Please enter the commit message for your changes. Lines starting
 # with '#' will be ignored, and an empty message aborts the commit.
@@ -167,7 +167,7 @@ commit 3
 
 关闭编辑器后，我们得到以下输出:
 
-```
+```java
 [detached HEAD 9433120] commit 3 - updated
  Date: Fri Jul 1 08:11:18 2022 +0530
  2 files changed, 3 insertions(+), 1 deletion(-) 
@@ -179,7 +179,7 @@ commit 3
 
 我们的下一步涉及到用*提交 3* 挤压*提交 4* 的*和*，它打开了下面的编辑器:
 
-```
+```java
 # This is a combination of 2 commits.
 # This is the 1st commit message:
 commit 3 - updated
@@ -203,7 +203,7 @@ commit 4
 
 在上面的编辑器中添加修改后，我们得到下面的输出:
 
-```
+```java
 [detached HEAD 917c583] commit 3 - squashed with commit 4
 Date: Fri Jul 1 08:11:18 2022 +0530
 2 files changed, 3 insertions(+), 1 deletion(-)
@@ -216,7 +216,7 @@ Successfully rebased and updated refs/heads/master.
 
 执行上述步骤后，我们可以看到`git log`的输出如下:
 
-```
+```java
 commit 917c583d5bb02803ee43cf87a2143f201c97bbe8 (HEAD -> master)
 Author: #######
 Date:   Fri Jul 1 08:11:18 2022 +0530
@@ -244,7 +244,7 @@ Amended Commit 1 - Added new file
 
 让我们使用 *reflog* 命令来观察我们示例的 git 历史:
 
-```
+```java
 917c583 (HEAD -> master) [[email protected]](/web/20220810181114/https://www.baeldung.com/cdn-cgi/l/email-protection){0}: rebase -i (finish): returning to refs/heads/master
 917c583 (HEAD -> master) [[email protected]](/web/20220810181114/https://www.baeldung.com/cdn-cgi/l/email-protection){1}: rebase -i (squash): commit 3 - squashed with commit 4
 9433120 [[email protected]](/web/20220810181114/https://www.baeldung.com/cdn-cgi/l/email-protection){2}: commit (amend): commit 3 - updated

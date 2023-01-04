@@ -26,7 +26,7 @@
 
 首先，我们需要在我们的`pom.xml `文件中包含它的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.bitbucket.cowwoc</groupId>
     <artifactId>diff-match-patch</artifactId>
@@ -36,7 +36,7 @@
 
 然后，让我们考虑这个代码:
 
-```
+```java
 String text1 = "ABCDELMN";
 String text2 = "ABCFGLMN";
 DiffMatchPatch dmp = new DiffMatchPatch();
@@ -45,7 +45,7 @@ LinkedList<Diff> diff = dmp.diffMain(text1, text2, false);
 
 如果我们运行上面的代码——它产生了`text1`和`text2`之间的差异——打印变量`diff`将产生以下输出:
 
-```
+```java
 [Diff(EQUAL,"ABC"), Diff(DELETE,"DE"), Diff(INSERT,"FG"), Diff(EQUAL,"LMN")]
 ```
 
@@ -53,7 +53,7 @@ LinkedList<Diff> diff = dmp.diffMain(text1, text2, false);
 
 当运行`text2`和`text1,` 之间的 diff 时，我们将得到以下结果:
 
-```
+```java
 [Diff(EQUAL,"ABC"), Diff(DELETE,"FG"), Diff(INSERT,"DE"), Diff(EQUAL,"LMN")]
 ```
 
@@ -63,7 +63,7 @@ LinkedList<Diff> diff = dmp.diffMain(text1, text2, false);
 
 首先，我们将把 Apache Commons Lang 依赖关系添加到我们的`pom.xml `文件中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -73,19 +73,19 @@ LinkedList<Diff> diff = dmp.diffMain(text1, text2, false);
 
 然后，为了找出 Apache Commons 的两个文本之间的区别，我们可以调用`StringUtils#Difference`:
 
-```
+```java
 StringUtils.difference(text1, text2)
 ```
 
 产生的输出**将是一个简单的字符串**:
 
-```
+```java
 FGLMN
 ```
 
 而运行`text2`和`text1`之间的差异将返回:
 
-```
+```java
 DELMN
 ```
 
@@ -97,7 +97,7 @@ DELMN
 
 然后我们遍历列表，在列表的`n^(th)`元素和`n+1^(th)`元素之间执行 diff:
 
-```
+```java
 @Benchmark
 public int diffMatchPatch() {
     for (int i = 0; i < inputs.size() - 1; i++) {
@@ -107,7 +107,7 @@ public int diffMatchPatch() {
 }
 ```
 
-```
+```java
 @Benchmark
 public int stringUtils() {
     for (int i = 0; i < inputs.size() - 1; i++) {
@@ -119,7 +119,7 @@ public int stringUtils() {
 
 最后，让我们运行基准测试并比较这两个库:
 
-```
+```java
 Benchmark                                   Mode  Cnt    Score   Error  Units
 StringDiffBenchmarkUnitTest.diffMatchPatch  avgt   50  130.559 ± 1.501  ms/op
 StringDiffBenchmarkUnitTest.stringUtils     avgt   50    0.211 ± 0.003  ms/op

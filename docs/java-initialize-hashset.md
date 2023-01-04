@@ -24,7 +24,7 @@
 
 这里我们使用了内联创建的`List`:
 
-```
+```java
 Set<String> set = new HashSet<>(Arrays.asList("a", "b", "c"));
 ```
 
@@ -36,7 +36,7 @@ Set<String> set = new HashSet<>(Arrays.asList("a", "b", "c"));
 
 因此，根据我们需要初始化`Set`的频率，我们可以**尽量避免使用这种方法**:
 
-```
+```java
 Set<String> set = new HashSet<String>(){{
     add("a");
     add("b");
@@ -50,7 +50,7 @@ Java 的 **`Collections`实用程序**类提供了名为`singleton`的方法来�
 
 有些情况下，特别是在单元测试中，我们需要创建一个只有一个值的`Set`:
 
-```
+```java
 Set<String> set = Collections.singleton("a");
 ```
 
@@ -62,7 +62,7 @@ Set<String> set = Collections.singleton("a");
 
 **方法使用泛型**,所以我们可以传递任何类型的值:
 
-```
+```java
 public static final <T> Set<T> newHashSet(T... objs) {
     Set<T> set = new HashSet<T>();
     Collections.addAll(set, objs);
@@ -72,7 +72,7 @@ public static final <T> Set<T> newHashSet(T... objs) {
 
 下面是我们如何在代码中使用 utility 方法:
 
-```
+```java
 Set<String> set = newHashSet("a","b","c");
 ```
 
@@ -80,7 +80,7 @@ Set<String> set = newHashSet("a","b","c");
 
 随着 Java 8 中`Stream` API 的引入，我们有了额外的选项，如 **`Stream`与`Collectors`** :
 
-```
+```java
 Set<String> set = Stream.of("a", "b", "c")
   .collect(Collectors.toCollection(HashSet::new));
 ```
@@ -93,13 +93,13 @@ Set<String> set = Stream.of("a", "b", "c")
 
 Guava 为可变和不可变的`Set`对象提供了方便的方法:
 
-```
+```java
 Set<String> set = Sets.newHashSet("a", "b", "c");
 ```
 
 类似地，Guava 有一个用于创建**不可变`Set`实例**的实用程序类:
 
-```
+```java
 Set<String> set = ImmutableSet.of("a", "b", "c");
 ```
 

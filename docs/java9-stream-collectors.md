@@ -16,7 +16,7 @@ Java 8 中增加了 [`Collectors`](https://web.archive.org/web/20221115122557/ht
 
 `Collectors.filtering`采用过滤输入元素的函数和收集过滤元素的收集器:
 
-```
+```java
 @Test
 public void givenList_whenSatifyPredicate_thenMapValueWithOccurences() {
     List<Integer> numbers = List.of(1, 2, 3, 5, 5);
@@ -41,7 +41,7 @@ public void givenList_whenSatifyPredicate_thenMapValueWithOccurences() {
 
 让我们看看下面的模型类:
 
-```
+```java
 class Blog {
     private String authorName;
     private List<String> comments;
@@ -52,7 +52,7 @@ class Blog {
 
 `Collectors.flatMapping`让我们跳过中间收集，直接写入映射到由`Collectors.groupingBy`定义的组的单个容器:
 
-```
+```java
 @Test
 public void givenListOfBlogs_whenAuthorName_thenMapAuthorWithComments() {
     Blog blog1 = new Blog("1", "Nice", "Very Nice");

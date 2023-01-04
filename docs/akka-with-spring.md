@@ -32,7 +32,7 @@ Spring/Akka 集成的问题在于 Spring 中 bean 的管理和 Akka 中 actors �
 
 为了在我们的 Spring 项目中演示 Akka 的用法，我们需要一个最简单的 Spring 依赖——`spring-context`库和`akka-actor`库。可以将库版本提取到`pom`的`<properties>`部分:
 
-```
+```java
 <properties>
     <spring.version>4.3.1.RELEASE</spring.version>
     <akka.version>2.4.8</akka.version>
@@ -70,7 +70,7 @@ Spring/Akka 集成的问题在于 Spring 中 bean 的管理和 Akka 中 actors �
 
 让我们来看看:
 
-```
+```java
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class GreetingActor extends UntypedActor {
@@ -109,7 +109,7 @@ public class GreetingActor extends UntypedActor {
 
 `GreeterService`的实现非常简单，注意我们通过添加`@Component`注释(默认为`singleton`范围)将其定义为 Spring 管理的 bean:
 
-```
+```java
 @Component
 public class GreetingService {
 
@@ -127,7 +127,7 @@ public class GreetingService {
 
 因为这两个类是紧密耦合的，所以实现嵌套在`ExtensionId`类中的`Extension`类是有意义的:
 
-```
+```java
 public class SpringExtension 
   extends AbstractExtensionId<SpringExtension.SpringExt> {
 
@@ -170,7 +170,7 @@ public class SpringExtension
 
 您可能已经猜到，**不是直接实例化，而是总是从 Spring 的`ApplicationContext`** 中检索一个 actor 实例。因为我们已经将 actor 设为了一个`prototype`作用域的 bean，所以每次调用`produce`方法都将返回 actor 的一个新实例:
 
-```
+```java
 public class SpringActorProducer implements IndirectActorProducer {
 
     private ApplicationContext applicationContext;
@@ -202,7 +202,7 @@ public class SpringActorProducer implements IndirectActorProducer {
 
 我们只需要添加一个额外的 bean——`ActorSystem`实例——并在这个`ActorSystem`上初始化 Spring 扩展:
 
-```
+```java
 @Configuration
 @ComponentScan
 public class AppConfiguration {
@@ -224,7 +224,7 @@ public class AppConfiguration {
 
 为了测试一切是否正常，我们可以将`ActorSystem`实例注入到我们的代码中(或者是一些 Spring 管理的应用程序代码，或者是基于 Spring 的测试)，使用我们的扩展为一个 actor 创建一个`Props`对象，通过`Props`对象检索一个 actor 的引用，并尝试问候某人:
 
-```
+```java
 ActorRef greeter = system.actorOf(SPRING_EXTENSION_PROVIDER.get(system)
   .props("greetingActor"), "greeter");
 

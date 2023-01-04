@@ -20,7 +20,7 @@ Guava 18 增加了`MoreObjects`类，它包含了在`java.util.Objects`中没有
 
 假设我们有一个`User` 对象，它包含一些需要在调用`toString()`时写入的字段。我们可以使用`MoreObjects.toStringHelper(Object self)` 方法轻松做到这一点。
 
-```
+```java
 public class User {
 
     private long id;
@@ -43,7 +43,7 @@ public class User {
 
 这里我们使用了`toStringHelper(Object self)`方法。通过这个设置，我们可以创建一个示例用户来查看调用`toString()`时的输出。
 
-```
+```java
 User user = new User(12L, "John Doe");
 String userState = user.toString();
 // userState: User{ id=12,name=John Doe } 
@@ -53,7 +53,7 @@ String userState = user.toString();
 
 **T2`toStringHelper(Class<?> clazz)`**
 
-```
+```java
 @Override
 public String toString() {
     return MoreObjects.toStringHelper(User.class)
@@ -65,7 +65,7 @@ public String toString() {
 
 **T2`toStringHelper(String className)`**
 
-```
+```java
 @Override
 public String toString() {
     return MoreObjects.toStringHelper("User")
@@ -77,7 +77,7 @@ public String toString() {
 
 如果您在`User`类的扩展上调用`toString()`,这些方法之间的差异是显而易见的。例如，如果你有两种`User`:`Administrator`和`Player`，它们会产生不同的输出。
 
-```
+```java
 public class Player extends User {
     public Player(long id, String name) {
         super(id, name);
@@ -101,7 +101,7 @@ public class Administrator extends User {
 
 假设您有一个在上面的例子中定义的`User`对象的列表，并且您希望过滤该列表以仅包括 18 岁或以上的用户。
 
-```
+```java
 List<User> users = new ArrayList<>();
 users.add(new User(1L, "John", 45));
 users.add(new User(2L, "Michelle", 27));
@@ -123,7 +123,7 @@ List<String> results = FluentIterable.from(users)
 
 用这种方法。您可以从数组`Object`中创建一个`FluentIterable`。
 
-```
+```java
 User[] usersArray = { new User(1L, "John", 45), new User(2L, "Max", 15) } ;
 FluentIterable<User> users = FluentIterable.of(usersArray); 
 ```
@@ -134,7 +134,7 @@ FluentIterable<User> users = FluentIterable.of(usersArray);
 
 您可以通过向现有的`FluentIterable`添加更多元素来创建新的`FluentIterable`。
 
-```
+```java
 User[] usersArray = {new User(1L, "John", 45), new User(2L, "Max", 15)};
 
 FluentIterable<User> users = FluentIterable.of(usersArray).append(
@@ -149,7 +149,7 @@ FluentIterable<User> users = FluentIterable.of(usersArray).append(
 
 这个方法的行为与前面的例子相同，但是允许您将任何现有的`Iterable`实现的全部内容添加到一个`FluentIterable`中。
 
-```
+```java
 User[] usersArray = { new User(1L, "John", 45), new User(2L, "Max", 15) };
 
 List<User> usersList = new ArrayList<>();
@@ -164,7 +164,7 @@ FluentIterable<User> users = FluentIterable.of(usersArray).append(usersList);
 
 `FluentIterable.join(…)` 方法产生一个表示`FluentIterable`全部内容的`String`，由一个给定的`String`连接。
 
-```
+```java
 User[] usersArray = { new User(1L, "John", 45), new User(2L, "Max", 15) };
 FluentIterable<User> users = FluentIterable.of(usersArray);
 String usersString = users.join(Joiner.on("; ")); 
@@ -178,7 +178,7 @@ String usersString = users.join(Joiner.on("; "));
 
 `Hashing.crc32c`方法返回实现 [CRC32C 算法](https://web.archive.org/web/20221208143856/https://en.wikipedia.org/wiki/Cyclic_redundancy_check)的`HashFunction`。
 
-```
+```java
 int receivedData = 123;
 HashCode hashCode = Hashing.crc32c().hashInt(receivedData);
 // hashCode: 495be649
@@ -188,7 +188,7 @@ HashCode hashCode = Hashing.crc32c().hashInt(receivedData);
 
 这个方法返回一个新的`InetAddress`，它将比它的输入“小一”。
 
-```
+```java
 InetAddress address = InetAddress.getByName("127.0.0.5");
 InetAddress decrementedAddress = InetAddresses.decrement(address);
 // decrementedAddress: 127.0.0.4
@@ -200,7 +200,7 @@ InetAddress decrementedAddress = InetAddresses.decrement(address);
 
 在 Java 中，你可以使用多线程来执行工作。为此，Java 有`Thread`和`Runnable`类。
 
-```
+```java
 ConcurrentHashMap<String, Boolean> threadExecutions = new ConcurrentHashMap<>();
 Runnable logThreadRun = () -> threadExecutions.put(Thread.currentThread().getName(), true);
 
@@ -212,7 +212,7 @@ Boolean isThreadExecuted = threadExecutions.get("main");
 
 不出所料，`isThreadExecuted` 将是`true`。你也可以看到这个`Runnable`将只在`main` 线程中运行。如果要使用多线程，可以针对不同的目的使用不同的`Executors`。
 
-```
+```java
 ExecutorService executorService = Executors.newFixedThreadPool(2);
 executorService.submit(logThreadRun);
 executorService.submit(logThreadRun);
@@ -232,7 +232,7 @@ Guava 在其`MoreExecutors`类中提供了不同的方法。
 
 这是一个轻量级执行器，可以在调用`execute`方法的线程上运行任务。
 
-```
+```java
 Executor executor = MoreExecutors.directExecutor();
 executor.execute(logThreadRun);
 
@@ -246,7 +246,7 @@ Boolean isThreadExecuted = threadExecutions.get("main");
 
 这个`ExecutorService` 将在调用`execute()`方法的线程上运行任务。
 
-```
+```java
 ListeningExecutorService executor = MoreExecutors.newDirectExecutorService();
 executor.execute(logThreadRun); 
 ```

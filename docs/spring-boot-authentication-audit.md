@@ -10,7 +10,7 @@
 
 首先，我们需要将`spring-boot-starter-actuator`添加到我们的`pom.xml:`中
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-actuator</artifactId>
@@ -24,7 +24,7 @@
 
 要记录 Spring Boot 应用程序中的所有身份验证和授权尝试，我们可以用一个监听器方法定义一个 bean:
 
-```
+```java
 @Component
 public class LoginAttemptsLogger {
 
@@ -54,7 +54,7 @@ public class LoginAttemptsLogger {
 
 运行该应用程序的输出将如下所示:
 
-```
+```java
 Principal anonymousUser - AUTHORIZATION_FAILURE
   Remote IP address: 0:0:0:0:0:0:0:1
   Session Id: null
@@ -78,7 +78,7 @@ Principal user - AUTHENTICATION_SUCCESS
 
 让我们看一个例子，其中我们还公开了授权失败时访问的请求 URL:
 
-```
+```java
 @Component
 public class ExposeAttemptedPathAuthorizationAuditListener 
   extends AbstractAuthorizationAuditListener {
@@ -114,7 +114,7 @@ public class ExposeAttemptedPathAuthorizationAuditListener
 
 我们现在可以在我们的侦听器中记录请求 URL:
 
-```
+```java
 @Component
 public class LoginAttemptsLogger {
 
@@ -140,7 +140,7 @@ public class LoginAttemptsLogger {
 
 因此，输出现在包含请求的 URL:
 
-```
+```java
 Principal anonymousUser - AUTHORIZATION_FAILURE
   Remote IP address: 0:0:0:0:0:0:0:1
   Session Id: null
@@ -151,7 +151,7 @@ Principal anonymousUser - AUTHORIZATION_FAILURE
 
 如果您想测试它，请检查源代码并运行:
 
-```
+```java
 mvn clean spring-boot:run 
 ```
 
@@ -165,7 +165,7 @@ mvn clean spring-boot:run
 
 这将返回审计事件的 JSON 表示:
 
-```
+```java
 {
   "events": [
     {

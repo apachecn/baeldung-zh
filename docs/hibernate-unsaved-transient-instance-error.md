@@ -24,7 +24,7 @@
 
 首先，让我们创建一个`User`实体:
 
-```
+```java
 @Entity
 @Table(name = "user")
 public class User {
@@ -50,7 +50,7 @@ public class User {
 
 让我们创建相关的`Address`实体:
 
-```
+```java
 @Entity
 @Table(name = "address")
 public class Address {
@@ -77,7 +77,7 @@ public class Address {
 
 接下来，我们将添加一个单元测试来在数据库中保存一个`User `:
 
-```
+```java
 @Test
 public void whenSaveEntitiesWithOneToOneAssociation_thenSuccess() {
     User user = new User("Bob", "Smith");
@@ -93,7 +93,7 @@ public void whenSaveEntitiesWithOneToOneAssociation_thenSuccess() {
 
 现在，当我们运行上面的测试时，我们得到一个异常:
 
-```
+```java
 java.lang.IllegalStateException: org.hibernate.TransientObjectException: object references an unsaved transient instance - save the transient instance before flushing: com.baeldung.hibernate.exception.transientobject.entity.Address
 ```
 
@@ -103,7 +103,7 @@ java.lang.IllegalStateException: org.hibernate.TransientObjectException: object 
 
 最后，让我们更新`User `实体，并为`User-Address`关联使用一个合适的`CascadeType `:
 
-```
+```java
 @Entity
 @Table(name = "user")
 public class User {
@@ -125,7 +125,7 @@ public class User {
 
 首先，让我们创建一个`Employee` 实体:
 
-```
+```java
 @Entity
 @Table(name = "employee")
 public class Employee {
@@ -148,7 +148,7 @@ public class Employee {
 
 以及相关联的`Department`实体:
 
-```
+```java
 @Entity
 @Table(name = "department")
 public class Department {
@@ -175,7 +175,7 @@ public class Department {
 
 接下来，我们将添加一个单元测试来将一个`Employee`持久化到数据库中:
 
-```
+```java
 @Test
 public void whenPersistEntitiesWithOneToManyAssociation_thenSuccess() {
     Department department = new Department();
@@ -193,7 +193,7 @@ public void whenPersistEntitiesWithOneToManyAssociation_thenSuccess() {
 
 现在，当我们运行上面的测试时，我们得到一个异常:
 
-```
+```java
 java.lang.IllegalStateException: org.hibernate.TransientObjectException: object references an unsaved transient instance - save the transient instance before flushing: com.baeldung.hibernate.exception.transientobject.entity.Department
 ```
 
@@ -203,7 +203,7 @@ java.lang.IllegalStateException: org.hibernate.TransientObjectException: object 
 
 最后，让我们更新`Employee`实体，并为`Employee-Department`关联使用一个合适的`CascadeType `:
 
-```
+```java
 @Entity
 @Table(name = "employee")
 public class Employee {
@@ -218,7 +218,7 @@ public class Employee {
 
 让我们更新`Department`实体，为`Department-Employees`关联使用一个合适的`CascadeType `:
 
-```
+```java
 @Entity
 @Table(name = "department")
 public class Department {
@@ -241,7 +241,7 @@ public class Department {
 
 让我们创建一个`Book`实体:
 
-```
+```java
 @Entity
 @Table(name = "book")
 public class Book {
@@ -268,7 +268,7 @@ public class Book {
 
 让我们创建相关的`Author`实体:
 
-```
+```java
 @Entity
 @Table(name = "author")
 public class Author {
@@ -297,7 +297,7 @@ public class Author {
 
 接下来，让我们添加一些单元测试，分别在数据库中保存一个有多个作者的`Book`和一个有多个书籍的`Author`:
 
-```
+```java
 @Test
 public void whenSaveEntitiesWithManyToManyAssociation_thenSuccess_1() {
     Book book = new Book("Design Patterns: Elements of Reusable Object-Oriented Software");
@@ -329,7 +329,7 @@ public void whenSaveEntitiesWithManyToManyAssociation_thenSuccess_2() {
 
 现在，当我们运行上述测试时，我们分别得到以下异常:
 
-```
+```java
 java.lang.IllegalStateException: org.hibernate.TransientObjectException: object references an unsaved transient instance - save the transient instance before flushing: com.baeldung.hibernate.exception.transientobject.entity.Author
 
 java.lang.IllegalStateException: org.hibernate.TransientObjectException: object references an unsaved transient instance - save the transient instance before flushing: com.baeldung.hibernate.exception.transientobject.entity.Book
@@ -341,7 +341,7 @@ java.lang.IllegalStateException: org.hibernate.TransientObjectException: object 
 
 最后，让我们更新`Author`实体，并为`Author`的`-Book`关联使用适当的`CascadeType`:
 
-```
+```java
 @Entity
 @Table(name = "author")
 public class Author {
@@ -356,7 +356,7 @@ public class Author {
 
 类似地，让我们更新`Book`实体，并为`Book` s- `Author` s 关联使用适当的`CascadeType`:
 
-```
+```java
 @Entity
 @Table(name = "book")
 public class Book {

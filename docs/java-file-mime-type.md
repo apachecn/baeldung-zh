@@ -12,7 +12,7 @@
 
 让我们从 Java 7 开始——它提供了解析 MIME 类型的方法 [`Files.probeContentType(path)`](https://web.archive.org/web/20220913091603/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Files.html#probeContentType(java.nio.file.Path)) :
 
-```
+```java
 @Test
 public void whenUsingJava7_thenSuccess() {
     Path path = new File("product.png").toPath();
@@ -38,7 +38,7 @@ public void whenUsingJava7_thenSuccess() {
 
 我们可以使用`URLConnection`的`getContentType()`方法来检索文件的 MIME 类型:
 
-```
+```java
 @Test
 public void whenUsingGetContentType_thenSuccess(){
     File file = new File("product.png");
@@ -55,7 +55,7 @@ public void whenUsingGetContentType_thenSuccess(){
 
 接下来，让我们看看如何利用`guessContentTypeFromName()`来达到这个目的:
 
-```
+```java
 @Test
 public void whenUsingGuessContentTypeFromName_thenSuccess(){
     File file = new File("product.png");
@@ -73,7 +73,7 @@ public void whenUsingGuessContentTypeFromName_thenSuccess(){
 
 使用`URLConnection`获得 MIME 类型的一个更快的方法是使用`getFileNameMap()`方法:
 
-```
+```java
 @Test
 public void whenUsingGetFileNameMap_thenSuccess(){
     File file = new File("product.png");
@@ -90,7 +90,7 @@ public void whenUsingGetFileNameMap_thenSuccess(){
 
 默认情况下，**类使用`JRE_HOME/lib`中的`content-types.properties`** 文件。**然而，我们可以扩展它，通过使用`content.types.user.table `属性:**指定一个用户特定的表
 
-```
+```java
 System.setProperty("content.types.user.table","<path-to-file>"); 
 ```
 
@@ -100,7 +100,7 @@ System.setProperty("content.types.user.table","<path-to-file>");
 
 现在让我们看看如何使用它:
 
-```
+```java
 @Test
 public void whenUsingMimeTypesFileTypeMap_thenSuccess() {
     File file = new File("product.png");
@@ -129,7 +129,7 @@ jMimeMagic 是一个受限许可的库，我们可以用它来获取文件的 MI
 
 让我们从配置 Maven 依赖项开始:
 
-```
+```java
 <dependency>
     <groupId>net.sf.jmimemagic</groupId>
     <artifactId>jmimemagic</artifactId>
@@ -141,7 +141,7 @@ jMimeMagic 是一个受限许可的库，我们可以用它来获取文件的 MI
 
 接下来，我们将探索如何使用该库:
 
-```
+```java
 @Test    
 public void whenUsingJmimeMagic_thenSuccess() {
     File file = new File("product.png");
@@ -160,7 +160,7 @@ Apache Tika 是一个工具集，可以从各种文件中检测和提取元数�
 
 让我们从配置 Maven 依赖性开始:
 
-```
+```java
 <dependency>
     <groupId>org.apache.tika</groupId>
     <artifactId>tika-core</artifactId>
@@ -170,7 +170,7 @@ Apache Tika 是一个工具集，可以从各种文件中检测和提取元数�
 
 接下来，我们将利用`detect()` 方法来解析类型:
 
-```
+```java
 @Test
 public void whenUsingTika_thenSuccess() {
     File file = new File("product.png");

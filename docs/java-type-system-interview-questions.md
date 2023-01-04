@@ -82,7 +82,7 @@ Java 有 8 种基本类型:
 
 这里有一个内部类的例子——你可以看到它可以以`OuterClass1.this`构造的形式访问外部类实例的引用:
 
-```
+```java
 public class OuterClass1 {
 
     public class InnerClass {
@@ -98,7 +98,7 @@ public class OuterClass1 {
 
 要实例化这样的内部类，您需要有一个外部类的实例:
 
-```
+```java
 OuterClass1 outerClass1 = new OuterClass1();
 OuterClass1.InnerClass innerClass = outerClass1.new InnerClass();
 ```
@@ -107,7 +107,7 @@ OuterClass1.InnerClass innerClass = outerClass1.new InnerClass();
 
 实际上，这意味着该类可以作为任何其他类进行实例化，而无需绑定到封闭类的任何实例:
 
-```
+```java
 public class OuterClass2 {
 
     public static class StaticNestedClass {
@@ -118,7 +118,7 @@ public class OuterClass2 {
 
 要实例化这样的类，不需要外部类的实例:
 
-```
+```java
 OuterClass2.StaticNestedClass staticNestedClass = new OuterClass2.StaticNestedClass();
 ```
 
@@ -132,14 +132,14 @@ Java 不支持类的多重继承，这意味着一个类只能从一个超类继
 
 对于 Java 中的八种原语类型，都有一个包装器类，可以用来包装一个原语值，并像使用对象一样使用它。这些等级相应地是`Boolean`、`Byte`、`Short`、`Character`、`Float`、`Long`和`Double`。例如，当您需要将一个原始值放入一个只接受引用对象的泛型集合时，这些包装器会很有用。
 
-```
+```java
 List<Integer> list = new ArrayList<>();
 list.add(new Integer(5));
 ```
 
 为了省去手动来回转换原语的麻烦，Java 编译器提供了一种称为自动装箱/自动拆箱的自动转换。
 
-```
+```java
 List<Integer> list = new ArrayList<>();
 list.add(5);
 int value = list.get(0);
@@ -149,7 +149,7 @@ int value = list.get(0);
 
 ==运算符允许您比较两个对象的“相同性”(即两个变量都引用内存中的同一个对象)。重要的是要记住，`new`关键字总是创建一个新对象，它不会通过与任何其他对象的`==`相等，即使它们看起来具有相同的值:
 
-```
+```java
 String string1 = new String("Hello");
 String string2 = new String("Hello");
 
@@ -158,7 +158,7 @@ assertFalse(string1 == string2);
 
 另外，==运算符允许比较原始值:
 
-```
+```java
 int i1 = 5;
 int i2 = 5;
 
@@ -169,7 +169,7 @@ assertTrue(i1 == i2);
 
 例如，对于`String`类，该方法检查字符串是否包含相同的字符:
 
-```
+```java
 String string1 = new String("Hello");
 String string2 = new String("Hello");
 
@@ -182,7 +182,7 @@ assertTrue(string1.equals(string2));
 
 幸运的是，`Class`类有一个方法`isInstance`,允许检查一个对象是否是这个类的实例:
 
-```
+```java
 Class<?> integerClass = new Integer(5).getClass();
 assertTrue(integerClass.isInstance(new Integer(4)));
 ```
@@ -195,7 +195,7 @@ assertTrue(integerClass.isInstance(new Integer(4)));
 
 以下是创建和填充地图的方法:
 
-```
+```java
 Map<String, Integer> ages = new HashMap<String, Integer>(){{
     put("David", 30);
     put("John", 25);

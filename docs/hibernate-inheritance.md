@@ -27,7 +27,7 @@
 
 让我们首先创建一个代表父类的`Person`类:
 
-```
+```java
 @MappedSuperclass
 public class Person {
 
@@ -43,7 +43,7 @@ public class Person {
 
 接下来，让我们添加一个`Employee`子类:
 
-```
+```java
 @Entity
 public class MyEmployee extends Person {
     private String company;
@@ -61,7 +61,7 @@ public class MyEmployee extends Person {
 
 我们可以通过向超类添加`@Inheritance`注释来定义我们想要使用的策略:
 
-```
+```java
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class MyProduct {
@@ -77,14 +77,14 @@ public class MyProduct {
 
 然后我们可以添加子类实体:
 
-```
+```java
 @Entity
 public class Book extends MyProduct {
     private String author;
 }
 ```
 
-```
+```java
 @Entity
 public class Pen extends MyProduct {
     private String color;
@@ -99,7 +99,7 @@ public class Pen extends MyProduct {
 
 要定制鉴别器列，我们可以使用`@DiscriminatorColumn`注释:
 
-```
+```java
 @Entity(name="products")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="product_type", 
@@ -113,7 +113,7 @@ public class MyProduct {
 
 接下来，我们需要告诉 Hibernate 每个子类记录对`product_type`列有什么值:
 
-```
+```java
 @Entity
 @DiscriminatorValue("1")
 public class Book extends MyProduct {
@@ -121,7 +121,7 @@ public class Book extends MyProduct {
 }
 ```
 
-```
+```java
 @Entity
 @DiscriminatorValue("2")
 public class Pen extends MyProduct {
@@ -136,7 +136,7 @@ Hibernate 添加了注释可以采用的另外两个预定义值— `null`和`no
 
 除了列，我们还可以使用特定于 Hibernate 的`@DiscriminatorFormula`注释来确定不同的值:
 
-```
+```java
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorFormula("case when author is not null then 1 else 2 end")
@@ -153,7 +153,7 @@ public class MyProduct { ... }
 
 让我们创建一个使用这种策略的超类:
 
-```
+```java
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Animal {
@@ -167,7 +167,7 @@ public class Animal {
 
 然后我们可以简单地定义一个子类:
 
-```
+```java
 @Entity
 public class Pet extends Animal {
     private String name;
@@ -182,7 +182,7 @@ public class Pet extends Animal {
 
 要定制这个列，我们可以添加`@PrimaryKeyJoinColumn`注释:
 
-```
+```java
 @Entity
 @PrimaryKeyJoinColumn(name = "petId")
 public class Pet extends Animal {
@@ -202,7 +202,7 @@ public class Pet extends Animal {
 
 要使用这种策略，我们只需要向基类添加`@Inheritance`注释:
 
-```
+```java
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Vehicle {
@@ -227,7 +227,7 @@ public class Vehicle {
 
 让我们通过一个 JUnit 测试来看看这种行为:
 
-```
+```java
 @Test
 public void givenSubclasses_whenQuerySuperclass_thenOk() {
     Book book = new Book(1, "1984", "George Orwell");
@@ -246,7 +246,7 @@ Hibernate 还可以查询不是实体而是由实体类扩展或实现的接口�
 
 让我们用我们的`@MappedSuperclass`例子来看一个 JUnit 测试:
 
-```
+```java
 @Test
 public void givenSubclasses_whenQueryMappedSuperclass_thenOk() {
     MyEmployee emp = new MyEmployee(1, "john", "baeldung");
@@ -263,7 +263,7 @@ public void givenSubclasses_whenQueryMappedSuperclass_thenOk() {
 
 如果我们不想让这种类型的查询返回一个子类，我们只需要将 Hibernate `@Polymorphism`注释添加到它的定义中，类型为`EXPLICIT`:
 
-```
+```java
 @Entity
 @Polymorphism(type = PolymorphismType.EXPLICIT)
 public class Bag implements Item { ...}

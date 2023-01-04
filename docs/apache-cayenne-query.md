@@ -22,7 +22,7 @@
 
 让我们从简单的开始，看看我们如何能得到名字包含“Paul”的所有作者:
 
-```
+```java
 @Test
 public void whenContainsObjS_thenWeGetOneRecord() {
     List<Author> authors = ObjectSelect.query(Author.class)
@@ -35,7 +35,7 @@ public void whenContainsObjS_thenWeGetOneRecord() {
 
 接下来，让我们看看如何对作者姓名列应用不区分大小写的 LIKE 类型的查询:
 
-```
+```java
 @Test
 void whenLikeObjS_thenWeGetTwoAuthors() {
     List<Author> authors = ObjectSelect.query(Author.class)
@@ -48,7 +48,7 @@ void whenLikeObjS_thenWeGetTwoAuthors() {
 
 接下来，`endsWith()`表达式将只返回一条记录，因为只有一个作者有匹配的名字:
 
-```
+```java
 @Test
 void whenEndsWithObjS_thenWeGetOrderedAuthors() {
     List<Author> authors = ObjectSelect.query(Author.class)
@@ -63,7 +63,7 @@ void whenEndsWithObjS_thenWeGetOrderedAuthors() {
 
 一个更复杂的方法是查询名字在列表中的作者:
 
-```
+```java
 @Test
 void whenInObjS_thenWeGetAuthors() {
     List names = Arrays.asList(
@@ -79,7 +79,7 @@ void whenInObjS_thenWeGetAuthors() {
 
 `nin`一个是相反的，这里只有“Vicky”会出现在结果中:
 
-```
+```java
 @Test
 void whenNinObjS_thenWeGetAuthors() {
     List names = Arrays.asList(
@@ -96,12 +96,12 @@ void whenNinObjS_thenWeGetAuthors() {
 
 请注意，以下两个代码是相同的，因为它们都将使用相同的参数创建相同类型的表达式:
 
-```
+```java
 Expression qualifier = ExpressionFactory
   .containsIgnoreCaseExp(Author.NAME.getName(), "Paul");
 ```
 
-```
+```java
 Author.NAME.containsIgnoreCase("Paul");
 ```
 
@@ -132,7 +132,7 @@ Author.NAME.containsIgnoreCase("Paul");
 
 让我们应用一个 LIKE 查询来获取姓名为" Paul" **:** 的作者
 
-```
+```java
 @Test
 void whenLikeSltQry_thenWeGetOneAuthor() {
     Expression qualifier 
@@ -150,7 +150,7 @@ void whenLikeSltQry_thenWeGetOneAuthor() {
 
 可以使用`containsIgnoreCaseExp` 表达式执行一个类似的查询，以获得姓名中包含 Paul 的所有作者，而不考虑字母的大小写:
 
-```
+```java
 @Test
 void whenCtnsIgnorCaseSltQry_thenWeGetTwoAuthors() {
     Expression qualifier = ExpressionFactory
@@ -166,7 +166,7 @@ void whenCtnsIgnorCaseSltQry_thenWeGetTwoAuthors() {
 
 类似地，让我们以不区分大小写的方式(`containsIgnoreCaseExp`)获取姓名中包含“Paul”的作者，并且姓名以字母 h 结尾(`endsWithExp`):
 
-```
+```java
 @Test
 void whenCtnsIgnorCaseEndsWSltQry_thenWeGetTwoAuthors() {
     Expression qualifier = ExpressionFactory
@@ -186,7 +186,7 @@ void whenCtnsIgnorCaseEndsWSltQry_thenWeGetTwoAuthors() {
 
 可以使用`Ordering`类执行升序排序:
 
-```
+```java
 @Test
 void whenAscOrdering_thenWeGetOrderedAuthors() {
     SelectQuery query = new SelectQuery(Author.class);
@@ -202,13 +202,13 @@ void whenAscOrdering_thenWeGetOrderedAuthors() {
 
 这里不使用`query.addOrdering(Author.NAME.asc()),` ，我们也可以只使用`SortOrder` 类来获得升序:
 
-```
+```java
 query.addOrdering(Author.NAME.getName(), SortOrder.ASCENDING);
 ```
 
 相对来说，是降序排列:
 
-```
+```java
 @Test
 void whenDescOrderingSltQry_thenWeGetOrderedAuthors() {
     SelectQuery query = new SelectQuery(Author.class);
@@ -224,7 +224,7 @@ void whenDescOrderingSltQry_thenWeGetOrderedAuthors() {
 
 正如我们在前面的例子中看到的，设置这种顺序的另一种方法是:
 
-```
+```java
 query.addOrdering(Author.NAME.getName(), SortOrder.DESCENDING);
 ```
 
@@ -236,7 +236,7 @@ query.addOrdering(Author.NAME.getName(), SortOrder.DESCENDING);
 
 以下是我们在每次测试后删除所有作者的方法:
 
-```
+```java
 @After
 void deleteAllAuthors() {
     SQLTemplate deleteAuthors = new SQLTemplate(
@@ -247,7 +247,7 @@ void deleteAllAuthors() {
 
 要找到所有记录的作者，我们只需应用 SQL 查询`select * from Author` ，我们将直接看到结果是正确的，因为我们正好有三个保存的作者:
 
-```
+```java
 @Test
 void givenAuthors_whenFindAllSQLTmplt_thenWeGetThreeAuthors() {
     SQLTemplate select = new SQLTemplate(
@@ -260,7 +260,7 @@ void givenAuthors_whenFindAllSQLTmplt_thenWeGetThreeAuthors() {
 
 接下来，让我们来看看作者的名字“维姬·萨拉”:
 
-```
+```java
 @Test
 void givenAuthors_whenFindByNameSQLTmplt_thenWeGetOneAuthor() {
     SQLTemplate select = new SQLTemplate(
@@ -281,7 +281,7 @@ void givenAuthors_whenFindByNameSQLTmplt_thenWeGetOneAuthor() {
 
 首先，对所有已保存作者的搜索如下所示:
 
-```
+```java
 @Test
 void givenAuthors_whenFindAllEJBQL_thenWeGetThreeAuthors() {
     EJBQLQuery query = new EJBQLQuery("select a FROM Author a");
@@ -293,7 +293,7 @@ void givenAuthors_whenFindAllEJBQL_thenWeGetThreeAuthors() {
 
 让我们用名字“Vicky Sarra”再次搜索作者，但现在用`EJBQLQuery`:
 
-```
+```java
 @Test
 void givenAuthors_whenFindByNameEJBQL_thenWeGetOneAuthor() {
     EJBQLQuery query = new EJBQLQuery(
@@ -308,7 +308,7 @@ void givenAuthors_whenFindByNameEJBQL_thenWeGetOneAuthor() {
 
 一个更好的例子是更新作者:
 
-```
+```java
 @Test
 void whenUpdadingByNameEJBQL_thenWeGetTheUpdatedAuthor() {
     EJBQLQuery query = new EJBQLQuery(
@@ -333,7 +333,7 @@ void whenUpdadingByNameEJBQL_thenWeGetTheUpdatedAuthor() {
 
 一个简单的插入看起来像这样:
 
-```
+```java
 @Test
 void whenInsertingSQLExec_thenWeGetNewAuthor() {
     int inserted = SQLExec
@@ -346,7 +346,7 @@ void whenInsertingSQLExec_thenWeGetNewAuthor() {
 
 接下来，我们可以根据作者的名字更新他:
 
-```
+```java
 @Test
 void whenUpdatingSQLExec_thenItsUpdated() {
     int updated = SQLExec.query(

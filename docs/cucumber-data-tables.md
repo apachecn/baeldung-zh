@@ -12,7 +12,7 @@ Cucumber 是一个行为驱动开发(BDD)框架，允许开发人员使用 Gherk
 
 当定义[黄瓜场景](/web/20220525133902/https://www.baeldung.com/cucumber-scenario-outline)时，我们通常会注入场景其余部分使用的测试数据:
 
-```
+```java
 Scenario: Correct non-zero number of books found by author
   Given I have the a book in the store called The Devil in the White City by Erik Larson
   When I search for books by author Erik Larson
@@ -23,7 +23,7 @@ Scenario: Correct non-zero number of books found by author
 
 虽然内联数据足以满足一本书的需求，但是当添加多本书时，我们的场景会变得混乱。为了处理这个问题，我们在我们的场景中创建了一个数据表:
 
-```
+```java
 Scenario: Correct non-zero number of books found by author
   Given I have the following books in the store
     | The Devil in the White City          | Erik Larson |
@@ -43,7 +43,7 @@ Scenario: Correct non-zero number of books found by author
 
 当需要澄清时，**我们可以通过添加新的第一行**来包含标题:
 
-```
+```java
 Scenario: Correct non-zero number of books found by author
   Given I have the following books in the store
     | title                                | author      |
@@ -60,7 +60,7 @@ Scenario: Correct non-zero number of books found by author
 
 创建场景后，我们实现`Given`步骤定义。在步骤包含数据表的情况下，**我们用`DataTable`参数**实现我们的方法:
 
-```
+```java
 @Given("some phrase")
 public void somePhrase(DataTable table) {
     // ...
@@ -71,7 +71,7 @@ public void somePhrase(DataTable table) {
 
 为了演示每种技术，我们将使用一个简单的`Book`域类:
 
-```
+```java
 public class Book {
 
     private String title;
@@ -83,7 +83,7 @@ public class Book {
 
 此外，我们将创建一个管理`Book`对象的`BookStore`类:
 
-```
+```java
 public class BookStore {
 
     private List<Book> books = new ArrayList<>();
@@ -106,7 +106,7 @@ public class BookStore {
 
 对于以下每个场景，我们将从基本的步骤定义开始:
 
-```
+```java
 public class BookStoreRunSteps {
 
     private BookStore store;
@@ -126,7 +126,7 @@ public class BookStoreRunSteps {
 
 处理表格数据最基本的方法是将 *DataTable* 参数转换成一系列列表。我们可以创建一个没有标题的表格来演示:
 
-```
+```java
 Scenario: Correct non-zero number of books found by author by list
   Given I have the following books in the store by list
     | The Devil in the White City          | Erik Larson |
@@ -138,7 +138,7 @@ Scenario: Correct non-zero number of books found by author by list
 
 Cucumber 通过将每一行视为列值的列表来将上面的表转换成列表的列表。因此，Cucumber 将每一行解析成一个列表，第一个元素是书名，第二个元素是作者:
 
-```
+```java
 [
     ["The Devil in the White City", "Erik Larson"],
     ["The Lion, the Witch and the Wardrobe", "C.S. Lewis"],
@@ -148,7 +148,7 @@ Cucumber 通过将每一行视为列值的列表来将上面的表转换成列�
 
 我们使用`asLists`方法——提供一个`String.class`参数——将`DataTable`参数转换为`List<List<String>>`。**这个** **`Class`** **参数通知`asLists`** **方法我们期望每个元素是什么数据类型**。在我们的例子中，我们希望标题和作者是`String`值。因此，我们提供`String.class`:
 
-```
+```java
 @Given("^I have the following books in the store by list$")
 public void haveBooksInTheStoreByList(DataTable table) {
 
@@ -170,7 +170,7 @@ public void haveBooksInTheStoreByList(DataTable table) {
 
 在这种情况下，**我们必须为我们的表**提供一个标题:
 
-```
+```java
 Scenario: Correct non-zero number of books found by author by map
   Given I have the following books in the store by map
     | title                                | author      |
@@ -183,7 +183,7 @@ Scenario: Correct non-zero number of books found by author by map
 
 类似于列表的列表机制，Cucumber 创建了一个包含每一行的列表，但是**将列标题映射到每一列值**。Cucumber 对随后的每一行重复这个过程:
 
-```
+```java
 [
     {"title": "The Devil in the White City", "author": "Erik Larson"},
     {"title": "The Lion, the Witch and the Wardrobe", "author": "C.S. Lewis"},
@@ -195,7 +195,7 @@ Scenario: Correct non-zero number of books found by author by map
 
 然后我们迭代每个`Map`对象，并使用列标题作为键提取每个列值:
 
-```
+```java
 @Given("^I have the following books in the store by map$")
 public void haveBooksInTheStoreByMap(DataTable table) {
 
@@ -215,7 +215,7 @@ public void haveBooksInTheStoreByMap(DataTable table) {
 
 让我们来看一个示例场景:
 
-```
+```java
 Scenario: Correct non-zero number of books found by author with transformer
   Given I have the following books in the store with transformer
     | title                                | author      |
@@ -228,7 +228,7 @@ Scenario: Correct non-zero number of books found by author with transformer
 
 虽然映射列表及其键控列数据比列表更精确，但我们仍然用转换逻辑来混淆步骤定义。相反，**我们应该用期望的域对象(在本例中是一个`BookCatalog`)作为参数**来定义我们的步骤:
 
-```
+```java
 @Given("^I have the following books in the store with transformer$")
 public void haveBooksInTheStoreByTransformer(BookCatalog catalog) {
     store.addAllBooks(catalog.getBooks());
@@ -244,7 +244,7 @@ public void haveBooksInTheStoreByTransformer(BookCatalog catalog) {
 
 为了将`DataTable`捕获到可用的域对象中，我们将创建一个`BookCatalog`类:
 
-```
+```java
 public class BookCatalog {
 
     private List<Book> books = new ArrayList<>();
@@ -259,7 +259,7 @@ public class BookCatalog {
 
 为了执行转换，让我们实现`TypeRegistryConfigurer`接口:
 
-```
+```java
 public class BookStoreRegistryConfigurer implements TypeRegistryConfigurer {
 
     @Override
@@ -279,7 +279,7 @@ public class BookStoreRegistryConfigurer implements TypeRegistryConfigurer {
 
 然后为我们的`BookCatalog`类实现`TableTransformer`接口:
 
-```
+```java
  private static class BookTableTransformer implements TableTransformer<BookCatalog> {
 
         @Override

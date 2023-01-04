@@ -18,7 +18,7 @@
 
 首先，让我们检查默认行为:
 
-```
+```java
 @Test
 public void givenPostRequest_whenConsumingUrlWhichRedirects_thenNotRedirected() 
   throws ClientProtocolException, IOException {
@@ -36,7 +36,7 @@ public void givenPostRequest_whenConsumingUrlWhichRedirects_thenNotRedirected()
 
 在 HttpClient 4.3 中，为客户机的创建和配置引入了更高级别的 API:
 
-```
+```java
 @Test
 public void givenRedirectingPOST_whenConsumingUrlWhichRedirectsWithPOST_thenRedirected() 
   throws ClientProtocolException, IOException {
@@ -53,7 +53,7 @@ public void givenRedirectingPOST_whenConsumingUrlWhichRedirectsWithPOST_thenRedi
 
 在以前版本的 HttpClient (4.2)中，我们可以直接在客户机上配置重定向策略:
 
-```
+```java
 @SuppressWarnings("deprecation")
 @Test
 public void givenRedirectingPOST_whenConsumingUrlWhichRedirectsWithPOST_thenRedirected() 
@@ -72,7 +72,7 @@ public void givenRedirectingPOST_whenConsumingUrlWhichRedirectsWithPOST_thenRedi
 
 在 HttpClient 4.2 之前，`LaxRedirectStrategy`类并不存在，所以我们需要自己开发:
 
-```
+```java
 @Test
 public void givenRedirectingPOST_whenConsumingUrlWhichRedirectsWithPOST_thenRedirected() 
   throws ClientProtocolException, IOException {

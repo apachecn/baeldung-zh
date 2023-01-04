@@ -16,7 +16,7 @@ Java 中的多维数组是由不同大小的数组作为元素组成的数组。
 
 定义多维数组的一种简单方法是:
 
-```
+```java
 int[][] multiDimensionalArr = {{1, 2}, {3, 4, 5}, {6, 7, 8, 9}};
 ```
 
@@ -26,7 +26,7 @@ int[][] multiDimensionalArr = {{1, 2}, {3, 4, 5}, {6, 7, 8, 9}};
 
 我们首先声明一个大小为 3 的多维数组:
 
-```
+```java
 int[][] multiDimensionalArr = new int[3][];
 ```
 
@@ -34,7 +34,7 @@ int[][] multiDimensionalArr = new int[3][];
 
 接下来，让我们进一步声明和初始化`multiDimensionalArr`中的各个元素:
 
-```
+```java
 multiDimensionalArr[0] = new int[] {1, 2};
 multiDimensionalArr[1] = new int[] {3, 4, 5};
 multiDimensionalArr[2] = new int[] {6, 7, 8, 9};
@@ -42,7 +42,7 @@ multiDimensionalArr[2] = new int[] {6, 7, 8, 9};
 
 我们也可以简单地声明它的元素而不初始化它们:
 
-```
+```java
 multiDimensionalArr[0] = new int[2];
 multiDimensionalArr[1] = new int[3];
 multiDimensionalArr[2] = new int[4];
@@ -52,7 +52,7 @@ multiDimensionalArr[2] = new int[4];
 
 我们还可以使用`java.util.Arrays.fill` 方法来初始化数组元素:
 
-```
+```java
 void initialize2DArray(int[][] multiDimensionalArray) {
     for (int[] array : multiDimensionalArray) {
         Arrays.fill(array, 7);
@@ -82,7 +82,7 @@ void initialize2DArray(int[][] multiDimensionalArray) {
 
 让我们尝试使用用户输入来迭代和初始化`multiDimensionalArr`元素:
 
-```
+```java
 void initializeElements(int[][] multiDimensionalArr) {
     Scanner sc = new Scanner(System.in);
     for (int outer = 0; outer < multiDimensionalArr.length; outer++) {
@@ -105,7 +105,7 @@ void initializeElements(int[][] multiDimensionalArr) {
 
 我们的另一个选择是使用`java.util.Arrays.toString()`辅助方法:
 
-```
+```java
 void printElements(int[][] multiDimensionalArr) {
     for (int index = 0; index < multiDimensionalArr.length; index++) {
         System.out.println(Arrays.toString(multiDimensionalArr[index]));
@@ -115,7 +115,7 @@ void printElements(int[][] multiDimensionalArr) {
 
 最终我们得到了干净简单的代码。生成的控制台输出如下所示:
 
-```
+```java
 [1, 2] [3, 4, 5] [6, 7, 8, 9]
 ```
 
@@ -123,7 +123,7 @@ void printElements(int[][] multiDimensionalArr) {
 
 我们可以通过迭代主数组来找到多维数组中数组的长度:
 
-```
+```java
 int[] findLengthOfElements(int[][] multiDimensionalArray) {
     int[] arrayOfLengths = new int[multiDimensionalArray.length];
     for (int i = 0; i < multiDimensionalArray.length; i++) {
@@ -135,7 +135,7 @@ int[] findLengthOfElements(int[][] multiDimensionalArray) {
 
 我们还可以使用 Java 流找到数组的长度:
 
-```
+```java
 Integer[] findLengthOfArrays(int[][] multiDimensionalArray) {
     return Arrays.stream(multiDimensionalArray)
       .map(array -> array.length)
@@ -147,7 +147,7 @@ Integer[] findLengthOfArrays(int[][] multiDimensionalArray) {
 
 我们可以使用`Arrays.copyOf`方法复制一个二维数组:
 
-```
+```java
 int[][] copy2DArray(int[][] arrayOfArrays) {
     int[][] copied2DArray = new int[arrayOfArrays.length][];
     for (int i = 0; i < arrayOfArrays.length; i++) {
@@ -160,7 +160,7 @@ int[][] copy2DArray(int[][] arrayOfArrays) {
 
 我们也可以通过使用 Java 流来实现这一点:
 
-```
+```java
 Integer[][] copy2DArray(Integer[][] arrayOfArrays) {
     return Arrays.stream(arrayOfArrays)
       .map(array -> Arrays.copyOf(array, array.length))

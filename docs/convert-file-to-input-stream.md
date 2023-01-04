@@ -30,7 +30,7 @@ How to convert a byte[] to an InputStream using plain Java or Guava.[Read more](
 
 让我们从第一个也是最简单的**开始——使用`FileInputStream`T2:**
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenConvertingFileToInputStream_thenCorrect() 
   throws IOException {
@@ -43,7 +43,7 @@ public void givenUsingPlainJava_whenConvertingFileToInputStream_thenCorrect()
 
 让我们看看另一种方法，我们可以使用`DataInputStream`从文件中读取二进制或原始数据:
 
-```
+```java
 @Test
 public final void givenUsingPlainJava_whenConvertingFileToDataInputStream_thenCorrect() 
   throws IOException {
@@ -57,7 +57,7 @@ public final void givenUsingPlainJava_whenConvertingFileToDataInputStream_thenCo
 
 最后，让我们看看**如何使用`SequenceInputStream` 将两个文件的输入流连接成一个`InputStream`T3:**
 
-```
+```java
 @Test
 public final void givenUsingPlainJava_whenConvertingFileToSequenceInputStream_thenCorrect() 
   throws IOException {
@@ -77,7 +77,7 @@ public final void givenUsingPlainJava_whenConvertingFileToSequenceInputStream_th
 
 接下来，让我们看看**番石榴溶液**，使用一个中介`ByteSource`:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenConvertingFileToInputStream_thenCorrect() 
   throws IOException {
@@ -90,7 +90,7 @@ public void givenUsingGuava_whenConvertingFileToInputStream_thenCorrect()
 
 最后，让我们看一个使用 Apache Commons IO 的解决方案:
 
-```
+```java
 @Test
 public void givenUsingCommonsIO_whenConvertingFileToInputStream_thenCorrect() 
   throws IOException {

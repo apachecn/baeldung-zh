@@ -14,7 +14,7 @@
 
 首先，我们需要将 [`spring-security-oauth2-autoconfigure`](https://web.archive.org/web/20220628160531/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.security.oauth.boot%22%20AND%20a%3A%22spring-security-oauth2-autoconfigure%22) 依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.security.oauth.boot</groupId>
     <artifactId>spring-security-oauth2-autoconfigure</artifactId>
@@ -26,7 +26,7 @@
 
 接下来，让我们创建应用程序的安全配置:
 
-```
+```java
 @Configuration
 @EnableOAuth2Sso
 public class SecurityConfig 
@@ -54,7 +54,7 @@ public class SecurityConfig
 
 虽然默认情况下 Spring 为我们创建了大部分组件，但是我们仍然需要配置一些属性:
 
-```
+```java
 security.oauth2.client.client-id=89a7c4facbb3434d599d
 security.oauth2.client.client-secret=9b3b08e4a340bd20e866787e4645b54f73d74b6a
 security.oauth2.client.access-token-uri=https://github.com/login/oauth/access_token
@@ -92,7 +92,7 @@ security.oauth2.resource.user-info-uri=https://api.github.com/user
 
 对于我们的应用程序的`Principal`,我们将简单地使用用户的 Github 用户名:
 
-```
+```java
 public class GithubPrincipalExtractor 
   implements PrincipalExtractor {
 
@@ -105,7 +105,7 @@ public class GithubPrincipalExtractor
 
 根据我们用户的 Github 订阅——免费或不免费——我们会给他们一个`GITHUB_USER_SUBSCRIBED`或`GITHUB_USER_FREE`权限:
 
-```
+```java
 public class GithubAuthoritiesExtractor 
   implements AuthoritiesExtractor {
     List<GrantedAuthority> GITHUB_FREE_AUTHORITIES
@@ -133,7 +133,7 @@ public class GithubAuthoritiesExtractor
 
 然后，我们还需要使用这些类创建 beans:
 
-```
+```java
 @Configuration
 @EnableOAuth2Sso
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -162,7 +162,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 让我们更改我们的应用程序，使用本文中[描述的授权服务器来验证我们的用户:](/web/20220628160531/https://www.baeldung.com/sso-spring-security-oauth2)
 
-```
+```java
 security.oauth2.client.client-id=SampleClientId
 security.oauth2.client.client-secret=secret
 security.oauth2.client.access-token-uri=http://localhost:8081/auth/oauth/token
@@ -172,7 +172,7 @@ security.oauth2.resource.user-info-uri=http://localhost:8081/auth/user/me
 
 现在我们指向我们的授权服务器，我们需要创建两个提取器；在这种情况下，我们的`PrincipalExtractor`将使用`name`键从`Map`中提取`Principal`:
 
-```
+```java
 public class BaeldungPrincipalExtractor 
   implements PrincipalExtractor {
 
@@ -187,7 +187,7 @@ public class BaeldungPrincipalExtractor
 
 因此，我们将提取并丰富它们:
 
-```
+```java
 public class BaeldungAuthoritiesExtractor 
   implements AuthoritiesExtractor {
 
@@ -213,7 +213,7 @@ public class BaeldungAuthoritiesExtractor
 
 然后我们将豆子添加到我们的`SecurityConfig`类中:
 
-```
+```java
 @Configuration
 @EnableOAuth2Sso
 public class SecurityConfig extends WebSecurityConfigurerAdapter {

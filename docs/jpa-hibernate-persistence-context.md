@@ -41,7 +41,7 @@ Hibernate 等持久性提供者利用持久性上下文来管理应用程序中�
 
 **默认持久上下文类型 `is` `PersistenceContextType.TRANSACTION`。**为了告诉`EntityManager`使用事务持久性上下文，我们简单地用`@PersistenceContext`对其进行注释:
 
-```
+```java
 @PersistenceContext
 private EntityManager entityManager;
 ```
@@ -54,7 +54,7 @@ private EntityManager entityManager;
 
 为了告诉`EntityManager`使用扩展范围的持久性上下文，我们需要应用`@PersistenceContext`的`type`属性:
 
-```
+```java
 @PersistenceContext(type = PersistenceContextType.EXTENDED)
 private EntityManager entityManager;
 ```
@@ -69,7 +69,7 @@ private EntityManager entityManager;
 
 首先，让我们创建我们的服务类，`TransctionPersistenceContextUserService`:
 
-```
+```java
 @Component
 public class TransctionPersistenceContextUserService {
 
@@ -95,7 +95,7 @@ public class TransctionPersistenceContextUserService {
 
 下一个类`ExtendedPersistenceContextUserService`与上面的非常相似，除了`@PersistenceContext` 注释。这次我们将`PersistenceContextType.EXTENDED` 传递到其`@PersistenceContext`注释的`type`参数中:
 
-```
+```java
 @Component
 public class ExtendedPersistenceContextUserService {
 
@@ -114,7 +114,7 @@ public class ExtendedPersistenceContextUserService {
 
 让我们使用事务范围的持久化上下文来持久化一个`User`实体。实体将被保存在永久存储器中。然后，我们通过使用扩展持久性上下文的`EntityManager`进行 find 调用来进行验证:
 
-```
+```java
 User user = new User(121L, "Devender", "admin");
 transctionPersistenceContext.insertWithTransaction(user);
 
@@ -129,7 +129,7 @@ assertNotNull(userFromExtendedPersistenceContext);
 
 当我们试图插入一个没有事务的`User`实体时，那么`TransactionRequiredException` 将被抛出:
 
-```
+```java
 @Test(expected = TransactionRequiredException.class)
 public void testThatUserSaveWithoutTransactionThrowException() {
     User user = new User(122L, "Devender", "admin");
@@ -141,7 +141,7 @@ public void testThatUserSaveWithoutTransactionThrowException() {
 
 接下来，让我们用扩展的持久化上下文持久化用户，并且不使用事务。`User`实体将保存在持久上下文(缓存)中，但不保存在持久存储中:
 
-```
+```java
 User user = new User(123L, "Devender", "admin");
 extendedPersistenceContext.insertWithoutTransaction(user);
 
@@ -156,7 +156,7 @@ assertNull(userFromTransctionPersistenceContext);
 
 在任何持久性实体标识的持久性上下文中，都有一个唯一的实体实例。如果我们试图持久化另一个具有相同标识符的实体:
 
-```
+```java
 @Test(expected = EntityExistsException.class)
 public void testThatPersistUserWithSameIdentifierThrowException() {
     User user1 = new User(126L, "Devender", "admin");
@@ -168,7 +168,7 @@ public void testThatPersistUserWithSameIdentifierThrowException() {
 
 我们会看到`EntityExistsException`:
 
-```
+```java
 javax.persistence.EntityExistsException: 
 A different object with the same identifier value
 was already associated with the session
@@ -176,7 +176,7 @@ was already associated with the session
 
 事务中的扩展持久性上下文在事务结束时将实体保存在持久性存储中:
 
-```
+```java
 User user = new User(127L, "Devender", "admin");
 extendedPersistenceContext.insertWithTransaction(user);
 
@@ -186,7 +186,7 @@ assertNotNull(userFromDB);
 
 当在事务中使用时，扩展持久上下文**将缓存的实体刷新到持久存储中。首先，我们在没有事务的情况下持久化实体。接下来，我们在事务中持久化另一个实体:**
 
-```
+```java
 User user1 = new User(124L, "Devender", "admin");
 extendedPersistenceContext.insertWithoutTransaction(user1);
 

@@ -28,7 +28,7 @@
 
 定义单个参数的约束很简单。**我们只需根据需要为每个参数添加注释**:
 
-```
+```java
 public void createReservation(@NotNull @Future LocalDate begin,
   @Min(1) int duration, @NotNull Customer customer) {
 
@@ -38,7 +38,7 @@ public void createReservation(@NotNull @Future LocalDate begin,
 
 同样，我们可以对构造函数使用相同的方法:
 
-```
+```java
 public class Customer {
 
     public Customer(@Size(min = 5, max = 200) @NotNull String firstName, 
@@ -67,7 +67,7 @@ public class Customer {
 
 与单参数约束相反，**交叉参数约束是在方法或构造函数**上声明的:
 
-```
+```java
 @ConsistentDateParameters
 public void createReservation(LocalDate begin, 
   LocalDate end, Customer customer) {
@@ -82,7 +82,7 @@ public void createReservation(LocalDate begin,
 
 首先，我们需要**定义约束注释**:
 
-```
+```java
 @Constraint(validatedBy = ConsistentDateParameterValidator.class)
 @Target({ METHOD, CONSTRUCTOR })
 @Retention(RUNTIME)
@@ -108,7 +108,7 @@ public @interface ConsistentDateParameters {
 
 之后，我们可以定义验证器类:
 
-```
+```java
 @SupportedValidationTarget(ValidationTarget.PARAMETERS)
 public class ConsistentDateParameterValidator 
   implements ConstraintValidator<ConsistentDateParameters, Object[]> {
@@ -146,7 +146,7 @@ public class ConsistentDateParameterValidator
 
 以下示例使用内置约束:
 
-```
+```java
 public class ReservationManagement {
 
     @NotNull
@@ -166,7 +166,7 @@ public class ReservationManagement {
 
 在某些情况下，我们可能还需要验证复杂的对象:
 
-```
+```java
 public class ReservationManagement {
 
     @ValidReservation
@@ -180,7 +180,7 @@ public class ReservationManagement {
 
 同样，**我们首先必须定义约束注释**:
 
-```
+```java
 @Constraint(validatedBy = ValidReservationValidator.class)
 @Target({ METHOD, CONSTRUCTOR })
 @Retention(RUNTIME)
@@ -197,7 +197,7 @@ public @interface ValidReservation {
 
 之后，我们定义验证器类:
 
-```
+```java
 public class ValidReservationValidator
   implements ConstraintValidator<ValidReservation, Reservation> {
 
@@ -231,7 +231,7 @@ public class ValidReservationValidator
 
 正如我们之前在`ValidReservation`接口中将`METHOD`和`CONSTRUCTOR`定义为`target`一样，**我们也可以注释`Reservation`的构造函数来验证构造的实例**:
 
-```
+```java
 public class Reservation {
 
     @ValidReservation
@@ -258,7 +258,7 @@ public class Reservation {
 
 让我们假设我们有一个带有一些属性约束的`Customer`类:
 
-```
+```java
 public class Customer {
 
     @Size(min = 5, max = 200)
@@ -273,7 +273,7 @@ public class Customer {
 
 一个`Reservation`类可能有一个`Customer`属性，以及更多带有约束的属性:
 
-```
+```java
 public class Reservation {
 
     @Valid
@@ -288,7 +288,7 @@ public class Reservation {
 
 如果我们现在引用`Reservation`作为方法参数，**我们可以强制递归验证所有属性**:
 
-```
+```java
 public void createNewCustomer(@Valid Reservation reservation) {
     // ...
 }
@@ -301,7 +301,7 @@ public void createNewCustomer(@Valid Reservation reservation) {
 
 这也适用于返回类型为 *Reservation* 的对象的方法:
 
-```
+```java
 @Valid
 public Reservation getReservationById(int id) {
     return null;
@@ -322,7 +322,7 @@ Spring Validation 提供了与 Hibernate Validator 的集成。
 
 **首先，我们要用`@Validated`** 对需要验证的 beans 进行注释:
 
-```
+```java
 @Validated
 public class ReservationManagement {
 
@@ -342,7 +342,7 @@ public class ReservationManagement {
 
 **其次，我们要提供一个`MethodValidationPostProcessor` bean:**
 
-```
+```java
 @Configuration
 @ComponentScan({ "org.baeldung.javaxval.methodvalidation.model" })
 public class MethodValidationConfig {
@@ -370,7 +370,7 @@ public class MethodValidationConfig {
 
 我们可以使用以下代码检索实例:
 
-```
+```java
 ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 ExecutableValidator executableValidator = factory.getValidator().forExecutables();
 ```
@@ -382,7 +382,7 @@ ExecutableValidator 提供了四种方法:
 
 验证我们的第一个方法`createReservation()`的参数如下所示:
 
-```
+```java
 ReservationManagement object = new ReservationManagement();
 Method method = ReservationManagement.class
   .getMethod("createReservation", LocalDate.class, int.class, Customer.class);

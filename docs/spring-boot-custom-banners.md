@@ -28,13 +28,13 @@
 
 这里要注意的一点是，`banner.txt`是默认的预期标题文件名，这是 Spring Boot 使用的。然而，如果我们想为横幅选择任何其他位置或其他名称，我们需要在`application.properties`文件中设置`spring.banner.location`属性:
 
-```
+```java
 spring.banner.location=classpath:/path/to/banner/bannername.txt
 ```
 
 我们也可以使用图像作为横幅。与`banner.txt`相同，Spring Boot 希望横幅图像的名称为`banner.gif`。此外，我们可以设置不同的图像属性，如高度、宽度等。在`application.properties`:
 
-```
+```java
 spring.banner.image.location=classpath:banner.gif
 spring.banner.image.width=  //TODO
 spring.banner.image.height= //TODO

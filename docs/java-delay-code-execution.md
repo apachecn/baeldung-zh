@@ -16,7 +16,7 @@ Java 程序在其操作中添加延迟或暂停是相对常见的。这对于任
 
 在 Java 中，暂停的一种快速而肮脏的方法是告诉当前线程休眠一段指定的时间。这可以通过使用`Thread.sleep(milliseconds)`来完成:
 
-```
+```java
 try {
     Thread.sleep(secondsToSleep * 1000);
 } catch (InterruptedException ie) {
@@ -30,7 +30,7 @@ try {
 
 **为了更好的可读性，我们可以使用`TimeUnit.XXX.sleep(y)`，其中`XXX`是睡眠的时间单位(`SECONDS`、`MINUTES`等)。)，而`y`是该单元的睡眠数。**这个在幕后使用`Thread.sleep`。下面是一个`TimeUnit`语法的例子:
 
-```
+```java
 try {
     TimeUnit.SECONDS.sleep(secondsToSleep);
 } catch (InterruptedException ie) {
@@ -49,7 +49,7 @@ Java 提供了 [`ScheduledExecutorService`](/web/20221126232147/https://www.bael
 
 要在延迟后运行一段代码，我们可以使用`schedule` 方法:
 
-```
+```java
 ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
 executorService.schedule(Classname::someTask, delayInSeconds, TimeUnit.SECONDS);
@@ -62,7 +62,7 @@ executorService.schedule(Classname::someTask, delayInSeconds, TimeUnit.SECONDS);
 
 要以固定的时间间隔运行任务，我们可以使用`scheduleAtFixedRate`方法:
 
-```
+```java
 ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
 executorService.scheduleAtFixedRate(Classname::someTask, 0, delayInSeconds, TimeUnit.SECONDS);

@@ -30,7 +30,7 @@
 
 为了避免文件路径上的任何混乱，让我们获得用户主目录的句柄，这在所有操作系统中都是有效的:
 
-```
+```java
 private static String HOME = System.getProperty("user.home");
 ```
 
@@ -38,7 +38,7 @@ private static String HOME = System.getProperty("user.home");
 
 首先，如果我们希望**创建一个新文件，如果它不存在，我们可以使用选项`CREATE`** :
 
-```
+```java
 @Test
 public void givenExistingPath_whenCreateNewFile_thenCorrect() throws IOException {
     assertFalse(Files.exists(Paths.get(HOME, "newfile.txt")));
@@ -51,7 +51,7 @@ public void givenExistingPath_whenCreateNewFile_thenCorrect() throws IOException
 
 其次，如果我们想让**打开文件进行读取，我们可以使用`newInputStream(Path, OpenOption.`** ..)方法。此方法打开文件进行读取，并返回输入流:
 
-```
+```java
 @Test
 public void givenExistingPath_whenReadExistingFile_thenCorrect() throws IOException {
     Path path = Paths.get(HOME, DUMMY_FILE_NAME);
@@ -73,7 +73,7 @@ public void givenExistingPath_whenReadExistingFile_thenCorrect() throws IOExcept
 
 让我们打开一个现有文件并添加一些数据:
 
-```
+```java
 @Test
 public void givenExistingPath_whenWriteToExistingFile_thenCorrect() throws IOException {
     Path path = Paths.get(HOME, DUMMY_FILE_NAME);
@@ -92,7 +92,7 @@ public void givenExistingPath_whenWriteToExistingFile_thenCorrect() throws IOExc
 
 让我们创建一个稀疏文件:
 
-```
+```java
 @Test
 public void givenExistingPath_whenCreateSparseFile_thenCorrect() throws IOException {
     Path path = Paths.get(HOME, "sparse.txt");
@@ -106,7 +106,7 @@ public void givenExistingPath_whenCreateSparseFile_thenCorrect() throws IOExcept
 
 让我们在文件中添加一些数据，并使用选项`SYNC`:
 
-```
+```java
 @Test
 public void givenExistingPath_whenWriteAndSync_thenCorrect() throws IOException {
     Path path = Paths.get(HOME, DUMMY_FILE_NAME);
@@ -122,7 +122,7 @@ enum 还提供了一个有用的选项，让我们能够在关闭流后销毁文
 
 让我们将一些数据添加到我们的文件中，并且**使用选项`DELETE_ON_CLOSE`** :
 
-```
+```java
 @Test
 public void givenExistingPath_whenDeleteOnClose_thenCorrect() throws IOException {
     Path path = Paths.get(HOME, EXISTING_FILE_NAME);

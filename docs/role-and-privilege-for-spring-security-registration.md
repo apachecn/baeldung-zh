@@ -30,7 +30,7 @@ A short example of redirection after login in Spring Security[Read more](/web/20
 
 下面是**用户**:
 
-```
+```java
 @Entity
 public class User {
 
@@ -60,7 +60,7 @@ public class User {
 
 接下来是**这个角色**:
 
-```
+```java
 @Entity
 public class Role {
 
@@ -85,7 +85,7 @@ public class Role {
 
 最后，我们来看看**的特权**:
 
-```
+```java
 @Entity
 public class Privilege {
 
@@ -108,7 +108,7 @@ public class Privilege {
 
 我们将它与应用程序的启动联系起来，我们将在`ContextRefreshedEvent`上使用一个`ApplicationListener`来在服务器启动时加载我们的初始数据:
 
-```
+```java
 @Component
 public class SetupDataLoader implements
   ApplicationListener<ContextRefreshedEvent> {
@@ -202,7 +202,7 @@ public class SetupDataLoader implements
 
 我们将看到如何在我们的自定义`UserDetailsService`中检索用户，以及如何从用户分配的角色和特权中映射正确的权限集:
 
-```
+```java
 @Service("userDetailsService")
 @Transactional
 public class MyUserDetailsService implements UserDetailsService {
@@ -290,7 +290,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
 让我们在 Spring Security 中通过简单地公开一个类型为`RoleHierarchy`的 bean 来创建这个层次结构:
 
-```
+```java
 @Bean
 public RoleHierarchy roleHierarchy() {
     RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
@@ -304,7 +304,7 @@ public RoleHierarchy roleHierarchy() {
 
 最后，为了在`Spring Web Expressions`中包含这个角色层次，我们将`roleHierarchy` 实例添加到`WebSecurityExpressionHandler`中:
 
-```
+```java
 @Bean
 public DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {
     DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
@@ -323,7 +323,7 @@ public DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {
 
 现在，让我们来看看在注册新用户时需要如何做:
 
-```
+```java
 @Override
 public User registerNewUserAccount(UserDto accountDto) throws EmailExistsException {
 

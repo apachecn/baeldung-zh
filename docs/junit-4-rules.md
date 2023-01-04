@@ -33,7 +33,7 @@
 
 首先，让我们添加例子中需要的项目依赖项。我们只需要主要的 JUnit 4 库:
 
-```
+```java
 <dependency>
     <groupId>junit</groupId>
     <artifactId>junit</artifactId>
@@ -53,7 +53,7 @@
 
 测试时，我们经常需要访问一个临时文件或文件夹。然而，管理这些文件的创建和删除可能很麻烦。使用`TemporaryFolder`规则，我们可以管理当测试方法终止时应该被删除的文件和文件夹的创建:
 
-```
+```java
 @Rule
 public TemporaryFolder tmpFolder = new TemporaryFolder();
 
@@ -73,19 +73,19 @@ public void givenTempFolderRule_whenNewFile_thenFileIsCreated() throws IOExcepti
 
 本课程中还有一些其他有趣的方法值得一提:
 
-*   ```
+*   ```java
     newFile()
     ```
 
     如果我们不提供任何文件名，那么这个方法会创建一个随机命名的新文件。
 
-*   ```
+*   ```java
     newFolder(String... folderNames)
     ```
 
     为了递归地创建深层临时文件夹，我们可以使用这个方法。
 
-*   ```
+*   ```java
     newFolder()
     ```
 
@@ -93,7 +93,7 @@ public void givenTempFolderRule_whenNewFile_thenFileIsCreated() throws IOExcepti
 
 值得一提的是，从 4.13 版本开始，`TemporaryFolder`规则允许验证删除的资源:
 
-```
+```java
 @Rule 
 public TemporaryFolder folder = TemporaryFolder.builder().assureDeletion().build();
 ```
@@ -106,7 +106,7 @@ public TemporaryFolder folder = TemporaryFolder.builder().assureDeletion().build
 
 顾名思义，**我们可以使用`ExpectedException`规则来验证某些代码抛出了预期的[异常](/web/20221206001420/https://www.baeldung.com/java-exceptions) :**
 
-```
+```java
 @Rule
 public final ExpectedException thrown = ExpectedException.none();
 
@@ -130,7 +130,7 @@ public void givenIllegalArgument_whenExceptionThrown_MessageAndCauseMatches() {
 
 **简单地说，`TestName`规则提供了给定测试方法中的当前测试名称:**
 
-```
+```java
 @Rule public TestName name = new TestName();
 
 @Test
@@ -142,7 +142,7 @@ public void givenAddition_whenPrintingTestName_thenTestNameIsDisplayed() {
 
 在这个简单的例子中，当我们运行单元测试时，我们应该在输出中看到测试名称:
 
-```
+```java
 INFO  c.baeldung.rules.JUnitRulesUnitTest - 
     Executing: givenAddition_whenPrintingTestName_thenTestNameIsDisplayed
 ```
@@ -153,7 +153,7 @@ INFO  c.baeldung.rules.JUnitRulesUnitTest -
 
 现在，让我们看看如何使用这个规则在测试类中的所有测试方法上设置一个全局超时:
 
-```
+```java
 @Rule
 public Timeout globalTimeout = Timeout.seconds(10);
 
@@ -167,7 +167,7 @@ public void givenLongRunningTest_whenTimout_thenTestFails() throws InterruptedEx
 
 当我们运行这个测试时，我们应该看到一个测试失败:
 
-```
+```java
 org.junit.runners.model.TestTimedOutException: test timed out after 10 seconds
 ...
 ```
@@ -178,7 +178,7 @@ org.junit.runners.model.TestTimedOutException: test timed out after 10 seconds
 
 让我们看看如何使用这个规则来收集所有的错误，并在测试终止时立即报告它们:
 
-```
+```java
 @Rule 
 public final ErrorCollector errorCollector = new ErrorCollector();
 
@@ -195,7 +195,7 @@ public void givenMultipleErrors_whenTestRuns_thenCollectorReportsErrors() {
 
 在输出中，我们将看到报告的两个错误:
 
-```
+```java
 java.lang.Throwable: First thing went wrong!
 ...
 java.lang.Throwable: Another thing went wrong!
@@ -207,7 +207,7 @@ java.lang.Throwable: Another thing went wrong!
 
 现在让我们看一个定义我们自己的验证器的小例子:
 
-```
+```java
 private List messageLog = new ArrayList();
 
 @Rule
@@ -223,7 +223,7 @@ public Verifier verifier = new Verifier() {
 
 现在，当我们运行单元测试并添加消息时，我们应该看到我们的验证器已经被应用了:
 
-```
+```java
 @Test
 public void givenNewMessage_whenVerified_thenMessageLogNotEmpty() {
     // ...
@@ -237,7 +237,7 @@ public void givenNewMessage_whenVerified_thenMessageLogNotEmpty() {
 
 `DisableOnDebug`规则恰恰做到了这一点，并允许我们在调试时标记某些要禁用的规则:
 
-```
+```java
 @Rule
 public DisableOnDebug disableTimeout = new DisableOnDebug(Timeout.seconds(30));
 ```
@@ -254,7 +254,7 @@ public DisableOnDebug disableTimeout = new DisableOnDebug(Timeout.seconds(30));
 
 让我们快速看一下如何扩展这个类:
 
-```
+```java
 @Rule
 public final ExternalResource externalResource = new ExternalResource() {
     @Override
@@ -277,7 +277,7 @@ public final ExternalResource externalResource = new ExternalResource() {
 
 这个注释的工作方式与`@Rule`非常相似，但是在整个测试中包含了一个规则— **主要的区别是我们用于类规则的字段必须是静态的:**
 
-```
+```java
 @ClassRule
 public static TemporaryFolder globalFolder = new TemporaryFolder();
 ```
@@ -288,7 +288,7 @@ public static TemporaryFolder globalFolder = new TemporaryFolder();
 
 让我们来看一个定义定制测试方法名称记录器规则的例子:
 
-```
+```java
 public class TestMethodNameLogger implements TestRule {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestMethodNameLogger.class);
@@ -322,7 +322,7 @@ public class TestMethodNameLogger implements TestRule {
 
 **在最后一部分，我们将看看如何使用`RuleChain`规则:**来排序几个测试规则
 
-```
+```java
 @Rule
 public RuleChain chain = RuleChain.outerRule(new MessageLogger("First rule"))
     .around(new MessageLogger("Second rule"))
@@ -333,7 +333,7 @@ public RuleChain chain = RuleChain.outerRule(new MessageLogger("First rule"))
 
 当我们运行我们的测试时，我们将看到这个链是如何按顺序应用的:
 
-```
+```java
 Starting: First rule
 Starting: Second rule
 Starting: Third rule

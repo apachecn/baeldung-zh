@@ -14,7 +14,7 @@
 
 让我们看看我们的第一个例子:
 
-```
+```java
 Calendar calendar = Calendar.getInstance(locale); 
 calendar.set(year, month, day); 
 int weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
@@ -24,7 +24,7 @@ int weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
 
 现在，让我们看看如何从我们的一个单元测试中调用这个方法:
 
-```
+```java
 @Test
 public void givenDateUsingFieldsAndLocaleItaly_whenGetWeekNumber_thenWeekIsReturnedCorrectly() {
     Calendar calendar = Calendar.getInstance(Locale.ITALY);
@@ -40,7 +40,7 @@ public void givenDateUsingFieldsAndLocaleItaly_whenGetWeekNumber_thenWeekIsRetur
 
 在倒数第二个例子中，我们将看看对我们的`Calendar`应用一些额外的设置会有什么效果:
 
-```
+```java
 Calendar calendar = Calendar.getInstance();
 calendar.setFirstDayOfWeek(firstDayOfWeek);
 calendar.setMinimalDaysInFirstWeek(minimalDaysInFirstWeek);
@@ -60,7 +60,7 @@ int weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
 
 区域设置在如何计算周数方面起着重要作用:
 
-```
+```java
 @Test
 public void givenDateUsingFieldsAndLocaleCanada_whenGetWeekNumber_thenWeekIsReturnedCorrectly() {
     Calendar calendar = Calendar.getInstance(Locale.CANADA);
@@ -84,7 +84,7 @@ Java 8 为 [`Date`和`Time`](/web/20221004034605/https://www.baeldung.com/java-8
 
 同样，正如我们之前在`Calendar`中看到的，我们也可以将年、月和日的值直接传递给`LocalDate`:
 
-```
+```java
 LocalDate date = LocalDate.of(year, month, day);
 int weekOfYear = date.get(WeekFields.of(locale).weekOfYear()); 
 ```
@@ -95,7 +95,7 @@ int weekOfYear = date.get(WeekFields.of(locale).weekOfYear());
 
 在最后一个例子中，我们将看到如何使用 **`ChronoField`枚举，它实现了`TemporalField`接口**:
 
-```
+```java
 LocalDate date = LocalDate.of(year, month, day);
 int weekOfYear = date.get(ChronoField.ALIGNED_WEEK_OF_YEAR); 
 ```

@@ -30,7 +30,7 @@ Learn several different ways how to copy a Set in Java.[Read more](/web/20220926
 
 让我们将这些依赖项添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.google.code.gson</groupId>
     <artifactId>gson</artifactId>
@@ -54,7 +54,7 @@ Learn several different ways how to copy a Set in Java.[Read more](/web/20220926
 
 为了比较复制 Java 对象的不同方法，我们需要两个类:
 
-```
+```java
 class Address {
 
     private String street;
@@ -65,7 +65,7 @@ class Address {
 }
 ```
 
-```
+```java
 class User {
 
     private String firstName;
@@ -80,7 +80,7 @@ class User {
 
 浅层拷贝是这样一种拷贝:我们只将字段的值从一个对象拷贝到另一个对象:
 
-```
+```java
 @Test
 public void whenShallowCopying_thenObjectsShouldNotBeSame() {
 
@@ -99,7 +99,7 @@ public void whenShallowCopying_thenObjectsShouldNotBeSame() {
 
 如果`Address`是不可变的，我们也不会为此烦恼，但它不是:
 
-```
+```java
 @Test
 public void whenModifyingOriginalObject_ThenCopyShouldChange() {
 
@@ -126,13 +126,13 @@ public void whenModifyingOriginalObject_ThenCopyShouldChange() {
 
 我们将考察的第一个实现基于复制构造函数:
 
-```
+```java
 public Address(Address that) {
     this(that.getStreet(), that.getCity(), that.getCountry());
 }
 ```
 
-```
+```java
 public User(User that) {
     this(that.getFirstName(), that.getLastName(), new Address(that.getAddress()));
 }
@@ -142,7 +142,7 @@ public User(User that) {
 
 因此，它们不可能被意外修改。让我们看看这是否可行:
 
-```
+```java
 @Test
 public void whenModifyingOriginalObject_thenCopyShouldNotChange() {
     Address address = new Address("Downing St 10", "London", "England");
@@ -164,7 +164,7 @@ public void whenModifyingOriginalObject_thenCopyShouldNotChange() {
 
 让我们将`clone()`方法添加到`Address` 类中:
 
-```
+```java
 @Override
 public Object clone() {
     try {
@@ -177,7 +177,7 @@ public Object clone() {
 
 现在让我们为`User`类实现`clone()`:
 
-```
+```java
 @Override
 public Object clone() {
     User user = null;
@@ -194,7 +194,7 @@ public Object clone() {
 
 **注意，`super.clone()`调用返回一个对象的浅层副本，但是我们手动设置可变字段的深层副本，所以结果是正确的:**
 
-```
+```java
 @Test
 public void whenModifyingOriginalObject_thenCloneCopyShouldNotChange() {
     Address address = new Address("Downing St 10", "London", "England");
@@ -226,7 +226,7 @@ Apache Commons Lang 有`SerializationUtils#clone,`，当对象图中的所有类
 
 因此，我们需要在我们的类中添加 `Serializable`接口:
 
-```
+```java
 @Test
 public void whenModifyingOriginalObject_thenCommonsCloneShouldNotChange() {
     Address address = new Address("Downing St 10", "London", "England");
@@ -248,7 +248,7 @@ public void whenModifyingOriginalObject_thenCommonsCloneShouldNotChange() {
 
 让我们快速看一个例子:
 
-```
+```java
 @Test
 public void whenModifyingOriginalObject_thenGsonCloneShouldNotChange() {
     Address address = new Address("Downing St 10", "London", "England");
@@ -269,7 +269,7 @@ Jackson 是另一个支持 JSON 序列化的库。这个实现将非常类似于
 
 让我们看一个例子:
 
-```
+```java
 @Test
 public void whenModifyingOriginalObject_thenJacksonCopyShouldNotChange() 
   throws IOException {

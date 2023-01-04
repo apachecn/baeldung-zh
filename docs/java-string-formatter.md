@@ -12,7 +12,7 @@
 
 `Formatter`的`format()`方法通过`String`类的静态方法公开。这个方法接受一个模板`String`和一个参数列表来填充模板:
 
-```
+```java
 String greetings = String.format(
   "Hello Folks, welcome to %s !", 
   "Baeldung");
@@ -20,7 +20,7 @@ String greetings = String.format(
 
 由此产生的`String`是:
 
-```
+```java
 "Hello Folks, welcome to Baeldung !"
 ```
 
@@ -34,7 +34,7 @@ String greetings = String.format(
 
 类型`General, Character,`和`Numeric`的格式说明符语法为:
 
-```
+```java
 %[argument_index$][flags][width][.precision]conversion
 ```
 
@@ -50,7 +50,7 @@ String greetings = String.format(
 
 这两个分别是第一个和第二个参数:
 
-```
+```java
 String greetings = String.format(
   "Hello %2$s, welcome to %1$s !", 
   "Baeldung", 
@@ -59,7 +59,7 @@ String greetings = String.format(
 
 ### 3.2。对于`Date/Time`代表
 
-```
+```java
 %[argument_index$][flags][width]conversion
 ```
 
@@ -67,7 +67,7 @@ String greetings = String.format(
 
 我们举个例子来理解这个:
 
-```
+```java
 @Test
 public void whenFormatSpecifierForCalendar_thenGotExpected() {
     Calendar c = new GregorianCalendar(2017, 11, 10);
@@ -88,7 +88,7 @@ public void whenFormatSpecifierForCalendar_thenGotExpected() {
 
 ### 3.3。没有参数的格式说明符
 
-```
+```java
 %[flags][width]conversion
 ```
 
@@ -96,7 +96,7 @@ public void whenFormatSpecifierForCalendar_thenGotExpected() {
 
 必需的`conversion`是一个字符或`String`表示要插入输出的内容。目前，只有 `‘%'`和换行符 `‘n'`可以用这个打印
 
-```
+```java
 @Test
 public void whenNoArguments_thenExpected() {
     String s = String.format("John scored 90%% in Fall semester");
@@ -125,7 +125,7 @@ public void whenNoArguments_thenExpected() {
 
 我们现在将尝试显示`boolean`和`String`值，使用相应的转换:
 
-```
+```java
 @Test
 public void givenString_whenGeneralConversion_thenConvertedString() {
     String s = String.format("The correct answer is %s", false);
@@ -147,7 +147,7 @@ public void givenString_whenGeneralConversion_thenConvertedString() {
 
 让我们试着打印一些字符:
 
-```
+```java
 @Test
 public void givenString_whenCharConversion_thenConvertedString() {
     String s = String.format("The correct answer is %c", 'a');
@@ -167,7 +167,7 @@ public void givenString_whenCharConversion_thenConvertedString() {
 
 让我们再举一个无效代码点的例子:
 
-```
+```java
 @Test(expected = IllegalFormatCodePointException.class)
 public void whenIllegalCodePointForConversion_thenError() {
     String s = String.format("The valid unicode character: %c", 0x11FFFF);
@@ -187,7 +187,7 @@ public void whenIllegalCodePointForConversion_thenError() {
 
 让我们试着把这些打印出来:
 
-```
+```java
 @Test
 public void whenNumericIntegralConversion_thenConvertedString() {
     String s = String.format("The number 25 in decimal = %d", 25);
@@ -211,7 +211,7 @@ public void whenNumericIntegralConversion_thenConvertedString() {
 
 让我们试着打印浮点数:
 
-```
+```java
 @Test
 public void whenNumericFloatingConversion_thenConvertedString() {
     String s = String.format(
@@ -234,7 +234,7 @@ public void whenNumericFloatingConversion_thenConvertedString() {
 
 让我们看一个简单的例子:
 
-```
+```java
 @Test
 public void whenLineSeparatorConversion_thenConvertedString() {
     String s = String.format("First Line %nSecond Line");
@@ -251,7 +251,7 @@ public void whenLineSeparatorConversion_thenConvertedString() {
 
 让我们看一个旗帜示例来了解它的用法。`‘-‘`用于将输出格式化为左对齐:
 
-```
+```java
 @Test
 public void whenSpecifyFlag_thenGotFormattedString() {
     String s = String.format("Without left justified flag: %5d", 25);
@@ -268,7 +268,7 @@ public void whenSpecifyFlag_thenGotFormattedString() {
 
 第一个语句是浮点数的精度示例，第二个语句是一般转换的示例:
 
-```
+```java
 @Test
 public void whenSpecifyPrecision_thenGotExpected() {
     String s = String.format(
@@ -289,7 +289,7 @@ public void whenSpecifyPrecision_thenGotExpected() {
 
 此外，还有另一种通过位置引用参数的方法，通过使用 `‘<‘ (‘\u003c')`标志，这意味着来自先前格式说明符的参数将被重用。例如，这两条语句会产生相同的输出:
 
-```
+```java
 @Test
 public void whenSpecifyArgumentIndex_thenGotExpected() {
     Calendar c = Calendar.getInstance();
@@ -313,7 +313,7 @@ public void whenSpecifyArgumentIndex_thenGotExpected() {
 
 让我们创建一个 S `tringBuilder` 实例`sb`，并使用它创建一个`Formatter` 。然后我们将调用`format()` 来格式化一个`String`:
 
-```
+```java
 @Test
 public void whenCreateFormatter_thenFormatterWithAppendable() {
     StringBuilder sb = new StringBuilder();

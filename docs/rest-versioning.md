@@ -59,14 +59,14 @@ Building Restful Web Services using Jersey 2 and Spring.[Read more](/web/2022091
 
 例如，假设一个 API 发布了以下资源——用户和权限:
 
-```
+```java
 http://host/v1/users
 http://host/v1/privileges
 ```
 
 现在，让我们考虑一下`users` API 中的一个突破性变化需要引入第二个版本:
 
-```
+```java
 http://host/v2/users
 http://host/v2/privileges
 ```
@@ -75,7 +75,7 @@ http://host/v2/privileges
 
 例如:
 
-```
+```java
 ===>
 GET /users/3 HTTP/1.1
 Accept: application/vnd.myname.v1+json
@@ -137,7 +137,7 @@ URI 中的版本标识符也非常不灵活。没有办法简单地发展单个�
 
 继续我们之前的例子，在`user`的表示中添加`amount`并不是一个突破性的改变:
 
-```
+```java
 {
     "user": {
         "name": "John Smith", 
@@ -154,7 +154,7 @@ URI 中的版本标识符也非常不灵活。没有办法简单地发展单个�
 
 让我们继续前面的例子。比方说我们要把`user`的`name`分解成`firstname`和`lastname`:
 
-```
+```java
 ===>
 GET /users/3 HTTP/1.1
 Accept: application/vnd.myname.v2+json

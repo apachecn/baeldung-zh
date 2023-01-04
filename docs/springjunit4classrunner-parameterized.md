@@ -14,7 +14,7 @@
 
 例如，我们可以为我们的`RestController`实现一个集成测试:
 
-```
+```java
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = WebConfig.class)
@@ -48,7 +48,7 @@ public class RoleControllerIntegrationTest {
 
 现在，**为了用不同的用户名/角色组合测试这个 REST 服务，我们必须实现一个新的测试:**
 
-```
+```java
 @Test
 public void givenEmployeeNameDoeWhenInvokeRoleThenReturnEmployee() throws Exception {
     this.mockMvc.perform(MockMvcRequestBuilders
@@ -70,7 +70,7 @@ public void givenEmployeeNameDoeWhenInvokeRoleThenReturnEmployee() throws Except
 
 `Parameterized`是一个定制的 JUnit 测试运行程序，它允许我们编写一个测试用例，并根据多个输入参数运行它:
 
-```
+```java
 @RunWith(Parameterized.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = WebConfig.class)
@@ -105,7 +105,7 @@ public class RoleControllerParameterizedIntegrationTest {
 
 第一个选项非常简单，因为 Spring 允许我们手动初始化`TestContextManager `:
 
-```
+```java
 @RunWith(Parameterized.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = WebConfig.class)
@@ -134,7 +134,7 @@ public class RoleControllerParameterizedIntegrationTest {
 
 现在，我们可以实现我们的参数化 JUnit 测试:
 
-```
+```java
 @Test
 public void givenEmployeeNameWhenInvokeRoleThenReturnRole() throws Exception {
     this.mockMvc.perform(MockMvcRequestBuilders
@@ -162,7 +162,7 @@ public void givenEmployeeNameWhenInvokeRoleThenReturnRole() throws Exception {
 
 让我们看看如何在我们的测试类中使用这种方法:
 
-```
+```java
 @RunWith(Parameterized.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = WebConfig.class)

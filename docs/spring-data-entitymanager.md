@@ -14,7 +14,7 @@
 
 首先，让我们定义一个 [`Entity`](/web/20220707143816/https://www.baeldung.com/jpa-entities) ，例如，对于我们希望存储在数据库中的用户:
 
-```
+```java
 @Entity
 public class User {
     @Id
@@ -30,7 +30,7 @@ public class User {
 
 让我们用自定义查找方法创建一个:
 
-```
+```java
 public interface CustomUserRepository {
     User customFindMethod(Long id);
 }
@@ -38,7 +38,7 @@ public interface CustomUserRepository {
 
 **使用`@PeristenceContext`，我们可以在实现类**中注入`EntityManager`:
 
-```
+```java
 public class CustomUserRepositoryImpl implements CustomUserRepository {
 
     @PersistenceContext
@@ -57,7 +57,7 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
 
 最后，**让我们创建一个扩展了`JpaRepository` 和 `CustomRepository`** 的`Repository`:
 
-```
+```java
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, CustomUserRepository {
 }
@@ -65,7 +65,7 @@ public interface UserRepository extends JpaRepository<User, Long>, CustomUserRep
 
 此外，我们可以制作一个`[Spring Boot](/web/20220707143816/https://www.baeldung.com/spring-boot)`应用程序并进行测试，以检查一切是否正常运行:
 
-```
+```java
 @SpringBootTest(classes = CustomRepositoryApplication.class)
 class CustomRepositoryUnitTest {
 

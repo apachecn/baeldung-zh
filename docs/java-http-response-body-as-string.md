@@ -18,7 +18,7 @@
 
 要将响应体作为`String,`读取，我们首先需要创建简单的客户端和请求对象:
 
-```
+```java
 HttpClient client = HttpClient.newHttpClient();
 HttpRequest request = HttpRequest.newBuilder()
     .uri(URI.create(DUMMY_URL))
@@ -27,7 +27,7 @@ HttpRequest request = HttpRequest.newBuilder()
 
 然后我们将使用`BodyHandlers`并调用方法`ofString()`来返回响应:
 
-```
+```java
 HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 ```
 
@@ -39,7 +39,7 @@ HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString(
 
 为了将来自`URL`的响应体作为`String`，我们应该首先**使用我们的`URL`创建一个`HttpURLConnection`** :
 
-```
+```java
 HttpURLConnection connection = (HttpURLConnection) new URL(DUMMY_URL).openConnection();
 ```
 
@@ -47,7 +47,7 @@ HttpURLConnection connection = (HttpURLConnection) new URL(DUMMY_URL).openConnec
 
 接下来，我们将**从`connection`** 对象中获取`InputStream`:
 
-```
+```java
 InputStream inputStream = connection.getInputStream();
 ```
 
@@ -59,7 +59,7 @@ InputStream inputStream = connection.getInputStream();
 
 要使用这个库，我们需要将它的依赖项添加到我们的 Maven 项目中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.httpcomponents</groupId>
     <artifactId>httpclient</artifactId>
@@ -73,25 +73,25 @@ InputStream inputStream = connection.getInputStream();
 
 首先，我们将**创建一个`HttpGet`对象**:
 
-```
+```java
 HttpGet request = new HttpGet(DUMMY_URL);
 ```
 
 其次，我们将**创建客户端**:
 
-```
+```java
 CloseableHttpClient client = HttpClients.createDefault();
 ```
 
 然后我们将**从`execute`方法的结果中检索响应对象**:
 
-```
+```java
 CloseableHttpResponse response = client.execute(request);
 ```
 
 最后，我们将通过**将响应实体转换为`String`** 来返回响应体:
 
-```
+```java
 HttpEntity entity = response.getEntity();
 String result = EntityUtils.toString(entity);
 ```
@@ -106,7 +106,7 @@ String result = EntityUtils.toString(entity);
 
 我们可以通过首先向我们的 Maven 项目添加一些依赖项来使用这个库:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -122,13 +122,13 @@ String result = EntityUtils.toString(entity);
 
 为了发出 web 请求并以字符串形式返回响应体，我们将**创建一个`RestTemplate`** 的实例:
 
-```
+```java
 RestTemplate restTemplate = new RestTemplate();
 ```
 
 然后，我们将通过调用方法`getForObject()`并传入 URL 和所需的响应类型来**获得响应对象。**我们将在示例中使用`String.class`:
 
-```
+```java
 String response = restTemplate.getForObject(DUMMY_URL, String.class);
 ```
 
@@ -138,7 +138,7 @@ String response = restTemplate.getForObject(DUMMY_URL, String.class);
 
 我们可以通过将 [`spring-boot-starter-webflux`](https://web.archive.org/web/20220926195223/https://search.maven.org/classic/#search%7Cga%7C1%7Ca%3A%22spring-boot-starter-webflux%22%20AND%20g%3A%22org.springframework.boot%22) 依赖项添加到我们的 Maven 项目来使用这个库:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-webflux</artifactId>
@@ -147,19 +147,19 @@ String response = restTemplate.getForObject(DUMMY_URL, String.class);
 
 执行 HTTP Get 请求的最简单方法是使用`create`方法:
 
-```
+```java
 WebClient webClient = WebClient.create(DUMMY_URL);
 ```
 
 执行 HTTP Get 请求最简单的方法是调用`get`和`retrieve`方法。**然后我们将使用`bodyToMono`方法和`String.class`类型**来提取主体作为单个字符串实例:
 
-```
+```java
 Mono<String> body = webClient.get().retrieve().bodyToMono(String.class);
 ```
 
 最后，我们将**调用`block`方法告诉 web flux 等待，直到整个主体流被读取**并被复制到字符串结果中:
 
-```
+```java
 String s = body.block();
 ```
 

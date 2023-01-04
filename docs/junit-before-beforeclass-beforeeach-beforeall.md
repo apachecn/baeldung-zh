@@ -30,7 +30,7 @@ A quick look at JUnit compared to TestNG - the other popular testing framework i
 
 让我们初始化一个列表并添加一些值:
 
-```
+```java
 @RunWith(JUnit4.class)
 public class BeforeAndAfterAnnotationsUnitTest {
 
@@ -56,7 +56,7 @@ public class BeforeAndAfterAnnotationsUnitTest {
 
 现在让我们添加一些测试来检查列表的大小:
 
-```
+```java
 @Test
 public void whenCheckingListSize_thenSizeEqualsToInit() {
     LOG.info("executing test");
@@ -78,7 +78,7 @@ public void whenCheckingListSizeAgain_thenSizeEqualsToInit() {
 
 如果我们看一下日志输出，我们可以检查到`init`和`teardown` 方法在每个测试中都运行了一次:
 
-```
+```java
 ... startup
 ... executing another test
 ... teardown
@@ -95,7 +95,7 @@ public void whenCheckingListSizeAgain_thenSizeEqualsToInit() {
 
 让我们创建一个简单的测试类来模拟数据库连接的创建:
 
-```
+```java
 @RunWith(JUnit4.class)
 public class BeforeClassAndAfterClassAnnotationsUnitTest {
 
@@ -117,7 +117,7 @@ public class BeforeClassAndAfterClassAnnotationsUnitTest {
 
 像以前一样，让我们也添加一些简单的测试:
 
-```
+```java
 @Test
 public void simpleTest() {
     LOG.info("simple test");
@@ -131,7 +131,7 @@ public void anotherSimpleTest() {
 
 这一次，如果我们看一下日志输出，我们可以检查到`setup`和`tearDown`方法只运行了一次:
 
-```
+```java
 ... startup - creating DB connection
 ... simple test
 ... another simple test
@@ -144,7 +144,7 @@ public void anotherSimpleTest() {
 
 让我们使用这些新注释复制我们以前的类，从`@BeforeEach`和`@AfterEach`注释开始:
 
-```
+```java
 class BeforeEachAndAfterEachAnnotationsUnitTest {
 
     // ...
@@ -169,7 +169,7 @@ class BeforeEachAndAfterEachAnnotationsUnitTest {
 
 如果我们检查日志，我们可以确认它的工作方式与使用`@Before`和`@After`注释的方式相同:
 
-```
+```java
 ... startup
 ... executing another test
 ... teardown
@@ -180,7 +180,7 @@ class BeforeEachAndAfterEachAnnotationsUnitTest {
 
 最后，让我们对另一个测试类做同样的事情，看看`@BeforeAll`和`@AfterAll`注释的作用:
 
-```
+```java
 class BeforeAllAndAfterAllAnnotationsUnitTest {
 
     // ...
@@ -201,7 +201,7 @@ class BeforeAllAndAfterAllAnnotationsUnitTest {
 
 输出与旧的注释相同:
 
-```
+```java
 ... startup - creating DB connection
 ... simple test
 ... another simple test

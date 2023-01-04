@@ -21,7 +21,7 @@ Java 12 为 [`String`类](/web/20220813064811/https://www.baeldung.com/java-stri
 
 例如:
 
-```
+```java
 @Test
 public void whenPositiveArgument_thenReturnIndentedString() {
     String multilineStr = "This is\na multiline\nstring.";
@@ -35,7 +35,7 @@ public void whenPositiveArgument_thenReturnIndentedString() {
 
 我们也可以传递一个负的`int`来减少字符串的缩进。例如:
 
-```
+```java
 @Test
 public void whenNegativeArgument_thenReturnReducedIndentedString() {
     String multilineStr = "   This is\n   a multiline\n   string.";
@@ -51,7 +51,7 @@ public void whenNegativeArgument_thenReturnReducedIndentedString() {
 
 我们可以使用`transform()` 方法对`this`字符串应用一个函数。该函数应该期待一个单独的`String`参数并产生一个结果:
 
-```
+```java
 @Test
 public void whenTransformUsingLamda_thenReturnTransformedString() {
     String result = "hello".transform(input -> input + " world!");
@@ -62,7 +62,7 @@ public void whenTransformUsingLamda_thenReturnTransformedString() {
 
 输出不必一定是字符串。例如:
 
-```
+```java
 @Test
 public void whenTransformUsingParseInt_thenReturnInt() {
     int result = "42".transform(Integer::parseInt);

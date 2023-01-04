@@ -34,7 +34,7 @@ JPA 和 Hibernate 支持不同的继承策略，允许您将实体映射到不�
 
 您还可以用`@DiscriminatorColumn`注释来注释超类，以定义鉴别器值的名称。Hibernate 使用这个值来确定它必须将数据库记录映射到的实体。如果您没有定义鉴别器列，就像我在下面的代码片段中所做的那样，Hibernate 和所有其他 JPA 实现都使用列`DTYPE`。
 
-```
+```java
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Publication {
@@ -68,7 +68,7 @@ JPA 规范还建议用一个`@DiscriminatorValue`注释对其进行注释，以�
 
 但是 JPA 规范没有定义如何生成鉴别器值，并且您的应用程序可能无法移植到其他 JPA 实现。Hibernate 使用简单的实体名作为鉴别器。
 
-```
+```java
 @Entity
 @DiscriminatorValue("Book")
 public class Book extends Publication {
@@ -81,14 +81,14 @@ public class Book extends Publication {
 
 如果您想要选择特定的实体、执行多态查询或遍历多态关联，那么`SingleTable`策略不需要 Hibernate 生成任何复杂的查询。
 
-```
+```java
 Author a = em.find(Author.class, 1L);
 List<Publication> publications = a.getPublications();
 ```
 
 所有实体都存储在同一个表中，Hibernate 可以从那里选择它们，而不需要额外的`JOIN`子句。
 
-```
+```java
 15:41:28,379 DEBUG [org.hibernate.SQL] - 
     select
         author0_.id as id1_0_0_,

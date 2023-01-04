@@ -18,7 +18,7 @@
 
 我们将实现这个接口来创建一个定制的过滤器，它将向每个传出的请求注入`Access-Control-Allow-*`头，并启用`CORS`机制:
 
-```
+```java
 @Provider
 public class CorsFilter implements ContainerResponseFilter {
 
@@ -48,7 +48,7 @@ public class CorsFilter implements ContainerResponseFilter {
 
 如前所述，我们也可以在端点级别显式注入'`Access-Control-Allow-*`'头:
 
-```
+```java
 @GET
 @Path("/")
 @Produces({MediaType.TEXT_PLAIN})
@@ -74,7 +74,7 @@ public Response index() {
 
 一旦应用程序启动，我们就可以使用 curl 命令测试头文件。示例头输出应该如下所示:
 
-```
+```java
 HTTP/1.1 200 OK
 Date : Tue, 13 May 2014 12:30:00 GMT
 Connection : keep-alive
@@ -87,7 +87,7 @@ Transfer-Encoding : chunked
 
 此外，我们可以创建一个简单的 AJAX 函数并检查跨域功能:
 
-```
+```java
 function call(url, type, data) {
     var request = $.ajax({
       url: url,

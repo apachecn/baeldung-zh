@@ -36,7 +36,7 @@
 
 让我们看看使用 API 令牌密钥触发 Jenkins 作业的请求:
 
-```
+```java
 $ curl -X POST http://11.223.231.112:8080/job/testJob/build --user testuser:1100a338c975eb40189c3fe2cf580b2bdf
 ```
 

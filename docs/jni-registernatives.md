@@ -16,7 +16,7 @@
 
 事实上，`java.lang.Object'` s `registerNatives()`方法使用了第二种方法。我们来看一个来自 C 中 [OpenJDK 8](https://web.archive.org/web/20221208143921/http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/687fd7c7986d/src/share/native/java/lang/Object.c) 的`java.lang.Object'` s `registerNatives()`方法实现:
 
-```
+```java
 static JNINativeMethod methods[] = {
     {"hashCode",    "()I",                    (void *)&JVM;_IHashCode},
     {"wait",        "(J)V",                   (void *)&JVM;_MonitorWait},
@@ -43,7 +43,7 @@ Java_java_lang_Object_registerNatives(JNIEnv *env, jclass cls)
 
 让我们从 Java 类开始:
 
-```
+```java
 public class RegisterNativesHelloWorldJNI {
 
     public native void register();
@@ -61,7 +61,7 @@ public class RegisterNativesHelloWorldJNI {
 
 让我们看看 Java 的`register()` 原生方法的 C++实现:
 
-```
+```java
 static JNINativeMethod methods[] = {
   {"sayHello", "()Ljava/lang/String;", (void*) &hello; },
 };
@@ -81,7 +81,7 @@ JNIEXPORT void JNICALL Java_com_baeldung_jni_RegisterNativesHelloWorldJNI_regist
 
 现在，我们可以随意调用第二个本地方法`sayHello()`:
 
-```
+```java
 JNIEXPORT jstring JNICALL hello (JNIEnv* env, jobject thisObject) {
     std::string hello = "Hello from registered native C++ !!";
     std::cout << hello << std::endl;
@@ -93,7 +93,7 @@ JNIEXPORT jstring JNICALL hello (JNIEnv* env, jobject thisObject) {
 
 最后，让我们运行来自`RegisterNativesHelloWorldJNI`类的`main()`方法:
 
-```
+```java
 Hello from registered native C++ !!
 ```
 

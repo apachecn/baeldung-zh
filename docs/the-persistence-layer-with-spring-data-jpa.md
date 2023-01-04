@@ -51,7 +51,7 @@ Spring Data 将这种简化推进了一步，**使得完全移除 DAO 实现成�
 
 让我们看一个例子。如果实体有一个`name` 字段(以及 Java Bean 标准的`getName`和`setName`方法)**，我们将在 DAO 接口中定义`findByName`方法。**这将自动生成正确的查询:
 
-```
+```java
 public interface IFooDAO extends JpaRepository<Foo, Long> {
 
     Foo findByName(String name);
@@ -63,7 +63,7 @@ public interface IFooDAO extends JpaRepository<Foo, Long> {
 
 如果解析器无法将属性与域对象字段相匹配，我们将看到以下异常:
 
-```
+```java
 java.lang.IllegalArgumentException: No property nam found for type class com.baeldung.spring.data.persistence.model.Foo
 ```
 
@@ -71,7 +71,7 @@ java.lang.IllegalArgumentException: No property nam found for type class com.bae
 
 现在让我们来看一个自定义查询，我们将通过`@Query`注释来定义它:
 
-```
+```java
 @Query("SELECT f FROM Foo f WHERE LOWER(f.name) = LOWER(:name)")
 Foo retrieveByName(@Param("name") String name);
 ```
@@ -92,7 +92,7 @@ Spring 管理的 DAO 的实际实现确实是隐藏的，因为我们不直接�
 
 让我们用一个集成测试来验证异常转换:
 
-```
+```java
 @Test(expected = DataIntegrityViolationException.class)
 public void whenInvalidEntityIsCreated_thenDataException() {
     service.create(new Foo());
@@ -105,7 +105,7 @@ public void whenInvalidEntityIsCreated_thenDataException() {
 
 为了激活 Spring JPA 存储库支持，我们可以使用`@EnableJpaRepositories`注释并指定包含 DAO 接口的包:
 
-```
+```java
 @EnableJpaRepositories(basePackages = "com.baeldung.spring.data.persistence.repository") 
 public class PersistenceConfig { 
     ...
@@ -114,7 +114,7 @@ public class PersistenceConfig {
 
 我们可以用 XML 配置做同样的事情:
 
-```
+```java
 <jpa:repositories base-package="com.baeldung.spring.data.persistence.repository" />
 ```
 
@@ -124,7 +124,7 @@ public class PersistenceConfig {
 
 除了已经讨论过的配置，如果我们使用 XML，我们还需要包括 Spring 数据 XML 配置:
 
-```
+```java
 @Configuration
 @EnableTransactionManagement
 @ImportResource("classpath*:*springDataConfig.xml")
@@ -137,7 +137,7 @@ public class PersistenceJPAConfig {
 
 除了 JPA 的 Maven 配置，就像在[之前的文章](/web/20220926191213/https://www.baeldung.com/the-persistence-layer-with-spring-and-jpa)中一样，我们将添加[的`spring-data-jpa`依赖项](https://web.archive.org/web/20220926191213/https://search.maven.org/search?q=g:org.springframework.data%20a:spring-data-jpa):
 
-```
+```java
 <dependency>
    <groupId>org.springframework.data</groupId>
    <artifactId>spring-data-jpa</artifactId>
@@ -151,7 +151,7 @@ public class PersistenceJPAConfig {
 
 我们需要确保我们想要使用的数据库存在于类路径中。在我们的示例中，我们添加了 H2 内存数据库:
 
-```
+```java
 <dependency>
    <groupId>org.springframework.boot</groupId>
    <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -172,7 +172,7 @@ public class PersistenceJPAConfig {
 
 Spring Boot 提供了一种简单的方法，使用`application.properties`文件中的属性来实现这一点。让我们看一个更改连接 URL 和凭据的示例:
 
-```
+```java
 spring.datasource.url=jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
 spring.datasource.username=sa
 spring.datasource.password=sa

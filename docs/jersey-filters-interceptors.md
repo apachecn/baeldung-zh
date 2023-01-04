@@ -12,7 +12,7 @@
 
 让我们首先在服务器上创建一个简单的资源:
 
-```
+```java
 @Path("/greetings")
 public class Greetings {
 
@@ -25,7 +25,7 @@ public class Greetings {
 
 同样，让我们为我们的应用程序创建相应的服务器配置:
 
-```
+```java
 @ApplicationPath("/*")
 public class ServerConfig extends ResourceConfig {
 
@@ -53,7 +53,7 @@ public class ServerConfig extends ResourceConfig {
 
 **我们将通过实现`ContainerRequestFilter`接口并在我们的服务器**中将它注册为`Provider`来实现
 
-```
+```java
 @Provider
 public class RestrictedOperationsRequestFilter implements ContainerRequestFilter {
 
@@ -78,7 +78,7 @@ public class RestrictedOperationsRequestFilter implements ContainerRequestFilter
 
 如果我们想在资源匹配之前执行一个过滤器，**我们可以通过用`@PreMatching`注释**注释我们的过滤器来使用预匹配过滤器:
 
-```
+```java
 @Provider
 @PreMatching
 public class PrematchingRequestFilter implements ContainerRequestFilter {
@@ -94,7 +94,7 @@ public class PrematchingRequestFilter implements ContainerRequestFilter {
 
 如果我们现在尝试访问我们的资源，我们可以检查我们的预匹配过滤器是否首先被执行:
 
-```
+```java
 2018-02-25 16:07:27,800 [http-nio-8080-exec-3] INFO  c.b.j.s.f.PrematchingRequestFilter - prematching filter
 2018-02-25 16:07:27,816 [http-nio-8080-exec-3] INFO  c.b.j.s.f.RestrictedOperationsRequestFilter - Restricted operations filter
 ```
@@ -105,7 +105,7 @@ public class PrematchingRequestFilter implements ContainerRequestFilter {
 
 为此，**我们的过滤器必须实现`ContainerResponseFilter`接口**，并实现它唯一的方法:
 
-```
+```java
 @Provider
 public class ResponseServerFilter implements ContainerResponseFilter {
 
@@ -125,7 +125,7 @@ public class ResponseServerFilter implements ContainerResponseFilter {
 
 让我们看看它在过滤器中的运行情况，该过滤器为请求添加了一个属性:
 
-```
+```java
 @Provider
 public class RequestClientFilter implements ClientRequestFilter {
 
@@ -138,7 +138,7 @@ public class RequestClientFilter implements ClientRequestFilter {
 
 让我们也创建一个 Jersey 客户机来测试这个过滤器:
 
-```
+```java
 public class JerseyClient {
 
     private static String URI_GREETINGS = "http://localhost:8080/jersey/greetings";
@@ -164,7 +164,7 @@ public class JerseyClient {
 
 这与服务器中的工作方式非常相似，但是实现了`ClientResponseFilter`接口:
 
-```
+```java
 @Provider
 public class ResponseClientFilter implements ClientResponseFilter {
 
@@ -190,7 +190,7 @@ public class ResponseClientFilter implements ClientResponseFilter {
 
 接下来，我们将在我们的服务器上创建另一个资源——通过 POST 访问该资源，并在主体中接收一个参数，因此拦截器将在访问它时执行:
 
-```
+```java
 @POST
 @Path("/custom")
 public Response getCustomGreeting(String name) {
@@ -201,7 +201,7 @@ public Response getCustomGreeting(String name) {
 
 我们还将向 Jersey 客户端添加一个新方法，以测试这个新资源:
 
-```
+```java
 public static Response getCustomGreeting() {
     return createClient().target(URI_GREETINGS + "/custom")
       .request()
@@ -215,7 +215,7 @@ public static Response getCustomGreeting() {
 
 让我们在服务器端创建一个拦截器，在被拦截的请求体中编写一条自定义消息:
 
-```
+```java
 @Provider
 public class RequestServerReaderInterceptor implements ReaderInterceptor {
 
@@ -242,7 +242,7 @@ public class RequestServerReaderInterceptor implements ReaderInterceptor {
 
 让我们创建一个 writer 拦截器，在客户端向请求添加一条消息:
 
-```
+```java
 @Provider
 public class RequestClientWriterInterceptor implements WriterInterceptor {
 
@@ -263,7 +263,7 @@ public class RequestClientWriterInterceptor implements WriterInterceptor {
 
 **不要忘记，您必须在客户端配置**中注册这个拦截器，就像我们之前在客户端过滤器中所做的那样:
 
-```
+```java
 private static Client createClient() {
     ClientConfig config = new ClientConfig();
     config.register(RequestClientFilter.class);
@@ -297,7 +297,7 @@ private static Client createClient() {
 
 让我们给我们的`RestrictedOperationsRequestFilter`添加一个优先级:
 
-```
+```java
 @Provider
 @Priority(Priorities.AUTHORIZATION)
 public class RestrictedOperationsRequestFilter implements ContainerRequestFilter {
@@ -319,7 +319,7 @@ public class RestrictedOperationsRequestFilter implements ContainerRequestFilter
 
 让我们在应用程序中创建一个:
 
-```
+```java
 @NameBinding
 @Retention(RetentionPolicy.RUNTIME)
 public @interface HelloBinding {
@@ -328,7 +328,7 @@ public @interface HelloBinding {
 
 之后，我们可以用这个`@HelloBinding`注释来注释一些资源:
 
-```
+```java
 @GET
 @HelloBinding
 public String getHelloGreeting() {
@@ -338,7 +338,7 @@ public String getHelloGreeting() {
 
 最后，我们也要用这个注释来注释我们的一个过滤器，所以这个过滤器将只对访问`getHelloGreeting()`方法的请求和响应执行:
 
-```
+```java
 @Provider
 @Priority(Priorities.AUTHORIZATION)
 @HelloBinding
@@ -355,7 +355,7 @@ public class RestrictedOperationsRequestFilter implements ContainerRequestFilter
 
 让我们首先为这个部分向我们的服务器添加另一个资源:
 
-```
+```java
 @GET
 @Path("/hi")
 public String getHiGreeting() {
@@ -365,7 +365,7 @@ public String getHiGreeting() {
 
 现在，让我们通过实现`DynamicFeature`接口为这个资源创建一个绑定:
 
-```
+```java
 @Provider
 public class HelloDynamicBinding implements DynamicFeature {
 

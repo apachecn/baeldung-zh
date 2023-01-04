@@ -14,14 +14,14 @@ Java Date Time API 中的 [`Instant`](https://web.archive.org/web/20220930182434
 
 首先，我们将从系统时钟获取当前的`Instant`和时区名称的 [`ZoneId`](https://web.archive.org/web/20220930182434/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/ZoneId.html) :
 
-```
+```java
 Instant nowUtc = Instant.now();
 ZoneId asiaSingapore = ZoneId.of("Asia/Singapore");
 ```
 
 最后，`ZoneId`和`Instant`可以用来创建一个包含时区细节的日期时间对象。 [`ZonedDateTime`](https://web.archive.org/web/20220930182434/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/ZonedDateTime.html) 类表示 ISO-8601 日历系统中带时区的日期时间:
 
-```
+```java
 ZonedDateTime nowAsiaSingapore = ZonedDateTime.ofInstant(nowUtc, asiaSingapore);
 ```
 
@@ -33,7 +33,7 @@ ZonedDateTime nowAsiaSingapore = ZonedDateTime.ofInstant(nowUtc, asiaSingapore);
 
 首先，让我们获取当前的 UTC 日期和一个 [`TimeZone`](https://web.archive.org/web/20220930182434/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TimeZone.html) 对象:
 
-```
+```java
 Date nowUtc = new Date();
 TimeZone asiaSingapore = TimeZone.getTimeZone(timeZone);
 ```
@@ -42,7 +42,7 @@ TimeZone asiaSingapore = TimeZone.getTimeZone(timeZone);
 
 最后，我们可以用`asiaSingapore TimeZone`创建一个`nowUtc Calendar`并设置时间:
 
-```
+```java
 Calendar nowAsiaSingapore = Calendar.getInstance(asiaSingapore);
 nowAsiaSingapore.setTime(nowUtc);
 ```
@@ -55,7 +55,7 @@ nowAsiaSingapore.setTime(nowUtc);
 
 首先，我们需要将[的 Joda 时间依赖关系](https://web.archive.org/web/20220930182434/https://search.maven.org/classic/#artifactdetails%7Cjoda-time%7Cjoda-time%7C2.10%7Cjar)添加到`pom.xml:`中
 
-```
+```java
 <dependency>
   <groupId>joda-time</groupId>
   <artifactId>joda-time</artifactId>
@@ -65,19 +65,19 @@ nowAsiaSingapore.setTime(nowUtc);
 
 为了表示时间线上的一个精确点，我们可以使用`org.joda.time`包中的`[Instant](https://web.archive.org/web/20220930182434/http://joda-time.sourceforge.net/apidocs/org/joda/time/Instant.html) `。在内部，该类保存一段数据，即从 Java 纪元 1970-01-01T00:00:00Z 开始的毫秒时刻:
 
-```
+```java
 Instant nowUtc = Instant.now();
 ```
 
 我们将使用 [`DateTimeZone`](https://web.archive.org/web/20220930182434/https://www.joda.org/joda-time/apidocs/org/joda/time/DateTimeZone.html) 来表示一个时区(对于指定的时区 id):
 
-```
+```java
 DateTimeZone asiaSingapore = DateTimeZone.forID("Asia/Singapore");
 ```
 
 现在使用时区信息将`nowUtc`时间转换为 [`DateTime`](https://web.archive.org/web/20220930182434/https://www.joda.org/joda-time/apidocs/org/joda/time/DateTime.html) 对象:
 
-```
+```java
 DateTime nowAsiaSingapore = nowUtc.toDateTime(asiaSingapore);
 ```
 

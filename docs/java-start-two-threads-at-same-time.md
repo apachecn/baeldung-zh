@@ -64,7 +64,7 @@
 
 首先，我们将创建我们的`Thread`类。姑且称之为`WorkerWithCountDownLatch`:
 
-```
+```java
 public class WorkerWithCountDownLatch extends Thread {
     private CountDownLatch latch;
 
@@ -99,7 +99,7 @@ public class WorkerWithCountDownLatch extends Thread {
 
 我们将在`usingCountDownLatch()`方法中实现主线程:
 
-```
+```java
 private static void usingCountDownLatch() throws InterruptedException {
     System.out.println("===============================================");
     System.out.println("        >>> Using CountDownLatch <<<<");
@@ -124,7 +124,7 @@ private static void usingCountDownLatch() throws InterruptedException {
 
 现在，让我们从我们的`main()`方法调用上面的`usingCountDownLatch()`方法。当我们运行`main()`方法时，我们将看到输出:
 
-```
+```java
 ===============================================
         >>> Using CountDownLatch <<<<
 ===============================================
@@ -149,7 +149,7 @@ private static void usingCountDownLatch() throws InterruptedException {
 
 让我们先来看看我们的 worker 线程的实现:
 
-```
+```java
 public class WorkerWithCyclicBarrier extends Thread {
     private CyclicBarrier barrier;
 
@@ -179,7 +179,7 @@ public class WorkerWithCyclicBarrier extends Thread {
 
 接下来，让我们看看如何控制两个工作线程在主线程中恢复:
 
-```
+```java
 private static void usingCyclicBarrier() throws BrokenBarrierException, InterruptedException {
     System.out.println("\n===============================================");
     System.out.println("        >>> Using CyclicBarrier <<<<");
@@ -212,7 +212,7 @@ private static void usingCyclicBarrier() throws BrokenBarrierException, Interrup
 
 如果我们在`main()`方法中调用`usingCyclicBarrier()`，我们将得到输出:
 
-```
+```java
 ===============================================
         >>> Using CyclicBarrier <<<<
 ===============================================
@@ -239,7 +239,7 @@ private static void usingCyclicBarrier() throws BrokenBarrierException, Interrup
 
 像往常一样，我们先看一下实现，然后理解它是如何工作的:
 
-```
+```java
 public class WorkerWithPhaser extends Thread {
     private Phaser phaser;
 
@@ -270,7 +270,7 @@ public class WorkerWithPhaser extends Thread {
 
 接下来，让我们继续，看看主线程的实现:
 
-```
+```java
 private static void usingPhaser() throws InterruptedException {
     System.out.println("\n===============================================");
     System.out.println("        >>> Using Phaser <<<");
@@ -300,7 +300,7 @@ private static void usingPhaser() throws InterruptedException {
 
 最后，我们调用`main()`方法中的`usingPhaser()`方法:
 
-```
+```java
 ===============================================
         >>> Using Phaser <<<
 ===============================================

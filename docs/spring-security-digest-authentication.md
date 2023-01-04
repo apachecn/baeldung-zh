@@ -12,7 +12,7 @@
 
 在这种情况下，我们需要手动**定义将要组成安全配置的原始 bean**—`DigestAuthenticationFilter`和`DigestAuthenticationEntryPoint`:
 
-```
+```java
 <beans:bean id="digestFilter" 
   class="org.springframework.security.web.authentication.www.DigestAuthenticationFilter">
     <beans:property name="userDetailsService" ref="userService" />
@@ -48,7 +48,7 @@
 
 最后，注意摘要过滤器被配置为**指向用户服务 bean**——这里，名称空间再次非常有用，因为它允许我们为由`<user-service>`元素创建的默认用户服务指定一个 bean 名称:
 
-```
+```java
 <user-service id="userService">
 ```
 
@@ -58,13 +58,13 @@
 
 让我们从请求主页–**开始，在请求中不提供安全凭证**:
 
-```
+```java
 curl -i http://localhost/spring-security-mvc-digest-auth/homepage.html
 ```
 
 正如所料，我们得到了一个带有`401 Unauthorized`状态代码的响应:
 
-```
+```java
 HTTP/1.1 401 Unauthorized
 Server: Apache-Coyote/1.1
 Set-Cookie: JSESSIONID=CF0233C...; Path=/spring-security-mvc-digest-auth/; HttpOnly
@@ -79,7 +79,7 @@ Date: Fri, 12 Jul 2013 14:04:25 GMT
 
 现在让我们**提供正确的凭证**并再次发送请求:
 
-```
+```java
 curl -i --digest --user 
    user1:user1Pass http://localhost/spring-security-mvc-digest-auth/homepage.html
 ```
@@ -88,7 +88,7 @@ curl -i --digest --user
 
 来自服务器的第一个响应将是相同的——`401 Unauthorized`,但是现在将由第二个请求解释和处理该挑战——第二个请求将通过`200 OK`成功:
 
-```
+```java
 HTTP/1.1 401 Unauthorized
 Server: Apache-Coyote/1.1
 Set-Cookie: JSESSIONID=A961E0D...; Path=/spring-security-mvc-digest-auth/; HttpOnly

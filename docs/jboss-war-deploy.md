@@ -19,7 +19,7 @@
 
 我们可以通过将`auto-deploy-zipped `属性的值设置为`true`或`false:`来指定配置文件`standalone.xml `中的模式
 
-```
+```java
 <deployment-scanner 
   name="default" 
   path="deployments" 

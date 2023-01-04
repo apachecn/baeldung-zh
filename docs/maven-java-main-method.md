@@ -10,7 +10,7 @@
 
 假设我们有下面的类:
 
-```
+```java
 public class Exec {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Exec.class);
@@ -30,7 +30,7 @@ public class Exec {
 
 为了执行`Exec`类的 main 方法，我们必须将类的完全限定名传递给插件:
 
-```
+```java
 $ mvn compile exec:java -Dexec.mainClass="com.baeldung.main.Exec"
 02:26:45.112 INFO com.baeldung.main.Exec - Running the main method
 ```
@@ -45,7 +45,7 @@ $ mvn compile exec:java -Dexec.mainClass="com.baeldung.main.Exec"
 
 也可以从命令行向 main 方法传递参数。为了做到这一点，我们可以使用`exec.args `系统属性:
 
-```
+```java
 $ mvn compile exec:java -Dexec.mainClass="com.baeldung.main.Exec" \
   -Dexec.args="First Second"
 02:31:08.235 INFO com.baeldung.main.Exec - Running the main method
@@ -54,7 +54,7 @@ $ mvn compile exec:java -Dexec.mainClass="com.baeldung.main.Exec" \
 
 如上所示，我们正在传递一个空格分隔的参数列表。此外，我们可以通过`exec.arguments `系统属性使用逗号分隔的参数列表:
 
-```
+```java
 $ mvn compile exec:java -Dexec.mainClass="com.baeldung.main.Exec" \ 
   -Dexec.arguments="Hello World,Bye"
 02:32:25.616 INFO com.baeldung.main.Exec - Running the main method
@@ -69,7 +69,7 @@ $ mvn compile exec:java -Dexec.mainClass="com.baeldung.main.Exec" \
 
 例如，我们可以在插件的配置中指定一个默认的主类:
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -86,7 +86,7 @@ $ mvn compile exec:java -Dexec.mainClass="com.baeldung.main.Exec" \
 
 现在，如果我们不指定所需类的完全限定名，将使用`com.baeldung.main.Exec `:
 
-```
+```java
 $ mvn compile exec:java
 02:33:14.197 INFO com.baeldung.main.Exec - Running the main method
 ```
@@ -95,7 +95,7 @@ $ mvn compile exec:java
 
 此外，我们还可以在配置中指定默认的程序参数:
 
-```
+```java
 <configuration>
     <mainClass>com.baeldung.main.Exec</mainClass>
     <arguments>
@@ -107,7 +107,7 @@ $ mvn compile exec:java
 
 这样我们就不需要在命令行上传递这些参数了:
 
-```
+```java
 $ mvn clean compile exec:java
 02:34:24.448 INFO com.baeldung.main.Exec - Running the main method
 02:34:24.450 INFO com.baeldung.main.Exec - List of arguments: [First, Second]

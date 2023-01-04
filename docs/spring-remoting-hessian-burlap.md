@@ -12,7 +12,7 @@
 
 `Hessian`和`Burlap` 都是由下面的库提供的，您需要将它们显式地包含在您的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>com.caucho</groupId>
     <artifactId>hessian</artifactId>
@@ -32,7 +32,7 @@
 
 让我们通过配置类型为`HessianServiceExporter`的`RemoteExporter`来公开服务，替换之前使用的`HttpInvokerServiceExporter`:
 
-```
+```java
 @Bean(name = "/booking") 
 RemoteExporter bookingService() {
     HessianServiceExporter exporter = new HessianServiceExporter();
@@ -48,7 +48,7 @@ RemoteExporter bookingService() {
 
 让我们实现客户端。同样，修改非常简单——我们需要用一个`HessianProxyFactoryBean`替换`HttpInvokerProxyFactoryBean`:
 
-```
+```java
 @Configuration
 public class HessianClient {
 
@@ -82,7 +82,7 @@ public class HessianClient {
 
 我们可以像使用`Hessian`一样使用`Burlap`——我们只需要选择合适的实现:
 
-```
+```java
 @Bean(name = "/booking") 
 RemoteExporter burlapService() {
     BurlapServiceExporter exporter = new BurlapServiceExporter();
@@ -100,7 +100,7 @@ RemoteExporter burlapService() {
 
 我们同样可以在客户端将`Hessian`换成`Burlap`，将`HessianProxyFactoryBean`换成`BurlapProxyFactoryBean`:
 
-```
+```java
 @Bean
 public BurlapProxyFactoryBean burlapInvoker() {
     BurlapProxyFactoryBean invoker = new BurlapProxyFactoryBean();

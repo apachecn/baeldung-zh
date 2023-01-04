@@ -12,7 +12,7 @@ Eclipse 为调试应用程序提供了强大的支持。它将一步一步的执
 
 为了演示 Eclipse 中的调试特性，我们将使用一个示例程序`PerfectSquareCounter`。这个程序计算所有的完美正方形，甚至是给定数字下的完美正方形:
 
-```
+```java
 public class PerfectSquareCounter {
 
     static int evenPerfectSquareNumbers = 0;

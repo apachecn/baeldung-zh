@@ -18,7 +18,7 @@
 
 `accumulateAndGet()`方法通过使用累加器函数将与键链接的值与现有值合并来更新该值。然后，它返回更新后的值:
 
-```
+```java
 @Test
 public void accumulateAndGet_withLongBinaryOperator_thenSuccessful() {
     long noOfStudents = 56;
@@ -41,7 +41,7 @@ public void accumulateAndGet_withLongBinaryOperator_thenSuccessful() {
 
 方法使用作为第二个参数提供的指定函数更新键的当前值。然后，它返回键的更新值:
 
-```
+```java
 @Test
 public void updateAndGet_withLongUnaryOperator_thenSuccessful() {
     long beforeUpdate = courses.get(SPRING_COURSE_KEY);
@@ -67,7 +67,7 @@ monitor 类被认为是对`ReentrantLock`的替代，它可读性更好，不容
 
 Guava 21 增加了一个新方法——`newGuard()`——返回一个`Monitor.Guard`实例，作为一个线程可以等待的布尔条件:
 
-```
+```java
 public class MonitorExample {
     private List<String> students = new ArrayList<String>();
     private static final int MAX_SIZE = 100;

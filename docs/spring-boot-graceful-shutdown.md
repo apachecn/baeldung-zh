@@ -12,14 +12,14 @@
 
 让我们考虑一个简单的 Spring Boot 应用程序。我们将自动连接默认的`TaskExecutor` bean:
 
-```
+```java
 @Autowired
 private TaskExecutor taskExecutor;
 ```
 
 在应用程序启动时，让我们使用线程池中的一个线程执行一个 1 分钟长的进程:
 
-```
+```java
 taskExecutor.execute(() -> {
     Thread.sleep(60_000);
 });
@@ -33,7 +33,7 @@ taskExecutor.execute(() -> {
 
 这个类提供了一个标志`setWaitForTasksToCompleteOnShutdown` 来防止中断正在运行的任务。我们把它设置为`true`:
 
-```
+```java
 @Bean
 public TaskExecutor taskExecutor() {
     ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
@@ -47,7 +47,7 @@ public TaskExecutor taskExecutor() {
 
 我们将重写前面的逻辑，创建 3 个线程，每个线程执行一个 1 分钟长的任务。
 
-```
+```java
 @PostConstruct
 public void runTaskOnStartup() {
     for (int i = 0; i < 3; i++) {
@@ -72,7 +72,7 @@ public void runTaskOnStartup() {
 
 为了阻止容器其余部分的关闭，我们可以在`ThreadPoolTaskExecutor:` 上指定最大等待时间
 
-```
+```java
 taskExecutor.setAwaitTerminationSeconds(30);
 ```
 

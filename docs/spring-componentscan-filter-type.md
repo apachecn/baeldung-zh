@@ -30,7 +30,7 @@
 
 比方说，我们有一个`@Anima` l 注释:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Animal { }
@@ -38,14 +38,14 @@ public @interface Animal { }
 
 现在，让我们定义一个使用`@Animal`的`Elephant`类:
 
-```
+```java
 @Animal
 public class Elephant { }
 ```
 
 最后，让我们使用`FilterType.ANNOTATION`来告诉 Spring 扫描`@Animal`注释的类:
 
-```
+```java
 @Configuration
 @ComponentScan(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION,
         classes = Animal.class))
@@ -54,7 +54,7 @@ public class ComponentScanAnnotationFilterApp { }
 
 正如我们所见，扫描仪很好地接收了我们的`Elephant`:
 
-```
+```java
 @Test
 public void whenAnnotationFilterIsUsed_thenComponentScanShouldRegisterBeanAnnotatedWithAnimalAnootation() {
     ApplicationContext applicationContext =
@@ -74,25 +74,25 @@ public void whenAnnotationFilterIsUsed_thenComponentScanShouldRegisterBeanAnnota
 
 首先，让我们声明`Animal`接口:
 
-```
+```java
 public interface Animal { }
 ```
 
 同样，让我们声明我们的`Elephant`类，这次实现`Animal` 接口`:`
 
-```
+```java
 public class Elephant implements Animal { }
 ```
 
 让我们声明我们的`Cat`类，它也实现了`Animal:`
 
-```
+```java
 public class Cat implements Animal { }
 ```
 
 现在，让我们使用`ASSIGNABLE_TYPE` 来引导 Spring 扫描`Animal`-实现类:
 
-```
+```java
 @Configuration
 @ComponentScan(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
         classes = Animal.class))
@@ -101,7 +101,7 @@ public class ComponentScanAssignableTypeFilterApp { }
 
 我们将看到`Cat`和`Elephant`都被扫描:
 
-```
+```java
 @Test
 public void whenAssignableTypeFilterIsUsed_thenComponentScanShouldRegisterBean() {
     ApplicationContext applicationContext =
@@ -122,25 +122,25 @@ public void whenAssignableTypeFilterIsUsed_thenComponentScanShouldRegisterBean()
 
 再次声明我们的`Elephant`类。这次没有实现任何接口或者用任何注释进行注释`:`
 
-```
+```java
 public class Elephant { }
 ```
 
 让我们再声明一个类`Cat`:
 
-```
+```java
 public class Cat { }
 ```
 
 现在，让我们声明`Loin`类:
 
-```
+```java
 public class Loin { }
 ```
 
 还是用`FilterType`吧。`REGEX`指示 Spring 扫描匹配正则表达式`.*[nt].` 的类，我们的正则表达式计算所有包含`nt:`的内容
 
-```
+```java
 @Configuration
 @ComponentScan(includeFilters = @ComponentScan.Filter(type = FilterType.REGEX,
         pattern = ".*[nt]"))
@@ -149,7 +149,7 @@ public class ComponentScanRegexFilterApp { }
 
 这次在我们的测试中，我们将看到 Spring 扫描了`Elephant`，但是没有扫描`Lion` `:`
 
-```
+```java
 @Test
 public void whenRegexFilterIsUsed_thenComponentScanShouldRegisterBeanMatchingRegex() {
     ApplicationContext applicationContext =
@@ -171,7 +171,7 @@ public void whenRegexFilterIsUsed_thenComponentScanShouldRegisterBeanMatchingReg
 
 让我们使用`FilterType.ASPECTJ`命令 Spring 扫描匹配我们的`AspectJ`表达式的类:
 
-```
+```java
 @Configuration
 @ComponentScan(includeFilters = @ComponentScan.Filter(type = FilterType.ASPECTJ,
   pattern = "com.baeldung.componentscan.filter.aspectj.* "
@@ -182,7 +182,7 @@ public class ComponentScanAspectJFilterApp { }
 
 虽然有点复杂，但是我们这里的逻辑希望 beans 的类名既不是以“L”也不是以“C”开头，所以这又给我们留下了`Elephant` s:
 
-```
+```java
 @Test
 public void whenAspectJFilterIsUsed_thenComponentScanShouldRegisterBeanMatchingAspectJCreteria() {
     ApplicationContext applicationContext =
@@ -202,7 +202,7 @@ public void whenAspectJFilterIsUsed_thenComponentScanShouldRegisterBeanMatchingA
 
 要创建自定义过滤器，我们需要实现`org.springframework.core.type.filter.TypeFilter`:
 
-```
+```java
 public class ComponentScanCustomFilter implements TypeFilter {
 
     @Override
@@ -218,7 +218,7 @@ public class ComponentScanCustomFilter implements TypeFilter {
 
 还是用`FilterType`吧。`CUSTOM`它使用我们的自定义过滤器`ComponentScanCustomFilter:`传送 Spring 来扫描类
 
-```
+```java
 @Configuration
 @ComponentScan(includeFilters = @ComponentScan.Filter(type = FilterType.CUSTOM,
   classes = ComponentScanCustomFilter.class))
@@ -227,7 +227,7 @@ public class ComponentScanCustomFilterApp { }
 
 现在是时候看看我们定制过滤器的测试用例了`ComponentScanCustomFilter:`
 
-```
+```java
 @Test
 public void whenCustomFilterIsUsed_thenComponentScanShouldRegisterBeanMatchingCustomFilter() {
     ApplicationContext applicationContext =

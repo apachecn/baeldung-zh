@@ -26,7 +26,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 对于开发，我们将需要以下依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -62,7 +62,7 @@ Knowing these types of challenges, we built Lightrun - a real-time production de
 
 让我们定义将保存用户源的主配置类:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class MultipleEntryPointsSecurityConfig {
@@ -104,7 +104,7 @@ public class MultipleEntryPointsSecurityConfig {
 
 为管理用户定义的入口点保护形式为`/admin/**`的 URL，只允许具有管理员角色的用户，并要求使用使用`authenticationEntryPoint()`方法设置的类型为`BasicAuthenticationEntryPoint` 的入口点进行 HTTP 基本身份验证:
 
-```
+```java
 @Configuration
 @Order(1)
 public static class App1ConfigurationAdapter extends WebSecurityConfigurerAdapter {
@@ -134,7 +134,7 @@ public static class App1ConfigurationAdapter extends WebSecurityConfigurerAdapte
 
 接下来，让我们定义表单 URL 的配置，具有用户角色的普通用户可以使用表单身份验证来访问表单 URL:
 
-```
+```java
 @Configuration
 @Order(2)
 public static class App2ConfigurationAdapter extends WebSecurityConfigurerAdapter {
@@ -162,7 +162,7 @@ public static class App2ConfigurationAdapter extends WebSecurityConfigurerAdapte
 
 接下来，我们需要在同一个静态配置类中定义入口点 beans:
 
-```
+```java
 @Bean
 public AuthenticationEntryPoint loginUrlauthenticationEntryPoint(){
     return new LoginUrlAuthenticationEntryPoint("/userLogin");
@@ -190,7 +190,7 @@ public AuthenticationEntryPoint loginUrlauthenticationEntryPointWithWarning(){
 
 最后，让我们为形式为`/guest/**`的 URL 定义第三种配置，它将允许所有类型的用户，包括未经身份验证的用户:
 
-```
+```java
 @Configuration
 @Order(3)
 public static class App3ConfigurationAdapter extends WebSecurityConfigurerAdapter {
@@ -209,7 +209,7 @@ public static class App3ConfigurationAdapter extends WebSecurityConfigurerAdapte
 
 对于`/admin/**`URL，XML 配置将使用`http-basic`元素的`entry-point-ref`属性:
 
-```
+```java
 <security:http pattern="/admin/**" use-expressions="true" auto-config="true">
     <security:intercept-url pattern="/**" access="hasRole('ROLE_ADMIN')"/>
     <security:http-basic entry-point-ref="authenticationEntryPoint" />
@@ -227,7 +227,7 @@ public static class App3ConfigurationAdapter extends WebSecurityConfigurerAdapte
 
 URL/user/general/* *的配置是:
 
-```
+```java
 <security:http pattern="/user/general/**" use-expressions="true" auto-config="true"
   entry-point-ref="loginUrlAuthenticationEntryPoint">
     <security:intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
@@ -242,7 +242,7 @@ URL/user/general/* *的配置是:
 
 对于`/user/private/**`URL，我们可以定义一个类似的配置:
 
-```
+```java
 <security:http pattern="/user/private/**" use-expressions="true" auto-config="true"
   entry-point-ref="loginUrlAuthenticationEntryPointWithWarning">
     <security:intercept-url pattern="/**" access="hasRole('ROLE_USER')"/>
@@ -257,7 +257,7 @@ URL/user/general/* *的配置是:
 
 对于`/guest/**`URL，我们将拥有`http`元素:
 
-```
+```java
 <security:http pattern="/**" use-expressions="true" auto-config="true">
     <security:intercept-url pattern="/guest/**" access="permitAll()"/>  
 </security:http>
@@ -271,7 +271,7 @@ URL/user/general/* *的配置是:
 
 让我们创建与我们保护的 URL 模式相匹配的请求映射:
 
-```
+```java
 @Controller
 public class PagesController {
 
@@ -304,7 +304,7 @@ public class PagesController {
 
 `/multipleHttpLinks`映射将返回一个简单的 HTML 页面，其中包含受保护 URL 的链接:
 
-```
+```java
 <a th:href="@{/admin/myAdminPage}">Admin page</a>
 <a th:href="@{/user/general/myUserPage}">User page</a>
 <a th:href="@{/user/private/myPrivateUserPage}">Private user page</a>
@@ -313,7 +313,7 @@ public class PagesController {
 
 对应于受保护的 URL 的每个 HTML 页面将具有简单的文本和反向链接:
 
-```
+```java
 Welcome admin!
 
 <a th:href="@{/multipleHttpLinks}" >Back to links</a>
@@ -323,7 +323,7 @@ Welcome admin!
 
 我们将把我们的例子作为一个 Spring Boot 应用程序运行，所以让我们用 main 方法定义一个类:
 
-```
+```java
 @SpringBootApplication
 public class MultipleEntryPointsApplication {
     public static void main(String[] args) {
@@ -338,7 +338,7 @@ public class MultipleEntryPointsApplication {
 
 让我们设置一个 JUnit 测试类，我们可以用它来测试我们受保护的 URL:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @WebAppConfiguration
 @SpringBootTest(classes = MultipleEntryPointsApplication.class)
@@ -366,7 +366,7 @@ public class MultipleEntryPointsTest {
 
 如果试图用管理员用户访问`/user/userPage` URL，我们应该收到状态 302 禁止:
 
-```
+```java
 @Test
 public void whenTestAdminCredentials_thenOk() throws Exception {
     mockMvc.perform(get("/admin/myAdminPage")).andExpect(status().isUnauthorized());
@@ -382,7 +382,7 @@ public void whenTestAdminCredentials_thenOk() throws Exception {
 
 让我们使用常规用户凭证创建一个类似的测试来访问 URL:
 
-```
+```java
 @Test
 public void whenTestUserCredentials_thenOk() throws Exception {
     mockMvc.perform(get("/user/general/myUserPage")).andExpect(status().isFound());
@@ -401,7 +401,7 @@ public void whenTestUserCredentials_thenOk() throws Exception {
 
 最后，让我们创建一个测试，在该测试中，我们访问`/guest/guestPage` URL，将进行所有三种类型的身份验证，并验证我们是否收到状态 200 OK:
 
-```
+```java
 @Test
 public void givenAnyUser_whenGetGuestPage_thenOk() throws Exception {
     mockMvc.perform(get("/guest/myGuestPage")).andExpect(status().isOk());

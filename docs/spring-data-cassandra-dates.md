@@ -35,7 +35,7 @@ Spring Data 让我们能够创建基于公共 Spring 接口的存储库。它还
 
 让我们使用 [`Testcontainers`](/web/20220525130304/https://www.baeldung.com/docker-test-containers) 库配置并启动 Cassandra。首先，我们将定义一个 Cassandra 容器，并将其公开给一个特定的端口:
 
-```
+```java
 @Container
 public static final CassandraContainer cassandra = (CassandraContainer) new CassandraContainer("cassandra:3.11.2")
     .withExposedPorts(9042);
@@ -43,7 +43,7 @@ public static final CassandraContainer cassandra = (CassandraContainer) new Cass
 
 接下来，我们需要[覆盖 Spring 数据所需的测试属性](/web/20220525130304/https://www.baeldung.com/spring-tests-override-properties),以便能够与 Cassandra 容器建立连接:
 
-```
+```java
 TestPropertyValues.of(
     "spring.data.cassandra.keyspace-name=" + KEYSPACE_NAME,
     "spring.data.cassandra.contact-points=" + cassandra.getContainerIpAddress(),
@@ -53,7 +53,7 @@ TestPropertyValues.of(
 
 最后，在创建任何对象/表之前，我们需要创建一个键空间:
 
-```
+```java
 session.execute("CREATE KEYSPACE IF NOT EXISTS " + KEYSPACE_NAME + " WITH replication = {'class':'SimpleStrategy','replication_factor':'1'};");
 ```
 
@@ -65,7 +65,7 @@ Spring Data 的 **[存储库支持](/web/20220525130304/https://www.baeldung.com
 
 在`org.springframework.data.cassandra.core.mapping`包中提供的`@Table`注释支持域对象映射:
 
-```
+```java
 @Table
 public class Person {
 
@@ -87,14 +87,14 @@ public class Person {
 
 接下来，我们将通过扩展`CassandraRepository`接口为我们的 DAO 定义一个 Spring 数据存储库:
 
-```
+```java
 @Repository
 public interface PersonRepository extends CassandraRepository<Person, UUID> {}
 ```
 
 最后，在开始编写集成测试之前，我们需要定义两个额外的属性:
 
-```
+```java
 spring.data.cassandra.schema-action=create_if_not_exists
 spring.data.cassandra.local-datacenter=datacenter1
 ```
@@ -111,7 +111,7 @@ spring.data.cassandra.local-datacenter=datacenter1
 
 让我们向我们的`Person` DAO 添加一个类型为`LocalDate`的新字段`birthDate`:
 
-```
+```java
 @Test
 public void givenValidPersonUsingLocalDate_whenSavingIt_thenDataIsPersisted() {
     UUID personId = UUIDs.timeBased();
@@ -130,7 +130,7 @@ public void givenValidPersonUsingLocalDate_whenSavingIt_thenDataIsPersisted() {
 
 让我们向我们的`Person` DAO 添加另一个名为*的字段，其类型为`LocalDateTime`:*
 
-```
+```java
 @Test
 public void givenValidPersonUsingLocalDateTime_whenSavingIt_thenDataIsPersisted() {
     UUID personId = UUIDs.timeBased();
@@ -149,7 +149,7 @@ public void givenValidPersonUsingLocalDateTime_whenSavingIt_thenDataIsPersisted(
 
 最后，让我们向我们的`Person` DAO 添加一个继承类型 *Date* 的字段*lastpucheddate*:
 
-```
+```java
 @Test
 public void givenValidPersonUsingLegacyDate_whenSavingIt_thenDataIsPersisted() {
     UUID personId = UUIDs.timeBased();
@@ -174,7 +174,7 @@ public void givenValidPersonUsingLegacyDate_whenSavingIt_thenDataIsPersisted() {
 
 连接到 Docker 容器 CLI 后，我们应该首先选择密钥空间，然后选择表:
 
-```
+```java
 # cqlsh
 Connected to Test Cluster at 127.0.0.1:9042.
 [cqlsh 5.0.1 | Cassandra 3.11.2 | CQL spec 3.4.4 | Native protocol v4]
@@ -185,7 +185,7 @@ cqlsh:test> select * from person;
 
 因此，CQLSH 将向我们显示保存在表中的数据的格式化输出:
 
-```
+```java
  id                                   | birthdate  | firstname | lastname | lastpurchaseddate | lastvisiteddate
 --------------------------------------+------------+-----------+----------+-------------------+-----------------
  9abef910-e3fd-11eb-9829-c5149ac796de | 1985-09-09 |      Luka |   Modric |              null |            null
@@ -193,13 +193,13 @@ cqlsh:test> select * from person;
 
 但是，我们还想检查用于特定日期列的数据类型:
 
-```
+```java
 cqlsh:test> DESC TABLE person;
 ```
 
 输出返回用于创建表的 CQL 命令。因此，它包含所有数据类型定义:
 
-```
+```java
 CREATE TABLE test.person (
     id uuid PRIMARY KEY,
     birthdate date,

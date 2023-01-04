@@ -12,7 +12,7 @@
 
 很简单，要解析 JSON 字符串，我们只需要一个`ObjectMapper`:
 
-```
+```java
 @Test
 public void whenParsingJsonStringIntoJsonNode_thenCorrect() 
   throws JsonParseException, IOException {
@@ -29,7 +29,7 @@ public void whenParsingJsonStringIntoJsonNode_thenCorrect()
 
 如果出于某种原因，您**需要去比它更低一级的**，下面的例子暴露了负责实际解析字符串的`JsonParser`:
 
-```
+```java
 @Test
 public void givenUsingLowLevelApi_whenParsingJsonStringIntoJsonNode_thenCorrect() 
   throws JsonParseException, IOException {
@@ -48,7 +48,7 @@ public void givenUsingLowLevelApi_whenParsingJsonStringIntoJsonNode_thenCorrect(
 
 在 JSON 被解析成 JsonNode 对象之后，我们可以**使用 Jackson JSON 树模型**:
 
-```
+```java
 @Test
 public void givenTheJsonNode_whenRetrievingDataFromId_thenCorrect() 
   throws JsonParseException, IOException {

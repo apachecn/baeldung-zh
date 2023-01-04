@@ -28,7 +28,7 @@
 
 **我们将使用 [Spring Security 的`AuthenticationManagerBuilder` 配置助手](https://web.archive.org/web/20221108144117/https://spring.io/guides/topicals/spring-security-architecture#_customizing_authentication_managers)来配置 JDBC 认证:**
 
-```
+```java
 @Autowired
 private DataSource dataSource;
 
@@ -59,7 +59,7 @@ public PasswordEncoder passwordEncoder() {
 
 让我们创建一个非常简单的端点来检索经过身份验证的*主体*信息:
 
-```
+```java
 @RestController
 @RequestMapping("/principal")
 public class UserController {
@@ -73,7 +73,7 @@ public class UserController {
 
 此外，我们将保护该端点，同时允许访问 H2 控制台:
 
-```
+```java
 @Configuration
 public class SecurityConfiguration {
 
@@ -128,7 +128,7 @@ public class SecurityConfiguration {
 
 首先，让我们移除`h2 `依赖项，并将其替换为相应的 MySQL 库:
 
-```
+```java
 <dependency>
     <groupId>mysql</groupId>
     <artifactId>mysql-connector-java</artifactId>
@@ -140,7 +140,7 @@ public class SecurityConfiguration {
 
 现在，让我们相应地重新设置应用程序属性:
 
-```
+```java
 spring.datasource.url=
   jdbc:mysql://localhost:3306/jdbc_authentication
 spring.datasource.username=root
@@ -151,7 +151,7 @@ spring.datasource.password=pass
 
 当然，这些应该定制为连接到您正在运行的 MySQL 服务器。出于测试目的，这里我们将使用 Docker 启动一个新实例:
 
-```
+```java
 docker run -p 3306:3306
   --name bael-mysql
   -e MYSQL_ROOT_PASSWORD=pass
@@ -173,7 +173,7 @@ docker run -p 3306:3306
 
 此外，由于我们将提供自己的 SQL 脚本，我们可以避免尝试以编程方式创建用户:
 
-```
+```java
 @Autowired
 public void configureGlobal(AuthenticationManagerBuilder auth)
   throws Exception {
@@ -186,7 +186,7 @@ public void configureGlobal(AuthenticationManagerBuilder auth)
 
 首先，我们的`schema.sql`:
 
-```
+```java
 CREATE TABLE users (
   username VARCHAR(50) NOT NULL,
   password VARCHAR(100) NOT NULL,
@@ -206,7 +206,7 @@ CREATE UNIQUE INDEX ix_auth_username
 
 然后，我们的`data.sql`:
 
-```
+```java
 -- User user/pass
 INSERT INTO users (username, password, enabled)
   values ('user',
@@ -222,7 +222,7 @@ INSERT INTO authorities (username, authority)
 *   因为我们不希望 Hibernate 现在创建模式，所以我们应该禁用`ddl-auto`属性
 *   默认情况下，Spring Boot 只为嵌入式数据库初始化数据源，但这里的情况并非如此:
 
-```
+```java
 spring.sql.init.mode=always
 spring.jpa.hibernate.ddl-auto=none
 ```
@@ -239,7 +239,7 @@ spring.jpa.hibernate.ddl-auto=none
 
 例如，假设我们已经有了一个结构与默认结构略有不同的数据库:
 
-```
+```java
 CREATE TABLE bael_users (
   name VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
@@ -259,7 +259,7 @@ CREATE UNIQUE INDEX ix_auth_email on authorities (email,authority);
 
 最后，我们的`data.sql`脚本也将适应这一变化:
 
-```
+```java
 -- User [[email protected]](/web/20221108144117/https://www.baeldung.com/cdn-cgi/l/email-protection)/pass
 INSERT INTO bael_users (name, email, password, enabled)
   values ('user',
@@ -283,7 +283,7 @@ Spring Security 仍然在数据库中寻找一个`username `字段。幸运的�
 
 修改查询非常容易。我们只需在配置`AuthenticationManagerBuilder`时提供我们自己的 SQL 语句:
 
-```
+```java
 @Autowired
 public void configureGlobal(AuthenticationManagerBuilder auth) 
   throws Exception {

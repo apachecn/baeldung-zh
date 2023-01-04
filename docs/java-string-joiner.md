@@ -12,7 +12,7 @@
 
 我们可以使用`add()`方法添加`Strings`:
 
-```
+```java
 @Test
 public void whenAddingElements_thenJoinedElements() {
     StringJoiner joiner = new StringJoiner(",", PREFIX, SUFFIX);
@@ -26,7 +26,7 @@ public void whenAddingElements_thenJoinedElements() {
 
 如果我们想连接一个列表中的所有元素，我们就必须遍历这个列表。不幸的是，使用`StringJoiner`很难做到这一点:
 
-```
+```java
 @Test
 public void whenAddingListElements_thenJoinedListElements() {
     List<String> rgbList = new ArrayList<>();
@@ -49,7 +49,7 @@ public void whenAddingListElements_thenJoinedListElements() {
 
 为了构造一个`StringJoiner,`的实例，我们需要提到分隔符。可选地，我们还可以指定应该出现在结果中的前缀和后缀:
 
-```
+```java
 private String PREFIX = "[";
 private String SUFFIX = "]";
 
@@ -75,7 +75,7 @@ public void whenEmptyJoinerJoinerWithPrefixSuffix_thenPrefixSuffix() {
 
 我们可以通过使用`setEmptyValue()`来改变默认返回的`String`:
 
-```
+```java
 @Test
 public void whenEmptyJoinerWithEmptyValue_thenDefaultValue() {
     StringJoiner joiner = new StringJoiner(",");
@@ -101,7 +101,7 @@ public void whenEmptyJoinerWithPrefixSuffixAndEmptyValue_thenDefaultValue() {
 
 我们可以使用`merge()`来合并两个 joiners。它将给定的`StringJoiner` **的内容加上不带前缀和后缀的**作为下一个元素:
 
-```
+```java
 @Test
 public void whenMergingJoiners_thenReturnMerged() {
     StringJoiner rgbJoiner = new StringJoiner(
@@ -133,7 +133,7 @@ public void whenMergingJoiners_thenReturnMerged() {
 
 在`Stream` API 中还可以找到一种间接用法:
 
-```
+```java
 @Test
 public void whenUsedWithinCollectors_thenJoined() {
     List<String> rgbList = Arrays.asList("Red", "Green", "Blue");

@@ -16,7 +16,7 @@ Spring Security 提供了一个组件，它直接负责决定在成功认证之�
 
 让我们首先配置一个基本的`@Configuration`和`@Service`类:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 public class SecSecurityConfig {
@@ -40,7 +40,7 @@ public class SecSecurityConfig {
 
 此外，我们需要配置用户及其角色。出于本文的目的，我们将实现一个简单的有两个用户的`UserDetailService`，每个用户有一个角色。关于这个话题的更多信息，请阅读我们的文章[Spring Security——角色和特权](/web/20221023124647/https://www.baeldung.com/role-and-privilege-for-spring-security-registration)。
 
-```
+```java
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
@@ -71,7 +71,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
 首先，我们需要将自定义成功处理程序定义为 bean:
 
-```
+```java
 @Bean
 public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
     return new MySimpleUrlAuthenticationSuccessHandler();
@@ -80,7 +80,7 @@ public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
 
 然后用`successHandler`方法替换`defaultSuccessUrl`调用，该方法接受我们的自定义成功处理程序作为参数:
 
-```
+```java
 @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
@@ -99,7 +99,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 在查看我们的自定义成功处理程序的实现之前，让我们先来看看等效的 XML 配置:
 
-```
+```java
 <http use-expressions="true" >
     <!-- other configuration -->
     <form-login login-page='/login.html' 
@@ -129,7 +129,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 首先，我们需要覆盖`onAuthenticationSuccess`方法:
 
-```
+```java
 public class MySimpleUrlAuthenticationSuccessHandler
   implements AuthenticationSuccessHandler {
 
@@ -149,7 +149,7 @@ public class MySimpleUrlAuthenticationSuccessHandler
 
 我们的定制方法调用两个助手方法:
 
-```
+```java
 protected void handle(
         HttpServletRequest request,
         HttpServletResponse response, 
@@ -171,7 +171,7 @@ protected void handle(
 
 其中下面的方法执行实际工作并将用户映射到目标 URL:
 
-```
+```java
 protected String determineTargetUrl(final Authentication authentication) {
 
     Map<String, String> roleTargetUrlMap = new HashMap<>();
@@ -192,7 +192,7 @@ protected String determineTargetUrl(final Authentication authentication) {
 
 请注意，该方法将返回用户拥有的第一个角色的映射 URL。因此，如果一个用户有多个角色，映射的 URL 将是与`authorities`集合中给出的第一个角色相匹配的那个。
 
-```
+```java
 protected void clearAuthenticationAttributes(HttpServletRequest request) {
     HttpSession session = request.getSession(false);
     if (session == null) {

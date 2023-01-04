@@ -27,7 +27,7 @@
 
 这是 POM 中的`compiler`插件:
 
-```
+```java
 <plugin>
     <artifactId>maven-compiler-plugin</artifactId>
     <version>3.7.0</version>
@@ -43,7 +43,7 @@
 
 **默认情况下，`compiler`插件编译与 Java 5 兼容的源代码，生成的类也能与 Java 5 一起工作，而不管使用的是什么 JDK。**我们可以在`configuration`元素中修改这些设置:
 
-```
+```java
 <configuration>
     <source>1.8</source>
     <target>1.8</target>
@@ -53,7 +53,7 @@
 
 为了方便起见，我们可以将 Java 版本设置为 POM 的属性:
 
-```
+```java
 <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
@@ -64,7 +64,7 @@
 
 例如，我们可以为编译器指定以下配置，以警告未检查的操作:
 
-```
+```java
 <configuration>
     <!-- other configuration -->
     <compilerArgs>
@@ -75,7 +75,7 @@
 
 编译该类时:
 
-```
+```java
 public class Data {
     List<String> textList = new ArrayList();
 
@@ -91,7 +91,7 @@ public class Data {
 
 我们将在控制台上看到一个未选中的警告:
 
-```
+```java
 [WARNING] ... Data.java:[7,29] unchecked conversion
   required: java.util.List<java.lang.String>
   found:    java.util.ArrayList
@@ -107,7 +107,7 @@ public class Data {
 
 对于 Java 9 及以上版本，我们可以直接使用版本号:
 
-```
+```java
 <configuration>
     <source>9</source>
     <target>9</target>
@@ -116,7 +116,7 @@ public class Data {
 
 类似地，我们可以使用`properties`将版本定义为:
 
-```
+```java
 <properties>
     <maven.compiler.source>9</maven.compiler.source>
     <maven.compiler.target>9</maven.compiler.target>
@@ -125,7 +125,7 @@ public class Data {
 
 Maven 在`3.5.0,` 中增加了对 Java 9 的支持，所以我们至少需要那个版本。我们至少还需要[中的`3.8.0` `maven-compiler-plugin`](https://web.archive.org/web/20220626085525/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.maven.plugins%22%20AND%20a%3A%22maven-compiler-plugin%22):
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -149,7 +149,7 @@ Maven 在`3.5.0,` 中增加了对 Java 9 的支持，所以我们至少需要那
 
 简单的一个就是 `javax.xml.XMLConstants.XML_NS_PREFIX:`
 
-```
+```java
 public class MavenCompilerPlugin {
     public static void main(String[] args) {
         System.out.println("The XML namespace prefix is: "
@@ -160,14 +160,14 @@ public class MavenCompilerPlugin {
 
 接下来，我们来编译一下:
 
-```
+```java
 mvn -q clean compile exec:java
   -Dexec.mainClass="com.baeldung.maven.java9.MavenCompilerPlugin"
 ```
 
 但是，当使用 Java 9 默认值时，我们会得到一个错误:
 
-```
+```java
 [ERROR] COMPILATION ERROR :
 [ERROR] .../MavenCompilerPlugin.java:[3,20]
   package javax.xml is not visible
@@ -185,7 +185,7 @@ location: class com.baeldung.maven.java9.MavenCompilerPlugin
 
 解决这个问题最简单的方法是创建`a module-info.java`类，并指出我们需要`java.xml`模块:
 
-```
+```java
 module com.baeldung.maven.java9 {
     requires java.xml;
 }
@@ -193,14 +193,14 @@ module com.baeldung.maven.java9 {
 
 现在我们可以再试一次:
 
-```
+```java
 mvn -q clean compile exec:java
   -Dexec.mainClass="com.baeldung.maven.java9.MavenCompilerPlugin"
 ```
 
 我们的输出将是:
 
-```
+```java
 The XML namespace prefix is: xml
 ```
 

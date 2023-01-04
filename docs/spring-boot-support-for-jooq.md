@@ -18,7 +18,7 @@
 
 本教程使用另一种方法:将依赖性管理委托给 Spring Boot。要实现这一点，只需将下面的`dependencyManagement`元素添加到 POM 文件中:
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -36,7 +36,7 @@
 
 为了让 Spring Boot 控制 jOOQ，需要声明对`spring-boot-starter-jooq`工件的依赖:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-jooq</artifactId>
@@ -56,7 +56,7 @@
 
 我们将在这里添加 URL 和凭证来定义我们的嵌入式 H2 数据库:
 
-```
+```java
 spring.datasource.url=jdbc:h2:~/jooq
 spring.datasource.username=sa
 spring.datasource.password=
@@ -64,7 +64,7 @@ spring.datasource.password=
 
 我们还将定义一个简单的引导应用程序:
 
-```
+```java
 @SpringBootApplication
 @EnableTransactionManagement
 public class Application {
@@ -78,7 +78,7 @@ public class Application {
 
 现在让我们定义这个`InitialConfiguration`类:
 
-```
+```java
 @Configuration
 public class InitialConfiguration {
     // Other declarations
@@ -87,7 +87,7 @@ public class InitialConfiguration {
 
 Spring Boot 已经基于`application.properties`文件中设置的属性自动生成并配置了`dataSource` bean，因此我们不需要手动注册它。下面的代码让自动配置的`DataSource` bean 注入到一个字段中，并展示了如何使用这个 bean:
 
-```
+```java
 @Autowired
 private DataSource dataSource;
 
@@ -102,7 +102,7 @@ public DataSourceConnectionProvider connectionProvider() {
 
 创建`DSLContext` bean 的方式与前面教程的`PersistenceContext`类相同:
 
-```
+```java
 @Bean
 public DefaultDSLContext dsl() {
     return new DefaultDSLContext(configuration());
@@ -111,7 +111,7 @@ public DefaultDSLContext dsl() {
 
 最后，需要向`DSLContext`提供一个`Configuration`实现。由于 Spring Boot 能够通过类路径上存在的 H2 工件来识别正在使用的 SQL 方言，因此不再需要方言配置:
 
-```
+```java
 public DefaultConfiguration configuration() {
     DefaultConfiguration jooqConfiguration = new DefaultConfiguration();
     jooqConfiguration.set(connectionProvider());
@@ -126,7 +126,7 @@ public DefaultConfiguration configuration() {
 
 为了使 Spring Boot 对 jOOQ 支持的演示更容易理解，本教程前传中的测试用例被重用，对其类级注释做了一点修改:
 
-```
+```java
 @SpringApplicationConfiguration(Application.class)
 @Transactional("transactionManager")
 @RunWith(SpringJUnit4ClassRunner.class)

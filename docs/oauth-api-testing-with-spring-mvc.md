@@ -24,7 +24,7 @@
 
 首先，让我们创建一个名为`Employee`的简单 POJO，它有两个属性，我们将通过 API 来操作:
 
-```
+```java
 public class Employee {
     private String email;
     private String name;
@@ -35,7 +35,7 @@ public class Employee {
 
 接下来，让我们定义一个具有两个请求映射的控制器，用于获取并保存一个`Employee`对象到一个列表:
 
-```
+```java
 @Controller
 public class EmployeeController {
 
@@ -66,7 +66,7 @@ public class EmployeeController {
 
 为了测试具有 Spring MVC 测试支持的安全 API，我们需要注入`WebAppplicationContext`和 `Spring Security Filter Chain`bean。在测试运行之前，我们将使用这些来获得一个`MockMvc`实例:
 
-```
+```java
 @RunWith(SpringRunner.class)
 @WebAppConfiguration
 @SpringBootTest(classes = AuthorizationServerApplication.class)
@@ -98,7 +98,7 @@ public class OAuthMvcTest {
 
 **让我们创建一个方法，发送 POST 请求以获取令牌**，并从 JSON 响应中读取`access_token`值:
 
-```
+```java
 private String obtainAccessToken(String username, String password) throws Exception {
 
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -128,7 +128,7 @@ private String obtainAccessToken(String username, String password) throws Except
 
 让我们尝试访问一个没有`Authorization`头的安全映射，并验证我们收到了一个`unauthorized`状态代码:
 
-```
+```java
 @Test
 public void givenNoToken_whenGetSecureRequest_thenUnauthorized() throws Exception {
     mockMvc.perform(get("/employee")
@@ -139,7 +139,7 @@ public void givenNoToken_whenGetSecureRequest_thenUnauthorized() throws Exceptio
 
 我们已经指定只有管理员角色的用户才能访问`/employee` URL。让我们创建一个测试，在这个测试中，我们为角色为`USER`的用户获取一个访问令牌，并验证我们收到了一个`forbidden`状态代码:
 
-```
+```java
 @Test
 public void givenInvalidRole_whenGetSecureRequest_thenForbidden() throws Exception {
     String accessToken = obtainAccessToken("user1", "pass");
@@ -152,7 +152,7 @@ public void givenInvalidRole_whenGetSecureRequest_thenForbidden() throws Excepti
 
 接下来，让我们使用有效的访问令牌测试我们的 API，通过发送 POST 请求来创建一个`Employee`对象，然后发送 GET 请求来读取创建的对象:
 
-```
+```java
 @Test
 public void givenToken_whenPostGetSecureRequest_thenOk() throws Exception {
     String accessToken = obtainAccessToken("admin", "nimda");

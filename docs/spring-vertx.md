@@ -12,7 +12,7 @@
 
 首先，让我们把依赖项放在适当的位置:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -50,7 +50,7 @@
 
 **`ServerVerticle`接受 HTTP 请求并将它们作为消息发送到指定的地址。**让我们创建一个扩展了`AbstractVerticle,` 的`ServerVerticle` 类，并覆盖`start()` 方法来创建我们的 HTTP 服务器:
 
-```
+```java
 @Override
 public void start() throws Exception {
     super.start();
@@ -67,7 +67,7 @@ public void start() throws Exception {
 
 在服务器请求处理程序中，我们传递了一个`router` 对象，它将任何传入的请求重定向到`getAllArticlesHandler`处理程序:
 
-```
+```java
 private void getAllArticlesHandler(RoutingContext routingContext) {
     vertx.eventBus().<String>send(ArticleRecipientVerticle.GET_ALL_ARTICLES, "", 
       result -> {
@@ -96,7 +96,7 @@ private void getAllArticlesHandler(RoutingContext routingContext) {
 
 我们将把 Spring service bean 注入到一个 Verticle 中，并调用各自的方法:
 
-```
+```java
 @Override
 public void start() throws Exception {
     super.start();
@@ -107,14 +107,14 @@ public void start() throws Exception {
 
 这里，`articleService` 是注入的春豆:
 
-```
+```java
 @Autowired
 private ArticleService articleService; 
 ```
 
 这个 Verticle 将继续监听地址`GET_ALL_ARTICLES.` 上的事件总线，一旦它接收到消息，它就将它委托给`getAllArticleService` 处理程序方法:
 
-```
+```java
 private Handler<Message<String>> getAllArticleService(ArticleService service) {
     return msg -> vertx.<String> executeBlocking(future -> {
         try {
@@ -139,7 +139,7 @@ private Handler<Message<String>> getAllArticleService(ArticleService service) {
 
 服务类是一个简单的实现，提供了与存储库层交互的方法:
 
-```
+```java
 @Service
 public class ArticleService {
 
@@ -158,7 +158,7 @@ public class ArticleService {
 
 我们将部署该应用程序，就像我们部署常规 Spring Boot 应用程序一样。我们必须创造一个垂直。x 实例，并在 Spring 上下文初始化完成后在其中部署 verticles:
 
-```
+```java
 public class VertxSpringApplication {
 
     @Autowired
@@ -186,7 +186,7 @@ public class VertxSpringApplication {
 
 让我们测试应用程序:
 
-```
+```java
 @Test
 public void givenUrl_whenReceivedArticles_thenSuccess() {
     ResponseEntity<String> responseEntity = restTemplate

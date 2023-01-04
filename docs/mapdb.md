@@ -22,13 +22,13 @@
 
 首先，让我们使用`DBMaker `类创建一个新的内存数据库:
 
-```
+```java
 DB db = DBMaker.memoryDB().make();
 ```
 
 一旦我们的`DB `对象启动并运行，我们就可以用它构建一个`HTreeMap `来处理我们的数据库记录:
 
-```
+```java
 String welcomeMessageKey = "Welcome Message";
 String welcomeMessageString = "Hello Baeldung!";
 
@@ -38,20 +38,20 @@ myMap.put(welcomeMessageKey, welcomeMessageString);
 
 `HTreeMap `是 MapDB 的`HashMap `实现。所以，现在我们的数据库中有了数据，我们可以使用`get `方法来检索它:
 
-```
+```java
 String welcomeMessageFromDB = (String) myMap.get(welcomeMessageKey);
 assertEquals(welcomeMessageString, welcomeMessageFromDB);
 ```
 
 最后，既然我们已经完成了数据库，我们应该关闭它以避免进一步的变异:
 
-```
+```java
 db.close();
 ```
 
 为了将数据存储在文件中，而不是存储在内存中，我们需要做的就是改变我们的`DB`对象的实例化方式:
 
-```
+```java
 DB db = DBMaker.fileDB("file.db").make();
 ```
 
@@ -63,13 +63,13 @@ DB db = DBMaker.fileDB("file.db").make();
 
 让我们从一个简单的`DB `对象实例开始:
 
-```
+```java
 DB db = DBMaker.memoryDB().make();
 ```
 
 接下来，让我们创建我们的`NavigableSet`:
 
-```
+```java
 NavigableSet<String> set = db
   .treeSet("mySet")
   .serializer(Serializer.STRING)
@@ -80,20 +80,20 @@ NavigableSet<String> set = db
 
 接下来，让我们添加一些数据:
 
-```
+```java
 set.add("Baeldung");
 set.add("is awesome");
 ```
 
 现在，让我们检查我们的两个不同的值是否已经正确地添加到数据库中:
 
-```
+```java
 assertEquals(2, set.size());
 ```
 
 最后，由于这是一个集合，让我们添加一个重复的字符串，并验证我们的数据库仍然只包含两个值:
 
-```
+```java
 set.add("Baeldung");
 
 assertEquals(2, set.size());
@@ -105,13 +105,13 @@ assertEquals(2, set.size());
 
 为了启用这个功能，我们需要用`transactionEnable `方法初始化我们的`DB `:
 
-```
+```java
 DB db = DBMaker.memoryDB().transactionEnable().make();
 ```
 
 接下来，让我们创建一个简单的集合，添加一些数据，并提交给数据库:
 
-```
+```java
 NavigableSet<String> set = db
   .treeSet("mySet")
   .serializer(Serializer.STRING)
@@ -127,7 +127,7 @@ assertEquals(2, set.size());
 
 现在，让我们向数据库添加第三个未提交的字符串:
 
-```
+```java
 set.add("Three");
 
 assertEquals(3, set.size());
@@ -135,7 +135,7 @@ assertEquals(3, set.size());
 
 如果我们对数据不满意，我们可以使用`DB's rollback` 方法回滚数据:
 
-```
+```java
 db.rollback();
 
 assertEquals(2, set.size());
@@ -145,7 +145,7 @@ assertEquals(2, set.size());
 
 MapDB 提供了各种各样的[序列化器，它们处理集合](https://web.archive.org/web/20221024071539/https://jankotek.gitbooks.io/mapdb/content/htreemap/#serializers)中的数据。最重要的构造参数是名称，它标识了`DB `对象中的单个集合:
 
-```
+```java
 HTreeMap<String, Long> map = db.hashMap("indentification_name")
   .keySerializer(Serializer.STRING)
   .valueSerializer(Serializer.LONG)
@@ -160,7 +160,7 @@ MapDB 的 **`HTreeMap `为使用我们的数据库提供了`HashMap `和`HashS
 
 首先，让我们实例化一个简单的`HashMap `，它将`String`用于键和值:
 
-```
+```java
 DB db = DBMaker.memoryDB().make();
 
 HTreeMap<String, String> hTreeMap = db
@@ -172,7 +172,7 @@ HTreeMap<String, String> hTreeMap = db
 
 上面，我们已经为键和值定义了单独的`serializers `。既然我们的`HashMap `已经创建，让我们使用`put `方法添加数据:
 
-```
+```java
 hTreeMap.put("key1", "value1");
 hTreeMap.put("key2", "value2");
 
@@ -181,7 +181,7 @@ assertEquals(2, hTreeMap.size());
 
 由于`HashMap `使用的是`Object's hashCode `方法，使用相同的键添加数据会导致值被覆盖:
 
-```
+```java
 hTreeMap.put("key1", "value3");
 
 assertEquals(2, hTreeMap.size());
@@ -194,7 +194,7 @@ MapDB 的 **`SortedTableMap `将键存储在一个固定大小的表中，并�
 
 让我们浏览一下创建和查询一个`SortedTableMap. `的过程。我们将首先创建一个内存映射卷来保存数据，并创建一个接收器来添加数据。在第一次调用我们的卷时，我们将只读标志设置为`false`，确保我们可以写入卷:
 
-```
+```java
 String VOLUME_LOCATION = "sortedTableMapVol.db";
 
 Volume vol = MappedFileVol.FACTORY.makeVolume(VOLUME_LOCATION, false);
@@ -209,7 +209,7 @@ SortedTableMap.Sink<Integer, String> sink =
 
 接下来，我们将添加我们的数据并调用 sink 上的`create `方法来创建我们的地图:
 
-```
+```java
 for(int i = 0; i < 100; i++){
   sink.put(i, "Value " + Integer.toString(i));
 }
@@ -219,7 +219,7 @@ sink.create();
 
 现在我们的地图已经存在，我们可以定义一个只读卷，并使用`SortedTableMap's open` 方法打开我们的地图:
 
-```
+```java
 Volume openVol = MappedFileVol.FACTORY.makeVolume(VOLUME_LOCATION, true);
 
 SortedTableMap<Integer, String> sortedTableMap = SortedTableMap
@@ -255,7 +255,7 @@ MapDB 提供了三种类型的内存存储。让我们快速浏览一下每种�
 
 让我们看一个指定堆上模式的例子:
 
-```
+```java
 DB db = DBMaker.heapDB().make();
 ```
 
@@ -265,7 +265,7 @@ DB db = DBMaker.heapDB().make();
 
 这是默认推荐的，并在我们的' [`Hello Baeldung'` 示例](#db)中使用:
 
-```
+```java
 DB db = DBMaker.memoryDB().make();
 ```
 
@@ -275,7 +275,7 @@ DB db = DBMaker.memoryDB().make();
 
 我们可以通过以下方式调用这种类型的存储:
 
-```
+```java
 DB db = DBMaker.memoryDirectDB().make();
 ```
 

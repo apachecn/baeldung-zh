@@ -24,7 +24,7 @@
 
 对于我们的例子，我们将创建一个非常简单的类来计算一个`Integer`的平方。这肯定不符合长时间运行的方法类别，但是我们将对它进行一个`Thread.sleep()`调用，以便它在完成之前持续 1 秒钟:
 
-```
+```java
 public class SquareCalculator {    
 
     private ExecutorService executor 
@@ -67,7 +67,7 @@ public class SquareCalculator {
 
 通过使用这两种方法，我们可以在等待主任务完成的同时运行其他代码:
 
-```
+```java
 Future<Integer> future = new SquareCalculator().calculate(10);
 
 while(!future.isDone()) {
@@ -84,7 +84,7 @@ Integer result = future.get();
 
 值得一提的是，`get()`有一个重载版本，以超时和一个 [`TimeUnit`](https://web.archive.org/web/20221007090011/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/TimeUnit.html) 作为参数:
 
-```
+```java
 Integer result = future.get(500, TimeUnit.MILLISECONDS);
 ```
 
@@ -94,7 +94,7 @@ Integer result = future.get(500, TimeUnit.MILLISECONDS);
 
 假设我们触发了一个任务，但是由于某种原因，我们不再关心结果了。我们可以使用`[Future.cancel(boolean)](https://web.archive.org/web/20221007090011/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Future.html#cancel(boolean))`来告诉执行器停止操作并中断其底层线程:
 
-```
+```java
 Future<Integer> future = new SquareCalculator().calculate(4);
 
 boolean canceled = future.cancel(true);
@@ -108,7 +108,7 @@ boolean canceled = future.cancel(true);
 
 我们当前的`ExecutorService`是单线程的，因为它是通过[executors . newsinglethreadexecutor](https://web.archive.org/web/20221007090011/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Executors.html#newSingleThreadExecutor())获得的。为了突出显示这个单线程，让我们同时触发两个计算:
 
-```
+```java
 SquareCalculator squareCalculator = new SquareCalculator();
 
 Future<Integer> future1 = squareCalculator.calculate(10);
@@ -135,7 +135,7 @@ squareCalculator.shutdown();
 
 现在让我们分析这段代码的输出:
 
-```
+```java
 calculating square for: 10
 future1 is not done and future2 is not done
 future1 is not done and future2 is not done
@@ -152,7 +152,7 @@ future1 is done and future2 is not done
 
 为了让我们的程序真正多线程化，我们应该使用另一种风格的`ExecutorService`。让我们看看，如果我们使用工厂方法`[Executors.newFixedThreadPool()](https://web.archive.org/web/20221007090011/https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Executors.html#newFixedThreadPool(int))`提供的线程池，我们的示例的行为会如何变化:
 
-```
+```java
 public class SquareCalculator {
 
     private ExecutorService executor = Executors.newFixedThreadPool(2);
@@ -165,7 +165,7 @@ public class SquareCalculator {
 
 如果我们再次运行完全相同的客户端代码，我们将得到以下输出:
 
-```
+```java
 calculating square for: 10
 calculating square for: 100
 future1 is not done and future2 is not done
@@ -195,7 +195,7 @@ future1 is not done and future2 is not done
 
 首先，我们需要创建一个`RecursiveTask`的具体实现，并实现它的`compute()` 方法。这是我们编写业务逻辑的地方:
 
-```
+```java
 public class FactorialSquareCalculator extends RecursiveTask<Integer> {
 
     private Integer n;
@@ -226,7 +226,7 @@ public class FactorialSquareCalculator extends RecursiveTask<Integer> {
 
 现在我们只需要创建一个`ForkJoinPool` 来处理执行和线程管理:
 
-```
+```java
 ForkJoinPool forkJoinPool = new ForkJoinPool();
 
 FactorialSquareCalculator calculator = new FactorialSquareCalculator(10);

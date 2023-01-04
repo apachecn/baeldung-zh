@@ -14,7 +14,7 @@ Apache Camel 是一个强大的开源集成框架，实现了几种已知的 T2 
 
 我们需要做的就是将`[camel-spring-boot-starter](https://web.archive.org/web/20221029120649/https://search.maven.org/search?q=a:camel-spring-boot-starter)`添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.camel.springboot</groupId>
      <artifactId>camel-spring-boot-starter</artifactId>
@@ -24,7 +24,7 @@ Apache Camel 是一个强大的开源集成框架，实现了几种已知的 T2 
 
 然后，我们需要将`[camel-test-spring-junit5](https://web.archive.org/web/20221029120649/https://search.maven.org/search?q=g:org.apache.camel%20a:camel-spring-boot-starter)`依赖项添加到我们的`pom.xml`中:
 
-```
+```java
 <dependency>
     <groupId>org.apache.camel</groupId>
     <artifactId>camel-test-spring-junit5</artifactId>
@@ -40,7 +40,7 @@ Apache Camel 是一个强大的开源集成框架，实现了几种已知的 T2 
 
 因此，让我们从定义应用程序入口点开始:
 
-```
+```java
 @SpringBootApplication
 public class ConditionalRoutingSpringApplication {
 
@@ -66,7 +66,7 @@ public class ConditionalRoutingSpringApplication {
 
 在本例中，我们将根据收到的消息正文的内容，用一些条件逻辑定义一个基本路由:
 
-```
+```java
 @Component
 public class ConditionalBodyRouter extends RouteBuilder {
 
@@ -103,7 +103,7 @@ public class ConditionalBodyRouter extends RouteBuilder {
 
 记住最后一节，让我们继续编写一个单元测试来探索我们的路由是如何工作的:
 
-```
+```java
 @SpringBootTest
 @CamelSpringBootTest
 class ConditionalBodyRouterUnitTest {
@@ -141,7 +141,7 @@ class ConditionalBodyRouterUnitTest {
 
 例如，**我们还可以通过检查给定消息头的值来控制我们的条件:**
 
-```
+```java
 @Component
 public class ConditionalHeaderRouter extends RouteBuilder {
 
@@ -170,7 +170,7 @@ public class ConditionalHeaderRouter extends RouteBuilder {
 
 首先，我们需要创建一个包含返回布尔值的方法的 Java bean:
 
-```
+```java
 public class FruitBean {
 
     public static boolean isApple(Exchange exchange) {
@@ -183,7 +183,7 @@ public class FruitBean {
 
 然后我们可以继续使用我们的`when`块中的`FruitBean`:
 
-```
+```java
 @Component
 public class ConditionalBeanRouter extends RouteBuilder {
 

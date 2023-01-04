@@ -49,7 +49,7 @@ T3![2016-08-10_10-16-52-1024x572](img/382c875c4fb645fe17784a06799826a6.png)
 
 这里，我们运行一个简单的任务，在屏幕上打印“Hello World `“`”。我们将任务作为 lambda(Java 8 的一个特性)提交，推断为`Runnable`:
 
-```
+```java
 Executor executor = Executors.newSingleThreadExecutor();
 executor.execute(() -> System.out.println("Hello World"));
 ```
@@ -60,7 +60,7 @@ executor.execute(() -> System.out.println("Hello World"));
 
 现在我们将创建一个`ExecutorService`，提交一个任务，然后使用返回的`Future`的`get`方法等待，直到提交的任务完成并且返回值:
 
-```
+```java
 ExecutorService executorService = Executors.newFixedThreadPool(10);
 Future<String> future = executorService.submit(() -> "Hello World");
 // some operations
@@ -95,7 +95,7 @@ String result = future.get();
 
 让我们看一个例子。`newFixedThreadPool`方法创建一个具有相等的`corePoolSize`和`maximumPoolSize`参数值的`ThreadPoolExecutor`和一个零`keepAliveTime`。这意味着该线程池中的线程数量总是相同的:
 
-```
+```java
 ThreadPoolExecutor executor = 
   (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
 executor.submit(() -> {
@@ -123,7 +123,7 @@ assertEquals(1, executor.getQueue().size());
 
 我们可以用`Executors.newCachedThreadPool()`方法创建另一个预配置的`ThreadPoolExecutor`。该方法根本不接收大量线程。我们将`corePoolSize`设置为 0，并将`maximumPoolSize`设置为`Integer.` MAX_VALUE。最后，`keepAliveTime`是 60 秒:
 
-```
+```java
 ThreadPoolExecutor executor = 
   (ThreadPoolExecutor) Executors.newCachedThreadPool();
 executor.submit(() -> {
@@ -153,7 +153,7 @@ assertEquals(0, executor.getQueue().size());
 
 以上示例中的任务将按顺序运行，因此在任务完成后，标志值将为 2:
 
-```
+```java
 AtomicInteger counter = new AtomicInteger();
 
 ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -179,7 +179,7 @@ executor.submit(() -> {
 
 下面是如何安排一个任务在 500 毫秒内执行:
 
-```
+```java
 ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);
 executor.schedule(() -> {
     System.out.println("Hello World");
@@ -188,7 +188,7 @@ executor.schedule(() -> {
 
 以下代码显示了如何在延迟 500 毫秒后运行任务，然后每隔 100 毫秒重复一次。调度完任务后，我们使用`CountDownLatch`锁等待它触发三次。然后我们使用`Future.cancel()`方法取消它:
 
-```
+```java
 CountDownLatch lock = new CountDownLatch(3);
 
 ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);
@@ -209,7 +209,7 @@ future.cancel(true);
 
 让我们看一个使用`ForkJoinPool`遍历节点树并计算所有叶值之和的简单例子。下面是一个由一个节点、`int`值和一组子节点组成的树的简单实现:
 
-```
+```java
 static class TreeNode {
 
     int value;
@@ -231,7 +231,7 @@ static class TreeNode {
 *   通过在每个分叉任务上调用`join`方法来收集结果
 *   使用`Collectors.summingInt`收集器对结果求和
 
-```
+```java
 public static class CountingTask extends RecursiveTask<Integer> {
 
     private final TreeNode node;
@@ -251,7 +251,7 @@ public static class CountingTask extends RecursiveTask<Integer> {
 
 在实际的树上运行计算的代码非常简单:
 
-```
+```java
 TreeNode tree = new TreeNode(5,
   new TreeNode(3), new TreeNode(2,
     new TreeNode(2), new TreeNode(8)));
@@ -268,7 +268,7 @@ int sum = forkJoinPool.invoke(new CountingTask(tree));
 
 我们向 Maven pom 文件添加以下依赖项，以便将 Guava 库包含到我们的项目中。在 [Maven Central](https://web.archive.org/web/20220929100635/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22com.google.guava%22%20AND%20a%3A%22guava%22) 资源库中找到最新版本的番石榴库:
 
-```
+```java
 <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
@@ -284,7 +284,7 @@ int sum = forkJoinPool.invoke(new CountingTask(tree));
 
 **这里有一个例子**，演示了在同一个线程中任务的执行。虽然提供的任务休眠了 500 毫秒，但是它**阻塞了当前线程**，并且在`execute`调用结束后结果立即可用:
 
-```
+```java
 Executor executor = MoreExecutors.directExecutor();
 
 AtomicBoolean executed = new AtomicBoolean();
@@ -315,7 +315,7 @@ assertTrue(executed.get());
 
 在下面的例子中，我们提交了一个包含无限循环的任务，但是我们使用了一个配置时间为 100 毫秒的 exiting executor 服务，在 VM 终止时等待任务。
 
-```
+```java
 ThreadPoolExecutor executor = 
   (ThreadPoolExecutor) Executors.newFixedThreadPool(5);
 ExecutorService executorService = 
@@ -338,7 +338,7 @@ executorService.submit(() -> {
 
 例如，使用`Futures.allAsList()`方法，我们可以将几个`ListenableFuture`实例合并到一个`ListenableFuture`中，该实例在所有合并的期货成功完成时完成:
 
-```
+```java
 ExecutorService executorService = Executors.newCachedThreadPool();
 ListeningExecutorService listeningExecutorService = 
   MoreExecutors.listeningDecorator(executorService);

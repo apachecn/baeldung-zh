@@ -17,7 +17,7 @@
 我们将创建一个 Axon / Spring Boot 应用程序。因此，我们需要将最新的`[axon-spring-boot-starter](https://web.archive.org/web/20220926201149/https://search.maven.org/search?q=a:axon-spring-boot-starter)`依赖项添加到我们的`pom.xml`中，以及用于测试的`[axon-test](https://web.archive.org/web/20220926201149/https://search.maven.org/search?q=a:axon-test)`依赖项。
 为了使用匹配的版本，我们将在依赖管理部分使用 [axon-bom](https://web.archive.org/web/20220926201149/https://search.maven.org/search?q=a:axon-bom) :
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -52,7 +52,7 @@
 
 Axon Server 可以在这里下载[。由于它是一个简单的 JAR 文件，下面的操作足以启动它:](https://web.archive.org/web/20220926201149/https://download.axoniq.io/axonserver/AxonServer.zip)
 
-```
+```java
 java -jar axonserver.jar
 ```
 
@@ -72,7 +72,7 @@ Axon 服务器的默认配置和`axon-spring-boot-starter`依赖关系将确保�
 
 自然，我们的域可以处理三个命令消息— `CreateOrderCommand`、` ConfirmOrderCommand`和`ShipOrderCommand`:
 
-```
+```java
 public class CreateOrderCommand {
 
     @TargetAggregateIdentifier
@@ -107,7 +107,7 @@ public class ShipOrderCommand {
 
 它将通过发布一个事件来通知应用程序的其余部分它的决定。我们将有三种类型的事件— `OrderCreatedEvent, OrderConfirmedEvent`和`OrderShippedEvent`:
 
-```
+```java
 public class OrderCreatedEvent {
 
     private final String orderId;
@@ -141,7 +141,7 @@ public class OrderShippedEvent {
 
 因此，让我们创建基本的聚合类:
 
-```
+```java
 @Aggregate
 public class OrderAggregate {
 
@@ -182,7 +182,7 @@ public class OrderAggregate {
 
 现在我们有了基本的集合，我们可以开始实现剩下的命令处理程序了:
 
-```
+```java
 @CommandHandler 
 public void handle(ConfirmOrderCommand command) { 
     if (orderConfirmed) {
@@ -215,7 +215,7 @@ public void on(OrderConfirmedEvent event) {
 
 首先，我们需要通过为`OrderAggregate`创建一个`[FixtureConfiguration](https://web.archive.org/web/20220926201149/https://apidocs.axoniq.io/3.3/org/axonframework/test/aggregate/FixtureConfiguration.html)` 来设置我们的测试:
 
-```
+```java
 private FixtureConfiguration<OrderAggregate> fixture;
 
 @Before
@@ -226,7 +226,7 @@ public void setUp() {
 
 第一个测试用例应该涵盖最简单的情况。当聚合处理`CreateOrderCommand`时，它应该产生一个`OrderCreatedEvent`:
 
-```
+```java
 String orderId = UUID.randomUUID().toString();
 String productId = "Deluxe Chair";
 fixture.givenNoPriorActivity()
@@ -238,7 +238,7 @@ fixture.givenNoPriorActivity()
 
 让我们看一下第一个场景，在这里我们会遇到一个异常:
 
-```
+```java
 String orderId = UUID.randomUUID().toString();
 String productId = "Deluxe Chair";
 fixture.given(new OrderCreatedEvent(orderId, productId))
@@ -248,7 +248,7 @@ fixture.given(new OrderCreatedEvent(orderId, productId))
 
 现在是第二个场景，我们期待一个`OrderShippedEvent`:
 
-```
+```java
 String orderId = UUID.randomUUID().toString();
 String productId = "Deluxe Chair";
 fixture.given(new OrderCreatedEvent(orderId, productId), new OrderConfirmedEvent(orderId))
@@ -264,7 +264,7 @@ fixture.given(new OrderCreatedEvent(orderId, productId), new OrderConfirmedEvent
 
 其中一种型号是`Order`:
 
-```
+```java
 public class Order {
 
     private final String orderId;
@@ -294,7 +294,7 @@ public enum OrderStatus {
 
 **我们将根据系统中传播的事件更新该模型。**一个春天`Service`比恩更新我们的模型就行了:
 
-```
+```java
 @Service
 public class OrdersEventHandler {
 
@@ -318,13 +318,13 @@ public class OrdersEventHandler {
 
 接下来，为了查询这个模型，例如检索所有订单，我们应该首先向我们的核心 API 引入一个查询消息:
 
-```
+```java
 public class FindAllOrderedProductsQuery { }
 ```
 
 其次，我们必须更新`OrdersEventHandler` 以便能够处理`FindAllOrderedProductsQuery`:
 
-```
+```java
 @QueryHandler
 public List<Order> handle(FindAllOrderedProductsQuery query) {
     return new ArrayList<>(orders.values());
@@ -343,7 +343,7 @@ public List<Order> handle(FindAllOrderedProductsQuery query) {
 
 其次，我们需要一种机制来存储我们的`Order`查询模型。对于这个例子，我们可以添加`[h2](https://web.archive.org/web/20220926201149/https://search.maven.org/search?q=g:com.h2database%20AND%20a:h2)`作为内存数据库，添加`[spring-boot-starter-data-jpa](https://web.archive.org/web/20220926201149/https://search.maven.org/search?q=a:spring-boot-starter-data-jpa%20AND%20g:org.springframework.boot)`以便于使用:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -359,7 +359,7 @@ public List<Order> handle(FindAllOrderedProductsQuery query) {
 
 接下来，我们需要能够访问我们的应用程序，为此我们将通过添加`[spring-boot-starter-web](https://web.archive.org/web/20220926201149/https://search.maven.org/search?q=a:spring-boot-starter-web%20AND%20g:org.springframework.boot)`依赖项来利用 REST 端点:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -368,7 +368,7 @@ public List<Order> handle(FindAllOrderedProductsQuery query) {
 
 从我们的 REST 端点，我们可以开始分派命令和查询:
 
-```
+```java
 @RestController
 public class OrderRestEndpoint {
 
@@ -383,7 +383,7 @@ public class OrderRestEndpoint {
 
 从现在开始，**我们的`OrderRestEndpoint`应该有一个 POST 端点来创建、确认和发送订单**:
 
-```
+```java
 @PostMapping("/ship-order")
 public CompletableFuture<Void> shipOrder() {
     String orderId = UUID.randomUUID().toString();
@@ -397,7 +397,7 @@ public CompletableFuture<Void> shipOrder() {
 
 现在，剩下的就是一个 GET 端点来查询所有的`Order:`
 
-```
+```java
 @GetMapping("/all-orders")
 public CompletableFuture<List<Order>> findAllOrders() {
     return queryGateway.query(new FindAllOrderedProductsQuery(), ResponseTypes.multipleInstancesOf(Order.class));

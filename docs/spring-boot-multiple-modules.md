@@ -14,7 +14,7 @@
 
 为了设置我们的多模块项目，让我们使用`pom packaging `创建一个简单的模块，在我们的 Maven 配置中聚合我们的库和应用程序模块:
 
-```
+```java
 <groupId>com.baeldung</groupId>
 <artifactId>parent-multi-module</artifactId>
 <packaging>pom</packaging>
@@ -24,7 +24,7 @@
 
 让我们在`pom.xml`中声明我们的模块:
 
-```
+```java
 <modules>
     <module>library</module>
     <module>application</module>
@@ -35,7 +35,7 @@
 
 对于我们的`library`模块，我们将使用`jar`封装:
 
-```
+```java
 <groupId>com.baledung.example</groupId>
 <artifactId>library</artifactId>
 <packaging>jar</packaging>
@@ -43,7 +43,7 @@
 
 由于我们希望**利用`Spring Boot`依赖管理**，我们将使用`spring-boot-starter-parent `作为父项目，注意**将`<relativePath/> `设置为空值**，这样 Maven 将从存储库中解析父项目`pom.xml`:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -54,7 +54,7 @@
 
 注意**如果我们有自己的父项目，我们可以在`pom.xml`的`<dependencyManagement/>`部分导入依赖管理作为物料清单(BOM)** :
 
-```
+```java
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -70,7 +70,7 @@
 
 最后，最初的依赖关系将非常简单:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -83,7 +83,7 @@
 
 之后，我们准备好**开发一个将由库**提供的服务组件:
 
-```
+```java
 @Service
 public class EvenOddService {
 
@@ -97,7 +97,7 @@ public class EvenOddService {
 
 像我们的`library`模块一样，我们的应用程序模块将使用`jar`打包:
 
-```
+```java
 <groupId>com.baeldung.example</groupId>
 <artifactId>application</artifactId>
 <packaging>jar</packaging>
@@ -105,7 +105,7 @@ public class EvenOddService {
 
 我们将像以前一样利用`Spring Boot`依赖性管理:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -116,7 +116,7 @@ public class EvenOddService {
 
 除了 Spring Boot 启动器依赖项之外，我们还将**包括我们在上一节**中创建的库 `jar` :
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -132,7 +132,7 @@ public class EvenOddService {
 
 最后，我们将使用`Spring Boot`插件
 
-```
+```java
 <build>
     <plugins>
         <plugin>
@@ -153,7 +153,7 @@ public class EvenOddService {
 
 既然已经准备好编写我们的应用程序类并直奔主题，让我们**在主应用程序类**中实现一个控制器:
 
-```
+```java
 @SpringBootApplication(scanBasePackages = "com.baeldung")
 @RestController
 public class EvenOddApplication {

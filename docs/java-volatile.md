@@ -28,7 +28,7 @@
 
 为了对缓存一致性进行更多的扩展，我们将从《实践中的 Java 并发性》一书中借用一个例子:
 
-```
+```java
 public class TaskRunner {
 
     private static int number;
@@ -78,7 +78,7 @@ public class TaskRunner {
 
 更糟糕的是，**读者线程可能会看到这些写操作的顺序不同于实际的程序顺序**。例如，因为我们首先更新了`number `变量:
 
-```
+```java
 public static void main(String[] args) { 
     new Reader().start();
     number = 42; 
@@ -98,7 +98,7 @@ public static void main(String[] args) {
 
 **为了确保对变量的更新可以预测地传播到其他线程，我们应该对这些变量应用`volatile `修饰符:**
 
-```
+```java
 public class TaskRunner {
 
     private volatile static int number;
@@ -135,7 +135,7 @@ public class TaskRunner {
 
 **由于发生前记忆排序的强度，有时我们可以借用另一个`volatile`变量**的可见性属性。例如，在我们的特定例子中，我们只需要将`ready `变量标记为`volatile`:
 
-```
+```java
 public class TaskRunner {
 
     private static int number; // not volatile

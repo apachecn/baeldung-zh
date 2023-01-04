@@ -29,7 +29,7 @@ Hazelcast Jet 是一个分布式数据处理引擎，将数据视为流。它可
 
 我们是这样做的:
 
-```
+```java
 <dependency>
     <groupId>com.hazelcast.jet</groupId>
     <artifactId>hazelcast-jet</artifactId>
@@ -57,7 +57,7 @@ Hazelcast Jet 的最新版本可以在[这里](https://web.archive.org/web/20220
 
 以下是我们编写管道的方式:
 
-```
+```java
 private Pipeline createPipeLine() {
     Pipeline p = Pipeline.create();
     p.readFrom(Sources.<String>list(LIST_NAME))
@@ -80,7 +80,7 @@ private Pipeline createPipeLine() {
 
 下面是我们如何编写一个接受参数并返回计数的`countWord` 函数:
 
-```
+```java
 public Long countWord(List<String> sentences, String word) {
     long count = 0;
     JetInstance jet = Jet.newJetInstance();
@@ -108,7 +108,7 @@ public Long countWord(List<String> sentences, String word) {
 
 下面是一个测试我们为 Jet 编写的代码的单元测试:
 
-```
+```java
 @Test
 public void whenGivenSentencesAndWord_ThenReturnCountOfWord() {
     List<String> sentences = new ArrayList<>();

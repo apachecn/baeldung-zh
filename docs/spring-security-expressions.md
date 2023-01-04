@@ -12,7 +12,7 @@
 
 为了使用 Spring Security，我们需要在我们的`pom.xml`文件中包含以下部分:
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.security</groupId>
@@ -32,7 +32,7 @@
 
 我们将扩展`WebSecurityConfigurerAdapter`,这样我们就可以选择挂接基类提供的任何扩展点:
 
-```
+```java
 @Configuration
 @EnableAutoConfiguration
 @EnableWebSecurity
@@ -44,7 +44,7 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
 
 当然，我们也可以进行 XML 配置:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans ...>
     <global-method-security pre-post-annotations="enabled"/>
@@ -66,7 +66,7 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
 
 这些表达式负责在我们的应用程序中定义对特定 URL 和方法的访问控制或授权:
 
-```
+```java
 @Override
 protected void configure(final HttpSecurity http) throws Exception {
     ...
@@ -80,7 +80,7 @@ protected void configure(final HttpSecurity http) throws Exception {
 
 我们可以通过编写以下代码在 XML 文件中实现相同的配置:
 
-```
+```java
 <http>
     <intercept-url pattern="/auth/admin/*" access="hasRole('ADMIN')"/>
     <intercept-url pattern="/auth/*" access="hasAnyRole('ADMIN','USER')"/>
@@ -99,7 +99,7 @@ protected void configure(final HttpSecurity http) throws Exception {
 
 下面是一个定义具有特定权限的用户的简单示例:
 
-```
+```java
 @Override
 protected void configure(AuthenticationManagerBuilder auth) throws Exception {
     auth.inMemoryAuthentication()
@@ -112,7 +112,7 @@ protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
 然后我们可以使用这些权威表达:
 
-```
+```java
 @Override
 protected void configure(final HttpSecurity http) throws Exception {
     ...
@@ -126,7 +126,7 @@ protected void configure(final HttpSecurity http) throws Exception {
 
 另外，从 Spring 5 开始，我们需要一个 [`PasswordEncoder`](/web/20220926185655/https://www.baeldung.com/spring-security-5-default-password-encoder) bean:
 
-```
+```java
 @Bean
 public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
@@ -135,7 +135,7 @@ public PasswordEncoder passwordEncoder() {
 
 最后，我们还可以选择使用 XML 配置来实现相同的功能:
 
-```
+```java
 <authentication-manager>
     <authentication-provider>
         <user-service>
@@ -150,7 +150,7 @@ public PasswordEncoder passwordEncoder() {
 
 并且:
 
-```
+```java
 <http>
     <intercept-url pattern="/auth/admin/*" access="hasAuthority('ADMIN')"/>
     <intercept-url pattern="/auth/*" access="hasAnyAuthority('ADMIN','USER')"/>
@@ -163,7 +163,7 @@ public PasswordEncoder passwordEncoder() {
 
 让我们来看看这个例子:
 
-```
+```java
 ...
 .antMatchers("/*").permitAll()
 ...
@@ -173,7 +173,7 @@ public PasswordEncoder passwordEncoder() {
 
 我们还可以拒绝访问我们的整个 URL 空间:
 
-```
+```java
 ...
 .antMatchers("/*").denyAll()
 ...
@@ -181,7 +181,7 @@ public PasswordEncoder passwordEncoder() {
 
 同样，我们也可以对 XML 进行同样的配置:
 
-```
+```java
 <http auto-config="true" use-expressions="true">
     <intercept-url access="permitAll" pattern="/*" /> <!-- Choose only one -->
     <intercept-url access="denyAll" pattern="/*" /> <!-- Choose only one -->
@@ -192,7 +192,7 @@ public PasswordEncoder passwordEncoder() {
 
 在这一小节中，我们将关注与用户登录状态相关的表达式。让我们从一个没有登录到我们页面的用户开始。通过在 Java 配置中指定以下内容，我们将允许所有未经授权的用户访问我们的主页:
 
-```
+```java
 ...
 .antMatchers("/*").anonymous()
 ...
@@ -200,7 +200,7 @@ public PasswordEncoder passwordEncoder() {
 
 在 XML 配置中也是如此:
 
-```
+```java
 <http>
     <intercept-url pattern="/*" access="isAnonymous()"/>
 </http>
@@ -208,7 +208,7 @@ public PasswordEncoder passwordEncoder() {
 
 如果我们想保护网站的安全，以便每个使用它的人都需要登录，我们需要使用`isAuthenticated()` 方法:
 
-```
+```java
 ...
 .antMatchers("/*").authenticated()
 ...
@@ -216,7 +216,7 @@ public PasswordEncoder passwordEncoder() {
 
 或者我们可以使用 XML 版本:
 
-```
+```java
 <http>
     <intercept-url pattern="/*" access="isAuthenticated()"/>
 </http>
@@ -226,7 +226,7 @@ public PasswordEncoder passwordEncoder() {
 
 为了向通过“记住我”功能登录的用户提供访问权限，我们可以使用:
 
-```
+```java
 ...
 .antMatchers("/*").rememberMe()
 ...
@@ -234,7 +234,7 @@ public PasswordEncoder passwordEncoder() {
 
 我们也可以使用 XML 版本:
 
-```
+```java
 <http>
     <intercept-url pattern="*" access="isRememberMe()"/>
 </http>
@@ -244,7 +244,7 @@ public PasswordEncoder passwordEncoder() {
 
 为此，我们可以指定`isFullyAuthenticated()`，如果用户不是匿名用户或“记住我”用户，则返回`true`:
 
-```
+```java
 ...
 .antMatchers("/*").fullyAuthenticated()
 ...
@@ -252,7 +252,7 @@ public PasswordEncoder passwordEncoder() {
 
 下面是 XML 版本:
 
-```
+```java
 <http>
     <intercept-url pattern="*" access="isFullyAuthenticated()"/>
 </http>
@@ -276,7 +276,7 @@ public PasswordEncoder passwordEncoder() {
 
 为了允许使用这样的服务，我们可以用访问控制方法创建以下方法:
 
-```
+```java
 @PreAuthorize("hasPermission(#articleId, 'isEditor')")
 public void acceptArticle(Article article) {
    …
@@ -287,7 +287,7 @@ public void acceptArticle(Article article) {
 
 我们还需要记住在我们的应用程序上下文中显式配置一个`PermissionEvaluator`，其中`customInterfaceImplementation`将是实现`PermissionEvaluator`的类:
 
-```
+```java
 <global-method-security pre-post-annotations="enabled">
     <expression-handler ref="expressionHandler"/>
 </global-method-security>
@@ -301,7 +301,7 @@ public void acceptArticle(Article article) {
 
 当然，我们也可以用 Java 配置做到这一点:
 
-```
+```java
 @Override
 protected MethodSecurityExpressionHandler expressionHandler() {
     DefaultMethodSecurityExpressionHandler expressionHandler = 

@@ -19,7 +19,7 @@
 
 每个 URI，不管它是不是 URL，都遵循特定的形式:
 
-```
+```java
 scheme:[//authority][/path][?query][#fragment]
 ```
 
@@ -35,7 +35,7 @@ scheme:[//authority][/path][?query][#fragment]
 
 现在我们知道了语法，让我们看一些例子。以下是 URIs 的列表，其中只有前三个是 URL:
 
-```
+```java
 ftp://ftp.is.co.za/rfc/rfc1808.txt
 https://tools.ietf.org/html/rfc3986
 mailto:[[email protected]](/web/20221205131345/http://www.baeldung.com/cdn-cgi/l/email-protection)
@@ -53,7 +53,7 @@ urn:isbn:1234567890
 
 创建`URI`和`URL`实例非常相似，两个类都提供了几个接受其大部分内容的构造函数，然而，只有`URI`类有一个指定语法所有部分的构造函数:
 
-```
+```java
 @Test
 public void whenCreatingURIs_thenSameInfo() throws Exception {
     URI firstURI = new URI(
@@ -82,7 +82,7 @@ public void whenCreatingURLs_thenSameInfo() throws Exception {
 
 `URI`类还提供了一个实用方法来创建一个不抛出检查异常的新实例:
 
-```
+```java
 @Test
 public void whenCreatingURI_thenCorrect() {
     URI uri = URI.create("urn:isbn:1234567890");
@@ -95,7 +95,7 @@ public void whenCreatingURI_thenCorrect() {
 
 由于 URL 必须以前面提到的方案之一开头，因此尝试用不同的方案创建对象将导致异常:
 
-```
+```java
 @Test(expected = MalformedURLException.class)
 public void whenCreatingURLs_thenException() throws Exception {
     URL theURL = new URL("otherprotocol://somehost/path/to/file");
@@ -110,7 +110,7 @@ public void whenCreatingURLs_thenException() throws Exception {
 
 URI 和 URL 之间的转换非常简单:
 
-```
+```java
 @Test
 public void givenObjects_whenConverting_thenCorrect()
   throws MalformedURLException, URISyntaxException {
@@ -129,7 +129,7 @@ public void givenObjects_whenConverting_thenCorrect()
 
 但是，尝试转换非 URL URI 会导致异常:
 
-```
+```java
 @Test(expected = MalformedURLException.class)
 public void givenURI_whenConvertingToURL_thenException()
   throws MalformedURLException, URISyntaxException {
@@ -145,7 +145,7 @@ public void givenURI_whenConvertingToURL_thenException()
 
 因为 URL 是对远程资源的有效引用，所以 Java 提供了打开到该资源的连接并获取其内容的方法:
 
-```
+```java
 @Test
 public void givenURL_whenGettingContents_thenCorrect()
   throws MalformedURLException, IOException {

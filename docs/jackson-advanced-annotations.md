@@ -14,7 +14,7 @@
 
 没有`@JsonIdentityReference`的豆子:
 
-```
+```java
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class BeanWithoutIdentityReference {
     private int id;
@@ -26,7 +26,7 @@ public class BeanWithoutIdentityReference {
 
 对于使用`@JsonIdentityReference`的 bean，我们选择`id`属性作为对象标识:
 
-```
+```java
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @JsonIdentityReference(alwaysAsId = true)
 public class BeanWithIdentityReference {
@@ -39,7 +39,7 @@ public class BeanWithIdentityReference {
 
 在第一种情况下，当`@JsonIdentityReference`不存在时，该 bean 被序列化，并包含其属性的全部细节:
 
-```
+```java
 BeanWithoutIdentityReference bean 
   = new BeanWithoutIdentityReference(1, "Bean Without Identity Reference Annotation");
 String jsonString = mapper.writeValueAsString(bean);
@@ -47,7 +47,7 @@ String jsonString = mapper.writeValueAsString(bean);
 
 上面序列化的输出:
 
-```
+```java
 {
     "id": 1,
     "name": "Bean Without Identity Reference Annotation"
@@ -56,7 +56,7 @@ String jsonString = mapper.writeValueAsString(bean);
 
 当使用`@JsonIdentityReference`时，bean 被序列化为一个简单的标识:
 
-```
+```java
 BeanWithIdentityReference bean 
   = new BeanWithIdentityReference(1, "Bean With Identity Reference Annotation");
 String jsonString = mapper.writeValueAsString(bean);
@@ -69,7 +69,7 @@ assertEquals("1", jsonString);
 
 假设我们有一个没有`@JsonAppend`的 bean，如下所示:
 
-```
+```java
 public class BeanWithoutAppend {
     private int id;
     private String name;
@@ -80,7 +80,7 @@ public class BeanWithoutAppend {
 
 一个测试将确认在没有`@JsonAppend`注释的情况下，序列化输出不包含关于补充`version` 属性的信息，尽管我们试图添加到`ObjectWriter`对象:
 
-```
+```java
 BeanWithoutAppend bean = new BeanWithoutAppend(2, "Bean Without Append Annotation");
 ObjectWriter writer 
   = mapper.writerFor(BeanWithoutAppend.class).withAttribute("version", "1.0");
@@ -89,7 +89,7 @@ String jsonString = writer.writeValueAsString(bean);
 
 序列化输出:
 
-```
+```java
 {
     "id": 2,
     "name": "Bean Without Append Annotation"
@@ -98,7 +98,7 @@ String jsonString = writer.writeValueAsString(bean);
 
 现在，假设我们有一个用`@JsonAppend`注释的 bean:
 
-```
+```java
 @JsonAppend(attrs = { 
   @JsonAppend.Attr(value = "version") 
 })
@@ -112,7 +112,7 @@ public class BeanWithAppend {
 
 与前一个类似的测试将验证当应用`@JsonAppend`注释时，补充属性在序列化后被包含:
 
-```
+```java
 BeanWithAppend bean = new BeanWithAppend(2, "Bean With Append Annotation");
 ObjectWriter writer 
   = mapper.writerFor(BeanWithAppend.class).withAttribute("version", "1.0");
@@ -121,7 +121,7 @@ String jsonString = writer.writeValueAsString(bean);
 
 该序列化的输出显示已经添加了`version`属性:
 
-```
+```java
 {
     "id": 2,
     "name": "Bean With Append Annotation",
@@ -144,7 +144,7 @@ String jsonString = writer.writeValueAsString(bean);
 
 给定一个 bean 定义:
 
-```
+```java
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class NamingBean {
     private int id;
@@ -156,7 +156,7 @@ public class NamingBean {
 
 下面的测试演示了指定的命名规则按要求工作:
 
-```
+```java
 NamingBean bean = new NamingBean(3, "Naming Bean");
 String jsonString = mapper.writeValueAsString(bean);        
 assertThat(jsonString, containsString("bean_name"));
@@ -164,7 +164,7 @@ assertThat(jsonString, containsString("bean_name"));
 
 `jsonString`变量包含以下数据:
 
-```
+```java
 {
     "id": 3,
     "bean_name": "Naming Bean"
@@ -179,7 +179,7 @@ Jackson 库能够在名为 [JSON Schema](https://web.archive.org/web/20221019195
 
 本节使用下面声明的 bean 来演示`@JsonPropertyDescription`的功能:
 
-```
+```java
 public class PropertyDescriptionBean {
     private int id;
     @JsonPropertyDescription("This is a description of the name property")
@@ -191,7 +191,7 @@ public class PropertyDescriptionBean {
 
 添加了`description`字段的 JSON 模式的生成方法如下所示:
 
-```
+```java
 SchemaFactoryWrapper wrapper = new SchemaFactoryWrapper();
 mapper.acceptJsonFormatVisitor(PropertyDescriptionBean.class, wrapper);
 JsonSchema jsonSchema = wrapper.finalSchema();
@@ -201,7 +201,7 @@ assertThat(jsonString, containsString("This is a description of the name propert
 
 正如我们所看到的，JSON 模式的生成是成功的:
 
-```
+```java
 {
     "type": "object",
     "id": "urn:jsonschema:com:baeldung:jackson:annotation:extra:PropertyDescriptionBean",
@@ -227,7 +227,7 @@ assertThat(jsonString, containsString("This is a description of the name propert
 
 假设我们需要反序列化以下 JSON 字符串:
 
-```
+```java
 {
     "id": 5,
     "name": "POJO Builder Bean"
@@ -236,7 +236,7 @@ assertThat(jsonString, containsString("This is a description of the name propert
 
 该 JSON 源代码将用于创建`POJOBuilderBean`的实例:
 
-```
+```java
 @JsonDeserialize(builder = BeanBuilder.class)
 public class POJOBuilderBean {
     private int identity;
@@ -255,7 +255,7 @@ bean 属性的名称不同于 JSON string 中的字段名称。这就是`@JsonPO
 
 这个例子使用了下面的`BeanBuilder`类，它用在`POJOBuilderBean`上:
 
-```
+```java
 @JsonPOJOBuilder(buildMethodName = "createBean", withPrefix = "construct")
 public class BeanBuilder {
     private int idValue;
@@ -281,7 +281,7 @@ public class BeanBuilder {
 
 对 bean 应用`@JsonPOJOBuilder`的描述和测试如下:
 
-```
+```java
 String jsonString = "{\"id\":5,\"name\":\"POJO Builder Bean\"}";
 POJOBuilderBean bean = mapper.readValue(jsonString, POJOBuilderBean.class);
 
@@ -299,7 +299,7 @@ assertEquals("POJO Builder Bean", bean.getBeanName());
 
 假设我们有一个 bean 类定义如下:
 
-```
+```java
 public class TypeIdBean {
     private int id;
     @JsonTypeId
@@ -311,7 +311,7 @@ public class TypeIdBean {
 
 下面的测试验证了`@JsonTypeId`如预期的那样工作:
 
-```
+```java
 mapper.enableDefaultTyping(DefaultTyping.NON_FINAL);
 TypeIdBean bean = new TypeIdBean(6, "Type Id Bean");
 String jsonString = mapper.writeValueAsString(bean);
@@ -321,7 +321,7 @@ assertThat(jsonString, containsString("Type Id Bean"));
 
 序列化过程的输出:
 
-```
+```java
 [
     "Type Id Bean",
     {
@@ -338,7 +338,7 @@ assertThat(jsonString, containsString("Type Id Bean"));
 
 `AbstractBean`超类:
 
-```
+```java
 @JsonTypeInfo(
   use = JsonTypeInfo.Id.NAME, 
   include = JsonTypeInfo.As.PROPERTY, 
@@ -358,7 +358,7 @@ public class AbstractBean {
 
 `FirstBean`子类:
 
-```
+```java
 public class FirstBean extends AbstractBean {
     String firstName;
 
@@ -373,7 +373,7 @@ public class FirstBean extends AbstractBean {
 
 `LastBean`子类:
 
-```
+```java
 public class LastBean extends AbstractBean {
     String lastName;
 
@@ -388,7 +388,7 @@ public class LastBean extends AbstractBean {
 
 这些类的实例用于填充一个`BeanContainer`对象:
 
-```
+```java
 public class BeanContainer {
     private List<AbstractBean> beans;
 
@@ -400,7 +400,7 @@ public class BeanContainer {
 
 下面是处理类型信息包含的解析器类:
 
-```
+```java
 public class BeanIdResolver extends TypeIdResolverBase {
 
     private JavaType superType;
@@ -454,7 +454,7 @@ public class BeanIdResolver extends TypeIdResolverBase {
 
 首先，我们需要实例化一个 bean 容器和 bean 类，然后用 bean 实例填充该容器:
 
-```
+```java
 FirstBean bean1 = new FirstBean(1, "Bean 1");
 LastBean bean2 = new LastBean(2, "Bean 2");
 
@@ -468,7 +468,7 @@ serializedContainer.setBeans(beans);
 
 接下来，`BeanContainer`对象被序列化，我们确认结果字符串包含类型信息:
 
-```
+```java
 String jsonString = mapper.writeValueAsString(serializedContainer);
 assertThat(jsonString, containsString("bean1"));
 assertThat(jsonString, containsString("bean2"));
@@ -476,7 +476,7 @@ assertThat(jsonString, containsString("bean2"));
 
 序列化的输出如下所示:
 
-```
+```java
 {
     "beans": 
     [
@@ -497,7 +497,7 @@ assertThat(jsonString, containsString("bean2"));
 
 该 JSON 结构将用于重新创建与序列化前相同子类型的对象。以下是反序列化的实现步骤:
 
-```
+```java
 BeanContainer deserializedContainer = mapper.readValue(jsonString, BeanContainer.class);
 List<AbstractBean> beanList = deserializedContainer.getBeans();
 assertThat(beanList.get(0), instanceOf(FirstBean.class));

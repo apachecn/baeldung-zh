@@ -16,25 +16,25 @@
 
 让我们创建一个空映射，其中键和值都是原语`int`，为此，我们将使用`IntIntMaps`工厂类:
 
-```
+```java
 MutableIntIntMap mutableIntIntMap = IntIntMaps.mutable.empty();
 ```
 
 **`IntIntMaps`工厂类是创建原始地图**最便捷的方式。它允许我们创建所需类型地图的可变和不可变实例。在我们的例子中，我们创建了`IntIntMap`的可变实例。类似地，我们可以通过简单地用`IntIntMaps.immutable`替换`IntIntMaps.mutable`静态工厂调用来创建不可变实例:
 
-```
+```java
 ImmutableIntIntMap immutableIntIntMap = IntIntMaps.immutable.empty();
 ```
 
 因此，让我们向可变映射添加一个键/值对:
 
-```
+```java
 mutableIntIntMap.addToValue(1, 1);
 ```
 
 同样，**我们可以创建带有引用和原始类型键值对的混合映射。**让我们用`String`键和`double`值创建一个地图:
 
-```
+```java
 MutableObjectDoubleMap dObject = ObjectDoubleMaps.mutable.empty();
 ```
 
@@ -42,7 +42,7 @@ MutableObjectDoubleMap dObject = ObjectDoubleMaps.mutable.empty();
 
 现在让我们添加一些条目:
 
-```
+```java
 dObject.addToValue("price", 150.5);
 dObject.addToValue("quality", 4.4);
 dObject.addToValue("stability", 0.8);
@@ -64,7 +64,7 @@ HPPC 是一个面向高性能和内存效率的库。这意味着该库比其他
 
 让我们首先创建一个有一个`int`键和一个`long`值的映射。使用这个非常熟悉:
 
-```
+```java
 IntLongHashMap intLongHashMap = new IntLongHashMap();
 intLongHashMap.put(25, 1L);
 intLongHashMap.put(150, Long.MAX_VALUE);
@@ -82,7 +82,7 @@ HPPC 为键和值的所有组合提供映射:
 
 对象类型映射支持泛型:
 
-```
+```java
 IntObjectOpenHashMap<BigDecimal>
 ObjectIntOpenHashMap<LocalDate> 
 ```
@@ -111,13 +111,13 @@ ObjectIntOpenHashMap<LocalDate>
 
 让我们创建一个`int`到`boolean`的映射:
 
-```
+```java
 Int2BooleanMap int2BooleanMap = new Int2BooleanOpenHashMap();
 ```
 
 现在，让我们添加一些条目:
 
-```
+```java
 int2BooleanMap.put(1, true);
 int2BooleanMap.put(7, false);
 int2BooleanMap.put(4, true);
@@ -125,7 +125,7 @@ int2BooleanMap.put(4, true);
 
 然后，我们可以从中检索值:
 
-```
+```java
 boolean value = int2BooleanMap.get(1);
 ```
 
@@ -135,7 +135,7 @@ boolean value = int2BooleanMap.get(1);
 
 Fastutil 提供了一种替代方案，可以极大地缓解这一问题:
 
-```
+```java
 Int2FloatMap map = new Int2FloatMap();
 //Add keys here
 for(Int2FloatMap.Entry e : Fastutil.fastIterable(map)) {
@@ -145,7 +145,7 @@ for(Int2FloatMap.Entry e : Fastutil.fastIterable(map)) {
 
 Fastutil 还提供了`fastForeach`方法。这将采用一个`Consumer` [函数接口](/web/20220701020340/https://www.baeldung.com/java-8-functional-interfaces)并为每个循环执行一个λ表达式:
 
-```
+```java
 Int2FloatMap map = new Int2FloatMap();
 //Add keys here
 Int2FloatMaps.fastForEach(map , e ->  {
@@ -155,7 +155,7 @@ Int2FloatMaps.fastForEach(map , e ->  {
 
 这非常类似于标准的 Java `foreach`构造:
 
-```
+```java
 Int2FloatMap map = new Int2FloatMap();
 //Add keys here
 map.forEach((key,value) -> {

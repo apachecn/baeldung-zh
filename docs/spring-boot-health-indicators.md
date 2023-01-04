@@ -12,7 +12,7 @@ Spring Boot 提供了几种不同的方法来检查正在运行的应用程序�
 
 健康信息贡献者是 [Spring Boot 致动器](/web/20221129013058/https://www.baeldung.com/spring-boot-actuators)模块的一部分，因此我们需要适当的 [Maven 依赖关系](https://web.archive.org/web/20221129013058/https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot-starter-actuator):
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-actuator</artifactId>
@@ -31,7 +31,7 @@ Spring Boot 提供了几种不同的方法来检查正在运行的应用程序�
 
 **此外，要查看某个特定指标的健康报告，我们可以调用`/actuator/health/{name} `端点**。例如，调用`/actuator/health/diskSpace `端点将从`DiskSpaceHealthIndicator`返回一个状态报告:
 
-```
+```java
 {
   "status": "UP",
   "details": {
@@ -49,7 +49,7 @@ Spring Boot 提供了几种不同的方法来检查正在运行的应用程序�
 
 例如，以下实现随机报告一个故障:
 
-```
+```java
 @Component
 public class RandomHealthIndicator implements HealthIndicator {
 
@@ -73,7 +73,7 @@ public class RandomHealthIndicator implements HealthIndicator {
 
 为了查看这个特定指标的报告，我们可以调用`/actuator/health/random `端点。例如，API 响应可能是这样的:
 
-```
+```java
 {"status": "UP"}
 ```
 
@@ -81,7 +81,7 @@ public class RandomHealthIndicator implements HealthIndicator {
 
 使用这种算法，如果我们将 bean 名称更改为，比方说，`rand`:
 
-```
+```java
 @Component("rand")
 public class RandomHealthIndicator implements HealthIndicator {
     // omitted
@@ -94,13 +94,13 @@ public class RandomHealthIndicator implements HealthIndicator {
 
 **要禁用某个指示器，我们可以将`“` `management.health.<indicator_identifier>.enabled” `配置属性设置为`false`** 。例如，如果我们将以下内容添加到我们的`application.properties`:
 
-```
+```java
 management.health.random.enabled=false
 ```
 
 然后 Spring Boot 将禁用`RandomHealthIndicator`。为了激活这个配置属性，我们还应该在指示器上添加`[@ConditionalOnEnabledHealthIndicator](https://web.archive.org/web/20221129013058/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/actuate/autoconfigure/health/ConditionalOnEnabledHealthIndicator.html) `注释:
 
-```
+```java
 @Component
 @ConditionalOnEnabledHealthIndicator("random")
 public class RandomHealthIndicator implements HealthIndicator { 
@@ -110,7 +110,7 @@ public class RandomHealthIndicator implements HealthIndicator {
 
 现在如果我们调用`/actuator/health/random`，Spring Boot 将返回一个 404 Not Found HTTP 响应:
 
-```
+```java
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(properties = "management.health.random.enabled=false")
@@ -133,7 +133,7 @@ class DisabledRandomHealthIndicatorIntegrationTest {
 
 除了报告状态，我们还可以使用 [`withDetail(key, value)`](https://web.archive.org/web/20221129013058/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/actuate/health/Health.Builder.html#withDetail-java.lang.String-java.lang.Object-) 附加额外的键值细节:
 
-```
+```java
 public Health health() {
     double chance = ThreadLocalRandom.current().nextDouble();
     Health.Builder status = Health.up();
@@ -150,7 +150,7 @@ public Health health() {
 
 这里我们向状态报告添加了两条信息。同样，我们可以通过向`[withDetails(map)](https://web.archive.org/web/20221129013058/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/actuate/health/Health.Builder.html#withDetail-java.lang.String-java.lang.Object-) `方法传递一个`Map<String, Object> `来实现同样的事情:
 
-```
+```java
 Map<String, Object> details = new HashMap<>();
 details.put("chance", chance);
 details.put("strategy", "thread-local");
@@ -160,7 +160,7 @@ return status.withDetails(details).build();
 
 现在，如果我们调用`/actuator/health/random`，我们可能会看到这样的内容:
 
-```
+```java
 {
   "status": "DOWN",
   "details": {
@@ -172,7 +172,7 @@ return status.withDetails(details).build();
 
 我们也可以用自动化测试来验证这种行为:
 
-```
+```java
 mockMvc.perform(get("/actuator/health/random"))
   .andExpect(jsonPath("$.status").exists())
   .andExpect(jsonPath("$.details.strategy").value("thread-local"))
@@ -181,7 +181,7 @@ mockMvc.perform(get("/actuator/health/random"))
 
 有时，在与系统组件(如数据库或磁盘)通信时会出现异常。我们可以使用`[withException(ex)](https://web.archive.org/web/20221129013058/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/actuate/health/Health.Builder.html#withException-java.lang.Throwable-) `方法报告这样的异常:
 
-```
+```java
 if (chance > 0.9) {
     status.withException(new RuntimeException("Bad luck"));
 }
@@ -189,7 +189,7 @@ if (chance > 0.9) {
 
 我们还可以将异常传递给我们之前看到的`[down(ex)](https://web.archive.org/web/20221129013058/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/actuate/health/Health.Builder.html#down-java.lang.Throwable-) `方法:
 
-```
+```java
 if (chance > 0.9) {
     status = Health.down(new RuntimeException("Bad Luck"));
 }
@@ -197,7 +197,7 @@ if (chance > 0.9) {
 
 现在，运行状况报告将包含堆栈跟踪:
 
-```
+```java
 {
   "status": "DOWN",
   "details": {
@@ -230,7 +230,7 @@ if (chance > 0.9) {
 
 这些状态被声明为`[public static final](https://web.archive.org/web/20221129013058/https://github.com/spring-projects/spring-boot/blob/310ef6e9995fab302f6af8b284d0a59ca0f212e9/spring-boot-project/spring-boot-actuator/src/main/java/org/springframework/boot/actuate/health/Status.java#L43) `实例，而不是 Java 枚举。因此，我们可以定义自己的健康状况。为此，我们可以使用`[status(name)](https://web.archive.org/web/20221129013058/https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/actuate/health/Health.Builder.html#status-java.lang.String-) `方法:
 
-```
+```java
 Health.Builder warning = Health.status("WARNING");
 ```
 
@@ -238,7 +238,7 @@ Health.Builder warning = Health.status("WARNING");
 
 为了定制这个映射，**我们可以将`management.endpoint.health.status.http-mapping.<status> `配置属性设置为所需的 HTTP 状态代码:**
 
-```
+```java
 management.endpoint.health.status.http-mapping.down=500
 management.endpoint.health.status.http-mapping.out_of_service=503
 management.endpoint.health.status.http-mapping.warning=500
@@ -246,7 +246,7 @@ management.endpoint.health.status.http-mapping.warning=500
 
 现在，Spring Boot 将把`DOWN `状态映射到 500，`OUT_OF_SERVICE `映射到 503，`WARNING `映射到 500 HTTP 状态代码:
 
-```
+```java
 mockMvc.perform(get("/actuator/health/warning"))
   .andExpect(jsonPath("$.status").value("WARNING"))
   .andExpect(status().isInternalServerError());
@@ -254,7 +254,7 @@ mockMvc.perform(get("/actuator/health/warning"))
 
 类似地，**我们可以注册一个类型为`[HttpCodeStatusMapper](https://web.archive.org/web/20221129013058/https://docs.spring.io/spring-boot/docs/2.2.3.RELEASE/api/org/springframework/boot/actuate/health/HttpCodeStatusMapper.html) `的 bean 来定制 HTTP 状态代码映射**:
 
-```
+```java
 @Component
 public class CustomStatusCodeMapper implements HttpCodeStatusMapper {
 
@@ -279,7 +279,7 @@ public class CustomStatusCodeMapper implements HttpCodeStatusMapper {
 
 `getStatusCode(status) `方法将健康状态作为输入，并将 HTTP 状态代码作为输出返回。此外，还可以映射定制的`Status `实例:
 
-```
+```java
 if (status.getCode().equals("WARNING")) {
     return 500;
 }

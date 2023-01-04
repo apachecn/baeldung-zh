@@ -14,7 +14,7 @@
 
 在我们开始之前，对于某些场景，我们需要一个 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-collections4</artifactId>
@@ -28,14 +28,14 @@
 
 从任何类型的`Collection`创建 [`Stream`](/web/20220628121151/https://www.baeldung.com/java-8-streams-introduction) 的基本方法是根据所需的流类型调用集合上的`stream()`或`parallelStream()`方法:
 
-```
+```java
 Collection<String> collection = Arrays.asList("a", "b", "c");
 Stream<String> streamOfCollection = collection.stream(); 
 ```
 
 我们的集合很可能在某个时候有一个外部源，当从集合中创建流时，我们可能会以类似于下面的方法结束:
 
-```
+```java
 public Stream<String> collectionAsStream(Collection<String> collection) {
     return collection.stream();
 } 
@@ -51,7 +51,7 @@ public Stream<String> collectionAsStream(Collection<String> collection) {
 
 为了防止意外的`null`指针异常，**当从集合创建流时，我们可以选择添加检查来防止`null`引用**:
 
-```
+```java
 Stream<String> collectionAsStream(Collection<String> collection) {
     return collection == null 
       ? Stream.empty() 
@@ -71,7 +71,7 @@ Stream<String> collectionAsStream(Collection<String> collection) {
 
 我们可以选择使用 Apache Commons 的 [`CollectionUtils`](https://web.archive.org/web/20220628121151/https://commons.apache.org/proper/commons-collections/apidocs/org/apache/commons/collections4/CollectionUtils.html) 库来确保我们的流是`null`安全的。这个库提供了一个`emptyIfNull`方法，该方法返回一个不可变的空集合，给定一个`null`集合作为参数，否则返回集合本身:
 
-```
+```java
 public Stream<String> collectionAsStream(Collection<String> collection) {
     return emptyIfNull(collection).stream();
 } 
@@ -87,7 +87,7 @@ Java SE 8 的 [`Optional`](/web/20220628121151/https://www.baeldung.com/java-opt
 
 让我们看看如何使用它，然后进行一个简短的讨论:
 
-```
+```java
 public Stream<String> collectionToStream(Collection<String> collection) {
     return Optional.ofNullable(collection)
       .map(Collection::stream)
@@ -107,7 +107,7 @@ public Stream<String> collectionToStream(Collection<String> collection) {
 
 我们可以将上面的示例转换为:
 
-```
+```java
 Stream<String> collectionAsStream(Collection<String> collection) {  
   return collection.stream().flatMap(s -> Stream.ofNullable(s));
 }

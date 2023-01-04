@@ -59,7 +59,7 @@ Spring MVC 实现了清晰的关注点分离，使我们能够轻松地开发和
 
 例如，如果我们想通过 id 从`www.mysite.com/user/123`中获取一个用户，我们应该将控制器中的方法映射为`/user/{id}`:
 
-```
+```java
 @RequestMapping("/user/{id}")
 public String handleRequest(@PathVariable("id") String userId, Model map) {}
 ```
@@ -68,7 +68,7 @@ public String handleRequest(@PathVariable("id") String userId, Model map) {}
 
 也允许有多个`@PathVariable`注释，或者通过一个接一个地声明它们:
 
-```
+```java
 @RequestMapping("/user/{userId}/name/{userName}")
 public String handleRequest(@PathVariable String userId,
   @PathVariable String userName, Model map) {}
@@ -76,7 +76,7 @@ public String handleRequest(@PathVariable String userId,
 
 或者将它们都放在一个`Map<String, String>`或`MultiValueMap<String, String>`中:
 
-```
+```java
 @RequestMapping("/user/{userId}/name/{userName}")
 public String handleRequest(@PathVariable Map<String, String> varsMap, Model map) {}
 ```
@@ -113,7 +113,7 @@ JSR-303 是用于 bean 验证的 Java API 的规范，是 Jakarta EE 和 JavaSE 
 
 **`@SessionAttributes`注释用于存储用户会话中的模型属性。**我们在控制器类级别使用它，如我们关于 Spring MVC 中[会话属性的文章所示:](/web/20221208143837/https://www.baeldung.com/spring-mvc-session-attributes)
 
-```
+```java
 @Controller
 @RequestMapping("/sessionattributes")
 @SessionAttributes("todos")
@@ -134,7 +134,7 @@ public class TodoControllerWithSessionAttributes {
 
 **如果我们想从全局管理的会话中检索现有属性，我们将使用`@SessionAttribute`注释作为方法参数**:
 
-```
+```java
 @GetMapping
 public String getTodos(@SessionAttribute("todos") TodoList todos) {
     // method body
@@ -158,7 +158,7 @@ public String getTodos(@SessionAttribute("todos") TodoList todos) {
 
 **`BindingResult`是来自`org.springframework.validation`包的接口，表示绑定结果。我们可以用它来检测和报告提交的表单**中的错误。它很容易调用——我们只需要确保将它作为参数放在我们正在验证的表单对象之后。可选的`Model`参数应该在`BindingResult`之后，这可以在[自定义验证器教程](/web/20221208143837/https://www.baeldung.com/spring-mvc-custom-validator)中看到:
 
-```
+```java
 @PostMapping("/user")
 public String submitForm(@Valid NewUserForm newUserForm, 
   BindingResult result, Model model) {
@@ -186,7 +186,7 @@ public String submitForm(@Valid NewUserForm newUserForm,
 
 让我们看一个例子。我们在 XML 配置中声明了两个相似的 beans:
 
-```
+```java
 <bean id="person1" class="com.baeldung.Person" >
     <property name="name" value="Joe" />
 </bean>
@@ -197,7 +197,7 @@ public String submitForm(@Valid NewUserForm newUserForm,
 
 当我们试图连接 bean 时，我们将得到一个`org.springframework.beans.factory.NoSuchBeanDefinitionException.`来修复它，我们需要使用`@Qualifier`来告诉 Spring 应该连接哪个 bean:
 
-```
+```java
 @Autowired
 @Qualifier("person1")
 private Person person;
@@ -211,7 +211,7 @@ private Person person;
 
 让我们看一个例子:
 
-```
+```java
 public class Person {
     private String name;
 
@@ -224,7 +224,7 @@ public class Person {
 
 现在，`Person` bean 的`name`需要像这样在 XML config 中设置:
 
-```
+```java
 <bean id="person" class="com.baeldung.Person">
     <property name="name" value="Joe" />
 </bean>
@@ -314,7 +314,7 @@ Spring MVC 拦截器允许我们拦截一个客户机请求，并在三个地方
 
 **如果我们想将适用的类限制在一个包中，我们应该将包的名称添加到注释**:
 
-```
+```java
 @ControllerAdvice("my.package")
 @ControllerAdvice(value = "my.package")
 @ControllerAdvice(basePackages = "my.package")
@@ -324,7 +324,7 @@ Spring MVC 拦截器允许我们拦截一个客户机请求，并在三个地方
 
 除了通过名字限制包，我们还可以通过使用包中的一个类或接口来做到这一点:
 
-```
+```java
 @ControllerAdvice(basePackageClasses = MyClass.class)
 ```
 
@@ -338,7 +338,7 @@ Spring MVC 拦截器允许我们拦截一个客户机请求，并在三个地方
 
 让我们来看看我们文章中关于用 Spring 对 REST 进行[错误处理的例子:](/web/20221208143837/https://www.baeldung.com/exception-handling-for-rest-with-spring)
 
-```
+```java
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler
   extends ResponseEntityExceptionHandler {

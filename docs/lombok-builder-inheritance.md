@@ -18,7 +18,7 @@ Lombok 库提供了一种无需编写任何样板代码就能实现`[Builder Pat
 
 假设我们的`Child`类扩展了一个`Parent`类:
 
-```
+```java
 @Getter
 @AllArgsConstructor
 public class Parent {
@@ -46,7 +46,7 @@ public class Child extends Parent {
 
 我们用`@Builder`来注释它，而不是类:
 
-```
+```java
 @Getter
 @AllArgsConstructor
 public class Parent {
@@ -70,7 +70,7 @@ public class Child extends Parent {
 
 这样，我们将能够从`Child`类访问一个方便的构建器，这将允许我们指定`Parent`类字段:
 
-```
+```java
 Child child = Child.builder()
   .parentName("Andrea")
   .parentAge(38)
@@ -94,7 +94,7 @@ assertThat(child.getChildAge()).isEqualTo(6);
 
 我们可以通过为至少一个构建器方法分配一个唯一的名称来解决这个问题:
 
-```
+```java
 @Getter
 public class Child extends Parent {
     private final String childName;
@@ -117,7 +117,7 @@ public class Child extends Parent {
 
 让我们创建一个`Child`的子类:
 
-```
+```java
 @Getter
 public class Student extends Child {
 
@@ -135,7 +135,7 @@ public class Student extends Child {
 
 通过在注释中提供另一个惟一的方法名，我们可以获得`Parent`、`Child`或`Student`的构建器:
 
-```
+```java
 Student student = Student.studentBuilder()
   .parentName("Andrea")
   .parentAge(38)
@@ -167,7 +167,7 @@ assertThat(student.getSchoolName()).isEqualTo("Baeldung High School");
 
 请注意，简单父子继承的原则是相同的:
 
-```
+```java
 @Getter
 @SuperBuilder
 public class Parent {
@@ -194,7 +194,7 @@ public class Student extends Child {
 
 由`@SuperBuilder`生成的构建器类的行为就像我们使用主 Lombok `@Builder`生成的一样:
 
-```
+```java
 Student student = Student.builder()
   .parentName("Andrea")
   .parentAge(38)

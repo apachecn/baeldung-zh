@@ -95,7 +95,7 @@ Cassandra 提供了一种使用集合类型将数据分组并存储在一列中�
 
 用户定义的类型允许我们在一列中附加多个数据字段:
 
-```
+```java
 CREATE TYPE student.basic_info (
   birthday timestamp,
   race text,
@@ -110,7 +110,7 @@ CREATE TYPE student.basic_info (
 
 下面是一个简单元组的命令:
 
-```
+```java
 -- create a tuple
 CREATE TABLE subjects (
   k int PRIMARY KEY,

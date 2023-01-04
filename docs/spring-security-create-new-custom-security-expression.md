@@ -16,7 +16,7 @@
 
 让我们看看我们的`User`实体——它有一个`Privileges`和一个`Organization`:
 
-```
+```java
 @Entity
 public class User{
     @Id
@@ -46,7 +46,7 @@ public class User{
 
 这里是我们简单的`Privilege`:
 
-```
+```java
 @Entity
 public class Privilege {
     @Id
@@ -62,7 +62,7 @@ public class Privilege {
 
 还有我们的`Organization`:
 
-```
+```java
 @Entity
 public class Organization {
     @Id
@@ -78,7 +78,7 @@ public class Organization {
 
 最后，我们将使用一个更简单的定制`Principal`:
 
-```
+```java
 public class MyUserPrincipal implements UserDetails {
 
     private User user;
@@ -112,7 +112,7 @@ public class MyUserPrincipal implements UserDetails {
 
 准备好所有这些类后，我们将在一个基本的`UserDetailsService`实现中使用我们的自定义`Principal` :
 
-```
+```java
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
@@ -136,7 +136,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
 接下来，让我们用简单的测试数据初始化我们的数据库:
 
-```
+```java
 @Component
 public class SetupData {
     @Autowired
@@ -159,7 +159,7 @@ public class SetupData {
 
 下面是我们的`init` 方法:
 
-```
+```java
 private void initPrivileges() {
     Privilege privilege1 = new Privilege("FOO_READ_PRIVILEGE");
     privilegeRepository.save(privilege1);
@@ -169,7 +169,7 @@ private void initPrivileges() {
 }
 ```
 
-```
+```java
 private void initOrganizations() {
     Organization org1 = new Organization("FirstOrg");
     organizationRepository.save(org1);
@@ -179,7 +179,7 @@ private void initOrganizations() {
 }
 ```
 
-```
+```java
 private void initUsers() {
     Privilege privilege1 = privilegeRepository.findByName("FOO_READ_PRIVILEGE");
     Privilege privilege2 = privilegeRepository.findByName("FOO_WRITE_PRIVILEGE");
@@ -217,7 +217,7 @@ private void initUsers() {
 
 为了创建我们自己的自定义权限评估器，我们需要实现`PermissionEvaluator`接口:
 
-```
+```java
 public class CustomPermissionEvaluator implements PermissionEvaluator {
     @Override
     public boolean hasPermission(
@@ -244,7 +244,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
 下面是我们的`hasPrivilege()`方法:
 
-```
+```java
 private boolean hasPrivilege(Authentication auth, String targetType, String permission) {
     for (GrantedAuthority grantedAuth : auth.getAuthorities()) {
         if (grantedAuth.getAuthority().startsWith(targetType) && 
@@ -260,19 +260,19 @@ private boolean hasPrivilege(Authentication auth, String targetType, String perm
 
 因此，不使用更硬编码的版本:
 
-```
+```java
 @PostAuthorize("hasAuthority('FOO_READ_PRIVILEGE')")
 ```
 
 我们可以用 use:
 
-```
+```java
 @PostAuthorize("hasPermission(returnObject, 'read')")
 ```
 
 或者
 
-```
+```java
 @PreAuthorize("hasPermission(#id, 'Foo', 'read')")
 ```
 
@@ -282,7 +282,7 @@ private boolean hasPrivilege(Authentication auth, String targetType, String perm
 
 仅仅定义`CustomPermissionEvaluator`是不够的——我们还需要在我们的方法安全配置中使用它:
 
-```
+```java
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
@@ -301,7 +301,7 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
 现在让我们开始使用新的表达式——在几个简单的控制器方法中:
 
-```
+```java
 @Controller
 public class MainController {
 
@@ -328,7 +328,7 @@ public class MainController {
 
 现在让我们编写一个简单的现场测试——点击 API 并确保一切正常:
 
-```
+```java
 @Test
 public void givenUserWithReadPrivilegeAndHasPermission_whenGetFooById_thenOK() {
     Response response = givenAuth("john", "123").get("http://localhost:8082/foos/1");
@@ -356,7 +356,7 @@ public void givenUserWithWritePrivilegeAndHasPermission_whenPostFoo_thenOk() {
 
 这里是我们的`givenAuth()`方法:
 
-```
+```java
 private RequestSpecification givenAuth(String username, String password) {
     FormAuthConfig formAuthConfig = 
       new FormAuthConfig("http://localhost:8082/login", "username", "password");
@@ -377,7 +377,7 @@ private RequestSpecification givenAuth(String username, String password) {
 
 为了创建这个新的自定义表达式，我们需要从实现根注释开始，所有安全表达式的计算都从这里开始:
 
-```
+```java
 public class CustomMethodSecurityExpressionRoot 
   extends SecurityExpressionRoot implements MethodSecurityExpressionOperations {
 
@@ -402,7 +402,7 @@ public class CustomMethodSecurityExpressionRoot
 
 接下来，我们需要在表达式处理程序中注入我们的`CustomMethodSecurityExpressionRoot`:
 
-```
+```java
 public class CustomMethodSecurityExpressionHandler 
   extends DefaultMethodSecurityExpressionHandler {
     private AuthenticationTrustResolver trustResolver = 
@@ -425,7 +425,7 @@ public class CustomMethodSecurityExpressionHandler
 
 现在，我们需要在方法安全配置中使用我们的`CustomMethodSecurityExpressionHandler`:
 
-```
+```java
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
@@ -443,7 +443,7 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
 下面是一个使用`isMember()`保护控制器方法的简单例子:
 
-```
+```java
 @PreAuthorize("isMember(#id)")
 @GetMapping("/organizations/{id}")
 @ResponseBody
@@ -456,7 +456,7 @@ public Organization findOrgById(@PathVariable long id) {
 
 最后，这里是对用户“`john`”的一个简单的现场测试:
 
-```
+```java
 @Test
 public void givenUserMemberInOrganization_whenGetOrganization_thenOK() {
     Response response = givenAuth("john", "123").get("http://localhost:8082/organizations/1");
@@ -479,7 +479,7 @@ public void givenUserMemberNotInOrganization_whenGetOrganization_thenForbidden()
 
 我们将从编写自己的`SecurityExpressionRoot`开始，主要是因为内置方法是`final`，所以我们不能覆盖它们:
 
-```
+```java
 public class MySecurityExpressionRoot implements MethodSecurityExpressionOperations {
     public MySecurityExpressionRoot(Authentication authentication) {
         if (authentication == null) {
@@ -502,7 +502,7 @@ public class MySecurityExpressionRoot implements MethodSecurityExpressionOperati
 
 现在，如果我们想使用`hasAuthority()`来保护方法——如下所示，当我们试图访问方法时，它将抛出`RuntimeException`:
 
-```
+```java
 @PreAuthorize("hasAuthority('FOO_READ_PRIVILEGE')")
 @GetMapping("/foos")
 @ResponseBody
@@ -515,7 +515,7 @@ public Foo findFooByName(@RequestParam String name) {
 
 最后，这是我们的简单测试:
 
-```
+```java
 @Test
 public void givenDisabledSecurityExpression_whenGetFooByName_thenError() {
     Response response = givenAuth("john", "123").get("http://localhost:8082/foos?name=sample");

@@ -16,7 +16,7 @@
 
 当开发一个标准的 J2EE 应用程序时，我们在`web.xml`文件中声明`ContextLoaderListener`。此外，还定义了一个`contextConfigLocation` 来表示 XML 配置文件。
 
-```
+```java
 <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>/WEB-INF/applicationContext*.xml</param-value>
@@ -31,7 +31,7 @@
 
 让我们看一下样本文件:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -71,7 +71,7 @@
 
 让我们来看看示例代码:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans 
   xmlns:mvc="http://www.springframework.org/schema/mvc"

@@ -62,7 +62,7 @@ IDE 可以在这方面有所帮助—**它允许设置断点，一旦命中就�
 
 考虑下面的例子:
 
-```
+```java
 public static void main(String[] args) {
     ThreadLocalRandom random = ThreadLocalRandom.current();
     int count = 0;
@@ -87,7 +87,7 @@ private static boolean isInterested(int i) {
 
 当运行应用程序时(注意仍然需要使用调试模式)，我们将看到输出:
 
-```
+```java
 isInterested(1)
 isInterested(4)
 isInterested(3)
@@ -114,7 +114,7 @@ IntelliJ 允许**创建断点，这些断点仅在满足用户定义的条件时
 
 让我们来看一个应用程序，我们将使用它来演示它们:
 
-```
+```java
 public class Test {
 
     public static void main(String[] args) {

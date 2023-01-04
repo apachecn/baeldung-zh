@@ -14,7 +14,7 @@
 
 例如，当对一个枚举应用`@Pattern`注释时，我们会收到一个类似 Hibernate Validator 的错误:
 
-```
+```java
 javax.validation.UnexpectedTypeException: HV000030: No validator could be found for constraint 
  'javax.validation.constraints.Pattern' validating type 'com.baeldung.javaxval.enums.demo.CustomerType'. 
  Check configuration for 'customerTypeMatchesPattern' 
@@ -26,7 +26,7 @@ javax.validation.UnexpectedTypeException: HV000030: No validator could be found 
 
 **让我们从定义一个注释来验证枚举的模式开始:**
 
-```
+```java
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Documented
@@ -41,14 +41,14 @@ public @interface EnumNamePattern {
 
 现在，我们可以简单地使用正则表达式将这个新注释添加到我们的`CustomerType`枚举中:
 
-```
+```java
 @EnumNamePattern(regexp = "NEW|DEFAULT")
 private CustomerType customerType;
 ```
 
 **正如我们所看到的，注释实际上并不包含验证逻辑。因此，我们需要提供一个`ConstraintValidator:`**
 
-```
+```java
 public class EnumNamePatternValidator implements ConstraintValidator<EnumNamePattern, Enum<?>> {
     private Pattern pattern;
 
@@ -83,7 +83,7 @@ public class EnumNamePatternValidator implements ConstraintValidator<EnumNamePat
 
 让我们看看如何为我们的`CustomerType`枚举创建一个特定的子集验证注释:
 
-```
+```java
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Documented
@@ -98,14 +98,14 @@ public @interface CustomerTypeSubset {
 
 然后，该注释可以应用于类型`CustomerType`的枚举:
 
-```
+```java
 @CustomerTypeSubset(anyOf = {CustomerType.NEW, CustomerType.OLD})
 private CustomerType customerType;
 ```
 
 **接下来，我们需要定义`CustomerTypeSubSetValidator`来检查给定枚举值的列表是否包含当前的**:
 
-```
+```java
 public class CustomerTypeSubSetValidator implements ConstraintValidator<CustomerTypeSubset, CustomerType> {
     private CustomerType[] subset;
 
@@ -127,7 +127,7 @@ public class CustomerTypeSubSetValidator implements ConstraintValidator<Customer
 
 我们也可以做相反的事情，而不是验证一个枚举来匹配一个`String`。为此，我们可以创建一个注释来检查`String`对于特定的 enum 是否有效。
 
-```
+```java
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Documented
@@ -142,14 +142,14 @@ public @interface ValueOfEnum {
 
 这个注释可以添加到一个`String`字段，我们可以传递任何枚举类。
 
-```
+```java
 @ValueOfEnum(enumClass = CustomerType.class)
 private String customerTypeString;
 ```
 
 **让我们定义`ValueOfEnumValidator`来检查`String`(或任何`CharSequence)`是否包含在枚举**中:
 
-```
+```java
 public class ValueOfEnumValidator implements ConstraintValidator<ValueOfEnum, CharSequence> {
     private List<String> acceptedValues;
 
@@ -173,7 +173,7 @@ public class ValueOfEnumValidator implements ConstraintValidator<ValueOfEnum, Ch
 
 当处理 JSON 对象时，这种验证尤其有用。因为在将 JSON 对象中的错误值映射到枚举时，会出现以下异常:
 
-```
+```java
 Cannot deserialize value of type CustomerType from String value 'UNDEFINED': value not one
  of declared Enum instance names: [...]
 ```
@@ -186,7 +186,7 @@ Cannot deserialize value of type CustomerType from String value 'UNDEFINED': val
 
 我们现在可以使用任何新的验证来验证 beans。最重要的是，我们所有的验证都接受`null`值。因此，我们也可以将它与注释`@NotNull`结合起来:
 
-```
+```java
 public class Customer {
     @ValueOfEnum(enumClass = CustomerType.class)
     private String customerTypeString;
@@ -210,7 +210,7 @@ public class Customer {
 
 首先，我们希望确保有效的`Customer`实例不会导致任何违规:
 
-```
+```java
 @Test 
 public void whenAllAcceptable_thenShouldNotGiveConstraintViolations() { 
     Customer customer = new Customer(); 
@@ -222,7 +222,7 @@ public void whenAllAcceptable_thenShouldNotGiveConstraintViolations() {
 
 其次，我们希望我们的新注释支持并接受`null`值。我们只希望有一次违规。这应该由`@NotNull `注解在`customerTypeOfSubset` 上报告:
 
-```
+```java
 @Test
 public void whenAllNull_thenOnlyNotNullShouldGiveConstraintViolations() {
     Customer customer = new Customer();
@@ -237,7 +237,7 @@ public void whenAllNull_thenOnlyNotNullShouldGiveConstraintViolations() {
 
 最后，当输入无效时，我们验证我们的验证器来报告违规:
 
-```
+```java
 @Test
 public void whenAllInvalid_thenViolationsShouldBeReported() {
     Customer customer = new Customer();

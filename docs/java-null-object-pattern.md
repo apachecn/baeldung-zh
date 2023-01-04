@@ -12,7 +12,7 @@
 
 在大多数面向对象的编程语言中，我们不允许使用`null`引用。这就是为什么我们经常被迫开`null`支票:
 
-```
+```java
 Command cmd = getCommand();
 if (cmd != null) {
     cmd.execute();
@@ -50,7 +50,7 @@ if (cmd != null) {
 
 首先，我们将创建`Router`接口:
 
-```
+```java
 public interface Router {
     void route(Message msg);
 }
@@ -58,7 +58,7 @@ public interface Router {
 
 接下来，让我们创建上述接口的两个实现——一个负责路由到 SMS 网关，另一个将消息路由到 JMS 队列:
 
-```
+```java
 public class SmsRouter implements Router {
     @Override
     public void route(Message msg) {
@@ -67,7 +67,7 @@ public class SmsRouter implements Router {
 }
 ```
 
-```
+```java
 public class JmsRouter implements Router {
     @Override
     public void route(Message msg) {
@@ -78,7 +78,7 @@ public class JmsRouter implements Router {
 
 最后，**让我们实现我们的空对象:**
 
-```
+```java
 public class NullRouter implements Router {
     @Override
     public void route(Message msg) {
@@ -89,7 +89,7 @@ public class NullRouter implements Router {
 
 我们现在准备把所有的部分放在一起。让我们看看示例客户端代码可能是什么样子的:
 
-```
+```java
 public class RoutingHandler {
     public void handle(Iterable<Message> messages) {
         for (Message msg : messages) {
@@ -110,7 +110,7 @@ public class RoutingHandler {
 
 为了更好地理解我们什么时候应该使用空对象模式，让我们假设我们必须实现如下定义的`CustomerDao`接口:
 
-```
+```java
 public interface CustomerDao {
     Collection<Customer> findByNameAndLastname(String name, String lastname);
     Customer getById(Long id);

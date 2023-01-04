@@ -16,7 +16,7 @@
 
 **首先，让我们创建一个控制器类`WelcomeController`和一个`/welcome` 端点，它返回一个简单的`String` 响应:**
 
-```
+```java
 @RestController
 public class WelcomeController {
 
@@ -33,7 +33,7 @@ public class WelcomeController {
 
 **接下来，让我们将与密钥库相关的属性添加到我们的`application.properties` 文件:**
 
-```
+```java
 server.port=8443
 server.servlet.context-path=/
 # The format used for the keystore
@@ -60,7 +60,7 @@ Spring 提供了一个方便的`RestTemplate`类来消费 REST 服务。
 
 **让我们编写一个简单的控制器，它使用一个`RestTemplate`来消费我们的 REST 服务:**
 
-```
+```java
 @RestController
 public class RestTemplateClientController {
     private static final String WELCOME_URL = "https://localhost:8443/welcome";
@@ -78,7 +78,7 @@ public class RestTemplateClientController {
 
 **如果我们运行我们的代码并访问`/welcomeclient`端点，我们将得到一个错误，因为没有找到访问安全 REST 服务的有效证书:**
 
-```
+```java
 `javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: 
 sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested 
 target at sun.security.ssl.Alerts.getSSLException(Alerts.java:192)`
@@ -96,7 +96,7 @@ target at sun.security.ssl.Alerts.getSSLException(Alerts.java:192)`
 
 **接下来，我们需要在`application.properties`文件中添加信任库的详细信息:**
 
-```
+```java
 server.port=8082
 #trust store location
 trust.store=classpath:keystore/baeldung.p12
@@ -106,7 +106,7 @@ trust.store.password=password
 
 **最后，让我们通过添加信任库来定制`RestTemplate`:**
 
-```
+```java
 @Configuration
 public class CustomRestTemplateConfiguration {
 

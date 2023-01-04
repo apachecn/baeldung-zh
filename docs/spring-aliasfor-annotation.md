@@ -20,7 +20,7 @@
 
 下面是注释的定义:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Documented
@@ -43,7 +43,7 @@ public @interface AliasFor {
 
 让我们考虑一个核心 Spring 注释， [`@ComponentScan`](/web/20220827110142/https://www.baeldung.com/spring-component-scanning) ，来理解单个注释内的显式别名:
 
-```
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
@@ -63,7 +63,7 @@ public @interface ComponentScan {
 
 实际上，这两种用法是相似的:
 
-```
+```java
 @ComponentScan(basePackages = "com.baeldung.aliasfor")
 
 @ComponentScan(value = "com.baeldung.aliasfor")
@@ -71,7 +71,7 @@ public @interface ComponentScan {
 
 此外，由于这两个属性也被标记为`default`，让我们写得更简洁一些:
 
-```
+```java
 @ComponentScan("com.baeldung.aliasfor")
 ```
 
@@ -83,7 +83,7 @@ public @interface ComponentScan {
 
 首先，让我们考虑将框架注释`RequestMapping` 作为我们的元注释:
 
-```
+```java
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
@@ -104,7 +104,7 @@ public @interface RequestMapping {
 
 接下来，我们将从它创建一个组合注释`MyMapping`:
 
-```
+```java
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @RequestMapping
@@ -122,7 +122,7 @@ public @interface MyMapping {
 
 具体来说，这里我们将只给`@MyMapping`、`route,`和`action`添加两个属性:
 
-```
+```java
 @Controller
 public class MyMappingController {
 
@@ -134,7 +134,7 @@ public class MyMappingController {
 
 最后，为了了解显式别名的行为，让我们添加一个简单的测试:
 
-```
+```java
 @Test
 public void givenComposedAnnotation_whenExplicitAlias_thenMetaAnnotationAttributeOverridden() {
     for (Method method : controllerClass.getMethods()) {
@@ -157,7 +157,7 @@ public void givenComposedAnnotation_whenExplicitAlias_thenMetaAnnotationAttribut
 
 为了理解这一点，**让我们在`@MyMapping`** 中再添加几个别名:
 
-```
+```java
 @AliasFor(annotation = RequestMapping.class, attribute = "path")
 String[] value() default {};
 
@@ -172,7 +172,7 @@ String[] route() default {};
 
 为了演示这一点，我们将使用与上一节相同的控制器。这是另一个测试:
 
-```
+```java
 @Test
 public void givenComposedAnnotation_whenImplictAlias_thenAttributesEqual() {
     for (Method method : controllerClass.getMethods()) {

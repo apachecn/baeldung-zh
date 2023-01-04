@@ -14,7 +14,7 @@
 
 首先，让我们在`pom.xml`文件中导入 spring-context 依赖关系。我们应该经常参考 Maven Central 来了解依赖关系的最新版本:
 
-```
+```java
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context</artifactId>
@@ -32,7 +32,7 @@
 
 配置文件是一个纯 Java 类，带有`@Configuration`注释:
 
-```
+```java
 @Configuration
 @ComponentScan("com.baeldung.dependson")
 public class Config {
@@ -57,7 +57,7 @@ public class Config {
 
 **`FileProcessor`用`@DependsOn`** 指定其从属关系。我们也可以用`@DependsOn:`来注释一个`Component`
 
-```
+```java
 @Component
 @DependsOn({"filereader", "fileWriter"})
 public class FileProcessor {}
@@ -67,7 +67,7 @@ public class FileProcessor {}
 
 让我们创建一个类`File`。每个 beans 更新`File`中的文本。`FileReader`更新为已读。`FileWriter`将它更新为 write，`FileProcessor`将文本更新为 processed:
 
-```
+```java
 @Test
 public void WhenFileProcessorIsCreated_FileTextContains_Processed() {
     FileProcessor processor = context.getBean(FileProcessor.class);
@@ -81,7 +81,7 @@ public void WhenFileProcessorIsCreated_FileTextContains_Processed() {
 
 例如，`dummyFileProcessor` bean 依赖于一个`dummyFileWriter` bean。由于`dummyFileWriter`不存在，它抛出`BeanCreationException:`
 
-```
+```java
 @Test(expected=NoSuchBeanDefinitionException.class)
 public void whenDependentBeanNotAvailable_ThrowsNosuchBeanDefinitionException(){
     context.getBean("dummyFileProcessor");
@@ -92,7 +92,7 @@ public void whenDependentBeanNotAvailable_ThrowsNosuchBeanDefinitionException(){
 
 同样，在这种情况下，它抛出`BeanCreationException` 并强调 beans 具有循环依赖:
 
-```
+```java
 @Bean("dummyFileProcessorCircular")
 @DependsOn({"dummyFileReaderCircular"})
 @Lazy
@@ -103,7 +103,7 @@ public FileProcessor dummyFileProcessorCircular() {
 
 **如果 bean 最终依赖于自身**，则会发生循环依赖，从而形成一个循环:
 
-```
+```java
 Bean1 -> Bean4 -> Bean6 -> Bean1
 ```
 

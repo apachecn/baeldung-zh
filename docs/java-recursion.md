@@ -16,7 +16,7 @@
 
 例如，假设我们想对从 0 到某个值`n`的整数求和:
 
-```
+```java
 public int sum(int n) {
     if (n >= 1) {
         return sum(n - 1) + n;
@@ -40,7 +40,7 @@ public int sum(int n) {
 
 我们上面的`sum()`函数的实现是头递归的一个例子，可以改成尾递归:
 
-```
+```java
 public int tailSum(int currentSum, int n) {
     if (n <= 1) {
         return currentSum + n;
@@ -65,7 +65,7 @@ public int tailSum(int currentSum, int n) {
 
 例如，我们的`sum`方法可以使用迭代来实现:
 
-```
+```java
 public int iterativeSum(int n) {
     int sum = 0;
     if(n < 0) {
@@ -94,7 +94,7 @@ public int iterativeSum(int n) {
 
 如果我们想用 Java 实现它，我们应该写:
 
-```
+```java
 public int powerOf10(int n) {
     if (n == 0) {
         return 1;
@@ -117,7 +117,7 @@ public int powerOf10(int n) {
 
 然后，很明显我们需要定义一个递归方法来解决这个问题:
 
-```
+```java
 public int fibonacci(int n) {
     if (n <= 1) {
         return n;
@@ -136,7 +136,7 @@ public int fibonacci(int n) {
 
 因此，我们的问题是编写一个方法，以保留顺序返回这些余数:
 
-```
+```java
 public String toBinary(int n) {
     if (n <= 1 ) {
         return String.valueOf(n);
@@ -157,7 +157,7 @@ public String toBinary(int n) {
 
 下面是我们的实现:
 
-```
+```java
 public int calculateTreeHeight(BinaryNode root){
     if (root!= null) {
         if (root.getLeft() != null || root.getRight() != null) {

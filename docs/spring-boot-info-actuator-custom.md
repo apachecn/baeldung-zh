@@ -12,7 +12,7 @@
 
 如果我们有一些静态信息，比如应用程序的名称或它的版本很长一段时间不会改变，那么在我们的`application.properties`文件中添加这些细节是一个好主意:
 
-```
+```java
 ## Configuring info endpoint
 info.app.name=Spring Sample Application
 info.app.description=This is my first spring boot application
@@ -21,7 +21,7 @@ info.app.version=1.0.0
 
 这就是我们要使这些数据在`/info`端点上可用所要做的一切。Spring 会自动将所有前缀为`info`的属性添加到`/info`端点:
 
-```
+```java
 {
   "app": {
     "description": "This is my first spring boot application",
@@ -35,13 +35,13 @@ info.app.version=1.0.0
 
 现在让我们在我们的`/info`端点中公开一个`Environment`变量:
 
-```
+```java
 info.java-vendor = ${java.specification.vendor}
 ```
 
 这将把 Java 供应商暴露给我们的`/info`端点:
 
-```
+```java
 {
   "app": {
     "description": "This is my first spring boot application",
@@ -60,7 +60,7 @@ info.java-vendor = ${java.specification.vendor}
 
 为此，我们需要实现`InfoContributor`接口并覆盖`contribute()`方法:
 
-```
+```java
 @Component
 public class TotalUsersInfoContributor implements InfoContributor {
 
@@ -82,7 +82,7 @@ public class TotalUsersInfoContributor implements InfoContributor {
 
 这种方法为我们向`/info`端点公开什么提供了很大的灵活性:
 
-```
+```java
 {
   ...other /info data...,
   ...

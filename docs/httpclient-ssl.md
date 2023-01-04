@@ -26,7 +26,7 @@ How to send Custom Cookies with the Apache HttpClient.[Read more](/web/202211262
 
 如果没有使用`HttpClient`配置 SSL，下面的测试——使用 HTTPS URL——将会失败:
 
-```
+```java
 public class RestClientLiveManualTest {
 
     @Test(expected = SSLPeerUnverifiedException.class)
@@ -46,7 +46,7 @@ public class RestClientLiveManualTest {
 
 确切的故障是:
 
-```
+```java
 javax.net.ssl.SSLPeerUnverifiedException: peer not authenticated
     at sun.security.ssl.SSLSessionImpl.getPeerCertificates(SSLSessionImpl.java:397)
     at org.apache.http.conn.ssl.AbstractVerifier.verify(AbstractVerifier.java:126)
@@ -59,7 +59,7 @@ javax.net.ssl.SSLPeerUnverifiedException: peer not authenticated
 
 现在让我们配置 HTTP 客户端信任所有证书链，而不管它们的有效性如何:
 
-```
+```java
 @Test
 public final void givenAcceptingAllCertificates_whenHttpsUrlIsConsumed_thenOk() 
   throws GeneralSecurityException {
@@ -82,7 +82,7 @@ public final void givenAcceptingAllCertificates_whenHttpsUrlIsConsumed_thenOk()
 
 有了新的 HTTPClient，我们现在有了一个增强的、重新设计的默认 SSL 主机名验证器。同样有了`SSLConnectionSocketFactory`和`RegistryBuilder`的引入，构建 SSLSocketFactory 就很容易了。所以我们可以这样写上面的测试用例:
 
-```
+```java
 @Test
 public final void givenAcceptingAllCertificates_whenHttpsUrlIsConsumed_thenOk()
   throws GeneralSecurityException {
@@ -116,7 +116,7 @@ public final void givenAcceptingAllCertificates_whenHttpsUrlIsConsumed_thenOk()
 
 在没有配置 SSL 的情况下，以下测试如预期的那样失败:
 
-```
+```java
 @Test(expected = ResourceAccessException.class)
 public void whenHttpsUrlIsConsumed_thenException() {
     String urlOverHttps 
@@ -129,7 +129,7 @@ public void whenHttpsUrlIsConsumed_thenException() {
 
 让我们来配置 SSL:
 
-```
+```java
 @Test
 public void givenAcceptingAllCertificates_whenHttpsUrlIsConsumed_thenException() 
   throws GeneralSecurityException {
@@ -157,7 +157,7 @@ public void givenAcceptingAllCertificates_whenHttpsUrlIsConsumed_thenException()
 
 我们可以用同样的方式来配置我们的`RestTemplate`:
 
-```
+```java
 @Test
 public void givenAcceptingAllCertificatesUsing4_4_whenUsingRestTemplate_thenCorrect() 
 throws ClientProtocolException, IOException {

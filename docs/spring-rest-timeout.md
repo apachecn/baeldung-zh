@@ -16,7 +16,7 @@
 
 为了看到这一点，我们将编写一个非常简单的 JPA 存储库层，它将表示一个需要很长时间才能完成并导致超时的外部服务。这个 JpaRepository 扩展有一个耗时的方法:
 
-```
+```java
 public interface BookRepository extends JpaRepository<Book, String> {
 
     default int wasteTime() {
@@ -35,7 +35,7 @@ public interface BookRepository extends JpaRepository<Book, String> {
 
 如果我们在一个超时 1 秒的事务中调用我们的`wasteTime()`方法，超时将在方法完成执行之前过去:
 
-```
+```java
 @GetMapping("/author/transactional")
 @Transactional(timeout = 1)
 public String getWithTransactionTimeout(@RequestParam String title) {
@@ -60,7 +60,7 @@ Resilience4j 是一个库，**主要管理远程通信的容错。**它的 [`Tim
 
 首先，我们必须将 [`resilience4j-timelimiter`依赖项](https://web.archive.org/web/20220727020632/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22io.github.resilience4j%22%20AND%20a%3A%22resilience4j-timelimiter%22)包含在我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>io.github.resilience4j</groupId>
     <artifactId>resilience4j-timelimiter</artifactId>
@@ -70,7 +70,7 @@ Resilience4j 是一个库，**主要管理远程通信的容错。**它的 [`Tim
 
 接下来，我们将定义一个简单的`TimeLimiter`，它的超时持续时间为 500 毫秒:
 
-```
+```java
 private TimeLimiter ourTimeLimiter = TimeLimiter.of(TimeLimiterConfig.custom()
   .timeoutDuration(Duration.ofMillis(500)).build());
 ```
@@ -79,7 +79,7 @@ private TimeLimiter ourTimeLimiter = TimeLimiter.of(TimeLimiterConfig.custom()
 
 我们可以使用我们的`TimeLimiter`来包装我们的`@Transactional`示例所使用的相同逻辑:
 
-```
+```java
 @GetMapping("/author/resilience4j")
 public Callable<String> getWithResilience4jTimeLimiter(@RequestParam String title) {
     return TimeLimiter.decorateFutureSupplier(ourTimeLimiter, () ->
@@ -102,13 +102,13 @@ Spring 为我们提供了一个名为`spring.mvc.async.request-timeout`的属性
 
 让我们用 750 毫秒的超时来定义该属性:
 
-```
+```java
 spring.mvc.async.request-timeout=750
 ```
 
 这个属性是全局的，可以在外部配置，但是像`TimeLimiter`解决方案一样，它只适用于返回`Callable`的端点。让我们定义一个类似于`TimeLimiter`例子的端点，但是不需要在`Futures,`中包装逻辑或者提供一个`TimeLimiter`:
 
-```
+```java
 @GetMapping("/author/mvc-request-timeout")
 public Callable<String> getWithMvcRequestTimeout(@RequestParam String title) {
     return () -> {
@@ -132,7 +132,7 @@ public Callable<String> getWithMvcRequestTimeout(@RequestParam String title) {
 
 要使用 WebClient，我们必须首先将 [Spring 的 WebFlux 依赖关系](https://web.archive.org/web/20220727020632/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-webflux%22)添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-webflux</artifactId>
@@ -142,7 +142,7 @@ public Callable<String> getWithMvcRequestTimeout(@RequestParam String title) {
 
 让我们定义一个响应超时为 250 毫秒的`WebClient`,我们可以使用它通过其基本 URL 中的 localhost 调用自己:
 
-```
+```java
 @Bean
 public WebClient webClient() {
     return WebClient.builder()
@@ -160,7 +160,7 @@ public WebClient webClient() {
 
 这是我们的新端点:
 
-```
+```java
 @GetMapping("/author/webclient")
 public String getWithWebClient(@RequestParam String title) {
     return webClient.get()

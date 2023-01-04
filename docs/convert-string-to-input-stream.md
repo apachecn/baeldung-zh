@@ -12,7 +12,7 @@
 
 让我们从一个使用 Java 进行转换的简单例子开始——使用一个中间的`byte`数组:
 
-```
+```java
 @Test
 public void givenUsingPlainJava_whenConvertingStringToInputStream_thenCorrect() 
   throws IOException {
@@ -29,7 +29,7 @@ public void givenUsingPlainJava_whenConvertingStringToInputStream_thenCorrect()
 
 那么就很容易获得`InputStream`:
 
-```
+```java
 @Test
 public void givenUsingGuava_whenConvertingStringToInputStream_thenCorrect() 
   throws IOException {
@@ -45,7 +45,7 @@ public void givenUsingGuava_whenConvertingStringToInputStream_thenCorrect()
 
 最后，Apache Commons IO 库提供了一个优秀的直接解决方案:
 
-```
+```java
 @Test
 public void givenUsingCommonsIO_whenConvertingStringToInputStream_thenCorrect() 
   throws IOException {

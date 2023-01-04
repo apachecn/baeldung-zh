@@ -26,7 +26,7 @@
 
 让我们在这一节定义我们的`BookId`类。`author`和`name`将指定一个唯一的`BookId` —这个类是`Serializable`，并且实现了`equals`和`hashCode` 两种方法:
 
-```
+```java
 @Embeddable
 public class BookId implements Serializable {
 
@@ -41,7 +41,7 @@ public class BookId implements Serializable {
 
 我们的`Book`实体有`@EmbeddedId` `BookId` 和其他与一个`book`相关的字段。`BookId`告诉 JPA`Book`实体有一个组合键:
 
-```
+```java
 @Entity
 public class Book {
 
@@ -58,7 +58,7 @@ public class Book {
 
 让我们通过用实体`Book`和`BookId`扩展`JpaRepository` 来快速定义我们的 JPA 存储库接口:
 
-```
+```java
 @Repository
 public interface BookRepository extends JpaRepository<Book, BookId> {
 
@@ -70,7 +70,7 @@ public interface BookRepository extends JpaRepository<Book, BookId> {
 
 我们使用部分`id`变量的字段名来派生我们的 Spring 数据查询方法。因此，JPA 将部分主键查询解释为:
 
-```
+```java
 findByIdName -> directive "findBy" field "id.name"
 findByIdAuthor -> directive "findBy" field "id.author"
 ```

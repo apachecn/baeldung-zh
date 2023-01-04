@@ -18,7 +18,7 @@
 
 首先，我们将 DynamoDB 本地依赖项添加到 Maven 配置的依赖项列表中:
 
-```
+```java
 <dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>DynamoDBLocal</artifactId>
@@ -31,7 +31,7 @@
 
 我们可以选择离我们当前 IP 地址地理位置最近的亚马逊服务器:
 
-```
+```java
 <repository>
     <id>dynamodb-local</id>
     <name>DynamoDB Local Release Repository</name>
@@ -47,7 +47,7 @@ DynamoDB Local 内部使用 [SQLite4Java](https://web.archive.org/web/2022112901
 
 让我们将传递提取的 SQLite4Java 库文件复制到一个名为`native-libs`的文件夹中:
 
-```
+```java
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-dependency-plugin</artifactId>
@@ -73,7 +73,7 @@ DynamoDB Local 内部使用 [SQLite4Java](https://web.archive.org/web/2022112901
 
 现在，我们将使用名为`sqlite4java.library.path`的 JVM 系统属性引用先前创建的文件夹(SQLite4Java 库所在的位置):
 
-```
+```java
 System.setProperty("sqlite4java.library.path", "native-libs");
 ```
 
@@ -85,7 +85,7 @@ System.setProperty("sqlite4java.library.path", "native-libs");
 
 在以下示例中，我们将在端口 8000 上启动本地 DynamoDB 服务器，并确保它在运行我们的测试后再次停止:
 
-```
+```java
 public class ProductInfoDAOIntegrationTest {
     private static DynamoDBProxyServer server;
 
@@ -110,7 +110,7 @@ public class ProductInfoDAOIntegrationTest {
 
 我们还可以使用`java.net.ServerSocket`在任何可用端口上运行本地 DynamoDB 服务器，而不是在固定端口上运行。在这种情况下，**我们还必须配置测试，将端点设置到正确的 DynamoDB 端口**:
 
-```
+```java
 public String getAvailablePort() throws IOException {
     ServerSocket serverSocket = new ServerSocket(0);
     return String.valueOf(serverSocket.getLocalPort());
@@ -121,7 +121,7 @@ public String getAvailablePort() throws IOException {
 
 我们可以将前面的逻辑包装在一个执行相同操作的 JUnit 规则中:
 
-```
+```java
 public class LocalDbCreationRule extends ExternalResource {
     private DynamoDBProxyServer server;
 
@@ -156,7 +156,7 @@ public class LocalDbCreationRule extends ExternalResource {
 
 注意，为了运行测试，测试规则的访问修饰符必须是`public` :
 
-```
+```java
 public class ProductInfoRepositoryIntegrationTest {
     @ClassRule
     public static LocalDbCreationRule dynamoDB = new LocalDbCreationRule();

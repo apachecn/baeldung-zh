@@ -40,7 +40,7 @@ Axon 支持的聚合和实体源于[领域驱动设计](https://web.archive.org/
 
 这些操作转化为类`AddProductCommand`、`IncrementProductCountCommand`和`DecrementProductCountCommand`:
 
-```
+```java
 public class AddProductCommand {
 
     @TargetAggregateIdentifier
@@ -77,7 +77,7 @@ public class DecrementProductCountCommand {
 
 让我们来看看反映增强的**连续性线索** — `ProductAddedEvent`、`ProductCountIncrementedEvent`、`ProductCountDecrementedEvent`和`ProductRemovedEvent`的 POJOs:
 
-```
+```java
 public class ProductAddedEvent {
 
     private final String orderId;
@@ -123,7 +123,7 @@ public class ProductRemovedEvent {
 
 了解了这些，我们再来增强一下`OrderAggregate`:
 
-```
+```java
 @Aggregate
 public class OrderAggregate {
 
@@ -184,7 +184,7 @@ public class OrderAggregate {
 
 有了更新的`OrderAggregate`，我们可以开始看看`OrderLine`:
 
-```
+```java
 public class OrderLine {
 
     @EntityId
@@ -252,7 +252,7 @@ public class OrderLine {
 
 我们通过一个例子来解释一下:
 
-```
+```java
 public class IncrementProductCountCommand {
 
     @TargetAggregateIdentifier

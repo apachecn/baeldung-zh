@@ -18,19 +18,19 @@
 
 这种消息的一个简单示例可能是:
 
-```
+```java
 Alice has sent you a message.
 ```
 
 这对于说英语的用户来说很好，但是那些不说英语的用户可能就不那么高兴了。例如，说法语的用户更喜欢看到以下消息:
 
-```
+```java
 Alice vous a envoyé un message. 
 ```
 
 虽然波兰人看到这个会很高兴:
 
-```
+```java
 Alice wysłała ci wiadomość. 
 ```
 
@@ -38,13 +38,13 @@ Alice wysłała ci wiadomość.
 
 我们可能会尝试通过在单个字符串中连接各个部分来解决这个问题，如下所示:
 
-```
+```java
 String message = "Alice has sent " + quantity + " messages"; 
 ```
 
 当我们需要通知时，情况很容易失控，因为不仅是 Alice，Bob 也可能发送消息:
 
-```
+```java
 Bob has sent two messages.
 Bob a envoyé deux messages.
 Bob wysłał dwie wiadomości.
@@ -64,19 +64,19 @@ Bob wysłał dwie wiadomości.
 
 每个文件都应该包含具有相应语言的消息的键值对。例如，文件`messages_en.properties`应该包含以下一对:
 
-```
+```java
 label=Alice has sent you a message.
 ```
 
 `messages_pl.properties`应该包含以下一对:
 
-```
+```java
 label=Alice wysłała ci wiadomość.
 ```
 
 类似地，其他文件给键`label`分配适当的值。现在，为了获取英语版本的通知，我们可以使用`ResourceBundle`:
 
-```
+```java
 ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.UK);
 String message = bundle.getString("label");
 ```
@@ -87,7 +87,7 @@ Java 的`Locale`类包含了常用语言和国家的快捷方式。
 
 在波兰语的情况下，我们可以这样写:
 
-```
+```java
 ResourceBundle bundle
   = ResourceBundle.getBundle("messages", Locale.forLanguageTag("pl-PL"));
 String message = bundle.getString("label");
@@ -115,7 +115,7 @@ String message = bundle.getString("label");
 
 为了说明这一点，让我们创建一个模式并将其提供给一个`MessageFormat`实例:
 
-```
+```java
 String pattern = "On {0, date}, {1} sent you "
   + "{2, choice, 0#no messages|1#a message|2#two messages|2<{2, number, integer} messages}.";
 MessageFormat formatter = new MessageFormat(pattern, Locale.UK); 
@@ -125,13 +125,13 @@ MessageFormat formatter = new MessageFormat(pattern, Locale.UK);
 
 如果我们提供每个值:
 
-```
+```java
 String message = formatter.format(new Object[] {date, "Alice", 2});
 ```
 
 然后`MessageFormat `将填写模板并呈现我们的消息:
 
-```
+```java
 On 27-Apr-2019, Alice sent you two messages.
 ```
 
@@ -139,13 +139,13 @@ On 27-Apr-2019, Alice sent you two messages.
 
 从上面的例子中，我们看到消息模式:
 
-```
+```java
 pattern = "On {...}, {..} sent you {...}.";
 ```
 
 包含占位符，这些占位符是带必需参数`index`和两个可选参数`type`和`style`的花括号`{…}`:
 
-```
+```java
 {index}
 {index, type}
 {index, type, style}
@@ -168,7 +168,7 @@ pattern = "On {...}, {..} sent you {...}.";
 
 在上例中，我们使用了以下格式表达式:
 
-```
+```java
 {2, choice, 0#no messages|1#a message|2#two messages|2<{2, number, integer} messages}
 ```
 
@@ -178,7 +178,7 @@ pattern = "On {...}, {..} sent you {...}.";
 
 在选项内部，除了最后一个选项，匹配值`k[i]`和字符串`v[i]`用#分隔。注意，我们可以将其他模式嵌套到字符串`v[i]`中，就像我们对最后一个选项所做的那样:
 
-```
+```java
 {2, choice, ...|2<{2, number, integer} messages}
 ```
 
@@ -190,7 +190,7 @@ pattern = "On {...}, {..} sent you {...}.";
 
 让我们更详细地考虑一下所选风格的范围。为此，我们采取这种模式:
 
-```
+```java
 pattern = "You''ve got "
   + "{0, choice, 0#no messages|1#a message|2#two messages|2<{0, number, integer} messages}.";
 ```
@@ -217,14 +217,14 @@ pattern = "You''ve got "
 
 例如，在英文版本中，我们将输入以下字符串:
 
-```
+```java
 label=On {0, date, full} {1} has sent you 
   + {2, choice, 0#nothing|1#a message|2#two messages|2<{2,number,integer} messages}.
 ```
 
 由于零消息的情况，我们应该稍微修改一下法语版本:
 
-```
+```java
 label={0, date, short}, {1}{2, choice, 0# ne|0<} vous a envoyé 
   + {2, choice, 0#aucun message|1#un message|2#deux messages|2<{2,number,integer} messages}.
 ```
@@ -241,7 +241,7 @@ label={0, date, short}, {1}{2, choice, 0# ne|0<} vous a envoyé
 
 在撰写本文时， [ICU for Java ( `ICU4J` )](https://web.archive.org/web/20220524002247/https://search.maven.org/search?q=g:com.ibm.icu%20AND%20a:icu4j) 的最新版本是 64.2。通常，为了开始使用它，我们应该将它作为一个依赖项添加到我们的项目中:
 
-```
+```java
 <dependency>
     <groupId>com.ibm.icu</groupId>
     <artifactId>icu4j</artifactId>
@@ -267,7 +267,7 @@ Bob wysłał ci N wiadomości.`  |
 
 让我们重新使用文件`formats.properties`并在那里添加一个键`label-icu`，其内容如下:
 
-```
+```java
 label-icu={0} has sent you
   + {2, plural, =0 {no messages} =1 {a message}
   + other {{2, number, integer} messages}}.
@@ -275,13 +275,13 @@ label-icu={0} has sent you
 
 它包含三个占位符，我们通过传递一个三元素数组来填充它们:
 
-```
+```java
 Object[] data = new Object[] { "Alice", "female", 0 }
 ```
 
 我们看到，在英文版本中，性别值占位符没有用，而在波兰语版本中:
 
-```
+```java
 label-icu={0} {2, plural, =0 {nie} other {}}
 +  {1, select, male {wysłał} female {wysłała} other {wysłało}} 
 +  ci {2, plural, =0 {żadnych wiadomości} =1 {wiadomość}

@@ -12,7 +12,7 @@
 
 首先，让我们准备一个输入字符串作为例子:
 
-```
+```java
 String INPUT_STRING = "  This string has nine spaces and a Tab:'	'";
 ```
 
@@ -20,7 +20,7 @@ String INPUT_STRING = "  This string has nine spaces and a Tab:'	'";
 
 因此，我们的预期结果是:
 
-```
+```java
 int EXPECTED_COUNT = 9;
 ```
 
@@ -40,7 +40,7 @@ int EXPECTED_COUNT = 9;
 
 最后，我们将得到字符串中空格的数量:
 
-```
+```java
 @Test
 void givenString_whenCountSpaceByLooping_thenReturnsExpectedCount() {
     int spaceCount = 0;
@@ -61,7 +61,7 @@ void givenString_whenCountSpaceByLooping_thenReturnsExpectedCount() {
 
 如果我们使用的是 Java 9 或更高版本，我们可以将这两个特性结合起来，用一行代码解决这个问题:
 
-```
+```java
 @Test
 void givenString_whenCountSpaceByJava8StreamFilter_thenReturnsExpectedCount() {
     long spaceCount = INPUT_STRING.chars().filter(c -> c == (int) ' ').count();
@@ -79,7 +79,7 @@ void givenString_whenCountSpaceByJava8StreamFilter_thenReturnsExpectedCount() {
 
 此外，为了得到空间的计数，我们在每次发现模式时增加一个计数器:
 
-```
+```java
 @Test
 void givenString_whenCountSpaceByRegexMatcher_thenReturnsExpectedCount() {
     Pattern pattern = Pattern.compile(" ");
@@ -102,7 +102,7 @@ void givenString_whenCountSpaceByRegexMatcher_thenReturnsExpectedCount() {
 
 所以，如果我们想得到计数，结果字符串的长度就是答案。接下来，让我们试试这个想法:
 
-```
+```java
 @Test
 void givenString_whenCountSpaceByReplaceAll_thenReturnsExpectedCount() {
     int spaceCount = INPUT_STRING.replaceAll("[^ ]", "").length();
@@ -124,7 +124,7 @@ void givenString_whenCountSpaceByReplaceAll_thenReturnsExpectedCount() {
 
 现在，让我们看看这个想法是否可行:
 
-```
+```java
 @Test
 void givenString_whenCountSpaceBySplit_thenReturnsExpectedCount() {
     int spaceCount = INPUT_STRING.split(" ").length - 1;
@@ -148,7 +148,7 @@ Apache Commons Lang 3 库提供了一个包含许多方便的字符串相关方�
 
 在我们开始使用`StringUtil`类之前，我们应该检查这个库是否在类路径中。我们可以在我们的`pom.xml`中添加与[最新版本](https://web.archive.org/web/20221208143917/https://search.maven.org/classic/#search%7Cga%7C1%7Cg%3A%22org.apache.commons%22%20AND%20a%3A%22commons-lang3%22)的依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>
@@ -158,7 +158,7 @@ Apache Commons Lang 3 库提供了一个包含许多方便的字符串相关方�
 
 现在，让我们创建一个单元测试来展示如何使用这种方法:
 
-```
+```java
 @Test
 void givenString_whenCountSpaceUsingApacheCommons_thenReturnsExpectedCount() {
     int spaceCount = StringUtils.countMatches(INPUT_STRING, " ");
@@ -174,7 +174,7 @@ void givenString_whenCountSpaceUsingApacheCommons_thenReturnsExpectedCount() {
 
 这正是我们想要的:
 
-```
+```java
 @Test
 void givenString_whenCountSpaceUsingSpring_thenReturnsExpectedCount() {
     int spaceCount = StringUtils.countOccurrencesOf(INPUT_STRING, " ");

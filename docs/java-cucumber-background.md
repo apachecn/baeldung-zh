@@ -14,7 +14,7 @@
 
 假设我们有一个想要用 Cucumber 测试的书店应用程序。首先，让我们创建这个应用程序，它只是一个 Java 类:
 
-```
+```java
 public class BookStore {
     private List<Book> books = new ArrayList<>();
 
@@ -38,7 +38,7 @@ public class BookStore {
 
 正如我们所见，可以在商店中添加和搜索书籍。现在，让我们创建几个黄瓜句子来与书店互动:
 
-```
+```java
 public class BookStoreRunSteps {
     private BookStore store;
     private List<Book> foundBooks;
@@ -90,7 +90,7 @@ public class BookStoreRunSteps {
 
 现在，一切都准备好了，我们来创建我们的功能。我们将根据作者以及书名来搜索书籍:
 
-```
+```java
 Feature: Book Store Without Background
   Scenario: Find books by author
     Given I have the following books in the store
@@ -131,7 +131,7 @@ Feature: Book Store Without Background
 
 那么，如何为这个功能创建一个创建商店的背景呢？**要做到这一点，我们必须使用关键字`Background`，像对`Scenario`一样给它一个标题，并定义要执行的句子:**
 
-```
+```java
 Background: The Book Store
   Given I have the following books in the store
     | The Devil in the White City          | Erik Larson |
@@ -141,7 +141,7 @@ Background: The Book Store
 
 当我们做到这一点时，我们可以在测试中去掉这句话，让他们专注于他们的特殊性:
 
-```
+```java
 Scenario: Find books by author
   When I search for books by author Erik Larson
   Then I find 2 books

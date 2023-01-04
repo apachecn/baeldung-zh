@@ -14,7 +14,7 @@
 
 **文本块以`“””`(三个双引号)开头，后面跟着可选的空格和换行符。**最简单的例子看起来是这样的:
 
-```
+```java
 String example = """
      Example text""";
 ```
@@ -31,7 +31,7 @@ String example = """
 
 考虑一个包含 HTML 的文本块:
 
-```
+```java
 public String getBlockOfHtml() {
     return """
             <html>
@@ -45,7 +45,7 @@ public String getBlockOfHtml() {
 
 在这种情况下，最小缩进是 12 个空格。因此，`<html>`左侧和所有后续行的所有 12 个空格都被删除。让我们来测试一下:
 
-```
+```java
 @Test
 void givenAnOldStyleMultilineString_whenComparing_thenEqualsTextBlock() {
     String expected = "<html>\n"
@@ -67,7 +67,7 @@ void givenAnOldStyleString_whenComparing_thenEqualsTextBlock() {
 
 **当我们需要显式缩进**时，我们可以对非空行(或最后一行)使用较少的缩进:
 
-```
+```java
 public String getNonStandardIndent() {
     return """
                 Indent
@@ -89,7 +89,7 @@ void givenAnIndentedString_thenMatchesIndentedOldStyle() {
 
 在文本块中，双引号不必转义。我们甚至可以通过转义其中一个来在文本块中再次使用三个双引号:
 
-```
+```java
 public String getTextWithEscapes() {
     return """
             "fun" with
@@ -107,7 +107,7 @@ public String getTextWithEscapes() {
 
 **但是，请注意，即使源文件有 Windows 行尾(`\r\n`)，文本块也只能以换行符(`\n` )** 结束。如果我们需要回车符(`\r`)出现，我们必须显式地将它们添加到文本块中:
 
-```
+```java
 public String getTextWithCarriageReturns() {
 return """
 separated with\r
@@ -123,7 +123,7 @@ assertThat(subject.getTextWithCarriageReturns())
 
 有时，我们可能在源代码中有很长的文本行，我们希望以可读的方式格式化。Java 14 预览版增加了一个允许我们这样做的特性。我们可以对换行符进行转义，这样它就会被忽略。
 
-```
+```java
 public String getIgnoredNewLines() {
     return """
             This is a long test which looks to \
@@ -133,7 +133,7 @@ public String getIgnoredNewLines() {
 
 实际上，这个`String`文字正好等于一个正常的非中断`String`:
 
-```
+```java
 @Test
 void givenAStringWithEscapedNewLines_thenTheResultHasNoNewLines() {
     String expected = "This is a long test which looks to have a newline but actually does not";
@@ -148,7 +148,7 @@ void givenAStringWithEscapedNewLines_thenTheResultHasNoNewLines() {
 
 让我们仔细看看逃逸空间的影响:
 
-```
+```java
 public String getEscapedSpaces() {
     return """
             line 1·······
@@ -172,7 +172,7 @@ void givenAStringWithEscapesSpaces_thenTheResultHasLinesEndingWithSpaces() {
 
 为了帮助变量替换，增加了一个新方法，允许直接在字符串上调用 [`String.format`方法](/web/20220916193820/https://www.baeldung.com/string/format):
 
-```
+```java
 public String getFormattedText(String parameter) {
     return """
             Some parameter: %s

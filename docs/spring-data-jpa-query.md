@@ -34,7 +34,7 @@ Create DML and DDL queries in Spring Data JPA by combining the @Query and @Modif
 
 让我们看一个简单的存储库方法，它从数据库返回活动的`User`实体:
 
-```
+```java
 @Query("SELECT u FROM User u WHERE u.status = 1")
 Collection<User> findAllActiveUsers(); 
 ```
@@ -43,7 +43,7 @@ Collection<User> findAllActiveUsers();
 
 我们也可以使用本地 SQL 来定义我们的查询。我们所要做的就是**将`nativeQuery`属性的值设置为`true`** ，并在注释的`value`属性中定义原生 SQL 查询:
 
-```
+```java
 @Query(
   value = "SELECT * FROM USERS u WHERE u.status = 1", 
   nativeQuery = true)
@@ -58,13 +58,13 @@ Collection<User> findAllActiveUsersNative();
 
 对于我们开箱即用的方法，比如`findAll(Sort)`或者通过解析方法签名生成的方法，**我们只能使用对象属性来定义我们的排序**:
 
-```
+```java
 userRepository.findAll(Sort.by(Sort.Direction.ASC, "name")); 
 ```
 
 现在假设我们想按名称属性的长度进行排序:
 
-```
+```java
 userRepository.findAll(Sort.by("LENGTH(name)")); 
 ```
 
@@ -76,20 +76,20 @@ userRepository.findAll(Sort.by("LENGTH(name)"));
 
 **当我们使用 JPQL 进行查询定义时，Spring 数据可以毫无问题地处理排序**——我们所要做的就是添加一个类型为`Sort`的方法参数:
 
-```
+```java
 @Query(value = "SELECT u FROM User u")
 List<User> findAllUsers(Sort sort); 
 ```
 
 我们可以调用这个方法并传递一个`Sort`参数，它将根据`User`对象的`name`属性对结果进行排序:
 
-```
+```java
 userRepository.findAllUsers(Sort.by("name"));
 ```
 
 因为我们使用了`@Query`注释，所以我们可以使用相同的方法根据名称的长度得到`Users`的排序列表:
 
-```
+```java
 userRepository.findAllUsers(JpaSort.unsafe("LENGTH(name)")); 
 ```
 
@@ -97,7 +97,7 @@ userRepository.findAllUsers(JpaSort.unsafe("LENGTH(name)"));
 
 当我们使用:
 
-```
+```java
 Sort.by("LENGTH(name)"); 
 ```
 
@@ -127,7 +127,7 @@ Sort.by("LENGTH(name)");
 
 在 JPQL 查询定义中使用分页非常简单:
 
-```
+```java
 @Query(value = "SELECT u FROM User u ORDER BY id")
 Page<User> findAllUsersWithPagination(Pageable pageable); 
 ```
@@ -142,7 +142,7 @@ Page<User> findAllUsersWithPagination(Pageable pageable);
 
 这定义了要执行的 SQL 以计算整个结果中的行数:
 
-```
+```java
 @Query(
   value = "SELECT * FROM Users ORDER BY id", 
   countQuery = "SELECT count(*) FROM Users", 
@@ -158,7 +158,7 @@ Page<User> findAllUsersWithPagination(Pageable pageable);
 
 我们可以通过在查询中添加额外的分页参数来解决这个问题:
 
-```
+```java
 @Query(
   value = "SELECT * FROM Users ORDER BY id \n-- #pageable\n",
   countQuery = "SELECT count(*) FROM Users",
@@ -180,7 +180,7 @@ Page<User> findAllUsersWithPagination(Pageable pageable);
 
 对于 JPQL 中的索引参数，Spring 数据将**按照方法参数在方法声明**中出现的顺序将它们传递给查询:
 
-```
+```java
 @Query("SELECT u FROM User u WHERE u.status = ?1")
 User findUserByStatus(Integer status);
 
@@ -194,7 +194,7 @@ User findUserByStatusAndName(Integer status, String name);
 
 本地查询的索引参数的工作方式与 JPQL 完全相同:
 
-```
+```java
 @Query(
   value = "SELECT * FROM Users u WHERE u.status = ?1", 
   nativeQuery = true)
@@ -213,7 +213,7 @@ User findUserByStatusNative(Integer status);
 
 如上所述，我们在方法声明中使用`@Param`注释来匹配 JPQL 中 name 定义的参数和方法声明中的参数:
 
-```
+```java
 @Query("SELECT u FROM User u WHERE u.status = :status and u.name = :name")
 User findUserByStatusAndNameNamedParams(
   @Param("status") Integer status, 
@@ -222,7 +222,7 @@ User findUserByStatusAndNameNamedParams(
 
 请注意，在上面的示例中，我们将 SQL 查询和方法参数定义为具有相同的名称，但是只要值字符串相同，这不是必需的:
 
-```
+```java
 @Query("SELECT u FROM User u WHERE u.status = :status and u.name = :name")
 User findUserByUserStatusAndUserName(@Param("status") Integer userStatus, 
   @Param("name") String userName); 
@@ -232,7 +232,7 @@ User findUserByUserStatusAndUserName(@Param("status") Integer userStatus,
 
 对于原生查询定义，与 JPQL 相比，我们通过名称向查询传递参数的方式没有区别——我们使用`@Param`注释:
 
-```
+```java
 @Query(value = "SELECT * FROM Users u WHERE u.status = :status and u.name = :name", 
   nativeQuery = true)
 User findUserByStatusAndNameNamedParamsNative(
@@ -243,13 +243,13 @@ User findUserByStatusAndNameNamedParamsNative(
 
 让我们考虑一下 JPQL 或 SQL 查询的`where`子句包含`IN`(或`NOT IN`)关键字的情况:
 
-```
+```java
 SELECT u FROM User u WHERE u.name IN :names
 ```
 
 在这种情况下，我们可以定义一个以`Collection `为参数的查询方法:
 
-```
+```java
 @Query(value = "SELECT u FROM User u WHERE u.name IN :names")
 List<User> findUserByNameList(@Param("names") Collection<String> names);
 ```
@@ -266,7 +266,7 @@ List<User> findUserByNameList(@Param("names") Collection<String> names);
 
 与`select`查询相比，修改数据的存储库方法有两个不同之处——它有`@Modifying`注释，当然，JPQL 查询使用`update`而不是`select`:
 
-```
+```java
 @Modifying
 @Query("update User u set u.status = :status where u.name = :name")
 int updateUserSetStatusForName(@Param("status") Integer status, 
@@ -279,7 +279,7 @@ int updateUserSetStatusForName(@Param("status") Integer status,
 
 我们还可以用本地查询修改数据库的状态。我们只需要添加`@Modifying`注释:
 
-```
+```java
 @Modifying
 @Query(value = "update Users u set u.status = ? where u.name = ?", 
   nativeQuery = true)
@@ -290,7 +290,7 @@ int updateUserSetStatusForNameNative(Integer status, String name);
 
 为了执行插入操作，我们必须同时应用`@Modifying`和使用本地查询，因为[插入不是 JPA 接口](/web/20220826180223/https://www.baeldung.com/jpa-insert)的一部分:
 
-```
+```java
 @Modifying
 @Query(
   value = 
@@ -308,7 +308,7 @@ void insertUser(@Param("name") String name, @Param("age") Integer age,
 
 例如，让我们设想这样一种情况，我们需要从运行时定义的集合中选择电子邮件为`LIKE` one 的所有用户— `email1`、`email2`、…、`emailn`:
 
-```
+```java
 SELECT u FROM User u WHERE u.email LIKE '%email1%' 
     or  u.email LIKE '%email2%'
     ... 
@@ -327,7 +327,7 @@ SELECT u FROM User u WHERE u.email LIKE '%email1%'
 
 我们将从创建一个自定义片段接口开始:
 
-```
+```java
 public interface UserRepositoryCustom {
     List<User> findUserByEmails(Set<String> emails);
 }
@@ -335,7 +335,7 @@ public interface UserRepositoryCustom {
 
 然后我们将实现它:
 
-```
+```java
 public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
     @PersistenceContext
@@ -372,7 +372,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
 因此，现在我们将通过扩展`UserRepository`中的新接口来集成我们的片段:
 
-```
+```java
 public interface UserRepository extends JpaRepository<User, Integer>, UserRepositoryCustom {
     //  query methods from section 2 - section 7
 }
@@ -382,7 +382,7 @@ public interface UserRepository extends JpaRepository<User, Integer>, UserReposi
 
 最后，我们可以调用我们的动态查询方法:
 
-```
+```java
 Set<String> emails = new HashSet<>();
 // filling the set with any number of items
 

@@ -14,7 +14,7 @@
 
 我们将在下面的例子中使用`emoji-java`，所以我们需要将这个依赖关系添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>com.vdurmont</groupId>
     <artifactId>emoji-java</artifactId>
@@ -26,7 +26,7 @@
 
 现在让我们看看如何使用`emoji-java `从我们的`String`中删除表情符号:
 
-```
+```java
 @Test
 public void whenRemoveEmojiUsingLibrary_thenSuccess() {
     String text = "la conférence, commencera à 10 heures ?";
@@ -40,7 +40,7 @@ public void whenRemoveEmojiUsingLibrary_thenSuccess() {
 
 我们也可以使用`EmojiParser`通过`parseToAliases()`方法将表情符号替换为它的别名:
 
-```
+```java
 @Test
 public void whenReplaceEmojiUsingLibrary_thenSuccess() {
     String text = "la conférence, commencera à 10 heures ?";
@@ -60,7 +60,7 @@ public void whenReplaceEmojiUsingLibrary_thenSuccess() {
 
 接下来，我们可以使用正则表达式来删除表情符号和其他符号。我们将只允许特定类型的字符:
 
-```
+```java
 @Test
 public void whenRemoveEmojiUsingMatcher_thenSuccess() {
     String text = "la conférence, commencera à 10 heures ?";
@@ -87,7 +87,7 @@ public void whenRemoveEmojiUsingMatcher_thenSuccess() {
 
 我们也可以将`String.replaceAll()`与相同的正则表达式一起使用:
 
-```
+```java
 @Test
 public void whenRemoveEmojiUsingRegex_thenSuccess() {
     String text = "la conférence, commencera à 10 heures ?";
@@ -104,7 +104,7 @@ public void whenRemoveEmojiUsingRegex_thenSuccess() {
 
 在以下示例中，我们使用表情符号的 Unicode 点移除了两个 Unicode 范围:
 
-```
+```java
 @Test
 public void whenRemoveEmojiUsingCodepoints_thenSuccess() {
     String text = "la conférence, commencera à 10 heures ?";
@@ -124,7 +124,7 @@ public void whenRemoveEmojiUsingCodepoints_thenSuccess() {
 
 下面是使用`\u`的对应表达式:
 
-```
+```java
 @Test
 public void whenRemoveEmojiUsingUnicode_thenSuccess() {
     String text = "la conférence, commencera à 10 heures ?";

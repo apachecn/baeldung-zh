@@ -22,14 +22,14 @@ application.properties 文件中定义的配置与所有客户端应用程序共
 
 让我们向我们的`baeldung.properties`文件添加一些属性，然后我们将在我们的客户端应用程序中使用这些属性:
 
-```
+```java
 hello=Hello Jane Doe!
 welcome=Welcome Jane Doe!
 ```
 
 让我们在一个`resources/config/application.properties`文件中添加一个共享属性，Spring 将在所有客户端之间共享这个属性:
 
-```
+```java
 shared-property=This property is shared accross all client applications
 ```
 
@@ -37,7 +37,7 @@ shared-property=This property is shared accross all client applications
 
 现在，让我们创建服务于我们的配置的 Spring 应用程序。我们还需要`[spring-cloud-config-server](https://web.archive.org/web/20221208210435/https://search.maven.org/search?q=spring-cloud-config-server)`依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-config-server</artifactId>
@@ -46,7 +46,7 @@ shared-property=This property is shared accross all client applications
 
 安装完成后，让我们创建应用程序并启用配置服务器:
 
-```
+```java
 @SpringBootApplication
 @EnableConfigServer
 public class ConfigServer {
@@ -58,20 +58,20 @@ public class ConfigServer {
 
 让我们在应用程序的`application.properties`文件中添加以下属性，告诉它在端口 8081 上启动并加载之前定义的配置:
 
-```
+```java
 server.port=8081
 spring.cloud.config.server.native.searchLocations=classpath:/config
 ```
 
 现在，让我们启动我们的服务器应用程序，激活本机概要文件并允许我们将文件系统用作配置存储库:
 
-```
+```java
 mvn spring-boot:run -Drun.profiles=native
 ```
 
 我们的服务器现在正在运行并为我们的配置提供服务。让我们验证我们的共享属性是否可访问:
 
-```
+```java
 $ curl localhost:8081/unknownclient/default
 {
   "name": "unknownclient",
@@ -94,7 +94,7 @@ $ curl localhost:8081/unknownclient/default
 
 以及特定于我们的应用的属性:
 
-```
+```java
 $ curl localhost:8081/baeldung/default
 {
   "name": "baeldung",
@@ -134,7 +134,7 @@ $ curl localhost:8081/baeldung/default
 
 让我们添加`[spring-cloud-starter-config](https://web.archive.org/web/20221208210435/https://search.maven.org/search?q=spring-cloud-starter-config)`依赖项来加载配置，添加`[spring-boot-starter-web](https://web.archive.org/web/20221208210435/https://search.maven.org/search?q=spring-boot-starter-web)`来在我们的`pom.xml`中创建控制器:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-config</artifactId>
@@ -149,7 +149,7 @@ $ curl localhost:8081/baeldung/default
 
 接下来，让我们创建从 spring-cloud-config 服务器读取配置的客户端应用程序:
 
-```
+```java
 @SpringBootApplication
 public class Client {
     public static void main(String[] args) {
@@ -162,7 +162,7 @@ public class Client {
 
 让我们修改我们的`application.properties`文件，告诉 spring-boot 从我们的服务器获取它的配置:
 
-```
+```java
 spring.cloud.config.name=baeldung
 spring.config.import=optional:configserver:http://localhost:8081
 ```
@@ -173,7 +173,7 @@ spring.config.import=optional:configserver:http://localhost:8081
 
 现在让我们创建一个控制器，负责显示我们的配置的特定属性，以及共享属性:
 
-```
+```java
 @RestController
 public class HelloController {
 
@@ -205,7 +205,7 @@ public class HelloController {
 
 现在，我们可以导航到这三个 URL 来验证我们的配置是否被考虑在内:
 
-```
+```java
 $ curl http://localhost:8080/hello
 Hello Jane Doe!
 $ curl http://localhost:8080/welcome
@@ -220,13 +220,13 @@ This property is shared accross all client applications
 
 让我们编辑服务器的`resources/application.properties`文件来覆盖`hello`属性:
 
-```
+```java
 spring.cloud.config.server.overrides.hello=Hello Jane Doe – application.properties!
 ```
 
 让我们再次测试对`/hello`控制器的调用，以验证是否考虑了过载:
 
-```
+```java
 $ curl http://localhost:8080/hello
 Hello Jane Doe - application.properties!
 ```
@@ -243,19 +243,19 @@ Hello Jane Doe - application.properties!
 
 让我们向我们的客户端应用程序添加一个`application-development.properties`配置文件，并覆盖`hello`属性:
 
-```
+```java
 hello=Hello local property!
 ```
 
 现在，让我们通过激活开发配置文件来启动我们的客户端:
 
-```
+```java
 mvn spring-boot:run -Drun.profiles=development
 ```
 
 我们现在可以再次测试我们的控制器`/hello`来验证过载是否正常工作:
 
-```
+```java
 $ curl http://localhost:8080/hello
 Hello local property!
 ```
@@ -266,7 +266,7 @@ Hello local property!
 
 让我们从服务器的`resources/application.properties`文件中移除`hello`属性的重载，并修改`config/baeldung.properties`中的重载，以使用占位符:
 
-```
+```java
 hello=${app.hello:Hello Jane Doe!}
 ```
 
@@ -274,13 +274,13 @@ hello=${app.hello:Hello Jane Doe!}
 
 让我们编辑客户端的`resources/application.properties`文件来添加属性:
 
-```
+```java
 app.hello=Hello, overriden local property!
 ```
 
 让我们再次测试我们的控制器 hello，以验证是否正确考虑了过度充电:
 
-```
+```java
 $ curl http://localhost:8080/hello
 Hello, overriden local property!
 ```
@@ -295,7 +295,7 @@ Hello, overriden local property!
 
 在 2.4 版之前，外部配置的管理是通过引导来确保的。我们将需要`[spring-cloud-starter-bootstrap](https://web.archive.org/web/20221208210435/https://search.maven.org/search?q=spring-cloud-starter-bootstrap)`依赖。让我们将此添加到我们的`pom.xml`:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-bootstrap</artifactId>
@@ -304,14 +304,14 @@ Hello, overriden local property!
 
 接下来，我们将在 resources 文件夹中创建一个`bootstrap.properties`文件，并配置服务器的访问 URL:
 
-```
+```java
 spring.cloud.config.name=baeldung
 spring.cloud.config.uri=http://localhost:8081
 ```
 
 让我们在`application.properties`中启用传统配置:
 
-```
+```java
 spring.config.use-legacy-processing=true
 ```
 
@@ -319,7 +319,7 @@ spring.config.use-legacy-processing=true
 
 在服务器端，我们需要指出属性重载是可能的。让我们以这种方式修改我们的`baeldung.properties`文件:
 
-```
+```java
 spring.cloud.config.overrideNone=true
 ```
 
@@ -329,13 +329,13 @@ spring.cloud.config.overrideNone=true
 
 我们现在可以通过`application.properties`文件覆盖客户端应用程序中的`hello`属性:
 
-```
+```java
 hello=localproperty
 ```
 
 让我们测试对控制器的调用:
 
-```
+```java
 $ curl http://localhost:8080/hello
 localproperty
 ```

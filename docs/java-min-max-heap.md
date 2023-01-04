@@ -25,7 +25,7 @@
 
 让我们从一个简单的表示最小-最大堆的类开始:
 
-```
+```java
 public class MinMaxHeap<T extends Comparable<T>> {
     private List<T> array;
     private int capacity;
@@ -37,7 +37,7 @@ public class MinMaxHeap<T extends Comparable<T>> {
 
 我们可以使用以下方法找到左右孩子的索引:
 
-```
+```java
 private int getLeftChildIndex(int i) {
    return 2 * i;
 }
@@ -49,7 +49,7 @@ private int getRightChildIndex(int i) {
 
 同样，我们可以通过以下代码找到数组中项目的父项和祖父项的索引:
 
-```
+```java
 private int getParentIndex(int i) {
    return i / 2;
 }
@@ -61,7 +61,7 @@ private int getGrandparentIndex(int i) {
 
 现在，让我们继续完成我们简单的最小-最大堆类:
 
-```
+```java
 public class MinMaxHeap<T extends Comparable<T>> {
     private List<T> array;
     private int capacity;
@@ -89,7 +89,7 @@ public class MinMaxHeap<T extends Comparable<T>> {
 
 让我们首先看看如何从一个现有的数组构建一个最小-最大堆。这里我们使用 Floyd 算法，并做了一些修改，如 [Heapify 算法](/web/20220628062856/https://www.baeldung.com/cs/binary-tree-max-heapify):
 
-```
+```java
 public List<T> create() {
     for (int i = Math.floorDiv(array.size(), 2); i >= 1; i--) {
         pushDown(array, i);
@@ -100,7 +100,7 @@ public List<T> create() {
 
 让我们仔细看看下面的代码中的`pushDown`,看看上面的代码到底发生了什么:
 
-```
+```java
 private void pushDown(List<T> array, int i) {
     if (isEvenLevel(i)) {
         pushDownMin(array, i);
@@ -112,7 +112,7 @@ private void pushDown(List<T> array, int i) {
 
 正如我们所见，对于所有偶数级，我们用`pushDownMin.` 检查数组项。这种算法类似于我们将用于`removeMin`和`removeMax`的 heapify-down:
 
-```
+```java
 private void pushDownMin(List<T> h, int i) {
     while (getLeftChildIndex(i) < indicator) {
        int indexOfSmallest = getIndexOfSmallestChildOrGrandChild(h, i);
@@ -126,7 +126,7 @@ private void pushDownMin(List<T> h, int i) {
 
 如果最小的子元素或孙元素不小于当前元素，则我们中断。换句话说，元素的当前排列类似于最小堆:
 
-```
+```java
 if (h.get(indexOfSmallest - 1).compareTo(h.get(i - 1)) < 0) {
     //...
 } else {
@@ -136,7 +136,7 @@ if (h.get(indexOfSmallest - 1).compareTo(h.get(i - 1)) < 0) {
 
 **如果最小的子元素或孙元素小于当前元素，我们将其与其父元素或祖父元素交换:**
 
-```
+```java
 if (getParentIndex(getParentIndex(indexOfSmallest)) == i) {
        if (h.get(indexOfSmallest - 1).compareTo(h.get(i - 1)) < 0) {
           swap(indexOfSmallest - 1, i - 1, h);
@@ -154,7 +154,7 @@ if (getParentIndex(getParentIndex(indexOfSmallest)) == i) {
 
 现在，让我们看看`getIndexOfSmallestChildOrGrandChild `是如何工作的。这很简单！首先，我们假设左边的孩子具有最小值，然后将其与其他孩子进行比较:
 
-```
+```java
 private int getIndexOfSmallestChildOrGrandChild(List<T> h, int i) {
     int minIndex = getLeftChildIndex(i);
     T minValue = h.get(minIndex - 1);
@@ -166,7 +166,7 @@ private int getIndexOfSmallestChildOrGrandChild(List<T> h, int i) {
 
 例如，让我们比较一下`min-value`和正确的孩子:
 
-```
+```java
 if (getRightChildIndex(i) < indicator) {
     if (h.get(getRightChildIndex(i) - 1).compareTo(minValue) < 0) {
         minValue = h.get(getRightChildIndex(i));
@@ -179,7 +179,7 @@ if (getRightChildIndex(i) < indicator) {
 
 现在，让我们创建一个测试来验证从一个无序数组创建一个最小-最大堆是否可以正常工作:
 
-```
+```java
 @Test
 public void givenUnOrderedArray_WhenCreateMinMaxHeap_ThenIsEqualWithMinMaxHeapOrdered() {
     List<Integer> list = Arrays.asList(34, 12, 28, 9, 30, 19, 1, 40);
@@ -195,7 +195,7 @@ public void givenUnOrderedArray_WhenCreateMinMaxHeap_ThenIsEqualWithMinMaxHeapOr
 
 让我们看看如何向最小-最大堆添加元素:
 
-```
+```java
 public void insert(T item) {
     if (isEmpty()) {
         array.add(item);
@@ -212,7 +212,7 @@ public void insert(T item) {
 
 首先，我们检查堆是否为空。如果堆是空的，我们添加新元素并增加指示器。否则，添加的新元素可能会改变 min-max 堆的顺序，所以我们需要用`pushUp`来调整堆:
 
-```
+```java
 private void pushUp(List<T>h,int i) {
     if (i != 1) {
         if (isEvenLevel(i)) {
@@ -241,7 +241,7 @@ private void pushUp(List<T>h,int i) {
 
 现在，让我们看看下面的`pushUpMin`:
 
-```
+```java
 private void pushUpMin(List<T> h , int i) {
     while(hasGrandparent(i) && h.get(i - 1)
       .compareTo(h.get(getGrandparentIndex(i) - 1)) < 0) {
@@ -255,7 +255,7 @@ private void pushUpMin(List<T> h , int i) {
 
 现在，让我们创建一个测试来验证在最小-最大堆中插入一个新元素是否正常:
 
-```
+```java
 @Test
 public void givenNewElement_WhenInserted_ThenIsEqualWithMinMaxHeapOrdered() {
     MinMaxHeap<Integer> minMaxHeap = new MinMaxHeap(8);
@@ -276,7 +276,7 @@ public void givenNewElement_WhenInserted_ThenIsEqualWithMinMaxHeapOrdered() {
 
 最小-最大堆中的主元素总是位于根，所以我们可以在时间复杂度 O(1)中找到它:
 
-```
+```java
 public T min() {
     if (!isEmpty()) {
         return array.get(0);
@@ -289,7 +289,7 @@ public T min() {
 
 最小-最大堆中的最大元素总是位于第一个奇数层，因此我们可以通过简单的比较在时间复杂度 O(1)中找到它:
 
-```
+```java
 public T max() {
     if (!isEmpty()) {
         if (indicator == 2) {
@@ -308,7 +308,7 @@ public T max() {
 
 在这种情况下，我们将找到 min 元素，然后用数组的最后一个元素替换它:
 
-```
+```java
 public T removeMin() {
     T min = min();
     if (min != null) {
@@ -328,7 +328,7 @@ public T removeMin() {
 
 移除 max 元素与移除 min 元素是一样的，唯一的变化是我们找到 max 元素的索引，然后调用`pushDown`:
 
-```
+```java
 public T removeMax() {
     T max = max();
     if (max != null) {

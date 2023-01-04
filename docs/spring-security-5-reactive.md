@@ -14,7 +14,7 @@
 
 基本设置需要父声明、web starter 和安全 starter 依赖项。我们还需要 Spring 安全测试框架:
 
-```
+```java
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -49,7 +49,7 @@
 
 `@EnableWebFlux`注释为应用程序启用了标准的 Spring Web 反应式配置:
 
-```
+```java
 @ComponentScan(basePackages = {"com.baeldung.security"})
 @EnableWebFlux
 public class SpringSecurity5Application {
@@ -70,7 +70,7 @@ Netty 关闭后，将使用`try-with-resources`块自动关闭上下文。
 
 我们还需要创建一个基于 Netty 的 HTTP 服务器，一个 HTTP 请求的处理程序，以及服务器和处理程序之间的适配器:
 
-```
+```java
 @Bean
 public NettyContext nettyContext(ApplicationContext context) {
     HttpHandler handler = WebHttpHandlerBuilder
@@ -88,7 +88,7 @@ public NettyContext nettyContext(ApplicationContext context) {
 
 要在 Spring Security 5 中启用 WebFlux 支持，我们只需要指定`@EnableWebFluxSecurity`注释:
 
-```
+```java
 @EnableWebFluxSecurity
 public class SecurityConfig {
     // ...
@@ -101,7 +101,7 @@ public class SecurityConfig {
 
 `ServerHttpSecurity`已经预先配置了一些默认设置，所以我们可以完全跳过这个配置。但是对于初学者，我们将提供以下最低配置:
 
-```
+```java
 @Bean
 public SecurityWebFilterChain securityWebFilterChain(
   ServerHttpSecurity http) {
@@ -113,7 +113,7 @@ public SecurityWebFilterChain securityWebFilterChain(
 
 此外，我们需要一个用户详细信息服务。Spring Security 为我们提供了一个方便的模拟用户生成器和用户详细信息服务的内存实现:
 
-```
+```java
 @Bean
 public MapReactiveUserDetailsService userDetailsService() {
     UserDetails user = User
@@ -127,7 +127,7 @@ public MapReactiveUserDetailsService userDetailsService() {
 
 既然我们处于被动领域，用户详细信息服务也应该是被动的。如果我们检查一下`ReactiveUserDetailsService`接口，**我们会看到它的`findByUsername`方法实际上返回了一个`Mono`发布者:**
 
-```
+```java
 public interface ReactiveUserDetailsService {
 
     Mono<UserDetails> findByUsername(String username);
@@ -142,7 +142,7 @@ Spring Security 5 中一个微小但引人注目的改进是使用 Bootstrap 4 C
 
 要使用新的登录表单，让我们将相应的`formLogin()`构建器方法添加到`ServerHttpSecurity`构建器中:
 
-```
+```java
 public SecurityWebFilterChain securityWebFilterChain(
   ServerHttpSecurity http) {
     return http.authorizeExchange()
@@ -164,7 +164,7 @@ public SecurityWebFilterChain securityWebFilterChain(
 
 为了了解身份验证表单背后的东西，让我们实现一个简单的反应式控制器来问候用户:
 
-```
+```java
 @RestController
 public class GreetingController {
 
@@ -180,7 +180,7 @@ public class GreetingController {
 
 登录后，我们会看到问候语。让我们添加另一个只能由管理员访问的反应式处理程序:
 
-```
+```java
 @GetMapping("/admin")
 public Mono<String> greetAdmin(Mono<Principal> principal) {
     return principal
@@ -191,7 +191,7 @@ public Mono<String> greetAdmin(Mono<Principal> principal) {
 
 现在让我们在我们的用户详细信息服务中创建第二个角色为`ADMIN`的用户:
 
-```
+```java
 UserDetails admin = User.withDefaultPasswordEncoder()
   .username("admin")
   .password("password")
@@ -203,7 +203,7 @@ UserDetails admin = User.withDefaultPasswordEncoder()
 
 **注意，我们必须在`.anyExchange()`** 链调用之前放置匹配器。此调用适用于其他匹配器尚未覆盖的所有其他 URL:
 
-```
+```java
 return http.authorizeExchange()
   .pathMatchers("/admin").hasAuthority("ROLE_ADMIN")
   .anyExchange().authenticated()
@@ -221,7 +221,7 @@ return http.authorizeExchange()
 
 要为反应式方法启用基于方法的安全性，我们只需向我们的`SecurityConfig`类添加`@EnableReactiveMethodSecurity`注释:
 
-```
+```java
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 public class SecurityConfig {
@@ -231,7 +231,7 @@ public class SecurityConfig {
 
 现在让我们用以下内容创建一个反应式问候服务:
 
-```
+```java
 @Service
 public class GreetingService {
 
@@ -243,7 +243,7 @@ public class GreetingService {
 
 我们可以将它注入到控制器中，转到[http://localhost:8080/greeting service](https://web.archive.org/web/20220707143840/http://localhost:8080/greetService)并查看它实际工作的情况:
 
-```
+```java
 @RestController
 public class GreetingController {
 
@@ -261,7 +261,7 @@ public class GreetingController {
 
 但是如果我们现在在具有`ADMIN`角色的服务方法上添加`@PreAuthorize`注释，那么普通用户将无法访问问候服务 URL:
 
-```
+```java
 @Service
 public class GreetingService {
 
@@ -278,7 +278,7 @@ public class GreetingService {
 
 首先，我们将使用注入的应用程序上下文创建一个测试:
 
-```
+```java
 @ContextConfiguration(classes = SpringSecurity5Application.class)
 public class SecurityTest {
 
@@ -291,7 +291,7 @@ public class SecurityTest {
 
 现在我们将设置一个简单的反应式 web 测试客户端，这是 Spring 5 测试框架的一个特性:
 
-```
+```java
 @Before
 public void setup() {
     this.webTestClient = WebTestClient
@@ -303,7 +303,7 @@ public void setup() {
 
 这允许我们快速检查未授权用户是否从应用程序的主页重定向到登录页面:
 
-```
+```java
 @Test
 void whenNoCredentials_thenRedirectToLogin() {
     webTestClient.get()
@@ -319,7 +319,7 @@ void whenNoCredentials_thenRedirectToLogin() {
 
 现在，我们可以检查授权用户是否看到了问候语:
 
-```
+```java
 @Test
 @WithMockUser
 void whenHasCredentials_thenSeesGreeting() {

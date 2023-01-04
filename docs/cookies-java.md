@@ -8,7 +8,7 @@
 
 Java 平台附带内置的网络支持，打包在`java.net`包中:
 
-```
+```java
 import java.net.*;
 ```
 
@@ -51,7 +51,7 @@ next-`CookieStore`顾名思义，它有保存和检索 cookies 的方法。当�
 
 我们先来看看默认值。创建默认值`CookieHandler`并将其设置为系统范围的默认值:
 
-```
+```java
 CookieManager cm = new CookieManager();
 CookieHandler.setDefault(cm);
 ```
@@ -74,7 +74,7 @@ CookieHandler.setDefault(cm);
 
 为了简单地改变当前的`CookiePolicy`而不实现我们自己的，我们在`CookieManager`实例上调用`setCookiePolicy`:
 
-```
+```java
 CookieManager cm=new CookieManager();
 cm.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
 ```
@@ -85,7 +85,7 @@ cm.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
 
 姑且称之为新政策——`ProxyAcceptCookiePolicy`。除了给定的代理地址之外，它基本上会拒绝来自其`shouldAccept`实现的任何其他代理服务器，然后调用`CookiePolicy.ACCEPT_ORIGINAL_SERVER`的`shouldAccept`方法来完成实现:
 
-```
+```java
 public class ProxyAcceptCookiePolicy implements CookiePolicy {
     private String acceptedProxy;
 
@@ -108,7 +108,7 @@ public class ProxyAcceptCookiePolicy implements CookiePolicy {
 
 然后，我们将这个实例设置为`CookieManager`实例的 cookie 策略，然后将其设置为默认的 CookieHandler:
 
-```
+```java
 CookieManager cm = new CookieManager();
 cm.setCookiePolicy(new ProxyAcceptCookiePolicy("baeldung.com"));
 CookieHandler.setDefault(cm);
@@ -128,7 +128,7 @@ CookieHandler.setDefault(cm);
 
 下面是`PersistentCookieStore`的实现:
 
-```
+```java
 public class PersistentCookieStore implements CookieStore, Runnable {
     private CookieStore store;
 

@@ -24,7 +24,7 @@
 
 让我们想象一个简单的`Calculator`类:
 
-```
+```java
 public class Calculator {
     private int result = 0;
 
@@ -48,7 +48,7 @@ public class Calculator {
 
 有些方法返回一个整数，有些不返回任何东西。现在，假设我们必须通过反射**检索所有不返回任何结果的方法**。我们将通过使用`Void.TYPE`变量来实现这一点:
 
-```
+```java
 @Test
 void givenCalculator_whenGettingVoidMethodsByReflection_thenOnlyClearAndPrint() {
     Method[] calculatorMethods = Calculator.class.getDeclaredMethods();
@@ -67,7 +67,7 @@ void givenCalculator_whenGettingVoidMethodsByReflection_thenOnlyClearAndPrint() 
 
 类型的另一种用法是泛型类。假设我们正在调用一个需要`Callable`参数的方法:
 
-```
+```java
 public class Defer {
     public static <V> V defer(Callable<V> callable) throws Exception {
         return callable.call();
@@ -77,7 +77,7 @@ public class Defer {
 
 **但是，我们要传递的`Callable`不一定要返回任何东西。因此，我们可以通过一个`Callable<Void>` :**
 
-```
+```java
 @Test
 void givenVoidCallable_whenDiffer_thenReturnNull() throws Exception {
     Callable<Void> callable = new Callable<Void>() {
@@ -96,13 +96,13 @@ void givenVoidCallable_whenDiffer_thenReturnNull() throws Exception {
 
 我们也可以将这种方法应用于 lambdas。事实上，我们的`Callable`可以写成 lambda。让我们想象一个需要一个`Function`的方法，但是我们想要使用一个不返回任何东西的`Function`。然后我们只要让它返回`Void`:
 
-```
+```java
 public static <T, R> R defer(Function<T, R> function, T arg) {
     return function.apply(arg);
 }
 ```
 
-```
+```java
 @Test
 void givenVoidFunction_whenDiffer_thenReturnNull() {
     Function<String, Void> function = s -> {
@@ -120,7 +120,7 @@ void givenVoidFunction_whenDiffer_thenReturnNull() {
 
 我们现在来看看如何避免这些情况。首先，让我们考虑一下带有`Callable`参数的方法。**为了避免使用`Callable<Void>`，我们可以提供另一个方法，用`Runnable`参数来代替:**
 
-```
+```java
 public static void defer(Runnable runnable) {
     runnable.run();
 }
@@ -128,7 +128,7 @@ public static void defer(Runnable runnable) {
 
 因此，我们可以传递给它一个不返回值的`Runnable`，从而去掉无用的`return null`:
 
-```
+```java
 Runnable runnable = new Runnable() {
     @Override
     public void run() {
@@ -141,7 +141,7 @@ Defer.defer(runnable);
 
 但是，如果`Defer`类不是我们可以修改的呢？然后我们要么坚持使用`Callable<Void>`选项，要么**创建另一个类，使用`Runnable`并将调用推迟到`Defer`类**:
 
-```
+```java
 public class MyOwnDefer {
     public static void defer(Runnable runnable) throws Exception {
         Defer.defer(new Callable<Void>() {
@@ -159,7 +159,7 @@ public class MyOwnDefer {
 
 当然对于`Function`来说同样可以实现。在我们的例子中，`Function`不返回任何东西，因此我们可以提供另一个采用`Consumer`的方法:
 
-```
+```java
 public static <T> void defer(Consumer<T> consumer, T arg) {
     consumer.accept(arg);
 }
@@ -167,7 +167,7 @@ public static <T> void defer(Consumer<T> consumer, T arg) {
 
 那么，如果我们的函数不带任何参数呢？我们可以使用一个`Runnable`或者创建我们自己的功能接口(如果这看起来更清楚的话):
 
-```
+```java
 public interface Action {
     void execute();
 }
@@ -175,13 +175,13 @@ public interface Action {
 
 然后，我们再次重载`defer()`方法:
 
-```
+```java
 public static void defer(Action action) {
     action.execute();
 }
 ```
 
-```
+```java
 Action action = () -> System.out.println("Hello!");
 
 Defer.defer(action);

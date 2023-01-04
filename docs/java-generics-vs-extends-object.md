@@ -14,7 +14,7 @@
 
 例如，在 JDK 5 之前，我们必须使用强制转换来处理列表元素。这反过来又产生了某种类型的运行时错误:
 
-```
+```java
 List aList = new ArrayList();
 aList.add(new Integer(1));
 aList.add("a_string");
@@ -31,7 +31,7 @@ for (int i = 0; i < aList.size(); i++) {
 
 泛型为我们填补了这个角色:
 
-```
+```java
 List<Integer> iList = new ArrayList<>();
 iList.add(1);
 iList.add("a_string"); // compile time error
@@ -57,7 +57,7 @@ for (int i = 0; i < iList.size(); i++) {
 
 让我们考虑这两种方法:
 
-```
+```java
 public static void printListObject(List<Object> list) {    
     for (Object element : list) {        
         System.out.print(element + " ");    
@@ -73,13 +73,13 @@ public static void printListWildCard(List<?> list) {    
 
 给出一个`Integer`列表，比如说:
 
-```
+```java
 List<Integer> li = Arrays.asList(1, 2, 3);
 ```
 
 `printListObject(li)`不会编译，我们会得到这个错误:
 
-```
+```java
 The method printListObject(List<Object>) is not applicable for the arguments (List<Integer>)
 ```
 
@@ -89,7 +89,7 @@ The method printListObject(List<Object>) is not applicable for the arguments (Li
 
 在上面的例子中，如果我们将`printListWildCard`的方法签名改为:
 
-```
+```java
 public static void printListWildCard(List<? extends Object> list)
 ```
 
@@ -113,7 +113,7 @@ public static void printListWildCard(List<? extends Object> list)
 
 所以，如果我们写:
 
-```
+```java
 List someList = new ArrayList<>();
 boolean instanceTest = someList instanceof List<?>
 ```
@@ -122,7 +122,7 @@ boolean instanceTest = someList instanceof List<?>
 
 但是，如果我们对`List<? extends Object>`使用`instanceof`操作符:
 
-```
+```java
 List anotherList = new ArrayList<>();
 boolean instanceTest = anotherList instanceof List<? extends Object>;
 ```
@@ -131,7 +131,7 @@ boolean instanceTest = anotherList instanceof List<? extends Object>;
 
 类似地，在下面的代码片段中，第 1 行编译了，但是第 2 行没有:
 
-```
+```java
 List<?>[] arrayOfList = new List<?>[1];
 List<? extends Object>[] arrayOfAnotherList = new List<? extends Object>[1]
 ```

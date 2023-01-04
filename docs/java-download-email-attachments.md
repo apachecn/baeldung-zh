@@ -14,7 +14,7 @@ JavaMail API 用于编写、发送和接收来自 Gmail 等电子邮件服务器
 
 我们需要在 Java 项目中添加 [javax.mail](https://web.archive.org/web/20221207224415/https://search.maven.org/search?q=g:com.sun.mail%20a:javax.mail) Maven 依赖项，以使用 JavaMail API:
 
-```
+```java
 <dependency>
     <groupId>com.sun.mail</groupId>
     <artifactId>javax.mail</artifactId> 
@@ -34,7 +34,7 @@ JavaMail API 用于编写、发送和接收来自 Gmail 等电子邮件服务器
 
 为了下载附件，我们首先检查内容类型是否包含多部分内容。如果是，我们可以进一步处理它，以检查零件是否有任何附件。为了检查内容类型，我们编写:
 
-```
+```java
 if (contentType.contains("multipart")) {
     //send to the download utility...
 }
@@ -42,7 +42,7 @@ if (contentType.contains("multipart")) {
 
 如果我们有一个多部分，我们首先检查它是否属于类型`Part.ATTACHMENT`，如果是，我们使用`saveFile` 方法将文件保存到我们的目标文件夹。因此，在下载实用程序中，我们将检查:
 
-```
+```java
 if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
     String file = part.getFileName();
     part.saveFile(downloadDirectory + File.separator + part.getFileName());
@@ -56,7 +56,7 @@ if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
 
 让我们看看下载附件并将它们保存到磁盘的示例代码:
 
-```
+```java
 public List<String> downloadAttachments(Message message) throws IOException, MessagingException {
     List<String> downloadedAttachments = new ArrayList<String>();
     Multipart multiPart = (Multipart) message.getContent();

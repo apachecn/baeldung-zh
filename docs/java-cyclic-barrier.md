@@ -37,7 +37,7 @@
 
 `CyclicBarrier`的构造函数很简单。它使用一个整数来表示需要调用 barrier 实例上的`await()`方法的线程数量，以表示到达了公共执行点:
 
-```
+```java
 public CyclicBarrier(int parties)
 ```
 
@@ -47,7 +47,7 @@ public CyclicBarrier(int parties)
 
 或者，我们可以将第二个参数传递给构造函数，这是一个`Runnable`实例。这个逻辑将由触发屏障的最后一个线程运行:
 
-```
+```java
 public CyclicBarrier(int parties, Runnable barrierAction)
 ```
 
@@ -59,7 +59,7 @@ public CyclicBarrier(int parties, Runnable barrierAction)
 
 让我们实现发生所有动作的主类:
 
-```
+```java
 public class CyclicBarrierDemo {
 
     private CyclicBarrier cyclicBarrier;
@@ -79,7 +79,7 @@ public class CyclicBarrierDemo {
 
 现在让我们实现每个工作线程的逻辑:
 
-```
+```java
 public class CyclicBarrierDemo {
 
     // ...
@@ -119,7 +119,7 @@ public class CyclicBarrierDemo {
 
 为了简单起见，我们只需将部分结果列表中的所有数字相加:
 
-```
+```java
 public class CyclicBarrierDemo {
 
     // ...
@@ -152,7 +152,7 @@ public class CyclicBarrierDemo {
 
 最后一步是构建`CyclicBarrier`并用`main()`方法开始:
 
-```
+```java
 public class CyclicBarrierDemo {
 
     // Previous code
@@ -189,7 +189,7 @@ public class CyclicBarrierDemo {
 
 下面是上述程序的一次执行的输出——每次执行可能会产生不同的结果，因为线程可能以不同的顺序产生:
 
-```
+```java
 Spawning 5 worker threads to compute 3 partial results each
 Thread 0: Crunching some numbers! Final result - 6
 Thread 0: Crunching some numbers! Final result - 2

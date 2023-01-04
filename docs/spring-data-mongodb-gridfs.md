@@ -14,7 +14,7 @@ GridFS 存储规范主要用于处理超过 16MB 文档大小限制的文件。S
 
 让我们从`GridFsTemplate`的简单 XML 配置开始:
 
-```
+```java
 <bean id="gridFsTemplate" class="org.springframework.data.mongodb.gridfs.GridFsTemplate">
     <constructor-arg ref="mongoDbFactory" />
     <constructor-arg ref="mongoConverter" />
@@ -23,7 +23,7 @@ GridFS 存储规范主要用于处理超过 16MB 文档大小限制的文件。S
 
 `GridFsTemplate`的构造函数参数包括对`mongoDbFactory`和`mongoConverter`的 bean 引用，前者创建一个 Mongo 数据库，后者在 Java 和 MongoDB 类型之间转换。它们的 bean 定义如下。
 
-```
+```java
 <mongo:db-factory id="mongoDbFactory" dbname="test" mongo-client-ref="mongoClient" />
 
 <mongo:mapping-converter id="mongoConverter" base-package="com.baeldung.converter">
@@ -35,7 +35,7 @@ GridFS 存储规范主要用于处理超过 16MB 文档大小限制的文件。S
 
 让我们创建一个类似的配置，只是使用 Java:
 
-```
+```java
 @Configuration
 @EnableMongoRepositories(basePackages = "com.baeldung.repository")
 public class MongoConfig extends AbstractMongoClientConfiguration {
@@ -61,14 +61,14 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
 假设我们有一个空数据库，并希望在其中存储一个文件:
 
-```
+```java
 InputStream inputStream = new FileInputStream("src/main/resources/test.png"); 
 gridFsTemplate.store(inputStream, "test.png", "image/png", metaData).toString();
 ```
 
 注意，我们可以通过向`store`方法传递一个`DBObject`来保存额外的元数据和文件。对于我们的例子， *DBObject* 可能看起来像这样:
 
-```
+```java
 DBObject metaData = new BasicDBObject();
 metaData.put("user", "alex");
 ```
@@ -77,7 +77,7 @@ metaData.put("user", "alex");
 
 如果我们执行 MongoDB 命令`db[‘fs.files'].find()`，我们将看到`fs.files`集合:
 
-```
+```java
 {
     "_id" : ObjectId("5602de6e5d8bba0d6f2e45e4"),
     "metadata" : {
@@ -95,7 +95,7 @@ metaData.put("user", "alex");
 
 命令`db[‘fs.chunks'].find()` 检索文件的内容:
 
-```
+```java
 {
     "_id" : ObjectId("5602de6e5d8bba0d6f2e45e4"),
     "files_id" : ObjectId("5602de6e5d8bba0d6f2e45e4"),
@@ -120,7 +120,7 @@ metaData.put("user", "alex");
 
 `findOne`只返回一个满足指定查询条件的文档。
 
-```
+```java
 String id = "5602de6e5d8bba0d6f2e45e4";
 GridFSFile gridFsFile = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(id))); 
 ```
@@ -133,7 +133,7 @@ GridFSFile gridFsFile = gridFsTemplate.findOne(new Query(Criteria.where("_id").i
 
 假设我们有以下数据库，包含 2 条记录:
 
-```
+```java
 [
     {
         "_id" : ObjectId("5602de6e5d8bba0d6f2e45e4"),
@@ -166,7 +166,7 @@ GridFSFile gridFsFile = gridFsTemplate.findOne(new Query(Criteria.where("_id").i
 
 如果我们使用`GridFsTemplate` 来执行下面的查询:
 
-```
+```java
 List<GridFSFile> fileList = new ArrayList<GridFSFile>();
 gridFsTemplate.find(new Query()).into(fileList);
 ```
@@ -175,7 +175,7 @@ gridFsTemplate.find(new Query()).into(fileList);
 
 当然，我们可以为`find`方法提供一些标准。例如，如果我们想要获取元数据包含名为`alex` `,`的用户的文件，代码应该是:
 
-```
+```java
 List<GridFSFile> gridFSFiles = new ArrayList<GridFSFile>();
 gridFsTemplate.find(new Query(Criteria.where("metadata.user").is("alex"))).into(gridFSFiles);
 ```
@@ -188,14 +188,14 @@ gridFsTemplate.find(new Query(Criteria.where("metadata.user").is("alex"))).into(
 
 使用前面示例中的数据库，假设我们有代码:
 
-```
+```java
 String id = "5702deyu6d8bba0d6f2e45e4";
 gridFsTemplate.delete(new Query(Criteria.where("_id").is(id))); 
 ```
 
 执行`delete`后，数据库中只剩下一条记录:
 
-```
+```java
 {
     "_id" : ObjectId("5702deyu6d8bba0d6f2e45e4"),
     "metadata" : {
@@ -213,7 +213,7 @@ gridFsTemplate.delete(new Query(Criteria.where("_id").is(id)));
 
 带组块:
 
-```
+```java
 {
     "_id" : ObjectId("5702deyu6d8bba0d6f2e45e4"),
     "files_id" : ObjectId("5702deyu6d8bba0d6f2e45e4"),
@@ -240,7 +240,7 @@ gridFsTemplate.delete(new Query(Criteria.where("_id").is(id)));
 
 假设我们在数据库中有以下记录:
 
-```
+```java
 [
    {
        "_id" : ObjectId("5602de6e5d8bba0d6f2e45e4"),
@@ -283,13 +283,13 @@ gridFsTemplate.delete(new Query(Criteria.where("_id").is(id)));
     }
 ```
 
-```
+```java
 ]
 ```
 
 现在让我们使用文件模式执行`getResources`:
 
-```
+```java
 GridFsResource[] gridFsResource = gridFsTemplate.getResources("test*");
 ```
 

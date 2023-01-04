@@ -77,21 +77,21 @@ MySQL 通过一些表公开了一些有用的信息，我们可以使用它们�
 
 为了运行我们的测试，我们将使用 MySQL 的一个 [docker](/web/20221009095608/https://www.baeldung.com/ops/docker-guide) 映像来创建我们的数据库并填充我们的测试模式，以便我们可以练习一些事务场景:
 
-```
+```java
 # Create MySQL container 
 docker run --network host --name example_db -e MYSQL_ROOT_PASSWORD=root -d mysql
 ```
 
 一旦我们有了数据库服务器，我们就可以通过连接到它并执行脚本来创建模式:
 
-```
+```java
 # Logging in MySQL 
 docker exec -it example_db mysql -uroot -p
 ```
 
 然后，在输入密码后，让我们创建数据库并插入一些数据:
 
-```
+```java
 CREATE DATABASE example_db;
 USE example_db;
 CREATE TABLE zipcode ( 
@@ -119,7 +119,7 @@ VALUES ('08025', 'Barcelona', 'ESP'),
 
 为了在测试过程中帮助我们，我们将对打开的所有会话运行以下命令:
 
-```
+```java
 USE example_db;
 -- Set our timeout to 10 seconds
 SET @@SESSION.innodb_lock_wait_timeout = 10; 
@@ -133,14 +133,14 @@ SET @@SESSION.innodb_lock_wait_timeout = 10;
 
 首先，我们将使用前面看到的登录 MySQL 脚本从两个不同的会话连接到服务器。之后，让我们在两个会话中运行下面的语句:
 
-```
+```java
 SET autocommit=0;
 UPDATE zipcode SET code = 'SW6 1AA' WHERE code = 'SW6';
 ```
 
 10 秒钟后，第二个会话将失败:
 
-```
+```java
 mysql>  UPDATE zipcode SET code = 'SW6 1AA' WHERE code = 'SW6';
 ERROR 1205 (HY000): Lock wait timeout exceeded; try restarting transaction 
 ```
@@ -151,7 +151,7 @@ ERROR 1205 (HY000): Lock wait timeout exceeded; try restarting transaction
 
 现在，让我们在两个会话中回滚，并像以前一样在第一个会话中运行脚本，但这一次，在第二个会话中，让我们运行以下语句:
 
-```
+```java
 SET autocommit=0;
 UPDATE zipcode SET code = 'Test' WHERE code = '08025';
 ```
@@ -160,7 +160,7 @@ UPDATE zipcode SET code = 'Test' WHERE code = '08025';
 
 为了确认这一点，我们将在任何会话或新会话中运行以下语句:
 
-```
+```java
 SELECT * FROM performance_schema.data_locks;
 ```
 
@@ -174,14 +174,14 @@ SELECT * FROM performance_schema.data_locks;
 
 这次让我们在我们的`WHERE`子句中使用不同的列。在第一个会话中，我们将运行:
 
-```
+```java
 SET autocommit=0;
 UPDATE zipcode SET city = 'SW6 1AA' WHERE country = 'USA';
 ```
 
 在第二个示例中，让我们运行这些语句:
 
-```
+```java
 SET autocommit=0;
 UPDATE zipcode SET city = '11025-030' WHERE country = 'BRA';
 ```
@@ -198,7 +198,7 @@ UPDATE zipcode SET city = '11025-030' WHERE country = 'BRA';
 
 例如，让我们回滚所有其他事务并执行以下语句:
 
-```
+```java
 CREATE TABLE zipcode_backup SELECT * FROM zipcode;
 SET autocommit=0;
 DELETE FROM zipcode_backup WHERE code IN (SELECT code FROM zipcode); 
@@ -208,7 +208,7 @@ DELETE FROM zipcode_backup WHERE code IN (SELECT code FROM zipcode);
 
 下一步是在第二个会话中运行以下语句:
 
-```
+```java
 SET autocommit=0;
 UPDATE zipcode SET code = 'SW6 1AA' WHERE code = 'SW6';
 ```
@@ -219,7 +219,7 @@ UPDATE zipcode SET code = 'SW6 1AA' WHERE code = 'SW6';
 
 在本例中，让我们在新脚本的第一个会话中混合执行 DDL 和 DMLs:
 
-```
+```java
 CREATE TEMPORARY TABLE temp_zipcode SELECT * FROM zipcode; 
 ```
 
@@ -231,7 +231,7 @@ CREATE TEMPORARY TABLE temp_zipcode SELECT * FROM zipcode;
 
 我们已经讨论了共享锁和排他锁。然而，我们没有看到如何使用`LOCK IN SHARE MODE`和`FOR UPDATE`选项明确地定义它们。首先，让我们使用共享模式:
 
-```
+```java
 SET autocommit=0;
 SELECT * FROM zipcode WHERE code = 'SW6' LOCK IN SHARE MODE;
 ```
@@ -240,7 +240,7 @@ SELECT * FROM zipcode WHERE code = 'SW6' LOCK IN SHARE MODE;
 
 与`SHARE MODE`相反，`FOR UPDATE`不允许读锁，如下所示，当我们在第一个会话中运行一个语句时:
 
-```
+```java
 SET autocommit=0;
 SELECT * FROM zipcode WHERE code = 'SW6' FOR UPDATE;
 ```
@@ -251,19 +251,19 @@ SELECT * FROM zipcode WHERE code = 'SW6' FOR UPDATE;
 
 [表锁](https://web.archive.org/web/20221009095608/https://dev.mysql.com/doc/refman/8.0/en/lock-tables.html)没有超时，不建议用于 InnoDB:
 
-```
+```java
 LOCK TABLE zipcode WRITE; 
 ```
 
 一旦我们运行这个，我们可以打开另一个会话，尝试选择或更新，并检查它是否将被锁定，但这一次，没有超时发生。更进一步，我们可以打开第三个会话并运行:
 
-```
+```java
 SHOW PROCESSLIST;
 ```
 
 它显示了活动会话及其状态，我们将看到第一个会话正在休眠，第二个会话正在等待表的元数据锁。在这种情况下，解决方案是运行下一个命令:
 
-```
+```java
 UNLOCK TABLES;
 ```
 
@@ -275,7 +275,7 @@ UNLOCK TABLES;
 
 让我们考虑在第一个会话中执行的以下语句:
 
-```
+```java
 CREATE TABLE address_type ( id bigint(20) not null, name varchar(255) not null, PRIMARY KEY (id) );
 SET autocommit=0;
 INSERT INTO address_type(id, name) VALUES (1, 'Street'), (2, 'Avenue'), (5, 'Square');
@@ -286,7 +286,7 @@ SELECT * FROM address_type WHERE id BETWEEN 1 and 5 LOCK IN SHARE MODE;
 
 在第二个会话中，我们将运行以下语句:
 
-```
+```java
 SET autocommit=0;
 INSERT INTO address_type(id, name) VALUES (3, 'Road'), (4, 'Park');
 ```
@@ -299,7 +299,7 @@ INSERT INTO address_type(id, name) VALUES (3, 'Road'), (4, 'Park');
 
 让我们模拟一个简单的死锁场景。对于第一个会话，我们执行:
 
-```
+```java
 SET autocommit=0;
 SELECT * FROM address_type WHERE id = 1 FOR UPDATE;
 SELECT tx.trx_id FROM information_schema.innodb_trx tx WHERE tx.trx_mysql_thread_id = connection_id(); 
@@ -307,7 +307,7 @@ SELECT tx.trx_id FROM information_schema.innodb_trx tx WHERE tx.trx_mysql_thread
 
 最后一条`SELECT`语句将给出当前的事务 ID。我们稍后需要它来检查日志。然后，对于第二个会话，让我们运行:
 
-```
+```java
 SET autocommit=0;
 SELECT * FROM address_type WHERE id = 2 FOR UPDATE;
 SELECT tx.trx_id FROM information_schema.innodb_trx tx WHERE tx.trx_mysql_thread_id = connection_id();
@@ -316,25 +316,25 @@ SELECT * FROM address_type WHERE id = 1 FOR UPDATE;
 
 在序列中，我们返回到会话一并运行:
 
-```
+```java
 SELECT * FROM address_type WHERE id = 2 FOR UPDATE;
 ```
 
 很快，我们会得到一个错误:
 
-```
+```java
 ERROR 1213 (40001): Deadlock found when trying to get lock; try restarting transaction 
 ```
 
 最后，我们进入第三个阶段，我们运行:
 
-```
+```java
 SHOW ENGINE INNODB STATUS;
 ```
 
 该命令的输出应该类似于以下内容:
 
-```
+```java
 ------------------------
 LATEST DETECTED DEADLOCK
 ------------------------

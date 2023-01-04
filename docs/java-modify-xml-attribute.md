@@ -10,7 +10,7 @@
 
 为了运行我们的测试，我们需要将 [JUnit](https://web.archive.org/web/20221127013950/https://search.maven.org/search?q=g:org.junit.jupiter%20AND%20a:junit-jupiter) 和`[xmlunit-assertj](https://web.archive.org/web/20221127013950/https://search.maven.org/search?q=g:org.xmlunit%20AND%20a:xmlunit-assertj)` 依赖项添加到我们的 [Maven](/web/20221127013950/https://www.baeldung.com/maven) 项目中:
 
-```
+```java
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter</artifactId>
@@ -19,7 +19,7 @@
 </dependency>
 ```
 
-```
+```java
 <dependency>
     <groupId>org.xmlunit</groupId>
     <artifactId>xmlunit-assertj</artifactId>
@@ -32,7 +32,7 @@
 
 让我们从一个 XML 文档开始:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <notification id="5">
     <to customer="true">[[email protected]](/web/20221127013950/https://www.baeldung.com/cdn-cgi/l/email-protection)</to>
@@ -46,7 +46,7 @@
 
 首先，我们需要从 XML 文件构建一个`Document`对象，为此，我们将使用一个`DocumentBuilderFactory`:
 
-```
+```java
 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
@@ -59,7 +59,7 @@ Document input = factory
 
 在初始化我们的`input`对象之后，我们需要定位我们想要改变属性的节点。让我们使用一个 [XPath 表达式](/web/20221127013950/https://www.baeldung.com/java-xpath)来选择它:
 
-```
+```java
 XPath xpath = XPathFactory
   .newInstance()
   .newXPath();
@@ -71,7 +71,7 @@ NodeList nodes = (NodeList) xpath.evaluate(expr, input, XPathConstants.NODESET);
 
 让我们遍历列表来更改值:
 
-```
+```java
 for (int i = 0; i < nodes.getLength(); i++) {
     Element value = (Element) nodes.item(i);
     value.setAttribute(attribute, newValue);
@@ -80,7 +80,7 @@ for (int i = 0; i < nodes.getLength(); i++) {
 
 或者，我们可以使用一个`IntStream`来代替`for`循环:
 
-```
+```java
 IntStream
     .range(0, nodes.getLength())
     .mapToObj(i -> (Element) nodes.item(i))
@@ -89,7 +89,7 @@ IntStream
 
 现在，让我们使用一个`Transformer`对象来应用更改:
 
-```
+```java
 TransformerFactory factory = TransformerFactory.newInstance();
 factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 Transformer xformer = factory.newTransformer();
@@ -100,7 +100,7 @@ xformer.transform(new DOMSource(input), new StreamResult(output));
 
 如果我们打印`output`对象内容，我们将得到修改了`customer`属性的结果 XML:
 
-```
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <notification id="5">
     <to customer="false">[[email protected]](/web/20221127013950/https://www.baeldung.com/cdn-cgi/l/email-protection)</to>
@@ -110,7 +110,7 @@ xformer.transform(new DOMSource(input), new StreamResult(output));
 
 同样，如果我们需要在单元测试中验证它，我们可以使用 [XMLUnit](/web/20221127013950/https://www.baeldung.com/xmlunit2) 的`assertThat`方法:
 
-```
+```java
 assertThat(output.toString()).hasXPath("//*[contains(@customer, 'false')]");
 ```
 
@@ -122,7 +122,7 @@ assertThat(output.toString()).hasXPath("//*[contains(@customer, 'false')]");
 
 我们需要将 [dom4j](https://web.archive.org/web/20221127013950/https://search.maven.org/search?q=g:org.dom4j%20AND%20a:dom4j) 和 [jaxen](https://web.archive.org/web/20221127013950/https://search.maven.org/search?q=g:jaxen%20AND%20a:jaxen) 依赖项添加到我们的`pom.xml`中，以便在我们的项目中使用 dom4j:
 
-```
+```java
 <dependency>
     <groupId>org.dom4j</groupId>
     <artifactId>dom4j</artifactId>
@@ -145,7 +145,7 @@ dom4j 提供了`Element`接口作为 XML 元素的抽象。我们将使用`addAt
 
 首先，我们需要从 XML 文件构建一个`Document`对象——这一次，我们将使用一个`SAXReader`:
 
-```
+```java
 SAXReader xmlReader = new SAXReader();
 Document input = xmlReader.read(resourcePath);
 xmlReader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
@@ -157,7 +157,7 @@ xmlReader.setFeature("http://xml.org/sax/features/external-parameter-entities", 
 
 像 JAXP 一样，我们可以使用 XPath 表达式来选择节点:
 
-```
+```java
 String expr = String.format("//*[contains(@%s, '%s')]", attribute, oldValue);
 XPath xpath = DocumentHelper.createXPath(expr);
 List<Node> nodes = xpath.selectNodes(input);
@@ -165,7 +165,7 @@ List<Node> nodes = xpath.selectNodes(input);
 
 现在，我们可以迭代并更新属性:
 
-```
+```java
 for (int i = 0; i < nodes.size(); i++) {
     Element element = (Element) nodes.get(i);
     element.addAttribute(attribute, newValue);
@@ -186,7 +186,7 @@ for (int i = 0; i < nodes.size(); i++) {
 
 对于 Java 9+的使用，我们可以使用:
 
-```
+```java
 <dependency>
     <groupId>org.jooq</groupId>
     <artifactId>joox</artifactId>
@@ -196,7 +196,7 @@ for (int i = 0; i < nodes.size(); i++) {
 
 或者使用 Java 6+，我们有:
 
-```
+```java
 <dependency>
     <groupId>org.jooq</groupId>
     <artifactId>joox-java-6</artifactId>
@@ -212,14 +212,14 @@ jOOX API 本身受到了 [jQuery](https://web.archive.org/web/20221127013950/htt
 
 首先，我们需要加载`Document`:
 
-```
+```java
 DocumentBuilder builder = JOOX.builder();
 Document input = builder.parse(resourcePath);
 ```
 
 现在，我们需要选择它:
 
-```
+```java
 Match $ = $(input);
 ```
 
@@ -227,7 +227,7 @@ Match $ = $(input);
 
 让我们看看`find`方法的实际应用:
 
-```
+```java
 $.find("to")
     .get()
     .stream()
@@ -236,7 +236,7 @@ $.find("to")
 
 要获得作为`String`的结果，我们只需调用`toString()`方法:
 
-```
+```java
 $.toString();
 ```
 
@@ -246,7 +246,7 @@ $.toString();
 
 让我们看看结果:
 
-```
+```java
 | Benchmark                          Mode  Cnt  Score   Error  Units |
 |--------------------------------------------------------------------|
 | AttributeBenchMark.dom4jBenchmark  avgt    5  0.150 ± 0.003  ms/op |

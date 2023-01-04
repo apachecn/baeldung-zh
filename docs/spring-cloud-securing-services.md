@@ -18,7 +18,7 @@
 
 让我们首先向系统中的每个模块添加[spring-boot-starter-security](https://web.archive.org/web/20220124013546/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-security%22)依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
@@ -29,7 +29,7 @@
 
 第二步，让我们用 [spring-session](https://web.archive.org/web/20220124013546/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.session%22%20AND%20a%3A%22spring-session%22) 、[spring-boot-starter-data-redis](https://web.archive.org/web/20220124013546/https://search.maven.org/classic/#search%7Cgav%7C1%7Cg%3A%22org.springframework.boot%22%20AND%20a%3A%22spring-boot-starter-data-redis%22)依赖项修改每个应用程序的`pom.xml` :
 
-```
+```java
 <dependency>
     <groupId>org.springframework.session</groupId>
     <artifactId>spring-session</artifactId>
@@ -44,7 +44,7 @@
 
 接下来，在与主应用程序文件相同的目录中，在所有三个服务中添加一个会话配置类:
 
-```
+```java
 @EnableRedisHttpSession
 public class SessionConfig
   extends AbstractHttpSessionApplicationInitializer {
@@ -53,7 +53,7 @@ public class SessionConfig
 
 最后，将这些属性添加到 git 存储库中的三个`*.properties`文件中:
 
-```
+```java
 spring.redis.host=localhost 
 spring.redis.port=6379
 ```
@@ -66,7 +66,7 @@ spring.redis.port=6379
 
 让我们向配置服务的`src/main/resources`中的`application.properties`文件添加安全属性:
 
-```
+```java
 eureka.client.serviceUrl.defaultZone=
   http://discUser:[[email protected]](/web/20220124013546/https://www.baeldung.com/cdn-cgi/l/email-protection):8082/eureka/
 security.user.name=configUser
@@ -88,7 +88,7 @@ security.user.role=SYSTEM
 
 让我们添加一个安全过滤器来保护其他服务将使用的端点:
 
-```
+```java
 @Configuration
 @EnableWebSecurity
 @Order(1)
@@ -124,7 +124,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 因为我们的 discovery 应用程序有一个很好的 UI 来查看当前注册的服务，所以让我们使用第二个安全过滤器来公开它，并将这个过滤器绑定到应用程序其余部分的身份验证中。请记住，没有`@Order()`标记意味着这是要评估的最后一个安全过滤器:
 
-```
+```java
 @Configuration
 public static class AdminSecurityConfig
   extends WebSecurityConfigurerAdapter {
@@ -151,7 +151,7 @@ protected void configure(HttpSecurity http) {
 
 在发现项目中，让我们向 src/main/resources 中的`bootstrap.properties`添加两个属性:
 
-```
+```java
 spring.cloud.config.username=configUser
 spring.cloud.config.password=configPassword
 ```
@@ -160,7 +160,7 @@ spring.cloud.config.password=configPassword
 
 让我们更新 Git 存储库中的 `discovery.properties`
 
-```
+```java
 eureka.client.serviceUrl.defaultZone=
   http://discUser:[[email protected]](/web/20220124013546/https://www.baeldung.com/cdn-cgi/l/email-protection):8082/eureka/
 eureka.client.register-with-eureka=false
@@ -179,7 +179,7 @@ eureka.client.fetch-registry=false
 
 让我们创建一个类似于我们的发现服务的`SecurityConfig`类，并用以下内容覆盖这些方法:
 
-```
+```java
 @Autowired
 public void configureGlobal(AuthenticationManagerBuilder auth) {
     auth.inMemoryAuthentication().withUser("user").password("password")
@@ -203,7 +203,7 @@ protected void configure(HttpSecurity http) {
 
 现在我们修改 config 类上的`@EnableRedisHttpSession`注释:
 
-```
+```java
 @EnableRedisHttpSession(
   redisFlushMode = RedisFlushMode.IMMEDIATE)
 ```
@@ -212,7 +212,7 @@ protected void configure(HttpSecurity http) {
 
 最后，让我们添加一个`ZuulFilter`，它将在登录后转发我们的身份验证令牌:
 
-```
+```java
 @Component
 public class SessionSavingZuulPreFilter
   extends ZuulFilter {
@@ -254,7 +254,7 @@ public class SessionSavingZuulPreFilter
 
 让我们将以下认证属性添加到网关服务的`src/main/resources`中的`bootstrap.properties`文件中:
 
-```
+```java
 spring.cloud.config.username=configUser
 spring.cloud.config.password=configPassword
 eureka.client.serviceUrl.defaultZone=
@@ -263,7 +263,7 @@ eureka.client.serviceUrl.defaultZone=
 
 接下来，让我们更新 Git 存储库中的 `gateway.properties`
 
-```
+```java
 management.security.sessions=always
 
 zuul.routes.book-service.path=/book-service/**
@@ -299,7 +299,7 @@ hystrix.command.discovery.execution.isolation.thread
 
 为了保护我们的 book 服务，我们将从网关复制`SecurityConfig`类并用以下内容覆盖该方法:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) {
     http.httpBasic().disable().authorizeRequests()
@@ -313,7 +313,7 @@ protected void configure(HttpSecurity http) {
 
 将这些属性添加到图书服务的`src/main/resources`中的`bootstrap.properties`文件:
 
-```
+```java
 spring.cloud.config.username=configUser
 spring.cloud.config.password=configPassword
 eureka.client.serviceUrl.defaultZone=
@@ -322,7 +322,7 @@ eureka.client.serviceUrl.defaultZone=
 
 让我们向 git 存储库中的`book-service.properties`文件添加属性:
 
-```
+```java
 management.security.sessions=never
 ```
 
@@ -338,7 +338,7 @@ management.security.sessions=never
 
 为了保护我们的评级服务，我们将从网关复制`SecurityConfig`类并用以下内容覆盖该方法:
 
-```
+```java
 @Override
 protected void configure(HttpSecurity http) {
     http.httpBasic().disable().authorizeRequests()
@@ -354,7 +354,7 @@ protected void configure(HttpSecurity http) {
 
 将这些属性添加到评级服务的`src/main/resources`中的`bootstrap.properties`文件中:
 
-```
+```java
 spring.cloud.config.username=configUser
 spring.cloud.config.password=configPassword
 eureka.client.serviceUrl.defaultZone=
@@ -363,7 +363,7 @@ eureka.client.serviceUrl.defaultZone=
 
 让我们将属性添加到 git 存储库中的评级服务`.properties`文件中:
 
-```
+```java
 management.security.sessions=never
 ```
 
@@ -377,7 +377,7 @@ management.security.sessions=never
 
 首先，让我们在 **gateway** 项目中创建一个测试类，并为我们的测试创建一个方法:
 
-```
+```java
 public class GatewayApplicationLiveTest {
     @Test
     public void testAccess() {
@@ -388,7 +388,7 @@ public class GatewayApplicationLiveTest {
 
 接下来，让我们设置我们的测试，并通过在我们的测试方法中添加以下代码片段来验证我们可以访问不受保护的`/book-service/books`资源:
 
-```
+```java
 TestRestTemplate testRestTemplate = new TestRestTemplate();
 String testUrl = "http://localhost:8080";
 
@@ -402,7 +402,7 @@ Assert.assertNotNull(response.getBody());
 
 现在，让我们通过将以下代码附加到测试方法的末尾来测试我们的用户在以未经身份验证的用户身份访问受保护的资源时会被重定向到登录状态:
 
-```
+```java
 response = testRestTemplate
   .getForEntity(testUrl + "/book-service/books/1", String.class);
 Assert.assertEquals(HttpStatus.FOUND, response.getStatusCode());
@@ -414,7 +414,7 @@ Assert.assertEquals("http://localhost:8080/login", response.getHeaders()
 
 接下来，让我们实际登录，然后使用我们的会话来访问用户保护的结果:
 
-```
+```java
 MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
 form.add("username", "user");
 form.add("password", "password");
@@ -424,7 +424,7 @@ response = testRestTemplate
 
 现在，让我们从 cookie 中提取会话，并将其传播到以下请求:
 
-```
+```java
 String sessionCookie = response.getHeaders().get("Set-Cookie")
   .get(0).split(";")[0];
 HttpHeaders headers = new HttpHeaders();
@@ -434,7 +434,7 @@ HttpEntity<String> httpEntity = new HttpEntity<>(headers);
 
 并请求受保护的资源:
 
-```
+```java
 response = testRestTemplate.exchange(testUrl + "/book-service/books/1",
   HttpMethod.GET, httpEntity, String.class);
 Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -445,7 +445,7 @@ Assert.assertNotNull(response.getBody());
 
 现在，让我们尝试用同一个会话访问管理部分:
 
-```
+```java
 response = testRestTemplate.exchange(testUrl + "/rating-service/ratings/all",
   HttpMethod.GET, httpEntity, String.class);
 Assert.assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
@@ -455,7 +455,7 @@ Assert.assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
 
 下一个测试将验证我们能否以管理员身份登录并访问受管理员保护的资源:
 
-```
+```java
 form.clear();
 form.add("username", "admin");
 form.add("password", "admin");
@@ -477,7 +477,7 @@ Assert.assertNotNull(response.getBody());
 
 我们最后的测试是通过网关访问我们的发现服务器。为此，请将此代码添加到我们测试的末尾:
 
-```
+```java
 response = testRestTemplate.exchange(testUrl + "/discovery",
   HttpMethod.GET, httpEntity, String.class);
 Assert.assertEquals(HttpStatus.OK, response.getStatusCode());

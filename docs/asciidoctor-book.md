@@ -12,7 +12,7 @@
 
 用 AsciiDoctorj 生成一本书的最简单的方法是用 Maven，就像前面提到的文章一样。**唯一的区别是你必须指定`doctype`标签并将其设置为`“book”.`**
 
-```
+```java
 <backend>pdf</backend>
 <doctype>book</doctype>
 ```
@@ -32,7 +32,7 @@
 
 例如，这段代码将定义一本书中每一页的外观。我们希望采用纵向模式，在 A4 纸格式上，顶部和底部的边距为 0.75 英寸，两侧的边距为 1 英寸:
 
-```
+```java
 page:
     layout: portrait
     margin: [0.75in, 1in, 0.75in, 1in]
@@ -41,7 +41,7 @@ page:
 
 此外，我们可以为图书的页脚和页眉定义自定义样式:
 
-```
+```java
 header:
   height: 0.5in
   line_height: 1
@@ -63,7 +63,7 @@ footer:
 
 要在图书生成过程中包含自定义主题，我们必须定义样式文件所在的路径。该位置在`pom.xml:`的属性部分指定
 
-```
+```java
 <pdf-stylesdir>${project.basedir}/src/themes</pdf-stylesdir>
 <pdf-style>custom</pdf-style>
 ```
@@ -72,7 +72,7 @@ footer:
 
 有了这些变化，我们的`pom.xml`看起来是这样的:
 
-```
+```java
 <configuration>
     <sourceDirectory>src/docs/asciidoc</sourceDirectory>
     <outputDirectory>target/docs/asciidoc</outputDirectory>

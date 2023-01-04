@@ -76,7 +76,7 @@
 
 要使用这个库——下面是要添加到您的`pom.xml`中的 Maven 依赖项:
 
-```
+```java
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
@@ -90,7 +90,7 @@
 
 现在，让我们看看如何在一个简单的例子中使用 Jackson:
 
-```
+```java
 @Test
 public void whenSerializeAndDeserializeUsingJackson_thenCorrect() 
   throws IOException{
@@ -109,7 +109,7 @@ public void whenSerializeAndDeserializeUsingJackson_thenCorrect()
 *   `ObjectMapper.readValue()`用于将 JSON 字符串反序列化为 Java 对象。
 *   JSON 输出示例:
 
-```
+```java
 {
     "id":1,
     "name":"first"
@@ -140,7 +140,7 @@ Gson 是我们要研究的下一个 Java JSON 库。
 
 ### 4.2。Maven 依赖关系
 
-```
+```java
 <dependency>
     <groupId>com.google.code.gson</groupId>
     <artifactId>gson</artifactId>
@@ -154,7 +154,7 @@ Gson 是我们要研究的下一个 Java JSON 库。
 
 下面是一个简单例子，阐明了如何使用 Gson 来序列化/反序列化 JSON:
 
-```
+```java
 @Test
 public void whenSerializeAndDeserializeUsingGson_thenCorrect(){
     Gson gson = new Gson();
@@ -184,7 +184,7 @@ Json-io 是一个简单的 Java 库，用于序列化/反序列化 Json。
 
 ### 5.2。Maven 依赖关系
 
-```
+```java
 <dependency>
     <groupId>com.cedarsoftware</groupId>
     <artifactId>json-io</artifactId>
@@ -198,7 +198,7 @@ Json-io 是一个简单的 Java 库，用于序列化/反序列化 Json。
 
 现在，让我们看一个使用 json-io 的简单例子:
 
-```
+```java
 @Test
 public void whenSerializeAndDeserializeUsingJsonio_thenCorrect(){
     Foo foo = new Foo(1,"first");
@@ -215,7 +215,7 @@ public void whenSerializeAndDeserializeUsingJsonio_thenCorrect(){
 *   `JsonReader.jsonToJava()`用于将 Json 反序列化为 Java 对象。
 *   JSON 输出示例:
 
-```
+```java
 {
     "@type":"org.baeldung.Foo",
     "id":1,
@@ -238,7 +238,7 @@ Genson 是一个 Java 和 Scala 到 JSON 的转换库，提供完整的数据绑
 
 ### 6.2。Maven 依赖关系
 
-```
+```java
 <dependency>
     <groupId>com.owlike</groupId>
     <artifactId>genson</artifactId>
@@ -252,7 +252,7 @@ Genson 是一个 Java 和 Scala 到 JSON 的转换库，提供完整的数据绑
 
 下面是一个使用库的简单示例:
 
-```
+```java
 @Test
 public void whenSerializeAndDeserializeUsingGenson_thenCorrect(){
     Genson genson = new Genson();

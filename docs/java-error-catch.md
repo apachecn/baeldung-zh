@@ -14,7 +14,7 @@
 
 因此，如果我们运行下面的测试用例，它将通过:
 
-```
+```java
 @Test(expected = AssertionError.class)
 public void whenError_thenIsNotCaughtByCatchException() {
     try {
@@ -27,7 +27,7 @@ public void whenError_thenIsNotCaughtByCatchException() {
 
 但是，下面的单元测试期望 catch 语句捕获错误:
 
-```
+```java
 @Test
 public void whenError_thenIsCaughtByCatchError() {
     try {

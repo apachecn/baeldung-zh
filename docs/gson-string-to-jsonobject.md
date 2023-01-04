@@ -14,7 +14,7 @@
 
 首先，我们需要在我们的`pom.xml`中包含 *gson* 依赖性:
 
-```
+```java
 <dependency>
     <groupId>com.google.code.gson</groupId>
     <artifactId>gson</artifactId>
@@ -32,7 +32,7 @@
 
 Gson 为我们提供了一个名为`JsonParser,`的解析器，它将指定的 JSON `String`解析成一个`JsonElements`的解析树:
 
-```
+```java
 public JsonElement parse(String json) throws JsonSyntaxException
 ```
 
@@ -40,7 +40,7 @@ public JsonElement parse(String json) throws JsonSyntaxException
 
 让我们看看如何获得最终的`JsonObject`:
 
-```
+```java
 String json = "{ \"name\": \"Baeldung\", \"java\": true }";
 JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
 
@@ -53,13 +53,13 @@ Assert.assertTrue(jsonObject.get("java").getAsBoolean() == true);
 
 在我们的第二种方法中，我们将看到如何创建一个`Gson`实例并使用`fromJson`方法。该方法将指定的 JSON `String`反序列化为指定类的对象:
 
-```
+```java
 public <T> T fromJson(String json, Class<T> classOfT) throws JsonSyntaxException
 ```
 
 让我们看看如何使用这个方法来解析我们的 JSON `String`，将`JsonObject`类作为第二个参数传递:
 
-```
+```java
 String json = "{ \"name\": \"Baeldung\", \"java\": true }";
 JsonObject convertedObject = new Gson().fromJson(json, JsonObject.class);
 

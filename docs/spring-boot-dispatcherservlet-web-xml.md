@@ -12,7 +12,7 @@
 
 首先，我们必须将 [`spring-boot-starter-web`](https://web.archive.org/web/20221115155356/https://search.maven.org/artifact/org.springframework.boot/spring-boot-starter-web) Maven 依赖项添加到我们的`pom.xml`文件中:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
@@ -27,7 +27,7 @@ DispatcherServlet 接收所有的 HTTP 请求，并将它们委派给控制器�
 
 让我们在 *web.xml* 文件中查看一个 *DispatcherServlet* 示例配置:
 
-```
+```java
 <servlet>
     <servlet-name>dispatcher</servlet-name>
     <servlet-class>
@@ -45,7 +45,7 @@ Spring Boot 为使用 Spring MVC 开发 web 应用程序提供了`spring-boot-st
 
 默认情况下，`spring-boot-starter-web`启动器将`DispatcherServlet`配置为 URL 模式“/”。因此，我们不需要在 *web.xml* 文件中为上面的 *DispatcherServlet* 示例完成任何额外的配置。然而，我们可以使用`application.properties`文件中的`server.servlet.` *定制 URL 模式:
 
-```
+```java
 server.servlet.context-path=/demo
 spring.mvc.servlet.path=/baeldung
 ```
@@ -64,7 +64,7 @@ Spring Boot 的情况不再如此。如果我们需要一个特殊的过滤器�
 
 让我们通过实现 [`Filter`](/web/20221115155356/https://www.baeldung.com/spring-boot-add-filter) 接口来创建一个过滤器:
 
-```
+```java
 @Component
 public class CustomFilter implements Filter {
 
@@ -88,7 +88,7 @@ public class CustomFilter implements Filter {
 
 如果没有 Spring Boot，我们将在 *web.xml* 文件中配置我们的`CustomFilter` :
 
-```
+```java
 <filter>
     <filter-name>customFilter</filter-name>
     <filter-class>CustomFilter</filter-class>
@@ -106,7 +106,7 @@ public class CustomFilter implements Filter {
 
 让我们通过扩展`HttpServlet`类来定义一个 servlet:
 
-```
+```java
 public class CustomServlet extends HttpServlet {
 
     Logger logger = LoggerFactory.getLogger(CustomServlet.class);
@@ -131,7 +131,7 @@ public class CustomServlet extends HttpServlet {
 
 没有 Spring Boot，我们将在`web.xml`文件中配置我们的`CustomServlet`:
 
-```
+```java
 <servlet>
     <servlet-name>customServlet</servlet-name>
     <servlet-class>CustomServlet</servlet-class>
@@ -149,7 +149,7 @@ public class CustomServlet extends HttpServlet {
 
 因此，我们将把`CustomServlet`定义为具有`ServletRegistrationBean` 类的 bean:
 
-```
+```java
 @Bean
 public ServletRegistrationBean customServletBean() {
     ServletRegistrationBean bean = new ServletRegistrationBean(new CustomServlet(), "/servlet");
@@ -161,7 +161,7 @@ public ServletRegistrationBean customServletBean() {
 
 让我们通过扩展`ServletContextListener`类来定义一个监听器:
 
-```
+```java
 public class CustomListener implements ServletContextListener {
 
     Logger logger = LoggerFactory.getLogger(CustomListener.class);
@@ -180,7 +180,7 @@ public class CustomListener implements ServletContextListener {
 
 没有 Spring Boot，我们将在`web.xml`文件中配置我们的`CustomListener`:
 
-```
+```java
 <listener>
     <listener-class>CustomListener</listener-class>
 </listener>
@@ -192,7 +192,7 @@ public class CustomListener implements ServletContextListener {
 
 所以，让我们用`ServletListenerRegistrationBean` 类将`CustomListener`定义为一个 bean:
 
-```
+```java
 @Bean
 public ServletListenerRegistrationBean<ServletContextListener> customListenerBean() {
     ServletListenerRegistrationBean<ServletContextListener> bean = new ServletListenerRegistrationBean();
@@ -203,7 +203,7 @@ public ServletListenerRegistrationBean<ServletContextListener> customListenerBea
 
 在启动我们的应用程序时，我们可以检查日志输出以确认侦听器已经成功初始化:
 
-```
+```java
 2020-09-28 08:50:30.872 INFO 19612 --- [main] c.baeldung.demo.listener.CustomListener: CustomListener is initialized
 ```
 

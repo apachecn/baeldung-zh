@@ -22,7 +22,7 @@ Testcontainers 是一个 Java 库，用于创建临时 Docker 容器以进行单
 
 首先，我们将添加 [Spring Boot 起动机测试](https://web.archive.org/web/20220810173458/https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test)和 [Spring Boot 起动机数据 Redis](https://web.archive.org/web/20220810173458/https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis) 相关性:
 
-```
+```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-test</artifactId>
@@ -35,7 +35,7 @@ Testcontainers 是一个 Java 库，用于创建临时 Docker 容器以进行单
 
 接下来，让我们添加 [Testcontainers](https://web.archive.org/web/20220810173458/https://mvnrepository.com/artifact/org.testcontainers/testcontainers) 依赖项:
 
-```
+```java
 <dependency> 
     <groupId>org.testcontainers</groupId> 
     <artifactId>testcontainers</artifactId> 
@@ -50,7 +50,7 @@ Testcontainers 是一个 Java 库，用于创建临时 Docker 容器以进行单
 
 为此，我们需要将 Redis 连接细节添加到`application.properties`文件中:
 
-```
+```java
 spring.redis.host=127.0.0.1
 spring.redis.port=6379
 ```
@@ -63,7 +63,7 @@ spring.redis.port=6379
 
 让我们从`Product`类开始:
 
-```
+```java
 @RedisHash("product")
 public class Product implements Serializable {
     private String id;
@@ -80,7 +80,7 @@ public class Product implements Serializable {
 
 接下来，我们可以为我们的`Product`散列:定义一个存储库
 
-```
+```java
 @Repository
 public interface ProductRepository extends CrudRepository<Product, String> {
 }
@@ -92,7 +92,7 @@ CRUD 存储库接口已经实现了我们保存、更新、删除和查找产品
 
 最后，让我们创建一个使用`ProductRepository`执行读写操作的服务:
 
-```
+```java
 @Service
 public class ProductService {
 
@@ -122,7 +122,7 @@ public class ProductService {
 
 让我们为`ProductService:`编写一个集成测试
 
-```
+```java
 @Test
 void givenProductCreated_whenGettingProductById_thenProductExistsAndHasSameProperties() {
     Product product = new Product("1", "Test Product", 10.0);
@@ -142,7 +142,7 @@ void givenProductCreated_whenGettingProductById_thenProductExistsAndHasSamePrope
 
 让我们看看创建和运行测试容器的代码:
 
-```
+```java
 static {
     GenericContainer<?> redis = 
       new GenericContainer<>(DockerImageName.parse("redis:5.0.3-alpine")).withExposedPorts(6379);
@@ -161,7 +161,7 @@ static {
 
 此时，我们有一个 Redis 容器在运行，但是我们没有更改应用程序使用的连接细节。为此，我们需要做的就是使用系统属性覆盖`application.properties`文件中的连接细节:
 
-```
+```java
 static {
     GenericContainer<?> redis = 
       new GenericContainer<>(DockerImageName.parse("redis:5.0.3-alpine")).withExposedPorts(6379);

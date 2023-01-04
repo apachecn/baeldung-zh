@@ -12,7 +12,7 @@
 
 让我们考虑几个协方差的基本例子:
 
-```
+```java
 List<? extends Number> integerList = new ArrayList<Integer>();
 List<? extends Number> doubleList = new ArrayList<Double>();
 ```
@@ -25,7 +25,7 @@ List<? extends Number> doubleList = new ArrayList<Double>();
 
 为了实践这一点，让我们用一个简单的`Producer` 类和一个`produce()` 方法`.`，默认情况下，它返回一个`String` 作为`Object` ，为子类提供灵活性:
 
-```
+```java
 public class Producer {
     public Object produce(String input) {
         Object result = input.toLowerCase();
@@ -36,7 +36,7 @@ public class Producer {
 
 由于将`Object `作为返回类型，我们可以在子类中有一个更具体的返回类型。这将是协变返回类型，并将从字符序列中产生数字:
 
-```
+```java
 public class IntegerProducer extends Producer {
     @Override
     public Integer produce(String input) {
@@ -51,7 +51,7 @@ public class IntegerProducer extends Producer {
 
 例如，让我们考虑下面的生产者场景:
 
-```
+```java
 @Test
 public void whenInputIsArbitrary_thenProducerProducesString() {
     String arbitraryInput = "just a random text";
@@ -66,7 +66,7 @@ public void whenInputIsArbitrary_thenProducerProducesString() {
 
 更改为`IntegerProducer`后，实际产生结果的业务逻辑可以保持不变:
 
-```
+```java
 @Test
 public void whenInputIsSupported_thenProducerCreatesInteger() {
     String integerAsString = "42";
@@ -81,7 +81,7 @@ public void whenInputIsSupported_thenProducerCreatesInteger() {
 
 然而，我们仍然通过一个`Object.`来引用结果，每当我们开始使用对`IntegerProducer, `的显式引用时，我们可以在不向下转换的情况下将结果作为`Integer`来检索:
 
-```
+```java
 @Test
 public void whenInputIsSupported_thenIntegerProducerCreatesIntegerWithoutCasting() {
     String integerAsString = "42";

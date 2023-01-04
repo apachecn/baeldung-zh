@@ -14,7 +14,7 @@
 
 我们将从一个示例 Spring Boot 应用程序的例子开始—`my-app`。在整篇文章中，我们将使用同一个例子来理解这些概念。我们的应用程序只有一个`GET`端点，它返回“`Hello buddy`”。它还启用了弹簧致动器。应用程序在端口`8080`上运行，管理端点在端口`8081`上运行。因此，当应用程序在本地计算机上运行时，这些命令起作用:
 
-```
+```java
 $ curl http://localhost:8080
 Hello buddy
 
@@ -26,7 +26,7 @@ $ curl http://localhost:8081/actuator/health
 
 由于我们的应用程序`my-app`在两个端口`8080`和`8081`中发布其端点，我们需要在我们的`Dockerfile`中公开这两个端口。`Dockerfile`中的`[EXPOSE](https://web.archive.org/web/20221126221746/https://docs.docker.com/engine/reference/builder/#expose)`动词暴露端口:
 
-```
+```java
 FROM openjdk:8-jdk-alpine
 EXPOSE 8080
 EXPOSE 8081
@@ -37,7 +37,7 @@ ENTRYPOINT ["java","-jar","/my-app.jar"]
 
 然而，**当我们使用这个`Dockerfile`** 构建图像时:
 
-```
+```java
 $ docker build -t my-app:latest .
 ```
 
@@ -45,7 +45,7 @@ $ docker build -t my-app:latest .
 
 我们还可以指定用于在该端口上通信的协议–`TCP`或`UDP`:
 
-```
+```java
 EXPOSE 8080/tcp
 EXPOSE 8081/udp
 ```
@@ -54,7 +54,7 @@ EXPOSE 8081/udp
 
 该命令还支持范围内的端口声明:
 
-```
+```java
 EXPOSE 8000-8009
 ```
 
@@ -64,13 +64,13 @@ EXPOSE 8000-8009
 
 让我们假设我们已经有了一个`my-app`的 docker 映像，该映像在`Dockerfile`中使用`EXPOSE`命令只暴露了一个端口`8080`。现在，**如果我们想要暴露另一个端口，`8081`，我们应该使用`–expose`参数和`[run](https://web.archive.org/web/20221126221746/https://docs.docker.com/engine/reference/run/#expose-incoming-ports)`命令**:
 
-```
+```java
 $ docker run --name myapp -d --expose=8081 my-app:latest
 ```
 
 上面的命令从映像`my-app`运行一个名为`myapp`的容器，并公开`8081`和端口`8080`。我们可以使用以下方法对此进行检查:
 
-```
+```java
 $ docker ps
 CONTAINER ID   IMAGE           COMMAND                  CREATED             STATUS              PORTS              NAMES
 2debb3c5345b   my-app:latest   "java -jar /my-app.j…"   5 seconds ago       Up 3 seconds        8080-8081/tcp      myapp
@@ -78,20 +78,20 @@ CONTAINER ID   IMAGE           COMMAND                  CREATED             STAT
 
 **重要的是要明白，该参数仅暴露——但不公布——主机中的端口。**为了更清楚地理解它，让我们执行:
 
-```
+```java
 $ docker port myapp
 ```
 
 这不会打印任何内容，因为主机中没有打开和映射任何端口。因此，即使应用程序正在容器内运行，我们也无法访问它:
 
-```
+```java
 $ curl http://localhost:8080
 curl: (7) Failed to connect to localhost port 8080: Connection refused
 ```
 
 我们也可以选择以同样的方式公开一系列端口:
 
-```
+```java
 $ docker run --name myapp -d --expose=8000-8009 my-app:latest
 ```
 
@@ -103,7 +103,7 @@ $ docker run --name myapp -d --expose=8000-8009 my-app:latest
 
 让我们重用上一节中的`my-app`图像的例子。它的`Dockerfile`—`8080`和`8081`有两个暴露的端口。在基于这个映像运行容器时，**我们可以使用`-P`参数**一次发布所有公开的端口:
 
-```
+```java
 $ docker run --name myapp -d -P myApp:latest
 ```
 
@@ -111,7 +111,7 @@ $ docker run --name myapp -d -P myApp:latest
 
 为了检查映射的端口，我们使用:
 
-```
+```java
 $ docker port myapp
 8080/tcp -> 0.0.0.0:32773
 8081/tcp -> 0.0.0.0:32772
@@ -119,7 +119,7 @@ $ docker port myapp
 
 现在，可以使用端口`32773,`访问应用程序，并且可以通过`32772`访问管理端点:
 
-```
+```java
 $ curl http://localhost:32773
 Hello buddy
 $ curl http://localhost:32772/actuator/health
@@ -128,13 +128,13 @@ $ curl http://localhost:32772/actuator/health
 
 **我们可以使用`-p`参数**在主机中选择特定的端口，而不是随机分配端口:
 
-```
+```java
 $ docker run --name myapp -d -p 80:8080 my-app:latest
 ```
 
 上面的命令只发布端口`8080`并与主机服务器中的端口`80`进行映射。它不允许从容器外部访问执行器端点:
 
-```
+```java
 $ curl http://localhost:80
 Hello buddy
 $ curl http://localhost:8081/actuator/health
@@ -143,7 +143,7 @@ curl: (7) Failed to connect to localhost port 8081: Connection refused
 
 **为了发布多个端口映射，我们多次使用`-p`参数**:
 
-```
+```java
 $ docker run --name myapp -d -p 80:8080 -p 81:8081 my-app:latest
 ```
 
@@ -153,7 +153,7 @@ $ docker run --name myapp -d -p 80:8080 -p 81:8081 my-app:latest
 
 如果我们在`docker-compose`、**中使用我们的应用程序，我们可以提供一个需要在`docker-compose.yml`文件**中发布的端口列表:
 
-```
+```java
 version: "3.7"
 services:
   myapp:
@@ -165,7 +165,7 @@ services:
 
 如果我们启动此设置，它会为主机服务器的随机端口分配给定的端口:
 
-```
+```java
 $ docker-compose up -d
 Starting my-app_myapp_1 ... done
 $ docker port  my-app_myapp_1
@@ -175,7 +175,7 @@ $ docker port  my-app_myapp_1
 
 但是，可以提供特定的端口选择:
 
-```
+```java
 version: "3.7"
 services:
   myapp:

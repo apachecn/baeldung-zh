@@ -10,7 +10,7 @@ Docker 映像包含一组顺序指令，用作构建容器的模板。在本教�
 
 首先，让我们从使用现成的`ubuntu:latest` [图像](/web/20221030130212/https://www.baeldung.com/ops/docker-images-vs-containers#docker-images)生成 Docker 容器开始:
 
-```
+```java
 $ docker run -it ubuntu:latest
 [[email protected]](/web/20221030130212/https://www.baeldung.com/cdn-cgi/l/email-protection):/# pwd
 /
@@ -20,7 +20,7 @@ $ docker run -it ubuntu:latest
 
 接下来，假设我们想在容器启动时将这个目录更改为`/tmp`。我们可以通过在使用`ubuntu:latest`作为基础图像的自定义图像中使用`WORKDIR`指令来实现这一点:
 
-```
+```java
 $ cat custom-ubuntu-v1.dockerfile
 FROM ubuntu:latest
 WORKDIR /tmp
@@ -28,13 +28,13 @@ WORKDIR /tmp
 
 在使用这个映像运行容器之前，我们需要构建这个映像。因此，让我们继续构建`custom-ubuntu:v1`图像:
 
-```
+```java
 $ docker build -t custom-ubuntu:v1 - < ./custom-ubuntu-v1.dockerfile
 ```
 
 最后，让我们[使用`custom-ubuntu:v1`映像运行一个容器](/web/20221030130212/https://www.baeldung.com/ops/docker-images-vs-containers#running-images),并验证当前目录:
 
-```
+```java
 $ docker run -it custom-ubuntu:v1
 [[email protected]](/web/20221030130212/https://www.baeldung.com/cdn-cgi/l/email-protection):/tmp# pwd
 /tmp
@@ -46,7 +46,7 @@ $ docker run -it custom-ubuntu:v1
 
 使用 [`WORKDIR`](https://web.archive.org/web/20221030130212/https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#workdir) 指令是大多数情况下我们希望在构建 Docker 映像时更改目录的推荐做法。然而，**如果我们的用例仅限于在运行容器时更改目录，那么我们可以通过使用`–workdir`选项**来实现:
 
-```
+```java
 $ docker run --workdir /tmp -it ubuntu:latest
 [[email protected]](/web/20221030130212/https://www.baeldung.com/cdn-cgi/l/email-protection):/tmp# pwd
 /tmp
@@ -60,7 +60,7 @@ $ docker run --workdir /tmp -it ubuntu:latest
 
 让我们从编写`custom-ubuntu-v2.dockerfile`开始，通过`cd`命令使用`RUN`指令:
 
-```
+```java
 FROM ubuntu:latest
 RUN cd /tmp && echo "sample text" > data.txt
 ```
@@ -69,19 +69,19 @@ RUN cd /tmp && echo "sample text" > data.txt
 
 接下来，让我们添加`ENTRYPOINT`指令来运行`bash`作为容器启动时的默认命令。此外，我们使用`cd`命令将当前目录更改为`/tmp`目录:
 
-```
+```java
 ENTRYPOINT ["sh", "-c", "cd /tmp && bash"]
 ```
 
 接下来，让我们构建自定义图像:
 
-```
+```java
 $ docker build -t custom-ubuntu:v2 - < ./custom-ubuntu-v2.dockerfile
 ```
 
 最后，让我们使用`custom-ubuntu:v2`映像运行容器，并验证命令的执行:
 
-```
+```java
 $ docker run -it custom-ubuntu:v2
 [[email protected]](/web/20221030130212/https://www.baeldung.com/cdn-cgi/l/email-protection):/tmp# pwd
 /tmp

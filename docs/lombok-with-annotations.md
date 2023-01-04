@@ -12,7 +12,7 @@ Lombok 是一个帮助我们在编写 Java 应用程序时显著减少样板代�
 
 当处理不可变对象时，设计上不允许 setters，我们可能需要一个与当前对象相似的对象，但是只有一个属性不同。这可以通过使用 Lombok 的`@With`注释来实现:
 
-```
+```java
 public class User {
     private final String username;
     private final String emailAddress;
@@ -25,7 +25,7 @@ public class User {
 
 上面的注释生成了以下内容:
 
-```
+```java
 public class User {
     private final String username;
     private final String emailAddress;
@@ -41,7 +41,7 @@ public class User {
 
 然后，我们可以使用上面生成的方法来创建原始对象的变异副本:
 
-```
+```java
 User immutableUser = new User("testuser", "[[email protected]](/web/20221126224530/https://www.baeldung.com/cdn-cgi/l/email-protection)", false);
 User authenticatedUser = immutableUser.withAuthenticated(true);
 
@@ -68,7 +68,7 @@ assertTrue(authenticatedUser.isAuthenticated());
 
 我们可以在抽象类的字段上使用`@With`注释:
 
-```
+```java
 public abstract class Device {
     private final String serial;
     @With
@@ -80,7 +80,7 @@ public abstract class Device {
 
 然而，**我们将需要为生成的`withInspected() `方法**提供一个实现。这是因为 Lombok 不知道我们的抽象类的具体实现来创建它的克隆:
 
-```
+```java
 public class KioskDevice extends Device {
 
     @Override
@@ -98,7 +98,7 @@ public class KioskDevice extends Device {
 
 或者，如果字段以下划线开头，那么`with`只是作为生成方法的前缀:
 
-```
+```java
 public class Holder {
     @With
     private String variableA;
@@ -113,7 +113,7 @@ public class Holder {
 
 根据上面的代码，我们看到只有前两个变量有为它们生成的`withX() `方法:
 
-```
+```java
 Holder value = new Holder("a", "b");
 
 Holder valueModifiedA = value.withVariableA("mod-a");
@@ -125,7 +125,7 @@ Holder valueModifiedB = value.with_variableB("mod-b");
 
 我们应该注意，除了以`$`符号开始的字段之外， **Lombok 不会生成一个`withX() `方法，如果它已经存在于我们的类**中:
 
-```
+```java
 public class Stock {
     @With
     private String sku;
@@ -145,7 +145,7 @@ public class Stock {
 
 此外，在下面的场景中，Lombok **跳过** **方法生成:**
 
-```
+```java
 public class Stock {
     @With
     private String sku;
@@ -173,7 +173,7 @@ public class Stock {
 
 与其他 Lombok 注释类似，我们可以对使用`@With`注释生成的方法进行`null`检查:
 
-```
+```java
 @With
 @AllArgsConstructor
 public class ImprovedUser {
@@ -186,7 +186,7 @@ public class ImprovedUser {
 
 Lombok 将为我们生成以下代码以及所需的`null`检查:
 
-```
+```java
 public ImprovedUser withUsername(@NonNull String username) {
     if (username == null) {
         throw new NullPointerException("username is marked non-null but is null");

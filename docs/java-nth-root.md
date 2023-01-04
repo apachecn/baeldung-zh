@@ -10,7 +10,7 @@
 
 假设我们想计算 N 次方根，如下所示:
 
-```
+```java
 base = 125, exponent = 3
 ```
 
@@ -18,7 +18,7 @@ base = 125, exponent = 3
 
 假设一个数 x 的 n 次方根等于这个数 x 的`1/n` 的幂。因此，我们将等式转换为:
 
-```
+```java
 N-th root = Math.pow(125, 1/3)
 ```
 
@@ -34,7 +34,7 @@ N-th root = Math.pow(125, 1/3)
 
 我们现在将使用舍入来解决我们的问题。让我们重复使用前面的例子，看看如何获得正确的结果:
 
-```
+```java
 public void whenBaseIs125AndNIs3_thenNthIs5() {
     double nth = Math.round(Math.pow(125, 1.0 / 3.0));
     assertEquals(5, nth, 0);
@@ -45,7 +45,7 @@ public void whenBaseIs125AndNIs3_thenNthIs5() {
 
 这种方法与上面的非常相似。我们只需要定义一个可接受的误差范围，假设 0.00001:
 
-```
+```java
 public void whenBaseIs625AndNIs4_thenNthIs5() {
     double nth = Math.pow(625, 1.0 / 4.0);
     assertEquals(5, nth, 0.00001);

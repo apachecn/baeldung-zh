@@ -12,7 +12,7 @@
 
 始终能够访问 docker 文件中的 Git 存储库的最简单的解决方案是将 docker 文件直接保存在 Git 存储库中:
 
-```
+```java
 ProjectFolder/
   .git/
   src/
@@ -23,19 +23,19 @@ ProjectFolder/
 
 上面的设置让我们可以访问整个项目的源代码目录。接下来，我们可以用一个 [`ADD`命令](/web/20220727020703/https://www.baeldung.com/ops/docker-copy-add)将它包含在我们的容器中，例如:
 
-```
+```java
 ADD . /project/
 ```
 
 我们当然可以限制复制到构建目录的范围:
 
-```
+```java
 ADD /build/ /project/
 ```
 
 或者像这样的构建输出。jar 文件:
 
-```
+```java
 ADD /output/project.jar /project/
 ```
 
@@ -47,7 +47,7 @@ ADD /output/project.jar /project/
 
 另一个简单的解决方案是在映像构建过程中获取我们的 git 存储库。我们可以通过简单地将 [SSH 密钥](/web/20220727020703/https://www.baeldung.com/linux/generating-ssh-keys-in-linux)添加到本地存储并调用 `git clone` 命令:来实现
 
-```
+```java
 ADD ssh-private-key /root/.ssh/id_rsa
 RUN git clone [[email protected]](/web/20220727020703/https://www.baeldung.com/cdn-cgi/l/email-protection):eugenp/tutorials.git
 ```
@@ -58,7 +58,7 @@ RUN git clone [[email protected]](/web/20220727020703/https://www.baeldung.com/
 
 首先，我们将我们的私有 SSH 密钥存储在 Docker 映像中，这可能会带来潜在的安全问题。我们可以通过使用 git 存储库的用户名和密码来应用一个变通方法:
 
-```
+```java
 ARG username=$GIT_USERNAME
 ARG password=$GIT_PASSWORD
 RUN git clone https://username:[[email protected]](/web/20220727020703/https://www.baeldung.com/cdn-cgi/l/email-protection):eugenp/tutorials.git
@@ -76,7 +76,7 @@ RUN git clone https://username:[[email protected]](/web/20220727020703/https://
 
 我们可以通过在 docker 文件中添加以下行来实现:
 
-```
+```java
 VOLUME /build/ /project/
 ```
 
@@ -92,7 +92,7 @@ VOLUME /build/ /project/
 
 首先，我们必须创建一个新的 Git 存储库，并将 Dockerfile 放在那里。接下来，我们可以通过将子模块添加到。gitmodules 文件:
 
-```
+```java
 [submodule "project"]
   path = project
   url = https://github.com/eugenp/tutorials.git
@@ -105,7 +105,7 @@ VOLUME /build/ /project/
 
 请记住，子模块不会自动更新。我们需要运行以下 git 命令来获取最新的更改:
 
-```
+```java
 git submodule update --init --recursive
 ```
 

@@ -18,7 +18,7 @@
 
 有了 Maven，我们可以只添加[和`spring-boot-starter` 的依赖关系](https://web.archive.org/web/20221129021422/https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter):
 
-```
+```java
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -36,7 +36,7 @@ Spring Boot 2 引入了`spring.main.lazy-initialization`属性，使得在整个
 
 让我们在`application.yml`配置文件中配置该属性:
 
-```
+```java
 spring:
   main:
     lazy-initialization: true
@@ -44,7 +44,7 @@ spring:
 
 或者，如果是这样，在我们的`application.properties`文件中:
 
-```
+```java
 spring.main.lazy-initialization=true
 ```
 
@@ -58,7 +58,7 @@ spring.main.lazy-initialization=true
 
 配置惰性初始化的另一种方法是使用`SpringApplicationBuilder`方法:
 
-```
+```java
 SpringApplicationBuilder(Application.class)
   .lazyInitialization(true)
   .build(args)
@@ -71,7 +71,7 @@ SpringApplicationBuilder(Application.class)
 
 或者，我们也可以使用`SpringApplication`类:
 
-```
+```java
 SpringApplication app = new SpringApplication(Application.class);
 app.setLazyInitialization(true);
 app.run(args);
@@ -87,7 +87,7 @@ app.run(args);
 
 通过向构造函数添加消息，我们将确切地知道 bean 是何时创建的。
 
-```
+```java
 public class Writer {
 
     private final String writerId;
@@ -106,7 +106,7 @@ public class Writer {
 
 同样，让我们创建`SpringApplication`并注入我们之前创建的服务。
 
-```
+```java
 @SpringBootApplication
 public class Application {
 
@@ -135,7 +135,7 @@ public class Application {
 
 让我们将`spring.main.lazy-initialization`属性值设置为`false`，并运行我们的应用程序。
 
-```
+```java
 Writer 1 initialized!!!
 Writer 2 initialized!!!
 Application context initialized!!!
@@ -147,7 +147,7 @@ Writer 2: Second message
 
 现在让我们将`spring.main.lazy-initialization`的值改为`true`，并再次运行我们的应用程序。
 
-```
+```java
 Application context initialized!!!
 Writer 1 initialized!!!
 Writer 1: First message

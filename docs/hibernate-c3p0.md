@@ -26,7 +26,7 @@
 
 首先，我们首先需要添加 [`hibernate-c3p0`](https://web.archive.org/web/20220524025913/https://mvnrepository.com/artifact/org.hibernate/hibernate-c3p0) maven 依赖关系:
 
-```
+```java
 <dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-c3p0</artifactId>
@@ -38,14 +38,14 @@
 
 因此，在我们添加了依赖项之后，我们可以运行我们的应用程序并检查日志:
 
-```
+```java
 Initializing c3p0-0.9.5.2 [built 08-December-2015 22:06:04 -0800; debug? true; trace: 10]
 Initializing c3p0 pool... [[email protected]](/web/20220524025913/https://www.baeldung.com/cdn-cgi/l/email-protection) [ ... default settings ... ]
 ```
 
 如果正在使用另一个 JDBC 连接池管理器，我们可以强制我们的应用程序使用 c3p0。我们只需要在属性文件中将`provider_class`设置为`C3P0ConnectionProvider`:
 
-```
+```java
 hibernate.connection.provider_class=org.hibernate.connection.C3P0ConnectionProvider
 ```
 
@@ -53,7 +53,7 @@ hibernate.connection.provider_class=org.hibernate.connection.C3P0ConnectionProvi
 
 最终，我们将需要覆盖默认配置。我们可以向`hibernate.cfg.xml`文件添加自定义属性:
 
-```
+```java
 <property name="hibernate.c3p0.min_size">5</property>
 <property name="hibernate.c3p0.max_size">20</property>
 <property name="hibernate.c3p0.acquire_increment">5</property>
@@ -62,7 +62,7 @@ hibernate.connection.provider_class=org.hibernate.connection.C3P0ConnectionProvi
 
 同样，`hibernate.properties`文件可以包含相同的设置:
 
-```
+```java
 hibernate.c3p0.min_size=5
 hibernate.c3p0.max_size=20
 hibernate.c3p0.acquire_increment=5
@@ -79,7 +79,7 @@ hibernate.c3p0.timeout=1800
 
 我们可以通过再次检查日志来验证新的池设置:
 
-```
+```java
 Initializing c3p0-0.9.5.2 [built 08-December-2015 22:06:04 -0800; debug? true; trace: 10]
 Initializing c3p0 pool... [[email protected]](/web/20220524025913/https://www.baeldung.com/cdn-cgi/l/email-protection) [ ... new settings ... ]
 ```

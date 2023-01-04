@@ -14,13 +14,13 @@
 
 可以使用以下方法创建空地图:
 
-```
+```java
 def emptyMap = [:]
 ```
 
 类似地，可以使用以下方法实例化带有值的映射:
 
-```
+```java
 def map = [name: "Jerry", age: 42, city: "New York"]
 ```
 
@@ -30,19 +30,19 @@ def map = [name: "Jerry", age: 42, city: "New York"]
 
 让我们从定义地图开始:
 
-```
+```java
 def map = [name:"Jerry"]
 ```
 
 我们可以在地图上添加一个键:
 
-```
+```java
 map["age"] = 42
 ```
 
 然而，另一种更像 Javascript 的方法是使用属性符号(点运算符):
 
-```
+```java
 map.city = "New York"
 ```
 
@@ -50,7 +50,7 @@ map.city = "New York"
 
 在向映射添加新项目时，我们也可以使用变量而不是文字作为键:
 
-```
+```java
 def hobbyLiteral = "hobby"
 def hobbyMap = [(hobbyLiteral): "Singing"]
 map.putAll(hobbyMap)
@@ -66,19 +66,19 @@ assertTrue(hobbyMap[hobbyLiteral] == "Singing")
 
 对于定义为以下内容的地图:
 
-```
+```java
 def map = [name:"Jerry", age: 42, city: "New York", hobby:"Singing"]
 ```
 
 我们可以得到键`name`对应的值:
 
-```
+```java
 assertTrue(map["name"] == "Jerry")
 ```
 
 或者
 
-```
+```java
 assertTrue(map.name == "Jerry")
 ```
 
@@ -88,7 +88,7 @@ assertTrue(map.name == "Jerry")
 
 `minus()`方法接受一个`Map`并在从底层地图中移除给定地图的所有条目后返回一个新的`Map`:
 
-```
+```java
 def map = [1:20, a:30, 2:42, 4:34, ba:67, 6:39, 7:49]
 
 def minusMap = map.minus([2:42, 4:34]);
@@ -97,14 +97,14 @@ assertTrue(minusMap == [1:20, a:30, ba:67, 6:39, 7:49])
 
 接下来，我们还可以根据条件删除条目。我们可以使用`removeAll()`方法来实现这一点:
 
-```
+```java
 minusMap.removeAll{it -> it.key instanceof String}
 assertTrue(minusMap == [1:20, 6:39, 7:49])
 ```
 
 相反，要保留满足条件的所有条目，我们可以使用`retainAll()`方法:
 
-```
+```java
 minusMap.retainAll{it -> it.value % 2 == 0}
 assertTrue(minusMap == [1:20])
 ```
@@ -119,19 +119,19 @@ assertTrue(minusMap == [1:20])
 
 在下一个例子中，我们将遍历每个`Entry.` 。传递给`each()`方法的`Closure`从隐式参数条目中获取键值对并打印出来:
 
-```
+```java
 map.each{entry -> println "$entry.key: $entry.value"}
 ```
 
 接下来，我们将使用`eachWithIndex()`方法打印当前索引和其他值:
 
-```
+```java
 map.eachWithIndex{entry, i -> println "$i $entry.key: $entry.value"}
 ```
 
 也可以要求分别提供`key`、`value,` 和索引:
 
-```
+```java
 map.eachWithIndex{key, value, i -> println "$i $key: $value"}
 ```
 
@@ -141,25 +141,25 @@ map.eachWithIndex{key, value, i -> println "$i $key: $value"}
 
 让我们首先定义一个映射来执行这些方法:
 
-```
+```java
 def map = [name:"Jerry", age: 42, city: "New York", hobby:"Singing"]
 ```
 
 首先，我们来看一下`find()`方法，它接受一个`Closure`并返回匹配`Closure`条件的第一个`Entry`:
 
-```
+```java
 assertTrue(map.find{it.value == "New York"}.key == "city")
 ```
 
 类似地，`findAll`也接受一个`Closure,`，但是返回一个`Map`，其中包含满足`Closure`中条件的所有键-值对:
 
-```
+```java
 assertTrue(map.findAll{it.value == "New York"} == [city : "New York"])
 ```
 
 如果我们喜欢用`List` ，我们可以用`grep`代替`findAll`:
 
-```
+```java
 map.grep{it.value == "New York"}.each{it -> assertTrue(it.key == "city" && it.value == "New York")}
 ```
 
@@ -169,13 +169,13 @@ map.grep{it.value == "New York"}.each{it -> assertTrue(it.key == "city" && it.va
 
 让我们检查一下地图中的所有值是否都是类型`String`:
 
-```
+```java
 assertTrue(map.every{it -> it.value instanceof String} == false)
 ```
 
 类似地，我们可以使用`any`来确定地图中是否有任何项目匹配某个条件:
 
-```
+```java
 assertTrue(map.any{it -> it.value instanceof String} == true)
 ```
 
@@ -185,7 +185,7 @@ assertTrue(map.any{it -> it.value instanceof String} == true)
 
 让我们看一些例子。给定雇员 id 和雇员的映射:
 
-```
+```java
 def map = [
   1: [name:"Jerry", age: 42, city: "New York"],
   2: [name:"Long", age: 25, city: "New York"],
@@ -195,28 +195,28 @@ def map = [
 
 我们可以使用`collect()`将所有员工的名字收集到一个列表中:
 
-```
+```java
 def names = map.collect{entry -> entry.value.name}
 assertTrue(names == ["Jerry", "Long", "Dustin", "Dustin"])
 ```
 
 然后，如果我们对一组独特的名称感兴趣，我们可以通过传递一个`Collection`对象来指定集合:
 
-```
+```java
 def uniqueNames = map.collect([] as HashSet){entry -> entry.value.name}
 assertTrue(uniqueNames == ["Jerry", "Long", "Dustin"] as Set)
 ```
 
 如果我们想将地图中的雇员姓名从小写改为大写，我们可以使用`collectEntries`。此方法返回转换值的映射:
 
-```
+```java
 def idNames = map.collectEntries{key, value -> [key, value.name]}
 assertTrue(idNames == [1:"Jerry", 2:"Long", 3:"Dustin", 4:"Dustin"])
 ```
 
 最后，**还可以将 `collect`方法与`find`和`findAll`方法**结合使用来转换过滤后的结果:
 
-```
+```java
 def below30Names = map.findAll{it.value.age < 30}.collect{key, value -> value.name}
 assertTrue(below30Names == ["Long", "Dustin"])
 ```
@@ -229,7 +229,7 @@ assertTrue(below30Names == ["Long", "Dustin"])
 
 **`groupBy()`方法返回一个映射的映射，每个映射包含键值对，对于给定的条件，这些键值对的结果相同:**
 
-```
+```java
 def map = [1:20, 2: 40, 3: 11, 4: 93]
 
 def subMap = map.groupBy{it.value % 2}
@@ -238,7 +238,7 @@ assertTrue(subMap == [0:[1:20, 2:40], 1:[3:11, 4:93]])
 
 **创建子地图的另一种方法是使用`subMap()`** 。它与`groupBy()`的不同之处在于它只允许基于键的分组:
 
-```
+```java
 def keySubMap = map.subMap([1,2])
 assertTrue(keySubMap == [1:20, 2:40])
 ```
@@ -251,27 +251,27 @@ assertTrue(keySubMap == [1:20, 2:40])
 
 给定一张地图:
 
-```
+```java
 def map = [ab:20, a: 40, cb: 11, ba: 93]
 ```
 
 如果需要对键进行排序，我们将使用无参数`sort()`方法，它基于自然排序:
 
-```
+```java
 def naturallyOrderedMap = map.sort()
 assertTrue([a:40, ab:20, ba:93, cb:11] == naturallyOrderedMap)
 ```
 
 或者我们可以使用`sort(Comparator)`方法来提供比较逻辑:
 
-```
+```java
 def compSortedMap = map.sort({k1, k2 -> k1 <=> k2} as Comparator)
 assertTrue([a:40, ab:20, ba:93, cb:11] == compSortedMap)
 ```
 
 接下来，**为了对键、值或两者进行排序，我们可以为`sort()`** 提供一个`Closure`条件:
 
-```
+```java
 def cloSortedMap = map.sort({it1, it2 -> it1.value <=> it1.value})
 assertTrue([cb:11, ab:20, a:40, ba:93] == cloSortedMap)
 ```
