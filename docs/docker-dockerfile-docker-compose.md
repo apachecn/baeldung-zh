@@ -1,6 +1,6 @@
 # Docker、Dockerfile 和 Docker Compose 之间的区别
 
-> 原文::1230]https://web . archive . org/web/202209930061024/https://www . BAE message . com/ops/docker-docker file-docker-compose
+> 原文::1230]https://web . archive . org/web/202209930061024/https://www . BAE message . com/ops/docker-dockerfile-docker-compose
 
 ## 1.介绍
 

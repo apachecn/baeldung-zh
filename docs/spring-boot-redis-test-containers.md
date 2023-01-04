@@ -1,6 +1,6 @@
 # Spring Boot——用 Testcontainers 测试 Redis
 
-> 原文:# t0]https://web . archive . org/web/202209930061024/https://www . BAE message . com/spring-boot-redis-test containers
+> 原文:# t0]https://web . archive . org/web/202209930061024/https://www . BAE message . com/spring-boot-redis-test-containers
 
 ## 1.概观
 

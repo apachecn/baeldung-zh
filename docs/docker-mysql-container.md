@@ -1,6 +1,6 @@
 # 设置和运行 MySQL 容器
 
-> 原文::1230【https://web . archive . org/web/202209930061024/https://www . BAE message . com/ops/docker-MySQL 容器】
+> 原文::1230【https://web . archive . org/web/202209930061024/https://www . BAE message . com/ops/docker-mysql-container
 
 ## 1.概观
 

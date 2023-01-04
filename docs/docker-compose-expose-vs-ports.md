@@ -1,6 +1,6 @@
 # Docker 编写中 Expose 和 Ports 的区别
 
-> 原文::1230]https://web . archive . org/web/202209930061024/https://www . BAE message . com/ops/docker-compose-expose-vs 端口
+> 原文::1230]https://web . archive . org/web/202209930061024/https://www . BAE message . com/ops/docker-compose-expose-vs-ports
 
 ## 1.概观
 
