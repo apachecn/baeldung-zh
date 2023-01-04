@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" viewBox="423 25.5 753.55 247.00006" width="753.55" height="247.00006" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 8 8" markerWidth="8" markerHeight="8" color="#929292">
+      <g>
+        <path d="M 5.866667 0 L 0 -2.2 L 0 2.2 Z" stroke-width="1" style="stroke: rgb(0, 0, 0);"/>
+      </g>
+    </marker>
+  </defs>
+  <g id="Canvas_1" stroke-opacity="1" stroke-dasharray="none" stroke="none" fill="none" fill-opacity="1">
+    <title>Canvas 1</title>
+    <g id="Canvas_1_Layer_1">
+      <title>Layer 1</title>
+      <g id="Graphic_5">
+        <path d="M 733.95 166.10003 L 827.95 166.10003 C 832.3683 166.10003 835.95 169.68176 835.95 174.10003 L 835.95 185.70004 C 835.95 190.11832 832.3683 193.70004 827.95 193.70004 L 733.95 193.70004 C 729.5317 193.70004 725.95 190.11832 725.95 185.70004 L 725.95 174.10003 C 725.95 169.68176 729.5317 166.10003 733.95 166.10003 Z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+        <text transform="translate(730.95 168.90004)" style="fill: rgb(205, 165, 5); stroke: rgb(24, 24, 25); white-space: pre;"><tspan>
+          </tspan><tspan style="font-family: &quot;Avenir Next&quot;; font-size: 16px; font-weight: 200;" x="11.168" y="16">Messaging</tspan><tspan>
+        </tspan></text>
+      </g>
+      <g id="Graphic_10">
+        <path d="M 637.1 227.90005 L 684.7 227.90005 C 689.1183 227.90005 692.7 231.48177 692.7 235.90005 L 692.7 247.50006 C 692.7 251.91834 689.1183 255.50006 684.7 255.50006 L 637.1 255.50006 C 632.6817 255.50006 629.1 251.91834 629.1 247.50006 L 629.1 235.90005 C 629.1 231.48177 632.6817 227.90005 637.1 227.90005 Z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+        <text transform="translate(634.1 230.70005)" style="fill: rgb(205, 165, 5); stroke: rgb(24, 24, 25); white-space: pre;"><tspan>
+          </tspan><tspan style="font-family: &quot;Avenir Next&quot;; font-size: 16px; font-weight: 200;" x="4.424" y="16">Mixins</tspan><tspan>
+        </tspan></text>
+      </g>
+      <g id="Graphic_11">
+        <path d="M 733.95 42.5 L 827.95 42.5 C 832.3683 42.5 835.95 46.08172 835.95 50.5 L 835.95 62.10001 C 835.95 66.518285 832.3683 70.10001 827.95 70.10001 L 733.95 70.10001 C 729.5317 70.10001 725.95 66.518285 725.95 62.10001 L 725.95 50.5 C 725.95 46.08172 729.5317 42.5 733.95 42.5 Z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+        <text transform="translate(730.95 45.300003)" style="fill: rgb(205, 165, 5); stroke: rgb(24, 24, 25); white-space: pre;"><tspan>
+          </tspan><tspan style="font-family: &quot;Avenir Next&quot;; font-size: 16px; font-weight: 200;" x="6.208" y="16">Applications</tspan><tspan>
+        </tspan></text>
+      </g>
+      <g id="Graphic_12">
+        <path d="M 967.95 104.30002 L 1151.55 104.30002 C 1155.9683 104.30002 1159.55 107.88174 1159.55 112.30002 L 1159.55 123.90002 C 1159.55 128.3183 1155.9683 131.90002 1151.55 131.90002 L 967.95 131.90002 C 963.5318 131.90002 959.95 128.3183 959.95 123.90002 L 959.95 112.30002 C 959.95 107.88174 963.5318 104.30002 967.95 104.30002 Z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+        <text transform="translate(964.95 107.10002)" style="fill: rgb(205, 165, 5); stroke: rgb(24, 24, 25); white-space: pre;"><tspan>
+          </tspan><tspan style="font-family: &quot;Avenir Next&quot;; font-size: 16px; font-weight: 200;" x="12.104" y="16">Command Line Parsing</tspan><tspan>
+        </tspan></text>
+      </g>
+      <g id="Graphic_13">
+        <path d="M 913 227.90005 L 1007 227.90005 C 1011.4183 227.90005 1015 231.48177 1015 235.90005 L 1015 247.50006 C 1015 251.91834 1011.4183 255.50006 1007 255.50006 L 913 255.50006 C 908.5817 255.50006 905 251.91834 905 247.50006 L 905 235.90005 C 905 231.48177 908.5817 227.90005 913 227.90005 Z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+        <text transform="translate(910 230.70005)" style="fill: rgb(205, 165, 5); stroke: rgb(24, 24, 25); white-space: pre;"><tspan>
+          </tspan><tspan style="font-family: &quot;Avenir Next&quot;; font-size: 16px; font-weight: 200;" x="9.888" y="16">Conversion</tspan><tspan>
+        </tspan></text>
+      </g>
+      <g id="Graphic_14">
+        <path d="M 448 104.30002 L 569.1 104.30002 C 573.5183 104.30002 577.1 107.88174 577.1 112.30002 L 577.1 123.90002 C 577.1 128.3183 573.5183 131.90002 569.1 131.90002 L 448 131.90002 C 443.5817 131.90002 440 128.3183 440 123.90002 L 440 112.30002 C 440 107.88174 443.5817 104.30002 448 104.30002 Z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+        <text transform="translate(445 107.10002)" style="fill: rgb(205, 165, 5); stroke: rgb(24, 24, 25); white-space: pre;"><tspan>
+          </tspan><tspan style="font-family: &quot;Avenir Next&quot;; font-size: 16px; font-weight: 200;" x="16.702" y="16">Components</tspan><tspan>
+        </tspan></text>
+      </g>
+      <g id="Graphic_15">
+        <path d="M 448 227.90005 L 569.1 227.90005 C 573.5183 227.90005 577.1 231.48177 577.1 235.90005 L 577.1 247.50006 C 577.1 251.91834 573.5183 255.50006 569.1 255.50006 L 448 255.50006 C 443.5817 255.50006 440 251.91834 440 247.50006 L 440 235.90005 C 440 231.48177 443.5817 227.90005 448 227.90005 Z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+        <text transform="translate(445 230.70005)" style="fill: rgb(205, 165, 5); stroke: rgb(24, 24, 25); white-space: pre;"><tspan>
+          </tspan><tspan style="font-family: &quot;Avenir Next&quot;; font-size: 16px; font-weight: 200;" x="10.094" y="16">Service Locator</tspan><tspan>
+        </tspan></text>
+      </g>
+      <g id="Graphic_16">
+        <path d="M 617.5 104.30002 L 704.3 104.30002 C 708.7183 104.30002 712.3 107.88174 712.3 112.30002 L 712.3 123.90002 C 712.3 128.3183 708.7183 131.90002 704.3 131.90002 L 617.5 131.90002 C 613.0817 131.90002 609.5 128.3183 609.5 123.90002 L 609.5 112.30002 C 609.5 107.88174 613.0817 104.30002 617.5 104.30002 Z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+        <text transform="translate(614.5 107.10002)" style="fill: rgb(205, 165, 5); stroke: rgb(24, 24, 25); white-space: pre;"><tspan>
+          </tspan><tspan style="font-family: &quot;Avenir Next&quot;; font-size: 16px; font-weight: 200;" x="10.56" y="16">Resources</tspan><tspan>
+        </tspan></text>
+      </g>
+      <g id="Graphic_17">
+        <path d="M 857.6 104.30002 L 925 104.30002 C 929.4183 104.30002 933 107.88174 933 112.30002 L 933 123.90002 C 933 128.3183 929.4183 131.90002 925 131.90002 L 857.6 131.90002 C 853.1817 131.90002 849.6 128.3183 849.6 123.90002 L 849.6 112.30002 C 849.6 107.88174 853.1817 104.30002 857.6 104.30002 Z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+        <text transform="translate(854.6 107.10002)" style="fill: rgb(205, 165, 5); stroke: rgb(24, 24, 25); white-space: pre;"><tspan>
+          </tspan><tspan style="font-family: &quot;Avenir Next&quot;; font-size: 16px; font-weight: 200;" x="6.612" y="16">Logging</tspan><tspan>
+        </tspan></text>
+      </g>
+      <g id="Line_21">
+        <line x1="835.95" y1="56.3" x2="952.8197" y2="100.45543" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+      <g id="Line_22">
+        <line x1="725.95" y1="56.3" x2="584.88824" y2="101.3027" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+      <g id="Graphic_23">
+        <path d="M 746.25 104.3 L 813.65 104.3 C 818.068 104.3 821.65 107.882 821.65 112.3 L 821.65 123.9 C 821.65 128.318 818.068 131.9 813.65 131.9 L 746.25 131.9 C 741.832 131.9 738.25 128.318 738.25 123.9 L 738.25 112.3 C 738.25 107.882 741.832 104.3 746.25 104.3 Z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+        <text transform="translate(744.25 107.10002)" style="fill: rgb(205, 165, 5); stroke: rgb(24, 24, 25); white-space: pre;"><tspan>
+          </tspan><tspan style="font-family: &quot;Avenir Next&quot;; font-size: 16px; font-weight: 200;" x="8.212" y="16">Settings</tspan><tspan>
+        </tspan></text>
+      </g>
+      <g id="Line_24">
+        <line x1="780.95" y1="71.10001" x2="780.95" y2="91.90002" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+      <g id="Line_25">
+        <line x1="738.25" y1="118.10002" x2="724.7" y2="118.10002" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+      <g id="Line_26">
+        <line x1="1059.2467" y1="132.90002" x2="1016.494" y2="217.84673" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+      <g id="Line_27">
+        <line x1="852.8217" y1="131.52818" x2="838.1593" y2="156.43758" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+      <g id="Line_28">
+        <line x1="574.02754" y1="131.43247" x2="715.0893" y2="176.43517" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+      <g id="Line_29">
+        <line x1="905" y1="241.70005" x2="842.2559" y2="199.63904" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+      <g id="Line_30">
+        <line x1="508.55" y1="131.90002" x2="622.70445" y2="221.67833" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+      <g id="Line_31">
+        <line x1="729.2521" y1="193.37811" x2="698.5465" y2="221.05106" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+      <g id="Line_32">
+        <line x1="508.55" y1="132.90002" x2="508.55" y2="215.50005" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+      <g id="Line_33">
+        <line x1="831.8689" y1="69.076025" x2="847.0388" y2="94.8475" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+      <g id="Line_34">
+        <line x1="708.8181" y1="131.6855" x2="723.6622" y2="156.48406" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+      <g id="Graphic_35">
+        <path d="M 733.95 227.90005 L 827.95 227.90005 C 832.3683 227.90005 835.95 231.48177 835.95 235.90005 L 835.95 247.50006 C 835.95 251.91834 832.3683 255.50006 827.95 255.50006 L 733.95 255.50006 C 729.5317 255.50006 725.95 251.91834 725.95 247.50006 L 725.95 235.90005 C 725.95 231.48177 729.5317 227.90005 733.95 227.90005 Z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+        <text transform="translate(730.95 230.70005)" style="fill: rgb(205, 165, 5); stroke: rgb(24, 24, 25); white-space: pre;"><tspan>
+          </tspan><tspan style="font-family: &quot;Avenir Next&quot;; font-size: 16px; font-weight: 200;" x="16.176" y="16">Interfaces</tspan><tspan>
+        </tspan></text>
+      </g>
+      <g id="Line_37">
+        <line x1="578.1" y1="118.10002" x2="597.1" y2="118.10002" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+      <g id="Line_39">
+        <line x1="819.8072" y1="131.27683" x2="950.6135" y2="221.43068" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+      <g id="Line_40">
+        <line x1="1059.75" y1="131.90002" x2="847.0965" y2="177.50936" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+      <g id="Line_41" transform="matrix(1, 0, 0, 1, 1, 0)">
+        <line x1="730.0311" y1="69.076025" x2="714.67316" y2="94.73302" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);" stroke-width="1.5"/>
+      </g>
+      <g id="Line_42">
+        <line x1="780.95" y1="132.90002" x2="780.95" y2="154.70003" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+      <g id="Graphic_43">
+        <path d="M 1057.55 227.90005 L 1151.55 227.90005 C 1155.9683 227.90005 1159.55 231.48177 1159.55 235.90005 L 1159.55 247.50006 C 1159.55 251.91834 1155.9683 255.50006 1151.55 255.50006 L 1057.55 255.50006 C 1053.1318 255.50006 1049.55 251.91834 1049.55 247.50006 L 1049.55 235.90005 C 1049.55 231.48177 1053.1318 227.90005 1057.55 227.90005 Z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+        <text transform="translate(1054.55 230.70005)" style="fill: rgb(205, 165, 5); stroke: rgb(24, 24, 25); white-space: pre;"><tspan>
+          </tspan><tspan style="font-family: &quot;Avenir Next&quot;; font-size: 16px; font-weight: 200;" x="15.096" y="16">Validation</tspan><tspan>
+        </tspan></text>
+      </g>
+      <g id="Line_44">
+        <line x1="1060.2167" y1="132.90002" x2="1099.7291" y2="217.56956" marker-end="url(#FilledArrow_Marker)" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" style="stroke: rgb(24, 24, 25); fill: rgb(205, 165, 5);"/>
+      </g>
+    </g>
+  </g>
+</svg>

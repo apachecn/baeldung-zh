@@ -1,0 +1,16 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 181 144.5" width="181" height="144.5">
+  <!-- svg-source:excalidraw -->
+  
+  <defs>
+    <style>
+      @font-face {
+        font-family: "Virgil";
+        src: url("https://excalidraw.com/Virgil.woff2");
+      }
+      @font-face {
+        font-family: "Cascadia";
+        src: url("https://excalidraw.com/Cascadia.woff2");
+      }
+    </style>
+  </defs>
+  <g stroke-linecap="round" transform="translate(10 10) rotate(0 68 18.5)"><path d="M1.15 -0.86 C45.31 -0.24, 88.68 1.81, 135.3 1.8 M-0.4 -0.31 C41.31 0.05, 83.75 -0.78, 135.81 -0.4 M136.73 1.4 C137.17 10.66, 133.9 22.74, 135.25 35.7 M136.33 0.1 C136.77 7.74, 136.04 16.87, 135.99 37.36 M135.78 35.63 C98.24 38.48, 62.8 39.03, -1.92 35.4 M135.18 36.19 C101.41 36.48, 69.23 36.86, 0.76 37.12 M-0.99 37.41 C0.55 26.15, 0.27 13.93, -1.48 -0.73 M-0.89 37.38 C0.55 22.04, -0.69 9.2, 0.07 -0.56" stroke="#000000" stroke-width="1" fill="none"></path></g><g transform="translate(21 16) rotate(0 53.5 12.5)"><text x="0" y="18" font-family="Virgil, Segoe UI Emoji" font-size="20px" fill="#000000" text-anchor="start" style="white-space: pre;" direction="ltr">aggregator</text></g><g transform="translate(88 104) rotate(0 34 12.5)"><text x="0" y="18" font-family="Virgil, Segoe UI Emoji" font-size="20px" fill="#000000" text-anchor="start" style="white-space: pre;" direction="ltr">module1</text></g><g stroke-linecap="round" transform="translate(75 97.5) rotate(0 48 18.5)"><path d="M-0.65 -0.32 C25.33 -1.19, 47.92 -1.91, 97.82 -1.35 M-0.33 0.55 C32.86 -0.13, 65.82 1.53, 96.25 -0.61 M96.28 0.47 C94.26 6.28, 94.02 15.91, 95.75 36.16 M95.28 0.53 C95.58 7.71, 96.42 14.27, 95.98 36.07 M95.37 36.12 C75.38 35.95, 56.45 38.17, -1.47 35.57 M96.96 37.31 C76.3 36.52, 54.97 36.85, -0.63 36.51 M1.35 38.69 C1.32 26.57, 0.78 15.95, 1.91 -1.27 M0.43 37.34 C0.19 22.53, 0.26 7.88, 0.61 0.79" stroke="#000000" stroke-width="1" fill="none"></path></g><g stroke-linecap="round"><g transform="translate(31 49) rotate(0 -2.0892274685203915 30.94223290667871)"><path d="M-0.07 0.19 C-0.67 10.34, -3.69 51.13, -4.11 61.41 M-1.56 -0.76 C-1.76 9.51, -1.72 51.99, -1.98 62.64" stroke="#000000" stroke-width="1" fill="none"></path></g></g><g stroke-linecap="round"><g transform="translate(32 111) rotate(0 21.35458250760564 -0.3022907205535148)"><path d="M-0.37 0.06 C6.35 0.01, 33.98 0.82, 40.93 0.65 M1.64 -0.95 C8.66 -1.44, 36.04 -1.27, 43.07 -1.14" stroke="#000000" stroke-width="1" fill="none"></path></g></g><g stroke-linecap="round"><g transform="translate(94.82198693754776 51.625193075421976) rotate(0 1.9863542179613205 5.594790595001385)"><path d="M0.04 -0.15 C-1.07 1.99, -8.19 11.07, -6.42 12.42 C-4.65 13.76, 9.74 9.88, 10.67 7.93 C11.6 5.98, 0.95 2.08, -0.84 0.71 M-1.39 -1.28 C-2.16 0.59, -6.22 9.7, -4.25 10.89 C-2.29 12.08, 9.86 7.91, 10.4 5.84 C10.93 3.78, 0.96 -0.5, -1.04 -1.48" stroke="#d9480f" stroke-width="1" fill="none"></path></g></g><g stroke-linecap="round"><g transform="translate(97.89891001447086 62.907244357473246) rotate(0 4.601877597337364 15.073766308030827)"><path d="M-0.78 0.91 C0.72 6.01, 8.37 25.08, 9.99 29.8 M1.01 0.35 C2.31 5.14, 8.16 22.83, 9.3 27.84" stroke="#d9480f" stroke-width="1" fill="none"></path></g></g></svg>

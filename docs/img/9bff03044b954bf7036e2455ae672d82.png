@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="12 71.5 1312.3077 196.5" width="1312.3077" height="196.5">
+  <defs>
+    <font-face font-family="Helvetica Neue" font-size="16" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+    <font-face font-family="Avenir Next" font-size="16" panose-1="2 11 5 3 2 2 2 2 2 4" units-per-em="1000" underline-position="-75" underline-thickness="50" slope="0" x-height="468" cap-height="708" ascent="1e3" descent="-365.9973" font-weight="400">
+      <font-face-src>
+        <font-face-name name="AvenirNext-Regular"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.18.5\n2021-09-12 18:37:44 +0000</metadata>
+  <g id="Canvas_1" stroke-opacity="1" stroke="none" stroke-dasharray="none" fill-opacity="1" fill="none">
+    <title>Canvas 1</title>
+    <g id="Canvas_1_Layer_1">
+      <title>Layer 1</title>
+      <g id="Graphic_2">
+        <rect x="28.5" y="88" width="322.8077" height="163.5" fill="#4293f7"/>
+        <rect x="28.5" y="88" width="322.8077" height="163.5" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(33.5 160.526)" fill="white">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="white" x="106.75584" y="15">Component A</tspan>
+        </text>
+      </g>
+      <g id="Graphic_3">
+        <text transform="translate(243 209)" fill="white">
+          <tspan font-family="Avenir Next" font-size="16" font-weight="400" fill="white" x="632383e-18" y="16">Broadcaster</tspan>
+        </text>
+      </g>
+      <g id="Graphic_6">
+        <rect x="507" y="88" width="322.8077" height="163.5" fill="#4293f7"/>
+        <rect x="507" y="88" width="322.8077" height="163.5" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(512 160.526)" fill="white">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="white" x="106.45984" y="15">Component B</tspan>
+        </text>
+      </g>
+      <g id="Graphic_5">
+        <text transform="translate(721.5 209)" fill="white">
+          <tspan font-family="Avenir Next" font-size="16" font-weight="400" fill="white" x="632383e-18" y="16">Broadcaster</tspan>
+        </text>
+      </g>
+      <g id="Graphic_8">
+        <rect x="985" y="88" width="322.8077" height="163.5" fill="#4293f7"/>
+        <rect x="985" y="88" width="322.8077" height="163.5" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(990 160.526)" fill="white">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="white" x="106.16384" y="15">Component C</tspan>
+        </text>
+      </g>
+      <g id="Graphic_9">
+        <text transform="translate(535 116)" fill="white">
+          <tspan font-family="Avenir Next" font-size="16" font-weight="400" fill="white" x="0" y="16">Listener</tspan>
+        </text>
+      </g>
+      <g id="Graphic_10">
+        <text transform="translate(1017 116)" fill="white">
+          <tspan font-family="Avenir Next" font-size="16" font-weight="400" fill="white" x="0" y="16">Listener</tspan>
+        </text>
+      </g>
+      <g id="Line_15">
+        <line x1="351.3077" y1="217" x2="498.4529" y2="130.99567" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_16">
+        <rect x="389.678" y="158.46126" width="74.896" height="28.447998" fill="white"/>
+        <text transform="translate(394.678 163.46126)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="31974423e-20" y="15">Message</tspan>
+        </text>
+      </g>
+      <g id="Line_18">
+        <line x1="829.3077" y1="215.25" x2="976.4529" y2="129.24567" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_17">
+        <rect x="867.678" y="156.71126" width="74.896" height="28.447998" fill="white"/>
+        <text transform="translate(872.678 161.71126)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="31974423e-20" y="15">Message</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>
