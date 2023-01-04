@@ -1,0 +1,1 @@
+["```\r\nfinal class Point {\r\n  final int x;\r\n  final int y;\r\n}\r\n```","```\r\nvalue class Point {\r\n  int x;\r\n  int y\r\n}\r\n```"]

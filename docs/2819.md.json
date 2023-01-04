@@ -1,0 +1,1 @@
+["```\r\ngit rm --cached <filename>\r\ngit commit -m \"<Message>\"\r\n```","```\r\ngit rm --cached -r <folder>\r\ngit commit -m \"<Message>\"\r\n```","```\r\nfatal: not removing 'folder' recursively without -r.\r\n```","```\r\ngit rm -r --cached .\r\ngit add .\r\ngit commit -m \"Removes all .gitignore files and folders\"\r\n```"]

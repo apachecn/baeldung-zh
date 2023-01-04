@@ -1,0 +1,1 @@
+["```\r\n@Configuration\r\n@EntityScan(\"com.baeldung.demopackage\")\r\npublic class EntityScanDemo {\r\n    // ...\r\n}\r\n```","```\r\n@Configuration\r\n@ComponentScan(\r\n  basePackages = {\"com.baeldung.demopackage\"}, \r\n  basePackageClasses = DemoBean.class)\r\npublic class ComponentScanExample {\r\n    // ...\r\n}\r\n```"]

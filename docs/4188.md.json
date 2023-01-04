@@ -1,0 +1,1 @@
+["```\r\nwhile (Boolean-expression) \r\n    statement;\r\n```","```\r\nint i = 0;\r\nwhile (i < 5) {\r\n    System.out.println(\"While loop: i = \" + i++);\r\n}\r\n```"]

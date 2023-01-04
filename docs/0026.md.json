@@ -1,0 +1,1 @@
+["```\r\nFROM centos \r\nWORKDIR /home\r\nENTRYPOINT [\"sh\", \"-c\", \"pwd\"]\r\n```","```\r\n$ docker run -w /home centos:latest sh -c \"pwd\"\r\n```"]

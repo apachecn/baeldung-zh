@@ -1,0 +1,1 @@
+["```\r\nDate date = new Date();\r\n```","```\r\nlong timestamp = 1532516399000; // 25 July 2018 10:59:59 UTC\r\nDate date = new Date(timestamp);\r\n```","```\r\ndate.setTime(0); // 01 January 1970 00:00:00\r\n```"]

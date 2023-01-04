@@ -1,0 +1,1 @@
+["```\r\npublic static String copyValueOf(char[] data)\r\npublic static String copyValueOf(char[] data, int offset, int count)\r\n```","```\r\n@Test\r\npublic void whenCallCopyValueOf_thenStringConstructed() {\r\n    char[] array = new char[] { 'a', 'b', 'c', 'd' };\r\n\r\n    assertEquals(\"abcd\", String.copyValueOf(array));\r\n}\r\n```"]

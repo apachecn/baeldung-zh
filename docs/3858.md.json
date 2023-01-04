@@ -1,0 +1,1 @@
+["```\r\nassertThat(Boolean.parseBoolean(\"true\")).isTrue();\r\n```","```\r\nassertThat(Boolean.valueOf(\"true\")).isTrue();\r\n```","```\r\nassertThat(Boolean.getBoolean(\"true\")).isTrue(); // this test fails!\r\n```","```\r\nSystem.setProperty(\"CODING_IS_FUN\", \"true\");\r\nassertThat(Boolean.getBoolean(\"CODING_IS_FUN\")).isTrue();\r\n```"]

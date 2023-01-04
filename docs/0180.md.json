@@ -1,0 +1,1 @@
+["```\r\nremote: Repository not found.\r\nfatal: repository 'https://github.com/profile/project.git/' not found\r\n```","```\r\ngit config\r\n```","```\r\ngit clone https://<username>:<password>@github.com/profile/project.git\r\n```"]

@@ -1,0 +1,1 @@
+["```\r\nmvn dependency:go-offline\r\n```","```\r\nmvn -o verify\r\n```","```\r\n<settings \r\n  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n  xsi:schemaLocation=\"http://maven.apache.org/SETTINGS/1.0.0\r\n                      https://maven.apache.org/xsd/settings-1.0.0.xsd\">\r\n  <offline>true</offline>\r\n</settings>\r\n```"]

@@ -1,0 +1,1 @@
+["```\r\nContinuation cont1 = new Continuation(() -> {\r\n    Continuation cont2 = new Continuation(() -> {\r\n        //do something\r\n        suspend(SCOPE_CONT_2);\r\n        suspend(SCOPE_CONT_1);\r\n    });\r\n});\r\n```"]

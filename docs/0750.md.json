@@ -1,0 +1,1 @@
+["```\r\nHttpRequest request = HttpRequest.newBuilder()\r\n  .version(HttpClient.Version.HTTP_2)\r\n  .uri(URI.create(\"https://postman-echo.com/get?param1=value1&param2;=value2\"))\r\n  .GET()\r\n  .build();\r\n```","```\r\nHttpRequest request = HttpRequest.newBuilder()\r\n  .uri(URI.create(\"https://postman-echo.com/get?param1=value1&param2;=value2\"))\r\n  .build();\r\n```"]

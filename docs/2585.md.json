@@ -1,0 +1,1 @@
+["```\r\npublic boolean endsWith(String suffix)\r\n```","```\r\n@Test\r\npublic void whenCallEndsWith_thenCorrect() {\r\n    String s1 = \"test\";\r\n\r\n    assertTrue(s1.endsWith(\"t\"));\r\n}\r\n```"]

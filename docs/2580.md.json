@@ -1,0 +1,1 @@
+["```\r\nboolean regionMatches(int toffset, String other, int ooffset, int len)\r\nboolean regionMatches(boolean ignoreCase, int toffset, String other, int ooffset, int len)\r\n```","```\r\n@Test\r\npublic void whenCallRegionMatches_thenCorrect() {\r\n    assertTrue(\"welcome to baeldung\".regionMatches(false, 11, \"baeldung\", 0, 8));\r\n}\r\n```"]

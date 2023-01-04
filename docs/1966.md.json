@@ -1,0 +1,1 @@
+["```\r\n$ keytool -list -keystore cacerts\r\nEnter keystore password:\r\nKeystore type: JKS\r\nKeystore provider: SUN\r\n\r\nYour keystore contains 92 entries\r\n\r\nverisignclass2g2ca [jdk], 2018-06-13, trustedCertEntry,\r\nCertificate fingerprint (SHA1): B3:EA:C4:47:76:C9:C8:1C:EA:F2:9D:95:B6:CC:A0:08:1B:67:EC:9D\r\n```"]

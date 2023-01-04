@@ -1,0 +1,1 @@
+["```\r\nZoneId zone = ZoneId.of(\"Europe/Berlin\");\r\nZonedDateTime zonedDateTime = ZonedDateTime.now(zone);\r\n```","```\r\nZonedDateTime destZonedDateTime = sourceZonedDateTime.withZoneSameInstant(destZoneId);\r\n```","```\r\nZoneOffset zoneOffSet= ZoneOffset.of(\"+02:00\");\r\nOffsetDateTime offsetDateTime = OffsetDateTime.now(zoneOffSet);\r\n```"]

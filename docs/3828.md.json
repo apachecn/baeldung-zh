@@ -1,0 +1,1 @@
+["```\r\nJAVA_OPTS=\"-Xms64m -Xmx512m ...\"\r\n```","```\r\nset JAVA_OPTS=-Xms256m -Xmx1024m ...\r\n```","```\r\nexport JAVA_OPTS=-Xms256m -Xmx1024m ...\r\n```","```\r\nJAVA_OPTS already set in environment; overriding default settings with values ...\r\n```"]

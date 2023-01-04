@@ -1,0 +1,1 @@
+["```\r\n<plugin>\r\n    <artifactId>maven-surefire-plugin</artifactId>\r\n    <version>2.22.2</version>\r\n    <configuration>\r\n        <excludes>\r\n            <exclude>DataTest.java</exclude>\r\n        </excludes>\r\n        <includes>\r\n            <include>DataCheck.java</include>\r\n        </includes>\r\n    </configuration>\r\n</plugin>\r\n```"]

@@ -1,0 +1,1 @@
+["```\r\n<deployment-scanner \r\n  name=\"default\" \r\n  path=\"deployments\" \r\n  scan-enabled=\"true\" \r\n  scan-interval=\"5000\" \r\n  relative-to=\"jboss.server.base.dir\" \r\n  auto-deploy-zipped=\"true\" \r\n  deployment-timeout=\"60\"/>\r\n```"]

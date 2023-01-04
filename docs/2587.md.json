@@ -1,0 +1,1 @@
+["```\r\npublic boolean contains(CharSequence s)\r\n```","```\r\n@Test\r\npublic void whenCallContains_thenCorrect() {\r\n    String s = \"abcd\";\r\n\r\n    assertTrue(s.contains(\"abc\"));\r\n    assertFalse(s.contains(\"cde\"));\r\n}\r\n```"]

@@ -1,0 +1,1 @@
+["```\r\npublic class A {\r\n    private B b = new B();\r\n}\r\n```","```\r\npublic class A {\r\n    private B b;\r\n\r\n    public A() {\r\n        this.b = new B();\r\n    }\r\n}\r\n```","```\r\npublic A(B b) {\r\n    this.b = b;\r\n}\r\n```","```\r\nB b = mock(B.class);\r\nA a = new A(b);\r\n```"]

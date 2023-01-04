@@ -1,0 +1,1 @@
+["```\r\nWindows: C:\\Users\\<User_Name>\\.m2\r\n```","```\r\nLinux: /home/<User_Name>/.m2\r\n```","```\r\nMac: /Users/<user_name>/.m2\r\n```","```\r\n~/.m2\r\n```","```\r\n<settings>\r\n    <localRepository>C:/maven_repository</localRepository>\r\n    ...\r\n```","```\r\nmvn -Dmaven.repo.local=/my/local/repository/path clean install\r\n```"]

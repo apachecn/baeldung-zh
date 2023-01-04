@@ -1,0 +1,1 @@
+["```\r\npublic double pow(double a, double b)\r\n```","```\r\nint intResult = (int) Math.pow(2, 3);\r\n```","```\r\ndouble dblResult = Math.pow(4.2, 3);\r\n```","```\r\nDecimalFormat df = new DecimalFormat(\".00\");\r\ndouble dblResult = Math.pow(4.2, 3);\r\n```"]

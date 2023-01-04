@@ -1,0 +1,1 @@
+["```\r\nSystem.out.println(StringUtils.reverse(args[0]));\r\n```"]

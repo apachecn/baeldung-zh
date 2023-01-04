@@ -1,0 +1,1 @@
+["```\r\npublic String concat(String str)\r\n```","```\r\n@Test\r\npublic void whenCallConcat_thenCorrect() {\r\n    assertEquals(\"elephant\", \"elep\".concat(\"hant\"));\r\n}\r\n```"]

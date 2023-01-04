@@ -1,0 +1,1 @@
+["```\r\nprotected void configure(HttpSecurity http) throws Exception {\r\n    http.csrf().disable()\r\n    ...\r\n}\r\n```"]

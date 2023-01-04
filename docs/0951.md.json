@@ -1,0 +1,1 @@
+["```\r\n@Configuration\r\npublic class SecurityConf extends WebSecurityConfigurerAdapter {\r\n\r\n    @Override\r\n    protected void configure(HttpSecurity http) throws Exception {\r\n        http\r\n          .headers()\r\n          .xssProtection()\r\n          .and()\r\n          .contentSecurityPolicy(\"script-src 'self'\");\r\n    }\r\n}\r\n```"]

@@ -1,0 +1,1 @@
+["```\r\njava -cp $CLASSPATH -Xloggc mypackage.MainClass\r\n```","```\r\njava -Xlog:logging=debug -version \r\n```","```\r\njava -cp $CLASSPATH -Xlog:gc*=debug:file=/tmp/gc.log mypackage.MainClass\r\n```","```\r\njava -cp $CLASSPATH -Xlog:gc*=debug:stdout -Xlog:gc*=debug:file=/tmp/gc.log mypackage.MainClass\r\n```"]

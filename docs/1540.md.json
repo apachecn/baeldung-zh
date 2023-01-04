@@ -1,0 +1,1 @@
+["```\r\ndocker save IMAGE > /path/to/file.tar\r\n```","```\r\ndocker save -o /path/to/file.tar IMAGE \r\n```","```\r\ndocker export CONTAINER > /path/to/file.tar\r\n```","```\r\ndocker export -o /path/to/file.tar CONTAINER\r\n```"]

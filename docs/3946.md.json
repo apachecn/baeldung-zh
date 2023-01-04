@@ -1,0 +1,1 @@
+["```\r\n@SpringBootApplication(scanBasePackages = \"example.baeldung.com\")\r\n@EnableJpaRepositories(\"example.baeldung.com\")\r\n@EntityScan(\"example.baeldung.com\")\r\n```"]

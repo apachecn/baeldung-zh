@@ -1,0 +1,1 @@
+["```\r\nspring.application.name=config-client\r\nspring.profiles.active=development\r\nspring.cloud.config.uri=http://localhost:8888\r\nspring.cloud.config.username=root\r\nspring.cloud.config.password=s3cr3t\r\nspring.cloud.config.fail-fast=true\r\nmanagement.security.enabled=false\r\n```"]

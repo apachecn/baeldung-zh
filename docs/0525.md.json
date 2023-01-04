@@ -1,0 +1,1 @@
+["```\r\nJenkinsfile (Declarative Pipeline)\r\npipeline {\r\n    //Setting the environment variables DISABLE_AUTH and DB_ENGINE\r\n    environment {\r\n        DISABLE_AUTH = 'true'\r\n        DB_ENGINE    = 'mysql'\r\n    }\r\n\r\n}\r\n```","```\r\necho \"Database engine is ${DB_ENGINE}\"\r\n```"]

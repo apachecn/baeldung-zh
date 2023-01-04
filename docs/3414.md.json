@@ -1,0 +1,1 @@
+["```\r\nfeign:\r\n  client:\r\n    config:\r\n      default:\r\n        connectTimeout: 60000\r\n        readTimeout: 10000\r\n```","```\r\nfeign:\r\n  client:\r\n    config:\r\n      FooClient:\r\n        connectTimeout: 10000\r\n        readTimeout: 20000\r\n```"]

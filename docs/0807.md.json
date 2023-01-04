@@ -1,0 +1,1 @@
+["```\r\n|--multimodulemavenproject\r\n    |--daomodule\r\n    |--entitymodule\r\n    |--mainappmodule\r\n    |--userdaomodule\r\n    |--pom.xml\r\n    |--README.md\r\n```","```\r\n<parent>\r\n    <groupId>com.baeldung</groupId>\r\n    <artifactId>parent-modules</artifactId>\r\n    <version>1.0.0-SNAPSHOT</version>\r\n    <relativePath>../../</relativePath>\r\n</parent>\r\n```"]

@@ -1,0 +1,1 @@
+["```\r\nspring.banner.location=classpath:/path/to/banner/bannername.txt\r\n```","```\r\nspring.banner.image.location=classpath:banner.gif\r\nspring.banner.image.width=  //TODO\r\nspring.banner.image.height= //TODO\r\nspring.banner.image.margin= //TODO\r\nspring.banner.image.invert= //TODO\r\n```"]

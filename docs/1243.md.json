@@ -1,0 +1,1 @@
+["```\r\nnode('slaveNode1'){\r\n    stage('Build') {\r\n        sh '''echo build steps'''\r\n    }\r\n    stage('Test') {\r\n        sh '''echo test steps'''\r\n    }\r\n} \r\n```"]

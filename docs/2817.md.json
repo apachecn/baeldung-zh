@@ -1,0 +1,1 @@
+["```\r\n@ResponseStatus(HttpStatus.I_AM_A_TEAPOT)\r\nvoid teaPot() {}\r\n```","```\r\n@ResponseStatus(HttpStatus.BAD_REQUEST, reason = \"Some parameters are invalid\")\r\nvoid onIllegalArgumentException(IllegalArgumentException exception) {}\r\n```","```\r\n@ResponseStatus(code = HttpStatus.BAD_REQUEST)\r\nclass CustomException extends RuntimeException {}\r\n```"]

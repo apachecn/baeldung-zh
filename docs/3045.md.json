@@ -1,0 +1,1 @@
+["```\r\nhttp://localhost:8080/\r\n```","```\r\nserver.servlet.context-path=/demo\r\n```","```\r\nhttp://localhost:8080/demo\r\n```","```\r\nspring.mvc.servlet.path=/\r\n```","```\r\nspring.mvc.servlet.path=/baeldung\r\n```"]

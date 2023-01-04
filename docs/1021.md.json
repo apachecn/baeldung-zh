@@ -1,0 +1,1 @@
+["```\r\npublic final class Paths {\r\n    public static Path get(URI uri) {\r\n        return Path.of(uri);\r\n    }\r\n}\r\n```"]

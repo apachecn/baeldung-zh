@@ -1,0 +1,1 @@
+["```\r\n<properties>\r\n    <junit.version>4.13</junit.version>\r\n</properties> \r\n```","```\r\nmvn install -Djunit.version=4.12\r\n```","```\r\n<dependencies>\r\n    <dependency>\r\n        <groupId>junit</groupId>\r\n        <artifactId>junit</artifactId>\r\n        <version>${junit.version}</version>\r\n    </dependency>\r\n</dependencies> \r\n```"]

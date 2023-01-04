@@ -1,0 +1,1 @@
+["```\r\nCar car = Car.dieselAndManualCar();\r\nboolean dieselXorManual = (car.isDiesel() && !car.isManual()) || (!car.isDiesel() && car.isManual());\r\n```","```\r\nCar car = Car.dieselAndManualCar();\r\nboolean dieselXorManual = car.isDiesel() ^ car.isManual();\r\n```","```\r\nassertThat(1 ^ 3).isEqualTo(2);\r\n```"]

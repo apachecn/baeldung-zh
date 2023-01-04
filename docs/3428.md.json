@@ -1,0 +1,1 @@
+["```\r\nfor (int a = 0; a < 100000; ++a) {\r\n    double result = Math.sqrt(a);\r\n} \r\n```","```\r\ndouble result = StrictMath.sqrt(a);\r\n```"]

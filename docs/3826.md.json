@@ -1,0 +1,1 @@
+["```\r\njpackage --input target/ \\\r\n  --name JPackageDemoApp \\\r\n  --main-jar JPackageDemoApp.jar \\\r\n  --main-class com.baeldung.java14.jpackagedemoapp.JPackageDemoApp \\\r\n  --type dmg \\\r\n  --java-options '--enable-preview'\r\n```"]

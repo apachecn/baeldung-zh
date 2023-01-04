@@ -1,0 +1,1 @@
+["```\r\nString hostname = \"http://locaihost\";\r\nURL url = new URL(hostname);\r\nHttpURLConnection con = (HttpURLConnection) url.openConnection();\r\ncon.getResponseCode();\r\n```","```\r\ntry {\r\n    con.getResponseCode();\r\n} catch (UnknownHostException e) {\r\n    con.disconnect();\r\n}\r\n```"]

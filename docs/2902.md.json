@@ -1,0 +1,1 @@
+["```\r\npublic String getLastWordUsingSplit(String input) {\r\n    String[] tokens = input.split(\" \");\r\n    return tokens[tokens.length - 1];\r\n}\r\n```","```\r\npublic String getLastWordUsingSubString(String input) {\r\n    return input.substring(input.lastIndexOf(\" \") + 1);\r\n}\r\n```"]

@@ -1,0 +1,1 @@
+["```\r\nlogging.group.rest=com.baeldung.web,org.springframework.web,org.springframework.http\r\n```","```\r\nlogging.level.rest=DEBUG \r\n```"]
