@@ -1,1 +1,0 @@
-["```\r\nAuthorization: Basic <credentials>\r\n```","```\r\nAuthorization: Basic YWRtaW46YmFlbGR1bmc=\r\n```","```\r\nGET /postman-test HTTP/1.1\r\nHost: localhost:8080\r\nAuthorization: Basic YWRtaW46YmFlbGR1bmc=\r\nCache-Control: no-cache\r\nPostman-Token: 6ad07f7c-4846-9c3f-2a3e-b24e8d2273ad\r\n```"]

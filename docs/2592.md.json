@@ -1,1 +1,0 @@
-["```\r\npublic CharSequence subSequence(int beginIndex, int endIndex)\r\n```","```\r\n@Test\r\npublic void whenCallSubSequence_thenCorrect() {\r\n    String s = \"Welcome to Baeldung\";\r\n\r\n    assertEquals(\"Welcome\", s.subSequence(0, 7));\r\n}\r\n```"]

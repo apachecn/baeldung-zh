@@ -1,1 +1,0 @@
-["```\r\nString[] strArray = new String[] { \"John\", \"Snow\" };\r\nArrayList<String> strList = (ArrayList<String>) Arrays.asList(strArray);\r\nSystem.out.println(\"String list: \" + strList);\r\n```","```\r\nList<String> strList = Arrays.asList(strArray);\r\nSystem.out.println(\"String list: \" + strList);\r\n```"]

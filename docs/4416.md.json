@@ -1,1 +1,0 @@
-["```\r\npublic class HelloWorld {\r\n    public static void main(String[] args) {\r\n        System.out.println(\"Hello World!\");\r\n    }\r\n}\r\n```","```\r\n$ javac HelloWorld.java\r\n```","```\r\n$ java HelloWorld\r\n```","```\r\nHello World!\r\n```"]

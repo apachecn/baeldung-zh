@@ -1,1 +1,0 @@
-["```\r\npublic static IvParameterSpec generateIv() {\r\n    byte[] iv = new byte[16];\r\n    new SecureRandom().nextBytes(iv);\r\n    return new IvParameterSpec(iv);\r\n}\r\n```"]

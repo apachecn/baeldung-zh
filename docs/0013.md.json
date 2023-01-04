@@ -1,1 +1,0 @@
-["```\r\n$ git clone https://github.com/pinpoint-apm/pinpoint-docker.git\r\n$ cd pinpoint-docker\r\n$ docker-compose pull && docker-compose up -d \r\n```","```\r\npinpoint-quickstart:\r\n   //...\r\n   environment:\r\n      JAVA_OPTS: -javaagent:/pinpoint-agent/pinpoint-bootstrap-${PINPOINT_VERSION}.jar ...\r\n```"]

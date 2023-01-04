@@ -1,1 +1,0 @@
-["```\r\npublic String toLowerCase(Locale locale)\r\npublic String toLowerCase()\r\n```","```\r\n@Test\r\npublic void whenConvertToLowerCase_thenCorrect() {\r\n    String s = \"WELCOME to BAELDUNG!\";\r\n\r\n    assertEquals(\"welcome to baeldung!\", s.toLowerCase());\r\n}\r\n```"]

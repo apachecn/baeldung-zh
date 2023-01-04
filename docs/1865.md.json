@@ -1,1 +1,0 @@
-["```\r\nassertEquals(\"5.1.10.RELEASE\", SpringVersion.getVersion());\r\n```","```\r\nassertEquals(\"1.8.0_191\", SystemProperties.get(\"java.version\"));\r\n```","```\r\nassertEquals(\"1.8.0_191\", System.getProperty(\"java.version\"));\r\n```","```\r\nassertEquals(\"1.8\", JavaVersion.getJavaVersion().toString());\r\n```"]

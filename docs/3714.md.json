@@ -1,1 +1,0 @@
-["```\r\n$ mvn clean compile\r\nThe goal you specified requires a project to execute but there is no POM in this directory.\r\nPlease verify you invoked Maven from the correct directory\r\n```","```\r\n$ mvn -f tutorials/ clean compile\r\n```","```\r\n$ mvn -f tutorials/pom.xml clean compile\r\n```"]

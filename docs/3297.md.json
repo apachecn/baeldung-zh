@@ -1,1 +1,0 @@
-["```\r\npublic boolean isLeapYear(int year);\r\n```","```\r\npublic static boolean isLeap(long year);\r\n```","```\r\npublic boolean isLeap();\r\n```","```\r\nLocalDate localDate = new LocalDate(2020, 1, 31);\r\nint numberOfDays = Days.daysBetween(localDate, localDate.plusYears(1)).getDays();\r\n\r\nboolean isLeapYear = (numberOfDays > 365) ? true : false;\r\n```"]

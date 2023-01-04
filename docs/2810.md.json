@@ -1,1 +1,0 @@
-["```\r\n@SpringBootConfiguration\r\npublic class Application {\r\n\r\n    public static void main(String[] args) {\r\n        SpringApplication.run(Application.class, args);\r\n    }\r\n\r\n    @Bean\r\n    public PersonService personService() {\r\n        return new PersonServiceImpl();\r\n    }\r\n}\r\n```"]

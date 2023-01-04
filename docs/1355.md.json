@@ -1,1 +1,0 @@
-["```\r\nint i = 10 / 4;\r\nassertEquals(2, i); \r\n```","```\r\nfloat x = 10 / 4;\r\nassertEquals(2, x); \r\n```","```\r\nfloat x = (float) 10 / 4;\r\nassertEquals(2.5, x);\r\n\r\nfloat y = 10 / (float) 8;\r\nassertEquals(1.25, y); \r\n```"]

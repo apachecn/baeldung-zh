@@ -1,1 +1,0 @@
-["```\r\npublic int lastIndexOf(int ch)\r\npublic int lastIndexOf(int ch, int fromIndex)\r\npublic int lastIndexOf(String str)\r\n```","```\r\n@Test\r\npublic void whenCallLastIndexOf_thenCorrect() {\r\n    assertEquals(2, \"foo\".lastIndexOf(\"o\"));\r\n    assertEquals(2, \"foo\".lastIndexOf(111));\r\n}\r\n```"]

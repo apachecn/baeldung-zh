@@ -1,1 +1,0 @@
-["```\r\npublic int indexOf(int ch)\r\npublic int indexOf(int ch, int fromIndex)\r\npublic int indexOf(String str)\r\npublic int indexOf(String str, int fromIndex)\r\n```","```\r\n@Test\r\npublic void whenCallIndexOf_thenCorrect() {\r\n    String str = \"foo\";\r\n\r\n    assertEquals(1, str.indexOf(\"o\"));\r\n    assertEquals(-1, str.indexOf(\"s\"));\r\n}\r\n```"]

@@ -1,1 +1,0 @@
-["```\r\nStringBuilder sb = new StringBuilder();\r\n```","```\r\nsb = null;\r\n```","```\r\nStringBuilder sb = new StringBuilder();\r\nSoftReference<StringBuilder> sbRef = new SoftReference<>(sb);\r\nsb = null;\r\n```"]

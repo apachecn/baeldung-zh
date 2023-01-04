@@ -1,1 +1,0 @@
-["```\r\nList list = Collections.synchronizedList(new LinkedList(...));\r\n```","```\r\nLinkedList<Object> linkedList = new LinkedList<>();\r\n```","```\r\nlinkedList.poll();\r\nlinkedList.pop();\r\n```","```\r\nlinkedList.push(Object o);\r\n```"]

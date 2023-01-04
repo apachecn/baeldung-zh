@@ -1,1 +1,0 @@
-["```\r\nWDS.sampleResult.sampleStart()\r\nWDS.browser.get('http://baeldung.com')\r\nWDS.sampleResult.sampleEnd()\r\nWDS.log.info(\"successfully navigated to http://baeldung.com/\");\r\n```"]

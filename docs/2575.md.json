@@ -1,1 +1,0 @@
-["```\r\npublic String trim()\r\n```","```\r\n@Test\r\npublic void whenTrim_thenCorrect() {\r\n    assertEquals(\"foo\", \" foo  \".trim());\r\n}\r\n```"]

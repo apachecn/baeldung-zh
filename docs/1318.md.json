@@ -1,1 +1,0 @@
-["```\r\npublic boolean isEmpty()\r\n```","```\r\n@Test\r\npublic void whenCallIsEmpty_thenCorrect() {\r\n    String s1 = \"\";\r\n\r\n    assertTrue(s1.isEmpty());\r\n}\r\n```"]

@@ -1,1 +1,0 @@
-["```\r\nserver.shutdown=graceful\r\n```","```\r\nspring.lifecycle.timeout-per-shutdown-phase=1m\r\n```"]

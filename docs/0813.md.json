@@ -1,1 +1,0 @@
-["```\r\n./jvisualvm\r\n```","```\r\njava -Dcom.sun.management.jmxremote.port=8080 \r\n-Dcom.sun.management.jmxremote.ssl=false \r\n-Dcom.sun.management.jmxremote.authenticate=false \r\n-Xms1024m -Xmx1024m -jar MyApp.jar\r\n```"]

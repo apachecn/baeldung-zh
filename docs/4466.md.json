@@ -1,1 +1,0 @@
-["```\r\n(String s1, String s2) -> s1 + s2\r\n```","```\r\n(s1, s2) -> s1 + s2\r\n```","```\r\n(var s1, var s2) -> s1 + s2\r\n```","```\r\n(@Nonnull var s1, @Nullable var s2) -> s1 + s2\r\n```","```\r\n(var s1, s2) -> s1 + s2\r\n```","```\r\n(var s1, String s2) -> s1 + s2\r\n```","```\r\ns1 -> s1.toUpperCase()\r\n```","```\r\nvar s1 -> s1.toUpperCase()\r\n```"]

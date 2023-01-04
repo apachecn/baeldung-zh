@@ -1,1 +1,0 @@
-["```\r\n@GET\r\nCall<ResponseBody> reposList(@Url String url);\r\n```","```\r\nRetrofit retrofit = new Retrofit.Builder()\r\n  .baseUrl(\"https://api.github.com/\")\r\n  .addConverterFactory(GsonConverterFactory.create()).build();\r\n```","```\r\n@GET(\"{fullUrl}\")\r\nCall<List<Contributor>> contributorsList(@Path(value = \"fullUrl\", encoded = true) String fullUrl);\r\n```"]

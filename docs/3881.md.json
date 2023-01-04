@@ -1,1 +1,0 @@
-["```\r\n<plugin>\r\n    <artifactId>maven-clean-plugin</artifactId>\r\n    <version>3.0.0</version>\r\n    <configuration>\r\n        <filesets>\r\n            <fileset>\r\n                <directory>output-resources</directory>\r\n            </fileset>\r\n        </filesets>\r\n    </configuration>\r\n</plugin>\r\n```"]

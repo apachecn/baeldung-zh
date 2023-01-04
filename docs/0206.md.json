@@ -1,1 +1,0 @@
-["```\r\nList<Integer> integers = new ArrayList<>();\r\nintegers.add(5);\r\nintegers.add(6);\r\nintegers.add(7);\r\nintegers.add(8);\r\nSystem.out.println(integers);\r\n```","```\r\nintegers.add(1,9);\r\nSystem.out.println(integers);\r\n```"]

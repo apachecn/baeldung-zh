@@ -1,1 +1,0 @@
-["```\r\nbackingArray[size] = newItem;\r\nsize++;\r\n```","```\r\nint possibleUpperBound = 10_000;\r\nList<String> items = new ArrayList<>(possibleUpperBound);\r\n```"]

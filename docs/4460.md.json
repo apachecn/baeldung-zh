@@ -1,1 +1,0 @@
-["```\r\npublic void infiniteLoopUsingWhile() {\r\n    while (true) {\r\n        // do something\r\n    }\r\n}\r\n```","```\r\npublic void infiniteLoopUsingFor() {\r\n    for (;;) {\r\n        // do something\r\n    }\r\n}\r\n```","```\r\npublic void infiniteLoopUsingDoWhile() {\r\n    do {\r\n        // do something\r\n    } while (true);\r\n}\r\n```"]

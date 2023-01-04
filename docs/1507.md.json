@@ -1,1 +1,0 @@
-["```\r\nList<Integer> EXPECTED = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));\r\n\r\nList<Integer> aList = new ArrayList<>(Arrays.asList(1, 2, 7, 4, 5));\r\naList.set(2, 3);\r\n\r\nassertThat(aList).isEqualTo(EXPECTED);\r\n```"]

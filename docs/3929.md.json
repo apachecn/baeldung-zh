@@ -1,1 +1,0 @@
-["```\r\n>> java -XX:PermSize=100m -XX:MaxPermSize=200m -version\r\nOpenJDK 64-Bit Server VM warning: Ignoring option PermSize; support was removed in 8.0\r\nOpenJDK 64-Bit Server VM warning: Ignoring option MaxPermSize; support was removed in 8.0\r\n...\r\n```"]

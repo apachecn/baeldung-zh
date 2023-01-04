@@ -1,1 +1,0 @@
-["```\r\npublic char charAt(int index)\r\n```","```\r\n@Test\r\npublic void whenCallCharAt_thenCorrect() {\r\n    assertEquals('P', \"Paul\".charAt(0));\r\n}\r\n```","```\r\n@Test(expected = IndexOutOfBoundsException.class)\r\npublic void whenCharAtOnNonExistingIndex_thenIndexOutOfBoundsExceptionThrown() {\r\n    int character = \"Paul\".charAt(4);\r\n}\r\n```"]

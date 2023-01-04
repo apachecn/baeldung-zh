@@ -1,1 +1,0 @@
-["```\r\n<plugin>\r\n    <artifactId>maven-war-plugin</artifactId>\r\n    <version>2.4</version>\r\n    <configuration>\r\n        <failOnMissingWebXml>false</failOnMissingWebXml>    \r\n    </configuration>\r\n</plugin>\r\n```","```\r\n<plugin>\r\n    <artifactId>maven-war-plugin</artifactId>\r\n    <version>3.1.0</version>\r\n</plugin>\r\n```"]

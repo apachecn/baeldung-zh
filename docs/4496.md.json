@@ -1,1 +1,0 @@
-["```\r\n@Entity\r\npublic class Car {\r\n\r\n    @GeneratedValue\r\n    @Id\r\n    public long id;\r\n\r\n    // getters and setters\r\n\r\n} \r\n```","```\r\n@Entity\r\npublic class SteeringWheel {\r\n\r\n    @OneToOne\r\n    private Car car\r\n\r\n    // getters and setters\r\n}\r\n```"]

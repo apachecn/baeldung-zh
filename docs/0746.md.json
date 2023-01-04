@@ -1,1 +1,0 @@
-["```\r\nrepositories {\r\n    flatDir {\r\n        dirs 'lib1', 'lib2'\r\n    }\r\n}\r\n```","```\r\ndependencies { implementation name: 'sample-jar-0.8.7' } \r\n```","```\r\nimplementation files('libs/a.jar', 'libs/b.jar')\r\n```","```\r\nimplementation fileTree(dir: 'libs', include: '*.jar')\r\n```"]

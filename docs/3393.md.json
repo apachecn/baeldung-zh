@@ -1,1 +1,0 @@
-["```\r\nCharacterEncodingFilter filter = new CharacterEncodingFilter();\r\nfilter.setEncoding(\"UTF-8\");\r\nfilter.setForceEncoding(true);\r\n```","```\r\nFilterRegistrationBean registrationBean = new FilterRegistrationBean();\r\nregistrationBean.setFilter(filter);\r\nregistrationBean.addUrlPatterns(\"/*\");\r\nreturn registrationBean;\r\n```"]

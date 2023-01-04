@@ -1,1 +1,0 @@
-["```\r\npipeline {\r\n    agent any\r\n    stages {\r\n        stage('build') {\r\n            steps {\r\n                echo \"parentJob\"\r\n            }\r\n        }\r\n        stage('triggerChildJob') {\r\n            steps {\r\n                build job: \"childJob\", wait: true\r\n            }\r\n        }\r\n    }\r\n}\r\n```"]

@@ -1,1 +1,0 @@
-["```\r\njava -jar JDCommandLine.jar ${TARGET_JAR_NAME}.jar ./classes\r\n```"]

@@ -1,1 +1,0 @@
-["```\r\nSEVERE: A web application registered the JBDC driver [oracle.jdbc.driver.OracleDriver]\r\n  but failed to unregister it when the web application was stopped.\r\n  To prevent a memory leak, the JDBC Driver has been forcibly unregistered.\r\n```","```\r\nDriverManager.deregisterDriver(DriverManager.getDrivers().nextElement());\r\n```"]

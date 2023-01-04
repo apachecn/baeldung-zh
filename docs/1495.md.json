@@ -1,1 +1,0 @@
-["```\r\nMETA-INF/\r\n    MANIFEST.MF\r\ncom/\r\n    baeldung/\r\n        MyApplication.class \r\n```","```\r\nMETA-INF/\r\n    MANIFEST.MF\r\nWEB-INF/\r\n    web.xml\r\n    jsp/\r\n        helloWorld.jsp\r\n    classes/\r\n        static/\r\n        templates/\r\n        application.properties\r\n    lib/\r\n        // *.jar files as libs\r\n```"]

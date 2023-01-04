@@ -1,1 +1,0 @@
-["```\r\npublic boolean startsWith(String prefix)\r\npublic boolean startsWith(String prefix, int toffset)\r\n```","```\r\n@Test\r\npublic void whenCallStartsWith_thenCorrect() {\r\n    String str = \"foo\";\r\n\r\n    assertTrue(str.startsWith(\"f\"));\r\n    assertTrue(str.startsWith(\"oo\", 1));\r\n}\r\n```"]

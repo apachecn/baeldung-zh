@@ -1,1 +1,0 @@
-["```\r\nNoClassDefFoundError: javax/xml/bind/JAXBException\r\n```","```\r\n--add-modules java.xml.bind\r\n```","```\r\n<dependency>\r\n    <groupId>javax.xml.bind</groupId>\r\n    <artifactId>jaxb-api</artifactId>\r\n    <version>2.3.0</version>\r\n</dependency>\r\n```"]

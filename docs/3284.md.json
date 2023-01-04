@@ -1,1 +1,0 @@
-["```\r\nDate: Sat Oct 19 17:12:30 2019\r\nOffsetDateTime: 2019-10-19T17:12:30.174Z\r\n```","```\r\nDate date = new Date();\r\nOffsetDateTime offsetDateTime = date.toInstant()\r\n  .atOffset(ZoneOffset.UTC);\r\n```","```\r\nint hour = 3;\r\nint minute = 30;\r\noffsetDateTime = date.toInstant()\r\n  .atOffset(ZoneOffset.ofHoursMinutes(hour, minute));\r\n```"]

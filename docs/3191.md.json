@@ -1,1 +1,0 @@
-["```\r\n@EventListener\r\npublic void handleContextRefreshEvent(ContextStartedEvent ctxStartEvt) {\r\n    System.out.println(\"Context Start Event received.\");\r\n}\r\n```","```\r\n@EventListener(classes = { ContextStartedEvent.class, ContextStoppedEvent.class })\r\npublic void handleMultipleEvents() {\r\n    System.out.println(\"Multi-event listener invoked\");\r\n}\r\n```"]

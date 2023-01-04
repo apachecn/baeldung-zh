@@ -1,1 +1,0 @@
-["```\r\npublic String intern()\r\n```","```\r\n@Test\r\npublic void whenIntern_thenCorrect() {\r\n    String s1 = \"abc\";\r\n    String s2 = new String(\"abc\");\r\n    String s3 = new String(\"foo\");\r\n    String s4 = s1.intern();\r\n    String s5 = s2.intern();\r\n\r\n    assertFalse(s3 == s4);\r\n    assertTrue(s1 == s5);\r\n}\r\n```"]

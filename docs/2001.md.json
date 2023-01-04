@@ -1,1 +1,0 @@
-["```\r\nString str = \"Java scanner skip tutorial\"; \r\nScanner sc = new Scanner(str); \r\nsc.skip(Pattern.compile(\".ava\"));\r\n```","```\r\nString str = \"Java scanner skip tutorial\";\r\nScanner sc = new Scanner(str); \r\nsc.skip(\"Java\");\r\n```"]

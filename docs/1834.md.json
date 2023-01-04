@@ -1,1 +1,0 @@
-["```\r\nint x = 0xff;\r\nassertEquals(255, x);\r\n```","```\r\nbyte y = (byte) 0xff;\r\nassertEquals(-1, y);\r\n```","```\r\nint rgba = 272214023;\r\n\r\nint r = rgba >> 24 & 0xff;\r\nassertEquals(16, r);\r\n\r\nint g = rgba >> 16 & 0xff;\r\nassertEquals(57, g);\r\n\r\nint b = rgba >> 8 & 0xff;\r\nassertEquals(168, b);\r\n\r\nint a = rgba & 0xff;\r\nassertEquals(7, a);\r\n```"]

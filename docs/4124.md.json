@@ -1,1 +1,0 @@
-["```\r\nlogger.trace(\"Number is {}\", getRandomNumber());\r\n```","```\r\nif (logger.isTraceEnabled()) {\r\n    logger.trace(\"Number is {}\", getRandomNumer());\r\n}\r\n```","```\r\nlogger.trace(\"Number is {}\", () -> getRandomNumber());\r\n```","```\r\nlogger.trace(\"Name is {} and age is {}\", () -> getName(), () -> getRandomNumber());\r\n```"]

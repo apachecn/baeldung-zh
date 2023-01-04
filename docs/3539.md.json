@@ -1,1 +1,0 @@
-["```\r\n$ wget http://download.redis.io/releases/redis-6.0.9.tar.gz\r\n$ tar xzf redis-6.0.9.tar.gz\r\n$ cd redis-6.0.9\r\n$ make \r\n```","```\r\nbrew tap mongodb/brew\r\nbrew install [[email protected]](/web/20220829182126/https://www.baeldung.com/cdn-cgi/l/email-protection)\r\n```"]

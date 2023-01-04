@@ -1,1 +1,0 @@
-["```\r\nList<Integer> list1 = Arrays.asList(5, 2, 3, 4, 1);\r\nCollections.sort(list1);\r\nassertEquals(new Integer(1), list1.get(0));\r\n\r\nList<Integer> list1 = Arrays.asList(5, 2, 3, 4, 1);\r\nCollections.sort(list1, (a, b) -> b - a);\r\nassertEquals(new Integer(5), list1.get(0));\r\n```"]

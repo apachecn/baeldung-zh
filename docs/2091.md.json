@@ -1,1 +1,0 @@
-["```\r\nmvn -N wrapper:wrapper\r\n```","```\r\nmvn -N wrapper:wrapper -Dmaven=3.5.2\r\n```","```\r\ndistributionUrl=https://repo1.maven.org/maven2/org/apache/maven/apache-maven/3.5.2/apache-maven-3.5.2-bin.zip\r\n```","```\r\n./mvnw clean install\r\n```","```\r\nmvnw.cmd clean install\r\n```","```\r\n./mvnw spring-boot:run\r\n```"]

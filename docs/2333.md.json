@@ -1,1 +1,0 @@
-["```\r\nchar c = 'a';\r\nSystem.out.println((int) c);\r\n```","```\r\n97\r\n```","```\r\nString str = \"abc\";\r\nchar c = str.charAt(0);\r\nSystem.out.println((int) c);\r\n```"]

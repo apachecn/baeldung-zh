@@ -1,1 +1,0 @@
-["```\r\n<socket-binding name=\"http\" port=\"${jboss.http.port:8080}\"/>\r\n```","```\r\n<socket-binding-group name=\"standard-sockets\" default-interface=\"public\" port-offset=\"${jboss.socket.binding.port-offset:0}\">\r\n```","```\r\nstandalone.bat -Djboss.http.port=<Desired_Port_Number>\r\n```","```\r\nstandalone.sh -Djboss.http.port=<Desired_Port_Number>\r\n```"]
